@@ -1,4 +1,0 @@
-Lace error: cannot change the `extending' property of a system between
-  two compilations.
-What to do: make sure to specify an `extending' clause in the Ace or
-  recompile your system from scratch.

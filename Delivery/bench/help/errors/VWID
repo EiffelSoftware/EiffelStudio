@@ -1,9 +1,0 @@
-VWID, chapter 23 (Expressions and constants), page 386
-
-     Identifier rule
-
-     An Identifier appearing in an expression as  part  of
-     the  text  of a routine `r' in a class `C', either by
-     itself or as the target or actual argument of a Call,
-     must  be the name of a feature of `C', a local entity
-     of `r', or a formal argument of `r'.

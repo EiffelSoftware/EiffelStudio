@@ -1,3 +1,0 @@
-Error: Routine has Local_declarations part, but is external or deferred.
-What to do: remove the Local_declarations part, or make the routine
-  internal (neither external nor deferred).

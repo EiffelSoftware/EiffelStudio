@@ -1,2 +1,0 @@
-Error: expanded type is based on deferred class.
-What to do: make type non-expanded, or base it on effective class.

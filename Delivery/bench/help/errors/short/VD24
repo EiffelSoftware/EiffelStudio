@@ -1,6 +1,0 @@
-Lace error: cluster contains conflicting declaration for basic class.
-What to do: choose the appropriate version of the class; exclude
-  the other from system (by moving it to another directory, or
-  by using the Lace Exclude clause, see ETL D.9, p. 524);
-  or if class is needed change its name it to remove the conflict.
-   

@@ -1,2 +1,0 @@
-Error: formal argument improperly used as anchor for `like' declaration.
-What to do: make sure that anchor type is neither expanded nor itself anchored.

@@ -1,5 +1,0 @@
-VHAY, chapter 6 (The inheritance relation), page 88
-
-     Whether you use the default `ANY' or another one, any
-     system will need to have a class of name `ANY'.  This
-     is a constraint on any valid universe.

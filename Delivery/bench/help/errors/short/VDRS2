@@ -1,3 +1,0 @@
-Error: Redefine subclause lists name of frozen or constant feature.
-What to do: unless you can change the status of the feature in the parent,
-  remove its name from Redefine subclause since it cannot be redefined.  

@@ -1,9 +1,0 @@
-VBGV, chapter 2 (Syntax, validity and semantics), page 28
-
-     General Validity rule
-
-     Every validity constraint relative to a construct  is
-     considered   to  include  an  implicit  supplementary
-     condition  stating  that  every  component   of   the
-     construct   satisfies   every   validity   constraint
-     applicable to the component.

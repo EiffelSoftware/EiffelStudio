@@ -1,3 +1,0 @@
-Error: conflicting redefinitions in sharing under repeated inheritance.
-What to do: use renaming to ensure replication, or undefine one of the
-  features to ensure a join, or remove conflicting redefinition(s).

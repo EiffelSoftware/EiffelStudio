@@ -1,3 +1,0 @@
-Type error: procedure call used as expression.
-What to do: call a function or attribute rather than a procedure, or
-  keep the procedure but use the call as instruction, not expression.

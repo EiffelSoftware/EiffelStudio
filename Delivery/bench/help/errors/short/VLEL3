@@ -1,3 +1,0 @@
-Error: identifier appears twice in export lists.
-What to do: make sure that no identifier appears twice in an export list
-  or in more than one export list for the class.

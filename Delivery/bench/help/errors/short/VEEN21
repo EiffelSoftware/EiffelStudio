@@ -1,3 +1,0 @@
-Error: the predefined entity `Result' may not be used in this context.
-What to do: make sure that the `Result' entity is only used in functions
-  and does not appear in any precondition.

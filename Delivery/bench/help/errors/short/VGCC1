@@ -1,3 +1,0 @@
-Error: Creation instruction applies to target of generic type
-       which does not have a creation constraint.
-What to do: make sure that the constraint has a creation part.

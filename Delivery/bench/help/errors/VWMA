@@ -1,7 +1,0 @@
-VWMA, chapter 23 (Expressions and constants), page 393
-
-     Manifest Array rule
-
-     A Manifest_array  `<<e1,  e2,  ... en>>'  is a  valid
-     expression  of  type  `ARRAY [T]'  if and only if the
-     type of every `ei' conforms to `T'.

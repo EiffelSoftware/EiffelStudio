@@ -1,3 +1,0 @@
-Error: type of manifest constant does not match INTEGER declaration.
-What to do: use manifest integer constant as value, or change declared
-  type to match type of value.

@@ -1,3 +1,0 @@
-Error: expanded type is based on class with improper creation procedure. 
-What to do: make type non-expanded, or base it on class with at most one
-  creation procedure, available to current class and having no argument.

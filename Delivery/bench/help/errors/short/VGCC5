@@ -1,3 +1,0 @@
-Error: Creation instruction should include call, but does not.
-What to do: since the corresponding base class lists Creation procedures,
-  use form of Creation instruction which includes call to one of them.

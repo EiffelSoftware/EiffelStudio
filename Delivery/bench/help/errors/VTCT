@@ -1,7 +1,0 @@
-VTCT, chapter 12 (Types), page 199
-
-     Class Type rule
-
-     An Identifier `CC' is valid as the Class_name part of
-     a Class_type if and only if it is the name of a class
-     in the surrounding universe.

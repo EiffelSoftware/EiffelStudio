@@ -1,3 +1,0 @@
-Error: Creation instruction uses call to improper feature.
-What to do: make sure that feature of call is a creation procedure,
-  is not `once', and is available for creation to enclosing class.  

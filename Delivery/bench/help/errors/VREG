@@ -1,7 +1,0 @@
-VREG, chapter 8 (Routines), page 110
-
-     Let  `el'   be   an   Entity_declaration_list.    Let
-     `identifiers'   be   the   concatenation   of   every
-     Identifier_list of every Entity_declaration_group  in
-     `fa'. Then `el' is valid if and only if no Identifier
-     appears more than once in the list `identifiers'.

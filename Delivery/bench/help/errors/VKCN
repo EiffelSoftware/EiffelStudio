@@ -1,8 +1,0 @@
-VKCN, chapter 21 (Feature call), page 341
-
-
-       If the feature is an attribute or a  function,  the
-          Call is syntactically an expression.
-
-       If the feature is  a  procedure,  the  Call  is  an
-          instruction.

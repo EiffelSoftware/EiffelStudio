@@ -1,3 +1,0 @@
-Error: introduced feature has same name as inherited feature.
-What to do: if both features are needed and no redeclaration is intended,
-  use renaming for inherited one or change name of introduced one.

@@ -1,4 +1,0 @@
-Lace error: an Ace file may not contain both an `extending' clause and 
-  a `precompiled' clause.
-What to do: remove either the `extending' clause or the `precompiled' clause
-  from the Ace file.

@@ -1,4 +1,0 @@
-Type error: target of assignment is not writable.
-What to do: make sure that target (left-hand side) is either
-  an attribute of the class or a local entity of the enclosing
-  routine. (Local entities include Result for a function.)

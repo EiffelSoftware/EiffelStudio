@@ -1,4 +1,0 @@
-Error: redeclaration causes name clash with other feature.
-What to do: make sure that no other feature of the class, introduced
-  in the class itself of inherited from a parent, has the same name;
-  or use redefinition or undefinition if they are meant to be merged.

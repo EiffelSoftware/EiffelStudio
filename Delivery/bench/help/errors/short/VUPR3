@@ -1,5 +1,0 @@
-Error: Invalid routine for use of Precursor
-What to do: make sure that the Precursor construct appears in the
-  redefinition of a routine and that this redefinition applies to
-  only one effective routine from the set of applicable parents. 
-

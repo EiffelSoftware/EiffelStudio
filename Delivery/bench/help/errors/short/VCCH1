@@ -1,3 +1,0 @@
-Error: class has deferred feature(s), but is not declared as deferred.  
-What to do: make feature(s) effective, or include `deferred' before
-  `class' in Class_header.  

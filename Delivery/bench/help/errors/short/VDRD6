@@ -1,3 +1,0 @@
-Error: invalid attribute redefinition.
-What to do: make sure that original version was not constant, and that
-  the redeclaration does not change its expansion status.

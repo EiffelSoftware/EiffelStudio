@@ -1,3 +1,0 @@
-Error: C++ routine redeclared into non-C++ routine or conversely.
-What to do: make sure that original and redeclared version are
-  both C++ or both non C++ routines. 

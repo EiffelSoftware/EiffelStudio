@@ -1,2 +1,0 @@
-Error: class has two formal generic parameters with the same name.
-What to do: make sure that all formal parameter names are different. 

@@ -1,5 +1,0 @@
-Lace error: Root clause lists unknown cluster.
-What to do: make sure that cluster name listed in Root clause
-  is that of a cluster described in the same Ace file.
-  (You do not need to specify the root cluster unless the root class
-  name corresponds to two or more classes in the system.)

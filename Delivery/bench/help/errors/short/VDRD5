@@ -1,3 +1,0 @@
-Error: class redefines effective feature into deferred one.
-What to do: make sure that redefined version is effective or, if you
-  do want it deferred, use undefinition instead of redefinition.

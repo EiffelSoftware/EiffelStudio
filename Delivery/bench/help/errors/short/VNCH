@@ -1,3 +1,0 @@
-Type error: non-conforming expression.
-What to do: make sure that type of expression conforms, or use
-  anchored (`like') type.

@@ -1,4 +1,0 @@
-Error: every descendant class of `DYNAMIC' in the DC-set must have a creation
-  procedure called `make' which expects a single argument of type `ANY'.
-What to do: make sure that such a `make' procedure is listed in the Creation
-  clause.

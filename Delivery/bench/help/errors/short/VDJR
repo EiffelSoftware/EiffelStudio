@@ -1,3 +1,0 @@
-Error: joined features have different signatures.
-What to do: if join of deferred features is desired, make sure they
-  have identical signatures (number and types of arguments and result). 

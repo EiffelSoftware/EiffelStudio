@@ -1,3 +1,0 @@
-Error: incompatible Unique constants.
-What to do: make sure that all Unique inspect constants in Multi_branch
-  instruction come from the same class of origin. 

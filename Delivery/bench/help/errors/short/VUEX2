@@ -1,2 +1,0 @@
-Error: feature of qualified call is not available to client class.
-What to do: make sure feature after dot is exported to caller.

@@ -1,2 +1,0 @@
-Error: a DC-set may only be finalized if its DR-system has been finalized.
-What to do: make sure the DR-system has been finalized.

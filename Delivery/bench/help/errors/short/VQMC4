@@ -1,4 +1,0 @@
-Error: declared type does not match implicit type of manifest constant
-  (REAL or DOUBLE).
-What to do: change declared type to match value or change manifest constant
-  to match declared type.

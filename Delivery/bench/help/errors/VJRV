@@ -1,6 +1,0 @@
-VJRV, chapter 20 (Reattaching entities), page 332
-
-     Assignment Attempt rule
-
-     An Assignment_attempt is valid if  and  only  if  the
-     type of the target entity is a reference type.

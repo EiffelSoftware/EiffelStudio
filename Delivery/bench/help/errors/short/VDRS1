@@ -1,3 +1,0 @@
-Error: identifier in Redefine subclause does not denote inherited feature.  
-What to do: make sure that all identifiers in subclause are final names
-  of features inherited from the given parent. 

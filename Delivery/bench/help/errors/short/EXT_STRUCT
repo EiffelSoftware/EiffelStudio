@@ -1,5 +1,0 @@
-Error: The signature of the Eiffel feature does not match the struct requirements.
-What to do: make sure that number or type of arguments in the Eiffel definition is
-    correct i.e.:
-    - one for an Eiffel function or two for an Eiffel procedure
-    - the first argument is always of type POINTER 

@@ -1,3 +1,0 @@
-Type error: non-conforming type. 
-What to do: to conform a non-generic class, make sure that type's base
-  class lists that class in its inheritance clause.

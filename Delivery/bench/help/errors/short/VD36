@@ -1,2 +1,0 @@
-Lace error: cluster-level option clause uses system-level option.
-What to do: move option to system-level Option clause, or remove it.

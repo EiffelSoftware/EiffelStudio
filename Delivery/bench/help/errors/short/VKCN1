@@ -1,3 +1,0 @@
-Type error: function call used as instruction.
-What to do: call a procedure rather than a function, or keep the
-  function but use the call as expression rather than instruction.

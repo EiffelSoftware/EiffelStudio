@@ -1,3 +1,0 @@
-Error: two features introduced in class have same name.
-What to do: remove one of the features, change name of one of them, or
-  make one deferred and one effective to cause an effecting.

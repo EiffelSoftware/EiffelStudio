@@ -1,3 +1,0 @@
-Error: invalid creation procedure for expanded class.
-What to do: make sure that class lists zero or one name of creation
-  procedure having no arguments; or make the class non-expanded.

@@ -1,7 +1,0 @@
-VNCN, chapter 13 (Conformance), page 221
-
-     Let `CT' be a reference type of base class  `C',  and
-     `BT'  be  a type whose base class `B' is not generic.
-     `CT' conforms directly to `BT' if  and  only  if  the
-     Inheritance clause of `C' lists `B' in one or more of
-     its Parent items.

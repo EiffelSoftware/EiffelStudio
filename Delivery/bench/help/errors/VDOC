@@ -1,5 +1,0 @@
-VDOC, chapter 11 (Specifying systems in Lace), page 526
-
-     A  Target_list  may  only  appear   in   an   Options
-     paragraph,  not in a Defaults paragraph. A System_tag
-     may only appear in an Ace-level Defaults clause.

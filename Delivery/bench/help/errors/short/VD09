@@ -1,2 +1,0 @@
-Lace error: class in include file has same name as class already in cluster.
-What to do: if both classes are needed, change name of one of them.

@@ -1,9 +1,0 @@
-number_of_columns: 7
-index_column: 1
-function_time_column: 3
-descendant_time_column: 4
-number_of_calls_column: 5
-function_name_column: 6
-percentage_column: 2
-second_percentage_column: 0
-generates_leading_underscore: no

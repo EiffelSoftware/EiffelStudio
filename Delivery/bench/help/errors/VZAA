@@ -1,9 +1,0 @@
-VZAA, chapter 24 (Interfaces with other  languages),  page
-  405
-
-     The validity constraint on actual  arguments  of  the
-     Address  form  is  clause  4 of the argument validity
-     rule, which makes $` f' valid as actual argument to a
-     call  if  and  only  if  `f'  is  the final name of a
-     feature of the enclosing class, and that  feature  is
-     not a constant attribute (which has no address).

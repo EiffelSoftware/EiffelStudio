@@ -1,4 +1,0 @@
-VAVE, chapter 9 (Correctness), page 130
-
-     A Variant is valid if and only if its  Expression  is
-     of type `INTEGER'.

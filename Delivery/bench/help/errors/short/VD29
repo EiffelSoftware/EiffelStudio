@@ -1,3 +1,0 @@
-Lace error: root class name ambiguous: two clusters have class of that name.
-What to do: remove the ambiguity, for example by making the cluster explicit
-   in `ROOT_CLASS_NAME (root_cluster_NAME)'. See ETL D.2, p. 514 for examples.

@@ -138,7 +138,7 @@ feature -- Element change
 			check_result
 		end
 		
-	terminate is
+	terminate_server is
 			-- End server.
 		do
 			dispparams.init

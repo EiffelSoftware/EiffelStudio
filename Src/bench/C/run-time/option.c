@@ -688,11 +688,13 @@ void stop_profile(void)
 			subtract_time(item->all_total_time, item->all_total_time, item->this_total_time);
 			item->is_running = 0; /* Mark feature is not running */
 
+#ifdef ISE_GC
 			if (gc_ran && !gc_running) {
 					/* Get time wasted by GC */
 				subtract_gc_time(item->all_total_time, last_gc_time);
 				gc_ran = 0;
 			}
+#endif /* ISE_GC */
 
 			if ((stk_item = prof_stack_top())) {
 					/* There is still a callee, so

@@ -35,7 +35,8 @@ inherit
 			visual_widget
 		redefine
 			interface,
-			set_tooltip
+			set_tooltip,
+			tooltip
 		end
 
 	EV_TEXTABLE_IMP
@@ -51,7 +52,7 @@ feature {NONE} -- Initialization
 	needs_event_box: BOOLEAN is do Result := False end
 	
 	event_widget: POINTER is
-			-- 
+			-- GtkWidget to which signals are connected
 		do
 			Result := visual_widget
 		end
@@ -75,6 +76,7 @@ feature {NONE} -- Initialization
 			feature {EV_GTK_EXTERNALS}.gtk_tool_button_set_label_widget (visual_widget, text_label)
 			feature {EV_GTK_DEPENDENT_EXTERNALS}.gtk_tool_item_set_is_important (visual_widget, True)
 			align_text_center
+			create tooltip.make (0)
 			is_initialized := True
 		end
 
@@ -83,6 +85,9 @@ feature -- Access
 	gray_pixmap: EV_PIXMAP
 			-- Image displayed on `Current'.
 
+	tooltip: STRING
+			-- Tooltip use for describing `Current'
+
 feature -- Element change
 
 	set_tooltip (a_text: STRING) is
@@ -90,6 +95,7 @@ feature -- Element change
 		local
 			a_cs: EV_GTK_C_STRING
 		do
+			tooltip := a_text.twin
 			create a_cs.make (a_text)
 			feature {EV_GTK_DEPENDENT_EXTERNALS}.gtk_tool_item_set_tooltip (
 				visual_widget,
@@ -121,7 +127,6 @@ feature {EV_ANY_I, EV_GTK_CALLBACK_MARSHAL} -- Implementation
 		do
 			create Result
 			real_signal_connect (visual_widget, "clicked", agent (App_implementation.gtk_marshal).toolbar_item_select_actions_intermediary (internal_id), Void)
-			real_signal_connect (event_widget, "button-press-event", agent (App_implementation.gtk_marshal).toolbar_item_select_actions_intermediary (internal_id), Void)
 		end
 
 feature {NONE} -- Implmentation

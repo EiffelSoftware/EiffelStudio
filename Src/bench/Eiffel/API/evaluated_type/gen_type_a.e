@@ -784,10 +784,12 @@ feature {COMPILER_EXPORTER} -- Primitives
 			crc_list := formal_dec_as.constraint_creation_list
 			if formal_type = Void then
 				class_c := to_check.associated_class
-				check
-					class_c_not_void: class_c /= Void
+				if class_c /= Void then
+						-- `class_c' can be Void if `to_check' represent NONE type, for
+						-- example in PROCEDURE [ANY, NONE], we will check NONE against
+						-- constraint of PROCEDURE which is `TUPLE create default_create end'.
+					creators_table := class_c.creators
 				end
-				creators_table := class_c.creators
 	
 					-- A creation procedure has to be specified, so if none is
 					-- specified or if there is no creation procedure in the class

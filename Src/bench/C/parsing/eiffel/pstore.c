@@ -30,10 +30,6 @@
 #include "unistd.h"
 #endif
 
-/* Exported feature */
-rt_public long store_append (EIF_INTEGER f_desc, char *object, fnptr mid, fnptr nid, char *s);
-rt_public void parsing_store_initialize (void);
-
 /* Internal variables */
 rt_private fnptr make_index;	/* Index building routine */
 rt_private fnptr need_index;	/* Index checking routine */
@@ -146,7 +142,7 @@ rt_private long pst_store(char *object, long int object_count)
 	char *o_ptr;
 	long nb_references;
 	union overhead *zone = HEADER(object);
-	uint32 flags;
+	uint32 fflags, flags;
 	int is_expanded;
 	EIF_BOOLEAN object_needs_index;
 	long saved_file_pos;
@@ -163,7 +159,8 @@ rt_private long pst_store(char *object, long int object_count)
 		saved_file_pos = file_position + parsing_position;
 	}
 
-	flags = zone->ov_flags;
+	fflags = zone->ov_flags;
+	flags = Mapped_flags(fflags);
 	is_expanded = (flags & EO_EXP) != (uint32) 0;
 	if (!(is_expanded || (flags & EO_STORE)))
 		return object_count;		/* Unmarked means already stored */

@@ -26,7 +26,7 @@ feature -- Access
 	main_widget: EV_NOTEBOOK is
 			-- The main widget of the demo
 		once
-			!!Result.make (Current)
+			!! Result.make (Current)
 		end
 	
 feature -- Access
@@ -59,6 +59,7 @@ feature -- Status setting
 			button1.set_text ("Button")			
 			main_widget.append_page (button1, "Button")
 			main_widget.append_page (box, "Pixmap 2")
+			main_widget.set_current_page (2)
 		end
 
 end -- class NOTEBOOK_DEMO_WINDOW

@@ -4,7 +4,7 @@ indexing
 	status: "See notice at end of class"
 	date: "$Date$"
 	revision: "$Revision$"
-	
+
 class
 	EV_CELL_IMP
 	
@@ -31,6 +31,7 @@ feature -- initialization
 			base_make (an_interface)
 			set_c_object (C.gtk_event_box_new)
 		end
+
 feature -- Access
 
 	item: EV_WIDGET is
@@ -40,7 +41,7 @@ feature -- Access
 			imp: EV_ANY_IMP
 		do
 			p := C.gtk_container_children (c_object)
-			if p/= Default_pointer then
+			if p /= Default_pointer then
 				p := C.g_list_nth_data (p, 0)
 				if p /= Default_pointer then
 					imp := eif_object_from_c (p)
@@ -103,6 +104,9 @@ end -- class EV_CELL_IMP
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.5  2000/04/25 21:07:09  brendel
+--| Costmetics.
+--|
 --| Revision 1.4  2000/02/26 01:27:03  brendel
 --| Added call to new_item_actions and remove_item_actions.
 --|

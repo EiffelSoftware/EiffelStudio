@@ -865,9 +865,6 @@ feature -- Merging
 			build_conformance_table;
 			sorter.clear;
 			process_dynamic_types;
-			generate_descriptor_tables;
-			Precompilation_descobj.make_from_string (Descobj);
-			Workbench.set_precompiled_descobj (Precompilation_descobj);
 
 			Compilation_modes.set_is_precompiling (was_precompiling)
 		end
@@ -2354,18 +2351,6 @@ feature -- Generation
 			generate_plug
 		end;
 
-	generate_descriptor_tables is
-			-- Generate descriptor tables.
-			-- Used when merging precompilations.
-		do
-			Desc_generator.init;
-			from classes.start until classes.after loop
-				classes.item_for_iteration.generate_precomp_descriptor_tables;
-				classes.forth
-			end;
-			Desc_generator.finish
-		end
-
 	process_dynamic_types is
 			-- Processing of the dynamic types.
 		local
@@ -2952,24 +2937,8 @@ feature -- Dispose routine
 	memory_class: CLASS_C is
 			-- MEMORY class of system. Void if it has
 			-- not been compiled.
-		local
-			class_c: CLASS_C
-			class_cursor: CURSOR
 		once
-			from
-				class_cursor := classes.cursor;
-				classes.start
-			until
-				classes.after or else (Result /= Void)
-			loop
-				class_c := classes.item_for_iteration;
-				if class_c.class_name.is_equal ("memory") then
-					Result := class_c
-				else
-					classes.forth
-				end;
-			end;
-			classes.go_to (class_cursor)
+			Result := memory_class_i.compiled_class
 		end;
 
 	memory_descendants: LINKED_LIST [CLASS_C] is
@@ -3377,6 +3346,9 @@ feature -- Main file generation
 
 			if not final_mode then
 				class_counter.generate_offsets (Initialization_file);
+				static_type_id_counter.generate_offsets (Initialization_file);
+				execution_table.counter.generate_offsets (Initialization_file);
+				dispatch_table.counter.generate_offsets (Initialization_file);
 				Initialization_file.putstring ("int32 rcorigin = ");
 				Initialization_file.putint (rcorigin);
 				Initialization_file.putstring (";%Nint rcdt = ");
@@ -3462,8 +3434,8 @@ feature -- Main file generation
 -- cl_type cannot be Void if process_dynamic_types has been done in
 -- freeze_system.
 					if cl_type /= Void then
-						Initialization_file.putstring ("%TInit");
-						Initialization_file.putint (cl_type.id.id);
+						Initialization_file.putchar ('%T');
+						Initialization_file.putstring (cl_type.id.init_name);
 						Initialization_file.putstring ("();%N")
 					end;
 					i := i + 1

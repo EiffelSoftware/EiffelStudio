@@ -45,11 +45,15 @@ extern void eif_thr_proxy_dispose(EIF_POINTER);
 typedef struct {
 	EIF_OBJ current;
 	EIF_PROC routine;
+#ifdef THREAD_DEVEL
+	int *addr_n_children;
+#endif
 } start_routine_ctxt_t;
 
 /* Exported functions */
 extern void eif_thr_init_root(void);
 extern void eif_thr_register(void);
+extern unsigned int eif_thr_is_initialized(void);
 extern void eif_thr_create(EIF_OBJ, EIF_PROC);
 extern void eif_thr_exit(void);
 extern void eif_thr_yield(void);
@@ -67,28 +71,30 @@ extern void eif_thr_join_all(void);
 /*-----------------------*/
 
 #include <pthread.h>
+/* #include <sched.h> */
 
-
-#define EIF_THR_ENTRY_TYPE		void
+#define EIF_THR_ENTRY_TYPE		void *
 #define EIF_THR_ENTRY_ARG_TYPE	void *
 
 #define EIF_THR_CREATION_FLAGS
 
 #define EIF_THR_TYPE				pthread_t
 #define EIF_THR_CREATE(entry,arg,tid,msg)	\
-	if (pthread_create(&(tid),NULL,(void (*)(void *))(entry), \
+	if (pthread_create (&(tid), 0, (entry), \
 		(EIF_THR_ENTRY_ARG_TYPE)(arg)) \
 	   )			\
-	eif_thr_panic(msg)
+	eif_thr_panic(msg)    ; \
+					  else pthread_detach(&tid)
+
 #define EIF_THR_EXIT(arg)			pthread_exit(NULL)
 #define EIF_THR_JOIN(which)			pthread_join((which),NULL)
 #define EIF_THR_JOIN_ALL
-#define EIF_THR_YIELD				sched_yield()
+#define EIF_THR_YIELD				pthread_yield(0)
 
 #define EIF_MUTEX_TYPE				pthread_mutex_t *
 #define EIF_MUTEX_CREATE(m,msg)		\
 	m = (EIF_MUTEX_TYPE) malloc(sizeof(pthread_mutex_t)); \
-	if (!(m)) eif_thr_panic("cannot allocate memory for mutex creation\n"##msg); \
+	if (!(m)) eif_thr_panic("cannot allocate memory for mutex creation\n"); \
 	if (pthread_mutex_init(m,NULL)) eif_thr_panic(msg)
 #define EIF_MUTEX_LOCK(m,msg)       if (pthread_mutex_lock(m)) eif_thr_panic(msg)
 #define EIF_MUTEX_TRYLOCK(m,r,msg)	\
@@ -106,13 +112,19 @@ extern void eif_thr_join_all(void);
 	if (pthread_key_create(&(key),NULL))	\
 		eif_thr_panic(msg)
 #define EIF_TSD_SET(key,val,msg)			\
-	if (pthread_setspecific((key),(EIF_TSD_VAL_TYPE)(val))) \
+	if (pthread_setspecific ((key), (EIF_TSD_VAL_TYPE)(val))) \
 		eif_thr_panic(msg)
-#define EIF_TSD_GET0(val_type,key,val)		\
-	pthread_getspecific((key),(void **)(val))
-#define EIF_TSD_GET(val_type,key,val,msg)	\
-	if (EIF_TSD_GET0(val_type,key,val))  eif_thr_panic(msg)
 
+#ifdef EIF_NONPOSIX_TSD
+#define EIF_TSD_GET0(val_type,key,val)	\
+	pthread_getspecific((key), (void *)&(val))
+#define EIF_TSD_GET(val_type,key,val,msg)	\
+	if ( EIF_TSD_GET0(val_type,key,val)	) eif_thr_panic(msg)
+#else
+#define EIF_TSD_GET0(foo,key,bar) pthread_getspecific((key))
+#define EIF_TSD_GET(val_type,key,val,msg)	\
+	if ( (val = EIF_TSD_GET0(0,key,0)) == (void *) 0) eif_thr_panic(msg)
+#endif
 #define EIF_TSD_DESTROY(key,msg)			\
 	if (pthread_key_delete((key)) eif_thr_panic(msg)
 
@@ -143,7 +155,7 @@ extern void eif_thr_join_all(void);
 #define EIF_MUTEX_TYPE						CRITICAL_SECTION *
 #define EIF_MUTEX_CREATE(m,msg)		\
 	m = (EIF_MUTEX_TYPE) malloc(sizeof(CRITICAL_SECTION)); \
-	if (!(m)) eif_thr_panic("Not enough memory to create mutex\n"##msg); \
+	if (!(m)) eif_thr_panic("Not enough memory to create mutex\n"); \
 	InitializeCriticalSection(m)
 #define EIF_MUTEX_LOCK(m,msg)				EnterCriticalSection(m)
 #define EIF_MUTEX_TRYLOCK(m,r,msg)
@@ -196,7 +208,7 @@ extern void eif_thr_join_all(void);
 #define EIF_MUTEX_TYPE				mutex_t *
 #define EIF_MUTEX_CREATE(m,msg)		\
 	m = (EIF_MUTEX_TYPE) malloc(sizeof(mutex_t)); \
-	if (!(m)) eif_thr_panic("cannot allocate memory for mutex creation\n"##msg); \
+	if (!(m)) eif_thr_panic("cannot allocate memory for mutex creation\n"); \
 	if (mutex_init((m),USYNC_THREAD,NULL)) eif_thr_panic(msg)
 #define EIF_MUTEX_LOCK(m,msg)		if (mutex_lock(m)) eif_thr_panic(msg)
 #define EIF_MUTEX_TRYLOCK(m,r,msg)	\
@@ -235,13 +247,15 @@ extern void eif_thr_join_all(void);
 #include <semLib.h>			/* 'mutexes' and semaphores */
 #include <sched.h>			/* 'sched_yield' */
 
-
 #define EIF_THR_ENTRY_TYPE		void
 #define EIF_THR_ENTRY_ARG_TYPE	int
 
 #define EIF_THR_CREATION_FLAGS	VX_FP_TASK
+#ifdef THREAD_DEVEL
+#define EIF_THR_DFLT_PRIORITY	99
+#else
 #define EIF_THR_DFLT_PRIORITY	151
-
+#endif
 #define EIF_THR_TYPE				int
 #define EIF_THR_CREATE(entry,arg,tid,msg)		\
 	if ( ERROR == (tid = taskSpawn(				\
@@ -249,21 +263,22 @@ extern void eif_thr_join_all(void);
 				EIF_THR_DFLT_PRIORITY,			\
 				EIF_THR_CREATION_FLAGS,			\
 /*stack size*/	0,								\
-				(entry),						\
+				(FUNCPTR)(entry),				\
 				(EIF_THR_ENTRY_ARG_TYPE)(arg),	\
 				0,0,0,0,0,0,0,0,0				\
 				))								\
 		) {										\
 			eif_thr_panic(msg);					\
 		}
-#define EIF_THR_EXIT(arg)
+
+#define EIF_THR_EXIT(arg)			taskDelete(taskIdSelf())
 #define EIF_THR_JOIN(which)
 #define EIF_THR_JOIN_ALL
 #define EIF_THR_YIELD				sched_yield()
 
 #define EIF_MUTEX_TYPE				SEM_ID
 #define EIF_MUTEX_CREATE(m,msg)		\
-	if ((m=semMCreate(SEM_Q_FIFO|SEM_DELETE_SAFE))==NULL) eif_thr_panic(msg)
+	if ((m=semBCreate(SEM_Q_FIFO,SEM_FULL))==NULL) eif_thr_panic(msg)
 #define EIF_MUTEX_LOCK(m,msg)		\
 	if (semTake(m,WAIT_FOREVER)!=OK) eif_thr_panic(msg)
 #define EIF_MUTEX_TRYLOCK(m,r,msg)	\
@@ -273,20 +288,17 @@ extern void eif_thr_join_all(void);
 #define EIF_MUTEX_DESTROY(m,msg)	\
 	if (semDelete(m)!=OK) eif_thr_panic(msg)
 
-#define EIF_TSD_TYPE				int *
-#define EIF_TSD_VAL_TYPE			int *
-#define EIF_TSD_CREATE(key,msg)		\
-	if (taskVarAdd(0,(int *)&(key))!=OK) eif_thr_panic(msg)
-#define EIF_TSD_SET(key,val,msg)	\
-	key = (EIF_TSD_TYPE)(val)
-#define EIF_TSD_GET0(val_type,key,val)		\
-	val = val_type (key)
-#define EIF_TSD_GET(val_type,key,val,msg)	\
-	EIF_TSD_GET0(val_type,key,val)
+#define EIF_TSD_TYPE				eif_global_context_t *
+#define EIF_TSD_VAL_TYPE			eif_global_context_t *
+#define EIF_TSD_CREATE(key,msg)
+#define EIF_TSD_SET(key,val,msg)		\
+	if (taskVarAdd (taskIdSelf(), (int *)&(key)) != OK) eif_thr_panic(msg); \
+	key = val
+#define EIF_TSD_GET0(val_type,key,val)
+#define EIF_TSD_GET(val_type,key,val,msg) \
+	val = key
 
-#define EIF_TSD_DESTROY(key,msg)	\
-	if (taskVarDelete(0,(int *)&(key))) eif_thr_panic(msg)
-
+#define EIF_TSD_DESTROY(key,msg)
 
 #else
 
@@ -321,7 +333,7 @@ extern EIF_BOOLEAN eif_thr_mutex_trylock(EIF_MUTEX_TYPE a_mutex_pointer);
 
 /* Once per thread management */
 /* MTOG = MT Once Get */
-/* MTOG = MT Once Set */
+/* MTOS = MT Once Set */
 
 #define MTOG(result_type,item,result)	result = result_type item
 #define MTOS(item,val)					item = (char *) val

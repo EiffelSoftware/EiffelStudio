@@ -69,6 +69,7 @@ feature {WINDOW_MGR}
 			then
 				free_list.start;
 				Result := free_list.item;
+				Result.set_x_y (screen.x, screen.y);
 				free_list.remove;
 			else
 				set_global_cursor (watch_cursor);
@@ -150,6 +151,23 @@ feature {WINDOW_MGR}
 				active_editors.after
 			loop
 				active_editors.item.raise;
+				active_editors.forth
+			end
+		end;
+
+feature -- Synchronization
+
+	synchronize is
+			-- Synchronize active editors.
+			-- Set them back to their default format.
+		do
+			from 
+				active_editors.start
+			until
+				active_editors.after
+			loop
+				active_editors.item.set_default_format;
+				active_editors.item.synchronize;
 				active_editors.forth
 			end
 		end;

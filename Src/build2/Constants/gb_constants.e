@@ -33,7 +33,7 @@ feature -- Access
 	Class_argument: STRING is "class"
 		-- Command line argument to start as class only.
 		
-	Build_wizard_title: STRING is "Eiffel Build Wizard"
+	Envision_build_wizard_title: STRING is "Advanced GUI Project Wizard"
 		-- title displayed in wizard mode.
 	
 feature -- Menu texts.

@@ -245,7 +245,7 @@ feature -- Event - command association
 			ev_data: EV_EVENT_DATA		
 		do
 			!EV_EVENT_DATA!ev_data.make-- temporary, create a correct object here XX
-			add_command_with_event_data (widget, "delete_event", cmd, arg, ev_data, 0, False)
+			add_command_with_event_data (widget, "delete_event", cmd, arg, ev_data, 0, False, default_pointer)
 			has_close_command := True
 		end
 
@@ -256,7 +256,7 @@ feature -- Event - command association
 			ev_data: EV_EVENT_DATA		
 		do
 			!EV_EVENT_DATA!ev_data.make  -- temporary, create a correct object here XX
-			add_command_with_event_data (widget, "configure_event", cmd, arg, ev_data, 2, False)
+			add_command_with_event_data (widget, "configure_event", cmd, arg, ev_data, 2, False, default_pointer)
 		end
 
 	add_move_command (cmd: EV_COMMAND; arg: EV_ARGUMENT) is
@@ -266,7 +266,7 @@ feature -- Event - command association
 			ev_data: EV_EVENT_DATA		
 		do
 			!EV_EVENT_DATA!ev_data.make  -- temporary, create a correct object here XX
-			add_command_with_event_data (widget, "configure_event", cmd, arg, ev_data, 1, False)
+			add_command_with_event_data (widget, "configure_event", cmd, arg, ev_data, 1, False, default_pointer)
 		end
 
 feature -- Event -- removing command association
@@ -311,7 +311,7 @@ feature {EV_APPLICATION_IMP} -- Implementation
 			i := c_gtk_signal_connect (widget, $a, exit_function, 
 						   the_application, the_untitled_window, 
 						   Default_pointer, Default_pointer,
-						   Default_pointer, 0, False)
+						   Default_pointer, 0, False, Default_pointer)
 			
 --			-- What about delete signal?
 --			s := "delete"

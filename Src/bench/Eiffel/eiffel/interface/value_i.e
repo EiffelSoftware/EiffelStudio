@@ -21,7 +21,7 @@ feature -- Comparison
 		deferred
 		end
 
-feature 
+feature -- Status report
 
 	valid_type (t: TYPE_A): BOOLEAN is
 			-- Is the current value compatible with `t' ?
@@ -76,6 +76,17 @@ feature
 			Result := True
 		end
 
+feature -- Settings
+
+	set_real_type (t: TYPE_A) is
+			-- Used only by BIT_VALUE_I
+		require
+			t_not_void: t /= Void
+		do
+		end
+
+feature -- Code generation
+
 	generate (buffer: GENERATION_BUFFER) is
 			-- Generate value in `buffer'.
 		require
@@ -111,16 +122,11 @@ feature
 			Result := dump
 		end
 
+feature -- Debugging
+
 	trace is
 		do
 			io.error.putstring (dump)
-		end
-
-	set_real_value (t: TYPE_A) is
-			-- Used only by BIT_VALUE_I
-		require
-			t_not_void: t /= Void
-		do
 		end
 
 end

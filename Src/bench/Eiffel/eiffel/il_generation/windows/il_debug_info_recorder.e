@@ -174,6 +174,16 @@ feature -- Access from debugger
 
 feature -- Class token access from eStudio
 
+	class_token_for_class_type (a_class_type: CLASS_TYPE): INTEGER is
+			-- Class token for CLASS_TYPE.
+		local
+			l_info_from_module: IL_DEBUG_INFO_FROM_MODULE
+			l_id: INTEGER
+			l_mod_name: STRING
+		do
+			Result := class_token (Void, a_class_type)
+		end
+		
 	class_token (a_module_name: STRING; a_class_type: CLASS_TYPE): INTEGER is
 			-- Class token for CLASS_TYPE.
 		local
@@ -186,8 +196,11 @@ feature -- Class token access from eStudio
 				
 				Result := internal_requested_class_tokens.item (l_id)
 				if Result = 0 then --| Not yet known, no requested yet
-				
-					l_info_from_module := info_from_module (a_module_name, False)
+					if a_module_name = Void then
+						l_info_from_module := info_from_module (module_file_name_for_class (a_class_type), False)
+					else
+						l_info_from_module := info_from_module (a_module_name, False)
+					end
 					if l_info_from_module /= Void then --| no module known for it .. (external)
 					
 						Result := l_info_from_module.class_token_for_class_type (a_class_type)

@@ -32,49 +32,64 @@ feature -- Basic operations
 			i: INTEGER
 			fi: FEATURE_I
 			overloaded_names: HASH_TABLE [ARRAYED_LIST [INTEGER], INTEGER]
-			overloaded_feat, temp_list: ARRAYED_LIST [INTEGER]
+			temp_list: ARRAYED_LIST [INTEGER]
+			overloaded_name, feature_name: STRING
+			descriptors: HASH_TABLE [FEATURE_DESCRIPTOR, STRING]
+			descriptor: FEATURE_DESCRIPTOR
 		do
 			ci := table.associated_class.lace_class
 			if ci /= Void then
 				overloaded_names := table.overloaded_names
-				if overloaded_names /= Void then
+				if overloaded_names /= Void and use_overloading then
 					from
-						create overloaded_feat.make (overloaded_names.count * 4) -- Guessing 4 overloads per overloaded members
 						overloaded_names.start
 					until
 						overloaded_names.after
 					loop
 						temp_list := overloaded_names.item_for_iteration
+						overloaded_name := table.item_id (overloaded_names.key_for_iteration).feature_name
 						from
 							temp_list.start
 						until
 							temp_list.after
 						loop
+							table.item_id (temp_list.item).set_feature_name (overloaded_name)
 							temp_list.forth
-							overloaded_feat.extend (temp_list.item)
 						end
 						overloaded_names.forth
 					end
 				end
-				create Result.make (1, table.count)
+				i := table.count
+				create Result.make (1, i)
+				create descriptors.make (i)
 				from
-					i := 1
 					table.start
 				until
 					table.after
 				loop
 					fi := table.item_for_iteration
-					if is_listed (fi, class_i, ci) and not (use_overloading and overloaded_feat /= Void and then overloaded_feat.has (fi.feature_id)) then
-						Result.put (create {FEATURE_DESCRIPTOR}.make_with_class_i_and_feature_i (ci, fi), i)
-						i := i + 1
+					if is_listed (fi, class_i, ci) then
+						feature_name := fi.feature_name
+						descriptors.search (feature_name)
+						if descriptors.found then
+							descriptors.found_item.increase_overload_count
+						else
+							create descriptor.make_with_class_i_and_feature_i (ci, fi)
+							descriptors.put (descriptor, feature_name)
+						end
 					end
 					table.forth
 				end
-				if Result.lower <= i - 1 and i - 1 <= Result.upper then
-					Result := Result.subarray (1, i - 1)
-					Result.sort	
-				else
-					create Result.make (1,0)
+				from
+					i := 1
+					descriptors.start
+					create Result.make (1, descriptors.count)
+				until
+					descriptors.after
+				loop
+					Result.put (descriptors.item_for_iteration, i)
+					descriptors.forth
+					i := i + 1
 				end
 			else
 				create Result.make (1,0)

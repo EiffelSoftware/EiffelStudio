@@ -46,7 +46,7 @@ feature -- Status setting
 			a_proportion_within_range: a_proportion >= 0 and a_proportion <= 1
 		deferred
 		ensure
-			assigned: (proportion - a_proportion).abs < step / (maximum - minimum)
+			assigned: (proportion - a_proportion).abs <= step / (maximum - minimum)
 		end
 
 end -- class EV_PROGRESSBAR_I
@@ -72,6 +72,9 @@ end -- class EV_PROGRESSBAR_I
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.8  2000/04/03 23:00:57  rogers
+--| Fixed post condition on set_proportion.
+--|
 --| Revision 1.7  2000/02/22 18:39:44  oconnor
 --| updated copyright date and formatting
 --|

@@ -27,12 +27,15 @@ feature -- Initialization
 			create_button (cmd)
 		end
 
+feature -- Access
+
+	button: EV_BUTTON
+			-- Fetch value button
+
 feature {NONE} -- Basic operation
 
 	create_button (cmd: EV_COMMAND) is
 			-- Create the button.
-		local
-			button: EV_BUTTON
 		do
 			create button.make_with_text (Current, "Fetch Value")
 			button.add_click_command (cmd, Void)

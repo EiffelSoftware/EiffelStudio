@@ -54,6 +54,7 @@ feature -- Initialization
 			non_negative_size: n >= 0
 		do
 			make_area (n);
+			count := 0
 		ensure
 			empty_string: count = 0;
 			area_allocated: capacity >= n;

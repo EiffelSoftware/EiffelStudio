@@ -13,7 +13,7 @@ class
 
 feature -- Access
 
-	retrieved (file: UNIX_FILE): STORABLE is
+	retrieved (file: IO_MEDIUM): STORABLE is
 			-- Retrieved object structure, from external
 			-- representation previously stored in `file'.
 			-- To access resulting object under correct type,
@@ -24,9 +24,9 @@ feature -- Access
 			file_not_void: file /= Void;
 			file_exists: file.exists;
 			file_is_open_read: file.is_open_read
-			file_is_binary: file.is_binary
+			file_is_binary: not file.is_plain_text
 		do
-			Result := c_retrieved (file.file_pointer)
+			Result := c_retrieved (file.handle)
 		ensure
 			Result_exists: Result /= Void
 		end
@@ -34,7 +34,7 @@ feature -- Access
 
 feature -- Element change
 
-	basic_store (file: UNIX_FILE) is
+	basic_store (file: IO_MEDIUM) is
 			-- Produce on `file' an external representation of the
 			-- entire object structure reachable from current object.
 			-- Retrievable within current system only.
@@ -42,12 +42,12 @@ feature -- Element change
 			file_not_void: file /= Void;
 			file_exists: file.exists;
 			file_is_open_write: file.is_open_write
-			file_is_binary: file.is_binary
+			file_is_binary: not file.is_plain_text
 		do
-			c_basic_store (file.file_pointer, $Current)
+			c_basic_store (file.handle, $Current)
 		end;
 
-	general_store (file: UNIX_FILE) is
+	general_store (file: IO_MEDIUM) is
 			-- Produce on `file' an external representation of the
 			-- entire object structure reachable from current object.
 			-- Retrievable from other systems for same platform
@@ -59,14 +59,14 @@ feature -- Element change
 			file_not_void: file /= Void;
 			file_exists: file.exists;
 			file_is_open_write: file.is_open_write
-			file_is_binary: file.is_binary
+			file_is_binary: file.is_plain_text
 		do
-			c_general_store (file.file_pointer, $Current)
+			c_general_store (file.handle, $Current)
 		end
 
 feature {NONE} -- Implementation
 
-	c_retrieved (file_ptr: POINTER): STORABLE is
+	c_retrieved (file_handle: INTEGER): STORABLE is
 			-- Object structured retrieved from file of pointer
 			-- `file_ptr'
 		external
@@ -75,7 +75,7 @@ feature {NONE} -- Implementation
 			"eretrieve"
 		end;
 
-	c_basic_store (file_ptr: POINTER; object: STORABLE) is
+	c_basic_store (file_handle: INTEGER; object: STORABLE) is
 			-- Store object structure reachable form current object
 			-- in file pointer `file_ptr'.
 		external
@@ -84,7 +84,7 @@ feature {NONE} -- Implementation
 			"estore"
 		end;
 
-	c_general_store (file_ptr: POINTER; object: STORABLE) is
+	c_general_store (file_handle: INTEGER; object: STORABLE) is
 			-- Store object structure reachable form current object
 			-- in file pointer `file_ptr'.
 		external

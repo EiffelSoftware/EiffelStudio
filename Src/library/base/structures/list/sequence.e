@@ -54,14 +54,21 @@ feature -- Element change
 			-- Append a copy of `s'.
 		require
 			argument_not_void: s /= Void
+		local
+			l: like s
 		do
+			if s = Current then
+				l := deep_clone (s)
+			else
+				l := s
+			end
 			from
-				s.start
+				l.start
 			until
-				s.exhausted
+				l.exhausted
 			loop
-				extend (s.item);
-				s.forth
+				extend (l.item);
+				l.forth
 			end
 		ensure
 	 		new_count: count >= old count

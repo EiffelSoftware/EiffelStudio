@@ -274,6 +274,13 @@ feature -- Generation constants
 			Result := "<APPLICATION>"
 		end
 		
+	project_name_tag: STRING is
+			--
+		once
+			Result := "<PROJECT_NAME>"
+		end
+		
+		
 	
 		
 	indent: STRING is

@@ -73,6 +73,7 @@ feature {NONE} -- Initialize toolkit
 			-- Initialize toolkit
 		do
 			if (init_toolkit = Void) then end
+			presentation_window.realize
 			if (toolkit = Void) then end
 		end
 

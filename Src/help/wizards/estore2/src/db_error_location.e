@@ -9,8 +9,6 @@ class
 
 inherit
 	WIZARD_FINAL_STATE_WINDOW
-		rename
-			pixmap_location as last_pixmap_location
 		redefine
 			build
 		end
@@ -43,6 +41,6 @@ feature -- basic Operations
 
 feature {WIZARD_STATE_WINDOW}
 
-	pixmap_location: STRING is "f_state_red.bmp"
+	pixmap_icon_location: STRING is "eiffel_wizard_icon.bmp"
 
 end -- class DB_ERROR_LOCATION

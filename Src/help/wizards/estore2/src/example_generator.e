@@ -9,7 +9,7 @@ class
 
 creation
 	make
-
+ 
 feature -- Initialization
 
 	make (li: LINKED_LIST [DB_REPOSITORY]) is
@@ -23,7 +23,7 @@ feature -- Initialization
 			ty: TYPES[DATABASE]
 		do
 			Result_string := "" 
-			Create ty
+			create ty
 			repositories := li
 			from
 				li.start
@@ -38,7 +38,7 @@ feature -- Initialization
 					col := li.item.column_i_th(i)
 					if not f1 and then (col.eiffel_type=ty.integer_type_database) or else
 							col.eiffel_type=ty.Real_type_database then
-						qu1 := [li.item.repository_name,col.column_name,"Your_integer_paramater"]
+						qu1 := [li.item.repository_name,col.column_name,"Your_integer_parameter"]
 						f1 := TRUE
 					end
 					if not f2 and then col.eiffel_type = ty.string_type_database then

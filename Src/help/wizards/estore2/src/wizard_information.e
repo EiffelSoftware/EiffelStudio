@@ -15,34 +15,34 @@ feature {NONE} -- Initialization
 	make is
 			-- Initialize Current with Default Values
 		do
-			username := ""
-			password := ""
-			data_source := ""
-			location := ""
-			project_location := ""
-			project_name := "sample"
-			Create table_list.make
-			is_oracle := FALSE
-			compile_project := TRUE
-			example := TRUE
+			new_project:= True
+			username:= ""
+			password:= ""
+			data_source:= ""
+			location:= ""
+			project_name:= "sample"
+			create table_list.make
+			is_oracle:= False
+			compile_project:= True
+			precompiled_base:= False
+			vision_example:= True
 		end
 
 feature {WIZARD_STATE_WINDOW} -- Settings
 
-	set_database_info (s1,s2,s3: STRING; oracle_selected: BOOLEAN) is
+	set_database_info (s1, s2, s3: STRING; oracle_selected: BOOLEAN) is
 			-- Set the database information.
 		do
-			username := s1
-			password := s2
-			data_source := s3
-			is_oracle := oracle_selected
+			username:= s1
+			password:= s2
+			data_source:= s3
+			is_oracle:= oracle_selected
 		end
 
-	set_generation_type (b1,b2: BOOLEAN) is
+	set_generation_type (b: BOOLEAN) is
 			-- Set generation type information.
 		do
-			generate_facade := b1
-			new_project := b2			
+			new_project := b			
 		end
 
 	set_table_list (li: LINKED_LIST [CLASS_NAME]) is
@@ -57,12 +57,11 @@ feature {WIZARD_STATE_WINDOW} -- Settings
 			unselected_table_list := li
 		end
 
-	set_locations (loc,proj: STRING) is
-			-- Set the locations corresponding to 
-			-- the generation(s).
+	set_location (loc: STRING) is
+			-- Set the location corresponding to 
+			-- the generation.
 		do
 			location := loc
-			project_location := proj
 		end
 
 	set_generate_all_table (b: BOOLEAN) is
@@ -71,14 +70,29 @@ feature {WIZARD_STATE_WINDOW} -- Settings
 		end
 
 	set_project_name (proj: STRING) is
-			-- Set the project Name
+			-- Set the project Name.
 		do
 			project_name := proj
 		end
 
 	set_compile_project (b: BOOLEAN) is
+			-- Set whether the user want to compile project or not.
 		do
 			compile_project := b
+		end
+
+	set_precompiled_base (b: BOOLEAN) is
+			-- Set whether the user want to use 
+			-- the precompiled base library or not.
+		do
+			precompiled_base := b
+		end
+
+	set_vision_example (b: BOOLEAN) is
+			-- Set whether the user want to create 
+			-- the Vision2 example.
+		do
+			vision_example := b
 		end
 
 feature -- Access
@@ -87,9 +101,6 @@ feature -- Access
 
 	location: STRING
 		-- Generation location.
-
-	project_location: STRING
-		-- Project location.
 
 	project_name: STRING
 		-- Project Name
@@ -103,14 +114,11 @@ feature -- Access
 	data_source: STRING
 		-- User datasource. (Useful with ODBC)
 
-	generate_facade: BOOLEAN
-		-- Does the user want to generate a facade ?
-
 	new_project: BOOLEAN
 		-- Does the user want to generate a new projet ?
 
-	example: BOOLEAN
-		-- Does the user want to generate an example ?
+	vision_example: BOOLEAN
+		-- Does the user want to generate an example using the EiffelVision2 library ?
 
 	table_list: LINKED_LIST[CLASS_NAME]
 		-- List of the selected database tables.
@@ -123,11 +131,14 @@ feature -- Access
 	compile_project: BOOLEAN
 		-- Does the user want to compile the project ?
 
+	precompiled_base: BOOLEAN
+		-- Does the user want to use the precompiled base library when compiling?
+
 invariant
-	default_exist :username /= Void
+	default_exist: username /= Void
 				  and password /= Void 
 				  and data_source /= Void
 			      and location /= Void 
-				  and project_location /= Void
 				  and table_list /= Void
+
 end -- class WIZARD_INFORMATION

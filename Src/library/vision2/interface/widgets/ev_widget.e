@@ -453,6 +453,39 @@ feature {EV_WIDGET, EV_ANY_I}--EV_WIDGET, EV_PICK_AND_DROPABLE_I} -- Implementat
 			-- native graphics toolkit.
 			-- (See bridge pattern notes in EV_ANY)
 
+feature {EV_ANY} -- Contract_support
+
+	make_for_test is
+			-- Instance of `Current' for testing purposes.
+		local
+			textable: EV_TEXTABLE
+			container: EV_CONTAINER
+			label: EV_LABEL
+			i: INTEGER
+		do
+			default_create
+			textable ?= Current
+			container ?= Current
+			if textable /= Void then
+				textable.set_text ("Text label")
+			end
+			if container /= Void then
+				from i := 1 until i = 6 or container.full
+				loop
+					create label.make_with_text ("item " + i.out)
+					container.extend (label)
+					inspect i
+						when 1 then label.set_background_color (create {EV_COLOR}.make_with_rgb (0.7,0.2,0.2))
+						when 2 then label.set_background_color (create {EV_COLOR}.make_with_rgb (0.7,0.7,0.2))
+						when 3 then label.set_background_color (create {EV_COLOR}.make_with_rgb (0.2,0.7,0.2))
+						when 4 then label.set_background_color (create {EV_COLOR}.make_with_rgb (0.2,0.7,0.7))
+						when 5 then label.set_background_color (create {EV_COLOR}.make_with_rgb (0.2,0.2,0.7))
+					end
+					i := i + 1
+				end
+			end
+		end
+
 feature -- Obsolete
 	
 	make_with_parent (a_parent: EV_CONTAINER) is
@@ -726,6 +759,9 @@ end -- class EV_WIDGET
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.68  2000/03/01 03:11:20  oconnor
+--| added make_for_test to produce an interesting example widget for testing
+--|
 --| Revision 1.67  2000/02/22 18:39:49  oconnor
 --| updated copyright date and formatting
 --|

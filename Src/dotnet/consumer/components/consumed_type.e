@@ -195,7 +195,9 @@ feature -- Functions used for easy browsing of data from ConsumerWrapper.
 			constructors_not_void: constructors /= Void
 		do
 			create Result.make (0)
-			Result.fill (constructors)
+			if constructors /= Void then
+				Result.fill (constructors)
+			end
 		end
 		
 	entities: ARRAYED_LIST [CONSUMED_ENTITY] is

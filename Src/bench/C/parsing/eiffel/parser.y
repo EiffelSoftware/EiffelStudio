@@ -885,14 +885,14 @@ Formal_generic:
 
 Constraint:
 	/* empty */
-	{$$ = NULL;yacc_error_code=186;}
+		{$$ = NULL;yacc_error_code=186;}
     | TE_CONSTRAIN Class_type 
 		{$$ = $2;yacc_error_code=187;}
     ;
 
 Creation_constraint:
 	/* empty */
-	{ $$ = NULL;yacc_error_code=188;}
+		{ $$ = NULL;yacc_error_code=188;}
 	| TE_CREATION {list_init ();yacc_error_code=189;} Feature_list TE_END
 		{$$ = list_new (CONSTRUCT_LIST_AS); yacc_error_code=190;}	
 	;

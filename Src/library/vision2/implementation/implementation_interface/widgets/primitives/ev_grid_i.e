@@ -428,7 +428,7 @@ feature -- Status setting
 			is_row_height_fixed := True
 			recompute_vertical_scroll_bar
 			row_offsets := Void
-			drawable.redraw
+			redraw_client_area
 		end
 		
 	disable_row_height_fixed is
@@ -437,7 +437,7 @@ feature -- Status setting
 			is_row_height_fixed := False
 			recompute_row_offsets (0)
 			recompute_vertical_scroll_bar
-			drawable.redraw
+			dredraw_client_area
 		end
 		
 	set_column_count_to (a_column_count: INTEGER) is
@@ -845,6 +845,12 @@ feature {EV_GRID_COLUMN_I, EV_GRID_I, EV_GRID_DRAWER_I, EV_GRID_ROW_I} -- Implem
 		ensure
 			result_positive: result >= 0
 		end
+	
+	redraw_client_area is
+			-- Redraw complete visible client area of `Current'.
+		do
+			drawable.redraw
+		end
 
 feature {EV_GRID_DRAWER_I, EV_GRID_COLUMN_I, EV_GRID_ROW_I, EV_DRAWABLE_GRID_ITEM_I} -- Implementation
 
@@ -997,7 +1003,7 @@ feature {NONE} -- Drawing implementation
 			end
 			fixme ("Only invalidate to the right hand side of the resized header item")
 			recompute_column_offsets
-			drawable.redraw
+			redraw_client_area
 		end
 		
 	screen: EV_SCREEN is
@@ -1113,7 +1119,7 @@ feature {NONE} -- Drawing implementation
 					-- `drawable' do not reach to the very left-hand edge of the `viewport', update the horizontal offset
 					-- so that they do reach the very left-hand edge of `viewport'
 				horizontal_scroll_bar.change_actions.block
---				viewport.set_x_offset ((l_total_header_width - viewport.width).max (0))
+				viewport.set_x_offset ((l_total_header_width - viewport.width).max (0))
 				header_viewport.set_x_offset ((l_total_header_width - viewport.width).max (0))
 				
 				horizontal_scroll_bar.change_actions.resume
@@ -1221,10 +1227,10 @@ feature {NONE} -- Drawing implementation
 			
 			if (virtual_y_position > last_vertical_scroll_bar_value) and ((virtual_y_position - last_vertical_scroll_bar_value) + (current_buffer_position)) >= buffer_space then
 				viewport.set_y_offset (0)
-				drawable.redraw
+				redraw_client_area
 			elseif (virtual_y_position < last_vertical_scroll_bar_value) and ((virtual_y_position - last_vertical_scroll_bar_value) + (current_buffer_position)) <= 0 then
 				viewport.set_y_offset (buffer_space)
-				drawable.redraw
+				redraw_client_area
 			else
 				viewport.set_y_offset (current_buffer_position + virtual_y_position - last_vertical_scroll_bar_value)
 			end
@@ -1250,10 +1256,10 @@ feature {NONE} -- Drawing implementation
 			
 			if (virtual_x_position > last_horizontal_scroll_bar_value) and ((virtual_x_position - last_horizontal_scroll_bar_value) + (current_buffer_position)) >= buffer_space then
 				viewport.set_x_offset (0)
-				drawable.redraw
+				redraw_client_area
 			elseif (virtual_x_position < last_horizontal_scroll_bar_value) and ((virtual_x_position - last_horizontal_scroll_bar_value) + (current_buffer_position)) < 0 then
 				viewport.set_x_offset (buffer_space)
-				drawable.redraw
+				redraw_client_area
 			else
 				viewport.set_x_offset (current_buffer_position + virtual_x_position - last_horizontal_scroll_bar_value)
 			end

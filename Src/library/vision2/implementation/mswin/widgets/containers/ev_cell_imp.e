@@ -27,10 +27,7 @@ inherit
 
 	EV_WEL_CONTROL_CONTAINER_IMP
 		rename
-			make as ev_wel_control_container_make,
-			move as wel_move,
-			resize as wel_resize,
-			move_and_resize as wel_move_and_resize
+			make as ev_wel_control_container_make
 		redefine
 			top_level_window_imp,
 			wel_move_and_resize
@@ -65,13 +62,15 @@ feature -- Element change
 
 feature {EV_ANY_I} -- Implementation
 
-	wel_move_and_resize (a_x, a_y, a_width, a_height: INTEGER; repaint: BOOLEAN) is
+	wel_move_and_resize (a_x, a_y, a_width, a_height: INTEGER;
+		repaint: BOOLEAN) is
 			-- Make `x' and `y' the new position of the current object and
 			-- `w' and `h' the new width and height of it.
 			-- If there is any child, it also adapt them to fit to the given
 			-- value.
 		do
-			{EV_WEL_CONTROL_CONTAINER_IMP} Precursor (a_x, a_y, a_width, a_height, repaint)
+			{EV_WEL_CONTROL_CONTAINER_IMP} Precursor (a_x, a_y, a_width,
+				 a_height, repaint)
 			if child /= Void then
 				--| FIXME necessary???
 				--child.set_move_and_size (0, 0, 
@@ -132,6 +131,9 @@ end -- class EV_CELL_IMP
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.7  2000/03/21 23:39:00  brendel
+--| Modified inheritance clause in compliance with EV_SIZEABLE_IMP.
+--|
 --| Revision 1.6  2000/03/14 03:02:55  brendel
 --| Merged changed from WINDOWS_RESIZING_BRANCH.
 --|
@@ -144,7 +146,9 @@ end -- class EV_CELL_IMP
 --| updated copyright date and formatting
 --|
 --| Revision 1.4  2000/02/22 17:34:49  rogers
---| Redefined move_and_resize from EV_WEL_CONTROL_CONTAINER_IMP, compute_minimum_width, compute_minimum_height and  compute_minimum_size from EV_SINGLE_CHILD_CONTAINER_IMP.
+--| Redefined move_and_resize from EV_WEL_CONTROL_CONTAINER_IMP,
+--| compute_minimum_width, compute_minimum_height and  compute_minimum_size
+--| from EV_SINGLE_CHILD_CONTAINER_IMP.
 --|
 --| Revision 1.3  2000/02/19 05:45:00  oconnor
 --| released

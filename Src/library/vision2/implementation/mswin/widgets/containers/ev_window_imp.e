@@ -418,8 +418,10 @@ feature {NONE} -- Implementation
 		
 	wel_destroy_window is
 			-- Destroy the window-widget
+		local
+			l_result: INTEGER
 		do
-			cwin_destroy_window (wel_item)
+			l_result := cwin_destroy_window (wel_item)
 		end
 
 	ev_apply_new_size (a_x_position, a_y_position,

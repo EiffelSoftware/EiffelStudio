@@ -2397,17 +2397,19 @@ end:
 		{
 			char  *new_obj;		/* New bit object created */
 			uint32 bcount;		/* Bit count */
+			uint32 realcount;	/* Real bit count */
 			int nb_uint32;
 			uint32 *addr;
 
 			last = iget();
+			realcount = get_uint32();
 			bcount = get_uint32();			/* Read bit count */
-			new_obj = RTLB(bcount);			/* Creation */
+			new_obj = RTLB(realcount);			/* Creation */
 			addr = ARENA(new_obj);
 			nb_uint32 = BIT_NBPACK(bcount);
 			while (nb_uint32--)	/* Write bit count and value in `new_obj' */ 
 				*addr++ = get_uint32();
-			last->type = SK_BIT + bcount;
+			last->type = SK_BIT + bcount; /* bcount or realcount ??*/
 			last->it_bit = new_obj;
 		}
 		break;
@@ -5125,7 +5127,7 @@ char *start;
 			fprintf(fd, "0x%lX BC_CREATE fid=%d\n", 
 				IC - sizeof(short) - sizeof(long) - 2, offset);
 			break;
-		case BC_CLIKE:				/* Like (precomp) feature creation type */
+		case BC_PCLIKE:				/* Like (precomp) feature creation type */
 			{
 			int32 origin, ooffset;
 

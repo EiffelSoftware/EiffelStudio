@@ -65,17 +65,15 @@ feature {NONE}
 		require
 			valid_cluster_info: cluster_info /= Void
 		local
-			cluster_root: S_CLUSTER_DATA;
+			root_cluster: S_CLUSTER_DATA;
 			system_data: S_SYSTEM_DATA;
 		do
 			if not rescued then
-				cluster_root := cluster_info.storage_info;
-				!! system_data.make ("");
-				system_data.set_cluster_root (cluster_root);
+				root_cluster := cluster_info.storage_info;
+				!! system_data;
+				system_data.set_root_cluster (root_cluster);
 				system_data.set_was_generated_from_bench;
 				system_data.set_grid_details (False, False, 20);
-				system_data.set_class_number (System.class_counter.value);
-				system_data.set_cluster_number (Universe.clusters.count);	
 				store_project_to_disk (system_data);
 			else
 				rescued := False
@@ -121,7 +119,8 @@ feature {NONE}
 			cluster_names_list: LINKED_LIST [STRING];
 			other_cluster_info: like cluster_info;
 			parent_cluster_info: like cluster_info;
-			system_name: STRING
+			system_name: STRING;
+			file_name: STRING
 		do
 			io.error.putstring ("Processing clusters%N");
 			!! cluster_info.make;
@@ -132,6 +131,10 @@ feature {NONE}
 			system_name.append (System.system_name);
 			system_name.to_upper;
 			cluster_info.set_name (system_name);
+			!! file_name.make (system_name.count);
+			file_name.append (system_name);
+			file_name.to_lower;
+			cluster_info.set_file_name (file_name);
 			!! list.make;
 			list.merge (Universe.clusters);
 			from
@@ -155,7 +158,7 @@ feature {NONE}
 					end
 					if other_cluster_info = Void then
 						!! other_cluster_info.make;
-						other_cluster_info.set_name (cluster_names_list.item);
+						other_cluster_info.set_file_name (cluster_names_list.item);
 						if parent_cluster_info = Void then
 							cluster_info.add_cluster (other_cluster_info);
 						else
@@ -172,6 +175,7 @@ feature {NONE}
 				list.forth
 			end;
 			cluster_info := cluster_info.useful_clusters;
+			check_cluster_names;
 		end;
 
 feature {NONE}
@@ -207,5 +211,59 @@ feature {NONE}
 				end
 			end
 		end;
+
+	check_cluster_names is
+			-- Need to check if there are cluster name
+			-- clashes. 
+		require
+			valid_cluster_info: cluster_info /= Void
+		local
+			clusters: LINKED_LIST [CASE_CLUSTER_INFO];
+			cursor: CURSOR;
+			has_name_clash: BOOLEAN;
+			cluster_name: STRING;
+			cluster1, cluster2: CASE_CLUSTER_INFO
+		do
+				-- WE KNOW that clusters with classes 
+				-- in them have unique names (since the compiler
+				-- checks for this). However, for clusters
+				-- that were derived from directories may
+				-- have the same directory names.
+			!! clusters.make;
+			cluster_info.clusters_without_cluster_i (clusters);
+			from
+				clusters.start
+			until
+				clusters.after
+			loop
+				cluster1 := clusters.item;
+				cursor := clusters.cursor;
+				cluster_name := clone (cluster1.name);
+				from
+					clusters.start
+				until
+					clusters.after 
+				loop
+					cluster2 := clusters.item;
+					if cluster1 /= cluster2 then
+						if cluster_name.is_equal (cluster2.name) then
+								-- Give new name to cluster1.
+								-- Each conflict results in "_X"
+								-- begin appended
+							cluster_name.append ("_X");
+							cluster1.set_name (cluster_name);
+							clusters.start;
+								-- Check again
+						else
+							clusters.forth
+						end
+					else
+						clusters.forth
+					end;
+				end;
+				clusters.go_to (cursor);
+				clusters.forth
+			end
+		end
 
 end	

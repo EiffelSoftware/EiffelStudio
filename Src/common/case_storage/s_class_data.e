@@ -69,6 +69,14 @@ feature
 								is_root = is_ro;
 		end;
 
+	set_is_effective is
+			-- Set is_effective to `true'.
+		do
+			is_effective := True
+		ensure
+			is_effective: is_effective
+		end;
+
 	set_generics (l: like generics) is
 			-- Set generics to `l'.
 		require

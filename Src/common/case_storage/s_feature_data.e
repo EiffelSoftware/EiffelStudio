@@ -74,6 +74,9 @@ feature -- Setting values
 
 	set_is_deferred is
 			-- Set is_deferred to `True'.
+		require
+			not_effective: not is_effective;
+			not_redefined: not is_redefined;
 		do
 			is_deferred := True
 		ensure
@@ -91,17 +94,23 @@ feature -- Setting values
 	set_is_redefined is
 			-- Set is_deferred to `True'.
 		do
-			is_redefined := True
+			is_redefined := True;
+			is_effective := False;
 		ensure
-			is_redefined: is_redefined
+			is_redefined: is_redefined;
+			not_effective: not is_effective;
 		end;
 
 	set_is_effective is
 			-- Set is_effective to `True'.
+		require
+			not_deferred: not is_deferred
 		do
-			is_effective := True
+			is_effective := True;
+			is_redefined := False;
 		ensure
-			is_effective: is_effective
+			is_effective: is_effective;
+			not_redefined: not is_redefined
 		end;
 
 	set_arguments (l: like arguments) is

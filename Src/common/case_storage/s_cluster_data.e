@@ -32,8 +32,8 @@ feature
 	icon_height: INTEGER;
 			-- Cluster's physical icon_height on drawing area
 
-	classes: FIXED_LIST [INTEGER];
-			-- Classes within Current cluster base on id
+	classes: FIXED_LIST [STRING];
+			-- Class path within Current 
 
 	clusters: FIXED_LIST [S_CLUSTER_DATA];
 			-- Clusters within Current cluster
@@ -71,7 +71,7 @@ feature -- Setting values
 		require
 			valid_l: l /= Void;
 			l_not_empty: not l.empty;
-			not_have_zero: not l.has (0)
+			not_have_zero: not l.has (Void)
 		do
 			classes := l
 		ensure
@@ -100,5 +100,5 @@ feature -- Setting values
 			tag_details_set: tag_is_south = is_south and then
 						tag_relative_x = rel_x
 		end;
-	
+
 end

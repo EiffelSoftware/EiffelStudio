@@ -4,30 +4,11 @@ inherit
 
 	STORABLE
 
-creation
-
-	make
-
-feature {NONE}
-
-	make (s: STRING) is
-			-- Set project_file_name to `s'.
-		require
-			valid_s: s /= Void
-		do
-			project_file_name := s
-		ensure
-			name_set: project_file_name = s
-		end;
-
 feature
 
-	cluster_root: S_CLUSTER_DATA;
+	root_cluster: S_CLUSTER_DATA;
 		-- Cluster root containing all system
 		-- entities (classes and clusters).
-
-	project_file_name: STRING;
-			-- Name of current project
 
 	is_grid_visible: BOOLEAN;
 			-- Is grid visible in a graphical representation on screen ?
@@ -93,14 +74,14 @@ feature -- Setting values
 			value_set: cluster_number = value
 		end;
 
-	set_cluster_root (cluster: like cluster_root) is
-			-- Set cluster_root to `cluster'.
+	set_root_cluster (cluster: like root_cluster) is
+			-- Set root_cluster to `cluster'.
 		require
 			not_void_cluster: cluster /= Void;
 		do
-			cluster_root := cluster
+			root_cluster := cluster
 		ensure
-			cluster_root_set: cluster_root = cluster;
+			root_cluster_set: root_cluster = cluster;
 		end;
 
 feature -- Storing
@@ -112,7 +93,7 @@ feature -- Storing
 			--slash_at_end: path requires slash at end
 		local
 			id_file_name, system_file_name: STRING;
-			id_file: UNIX_FILE;
+			id_file: PLAIN_TEXT_FILE;
 			system_file: RAW_FILE;
 		do
 			id_file_name := clone (path);

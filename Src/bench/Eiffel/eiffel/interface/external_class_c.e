@@ -90,7 +90,8 @@ feature -- Initialization
 					Void,	-- invariant_part
 					create {SUPPLIERS_AS}.make,	-- suppliers
 					Void,	-- obsolete_message
-					create {CLICK_LIST}.make (0))	-- click_list
+					create {CLICK_LIST}.make (0),	-- click_list
+					True)	-- has_externals
 				l_ast.set_class_id (class_id)
 					
 				Tmp_ast_server.put (l_ast)

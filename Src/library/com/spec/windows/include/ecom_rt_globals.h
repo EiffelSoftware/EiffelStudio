@@ -18,5 +18,6 @@
 
 extern Formatter  f;
 extern ecom_runtime_ce rt_ce;
+extern ecom_runtime_ec rt_ec;
 
 #endif // !__ECOM_RUNTIME_GLOBALS_H_INC__

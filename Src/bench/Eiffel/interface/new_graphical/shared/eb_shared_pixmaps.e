@@ -157,9 +157,19 @@ feature -- Icons
 			Result := pixmap_file_content ("icon_object_symbol")
 		end
 
+	Icon_static_object_symbol: EV_PIXMAP is
+		once
+			Result := pixmap_file_content ("icon_static_object_symbol")
+		end
+		
 	Icon_external_symbol: EV_PIXMAP is
 		once
 			Result := pixmap_file_content ("icon_external_symbol")
+		end		
+
+	Icon_static_external_symbol: EV_PIXMAP is
+		once
+			Result := pixmap_file_content ("icon_static_external_symbol")
 		end		
 
 	Icon_once_objects: EV_PIXMAP is

@@ -59,7 +59,7 @@ inherit
 			selected_item,
 			rows,
 			selected,
-			clear_items,
+--			clear_items,
 			add_selection_command,
 			remove_selection_commands,
 			add_item,
@@ -257,12 +257,12 @@ feature -- Status setting
 
 feature -- Element change
 
-	clear_items is
-			-- Clear all the items of the list.
-		do
-			clear_ev_children
-			gtk_list_clear_items (list_widget, 0, rows)
-		end
+--	clear_items is
+--			-- Clear all the items of the list.
+--		do
+--			clear_ev_children
+--			gtk_list_clear_items (list_widget, 0, rows)
+--		end
 
 feature -- Basic operation
 

@@ -37,7 +37,6 @@ feature -- Basic operations
 			local_string1: STRING
 			local_char: CHARACTER
 			char_ref: CHARACTER_REF
-			adr_tmp: ANY
 		do
 			ftype := field_type (i, object)
 			fname := field_name (i, object)

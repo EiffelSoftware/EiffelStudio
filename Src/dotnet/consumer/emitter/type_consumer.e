@@ -99,7 +99,7 @@ feature {NONE} -- Initialization
 			else
 				internal_members := t.get_members_binding_flags (feature {BINDING_FLAGS}.instance |
 						feature {BINDING_FLAGS}.static | feature {BINDING_FLAGS}.public |
-						feature {BINDING_FLAGS}.non_public)
+						feature {BINDING_FLAGS}.non_public | feature {BINDING_FLAGS}.flatten_hierarchy)
 --				internal_methods := t.get_methods_binding_flags (feature {BINDING_FLAGS}.instance |
 --						feature {BINDING_FLAGS}.static | feature {BINDING_FLAGS}.public |
 --						feature {BINDING_FLAGS}.non_public | feature {BINDING_FLAGS}.flatten_hierarchy)
@@ -108,10 +108,10 @@ feature {NONE} -- Initialization
 --						feature {BINDING_FLAGS}.non_public | feature {BINDING_FLAGS}.flatten_hierarchy)
 				internal_properties := t.get_properties_binding_flags (feature {BINDING_FLAGS}.instance |
 						feature {BINDING_FLAGS}.public | feature {BINDING_FLAGS}.non_public |
-						feature {BINDING_FLAGS}.static)
+						feature {BINDING_FLAGS}.static | feature {BINDING_FLAGS}.flatten_hierarchy)
 				internal_events := t.get_events_binding_flags (feature {BINDING_FLAGS}.instance |
 						feature {BINDING_FLAGS}.public | feature {BINDING_FLAGS}.non_public|
-						feature {BINDING_FLAGS}.static)
+						feature {BINDING_FLAGS}.static | feature {BINDING_FLAGS}.flatten_hierarchy)
 			end
 			
 --			internal_properties := t.get_properties_binding_flags (feature {BINDING_FLAGS}.instance |
@@ -469,7 +469,7 @@ feature {NONE} -- Implementation
 			l_unique_eiffel_name: STRING
 		do
 			if is_consumed_method (info) then
-				l_unique_eiffel_name := overload_solver.unique_eiffel_name (info.name, info.get_parameters, info.return_type)
+				l_unique_eiffel_name := overload_solver.unique_eiffel_name (info.name, info.get_parameters, info.return_type, info.declaring_type)
 				check
 					non_void_eiffel_name: l_unique_eiffel_name /= Void
 				end
@@ -494,7 +494,7 @@ feature {NONE} -- Implementation
 			l_unique_eiffel_name: STRING
 		do
 			if is_consumed_method (info) then
-				l_unique_eiffel_name := overload_solver.unique_eiffel_name (info.name, info.get_parameters, info.return_type)
+				l_unique_eiffel_name := overload_solver.unique_eiffel_name (info.name, info.get_parameters, info.return_type, info.declaring_type)
 				check
 					non_void_eiffel_name: l_unique_eiffel_name /= Void
 				end
@@ -943,16 +943,16 @@ feature {NONE} -- Added features of System.Object to Interfaces
 		do
 			l_members := t.get_members_binding_flags (feature {BINDING_FLAGS}.instance |
 					feature {BINDING_FLAGS}.static | feature {BINDING_FLAGS}.public |
-					feature {BINDING_FLAGS}.non_public)
+					feature {BINDING_FLAGS}.non_public | feature {BINDING_FLAGS}.flatten_hierarchy)
 --			l_methods := t.get_methods_binding_flags (feature {BINDING_FLAGS}.instance |
 --					feature {BINDING_FLAGS}.static | feature {BINDING_FLAGS}.public |
 --					feature {BINDING_FLAGS}.non_public | feature {BINDING_FLAGS}.flatten_hierarchy)
 			l_properties := t.get_properties_binding_flags (feature {BINDING_FLAGS}.instance |
 					feature {BINDING_FLAGS}.public | feature {BINDING_FLAGS}.non_public |
-					feature {BINDING_FLAGS}.static)
+					feature {BINDING_FLAGS}.static | feature {BINDING_FLAGS}.flatten_hierarchy)
 			l_events := t.get_events_binding_flags (feature {BINDING_FLAGS}.instance |
 					feature {BINDING_FLAGS}.public | feature {BINDING_FLAGS}.non_public |
-					feature {BINDING_FLAGS}.static)
+					feature {BINDING_FLAGS}.static | feature {BINDING_FLAGS}.flatten_hierarchy)
 			
 
 				-- merge members.

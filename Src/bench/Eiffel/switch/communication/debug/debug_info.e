@@ -852,7 +852,7 @@ feature {APPLICATION_EXECUTION, FAILURE_HDLR}
 				breakpoints.forth
 			end
 
-				-- Remove useless breakpoints (the syunchronization
+				-- Remove useless breakpoints (the synchronization
 				-- may have removed some breakpoints)
 			update
 		end

@@ -93,8 +93,14 @@ feature {EV_ANY_I} -- Implementation
 		deferred
 		end
 
-	update_needed: BOOLEAN
+	dirty_child is
 			-- Mark `Current' as dirty.
+		do
+			update_needed := True
+		end
+
+	update_needed: BOOLEAN
+			-- Is the child dirty.
 
 	update_performed is
 			-- Mark `Current' as up to date.
@@ -129,6 +135,9 @@ end -- class EV_MULTI_COLUMN_LIST_ROW_I
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.37  2000/03/28 00:33:12  king
+--| Added dirty_child feature
+--|
 --| Revision 1.36  2000/03/25 01:45:14  brendel
 --| Replaced once_on_idle_actions.extend with do_once_on_idle.
 --|

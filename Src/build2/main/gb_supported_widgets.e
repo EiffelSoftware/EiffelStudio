@@ -114,6 +114,7 @@ feature {NONE} -- Implementation
 			gb_ev_colorizable: GB_EV_COLORIZABLE
 			gb_ev_widget: GB_EV_WIDGET
 			gb_ev_gauge: GB_EV_GAUGE
+			gb_ev_notebook: GB_EV_NOTEBOOK
 		do
 		end
 

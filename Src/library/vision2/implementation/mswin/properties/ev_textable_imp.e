@@ -46,12 +46,6 @@ feature -- Element change
 			wel_set_text (a_text)
 		end
 
-	remove_text is
-			-- Make `text' `Void'.
-		do
-			wel_set_text (create {STRING}.make (0))
-		end
-
 	align_text_center is
 			-- Display `text' centered.
 		do
@@ -103,9 +97,7 @@ feature {NONE} -- Implementation
 	line_count: INTEGER is
 			-- Number of lines required by `text'.
 		do
-			if text /= Void then
-				Result := text.occurrences ('%N') + 1
-			end
+			Result := text.occurrences ('%N') + 1
 		ensure
 			non_negative: Result >= 0
 		end

@@ -359,39 +359,11 @@ feature -- Status report
 			-- calling even when there is no selection as required by some implementation
 			-- features.
 		local
-			wel_paragraph_format: WEL_PARAGRAPH_FORMAT2
-			alignment: INTEGER
-			screen_dc: WEL_SCREEN_DC
+			imp: EV_PARAGRAPH_FORMAT_IMP
 		do
-				-- Create a screen DC for access to metrics
-			create screen_dc
-			screen_dc.get
-			
-			create wel_paragraph_format.make
-			cwin_send_message (wel_item, em_getparaformat, 1, wel_paragraph_format.to_integer)
-			
 			create Result
-			alignment := wel_paragraph_format.alignment
-			inspect alignment
-			when pfa_left then
-				Result.enable_left_alignment
-			when pfa_center then
-				Result.enable_center_alignment
-			when pfa_right then
-				Result.enable_right_alignment
-			when pfa_justify then
-				Result.enable_justification
-			else
-				check
-					invalid_alignment: False
-				end
-			end
-			Result.set_left_margin (point_to_pixel (screen_dc, wel_paragraph_format.start_indent, 20))
-			Result.set_right_margin (point_to_pixel (screen_dc, wel_paragraph_format.right_indent, 20))
-			Result.set_top_spacing (point_to_pixel (screen_dc, wel_paragraph_format.space_before, 20))
-			Result.set_bottom_spacing (point_to_pixel (screen_dc, wel_paragraph_format.space_after, 20))
-			
-			screen_dc.release
+			imp ?= Result.implementation
+			cwin_send_message (wel_item, em_getparaformat, 0, imp.to_integer)
 		end
 		
 	character_format_contiguous (start_index, end_index: INTEGER): BOOLEAN is
@@ -660,44 +632,16 @@ feature -- Status setting
 	format_paragraph (start_line, end_line: INTEGER; format: EV_PARAGRAPH_FORMAT) is
 			-- Apply paragraph formatting `format' to lines `start_line', `end_line' inclusive.
 		do
-			format_paragraph_internal (start_line, end_line, format, pfm_alignment + pfm_startindent + pfm_rightindent + pfm_spacebefore + pfm_spaceafter + pfm_linespacing)
+			format_paragraph_internal (start_line, end_line, format, pfm_alignment | pfm_startindent | pfm_rightindent | pfm_spacebefore | pfm_spaceafter | pfm_linespacing)
 		end
+		
 		
 	format_paragraph_internal (start_line, end_line: INTEGER; format: EV_PARAGRAPH_FORMAT; mask: INTEGER) is
 			-- Apply paragraph formatting `format' to lines `start_line', `end_line' inclusive, only
 			-- modifying attributes specified in `mask'.
 		local
 			paragraph: WEL_PARAGRAPH_FORMAT2
-			screen_dc: WEL_SCREEN_DC
 		do
-				-- Create a screen DC for access to metrics
-			create screen_dc
-			screen_dc.get
-		--	paragraph ?= format.implementation
---			paragraph.set_mask (mask)
-			
---			create paragraph.make
---			if format.is_left_aligned then
---				paragraph.set_left_alignment
---			elseif format.is_center_aligned then
---				paragraph.set_center_alignment
---			elseif format.is_right_aligned then
---				paragraph.set_right_alignment
---			elseif format.is_justified then
---				paragraph.set_alignment (pfa_justify)
---			end
---			
---				-- Now handle paragraph margins.
---				-- Note that there are 20 Twips per point, hence the multiplication by 20.
---			paragraph.set_start_indent (pixel_to_point (screen_dc, format.left_margin) * 20)
---			paragraph.set_right_indent (pixel_to_point (screen_dc, format.right_margin) * 20)
---			paragraph.set_space_after (pixel_to_point (screen_dc, format.bottom_spacing) * 20)
---			paragraph.set_space_before (pixel_to_point (screen_dc, format.top_spacing) * 20)
---
---				-- Paticular calls to `paragraph' modify its `mask', so we perform the setting here,
---				-- after initializing the paragraph structure. Without this, a call to `modify_paragraph'
---				-- does not work correctly.
-			screen_dc.release
 			disable_redraw
 			safe_store_caret
 			set_selection (first_position_from_line_number (start_line), last_position_from_line_number (end_line))

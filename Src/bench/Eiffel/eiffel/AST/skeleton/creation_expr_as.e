@@ -20,9 +20,20 @@ feature {AST_FACTORY} -- Initialization
 			-- Create a new CREATION_EXPR AST node.
 		require
 			t_not_void: t /= Void
+		local
+			dcr_id : ID_AS
 		do
 			type := t
 			call := c
+
+				-- If there's no call create 'default_call'
+			if call = Void then
+					-- Create id. True name set later.
+				!! dcr_id.make (0)
+				dcr_id.make_from_string ("")
+				!! default_call
+				default_call.set_feature_name (dcr_id)
+			end
 		ensure
 			type_set: type = t
 			call_set: call = c
@@ -32,9 +43,20 @@ feature {NONE} -- Initialization
 
 	set is
 			-- Yacc initialization
+		local
+			dcr_id : ID_AS
 		do
 			type ?= yacc_arg (0)
 			call ?= yacc_arg (1)
+
+				-- If there's no call create 'default_call'
+			if call = Void then
+					-- Create id. True name set later.
+				!! dcr_id.make (0)
+				dcr_id.make_from_string ("")
+				!! default_call
+				default_call.set_feature_name (dcr_id)
+			end
 		end
 
 feature {AST_EIFFEL} -- Output
@@ -67,6 +89,9 @@ feature -- Properties
 			-- only procedure and functions are valid and no export validation
 			-- is made.
 
+	default_call : ACCESS_INV_AS
+			-- Call to default create
+
 feature -- Type check
 
 	type_check is
@@ -90,6 +115,9 @@ feature -- Type check
 			vgcc5: VGCC5
 			vtug: VTUG
 			not_supported: NOT_SUPPORTED
+			dcr_id: ID_AS
+			dcr_feat: FEATURE_I
+			the_call: like call
 		do
 				-- We need to remove from the stack the first element, since it
 				-- has been added by EXPR_CALL_AS and it does not correspond to
@@ -159,18 +187,35 @@ feature -- Type check
 				Error_handler.raise_error
 			end
 
-			if call /= Void then
+			if call = Void and then
+					creation_class.allows_default_creation then
+				-- Use default create
+				-- if it actually does something.
+				dcr_feat := creation_class.default_create_feature
+
+				if not dcr_feat.empty_body then
+					dcr_id := default_call.feature_name
+					dcr_id.load (dcr_feat.feature_name)
+					the_call := default_call
+				end
+			else
+				the_call := call
+			end
+
+			creators := creation_class.creators
+
+			if the_call /= Void then
 				context.replace (creation_type)
 					-- Type check the call: note that the creation type is on
 					-- the type stack
-				call.type_check	
+				the_call.type_check	
 					-- But since a creation routine is a feature its TYPE_A is of type
 					-- VOID_A which is not what we want here, that's why we need to update
 					-- the type now.
 				context.replace (creation_type)
 
 					-- Check if creation routine is non-once procedure
-				feature_name := call.feature_name
+				feature_name := the_call.feature_name
 				if not creation_class.valid_creation_procedure (feature_name) then
 					!!vgcc5
 					context.init_error (vgcc5)
@@ -179,8 +224,8 @@ feature -- Type check
 					a_feature := creation_class.feature_table.item (feature_name)
 					vgcc5.set_creation_feature (a_feature)
 					Error_handler.insert_error (vgcc5)
-				else
-					export_status := creation_class.creators.item (feature_name)
+				elseif creators /= Void then
+					export_status := creators.item (feature_name)
 					if not export_status.valid_for (context.a_class) then
 							-- Creation procedure is not exported
 						!!vgcc5
@@ -194,7 +239,6 @@ feature -- Type check
 				end
 			else
 				context.replace (creation_type)
-				creators := creation_class.creators
 				if (creators = Void) then
 				elseif creators.empty then
 					!!vgcc5
@@ -235,11 +279,20 @@ feature
 			create_type: CREATE_TYPE
 			call_access: FEATURE_B
 			creation_feature_call: CREATION_FEATURE_B
+			the_call: like call
 		do
 			!! Result.make
 
-			if call /= Void then
-				call_access ?= call.byte_node
+
+			if default_call = Void or else
+						default_call.feature_name.empty then
+				the_call := call
+			else
+				the_call := default_call
+			end
+
+			if the_call /= Void then
+				call_access ?= the_call.byte_node
 
 					-- Cannot be Void since a call in this case is a call to a feature
 				check

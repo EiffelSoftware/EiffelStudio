@@ -206,8 +206,8 @@ feature {EV_WIDGET_I} -- Implementation
 			already_displayed := True
 			resize (minimum_width, minimum_height)
 			initialize_length_at_minimum
-			child_cell.set_width (minimum_width)
-			child_cell.set_height (minimum_height)
+--			child_cell.set_width (minimum_width)
+--			child_cell.set_height (minimum_height)
 		end
 
 feature {NONE} -- Deferred features

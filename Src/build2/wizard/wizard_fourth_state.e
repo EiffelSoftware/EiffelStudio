@@ -104,6 +104,8 @@ feature -- Basic Operation
 	open_with_name (f: STRING) is
 			-- Use the open project command to open
 			-- file `f'.
+		require
+			f_not_void: f /= Void
 		do
 			command_handler.Open_project_command.execute_with_name (f)
 		end

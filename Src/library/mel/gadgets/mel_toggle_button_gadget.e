@@ -428,7 +428,7 @@ feature {NONE} -- Implementation
 
 	xm_toggle_button_get_state (scr_obj: POINTER): BOOLEAN is
 		external
-			"C (Widget): EIF_BOOLEAN | <Xm/ToggleBG.h>"
+			"C (Widget): EIF_BOOLEAN | <Xm/ToggleB.h>"
 		alias
 			"XmToggleButtonGetState"
 		end;

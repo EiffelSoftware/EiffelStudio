@@ -101,19 +101,17 @@ feature {NONE} -- Implementation
 			until
 				coclass_descriptor.interface_descriptors.off
 			loop
---				if not is_typeflag_fhidden (coclass_descriptor.interface_descriptors.item.flags) then
-					if coclass_descriptor.interface_descriptors.item.dispinterface or else
-						coclass_descriptor.interface_descriptors.item.dual
-					then
-						dispatch_interface := True
-					end
-					create inherit_clause.make
-					inherit_clause.set_name (coclass_descriptor.interface_descriptors.item.eiffel_class_name)
+				if coclass_descriptor.interface_descriptors.item.dispinterface or else
+					coclass_descriptor.interface_descriptors.item.dual
+				then
+					dispatch_interface := True
+				end
+				create inherit_clause.make
+				inherit_clause.set_name (coclass_descriptor.interface_descriptors.item.eiffel_class_name)
 
-					generate_functions_and_properties (coclass_descriptor.interface_descriptors.item, 
-						coclass_descriptor, eiffel_writer, inherit_clause)
-					eiffel_writer.add_inherit_clause (inherit_clause)
---				end
+				generate_functions_and_properties (coclass_descriptor.interface_descriptors.item, 
+					coclass_descriptor, eiffel_writer, inherit_clause)
+				eiffel_writer.add_inherit_clause (inherit_clause)
 				coclass_descriptor.interface_descriptors.forth
 			end
 		end

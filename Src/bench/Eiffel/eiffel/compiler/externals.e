@@ -1,6 +1,6 @@
 indexing
 	description: "[
-		Externals names used by system. Useful for controling
+		C Externals names used by system. Useful for controling
 		introduction of a new external in system which trigger a freeze
 		operation.
 		]"
@@ -25,7 +25,7 @@ inherit
 creation
 	make
 
-feature -- Initialization
+feature {NONE} -- Initialization
 
 	make is
 		do
@@ -56,17 +56,17 @@ feature -- Status
 						-- If name has been added and removed, no
 						-- refreezing is needed.
 					item_for_iteration.occurrence = 0
-debug
-	if not Result then
-		io.error.putstring ("EXTERNALS.equiv: False on ")
-		io.error.putstring (Names_heap.item (key_for_iteration))
-		io.error.putstring (" duplication.has: ")
-		io.error.putbool (duplication.has (key_for_iteration))
-		io.error.putstring (" item_for_iteration.occurrence: ")
-		io.error.putint (item_for_iteration.occurrence)
-		io.error.new_line
-	end
-end
+				debug
+					if not Result then
+						io.error.putstring ("EXTERNALS.equiv: False on ")
+						io.error.putstring (Names_heap.item (key_for_iteration))
+						io.error.putstring (" duplication.has: ")
+						io.error.putbool (duplication.has (key_for_iteration))
+						io.error.putstring (" item_for_iteration.occurrence: ")
+						io.error.putint (item_for_iteration.occurrence)
+						io.error.new_line
+					end
+				end
 				forth
 			end
 		end
@@ -92,12 +92,12 @@ feature -- Basic operatios
 				put (info, external_name_id)
 			end
 			info.add_occurrence
-debug
-	io.error.putstring ("After add_occurrence (")
-	io.error.putstring (Names_heap.item (external_name_id))
-	io.error.putstring (")%N")
-	trace
-end
+			debug
+				io.error.putstring ("After add_occurrence (")
+				io.error.putstring (Names_heap.item (external_name_id))
+				io.error.putstring (")%N")
+				trace
+			end
 		end
 
 	remove_occurrence (external_name_id: INTEGER) is
@@ -113,12 +113,12 @@ end
 			if info.occurrence /= 0 then
 				info.remove_occurrence
 			end
-debug
-	io.error.putstring ("After remove_occurrence (")
-	io.error.putstring (Names_heap.item (external_name_id))
-	io.error.putstring (")%N")
-	trace
-end
+			debug
+				io.error.putstring ("After remove_occurrence (")
+				io.error.putstring (Names_heap.item (external_name_id))
+				io.error.putstring (")%N")
+				trace
+			end
 		end
 
 	freeze is
@@ -129,10 +129,10 @@ end
 			external_name_id: INTEGER
 			info: EXTERNAL_INFO
 		do
-debug
-	io.error.putstring ("Freezing externals%N")
-	trace
-end
+			debug
+				io.error.putstring ("Freezing externals%N")
+				trace
+			end
 			from
 				available_keys := current_keys
 				i := 1
@@ -212,4 +212,4 @@ feature -- Debug
 			end
 		end
 
-end
+end -- class EXTERNALS

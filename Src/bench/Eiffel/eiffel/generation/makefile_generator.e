@@ -1149,8 +1149,15 @@ feature {NONE} -- Implementation
 
 feature {NONE} -- Constants
 
-	lib_location: STRING is "\$(ISE_EIFFEL)/studio/spec/\$(ISE_PLATFORM)/lib/"
+	lib_location: STRING is
 			-- Location of run-time library files.
+		once
+			if System.uses_ise_gc_runtime then
+				Result := "\$(ISE_EIFFEL)/studio/spec/\$(ISE_PLATFORM)/lib/"
+			else
+				Result := "\$(ISE_EIFFEL)/studio/spec/\$(ISE_PLATFORM)/other-lib/"
+			end
+		end
 
 	libnet_location: STRING is "\$(ISE_EIFFEL)/library/net/spec/\$(ISE_PLATFORM)/lib/libnet.a"
 			-- Library name + location of EiffelNet.

@@ -71,30 +71,26 @@ feature -- Access
 			full_information: HASH_TABLE [ELEMENT_INFORMATION, STRING]
 			top_level_id: INTEGER
 			actual_object: GB_OBJECT
-			new_parent: GB_OBJECT
 			selected_window: GB_WINDOW_SELECTOR_ITEM
 		do
 			Result := not clipboard.is_empty and ((layout_constructor.has_focus and layout_constructor.selected_item /= Void) or (window_selector.has_focus))
-			if not clipboard.is_empty and (layout_constructor.has_focus and layout_constructor.selected_item /= Void) then
+			if layout_constructor.has_focus then
 				layout_item ?= layout_constructor.selected_item
-				parent_object ?= layout_item.object
-				Result := parent_object.accepts_child (clipboard.object_type) and not parent_object.is_full and not parent_object.is_instance_of_top_level_object
-			end
+				if layout_item /= Void then
+					parent_object ?= layout_item.object
+				end
+			else
+				selected_window ?= window_selector.selected_window
+				if selected_window /= Void then
+					parent_object ?= selected_window.object
+				end
+			end	
+			Result := Result and parent_object.accepts_child (clipboard.object_type) and not parent_object.is_full and not parent_object.is_instance_of_top_level_object
+			
 				-- Now ensure that we do not nest an instance of a top level widget in a structure
 				-- that does not permit such nesting, thereby preventing nested inheritance cycles.
 			if Result then
-				if layout_constructor.has_focus then
-					layout_item ?= layout_constructor.selected_item
-					if layout_item /= Void then
-						new_parent ?= layout_item.object
-					end
-				else
-					selected_window ?= window_selector.selected_window
-					if selected_window /= Void then
-						new_parent ?= selected_window.object
-					end
-				end	
-				if new_parent /= Void then	
+				if parent_object /= Void then	
 					contents ?= clipboard.contents_cell.item.first
 					contents ?= child_element_by_name (contents, internal_properties_string)
 					full_information := get_unique_full_info (contents)
@@ -107,10 +103,10 @@ feature -- Access
 						if actual_object /= Void then
 							actual_object.all_dependents_recursive (actual_object, all_dependents)
 							all_dependents.extend (actual_object, actual_object.id)
-							Result := Result and not all_dependents.has (new_parent.id)
+							Result := Result and not all_dependents.has (parent_object.id)
 						end
 						
-						Result := Result and new_parent.override_drop_on_child (actual_object)
+						Result := Result and parent_object.override_drop_on_child (actual_object)
 					end
 				end
 			end

@@ -7,7 +7,7 @@ inherit
 		redefine
 			is_once, generate_once,
 			pre_inlined_code, inlined_byte_code, generate_once_declaration,
-			generate_il, is_global_once
+			generate_global_once_termination, generate_il, is_global_once
 		end
 
 feature -- Access
@@ -90,7 +90,7 @@ feature -- C code generation
 			-- Generate test at the head of once routines
 		do
 			if is_global_once then
-				generate_global_once
+				generate_global_once (name)
 			elseif System.has_multithreaded or else not context.final_mode then
 				generate_safe_once
 			else
@@ -102,24 +102,44 @@ feature -- C code generation
 			-- Generate declaration of static
 		local
 			head_buf, buf: GENERATION_BUFFER
+			l_res_name, l_done_name: STRING
 		do
-			if
-				not is_global_once and then
-				context.final_mode and then not System.has_multithreaded
-			then
+			if is_global_once then
+					-- Generate static mutex used to initialize global once
+				buf := Context.buffer
+				buf.putstring ("EIF_MUTEX_TYPE *")
+				buf.putchar (' ')
+				buf.putstring (mutex_name (name))
+				buf.putstring (" = NULL;")
+				buf.new_line
+				buf.new_line
+					-- Insert current global once in `context' so that
+					-- mutex initialization call can be generated in the `EIF_MinitXX'
+					-- routine of the type defining the global once.
+					-- FIXME: Manu: 02/11/2003: Mutex are created in `EIF_MinitXX'
+					-- but they are never freed, thus a memory leak if upon program
+					-- termination the system does not get back the resources allocated
+					-- for the mutex.
+				context.global_onces.extend (body_index)
+			elseif context.final_mode and then not System.has_multithreaded then
+					-- Generate static declaration and definition of `once_done'
+					-- and `once_result' variables used to find out if once has
+					-- already been computed or not.
 				head_buf := Context.header_buffer
 				if not is_procedure then
+					l_res_name := result_name (name)
 					head_buf.new_line
 					head_buf.putstring ("extern ")
 					head_buf.putstring (type)
 					head_buf.putchar (' ')
-					head_buf.putstring (name)
-					head_buf.putstring ("_result;")
+					head_buf.putstring (l_res_name)
+					head_buf.putchar (';')
 				end
 				head_buf.new_line
+				l_done_name := done_name (name)
 				head_buf.putstring ("extern EIF_BOOLEAN ")
-				head_buf.putstring (name)
-				head_buf.putstring ("_done;")
+				head_buf.putstring (l_done_name)
+				head_buf.putchar (';')
 				head_buf.new_line
 				head_buf.new_line
 
@@ -127,20 +147,38 @@ feature -- C code generation
 				if not is_procedure then
 					buf.putstring (type)
 					buf.putchar (' ')
-					buf.putstring (name)
-					buf.putstring ("_result = (")
+					buf.putstring (l_res_name)
+					buf.putstring (" = (")
 					buf.putstring (type)
 					buf.putstring (") 0;")
 				end
 				buf.new_line
 				buf.putstring ("EIF_BOOLEAN ")
-				buf.putstring (name)
-				buf.putstring ("_done = EIF_FALSE;")
+				buf.putstring (l_done_name)
+				buf.putstring (" = EIF_FALSE;")
 				buf.new_line
 				buf.new_line
 			end
 		end
 
+	generate_global_once_termination (a_name: STRING) is
+			-- Generate end of global once block.
+		local
+			l_buf: like buffer
+		do
+			l_buf := context.buffer
+			l_buf.exdent
+			l_buf.putchar ('}')
+			l_buf.new_line
+			l_buf.putstring ("eif_thr_mutex_unlock (")
+			l_buf.putstring (mutex_name (a_name))
+			l_buf.putstring (");")
+			l_buf.new_line
+			l_buf.exdent
+			l_buf.putchar ('}')
+			l_buf.new_line
+		end
+		
 feature -- Inlining
 
 	pre_inlined_code: like Current is
@@ -162,19 +200,33 @@ feature -- Inlining
 
 feature {NONE} -- Implementation
 
-	generate_global_once is
-			-- Generate test at the head of once routines
+	generate_global_once (name: STRING) is
+			-- Generate test at the head of once routine `name'.
+		require
+			multithreaded_mode: System.has_multithreaded
+			is_global_once: internal_is_global_once
+			name_not_void: name /= Void
 		local
 			type_i: TYPE_I
 			buf: like buffer
+			l_mutex_name: STRING
 		do
 			type_i := real_type (result_type)
+			l_mutex_name := mutex_name (name)
 
 			buf := buffer
 			buf.putstring ("if (!done) {")
 			buf.new_line
 			buf.indent
+			buf.putstring ("eif_thr_mutex_lock (")
+			buf.putstring (l_mutex_name)
+			buf.putstring (");")
 			buf.new_line
+				-- Double-Checked Locking on `done' is safe, because
+				-- `done' is marked volatile.
+			buf.putstring ("if (!done) {")
+			buf.new_line
+			buf.indent
 			buf.putstring ("done = EIF_TRUE;")
 
 			if context.result_used then
@@ -196,40 +248,39 @@ feature {NONE} -- Implementation
 		local
 			type_i		: TYPE_I
 			buf			: GENERATION_BUFFER
-			result_name	: STRING
+			l_res_name, l_done_name	: STRING
 		do
 			buf := buffer
-			create result_name.make (name.count + 8)
-			result_name.append (name)
-			result_name.append ("_result")
+			l_res_name := result_name (name)
+			l_done_name := done_name (name)
 
 			type_i := real_type (result_type)
 
 			buf.putstring ("if (")
-			buf.putstring (name)
-			buf.putstring ("_done) return")
+			buf.putstring (l_done_name)
+			buf.putstring (") return")
 			if result_type /= Void and then not result_type.is_void then
 				buf.putchar (' ')
-				buf.putstring (result_name)
+				buf.putstring (l_res_name)
 			end
 			buf.putchar (';')
 
 			buf.new_line
-			buf.putstring (name)
-			buf.putstring ("_done = EIF_TRUE;")
+			buf.putstring (l_done_name)
+			buf.putstring (" = EIF_TRUE;")
 
 			if context.result_used then
 				if real_type(result_type).c_type.is_pointer then
 					buf.new_line
 					buf.putstring ("RTOC_NEW(")
-					buf.putstring (result_name)
+					buf.putstring (l_res_name)
 					buf.putstring (");")
 				end
 			end
 
 			buf.new_line
 			buf.putstring ("%N#define Result ")
-			buf.putstring (result_name)
+			buf.putstring (l_res_name)
 			buf.new_line
 			init_dftype
 			init_dtype
@@ -321,4 +372,42 @@ feature {NONE} -- Implementation
 			init_dtype;
 		end;
 
+feature {NONE} -- Convenience
+
+	result_name (a_name: STRING): STRING is
+			-- Once result variable name using `a_name' as prefix
+		require
+			a_name_not_void: a_name /= Void
+		do
+			create Result.make (a_name.count + 7)
+			Result.append (a_name)
+			Result.append ("_result")
+		ensure
+			result_name_not_void: Result /= Void
+		end
+
+	done_name (a_name: STRING): STRING is
+			-- Once result variable name using `a_name' as prefix
+		require
+			a_name_not_void: a_name /= Void
+		do
+			create Result.make (a_name.count + 5)
+			Result.append (a_name)
+			Result.append ("_done")
+		ensure
+			done_name_not_void: Result /= Void
+		end
+
+	mutex_name (a_name: STRING): STRING is
+			-- Once mutex variable name using `a_name' as prefix
+		require
+			a_name_not_void: a_name /= Void
+		do
+			create Result.make (a_name.count + 6)
+			Result.append (a_name)
+			Result.append ("_mutex")
+		ensure
+			mutex_name_not_void: Result /= Void
+		end
+		
 end

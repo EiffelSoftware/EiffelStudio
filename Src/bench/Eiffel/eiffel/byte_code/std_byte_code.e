@@ -36,6 +36,16 @@ feature -- Status
 			-- False
 		end
 
+feature -- Access
+
+	generated_c_feature_name: STRING is
+			-- Name of generated routine in C generated code
+		do
+			Result := Encoder.feature_name (
+				System.class_type_of_id (context.current_type.type_id).static_type_id,
+				body_index)
+		end
+
 feature -- Setting
 
 	set_compound (c: like compound) is
@@ -224,9 +234,7 @@ feature -- Analyzis
 			type_i := real_type (result_type)
 
 				-- Function's name
-			internal_name := Encoder.feature_name (
-				System.class_type_of_id (context.current_type.type_id).static_type_id,
-				body_index)
+			internal_name := generated_c_feature_name
 
 				-- Add entry in the log file
 			add_in_log (internal_name)
@@ -247,15 +255,6 @@ feature -- Analyzis
 			buf.generate_function_signature
 				(type_i.c_type.c_string, internal_name, True,
 				 Context.header_buffer, argument_names, argument_types)
-
-				-- If it is a global once, performs mutex lock operation
-			if is_global_once then
-				buf.indent
-				buf.putstring ("EIF_GLOBAL_ONCE_MUTEX_LOCK;")
-				buf.new_line
-				buf.putchar ('{')
-				buf.new_line
-			end
 
 				-- Starting body of C routine
 			buf.indent
@@ -365,16 +364,10 @@ feature -- Analyzis
 			buf.exdent
 
 				-- End of C function
-			if l_is_once then
-				if is_global_once then
-					buf.putchar ('}')
-					buf.new_line
-					buf.exdent
-				else
-					buf.new_line
-					buf.putstring ("#undef Result")
-					buf.new_line
-				end
+			if l_is_once and not is_global_once then
+				buf.new_line
+				buf.putstring ("#undef Result")
+				buf.new_line
 			end
 
 				-- Leave a blank line after function definition
@@ -470,14 +463,27 @@ end
 			end
 		end -- generate_return_exp
 
-	generate_once (name: STRING) is
-			-- Generate test at the head of once routines
+	generate_once_declaration (a_name, a_type: STRING; is_procedure: BOOLEAN) is
+			-- Generate static variable and their declarations used by
+			-- generation of opimized once functions.
+		require
+			a_name_not_void: a_name /= Void
+			a_type_not_void: a_type /= Void
 		do
 		end
 
-	generate_once_declaration (name, type: STRING; is_procedure: BOOLEAN) is
-			-- Generate static variable and their declarations used by
-			-- generation of opimized once functions.
+	generate_once (a_name: STRING) is
+			-- Generate test at the head of once routines
+		require
+			a_name_not_void: a_name /= Void
+		do
+		end
+
+	generate_global_once_termination (a_name: STRING) is
+			-- Generate end of global once block.
+		require
+			is_global_once: is_global_once
+			a_name_not_void: a_name /= Void
 		do
 		end
 
@@ -819,6 +825,16 @@ end
 			if (not result_type.is_void) and then (wkb_mode or else context.result_used) then 
 				generate_result_declaration (has_rescue and then not wkb_mode)
 			end
+
+			if is_global_once then
+					-- Need `volatile' qualifier for global once in
+					-- multithreaded environment, to ensure that we
+					-- read the value in memory and not value from
+					-- the processor cache.
+				buf.putstring ("static volatile EIF_BOOLEAN done = 0;")
+				buf.new_line
+			end
+
 				-- Declare the 'dtype' variable which holds the pre-computed
 				-- dynamic type of current. To avoid unnecssary computations,
 				-- this is not done in case of a once, before we know we have
@@ -918,7 +934,13 @@ end
 				if l_global_once then
 					buf.putstring ("static ")
 				end
-				if may_need_volatile and then type_i.is_basic then
+				if l_global_once then
+						-- Need `volatile' qualifier for global once in
+						-- multithreaded environment, to ensure that we
+						-- read the value in memory and not value from
+						-- the processor cache.
+					buf.putstring ("volatile ")
+				elseif may_need_volatile and then type_i.is_basic then
 					buf.putstring ("EIF_VOLATILE ")
 				end
 				ctype.generate (buf)
@@ -926,14 +948,6 @@ end
 				ctype.generate_cast (buf)
 				buf.putstring (" 0;")
 				buf.new_line
-				if l_global_once then
-					if may_need_volatile then
-						buf.putstring ("static EIF_VOLATILE EIF_BOOLEAN done = 0;")
-					else
-						buf.putstring ("static EIF_BOOLEAN done = 0;")
-					end
-					buf.new_line
-				end
 			end
 		end
 
@@ -1331,8 +1345,6 @@ end
 
 	finish_compound is
 			-- Generate the end of the compound routine
-		local
-			buf: like buffer
 		do
 				-- Generate the hook corresponding to the end of the feature ("end;")
 			generate_frozen_end_debugger_hook
@@ -1350,13 +1362,7 @@ end
 			generate_pop_execution_trace
 
 			if is_global_once then
-				buf := buffer
-				buf.new_line
-				buf.exdent
-				buf.putchar ('}')
-				buf.new_line
-				buf.putstring ("EIF_GLOBAL_ONCE_MUTEX_UNLOCK;")
-				buf.new_line
+				generate_global_once_termination (generated_c_feature_name)
 			end
 		end
 

@@ -494,6 +494,7 @@ feature -- Generation
 			generate_c_code: BOOLEAN
 			once_count:INTEGER
 			tmp, buffer, header_buffer, headers: GENERATION_BUFFER
+			l_globals: ARRAYED_LIST [INTEGER]
 		do
 			final_mode := byte_context.final_mode
 
@@ -540,6 +541,8 @@ feature -- Generation
 						-- which will enable us to know wether or not a C++ call has been
 						-- generated
 					byte_context.set_has_cpp_externals_calls (False)
+						-- Then we reset `global_onces'.
+					byte_context.reset_global_onces
 
 					if final_mode then
 						tmp := headers
@@ -613,15 +616,32 @@ feature -- Generation
 						(static_type_id), True, header_buffer, <<>>, <<>>)
 	
 					if once_count > 0 then
-						buffer.putstring ("%TEIF_oidx_off")
+						buffer.indent
+						buffer.putstring ("EIF_oidx_off")
 						buffer.putint (static_type_id)
-						buffer.putstring (" = EIF_once_count;%N%
-									%%TEIF_once_count += ")
+						buffer.putstring (" = EIF_once_count;")
+						buffer.new_line
+						buffer.putstring ("EIF_once_count += ")
 						buffer.putint (once_count)
-						buffer.putstring (";%N}%N%N")
-					else
-						buffer.putstring ("%N}%N%N")
+						buffer.putchar (';')
+						l_globals := byte_context.global_onces
+						from
+							l_globals.start
+						until
+							l_globals.after
+						loop
+							buffer.new_line
+							buffer.putstring (encoder.feature_name (static_type_id, l_globals.item))
+							buffer.putstring ("_mutex = eif_thr_mutex_create ();")
+							l_globals.forth
+						end
+						buffer.exdent
 					end
+
+					buffer.new_line
+					buffer.putchar ('}')
+					buffer.new_line
+					buffer.new_line
 
 					if
 						current_class.has_invariant and then
@@ -1121,7 +1141,7 @@ feature -- Generation
 				end
 			end
 		end
-
+		
 feature -- IL code generation
 
 	generate_il_feature (f: FEATURE_I) is

@@ -63,7 +63,7 @@ feature -- Access
 			-- (Zero if not found.)
 		require
 			positive_occurrence: i > 0;
-			valid_an_item: an_item /= Void and then not an_item.is_destroyed
+			valid_item: an_item /= Void and then an_item.is_valid
 		do
 			Result := xm_list_index_of (screen_object, an_item.handle, i)
 		ensure 
@@ -74,7 +74,7 @@ feature -- Access
 			-- Index of `an_item' beyond `from_pos' in `items'.
 			-- (Zero if not found.)
 		require
-			valid_an_item: an_item /= Void and then not an_item.is_destroyed;
+			valid_item: an_item /= Void and then an_item.is_valid;
 			from_pos_large_enough: from_pos >= 0;
 			from_pos_small_enough: from_pos <= item_count
 		do
@@ -87,7 +87,7 @@ feature -- Access
 			-- Is `an_item' present?
 		require
 			exists: not is_destroyed;
-			an_item_not_void: not an_item.is_destroyed
+			valid_item: an_item /= Void and then an_item.is_valid
 		do
 			Result := xm_list_item_exists (screen_object, an_item.handle)
 		end;
@@ -96,7 +96,7 @@ feature -- Access
 			-- Index of `an_item'
 		require
 			exists: not is_destroyed;
-			an_item_not_void: not an_item.is_destroyed
+			valid_item: an_item /= Void and then an_item.is_valid
 		do
 			Result := xm_list_item_pos (screen_object, an_item.handle)
 		ensure
@@ -133,9 +133,11 @@ feature -- Status report
 			exists: not is_destroyed
 		do
 			!! Result.make_from_existing (get_xm_string_table 
-						(screen_object, XmNitems), item_count)
+						(screen_object, XmNitems), item_count);
+			Result.set_shared
 		ensure
-			items_exist: Result /= Void and then not Result.is_destroyed
+			items_exist: Result /= Void and then Result.is_valid;
+			items_is_shared: Result.shared
 		end;
 
 	margin_height: INTEGER is
@@ -207,10 +209,12 @@ feature -- Status report
 		require
 			exists: not is_destroyed
 		do
-			!! Result.make_from_existing (get_xm_string_table (screen_object, XmNselectedItems),
-							selected_item_count)
+			!! Result.make_from_existing (get_xm_string_table 
+				(screen_object, XmNselectedItems), selected_item_count);
+			Result.set_shared
 		ensure
-			selected_items_exists: Result /= Void and then not Result.is_destroyed
+			selected_items_exists: Result /= Void and then Result.is_valid;
+			items_is_shared: Result.shared
 		end;
 
 	is_single_select: BOOLEAN is
@@ -300,7 +304,7 @@ feature -- Status setting
 			-- Set `items' to `a_list'.
 		require
 			exists: not is_destroyed;
-			a_list_not_null: not a_list.is_destroyed
+			valid_list: a_list /= Void and then a_list.is_valid
 		do
 			set_xm_string_table (screen_object, XmNitems, a_list.handle)
 		end;
@@ -342,11 +346,9 @@ feature -- Status setting
 			-- Set `selected_items' to `a_list'.
 		require
 			exists: not is_destroyed;
-			a_list_not_null: not a_list.is_destroyed
+			valid_list: a_list /= Void and then a_list.is_valid
 		do
 			set_xm_string_table (screen_object, XmNselectedItems, a_list.handle)
-		ensure
-			selected_items_set: selected_items.is_equal (a_list)
 		end;
 
 	set_single_select is
@@ -452,7 +454,7 @@ feature -- Element Change
 			exists: not is_destroyed;
 			a_position_large_enough: a_position > 0;
 			a_position_small_enough: a_position <= item_count + 1;
-			an_item_not_void: not an_item.is_destroyed
+			valid_item: an_item /= Void and then an_item.is_valid
 		do
 			xm_list_add_item (screen_object, an_item.handle, a_position)
 		ensure
@@ -466,7 +468,7 @@ feature -- Element Change
 			exists: not is_destroyed;
 			a_position_large_enough: a_position >= 0;
 			a_position_small_enough: a_position <= item_count + 1;
-			an_item_not_void: not an_item.is_destroyed
+			valid_item: an_item /= Void and then an_item.is_valid
 		do
 			xm_list_add_item_unselected (screen_object, an_item.handle, a_position)
 		ensure
@@ -479,7 +481,7 @@ feature -- Element Change
 			exists: not is_destroyed;
 			a_position_large_enough: a_position >= 0;
 			a_position_small_enough: a_position <= item_count + 1;
-			an_item_list_not_void: not an_item_list.is_destroyed
+			valid_list: an_item_list /= Void and then an_item_list.is_valid
 		do
 			xm_list_add_items (screen_object, an_item_list.handle, an_item_list.count, a_position)
 		ensure
@@ -492,7 +494,7 @@ feature -- Element Change
 			exists: not is_destroyed;
 			a_position_large_enough: a_position > 0;
 			a_position_small_enough: a_position <= item_count + 1;
-			an_item_list_not_void: not an_item_list.is_destroyed
+			valid_list: an_item_list /= Void and then an_item_list.is_valid
 		do
 			xm_list_add_items_unselected (screen_object, an_item_list.handle, an_item_list.count, a_position)
 		ensure
@@ -505,7 +507,7 @@ feature -- Element Change
 			exists: not is_destroyed;
 			a_position_large_enough: a_position > 0;
 			a_position_small_enough: a_position <= item_count;
-			new_items_not_void: not new_items.is_destroyed
+			valid_list: new_items /= Void and then new_items.is_valid
 		do
 			xm_list_replace_items_pos (screen_object, new_items.handle, new_items.count, a_position)
 		ensure
@@ -518,7 +520,7 @@ feature -- Element Change
 			exists: not is_destroyed;
 			a_position_large_enough: a_position > 0;
 			a_position_small_enough: a_position <= item_count;
-			new_items_not_void: new_item /= Void and then not new_item.is_destroyed
+			new_items_not_void: new_item /= Void and then new_item.is_valid
 		local
 			ptr: POINTER
 		do
@@ -534,7 +536,7 @@ feature -- Element Change
 			exists: not is_destroyed;
 			a_position_large_enough: a_position > 0;
 			a_position_small_enough: a_position <= item_count;
-			new_items_not_void: not new_items.is_destroyed
+			valid_items: new_items /= Void and then new_items.is_valid
 		do
 			xm_list_replace_items_pos_unselected (screen_object, new_items.handle, new_items.count, a_position)
 		ensure
@@ -545,8 +547,8 @@ feature -- Element Change
 			-- Replace `old_items' by `new_items' and select `new_items'.
 		require
 			exists: not is_destroyed;
-			old_items_valid: old_items /= Void and then not old_items.is_destroyed;
-			new_items_valid: new_items /= Void and then not new_items.is_destroyed;
+			valid_old_items: old_items /= Void and then old_items.is_valid;
+			valid_new_items: new_items /= Void and then new_items.is_valid;
 			old_items_as_big_as_new_items: old_items.count = new_items.count
 		do
 			xm_list_replace_items (screen_object, old_items.handle, old_items.count, new_items.handle)
@@ -558,8 +560,8 @@ feature -- Element Change
 			-- Replace `old_items' by `new_items'.
 		require
 			exists: not is_destroyed;
-			old_items_valid: old_items /= Void and then not old_items.is_destroyed;
-			new_items_valid: new_items /= Void and then not new_items.is_destroyed;
+			valid_old_items: old_items /= Void and then old_items.is_valid;
+			valid_new_items: new_items /= Void and then new_items.is_valid;
 			old_items_as_big_as_new_items: old_items.count = new_items.count
 		do
 			xm_list_replace_items_unselected (screen_object, old_items.handle, old_items.count, new_items.handle)
@@ -571,8 +573,8 @@ feature -- Element Change
 			-- Select `an_item' and call the callback routines aaccording to `notify'.
 		require
 			exists: not is_destroyed;
-			an_item_not_void: not an_item.is_destroyed;
-			an_item_already_present: item_exists(an_item)
+			valid_item: an_item /= Void and then an_item.is_valid;
+			an_item_already_present: item_exists (an_item)
 		do
 			xm_list_select_item (screen_object, an_item.handle, notify)
 		end;
@@ -594,8 +596,8 @@ feature -- Element Change
 			-- Deselect `an_item'.
 		require
 			exists: not is_destroyed;
-			an_item_not_void: not an_item.is_destroyed;
-			an_item_already_present: item_exists(an_item)
+			valid_item: an_item /= Void and then an_item.is_valid;
+			an_item_already_present: item_exists (an_item)
 		do
 			xm_list_deselect_item (screen_object, an_item.handle)
 		end;
@@ -674,7 +676,7 @@ feature -- Removal
 			-- Delete `an_item'.
 		require
 			exists: not is_destroyed;
-			an_item_not_void: not an_item.is_destroyed;
+			valid_item: an_item /= Void and then an_item.is_valid;
 			an_item_already_present: item_exists (an_item)
 		do
 			xm_list_delete_item (screen_object, an_item.handle)
@@ -694,7 +696,7 @@ feature -- Removal
 			-- Delete all items of `an_item_list'.
 		require
 			exists: not is_destroyed;
-			an_item_list_not_void: not an_item_list.is_destroyed
+			valid_list: an_item_list /= Void and then an_item_list.is_valid
 		do
 			xm_list_delete_items (screen_object, an_item_list.handle, an_item_list.count)
 		end;

@@ -76,7 +76,7 @@ end;
 			if target_type.is_separate then
 				ba.append (Bc_sep_create);
 				cl_type ?= target_type -- can't be fail
-				ba.append_raw_string (cl_type.associated_class_type.associated_class.e_class.name_in_upper);
+				ba.append_raw_string (cl_type.associated_class_type.associated_class.name_in_upper);
 				if call = Void then
 					ba.append_raw_string ("_no_cf");
 				else

@@ -25,7 +25,7 @@ feature
 			temp: STRING;
 			comment_reg: COMMENT_REGISTRATION
 		do
-			degree_output.put_degree_5 (associated_class.e_class, to_go)
+			degree_output.put_degree_5 (associated_class, to_go)
 
 			class_id := associated_class.id;
 			if new_compilation then

@@ -551,7 +551,7 @@ feature {COMPILER_EXPORTER} -- Implementation
 	associated_feature_i: FEATURE_I is
 			-- Assocated feature_i
 		do
-			Result := associated_class.compiled_info.feature_named (name)
+			Result := associated_class.feature_named (name)
 		end;
 
 feature {FEATURE_I} -- Setting

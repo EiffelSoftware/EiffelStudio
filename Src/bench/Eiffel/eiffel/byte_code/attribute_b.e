@@ -275,7 +275,7 @@ feature -- Concurrent Eiffel
 			if my_code = Bc_sep_attribute_inv then
 					-- keep the class name of the target of the attribute call
 				class_type ?= context_type; -- Can't fail
-				ba.append_raw_string (class_type.base_class.e_class.name_in_upper);
+				ba.append_raw_string (class_type.base_class.name_in_upper);
 					-- keep the attribute name of the attribute call
 				ba.append_raw_string (attribute_name);
 			end
@@ -305,7 +305,7 @@ feature -- Concurrent Eiffel
 			if my_code = Bc_sep_pattribute_inv then
 					-- keep the class name of the target of the attribute call
 				class_type ?= context_type; -- Can't fail
-				ba.append_raw_string (class_type.base_class.e_class.name_in_upper);
+				ba.append_raw_string (class_type.base_class.name_in_upper);
 					-- keep the attribute name of the attribute call
 				ba.append_raw_string (attribute_name);
 			end

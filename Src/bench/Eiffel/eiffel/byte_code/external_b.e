@@ -431,7 +431,7 @@ feature -- Concurrent Eiffel
 				end;
 					-- keep the class name of the target of the feature call
 				class_type ?= context_type; -- Can't fail
-				ba.append_raw_string (class_type.base_class.e_class.name_in_upper);
+				ba.append_raw_string (class_type.base_class.name_in_upper);
 					-- keep the feature name of the feature call
 				ba.append_raw_string (feature_name);
 					-- keep the return value's type;
@@ -476,7 +476,7 @@ feature -- Concurrent Eiffel
 				end;
 					-- keep the class name of the target of the feature call
 				class_type ?= context_type; -- Can't fail
-				ba.append_raw_string (class_type.base_class.e_class.name_in_upper);
+				ba.append_raw_string (class_type.base_class.name_in_upper);
 					-- keep the feature name of the feature call
 				ba.append_raw_string (feature_name);
 					-- keep the return value's type;

@@ -242,6 +242,7 @@ feature {NONE} -- Implementation
 			if status_bar /= Void then
 				mh := mh + status_bar.minimum_height
 			end
+			mw := mw.max (status_bar.minimum_width)
 
 			-- Finaly, we set the value
 			internal_set_minimum_size (mw, mh)
@@ -341,6 +342,9 @@ end -- class EV_TITLED_WINDOW_IMP
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.66  2000/04/29 00:44:47  brendel
+--| Changed to take minimum width of status bar into account.
+--|
 --| Revision 1.65  2000/04/28 23:41:27  brendel
 --| Uses status bar's minimum height instead of height.
 --|

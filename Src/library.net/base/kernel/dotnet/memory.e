@@ -9,7 +9,11 @@ indexing
 	date: "$Date$"
 	revision: "$Revision$"
 
-class MEMORY inherit
+class
+	MEMORY
+
+inherit
+	DISPOSABLE
 
 	MEM_CONST
 

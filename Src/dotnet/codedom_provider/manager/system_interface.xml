@@ -174,7 +174,7 @@
 <item type="EV_MENU_BAR"><Internal_properties>
 	<id>2</id>
 	<name>menu</name>
-	<Expanded>0</Expanded>
+	<Expanded>1</Expanded>
 	</Internal_properties>
 <item type="EV_MENU"><Internal_properties>
 	<id>3</id>
@@ -185,6 +185,21 @@
 <EV_TEXTABLE><Text><![CDATA[File]]></Text>
 	</EV_TEXTABLE>
 <EV_PIXMAPABLE></EV_PIXMAPABLE>
+<item type="EV_MENU_ITEM"><Internal_properties>
+	<id>9</id>
+	<name>new_menu_item</name>
+	<Expanded>0</Expanded>
+	</Internal_properties>
+<EV_SENSITIVE></EV_SENSITIVE>
+<EV_TEXTABLE><Text><Constant>new_button_text</Constant>
+		</Text>
+	</EV_TEXTABLE>
+<EV_PIXMAPABLE><Pixmap_path><Constant>new_png</Constant>
+		</Pixmap_path>
+	</EV_PIXMAPABLE>
+<Events><Event>select_actions EV_MENU_ITEM_ACTION_SEQUENCES on_config_new</Event>
+	</Events>
+</item>
 <item type="EV_MENU_ITEM"><Internal_properties>
 	<id>4</id>
 	<name>save_menu_item</name>
@@ -245,21 +260,6 @@
 <EV_TEXTABLE><Text><![CDATA[Edit]]></Text>
 	</EV_TEXTABLE>
 <EV_PIXMAPABLE></EV_PIXMAPABLE>
-<item type="EV_MENU_ITEM"><Internal_properties>
-	<id>9</id>
-	<name>new_menu_item</name>
-	<Expanded>0</Expanded>
-	</Internal_properties>
-<EV_SENSITIVE></EV_SENSITIVE>
-<EV_TEXTABLE><Text><Constant>new_button_text</Constant>
-		</Text>
-	</EV_TEXTABLE>
-<EV_PIXMAPABLE><Pixmap_path><Constant>new_png</Constant>
-		</Pixmap_path>
-	</EV_PIXMAPABLE>
-<Events><Event>select_actions EV_MENU_ITEM_ACTION_SEQUENCES on_config_new</Event>
-	</Events>
-</item>
 <item type="EV_MENU_ITEM"><Internal_properties>
 	<id>10</id>
 	<name>properties_menu_item</name>

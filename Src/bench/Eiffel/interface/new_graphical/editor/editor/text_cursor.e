@@ -212,7 +212,7 @@ feature -- Element change
 			else
 					-- The cursor is further than the end of the line, so
 					-- we set the current token to the last of the line.
-				token := line.end_token
+				token := line.eol_token
 				pos_in_token := 1
 				x_in_pixels := current_x
 			end
@@ -248,7 +248,7 @@ feature -- Cursor movement
 						-- No previous token? Go to previous line.
 					if line.previous /= Void then
 						set_line_to_previous
-						set_current_char (line.end_token, line.end_token.length)
+						set_current_char (line.eol_token, line.eol_token.length)
 					end
 				else
 					set_current_char (token.previous, token.previous.length)
@@ -281,7 +281,7 @@ feature -- Cursor movement
 	go_end_line is
 			-- Move to end of line.
 		do
-			set_current_char (line.end_token, line.end_token.length)
+			set_current_char (line.eol_token, line.eol_token.length)
 		end
 
 feature -- Comparison
@@ -310,7 +310,7 @@ feature -- Transformation
 			else
 				update_x_in_pixels
 				s := clone (token.image)
-				if token = line.end_token then
+				if token = line.eol_token then
 					s := c.out
 				else
 					s.insert (c.out, pos_in_token)
@@ -327,7 +327,7 @@ feature -- Transformation
 					from
 						t_after := token.next
 					until
-						t_after = line.end_token
+						t_after = line.eol_token
 					loop
 						s.append (t_after.image)
 						t_after := t_after.next
@@ -346,7 +346,7 @@ feature -- Transformation
 			s: STRING
 		do
 			update_x_in_pixels
-			if token = line.end_token then
+			if token = line.eol_token then
 				s := line.image + line.next.image
 				line.next.delete
 				whole_text.lexer.execute (s)
@@ -368,7 +368,7 @@ feature -- Transformation
 				from
 					t_after := token.next
 				until
-					t_after = line.end_token
+					t_after = line.eol_token
 				loop
 					s.append (t_after.image)
 					t_after := t_after.next
@@ -386,11 +386,11 @@ feature -- Transformation
 		do
 			if c = '%N' then
 				insert_eol
-			elseif token = line.end_token then
+			elseif token = line.eol_token then
 					s := line.image + c.out
 					whole_text.lexer.execute (s)
 					line.make_from_lexer (whole_text.lexer)
-					set_current_char (line.end_token, line.end_token.length)
+					set_current_char (line.eol_token, line.eol_token.length)
 			else
 				update_x_in_pixels
 				s := clone (token.image)
@@ -409,7 +409,7 @@ feature -- Transformation
 				from
 					t_after := token.next
 				until
-					t_after = line.end_token
+					t_after = line.eol_token
 				loop
 					s.append (t_after.image)
 					t_after := t_after.next
@@ -437,7 +437,7 @@ feature -- Transformation
 			i_t: EDITOR_TOKEN
 			new_line : EDITOR_LINE
 		do
-			if token = line.end_token then
+			if token = line.eol_token then
 				update_x_in_pixels
 				create new_line.make_empty_line
 				line.add_right (new_line)
@@ -447,7 +447,7 @@ feature -- Transformation
 				from
 					i_t := token.next
 				until
-					i_t = line.end_token
+					i_t = line.eol_token
 				loop
 					s.append (i_t.image)
 					i_t := i_t.next
@@ -470,7 +470,7 @@ feature -- Transformation
 			s: STRING
 		do
 			update_x_in_pixels
-			if token /= line.end_token then
+			if token /= line.eol_token then
 				s := token.image.substring (1, pos_in_token - 1)
 				from
 					t := token.previous
@@ -574,7 +574,7 @@ feature {NONE} -- Implementation
 			else
 				-- The cursor is further than the end of the line, so
 				-- we set the current token to the last of the line.
-				token := line.end_token
+				token := line.eol_token
 				pos_in_token := 1
 			end
 		end

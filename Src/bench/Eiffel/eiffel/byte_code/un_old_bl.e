@@ -25,11 +25,16 @@ feature
 
 	analyze is
 			-- Analyze expression and get a register
+		local
+			target_type: TYPE_I
 		do
+			target_type := Context.real_type (type);
 			context.init_propagation;
 			expr.propagate (No_register);
 			expr.analyze;
-			expr.free_register;
+			if not target_type.is_basic then
+				expr.free_register;
+			end;
 			get_register;
 		end;
 

@@ -185,7 +185,7 @@ feature -- Generation constants
 			-- String representing standard indent
 			-- for code generation.
 		once
-			Result := "%N%T%T%T"
+			Result := "%R%N%T%T%T"
 		end
 		
 	Local_object_name_prepend_string: STRING is "l_"

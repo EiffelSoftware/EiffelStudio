@@ -4275,6 +4275,8 @@ feature -- Concurrent Eiffel
 
 	set_has_separate is
 			-- Set `has_separate' to True.
+		require
+			concurrent_eiffel_allowed: Concurrent_eiffel
 		do
 			has_separate := True
 		end

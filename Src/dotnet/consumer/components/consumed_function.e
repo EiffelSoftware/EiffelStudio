@@ -10,6 +10,8 @@ inherit
 	CONSUMED_PROCEDURE
 		rename
 			make as method_make
+		redefine
+			has_return_value
 		end
 
 create
@@ -52,6 +54,8 @@ feature -- Access
 	return_type: CONSUMED_REFERENCED_TYPE
 			-- Function return type
 
+feature -- Status report
+
 	is_infix: BOOLEAN is
 			-- Is function an infix feature?
 		do
@@ -63,6 +67,9 @@ feature -- Access
 		do
 			Result := internal_flags & Is_prefix_mask = Is_prefix_mask
 		end
+
+	has_return_value: BOOLEAN is True
+			-- A function always return a value.
 
 feature {NONE} -- Internal
 

@@ -10,6 +10,8 @@ inherit
 	CONSUMED_MEMBER
 		rename
 			make as member_make
+		redefine
+			has_arguments
 		end
 create
 	make
@@ -49,7 +51,9 @@ feature -- Access
 
 	arguments: ARRAY [CONSUMED_ARGUMENT]
 			-- Feature arguments
-	
+
+feature -- Status report
+
 	is_frozen: BOOLEAN is
 			-- Is feature frozen?
 		do
@@ -68,6 +72,12 @@ feature -- Access
 			Result := internal_flags & Is_deferred_mask = Is_deferred_mask
 		end
 
+	has_arguments: BOOLEAN is
+			-- Does current have arguments?
+		do
+			Result := arguments /= Void and then arguments.count /= 0
+		end
+		
 feature {NONE} -- Internal
 
 	internal_flags: INTEGER

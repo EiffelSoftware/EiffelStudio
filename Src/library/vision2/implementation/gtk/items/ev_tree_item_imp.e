@@ -178,7 +178,7 @@ feature {NONE} -- Implementation
 				-- Connect events to items own tree.
 			real_signal_connect (Result, "select_child", ~select_callback)
 				--| Gtk bug means that select_child signal gets
-				--| fired on button press.
+				--| fired on button click regardless.
 		end
 
 	add_to_container (v: like item) is
@@ -328,6 +328,9 @@ end -- class EV_TREE_ITEM_IMP
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.43  2000/03/01 18:04:44  king
+--| Changed on_select bug comment
+--|
 --| Revision 1.42  2000/02/29 22:28:55  king
 --| Tidied up code, fixed gtk select callback bug
 --|

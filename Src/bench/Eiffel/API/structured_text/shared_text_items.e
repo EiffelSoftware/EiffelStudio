@@ -651,6 +651,12 @@ feature {NONE} -- Symbol names
 			!!Result.make ("<=")
 		end
 
+	ti_Question: SYMBOL_TEXT is
+			-- "'" characters
+		once
+			!!Result.make ("?")
+		end
+
 	ti_Quote: SYMBOL_TEXT is
 			-- "'" characters
 		once

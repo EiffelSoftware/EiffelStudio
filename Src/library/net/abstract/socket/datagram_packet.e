@@ -150,7 +150,7 @@ feature -- Externals
 	c_int32_min: INTEGER is
 			-- Min value for a signed integer 32 bits
 		external
-			"C [macro %"portable.h%"]"
+			"C [macro %"eif_portable.h%"]"
 		alias
 			"INT32_MIN"
 		end;
@@ -158,7 +158,7 @@ feature -- Externals
 	c_int32_max: INTEGER is
 			-- Max value for signed integer 32 bits
 		external
-			"C [macro %"portable.h%"]"
+			"C [macro %"eif_portable.h%"]"
 		alias
 			"INT32_MAX"
 		end

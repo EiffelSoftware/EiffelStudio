@@ -18,9 +18,9 @@ ld='ld'
 mt_prefix='mt'
 
 # FIXME: Manu 02/14/2002: fix threads flag
-mtccflags='-pipe -fno-common'
-mtlibs='-L/opt/local/lib -lcompat'
-mtsharedlibs='-L/opt/local/lib -lcompat'
+mtccflags='-pipe -fno-common -DEIF_THREADS -DEIF_POSIX_THREADS'
+mtlibs='-L/opt/local/lib -lcompat -lpthread'
+mtsharedlibs='-L/opt/local/lib -lcompat -lpthread'
 
 optimize='-Wall -O3'
 wkoptimize='-O'

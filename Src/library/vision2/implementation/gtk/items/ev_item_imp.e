@@ -35,8 +35,37 @@ feature -- Access
 			end
 		end
 
+	parent_imp: EV_ITEM_HOLDER_IMP
+			-- Parent of current.
+
 feature -- Element Change
 
+	set_parent (par: like parent) is
+			-- Make `par' the new parent of the widget.
+			-- `par' can be Void.
+			-- Before to remove the widget from the
+			-- container, we increment the number of
+			-- reference on the object otherwise gtk
+			-- destroyed the object. And after having
+			-- added the object to another container,
+			-- we remove this supplementary reference.
+		do
+			if parent_imp /= Void then
+				gtk_object_ref (widget)
+				parent_imp.remove_item (Current)
+				parent_imp := Void
+			end
+			if par /= Void then
+				parent_imp ?= par.implementation
+				check
+					parent_not_void: parent_imp /= Void
+				end
+				parent_imp.add_item (Current)
+				show
+				gtk_object_unref (widget)
+			end
+		end
+	
 	set_parent_with_index (par: like parent; pos: INTEGER) is
 			-- Make `par' the new parent of the widget and set
 			-- the current button at `pos'.

@@ -571,7 +571,7 @@ feature {NONE} -- Implementation
 					loop
 						create l_assembly.initialize (
 							l_factory.new_id_sd (l_missing.item.cluster_name, True),
-							l_factory.new_id_sd (l_missing.item.assembly_name, True),
+							l_factory.new_id_sd (l_missing.item.assembly_path, True),
 							l_factory.new_id_sd (l_missing.item.prefix_name, True),
 							Void,
 							Void,

@@ -98,5 +98,10 @@ feature {NONE}
 		once
 			Result := System.Rep_depend_server;
 		end;
+
+	Class_comments_server: CLASS_COMMENTS_SERVER is
+		once
+			Result := System.Class_comments_server;
+		end;
  
 end

@@ -1,7 +1,7 @@
 indexing
 
 	description:
-		"Abstract notion of category of resources used for a UI.";
+		"Resource valid for the system tool.";
 	date: "$Date$";
 	revision: "$Revision$"
 
@@ -15,8 +15,6 @@ inherit
 			{NONE} all
 		end;
 	PREFERENCE_CATEGORY
-		rename
-			make as rc_make
 		redefine
 			init_colors
 		end
@@ -26,28 +24,20 @@ creation
 
 feature {NONE} -- Initialization
 
-	make (a_tool: PREFERENCE_TOOL) is
-			-- Initialize Current with `a_tool' as `tool'.
-		require
-			a_tool_not_void: a_tool /= Void
+	update_resources is
+			-- Update `resources'.
 		do
-			tool := a_tool;
-			!! resources.make;
+			!! tool_width.make (associated_category.tool_width);
+			!! tool_height.make (associated_category.tool_height);
+			!! command_bar.make (associated_category.command_bar);
+			!! format_bar.make (associated_category.format_bar);
+			--!! arr_hidden_clusters.make (associated_category.hidden_clusters);
 
-			!! parse_class_after_saving.make 
-							(associated_category.parse_class_after_saving, Current)
-			!! default_window_position.make (associated_category.default_window_position, Current);
-			!! str_temporary_dir.make (associated_category.temporary_dir, Current);
-			!! str_profiler_dir.make (associated_category.profiler_dir, Current);
-			!! str_filter_dir.make (associated_category.filter_dir,	Current);
-			!! int_history_size.make (associated_category.history_size, Current)
-
-			resources.extend (default_window_position);
-			resources.extend (parse_class_after_saving);
-			resources.extend (str_profiler_dir);
-			resources.extend (str_filter_dir);
-			resources.extend (str_temporary_dir);
-			resources.extend (int_history_size);
+			resources.extend (tool_width);
+			resources.extend (tool_height);
+			resources.extend (command_bar);
+			resources.extend (format_bar);
+			--resources.extend (arr_hidden_clusters)
 		end;
 
 	init_colors is
@@ -62,7 +52,7 @@ feature {NONE} -- Initialization
 feature {PREFERENCE_TOOL} -- Initialization
 
 	init_visual_aspects (a_menu: MENU_PULL; a_button_parent, a_parent: COMPOSITE) is
-			-- Initialize Current and `a_parent' as `parent'.
+			-- Initialize Currrent's visual aspects.
 		local
 			button: EB_PREFERENCE_BUTTON;
 			menu_entry: PREFERENCE_TICKABLE_MENU_ENTRY
@@ -70,38 +60,23 @@ feature {PREFERENCE_TOOL} -- Initialization
 			!! button.make (Current, a_button_parent);
 			!! menu_entry.make (Current, a_menu);
 			!! holder.make (button, menu_entry);
-
-			button.set_selected (False);
-
-			rc_make (name, a_parent)
+			make_row_column (name, a_parent)
 		end
 
 feature -- Properties
 
-	name: STRING is "System preferences"
+	name: STRING is "System tool preferences"
 			-- Current's name
 
 	symbol: PIXMAP is
-			-- Current's symobl for being unselected
 		once
 			Result := Pixmaps.bm_System
 		end;
 
-	dark_symbol: PIXMAP is
-			-- Dark version of `symbol'
-		local
-			full_path: FILE_NAME
-		once
-			Result := Pixmaps.bm_System_dot
-		end
-
 feature {NONE} -- Resources
 
-	parse_class_after_saving: BOOLEAN_PREF_RES;
-	default_window_position: BOOLEAN_PREF_RES;
-	str_temporary_dir: STRING_PREF_RES;
-	str_profiler_dir: STRING_PREF_RES;
-	str_filter_dir: STRING_PREF_RES;
-	int_history_size: INTEGER_PREF_RES
+	tool_width, tool_height: INTEGER_PREF_RES;
+	command_bar, format_bar: BOOLEAN_PREF_RES;
+	--arr_hidden_clusters: ARRAY_PREF_RES
 
 end -- class SYSTEM_PREF_CAT

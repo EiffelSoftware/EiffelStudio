@@ -29,6 +29,7 @@ extern "C" {
  */
 #define signal_pending		sig_stk.s_pending
 
+extern Signal_t ehandlr(EIF_CONTEXT register int sig);			/* Eiffel main signal handler */
 extern void esdpch(EIF_CONTEXT_NOARG);			/* Dispatch queued signals */
 extern char *signame(int sig);			/* Give English description of a signal */
 RT_LNK void initsig(void);			/* Initialize the Eiffel handling of signals */

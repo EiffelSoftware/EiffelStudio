@@ -176,6 +176,8 @@ feature -- Access
 			has: has_associated_class_type
 		do
 			Result := base_class.types.search_item (Current)
+		ensure
+			result_not_void: Result /= Void
 		end
 
 	type_id: INTEGER is
@@ -294,7 +296,7 @@ feature -- Status
 	has_associated_class_type: BOOLEAN is
 			-- Has `Current' an associated class type?
 		do
-			Result := base_class.types.search_item (Current) /= Void
+			Result := base_class.types.has_type (Current)
 		end
 
 	same_as (other: TYPE_I): BOOLEAN is

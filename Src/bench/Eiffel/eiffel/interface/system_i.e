@@ -48,7 +48,11 @@ inherit
 	COMPILER_EXPORTER
 	SHARED_EIFFEL_PROJECT
 	SHARED_CONFIGURE_RESOURCES
-	SHARED_BENCH_LICENSES
+
+	SHARED_LICENSE
+		export
+			{NONE} all
+		end
 
 create
 	make
@@ -713,7 +717,6 @@ feature -- Recompilation
 			freezing_occurred := False
 
 			If System.uses_precompiled then
-				check_precompiled_licenses
 					-- Validate the precompilation.
 				create precomp_r
 				precomp_r.check_version_number
@@ -3494,7 +3497,7 @@ feature -- Pattern table generation
 			buffer.generate_function_signature (
 				"void", "egc_system_mod_init_init", True, buffer, <<"">>, <<"void">>)
 
-			if license.demo_mode or else license.non_commercial_mode then
+			if license.is_evaluating then
 					-- Set egc_type_of_gc = 25 * egc_platform_level + egc_compiler_tag - 1
 				buffer.putstring ("%N%Tegc_type_of_gc = 123173;%N")
 			else
@@ -3818,7 +3821,7 @@ feature -- Concurrent Eiffel
 			--| of the compilation or after retrieving a project
 			--| s this can raise an error
 		do
-			Result := Concurrency_license.licensed
+			Result := False
 		end
 
 	has_separate: BOOLEAN

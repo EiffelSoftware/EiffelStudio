@@ -52,11 +52,11 @@ extern EIF_INTEGER prof_enabled;
 /* Total execution time */
 
 #ifdef HAS_GETRUSAGE
-struct 	prof_rusage	init_date;
+struct 	prof_rusage	*init_date;
 #elif defined(HAS_TIMES)
-double 		init_date;
+double 	       init_date;
 #elif defined(EIF_WIN32)
-SYSTEMTIME 	init_date;
+SYSTEMTIME 	*init_date;
 #endif  /* HAS_GERUSAGE */
 
 /* INTERNAL TRACE VARIABLES */
@@ -491,7 +491,15 @@ void initprf(void)
 
 		prof_stack_init();		/* Initialize stack */
 
-		record_time (&init_date); 
+#ifdef HAS_GETRUSAGE
+		init_date = (struct prof_rusage *) eif_malloc (sizeof (struct prof_rusage));
+#elif defined(HAS_TIMES)
+		
+#elif defined(EIF_WIN32)
+		init_date = (SYSTEMTIME *) eif_malloc (sizeof (SYSTEMTIME));
+#endif  /* HAS_GERUSAGE */
+
+		record_time (init_date); 
 	}
 }
 
@@ -505,11 +513,11 @@ void exitprf(void)
 	if(prof_enabled) {
 
 #ifdef HAS_GETRUSAGE
-		struct prof_rusage execution_time;
+		struct prof_rusage *execution_time;
 #elif defined(HAS_TIMES)
 		double execution_time;
 #elif defined(EIF_WIN32)
-		SYSTEMTIME execution_time;
+		SYSTEMTIME *execution_time;
 #endif  /* HAS_GERUSAGE */
 
 		unsigned long *keys;		/* Keys from H table */
@@ -525,7 +533,15 @@ void exitprf(void)
 		chdir (cwd);	/* change the current directory to EIFGEN/W_code or
 						/* EIFGEN/F_code before to crete the profile_output_file */
 
-		record_time (&execution_time); 
+#ifdef HAS_GETRUSAGE
+		execution_time = (struct prof_rusage *) eif_malloc (sizeof (struct prof_rusage));
+#elif defined(HAS_TIMES)
+		
+#elif defined(EIF_WIN32)
+		execution_time = (SYSTEMTIME *) eif_malloc (sizeof (SYSTEMTIME));
+#endif  /* HAS_GERUSAGE */
+
+		record_time (execution_time); 
 		
 		prof_output = fopen(profile_output_file, "w");
 		if (!prof_output) {
@@ -534,11 +550,11 @@ void exitprf(void)
 		}
 
 #ifdef HAS_GETRUSAGE
-		subtract_time (&execution_time, &execution_time, &init_date);
+		subtract_time (execution_time, execution_time, init_date);
 #elif defined(HAS_TIMES)
 		execution_time = execution_time - init_date;
 #elif defined(EIF_WIN32)
-		subtract_time (&execution_time, &execution_time, &init_date);
+		subtract_time (execution_time, execution_time, init_date);
 #endif 
 
 /* NEED TO BE CHECKED BY GUILLAUME
@@ -560,11 +576,11 @@ void exitprf(void)
 						features = (struct prof_info *) f_values[i].htab->h_values;
 						
 #ifdef HAS_GETRUSAGE
-						percentage = (real_time(features[j].all_total_time)) / (real_time(&execution_time)) / 10000.0; 
+						percentage = (real_time(features[j].all_total_time)) / (real_time(execution_time)) / 10000.0; 
 #elif defined(HAS_TIMES)
 						percentage = features[j].all_total_time / (double) execution_time * 100.;
 #elif defined(EIF_WIN32)
-						percentage = (real_time(features[j].all_total_time)) / (real_time(&execution_time)) * 100.0; 
+						percentage = (real_time(features[j].all_total_time)) / (real_time(execution_time)) * 100.0; 
 #endif						
 						
 						fprintf(prof_output, "[%d]\t%.2f\t%.2f\t%ld\t%.2f\t%s from %d\n", index,
@@ -586,6 +602,15 @@ void exitprf(void)
 					}
 				}
 				ht_free(f_values[i].htab);
+#ifdef HAS_GETRUSAGE
+				eif_free (init_date);
+				eif_free (execution_time);
+#elif defined(HAS_TIMES)
+
+#elif defined(EIF_WIN32)
+				eif_free (init_date);
+				eif_free (execution_time);
+#endif
 			}
 		}
 

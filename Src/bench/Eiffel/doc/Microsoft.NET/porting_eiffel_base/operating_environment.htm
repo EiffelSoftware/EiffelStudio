@@ -1,0 +1,38 @@
+<html>
+
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=windows-1252">
+<title>DOUBLE_MATH</title>
+</head>
+
+<body>
+<h1>OPERATING_ENVIRONMENT</h1>
+<h2>Used .NET classes</h2>
+<ul>
+	<li>PATH
+</ul>
+<h2>Static methods used</h2>
+<ul>
+	<li>{PATH}.directory_separator_char
+</ul>
+<h2>Security notes</h2>
+<ul>
+	<li>NONE
+</ul>
+<h2>Unhandled exceptions</h2>
+<ul>
+  <li>None</li>
+</ul>
+<h2>Tricks</h2>
+<ul>
+  <li>&nbsp;Looked in path_name.c in the runtime source to double check the
+    expected result for Win32.</li>
+  <li>Implemented previous externals as constants to avoid redefinition as there
+    is no API to call for all the functions except directory_separator_char.&nbsp;
+    This will have to be investigated further should the emphasis on dotnet be
+    placed on non Microsoft platforms.</li>
+</ul>
+
+</body>
+
+</html>

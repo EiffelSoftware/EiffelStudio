@@ -2,9 +2,28 @@ class STRING_PATTERN
 
 inherit
 	STRING
+		rename
+			make as str_make
+		end;
+	STRING
+		redefine
+			make
+		select
+			make
+		end
 
 creation
 	make
+
+feature {NONE} -- Initialization
+
+	make (size: INTEGER) is
+			-- Create a new string object.
+		do
+			str_make (size);
+			string_representation := '*';
+			character_representation := '?'
+		end
 
 feature -- Status setting
 
@@ -12,9 +31,10 @@ feature -- Status setting
 			-- Set `string_representation' to
 			-- `new_str_rep'.
 		require
-			new_str_rep_non_void: new_str_rep /= Void
+			new_str_rep_not_nul_char: new_str_rep /= '%U';
+			different_string_representation: new_str_rep /= character_representation
 		do
-			str_rep := new_str_rep;
+			string_representation := new_str_rep
 		ensure
 			string_representation_is_new_str_rep: string_representation = new_str_rep
 		end;
@@ -23,75 +43,64 @@ feature -- Status setting
 			-- Set `character_representation' to
 			-- `new_char_rep'.
 		require
-			new_char_rep_non_void: new_char_rep /= Void
+			new_char_rep_not_nul_char: new_char_rep /= '%U';
+			different_character_representation: new_char_rep /= string_representation
 		do
-			char_rep := new_char_rep;
+			character_representation := new_char_rep
 		ensure
 			character_representation_is_new_char_rep: character_representation = new_char_rep
-		end;
+		end
 	
 feature -- Status report
 
-	character_representation: CHARACTER is
+	character_representation: CHARACTER
 			-- The character that represents any single
-			-- character in `text'. Default: '?'
-		do
-			if char_rep = Void then
-				Result := '?';
-			else
-				Result := char_rep;
-			end;
-		end;
+			-- character in `text'
+			--| Default: '?'
 
-	string_representation: CHARACTER is
+	string_representation: CHARACTER
 			-- The character that represents any string
-			-- in `text'. Default: '*'
-		do
-			if str_rep = Void then
-				Result := '*';
-			else
-				Result := str_rep;
-			end;
-		end;
+			-- in `text'
+			--| Default: '*'
 
 	has_wild_cards: BOOLEAN is
-			-- Has the Current either of `string_representation' or
-			-- `character_representation'.
+			-- Has Current either of `string_representation' or
+			-- `character_representation'?
 		do
 			Result := has (string_representation) or else
 				  has (character_representation);
-		end;
+		end
+
 feature -- Comparison
 
-        str_is_equal (other: STRING): BOOLEAN is
-                        -- Is string made of same character sequence as `other'
-                        -- (possibly with a different capacity)?
-                local
-                        o_area: like area;
-                        i: INTEGER
-                do
-                        if count = other.count then
-                                o_area := other.area;
-                                i := str_cmp ($area, $o_area, count, other.count
-);
-                                Result := (i = 0);
-                        end;
-                end;
+	str_is_equal (other: STRING): BOOLEAN is
+			-- Is string made of same character sequence as `other'
+			-- (possibly with a different capacity)?
+		local
+			o_area: like area;
+			i: INTEGER
+		do
+			if count = other.count then
+				o_area := other.area;
+				i := str_cmp ($area, $o_area, count, other.count);
+				Result := (i = 0);
+			end;
+		end;
 
 	matches (other: STRING): BOOLEAN is
 			-- Matches `other' the Current pattern ?
 		require
 			has_wild_cards: has_wild_cards;
-			other_non_void: other /= Void;
+			other_non_void: other /= Void
 		local
-			automaton_area, input_area: SPECIAL [CHARACTER]
-			automaton_index, automaton_count: INTEGER
-			input_index, input_count: INTEGER
-			next_automaton, automaton_char, input_char, s_r, c_r: CHARACTER
+			automaton_area, input_area: SPECIAL [CHARACTER];
+			automaton_index, automaton_count: INTEGER;
+			input_index, input_count: INTEGER;
+			next_automaton, automaton_char, input_char, s_r, c_r: CHARACTER;
 			str_rep_str: STRING
  		do
-			s_r := str_rep;
-			c_r := char_rep;
+			s_r := string_representation;
+			c_r := character_representation;
 			!! str_rep_str.make (0);
 			str_rep_str.extend (s_r);
 			if count > other.count then
@@ -101,22 +110,22 @@ feature -- Comparison
 			else
 
 				from
-					automaton_area := area
-					input_area := other.area
-					automaton_count := count
-					input_count := other.count
-					Result := true;
+					automaton_area := area;
+					input_area := other.area;
+					automaton_count := count;
+					input_count := other.count;
+					Result := true
 				until
 					automaton_index >= automaton_count or else
 					input_index >= input_count or else
 					not Result
 				loop
-					automaton_char := automaton_area.item(automaton_index)
-					input_char := input_area.item(input_index)
+					automaton_char := automaton_area.item(automaton_index);
+					input_char := input_area.item(input_index);
 					if automaton_index + 1 < automaton_count then
 						next_automaton := automaton_area.item(automaton_index + 1)
 					else
-						input_index := input_count
+						input_index := input_count;
 						automaton_index := automaton_count
 					end
 	
@@ -133,13 +142,13 @@ feature -- Comparison
 							end
 						end
 					elseif automaton_char = c_r then
-						automaton_index := automaton_index + 1
+						automaton_index := automaton_index + 1;
 						input_index := input_index + 1
 					else
 						if automaton_char /= input_char then
 							Result := false
 						else
-							automaton_index := automaton_index + 1
+							automaton_index := automaton_index + 1;
 							input_index := input_index + 1
 						end
 					end
@@ -157,12 +166,8 @@ feature -- Comparison
 			end
 		end
 
-feature {NONE} -- Attributes
+invariant
 
-	char_rep: CHARACTER;
-			-- Character that represents any single character.
-
-	str_rep: CHARACTER;
-			-- Character that represents any number of characters.
+	different_character_and_string_representation: character_representation /= string_representation
 
 end -- class STRING_PATTERN

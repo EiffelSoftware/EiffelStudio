@@ -172,9 +172,9 @@ feature -- Element change
 		do
 			implementation.put_front (v)
 		ensure
-			item_inserted: has (v)
-			new_count: count = old count + 1
 			item_inserted: first = v
+			new_count: count = old count + 1
+			item_parent_is_current: v.parent = Current
 		end
 
 	put_right (v: like item) is
@@ -189,9 +189,10 @@ feature -- Element change
 		do
 			implementation.put_right (v)
 		ensure
-			item_inserted: has (v)
+			item_inserted: i_th (index + 1) = v
 	 		new_count: count = old count + 1
 	 		same_index: index = old index
+			item_parent_is_current: v.parent = Current
 		end
 
 	merge_left (other: like Current) is
@@ -376,6 +377,9 @@ end -- class EV_WIDGET_LIST
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.15  2000/03/16 23:12:28  king
+--| Revised post conditions on insertion
+--|
 --| Revision 1.14  2000/03/07 02:58:50  brendel
 --| Added redefine of make_for_test.
 --|

@@ -242,8 +242,11 @@ feature -- Saving
 			if has_debug_info then
 				l_pe_file.put_data (debug_directory.item, debug_directory.count)
 				l_pe_file.put_data (debug_info.item, debug_info.count)
-				create l_padding.make (padding (debug_directory.count + debug_info.count, 16))
-				l_pe_file.put_data (l_padding.item, l_padding.count)
+				l_size := padding (debug_directory.count + debug_info.count, 16)
+				if l_size > 0 then
+					create l_padding.make (l_size)
+					l_pe_file.put_data (l_padding.item, l_padding.count)
+				end
 			end
 
 			if has_strong_name then

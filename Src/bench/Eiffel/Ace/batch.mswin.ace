@@ -192,7 +192,7 @@ external
 		"$(EIFFEL_SRC)\C\bench",
 		"$(EIFFEL_SRC)\C\platform",
 		"$(EIFFEL_SRC)\library\wel\spec\windows\include",
-		"$(EIFFEL_SRC)\Eiffel\library\cli_writer\Clib"
+		"$(EIFFEL_SRC)\Eiffel\library\cli_writer\Clib -D_WIN32_DCOM"
 
 	object:
 		"$(EIFFEL_SRC)\C\bench\compiler.lib",

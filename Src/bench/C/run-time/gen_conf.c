@@ -2528,7 +2528,7 @@ rt_private EIF_ANC_ID_MAP *eif_new_anc_id_map (int16 min_id, int16 max_id) {
 		size = (max_id - min_id + 1);
 
 		if (size > 8) {
-			map = (int16 *) eif_calloc (size * sizeof(int16));
+			map = (int16 *) eif_calloc (size, sizeof(int16));
 
 			if (map == (int16 *) 0)
 				enomem ();

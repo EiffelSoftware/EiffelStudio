@@ -15,7 +15,8 @@ inherit
 			create_toolbars,
 			set_text_from_file,
 			show_file,
-			reset
+			reset,
+			build_special_menu
 		end
 
 feature {NONE} -- Initialization
@@ -57,6 +58,8 @@ feature -- Window Properties
 			-- for the `create_toolbars' creation instruction not
 			-- to be rejected by the compiler.
 
+	format_bar_menu_item: EV_CHECK_MENU_ITEM
+
 	format_bar_is_used: BOOLEAN is
 			-- Do the tool need an effective format_bar?
 		deferred
@@ -89,7 +92,18 @@ feature -- Window settings
 
 feature -- Update
 
-	update is
+	format_bar_menu_update (arg: EV_ARGUMENT; data: EV_EVENT_DATA) is
+		require
+			menu_item_exists: format_bar_menu_item /= Void
+		do
+			if format_bar_menu_item.is_selected then
+				format_bar.show
+			else
+				format_bar.hide
+			end
+		end
+
+	update_format is
 			-- Update the content of the window (only after saving the content of
 			-- the tool.
 		local
@@ -193,6 +207,19 @@ feature {EB_TOOL_MANAGER} -- Menus Implementation
 				end
 				cfl.item.launch_cmd.set_menu_item (ri)
 				cfl.forth
+			end
+		end
+
+	build_special_menu (a_menu: EV_MENU_ITEM_HOLDER) is
+		local
+			cmd: EV_ROUTINE_COMMAND
+		do
+			Precursor (a_menu)
+			if format_bar_is_used then
+				create format_bar_menu_item.make_with_text (a_menu, Interface_names.n_Format_bar_name)
+				create cmd.make (~format_bar_menu_update)
+				format_bar_menu_item.add_select_command (cmd, Void)
+				format_bar_menu_item.add_unselect_command (cmd, Void)
 			end
 		end
 

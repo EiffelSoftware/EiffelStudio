@@ -128,9 +128,9 @@ feature -- Stone process
 				showtext_frmt_holder.execute (cl_stone);
 				history.extend (stone);
 				text_window.deselect_all;
+				text_window.set_cursor_position (s.start_position);
 				text_window.highlight_selected
-						(s.start_position, s.end_position);
-				text_window.set_cursor_position (s.start_position)
+						(s.start_position, s.end_position)
 			end
 		end;
  

@@ -20,7 +20,7 @@ inherit
 		undefine
 			string_value
 		redefine
-			generate, is_integer, is_propagation_equivalent,
+			generate, is_integer,
 			set_real_type
 		end
 
@@ -192,11 +192,6 @@ feature -- Conveniences
 			end
 			
 			Result := (upper.to_integer_64 |<< 32) | l_lower_64
-		end
-
-	is_propagation_equivalent (other: like Current): BOOLEAN is
-		do
-			Result := same_type (other) and then is_equivalent (other)
 		end
 
 	used (r: REGISTRABLE): BOOLEAN is

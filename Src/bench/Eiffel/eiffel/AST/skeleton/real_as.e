@@ -30,7 +30,7 @@ feature {NONE} -- Initialization
 			value.replace_substring_all ("_","")
 			constant_type := a_type
 		ensure
-			value_set: value = r
+			value_set: value.is_equal (r)
 			constant_type_set: constant_type = a_type
 		end
 

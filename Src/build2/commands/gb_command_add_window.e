@@ -92,10 +92,10 @@ feature -- Basic Operation
 			end
 			create selector_item.make_with_object (an_object)
 			if parent_directory = Void then
-				window_selector.extend (an_object.window_selector_item)
+				add_to_tree_node_alphabetically (window_selector, an_object.window_selector_item)
 			else
 				directory_item := window_selector.directory_object_from_name (parent_directory)
-				directory_item.extend (an_object.window_selector_item)
+				add_to_tree_node_alphabetically (directory_item, an_object.window_selector_item)
 					-- Ensure that the newly added item is visible.
 				directory_item.expand
 			end

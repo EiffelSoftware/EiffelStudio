@@ -360,9 +360,14 @@ feature {NONE} -- Implementation
 
 	set_output is
 			-- Set content of `output_text' with `text'
+		local
+			l_scroll: INTEGER
 		do
 			output_text.set_text (text)
-			output_text.scroll_to_line (output_text.line_count - output_text.visible_lines_count)
+			l_scroll := output_text.line_count - output_text.visible_lines_count
+			if l_scroll > 0 then
+				output_text.scroll_to_line (l_scroll)
+			end
 		end
 		
 	eiffelstudio_command (a_folder: STRING): STRING is

@@ -55,6 +55,9 @@ feature -- Access
 	object_tool: EB_OBJECT_TOOL
 			-- A tool that represents the current call stack element and an object in a graphical display.
 
+	evaluator_tool: EB_EXPRESSION_EVALUATOR
+			-- A tool that evaluates expressions.
+
 	kept_objects: LINKED_SET [STRING]
 			-- Objects represented by their address that should be kept during the execution.
 
@@ -299,6 +302,22 @@ feature -- Status setting
 				io.putstring ("editor height: " + debugging_window.editor_tool.explorer_bar_item.widget.height.out + "%N")
 			end
 			
+			if evaluator_tool = Void then
+				create evaluator_tool.make (debugging_window, debugging_window.left_panel)
+			else
+				evaluator_tool.change_manager (debugging_window, debugging_window.left_panel)
+			end
+			debug ("DEBUGGER_INTERFACE")
+				io.putstring ("editor height: " + debugging_window.editor_tool.explorer_bar_item.widget.height.out + "%N")
+			end
+			
+			evaluator_tool.prepare_for_debug
+			evaluator_tool.update
+			evaluator_tool.show
+			debug ("DEBUGGER_INTERFACE")
+				io.putstring ("editor height: " + debugging_window.editor_tool.explorer_bar_item.widget.height.out + "%N")
+			end
+			
 			split ?= object_tool.widget
 				--| 200 is the default size of the local tree.
 			split.set_split_position (split.minimum_split_position.max (object_split_position).min (split.maximum_split_position))
@@ -385,6 +404,7 @@ feature -- Status setting
 				-- Hide debugging tools.
 			call_stack_tool.recycle
 			object_tool.recycle
+			evaluator_tool.recycle
 			debug ("DEBUGGER_INTERFACE")
 				io.putstring ("editor height after debug: " + debugging_window.editor_tool.explorer_bar_item.widget.height.out + "%N")
 			end
@@ -411,10 +431,17 @@ feature -- Status setting
 
 	set_stone (st: STONE) is
 			-- Propagate `st' to tools.
+		local
+			cst: CALL_STACK_STONE
 		do
 			if raised then
+				cst ?= st
+				if cst /= Void then
+					Application.set_current_execution_stack (cst.level_number)
+				end
 				call_stack_tool.set_stone (st)
 				object_tool.set_stone (st)
+				evaluator_tool.set_stone (st)
 			end
 		end
 
@@ -516,6 +543,7 @@ feature -- Debugging events
 				io.putstring ("Displaying the objects (dixit EB_DEBUGGER_MANAGER)%N")
 			end
 			object_tool.update
+			evaluator_tool.update
 			create stt.make
 			stt.add_string ("Application stopped")
 			stt.add_new_line
@@ -540,6 +568,7 @@ feature -- Debugging events
 			call_stack_tool.update
 				-- Fill in the object tool.
 			object_tool.update
+			evaluator_tool.update
 			create stt.make
 			stt.add_string ("Application is running")
 			stt.add_new_line
@@ -564,6 +593,7 @@ feature -- Debugging events
 			window_manager.quick_refresh_all
 			debugging_window := Void
 			output_manager.display_system_info
+			kept_objects.wipe_out
 		end
 
 feature -- Basic operations

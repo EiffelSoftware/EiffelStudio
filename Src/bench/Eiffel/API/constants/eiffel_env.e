@@ -10,7 +10,7 @@ class EIFFEL_ENV
 inherit
 	SYSTEM_CONSTANTS
 
-	ENV_INTERP
+	SHARED_EXEC_ENVIRONMENT
 
 feature -- Status
 

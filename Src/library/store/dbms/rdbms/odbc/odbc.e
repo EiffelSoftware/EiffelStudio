@@ -192,6 +192,7 @@ feature -- DATABASE_DATETIME
 		local
 			sep: STRING
 		once
+			!! sep.make (1)
 			sep.from_c(odbc_driver_name)
 			if sep.substring_index("Oracle", 1) /= 0 or sep.substring_index ("INGRES", 1) /= 0 then
 				Result := " date"

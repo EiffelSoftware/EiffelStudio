@@ -957,7 +957,7 @@ where <I>returned_value</I> is the value returned by <I>eif_create</I> .
 This means that when creating
 an eiffel object from C, the eiffel object is automatically protected:
 there is no need to call <I><A HREF="#eif_adopt">eif_adopt</A></I> or 
-<A HREF="#henter"><I>eif_protect</i></A> <I> on
+<A HREF="#henter"><I>eif_protect</I></A> on
 it. This function does not call any creation procedure. To do so, you need
 to explicitly call it&nbsp; with <A HREF="#eif_procedure">eif_procedure</A>.
 The garbage collector will not collect the newly created object until you

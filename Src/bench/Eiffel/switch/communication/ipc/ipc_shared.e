@@ -12,146 +12,149 @@ feature {NONE} -- Request constants
 		-- Same as in file /ipc/shared/rqst_const.h
 
 	Rqst_hello: INTEGER is 4
-		-- Application's handshake with ewb
+			-- Application's handshake with ewb
 
 	Rqst_inspect: INTEGER is 6
-		-- Object inspection
+			-- Object inspection
 
 	Rqst_dump: INTEGER is 7
-		-- A general stack dump request
+			-- A general stack dump request
 
 	Rqst_move: INTEGER is 9
-		-- Change active routine pointer
+			-- Change active routine pointer
 
 	Rqst_break: INTEGER is 10
-		-- Add/delete breakpoint
+			-- Add/delete breakpoint
 
 	Rqst_resume: INTEGER is 11
-		-- Resume execution
+			-- Resume execution
 
 	Rqst_quit: INTEGER is 12
-		-- Application must die immediately
+			-- Application must die immediately
 
 	Rqst_application: INTEGER is 14
 			-- Start up application (for ised)
 
 	Rqst_load: INTEGER is 19
-		-- Load byte code information
+			-- Load byte code information
 
 	Rqst_bc: INTEGER is 20
-		-- Byte code transfer
+			-- Byte code transfer
 
 	Rqst_kill: INTEGER is 21
-		-- Kill application asynchronously
+			-- Kill application asynchronously
 
 	Rqst_adopt: INTEGER is 22
-		-- Adopt object
+			-- Adopt object
 
 	Rqst_access: INTEGER is 23
-		-- Access object through hector
+			-- Access object through hector
 
 	Rqst_wean: INTEGER is 24
-		-- Wean adopted object
+			-- Wean adopted object
 
 	Rqst_once: INTEGER is 25
-		-- Once routines inspection
+			-- Once routines inspection
 
 	Rqst_interrupt: INTEGER is 26
-		-- Debugger asking interruption of application
+			-- Debugger asking interruption of application
 
 	Rqst_sp_lower: INTEGER is 30
-		-- Bounds for special objects inspection
+			-- Bounds for special objects inspection
 
 	Rqst_metamorphose: INTEGER is 31
-		-- Convert the top-level item on the operational stack from a basic type to a reference type.
+			-- Convert the top-level item on the operational stack from a basic type to a reference type.
 	
 	Rqst_new_breakpoint: INTEGER is 33
-		-- Debugger asking interruption of application in
-		-- order to take new breakpoint(s) into account.
+			-- Debugger asking interruption of application in
+			-- order to take new breakpoint(s) into account.
 
 	Rqst_modify_local: INTEGER is 34
-		-- Debugger asking modification of a local item
-		-- (argument/local variable/result).
+			-- Debugger asking modification of a local item
+			-- (argument/local variable/result).
 
 	Rqst_modify_attr: INTEGER is 35
-		-- Debugger asking modification of an object attribute.
+			-- Debugger asking modification of an object attribute.
 
 	Rqst_dynamic_eval: INTEGER is 36
-		-- Debugger asking the application to evaluate a
-		-- given feature with the given parameters.
+			-- Debugger asking the application to evaluate a
+			-- given feature with the given parameters.
 
 	Rqst_dump_variables: INTEGER is 37
-		-- Dump variable for the current feature on stack.
-		-- Defined as DUMP_VARIABLE in run-time
+			-- Dump variable for the current feature on stack.
+			-- Defined as DUMP_VARIABLE in run-time
 
 	Rqst_application_cwd: INTEGER is 38
-		-- Set current directory for application.
+			-- Set current directory for application.
 
 	Rqst_create_ref: INTEGER is 39
-		-- Create a reference based on a basic type (INTEGER => INTEGER_REF...)
+			-- Create a reference based on a basic type (INTEGER => INTEGER_REF...)
 
 feature {NONE} -- Resume
 
 	Resume_cont: INTEGER is 0
-		-- Continue until next breakpoint
+			-- Continue until next breakpoint
 
 	Resume_step: INTEGER is 1
-		-- Advance one step
+			-- Advance one step
 
 	Resume_next: INTEGER is 2
-		-- Advance until next line
+			-- Advance until next line
 
 	Break_set: INTEGER is 0
-		-- Activate user breakpoint			-- ( <=> DT_SET in run-time )
+			-- Activate user breakpoint			-- ( <=> DT_SET in run-time )
 
 	Break_remove: INTEGER is 1 				-- ( <=> DT_REMOVE in run-time )
-		-- Remove user breakpoint
+			-- Remove user breakpoint
 
 	Break_set_stack_depth: INTEGER is 2		-- ( <=> DT_SET_STACKBP in run-time )
-		-- Activate stepinto mode
+			-- Activate stepinto mode
 
 	Break_set_stepinto: INTEGER is 3		-- ( <=> DT_SET_STEPINTO in run-time )
-		-- Activate stepinto mode
+			-- Activate stepinto mode
 
 
 feature {NONE} -- Inspection constants
 
 	In_address: INTEGER is 0
-		-- Inspect Object at given physical addr
+			-- Inspect Object at given physical addr
 
 	In_h_addr: INTEGER is 5
-		-- Inspect Object at given hector addr
+			-- Inspect Object at given hector addr
 
 	In_bit_addr: INTEGER is 6
-		-- Inspect Bit object at given addr
+			-- Inspect Bit object at given addr
 
 	In_string_addr: INTEGER is 7
-		-- Inspect String object at given addr
+			-- Inspect String object at given addr
 
 	Out_called: INTEGER is 0
-		-- Check whether once routine has been called
+			-- Check whether once routine has been called
 
 	Out_result: INTEGER is 1
-		-- Ask for result of already called once function
+			-- Ask for result of already called once function
 
 
 feature {NONE} -- Implementation
 
 	Pg_raise: INTEGER is 1
-		-- Explicitely raised exception
+			-- Explicitely raised exception
 
 	Pg_viol: INTEGER is 2
-		-- Implicitely raised exception
+			-- Implicitely raised exception
 
 	Pg_break: INTEGER is 3
-		-- Breakpoint reached
+			-- Breakpoint reached
 
 	Pg_interrupt: INTEGER is 4
-		-- System execution interrupted
+			-- System execution interrupted
 
 	Pg_new_breakpoint: INTEGER is 5
-		-- New breakpoints added while running. The application should stop
-		-- to record the new breakpoints.
+			-- New breakpoints added while running. The application should stop
+			-- to record the new breakpoints.
+
+	Pg_step: INTEGER is 6
+			-- The application completed a step operation.
 
 		-- stack request code: same as in ipc/shared/stack.h
 --	Exceptions_stack: INTEGER is 0

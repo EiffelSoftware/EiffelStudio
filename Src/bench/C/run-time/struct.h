@@ -109,7 +109,7 @@ extern int scount;				/* Numner of dynamic types */
 
 #ifdef WORKBENCH
 struct desc_info {						/* Descriptor information */
-	int16 info;							/* Body index or attribute offset */
+	uint16 info;						/* Body index or attribute offset */
 	int16 type;							/* Feature type */
 };
 
@@ -118,6 +118,9 @@ struct rout_info {						/* Routine information */
 	int16 offset;						/* Routine offset in origin */
 };
 #endif
+
+/* Invalid body index used to mark empty invariants (= max uint16) */
+#define INVALID_INDEX 0xFFFF
 
 /* Array of class node (indexed by dynamic type). It is statically allocated
  * in production mode and dynamically in workbench mode.

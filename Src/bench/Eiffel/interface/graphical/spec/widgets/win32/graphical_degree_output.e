@@ -416,16 +416,18 @@ feature {NONE} -- Implementation
 		require
 			valid_message: a_msg /= Void
 		do
-			progress_bar.set_position (0);
-			saved_width := degree_text.width;
-			degree_text.resize (width, degree_text.height);
-			current_degree_text.set_text (Empty_string);
-			nbr_to_go_text.set_text (Empty_string);
-			current_nbr_to_go_text.set_text (Empty_string);
-			entity_text.set_text (Empty_string);
-			current_entity_text.set_text (Empty_string);
-			percentage_text.set_text (Empty_string)
-			degree_text.set_text (a_msg);
+			if exists then
+				progress_bar.set_position (0);
+				saved_width := degree_text.width;
+				degree_text.resize (width, degree_text.height);
+				current_degree_text.set_text (Empty_string);
+				nbr_to_go_text.set_text (Empty_string);
+				current_nbr_to_go_text.set_text (Empty_string);
+				entity_text.set_text (Empty_string);
+				current_entity_text.set_text (Empty_string);
+				percentage_text.set_text (Empty_string)
+				degree_text.set_text (a_msg);
+			end
 		end;
 
 	set_project_icon_name (msg: STRING) is

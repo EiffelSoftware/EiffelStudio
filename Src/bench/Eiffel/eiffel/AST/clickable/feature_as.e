@@ -10,8 +10,7 @@ inherit
 	AST_EIFFEL
 		redefine
 			type_check, byte_node,
-			format, fill_calls_list, replicate,
-			is_feature_obj, number_of_breakpoint_slots
+			format, number_of_breakpoint_slots
 		end
 
 	COMPARABLE
@@ -343,20 +342,17 @@ feature -- Type check, byte code and dead code removal
 			Result := body.new_feature
 		end
 
-	local_table (f: FEATURE_I): EXTEND_TABLE [LOCAL_INFO, STRING] is
+	local_table (f: FEATURE_I): HASH_TABLE [LOCAL_INFO, STRING] is
 		do
 			Result := body.local_table (f)
 		end
 
-	local_table_for_format (f: FEATURE_I): EXTEND_TABLE [LOCAL_INFO, STRING] is
+	local_table_for_format (f: FEATURE_I): HASH_TABLE [LOCAL_INFO, STRING] is
 		do
 			Result := body.local_table_for_format (f)
 		end
 
 feature {COMPILER_EXPORTER} -- Conveniences
-
-	is_feature_obj: BOOLEAN is True
-			-- Is the current object an instance of FEATURE_AS ?
 
 	infix "<" (other: like Current): BOOLEAN is
 		do	
@@ -448,27 +444,6 @@ feature -- Debugger
 				end
 				ctxt.commit
 			end
-		end
-
-feature -- Replication
-
-	fill_calls_list (l: CALLS_LIST) is
-			-- find calls to Current
-		do
-			body.fill_calls_list (l)
-		end
-
-	replicate (ctxt: REP_CONTEXT): like Current is
-			  -- Adapt to replication.
-		local
-			new_feature_names: like feature_names
-		do
-			Result := clone (Current)
-			Result.set_id (System.feature_as_counter.next_id)
-			!! new_feature_names.make (1)
-			new_feature_names.extend (ctxt.replicated_name)
-			Result.set_feature_names (new_feature_names)
-			Result.set_body (body.replicate (ctxt))
 		end
 
 feature {COMPILER_EXPORTER} -- Setting

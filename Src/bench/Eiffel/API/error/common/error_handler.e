@@ -125,7 +125,17 @@ feature -- Syntax errors
 			insert_error (bad_char);
 			raise_error;
 		end;
-	
+
+	make_string_empty is
+			-- Build an error message for an empty string
+		local
+			string_empty: STRING_EMPTY;
+		do
+			!!string_empty.init;
+			insert_error (string_empty);
+			raise_error;
+		end;
+
 	send_yacc_information is
 			-- Send to C code of Yacc information for making
 			-- error messages.
@@ -134,7 +144,8 @@ feature -- Syntax errors
 									$make_string_too_long,
 									$make_string_extension,
 									$make_string_uncompleted,
-									$make_bad_character);
+									$make_bad_character,
+									$make_string_empty);
 		end;
 
 	wipe_out is
@@ -160,7 +171,7 @@ feature -- Debug purpose
 
 feature {NONE} -- Externals
 
-	error_init (obj: ANY; ptr1, ptr2, ptr3, ptr4, ptr5: POINTER) is
+	error_init (obj: ANY; ptr1, ptr2, ptr3, ptr4, ptr5, ptr6: POINTER) is
 			-- Initialize syntac error handling C primitives.
 		external
 			"C"

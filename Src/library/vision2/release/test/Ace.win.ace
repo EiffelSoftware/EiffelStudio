@@ -1,0 +1,43 @@
+system
+	test
+
+root
+	TEST: make_and_launch
+
+default
+
+	assertion (all)
+
+	--debug("EVENT_TRACE")
+	--debug("EV_GTK_DEBUG")
+cluster
+
+dev:						"e:\brendel"
+
+event(dev):					"$\event"
+
+all wel(dev):					"$\wel"
+
+all vision2(dev):				"$\vision2"
+	exclude
+		"test";
+		"gtk";
+		"EIFGEN";
+	end
+
+
+all base(dev):					"$\base"
+	exclude
+		"table_eiffel3"
+	end
+
+test(vision2):				"$\release\test"
+
+external
+
+	include_path:
+		"e:\work\wel\spec\windows\include";
+	object:
+		"e:\work\wel\spec\msc\lib"
+
+end

@@ -180,7 +180,7 @@ feature -- Iteration
 				c := cs.cursor
 			end
 
-			create t.make
+			create t
 			from
 				start
 			until
@@ -210,7 +210,7 @@ feature -- Iteration
 				c := cs.cursor
 			end
 
-			create t.make
+			create t
 			from
 				start
 			until
@@ -235,7 +235,7 @@ feature -- Iteration
 			c: CURSOR
 			t: TUPLE [G]
 		do
-			create t.make
+			create t
 			
 			cs ?= Current
 			if cs /= Void then
@@ -264,7 +264,7 @@ feature -- Iteration
 			c: CURSOR
 			t: TUPLE [G]
 		do
-			create t.make
+			create t
 			
 			cs ?= Current
 			if cs /= Void then

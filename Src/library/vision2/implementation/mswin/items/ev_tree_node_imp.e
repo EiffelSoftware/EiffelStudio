@@ -144,16 +144,19 @@ feature {EV_ANY_I}-- Access
 				-- Retrieve the pixmap from the imagelist
 			if has_pixmap then
 				if private_pixmap = Void then
-					create private_pixmap
-					pix_imp ?= private_pixmap.implementation
+					create Result
+					pix_imp ?= Result.implementation
 					check
 						pix_imp /= Void
 					end
 					image_list := top_parent_imp.image_list
 					image_icon := image_list.get_icon (image_index, Ild_normal)
+					image_icon.enable_reference_tracking
 					pix_imp.set_with_resource (image_icon)
+					image_icon.decrement_reference
+				else
+					Result := private_pixmap
 				end
-				Result := private_pixmap
 			end
 		end 
 

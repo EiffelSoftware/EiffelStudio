@@ -31,20 +31,7 @@ feature -- Basic operation
 	add_child_object (an_object: GB_OBJECT; position: INTEGER) is
 			--
 		do
---		local
---			widget: EV_WIDGET
---		do
---			widget ?= an_object.object
---			check
---				object_is_a_widget: widget /= Void
---			end
---			object.extend (widget)
---			widget ?= an_object.display_object
---			check
---				display_object_is_a_widget: widget /= Void
---			end
---			display_object.extend (widget)
---			layout_item.extend (an_object.layout_item)
+			--| FIXME implement
 		end
 
 end -- class GB_TABLE_OBJECT

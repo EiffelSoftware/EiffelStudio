@@ -8,11 +8,11 @@ frozen external class
 inherit
 	SYSTEM_DATA_IDATAPARAMETERCOLLECTION
 		rename
-			remove_at as remove_at_int32,
+			prune_i_th as remove_at_int32,
 			index_of as index_of_object,
-			contains as contains_object,
-			add as add_object,
-			set_item as system_collections_ilist_set_item,
+			has as contains_object,
+			extend as add_object,
+			put_i_th as system_collections_ilist_set_item,
 			get_item as system_collections_ilist_get_item,
 			get_sync_root as system_collections_icollection_get_sync_root,
 			get_is_synchronized as system_collections_icollection_get_is_synchronized,
@@ -22,11 +22,11 @@ inherit
 	SYSTEM_MARSHALBYREFOBJECT
 	SYSTEM_COLLECTIONS_ILIST
 		rename
-			remove_at as remove_at_int32,
+			prune_i_th as remove_at_int32,
 			index_of as index_of_object,
-			contains as contains_object,
-			add as add_object,
-			set_item as system_collections_ilist_set_item,
+			has as contains_object,
+			extend as add_object,
+			put_i_th as system_collections_ilist_set_item,
 			get_item as system_collections_ilist_get_item,
 			get_sync_root as system_collections_icollection_get_sync_root,
 			get_is_synchronized as system_collections_icollection_get_is_synchronized,

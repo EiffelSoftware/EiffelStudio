@@ -22,13 +22,13 @@ inherit
 			remove as system_collections_idictionary_remove,
 			get_values as system_collections_idictionary_get_values,
 			get_keys as system_collections_idictionary_get_keys,
-			set_item as system_collections_idictionary_set_item,
+			put_i_th as system_collections_idictionary_set_item,
 			get_item as system_collections_idictionary_get_item,
 			get_is_read_only as system_collections_idictionary_get_is_read_only,
 			get_is_fixed_size as system_collections_idictionary_get_is_fixed_size,
-			contains as system_collections_idictionary_contains,
+			has as system_collections_idictionary_contains,
 			clear as system_collections_idictionary_clear,
-			add as system_collections_idictionary_add
+			extend as system_collections_idictionary_add
 		end
 	SYSTEM_COLLECTIONS_ILIST
 		rename
@@ -38,14 +38,14 @@ inherit
 			get_is_fixed_size as system_collections_ilist_get_is_fixed_size,
 			get_is_read_only as system_collections_ilist_get_is_read_only,
 			get_count as system_collections_icollection_get_count,
-			remove_at as system_collections_ilist_remove_at,
+			prune_i_th as system_collections_ilist_remove_at,
 			remove as system_collections_ilist_remove,
 			insert as system_collections_ilist_insert,
 			index_of as system_collections_ilist_index_of,
-			contains as system_collections_ilist_contains,
+			has as system_collections_ilist_contains,
 			clear as system_collections_ilist_clear,
-			add as system_collections_ilist_add,
-			set_item as system_collections_ilist_set_item,
+			extend as system_collections_ilist_add,
+			put_i_th as system_collections_ilist_set_item,
 			get_item as system_collections_ilist_get_item
 		end
 	SYSTEM_COLLECTIONS_IENUMERABLE
@@ -109,7 +109,7 @@ feature -- Basic Operations
 			"Sort"
 		end
 
-	frozen add (value: SYSTEM_COMPONENTMODEL_PROPERTYDESCRIPTOR): INTEGER is
+	frozen extend (value: SYSTEM_COMPONENTMODEL_PROPERTYDESCRIPTOR): INTEGER is
 		external
 			"IL signature (System.ComponentModel.PropertyDescriptor): System.Int32 use System.ComponentModel.PropertyDescriptorCollection"
 		alias
@@ -186,7 +186,7 @@ feature -- Basic Operations
 			"Sort"
 		end
 
-	frozen contains (value: SYSTEM_COMPONENTMODEL_PROPERTYDESCRIPTOR): BOOLEAN is
+	frozen has (value: SYSTEM_COMPONENTMODEL_PROPERTYDESCRIPTOR): BOOLEAN is
 		external
 			"IL signature (System.ComponentModel.PropertyDescriptor): System.Boolean use System.ComponentModel.PropertyDescriptorCollection"
 		alias
@@ -214,7 +214,7 @@ feature -- Basic Operations
 			"Sort"
 		end
 
-	frozen remove_at (index: INTEGER) is
+	frozen prune_i_th (index: INTEGER) is
 		external
 			"IL signature (System.Int32): System.Void use System.ComponentModel.PropertyDescriptorCollection"
 		alias
@@ -356,7 +356,7 @@ feature {NONE} -- Implementation
 			"System.Collections.ICollection.get_Count"
 		end
 
-	frozen get_enumerator_idictionary_enumerator: SYSTEM_COLLECTIONS_IDICTIONARYENUMERATOR is
+	frozen get_dictionary_enumerator: SYSTEM_COLLECTIONS_IDICTIONARYENUMERATOR is
 		external
 			"IL signature (): System.Collections.IDictionaryEnumerator use System.ComponentModel.PropertyDescriptorCollection"
 		alias

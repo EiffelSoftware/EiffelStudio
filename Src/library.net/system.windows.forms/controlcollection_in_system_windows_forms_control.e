@@ -115,7 +115,7 @@ feature -- Basic Operations
 			"GetHashCode"
 		end
 
-	frozen contains (control: SYSTEM_WINDOWS_FORMS_CONTROL): BOOLEAN is
+	frozen has (control: SYSTEM_WINDOWS_FORMS_CONTROL): BOOLEAN is
 		external
 			"IL signature (System.Windows.Forms.Control): System.Boolean use System.Windows.Forms.Control+ControlCollection"
 		alias
@@ -157,7 +157,7 @@ feature -- Basic Operations
 			"AddRange"
 		end
 
-	add (value: SYSTEM_WINDOWS_FORMS_CONTROL) is
+	extend (value: SYSTEM_WINDOWS_FORMS_CONTROL) is
 		external
 			"IL signature (System.Windows.Forms.Control): System.Void use System.Windows.Forms.Control+ControlCollection"
 		alias
@@ -178,7 +178,7 @@ feature -- Basic Operations
 			"Clear"
 		end
 
-	frozen remove_at (index: INTEGER) is
+	frozen prune_i_th (index: INTEGER) is
 		external
 			"IL signature (System.Int32): System.Void use System.Windows.Forms.Control+ControlCollection"
 		alias

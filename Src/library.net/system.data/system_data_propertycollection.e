@@ -8,7 +8,7 @@ external class
 inherit
 	SYSTEM_COLLECTIONS_ICOLLECTION
 		rename
-			get_enumerator as system_collections_ienumerable_get_enumerator
+			get_enumerator as ienumerable_get_enumerator
 		end
 	SYSTEM_RUNTIME_SERIALIZATION_ISERIALIZABLE
 	SYSTEM_COLLECTIONS_HASHTABLE
@@ -16,11 +16,11 @@ inherit
 	SYSTEM_RUNTIME_SERIALIZATION_IDESERIALIZATIONCALLBACK
 	SYSTEM_COLLECTIONS_IENUMERABLE
 		rename
-			get_enumerator as system_collections_ienumerable_get_enumerator
+			get_enumerator as ienumerable_get_enumerator
 		end
 	SYSTEM_COLLECTIONS_IDICTIONARY
 		rename
-			get_enumerator as system_collections_ienumerable_get_enumerator
+			get_enumerator as ienumerable_get_enumerator
 		end
 
 create

@@ -163,7 +163,7 @@ feature -- Basic Operations
 			"Remove"
 		end
 
-	frozen remove_at (index: INTEGER) is
+	frozen prune_i_th (index: INTEGER) is
 		external
 			"IL signature (System.Int32): System.Void use System.Windows.Forms.ToolBar+ToolBarButtonCollection"
 		alias

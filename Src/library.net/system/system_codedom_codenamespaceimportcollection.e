@@ -15,19 +15,19 @@ inherit
 		end
 	SYSTEM_COLLECTIONS_ILIST
 		rename
-			remove_at as system_collections_ilist_remove_at,
+			prune_i_th as system_collections_ilist_remove_at,
 			remove as system_collections_ilist_remove,
 			insert as system_collections_ilist_insert,
 			index_of as system_collections_ilist_index_of,
-			contains as system_collections_ilist_contains,
+			has as system_collections_ilist_contains,
 			clear as system_collections_ilist_clear,
-			add as system_collections_ilist_add,
+			extend as system_collections_ilist_add,
 			get_enumerator as system_collections_ienumerable_get_enumerator,
 			copy_to as system_collections_icollection_copy_to,
 			get_sync_root as system_collections_icollection_get_sync_root,
 			get_is_synchronized as system_collections_icollection_get_is_synchronized,
 			get_count as system_collections_icollection_get_count,
-			set_item as system_collections_ilist_set_item,
+			put_i_th as system_collections_ilist_set_item,
 			get_item as system_collections_ilist_get_item,
 			get_is_fixed_size as system_collections_ilist_get_is_fixed_size,
 			get_is_read_only as system_collections_ilist_get_is_read_only

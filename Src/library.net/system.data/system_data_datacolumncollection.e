@@ -77,7 +77,7 @@ feature -- Basic Operations
 			"Remove"
 		end
 
-	frozen contains (name: STRING): BOOLEAN is
+	frozen has (name: STRING): BOOLEAN is
 		external
 			"IL signature (System.String): System.Boolean use System.Data.DataColumnCollection"
 		alias
@@ -105,7 +105,7 @@ feature -- Basic Operations
 			"AddRange"
 		end
 
-	add: SYSTEM_DATA_DATACOLUMN is
+	extend: SYSTEM_DATA_DATACOLUMN is
 		external
 			"IL signature (): System.Data.DataColumn use System.Data.DataColumnCollection"
 		alias
@@ -133,7 +133,7 @@ feature -- Basic Operations
 			"CanRemove"
 		end
 
-	frozen remove_at (index: INTEGER) is
+	frozen prune_i_th (index: INTEGER) is
 		external
 			"IL signature (System.Int32): System.Void use System.Data.DataColumnCollection"
 		alias

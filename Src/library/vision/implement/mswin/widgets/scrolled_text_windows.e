@@ -204,7 +204,8 @@ feature {NONE} -- Implementation
 			-- Default style for creation.
 		do
 			Result := Ws_child + Ws_visible + Ws_border +
-				Es_disablenoscroll + Es_multiline + Es_left
+				Es_disablenoscroll + Es_multiline + Es_left +
+				Es_autohscroll + Es_autovscroll
 			if is_read_only then
 				Result := Result + Es_readonly
 			end

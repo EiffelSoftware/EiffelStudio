@@ -1,4 +1,4 @@
-ISE EiffelStore 4.3e, July 1998.
+ISE EiffelStore 4.3, July 1998.
 
 Overview
 ========
@@ -6,11 +6,11 @@ Overview
    The EiffelStore library provides a consistent set of 
 classes for writing object oriented Eiffel applications that need 
 to handle persistent objects.
-   EiffelStore 4.3e has currently only been tested with:
-		ISE-Eiffel Release 4.3e
+   EiffelStore 4.3 has currently only been tested with:
+		ISE-Eiffel Release 4.3
    		Oracle8 8.0.3
 		Sybase Adaptive Server Enterprise for Windows NT Evaluation Copy
- Version 11.5
+			Version 11.5
 		IngresII
 		ODBC 3.0
 

@@ -37,6 +37,7 @@ feature -- Access
 			if not lines.after then
 				lines.remove
 			end
+			undo_executed := True
 			perform_update_display
 		end
 
@@ -81,9 +82,16 @@ feature {NONE} -- Implementation
 			lines.append (line)
 		end
 
+	undo_executed: BOOLEAN
+
 	update_display is
 		do
-			application_editor.draw_figures
+			if undo_executed then
+				application_editor.draw_figures
+				undo_executed := False
+			else
+				line.draw
+			end
 		end
 
 	name: STRING is

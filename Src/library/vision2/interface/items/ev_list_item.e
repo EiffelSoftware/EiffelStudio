@@ -16,12 +16,6 @@ inherit
 			implementation
 		end
 
-	EV_PICK_AND_DROPABLE
-		redefine
-			create_action_sequences,
-			implementation
-		end
-
 create
 	default_create,
 	make_with_text
@@ -147,6 +141,9 @@ end -- class EV_LIST_ITEM
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.28  2000/03/09 20:09:09  king
+--| Removed inheritance from PND, now in simple item
+--|
 --| Revision 1.27  2000/03/09 17:49:32  king
 --| Inheriting from PND
 --|

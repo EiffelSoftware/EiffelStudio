@@ -1,3 +1,6 @@
+/* ...C/platform/names.c */
+/* $Id$ */
+
 #ifdef EIF_WIN32
 #define WIN32_LEAN_AND_MEAN
 #include <windows.h>
@@ -25,13 +28,16 @@ rt_public EIF_REFERENCE eif_dot_o (void)
 
 rt_public EIF_REFERENCE eif_driver (void)
 {
-#if defined EIF_WIN32 || __VMS || defined EIF_OS2
+#if defined EIF_WIN32 || defined EIF_OS2
 	char driver [20] = "\0";
 
 	strcat (driver, (char *) eif_getenv ("COMPILER"));
 	strcat (driver, "\\driver.exe");
 
 	return RTMS (driver);
+
+#elif defined __VMS
+	return RTMS ("driver.exe");
 #else
 	return RTMS ("driver");
 #endif
@@ -100,7 +106,7 @@ rt_public EIF_REFERENCE eif_timeout_msg (void)
 	strcpy(s, "Could not launch system in allotted time.\n");
 	strcat(s, "Try restarting ebench after setting ");
 #ifdef __VMS
-	strcat(s, " the logical\n");
+	strcat(s, "the logical name \n");
 #else
 	strcat(s, "environment\nvariable ");
 #endif

@@ -330,7 +330,6 @@ feature {NONE} -- Initialization
 			{EV_ITEM_LIST_IMP} Precursor
 			{EV_PRIMITIVE_IMP} Precursor
 			{EV_MULTI_COLUMN_LIST_I} Precursor
-			real_signal_connect (visual_widget, "motion_notify_event", agent motion_handler, Default_translate)
 			connect_button_press_switch
 			disable_multiple_selection
 		end
@@ -345,7 +344,7 @@ feature {NONE} -- Initialization
 			if pointer_motion_actions_internal /= Void then
 				pointer_motion_actions_internal.call (t)
 			end
-			if a_y > y_coord_offset then
+			if a_y > 0 and a_x <= width then
 				a_row_number := row_from_y_coord (a_y)
 				if a_row_number > 0 and then a_row_number <= count then
 					a_row_imp := ev_children @ a_row_number
@@ -943,7 +942,7 @@ feature {EV_MULTI_COLUMN_LIST_ROW_IMP} -- Implementation
 		do
 			ver_adj := C.gtk_scrolled_window_get_vadjustment (c_object)
 			ver_offset := C.gtk_adjustment_struct_value (ver_adj).rounded
-			temp_a_y := a_y + ver_offset - y_coord_offset
+			temp_a_y := a_y + ver_offset
 			Result := temp_a_y // (row_height + 1) + 1
 			if Result > ev_children.count then
 				Result := 0
@@ -951,17 +950,6 @@ feature {EV_MULTI_COLUMN_LIST_ROW_IMP} -- Implementation
 		end
 
 feature {NONE} -- Implementation
-
-	y_coord_offset: INTEGER is
-			-- Used for altering y coord to detect motion on rows.
-		do
-			if title_shown then
-				Result := 27
-				--| FIXME IEK Need to fetch the value from gtk.
-			else
-				Result := 4
-			end
-		end
 
 	gtk_clist_struct_columns (a_clist: POINTER): INTEGER is
 		external

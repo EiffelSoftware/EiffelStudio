@@ -51,6 +51,13 @@ feature -- Access
 		alias
 			"HDI_WIDTH"
 		end
+		
+	frozen Hdi_image: INTEGER is
+		external
+			"C [macro %"cctrl.h%"]"
+		alias
+			"HDI_IMAGE"
+		end
 
 end -- class WEL_HDI_CONSTANTS
 

@@ -59,6 +59,21 @@ feature {EV_ANY_I} -- Implementation
 			void_implementation: implementation = Void
 		end
 
+feature -- Basic commands
+
+	file_exists (file_name: STRING) : BOOLEAN is
+			-- Does the given file name exist?
+		require
+			valid_file: file_name /= Void
+		local
+			file: RAW_FILE
+		do	
+			!!file.make (file_name)
+			if file.exists then
+				Result := True
+			end
+		end
+
 feature -- Implementation
 
 	implementation: EV_ANY_I

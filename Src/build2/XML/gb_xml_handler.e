@@ -39,6 +39,16 @@ inherit
 		export
 			{NONE} all
 		end
+		
+	GB_SHARED_STATUS_BAR
+		export
+			{NONE} all
+		end
+		
+	GB_SHARED_SYSTEM_STATUS
+		export
+			{NONE} all
+		end
 	
 feature -- Access
 
@@ -56,6 +66,7 @@ feature -- Basic operations
 			xml_store: GB_XML_STORE
 		do
 			create xml_store
+			xml_store.register_object_written_agent (agent display_save_progress)
 			xml_store.store
 		end
 		
@@ -66,12 +77,6 @@ feature -- Basic operations
 		do
 			create xml_load
 			xml_load.load
-		end
-		
-	pipe_callback: XM_TREE_CALLBACKS_PIPE is
-			-- Create unique callback pipe.
-		once
-			create Result.make
 		end
 	
 	load_components is
@@ -251,16 +256,24 @@ feature {NONE} -- Implementation
 			end
 		ensure
 			Result_exists: Result /= Void and not Result.is_empty
-		end	
-
-	visual_studio_information: VISUAL_STUDIO_INFORMATION is
-			-- `Result' is instance of VISUAL_STUDIO_INFORMATION.
-			-- Is a Once, as the state will never change during the
-			-- execution of Build.
+		end
+		
+	display_save_progress (total, written: INTEGER) is
+			-- Display current save progress as percentage of `total' based on `written',
+			-- unless Build is running in Wizard mode.
+		do
+				-- The wizard version of Build has to perform a real store at the end,
+				-- so we avoid displaying the output if we are in wizard mode.
+			if not System_status.is_wizard_system then
+				set_status_text ("Saving : " + (((written / total) * 95).truncated_to_integer.out) + "%%")
+				environment.application.process_events
+			end
+		end
+		
+	pipe_callback: XM_TREE_CALLBACKS_PIPE is
+			-- Create unique callback pipe.
 		once
-			create Result
-		ensure
-			Result_not_void: Result /= Void
+			create Result.make
 		end
 
 	component_document: XM_DOCUMENT

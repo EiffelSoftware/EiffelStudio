@@ -125,8 +125,7 @@ feature {NONE} -- WEL Implementation
 			process_tab_key (virtual_key)
 			if virtual_key = Vk_return then
 				set_caret_position (1)
-				--|FIXME Now need to use the new events.
-				--execute_command (Cmd_activate, Void)
+				interface.return_actions.call ([])
 			end
 		end	
 
@@ -240,6 +239,9 @@ end -- class EV_TEXT_FIELD_IMP
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.31  2000/02/23 01:32:17  rogers
+--| Added the call to the new events when return is pressed.
+--|
 --| Revision 1.30  2000/02/19 06:34:13  oconnor
 --| removed old command stuff
 --|

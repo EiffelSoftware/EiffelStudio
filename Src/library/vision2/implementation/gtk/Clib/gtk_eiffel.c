@@ -7,7 +7,19 @@
  *			   *	       
  *   Date: 5/22/98         *
  *                         *
- ***************************/
+ ***************************
+ $Id$
+*/
+
+#ifdef __VMS 
+#define XFreeFontNames XFREEFONTNAMES 
+#define XGetWindowAttributes XGETWINDOWATTRIBUTES 
+#define XIconifyWindow XICONIFYWINDOW 
+#define XListFonts XLISTFONTS 
+#define XMapRaised XMAPRAISED 
+#define XQueryColor XQUERYCOLOR 
+#endif /* __VMS */
+
 
 #include "gtk_eiffel.h"
 //#include "gdk_eiffel.h"
@@ -20,6 +32,8 @@
 #include <X11/Xlib.h>
 #include <gdk/gdkprivate.h>
 #include <gdk/gdkx.h>
+
+
 
 /*********************************
  *

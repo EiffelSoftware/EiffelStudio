@@ -12,7 +12,8 @@ inherit
 			make as entity_make
 		redefine
 			eiffelized_consumed_entities,
-			dotnet_name
+			dotnet_name,
+			is_event
 		end
 
 create
@@ -61,6 +62,14 @@ feature {NONE} -- Initialization
 			valid_remover: has_remover implies remover.is_property_or_event
 			raiser_set: raiser = rais
 			valid_raiser: raiser /= Void implies raiser.is_property_or_event
+		end
+
+feature -- ConsumerWrapper functions
+
+	is_event: BOOLEAN is
+			-- Is `Current' a .Net Event.
+		do
+			Result := True
 		end
 
 feature -- Access

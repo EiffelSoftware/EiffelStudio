@@ -25,18 +25,6 @@ feature {NONE} -- Initialization
 			item_set: item = an_item
 		end
 
-feature -- Ref management
-
-	add_ref is
-			-- Call to the AddRef feature
-		do
-			debug ("COM_OBJECT")
-				io.put_string ("["+generating_type+"].add_ref called")
-				io.put_new_line
-			end			
-			cpp_addref (item)
-		end
-
 feature -- Status report
 
 	is_successful: BOOLEAN is
@@ -57,20 +45,22 @@ feature {NONE} -- Disposal
 
 	dispose is
 			-- Free `item'.
+		local
+			l_nb_ref: INTEGER
 		do
 			debug ("COM_OBJECT")
-				dispose_debug_output (1, item, $Current)
+				dispose_debug_output (1, item, $Current, 0)
 			end
-			feature {CLI_COM}.release (item)
+			l_nb_ref := feature {CLI_COM}.release (item)
 			item := default_pointer
 			debug ("COM_OBJECT")
-				dispose_debug_output (2, item, $Current)
+				dispose_debug_output (2, item, $Current, l_nb_ref)
 			end
 		ensure then
 			item_null: item = default_pointer
 		end
 
-	dispose_debug_output (type: INTEGER; a_ptr: POINTER; an_obj: POINTER) is
+	dispose_debug_output (type: INTEGER; a_ptr: POINTER; an_obj: POINTER; a_nb_ref: INTEGER) is
 			-- Safe display while disposing. If `type' is `1' then
 			-- we are entering `dispose', else we are leaving it.
 			-- `a_ptr' is the item being freed in current object `an_obj'.
@@ -82,21 +72,17 @@ feature {NONE} -- Disposal
 					extern char *eif_typename(int16);
 					printf ("\nEntering dispose of %s with item value 0x%lX\n", eif_typename((int16)Dftype($an_obj)), $a_ptr);
 				} else {
-					printf ("Quitting dispose with item value 0x%lX\n", $a_ptr);
+					printf ("Quitting dispose with item value 0x%lX nb_ref[%d]\n", $a_ptr, $a_nb_ref);
 				}
 			]"
 		end
 
 feature {NONE} -- COM Ref management
 
-	cpp_addref (obj: POINTER) is
-			-- 
+	cpp_addref (a_pointer: POINTER): INTEGER is
+			-- AddRef COM objects
 		external
-			"[
-				C++ IUnknown signature 
-					()
-				use <unknwn.h>
-			]"
+			"C++ IUnknown use %"unknwn.h%""
 		alias
 			"AddRef"
 		end

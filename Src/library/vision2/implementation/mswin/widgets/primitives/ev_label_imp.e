@@ -134,7 +134,9 @@ feature -- Status setting
 			check
 				font_not_void: fw /= Void
 			end
-			internal_set_minimum_size (fw.string_width (text) + 10, 7 * fw.height // 4 - 2)
+			fw.calculate_text_extent (safe_text)
+			internal_set_minimum_size (fw.last_text_width, fw.last_text_height)
+			--internal_set_minimum_size (fw.string_width (safe_text) + 10, line_count * (fw.height + )-- 7 * fw.height // 4 - 2)
 		end
 
 feature -- Element change
@@ -246,6 +248,9 @@ end -- class EV_LABEL_IMP
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.32  2000/03/03 00:57:19  brendel
+--| Changed set_minimum_size to use new features of EV_FONT_IMP.
+--|
 --| Revision 1.31  2000/02/22 01:12:58  rogers
 --| Changed wel_make to take a space instead of an empty string in make.
 --|

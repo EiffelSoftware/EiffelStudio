@@ -39,10 +39,6 @@ feature -- Status setting
 				c_gtk_text_full_insert (widget, font_imp.widget,
 					color.red, color.green, color.blue,
 					$a, txt.count)
-
---				gtk_text_insert (widget, font_imp.widget,
---					default_pointer, default_pointer,
---					$a, txt.count)
 			else
 				{EV_TEXT_IMP} Precursor (txt)
 			end
@@ -50,7 +46,11 @@ feature -- Status setting
 
 	apply_format (format: EV_TEXT_FORMAT) is
 			-- Apply the given format to the text.
+		local
+			tt: EV_RICH_TEXT
 		do
+			tt ?= interface
+			format.apply (tt)
 		end
 
 feature -- Element change
@@ -58,8 +58,26 @@ feature -- Element change
 	set_character_format (format: EV_CHARACTER_FORMAT) is
 			-- Apply `format' to the selection and make it the
 			-- current character format.
+		local
+			str: STRING
+			index: INTEGER
+			font_imp: EV_FONT_IMP
+			color: EV_COLOR
+			a: ANY
 		do
 			character_format := format
+			if has_selection then
+				str := selected_text
+				index := selection_start
+				delete_selection
+				set_position (index)
+				a := str.to_c
+				font_imp ?= character_format.font.implementation
+				color := character_format.color
+				c_gtk_text_full_insert (widget, font_imp.widget,
+					color.red, color.green, color.blue,
+					$a, str.count)
+			end
 		end
 
 feature -- Basic operation

@@ -189,6 +189,9 @@ feature -- IL code generation
 				
 			when to_real_type then
 				il_generator.convert_to_real
+
+			when to_double_type then
+				il_generator.convert_to_double
 			
 			when out_type then
 				il_generator.generate_out (type)
@@ -252,6 +255,8 @@ feature {NONE} -- C and Byte code corresponding Eiffel function calls
  			Result.put (min_type, min_name_id)
  			Result.put (offset_type, infix_plus_name_id)
  			Result.put (to_real_type, truncated_to_real_name_id)
+ 			Result.put (to_real_type, to_real_name_id)
+ 			Result.put (to_double_type, to_double_name_id)
  			Result.put (out_type, out_name_id)
  			Result.put (hash_code_type, hash_code_name_id)
  			Result.put (hash_code_type, code_name_id)
@@ -308,7 +313,8 @@ feature -- Fast access to feature name
 	From_integer_to_enum_type: INTEGER is 30
 	From_enum_to_integer_type: INTEGER is 31
 	is_digit_type: INTEGER is 32
-	max_type_id: INTEGER is 32
+	to_double_type: INTEGER is 33
+	max_type_id: INTEGER is 33
 
 feature {NONE} -- IL code generation
 

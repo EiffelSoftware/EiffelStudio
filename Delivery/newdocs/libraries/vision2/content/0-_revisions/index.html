@@ -41,7 +41,7 @@
 			<UL>
 			<LI><B>EV_RANGE</B> - The `maximum_value' could not be set greater than 32,000. The full range of an INTEGER may now be set. </LI>
 			<LI><B>`focused_widget' from `EV_APPLICATION'</B> - was incorrect if an EV_CONTAINER had just received the focus.</LI>
-			<LI><B>EV_PICK_AND_DROPABLE</B> - Ending a pick and drop on an EV_TOOL_BAR_BUTTON which has a non `void' pebble no longer starts a transport from the button. Reduced flicker on cursor when picking from an EV_TREE_ITEM or EV_LIST_ITEM.</LI>
+			<LI><B>EV_PICK_AND_DROPABLE</B> - Ending a pick and drop on an EV_TOOL_BAR_BUTTON which has a non `void' pebble no longer starts a transport from the button. Reduced flicker on cursor when picking from an EV_TREE_ITEM or EV_LIST_ITEM. `pebble_function' would previously be called twice during a pick and drop.</LI>
 			<LI><B>EV_FIXED</B> - Items contained are now drawn correctly dependent on their z order.</LI>
 			<LI><B>EV_DRAWABLE</B>
 				<UL>
@@ -51,7 +51,7 @@
 				</UL>
 			<LI><B>EV_TEXT</B> - `set_background_color' now correctly sets the color of the whole background. Previously only the area containing text was modified.</LI>
 			<LI><B>EV_CLIPBOARD</B> - Our implementation would sometimes query `text' when not allowed by Windows, thus causing postcondition failures.</LI>
-			<LI><B>EV_BUTTON</B> - The result of querying `text_alignment' after default_create was incorrect.
+			<LI><B>EV_BUTTON</B> - The result of querying `text_alignment' after default_create was incorrect.</LI>
 			</UL>
 		<LI><B>Gtk</B></LI>
 			<UL>

@@ -609,9 +609,6 @@ feature -- Modification
 						if cs.feature_code /= Void then
 							insertion_position := cs.insertion_position
 							saved_code := cs.feature_code
-			--				if saved_code.item (saved_code.count) = '%N' then
-			--					saved_code.remove (saved_code.count)
-			--				end
 							insert_code (saved_code)
 							cs.restore
 						end
@@ -1014,18 +1011,28 @@ feature {CLASS_NAME_REPLACER} -- Implementation
 			a_type_not_void: a_type /= Void
 		local
 			s: STRING
+			first_character: CHARACTER
+			preposition: STRING
 		do
 			create s.make (60)
-			s.append ("%Tset_" + a_attribute + " (a_" + a_attribute + ": " + a_type + ") is%N")
-			s.append ("%T%T%T-- Set `" + a_attribute + "' to `a_" + a_attribute + "'.%N")
+			first_character := a_attribute.item (1)
+			if first_character = 'a' or first_character = 'e' or first_character = 'i' or
+				first_character = 'o' or first_character = 'u' then
+				
+				preposition := "an_"
+			else
+				preposition := "a_"
+			end
+			s.append ("%Tset_" + a_attribute + " (" + preposition + a_attribute + ": like " + a_attribute + ") is%N")
+			s.append ("%T%T%T-- Set `" + a_attribute + "' to `" + preposition + a_attribute + "'.%N")
 			if a_pc /= Void then
 				s.append ("%T%Trequire%N")
 				s.append ("%T%T%T" + a_pc + "%N")
 			end
 			s.append ("%T%Tdo%N")
-			s.append ("%T%T%T" + a_attribute + " := a_" + a_attribute + "%N")
+			s.append ("%T%T%T" + a_attribute + " := " + preposition + a_attribute + "%N")
 			s.append ("%T%Tensure%N")
-			s.append ("%T%T%T" + a_attribute + "_assigned: " + a_attribute + " = a_" + a_attribute + "%N")
+			s.append ("%T%T%T" + a_attribute + "_assigned: " + a_attribute + " = " + preposition + a_attribute + "%N")
 			s.append ("%T%Tend%N")
 			s.append ("%N")
 			Result := s

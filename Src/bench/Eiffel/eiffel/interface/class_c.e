@@ -378,6 +378,7 @@ feature -- Conformance dependenies
 
 			if not conf_dep_classes.has (a_class) then
 				conf_dep_classes.extend (a_class)
+				conf_dep_classes.forth
 			end
 		ensure
 			has_dep_class : has_dep_class (a_class)
@@ -3220,14 +3221,13 @@ feature -- Merging
 			classes: LINKED_LIST [E_CLASS]
 			class_c: CLASS_C
 		do
-			is_used_as_expanded :=
-				is_used_as_expanded or other.is_used_as_expanded
-			is_used_as_separate :=
-				is_used_as_separate or other.is_used_as_separate
+			is_used_as_expanded := is_used_as_expanded or other.is_used_as_expanded
+			is_used_as_separate := is_used_as_separate or other.is_used_as_separate
 			filters.append (other.filters)
 
 			from 
 				classes := other.clients
+				clients.finish
 				classes.start 
 			until 
 				classes.after 
@@ -3235,12 +3235,14 @@ feature -- Merging
 				class_c := System.class_of_id (classes.item.id)
 				if not clients.has (class_c) then
 					clients.extend (class_c)
+					clients.forth
 				end
 				classes.forth
 			end
 
 			from 
 				classes := other.descendants
+				descendants.finish
 				classes.start 
 			until 
 				classes.after 
@@ -3248,6 +3250,7 @@ feature -- Merging
 				class_c := System.class_of_id (classes.item.id)
 				if not descendants.has (class_c) then
 					descendants.extend (class_c)
+					descendants.forth
 				end
 				classes.forth
 			end

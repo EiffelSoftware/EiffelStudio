@@ -186,7 +186,7 @@ feature
 			put_string ("<=")
 			from
 			until
-				i = nb
+				i >= nb
 			loop
 				i := i + 1;
 				c := a_line.item (i)

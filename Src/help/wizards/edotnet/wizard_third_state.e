@@ -285,8 +285,11 @@ feature {NONE} -- Implementation
 				assemblies.after
 			loop
 				an_assembly := assemblies.item
-				if not wizard_information.has_assembly (last_available_assemblies, an_assembly) then
+				if not wizard_information.has_assembly (last_available_assemblies, an_assembly) and not wizard_information.has_assembly (selected_assemblies, an_assembly) then
 					selected_assemblies.extend (an_assembly)
+					assemblies_to_remove.extend (an_assembly)
+				end
+				if wizard_information.has_assembly (selected_assemblies, an_assembly) then
 					assemblies_to_remove.extend (an_assembly)
 				end
 				assemblies.forth

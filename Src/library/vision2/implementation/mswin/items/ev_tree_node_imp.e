@@ -17,11 +17,10 @@ inherit
 		end
 
 	EV_ITEM_IMP
-		rename
-			parent as old_parent
 		undefine
 			set_pnd_original_parent,
-			pixmap_equal_to
+			pixmap_equal_to,
+			parent
 		redefine
 			parent_imp,
 			destroy,

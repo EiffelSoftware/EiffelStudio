@@ -238,7 +238,7 @@ feature -- Basic Operations
 		end
 		
 	clean_cache is
-			-- cleans up cache and removes all consumed assembly metadata that does not have an entry in cache info file
+			-- cleans up cache and removes all incomplete consumed assembly metadata
 		local
 			l_cache_folder: DIRECTORY
 			l_assembly_path: STRING
@@ -248,10 +248,10 @@ feature -- Basic Operations
 			l_retried: BOOLEAN
 			i: INTEGER
 		do
-			if not l_retried then				
+			if not l_retried then								
 				create l_cache_folder.make (cache_reader.eiffel_assembly_cache_path)
 				if l_cache_folder.exists then
-					l_assemblies := cache_reader.consumed_assemblies
+					l_assemblies := cache_reader.info.assemblies
 					
 					l_directories := l_cache_folder.linear_representation
 					if l_directories.count > 2 then
@@ -267,19 +267,19 @@ feature -- Basic Operations
 								l_match or i > l_assemblies.count
 							loop
 								if l_assemblies.item (i).folder_name.is_equal (l_directories.item) then
+									if not l_assemblies.item (i).is_consumed then
+											-- there is no entry in cache info so lets remove it
+										l_assembly_path := cache_reader.eiffel_assembly_cache_path.twin
+										l_assembly_path.append_character ((create {OPERATING_ENVIRONMENT}).directory_separator)
+										l_assembly_path.append (l_directories.item)
+										create l_cache_folder.make (l_assembly_path)
+										if l_cache_folder.exists then
+											l_cache_folder.recursive_delete
+										end
+									end
 									l_match := True
 								end
 								i := i + 1
-							end
-							if not l_match then
-									-- there is no entry in cache info so lets remove it
-								l_assembly_path := cache_reader.eiffel_assembly_cache_path.twin
-								l_assembly_path.append_character ((create {OPERATING_ENVIRONMENT}).directory_separator)
-								l_assembly_path.append (l_directories.item)
-								create l_cache_folder.make (l_assembly_path)
-								if l_cache_folder.exists then
-									l_cache_folder.recursive_delete
-								end
 							end
 							l_directories.forth
 						end	

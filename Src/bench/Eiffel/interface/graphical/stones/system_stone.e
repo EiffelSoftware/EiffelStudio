@@ -68,7 +68,7 @@ feature -- Access
 	clickable: BOOLEAN is
 			-- Is Current an element with recorded structures information?
 		do
-			Result := true
+			Result := Eiffel_ace.click_list /= Void
 		end
 
 feature -- Setting

@@ -12,14 +12,16 @@ deferred class
 	EV_BOX_IMP
 	
 inherit
-	
 	EV_BOX_I
 		
 	EV_INVISIBLE_CONTAINER_IMP
-		redefine
-			add_child
+		undefine
+			add_child,
+			child_expand_changed,
+			child_horiresize_changed,
+			child_vertresize_changed
 		end
-	
+
 feature {NONE} -- Initialization
 	
         make (par: EV_CONTAINER) is
@@ -42,17 +44,24 @@ feature -- Element change (box specific)
 			gtk_box_set_spacing (widget, value)
 		end	
 	
-feature {EV_BOX} -- Implementation
+feature {EV_WIDGET_IMP} -- Implementation
+
+	set_child_options (resize_flag, position_flag: BOOLEAN; the_child:EV_WIDGET_IMP) is
+			-- Set the new options of the child in the box
+		do
+			
+		end
+
+--feature {EV_BOX} -- Implementation
 	
-	add_child (child_imp: EV_WIDGET_IMP) is
+--	add_child (child_imp: EV_WIDGET_IMP) is
 			-- Add child into composite. Several children
 			-- possible.
-		do
-			child ?= child_imp
-			gtk_box_pack_start (widget, child_imp.widget, 
-					    Default_expand, Default_fill, 
-					    Default_padding)
-		end
+--		do
+--			child ?= child_imp
+--			gtk_box_pack_start (widget, child_imp.widget, 
+--					    child_imp.expand, , 0)
+--		end
 
 end -- class EV_BOX_IMP
 

@@ -54,6 +54,9 @@ feature -- Access
 
 			disable_all_items (Result)
 			align_labels_left (Result)
+		ensure
+			text_or_field_not_void: (text_entry /= Void or text_field_entry /= Void) and not
+				(text_entry /= Void and text_field_entry /= Void)
 		end
 
 feature {NONE} -- Implementation
@@ -92,7 +95,4 @@ feature {NONE} -- Implementation
 
 	Text_string: STRING is "Text"
 	
-invariant
-	text_or_field_not_void: (text_entry /= Void or text_field_entry /= Void) and not (text_entry /= Void and text_field_entry /= Void)
-
 end -- class GB_EV_TEXTABLE_EDITOR_CONSTRUCTOR

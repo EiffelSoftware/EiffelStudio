@@ -192,12 +192,8 @@ feature -- Access
 
 	description: STRING is
 			-- Feature description.
-			--| FIXME For the moment, only returns the external name.
-		local
-			index: INTEGER
-			overload_text: STRING
 		do
- 			extract_description (compiler_feature, compiler_class)
+ 			extract_description (compiler_feature, compiler_class, name)
  			Result := extracted_description
         ensure then
             result_exists: Result /= void           

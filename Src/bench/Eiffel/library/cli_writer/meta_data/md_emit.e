@@ -462,14 +462,21 @@ feature -- Definition: creation
 			-- Define a new token for `ca' applied on token `owner' with using `constructor'
 			-- as creation procedure.
 		require
-			owner_valid: True -- Any type of token is accepted.
+			owner_valid: (owner & Md_mask) /= Md_custom_attribute -- Any type of token except mdCustomAttribute is accepted.
 			constructor_valid:
 				(constructor & Md_mask = Md_member_ref) or
 				(constructor & Md_mask = Md_method_def)
-			ca_not_void: ca /= Void
+			ca_not_void_implies_not_empty: ca /= Void implies ca.count >= 4
+		local
+			blob: POINTER
+			blob_count: INTEGER
 		do
+			if ca /= Void then
+				blob := ca.item.item
+				blob_count := ca.count
+			end
 			last_call_success := c_define_custom_attribute (item, owner, constructor,
-				ca.item.item, ca.count, $Result)
+				blob, blob_count, $Result)
 		ensure
 			success: last_call_success = 0
 			result_valid: Result & Md_mask = Md_custom_attribute

@@ -2508,13 +2508,14 @@ rt_private void print_top(void (*append_trace)(char *))
 	/* element gives only the reason of crashes                                         */
 	line_number = (eif_trace.st_bot)->ex_linenum;
 
-	/* create the 'routine_name@line_number' string */
+	/* create the 'routine_name@line_number' string. We limit ourself to the first 240
+	 * characters of `routine_name' otherwise we will do a buffer overflow. */
 	if (line_number>0)
 		/* the line number seems valid, so we are going to print it */
-		sprintf(rout_name_buffer, "%s @%d", eif_except.rname, line_number);
+		sprintf(rout_name_buffer, "%.240s @%d", eif_except.rname, line_number);
 	else
 		/* the line number is not valid, so we are forgetting it */
-		sprintf(rout_name_buffer, "%s", eif_except.rname);
+		sprintf(rout_name_buffer, "%.240s", eif_except.rname);
 
 	if (eif_except.tag)
 		sprintf(buf, "%.255s:", eif_except.tag);
@@ -2548,11 +2549,13 @@ rt_private void print_top(void (*append_trace)(char *))
 	buf[0] = '\0';
 
 	if (eif_except.from >= 0) {
+			/* We limit ourself to the first 1000 characters of class name
+			 * to avoir buffer overflow. */
 		if (eif_except.obj_id) {
 			if (eif_except.from != (int)Dtype(eif_except.obj_id))
-				sprintf(buf, "(From %s)", Origin(eif_except.from));
+				sprintf(buf, "(From %.1000s)", Origin(eif_except.from));
 		} else
-			sprintf(buf, "(From %s)", Origin(eif_except.from));
+			sprintf(buf, "(From %.1000s)", Origin(eif_except.from));
 	}
 
 	/* Start panic effect when we reach the EN_BYE record */
@@ -3315,13 +3318,14 @@ rt_private void cur_print_top(void)
 	eif_except.previous = code;	 /* Update previous exception code */
 	line_number = (eif_trace.st_bot)->ex_linenum;
 
-	/* create the 'routine_name@line_number' string */
+	/* create the 'routine_name@line_number' string. We limit ourself to the first 240
+	 * characters of `routine_name' otherwise we will do a buffer overflow. */
 	if (line_number>0)
 		/* the line number seems valid, so we are going to print it */
-		sprintf(rout_name_buffer, "%s @%d", eif_except.rname, line_number);
+		sprintf(rout_name_buffer, "%.240s @%d", eif_except.rname, line_number);
 	else
 		/* the line number is not valid, so we are forgetting it */
-		sprintf(rout_name_buffer, "%s", eif_except.rname);
+		sprintf(rout_name_buffer, "%.240s", eif_except.rname);
 
 	if (eif_except.tag)
 		sprintf(buf, "%.28s:", eif_except.tag);

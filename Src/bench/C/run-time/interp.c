@@ -786,6 +786,23 @@ end:
 			if (ref == (char *) 0)
 				xraise(EN_VEXP);	/* Void assigned to expanded */
 			ecopy(ref, iresult->it_ref);
+
+			if (once_done != (char *) 0) {
+				last = iresult;
+				switch (rtype & SK_HEAD) {	/* Result type held in rtype */
+				case SK_BIT:
+				case SK_EXP:
+				case SK_REF:	/* See below */ 
+					/* If the Result is a reference, then we have an hector pointer
+				 	* in place of the result.
+				 	*/
+					string = IC;	/* Save IC value */
+					IC = rvar;		/* Where hector pointer is recorded */
+					eif_access(get_address()) = last->it_ref;
+					IC = string;	/* Restore IC value */
+					break;
+				}
+			}
 		}
 		break;
 
@@ -896,6 +913,21 @@ end:
 			iresult->it_ref = (char *) 0;
 		else
 			iresult->it_ref = last->it_ref;
+
+		/* Register once function if needed. This has to be done constantly
+		 * whenever the Result is changed, in case the once calls another
+		 * feature which is going to call this once feature again.
+		 */
+		if (once_done != (char *) 0) {
+			last = iresult;
+				/* If the Result is a reference, then we have an hector pointer
+				 * in place of the result.
+				 */
+			string = IC;	/* Save IC value */
+			IC = rvar;		/* Where hector pointer is recorded */
+			eif_access(get_address()) = last->it_ref;
+			IC = string;	/* Restore IC value */
+		}
 		break;
 
 	/*

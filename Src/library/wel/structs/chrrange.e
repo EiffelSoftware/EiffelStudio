@@ -25,7 +25,8 @@ feature {NONE} -- Initialization
 			-- `minimum', with `a_maximum', `a_minimum'
 		require
 			positive_minimum: a_minimum >= 0
-			valid_range: a_minimum <= a_maximum
+			valid_maximum: a_minimum = 0 implies a_maximum >= -1
+			positive_maximum: a_minimum > 0 implies a_maximum >= 0
 		do
 			structure_make
 			set_range (a_minimum, a_maximum)
@@ -64,7 +65,8 @@ feature -- Element change
 			-- `maximum' with `a_maximum'
 		require
 			positive_minimum: a_minimum >= 0
-			valid_range: a_minimum <= a_maximum
+			valid_maximum: a_minimum = 0 implies a_maximum >= -1
+			positive_maximum: a_minimum > 0 implies a_maximum >= 0
 		do
 			cwel_charrange_set_cpmin (item, a_minimum)
 			cwel_charrange_set_cpmax (item, a_maximum)

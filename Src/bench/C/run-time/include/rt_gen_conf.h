@@ -55,10 +55,6 @@ extern int eif_par_table_size;
 extern struct eif_par_types **eif_par_table2;
 extern int eif_par_table2_size;
 
-/* Find true type of an object after many compilations in workbench mode
- * `x' being the compiled type, it returns the type in current compilation */
-extern int16 eif_find_true_type (int16 x);
-
 extern void eif_gen_conf_thread_init (void);
 extern void eif_gen_conf_thread_cleanup (void);
 

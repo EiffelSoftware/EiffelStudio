@@ -70,7 +70,7 @@ feature {NONE} -- Implementation
 	class_array: ARRAY [CLASS_C] is
 			-- Classes compiled during compilation `compilation_id'
 		once
-			Result := System.classes.item (Normal_compilation)
+			Result := System.project_classes
 		end
 
 end -- class CLASS_ID

@@ -1,7 +1,5 @@
 indexing
-
-	description:	
-		"Class text field in class tool.";
+	description: "Class text field in class tool.";
 	date: "$Date$";
 	revision: "$Revision$"
 
@@ -25,7 +23,8 @@ creation
 feature -- Initialization
 
 	make (a_parent: COMPOSITE; a_tool: CLASS_W) is
-			-- Initialize the window.
+			-- Initialize the text field "Class_name".
+			-- Set up the activate actions.
 		do
 			text_field_make ("", a_parent);
 			add_activate_action (Current, Void);
@@ -80,10 +79,9 @@ feature {NONE} -- Execution
 		local
 			classi_stone: CLASSI_STONE;
 			classc_stone: CLASSC_STONE;
-			cname, class_name: STRING;
+			cname: STRING;
 			clusters: LINKED_LIST [CLUSTER_I];
 			sorted_classes: SORTED_TWO_WAY_LIST [CLASS_I];
-			classes: EXTEND_TABLE [CLASS_I, STRING];
 			class_i: CLASS_I;
 			mp: MOUSE_PTR;
 			choice_position: INTEGER;
@@ -91,6 +89,8 @@ feature {NONE} -- Execution
 			cluster: CLUSTER_I;
 			cluster_name: STRING;
 			pattern: STRING_PATTERN
+--			matcher: KMP_WILD
+			classes: EXTEND_TABLE [CLASS_I, STRING]
 		do
 			if (choice /= Void) and then (arg = choice) then
 				check
@@ -122,8 +122,7 @@ feature {NONE} -- Execution
 							!! mp.set_watch_cursor;
 							at_pos := cname.index_of ('@', 1);
 							if at_pos = 0 then
-								class_list :=
-									Eiffel_universe.classes_with_name (cname)
+								class_list := Eiffel_universe.classes_with_name (cname)
 								mp.restore;
 								if class_list.empty then
 									class_list := Void;
@@ -158,37 +157,37 @@ feature {NONE} -- Execution
 									if class_i = Void then
 										if new_class_win = Void then
 											!! new_class_win.make (tool)
-										end;
+										end
 										new_class_win.call (cname, cluster)
 									end
 								end	
 							end
 						else
-							!! mp.set_watch_cursor;
-							!! sorted_classes.make;
-							clusters := Eiffel_universe.clusters;
 							from
+								!! mp.set_watch_cursor
+								!! sorted_classes.make
+--								!! matcher.make (cname, "")
+								clusters := Eiffel_universe.clusters
 								clusters.start
 							until
 								clusters.after
 							loop
-								classes := clusters.item.classes;
 								from
+									classes := clusters.item.classes
 									classes.start
 								until
 									classes.after
 								loop
-									class_name := classes.key_for_iteration;
-									if
-										pattern.matches (class_name)
-									then
-										sorted_classes.put_front
-											(classes.item_for_iteration)
-									end;
+--									matcher.set_text (classes.key_for_iteration) 
+--									if matcher.search_for_pattern then
+									if pattern.matches (classes.key_for_iteration) then
+										sorted_classes.put_front (classes.item_for_iteration)
+									end
 									classes.forth
-								end;
+								end
 								clusters.forth
-							end;
+							end
+
 							sorted_classes.sort;
 							class_list := sorted_classes;
 							mp.restore;

@@ -97,7 +97,8 @@ feature -- {EV_TREE_IMP}
 				parent_not_void: tree_imp /= Void
 			end
 			if press_action = Ev_pnd_start_transport then
-				start_transport (a_x, a_y, a_button, 0, 0, 0.5, a_screen_x, a_screen_y)
+				start_transport (a_x, a_y, a_button, 0, 0, 0.5, a_screen_x, 
+				a_screen_y)
 				tree_imp.set_source_true
 				tree_imp.set_pnd_child_source (Current)
 				tree_imp.set_t_item_true
@@ -141,8 +142,9 @@ feature -- {EV_TREE_IMP}
 
 	on_parented is
 			-- `Current' has just been parented.
-			-- Because this message is only recieved when a tree item becomes the child of a tree,
-			-- we need to recurse through all children of the item and send this message.
+			-- Because this message is only recieved when a tree item becomes 
+			-- the child of a tree, we need to recurse through all children of 
+			-- the item and send this message.
 		local
 			original_index: INTEGER
 		do
@@ -165,8 +167,9 @@ feature -- {EV_TREE_IMP}
 
 	on_orphaned is
 			-- `Current' has just been orphaned.
-			-- Because this message is only recieved when a tree item becomes the child of a tree,
-			-- we need to recurse through all children of the item and send this message.
+			-- Because this message is only recieved when a tree item becomes
+			-- the child of a tree, we need to recurse through all children of 
+			--the item and send this message.
 		do
 			remove_all_direct_references
 		ensure then
@@ -175,8 +178,9 @@ feature -- {EV_TREE_IMP}
 
 	
 	remove_all_direct_references is
-			-- Recurse through all children and update `top_parent_imp.current_image_list_info'
-			-- removing images from image list as required.
+			-- Recurse through all children and update 
+			--`top_parent_imp.current_image_list_info' removing images
+			-- from image list as required.
 		local	
 			original_index: INTEGER
 			loc_tuple: TUPLE[INTEGER, INTEGER]
@@ -196,23 +200,30 @@ feature -- {EV_TREE_IMP}
 			if pixmap /= Void then
 				-- If the item has a pixmap then 
 				if pixmap_imp.icon.item /= Void then
-					item_value := cwel_pointer_to_integer (pixmap_imp.icon.item)
+					item_value := cwel_pointer_to_integer 
+					(pixmap_imp.icon.item)
 				else
-					item_value := cwel_pointer_to_integer (pixmap_imp.bitmap.item)
+					item_value := cwel_pointer_to_integer 
+					(pixmap_imp.bitmap.item)
 				end
 				current_images := top_parent_imp.current_image_list_info
 					-- Retrieve the information about the image list.
 				loc_tuple := current_images.item (item_value)
-					-- Retrieve the tuple of info correspoding to the pixmap of the item.
+					-- Retrieve the tuple of info correspoding to 
+					-- the pixmap of the item.
 				if loc_tuple.integer_item (2) > 0 then
 					loc_tuple.enter (loc_tuple.integer_item (2) - 1, 2)
-						--Decrease and store the number of items referencing this image.
+						-- Decrease and store the number of items referencing
+						-- this image.
 					if loc_tuple.integer_item (2) = 0 then
-						-- If there are no longer any items referencing this image.
-						top_parent_imp.image_list.remove_image (loc_tuple.integer_item (1))
+						-- If there are no longer any items referencing 
+						-- this image.
+						top_parent_imp.image_list.remove_image 
+							(loc_tuple.integer_item (1))
 							-- Remove the icon from the image_list
 						current_images.remove (item_value)
-							-- Remove the image from our current_image_list_info
+							-- Remove the image from our 
+							-- current_image_list_info
 					end
 				end
 			end
@@ -220,7 +231,8 @@ feature -- {EV_TREE_IMP}
 
 
 	set_pixmap_in_parent is
-			-- Add the pixmap to the parent by updating the parent's image list.
+			-- Add the pixmap to the parent by updating the parent's image 
+			-- list.
 		local
 			p_imp: EV_PIXMAP_IMP
 			loc_image_list: WEL_IMAGE_LIST
@@ -248,9 +260,11 @@ feature -- {EV_TREE_IMP}
 				else
 					loc_tuple := current_images.item (item_value)
 					image_index := loc_tuple.integer_item (1)
-						-- `p_imp.icon' already in image list so set `image_index' to this.
+						-- `p_imp.icon' already in image list so set 
+						-- `image_index' to this.
 					loc_tuple.enter (loc_tuple.integer_item (2) + 1, 2)
-						-- Increase and store the number of items referencing this image.
+						-- Increase and store the number of items referencing
+						-- this image.
 				end
 			elseif p_imp.mask_bitmap /= Void and p_imp.bitmap /= Void then
 				--|FIXME This does not work correctly yet.
@@ -258,7 +272,8 @@ feature -- {EV_TREE_IMP}
 				if p_imp.bitmap.height > tree_view_pixmap_height or
 					p_imp.bitmap.height > tree_view_pixmap_width then
 					p_imp.set_size (16, 16)
-					loc_image_list.add_masked_bitmap (p_imp.bitmap, p_imp.mask_bitmap)
+					loc_image_list.add_masked_bitmap 
+					(p_imp.bitmap, p_imp.mask_bitmap)
 					image_index := loc_image_list.last_position
 						-- Add a bitmap and a bitmap mask image_list.
 				end
@@ -274,10 +289,12 @@ feature -- {EV_TREE_IMP}
 		end
 
 	image_index: INTEGER
-		-- The index into `image_list' of `top_parent_imp' for the standard displayed image.
+		-- The index into `image_list' of `top_parent_imp' for the standard 
+		-- displayed image.
 	
 	selected_image_index: INTEGER 
-		-- The index into `image_list' of `top_parent_imp' for the selected displayed image.
+		-- The index into `image_list' of `top_parent_imp' for the selected 
+		-- displayed image.
 
 	tree_view_pixmap_height: INTEGER is 16
 		-- The height of a pixmap in a windows tree view.
@@ -334,7 +351,8 @@ feature -- Status report
 			if top_parent_imp /= Void then
 				Result := top_parent_imp.is_parent (Current)
 			else
-				Result := (internal_children /= Void) and then (internal_children.count > 0)
+				Result := (internal_children /= Void) and then 
+				(internal_children.count > 0)
 			end
 		end
 
@@ -483,9 +501,11 @@ feature {NONE} -- Implementation
 		do
 			if top_parent_imp /= Void then
 				if pos = 1 then
-					top_parent_imp.general_insert_item (item_imp, h_item, Tvi_first, pos)
+					top_parent_imp.general_insert_item 
+					(item_imp, h_item, Tvi_first, pos)
 				else
-					top_parent_imp.general_insert_item (item_imp, h_item, (ev_children @ (pos - 1)).h_item, pos)
+					top_parent_imp.general_insert_item
+					(item_imp, h_item, (ev_children @ (pos - 1)).h_item, pos)                                                                   
 				end
 			else
 				internal_children.go_i_th (pos)
@@ -536,24 +556,28 @@ end -- class EV_TREE_ITEM_IMP
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
---| Revision 1.45  2000/03/27 22:56:31  rogers
---| Fixed remove_all_direct_references.
+--| Revision 1.46  2000/03/27 23:11:25  rogers
+--| Formatting.
 --|
 --| Revision 1.42  2000/03/24 20:51:52  rogers
---| Added on_parented and set_pixmap_in_parent. This allows the pixmaps to be set before parenting the items.
+--| Added on_parented and set_pixmap_in_parent. This allows the pixmaps to be 
+--| set before parenting the items.
 --|
 --| Revision 1.41  2000/03/24 19:16:20  rogers
---| Redefined initialize from EV_ARRAYED_LIST_ITEM_HOLDER_IMP. Removed commented PND inheritence.
+--| Redefined initialize from EV_ARRAYED_LIST_ITEM_HOLDER_IMP. Removed 
+--| commented PND inheritence.
 --|
 --| Revision 1.40  2000/03/24 17:15:36  rogers
---| Added tree_view_pixmap_height, tree_view_pixmap_width, and fixed set_pixmap so that repeated icons are
---| shared internally in the image list.
+--| Added tree_view_pixmap_height, tree_view_pixmap_width, and fixed 
+--| set_pixmap so that repeated icons are shared internally in the image list.
 --|
+
 --| Revision 1.39  2000/03/24 00:18:01  rogers
 --| Implemented set_pixmap.
 --|
 --| Revision 1.38  2000/03/22 20:23:05  rogers
---| Removed repeated inheritance from EV_PICK_AND_DROPABLE_IMP. Added pnd_press and set_pointer_style.
+--| Removed repeated inheritance from EV_PICK_AND_DROPABLE_IMP. Added 
+--|pnd_press and set_pointer_style.
 --|
 --| Revision 1.37  2000/03/17 23:25:18  rogers
 --| Undefined set_pointer_style from EV_PICK_AND_AND_DROPABLE_IMP.
@@ -562,31 +586,34 @@ end -- class EV_TREE_ITEM_IMP
 --| Removed old command association.
 --|
 --| Revision 1.35  2000/03/13 20:51:43  rogers
---| Added relative position which returns position of `Current' in relation to the tree.
+--| Added relative position which returns position of `Current' in relation 
+--|to the tree.
 --|
 --| Revision 1.34  2000/03/09 20:24:51  rogers
 --| Added text coment, removed add_item and removed commented lines from count.
 --|
 --| Revision 1.33  2000/03/09 17:28:33  rogers
---| Removed redundent commented code. Insert item now uses pos - 1 correctly, instead of index when the
---| insertion position is not one.
+--| Removed redundent commented code. Insert item now uses pos - 1 correctly,
+--| instead of index when the insertion position is not one.
 --|
 --| Revision 1.31  2000/03/08 17:33:44  rogers
---| Set_text from WEL_TREE_VIEW is now redefined. Redundent make_with_text has been removed. Set text now
---| sets the text to a clone of the passed text. All calls to general_insert_item now take an index.
+--| Set_text from WEL_TREE_VIEW is now redefined. Redundent make_with_text has
+--| been removed. Set text now sets the text to a clone of the passed text. 
+--| All calls to general_insert_item now take an index.
 --|
 --| Revision 1.30  2000/03/07 17:43:18  rogers
---| Now inherits from EV_ARRAYED_LIST_ITEM_HOLDER_IMP [EV_TREE_ITEM] instead of EV_TREE_ITEM_HOLDER_IMP.
---| The same type change has been implemented for parent_imp, and insert item now takes EV_TREE_ITEM_IMP 
---|instead of like item_type.
+--| Now inherits from EV_ARRAYED_LIST_ITEM_HOLDER_IMP [EV_TREE_ITEM] instead 
+--| of EV_TREE_ITEM_HOLDER_IMP. The same type change has been implemented for
+--| parent_imp, and insert item now takes EV_TREE_ITEM_IMP instead of 
+--| like item_type.
 --|
 --| Revision 1.29  2000/03/06 21:10:21  rogers
---| Is_initialized is now set to true in initialization, and internal_children is created. Re-implemented 
---| parent_imp.
+--| Is_initialized is now set to true in initialization, and internal_children
+--| is created. Re-implemented parent_imp.
 --|
 --| Revision 1.28  2000/03/06 19:07:22  rogers
---| Added text and also top_parent_imp which returns the implementation of parent_tree. Set text no longer 
---| calls the EV_SIMPLE_ITEM_IMP Precursor.
+--| Added text and also top_parent_imp which returns the implementation of 
+--| parent_tree. Set text no longer calls the EV_SIMPLE_ITEM_IMP Precursor.
 --|
 --| Revision 1.27  2000/02/19 06:34:12  oconnor
 --| removed old command stuff

@@ -22,6 +22,11 @@ inherit
 			{NONE} all
 		end
 
+	SHARED_OVERRIDDEN_METADATA_CACHE_PATH
+		export
+			{NONE} all
+		end
+
 create
 	default_create,
 	initialize
@@ -878,7 +883,9 @@ feature {COMPILER_EXPORTER} -- Lace compilation
 			l_val: OPT_VAL_SD
 			l_has_value: BOOLEAN
 		do
-			if defaults /= Void then
+			if overridden_metadata_cache_path /= Void then
+				System.set_metadata_cache_path (overridden_metadata_cache_path)
+			elseif defaults /= Void then
 				from
 					defaults.start
 				until

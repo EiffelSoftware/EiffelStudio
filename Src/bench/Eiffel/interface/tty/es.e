@@ -21,6 +21,8 @@ inherit
 
 	EIFFEL_ENV
 
+	SHARED_OVERRIDDEN_METADATA_CACHE_PATH
+
 create
 	make
 
@@ -810,7 +812,7 @@ feature -- Update
 			elseif option.is_equal ("-metadata_cache_path") then
 				if current_option + 1 < argument_count then
 					current_option := current_option + 1
-					
+					set_overridden_metadata_cache_path (argument (current_option))
 				else
 					option_error := True
 				end

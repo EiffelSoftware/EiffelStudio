@@ -12,6 +12,13 @@ inherit
 			is_equal
 		end
 
+	CODE_SHARED_INHERITANCE_CLAUSE_PARSER
+		export
+			{NONE} all
+		redefine
+			is_equal
+		end
+
 create
 	make
 
@@ -277,10 +284,7 @@ feature -- Code generation
 			Result.append ("%"%N%N")
 			
 				-- inherit
-			if snippet_inherit_clause /= Void then
-				Result.append (snippet_inherit_clause)
-			end
-			if parents /= Void and then parents.count > 0 then
+			if (parents /= Void and then parents.count > 0) or snippet_inherit_clause /= Void then
 				Result.append (inheritance_clause)
 				Result.append_character ('%N')
 			end
@@ -340,183 +344,218 @@ feature -- Code generation
 		require
 			not_empty_parents: parents.count > 0
 			is_in_code_generation: current_state = Code_generation
+		local
+			l_snippet_parents: LIST [CODE_SNIPPET_PARENT]
+			l_parent: CODE_PARENT
+			l_snippet_parent: CODE_SNIPPET_PARENT
 		do
 			create Result.make (200)
-			if snippet_inherit_clause = Void then
-				Result.append ("inherit%N")
+			Result.append ("inherit%N")
+			if snippet_inherit_clause /= Void then
+				Inheritance_clause_parser.parse (snippet_inherit_clause)
+				l_snippet_parents := Inheritance_clause_parser.parents
 			end
 			from
 				parents.start
 			until 
 				parents.after
 			loop
-				Result.append (parents.item_for_iteration.code)
+				l_parent := parents.item_for_iteration
+				if l_snippet_parents /= Void then
+					from
+						l_snippet_parents.start
+					until
+						l_snippet_parents.after
+					loop
+						l_snippet_parent := l_snippet_parents.item
+						if l_snippet_parent.type.is_equal (l_parent.type.eiffel_name) then
+							l_parent.set_snippet_parent (l_snippet_parent)
+							l_snippet_parents.remove
+							l_snippet_parents.finish
+						end
+						l_snippet_parents.forth
+					end
+				end
+				Result.append (l_parent.code)
 				parents.forth
 			end
-		ensure
-			parents_generated: Result /= Void and not Result.is_empty
-		end
-								
-	creation_clause: STRING is 
-			-- Code of creation clause
-		require
-			is_in_code_generation: current_state = Code_generation
-		do
-			create Result.make (100)
-			if creation_routines.count = 0 then
-				Result.append ("create {NONE}%N%N")
-			else
-				Result.append ("create%N")
-				Result.append (tabulation_string)
+			
+			-- Generate code for snippet parents that do not have a matching
+			-- generated parent
+			if l_snippet_parents /= Void then
 				from
-					creation_routines.start
-					if not creation_routines.after then
+					l_snippet_parents.start
+				until
+					l_snippet_parents.after
+				loop
+					Result.append (l_snippet_parents.item.code)
+					l_snippet_parents.forth
+				end
+			end
+			ensure
+				parents_generated: Result /= Void and not Result.is_empty
+			end
+									
+		creation_clause: STRING is 
+				-- Code of creation clause
+			require
+				is_in_code_generation: current_state = Code_generation
+			do
+				create Result.make (100)
+				if creation_routines.count = 0 then
+					Result.append ("create {NONE}%N%N")
+				else
+					Result.append ("create%N")
+					Result.append (tabulation_string)
+					from
+						creation_routines.start
+						if not creation_routines.after then
+							Result.append (creation_routines.item_for_iteration.eiffel_name)
+							creation_routines.forth
+						end
+					until
+						creation_routines.after
+					loop
+						Result.append_character (',')
 						Result.append (creation_routines.item_for_iteration.eiffel_name)
+						Result.append ("%N")
+						Result.append (tabulation_string)
 						creation_routines.forth
 					end
-				until
-					creation_routines.after
-				loop
-					Result.append_character (',')
-					Result.append (creation_routines.item_for_iteration.eiffel_name)
-					Result.append ("%N")
-					Result.append (tabulation_string)
-					creation_routines.forth
+					Result.append ("%N%N")
+				end			
+			end
+	
+		body: STRING is
+				-- Eiffel code of type body
+			require
+				is_in_code_generation: current_state = Code_generation
+			do
+				create Result.make (100)
+				if creation_routines.count > 0 then
+					Result.append (features_code (creation_routines))
 				end
-				Result.append ("%N%N")
-			end			
-		end
-
-	body: STRING is
-			-- Eiffel code of type body
-		require
-			is_in_code_generation: current_state = Code_generation
-		do
-			create Result.make (100)
-			if creation_routines.count > 0 then
-				Result.append (features_code (creation_routines))
-			end
-			if features.count > 0 then
-				Result.append (features_code (features))
-			end
-			if implementation_features.count > 0 then
-				Result.append ("%Nfeature {NONE} -- Try/Catch Implementation%N")
-				from
-					implementation_features.start
-				until
-					implementation_features.after
-				loop
-					Result.append (implementation_features.item_for_iteration.code)
-					implementation_features.forth
+				if features.count > 0 then
+					Result.append (features_code (features))
 				end
+				if implementation_features.count > 0 then
+					Result.append ("%Nfeature {NONE} -- Try/Catch Implementation%N")
+					from
+						implementation_features.start
+					until
+						implementation_features.after
+					loop
+						Result.append (implementation_features.item_for_iteration.code)
+						implementation_features.forth
+					end
+				end
+			ensure
+				body_generated: Result /= Void
 			end
-		ensure
-			body_generated: Result /= Void
-		end
-
-	features_code (a_features: HASH_TABLE [CODE_FEATURE, STRING]): STRING is 
-			-- Code corresponding to features `a_features'
-		require
-			non_void_features: a_features /= Void
-			is_in_code_generation: current_state = Code_generation
-		local
-			l_clauses: HASH_TABLE [LIST [CODE_FEATURE], STRING]
-			l_features: LIST [CODE_FEATURE]
-		do
-			create Result.make (1000)
-			l_clauses := features_per_clauses (a_features)
-			from
-				l_clauses.start
-			until
-				l_clauses.after
-			loop
-				l_features := l_clauses.item_for_iteration
-				Result.append (l_clauses.key_for_iteration)
+	
+		features_code (a_features: HASH_TABLE [CODE_FEATURE, STRING]): STRING is 
+				-- Code corresponding to features `a_features'
+			require
+				non_void_features: a_features /= Void
+				is_in_code_generation: current_state = Code_generation
+			local
+				l_clauses: HASH_TABLE [LIST [CODE_FEATURE], STRING]
+				l_features: LIST [CODE_FEATURE]
+			do
+				create Result.make (1000)
+				l_clauses := features_per_clauses (a_features)
 				from
-					l_features.start
-					if not l_features.after then
+					l_clauses.start
+				until
+					l_clauses.after
+				loop
+					l_features := l_clauses.item_for_iteration
+					Result.append (l_clauses.key_for_iteration)
+					from
+						l_features.start
+						if not l_features.after then
+							Result.append (l_features.item.code)
+							l_features.forth
+						end
+					until
+						l_features.after
+					loop
 						Result.append (l_features.item.code)
 						l_features.forth
 					end
+					l_clauses.forth
+				end
+			end
+			
+		footer: STRING is
+				-- | Call `invariants'.
+	
+				-- Eiffel code of type footer (from `invariant' keyword to end of type)
+			require
+				is_in_code_generation: current_state = Code_generation
+			do
+				create Result.make (eiffel_name.count + 8)
+				Result.append ("%Nend -- ")
+				Result.append (eiffel_name)
+			ensure
+				footer_generated: Result /= Void and then not Result.is_empty
+			end
+	
+		features_per_clauses (a_features: HASH_TABLE [CODE_FEATURE, STRING]): HASH_TABLE [LIST [CODE_FEATURE], STRING] is
+				-- Features ordered per feature clause
+			require
+				non_void_features: a_features /= Void
+				is_in_code_generation: current_state = Code_generation
+			local
+				l_clause: STRING
+			do
+				create {HASH_TABLE [ARRAYED_LIST [CODE_FEATURE], STRING]} Result.make (a_features.count)
+				from
+					a_features.start
 				until
-					l_features.after
+					a_features.after
 				loop
-					Result.append (l_features.item.code)
-					l_features.forth
+					l_clause := a_features.item_for_iteration.feature_clause
+					if not Result.has (l_clause) then
+						Result.extend (create {ARRAYED_LIST [CODE_FEATURE]}.make (4), l_clause)
+					end
+					check
+						has_clause: Result.has (l_clause)
+					end
+					Result.item (l_clause).extend (a_features.item_for_iteration)
+					a_features.forth
 				end
-				l_clauses.forth
+			ensure
+				non_void_result: Result /= Void
 			end
-		end
-		
-	footer: STRING is
-			-- | Call `invariants'.
-
-			-- Eiffel code of type footer (from `invariant' keyword to end of type)
-		require
-			is_in_code_generation: current_state = Code_generation
-		do
-			create Result.make (eiffel_name.count + 8)
-			Result.append ("%Nend -- ")
-			Result.append (eiffel_name)
-		ensure
-			footer_generated: Result /= Void and then not Result.is_empty
-		end
-
-	features_per_clauses (a_features: HASH_TABLE [CODE_FEATURE, STRING]): HASH_TABLE [LIST [CODE_FEATURE], STRING] is
-			-- Features ordered per feature clause
-		require
-			non_void_features: a_features /= Void
-			is_in_code_generation: current_state = Code_generation
-		local
-			l_clause: STRING
-		do
-			create {HASH_TABLE [ARRAYED_LIST [CODE_FEATURE], STRING]} Result.make (a_features.count)
-			from
-				a_features.start
-			until
-				a_features.after
-			loop
-				l_clause := a_features.item_for_iteration.feature_clause
-				if not Result.has (l_clause) then
-					Result.extend (create {ARRAYED_LIST [CODE_FEATURE]}.make (4), l_clause)
-				end
-				check
-					has_clause: Result.has (l_clause)
-				end
-				Result.item (l_clause).extend (a_features.item_for_iteration)
-				a_features.forth
+	
+	feature -- Comparison
+	
+		is_equal (other: CODE_GENERATED_TYPE): BOOLEAN is
+				-- Is `other' attached to an object considered
+				-- equal to current object?
+				-- We consider that CodeDom has the same limitation as C# where
+				-- two namespaces with the same name cannot have types with the same name
+			do
+				Result := other.name.is_equal (name)
 			end
-		ensure
-			non_void_result: Result /= Void
-		end
-
-feature -- Comparison
-
-	is_equal (other: CODE_GENERATED_TYPE): BOOLEAN is
-			-- Is `other' attached to an object considered
-			-- equal to current object?
-			-- We consider that CodeDom has the same limitation as C# where
-			-- two namespaces with the same name cannot have types with the same name
-		do
-			Result := other.name.is_equal (name)
-		end
-		
-invariant
-	non_void_indexing_clauses: indexing_clauses /= Void
-	non_void_parents: parents /= Void
-	non_void_creation_routines: creation_routines /= Void
-	non_void_features: features /= Void
-	non_void_dotnet_features: dotnet_features /= Void
-
-end -- class CODE_GENERATED_TYPE
-
---+--------------------------------------------------------------------
---| Eiffel CodeDOM Provider
---| Copyright (C) 2001-2004 Eiffel Software
---| Eiffel Software Confidential
---| All rights reserved. Duplication and distribution prohibited.
---|
---| Eiffel Software
---| 356 Storke Road, Goleta, CA 93117 USA
---| http://www.eiffel.com
---+--------------------------------------------------------------------
+	
+	invariant
+		non_void_indexing_clauses: indexing_clauses /= Void
+		non_void_parents: parents /= Void
+		non_void_creation_routines: creation_routines /= Void
+		non_void_features: features /= Void
+		non_void_dotnet_features: dotnet_features /= Void
+	
+	end -- class CODE_GENERATED_TYPE
+	
+	--+--------------------------------------------------------------------
+	--| Eiffel CodeDOM Provider
+	--| Copyright (C) 2001-2004 Eiffel Software
+	--| Eiffel Software Confidential
+	--| All rights reserved. Duplication and distribution prohibited.
+	--|
+	--| Eiffel Software
+	--| 356 Storke Road, Goleta, CA 93117 USA
+	--| http://www.eiffel.com
+	--+--------------------------------------------------------------------

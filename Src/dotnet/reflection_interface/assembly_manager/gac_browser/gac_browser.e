@@ -25,16 +25,16 @@ feature -- Access
 			create Result.make
 			create wde.make
 			assembly_path := wde.windows_directory_name
-			assembly_path := assembly_path.concat_string_string (assembly_path.remove (assembly_path.length - 1, 1), Gac_path)
+			assembly_path := assembly_path.concat_string_string (assembly_path.remove (assembly_path.get_length - 1, 1), Gac_path)
 			create dir_info.make_directoryinfo (assembly_path)
-			assemblies := dir_info.getdirectories
+			assemblies := dir_info.get_directories
 			from
 				i := 0
 			until
 				i >= assemblies.count
 			loop
 				versions := assembly_versions (assemblies.item (i))
-				Result.addrange (versions)
+				Result.add_range (versions)
 				i := i + 1
 			end
 		ensure
@@ -64,21 +64,21 @@ feature {NONE} -- Implementation
 			i, j, n: INTEGER
 		do
 			create Result.make
-			version_dirs := dir.getdirectories
+			version_dirs := dir.get_directories
 			from
 				i := 0
 			until
 				i >= version_dirs.count
 			loop
-				files := version_dirs.item (i).getfiles
+				files := version_dirs.item (i).get_files
 				from
 					j := 0
 				until
 					j >= files.count
 				loop
-					assembly := load_from_file (files.item (j).fullname)
+					assembly := load_from_file (files.item (j).get_full_name)
 					if assembly /= Void then
-						desc := assemblydescriptorfromname (assembly)
+						desc := assembly_descriptor_from_name (assembly)
 						n := Result.add (desc)
 					end
 					j := j + 1
@@ -100,7 +100,7 @@ feature {NONE} -- Implementation
 		do
 			if not rescued then
 				create Result.make
-				Result := Result.getassemblyname (file)
+				Result := Result.get_assembly_name (file)
 			else 
 				Result := Void
 			end

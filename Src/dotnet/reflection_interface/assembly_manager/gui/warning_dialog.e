@@ -27,16 +27,16 @@ feature {NONE} -- Initialization
 		require
 			non_void_assembly_descriptor: an_assembly_descriptor /= Void
 			non_void_assembly_name: an_assembly_descriptor.name /= Void
-			not_empty_assembly_name: an_assembly_descriptor.name.Length > 0
+			not_empty_assembly_name: an_assembly_descriptor.name.get_length > 0
 			non_void_dependancies: assembly_dependancies /= Void
 			not_empty_dependancies: assembly_dependancies.count > 0
 			non_void_question: a_question /= Void
-			not_empty_question: a_question.length > 0
+			not_empty_question: a_question.get_length > 0
 			non_void_caption_text: a_caption_text /= Void
-			not_empty_caption_text: a_caption_text.length > 0
+			not_empty_caption_text: a_caption_text.get_length > 0
 			non_void_call_back: a_call_back /= Void
 		local
-			return_value: INTEGER
+			return_value: SYSTEM_WINDOWS_FORMS_DIALOGRESULT
 		do
 			make_form
 			assembly_descriptor := an_assembly_descriptor
@@ -46,7 +46,7 @@ feature {NONE} -- Initialization
 			call_back := a_call_back
 			build_dependancies_list
 			initialize_gui
-			return_value := showdialog
+			return_value := show_dialog
 		ensure
 			assembly_descriptor_set: assembly_descriptor = an_assembly_descriptor
 			dependancies_set: dependancies = assembly_dependancies
@@ -114,15 +114,17 @@ feature -- Basic Operations
 			label_font: SYSTEM_DRAWING_FONT
 			on_yes_event_handler_delegate: SYSTEM_EVENTHANDLER
 			on_no_event_handler_delegate: SYSTEM_EVENTHANDLER
+			border_style: SYSTEM_WINDOWS_FORMS_FORMBORDERSTYLE
+			style: SYSTEM_DRAWING_FONTSTYLE
 		do
 			set_Enabled (True)
 			set_text (dictionary.Title)
-			set_borderstyle (dictionary.Border_style)
+			set_border_style (border_style.fixed_single)
 			a_size.set_Width (dictionary.Window_width)
 			a_size.set_Height (dictionary.Window_height)
 			set_size (a_size)	
 			set_icon (dictionary.Assembly_manager_icon)
-			set_maximizebox (False)
+			set_maximize_box (False)
 
 				-- Assembly name
 			create assembly_label.make_label
@@ -132,7 +134,7 @@ feature -- Basic Operations
 			assembly_label.set_location (a_point)
 			a_size.set_Height (dictionary.Label_height)
 			assembly_label.set_size (a_size)
-			create label_font.make_font_10 (dictionary.Font_family_name, dictionary.Font_size, dictionary.Bold_style)  
+			create label_font.make_font_10 (dictionary.Font_family_name, dictionary.Font_size, style.Bold)  
 			assembly_label.set_font (label_font)
 			
 			create_assembly_labels
@@ -142,9 +144,9 @@ feature -- Basic Operations
 			a_size.set_width (dictionary.Window_width - dictionary.Margin // 2)
 			a_size.set_height (dictionary.Window_height - 7 * Dictionary.Margin - 4 * dictionary.Label_height - dictionary.Button_height)
 			data_grid.set_Size (a_size)
-			data_grid.set_captiontext (caption_text)
+			data_grid.set_caption_text (caption_text)
 			display_dependancies
-			controls.add (data_grid)
+			get_controls.add (data_grid)
 
 				-- Question to the user
 			create question_label.make_label
@@ -152,7 +154,7 @@ feature -- Basic Operations
 			a_point.set_X (dictionary.Margin)
 			a_point.set_Y (dictionary.Window_height - 4 * dictionary.Margin - dictionary.Label_height - dictionary.Button_height)
 			question_label.set_location (a_point)
-			question_label.set_autosize (True)	
+			question_label.set_auto_size (True)	
 			question_label.set_font (label_font)
 			
 				-- Yes button
@@ -177,12 +179,12 @@ feature -- Basic Operations
 			create on_no_event_handler_delegate.make_eventhandler (Current, $on_no_event_handler)
 			no_button.add_Click (on_no_event_handler_delegate)
 			
-				-- Addition of controls
-			controls.add (assembly_label)
-			controls.add (dependancies_label)
-			controls.add (question_label)
-			controls.add (yes_button)
-			controls.add (no_button)
+				-- Addition of get_controls
+			get_controls.add (assembly_label)
+			get_controls.add (dependancies_label)
+			get_controls.add (question_label)
+			get_controls.add (yes_button)
+			get_controls.add (no_button)
 		end
 
 feature -- Event handling
@@ -202,7 +204,7 @@ feature -- Event handling
 			close
 			if not retried then
 				create an_array.make (0)
-				object_invoked := call_back.dynamicinvoke (an_array)
+				object_invoked := call_back.dynamic_invoke (an_array)
 			end
 		rescue
 			retried := True

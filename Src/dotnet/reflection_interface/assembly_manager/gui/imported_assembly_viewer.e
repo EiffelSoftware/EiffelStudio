@@ -18,17 +18,18 @@ create
 feature -- Access
 
 	non_editable_assemblies: SYSTEM_COLLECTIONS_ARRAYLIST is
-			-- | SYSTEM_COLLECTIONS_ARRAYLIST [ISE_REFLECTION_ASSEMBLYDESCRIPTOR]
+			-- | SYSTEM_COLLECTIONS_ARRAYLIST [STRING]
 		indexing
-			description: "List of assemblies that cannot be edited"
+			description: "Non editable assemblies"
 			external_name: "NonEditableAssemblies"
 		local
-			special_assemblies: SPECIAL_ASSEMBLIES
+			added: INTEGER
 		once
-			create special_assemblies
-			Result := special_assemblies.non_editable_assemblies
+			create Result.make
+			added := Result.add (dictionary.Mscorlib_assembly_name)
 		ensure
-			non_editable_assemblies_created: Result /= Void
+			list_created: Result /= Void
+			valid_list: Result.get_count = 1
 		end
 		
 	dictionary: IMPORTED_ASSEMBLY_VIEWER_DICTIONARY is
@@ -113,23 +114,8 @@ feature -- Status Report
 			external_name: "IsNonRemovableAssembly"
 		require
 			non_void_descriptor: a_descriptor /= Void
-		local
-			i: INTEGER
-			an_assembly_descriptor: ISE_REFLECTION_ASSEMBLYDESCRIPTOR
 		do
-			from
-			until
-				i = non_editable_assemblies.count or Result
-			loop
-				an_assembly_descriptor ?= non_editable_assemblies.item (i)
-				if an_assembly_descriptor /= Void then
-					Result := an_assembly_descriptor.name.tolower.equals_string (a_descriptor.name.tolower) and
-							an_assembly_descriptor.version.tolower.equals_string (a_descriptor.version.tolower) and
-							an_assembly_descriptor.culture.tolower.equals_string (a_descriptor.culture.tolower) and
-							an_assembly_descriptor.publickey.tolower.equals_string (a_descriptor.publickey.tolower) 
-				end
-				i := i + 1
-			end
+			Result := non_editable_assemblies.contains (a_descriptor.name.to_lower)		
 		end
 		
 feature -- Basic Operations
@@ -147,13 +133,13 @@ feature -- Basic Operations
 			on_update_replace_delegate: SYSTEM_EVENTHANDLER
 		do
 			create notifier_handle.make1
-			notifier := notifier_handle.currentnotifier
+			notifier := notifier_handle.current_notifier
 			create on_update_add_delegate.make_eventhandler (Current, $update_add)		
-			notifier.addadditionobserver (on_update_add_delegate)
+			notifier.add_addition_observer (on_update_add_delegate)
 			create on_update_remove_delegate.make_eventhandler (Current, $update_remove)		
-			notifier.addremoveobserver (on_update_remove_delegate)
+			notifier.add_remove_observer (on_update_remove_delegate)
 			create on_update_replace_delegate.make_eventhandler (Current, $update_replace)
-			notifier.addreplaceobserver (on_update_replace_delegate)
+			notifier.add_replace_observer (on_update_replace_delegate)
 		end
 		
 	build_menu is
@@ -163,37 +149,38 @@ feature -- Basic Operations
 		local
 			added: INTEGER
 			separator: SYSTEM_WINDOWS_FORMS_MENUITEM
+			shortcut: SYSTEM_WINDOWS_FORMS_SHORTCUT
 		do					
 			--Precursor {ASSEMBLY_VIEWER}
 			build_menu_assembly_viewer
-			added := file_menu_item.menuitems.add (exit_menu_item)
+			added := file_menu_item.get_menu_items.add (exit_menu_item)
 			
 				-- Build View menu item.
 			create path_menu_item.make_menuitem_1 (dictionary.Path_menu_item)			
 			create show_name_and_path_menu_item.make_menuitem_1 (dictionary.Show_name_and_path_menu_item)
-			path_menu_item.set_shortcut (dictionary.Ctrl_P_shortcut)
-			show_name_and_path_menu_item.set_shortcut (dictionary.Ctrl_W_shortcut)			
+			path_menu_item.set_shortcut (shortcut.Ctrl_P)
+			show_name_and_path_menu_item.set_shortcut (shortcut.Ctrl_W)			
 			path_menu_item.set_checked (True)
-			added := view_menu_item.menuitems.add (path_menu_item)	
-			separator := view_menu_item.menuitems.add_string ("-")
-			added := view_menu_item.menuitems.add (show_all_menu_item)	
-			added := view_menu_item.menuitems.add (show_name_and_path_menu_item)	
+			added := view_menu_item.get_menu_items.add (path_menu_item)	
+			separator := view_menu_item.get_menu_items.add_string ("-")
+			added := view_menu_item.get_menu_items.add (show_all_menu_item)	
+			added := view_menu_item.get_menu_items.add (show_name_and_path_menu_item)	
 			
 				-- Build Tools menu item.
 			create edit_menu_item.make_menuitem_1 (dictionary.Edit_menu_item)
 			create remove_menu_item.make_menuitem_1 (dictionary.Remove_menu_item)
 			create import_menu_item.make_menuitem_1 (dictionary.Import_menu_item)
 			create eiffel_generation_menu_item.make_menuitem_1 (dictionary.Eiffel_generation_menu_item)
-			edit_menu_item.set_shortcut (dictionary.Ctrl_E_shortcut)
-			remove_menu_item.set_shortcut (dictionary.Ctrl_M_shortcut)
-			import_menu_item.set_shortcut (dictionary.Ctrl_I_shortcut)
-			eiffel_generation_menu_item.set_shortcut (dictionary.Ctrl_G_shortcut)
-			added := tools_menu_item.menuitems.add (edit_menu_item)
-			added := tools_menu_item.menuitems.add (remove_menu_item)
-			separator := tools_menu_item.menuitems.add_string ("-")
-			added := tools_menu_item.menuitems.add (eiffel_generation_menu_item)
-			separator := tools_menu_item.menuitems.add_string ("-")
-			added := tools_menu_item.menuitems.add (import_menu_item)
+			edit_menu_item.set_shortcut (shortcut.Ctrl_E)
+			remove_menu_item.set_shortcut (shortcut.Ctrl_M)
+			import_menu_item.set_shortcut (shortcut.Ctrl_I)
+			eiffel_generation_menu_item.set_shortcut (shortcut.Ctrl_G)
+			added := tools_menu_item.get_menu_items.add (edit_menu_item)
+			added := tools_menu_item.get_menu_items.add (remove_menu_item)
+			separator := tools_menu_item.get_menu_items.add_string ("-")
+			added := tools_menu_item.get_menu_items.add (eiffel_generation_menu_item)
+			separator := tools_menu_item.get_menu_items.add_string ("-")
+			added := tools_menu_item.get_menu_items.add (import_menu_item)
 		end
 	
 	set_menu_actions is
@@ -235,6 +222,7 @@ feature -- Basic Operations
 			added: INTEGER
 			separator: SYSTEM_WINDOWS_FORMS_TOOLBARBUTTON
 			toolbar_button_click_delegate: SYSTEM_WINDOWS_FORMS_TOOLBARBUTTONCLICKEVENTHANDLER
+			appearance: SYSTEM_WINDOWS_FORMS_TOOLBARBUTTONSTYLE
 		do
 			--Precursor {ASSEMBLY_VIEWER}
 			build_toolbar_assembly_viewer
@@ -246,50 +234,50 @@ feature -- Basic Operations
 			create separator.make_toolbarbutton
 			
 				-- Set icons to toolbar buttons.
-			path_toolbar_button.set_imageindex (7)
-			edit_toolbar_button.set_imageindex (8)
-			remove_toolbar_button.set_imageindex (9)
-			eiffel_generation_toolbar_button.set_imageindex (10)
-			import_toolbar_button.set_imageindex (11)
+			path_toolbar_button.set_image_index (7)
+			edit_toolbar_button.set_image_index (8)
+			remove_toolbar_button.set_image_index (9)
+			eiffel_generation_toolbar_button.set_image_index (10)
+			import_toolbar_button.set_image_index (11)
 			
 				-- Set tooltips.
-			path_toolbar_button.set_tooltiptext (dictionary.Path_menu_item)
-			edit_toolbar_button.set_tooltiptext (dictionary.Edit_menu_item)
-			remove_toolbar_button.set_tooltiptext (dictionary.Remove_menu_item)
-			eiffel_generation_toolbar_button.set_tooltiptext (dictionary.Eiffel_generation_menu_item)
-			import_toolbar_button.set_tooltiptext (dictionary.Import_menu_item)
+			path_toolbar_button.set_tool_tip_text (dictionary.Path_menu_item)
+			edit_toolbar_button.set_tool_tip_text (dictionary.Edit_menu_item)
+			remove_toolbar_button.set_tool_tip_text (dictionary.Remove_menu_item)
+			eiffel_generation_toolbar_button.set_tool_tip_text (dictionary.Eiffel_generation_menu_item)
+			import_toolbar_button.set_tool_tip_text (dictionary.Import_menu_item)
 			
 				-- Set button style.
-			path_toolbar_button.set_style (dictionary.Toggle_button)
-			edit_toolbar_button.set_style (dictionary.Push_button)
-			remove_toolbar_button.set_style (dictionary.Push_button)
-			eiffel_generation_toolbar_button.set_style (dictionary.Push_button)
-			import_toolbar_button.set_style (dictionary.Push_button)
-			separator.set_style (dictionary.Separator)
+			path_toolbar_button.set_style (appearance.Toggle_button)
+			edit_toolbar_button.set_style (appearance.Push_button)
+			remove_toolbar_button.set_style (appearance.Push_button)
+			eiffel_generation_toolbar_button.set_style (appearance.Push_button)
+			import_toolbar_button.set_style (appearance.Push_button)
+			separator.set_style (appearance.Separator)
 			
 				-- Set visible
 			path_toolbar_button.set_pushed (True)
 			
 				-- Add buttons to `toolbar'.
-			added := toolbar.buttons.add_toolbarbutton (path_toolbar_button)
-			added := toolbar.buttons.add_toolbarbutton (separator)
-			added := toolbar.buttons.add_toolbarbutton (dependancy_viewer_toolbar_button)
-			added := toolbar.buttons.add_toolbarbutton (separator)
-			added := toolbar.buttons.add_toolbarbutton (edit_toolbar_button)
-			added := toolbar.buttons.add_toolbarbutton (remove_toolbar_button)
-			added := toolbar.buttons.add_toolbarbutton (separator)
-			added := toolbar.buttons.add_toolbarbutton (eiffel_generation_toolbar_button)
-			added := toolbar.buttons.add_toolbarbutton (separator)
-			added := toolbar.buttons.add_toolbarbutton (import_toolbar_button)
-			added := toolbar.buttons.add_toolbarbutton (separator)
-			added := toolbar.buttons.add_toolbarbutton (help_toolbar_button)
-			controls.add (toolbar)
+			added := toolbar.get_buttons.add_tool_bar_button (path_toolbar_button)
+			added := toolbar.get_buttons.add_tool_bar_button (separator)
+			added := toolbar.get_buttons.add_tool_bar_button (dependancy_viewer_toolbar_button)
+			added := toolbar.get_buttons.add_tool_bar_button (separator)
+			added := toolbar.get_buttons.add_tool_bar_button (edit_toolbar_button)
+			added := toolbar.get_buttons.add_tool_bar_button (remove_toolbar_button)
+			added := toolbar.get_buttons.add_tool_bar_button (separator)
+			added := toolbar.get_buttons.add_tool_bar_button (eiffel_generation_toolbar_button)
+			added := toolbar.get_buttons.add_tool_bar_button (separator)
+			added := toolbar.get_buttons.add_tool_bar_button (import_toolbar_button)
+			added := toolbar.get_buttons.add_tool_bar_button (separator)
+			added := toolbar.get_buttons.add_tool_bar_button (help_toolbar_button)
+			get_controls.add (toolbar)
 		end
 
 	build_image_list is
 		indexing
 			description: "Build toolbar image list."
-			external_name: "BuildImageList"
+			external_name: "Buildimage_list"
 		local
 			path_image: SYSTEM_DRAWING_IMAGE
 			edit_image: SYSTEM_DRAWING_IMAGE
@@ -297,20 +285,20 @@ feature -- Basic Operations
 			eiffel_generation_image: SYSTEM_DRAWING_IMAGE
 			import_image: SYSTEM_DRAWING_IMAGE
 			image_list: SYSTEM_WINDOWS_FORMS_IMAGELIST
-			images: IMAGECOLLECTION_IN_SYSTEM_WINDOWS_FORMS_IMAGELIST 
+			images: IMAGECOLLECTION_IN_SYSTEM_WINDOWS_FORMS_IMAGELIST
 		do
 			--Precursor {ASSEMBLY_VIEWER}
 			build_image_list_assembly_viewer
 				-- Create icons
-			path_image := image_factory.fromfile (dictionary.Path_icon_filename)
-			edit_image := image_factory.fromfile (dictionary.Edit_icon_filename)
-			remove_image := image_factory.fromfile (dictionary.Remove_icon_filename)
-			eiffel_generation_image := image_factory.fromfile (dictionary.Eiffel_generation_icon_filename)
-			import_image := image_factory.fromfile (dictionary.Import_icon_filename)
+			path_image := image_factory.from_file (dictionary.Path_icon_filename)
+			edit_image := image_factory.from_file (dictionary.Edit_icon_filename)
+			remove_image := image_factory.from_file (dictionary.Remove_icon_filename)
+			eiffel_generation_image := image_factory.from_file (dictionary.Eiffel_generation_icon_filename)
+			import_image := image_factory.from_file (dictionary.Import_icon_filename)
 			
-				-- Add icons to `imagelist'.
-			image_list := toolbar.imagelist
-			images := image_list.images
+				-- Add icons to `image_list'.
+			image_list := toolbar.get_image_list
+			images := image_list.get_images
 			images.add (path_image)
 			images.add (edit_image)
 			images.add (remove_image)
@@ -327,9 +315,9 @@ feature -- Basic Operations
 		do
 			--Precursor {ASSEMBLY_VIEWER}
 			build_data_table_assembly_viewer
-			type := type_factory.GetType_String (dictionary.System_string_type);		
+			type := type_factory.Get_Type_String (dictionary.System_string_type)		
 			create eiffel_path_column.make_datacolumn_2 (dictionary.Eiffel_path_column_title, type)			
-			data_table.Columns.Add_DataColumn (eiffel_path_column)
+			data_table.get_Columns.Add_Data_Column (eiffel_path_column)
 		end
 
 	build_data_grid is
@@ -342,11 +330,11 @@ feature -- Basic Operations
 		do
 			--Precursor {ASSEMBLY_VIEWER}
 			build_data_grid_assembly_viewer
-			data_grid.set_captiontext (dictionary.Caption_text)
+			data_grid.set_caption_text (dictionary.Caption_text)
 			create eiffel_path_column_style.make_datagridtextboxcolumn
-			eiffel_path_column_style.set_mappingname (dictionary.Eiffel_path_column_title)
-			eiffel_path_column_style.set_headertext (dictionary.Eiffel_path_column_title)
-			added := data_grid_table_style.gridcolumnstyles.add (eiffel_path_column_style)	
+			eiffel_path_column_style.set_mapping_name (dictionary.Eiffel_path_column_title)
+			eiffel_path_column_style.set_header_text (dictionary.Eiffel_path_column_title)
+			added := data_grid_table_style.get_grid_column_styles.add (eiffel_path_column_style)	
 			set_read_only
 			resize_columns
 			--create on_row_delegate.make_eventhandler (Current, $on_row)
@@ -354,15 +342,6 @@ feature -- Basic Operations
 		end
 		
 feature -- Event handling
-
-	on_close (sender: ANY; arguments: SYSTEM_EVENTARGS) is
-		indexing
-			description: "Action performed when user closes the window"
-			external_name: "OnClose"
-		do
-			--reflection_interface.cleanassemblies
-			close
-		end
 	
 	update_replace (sender: ANY; arguments: SYSTEM_EVENTARGS) is
 		indexing
@@ -371,9 +350,9 @@ feature -- Event handling
 		require
 			non_void_sender: sender /= Void
 		do
-			current_history.typestable.clear
+			current_history.types_table.clear
 		ensure
-			empty_types_table: current_history.typestable.count = 0
+			empty_types_table: current_history.types_table.get_count = 0
 		end
 			
 	display_name (sender: ANY; arguments: SYSTEM_EVENTARGS) is
@@ -384,42 +363,42 @@ feature -- Event handling
 			checked: BOOLEAN
 			columns: SYSTEM_DATA_DATACOLUMNCOLLECTION
 		do
-			columns := data_table.columns
-			checked := name_menu_item.checked
-			if columns.count > 1 or not checked then	
+			columns := data_table.get_columns
+			checked := name_menu_item.get_checked
+			if columns.get_count > 1 or not checked then	
 				if checked and then columns.contains (dictionary.Assembly_name_column_title) then
-					columns.remove_datacolumn (assembly_name_column)
+					columns.remove_data_column (assembly_name_column)
 					name_menu_item.set_checked (not checked)
 					name_toolbar_button.set_pushed (not checked)
 					resize_columns
 					refresh
 				elseif not checked then
-					controls.remove (data_grid)
+					get_controls.remove (data_grid)
 					build_assemblies_table
-					columns := data_table.columns
+					columns := data_table.get_columns
 					columns.clear
-					columns.add_datacolumn (assembly_name_column)
-					if version_menu_item.checked then
-						columns.add_datacolumn (assembly_version_column)
+					columns.add_data_column (assembly_name_column)
+					if version_menu_item.get_checked then
+						columns.add_data_column (assembly_version_column)
 					end
-					if culture_menu_item.checked then
-						columns.add_datacolumn (assembly_culture_column)
+					if culture_menu_item.get_checked then
+						columns.add_data_column (assembly_culture_column)
 					end
-					if public_key_menu_item.checked then
-						columns.add_datacolumn (assembly_public_key_column)
+					if public_key_menu_item.get_checked then
+						columns.add_data_column (assembly_public_key_column)
 					end
-					if dependancies_menu_item.checked then
-						columns.add_datacolumn (dependancies_column)
+					if dependancies_menu_item.get_checked then
+						columns.add_data_column (dependancies_column)
 					end
-					if path_menu_item.checked then
-						columns.add_datacolumn (eiffel_path_column)
+					if path_menu_item.get_checked then
+						columns.add_data_column (eiffel_path_column)
 					end	
 					display_assemblies
 					name_menu_item.set_checked (not checked)
 					name_toolbar_button.set_pushed (not checked)
 					resize_columns
 					fill_data_grid
-					controls.add (data_grid)
+					get_controls.add (data_grid)
 					refresh
 				end
 			end
@@ -433,42 +412,42 @@ feature -- Event handling
 			checked: BOOLEAN
 			columns: SYSTEM_DATA_DATACOLUMNCOLLECTION
 		do
-			columns := data_table.columns
-			checked := version_menu_item.checked
-			if columns.count > 1 or not checked then		
+			columns := data_table.get_columns
+			checked := version_menu_item.get_checked
+			if columns.get_count > 1 or not checked then		
 				if checked and then columns.contains (dictionary.Assembly_version_column_title) then
-					columns.remove_datacolumn (assembly_version_column)
+					columns.remove_data_column (assembly_version_column)
 					version_menu_item.set_checked (not checked)
 					version_toolbar_button.set_pushed (not checked)
 					resize_columns
 					refresh
 				elseif not checked then
-					controls.remove (data_grid)
+					get_controls.remove (data_grid)
 					build_assemblies_table
-					columns := data_table.columns
+					columns := data_table.get_columns
 					columns.clear
-					if name_menu_item.checked then
-						columns.add_datacolumn (assembly_name_column)
+					if name_menu_item.get_checked then
+						columns.add_data_column (assembly_name_column)
 					end
-					columns.add_datacolumn (assembly_version_column)
-					if culture_menu_item.checked then
-						columns.add_datacolumn (assembly_culture_column)
+					columns.add_data_column (assembly_version_column)
+					if culture_menu_item.get_checked then
+						columns.add_data_column (assembly_culture_column)
 					end
-					if public_key_menu_item.checked then
-						columns.add_datacolumn (assembly_public_key_column)
+					if public_key_menu_item.get_checked then
+						columns.add_data_column (assembly_public_key_column)
 					end
-					if dependancies_menu_item.checked then
-						columns.add_datacolumn (dependancies_column)
+					if dependancies_menu_item.get_checked then
+						columns.add_data_column (dependancies_column)
 					end
-					if path_menu_item.checked then
-						columns.add_datacolumn (eiffel_path_column)
+					if path_menu_item.get_checked then
+						columns.add_data_column (eiffel_path_column)
 					end	
 					display_assemblies
 					version_menu_item.set_checked (not checked)
 					version_toolbar_button.set_pushed (not checked)
 					resize_columns
 					fill_data_grid
-					controls.add (data_grid)
+					get_controls.add (data_grid)
 					refresh		
 				end
 			end
@@ -482,42 +461,42 @@ feature -- Event handling
 			checked: BOOLEAN
 			columns: SYSTEM_DATA_DATACOLUMNCOLLECTION
 		do
-			columns := data_table.columns
-			checked := culture_menu_item.checked
-			if columns.count > 1 or not checked then				
+			columns := data_table.get_columns
+			checked := culture_menu_item.get_checked
+			if columns.get_count > 1 or not checked then				
 				if checked and then columns.contains (dictionary.Assembly_culture_column_title) then
-					columns.remove_datacolumn (assembly_culture_column)
+					columns.remove_data_column (assembly_culture_column)
 					culture_menu_item.set_checked (not checked)
 					culture_toolbar_button.set_pushed (not checked)
 					resize_columns
 					refresh
 				elseif not checked then
-					controls.remove (data_grid)
+					get_controls.remove (data_grid)
 					build_assemblies_table
-					columns := data_table.columns
+					columns := data_table.get_columns
 					columns.clear
-					if name_menu_item.checked then
-						columns.add_datacolumn (assembly_name_column)
+					if name_menu_item.get_checked then
+						columns.add_data_column (assembly_name_column)
 					end
-					if version_menu_item.checked then
-						columns.add_datacolumn (assembly_version_column)
+					if version_menu_item.get_checked then
+						columns.add_data_column (assembly_version_column)
 					end
-					columns.add_datacolumn (assembly_culture_column)
-					if public_key_menu_item.checked then
-						columns.add_datacolumn (assembly_public_key_column)
+					columns.add_data_column (assembly_culture_column)
+					if public_key_menu_item.get_checked then
+						columns.add_data_column (assembly_public_key_column)
 					end
-					if dependancies_menu_item.checked then
-						columns.add_datacolumn (dependancies_column)
+					if dependancies_menu_item.get_checked then
+						columns.add_data_column (dependancies_column)
 					end
-					if path_menu_item.checked then
-						columns.add_datacolumn (eiffel_path_column)
+					if path_menu_item.get_checked then
+						columns.add_data_column (eiffel_path_column)
 					end		
 					display_assemblies
 					culture_menu_item.set_checked (not checked)
 					culture_toolbar_button.set_pushed (not checked)
 					resize_columns
 					fill_data_grid
-					controls.add (data_grid)
+					get_controls.add (data_grid)
 					refresh		
 				end
 			end
@@ -531,42 +510,42 @@ feature -- Event handling
 			checked: BOOLEAN
 			columns: SYSTEM_DATA_DATACOLUMNCOLLECTION
 		do
-			columns := data_table.columns
-			checked := public_key_menu_item.checked
-			if columns.count > 1 or not checked then						
+			columns := data_table.get_columns
+			checked := public_key_menu_item.get_checked
+			if columns.get_count > 1 or not checked then						
 				if checked and then columns.contains (dictionary.Assembly_public_key_column_title) then
-					columns.remove_datacolumn (assembly_public_key_column)
+					columns.remove_data_column (assembly_public_key_column)
 					public_key_menu_item.set_checked (not checked)
 					public_key_toolbar_button.set_pushed (not checked)	
 					resize_columns
 					refresh
 				elseif not checked then
-					controls.remove (data_grid)
+					get_controls.remove (data_grid)
 					build_assemblies_table
-					columns := data_table.columns
+					columns := data_table.get_columns
 					columns.clear
-					if name_menu_item.checked then
-						columns.add_datacolumn (assembly_name_column)
+					if name_menu_item.get_checked then
+						columns.add_data_column (assembly_name_column)
 					end
-					if version_menu_item.checked then
-						columns.add_datacolumn (assembly_version_column)
+					if version_menu_item.get_checked then
+						columns.add_data_column (assembly_version_column)
 					end
-					if culture_menu_item.checked then
-						columns.add_datacolumn (assembly_culture_column)
+					if culture_menu_item.get_checked then
+						columns.add_data_column (assembly_culture_column)
 					end
-					columns.add_datacolumn (assembly_public_key_column)
-					if dependancies_menu_item.checked then
-						columns.add_datacolumn (dependancies_column)
+					columns.add_data_column (assembly_public_key_column)
+					if dependancies_menu_item.get_checked then
+						columns.add_data_column (dependancies_column)
 					end
-					if path_menu_item.checked then
-						columns.add_datacolumn (eiffel_path_column)
+					if path_menu_item.get_checked then
+						columns.add_data_column (eiffel_path_column)
 					end	
 					display_assemblies
 					public_key_menu_item.set_checked (not checked)
 					public_key_toolbar_button.set_pushed (not checked)	
 					resize_columns
 					fill_data_grid
-					controls.add (data_grid)
+					get_controls.add (data_grid)
 					refresh		
 				end
 			end
@@ -580,42 +559,42 @@ feature -- Event handling
 			checked: BOOLEAN
 			columns: SYSTEM_DATA_DATACOLUMNCOLLECTION
 		do
-			columns := data_table.columns
-			checked := dependancies_menu_item.checked
-			if columns.count > 1 or not checked then						
+			columns := data_table.get_columns
+			checked := dependancies_menu_item.get_checked
+			if columns.get_count > 1 or not checked then						
 				if checked and then columns.contains (dictionary.Dependancies_column_title) then
-					columns.remove_datacolumn (dependancies_column)
+					columns.remove_data_column (dependancies_column)
 					dependancies_menu_item.set_checked (not checked)
 					dependancies_toolbar_button.set_pushed (not checked)	
 					resize_columns
 					refresh
 				elseif not checked then
-					controls.remove (data_grid)
+					get_controls.remove (data_grid)
 					build_assemblies_table
-					columns := data_table.columns
+					columns := data_table.get_columns
 					columns.clear
-					if name_menu_item.checked then
-						columns.add_datacolumn (assembly_name_column)
+					if name_menu_item.get_checked then
+						columns.add_data_column (assembly_name_column)
 					end
-					if version_menu_item.checked then
-						columns.add_datacolumn (assembly_version_column)
+					if version_menu_item.get_checked then
+						columns.add_data_column (assembly_version_column)
 					end
-					if culture_menu_item.checked then
-						columns.add_datacolumn (assembly_culture_column)
+					if culture_menu_item.get_checked then
+						columns.add_data_column (assembly_culture_column)
 					end
-					if public_key_menu_item.checked then
-						columns.add_datacolumn (assembly_public_key_column)
+					if public_key_menu_item.get_checked then
+						columns.add_data_column (assembly_public_key_column)
 					end				
-					columns.add_datacolumn (dependancies_column)
-					if path_menu_item.checked then
-						columns.add_datacolumn (eiffel_path_column)
+					columns.add_data_column (dependancies_column)
+					if path_menu_item.get_checked then
+						columns.add_data_column (eiffel_path_column)
 					end					
 					dependancies_menu_item.set_checked (not checked)
 					dependancies_toolbar_button.set_pushed (not checked)
 					display_assemblies
 					resize_columns
 					fill_data_grid
-					controls.add (data_grid)
+					get_controls.add (data_grid)
 					refresh		
 				end
 			end
@@ -632,42 +611,42 @@ feature -- Event handling
 			checked: BOOLEAN
 			columns: SYSTEM_DATA_DATACOLUMNCOLLECTION
 		do
-			columns := data_table.columns
-			checked := path_menu_item.checked
-			if columns.count > 1 or not checked then						
+			columns := data_table.get_columns
+			checked := path_menu_item.get_checked
+			if columns.get_count > 1 or not checked then						
 				if checked and then columns.contains (dictionary.Eiffel_path_column_title) then
-					columns.remove_datacolumn (eiffel_path_column)
+					columns.remove_data_column (eiffel_path_column)
 					path_menu_item.set_checked (not checked)
 					path_toolbar_button.set_pushed (not checked)	
 					resize_columns
 					refresh
 				elseif not checked then
-					controls.remove (data_grid)
+					get_controls.remove (data_grid)
 					build_assemblies_table
-					columns := data_table.columns
+					columns := data_table.get_columns
 					columns.clear
-					if name_menu_item.checked then
-						columns.add_datacolumn (assembly_name_column)
+					if name_menu_item.get_checked then
+						columns.add_data_column (assembly_name_column)
 					end
-					if version_menu_item.checked then
-						columns.add_datacolumn (assembly_version_column)
+					if version_menu_item.get_checked then
+						columns.add_data_column (assembly_version_column)
 					end
-					if culture_menu_item.checked then
-						columns.add_datacolumn (assembly_culture_column)
+					if culture_menu_item.get_checked then
+						columns.add_data_column (assembly_culture_column)
 					end
-					if public_key_menu_item.checked then
-						columns.add_datacolumn (assembly_public_key_column)
+					if public_key_menu_item.get_checked then
+						columns.add_data_column (assembly_public_key_column)
 					end		
-					if dependancies_menu_item.checked then
-						columns.add_datacolumn (dependancies_column)
+					if dependancies_menu_item.get_checked then
+						columns.add_data_column (dependancies_column)
 					end					
-					columns.add_datacolumn (eiffel_path_column)
+					columns.add_data_column (eiffel_path_column)
 					display_assemblies
 					path_menu_item.set_checked (not checked)
 					path_toolbar_button.set_pushed (not checked)	
 					resize_columns
 					fill_data_grid
-					controls.add (data_grid)
+					get_controls.add (data_grid)
 					refresh	
 				end
 			end
@@ -683,15 +662,15 @@ feature -- Event handling
 			show_all_assembly_viewer (sender, arguments)
 			path_menu_item.set_checked (True)
 			path_toolbar_button.set_pushed (True)
-			columns := data_table.columns
-			columns.add_datacolumn (eiffel_path_column)
+			columns := data_table.get_columns
+			columns.add_data_column (eiffel_path_column)
 			display_assemblies
 			set_default_column_width
 			fill_data_grid
-			controls.add (data_grid)
+			get_controls.add (data_grid)
 			refresh
 		ensure then
-			all_columns_displayed: data_table.columns.count = 6
+			all_columns_displayed: data_table.get_columns.get_count = 6
 		end
 
 	show_name_and_path (sender: ANY; arguments: SYSTEM_EVENTARGS) is
@@ -707,15 +686,15 @@ feature -- Event handling
 			show_name_assembly_viewer (sender, arguments)
 			path_menu_item.set_checked (True)
 			path_toolbar_button.set_pushed (True)
-			columns := data_table.columns
-			columns.add_datacolumn (eiffel_path_column)	
+			columns := data_table.get_columns
+			columns.add_data_column (eiffel_path_column)	
 			display_assemblies
 			resize_columns
 			fill_data_grid
-			controls.add (data_grid)
+			get_controls.add (data_grid)
 			refresh
 		ensure
-			name_and_path_columns_displayed: data_table.columns.count = 2
+			name_and_path_columns_displayed: data_table.get_columns.get_count = 2
 		end
 		
 	edit (sender: ANY; arguments: SYSTEM_EVENTARGS) is
@@ -732,7 +711,9 @@ feature -- Event handling
 			assembly_view: ASSEMBLY_VIEW
 			current_descriptor: ISE_REFLECTION_ASSEMBLYDESCRIPTOR
 			windows_message_box: SYSTEM_WINDOWS_FORMS_MESSAGEBOX
-			returned_value: INTEGER
+			returned_value: SYSTEM_WINDOWS_FORMS_DIALOGRESULT
+			message_box_icon: SYSTEM_WINDOWS_FORMS_MESSAGEBOXICON
+			message_box_buttons: SYSTEM_WINDOWS_FORMS_MESSAGEBOXBUTTONS
 			retried: BOOLEAN
 			cursors: SYSTEM_WINDOWS_FORMS_CURSORS
 			wait_cursor: SYSTEM_WINDOWS_FORMS_CURSOR
@@ -742,21 +723,21 @@ feature -- Event handling
 			if not retried then
 				intern_edit (False)
 			else
-				normal_cursor := cursors.Arrow
+				normal_cursor := cursors.get_Arrow
 				set_cursor (normal_cursor)
-				if not reflection_interface.lastreadsuccessful then 
-					error_code := reflection_interface.lasterror.code
-					if error_code = reflection_interface.Haswritelockcode or error_code = reflection_interface.Hasreadlockcode then
-						returned_value := windows_message_box.show_string_string_messageboxbuttons_messageboxicon (dictionary.Access_violation_error, dictionary.Error_caption, dictionary.Abort_retry_ignore_message_box_buttons, dictionary.Error_icon)
-						if returned_value = dictionary.Retry_result then
+				if not reflection_interface.last_read_successful then 
+					error_code := reflection_interface.last_error.code
+					if error_code = reflection_interface.Has_write_lock_code or error_code = reflection_interface.Has_read_lock_code then
+						returned_value := windows_message_box.show_string_string_message_box_buttons_message_box_icon (dictionary.Access_violation_error, dictionary.Error_caption, message_box_buttons.Abort_retry_ignore, message_box_icon.Error)
+						if returned_value = returned_value.Retry_ then
 							intern_edit (False)
-						elseif returned_value = dictionary.Ignore_result then
+						elseif returned_value = returned_value.Ignore then
 							intern_edit (True)
 						end
 					end
 				else
-					if reflection_interface.lasterror /= Void and then reflection_interface.lasterror.description /= Void and then reflection_interface.lasterror.description.length > 0 then
-						returned_value := windows_message_box.show_string_string_messageboxbuttons_messageboxicon (reflection_interface.lasterror.description, dictionary.Error_caption, dictionary.Ok_message_box_button, dictionary.Error_icon)
+					if reflection_interface.last_error /= Void and then reflection_interface.last_error.description /= Void and then reflection_interface.last_error.description.get_length > 0 then
+						returned_value := windows_message_box.show_string_string_message_box_buttons_message_box_icon (reflection_interface.last_error.description, dictionary.Error_caption, message_box_buttons.Ok, message_box_icon.Error)
 					end
 				end
 			end
@@ -782,7 +763,7 @@ feature -- Event handling
 		do
 			if not retried then
 				create support
-				selected_row := data_grid.CurrentRowIndex			
+				selected_row := data_grid.get_Current_Row_Index			
 				a_descriptor := current_assembly (selected_row)
 				if a_descriptor /= Void then
 					assembly_dependancies := support.dependancies_from_info (a_descriptor)
@@ -810,10 +791,10 @@ feature -- Event handling
 			wait_cursor: SYSTEM_WINDOWS_FORMS_CURSOR
 			normal_cursor: SYSTEM_WINDOWS_FORMS_CURSOR
 		do
-			wait_cursor := cursors.WaitCursor
+			wait_cursor := cursors.get_Wait_Cursor
 			set_cursor (wait_cursor)
 			create import_tool.make
-			normal_cursor := cursors.Arrow
+			normal_cursor := cursors.get_Arrow
 			set_cursor (normal_cursor)
 		end
 
@@ -831,7 +812,7 @@ feature -- Event handling
 			retried: BOOLEAN
 		do
 			if not retried then
-				selected_row := data_grid.CurrentRowIndex
+				selected_row := data_grid.get_Current_Row_Index
 				a_descriptor := current_assembly (selected_row)
 				if a_descriptor /= Void and eiffel_path /= Void then
 					create eiffel_generation_dialog.make (a_descriptor, eiffel_path)
@@ -850,7 +831,7 @@ feature -- Event handling
 			index: INTEGER
 			args: SYSTEM_EVENTARGS
 		do
-			index := toolbar.buttons.indexof (arguments.button) 
+			index := toolbar.get_buttons.index_of (arguments.get_button) 
 			create args.make
 			inspect
 				index
@@ -933,38 +914,43 @@ feature {NONE} -- Implementation
 			assembly_view: ASSEMBLY_VIEW
 			current_descriptor: ISE_REFLECTION_ASSEMBLYDESCRIPTOR
 			windows_message_box: SYSTEM_WINDOWS_FORMS_MESSAGEBOX
-			returned_value: INTEGER
+			returned_value: SYSTEM_WINDOWS_FORMS_DIALOGRESULT
+			message_box_buttons: SYSTEM_WINDOWS_FORMS_MESSAGEBOXBUTTONS
+			message_box_icon: SYSTEM_WINDOWS_FORMS_MESSAGEBOXICON
 			retried: BOOLEAN
 			cursors: SYSTEM_WINDOWS_FORMS_CURSORS
 			wait_cursor: SYSTEM_WINDOWS_FORMS_CURSOR
-			normal_cursor: SYSTEM_WINDOWS_FORMS_CURSOR		
+			normal_cursor: SYSTEM_WINDOWS_FORMS_CURSOR	
+			reflection_support: ISE_REFLECTION_REFLECTIONSUPPORT
 		do
-			wait_cursor := cursors.WaitCursor
+			wait_cursor := cursors.get_Wait_Cursor
 			set_cursor (wait_cursor)
-			selected_row := data_grid.CurrentRowIndex
+			selected_row := data_grid.get_Current_Row_Index
 			current_descriptor := current_assembly (selected_row)
 			if current_descriptor /= Void then
 				if is_non_editable_assembly (current_descriptor) then
-					normal_cursor := cursors.Arrow
+					normal_cursor := cursors.get_Arrow
 					set_cursor (normal_cursor)
-					returned_value := windows_message_box.show_string_string_messageboxbuttons_messageboxicon (dictionary.Non_editable_assembly, dictionary.Error_caption, dictionary.Ok_message_box_button, dictionary.Error_icon)
+					returned_value := windows_message_box.show_string_string_message_box_buttons_message_box_icon (dictionary.Non_editable_assembly, dictionary.Error_caption, message_box_buttons.Ok, message_box_icon.Error)
 				else	
 					if remove_locks then
-						reflection_interface.cleanassembly (current_descriptor)
+						create reflection_support.make_reflectionsupport
+						reflection_support.make
+						reflection_support.clean_assembly (current_descriptor)
 					end
 					an_assembly := reflection_interface.assembly (current_descriptor)
 					if an_assembly /= Void then
 						a_type_list := an_assembly.types
 						if a_type_list /= Void then								
 							create assembly_view.make (an_assembly)
-							normal_cursor := cursors.Arrow
+							normal_cursor := cursors.get_Arrow
 							set_cursor (normal_cursor)
 						end
 					else
-						normal_cursor := cursors.Arrow
+						normal_cursor := cursors.get_Arrow
 						set_cursor (normal_cursor)
-						if reflection_interface.lasterror /= Void and then reflection_interface.lasterror.description /= Void and then reflection_interface.lasterror.description.length > 0 then
-							returned_value := windows_message_box.show_string_string_messageboxbuttons_messageboxicon (reflection_interface.lasterror.description, dictionary.Error_caption, dictionary.Ok_message_box_button, dictionary.Error_icon)
+						if reflection_interface.last_error /= Void and then reflection_interface.last_error.description /= Void and then reflection_interface.last_error.description.get_length > 0 then
+							returned_value := windows_message_box.show_string_string_message_box_buttons_message_box_icon (reflection_interface.last_error.description, dictionary.Error_caption, message_box_buttons.Ok, message_box_icon.Error)
 						end
 					end
 				end
@@ -977,37 +963,55 @@ feature {NONE} -- Implementation
 			external_name: "BuildAssemblies"
 		local
 			retried: BOOLEAN
-			returned_value: INTEGER
+			returned_value: SYSTEM_WINDOWS_FORMS_DIALOGRESULT
+			message_box_icon: SYSTEM_WINDOWS_FORMS_MESSAGEBOXICON
+			message_box_buttons: SYSTEM_WINDOWS_FORMS_MESSAGEBOXBUTTONS
 			message_box: SYSTEM_WINDOWS_FORMS_MESSAGEBOX
 			error_code: INTEGER
+			reflection_support: ISE_REFLECTION_REFLECTIONSUPPORT
 		do
 			if not retried then
 				imported_assemblies := reflection_interface.assemblies
-				sort_assemblies
-			else
-				if not reflection_interface.lastreadsuccessful then 
-					error_code := reflection_interface.lasterror.code
-					if error_code = reflection_interface.Haswritelockcode or error_code = reflection_interface.Hasreadlockcode then
-						returned_value := message_box.show_string_string_messageboxbuttons_messageboxicon (dictionary.Access_violation_error, dictionary.Error_caption, dictionary.Abort_retry_ignore_message_box_buttons, dictionary.Error_icon)
-						if returned_value = dictionary.Retry_result then
+				if reflection_interface.last_error /= Void then 
+					error_code := reflection_interface.last_error.code
+					if error_code = reflection_interface.Has_write_lock_code or error_code = reflection_interface.Has_read_lock_code then
+						returned_value := message_box.show_string_string_message_box_buttons_message_box_icon (dictionary.Access_violation_error, dictionary.Error_caption, message_box_buttons.Abort_retry_ignore, message_box_icon.Error)
+						if returned_value = returned_value.Retry_ then
 							imported_assemblies := reflection_interface.assemblies
 							sort_assemblies
-						elseif returned_value = dictionary.Ignore_result then
-							reflection_interface.cleanassemblies
+						elseif returned_value = returned_value.Ignore then
+							create reflection_support.make_reflectionsupport
+							reflection_support.make
+							reflection_support.clean_assemblies
 							imported_assemblies := reflection_interface.assemblies
 							sort_assemblies
 						else
 							close
 						end
 					end
-				else					
-					if reflection_interface.lasterror /= Void and then reflection_interface.lasterror.description /= Void and then reflection_interface.lasterror.description.length > 0 then
-						returned_value := message_box.show_string_string_messageboxbuttons_messageboxicon (reflection_interface.lasterror.description, dictionary.Error_caption, dictionary.Ok_message_box_button, dictionary.Error_icon)
+				else
+					sort_assemblies
+				end
+			else					
+				if reflection_interface.last_error /= Void then 
+					error_code := reflection_interface.last_error.code
+					if error_code = reflection_interface.Has_write_lock_code or error_code = reflection_interface.Has_read_lock_code then
+						returned_value := message_box.show_string_string_message_box_buttons_message_box_icon (dictionary.Access_violation_error, dictionary.Error_caption, message_box_buttons.Abort_retry_ignore, message_box_icon.Error)
+						if returned_value = returned_value.Retry_ then
+							imported_assemblies := reflection_interface.assemblies
+							sort_assemblies
+						elseif returned_value = returned_value.Ignore then
+							create reflection_support.make_reflectionsupport
+							reflection_support.make
+							reflection_support.clean_assemblies
+							imported_assemblies := reflection_interface.assemblies
+							sort_assemblies
+						else
+							close
+						end
 					end
 				end
 			end
-		ensure then
-			non_void_imported_assemblies: imported_assemblies /= Void
 		rescue
 			retried := True
 			retry
@@ -1044,11 +1048,11 @@ feature {NONE} -- Implementation
 				row_count := 0
 				i := 0
 			until
-				i = imported_assemblies.Count
+				i = imported_assemblies.get_Count
 			loop
-				an_assembly ?= imported_assemblies.Item (i)
+				an_assembly ?= imported_assemblies.get_Item (i)
 				if an_assembly /= Void then
-					build_row (an_assembly.assemblydescriptor, row_count, an_assembly.EiffelClusterPath)
+					build_row (an_assembly.assembly_descriptor, row_count, an_assembly.Eiffel_Cluster_Path)
 					row_count := row_count + 1
 				end
 				i := i + 1
@@ -1069,7 +1073,7 @@ feature {NONE} -- Implementation
 			columns: SYSTEM_DATA_DATACOLUMNCOLLECTION
 		do
 			row := new_row (a_descriptor, row_count)
-			columns := data_table.columns			
+			columns := data_table.get_columns			
 			if columns.contains (dictionary.Eiffel_path_column_title) then
 				row.set_Item_String (dictionary.Eiffel_path_column_title, an_eiffel_path)
 			end
@@ -1084,7 +1088,7 @@ feature {NONE} -- Implementation
 			columns: SYSTEM_DATA_DATACOLUMNCOLLECTION
 		do
 			row := empty_row (row_count)
-			columns := data_table.columns
+			columns := data_table.get_columns
 			if columns.contains (dictionary.Eiffel_path_column_title) then
 				row.set_Item_String (dictionary.Eiffel_path_column_title, dictionary.Empty_string)
 			end
@@ -1112,7 +1116,7 @@ feature {NONE} -- Implementation
 			external_name: "SetReadOnly"
 		do
 			set_read_only_assembly_viewer
-			eiffel_path_column_style.set_readonly (True)	
+			eiffel_path_column_style.set_read_only (True)	
 		end
 		
 	resize_columns is
@@ -1124,42 +1128,42 @@ feature {NONE} -- Implementation
 			current_width: INTEGER
 		do
 			set_default_column_width
-			if name_menu_item.checked then
-				total_width := assembly_name_column_style.width
+			if name_menu_item.get_checked then
+				total_width := assembly_name_column_style.get_width
 			end
-			if version_menu_item.checked then
-				total_width := total_width + assembly_version_column_style.width
+			if version_menu_item.get_checked then
+				total_width := total_width + assembly_version_column_style.get_width
 			end	
-			if culture_menu_item.checked then
-				total_width := total_width + assembly_culture_column_style.width
+			if culture_menu_item.get_checked then
+				total_width := total_width + assembly_culture_column_style.get_width
 			end	
-			if public_key_menu_item.checked then
-				total_width := total_width + assembly_public_key_column_style.width
+			if public_key_menu_item.get_checked then
+				total_width := total_width + assembly_public_key_column_style.get_width
 			end
-			if dependancies_menu_item.checked then
-				total_width := total_width + dependancies_column_style.width
+			if dependancies_menu_item.get_checked then
+				total_width := total_width + dependancies_column_style.get_width
 			end	
-			if path_menu_item.checked then
-				total_width := total_width + eiffel_path_column_style.width
+			if path_menu_item.get_checked then
+				total_width := total_width + eiffel_path_column_style.get_width
 			end
-			if (width > dictionary.Window_width and total_width < width) or (width <= dictionary.Window_width and total_width < width - dictionary.Scrollbar_width) then
-				if path_menu_item.checked then
-					current_width := eiffel_path_column_style.width
-					eiffel_path_column_style.set_width (current_width + width - total_width - dictionary.Scrollbar_width)
-				elseif	dependancies_menu_item.checked then
-					current_width := dependancies_column_style.width
-					dependancies_column_style.set_width (current_width + width - total_width - dictionary.Scrollbar_width)		
-				elseif	public_key_menu_item.checked then
-					current_width := assembly_public_key_column_style.width
-					assembly_public_key_column_style.set_width (current_width + width - total_width - dictionary.Scrollbar_width)		
-				elseif	culture_menu_item.checked then
-					current_width := assembly_culture_column_style.width
-					assembly_culture_column_style.set_width (current_width + width - total_width - dictionary.Scrollbar_width)		
-				elseif	version_menu_item.checked then
-					current_width := assembly_version_column_style.width
-					assembly_version_column_style.set_width (current_width + width - total_width - dictionary.Scrollbar_width)		
-				elseif	name_menu_item.checked then
-					assembly_name_column_style.set_width (width - dictionary.Scrollbar_width)		
+			if (get_width > dictionary.Window_width and total_width < get_width) or (get_width <= dictionary.Window_width and total_width < get_width - dictionary.Scrollbar_width) then
+				if path_menu_item.get_checked then
+					current_width := eiffel_path_column_style.get_width
+					eiffel_path_column_style.set_width (current_width + get_width - total_width - dictionary.Scrollbar_width)
+				elseif	dependancies_menu_item.get_checked then
+					current_width := dependancies_column_style.get_width
+					dependancies_column_style.set_width (current_width + get_width - total_width - dictionary.Scrollbar_width)		
+				elseif	public_key_menu_item.get_checked then
+					current_width := assembly_public_key_column_style.get_width
+					assembly_public_key_column_style.set_width (current_width + get_width - total_width - dictionary.Scrollbar_width)		
+				elseif	culture_menu_item.get_checked then
+					current_width := assembly_culture_column_style.get_width
+					assembly_culture_column_style.set_width (current_width + get_width - total_width - dictionary.Scrollbar_width)		
+				elseif	version_menu_item.get_checked then
+					current_width := assembly_version_column_style.get_width
+					assembly_version_column_style.set_width (current_width + get_width - total_width - dictionary.Scrollbar_width)		
+				elseif	name_menu_item.get_checked then
+					assembly_name_column_style.set_width (get_width - dictionary.Scrollbar_width)		
 				end
 			end
 		end
@@ -1179,59 +1183,59 @@ feature {NONE} -- Implementation
 			retried: BOOLEAN		
 		do
 			if not retried then
-				data_table ?= data_grid.datasource
+				data_table ?= data_grid.get_data_source
 				if data_table /= Void then
-					controls.remove (data_grid)
+					get_controls.remove (data_grid)
 					build_assemblies_table
-					columns := data_table.columns
+					columns := data_table.get_columns
 					columns.clear
-					data_table.columns.add_datacolumn (assembly_name_column)
-					data_table.columns.add_datacolumn (assembly_version_column)
-					data_table.columns.add_datacolumn (assembly_culture_column)
-					data_table.columns.add_datacolumn (assembly_public_key_column)
-					data_table.columns.add_datacolumn (dependancies_column)
-					data_table.columns.add_datacolumn (eiffel_path_column)
+					data_table.get_columns.add_data_column (assembly_name_column)
+					data_table.get_columns.add_data_column (assembly_version_column)
+					data_table.get_columns.add_data_column (assembly_culture_column)
+					data_table.get_columns.add_data_column (assembly_public_key_column)
+					data_table.get_columns.add_data_column (dependancies_column)
+					data_table.get_columns.add_data_column (eiffel_path_column)
 					display_assemblies
-					controls.add (data_grid)
-					rows := data_table.rows
+					get_controls.add (data_grid)
+					rows := data_table.get_rows
 					
-					controls.remove (data_grid)
-					a_row := rows.item (row_number)
-					a_name ?= a_row.item (assembly_name_column)
-					a_version ?= a_row.item (assembly_version_column)
-					a_culture ?= a_row.item (assembly_culture_column)
-					a_public_key ?= a_row.item (assembly_public_key_column)
+					get_controls.remove (data_grid)
+					a_row := rows.get_item (row_number)
+					a_name ?= a_row.get_item (assembly_name_column)
+					a_version ?= a_row.get_item (assembly_version_column)
+					a_culture ?= a_row.get_item (assembly_culture_column)
+					a_public_key ?= a_row.get_item (assembly_public_key_column)
 					if a_name /= Void and a_version /= Void and a_culture /= Void and a_public_key /= Void then
 						create Result.make1
 						Result.make (a_name, a_version, a_culture, a_public_key)
 					end
-					eiffel_path ?= a_row.item (eiffel_path_column)
+					eiffel_path ?= a_row.get_item (eiffel_path_column)
 					
 					build_assemblies_table
-					columns := data_table.columns
+					columns := data_table.get_columns
 					columns.clear
-					if name_menu_item.checked then
-						data_table.columns.add_datacolumn (assembly_name_column)
+					if name_menu_item.get_checked then
+						data_table.get_columns.add_data_column (assembly_name_column)
 					end
-					if version_menu_item.checked then
-						data_table.columns.add_datacolumn (assembly_version_column)
+					if version_menu_item.get_checked then
+						data_table.get_columns.add_data_column (assembly_version_column)
 					end
-					if culture_menu_item.checked then
-						data_table.columns.add_datacolumn (assembly_culture_column)
+					if culture_menu_item.get_checked then
+						data_table.get_columns.add_data_column (assembly_culture_column)
 					end
-					if public_key_menu_item.checked then
-						data_table.columns.add_datacolumn (assembly_public_key_column)
+					if public_key_menu_item.get_checked then
+						data_table.get_columns.add_data_column (assembly_public_key_column)
 					end
-					if dependancies_menu_item.checked then
-						data_table.columns.add_datacolumn (dependancies_column)
+					if dependancies_menu_item.get_checked then
+						data_table.get_columns.add_data_column (dependancies_column)
 					end
-					if path_menu_item.checked then
-						data_table.columns.add_datacolumn (eiffel_path_column)
+					if path_menu_item.get_checked then
+						data_table.get_columns.add_data_column (eiffel_path_column)
 					end
 					display_assemblies
 					resize_columns
 					fill_data_grid
-					controls.add (data_grid)
+					get_controls.add (data_grid)
 					refresh
 				end
 			else
@@ -1253,14 +1257,14 @@ feature {NONE} -- Implementation
 			columns: SYSTEM_DATA_DATACOLUMNCOLLECTION
 		do
 			update_gui_assembly_viewer
-			columns := data_table.columns
-			if path_menu_item.checked then
-				columns.add_datacolumn (eiffel_path_column)	
+			columns := data_table.get_columns
+			if path_menu_item.get_checked then
+				columns.add_data_column (eiffel_path_column)	
 			end
 			display_assemblies
 			resize_columns
 			fill_data_grid
-			controls.add (data_grid)
+			get_controls.add (data_grid)
 			refresh		
 		end
 
@@ -1271,5 +1275,5 @@ feature {NONE} -- Implementation
 		once
 			create Result.make1
 		end
-		
+	
 end -- class IMPORTED_ASSEMBLY_VIEWER

@@ -42,7 +42,7 @@ feature -- Access
 feature -- Basic Operations
 
 	assembly_name_column_width_from_info (a_list: SYSTEM_COLLECTIONS_ARRAYLIST): INTEGER is
-			-- | SYSTEM_COLLECTIONS_ARRAYLIST [ISE_REFLECTION_ASSEMBLYDESCRIPTOR]
+			-- | SYSTEM_COLLECTIONS_ARRAYLIST [ISE_REFLECTION_assembly_descriptor]
 		indexing
 			description: "Assembly name column width from `a_list'."
 			external_name: "AssemblyNameColumnWidthFromInfo"
@@ -58,12 +58,12 @@ feature -- Basic Operations
 			if not retried then
 				from
 				until
-					i = a_list.count
+					i = a_list.get_count
 				loop
-					a_descriptor ?= a_list.item (i)
+					a_descriptor ?= a_list.get_item (i)
 					if a_descriptor /= Void then
-						if a_descriptor.name.length > Result then
-							Result := a_descriptor.name.length
+						if a_descriptor.name.get_length > Result then
+							Result := a_descriptor.name.get_length
 							name := a_descriptor.name
 						end
 					end
@@ -96,13 +96,13 @@ feature -- Basic Operations
 			if not retried then
 				from
 				until
-					i = a_list.count
+					i = a_list.get_count
 				loop
-					an_eiffel_assembly ?= a_list.item (i)
+					an_eiffel_assembly ?= a_list.get_item (i)
 					if an_eiffel_assembly /= Void then
-						if an_eiffel_assembly.assemblydescriptor.name.length > Result then
-							Result := an_eiffel_assembly.assemblydescriptor.name.length
-							name := an_eiffel_assembly.assemblydescriptor.name
+						if an_eiffel_assembly.assembly_descriptor.name.get_length > Result then
+							Result := an_eiffel_assembly.assembly_descriptor.name.get_length
+							name := an_eiffel_assembly.assembly_descriptor.name
 						end
 					end
 					i := i + 1
@@ -118,7 +118,7 @@ feature -- Basic Operations
 		end
 
 	assembly_version_column_width_from_info (a_list: SYSTEM_COLLECTIONS_ARRAYLIST): INTEGER is
-			-- | SYSTEM_COLLECTIONS_ARRAYLIST [ISE_REFLECTION_ASSEMBLYDESCRIPTOR]
+			-- | SYSTEM_COLLECTIONS_ARRAYLIST [ISE_REFLECTION_assembly_descriptor]
 		indexing
 			description: "Assembly version column width from `a_list'."
 			external_name: "AssemblyVersionColumnWidthFromInfo"
@@ -134,12 +134,12 @@ feature -- Basic Operations
 			if not retried then
 				from
 				until
-					i = a_list.count
+					i = a_list.get_count
 				loop
-					a_descriptor ?= a_list.item (i)
+					a_descriptor ?= a_list.get_item (i)
 					if a_descriptor /= Void then
-						if a_descriptor.version.length > Result then
-							Result := a_descriptor.version.length
+						if a_descriptor.version.get_length > Result then
+							Result := a_descriptor.version.get_length
 							version := a_descriptor.version
 						end
 					end
@@ -172,13 +172,13 @@ feature -- Basic Operations
 			if not retried then
 				from
 				until
-					i = a_list.count
+					i = a_list.get_count
 				loop
-					an_eiffel_assembly ?= a_list.item (i)
+					an_eiffel_assembly ?= a_list.get_item (i)
 					if an_eiffel_assembly /= Void then
-						if an_eiffel_assembly.assemblydescriptor.version.length > Result then
-							Result := an_eiffel_assembly.assemblydescriptor.version.length
-							version := an_eiffel_assembly.assemblydescriptor.version
+						if an_eiffel_assembly.assembly_descriptor.version.get_length > Result then
+							Result := an_eiffel_assembly.assembly_descriptor.version.get_length
+							version := an_eiffel_assembly.assembly_descriptor.version
 						end
 					end
 					i := i + 1
@@ -194,7 +194,7 @@ feature -- Basic Operations
 		end
 
 	assembly_culture_column_width_from_info (a_list: SYSTEM_COLLECTIONS_ARRAYLIST): INTEGER is
-			-- | SYSTEM_COLLECTIONS_ARRAYLIST [ISE_REFLECTION_ASSEMBLYDESCRIPTOR]
+			-- | SYSTEM_COLLECTIONS_ARRAYLIST [ISE_REFLECTION_assembly_descriptor]
 		indexing
 			description: "Assembly culture column width from `a_list'."
 			external_name: "AssemblyCultureColumnWidthFromInfo"
@@ -210,12 +210,12 @@ feature -- Basic Operations
 			if not retried then
 				from
 				until
-					i = a_list.count
+					i = a_list.get_count
 				loop
-					a_descriptor ?= a_list.item (i)
+					a_descriptor ?= a_list.get_item (i)
 					if a_descriptor /= Void then
-						if a_descriptor.culture.length > Result then
-							Result := a_descriptor.culture.length
+						if a_descriptor.culture.get_length > Result then
+							Result := a_descriptor.culture.get_length
 							culture := a_descriptor.culture
 						end
 					end
@@ -248,13 +248,13 @@ feature -- Basic Operations
 			if not retried then
 				from
 				until
-					i = a_list.count
+					i = a_list.get_count
 				loop
-					an_eiffel_assembly ?= a_list.item (i)
+					an_eiffel_assembly ?= a_list.get_item (i)
 					if an_eiffel_assembly /= Void then
-						if an_eiffel_assembly.assemblydescriptor.culture.length > Result then
-							Result := an_eiffel_assembly.assemblydescriptor.culture.length
-							culture := an_eiffel_assembly.assemblydescriptor.culture
+						if an_eiffel_assembly.assembly_descriptor.culture.get_length > Result then
+							Result := an_eiffel_assembly.assembly_descriptor.culture.get_length
+							culture := an_eiffel_assembly.assembly_descriptor.culture
 						end
 					end
 					i := i + 1
@@ -270,7 +270,7 @@ feature -- Basic Operations
 		end
 		
 	assembly_public_key_column_width_from_info (a_list: SYSTEM_COLLECTIONS_ARRAYLIST): INTEGER is
-			-- | SYSTEM_COLLECTIONS_ARRAYLIST [ISE_REFLECTION_ASSEMBLYDESCRIPTOR]
+			-- | SYSTEM_COLLECTIONS_ARRAYLIST [ISE_REFLECTION_assembly_descriptor]
 		indexing
 			description: "Assembly public key column width from `a_list'."
 			external_name: "AssemblyPublicKeyColumnWidthFromInfo"
@@ -286,13 +286,13 @@ feature -- Basic Operations
 			if not retried then
 				from
 				until
-					i = a_list.count
+					i = a_list.get_count
 				loop
-					a_descriptor ?= a_list.item (i)
+					a_descriptor ?= a_list.get_item (i)
 					if a_descriptor /= Void then
-						if a_descriptor.publickey.length > Result then
-							Result := a_descriptor.publickey.length
-							public_key := a_descriptor.publickey
+						if a_descriptor.public_key.get_length > Result then
+							Result := a_descriptor.public_key.get_length
+							public_key := a_descriptor.public_key
 						end
 					end
 					i := i + 1
@@ -324,13 +324,13 @@ feature -- Basic Operations
 			if not retried then
 				from
 				until
-					i = a_list.count
+					i = a_list.get_count
 				loop
-					an_eiffel_assembly ?= a_list.item (i)
+					an_eiffel_assembly ?= a_list.get_item (i)
 					if an_eiffel_assembly /= Void then
-						if an_eiffel_assembly.assemblydescriptor.publickey.length > Result then
-							Result := an_eiffel_assembly.assemblydescriptor.publickey.length
-							public_key := an_eiffel_assembly.assemblydescriptor.publickey
+						if an_eiffel_assembly.assembly_descriptor.public_key.get_length > Result then
+							Result := an_eiffel_assembly.assembly_descriptor.public_key.get_length
+							public_key := an_eiffel_assembly.assembly_descriptor.public_key
 						end
 					end
 					i := i + 1
@@ -346,7 +346,7 @@ feature -- Basic Operations
 		end
 
 	dependancies_column_width_from_info (a_list: SYSTEM_COLLECTIONS_ARRAYLIST): INTEGER is
-			-- | SYSTEM_COLLECTIONS_ARRAYLIST [ISE_REFLECTION_ASSEMBLYDESCRIPTOR]
+			-- | SYSTEM_COLLECTIONS_ARRAYLIST [ISE_REFLECTION_assembly_descriptor]
 		indexing
 			description: "Dependancies column width from `a_list'."
 			external_name: "DependanciesColumnWidthFromInfo"
@@ -366,10 +366,10 @@ feature -- Basic Operations
 				create support
 				from
 				until
-					i = a_list.count
+					i = a_list.get_count
 				loop
 					dependancies_string := Void
-					a_descriptor ?= a_list.item (i)
+					a_descriptor ?= a_list.get_item (i)
 					if a_descriptor /= Void then
 						dependancies := support.dependancies_from_info (a_descriptor)
 						if dependancies /= Void and then dependancies.count > 0 then
@@ -377,8 +377,8 @@ feature -- Basic Operations
 						else
 							dependancies_string := No_dependancy
 						end
-						if dependancies_string.length > Result then
-							Result := dependancies_string.length
+						if dependancies_string.get_length > Result then
+							Result := dependancies_string.get_length
 							a_string := dependancies_string
 						end
 					end
@@ -416,20 +416,20 @@ feature -- Basic Operations
 				create support
 				from
 				until
-					i = a_list.count
+					i = a_list.get_count
 				loop
 					dependancies_string := Void
-					an_eiffel_assembly ?= a_list.item (i)
+					an_eiffel_assembly ?= a_list.get_item (i)
 					if an_eiffel_assembly /= Void then					
-						a_descriptor := an_eiffel_assembly.assemblydescriptor
+						a_descriptor := an_eiffel_assembly.assembly_descriptor
 						dependancies := support.dependancies_from_info (a_descriptor)
 						if dependancies /= Void and then dependancies.count > 0 then
 							dependancies_string := support.dependancies_string (dependancies)
 						else
 							dependancies_string := No_dependancy
 						end
-						if dependancies_string.length > Result then
-							Result := dependancies_string.length
+						if dependancies_string.get_length > Result then
+							Result := dependancies_string.get_length
 							a_string := dependancies_string
 						end					
 					end
@@ -462,13 +462,13 @@ feature -- Basic Operations
 			if not retried then
 				from
 				until
-					i = a_list.count
+					i = a_list.get_count
 				loop
-					an_eiffel_assembly ?= a_list.item (i)
+					an_eiffel_assembly ?= a_list.get_item (i)
 					if an_eiffel_assembly /= Void then
-						if an_eiffel_assembly.eiffelclusterpath.length > Result then
-							Result := an_eiffel_assembly.eiffelclusterpath.length
-							eiffel_path := an_eiffel_assembly.eiffelclusterpath
+						if an_eiffel_assembly.eiffel_cluster_path.get_length > Result then
+							Result := an_eiffel_assembly.eiffel_cluster_path.get_length
+							eiffel_path := an_eiffel_assembly.eiffel_cluster_path
 						end
 					end
 					i := i + 1
@@ -500,13 +500,13 @@ feature -- Basic Operations
 			if not retried then
 				from
 				until
-					i = a_list.count
+					i = a_list.get_count
 				loop
-					a_class ?= a_list.item (i)
+					a_class ?= a_list.get_item (i)
 					if a_class /= Void then
-						if a_class.eiffelname.length > Result then
-							Result := a_class.eiffelname.length
-							name := a_class.eiffelname
+						if a_class.eiffel_name.get_length > Result then
+							Result := a_class.eiffel_name.get_length
+							name := a_class.eiffel_name
 						end
 					end
 					i := i + 1
@@ -538,13 +538,13 @@ feature -- Basic Operations
 			if not retried then
 				from
 				until
-					i = a_list.count
+					i = a_list.get_count
 				loop
-					a_class ?= a_list.item (i)
+					a_class ?= a_list.get_item (i)
 					if a_class /= Void then
-						if a_class.externalname.length > Result then
-							Result := a_class.externalname.length
-							name := a_class.externalname
+						if a_class.external_name.get_length > Result then
+							Result := a_class.external_name.get_length
+							name := a_class.external_name
 						end
 					end
 					i := i + 1
@@ -575,11 +575,11 @@ feature {NONE} -- Implementation
 		
 	pixel_width (a_string: STRING): INTEGER is
 		indexing
-			description: "Length in pixels of `a_string'"
+			description: "get_length in pixels of `a_string'"
 			external_name: "PixelWidth"
 		require
 			non_void_string: a_string /= Void
-			not_empty_string: a_string.length > 0
+			not_empty_string: a_string.get_length > 0
 		local
 			a_label: SYSTEM_WINDOWS_FORMS_LABEL
 			graphics: SYSTEM_DRAWING_GRAPHICS
@@ -588,11 +588,11 @@ feature {NONE} -- Implementation
 			create a_label.make_label 
 			a_label.set_text (a_string)
 			a_label.set_font (font)
-			a_label.set_autosize (True)
-			Result := a_label.width + Margin
-			--graphics := graphics_factory.fromimage (image)
-			--a_sizef := graphics.measurestring (a_string, font)
-			--Result := a_sizef.tosize.width
+			a_label.set_auto_size (True)
+			Result := a_label.get_width + Margin
+			--graphics := graphics_factory.from_image (image)
+			--a_sizef := graphics.measure_string (a_string, font)
+			--Result := a_sizef.to_size.get_width
 		end
 	
 --	graphics_factory: SYSTEM_DRAWING_GRAPHICS

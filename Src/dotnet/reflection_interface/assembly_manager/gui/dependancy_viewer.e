@@ -24,7 +24,7 @@ feature {NONE} -- Initialization
 		require
 			non_void_assembly_descriptor: an_assembly_descriptor /= Void
 			non_void_assembly_name: an_assembly_descriptor.name /= Void
-			not_empty_assembly_name: an_assembly_descriptor.name.Length > 0
+			not_empty_assembly_name: an_assembly_descriptor.name.get_length > 0
 			non_void_dependancies: assembly_dependancies /= Void
 		local
 			is_focused: BOOLEAN
@@ -61,15 +61,17 @@ feature -- Basic Operations
 		local
 			a_size: SYSTEM_DRAWING_SIZE
 			a_point: SYSTEM_DRAWING_POINT
-			label_font: SYSTEM_DRAWING_FONT	
+			label_font: SYSTEM_DRAWING_FONT
+			style: SYSTEM_DRAWING_FONTSTYLE
+			border_style: SYSTEM_WINDOWS_FORMS_FORMBORDERSTYLE
 		do
 			set_Enabled (True)
 			set_text (dictionary.Title)
-			set_borderstyle (dictionary.Border_style)
+			set_border_style (border_style.fixed_single)
 			a_size.set_Width (dictionary.Window_width)
 			a_size.set_Height (dictionary.Window_height)
 			set_size (a_size)	
-			set_maximizebox (False)
+			set_maximize_box (False)
 			set_icon (dictionary.Dependancies_icon)
 
 				-- `Selected assembly: '
@@ -80,9 +82,9 @@ feature -- Basic Operations
 			assembly_label.set_location (a_point)
 			a_size.set_Height (dictionary.Label_height)
 			assembly_label.set_size (a_size)
-			create label_font.make_font_10 (dictionary.Font_family_name, dictionary.Font_size, dictionary.Bold_style) 
+			create label_font.make_font_10 (dictionary.Font_family_name, dictionary.Font_size, style.Bold) 
 			assembly_label.set_font (label_font)
-			controls.add (assembly_label)
+			get_controls.add (assembly_label)
 			
 			create_assembly_labels
 			
@@ -92,9 +94,9 @@ feature -- Basic Operations
 				a_size.set_width (dictionary.Window_width - dictionary.Margin // 2)
 				a_size.set_height (dictionary.Window_height - 4 * Dictionary.Margin - 4 * dictionary.Label_height)
 				data_grid.set_Size (a_size)
-				data_grid.set_captiontext (dictionary.Caption_text)
+				data_grid.set_caption_text (dictionary.Caption_text)
 				display_dependancies
-				controls.add (data_grid)
+				get_controls.add (data_grid)
 			else
 				create dependancies_label.make_label
 				dependancies_label.set_text (dictionary.No_dependancies_text)
@@ -104,7 +106,7 @@ feature -- Basic Operations
 				a_size.set_Height (dictionary.Label_height)
 				dependancies_label.set_size (a_size)
 				dependancies_label.set_font (label_font)	
-				controls.add (dependancies_label)
+				get_controls.add (dependancies_label)
 			end
 		end
 		

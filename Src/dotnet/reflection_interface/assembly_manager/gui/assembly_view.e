@@ -24,17 +24,17 @@ feature {NONE} -- Initialization
 		require
 			non_void_assembly: an_assembly /= Void
 		local
-			return_value: INTEGER
+			return_value: SYSTEM_WINDOWS_FORMS_DIALOGRESULT
 		do
 			make_form
 			assembly := an_assembly
-			assembly_descriptor := an_assembly.assemblydescriptor
+			assembly_descriptor := an_assembly.assembly_descriptor
 			type_list := assembly.types
 			sort_classes
 			create types.make
 			create children_table.make
 			initialize_gui
-			return_value := showdialog
+			return_value := show_dialog
 		ensure
 			assembly_set: assembly = an_assembly
 			assembly_descriptor_set: assembly_descriptor /= Void
@@ -78,10 +78,10 @@ feature -- Basic Operations
 			type: SYSTEM_TYPE
 			on_close_delegate: SYSTEM_EVENTHANDLER
 			on_resize_delegate: SYSTEM_EVENTHANDLER
+			style: SYSTEM_DRAWING_FONTSTYLE
 		do
 			set_Enabled (True)
 			set_text (dictionary.Title)
-			--set_borderstyle (dictionary.Border_style)
 			a_size.set_Width (dictionary.Window_width)
 			a_size.set_Height (dictionary.Window_height)
 			set_size (a_size)	
@@ -95,30 +95,30 @@ feature -- Basic Operations
 			assembly_label.set_location (a_point)
 			a_size.set_Height (dictionary.Label_height)
 			assembly_label.set_size (a_size)
-			create label_font.make_font_10 (dictionary.Font_family_name, dictionary.Font_size, dictionary.Bold_style) 
+			create label_font.make_font_10 (dictionary.Font_family_name, dictionary.Font_size, style.Bold) 
 			assembly_label.set_font (label_font)
-			controls.add (assembly_label)
+			get_controls.add (assembly_label)
 
 			create_assembly_labels
 			build_types_table
 			display_types
-			controls.add (data_grid)
+			get_controls.add (data_grid)
 			
-			create on_resize_delegate.make_eventhandler (Current, $on_resize)
+			create on_resize_delegate.make_eventhandler (Current, $on_resize_action)
 			add_resize (on_resize_delegate)
 		end
 
 feature -- Event handling
 
-	on_resize (sender: ANY; arguments: SYSTEM_EVENTARGS) is
+	on_resize_action (sender: ANY; arguments: SYSTEM_EVENTARGS) is
 		indexing
 			description: "Resize window and its content."
-			external_name: "OnResize"
+			external_name: "OnResizeAction"
 		local
 			a_size: SYSTEM_DRAWING_SIZE
 		do
-			a_size.set_width (width - dictionary.Margin // 2)
-			a_size.set_height (height - 4 * dictionary.Row_height)
+			a_size.set_width (get_width - dictionary.Margin // 2)
+			a_size.set_height (get_height - 4 * dictionary.Row_height)
 			data_grid.set_Size (a_size)			
 			fill_data_grid
 			refresh
@@ -144,27 +144,27 @@ feature -- Event handling
 			wait_cursor: SYSTEM_WINDOWS_FORMS_CURSOR
 			normal_cursor: SYSTEM_WINDOWS_FORMS_CURSOR
 		do
-			if data_grid.CurrentCell /= Void and then data_grid.currentcell.columnnumber /= Void then
-				selected_column := data_grid.currentcell.columnnumber
+			if data_grid.get_Current_Cell /= Void and then data_grid.get_current_cell.get_column_number /= Void then
+				selected_column := data_grid.get_current_cell.get_column_number
 				if selected_column = 0 then
-					selected_row := data_grid.CurrentRowIndex
+					selected_row := data_grid.get_Current_Row_Index
 					if selected_row /= -1 then
-						rows := data_table.rows
-						a_row := rows.item (selected_row)
-						eiffel_name ?= a_row.item_int32 (selected_column)
+						rows := data_table.get_rows
+						a_row := rows.get_item (selected_row)
+						eiffel_name ?= a_row.get_item_int32 (selected_column)
 						if eiffel_name /= Void then
-							eiffel_class ?= types.item (eiffel_name)
+							eiffel_class ?= types.get_item (eiffel_name)
 							if eiffel_class /= Void then
 								if not children_table.contains (eiffel_class) then
 									children := children_factory.recursive_children (eiffel_class)
 									children_table.add (eiffel_class, children)
 								else
-									children ?= children_table.item (eiffel_class)
+									children ?= children_table.get_item (eiffel_class)
 								end
-								wait_cursor := cursors.WaitCursor
+								wait_cursor := cursors.get_Wait_Cursor
 								set_cursor (wait_cursor)
 								create type_view.make (assembly_descriptor, eiffel_class, children, Current)
-								normal_cursor := cursors.Arrow
+								normal_cursor := cursors.get_Arrow
 								set_cursor (normal_cursor)
 							end							
 						end
@@ -185,10 +185,10 @@ feature -- Basic Operations
 			create types.make
 			type_list := assembly.types
 			sort_classes
-			controls.remove (data_grid)
+			get_controls.remove (data_grid)
 			build_types_table
 			display_types
-			controls.add (data_grid)
+			get_controls.add (data_grid)
 			refresh		
 		end
 		
@@ -305,13 +305,13 @@ feature {NONE} -- Implementation
 			create data_table.make_datatable_1 (dictionary.Data_table_title)
 			
 				-- Create table columns
-			type := type_factory.GetType_String (dictionary.System_string_type);
+			type := type_factory.Get_Type_String (dictionary.System_string_type)
 			create eiffel_name_column.make_datacolumn_2 (dictionary.Eiffel_name_column_title, type)
 			create external_name_column.make_datacolumn_2 (dictionary.External_name_column_title, type)
 
 				-- Add columns to data table
-			data_table.Columns.Add_DataColumn (eiffel_name_column)
-			data_table.Columns.Add_DataColumn (external_name_column)
+			data_table.get_Columns.Add_Data_Column (eiffel_name_column)
+			data_table.get_Columns.Add_Data_Column (external_name_column)
 		end
 
 	build_data_grid is
@@ -326,13 +326,14 @@ feature {NONE} -- Implementation
 			added: INTEGER
 			a_color: SYSTEM_DRAWING_COLOR
 			on_cell_delegate: SYSTEM_EVENTHANDLER
+			style: SYSTEM_DRAWING_FONTSTYLE
 		do
 				-- Build data grid	
 			create data_grid.make_datagrid
-			data_grid.BeginInit
+			data_grid.Begin_Init
 			data_grid.set_Visible (True)
-			data_grid.set_captiontext (dictionary.Caption_text)
-			create data_grid_font.make_font_10 (dictionary.Font_family_name, dictionary.Font_size, dictionary.Regular_style)
+			data_grid.set_caption_text (dictionary.Caption_text)
+			create data_grid_font.make_font_10 (dictionary.Font_family_name, dictionary.Font_size, style.Regular)
 			data_grid.set_font (data_grid_font)
 			
 			a_point.set_x (0)
@@ -341,21 +342,21 @@ feature {NONE} -- Implementation
 			a_size.set_width (dictionary.Window_width - dictionary.Margin // 2)
 			a_size.set_height (dictionary.Window_height - 4 * dictionary.Margin - 4 * dictionary.Label_height)
 			data_grid.set_size (a_size)
-			data_grid.set_DataSource (data_table)
-			data_grid.set_TabIndex (0)
-			data_grid.EndInit 
+			data_grid.set_Data_Source (data_table)
+			data_grid.set_Tab_Index (0)
+			data_grid.End_Init 
 			
 				-- Table styles
 			create eiffel_name_column_style.make_datagridtextboxcolumn
 			create external_name_column_style.make_datagridtextboxcolumn
 			
 				-- Set `MappingName'.
-			eiffel_name_column_style.set_mappingname (dictionary.Eiffel_name_column_title)
-			external_name_column_style.set_mappingname (dictionary.External_name_column_title)
+			eiffel_name_column_style.set_mapping_name (dictionary.Eiffel_name_column_title)
+			external_name_column_style.set_mapping_name (dictionary.External_name_column_title)
 
 				-- Set `HeaderText'.
-			eiffel_name_column_style.set_headertext (dictionary.Eiffel_name_column_title)
-			external_name_column_style.set_headertext (dictionary.External_name_column_title)
+			eiffel_name_column_style.set_header_text (dictionary.Eiffel_name_column_title)
+			external_name_column_style.set_header_text (dictionary.External_name_column_title)
 			
 				-- Set `width'.
 			set_default_column_width
@@ -363,23 +364,23 @@ feature {NONE} -- Implementation
 			
 				-- Set styles.
 			create data_grid_table_style.make_datagridtablestyle_1 
-			data_grid_table_style.set_backcolor (a_color.White)
-			data_grid_table_style.set_PreferredColumnWidth (dictionary.Window_width // 2)
-			data_grid_table_style.set_preferredrowheight (dictionary.Row_height)
-			data_grid_table_style.set_readonly (True)
-			data_grid_table_style.set_rowheadersvisible (False)
-			data_grid_table_style.set_columnheadersvisible (True)
-			data_grid_table_style.set_mappingname (dictionary.Data_table_title)
-			data_grid_table_style.set_allowsorting (False)
+			data_grid_table_style.set_back_color (a_color.get_White)
+			data_grid_table_style.set_Preferred_Column_Width (dictionary.Window_width // 2)
+			data_grid_table_style.set_preferred_row_height (dictionary.Row_height)
+			data_grid_table_style.set_read_only (True)
+			data_grid_table_style.set_row_headers_visible (False)
+			data_grid_table_style.set_column_headers_visible (True)
+			data_grid_table_style.set_mapping_name (dictionary.Data_table_title)
+			data_grid_table_style.set_allow_sorting (False)
 			
-			added := data_grid_table_style.gridcolumnstyles.add (eiffel_name_column_style)
-			added := data_grid_table_style.gridcolumnstyles.add (external_name_column_style)
+			added := data_grid_table_style.get_grid_column_styles.add (eiffel_name_column_style)
+			added := data_grid_table_style.get_grid_column_styles.add (external_name_column_style)
 			
-			if not data_grid.TableStyles.contains_datagridtablestyle (data_grid_table_style) then
-				added := data_grid.TableStyles.Add (data_grid_table_style)
+			if not data_grid.get_Table_Styles.contains_data_grid_table_style (data_grid_table_style) then
+				added := data_grid.get_Table_Styles.Add (data_grid_table_style)
 			end	
 			create on_cell_delegate.make_eventhandler (Current, $on_cell)
-			data_grid.add_currentcellchanged (on_cell_delegate)	
+			data_grid.add_current_cell_changed (on_cell_delegate)	
 			data_grid.add_click (on_cell_delegate)	
 		end
 
@@ -396,8 +397,8 @@ feature {NONE} -- Implementation
 			eiffel_name_width := resizing_support.eiffel_name_column_width_from_classes (type_list)
 			eiffel_name_column_style.set_width (eiffel_name_width)
 			external_name_width := resizing_support.external_name_column_width_from_classes (type_list)
-			if (width > dictionary.Window_width and external_name_width + eiffel_name_width < width) or (width <= dictionary.Window_width and external_name_width + eiffel_name_width < width - dictionary.Scrollbar_width) then
-				external_name_column_style.set_width (width - eiffel_name_width - dictionary.Scrollbar_width)
+			if (get_width > dictionary.Window_width and external_name_width + eiffel_name_width < get_width) or (get_width <= dictionary.Window_width and external_name_width + eiffel_name_width < get_width - dictionary.Scrollbar_width) then
+				external_name_column_style.set_width (get_width - eiffel_name_width - dictionary.Scrollbar_width)
 			else
 				external_name_column_style.set_width (external_name_width)
 			end
@@ -408,8 +409,8 @@ feature {NONE} -- Implementation
 			description: "Set read-only property to each column of the data grid."
 			external_name: "SetReadOnly"
 		do
-			eiffel_name_column_style.set_readonly (True)
-			external_name_column_style.set_readonly (True)	
+			eiffel_name_column_style.set_read_only (True)
+			external_name_column_style.set_read_only (True)	
 		end
 		
 	display_types is
@@ -427,12 +428,12 @@ feature {NONE} -- Implementation
 				row_count := 0
 				i := 0
 			until
-				i = type_list.Count
+				i = type_list.get_Count
 			loop
-				a_class ?= type_list.Item (i)
+				a_class ?= type_list.get_Item (i)
 				if a_class /= Void then
-					if not types.contains (a_class.eiffelname) then
-						types.add (a_class.eiffelname, a_class)
+					if not types.contains (a_class.eiffel_name) then
+						types.add (a_class.eiffel_name, a_class)
 					end
 					build_row (a_class, row_count)
 					row_count := row_count + 1
@@ -452,13 +453,13 @@ feature {NONE} -- Implementation
 		local
 			row: SYSTEM_DATA_DATAROW
 		do
-			row := data_table.NewRow
-			data_table.rows.Add (row)
-			row.Table.DefaultView.set_AllowEdit (False)
-			row.Table.DefaultView.set_AllowNew (False)
-			row.Table.DefaultView.set_AllowDelete (False)
-			row.set_Item_String (dictionary.Eiffel_name_column_title, a_class.eiffelname)
-			row.set_Item_String (dictionary.External_name_column_title, a_class.externalname)			
+			row := data_table.New_Row
+			data_table.get_rows.Add (row)
+			row.get_Table.get_Default_View.set_Allow_Edit (False)
+			row.get_Table.get_Default_View.set_Allow_New (False)
+			row.get_Table.get_Default_View.set_Allow_Delete (False)
+			row.set_Item_String (dictionary.Eiffel_name_column_title, a_class.eiffel_name)
+			row.set_Item_String (dictionary.External_name_column_title, a_class.external_name)			
 		end
 
 	build_empty_row (row_count: INTEGER) is 
@@ -470,11 +471,11 @@ feature {NONE} -- Implementation
 		local
 			row: SYSTEM_DATA_DATAROW
 		do
-			row := data_table.NewRow
-			data_table.rows.Add (row)
-			row.Table.DefaultView.set_AllowEdit (False)
-			row.Table.DefaultView.set_AllowNew (False)
-			row.Table.DefaultView.set_AllowDelete (False)
+			row := data_table.New_Row
+			data_table.get_rows.Add (row)
+			row.get_Table.get_Default_View.set_Allow_Edit (False)
+			row.get_Table.get_Default_View.set_Allow_New (False)
+			row.get_Table.get_Default_View.set_Allow_Delete (False)
 			row.set_Item_String (dictionary.Eiffel_name_column_title, dictionary.Empty_string)
 			row.set_Item_String (dictionary.External_name_column_title, dictionary.Empty_string)		
 		end
@@ -492,15 +493,15 @@ feature {NONE} -- Implementation
 			retried: BOOLEAN
 		do
 			if not retried then
-				rows := data_table.rows
-				if (rows.count + 3) * dictionary.Row_height < height - 4 * dictionary.Margin - 4 * dictionary.Label_height then
-					difference := height - 4 * dictionary.Margin - 4 * dictionary.Label_height - (rows.count + 3) * dictionary.Row_height
+				rows := data_table.get_rows
+				if (rows.get_count + 3) * dictionary.Row_height < get_height - 4 * dictionary.Margin - 4 * dictionary.Label_height then
+					difference := get_height - 4 * dictionary.Margin - 4 * dictionary.Label_height - (rows.get_count + 3) * dictionary.Row_height
 					empty_row_count := difference // dictionary.Row_height + 1
 					from
 					until
 						i = empty_row_count
 					loop
-						build_empty_row (rows.count)
+						build_empty_row (rows.get_count)
 						i := i + 1
 					end
 				end

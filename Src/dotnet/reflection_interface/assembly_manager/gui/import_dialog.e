@@ -24,16 +24,16 @@ feature {NONE} -- Initialization
 		require
 			non_void_assembly_descriptor: an_assembly_descriptor /= Void
 			non_void_assembly_name: an_assembly_descriptor.name /= Void
-			not_empty_assembly_name: an_assembly_descriptor.name.length > 0
+			not_empty_assembly_name: an_assembly_descriptor.name.get_length > 0
 			non_void_dependancies: assembly_dependancies /= Void
 		local
-			return_value: INTEGER
+			return_value: SYSTEM_WINDOWS_FORMS_DIALOGRESULT
 		do
 			make_form
 			assembly_descriptor := an_assembly_descriptor
 			dependancies := assembly_dependancies
 			initialize_gui
-			return_value := showdialog
+			return_value := show_dialog
 		ensure
 			assembly_descriptor_set: assembly_descriptor = an_assembly_descriptor
 			dependancies_set: dependancies = assembly_dependancies
@@ -90,7 +90,7 @@ feature -- Status Report
 			if not retried then
 				create support.make_conversionsupport
 				create reflection_interface.make_reflectioninterface
-				reflection_interface.makereflectioninterface
+				reflection_interface.make_reflection_interface
 				from
 					Result := True
 					create non_imported_dependancies.make (dependancies.count)
@@ -99,7 +99,7 @@ feature -- Status Report
 				loop
 					an_assembly_name := dependancies.item (i)
 					if an_assembly_name /= Void then 
-						a_descriptor := support.assemblydescriptorfromname (an_assembly_name)
+						a_descriptor := support.assembly_descriptor_from_name (an_assembly_name)
 						if a_descriptor /= Void then
 							reflection_interface.search (a_descriptor)
 							if not reflection_interface.found then
@@ -151,8 +151,8 @@ feature -- Basic Operations
 			a_size.set_width (dictionary.Window_width - 2 * dictionary.Margin)
 			eiffel_names_check_box.set_size (a_size)
 			eiffel_names_check_box.set_checked (True)
-			eiffel_names_check_box.set_autocheck (True)
-			controls.add (eiffel_names_check_box)
+			eiffel_names_check_box.set_auto_check (True)
+			get_controls.add (eiffel_names_check_box)
 			
 				-- Dependancies check box (checked by default)
 			if dependancies.count > 0 then
@@ -166,8 +166,8 @@ feature -- Basic Operations
 				a_size.set_width (dictionary.Window_width - 2 * dictionary.Margin)
 				dependancies_check_box.set_size (a_size)
 				dependancies_check_box.set_checked (True)
-				dependancies_check_box.set_autocheck (True)
-				controls.add (dependancies_check_box)
+				dependancies_check_box.set_auto_check (True)
+				get_controls.add (dependancies_check_box)
 			end
 			
 				-- OK button
@@ -201,8 +201,8 @@ feature -- Basic Operations
 			cancel_button.add_Click (on_cancel_event_handler_delegate)
 			
 				-- Addition of controls
-			controls.add (ok_button)
-			controls.add (cancel_button)
+			get_controls.add (ok_button)
+			get_controls.add (cancel_button)
 		end
 		
 feature -- Event handling
@@ -216,7 +216,7 @@ feature -- Event handling
 			warning_dialog: WARNING_DIALOG
 		do
 			if dependancies.count > 0 then
-				if not dependancies_check_box.Checked then
+				if not dependancies_check_box.get_Checked then
 					if not dependancies_imported then
 						create on_confirmation_event_handler_delegate.make_eventhandler (Current, $import_assembly_without_dependancies)
 						create warning_dialog.make (assembly_descriptor, non_imported_dependancies, dictionary.Warning_text, dictionary.Caption_text, on_confirmation_event_handler_delegate)
@@ -258,7 +258,9 @@ feature {NONE} -- Implementation
 			assembly_name: SYSTEM_REFLECTION_ASSEMBLYNAME
 			assembly: SYSTEM_REFLECTION_ASSEMBLY
 			emitter: NEWEIFFELCLASSGENERATOR
-			returned_value: INTEGER
+			returned_value: SYSTEM_WINDOWS_FORMS_DIALOGRESULT
+			message_box_buttons: SYSTEM_WINDOWS_FORMS_MESSAGEBOXBUTTONS
+			message_box_icon: SYSTEM_WINDOWS_FORMS_MESSAGEBOXICON
 			windows_message_box: SYSTEM_WINDOWS_FORMS_MESSAGEBOX
 			message_box: MESSAGE_BOX
 			retried: BOOLEAN		
@@ -268,20 +270,20 @@ feature {NONE} -- Implementation
 				message_box.refresh
 				if not retried then
 					create conversion_support.make_conversionsupport
-					assembly_name := conversion_support.assemblynamefromdescriptor (assembly_descriptor)
+					assembly_name := conversion_support.assembly_name_from_descriptor (assembly_descriptor)
 					assembly := assembly.load (assembly_name)
 					close
 					create emitter.make_neweiffelclassgenerator
-					if destination_path_text_box.text /= Void and then destination_path_text_box.text.length > 0 then
-						emitter.importassemblywithdependancies (assembly, destination_path_text_box.text, eiffel_names_check_box.checked)
+					if destination_path_text_box.get_text /= Void and then destination_path_text_box.get_text.get_length > 0 then
+						emitter.import_assembly_with_dependancies (assembly, destination_path_text_box.get_text, eiffel_names_check_box.get_checked)
 						message_box.close
 					else
 						message_box.close
-						returned_value := windows_message_box.show_string_string_messageboxbuttons_messageboxicon (dictionary.No_path, dictionary.Error_caption, dictionary.Ok_message_box_button, dictionary.Error_icon)
+						returned_value := windows_message_box.show_string_string_message_box_buttons_message_box_icon (dictionary.No_path, dictionary.Error_caption, message_box_buttons.Ok, message_box_icon.Error)
 					end
 				else
 					message_box.close
-					returned_value := windows_message_box.show_string_string_messageboxbuttons_messageboxicon (dictionary.Importation_error, dictionary.Error_caption, dictionary.Ok_message_box_button, dictionary.Error_icon)
+					returned_value := windows_message_box.show_string_string_message_box_buttons_message_box_icon (dictionary.Importation_error, dictionary.Error_caption, message_box_buttons.Ok, message_box_icon.Error)
 				end
 			end
 		rescue
@@ -315,7 +317,9 @@ feature {NONE} -- Implementation
 			assembly: SYSTEM_REFLECTION_ASSEMBLY
 			conversion_support: ISE_REFLECTION_CONVERSIONSUPPORT
 			emitter: NEWEIFFELCLASSGENERATOR
-			returned_value: INTEGER
+			returned_value: SYSTEM_WINDOWS_FORMS_DIALOGRESULT
+			message_box_buttons: SYSTEM_WINDOWS_FORMS_MESSAGEBOXBUTTONS
+			message_box_icon: SYSTEM_WINDOWS_FORMS_MESSAGEBOXICON
 			windows_message_box: SYSTEM_WINDOWS_FORMS_MESSAGEBOX	
 			message_box: MESSAGE_BOX
 			retried: BOOLEAN
@@ -325,20 +329,20 @@ feature {NONE} -- Implementation
 				message_box.refresh
 				if not retried then
 					create conversion_support.make_conversionsupport
-					assembly_name := conversion_support.assemblynamefromdescriptor (assembly_descriptor)
+					assembly_name := conversion_support.assembly_name_from_descriptor (assembly_descriptor)
 					assembly := assembly.load (assembly_name)
 					close
 					create emitter.make_neweiffelclassgenerator
-					if destination_path_text_box.text /= Void and then destination_path_text_box.text.length > 0 then
-						emitter.importassemblywithoutdependancies (assembly, destination_path_text_box.text, eiffel_names_check_box.checked)
+					if destination_path_text_box.get_text /= Void and then destination_path_text_box.get_text.get_length > 0 then
+						emitter.import_assembly_without_dependancies (assembly, destination_path_text_box.get_text, eiffel_names_check_box.get_checked)
 						message_box.close
 					else
 						message_box.close
-						returned_value := windows_message_box.show_string_string_messageboxbuttons_messageboxicon (dictionary.No_path, dictionary.Error_caption, dictionary.Ok_message_box_button, dictionary.Error_icon)
+						returned_value := windows_message_box.show_string_string_message_box_buttons_message_box_icon (dictionary.No_path, dictionary.Error_caption, message_box_buttons.Ok, message_box_icon.Error)
 					end
 				else
 					message_box.close
-					returned_value := windows_message_box.show_string_string_messageboxbuttons_messageboxicon (dictionary.Importation_error, dictionary.Error_caption, dictionary.Ok_message_box_button, dictionary.Error_icon)
+					returned_value := windows_message_box.show_string_string_message_box_buttons_message_box_icon (dictionary.Importation_error, dictionary.Error_caption, message_box_buttons.Ok, message_box_icon.Error)
 				end
 			end
 		rescue

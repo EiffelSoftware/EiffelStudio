@@ -22,10 +22,10 @@ feature {NONE} -- Initialization
 			external_name: "Make"
 		require
 			non_void_message: a_message /= Void
-			not_empty_message: a_message.length > 0
+			not_empty_message: a_message.get_length > 0
 			non_void_call_back: call_back /= Void
 		local
-			returned_value: INTEGER
+			returned_value: SYSTEM_WINDOWS_FORMS_DIALOGRESULT
 			is_focused: BOOLEAN
 			arguments: SYSTEM_EVENTARGS
 		do
@@ -69,46 +69,48 @@ feature -- Basic Operations
 			a_label: SYSTEM_WINDOWS_FORMS_LABEL
 			a_panel: SYSTEM_WINDOWS_FORMS_PANEL
 			an_image: SYSTEM_DRAWING_IMAGE
+			border_style: SYSTEM_WINDOWS_FORMS_FORMBORDERSTYLE
+			style: SYSTEM_DRAWING_FONTSTYLE
 		do
 			set_Enabled (True)
 			set_text (dictionary.Title)
-			set_borderstyle (dictionary.Border_style)
+			set_border_style (border_style.fixed_single)
 			a_size.set_Width (dictionary.Window_width)
 			a_size.set_Height (dictionary.Window_height)
 			set_size (a_size)	
-			set_maximizebox (False)
+			set_maximize_box (False)
 			set_icon (dictionary.Assembly_manager_icon)	
 			
 			create message_label.make_label
 			a_point.set_x (dictionary.Margin)
 			a_point.set_y (2 * dictionary.Margin)
 			message_label.set_location (a_point)
-			message_label.set_autosize (True)
-			create a_font.make_font_10 (dictionary.Font_family_name, dictionary.Font_size, dictionary.Bold_style)
+			message_label.set_auto_size (True)
+			create a_font.make_font_10 (dictionary.Font_family_name, dictionary.Font_size, style.Bold)
 			message_label.set_font (a_font)
 			message_label.set_text (message)
-			controls.add (message_label)
+			get_controls.add (message_label)
 
 			create a_label.make_label
 			a_point.set_x (dictionary.Margin)
 			a_point.set_y (2 * dictionary.Margin + dictionary.Label_height)
 			a_label.set_location (a_point)
-			a_label.set_autosize (True)
-			create a_font.make_font_10 (dictionary.Font_family_name, dictionary.Font_size, dictionary.Regular_style)
+			a_label.set_auto_size (True)
+			create a_font.make_font_10 (dictionary.Font_family_name, dictionary.Font_size, style.Regular)
 			a_label.set_font (a_font)
 			a_label.set_text (dictionary.Other_message)
-			controls.add (a_label)
+			get_controls.add (a_label)
 			
 				-- Image
-			an_image := image_factory.fromfile (dictionary.Watch_icon_filename)
+			an_image := image_factory.from_file (dictionary.Watch_icon_filename)
 			create a_panel.make_panel
-			a_panel.set_height (an_image.height)
-			a_panel.set_width (an_image.width)
-			a_panel.set_backgroundimage (an_image)	
-			a_point.set_x (dictionary.Window_width - 2 * dictionary.Margin - an_image.width)
+			a_panel.set_height (an_image.get_height)
+			a_panel.set_width (an_image.get_width)
+			a_panel.set_background_image (an_image)	
+			a_point.set_x (dictionary.Window_width - 2 * dictionary.Margin - an_image.get_width)
 			a_point.set_y (2 * dictionary.Margin)
 			a_panel.set_location (a_point)
-			controls.add (a_panel)	
+			get_controls.add (a_panel)	
 		end
 		
 feature {NONE} -- Implementation

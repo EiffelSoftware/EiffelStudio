@@ -36,9 +36,9 @@ feature -- Basic Operations
 					create tmp_list.make
 					create tmp_table.make
 				until
-					i = a_list.count
+					i = a_list.get_count
 				loop
-					a_descriptor ?= a_list.item (i)
+					a_descriptor ?= a_list.get_item (i)
 					if a_descriptor /= Void then
 						added := tmp_list.add (a_descriptor.name)
 						tmp_table.add (a_descriptor.name, a_descriptor)
@@ -50,11 +50,11 @@ feature -- Basic Operations
 				from
 					i := 0
 				until
-					i = tmp_list.count
+					i = tmp_list.get_count
 				loop
-					a_name ?= tmp_list.item (i)
+					a_name ?= tmp_list.get_item (i)
 					if a_name /= Void then
-						a_descriptor ?= tmp_table.item (a_name)
+						a_descriptor ?= tmp_table.get_item (a_name)
 						if a_descriptor /= Void then
 							added := sorted_list.add (a_descriptor)
 						end
@@ -66,7 +66,7 @@ feature -- Basic Operations
 			end
 		ensure
 			non_void_sorted_list: sorted_list /= Void
-			valid_sorted_list: sorted_list.count = a_list.count
+			valid_sorted_list: sorted_list.get_count = a_list.get_count
 		rescue
 			retried := True
 			retry
@@ -93,12 +93,12 @@ feature -- Basic Operations
 					create tmp_list.make
 					create tmp_table.make
 				until
-					i = a_list.count
+					i = a_list.get_count
 				loop
-					an_eiffel_assembly ?= a_list.item (i)
+					an_eiffel_assembly ?= a_list.get_item (i)
 					if an_eiffel_assembly /= Void then
-						added := tmp_list.add (an_eiffel_assembly.assemblydescriptor.name)
-						tmp_table.add (an_eiffel_assembly.assemblydescriptor.name, an_eiffel_assembly)
+						added := tmp_list.add (an_eiffel_assembly.assembly_descriptor.name)
+						tmp_table.add (an_eiffel_assembly.assembly_descriptor.name, an_eiffel_assembly)
 					end
 					i := i + 1
 				end
@@ -107,11 +107,11 @@ feature -- Basic Operations
 				from
 					i := 0
 				until
-					i = tmp_table.count
+					i = tmp_table.get_count
 				loop
-					a_name ?= tmp_list.item (i)
+					a_name ?= tmp_list.get_item (i)
 					if a_name /= Void then
-						an_eiffel_assembly ?= tmp_table.item (a_name)
+						an_eiffel_assembly ?= tmp_table.get_item (a_name)
 						if an_eiffel_assembly /= Void then
 							added := sorted_list.add (an_eiffel_assembly)
 						end
@@ -149,12 +149,12 @@ feature -- Basic Operations
 					create tmp_list.make
 					create tmp_table.make
 				until
-					i = a_list.count
+					i = a_list.get_count
 				loop
-					an_eiffel_class ?= a_list.item (i)
+					an_eiffel_class ?= a_list.get_item (i)
 					if an_eiffel_class /= Void then
-						added := tmp_list.add (an_eiffel_class.eiffelname)
-						tmp_table.add (an_eiffel_class.eiffelname, an_eiffel_class)
+						added := tmp_list.add (an_eiffel_class.eiffel_name)
+						tmp_table.add (an_eiffel_class.eiffel_name, an_eiffel_class)
 					end
 					i := i + 1
 				end
@@ -163,11 +163,11 @@ feature -- Basic Operations
 				from
 					i := 0
 				until
-					i = tmp_table.count
+					i = tmp_table.get_count
 				loop
-					a_name ?= tmp_list.item (i)
+					a_name ?= tmp_list.get_item (i)
 					if a_name /= Void then
-						an_eiffel_class ?= tmp_table.item (a_name)
+						an_eiffel_class ?= tmp_table.get_item (a_name)
 						if an_eiffel_class /= Void then
 							added := sorted_list.add (an_eiffel_class)
 						end

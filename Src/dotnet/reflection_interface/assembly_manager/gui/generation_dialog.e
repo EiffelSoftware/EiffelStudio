@@ -84,10 +84,12 @@ feature -- Basic Operations
 			on_browse_event_handler_delegate: SYSTEM_EVENTHANDLER
 			on_cancel_event_handler_delegate: SYSTEM_EVENTHANDLER
 			checked_changed_delegate: SYSTEM_EVENTHANDLER
+			style: SYSTEM_DRAWING_FONTSTYLE
+			border_style: SYSTEM_WINDOWS_FORMS_FORMBORDERSTYLE
 		do
 			set_enabled (True)
-			set_borderstyle (dictionary.Border_style)	
-			set_maximizebox (False)
+			set_border_style (border_style.fixed_single)	
+			set_maximize_box (False)
 
 				-- Assembly name
 			create assembly_label.make_label
@@ -95,10 +97,10 @@ feature -- Basic Operations
 			a_point.set_X (dictionary.Margin)
 			a_point.set_Y (dictionary.Margin)
 			assembly_label.set_location (a_point)
-			assembly_label.set_autosize (True)
-			create label_font.make_font_10 (dictionary.Font_family_name, dictionary.Font_size, dictionary.Bold_style) 
+			assembly_label.set_auto_size (True)
+			create label_font.make_font_10 (dictionary.Font_family_name, dictionary.Font_size, style.Bold) 
 			assembly_label.set_font (label_font)
-			controls.add (assembly_label)			
+			get_controls.add (assembly_label)			
 			
 			create_assembly_labels
 			
@@ -108,9 +110,9 @@ feature -- Basic Operations
 			a_point.set_X (dictionary.Margin)
 			a_point.set_Y (2 * dictionary.Margin + 4 * dictionary.Label_height)
 			destination_path_label.set_location (a_point)
-			destination_path_label.set_autosize (True)
+			destination_path_label.set_auto_size (True)
 			destination_path_label.set_font (label_font)
-			controls.add (destination_path_label)
+			get_controls.add (destination_path_label)
 
 				-- Destination path text box
 			create destination_path_text_box.make_textbox
@@ -121,7 +123,7 @@ feature -- Basic Operations
 			a_size.set_Height (dictionary.Label_height)
 			destination_path_text_box.set_size (a_size)
 			destination_path_text_box.set_enabled (False)
-			controls.add (destination_path_text_box)
+			get_controls.add (destination_path_text_box)
 
 				-- Browse button
 			create browse_button.make_button
@@ -134,7 +136,7 @@ feature -- Basic Operations
 			browse_button.set_enabled (False)
 			create on_browse_event_handler_delegate.make_eventhandler (Current, $on_browse_event_handler)
 			browse_button.add_Click (on_browse_event_handler_delegate)
-			controls.add (browse_button)
+			get_controls.add (browse_button)
 			
 				-- Explanations for destination path
 			create explanation_label.make_label
@@ -143,16 +145,16 @@ feature -- Basic Operations
 			a_point.set_X (dictionary.Margin)
 			a_point.set_Y (4 * dictionary.Margin + 6 * dictionary.Label_height)
 			explanation_label.set_location (a_point)
-			explanation_label.set_autosize (True)
-			controls.add (explanation_label)
+			explanation_label.set_auto_size (True)
+			get_controls.add (explanation_label)
 			
 			create other_explanation_label.make_label
 			a_point.set_X (dictionary.Margin)
 			a_point.set_Y (4 * dictionary.Margin + 7 * dictionary.Label_height)
 			other_explanation_label.set_location (a_point)
-			other_explanation_label.set_autosize (True)
+			other_explanation_label.set_auto_size (True)
 			other_explanation_label.set_text (dictionary.Explanation_text)
-			controls.add (other_explanation_label)
+			get_controls.add (other_explanation_label)
 
 				-- Default path check box
 			create default_path_check_box.make_checkbox
@@ -165,10 +167,10 @@ feature -- Basic Operations
 			a_size.set_width (dictionary.Window_width - 2 * dictionary.Margin)
 			default_path_check_box.set_size (a_size)
 			default_path_check_box.set_checked (True)
-			default_path_check_box.set_autocheck (True)
-			controls.add (default_path_check_box)
+			default_path_check_box.set_auto_check (True)
+			get_controls.add (default_path_check_box)
 			create checked_changed_delegate.make_eventhandler (Current, $on_check)
-			default_path_check_box.add_checkedchanged (checked_changed_delegate)
+			default_path_check_box.add_checked_changed (checked_changed_delegate)
 		end
 
 feature -- Event handling
@@ -181,7 +183,7 @@ feature -- Event handling
 			non_void_sender: sender /= Void
 			non_void_arguments: arguments /= Void
 		do
-			if default_path_check_box.checked then
+			if default_path_check_box.get_checked then
 				destination_path_text_box.set_enabled (False)
 				browse_button.set_enabled (False)			
 			else
@@ -210,7 +212,7 @@ feature -- Event handling
 			non_void_arguments: arguments /= Void
 		do
 			ask_for_folder
-			if last_folder /= Void and then last_folder.length > 0 then
+			if last_folder /= Void and then last_folder.get_length > 0 then
 				destination_path_text_box.set_text (last_folder)
 			end
 		end
@@ -235,8 +237,8 @@ feature {NONE} -- Implementation
 		do
 			if not retried then
 				create browser.make
-				current_path := destination_path_text_box.text
-				if current_path /= Void and then current_path.length > 0 and then dir.Exists (current_path) then
+				current_path := destination_path_text_box.get_text
+				if current_path /= Void and then current_path.get_length > 0 and then dir.Exists (current_path) then
 					browser.set_start_folder (current_path)
 				end
 				browser.ask_for_folder

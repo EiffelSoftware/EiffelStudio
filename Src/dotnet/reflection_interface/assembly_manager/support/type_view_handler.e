@@ -129,7 +129,7 @@ feature -- Basic Operations
 		do
 				-- Update class name (in current class and descendants)
 		--	if type_modifications.new_name /= Void then
-		--		if type_modifications.new_name.length > 0 then
+		--		if type_modifications.new_name.get_length > 0 then
 		--			update_class
 		--		else
 		--			is_valid := False
@@ -138,16 +138,16 @@ feature -- Basic Operations
 		--	end			
 				-- Update class features 
 			features_changes := type_modifications.features_modifications
-			if features_changes /= Void and then features_changes.count > 0 then
-				enumerator := features_changes.keys.getenumerator
+			if features_changes /= Void and then features_changes.get_count > 0 then
+				enumerator := features_changes.get_keys.get_enumerator
 				from
 					create changes.make 
 				until
-					not enumerator.movenext
+					not enumerator.move_next
 				loop
-					a_feature ?= enumerator.current_
+					a_feature ?= enumerator.get_current
 					if a_feature /= Void then
-						a_feature_modifications ?= features_changes.item (a_feature)
+						a_feature_modifications ?= features_changes.get_item (a_feature)
 						if a_feature_modifications /= Void then
 							create an_array.make (2)
 							an_array.put (0, a_feature)
@@ -159,9 +159,9 @@ feature -- Basic Operations
 				tmp_changes ?= changes.clone
 				from
 				until
-					i = changes.count
+					i = changes.get_count
 				loop
-					an_array ?= tmp_changes.item (i)
+					an_array ?= tmp_changes.get_item (i)
 					if an_array /= Void then
 						a_feature ?= an_array.item (0)
 						a_feature_modifications ?= an_array.item (1)
@@ -219,7 +219,7 @@ feature {NONE} -- Implementation
 		do
 				-- Update feature name
 			if a_feature_modifications.new_feature_name /= Void then
-				if a_feature_modifications.new_feature_name.length > 0 then
+				if a_feature_modifications.new_feature_name.get_length > 0 then
 					new_name := a_feature_modifications.new_feature_name
 					if recursive_exists (new_name) then
 						is_valid := False
@@ -227,7 +227,7 @@ feature {NONE} -- Implementation
 							errors_in_features.remove (a_feature)
 						end
 						errors_in_features.add (a_feature, Feature_exists_error)
-					elseif reserved_words.contains (new_name.tolower) then
+					elseif reserved_words.contains (new_name.to_lower) then
 						is_valid := False
 						if errors_in_features.contains (a_feature) then
 							errors_in_features.remove (a_feature)
@@ -239,8 +239,8 @@ feature {NONE} -- Implementation
 						--recursive_update_inheritance_clauses (old_name, new_name)
 						--update_children_inheritance_clauses (old_name, new_name)
 						rename_feature_in_children (old_name, new_name)
-						a_feature.seteiffelname (new_name)
-						a_feature.setmodified
+						a_feature.set_eiffel_name (new_name)
+						a_feature.set_modified
 					end
 				else
 					is_valid := False
@@ -252,16 +252,16 @@ feature {NONE} -- Implementation
 			end
 				-- Update feature arguments
 			arguments_changes := a_feature_modifications.arguments_modifications
-			if arguments_changes /= Void and then arguments_changes.count > 0 then
-				enumerator := arguments_changes.keys.getenumerator
+			if arguments_changes /= Void and then arguments_changes.get_count > 0 then
+				enumerator := arguments_changes.get_keys.get_enumerator
 				from
 					create changes.make
 				until
-					not enumerator.movenext
+					not enumerator.move_next
 				loop
-					an_argument ?= enumerator.current_
+					an_argument ?= enumerator.get_current
 					if an_argument /= Void then
-						new_name ?= arguments_changes.item (an_argument)
+						new_name ?= arguments_changes.get_item (an_argument)
 						if new_name /= Void then
 							create an_array.make (2)
 							an_array.put (0, an_argument)
@@ -273,9 +273,9 @@ feature {NONE} -- Implementation
 				tmp_changes ?= changes.clone
 				from
 				until
-					i = changes.count
+					i = changes.get_count
 				loop
-					an_array ?= tmp_changes.item (i)
+					an_array ?= tmp_changes.get_item (i)
 					if an_array /= Void then
 						an_argument ?= an_array.item (0)
 						new_name ?= an_array.item (1)
@@ -300,7 +300,7 @@ feature {NONE} -- Implementation
 		local
 			an_array: ARRAY [ANY]
 		do
-			if new_name.length > 0 then
+			if new_name.get_length > 0 then
 				if recursive_exists (new_name) then
 					is_valid := False
 					create an_array.make (2)
@@ -310,7 +310,7 @@ feature {NONE} -- Implementation
 						errors_in_arguments.remove (an_array)
 					end
 					errors_in_arguments.add (an_array, Clash_with_feature_name)
-				elseif reserved_words.contains (new_name.tolower) then
+				elseif reserved_words.contains (new_name.to_lower) then
 					is_valid := False
 					create an_array.make (2)
 					an_array.put (0, a_feature)
@@ -330,8 +330,8 @@ feature {NONE} -- Implementation
 					errors_in_arguments.add (an_array, Argument_name_exists)
 				else
 					is_valid := is_valid and True
-					an_argument.seteiffelname (new_name)
-					a_feature.setmodified
+					an_argument.set_eiffel_name (new_name)
+					a_feature.set_modified
 				end
 			else
 				is_valid := False
@@ -365,11 +365,11 @@ feature {NONE} -- Implementation
 		do
 			from
 			until
-				i = assembly_types.count or Result
+				i = assembly_types.get_count or Result
 			loop
-				a_type ?= assembly_types.item (i)
+				a_type ?= assembly_types.get_item (i)
 				if a_type /= Void then
-					Result := a_type.eiffelname.tolower.equals_string (a_class_name.tolower)
+					Result := a_type.eiffel_name.to_lower.equals_string (a_class_name.to_lower)
 				end
 				i := i + 1
 			end
@@ -388,18 +388,18 @@ feature {NONE} -- Implementation
 		do
 			from
 			until
-				i = assembly_types.count or class_found
+				i = assembly_types.get_count or class_found
 			loop
-				a_class ?= assembly_types.item (i)
-				if a_class.eiffelname.tolower.equals_string (eiffel_class.eiffelname.tolower) then
-					a_class.seteiffelname (new_name)
+				a_class ?= assembly_types.get_item (i)
+				if a_class.eiffel_name.to_lower.equals_string (eiffel_class.eiffel_name.to_lower) then
+					a_class.set_eiffel_name (new_name)
 					class_found := True
 				end
 				i := i + 1
 			end
-			eiffel_class.seteiffelname (new_name)
+			eiffel_class.set_eiffel_name (new_name)
 		ensure
-			new_name_set: eiffel_class.eiffelname.equals_string (new_name)
+			new_name_set: eiffel_class.eiffel_name.equals_string (new_name)
 		end
 
 	rename_children_parent (new_name: STRING) is
@@ -416,15 +416,15 @@ feature {NONE} -- Implementation
 		do
 			from
 			until
-				i = children.count
+				i = children.get_count
 			loop
-				a_child ?= children.item (i)
+				a_child ?= children.get_item (i)
 				if a_child /= Void then
 					parents := a_child.parents
-					if parents.contains (eiffel_class.eiffelname) then
-						clauses ?= parents.item (eiffel_class.eiffelname)
+					if parents.contains (eiffel_class.eiffel_name) then
+						clauses ?= parents.get_item (eiffel_class.eiffel_name)
 						if clauses /= Void then
-							parents.remove (eiffel_class.eiffelname)
+							parents.remove (eiffel_class.eiffel_name)
 							parents.add (new_name, clauses)
 						end
 					end
@@ -464,9 +464,9 @@ feature {NONE} -- Implementation
 			else
 				from
 				until
-					i = children.count or Result
+					i = children.get_count or Result
 				loop
-					a_child ?= children.item (i)	
+					a_child ?= children.get_item (i)	
 					if a_child /= Void then
 						Result := exists (a_child, a_feature_name)
 					end
@@ -497,30 +497,30 @@ feature {NONE} -- Implementation
 			from
 				create children_to_change.make
 			until
-				i = children.count
+				i = children.get_count
 			loop
-				a_child ?= children.item (i)
+				a_child ?= children.get_item (i)
 				if a_child /= Void and then exists (a_child, old_name) then
 					children_to_change.add (a_child, eiffel_feature)
 				end
 				i := i + 1
 			end
-			enumerator := children_to_change.values.getenumerator
+			enumerator := children_to_change.get_values.get_enumerator
 			from
 			until
-				not enumerator.movenext
+				not enumerator.move_next
 			loop
-				a_feature ?= enumerator.current_
+				a_feature ?= enumerator.get_current
 				if a_feature /= Void then
-					a_feature.seteiffelname (new_name)
-					a_feature.setmodified
+					a_feature.set_eiffel_name (new_name)
+					a_feature.set_modified
 				end
 			end
 		end
 		
 	recursive_update_inheritance_clauses (old_name, new_name: STRING) is
 		indexing
-			description: "Update of all inheritance clauses to tke `new_name' into account."
+			description: "Update of all inheritance clauses to tke `new_name' into acget_count."
 			external_name: "RecursiveUpdateInheritanceClauses"
 		require
 			non_void_old_name: old_name /= Void
@@ -533,14 +533,14 @@ feature {NONE} -- Implementation
 			parent_names: SYSTEM_COLLECTIONS_ARRAYLIST
 			tmp_parent_names: SYSTEM_COLLECTIONS_ARRAYLIST
 		do
-			parents_enumerator := eiffel_class.parents.keys.getenumerator
+			parents_enumerator := eiffel_class.parents.get_keys.get_enumerator
 			from
 				create parent_names.make
 			until
-				not parents_enumerator.movenext
+				not parents_enumerator.move_next
 			loop
-				a_parent_name ?= parents_enumerator.current_
-				if a_parent_name /= Void and then a_parent_name.length > 0 then
+				a_parent_name ?= parents_enumerator.get_current
+				if a_parent_name /= Void and then a_parent_name.get_length > 0 then
 					added := parent_names.add (a_parent_name)
 					--update_inheritance_clauses (a_parent_name, old_name, new_name)
 				end
@@ -548,9 +548,9 @@ feature {NONE} -- Implementation
 			tmp_parent_names ?= parent_names.clone
 			from
 			until
-				i = parent_names.count
+				i = parent_names.get_count
 			loop
-				a_parent_name ?= tmp_parent_names.item (i)
+				a_parent_name ?= tmp_parent_names.get_item (i)
 				if a_parent_name /= Void then
 					update_inheritance_clauses (a_parent_name, old_name, new_name)
 				end
@@ -574,7 +574,7 @@ feature {NONE} -- Implementation
 			build_inheritance_clauses (parent_name)
 			if not has_rename_clause (old_name) and then (is_in_list (undefine_clauses, old_name) or is_in_list (redefine_clauses, old_name) or is_in_list (select_clauses, old_name)) then
 				create a_rename_clause.make_renameclause
-				a_rename_clause.makefrominfo (old_name, new_name)
+				a_rename_clause.make_from_info (old_name, new_name)
 				added := rename_clauses.add (a_rename_clause)
 			end
 			intern_update_inheritance_clauses (old_name, new_name)
@@ -606,19 +606,19 @@ feature {NONE} -- Implementation
 		--		added := rename_clauses.add (a_rename_clause)
 		--	end
 			if is_in_list (undefine_clauses, old_name) then
-				undefine_clauses.removeat (index_in_list)
+				undefine_clauses.remove_at (index_in_list)
 				create an_undefine_clause.make_undefineclause
 				an_undefine_clause.make (new_name)
 				added := undefine_clauses.add (an_undefine_clause)
 			end
 			if is_in_list (redefine_clauses, old_name) then
-				redefine_clauses.removeat (index_in_list)
+				redefine_clauses.remove_at (index_in_list)
 				create a_redefine_clause.make_redefineclause
 				a_redefine_clause.make (new_name)				
 				added := redefine_clauses.add (a_redefine_clause)			
 			end
 			if is_in_list (select_clauses, old_name) then
-				select_clauses.removeat (index_in_list)
+				select_clauses.remove_at (index_in_list)
 				create a_select_clause.make_selectclause
 				a_select_clause.make (new_name)
 				added := select_clauses.add (a_select_clause)			
@@ -640,7 +640,7 @@ feature {NONE} -- Implementation
 		do
 			if new_inheritance_clauses.contains (parent_name) then
 				new_inheritance_clauses.remove (parent_name)
-				if a_class.parents.contains (parent_name) and not a_class.eiffelname.equals_string (parent_name) then
+				if a_class.parents.contains (parent_name) and not a_class.eiffel_name.equals_string (parent_name) then
 					new_inheritance_clauses.add (parent_name, inheritance_clauses)
 				end
 			end
@@ -653,7 +653,7 @@ feature {NONE} -- Implementation
 		require
 			non_void_eiffel_class: an_eiffel_class /= Void
 		do
-			an_eiffel_class.setparents (new_inheritance_clauses)	
+			an_eiffel_class.set_parents (new_inheritance_clauses)	
 		end
 		
 	inheritance_clauses: ARRAY [SYSTEM_COLLECTIONS_ARRAYLIST] is
@@ -695,25 +695,25 @@ feature {NONE} -- Implementation
 			from
 				tmp_children ?= children.clone
 			until
-				i = children.count
+				i = children.get_count
 			loop
-				a_child ?= children.item (i)
+				a_child ?= children.get_item (i)
 				if a_child /= Void then
 					parents := a_child.parents
-					if parents.contains (eiffel_class.eiffelname) then
+					if parents.contains (eiffel_class.eiffel_name) then
 						new_inheritance_clauses ?= parents.clone
-						clauses ?= parents.item (eiffel_class.eiffelname) 
+						clauses ?= parents.get_item (eiffel_class.eiffel_name) 
 						if clauses /= Void and then clauses.count = 5 then
 							rename_clauses := clauses.item (0)
 							undefine_clauses := clauses.item (1)		
 							redefine_clauses := clauses.item (2)	
 							select_clauses := clauses.item (3)	
 							intern_update_inheritance_clauses (old_name, new_name)
-							commit_parent_changes (eiffel_class.eiffelname, a_child)
+							commit_parent_changes (eiffel_class.eiffel_name, a_child)
 						end
 					end
 				end
-				tmp_child ?= tmp_children.item (i)
+				tmp_child ?= tmp_children.get_item (i)
 				if tmp_child /= Void then
 					commit (tmp_child)
 				end
@@ -733,7 +733,7 @@ feature {NONE} -- Implementation
 			clauses: ARRAY [SYSTEM_COLLECTIONS_ARRAYLIST]
 		do
 			parents := eiffel_class.parents
-			clauses ?= parents.item (parent_name)
+			clauses ?= parents.get_item (parent_name)
 			if clauses /= Void and then clauses.count = 5 then
 				rename_clauses := clauses.item (0)
 				undefine_clauses := clauses.item (1)		
@@ -789,10 +789,10 @@ feature {NONE} -- Implementation
 		do
 			from
 			until
-				i = a_list.count or Result
+				i = a_list.get_count or Result
 			loop
-				a_clause ?= a_list.item (i)
-				if a_clause /= Void and then a_clause.sourcename.tolower.equals_string (a_feature_name.tolower) then
+				a_clause ?= a_list.get_item (i)
+				if a_clause /= Void and then a_clause.source_name.to_lower.equals_string (a_feature_name.to_lower) then
 					index_in_list := i
 					Result := True
 				end
@@ -814,17 +814,17 @@ feature {NONE} -- Implementation
 			non_void_name: a_name /= Void
 		local
 			i: INTEGER
-			an_item: ISE_REFLECTION_RENAMECLAUSE			
+			an_get_item: ISE_REFLECTION_RENAMECLAUSE			
 		do
 			from
 			until
-				i = rename_clauses.count or Result
+				i = rename_clauses.get_count or Result
 			loop
-				an_item ?= rename_clauses.item (i)
-				if an_item /= Void then
-					if an_item.targetname.tolower.equals_string (a_name.tolower) then
+				an_get_item ?= rename_clauses.get_item (i)
+				if an_get_item /= Void then
+					if an_get_item.target_name.to_lower.equals_string (a_name.to_lower) then
 						index_in_list := i
-						rename_source := an_item.sourcename
+						rename_source := an_get_item.source_name
 						Result := True
 					end
 				end
@@ -853,11 +853,11 @@ feature {NONE} -- Implementation
 			arguments := a_feature.arguments
 			from
 			until
-				i = arguments.count or Result
+				i = arguments.get_count or Result
 			loop
-				an_argument ?= arguments.item (i)
-				if an_argument /= Void and then an_argument.eiffelname /= Void then
-					Result := an_argument.eiffelname.tolower.equals_string (new_name.tolower)
+				an_argument ?= arguments.get_item (i)
+				if an_argument /= Void and then an_argument.eiffel_name /= Void then
+					Result := an_argument.eiffel_name.to_lower.equals_string (new_name.to_lower)
 				end
 				i := i + 1
 			end

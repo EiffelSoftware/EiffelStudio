@@ -54,6 +54,15 @@ feature
 			end
 		end;
 
+feature {STATES_WND}
+
+	reset_callback is
+		local
+			Nothing: ANY;
+		do
+			button.add_button_press_action (2, Current, Nothing);
+		end;
+
 feature {NONE}
 
 	associated_editor: BEHAVIOR_EDITOR;
@@ -97,8 +106,11 @@ feature {NONE}
 		end;
 
 	execute (argument: ANY) is
+		local
+			Nothing: ANY;
 		do
-			states_wnd.popup (graph.state_names)
+			button.remove_button_press_action (2, Current, Nothing);
+			states_wnd.popup (graph.state_names);
 		end;
 
 end

@@ -96,7 +96,7 @@ feature -- Event - command association
 			-- Add 'cmd' to the list of commands to be
 			-- executed when the button is pressed
 		do
-			add_command ("activate", cmd,  arg)
+			add_command (widget, "activate", cmd,  arg)
 		end
 
 feature -- Event -- removing command association
@@ -106,7 +106,7 @@ feature -- Event -- removing command association
 			-- when the text field is activated, ie when the user
 			-- press the enter key.
 		do
-			remove_commands (activate_id)
+			remove_commands (widget, activate_id)
 		end
 
 end -- class EV_TEXT_FIELD_IMP

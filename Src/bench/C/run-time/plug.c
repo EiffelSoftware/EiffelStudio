@@ -50,14 +50,14 @@ rt_private char *rcsid =
 rt_public int nstcall = 0;	/* Is current call a nested one? */ /* %%ss mt */
 #endif /* EIF_THREADS */
 
-rt_private void recursive_chkinv(EIF_CONTEXT int dtype, EIF_REFERENCE obj, int where);		/* Internal invariant control loop */
+rt_private void recursive_chkinv(int dtype, EIF_REFERENCE obj, int where);		/* Internal invariant control loop */
 
 /*
  * ARRAY [STRING] creation for initialization of argument of root's
  * class creation routine
  */
 
-rt_public EIF_REFERENCE argarr(EIF_CONTEXT int argc, char **argv)
+rt_public EIF_REFERENCE argarr(int argc, char **argv)
 {
 	/* Create an Eiffel ARRAY [STRING] with the values contained in
 	 * `argv'
@@ -303,7 +303,7 @@ rt_private char *inv_mark_tablep = (char * ) 0;	/* Marking table to avoid checki
 									 */ /* %%ss mt renamed conflicting with interp.c */
 #endif /* EIF_THREADS */
 
-rt_public void chkinv (EIF_CONTEXT EIF_REFERENCE obj, int where)
+rt_public void chkinv (EIF_REFERENCE obj, int where)
 		  
 		  		/* Invariant is beeing checked before or after compound? */
 {
@@ -322,7 +322,7 @@ rt_public void chkinv (EIF_CONTEXT EIF_REFERENCE obj, int where)
 }
 
 #ifdef WORKBENCH
-rt_public void chkcinv(EIF_CONTEXT EIF_REFERENCE obj)
+rt_public void chkcinv(EIF_REFERENCE obj)
 {
 	/* Check invariant of `obj' after creation. */
 	EIF_GET_CONTEXT
@@ -331,7 +331,7 @@ rt_public void chkcinv(EIF_CONTEXT EIF_REFERENCE obj)
 }
 #endif
 
-rt_private void recursive_chkinv(EIF_CONTEXT int dtype, EIF_REFERENCE obj, int where)
+rt_private void recursive_chkinv(int dtype, EIF_REFERENCE obj, int where)
 		  
 		  
 		  		/* Invariant is being checked before or after compound? */
@@ -362,10 +362,10 @@ rt_private void recursive_chkinv(EIF_CONTEXT int dtype, EIF_REFERENCE obj, int w
 	/* Invariant check */
 #ifndef WORKBENCH
 	{
-		void (*cn_inv)(); /* %%ss moved from above */
+		void (*cn_inv)(EIF_REFERENCE, EIF_INTEGER);
 		cn_inv = node->cn_inv;
-		if (cn_inv != (void (*)()) 0)
-			(cn_inv)(obj, where);
+		if (cn_inv)
+			(FUNCTION_CAST (void, (EIF_REFERENCE, EIF_INTEGER)) cn_inv)(obj, where);
 	}
 #else
 	{
@@ -375,7 +375,8 @@ rt_private void recursive_chkinv(EIF_CONTEXT int dtype, EIF_REFERENCE obj, int w
 		CBodyId(body_id,INVARIANT_ID,dtype);
 		if (body_id != INVALID_ID) {
 			if (egc_frozen [body_id]) {	/* Frozen invariant */
-				((void (*)()) egc_frozen[body_id])(obj, where);
+				(FUNCTION_CAST (void, (EIF_REFERENCE, EIF_INTEGER)) egc_frozen[body_id])
+				  	(obj, where);
 			} else 
 				/* Melted invariant */
 			{					

@@ -49,6 +49,7 @@ typedef enum EIF_EXCEPTIONS
 	EIF_EXCEPTIONS_ProjectIncomplete,
 	EIF_EXCEPTIONS_IOError,
 	EIF_EXCEPTIONS_NonDotnetProject,
+	EIF_EXCEPTIONS_UnableToInitializeProject,
 
 	// IEiffelSystemAssemblies Exceptions
 	EIF_EXCEPTIONS_AssemblyAlreadyAdded,
@@ -316,6 +317,9 @@ interface IEiffelCompiler: IDispatch
 
 	[id (DISPID_EiffelComCompiler_GenerateMsilKeyFileName), helpstring ("Generate a cyrptographic key filename.")]
 	HRESULT GenerateMsilKeyFileName ([in] BSTR bstrFileName);
+
+	[id (DISPID_EiffelComCompiler_SetQuickFinalization), helpstring ("Enable quick (non-incremental) finalization.")]
+	HRESULT SetQuickFinalization ();
 };
 
 //---------------------------------------------------------------------
@@ -1451,6 +1455,9 @@ interface IEiffelProject: IDispatch
 
 	[id (DISPID_EiffelComCompiler_GenerateNewEiffelProject), helpstring ("Create new Eiffel project from scratch.")]
 	HRESULT GenerateNewEiffelProject ([in] BSTR bstrProjectName, [in] BSTR bstrAceFileName, [in] BSTR bstrRootClassName, [in] BSTR bstrCreationRoutine, [in] BSTR bstrProjectDirectory);
+
+	[id (DISPID_EiffelComCompiler_CreateInMemoryEiffelProject), helpstring ("Create new Eiffel project from scratch in memory (no need for ace file).")]
+	HRESULT CreateInMemoryEiffelProject ([in] BSTR bstrProjectDirectory);
 
 	[id (DISPID_EiffelComCompiler_ProjectFileName), helpstring ("Full path to .epr file."), propget]
 	HRESULT ProjectFileName ([out, retval] BSTR* pbstrProjectFileName);

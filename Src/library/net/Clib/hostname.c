@@ -16,21 +16,14 @@
 extern void do_init (void);
 #endif
 
-#ifndef MAXHOSTNAMELEN      /* added for dgux and other platforms maybe */
-#define MAXHOSTNAMELEN 128
-#endif
-
-static char hostname[MAXHOSTNAMELEN + 1];
-
-EIF_POINTER c_get_hostname()
+void c_get_hostname(char * buffer, size_t buffer_count)
 	/*x get host name in dotted format */
 {
 #if defined EIF_WIN32 || defined EIF_OS2
 	do_init ();
 #endif
 
-	if (gethostname (hostname, sizeof(hostname)) == -1)
-		hostname[0] = '\0';
-
-	return hostname;
+	if (gethostname (buffer, buffer_count) == -1) {
+		buffer[0] = '\0';
+	}
 }

@@ -19,6 +19,11 @@ inherit
 			implementation
 		end
 
+	EV_ITEM_HOLDER [EV_LIST_ITEM]
+		redefine
+			implementation
+		end
+
 creation
 	make
 	
@@ -34,24 +39,6 @@ feature {NONE} -- Initialization
 		end
 
 feature -- Access
-
-	count: INTEGER is
-			-- Number of rows
-		require
-			exists: not destroyed
-		do
-			Result := implementation.count
-		end
-
-	get_item (index: INTEGER): EV_LIST_ITEM is
-			-- Give the item of the list at the zero-base
-			-- `index'.
-		require
-			exists: not destroyed
-			item_exists: (index <= count) and (index >= 0)
-		do
-			Result := implementation.get_item(index)
-		end
 
 	selected_item: EV_LIST_ITEM is
 			-- Item which is currently selected
@@ -140,27 +127,6 @@ feature -- Status setting
 			exists: not destroyed
 		do
 			implementation.set_single_selection
-		end
-
-feature -- Element change
-
-	clear_items is
-			-- Clear all the items of the list.
-		require
-			exists: not destroyed
-		do
-			implementation.clear_items
-		end
-
-feature -- Basic operations
-
-	find_item_by_data (data: ANY): EV_LIST_ITEM is
-			-- Find a child with data equal to `data'.
-		require
-			exists: not destroyed
-			valid_data: data /= Void
-		do
-			Result := implementation.find_item_by_data (data)
 		end
 
 feature -- Event : command association

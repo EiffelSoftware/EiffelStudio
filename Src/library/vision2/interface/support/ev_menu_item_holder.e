@@ -11,7 +11,7 @@ deferred class
 	EV_MENU_ITEM_HOLDER
 
 inherit
-	EV_ANY
+	EV_ITEM_HOLDER [EV_MENU_ITEM]
 		redefine
 			implementation
 		end

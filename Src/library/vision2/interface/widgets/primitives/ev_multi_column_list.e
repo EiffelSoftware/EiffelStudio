@@ -19,6 +19,11 @@ inherit
 			make
 		end
 
+	EV_ITEM_HOLDER [EV_MULTI_COLUMN_LIST_ROW]
+		redefine
+			implementation
+		end
+
 creation
 	make_with_size,
 	make_with_text
@@ -53,10 +58,10 @@ feature -- Access
 
 	rows: INTEGER is
 			-- Number of rows
-		require
-			exists: not destroyed
+		obsolete
+			"Use count instead."
 		do
-			Result := implementation.rows
+			Result := implementation.count
 		end
 
 	columns: INTEGER is
@@ -65,16 +70,6 @@ feature -- Access
 			exists: not destroyed
 		do
 			Result := implementation.columns
-		end
-
-	get_item (index: INTEGER): EV_MULTI_COLUMN_LIST_ROW is
-			-- Give the item of the list at the one-base
-			-- `index'.
-		require
-			exists: not destroyed
-			item_exists: index <= rows
-		do
-			Result := implementation.get_item(index)
 		end
 
 	selected_item: EV_MULTI_COLUMN_LIST_ROW is
@@ -272,25 +267,6 @@ feature -- Element change
 			implementation.set_rows_height (value)
 		end
 
-	clear_items is
-			-- Clear all the items of the list.
-		require
-			exists: not destroyed
-		do
-			implementation.clear_items
-		end
-
-feature -- Basic operation
-
-	find_item_by_data (data: ANY): EV_MULTI_COLUMN_LIST_ROW is
-			-- Find a child with data equal to `data'.
-		require
-			exists: not destroyed
-			valid_data: data /= Void
-		do
-			Result := implementation.find_item_by_data (data)
-		end
-
 feature -- Event : command association
 
 	add_selection_command (cmd: EV_COMMAND; arg: EV_ARGUMENT) is	
@@ -333,9 +309,10 @@ feature -- Event -- removing command association
 			implementation.remove_column_click_commands
 		end
 
-feature {EV_MULTI_COLUMN_LIST_ROW_IMP, EV_MULTI_COLUMN_LIST_ROW} -- Implementation
+feature -- Implementation
 	
-	implementation: EV_MULTI_COLUMN_LIST_I	
+	implementation: EV_MULTI_COLUMN_LIST_I
+			-- Platform specific access.
 
 feature {NONE} -- Inapplicable
 
@@ -350,7 +327,7 @@ feature {NONE} -- Inapplicable
 end -- class EV_MULTI_COLUMN_LIST
 
 --|----------------------------------------------------------------
---| Windows Eiffel Library: library of reusable components for ISE Eiffel.
+--| EiffelVision Library: library of reusable components for ISE Eiffel.
 --| Copyright (C) 1986-1998 Interactive Software Engineering Inc.
 --| All rights reserved. Duplication and distribution prohibited.
 --| May be used only with ISE Eiffel, under terms of user license. 

@@ -14,6 +14,11 @@ inherit
 			implementation
 		end
 
+	EV_ITEM_HOLDER [EV_TOOL_BAR_BUTTON]
+		redefine
+			implementation
+		end
+
 creation
 	make,
 	make_with_size

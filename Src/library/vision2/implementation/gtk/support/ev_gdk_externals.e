@@ -76,7 +76,7 @@ feature {NONE} -- GTK macros for casting types
 	
 	c_gdk_event_string (p: POINTER): POINTER is
 		external 
-			"C [macro %"gdk_eiffel.h%"]"
+			"C [macro %"gdk_eiffel.h%"] (GdkEventKey *): EIF_POINTER"
 		end		
 	
 	-- Expose

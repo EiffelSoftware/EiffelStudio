@@ -4703,16 +4703,32 @@ feature {NONE} -- Once per modules being generated.
 		local
 			l_ass_info: MD_ASSEMBLY_INFO
 			l_pub_key: MD_PUBLIC_KEY_TOKEN
+			l_system_object: EXTERNAL_CLASS_I
+			l_mscorlib: ASSEMBLY_I
+			l_version: VERSION
 		do
+				-- To compute it, we simply take the data from `System.Object'. That way our
+				-- code is automatically using the version of `mscorlib' that was specified
+				-- in the Ace file.
+			l_system_object := System.system_object_class
+			l_mscorlib := l_system_object.assembly
+			
+			create l_version
+			check
+				version_valid: l_version.is_version_valid (l_mscorlib.version)
+			end
+			
+			l_version.set_version (l_mscorlib.version)
 			create l_ass_info.make
-			l_ass_info.set_major_version (1)
-			l_ass_info.set_build_number (3300)
+			l_ass_info.set_major_version (l_version.major.to_integer_16)
+			l_ass_info.set_minor_version (l_version.minor.to_integer_16)
+			l_ass_info.set_build_number (l_version.build.to_integer_16)
+			l_ass_info.set_revision_number (l_version.revision.to_integer_16)
 
-			create l_pub_key.make_from_array (
-				<<0xB7, 0x7A, 0x5C, 0x56, 0x19, 0x34, 0xE0, 0x89>>)
+			create l_pub_key.make_from_string (l_mscorlib.public_key_token)
 
 			mscorlib_token := md_emit.define_assembly_ref (
-				create {UNI_STRING}.make ("mscorlib"), l_ass_info, l_pub_key)
+				create {UNI_STRING}.make (l_mscorlib.assembly_name), l_ass_info, l_pub_key)
 		end
 
 	compute_mscorlib_type_tokens is

@@ -103,10 +103,7 @@ feature -- Metrics loading
 			-- Store metric objects in `metric_list' and their XML definition in `xml_list'.
 		local
 			metric_name, metric_unit, scope_num, scope_den, type, parent_name: STRING
-			l_parser: XM_EIFFEL_PARSER
-			l_tree_pipe: XM_TREE_CALLBACKS_PIPE
-			l_file: KL_BINARY_INPUT_FILE
-			l_xm_concatenator: XM_CONTENT_CONCATENATOR
+			l_deserialized_document: XM_DOCUMENT
 			metric_element, node, definition, scope_element: XM_ELEMENT
 			a_cursor: DS_LINKED_LIST_CURSOR [XM_NODE]
 			min_scope, i: INTEGER
@@ -121,21 +118,10 @@ feature -- Metrics loading
 		do
 			if not retried then
 				tool.set_min_scope_available (tool.scope (interface_names.metric_this_system).index)
-				create l_parser.make
-				create l_file.make (f.name)
-				l_file.open_read
-				if l_file.is_open_read then
-					create l_tree_pipe.make
-					create l_xm_concatenator.make_null
-					l_parser.set_callbacks (standard_callbacks_pipe (<<l_xm_concatenator, l_tree_pipe.start>>))
-					l_parser.parse_from_stream (l_file)
-					l_file.close
-					check
-						ok_parsing: l_parser.is_correct
-					end
-					metric_element := element_by_name (l_tree_pipe.document.root_element, "METRIC_DEFINITIONS")
+				l_deserialized_document := deserialize_document (f.name)
+				if l_deserialized_document /= Void then
+					metric_element := element_by_name (l_deserialized_document.root_element, "METRIC_DEFINITIONS")
 					a_cursor := metric_element.new_cursor
-
 					from
 						a_cursor.start
 						i := 1
@@ -214,8 +200,8 @@ feature -- Metrics loading
 						end
 						a_cursor.forth
 					end
-				elseif not l_parser.is_correct or info_missing or tree = Void then
-					parser_problems := not l_parser.is_correct or info_missing or tree = Void
+				elseif info_missing or tree = Void then
+					parser_problems := info_missing or tree = Void
 --				if not parser.is_correct or info_missing or tree = Void then
 --					create error_dialog.make_with_text ("File: " + file_manager.metric_file_name + "%Nhas syntax error or missing information")
 --					error_dialog.show_modal_to_window (tool.development_window.window)
@@ -504,10 +490,7 @@ feature -- Measures
 	retrieve_recorded_measures (f: PLAIN_TEXT_FILE) is
 			-- Retrieve recorded measures from `file_manager.metric_file'.
 		local
-			l_parser: XM_EIFFEL_PARSER
-			l_tree_pipe: XM_TREE_CALLBACKS_PIPE
-			l_file: KL_BINARY_INPUT_FILE
-			l_xm_concatenator: XM_CONTENT_CONCATENATOR
+			l_deserialized_document: XM_DOCUMENT
 			metric_element, node: XM_ELEMENT
 			a_cursor: DS_LINKED_LIST_CURSOR [XM_NODE]
 			row_array: ARRAY [STRING]
@@ -516,22 +499,12 @@ feature -- Measures
 			a_metric: EB_METRIC
 			a_composite_metric: EB_METRIC_COMPOSITE
 			a_result: DOUBLE
-			error_dialog:EB_INFORMATION_DIALOG
+			l_error_dialog: EB_INFORMATION_DIALOG
 		do
 			if not retried then
-				create l_parser.make
-				create l_file.make (f.name)
-				l_file.open_read
-				if l_file.is_open_read then
-					create l_tree_pipe.make
-					create l_xm_concatenator.make_null
-					l_parser.set_callbacks (standard_callbacks_pipe (<<l_xm_concatenator, l_tree_pipe.start>>))
-					l_parser.parse_from_stream (l_file)
-					check
-						ok_parsing: l_parser.is_correct
-					end
-					l_file.close
-					metric_element := element_by_name (l_tree_pipe.document.root_element, "RECORDED_MEASURES")
+				l_deserialized_document := deserialize_document (f.name)
+				if l_deserialized_document /= Void then
+					metric_element := element_by_name (l_deserialized_document.root_element, "RECORDED_MEASURES")
 					a_cursor := metric_element.new_cursor
 					from
 						a_cursor.start
@@ -594,8 +567,8 @@ feature -- Measures
 						a_cursor.forth
 					end
 					tool.progress_dialog.hide
-				elseif not l_parser.is_correct or info_missing then
-					parser_problems := not l_parser.is_correct or info_missing
+				elseif info_missing then
+					parser_problems := info_missing
 --				if not parser.is_correct or info_missing then
 --					create error_dialog.make_with_text ("File: " + file_manager.metric_file_name + "%Nhas syntax error or missing information.")
 --					error_dialog.show_modal_to_window (tool.development_window.window)
@@ -608,9 +581,9 @@ feature -- Measures
 			end
 		rescue
 			retried := True
-			create error_dialog.make_with_text ("Unable to read file:%N"
+			create l_error_dialog.make_with_text ("Unable to read file:%N"
 								+ file_manager.metric_file_name )
-			error_dialog.show_modal_to_window (tool.development_window.window)
+			l_error_dialog.show_modal_to_window (tool.development_window.window)
 			tool.progress_dialog.hide
 			retry
 		end

@@ -106,8 +106,8 @@ feature -- Element change
 			exists: not destroyed
 		do
 			implementation.set_parent (par)
---		ensure
---			parent_set: parent = par
+		ensure
+			parent_set: parent = par
 		end
 
 feature -- Implementation

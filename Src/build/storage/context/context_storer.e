@@ -51,7 +51,7 @@ feature {NONE}
 			until
 				Shared_window_list.after
 			loop
-				!!current_table.make (100);
+				!! current_table.make (30);
 				stored_contexts.extend (current_table);
 				build_stored_context (Shared_window_list.item);
 				Shared_window_list.forth
@@ -79,6 +79,9 @@ feature
 		do
 			retrieve_by_name (dir_name);
 			stored_contexts := retrieved.stored_contexts;
+			debug ("STORER") 
+				io.error.putstring ("RETRIEVING CONTEXT%N");
+			end;
 			!!retrieved_data.make;
 			from
 				stored_contexts.start;
@@ -113,7 +116,33 @@ feature {NONE}
 				temp := find_parent (temp_wind.parent_name);
 				Result := s_context.context (temp);
 			end;
+			debug ("STORER_CHECK")
+                if context_table.has (s_context.identifier) then
+                    io.error.putstring ("**** Error: Context already exists: ");
+                    io.error.putstring (Result.full_name);
+                    io.error.putstring (" ****");
+                    io.error.putstring (" id: ")
+                    io.error.putint (s_context.identifier);
+                    io.error.new_line
+                else
+                    io.error.putstring ("CT put: ");
+                    io.error.putstring (Result.full_name);
+                    io.error.putstring (" id: ")
+                    io.error.putint (Result.identifier);
+                    io.error.putstring (" old id: ")
+                    io.error.putint (s_context.identifier);
+                    if Result.is_in_a_group then
+                        io.error.putstring (" is in a group")
+                    end;
+                    io.error.new_line;
+                end
+            end;
+				-- Record the retrieved identifier
 			context_table.put (Result, s_context.identifier);
+			debug ("STORER") 
+				s_context.trace;
+				io.error.new_line;
+			end;
 			temp ?= Result;
 			from
 				counter := 1

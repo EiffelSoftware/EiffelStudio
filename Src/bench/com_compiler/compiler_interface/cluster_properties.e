@@ -163,7 +163,9 @@ feature -- Access
 			Result := True
 			cl_prop := cluster_sd.cluster_properties
 			if cl_prop /= Void then
-				Result := cl_prop.default_option = Void
+				if cl_prop.default_option /= Void then
+					Result := cl_prop.default_option.count > 0
+				end
 			end
 		end
 		

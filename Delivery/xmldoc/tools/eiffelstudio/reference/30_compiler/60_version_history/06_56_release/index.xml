@@ -20,9 +20,9 @@
 			<size>2</size>Changes
 		</heading>
 		<list ordered="false">
-			<item>Changed behavior of once routines in .NET  mode from once-per-process to once-per-thread to match behavior in classic mode.</item>
+			<item>Changed default behavior of once routines in .NET  mode from once-per-process to once-per-thread to match behavior in classic mode.</item>
 			<item>Provided project options (<code>old_verbatim_strings</code> and <code>old_verbatim_strings_warning</code>) to support semantics of verbatim strings as in previous versions when they were not left-aligned.</item>
-			<item>Changed processing of hexadecimal integer literals to be consistent for different integer types.</item>
+			<item>Changed processing of hexadecimal integer literals to be consistent for different integer types. For example, <code><number>0xFF</number></code> gives <code><number>255</number></code> when assigned to a variable of type <code><number>INTEGER</number></code> rather than <code><number>-1</number></code> as before.</item>
 		</list>
 		<heading>
 			<size>2</size>Bug fixes
@@ -32,9 +32,38 @@
 		</heading>
 		<list ordered="false">
 			<item>Used <code><character>'%N'</character></code> as an end of line in verbatim strings regardless of the end of line sequence in source code.</item>
-			<item>Fixed incorrect handling of negative hexadecimal integer literals.</item>
-			<item>Implemented checks for input ranges of integer constants.</item>
-			<item>Excluded nonsignificant leading zeroes from determination of allowed integer constant type.</item>
+			<item>Fixed incorrect handling of negative hexadecimal integer literals when sign before the literal was not taken into account. For example, <code><number>-0x1</number></code> could be interpreted as <code><number>1</number></code>.</item>
+			<item>Implemented checks for input ranges of integer constants and fixed issue with inability to assign minimum integer values to variables of  the corresponding integer types.
+				<table>
+					<legend>Allowed integer values</legend>
+					<row>
+						<cell>Type</cell>
+						<cell>Integer interval</cell>
+						<cell>Unsigned hexadecimal representation</cell>
+					</row>
+					<row>
+						<cell><code><class_name>INTEGER_8</class_name></code></cell>
+						<cell><code><number>-128</number> <symbol>..</symbol> <number>127</number></code></cell>
+						<cell><code><number>0x0</number> <symbol>..</symbol> <number>0xFF</number></code></cell>
+					</row>
+					<row>
+						<cell><code><class_name>INTEGER_16</class_name></code></cell>
+						<cell><code><number>-32768</number> <symbol>..</symbol> <number>32767</number></code></cell>
+						<cell><code><number>0x0</number> <symbol>..</symbol> <number>0xFFFF</number></code></cell>
+					</row>
+					<row>
+						<cell><code><class_name>INTEGER_32</class_name></code></cell>
+						<cell><code><number>-2147483648</number> <symbol>..</symbol> <number>2147483647</number></code></cell>
+						<cell><code><number>0x0</number> <symbol>..</symbol> <number>0xFFFFFFFF</number></code></cell>
+					</row>
+					<row>
+						<cell><code><class_name>INTEGER_64</class_name></code></cell>
+						<cell><code><number>-9223372036854775808</number> <symbol>..</symbol> <number>9223372036854775807</number></code></cell>
+						<cell><code><number>0x0</number> <symbol>..</symbol> <number>0xFFFFFFFFFFFFFFFF</number></code></cell>
+					</row>
+				</table>
+			</item>
+			<item>Excluded nonsignificant leading zeroes from determination of allowed integer constant type, so that <code><number>00000000000000123</number></code> is now a valid <code><class_name>INTEGER_8</class_name></code> value.</item>
 		</list>
 		<heading>
 			<size>3</size>Compiler issues
@@ -46,13 +75,14 @@
 			<size>3</size>Runtime/code generation issues
 		</heading>
 		<list ordered="false">
-			<item>Corrected C code on Windows for constants of type <code><class_name>INTEGER_64</class_name></code>.</item>
+			<item>Corrected C code on Windows for constants of type <code><class_name>INTEGER_64</class_name></code>. Before constants of this type between <code><number>-2147483648</number></code> and <code><number>-1</number></code> could be processed as positive 64-bit values.</item>
+			<item>Fixed incorrect C and IL code generation for <code><class_name>INTEGER_8</class_name></code> and <code><class_name>INTEGER_16</class_name></code> arithmetic and shift operations that might produce incorrect result when combined in two or more operations in a row. For example,<code_block><local_variable>i</local_variable> <symbol>:=</symbol> <symbol>(</symbol><local_variable>i</local_variable> <symbol>+</symbol> <local_variable>i</local_variable><symbol>)</symbol> <symbol>|&gt;&gt;</symbol> <number>1</number></code_block>assigned <code><number>-128</number></code> to <code><local_variable>i</local_variable></code> of type <code><class_name>INTEGER_8</class_name></code> if the initial value of <code><local_variable>i</local_variable></code> was <code><number>-128</number></code>. Now this instruction assigns <code><number>0</number></code>.</item>
 		</list>
 		<heading>
 			<size>3</size>.NET issues
 		</heading>
 		<list ordered="false">
-			<item>Corrected processing of literal floating point fields from external assemblies to obtain proper values (e.g., <code><cluster_name>System</cluster_name><symbol>.</symbol><class_name>Math</class_name><symbol>.</symbol><feature_name>PI</feature_name></code>).</item>
+			<item>Corrected processing of literal floating point fields from external assemblies (such as <code><cluster_name>System</cluster_name><symbol>.</symbol><class_name>Math</class_name><symbol>.</symbol><feature_name>PI</feature_name></code>) to obtain proper values.</item>
 		</list>
 		<heading>
 			<size>3</size>Store/Retrieve issues

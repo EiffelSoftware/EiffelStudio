@@ -115,7 +115,12 @@ feature -- Comparison
 	infix "<" (other: like Current): BOOLEAN is
 			-- Is current object less than `other'?
 		do
-			Result := arguments.count < other.arguments.count
+			if arguments.count = other.arguments.count then
+				Result := not internal_method.is_public
+			else
+				Result := arguments.count < other.arguments.count
+			end
+			
 		end
 		
 feature {METHOD_SOLVER, OVERLOAD_SOLVER} -- Implementation

@@ -9,7 +9,7 @@ deferred class EWB_FEATURE
 
 inherit
 
-	EWB_CLASS
+	EWB_FILTER_CLASS
 		rename
 			make as class_make,
 			execute as class_execute
@@ -17,7 +17,7 @@ inherit
 			loop_action, process_compiled_class, 
 			want_compiled_class
 		end
-	EWB_CLASS
+	EWB_FILTER_CLASS
 		rename
 			make as class_make
 		redefine
@@ -62,22 +62,18 @@ feature {NONE} -- Implementation property
 			-- Associated feature command to be executed
 			-- after successfully retrieving the feature_i
 		deferred
-		ensure
-			non_void_result: Result /= Void
 		end;
 
 feature {NONE} -- Implementation
 
 	loop_action is
 		do
-			if command_line_io.more_arguments then
-				command_line_io.get_class_name;
-				class_name := command_line_io.last_input;
-				if command_line_io.more_arguments then
-					command_line_io.get_feature_name;
-					feature_name := command_line_io.last_input
-				end;
-			end;
+			command_line_io.get_class_name;
+			class_name := command_line_io.last_input;
+			command_line_io.get_feature_name;
+			feature_name := command_line_io.last_input;
+			command_line_io.get_filter_name;
+			filter_name := command_line_io.last_input;
 			check_arguments_and_execute
 		end;
 
@@ -124,13 +120,16 @@ feature {NONE} -- Implementation
 			valid_e_class: e_class /= Void
 		local
 			cmd: like associated_cmd;
-			st: STRUCTURED_TEXT
+			st: STRUCTURED_TEXT;
+			filter: TEXT_FILTER
 		do
 			!! st.make;
 			cmd := clone (associated_cmd);
 			cmd.set (e_feature, e_class, st);
 			cmd.execute;
-			output_window.put_string (st.image);
+			!! filter.make (filter_name);
+			filter.process_text (st);
+			output_window.put_string (filter.image);
 			output_window.new_line
 		end
 

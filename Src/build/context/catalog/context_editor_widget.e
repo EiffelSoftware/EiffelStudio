@@ -83,7 +83,7 @@ feature -- Creation
 			focus_area_form.attach_right (formats_rc, 0)
 			focus_area_form.attach_left (context_hole, 0)
 			focus_area_form.attach_left_widget (context_hole, context_editor_label, 5)
-			focus_area_form.attach_left_widget (context_editor_label, formats_rc, 5)
+			focus_area_form.attach_left_widget (context_editor_label, formats_rc, 10)
 			focus_area_form.attach_bottom (context_hole, 0)
 			focus_area_form.attach_bottom (context_editor_label, 0)
 			focus_area_form.attach_bottom (formats_rc, 0)

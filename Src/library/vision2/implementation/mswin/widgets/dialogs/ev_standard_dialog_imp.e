@@ -51,6 +51,7 @@ feature -- Status setting
 		do
 			win ?= parent_imp
 			activate (win)
+			dispatch_events
 		end
 
 feature -- Element change
@@ -85,6 +86,10 @@ feature {NONE} -- Deferred features
 		end
 
 	selected: BOOLEAN is
+		deferred
+		end
+
+	dispatch_events is
 		deferred
 		end
 

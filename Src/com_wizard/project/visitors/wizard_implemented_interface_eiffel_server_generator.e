@@ -29,7 +29,7 @@ feature -- Basic operations
 			create a_visible.make
 			an_interface.set_impl_names (False)
 			a_visible.set_name (an_interface.eiffel_class_name)
-			system_descriptor.add_visible_class_component (a_visible)
+			system_descriptor.add_visible_class_server (a_visible)
 
 			create eiffel_writer.make
 

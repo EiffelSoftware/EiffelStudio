@@ -96,7 +96,7 @@ feature -- Access
 		local
 			string_data: STRING
 		do
-			if boolean then
+			if content then
 				string_data := True_string
 			else
 				string_data := False_string

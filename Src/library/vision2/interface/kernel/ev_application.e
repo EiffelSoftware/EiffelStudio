@@ -286,7 +286,7 @@ feature {NONE} -- Contract support
 			Result := True
 		end
 
-feature {EV_ANY_I, EV_ABSTRACT_PICK_AND_DROPABLE} -- Implementation
+feature {EV_ANY_I, EV_ABSTRACT_PICK_AND_DROPABLE, EV_SHARED_TRANSPORT_I} -- Implementation
 	
 	implementation: EV_APPLICATION_I
 			-- Responsible for interaction with native graphics toolkit.

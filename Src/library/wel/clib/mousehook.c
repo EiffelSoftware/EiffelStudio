@@ -9,6 +9,10 @@
 #include "wel_mousehook.h"
 #include <stdio.h>
 
+extern int debug_mode;			/* Status of debugger */
+static int saved_debug_mode;	/* Saved status of debugger when enabling
+								   heavy_capture */
+
 /*---------------------------------------------------------------------------*/
 /* FUNC: cwel_get_hook_window                                                */
 /*---------------------------------------------------------------------------*/
@@ -53,6 +57,10 @@ EIF_BOOLEAN cwel_hook_mouse(HWND hWnd)
 	FARPROC hook_mouse_func;
 	BOOL bRes;
 	
+		/* Disable debugger otherwise everything is blocked */
+	saved_debug_mode = debug_mode;
+	debug_mode = 0;
+	
 	hLibrary = LoadLibrary("wel_hook.dll");
 	if (hLibrary == NULL)
 		{
@@ -84,6 +92,9 @@ EIF_BOOLEAN cwel_unhook_mouse()
 	FARPROC unhook_mouse_func;
 	EIF_BOOLEAN bRes;
 	
+		/* Restore status of debugger */
+	debug_mode = saved_debug_mode;
+
 	// Get the module of the library WITHOUT loading it.
 	hLibrary = GetModuleHandle("wel_hook.dll");
 

@@ -65,7 +65,7 @@ feature {NONE} -- Initialization
 			-- create button box to hold label and pixmap.
 		do
 			{EV_PRIMITIVE_IMP} Precursor
-			C.gtk_button_set_relief (c_object, C.gtk_relief_half_enum)
+			C.gtk_button_set_relief (visual_widget, C.gtk_relief_half_enum)
 			pixmapable_imp_initialize
 			textable_imp_initialize
 			initialize_button_box

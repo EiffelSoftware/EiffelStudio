@@ -102,6 +102,14 @@ feature -- Access
 	Maximum_bit_constant: INTEGER is 0x7FFF
 			-- Maximum value of Constant in Bit_type declaration
 
+	Maximum_string_length: INTEGER is 0x7FFF
+			-- Maximum length of tokens that require a string representation
+			-- (such as Identifier, Manifest_string, Free_operator)
+			-- The limit is imposed by
+			--   byte-code format (string length is encoded as a short integer with maximum 0x7FFF)
+			--   C compiler (e.g., CL does not support strings longer than 0xFFFF bytes)
+			--   CLI specification (e.g., identifiers cannot be longer 0x1FFFFFFF bytes)
+
 feature -- Osolete
 
 	error_code: INTEGER is 0
@@ -134,7 +142,7 @@ feature -- Settings
 			has_old_verbatim_strings_warning_set: has_old_verbatim_strings_warning = b
 		end
 	
-feature -- Error handling
+feature {NONE} -- Error handling
 
 	fatal_error (a_message: STRING) is
 			-- A fatal error occurred.
@@ -239,6 +247,22 @@ feature -- Error handling
 			else
 				last_token := TE_VERBATIM_STRING
 			end
+		end
+
+	report_too_long_string is
+			-- Report that current token has too long string representation.
+		require
+			valid_token: last_token = TE_STR_FREE or last_token = TE_ID or last_token = TE_STRING or last_token = TE_VERBATIM_STRING
+			token_buffer_not_void: token_buffer /= Void
+			too_long_token: token_buffer.count > maximum_string_length
+		do
+			Error_handler.insert_error (
+				create {SYNTAX_ERROR}.make (current_position.start_position,
+					current_position.end_position, filename, 0,
+					"Identifier, manifest string or free operator is " + token_buffer.count.out +
+					" characters long that exceeds limit of " + maximum_string_length.out + " characters.",
+					False))
+			Error_handler.raise_error
 		end
 
 	report_unknown_token_error (a_token: CHARACTER) is

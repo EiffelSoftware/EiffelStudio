@@ -1,7 +1,7 @@
 indexing
 
 	description:
-		"A Boolean resource with a toggle button."
+		"A Boolean resource with a check button."
 	date: "$Date$"
 	revision: "$Revision$"
 
@@ -70,13 +70,15 @@ feature -- Basic Operations
 			end
 		end
 
-	modified_resource: CELL2 [EB_RESOURCE, EB_RESOURCE] is
+feature -- Access
+
+	modified_resource: EB_MODIFIED_RESOURCE is
 			-- Modified resource
 		local
 			new_res: like resource
 		do
-			!! new_res.make_with_values (resource.name, boolean_toggle.state)
-			!! Result.make (resource, new_res)
+			create new_res.make_with_values (resource.name, boolean_toggle.state)
+			create Result.make (resource, new_res)
 		end
 
 feature {NONE} -- Implementation

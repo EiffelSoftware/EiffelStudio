@@ -16,9 +16,6 @@ inherit
 	PRIMITIVE_I;
 
 	FONTABLE_I
-
-
-
 	
 feature 
 
@@ -34,8 +31,13 @@ feature
 		deferred
 		end; -- forbid_recom
 
+	set_right_alignment is
+		-- Set text alignment of current label to right.
+		deferred
+		end;
+
 	set_center_alignment is
-			-- Set text alignment of current label to center
+			-- Set text alignment of current label to center.
 		deferred
 		end; -- set_center_alignment
 

@@ -20,13 +20,18 @@ creation
 
 feature {NONE} -- Implementation
 
-	make (a_system_name: STRING; a_project_directory: STRING) is
+	make (a_system_name, a_root_class_name, a_root_cluster_name, a_root_feature_name: STRING; a_project_directory: STRING) is
 			-- Set up the blank ace builder to work with a system named
 			-- `a_system_name' and a project located in `a_project_directory'.
+			-- `a_root_class_name', `a_root_cluster_name' and `a_root_feature_name' are the root attribute names.
 		local
 			system_name_lower: STRING
+			cl: STRING
 		do
 			system_name := a_system_name
+			root_class_name := a_root_class_name
+			root_cluster_name := a_root_cluster_name
+			root_feature_name := a_root_feature_name
 			project_directory := a_project_directory
 
 				-- Create the pathname of the ace file
@@ -38,7 +43,9 @@ feature {NONE} -- Implementation
 
 				-- Create the pathname of the root class.
 			create root_class_filename.make_from_string (project_directory)
-			root_class_filename.set_file_name ("root_class")
+			cl := clone (a_root_class_name)
+			cl.to_lower
+			root_class_filename.set_file_name (cl)
 			root_class_filename.add_extension ("e")
 		end
 
@@ -62,7 +69,7 @@ feature -- Basic operations.
 			process_ace_file_content (ace_file_content)
 			save_ace_file_content (ace_file_content)
 
-				-- Create the ace file
+				-- Create the root class file
 			create_root_class
 		end
 
@@ -78,7 +85,7 @@ feature {NONE} -- Implementation
 			default_options: STRING
 		do
 			contents.replace_substring_all ("$system_name", system_name)
-			contents.replace_substring_all ("$root_class_line", "ROOT_CLASS: %"make%"")
+			contents.replace_substring_all ("$root_class_line", root_class_name + ": %"" + root_feature_name + "%"")
 
 				-- Generate Default options.
 			create default_options.make (0)
@@ -98,7 +105,7 @@ feature {NONE} -- Implementation
 			contents.replace_substring_all ("$precompile", "")
 
 				-- Root cluster
-			contents.replace_substring_all ("$root_cluster_line", "%N%Troot_cluster: %""+project_directory+"%"")
+			contents.replace_substring_all ("$root_cluster_line", "%N%T" + root_cluster_name + ": %"" + project_directory + "%"")
 		end
 
 	save_ace_file_content (contents: STRING) is
@@ -182,19 +189,19 @@ feature {NONE} -- Implementation
 					%%Tnote%T%T: %"Initial version automatically generated%"%N%
 					%%N%
 					%class%N%
-					%%TROOT_CLASS%N%
+					%%T" + root_class_name + "%N%
 					%%N%
 					%creation%N%
-					%%Tmake%N%
+					%%T" + root_feature_name + "%N%
 					%%N%
 					%feature -- Initialization%N%
 					%%N%
-					%%Tmake is%N%
+					%%T" + root_feature_name + " is%N%
 					%%T%T%T-- Creation procedure.%N%
 					%%T%Tdo%N%
 					%%T%T%T--| Add your code here%N%
 					%%T%Tend%N%
-					%%Nend -- class ROOT_CLASS%
+					%%Nend -- class " + root_class_name + "%
 					%%N")
 				new_class.close
 			end
@@ -207,6 +214,15 @@ feature {NONE} -- Implementation
 feature {NONE} -- Private attributes
 
 	system_name: STRING
+			-- Name of the system of the project to build.
+
+	root_class_name: STRING
+			-- Name of the system of the project to build.
+
+	root_cluster_name: STRING
+			-- Name of the system of the project to build.
+
+	root_feature_name: STRING
 			-- Name of the system of the project to build.
 
 	project_directory: STRING

@@ -1172,6 +1172,34 @@ end
 			end
 		end
 
+	process_conformance_table_for_type (set_or_reset_action: PROCEDURE [ANY, TUPLE [CLASS_TYPE]]) is
+			-- Build the conformance table
+		require
+			set_or_reset_action_not_void: set_or_reset_action /= Void
+			class_types_not_void: class_types /= Void
+		local
+			l_class_type: CLASS_TYPE
+			l_types: ARRAY [CLASS_TYPE]
+			i, nb: INTEGER
+			l_tuple: TUPLE [CLASS_TYPE]
+		do
+			from
+				l_types := class_types
+				i := l_types.lower
+				nb := l_types.upper
+				create l_tuple
+			until
+				i > nb
+			loop
+				l_class_type := l_types.item (i)
+				if l_class_type /= Void then
+					l_tuple.put (l_class_type, 1)
+					set_or_reset_action.call (l_tuple)
+				end
+				i := i + 1
+			end
+		end
+
 	process_skeleton is
 			-- Type skeleton processing: for a class marked `changed2', the
 			-- feature table has changed so the skeleton of its class
@@ -1918,6 +1946,11 @@ feature -- Final mode generation
 		
 					-- FIXME
 					--process_dynamic_types
+					
+						-- Build conformance table for CLASS_TYPE instances. This is
+						-- needed for proper processing of computation of `is_polymorphic'
+						-- on polymorphic table.
+					process_conformance_table_for_type (agent {CLASS_TYPE}.build_conformance_table)
 		
 						-- Generation of C files associated to the classes of
 						-- the system.
@@ -1931,6 +1964,10 @@ feature -- Final mode generation
 					Eiffel_table.wipe_out
 					Tmp_poly_server.clear
 					Tmp_opt_byte_server.clear
+
+						-- Clean conformance table for CLASS_TYPE instances. We don't need
+						-- to store them on disk as they are recomputed at each finalization.
+					process_conformance_table_for_type (agent {CLASS_TYPE}.reset_conformance_table)
 		
 					remover := Void
 		
@@ -1966,6 +2003,10 @@ feature -- Final mode generation
 			exception_stack_managed := old_exception_stack_managed
 			inlining_on := old_inlining_on
 			array_optimization_on := old_array_optimization_on
+
+				-- Clean conformance table for CLASS_TYPE instances. We don't need
+				-- to store them on disk as they are recomputed at each finalization.
+			process_conformance_table_for_type (agent {CLASS_TYPE}.reset_conformance_table)
 
 			if rescue_status.is_error_exception then
 				retried := True

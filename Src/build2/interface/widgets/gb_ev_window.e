@@ -26,11 +26,6 @@ inherit
 			default_create
 		end
 		
-	CDATA_HANDLER
-		undefine
-			default_create
-		end
-		
 	DEFAULT_OBJECT_STATE_CHECKER
 		undefine
 			default_create
@@ -117,7 +112,7 @@ feature {GB_XML_STORE} -- Output
 				add_integer_element (element, Maximum_height_string, first.maximum_height)
 			end
 			if (window.title /= first.title and not objects.first.title.is_empty) or uses_constant (Title_string) then
-				add_string_element (element, Title_string, enclose_in_cdata (first.title))
+				add_string_element (element, Title_string, first.title)
 			end
 		end
 		
@@ -146,7 +141,7 @@ feature {GB_XML_STORE} -- Output
 			end
 			
 			if attribute_set (title_string) then
-				for_first_object (agent {EV_WINDOW}.set_title (strip_cdata (retrieve_and_set_string_value (title_string))))
+				for_first_object (agent {EV_WINDOW}.set_title (retrieve_and_set_string_value (title_string)))
 			end
 		end
 		

@@ -50,9 +50,9 @@ EOBJ = wmath.obj wmalloc.obj wgarcol.obj wlocal.obj bexcept.obj wstore.obj \
 
 all:: size.h
 
-all:: runtime.lib
+all:: finalized.lib
 
-runtime.lib: $(OBJECTS)
+finalized.lib: $(OBJECTS)
 	$(RM) $@
 	$link_line
 
@@ -405,7 +405,7 @@ wdle.obj : wdle.c
 woption.obj : woption.c
 	$(CC)  $(JCFLAGS) -DWORKBENCH $*.c
 
-final: runtime.lib
+final: finalized.lib
 work: wkbench.lib
 
 bmain.c : main.c

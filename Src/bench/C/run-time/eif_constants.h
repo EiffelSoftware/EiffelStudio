@@ -30,12 +30,7 @@ extern "C" {
 	/*------------*/
 	/*  except.h  */
 	/*------------*/
-#ifndef WORKBENCH
-#define EN_NEX		25			/* Number of internal exceptions */
-#else
 #define EN_NEX		26			/* Number of internal exceptions */
-#endif
-
 
 	/*------------*/
 	/*  garcol.h  */

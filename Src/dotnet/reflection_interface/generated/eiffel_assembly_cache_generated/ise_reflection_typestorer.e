@@ -1,5 +1,5 @@
 indexing
-	Generator: "Eiffel Emitter beta 2"
+	Generator: "Eiffel Emitter 2.3b"
 	external_name: "ISE.Reflection.TypeStorer"
 
 external class
@@ -19,6 +19,13 @@ feature {NONE} -- Initialization
 		end
 
 feature -- Access
+
+	frozen LastError: ISE_REFLECTION_ERRORINFO is
+		external
+			"IL field signature :ISE.Reflection.ErrorInfo use ISE.Reflection.TypeStorer"
+		alias
+			"LastError"
+		end
 
 	frozen AssemblyFolderName: STRING is
 		external
@@ -55,20 +62,20 @@ feature -- Access
 			"Parents"
 		end
 
+	frozen ErrorMessages: ISE_REFLECTION_TYPESTORERERRORMESSAGES is
+		external
+			"IL field signature :ISE.Reflection.TypeStorerErrorMessages use ISE.Reflection.TypeStorer"
+		alias
+			"ErrorMessages"
+		end
+
 feature -- Basic Operations
 
-	Make (a_folder_name: STRING) is
+	MakeTypeStorer (a_folder_name: STRING) is
 		external
 			"IL signature (System.String): System.Void use ISE.Reflection.TypeStorer"
 		alias
-			"Make"
-		end
-
-	commit is
-		external
-			"IL signature (): System.Void use ISE.Reflection.TypeStorer"
-		alias
-			"commit"
+			"MakeTypeStorer"
 		end
 
 	exists (a_filename: STRING): BOOLEAN is
@@ -85,11 +92,11 @@ feature -- Basic Operations
 			"GenerateXmlElementFromList"
 		end
 
-	GenerateXmlElementsFromAssertions (assertions: SYSTEM_COLLECTIONS_ARRAYLIST; assertion_type: STRING) is
+	GenerateXmlElementsFromFeatureArguments (arguments: SYSTEM_COLLECTIONS_ARRAYLIST) is
 		external
-			"IL signature (System.Collections.ArrayList, System.String): System.Void use ISE.Reflection.TypeStorer"
+			"IL signature (System.Collections.ArrayList): System.Void use ISE.Reflection.TypeStorer"
 		alias
-			"GenerateXmlElementsFromAssertions"
+			"GenerateXmlElementsFromFeatureArguments"
 		end
 
 	GenerateXmlClassFooter (invariants: SYSTEM_COLLECTIONS_ARRAYLIST) is
@@ -99,32 +106,39 @@ feature -- Basic Operations
 			"GenerateXmlClassFooter"
 		end
 
-	GenerateXmlInheritElement is
-		external
-			"IL signature (): System.Void use ISE.Reflection.TypeStorer"
-		alias
-			"GenerateXmlInheritElement"
-		end
-
-	GenerateXmlFeaturesElement (features: SYSTEM_COLLECTIONS_ARRAYLIST) is
-		external
-			"IL signature (System.Collections.ArrayList): System.Void use ISE.Reflection.TypeStorer"
-		alias
-			"GenerateXmlFeaturesElement"
-		end
-
-	AddType (an_eiffel_class: ISE_REFLECTION_EIFFELCLASS) is
-		external
-			"IL signature (ISE.Reflection.EiffelClass): System.Void use ISE.Reflection.TypeStorer"
-		alias
-			"AddType"
-		end
-
 	StringFromList (a_list: SYSTEM_COLLECTIONS_ARRAYLIST): STRING is
 		external
 			"IL signature (System.Collections.ArrayList): System.String use ISE.Reflection.TypeStorer"
 		alias
 			"StringFromList"
+		end
+
+	Support: ISE_REFLECTION_CODEGENERATIONSUPPORT is
+		external
+			"IL signature (): ISE.Reflection.CodeGenerationSupport use ISE.Reflection.TypeStorer"
+		alias
+			"Support"
+		end
+
+	GenerateXmlElementsFromAssertions (assertions: SYSTEM_COLLECTIONS_ARRAYLIST; assertion_type: STRING) is
+		external
+			"IL signature (System.Collections.ArrayList, System.String): System.Void use ISE.Reflection.TypeStorer"
+		alias
+			"GenerateXmlElementsFromAssertions"
+		end
+
+	AddType (an_eiffel_class: ISE_REFLECTION_EIFFELCLASS; overwrite: BOOLEAN) is
+		external
+			"IL signature (ISE.Reflection.EiffelClass, System.Boolean): System.Void use ISE.Reflection.TypeStorer"
+		alias
+			"AddType"
+		end
+
+	GenerateXmlInheritElement is
+		external
+			"IL signature (): System.Void use ISE.Reflection.TypeStorer"
+		alias
+			"GenerateXmlInheritElement"
 		end
 
 	GenerateXmlAliasElement is
@@ -148,11 +162,18 @@ feature -- Basic Operations
 			"GenerateXmlClassHeader"
 		end
 
-	GenerateXmlElementsFromFeatureArguments (arguments: SYSTEM_COLLECTIONS_ARRAYLIST) is
+	commit is
+		external
+			"IL signature (): System.Void use ISE.Reflection.TypeStorer"
+		alias
+			"commit"
+		end
+
+	GenerateXmlFeaturesElement (features: SYSTEM_COLLECTIONS_ARRAYLIST) is
 		external
 			"IL signature (System.Collections.ArrayList): System.Void use ISE.Reflection.TypeStorer"
 		alias
-			"GenerateXmlElementsFromFeatureArguments"
+			"GenerateXmlFeaturesElement"
 		end
 
 end -- class ISE_REFLECTION_TYPESTORER

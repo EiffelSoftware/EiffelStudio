@@ -1,5 +1,5 @@
 indexing
-	Generator: "Eiffel Emitter beta 2"
+	Generator: "Eiffel Emitter 2.3b"
 	external_name: "ISE.Reflection.Generator"
 
 external class
@@ -17,30 +17,30 @@ feature {NONE} -- Initialization
 
 feature -- Access
 
-	frozen eiffelgeneratorfromxml: ISE_REFLECTION_EIFFELCODEGENERATORFROMXML is
-		external
-			"IL field signature :ISE.Reflection.EiffelCodeGeneratorFromXml use ISE.Reflection.Generator"
-		alias
-			"EiffelGeneratorFromXml"
-		end
-
-	frozen eiffelgenerator: ISE_REFLECTION_EIFFELCODEGENERATOR is
+	frozen EiffelGenerator: ISE_REFLECTION_EIFFELCODEGENERATOR is
 		external
 			"IL field signature :ISE.Reflection.EiffelCodeGenerator use ISE.Reflection.Generator"
 		alias
 			"EiffelGenerator"
 		end
 
-	frozen xmlgenerator: ISE_REFLECTION_XMLCODEGENERATOR is
+	frozen XmlGenerator: ISE_REFLECTION_XMLCODEGENERATOR is
 		external
 			"IL field signature :ISE.Reflection.XmlCodeGenerator use ISE.Reflection.Generator"
 		alias
 			"XmlGenerator"
 		end
 
+	frozen EiffelGeneratorFromXml: ISE_REFLECTION_EIFFELCODEGENERATORFROMXML is
+		external
+			"IL field signature :ISE.Reflection.EiffelCodeGeneratorFromXml use ISE.Reflection.Generator"
+		alias
+			"EiffelGeneratorFromXml"
+		end
+
 feature -- Basic Operations
 
-	make is
+	Make is
 		external
 			"IL signature (): System.Void use ISE.Reflection.Generator"
 		alias

@@ -47,16 +47,16 @@ feature -- Access
 			external_name: "EiffelName"
 		end
 	
-	dot_net_full_name: STRING
-			-- .NET full name (i.e. with namespace)
+	full_external_name: STRING
+			-- Full external name (i.e. with namespace)
 		indexing
-			external_name: "DotNetFullName"
+			external_name: "FullExternalName"
 		end
 		
-	dot_net_simple_name: STRING 
+	external_name: STRING 
 			-- .NET simple name
 		indexing
-			external_name: "DotNetSimpleName"
+			external_name: "ExternalName"
 		end
 	
 	assembly_descriptor: ASSEMBLY_DESCRIPTOR
@@ -312,17 +312,17 @@ feature -- Status Setting
 			eiffel_name_set: eiffel_name.Equals_String (a_name)
 		end
 	
-	set_dot_net_simple_name (a_name: like dot_net_simple_name) is
-			-- Set `eiffel_name' with `a_name'.
+	set_external_name (a_name: like external_name) is
+			-- Set `external_name' with `a_name'.
 		indexing
-			external_name: "SetDotNetSimpleName"
+			external_name: "SetExternalName"
 		require
 			non_void_name: a_name /= Void
 			not_empty_name: a_name.Length > 0
 		do
-			dot_net_simple_name := a_name
+			external_name := a_name
 		ensure
-			dot_net_simple_name_set: dot_net_simple_name.Equals_String (a_name)
+			external_name_set: external_name.Equals_String (a_name)
 		end	
 	
 	set_namespace (a_name: like namespace) is
@@ -338,11 +338,11 @@ feature -- Status Setting
 			namespace_set: namespace.Equals_String (a_name)
 		end	
 
-	set_dot_net_full_name (a_full_name: like dot_net_full_name) is
-			-- Set `dot_net_full_name' from `a_full_name'.
-			-- Set `dot_net_simple_name' and `namespace' from `a_full_name'.
+	set_external_names (a_full_name: like full_external_name) is
+			-- Set `full_external_name' from `a_full_name'.
+			-- Set `external_name' and `namespace' from `a_full_name'.
 		indexing
-			external_name: "SetDotNetFullName"
+			external_name: "SetExternalNames"
 		require
 			non_void_full_name: a_full_name /= Void
 			not_empty_full_name: a_full_name.Length > 0
@@ -350,20 +350,20 @@ feature -- Status Setting
 			dot_index: INTEGER
 			full_name: STRING
 		do
-			dot_net_full_name := a_full_name
+			full_external_name := a_full_name
 			full_name ?= a_full_name.Clone
 			if full_name /= Void then
 				full_name := full_name.Trim				
 				dot_index := full_name.LastIndexOf_Char ('.')
 				if dot_index > -1 then
 					set_namespace (full_name.Substring_Int32_Int32 (0, dot_index))
-					set_dot_net_simple_name (full_name.Substring (dot_index + 1))
+					set_external_name (full_name.Substring (dot_index + 1))
 				else
-					set_dot_net_simple_name (full_name)
+					set_external_name (full_name)
 				end
 			end
 		ensure
-			dot_net_full_name_set: dot_net_full_name.Equals_String (a_full_name)
+			full_external_name_set: full_external_name.Equals_String (a_full_name)
 		end
 
 	set_assembly_descriptor (a_descriptor: like assembly_descriptor) is
@@ -378,17 +378,17 @@ feature -- Status Setting
 			assembly_descriptor_set: assembly_descriptor = a_descriptor
 		end
 		
-	set_full_name (a_full_name: like dot_net_full_name) is
-			-- Set `dot_net_full_name' from `a_full_name'.
+	set_full_external_name (a_full_name: like full_external_name) is
+			-- Set `full_external_name' from `a_full_name'.
 		indexing
-			external_name: "SetFullName"
+			external_name: "SetFullExternalName"
 		require
 			non_void_full_name: a_full_name /= Void
 			not_empty_full_name: a_full_name.Length > 0
 		do
-			dot_net_full_name := a_full_name
+			full_external_name := a_full_name
 		ensure
-			dot_net_full_name_set: dot_net_full_name.Equals_String (a_full_name)
+			full_external_name_set: full_external_name.Equals_String (a_full_name)
 		end
 		
 feature -- Basic Operations
@@ -609,21 +609,29 @@ feature {NONE} -- Implementation
 		local
 			i: INTEGER
 			eiffel_feature: EIFFEL_FEATURE
+			retried: BOOLEAN
 		do
-			from
-				attribute := Void
-			until
-				i = a_list.Count or Result
-			loop
-				eiffel_feature ?= a_list.Item (i)
-				if eiffel_feature /= Void then
-					if info.Name.Equals_String (eiffel_feature.dot_net_name) then
-						attribute := eiffel_feature
-						Result := True
+			if not retried then
+				from
+					attribute := Void
+				until
+					i = a_list.Count or Result
+				loop
+					eiffel_feature ?= a_list.Item (i)
+					if eiffel_feature /= Void then
+						if info.Name.Equals_String (eiffel_feature.external_name) then
+							attribute := eiffel_feature
+							Result := True
+						end
 					end
+					i := i + 1
 				end
-				i := i + 1
+			else
+				Result := False
 			end
+		rescue
+			retried := True
+			retry
 		end
 
 	routine: EIFFEL_FEATURE
@@ -644,24 +652,31 @@ feature {NONE} -- Implementation
 			i: INTEGER
 			eiffel_feature: EIFFEL_FEATURE
 			constructor_info: SYSTEM_REFLECTION_CONSTRUCTORINFO
-			
+			retried: BOOLEAN
 		do
-			constructor_info ?= info
-			from
-				routine := Void
-			until
-				i = a_list.Count or Result
-			loop
-				eiffel_feature ?= a_list.Item (i)
-				if eiffel_feature /= Void then
-					if info.Name.Equals_String (eiffel_feature.dot_net_name) then
-						Result := intern_has_routine (eiffel_feature, info)
-					elseif constructor_info /= Void then	
-						Result := intern_has_routine (eiffel_feature, constructor_info)
+			if not retried then
+				constructor_info ?= info
+				from
+					routine := Void
+				until
+					i = a_list.Count or Result
+				loop
+					eiffel_feature ?= a_list.Item (i)
+					if eiffel_feature /= Void then
+						if info.Name.Equals_String (eiffel_feature.external_name) then
+							Result := intern_has_routine (eiffel_feature, info)
+						elseif constructor_info /= Void then	
+							Result := intern_has_routine (eiffel_feature, constructor_info)
+						end
 					end
+					i := i + 1
 				end
-				i := i + 1
+			else
+				Result := False
 			end
+		rescue
+			retried := True
+			retry
 		end
 		
 	intern_has_routine (eiffel_feature: EIFFEL_FEATURE; info: SYSTEM_REFLECTION_METHODBASE): BOOLEAN is
@@ -698,34 +713,38 @@ feature {NONE} -- Implementation
 			non_void_arguments: arguments /= Void		
 		local
 			j: INTEGER	
-			an_argument: ARRAY [STRING]
+			an_argument: NAMED_SIGNATURE_TYPE
+			retried: BOOLEAN
 		do
-			if info.GetParameters /= Void then
-				if info.GetParameters.count /= arguments.count then
-					Result := False
-				else
-					from
-						Result := True
-						j := 0
-					until
-						j = arguments.Count or not Result
-					loop
-						an_argument ?= arguments.Item (j)
-						if an_argument /= Void then
-							if an_argument.count = 4 then
-								Result := info.GetParameters.item (j).ParameterType.FullName.Equals_String (an_argument.item (3))
-							else	
+			if not retried then
+				if info.GetParameters /= Void then
+					if info.GetParameters.count /= arguments.count then
+						Result := False
+					else
+						from
+							Result := True
+							j := 0
+						until
+							j = arguments.Count or not Result
+						loop
+							an_argument ?= arguments.Item (j)
+							if an_argument /= Void then
+								Result := info.GetParameters.item (j).ParameterType.FullName.Equals_String (an_argument.type_full_external_name)
+							else
 								Result := False
 							end
-						else
-							Result := False
+							j := j + 1
 						end
-						j := j + 1
 					end
+				else
+					Result := False
 				end
 			else
 				Result := False
 			end
+		rescue
+			retried := True
+			retry
 		end
 		
 invariant

@@ -1,10 +1,9 @@
 indexing
-	Generator: "Eiffel Emitter beta 2"
+	Generator: "Eiffel Emitter 2.3b"
+	external_name: "Globals"
 
 external class
 	GLOBALS
-alias
-	"Globals"
 
 create
 	make

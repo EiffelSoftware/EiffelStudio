@@ -1,13 +1,13 @@
 indexing
 	description: "XML elements names for assembly and type decription xml files"
 	external_name: "ISE.Reflection.XmlElements"
+
 class
 	XML_ELEMENTS
+
 inherit
 	DICTIONARY
-		export
-			{NONE} all
-		end
+
 		
 feature -- Access
 		
@@ -93,9 +93,9 @@ feature -- Access
 			external_name: "DeferredElement"
 		end
 		
-	Class_name_element: STRING is "class_name"
+	Class_eiffel_name_element: STRING is "class_eiffel_name"
 		indexing
-			external_name: "ClassNameElement"
+			external_name: "ClassEiffelNameElement"
 		end
 		
 	Alias_element: STRING is "alias"
@@ -253,14 +253,14 @@ feature -- Access
 			external_name: "CreationRoutineElement"
 		end
 		
-	Eiffel_name_element: STRING is "eiffel_name"
+	Feature_eiffel_name_element: STRING is "feature_eiffel_name"
 		indexing
-			external_name: "EiffelNameElement"
+			external_name: "FeatureEiffelNameElement"
 		end
 		
-	Dot_net_name_element: STRING is "dot_net_name"
+	Feature_external_name_element: STRING is "feature_external_name"
 		indexing
-			external_name: "DotNetNameElement"
+			external_name: "FeatureExternalNameElement"
 		end
 		
 	Arguments_element: STRING is "arguments"
@@ -273,14 +273,14 @@ feature -- Access
 			external_name: "ArgumentElement"
 		end
 		
-	Eiffel_argument_name_element: STRING is "eiffel_argument_name"
+	Argument_eiffel_name_element: STRING is "argument_eiffel_name"
 		indexing
-			external_name: "EiffelArgumentNameElement"
+			external_name: "ArgumentEiffelNameElement"
 		end
 	
-	Dot_net_argument_name_element: STRING is "dot_net_argument_name"
+	Argument_external_name_element: STRING is "argument_external_name"
 		indexing
-			external_name: "DotNetArgumentNameElement"
+			external_name: "ArgumentExternalNameElement"
 		end
 		
 	Argument_type_element: STRING is "argument_type"
@@ -292,6 +292,11 @@ feature -- Access
 		indexing
 			external_name: "ArgumentTypeFullNameElement"
 		end
+	
+	Argument_type_enum_element: STRING is "argument_type_enum"
+		indexing
+			external_name: "ArgumentTypeEnumElement"
+		end
 		
 	Return_type_element: STRING is "return_type"
 		indexing
@@ -301,6 +306,11 @@ feature -- Access
 	Return_type_full_name_element: STRING is "return_type_full_name"
 		indexing
 			external_name: "ReturnTypeFullNameElement"
+		end
+	
+	Return_type_enum_element: STRING is "return_type_enum"
+		indexing
+			external_name: "ReturnTypeEnumElement"
 		end
 		
 	Comments_element: STRING is "comments"

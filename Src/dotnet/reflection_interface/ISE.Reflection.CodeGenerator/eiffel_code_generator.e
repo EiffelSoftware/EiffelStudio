@@ -6,26 +6,21 @@ class
 	EIFFEL_CODE_GENERATOR
 	
 inherit
-	CODE_GENERATOR
-		rename
-			generate_code as generate_eiffel_class
-		end
-		
 	EIFFEL_CODE_GENERATOR_DICTIONARY
 		export
 			{NONE} all
 		end
 
 create
-	make,
+	make_eiffel_code_generator,
 	make_from_info
 
 feature {NONE} -- Initialization
 
-	make is
+	make_eiffel_code_generator is
 			-- Creation routine
 		indexing
-			external_name: "Make"
+			external_name: "MakeEiffelCodeGenerator"
 		do
 		end
 		
@@ -38,8 +33,8 @@ feature {NONE} -- Initialization
 			non_void_eiffel_class: an_eiffel_class /= Void
 			non_void_eiffel_class_name: an_eiffel_class.EiffelName /= Void
 			not_empty_eiffel_class_name: an_eiffel_class.EiffelName.Length > 0
-			non_void_eiffel_class_dot_net_full_name: an_eiffel_class.DotNetFullName /= Void
-			not_empty_eiffel_class_dot_net_full_name: an_eiffel_class.DotNetFullName.Length > 0
+			non_void_eiffel_class_full_external_name: an_eiffel_class.FullExternalName /= Void
+			not_empty_eiffel_class_full_external_name: an_eiffel_class.FullExternalName.Length > 0
 			non_void_eiffel_assembly: an_eiffel_assembly /= Void
 			non_void_eiffel_assembly_name: an_eiffel_assembly.AssemblyName /= Void
 			not_empty_eiffel_assembly_name: an_eiffel_assembly.AssemblyName.Length > 0
@@ -83,16 +78,19 @@ feature -- Basic Operations
 		local
 			file_stream: SYSTEM_IO_STREAMWRITER
 			eiffel_cluster_path: STRING
-			dot_net_full_name: STRING
+			full_external_name: STRING
 			filename: STRING
 			formatter: FORMATTER
+			dir: SYSTEM_IO_DIRECTORY
+			env: SYSTEM_ENVIRONMENT
+			cluster_path: STRING
 		do
 			check
 				non_void_eiffel_class: eiffel_class /= Void
 				non_void_eiffel_class_name: eiffel_class.EiffelName /= Void
 				not_empty_eiffel_class_name: eiffel_class.EiffelName.Length > 0
-				non_void_eiffel_class_dot_net_full_name: eiffel_class.DotNetFullName /= Void
-				not_empty_eiffel_class_dot_net_full_name: eiffel_class.DotNetFullName.Length > 0
+				non_void_eiffel_class_full_external_name: eiffel_class.FullExternalName /= Void
+				not_empty_eiffel_class_full_external_name: eiffel_class.FullExternalName.Length > 0
 				non_void_eiffel_assembly: eiffel_assembly /= Void
 				non_void_eiffel_assembly_name: eiffel_assembly.AssemblyName /= Void
 				not_empty_eiffel_assembly_name: eiffel_assembly.AssemblyName.Length > 0
@@ -100,16 +98,19 @@ feature -- Basic Operations
 				non_void_emitter_version_number: eiffel_assembly.EmitterVersionNumber /= Void
 				not_empty_emitter_version_number: eiffel_assembly.EmitterVersionNumber.Length > 0
 			end
-			
+	
 			create formatter.make_formatter
 			eiffel_cluster_path := eiffel_assembly.EiffelClusterPath
-			if eiffel_cluster_path.Length > 0 then
-				if not eiffel_cluster_path.EndsWith ("\") then
-					eiffel_cluster_path := eiffel_cluster_path.Concat_String_String (eiffel_cluster_path, "\")
-				end
+			if eiffel_cluster_path.Length > 0 and then not eiffel_cluster_path.EndsWith ("\") then
+				eiffel_cluster_path := eiffel_cluster_path.Concat_String_String (eiffel_cluster_path, "\")
 			end
-			dot_net_full_name := eiffel_class.DotNetFullName
-			filename := eiffel_cluster_path.Concat_String_String_String (eiffel_cluster_path, formatter.FormatTypeName (dot_net_full_name).ToLower, Eiffel_class_extension)
+			full_external_name := eiffel_class.FullExternalName
+			if dir.Exists (eiffel_cluster_path) then
+				filename := eiffel_cluster_path.Concat_String_String_String (eiffel_cluster_path, formatter.FormatTypeName (full_external_name).ToLower, Eiffel_class_extension)
+			else
+				cluster_path := env.CurrentDirectory
+				filename := cluster_path.Concat_String_String_String_String (cluster_path, "\", formatter.FormatTypeName (full_external_name).ToLower, Eiffel_class_extension)
+			end
 			create file_stream.make_streamwriter_5 (filename, False, create {SYSTEM_TEXT_ASCIIENCODING}.make_asciiencoding)
 
 			create generated_code.make_2 ('%U', 0)
@@ -122,7 +123,7 @@ feature -- Basic Operations
 			generated_code := generated_code.Concat_String_String_String_String (generated_code, Inverted_comma, Generator_name, Space)
 			generated_code := generated_code.Concat_String_String_String_String (generated_code, eiffel_assembly.EmitterVersionNumber, Inverted_comma, New_line)	
 			generated_code := generated_code.Concat_String_String_String_String (generated_code, Tab, external_name_keyword, Colon)
-			generated_code := generated_code.Concat_String_String_String_String (generated_code, Space, Inverted_comma, formatter.FormatStrongName (eiffel_class.DotNetFullName))
+			generated_code := generated_code.Concat_String_String_String_String (generated_code, Space, Inverted_comma, formatter.FormatStrongName (eiffel_class.FullExternalName))
 			generated_code := generated_code.Concat_String_String_String_String (generated_code, Inverted_comma, New_line, New_line)
 
 				-- frozen
@@ -185,7 +186,7 @@ feature {NONE} -- Implementation
 		indexing
 			external_name: "SpecialClasses"
 		end
-		
+
 	generate_inherit_clause is
 			-- Generate inherit clause 
 		indexing
@@ -202,6 +203,7 @@ feature {NONE} -- Implementation
 			rename_clauses: SYSTEM_COLLECTIONS_ARRAYLIST
 			undefine_clauses: SYSTEM_COLLECTIONS_ARRAYLIST
 			redefine_clauses: SYSTEM_COLLECTIONS_ARRAYLIST
+			select_clauses: SYSTEM_COLLECTIONS_ARRAYLIST
 			formatted_parents: ARRAY [STRING]
 			i: INTEGER
 		do
@@ -267,9 +269,19 @@ feature {NONE} -- Implementation
 								generate_inheritance_clauses (redefine_clauses)
 							end
 						end
-					
+
+							-- select clauses
+						if inheritance_clauses.Item (3).Count > 0 then
+							generated_code := generated_code.Concat_String_String_String_String (generated_code, New_line, Tab, Tab)
+							generated_code := generated_code.Concat_String_String (generated_code, Select_keyword)						
+							select_clauses := inheritance_clauses.Item (3)
+							if select_clauses /= Void and then select_clauses.Count > 0 then
+								generate_inheritance_clauses (select_clauses)
+							end
+						end
+						
 						-- Add `end' keyword at the end of inheritance clauses
-						if inheritance_clauses.Item (0).Count > 0 or inheritance_clauses.Item (1).Count > 0 or inheritance_clauses.Item (2).Count > 0 then
+						if inheritance_clauses.Item (0).Count > 0 or inheritance_clauses.Item (1).Count > 0 or inheritance_clauses.Item (2).Count > 0 or inheritance_clauses.Item (3).Count > 0 then
 							generated_code := generated_code.Concat_String_String_String_String (generated_code, New_line, Tab, Tab)
 							generated_code := generated_code.Concat_String_String (generated_code, End_keyword)
 						end
@@ -329,7 +341,7 @@ feature {NONE} -- Implementation
 						i := i + 1
 					end
 				end				
-			elseif eiffel_class.CreationRoutines.Count = 0 and not eiffel_class.IsDeferred and eiffel_class.CreateNone then
+			elseif eiffel_class.CreationRoutines.Count = 0 and not eiffel_class.IsDeferred and not eiffel_class.IsExpanded then--and eiffel_class.CreateNone then
 				generated_code := generated_code.Concat_String_String_String_String (generated_code, Create_none, New_line, New_line)
 			end
 			
@@ -500,14 +512,13 @@ feature {NONE} -- Implementation
 			binary_operator: STRING
 			arguments: SYSTEM_COLLECTIONS_ARRAYLIST
 			i: INTEGER
-			an_argument: ARRAY [STRING]
+			an_argument: ISE_REFLECTION_NAMEDSIGNATURETYPE
 			argument_name: STRING
 			argument_type: STRING
 			comments: SYSTEM_COLLECTIONS_ARRAYLIST
 			a_comment: STRING
 			preconditions: SYSTEM_COLLECTIONS_ARRAYLIST
 			postconditions: SYSTEM_COLLECTIONS_ARRAYLIST
-			console: SYSTEM_CONSOLE
 		do
 			is_binary_operator := eiffel_class.BinaryOperatorsFeatures.Contains (a_feature)
 			is_unary_operator := eiffel_class.UnaryOperatorsFeatures.Contains (a_feature)	
@@ -540,15 +551,10 @@ feature {NONE} -- Implementation
 				until
 					i = arguments.Count 
 				loop
-					--if is_binary_operator and not a_feature.IsInfix then
-					--	i := 1
-					--end
 					an_argument ?= arguments.Item (i)
 					if an_argument /= Void then
-						if an_argument.Count = 4 then
-							argument_name := an_argument.Item (0)
-							argument_type := an_argument.Item (2)
-						end
+						argument_name := an_argument.eiffelname
+						argument_type := an_argument.typeeiffelname
 					end
 					generated_code := generated_code.Concat_String_String_String_String (generated_code, argument_name, Colon, Space)
 					generated_code := generated_code.Concat_String_String (generated_code, argument_type)
@@ -561,11 +567,11 @@ feature {NONE} -- Implementation
 			end
 		
 				-- feature return type
-			if a_feature.IsMethod and then a_feature.ReturnType /= Void then
-				generated_code := generated_code.Concat_String_String_String_String (generated_code, Colon, Space, a_feature.ReturnType)
+			if a_feature.IsMethod and then a_feature.ReturnType /= Void and then a_feature.ReturnType.TypeEiffelName /= Void then
+				generated_code := generated_code.Concat_String_String_String_String (generated_code, Colon, Space, a_feature.ReturnType.TypeEiffelName)
 			end
 			if a_feature.IsField and not a_feature.EiffelName.StartsWith (Property_set_prefix) then
-				generated_code := generated_code.Concat_String_String_String_String (generated_code, Colon, Space, a_feature.ReturnType)
+				generated_code := generated_code.Concat_String_String_String_String (generated_code, Colon, Space, a_feature.ReturnType.TypeEiffelName)
 			end
 
 				-- `is' keyword
@@ -606,7 +612,7 @@ feature {NONE} -- Implementation
 				generated_code := generated_code.Concat_String_String (generated_code, Alias_keyword)
 
 				generated_code := generated_code.Concat_String_String_String_String (generated_code, New_line, Tab, Tab)
-				generated_code := generated_code.Concat_String_String_String_String (generated_code, Tab, Inverted_comma, a_feature.DotNetName)
+				generated_code := generated_code.Concat_String_String_String_String (generated_code, Tab, Inverted_comma, a_feature.ExternalName)
 				generated_code := generated_code.Concat_String_String (generated_code, Inverted_comma)
 			end
 
@@ -690,23 +696,23 @@ feature {NONE} -- Implementation
 						-- "IL operator `signature' use `alias' "
 					generated_code := generated_code.Concat_String_String_String_String (generated_code, Inverted_comma, IL, Space)
 					generated_code := generated_code.Concat_String_String_String_String (generated_code, Operator, signature, Use)
-					generated_code := generated_code.Concat_String_String_String_String (generated_code, Space, formatter.FormatStrongName (eiffel_class.DotNetFullName), Inverted_comma)
+					generated_code := generated_code.Concat_String_String_String_String (generated_code, Space, formatter.FormatStrongName (eiffel_class.FullExternalName), Inverted_comma)
 				else
 					if a_feature.IsStatic then
 							-- "IL static `signature' use `alias' "
 						generated_code := generated_code.Concat_String_String_String_String (generated_code, Inverted_comma, IL, Space)
 						generated_code := generated_code.Concat_String_String_String_String (generated_code, Static, signature, Use)
-						generated_code := generated_code.Concat_String_String_String_String (generated_code, Space, formatter.FormatStrongName (eiffel_class.DotNetFullName), Inverted_comma)
+						generated_code := generated_code.Concat_String_String_String_String (generated_code, Space, formatter.FormatStrongName (eiffel_class.FullExternalName), Inverted_comma)
 					else
 						if a_feature.IsAbstract then
 								-- "IL deferred `signature' use `alias' "
 							generated_code := generated_code.Concat_String_String_String_String (generated_code, Inverted_comma, IL, Space)
 							generated_code := generated_code.Concat_String_String_String_String (generated_code, Deferred_keyword, signature, Use)
-							generated_code := generated_code.Concat_String_String_String_String (generated_code, Space, formatter.FormatStrongName (eiffel_class.DotNetFullName), Inverted_comma)
+							generated_code := generated_code.Concat_String_String_String_String (generated_code, Space, formatter.FormatStrongName (eiffel_class.FullExternalName), Inverted_comma)
 						else
 								-- "IL `signature' use `alias' "
 							generated_code := generated_code.Concat_String_String_String_String (generated_code, Inverted_comma, IL, signature)
-							generated_code := generated_code.Concat_String_String_String_String (generated_code, Use, Space, formatter.FormatStrongName (eiffel_class.DotNetFullName))
+							generated_code := generated_code.Concat_String_String_String_String (generated_code, Use, Space, formatter.FormatStrongName (eiffel_class.FullExternalName))
 							generated_code := generated_code.Concat_String_String (generated_code, Inverted_comma)
 						end	
 					end
@@ -717,22 +723,22 @@ feature {NONE} -- Implementation
 							-- "IL static_field signature : `type_full_name' use `alias'.
 						generated_code := generated_code.Concat_String_String_String_String (generated_code, Inverted_comma, IL, Space)
 						generated_code := generated_code.Concat_String_String_String_String (generated_code, Static_field, Space, Signature_keyword)
-						generated_code := generated_code.Concat_String_String_String_String (generated_code, Space, Colon, a_feature.ReturnTypeFullName)				
+						generated_code := generated_code.Concat_String_String_String_String (generated_code, Space, Colon, a_feature.ReturnType.TypeFullExternalName)				
 						generated_code := generated_code.Concat_String_String_String_String (generated_code, Space, Use, Space)
-						generated_code := generated_code.Concat_String_String_String (generated_code, formatter.FormatStrongName (eiffel_class.DotNetFullName), Inverted_comma)
+						generated_code := generated_code.Concat_String_String_String (generated_code, formatter.FormatStrongName (eiffel_class.FullExternalName), Inverted_comma)
 					else
 							-- "IL field signature : `type_full_name' use `alias'.
 						generated_code := generated_code.Concat_String_String_String_String (generated_code, Inverted_comma, IL, Space)
 						generated_code := generated_code.Concat_String_String_String_String (generated_code, Field, Space, Signature_keyword)
-						generated_code := generated_code.Concat_String_String_String_String (generated_code, Space, Colon, a_feature.ReturnTypeFullName)				
+						generated_code := generated_code.Concat_String_String_String_String (generated_code, Space, Colon, a_feature.ReturnType.TypeFullExternalName)				
 						generated_code := generated_code.Concat_String_String_String_String (generated_code, Space, Use, Space)
-						generated_code := generated_code.Concat_String_String_String (generated_code, formatter.FormatStrongName (eiffel_class.DotNetFullName), Inverted_comma)
+						generated_code := generated_code.Concat_String_String_String (generated_code, formatter.FormatStrongName (eiffel_class.FullExternalName), Inverted_comma)
 					end
 				else
 						-- "IL creator `signature' use `alias' "
 					generated_code := generated_code.Concat_String_String_String_String (generated_code, Inverted_comma, IL, Space)
 					generated_code := generated_code.Concat_String_String_String_String (generated_code, Creator, signature, Use)
-					generated_code := generated_code.Concat_String_String_String_String (generated_code, Space, formatter.FormatStrongName (eiffel_class.DotNetFullName), Inverted_comma)
+					generated_code := generated_code.Concat_String_String_String_String (generated_code, Space, formatter.FormatStrongName (eiffel_class.FullExternalName), Inverted_comma)
 				end
 			end		
 		end
@@ -750,14 +756,14 @@ feature {NONE} -- Implementation
 			is_binary_operator: BOOLEAN
 			arguments: SYSTEM_COLLECTIONS_ARRAYLIST
 			i: INTEGER
-			an_argument: ARRAY [STRING]
+			an_argument: ISE_REFLECTION_NAMEDSIGNATURETYPE
 			temp: STRING			
 		do
 			create Result.make_2 ('%U', 0)
 			
 			is_binary_operator := eiffel_class.BinaryOperatorsFeatures.Contains (a_feature)
 			is_unary_operator := eiffel_class.UnaryOperatorsFeatures.Contains (a_feature)
-			
+
 			if a_feature.IsMethod then
 				arguments := a_feature.Arguments
 				if not is_unary_operator or arguments.Count > 0 then
@@ -768,12 +774,12 @@ feature {NONE} -- Implementation
 					until
 						i = arguments.Count
 					loop
-						--if is_binary_operator and not a_feature.IsInfix then
-						--	i := 1
-						--end
 						an_argument ?= arguments.Item (i)
-						if an_argument /= Void and then an_argument.Count = 4 then
-							Result := Result.Concat_String_String (Result, an_argument.Item (3))
+						if an_argument /= Void then
+							if an_argument.IsEnum then
+								Result := Result.concat_string_string_string (Result, Enum_keyword, Space)
+							end
+							Result := Result.Concat_String_String (Result, an_argument.TypeFullExternalName)
 							if i < arguments.Count - 1 then
 								Result := Result.Concat_String_String_String (Result, Comma, Space)
 							end
@@ -787,8 +793,11 @@ feature {NONE} -- Implementation
 					temp := temp.Concat_String_String_String_String (temp, Space, Colon, Space)
 				end
 				
-				if a_feature.ReturnTypeFullName /= Void then
-					Result := Result.Concat_String_String_String (Result, temp, a_feature.ReturnTypeFullName)
+				if a_feature.ReturnType /= Void and then a_feature.ReturnType.IsEnum then
+					temp := temp.concat_string_string_string (Enum_keyword, Space, temp)
+				end
+				if a_feature.ReturnType /= Void and then a_feature.ReturnType.TypeFullExternalName /= Void and then a_feature.ReturnType.TypeFullExternalName.length > 0 then
+					Result := Result.Concat_String_String_String (Result, temp, a_feature.ReturnType.TypeFullExternalName)
 				end
 				Result := Result.Concat_String_String (Result, Space)
 			end
@@ -804,8 +813,11 @@ feature {NONE} -- Implementation
 						i = arguments.Count
 					loop
 						an_argument ?= arguments.Item (i)
-						if an_argument /= Void and then an_argument.Count = 4 then
-							Result := Result.Concat_String_String (Result, an_argument.Item (3))
+						if an_argument /= Void then
+							if an_argument.IsEnum then
+								Result := Result.concat_string_string_string (Result, Enum_keyword, Space)
+							end
+							Result := Result.Concat_String_String (Result, an_argument.TypeFullExternalName)
 						end
 						if i < arguments.Count - 1 then
 							Result := Result.Concat_String_String_String (Result, Comma, Space)

@@ -1,5 +1,5 @@
 indexing
-	Generator: "Eiffel Emitter beta 2"
+	Generator: "Eiffel Emitter 2.3b"
 	external_name: "ISE.Reflection.EiffelClass"
 
 external class
@@ -17,265 +17,258 @@ feature {NONE} -- Initialization
 
 feature -- Access
 
-	frozen isfrozen: BOOLEAN is
-		external
-			"IL field signature :System.Boolean use ISE.Reflection.EiffelClass"
-		alias
-			"IsFrozen"
-		end
-
-	frozen accessfeatures: SYSTEM_COLLECTIONS_ARRAYLIST is
-		external
-			"IL field signature :System.Collections.ArrayList use ISE.Reflection.EiffelClass"
-		alias
-			"AccessFeatures"
-		end
-
-	frozen namespace: STRING is
-		external
-			"IL field signature :System.String use ISE.Reflection.EiffelClass"
-		alias
-			"Namespace"
-		end
-
-	frozen invariants: SYSTEM_COLLECTIONS_ARRAYLIST is
-		external
-			"IL field signature :System.Collections.ArrayList use ISE.Reflection.EiffelClass"
-		alias
-			"Invariants"
-		end
-
-	frozen isexpanded: BOOLEAN is
+	frozen IsExpanded: BOOLEAN is
 		external
 			"IL field signature :System.Boolean use ISE.Reflection.EiffelClass"
 		alias
 			"IsExpanded"
 		end
 
-	frozen dotnetsimplename: STRING is
-		external
-			"IL field signature :System.String use ISE.Reflection.EiffelClass"
-		alias
-			"DotNetSimpleName"
-		end
-
-	frozen creationroutines: SYSTEM_COLLECTIONS_ARRAYLIST is
-		external
-			"IL field signature :System.Collections.ArrayList use ISE.Reflection.EiffelClass"
-		alias
-			"CreationRoutines"
-		end
-
-	frozen assemblydescriptor: ISE_REFLECTION_ASSEMBLYDESCRIPTOR is
-		external
-			"IL field signature :ISE.Reflection.AssemblyDescriptor use ISE.Reflection.EiffelClass"
-		alias
-			"AssemblyDescriptor"
-		end
-
-	frozen elementchangefeatures: SYSTEM_COLLECTIONS_ARRAYLIST is
-		external
-			"IL field signature :System.Collections.ArrayList use ISE.Reflection.EiffelClass"
-		alias
-			"ElementChangeFeatures"
-		end
-
-	frozen isdeferred: BOOLEAN is
-		external
-			"IL field signature :System.Boolean use ISE.Reflection.EiffelClass"
-		alias
-			"IsDeferred"
-		end
-
-	frozen initializationfeatures: SYSTEM_COLLECTIONS_ARRAYLIST is
-		external
-			"IL field signature :System.Collections.ArrayList use ISE.Reflection.EiffelClass"
-		alias
-			"InitializationFeatures"
-		end
-
-	frozen basicoperations: SYSTEM_COLLECTIONS_ARRAYLIST is
-		external
-			"IL field signature :System.Collections.ArrayList use ISE.Reflection.EiffelClass"
-		alias
-			"BasicOperations"
-		end
-
-	frozen createnone: BOOLEAN is
-		external
-			"IL field signature :System.Boolean use ISE.Reflection.EiffelClass"
-		alias
-			"CreateNone"
-		end
-
-	frozen unaryoperatorsfeatures: SYSTEM_COLLECTIONS_ARRAYLIST is
+	frozen UnaryOperatorsFeatures: SYSTEM_COLLECTIONS_ARRAYLIST is
 		external
 			"IL field signature :System.Collections.ArrayList use ISE.Reflection.EiffelClass"
 		alias
 			"UnaryOperatorsFeatures"
 		end
 
-	frozen attribute: ISE_REFLECTION_EIFFELFEATURE is
-		external
-			"IL field signature :ISE.Reflection.EiffelFeature use ISE.Reflection.EiffelClass"
-		alias
-			"Attribute"
-		end
-
-	frozen routine: ISE_REFLECTION_EIFFELFEATURE is
-		external
-			"IL field signature :ISE.Reflection.EiffelFeature use ISE.Reflection.EiffelClass"
-		alias
-			"Routine"
-		end
-
-	frozen dotnetfullname: STRING is
-		external
-			"IL field signature :System.String use ISE.Reflection.EiffelClass"
-		alias
-			"DotNetFullName"
-		end
-
-	frozen specialfeatures: SYSTEM_COLLECTIONS_ARRAYLIST is
-		external
-			"IL field signature :System.Collections.ArrayList use ISE.Reflection.EiffelClass"
-		alias
-			"SpecialFeatures"
-		end
-
-	frozen parents: SYSTEM_COLLECTIONS_HASHTABLE is
-		external
-			"IL field signature :System.Collections.Hashtable use ISE.Reflection.EiffelClass"
-		alias
-			"Parents"
-		end
-
-	frozen binaryoperatorsfeatures: SYSTEM_COLLECTIONS_ARRAYLIST is
-		external
-			"IL field signature :System.Collections.ArrayList use ISE.Reflection.EiffelClass"
-		alias
-			"BinaryOperatorsFeatures"
-		end
-
-	frozen implementationfeatures: SYSTEM_COLLECTIONS_ARRAYLIST is
-		external
-			"IL field signature :System.Collections.ArrayList use ISE.Reflection.EiffelClass"
-		alias
-			"ImplementationFeatures"
-		end
-
-	frozen eiffelname: STRING is
+	frozen EiffelName: STRING is
 		external
 			"IL field signature :System.String use ISE.Reflection.EiffelClass"
 		alias
 			"EiffelName"
 		end
 
+	frozen Parents: SYSTEM_COLLECTIONS_HASHTABLE is
+		external
+			"IL field signature :System.Collections.Hashtable use ISE.Reflection.EiffelClass"
+		alias
+			"Parents"
+		end
+
+	frozen ImplementationFeatures: SYSTEM_COLLECTIONS_ARRAYLIST is
+		external
+			"IL field signature :System.Collections.ArrayList use ISE.Reflection.EiffelClass"
+		alias
+			"ImplementationFeatures"
+		end
+
+	frozen InitializationFeatures: SYSTEM_COLLECTIONS_ARRAYLIST is
+		external
+			"IL field signature :System.Collections.ArrayList use ISE.Reflection.EiffelClass"
+		alias
+			"InitializationFeatures"
+		end
+
+	frozen FullExternalName: STRING is
+		external
+			"IL field signature :System.String use ISE.Reflection.EiffelClass"
+		alias
+			"FullExternalName"
+		end
+
+	frozen Invariants: SYSTEM_COLLECTIONS_ARRAYLIST is
+		external
+			"IL field signature :System.Collections.ArrayList use ISE.Reflection.EiffelClass"
+		alias
+			"Invariants"
+		end
+
+	frozen Attribute: ISE_REFLECTION_EIFFELFEATURE is
+		external
+			"IL field signature :ISE.Reflection.EiffelFeature use ISE.Reflection.EiffelClass"
+		alias
+			"Attribute"
+		end
+
+	frozen AssemblyDescriptor: ISE_REFLECTION_ASSEMBLYDESCRIPTOR is
+		external
+			"IL field signature :ISE.Reflection.AssemblyDescriptor use ISE.Reflection.EiffelClass"
+		alias
+			"AssemblyDescriptor"
+		end
+
+	frozen IsDeferred: BOOLEAN is
+		external
+			"IL field signature :System.Boolean use ISE.Reflection.EiffelClass"
+		alias
+			"IsDeferred"
+		end
+
+	frozen SpecialFeatures: SYSTEM_COLLECTIONS_ARRAYLIST is
+		external
+			"IL field signature :System.Collections.ArrayList use ISE.Reflection.EiffelClass"
+		alias
+			"SpecialFeatures"
+		end
+
+	frozen IsFrozen: BOOLEAN is
+		external
+			"IL field signature :System.Boolean use ISE.Reflection.EiffelClass"
+		alias
+			"IsFrozen"
+		end
+
+	frozen ExternalName: STRING is
+		external
+			"IL field signature :System.String use ISE.Reflection.EiffelClass"
+		alias
+			"ExternalName"
+		end
+
+	frozen CreateNone: BOOLEAN is
+		external
+			"IL field signature :System.Boolean use ISE.Reflection.EiffelClass"
+		alias
+			"CreateNone"
+		end
+
+	frozen CreationRoutines: SYSTEM_COLLECTIONS_ARRAYLIST is
+		external
+			"IL field signature :System.Collections.ArrayList use ISE.Reflection.EiffelClass"
+		alias
+			"CreationRoutines"
+		end
+
+	frozen Namespace: STRING is
+		external
+			"IL field signature :System.String use ISE.Reflection.EiffelClass"
+		alias
+			"Namespace"
+		end
+
+	frozen Routine: ISE_REFLECTION_EIFFELFEATURE is
+		external
+			"IL field signature :ISE.Reflection.EiffelFeature use ISE.Reflection.EiffelClass"
+		alias
+			"Routine"
+		end
+
+	frozen AccessFeatures: SYSTEM_COLLECTIONS_ARRAYLIST is
+		external
+			"IL field signature :System.Collections.ArrayList use ISE.Reflection.EiffelClass"
+		alias
+			"AccessFeatures"
+		end
+
+	frozen BinaryOperatorsFeatures: SYSTEM_COLLECTIONS_ARRAYLIST is
+		external
+			"IL field signature :System.Collections.ArrayList use ISE.Reflection.EiffelClass"
+		alias
+			"BinaryOperatorsFeatures"
+		end
+
+	frozen ElementChangeFeatures: SYSTEM_COLLECTIONS_ARRAYLIST is
+		external
+			"IL field signature :System.Collections.ArrayList use ISE.Reflection.EiffelClass"
+		alias
+			"ElementChangeFeatures"
+		end
+
+	frozen BasicOperations: SYSTEM_COLLECTIONS_ARRAYLIST is
+		external
+			"IL field signature :System.Collections.ArrayList use ISE.Reflection.EiffelClass"
+		alias
+			"BasicOperations"
+		end
+
 feature -- Basic Operations
 
-	hasattribute (info: SYSTEM_REFLECTION_MEMBERINFO; a_list: SYSTEM_COLLECTIONS_ARRAYLIST): BOOLEAN is
+	AddInitializationFeature (a_feature: ISE_REFLECTION_EIFFELFEATURE) is
 		external
-			"IL signature (System.Reflection.MemberInfo, System.Collections.ArrayList): System.Boolean use ISE.Reflection.EiffelClass"
+			"IL signature (ISE.Reflection.EiffelFeature): System.Void use ISE.Reflection.EiffelClass"
 		alias
-			"HasAttribute"
+			"AddInitializationFeature"
 		end
 
-	addcreationroutine (a_name: STRING) is
+	SetDeferred (a_value: BOOLEAN) is
 		external
-			"IL signature (System.String): System.Void use ISE.Reflection.EiffelClass"
+			"IL signature (System.Boolean): System.Void use ISE.Reflection.EiffelClass"
 		alias
-			"AddCreationRoutine"
+			"SetDeferred"
 		end
 
-	creationroutinefrominfo (info: SYSTEM_REFLECTION_CONSTRUCTORINFO): ISE_REFLECTION_EIFFELFEATURE is
-		external
-			"IL signature (System.Reflection.ConstructorInfo): ISE.Reflection.EiffelFeature use ISE.Reflection.EiffelClass"
-		alias
-			"CreationRoutineFromInfo"
-		end
-
-	addbinaryoperator (a_feature: ISE_REFLECTION_EIFFELFEATURE) is
+	AddBinaryOperator (a_feature: ISE_REFLECTION_EIFFELFEATURE) is
 		external
 			"IL signature (ISE.Reflection.EiffelFeature): System.Void use ISE.Reflection.EiffelClass"
 		alias
 			"AddBinaryOperator"
 		end
 
-	setfrozen (a_value: BOOLEAN) is
+	HasCreationRoutine (info: SYSTEM_REFLECTION_CONSTRUCTORINFO): BOOLEAN is
 		external
-			"IL signature (System.Boolean): System.Void use ISE.Reflection.EiffelClass"
+			"IL signature (System.Reflection.ConstructorInfo): System.Boolean use ISE.Reflection.EiffelClass"
 		alias
-			"SetFrozen"
+			"HasCreationRoutine"
 		end
 
-	addaccessfeature (a_feature: ISE_REFLECTION_EIFFELFEATURE) is
-		external
-			"IL signature (ISE.Reflection.EiffelFeature): System.Void use ISE.Reflection.EiffelClass"
-		alias
-			"AddAccessFeature"
-		end
-
-	setdotnetfullname (a_full_name: STRING) is
-		external
-			"IL signature (System.String): System.Void use ISE.Reflection.EiffelClass"
-		alias
-			"SetDotNetFullName"
-		end
-
-	addimplementationfeature (a_feature: ISE_REFLECTION_EIFFELFEATURE) is
+	AddBasicOperation (a_feature: ISE_REFLECTION_EIFFELFEATURE) is
 		external
 			"IL signature (ISE.Reflection.EiffelFeature): System.Void use ISE.Reflection.EiffelClass"
 		alias
-			"AddImplementationFeature"
+			"AddBasicOperation"
 		end
 
-	setdotnetsimplename (a_name: STRING) is
+	AttributeFromInfo (info: SYSTEM_REFLECTION_MEMBERINFO): ISE_REFLECTION_EIFFELFEATURE is
 		external
-			"IL signature (System.String): System.Void use ISE.Reflection.EiffelClass"
+			"IL signature (System.Reflection.MemberInfo): ISE.Reflection.EiffelFeature use ISE.Reflection.EiffelClass"
 		alias
-			"SetDotNetSimpleName"
+			"AttributeFromInfo"
 		end
 
-	setnamespace (a_name: STRING) is
-		external
-			"IL signature (System.String): System.Void use ISE.Reflection.EiffelClass"
-		alias
-			"SetNamespace"
-		end
-
-	addinvariant (a_tag: STRING; a_text: STRING) is
+	AddInvariant (a_tag: STRING; a_text: STRING) is
 		external
 			"IL signature (System.String, System.String): System.Void use ISE.Reflection.EiffelClass"
 		alias
 			"AddInvariant"
 		end
 
-	setcreatenone (a_value: BOOLEAN) is
+	SetExternalNames (a_full_name: STRING) is
 		external
-			"IL signature (System.Boolean): System.Void use ISE.Reflection.EiffelClass"
+			"IL signature (System.String): System.Void use ISE.Reflection.EiffelClass"
 		alias
-			"SetCreateNone"
+			"SetExternalNames"
 		end
 
-	setassemblydescriptor (a_descriptor: ISE_REFLECTION_ASSEMBLYDESCRIPTOR) is
+	HasAttribute (info: SYSTEM_REFLECTION_MEMBERINFO; a_list: SYSTEM_COLLECTIONS_ARRAYLIST): BOOLEAN is
+		external
+			"IL signature (System.Reflection.MemberInfo, System.Collections.ArrayList): System.Boolean use ISE.Reflection.EiffelClass"
+		alias
+			"HasAttribute"
+		end
+
+	SetAssemblyDescriptor (a_descriptor: ISE_REFLECTION_ASSEMBLYDESCRIPTOR) is
 		external
 			"IL signature (ISE.Reflection.AssemblyDescriptor): System.Void use ISE.Reflection.EiffelClass"
 		alias
 			"SetAssemblyDescriptor"
 		end
 
-	setexpanded (a_value: BOOLEAN) is
+	AddElementChangeFeature (a_feature: ISE_REFLECTION_EIFFELFEATURE) is
+		external
+			"IL signature (ISE.Reflection.EiffelFeature): System.Void use ISE.Reflection.EiffelClass"
+		alias
+			"AddElementChangeFeature"
+		end
+
+	AddUnaryOperator (a_feature: ISE_REFLECTION_EIFFELFEATURE) is
+		external
+			"IL signature (ISE.Reflection.EiffelFeature): System.Void use ISE.Reflection.EiffelClass"
+		alias
+			"AddUnaryOperator"
+		end
+
+	SetExpanded (a_value: BOOLEAN) is
 		external
 			"IL signature (System.Boolean): System.Void use ISE.Reflection.EiffelClass"
 		alias
 			"SetExpanded"
 		end
 
-	internhasroutine (eiffel_feature: ISE_REFLECTION_EIFFELFEATURE; info: SYSTEM_REFLECTION_METHODBASE): BOOLEAN is
+	AddAccessFeature (a_feature: ISE_REFLECTION_EIFFELFEATURE) is
 		external
-			"IL signature (ISE.Reflection.EiffelFeature, System.Reflection.MethodBase): System.Boolean use ISE.Reflection.EiffelClass"
+			"IL signature (ISE.Reflection.EiffelFeature): System.Void use ISE.Reflection.EiffelClass"
 		alias
-			"InternHasRoutine"
+			"AddAccessFeature"
 		end
 
 	a_invariant is
@@ -285,105 +278,112 @@ feature -- Basic Operations
 			"_invariant"
 		end
 
-	matchingarguments (info: SYSTEM_REFLECTION_METHODBASE; arguments: SYSTEM_COLLECTIONS_ARRAYLIST): BOOLEAN is
+	MatchingArguments (info: SYSTEM_REFLECTION_METHODBASE; arguments: SYSTEM_COLLECTIONS_ARRAYLIST): BOOLEAN is
 		external
 			"IL signature (System.Reflection.MethodBase, System.Collections.ArrayList): System.Boolean use ISE.Reflection.EiffelClass"
 		alias
 			"MatchingArguments"
 		end
 
-	attributefrominfo (info: SYSTEM_REFLECTION_MEMBERINFO): ISE_REFLECTION_EIFFELFEATURE is
-		external
-			"IL signature (System.Reflection.MemberInfo): ISE.Reflection.EiffelFeature use ISE.Reflection.EiffelClass"
-		alias
-			"AttributeFromInfo"
-		end
-
-	seteiffelname (a_name: STRING) is
-		external
-			"IL signature (System.String): System.Void use ISE.Reflection.EiffelClass"
-		alias
-			"SetEiffelName"
-		end
-
-	addparent (a_name: STRING; rename_clauses: SYSTEM_COLLECTIONS_ARRAYLIST; undefine_clauses: SYSTEM_COLLECTIONS_ARRAYLIST; redefine_clauses: SYSTEM_COLLECTIONS_ARRAYLIST; select_clauses: SYSTEM_COLLECTIONS_ARRAYLIST; export_clauses: SYSTEM_COLLECTIONS_ARRAYLIST) is
-		external
-			"IL signature (System.String, System.Collections.ArrayList, System.Collections.ArrayList, System.Collections.ArrayList, System.Collections.ArrayList, System.Collections.ArrayList): System.Void use ISE.Reflection.EiffelClass"
-		alias
-			"AddParent"
-		end
-
-	addbasicoperation (a_feature: ISE_REFLECTION_EIFFELFEATURE) is
-		external
-			"IL signature (ISE.Reflection.EiffelFeature): System.Void use ISE.Reflection.EiffelClass"
-		alias
-			"AddBasicOperation"
-		end
-
-	setdeferred (a_value: BOOLEAN) is
-		external
-			"IL signature (System.Boolean): System.Void use ISE.Reflection.EiffelClass"
-		alias
-			"SetDeferred"
-		end
-
-	routinefrominfo (info: SYSTEM_REFLECTION_METHODINFO): ISE_REFLECTION_EIFFELFEATURE is
-		external
-			"IL signature (System.Reflection.MethodInfo): ISE.Reflection.EiffelFeature use ISE.Reflection.EiffelClass"
-		alias
-			"RoutineFromInfo"
-		end
-
-	addunaryoperator (a_feature: ISE_REFLECTION_EIFFELFEATURE) is
-		external
-			"IL signature (ISE.Reflection.EiffelFeature): System.Void use ISE.Reflection.EiffelClass"
-		alias
-			"AddUnaryOperator"
-		end
-
-	setfullname (a_full_name: STRING) is
-		external
-			"IL signature (System.String): System.Void use ISE.Reflection.EiffelClass"
-		alias
-			"SetFullName"
-		end
-
-	make is
-		external
-			"IL signature (): System.Void use ISE.Reflection.EiffelClass"
-		alias
-			"Make"
-		end
-
-	addinitializationfeature (a_feature: ISE_REFLECTION_EIFFELFEATURE) is
-		external
-			"IL signature (ISE.Reflection.EiffelFeature): System.Void use ISE.Reflection.EiffelClass"
-		alias
-			"AddInitializationFeature"
-		end
-
-	hascreationroutine (info: SYSTEM_REFLECTION_CONSTRUCTORINFO): BOOLEAN is
-		external
-			"IL signature (System.Reflection.ConstructorInfo): System.Boolean use ISE.Reflection.EiffelClass"
-		alias
-			"HasCreationRoutine"
-		end
-
-	hasroutine (info: SYSTEM_REFLECTION_METHODBASE; a_list: SYSTEM_COLLECTIONS_ARRAYLIST): BOOLEAN is
+	HasRoutine (info: SYSTEM_REFLECTION_METHODBASE; a_list: SYSTEM_COLLECTIONS_ARRAYLIST): BOOLEAN is
 		external
 			"IL signature (System.Reflection.MethodBase, System.Collections.ArrayList): System.Boolean use ISE.Reflection.EiffelClass"
 		alias
 			"HasRoutine"
 		end
 
-	addelementchangefeature (a_feature: ISE_REFLECTION_EIFFELFEATURE) is
+	SetExternalName (a_name: STRING) is
+		external
+			"IL signature (System.String): System.Void use ISE.Reflection.EiffelClass"
+		alias
+			"SetExternalName"
+		end
+
+	SetEiffelName (a_name: STRING) is
+		external
+			"IL signature (System.String): System.Void use ISE.Reflection.EiffelClass"
+		alias
+			"SetEiffelName"
+		end
+
+	AddCreationRoutine (a_name: STRING) is
+		external
+			"IL signature (System.String): System.Void use ISE.Reflection.EiffelClass"
+		alias
+			"AddCreationRoutine"
+		end
+
+	Make is
+		external
+			"IL signature (): System.Void use ISE.Reflection.EiffelClass"
+		alias
+			"Make"
+		end
+
+	SetFrozen (a_value: BOOLEAN) is
+		external
+			"IL signature (System.Boolean): System.Void use ISE.Reflection.EiffelClass"
+		alias
+			"SetFrozen"
+		end
+
+	AddParent (a_name: STRING; rename_clauses: SYSTEM_COLLECTIONS_ARRAYLIST; undefine_clauses: SYSTEM_COLLECTIONS_ARRAYLIST; redefine_clauses: SYSTEM_COLLECTIONS_ARRAYLIST; select_clauses: SYSTEM_COLLECTIONS_ARRAYLIST; export_clauses: SYSTEM_COLLECTIONS_ARRAYLIST) is
+		external
+			"IL signature (System.String, System.Collections.ArrayList, System.Collections.ArrayList, System.Collections.ArrayList, System.Collections.ArrayList, System.Collections.ArrayList): System.Void use ISE.Reflection.EiffelClass"
+		alias
+			"AddParent"
+		end
+
+	AddImplementationFeature (a_feature: ISE_REFLECTION_EIFFELFEATURE) is
 		external
 			"IL signature (ISE.Reflection.EiffelFeature): System.Void use ISE.Reflection.EiffelClass"
 		alias
-			"AddElementChangeFeature"
+			"AddImplementationFeature"
 		end
 
-	addspecialfeature (a_feature: ISE_REFLECTION_EIFFELFEATURE) is
+	RoutineFromInfo (info: SYSTEM_REFLECTION_METHODINFO): ISE_REFLECTION_EIFFELFEATURE is
+		external
+			"IL signature (System.Reflection.MethodInfo): ISE.Reflection.EiffelFeature use ISE.Reflection.EiffelClass"
+		alias
+			"RoutineFromInfo"
+		end
+
+	SetCreateNone (a_value: BOOLEAN) is
+		external
+			"IL signature (System.Boolean): System.Void use ISE.Reflection.EiffelClass"
+		alias
+			"SetCreateNone"
+		end
+
+	CreationRoutineFromInfo (info: SYSTEM_REFLECTION_CONSTRUCTORINFO): ISE_REFLECTION_EIFFELFEATURE is
+		external
+			"IL signature (System.Reflection.ConstructorInfo): ISE.Reflection.EiffelFeature use ISE.Reflection.EiffelClass"
+		alias
+			"CreationRoutineFromInfo"
+		end
+
+	InternHasRoutine (eiffel_feature: ISE_REFLECTION_EIFFELFEATURE; info: SYSTEM_REFLECTION_METHODBASE): BOOLEAN is
+		external
+			"IL signature (ISE.Reflection.EiffelFeature, System.Reflection.MethodBase): System.Boolean use ISE.Reflection.EiffelClass"
+		alias
+			"InternHasRoutine"
+		end
+
+	SetFullExternalName (a_full_name: STRING) is
+		external
+			"IL signature (System.String): System.Void use ISE.Reflection.EiffelClass"
+		alias
+			"SetFullExternalName"
+		end
+
+	SetNamespace (a_name: STRING) is
+		external
+			"IL signature (System.String): System.Void use ISE.Reflection.EiffelClass"
+		alias
+			"SetNamespace"
+		end
+
+	AddSpecialFeature (a_feature: ISE_REFLECTION_EIFFELFEATURE) is
 		external
 			"IL signature (ISE.Reflection.EiffelFeature): System.Void use ISE.Reflection.EiffelClass"
 		alias

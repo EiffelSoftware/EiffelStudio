@@ -1,5 +1,5 @@
 indexing
-	Generator: "Eiffel Emitter beta 2"
+	Generator: "Eiffel Emitter 2.3b"
 	external_name: "ISE.Reflection.AssemblyDescriptor"
 
 external class
@@ -17,28 +17,28 @@ feature {NONE} -- Initialization
 
 feature -- Access
 
-	frozen version: STRING is
-		external
-			"IL field signature :System.String use ISE.Reflection.AssemblyDescriptor"
-		alias
-			"Version"
-		end
-
-	frozen publickey: STRING is
-		external
-			"IL field signature :System.String use ISE.Reflection.AssemblyDescriptor"
-		alias
-			"PublicKey"
-		end
-
-	frozen culture: STRING is
+	frozen Culture: STRING is
 		external
 			"IL field signature :System.String use ISE.Reflection.AssemblyDescriptor"
 		alias
 			"Culture"
 		end
 
-	frozen name: STRING is
+	frozen Version: STRING is
+		external
+			"IL field signature :System.String use ISE.Reflection.AssemblyDescriptor"
+		alias
+			"Version"
+		end
+
+	frozen PublicKey: STRING is
+		external
+			"IL field signature :System.String use ISE.Reflection.AssemblyDescriptor"
+		alias
+			"PublicKey"
+		end
+
+	frozen Name: STRING is
 		external
 			"IL field signature :System.String use ISE.Reflection.AssemblyDescriptor"
 		alias
@@ -47,6 +47,13 @@ feature -- Access
 
 feature -- Basic Operations
 
+	Make (a_name: STRING; a_version: STRING; a_culture: STRING; a_public_key: STRING) is
+		external
+			"IL signature (System.String, System.String, System.String, System.String): System.Void use ISE.Reflection.AssemblyDescriptor"
+		alias
+			"Make"
+		end
+
 	a_invariant is
 		external
 			"IL signature (): System.Void use ISE.Reflection.AssemblyDescriptor"
@@ -54,11 +61,11 @@ feature -- Basic Operations
 			"_invariant"
 		end
 
-	make (a_name: STRING; a_version: STRING; a_culture: STRING; a_public_key: STRING) is
+	MakeFromAssembly (a_dot_net_assembly: SYSTEM_REFLECTION_ASSEMBLY) is
 		external
-			"IL signature (System.String, System.String, System.String, System.String): System.Void use ISE.Reflection.AssemblyDescriptor"
+			"IL signature (System.Reflection.Assembly): System.Void use ISE.Reflection.AssemblyDescriptor"
 		alias
-			"Make"
+			"MakeFromAssembly"
 		end
 
 end -- class ISE_REFLECTION_ASSEMBLYDESCRIPTOR

@@ -1,5 +1,5 @@
 indexing
-	Generator: "Eiffel Emitter beta 2"
+	Generator: "Eiffel Emitter 2.3b"
 	external_name: "ISE.Reflection.EiffelAssemblyCacheHandler"
 
 external class
@@ -20,18 +20,18 @@ feature {NONE} -- Initialization
 
 feature -- Access
 
-	frozen LastWriteSuccessful: BOOLEAN is
-		external
-			"IL field signature :System.Boolean use ISE.Reflection.EiffelAssemblyCacheHandler"
-		alias
-			"LastWriteSuccessful"
-		end
-
 	frozen AssemblyFolderPath: STRING is
 		external
 			"IL field signature :System.String use ISE.Reflection.EiffelAssemblyCacheHandler"
 		alias
 			"AssemblyFolderPath"
+		end
+
+	frozen LastWriteSuccessful: BOOLEAN is
+		external
+			"IL field signature :System.Boolean use ISE.Reflection.EiffelAssemblyCacheHandler"
+		alias
+			"LastWriteSuccessful"
 		end
 
 	frozen EiffelAssembly: ISE_REFLECTION_EIFFELASSEMBLY is
@@ -48,6 +48,20 @@ feature -- Access
 			"AssemblyDescriptor"
 		end
 
+	frozen ErrorMessages: ISE_REFLECTION_EIFFELASSEMBLYCACHEHANDLERERRORMESSAGES is
+		external
+			"IL field signature :ISE.Reflection.EiffelAssemblyCacheHandlerErrorMessages use ISE.Reflection.EiffelAssemblyCacheHandler"
+		alias
+			"ErrorMessages"
+		end
+
+	frozen LastError: ISE_REFLECTION_ERRORINFO is
+		external
+			"IL field signature :ISE.Reflection.ErrorInfo use ISE.Reflection.EiffelAssemblyCacheHandler"
+		alias
+			"LastError"
+		end
+
 	frozen LastRemovalSuccessful: BOOLEAN is
 		external
 			"IL field signature :System.Boolean use ISE.Reflection.EiffelAssemblyCacheHandler"
@@ -57,18 +71,32 @@ feature -- Access
 
 feature -- Basic Operations
 
-	Commit is
+	PrepareTypeStorage_AssemblyDescriptor (an_assembly_descriptor: ISE_REFLECTION_ASSEMBLYDESCRIPTOR) is
 		external
-			"IL signature (): System.Void use ISE.Reflection.EiffelAssemblyCacheHandler"
+			"IL signature (ISE.Reflection.AssemblyDescriptor): System.Void use ISE.Reflection.EiffelAssemblyCacheHandler"
 		alias
-			"Commit"
+			"PrepareTypeStorage"
 		end
 
-	Make is
+	ReplaceType (an_assembly_descriptor: ISE_REFLECTION_ASSEMBLYDESCRIPTOR; an_eiffel_class: ISE_REFLECTION_EIFFELCLASS): ISE_REFLECTION_TYPESTORER is
 		external
-			"IL signature (): System.Void use ISE.Reflection.EiffelAssemblyCacheHandler"
+			"IL signature (ISE.Reflection.AssemblyDescriptor, ISE.Reflection.EiffelClass): ISE.Reflection.TypeStorer use ISE.Reflection.EiffelAssemblyCacheHandler"
 		alias
-			"Make"
+			"ReplaceType"
+		end
+
+	HasReadLockCode: INTEGER is
+		external
+			"IL signature (): System.Int32 use ISE.Reflection.EiffelAssemblyCacheHandler"
+		alias
+			"HasReadLockCode"
+		end
+
+	WriteLockCreationFailedCode: INTEGER is
+		external
+			"IL signature (): System.Int32 use ISE.Reflection.EiffelAssemblyCacheHandler"
+		alias
+			"WriteLockCreationFailedCode"
 		end
 
 	StoreAssembly (an_eiffel_assembly: ISE_REFLECTION_EIFFELASSEMBLY): ISE_REFLECTION_TYPESTORER is
@@ -78,11 +106,18 @@ feature -- Basic Operations
 			"StoreAssembly"
 		end
 
-	GenerateAssemblyXmlFile is
+	Support: ISE_REFLECTION_CODEGENERATIONSUPPORT is
 		external
-			"IL signature (): System.Void use ISE.Reflection.EiffelAssemblyCacheHandler"
+			"IL signature (): ISE.Reflection.CodeGenerationSupport use ISE.Reflection.EiffelAssemblyCacheHandler"
 		alias
-			"GenerateAssemblyXmlFile"
+			"Support"
+		end
+
+	HasWriteLockCode: INTEGER is
+		external
+			"IL signature (): System.Int32 use ISE.Reflection.EiffelAssemblyCacheHandler"
+		alias
+			"HasWriteLockCode"
 		end
 
 	UpdateIndex is
@@ -92,11 +127,11 @@ feature -- Basic Operations
 			"UpdateIndex"
 		end
 
-	PrepareTypeStorage is
+	Commit is
 		external
 			"IL signature (): System.Void use ISE.Reflection.EiffelAssemblyCacheHandler"
 		alias
-			"PrepareTypeStorage"
+			"Commit"
 		end
 
 	RemoveAssembly (a_descriptor: ISE_REFLECTION_ASSEMBLYDESCRIPTOR) is
@@ -104,6 +139,27 @@ feature -- Basic Operations
 			"IL signature (ISE.Reflection.AssemblyDescriptor): System.Void use ISE.Reflection.EiffelAssemblyCacheHandler"
 		alias
 			"RemoveAssembly"
+		end
+
+	MakeCacheHandler is
+		external
+			"IL signature (): System.Void use ISE.Reflection.EiffelAssemblyCacheHandler"
+		alias
+			"MakeCacheHandler"
+		end
+
+	GenerateAssemblyXmlFile is
+		external
+			"IL signature (): System.Void use ISE.Reflection.EiffelAssemblyCacheHandler"
+		alias
+			"GenerateAssemblyXmlFile"
+		end
+
+	PrepareTypeStorage is
+		external
+			"IL signature (): System.Void use ISE.Reflection.EiffelAssemblyCacheHandler"
+		alias
+			"PrepareTypeStorage"
 		end
 
 end -- class ISE_REFLECTION_EIFFELASSEMBLYCACHEHANDLER

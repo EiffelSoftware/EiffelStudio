@@ -12,18 +12,18 @@ inherit
 		end
 		
 create 
-	make
+	make_xml_code_generator
 
 feature {NONE} -- Initialization
 
-	make is
+	make_xml_code_generator is
 			-- Creation routine
 			-- | Initialize `cache_handler'.
 		indexing
-			external_name: "Make"
+			external_name: "MakeXmlCodeGenerator"
 		do
 			create cache_handler.make_eiffelassemblycachehandler
-			cache_handler.Make
+			cache_handler.makecachehandler
 		ensure
 			non_void_cache_handler: cache_handler /= Void
 		end
@@ -57,7 +57,7 @@ feature -- Basic Operations
 			check
 				non_void_type_storer: type_storer /= Void
 			end
-			type_storer.AddType (an_eiffel_class)
+			type_storer.AddType (an_eiffel_class, False)
 		end
 
 	end_assembly_generation is
@@ -76,6 +76,22 @@ feature -- Basic Operations
 			void_type_storer: type_storer = Void
 		end
 
+	replace_type (an_assembly_descriptor: ISE_REFLECTION_ASSEMBLYDESCRIPTOR; an_eiffel_class: ISE_REFLECTION_EIFFELCLASS) is
+			-- Replace type corresponding to `an_eiffel_class' in assembly corresponding to `an_assembly_descriptor'.
+		indexing
+			external_name: "ReplaceType"
+		require
+			non_void_assembly_descriptor: an_assembly_descriptor /= Void
+			non_void_eiffel_class: an_eiffel_class /= Void
+		do
+			type_storer := cache_handler.replacetype (an_assembly_descriptor, an_eiffel_class)
+			type_storer.addtype (an_eiffel_class, True)
+			type_storer.commit
+			type_storer := Void
+		ensure
+			void_type_storer: type_storer = Void
+		end
+		
 feature {NONE} -- Implementation
 
 	cache_handler: ISE_REFLECTION_EIFFELASSEMBLYCACHEHANDLER

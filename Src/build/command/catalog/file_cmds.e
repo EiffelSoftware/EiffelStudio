@@ -24,8 +24,9 @@ feature {NONE}
 
 	reset_commands is
 		do
-			extend (save_cmd)
+			extend (new_cmd)
 			extend (open_cmd)
+			extend (save_cmd)
 		end
 
 	symbol: PIXMAP is

@@ -422,9 +422,7 @@ feature -- Status report
 		require
 			file_exists: exists
 		do
-			internal_file.refresh
-			Result := (internal_file.attributes.to_integer & feature {FILE_ATTRIBUTES}.normal.to_integer) = 
-				feature {FILE_ATTRIBUTES}.normal.to_integer
+			Result := not is_directory and not is_device
 		end
 
 	is_device: BOOLEAN is
@@ -1124,7 +1122,13 @@ feature -- Element change
 		require
 			new_name_not_void: new_name /= Void
 			file_exists: exists
+		local
+			l_info: FILE_INFO
 		do
+			create l_info.make (new_name.to_cil)
+			if l_info.exists then
+				l_info.delete
+			end
 			internal_file.refresh
 			internal_file.move_to (new_name.to_cil)
 			name := new_name

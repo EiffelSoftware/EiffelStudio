@@ -123,10 +123,10 @@ feature {NONE} -- Initialization
 			data_not_void: a_data /= Void
 			data_count_big_enough: a_data.count >= 2 * (a_width * a_height * a_bits_per_pixel * a_planes) // 8
 		local
-			a: ANY
+			l_data: WEL_STRING
 		do
-			a := a_data.to_c
-			item := cwin_create_bitmap (a_width, a_height, a_planes, a_bits_per_pixel, $a)
+			create l_data.make (a_data)
+			item := cwin_create_bitmap (a_width, a_height, a_planes, a_bits_per_pixel, l_data.item)
 			gdi_make
 		end
 

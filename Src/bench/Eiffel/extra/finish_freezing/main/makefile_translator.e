@@ -899,7 +899,7 @@ feature {NONE} -- Translation
 			-- application name, cecil
 			if appl /= Void and then lastline.count>=appl.count and then lastline.substring (1, appl.count).is_equal (appl) then
 				translate_appl
-			elseif lastline.count>13 and then lastline.substring (1,13).is_equal ("STATIC_CECIL=") then
+			elseif lastline.count>14 and then lastline.substring (1,14).is_equal ("STATIC_CECIL =") then
 				translate_cecil_and_dll
 			else
 				debug ("translate_line_change")
@@ -1053,7 +1053,7 @@ feature {NONE} -- Translation
 			lastline := clone (makefile_sh.laststring)
 			from
 			until
-				lastline.count>13 and then lastline.substring (1,13).is_equal ("SHARED_CECIL=")
+				lastline.count>14 and then lastline.substring (1,14).is_equal ("SHARED_CECIL =")
 			loop
 				read_next
 				lastline := clone (makefile_sh.laststring)
@@ -1063,9 +1063,10 @@ feature {NONE} -- Translation
 			makefile.new_line
 
 			makefile.putstring ("%N#SHARED_CECIL PART%N")
--- SHARED_CECIL= appl.dll
-			lastline.replace_substring_all ("$shared_suffix", options.get_string ("shared_suffix", ".dll"))
 			makefile.putstring (lastline)
+			makefile.new_line
+			read_next
+			makefile.putstring (makefile_sh.laststring)
 			makefile.new_line
 
 -- DEF_FILE= appl.def
@@ -1086,19 +1087,23 @@ feature {NONE} -- Translation
 			makefile.new_line
 
 				-- SHARED_CECIL_OBJECT
+			if uses_precompiled then
+				read_next
+				makefile.putchar ('%T')
+				makefile.putstring (precompile_libs)
+				makefile.putstring (options.get_string ("continuation", Void))
+				makefile.new_line
+			end
+
 			read_next
 			lastline := clone (makefile_sh.laststring)
 			lastline.replace_substring_all (".o", object_extension)
-			subst_library (lastline)
-			subst_precomp_libs (lastline, precompile_libs)
-			subst_dir_sep (lastline)
 			makefile.putstring (lastline)
 			makefile.new_line
+			read_next
+			makefile.putstring (makefile_sh.laststring)
 
 				-- SHAREDFLAGS
-			read_next
-			lastline := clone (makefile_sh.laststring)
-			makefile.putstring (lastline)
 			if options.has ("cecil_dynlib") then 
 				makefile.putstring (" \%N")
 				lastline := clone (options.get_string ("cecil_dynlib", Void))
@@ -1169,18 +1174,11 @@ feature {NONE} -- Translation
 			makefile.putstring (lastline)
 			makefile.new_line
 
-			read_next -- cd E1 ...
-			makefile.putstring (makefile_sh.laststring)
-			makefile.new_line
-
-			read_next -- $(MAKE) ...
+			read_next -- cd E1 ; $(MAKE) ....
 			lastline := clone (makefile_sh.laststring)
 			lastline.replace_substring_all (".o", object_extension)
+			lastline.replace_substring_all (" ; ", options.get_string ("subcommand_separator", " && "))
 			makefile.putstring (lastline)
-			makefile.new_line
-
-			read_next -- cd ..
-			makefile.putstring (makefile_sh.laststring)
 			makefile.new_line
 
 				-- edynlib.obj
@@ -1191,26 +1189,31 @@ feature {NONE} -- Translation
 			makefile.putstring (lastline)
 			makefile.new_line
 
-			read_next -- cd E1 ...
-			makefile.putstring (makefile_sh.laststring)
-			makefile.new_line
-
-			read_next -- $(MAKE) ...
+			read_next -- cd E1 ; $(MAKE) ...
 			lastline := clone (makefile_sh.laststring)
 			lastline.replace_substring_all (".o", object_extension)
+			lastline.replace_substring_all (" ; ", options.get_string ("subcommand_separator", " && "))
 			makefile.putstring (lastline)
-			makefile.new_line
-
-			read_next -- cd ..
-			makefile.putstring (makefile_sh.laststring)
 			makefile.new_line
 
 				-- SYSTEM_IN_DYNAMIC_LIB_OBJ
 			read_next
+			makefile.new_line
+			read_next
+			makefile.putstring (makefile_sh.laststring)
+			makefile.new_line
+			
+			if uses_precompiled then
+				read_next
+				makefile.putchar ('%T')
+				makefile.putstring (precompile_libs)
+				makefile.putstring (options.get_string ("continuation", Void))
+				makefile.new_line
+			end
+
+			read_next
 			lastline := clone (makefile_sh.laststring)
 			lastline.replace_substring_all (".o", object_extension)
-			subst_library (lastline)
-			subst_precomp_libs (lastline, precompile_libs)
 			subst_dir_sep (lastline)
 			makefile.putstring (lastline)
 			makefile.new_line
@@ -1566,8 +1569,7 @@ feature {NONE} -- Implementation
 			preobj: STRING
 		once
 			Result := ""
-			preobj := "preobj"
-			preobj.append (object_extension)
+			preobj := "precomp.lib"
 
 			debug ("implementation")
 				io.putstring ("%Tget_libs%N")

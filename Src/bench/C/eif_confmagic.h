@@ -52,7 +52,10 @@
 #endif
 
 /* Define a certain kind of optimization */
+#ifndef VXWORKS	/* VXWORKS use ITERATIVE_MARKING, which does not
+				 * support this optimization yet. */
 #define EIF_REM_SET_OPTIMIZATION
+#endif
 
 /* Do not compile with assertions, by default. */
 #ifndef EIF_ASSERTIONS

@@ -161,10 +161,18 @@ feature {EV_ANY_I, EV_INTERNAL_COMBO_FIELD_IMP,
 			-- Wmlbuttonup message
 		local
 			pt: WEL_POINT
+			tool_bar: EV_TOOL_BAR_IMP
 		do
 			create pt.make (x_pos, y_pos)
 			pt := client_to_screen (x_pos, y_pos)
-			if item_is_pnd_source then
+			if item_is_dockable_source then
+				tool_bar ?= Current
+				if tool_bar /= Void then--and then tool_bar.is_dragging or tool_bar. then
+					tool_bar.end_dragable (x_pos, y_pos, 1, 0, 0, 0, pt.x, pt.y)	
+				end
+				
+			end
+			if item_is_pnd_source then 
 				pnd_item_source.check_drag_and_drop_release (x_pos, y_pos)
 			elseif parent_is_pnd_source then
 				check_drag_and_drop_release (x_pos, y_pos)
@@ -173,7 +181,6 @@ feature {EV_ANY_I, EV_INTERNAL_COMBO_FIELD_IMP,
 			interface.pointer_button_release_actions.call
 				([x_pos, y_pos, 1, 0.0, 0.0, 0.0, pt.x, pt.y])
 		end
-
 
 	on_left_button_double_click (keys, x_pos, y_pos: INTEGER) is
 			-- Executed when the right button is double clicked.
@@ -269,7 +276,9 @@ feature {EV_PICK_AND_DROPABLE_ITEM_IMP} -- Status report
 			-- PND source if PND started in an item.
 
 	item_is_pnd_source: BOOLEAN
-		-- PND started in an item. 
+		-- PND started in an item.
+		
+	item_is_dockable_source: BOOLEAN
 
 	set_item_source (source: EV_PICK_AND_DROPABLE_ITEM_IMP) is
 			-- Assign `source' to `pnd_item_source'

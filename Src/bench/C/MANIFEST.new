@@ -7,17 +7,6 @@ U/End.U
 U/Myinit.U
 U/add_log.U
 U/panic.U
-clicking/
-clicking/Jmakefile
-clicking/Makefile.SH
-clicking/motif
-clicking/motif/Jmakefile
-clicking/motif/Makefile.SH
-clicking/motif/click.c
-clicking/openlook
-clicking/openlook/Jmakefile
-clicking/openlook/Makefile.SH
-clicking/openlook/click.c
 hints/
 hints/dgux.sh
 hints/mips.sh

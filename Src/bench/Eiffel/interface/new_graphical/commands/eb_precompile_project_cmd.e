@@ -14,7 +14,7 @@ inherit
 			name, menu_name,
 			perform_compilation,
 			is_precompiling,
-			make
+			make, tooltext
 		end
 
 	EB_SHARED_WINDOW_MANAGER
@@ -99,6 +99,12 @@ feature {NONE} -- Implementation
 		end
 
 feature {NONE} -- Attributes
+
+	tooltext: STRING is
+			-- Text for the toolbar button.
+		do
+			Result := Interface_names.b_Precompile
+		end
 
 	name: STRING is "Precompile"
 			-- Name of precompile command.

@@ -14,7 +14,8 @@ inherit
 
 	EB_TOOLBARABLE_AND_MENUABLE_COMMAND
 		redefine
-			new_toolbar_item
+			new_toolbar_item,
+			tooltext
 		end
 
 	SHARED_EIFFEL_PROJECT
@@ -227,6 +228,12 @@ feature {NONE} -- Implementation properties
 			-- Tooltip for the toolbar button.
 		do
 			Result := Interface_names.e_Shell
+		end
+
+	tooltext: STRING is
+			-- Textp for the toolbar button.
+		do
+			Result := Interface_names.b_Shell
 		end
 
 	description: STRING is

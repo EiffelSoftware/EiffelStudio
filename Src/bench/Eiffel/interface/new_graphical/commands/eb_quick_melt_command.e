@@ -12,7 +12,7 @@ inherit
 		redefine
 			name, menu_name, description, pixmap,
 			perform_compilation, tooltip,
-			make
+			make, tooltext
 		end
 
 	EB_SHARED_WINDOW_MANAGER
@@ -47,6 +47,12 @@ feature {NONE} -- Attributes
 
 	name: STRING is "Quick_compile"
 			-- Name of precompile command.
+
+	tooltext: STRING is
+			-- Text for the toolbar button.
+		do
+			Result := Interface_names.b_Quickmelt
+		end
 
 	menu_name: STRING is
 			-- Name used in menu entry

@@ -9,7 +9,8 @@ class
 inherit
 	EB_TOOLBARABLE_AND_MENUABLE_COMMAND
 		redefine
-			mini_pixmap
+			mini_pixmap,
+			tooltext
 		end
 
 	EB_DEVELOPMENT_WINDOW_COMMAND
@@ -103,6 +104,12 @@ feature {NONE} -- Implementation
 			-- Tooltip for the toolbar button.
 		do
 			Result := Interface_names.f_Create_new_feature
+		end
+
+	tooltext: STRING is
+			-- Text for the toolbar button.
+		do
+			Result := Interface_names.b_Create_new_feature
 		end
 
 	description: STRING is

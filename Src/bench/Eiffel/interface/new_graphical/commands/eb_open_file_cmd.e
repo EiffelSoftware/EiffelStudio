@@ -13,6 +13,9 @@ inherit
 		end
 
 	EB_TOOLBARABLE_AND_MENUABLE_COMMAND
+		redefine
+			tooltext
+		end
 
 	EB_CONFIRM_SAVE_CALLBACK
 		export
@@ -93,6 +96,13 @@ feature -- Properties
 		do
 			Result := description
 		end
+
+	tooltext: STRING is
+			-- Text of toolbar button
+		do
+			Result := Interface_names.b_Open
+		end
+		
 
 feature {NONE} -- Implementation
 

@@ -10,7 +10,8 @@ class
 inherit
 	EB_TOOLBARABLE_AND_MENUABLE_COMMAND
 		redefine
-			new_toolbar_item
+			new_toolbar_item,
+			tooltext
 		end
 
 	EB_SHARED_WINDOW_MANAGER
@@ -121,6 +122,19 @@ feature {NONE} -- Implementation
 			-- Tooltip for the toolbar button.
 		do
 			Result := description
+		end
+
+	tooltext: STRING is
+			-- Text for the toolbar button.
+		do
+			inspect style
+			when default_style then
+				Result := Interface_names.b_New_window
+			when editor_style then
+				Result := Interface_names.b_New_editor
+			when context_style then
+				Result := Interface_names.b_New_context
+			end
 		end
 
 	is_storable (st: ANY): BOOLEAN is

@@ -9,8 +9,8 @@ class SHARED_LACE_PARSER
 
 feature -- Access
 
---	Parser: LACE_PARSER is
-	Parser: YACC_LACE_PARSER is
+	Parser: LACE_PARSER is
+--	Parser: YACC_LACE_PARSER is
 			-- Lace parser
 		once
 			!! Result.make
@@ -18,8 +18,8 @@ feature -- Access
 			lace_parser_not_void: Result /= Void
 		end
 
---	Classname_finder: CLASSNAME_FINDER is
-	Classname_finder: YACC_CLASSNAME_FINDER is
+	Classname_finder: CLASSNAME_FINDER is
+--	Classname_finder: YACC_CLASSNAME_FINDER is
 			-- Classname finder
 		once
 			!! Result.make

@@ -85,6 +85,7 @@ modifications are relative to the previously released version.</p>
 	<li><b>EV_DIALOG</b> - If a dialog with a default cancel button was displayed using `show', then minimizing the dialog would cause the system to fail internally.</li>
 	<li><b>EV_TEXT</b> - Fixed `put_new_line', although it has been made obsolete, as you should just use `set_text ("%N") instead.</li>
 	<li><b>EV_SPLIT_AREA</b> - Fixed crash reproducable by inserting an EV_PIXMAP directly into the split area.</li>
+	<li><b>EV_CONTAINER</b> - Fixed `propagate_foreground_color' and `propagate_background_color' which failed when one of the children was a descendent of EV_CELL.</li>
     </ul>
   <li><b>Gtk</b>
     <ul>

@@ -1,5 +1,5 @@
 system
-	"EiffelSoftware.EiffelVision2"
+	"EiffelSoftware.CodeDomVision2"
 
 root
 	ANY
@@ -16,7 +16,7 @@ default
 	msil_use_optimized_precompile (yes)
  	use_all_cluster_name_as_namespace (yes)
  	use_cluster_name_as_namespace (no)
- 	precompiled ("$EIFFEL_SRC\dotnet\codedom_provider\build_studio_debug\EiffelSoftware.EiffelBase")
+ 	precompiled ("$EIFFEL_SRC\dotnet\codedom_provider\build_studio_debug\EiffelSoftware.CodeDomBase")
  	version ("5.5.0.0")
  	
 
@@ -79,7 +79,7 @@ external
 		"$(EIFFEL_SRC)\library\vision2\spec\$(ISE_C_COMPILER)\lib\zlib.lib",
 		"$(EIFFEL_SRC)\library\vision2\spec\$(ISE_C_COMPILER)\lib\libpng.lib"
 
-end -- system EiffelSoftware.EiffelVision2
+end -- system EiffelSoftware.CodeDomVision2
 
 --+--------------------------------------------------------------------
 --| Eiffel CodeDOM Provider

@@ -3,14 +3,14 @@
 
 @ECHO OFF
 
-IF EXIST ..\build_envision\EiffelSoftware.EiffelBase\EiffelSoftware.EiffelBase.eifp COPY /Y ..\build_envision\EiffelSoftware.EiffelBase\EiffelSoftware.EiffelBase.eifp base.eifp
-IF EXIST ..\build_envision\EiffelSoftware.EiffelBase\EiffelSoftware.EiffelBase.eifp GOTO VISION2
-ECHO Could not find ..\build_envision\EiffelSoftware.EiffelBase\EiffelSoftware.EiffelBase.eifp !!
+IF EXIST ..\build_envision\EiffelSoftware.CodeDomBase\EiffelSoftware.CodeDomBase.eifp COPY /Y ..\build_envision\EiffelSoftware.CodeDomBase\EiffelSoftware.CodeDomBase.eifp base.eifp
+IF EXIST ..\build_envision\EiffelSoftware.CodeDomBase\EiffelSoftware.CodeDomBase.eifp GOTO VISION2
+ECHO Could not find ..\build_envision\EiffelSoftware.CodeDomBase\EiffelSoftware.CodeDomBase.eifp !!
 
 :VISION2
-IF EXIST ..\build_envision\EiffelSoftware.EiffelVision2\EiffelSoftware.EiffelVision2.eifp COPY /Y ..\build_envision\EiffelSoftware.EiffelVision2\EiffelSoftware.EiffelVision2.eifp vision2.eifp
-IF EXIST ..\build_envision\EiffelSoftware.EiffelVision2\EiffelSoftware.EiffelVision2.eifp GOTO CACHE
-ECHO Could not find ..\build_envision\EiffelSoftware.EiffelVision2\EiffelSoftware.EiffelVision2.eifp !!
+IF EXIST ..\build_envision\EiffelSoftware.CodeDomVision2\EiffelSoftware.CodeDomVision2.eifp COPY /Y ..\build_envision\EiffelSoftware.CodeDomVision2\EiffelSoftware.CodeDomVision2.eifp vision2.eifp
+IF EXIST ..\build_envision\EiffelSoftware.CodeDomVision2\EiffelSoftware.CodeDomVision2.eifp GOTO CACHE
+ECHO Could not find ..\build_envision\EiffelSoftware.CodeDomVision2\EiffelSoftware.CodeDomVision2.eifp !!
 
 :CACHE
 IF EXIST ..\build_envision\EiffelSoftware.CacheBrowser\EiffelSoftware.CacheBrowser.eifp COPY /Y ..\build_envision\EiffelSoftware.CacheBrowser\EiffelSoftware.CacheBrowser.eifp cache_browser.eifp

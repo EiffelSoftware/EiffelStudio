@@ -27,28 +27,28 @@ GOTO BASE
 CD build_studio_debug
 
 :BASE
-ECHO Registering EiffelSoftware.EiffelBase.dll
-IF EXIST EiffelSoftware.EiffelBase\EIFGEN\F_code\EiffelSoftware.EiffelBase.dll gacutil -if EiffelSoftware.EiffelBase\EIFGEN\F_code\EiffelSoftware.EiffelBase.dll /nologo
-IF EXIST EiffelSoftware.EiffelBase\EIFGEN\F_code\EiffelSoftware.EiffelBase.dll GOTO LIBBASE
-ECHO Could not find EiffelSoftware.EiffelBase\EIFGEN\F_code\EiffelSoftware.EiffelBase.dll
+ECHO Registering EiffelSoftware.CodeDomBase.dll
+IF EXIST EiffelSoftware.CodeDomBase\EIFGEN\F_code\EiffelSoftware.CodeDomBase.dll gacutil -if EiffelSoftware.CodeDomBase\EIFGEN\F_code\EiffelSoftware.CodeDomBase.dll /nologo
+IF EXIST EiffelSoftware.CodeDomBase\EIFGEN\F_code\EiffelSoftware.CodeDomBase.dll GOTO LIBBASE
+ECHO Could not find EiffelSoftware.CodeDomBase\EIFGEN\F_code\EiffelSoftware.CodeDomBase.dll
 
 :LIBBASE
-ECHO Registering libEiffelSoftware.EiffelBase.dll
-IF EXIST EiffelSoftware.EiffelBase\EIFGEN\F_code\libEiffelSoftware.EiffelBase.dll COPY /Y EiffelSoftware.EiffelBase\EIFGEN\F_code\libEiffelSoftware.EiffelBase.dll %WINDIR%\System32
-IF EXIST EiffelSoftware.EiffelBase\EIFGEN\F_code\libEiffelSoftware.EiffelBase.dll GOTO VISION2
-ECHO Could not find EiffelSoftware.EiffelBase\EIFGEN\F_code\libEiffelSoftware.EiffelBase.dll
+ECHO Registering libEiffelSoftware.CodeDomBase.dll
+IF EXIST EiffelSoftware.CodeDomBase\EIFGEN\F_code\libEiffelSoftware.CodeDomBase.dll COPY /Y EiffelSoftware.CodeDomBase\EIFGEN\F_code\libEiffelSoftware.CodeDomBase.dll %WINDIR%\System32
+IF EXIST EiffelSoftware.CodeDomBase\EIFGEN\F_code\libEiffelSoftware.CodeDomBase.dll GOTO VISION2
+ECHO Could not find EiffelSoftware.CodeDomBase\EIFGEN\F_code\libEiffelSoftware.CodeDomBase.dll
 
 :VISION2
-ECHO Registering EiffelSoftware.EiffelVision2.dll
-IF EXIST EiffelSoftware.EiffelVision2\EIFGEN\F_code\EiffelSoftware.EiffelVision2.dll gacutil -if EiffelSoftware.EiffelVision2\EIFGEN\F_code\EiffelSoftware.EiffelVision2.dll /nologo
-IF EXIST EiffelSoftware.EiffelVision2\EIFGEN\F_code\EiffelSoftware.EiffelVision2.dll GOTO LIBVISION2
-ECHO Could not find EiffelSoftware.EiffelVision2\EIFGEN\F_code\EiffelSoftware.EiffelVision2.dll
+ECHO Registering EiffelSoftware.CodeDomVision2.dll
+IF EXIST EiffelSoftware.CodeDomVision2\EIFGEN\F_code\EiffelSoftware.CodeDomVision2.dll gacutil -if EiffelSoftware.CodeDomVision2\EIFGEN\F_code\EiffelSoftware.CodeDomVision2.dll /nologo
+IF EXIST EiffelSoftware.CodeDomVision2\EIFGEN\F_code\EiffelSoftware.CodeDomVision2.dll GOTO LIBVISION2
+ECHO Could not find EiffelSoftware.CodeDomVision2\EIFGEN\F_code\EiffelSoftware.CodeDomVision2.dll
 
 :LIBVISION2
-ECHO Registering libEiffelSoftware.EiffelVision2.dll
-IF EXIST EiffelSoftware.EiffelVision2\EIFGEN\F_code\libEiffelSoftware.EiffelVision2.dll COPY /Y EiffelSoftware.EiffelVision2\EIFGEN\F_code\libEiffelSoftware.EiffelVision2.dll %WINDIR%\System32
-IF EXIST EiffelSoftware.EiffelVision2\EIFGEN\F_code\libEiffelSoftware.EiffelVision2.dll GOTO CACHE
-ECHO Could not find EiffelSoftware.EiffelVision2\EIFGEN\F_code\libEiffelSoftware.EiffelVision2.dll
+ECHO Registering libEiffelSoftware.CodeDomVision2.dll
+IF EXIST EiffelSoftware.CodeDomVision2\EIFGEN\F_code\libEiffelSoftware.CodeDomVision2.dll COPY /Y EiffelSoftware.CodeDomVision2\EIFGEN\F_code\libEiffelSoftware.CodeDomVision2.dll %WINDIR%\System32
+IF EXIST EiffelSoftware.CodeDomVision2\EIFGEN\F_code\libEiffelSoftware.CodeDomVision2.dll GOTO CACHE
+ECHO Could not find EiffelSoftware.CodeDomVision2\EIFGEN\F_code\libEiffelSoftware.CodeDomVision2.dll
 
 :CACHE
 ECHO Registering EiffelSoftware.CacheBrowser.dll

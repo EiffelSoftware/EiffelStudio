@@ -8,22 +8,22 @@ SET PATH=%PATH%;%ISE_EIFFEL%\studio\spec\windows\bin
 
 IF "%1"=="/release" GOTO CDREL
 IF NOT EXIST build_studio_debug CALL setup_studio.bat %1
-CD build_studio_debug\EiffelSoftware.EiffelBase
+CD build_studio_debug\EiffelSoftware.CodeDomBase
 GOTO BASE
 
 :CDREL
 IF NOT EXIST build_studio CALL setup_studio.bat %1
-CD build_studio\EiffelSoftware.EiffelBase
+CD build_studio\EiffelSoftware.CodeDomBase
 
 :BASE
 IF EXIST EIFGEN RD /Q /S EIFGEN
 IF EXIST *.epr DEL /Q /F *.epr
 ECHO -
-ECHO COMPILING EiffelBase
+ECHO COMPILING CodeDomBase
 ECHO -
 ec -ace ace.ace -precompile -finalize -c_compile
-IF EXIST EIFGEN\F_code\EiffelSoftware.EiffelBase.dll GOTO CACHE
-ECHO Compilation failed !! (no EiffelSoftware.EiffelBase.dll was generated in build_studio\EiffelSoftware.EiffelBase\EIFGEN\F_code)
+IF EXIST EIFGEN\F_code\EiffelSoftware.CodeDomBase.dll GOTO CACHE
+ECHO Compilation failed !! (no EiffelSoftware.CodeDomBase.dll was generated in build_studio\EiffelSoftware.CodeDomBase\EIFGEN\F_code)
 GOTO END
 
 :CACHE
@@ -54,15 +54,15 @@ GOTO END
 
 :VISION2
 CD ..
-CD EiffelSoftware.EiffelVision2
+CD EiffelSoftware.CodeDomVision2
 IF EXIST EIFGEN RD /Q /S EIFGEN
 IF EXIST *.epr DEL /Q /F *.epr
 ECHO -
-ECHO COMPILING EiffelVision2
+ECHO COMPILING CodeDomVision2
 ECHO -
 ec -ace ace.ace -precompile -finalize -c_compile
-IF EXIST EIFGEN\F_code\EiffelSoftware.EiffelVision2.dll GOTO MANAGER
-ECHO Compilation failed !! (no EiffelSoftware.EiffelVision2.dll was generated in build_studio\EiffelSoftware.EiffelVision2\EIFGEN\F_code)
+IF EXIST EIFGEN\F_code\EiffelSoftware.CodeDomVision2.dll GOTO MANAGER
+ECHO Compilation failed !! (no EiffelSoftware.CodeDomVision2.dll was generated in build_studio\EiffelSoftware.CodeDomVision2\EIFGEN\F_code)
 GOTO END
 
 :MANAGER

@@ -1,8 +1,7 @@
 --| FIXME NOT_REVIEWED this file has not been reviewed
 indexing
 	description:
-		" EiffelVision tool-bar radio button, mswindows%
-		% implementation."
+		"EiffelVision tool-bar radio button, mswindows implementation."
 	status: "See notice at end of class."
 	date: "$Date$"
 	revision: "$Revision$"
@@ -35,6 +34,7 @@ creation
 feature {NONE} -- Initialization
 
 	initialize is
+			-- Post creation initialization.
 		do
 			Precursor
 			enable_select
@@ -61,7 +61,7 @@ feature -- Status report
 			end
 		end
 
-		update_radio_states is
+	update_radio_states is
 			-- Unselect all members of `radio_group'
 			-- and assign True to `checked'.
 		local
@@ -88,7 +88,7 @@ feature {EV_ANY_I} -- Implementation
 
 end -- class EV_TOOL_BAR_RADIO_BUTTON_IMP
 
---|----------------------------------------------------------------
+--|-----------------------------------------------------------------------------
 --| EiffelVision: library of reusable components for ISE Eiffel.
 --| Copyright (C) 1986-1998 Interactive Software Engineering Inc.
 --| All rights reserved. Duplication and distribution prohibited.
@@ -102,13 +102,16 @@ end -- class EV_TOOL_BAR_RADIO_BUTTON_IMP
 --| Electronic mail <info@eiffel.com>
 --| Customer support e-mail <support@eiffel.com>
 --| For latest info see award-winning pages: http://www.eiffel.com
---|----------------------------------------------------------------
+--|-----------------------------------------------------------------------------
 
 --|-----------------------------------------------------------------------------
 --| CVS log
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.10  2000/04/07 00:48:00  rogers
+--| Formatting and comments.
+--|
 --| Revision 1.9  2000/04/05 18:18:44  rogers
 --| Removed disable_select, checked. Renamed internal_enable_select
 --| to update_radio_states/

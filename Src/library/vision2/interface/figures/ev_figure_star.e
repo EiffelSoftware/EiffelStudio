@@ -1,6 +1,7 @@
 indexing
 	description:
-		"`line_count' lines emerging from `center_point'."
+		"`line_count' lines emerging from `center_point'.%N%
+		%First line is from `center_point' to `corner_point."
 	status: "See notice at end of class"
 	keywords: "figure, star, plus"
 	date: "$Date$"
@@ -25,7 +26,8 @@ inherit
 		end
 
 create
-	default_create
+	default_create,
+	make_with_points
 
 feature {NONE} -- Initialization
 
@@ -39,7 +41,7 @@ feature {NONE} -- Initialization
 feature -- Access
 
 	line_count: INTEGER
-			-- The number of sides of this equilateral.
+			-- Number of lines.
 
 feature -- Status setting
 
@@ -77,8 +79,8 @@ feature -- Implementation
 			loop
 				ang := ang + ang_step
 				create crd.set (
-					center_point.x - delta_x (ang, radius),
-					center_point.y + delta_y (ang, radius))
+					center_point.x_abs - delta_x (ang, radius),
+					center_point.y_abs + delta_y (ang, radius))
 				Result.put (crd, n)
 				n := n + 1
 			end
@@ -87,10 +89,9 @@ feature -- Implementation
 		end
 
 	position_on_figure (x, y: INTEGER): BOOLEAN is
-			-- Is the point on (`x', `y') on this figure?
+			-- Is (`x', `y') on this figure?
 		do
-			-- To be implemented
-			Result := False
+			Result := point_on_polygon (x, y, polygon_array)
 		end
 
 	bounding_box: EV_RECTANGLE is

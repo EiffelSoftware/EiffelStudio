@@ -236,4 +236,45 @@ feature -- Trace
 			end;
 		end;
 
+feature -- DLE
+
+	dle_C_string: STRING is
+			-- C code of run-time structure representing Current
+		require
+			dynamic_syatem: System.is_dynamic
+		local
+			i: INTEGER;
+			ri: ROUT_INFO
+		do
+			!!Result.make (0);
+			Result.append ("#include %"macros.h%"%N%N");
+			Result.append ("static struct rout_info Dforg_table[] = {%N");
+				-- C tables start at 0, we want to start at 1, to
+				-- that effect we insert a dummy entry.
+			Result.append ("%T{(int16) -1, (int16) -1},%N");
+				-- Entry for the invariant "routine"
+			Result.append ("%T{(int16) 0, (int16) 0},%N");
+			from
+				i := 2	
+			until
+				i > nb_elements
+			loop
+				ri := item (i);
+				if ri /= Void then
+					Result.append ("%T{(int16) ");
+					Result.append_integer (ri.origin);
+					Result.append (", (int16) ");
+					Result.append_integer (ri.offset);
+					Result.append ("},%N");
+				else
+					Result.append ("%T{(int16) -1, (int16) -1},%N")
+				end;
+				i := i + 1
+			end;
+			Result.put ('%N', Result.count - 1);
+			Result.put ('}', Result.count);
+			Result.append (";%N%Nvoid dle_ecall()%N%
+					%{%N%Teorg_table = Dforg_table;%N}%N")
+		end;
+
 end

@@ -131,4 +131,41 @@ feature -- Melting
 			desc_list.melt
 		end;
 
+feature -- DLE
+
+	generate_dle (c: CLASS_C) is
+			-- Generate descriptor C tables of class 
+			-- types associated with class `c'.
+		require
+			dynamic_system: System.is_dynamic
+		local
+			desc_list: DESC_LIST
+		do
+			desc_list := descriptors (c);
+			from
+				desc_list.start
+			until
+				desc_list.after
+			loop
+				if desc_list.item.class_type.is_dynamic then
+					desc_list.item.generate
+				end;
+				desc_list.forth
+			end
+		end;
+
+	melt_dle (c: CLASS_C) is
+			-- Melt descriptors of class types
+			-- associated with class `c'.
+			--| (The result is put in the melted 
+			--| descriptor server).
+		require
+			dynamic_system: System.is_dynamic
+		local
+			desc_list: DESC_LIST
+		do
+			desc_list := descriptors (c);
+			desc_list.melt_dle
+		end;
+
 end

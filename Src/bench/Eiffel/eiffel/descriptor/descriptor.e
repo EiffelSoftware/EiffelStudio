@@ -106,7 +106,9 @@ feature -- Generation
 			Result.append ("()%N{%N");
 
 				-- Special descriptor unit (invariant)
-			Result.append ("%TIDSC(desc");
+			Result.append ("%T");
+			Result.append (Init_macro);
+			Result.append ("(desc");
 			Result.append_integer (class_type.id);
 			Result.append (", 0, RTUD(");
 			Result.append_integer (class_type.id);
@@ -119,7 +121,9 @@ feature -- Generation
 			until
 				after
 			loop
-				Result.append ("%TIDSC(desc");
+				Result.append ("%T");
+				Result.append (Init_macro);
+				Result.append ("(desc");
 				Result.append_integer (class_type.id);
 				Result.append ("+");
 				Result.append_integer (i);
@@ -171,6 +175,18 @@ feature -- Melting
 				item_for_iteration.make_byte_code (ba);
 				forth
 			end;
+		end;
+
+feature -- DLE
+
+	Init_macro: STRING is
+			-- Macro for descriptor initialization
+		once
+			if System.is_dynamic then
+				Result := "IMDSC"
+			else
+				Result := "IDSC"
+			end
 		end;
 
 end

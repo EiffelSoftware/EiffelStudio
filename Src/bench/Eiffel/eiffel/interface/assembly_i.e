@@ -76,12 +76,12 @@ feature {NONE} -- Initialization
 				l_assembly_location := clone (l_env.Assemblies_path)
 			end
 			l_assembly_location.extend (l_assembly_directory)
-			create path.make_from_string (l_assembly_location)
+			create dollar_path.make_from_string (l_assembly_location)
+			update_path
 			
 			consume_assemblies
 
 				-- Necessary initialization to preserve inherited invariants.
-			dollar_path := path
 			create renamings.make
 			create ignore.make
 			create sub_clusters.make (0)
@@ -135,12 +135,12 @@ feature {NONE} -- Initialization
 				l_assembly_location := clone (l_env.Assemblies_path)
 			end
 			l_assembly_location.extend (l_assembly_directory)
-			create path.make_from_string (l_assembly_location)
+			create dollar_path.make_from_string (l_assembly_location)
+			update_path
 			
 			consume_assemblies
 
 				-- Necessary initialization to preserve inherited invariants.
-			dollar_path := path
 			create renamings.make
 			create ignore.make
 			create sub_clusters.make (0)
@@ -219,7 +219,8 @@ feature -- Initialization
 		local
 			l_reader: EIFFEL_XML_DESERIALIZER
 			l_env: EIFFEL_ENV
-			l_assembly_location: PATH_NAME
+			l_assembly_location, l_local_path: PATH_NAME
+			l_path: STRING
 			l_types_file, l_reference_file: FILE_NAME
 			l_location: FILE_NAME
 			
@@ -309,16 +310,20 @@ feature -- Initialization
 				l_assembly_location.extend (build_assembly_path (
 					l_cons_assembly.name, l_cons_assembly.version,
 					l_cons_assembly.culture, l_cons_assembly.key))
+				l_path := environ.interpreted_string (l_assembly_location)
 					
-				l_assembly ?= Universe.cluster_of_path (l_assembly_location)
+				l_assembly ?= Universe.cluster_of_path (l_path)
 				if l_assembly = Void then
-					l_assembly_location := clone (Local_assembly_path)
-					l_assembly_location.extend (build_assembly_path (
+					l_local_path := clone (Local_assembly_path)
+					l_local_path.extend (build_assembly_path (
 						l_cons_assembly.name, l_cons_assembly.version,
 						l_cons_assembly.culture, l_cons_assembly.key))
-					l_assembly ?= Universe.cluster_of_path (l_assembly_location)
+					l_assembly ?= Universe.cluster_of_path (l_local_path)
 					if l_assembly = Void then
-						l_assembly ?= Lace.old_universe.cluster_of_path (l_assembly_location)
+							-- We did not find a global or a local matching assembly,
+							-- we are going to try to add it as a global assembly and
+							-- emit the missing XML.
+						l_assembly ?= Lace.old_universe.cluster_of_path (l_path)
 						if l_assembly = Void then
 							create l_assembly.make_from_consumed_assembly (l_cons_assembly)
 							Eiffel_system.add_sub_cluster (l_assembly)

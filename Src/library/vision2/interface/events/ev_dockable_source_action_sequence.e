@@ -1,6 +1,5 @@
 indexing
 	description: "Action sequence for docking events."
-	status: "See notice at end of class"
 	date: "$Date$"
 	revision: "$Revision$"
 
@@ -13,6 +12,9 @@ inherit
 	
 create
 	default_create
+
+create {EV_DOCKABLE_SOURCE_ACTION_SEQUENCE}
+	make_filled
 
 feature -- Access
 
@@ -27,6 +29,15 @@ feature -- Access
 			-- Calls `action' passing all other arguments.
 		do
 			action.call ([source])
+		end
+
+
+feature {NONE} -- Implementation
+
+	new_filled_list (n: INTEGER): like Current is
+			-- New list with `n' elements.
+		do
+			create Result.make_filled (n)
 		end
 
 end -- class EV_DOCKABLE_SOURCE_ACTION_SEQUENCE

@@ -11,6 +11,9 @@ deferred class
 
 inherit
 	ACTION_SEQUENCE [EVENT_DATA]
+		undefine
+			new_filled_list
+		end
 
 feature -- Element change
 

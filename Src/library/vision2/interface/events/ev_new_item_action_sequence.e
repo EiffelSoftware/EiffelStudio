@@ -17,6 +17,9 @@ inherit
 create
 	default_create
 
+create {EV_NEW_ITEM_ACTION_SEQUENCE}
+	make_filled
+
 feature -- Access
 
 	force_extend (action: PROCEDURE [ANY, TUPLE]) is
@@ -31,6 +34,15 @@ feature -- Access
 		do
 			action.call ([a_widget])
 		end
+
+feature {NONE} -- Implementation
+
+	new_filled_list (n: INTEGER): like Current is
+			-- New list with `n' elements.
+		do
+			create Result.make_filled (n)
+		end
+
 end
 
 --|----------------------------------------------------------------

@@ -324,6 +324,7 @@ feature {NONE} -- Implementation
 				if c < ' ' or c > '%/127/' then
 					buffer.append_string ("&#")
 					buffer.append_integer (c.code)
+					buffer.append_character (';')
 				else
 					buffer.append_character (c)
 				end

@@ -26,18 +26,13 @@ feature {NONE} -- Initialization
 		require
 			non_void_a_dtp: a_dtp /= Void
 		local
-			dummy: SYSTEM_OBJECT
-			l_form: WINFORMS_FORM
-			dtp_form: DATE_TIME_PICKER_CTL
+			return: SYSTEM_OBJECT
 		do
-			make_form
 			initialize_components
-
 			dtp := a_dtp
-
 			synchronize_panel_colors
 		ensure
-			dtp_set: dtp = a_dtp implies dtp /= Void
+			dtp_set: dtp = a_dtp
 		end
 
 feature -- Access
@@ -91,135 +86,135 @@ feature -- Implementation
 			create label_3.make
 			create label_1.make
 
-			set_text (("Change Color").to_cil)
+			set_text ("Change Color")
 			set_maximize_box (False)
-			l_size.make_from_width_and_height (5, 13)
+			l_size.make (5, 13)
 			set_auto_scale_base_size (l_size)
 			set_form_border_style (feature {WINFORMS_FORM_BORDER_STYLE}.fixed_dialog)
 			set_minimize_box (False)
-			l_size.make_from_width_and_height (406, 194)
+			l_size.make (406, 194)
 			set_client_size (l_size)
 
-			l_point.make_from_x_and_y (232, 112)
+			l_point.make (232, 112)
 			btn_trailing_fore_color.set_location (l_point)
-			l_size.make_from_width_and_height (75, 23)
+			l_size.make (75, 23)
 			btn_trailing_fore_color.set_size (l_size)
 			btn_trailing_fore_color.set_tab_index (12)
-			btn_trailing_fore_color.set_text (("Change").to_cil)
+			btn_trailing_fore_color.set_text ("Change")
 			btn_trailing_fore_color.add_click (create {EVENT_HANDLER}.make (Current, $on_btn_trailing_fore_color_click))
 
-			l_point.make_from_x_and_y (320, 160)
+			l_point.make (320, 160)
 			btn_OK.set_location (l_point)
 			btn_OK.set_dialog_result (feature {WINFORMS_DIALOG_RESULT}.OK)
-			l_size.make_from_width_and_height (75, 23)
+			l_size.make (75, 23)
 			btn_OK.set_size (l_size)
 			btn_OK.set_tab_index (9)
-			btn_OK.set_text (("&OK").to_cil)
+			btn_OK.set_text ("&OK")
 
 			pnl_month_background.set_border_style (feature {WINFORMS_BORDER_STYLE}.fixed_3_d)
-			l_point.make_from_x_and_y (160, 43)
+			l_point.make (160, 43)
 			pnl_month_background.set_location (l_point)
-			l_size.make_from_width_and_height (48, 16)
+			l_size.make (48, 16)
 			pnl_month_background.set_size (l_size)
 			pnl_month_background.set_tab_index (3)
-			pnl_month_background.set_text (("panel1").to_cil)
+			pnl_month_background.set_text ("panel1")
 
-			l_point.make_from_x_and_y (232, 64)
+			l_point.make (232, 64)
 			btn_title_back_color.set_location (l_point)
-			l_size.make_from_width_and_height (75, 23)
+			l_size.make (75, 23)
 			btn_title_back_color.set_size (l_size)
 			btn_title_back_color.set_tab_index (14)
-			btn_title_back_color.set_text (("Change").to_cil)
+			btn_title_back_color.set_text ("Change")
 			btn_title_back_color.add_click (create {EVENT_HANDLER}.make (Current, $on_btn_title_back_color_click))
 
 			pnl_fore_color.set_border_style (feature {WINFORMS_BORDER_STYLE}.fixed_3_d)
-			l_point.make_from_x_and_y (160, 19)
+			l_point.make (160, 19)
 			pnl_fore_color.set_location (l_point)
-			l_size.make_from_width_and_height (48, 16)
+			l_size.make (48, 16)
 			pnl_fore_color.set_size (l_size)
 			pnl_fore_color.set_tab_index (10)
-			pnl_fore_color.set_text (("panel1").to_cil)
+			pnl_fore_color.set_text ("panel1")
 
 			pnl_title_fore_color.set_border_style (feature {WINFORMS_BORDER_STYLE}.fixed_3_d)
-			l_point.make_from_x_and_y (160, 91)
+			l_point.make (160, 91)
 			pnl_title_fore_color.set_location (l_point)
-			l_size.make_from_width_and_height (48, 16)
+			l_size.make (48, 16)
 			pnl_title_fore_color.set_size (l_size)
 			pnl_title_fore_color.set_tab_index (1)
-			pnl_title_fore_color.set_text (("panel1").to_cil)
+			pnl_title_fore_color.set_text ("panel1")
 
-			l_point.make_from_x_and_y (232, 40)
+			l_point.make (232, 40)
 			btn_month_background.set_location (l_point)
-			l_size.make_from_width_and_height (75, 23)
+			l_size.make (75, 23)
 			btn_month_background.set_size (l_size)
 			btn_month_background.set_tab_index (15)
-			btn_month_background.set_text (("Change").to_cil)
+			btn_month_background.set_text ("Change")
 			btn_month_background.add_click (create {EVENT_HANDLER}.make (Current, $on_btn_month_background_click))
 
 			pnl_title_back_color.set_border_style (feature {WINFORMS_BORDER_STYLE}.fixed_3_d)
-			l_point.make_from_x_and_y (160, 67)
+			l_point.make (160, 67)
 			pnl_title_back_color.set_location (l_point)
-			l_size.make_from_width_and_height (48, 16)
+			l_size.make (48, 16)
 			pnl_title_back_color.set_size (l_size)
 			pnl_title_back_color.set_tab_index (2)
-			pnl_title_back_color.set_text (("panel1").to_cil)
+			pnl_title_back_color.set_text ("panel1")
 
-			l_point.make_from_x_and_y (232, 88)
+			l_point.make (232, 88)
 			btn_title_fore_color.set_location (l_point)
-			l_size.make_from_width_and_height (75, 23)
+			l_size.make (75, 23)
 			btn_title_fore_color.set_size (l_size)
 			btn_title_fore_color.set_tab_index (13)
-			btn_title_fore_color.set_text (("Change").to_cil)
+			btn_title_fore_color.set_text ("Change")
 			btn_title_fore_color.add_click (create {EVENT_HANDLER}.make (Current, $on_btn_title_fore_color_click))
 
-			l_point.make_from_x_and_y (16, 115)
+			l_point.make (16, 115)
 			label_5.set_location (l_point)
-			label_5.set_text (("CalendarTrailingForeColor:").to_cil)
-			l_size.make_from_width_and_height (136, 16)
+			label_5.set_text ("Calendar trailing fore color: ")
+			l_size.make (136, 16)
 			label_5.set_size (l_size)
 			label_5.set_tab_index (4)
 
-			l_point.make_from_x_and_y (232, 16)
+			l_point.make (232, 16)
 			btn_fore_color.set_location (l_point)
-			l_size.make_from_width_and_height (75, 23)
+			l_size.make (75, 23)
 			btn_fore_color.set_size (l_size)
 			btn_fore_color.set_tab_index (11)
-			btn_fore_color.set_text (("Change").to_cil)
+			btn_fore_color.set_text ("Change")
 			btn_fore_color.add_click (create {EVENT_HANDLER}.make (Current, $on_btn_fore_color_click))
 
 			pnl_trailing_fore_color.set_border_style (feature {WINFORMS_BORDER_STYLE}.fixed_3_d)
-			l_point.make_from_x_and_y (160, 115)
+			l_point.make (160, 115)
 			pnl_trailing_fore_color.set_location (l_point)
-			l_size.make_from_width_and_height (48, 16)
+			l_size.make (48, 16)
 			pnl_trailing_fore_color.set_size (l_size)
 			pnl_trailing_fore_color.set_tab_index (0)
-			pnl_trailing_fore_color.set_text (("panel1").to_cil)
+			pnl_trailing_fore_color.set_text ("panel1")
 
-			l_point.make_from_x_and_y (16, 91)
+			l_point.make (16, 91)
 			label_4.set_location (l_point)
-			label_4.set_text (("CalendarTitleForeColor:").to_cil)
-			l_size.make_from_width_and_height (136, 16)
+			label_4.set_text ("Calendar title fore color: ")
+			l_size.make (136, 16)
 			label_4.set_size (l_size)
 			label_4.set_tab_index (5)
 
-			l_point.make_from_x_and_y (16, 43)
+			l_point.make (16, 43)
 			label_2.set_location (l_point)
-			label_2.set_text (("CalendarMonthBackground:").to_cil)
-			l_size.make_from_width_and_height (144, 16)
+			label_2.set_text ("Calendar month background: ")
+			l_size.make (144, 16)
 			label_2.set_size (l_size)
 			label_2.set_tab_index (7)
 
-			l_point.make_from_x_and_y (16, 67)
+			l_point.make (16, 67)
 			label_3.set_location (l_point)
-			label_3.set_text (("CalendarTitleBackColor:").to_cil)
-			l_size.make_from_width_and_height (136, 16)
+			label_3.set_text ("Calendar title back color: ")
+			l_size.make (136, 16)
 			label_3.set_size (l_size)
 			label_3.set_tab_index (6)
 
-			l_point.make_from_x_and_y (16, 19)
+			l_point.make (16, 19)
 			label_1.set_location (l_point)
-			label_1.set_text (("CalendarForeColor:").to_cil)
-			l_size.make_from_width_and_height (136, 16)
+			label_1.set_text ("Calendar fore color: ")
+			l_size.make (136, 16)
 			label_1.set_size (l_size)
 			label_1.set_tab_index (8)
 
@@ -266,7 +261,6 @@ feature {NONE} -- Implementation
 	dispose_boolean (a_disposing: BOOLEAN) is
 			-- method called when form is disposed.
 		local
-			dummy: WINFORMS_DIALOG_RESULT
 			retried: BOOLEAN
 		do
 			if not retried then
@@ -302,7 +296,7 @@ feature {NONE} -- Implementation
 			res := color_dialog.show_dialog
 			if res = feature {WINFORMS_DIALOG_RESULT}.OK then
 				dtp.set_calendar_fore_color (color_dialog.color)
-				synchronize_panel_colors()
+				synchronize_panel_colors
 			end
 		end
 
@@ -318,7 +312,7 @@ feature {NONE} -- Implementation
 			res := color_dialog.show_dialog
 			if res = feature {WINFORMS_DIALOG_RESULT}.OK then
 				dtp.set_calendar_month_background (color_dialog.color)
-				synchronize_panel_colors()
+				synchronize_panel_colors
 			end
 		end
 
@@ -334,7 +328,7 @@ feature {NONE} -- Implementation
 			res := color_dialog.show_dialog
 			if res = feature {WINFORMS_DIALOG_RESULT}.OK then 
 				dtp.set_calendar_title_back_color (color_dialog.color)
-				synchronize_panel_colors()
+				synchronize_panel_colors
 			end
 		end
 

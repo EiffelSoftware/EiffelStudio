@@ -149,12 +149,11 @@ feature -- Access
 						Result := False
 					end
 				end	
-					
-				check
-					parent_of_object_not_void: object.parent_object /= Void
-				end
-				
-				if not object.parent_object.accepts_child (type) then
+
+				if object.parent_object = Void then
+						-- This prevents top level objects from being replaced.
+					Result := False
+				elseif not object.parent_object.accepts_child (type) then
 					Result := False
 				end
 	

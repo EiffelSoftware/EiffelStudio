@@ -303,7 +303,7 @@ feature {GB_XML_STORE, GB_XML_LOAD, GB_XML_OBJECT_BUILDER} -- Basic operation
 			end
 		end
 		
-feature {GB_WINDOW_SELECTOR, GB_TITLED_WINDOW_OBJECT} -- Basic operation
+feature {GB_WINDOW_SELECTOR, GB_TITLED_WINDOW_OBJECT, GB_OBJECT_HANDLER} -- Basic operation
 
 	set_as_root_window is
 			-- Ensure `Current' is the root window of the project,

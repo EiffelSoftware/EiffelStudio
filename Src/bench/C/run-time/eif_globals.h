@@ -82,6 +82,10 @@ typedef struct tag_eif_globals		/* Structure containing all global variables to 
 	struct stack hec_stack_cx;		/* Indirection table "hector stack" for references passed to C*/
 #endif
 
+		/* option.c */
+	int trace_call_level_cx;
+	struct stack *prof_stack_cx;
+
 } eif_global_context_t;
 
 
@@ -162,6 +166,9 @@ rt_private eif_global_context_t * eif_thr_getspecific (EIF_TSD_TYPE global_key) 
 #ifdef ISE_GC
 #define hec_stack			(eif_globals->hec_stack_cx)		/* rt_public */
 #endif
+
+#define trace_call_level	(eif_globals->trace_call_level_cx)
+#define prof_stack			(eif_globals->prof_stack_cx)
 
 RT_LNK EIF_TSD_TYPE eif_global_key;
 

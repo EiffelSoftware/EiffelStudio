@@ -202,6 +202,20 @@ typedef struct tag_rt_globals
 	struct stack free_stack_cx;			/* Entries free in hector */
 #endif
 
+		/* option.c */
+	int last_dtype_cx;
+	int last_origin_cx;
+	char *last_name_cx;
+	struct htable *class_table_cx;
+#ifdef HAS_GETRUSAGE
+	struct 	prof_rusage	*init_date_cx;
+#elif defined(HAS_TIMES)
+	double 	       init_date_cx;
+#elif defined(EIF_WIN32)
+	SYSTEMTIME 	*init_date_cx;
+#endif  /* HAS_GERUSAGE */
+
+
 } rt_global_context_t;
 
 	/*
@@ -397,6 +411,13 @@ rt_private rt_global_context_t * rt_thr_getspecific (EIF_TSD_TYPE global_key) {
 #define hec_saved			(rt_globals->hec_saved_cx)		/* rt_public */
 #define free_stack			(rt_globals->free_stack_cx)	/* rt_private */
 #endif
+
+	/* option.c */
+#define last_dtype			(rt_globals->last_dtype_cx)
+#define last_origin			(rt_globals->last_origin_cx)
+#define last_name			(rt_globals->last_name_cx)
+#define class_table			(rt_globals->class_table_cx)
+#define init_date			(rt_globals->init_date_cx)
 
 RT_LNK EIF_TSD_TYPE rt_global_key;
 

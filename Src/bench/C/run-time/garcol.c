@@ -48,7 +48,7 @@ doc:<file name="garcol.c" header="eif_garcol.h" version="$Id$" summary="Garbage 
 
 #include "rt_assert.h" 				/* For assertions checking. */
 #if ! defined CUSTOM || defined NEED_OPTION_H
-#include "eif_option.h"		/* For exitprf */
+#include "rt_option.h"		/* For exitprf */
 #endif
 #if ! defined CUSTOM || defined NEED_OBJECT_ID_H
 #include "rt_object_id.h"	/* For the object id and separate stacks */

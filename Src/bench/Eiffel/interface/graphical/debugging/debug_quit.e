@@ -23,10 +23,10 @@ creation
 
 feature -- Initialization
 
-	make (a_text_window: TEXT_WINDOW) is
+	make (a_tool: TOOL_W) is
 			-- Initialize the command.
 		do
-			init (a_text_window);
+			init (a_tool);
 			!!request.make (Rqst_quit);
 			Application.set_termination_command (Current)
 		end;

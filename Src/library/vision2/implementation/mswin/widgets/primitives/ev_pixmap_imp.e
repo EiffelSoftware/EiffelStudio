@@ -14,6 +14,7 @@ inherit
 		rename
 			dc as internal_dc
 		redefine
+			initialize,
 			internal_dc,
 			clear_rect,
 			draw_point,
@@ -52,6 +53,7 @@ feature {NONE} -- Initialization
 			!! bmp.make_compatible (screen, 1, 1)
 			internal_dc.select_bitmap (bmp)
 			screen.release
+			initialize
 		end
 
 	make_with_size (w, h: INTEGER) is
@@ -59,8 +61,6 @@ feature {NONE} -- Initialization
 		local
 			bmp: WEL_BITMAP
 			screen: WEL_SCREEN_DC
-			color: EV_COLOR
-			default_colors: EV_DEFAULT_COLORS
 		do
 			!! screen
 			screen.get
@@ -68,12 +68,21 @@ feature {NONE} -- Initialization
 			!! bmp.make_compatible (screen, w, h)
 			internal_dc.select_bitmap (bmp)
 			screen.release
+			initialize
+		end
 
+	initialize is
+			-- Set some default values.
+		local
+			default_colors: EV_DEFAULT_COLORS
+			color: EV_COLOR
+		do
 			!! default_colors
 			set_background_color (default_colors.Color_dialog)
 			!! color.make_rgb (0, 0, 0)
 			set_foreground_color (color)
 			clear
+			{EV_DRAWABLE_IMP} Precursor
 		end
 
 feature -- Access

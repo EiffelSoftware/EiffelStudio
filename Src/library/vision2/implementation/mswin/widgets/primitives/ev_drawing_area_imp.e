@@ -94,14 +94,7 @@ feature {NONE} -- Initialization
 			wel_make (default_parent, "Drawing area")
 			!! dc.make (Current)
 			dc.get
-
-			-- We set some default_values
-			dc.set_background_opaque
-			set_logical_mode (3)
-			dc.select_brush (background_brush)
-			dc.select_pen (background_pen)
-			set_line_width (1)
-			set_line_style (ps_solid)
+			initialize
 		end
 
 feature -- Access

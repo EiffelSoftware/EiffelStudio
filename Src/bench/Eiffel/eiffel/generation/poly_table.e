@@ -329,7 +329,7 @@ feature
 						file.putstring ("_pgtype");
 						file.putint (j);
 						file.putstring (" [] = {");
-						file.putstring (entry.gen_type_string);
+						file.putstring (entry.gen_type_string (True));
 						file.putstring ("-1};");
 						file.new_line;
 						j := j + 1

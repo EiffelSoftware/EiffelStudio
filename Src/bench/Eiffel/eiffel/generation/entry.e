@@ -163,13 +163,13 @@ feature -- from ENTRY
 			Result := (gtype /= Void)
 		end;
 
-	gen_type_string : STRING is
+	gen_type_string (final_mode: BOOLEAN): STRING is
 			-- List of type id's of generic type 
 			-- separated by commas.
 		require
 			is_generic : is_generic
 		do
-			Result := type.gen_type_string (False, False) -- Necessarily in WB mode!
+			Result := type.gen_type_string (final_mode, False)
 		ensure
 			exists : Result /= Void
 		end;

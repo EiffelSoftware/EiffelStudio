@@ -9,13 +9,19 @@ class
 
 inherit
 	EV_TREE_ITEM_I
+		select
+			parent_imp
+		end
 	
 	EV_SIMPLE_ITEM_IMP
+		rename
+			parent_imp as old_parent_imp
 		export {NONE}
 			box
 		redefine
 			make,
 			has_parent,
+			set_parent,
 			set_pixmap,
 			unset_pixmap,
 			set_text,

@@ -42,9 +42,9 @@ following.
 #ifdef VXWORKS
 #define ITERATIVE_MARKING		/* Select iterative marking */
 #else
-/*#define ITERATIVE_MARKING		/* Select iterative marking */
+/*#define ITERATIVE_MARKING	*/	/* Select iterative marking */
 #define HYBRID_MARKING		/* Select combined marking */
-/* #define RECURSIVE_MARKING /* Select recursive marking */
+/* #define RECURSIVE_MARKING */ /* Select recursive marking */
 #endif
 
 /*

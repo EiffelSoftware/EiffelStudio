@@ -15,7 +15,7 @@
 #pragma data_seg(".shared")	// Make a new section that we'll make shared
 HHOOK hMouseHook = NULL;	// HHOOK from SetWindowsHook
 HWND hHookWindow = NULL;	// Handle to the window that hook the mouse
-#pragma data_seg()	// Back to regular, nonshared data
+#pragma data_seg()			// Back to regular, nonshared data
 
 // Per process data
 HINSTANCE hDllInstance = 0;
@@ -77,7 +77,7 @@ __declspec(dllexport) LRESULT WINAPI MouseProc(int nCode, WPARAM wParam, LPARAM 
 	if (hMouseHook == NULL) 				// We do not know our hook handle
 		return 0;
 
-	if (hHookWindow==NULL)					// Something wrong happened...
+	if (hHookWindow == NULL)					// Something wrong happened...
 		UnhookWindowsHookEx(hMouseHook);	// We don't have any window target
 											// So we stop the hook.
 
@@ -167,7 +167,7 @@ __declspec(dllexport) LRESULT WINAPI MouseProc(int nCode, WPARAM wParam, LPARAM 
 			return 1;
 		}
 	
-	// We dont care about this message...do nothing.
+	// We don't care about this message...do nothing.
 	return retValue;
 	}
 
@@ -234,7 +234,7 @@ __declspec(dllexport) int WINAPI hook_mouse(HWND hWnd)
 /*---------------------------------------------------------------------------*/
 __declspec(dllexport) int WINAPI unhook_mouse()
 	{
-	if (UnhookWindowsHookEx(hMouseHook)==0)
+	if (UnhookWindowsHookEx(hMouseHook) == 0)
 		{
 		// DWORD nErrorCode = GetLastError();
 		// FIXME: Insert code here to deal with the error */

@@ -107,7 +107,9 @@ feature -- Status report
 	line_count: INTEGER is
 			-- Number of lines in widget.
 		do
-			Result := text.occurrences ('%N') + 1
+			if text /= Void then
+				Result := text.occurrences ('%N') + 1
+			end	
 		end 
 
 	first_position_from_line_number (i: INTEGER): INTEGER is
@@ -127,7 +129,7 @@ feature -- Status report
 				until
 					count = i
 				loop
-					-- Look for the ith'Return' in the string.
+					-- Look for the ith 'Return' in the string.
 					-- Return is symbolized by '%N'
 					pos := text.index_of ('%N', start)
 					count := count + 1
@@ -246,7 +248,9 @@ feature -- Basic operation
 			-- Position of first occurrence of `str' at or after `start';
 			-- 0 if none.
 		do
-			Result := text.substring_index (str, start)
+			if text /= Void then
+				Result := text.substring_index (str, start)
+			end	
 		end
 
 	scroll_to_line (i: INTEGER) is
@@ -258,9 +262,11 @@ feature -- Assertions
 	last_line_not_empty: BOOLEAN is
 			-- Has the line at least one character?
 		do
-			Result := not ((text @ text.count) = '%N')
+			if text /= Void then
+				Result := not ((text @ text.count) = '%N')
+			end
 		end
-
+		
 feature {NONE} -- Implementation
 
 	entry_widget: POINTER

@@ -917,12 +917,14 @@ feature -- Status setting
 					if tab_positions.count >= counter then
 							-- Set tab to the value in `tab_positions'.
 						value_in_twips := value_in_twips + mul_div (1440, tab_positions.i_th (counter), logical_pixels)
+						if not tab_positions.off then
+							tab_positions.forth	
+						end
 					else
 							-- Use the current default value, as a user has not set the position within `tab_positions'.
 						value_in_twips := value_in_twips + current_default
 					end
 					array.put (value_in_twips, counter)
-					tab_positions.forth
 					counter := counter + 1
 				end
 					-- The formatting is applied to the current selection.

@@ -611,6 +611,10 @@ feature -- Inlining
 
 				Result := nested_b
 			end
+			type := real_type (type)
+			if precursor_type /= Void then
+				precursor_type ?= real_type (precursor_type)
+			end
 			if parameters /= Void then
 				parameters := parameters.pre_inlined_code
 			end

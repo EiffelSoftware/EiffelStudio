@@ -381,6 +381,7 @@ feature -- Inlining
 		local
 			inlined_attr_b: INLINED_ATTR_B
 		do
+			type := real_type (type)
 			if parent /= Void then
 				Result := Current
 			else

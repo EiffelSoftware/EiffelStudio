@@ -194,12 +194,14 @@ feature -- Inlining
 	pre_inlined_code: like Current is
 		do
 			Result := Current;
+			attachment_type := context.real_type (attachment_type)
 			expression := expression.pre_inlined_code
 		end
 
 	inlined_byte_code: like Current is
 		do
 			Result := Current
+			attachment_type := context.real_type (attachment_type)
 			expression := expression.inlined_byte_code
 		end
 

@@ -1717,6 +1717,7 @@ feature -- Inlining
 	pre_inlined_code: like Current is
 		local
 			old_bc: BYTE_CODE
+			i, nb: INTEGER
 		do
 			check
 				no_rescue: rescue_clause = Void
@@ -1725,6 +1726,18 @@ feature -- Inlining
 			old_bc := Context.byte_code
 			Context.set_byte_code (Current)
 			Result := Current
+			result_type := real_type (result_type)
+			if locals /= Void then
+				from
+					i := locals.lower
+					nb := locals.upper
+				until
+					i > nb
+				loop
+					locals.put (real_type (locals.item (i)), i)
+					i := i + 1
+				end
+			end
 			if compound /= Void then
 				compound := compound.pre_inlined_code
 			end

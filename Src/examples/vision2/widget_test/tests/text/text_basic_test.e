@@ -28,4 +28,4 @@ feature {NONE} -- Implementation
 	text: EV_TEXT
 		-- Widget that test is to be performed on.
 
-end -- class TREE_BASIC_TEST
+end -- class TEXT_BASIC_TEST

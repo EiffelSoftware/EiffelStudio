@@ -45,7 +45,7 @@ feature  -- Access
 	set_lexical (lexical: LEXICAL) is
 			-- Designate `lexical' as the `analyzer' to be used.
 		require
-			lex_not_void: analyzer /= Void
+			lex_not_void: lexical /= Void
 		do
 			analyzer := lexical
 		end;

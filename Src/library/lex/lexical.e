@@ -132,11 +132,11 @@ feature -- Status setting
 	set_separator_type (type : INTEGER) is
 			-- Set `type' to be the type of tokens
 			-- used as separators.
-        do
-            separator_token_type := type
+		do
+			separator_token_type := type
 		ensure
 			separator_token_type = type
-        end;
+		end;
 
 feature -- Input
 
@@ -161,6 +161,14 @@ feature -- Input
 			and token_type /= 0)
 		end;
 
+	buffer_item_code (c: INTEGER): INTEGER is
+		do
+			Result := buffer.item_code (c);
+			if Result = 255 then
+				Result := -1
+			end;
+		end;
+
 	get_any_token is
 			-- Try to read a new token.
 			-- Recognize longest possible string.
@@ -181,8 +189,8 @@ feature -- Input
 				token_end := 0
 			end;
 			if
-				buffer.item_code (read_index) = -1
-				or buffer.item_code (read_index) = Close_of_file
+				buffer_item_code (read_index) = -1
+				or buffer_item_code (read_index) = Close_of_file
 			then
 				end_of_text := true;
 				token_type := -1;
@@ -193,7 +201,6 @@ feature -- Input
 				token_start := token_end + 1
 			end;
 			read_index := token_end + 1;
-if not end_of_text then
 			if read_index > buffer_size then
 				if token_start = 1 then
 					buffer_resized := true;
@@ -207,7 +214,7 @@ if not end_of_text then
 				from
 					state := dfa.item (1);
 					state := state.item (categories_table.item
-							(buffer.item_code (read_index)))
+							(buffer_item_code (read_index)))
 				until
 					state = Void or too_big
 				loop
@@ -221,7 +228,7 @@ if not end_of_text then
 						too_big := true
 					else
 						state := state.item (categories_table.item
-								(buffer.item_code (read_index)))
+								(buffer_item_code (read_index)))
 					end
 				end;
 				if too_big then
@@ -256,7 +263,6 @@ if not end_of_text then
 				resize_and_fill_buffer (Standard_buffer_size, token_end);
 				token_end := 0
 			end
-end
 		rescue
 			if read_index > buffer_size and not retried then
 				fill_buffer (token_start - 1);
@@ -284,7 +290,7 @@ end
 				fill_buffer (token_end);
 				token_end := 0
 			end;
-			if buffer.item_code (read_index) = -1 then
+			if buffer_item_code (read_index) = -1 then
 				end_of_text := true;
 				token_type := -1;
 				token_start := token_end;
@@ -297,7 +303,7 @@ end
 			from
 				state := dfa.item (1);
 				state := state.item (categories_table.item
-							(buffer.item_code (read_index)));
+							(buffer_item_code (read_index)));
 			until
 				state = Void or recognized
 			loop
@@ -309,7 +315,7 @@ end
 				end;
 				read_index := read_index + 1;
 				state := state.item (categories_table.item
-							(buffer.item_code (read_index)))
+							(buffer_item_code (read_index)))
 			end;
 			if token_type = 0 then
 				token_end := token_end + 1;
@@ -350,7 +356,7 @@ end
 				fill_buffer (token_end);
 				token_end := 0
 			end;
-			if buffer.item_code (read_index) = -1 then
+			if buffer_item_code (read_index) = -1 then
 				end_of_text := true;
 				token_type := -1;
 				token_start := token_end;
@@ -363,7 +369,7 @@ end
 			from
 				state := dfa.item (1);
 				state := state.item (categories_table.item
-							(buffer.item_code (read_index)))
+							(buffer_item_code (read_index)))
 			until
 				state = Void or (read_index - token_start) = l
 			loop
@@ -374,7 +380,7 @@ end
 				end;
 				read_index := read_index + 1;
 				state := state.item (categories_table.item
-							(buffer.item_code (read_index)))
+							(buffer_item_code (read_index)))
 			end;
 			if token_type = 0 then
 				token_end := token_end + 1;

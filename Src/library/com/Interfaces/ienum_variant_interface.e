@@ -10,7 +10,7 @@ inherit
 
 feature -- Status Report
 
-	next_user_precondition (celt: INTEGER; rgvar: ECOM_VARIANT; pcelt_fetched: INTEGER_REF): BOOLEAN is
+	next_user_precondition (celt: INTEGER; rgvar: ARRAY [ECOM_VARIANT]; pcelt_fetched: INTEGER_REF): BOOLEAN is
 			-- User-defined preconditions for `next'.
 			-- Redefine in descendants if needed.
 		do
@@ -40,14 +40,13 @@ feature -- Status Report
 
 feature -- Basic Operations
 
-	next (celt: INTEGER; rgvar: ECOM_VARIANT; pcelt_fetched: INTEGER_REF) is
+	next (celt: INTEGER; rgvar: ARRAY [ECOM_VARIANT]; pcelt_fetched: INTEGER_REF) is
 			-- No description available.
 			-- `celt' [in].  
 			-- `rgvar' [in].  
 			-- `pcelt_fetched' [out].  
 		require
 			non_void_rgvar: rgvar /= Void
-			valid_rgvar: rgvar.item /= default_pointer
 			non_void_pcelt_fetched: pcelt_fetched /= Void
 			next_user_precondition: next_user_precondition (celt, rgvar, pcelt_fetched)
 		deferred

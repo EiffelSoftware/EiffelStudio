@@ -438,7 +438,7 @@ unsigned int nbytes;
 
 	char *arena;		/* C arena allocated */
 
-	arena = xmalloc(nbytes, C_T, GC_ON);	/* Enable GC, why not? */
+	arena = xmalloc(nbytes, C_T, GC_OFF);
 
 	/* The C object does not use its Eiffel flags field in the header. However,
 	 * we set the EO_C bit. This will help the GC because it won't need

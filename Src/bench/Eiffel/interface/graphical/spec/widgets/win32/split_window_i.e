@@ -9,7 +9,8 @@ indexing
 class SPLIT_WINDOW_I
 
 inherit
-	MANAGER_IMP
+	--MANAGER_IMP
+	MANAGER_WINDOWS -- VISIONLITE
 		rename
 			cursor as manager_cursor
 		redefine

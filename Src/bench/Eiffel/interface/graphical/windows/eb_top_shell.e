@@ -79,6 +79,7 @@ feature -- Display
 
 feature {NONE} -- Implementation
 
-	implementation: TOP_SHELL_IMP
+	--implementation: TOP_SHELL_IMP
+	implementation: TOP_SHELL_I --VISIONLITE
 
 end -- class EB_TOP_SHELL

@@ -11,17 +11,20 @@ class WIDGET_ROUTINES
 
 feature -- Setting
 
-	set_scrolled_text_background_color (a_widget: SCROLLED_T_IMP; a_color: COLOR) is
+	--set_scrolled_text_background_color (a_widget: SCROLLED_T_IMP; a_color: COLOR) is
+	set_scrolled_text_background_color (a_widget: SCROLLED_T_I; a_color: COLOR) is -- VISIONLITE
 			-- Set the scrolled text widget `a_widget' background color
 			-- to `a_color'
 		local
-			text_windows: TEXT_IMP
+			--text_windows: TEXT_IMP
+			text_windows: TEXT_I -- VISIONLITE
 		do
 			text_windows ?= a_widget;
 			text_windows.set_background_color (a_color)
 		end;
 
-	copy_text_from_widget (a_widget: SCROLLED_T_IMP) is
+	--copy_text_from_widget (a_widget: SCROLLED_T_IMP) is
+	copy_text_from_widget (a_widget: SCROLLED_T_I) is -- VISIONLITE
 			-- Copy the text from `a_widget'.
 		local
 			wel_edit: WEL_EDIT
@@ -32,7 +35,8 @@ feature -- Setting
 			end
 		end;
 
-	cut_text_from_widget (a_widget: SCROLLED_T_IMP) is
+	--cut_text_from_widget (a_widget: SCROLLED_T_IMP) is
+	cut_text_from_widget (a_widget: SCROLLED_T_I) is -- VISIONLITE
 			-- Cut the text from `a_widget'.
 		local
 			wel_edit: WEL_EDIT
@@ -43,7 +47,8 @@ feature -- Setting
 			end
 		end;
 
-	paste_text_to_widget (a_widget: SCROLLED_T_IMP) is
+	--paste_text_to_widget (a_widget: SCROLLED_T_IMP) is
+	paste_text_to_widget (a_widget: SCROLLED_T_I) is -- VISIONLITE
 			-- Paste the text to `a_widget'.
 		local
 			wel_edit: WEL_EDIT
@@ -52,12 +57,14 @@ feature -- Setting
 			wel_edit.clip_paste
 		end;
 
-	init_button (a_button: BUTTON_IMP) is
+	--init_button (a_button: BUTTON_IMP) is
+	init_button (a_button: BUTTON_I) is --VISIONLITE
 			-- Initialize the button.
 		do
 		end;
 
-	real_project_height (a_widget: WIDGET_IMP): INTEGER is
+	--real_project_height (a_widget: WIDGET_IMP): INTEGER is
+	real_project_height (a_widget: WIDGET_I): INTEGER is --VISIONLITE
 		local
 			wel_window: WEL_WINDOW
 		do

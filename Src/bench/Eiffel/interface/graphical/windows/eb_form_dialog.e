@@ -129,6 +129,7 @@ feature -- Inapplicable
 
 feature {NONE} -- Implementation
 
-	implementation: FORM_D_IMP
+	--implementation: FORM_D_IMP
+	implementation: FORM_D_I --VISIONLITE
 
 end -- class EB_FORM_DIALOG

@@ -8,7 +8,7 @@ indexing
 class PRINT_DIALOG
 
 inherit
-
+	G_ANY_I; -- VISIONLITE
 	CLOSEABLE
 
 feature -- Removal

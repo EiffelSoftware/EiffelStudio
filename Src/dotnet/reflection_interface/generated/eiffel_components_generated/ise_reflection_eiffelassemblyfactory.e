@@ -38,11 +38,11 @@ feature -- Access
 			"_internal_AssemblyName"
 		end
 
-	get_assembly_public_key: STRING is
+	get_assembly_name: STRING is
 		external
 			"IL signature (): System.String use ISE.Reflection.EiffelAssemblyFactory"
 		alias
-			"get_AssemblyPublicKey"
+			"get_AssemblyName"
 		end
 
 	get_eiffel_cluster_path: STRING is
@@ -73,25 +73,11 @@ feature -- Access
 			"get_EmitterVersionNumber"
 		end
 
-	frozen a_internal_assembly_version: STRING is
+	get_assembly_public_key: STRING is
 		external
-			"IL field signature :System.String use ISE.Reflection.EiffelAssemblyFactory"
+			"IL signature (): System.String use ISE.Reflection.EiffelAssemblyFactory"
 		alias
-			"_internal_AssemblyVersion"
-		end
-
-	frozen a_internal_types: SYSTEM_COLLECTIONS_ARRAYLIST is
-		external
-			"IL field signature :System.Collections.ArrayList use ISE.Reflection.EiffelAssemblyFactory"
-		alias
-			"_internal_Types"
-		end
-
-	get_types: SYSTEM_COLLECTIONS_ARRAYLIST is
-		external
-			"IL signature (): System.Collections.ArrayList use ISE.Reflection.EiffelAssemblyFactory"
-		alias
-			"get_Types"
+			"get_AssemblyPublicKey"
 		end
 
 	frozen a_internal_eiffel_cluster_path: STRING is
@@ -101,11 +87,11 @@ feature -- Access
 			"_internal_EiffelClusterPath"
 		end
 
-	get_assembly_name: STRING is
+	frozen a_internal_assembly_version: STRING is
 		external
-			"IL signature (): System.String use ISE.Reflection.EiffelAssemblyFactory"
+			"IL field signature :System.String use ISE.Reflection.EiffelAssemblyFactory"
 		alias
-			"get_AssemblyName"
+			"_internal_AssemblyVersion"
 		end
 
 	get_assembly_culture: STRING is
@@ -124,18 +110,25 @@ feature -- Basic Operations
 			"SetAssemblyPublicKey"
 		end
 
+	set_assembly_name (a_name: STRING) is
+		external
+			"IL signature (System.String): System.Void use ISE.Reflection.EiffelAssemblyFactory"
+		alias
+			"SetAssemblyName"
+		end
+
+	set_assembly_culture (a_culture: STRING) is
+		external
+			"IL signature (System.String): System.Void use ISE.Reflection.EiffelAssemblyFactory"
+		alias
+			"SetAssemblyCulture"
+		end
+
 	make is
 		external
 			"IL signature (): System.Void use ISE.Reflection.EiffelAssemblyFactory"
 		alias
 			"Make"
-		end
-
-	set_eiffel_cluster_path (a_path: STRING) is
-		external
-			"IL signature (System.String): System.Void use ISE.Reflection.EiffelAssemblyFactory"
-		alias
-			"SetEiffelClusterPath"
 		end
 
 	set_emitter_version_number (a_value: STRING) is
@@ -145,25 +138,11 @@ feature -- Basic Operations
 			"SetEmitterVersionNumber"
 		end
 
-	add_type (a_type: ISE_REFLECTION_EIFFELCLASS) is
-		external
-			"IL signature (ISE.Reflection.EiffelClass): System.Void use ISE.Reflection.EiffelAssemblyFactory"
-		alias
-			"AddType"
-		end
-
-	set_assembly_name (a_name: STRING) is
+	set_eiffel_cluster_path (a_path: STRING) is
 		external
 			"IL signature (System.String): System.Void use ISE.Reflection.EiffelAssemblyFactory"
 		alias
-			"SetAssemblyName"
-		end
-
-	frozen a_invariant (current_object: ISE_REFLECTION_EIFFELASSEMBLYFACTORY) is
-		external
-			"IL static signature (ISE.Reflection.EiffelAssemblyFactory): System.Void use ISE.Reflection.EiffelAssemblyFactory"
-		alias
-			"_invariant"
+			"SetEiffelClusterPath"
 		end
 
 	set_assembly_version (a_version: STRING) is
@@ -171,13 +150,6 @@ feature -- Basic Operations
 			"IL signature (System.String): System.Void use ISE.Reflection.EiffelAssemblyFactory"
 		alias
 			"SetAssemblyVersion"
-		end
-
-	set_assembly_culture (a_culture: STRING) is
-		external
-			"IL signature (System.String): System.Void use ISE.Reflection.EiffelAssemblyFactory"
-		alias
-			"SetAssemblyCulture"
 		end
 
 end -- class ISE_REFLECTION_EIFFELASSEMBLYFACTORY

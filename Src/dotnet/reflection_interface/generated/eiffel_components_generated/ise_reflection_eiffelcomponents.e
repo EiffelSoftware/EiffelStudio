@@ -17,11 +17,18 @@ feature {NONE} -- Initialization
 
 feature -- Access
 
-	frozen a_internal_undefine_clause: ISE_REFLECTION_UNDEFINECLAUSE is
+	frozen a_internal_eiffel_class: ISE_REFLECTION_EIFFELCLASS is
 		external
-			"IL field signature :ISE.Reflection.UndefineClause use ISE.Reflection.EiffelComponents"
+			"IL field signature :ISE.Reflection.EiffelClass use ISE.Reflection.EiffelComponents"
 		alias
-			"_internal_UndefineClause"
+			"_internal_EiffelClass"
+		end
+
+	get_undefine_clause: ISE_REFLECTION_UNDEFINECLAUSE is
+		external
+			"IL signature (): ISE.Reflection.UndefineClause use ISE.Reflection.EiffelComponents"
+		alias
+			"get_UndefineClause"
 		end
 
 	get_rename_clause: ISE_REFLECTION_RENAMECLAUSE is
@@ -29,6 +36,13 @@ feature -- Access
 			"IL signature (): ISE.Reflection.RenameClause use ISE.Reflection.EiffelComponents"
 		alias
 			"get_RenameClause"
+		end
+
+	frozen a_internal_undefine_clause: ISE_REFLECTION_UNDEFINECLAUSE is
+		external
+			"IL field signature :ISE.Reflection.UndefineClause use ISE.Reflection.EiffelComponents"
+		alias
+			"_internal_UndefineClause"
 		end
 
 	get_redefine_clause: ISE_REFLECTION_REDEFINECLAUSE is
@@ -43,13 +57,6 @@ feature -- Access
 			"IL field signature :ISE.Reflection.ExportClause use ISE.Reflection.EiffelComponents"
 		alias
 			"_internal_ExportClause"
-		end
-
-	get_eiffel_assembly_factory: ISE_REFLECTION_EIFFELASSEMBLYFACTORY is
-		external
-			"IL signature (): ISE.Reflection.EiffelAssemblyFactory use ISE.Reflection.EiffelComponents"
-		alias
-			"get_EiffelAssemblyFactory"
 		end
 
 	get_export_clause: ISE_REFLECTION_EXPORTCLAUSE is
@@ -73,13 +80,6 @@ feature -- Access
 			"_internal_RenameClause"
 		end
 
-	get_undefine_clause: ISE_REFLECTION_UNDEFINECLAUSE is
-		external
-			"IL signature (): ISE.Reflection.UndefineClause use ISE.Reflection.EiffelComponents"
-		alias
-			"get_UndefineClause"
-		end
-
 	get_select_clause: ISE_REFLECTION_SELECTCLAUSE is
 		external
 			"IL signature (): ISE.Reflection.SelectClause use ISE.Reflection.EiffelComponents"
@@ -87,11 +87,11 @@ feature -- Access
 			"get_SelectClause"
 		end
 
-	frozen a_internal_eiffel_assembly_factory: ISE_REFLECTION_EIFFELASSEMBLYFACTORY is
+	get_eiffel_class: ISE_REFLECTION_EIFFELCLASS is
 		external
-			"IL field signature :ISE.Reflection.EiffelAssemblyFactory use ISE.Reflection.EiffelComponents"
+			"IL signature (): ISE.Reflection.EiffelClass use ISE.Reflection.EiffelComponents"
 		alias
-			"_internal_EiffelAssemblyFactory"
+			"get_EiffelClass"
 		end
 
 	frozen a_internal_redefine_clause: ISE_REFLECTION_REDEFINECLAUSE is

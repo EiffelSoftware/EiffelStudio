@@ -36,25 +36,18 @@ feature -- Access
 
 feature -- Basic Operations
 
-	eiffel_keyword: STRING is
+	equals_rename_clause (obj: ISE_REFLECTION_RENAMECLAUSE): BOOLEAN is
 		external
-			"IL signature (): System.String use ISE.Reflection.RenameClause"
+			"IL signature (ISE.Reflection.RenameClause): System.Boolean use ISE.Reflection.RenameClause"
 		alias
-			"EiffelKeyword"
+			"Equals"
 		end
 
-	string_representation: STRING is
+	space: STRING is
 		external
 			"IL signature (): System.String use ISE.Reflection.RenameClause"
 		alias
-			"StringRepresentation"
-		end
-
-	as_keyword: STRING is
-		external
-			"IL signature (): System.String use ISE.Reflection.RenameClause"
-		alias
-			"AsKeyword"
+			"Space"
 		end
 
 	make_from_info (a_source_name: STRING; a_target_name: STRING) is
@@ -64,11 +57,11 @@ feature -- Basic Operations
 			"MakeFromInfo"
 		end
 
-	rename_keyword: STRING is
+	string_representation: STRING is
 		external
 			"IL signature (): System.String use ISE.Reflection.RenameClause"
 		alias
-			"RenameKeyword"
+			"StringRepresentation"
 		end
 
 	set_target_name (a_target_name: STRING) is
@@ -78,11 +71,25 @@ feature -- Basic Operations
 			"SetTargetName"
 		end
 
-	space: STRING is
+	rename_keyword: STRING is
 		external
 			"IL signature (): System.String use ISE.Reflection.RenameClause"
 		alias
-			"Space"
+			"RenameKeyword"
+		end
+
+	eiffel_keyword: STRING is
+		external
+			"IL signature (): System.String use ISE.Reflection.RenameClause"
+		alias
+			"EiffelKeyword"
+		end
+
+	as_keyword: STRING is
+		external
+			"IL signature (): System.String use ISE.Reflection.RenameClause"
+		alias
+			"AsKeyword"
 		end
 
 end -- class ISE_REFLECTION_RENAMECLAUSE

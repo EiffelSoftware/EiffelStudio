@@ -20,11 +20,11 @@ feature {NONE} -- Initialization
 
 feature -- Access
 
-	frozen a_internal_eiffel_class: ISE_REFLECTION_EIFFELCLASS is
+	frozen a_internal_types: SYSTEM_COLLECTIONS_ARRAYLIST is
 		external
-			"IL field signature :ISE.Reflection.EiffelClass use ISE.Reflection.TypeStorer"
+			"IL field signature :System.Collections.ArrayList use ISE.Reflection.TypeStorer"
 		alias
-			"_internal_EiffelClass"
+			"_internal_Types"
 		end
 
 	frozen a_internal_error_messages: ISE_REFLECTION_TYPESTORERERRORMESSAGES is
@@ -32,6 +32,13 @@ feature -- Access
 			"IL field signature :ISE.Reflection.TypeStorerErrorMessages use ISE.Reflection.TypeStorer"
 		alias
 			"_internal_ErrorMessages"
+		end
+
+	get_types: SYSTEM_COLLECTIONS_ARRAYLIST is
+		external
+			"IL signature (): System.Collections.ArrayList use ISE.Reflection.TypeStorer"
+		alias
+			"get_Types"
 		end
 
 	get_last_error: ISE_REFLECTION_ERRORINFO is
@@ -97,11 +104,11 @@ feature -- Access
 			"get_Parents"
 		end
 
-	get_committed: BOOLEAN is
+	frozen a_internal_eiffel_class: ISE_REFLECTION_EIFFELCLASS is
 		external
-			"IL signature (): System.Boolean use ISE.Reflection.TypeStorer"
+			"IL field signature :ISE.Reflection.EiffelClass use ISE.Reflection.TypeStorer"
 		alias
-			"get_Committed"
+			"_internal_EiffelClass"
 		end
 
 	get_eiffel_class: ISE_REFLECTION_EIFFELCLASS is
@@ -116,6 +123,13 @@ feature -- Access
 			"IL signature (): ISE.Reflection.TypeStorerErrorMessages use ISE.Reflection.TypeStorer"
 		alias
 			"get_ErrorMessages"
+		end
+
+	get_committed: BOOLEAN is
+		external
+			"IL signature (): System.Boolean use ISE.Reflection.TypeStorer"
+		alias
+			"get_Committed"
 		end
 
 feature -- Basic Operations
@@ -139,6 +153,13 @@ feature -- Basic Operations
 			"IL signature (System.Collections.ArrayList): System.String use ISE.Reflection.TypeStorer"
 		alias
 			"StringFromList"
+		end
+
+	generate_xml_feature_element (a_feature: ISE_REFLECTION_EIFFELFEATURE) is
+		external
+			"IL signature (ISE.Reflection.EiffelFeature): System.Void use ISE.Reflection.TypeStorer"
+		alias
+			"GenerateXmlFeatureElement"
 		end
 
 	exists (a_filename: STRING): BOOLEAN is
@@ -225,11 +246,11 @@ feature -- Basic Operations
 			"GenerateXmlElementsFromAssertions"
 		end
 
-	generate_xml_feature_element (a_feature: ISE_REFLECTION_EIFFELFEATURE) is
+	assembly_description_filename: STRING is
 		external
-			"IL signature (ISE.Reflection.EiffelFeature): System.Void use ISE.Reflection.TypeStorer"
+			"IL signature (): System.String use ISE.Reflection.TypeStorer"
 		alias
-			"GenerateXmlFeatureElement"
+			"AssemblyDescriptionFilename"
 		end
 
 	generate_xml_class_footer (invariants: SYSTEM_COLLECTIONS_ARRAYLIST) is
@@ -237,6 +258,13 @@ feature -- Basic Operations
 			"IL signature (System.Collections.ArrayList): System.Void use ISE.Reflection.TypeStorer"
 		alias
 			"GenerateXmlClassFooter"
+		end
+
+	update_assembly_description is
+		external
+			"IL signature (): System.Void use ISE.Reflection.TypeStorer"
+		alias
+			"UpdateAssemblyDescription"
 		end
 
 	generate_xml_class_header is

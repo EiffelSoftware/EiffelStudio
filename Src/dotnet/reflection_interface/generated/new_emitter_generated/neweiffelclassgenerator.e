@@ -106,9 +106,9 @@ feature {NONE} -- Implementation
 			"EmitXmlFiles"
 		end
 
-	generated_assembly_factory (assembly_type: SYSTEM_TYPE): ISE_REFLECTION_EIFFELASSEMBLYFACTORY is
+	generated_assembly_factory (assembly_type: SYSTEM_TYPE; eiffel_cluster_path :STRING): ISE_REFLECTION_EIFFELASSEMBLY is
 		external
-			"IL signature (System.Type): ISE.Reflection.EiffelAssemblyFactory use EiffelClassGenerator"
+			"IL signature (System.Type, System.String): ISE.Reflection.EiffelAssembly use EiffelClassGenerator"
 		alias
 			"GeneratedAssemblyFactory"
 		end

@@ -8,7 +8,7 @@ class UNIQUE_I
 inherit
 	CONSTANT_I
 		redefine
-			is_unique, check_types, equiv, value, 
+			is_unique, is_once, check_types, equiv, value, 
 			replicated, unselected, new_api_feature
 		end
 
@@ -24,6 +24,9 @@ feature
 
 	is_unique: BOOLEAN is True
 			-- Is the current feature a unique one ?
+
+	is_once: BOOLEAN is False
+			-- Is the constant (implemented like) a once function?
 
 	equiv (other: FEATURE_I): BOOLEAN is
 			-- Is `other' equivalent to Current ?

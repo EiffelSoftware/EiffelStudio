@@ -40,7 +40,7 @@ echo %DEL% * >> cleanup.bat
 echo Precompiling EiffelBase
 cd precomp\spec\windows\base
 if exist EIFGEN %RM% EIFGEN
-%EC% -precompile
+%EC% -precompile -ace Ace.ace
 cd EIFGEN\W_code
 copy ..\..\..\..\..\..\cleanup.bat .
 %FF%
@@ -53,7 +53,7 @@ goto END
 echo Precompiling WEL
 cd ..\..\..\wel
 %RM% EIFGEN
-%EC% -precompile
+%EC% -precompile -ace Ace.ace
 cd EIFGEN\W_code
 copy ..\..\..\..\..\..\cleanup.bat .
 %FF%
@@ -65,7 +65,7 @@ goto END
 echo Precompiling EiffelVision2
 cd ..\..\..\vision2
 %RM% EIFGEN
-%EC% -precompile
+%EC% -precompile -ace Ace.ace
 cd EIFGEN\W_code
 copy ..\..\..\..\..\..\cleanup.bat .
 %FF%

@@ -122,12 +122,12 @@ feature -- Status setting
 
 feature {LINKABLE_FIGURE_GROUP} -- XML
 
-	xml_element (a_parent: XML_ELEMENT): XML_ELEMENT is
+	xml_element (a_parent: XM_ELEMENT): XM_ELEMENT is
 			-- XML representation.
 		deferred
 		end
 
-	set_with_xml_element (an_element: XML_ELEMENT) is
+	set_with_xml_element (an_element: XM_ELEMENT) is
 			-- Set attributes from XML element.
 		require
 			an_element_not_void: an_element /= Void

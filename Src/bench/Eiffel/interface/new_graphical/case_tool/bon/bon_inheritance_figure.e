@@ -56,21 +56,23 @@ feature -- Status setting
 
 feature {CONTEXT_DIAGRAM} -- XML
 
-	xml_element (a_parent: XML_ELEMENT): XML_ELEMENT is
+	xml_element (a_parent: XM_ELEMENT): XM_ELEMENT is
 			-- XML representation.
 		local		
-			vertice_xml_element: XML_ELEMENT
+			vertice_xml_element: XM_ELEMENT
+			l_namespace: XM_NAMESPACE
 		do
 			if vertices.count > 2 then
-				create Result.make (a_parent, "INHERITANCE_FIGURE")
-				Result.attributes.add_attribute (create {XML_ATTRIBUTE}.make ("SRC", descendant.name))
-				Result.attributes.add_attribute (create {XML_ATTRIBUTE}.make ("TRG", ancestor.name))
+				create l_namespace.make ("", "")
+				create Result.make_child (a_parent, "INHERITANCE_FIGURE", l_namespace)
+				Result.add_attribute ("SRC", l_namespace, descendant.name)
+				Result.add_attribute ("TRG", l_namespace, ancestor.name)
 				from
 					vertices.go_i_th (2)
 				until	
 					vertices.islast
 				loop
-					create vertice_xml_element.make (Result, "MIDPOINT")
+					create vertice_xml_element.make_child (Result, "MIDPOINT", l_namespace)
 					vertice_xml_element.put_last (
 						xml_node (
 							vertice_xml_element,
@@ -87,14 +89,15 @@ feature {CONTEXT_DIAGRAM} -- XML
 			end
 		end
 
-	set_with_xml_element (an_element: XML_ELEMENT) is
+	set_with_xml_element (an_element: XM_ELEMENT) is
 			-- Set attributes from XML element.
 		require else
 			an_element_is_inheritance_figure: an_element.name.is_equal ("INHERITANCE_FIGURE")
 		local
 			x_pos, y_pos: INTEGER
-			a_cursor: DS_BILINKED_LIST_CURSOR[XML_NODE]
-			node: XML_ELEMENT
+			a_cursor: DS_LINKED_LIST_CURSOR [XM_NODE]
+			node: XM_ELEMENT
+			att_node: XM_ATTRIBUTE
 			new_midpoint: EV_RELATIVE_POINT
 			retrieved_midpoints: LINKED_LIST [EV_RELATIVE_POINT]
 		do
@@ -119,9 +122,14 @@ feature {CONTEXT_DIAGRAM} -- XML
 						error_window.show
 					end
 				else
-					create error_window
-					error_window.set_text ("XML element missing")
-					error_window.show
+					debug
+						att_node ?= a_cursor.item
+						if att_node = Void then
+							create error_window
+							error_window.set_text ("XML element missing")
+							error_window.show
+						end
+					end
 				end
 				a_cursor.forth
 			end

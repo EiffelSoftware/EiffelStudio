@@ -431,15 +431,17 @@ feature -- Status report
 
 feature {LINKABLE_FIGURE_GROUP} -- XML
 
-	xml_element (a_parent: XML_ELEMENT): XML_ELEMENT is
+	xml_element (a_parent: XM_ELEMENT): XM_ELEMENT is
 			-- XML representation.
 		local
 			name_in_lower: STRING
+			l_namespace: XM_NAMESPACE
 		do
 			name_in_lower := clone (class_i.name)
 			name_in_lower.to_lower
-			create Result.make (a_parent, "CLASS_FIGURE")
-			Result.attributes.add_attribute (create {XML_ATTRIBUTE}.make ("NAME", name_in_lower))
+			create l_namespace.make ("", "")
+			create Result.make_child (a_parent, "CLASS_FIGURE", l_namespace)
+			Result.add_attribute ("NAME", l_namespace, name_in_lower)
 			Result.put_last (xml_node (Result, "X_POS", point.x.out))
 			Result.put_last (xml_node (Result, "Y_POS", point.y.out))
 			Result.put_last (xml_node (Result, "COLOR",
@@ -448,13 +450,12 @@ feature {LINKABLE_FIGURE_GROUP} -- XML
 				color.blue_8_bit.out))
 		end
 
-	set_with_xml_element (an_element: XML_ELEMENT) is
+	set_with_xml_element (an_element: XM_ELEMENT) is
 			-- Set attributes from XML element.
 		require else
 			an_element_is_class_figure: an_element.name.is_equal ("CLASS_FIGURE")
-			an_element_has_name_attribute: an_element.attributes.has ("NAME")
-			an_element_name_is_class_name:
-				an_element.attributes.item ("NAME").value.is_equal (class_i.name)
+			an_element_has_name_attribute: an_element.has_attribute_by_name ("NAME")
+			an_element_name_is_class_name: an_element.attribute_by_name ("NAME").value.is_equal (class_i.name)
 		local
 			x_pos, y_pos: INTEGER
 			col: EV_COLOR

@@ -156,15 +156,17 @@ feature -- Status setting
 
 feature {CONTEXT_DIAGRAM} -- XML
 
-	xml_element (a_parent: XML_ELEMENT): XML_ELEMENT is
+	xml_element (a_parent: XM_ELEMENT): XM_ELEMENT is
 			-- XML representation.
 		local		
-			vertice_xml_element, label_xml_element: XML_ELEMENT
+			vertice_xml_element, label_xml_element: XM_ELEMENT
+			l_namespace: XM_NAMESPACE
 		do
-			create Result.make (a_parent, "CLIENT_SUPPLIER_FIGURE")
-			Result.attributes.add_attribute (create {XML_ATTRIBUTE}.make ("SRC", client.name))
-			Result.attributes.add_attribute (create {XML_ATTRIBUTE}.make ("TRG", supplier.name))
-			create label_xml_element.make (Result, "LABEL")
+			create l_namespace.make ("", "")
+			create Result.make_child (a_parent, "CLIENT_SUPPLIER_FIGURE", l_namespace)
+			Result.add_attribute ("SRC", l_namespace, client.name)
+			Result.add_attribute ("TRG", l_namespace, supplier.name)
+			create label_xml_element.make_child (Result, "LABEL", l_namespace)
 			label_xml_element.put_last (
 				xml_node (
 					label_xml_element,
@@ -187,7 +189,7 @@ feature {CONTEXT_DIAGRAM} -- XML
 				until	
 					vertices.islast
 				loop
-					create vertice_xml_element.make (Result, "MIDPOINT")
+					create vertice_xml_element.make_child (Result, "MIDPOINT", l_namespace)
 					vertice_xml_element.put_last (
 						xml_node (
 							vertice_xml_element,
@@ -204,14 +206,15 @@ feature {CONTEXT_DIAGRAM} -- XML
 			end
 		end
 
-	set_with_xml_element (an_element: XML_ELEMENT) is
+	set_with_xml_element (an_element: XM_ELEMENT) is
 			-- Set attributes from XML element.
 		require else
 			an_element_is_client_supplier_figure: an_element.name.is_equal ("CLIENT_SUPPLIER_FIGURE")
 		local
 			x_pos, y_pos: INTEGER
-			a_cursor: DS_BILINKED_LIST_CURSOR [XML_NODE]
-			node: XML_ELEMENT
+			a_cursor: DS_LINKED_LIST_CURSOR [XM_NODE]
+			node: XM_ELEMENT
+			att_node: XM_ATTRIBUTE
 			new_midpoint: EV_RELATIVE_POINT
 			retrieved_midpoints: LINKED_LIST [EV_RELATIVE_POINT]
 		do
@@ -240,9 +243,14 @@ feature {CONTEXT_DIAGRAM} -- XML
 						error_window.show
 					end
 				else
-					create error_window
-					error_window.set_text ("XML element missing")
-					error_window.show
+					debug
+						att_node ?= a_cursor.item
+						if att_node = Void then
+							create error_window
+							error_window.set_text ("XML element missing")
+							error_window.show
+						end
+					end
 				end
 				a_cursor.forth
 			end

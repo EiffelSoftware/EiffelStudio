@@ -21,7 +21,8 @@ inherit
 			include_new_dropped_class, remove_dropped_class,
 			synchronize, remove_view, remove_view_from_file,
 			prepare_synchronize, remove_unneeded_classes,
-			recycle, remove_included_figures, load_from_file
+			recycle, remove_included_figures, load_from_file,
+			save_xml_document
 		end
 
 	EB_CLUSTER_MANAGER_OBSERVER
@@ -397,36 +398,33 @@ feature -- View management
 			-- Remove view named `a_name' in `ptf'.
 		local
 			s: STRING
-			diagram_output, node: XML_ELEMENT
-			parser: XML_TREE_PARSER
-			a_cursor: DS_BILINKED_LIST_CURSOR [XML_NODE]
+			diagram_output, node: XM_ELEMENT
+			l_parser: XM_EIFFEL_PARSER
+			l_tree_pipe: XM_TREE_CALLBACKS_PIPE
+			l_file: KL_BINARY_INPUT_FILE
+			l_xm_concatenator: XM_CONTENT_CONCATENATOR
+			a_cursor: DS_LINKED_LIST_CURSOR [XM_NODE]
 		do
 				-- Remove any previous save of `current_view'.
-			create parser.make
+			create l_parser.make
 			ptf.read_stream (ptf.count)
 			s := ptf.last_string
-			parser.parse_string (s)
-			parser.set_end_of_file
-			if parser.is_correct then
-				if parser.root_element.name.is_equal ("CLUSTER_DIAGRAM") then
-					diagram_output := parser.root_element
-					a_cursor := diagram_output.new_cursor
-					from
-						a_cursor.start
-					until
-						a_cursor.after
-					loop
-						node ?= a_cursor.item
-						if node /= Void then
-							if node.name.is_equal ("VIEW") then
-								if node.attributes.item ("NAME").value.is_equal (a_name) then
-									diagram_output.remove_at_cursor (a_cursor)
-								end
-							end
-						end
-						if not a_cursor.after then
-							a_cursor.forth
-						end
+			create l_file.make (ptf.name)
+			l_file.open_read
+			if l_file.is_open_read then
+				create l_tree_pipe.make
+				create l_xm_concatenator.make_null
+				l_parser.set_callbacks (standard_callbacks_pipe (<<l_xm_concatenator, l_tree_pipe.start>>))
+				l_parser.parse_from_stream (l_file)
+				check
+					ok_parsing: l_parser.is_correct
+				end
+				l_file.close
+				if l_tree_pipe.document.root_element.name.is_equal ("CLUSTER_DIAGRAM") then
+					diagram_output := l_tree_pipe.document.root_element
+					node := diagram_output.element_by_name ("VIEW")
+					if node /= Void and then node.has_attribute_by_name ("NAME") then
+						diagram_output.remove_attribute_by_name ("NAME")
 					end
 				end
 				ptf.close
@@ -748,23 +746,35 @@ feature {EB_CONTEXT_EDITOR, EB_DIAGRAM_HTML_GENERATOR} -- Saving
 	store (ptf: RAW_FILE) is
 			-- Freeze state of `Current'.
 		local
-			s: STRING
-			diagram_output, view_output, node: XML_ELEMENT
-			parser: XML_TREE_PARSER
-			a_cursor: DS_BILINKED_LIST_CURSOR [XML_NODE]
+			diagram_output: XM_DOCUMENT
+			view_output, node: XM_ELEMENT
+			l_parser: XM_EIFFEL_PARSER
+			l_tree_pipe: XM_TREE_CALLBACKS_PIPE
+			l_file: KL_BINARY_INPUT_FILE
+			a_cursor: DS_LINKED_LIST_CURSOR [XM_NODE]
+			l_formatter: XM_FORMATTER
+			l_output_file: KL_TEXT_OUTPUT_FILE
+			l_namespace: XM_NAMESPACE
+			l_xm_concatenator: XM_CONTENT_CONCATENATOR
+			rescued: BOOLEAN
 		do
-			if ptf.is_open_read then
-
-					-- Remove any previous save of `current_view'.
-				create parser.make
-				ptf.read_stream (ptf.count)
-				s := ptf.last_string
-				parser.parse_string (s)
-				parser.set_end_of_file
-				if parser.is_correct then
-					if parser.root_element.name.is_equal ("CLUSTER_DIAGRAM") then
-						diagram_output := parser.root_element
-						a_cursor := diagram_output.new_cursor
+			if not rescued then
+				if ptf.is_open_read then
+					create l_file.make (ptf.name)
+					l_file.open_read
+					if l_file.is_open_read then
+						create l_parser.make
+						create l_tree_pipe.make
+						create l_xm_concatenator.make_null
+						l_parser.set_callbacks (standard_callbacks_pipe (<<l_xm_concatenator, l_tree_pipe.start>>))
+						l_parser.parse_from_stream (l_file)
+						l_file.close
+						check
+							ok_parsing: l_parser.is_correct
+							valid_xml: l_tree_pipe.document.root_element.name.is_equal ("CLUSTER_DIAGRAM")
+						end
+						diagram_output := l_tree_pipe.document
+						a_cursor := diagram_output.root_element.new_cursor
 						from
 							a_cursor.start
 						until
@@ -773,8 +783,8 @@ feature {EB_CONTEXT_EDITOR, EB_DIAGRAM_HTML_GENERATOR} -- Saving
 							node ?= a_cursor.item
 							if node /= Void then
 								if node.name.is_equal ("VIEW") then
-									if node.attributes.item ("NAME").value.is_equal (current_view) then
-										diagram_output.remove_at_cursor (a_cursor)
+									if node.attribute_by_name ("NAME").value.is_equal (current_view) then
+										diagram_output.root_element.remove_at_cursor (a_cursor)
 									end
 								end
 							end
@@ -782,17 +792,36 @@ feature {EB_CONTEXT_EDITOR, EB_DIAGRAM_HTML_GENERATOR} -- Saving
 								a_cursor.forth
 							end
 						end
+						view_output := xml_element
+						view_output.set_parent (diagram_output)
+						diagram_output.root_element.force_first (view_output)
+						save_xml_document (ptf, diagram_output)
 					end
-					ptf.close
-					ptf.open_write
+				else
+					create l_namespace.make ("", "")
+					create node.make_root ("CLUSTER_DIAGRAM", l_namespace)
+					create diagram_output.make
+					diagram_output.force_first (node)
+					save_xml_document (ptf, diagram_output)
 				end
-			else
-				create diagram_output.make_root ("CLUSTER_DIAGRAM")
 			end
-			view_output := xml_element
-			view_output.set_parent (diagram_output)
-			diagram_output.put_last (view_output)
-			ptf.put_string (diagram_output.out)
+		rescue
+			rescued := True
+			Error_handler.error_list.wipe_out
+			create error_window
+			error_window.set_text ("File " + center_class.name + ".ead is corrupted.")
+			error_window.show
+			retry
+		end
+
+	save_xml_document (ptf: RAW_FILE; a_doc: XM_DOCUMENT) is
+			-- Save `a_doc' in `ptf'
+		require else
+			file_not_void: ptf /= Void
+			file_exists: ptf /= Void
+			valid_document: a_doc /= Void and then a_doc.root_element.name.is_equal ("CONTEXT_DIAGRAM")
+		do
+			Precursor {CONTEXT_DIAGRAM} (ptf, a_doc)
 		end
 
 	load_from_file (f: RAW_FILE) is
@@ -845,20 +874,27 @@ feature {EB_CONTEXT_EDITOR, EB_DIAGRAM_HTML_GENERATOR} -- Saving
 	retrieve (f: RAW_FILE) is
 			-- Reload former state of `Current'.
 		local
-			s: STRING
-			parser: XML_TREE_PARSER
-			diagram_input, view_input, node: XML_ELEMENT
-			a_cursor: DS_BILINKED_LIST_CURSOR [XML_NODE]
+			l_parser: XM_EIFFEL_PARSER
+			l_file: KL_BINARY_INPUT_FILE
+			l_tree_pipe: XM_TREE_CALLBACKS_PIPE
+			l_xm_concatenator: XM_CONTENT_CONCATENATOR
+			diagram_input, view_input, node: XM_ELEMENT
+			a_cursor: DS_LINKED_LIST_CURSOR [XM_NODE]
 		do
 			if not cancelled then
-				create parser.make
-				f.read_stream (f.count)
-				s := f.last_string
-				parser.parse_string (s)
-				parser.set_end_of_file
-				f.close
-				if parser.is_correct then
-					diagram_input := parser.root_element
+				create l_file.make (f.name)
+				l_file.open_read
+				if l_file.is_open_read then
+					create l_parser.make
+					create l_tree_pipe.make
+					create l_xm_concatenator.make_null
+					l_parser.set_callbacks (standard_callbacks_pipe (<<l_xm_concatenator, l_tree_pipe.start>>))
+					l_parser.parse_from_stream (l_file)
+					l_file.close
+					check
+						ok_parsing: l_parser.is_correct
+					end
+					diagram_input := l_tree_pipe.document.root_element
 					if diagram_input.name.is_equal ("CLUSTER_DIAGRAM") then
 						available_views.wipe_out
 						a_cursor := diagram_input.new_cursor
@@ -870,8 +906,8 @@ feature {EB_CONTEXT_EDITOR, EB_DIAGRAM_HTML_GENERATOR} -- Saving
 							node ?= a_cursor.item
 							if node /= Void then
 								if node.name.is_equal ("VIEW") then
-									available_views.extend (node.attributes.item ("NAME").value)
-									if node.attributes.item ("NAME").value.is_equal (current_view) then
+									available_views.extend (node.attribute_by_name ("NAME").value)
+									if node.attribute_by_name ("NAME").value.is_equal (current_view) then
 										view_input := node
 									end
 								end
@@ -900,12 +936,12 @@ feature {EB_CONTEXT_EDITOR, EB_DIAGRAM_HTML_GENERATOR} -- Saving
 						end
 					else
 						create error_window
-						error_window.set_text ("Incorrect File:" + center_cluster.name + ".ead")
+						error_window.set_text ("Incorrect File: " + center_cluster.name + ".ead")
 						error_window.show
 					end
 				else
 					create error_window
-					error_window.set_text ("Incorrect File:" + center_cluster.name + ".ead")
+					error_window.set_text ("Incorrect File: " + center_cluster.name + ".ead")
 					error_window.show
 				end
 			end
@@ -913,18 +949,20 @@ feature {EB_CONTEXT_EDITOR, EB_DIAGRAM_HTML_GENERATOR} -- Saving
 
 feature {NONE} -- XML
 
-	xml_element: XML_ELEMENT is
+	xml_element: XM_ELEMENT is
 			-- XML representation.
 		local
 			cf: CLASS_FIGURE
 			clf: CLUSTER_FIGURE
 			hf: BON_INHERITANCE_FIGURE
 			csf: CLIENT_SUPPLIER_FIGURE
-			include_xe, exclude_xe, xe: XML_ELEMENT
-			include_element, exclude_element: XML_ELEMENT
+			include_xe, exclude_xe, xe: XM_ELEMENT
+			include_element, exclude_element: XM_ELEMENT
+			l_namespace: XM_NAMESPACE
 		do
-			create Result.make_root ("VIEW")
-			Result.attributes.add_attribute (create {XML_ATTRIBUTE}.make ("NAME", current_view))
+			create l_namespace.make ("", "")
+			create Result.make_root ("VIEW", l_namespace)
+			Result.add_attribute ("NAME", l_namespace, current_view)
 			Result.put_last (xml_node (Result, "SUPERCLUSTER_DEPTH", supercluster_depth.out))
 			Result.put_last (xml_node (Result, "SUBCLUSTER_DEPTH", subcluster_depth.out))
 			Result.put_last (xml_node (Result, "INHERITANCE_LINKS_DISPLAYED", inheritance_links_displayed.out))
@@ -932,7 +970,7 @@ feature {NONE} -- XML
 			Result.put_last (xml_node (Result, "LABELS_SHOWN", labels_shown.out))
 			Result.put_last (xml_node (Result, "X_POS", ((point.x / scale_x)).rounded.out))
 			Result.put_last (xml_node (Result, "Y_POS", ((point.y / scale_y)).rounded.out))
-			create include_element.make (Result, "INCLUDED_FIGURES")
+			create include_element.make_child (Result, "INCLUDED_FIGURES", l_namespace)
 
 				-- Save included cluster figures.
 			from
@@ -942,8 +980,8 @@ feature {NONE} -- XML
 			loop
 				clf ?= included_figures.item
 				if clf /= Void then
-					create include_xe.make (include_element, "CLUSTER")
-					include_xe.attributes.add_attribute (create {XML_ATTRIBUTE}.make ("NAME", clf.name))
+					create include_xe.make_child (include_element, "CLUSTER", l_namespace)
+					include_xe.add_attribute ("NAME", l_namespace, clf.name)
 					include_element.put_last (include_xe)
 				end
 				included_figures.forth
@@ -957,8 +995,8 @@ feature {NONE} -- XML
 			loop
 				cf ?= included_figures.item
 				if cf /= Void then
-					create include_xe.make (include_element, "CLASS")
-					include_xe.attributes.add_attribute (create {XML_ATTRIBUTE}.make ("NAME", cf.name))
+					create include_xe.make_child (include_element, "CLASS", l_namespace)
+					include_xe.add_attribute ("NAME", l_namespace, cf.name)
 					include_element.put_last (include_xe)
 				end
 				included_figures.forth
@@ -966,7 +1004,7 @@ feature {NONE} -- XML
 			Result.put_last (include_element)
 
 					-- Save excluded figures.
-			create exclude_element.make (Result, "EXCLUDED_FIGURES")
+			create exclude_element.make_child (Result, "EXCLUDED_FIGURES", l_namespace)
 			from
 				excluded_figures.start
 			until
@@ -975,11 +1013,11 @@ feature {NONE} -- XML
 				cf ?= excluded_figures.item
 				clf ?= excluded_figures.item
 				if cf /= Void then
-					create  exclude_xe.make (exclude_element, "CLASS")
-					exclude_xe.attributes.add_attribute (create {XML_ATTRIBUTE}.make ("NAME", cf.name))
+					create  exclude_xe.make_child (exclude_element, "CLASS", l_namespace)
+					exclude_xe.add_attribute ("NAME", l_namespace, cf.name)
 				elseif clf /= Void then
-					create exclude_xe.make (exclude_element, "CLUSTER")
-					exclude_xe.attributes.add_attribute (create {XML_ATTRIBUTE}.make ("NAME", clf.name))
+					create exclude_xe.make_child (exclude_element, "CLUSTER", l_namespace)
+					exclude_xe.add_attribute ("NAME", l_namespace, clf.name)
 				end
 				exclude_element.put_last (exclude_xe)
 				excluded_figures.forth
@@ -1031,11 +1069,11 @@ feature {NONE} -- XML
 			end
 		end
 
-	set_with_xml_element (an_element: XML_ELEMENT) is
+	set_with_xml_element (an_element: XM_ELEMENT) is
 			-- Set attributes from XML element.
 		local
-			a_cursor, include_cursor, exclude_cursor: DS_BILINKED_LIST_CURSOR [XML_NODE]
-			node, child_node: XML_ELEMENT
+			a_cursor, include_cursor, exclude_cursor: DS_LINKED_LIST_CURSOR [XM_NODE]
+			node, child_node: XM_ELEMENT
 			cf, cf2: CLASS_FIGURE
 			clf: CLUSTER_FIGURE
 			hf: BON_INHERITANCE_FIGURE
@@ -1107,10 +1145,10 @@ feature {NONE} -- XML
 						end
 					elseif node.name.is_equal ("INHERITANCE_FIGURE") then
 						if not node.attributes.is_empty then
-							a_source_name := clone (node.attributes.item ("SRC").value)
+							a_source_name := clone (node.attribute_by_name ("SRC").value)
 							a_source_name.to_upper
 							cf := class_figure_by_class_name (a_source_name)
-							a_target_name := clone (node.attributes.item ("TRG").value)
+							a_target_name := clone (node.attribute_by_name ("TRG").value)
 							a_target_name.to_upper
 							cf2 := class_figure_by_class_name (a_target_name)
 							hf ?= inherit_link (cf, cf2)
@@ -1124,10 +1162,10 @@ feature {NONE} -- XML
 						end		
 					elseif node.name.is_equal ("CLIENT_SUPPLIER_FIGURE") then
 						if not node.attributes.is_empty then
-							a_source_name := clone (node.attributes.item ("SRC").value)
+							a_source_name := clone (node.attribute_by_name ("SRC").value)
 							a_source_name.to_upper
 							cf := class_figure_by_class_name (a_source_name)
-							a_target_name := clone (node.attributes.item ("TRG").value)
+							a_target_name := clone (node.attribute_by_name ("TRG").value)
 							a_target_name.to_upper
 							cf2 := class_figure_by_class_name (a_target_name)
 							csf ?= client_link (cf, cf2)
@@ -1148,9 +1186,9 @@ feature {NONE} -- XML
 						loop
 							child_node ?= include_cursor.item
 							if child_node /= Void then
-								if child_node.name.is_equal ("CLUSTER") then 
-									if not child_node.attributes.is_empty then 			
-										cluster_name := clone (child_node.attributes.item ("NAME").value) 
+								if child_node.name.is_equal ("CLUSTER") then
+									if child_node.has_attribute_by_name ("NAME") then		
+										cluster_name := clone (child_node.attribute_by_name ("NAME").value) 
 										cluster_name.to_upper 
 										clf := cluster_figure_by_cluster_name (cluster_name) 
 										if clf = Void then 
@@ -1169,8 +1207,8 @@ feature {NONE} -- XML
 										error_window.show
 									 end 
 								elseif child_node.name.is_equal ("CLASS") then
-									if not child_node.attributes.is_empty then
-										class_name := clone (child_node.attributes.item ("NAME").value)
+									if child_node.has_attribute_by_name ("NAME") then
+										class_name := clone (child_node.attribute_by_name ("NAME").value)
 										class_name.to_upper
 										cf := class_figure_by_class_name (class_name)
 										if cf = Void then
@@ -1208,8 +1246,8 @@ feature {NONE} -- XML
 							child_node ?= exclude_cursor.item
 							if child_node /= Void then
 								if child_node.name.is_equal ("CLUSTER") then 
-									if not child_node.attributes.is_empty then 			
-										cluster_name := clone (child_node.attributes.item ("NAME").value) 
+									if child_node.has_attribute_by_name ("NAME") then 			
+										cluster_name := clone (child_node.attribute_by_name ("NAME").value) 
 										cluster_name.to_upper 
 										clf := cluster_figure_by_cluster_name (cluster_name) 
 										if clf /= Void then 
@@ -1221,8 +1259,8 @@ feature {NONE} -- XML
 										error_window.show
 									 end 
 								elseif child_node.name.is_equal ("CLASS") then
-									if not child_node.attributes.is_empty then
-										class_name := clone (child_node.attributes.item ("NAME").value)
+									if child_node.has_attribute_by_name ("NAME") then
+										class_name := clone (child_node.attribute_by_name ("NAME").value)
 										class_name.to_upper
 										cf := class_figure_by_class_name (class_name)
 										if cf /= Void then
@@ -1242,9 +1280,21 @@ feature {NONE} -- XML
 							exclude_cursor.forth
 						end			
 					else
-						create error_window
-						error_window.set_text ("File " + center_cluster.name + ".ead: Tag " + node.name + " unknown")
-						error_window.show
+						debug
+							if 
+								not node.name.is_equal ("SUPERCLUSTER_DEPTH") and
+								not node.name.is_equal ("SUBCLUSTER_DEPTH") and
+								not node.name.is_equal ("LABELS_SHOWN") and
+								not node.name.is_equal ("INHERITANCE_LINKS_DISPLAYED") and
+								not node.name.is_equal ("CLIENT_LINKS_DISPLAYED") and
+								not node.name.is_equal ("X_POS") and
+								not node.name.is_equal ("Y_POS")
+							then
+								create error_window
+								error_window.set_text ("File " + center_cluster.name + ".ead: Tag " + node.name + " unknown")
+								error_window.show
+							end
+						end
 					end
 				end
 				a_cursor.forth
@@ -1842,6 +1892,3 @@ feature -- Inapplicable
 		end
 
 end -- class CLUSTER_DIAGRAM
-
-
-

@@ -10,6 +10,13 @@ class
 inherit
 	SHARED_EIFFEL_PROJECT
 
+	XM_CALLBACKS_FILTER_FACTORY
+		export
+			{NONE} all
+		undefine
+			default_create
+		end
+
 create
 	make_for_documentation,
 	make_for_wizard
@@ -77,39 +84,35 @@ feature {EB_DOCUMENTATION_WIZARD} -- Basic operations
 	available_views: LINKED_LIST [STRING] is
 			-- Names of available views of `cluster'.
 		local
-			diagram_file: RAW_FILE
-			s: STRING
-			parser: XML_TREE_PARSER
-			diagram_input, node: XML_ELEMENT
-			a_cursor: DS_BILINKED_LIST_CURSOR [XML_NODE]			
+			l_parser: XM_EIFFEL_PARSER
+			l_tree_pipe: XM_TREE_CALLBACKS_PIPE
+			l_file: KL_BINARY_INPUT_FILE
+			l_xm_concatenator: XM_CONTENT_CONCATENATOR
+			diagram_input, node: XM_ELEMENT
+			a_cursor: DS_LINKED_LIST_CURSOR [XM_NODE]
 		do
 			create Result.make
-			create diagram_file.make (diagram_file_name)
-			if diagram_file.exists then
-				diagram_file.open_read
-				create parser.make
-				diagram_file.read_stream (diagram_file.count)
-				s := diagram_file.last_string
-				parser.parse_string (s)
-				parser.set_end_of_file
-				diagram_file.close
-				if parser.is_correct then
-					diagram_input := parser.root_element
-					if diagram_input.name.is_equal ("CLUSTER_DIAGRAM") then
-						a_cursor := diagram_input.new_cursor
-						from
-							a_cursor.start
-						until
-							a_cursor.after
-						loop
-							node ?= a_cursor.item
-							if node /= Void then
-								if node.name.is_equal ("VIEW") then
-									Result.extend (node.attributes.item ("NAME").value)
-								end
-							end
-							a_cursor.forth
+			create l_file.make (diagram_file_name)
+			if l_file.exists then
+				l_file.open_read
+				create l_parser.make
+				create l_tree_pipe.make
+				create l_xm_concatenator.make_null
+				l_parser.set_callbacks (standard_callbacks_pipe (<<l_xm_concatenator, l_tree_pipe.start>>))
+				l_parser.parse_from_stream (l_file)
+				l_file.close
+				if l_parser.is_correct then
+					diagram_input := l_tree_pipe.document.root_element
+					check
+						valid_file: diagram_input.name.is_equal ("CLUSTER_DIAGRAM")
+					end
+					a_cursor := diagram_input.new_cursor
+					if diagram_input.has_element_by_name ("VIEW") then
+						node := diagram_input.element_by_name ("VIEW")
+						check
+							valid_node: node.has_attribute_by_name ("NAME")
 						end
+						Result.extend (node.attribute_by_name ("NAME").value)
 					end
 				end					
 			end		

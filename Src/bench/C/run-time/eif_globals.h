@@ -85,18 +85,9 @@ extern "C" {
 
 #else
 	Platform not supported for multithreading, check that you are using
-	the correct -D???_THREADS
+	the correct EIFFEL flags
 #endif
 
-	/* - Former EIF_GET_CONTEXT macro (not used anymore):
-	 * 
-	 * #define EIF_GET_CONTEXT \
-	 * eif_global_context_t *eif_globals;\
-	 * EIF_TSD_GET((eif_global_context_t *),eif_global_key,eif_globals,
-	 * "Thread data not available"); \
-	 * {
-	 * #define EIF_END_GET_CONTEXT }
-	 */
 
 typedef struct tag_eif_globals		/* Structure containing all global variables to the run-time */
 {
@@ -147,8 +138,8 @@ typedef struct tag_eif_globals		/* Structure containing all global variables to 
 	char *root_obj_cx;					/* Address of the 'root' object */
 
 		/* hector.c */
-	struct stack hec_stack_cx;			/* Indirection table "hector" */
-	struct stack hec_saved_cx;			/* Entries free in hector */
+	struct stack hec_stack_cx;			/* Indirection table "hectori stack" for references passed to C*/
+	struct stack hec_saved_cx;			/* Indirection table "hector saved" */
 	struct stack free_stack_cx;		/* Entries free in hector */
 
 		/* interp.c */
@@ -210,6 +201,8 @@ typedef struct tag_eif_globals		/* Structure containing all global variables to 
 
 		/* main.c */
 	char **EIF_once_values_cx;	/* Once values for a thread */
+    int in_assertion_cx = 0;    /* Is an assertion evaluated? */
+
 
 #ifdef WORKBENCH
 		/* except.c */
@@ -359,6 +352,7 @@ typedef struct tag_eif_globals		/* Structure containing all global variables to 
 
 	/* main.c */
 #define EIF_once_values	(eif_globals->EIF_once_values_cx)	/* rt_public */
+#define in_assertion	(eif_globals->in_assertion_cx)	/* rt_public */
 
 	/* special */
 /* These variables are defined only if

@@ -607,16 +607,16 @@ feature
 			valid_parent: parent /= Void;
 		local
 			eb_bulletin: SCALABLE;
-			not_managed: BOOLEAN
+			was_managed: BOOLEAN
 		do
 			position_modified := True;
 			if parent.is_bulletin then
 				if widget.managed then
-					not_managed := True
+					was_managed := True
 					widget.unmanage
 				end;
 				widget.set_x_y (new_x, new_y);
-				if not_managed then
+				if was_managed then
 					widget.manage
 				end;
 				eb_bulletin ?= parent.widget;
@@ -670,7 +670,7 @@ feature
 
 	hide is
 		do
-			if widget.realized then
+			if widget.realized and then widget.shown then
 				widget.hide
 			end
 		end;
@@ -683,7 +683,9 @@ feature
 	show is
 		do
 			if widget.realized then
-				widget.show
+				if not widget.shown then
+					widget.show
+				end
 			else
 				widget.realize
 			end

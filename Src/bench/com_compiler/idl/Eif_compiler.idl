@@ -82,6 +82,9 @@ interface IEiffelCompiler: IUnknown
   
   [helpstring ("Was last compilation successful?")]
   HRESULT is_successful ([out, retval] VARIANT_BOOL * return_value);
+  
+  [helpstring ("Compiler version.")]
+  HRESULT compiler_version ([out, retval] BSTR * return_value);
 };
 //---------------------------------------------------------------------
 

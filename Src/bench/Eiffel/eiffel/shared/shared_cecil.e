@@ -7,17 +7,12 @@ class SHARED_CECIL
 	
 feature {NONE}
 
-	Cecil1: CECIL1 is
-		once
-			create Result.wipe_out
-		end
-
-	Cecil2: CECIL2 is
+	cecil_routine_table: CECIL_ROUTINE_TABLE is
 		once
 			create Result.init (1)
 		end
 
-	Cecil3: CECIL3 is
+	cecil_class_table: CECIL_CLASS_TABLE is
 		once
 			create Result.init (1)
 		end

@@ -94,7 +94,7 @@ rt_public int eifreturntype (char *routine, EIF_TYPE_ID cid) {
         eif_panic ("Unknown dynamic typei\n");  /* Check if dynamic exists */
 
 
-    sk = &System(cid_to_dtype(cid));    /* Fetch skeleton entry */
+    sk = &System(Deif_bid(cid_to_dtype(cid)));    /* Fetch skeleton entry */
     nb_attr = sk->cn_nbattr;        /* Number of attributes */
 
 
@@ -178,7 +178,7 @@ rt_public EIF_OBJ eifcreate(EIF_TYPE_ID cid)
 	char *object;					/* Eiffel object's physical address */
 	int dtype;						/* Dynamic type associated with class ID */
 	
-	dtype = cid_to_dtype(cid);		/* Convert class ID to dynamic type */
+	dtype = Deif_bid(cid_to_dtype(cid));		/* Convert class ID to dynamic type */
 	if (dtype < 0)					/* Was not a valid reference type */
 		return (EIF_OBJ) 0;			/* No creation, return null pointer */
 
@@ -252,7 +252,7 @@ rt_public EIF_FN_REF eifref(char *routine, EIF_TYPE_ID cid)
 
 	EIF_GET_CONTEXT
 
-	int dtype = cid_to_dtype(cid);		/* Compute dynamic type from class ID */
+	int dtype = Deif_bid(cid_to_dtype(cid));		/* Compute dynamic type from class ID */
 	struct ctable *ptr_table;			/* H table holding function pointers */
 #ifdef WORKBENCH
 	int32 *feature_ptr;
@@ -318,7 +318,7 @@ rt_public int eiftype(EIF_OBJ object)
 {
 	/* Return the dynamic type of the specified object */
 
-	return Dtype(eif_access(object));
+	return Dftype(eif_access(object));
 }
 
 rt_public char *eifname(EIF_TYPE_ID cid)
@@ -328,7 +328,7 @@ rt_public char *eifname(EIF_TYPE_ID cid)
 	 * is returned.
 	 */
 
-	int dtype = cid_to_dtype(cid);		/* Convert to dynamic type */
+	int dtype = Deif_bid(cid_to_dtype(cid));		/* Convert to dynamic type */
 
 	if (dtype < 0)						/* Not a reference type */
 		return (char *) 0;

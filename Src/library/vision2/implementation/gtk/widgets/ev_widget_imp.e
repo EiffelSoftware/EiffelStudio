@@ -43,9 +43,9 @@ inherit
 
 feature {NONE} -- Initialization
 
-	gdk_events_mask: INTEGER is
+	Gdk_events_mask: INTEGER is
 			-- Mask of all the gdk events the gdkwindow shall receive.
-		do
+		once
 			Result := C.GDK_EXPOSURE_MASK_ENUM +
 			C.GDK_POINTER_MOTION_MASK_ENUM +
 		--	C.GDK_BUTTON_MOTION_MASK_ENUM +
@@ -64,7 +64,7 @@ feature {NONE} -- Initialization
 	initialize_events is
 		do
 			if not gtk_widget_no_window (visual_widget) then
-				C.gtk_widget_add_events (visual_widget, gdk_events_mask)
+				C.gtk_widget_add_events (visual_widget, Gdk_events_mask)
 			end
 		end
 
@@ -73,8 +73,8 @@ feature {NONE} -- Initialization
 			-- Initialize default options, colors and sizes.
 			-- Connect action sequences to GTK signals.
 		local
-			on_key_event_agent: PROCEDURE [EV_WIDGET_IMP, TUPLE [EV_KEY, STRING, BOOLEAN]]
-			connect_button_press_switch_agent: PROCEDURE [EV_WIDGET_IMP, TUPLE[]]
+			connect_button_press_switch_agent: PROCEDURE [EV_GTK_CALLBACK_MARSHAL, TUPLE[]]
+			on_key_event_intermediary_agent: PROCEDURE [EV_GTK_CALLBACK_MARSHAL, TUPLE [EV_KEY, STRING, BOOLEAN]]
 		do
 			if not C.gtk_is_widget (c_object) then
 				print ("not widget!! " + generating_type)
@@ -82,25 +82,21 @@ feature {NONE} -- Initialization
 			if C.gtk_is_widget (c_object) and not C.gtk_is_window (c_object) then
 				C.gtk_widget_show (c_object)
 			end
-
-			initialize_events
-			
+			initialize_events	
 			set_default_colors
-
 				--| "configure-event" only happens for windows,
 				--| so we connect to the "size-allocate" function.
 			if C.gtk_is_window (c_object) then
 				real_signal_connect (c_object, "configure-event", agent on_size_allocate, Default_translate)
 			else
-				real_signal_connect (c_object, "size-allocate", agent on_size_allocate, size_allocate_translate_agent)
+				real_signal_connect (c_object, "size-allocate", agent gtk_marshal.on_size_allocate_intermediate (c_object, ?, ?, ?, ?), size_allocate_translate_agent)
 			end
-			on_key_event_agent := agent on_key_event
-			real_signal_connect (visual_widget, "key_press_event", on_key_event_agent, key_event_translate_agent)
-			real_signal_connect (visual_widget, "key_release_event", on_key_event_agent, key_event_translate_agent)
-
+			on_key_event_intermediary_agent := agent gtk_marshal.on_key_event_intermediary (c_object, ?, ?, ?)
+			real_signal_connect (visual_widget, "key_press_event", on_key_event_intermediary_agent, key_event_translate_agent)
+			real_signal_connect (visual_widget, "key_release_event", on_key_event_intermediary_agent, key_event_translate_agent)
 				--| "button-press-event" is a special case, see below.
 				
-			connect_button_press_switch_agent := agent connect_button_press_switch
+			connect_button_press_switch_agent := agent gtk_marshal.connect_button_press_switch_intermediary (c_object)
 			pointer_button_press_actions.not_empty_actions.extend (connect_button_press_switch_agent)
 			pointer_double_press_actions.not_empty_actions.extend (connect_button_press_switch_agent)
 			if not pointer_button_press_actions.is_empty or not pointer_double_press_actions.is_empty then
@@ -113,19 +109,50 @@ feature {NONE} -- Initialization
 
 	Signal_map_actions: INTEGER is 2
 
+	button_press_switch_is_connected: BOOLEAN
+			-- Is `button_press_switch' connected to its event source.
+		
+feature {EV_WINDOW_IMP, EV_GTK_CALLBACK_MARSHAL} -- Implementation
 
-	button_press_switch_agent: PROCEDURE [EV_WIDGET_IMP, TUPLE [INTEGER, INTEGER, INTEGER, INTEGER, DOUBLE, DOUBLE, DOUBLE, INTEGER, INTEGER]] is
-			-- 
+	on_key_event (a_key: EV_KEY; a_key_string: STRING; a_key_press: BOOLEAN) is
+			-- Used for key event actions sequences.
+		local
+			temp_key_string: STRING
 		do
-			if button_press_switch_agent_internal /= Void then
-				Result := button_press_switch_agent_internal
+			if a_key_press then
+					-- The event is a key press event.
+				if a_key /= Void and then key_press_actions_internal /= Void then
+					key_press_actions_internal.call ([a_key])
+				end
+				if key_press_string_actions_internal /= Void then
+					temp_key_string := a_key_string
+					if a_key /= Void then
+						if a_key.out.count /= 1 and not a_key.is_numpad then
+							temp_key_string := ""
+						end
+						if a_key.code = app_implementation.Key_constants.Key_space then
+							temp_key_string := " "
+						end
+					end
+					key_press_string_actions_internal.call ([temp_key_string])
+				end
 			else
-				button_press_switch_agent_internal := agent button_press_switch
-				Result := button_press_switch_agent_internal
+					-- The event is a key release event.
+				if a_key /= Void and then key_release_actions_internal /= Void then
+					key_release_actions_internal.call ([a_key])
+				end
 			end
 		end
 		
-	button_press_switch_agent_internal: PROCEDURE [EV_WIDGET_IMP, TUPLE [INTEGER, INTEGER, INTEGER, INTEGER, DOUBLE, DOUBLE, DOUBLE, INTEGER, INTEGER]]
+	connect_button_press_switch is
+			-- Connect `button_press_switch' to its event sources.
+			--| See comment in `button_press_switch' above.
+		do
+			if not button_press_switch_is_connected then
+				signal_connect ("button-press-event", agent gtk_marshal.button_press_switch_intermediary (c_object, ?, ?, ?, ?, ?, ?, ?, ?, ?), default_translate)
+				button_press_switch_is_connected := True
+			end
+		end
 	
 	button_press_switch (
 			a_type: INTEGER;
@@ -159,18 +186,23 @@ feature {NONE} -- Initialization
 					pointer_double_press_actions_internal.call (t)
 				end
 			end
-        	end
-
-	button_press_switch_is_connected: BOOLEAN
-			-- Is `button_press_switch' connected to its event source.
-
-	connect_button_press_switch is
-			-- Connect `button_press_switch' to its event sources.
-			--| See comment in `button_press_switch' above.
+       end
+       
+	on_size_allocate (a_x, a_y, a_width, a_height: INTEGER) is
+			-- Gtk_Widget."size-allocate" happened.
 		do
-			if not button_press_switch_is_connected then
-				signal_connect ("button-press-event", button_press_switch_agent, default_translate)
-				button_press_switch_is_connected := True
+			--| FIXME VB 05/11/2000
+			--| Temporary implementation.
+			if not in_resize_event then
+				in_resize_event := True
+				if last_width /= a_width or else last_height /= a_height then
+					if resize_actions_internal /= Void then
+						resize_actions_internal.call ([a_x, a_y, a_width, a_height])
+					end
+					last_width := a_width
+					last_height := a_height
+				end
+				in_resize_event := False
 			end
 		end
 
@@ -587,24 +619,6 @@ feature {NONE} -- Implementation
 			)
 		end
 
-	on_size_allocate (a_x, a_y, a_width, a_height: INTEGER) is
-			-- Gtk_Widget."size-allocate" happened.
-		do
-			--| FIXME VB 05/11/2000
-			--| Temporary implementation.
-			if not in_resize_event then
-				in_resize_event := True
-				if last_width /= a_width or else last_height /= a_height then
-					if resize_actions_internal /= Void then
-						resize_actions_internal.call ([a_x, a_y, a_width, a_height])
-					end
-					last_width := a_width
-					last_height := a_height
-				end
-				in_resize_event := False
-			end
-		end
-
 feature {NONE} -- Agent functions.
 
 	key_event_translate_agent: FUNCTION [EV_GTK_CALLBACK_MARSHAL, TUPLE [INTEGER, POINTER], TUPLE] is
@@ -617,38 +631,6 @@ feature {NONE} -- Agent functions.
 			-- 
 		once
 			Result := agent gtk_marshal.size_allocate_translate
-		end
-		
-feature {EV_WINDOW_IMP} -- Implementation
-
-	on_key_event (a_key: EV_KEY; a_key_string: STRING; a_key_press: BOOLEAN) is
-			-- Used for key event actions sequences.
-		local
-			temp_key_string: STRING
-		do
-			if a_key_press then
-					-- The event is a key press event.
-				if a_key /= Void and then key_press_actions_internal /= Void then
-					key_press_actions_internal.call ([a_key])
-				end
-				if key_press_string_actions_internal /= Void then
-					temp_key_string := a_key_string
-					if a_key /= Void then
-						if a_key.out.count /= 1 and not a_key.is_numpad then
-							temp_key_string := ""
-						end
-						if a_key.code = app_implementation.Key_constants.Key_space then
-							temp_key_string := " "
-						end
-					end
-					key_press_string_actions_internal.call ([temp_key_string])
-				end
-			else
-					-- The event is a key release event.
-				if a_key /= Void and then key_release_actions_internal /= Void then
-					key_release_actions_internal.call ([a_key])
-				end
-			end
 		end
 
 feature {NONE} -- Implementation

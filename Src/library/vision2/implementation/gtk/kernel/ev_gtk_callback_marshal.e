@@ -294,7 +294,7 @@ feature {EV_ANY_IMP} -- Access
 			
 			Result := [key, a_key_string, a_key_press]
 		end
-		
+
 	size_allocate_translate (n: INTEGER; p: POINTER): TUPLE is
 			-- Convert GtkAllocation to tuple.
 		local
@@ -308,23 +308,75 @@ feature {EV_ANY_IMP} -- Access
 				C.gtk_allocation_struct_height (gtk_alloc)
 			]
 		end
+
+feature {EV_ANY_IMP} -- Agent implementation routines
+
+	signal_disconnect_agent_routine (visual_widget: POINTER; a_connection_id: INTEGER; signal_ids_list: ARRAYED_LIST [INTEGER]) is
+			-- Disconnect signal connection with `a_connection_id'.
+			-- Used to avoid reference on widget implementation object.
+		require
+			a_connection_id_positive: a_connection_id > 0
+		do
+			C.gtk_signal_disconnect (visual_widget, a_connection_id)
+			signal_ids_list.prune_all (a_connection_id)
+		end
 		
-		
-	gtk_value_pointer (arg: POINTER): POINTER is
-			-- Pointer to the value of a GtkArg.
-			--| FIXME find a better home for this feature. - sam
-		external
-			"C | %"ev_gtk_callback_marshal.h%""
+	on_key_event_intermediary (a_c_object: POINTER; a_key: EV_KEY; a_key_string: STRING; a_key_press: BOOLEAN) is
+			-- Intermediate agent to prevent reference on implementation object from agent.
+		do
+			c_get_eif_reference_from_object_id (a_c_object).on_key_event (a_key, a_key_string, a_key_press)
 		end
 
-	gtk_value_int (arg: POINTER): INTEGER is
-			-- Integer value from a GtkArg.
-			--| FIXME find a better home for this feature. - sam
-		external
-			"C | %"ev_gtk_callback_marshal.h%""
+	connect_button_press_switch_intermediary (a_c_object: POINTER) is
+			-- 
+		do
+			c_get_eif_reference_from_object_id (a_c_object).connect_button_press_switch
+		end
+		
+	button_press_switch_intermediary (
+			a_c_object: POINTER;
+			a_type: INTEGER;
+			a_x, a_y, a_button: INTEGER;
+			a_x_tilt, a_y_tilt, a_pressure: DOUBLE;
+			a_screen_x, a_screen_y: INTEGER
+		) is
+				-- 
+			do
+				c_get_eif_reference_from_object_id (a_c_object).button_press_switch (a_type, a_x, a_y, a_button, a_x_tilt, a_y_tilt, a_pressure, a_screen_x, a_screen_y)
+			end
+			
+	on_size_allocate_intermediate (a_c_object: POINTER; a_x, a_y, a_width, a_height: INTEGER) is
+			--
+		do
+			c_get_eif_reference_from_object_id (a_c_object).on_size_allocate (a_x, a_y, a_width, a_height)
+		end
+		
+	kamikaze_agent (an_action_sequence: ARRAYED_LIST [PROCEDURE [ANY, TUPLE]];
+		target: PROCEDURE [ANY, TUPLE]):
+		PROCEDURE [ANY, TUPLE []] is
+			-- Agent to remove `target' and itself form `an_action_sequence'.
+		local
+			kamikaze_cell: CELL [PROCEDURE [ANY, TUPLE[]]]
+		do
+			create kamikaze_cell.put (Void)
+			Result := agent do_kamikaze (
+				an_action_sequence,
+				target,
+				kamikaze_cell
+			)
+			kamikaze_cell.put (Result)
+		end
+	
+	do_kamikaze (an_action_sequence: ARRAYED_LIST [PROCEDURE [ANY, TUPLE]];
+		target: PROCEDURE [ANY, TUPLE];
+		kamikaze_cell: CELL [PROCEDURE [ANY, TUPLE]]) is
+			-- Remove `target' and agent for self (from `kamikaze_cell') from
+			-- `an_action_sequence'.
+		do
+			an_action_sequence.prune_all (target)
+			an_action_sequence.prune_all (kamikaze_cell.item)
 		end
 
-		
 feature {EV_APPLICATION_IMP} -- Destruction
 
 	destroy is
@@ -377,6 +429,28 @@ feature {NONE} -- Externals
 	c_ev_gtk_callback_marshal_destroy
 		is
 			-- See ev_gtk_callback_marshal.c
+		external
+			"C | %"ev_gtk_callback_marshal.h%""
+		end
+		
+	c_get_eif_reference_from_object_id (a_c_object: POINTER): EV_WIDGET_IMP is
+			-- Get Eiffel object from `a_c_object'.
+		external
+			"C (GtkWidget*): EIF_REFERENCE | %"ev_any_imp.h%""
+		alias
+			"c_ev_any_imp_get_eif_reference_from_object_id"
+		end
+		
+	gtk_value_pointer (arg: POINTER): POINTER is
+			-- Pointer to the value of a GtkArg.
+			--| FIXME find a better home for this feature. - sam
+		external
+			"C | %"ev_gtk_callback_marshal.h%""
+		end
+
+	gtk_value_int (arg: POINTER): INTEGER is
+			-- Integer value from a GtkArg.
+			--| FIXME find a better home for this feature. - sam
 		external
 			"C | %"ev_gtk_callback_marshal.h%""
 		end

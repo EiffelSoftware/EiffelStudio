@@ -226,7 +226,11 @@ feature {NONE} -- GTK C functions for scrollable area
 	gtk_scrolled_window_new (hadj, vadj: POINTER): POINTER is
 		external "C | %"gtk/gtk.h%""
 		end
-	
+
+	gtk_scrolled_window_add_with_viewport (scrolled_window, child: POINTER) is
+		external "C | %"gtk/gtk.h%""
+		end	
+
 	gtk_scrolled_window_set_policy (w: POINTER; h, v: INTEGER) is
 		external "C | %"gtk/gtk.h%""
 		end

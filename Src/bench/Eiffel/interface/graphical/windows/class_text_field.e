@@ -30,7 +30,7 @@ feature -- Initialization
 		do
 			text_field_make (name, a_parent);
 			add_activate_action (Current, Void);
-			init_from_tool (a_tool);
+			init (a_tool);
 		end;
 
 feature -- Properties
@@ -100,17 +100,16 @@ feature {NONE} -- Execution
 					class_list /= Void
 				end;
 				choice_position := choice.position;
-				if choice_position /= 1 then
-					class_i := class_list.i_th (choice_position - 1);
-					class_list := Void;
+				if choice_position /= 0 then
+					class_i := class_list.i_th (choice_position);
 					cname := clone (class_i.class_name);
 					cname.to_upper;
 					set_text (cname);
 					execute (class_i)
 				else
-					close_choice_window
+					close_choice_window;
+					class_list := Void
 				end
-				class_list := Void
 			elseif project_initialized then
 				class_i ?= arg;
 				if class_i = Void then
@@ -208,7 +207,7 @@ feature {NONE} -- Execution
 						!! classi_stone.make (class_i)
 						tool.process_classi (classi_stone);
 					end
-					close_choice_window;
+					--close_choice_window;
 				end
 			end
 		end;

@@ -20,14 +20,49 @@ feature -- Access
 			end
 		end
 
+	assembly_types (aname: ASSEMBLY_NAME): CONSUMED_ASSEMBLY_TYPES is
+			-- Assembly information from EAC
+		require
+			non_void_name: aname /= Void
+			valid_name: is_assembly_in_cache (aname)
+		local
+			des: EIFFEL_XML_DESERIALIZER
+		do
+			create des
+			des.deserialize (absolute_assembly_path (aname) + Assembly_types_file_name)
+			Result ?= des.deserialized_object
+		ensure
+			non_void_info: Result /= Void
+		end
+		
+	assembly_mapping (aname: ASSEMBLY_NAME): CONSUMED_ASSEMBLY_MAPPING is
+			-- Assembly information from EAC
+		require
+			non_void_name: aname /= Void
+			valid_name: is_assembly_in_cache (aname)
+		local
+			des: EIFFEL_XML_DESERIALIZER
+		do
+			create des
+			des.deserialize (absolute_assembly_path (aname) + Assembly_mapping_file_name)
+			Result ?= des.deserialized_object
+		ensure
+			non_void_info: Result /= Void
+		end
+		
 	consumed_type (t: TYPE): CONSUMED_TYPE is
 			-- Consumed type corresponding to `t'.
+		require
+			non_void_type: t /= Void
+			valid_type: is_type_in_cache (t)
 		local
 			des: EIFFEL_XML_DESERIALIZER
 		do
 			create des
 			des.deserialize (absolute_type_path (t))
 			Result ?= des.deserialized_object
+		ensure
+			non_void_consumed_type: Result /= Void
 		end
 	
 	client_assemblies (assembly: CONSUMED_ASSEMBLY): ARRAY [CONSUMED_ASSEMBLY] is
@@ -90,7 +125,7 @@ feature -- Status Report
 	is_type_in_cache (t: TYPE): BOOLEAN is
 			-- Is `t' in EAC?
 		do
-			if  t.get_assembly.get_name.get_public_key_token /= Void then
+			if t.get_assembly.get_name.get_public_key_token /= Void then
 				Result := (create {RAW_FILE}.make (absolute_type_path (t))).exists			
 			end
 		end

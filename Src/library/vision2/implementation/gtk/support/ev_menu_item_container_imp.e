@@ -19,8 +19,10 @@ inherit
 		-- are widgets in gtk, although it is not a widget in
 		-- EiffelVision. This is just for implementation
 		-- reasons.
+
 	EV_WIDGET_IMP 
 
+	EV_GTK_ITEMS_EXTERNALS
 	
 feature {EV_MENU_ITEM_CONTAINER} -- Element change	
 	

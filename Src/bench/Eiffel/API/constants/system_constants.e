@@ -171,7 +171,7 @@ feature {NONE, AUXILIARY_FILES} -- Versioning
 			Result.append_character ('.')
 			Result.append_integer (Minor_version_number)
 			Result.append_character ('.')
-			Result.append_string ("0708")
+			Result.append_string ("0715")
 			Result.append_character (' ')
 			Result.append_string (version_type_name)
 		end

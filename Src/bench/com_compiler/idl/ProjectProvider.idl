@@ -1,0 +1,24 @@
+//
+//    ProjectProvider.idl
+//
+//
+//
+
+
+import "oaidl.idl";
+import "ISE.Compiler.idl";
+
+interface IEiffelProjectProvider;
+
+//---------------------------------------------------------------------
+
+[
+  object,
+  uuid (EB4CDF8C-61A3-4297-A920-DB7B44CA3548),
+  helpstring ("Eiffel project provider.")
+]
+interface IEiffelProjectProvider : IUnknown
+{
+  [helpstring ("Eiffel project.")]
+  HRESULT GetProject (IEiffelProject** ppeiffelProject);
+};

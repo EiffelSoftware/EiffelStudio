@@ -211,7 +211,8 @@ feature {NONE} -- Implementation
 		do
 			if switch.is_equal (Dest_path_switch) or switch.is_equal (Dest_path_short) then
 				if (create {DIRECTORY}.make (switch_value)).exists then
-					destination_path := switch_value
+					destination_path := switch_value.clone (switch_value)
+					destination_path.prune_all_trailing ('\')
 				else
 					set_error (Invalid_destination_path, switch_value)
 				end
@@ -354,21 +355,36 @@ feature {NONE} -- Implementation
 			assembly: ASSEMBLY
 			consume_folder: DIRECTORY			
 			reconsume: BOOLEAN
+			
+			local_info: LOCAL_CACHE_INFO
+			des: EIFFEL_XML_DESERIALIZER
+			local_info_path: STRING
 		do
 			reconsume := True
+			local_info_path := destination_path.clone (destination_path)
+			if local_info_path.item (local_info_path.count) /= '\' then
+				local_info_path.append_character ((create {OPERATING_ENVIRONMENT}).Directory_separator)
+			end
+			local_info_path.append ("info.xml")
 			
 			output_destination_path := destination_path.clone (destination_path)
 			if output_destination_path.item (output_destination_path.count) /= '\' then
 				output_destination_path.append_character ((create {OPERATING_ENVIRONMENT}).Directory_separator)
 			end
 			output_destination_path.append (relative_assembly_path (ass.get_name))
-			
+		
 			if not no_output then
 				display_status ("Consuming " + create {STRING}.make_from_cil (ass.get_name.get_full_name))
 			end
 			
 			-- only consume the assembly if it needs to be consumed
 			if assembly_consumer.is_assembly_modified (ass, output_destination_path) then
+				create des
+				des.deserialize (local_info_path)
+				if des.successful then
+					local_info ?= des.deserialized_object
+				end
+				
 				create consume_folder.make (output_destination_path.substring (1, output_destination_path.count - 1))
 				if consume_folder.exists then
 					consume_folder.recursive_delete					
@@ -376,6 +392,12 @@ feature {NONE} -- Implementation
 				
 				assembly_consumer.set_destination_path (output_destination_path)				
 				assembly_consumer.consume (ass)
+				if local_info = Void then
+					create local_info.make (destination_path)					
+				end
+				local_info.add_assembly (Assembly_consumer.Consumed_assembly_factory.consumed_assembly (ass))
+
+				(create {EIFFEL_XML_SERIALIZER}).serialize (local_info, local_info_path)
 			else
 				if not no_output then
 					display_status ("Up-to-date check: '" + create {STRING}.make_from_cil (ass.get_name.get_full_name) + "' has not been modified since last consumption.%N")

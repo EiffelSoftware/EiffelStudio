@@ -30,10 +30,10 @@ feature -- Basic Operations
 				else
 					create culture.make_from_cil (native_culture)
 				end
-				create Result.make (create {STRING}.make_from_cil (ass.get_location),
+				create Result.make (create {STRING}.make_from_cil (ass.get_name.get_name),
 									create {STRING}.make_from_cil (aname.get_version.to_string),
 									culture,
-									Void)
+									void)
 			end
 		ensure
 			name_set: Result.name /= Void

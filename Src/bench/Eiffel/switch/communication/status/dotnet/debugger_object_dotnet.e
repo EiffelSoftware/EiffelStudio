@@ -44,7 +44,8 @@ feature -- Access
 			if l_val /= Void then
 
 				attributes := l_val.children;
-
+				is_tuple := False --| We considers Tuple object as Ref with Array container
+				
 				l_spec_val ?= l_val
 				if l_spec_val /= Void then
 					is_special := True

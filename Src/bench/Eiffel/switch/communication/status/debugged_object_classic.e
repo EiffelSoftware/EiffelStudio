@@ -38,6 +38,7 @@ feature
 			rqst.send;
 			attributes := rqst.attributes;
 			is_special := rqst.is_special;
+			is_tuple := rqst.is_tuple
 			capacity := rqst.capacity;
 			if Eiffel_system.valid_dynamic_id (rqst.object_type_id) then
 				class_type := eiffel_system.type_of_dynamic_id (rqst.object_type_id)

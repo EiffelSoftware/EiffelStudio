@@ -48,6 +48,15 @@ public EIF_REFERENCE eif_exec_suffix ()
 #endif
 }
 
+public EIF_REFERENCE eif_finish_freezing ()
+{
+#ifdef __WATCOMC__
+	return RTMS ("es3sh");
+#else
+	return RTMS ("finish_freezing");
+#endif
+}
+
 public EIF_REFERENCE eif_preobj ()
 {
 #ifdef __WATCOMC__

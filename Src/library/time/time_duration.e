@@ -9,19 +9,15 @@ class
 	TIME_DURATION
 
 inherit
-	TIME_VALUE
-		rename
-			fractionnal_second as time_value_frac_sec
-		undefine
-			is_equal
-		redefine
-			hour, minute, second, fine_second
-		end;
 
 	DURATION
 		undefine
-			is_equal,
-			out
+			is_equal
+		end
+
+	TIME_CONSTANTS
+		undefine
+			is_equal
 		end
 
 creation

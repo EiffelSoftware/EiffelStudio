@@ -8,7 +8,7 @@ indexing
 	date: "$Date$"
 	revision: "$Revision$"
 
-expanded external class TYPED_POINTER [G]
+expanded external class TYPED_POINTER [G->SYSTEM_OBJECT]
 
 inherit
 	POINTER_REF

@@ -163,17 +163,6 @@ feature -- Event : command association
 			implementation.add_subtree_command (cmd, arg)
 		end
 
-	add_right_selection_command (cmd: EV_COMMAND; arg: EV_ARGUMENT) is
-			-- Add `cmd' to the list of commands to be executed
-			-- when the user select the item with the right button
-			-- of the mouse.
-		require
-			exists: not destroyed
-			valid_command: cmd /= Void
-		do
-			implementation.add_right_selection_command (cmd, arg)
-		end
-
 feature -- Event -- removing command association
 
 	remove_activate_commands is
@@ -201,16 +190,6 @@ feature -- Event -- removing command association
 			exists: not destroyed
 		do
 			implementation.remove_subtree_commands
-		end
-
-	remove_right_selection_commands is
-			-- Empty the list of commands to be executed when
-			-- the user select the item with the right button
-			-- of the mouse.
-		require
-			exists: not destroyed
-		do
-			implementation.remove_right_selection_commands
 		end
 
 feature {EV_TREE_ITEM_HOLDER, EV_TREE_ITEM_HOLDER_I} -- Implementation

@@ -8,20 +8,15 @@ inherit
 		redefine
 			actual_type, solved_type, has_like, instantiation_in, is_like,
 			is_basic, instantiated_in, same_as, is_like_current,
-			meta_type, is_deep_equal
+			meta_type, is_deep_equal, valid_base_type
 		end
 
-feature -- Attributes
+feature -- Property
 
-	actual_type: TYPE_A;
-			-- Actual type of the type `like Current' in a given class
-
-feature -- Primitives
-
-	set_actual_type (a: TYPE_A) is
-			-- Assign `a' to `actual_type'.
+	is_like_current: BOOLEAN is
+			-- Is the current type an anchored type on Current ?
 		do
-			actual_type := a;
+			Result := True;
 		end;
 
 	is_like: BOOLEAN is
@@ -30,10 +25,54 @@ feature -- Primitives
 			Result := True;
 		end;
 
-	is_like_current: BOOLEAN is
-			-- Is the current type an anchored type on Current ?
+feature -- Access
+
+	is_basic: BOOLEAN is
+			-- Is the current actual type a basic one ?
 		do
-			Result := True;
+			Result := actual_type.is_basic;
+		end;
+
+    valid_base_type: BOOLEAN is
+            -- Is the base type valid
+        do
+            Result := evaluated_type /= Void
+        end;
+
+	associated_eclass: E_CLASS is
+			-- Associated class
+		do
+			Result := actual_type.associated_eclass;
+		end;
+
+feature -- Output
+
+	dump: STRING is
+			-- Dumped trace
+		local
+			actual_dump: STRING;
+		do
+			actual_dump := actual_type.dump;
+			!!Result.make (15 + actual_dump.count);
+			Result.append ("(like Current)");
+			Result.append (actual_dump);
+		end;
+
+	append_clickable_signature (a_clickable: CLICK_WINDOW) is
+		do
+			a_clickable.put_string ("(like Current)");
+			actual_type.append_clickable_signature (a_clickable);
+		end;
+
+feature -- Primitives
+
+	actual_type: TYPE_A;
+			-- Actual type of the type `like Current' in a given class
+
+	set_actual_type (a: TYPE_A) is
+			-- Assign `a' to `actual_type'.
+		do
+			actual_type := a;
 		end;
 
 	solved_type (feat_table: FEATURE_TABLE; f: FEATURE_I): LIKE_CURRENT is
@@ -75,27 +114,16 @@ feature -- Primitives
 			Result := actual_type.associated_class;
 		end;
 
-	dump: STRING is
-			-- Dumped trace
-		local
-			actual_dump: STRING;
-		do
-			actual_dump := actual_type.dump;
-			!!Result.make (15 + actual_dump.count);
-			Result.append ("(like Current)");
-			Result.append (actual_dump);
-		end;
-
-	append_clickable_signature (a_clickable: CLICK_WINDOW) is
-		do
-			a_clickable.put_string ("(like Current)");
-			actual_type.append_clickable_signature (a_clickable);
-		end;
-
 	has_like: BOOLEAN is
 			-- Does the type have anchored types in its definition ?
 		do
 			Result := True;
+		end;
+
+	same_as (other: TYPE_A): BOOLEAN is
+			-- Is the current type the same as `other' ?
+		do
+			Result := other.is_like_current
 		end;
 
 	type_i: TYPE_I is
@@ -108,18 +136,6 @@ feature -- Primitives
 			-- C type for `actual_type'
 		do
 			Result := actual_type.meta_type
-		end;
-
-	is_basic: BOOLEAN is
-			-- Is the current actual type a basic one ?
-		do
-			Result := actual_type.is_basic;
-		end;
-
-	same_as (other: TYPE_A): BOOLEAN is
-			-- Is the current type the same as `other' ?
-		do
-			Result := other.is_like_current
 		end;
 
 	is_deep_equal (other: TYPE_B): BOOLEAN is

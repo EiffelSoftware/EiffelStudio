@@ -204,7 +204,7 @@ feature {CLUSTER_DATA} -- Update
 	update_cluster_name (a_cluster: CLUSTER_DATA) is
 			-- Update the cluster name `a_cluster'.
 		local
-			ed: EC_CLASS_WINDOW;
+		--	ed: EC_CLASS_WINDOW;
 			s_type: INTEGER
 		do
 --			s_type := a_cluster.stone_type;

@@ -167,7 +167,7 @@ feature -- Properties
 	modify_generics (p : INTEGER; g : GENERIC_DATA ) is -- p is for the position ...pascalf
 		local
 			cl: CLASS_DATA
-			cl_list : EDITOR_LIST [ EC_CLASS_WINDOW ]
+	--		cl_list : EDITOR_LIST [ EC_CLASS_WINDOW ]
 		do
 --			generics.put_i_th(g,p)
 --			cl ?= f_rom

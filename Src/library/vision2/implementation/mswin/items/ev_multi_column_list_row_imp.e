@@ -18,6 +18,10 @@ inherit
 			set_cell_text
 		end
 
+	EV_PND_TARGET_IMP
+
+	EV_PND_SOURCE_IMP
+
 creation
 	make,
 	make_with_text,
@@ -156,6 +160,36 @@ feature -- Event : command association
 			add_command (Cmd_item_deactivate, cmd, arg)		
 		end
 
+	add_button_press_command (mouse_button: INTEGER; 
+		 cmd: EV_COMMAND; arg: EV_ARGUMENT) is
+			-- Add `cmd' to the list of commands to be executed
+			-- when button number 'mouse_button' is pressed.
+		do
+			inspect mouse_button 
+			when 1 then
+				add_command (Cmd_button_one_press, cmd, arg)
+			when 2 then
+				add_command (Cmd_button_two_press, cmd, arg)
+			when 3 then
+				add_command (Cmd_button_three_press, cmd, arg)
+			end
+		end
+
+	add_button_release_command (mouse_button: INTEGER;
+		    cmd: EV_COMMAND; arg: EV_ARGUMENT) is
+			-- Add `cmd' to the list of commands to be executed
+			-- when button number 'mouse_button' is released.
+		do
+			inspect mouse_button
+			when 1 then
+				add_command (Cmd_button_one_release, cmd, arg)
+			when 2 then
+				add_command (Cmd_button_two_release, cmd, arg)
+			when 3 then
+				add_command (Cmd_button_three_release, cmd, arg)
+			end
+		end
+
 feature -- Event -- removing command association
 
 	remove_select_commands is
@@ -170,6 +204,42 @@ feature -- Event -- removing command association
 			-- when the item is unselected.
 		do
 			remove_command (Cmd_item_deactivate)		
+		end
+
+	remove_button_press_commands (mouse_button: INTEGER) is
+			-- Empty the list of commands to be executed when
+			-- button number 'mouse_button' is pressed.
+		do
+			inspect mouse_button 
+			when 1 then
+				remove_command (Cmd_button_one_press)
+			when 2 then
+				remove_command (Cmd_button_two_press)
+			when 3 then
+				remove_command (Cmd_button_three_press)
+			end
+		end
+
+	remove_button_release_commands (mouse_button: INTEGER) is
+			-- Empty the list of commands to be executed when
+			-- button number 'mouse_button' is released.
+		do
+			inspect mouse_button 
+			when 1 then
+				remove_command (Cmd_button_one_release)
+			when 2 then
+				remove_command (Cmd_button_two_release)
+			when 3 then
+				remove_command (Cmd_button_three_release)
+			end
+		end
+
+feature {NONE} -- Implementation
+
+	widget_source: EV_WIDGET_IMP is
+			-- Widget drag source used for transport
+		do
+			Result := parent_imp
 		end
 
 end -- class EV_MULTI_COLUMN_LIST_ROW_IMP

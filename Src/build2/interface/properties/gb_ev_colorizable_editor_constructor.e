@@ -192,6 +192,7 @@ feature {NONE} -- Implementation
 			p := agent {EV_COLORIZABLE}.set_background_color (color)
 			for_all_objects (p)
 --| FIXME ADD THIS and propagate to all instances.
+--| See code in the container editor constructor also.
 --			container ?= objects.i_th (2)
 --			if container /= Void then
 --				container ?= container.parent
@@ -241,10 +242,5 @@ feature {NONE} -- Implementation
 	foreground_color_entry: GB_COLOR_INPUT_FIELD
 	
 	background_color_entry: GB_COLOR_INPUT_FIELD
-
-	-- Constants for XML
-	
-	background_color_string: STRING is "Background_color"
-	foreground_color_string: STRING is "Foreground_color"
 
 end -- class GB_EV_COLORIZABLE_EDITOR_CONSTRUCTOR

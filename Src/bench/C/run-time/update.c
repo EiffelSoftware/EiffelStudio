@@ -55,7 +55,7 @@ rt_private void write_long(char *where, long int value);				/* Write long consta
 
 /* For debugging */
 #define dprintf(n)	  if (DEBUG & (n)) printf
-/*#define DEBUG 3		/**/
+/*#define DEBUG 3 */		/**/
 
 /* TEMPORARY */
 static FILE *fil;

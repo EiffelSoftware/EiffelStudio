@@ -37,9 +37,9 @@
 #include "eif_curextern.h"
 #endif
 
-/*#define SEP_DEBUG  /**/
-/*#define DEBUG 6	/**/
-/*#define TEST /**/
+/*#define SEP_DEBUG */  /**/
+/*#define DEBUG 6 */	/**/
+/*#define TEST */ /**/
 #ifdef TEST
 #include <stdio.h>
 #endif

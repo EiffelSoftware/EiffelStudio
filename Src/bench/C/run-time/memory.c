@@ -359,7 +359,8 @@ rt_public void eif_set_chunk_size (EIF_INTEGER sz)
 
 	EIF_GET_CONTEXT
 	int size = (int) sz;
-	if (size > 0) eif_chunk_size = size;
+	if (size > 0) 
+		eif_chunk_size = size;
 	EIF_END_GET_CONTEXT
 }
 

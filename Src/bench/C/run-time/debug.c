@@ -34,7 +34,7 @@
 #define BODY_ID_SZ		sizeof(uint32)
 
 
-/*#define DEBUG 63		/* Activate debugging code */
+/*#define DEBUG 63 */		/* Activate debugging code */
 
 /* For debugging */
 #define dprintf(n)		if (DEBUG & (n)) printf

@@ -168,7 +168,7 @@ void eif_free(register void *ptr)
 	free (ptr);
 
 #elif !defined HAS_SMART_MMAP && !defined HAS_SBRK
-	return free (ptr);
+	free (ptr);
 #else /* all the other platforms (Unix/Linux) use an eiffel implementation */
       /* for eif_free() */ 
 

@@ -116,9 +116,9 @@ rt_private struct stack parent_expanded_stack = {	/* Records expanded parents */
 #endif /* EIF_THREADS */
 #endif	/* ITERATIVE_MARKING */
 
-/*#define DEBUG 63				/* Debugging level */
-/*#define MEMCHK				/* Activate memory checking */
-/*#define MEM_STAT				/* Activate Eiffel memory monitoring */
+/*#define DEBUG 63 */				/* Debugging level */
+/*#define MEMCHK		*/		/* Activate memory checking */
+/*#define MEM_STAT		*/		/* Activate Eiffel memory monitoring */
 /* Internal data structure used to monitor the activity of the garbage
  * collection process and help the auto-adaptative algorithm in its
  * decisions (heuristics).

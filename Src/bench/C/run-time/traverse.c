@@ -39,7 +39,7 @@
 /*
  * Declarations
  */
-/*#define DEBUG		/**/
+/*#define DEBUG */		/**/
 
 /* The mstack structure has to be an exact copy of the stack structure, but has
  * an added field st_bot at the end. That way, we may safely use the common

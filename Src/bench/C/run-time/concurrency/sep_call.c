@@ -20,7 +20,7 @@
 */
 
 
-/*#define DEBUG 0/**/
+/*#define DEBUG 0 */
 #define dprintf(n)	if (DEBUG & n) printf
 
 rt_private int locate_from_cecil(object, name)

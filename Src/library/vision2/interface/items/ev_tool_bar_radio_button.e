@@ -20,13 +20,14 @@ inherit
 creation
 	make,
 	make_with_text,
-	make_with_pixmap,
 	make_with_index,
-	make_with_all
+	make_with_all,
+	make_with_pixmap,
+	make_with_pixmap_and_all
 
 feature {NONE} -- Initialization
 
-	make (par: EV_TOOL_BAR) is
+	make (par: like parent) is
 			-- Create the widget with `par' as parent.
 		do
 			!EV_TOOL_BAR_RADIO_BUTTON_IMP! implementation.make
@@ -34,7 +35,7 @@ feature {NONE} -- Initialization
 			set_parent (par)
 		end
 
-	make_with_text (par: EV_TOOL_BAR; txt: STRING) is
+	make_with_text (par: like parent; txt: STRING) is
 			-- Create an item with `par' as parent and `txt'
 			-- as text.
 		do

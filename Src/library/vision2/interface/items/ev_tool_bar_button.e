@@ -13,6 +13,8 @@ inherit
 	EV_SIMPLE_ITEM
 		redefine
 			implementation,
+			make_with_index,
+			make_with_all,
 			parent
 		end
 
@@ -29,57 +31,59 @@ inherit
 creation
 	make,
 	make_with_text,
-	make_with_pixmap,
 	make_with_index,
-	make_with_all
+	make_with_all,
+	make_with_pixmap,
+	make_with_pixmap_and_all
 
 feature {NONE} -- Initialization
 
-	make (par: EV_TOOL_BAR) is
+	make (par: like parent) is
 			-- Create the widget with `par' as parent.
 		do
-			!EV_TOOL_BAR_BUTTON_IMP! implementation.make
+			create {EV_TOOL_BAR_BUTTON_IMP} implementation.make
 			implementation.set_interface (Current)
 			set_parent (par)
 		end
 
-	make_with_text (par: EV_TOOL_BAR; txt: STRING) is
+	make_with_text (par: like parent; txt: STRING) is
 			-- Create an item with `par' as parent and `txt'
 			-- as text.
-		require
-			valid_text: txt /= Void
 		do
-			!EV_TOOL_BAR_BUTTON_IMP! implementation.make
+			create {EV_TOOL_BAR_BUTTON_IMP} implementation.make
 			implementation.set_interface (Current)
 			implementation.set_text (txt)
 			set_parent (par)
 		end
 
-	make_with_pixmap (par: EV_TOOL_BAR; pix: EV_PIXMAP) is
+	make_with_index (par: like parent; value: INTEGER) is
+			-- Create a row at the given `value' index in the list.
+		do
+			create {EV_TOOL_BAR_BUTTON_IMP} implementation.make
+			{EV_SIMPLE_ITEM} Precursor (par, value)
+		end
+
+	make_with_all (par: like parent; txt: STRING; value: INTEGER) is
+			-- Create a row with `txt' as text at the given
+			-- `value' index in the list.
+		do
+			create {EV_TOOL_BAR_BUTTON_IMP} implementation.make_with_text (txt)
+			{EV_SIMPLE_ITEM} Precursor (par, txt, value)
+		end
+
+	make_with_pixmap (par: like parent; pix: EV_PIXMAP) is
 			-- Create an item with `par' as parent and `txt'
 			-- as text.
 		require
 			valid_pixmap: is_valid (pix)
 		do
-			!EV_TOOL_BAR_BUTTON_IMP! implementation.make
+			create {EV_TOOL_BAR_BUTTON_IMP} implementation.make
 			implementation.set_interface (Current)
 			implementation.set_pixmap (pix)
 			set_parent (par)
 		end
 
-	make_with_index (par: EV_TOOL_BAR; value: INTEGER) is
-			-- Create an item with `par' as parent and `value'
-			-- as index.
-		require
-			valid_parent: is_valid (par)
-			valid_index: value >= 1
-		do
-			!EV_TOOL_BAR_BUTTON_IMP! implementation.make --_with_index (par, value)
-			implementation.set_interface (Current)
-			set_parent_with_index (par, index)
-		end
-
-	make_with_all (par: EV_TOOL_BAR; txt: STRING; pix: EV_PIXMAP; 
+	make_with_pixmap_and_all (par: like parent; txt: STRING; pix: EV_PIXMAP; 
 					value: INTEGER) is
 			-- Create an item with `par' as parent and `txt' as
 			-- text, `pix' as pixmap and `index' as index.
@@ -110,15 +114,6 @@ feature -- Access
 			Result ?= {EV_SIMPLE_ITEM} Precursor
 		end
 
-	index: INTEGER is
-			-- Index of the button in the tool-bar.
-		require
-			exists: not destroyed
-			has_parent: parent /= Void
-		do
-			Result := implementation.index
-		end
-
 feature -- Status report
 
 	is_insensitive: BOOLEAN is
@@ -140,21 +135,8 @@ feature -- Status setting
 			has_parent: parent /= Void
 		do
 			implementation.set_insensitive (flag)
-		end
-
-feature -- Element change
-
-	set_parent_with_index (par: EV_TOOL_BAR; value: INTEGER) is
-			-- Make `par' the new parent of the widget and set
-			-- the current button at `value'.
-		require
-			exists: not destroyed
-			valid_index: value >= 1
-		do
-			implementation.set_parent_with_index (par, value)
 		ensure
-			parent_set: parent = par
-			index_set: index = value
+			state_set: is_insensitive = flag
 		end
 
 feature -- Event : command association

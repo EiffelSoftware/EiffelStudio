@@ -11,16 +11,20 @@ inherit
 	EV_SIMPLE_ITEM
 		redefine
 			implementation,
+			make_with_index,
+			make_with_all,
 			parent
 		end
 
 creation
 	make,
-	make_with_text
+	make_with_text,
+	make_with_index,
+	make_with_all
 
 feature {NONE} -- Initialization
 
-	make (par: EV_STATUS_BAR) is
+	make (par: like parent) is
 			-- Create the widget with `par' as parent.
 		do
 			!EV_STATUS_BAR_ITEM_IMP! implementation.make
@@ -28,7 +32,7 @@ feature {NONE} -- Initialization
 			set_parent (par)
 		end
 
-	make_with_text (par: EV_STATUS_BAR; txt: STRING) is
+	make_with_text (par: like parent; txt: STRING) is
 			-- Create an item with `par' as parent and `txt'
 			-- as text.
 		do
@@ -36,6 +40,21 @@ feature {NONE} -- Initialization
 			implementation.set_interface (Current)
 			implementation.set_text (txt)
 			set_parent (par)
+		end
+
+	make_with_index (par: like parent; value: INTEGER) is
+			-- Create a row at the given `value' index in the list.
+		do
+			create {EV_STATUS_BAR_ITEM_IMP} implementation.make
+			{EV_SIMPLE_ITEM} Precursor (par, value)
+		end
+
+	make_with_all (par: like parent; txt: STRING; value: INTEGER) is
+			-- Create a row with `txt' as text at the given
+			-- `value' index in the list.
+		do
+			create {EV_STATUS_BAR_ITEM_IMP} implementation.make_with_text (txt)
+			{EV_SIMPLE_ITEM} Precursor (par, txt, value)
 		end
 
 feature -- Access

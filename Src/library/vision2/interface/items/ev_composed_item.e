@@ -17,6 +17,37 @@ inherit
 			implementation
 		end
 
+feature {NONE} -- Initialization
+
+	make_with_text (par: like parent; txt: ARRAY [STRING]) is
+			-- Create a row with text in it.
+		require
+			valid_text: txt /= Void
+		deferred
+		ensure
+			text_set: implementation.text_set (txt)
+		end
+
+	make_with_all (par: like parent; txt: ARRAY [STRING]; pos: INTEGER) is
+			-- Create a row with `txt' as text at the given
+			-- `value' index in the list.
+		require
+			valid_parent: par /= Void
+			valid_text: txt /= Void
+			valid_index: pos > 0 and pos <= par.count + 1
+		do
+			-- create {?} implementation.make_with_text (txt)
+			check
+				valid_implementation: implementation /= Void
+			end
+			implementation.set_interface (Current)
+			set_parent_with_index (par, pos)
+		ensure
+			parent_set: parent.is_equal (par)
+			text_set: implementation.text_set (txt)
+			index_set: index = pos
+		end
+
 feature -- Access
 
 	count: INTEGER is
@@ -25,15 +56,19 @@ feature -- Access
 			exists: not destroyed
 		do
 			Result := implementation.count
+		ensure
+			positive_result: result >= 0
 		end
 
-	cell_text (index: INTEGER): STRING is
-			-- Return the text of the cell number `index' 
+	cell_text (value: INTEGER): STRING is
+			-- Return the text of the cell number `value' 
 		require
 			exists: not destroyed
-			valid_index: index >= 1 and index <= count
+			valid_index: value >= 1 and value <= count
 		do
-			Result := implementation.cell_text (index)
+			Result := implementation.cell_text (value)
+		ensure
+			valid_result: Result /= Void
 		end
 
 	text: LINKED_LIST [STRING] is
@@ -42,16 +77,19 @@ feature -- Access
 			exists: not destroyed
 		do
 			Result := implementation.text
+		ensure
+			valid_result: Result /= Void
+			valid_texts: not Result.has (Void)
 		end
 
-	cell_pixmap (index: INTEGER): EV_PIXMAP is
+	cell_pixmap (value: INTEGER): EV_PIXMAP is
 			-- Return the pixmap of the cell number
-			-- `index'. On windows platform, 
-			-- if index > 1, the result is void.
+			-- `value'. On windows platform, 
+			-- if value > 1, the result is void.
 		require
 			exists: not destroyed
 		do
-			Result := implementation.cell_pixmap (index)
+			Result := implementation.cell_pixmap (value)
 		end
 
 	pixmap: LINKED_LIST [EV_PIXMAP] is
@@ -75,17 +113,21 @@ feature -- Element change
 			valid_value: value > 0
 		do
 			implementation.set_count (value)
+		ensure
+			count_set: count = value
 		end
 
-	set_cell_text (index: INTEGER; txt: STRING) is
-			-- Make `txt' the new label of the `index'-th
+	set_cell_text (value: INTEGER; txt: STRING) is
+			-- Make `txt' the new label of the `value'-th
 			-- cell of the item.
 		require
 			exists: not destroyed
-			valid_index: index >= 1 and index <= count
+			valid_index: value >= 1 and value <= count
 			valid_text: txt /= Void
 		do
-			implementation.set_cell_text (index, txt)
+			implementation.set_cell_text (value, txt)
+		ensure
+			text_set: (cell_text (value)).is_equal (txt)
 		end
 
 	set_text (txt: ARRAY [STRING]) is
@@ -96,29 +138,34 @@ feature -- Element change
 			valid_text_length: txt.count = count
 		do
 			implementation.set_text (txt)
+		ensure
+			text_set: implementation.text_set (txt)
 		end
 
-	set_cell_pixmap (index: INTEGER; pix: EV_PIXMAP) is
+	set_cell_pixmap (value: INTEGER; pix: EV_PIXMAP) is
 			-- Make `pix' the new pixmap of the 
-			-- `index'-th cell of the item.
+			-- `value'-th cell of the item.
 		require
 			exists: not destroyed
-			valid_index: index >= 1 and index <= count
-			valid_pixmap: is_valid (pix)
-			valid_size: pixmap_size_ok (pix)
+			valid_index: value >= 1 and value <= count
+			valid_size: (pix /= Void) implies pixmap_size_ok (pix)
 		do
-			implementation.set_cell_pixmap (index, pix)
+			implementation.set_cell_pixmap (value, pix)
+		ensure
+			pixmap_set: (cell_pixmap (value)).is_equal (pix)
 		end
 
-	unset_cell_pixmap (index: INTEGER) is
-			-- Remove the pixmap of the 
-			-- `index'-th cell of the item.
-		require
-			valid_index: index >= 1 and index <= count
-			has_pixmap: (pixmap @ index) /= Void
-		do
-			implementation.unset_cell_pixmap (index)
-		end
+--	unset_cell_pixmap (value: INTEGER) is
+--			-- Remove the pixmap of the 
+--			-- `value'-th cell of the item.
+--		require
+--			valid_index: value >= 1 and value <= count
+--			has_pixmap: (pixmap @ value) /= Void
+--		do
+--			implementation.unset_cell_pixmap (value)
+--		ensure
+--			pixmap_unset: (cell_pixmap (value) = Void)
+--		end
 
 	set_pixmap (pix: ARRAY [EV_PIXMAP]) is
 			-- Make `pix' the new pixmaps of the item.
@@ -128,6 +175,8 @@ feature -- Element change
 			valid_size: pixmaps_size_ok (pix)
 		do
 			implementation.set_pixmap (pix)
+		ensure
+			text_set: implementation.pixmap_set (pix)
 		end
 
 feature -- Assertion features

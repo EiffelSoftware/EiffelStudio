@@ -28,7 +28,7 @@ creation
 	
 feature {NONE} -- Initialization
 
-	make (par: EV_MENU_ITEM_HOLDER) is
+	make (par: like parent) is
 			-- Create the widget with `par' as parent.
 		do
 			!EV_RADIO_MENU_ITEM_IMP! implementation.make
@@ -36,7 +36,7 @@ feature {NONE} -- Initialization
 			set_parent (par)
 		end
 
-	make_with_text (par: EV_MENU_ITEM_HOLDER; txt: STRING) is
+	make_with_text (par: like parent; txt: STRING) is
 			-- Create an item with `par' as parent and `txt'
 			-- as text.
 		do
@@ -46,7 +46,7 @@ feature {NONE} -- Initialization
 			set_parent (par)
 		end
 
-	make_peer_with_text (par: EV_MENU_ITEM_HOLDER; txt: STRING; peer: EV_RADIO_MENU_ITEM) is
+	make_peer_with_text (par: like parent; txt: STRING; peer: EV_RADIO_MENU_ITEM) is
 			-- Create a radio menu item and put it in
 			-- the same group as peer
 		do
@@ -57,19 +57,20 @@ feature {NONE} -- Initialization
 
 feature -- Status Setting
 
-	set_peer (peer: EV_RADIO_MENU_ITEM) is
+	set_peer (peer: like Current) is
 			-- Put in same group as peer
 		require
 			exists: not destroyed
 		do
 			implementation.set_peer (peer)
 		ensure
-			implementation.is_peer (peer)
+			same_group: implementation.is_peer (peer)
 		end
 
 feature -- Implementation
 
 	implementation: EV_RADIO_MENU_ITEM_I
+			-- Platform dependent access.
 
 end -- class EV_RADIO_MENU_ITEM
 

@@ -1,6 +1,0 @@
--- Export feature (s) of system : Eif_compiler
-
-ECOM_EIF_COMPILER_REGISTRATION (make) : dll_register_server @ 1 alias DllRegisterServer call_type __stdcall
-ECOM_EIF_COMPILER_REGISTRATION (make) : dll_unregister_server @ 2 alias DllUnregisterServer call_type __stdcall
-ECOM_EIF_COMPILER_REGISTRATION (make) : dll_get_class_object @ 3 alias DllGetClassObject call_type __stdcall
-ECOM_EIF_COMPILER_REGISTRATION (make) : dll_can_unload_now @ 4 alias DllCanUnloadNow call_type __stdcall

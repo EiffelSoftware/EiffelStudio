@@ -1,5 +1,5 @@
 ?X:
-?X:	Look wether <sys/select.h> deines struct timeval
+?X:	Look wether <sys/select.h> defines struct timeval
 ?X:
 ?MAKE:i_tmvlsyss: Inhdr contains test Loc Setvar Findhdr
 ?MAKE:	-pick add $@ %<

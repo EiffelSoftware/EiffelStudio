@@ -8,6 +8,38 @@ class
 
 feature -- Externals
 
+	frozen gdk_pixbuf_render_pixmap_and_mask (a_pixbuf: POINTER; a_pixmap, a_mask: TYPED_POINTER [POINTER]; alpha_threshold: INTEGER) is
+		external
+			"C signature (GdkPixbuf*, GdkPixmap**, GdkBitmap**, int) use <gtk/gtk.h>"
+		end
+
+	frozen gdk_pixbuf_new_from_file (a_filename: POINTER; a_error: TYPED_POINTER [POINTER]): POINTER is
+		external
+			"C signature (char*, GError**): GdkPixbuf* use <gtk/gtk.h>"
+		end
+
+	frozen g_locale_to_utf8 (a_string: POINTER; a_length: INTEGER; byte_read, bytes_written, gerror: TYPED_POINTER [INTEGER]): POINTER is
+		external
+			"C signature (gchar*, gssize, gsize*, gsize*, GError**): gchar* use <gtk/gtk.h> "
+		end
+	
+	frozen g_utf8_strlen (a_utf8_string: POINTER; maximum: INTEGER): INTEGER is
+		external
+			"C inline use <gtk/gtk.h>"
+		alias
+			"g_utf8_strlen ((gchar*) $a_utf8_string, (gssize) $maximum)"
+		end
+
+	frozen g_locale_from_utf8 (a_string: POINTER; a_length: INTEGER; byte_read, bytes_written, gerror: TYPED_POINTER [INTEGER]): POINTER is
+		external
+			"C signature (gchar*, gssize, gsize*, gsize*, GError**): gchar* use <gtk/gtk.h> "
+		end
+
+	frozen gtk_settings_get_default: POINTER is
+		external
+			"C signature (): GtkSettings* use <gtk/gtk.h>"
+		end
+
 	frozen gtk_value_pointer (arg: POINTER): POINTER is
 			-- Pointer to the value of a GtkArg.
 		external
@@ -72,8 +104,7 @@ feature -- Externals
 	frozen gtk_widget_get_modifier_style (a_widget: POINTER): POINTER is
 		external
 			"C signature (GtkWidget*): GtkRcStyle* use <gtk/gtk.h>"
-		end
-		
+		end	
 
 	frozen pango_scale: INTEGER is
 		external
@@ -142,37 +173,46 @@ feature -- Externals
 			"C signature (char*): PangoFontDescription* use <gtk/gtk.h>"
 		end
 
-	frozen g_object_set (a_object: POINTER; a_property: POINTER; arg1: POINTER; arg2: POINTER) is
+	frozen g_object_set_pointer (a_object: POINTER; a_property: POINTER; arg1: POINTER; arg2: POINTER) is
 		external
-			"C signature (gpointer, gchar*, gpointer, gpointer) use <gtk/gtk.h>"
+			"C inline use <gtk/gtk.h>"
+		alias
+			"g_object_set ((gpointer) $a_object, (gchar*) $a_property, (gpointer) $arg1, NULL)"
 		end
 		
 	frozen g_object_set_string (a_object: POINTER; a_property: POINTER; string_arg: POINTER) is
 		external
-			"C signature (gpointer, gchar*, gchar*) use <gtk/gtk.h>"
+			"C inline use <gtk/gtk.h>"
 		alias
-			"g_object_set"
+			"g_object_set ((gpointer) $a_object, (gchar*) $a_property, (gchar*) $string_arg, NULL)"
+		end
+
+	frozen g_object_get_string (a_object: POINTER; a_property: POINTER; string_arg: TYPED_POINTER [POINTER]) is
+		external
+			"C inline use <gtk/gtk.h>"
+		alias
+			"g_object_get ((gpointer) $a_object, (gchar*) $a_property, (gchar**) $string_arg, NULL)"
 		end
 
 	frozen g_object_set_integer (a_object: POINTER; a_property: POINTER; int_arg: INTEGER) is
 		external
 			"C inline use <gtk/gtk.h>"
 		alias
-			"g_object_set((gpointer) $a_object, (gchar*) $a_property, $int_arg)"
+			"g_object_set((gpointer) $a_object, (gchar*) $a_property, $int_arg, NULL)"
 		end
 
 	frozen g_object_set_double (a_object: POINTER; a_property: POINTER; double_arg: DOUBLE) is
 		external
 			"C inline use <gtk/gtk.h>"
 		alias
-			"g_object_set((gpointer) $a_object, (gchar*) $a_property, $double_arg)"
+			"g_object_set((gpointer) $a_object, (gchar*) $a_property, $double_arg, NULL)"
 		end
 		
 	frozen g_object_set_boolean (a_object: POINTER; a_property: POINTER; bool_arg: BOOLEAN) is
 		external
 			"C inline use <gtk/gtk.h>"
 		alias
-			"g_object_set((gpointer) $a_object, (gchar*) $a_property, $bool_arg)"
+			"g_object_set((gpointer) $a_object, (gchar*) $a_property, $bool_arg, NULL)"
 		end
 
 	frozen signal_disconnect (a_object: POINTER; a_handler_id: INTEGER) is
@@ -438,7 +478,7 @@ feature -- Externals
 		
 	frozen gtk_text_tag_table_add (a_table: POINTER; a_tag: POINTER) is
 		external
-			"C signature (GtkTextTagTable*, GtkTextTag*)"
+			"C signature (GtkTextTagTable*, GtkTextTag*) use <gtk/gtk.h>"
 		end
 
 	frozen gtk_text_buffer_remove_all_tags (a_buffer: POINTER; a_start: POINTER; a_end: POINTER) is

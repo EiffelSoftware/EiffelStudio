@@ -18,6 +18,10 @@ inherit
 	
 	GB_SHARED_COMMAND_HANDLER
 	
+	GB_XML_UTILITIES
+	
+	GB_SHARED_DEFERRED_BUILDER
+	
 create
 	initialize
 
@@ -75,7 +79,6 @@ feature -- Basic operation
 				-- This information. Some representations of objects in the editor
 				-- display information regarding their children, so a call to
 				-- this function requires and update to the object editor.
-				
 			all_editors_local := all_editors
 			from
 				all_editors_local.start
@@ -99,9 +102,11 @@ feature -- Basic operation
 			new_object_object_not_void: new_object.object /= Void
 		end
 
-	move_object_contents (new_object, old_object: GB_OBJECT) is
+	move_object_contents (new_object, old_object: GB_OBJECT; in_type_change: BOOLEAN) is
 			-- Take all children of `old_object', and their representations,
-			-- and move into `new_object'.
+			-- and move into `new_object'. If `in_type_change' then do not unparent
+			-- layout items of children, so use `unparent_during_type_change' otherwise using
+			-- `unparent'.
 		require
 			new_object_not_void: new_object /= Void
 			old_object_not_Void: old_object /= Void
@@ -133,12 +138,16 @@ feature -- Basic operation
 				check
 					child_object_not_void: child_object /= Void
 				end
-				child_object.unparent_during_type_change
+				if in_type_change then
+					child_object.unparent_during_type_change
+				else
+					child_object.unparent
+				end
 				
 				if cell_object /= Void then
 					cell_object.add_child_object (child_object, 1)	
 				else
-					container_object.add_child_object (child_object, container_object.object.count + 1)--container_object.layout_item.count + 1)
+					container_object.add_child_object (child_object, container_object.object.count + 1)
 				end
 
 				layout_item.forth
@@ -219,7 +228,7 @@ feature -- Basic operation
 				(is_instance_of (new_object, dynamic_type_from_string (gb_cell_object_class_name)) or
 				is_instance_of (new_object, dynamic_type_from_string (gb_container_object_class_name)))) then
 					
-				move_object_contents (new_object, an_object)	
+				move_object_contents (new_object, an_object, True)	
 			end
 			
 				-- Now we must update all the object editors.
@@ -293,6 +302,8 @@ feature -- Basic operation
 		do
 			Result := build_object_from_string (a_text)
 			Result.assign_id
+				-- As `Result' has just been built, we add it to `objects'.
+			add_object_to_objects (Result)
 		end
 		
 
@@ -398,7 +409,7 @@ feature -- Basic operation
 			-- first item in `objects' is the root window.
 			-- This will almost certainly change at some point in the future.
 		local
-			window_object: GB_CELL_OBJECT
+			window_object: GB_TITLED_WINDOW_OBJECT
 			window_child: GB_OBJECT
 			layout_item, temp_layout_item: GB_LAYOUT_CONSTRUCTOR_ITEM
 		do
@@ -426,6 +437,10 @@ feature -- Basic operation
 					layout_item.forth
 				end
 			end
+			
+				-- Update objects referenced by `window_object'.
+			window_object.update_objects
+			
 				-- Because `window_object' exists throughout
 				-- the execution of the application, we
 				-- must clear the events. Otherwise, every time
@@ -663,7 +678,7 @@ feature -- Basic operation
 		
 	object_from_display_widget (ev_any: EV_ANY): GB_OBJECT is
 			-- `Result' is GB_OBJECT with `ev_any' as `object'.
-			-- Only checks in `obejcts'.
+			-- Only checks in `objects'.
 		local
 			local_objects: ARRAYED_LIST [GB_OBJECT]
 			counter: INTEGER
@@ -703,6 +718,29 @@ feature -- Basic operation
 			end
 		end
 		
+	deep_object_from_id (an_id: INTEGER): GB_OBJECT is
+			-- `Result' is GB_OBJECT with id `an_id'.
+			-- Checks in `objects' and `deleted_objects'.
+		local
+			local_objects: ARRAYED_LIST [GB_OBJECT]
+			counter: INTEGER
+		do
+			Result := object_from_id (an_id)
+			if Result = Void then
+				local_objects ?= deleted_objects
+				from
+					counter := 1
+				until
+					counter > local_objects.count or
+					Result /= Void
+				loop
+					if (local_objects @ counter).id = an_id then
+						Result := local_objects @ counter
+					end
+					counter := counter + 1
+				end	
+			end
+		end
 
 feature {GB_XML_OBJECT_BUILDER} -- Basic operations
 
@@ -730,6 +768,160 @@ feature {GB_XML_OBJECT_BUILDER} -- Basic operations
 			new_object_object_not_void: new_object.object /= Void
 		end
 		
+feature {GB_EV_WIDGET_EDITOR_CONSTRUCTOR} -- Implementation
+
+	reset_object (an_object: GB_OBJECT) is
+			-- Reset `an_object' by rebuilding. An XML representation
+			-- of the object is built, and then a new object is generated from
+			-- this XML. The new object replaces the old version with the same ID,
+			-- and the contents are transferred across.
+		local
+			store: GB_XML_STORE
+			element: XML_ELEMENT
+			load: GB_XML_LOAD
+			new_object: GB_OBJECT
+			parent_object: GB_OBJECT
+			table_parent_object: GB_TABLE_OBJECT
+			original_position: INTEGER
+			x, y, width, height: INTEGER
+			fixed: EV_FIXED
+			widget: EV_WIDGET
+			table: EV_TABLE
+			container_object: GB_CONTAINER_OBJECT
+			titled_window_object: GB_TITLED_WINDOW_OBJECT
+			old_contents: EV_WIDGET
+			old_window: EV_TITLED_WINDOW
+			new_window: EV_TITLED_WINDOW
+			old_builder_window, new_builder_window: EV_TITLED_WINDOW
+			old_builder_contents: EV_WIDGET
+		do
+			titled_window_object ?= an_object
+				-- We must handle windows as a special case,
+				-- as they are built by Build and are not completely dynamic
+				-- like other objects.
+				
+			if titled_window_object = Void then
+				
+				parent_object := an_object.parent_object
+				table_parent_object ?= parent_object
+				
+				if table_parent_object /= Void then
+						-- If the object is parented in a table, store
+						-- relevent information to enable us to restore the position.
+					widget ?= an_object.object
+					x := table_parent_object.object.item_column_position (widget)
+					y := table_parent_object.object.item_row_position (widget)
+					width := table_parent_object.object.item_column_span (widget)
+					height := table_parent_object.object.item_row_span (widget)
+				end
+				fixed ?= an_object.parent_object.object
+				if fixed /= Void then
+						-- If the object is parented in a fixed, store relevent information
+						-- which enables us to restore the position.
+					widget ?= an_object.object
+					x := widget.x_position
+					y := widget.y_position
+					width := widget.width
+					height := widget.height
+				end
+				original_position := parent_object.layout_item.index_of (an_object.layout_item, 1)
+				an_object.unparent
+				
+					-- We must now remove `an_object' from `objects' as it will be replaced with
+					-- the new version. If we leave it there, then we will have two objects with the
+					-- same id. When we reset an object, the old object is never used again, it is completely
+					-- replaced with the new. This is not an undoable command, as it will always be silent to
+					-- the user.
+				objects.prune_all (an_object)
+				
+				
+				create store
+				create load
+				element := new_root_element ("item", "prefix")
+				add_attribute_to_element (element, "type", "xsi", an_object.type)
+				
+				store.output_attributes (an_object, element, create {GB_GENERATION_SETTINGS})
+					-- Generate an XML representation of `an_object' in `element'.
+					
+				new_object := load.retrieve_new_object (element, parent_object, original_position)
+					-- construct `new_object' from `element.
+				
+					
+				if not is_instance_of (new_object, dynamic_type_from_string (gb_primitive_object_class_name)) then
+						-- Only transfer object contents if the object is not a primitive and
+						-- may therefore hold other widgets. Although some primitives hold items, the
+						-- size is not affected by the items, and `reset_object' will not be called.
+					move_object_contents (new_object, an_object, False)
+				end
+				
+					
+				if table_parent_object /= Void then
+						-- We must now position `an_object' if it was contained in a table.
+					widget ?= new_object.object
+					table_parent_object.object.set_item_position_and_span (widget, x, y, width, height)
+					widget ?= new_object.display_object
+					table ?= table_parent_object.display_object.child
+					table.set_item_position_and_span (widget, x, y, width, height)
+				end
+				
+				if fixed /= Void then
+						-- We must now position `an_object' if it was contained in a fixed.
+					widget ?= new_object.object
+					fixed.set_item_position (widget, x, y)
+					fixed.set_item_size (widget, width.max (widget.minimum_width), height.max (widget.minimum_height))
+					container_object ?= parent_object
+					fixed ?= container_object.display_object.child
+					widget ?= new_object.display_object
+					fixed.set_item_position (widget, x, y)
+					fixed.set_item_size (widget, width.max (widget.minimum_width), height.max (widget.minimum_height))
+				end
+				
+					-- We now perform any deferred building that is required.
+				Deferred_builder.build
+			else
+					-- We must handle windows as a special case. Store the contents.
+				old_contents := titled_window_object.object.item
+				old_window ?= titled_window_object.object				
+				old_builder_contents := titled_window_object.display_object.child.item
+				old_builder_window ?= titled_window_object.display_object.child
+				
+					
+				create store
+				create load
+				element := new_root_element ("item", "prefix")
+				add_attribute_to_element (element, "type", "xsi", an_object.type)
+				store.output_attributes (an_object, element, create {GB_GENERATION_SETTINGS})
+				
+				titled_window_object.update_objects
+				--load.rebuild_window (element)
+				load.build_window (element)
+				
+				new_window := titled_window_object.object
+				new_builder_window ?= titled_window_object.display_object.child
+				
+				old_window.wipe_out
+				old_builder_window.wipe_out
+				
+				new_window.extend (old_contents)
+				new_builder_window.extend (old_builder_contents)
+				
+				new_window.set_position (old_window.x_position, old_window.y_position)
+				new_window.set_size (old_window.width.max (new_window.minimum_width), old_window.height.max (new_window.minimum_height))
+				if old_window.is_displayed then					
+					new_window.show
+				end
+				old_window.destroy
+				
+				new_builder_window.set_position (old_builder_window.x_position, old_builder_window.y_position)
+				new_builder_window.set_size (old_builder_window.width.max (new_builder_window.minimum_width), old_builder_window.height.max (new_builder_window.minimum_height))
+				if old_builder_window.is_displayed then
+					new_builder_window.show
+				end
+				old_builder_window.destroy
+			end
+		end
+		
+		
 feature {GB_TITLED_WINDOW_OBJECT, GB_XML_OBJECT_BUILDER} -- Implementation
 		
 	add_object_to_objects (an_object: GB_OBJECT) is
@@ -747,6 +939,6 @@ feature -- Access
 		
 	deleted_objects: ARRAYED_LIST [GB_OBJECT]
 		-- All objects that have been deleted in
-		-- this session of the application.
+		-- this session of the application.		
 
 end -- class GB_OBJECT_HANDLER

@@ -287,7 +287,8 @@ feature -- Settings
 
 feature -- Generation Structure
 
-	start_assembly_generation (assembly_name, a_file_name, location: STRING) is
+	start_assembly_generation (assembly_name, a_file_name,
+			a_key_pair_file_name, location: STRING)
 			-- Create Assembly with `name'.
 		require
 			assembly_name_not_void: assembly_name /= Void

@@ -66,8 +66,8 @@ feature -- Type check, byte code, dead code removal and formatter
 			end
 				-- Update type stack
 			!! tuple_type
-			tuple_type.set_generics (generics)
 			tuple_type.set_base_class_id (System.tuple_id)
+			tuple_type.set_generics (generics)
 
 			context.replace (tuple_type)
 				-- Update the tuple type stack
@@ -117,7 +117,7 @@ feature {AST_EIFFEL} -- Output
 
 	string_value: STRING is ""
 
-feature {TUPLE_AS}	-- Replication
+feature {TUPLE_AS, ROUTINE_CREATION_AS} 
 
 	set_expressions (e: like expressions) is
 		require
@@ -127,3 +127,4 @@ feature {TUPLE_AS}	-- Replication
 		end
 
 end -- class TUPLE_AS
+

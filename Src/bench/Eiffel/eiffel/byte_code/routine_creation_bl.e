@@ -1,4 +1,4 @@
--- Byte code for strip expression
+-- Byte code for routine creation expression
 
 class ROUTINE_CREATION_BL
 
@@ -17,7 +17,7 @@ inherit
 feature 
 
 	register: REGISTRABLE;
-			-- Register for array containing the strip
+			-- Register for array containing the routine object
 
 	set_register (r: REGISTRABLE) is
 			-- Set `register' to `r
@@ -28,12 +28,26 @@ feature
 	unanalyze is
 			-- Unanalyze expression
 		do
+			if target /= Void then
+				target.unanalyze
+			end
+
+			if arguments /= Void then
+				arguments.unanalyze
+			end
 			register := Void
 		end;
 	
 	analyze is
 			-- Analyze expression
 		do
+			if target /= Void then
+				target.analyze
+			end
+
+			if arguments /= Void then
+				arguments.analyze
+			end
 			get_register
 		end;
 
@@ -46,6 +60,14 @@ feature
 			gen_type: GEN_TYPE_I
 			buf: GENERATION_BUFFER
 		do
+			if target /= Void then
+				target.generate
+			end
+
+			if arguments /= Void then
+				arguments.generate
+			end
+
 			buf := buffer
 			cl_type_i ?= context.real_type (type)
 			gen_type  ?= cl_type_i
@@ -55,10 +77,26 @@ feature
 			buf.putstring (" = ")
 			buf.putstring ("RTLNR(typres, (char*)(")
 			generate_routine_address
-			buf.putstring ("));")
+			buf.putstring ("), ")
+
+			if target /= Void then
+				target.print_register
+				buf.putstring (", ")
+			else
+				buf.putstring ("(char *)0, ")
+			end
+
+			if arguments /= Void then
+				arguments.print_register
+				buf.putstring (", ")
+			else
+				buf.putstring ("(char *)0, ")
+			end
+			buf.putint (modulus)
+			buf.putstring (");")
 			buf.new_line
 			generate_block_close
-		end;
+		end
 
 	generate_routine_address is
 			-- Generate routine address

@@ -21,9 +21,28 @@ feature {NONE} -- Initialization
 
 	set is
 			-- Yacc initialization
+		local
+			params : EIFFEL_LIST [EXPR_AS]
 		do
 			class_type ?= yacc_arg (0)
 			feature_name ?= yacc_arg (1)
+			params ?= yacc_arg (2)
+
+			-- We treat the parameter list as 
+			-- a manifest TUPLE!
+
+			if params /= Void then
+				!!parameters
+				parameters.set_expressions (params)
+			end
+
+			if class_type = Void then
+				-- No type qualifier: Use Current as target
+				!!target
+			end
+
+			tilde_count := yacc_int_arg (0) - 1
+
 		ensure then
 			feature_name_exists: feature_name /= Void
 		end
@@ -35,6 +54,15 @@ feature -- Attributes
 
 	feature_name: FEATURE_NAME
 			-- Feature name to address
+
+	parameters: TUPLE_AS
+			-- Optional call parameters
+
+	target: CURRENT_AS
+			-- Target: either Void or Current
+
+	tilde_count: INTEGER
+			-- Nr. of extra tildes in the construct
 
 	class_type_a : CL_TYPE_A
 			-- Class from which the feature comes
@@ -48,7 +76,9 @@ feature -- Comparison
 			-- Is `other' equivalent to the current object ?
 		do
 			Result := equivalent (feature_name, other.feature_name) and then
-					  equivalent (class_type, other.class_type)
+					  equivalent (class_type, other.class_type) and then
+					  equivalent (parameters, other.parameters) and then
+					  (tilde_count = other.tilde_count)
 		end
 
 feature -- Type check, byte code and dead code removal
@@ -85,6 +115,16 @@ feature -- Type check, byte code and dead code removal
 				vxxx.set_address_name (feature_name.internal_name)
 				Error_handler.insert_error (vxxx)
 			else
+					-- Check target
+				if target /= Void then
+					target.type_check
+				end
+					-- Check parameters
+				if parameters /= Void then
+					parameters.type_check
+					type_check_parameters (a_class, a_feature, a_table)
+					context.pop (1)
+				end
 					-- Dependance
 				!! depend_unit.make (a_class.id, a_feature)
 				context.supplier_ids.extend (depend_unit)
@@ -94,6 +134,12 @@ feature -- Type check, byte code and dead code removal
 				context.put (type)
 			end
 			Error_handler.checksum
+		end
+
+	type_check_parameters (a_class : CLASS_C; a_feature : FEATURE_I; a_table : FEATURE_TABLE) is
+			-- Check actual parameter list
+		do
+			-- FIXME
 		end
 
 	byte_node: ROUTINE_CREATION_B is
@@ -108,19 +154,59 @@ feature -- Type check, byte code and dead code removal
 			a_feature := a_table.item (feature_name.internal_name)
 
 			!!Result
-			Result.init (class_type_a.type_i, a_class.id, a_feature, type.type_i)
+
+			if target /= Void then
+				if parameters /= Void then
+					Result.init (class_type_a.type_i, a_class.id, 
+								 a_feature, type.type_i, 
+								 target.byte_node, parameters.byte_node,
+								 tilde_count)
+				else
+					Result.init (class_type_a.type_i, a_class.id, 
+								 a_feature, type.type_i, 
+								 target.byte_node, Void,
+								 tilde_count)
+				end
+			else
+				if parameters /= Void then
+					Result.init (class_type_a.type_i, a_class.id, 
+								 a_feature, type.type_i, 
+								 Void, parameters.byte_node,
+								 tilde_count)
+				else
+					Result.init (class_type_a.type_i, a_class.id, 
+								 a_feature, type.type_i, 
+								 Void, Void,
+								 tilde_count)
+				end
+			end
 		end
 
 	format (ctxt: FORMAT_CONTEXT) is
 			-- Reconstitute text.
+		local
+			i : INTEGER
 		do
 			ctxt.begin
 			if class_type /= Void then
 				-- FIXME: treat class_type, i.e "{TYPE}"
 			end
-			ctxt.prepare_for_feature (feature_name.internal_name, Void)
+			if parameters /= Void then
+				ctxt.prepare_for_feature (feature_name.internal_name,
+										  parameters.expressions)
+			else
+				ctxt.prepare_for_feature (feature_name.internal_name, Void)
+			end
+
 			if ctxt.is_feature_visible then
-				ctxt.put_text_item_without_tabs (ti_Tilda)
+				from
+					i := 0
+				until
+					i > tilde_count
+				loop
+					ctxt.put_text_item_without_tabs (ti_Tilda)
+					i := i + 1
+				end
 				ctxt.put_current_feature;
 				ctxt.commit
 			else
@@ -131,28 +217,66 @@ feature -- Type check, byte code and dead code removal
 feature -- Replication
 
 	fill_calls_list (l: CALLS_LIST) is
+			-- find calls to Current
+		local
+			new_list: like l
 		do
-			l.add (feature_name.internal_name)
+			if l.is_new then
+				l.add (feature_name.internal_name)
+			end
+			if parameters /= Void then
+				!!new_list.make
+				parameters.fill_calls_list (new_list)
+				l.merge (new_list)
+			end
 		end
 
 	replicate (ctxt: REP_CONTEXT): like Current is
+			-- Adapt to replication
 		do
 			Result := clone (Current)
 			ctxt.adapt_name (feature_name.internal_name)
 			Result.feature_name.set_name (ctxt.adapted_name)
+
+			if parameters /= Void then
+				Result.set_parameters (parameters.replicate (ctxt.new_ctxt))
+			end
 		end
 
 feature {AST_EIFFEL} -- Output
 
 	simple_format (ctxt: FORMAT_CONTEXT) is
 			-- Reconstitute text.
+		local
+			i : INTEGER
 		do
 			if class_type /= Void then
 				-- FIXME: treat class_type, i.e "{TYPE}"
 			end
-			ctxt.prepare_for_feature (feature_name.internal_name, Void)
-			ctxt.put_text_item_without_tabs (ti_Tilda)
+			if parameters /= Void then
+				ctxt.prepare_for_feature (feature_name.internal_name,
+										  parameters.expressions)
+			else
+				ctxt.prepare_for_feature (feature_name.internal_name, Void)
+			end
+
+			from
+				i := 0
+			until
+				i > tilde_count
+			loop
+				ctxt.put_text_item_without_tabs (ti_Tilda)
+				i := i + 1
+			end
 			ctxt.put_current_feature
+		end
+
+feature {ROUTINE_CREATION_AS} -- Parameters
+
+	set_parameters (p : like parameters) is
+			-- Set `parameters' to `p'.
+		do
+			parameters := p
 		end
 
 feature {NONE} -- Type
@@ -227,7 +351,9 @@ feature {NONE} -- Type
 			end
 
 			if ttype.is_basic then
-				-- Not supported - doesn't make sense.
+				-- Not supported. May change in the future - M.S.
+				-- Reason: We cannot call a feature with basic
+				-- call target!
 				!!not_supported
 				context.init_error (not_supported)
 				not_supported.set_message ("Target type of a ROUTINE may not be a basic type.")
@@ -259,7 +385,7 @@ feature {NONE} -- Type
 			args: FEAT_ARG
 			argtypes: ARRAY [TYPE_A]
 			tuple: TUPLE_TYPE_A
-			idx: INTEGER
+			idx, tidx, modulus, toff: INTEGER
 		do
 			!!Result
 
@@ -272,7 +398,7 @@ feature {NONE} -- Type
 										   a_feature.type, a_table, a_feature
 																 )
 				solved_type := solved_type.instantiation_in (class_type_a, cid)
-				generics.put (solved_type.actual_type, 3)
+				generics.put (solved_type.deep_actual_type, 3)
 			else
 				-- PROCEDURE
 				Result.set_base_class_id (System.procedure_class_id)
@@ -280,12 +406,19 @@ feature {NONE} -- Type
 				!!generics.make (1, 2)
 			end
 
-			-- Put target type (type of enclosing class)
-			generics.put (class_type_a, 1)
-
-			-- Create argument types
+			-- Prepare for rotation
 
 			args := a_feature.arguments
+
+			if args /= Void then
+				modulus := args.count + 1
+			else
+				modulus := 1
+			end
+
+			toff := tilde_count \\ modulus
+
+			-- Create argument types
 
 			if args /= Void then
 				from
@@ -299,21 +432,43 @@ feature {NONE} -- Type
 										   args.item, a_table, a_feature
 																	 )
 					solved_type := solved_type.instantiation_in (class_type_a, cid)
-					argtypes.put (solved_type.actual_type, idx)
+
+					tidx := (idx - toff) \\ modulus
+
+					if (tidx < 0) then
+						tidx := tidx + modulus
+					end
+
+					if tidx = 0 then
+						-- It's the target
+						generics.put (solved_type.deep_actual_type, 1)
+					else
+						argtypes.put (solved_type.deep_actual_type, tidx)
+					end
+
 					idx := idx + 1
 					args.forth
 				end
+			end
+
+			-- Put target type
+
+			if toff = 0 then
+				generics.put (class_type_a, 1)
+			else
+				argtypes.put (class_type_a, modulus-toff)
 			end
 
 			-- Create argument type tuple
 			!!tuple
 			tuple.set_base_class_id (System.tuple_id)
 			tuple.set_generics (argtypes)
-			generics.put (tuple, 2)
 
+			generics.put (tuple, 2)
 			Result.set_generics (generics)
+
 		ensure
-			exists: Result /= Void;
+			exists: Result /= Void
 		end
 
 end -- class ROUTINE_CREATION_AS

@@ -1,7 +1,7 @@
 indexing
 	description: "Descritpion of an actual generical type."
 	date: "$Date$"
-	revision: "$Revision $"
+	revision: "$Revision$"
 
 class GEN_TYPE_A
 
@@ -13,7 +13,7 @@ inherit
 			error_generics, check_constraints, has_formal_generic, instantiated_in,
 			has_expanded, is_valid, expanded_deferred, valid_expanded_creation,
 			same_as, same_class_type, format, is_equivalent,
-			storage_info, storage_info_with_name
+			storage_info, storage_info_with_name, deep_actual_type
 		end
 
 feature -- Property
@@ -256,6 +256,31 @@ feature {COMPILER_EXPORTER} -- Primitives
 				loop
 					new_generics.put
 							(generics.item (i).solved_type (feat_table, f), i)
+					i := i + 1
+				end
+				!!Result
+				Result.set_base_class_id (base_class_id)
+				Result.set_generics (new_generics)
+			end
+		end
+
+	deep_actual_type: GEN_TYPE_A is
+			-- Actual type of Current; recursive version for generics
+		local
+			i, count: INTEGER
+			new_generics: like generics
+		do
+			if not has_like then
+				Result := Current
+			else
+				from
+					i := 1
+					count := generics.count
+					!!new_generics.make (1, count)
+				until
+					i > count
+				loop
+					new_generics.put (generics.item (i).deep_actual_type, i)
 					i := i + 1
 				end
 				!!Result

@@ -172,6 +172,16 @@ feature -- Access
 			Result := Current
 		end
 
+	deep_actual_type: TYPE_A is
+			-- Actual type; recursive on generic types
+			-- NOTE by M.S: Needed for ROUTINEs - perhaps
+			--              this is the intended meaning
+			--              of 'actual_type' - but 'actual_type'
+			--              does not recurs on generics(?)!
+		do
+			Result := actual_type
+		end
+
 	has_generics: BOOLEAN is
 			-- Has the current type generics types ?
 		do

@@ -580,7 +580,7 @@ feature -- Plug and Makefile file
 
 				--Pointer on `set_rout_disp' of class ROUTINE
 			if set_rout_disp_name /= Void then
-				buffer.putstring ("%Tegc_routdisp = (void (*)(EIF_REFERENCE, EIF_POINTER)) ")
+				buffer.putstring ("%Tegc_routdisp = (void (*)(EIF_REFERENCE, EIF_POINTER, EIF_REFERENCE, EIF_REFERENCE, EIF_INTEGER)) ")
 				buffer.putstring (set_rout_disp_name)
 				buffer.putstring (";%N")
 			end
@@ -659,13 +659,13 @@ feature -- Plug and Makefile file
 				buffer.putstring ("%Tegc_fnbref = egc_fnbref_init;%N")
 				buffer.putstring ("%Tegc_fsize = egc_fsize_init;%N")
 			end
- 
+
 			buffer.putstring ("%N%Tegc_system_name = %"")
 			buffer.putstring (System.system_name)
 			buffer.putstring ("%";%N%Tegc_compiler_tag = ")
 			buffer.putstring (System.version_tag);
 			buffer.putstring (";%N}%N")
-  			buffer.close_c
+			buffer.close_c
 
 			!! plug_file.make_open_write (gen_file_name (final_mode, Eplug));
 			plug_file.put_string (buffer)

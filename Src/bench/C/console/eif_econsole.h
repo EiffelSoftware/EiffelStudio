@@ -13,6 +13,7 @@ extern "C" {
 #include "eif_eiffel.h"
 
 RT_LNK void get_argcargv (int *argc, char ***argv);
+RT_LNK void free_argv (int argc, char ***argv);
 extern void eif_console_cleanup (EIF_BOOLEAN);
 extern void eif_console_next_line(void);
 extern void eif_console_putint(EIF_INTEGER);

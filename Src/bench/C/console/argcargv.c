@@ -11,6 +11,7 @@
 #include <windows.h>
 
 #include "eif_argcargv.h"
+#include "eif_lmalloc.h"
 #include "eif_except.h"		/* For `eraise' */
 
 #define EIF_CLEANUP_TABLE_SIZE 20		/* Clean up table size */
@@ -27,7 +28,7 @@ int eif_nCmdShow;
 static char *temp = NULL;
 rt_private void shword(char *cmd, int *argc, char ***argvp);
 
-void get_argcargv (int *argc, char ***argv)
+rt_public void get_argcargv (int *argc, char ***argv)
 {
 	int tl;
 	temp = strdup (GetCommandLine());
@@ -43,7 +44,19 @@ void get_argcargv (int *argc, char ***argv)
 		temp[tl-17] = '\0';
 	}
 	
+	*argc = 0;
 	shword (temp, argc, argv);
+}
+
+rt_public void free_argv(char argc, char ***argv)
+{
+	int i;
+
+	for (i = 0; i < argc; i++) 
+		eif_free((*argv)[i]);
+
+	eif_free(*argv);
+	*argv = NULL;
 }
 
 rt_private void shword(char *cmd, int *argc, char ***argvp)
@@ -67,9 +80,9 @@ rt_private void shword(char *cmd, int *argc, char ***argvp)
 
 	if (p <= pe) {
 
-		*argc++;	/* at least one argument */
+		*argc = *argc + 1;	/* at least one argument */
 
-		if (!(qb = q = malloc(pe - p + 2)))
+		if (!(qb = q = eif_malloc(pe - p + 2)))
 			return;
 
 		do {
@@ -85,7 +98,7 @@ rt_private void shword(char *cmd, int *argc, char ***argvp)
 							p++;
 						} while(*p == ' ' || *p == '\t');
 						*q++ = '\0';
-						*argc++;
+						*argc = *argc + 1;
 					}
 					break;
 				case '\"':
@@ -119,7 +132,7 @@ rt_private void shword(char *cmd, int *argc, char ***argvp)
 		return;
 	}
 
-	if (!(*argvp = (char **) malloc ((*argc + 1) * sizeof(char *)))) {
+	if (!(*argvp = (char **) eif_malloc ((*argc + 1) * sizeof(char *)))) {
 		free(qb);
 		return;
 	}

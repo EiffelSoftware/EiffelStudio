@@ -99,9 +99,7 @@ feature {NONE} -- Implementation
 	initialize is
 			-- Create `Current' in correct default state.
 		do
-			pointer_enter_actions.extend (agent set_minimum_width (120))
-			pointer_leave_actions.extend (agent set_minimum_width (120))
-	
+			set_minimum_height (tool_minimum_height)
 			drop_actions.set_veto_pebble_function (agent veto_drop)
 			drop_actions.extend (agent add_new_object)			
 			

@@ -58,9 +58,6 @@ feature
 	body_index_counter: COUNTER;
 			-- Body index counter
 
-	feature_id_counter: COUNTER;
-			-- Counter for feature ids
-
 	routine_id_counter: ROUT_ID_COUNTER;
 			-- Counter for routine ids
 
@@ -357,7 +354,6 @@ feature
 			!!m_desc_server.make;
 				-- Counter creation
 			!!class_counter;
-			!!feature_id_counter;
 			!!body_id_counter.make;
 			!!routine_id_counter.make;
 			!!type_id_counter;

@@ -1160,12 +1160,6 @@ end;
 			Result := System.body_id_counter;
 		end;
 
-	Feature_id_counter: COUNTER is
-			-- Counter for feature ids
-		once
-			Result := System.feature_id_counter;
-		end;
-
 	Routine_id_counter: COUNTER is
 			-- Counter for routine ids
 		once

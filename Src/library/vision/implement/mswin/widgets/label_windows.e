@@ -5,7 +5,7 @@ indexing
 	revision: "$Revision$"
 
 class
-	LABEL_WINDOWS
+	LABEL_WINDOWS 
 
 inherit
 	PRIMITIVE_WINDOWS

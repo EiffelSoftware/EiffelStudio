@@ -135,24 +135,24 @@ feature -- Access
 
 feature {NONE} -- Implementation
 
+	default_object_by_type (a_type: STRING): EV_ANY is
+			-- `Result' is a default object that corresponds to `a_type'.
+		deferred
+		end
+
 	retrieve_color (label: EV_DRAWING_AREA): EV_COLOR is
 			-- `Result' is color for pick and drop, retrieved
 			-- from `background_color' of `label'.
 		do
 			Result := label.background_color
 		end
-		
 
 	restore_background_color is
 			-- Restore `background_color' of objects to originals.
 		local
 			colorizable: EV_COLORIZABLE
 		do
-			colorizable ?= new_instance_of (dynamic_type (first))
-			check
-				correct_type: colorizable /= Void
-			end
-			colorizable.default_create
+			colorizable ?= default_object_by_type (class_name (first))
 			for_all_objects (agent {EV_COLORIZABLE}.set_background_color (colorizable.background_color))
 			update_editors
 			update_background_display
@@ -163,16 +163,11 @@ feature {NONE} -- Implementation
 		local
 			colorizable: EV_COLORIZABLE
 		do
-			colorizable ?= new_instance_of (dynamic_type (first))
-			check
-				correct_type: colorizable /= Void
-			end
-			colorizable.default_create
+			colorizable ?= default_object_by_type (class_name (first))
 			for_all_objects (agent {EV_COLORIZABLE}.set_foreground_color (colorizable.foreground_color))
 			update_editors
 			update_foreground_display
 		end
-		
 
 	update_background_color is
 			-- Update `background_color' of objects through an EV_COLOR_DIALOG.

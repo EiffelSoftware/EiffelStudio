@@ -47,11 +47,26 @@ feature -- Initialization
 		require
 			physical_not_exists: not exists
 		local
-			l_name: SYSTEM_STRING
 			di: DIRECTORY_INFO
+			l_sub_dir: STRING
+			l_sep_index: INTEGER
+			l_full_path: STRING
 		do
-			l_name := name.to_cil
-			di := feature {SYSTEM_DIRECTORY}.create_directory (l_name)
+			create di.make (name.to_cil)
+			create l_full_path.make_from_cil (di.full_name)
+			l_sep_index := l_full_path.last_index_of (feature {PATH}.directory_separator_char, l_full_path.count)
+			if l_sep_index = 0 then
+				di := feature {SYSTEM_DIRECTORY}.create_directory (l_full_path.to_cil)
+			else
+					-- Might be a complex path, we need to check that path up to `l_sep_index'
+					-- does not exist.
+				l_sub_dir := l_full_path.substring (1, l_sep_index - 1)
+				if feature {SYSTEM_DIRECTORY}.exists (l_sub_dir.to_cil) then
+					di := feature {SYSTEM_DIRECTORY}.create_directory (l_full_path.to_cil)
+				else
+					feature {EXCEPTION_MANAGER}.raise (create {IOEXCEPTION}.make)
+				end
+			end
 		end
 
 feature -- Access

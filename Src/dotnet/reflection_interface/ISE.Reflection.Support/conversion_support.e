@@ -18,14 +18,24 @@ feature -- Access
 		require
 			non_void_assembly_name: an_assembly_name /= Void
 		local
-			assembly_info: ARRAY [STRING]
+			assembly_info: ARRAY [ANY]
+			a_name: STRING
+			a_version: STRING
+			a_culture: STRING
+			a_public_key: STRING
 			retried: BOOLEAN
 		do
 			create Result.make1
 			if not retried then
 				assembly_info := assembly_info_from_name (an_assembly_name)
-				if assembly_info /= Void and then assembly_info.count = 4 then	
-					Result.make (assembly_info.item (0), assembly_info.item (1), assembly_info.item (2), assembly_info.item (3))
+				if assembly_info /= Void and then assembly_info.count = 4 then
+					a_name ?= assembly_info.item (0)
+					a_version ?= assembly_info.item (1)
+					a_culture ?= assembly_info.item (2)
+					a_public_key ?= assembly_info.item (3)
+					if a_name /= Void and a_version /= Void and a_culture /= Void and a_public_key /= Void then
+						Result.make (a_name, a_version, a_culture, a_public_key)	
+					end				
 				end
 			end
 		ensure
@@ -49,18 +59,18 @@ feature -- Access
 			retried: BOOLEAN
 		do
 			create Result.make
-			Result.set_Name (a_descriptor.Name)
-			create version.make_3 (a_descriptor.Version)
+			Result.set_Name (a_descriptor.get_name)
+			create version.make_3 (a_descriptor.get_version)
 			Result.set_Version (version)
-			if not a_descriptor.Culture.equals_string (Neutral_culture) then
-				create culture.make (a_descriptor.Culture)
+			if not a_descriptor.get_culture.equals_string (Neutral_culture) then
+				create culture.make (a_descriptor.get_culture)
 			else
 				create culture.make (Empty_string)
 			end
 			Result.set_Culture_Info (culture)
 			create encoding.make_asciiencoding 
 			if not retried then
-				public_key := encoding.Get_Bytes (a_descriptor.Public_Key)
+				public_key := encoding.Get_Bytes (a_descriptor.get_public_key)
 				Result.Set_Public_Key_Token (public_key)
 			end
 		ensure
@@ -118,10 +128,10 @@ feature -- Access
 			Result.set_target_name (target_name)
 		ensure
 			rename_clause_created: Result /= Void
-			non_void_source_name: Result.source_name /= Void
-			not_empty_source_name: Result.source_name.get_length > 0
-			non_void_target_name: Result.target_name /= Void
-			not_empty_target_name: Result.target_name.get_length > 0
+			non_void_source_name: Result.get_source_name /= Void
+			not_empty_source_name: Result.get_source_name.get_length > 0
+			non_void_target_name: Result.get_target_name /= Void
+			not_empty_target_name: Result.get_target_name.get_length > 0
 		end
 		
 	source_from_text (a_text: STRING): STRING is
@@ -205,8 +215,8 @@ feature -- Access
 			end
 		ensure
 			non_void_export_clause: Result /= Void
-			non_void_source_name: Result.source_name /= Void
-			not_empty_source_name: Result.source_name.get_length > 0
+			non_void_source_name: Result.get_source_name /= Void
+			not_empty_source_name: Result.get_source_name.get_length > 0
 		end
 		
 end -- class CONVERSION_SUPPORT

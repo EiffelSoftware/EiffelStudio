@@ -416,7 +416,7 @@ feature {NONE} -- Implementation
 				eiffel_class.Set_Assembly_Descriptor (descriptor)
 
 					-- Set `full_external_name'
-				if eiffel_class.namespace /= Void then
+				if eiffel_class.get_namespace /= Void then
 					eiffel_class.Set_Full_External_Name (namespace.Concat_String_String_String (namespace, xml_elements.Dot_string, simple_name))
 				else
 					eiffel_class.Set_Full_External_Name (simple_name)
@@ -631,50 +631,90 @@ feature {NONE} -- Implementation
 			non_void_type_description: type_description /= Void
 		local
 			retried: BOOLEAN
+			bit_or_infix: STRING
+			console: SYSTEM_CONSOLE
 		do
 			if not retried then
 				type_description.read_start_element_string (xml_elements.Body_element)
-
-				if type_description.get_Name.equals_string (xml_elements.Initialization_element) then
-					type_description.read_start_element_string (xml_elements.Initialization_element)
-					generate_features (xml_elements.Initialization_element)
-					type_description.read_end_element
+				
+				if type_description.get_Name.equals_string (xml_elements.Initialization_element) then				
+					if not type_description.get_is_empty_element then
+						type_description.read_start_element_string (xml_elements.Initialization_element)
+						generate_features (xml_elements.Initialization_element)
+						type_description.read_end_element
+					else
+						type_description.skip
+					end
 				end
 				if type_description.get_Name.equals_string (xml_elements.Access_element) then
-					type_description.read_start_element_string (xml_elements.Access_element)
-					generate_features (xml_elements.Access_element)
-					type_description.read_end_element				
+					if not type_description.get_is_empty_element then
+						type_description.read_start_element_string (xml_elements.Access_element)
+						generate_features (xml_elements.Access_element)
+						type_description.read_end_element				
+					else
+						type_description.skip
+					end
 				end
 				if type_description.get_Name.equals_string (xml_elements.Element_change_element) then
-					type_description.read_start_element_string (xml_elements.Element_change_element)
-					generate_features (xml_elements.Element_change_element)
-					type_description.read_end_element				
+					if not type_description.get_is_empty_element then
+						type_description.read_start_element_string (xml_elements.Element_change_element)
+						generate_features (xml_elements.Element_change_element)
+						type_description.read_end_element				
+					else
+						type_description.skip
+					end
 				end
 				if type_description.get_Name.equals_string (xml_elements.Basic_operations_element) then
-					type_description.read_start_element_string (xml_elements.Basic_operations_element)
-					generate_features (xml_elements.Basic_operations_element)
-					type_description.read_end_element
+					if not type_description.get_is_empty_element then
+						type_description.read_start_element_string (xml_elements.Basic_operations_element)
+						generate_features (xml_elements.Basic_operations_element)
+						type_description.read_end_element
+					else
+						type_description.skip
+					end
 				end
 				if type_description.get_Name.equals_string (xml_elements.Unary_operators_element) then
-					type_description.read_start_element_string (xml_elements.Unary_operators_element)
-					generate_features (xml_elements.Unary_operators_element)
-					type_description.read_end_element				
+					if not type_description.get_is_empty_element then
+						type_description.read_start_element_string (xml_elements.Unary_operators_element)
+						generate_features (xml_elements.Unary_operators_element)
+						type_description.read_end_element				
+					else
+						type_description.skip
+					end
 				end
 				if type_description.get_Name.equals_string (xml_elements.Binary_operators_element) then
-					type_description.read_start_element_string (xml_elements.Binary_operators_element)
-					generate_features (xml_elements.Binary_operators_element)
-					type_description.read_end_element				
+					if not type_description.get_is_empty_element then
+						type_description.read_start_element_string (xml_elements.Binary_operators_element)
+						generate_features (xml_elements.Binary_operators_element)
+						type_description.read_end_element				
+					else
+						type_description.skip
+					end
 				end
 				if type_description.get_Name.equals_string (xml_elements.Specials_element) then
-					type_description.read_start_element_string (xml_elements.Specials_element)
-					generate_features (xml_elements.Specials_element)
-					type_description.read_end_element				
+					if not type_description.get_is_empty_element then
+						type_description.read_start_element_string (xml_elements.Specials_element)
+						generate_features (xml_elements.Specials_element)
+						type_description.read_end_element				
+					else
+						type_description.skip
+					end
 				end
 				if type_description.get_Name.equals_string (xml_elements.Implementation_element) then
-					type_description.read_start_element_string (xml_elements.Implementation_element)
-					generate_features (xml_elements.Implementation_element)
-					type_description.read_end_element				
-				end			
+					if not type_description.get_is_empty_element then
+						type_description.read_start_element_string (xml_elements.Implementation_element)
+						generate_features (xml_elements.Implementation_element)
+						type_description.read_end_element	
+					else
+						type_description.skip
+					end
+				end	
+				if type_description.get_name.equals_string (xml_elements.Bit_or_infix_element) then
+					bit_or_infix := type_description.read_element_string_string (xml_elements.Bit_or_infix_element)
+					if bit_or_infix.equals_string (xml_elements.True_string) then
+						eiffel_class.set_bit_or_infix
+					end
+				end
 				type_description.read_end_element
 			end
 		rescue
@@ -699,6 +739,7 @@ feature {NONE} -- Implementation
 			return_type: STRING
 			return_type_full_name: STRING
 			signature_type: ISE_REFLECTION_SIGNATURETYPE
+			literal_value: STRING
 			retried: BOOLEAN
 		do
 			if not retried then
@@ -771,6 +812,11 @@ feature {NONE} -- Implementation
 						generate_feature_assertions (xml_elements.Postcondition_element)
 					end
 
+						-- Set `literal_value' (if any).
+					if type_description.get_name.equals_string (xml_elements.Literal_value_element) then
+						literal_value := type_description.read_element_string_string (xml_elements.Literal_value_element)
+						eiffel_feature.set_literal_value (literal_value)
+					end
 					type_description.read_end_element
 
 					if element_name.equals_string (xml_elements.Initialization_element) then
@@ -811,6 +857,7 @@ feature {NONE} -- Implementation
 			is_prefix, is_infix: STRING
 			is_new_slot: STRING
 			is_enum_literal: STRING
+			is_literal: STRING
 			retried: BOOLEAN
 		do
 			if not retried then
@@ -897,6 +944,12 @@ feature {NONE} -- Implementation
 				if is_enum_literal.equals_string (xml_elements.True_string) then
 					eiffel_feature.Set_Enum_Literal
 				end	
+
+					-- Set `is_literal'.
+				is_literal := type_description.read_element_string_string (xml_elements.Is_literal_element)
+				if is_literal.equals_string (xml_elements.True_string) then
+					eiffel_feature.set_literal
+				end	
 			end
 		rescue
 			retried := True
@@ -926,21 +979,33 @@ feature {NONE} -- Implementation
 					not type_description.get_Name.equals_string (xml_elements.Argument_element) 
 				loop
 					type_description.read_start_element_string (xml_elements.Argument_element)
-					eiffel_name := type_description.read_element_string_string (xml_elements.Argument_eiffel_name_element)
-					external_name := type_description.read_element_string_string (xml_elements.Argument_external_name_element)
-					type := type_description.read_element_string_string (xml_elements.Argument_type_element)
-					type_full_name := type_description.read_element_string_string (xml_elements.Argument_type_full_name_element)
-					
-					if eiffel_name /= Void and external_name /= Void and type /= Void and type_full_name /= Void then
-						if eiffel_name.get_length > 0 and external_name.get_length > 0 and type.get_length > 0 and type_full_name.get_length > 0 then
-							create an_argument.make_namedsignaturetype
-							an_argument.set_eiffel_name (eiffel_name)
-							an_argument.set_external_name (external_name)
-							an_argument.set_type_eiffel_name (type)
-							an_argument.set_type_full_external_name (type_full_name)
-							eiffel_feature.Add_Argument (an_argument)	
-						end
+					if type_description.get_name.equals_string (xml_elements.Argument_eiffel_name_element) then
+						eiffel_name := type_description.read_element_string_string (xml_elements.Argument_eiffel_name_element)
+					else
+						eiffel_name := xml_elements.Empty_string
 					end
+					if type_description.get_name.equals_string (xml_elements.Argument_external_name_element) then
+						external_name := type_description.read_element_string_string (xml_elements.Argument_external_name_element)
+					else
+						external_name := xml_elements.Empty_string
+					end
+					if type_description.get_name.equals_string (xml_elements.Argument_type_element) then
+						type := type_description.read_element_string_string (xml_elements.Argument_type_element)
+					else
+						type := xml_elements.Empty_string
+					end
+					if type_description.get_name.equals_string (xml_elements.Argument_type_full_name_element) then
+						type_full_name := type_description.read_element_string_string (xml_elements.Argument_type_full_name_element)
+					else
+						type_full_name := xml_elements.Empty_string
+					end
+					create an_argument.make_namedsignaturetype
+					an_argument.set_eiffel_name (eiffel_name)
+					an_argument.set_external_name (external_name)
+					an_argument.set_type_eiffel_name (type)
+					an_argument.set_type_full_external_name (type_full_name)
+					eiffel_feature.Add_Argument (an_argument)	
+
 					type_description.read_end_element
 				end
 				type_description.read_end_element

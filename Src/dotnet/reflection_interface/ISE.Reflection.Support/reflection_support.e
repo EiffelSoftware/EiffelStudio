@@ -70,10 +70,10 @@ feature -- Access
 			string_to_code: STRING
 			folder_name: STRING
 		do
-			name := a_descriptor.Name
-			version := a_descriptor.Version
-			culture := a_descriptor.Culture
-			public_key := a_descriptor.Public_Key
+			name := a_descriptor.get_name
+			version := a_descriptor.get_version
+			culture := a_descriptor.get_culture
+			public_key := a_descriptor.get_public_key
 			string_to_code := name.Concat_String_String_String_String (name, dictionary.Dash, version, dictionary.Dash)
 			string_to_code := string_to_code.Concat_String_String_String_String (string_to_code, culture, dictionary.Dash, public_key)
 			Result := Assemblies_folder_path
@@ -89,9 +89,9 @@ feature -- Access
 			external_name: "XmlAssemblyFilename"
 		require
 			non_void_assembly_descriptor: an_assembly_descriptor /= Void
-			non_void_assembly_version: an_assembly_descriptor.version /= Void
-			non_void_assembly_culture: an_assembly_descriptor.culture /= Void
-			non_void_assembly_public_key: an_assembly_descriptor.public_key /= Void
+			non_void_assembly_version: an_assembly_descriptor.get_version /= Void
+			non_void_assembly_culture: an_assembly_descriptor.get_culture /= Void
+			non_void_assembly_public_key: an_assembly_descriptor.get_public_key /= Void
 		local
 			assembly_folder_path: STRING
 			retried: BOOLEAN

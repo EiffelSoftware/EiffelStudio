@@ -4,22 +4,11 @@
 class TMP_BODY_SERVER 
 
 inherit
-
 	READ_SERVER [FEATURE_AS_B, BODY_ID]
-		rename
-			clear as old_clear,
-			make as basic_make,
-			has as old_has
 		export
 			{BODY_SERVER} tbl_item
 		redefine
-			ontable, updated_id, trace
-		end;
-	READ_SERVER [FEATURE_AS_B, BODY_ID]
-		redefine
 			clear, make, ontable, updated_id, has, trace
-		select
-			clear, make, has
 		end
 
 creation
@@ -32,7 +21,7 @@ feature
 		local
 			i: INTEGER
 		do
-			Result := old_has (an_id);
+			Result := server_has (an_id)
 			if Result then
 				from
 					i := 1
@@ -40,7 +29,8 @@ feature
 					(i > nb_useless) or else not Result
 				loop
 					if useless_body_ids.item (i) /= Void then
-						Result := not equal (updated_id (an_id), updated_id (useless_body_ids.item (i)))
+						Result := not equal (updated_id (an_id),
+								updated_id (useless_body_ids.item (i)))
 					end;
 					i := i + 1
 				end;
@@ -71,8 +61,8 @@ feature
 	make is
 			-- Initialization
 		do
-			basic_make;
-			!!useless_body_ids.make (1, Chunk);
+			{READ_SERVER} Precursor
+			!!useless_body_ids.make (1, array_chunk)
 		end;
 
 	Cache: BODY_CACHE is
@@ -100,7 +90,7 @@ end;
 			nb_useless := nb_useless + 1;
 			nb := useless_body_ids.count;
 			if nb_useless > nb then
-				useless_body_ids.resize (1, nb + Chunk);
+				useless_body_ids.resize (1, nb + array_chunk);
 			end;
 
 			useless_body_ids.put (body_id, nb_useless);
@@ -130,7 +120,7 @@ end;
 			end;
 		end;
 
-	Chunk: INTEGER is 10;
+	array_chunk: INTEGER is 10;
 			-- Array chunk
 
 	finalize is
@@ -175,9 +165,9 @@ end;
 	clear is
 			-- Clear the structure
 		do
-			old_clear;
-			nb_useless := 0;
-			useless_body_ids.clear_all;
+			{READ_SERVER} Precursor
+			nb_useless := 0
+			useless_body_ids.clear_all
 		end;
 
 	trace is

@@ -1,29 +1,18 @@
 -- Server for routine tables associated to file ".FT"
 
-class FEAT_TBL_SERVER 
+class
+	FEAT_TBL_SERVER 
 
 inherit
-
-	COMPILER_SERVER [FEATURE_TABLE, CLASS_ID]
-		rename
-			item as server_item,
-			has as server_has
-		export
-			{ANY} server_item, server_has
-		end;
-
 	COMPILER_SERVER [FEATURE_TABLE, CLASS_ID]
 		redefine
-			has, item
-		select
 			has, item
 		end
 
 creation
-
 	make
 	
-feature 
+feature -- Access
 
 	Cache: FEAT_TBL_CACHE is
 			-- Cache for routine tables
@@ -54,6 +43,8 @@ feature
 				Result := server_item (an_id);
 			end; 
 		end;
+
+feature -- Server size configuration
 
 	Size_limit: INTEGER is 400
 			-- Size of the FEAT_TBL_SERVER file (400 Ko)

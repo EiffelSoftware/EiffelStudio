@@ -40,7 +40,7 @@ feature -- Initialization
 
 feature -- Access
 
-	server_has, has (i: H): BOOLEAN is
+	has, frozen server_has (i: H): BOOLEAN is
 			-- Does the server contain an element of id `i'?
 		do
 			Result := tbl_has (updated_id(i))

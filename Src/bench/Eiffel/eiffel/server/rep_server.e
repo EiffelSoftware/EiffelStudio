@@ -1,29 +1,18 @@
 -- Server for replicated features 
 
-class REP_SERVER 
+class
+	REP_SERVER 
 
 inherit
-
-	COMPILER_SERVER [REP_FEATURES, CLASS_ID]
-		rename
-			item as server_item,
-			has as server_has,
-			disk_item as disk_server_item
-		export
-			{ANY} server_item
-		end;
 	COMPILER_SERVER [REP_FEATURES, CLASS_ID]
 		redefine
 			disk_item, has, item
-		select
-			has, item, disk_item
 		end
 
 creation
-
 	make
 
-feature 
+feature -- Access
 
 	Cache: REP_CACHE is
 			-- Cache for routine tables
@@ -57,7 +46,7 @@ feature
 			if Tmp_rep_server.has (an_id) then
 				Result := Tmp_rep_server.disk_item (an_id);
 			else
-				Result := disk_server_item (an_id);
+				Result := {COMPILER_SERVER} Precursor (an_id);
 			end;
 		end;
 
@@ -69,6 +58,8 @@ feature
 		do
 			Result := server_has (an_id) or else Tmp_rep_server.has (an_id);
 		end;
+
+feature -- Server size configuration
 
 	Size_limit: INTEGER is 75
 			-- Size of the REP_SERVER file (75 Ko)

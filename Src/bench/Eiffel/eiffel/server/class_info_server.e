@@ -3,24 +3,12 @@
 class CLASS_INFO_SERVER 
 
 inherit
-
-	COMPILER_SERVER [CLASS_INFO, CLASS_ID]
-		rename
-			item as server_item,
-			has as server_has,
-			disk_item as disk_server_item
-		export
-			{ANY} server_item
-		end;
 	COMPILER_SERVER [CLASS_INFO, CLASS_ID]
 		redefine
-			has, item, disk_item
-		select
 			has, item, disk_item
 		end
 
 creation
-
 	make
 
 	
@@ -35,9 +23,8 @@ feature
 	has (an_id: CLASS_ID): BOOLEAN is
 			-- Is an item of id `an_id' present in the current server ?
 		do
-			Result := 	server_has (an_id)
-						or else
-						Tmp_class_info_server.has (an_id);
+			Result := server_has (an_id)
+					or else Tmp_class_info_server.has (an_id);
 		end;
 					
 	id (t: CLASS_INFO): CLASS_ID is
@@ -66,15 +53,16 @@ feature
 			if Tmp_class_info_server.has (an_id) then
 				Result := Tmp_class_info_server.disk_item (an_id);
 			else
-				Result := disk_server_item (an_id);
+				Result := {COMPILER_SERVER} Precursor (an_id);
 			end;
 		end;
+
+feature -- Server size configuration
 
 	Size_limit: INTEGER is 50
 			-- Size of the CLASS_INFO_SERVER file (50 Ko)
 
 	Chunk: INTEGER is 150
 			-- Size of a HASH_TABLE block
-
 
 end

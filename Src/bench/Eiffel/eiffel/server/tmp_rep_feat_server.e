@@ -4,24 +4,14 @@
 class TMP_REP_FEAT_SERVER 
 
 inherit
-
 	READ_SERVER [FEATURE_AS_B, BODY_ID]
 		rename
-			clear as old_clear,
-			make as basic_make,
-			has as old_has
-		redefine
-			ontable, updated_id
-		end;
-	READ_SERVER [FEATURE_AS_B, BODY_ID]
+			tmp_rep_server as offsets
 		redefine
 			clear, make, ontable, updated_id, has
-		select
-			clear, make, has
 		end
 
 creation
-
 	make
 	
 feature
@@ -30,7 +20,7 @@ feature
 		local
 			i: INTEGER
 		do
-			Result := old_has (an_id);
+			Result := server_has (an_id)
 			if Result then
 				from
 					i := 1
@@ -69,8 +59,8 @@ feature
 	make is
 			-- Hash table creation
 		do
-			basic_make;
-			!!useless_body_ids.make (1, Chunk);
+			{READ_SERVER} Precursor;
+			!!useless_body_ids.make (1, array_chunk);
 		end;
 
 	Cache: REP_FEAT_CACHE is
@@ -79,14 +69,8 @@ feature
 			!!Result.make;
 		end;
 
-	Chunk: INTEGER is 10;
+	array_chunk: INTEGER is 10;
 			-- Array chunk
-
-	offsets: EXTEND_TABLE [SERVER_INFO, CLASS_ID] is
-			-- Class offsets in the temporary AST class server
-		do
-			Result := Tmp_rep_server;
-		end; -- offsets
 
 	desactive (body_id: BODY_ID) is
 			-- Put `body_id' in `useless_body_ids'.
@@ -97,7 +81,7 @@ feature
 			nb_useless := nb_useless + 1;
 			nb := useless_body_ids.count;
 			if nb_useless > nb then
-				useless_body_ids.resize (1, nb + Chunk);
+				useless_body_ids.resize (1, nb + array_chunk);
 			end;
 			useless_body_ids.put (body_id, nb_useless);
 		end;
@@ -153,7 +137,7 @@ feature
 	clear is
 			-- Clear the structure
 		do
-			old_clear;
+			{READ_SERVER} Precursor;
 			nb_useless := 0;			
 			useless_body_ids.clear_all;
 		end;

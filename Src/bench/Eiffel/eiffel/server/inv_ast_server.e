@@ -1,26 +1,19 @@
 -- Server for abstract syntax description of invariant
 
-class INV_AST_SERVER 
+class
+	INV_AST_SERVER 
 
 inherit
-
 	READ_SERVER [INVARIANT_AS_B, CLASS_ID]
 		rename
-			item as server_item,
-			has as server_has
+			ast_server as offsets
 		export
-			{ANY} server_has, server_item, merge
-		end;
-
-	READ_SERVER [INVARIANT_AS_B, CLASS_ID]
+			{ANY} merge
 		redefine
-			has, item
-		select
 			has, item
 		end
 
 creation
-
 	make
 
 feature 
@@ -49,12 +42,6 @@ feature
 			end;
 		ensure then
 			Result_exists: Result /= Void
-		end;
-
-	offsets: EXTEND_TABLE [SERVER_INFO, CLASS_ID] is
-			-- Class offsets in the AST server
-		do
-			Result := Ast_server;
 		end;
 
 end

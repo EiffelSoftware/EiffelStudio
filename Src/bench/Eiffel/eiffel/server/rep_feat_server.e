@@ -3,30 +3,19 @@
 class REP_FEAT_SERVER 
 
 inherit
-
 	READ_SERVER [FEATURE_AS_B, BODY_ID]
 		rename
-			item as server_item,
-			has as server_has,
-			change_id as server_change_id
+			rep_server as offsets
 		export
-			{ANY} server_has, server_item, merge
-		redefine
-			ontable, updated_id
-		end;
-
-	READ_SERVER [FEATURE_AS_B, BODY_ID]
+			{ANY} merge
 		redefine
 			has, item, ontable, updated_id, change_id
-		select
-			has, item, change_id
 		end
 
 creation
-
 	make
 
-feature 
+feature -- Access
 
 	ontable: O_N_TABLE [BODY_ID] is
 			-- Mapping table between old id s and new ids.
@@ -68,16 +57,10 @@ feature
 			Result_exists: Result /= Void
 		end;
 
-	offsets: EXTEND_TABLE [SERVER_INFO, CLASS_ID] is
-			-- Class offsets in the AST server
-		do
-			Result := Rep_server;
-		end;
-
 	change_id (new_value, old_value: BODY_ID) is
 		do
 			if server_has (old_value) then
-				server_change_id (new_value, old_value)
+				{READ_SERVER} Precursor (new_value, old_value)
 			end;
 			if Tmp_rep_feat_server.has (old_value) then
 				Tmp_rep_feat_server.change_id (new_value, old_value)

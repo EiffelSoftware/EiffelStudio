@@ -865,6 +865,7 @@ end;
 				-- Internal name of the feature
 			vffd4: VFFD4;
 			external_i: EXTERNAL_I;
+			l_ext_name: STRING
 		do
 			feature_name := feat.internal_name;
 debug ("ACTIVITY")
@@ -900,8 +901,11 @@ end;
 				system.il_generation and then
 				Result.private_external_name = Void
 			then
-					-- Get external name of a pure Eiffel feature.
-				Result.set_external_name (yacc_feature.external_name)
+					-- Get external name of a pure Eiffel feature if any.
+				l_ext_name := yacc_feature.external_name
+				if l_ext_name /= Void then
+					Result.set_external_name (l_ext_name)
+				end
 			end
 
 			read_info := class_info.index.item (yacc_feature.id);

@@ -158,8 +158,6 @@ feature -- Element change
 	insert_item (item_imp: EV_STATUS_BAR_ITEM_IMP; an_index: INTEGER) is
 			-- Insert an item at `an_index' position
 		do
-			ev_children.go_i_th (an_index)
-			ev_children.put_left (item_imp)
 			update_edges
 			update_texts
 		end
@@ -222,7 +220,9 @@ feature -- Implementation
 		local
 			clist: ARRAYED_LIST [EV_STATUS_BAR_ITEM_IMP]
 			array: ARRAY [INTEGER]
+			original_index: INTEGER
 		do
+			original_index := ev_children.index
 			clist := ev_children
 			if clist.empty then
 				set_simple_mode
@@ -259,13 +259,18 @@ feature -- Implementation
 				end
 				set_parts (array)
 			end
+			ev_children.go_i_th (original_index)
+		ensure
+			original_index_not_changed: ev_children.index = old ev_children.index
 		end
 
 	update_texts is
 			-- Update the texts after addition or remove of a child.
 		local
 			clist: ARRAYED_LIST [EV_STATUS_BAR_ITEM_IMP]
+			original_index: INTEGER
 		do
+			original_index := ev_children.index
 			clist := ev_children
 			from
 				clist.start
@@ -282,6 +287,9 @@ feature -- Implementation
 			if number_of_parts > count then
 				set_text_part (number_of_parts - 1, "")
 			end
+			ev_children.go_i_th (original_index)
+		ensure
+			original_index_not_changed: ev_children.index = old ev_children.index
 		end
 
 	set_child_owner_draw (current_child: EV_STATUS_BAR_ITEM_IMP; bool: BOOLEAN) is
@@ -292,9 +300,11 @@ feature -- Implementation
 			counter: INTEGER
 			child_found: BOOLEAN
 			clist: ARRAYED_LIST [EV_STATUS_BAR_ITEM_IMP]
+			original_index: INTEGER
 		do
 			from
 				counter := 0
+				original_index := ev_children.index
 				clist := ev_children
 				clist.start
 			until
@@ -313,6 +323,9 @@ feature -- Implementation
 					clist.forth
 				end
 			end
+			ev_children.go_i_th (original_index)
+		ensure
+			original_index_not_changed: ev_children.index = old ev_children.index
 		end
 
 
@@ -448,6 +461,11 @@ end -- class EV_STATUS_BAR_IMP
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.28  2000/04/26 23:32:24  rogers
+--| insert_item no longer directly modifies ev_children.
+--| Update_texts, update_edges and set_child_owner_draw now ensure
+--| that they will not modify ev_children.index.
+--|
 --| Revision 1.27  2000/04/11 16:51:57  rogers
 --| Added internal_propagate_pointer_press.
 --|

@@ -1,4 +1,6 @@
 TOP = ..\..
+OUTDIR = .
+INDIR = .
 CC = $cc
 RUN_TIME = $(TOP)\run-time 
 CFLAGS = -I$(TOP) -I$(LIBDIR) -I$(RUN_TIME) -I$(TOP)\console -I$(LIBIDR)

@@ -1,4 +1,6 @@
 TOP = ..\..
+OUTDIR = .
+INDIR = .
 CC = $cc
 JCFLAGS = $(CFLAGS) $ccflags $optimize
 DPFLAGS = -I$(TOP) -I$(TOP)\run-time -I..\shared

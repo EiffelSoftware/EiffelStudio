@@ -101,6 +101,7 @@ feature -- Constants
 	set_bit_with_mask_name_id: INTEGER is 91
 	memory_alloc_name_id: INTEGER is 92
 	memory_free_name_id: INTEGER is 93
+	from_integer_name_id: INTEGER is 94
 	
 			-- Predefined name IDs constants
 

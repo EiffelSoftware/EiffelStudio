@@ -265,6 +265,7 @@ feature {NONE} -- Implementation: access
 			put ("set_bit_with_mask") check found_item = set_bit_with_mask_name_id end
 			put ("memory_alloc") check found_item = memory_alloc_name_id end
 			put ("memory_free") check found_item = memory_free_name_id end
+			put ("from_integer") check found_item = from_integer_name_id end
 		end
 		
 invariant

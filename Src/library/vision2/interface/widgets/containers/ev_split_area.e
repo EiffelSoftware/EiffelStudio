@@ -65,6 +65,7 @@ feature {NONE} -- Initialization
 			previous_split_position := -1
 			sep.pointer_button_press_actions.extend (~on_click)
 			split_box.resize_actions.extend (~on_fixed_resized)
+			layout_widgets
 		end
 
 feature -- Access
@@ -458,6 +459,7 @@ feature {NONE} -- Implementation
 			--| 1: (1) exp (2) not exp: (2) retains size, splitter moves.
 			--| 2: (1) and (2) same: both grow/shrink same, splitter moves.
 			--| 3: (1) not exp (2) exp: (1) retains size, (2) resizes.
+			io.put_string ("%TRESIZE%N")
 			layout_widgets
 		end
 
@@ -465,6 +467,7 @@ feature {NONE} -- Implementation
 			-- Set position and dimensions of the children in `split_box'.
 			--| Call after split_position or dimensions changed.
 		do
+			io.put_string ("%TLAYOUT%N")
 			if select_from (0, 1) = 0 then
 				split_box.set_item_position (first_cell, 0, 0)
 				split_box.set_item_size (first_cell,
@@ -557,6 +560,9 @@ end -- class EV_SPLIT_AREA
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.37  2000/05/03 17:29:26  brendel
+--| Added call to layout_widgets at initialize.
+--|
 --| Revision 1.36  2000/05/03 00:09:34  brendel
 --| Cosmetics.
 --|

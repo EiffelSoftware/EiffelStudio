@@ -114,14 +114,14 @@ feature {NONE}-- Externals
 
 	cwin_coinitialize is
 			external
-				"C [macro %"wel.h%"]"
+				"C [macro %"wel_imalloc.h%"]"
 			alias
 				"CoInitialize (NULL)"
 			end
 
 	cwin_couninitialize is
 			external
-				"C | %"wel.h%""
+				"C | %"wel_imalloc.h%""
 			alias
 				"CoUninitialize"
 			end

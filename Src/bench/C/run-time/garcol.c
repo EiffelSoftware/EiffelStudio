@@ -3231,9 +3231,15 @@ register1 union overhead *zone;		/* Pointer on malloc info zone */
 	register2 uint32 dtype;			/* Dynamic type of object */
 
 /*
-	if (!(zone->ov_size & B_BUSY)) 	/* Object freed ? */
-		return;						/* Yes, then return -- NEED TO CHECK WITH
-									 * RAM - DINOV */
+
+	* Object freed ?
+	* Yes, then return -- NEED TO CHECK WITH
+	* RAM - DINOV
+	* Does not seem necessary to me - FRED
+
+	if (!(zone->ov_size & B_BUSY))
+		return;					
+							
 */
 
 	dtype = Dtype((zone + 1)); 

@@ -52,7 +52,7 @@ YACC = $yacc
 ########################################################################
 # Automatically generated parameters -- do not edit
 
-SOURCES =  \$(SRCS) lace_l.l lace_y.y eif_l.l
+SOURCES =  \$(SRCS) lace_y.y
 OBJECTS =  \$(OBJS) lace_l.o lace_y.o eif_l.o
 
 ########################################################################
@@ -85,7 +85,7 @@ DPFLAGS = -I$(TOP) -I$(SHARED_CLIB) -I$(RUN_TIME)
 CFLAGS = $(DPFLAGS)
 YFLAGS = -d
 
-SRCS = lace_l.l lace_y.y lace_c.c eif_l.l lac_err.c keyword.c
+SRCS = lace_y.y lace_c.c lac_err.c keyword.c
 
 OBJS = \
 	lace_l.o \
@@ -114,9 +114,6 @@ lace_l.c: lace_l.l
 	$(SED) -e 's/^# define YYLMAX [0-9][0-9]*/# define YYLMAX BUFSIZ/g' < lex.yy.c > lex.xx.c
 	$(SED) -e 's/yy\(.\)/xx\1/g' < lex.xx.c > lace_l.c
 	$(RM) lex.yy.c lex.xx.c
-
-local_realclean::
-	$(RM) lace_l.c
 
 liblace.a: lace_y.c
 
@@ -156,9 +153,6 @@ eif_l.c: eif_l.l
 	$(SED) -e 's/^# define YYLMAX [0-9][0-9]*/# define YYLMAX BUFSIZ/g' < lex.yy.c > lex.zz.c
 	$(SED) -e 's/yy\(.\)/zz\1/g' < lex.zz.c > eif_l.c
 	$(RM) lex.yy.c lex.zz.c
-
-local_realclean::
-	$(RM) eif_l.c
 
 depend:: ../../mkdep
 

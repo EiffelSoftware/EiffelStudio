@@ -432,14 +432,13 @@ feature {AST_EIFFEL} -- Output
 			-- Reconstitute text.
 		do
 			ctxt.put_breakable
+			ctxt.put_text_item (ti_create_keyword)
+			ctxt.put_space
 			if type /= Void then
 				ctxt.set_type_creation (type)
-				ctxt.put_text_item (ti_Exclamation)
+				ctxt.put_text_item (ti_l_curly)
 				ctxt.format_ast (type)
-				ctxt.put_text_item_without_tabs (ti_Exclamation)
-				ctxt.put_space
-			else
-				ctxt.put_text_item (ti_Creation_mark)
+				ctxt.put_text_item_without_tabs (ti_r_curly)
 				ctxt.put_space
 			end
 			ctxt.format_ast (target)

@@ -66,6 +66,9 @@ feature {NONE} -- Initialization
 			pixmap := (create {EV_STOCK_PIXMAPS}).warning_pixmap.twin
 			pixmap.set_minimum_size (pixmap.width, pixmap.height)
 			pixmap_cell.extend (pixmap)
+			set_default_push_button (flatten_all_instances_button)
+			set_default_cancel_button (cancel_button)
+			set_icon_pixmap (icon_build_window_color_png)
 		ensure then
 			pixmap_cell_full: pixmap_cell.full
 		end

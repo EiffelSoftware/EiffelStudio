@@ -16,7 +16,6 @@ inherit
 		redefine
 			make,
 			has_parent,
---			set_expand,
 			set_pixmap,
 			unset_pixmap,
 			set_text,
@@ -27,20 +26,6 @@ inherit
 		end
 
 	EV_TREE_ITEM_HOLDER_IMP
-		rename
---			parent_set as widget_parent_set,
---			add_double_click_command as old_add_dblclk,
---			remove_double_click_commands as old_remove_dblclk,
---			parent_imp as widget_parent_imp,
---			set_parent as widget_set_parent
-		undefine
---			has_parent,
---			set_foreground_color,
---			destroy,
---			destroyed
-		redefine
---			set_expand
-		end
 
 creation
 	make,
@@ -151,9 +136,6 @@ feature -- Status setting
 			else
 				gtk_ctree_collapse (tree_parent_imp.tree_widget, widget)
 			end
-
---			-- We do this only to ensure the postcondition.
---			expandable := Flag								
 		end
 
 	set_index (value: INTEGER) is
@@ -409,18 +391,13 @@ feature -- Event : command association
 			-- The toggle event doesn't work on gtk, then
 			-- we add both event command.
 		local
---			ev_data: EV_EVENT_DATA
 			arg_list: LINKED_LIST [EV_ARGUMENT]
 		do
---			!EV_EVENT_DATA!ev_data.make  -- temporary, create a correct object here XX
-
 			-- Connect to the GtkCTreeNode if it exists already.
 			-- Otherwise just store the command and argument.
 			if (widget /= default_pointer) then
---				add_command_with_event_data (tree_parent_imp.tree_widget, "tree_select_row", command, arguments, ev_data, 0, False, widget)
 				add_command (tree_parent_imp.tree_widget, "tree_select_row", command, arguments, widget)
 			else
---				add_command_with_event_data (default_pointer, "tree_select_row", command, arguments, ev_data, 0, False, default_pointer)
 				add_command (default_pointer, "tree_select_row", command, arguments, default_pointer)
 			end	
 
@@ -436,12 +413,8 @@ feature -- Event : command association
 			-- Make `cmd' the executed command when the item is
 			-- unactivated.
 		local
---			ev_data: EV_EVENT_DATA
 			arg_list: LINKED_LIST [EV_ARGUMENT]
 		do
---			!EV_EVENT_DATA!ev_data.make  -- temporary, create a correct object here XX
-
---			add_command_with_event_data (tree_parent_imp.tree_widget, "tree_unselect_row", command, arguments, ev_data, 0, False, widget)
 			add_command (tree_parent_imp.tree_widget, "tree_unselect_row", command, arguments, widget)
 
 			if ((argument_array @ tree_unselect_row_id) = Void) then
@@ -457,12 +430,8 @@ feature -- Event : command association
 			-- executed when the selection subtree
 			-- expanded or collapsed.
 		local
---			ev_data: EV_EVENT_DATA
 			arg_list: LINKED_LIST [EV_ARGUMENT]
 		do
---			!EV_EVENT_DATA!ev_data.make  -- temporary, create a correct object here XX
-
---			add_command_with_event_data (tree_parent_imp.tree_widget, "tree_expand", command, arguments, ev_data, 0, False, widget)
 			add_command (tree_parent_imp.tree_widget, "tree_expand", command, arguments, widget)
 
 			if ((argument_array @ tree_expand_id) = Void) then
@@ -472,10 +441,6 @@ feature -- Event : command association
 
 			(argument_array @ tree_expand_id).force (arguments)
 
-
---			!EV_EVENT_DATA!ev_data.make  -- temporary, create a correct object here XX
-
---			add_command_with_event_data (tree_parent_imp.tree_widget, "tree_collapse", command, arguments, ev_data, 0, False, widget)
 			add_command (tree_parent_imp.tree_widget, "tree_collapse", command, arguments, widget)
 
 			if ((argument_array @ tree_collapse_id) = Void) then

@@ -87,7 +87,8 @@ feature
 		local
 			error_found: BOOLEAN;
 			vd37: VD37;
-			i: INTEGER
+			i: INTEGER;
+			string_value: STRING
 		do
 			inspect
 				valid_options.item (option_name)
@@ -125,11 +126,16 @@ feature
 				if value = Void then
 					error_found := True
 				elseif value.is_name then
-					i := value.value.to_integer
-					if (i <= 0 or else i > 100) then
-						error_found := True;
+					string_value := value.value;
+					if string_value.is_integer then
+						i := value.value.to_integer;
+						if (i <= 0 or else i > 100) then
+							error_found := True
+						else
+							System.set_inlining_size (i)
+						end
 					else
-						System.set_inlining_size (i)
+						error_found := True
 					end
 				else
 					error_found := True;
@@ -138,11 +144,16 @@ feature
 				if value = Void then
 					error_found := True
 				elseif value.is_name then
-					i := value.value.to_integer
-					if i <= 0 then
-						error_found := True;
+					string_value := value.value;
+					if string_value.is_integer then 
+						i := value.value.to_integer;
+						if i <= 0 then
+							error_found := True
+						else
+							System.server_controler.set_chunk_size (i)
+						end
 					else
-						System.server_controler.set_chunk_size (i)
+						error_found := True
 					end
 				else
 					error_found := True;

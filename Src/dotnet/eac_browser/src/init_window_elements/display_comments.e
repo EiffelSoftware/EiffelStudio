@@ -87,11 +87,12 @@ feature -- Basic Operations
 		local
 			l_assembly_info: ASSEMBLY_INFORMATION
 			l_member_info: MEMBER_INFORMATION
-			l_signature, l_full_dotnet_type_name: STRING
+			l_signature: STRING
+			l_full_dotnet_type_name: STRING
 			l_consumed_assembly: CONSUMED_ASSEMBLY
 			l_static_type: TUPLE [CONSUMED_ASSEMBLY, STRING]
 		do
-			l_static_type := imediat_type_feature (an_assembly, a_member, a_full_dotnet_type_name)
+			l_static_type := immediate_type_feature (an_assembly, a_member, a_full_dotnet_type_name)
 			l_full_dotnet_type_name ?= l_static_type.item (2)
 			l_consumed_assembly ?= l_static_type.item (1)
 
@@ -163,12 +164,23 @@ feature -- Basic Operations
 			l_assembly_info: ASSEMBLY_INFORMATION
 			l_member_info: MEMBER_INFORMATION
 			l_signature: STRING
+			l_full_dotnet_type_name: STRING
+			l_consumed_assembly: CONSUMED_ASSEMBLY
+			l_static_type: TUPLE [CONSUMED_ASSEMBLY, STRING]
 		do
-			if (create {CACHE}).assemblies_informations.has (an_assembly.out) then
-				l_assembly_info := (create {CACHE}).assemblies_informations.item (an_assembly.out)
+			l_static_type := immediate_type_feature (an_assembly, a_property, a_full_dotnet_type_name)
+			l_full_dotnet_type_name ?= l_static_type.item (2)
+			l_consumed_assembly ?= l_static_type.item (1)
+
+			if not (create {CACHE}).assemblies_informations.has (l_consumed_assembly.out) then
+					-- Deserialize information of assembly.
+				(create {CACHE}).deserialize_information_assembly (l_consumed_assembly)
+			end
+			if (create {CACHE}).assemblies_informations.has (l_consumed_assembly.out) then
+				l_assembly_info := (create {CACHE}).assemblies_informations.item (l_consumed_assembly.out)
 				if l_assembly_info /= Void then
 					l_signature := a_property.dotnet_name
-					l_member_info := l_assembly_info.find_feature (a_full_dotnet_type_name, l_signature)
+					l_member_info := l_assembly_info.find_feature (l_full_dotnet_type_name, l_signature)
 					if l_member_info /= Void then
 						display (l_member_info)
 					else
@@ -189,12 +201,23 @@ feature -- Basic Operations
 			l_assembly_info: ASSEMBLY_INFORMATION
 			l_member_info: MEMBER_INFORMATION
 			l_signature: STRING
+			l_full_dotnet_type_name: STRING
+			l_consumed_assembly: CONSUMED_ASSEMBLY
+			l_static_type: TUPLE [CONSUMED_ASSEMBLY, STRING]
 		do
-			if (create {CACHE}).assemblies_informations.has (an_assembly.out) then
-				l_assembly_info := (create {CACHE}).assemblies_informations.item (an_assembly.out)
+			l_static_type := immediate_type_feature (an_assembly, an_event, a_full_dotnet_type_name)
+			l_full_dotnet_type_name ?= l_static_type.item (2)
+			l_consumed_assembly ?= l_static_type.item (1)
+
+			if not (create {CACHE}).assemblies_informations.has (l_consumed_assembly.out) then
+					-- Deserialize information of assembly.
+				(create {CACHE}).deserialize_information_assembly (l_consumed_assembly)
+			end
+			if (create {CACHE}).assemblies_informations.has (l_consumed_assembly.out) then
+				l_assembly_info := (create {CACHE}).assemblies_informations.item (l_consumed_assembly.out)
 				if l_assembly_info /= Void then
 					l_signature := an_event.dotnet_name
-					l_member_info := l_assembly_info.find_feature (a_full_dotnet_type_name, l_signature)
+					l_member_info := l_assembly_info.find_feature (l_full_dotnet_type_name, l_signature)
 					if l_member_info /= Void then
 						display (l_member_info)
 					else
@@ -241,7 +264,7 @@ feature {NONE} -- Basic Operations
 			comments_area.disable_edit
 		end
 		
-	imediat_type_feature (an_assembly: CONSUMED_ASSEMBLY; a_member: CONSUMED_MEMBER; a_full_dotnet_type: STRING): TUPLE [CONSUMED_ASSEMBLY, STRING] is
+	immediate_type_feature (an_assembly: CONSUMED_ASSEMBLY; a_member: CONSUMED_ENTITY; a_full_dotnet_type: STRING): TUPLE [CONSUMED_ASSEMBLY, STRING] is
 			-- Return the `full_dotnet_type' where `a_member' is declared.
 		require
 			non_void_an_assembly: an_assembly /= Void
@@ -288,7 +311,7 @@ feature {NONE} -- Basic Operations
 					l_ancestors.after or Result /= Void
 				loop
 					l_ancestor_assembly := eac.referenced_assembly (an_assembly, l_ancestors.item.assembly_id)
-					Result := imediat_type_feature (l_ancestor_assembly, a_member, l_ancestors.item.name)
+					Result := immediate_type_feature (l_ancestor_assembly, a_member, l_ancestors.item.name)
 --					ct2 := eac.consumed_type (l_ancestor_assembly, l_ancestors.item.name)
 --					if ct2.entities.has (a_member) then
 --						Result := l_ancestors.item.name

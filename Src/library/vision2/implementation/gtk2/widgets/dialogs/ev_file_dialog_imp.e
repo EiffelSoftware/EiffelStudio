@@ -32,6 +32,7 @@ feature {NONE} -- Initialization
 			create a_cs.make ("Select file")
 			set_c_object
 				(feature {EV_GTK_DEPENDENT_EXTERNALS}.gtk_file_chooser_dialog_new (a_cs.item, NULL, file_chooser_action))
+			create filters.make (0)
 		end
 
 	initialize is
@@ -43,7 +44,6 @@ feature {NONE} -- Initialization
 			is_initialized := False
 			
 			filter := "*.*"
-			create filters.make (0)
 			
 			a_cancel_button := feature {EV_GTK_DEPENDENT_EXTERNALS}.gtk_dialog_add_button (c_object, feature {EV_GTK_DEPENDENT_EXTERNALS}.gtk_stock_cancel_enum, feature {EV_GTK_EXTERNALS}.gtk_response_cancel_enum)
 			a_ok_button := feature {EV_GTK_DEPENDENT_EXTERNALS}.gtk_dialog_add_button (c_object, feature {EV_GTK_DEPENDENT_EXTERNALS}.gtk_stock_ok_enum, feature {EV_GTK_EXTERNALS}.gtk_response_accept_enum)

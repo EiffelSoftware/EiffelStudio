@@ -72,13 +72,10 @@ feature -- Show the window
 	activate (win: MAIN_WINDOW) is
 		local
 			arg1: EV_ARGUMENT1[DEMO_WINDOW]
-			arg2: EV_ARGUMENT1[EV_WIDGET]
 		do
 			show
 			!! actions_window.make_with_main_widget (Current, main_widget)
 			actions_window.show
-			!! cmd
-			!! arg2.make (actions_window)
 			win.set_insensitive (True)
 			!! arg1.make (Current)
 			add_close_command (win, arg1)

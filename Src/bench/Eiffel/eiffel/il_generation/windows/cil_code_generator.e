@@ -1268,7 +1268,9 @@ feature -- Features info
 
 			byte_context.set_class_type (l_class_type)
 
-			if l_feat.feature_name_id /= Names_heap.void_name_id then
+			if l_feat.is_il_external then
+				define_external_feature_reference (l_feat, a_type_id)
+			elseif l_feat.feature_name_id /= Names_heap.void_name_id then
 				l_is_attribute := l_feat.is_attribute
 				l_is_c_external := l_feat.is_c_external
 				l_parameter_count := l_feat.argument_count
@@ -1409,6 +1411,29 @@ feature -- Features info
 			byte_context.set_class_type (current_class_type)
 		end
 
+	define_external_feature_reference (a_feat: FEATURE_I; a_type_id: INTEGER) is
+			-- Define reference to external feature `a_feat' defined in `a_type_id'.
+		require
+			a_feat_not_void: a_feat /= Void
+			a_feat_is_il_external: a_feat.is_il_external
+		local
+			l_ext: IL_EXTENSION_I
+			l_signature: like last_external_signature
+			l_token: INTEGER
+		do
+			l_ext ?= a_feat.extension
+			check
+				l_ext_not_void: l_ext /= Void
+			end
+			l_token := l_ext.token
+			l_signature := last_external_signature
+
+			insert_implementation_feature (l_token, a_type_id, a_feat.feature_id)
+			insert_implementation_signature (l_signature, a_type_id, a_feat.feature_id)
+			insert_feature (l_token, a_type_id, a_feat.feature_id)
+			insert_signature (l_signature, a_type_id, a_feat.feature_id)
+		end
+	
 	generate_feature (feat: FEATURE_I; in_interface, is_static, is_override: BOOLEAN) is
 			-- Generate interface `feat' description.
 		require
@@ -2021,7 +2046,7 @@ feature -- IL Generation
 			method_writer.write_current_body
 		end
 
-	generate_feature_il (feat, orig: FEATURE_I; a_type_id, code_feature_id: INTEGER) is
+	generate_feature_il (feat: FEATURE_I; a_type_id, code_feature_id: INTEGER) is
 			-- Specifies for which feature `feat' of `feat.feature_id' written in class of
 			-- `a_type_id' IL code will be generated. If `a_type_id' is different from current
 			-- type id, it means that `a_feature_id' is simply a delegation to a call on
@@ -2037,7 +2062,7 @@ feature -- IL Generation
 			l_cur_sig: ARRAY [INTEGER]
 			l_impl_sig: ARRAY [INTEGER]
 			i, nb: INTEGER
-			l_is_c_external: BOOLEAN
+			l_is_external: BOOLEAN
 			l_sequence_point: like sequence_point
 			l_sequence_point_list: LIST [like sequence_point]
 			l_class_type: CLASS_TYPE
@@ -2065,12 +2090,12 @@ feature -- IL Generation
 				l_cur_sig := signatures (current_type_id, feat.feature_id)
 				l_impl_sig := implementation_signatures (a_type_id, code_feature_id)
 
-				l_is_c_external := feat.is_c_external
+				l_is_external := feat.is_external or (feat.extension /= Void and feat.extension.is_il)
 
 				l_class_type := class_types.item (a_type_id)
 
 				if
-					not l_is_c_external and then not l_class_type.is_precompiled and then
+					not l_is_external and then not l_class_type.is_precompiled and then
 					(l_cur_sig = Void or else l_cur_sig.is_equal (l_impl_sig))
 				then
 					if is_debug_info_enabled then
@@ -2303,6 +2328,9 @@ feature -- IL Generation
 			method_body_set: method_body /= Void
 		end
 
+	last_external_signature: ARRAY [INTEGER]
+			-- Signature of last external processed through `external_token'.
+
 	last_override_token: INTEGER
 			-- Token of last defined override feature.
 
@@ -2469,6 +2497,7 @@ feature -- IL Generation
 			l_is_array: BOOLEAN
 			l_parameters_string: ARRAY [STRING]
 			l_return_type: STRING
+			l_signature: ARRAY [INTEGER]
 		do
 			l_class_token := external_token_mapping.item (base_name)
 			l_parameters_string := Names_heap.convert_to_string_array (parameters_type)
@@ -2485,6 +2514,13 @@ feature -- IL Generation
 				l_type := external_class_mapping.item (l_real_type)
 			end
 
+			if parameters_type = Void then
+				create l_signature.make (0, 0)
+			else
+				create l_signature.make (0, parameters_type.count)
+			end
+			l_signature.compare_references
+
 			inspect ext_kind
 			when Field_type, Static_field_type, Set_field_type, Set_static_field_type then
 				l_field_sig := field_sig
@@ -2495,6 +2531,7 @@ feature -- IL Generation
 				end
 				if l_type /= Void then
 					set_signature_type (l_field_sig, l_type)
+					l_signature.put (l_type.static_type_id, 0)
 				else
 					l_field_sig.set_type (feature {MD_SIGNATURE_CONSTANTS}.Element_type_class,
 						external_token_mapping.item (l_return_type))
@@ -2524,6 +2561,7 @@ feature -- IL Generation
 					end
 					if l_type /= Void then
 						set_method_return_type (l_meth_sig, l_type)
+						l_signature.put (l_type.static_type_id, 0)
 					else
 						l_meth_sig.set_return_type (
 							feature {MD_SIGNATURE_CONSTANTS}.Element_type_class,
@@ -2553,6 +2591,7 @@ feature -- IL Generation
 					end
 					if l_type /= Void then
 						set_signature_type (l_meth_sig, l_type)
+						l_signature.put (l_type.static_type_id, i)
 					else
 						l_meth_sig.set_type (feature {MD_SIGNATURE_CONSTANTS}.Element_type_class,
 							external_token_mapping.item (l_real_type))
@@ -2568,6 +2607,7 @@ feature -- IL Generation
 
 				Result := md_emit.define_member_ref (uni_string, l_class_token, l_meth_sig)
 			end
+			last_external_signature := l_signature
 		end
 
 	internal_generate_external_call (an_assembly_token, a_type_token: INTEGER; base_name: STRING;

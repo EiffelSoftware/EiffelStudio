@@ -44,8 +44,6 @@ feature {NONE} -- Initialization
 		require
 			a_window_not_void: a_window /= Void
 			cmd_not_void: cmd /= Void
-		local
-			vb: EV_VERTICAL_BOX
 		do		
 			default_create
 			run := cmd
@@ -62,7 +60,6 @@ feature {NONE} -- Initialization
 		local
 			vbox: EV_VERTICAL_BOX
 			hbox: EV_HORIZONTAL_BOX
-			label: EV_LABEL
 			b: EV_BUTTON
 			cell: EV_CELL
 		do
@@ -125,7 +122,7 @@ feature {NONE} -- Actions
 	okay is
 	 		-- Action to take when user presses 'OK' button.
 		do
-			arguments_control.store_arguments
+			arguments_control.store_arguments (Void)
 			hide
 		end	
 
@@ -159,7 +156,7 @@ feature {NONE} -- Implementation
 			hide
 			if arg /= Void then
 				if arg = Apply_and_run_it then
-					arguments_control.store_arguments
+					arguments_control.store_arguments (Void)
 					run.call ([])
 				end
 			end

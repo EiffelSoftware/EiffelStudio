@@ -76,6 +76,7 @@ feature -- Access
 		do
 			Result := {EB_TOOLBARABLE_AND_MENUABLE_COMMAND} Precursor (display_text, use_gray_icons)
 			Result.select_actions.put_front (~execute_from (Result))
+			Result.pointer_button_press_actions.put_front (agent button_right_click_action)
 		end
 
 	new_menu_item: EB_COMMAND_MENU_ITEM is
@@ -157,6 +158,23 @@ feature {NONE} -- Implementation
 	internal_tooltip: STRING is
 			-- Basic tooltip (without the key shortcut).
 		deferred
+		end
+		
+	button_right_click_action (a_x, a_y, a_button: INTEGER; a_x_tilt, a_y_tilt, a_pressure: DOUBLE; a_screen_x, a_screen_y: INTEGER) is
+			-- Show the arguments dialog box when the user right clicks the button
+		local
+			args_dialog: EB_ARGUMENT_DIALOG
+			window: EB_WINDOW
+			dev: EV_WINDOW
+		do
+			if a_button = 3 then	
+			window ?= Window_manager.last_focused_window
+					if window /= Void then
+						dev := window.window
+						create args_dialog.make_default (agent execute)
+						args_dialog.show_relative_to_window (dev)
+					end			
+			end
 		end
 
 end -- class EB_EXEC_FORMAT_CMD

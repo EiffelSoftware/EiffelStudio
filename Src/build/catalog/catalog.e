@@ -128,7 +128,7 @@ feature
 
 feature {NONE}
 
-	set_current_page (page: CAT_PAGE [T]) is
+	set_current_page (page: CAT_PAGE [T]; just_created: BOOLEAN) is
 			-- Set current_page to `page', update the drawing_sw
 			-- working area with `page'
 		require
@@ -142,6 +142,11 @@ feature {NONE}
 			current_page := page;
 			page.unmanage;
 			page_sw.set_working_area (page);
+			if not just_created and then not page.empty then
+					-- Refresh page correctly (ok its for motif)
+				page.go_i_th (1);
+				page.refresh_display
+			end;
 			page.manage;
 		end;
 
@@ -165,11 +170,12 @@ feature
 						page.update_display
 					end
 					page.manage;
+					set_current_page (page, true);
 					mp.restore
 				else
 					page.show;
+					set_current_page (page, false);
 				end;
-				set_current_page (page);
 			end
 		end; -- execute
 

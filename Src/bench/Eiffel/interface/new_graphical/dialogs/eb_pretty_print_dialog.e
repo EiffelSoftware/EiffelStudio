@@ -36,7 +36,7 @@ feature {NONE} -- Initialization
 			dialog.set_icon_pixmap (Pixmaps.Icon_pretty_print)
 				--| FIXME XR: Implement the save to file.
 			create exit_button.make_with_text (Interface_names.b_Close)
-			exit_button.select_actions.extend (dialog~destroy)
+			exit_button.select_actions.extend (~destroy)
 			create slice_button.make_with_text (Interface_names.b_Slice)
 			slice_button.select_actions.extend (slice_cmd~execute)
 			
@@ -94,6 +94,7 @@ feature -- Status setting
 			-- Give a new object to `Current' and refresh the display.
 		do
 			current_object := st
+			parent.tool.debugger_manager.kept_objects.extend (st.object_address)
 			if slice_cmd.is_resizable (st) then
 				slice_cmd.enable_sensitive
 			else

@@ -227,6 +227,38 @@ feature -- Basic operations
 			end
 		end
 
+	finalize_inherited_interfaces is
+			-- Set references to inherited interfaces.
+		require
+			complete: complete
+		local
+			i, local_counter: INTEGER
+			interface_descriptor: WIZARD_INTERFACE_DESCRIPTOR
+		do
+			from
+				i := 1
+			variant
+				descriptors.count - i + 1
+			until
+				i > descriptors.count
+			loop
+				if descriptors.item (i) /= Void then
+					if (descriptors.item (i).type_kind = Tkind_interface) or (descriptors.item (i).type_kind = Tkind_dispatch) then
+						interface_descriptor ?= descriptors.item (i)
+						if interface_descriptor /= Void then
+							if 
+								interface_descriptor.inherited_interface = Void and 
+								interface_descriptor.inherited_interface_descriptor /= Void
+							then
+								interface_descriptor.initialize_inherited_interface
+							end
+						end
+					end
+				end
+				i := i + 1
+			end
+		end
+
 	finalize_names is
 			-- Remove name clashes in system.
 		require

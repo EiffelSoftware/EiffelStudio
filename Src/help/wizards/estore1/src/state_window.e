@@ -19,6 +19,9 @@ feature -- Initialization
 		do
 			state_information := clone(an_info)
 			change_entries
+			if is_final_state then
+				first_window.set_final_state
+			end
 		ensure
 			information_set: state_information /= Void
 		end

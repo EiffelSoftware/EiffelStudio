@@ -8,7 +8,7 @@ class
 	WIZARD_WINDOW
 
 inherit
-	EV_TITLED_WINDOW
+	EV_TITLED_WINDOW 
 
 	STATE_MANAGER
 		undefine
@@ -94,6 +94,15 @@ feature -- Implementation
 
 feature -- Basic Operations	
 
+	set_final_state is
+			-- Current state is final, hence a special
+			-- process.
+		do
+			previous_b.parent.prune(previous_b)
+			next_b.set_text("Exit")
+			cancel_b.parent.prune(cancel_b)
+		end
+
 	previous_page is
 			-- Go to the previous page.
 		do
@@ -106,14 +115,10 @@ feature -- Basic Operations
 	update_navigation is
 			-- Update navigation buttons.
 		do
-			if history.count<1 then
+			if history.count<1 or else history.isfirst then
 				previous_b.disable_sensitive
 			else
 				previous_b.enable_sensitive
-			end
-			if is_final_state then
-				previous_b.disable_sensitive
-				next_b.set_text("Exit")
 			end
 		end
 

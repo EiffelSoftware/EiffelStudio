@@ -23,8 +23,8 @@ feature -- Initialization
 	make (an_info: like state_information) is
 			-- Initialize with 'an_info'
 		do
-			precursor(an_info)
 			is_final_state := TRUE
+			precursor(an_info)
 		end
 
 feature -- basic Operations
@@ -59,7 +59,7 @@ feature -- basic Operations
 			li := state_information.table_list
 			total := li.count
 			if state_information.generate_facade then
-				total := total + 5
+				total := total + 6
 			end
 			if state_information.example then
 				total := total + 1
@@ -174,6 +174,8 @@ feature -- Processing
 			copy_class("db_action")
 			notify_user("Importing db_shared ...")
 			copy_class("db_shared")
+			notify_user("Importing db_action_dyn ...")
+			copy_class("db_action_dyn")
 			if state_information.example then
 				copy_class("estore_example")
 				copy_class("estore_root")

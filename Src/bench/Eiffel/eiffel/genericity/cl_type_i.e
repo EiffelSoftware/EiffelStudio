@@ -60,7 +60,7 @@ feature
 			-- of generic types with anchored parameters
 
 	set_cr_info (cinfo : CREATE_INFO) is
-			-- Set `cr_infoï to `cinfoï.
+			-- Set `cr_info' to `cinfo'.
 		do
 			cr_info := cinfo
 		ensure

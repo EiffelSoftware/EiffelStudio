@@ -1,10 +1,8 @@
 <document title="MANUAL IDENTIFICATION AND COPYRIGHT" output="studio">
-	<meta_data>
-		<help></help>
-	</meta_data>
+	<meta_data></meta_data>
 	<paragraph>
 		<heading>
-			<size>4</size>Manual Identification and Copyright
+			<size>1</size>Manual Identification and Copyright
 		</heading>
 		<paragraph>Title: 
 			<span>EiffelStudio: A Guided Tour</span>, ISE Technical Report TR-EI-68/GT.  (Replaces TR-EI-38/EB.  )
@@ -44,5 +42,4 @@
 				</link>
 			</span> may be permitted under certain conditions to copy specific parts of this book.  Contact ISE for details.  
 		</paragraph>
-	</paragraph>
-</document>
+	</paragraph></document>

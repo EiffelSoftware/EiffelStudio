@@ -1,7 +1,5 @@
 <document title="6 STARTING TO BROWSE" output="studio">
-	<meta_data>
-		<help></help>
-	</meta_data>
+	<meta_data/>
 	<paragraph>
 		<heading>
 			<size>1</size>6 Starting to Browse
@@ -51,7 +49,7 @@
 			</image_link>
 		</div>
 		<note>
-			<italic>If some parts are too small, just resize the window to arrive at something like what's on the figure.  When it first comes up, EiffelStudio initially uses a fairly small window, because it'sdesigned to run on a 800x600 display, although of course a bigger display is recommended.  But as soon as you have resized it, EiffelStudio will come up, in the next session, with the size you've set.</italic>
+			<italic>If some parts are too small, just resize the window to arrive at something like what's on the figure.  When it first comes up, EiffelStudio initially uses a fairly small window, because it's designed to run on a 800x600 display, although of course a bigger display is recommended.  But as soon as you have resized it, EiffelStudio will come up, in the next session, with the size you've set.</italic>
 		</note>
 		<paragraph>You can see four panes, marked on the figure: 
 			<code>
@@ -211,7 +209,7 @@
 				<symbol>--&gt;</symbol>
 			</code> 
 			<code>
-				<keyword>context tool Link</keyword>
+				<keyword>Link context tool</keyword>
 			</code>
 			<italic>; this will display the diagram as shown.  We'll see the explanation for this behavior in </italic>
 			<link>
@@ -496,10 +494,10 @@
 				<keyword>Favorites</keyword>
 			</code> menu and select 
 			<code>
-				<keyword>favorites to Add</keyword>
+				<keyword>Add to favorites</keyword>
 			</code> .  Now display the favorites; one way is to go back to that same Favorites menu and select 
 			<code>
-				<keyword>favorites Show</keyword>
+				<keyword>Show favorites</keyword>
 			</code>.  The Favorites Tool appears below the Cluster Tree:
 		</paragraph>
 		<div>
@@ -520,7 +518,7 @@
 		</paragraph>
 		<paragraph>Right now we don't need the Favorites Tool, so you can get rid of it by either selecting 
 			<code>
-				<keyword>favorites Hide</keyword>
+				<keyword>Hide favorites</keyword>
 			</code> in the 
 			<code>
 				<keyword>Favorites</keyword>
@@ -581,7 +579,7 @@
 				<symbol>--&gt;</symbol>
 			</code> 
 			<code>
-				<keyword>window New</keyword>
+				<keyword>New window</keyword>
 			</code> ; this creates a new tool, untargeted.  The title bar says "
 			<code>
 				<keyword>Empty development tool #1 </keyword>

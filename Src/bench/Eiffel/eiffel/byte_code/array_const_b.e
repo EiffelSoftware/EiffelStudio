@@ -6,7 +6,7 @@ inherit
 
 	EXPR_B
 		redefine
-			make_byte_code, analyze, generate, print_register
+			make_byte_code, enlarged, enlarge_tree
 		end
 	
 feature 
@@ -16,6 +16,23 @@ feature
 
 	type: GEN_TYPE_I;
 			-- Generic array type
+
+	need_metamorphosis (source_type: TYPE_I): BOOLEAN is
+			-- Do we need to issue a metamorphosis on the `source_type'?
+		local
+			target_type: TYPE_I;
+			real_ty: GEN_TYPE_I
+		do
+			real_ty ?= context.real_type (type);
+			target_type := real_ty.meta_generic.item (1); 
+			if 
+				not (target_type.is_expanded or target_type.is_basic) 
+				and (source_type.is_basic or source_type.is_expanded)
+			then
+				Result := True;
+			end;
+		end;
+
 
 	set_expressions (e: like expressions) is
 			-- Assign `e' to `expressions'.
@@ -30,32 +47,71 @@ feature
 		end;
 
 	used (r: REGISTRABLE): BOOLEAN is
-			--## FIXME
 		do
 		end;
 
-	analyze is
-			-- Analyze expression
+	enlarge_tree is
+			-- Enlarge the expressions.
 		do
-			--## FIXME
-		end;
-	
-	generate is
-			-- Generate expression
-		do
-			--## FIXME
+			if expressions /= Void then
+				expressions.enlarge_tree;
+			end;
 		end;
 
-	print_register is
-			-- Print the register holding the manifest array
+	enlarged: ARRAY_CONST_BL is
+			-- Enlarge node
 		do
-			--## FIXME
+			!!Result;
+			Result.set_expressions (expressions);
+			Result.set_type (type);
+			Result.enlarge_tree;
 		end;
 
 	make_byte_code (ba: BYTE_ARRAY) is
 			-- Generate byte code for a manifest array
+		local
+			real_ty: GEN_TYPE_I;
+			actual_type: CL_TYPE_I;
+			f_table: FEATURE_TABLE;
+			feat_i: FEATURE_I;
+			feat_id: INTEGER;
+			expr: EXPR_B;
+			target_type: TYPE_I;
+			basic_i: BASIC_I
 		do
-			-- FIXME
+			real_ty ?= context.real_type (type);
+			target_type := real_ty.meta_generic.item (1);
+			f_table := real_ty.base_class.feature_table;
+			feat_i := f_table.item ("make");
+			feat_id := feat_i.feature_id;
+			ba.append (Bc_array);
+			ba.append_short_integer (real_ty.associated_class_type.id - 1);
+			ba.append_short_integer (real_ty.type_id - 1);
+			ba.append_short_integer (feat_id);
+			ba.append_integer (expressions.count);
+			from
+				expressions.start;
+			until
+				expressions.after
+			loop
+				expr ?= expressions.item;
+				actual_type ?= context.real_type (expr.type);
+				expr.make_byte_code (ba);
+				if need_metamorphosis (actual_type) then
+					if actual_type.is_expanded then
+							-- Expanded objects are cloned
+						ba.append (Bc_clone)
+					else 
+							-- Simple type objects are metamorphosed
+						basic_i ?= actual_type;	
+						ba.append (Bc_metamorphose);
+						ba.append_short_integer (basic_i.associated_dtype);
+					end
+				end;
+				ba.append (Bc_insert);
+				expressions.forth;
+			end;
+			ba.append (Bc_end_insert)
 		end;
 
 end

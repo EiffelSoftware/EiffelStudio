@@ -10,8 +10,10 @@ inherit
 	PICT_COLOR_B_IMP
 		redefine
 			draw_all_unselected,
+			draw_selected_border,
 			on_mouse_enter,
-			on_mouse_leave
+			on_mouse_leave,
+			total_offset
 		end
 
 creation
@@ -54,6 +56,8 @@ feature {NONE}
 			end
 		end
 
+	total_offset: INTEGER is 4
+
 feature {NONE}
 
 	draw_unselected_no_border (a_dc: WEL_DC) is
@@ -69,8 +73,6 @@ feature {NONE}
 			a_dc.line (0, height - 1, width, height - 1);
 			a_dc.line (0, 0, width - 1, 0);
 			a_dc.line (0, 0, 0, height - 1);
-			a_dc.line (1, 1, 1, height - 2);
-			a_dc.line (1, 1, width - 2, 1)
 		end
 
 	draw_unselected_border (a_dc: WEL_DC) is
@@ -79,21 +81,34 @@ feature {NONE}
 			pen: WEL_PEN
 			color: WEL_COLOR_REF
 		do
-			!! color.make_rgb (255, 255, 255);
+			!! color.make_system (color_btnhighlight)
 			!! pen.make (ps_solid, 1, color);
 			a_dc.select_pen (pen);
-			a_dc.line (0, 0, width, 0);
-			a_dc.line (0, 0, 0, height);
-			!! color.make_system (color_btnshadow);
-			!! pen.make (ps_solid, 1, color);
-			a_dc.select_pen (pen);
-			a_dc.line (1, height - 2, width - 1, height - 2);
-			a_dc.line (width - 2, 1, width - 2, height - 1);
-			!! color.make_rgb (0, 0, 0);
+			a_dc.line (0, 0, width - 1, 0);
+			a_dc.line (0, 0, 0, height - 1);
+			!! color.make_system (color_btnshadow)
 			!! pen.make (ps_solid, 1, color);
 			a_dc.select_pen (pen);
 			a_dc.line (width - 1, 0, width - 1, height);
 			a_dc.line (0, height - 1, width, height - 1)
+		end
+
+	draw_selected_border (a_dc: WEL_DC) is
+			-- Draw the button with borders and selected
+		local
+			pen: WEL_PEN
+			color: WEL_COLOR_REF
+		do
+			!! color.make_system (color_btnshadow)
+			!! pen.make (ps_solid, 1, color)
+			a_dc.select_pen (pen)
+			a_dc.line (0, 0, width, 0);
+			a_dc.line (0, 0, 0, height);
+			!! color.make_system (color_btnhighlight)
+			!! pen.make (ps_solid, 1, color);
+			a_dc.select_pen (pen);
+			a_dc.line (width - 1, 1, width - 1, height);
+			a_dc.line (1, height - 1, width, height - 1)
 		end
 
 feature {NONE} -- Attributes

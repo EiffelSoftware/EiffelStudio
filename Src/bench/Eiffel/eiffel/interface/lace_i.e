@@ -456,6 +456,8 @@ feature -- Status setting
 				-- Check sum error
 			Error_handler.checksum
 
+			add_missing_assemblies
+			
 			old_universe := Void
 
 			successful := True
@@ -524,6 +526,63 @@ feature {NONE} -- Implementation
 				ace_file.put_string (st)
 				ace_file.close
 			end
+		end
+
+	add_missing_assemblies is
+			-- Create a copy of Ace file on disk with missing assemblies added.
+		require
+			parsed_ast_not_void: parsed_ast /= Void
+			has_assemblies: parsed_ast.assemblies /= Void
+		local
+			st: GENERATION_BUFFER
+			ace_file: PLAIN_TEXT_FILE
+			ast: like root_ast
+			l_missing: ARRAYED_LIST [ASSEMBLY_I]
+			l_assembly: ASSEMBLY_SD
+			l_factory: LACE_AST_FACTORY
+			retried: BOOLEAN
+			vd66: VD66
+		do
+			if not retried then
+				l_missing := Universe.assemblies_to_be_added
+				
+				if l_missing /= Void then
+					ast := parsed_ast
+					
+					from
+						l_missing.start
+						create l_factory
+					until
+						l_missing.after
+					loop
+						create l_assembly.initialize (
+							l_factory.new_id_sd (l_missing.item.cluster_name, True),
+							l_factory.new_id_sd (l_missing.item.assembly_name, True),
+							l_factory.new_id_sd (l_missing.item.prefix_name, True),
+							l_factory.new_id_sd (l_missing.item.version, True),
+							l_factory.new_id_sd (l_missing.item.culture, True),
+							l_factory.new_id_sd (l_missing.item.public_key_token, True))
+						ast.assemblies.extend (l_assembly)
+						l_missing.forth
+					end
+					
+					Universe.reset_assemblies_to_be_added
+	
+					create st.make (2048)
+					ast.save (st)
+					if Eiffel_ace.file_name /= Void then
+						create ace_file.make_open_write (Eiffel_ace.file_name)
+						ace_file.put_string (st)
+						ace_file.close
+					end
+				end
+			else
+				create vd66.make (l_missing)
+				Error_handler.insert_warning (vd66)
+			end
+		rescue
+			retried := True
+			retry
 		end
 
 invariant

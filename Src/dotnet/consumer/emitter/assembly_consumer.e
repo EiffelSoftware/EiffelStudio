@@ -67,10 +67,14 @@ feature -- Basic Operations
 	
 feature -- Access
 
-	file_name (type: CONSUMED_TYPE): STRING is
+	file_name (i: INTEGER): STRING is
 			-- File name where `type' will be serialized.
+		require
+			i_is_positive: i > 0
 		do
-			Result := type.dotnet_name + Xml_extension
+			create Result.make (10)
+			Result.append_integer (i) 
+			Result.append_string (Xml_extension)
 		end
 		
 	Xml_extension: STRING is ".xml"
@@ -300,29 +304,29 @@ feature {NONE} -- Implementation
 						-- do not add base types in types.xml
 					if not is_base_type (type.dotnet_name) then
 						types.put (type.dotnet_name, type.eiffel_name, type.is_interface, type.is_enum, l_is_delegate, l_is_value_type)
-					end
-					fn := file_name (type)
-						-- Delete constructor of System.Object for compiler
-					if type.dotnet_name.is_equal ("System.Object") then
-						type.set_constructors (create {ARRAY [CONSUMED_CONSTRUCTOR]}.make (1, 0))
-					end
-					create s.make (fn.count + destination_path.count + Classes_path.count)
-					s.append (destination_path)
-					s.append (Classes_path)
-					s.append (fn)
-					serializer.serialize (type, s)
-					if not serializer.successful and error_printer /= Void then
-						set_error (Serialization_error, type.eiffel_name + ", " + serializer.error_message)
-						l_string_tuple.put (error_message, 1)
-						error_printer.call (l_string_tuple)
-					else
-						if status_printer /= Void then
-							l_string_tuple.put ("Written " + s, 1)
-							status_printer.call (l_string_tuple)
+						fn := file_name (types.index)
+							-- Delete constructor of System.Object for compiler
+						if type.dotnet_name.is_equal ("System.Object") then
+							type.set_constructors (create {ARRAY [CONSUMED_CONSTRUCTOR]}.make (1, 0))
 						end
-						if status_querier /= Void then
-							status_querier.call (l_empty_tuple)
-							done := status_querier.last_result
+						create s.make (fn.count + destination_path.count + Classes_path.count)
+						s.append (destination_path)
+						s.append (Classes_path)
+						s.append (fn)
+						serializer.serialize (type, s)
+						if not serializer.successful and error_printer /= Void then
+							set_error (Serialization_error, type.eiffel_name + ", " + serializer.error_message)
+							l_string_tuple.put (error_message, 1)
+							error_printer.call (l_string_tuple)
+						else
+							if status_printer /= Void then
+								l_string_tuple.put ("Written " + s, 1)
+								status_printer.call (l_string_tuple)
+							end
+							if status_querier /= Void then
+								status_querier.call (l_empty_tuple)
+								done := status_querier.last_result
+							end
 						end
 					end
 				end

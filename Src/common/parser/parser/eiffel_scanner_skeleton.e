@@ -96,6 +96,9 @@ feature -- Access
 	has_old_verbatim_strings_warning: BOOLEAN
 			-- Are warnings produces for old semantics of verbatim strings?
 
+	Maximum_character_code: INTEGER is 255
+			-- Largest supported code for CHARACTER values
+
 feature -- Osolete
 
 	error_code: INTEGER is 0
@@ -423,9 +426,6 @@ feature {NONE} -- Constants
 
 	Initial_verbatim_marker_size: INTEGER is 3
 			-- Initial size for `verbatim_marker'
-
-	Maximum_character_code: INTEGER is 255
-			-- Largest supported code for CHARACTER values
 
 	Case_sensitive: BOOLEAN is False
 			-- Is code case sensitive?

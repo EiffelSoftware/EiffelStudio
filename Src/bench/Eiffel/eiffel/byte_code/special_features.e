@@ -127,16 +127,8 @@ feature -- C special code generation
 				parameter := parameters.first
 			end
 			inspect function_type
-			when lower_type then
-				check character_type: type_of (basic_type) = character_type end
-				buffer.putstring ("chlower(")
-				target.print_register
-				buffer.putchar (')')
-			when upper_type then
-				check character_type: type_of (basic_type) = character_type end
-				buffer.putstring ("chupper(")
-				target.print_register
-				buffer.putchar (')')
+			when lower_type, upper_type then
+				generate_lower_upper (buffer, basic_type, function_type, target)
 			when equal_type then
 				generate_equal (buffer, target, parameter)
 			when to_character_type then
@@ -389,6 +381,28 @@ feature {NONE} -- Byte code generation
 		end
 
 feature {NONE} -- C code generation
+
+	generate_lower_upper (buffer: GENERATION_BUFFER;
+			basic_type: BASIC_I; f_type: INTEGER; target: REGISTRABLE)
+		is
+			-- Generate fast wrapper for call on `upper' and `lower' of CHARACTER.
+		require
+			buffer_not_void: buffer /= Void
+			target_not_void: target /= Void
+			character_type: type_of (basic_type) = character_type
+			valid_function_type: f_type = lower_type or f_type = upper_type
+		do
+			if function_type = lower_type then
+				buffer.putstring ("chlower(")
+			else
+				buffer.putstring ("chupper(")
+			end
+			target.print_register
+			buffer.putchar (')')
+
+				-- Add `eif_misc.h' for C compilation where `chlower' and `chupper' are declared.
+			shared_include_queue.put (feature {PREDEFINED_NAMES}.eif_misc_header_name_id)
+		end
 
 	generate_equal (buffer: GENERATION_BUFFER; target, parameter: REGISTRABLE) is
 			-- Generate fast wrapper for call on `equal' where target and parameter

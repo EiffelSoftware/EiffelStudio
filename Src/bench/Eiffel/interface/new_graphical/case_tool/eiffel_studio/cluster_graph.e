@@ -331,26 +331,6 @@ feature {NONE} -- Implementation
 				end
 			end
 		end
-		
---	add_class (a_class: CLASS_I; cluster: ES_CLUSTER) is
---			-- Include `a_class' in the diagram.
---			-- Add any relations `a_class' may have with
---			-- all items in `class_figures'.
---		require
---			a_class_not_void: a_class /= Void
---			cluster_not_void: cluster /= Void
---		local
---			es_class: ES_CLASS
---		do
---			if not context_editor.is_excluded_in_preferences (a_class.name_in_upper) then
---				es_class := class_from_interface (a_class)
---				if es_class = Void then
---					create es_class.make (a_class)
---					add_node (es_class)
---					cluster.extend (es_class)
---				end
---			end
---		end
 
 	add_class (a_class: CLASS_I; cluster: ES_CLUSTER) is
 			-- Include `a_class' in the diagram.
@@ -363,28 +343,25 @@ feature {NONE} -- Implementation
 		do
 			last_added_class := Void
 			if context_editor = Void or else not context_editor.is_excluded_in_preferences (a_class.name_in_upper) then
-				
---				if not include_only_classes_of_cluster or else a_class.cluster = center_class.class_i.cluster then
-					es_class := class_from_interface (a_class)
-					if es_class = Void then
-						create es_class.make (a_class)
-						add_node (es_class)
-						cluster.extend (es_class)
-						last_added_class := es_class
-					elseif not es_class.is_needed_on_diagram then
-						es_class.enable_needed_on_diagram
-						if es_class.is_compiled then
-							add_ancestor_relations (es_class)
-							add_descendant_relations (es_class)
-							add_client_relations (es_class)
-							add_supplier_relations (es_class)
-						end
-						if not cluster.has (es_class) then
-							cluster.extend (es_class)
-						end
-						last_added_class := es_class
+				es_class := class_from_interface (a_class)
+				if es_class = Void then
+					create es_class.make (a_class)
+					add_node (es_class)
+					cluster.extend (es_class)
+					last_added_class := es_class
+				elseif not es_class.is_needed_on_diagram then
+					es_class.enable_needed_on_diagram
+					if es_class.is_compiled then
+						add_ancestor_relations (es_class)
+						add_descendant_relations (es_class)
+						add_client_relations (es_class)
+						add_supplier_relations (es_class)
 					end
---				end
+					if not cluster.has (es_class) then
+						cluster.extend (es_class)
+					end
+					last_added_class := es_class
+				end
 			end
 		end
 		

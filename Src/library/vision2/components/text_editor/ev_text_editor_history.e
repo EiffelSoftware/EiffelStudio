@@ -35,12 +35,12 @@ feature -- Basic operations
 			until
 				not (can_undo and then
 				insert_text_cmd /= Void and then 
-				not insert_text_cmd.is_seperator)
+				not insert_text_cmd.is_separator)
 			loop
 				insert_text_cmd ?= next_undo_command
 				
 				if
-					insert_text_cmd /= Void and then not insert_text_cmd.is_seperator
+					insert_text_cmd /= Void and then not insert_text_cmd.is_separator
 				then
 					{EV_LINKED_HISTORY} Precursor
 				end
@@ -61,12 +61,12 @@ feature -- Basic operations
 			until
 				not (can_redo and then
 				insert_text_cmd /= Void and then 
-				not insert_text_cmd.is_seperator)
+				not insert_text_cmd.is_separator)
 			loop
 				insert_text_cmd ?= next_redo_command
 				
 				if
-					insert_text_cmd /= Void and then not insert_text_cmd.is_seperator
+					insert_text_cmd /= Void and then not insert_text_cmd.is_separator
 				then
 					{EV_LINKED_HISTORY} Precursor
 				end

@@ -301,7 +301,7 @@ feature -- Event : command association
 --			add_command_with_event_data (parent_imp.widget, "select_row", cmd, arg, ev_data, index - 1, False, default_pointer)
 
 			-- We need the index so we pass it as the extra_data.
-			add_command (parent_imp.widget, "select_row", cmd, arg, c_integer_to_pointer (index))
+			add_command (parent_imp.widget, "select_row", cmd, arg, c_gtk_integer_to_pointer (index))
 		end	
 
 	add_unselect_command (cmd: EV_COMMAND; arg: EV_ARGUMENT) is
@@ -316,7 +316,7 @@ feature -- Event : command association
 --			add_command_with_event_data (parent_imp.widget, "unselect_row", cmd, arg, ev_data, index - 1, False, default_pointer)
 
 			-- We need the index so we pass it as the extra_data.
-			add_command (parent_imp.widget, "unselect_row", cmd, arg, c_integer_to_pointer (index))
+			add_command (parent_imp.widget, "unselect_row", cmd, arg, c_gtk_integer_to_pointer (index))
 		end
 
 feature -- Event -- removing command association

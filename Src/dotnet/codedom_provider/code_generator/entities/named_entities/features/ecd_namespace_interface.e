@@ -16,6 +16,9 @@ inherit
 	ECD_SHARED_EVENT_MANAGER
 		export
 			{NONE} all
+		undefine
+			default_create,
+			is_equal
 		end
 
 feature {NONE} -- Initialization

@@ -96,6 +96,11 @@
 			<TEXT>dynamic_lib_tool_width<INTEGER>440</INTEGER></TEXT>
 			<TEXT>dynamic_lib_tool_height<INTEGER>500</INTEGER></TEXT>
 		</TOPIC>
+		<TOPIC TOPIC_ID="Diagram_tool_preferences">
+			<HEAD>Diagram tool preferences</HEAD>
+			<TEXT>excluded_class_figures<LIST_STRING>INTEGER;BOOLEAN;STRING;CHARACTER;REAL;DOUBLE</LIST_STRING></TEXT>
+			<TEXT>ignore_excluded_class_figures<BOOLEAN>False</BOOLEAN></TEXT>
+		</TOPIC>
 	</TOPIC>
 	<TOPIC TOPIC_ID="Graphics">
 		<HEAD>Graphical Elements</HEAD>

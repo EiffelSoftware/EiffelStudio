@@ -31,7 +31,8 @@ feature {NONE}
 			edited_function.finish;
 			output_data := edited_function.output;
 			input_data := edited_function.input;
-			update_history
+			update_history;
+			update_interface;
 		end; -- function_work
 
 	worked_on: STRING is

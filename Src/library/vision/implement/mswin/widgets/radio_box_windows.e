@@ -11,8 +11,10 @@ inherit
 	RADIO_BOX_I
 
 	BOX_WINDOWS
+		rename
+			make as row_column_make
 		redefine
-			realize_children
+			class_name
 		end
 
 creation
@@ -20,27 +22,18 @@ creation
 
 feature -- Initialization
 
-	realize_current is
-			-- Realize current object without it children.
-		local
-			wc: WEL_COMPOSITE_WINDOW
-		do
-			if not exists then
-				wc ?= parent
-				wel_make (wc, "", x, y, width, height, id_default)
-				realize_children
-			end
-		end;
-
 	make (a_radio_box: RADIO_BOX; man: BOOLEAN; oui_parent: COMPOSITE) is
 			-- Make a radio box.
 		do
 			!! private_attributes
-			parent ?= oui_parent.implementation;
-			!! toggle_list.make;
-			only_one := true;
-			managed := man;
-			set_form_width (Minimum_width)
+			parent ?= oui_parent.implementation
+			!! toggle_list.make
+			initialize
+			set_margin_width (5)
+			set_margin_height (5)
+			only_one := True
+			managed := man
+			set_same_size
 		end
 
 	set_always_one (flag: BOOLEAN) is
@@ -52,46 +45,13 @@ feature -- Initialization
 feature {NONE} -- Implementation
 
 	only_one: BOOLEAN
+			-- Can there be only one checked radio button?
 
-	realize_children is
-			-- Realize the children
-		local
-			tb: TOGGLE_B_WINDOWS
-			a_style: INTEGER
-			c: CURSOR
-		do
-			c := toggle_list.cursor
-			from
-				toggle_list.start
-			variant
-				toggle_list.count - toggle_list.index
-			until
-				toggle_list.after
-			loop
-				tb := toggle_list.item;
-				a_style := ws_child + ws_visible
-				if only_one then
-					a_style := a_style + bs_autoradiobutton
-				else
-					a_style := a_style + bs_radiobutton
-				end
-				check
-					after1: not toggle_list.after
-				end
-				tb.realize;
-				check
-					after2: not toggle_list.after
-				end
-				toggle_list.forth
-			end
-			toggle_list.go_to (c)
+	class_name: STRING is
+			-- Class name
+		once
+			Result := "EvisionRadioBox"
 		end
-
-	wel_set_menu (wel_menu: WEL_MENU) is
-		do
-		end
-
-	wel_children: LINKED_LIST [WEL_WINDOW]
 
 end -- class RADIO_BOX_WINDOWS
  

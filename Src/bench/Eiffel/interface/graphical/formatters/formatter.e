@@ -188,15 +188,30 @@ feature {NONE}
 
 	file_name (stone: STONE): STRING is
 		local
-			filed_stone: FILED_STONE
+			filed_stone: FILED_STONE;
+			fname: FILE_NAME;
+			i: INTEGER
 		do
 			filed_stone ?= stone;
-			!!Result.make (0);
 			if filed_stone /= Void then
-				Result.append (filed_stone.file_name);
-					--| remove "e"
-				Result.remove (Result.count);	
-				Result.append (post_fix);
+				Result := clone (filed_stone.file_name);
+					--| remove the extension
+				from
+					i := Result.count
+				until
+					i = 0 or else Result.item (i) = '.'
+				loop
+					i := i - 1
+				end;
+				if i /= 0 and i >= Result.count - 3 then
+					Result.head (i - 1)
+				end;
+
+				!!fname.make_from_string (Result);
+				fname.add_extension (post_fix);
+				Result := fname
+			else
+				!!Result.make (0)
 			end;
 		end;
 

@@ -2,8 +2,8 @@
 	<meta_data/>
 	<paragraph>
 		<paragraph>
-			Welcome to the new and improved Online Eiffel Documentation.  This is a <bold>beta-version</bold> of the
-			new documents and the documents herein will be promoted to the first official version once the following
+			Welcome to the new and improved Online Eiffel Documentation.  This is a <bold>beta-version</bold> of the 
+			new documents and the documents herein will be promoted to the first official version once the following 
 			known issues have been resolved.
 			<list ordered="false">
 				<item>Files containing code snippets to be correctly formatted and colorized</item>
@@ -16,14 +16,14 @@
 		</paragraph>
 
 		<output output="studio">
-			<paragraph>Congratulations for installing Eiffel Software's Eiffel, featuring
+			<paragraph>Congratulations for installing Eiffel Software's Eiffel, featuring 
 				<link>
 					<url>tools/eiffelstudio/index.xml</url>
 					<label>EiffelStudio</label>
 				</link>, the full-life cycle environment for quality software development, based on the most advanced version of object technology and the concepts of Design by Contract.
 			</paragraph>
 			<paragraph>Eiffel Software's Eiffel is available on many platforms and is one of the first development environments to take advantage of the Microsoft.NET framework.</paragraph>
-			<paragraph>Eiffel Software's Eiffel comes with extensive online documentation. Please take the time to read up on Eiffel and the
+			<paragraph>Eiffel Software's Eiffel comes with extensive online documentation. Please take the time to read up on Eiffel and the 
 				<link>
 					<url>tools/eiffelstudio/index.xml</url>
 					<label>EiffelStudio</label>
@@ -34,7 +34,7 @@
 						<size>2</size>Release notes
 					</heading>
 				</paragraph>
-				<paragraph>You will find out
+				<paragraph>You will find out 
 					<link>
 						<url>tools/eiffelstudio/reference/02_what_s_new/Eiffel54.xml</url>
 						<label>here</label>
@@ -47,13 +47,13 @@
 							<link>
 								<url>general/guided_tour/language/invitation-00.xml</url>
 								<label>"an invitation to Eiffel"</label>
-							</link>) and the other a
+							</link>) and the other a 
 							<link>
 								<url>general/guided_tour/language/tutorial-00.xml</url>
 								<label>detailed tutorial</label>
 							</link>.
 						</item>
-						<item>An in-depth, step-by-step
+						<item>An in-depth, step-by-step 
 							<link>
 								<url>general/guided_tour/environment/index.xml</url>
 								<label>Guided Tour of EiffelStudio</label>
@@ -63,7 +63,7 @@
 							<link>
 								<url>general/guided_tour/other/why_eiffel.xml</url>
 								<label>"Why your next project should use Eiffel"</label>
-							</link> and the
+							</link> and the 
 							<link>
 								<url>general/guided_tour/other/one_minute.xml</url>
 								<label>"1-minute summary"</label>
@@ -71,7 +71,7 @@
 						</item>
 					</list>
 				</paragraph>
-				<paragraph>You will find the introductory documentation
+				<paragraph>You will find the introductory documentation 
 					<link>
 						<url>general/guided_tour/index.xml</url>
 						<label>here</label>
@@ -84,11 +84,11 @@
 					<link>
 						<url>tools/eiffelstudio/index.xml</url>
 						<label>EiffelStudio</label>
-					</link> is the centerpiece of Eiffel Software's Eiffel, your friendly environment for conceptualizing, analyzing, designing, producing, documenting, debugging, exploring, measuring and maintaining systems. You will find
+					</link> is the centerpiece of Eiffel Software's Eiffel, your friendly environment for conceptualizing, analyzing, designing, producing, documenting, debugging, exploring, measuring and maintaining systems. You will find 
 					<link>
 						<url>tools/eiffelstudio/index.xml</url>
 						<label>EiffelStudio</label>
-					</link> documentation
+					</link> documentation 
 					<link>
 						<url>tools/eiffelstudio/index.xml</url>
 						<label>here</label>
@@ -199,10 +199,10 @@
 		<output output="envision">
 			<paragraph>Congratulations for installing Eiffel ENViSioN!</paragraph>
 			<paragraph>ENViSioN! is a product of Eiffel Software Inc.</paragraph>
-			<paragraph>ENViSioN! is
+			<paragraph>ENViSioN! is 
 				<bold>E</bold>iffel for .
-				<bold>N</bold>ET for
-				<bold>V</bold>isual
+				<bold>N</bold>ET for 
+				<bold>V</bold>isual 
 				<bold>S</bold>tudio .
 				<bold>N</bold>ET.
 			</paragraph>

@@ -1,5 +1,5 @@
 indexing
-	description: "GB_OBJECT representing an EV_TREE"
+	description: "GB_OBJECT representing an EV_TREE."
 	author: ""
 	date: "$Date$"
 	revision: "$Revision$"

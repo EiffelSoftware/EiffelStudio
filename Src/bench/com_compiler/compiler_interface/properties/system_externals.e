@@ -272,20 +272,20 @@ feature {NONE} -- Implementation
 			valid_external: not external_item.is_empty
 			non_void_external_list: external_list /= Void
 		local
-			formatted_path: STRING
-			external_copy: STRING
-			eiffel_dir: STRING
+--			formatted_path: STRING
+--			external_copy: STRING
+--			eiffel_dir: STRING
 			can_add: BOOLEAN
 		do
-			formatted_path := format_external (external_item)
-
-			-- replace path to Eiffel installation with $ISE_EIFFEL			
-			external_copy := external_item.as_lower
-			eiffel_dir := ace_accesser.ise_eiffel.as_lower
-			if external_copy.substring_index (eiffel_dir, 1) = 1 then
-				formatted_path := formatted_path.substring (eiffel_dir.count + 1,  formatted_path.count)
-				formatted_path.prepend (ace_accesser.Ise_eiffel_envvar)
-			end
+--			formatted_path := format_external (external_item)
+--
+--			-- replace path to Eiffel installation with $ISE_EIFFEL			
+--			external_copy := external_item.as_lower
+--			eiffel_dir := ace_accesser.ise_eiffel.as_lower
+--			if external_copy.substring_index (eiffel_dir, 1) = 1 then
+--				formatted_path := formatted_path.substring (eiffel_dir.count + 1,  formatted_path.count)
+--				formatted_path.prepend (ace_accesser.Ise_eiffel_envvar)
+--			end
 			
 			from
 				can_add := true
@@ -293,14 +293,14 @@ feature {NONE} -- Implementation
 			until
 				external_list.after or not can_add
 			loop
-				if is_external_equal (formatted_path, external_list.item) then
+				if is_external_equal (external_item, external_list.item) then
 					can_add := false
 				end
 				external_list.forth
 			end
 			
 			if can_add then
-				external_list.extend (formatted_path)
+				external_list.extend (external_item)
 			end
 		end
 		

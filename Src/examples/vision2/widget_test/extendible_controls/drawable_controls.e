@@ -16,6 +16,11 @@ inherit
 		undefine
 			default_create, copy, is_equal
 		end
+		
+	COMMON_TEST
+		undefine
+			default_create, copy, is_equal
+		end
 
 create
 	make_with_control
@@ -55,6 +60,7 @@ feature {NONE} -- Initialization
 			operation_frame, arguments_frame: EV_FRAME
 			clear_button: EV_BUTTON
 			main_vertical_box: EV_VERTICAL_BOX
+			list_item: EV_LIST_ITEM
 		do	
 			set_text ("Drawing operations")
 			create main_vertical_box
@@ -64,6 +70,27 @@ feature {NONE} -- Initialization
 			create clear_button.make_with_text ("Clear")
 			main_vertical_box.extend (clear_button)
 			clear_button.select_actions.extend (agent drawable.clear)
+			create mode_combo
+			mode_combo.disable_edit
+			create list_item.make_with_text ("Copy")
+			mode_combo.extend (list_item)
+			list_item.select_actions.extend (agent drawable.set_copy_mode)
+			create list_item.make_with_text ("Invert")
+			mode_combo.extend (list_item)
+			list_item.select_actions.extend (agent drawable.set_invert_mode)
+			create list_item.make_with_text ("Or")
+			mode_combo.extend (list_item)
+			list_item.select_actions.extend (agent drawable.set_or_mode)
+			create list_item.make_with_text ("Xor")
+			mode_combo.extend (list_item)
+			list_item.select_actions.extend (agent drawable.set_xor_mode)
+			create list_item.make_with_text ("And")
+			mode_combo.extend (list_item)
+			list_item.select_actions.extend (agent drawable.set_and_mode)
+				-- Ensure copy mode is selected
+			mode_combo.first.enable_select
+			main_vertical_box.extend (mode_combo)
+			
 			
 				-- Add drawing operation controls.
 			create operation_frame.make_with_text ("Drawing operation")
@@ -468,6 +495,7 @@ feature {NONE} -- Implementation
 		local
 			a_parent: EV_VERTICAL_BOX
 		do
+			filled_check_button.disable_select
 			argument_holder.go_i_th (1)
 			argument_holder.put_left (filled_check_button)
 		end	
@@ -480,6 +508,8 @@ feature {NONE} -- Implementation
 	argument_holder: EV_VERTICAL_BOX
 	
 	radio_parent: EV_VERTICAL_BOX
+	
+	mode_combo: EV_COMBO_BOX
 
 	drawable: EV_DRAWABLE
 		-- The item on which operations must take place.
@@ -495,7 +525,7 @@ feature {NONE} -- Implementation
 	test_pixmap: EV_PIXMAP is
 			-- Pixmap for drawing operations.
 		once
-			Result := (create {EV_STOCK_PIXMAPS}).information_pixmap
+			Result := numbered_pixmap (1)
 		end
 
 invariant

@@ -47,9 +47,6 @@ BOOL windowed_application = TRUE;		/* Is this a windowed application?		*/
 extern HINSTANCE eif_hInstance;			/* Instance available for windowed applications */
 
 /* Prototypes */
-void eif_console_putint (long l);
-void eif_console_putchar (char c);
-void eif_console_putstring (BYTE *s, long length);
 void eif_make_console();
 void eif_GetWindowedInput();
 HWND eif_conout_window;
@@ -58,7 +55,7 @@ void eif_PutWindowedOutput(char *s, int l);
 
 static HWND hEdit;				/* Edit window handle				*/
 
-long eif_console_readint()
+EIF_INTEGER eif_console_readint()
 /*
 	read an integer from the console
 */
@@ -90,7 +87,7 @@ long eif_console_readint()
 	return lastint;
 }
 
-float eif_console_readreal()
+EIF_REAL eif_console_readreal()
 /*
 	read a real from the console
 */
@@ -122,7 +119,7 @@ float eif_console_readreal()
 	return lastreal;
 }
 
-char eif_console_readchar()
+EIF_CHARACTER eif_console_readchar()
 /*
 	read a character from the console
 */
@@ -181,7 +178,7 @@ double eif_console_readdouble()
 	return lastdouble;
 }
 
-long eif_console_readline(char *s, long bound, long start)
+EIF_INTEGER eif_console_readline(char *s, long bound, long start)
 /*
 	read a line of input from the console
 	into the buffer s, s has start characters in it and a total 
@@ -347,7 +344,7 @@ void eif_console_putint (long l)
 		WriteConsole(eif_conoutfile,transfer_buffer, t, &dummy_length, NULL);
 	}
 
-void eif_console_putchar (char c)
+void eif_console_putchar (EIF_CHARACTER c)
 /*
 	put the character c on the console
 */
@@ -375,7 +372,7 @@ void eif_console_putstring (BYTE *s, long length)
 		WriteConsole(eif_conoutfile,s, length, &dummy_length, NULL);
 	}
 
-void eif_console_putreal (double r)
+void eif_console_putreal (EIF_DOUBLE r)
 /*
 	put the ascii representation of r on the console
 */
@@ -410,7 +407,7 @@ void eif_console_putdouble (double d)
 }
 
 
-char eif_console_eof ()
+EIF_BOOLEAN eif_console_eof ()
 /*
 	Has the equivalent of eof been reached for the console?
 */

@@ -431,7 +431,7 @@ feature {NONE} -- External features
 	x_check_window_event (display_ptr: POINTER; a_window: POINTER; 
 				an_event_mask: INTEGER; event_ptr: POINTER): BOOLEAN is
 		external
-			"C (Display *, Window, long, XEvent *): EIF_BOOLEAN" 
+			"C (Display *, Window, long, XEvent *): Bool" 
 		alias
 			"XCheckWindowEvent"
 		end;

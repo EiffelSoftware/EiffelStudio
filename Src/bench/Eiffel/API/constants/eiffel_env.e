@@ -163,7 +163,13 @@ feature {NONE}
 			!!Result.make (50); Result.append (Eiffel3_dir_name);
 			Result.append ("/bitmaps/search.bm")
 		end;
-
+	
+	bm_Shell: STRING is
+		do
+			!!Result.make (50); Result.append (Eiffel3_dir_name);
+			Result.append ("/bitmaps/shell.bm")
+		end;
+	
 	bm_Showancestors: STRING is
 		do
 			!!Result.make (50); Result.append (Eiffel3_dir_name);

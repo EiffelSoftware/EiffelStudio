@@ -38,11 +38,12 @@ feature {NONE}
 		do
 			if project_tool.initialized then
 				if show_plain_text then
+					system_tool.display;
 					system_tool.text_window.show_file_content (lace.file_name);
 				elseif lace.file_name = void then
 					if argument = void then
 						load_default_ace;
-						system_tool.show;
+						system_tool.display;
 					elseif argument = warner then
 						name_chooser.call (Current);
 					elseif argument = name_chooser then
@@ -55,7 +56,7 @@ feature {NONE}
 				else
 					!!system_stone.make (System);
 					system_tool.receive (system_stone);
-					system_tool.show;
+					system_tool.display;
 				end;
 			elseif argument = name_chooser then
 				!!project_dir.make (name_chooser.selected_file);

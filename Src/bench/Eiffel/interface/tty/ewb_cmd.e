@@ -10,7 +10,8 @@ inherit
 		redefine
 			init_project_directory,
 			init_precompilation_directory
-		end
+		end;
+	SHARED_DIALOG
 
 feature -- Initialization
 
@@ -186,9 +187,9 @@ feature {NONE}
 	wait_for_return is
 		do
 			io.readline;
---		rescue
---				-- FIXME: Should abort for CTRL C
---			retry
+		rescue
+				-- FIXME: Should abort for CTRL C
+			retry
 		end;
 
 feature -- Precompilation
@@ -251,6 +252,12 @@ feature -- Termination
 			file.open_write;
 			Workbench.basic_store (file);
 			file.close;
+		rescue
+			if not file.is_closed then
+				file.close;
+			end;
+			Dialog_window.display ("Error in reading/writing .workbench file");
+			retry
 		end;
 
 feature -- Input/Output

@@ -50,7 +50,6 @@ feature {NONE}
 			if project_tool = Void then end;
 			if name_chooser = Void then end;
 			if confirmer = Void then end;
-			if font_window = Void then end
 		end
  
 end

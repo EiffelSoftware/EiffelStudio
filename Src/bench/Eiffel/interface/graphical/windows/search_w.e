@@ -18,16 +18,19 @@ creation
 	
 feature 
 
-	make (a_composite: COMPOSITE) is
+	make (a_composite: COMPOSITE; t_w: TEXT_WINDOW) is
 			-- Create a file selection dialog
 		local
 			void_argument: ANY
 		do
+			text_window := t_w;
 			prompt_dialog_create (l_Search, a_composite);
 			hide_apply_button;
 			!!ok_it;
 			!!cancel_it;
+			set_ok_label ("next");
 			add_ok_action (Current, ok_it);
+			text_window.set_action ("Ctrl<Key>d", Current, ok_it);
 			add_cancel_action (Current, cancel_it)
 		end;
 
@@ -39,14 +42,11 @@ feature {NONE}
 
 feature 
 
-	call (a_text_window: TEXT_WINDOW) is
+	call is
 			-- Record calling text_window `a_text_window' and popup current.
 		do
-			last_text_window := a_text_window;
 			set_exclusive_grab;
 			popup
-		ensure
-			last_text_window_recorded: last_text_window = a_text_window
 		end;
 
 feature {NONE}
@@ -54,8 +54,8 @@ feature {NONE}
 	work (argument: ANY) is
         do
 			if argument = ok_it then
-				last_text_window.search (selection_text);
-				if last_text_window.found then
+				text_window.search (selection_text);
+				if text_window.found then
 					popdown
 				end
 			elseif argument = cancel_it then
@@ -63,7 +63,7 @@ feature {NONE}
 			end
 		end;
 
-	last_text_window: TEXT_WINDOW
-			-- Last text_window which popped up current
+	text_window: TEXT_WINDOW
+			-- Text_window which popped up current
 
 end

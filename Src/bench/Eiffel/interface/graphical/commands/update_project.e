@@ -8,7 +8,7 @@ inherit
 	SHARED_WORKBENCH;
 	PROJECT_CONTEXT;
 	ICONED_COMMAND;
-	SHARED_DEBUG
+	SHARED_DIALOG; SHARED_DEBUG
 
 creation
 
@@ -79,6 +79,12 @@ feature {NONE}
 			else
 				warner.call(Current, l_Initialize);
 			end;
+		rescue
+			if not file.is_closed then
+				file.close
+			end;
+			Dialog_window.display ("Error in reading/writing .workbench file ");
+			retry
 		end;
 
 feature 

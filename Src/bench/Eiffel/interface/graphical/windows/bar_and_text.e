@@ -1,7 +1,7 @@
 
 -- Model for workbench windows
 
-deferred class BAR_AND_TEXT
+class BAR_AND_TEXT
 
 inherit
 
@@ -14,6 +14,10 @@ inherit
 			make as shell_make
 		end
 
+creation
+
+	make
+
 feature
 
 	make (a_screen: SCREEN) is
@@ -24,7 +28,7 @@ feature
 			build_widgets;
 			set_icon_pixmap (hole.symbol);
 			set_icon_name (tool_name);
-			realize;
+			--realize;
 			transporter_init
 		end;
 
@@ -42,7 +46,7 @@ feature
 			set_size (440, 500);
 				!!text_window.make (new_name, global_form, Current);
 				!!edit_bar.make (new_name, global_form);
-				build_edit_bar;
+				build_bar;
 				!!format_bar.make (new_name, global_form);
 				build_format_bar;
 				text_window.set_last_format (default_format);
@@ -53,12 +57,6 @@ feature
 			-- Command to show text od text window's root stone,
 			-- default format by default
 	default_format: FORMATTER is do Result := showtext_command end;
-	open_command: OPEN_FILE;
-	save_command: SAVE_FILE;
-	save_as_command: SAVE_AS_FILE;
-	change_font_command: CHANGE_FONT;
-	search_command: SEARCH_STRING;
-	quit_command: QUIT_FILE;
 
 	type_teller: LABEL_G;
 			-- To tell what type of element we are dealing with
@@ -75,37 +73,85 @@ feature
 			type_teller.set_text (a_type_name)
 		end;
 
+	editable: BOOLEAN is
+			-- Is Current window editable (default is false)?
+		do
+		end;
+
+	build_bar is
+		do
+			if editable then
+				build_edit_bar
+			else
+				build_basic_bar
+			end;
+		end;
+
+	build_basic_bar is
+			-- Build top bar (only the basics).
+		local
+			change_font_command: CHANGE_FONT;
+			search_command: SEARCH_STRING;
+			quit_cmd: QUIT_FILE;
+		do
+			!!hole.make (edit_bar, Current);
+			!!type_teller.make (new_name, edit_bar);
+			type_teller.set_center_alignment;
+			!!search_command.make (edit_bar, text_window);
+			!!change_font_command.make (edit_bar, text_window);
+			!!quit_cmd.make (edit_bar, text_window);
+				edit_bar.attach_left (hole, 0);
+				edit_bar.attach_top (hole, 0);
+				clean_type;
+				edit_bar.attach_left_widget (hole, type_teller, 0);
+				edit_bar.attach_top (type_teller, 0);
+				edit_bar.attach_right_widget (search_command, type_teller, 0);
+				edit_bar.attach_bottom (type_teller, 0);
+				edit_bar.attach_top (search_command, 0);
+				edit_bar.attach_right_widget (change_font_command, search_command, 25);
+				edit_bar.attach_top (change_font_command, 0);
+				edit_bar.attach_right_widget (quit_cmd, change_font_command, 25);
+				edit_bar.attach_top (quit_cmd, 0);
+				edit_bar.attach_right (quit_cmd, 0);
+		end;
+
+	open_command: OPEN_FILE is do end;
+	save_command: SAVE_FILE is do end;
+	save_as_command: SAVE_AS_FILE is do end;
+	quit_command: QUIT_FILE is do end;
+	create_edit_buttons is do end;
+
 	build_edit_bar is
 			-- Build top bar: editing commands.
+		local
+			change_font_command: CHANGE_FONT;
+			search_command: SEARCH_STRING;
 		do
-				!!hole.make (edit_bar, Current);
-				!!open_command.make (edit_bar, text_window);
-				!!save_command.make (edit_bar, text_window);
-				!!save_as_command.make (edit_bar, text_window);
-				!!type_teller.make (new_name, edit_bar);
-					type_teller.set_center_alignment;
-				!!search_command.make (edit_bar, text_window);
-				!!change_font_command.make (edit_bar, text_window);
-				!!quit_command.make (edit_bar, text_window);
-					edit_bar.attach_left (hole, 0);
-					edit_bar.attach_top (hole, 0);
-					edit_bar.attach_left_widget (hole, open_command, 25);
-					edit_bar.attach_top (open_command, 0);
-					edit_bar.attach_left_widget (open_command, save_command, 0);
-					edit_bar.attach_top (save_command, 0);
-					edit_bar.attach_left_widget (save_command, save_as_command, 0);
-					edit_bar.attach_top (save_as_command, 0);
-					clean_type;
-					edit_bar.attach_left_widget (save_as_command, type_teller, 0);
-					edit_bar.attach_top (type_teller, 0);
-					edit_bar.attach_right_widget (search_command, type_teller, 0);
-					edit_bar.attach_bottom (type_teller, 0);
-					edit_bar.attach_top (search_command, 0);
-					edit_bar.attach_right_widget (change_font_command, search_command, 25);
-					edit_bar.attach_top (change_font_command, 0);
-					edit_bar.attach_right_widget (quit_command, change_font_command, 25);
-					edit_bar.attach_top (quit_command, 0);
-					edit_bar.attach_right (quit_command, 0);
+			!!hole.make (edit_bar, Current);
+			create_edit_buttons;
+			!!type_teller.make (new_name, edit_bar);
+				type_teller.set_center_alignment;
+			!!search_command.make (edit_bar, text_window);
+			!!change_font_command.make (edit_bar, text_window);
+				edit_bar.attach_left (hole, 0);
+				edit_bar.attach_top (hole, 0);
+				edit_bar.attach_left_widget (hole, open_command, 25);
+				edit_bar.attach_top (open_command, 0);
+				edit_bar.attach_left_widget (open_command, save_command, 0);
+				edit_bar.attach_top (save_command, 0);
+				edit_bar.attach_left_widget (save_command, save_as_command, 0);
+				edit_bar.attach_top (save_as_command, 0);
+				clean_type;
+				edit_bar.attach_left_widget (save_as_command, type_teller, 0);
+				edit_bar.attach_top (type_teller, 0);
+				edit_bar.attach_right_widget (search_command, type_teller, 0);
+				edit_bar.attach_bottom (type_teller, 0);
+				edit_bar.attach_top (search_command, 0);
+				edit_bar.attach_right_widget (change_font_command, search_command, 25);
+				edit_bar.attach_top (change_font_command, 0);
+				edit_bar.attach_right_widget (quit_command, change_font_command, 25);
+				edit_bar.attach_top (quit_command, 0);
+				edit_bar.attach_right (quit_command, 0);
 		end;
 
 	build_format_bar is

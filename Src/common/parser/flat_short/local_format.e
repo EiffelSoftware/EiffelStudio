@@ -7,7 +7,8 @@ feature
 
 	make (c: TYPE_A) is
 		do
-			!!global_types;
+			!FEAT1_ADAPTATION!global_types.make (c.associated_class,
+				 c.associated_class);
 			global_types.set_source_type (c);
 			global_types.set_target_type (global_types.source_type);
 			local_types := global_types;
@@ -115,7 +116,7 @@ feature
 			source_not_void: source_class /= void;
 			target_not_void: target_class /= void;
 		do
-			!!global_types;
+			!FEAT1_ADAPTATION!global_types.make (source_class, target_class);
 			global_types.set_source_type(source_class.actual_type);
 			global_types.set_target_type(target_class.actual_type);
 		end;

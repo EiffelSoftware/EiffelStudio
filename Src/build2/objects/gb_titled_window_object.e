@@ -130,6 +130,7 @@ feature -- Access
 			an_object: GB_OBJECT
 			menu_bar_object: GB_MENU_BAR_OBJECT
 			component: GB_COMPONENT
+			titled_window_object: GB_TITLED_WINDOW_OBJECT
 		do
 			Result := Precursor {GB_CELL_OBJECT} (object_representation)
 			component ?= object_representation
@@ -140,6 +141,15 @@ feature -- Access
 				or (an_object /= Void and then an_object.type.is_equal (Ev_menu_bar_string))) and object.menu_bar /= Void then
 				Result := False
 			end
+			
+			titled_window_object ?= an_object
+			if titled_window_object /= Void then
+					-- Windows may not be parented in other windows.
+					-- We do not need to check components, as window may not be made into
+					-- a component.
+				Result := False
+			end
+			
 			check
 				object_is_a_component_or_an_object: component /= Void or an_object /= Void
 			end

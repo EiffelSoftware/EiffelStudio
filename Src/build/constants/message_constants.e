@@ -6,6 +6,8 @@ feature -- Error messages
 
 	Add_label_er: STRING is "Cannot add labels to predefined commands!";
 	Add_parent_er: STRING is "Cannot add parent for predefined command!";
+	Cannot_create_context_in_group_er: STRING is 
+				"Cannot create additional contexts in a group!";
 	Cannot_find_command_file_er: STRING is "Cannot find command class name %%X!";
 	Cannot_ret_dir_er: STRING is "Cannot retrieve from directory %%X!";
 	Cannot_save_er: STRING is "Could not save project to%N%%X!";
@@ -15,11 +17,16 @@ feature -- Error messages
 			"Directory %%X %Nalready exists. Cannot save!";
 	Cannot_read_file_er: STRING is 
 			"Cannot read file %N%%X!";
+	Cannot_remove_group_er: STRING is 
+			"Cannot remove group!%NGroup type %%X is being used.";
+	Cannot_remove_cmd_er: STRING is 
+			"Cannot remove command %%X!%NCommand has descendents.";
 	Cannot_save_file_er: STRING is 
 			"File %%X %Nalready exists. Cannot save!";
 	Dir_not_exist_er: STRING is "Import directory %%X%N does not exist!";
 	Dir_not_chosen_er: STRING is "No Directory chosen!";
 	Generate_er: STRING is "Cannot generate files to directory%N%%X";
+	Group_name_exists_er: STRING is "Group %%X already exists!";
 	Incomp_er: STRING is "Incompatible types!";
 	Instance_add_arg_er: STRING is 
 			"Command has descendents. Cannot add argument!";
@@ -35,6 +42,12 @@ feature -- Error messages
 			"Command has instances in behavior.%NCannot remove parent command with arguments!";
 	Instance_rem_com_er: STRING is 
 			"Command has instances in behavior.%NCannot remove command!";
+	Invalid_group_class_name_er: STRING is 
+			"%%X is not a valid group class name.";
+	Invalid_file_name_er: STRING is 
+			"%%X is not a valid file name.";
+	Invalid_feature_name_er: STRING is 
+			"%%X is not a valid feature name.";
 	Eb_project_not_exists_er: STRING is 
 			"Project directory :%N %%X does not exist!";
 	Not_eb_project_er: STRING is 

@@ -1694,7 +1694,7 @@ feature {NONE}
 	creation_procedure_text: STRING is
 		do
 			!!Result.make (100)
-			Result.append ("%N%Tmake (a_name: STRING a_parent: COMPOSITE) is%N%T%Tdo%N")
+			Result.append ("%N%Tmake (a_name: STRING; a_parent: SCREEN) is%N%T%Tdo%N")
 			Result.append ("%T%T%TPrecursor (a_name, a_parent)%N")
 		end
 
@@ -1731,8 +1731,7 @@ feature
 			Result.append ("WINDOWS%N%N%TSTATES%N%N%T")
 			Result.append (eiffel_type)
 			Result.append ("%N%T%Tundefine%N%T%T%Tinit_toolkit")
-			Result.append ("%N%T%Tredefine%N%T%T%Trealize,%N%T%T%Tmake")
-			Result.append ("%N%T%Tselect%N%T%T%Trealize%N%T%Tend")
+			Result.append ("%N%T%Tredefine%N%T%T%Trealize,%N%T%T%Tmake%N%T%Tend")
 
 				-- Creation
 				--=========

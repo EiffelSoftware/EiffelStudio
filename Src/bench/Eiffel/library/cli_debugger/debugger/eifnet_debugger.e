@@ -687,6 +687,7 @@ feature -- Function Evaluation
 			-- ICorDebugFunction for `ct'.`a_feat' 
 			-- and optionally on object `icdv'
 		local
+			l_prepared_icdv: ICOR_DEBUG_VALUE
 			l_feat_tok: INTEGER
 			l_feat_name: STRING
 			l_icd_class: ICOR_DEBUG_CLASS			
@@ -696,14 +697,21 @@ feature -- Function Evaluation
 			l_dispose_mod: BOOLEAN
 		do
 			if icdv /= Void and ct.is_external then
-				l_icd_obj_val := icdv.query_interface_icor_debug_object_value
-				if l_icd_obj_val /= Void then
-					l_icd_class := l_icd_obj_val.get_class
-					l_icd_module := l_icd_class.get_module
-					l_feat_name := a_feat.external_name
-					l_dispose_mod := True
-					l_icd_class.clean_on_dispose
-					l_icd_obj_val.clean_on_dispose
+				l_prepared_icdv := edv_formatter.prepared_debug_value (icdv)
+				if l_prepared_icdv /= Void then
+					l_icd_obj_val := l_prepared_icdv.query_interface_icor_debug_object_value
+-- FIXME jfiat [2004/08/25] : in one day we ensure we have a prepared icdv
+-- we'll get rid of the previous lines
+--					l_icd_obj_val := icdv.query_interface_icor_debug_object_value
+					if l_icd_obj_val /= Void then
+						l_icd_class := l_icd_obj_val.get_class
+						l_icd_module := l_icd_class.get_module
+						l_feat_name := a_feat.external_name
+						l_dispose_mod := True
+						l_icd_class.clean_on_dispose
+						l_icd_obj_val.clean_on_dispose
+					end
+					l_prepared_icdv.clean_on_dispose
 				end
 			else
 					--| This should be an true Eiffel type

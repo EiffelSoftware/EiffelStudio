@@ -270,11 +270,15 @@ feature -- Status setting
 	on_compile_stop is
 			-- A compilation is over. Make all run* commands sensitive.
 		do
-			step_cmd.enable_sensitive
-			into_cmd.enable_sensitive
-			no_stop_cmd.enable_sensitive
-			debug_cmd.enable_sensitive
-			enable_debug
+			if is_msil_dll_system then
+				disable_debugging_commands
+			else
+				step_cmd.enable_sensitive
+				into_cmd.enable_sensitive
+				no_stop_cmd.enable_sensitive
+				debug_cmd.enable_sensitive
+				enable_debug
+			end
 		end
 
 	raise is
@@ -825,31 +829,25 @@ feature {NONE} -- Implementation
 			toolbarable_commands.extend (display_error_help_cmd)
 
 			create step_cmd.make (Current)
-			step_cmd.enable_sensitive
 			toolbarable_commands.extend (step_cmd)
-
 			create into_cmd.make (Current)
-			into_cmd.enable_sensitive
 			toolbarable_commands.extend (into_cmd)
-
 			create out_cmd.make (Current)
-			out_cmd.enable_sensitive
 			toolbarable_commands.extend (out_cmd)
-
 			create debug_cmd.make (Current)
-			debug_cmd.enable_sensitive
 			toolbarable_commands.extend (debug_cmd)
-
 			create no_stop_cmd.make (Current)
-			no_stop_cmd.enable_sensitive
 			toolbarable_commands.extend (no_stop_cmd)
-
 			create stop_cmd.make
 			toolbarable_commands.extend (stop_cmd)
-
 			create quit_cmd.make
 			toolbarable_commands.extend (quit_cmd)
 
+			step_cmd.enable_sensitive
+			into_cmd.enable_sensitive
+			out_cmd.enable_sensitive
+			debug_cmd.enable_sensitive
+			no_stop_cmd.enable_sensitive
 			stop_cmd.disable_sensitive
 			quit_cmd.disable_sensitive
 
@@ -890,22 +888,27 @@ feature {NONE} -- Implementation
 			-- Enable commands when a new project has been created and compiled
 		do
 			display_error_help_cmd.enable_sensitive
-			debug_cmd.enable_sensitive
-			no_stop_cmd.enable_sensitive
-			if
-				display_dotnet_cmd and then
-				Eiffel_system.System.il_generation
-			then
-				eac_browser_cmd.enable_sensitive
-			end
-			clear_bkpt.enable_sensitive
-			enable_bkpt.enable_sensitive
-			disable_bkpt.enable_sensitive
-			bkpt_info_cmd.enable_sensitive
-			
-			step_cmd.enable_sensitive
-			out_cmd.disable_sensitive				
-			into_cmd.enable_sensitive
+
+			if is_msil_dll_system then
+				disable_debugging_commands
+			else
+				debug_cmd.enable_sensitive
+				no_stop_cmd.enable_sensitive
+				if
+					display_dotnet_cmd and then
+					Eiffel_system.System.il_generation
+				then
+					eac_browser_cmd.enable_sensitive
+				end
+				clear_bkpt.enable_sensitive
+				enable_bkpt.enable_sensitive
+				disable_bkpt.enable_sensitive
+				bkpt_info_cmd.enable_sensitive
+				
+				step_cmd.enable_sensitive
+				into_cmd.enable_sensitive
+				out_cmd.disable_sensitive					
+			end			
 		end
 
 	disable_commands_on_project_unloaded is
@@ -925,6 +928,21 @@ feature {NONE} -- Implementation
 				eac_browser_cmd.disable_sensitive
 			end
 		end
+		
+	disable_debugging_commands is
+			-- Disable commands related to debugging.
+		do
+			clear_bkpt.disable_sensitive
+			enable_bkpt.disable_sensitive
+			disable_bkpt.disable_sensitive
+			bkpt_info_cmd.disable_sensitive
+			
+			debug_cmd.disable_sensitive
+			no_stop_cmd.disable_sensitive
+			step_cmd.disable_sensitive
+			into_cmd.disable_sensitive
+			out_cmd.disable_sensitive
+		end		
 
 	display_breakpoints is
 			-- Show the list of breakpoints (set and disabled) in the output manager.
@@ -1082,5 +1100,17 @@ feature {NONE} -- Implementation
 				send_rqst_3 (Rqst_overflow_detection, 0, 0, nb)
 			end
 		end
+		
+feature {NONE} -- MSIL system implementation
+
+	is_msil_dll_system: BOOLEAN is
+			-- Is a MSIL DLL system ?
+		do
+			Result := Eiffel_system.System.il_generation
+					and then Eiffel_system.System.msil_generation_type.is_equal (dll_type)			
+		end
+		
+	dll_type: STRING is "dll"
+			-- DLL type constant for MSIL system
 
 end -- class EB_DEBUGGER_MANAGER

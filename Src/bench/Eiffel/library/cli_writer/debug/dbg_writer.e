@@ -130,6 +130,9 @@ feature -- Definition
 		do
 			last_call_success := c_define_document (item, url.item, language.item.item,
 				vendor.item.item, doc_type.item.item, $p)
+			check
+				p_not_null: p /= default_pointer
+			end
 			create Result.make_by_pointer (p)
 		ensure
 			success: last_call_success = 0

@@ -61,8 +61,8 @@
         elements to the tuple: for example a tuple with first element 5 and
         second element &quot;FOO&quot; is an instance of all of the following
         tuple types: <a href="../../reference/10_kernel/tuple_chart.html">TUPLE</a>;
-        <a href="../../reference/10_kernel/tuple_chart.html">TUPLE</a> [<a class="eclass" href="../../../base/reference/kernel/integer_chart.html">INTEGER</a>];
-        <a href="../../reference/10_kernel/tuple_chart.html">TUPLE</a> [<a class="eclass" href="../../../base/reference/kernel/integer_chart.html">INTEGER</a>,
+        <a href="../../reference/10_kernel/tuple_chart.html">TUPLE</a> [<a class="eclass" href="../../reference/10_kernel/integer_chart.html">INTEGER</a>];
+        <a href="../../reference/10_kernel/tuple_chart.html">TUPLE</a> [<a class="eclass" href="../../reference/10_kernel/integer_chart.html">INTEGER</a>,
         <a class="eclass" href="../../reference/10_kernel/string_chart.html">STRING</a>].</p>
         <ul>
           (Note 2: It may seem restrictive at first to permit only one class, <a href="../../reference/10_kernel/tuple_chart.html">TUPLE</a>,
@@ -91,48 +91,18 @@
         Tuple expressions can be nested: whereas
         <pre>	[1, 2, 3]</pre>
         <p>is a tuple with three elements (representing an instance of <a href="../../reference/10_kernel/tuple_chart.html">TUPLE</a>
-        [<a class="eclass" href="../../../base/reference/kernel/integer_chart.html">INTEGER</a>,
-        <a class="eclass" href="../../../base/reference/kernel/integer_chart.html">INTEGER</a>,
-        <a class="eclass" href="../../../base/reference/kernel/integer_chart.html">INTEGER</a>]),
+        [<a class="eclass" href="../../reference/10_kernel/integer_chart.html">INTEGER</a>,
+        <a class="eclass" href="../../reference/10_kernel/integer_chart.html">INTEGER</a>,
+        <a class="eclass" href="../../reference/10_kernel/integer_chart.html">INTEGER</a>]),
         <pre>	 [1, [2, 3]]</pre>
         <p>is a tuple with two elements, the second one itself a tuple; the
         overall expression represents an instance of <a href="../../reference/10_kernel/tuple_chart.html">TUPLE</a>
-        [<a class="eclass" href="../../../base/reference/kernel/integer_chart.html">INTEGER</a>,
-        <a href="../../reference/10_kernel/tuple_chart.html">TUPLE</a> [<a class="eclass" href="../../../base/reference/kernel/integer_chart.html">INTEGER</a>,
-        <a class="eclass" href="../../../base/reference/kernel/integer_chart.html">INTEGER</a>].<br>
+        [<a class="eclass" href="../../reference/10_kernel/integer_chart.html">INTEGER</a>,
+        <a href="../../reference/10_kernel/tuple_chart.html">TUPLE</a> [<a class="eclass" href="../../reference/10_kernel/integer_chart.html">INTEGER</a>,
+        <a class="eclass" href="../../reference/10_kernel/integer_chart.html">INTEGER</a>].<br>
         As a special case of tuple expression syntax, the delimiters [ and ] are
         replaced by parentheses for the tuple representing the actual argument
         list of a routine call (see section 4).
-        <h3>Tuple features</h3>
-        <p>The exact specification of class <a href="../../reference/10_kernel/tuple_chart.html">TUPLE</a>
-        will be described in an addition to ELKS. The principal features are:
-        <ul>
-          <li><a href="../../../base/reference/kernel/tuple.html#f_count">count</a>
-            (number of significant elements)
-          <li><a href="../../../base/reference/kernel/tuple.html#f_item">item</a>
-            (i), with the obvious precondition: the i-th element, of type <a href="../../reference/10_kernel/any_chart.html">ANY</a>
-            (since the value of i is not known at compile time); also first,
-            second, third, fourth and fifth, of the appropriate types.
-          <li><a href="../../../base/reference/kernel/tuple.html#f_put">put</a>
-            (x, i), with the obvious precondition: replace i-th element with x.
-            If argument x is not of the appropriate type T<sub>i</sub> there is
-            no effect.
-          <li><a href="../../../base/reference/kernel/tuple.html#f_is_equal">is_equal</a>:
-            redefined to consider only the first n elements, where n is the
-            smaller length.</li>
-        </ul>
-        <p>Other features under consideration include:
-        <ul>
-          <li>stripped (i): a tuple of type <a href="../../reference/10_kernel/tuple_chart.html">TUPLE</a>
-            [T<sub>1</sub>, T<sub>2</sub>, T<sub>i-1</sub>, T<sub>i+1</sub>,
-            ..., T<sub>n</sub>], derived from the current one by removing the
-            i-th component, again with the obvious precondition.
-          <li>wedged (x, i): a tuple with one more element, inserted at position
-            i.
-          <li><b>infix</b> &quot;+&quot;: tuple concatenation
-          <li><b>infix</b> &quot;++&quot;: element concatenation; t ++ x is the
-            same thing as t.wedged (x, t.count + 1).</li>
-        </ul>
         <h3>What have we gained?</h3>
         <p>First we have solved the only case in the Eiffel language in which an
         expression has no precisely defined type: polymorphic manifest arrays.

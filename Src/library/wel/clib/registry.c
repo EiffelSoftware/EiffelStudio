@@ -305,9 +305,14 @@ EIF_BOOLEAN cwin_reg_delete_value(EIF_INTEGER key, EIF_POINTER value_name)
 //  Closing of a key.
 //
 
-void cwin_reg_close_key( EIF_INTEGER key )
+EIF_BOOLEAN cwin_reg_close_key( EIF_INTEGER key )
 {
-    RegCloseKey( (HKEY)key );
+    long result;
+	
+	result = RegCloseKey( (HKEY)key );
+	if (result == ERROR_SUCCESS) 
+		return EIF_TRUE;
+	return EIF_FALSE;
 }
 
 //////////////////////////////////////////////////////////////

@@ -21,10 +21,6 @@ cluster
 		traversing:			"$EIFFEL3/library/base/structures/traversing";
 		tree:				"$EIFFEL3/library/base/structures/tree";
 
-	-- EiffelLex
-
-		lex:				"$EIFFEL3/library/lex";
-
 -- ES3 SPECIFIC CLUSTERS
 
 		liman_common:		"$BENCH/Eiffel/limand/common";
@@ -123,7 +119,6 @@ external
 		"$(BENCH)/C/parsing/eiffel/libeiffel.a";
 		"$(BENCH)/C/parsing/lace/liblace.a";
 		"$(BENCH)/C/parsing/shared/libparsing.a";
-		"$(BENCH)/C/platform/libplatform.a";
-		"$(EIFFEL3)/library/lex/spec/$(PLATFORM)/lib/lex.a"
+		"$(BENCH)/C/platform/libplatform.a"
 
 end

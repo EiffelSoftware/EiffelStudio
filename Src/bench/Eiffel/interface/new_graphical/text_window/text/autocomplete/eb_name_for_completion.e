@@ -157,6 +157,12 @@ feature -- Status Report
 			Result := e_feature /= Void or e_class /= Void	
 		end		
 		
+	has_arguments: BOOLEAN is
+			-- Does Current have a signature?
+		do
+			Result := e_feature /= Void and then e_feature.has_arguments
+		end		
+		
 	show_signature: BOOLEAN is
 			-- Should signature be displayed?
 		do

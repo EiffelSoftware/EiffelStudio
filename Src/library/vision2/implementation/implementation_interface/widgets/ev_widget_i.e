@@ -8,7 +8,9 @@ deferred class
 	EV_WIDGET_I 
 
 inherit
-	EV_ANY_I
+	EV_PND_SOURCE_I
+
+	EV_PND_TARGET_I
 
 feature {NONE} -- Initialization
 
@@ -456,24 +458,6 @@ feature -- Assertions
 		end
 
 feature -- Event - command association
-
-	add_button_press_command (mouse_button: INTEGER; cmd: EV_COMMAND; arg: EV_ARGUMENT) is
-			-- Add `cmd' to the list of commands to be executed
-			-- when button no 'mouse_button' is pressed.
-		require
-			exists: not destroyed
-			valid_command: cmd /= Void
-		deferred
-		end
-
-	add_button_release_command (mouse_button: INTEGER; cmd: EV_COMMAND; arg: EV_ARGUMENT) is
-			-- Add `cmd' to the list of commands to be executed
-			-- when button no 'mouse_button' is released.
-		require
-			exists: not destroyed
-			valid_command: cmd /= Void
-		deferred
-		end
 
 	add_double_click_command (mouse_button: INTEGER; cmd: EV_COMMAND; arg: EV_ARGUMENT) is
 			-- Add `cmd' to the list of commands to be executed

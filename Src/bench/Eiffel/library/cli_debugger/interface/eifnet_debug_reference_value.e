@@ -273,9 +273,17 @@ feature -- Status
 				Result := Void_value
 			else
 				if is_external_type then
-					Result := External_reference_value
+					if is_static then
+						Result := Static_external_reference_value
+					else
+						Result := External_reference_value
+					end
 				else
-					Result := Reference_value
+					if is_static then
+						Result := Static_reference_value
+					else
+						Result := Reference_value
+					end					
 				end
 			end
 		end

@@ -130,14 +130,14 @@ feature -- Status report
 			int: INTERNAL
 			open_type_codes: STRING
 		do
+			create int
 			open_type_codes := eif_gen_typecode_str ($Current)
 			if args = Void or open_map = Void then
 				-- Void operands are only allowed
 				-- if object has no open operands.
 				Result := (open_map = Void)
-			elseif open_map /= Void and then eif_gen_count ($args) >= open_map.count then
+			elseif open_map /= Void and then int.generic_count (args) >= open_map.count then
 				from
-					create int
 					i := 1
 				until
 					i > open_map.count or mismatch
@@ -454,12 +454,6 @@ feature {NONE} -- Externals
 			-- Code name for generic parameter `pos' in `obj'.
 		external
 			"C signature (EIF_REFERENCE): EIF_REFERENCE use %"eif_gen_conf.h%""
-		end
-
-	eif_gen_count (obj: POINTER): INTEGER is
-			-- Number of generic parameters of `obj'.
-		external
-			"C signature (EIF_REFERENCE): int use %"eif_gen_conf.h%""
 		end
 
 feature -- Obsolete

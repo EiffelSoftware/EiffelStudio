@@ -45,6 +45,7 @@ feature -- Initialization
 			color: EV_COLOR
 			bc: EV_BASIC_COLORS
 			sitem: EV_STATUS_BAR_ITEM
+			action_button: EV_BUTTON
 			tooltip: EV_TOOLTIP
 			cmd: EV_ROUTINE_COMMAND
 			item: DEMO_ITEM [WINDOW_WINDOW]
@@ -95,7 +96,19 @@ feature -- Initialization
 			item.example_page.set_parent (notebook)
 			notebook.append_page (item.example_page, "Example text")
 			item.destroy
-			notebook.set_minimum_size (195, 195)
+			notebook.set_minimum_size (250, 250)
+
+			-- We create a tooltip
+--			create tooltip.make
+--			create color.make_rgb (0, 255, 0)
+---			tooltip.set_background_color (color)
+	---		create color.make_rgb (0, 0, 255)
+	--		tooltip.set_foreground_color (color)
+	--		tooltip.add_tips (tree, "EiffelVision components")
+	--		tooltip.add_tip (notebook, "Demo Area")
+
+			--create cmd.make(~execute1)
+			--action_button.add_click_command (cmd, Void)
 		end
 
 feature -- Features needed for the status bar of the window.

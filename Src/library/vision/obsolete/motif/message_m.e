@@ -46,7 +46,7 @@ creation
 
 feature {NONE} -- Creation
 
-	make (a_message: MESSAGE) is
+	make (a_message: MESSAGE; man: BOOLEAN) is
 			-- Create a motif message box.
 		local
 			ext_name: ANY
@@ -54,7 +54,8 @@ feature {NONE} -- Creation
 			widget_index := widget_manager.last_inserted_position;
 			ext_name := a_message.identifier.to_c;
 			screen_object := create_message ($ext_name,
-				parent_screen_object (a_message, widget_index));
+				parent_screen_object (a_message, widget_index),
+				man);
 		end
 
 feature {NONE}
@@ -280,7 +281,8 @@ feature {NONE} -- External features
 			"C"
 		end;
 
-	create_message (i_name: ANY; scr_obj: POINTER): POINTER is
+	create_message (i_name: ANY; scr_obj: POINTER;
+			man: BOOLEAN): POINTER is
 		external
 			"C"
 		end;

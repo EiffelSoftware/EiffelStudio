@@ -67,7 +67,9 @@ rt_public char *spclone(register char *source)
 
 	if ((char *) 0 == source)
 		return (char *) 0;				/* Void source */
-	
+
+	epush(&loc_stack, &source);			/* Protection against GC */
+
 	zone = HEADER(source);				/* Allocation of a new object */
 	flags = zone->ov_flags;
 	size = zone->ov_size & B_SIZE;
@@ -81,10 +83,13 @@ rt_public char *spclone(register char *source)
 	*(long *) r_ref = *(long *) s_ref;
 	*(long *) (r_ref + sizeof(long)) = *(long *) (s_ref + sizeof(long));
 
+	epop(&loc_stack, 1);				/* Remove GC protection */
+
 	return result;
 }
 
 rt_public char *edclone(char *source)
+
 {
 	/* Recursive Eiffel clone. This function recursively clones the source
 	 * object and returns a pointer to the top of the new tree.

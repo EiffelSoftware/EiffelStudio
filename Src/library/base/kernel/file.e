@@ -1165,7 +1165,7 @@ feature -- Removal
 			-- Change file name to `fn' and reset
 			-- file descriptor and all information.
 		require
-			fn /= Void
+			valid_file_name: fn /= Void
 		do
 			name := fn;
 			if mode /= Closed_file then

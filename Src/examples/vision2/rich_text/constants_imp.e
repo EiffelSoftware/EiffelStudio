@@ -81,6 +81,12 @@ feature -- Access
 			Result := 2
 		end
 
+	small_padding: INTEGER is 
+			-- `Result' is INTEGER constant named small_padding.
+		once
+			Result := 4
+		end
+
 	underline_png: EV_PIXMAP is
 		local
 			a_file_name: FILE_NAME

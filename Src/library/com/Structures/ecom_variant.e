@@ -1300,7 +1300,7 @@ feature {NONE} -- Externals
 
 	c_size_of_variant: INTEGER is
 		external 
-			"C [macro %"E_variant.h%"]"
+			"C++ [macro %"E_variant.h%"]"
 		alias
 			"sizeof(VARIANT)"
 		end

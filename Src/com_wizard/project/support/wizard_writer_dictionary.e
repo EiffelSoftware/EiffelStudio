@@ -186,6 +186,8 @@ feature -- C keywords -- 3
 
 	Hash_end_if: STRING is "#endif"
 
+	Hash_define: STRING is "#define"
+
 	While: STRING is "while"
 
 	Long_macro: STRING is "LONG"
@@ -355,6 +357,8 @@ feature -- CECIL names -- 5
 
 	C_keyword: STRING is "C"
 
+	Macro: STRING is "macro"
+
 feature -- COM constants -- 6
 
 	Appid: STRING is "AppID"
@@ -493,8 +497,18 @@ feature -- Generator constants -- 8
 
 	Unregister_dll_server_function_name: STRING is "unregister_dll_server"
 
-	Can_unload_dll_now_function_name: STRING is "can_unload_dll_now"
+	Can_unload_dll_now_function_name: STRING is "dll_can_unload_now"
 
+	Get_class_object_function_name: STRING is "class_object"
+
+	Ccom_get_class_object_function_name: STRING is "ccom_class_object"
+
+	Ccom_register_dll_server_function_name: STRING is "ccom_register_dll_server"
+
+	Ccom_unregister_dll_server_function_name: STRING is "ccom_unregister_dll_server"
+
+	Ccom_can_unload_dll_now_function_name: STRING is "ccom_dll_can_unload_now"
+	
 	Excepinfo_access: STRING is "excepinfo->"
 
 	Excepinfo_variable_name: STRING is "excepinfo"
@@ -515,13 +529,19 @@ feature -- Generator constants -- 8
 
 	Ccom_unregserver_feature_name: STRING is "ccom_unregserver"
 
+	Embedding_feature_name: STRING is "embedding"
+
+	Regserver_feature_name: STRING is "regserver"
+
+	Unregserver_feature_name: STRING is "unregserver"
+
 	Bstr_description_field: STRING is "bstrDescription"
 
 	Bstr_help_file_field: STRING is "bstrHelpFile"
 
 	Class_object_registration_token: STRING is "dwRegister"
 
-	Class_object_variable_name: STRING is "class_object"
+	Class_object_variable_name: STRING is "cls_object"
 
 	Tmp_eif_object: STRING is "tmp_eif_object"
 
@@ -702,8 +722,6 @@ feature -- Generator constants -- 8
 	Get_clause: STRING is "get_"
 
 	Register: STRING is "Register"
-
-	Get_class_object_function_name: STRING is "class_object"
 
 	Export_dll_class_name: STRING is "EXPORT_DLL_FEATURES"
 

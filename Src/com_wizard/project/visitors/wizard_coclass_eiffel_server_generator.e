@@ -64,7 +64,7 @@ feature --  Basic operation
 feature {NONE} -- Implementation
 
 	set_default_ancestors (an_eiffel_writer: WIZARD_WRITER_EIFFEL_CLASS) is
-			-- Set default ancestors
+			-- Set default ancestors.
 		local
 			tmp_writer: WIZARD_WRITER_INHERIT_CLAUSE
 		do
@@ -76,7 +76,7 @@ feature {NONE} -- Implementation
 		end
 
 	add_default_features is
-			-- Generate process dependent feature
+			-- Generate process dependent feature.
 		do
 			if shared_wizard_environment.in_process_server then
 				eiffel_writer.add_feature (dll_register_server_feature, Externals)
@@ -90,7 +90,7 @@ feature {NONE} -- Implementation
 		end
 
 	ccom_embedding_feature: WIZARD_WRITER_FEATURE is
-			-- 'ccom_initialize' feature
+			-- 'ccom_initialize' feature.
 		local
 			tmp_string: STRING
 		do
@@ -105,21 +105,9 @@ feature {NONE} -- Implementation
 
 			Result.add_argument (tmp_string)
 
-			Result.set_name (Ccom_embedding_feature_name)
+			Result.set_name (Embedding_feature_name)
 
-			tmp_string := clone (Tab_tab_tab)
-			tmp_string.append (Double_quote)
-			tmp_string.append (C_keyword)
-			tmp_string.append (Space_open_parenthesis)
-			tmp_string.append (Eif_type_id)
-			tmp_string.append (Close_parenthesis)
-			tmp_string.append (C_binary_or)
-			tmp_string.append (Percent_double_quote)
-			tmp_string.append (Server_registration_header_file_name)
-			tmp_string.append (Percent_double_quote)
-			tmp_string.append (Double_quote)
-
-			Result.set_body (tmp_string)
+			Result.set_body (cpp_macro_code (Server_registration_header_file_name,Eif_type_id, ""))
 		ensure
 			valid_writer: Result.can_generate
 		end
@@ -131,6 +119,8 @@ feature {NONE} -- Implementation
 		do
 			create Result.make
 			Result.set_external
+			Result.set_name (Regserver_feature_name)
+
 			Result.set_comment ("Register server.")
 
 			tmp_string := clone (Type_id_variable_name)
@@ -140,21 +130,7 @@ feature {NONE} -- Implementation
 
 			Result.add_argument (tmp_string)
 
-			Result.set_name (Ccom_regserver_feature_name)
-
-			tmp_string := clone (Tab_tab_tab)
-			tmp_string.append (Double_quote)
-			tmp_string.append (C_keyword)
-			tmp_string.append (Space_open_parenthesis)
-			tmp_string.append (Eif_type_id)
-			tmp_string.append (Close_parenthesis)
-			tmp_string.append (C_binary_or)
-			tmp_string.append (Percent_double_quote)
-			tmp_string.append (Server_registration_header_file_name)
-			tmp_string.append (Percent_double_quote)
-			tmp_string.append (Double_quote)
-
-			Result.set_body (tmp_string)
+			Result.set_body (cpp_macro_code (Server_registration_header_file_name,Eif_type_id, ""))
 		ensure
 			valid_writer: Result.can_generate
 		end
@@ -166,6 +142,8 @@ feature {NONE} -- Implementation
 		do
 			create Result.make
 			Result.set_external
+			Result.set_name (Unregserver_feature_name)
+
 			Result.set_comment ("Unregister server.")
 
 			tmp_string := clone (Type_id_variable_name)
@@ -175,21 +153,7 @@ feature {NONE} -- Implementation
 
 			Result.add_argument (tmp_string)
 
-			Result.set_name (Ccom_unregserver_feature_name)
-
-			tmp_string := clone (Tab_tab_tab)
-			tmp_string.append (Double_quote)
-			tmp_string.append (C_keyword)
-			tmp_string.append (Space_open_parenthesis)
-			tmp_string.append (Eif_type_id)
-			tmp_string.append (Close_parenthesis)
-			tmp_string.append (C_binary_or)
-			tmp_string.append (Percent_double_quote)
-			tmp_string.append (Server_registration_header_file_name)
-			tmp_string.append (Percent_double_quote)
-			tmp_string.append (Double_quote)
-
-			Result.set_body (tmp_string)
+			Result.set_body (cpp_macro_code (Server_registration_header_file_name,Eif_type_id, ""))
 		ensure
 			valid_writer: Result.can_generate
 		end
@@ -205,15 +169,15 @@ feature {NONE} -- Implementation
 			Result.set_comment ("Initialize COM component.")
 
 			tmp_body := clone (Tab_tab_tab)
-			tmp_body.append (argument_test_code (Register_server_option_a, Register_server_option_b, Ccom_regserver_feature_name))
+			tmp_body.append (argument_test_code (Register_server_option_a, Register_server_option_b, Regserver_feature_name))
 			tmp_body.append (New_line_tab_tab_tab)
 			tmp_body.append (Else_keyword)
-			tmp_body.append (argument_test_code (Unregister_server_option_a, Unregister_server_option_b, Ccom_unregserver_feature_name))
+			tmp_body.append (argument_test_code (Unregister_server_option_a, Unregister_server_option_b, Unregserver_feature_name))
 			tmp_body.append (New_line_tab_tab_tab)
 			tmp_body.append (Else_keyword)
 			tmp_body.append (New_line_tab_tab_tab)
 			tmp_body.append (Tab)
-			tmp_body.append (Ccom_embedding_feature_name)
+			tmp_body.append (Embedding_feature_name)
 			tmp_body.append (Space_open_parenthesis)
 			tmp_body.append (Dynamic_type_function_name)
 			tmp_body.append (Space_open_parenthesis)
@@ -228,27 +192,32 @@ feature {NONE} -- Implementation
 			valid_writer: Result.can_generate
 		end
 
-	common_c_external_feature_code (argument_types: STRING): STRING is
+	cpp_macro_code (header_file_name, argument_types, return_type: STRING): STRING is
 			-- Common C external feature code
+		require
+			non_void_file_name: header_file_name /= Void
+			valid_file_name: not header_file_name.empty
+			non_void_argument_types: argument_types /= Void
+			non_void_return_type: return_type /= Void
 		do
 			Result := clone (Tab_tab_tab)
 			Result.append (Double_quote)
-			Result.append (C_keyword)
+			Result.append (Cpp_clause)
+			Result.append (Macro)
+			Result.append (Space)
+			Result.append (Percent_double_quote)
+			Result.append (header_file_name)
+			Result.append (Percent_double_quote)
+			Result.append (Close_bracket)
 			Result.append (Space_open_parenthesis)
 			Result.append (Argument_types)
 			Result.append (Close_parenthesis)
-			Result.append (Colon)
-			Result.append (Space)
-			Result.append (Eif_pointer)
-			Result.append (Space)
-			Result.append (C_binary_or)
-			Result.append (Space)
-			Result.append (Percent_double_quote)
-			Result.append (coclass_descriptor.c_type_name)
-			Result.append (Underscore)
-			Result.append (Factory)
-			Result.append (Header_file_extension)
-			Result.append (Percent_double_quote)
+
+			if not return_type.empty then
+				Result.append (Colon)
+				Result.append (Space)
+				Result.append (return_type)
+			end
 			Result.append (Double_quote)
 		end
  
@@ -260,9 +229,9 @@ feature {NONE} -- Implementation
 			Result.set_external
 			Result.set_name (Register_dll_server_function_name)
 			Result.set_comment ("Register Dll server")
-			Result.set_result_type (Pointer_type)
+			Result.set_result_type (Integer_type)
 
-			Result.set_body (common_c_external_feature_code (""))
+			Result.set_body (cpp_macro_code (Server_registration_header_file_name, "", Eif_integer))
 		ensure
 			valid_writer: Result.can_generate
 		end
@@ -275,9 +244,9 @@ feature {NONE} -- Implementation
 			Result.set_external
 			Result.set_name (Unregister_dll_server_function_name)
 			Result.set_comment ("Unregister Dll server")
-			Result.set_result_type (Pointer_type)
+			Result.set_result_type (Integer_type)
 
-			Result.set_body (common_c_external_feature_code (""))
+			Result.set_body (cpp_macro_code (Server_registration_header_file_name, "", Eif_integer))
 		ensure
 			valid_writer: Result.can_generate
 		end
@@ -292,9 +261,9 @@ feature {NONE} -- Implementation
 			Result.set_external
 			Result.set_name (Can_unload_dll_now_function_name)
 			Result.set_comment ("Can unload Dll now?")
-			Result.set_result_type (Pointer_type)
+			Result.set_result_type (Integer_type)
 
-			Result.set_body (common_c_external_feature_code (""))
+			Result.set_body (cpp_macro_code (Server_registration_header_file_name, "", Eif_integer))
 		ensure
 			valid_writer: Result.can_generate
 		end
@@ -309,7 +278,7 @@ feature {NONE} -- Implementation
 			Result.set_effective
 			Result.set_name (Get_class_object_function_name)
 			Result.set_comment ("Get class object.")
-			Result.set_result_type (Pointer_type)
+			Result.set_result_type (Integer_type)
 
 			Result.add_argument ("class_id: POINTER")
 			Result.add_argument ("riid: POINTER")
@@ -346,14 +315,14 @@ feature {NONE} -- Implementation
 
 			Result.set_name (tmp_string)
 			Result.set_comment ("Get class object.")
-			Result.set_result_type (Pointer_type)
+			Result.set_result_type (Integer_type)
 
 			Result.add_argument ("tid: INTEGER")
 			Result.add_argument ("class_id: POINTER")
 			Result.add_argument ("riid: POINTER")
 			Result.add_argument ("interface_pointer: POINTER")
 
-			Result.set_body (common_c_external_feature_code ("EIF_TYPE_ID, REFCLSID, REFIID, void **"))
+			Result.set_body (cpp_macro_code (Server_registration_header_file_name,"EIF_TYPE_ID, REFCLSID, REFIID, void **", Eif_integer))
 		ensure
 			valid_writer: Result.can_generate
 		end

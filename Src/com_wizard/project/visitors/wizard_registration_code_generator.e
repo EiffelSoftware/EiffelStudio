@@ -70,37 +70,36 @@ feature -- Basic operations
 			-- Global variables
 
 			-- (TCHAR file_name[MAX_PATH])
-			create member_writer.make
-			member_writer.set_name ("file_name[MAX_PATH]")
-			member_writer.set_result_type (Tchar_type)
-			member_writer.set_comment ("File name")
-			c_writer.add_global_variable (member_writer)
+
+			tmp_string := clone (Tchar_type)
+			tmp_string.append (Space)
+			tmp_string.append ("file_name[MAX_PATH];")
+
+			c_writer.add_other_source (tmp_string)
 
 			-- (OLECHAR ws_file_name[MAX_PATH])
-			create member_writer.make
-			member_writer.set_name ("ws_file_name[MAX_PATH]")
-			member_writer.set_result_type (Olechar)
-			member_writer.set_comment ("Wide string file name")
-			c_writer.add_global_variable (member_writer)
-
-			create member_writer.make
-			member_writer.set_name (Class_object_variable_name)
+			tmp_string := clone (Olechar)
+			tmp_string.append (Space)
+			tmp_string.append ("ws_file_name[MAX_PATH];")
+			c_writer.add_other_source (tmp_string)
 
 			tmp_string := clone (coclass_descriptor.c_type_name)
 			tmp_string.append (Underscore)
 			tmp_string.append (Factory)
-			member_writer.set_result_type (tmp_string)
-			member_writer.set_comment ("Class object")
-			c_writer.add_global_variable (member_writer)
+			tmp_string.append (Space)
+			tmp_string.append (Class_object_variable_name)
+			tmp_string.append (Semicolon)
+			c_writer.add_other_source (tmp_string)
+
 
 			-- REG_DATA structure
 			c_writer.add_other (reg_data_struct)
 
 			-- REG_DATA entries
-			c_writer.add_other (registry_entries_data)
+			c_writer.add_other_source (registry_entries_data)
 
 			-- Entries count
-			c_writer.add_other (entries_count)
+			c_writer.add_other_source (entries_count)
 
 			c_writer.add_function (unregister_feature)
 			c_writer.add_function (register_feature)
@@ -110,21 +109,130 @@ feature -- Basic operations
 				c_writer.add_function (dll_register_server_feature)
 				c_writer.add_function (dll_unregister_server_feature)
 				c_writer.add_function (dll_can_unload_now_feature)
+
+				-- define macros for previous four features
+
+				tmp_string := clone (Hash_define)
+				tmp_string.append (Space)
+				tmp_string.append (Register_dll_server_function_name)
+				tmp_string.append (Space_open_parenthesis)
+				tmp_string.append (Open_parenthesis)
+				tmp_string.append (Eif_integer)
+				tmp_string.append (Close_parenthesis)
+				tmp_string.append (Space)
+				tmp_string.append (Ccom_register_dll_server_function_name)
+				tmp_string.append (Open_parenthesis)
+				tmp_string.append (Close_parenthesis)
+				tmp_string.append (Close_parenthesis)
+				c_writer.add_other (tmp_string)
+
+				tmp_string := clone (Hash_define)
+				tmp_string.append (Space)
+				tmp_string.append (Unregister_dll_server_function_name)
+				tmp_string.append (Space_open_parenthesis)
+				tmp_string.append (Open_parenthesis)
+				tmp_string.append (Eif_integer)
+				tmp_string.append (Close_parenthesis)
+				tmp_string.append (Space)
+				tmp_string.append (Ccom_unregister_dll_server_function_name)
+				tmp_string.append (Open_parenthesis)
+				tmp_string.append (Close_parenthesis)
+				tmp_string.append (Close_parenthesis)
+				c_writer.add_other (tmp_string)
+
+				tmp_string := clone (Hash_define)
+				tmp_string.append (Space)
+				tmp_string.append (Can_unload_dll_now_function_name)
+				tmp_string.append (Space_open_parenthesis)
+				tmp_string.append (Open_parenthesis)
+				tmp_string.append (Eif_integer)
+				tmp_string.append (Close_parenthesis)
+				tmp_string.append (Space)
+				tmp_string.append (Ccom_can_unload_dll_now_function_name)
+				tmp_string.append (Open_parenthesis)
+				tmp_string.append (Close_parenthesis)
+				tmp_string.append (Close_parenthesis)
+				c_writer.add_other (tmp_string)
+
+				tmp_string := clone (Hash_define)
+				tmp_string.append (Space)
+				tmp_string.append (Ccom_get_class_object_function_name)
+				tmp_string.append (Open_parenthesis)
+				tmp_string.append ("tid, clsid, riid, ppv")
+				tmp_string.append (Close_parenthesis)
+				tmp_string.append (Space_open_parenthesis)
+				tmp_string.append (Open_parenthesis)
+				tmp_string.append (Eif_integer)
+				tmp_string.append (Close_parenthesis)
+				tmp_string.append (Space)
+
+				tmp_string.append (Get_clause)
+				tmp_string.append (Get_class_object_function_name)
+				tmp_string.append (Open_parenthesis)
+				tmp_string.append ("tid, clsid, riid, ppv")
+				tmp_string.append (Close_parenthesis)
+				tmp_string.append (Close_parenthesis)
+				c_writer.add_other (tmp_string)
+
 				c_writer.add_function (dll_unlock_module_feature)
 				c_writer.add_function (dll_lock_module_feature)
 
-				create member_writer.make
-				member_writer.set_name (Locks_variable_name)
-				member_writer.set_result_type (Long)
-				member_writer.set_comment ("Locks counter")
-				c_writer.add_global_variable (member_writer)
+				tmp_string := clone (Long)
+				tmp_string.append (Space)
+				tmp_string.append (Locks_variable_name)
+				tmp_string.append (Semicolon)
+				c_writer.add_other_source (tmp_string)
 			else
-				c_writer.add_other ("DWORD threadID = GetCurrentThreadId ();")
+				c_writer.add_other_source ("DWORD threadID = GetCurrentThreadId ();")
 				c_writer.add_function (exe_lock_module_feature)
 				c_writer.add_function (exe_unlock_module_feature)
 				c_writer.add_function (ccom_embedding_feature)
 				c_writer.add_function (ccom_regserver_feature)
 				c_writer.add_function (ccom_unregserver_feature)
+
+				-- define macros for features ccom_embedding_feature, ccom_regserver_feature, ccom_unregserver_feature
+				tmp_string := clone (Hash_define)
+				tmp_string.append (Space)
+				tmp_string.append (Embedding_feature_name)
+				tmp_string.append (Open_parenthesis)
+				tmp_string.append (Type_id_variable_name)
+				tmp_string.append (Close_parenthesis)
+				tmp_string.append (Space_open_parenthesis)
+				tmp_string.append (Ccom_embedding_feature_name)
+				tmp_string.append (Open_parenthesis)
+				tmp_string.append (Type_id_variable_name)
+				tmp_string.append (Close_parenthesis)
+				tmp_string.append (Close_parenthesis)
+				c_writer.add_other (tmp_string)
+
+				tmp_string := clone (Hash_define)
+				tmp_string.append (Space)
+				tmp_string.append (Regserver_feature_name)
+				tmp_string.append (Open_parenthesis)
+				tmp_string.append (Type_id_variable_name)
+				tmp_string.append (Close_parenthesis)
+				tmp_string.append (Space_open_parenthesis)
+				tmp_string.append (Ccom_regserver_feature_name)
+				tmp_string.append (Open_parenthesis)
+				tmp_string.append (Type_id_variable_name)
+				tmp_string.append (Close_parenthesis)
+				tmp_string.append (Close_parenthesis)
+				c_writer.add_other (tmp_string)
+
+				tmp_string := clone (Hash_define)
+				tmp_string.append (Space)
+				tmp_string.append (Unregserver_feature_name)
+				tmp_string.append (Open_parenthesis)
+				tmp_string.append (Type_id_variable_name)
+				tmp_string.append (Close_parenthesis)
+				tmp_string.append (Space_open_parenthesis)
+				tmp_string.append (Ccom_unregserver_feature_name)
+				tmp_string.append (Open_parenthesis)
+				tmp_string.append (Type_id_variable_name)
+				tmp_string.append (Close_parenthesis)
+				tmp_string.append (Close_parenthesis)
+				c_writer.add_other (tmp_string)
+ 
 			end
 
 			check
@@ -354,7 +462,7 @@ feature {NONE} -- Implementation
 		do
 			create Result.make
 			Result.set_name (Ccom_unregserver_feature_name)
-            Result.set_comment ("Unregister server.")
+            	Result.set_comment ("Unregister server.")
 			Result.set_result_type (Void_c_keyword)
 
 			tmp_string := clone (Eif_type_id)
@@ -411,7 +519,7 @@ feature {NONE} -- Implementation
 		do
 			create Result.make
 			Result.set_name (Ccom_regserver_feature_name)
-            Result.set_comment ("Register server.")
+	            Result.set_comment ("Register server.")
 			Result.set_result_type (Void_c_keyword)
 
 			tmp_string := clone (Eif_type_id)
@@ -471,7 +579,7 @@ feature {NONE} -- Implementation
 		do
 			create Result.make
 
-			tmp_string := clone (Ccom_clause)
+			tmp_string := clone (Get_clause)
 			tmp_string.append (Get_class_object_function_name)
 
 			Result.set_name (tmp_string)
@@ -582,7 +690,7 @@ feature {NONE} -- Implementation
 			tmp_body: STRING
 		do
 			create Result.make
-			Result.set_name (Register_dll_server_function_name)
+			Result.set_name (Ccom_register_dll_server_function_name)
 			Result.set_comment ("Register DLL server.")
 			Result.set_result_type (Std_api)
 			Result.set_signature (Void_c_keyword)
@@ -612,7 +720,7 @@ feature {NONE} -- Implementation
 			tmp_body: STRING
 		do
 			create Result.make
-			Result.set_name (Unregister_dll_server_function_name)
+			Result.set_name (Ccom_unregister_dll_server_function_name)
 			Result.set_comment ("Unregister Server.")
 			Result.set_result_type (Std_api)
 			Result.set_signature (Void_c_keyword)
@@ -637,7 +745,7 @@ feature {NONE} -- Implementation
 			tmp_body: STRING
 		do
 			create Result.make
-			Result.set_name (Can_unload_dll_now_function_name)
+			Result.set_name (Ccom_can_unload_dll_now_function_name)
 			Result.set_comment ("Whether component can be unloaded?")
 			Result.set_result_type (Std_api)
 			Result.set_signature (Void_c_keyword)

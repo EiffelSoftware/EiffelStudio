@@ -19,6 +19,8 @@ inherit
 			string_size
 		end
 
+	DISPOSABLE
+
 create
 	make
 
@@ -245,6 +247,7 @@ feature -- Status report
 			Result := [a_width.max (1), a_height.max (1), left_off, right_off, a_baseline]
 			ink_rect.memory_free
 			log_rect.memory_free
+			feature {EV_GTK_DEPENDENT_EXTERNALS}.pango_layout_set_font_description (a_pango_layout, default_pointer)
 		end
 
 	string_width (a_string: STRING): INTEGER is
@@ -260,6 +263,7 @@ feature -- Status report
 			log_rect := reusable_pango_rectangle_struct
 			feature {EV_GTK_DEPENDENT_EXTERNALS}.pango_layout_get_pixel_extents (a_pango_layout, default_pointer, log_rect)
 			Result := feature {EV_GTK_DEPENDENT_EXTERNALS}.pango_rectangle_struct_width (log_rect)
+			feature {EV_GTK_DEPENDENT_EXTERNALS}.pango_layout_set_font_description (a_pango_layout, default_pointer)
 		end
 
 	reusable_pango_rectangle_struct: POINTER is
@@ -300,12 +304,6 @@ feature {NONE} -- Implementation
 		end
 
 feature {EV_FONT_IMP, EV_CHARACTER_FORMAT_IMP, EV_RICH_TEXT_IMP, EV_DRAWABLE_IMP} -- Implementation
-		
-	font_description_from_values: POINTER is
-			-- PangoFontDescription from set values
-		do
-			Result := feature {EV_GTK_DEPENDENT_EXTERNALS}.pango_font_description_copy (font_description)
-		end
 		
 	pango_family_string: STRING is
 			-- Get standard string to represent family.
@@ -429,11 +427,21 @@ feature {NONE} -- Implementation
 feature {EV_ANY_I} -- Implementation
 
 	interface: EV_FONT
+		-- Interface coupling object for `Current'
 			
 	destroy is
+			-- Flag `Current' as destroyed
 		do
 			is_destroyed := True
 		end
+
+	dispose is
+			-- Clean up `Current'
+		do
+			feature {EV_GTK_DEPENDENT_EXTERNALS}.pango_font_description_set_family (font_description, default_pointer)	
+			feature {EV_GTK_DEPENDENT_EXTERNALS}.pango_font_description_free (font_description)
+		end
+		
 	
 end -- class EV_FONT_IMP
 

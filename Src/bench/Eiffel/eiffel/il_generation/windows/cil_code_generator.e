@@ -98,7 +98,7 @@ feature -- Status report
 	is_debug_info_enabled: BOOLEAN
 			-- Are we generating debug information?
 
-feature {IL_WINDOWS_GENERATOR} -- Access
+feature {IL_MODULE} -- Access
 
 	is_single_inheritance_implementation: BOOLEAN is
 			-- Is current generation of type SINGLE_IL_CODE_GENERATOR?
@@ -117,7 +117,7 @@ feature {IL_CODE_GENERATOR, IL_MODULE} -- Access
 			-- Is current module generated as just a single module?
 			-- Case of precompiled libraries or finalized systems.
 
-feature {IL_WINDOWS_GENERATOR} -- Access
+feature {NONE} -- Access
 
 	main_module: IL_MODULE
 			-- Module containing assembly manifest.
@@ -606,12 +606,8 @@ feature -- Generation Structure
 			l_uni_string: UNI_STRING
 			l_module: IL_MODULE
 			l_token, l_file_token: INTEGER
-			l_any_wrapper: IL_ANY_WRAPPER
 		do
 			current_module := main_module
-
-			create l_any_wrapper.make (System.any_class.compiled_class)
-			l_any_wrapper.generate
 
 			if not is_single_module then
 				from

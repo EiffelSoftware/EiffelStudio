@@ -1,10 +1,10 @@
 <HTML>
 	<HEAD>
-		
+
 <META NAME="generator" CONTENT="ISE EiffelBench version 5.0.020">
-		
+
 <TITLE>STATE Text</TITLE>
-		
+
 <LINK REL="stylesheet" HREF="/default.css" TYPE="text/css">
 
 	</HEAD>
@@ -24,7 +24,7 @@
 
 <SPAN CLASS="ekeyword">class</SPAN> <BR>
 
- &nbsp; &nbsp; &nbsp;<A CLASS="eclass" HREF="../lex/state.html">STATE</A><BR>
+ &nbsp; &nbsp; &nbsp;<A CLASS="eclass" HREF="/libraries/lex/reference/lex/state.html">STATE</A><BR>
 
 <BR>
 
@@ -32,7 +32,7 @@
 
 <BR>
 
- &nbsp; &nbsp; &nbsp;<A NAME="f_final"><A CLASS="efeature" HREF="../lex/state.html#f_final">final</A><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="neclass">INTEGER</SPAN></A><BR>
+ &nbsp; &nbsp; &nbsp;<A NAME="f_final"><A CLASS="efeature" HREF="/libraries/lex/reference/lex/state.html#f_final">final</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="/libraries/base/reference/kernel/integer.html">INTEGER</A></A><BR>
 
  &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Number of the regular expression of which </SPAN><SPAN CLASS="equoted">Current</SPAN><SPAN CLASS="ecomment"></SPAN><BR>
 
@@ -42,7 +42,7 @@
 
  &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> in an automaton, at the end of the course the</SPAN><BR>
 
- &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> attribute </SPAN><A CLASS="efeature" HREF="../lex/state.html#f_final">final</A><SPAN CLASS="ecomment"> of the current state is the</SPAN><BR>
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> attribute </SPAN><A CLASS="efeature" HREF="/libraries/lex/reference/lex/state.html#f_final">final</A><SPAN CLASS="ecomment"> of the current state is the</SPAN><BR>
 
  &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> identification number of the regular expression</SPAN><BR>
 
@@ -50,9 +50,9 @@
 
 <BR>
 
- &nbsp; &nbsp; &nbsp;<A NAME="f_final_array"><A CLASS="efeature" HREF="../lex/state.html#f_final_array">final_array</A><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="neclass">ARRAY</SPAN> <SPAN CLASS="esymbol">[</SPAN><SPAN CLASS="neclass">INTEGER</SPAN><SPAN CLASS="esymbol">]</SPAN></A><BR>
+ &nbsp; &nbsp; &nbsp;<A NAME="f_final_array"><A CLASS="efeature" HREF="/libraries/lex/reference/lex/state.html#f_final_array">final_array</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="/libraries/base/reference/kernel/array.html">ARRAY</A> <SPAN CLASS="esymbol">[</SPAN><A CLASS="eclass" HREF="/libraries/base/reference/kernel/integer.html">INTEGER</A><SPAN CLASS="esymbol">]</SPAN></A><BR>
 
- &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Array of all the possible </SPAN><A CLASS="efeature" HREF="../lex/state.html#f_final">final</A><SPAN CLASS="ecomment"> states (useful</SPAN><BR>
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Array of all the possible </SPAN><A CLASS="efeature" HREF="/libraries/lex/reference/lex/state.html#f_final">final</A><SPAN CLASS="ecomment"> states (useful</SPAN><BR>
 
  &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> in the case of several possible final attributes)</SPAN><BR>
 
@@ -62,33 +62,33 @@
 
 <BR>
 
- &nbsp; &nbsp; &nbsp;<A NAME="f_set_final"><A CLASS="efeature" HREF="../lex/state.html#f_set_final">set_final</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">i</SPAN><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="neclass">INTEGER</SPAN><SPAN CLASS="esymbol">)</SPAN> <SPAN CLASS="ekeyword">is</SPAN><BR>
+ &nbsp; &nbsp; &nbsp;<A NAME="f_set_final"><A CLASS="efeature" HREF="/libraries/lex/reference/lex/state.html#f_set_final">set_final</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">i</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="/libraries/base/reference/kernel/integer.html">INTEGER</A><SPAN CLASS="esymbol">)</SPAN> <SPAN CLASS="ekeyword">is</SPAN><BR>
 
  &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Make current state final for </SPAN><SPAN CLASS="equoted">i</SPAN><SPAN CLASS="ecomment">-th regular expression.</SPAN><BR>
 
  &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ekeyword">do</SPAN><BR>
 
- &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ekeyword">if</SPAN> <A CLASS="efeature" HREF="../lex/state.html#f_final_array">final_array</A> <SPAN CLASS="esymbol">=</SPAN> <SPAN CLASS="nefeature">void</SPAN> <SPAN CLASS="ekeyword">then</SPAN><BR>
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ekeyword">if</SPAN> <A CLASS="efeature" HREF="/libraries/lex/reference/lex/state.html#f_final_array">final_array</A> <SPAN CLASS="esymbol">=</SPAN> <A CLASS="efeature" HREF="/libraries/base/reference/kernel/any.html#f_void">void</A> <SPAN CLASS="ekeyword">then</SPAN><BR>
 
- &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ekeyword">create</SPAN> <A CLASS="efeature" HREF="../lex/state.html#f_final_array">final_array</A><SPAN CLASS="edot">.</SPAN><SPAN CLASS="nefeature">make</SPAN> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="enumber">1</SPAN><SPAN CLASS="esymbol">,</SPAN> <SPAN CLASS="enumber">1</SPAN><SPAN CLASS="esymbol">)</SPAN><BR>
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ekeyword">create</SPAN> <A CLASS="efeature" HREF="/libraries/lex/reference/lex/state.html#f_final_array">final_array</A><SPAN CLASS="edot">.</SPAN><A CLASS="efeature" HREF="/libraries/base/reference/kernel/array.html#f_make">make</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="enumber">1</SPAN><SPAN CLASS="esymbol">,</SPAN> <SPAN CLASS="enumber">1</SPAN><SPAN CLASS="esymbol">)</SPAN><BR>
 
- &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<A CLASS="efeature" HREF="../lex/state.html#f_final_array">final_array</A><SPAN CLASS="edot">.</SPAN><SPAN CLASS="nefeature">put</SPAN> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">i</SPAN><SPAN CLASS="esymbol">,</SPAN> <SPAN CLASS="enumber">1</SPAN><SPAN CLASS="esymbol">)</SPAN><BR>
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<A CLASS="efeature" HREF="/libraries/lex/reference/lex/state.html#f_final_array">final_array</A><SPAN CLASS="edot">.</SPAN><A CLASS="efeature" HREF="/libraries/base/reference/kernel/array.html#f_put">put</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">i</SPAN><SPAN CLASS="esymbol">,</SPAN> <SPAN CLASS="enumber">1</SPAN><SPAN CLASS="esymbol">)</SPAN><BR>
 
- &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<A CLASS="efeature" HREF="../lex/state.html#f_final">final</A> <SPAN CLASS="esymbol">:=</SPAN> <SPAN CLASS="elocal">i</SPAN><BR>
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<A CLASS="efeature" HREF="/libraries/lex/reference/lex/state.html#f_final">final</A> <SPAN CLASS="esymbol">:=</SPAN> <SPAN CLASS="elocal">i</SPAN><BR>
 
- &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ekeyword">elseif</SPAN> <A CLASS="efeature" HREF="../lex/state.html#f_final_array">final_array</A><SPAN CLASS="edot">.</SPAN><SPAN CLASS="nefeature">item</SPAN> <SPAN CLASS="esymbol">(</SPAN><A CLASS="efeature" HREF="../lex/state.html#f_final_array">final_array</A><SPAN CLASS="edot">.</SPAN><SPAN CLASS="nefeature">lower</SPAN><SPAN CLASS="esymbol">)</SPAN> <SPAN CLASS="esymbol">/=</SPAN> <SPAN CLASS="elocal">i</SPAN> <SPAN CLASS="ekeyword">then</SPAN><BR>
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ekeyword">elseif</SPAN> <A CLASS="efeature" HREF="/libraries/lex/reference/lex/state.html#f_final_array">final_array</A><SPAN CLASS="edot">.</SPAN><A CLASS="efeature" HREF="/libraries/base/reference/kernel/array.html#f_item">item</A> <SPAN CLASS="esymbol">(</SPAN><A CLASS="efeature" HREF="/libraries/lex/reference/lex/state.html#f_final_array">final_array</A><SPAN CLASS="edot">.</SPAN><A CLASS="efeature" HREF="/libraries/base/reference/kernel/array.html#f_lower">lower</A><SPAN CLASS="esymbol">)</SPAN> <SPAN CLASS="esymbol">/=</SPAN> <SPAN CLASS="elocal">i</SPAN> <SPAN CLASS="ekeyword">then</SPAN><BR>
 
- &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<A CLASS="efeature" HREF="../lex/state.html#f_final_array">final_array</A><SPAN CLASS="edot">.</SPAN><SPAN CLASS="nefeature">force</SPAN> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">i</SPAN><SPAN CLASS="esymbol">,</SPAN> <A CLASS="efeature" HREF="../lex/state.html#f_final_array">final_array</A><SPAN CLASS="edot">.</SPAN><SPAN CLASS="nefeature">lower</SPAN> <SPAN CLASS="esymbol">-</SPAN> <SPAN CLASS="enumber">1</SPAN><SPAN CLASS="esymbol">)</SPAN><SPAN CLASS="esymbol">;</SPAN><BR>
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<A CLASS="efeature" HREF="/libraries/lex/reference/lex/state.html#f_final_array">final_array</A><SPAN CLASS="edot">.</SPAN><A CLASS="efeature" HREF="/libraries/base/reference/kernel/array.html#f_force">force</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">i</SPAN><SPAN CLASS="esymbol">,</SPAN> <A CLASS="efeature" HREF="/libraries/lex/reference/lex/state.html#f_final_array">final_array</A><SPAN CLASS="edot">.</SPAN><A CLASS="efeature" HREF="/libraries/base/reference/kernel/array.html#f_lower">lower</A> <A CLASS="esymbol" HREF="/libraries/base/reference/kernel/integer_ref.html#f__infix_minus">-</A> <SPAN CLASS="enumber">1</SPAN><SPAN CLASS="esymbol">)</SPAN><SPAN CLASS="esymbol">;</SPAN><BR>
 
- &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<A CLASS="efeature" HREF="../lex/state.html#f_final">final</A> <SPAN CLASS="esymbol">:=</SPAN> <SPAN CLASS="elocal">i</SPAN><BR>
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<A CLASS="efeature" HREF="/libraries/lex/reference/lex/state.html#f_final">final</A> <SPAN CLASS="esymbol">:=</SPAN> <SPAN CLASS="elocal">i</SPAN><BR>
 
  &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ekeyword">end</SPAN><BR>
 
  &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ekeyword">ensure</SPAN><BR>
 
- &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="etag">final_is_i</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="efeature" HREF="../lex/state.html#f_final">final</A> <SPAN CLASS="esymbol">=</SPAN> <SPAN CLASS="elocal">i</SPAN><BR>
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="etag">final_is_i</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="efeature" HREF="/libraries/lex/reference/lex/state.html#f_final">final</A> <SPAN CLASS="esymbol">=</SPAN> <SPAN CLASS="elocal">i</SPAN><BR>
 
- &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="etag">lower_entry_is_i</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="efeature" HREF="../lex/state.html#f_final_array">final_array</A><SPAN CLASS="edot">.</SPAN><SPAN CLASS="nefeature">item</SPAN> <SPAN CLASS="esymbol">(</SPAN><A CLASS="efeature" HREF="../lex/state.html#f_final_array">final_array</A><SPAN CLASS="edot">.</SPAN><SPAN CLASS="nefeature">lower</SPAN><SPAN CLASS="esymbol">)</SPAN> <SPAN CLASS="esymbol">=</SPAN> <SPAN CLASS="elocal">i</SPAN><BR>
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="etag">lower_entry_is_i</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="efeature" HREF="/libraries/lex/reference/lex/state.html#f_final_array">final_array</A><SPAN CLASS="edot">.</SPAN><A CLASS="efeature" HREF="/libraries/base/reference/kernel/array.html#f_item">item</A> <SPAN CLASS="esymbol">(</SPAN><A CLASS="efeature" HREF="/libraries/lex/reference/lex/state.html#f_final_array">final_array</A><SPAN CLASS="edot">.</SPAN><A CLASS="efeature" HREF="/libraries/base/reference/kernel/array.html#f_lower">lower</A><SPAN CLASS="esymbol">)</SPAN> <SPAN CLASS="esymbol">=</SPAN> <SPAN CLASS="elocal">i</SPAN><BR>
 
  &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ekeyword">end</SPAN></A><BR>
 
@@ -98,7 +98,7 @@
 
 <BR>
 
- &nbsp; &nbsp; &nbsp;<SPAN CLASS="etag">lower_entry_is_final</SPAN><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="esymbol">(</SPAN><A CLASS="efeature" HREF="../lex/state.html#f_final">final</A> <SPAN CLASS="esymbol">=</SPAN> <SPAN CLASS="enumber">0</SPAN> <SPAN CLASS="ekeyword">and</SPAN> <A CLASS="efeature" HREF="../lex/state.html#f_final_array">final_array</A> <SPAN CLASS="esymbol">=</SPAN> <SPAN CLASS="nefeature">void</SPAN><SPAN CLASS="esymbol">)</SPAN> <SPAN CLASS="ekeyword">or else</SPAN> <A CLASS="efeature" HREF="../lex/state.html#f_final_array">final_array</A><SPAN CLASS="edot">.</SPAN><SPAN CLASS="nefeature">item</SPAN> <SPAN CLASS="esymbol">(</SPAN><A CLASS="efeature" HREF="../lex/state.html#f_final_array">final_array</A><SPAN CLASS="edot">.</SPAN><SPAN CLASS="nefeature">lower</SPAN><SPAN CLASS="esymbol">)</SPAN> <SPAN CLASS="esymbol">=</SPAN> <A CLASS="efeature" HREF="../lex/state.html#f_final">final</A><BR>
+ &nbsp; &nbsp; &nbsp;<SPAN CLASS="etag">lower_entry_is_final</SPAN><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="esymbol">(</SPAN><A CLASS="efeature" HREF="/libraries/lex/reference/lex/state.html#f_final">final</A> <SPAN CLASS="esymbol">=</SPAN> <SPAN CLASS="enumber">0</SPAN> <SPAN CLASS="ekeyword">and</SPAN> <A CLASS="efeature" HREF="/libraries/lex/reference/lex/state.html#f_final_array">final_array</A> <SPAN CLASS="esymbol">=</SPAN> <A CLASS="efeature" HREF="/libraries/base/reference/kernel/any.html#f_void">void</A><SPAN CLASS="esymbol">)</SPAN> <SPAN CLASS="ekeyword">or else</SPAN> <A CLASS="efeature" HREF="/libraries/lex/reference/lex/state.html#f_final_array">final_array</A><SPAN CLASS="edot">.</SPAN><A CLASS="efeature" HREF="/libraries/base/reference/kernel/array.html#f_item">item</A> <SPAN CLASS="esymbol">(</SPAN><A CLASS="efeature" HREF="/libraries/lex/reference/lex/state.html#f_final_array">final_array</A><SPAN CLASS="edot">.</SPAN><A CLASS="efeature" HREF="/libraries/base/reference/kernel/array.html#f_lower">lower</A><SPAN CLASS="esymbol">)</SPAN> <SPAN CLASS="esymbol">=</SPAN> <A CLASS="efeature" HREF="/libraries/lex/reference/lex/state.html#f_final">final</A><BR>
 
 <BR>
 

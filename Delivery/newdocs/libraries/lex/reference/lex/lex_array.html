@@ -1,10 +1,10 @@
 <HTML>
 	<HEAD>
-		
+
 <META NAME="generator" CONTENT="ISE EiffelBench version 5.0.020">
-		
+
 <TITLE>LEX_ARRAY Text</TITLE>
-		
+
 <LINK REL="stylesheet" HREF="/default.css" TYPE="text/css">
 
 	</HEAD>
@@ -24,23 +24,23 @@
 
 <SPAN CLASS="ekeyword">class</SPAN> <BR>
 
- &nbsp; &nbsp; &nbsp;<A CLASS="eclass" HREF="../lex/lex_array.html">LEX_ARRAY</A> <SPAN CLASS="esymbol">[</SPAN><SPAN CLASS="egeneric">T</SPAN><SPAN CLASS="esymbol">]</SPAN><BR>
+ &nbsp; &nbsp; &nbsp;<A CLASS="eclass" HREF="/libraries/lex/reference/lex/lex_array.html">LEX_ARRAY</A> <SPAN CLASS="esymbol">[</SPAN><SPAN CLASS="egeneric">T</SPAN><SPAN CLASS="esymbol">]</SPAN><BR>
 
 <BR>
 
 <SPAN CLASS="ekeyword">inherit</SPAN><BR>
 
- &nbsp; &nbsp; &nbsp;<SPAN CLASS="neclass">ARRAY</SPAN> <SPAN CLASS="esymbol">[</SPAN><SPAN CLASS="egeneric">T</SPAN><SPAN CLASS="esymbol">]</SPAN><BR>
+ &nbsp; &nbsp; &nbsp;<A CLASS="eclass" HREF="/libraries/base/reference/kernel/array.html">ARRAY</A> <SPAN CLASS="esymbol">[</SPAN><SPAN CLASS="egeneric">T</SPAN><SPAN CLASS="esymbol">]</SPAN><BR>
 
  &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ekeyword">rename</SPAN><BR>
 
- &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="nefeature">make</SPAN> <SPAN CLASS="ekeyword">as</SPAN> <SPAN CLASS="elocal">array_make</SPAN><BR>
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<A CLASS="efeature" HREF="/libraries/base/reference/kernel/array.html#f_make">make</A> <SPAN CLASS="ekeyword">as</SPAN> <SPAN CLASS="elocal">array_make</SPAN><BR>
 
  &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ekeyword">export</SPAN><BR>
 
- &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="esymbol">{</SPAN><SPAN CLASS="neclass">ANY</SPAN><SPAN CLASS="esymbol">}</SPAN> <SPAN CLASS="nefeature">lower</SPAN><SPAN CLASS="esymbol">,</SPAN> <SPAN CLASS="nefeature">upper</SPAN><SPAN CLASS="esymbol">,</SPAN> <SPAN CLASS="nefeature">item</SPAN><SPAN CLASS="esymbol">,</SPAN> <SPAN CLASS="nefeature">put</SPAN><SPAN CLASS="esymbol">,</SPAN> <SPAN CLASS="nefeature">resize</SPAN><SPAN CLASS="esymbol">,</SPAN><BR>
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="esymbol">{</SPAN><A CLASS="eclass" HREF="/libraries/base/reference/kernel/any.html">ANY</A><SPAN CLASS="esymbol">}</SPAN> <A CLASS="efeature" HREF="/libraries/base/reference/kernel/array.html#f_lower">lower</A><SPAN CLASS="esymbol">,</SPAN> <A CLASS="efeature" HREF="/libraries/base/reference/kernel/array.html#f_upper">upper</A><SPAN CLASS="esymbol">,</SPAN> <A CLASS="efeature" HREF="/libraries/base/reference/kernel/array.html#f_item">item</A><SPAN CLASS="esymbol">,</SPAN> <A CLASS="efeature" HREF="/libraries/base/reference/kernel/array.html#f_put">put</A><SPAN CLASS="esymbol">,</SPAN> <A CLASS="efeature" HREF="/libraries/base/reference/kernel/array.html#f_resize">resize</A><SPAN CLASS="esymbol">,</SPAN><BR>
 
- &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="esymbol">{</SPAN><A CLASS="eclass" HREF="../lex/text_filler.html">TEXT_FILLER</A><SPAN CLASS="esymbol">}</SPAN> <SPAN CLASS="nefeature">area</SPAN><SPAN CLASS="esymbol">,</SPAN> <SPAN CLASS="nefeature">to_c</SPAN><BR>
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="esymbol">{</SPAN><A CLASS="eclass" HREF="/libraries/lex/reference/lex/text_filler.html">TEXT_FILLER</A><SPAN CLASS="esymbol">}</SPAN> <A CLASS="efeature" HREF="/libraries/base/reference/kernel/to_special.html#f_area">area</A><SPAN CLASS="esymbol">,</SPAN> <A CLASS="efeature" HREF="/libraries/base/reference/kernel/array.html#f_to_c">to_c</A><BR>
 
  &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ekeyword">end</SPAN><BR>
 
@@ -48,7 +48,7 @@
 
 <SPAN CLASS="ekeyword">create</SPAN> <BR>
 
- &nbsp; &nbsp; &nbsp;<A CLASS="efeature" HREF="../lex/lex_array.html#f_make">make</A><BR>
+ &nbsp; &nbsp; &nbsp;<A CLASS="efeature" HREF="/libraries/lex/reference/lex/lex_array.html#f_make">make</A><BR>
 
 <BR>
 
@@ -56,11 +56,11 @@
 
 <BR>
 
- &nbsp; &nbsp; &nbsp;<A NAME="f_make"><A CLASS="efeature" HREF="../lex/lex_array.html#f_make">make</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">lower_index</SPAN><SPAN CLASS="esymbol">,</SPAN> <SPAN CLASS="elocal">upper_index</SPAN><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="neclass">INTEGER</SPAN><SPAN CLASS="esymbol">)</SPAN> <SPAN CLASS="ekeyword">is</SPAN><BR>
+ &nbsp; &nbsp; &nbsp;<A NAME="f_make"><A CLASS="efeature" HREF="/libraries/lex/reference/lex/lex_array.html#f_make">make</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">lower_index</SPAN><SPAN CLASS="esymbol">,</SPAN> <SPAN CLASS="elocal">upper_index</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="/libraries/base/reference/kernel/integer.html">INTEGER</A><SPAN CLASS="esymbol">)</SPAN> <SPAN CLASS="ekeyword">is</SPAN><BR>
 
  &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ekeyword">do</SPAN><BR>
 
- &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="nefeature">array_make</SPAN> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">lower_index</SPAN><SPAN CLASS="esymbol">,</SPAN> <SPAN CLASS="elocal">upper_index</SPAN><SPAN CLASS="esymbol">)</SPAN><BR>
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<A CLASS="efeature" HREF="/libraries/base/reference/kernel/array.html#f_make">array_make</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">lower_index</SPAN><SPAN CLASS="esymbol">,</SPAN> <SPAN CLASS="elocal">upper_index</SPAN><SPAN CLASS="esymbol">)</SPAN><BR>
 
  &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ekeyword">end</SPAN></A><BR>
 

@@ -1,10 +1,10 @@
 <HTML>
 	<HEAD>
-		
+
 <META NAME="generator" CONTENT="ISE EiffelBench version 5.0.020">
-		
+
 <TITLE>L_INTERFACE Text</TITLE>
-		
+
 <LINK REL="stylesheet" HREF="/default.css" TYPE="text/css">
 
 	</HEAD>
@@ -24,17 +24,17 @@
 
 <SPAN CLASS="ekeyword">deferred</SPAN> <SPAN CLASS="ekeyword">class</SPAN> <BR>
 
- &nbsp; &nbsp; &nbsp;<A CLASS="eclass" HREF="../parse/l_interface.html">L_INTERFACE</A><BR>
+ &nbsp; &nbsp; &nbsp;<A CLASS="eclass" HREF="/libraries/lex/reference/parse/l_interface.html">L_INTERFACE</A><BR>
 
 <BR>
 
 <SPAN CLASS="ekeyword">inherit</SPAN><BR>
 
- &nbsp; &nbsp; &nbsp;<A CLASS="eclass" HREF="../lex/metalex.html">METALEX</A><BR>
+ &nbsp; &nbsp; &nbsp;<A CLASS="eclass" HREF="/libraries/lex/reference/lex/metalex.html">METALEX</A><BR>
 
  &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ekeyword">rename</SPAN><BR>
 
- &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<A CLASS="efeature" HREF="../lex/lex_builder.html#f_make">make</A> <SPAN CLASS="ekeyword">as</SPAN> <SPAN CLASS="elocal">metalex_make</SPAN><BR>
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<A CLASS="efeature" HREF="/libraries/lex/reference/lex/lex_builder.html#f_make">make</A> <SPAN CLASS="ekeyword">as</SPAN> <SPAN CLASS="elocal">metalex_make</SPAN><BR>
 
  &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ekeyword">end</SPAN><BR>
 
@@ -44,7 +44,7 @@
 
 <BR>
 
- &nbsp; &nbsp; &nbsp;<A NAME="f_build"><A CLASS="efeature" HREF="../parse/l_interface.html#f_build">build</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">doc</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../parse/input.html">INPUT</A><SPAN CLASS="esymbol">)</SPAN> <SPAN CLASS="ekeyword">is</SPAN><BR>
+ &nbsp; &nbsp; &nbsp;<A NAME="f_build"><A CLASS="efeature" HREF="/libraries/lex/reference/parse/l_interface.html#f_build">build</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">doc</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="/libraries/lex/reference/parse/input.html">INPUT</A><SPAN CLASS="esymbol">)</SPAN> <SPAN CLASS="ekeyword">is</SPAN><BR>
 
  &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Create lexical analyzer and set </SPAN><SPAN CLASS="equoted">doc</SPAN><SPAN CLASS="ecomment"></SPAN><BR>
 
@@ -52,23 +52,23 @@
 
  &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ekeyword">require</SPAN><BR>
 
- &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="etag">document_exists</SPAN><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="elocal">doc</SPAN> <SPAN CLASS="esymbol">/=</SPAN> <SPAN CLASS="nefeature">void</SPAN><BR>
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="etag">document_exists</SPAN><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="elocal">doc</SPAN> <SPAN CLASS="esymbol">/=</SPAN> <A CLASS="efeature" HREF="/libraries/base/reference/kernel/any.html#f_void">void</A><BR>
 
  &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ekeyword">do</SPAN><BR>
 
- &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<A CLASS="efeature" HREF="../lex/lex_builder.html#f_make">metalex_make</A><BR>
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<A CLASS="efeature" HREF="/libraries/lex/reference/lex/lex_builder.html#f_make">metalex_make</A><BR>
 
- &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<A CLASS="efeature" HREF="../parse/l_interface.html#f_obtain_analyzer">obtain_analyzer</A><BR>
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<A CLASS="efeature" HREF="/libraries/lex/reference/parse/l_interface.html#f_obtain_analyzer">obtain_analyzer</A><BR>
 
- &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<A CLASS="efeature" HREF="../lex/metalex.html#f_make_analyzer">make_analyzer</A><BR>
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<A CLASS="efeature" HREF="/libraries/lex/reference/lex/metalex.html#f_make_analyzer">make_analyzer</A><BR>
 
- &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="elocal">doc</SPAN><SPAN CLASS="edot">.</SPAN><A CLASS="efeature" HREF="../parse/input.html#f_set_lexical">set_lexical</A> <SPAN CLASS="esymbol">(</SPAN><A CLASS="efeature" HREF="../lex/lex_builder.html#f_analyzer">analyzer</A><SPAN CLASS="esymbol">)</SPAN><BR>
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="elocal">doc</SPAN><SPAN CLASS="edot">.</SPAN><A CLASS="efeature" HREF="/libraries/lex/reference/parse/input.html#f_set_lexical">set_lexical</A> <SPAN CLASS="esymbol">(</SPAN><A CLASS="efeature" HREF="/libraries/lex/reference/lex/lex_builder.html#f_analyzer">analyzer</A><SPAN CLASS="esymbol">)</SPAN><BR>
 
  &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ekeyword">end</SPAN></A><BR>
 
 <BR>
 
- &nbsp; &nbsp; &nbsp;<A NAME="f_obtain_analyzer"><A CLASS="efeature" HREF="../parse/l_interface.html#f_obtain_analyzer">obtain_analyzer</A> <SPAN CLASS="ekeyword">is</SPAN><BR>
+ &nbsp; &nbsp; &nbsp;<A NAME="f_obtain_analyzer"><A CLASS="efeature" HREF="/libraries/lex/reference/parse/l_interface.html#f_obtain_analyzer">obtain_analyzer</A> <SPAN CLASS="ekeyword">is</SPAN><BR>
 
  &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Build lexical analyzer.</SPAN><BR>
 
@@ -76,7 +76,7 @@
 
  &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ekeyword">ensure</SPAN><BR>
 
- &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<A CLASS="efeature" HREF="../lex/lex_builder.html#f_analyzer">analyzer</A> <SPAN CLASS="esymbol">/=</SPAN> <SPAN CLASS="nefeature">void</SPAN><BR>
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<A CLASS="efeature" HREF="/libraries/lex/reference/lex/lex_builder.html#f_analyzer">analyzer</A> <SPAN CLASS="esymbol">/=</SPAN> <A CLASS="efeature" HREF="/libraries/base/reference/kernel/any.html#f_void">void</A><BR>
 
  &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ekeyword">end</SPAN></A><BR>
 
@@ -86,19 +86,19 @@
 
 <BR>
 
- &nbsp; &nbsp; &nbsp;<A NAME="f_set_separator_type"><A CLASS="efeature" HREF="../parse/l_interface.html#f_set_separator_type">set_separator_type</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">type</SPAN><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="neclass">INTEGER</SPAN><SPAN CLASS="esymbol">)</SPAN> <SPAN CLASS="ekeyword">is</SPAN><BR>
+ &nbsp; &nbsp; &nbsp;<A NAME="f_set_separator_type"><A CLASS="efeature" HREF="/libraries/lex/reference/parse/l_interface.html#f_set_separator_type">set_separator_type</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">type</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="/libraries/base/reference/kernel/integer.html">INTEGER</A><SPAN CLASS="esymbol">)</SPAN> <SPAN CLASS="ekeyword">is</SPAN><BR>
 
  &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Make tokens of type </SPAN><SPAN CLASS="equoted">type</SPAN><SPAN CLASS="ecomment"> to be separators.</SPAN><BR>
 
  &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ekeyword">do</SPAN><BR>
 
- &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ekeyword">if</SPAN> <A CLASS="efeature" HREF="../lex/lex_builder.html#f_analyzer">analyzer</A> <SPAN CLASS="esymbol">=</SPAN> <SPAN CLASS="nefeature">void</SPAN> <SPAN CLASS="ekeyword">then</SPAN><BR>
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ekeyword">if</SPAN> <A CLASS="efeature" HREF="/libraries/lex/reference/lex/lex_builder.html#f_analyzer">analyzer</A> <SPAN CLASS="esymbol">=</SPAN> <A CLASS="efeature" HREF="/libraries/base/reference/kernel/any.html#f_void">void</A> <SPAN CLASS="ekeyword">then</SPAN><BR>
 
- &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ekeyword">create</SPAN> <A CLASS="efeature" HREF="../lex/lex_builder.html#f_analyzer">analyzer</A><SPAN CLASS="edot">.</SPAN><A CLASS="efeature" HREF="../lex/lexical.html#f_make">make</A><BR>
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ekeyword">create</SPAN> <A CLASS="efeature" HREF="/libraries/lex/reference/lex/lex_builder.html#f_analyzer">analyzer</A><SPAN CLASS="edot">.</SPAN><A CLASS="efeature" HREF="/libraries/lex/reference/lex/lexical.html#f_make">make</A><BR>
 
  &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ekeyword">end</SPAN><BR>
 
- &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<A CLASS="efeature" HREF="../lex/lex_builder.html#f_analyzer">analyzer</A><SPAN CLASS="edot">.</SPAN><A CLASS="efeature" HREF="../lex/lexical.html#f_set_separator_type">set_separator_type</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">type</SPAN><SPAN CLASS="esymbol">)</SPAN><BR>
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<A CLASS="efeature" HREF="/libraries/lex/reference/lex/lex_builder.html#f_analyzer">analyzer</A><SPAN CLASS="edot">.</SPAN><A CLASS="efeature" HREF="/libraries/lex/reference/lex/lexical.html#f_set_separator_type">set_separator_type</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">type</SPAN><SPAN CLASS="esymbol">)</SPAN><BR>
 
  &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ekeyword">end</SPAN></A><BR>
 

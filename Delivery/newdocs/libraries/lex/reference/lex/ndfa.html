@@ -1,10 +1,10 @@
 <HTML>
 	<HEAD>
-		
+
 <META NAME="generator" CONTENT="ISE EiffelBench version 5.0.020">
-		
+
 <TITLE>NDFA Text</TITLE>
-		
+
 <LINK REL="stylesheet" HREF="/default.css" TYPE="text/css">
 
 	</HEAD>
@@ -24,13 +24,13 @@
 
 <SPAN CLASS="ekeyword">deferred</SPAN> <SPAN CLASS="ekeyword">class</SPAN> <BR>
 
- &nbsp; &nbsp; &nbsp;<A CLASS="eclass" HREF="../lex/ndfa.html">NDFA</A><BR>
+ &nbsp; &nbsp; &nbsp;<A CLASS="eclass" HREF="/libraries/lex/reference/lex/ndfa.html">NDFA</A><BR>
 
 <BR>
 
 <SPAN CLASS="ekeyword">inherit</SPAN><BR>
 
- &nbsp; &nbsp; &nbsp;<A CLASS="eclass" HREF="../lex/automaton.html">AUTOMATON</A><BR>
+ &nbsp; &nbsp; &nbsp;<A CLASS="eclass" HREF="/libraries/lex/reference/lex/automaton.html">AUTOMATON</A><BR>
 
 <BR>
 
@@ -38,15 +38,15 @@
 
 <BR>
 
- &nbsp; &nbsp; &nbsp;<A NAME="f_dfa"><A CLASS="efeature" HREF="../lex/ndfa.html#f_dfa">dfa</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../lex/fixed_dfa.html">FIXED_DFA</A></A><BR>
+ &nbsp; &nbsp; &nbsp;<A NAME="f_dfa"><A CLASS="efeature" HREF="/libraries/lex/reference/lex/ndfa.html#f_dfa">dfa</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="/libraries/lex/reference/lex/fixed_dfa.html">FIXED_DFA</A></A><BR>
 
- &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> </SPAN><A CLASS="eclass" HREF="../lex/dfa.html">DFA</A><SPAN CLASS="ecomment"> built by routine construct_dfa,</SPAN><BR>
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> </SPAN><A CLASS="eclass" HREF="/libraries/lex/reference/lex/dfa.html">DFA</A><SPAN CLASS="ecomment"> built by routine construct_dfa,</SPAN><BR>
 
  &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> which recognizes the same language.</SPAN><BR>
 
 <BR>
 
- &nbsp; &nbsp; &nbsp;<A NAME="f_find_successors"><A CLASS="efeature" HREF="../lex/ndfa.html#f_find_successors">find_successors</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">source</SPAN><SPAN CLASS="esymbol">,</SPAN> <SPAN CLASS="elocal">input_doc</SPAN><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="neclass">INTEGER</SPAN><SPAN CLASS="esymbol">)</SPAN><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="neclass">LINKED_LIST</SPAN> <SPAN CLASS="esymbol">[</SPAN><SPAN CLASS="neclass">INTEGER</SPAN><SPAN CLASS="esymbol">]</SPAN> <SPAN CLASS="ekeyword">is</SPAN><BR>
+ &nbsp; &nbsp; &nbsp;<A NAME="f_find_successors"><A CLASS="efeature" HREF="/libraries/lex/reference/lex/ndfa.html#f_find_successors">find_successors</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">source</SPAN><SPAN CLASS="esymbol">,</SPAN> <SPAN CLASS="elocal">input_doc</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="/libraries/base/reference/kernel/integer.html">INTEGER</A><SPAN CLASS="esymbol">)</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="/libraries/base/reference/structures/list/linked_list.html">LINKED_LIST</A> <SPAN CLASS="esymbol">[</SPAN><A CLASS="eclass" HREF="/libraries/base/reference/kernel/integer.html">INTEGER</A><SPAN CLASS="esymbol">]</SPAN> <SPAN CLASS="ekeyword">is</SPAN><BR>
 
  &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Successors of </SPAN><SPAN CLASS="equoted">source</SPAN><SPAN CLASS="ecomment"> on </SPAN><SPAN CLASS="equoted">input_doc</SPAN><SPAN CLASS="ecomment">;</SPAN><BR>
 
@@ -54,9 +54,9 @@
 
  &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ekeyword">require</SPAN><BR>
 
- &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="etag">source_in_automaton</SPAN><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="elocal">source</SPAN> <SPAN CLASS="esymbol">&gt;=</SPAN> <SPAN CLASS="enumber">1</SPAN> <SPAN CLASS="ekeyword">and</SPAN> <SPAN CLASS="elocal">source</SPAN> <SPAN CLASS="esymbol">&lt;=</SPAN> <A CLASS="efeature" HREF="../lex/automaton.html#f_nb_states">nb_states</A><BR>
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="etag">source_in_automaton</SPAN><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="elocal">source</SPAN> <A CLASS="esymbol" HREF="/libraries/base/reference/kernel/comparable.html#f__infix_ge">&gt;=</A> <SPAN CLASS="enumber">1</SPAN> <A CLASS="ekeyword" HREF="/libraries/base/reference/kernel/boolean_ref.html#f__infix_and">and</A> <SPAN CLASS="elocal">source</SPAN> <A CLASS="esymbol" HREF="/libraries/base/reference/kernel/comparable.html#f__infix_le">&lt;=</A> <A CLASS="efeature" HREF="/libraries/lex/reference/lex/automaton.html#f_nb_states">nb_states</A><BR>
 
- &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="etag">possible_input_doc</SPAN><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="elocal">input_doc</SPAN> <SPAN CLASS="esymbol">&gt;=</SPAN> <SPAN CLASS="enumber">0</SPAN> <SPAN CLASS="ekeyword">and</SPAN> <SPAN CLASS="elocal">input_doc</SPAN> <SPAN CLASS="esymbol">&lt;=</SPAN> <A CLASS="efeature" HREF="../lex/automaton.html#f_greatest_input">greatest_input</A><BR>
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="etag">possible_input_doc</SPAN><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="elocal">input_doc</SPAN> <A CLASS="esymbol" HREF="/libraries/base/reference/kernel/comparable.html#f__infix_ge">&gt;=</A> <SPAN CLASS="enumber">0</SPAN> <A CLASS="ekeyword" HREF="/libraries/base/reference/kernel/boolean_ref.html#f__infix_and">and</A> <SPAN CLASS="elocal">input_doc</SPAN> <A CLASS="esymbol" HREF="/libraries/base/reference/kernel/comparable.html#f__infix_le">&lt;=</A> <A CLASS="efeature" HREF="/libraries/lex/reference/lex/automaton.html#f_greatest_input">greatest_input</A><BR>
 
  &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ekeyword">deferred</SPAN><BR>
 
@@ -64,7 +64,7 @@
 
 <BR>
 
- &nbsp; &nbsp; &nbsp;<A NAME="f_find_e_successors"><A CLASS="efeature" HREF="../lex/ndfa.html#f_find_e_successors">find_e_successors</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">source</SPAN><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="neclass">INTEGER</SPAN><SPAN CLASS="esymbol">)</SPAN><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="neclass">LINKED_LIST</SPAN> <SPAN CLASS="esymbol">[</SPAN><SPAN CLASS="neclass">INTEGER</SPAN><SPAN CLASS="esymbol">]</SPAN> <SPAN CLASS="ekeyword">is</SPAN><BR>
+ &nbsp; &nbsp; &nbsp;<A NAME="f_find_e_successors"><A CLASS="efeature" HREF="/libraries/lex/reference/lex/ndfa.html#f_find_e_successors">find_e_successors</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">source</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="/libraries/base/reference/kernel/integer.html">INTEGER</A><SPAN CLASS="esymbol">)</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="/libraries/base/reference/structures/list/linked_list.html">LINKED_LIST</A> <SPAN CLASS="esymbol">[</SPAN><A CLASS="eclass" HREF="/libraries/base/reference/kernel/integer.html">INTEGER</A><SPAN CLASS="esymbol">]</SPAN> <SPAN CLASS="ekeyword">is</SPAN><BR>
 
  &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Epsilon successors of source.</SPAN><BR>
 
@@ -72,7 +72,7 @@
 
  &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ekeyword">require</SPAN><BR>
 
- &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="etag">source_in_automaton</SPAN><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="elocal">source</SPAN> <SPAN CLASS="esymbol">&gt;=</SPAN> <SPAN CLASS="enumber">1</SPAN> <SPAN CLASS="ekeyword">and</SPAN> <SPAN CLASS="elocal">source</SPAN> <SPAN CLASS="esymbol">&lt;=</SPAN> <A CLASS="efeature" HREF="../lex/automaton.html#f_nb_states">nb_states</A><BR>
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="etag">source_in_automaton</SPAN><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="elocal">source</SPAN> <A CLASS="esymbol" HREF="/libraries/base/reference/kernel/comparable.html#f__infix_ge">&gt;=</A> <SPAN CLASS="enumber">1</SPAN> <A CLASS="ekeyword" HREF="/libraries/base/reference/kernel/boolean_ref.html#f__infix_and">and</A> <SPAN CLASS="elocal">source</SPAN> <A CLASS="esymbol" HREF="/libraries/base/reference/kernel/comparable.html#f__infix_le">&lt;=</A> <A CLASS="efeature" HREF="/libraries/lex/reference/lex/automaton.html#f_nb_states">nb_states</A><BR>
 
  &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ekeyword">deferred</SPAN><BR>
 
@@ -84,17 +84,17 @@
 
 <BR>
 
- &nbsp; &nbsp; &nbsp;<A NAME="f_set_transition"><A CLASS="efeature" HREF="../lex/ndfa.html#f_set_transition">set_transition</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">source</SPAN><SPAN CLASS="esymbol">,</SPAN> <SPAN CLASS="elocal">input_doc</SPAN><SPAN CLASS="esymbol">,</SPAN> <SPAN CLASS="elocal">target</SPAN><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="neclass">INTEGER</SPAN><SPAN CLASS="esymbol">)</SPAN> <SPAN CLASS="ekeyword">is</SPAN><BR>
+ &nbsp; &nbsp; &nbsp;<A NAME="f_set_transition"><A CLASS="efeature" HREF="/libraries/lex/reference/lex/ndfa.html#f_set_transition">set_transition</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">source</SPAN><SPAN CLASS="esymbol">,</SPAN> <SPAN CLASS="elocal">input_doc</SPAN><SPAN CLASS="esymbol">,</SPAN> <SPAN CLASS="elocal">target</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="/libraries/base/reference/kernel/integer.html">INTEGER</A><SPAN CLASS="esymbol">)</SPAN> <SPAN CLASS="ekeyword">is</SPAN><BR>
 
  &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Set transition from </SPAN><SPAN CLASS="equoted">source</SPAN><SPAN CLASS="ecomment"> to </SPAN><SPAN CLASS="equoted">target</SPAN><SPAN CLASS="ecomment"> for </SPAN><SPAN CLASS="equoted">input_doc</SPAN><SPAN CLASS="ecomment">.</SPAN><BR>
 
  &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ekeyword">require</SPAN> <SPAN CLASS="ekeyword">else</SPAN><BR>
 
- &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="etag">source_in_automaton</SPAN><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="elocal">source</SPAN> <SPAN CLASS="esymbol">&gt;=</SPAN> <SPAN CLASS="enumber">1</SPAN> <SPAN CLASS="ekeyword">and</SPAN> <SPAN CLASS="elocal">source</SPAN> <SPAN CLASS="esymbol">&lt;=</SPAN> <A CLASS="efeature" HREF="../lex/automaton.html#f_nb_states">nb_states</A><BR>
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="etag">source_in_automaton</SPAN><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="elocal">source</SPAN> <A CLASS="esymbol" HREF="/libraries/base/reference/kernel/comparable.html#f__infix_ge">&gt;=</A> <SPAN CLASS="enumber">1</SPAN> <A CLASS="ekeyword" HREF="/libraries/base/reference/kernel/boolean_ref.html#f__infix_and">and</A> <SPAN CLASS="elocal">source</SPAN> <A CLASS="esymbol" HREF="/libraries/base/reference/kernel/comparable.html#f__infix_le">&lt;=</A> <A CLASS="efeature" HREF="/libraries/lex/reference/lex/automaton.html#f_nb_states">nb_states</A><BR>
 
- &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="etag">target_in_automaton</SPAN><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="elocal">target</SPAN> <SPAN CLASS="esymbol">&gt;=</SPAN> <SPAN CLASS="enumber">1</SPAN> <SPAN CLASS="ekeyword">and</SPAN> <SPAN CLASS="elocal">target</SPAN> <SPAN CLASS="esymbol">&lt;=</SPAN> <A CLASS="efeature" HREF="../lex/automaton.html#f_nb_states">nb_states</A><BR>
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="etag">target_in_automaton</SPAN><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="elocal">target</SPAN> <A CLASS="esymbol" HREF="/libraries/base/reference/kernel/comparable.html#f__infix_ge">&gt;=</A> <SPAN CLASS="enumber">1</SPAN> <A CLASS="ekeyword" HREF="/libraries/base/reference/kernel/boolean_ref.html#f__infix_and">and</A> <SPAN CLASS="elocal">target</SPAN> <A CLASS="esymbol" HREF="/libraries/base/reference/kernel/comparable.html#f__infix_le">&lt;=</A> <A CLASS="efeature" HREF="/libraries/lex/reference/lex/automaton.html#f_nb_states">nb_states</A><BR>
 
- &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="etag">possible_input_doc</SPAN><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="elocal">input_doc</SPAN> <SPAN CLASS="esymbol">&gt;=</SPAN> <SPAN CLASS="enumber">0</SPAN> <SPAN CLASS="ekeyword">and</SPAN> <SPAN CLASS="elocal">input_doc</SPAN> <SPAN CLASS="esymbol">&lt;=</SPAN> <A CLASS="efeature" HREF="../lex/automaton.html#f_greatest_input">greatest_input</A><BR>
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="etag">possible_input_doc</SPAN><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="elocal">input_doc</SPAN> <A CLASS="esymbol" HREF="/libraries/base/reference/kernel/comparable.html#f__infix_ge">&gt;=</A> <SPAN CLASS="enumber">0</SPAN> <A CLASS="ekeyword" HREF="/libraries/base/reference/kernel/boolean_ref.html#f__infix_and">and</A> <SPAN CLASS="elocal">input_doc</SPAN> <A CLASS="esymbol" HREF="/libraries/base/reference/kernel/comparable.html#f__infix_le">&lt;=</A> <A CLASS="efeature" HREF="/libraries/lex/reference/lex/automaton.html#f_greatest_input">greatest_input</A><BR>
 
  &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ekeyword">deferred</SPAN><BR>
 
@@ -102,15 +102,15 @@
 
 <BR>
 
- &nbsp; &nbsp; &nbsp;<A NAME="f_set_e_transition"><A CLASS="efeature" HREF="../lex/ndfa.html#f_set_e_transition">set_e_transition</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">source</SPAN><SPAN CLASS="esymbol">,</SPAN> <SPAN CLASS="elocal">target</SPAN><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="neclass">INTEGER</SPAN><SPAN CLASS="esymbol">)</SPAN> <SPAN CLASS="ekeyword">is</SPAN><BR>
+ &nbsp; &nbsp; &nbsp;<A NAME="f_set_e_transition"><A CLASS="efeature" HREF="/libraries/lex/reference/lex/ndfa.html#f_set_e_transition">set_e_transition</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">source</SPAN><SPAN CLASS="esymbol">,</SPAN> <SPAN CLASS="elocal">target</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="/libraries/base/reference/kernel/integer.html">INTEGER</A><SPAN CLASS="esymbol">)</SPAN> <SPAN CLASS="ekeyword">is</SPAN><BR>
 
  &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Set epsilon transition from </SPAN><SPAN CLASS="equoted">source</SPAN><SPAN CLASS="ecomment"> to </SPAN><SPAN CLASS="equoted">target</SPAN><SPAN CLASS="ecomment">.</SPAN><BR>
 
  &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ekeyword">require</SPAN><BR>
 
- &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="etag">source_in_automaton</SPAN><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="elocal">source</SPAN> <SPAN CLASS="esymbol">&gt;=</SPAN> <SPAN CLASS="enumber">1</SPAN> <SPAN CLASS="ekeyword">and</SPAN> <SPAN CLASS="elocal">source</SPAN> <SPAN CLASS="esymbol">&lt;=</SPAN> <A CLASS="efeature" HREF="../lex/automaton.html#f_nb_states">nb_states</A><BR>
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="etag">source_in_automaton</SPAN><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="elocal">source</SPAN> <A CLASS="esymbol" HREF="/libraries/base/reference/kernel/comparable.html#f__infix_ge">&gt;=</A> <SPAN CLASS="enumber">1</SPAN> <A CLASS="ekeyword" HREF="/libraries/base/reference/kernel/boolean_ref.html#f__infix_and">and</A> <SPAN CLASS="elocal">source</SPAN> <A CLASS="esymbol" HREF="/libraries/base/reference/kernel/comparable.html#f__infix_le">&lt;=</A> <A CLASS="efeature" HREF="/libraries/lex/reference/lex/automaton.html#f_nb_states">nb_states</A><BR>
 
- &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="etag">target_in_automaton</SPAN><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="elocal">target</SPAN> <SPAN CLASS="esymbol">&gt;=</SPAN> <SPAN CLASS="enumber">1</SPAN> <SPAN CLASS="ekeyword">and</SPAN> <SPAN CLASS="elocal">target</SPAN> <SPAN CLASS="esymbol">&lt;=</SPAN> <A CLASS="efeature" HREF="../lex/automaton.html#f_nb_states">nb_states</A><BR>
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="etag">target_in_automaton</SPAN><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="elocal">target</SPAN> <A CLASS="esymbol" HREF="/libraries/base/reference/kernel/comparable.html#f__infix_ge">&gt;=</A> <SPAN CLASS="enumber">1</SPAN> <A CLASS="ekeyword" HREF="/libraries/base/reference/kernel/boolean_ref.html#f__infix_and">and</A> <SPAN CLASS="elocal">target</SPAN> <A CLASS="esymbol" HREF="/libraries/base/reference/kernel/comparable.html#f__infix_le">&lt;=</A> <A CLASS="efeature" HREF="/libraries/lex/reference/lex/automaton.html#f_nb_states">nb_states</A><BR>
 
  &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ekeyword">deferred</SPAN><BR>
 
@@ -122,17 +122,17 @@
 
 <BR>
 
- &nbsp; &nbsp; &nbsp;<A NAME="f_delete_transition"><A CLASS="efeature" HREF="../lex/ndfa.html#f_delete_transition">delete_transition</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">source</SPAN><SPAN CLASS="esymbol">,</SPAN> <SPAN CLASS="elocal">input_doc</SPAN><SPAN CLASS="esymbol">,</SPAN> <SPAN CLASS="elocal">target</SPAN><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="neclass">INTEGER</SPAN><SPAN CLASS="esymbol">)</SPAN> <SPAN CLASS="ekeyword">is</SPAN><BR>
+ &nbsp; &nbsp; &nbsp;<A NAME="f_delete_transition"><A CLASS="efeature" HREF="/libraries/lex/reference/lex/ndfa.html#f_delete_transition">delete_transition</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">source</SPAN><SPAN CLASS="esymbol">,</SPAN> <SPAN CLASS="elocal">input_doc</SPAN><SPAN CLASS="esymbol">,</SPAN> <SPAN CLASS="elocal">target</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="/libraries/base/reference/kernel/integer.html">INTEGER</A><SPAN CLASS="esymbol">)</SPAN> <SPAN CLASS="ekeyword">is</SPAN><BR>
 
  &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Delete transition from </SPAN><SPAN CLASS="equoted">source</SPAN><SPAN CLASS="ecomment"> to </SPAN><SPAN CLASS="equoted">target</SPAN><SPAN CLASS="ecomment"> on </SPAN><SPAN CLASS="equoted">input_doc</SPAN><SPAN CLASS="ecomment">.</SPAN><BR>
 
  &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ekeyword">require</SPAN><BR>
 
- &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="etag">source_in_automaton</SPAN><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="elocal">source</SPAN> <SPAN CLASS="esymbol">&gt;=</SPAN> <SPAN CLASS="enumber">1</SPAN> <SPAN CLASS="ekeyword">and</SPAN> <SPAN CLASS="elocal">source</SPAN> <SPAN CLASS="esymbol">&lt;=</SPAN> <A CLASS="efeature" HREF="../lex/automaton.html#f_nb_states">nb_states</A><BR>
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="etag">source_in_automaton</SPAN><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="elocal">source</SPAN> <A CLASS="esymbol" HREF="/libraries/base/reference/kernel/comparable.html#f__infix_ge">&gt;=</A> <SPAN CLASS="enumber">1</SPAN> <A CLASS="ekeyword" HREF="/libraries/base/reference/kernel/boolean_ref.html#f__infix_and">and</A> <SPAN CLASS="elocal">source</SPAN> <A CLASS="esymbol" HREF="/libraries/base/reference/kernel/comparable.html#f__infix_le">&lt;=</A> <A CLASS="efeature" HREF="/libraries/lex/reference/lex/automaton.html#f_nb_states">nb_states</A><BR>
 
- &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="etag">target_in_automaton</SPAN><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="elocal">target</SPAN> <SPAN CLASS="esymbol">&gt;=</SPAN> <SPAN CLASS="enumber">1</SPAN> <SPAN CLASS="ekeyword">and</SPAN> <SPAN CLASS="elocal">target</SPAN> <SPAN CLASS="esymbol">&lt;=</SPAN> <A CLASS="efeature" HREF="../lex/automaton.html#f_nb_states">nb_states</A><BR>
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="etag">target_in_automaton</SPAN><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="elocal">target</SPAN> <A CLASS="esymbol" HREF="/libraries/base/reference/kernel/comparable.html#f__infix_ge">&gt;=</A> <SPAN CLASS="enumber">1</SPAN> <A CLASS="ekeyword" HREF="/libraries/base/reference/kernel/boolean_ref.html#f__infix_and">and</A> <SPAN CLASS="elocal">target</SPAN> <A CLASS="esymbol" HREF="/libraries/base/reference/kernel/comparable.html#f__infix_le">&lt;=</A> <A CLASS="efeature" HREF="/libraries/lex/reference/lex/automaton.html#f_nb_states">nb_states</A><BR>
 
- &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="etag">possible_input_doc</SPAN><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="elocal">input_doc</SPAN> <SPAN CLASS="esymbol">&gt;=</SPAN> <SPAN CLASS="enumber">0</SPAN> <SPAN CLASS="ekeyword">and</SPAN> <SPAN CLASS="elocal">input_doc</SPAN> <SPAN CLASS="esymbol">&lt;=</SPAN> <A CLASS="efeature" HREF="../lex/automaton.html#f_greatest_input">greatest_input</A><BR>
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="etag">possible_input_doc</SPAN><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="elocal">input_doc</SPAN> <A CLASS="esymbol" HREF="/libraries/base/reference/kernel/comparable.html#f__infix_ge">&gt;=</A> <SPAN CLASS="enumber">0</SPAN> <A CLASS="ekeyword" HREF="/libraries/base/reference/kernel/boolean_ref.html#f__infix_and">and</A> <SPAN CLASS="elocal">input_doc</SPAN> <A CLASS="esymbol" HREF="/libraries/base/reference/kernel/comparable.html#f__infix_le">&lt;=</A> <A CLASS="efeature" HREF="/libraries/lex/reference/lex/automaton.html#f_greatest_input">greatest_input</A><BR>
 
  &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ekeyword">deferred</SPAN><BR>
 
@@ -144,59 +144,59 @@
 
 <BR>
 
- &nbsp; &nbsp; &nbsp;<A NAME="f_construct_dfa"><A CLASS="efeature" HREF="../lex/ndfa.html#f_construct_dfa">construct_dfa</A> <SPAN CLASS="ekeyword">is</SPAN><BR>
+ &nbsp; &nbsp; &nbsp;<A NAME="f_construct_dfa"><A CLASS="efeature" HREF="/libraries/lex/reference/lex/ndfa.html#f_construct_dfa">construct_dfa</A> <SPAN CLASS="ekeyword">is</SPAN><BR>
 
  &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Create an equivalent deterministic finite automaton.</SPAN><BR>
 
  &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ekeyword">require</SPAN><BR>
 
- &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="etag">start_number_designated</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="efeature" HREF="../lex/automaton.html#f_start_number">start_number</A> <SPAN CLASS="esymbol">&gt;</SPAN> <SPAN CLASS="enumber">0</SPAN><BR>
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="etag">start_number_designated</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="efeature" HREF="/libraries/lex/reference/lex/automaton.html#f_start_number">start_number</A> <A CLASS="esymbol" HREF="/libraries/base/reference/kernel/comparable.html#f__infix_gt">&gt;</A> <SPAN CLASS="enumber">0</SPAN><BR>
 
  &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ekeyword">local</SPAN><BR>
 
- &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="elocal">dstates</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../lex/linked_dfa.html">LINKED_DFA</A><BR>
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="elocal">dstates</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="/libraries/lex/reference/lex/linked_dfa.html">LINKED_DFA</A><BR>
 
- &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="elocal">state</SPAN><SPAN CLASS="esymbol">,</SPAN> <SPAN CLASS="elocal">state_memory</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../lex/state_of_dfa.html">STATE_OF_DFA</A><BR>
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="elocal">state</SPAN><SPAN CLASS="esymbol">,</SPAN> <SPAN CLASS="elocal">state_memory</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="/libraries/lex/reference/lex/state_of_dfa.html">STATE_OF_DFA</A><BR>
 
- &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="elocal">set</SPAN><SPAN CLASS="esymbol">,</SPAN> <SPAN CLASS="elocal">e_set</SPAN><SPAN CLASS="esymbol">,</SPAN> <SPAN CLASS="elocal">old_move</SPAN><SPAN CLASS="esymbol">,</SPAN> <SPAN CLASS="elocal">current_set</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../lex/fixed_integer_set.html">FIXED_INTEGER_SET</A><BR>
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="elocal">set</SPAN><SPAN CLASS="esymbol">,</SPAN> <SPAN CLASS="elocal">e_set</SPAN><SPAN CLASS="esymbol">,</SPAN> <SPAN CLASS="elocal">old_move</SPAN><SPAN CLASS="esymbol">,</SPAN> <SPAN CLASS="elocal">current_set</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="/libraries/lex/reference/lex/fixed_integer_set.html">FIXED_INTEGER_SET</A><BR>
 
- &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="elocal">input_doc</SPAN><SPAN CLASS="esymbol">,</SPAN> <SPAN CLASS="elocal">old_index</SPAN><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="neclass">INTEGER</SPAN><BR>
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="elocal">input_doc</SPAN><SPAN CLASS="esymbol">,</SPAN> <SPAN CLASS="elocal">old_index</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="/libraries/base/reference/kernel/integer.html">INTEGER</A><BR>
 
  &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ekeyword">do</SPAN><BR>
 
- &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<A CLASS="efeature" HREF="../lex/ndfa.html#f_build_closures">build_closures</A><BR>
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<A CLASS="efeature" HREF="/libraries/lex/reference/lex/ndfa.html#f_build_closures">build_closures</A><BR>
 
- &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ekeyword">create</SPAN> <A CLASS="efeature" HREF="../lex/ndfa.html#f_sets_list">sets_list</A><SPAN CLASS="edot">.</SPAN><SPAN CLASS="nefeature">make</SPAN><BR>
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ekeyword">create</SPAN> <A CLASS="efeature" HREF="/libraries/lex/reference/lex/ndfa.html#f_sets_list">sets_list</A><SPAN CLASS="edot">.</SPAN><A CLASS="efeature" HREF="/libraries/base/reference/structures/list/linked_list.html#f_make">make</A><BR>
 
- &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ekeyword">create</SPAN> <A CLASS="efeature" HREF="../lex/ndfa.html#f_set_tree">set_tree</A><SPAN CLASS="edot">.</SPAN><SPAN CLASS="nefeature">make</SPAN> <SPAN CLASS="esymbol">(</SPAN><A CLASS="efeature" HREF="../lex/automaton.html#f_nb_states">nb_states</A><SPAN CLASS="esymbol">,</SPAN> <SPAN CLASS="enumber">0</SPAN><SPAN CLASS="esymbol">)</SPAN><BR>
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ekeyword">create</SPAN> <A CLASS="efeature" HREF="/libraries/lex/reference/lex/ndfa.html#f_set_tree">set_tree</A><SPAN CLASS="edot">.</SPAN><A CLASS="efeature" HREF="/libraries/base/reference/structures/tree/fixed_tree.html#f_make">make</A> <SPAN CLASS="esymbol">(</SPAN><A CLASS="efeature" HREF="/libraries/lex/reference/lex/automaton.html#f_nb_states">nb_states</A><SPAN CLASS="esymbol">,</SPAN> <SPAN CLASS="enumber">0</SPAN><SPAN CLASS="esymbol">)</SPAN><BR>
 
- &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="elocal">e_set</SPAN> <SPAN CLASS="esymbol">:=</SPAN> <A CLASS="efeature" HREF="../lex/ndfa.html#f_closure">closure</A> <SPAN CLASS="esymbol">(</SPAN><A CLASS="efeature" HREF="../lex/automaton.html#f_start_number">start_number</A><SPAN CLASS="esymbol">)</SPAN><BR>
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="elocal">e_set</SPAN> <SPAN CLASS="esymbol">:=</SPAN> <A CLASS="efeature" HREF="/libraries/lex/reference/lex/ndfa.html#f_closure">closure</A> <SPAN CLASS="esymbol">(</SPAN><A CLASS="efeature" HREF="/libraries/lex/reference/lex/automaton.html#f_start_number">start_number</A><SPAN CLASS="esymbol">)</SPAN><BR>
 
- &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<A CLASS="efeature" HREF="../lex/ndfa.html#f_search_in_tree">search_in_tree</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">e_set</SPAN><SPAN CLASS="esymbol">)</SPAN><BR>
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<A CLASS="efeature" HREF="/libraries/lex/reference/lex/ndfa.html#f_search_in_tree">search_in_tree</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">e_set</SPAN><SPAN CLASS="esymbol">)</SPAN><BR>
 
- &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<A CLASS="efeature" HREF="../lex/ndfa.html#f_sets_list">sets_list</A><SPAN CLASS="edot">.</SPAN><SPAN CLASS="nefeature">put_right</SPAN> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">e_set</SPAN><SPAN CLASS="esymbol">)</SPAN><BR>
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<A CLASS="efeature" HREF="/libraries/lex/reference/lex/ndfa.html#f_sets_list">sets_list</A><SPAN CLASS="edot">.</SPAN><A CLASS="efeature" HREF="/libraries/base/reference/structures/list/two_way_list.html#f_put_right">put_right</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">e_set</SPAN><SPAN CLASS="esymbol">)</SPAN><BR>
 
- &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ekeyword">create</SPAN> <SPAN CLASS="elocal">old_move</SPAN><SPAN CLASS="edot">.</SPAN><A CLASS="efeature" HREF="../lex/fixed_integer_set.html#f_make">make</A> <SPAN CLASS="esymbol">(</SPAN><A CLASS="efeature" HREF="../lex/automaton.html#f_nb_states">nb_states</A><SPAN CLASS="esymbol">)</SPAN><BR>
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ekeyword">create</SPAN> <SPAN CLASS="elocal">old_move</SPAN><SPAN CLASS="edot">.</SPAN><A CLASS="efeature" HREF="/libraries/lex/reference/lex/fixed_integer_set.html#f_make">make</A> <SPAN CLASS="esymbol">(</SPAN><A CLASS="efeature" HREF="/libraries/lex/reference/lex/automaton.html#f_nb_states">nb_states</A><SPAN CLASS="esymbol">)</SPAN><BR>
 
  &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ekeyword">from</SPAN><BR>
 
- &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ekeyword">create</SPAN> <SPAN CLASS="elocal">dstates</SPAN><SPAN CLASS="edot">.</SPAN><A CLASS="efeature" HREF="../lex/linked_dfa.html#f_make">make</A> <SPAN CLASS="esymbol">(</SPAN><A CLASS="efeature" HREF="../lex/automaton.html#f_greatest_input">greatest_input</A><SPAN CLASS="esymbol">)</SPAN><BR>
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ekeyword">create</SPAN> <SPAN CLASS="elocal">dstates</SPAN><SPAN CLASS="edot">.</SPAN><A CLASS="efeature" HREF="/libraries/lex/reference/lex/linked_dfa.html#f_make">make</A> <SPAN CLASS="esymbol">(</SPAN><A CLASS="efeature" HREF="/libraries/lex/reference/lex/automaton.html#f_greatest_input">greatest_input</A><SPAN CLASS="esymbol">)</SPAN><BR>
 
- &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="elocal">dstates</SPAN><SPAN CLASS="edot">.</SPAN><A CLASS="efeature" HREF="../lex/linked_dfa.html#f_set_state">set_state</A><BR>
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="elocal">dstates</SPAN><SPAN CLASS="edot">.</SPAN><A CLASS="efeature" HREF="/libraries/lex/reference/lex/linked_dfa.html#f_set_state">set_state</A><BR>
 
  &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ekeyword">until</SPAN><BR>
 
- &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="elocal">dstates</SPAN><SPAN CLASS="edot">.</SPAN><SPAN CLASS="nefeature">after</SPAN> <SPAN CLASS="ekeyword">or</SPAN> <SPAN CLASS="elocal">dstates</SPAN><SPAN CLASS="edot">.</SPAN><SPAN CLASS="nefeature">is_empty</SPAN><BR>
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="elocal">dstates</SPAN><SPAN CLASS="edot">.</SPAN><A CLASS="efeature" HREF="/libraries/base/reference/structures/list/linked_list.html#f_after">after</A> <A CLASS="ekeyword" HREF="/libraries/base/reference/kernel/boolean_ref.html#f__infix_or">or</A> <SPAN CLASS="elocal">dstates</SPAN><SPAN CLASS="edot">.</SPAN><A CLASS="efeature" HREF="/libraries/base/reference/structures/storage/finite.html#f_is_empty">is_empty</A><BR>
 
  &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ekeyword">loop</SPAN><BR>
 
- &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="elocal">state</SPAN> <SPAN CLASS="esymbol">:=</SPAN> <SPAN CLASS="elocal">dstates</SPAN><SPAN CLASS="edot">.</SPAN><SPAN CLASS="nefeature">item</SPAN><BR>
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="elocal">state</SPAN> <SPAN CLASS="esymbol">:=</SPAN> <SPAN CLASS="elocal">dstates</SPAN><SPAN CLASS="edot">.</SPAN><A CLASS="efeature" HREF="/libraries/base/reference/structures/list/linked_list.html#f_item">item</A><BR>
 
- &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="elocal">old_index</SPAN> <SPAN CLASS="esymbol">:=</SPAN> <SPAN CLASS="elocal">dstates</SPAN><SPAN CLASS="edot">.</SPAN><SPAN CLASS="nefeature">index</SPAN><BR>
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="elocal">old_index</SPAN> <SPAN CLASS="esymbol">:=</SPAN> <SPAN CLASS="elocal">dstates</SPAN><SPAN CLASS="edot">.</SPAN><A CLASS="efeature" HREF="/libraries/base/reference/structures/list/linked_list.html#f_index">index</A><BR>
 
- &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<A CLASS="efeature" HREF="../lex/ndfa.html#f_sets_list">sets_list</A><SPAN CLASS="edot">.</SPAN><SPAN CLASS="nefeature">go_i_th</SPAN> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">old_index</SPAN><SPAN CLASS="esymbol">)</SPAN><BR>
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<A CLASS="efeature" HREF="/libraries/lex/reference/lex/ndfa.html#f_sets_list">sets_list</A><SPAN CLASS="edot">.</SPAN><A CLASS="efeature" HREF="/libraries/base/reference/structures/list/linked_list.html#f_go_i_th">go_i_th</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">old_index</SPAN><SPAN CLASS="esymbol">)</SPAN><BR>
 
- &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="elocal">current_set</SPAN> <SPAN CLASS="esymbol">:=</SPAN> <A CLASS="efeature" HREF="../lex/ndfa.html#f_sets_list">sets_list</A><SPAN CLASS="edot">.</SPAN><SPAN CLASS="nefeature">item</SPAN><BR>
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="elocal">current_set</SPAN> <SPAN CLASS="esymbol">:=</SPAN> <A CLASS="efeature" HREF="/libraries/lex/reference/lex/ndfa.html#f_sets_list">sets_list</A><SPAN CLASS="edot">.</SPAN><A CLASS="efeature" HREF="/libraries/base/reference/structures/list/linked_list.html#f_item">item</A><BR>
 
  &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ekeyword">from</SPAN><BR>
 
@@ -204,61 +204,61 @@
 
  &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ekeyword">until</SPAN><BR>
 
- &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="elocal">input_doc</SPAN> <SPAN CLASS="esymbol">=</SPAN> <A CLASS="efeature" HREF="../lex/automaton.html#f_greatest_input">greatest_input</A> <SPAN CLASS="esymbol">+</SPAN> <SPAN CLASS="enumber">1</SPAN><BR>
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="elocal">input_doc</SPAN> <SPAN CLASS="esymbol">=</SPAN> <A CLASS="efeature" HREF="/libraries/lex/reference/lex/automaton.html#f_greatest_input">greatest_input</A> <A CLASS="esymbol" HREF="/libraries/base/reference/kernel/integer_ref.html#f__infix_plus">+</A> <SPAN CLASS="enumber">1</SPAN><BR>
 
  &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ekeyword">loop</SPAN><BR>
 
- &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="elocal">set</SPAN> <SPAN CLASS="esymbol">:=</SPAN> <A CLASS="efeature" HREF="../lex/ndfa.html#f_move">move</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">current_set</SPAN><SPAN CLASS="esymbol">,</SPAN> <SPAN CLASS="elocal">input_doc</SPAN><SPAN CLASS="esymbol">)</SPAN><BR>
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="elocal">set</SPAN> <SPAN CLASS="esymbol">:=</SPAN> <A CLASS="efeature" HREF="/libraries/lex/reference/lex/ndfa.html#f_move">move</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">current_set</SPAN><SPAN CLASS="esymbol">,</SPAN> <SPAN CLASS="elocal">input_doc</SPAN><SPAN CLASS="esymbol">)</SPAN><BR>
 
- &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ekeyword">if</SPAN> <SPAN CLASS="elocal">set</SPAN> <SPAN CLASS="esymbol">/=</SPAN> <SPAN CLASS="nefeature">void</SPAN> <SPAN CLASS="ekeyword">then</SPAN><BR>
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ekeyword">if</SPAN> <SPAN CLASS="elocal">set</SPAN> <SPAN CLASS="esymbol">/=</SPAN> <A CLASS="efeature" HREF="/libraries/base/reference/kernel/any.html#f_void">void</A> <SPAN CLASS="ekeyword">then</SPAN><BR>
 
- &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ekeyword">if</SPAN> <SPAN CLASS="elocal">set</SPAN><SPAN CLASS="edot">.</SPAN><SPAN CLASS="nefeature">is_equal</SPAN> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">old_move</SPAN><SPAN CLASS="esymbol">)</SPAN> <SPAN CLASS="ekeyword">then</SPAN><BR>
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ekeyword">if</SPAN> <SPAN CLASS="elocal">set</SPAN><SPAN CLASS="edot">.</SPAN><A CLASS="efeature" HREF="/libraries/base/reference/kernel/any.html#f_is_equal">is_equal</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">old_move</SPAN><SPAN CLASS="esymbol">)</SPAN> <SPAN CLASS="ekeyword">then</SPAN><BR>
 
- &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="elocal">state</SPAN><SPAN CLASS="edot">.</SPAN><A CLASS="efeature" HREF="../lex/state_of_dfa.html#f_append_transition">append_transition</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">input_doc</SPAN><SPAN CLASS="esymbol">,</SPAN> <SPAN CLASS="elocal">state_memory</SPAN><SPAN CLASS="esymbol">)</SPAN><BR>
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="elocal">state</SPAN><SPAN CLASS="edot">.</SPAN><A CLASS="efeature" HREF="/libraries/lex/reference/lex/state_of_dfa.html#f_append_transition">append_transition</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">input_doc</SPAN><SPAN CLASS="esymbol">,</SPAN> <SPAN CLASS="elocal">state_memory</SPAN><SPAN CLASS="esymbol">)</SPAN><BR>
 
  &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ekeyword">else</SPAN><BR>
 
  &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="elocal">old_move</SPAN> <SPAN CLASS="esymbol">:=</SPAN> <SPAN CLASS="elocal">set</SPAN><BR>
 
- &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="elocal">e_set</SPAN> <SPAN CLASS="esymbol">:=</SPAN> <A CLASS="efeature" HREF="../lex/ndfa.html#f_epsilon_closure">epsilon_closure</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">set</SPAN><SPAN CLASS="esymbol">)</SPAN><BR>
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="elocal">e_set</SPAN> <SPAN CLASS="esymbol">:=</SPAN> <A CLASS="efeature" HREF="/libraries/lex/reference/lex/ndfa.html#f_epsilon_closure">epsilon_closure</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">set</SPAN><SPAN CLASS="esymbol">)</SPAN><BR>
 
- &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<A CLASS="efeature" HREF="../lex/ndfa.html#f_search_in_tree">search_in_tree</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">e_set</SPAN><SPAN CLASS="esymbol">)</SPAN><BR>
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<A CLASS="efeature" HREF="/libraries/lex/reference/lex/ndfa.html#f_search_in_tree">search_in_tree</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">e_set</SPAN><SPAN CLASS="esymbol">)</SPAN><BR>
 
- &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ekeyword">if</SPAN> <A CLASS="efeature" HREF="../lex/ndfa.html#f_new_set">new_set</A> <SPAN CLASS="ekeyword">then</SPAN><BR>
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ekeyword">if</SPAN> <A CLASS="efeature" HREF="/libraries/lex/reference/lex/ndfa.html#f_new_set">new_set</A> <SPAN CLASS="ekeyword">then</SPAN><BR>
 
- &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="elocal">dstates</SPAN><SPAN CLASS="edot">.</SPAN><A CLASS="efeature" HREF="../lex/linked_dfa.html#f_set_state">set_state</A><BR>
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="elocal">dstates</SPAN><SPAN CLASS="edot">.</SPAN><A CLASS="efeature" HREF="/libraries/lex/reference/lex/linked_dfa.html#f_set_state">set_state</A><BR>
 
- &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<A CLASS="efeature" HREF="../lex/ndfa.html#f_sets_list">sets_list</A><SPAN CLASS="edot">.</SPAN><SPAN CLASS="nefeature">finish</SPAN><BR>
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<A CLASS="efeature" HREF="/libraries/lex/reference/lex/ndfa.html#f_sets_list">sets_list</A><SPAN CLASS="edot">.</SPAN><A CLASS="efeature" HREF="/libraries/base/reference/structures/list/two_way_list.html#f_finish">finish</A><BR>
 
- &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<A CLASS="efeature" HREF="../lex/ndfa.html#f_sets_list">sets_list</A><SPAN CLASS="edot">.</SPAN><SPAN CLASS="nefeature">put_right</SPAN> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">e_set</SPAN><SPAN CLASS="esymbol">)</SPAN><BR>
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<A CLASS="efeature" HREF="/libraries/lex/reference/lex/ndfa.html#f_sets_list">sets_list</A><SPAN CLASS="edot">.</SPAN><A CLASS="efeature" HREF="/libraries/base/reference/structures/list/two_way_list.html#f_put_right">put_right</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">e_set</SPAN><SPAN CLASS="esymbol">)</SPAN><BR>
 
  &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ekeyword">end</SPAN><BR>
 
- &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="elocal">dstates</SPAN><SPAN CLASS="edot">.</SPAN><SPAN CLASS="nefeature">go_i_th</SPAN> <SPAN CLASS="esymbol">(</SPAN><A CLASS="efeature" HREF="../lex/ndfa.html#f_set_position">set_position</A><SPAN CLASS="esymbol">)</SPAN><BR>
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="elocal">dstates</SPAN><SPAN CLASS="edot">.</SPAN><A CLASS="efeature" HREF="/libraries/base/reference/structures/list/linked_list.html#f_go_i_th">go_i_th</A> <SPAN CLASS="esymbol">(</SPAN><A CLASS="efeature" HREF="/libraries/lex/reference/lex/ndfa.html#f_set_position">set_position</A><SPAN CLASS="esymbol">)</SPAN><BR>
 
- &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="elocal">state_memory</SPAN> <SPAN CLASS="esymbol">:=</SPAN> <SPAN CLASS="elocal">dstates</SPAN><SPAN CLASS="edot">.</SPAN><SPAN CLASS="nefeature">item</SPAN><BR>
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="elocal">state_memory</SPAN> <SPAN CLASS="esymbol">:=</SPAN> <SPAN CLASS="elocal">dstates</SPAN><SPAN CLASS="edot">.</SPAN><A CLASS="efeature" HREF="/libraries/base/reference/structures/list/linked_list.html#f_item">item</A><BR>
 
- &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="elocal">state</SPAN><SPAN CLASS="edot">.</SPAN><A CLASS="efeature" HREF="../lex/state_of_dfa.html#f_append_transition">append_transition</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">input_doc</SPAN><SPAN CLASS="esymbol">,</SPAN> <SPAN CLASS="elocal">state_memory</SPAN><SPAN CLASS="esymbol">)</SPAN><BR>
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="elocal">state</SPAN><SPAN CLASS="edot">.</SPAN><A CLASS="efeature" HREF="/libraries/lex/reference/lex/state_of_dfa.html#f_append_transition">append_transition</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">input_doc</SPAN><SPAN CLASS="esymbol">,</SPAN> <SPAN CLASS="elocal">state_memory</SPAN><SPAN CLASS="esymbol">)</SPAN><BR>
 
  &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ekeyword">end</SPAN><BR>
 
  &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ekeyword">end</SPAN><BR>
 
- &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="elocal">input_doc</SPAN> <SPAN CLASS="esymbol">:=</SPAN> <SPAN CLASS="elocal">input_doc</SPAN> <SPAN CLASS="esymbol">+</SPAN> <SPAN CLASS="enumber">1</SPAN><BR>
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="elocal">input_doc</SPAN> <SPAN CLASS="esymbol">:=</SPAN> <SPAN CLASS="elocal">input_doc</SPAN> <A CLASS="esymbol" HREF="/libraries/base/reference/kernel/integer_ref.html#f__infix_plus">+</A> <SPAN CLASS="enumber">1</SPAN><BR>
 
  &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ekeyword">end</SPAN><BR>
 
- &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="elocal">dstates</SPAN><SPAN CLASS="edot">.</SPAN><SPAN CLASS="nefeature">go_i_th</SPAN> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">old_index</SPAN> <SPAN CLASS="esymbol">+</SPAN> <SPAN CLASS="enumber">1</SPAN><SPAN CLASS="esymbol">)</SPAN><BR>
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="elocal">dstates</SPAN><SPAN CLASS="edot">.</SPAN><A CLASS="efeature" HREF="/libraries/base/reference/structures/list/linked_list.html#f_go_i_th">go_i_th</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">old_index</SPAN> <A CLASS="esymbol" HREF="/libraries/base/reference/kernel/integer_ref.html#f__infix_plus">+</A> <SPAN CLASS="enumber">1</SPAN><SPAN CLASS="esymbol">)</SPAN><BR>
 
  &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ekeyword">end</SPAN><BR>
 
- &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<A CLASS="efeature" HREF="../lex/ndfa.html#f_dfa">dfa</A> <SPAN CLASS="esymbol">:=</SPAN> <SPAN CLASS="elocal">dstates</SPAN><SPAN CLASS="edot">.</SPAN><A CLASS="efeature" HREF="../lex/linked_dfa.html#f_lcopy">lcopy</A><BR>
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<A CLASS="efeature" HREF="/libraries/lex/reference/lex/ndfa.html#f_dfa">dfa</A> <SPAN CLASS="esymbol">:=</SPAN> <SPAN CLASS="elocal">dstates</SPAN><SPAN CLASS="edot">.</SPAN><A CLASS="efeature" HREF="/libraries/lex/reference/lex/linked_dfa.html#f_lcopy">lcopy</A><BR>
 
- &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<A CLASS="efeature" HREF="../lex/ndfa.html#f_initial_final_designation">initial_final_designation</A><BR>
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<A CLASS="efeature" HREF="/libraries/lex/reference/lex/ndfa.html#f_initial_final_designation">initial_final_designation</A><BR>
 
  &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ekeyword">debug</SPAN> <BR>
 
- &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<A CLASS="efeature" HREF="../lex/ndfa.html#f_dfa">dfa</A><SPAN CLASS="edot">.</SPAN><A CLASS="efeature" HREF="../lex/fixed_dfa.html#f_trace">trace</A><BR>
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<A CLASS="efeature" HREF="/libraries/lex/reference/lex/ndfa.html#f_dfa">dfa</A><SPAN CLASS="edot">.</SPAN><A CLASS="efeature" HREF="/libraries/lex/reference/lex/fixed_dfa.html#f_trace">trace</A><BR>
 
  &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ekeyword">end</SPAN><BR>
 
@@ -270,29 +270,29 @@
 
 <BR>
 
- &nbsp; &nbsp; &nbsp;<A NAME="f_sets_list"><A CLASS="efeature" HREF="../lex/ndfa.html#f_sets_list">sets_list</A><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="neclass">TWO_WAY_LIST</SPAN> <SPAN CLASS="esymbol">[</SPAN><A CLASS="eclass" HREF="../lex/fixed_integer_set.html">FIXED_INTEGER_SET</A><SPAN CLASS="esymbol">]</SPAN></A><BR>
+ &nbsp; &nbsp; &nbsp;<A NAME="f_sets_list"><A CLASS="efeature" HREF="/libraries/lex/reference/lex/ndfa.html#f_sets_list">sets_list</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="/libraries/base/reference/structures/list/two_way_list.html">TWO_WAY_LIST</A> <SPAN CLASS="esymbol">[</SPAN><A CLASS="eclass" HREF="/libraries/lex/reference/lex/fixed_integer_set.html">FIXED_INTEGER_SET</A><SPAN CLASS="esymbol">]</SPAN></A><BR>
 
  &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Sets used in construct_dfa:</SPAN><BR>
 
- &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Each dfa state is associated with a </SPAN><A CLASS="eclass" HREF="../lex/fixed_integer_set.html">FIXED_INTEGER_SET</A><SPAN CLASS="ecomment"></SPAN><BR>
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Each dfa state is associated with a </SPAN><A CLASS="eclass" HREF="/libraries/lex/reference/lex/fixed_integer_set.html">FIXED_INTEGER_SET</A><SPAN CLASS="ecomment"></SPAN><BR>
 
- &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> of </SPAN><A CLASS="eclass" HREF="../lex/ndfa.html">NDFA</A><SPAN CLASS="ecomment"> states</SPAN><BR>
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> of </SPAN><A CLASS="eclass" HREF="/libraries/lex/reference/lex/ndfa.html">NDFA</A><SPAN CLASS="ecomment"> states</SPAN><BR>
 
 <BR>
 
- &nbsp; &nbsp; &nbsp;<A NAME="f_new_set"><A CLASS="efeature" HREF="../lex/ndfa.html#f_new_set">new_set</A><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="neclass">BOOLEAN</SPAN></A><BR>
+ &nbsp; &nbsp; &nbsp;<A NAME="f_new_set"><A CLASS="efeature" HREF="/libraries/lex/reference/lex/ndfa.html#f_new_set">new_set</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="/libraries/base/reference/kernel/boolean.html">BOOLEAN</A></A><BR>
 
  &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Was there a creation in last search_in_tree?</SPAN><BR>
 
 <BR>
 
- &nbsp; &nbsp; &nbsp;<A NAME="f_new_number"><A CLASS="efeature" HREF="../lex/ndfa.html#f_new_number">new_number</A><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="neclass">INTEGER</SPAN></A><BR>
+ &nbsp; &nbsp; &nbsp;<A NAME="f_new_number"><A CLASS="efeature" HREF="/libraries/lex/reference/lex/ndfa.html#f_new_number">new_number</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="/libraries/base/reference/kernel/integer.html">INTEGER</A></A><BR>
 
  &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Used to search a set in sets_list</SPAN><BR>
 
 <BR>
 
- &nbsp; &nbsp; &nbsp;<A NAME="f_set_tree"><A CLASS="efeature" HREF="../lex/ndfa.html#f_set_tree">set_tree</A><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="neclass">FIXED_TREE</SPAN> <SPAN CLASS="esymbol">[</SPAN><SPAN CLASS="neclass">INTEGER</SPAN><SPAN CLASS="esymbol">]</SPAN></A><BR>
+ &nbsp; &nbsp; &nbsp;<A NAME="f_set_tree"><A CLASS="efeature" HREF="/libraries/lex/reference/lex/ndfa.html#f_set_tree">set_tree</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="/libraries/base/reference/structures/tree/fixed_tree.html">FIXED_TREE</A> <SPAN CLASS="esymbol">[</SPAN><A CLASS="eclass" HREF="/libraries/base/reference/kernel/integer.html">INTEGER</A><SPAN CLASS="esymbol">]</SPAN></A><BR>
 
  &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Used to search a set in sets_list:</SPAN><BR>
 
@@ -304,57 +304,57 @@
 
 <BR>
 
- &nbsp; &nbsp; &nbsp;<A NAME="f_set_position"><A CLASS="efeature" HREF="../lex/ndfa.html#f_set_position">set_position</A><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="neclass">INTEGER</SPAN></A><BR>
+ &nbsp; &nbsp; &nbsp;<A NAME="f_set_position"><A CLASS="efeature" HREF="/libraries/lex/reference/lex/ndfa.html#f_set_position">set_position</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="/libraries/base/reference/kernel/integer.html">INTEGER</A></A><BR>
 
  &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Position of the last searched set in sets_list</SPAN><BR>
 
 <BR>
 
- &nbsp; &nbsp; &nbsp;<A NAME="f_closures"><A CLASS="efeature" HREF="../lex/ndfa.html#f_closures">closures</A><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="neclass">ARRAY</SPAN> <SPAN CLASS="esymbol">[</SPAN><A CLASS="eclass" HREF="../lex/fixed_integer_set.html">FIXED_INTEGER_SET</A><SPAN CLASS="esymbol">]</SPAN></A><BR>
+ &nbsp; &nbsp; &nbsp;<A NAME="f_closures"><A CLASS="efeature" HREF="/libraries/lex/reference/lex/ndfa.html#f_closures">closures</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="/libraries/base/reference/kernel/array.html">ARRAY</A> <SPAN CLASS="esymbol">[</SPAN><A CLASS="eclass" HREF="/libraries/lex/reference/lex/fixed_integer_set.html">FIXED_INTEGER_SET</A><SPAN CLASS="esymbol">]</SPAN></A><BR>
 
  &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Each element of this array represents the</SPAN><BR>
 
- &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> epsilon closure of one </SPAN><A CLASS="eclass" HREF="../lex/ndfa.html">NDFA</A><SPAN CLASS="ecomment"> state</SPAN><BR>
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> epsilon closure of one </SPAN><A CLASS="eclass" HREF="/libraries/lex/reference/lex/ndfa.html">NDFA</A><SPAN CLASS="ecomment"> state</SPAN><BR>
 
 <BR>
 
- &nbsp; &nbsp; &nbsp;<A NAME="f_epsilon_closure"><A CLASS="efeature" HREF="../lex/ndfa.html#f_epsilon_closure">epsilon_closure</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">initial_set</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../lex/fixed_integer_set.html">FIXED_INTEGER_SET</A><SPAN CLASS="esymbol">)</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../lex/fixed_integer_set.html">FIXED_INTEGER_SET</A> <SPAN CLASS="ekeyword">is</SPAN><BR>
+ &nbsp; &nbsp; &nbsp;<A NAME="f_epsilon_closure"><A CLASS="efeature" HREF="/libraries/lex/reference/lex/ndfa.html#f_epsilon_closure">epsilon_closure</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">initial_set</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="/libraries/lex/reference/lex/fixed_integer_set.html">FIXED_INTEGER_SET</A><SPAN CLASS="esymbol">)</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="/libraries/lex/reference/lex/fixed_integer_set.html">FIXED_INTEGER_SET</A> <SPAN CLASS="ekeyword">is</SPAN><BR>
 
  &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Epsilon-closure of initial_set:</SPAN><BR>
 
- &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> set of </SPAN><A CLASS="eclass" HREF="../lex/ndfa.html">NDFA</A><SPAN CLASS="ecomment"> states</SPAN><BR>
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> set of </SPAN><A CLASS="eclass" HREF="/libraries/lex/reference/lex/ndfa.html">NDFA</A><SPAN CLASS="ecomment"> states</SPAN><BR>
 
- &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> reachable from some </SPAN><A CLASS="eclass" HREF="../lex/ndfa.html">NDFA</A><SPAN CLASS="ecomment"> states in initial_set</SPAN><BR>
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> reachable from some </SPAN><A CLASS="eclass" HREF="/libraries/lex/reference/lex/ndfa.html">NDFA</A><SPAN CLASS="ecomment"> states in initial_set</SPAN><BR>
 
  &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> on epsilon-transition alone</SPAN><BR>
 
  &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ekeyword">require</SPAN><BR>
 
- &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="etag">closures_exists</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="efeature" HREF="../lex/ndfa.html#f_closures">closures</A> <SPAN CLASS="esymbol">/=</SPAN> <SPAN CLASS="nefeature">void</SPAN><BR>
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="etag">closures_exists</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="efeature" HREF="/libraries/lex/reference/lex/ndfa.html#f_closures">closures</A> <SPAN CLASS="esymbol">/=</SPAN> <A CLASS="efeature" HREF="/libraries/base/reference/kernel/any.html#f_void">void</A><BR>
 
  &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ekeyword">local</SPAN><BR>
 
- &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="elocal">index</SPAN><SPAN CLASS="esymbol">,</SPAN> <SPAN CLASS="elocal">last_index</SPAN><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="neclass">INTEGER</SPAN><BR>
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="elocal">index</SPAN><SPAN CLASS="esymbol">,</SPAN> <SPAN CLASS="elocal">last_index</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="/libraries/base/reference/kernel/integer.html">INTEGER</A><BR>
 
  &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ekeyword">do</SPAN><BR>
 
- &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ekeyword">create</SPAN> <SPAN CLASS="ereserved">Result</SPAN><SPAN CLASS="edot">.</SPAN><A CLASS="efeature" HREF="../lex/fixed_integer_set.html#f_make">make</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">initial_set</SPAN><SPAN CLASS="edot">.</SPAN><SPAN CLASS="nefeature">count</SPAN><SPAN CLASS="esymbol">)</SPAN><BR>
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ekeyword">create</SPAN> <SPAN CLASS="ereserved">Result</SPAN><SPAN CLASS="edot">.</SPAN><A CLASS="efeature" HREF="/libraries/lex/reference/lex/fixed_integer_set.html#f_make">make</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">initial_set</SPAN><SPAN CLASS="edot">.</SPAN><A CLASS="efeature" HREF="/libraries/base/reference/support/bool_string.html#f_count">count</A><SPAN CLASS="esymbol">)</SPAN><BR>
 
- &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="elocal">last_index</SPAN> <SPAN CLASS="esymbol">:=</SPAN> <SPAN CLASS="elocal">initial_set</SPAN><SPAN CLASS="edot">.</SPAN><SPAN CLASS="nefeature">count</SPAN><BR>
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="elocal">last_index</SPAN> <SPAN CLASS="esymbol">:=</SPAN> <SPAN CLASS="elocal">initial_set</SPAN><SPAN CLASS="edot">.</SPAN><A CLASS="efeature" HREF="/libraries/base/reference/support/bool_string.html#f_count">count</A><BR>
 
  &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ekeyword">from</SPAN><BR>
 
- &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="elocal">index</SPAN> <SPAN CLASS="esymbol">:=</SPAN> <SPAN CLASS="elocal">initial_set</SPAN><SPAN CLASS="edot">.</SPAN><A CLASS="efeature" HREF="../lex/fixed_integer_set.html#f_smallest">smallest</A><BR>
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="elocal">index</SPAN> <SPAN CLASS="esymbol">:=</SPAN> <SPAN CLASS="elocal">initial_set</SPAN><SPAN CLASS="edot">.</SPAN><A CLASS="efeature" HREF="/libraries/lex/reference/lex/fixed_integer_set.html#f_smallest">smallest</A><BR>
 
  &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ekeyword">until</SPAN><BR>
 
- &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="elocal">index</SPAN> <SPAN CLASS="esymbol">&gt;</SPAN> <SPAN CLASS="elocal">last_index</SPAN><BR>
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="elocal">index</SPAN> <A CLASS="esymbol" HREF="/libraries/base/reference/kernel/comparable.html#f__infix_gt">&gt;</A> <SPAN CLASS="elocal">last_index</SPAN><BR>
 
  &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ekeyword">loop</SPAN><BR>
 
- &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ereserved">Result</SPAN> <SPAN CLASS="esymbol">:=</SPAN> <SPAN CLASS="ereserved">Result</SPAN> <SPAN CLASS="ekeyword">or</SPAN> <SPAN CLASS="esymbol">(</SPAN><A CLASS="efeature" HREF="../lex/ndfa.html#f_closures">closures</A><SPAN CLASS="edot">.</SPAN><SPAN CLASS="nefeature">item</SPAN> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">index</SPAN><SPAN CLASS="esymbol">)</SPAN><SPAN CLASS="esymbol">)</SPAN><BR>
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ereserved">Result</SPAN> <SPAN CLASS="esymbol">:=</SPAN> <SPAN CLASS="ereserved">Result</SPAN> <A CLASS="ekeyword" HREF="/libraries/base/reference/support/bool_string.html#f__infix_or">or</A> <SPAN CLASS="esymbol">(</SPAN><A CLASS="efeature" HREF="/libraries/lex/reference/lex/ndfa.html#f_closures">closures</A><SPAN CLASS="edot">.</SPAN><A CLASS="efeature" HREF="/libraries/base/reference/kernel/array.html#f_item">item</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">index</SPAN><SPAN CLASS="esymbol">)</SPAN><SPAN CLASS="esymbol">)</SPAN><BR>
 
- &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="elocal">index</SPAN> <SPAN CLASS="esymbol">:=</SPAN> <SPAN CLASS="elocal">initial_set</SPAN><SPAN CLASS="edot">.</SPAN><A CLASS="efeature" HREF="../lex/fixed_integer_set.html#f_next">next</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">index</SPAN><SPAN CLASS="esymbol">)</SPAN><BR>
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="elocal">index</SPAN> <SPAN CLASS="esymbol">:=</SPAN> <SPAN CLASS="elocal">initial_set</SPAN><SPAN CLASS="edot">.</SPAN><A CLASS="efeature" HREF="/libraries/lex/reference/lex/fixed_integer_set.html#f_next">next</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">index</SPAN><SPAN CLASS="esymbol">)</SPAN><BR>
 
  &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ekeyword">end</SPAN><BR>
 
@@ -362,7 +362,7 @@
 
 <BR>
 
- &nbsp; &nbsp; &nbsp;<A NAME="f_build_closures"><A CLASS="efeature" HREF="../lex/ndfa.html#f_build_closures">build_closures</A> <SPAN CLASS="ekeyword">is</SPAN><BR>
+ &nbsp; &nbsp; &nbsp;<A NAME="f_build_closures"><A CLASS="efeature" HREF="/libraries/lex/reference/lex/ndfa.html#f_build_closures">build_closures</A> <SPAN CLASS="ekeyword">is</SPAN><BR>
 
  &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Build the array closures, which is used</SPAN><BR>
 
@@ -370,11 +370,11 @@
 
  &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ekeyword">local</SPAN><BR>
 
- &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="elocal">index</SPAN><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="neclass">INTEGER</SPAN><BR>
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="elocal">index</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="/libraries/base/reference/kernel/integer.html">INTEGER</A><BR>
 
  &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ekeyword">do</SPAN><BR>
 
- &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ekeyword">create</SPAN> <A CLASS="efeature" HREF="../lex/ndfa.html#f_closures">closures</A><SPAN CLASS="edot">.</SPAN><SPAN CLASS="nefeature">make</SPAN> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="enumber">1</SPAN><SPAN CLASS="esymbol">,</SPAN> <A CLASS="efeature" HREF="../lex/automaton.html#f_nb_states">nb_states</A><SPAN CLASS="esymbol">)</SPAN><BR>
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ekeyword">create</SPAN> <A CLASS="efeature" HREF="/libraries/lex/reference/lex/ndfa.html#f_closures">closures</A><SPAN CLASS="edot">.</SPAN><A CLASS="efeature" HREF="/libraries/base/reference/kernel/array.html#f_make">make</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="enumber">1</SPAN><SPAN CLASS="esymbol">,</SPAN> <A CLASS="efeature" HREF="/libraries/lex/reference/lex/automaton.html#f_nb_states">nb_states</A><SPAN CLASS="esymbol">)</SPAN><BR>
 
  &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ekeyword">from</SPAN><BR>
 
@@ -382,13 +382,13 @@
 
  &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ekeyword">until</SPAN><BR>
 
- &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="elocal">index</SPAN> <SPAN CLASS="esymbol">=</SPAN> <A CLASS="efeature" HREF="../lex/automaton.html#f_nb_states">nb_states</A><BR>
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="elocal">index</SPAN> <SPAN CLASS="esymbol">=</SPAN> <A CLASS="efeature" HREF="/libraries/lex/reference/lex/automaton.html#f_nb_states">nb_states</A><BR>
 
  &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ekeyword">loop</SPAN><BR>
 
- &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="elocal">index</SPAN> <SPAN CLASS="esymbol">:=</SPAN> <SPAN CLASS="elocal">index</SPAN> <SPAN CLASS="esymbol">+</SPAN> <SPAN CLASS="enumber">1</SPAN><BR>
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="elocal">index</SPAN> <SPAN CLASS="esymbol">:=</SPAN> <SPAN CLASS="elocal">index</SPAN> <A CLASS="esymbol" HREF="/libraries/base/reference/kernel/integer_ref.html#f__infix_plus">+</A> <SPAN CLASS="enumber">1</SPAN><BR>
 
- &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<A CLASS="efeature" HREF="../lex/ndfa.html#f_closures">closures</A><SPAN CLASS="edot">.</SPAN><SPAN CLASS="nefeature">put</SPAN> <SPAN CLASS="esymbol">(</SPAN><A CLASS="efeature" HREF="../lex/ndfa.html#f_closure">closure</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">index</SPAN><SPAN CLASS="esymbol">)</SPAN><SPAN CLASS="esymbol">,</SPAN> <SPAN CLASS="elocal">index</SPAN><SPAN CLASS="esymbol">)</SPAN><BR>
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<A CLASS="efeature" HREF="/libraries/lex/reference/lex/ndfa.html#f_closures">closures</A><SPAN CLASS="edot">.</SPAN><A CLASS="efeature" HREF="/libraries/base/reference/kernel/array.html#f_put">put</A> <SPAN CLASS="esymbol">(</SPAN><A CLASS="efeature" HREF="/libraries/lex/reference/lex/ndfa.html#f_closure">closure</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">index</SPAN><SPAN CLASS="esymbol">)</SPAN><SPAN CLASS="esymbol">,</SPAN> <SPAN CLASS="elocal">index</SPAN><SPAN CLASS="esymbol">)</SPAN><BR>
 
  &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ekeyword">end</SPAN><BR>
 
@@ -396,7 +396,7 @@
 
 <BR>
 
- &nbsp; &nbsp; &nbsp;<A NAME="f_search_in_tree"><A CLASS="efeature" HREF="../lex/ndfa.html#f_search_in_tree">search_in_tree</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">set</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../lex/fixed_integer_set.html">FIXED_INTEGER_SET</A><SPAN CLASS="esymbol">)</SPAN> <SPAN CLASS="ekeyword">is</SPAN><BR>
+ &nbsp; &nbsp; &nbsp;<A NAME="f_search_in_tree"><A CLASS="efeature" HREF="/libraries/lex/reference/lex/ndfa.html#f_search_in_tree">search_in_tree</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">set</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="/libraries/lex/reference/lex/fixed_integer_set.html">FIXED_INTEGER_SET</A><SPAN CLASS="esymbol">)</SPAN> <SPAN CLASS="ekeyword">is</SPAN><BR>
 
  &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Search set in set_tree. If set is not found,</SPAN><BR>
 
@@ -408,85 +408,85 @@
 
  &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ekeyword">require</SPAN><BR>
 
- &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="etag">set_no_void</SPAN><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="elocal">set</SPAN> <SPAN CLASS="esymbol">/=</SPAN> <SPAN CLASS="nefeature">void</SPAN><BR>
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="etag">set_no_void</SPAN><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="elocal">set</SPAN> <SPAN CLASS="esymbol">/=</SPAN> <A CLASS="efeature" HREF="/libraries/base/reference/kernel/any.html#f_void">void</A><BR>
 
- &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="etag">set_no_empty</SPAN><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="ekeyword">not</SPAN> <SPAN CLASS="elocal">set</SPAN><SPAN CLASS="edot">.</SPAN><A CLASS="efeature" HREF="../lex/fixed_integer_set.html#f_is_empty">is_empty</A><BR>
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="etag">set_no_empty</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="ekeyword" HREF="/libraries/base/reference/kernel/boolean_ref.html#f__prefix_not">not</A> <SPAN CLASS="elocal">set</SPAN><SPAN CLASS="edot">.</SPAN><A CLASS="efeature" HREF="/libraries/lex/reference/lex/fixed_integer_set.html#f_is_empty">is_empty</A><BR>
 
  &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ekeyword">local</SPAN><BR>
 
- &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="elocal">index</SPAN><SPAN CLASS="esymbol">,</SPAN> <SPAN CLASS="elocal">last_index</SPAN><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="neclass">INTEGER</SPAN><BR>
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="elocal">index</SPAN><SPAN CLASS="esymbol">,</SPAN> <SPAN CLASS="elocal">last_index</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="/libraries/base/reference/kernel/integer.html">INTEGER</A><BR>
 
- &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="elocal">current_tree</SPAN><SPAN CLASS="esymbol">,</SPAN> <SPAN CLASS="elocal">new_tree</SPAN><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="neclass">FIXED_TREE</SPAN> <SPAN CLASS="esymbol">[</SPAN><SPAN CLASS="neclass">INTEGER</SPAN><SPAN CLASS="esymbol">]</SPAN><BR>
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="elocal">current_tree</SPAN><SPAN CLASS="esymbol">,</SPAN> <SPAN CLASS="elocal">new_tree</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="/libraries/base/reference/structures/tree/fixed_tree.html">FIXED_TREE</A> <SPAN CLASS="esymbol">[</SPAN><A CLASS="eclass" HREF="/libraries/base/reference/kernel/integer.html">INTEGER</A><SPAN CLASS="esymbol">]</SPAN><BR>
 
  &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ekeyword">do</SPAN><BR>
 
  &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ekeyword">debug</SPAN> <BR>
 
- &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="elocal">set</SPAN><SPAN CLASS="edot">.</SPAN><A CLASS="efeature" HREF="../lex/fixed_integer_set.html#f_print">print</A><BR>
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="elocal">set</SPAN><SPAN CLASS="edot">.</SPAN><A CLASS="efeature" HREF="/libraries/lex/reference/lex/fixed_integer_set.html#f_print">print</A><BR>
 
  &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ekeyword">end</SPAN><BR>
 
- &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="elocal">last_index</SPAN> <SPAN CLASS="esymbol">:=</SPAN> <SPAN CLASS="elocal">set</SPAN><SPAN CLASS="edot">.</SPAN><A CLASS="efeature" HREF="../lex/fixed_integer_set.html#f_largest">largest</A><BR>
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="elocal">last_index</SPAN> <SPAN CLASS="esymbol">:=</SPAN> <SPAN CLASS="elocal">set</SPAN><SPAN CLASS="edot">.</SPAN><A CLASS="efeature" HREF="/libraries/lex/reference/lex/fixed_integer_set.html#f_largest">largest</A><BR>
 
- &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="elocal">current_tree</SPAN> <SPAN CLASS="esymbol">:=</SPAN> <A CLASS="efeature" HREF="../lex/ndfa.html#f_set_tree">set_tree</A><BR>
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="elocal">current_tree</SPAN> <SPAN CLASS="esymbol">:=</SPAN> <A CLASS="efeature" HREF="/libraries/lex/reference/lex/ndfa.html#f_set_tree">set_tree</A><BR>
 
  &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ekeyword">from</SPAN><BR>
 
- &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="elocal">index</SPAN> <SPAN CLASS="esymbol">:=</SPAN> <SPAN CLASS="elocal">set</SPAN><SPAN CLASS="edot">.</SPAN><A CLASS="efeature" HREF="../lex/fixed_integer_set.html#f_smallest">smallest</A><BR>
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="elocal">index</SPAN> <SPAN CLASS="esymbol">:=</SPAN> <SPAN CLASS="elocal">set</SPAN><SPAN CLASS="edot">.</SPAN><A CLASS="efeature" HREF="/libraries/lex/reference/lex/fixed_integer_set.html#f_smallest">smallest</A><BR>
 
  &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ekeyword">until</SPAN><BR>
 
- &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="elocal">index</SPAN> <SPAN CLASS="esymbol">&gt;</SPAN> <SPAN CLASS="elocal">last_index</SPAN><BR>
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="elocal">index</SPAN> <A CLASS="esymbol" HREF="/libraries/base/reference/kernel/comparable.html#f__infix_gt">&gt;</A> <SPAN CLASS="elocal">last_index</SPAN><BR>
 
  &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ekeyword">loop</SPAN><BR>
 
  &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ekeyword">debug</SPAN> <BR>
 
- &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="nefeature">io</SPAN><SPAN CLASS="edot">.</SPAN><SPAN CLASS="nefeature">put_string</SPAN> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="estring">"Arity: "</SPAN><SPAN CLASS="esymbol">)</SPAN><BR>
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<A CLASS="efeature" HREF="/libraries/base/reference/kernel/any.html#f_io">io</A><SPAN CLASS="edot">.</SPAN><A CLASS="efeature" HREF="/libraries/base/reference/kernel/std_files.html#f_put_string">put_string</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="estring">"Arity: "</SPAN><SPAN CLASS="esymbol">)</SPAN><BR>
 
- &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="nefeature">io</SPAN><SPAN CLASS="edot">.</SPAN><SPAN CLASS="nefeature">put_integer</SPAN> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">current_tree</SPAN><SPAN CLASS="edot">.</SPAN><SPAN CLASS="nefeature">arity</SPAN><SPAN CLASS="esymbol">)</SPAN><BR>
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<A CLASS="efeature" HREF="/libraries/base/reference/kernel/any.html#f_io">io</A><SPAN CLASS="edot">.</SPAN><A CLASS="efeature" HREF="/libraries/base/reference/kernel/std_files.html#f_put_integer">put_integer</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">current_tree</SPAN><SPAN CLASS="edot">.</SPAN><A CLASS="efeature" HREF="/libraries/base/reference/structures/list/fixed_list.html#f_count">arity</A><SPAN CLASS="esymbol">)</SPAN><BR>
 
- &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="nefeature">io</SPAN><SPAN CLASS="edot">.</SPAN><SPAN CLASS="nefeature">new_line</SPAN><BR>
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<A CLASS="efeature" HREF="/libraries/base/reference/kernel/any.html#f_io">io</A><SPAN CLASS="edot">.</SPAN><A CLASS="efeature" HREF="/libraries/base/reference/kernel/std_files.html#f_new_line">new_line</A><BR>
 
- &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="nefeature">io</SPAN><SPAN CLASS="edot">.</SPAN><SPAN CLASS="nefeature">put_string</SPAN> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="estring">"Index: "</SPAN><SPAN CLASS="esymbol">)</SPAN><BR>
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<A CLASS="efeature" HREF="/libraries/base/reference/kernel/any.html#f_io">io</A><SPAN CLASS="edot">.</SPAN><A CLASS="efeature" HREF="/libraries/base/reference/kernel/std_files.html#f_put_string">put_string</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="estring">"Index: "</SPAN><SPAN CLASS="esymbol">)</SPAN><BR>
 
- &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="nefeature">io</SPAN><SPAN CLASS="edot">.</SPAN><SPAN CLASS="nefeature">put_integer</SPAN> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">index</SPAN><SPAN CLASS="esymbol">)</SPAN><BR>
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<A CLASS="efeature" HREF="/libraries/base/reference/kernel/any.html#f_io">io</A><SPAN CLASS="edot">.</SPAN><A CLASS="efeature" HREF="/libraries/base/reference/kernel/std_files.html#f_put_integer">put_integer</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">index</SPAN><SPAN CLASS="esymbol">)</SPAN><BR>
 
- &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="nefeature">io</SPAN><SPAN CLASS="edot">.</SPAN><SPAN CLASS="nefeature">new_line</SPAN><BR>
-
- &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ekeyword">end</SPAN><BR>
-
- &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="elocal">current_tree</SPAN><SPAN CLASS="edot">.</SPAN><SPAN CLASS="nefeature">child_go_i_th</SPAN> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">index</SPAN><SPAN CLASS="esymbol">)</SPAN><BR>
-
- &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ekeyword">if</SPAN> <SPAN CLASS="elocal">current_tree</SPAN><SPAN CLASS="edot">.</SPAN><SPAN CLASS="nefeature">child</SPAN> <SPAN CLASS="esymbol">=</SPAN> <SPAN CLASS="nefeature">void</SPAN> <SPAN CLASS="ekeyword">then</SPAN><BR>
-
- &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ekeyword">create</SPAN> <SPAN CLASS="elocal">new_tree</SPAN><SPAN CLASS="edot">.</SPAN><SPAN CLASS="nefeature">make</SPAN> <SPAN CLASS="esymbol">(</SPAN><A CLASS="efeature" HREF="../lex/automaton.html#f_nb_states">nb_states</A><SPAN CLASS="esymbol">,</SPAN> <SPAN CLASS="enumber">0</SPAN><SPAN CLASS="esymbol">)</SPAN><BR>
-
- &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="elocal">current_tree</SPAN><SPAN CLASS="edot">.</SPAN><SPAN CLASS="nefeature">put_child</SPAN> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">new_tree</SPAN><SPAN CLASS="esymbol">)</SPAN><BR>
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<A CLASS="efeature" HREF="/libraries/base/reference/kernel/any.html#f_io">io</A><SPAN CLASS="edot">.</SPAN><A CLASS="efeature" HREF="/libraries/base/reference/kernel/std_files.html#f_new_line">new_line</A><BR>
 
  &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ekeyword">end</SPAN><BR>
 
- &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="elocal">current_tree</SPAN> <SPAN CLASS="esymbol">:=</SPAN> <SPAN CLASS="elocal">current_tree</SPAN><SPAN CLASS="edot">.</SPAN><SPAN CLASS="nefeature">child</SPAN><BR>
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="elocal">current_tree</SPAN><SPAN CLASS="edot">.</SPAN><A CLASS="efeature" HREF="/libraries/base/reference/structures/list/fixed_list.html#f_go_i_th">child_go_i_th</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">index</SPAN><SPAN CLASS="esymbol">)</SPAN><BR>
 
- &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="elocal">index</SPAN> <SPAN CLASS="esymbol">:=</SPAN> <SPAN CLASS="elocal">set</SPAN><SPAN CLASS="edot">.</SPAN><A CLASS="efeature" HREF="../lex/fixed_integer_set.html#f_next">next</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">index</SPAN><SPAN CLASS="esymbol">)</SPAN><BR>
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ekeyword">if</SPAN> <SPAN CLASS="elocal">current_tree</SPAN><SPAN CLASS="edot">.</SPAN><A CLASS="efeature" HREF="/libraries/base/reference/structures/list/fixed_list.html#f_item">child</A> <SPAN CLASS="esymbol">=</SPAN> <A CLASS="efeature" HREF="/libraries/base/reference/kernel/any.html#f_void">void</A> <SPAN CLASS="ekeyword">then</SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ekeyword">create</SPAN> <SPAN CLASS="elocal">new_tree</SPAN><SPAN CLASS="edot">.</SPAN><A CLASS="efeature" HREF="/libraries/base/reference/structures/tree/fixed_tree.html#f_make">make</A> <SPAN CLASS="esymbol">(</SPAN><A CLASS="efeature" HREF="/libraries/lex/reference/lex/automaton.html#f_nb_states">nb_states</A><SPAN CLASS="esymbol">,</SPAN> <SPAN CLASS="enumber">0</SPAN><SPAN CLASS="esymbol">)</SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="elocal">current_tree</SPAN><SPAN CLASS="edot">.</SPAN><A CLASS="efeature" HREF="/libraries/base/reference/structures/tree/fixed_tree.html#f_put_child">put_child</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">new_tree</SPAN><SPAN CLASS="esymbol">)</SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ekeyword">end</SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="elocal">current_tree</SPAN> <SPAN CLASS="esymbol">:=</SPAN> <SPAN CLASS="elocal">current_tree</SPAN><SPAN CLASS="edot">.</SPAN><A CLASS="efeature" HREF="/libraries/base/reference/structures/list/fixed_list.html#f_item">child</A><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="elocal">index</SPAN> <SPAN CLASS="esymbol">:=</SPAN> <SPAN CLASS="elocal">set</SPAN><SPAN CLASS="edot">.</SPAN><A CLASS="efeature" HREF="/libraries/lex/reference/lex/fixed_integer_set.html#f_next">next</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">index</SPAN><SPAN CLASS="esymbol">)</SPAN><BR>
 
  &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ekeyword">end</SPAN><BR>
 
- &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<A CLASS="efeature" HREF="../lex/ndfa.html#f_set_position">set_position</A> <SPAN CLASS="esymbol">:=</SPAN> <SPAN CLASS="elocal">current_tree</SPAN><SPAN CLASS="edot">.</SPAN><SPAN CLASS="nefeature">item</SPAN><BR>
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<A CLASS="efeature" HREF="/libraries/lex/reference/lex/ndfa.html#f_set_position">set_position</A> <SPAN CLASS="esymbol">:=</SPAN> <SPAN CLASS="elocal">current_tree</SPAN><SPAN CLASS="edot">.</SPAN><A CLASS="efeature" HREF="/libraries/base/reference/structures/list/cell.html#f_item">item</A><BR>
 
- &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ekeyword">if</SPAN> <A CLASS="efeature" HREF="../lex/ndfa.html#f_set_position">set_position</A> <SPAN CLASS="esymbol">=</SPAN> <SPAN CLASS="enumber">0</SPAN> <SPAN CLASS="ekeyword">then</SPAN><BR>
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ekeyword">if</SPAN> <A CLASS="efeature" HREF="/libraries/lex/reference/lex/ndfa.html#f_set_position">set_position</A> <SPAN CLASS="esymbol">=</SPAN> <SPAN CLASS="enumber">0</SPAN> <SPAN CLASS="ekeyword">then</SPAN><BR>
 
- &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<A CLASS="efeature" HREF="../lex/ndfa.html#f_new_number">new_number</A> <SPAN CLASS="esymbol">:=</SPAN> <A CLASS="efeature" HREF="../lex/ndfa.html#f_new_number">new_number</A> <SPAN CLASS="esymbol">+</SPAN> <SPAN CLASS="enumber">1</SPAN><BR>
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<A CLASS="efeature" HREF="/libraries/lex/reference/lex/ndfa.html#f_new_number">new_number</A> <SPAN CLASS="esymbol">:=</SPAN> <A CLASS="efeature" HREF="/libraries/lex/reference/lex/ndfa.html#f_new_number">new_number</A> <A CLASS="esymbol" HREF="/libraries/base/reference/kernel/integer_ref.html#f__infix_plus">+</A> <SPAN CLASS="enumber">1</SPAN><BR>
 
- &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="elocal">current_tree</SPAN><SPAN CLASS="edot">.</SPAN><SPAN CLASS="nefeature">put</SPAN> <SPAN CLASS="esymbol">(</SPAN><A CLASS="efeature" HREF="../lex/ndfa.html#f_new_number">new_number</A><SPAN CLASS="esymbol">)</SPAN><BR>
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="elocal">current_tree</SPAN><SPAN CLASS="edot">.</SPAN><A CLASS="efeature" HREF="/libraries/base/reference/structures/list/cell.html#f_put">put</A> <SPAN CLASS="esymbol">(</SPAN><A CLASS="efeature" HREF="/libraries/lex/reference/lex/ndfa.html#f_new_number">new_number</A><SPAN CLASS="esymbol">)</SPAN><BR>
 
- &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<A CLASS="efeature" HREF="../lex/ndfa.html#f_set_position">set_position</A> <SPAN CLASS="esymbol">:=</SPAN> <A CLASS="efeature" HREF="../lex/ndfa.html#f_new_number">new_number</A><BR>
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<A CLASS="efeature" HREF="/libraries/lex/reference/lex/ndfa.html#f_set_position">set_position</A> <SPAN CLASS="esymbol">:=</SPAN> <A CLASS="efeature" HREF="/libraries/lex/reference/lex/ndfa.html#f_new_number">new_number</A><BR>
 
- &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<A CLASS="efeature" HREF="../lex/ndfa.html#f_new_set">new_set</A> <SPAN CLASS="esymbol">:=</SPAN> <SPAN CLASS="ekeyword">True</SPAN><BR>
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<A CLASS="efeature" HREF="/libraries/lex/reference/lex/ndfa.html#f_new_set">new_set</A> <SPAN CLASS="esymbol">:=</SPAN> <SPAN CLASS="ekeyword">True</SPAN><BR>
 
  &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ekeyword">else</SPAN><BR>
 
- &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<A CLASS="efeature" HREF="../lex/ndfa.html#f_new_set">new_set</A> <SPAN CLASS="esymbol">:=</SPAN> <SPAN CLASS="ekeyword">False</SPAN><BR>
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<A CLASS="efeature" HREF="/libraries/lex/reference/lex/ndfa.html#f_new_set">new_set</A> <SPAN CLASS="esymbol">:=</SPAN> <SPAN CLASS="ekeyword">False</SPAN><BR>
 
  &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ekeyword">end</SPAN><BR>
 
@@ -494,33 +494,33 @@
 
 <BR>
 
- &nbsp; &nbsp; &nbsp;<A NAME="f_closure"><A CLASS="efeature" HREF="../lex/ndfa.html#f_closure">closure</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">i</SPAN><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="neclass">INTEGER</SPAN><SPAN CLASS="esymbol">)</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../lex/fixed_integer_set.html">FIXED_INTEGER_SET</A> <SPAN CLASS="ekeyword">is</SPAN><BR>
+ &nbsp; &nbsp; &nbsp;<A NAME="f_closure"><A CLASS="efeature" HREF="/libraries/lex/reference/lex/ndfa.html#f_closure">closure</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">i</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="/libraries/base/reference/kernel/integer.html">INTEGER</A><SPAN CLASS="esymbol">)</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="/libraries/lex/reference/lex/fixed_integer_set.html">FIXED_INTEGER_SET</A> <SPAN CLASS="ekeyword">is</SPAN><BR>
 
  &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Epsilon_closure of ith state which means</SPAN><BR>
 
- &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> set of </SPAN><A CLASS="eclass" HREF="../lex/ndfa.html">NDFA</A><SPAN CLASS="ecomment"> state reachable from ith</SPAN><BR>
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> set of </SPAN><A CLASS="eclass" HREF="/libraries/lex/reference/lex/ndfa.html">NDFA</A><SPAN CLASS="ecomment"> state reachable from ith</SPAN><BR>
 
  &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> state on epsilon-transition alone</SPAN><BR>
 
  &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ekeyword">require</SPAN><BR>
 
- &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="etag">i_in_automaton</SPAN><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="elocal">i</SPAN> <SPAN CLASS="esymbol">&gt;</SPAN> <SPAN CLASS="enumber">0</SPAN> <SPAN CLASS="ekeyword">and</SPAN> <SPAN CLASS="elocal">i</SPAN> <SPAN CLASS="esymbol">&lt;=</SPAN> <A CLASS="efeature" HREF="../lex/automaton.html#f_nb_states">nb_states</A><BR>
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="etag">i_in_automaton</SPAN><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="elocal">i</SPAN> <A CLASS="esymbol" HREF="/libraries/base/reference/kernel/comparable.html#f__infix_gt">&gt;</A> <SPAN CLASS="enumber">0</SPAN> <A CLASS="ekeyword" HREF="/libraries/base/reference/kernel/boolean_ref.html#f__infix_and">and</A> <SPAN CLASS="elocal">i</SPAN> <A CLASS="esymbol" HREF="/libraries/base/reference/kernel/comparable.html#f__infix_le">&lt;=</A> <A CLASS="efeature" HREF="/libraries/lex/reference/lex/automaton.html#f_nb_states">nb_states</A><BR>
 
  &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ekeyword">deferred</SPAN><BR>
 
  &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ekeyword">ensure</SPAN><BR>
 
- &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="etag">i_in_closure</SPAN><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="ereserved">Result</SPAN><SPAN CLASS="edot">.</SPAN><A CLASS="efeature" HREF="../lex/fixed_integer_set.html#f_has">has</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">i</SPAN><SPAN CLASS="esymbol">)</SPAN><BR>
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="etag">i_in_closure</SPAN><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="ereserved">Result</SPAN><SPAN CLASS="edot">.</SPAN><A CLASS="efeature" HREF="/libraries/lex/reference/lex/fixed_integer_set.html#f_has">has</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">i</SPAN><SPAN CLASS="esymbol">)</SPAN><BR>
 
  &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ekeyword">end</SPAN></A><BR>
 
 <BR>
 
- &nbsp; &nbsp; &nbsp;<A NAME="f_move"><A CLASS="efeature" HREF="../lex/ndfa.html#f_move">move</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">initial_set</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../lex/fixed_integer_set.html">FIXED_INTEGER_SET</A><SPAN CLASS="esymbol">;</SPAN> <SPAN CLASS="elocal">i</SPAN><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="neclass">INTEGER</SPAN><SPAN CLASS="esymbol">)</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../lex/fixed_integer_set.html">FIXED_INTEGER_SET</A> <SPAN CLASS="ekeyword">is</SPAN><BR>
+ &nbsp; &nbsp; &nbsp;<A NAME="f_move"><A CLASS="efeature" HREF="/libraries/lex/reference/lex/ndfa.html#f_move">move</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">initial_set</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="/libraries/lex/reference/lex/fixed_integer_set.html">FIXED_INTEGER_SET</A><SPAN CLASS="esymbol">;</SPAN> <SPAN CLASS="elocal">i</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="/libraries/base/reference/kernel/integer.html">INTEGER</A><SPAN CLASS="esymbol">)</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="/libraries/lex/reference/lex/fixed_integer_set.html">FIXED_INTEGER_SET</A> <SPAN CLASS="ekeyword">is</SPAN><BR>
 
- &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Set of </SPAN><A CLASS="eclass" HREF="../lex/ndfa.html">NDFA</A><SPAN CLASS="ecomment"> states to which there is a transition on</SPAN><BR>
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Set of </SPAN><A CLASS="eclass" HREF="/libraries/lex/reference/lex/ndfa.html">NDFA</A><SPAN CLASS="ecomment"> states to which there is a transition on</SPAN><BR>
 
- &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> input i from some </SPAN><A CLASS="eclass" HREF="../lex/ndfa.html">NDFA</A><SPAN CLASS="ecomment"> state s of initial_set;</SPAN><BR>
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> input i from some </SPAN><A CLASS="eclass" HREF="/libraries/lex/reference/lex/ndfa.html">NDFA</A><SPAN CLASS="ecomment"> state s of initial_set;</SPAN><BR>
 
  &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Void if the set if empty</SPAN><BR>
 
@@ -532,7 +532,7 @@
 
 <BR>
 
- &nbsp; &nbsp; &nbsp;<A NAME="f_initial_final_designation"><A CLASS="efeature" HREF="../lex/ndfa.html#f_initial_final_designation">initial_final_designation</A> <SPAN CLASS="ekeyword">is</SPAN><BR>
+ &nbsp; &nbsp; &nbsp;<A NAME="f_initial_final_designation"><A CLASS="efeature" HREF="/libraries/lex/reference/lex/ndfa.html#f_initial_final_designation">initial_final_designation</A> <SPAN CLASS="ekeyword">is</SPAN><BR>
 
  &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Set the final and initial attributes of dfa,</SPAN><BR>
 
@@ -540,7 +540,7 @@
 
  &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ekeyword">require</SPAN><BR>
 
- &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="etag">dfa_exists</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="efeature" HREF="../lex/ndfa.html#f_dfa">dfa</A> <SPAN CLASS="esymbol">/=</SPAN> <SPAN CLASS="nefeature">void</SPAN><BR>
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="etag">dfa_exists</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="efeature" HREF="/libraries/lex/reference/lex/ndfa.html#f_dfa">dfa</A> <SPAN CLASS="esymbol">/=</SPAN> <A CLASS="efeature" HREF="/libraries/base/reference/kernel/any.html#f_void">void</A><BR>
 
  &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ekeyword">deferred</SPAN><BR>
 

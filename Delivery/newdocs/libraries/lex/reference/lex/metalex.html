@@ -1,10 +1,10 @@
 <HTML>
 	<HEAD>
-		
+
 <META NAME="generator" CONTENT="ISE EiffelBench version 5.0.020">
-		
+
 <TITLE>METALEX Text</TITLE>
-		
+
 <LINK REL="stylesheet" HREF="/default.css" TYPE="text/css">
 
 	</HEAD>
@@ -24,21 +24,21 @@
 
 <SPAN CLASS="ekeyword">class</SPAN> <BR>
 
- &nbsp; &nbsp; &nbsp;<A CLASS="eclass" HREF="../lex/metalex.html">METALEX</A><BR>
+ &nbsp; &nbsp; &nbsp;<A CLASS="eclass" HREF="/libraries/lex/reference/lex/metalex.html">METALEX</A><BR>
 
 <BR>
 
 <SPAN CLASS="ekeyword">inherit</SPAN><BR>
 
- &nbsp; &nbsp; &nbsp;<A CLASS="eclass" HREF="../lex/high_builder.html">HIGH_BUILDER</A><BR>
+ &nbsp; &nbsp; &nbsp;<A CLASS="eclass" HREF="/libraries/lex/reference/lex/high_builder.html">HIGH_BUILDER</A><BR>
 
  &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ekeyword">export</SPAN><BR>
 
- &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="esymbol">{</SPAN>NONE<SPAN CLASS="esymbol">}</SPAN> <A CLASS="efeature" HREF="../lex/lex_builder.html#f_freeze_lexical">freeze_lexical</A><BR>
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="esymbol">{</SPAN>NONE<SPAN CLASS="esymbol">}</SPAN> <A CLASS="efeature" HREF="/libraries/lex/reference/lex/lex_builder.html#f_freeze_lexical">freeze_lexical</A><BR>
 
  &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ekeyword">redefine</SPAN><BR>
 
- &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<A CLASS="efeature" HREF="../lex/high_builder.html#f_raise_error">raise_error</A><BR>
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<A CLASS="efeature" HREF="/libraries/lex/reference/lex/high_builder.html#f_raise_error">raise_error</A><BR>
 
  &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ekeyword">end</SPAN><BR>
 
@@ -46,9 +46,9 @@
 
 <SPAN CLASS="ekeyword">create</SPAN> <BR>
 
- &nbsp; &nbsp; &nbsp;<A CLASS="efeature" HREF="../lex/lex_builder.html#f_make">make</A><SPAN CLASS="esymbol">,</SPAN><BR>
+ &nbsp; &nbsp; &nbsp;<A CLASS="efeature" HREF="/libraries/lex/reference/lex/lex_builder.html#f_make">make</A><SPAN CLASS="esymbol">,</SPAN><BR>
 
- &nbsp; &nbsp; &nbsp;<A CLASS="efeature" HREF="../lex/lex_builder.html#f_make_extended">make_extended</A><BR>
+ &nbsp; &nbsp; &nbsp;<A CLASS="efeature" HREF="/libraries/lex/reference/lex/lex_builder.html#f_make_extended">make_extended</A><BR>
 
 <BR>
 
@@ -56,35 +56,35 @@
 
 <BR>
 
- &nbsp; &nbsp; &nbsp;<A NAME="f_make_analyzer"><A CLASS="efeature" HREF="../lex/metalex.html#f_make_analyzer">make_analyzer</A> <SPAN CLASS="ekeyword">is</SPAN><BR>
+ &nbsp; &nbsp; &nbsp;<A NAME="f_make_analyzer"><A CLASS="efeature" HREF="/libraries/lex/reference/lex/metalex.html#f_make_analyzer">make_analyzer</A> <SPAN CLASS="ekeyword">is</SPAN><BR>
 
  &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Create analyzer (if Void) and initialize it.</SPAN><BR>
 
  &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ekeyword">require</SPAN><BR>
 
- &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="etag">not_initialized</SPAN><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="ekeyword">not</SPAN> <A CLASS="efeature" HREF="../lex/lex_builder.html#f_initialized">initialized</A><BR>
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="etag">not_initialized</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="ekeyword" HREF="/libraries/base/reference/kernel/boolean_ref.html#f__prefix_not">not</A> <A CLASS="efeature" HREF="/libraries/lex/reference/lex/lex_builder.html#f_initialized">initialized</A><BR>
 
  &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ekeyword">do</SPAN><BR>
 
- &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<A CLASS="efeature" HREF="../lex/lex_builder.html#f_freeze_lexical">freeze_lexical</A><BR>
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<A CLASS="efeature" HREF="/libraries/lex/reference/lex/lex_builder.html#f_freeze_lexical">freeze_lexical</A><BR>
 
- &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ekeyword">if</SPAN> <A CLASS="efeature" HREF="../lex/lex_builder.html#f_analyzer">analyzer</A> <SPAN CLASS="esymbol">=</SPAN> <SPAN CLASS="nefeature">void</SPAN> <SPAN CLASS="ekeyword">then</SPAN><BR>
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ekeyword">if</SPAN> <A CLASS="efeature" HREF="/libraries/lex/reference/lex/lex_builder.html#f_analyzer">analyzer</A> <SPAN CLASS="esymbol">=</SPAN> <A CLASS="efeature" HREF="/libraries/base/reference/kernel/any.html#f_void">void</A> <SPAN CLASS="ekeyword">then</SPAN><BR>
 
- &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ekeyword">create</SPAN> <A CLASS="efeature" HREF="../lex/lex_builder.html#f_analyzer">analyzer</A><SPAN CLASS="edot">.</SPAN><A CLASS="efeature" HREF="../lex/lexical.html#f_make">make</A><BR>
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ekeyword">create</SPAN> <A CLASS="efeature" HREF="/libraries/lex/reference/lex/lex_builder.html#f_analyzer">analyzer</A><SPAN CLASS="edot">.</SPAN><A CLASS="efeature" HREF="/libraries/lex/reference/lex/lexical.html#f_make">make</A><BR>
 
  &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ekeyword">end</SPAN><BR>
 
- &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<A CLASS="efeature" HREF="../lex/lex_builder.html#f_analyzer">analyzer</A><SPAN CLASS="edot">.</SPAN><A CLASS="efeature" HREF="../lex/lexical.html#f_initialize_attributes">initialize_attributes</A> <SPAN CLASS="esymbol">(</SPAN><A CLASS="efeature" HREF="../lex/ndfa.html#f_dfa">dfa</A><SPAN CLASS="esymbol">,</SPAN> <A CLASS="efeature" HREF="../lex/lex_builder.html#f_categories_table">categories_table</A><SPAN CLASS="esymbol">,</SPAN> <A CLASS="efeature" HREF="../lex/lex_builder.html#f_keyword_h_table">keyword_h_table</A><SPAN CLASS="esymbol">,</SPAN> <A CLASS="efeature" HREF="../lex/lex_builder.html#f_keywords_case_sensitive">keywords_case_sensitive</A><SPAN CLASS="esymbol">)</SPAN><BR>
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<A CLASS="efeature" HREF="/libraries/lex/reference/lex/lex_builder.html#f_analyzer">analyzer</A><SPAN CLASS="edot">.</SPAN><A CLASS="efeature" HREF="/libraries/lex/reference/lex/lexical.html#f_initialize_attributes">initialize_attributes</A> <SPAN CLASS="esymbol">(</SPAN><A CLASS="efeature" HREF="/libraries/lex/reference/lex/ndfa.html#f_dfa">dfa</A><SPAN CLASS="esymbol">,</SPAN> <A CLASS="efeature" HREF="/libraries/lex/reference/lex/lex_builder.html#f_categories_table">categories_table</A><SPAN CLASS="esymbol">,</SPAN> <A CLASS="efeature" HREF="/libraries/lex/reference/lex/lex_builder.html#f_keyword_h_table">keyword_h_table</A><SPAN CLASS="esymbol">,</SPAN> <A CLASS="efeature" HREF="/libraries/lex/reference/lex/lex_builder.html#f_keywords_case_sensitive">keywords_case_sensitive</A><SPAN CLASS="esymbol">)</SPAN><BR>
 
- &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<A CLASS="efeature" HREF="../lex/lex_builder.html#f_initialized">initialized</A> <SPAN CLASS="esymbol">:=</SPAN> <SPAN CLASS="ekeyword">True</SPAN><BR>
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<A CLASS="efeature" HREF="/libraries/lex/reference/lex/lex_builder.html#f_initialized">initialized</A> <SPAN CLASS="esymbol">:=</SPAN> <SPAN CLASS="ekeyword">True</SPAN><BR>
 
  &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ekeyword">ensure</SPAN><BR>
 
- &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<A CLASS="efeature" HREF="../lex/lex_builder.html#f_initialized">initialized</A><BR>
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<A CLASS="efeature" HREF="/libraries/lex/reference/lex/lex_builder.html#f_initialized">initialized</A><BR>
 
- &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="etag">analyzer_created</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="efeature" HREF="../lex/lex_builder.html#f_analyzer">analyzer</A> <SPAN CLASS="esymbol">/=</SPAN> <SPAN CLASS="nefeature">void</SPAN><BR>
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="etag">analyzer_created</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="efeature" HREF="/libraries/lex/reference/lex/lex_builder.html#f_analyzer">analyzer</A> <SPAN CLASS="esymbol">/=</SPAN> <A CLASS="efeature" HREF="/libraries/base/reference/kernel/any.html#f_void">void</A><BR>
 
- &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<A CLASS="efeature" HREF="../lex/lex_builder.html#f_lexical_frozen">lexical_frozen</A><BR>
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<A CLASS="efeature" HREF="/libraries/lex/reference/lex/lex_builder.html#f_lexical_frozen">lexical_frozen</A><BR>
 
  &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ekeyword">end</SPAN></A><BR>
 
@@ -94,7 +94,7 @@
 
 <BR>
 
- &nbsp; &nbsp; &nbsp;<A NAME="f_put_expression"><A CLASS="efeature" HREF="../lex/metalex.html#f_put_expression">put_expression</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">s</SPAN><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="neclass">STRING</SPAN><SPAN CLASS="esymbol">;</SPAN> <SPAN CLASS="elocal">n</SPAN><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="neclass">INTEGER</SPAN><SPAN CLASS="esymbol">;</SPAN> <SPAN CLASS="elocal">c</SPAN><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="neclass">STRING</SPAN><SPAN CLASS="esymbol">)</SPAN> <SPAN CLASS="ekeyword">is</SPAN><BR>
+ &nbsp; &nbsp; &nbsp;<A NAME="f_put_expression"><A CLASS="efeature" HREF="/libraries/lex/reference/lex/metalex.html#f_put_expression">put_expression</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">s</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="/libraries/base/reference/kernel/string.html">STRING</A><SPAN CLASS="esymbol">;</SPAN> <SPAN CLASS="elocal">n</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="/libraries/base/reference/kernel/integer.html">INTEGER</A><SPAN CLASS="esymbol">;</SPAN> <SPAN CLASS="elocal">c</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="/libraries/base/reference/kernel/string.html">STRING</A><SPAN CLASS="esymbol">)</SPAN> <SPAN CLASS="ekeyword">is</SPAN><BR>
 
  &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Record the regular expression described by </SPAN><SPAN CLASS="equoted">s</SPAN><SPAN CLASS="ecomment"></SPAN><BR>
 
@@ -102,19 +102,19 @@
 
  &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ekeyword">require</SPAN><BR>
 
- &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="etag">source_long_enough</SPAN><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="elocal">s</SPAN><SPAN CLASS="edot">.</SPAN><SPAN CLASS="nefeature">capacity</SPAN> <SPAN CLASS="esymbol">&gt;</SPAN> <SPAN CLASS="enumber">0</SPAN><BR>
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="etag">source_long_enough</SPAN><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="elocal">s</SPAN><SPAN CLASS="edot">.</SPAN><A CLASS="efeature" HREF="/libraries/base/reference/kernel/string.html#f_capacity">capacity</A> <A CLASS="esymbol" HREF="/libraries/base/reference/kernel/comparable.html#f__infix_gt">&gt;</A> <SPAN CLASS="enumber">0</SPAN><BR>
 
  &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ekeyword">do</SPAN><BR>
 
- &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<A CLASS="efeature" HREF="../lex/metalex.html#f_construct">construct</A> <SPAN CLASS="esymbol">:=</SPAN> <SPAN CLASS="elocal">c</SPAN><BR>
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<A CLASS="efeature" HREF="/libraries/lex/reference/lex/metalex.html#f_construct">construct</A> <SPAN CLASS="esymbol">:=</SPAN> <SPAN CLASS="elocal">c</SPAN><BR>
 
- &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<A CLASS="efeature" HREF="../lex/high_builder.html#f_put_nameless_expression">put_nameless_expression</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">s</SPAN><SPAN CLASS="esymbol">,</SPAN> <SPAN CLASS="elocal">n</SPAN><SPAN CLASS="esymbol">)</SPAN><BR>
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<A CLASS="efeature" HREF="/libraries/lex/reference/lex/high_builder.html#f_put_nameless_expression">put_nameless_expression</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">s</SPAN><SPAN CLASS="esymbol">,</SPAN> <SPAN CLASS="elocal">n</SPAN><SPAN CLASS="esymbol">)</SPAN><BR>
 
  &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ekeyword">end</SPAN></A><BR>
 
 <BR>
 
- &nbsp; &nbsp; &nbsp;<A NAME="f_add_word"><A CLASS="efeature" HREF="../lex/metalex.html#f_add_word">add_word</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">s</SPAN><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="neclass">STRING</SPAN><SPAN CLASS="esymbol">;</SPAN> <SPAN CLASS="elocal">n</SPAN><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="neclass">INTEGER</SPAN><SPAN CLASS="esymbol">)</SPAN> <SPAN CLASS="ekeyword">is</SPAN><BR>
+ &nbsp; &nbsp; &nbsp;<A NAME="f_add_word"><A CLASS="efeature" HREF="/libraries/lex/reference/lex/metalex.html#f_add_word">add_word</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">s</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="/libraries/base/reference/kernel/string.html">STRING</A><SPAN CLASS="esymbol">;</SPAN> <SPAN CLASS="elocal">n</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="/libraries/base/reference/kernel/integer.html">INTEGER</A><SPAN CLASS="esymbol">)</SPAN> <SPAN CLASS="ekeyword">is</SPAN><BR>
 
  &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Record the word </SPAN><SPAN CLASS="equoted">s</SPAN><SPAN CLASS="ecomment"> and</SPAN><BR>
 
@@ -122,17 +122,17 @@
 
  &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ekeyword">require</SPAN><BR>
 
- &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="etag">s_not_void</SPAN><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="elocal">s</SPAN> <SPAN CLASS="esymbol">/=</SPAN> <SPAN CLASS="nefeature">void</SPAN><BR>
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="etag">s_not_void</SPAN><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="elocal">s</SPAN> <SPAN CLASS="esymbol">/=</SPAN> <A CLASS="efeature" HREF="/libraries/base/reference/kernel/any.html#f_void">void</A><BR>
 
- &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="etag">s_not_empty</SPAN><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="elocal">s</SPAN><SPAN CLASS="edot">.</SPAN><SPAN CLASS="nefeature">capacity</SPAN> <SPAN CLASS="esymbol">&gt;=</SPAN> <SPAN CLASS="enumber">1</SPAN><BR>
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="etag">s_not_empty</SPAN><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="elocal">s</SPAN><SPAN CLASS="edot">.</SPAN><A CLASS="efeature" HREF="/libraries/base/reference/kernel/string.html#f_capacity">capacity</A> <A CLASS="esymbol" HREF="/libraries/base/reference/kernel/comparable.html#f__infix_ge">&gt;=</A> <SPAN CLASS="enumber">1</SPAN><BR>
 
  &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ekeyword">do</SPAN><BR>
 
- &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<A CLASS="efeature" HREF="../lex/lex_builder.html#f_set_word">set_word</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">s</SPAN><SPAN CLASS="esymbol">)</SPAN><BR>
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<A CLASS="efeature" HREF="/libraries/lex/reference/lex/lex_builder.html#f_set_word">set_word</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">s</SPAN><SPAN CLASS="esymbol">)</SPAN><BR>
 
- &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<A CLASS="efeature" HREF="../lex/lex_builder.html#f_select_tool">select_tool</A> <SPAN CLASS="esymbol">(</SPAN><A CLASS="efeature" HREF="../lex/lex_builder.html#f_last_created_tool">last_created_tool</A><SPAN CLASS="esymbol">)</SPAN><BR>
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<A CLASS="efeature" HREF="/libraries/lex/reference/lex/lex_builder.html#f_select_tool">select_tool</A> <SPAN CLASS="esymbol">(</SPAN><A CLASS="efeature" HREF="/libraries/lex/reference/lex/lex_builder.html#f_last_created_tool">last_created_tool</A><SPAN CLASS="esymbol">)</SPAN><BR>
 
- &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<A CLASS="efeature" HREF="../lex/lex_builder.html#f_associate">associate</A> <SPAN CLASS="esymbol">(</SPAN><A CLASS="efeature" HREF="../lex/lex_builder.html#f_last_created_tool">last_created_tool</A><SPAN CLASS="esymbol">,</SPAN> <SPAN CLASS="elocal">n</SPAN><SPAN CLASS="esymbol">)</SPAN><BR>
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<A CLASS="efeature" HREF="/libraries/lex/reference/lex/lex_builder.html#f_associate">associate</A> <SPAN CLASS="esymbol">(</SPAN><A CLASS="efeature" HREF="/libraries/lex/reference/lex/lex_builder.html#f_last_created_tool">last_created_tool</A><SPAN CLASS="esymbol">,</SPAN> <SPAN CLASS="elocal">n</SPAN><SPAN CLASS="esymbol">)</SPAN><BR>
 
  &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ekeyword">end</SPAN></A><BR>
 
@@ -142,7 +142,7 @@
 
 <BR>
 
- &nbsp; &nbsp; &nbsp;<A NAME="f_read_grammar"><A CLASS="efeature" HREF="../lex/metalex.html#f_read_grammar">read_grammar</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">token_file_name</SPAN><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="neclass">STRING</SPAN><SPAN CLASS="esymbol">)</SPAN> <SPAN CLASS="ekeyword">is</SPAN><BR>
+ &nbsp; &nbsp; &nbsp;<A NAME="f_read_grammar"><A CLASS="efeature" HREF="/libraries/lex/reference/lex/metalex.html#f_read_grammar">read_grammar</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">token_file_name</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="/libraries/base/reference/kernel/string.html">STRING</A><SPAN CLASS="esymbol">)</SPAN> <SPAN CLASS="ekeyword">is</SPAN><BR>
 
  &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Create lexical analyzer for grammar in file of name</SPAN><BR>
 
@@ -158,23 +158,23 @@
 
  &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ekeyword">do</SPAN><BR>
 
- &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ekeyword">create</SPAN> <A CLASS="efeature" HREF="../lex/metalex.html#f_token_file">token_file</A><SPAN CLASS="edot">.</SPAN><SPAN CLASS="nefeature">make_open_read</SPAN> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">token_file_name</SPAN><SPAN CLASS="esymbol">)</SPAN><BR>
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ekeyword">create</SPAN> <A CLASS="efeature" HREF="/libraries/lex/reference/lex/metalex.html#f_token_file">token_file</A><SPAN CLASS="edot">.</SPAN><A CLASS="efeature" HREF="/libraries/base/reference/kernel/file.html#f_make_open_read">make_open_read</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">token_file_name</SPAN><SPAN CLASS="esymbol">)</SPAN><BR>
 
- &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<A CLASS="efeature" HREF="../lex/metalex.html#f_record_atomics">record_atomics</A><BR>
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<A CLASS="efeature" HREF="/libraries/lex/reference/lex/metalex.html#f_record_atomics">record_atomics</A><BR>
 
- &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<A CLASS="efeature" HREF="../lex/metalex.html#f_record_keywords">record_keywords</A><BR>
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<A CLASS="efeature" HREF="/libraries/lex/reference/lex/metalex.html#f_record_keywords">record_keywords</A><BR>
 
- &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<A CLASS="efeature" HREF="../lex/metalex.html#f_make_analyzer">make_analyzer</A><BR>
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<A CLASS="efeature" HREF="/libraries/lex/reference/lex/metalex.html#f_make_analyzer">make_analyzer</A><BR>
 
  &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ekeyword">ensure</SPAN><BR>
 
- &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="etag">analyzer_exists</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="efeature" HREF="../lex/lex_builder.html#f_analyzer">analyzer</A> <SPAN CLASS="esymbol">/=</SPAN> <SPAN CLASS="nefeature">void</SPAN><BR>
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="etag">analyzer_exists</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="efeature" HREF="/libraries/lex/reference/lex/lex_builder.html#f_analyzer">analyzer</A> <SPAN CLASS="esymbol">/=</SPAN> <A CLASS="efeature" HREF="/libraries/base/reference/kernel/any.html#f_void">void</A><BR>
 
  &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ekeyword">end</SPAN></A><BR>
 
 <BR>
 
- &nbsp; &nbsp; &nbsp;<A NAME="f_no_token"><A CLASS="efeature" HREF="../lex/metalex.html#f_no_token">No_token</A><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="neclass">INTEGER</SPAN> <SPAN CLASS="ekeyword">is</SPAN> <SPAN CLASS="enumber">0</SPAN></A><BR>
+ &nbsp; &nbsp; &nbsp;<A NAME="f_no_token"><A CLASS="efeature" HREF="/libraries/lex/reference/lex/metalex.html#f_no_token">No_token</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="/libraries/base/reference/kernel/integer.html">INTEGER</A> <SPAN CLASS="ekeyword">is</SPAN> <SPAN CLASS="enumber">0</SPAN></A><BR>
 
  &nbsp; &nbsp; &nbsp;<BR>
 
@@ -182,7 +182,7 @@
 
 <BR>
 
- &nbsp; &nbsp; &nbsp;<A NAME="f_construct"><A CLASS="efeature" HREF="../lex/metalex.html#f_construct">construct</A><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="neclass">STRING</SPAN></A><BR>
+ &nbsp; &nbsp; &nbsp;<A NAME="f_construct"><A CLASS="efeature" HREF="/libraries/lex/reference/lex/metalex.html#f_construct">construct</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="/libraries/base/reference/kernel/string.html">STRING</A></A><BR>
 
  &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Construct including description</SPAN><BR>
 
@@ -190,25 +190,25 @@
 
 <BR>
 
- &nbsp; &nbsp; &nbsp;<A NAME="f_give_h_table"><A CLASS="efeature" HREF="../lex/metalex.html#f_give_h_table">give_h_table</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">d</SPAN><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="neclass">HASH_TABLE</SPAN> <SPAN CLASS="esymbol">[</SPAN><SPAN CLASS="neclass">INTEGER</SPAN><SPAN CLASS="esymbol">,</SPAN> <SPAN CLASS="neclass">STRING</SPAN><SPAN CLASS="esymbol">]</SPAN><SPAN CLASS="esymbol">)</SPAN> <SPAN CLASS="ekeyword">is</SPAN><BR>
+ &nbsp; &nbsp; &nbsp;<A NAME="f_give_h_table"><A CLASS="efeature" HREF="/libraries/lex/reference/lex/metalex.html#f_give_h_table">give_h_table</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">d</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="/libraries/base/reference/structures/table/hash_table.html">HASH_TABLE</A> <SPAN CLASS="esymbol">[</SPAN><A CLASS="eclass" HREF="/libraries/base/reference/kernel/integer.html">INTEGER</A><SPAN CLASS="esymbol">,</SPAN> <A CLASS="eclass" HREF="/libraries/base/reference/kernel/string.html">STRING</A><SPAN CLASS="esymbol">]</SPAN><SPAN CLASS="esymbol">)</SPAN> <SPAN CLASS="ekeyword">is</SPAN><BR>
 
  &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Set the h_table to d.</SPAN><BR>
 
- &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Used when the h_table is not built by a </SPAN><A CLASS="eclass" HREF="../lex/lex_builder.html">LEX_BUILDER</A><SPAN CLASS="ecomment">.</SPAN><BR>
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Used when the h_table is not built by a </SPAN><A CLASS="eclass" HREF="/libraries/lex/reference/lex/lex_builder.html">LEX_BUILDER</A><SPAN CLASS="ecomment">.</SPAN><BR>
 
  &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ekeyword">do</SPAN><BR>
 
- &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<A CLASS="efeature" HREF="../lex/lex_builder.html#f_keyword_h_table">keyword_h_table</A> <SPAN CLASS="esymbol">:=</SPAN> <SPAN CLASS="elocal">d</SPAN><BR>
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<A CLASS="efeature" HREF="/libraries/lex/reference/lex/lex_builder.html#f_keyword_h_table">keyword_h_table</A> <SPAN CLASS="esymbol">:=</SPAN> <SPAN CLASS="elocal">d</SPAN><BR>
 
  &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ekeyword">end</SPAN></A><BR>
 
 <BR>
 
- &nbsp; &nbsp; &nbsp;<A NAME="f_token_file"><A CLASS="efeature" HREF="../lex/metalex.html#f_token_file">token_file</A><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="neclass">PLAIN_TEXT_FILE</SPAN></A><BR>
+ &nbsp; &nbsp; &nbsp;<A NAME="f_token_file"><A CLASS="efeature" HREF="/libraries/lex/reference/lex/metalex.html#f_token_file">token_file</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="/libraries/base/reference/kernel/plain_text_file.html">PLAIN_TEXT_FILE</A></A><BR>
 
 <BR>
 
- &nbsp; &nbsp; &nbsp;<A NAME="f_record_atomics"><A CLASS="efeature" HREF="../lex/metalex.html#f_record_atomics">record_atomics</A> <SPAN CLASS="ekeyword">is</SPAN><BR>
+ &nbsp; &nbsp; &nbsp;<A NAME="f_record_atomics"><A CLASS="efeature" HREF="/libraries/lex/reference/lex/metalex.html#f_record_atomics">record_atomics</A> <SPAN CLASS="ekeyword">is</SPAN><BR>
 
  &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Record the regular expressions with their names and</SPAN><BR>
 
@@ -216,9 +216,9 @@
 
  &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ekeyword">local</SPAN><BR>
 
- &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="elocal">token_name</SPAN><SPAN CLASS="esymbol">,</SPAN> <SPAN CLASS="elocal">regular</SPAN><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="neclass">STRING</SPAN><BR>
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="elocal">token_name</SPAN><SPAN CLASS="esymbol">,</SPAN> <SPAN CLASS="elocal">regular</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="/libraries/base/reference/kernel/string.html">STRING</A><BR>
 
- &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="elocal">id</SPAN><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="neclass">INTEGER</SPAN><BR>
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="elocal">id</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="/libraries/base/reference/kernel/integer.html">INTEGER</A><BR>
 
  &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ekeyword">do</SPAN><BR>
 
@@ -226,31 +226,31 @@
 
  &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="elocal">id</SPAN> <SPAN CLASS="esymbol">:=</SPAN> <SPAN CLASS="enumber">1</SPAN><BR>
 
- &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<A CLASS="efeature" HREF="../lex/metalex.html#f_token_file">token_file</A><SPAN CLASS="edot">.</SPAN><SPAN CLASS="nefeature">read_word</SPAN><BR>
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<A CLASS="efeature" HREF="/libraries/lex/reference/lex/metalex.html#f_token_file">token_file</A><SPAN CLASS="edot">.</SPAN><A CLASS="efeature" HREF="/libraries/base/reference/kernel/file.html#f_read_word">read_word</A><BR>
 
- &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="elocal">token_name</SPAN> <SPAN CLASS="esymbol">:=</SPAN> <SPAN CLASS="nefeature">clone</SPAN> <SPAN CLASS="esymbol">(</SPAN><A CLASS="efeature" HREF="../lex/metalex.html#f_token_file">token_file</A><SPAN CLASS="edot">.</SPAN><SPAN CLASS="nefeature">last_string</SPAN><SPAN CLASS="esymbol">)</SPAN><BR>
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="elocal">token_name</SPAN> <SPAN CLASS="esymbol">:=</SPAN> <A CLASS="efeature" HREF="/libraries/base/reference/kernel/any.html#f_clone">clone</A> <SPAN CLASS="esymbol">(</SPAN><A CLASS="efeature" HREF="/libraries/lex/reference/lex/metalex.html#f_token_file">token_file</A><SPAN CLASS="edot">.</SPAN><A CLASS="efeature" HREF="/libraries/base/reference/kernel/io_medium.html#f_last_string">last_string</A><SPAN CLASS="esymbol">)</SPAN><BR>
 
- &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<A CLASS="efeature" HREF="../lex/metalex.html#f_token_file">token_file</A><SPAN CLASS="edot">.</SPAN><SPAN CLASS="nefeature">read_line</SPAN><BR>
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<A CLASS="efeature" HREF="/libraries/lex/reference/lex/metalex.html#f_token_file">token_file</A><SPAN CLASS="edot">.</SPAN><A CLASS="efeature" HREF="/libraries/base/reference/kernel/file.html#f_read_line">read_line</A><BR>
 
- &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="elocal">regular</SPAN> <SPAN CLASS="esymbol">:=</SPAN> <SPAN CLASS="nefeature">clone</SPAN> <SPAN CLASS="esymbol">(</SPAN><A CLASS="efeature" HREF="../lex/metalex.html#f_token_file">token_file</A><SPAN CLASS="edot">.</SPAN><SPAN CLASS="nefeature">last_string</SPAN><SPAN CLASS="esymbol">)</SPAN><BR>
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="elocal">regular</SPAN> <SPAN CLASS="esymbol">:=</SPAN> <A CLASS="efeature" HREF="/libraries/base/reference/kernel/any.html#f_clone">clone</A> <SPAN CLASS="esymbol">(</SPAN><A CLASS="efeature" HREF="/libraries/lex/reference/lex/metalex.html#f_token_file">token_file</A><SPAN CLASS="edot">.</SPAN><A CLASS="efeature" HREF="/libraries/base/reference/kernel/io_medium.html#f_last_string">last_string</A><SPAN CLASS="esymbol">)</SPAN><BR>
 
  &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ekeyword">until</SPAN><BR>
 
- &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="elocal">token_name</SPAN><SPAN CLASS="edot">.</SPAN><SPAN CLASS="nefeature">is_equal</SPAN> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="estring">"--"</SPAN><SPAN CLASS="esymbol">)</SPAN><BR>
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="elocal">token_name</SPAN><SPAN CLASS="edot">.</SPAN><A CLASS="efeature" HREF="/libraries/base/reference/kernel/string.html#f_is_equal">is_equal</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="estring">"--"</SPAN><SPAN CLASS="esymbol">)</SPAN><BR>
 
  &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ekeyword">loop</SPAN><BR>
 
- &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<A CLASS="efeature" HREF="../lex/metalex.html#f_put_expression">put_expression</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">regular</SPAN><SPAN CLASS="esymbol">,</SPAN> <SPAN CLASS="elocal">id</SPAN><SPAN CLASS="esymbol">,</SPAN> <SPAN CLASS="elocal">token_name</SPAN><SPAN CLASS="esymbol">)</SPAN><BR>
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<A CLASS="efeature" HREF="/libraries/lex/reference/lex/metalex.html#f_put_expression">put_expression</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">regular</SPAN><SPAN CLASS="esymbol">,</SPAN> <SPAN CLASS="elocal">id</SPAN><SPAN CLASS="esymbol">,</SPAN> <SPAN CLASS="elocal">token_name</SPAN><SPAN CLASS="esymbol">)</SPAN><BR>
 
- &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<A CLASS="efeature" HREF="../lex/metalex.html#f_token_file">token_file</A><SPAN CLASS="edot">.</SPAN><SPAN CLASS="nefeature">read_word</SPAN><BR>
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<A CLASS="efeature" HREF="/libraries/lex/reference/lex/metalex.html#f_token_file">token_file</A><SPAN CLASS="edot">.</SPAN><A CLASS="efeature" HREF="/libraries/base/reference/kernel/file.html#f_read_word">read_word</A><BR>
 
- &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="elocal">token_name</SPAN> <SPAN CLASS="esymbol">:=</SPAN> <SPAN CLASS="nefeature">clone</SPAN> <SPAN CLASS="esymbol">(</SPAN><A CLASS="efeature" HREF="../lex/metalex.html#f_token_file">token_file</A><SPAN CLASS="edot">.</SPAN><SPAN CLASS="nefeature">last_string</SPAN><SPAN CLASS="esymbol">)</SPAN><BR>
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="elocal">token_name</SPAN> <SPAN CLASS="esymbol">:=</SPAN> <A CLASS="efeature" HREF="/libraries/base/reference/kernel/any.html#f_clone">clone</A> <SPAN CLASS="esymbol">(</SPAN><A CLASS="efeature" HREF="/libraries/lex/reference/lex/metalex.html#f_token_file">token_file</A><SPAN CLASS="edot">.</SPAN><A CLASS="efeature" HREF="/libraries/base/reference/kernel/io_medium.html#f_last_string">last_string</A><SPAN CLASS="esymbol">)</SPAN><BR>
 
- &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<A CLASS="efeature" HREF="../lex/metalex.html#f_token_file">token_file</A><SPAN CLASS="edot">.</SPAN><SPAN CLASS="nefeature">read_line</SPAN><BR>
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<A CLASS="efeature" HREF="/libraries/lex/reference/lex/metalex.html#f_token_file">token_file</A><SPAN CLASS="edot">.</SPAN><A CLASS="efeature" HREF="/libraries/base/reference/kernel/file.html#f_read_line">read_line</A><BR>
 
- &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="elocal">regular</SPAN> <SPAN CLASS="esymbol">:=</SPAN> <SPAN CLASS="nefeature">clone</SPAN> <SPAN CLASS="esymbol">(</SPAN><A CLASS="efeature" HREF="../lex/metalex.html#f_token_file">token_file</A><SPAN CLASS="edot">.</SPAN><SPAN CLASS="nefeature">last_string</SPAN><SPAN CLASS="esymbol">)</SPAN><BR>
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="elocal">regular</SPAN> <SPAN CLASS="esymbol">:=</SPAN> <A CLASS="efeature" HREF="/libraries/base/reference/kernel/any.html#f_clone">clone</A> <SPAN CLASS="esymbol">(</SPAN><A CLASS="efeature" HREF="/libraries/lex/reference/lex/metalex.html#f_token_file">token_file</A><SPAN CLASS="edot">.</SPAN><A CLASS="efeature" HREF="/libraries/base/reference/kernel/io_medium.html#f_last_string">last_string</A><SPAN CLASS="esymbol">)</SPAN><BR>
 
- &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="elocal">id</SPAN> <SPAN CLASS="esymbol">:=</SPAN> <SPAN CLASS="elocal">id</SPAN> <SPAN CLASS="esymbol">+</SPAN> <SPAN CLASS="enumber">1</SPAN><BR>
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="elocal">id</SPAN> <SPAN CLASS="esymbol">:=</SPAN> <SPAN CLASS="elocal">id</SPAN> <A CLASS="esymbol" HREF="/libraries/base/reference/kernel/integer_ref.html#f__infix_plus">+</A> <SPAN CLASS="enumber">1</SPAN><BR>
 
  &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ekeyword">end</SPAN><BR>
 
@@ -258,7 +258,7 @@
 
 <BR>
 
- &nbsp; &nbsp; &nbsp;<A NAME="f_record_keywords"><A CLASS="efeature" HREF="../lex/metalex.html#f_record_keywords">record_keywords</A> <SPAN CLASS="ekeyword">is</SPAN><BR>
+ &nbsp; &nbsp; &nbsp;<A NAME="f_record_keywords"><A CLASS="efeature" HREF="/libraries/lex/reference/lex/metalex.html#f_record_keywords">record_keywords</A> <SPAN CLASS="ekeyword">is</SPAN><BR>
 
  &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Record the keywords with their names, with type</SPAN><BR>
 
@@ -266,31 +266,31 @@
 
  &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ekeyword">local</SPAN><BR>
 
- &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="elocal">keyword_name</SPAN><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="neclass">STRING</SPAN><BR>
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="elocal">keyword_name</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="/libraries/base/reference/kernel/string.html">STRING</A><BR>
 
- &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="elocal">keyword_type</SPAN><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="neclass">INTEGER</SPAN><BR>
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="elocal">keyword_type</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="/libraries/base/reference/kernel/integer.html">INTEGER</A><BR>
 
  &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ekeyword">do</SPAN><BR>
 
  &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ekeyword">from</SPAN><BR>
 
- &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="elocal">keyword_type</SPAN> <SPAN CLASS="esymbol">:=</SPAN> <A CLASS="efeature" HREF="../lex/lex_builder.html#f_token_type_list">token_type_list</A><SPAN CLASS="edot">.</SPAN><SPAN CLASS="nefeature">last</SPAN><BR>
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="elocal">keyword_type</SPAN> <SPAN CLASS="esymbol">:=</SPAN> <A CLASS="efeature" HREF="/libraries/lex/reference/lex/lex_builder.html#f_token_type_list">token_type_list</A><SPAN CLASS="edot">.</SPAN><A CLASS="efeature" HREF="/libraries/base/reference/structures/list/linked_list.html#f_last">last</A><BR>
 
- &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<A CLASS="efeature" HREF="../lex/metalex.html#f_token_file">token_file</A><SPAN CLASS="edot">.</SPAN><SPAN CLASS="nefeature">read_word</SPAN><BR>
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<A CLASS="efeature" HREF="/libraries/lex/reference/lex/metalex.html#f_token_file">token_file</A><SPAN CLASS="edot">.</SPAN><A CLASS="efeature" HREF="/libraries/base/reference/kernel/file.html#f_read_word">read_word</A><BR>
 
- &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="elocal">keyword_name</SPAN> <SPAN CLASS="esymbol">:=</SPAN> <SPAN CLASS="nefeature">clone</SPAN> <SPAN CLASS="esymbol">(</SPAN><A CLASS="efeature" HREF="../lex/metalex.html#f_token_file">token_file</A><SPAN CLASS="edot">.</SPAN><SPAN CLASS="nefeature">last_string</SPAN><SPAN CLASS="esymbol">)</SPAN><BR>
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="elocal">keyword_name</SPAN> <SPAN CLASS="esymbol">:=</SPAN> <A CLASS="efeature" HREF="/libraries/base/reference/kernel/any.html#f_clone">clone</A> <SPAN CLASS="esymbol">(</SPAN><A CLASS="efeature" HREF="/libraries/lex/reference/lex/metalex.html#f_token_file">token_file</A><SPAN CLASS="edot">.</SPAN><A CLASS="efeature" HREF="/libraries/base/reference/kernel/io_medium.html#f_last_string">last_string</A><SPAN CLASS="esymbol">)</SPAN><BR>
 
  &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ekeyword">until</SPAN><BR>
 
- &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<A CLASS="efeature" HREF="../lex/metalex.html#f_token_file">token_file</A><SPAN CLASS="edot">.</SPAN><SPAN CLASS="nefeature">end_of_file</SPAN><BR>
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<A CLASS="efeature" HREF="/libraries/lex/reference/lex/metalex.html#f_token_file">token_file</A><SPAN CLASS="edot">.</SPAN><A CLASS="efeature" HREF="/libraries/base/reference/kernel/file.html#f_end_of_file">end_of_file</A><BR>
 
  &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ekeyword">loop</SPAN><BR>
 
- &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<A CLASS="efeature" HREF="../lex/lex_builder.html#f_put_keyword">put_keyword</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">keyword_name</SPAN><SPAN CLASS="esymbol">,</SPAN> <SPAN CLASS="elocal">keyword_type</SPAN><SPAN CLASS="esymbol">)</SPAN><BR>
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<A CLASS="efeature" HREF="/libraries/lex/reference/lex/lex_builder.html#f_put_keyword">put_keyword</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">keyword_name</SPAN><SPAN CLASS="esymbol">,</SPAN> <SPAN CLASS="elocal">keyword_type</SPAN><SPAN CLASS="esymbol">)</SPAN><BR>
 
- &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<A CLASS="efeature" HREF="../lex/metalex.html#f_token_file">token_file</A><SPAN CLASS="edot">.</SPAN><SPAN CLASS="nefeature">read_word</SPAN><BR>
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<A CLASS="efeature" HREF="/libraries/lex/reference/lex/metalex.html#f_token_file">token_file</A><SPAN CLASS="edot">.</SPAN><A CLASS="efeature" HREF="/libraries/base/reference/kernel/file.html#f_read_word">read_word</A><BR>
 
- &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="elocal">keyword_name</SPAN> <SPAN CLASS="esymbol">:=</SPAN> <SPAN CLASS="nefeature">clone</SPAN> <SPAN CLASS="esymbol">(</SPAN><A CLASS="efeature" HREF="../lex/metalex.html#f_token_file">token_file</A><SPAN CLASS="edot">.</SPAN><SPAN CLASS="nefeature">last_string</SPAN><SPAN CLASS="esymbol">)</SPAN><BR>
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="elocal">keyword_name</SPAN> <SPAN CLASS="esymbol">:=</SPAN> <A CLASS="efeature" HREF="/libraries/base/reference/kernel/any.html#f_clone">clone</A> <SPAN CLASS="esymbol">(</SPAN><A CLASS="efeature" HREF="/libraries/lex/reference/lex/metalex.html#f_token_file">token_file</A><SPAN CLASS="edot">.</SPAN><A CLASS="efeature" HREF="/libraries/base/reference/kernel/io_medium.html#f_last_string">last_string</A><SPAN CLASS="esymbol">)</SPAN><BR>
 
  &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ekeyword">end</SPAN><BR>
 
@@ -298,7 +298,7 @@
 
 <BR>
 
- &nbsp; &nbsp; &nbsp;<A NAME="f_raise_error"><A CLASS="efeature" HREF="../lex/metalex.html#f_raise_error">raise_error</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">pos</SPAN><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="neclass">INTEGER</SPAN><SPAN CLASS="esymbol">;</SPAN> <SPAN CLASS="elocal">expected</SPAN><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="neclass">CHARACTER</SPAN><SPAN CLASS="esymbol">;</SPAN> <SPAN CLASS="elocal">mes</SPAN><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="neclass">STRING</SPAN><SPAN CLASS="esymbol">)</SPAN> <SPAN CLASS="ekeyword">is</SPAN><BR>
+ &nbsp; &nbsp; &nbsp;<A NAME="f_raise_error"><A CLASS="efeature" HREF="/libraries/lex/reference/lex/metalex.html#f_raise_error">raise_error</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">pos</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="/libraries/base/reference/kernel/integer.html">INTEGER</A><SPAN CLASS="esymbol">;</SPAN> <SPAN CLASS="elocal">expected</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="/libraries/base/reference/kernel/character.html">CHARACTER</A><SPAN CLASS="esymbol">;</SPAN> <SPAN CLASS="elocal">mes</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="/libraries/base/reference/kernel/string.html">STRING</A><SPAN CLASS="esymbol">)</SPAN> <SPAN CLASS="ekeyword">is</SPAN><BR>
 
  &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Print an error message and stop parsing.</SPAN><BR>
 
@@ -306,65 +306,65 @@
 
  &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ekeyword">require</SPAN> <SPAN CLASS="ekeyword">else</SPAN><BR>
 
- &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="etag">parsing_not_stopped</SPAN><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="ekeyword">not</SPAN> <A CLASS="efeature" HREF="../lex/high_builder.html#f_parsing_stopped">parsing_stopped</A><BR>
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="etag">parsing_not_stopped</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="ekeyword" HREF="/libraries/base/reference/kernel/boolean_ref.html#f__prefix_not">not</A> <A CLASS="efeature" HREF="/libraries/lex/reference/lex/high_builder.html#f_parsing_stopped">parsing_stopped</A><BR>
 
  &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ekeyword">local</SPAN><BR>
 
- &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="elocal">error_position</SPAN><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="neclass">INTEGER</SPAN><BR>
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="elocal">error_position</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="/libraries/base/reference/kernel/integer.html">INTEGER</A><BR>
 
- &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="elocal">message</SPAN><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="neclass">STRING</SPAN><BR>
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="elocal">message</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="/libraries/base/reference/kernel/string.html">STRING</A><BR>
 
  &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ekeyword">do</SPAN><BR>
 
- &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ekeyword">create</SPAN> <SPAN CLASS="elocal">message</SPAN><SPAN CLASS="edot">.</SPAN><SPAN CLASS="nefeature">make</SPAN> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="enumber">0</SPAN><SPAN CLASS="esymbol">)</SPAN><BR>
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ekeyword">create</SPAN> <SPAN CLASS="elocal">message</SPAN><SPAN CLASS="edot">.</SPAN><A CLASS="efeature" HREF="/libraries/base/reference/kernel/string.html#f_make">make</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="enumber">0</SPAN><SPAN CLASS="esymbol">)</SPAN><BR>
 
- &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ekeyword">if</SPAN> <A CLASS="efeature" HREF="../lex/high_builder.html#f_description_length">description_length</A> <SPAN CLASS="esymbol">=</SPAN> <SPAN CLASS="enumber">1</SPAN> <SPAN CLASS="ekeyword">or</SPAN> <SPAN CLASS="elocal">pos</SPAN> <SPAN CLASS="esymbol">&lt;</SPAN> <SPAN CLASS="enumber">1</SPAN> <SPAN CLASS="ekeyword">then</SPAN><BR>
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ekeyword">if</SPAN> <A CLASS="efeature" HREF="/libraries/lex/reference/lex/high_builder.html#f_description_length">description_length</A> <SPAN CLASS="esymbol">=</SPAN> <SPAN CLASS="enumber">1</SPAN> <SPAN CLASS="ekeyword">or</SPAN> <SPAN CLASS="elocal">pos</SPAN> <A CLASS="esymbol" HREF="/libraries/base/reference/kernel/integer_ref.html#f__infix_lt">&lt;</A> <SPAN CLASS="enumber">1</SPAN> <SPAN CLASS="ekeyword">then</SPAN><BR>
 
  &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="elocal">error_position</SPAN> <SPAN CLASS="esymbol">:=</SPAN> <SPAN CLASS="enumber">1</SPAN><BR>
 
- &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ekeyword">elseif</SPAN> <SPAN CLASS="elocal">pos</SPAN> <SPAN CLASS="esymbol">&lt;</SPAN> <A CLASS="efeature" HREF="../lex/high_builder.html#f_description_length">description_length</A> <SPAN CLASS="ekeyword">then</SPAN><BR>
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ekeyword">elseif</SPAN> <SPAN CLASS="elocal">pos</SPAN> <A CLASS="esymbol" HREF="/libraries/base/reference/kernel/integer_ref.html#f__infix_lt">&lt;</A> <A CLASS="efeature" HREF="/libraries/lex/reference/lex/high_builder.html#f_description_length">description_length</A> <SPAN CLASS="ekeyword">then</SPAN><BR>
 
  &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="elocal">error_position</SPAN> <SPAN CLASS="esymbol">:=</SPAN> <SPAN CLASS="elocal">pos</SPAN><BR>
 
  &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ekeyword">else</SPAN><BR>
 
- &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="elocal">error_position</SPAN> <SPAN CLASS="esymbol">:=</SPAN> <A CLASS="efeature" HREF="../lex/high_builder.html#f_description_length">description_length</A> <SPAN CLASS="esymbol">-</SPAN> <SPAN CLASS="enumber">1</SPAN><BR>
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="elocal">error_position</SPAN> <SPAN CLASS="esymbol">:=</SPAN> <A CLASS="efeature" HREF="/libraries/lex/reference/lex/high_builder.html#f_description_length">description_length</A> <A CLASS="esymbol" HREF="/libraries/base/reference/kernel/integer_ref.html#f__infix_minus">-</A> <SPAN CLASS="enumber">1</SPAN><BR>
 
  &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ekeyword">end</SPAN><BR>
 
- &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="elocal">message</SPAN><SPAN CLASS="edot">.</SPAN><SPAN CLASS="nefeature">append</SPAN> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="estring">"Metalex, construct "</SPAN><SPAN CLASS="esymbol">)</SPAN><BR>
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="elocal">message</SPAN><SPAN CLASS="edot">.</SPAN><A CLASS="efeature" HREF="/libraries/base/reference/kernel/string.html#f_append">append</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="estring">"Metalex, construct "</SPAN><SPAN CLASS="esymbol">)</SPAN><BR>
 
- &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="elocal">message</SPAN><SPAN CLASS="edot">.</SPAN><SPAN CLASS="nefeature">append</SPAN> <SPAN CLASS="esymbol">(</SPAN><A CLASS="efeature" HREF="../lex/metalex.html#f_construct">construct</A><SPAN CLASS="esymbol">)</SPAN><BR>
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="elocal">message</SPAN><SPAN CLASS="edot">.</SPAN><A CLASS="efeature" HREF="/libraries/base/reference/kernel/string.html#f_append">append</A> <SPAN CLASS="esymbol">(</SPAN><A CLASS="efeature" HREF="/libraries/lex/reference/lex/metalex.html#f_construct">construct</A><SPAN CLASS="esymbol">)</SPAN><BR>
 
- &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="elocal">message</SPAN><SPAN CLASS="edot">.</SPAN><SPAN CLASS="nefeature">append</SPAN> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="estring">", error in format near: ``"</SPAN><SPAN CLASS="esymbol">)</SPAN><BR>
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="elocal">message</SPAN><SPAN CLASS="edot">.</SPAN><A CLASS="efeature" HREF="/libraries/base/reference/kernel/string.html#f_append">append</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="estring">", error in format near: ``"</SPAN><SPAN CLASS="esymbol">)</SPAN><BR>
 
- &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="elocal">message</SPAN><SPAN CLASS="edot">.</SPAN><SPAN CLASS="nefeature">extend</SPAN> <SPAN CLASS="esymbol">(</SPAN><A CLASS="efeature" HREF="../lex/high_builder.html#f_description">description</A><SPAN CLASS="edot">.</SPAN><SPAN CLASS="nefeature">item</SPAN> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">error_position</SPAN><SPAN CLASS="esymbol">)</SPAN><SPAN CLASS="esymbol">)</SPAN><BR>
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="elocal">message</SPAN><SPAN CLASS="edot">.</SPAN><A CLASS="efeature" HREF="/libraries/base/reference/kernel/string.html#f_extend">extend</A> <SPAN CLASS="esymbol">(</SPAN><A CLASS="efeature" HREF="/libraries/lex/reference/lex/high_builder.html#f_description">description</A><SPAN CLASS="edot">.</SPAN><A CLASS="efeature" HREF="/libraries/base/reference/kernel/string.html#f_item">item</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">error_position</SPAN><SPAN CLASS="esymbol">)</SPAN><SPAN CLASS="esymbol">)</SPAN><BR>
 
- &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="elocal">message</SPAN><SPAN CLASS="edot">.</SPAN><SPAN CLASS="nefeature">append</SPAN> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="estring">"''%N("</SPAN><SPAN CLASS="esymbol">)</SPAN><BR>
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="elocal">message</SPAN><SPAN CLASS="edot">.</SPAN><A CLASS="efeature" HREF="/libraries/base/reference/kernel/string.html#f_append">append</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="estring">"''%N("</SPAN><SPAN CLASS="esymbol">)</SPAN><BR>
 
- &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="elocal">message</SPAN><SPAN CLASS="edot">.</SPAN><SPAN CLASS="nefeature">append_integer</SPAN> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">error_position</SPAN><SPAN CLASS="esymbol">)</SPAN><BR>
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="elocal">message</SPAN><SPAN CLASS="edot">.</SPAN><A CLASS="efeature" HREF="/libraries/base/reference/kernel/string.html#f_append_integer">append_integer</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">error_position</SPAN><SPAN CLASS="esymbol">)</SPAN><BR>
 
- &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="elocal">message</SPAN><SPAN CLASS="edot">.</SPAN><SPAN CLASS="nefeature">append</SPAN> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="estring">"-th significant character of the description).%N"</SPAN><SPAN CLASS="esymbol">)</SPAN><BR>
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="elocal">message</SPAN><SPAN CLASS="edot">.</SPAN><A CLASS="efeature" HREF="/libraries/base/reference/kernel/string.html#f_append">append</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="estring">"-th significant character of the description).%N"</SPAN><SPAN CLASS="esymbol">)</SPAN><BR>
 
  &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ekeyword">if</SPAN> <SPAN CLASS="elocal">expected</SPAN> <SPAN CLASS="esymbol">=</SPAN> <SPAN CLASS="echar">'%U'</SPAN> <SPAN CLASS="ekeyword">then</SPAN><BR>
 
- &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="elocal">message</SPAN><SPAN CLASS="edot">.</SPAN><SPAN CLASS="nefeature">append</SPAN> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">mes</SPAN><SPAN CLASS="esymbol">)</SPAN><BR>
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="elocal">message</SPAN><SPAN CLASS="edot">.</SPAN><A CLASS="efeature" HREF="/libraries/base/reference/kernel/string.html#f_append">append</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">mes</SPAN><SPAN CLASS="esymbol">)</SPAN><BR>
 
  &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ekeyword">else</SPAN><BR>
 
- &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="elocal">message</SPAN><SPAN CLASS="edot">.</SPAN><SPAN CLASS="nefeature">append</SPAN> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="estring">"``"</SPAN><SPAN CLASS="esymbol">)</SPAN><BR>
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="elocal">message</SPAN><SPAN CLASS="edot">.</SPAN><A CLASS="efeature" HREF="/libraries/base/reference/kernel/string.html#f_append">append</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="estring">"``"</SPAN><SPAN CLASS="esymbol">)</SPAN><BR>
 
- &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="elocal">message</SPAN><SPAN CLASS="edot">.</SPAN><SPAN CLASS="nefeature">extend</SPAN> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">expected</SPAN><SPAN CLASS="esymbol">)</SPAN><BR>
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="elocal">message</SPAN><SPAN CLASS="edot">.</SPAN><A CLASS="efeature" HREF="/libraries/base/reference/kernel/string.html#f_extend">extend</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">expected</SPAN><SPAN CLASS="esymbol">)</SPAN><BR>
 
- &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="elocal">message</SPAN><SPAN CLASS="edot">.</SPAN><SPAN CLASS="nefeature">append</SPAN> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="estring">"'' expected."</SPAN><SPAN CLASS="esymbol">)</SPAN><BR>
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="elocal">message</SPAN><SPAN CLASS="edot">.</SPAN><A CLASS="efeature" HREF="/libraries/base/reference/kernel/string.html#f_append">append</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="estring">"'' expected."</SPAN><SPAN CLASS="esymbol">)</SPAN><BR>
 
  &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ekeyword">end</SPAN><BR>
 
- &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="elocal">message</SPAN><SPAN CLASS="edot">.</SPAN><SPAN CLASS="nefeature">append</SPAN> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="estring">"%NParsing of the grammar stopped.%N"</SPAN><SPAN CLASS="esymbol">)</SPAN><BR>
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="elocal">message</SPAN><SPAN CLASS="edot">.</SPAN><A CLASS="efeature" HREF="/libraries/base/reference/kernel/string.html#f_append">append</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="estring">"%NParsing of the grammar stopped.%N"</SPAN><SPAN CLASS="esymbol">)</SPAN><BR>
 
- &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<A CLASS="efeature" HREF="../lex/lex_builder.html#f_error_list">error_list</A><SPAN CLASS="edot">.</SPAN><A CLASS="efeature" HREF="../lex/error_list.html#f_add_message">add_message</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">message</SPAN><SPAN CLASS="esymbol">)</SPAN><BR>
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<A CLASS="efeature" HREF="/libraries/lex/reference/lex/lex_builder.html#f_error_list">error_list</A><SPAN CLASS="edot">.</SPAN><A CLASS="efeature" HREF="/libraries/lex/reference/lex/error_list.html#f_add_message">add_message</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">message</SPAN><SPAN CLASS="esymbol">)</SPAN><BR>
 
- &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<A CLASS="efeature" HREF="../lex/high_builder.html#f_parsing_stopped">parsing_stopped</A> <SPAN CLASS="esymbol">:=</SPAN> <SPAN CLASS="ekeyword">True</SPAN><BR>
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<A CLASS="efeature" HREF="/libraries/lex/reference/lex/high_builder.html#f_parsing_stopped">parsing_stopped</A> <SPAN CLASS="esymbol">:=</SPAN> <SPAN CLASS="ekeyword">True</SPAN><BR>
 
  &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ekeyword">end</SPAN></A><BR>
 

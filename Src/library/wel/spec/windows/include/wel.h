@@ -38,6 +38,8 @@
 #	define cwel_menu_item_not_found 0xFFFFFFFF
 #	define cwel_set_selection_edit(_hwnd_, _start_, _end_, _scrollcaret_) SendMessage ((HWND) _hwnd_, EM_SETSEL, _start_, _end_)
 #	define cwel_scroll_caret(_hwnd_) SendMessage ((HWND) _hwnd_, EM_SCROLLCARET, 0, 0)
+#	define cwel_idc_size IDC_SIZEALL
+#	define cwel_idc_icon IDC_ARROW
 #else
 #	define cwel_is_win32 FALSE
 #	define cwel_menu_item_not_found 0xFFFF
@@ -45,6 +47,8 @@
 #	define OFN_NOLONGNAMES 0x0400
 #	define cwel_set_selection_edit(_hwnd_, _start_, _end_, _scrollcaret_) SendMessage ((HWND) _hwnd_, EM_SETSEL, !_scrollcaret_, MAKELPARAM(_start_, _end_))
 #	define cwel_scroll_caret(_hwnd_) ((void) 0)
+#	define cwel_idc_size IDC_SIZE
+#	define cwel_idc_icon IDC_ICON
 #endif
 
 #endif /* __WEL__ */

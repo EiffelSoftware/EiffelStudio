@@ -47,7 +47,7 @@ extern void eif_thr_join_all(void);
 
 #include <pthread.h>
 
-#elif defined WIN32
+#elif defined EIF_WIN32
 
 /*-------------------------------*/
 /*---  WINDOWS 95/NT Threads  ---*/

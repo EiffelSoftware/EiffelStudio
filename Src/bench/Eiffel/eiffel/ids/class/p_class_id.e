@@ -26,7 +26,7 @@ creation
 
 feature {COMPILER_EXPORTER} -- Access
 
-	generated_id (f: INDENT_FILE) is
+	generated_id (buffer: GENERATION_BUFFER) is
 			-- Generate textual representation of class id
 			-- in generated C code
 		local
@@ -39,9 +39,9 @@ feature {COMPILER_EXPORTER} -- Access
 				statement.append (buff);
 				statement.extend ('+');
 				statement.append_integer (internal_id)
-				f.putstring (statement)
+				buffer.putstring (statement)
 			else
-				f.putint (id)
+				buffer.putint (id)
 			end
 		end
 

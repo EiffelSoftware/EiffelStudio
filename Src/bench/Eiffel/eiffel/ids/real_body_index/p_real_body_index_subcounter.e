@@ -42,30 +42,30 @@ feature -- Access
 
 feature -- Generation
  
-	generate_offset (file: INDENT_FILE) is
-			-- Generate `offset' declaration into `file'.
+	generate_offset (buffer: GENERATION_BUFFER) is
+			-- Generate `offset' declaration into `buffer'.
 		local
 			buff: STRING
 		do
 			buff := Real_body_index_offset_buffer;
 			eif011 ($buff, compilation_id);
-			file.putstring ("int32 ");
-			file.putstring (buff);
-			file.putstring (" = ");
-			file.putint (offset);
-			file.putstring (";%N")
+			buffer.putstring ("int32 ");
+			buffer.putstring (buff);
+			buffer.putstring (" = ");
+			buffer.putint (offset);
+			buffer.putstring (";%N")
 		end
  
-	generate_extern_offset (file: INDENT_FILE) is
-			-- Generate `offset' declaration into `file'.
+	generate_extern_offset (buffer: GENERATION_BUFFER) is
+			-- Generate `offset' declaration into `buffer'.
 		local
 			buff: STRING
 		do
 			buff := Real_body_index_offset_buffer;
 			eif011 ($buff, compilation_id);
-			file.putstring ("extern int32 ");
-			file.putstring (buff);
-			file.putstring (";%N")
+			buffer.putstring ("extern int32 ");
+			buffer.putstring (buff);
+			buffer.putstring (";%N")
 		end
 
 end -- class P_REAL_BODY_INDEX_SUBCOUNTER

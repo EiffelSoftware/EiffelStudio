@@ -45,7 +45,7 @@ feature {NONE} -- Initialization
 		end
 
 	font_is_default: BOOLEAN is
-			-- Does `Current' have the characteristics of a default font?
+			-- Does `Current' have the characteristics of the default application font?
 		do
 			Result := 
 					family = Family_sans and then
@@ -81,7 +81,7 @@ feature -- Element change
 	set_face_name (a_face: STRING) is
 			-- Set the face name for current.
 		local
-			propvalue: EV_GTK_C_UTF8_STRING
+			propvalue: EV_GTK_C_STRING
 		do
 			name := a_face
 			create propvalue.make (a_face)
@@ -90,48 +90,23 @@ feature -- Element change
 
 	set_weight (a_weight: INTEGER) is
 			-- Set `a_weight' as preferred font thickness.
-		local
-			font_weight: INTEGER
 		do
 			weight := a_weight
-			inspect
-				weight
-			when
-				feature {EV_FONT_CONSTANTS}.weight_bold
-			then
-				font_weight := pango_weight_bold
-			when
-				feature {EV_FONT_CONSTANTS}.weight_regular
-			then
-				font_weight := pango_weight_normal
-			when
-				feature {EV_FONT_CONSTANTS}.weight_thin
-			then
-				font_weight := pango_weight_ultra_light
-			when
-				feature {EV_FONT_CONSTANTS}.weight_black
-			then
-				font_weight := pango_weight_heavy
-			end
-			feature {EV_GTK_DEPENDENT_EXTERNALS}.pango_font_description_set_weight (font_description, font_weight)
+			feature {EV_GTK_DEPENDENT_EXTERNALS}.pango_font_description_set_weight (font_description, pango_weight)
 		end
 
 	set_shape (a_shape: INTEGER) is
 			-- Set `a_shape' as preferred font slant.
 		do
 			shape := a_shape
-			if shape = shape_italic then
-				feature {EV_GTK_DEPENDENT_EXTERNALS}.pango_font_description_set_style (font_description, 2)
-			else
-				feature {EV_GTK_DEPENDENT_EXTERNALS}.pango_font_description_set_style (font_description, 0)
-			end
+			feature {EV_GTK_DEPENDENT_EXTERNALS}.pango_font_description_set_style (font_description, pango_style)
 		end
 
 	set_height (a_height: INTEGER) is
 			-- Set `a_height' as preferred font size in screen pixels
 		do
 			height := a_height
-			feature {EV_GTK_DEPENDENT_EXTERNALS}.pango_font_description_set_size (font_description, a_height * feature {EV_GTK_DEPENDENT_EXTERNALS}.pango_scale)
+			feature {EV_GTK_DEPENDENT_EXTERNALS}.pango_font_description_set_size (font_description, pango_height)
 		end
 
 	set_values (a_family, a_weight, a_shape, a_height: INTEGER;
@@ -159,7 +134,7 @@ feature -- Status report
 			-- Vertical distance from the origin of the drawing
 			-- operation to the top of the drawn character. 
 		local
-			a_cs: EV_GTK_C_UTF8_STRING
+			a_cs: EV_GTK_C_STRING
 			pango_layout, pango_iter: POINTER
 		do
 			create a_cs.make ("A")
@@ -174,7 +149,7 @@ feature -- Status report
 			-- Vertical distance from the origin of the drawing
 			-- operation to the bottom of the drawn character. 
 		local
-			a_cs: EV_GTK_C_UTF8_STRING
+			a_cs: EV_GTK_C_STRING
 			pango_layout, pango_iter: POINTER
 			a_width, a_height: INTEGER
 		do
@@ -209,7 +184,7 @@ feature -- Status report
 	string_width (a_string: STRING): INTEGER is
 			-- Width in pixels of `a_string' in the current font.
 		local
-			a_cs: EV_GTK_C_UTF8_STRING
+			a_cs: EV_GTK_C_STRING
 			pango_layout: POINTER
 			a_width, a_height: INTEGER
 		do
@@ -251,7 +226,7 @@ feature {NONE} -- Implementation
 			set_face_name (pango_family_string)
 		end
 
-feature {EV_FONT_IMP, EV_CHARACTER_FORMAT_IMP, EV_RICH_TEXT_IMP} -- Implementation
+feature {EV_FONT_IMP, EV_CHARACTER_FORMAT_IMP, EV_RICH_TEXT_IMP, EV_DRAWABLE_IMP} -- Implementation
 		
 	font_description_from_values: POINTER is
 			-- PangoFontDescription from set values
@@ -295,6 +270,46 @@ feature {EV_FONT_IMP, EV_CHARACTER_FORMAT_IMP, EV_RICH_TEXT_IMP} -- Implementati
 			end
 		end
 
+	pango_height: INTEGER is
+			-- Font height in Pango Units
+		do
+			Result := height * feature {EV_GTK_DEPENDENT_EXTERNALS}.pango_scale
+		end
+
+	pango_style: INTEGER is
+			-- Pango Style constant of `Current'
+		do
+			if shape = shape_italic then
+				Result := 2
+			else
+				Result := 0
+			end
+		end
+
+	pango_weight: INTEGER is
+			-- Pango Weight of `Current'
+		do
+			inspect
+				weight
+			when
+				feature {EV_FONT_CONSTANTS}.weight_bold
+			then
+				Result := pango_weight_bold
+			when
+				feature {EV_FONT_CONSTANTS}.weight_regular
+			then
+				Result := pango_weight_normal
+			when
+				feature {EV_FONT_CONSTANTS}.weight_thin
+			then
+				Result := pango_weight_ultra_light
+			when
+				feature {EV_FONT_CONSTANTS}.weight_black
+			then
+				Result := pango_weight_heavy
+			end
+		end
+
 	set_weight_from_pango_weight (a_pango_weight: INTEGER) is
 			-- Set `weight' from Pango weight value `a_pango_weight'.
 		do
@@ -308,12 +323,8 @@ feature {EV_FONT_IMP, EV_CHARACTER_FORMAT_IMP, EV_RICH_TEXT_IMP} -- Implementati
 				set_weight (feature {EV_FONT_CONSTANTS}.weight_black)
 			end
 		end
-		
 
 feature {EV_ANY_IMP, EV_DRAWABLE_IMP, EV_APPLICATION_IMP} -- Implementation
-
-	c_object: POINTER
-		-- Reference to the GdkFont object.
 		
 	font_description: POINTER
 		-- Pointer to the PangoFontDescription struct

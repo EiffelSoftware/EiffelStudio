@@ -10,7 +10,8 @@ inherit
 	SHARED_RESCUE_STATUS;
 	S_CASE_INFO;
 	SHARED_CASE_INFO;
-	COMPILER_EXPORTER
+	COMPILER_EXPORTER;
+	SHARED_EIFFEL_PROJECT
 
 creation
 
@@ -120,7 +121,6 @@ feature {FORMAT_CASE_STORAGE, CASE_CLUSTER_INFO}
 			view_id: INTEGER;
 			old_cluster_info: OLD_CASE_LINKABLE_INFO;
 			s_chart: S_CHART;
-			cluster_name: STRING;
 			dollar_path: STRING;
 		do
 				-- Need to covert to a string since
@@ -173,11 +173,7 @@ feature {FORMAT_CASE_STORAGE, CASE_CLUSTER_INFO}
 				end;
 				classes_i := Void;
 				if not classes.empty then
-io.error.putstring ("Analyzing cluster: ");
-cluster_name := clone (name);
-cluster_name.to_lower;
-io.error.putstring (cluster_name);
-io.error.new_line;
+					Degree_output.put_case_cluster_message (name);
 					Result.set_classes (class_storage_information (classes))
 				end;
 				classes := Void;
@@ -336,8 +332,10 @@ feature {NONE} -- Class information
 			new_class_views: LINKED_LIST [S_CLASS_DATA];
 			view_id: INTEGER;
 			re_class: BOOLEAN;
-			c_name: STRING
+			c_name: STRING;
+			deg_output: DEGREE_OUTPUT
 		do
+			deg_output := Degree_output;
 			old_classes := Old_case_info.old_classes_with_cluster_name (name);
 			!! stored_classes.make;
 			!! format_reg.initialize;
@@ -380,9 +378,7 @@ end
 					end;
 				end;
 				if re_class then
-						io.error.putstring ("%TAnalyzing class ");
-						io.error.putstring (c_name);
-						io.error.new_line;
+					deg_output.put_case_class_message (classc.e_class);
 						-- Need to reverse engineer class for eiffelcase.
 					!! class_info.make (classc);
 					class_info.formulate_class_data (format_reg);
@@ -398,6 +394,8 @@ end
 						end;
 						old_class_data := Void
 					end
+				else
+					deg_output.skip_case_class
 				end;	
 debug ("CASE_ID")
 	if view_id /= Void then

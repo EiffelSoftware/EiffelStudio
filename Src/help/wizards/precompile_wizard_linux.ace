@@ -94,7 +94,5 @@ external
 	object:
 		"$(EIFFEL_SRC)/library/vision2/spec/$(ISE_PLATFORM)/lib/gtk_eiffel.o",
 		"$(EIFFEL_SRC)/library/vision2/spec/$(ISE_PLATFORM)/lib/load_pixmap.o `gtk-config --libs`",
-			-- For system time.
---		"/usr/lib/libc.a",
-		"-L/usr/X11R6/lib -lXt -lX11 -lpng -lz -lXext -lXp -lSM -lICE -lXtst"
+		"-L/usr/X11R6/lib -lXtst"
 end

@@ -91,8 +91,6 @@ feature -- IL code generation
 				-- FIXME: invariant and variants are not correctly generated
 			check_assertion := False
 			
-			generate_il_line_info
-
 			if from_part /= Void then
 					-- Generate IL code for the from part
 				from_part.generate_il
@@ -126,8 +124,12 @@ feature -- IL code generation
 			test_label := il_label_factory.new_label
 			end_label := il_label_factory.new_label
 
+
+			generate_il_line_info
+
 				-- Generate byte code for exit expression
 			il_generator.mark_label (test_label)
+			
 			stop.generate_il
 
 				-- Generate a test

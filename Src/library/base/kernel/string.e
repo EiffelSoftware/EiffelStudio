@@ -179,10 +179,10 @@ is
 			other_not_empty: not other.empty
 			start_large_enough: start >= 1
 			start_small_enough: start <= count
-			acceptable_fuzzy: fuzzy <= other.count
+			acceptable_fuzzy: fuzz <= other.count
 		do
 			Result := str_str (area, other.area, count, other.count, start,
-fuzzy)
+fuzz)
 		end
 
 feature -- Measurement

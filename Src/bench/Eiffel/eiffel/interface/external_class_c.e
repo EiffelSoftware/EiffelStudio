@@ -934,8 +934,7 @@ feature {NONE} -- Implementation
 				l_int32 := l_int.lower;
 				($l_double + 4).memory_copy ($l_int32, 4)
 
-				create l_double_value
-				l_double_value.set_double_value (l_double)
+				create l_double_value.make (l_double)
 				l_value := l_double_value
 			elseif a_external_type.is_real then
 				create l_int.make_default
@@ -943,8 +942,7 @@ feature {NONE} -- Implementation
 				l_int32 := l_int.lower;
 				($l_real).memory_copy ($l_int32, 4)
 
-				create l_real_value
-				l_real_value.set_real_value (l_real)
+				create l_real_value.make (l_real)
 				l_value := l_real_value
 			elseif a_external_type.is_integer then
 				if a_value.item (1) = '-' then
@@ -958,15 +956,13 @@ feature {NONE} -- Implementation
 				l_value := l_int
 			elseif a_external_type.is_boolean then
 				a_value.to_lower
-				create l_bool_value
-				l_bool_value.set_bool_val (a_value.is_equal (a_value.True_constant))
+				create l_bool_value.make (a_value.is_equal (a_value.True_constant))
 				l_value := l_bool_value
 			elseif a_external_type.is_character then
 				check
 					valid_count: a_value.count = 1
 				end
-				create l_char_value
-				l_char_value.set_char_val (a_value.item (1))
+				create l_char_value.make (a_value.item (1))
 				l_value := l_char_value
 			elseif a_external_type.associated_class.lace_class = System.system_string_class then
 				create l_string_value

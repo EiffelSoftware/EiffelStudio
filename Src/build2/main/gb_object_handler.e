@@ -365,6 +365,7 @@ feature -- Basic operation
 			split_area_object: GB_SPLIT_AREA_OBJECT
 			table_object: GB_TABLE_OBJECT
 			widget_list_object: GB_WIDGET_LIST_OBJECT
+			notebook_object: GB_NOTEBOOK_OBJECT
 			tool_bar_item_object: GB_TOOL_BAR_ITEM_OBJECT
 			tool_bar_object: GB_TOOL_BAR_OBJECT
 			list_object: GB_LIST_OBJECT
@@ -394,7 +395,10 @@ feature -- Basic operation
 					Result ?= cell_object
 				end
 			elseif type_conforms_to (current_type, dynamic_type_from_string (Ev_container_string)) then
-				if type_conforms_to (current_type, dynamic_type_from_string (Ev_widget_list_string)) then
+				if type_conforms_to (current_type, dynamic_type_from_string (Ev_notebook_string)) then
+					create notebook_object.make_with_type (text)
+					Result ?= notebook_object
+				elseif type_conforms_to (current_type, dynamic_type_from_string (Ev_widget_list_string)) then
 					create widget_list_object.make_with_type (text)
 					Result ?= widget_list_object
 				elseif type_conforms_to (current_type, dynamic_type_from_string (Ev_table_string)) then

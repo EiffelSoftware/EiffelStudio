@@ -20,7 +20,18 @@ feature -- Implementation
 		local
 			arg: EV_ARGUMENT2 [like Current, EV_INTERNAL_COMMAND]
 			arg1: EV_ARGUMENT1 [like Current]
+			widg: EV_WIDGET_IMP
 		do
+			widg ?= Current
+			io.putstring ("PND INITIALISED%N")
+			widg.set_capture
+			io.putint (widg.x)
+			io.new_line
+			io.putint (widg.y)
+			io.new_line
+	
+			io.putstring ("%N" + "X = " + widg.absolute_x.out + "%N" + "Y = " + widg.absolute_y.out + "%N")
+	
 			if not ev_data.first_button_pressed
 			and then not ev_data.second_button_pressed
 			and then not ev_data.shift_key_pressed
@@ -38,22 +49,22 @@ feature -- Implementation
 						transporter.start_from (Current, 10, 10)
 					end
 						-- We add the commands
-					--remove_single_command (Cmd_button_three_press, args.second)
+					--remove_button_press_command (3, args.second)
 					create drop_cmd.make (transporter~drop_command)
 					create cancel_cmd.make (transporter~cancel_command)
 					create arg.make (Current, args.first)
-					--widget_source.add_command (Cmd_button_three_press, drop_cmd, arg)
-					--widget_source.add_command (Cmd_button_one_press, cancel_cmd, arg)
-					--widget_source.add_command (Cmd_button_two_press, cancel_cmd, arg)
+					--widget_source.add_button_press_command (3, drop_cmd, arg)
+					--widget_source.add_button_press_command (1, cancel_cmd, arg)
+					--widget_source.add_button_press_command (2, cancel_cmd, arg)
 						-- We set a command that draw the line
 					create arg1.make (Current)
-					--widget_source.add_command (Cmd_motion_notify, transporter, arg1)
+					widget_source.add_motion_notify_command (transporter, arg1)
 				end
 			end
 		end
 
 	terminate_transport (cmd: EV_INTERNAL_COMMAND) is
-			-- Terminate the pick and drop mechanim.
+			-- Terminate the pick and drop mechanism.
 		local
 			com: EV_ROUTINE_COMMAND
 			arg: EV_ARGUMENT2 [EV_INTERNAL_COMMAND, EV_COMMAND]

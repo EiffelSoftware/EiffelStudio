@@ -17,7 +17,7 @@ inherit
 			put_comments as old_put_comments,
 			put_origin_comment as old_put_origin_comment
 		export
-			{DOTNET_CLASS_AS, DOTNET_CLASS_CONTEXT} name_of_current_feature	
+			{DOTNET_CLASS_AS, DOTNET_CLASS_CONTEXT} name_of_current_feature
 		redefine
 			initialize
 		end
@@ -190,7 +190,7 @@ feature -- Element change
 				text.add_new_line
 				text.add_indent
 				if current_feature.is_frozen or l_feature.is_frozen then
-					text.add_string (Ti_frozen_keyword.image)
+					text.add (Ti_frozen_keyword)
 					text.add_space
 				end
 				text.add_feature (l_feature, name_of_current_feature)

@@ -20,6 +20,7 @@
 #include "eif_rw_lock.h"
 #include "eif_threads.h"
 #include "eif_portable.h"
+#include "eif_lmalloc.h"
 
 #ifdef EIF_THREADS /* Only in MT mode */
 
@@ -54,9 +55,10 @@ rt_public void eif_rwl_rdlock (eif_rwl_t *rwlp)
 	 */
 
 	EIF_MUTEX_LOCK (rwlp->m, "Couldn't lock rwlp->m\n");
-	while (rwlp->rwlock < 0 || rwlp->waiting_writers)
+	while (rwlp->rwlock < 0 || rwlp->waiting_writers) {
 		EIF_COND_WAIT (rwlp->readers_ok, rwlp->m, 
 				"Couldn't wait for condition rwlp->readers_ok\n");
+	}
 	rwlp->rwlock++;
 	EIF_MUTEX_UNLOCK (rwlp->m, "Couldn't unlock rwlp->m\n");
 }
@@ -102,13 +104,13 @@ rt_public void eif_rwl_unlock (eif_rwl_t *rwlp)
 
 	/* Wake up a waiting writer first. Otherwise wake up all readers. */
 
-	if (ww)
+	if (ww) { 
 		EIF_COND_SIGNAL (rwlp->writers_ok, 
 				"Couldn't signal condition rwlp->writers_ok\n");
-	else if (wr)
+	}
+	else if (wr) { 
 		EIF_COND_BROADCAST (rwlp->readers_ok, 
 				"Couldn't broadcast condition rwlp->readers_ok\n");
+		}
 }
-	
-
 #endif /* EIF_THREADS */

@@ -6,14 +6,12 @@ inherit
 
 	EIFFEL_ERROR
 		redefine
-			subcode, build_explain
+			build_explain
 		end;
 
 feature 
 
 	code: STRING is "VTUG";
-
-	subcode: INTEGER;
 
 	feature_i: FEATURE_I;
 
@@ -36,11 +34,6 @@ feature
 	set_base_class (c: CLASS_C) is
 		do
 			base_class := c;
-			if c.generics /= Void then
-				subcode := 2
-			else
-				subcode := 1
-			end;
 		end;
 
 	entity_name: STRING;

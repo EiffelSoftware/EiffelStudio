@@ -133,7 +133,6 @@ feature -- Implementation of inherited deferred features
 			end;
 		end;
 
-
 	format (ctxt: FORMAT_CONTEXT) is
 			-- Reconstitute text.
 		do

@@ -11,19 +11,19 @@ feature
 	formal_number: INTEGER;
 			-- Number of the generic parameter violating the rule
 
-	type1, type2: TYPE_A;
-			-- Types involved: `type1' doesn't conform to `type2'.
+	actual_type, c_type: TYPE_A;
+			-- Types involved
 
-	set_type1 (t: TYPE_A) is
+	set_actual_type (t: TYPE_A) is
 			-- Assign `t' to `type1'.
 		do
-			type1 := t;
+			actual_type := t;
 		end;
 
-	set_type2 (t: TYPE_A) is
+	set_constraint_type (t: TYPE_A) is
 			-- Assign `t' to `type2'.
 		do
-			type2 := t;
+			c_type := t;
 		end;
 
 	set_type (t: GEN_TYPE_A) is
@@ -41,17 +41,17 @@ feature
 	build_explain (error_window: CLICK_WINDOW) is
 		require
 			type /= Void;
-			type1 /= Void;
-			type2 /= Void;
+			actual_type /= Void;
+			c_type /= Void;
 		do
 			error_window.put_string ("For type: ");
 			type.append_clickable_signature (error_window);
 			error_window.put_string ("%NArgument number: ");
 			error_window.put_int (formal_number);
-			error_window.put_string ("]:%NActual generic parameter: ");
-			type2.append_clickable_signature (error_window);
+			error_window.put_string (":%NActual generic parameter: ");
+			actual_type.append_clickable_signature (error_window);
 			error_window.put_string ("%NType to which it should conform: ");
-			type1.append_clickable_signature (error_window);
+			c_type.append_clickable_signature (error_window);
 			error_window.new_line;
 		end
 

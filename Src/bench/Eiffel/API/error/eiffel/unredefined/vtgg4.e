@@ -41,7 +41,6 @@ feature
 			until
 				error_list.after
 			loop
-				put_char ('%T');
 				error_list.item.build_explain (error_window);
 				error_list.forth;
 			end;

@@ -36,7 +36,10 @@ feature
 			target_name := s;
 		end;
 
-	code: STRING is "VJAR";
+	code: STRING is
+		do
+			Result := "VJAR";
+		end;
 
 	build_explain is
 			-- Build specific explanation image for current error

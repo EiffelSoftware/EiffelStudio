@@ -7,7 +7,7 @@ inherit
 	STONABLE;
 	TYPE
 		redefine 
-			format, append_clickable_signature
+			format, append_clickable_signature, a_type
 		end;
 
 feature -- Initialization
@@ -19,6 +19,11 @@ feature -- Initialization
 		end;
 
 feature -- signature
+
+	a_type (a_cluster: CLUSTER_I): TYPE_A is
+		do
+			Result := actual_type
+		end;
 
 	append_clickable_signature (a_clickable: CLICK_WINDOW) is
 		do

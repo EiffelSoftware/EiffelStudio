@@ -78,7 +78,7 @@ feature -- Type check, byte code and dead code removal
 			vwoe: VWOE;
 			vwoe1: VWOE1;
 			vhne: VHNE;
-			vkcn: VKCN;
+			vkcn3: VKCN3;
 			vuex: VUEX;
 		do
 				-- First type check the left operand
@@ -88,10 +88,9 @@ feature -- Type check, byte code and dead code removal
 			left_constrained := context.last_constrained_type;
 			if left_constrained.is_void then
 					-- No call when target is a procedure
-				!!vkcn;
-				context.init_error (vkcn);
-				vkcn.set_node (Current);
-				Error_handler.insert_error (vkcn);
+				!!vkcn3;
+				context.init_error (vkcn3);
+				Error_handler.insert_error (vkcn3);
 					-- Cannot go on here
 				Error_handler.raise_error;
 			elseif left_constrained.is_none then
@@ -123,7 +122,7 @@ feature -- Type check, byte code and dead code removal
 				!!vuex;
 				context.init_error (vuex);
 				vuex.set_static_class (last_class);
-				vuex.set_feature_name (infix_function_name);
+				vuex.set_exported_feature (infix_function);
 				Error_handler.insert_error (vuex);
 				Error_handler.raise_error;
 			end;

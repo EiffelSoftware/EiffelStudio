@@ -31,9 +31,11 @@ feature
 
 	build_explain is
 		do
-			put_string ("Parameter name: ");
-			put_string (formal_name);
-			new_line;
+			if formal_name /= Void then
+				put_string ("Parameter name: ");
+				put_string (formal_name);
+				new_line;
+			end;
 		end;
 
 end

@@ -12,6 +12,6 @@ inherit
 
 feature
 
-	subcode: INTEGER is 4;
+	subcode: INTEGER is 5;
 
 end

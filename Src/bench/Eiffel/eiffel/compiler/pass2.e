@@ -4,10 +4,18 @@ class PASS2
 inherit
 
 	SHARED_TMP_SERVER;
-	SHARED_WORKBENCH;
+	SHARED_ERROR_HANDLER;
 	SORTED_PASS
+		rename
+			remove_class as basic_remove_class
 		redefine
 			changed_classes, execute, make
+		end;
+	SORTED_PASS
+		redefine
+			changed_classes, execute, make, remove_class
+		select
+			remove_class
 		end
 
 creation
@@ -52,6 +60,25 @@ feature
 			id: INTEGEr
 		do
 			from
+				changed_classes.start
+			until
+				changed_classes.after
+			loop
+				pass_c := changed_classes.item;
+				current_class := pass_c.associated_class;
+				if
+					current_class.changed
+				and then
+					current_class.generics /= Void
+				then
+					current_class.check_constraint_genericity;
+				end;
+				changed_classes.forth
+			end;
+				-- Cannot continue if there is an error in the
+				-- constraint genericity clause of a class
+			Error_handler.checksum;
+			from
 			until
 				changed_classes.empty
 			loop
@@ -93,6 +120,25 @@ end;
 			System.set_current_class (Void);
 
 			changed_status.wipe_out;
+		end;
+
+	remove_class (a_class: CLASS_C) is
+		local
+			found: BOOLEAN
+		do	
+			basic_remove_class (a_class);
+			from
+				extra_check_list.start
+			until
+				extra_check_list.after or else found
+			loop
+				if extra_check_list.item = a_class then
+					found := True;
+					extra_check_list.remove;
+				else
+					extra_check_list.forth
+				end;
+			end;
 		end;
 
 	set_expanded_modified (a_class: CLASS_C) is

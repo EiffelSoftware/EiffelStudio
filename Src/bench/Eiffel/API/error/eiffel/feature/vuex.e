@@ -9,7 +9,7 @@ inherit
 			feature_name as other_feature_name,
 			set_feature_name as set_other_feature_name
 		redefine
-			build_explain
+			build_explain, subcode
 		end
 	
 feature
@@ -20,6 +20,8 @@ feature
 
 	feature_name: STRING;
 			-- Feature name involved
+
+	exported_feature: FEATURE_I;
 
 	set_static_class (c: CLASS_C) is
 			-- Assign `c' to `static_class'.
@@ -33,21 +35,30 @@ feature
 			feature_name := s;
 		end;
 
+	set_exported_feature (f: FEATURE_I) is
+			-- Assign `s' to `feature_name'.
+		do
+			exported_feature := f;
+		end;
+
 	code: STRING is "VUEX";
 			-- Error code
+
+	subcode: INTEGEr is 1;
 
 	build_explain is
 			-- Build specific explanation image for current error
 			-- in `error_window'.
+		local
+			w_class: CLASS_C
 		do
-			put_string ("%Tfeature ");
--- FIXME
---			put_clickable_string (
---				static_class.feature_named (feature_name),
---				feature_name);
-			put_string (feature_name);
-			put_string (" from class ");
-			static_class.append_clickable_signature (error_window);
+			w_class := exported_feature.written_class;
+			put_string ("Feature name: ");
+			exported_feature.append_clickable_name (error_window, w_class);
+			put_string (" written in: ");
+			w_class.append_clickable_name (error_window);
+			put_string (" from class: ");
+			static_class.append_clickable_name (error_window);
 			put_string (" is not exported to class ");
 			class_c.append_clickable_name (error_window);
 			new_line

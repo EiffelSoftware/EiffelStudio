@@ -40,7 +40,6 @@ feature
             Result.set_actual_type (feat_table.associated_class.actual_type);
         end;
 		
-
 	format (ctxt: FORMAT_CONTEXT) is
 			-- Reconstitute text.
 		do

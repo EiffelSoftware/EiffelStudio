@@ -4,17 +4,13 @@ class VTUG2
 
 inherit
 
-	VTUG1
+	VTUG
 		redefine
 			subcode
 		end;
 	
 feature 
 
-	subcode: INTEGER is
-			-- Error code
-		do
-			Result := NOT USED
-		end;
+	subcode: INTEGER is 2
 
 end

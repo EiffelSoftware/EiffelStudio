@@ -72,7 +72,7 @@ feature
 
 	error_generics: VTUG is
 		do
-			!!Result;
+			!VTUG2!Result;
 			Result.set_type (Current);
 			Result.set_base_class (associated_class);
 		end;

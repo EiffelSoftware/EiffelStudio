@@ -103,10 +103,8 @@ end;
 		local
 			found: BOOLEAN;
 			pass_c: PASS_C;
-			position: INTEGER;
 		do
 			from
-				position := changed_classes.position;
 				changed_classes.start
 			until
 				changed_classes.after or else found
@@ -119,7 +117,6 @@ end;
 					changed_classes.forth
 				end;
 			end;
-			changed_classes.go (position);
 		end;
 
 	wipe_out is

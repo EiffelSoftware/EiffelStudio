@@ -2529,10 +2529,16 @@ rt_private void interpret(int flag, int where)
 	 */
  
 	case BC_ARRAY:
+	case BC_PARRAY:
 #ifdef DEBUG
-		dprintf(2)("BC_ARRAY\n");
+		if (code == BC_ARRAY) {
+			dprintf(2)("BC_ARRAY\n");
+		} else {
+			dprintf(2)("BC_PARRAY\n");
+		}
 #endif
 		{
+			int32 origin, ooffset;
 			long nbr_of_items;
 			EIF_REFERENCE new_obj;
 			EIF_REFERENCE sp_area;
@@ -2544,33 +2550,56 @@ rt_private void interpret(int flag, int where)
 			unsigned char *OLD_IC;
 			short is_tuple;
  
-			stype = get_short();			/* Get the static type */
-			dtype = get_short();			/* Get the static type */
+			if (code == BC_PARRAY) {
+				origin = get_long();		/* Get the origin class id */
+				ooffset = get_long();		/* Get the offset in origin */
+				dtype = get_short();			/* Get the static type */
 
-/*GENERIC CONFORMANCE */
-			dtype = get_compound_id(MTC icurrent->it_ref,dtype);
+					/*GENERIC CONFORMANCE */
+				dtype = get_compound_id(MTC icurrent->it_ref,dtype);
 
-			feat_id = get_short();		  	/* Get the feature id */
-			nbr_of_items = get_long();	  	/* Number of items in array */
-			is_tuple = get_short(); /* Is it actually a TUPLE? */
+				nbr_of_items = get_long();	  	/* Number of items in array */
+				is_tuple = get_short(); /* Is it actually a TUPLE?*/
+				stagval = tagval;
+				OLD_IC = IC;					/* Save IC counter */
+	 
+				new_obj = RTLN(dtype);			/* Create new object */
+				RT_GC_PROTECT(new_obj);   /* Protect new_obj */
+				if (is_tuple)
+					((void (*)()) RTWPF(origin, ooffset, Dtype(new_obj)))(new_obj);
+				else
+					((void (*)()) RTWPF(origin, ooffset, Dtype(new_obj)))
+						(new_obj, 1L, nbr_of_items);
+			} else {
+				stype = get_short();			/* Get the static type */
+				dtype = get_short();			/* Get the static type */
 
-			stagval = tagval;
-			OLD_IC = IC;					/* Save IC counter */
- 
-			new_obj = RTLN(dtype);			/* Create new object */
+					/*GENERIC CONFORMANCE */
+				dtype = get_compound_id(MTC icurrent->it_ref,dtype);
 
-			RT_GC_PROTECT(new_obj);   /* Protect new_obj */
-			if (is_tuple)
-				((void (*)()) RTWF(stype, feat_id, Dtype(new_obj)))(new_obj);
-			else
-				((void (*)()) RTWF(stype, feat_id, Dtype(new_obj)))(new_obj, 1L, nbr_of_items);
+				feat_id = get_short();		  	/* Get the feature id */
+				nbr_of_items = get_long();	  	/* Number of items in array */
+				is_tuple = get_short(); /* Is it actually a TUPLE? */
+				stagval = tagval;
+				OLD_IC = IC;					/* Save IC counter */
+	 
+				new_obj = RTLN(dtype);			/* Create new object */
+				RT_GC_PROTECT(new_obj);   /* Protect new_obj */
+				if (is_tuple)
+					((void (*)()) RTWF(stype, feat_id, Dtype(new_obj)))(new_obj);
+				else
+					((void (*)()) RTWF(stype, feat_id, Dtype(new_obj)))
+						(new_obj, 1L, nbr_of_items);
+			}
 
 			IC = OLD_IC;
 			if (tagval != stagval)
 				sync_registers(MTC scur, stop); /* If calls melted make of array */ 
 		
 			sp_area = *(EIF_REFERENCE *) new_obj;
-			while ((curr_pos++) != nbr_of_items) {
+			RT_GC_PROTECT(sp_area);
+
+			while (curr_pos < nbr_of_items) {
 				/* Fill the special area with the expressions
 				* for the manifest array.
 				*/
@@ -2579,177 +2608,61 @@ rt_private void interpret(int flag, int where)
 				switch (it->type & SK_HEAD) {
 					case SK_BOOL:
 					case SK_CHAR:
-						*(EIF_CHARACTER *) sp_area = it->it_char;
-						sp_area += sizeof(EIF_CHARACTER);
+						*((EIF_CHARACTER *) sp_area + curr_pos) = it->it_char;
 						break;
 					case SK_WCHAR:
-						*(EIF_WIDE_CHAR *) sp_area = it->it_wchar;
-						sp_area += sizeof(EIF_WIDE_CHAR);
+						*((EIF_WIDE_CHAR *) sp_area + curr_pos) = it->it_wchar;
 						break;
 					case SK_BIT:
-						*(EIF_REFERENCE *) sp_area = it->it_bit;
-						sp_area += BITOFF(LENGTH(it->it_bit)); 
+						*((EIF_REFERENCE *) sp_area + curr_pos) = it->it_bit;
 						break;
 					case SK_EXP:
-						elem_size = *(EIF_INTEGER_32 *) (sp_area + (HEADER(sp_area)->ov_size & B_SIZE) - LNGPAD_2 + sizeof(EIF_INTEGER_32));
-						eif_std_ref_copy(it->it_ref, sp_area + OVERHEAD + elem_size * curr_pos);
+						if (is_tuple) {
+							EIF_REFERENCE loc1 = RTCL(it->it_ref);
+							*((EIF_REFERENCE *) sp_area + curr_pos) = loc1;
+							RTAS_OPT(loc1, curr_pos, sp_area);
+						} else {
+							elem_size = *(EIF_INTEGER_32 *) (sp_area + (HEADER(sp_area)->ov_size & B_SIZE) - LNGPAD_2 + sizeof(EIF_INTEGER_32));
+							ecopy(it->it_ref, sp_area + OVERHEAD + elem_size * curr_pos);
+						}
 						break;
 					case SK_REF:
-						/* No need to call RTAS as the area is the last object allocated and is thus in the NEW set */
-						*(EIF_REFERENCE *) sp_area = it->it_ref;
-						sp_area += sizeof(EIF_REFERENCE);
+						*((EIF_REFERENCE *) sp_area + curr_pos) = it->it_ref;
+						RTAS_OPT(it->it_ref, curr_pos, sp_area);
 						break;
 					case SK_INT8:
-						*(EIF_INTEGER_8 *) sp_area = it->it_int8;
-						sp_area += sizeof(EIF_INTEGER_8);
+						*((EIF_INTEGER_8 *) sp_area + curr_pos) = it->it_int8;
 						break;
 					case SK_INT16:
-						*(EIF_INTEGER_16 *) sp_area = it->it_int16;
-						sp_area += sizeof(EIF_INTEGER_16);
+						*((EIF_INTEGER_16 *) sp_area + curr_pos) = it->it_int16;
 						break;
 					case SK_INT32:
-						*(EIF_INTEGER_32 *) sp_area = it->it_int32;
-						sp_area += sizeof(EIF_INTEGER_32);
+						*((EIF_INTEGER_32 *) sp_area + curr_pos) = it->it_int32;
 						break;
 					case SK_INT64:
-						*(EIF_INTEGER_64 *) sp_area = it->it_int64;
-						sp_area += sizeof(EIF_INTEGER_64);
+						*((EIF_INTEGER_64 *) sp_area + curr_pos) = it->it_int64;
 						break;
 					case SK_FLOAT:
-						*(EIF_REAL *) sp_area = it->it_float;
-						sp_area += sizeof(EIF_REAL);
+						*((EIF_REAL *) sp_area + curr_pos) = it->it_float;
 						break;
 					case SK_DOUBLE:
-						*(EIF_DOUBLE *) sp_area = it->it_double;
-						sp_area += sizeof(EIF_DOUBLE);
+						*((EIF_DOUBLE *) sp_area + curr_pos) = it->it_double;
 						break;
 					case SK_POINTER:
-						*(EIF_POINTER *) sp_area = it->it_ptr;
-						sp_area += sizeof(fnptr);
+						*((EIF_POINTER *) sp_area + curr_pos) = it->it_ptr;
 						break;
 					default:
 						eif_panic(MTC botched);
 				}
+				curr_pos++;
 			}
-			RT_GC_WEAN(new_obj);			/* Release protection of `new_obj' */
+			RT_GC_WEAN(sp_area);			/* Release protection of `sp_area' */
+			RT_GC_WEAN(new_obj);			/* and of `new_obj'. */
 			last = iget();
 			last->type = SK_REF;
 			last->it_ref = new_obj;
 			break;
 		}
-
-	/*
-	 * Manifest array (when ARRAY is precompiled)
-	 */
- 
-	case BC_PARRAY:
-#ifdef DEBUG
-		dprintf(2)("BC_PARRAY\n");
-#endif
-		{
-			int32 origin, ooffset;
-			long nbr_of_items;
-			EIF_REFERENCE new_obj;
-			EIF_REFERENCE sp_area;
-			short dtype;
-			unsigned long stagval;
-			int curr_pos = 0;
-			struct item *it;
-			long elem_size;
-			unsigned char *OLD_IC;
-			short is_tuple;
- 
-			origin = get_long();		/* Get the origin class id */
-			ooffset = get_long();		/* Get the offset in origin */
-			dtype = get_short();			/* Get the static type */
-
-/*GENERIC CONFORMANCE */
-			dtype = get_compound_id(MTC icurrent->it_ref,dtype);
-
-			nbr_of_items = get_long();	  	/* Number of items in array */
-			is_tuple = get_short(); /* Is it actually a TUPLE?*/
-			stagval = tagval;
-			OLD_IC = IC;					/* Save IC counter */
- 
-			new_obj = RTLN(dtype);			/* Create new object */
-			RT_GC_PROTECT(new_obj);   /* Protect new_obj */
-			if (is_tuple)
-				((void (*)()) RTWPF(origin, ooffset, Dtype(new_obj)))(new_obj);
-			else
-				((void (*)()) RTWPF(origin, ooffset, Dtype(new_obj)))(new_obj, 1L, nbr_of_items);
-
-			IC = OLD_IC;
-			if (tagval != stagval)
-				sync_registers(MTC scur, stop); /* If calls melted make of array */ 
-		
-			sp_area = *(EIF_REFERENCE *) new_obj;
-			while ((curr_pos++) != nbr_of_items) {
-				/* Fill the special area with the expressions
-				* for the manifest array.
-				*/
-				it = opop();		/* Pop expression off stack */
-				switch (it->type & SK_HEAD) {
-					case SK_BOOL:
-					case SK_CHAR:
-						*(EIF_CHARACTER *) sp_area = it->it_char;
-						sp_area += sizeof(EIF_CHARACTER);
-						break;
-					case SK_WCHAR:
-						*(EIF_WIDE_CHAR *) sp_area = it->it_wchar;
-						sp_area += sizeof(EIF_WIDE_CHAR);
-						break;
-					case SK_BIT:
-						*(EIF_REFERENCE *) sp_area = it->it_bit;
-						sp_area += BITOFF(LENGTH(it->it_bit)); 
-						break;
-					case SK_EXP:
-						elem_size = *(EIF_INTEGER_32 *) (sp_area + (HEADER(sp_area)->ov_size & B_SIZE) - LNGPAD_2 + sizeof(EIF_INTEGER_32));
-						eif_std_ref_copy(it->it_ref, sp_area + OVERHEAD + elem_size * curr_pos);
-						break;
-					case SK_REF:
-						/* No need to call RTAS as the area is the last object allocated and is thus in the NEW set */
-						*(EIF_REFERENCE *) sp_area = it->it_ref;
-						sp_area += sizeof(EIF_REFERENCE);
-						break;
-					case SK_INT8:
-						*(EIF_INTEGER_8 *) sp_area = it->it_int8;
-						sp_area += sizeof(EIF_INTEGER_8);
-						break;
-					case SK_INT16:
-						*(EIF_INTEGER_16 *) sp_area = it->it_int16;
-						sp_area += sizeof(EIF_INTEGER_16);
-						break;
-					case SK_INT32:
-						*(EIF_INTEGER_32 *) sp_area = it->it_int32;
-						sp_area += sizeof(EIF_INTEGER_32);
-						break;
-					case SK_INT64:
-						*(EIF_INTEGER_64 *) sp_area = it->it_int64;
-						sp_area += sizeof(EIF_INTEGER_64);
-						break;
-					case SK_FLOAT:
-						*(EIF_REAL *) sp_area = it->it_float;
-						sp_area += sizeof(EIF_REAL);
-						break;
-					case SK_DOUBLE:
-						*(EIF_DOUBLE *) sp_area = it->it_double;
-						sp_area += sizeof(EIF_DOUBLE);
-						break;
-					case SK_POINTER:
-						*(EIF_POINTER *) sp_area = it->it_ptr;
-						sp_area += sizeof(fnptr);
-						break;
-					default:
-						eif_panic(MTC botched);
-				}
-			}
-			RT_GC_WEAN(new_obj);			/* Release protection of `new_obj' */
-			last = iget();
-			last->type = SK_REF;
-			last->it_ref = new_obj;
-			break;
-		}
-
 
 	/*
 	 * Retrieve old expression from local register.

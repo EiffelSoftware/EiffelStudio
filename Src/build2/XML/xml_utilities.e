@@ -12,18 +12,11 @@ inherit
 	ANY
 	
 	GB_CONSTANTS
-
-feature -- Initialization
-
-feature -- Access
-
-	ucstring_from_string (string: STRING): UCSTRING is
-			-- `Result' is a UCSTRING made from `string'.
-		do
-			create Result.make_from_string (string)
+		export
+			{NONE} all
 		end
 
-feature {NONE} -- Basic operations
+feature -- Access
 
 	new_child_element (a_parent: XML_COMPOSITE; a_name, a_ns_prefix: STRING): XML_ELEMENT is
 			-- `Result' is a new child element with name `a_name' and ns_prexif `a_ns_prefix'.
@@ -258,7 +251,7 @@ feature {NONE} -- Basic operations
 			end
 		end
 		
-		
+feature {NONE} -- Implementation
 
 	data_valid (current_data: STRING):BOOLEAN is
 			-- Is `current_data' not empty and valid?
@@ -266,6 +259,12 @@ feature {NONE} -- Basic operations
 			if current_data.count > 0 and current_data.item (1).code /= 10 then	
 				Result := True
 			end
+		end
+		
+	ucstring_from_string (string: STRING): UCSTRING is
+			-- `Result' is a UCSTRING made from `string'.
+		do
+			create Result.make_from_string (string)
 		end
 
 end -- class XML_UTILITIES

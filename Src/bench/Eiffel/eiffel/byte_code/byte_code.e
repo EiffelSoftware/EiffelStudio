@@ -535,7 +535,7 @@ feature -- IL code generation
 			if rescue_clause /= Void then
 				context.add_local (Boolean_c_type)
 				exception_occurred := context.local_list.count
-				il_generator.put_local_info (Boolean_c_type, "dummy_" + exception_occurred.out)
+				il_generator.put_dummy_local_info (Boolean_c_type, exception_occurred)
 				il_label_factory.create_retry_label
 				il_generator.mark_label (il_label_factory.retry_label)
 				il_generator.generate_start_exception_block
@@ -677,7 +677,7 @@ feature -- IL code generation
 		local
 			feature_as: FEATURE_AS
 			routine_as: ROUTINE_AS
-			id_list: EIFFEL_LIST [ID_AS]
+			id_list: ARRAYED_LIST [INTEGER]
 			rout_locals: EIFFEL_LIST [TYPE_DEC_AS]
 			debug_generation: BOOLEAN
 			i: INTEGER
@@ -712,7 +712,7 @@ feature -- IL code generation
 							end
 							rout_locals.forth
 						else
-							il_generator.put_local_info (local_list.item, "V_" + i.out)
+							il_generator.put_nameless_local_info (local_list.item, i)
 							i := i + 1
 							local_list.forth
 						end
@@ -732,7 +732,7 @@ feature -- IL code generation
 				until
 					local_list.after
 				loop
-					il_generator.put_local_info (local_list.item, "V_" + i.out)
+					il_generator.put_nameless_local_info (local_list.item, i)
 					i := i + 1
 					local_list.forth
 				end				

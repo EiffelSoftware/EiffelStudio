@@ -28,6 +28,8 @@ inherit
 			on_mouse_move,
 			on_char,
 			on_key_up,
+			on_set_focus,
+			on_kill_focus,
 			on_draw_item,
 			background_brush,
 			on_menu_command

@@ -164,7 +164,7 @@ feature -- Access
 			-- List of the direct children of the tree.
 
 	selected_item: EV_TREE_ITEM is
-			-- Item which is currently selected.
+			-- Currently selected item.
 		local
 			handle: POINTER
 		do
@@ -174,42 +174,6 @@ feature -- Access
 			else
 				Result := Void
 			end
-		end
-
-	find_item_at_position (x_pos, y_pos: INTEGER): EV_TREE_ITEM_IMP is
-			-- Find the item at the given position.
-			-- Position is relative to the toolbar.
-		local
-			pt: WEL_POINT
-			info: WEL_TV_HITTESTINFO
-		do
-			create pt.make (x_pos, y_pos)
-			create info.make_with_point (pt)
-			cwin_send_message (wel_item, Tvm_hittest, 0, info.to_integer)
-			if flag_set (info.flags, Tvht_onitemlabel)
-			or flag_set (info.flags, Tvht_onitemicon)
-			then
-				Result := all_ev_children @ info.hitem
-			end
-		end
-
-feature -- Element change
-
-	clear_items is
-			-- Clear all the items of the list.
-		local
-			c: ARRAYED_LIST [EV_TREE_ITEM_IMP]
-		do
-			c := ev_children
-			from
-				c.start
-			until
-				c.after
-			loop
-				delete_item (c.item)
-				c.forth
-			end
-			all_ev_children.clear_all
 		end
 
 feature -- Event : command association
@@ -338,58 +302,7 @@ feature -- Basic operations
 			end
 		end
 
-	get_children_count (item_imp: EV_TREE_ITEM_IMP): INTEGER is
-			-- Number of children of the given item.
-			-- If the item is Void, it return the children of the tree.
-		local
-			handle: INTEGER
-		do
-			from
-				if item_imp = Void then
-					handle := cwin_send_message_result (wel_item, Tvm_getnextitem, Tvgn_root, 0)
-				else
-					handle := cwin_send_message_result (wel_item, Tvm_getnextitem, Tvgn_child, cwel_pointer_to_integer (item_imp.h_item))
-				end
-			until
-				handle = 0
-			loop
-				Result := Result + 1
-				handle := cwin_send_message_result (wel_item, Tvm_getnextitem, Tvgn_next, handle)
-			end
-		end
-
-	internal_get_index (item_imp: EV_TREE_ITEM_IMP): INTEGER is
-			-- Find the index fo `item_imp' in his parent.
-		local
-			handle: INTEGER
-			found: BOOLEAN
-		do
-			from
-				if item_imp.parent_imp = Current then
-					handle := cwin_send_message_result (wel_item, Tvm_getnextitem, Tvgn_root, 0)
-				else
-					handle := cwin_send_message_result (wel_item, Tvm_getnextitem, Tvgn_child, cwel_pointer_to_integer (item_imp.h_item))
-				end
-				Result := -1
-			until
-				handle = 0 or found
-			loop
-				Result := Result + 1
-				if handle = cwel_pointer_to_integer (item_imp.h_item) then
-					found := True
-				else
-					handle := cwin_send_message_result (wel_item, Tvm_getnextitem, Tvgn_next, handle)
-				end
-			end
-		end
-
 feature {EV_TREE_ITEM_I} -- Implementation
-
-	add_item (item_imp: EV_TREE_ITEM_IMP) is
-			-- Add `item_imp' to the list
-		do
-			general_insert_item (item_imp, default_pointer, Tvi_last, index)
-		end
 
 	insert_item (item_imp: EV_TREE_ITEM_IMP; an_index: INTEGER) is
 			-- Insert `item_imp' at the `an_index' position.
@@ -431,17 +344,6 @@ feature {NONE} -- WEL Implementation
 				+ Tvs_hasbuttons + Tvs_linesatroot
 				+ Tvs_showselalways
 		end
-
---	internal_propagate_event (event_id, x_pos, y_pos: INTEGER; ev_data: EV_BUTTON_EVENT_DATA) is
-			-- Propagate `event_id' to the goood item.
---		local
---			it: EV_TREE_ITEM_IMP
---		do
---			it := find_item_at_position (x_pos, y_pos)
---			if it /= Void then
---				it.execute_command (event_id, ev_data)
---			end
---		end
 
 	on_tvn_selchanged (info: WEL_NM_TREE_VIEW) is
 			-- selection has changed from one item to another.
@@ -650,6 +552,9 @@ end -- class EV_TREE_IMP
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.43  2000/03/09 19:55:24  rogers
+--| Removed redundent features, internal_propogate_event, internal_get_index, get_children_count, find item_at_position and clear_items. None of these are referenced anymore.
+--|
 --| Revision 1.42  2000/03/09 16:44:23  rogers
 --| Connected the addition and removal of ev_children directly now.
 --|

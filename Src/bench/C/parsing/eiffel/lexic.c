@@ -2066,8 +2066,7 @@ void *ptr;
  * Managing `start_position' and `end_position'
  */
 
-static int process(token_code)
-int token_code;
+static int process(int token_code)
 {
 	/* Process a token updating global variables `start_position' and
 	 * `end_position'.
@@ -2079,8 +2078,7 @@ int token_code;
 	return token_code;
 }
 
-static int process_name(token_code)
-int token_code;
+static int process_name(int token_code)
 {
 	/* Process an identifier. */
 
@@ -2254,8 +2252,7 @@ static int get_string()
 	}
 }
 
-static int eif_char(c)
-char c;
+static int eif_char(char c)
 {
 	int i;
 	int dec_value = 0;

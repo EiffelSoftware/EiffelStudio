@@ -29,7 +29,7 @@ feature {NONE} -- Initialization
 			item := cwin_global_alloc (Gptr, structure_size)
 			memory_allocated_with_global_alloc := True
 			if item = default_pointer then
-				-- Memory allocation problem
+					-- Memory allocation problem
 				c_enomem
 			end
 			shared := False
@@ -237,7 +237,7 @@ feature -- Measurement
 			-- Size to allocate (in bytes)
 		once
 				-- An extra 1024 because a dialog template contains things after
-				-- the end of structure.
+				-- end of structure which are used by Windows.
 			Result := c_size_of_dlgtemplate + 1024
 		end
 

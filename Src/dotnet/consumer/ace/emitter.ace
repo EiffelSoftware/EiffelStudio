@@ -18,7 +18,7 @@ default
 	use_all_cluster_name_as_namespace (no)
 	msil_generation_type ("exe")
 	namespace ("ISE.Cache")
-	version ("5.4.120.0")
+	version ("5.4.808.0")
 	msil_key_file_name ("$EIFFEL_SRC\dotnet\helpers\isekey.snk")
 	msil_assembly_compatibility ("None")
 	msil_clr_version ("v1.0.3705")

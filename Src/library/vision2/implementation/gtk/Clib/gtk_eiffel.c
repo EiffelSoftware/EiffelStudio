@@ -11,9 +11,6 @@
 #include "gtk_eiffel.h"
 #include "gdk_eiffel.h"
 
-static void c_gtk_widget_show_children_recurse (GtkWidget *widget,
-					      gpointer   client_data);
-
 /*********************************
  *
  * Function `c_free_call_back_block'
@@ -658,39 +655,6 @@ int c_gtk_get_text_max_length (GtkWidget* text)
 
 /*********************************
  *
- * Function : `c_gtk_widget_show_children'
- *
- * Note : Show the children of widget recursively
- *
- *********************************/
-
-void c_gtk_widget_show_children (GtkWidget *widget)
-{
-    g_return_if_fail (widget != NULL);
- 
-    if (GTK_IS_CONTAINER (widget) && !GTK_IS_TREE (widget))
-	  gtk_container_foreach (GTK_CONTAINER (widget),
-    			         c_gtk_widget_show_children_recurse,
-				 NULL);
-}
-
-/*********************************
- *
- * Function : `c_gtk_widget_show_children_recurse'
- *
- * Note : static functions
- *
- *********************************/
-
-static void c_gtk_widget_show_children_recurse (GtkWidget *widget,
-                                  gpointer   client_data)
-{
-    gtk_widget_show (widget);
-    c_gtk_widget_show_children (widget);
-}
-
-/*********************************
- *
  * Function : `c_gtk_toggle_button_active'
  *
  * Note : Return a state of a toggle button
@@ -820,15 +784,12 @@ void c_gtk_pixmap_read_from_xpm ( GtkPixmap *pixmap,
 
 /*********************************
  *
- * Function : `c_gtk_add_list_item'      (1)
- * 			  `c_gtk_list_item_select'   (2)
+ * Function : `c_gtk_list_item_select'   (2)
  *            `c_gtk_list_item_unselect' (3)
  *            `c_gtk_list_rows           (4)
  *            `c_gtk_list_selection_mode (5)
  *            `c_gtk_list_selected_item  (6)
  *            
- * Note (1)   : Add a listItem in a list. The item is first added in a Glist,
- *              then the Glist is added to the list.
  * Note (2,3) : Two routines to select or unselect an item, because the gtk
  *              functions seems to have a bug.
  * Note (4)   : Give the number of rows of a list.
@@ -837,16 +798,6 @@ void c_gtk_pixmap_read_from_xpm ( GtkPixmap *pixmap,
  * Author : Leila
  *
  *********************************/
-
-void c_gtk_add_list_item (GtkWidget *list, GtkWidget *item)
-{
-	GList *glist;
-	
-	glist=NULL;
-	glist=g_list_append(glist, item);
-	gtk_list_append_items (GTK_LIST(list), glist);
-	/*	gtk_widget_show(item);*/
-}
 
 void c_gtk_list_item_select (GtkWidget *item)
 {  

@@ -29,7 +29,8 @@ inherit
 		
 create
 	default_create,
-	make_with_text
+	make_with_text,
+	make_with_text_and_actions
 
 feature {NONE} -- Initialization
 

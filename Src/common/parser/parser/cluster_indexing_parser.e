@@ -977,7 +977,7 @@ debug ("GEYACC")
 end
 
 
-yyval10 := new_empty_verbatim_string_as (cloned_string (verbatim_marker)) 
+yyval10 := new_empty_verbatim_string_as (verbatim_marker.substring (2, verbatim_marker.count), not has_old_verbatim_strings and then verbatim_marker.item (1) = ']') 
 			yyval := yyval10
 if yy_parsing_status = yyContinue then
 	yyssp := yyssp - 1
@@ -1015,7 +1015,7 @@ debug ("GEYACC")
 end
 
 
-yyval10 := new_verbatim_string_as (cloned_string (token_buffer), cloned_string (verbatim_marker)) 
+yyval10 := new_verbatim_string_as (cloned_string (token_buffer), verbatim_marker.substring (2, verbatim_marker.count), not has_old_verbatim_strings and then verbatim_marker.item (1) = ']') 
 			yyval := yyval10
 if yy_parsing_status = yyContinue then
 	yyssp := yyssp - 1

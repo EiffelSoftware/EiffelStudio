@@ -16,7 +16,7 @@ inherit
 
 feature {AST_FACTORY} -- Initialization
 
-	initialize (s, marker: STRING) is
+	initialize (s, marker: STRING; indentable: BOOLEAN) is
 			-- Create a new Verbatim string AST node.
 		require
 			s_not_void: s /= Void
@@ -24,9 +24,11 @@ feature {AST_FACTORY} -- Initialization
 		do
 			string_initialize (s)
 			verbatim_marker := marker
+			is_indentable := indentable
 		ensure
 			value_set: value = s
 			verbatim_marker_set: verbatim_marker = marker
+			is_indentable_set: is_indentable = indentable
 		end
 
 feature -- Visitor
@@ -43,6 +45,12 @@ feature -- Attributes
 			-- Delimiter used to mark the beginning and end of the
 			-- verbatim string.
 			-- If `empty', no marker was used.
+
+	is_indentable: BOOLEAN
+			-- Is verbatim string indentable, i.e. can all lines be prepended
+			-- by the same white space without changing string value?
+			-- Normally, indentable verbatim string is enclosed in '[' and ']'.
+			-- Non-indentable verbatim string is enclosed in '{' and '}'.
 
 --feature {AST_EIFFEL} -- Output
 --

@@ -69,7 +69,7 @@
 			<paragraph>EiffelStudio provides a set of predefined units.  Some simply serve to count occurrences of certain construct specimens in the software; examples include 
 				<code>
 					<string>CLASS</string>
-				</code> , 
+				</code>, 
 				<code>
 					<string>CLUSTER</string>
 				</code>, 
@@ -85,7 +85,7 @@
 				</code> describes metrics whose values are divisions, for example "average number of classes per cluster", obtained by dividing the number of classes by the number of classes.
 			</paragraph>
 			<paragraph>Any metric applies over one or more 
-				<bold>scope types</bold> .  A scope type is a type of product or process over which the metric is measured; for product metric, examples include 
+				<bold>scope types</bold>.  A scope type is a type of product or process over which the metric is measured; for product metric, examples include 
 				<code>
 					<string>feature</string>
 				</code> (meaning that we will compute a metric over a single feature), 
@@ -97,13 +97,13 @@
 				</code>, 
 				<code>
 					<string>system</string>
-				</code> .  They obey an order relation corresponding to containment order: a feature belongs to a class, a class to a cluster and so on.
+				</code>.  They obey an order relation corresponding to containment order: a feature belongs to a class, a class to a cluster and so on.
 			</paragraph>
 			<paragraph>A 
 				<bold>scope</bold> is an instance of a scope type.  For example a given cluster is an instance of the scope type 
 				<code>
 					<string>cluster</string>
-				</code> .
+				</code>.
 			</paragraph>
 			<paragraph>To compute a measure is to apply a certain metric over a certain scope of an applicable scope type.  For example we may compute the value of the metric 
 				<code>
@@ -117,14 +117,6 @@
 				<content>Kinds of metrics</content>
 			</heading>
 			<paragraph>The EiffelStudio metric framework provides a number of predefined metrics but also enables users to define their own metrics in terms of the predefined ones according to a taxonomy illustrated as follows:</paragraph>
-			<list ordered="false"><!---->
-				<item>
-					<image>
-						<usemap>#index-93</usemap>
-						<url>index-93.png</url>
-					</image>
-				</item>
-			</list>
 		</div>
 		<paragraph>Metrics are divided into elementary and composite:</paragraph>
 		<list ordered="false">
@@ -139,10 +131,10 @@
 				</code>, the number of classes, is raw.
 			</item>
 			<item>It is often useful to define a new metric by subjecting a raw metric to one or more 
-				<bold>selection criteria</bold> .  For example a class may be either deferred (abstract) or effective (concrete, i.e.  fully implemented).  This is a selection criterion.  Separately, a class may have an invariant, or not; this is another selection criterion, 
+				<bold>selection criteria</bold>.  For example a class may be either deferred (abstract) or effective (concrete, i.e.  fully implemented).  This is a selection criterion.  Separately, a class may have an invariant, or not; this is another selection criterion, 
 				<code>
 					<string>Invariant_equipped</string>
-				</code> .  You might want to know the number of classes that are deferred and have no invariant clause; if so, you may define a derived metric by submitting the raw metric 
+				</code>.  You might want to know the number of classes that are deferred and have no invariant clause; if so, you may define a derived metric by submitting the raw metric 
 				<code>
 					<string>Classes</string>
 				</code> to both of these criteria connected by an "and".
@@ -271,25 +263,25 @@
 					<code>
 						<string>k</string>
 					</code>
-					<span>i</span>
+					<sub_script>i</sub_script>
 					<code>
-						<symbol>.  </symbol>
+						<symbol>. </symbol>
 					</code>
 					<code>
 						<string>m</string>
 					</code>
-					<span>i</span>, where the 
+					<sub_script>i</sub_script>, where the 
 					<code>
 						<string>k</string>
 					</code>
-					<span>i</span> are real values and the 
+					<sub_script>i</sub_script> are real values and the 
 					<code>
 						<string>m</string>
 					</code>
-					<span>i</span> existing metrics (either elementary or basic) with the same unit, other than 
+					<sub_script>i</sub_script> existing metrics (either elementary or basic) with the same unit, other than 
 					<code>
 						<string>RATIO</string>
-					</code> .  (It would be improper to add two 
+					</code>.  (It would be improper to add two 
 					<code>
 						<string>RATIO</string>
 					</code> values since they might be ratios of incompatible things.  )
@@ -299,18 +291,18 @@
 					<code>
 						<string>m</string>
 					</code>
-					<span>1</span>
+					<sub_script>1</sub_script>
 					<code>
 						<string>/</string>
 					</code>
 					<code>
 						<string>m</string>
 					</code>
-					<span>2</span> where both 
+					<sub_script>2</sub_script> where both 
 					<code>
 						<string>m</string>
 					</code>
-					<span>i</span> are previously defined metrics, not necessarily with the same unit, neither of which a 
+					<sub_script>i</sub_script> are previously defined metrics, not necessarily with the same unit, neither of which a 
 					<code>
 						<string>RATIO</string>
 					</code> (again because 
@@ -334,7 +326,7 @@
 				</code> again and choose the tab 
 				<code>
 					<keyword>Linear</keyword>
-				</code> .  Bring up the 
+				</code>.  Bring up the 
 				<code>
 					<keyword>Metric</keyword>
 				</code> menu:
@@ -352,7 +344,7 @@
 			<paragraph>To define the first term of the sum, select 
 				<code>
 					<string>Clients</string>
-				</code> .  Do 
+				</code>.  Do 
 				<bold>not</bold> click the button marked OK (we are not done yet as we need a second term) but instead click the 
 				<code>
 					<keyword>+</keyword>
@@ -398,13 +390,13 @@
 			<paragraph>The name of our new linear metric will be 
 				<code>
 					<string>Direct_dependents</string>
-				</code> .  Enter it into the top field, 
+				</code>.  Enter it into the top field, 
 				<code>
 					<keyword>New_metric_name</keyword>
 				</code> (if you forget, you will be reminded), and click 
 				<code>
 					<keyword>OK</keyword>
-				</code> .  The name of the new metric and its unit become the defaults in the corresponding fields of the Context Tool.
+				</code>.  The name of the new metric and its unit become the defaults in the corresponding fields of the Context Tool.
 			</paragraph>
 			<paragraph>Let's define one more metric, this time a ratio.  We want to know the "branching factor": average number of heirs per class.  It will be the ratio of metrics 
 				<code>
@@ -412,7 +404,7 @@
 				</code> and 
 				<code>
 					<string>Classes</string>
-				</code> .  Click 
+				</code>.  Click 
 				<code>
 					<keyword>Define new metric</keyword>
 				</code> then 
@@ -449,7 +441,7 @@
 				</code>, more clear than "branching factor", in the field at the top, and click 
 				<code>
 					<keyword>OK</keyword>
-				</code> .  You now have three user-defined metrics available in addition to predefined metrics, as you can check by bringing up the 
+				</code>.  You now have three user-defined metrics available in addition to predefined metrics, as you can check by bringing up the 
 				<code>
 					<keyword>Metric</keyword>
 				</code> menu on the Context Tool:
@@ -532,7 +524,7 @@
 				</code>, to 
 				<code>
 					<string>Class_count</string>
-				</code> .  Now compute that measure by clicking the 
+				</code>.  Now compute that measure by clicking the 
 				<code>
 					<keyword>Calculate metric</keyword>
 				</code> button, at the place shown on the above figure.  This displays the resulting measure in the field just below:
@@ -655,7 +647,7 @@
 			<paragraph>Here (possibly after having tried rearranging the metrics) just click 
 				<code>
 					<keyword>Exit</keyword>
-				</code> .
+				</code>.
 			</paragraph>
 		</div>
 		<div>
@@ -717,8 +709,7 @@
 				</code> file:
 			</paragraph>
 			<code_block>
-	<keyword>http://metrics.eiffel.com/vision.xml</keyword>
-			</code_block>
+<keyword>http://metrics.eiffel.com/vision.xml</keyword></code_block>
 			<paragraph>If you do not have access to the Web, 
 				<code>
 					<keyword>Browse</keyword>
@@ -761,4 +752,14 @@
 			</paragraph>
 			<paragraph>An archive, stored as an XML file, includes both the project metrics and its current measures.  The metrics will be made available for import to projects selecting the archive for comparison.  </paragraph>
 		</div>
+		<paragraph>
+			<link>
+				<url>index-14.xml</url>
+				<label>&lt;&lt; Previous</label>
+			</link> 
+			<link>
+				<url>index-16.xml</url>
+				<label>Next &gt;&gt;</label>
+			</link>
+</paragraph>
 	</paragraph></document>

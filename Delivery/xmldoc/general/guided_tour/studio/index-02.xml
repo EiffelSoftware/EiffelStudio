@@ -24,7 +24,7 @@
 				<span>TM</span>.  
 			</item>
 			<item>Displaying a graphical representation of your software elements, and modifying the software through the graphical views (as well as through its text).  </item>
-			<item>Producing extensive documentation of your system, textual or graphical, under many different formats such as HTML, RTF, Postscript, XMI (for e.  g.  Rational Rose) and others.  </item>
+			<item>Producing extensive documentation of your system, textual or graphical, under many different formats such as HTML, RTF, Postscript, XMI (for example Rational Rose) and others.  </item>
 			<item>Browsing through simple or complex software systems, to find out their various components, properties and relationships.  </item>
 			<item>Measuring quantitative properties of the software, by applying metrics predefined in EiffelStudio as well as new ones that you define.  </item>
 			<item>Executing a compiled system, and controlling its execution through the debugging mechanisms of EiffelStudio.  </item>
@@ -147,4 +147,11 @@
 				<keyword>\</keyword>
 			</code> .  VMS users: this is to be replaced by the VMS path naming conventions.  )
 		</paragraph>
-	</paragraph></document>
+		<paragraph>
+			<link>
+				<url>index-03.xml</url>
+				<label>Next &gt;&gt;</label>
+			</link>
+		</paragraph>
+	</paragraph>
+</document>

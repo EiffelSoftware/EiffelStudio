@@ -275,7 +275,7 @@
 			<code>
 				<keyword>Search</keyword>
 			</code>
-			<italic>button at the top of the window, or type CTRL-</italic>
+			<italic> button at the top of the window, or type CTRL-</italic>
 			<code>
 				<keyword>F</keyword>
 			</code>. 
@@ -503,4 +503,14 @@
 				</code> has quite a few.
 			</item>
 		</list>
+		<paragraph>
+			<link>
+				<url>index-07.xml</url>
+				<label>&lt;&lt; Previous</label>
+			</link> 
+			<link>
+				<url>index-09.xml</url>
+				<label>Next &gt;&gt;</label>
+			</link>
+		</paragraph>
 	</paragraph></document>

@@ -29,7 +29,7 @@
 			<size>2</size>
 			<content>Documentation filters</content>
 		</heading>
-		<paragraph>Note: Exporting documentation is not possible if you are using the free version of EiffelStudio.  </paragraph>
+		<note>Note: Exporting documentation is not possible if you are using the free version of EiffelStudio.  </note>
 		<paragraph>Let's see how documentation works by starting to generate it for our Guided Tour system -- which really means for EiffelBase, since that's what it mostly consists of.  The HTML result is available as part of the present documentation (we'll tell you where in just a minute), so you don't have to regenerate it unless you want to.  Indeed we'll show you when to click 
 			<code>
 				<keyword>Cancel</keyword>
@@ -37,7 +37,7 @@
 		</paragraph>
 		<paragraph>Click the following menu entry, used to generate documentation:</paragraph>
 		<code_block>
-			<keyword>Project --&gt; Generate documentation...</keyword>
+	<keyword>Project --&gt; Generate documentation...</keyword>
 		</code_block>
 		<paragraph>This is the next-to-last entry in the 
 			<code>
@@ -125,7 +125,7 @@
 		</list>
 		<paragraph>Not only do these predefined filters provide support for a number of important industry formats; better yet, if you want 
 			<span>another</span> format not represented on the list, or would like to adapt an existing format to your own style preferences, it's easy to define a new filter.  The list that EiffelStudio displays comes from the files with a 
-			<span>.  </span>
+			<span>.</span>
 			<code>
 				<keyword>fil</keyword>
 			</code> extension that it finds in a subdirectory of the installation:
@@ -193,19 +193,19 @@
 		<paragraph>Eiffel classes, as you know, may start with an 
 			<code>
 				<syntax>Indexing</syntax>
-			</code> entry that enables class authors to include documentary information in any category they like.  It is standard (and part of the official style guidelines) to include a the very least an entry of the form 
+			</code> entry that enables class authors to include documentary information in any category they like.  It is standard (and part of the official style guidelines) to include at the very least an entry of the form 
 			<code>
 				<keyword>description:</keyword>
-			</code>
+			</code> 
 			<code>
-				<string>text Descriptive</string>
+				<string>Descriptive text</string>
 			</code> in every class.  The earlier displays of class 
 			<code>
 				<string>LIST</string>
-			</code> showed that entry, which read " 
+			</code> showed that entry, which read "
 			<code>
 				<keyword>Sequential lists, without commitment to a particular representation</keyword>
-			</code> ".
+			</code>".
 		</paragraph>
 		<paragraph>You may have noted that the purpose of Eiffel's 
 			<code>
@@ -323,7 +323,7 @@
 			<italic>The name </italic>
 			<code>
 				<keyword>index-09A</keyword>
-			</code>
+			</code> 
 			<italic>for the needs of this manual.  The default name is, as noted, </italic>
 			<code>
 				<keyword>Documentation</keyword>
@@ -344,8 +344,7 @@
 		<paragraph>Let's take a peek at the generated documentation.  If you are reading this electronically you can see the generated documentation in the 
 			<code>
 				<keyword>index-09A</keyword>
-			</code> subdirectory of the documentation.  Since you can browse the HTML files of that subdirectory at your leisure we'll just take a quick look to get familiar with the basics.  Next to every figure you'll find a link labeled 
-			<span>Browser link</span> enabling you to see the corresponding page directly in your browser.  The link will open in a new browser page.
+			</code> subdirectory of the documentation.  Since you can browse the HTML files of that subdirectory at your leisure we'll just take a quick look to get familiar with the basics.
 		</paragraph>
 		<note>
 			<italic>Make sure you have a browser with full support for style sheets, such as Internet Explorer 4 or later, Netscape 4 or later.  </italic>
@@ -354,15 +353,6 @@
 			<code>
 				<keyword>index-09A/index.html</keyword>
 			</code> :
-		</paragraph>
-		<paragraph>
-			<span>
-				<link>
-					<url>index-09a/index.xml</url>
-					<label>Browser link</label>
-					<target>other</target>
-				</link>
-			</span>
 		</paragraph>
 		<div>
 			<image_link>
@@ -382,15 +372,6 @@
 				<keyword>Classes</keyword>
 			</code> at the top left.
 		</paragraph>
-		<paragraph>
-			<span>
-				<link>
-					<url>index-09a/class_list.xml</url>
-					<label>Browser link</label>
-					<target>other</target>
-				</link>
-			</span>
-		</paragraph>
 		<div>
 			<image_link>
 				<url>index-44.png</url>
@@ -405,15 +386,6 @@
 			<code>
 				<keyword>Cluster hierarchy</keyword>
 			</code> to see the overall organization of the system into clusters:
-		</paragraph>
-		<paragraph>
-			<span>
-				<link>
-					<url>index-09a/cluster_hierarchy.xml</url>
-					<label>Browser link</label>
-					<target>other</target>
-				</link>
-			</span>
 		</paragraph>
 		<div>
 			<image_link>
@@ -442,15 +414,6 @@
 				<string>LIST</string>
 			</code> used as example in the preceding sections:
 		</paragraph>
-		<paragraph>
-			<span>
-				<link>
-					<url>index-09a/base/structures/list/index.xml</url>
-					<label>Browser link</label>
-					<target>other</target>
-				</link>
-			</span>
-		</paragraph>
 		<div>
 			<image_link>
 				<url>index-46.png</url>
@@ -475,15 +438,6 @@
 				<keyword>(diagram)</keyword>
 			</code> link wouldn't be there.  Click it now to get the generated diagrams:
 		</paragraph>
-		<paragraph>
-			<span>
-				<link>
-					<url>index-09a/base/structures/list/diagram.xml</url>
-					<label>Browser link</label>
-					<target>other</target>
-				</link>
-			</span>
-		</paragraph>
 		<div>
 			<image_link>
 				<url>index-47.png</url>
@@ -505,15 +459,6 @@
 				<keyword>Go to</keyword>
 			</code> field -- just click its bubble (left on the figure, third from the top):
 		</paragraph>
-		<paragraph>
-			<span>
-				<link>
-					<url>index-09a/base/structures/list/list_chart.xml</url>
-					<label>Browser link</label>
-					<target>other</target>
-				</link>
-			</span>
-		</paragraph>
 		<div>
 			<image_link>
 				<url>index-48.png</url>
@@ -532,10 +477,11 @@
 				<keyword>Commands</keyword>
 			</code> .  Note that all class names and feature names are hyperlinks, which would lead you to the appropriate place in a class text.
 		</paragraph>
-		<paragraph>The top row of hyperlinks now includes class formats corresponding to those we discovered under EiffelStudio ( 
+		<paragraph>The top row of hyperlinks now includes class formats corresponding to those we discovered under EiffelStudio (
 			<link>
-				<url>index-08.xml#76845</url>
-			</link> ): 
+				<url>index-08.xml</url>
+				<label>"CLASS VIEWS"</label>
+			</link>): 
 			<code>
 				<keyword>Relations</keyword>
 			</code> (covering ancestors, descendants, clients, suppliers, ), full 
@@ -551,15 +497,6 @@
 			<code>
 				<keyword>Flat contracts</keyword>
 			</code> to see the full interface of the class:
-		</paragraph>
-		<paragraph>
-			<span>
-				<link>
-					<url>index-09a/base/structures/list/list_flatshort.xml</url>
-					<label>Browser link</label>
-					<target>other</target>
-				</link>
-			</span>
 		</paragraph>
 		<div>
 			<image_link>
@@ -605,4 +542,14 @@
 			</item>
 		</list>
 		<paragraph>The documentation generation mechanisms, using HTML or other formats, let you publish your designs, at the level of detail you desire, on an Intranet, the Internet, or as part of documents you release.  They are an important part of the power of ISE Eiffel for quality software development.  </paragraph>
+		<paragraph>
+			<link>
+				<url>index-08.xml</url>
+				<label>&lt;&lt; Previous</label>
+			</link> 
+			<link>
+				<url>index-10.xml</url>
+				<label>Next &gt;&gt;</label>
+			</link>
+</paragraph>
 	</paragraph></document>

@@ -67,15 +67,15 @@
 				<keyword>Class</keyword>
 			</code>, at any time to make room for the others.
 		</paragraph>
-		<paragraph>So far we have talked about " 
+		<paragraph>So far we have talked about "
 			<span>the</span> EiffelStudio window", but in fact that's not correct.  What you see is 
-			<span>one</span> " 
-			<bold>Development Window</bold> ", of which you can have as many as you wish.  Some people prefer to use a single development tool, avoiding screen clutter; others don't think twice about having lots of windows, taking the "desktop metaphor" to its full conclusion (some non-computer desktops are quite cluttered).  There are many ways to start a new Development Window; for example if you look at the entries in the 
+			<span>one</span> "
+			<bold>Development Window</bold>", of which you can have as many as you wish.  Some people prefer to use a single development tool, avoiding screen clutter; others don't think twice about having lots of windows, taking the "desktop metaphor" to its full conclusion (some non-computer desktops are quite cluttered).  There are many ways to start a new Development Window; for example if you look at the entries in the 
 			<code>
 				<keyword>File</keyword>
 			</code> menu at the top left -- don't select any of these entries yet, just look -- you'll see, among others, 
 			<code>
-				<keyword>window New</keyword>
+				<keyword>New window</keyword>
 			</code>, which would create a new Development Window.
 		</paragraph>
 		<paragraph>Whether you have one Development Window or many, each may have as its 
@@ -301,13 +301,11 @@
 				<string>support</string>
 			</code> for additional supporting mechanisms.
 		</paragraph>
-		<list ordered="false">
-			<item>
-				<image>
-					<url>index-16.png</url>
-				</image>
-			</item>
-		</list>
+		<paragraph>
+			<image>
+				<url>index-16.png</url>
+			</image>
+		</paragraph>
 		<paragraph>The most extensive of these EiffelBase libraries is 
 			<code>
 				<string>structures</string>
@@ -576,15 +574,25 @@
 			</code>
 			<code>
 				<keyword>New window</keyword>
-			</code> ; this creates a new tool, untargeted.  The title bar says " 
+			</code> ; this creates a new tool, untargeted.  The title bar says "
 			<code>
-				<keyword>Empty development tool #1 </keyword>
-			</code> ".  You can get the same effect by clicking the Create New Window icon, leftmost on the top row of buttons, just below " 
+				<keyword>Empty development tool #1</keyword>
+			</code> ".  You can get the same effect by clicking the Create New Window icon, leftmost on the top row of buttons, just below "
 			<code>
 				<keyword>File</keyword>
-			</code> ".  The corresponding keyboard accelerator is CTRL- 
+			</code>".  The corresponding keyboard accelerator is CTRL- 
 			<code>
 				<keyword>N</keyword>
 			</code> .
 		</paragraph>
+		<paragraph>
+	<link>
+		<url>index-06.xml</url>
+		<label>&lt;&lt; Previous</label>
+	</link> 
+	<link>
+		<url>index-08.xml</url>
+		<label>Next &gt;&gt;</label>
+	</link>
+</paragraph>
 	</paragraph></document>

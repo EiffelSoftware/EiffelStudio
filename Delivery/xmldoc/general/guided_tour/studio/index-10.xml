@@ -112,10 +112,7 @@
 		<paragraph>The bottom Context Tool shows one of the Feature views, by default 
 			<code>
 				<keyword>Flat</keyword>
-			</code>.  The flat view of a feature, similar in concept to the flat view of a class (page 
-			<link>
-				<url>index.xml#FLAT FORM OF CLASS</url>
-			</link> ), gives the full text of a feature, taking into account any inherited precondition or postcondition clauses.  Here the feature as declared in the class appears in the top Editing Tool, with no precondition and an 
+			</code>.  The flat view of a feature, similar in concept to the flat view of a class, gives the full text of a feature, taking into account any inherited precondition or postcondition clauses.  Here the feature as declared in the class appears in the top Editing Tool, with no precondition and an 
 			<code>
 				<keyword>ensure then</keyword>
 			</code> postcondition clause.  But it's a redefinition of an inherited feature; the flat view in the bottom Context Tool shows the full precondition, inherited from the ancestor 
@@ -358,4 +355,14 @@
 			</paragraph>
 			<paragraph>In any system or library that takes advantage of inheritance and its associated mechanisms -- renaming, redefinition, effecting, undefinition, multiple and repeated inheritance, polymorphism, dynamic binding -- the feature browsing facilities that we have just explored are invaluable to track what happens to features.  What makes them even more precious is their connection with the rest of the browsing and documentation capabilities, especially the pick-and-drop which we will now study.  </paragraph>
 		</div>
+		<paragraph>
+			<link>
+				<url>index-09.xml</url>
+				<label>&lt;&lt; Previous</label>
+			</link> 
+			<link>
+				<url>index-11.xml</url>
+				<label>Next &gt;&gt;</label>
+			</link>
+</paragraph>
 	</paragraph></document>

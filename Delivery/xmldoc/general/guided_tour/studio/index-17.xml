@@ -68,13 +68,13 @@
 			</paragraph>
 			<list ordered="false">
 				<item>
-					<span>Security and efficiency of the generated code</span> : compiling techniques for the strongly typed Eiffel language ensure that compilers can catch many errors before it is too late, and generate more efficient code.  The "validity constraints" of the language, whose violations are caught as compilation errors, are particularly useful here, playing the role of enforceable design rules.
+					<italic>Security and efficiency of the generated code</italic>: compiling techniques for the strongly typed Eiffel language ensure that compilers can catch many errors before it is too late, and generate more efficient code.  The "validity constraints" of the language, whose violations are caught as compilation errors, are particularly useful here, playing the role of enforceable design rules.
 				</item>
 				<item>
-					<span>Quick turnaround </span> : you should experience an almost immediate transition from the time you write or (more commonly) modify software to the time you can execute it.
+					<italic>Quick turnaround </italic>: you should experience an almost immediate transition from the time you write or (more commonly) modify software to the time you can execute it.
 				</item>
 				<item>
-					<span>C code generation</span>: for portability, it is useful to take advantage of C in its proper role, that of a portable assembly language.  C's closeness to machine concepts -- one of the very properties making it less suitable for human programming except in the case of short routines to access low-level mechanisms --, its almost universal availability, and its good level of standardization, make it an excellent target language for a code generator.  This also enables the environment to benefit from the often extensive optimizations performed by good C compilers, and facilitates interfacing new software with the large body of existing C-based systems, tools and libraries.  As the final output of Eiffel compilation, you can obtain a complete C package that you can either C-compile on the same machine or port to other platforms, making ISE Eiffel a tool of choice for 
+					<italic>C code generation</italic>: for portability, it is useful to take advantage of C in its proper role, that of a portable assembly language.  C's closeness to machine concepts -- one of the very properties making it less suitable for human programming except in the case of short routines to access low-level mechanisms --, its almost universal availability, and its good level of standardization, make it an excellent target language for a code generator.  This also enables the environment to benefit from the often extensive optimizations performed by good C compilers, and facilitates interfacing new software with the large body of existing C-based systems, tools and libraries.  As the final output of Eiffel compilation, you can obtain a complete C package that you can either C-compile on the same machine or port to other platforms, making ISE Eiffel a tool of choice for 
 					<bold>cross-platform development</bold> : develop on one platform, deploy on one or more others.
 				</item>
 			</list>
@@ -88,6 +88,8 @@
 				<bold>changed system</bold>, of which an earlier state had previously been processed.
 			</paragraph>
 			<paragraph>The change may be big or small; the system may be big or small.  ("Small system" here means up to a few tens of thousands of lines.  ) This gives four possible cases, of which only one is really critical:</paragraph>
+			<table><row><cell></cell><cell><bold>Small system</bold></cell><cell></cell><cell><bold>Large system</bold></cell></row><row><cell></cell><cell></cell><cell></cell><cell></cell></row><row><cell></cell><cell></cell><cell></cell><cell></cell></row></table>
+
 			<paragraph>If the system is small, as in both of the left column entries, speed of recompilation with a good compiler will be acceptable.  </paragraph>
 			<paragraph>In the bottom-right box, the developers have spent days or weeks changing many classes in a large system, so they will not resent having to wait a little to see the results of the recompilation, as long as the time remains reasonable.  In EiffelStudio this corresponds, as we'll see shortly, to 
 				<span>finalization</span>, which is in fact fairly fast anyway, but not as fast as the incremental modes.

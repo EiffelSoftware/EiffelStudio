@@ -258,8 +258,7 @@
 			<paragraph>The choice between linked and isolated behavior is a matter of taste; let's see how you can change it, so that you can set your own preference.  </paragraph>
 			<paragraph>To change the behavior, choose the menu entry</paragraph>
 			<code_block>
-				<keyword>View --&gt; Link context tool</keyword>
-			</code_block>
+<keyword>View --&gt; Link context tool</keyword></code_block>
 			<paragraph>After this, the entry will change to 
 				<code>
 					<keyword>View</keyword>
@@ -284,8 +283,7 @@
 				<span>not</span> present by default on the toolbar, so this is a good opportunity to take a quick look at the user interface customization mechanism, which you can use later to tailor the interface to the exact form you need.  Select
 			</paragraph>
 			<code_block>
-				<keyword>View --&gt; Toolbars --&gt; Customize standard toolbar</keyword>
-			</code_block>
+<keyword>View --&gt; Toolbars --&gt; Customize standard toolbar</keyword></code_block>
 			<paragraph>(The adjacent entry is 
 				<code>
 					<keyword>toolbar project Customize</keyword>
@@ -459,4 +457,14 @@
 				</cell>
 			</row>
 		</table>
+		<paragraph>
+			<link>
+				<url>index-10.xml</url>
+				<label>&lt;&lt; Previous</label>
+			</link> 
+			<link>
+				<url>index-12.xml</url>
+				<label>Next &gt;&gt;</label>
+			</link>
+</paragraph>
 	</paragraph></document>

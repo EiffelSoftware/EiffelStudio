@@ -22,28 +22,31 @@ inherit
 		end
 
 creation 
-	make
+	make,
+	make_from_existing
 
-feature {NONE} -- Initialization
+feature -- Initialization
 
 	make (a_name: STRING; a_parent: MEL_COMPOSITE; do_manage: BOOLEAN) is
 			-- Create a motif row column.
 		require
-			a_name_exists: a_name /= Void;
-			a_parent_exists: a_parent /= Void and then not a_parent.is_destroyed
+			name_exists: a_name /= Void;
+			parent_exists: a_parent /= Void and then not a_parent.is_destroyed
 		local
 			widget_name: ANY
 		do
 			parent := a_parent;
 			widget_name := a_name.to_c;
 			screen_object := xm_create_row_column (a_parent.screen_object, $widget_name, default_pointer, 0);
-			Mel_widgets.put (Current, screen_object);
+			Mel_widgets.add (Current);
 			set_default;
 			if do_manage then
 				manage
 			end
 		ensure
-			exists: not is_destroyed
+			exists: not is_destroyed;
+			parent_set: parent = a_parent;
+			name_set: name.is_equal (a_name)
 		end;
 
 feature -- Measurement
@@ -241,12 +244,13 @@ feature -- Status report
 			result_not_void: Result /= Void
 		end;
 
-	mnemonic: POINTER is
+	mnemonic: CHARACTER is
 			-- Keysym of the key to press in order to post the pulldown
 			-- menu associated with an option menu
 		require
 			exists: not is_destroyed
 		do
+			Result := get_xt_keysym (screen_object, XmNmnemonic)
 		end;
 
 	mnemonic_char_set: STRING is
@@ -343,6 +347,20 @@ feature -- Status report
 			Result := get_xt_unsigned_char (screen_object, XmNrowColumnType) = XmWORK_AREA
 		end;
 
+	is_menu: BOOLEAN is
+			-- Is Current a menu?
+			-- (ie is it a menu bar or menu popup or menu pulldown
+			-- or menu option).
+		do
+			Result := is_menu_bar or else is_menu_popup or else
+				is_menu_pulldown or else is_menu_option
+		ensure
+			valid_result: Result = is_menu_bar or else 
+					is_menu_popup or else
+					is_menu_pulldown or else 
+					is_menu_option
+		end;
+				
 	is_menu_bar: BOOLEAN is
 			-- Is Current a menu bar?
 		require
@@ -375,14 +393,6 @@ feature -- Status report
 			Result := get_xt_unsigned_char (screen_object, XmNrowColumnType) = XmMENU_OPTION
 		end;
 	
-	sub_menu: MEL_PULLDOWN_MENU is
-			-- Pulldown menu to be associated with an option menu.
-		require
-			exists: not is_destroyed
-		do
-			Result ?= get_xt_widget (screen_object, XmNsubMenuId)
-		end;
-
 	is_tear_off_enabled: BOOLEAN is
 			-- Is the tear-off behavior enabled for Current?
 		require
@@ -427,7 +437,7 @@ feature -- Status setting
 		end;
 
 	set_entry_alignment_center is
-            -- Set `entry_alignment_center'.
+			-- Set `entry_alignment_center'.
 		require
 			exists: not is_destroyed
 		do
@@ -570,18 +580,24 @@ feature -- Status setting
 			menu_post_set: menu_post.is_equal (a_string)
 		end;
 
-	set_mnemonic is
+	set_mnemonic (a_character: CHARACTER) is
 			-- Set `mnemonic'.
 		require
 			exists: not is_destroyed
 		do
+			set_xt_keysym (screen_object, XmNmnemonic, a_character)
+		ensure
+			set: mnemonic = a_character
 		end;
 
-	set_mnemonic_char_set is
+	set_mnemonic_char_set (a_string: STRING) is
 			-- Set `mnemonic_char_set'.
 		require
 			exists: not is_destroyed
 		do
+			set_xt_string (screen_object, XmNmnemonicCharSet, a_string)
+		ensure
+			set: mnemonic_char_set.is_equal (a_string)
 		end;
 
 	set_num_columns (a_number: INTEGER) is
@@ -687,17 +703,6 @@ feature -- Status setting
 			set_xt_boolean (screen_object, XmNradioBehavior, b)
 		ensure
 			radio_behavior_set: radio_behavior = b
-		end;
-
-	set_sub_menu (a_widget: MEL_PULLDOWN_MENU) is
-			-- Set `sub_menu' to `a_widget'.
-		require
-			exists: not is_destroyed
-			a_widget_exists: not a_widget.is_destroyed
-		do
-			set_xt_widget (screen_object, XmNsubMenuId, a_widget.screen_object)
-		ensure
-			sub_menu_set: sub_menu.is_equal (a_widget)
 		end;
 
 	set_tear_off_enabled (b: BOOLEAN) is

@@ -214,7 +214,7 @@ feature -- Cursor movement
 		do
 			Result := (i >= 1) and (i <= count)
 		ensure then
-			valid_index_definition: Result = (i >= 1) and (i <= count)
+			valid_index_definition: Result = ((i >= 1) and (i <= count))
 		end;
 
 

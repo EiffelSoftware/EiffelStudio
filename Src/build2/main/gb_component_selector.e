@@ -70,6 +70,13 @@ inherit
 		undefine
 			default_create, copy, is_equal
 		end
+		
+	GB_SHARED_PIXMAPS
+		export
+			{NONE} all
+		undefine
+			default_create, copy, is_equal
+		end
 
 create
 	default_create
@@ -217,6 +224,7 @@ feature {NONE} -- Implementation
 					-- object was selected.
 				if Preferences.boolean_resource_value (preferences.show_deleting_keyboard_warning, True) then
 					create warning_dialog.make_initialized (2, preferences.show_deleting_keyboard_warning, delete_warning1 + "component" + delete_warning2, delete_do_not_show_again)
+					warning_dialog.set_icon_pixmap (Icon_build_window @ 1)
 					warning_dialog.set_ok_action (agent delete_component (selected_item.text))
 					warning_dialog.show_modal_to_window (parent_window (Current))
 				else

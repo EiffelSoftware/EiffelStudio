@@ -114,8 +114,10 @@ feature {NONE} -- Initialization
 			tool.parent.prune_all (tool)
 			dialog.destroy
 			parent_window (parent_area).lock_update
-			parent_area.insert_widget (tool, display_name, original_parent_position)
+			parent_area.insert_widget (tool, display_name, original_parent_position.min (parent_area.count + 1))
 			parent_window (parent_area).unlock_update
+		ensure
+			put_back_in_split_area: parent_area.linear_representation.has (tool)
 		end
 		
 	original_parent_position: INTEGER

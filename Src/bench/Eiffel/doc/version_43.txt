@@ -1,0 +1,18 @@
+New changes in 4.3:
+-------------------
+
+­ Degree renumberisation:
+
+	4.2 meaning		->	 4.3 meaning
+	---------------------------------
+	 degree 6		|	degree 6
+	 degree 5		|	degree 5
+	 degree 4		|	degree 4
+	 degree 3		|	degree 3
+	 degree 2		|	degree 2
+	 degree 1		|	degree 1
+	 degree -1		|	degree -1
+	 degree -2		|	degree -1
+	 degree -3		|	degree -1
+	 degree -4		|	degree -2
+	 degree -5		|	degree -3

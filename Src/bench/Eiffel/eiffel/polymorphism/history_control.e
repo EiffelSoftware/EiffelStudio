@@ -33,7 +33,7 @@ feature
 			-- What it the highest assigned ROUTINE_ID?
 			--| Needed in EIFFEL_HISTORY to create the tables.
 
-	add_new (entry: ENTRY; rout_id: ROUTINE_ID; pattern_id: PATTERN_ID) is
+	add_new (entry: ENTRY; rout_id: ROUTINE_ID) is
 			-- Add a new unit for routine id `rout_id' to the controler
 		require
 			good_argument: entry /= Void

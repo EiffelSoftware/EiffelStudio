@@ -137,4 +137,13 @@ feature -- Generic conformance
 			Result := -6        -- Code for DOUBLE
 		end
 
+feature
+
+	make_basic_creation_byte_code (ba : BYTE_ARRAY) is
+
+		do
+			ba.append (Bc_double)
+			ba.append_real (0.0)
+		end 
+
 end

@@ -142,4 +142,13 @@ feature -- Generic conformance
 			Result := -4        -- Code for INTEGER
 		end
 
+feature
+
+	make_basic_creation_byte_code (ba : BYTE_ARRAY) is
+
+		do
+			ba.append (Bc_int)
+			ba.append_integer (0)
+		end 
+
 end

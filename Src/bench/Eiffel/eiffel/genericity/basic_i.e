@@ -18,6 +18,8 @@ inherit
 
 	SHARED_C_LEVEL
 
+	BYTE_CONST
+
 feature
 
 	c_type: TYPE_C is
@@ -104,4 +106,22 @@ feature
 			Result := sk_value
 		end
 
+feature
+
+	generate_basic_creation (buffer : GENERATION_BUFFER) is
+			-- Creation of entities of basic type
+		require
+			valid_buffer: buffer /= Void
+		do
+			buffer.putchar ('(')
+			generate_cast (buffer)
+			buffer.putstring ("0)")
+		end
+	
+	make_basic_creation_byte_code (ba : BYTE_ARRAY) is
+			-- Creation of entities of basic type
+		require
+			valid_array: ba /= Void
+		deferred
+		end 
 end

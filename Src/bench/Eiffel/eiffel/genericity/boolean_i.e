@@ -124,4 +124,13 @@ feature -- Generic conformance
 			Result := -3        -- Code for BOOLEAN
 		end
 
+feature
+
+	make_basic_creation_byte_code (ba : BYTE_ARRAY) is
+
+		do
+			ba.append (Bc_bool)
+			ba.append ('%U')
+		end 
+
 end

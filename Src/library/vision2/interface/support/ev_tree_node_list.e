@@ -17,8 +17,8 @@ feature -- Access
 
 	find_item_recursively_by_data (some_data: ANY): EV_TREE_NODE is
 			-- If `data' contained in a tree item at any level then
-			-- assign this item to `Result'. Search comparison is based
-			-- on `object_comparison'.
+			-- assign this item to `Result'.
+		obsolete "Use `retrieve_item_recursively_by_data' instead."
 		do
 			Result := implementation.find_item_recursively_by_data (some_data)
 		ensure
@@ -26,12 +26,23 @@ feature -- Access
 			index_not_changed: old index = index
 		end
 		
-	find_items_recursively_by_data (some_data: ANY): ARRAYED_LIST [EV_TREE_NODE] is
-			-- `Result' is all tree items contained in `Current' at any level
-			-- with data matching `some_data'. Search comparisonis based on
-			-- `object_comparison'.
+	retrieve_item_recursively_by_data (some_data: ANY; should_compare_objects: BOOLEAN): EV_TREE_NODE is
+			-- If `data' contained in a tree item at any level then
+			-- assign this item to `Result'. Compare objects if
+			-- `should_compare_objects' otherwise compare references.
 		do
-			Result := implementation.find_items_recursively_by_data (some_data)
+			Result := implementation.retrieve_item_recursively_by_data (some_data, should_compare_objects)
+		ensure
+			not_found_in_empty: Result /= Void implies not is_empty
+			index_not_changed: old index = index
+		end
+		
+	retrieve_items_recursively_by_data (some_data: ANY; should_compare_objects: BOOLEAN): ARRAYED_LIST [EV_TREE_NODE] is
+			-- `Result' is all tree items contained in `Current' at any level
+			-- with data matching `some_data'. Compare objects if
+			-- `should_compare_objects' otherwise compare references.
+		do
+			Result := implementation.retrieve_items_recursively_by_data (some_data, should_compare_objects)
 		ensure
 			Result_not_void: Result /= Void
 			not_found_in_empty: not Result.is_empty implies not is_empty

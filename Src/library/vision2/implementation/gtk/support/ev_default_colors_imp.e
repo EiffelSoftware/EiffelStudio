@@ -44,7 +44,6 @@ feature -- Access
 			r, g, b: INTEGER
 			color: POINTER
 		do
---| FIXME, can you implement it Sam ?
 			color := {EV_GTK_EXTERNALS}.gtk_style_struct_fg ({EV_GTK_EXTERNALS}.gtk_widget_get_default_style)
 			r := {EV_GTK_EXTERNALS}.gdk_color_struct_red (color)
 			g := {EV_GTK_EXTERNALS}.gdk_color_struct_green (color)
@@ -60,7 +59,6 @@ feature -- Access
 			r, g, b: INTEGER
 			color: POINTER
 		do
---| FIXME, can you implement it Sam ?
 			color := {EV_GTK_EXTERNALS}.gtk_style_struct_fg ({EV_GTK_EXTERNALS}.gtk_widget_get_default_style)
 			r := {EV_GTK_EXTERNALS}.gdk_color_struct_red (color)
 			g := {EV_GTK_EXTERNALS}.gdk_color_struct_green (color)

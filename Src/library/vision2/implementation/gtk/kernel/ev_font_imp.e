@@ -25,8 +25,6 @@ inherit
 			set_values
 		end
 
-	EV_C_UTIL
-
 create
 	make
 
@@ -211,7 +209,7 @@ feature {NONE} -- Implementation
 					exp_name := match_name (a_try_string)
 					if exp_name /= Void and then not exp_name.is_empty then
 						create Result.make (exp_name)
-						if Result.c_object /= NULL then
+						if Result.c_object /= default_pointer then
 							preloaded.put (Result, a_try_string)
 							name := a_try_face						
 						else
@@ -281,7 +279,7 @@ feature {NONE} -- Implementation
 				i := i + 1
 			end
 
-			if temp_font.c_object = NULL then
+			if temp_font.c_object = default_pointer then
 				-- The font cannot be found so we do nothing and stick with the last found font.
 				--name := ""
 				--full_name := ""
@@ -578,7 +576,7 @@ feature -- Obsolete
 		end
 
 invariant
-	c_object_not_null: is_initialized implies c_object /= NULL
+	c_object_not_null: is_initialized implies c_object /= default_pointer
 	full_name_not_void: is_initialized implies full_name /= Void
 	
 end -- class EV_FONT_IMP

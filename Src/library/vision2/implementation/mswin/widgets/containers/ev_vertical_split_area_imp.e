@@ -129,7 +129,7 @@ feature {NONE} -- Implementation
 	on_size (size_type, a_width, a_height: INTEGER) is
 			-- Wm_size message
 		do
-			Precursor (size_type, a_width, a_height)
+			Precursor {EV_SPLIT_AREA_IMP} (size_type, a_width, a_height)
 			split_area_resizing (a_height, True)
 		end
 
@@ -299,6 +299,8 @@ feature {NONE} -- Implementation
 		
 	on_left_button_down (keys, x_pos, y_pos: INTEGER) is
 			-- Wm_lbuttondown message handling.
+		local
+			splitter_bitmap: WEL_BITMAP
 		do
 				-- Pressing the left button on the splitter to move it, was
 				-- not bringing the window it was contained in to the front.
@@ -312,6 +314,11 @@ feature {NONE} -- Implementation
 				-- Start to move the splitter. We capture the mouse
 				-- message to be able to move the mouse over the
 				-- left or right control without losing the "mouse focus."
+				create splitter_bitmap.make_direct (8, 8, 1, 1, splitter_string_bitmap)
+				create splitter_brush.make_by_pattern (splitter_bitmap)
+				splitter_bitmap.delete
+				splitter_bitmap := Void
+
 				set_click_position (x_pos, y_pos)
 				set_capture
 			end
@@ -337,6 +344,8 @@ feature {NONE} -- Implementation
 					new_pos := y_pos - click_relative_position
 				end
 				set_split_position (new_pos)
+				splitter_brush.delete
+				splitter_brush := Void
 			end
 		end
 

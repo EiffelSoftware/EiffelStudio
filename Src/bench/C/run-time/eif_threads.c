@@ -499,13 +499,15 @@ rt_public void eif_thr_exit(void)
 
 	int destroy_mutex = 0; /* If non null, we'll destroy the 'join' mutex */
 
-		/* We need to keep a reference to the children mutex and 
-		 * the children condition variable after freeing ressources */
+		/* We need to keep a reference to the children mutex, 
+		 * the children condition variable and parent's thread number
+		 * of children after freeing ressources */
 #ifndef EIF_NO_CONDVAR
-	EIF_COND_TYPE *chld_cond = eif_thr_context->children_cond; 
+	EIF_COND_TYPE *l_chld_cond = eif_thr_context->children_cond; 
 #endif /* EIF_NO_CONDVAR */
-	EIF_MUTEX_TYPE *chld_mutex = eif_thr_context->children_mutex;
-
+	EIF_MUTEX_TYPE *l_chld_mutex = eif_thr_context->children_mutex;
+	int *l_addr_n_children = eif_thr_context->addr_n_children;
+	
 	int ret;	/* Return Status of "eifaddr". */
 	EIF_BOOLEAN *terminated = (EIF_BOOLEAN *)
 		eifaddr (eif_access (eif_thr_context->current), "terminated", &ret);
@@ -513,24 +515,12 @@ rt_public void eif_thr_exit(void)
 	if (ret != EIF_CECIL_OK) 
 		eraise ("eif_thr_exit", EN_EXT);
 
-	EIF_MUTEX_LOCK(chld_mutex, "Lock parent mutex");
+	EIF_MUTEX_LOCK(l_chld_mutex, "Lock parent mutex");
 
-	/* Set the `terminated' field of the twin thread object to True so that
-	 * it knows the thread is terminated
-	 */
-
+		/* Set the `terminated' field of the twin thread object to True so that
+		 * it knows the thread is terminated */
 	*terminated = EIF_TRUE;
 
-	/* Decrement the number of child threads of the parent */
-	*(eif_thr_context->addr_n_children) -= 1;
-
-#ifndef EIF_NO_CONDVAR
-	EIF_COND_BROADCAST(chld_cond, "Pbl cond_broadcast");
-#endif
-	EIF_MUTEX_UNLOCK(chld_mutex, "Unlock parent mutex");
-
-		/* Clean GC of non-used data that were used to hold objects */
-	eif_destroy_gc_stacks();
 
 	/* 
 	 * Every thread that has created a child thread with eif_thr_create() or
@@ -547,20 +537,18 @@ rt_public void eif_thr_exit(void)
 		if (!n_children) destroy_mutex = 1; /* No children are alive */
 		EIF_MUTEX_UNLOCK (eif_children_mutex, "Unlocking problem in reclaim()");
 	}
+
 	if (destroy_mutex) {
 	  EIF_MUTEX_DESTROY(eif_children_mutex, "Couldn't destroy join mutex.");
+	  eif_children_mutex = NULL;
 #ifndef EIF_NO_CONDVAR
 	  EIF_COND_DESTROY(eif_children_cond, "Couldn't destroy join cond. var");
+	  eif_children_cond = NULL;
 #endif
-	  eif_children_mutex = (EIF_MUTEX_TYPE *) 0;
 	}
 
-	/* The TSD is managed in a different way under VxWorks: each thread
-	 * must call taskVarAdd upon initialization and taskVarDelete upon
-	 * termination.  It was impossible to call taskVarDelete using the same
-	 * model as on other platforms unless creating a new macro that would
-	 * be useful only for VxWorks. It is easier to do the following:
-	 */
+		/* Clean GC of non-used data that were used to hold objects */
+	eif_destroy_gc_stacks();
 
 	if (eif_thr_is_root ())	{	/* Is this the root thread */
 		eif_cecil_reclaim ();
@@ -576,11 +564,29 @@ rt_public void eif_thr_exit(void)
 		eif_free (eif_thr_context);		/* Thread context passed by parent */
 		eif_free (eif_globals);			
 						/* Global variables specific to the current thread */
-	}	
+	}
+
 #ifdef VXWORKS
+	/* The TSD is managed in a different way under VxWorks: each thread
+	 * must call taskVarAdd upon initialization and taskVarDelete upon
+	 * termination.  It was impossible to call taskVarDelete using the same
+	 * model as on other platforms unless creating a new macro that would
+	 * be useful only for VxWorks. It is easier to do the following:
+	 */
+
+
 	if (taskVarDelete(0,(int *)&(eif_global_key))) 
 	  eif_thr_panic("Problem with taskVarDelete\n");
 #endif	/* VXWORKS */
+
+		/* Decrement the number of child threads of the parent */
+	*l_addr_n_children -= 1;
+
+#ifndef EIF_NO_CONDVAR
+	EIF_COND_BROADCAST(l_chld_cond, "Pbl cond_broadcast");
+#endif
+	EIF_MUTEX_UNLOCK(l_chld_mutex, "Unlock parent mutex");
+
 
 	EIF_THR_EXIT(0);
 }	/* eif_thr_exit ().*/

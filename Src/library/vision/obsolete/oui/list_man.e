@@ -255,7 +255,7 @@ feature -- Deletion
 		require
 			exists: not destroyed
 		do
-			implementation.remove_all_occurrences (an_item)
+			implementation.prune_all (an_item)
 		ensure
 			is_off: off
 		end;
@@ -301,7 +301,7 @@ feature -- Insertion
 		require
 			exists: not destroyed
 		do
-			implementation.add_left (an_item)
+			implementation.put_left (an_item)
 		ensure
 			count = old count+1;
 		end; 
@@ -312,7 +312,7 @@ feature -- Insertion
 		require
 			exists: not destroyed
 		do
-			implementation.add_right (an_item)
+			implementation.put_right (an_item)
 		ensure
 			count = old count+1;
 			index = old index

@@ -423,6 +423,7 @@ char *name;
 #else
 #ifdef HAS_GETEUID
 	int uid, gid;				/* File owner and group */
+	int euid, egid;				/* Effective user and group */
 #endif
 
 #define ST_MODE     0x0fff      /* Keep only permission mode */
@@ -434,13 +435,23 @@ char *name;
 	mode = buf.st_mode & ST_MODE;
 
 #ifdef HAS_GETEUID
+
 	uid = buf.st_uid;
 	gid = buf.st_gid;
 
-	if (uid == geteuid())
+	euid = geteuid();
+	egid = getegid();
+
+	if (euid == 0)
+		return (EIF_BOOLEAN) '\01';
+	else if (uid == euid)
 		return (EIF_BOOLEAN) ((mode & S_IRUSR) ? '\01' : '\0');
-	else if (gid == getegid())
+	else if (gid == egid)
 		return (EIF_BOOLEAN) ((mode & S_IRGRP) ? '\01' : '\0');
+#ifdef HAS_GETGROUPS
+	else if (eif_group_in_list(gid))
+		return (EIF_BOOLEAN) ((mode & S_IRGRP) ? '\01' : '\0');
+#endif
 	else
 #endif
 		return (EIF_BOOLEAN) ((mode & S_IROTH) ? '\01' : '\0');
@@ -467,6 +478,7 @@ char *name;
 
 #ifdef HAS_GETEUID
 	int uid, gid;				/* File owner and group */
+	int euid, egid;				/* Effective user and group */
 #endif
 
 	int mode;					/* Current mode */
@@ -479,10 +491,19 @@ char *name;
 	uid = buf.st_uid;
 	gid = buf.st_gid;
 
-	if (uid == geteuid())
+	euid = geteuid();
+	egid = getegid();
+
+	if (euid == 0)
+		return (EIF_BOOLEAN) '\01';
+	else if (uid == euid)
 		return (EIF_BOOLEAN) ((mode & S_IWUSR) ? '\01' : '\0');
-	else if (gid == getegid())
+	else if (gid == egid)
 		return (EIF_BOOLEAN) ((mode & S_IWGRP) ? '\01' : '\0');
+#ifdef HAS_GETGROUPS
+	else if (eif_group_in_list(gid))
+		return (EIF_BOOLEAN) ((mode & S_IWGRP) ? '\01' : '\0');
+#endif
 	else
 #endif
 		return (EIF_BOOLEAN) ((mode & S_IWOTH) ? '\01' : '\0');
@@ -506,6 +527,7 @@ char *name;
 #else
 #ifdef HAS_GETEUID
 	int uid, gid;				/* File owner and group */
+	int euid, egid;				/* Effective user and group */
 #endif
 
 	int mode;					/* Current mode */
@@ -518,10 +540,19 @@ char *name;
 	uid = buf.st_uid;
 	gid = buf.st_gid;
 
-	if (uid == geteuid())
+	euid = geteuid();
+	egid = getegid();
+
+	if (euid == 0)
+		return (EIF_BOOLEAN) '\01';
+	else if (uid == euid)
 		return (EIF_BOOLEAN) ((mode & S_IXUSR) ? '\01' : '\0');
-	else if (gid == getegid())
+	else if (gid == egid)
 		return (EIF_BOOLEAN) ((mode & S_IXGRP) ? '\01' : '\0');
+#ifdef HAS_GETGROUPS
+	else if (eif_group_in_list(gid))
+		return (EIF_BOOLEAN) ((mode & S_IXGRP) ? '\01' : '\0');
+#endif
 	else
 #endif
 		return (EIF_BOOLEAN) ((mode & S_IXOTH) ? '\01' : '\0');

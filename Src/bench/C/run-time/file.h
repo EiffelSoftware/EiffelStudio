@@ -138,4 +138,5 @@ extern char *file_group();
 extern int rename();
 extern int rmdir();
 
+extern EIF_BOOLEAN eif_group_in_list();
 #endif

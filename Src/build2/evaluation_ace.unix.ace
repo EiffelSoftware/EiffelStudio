@@ -90,8 +90,6 @@ cluster
 
 	eiffel_parser (ast):		"$EIFFEL_SRC/dotnet/VisualStudio/codedom/producer/eiffel_parser"
 
-	eiffel_lexer (ast):		"$EIFFEL_SRC/dotnet/VisualStudio/codedom/producer/eiffel_lexer"
-
 external
 
 	include_path:

@@ -5,11 +5,12 @@ indexing
 	revision: "$Revision$"
 	access: time
 
-class TIME_CONSTANTS inherit
+class TIME_CONSTANTS
 
+inherit
 	TIME_UTILITY
 		export
-			{NONE} all
+			{NONE} mod, div
 		end
 
 feature -- Access

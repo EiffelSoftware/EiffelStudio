@@ -17,4 +17,13 @@ feature -- Access
 	Assembly_mapping_file_name: STRING is "referenced_assemblies.xml"
 			-- File which lists referenced assemblies with corresponding ids
 
+	assembly_locations: LINKED_LIST [STRING] is
+			-- List of assembly to consume.
+		once
+			create Result.make
+		ensure
+			non_void_assembly_locations: Result /= Void
+		end
+
+
 end -- class COMMON_PATH

@@ -23,6 +23,8 @@ extern "C" {
 #include "eif_types.h"
 #include "eif_threads.h"
 
+#define GTCX		EIF_GET_CONTEXT
+#define EDCX		EIF_END_GET_CONTEXT
 
 #ifdef EIF_THREADS
 

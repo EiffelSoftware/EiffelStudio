@@ -271,6 +271,157 @@ feature -- DrawEdge constants (BDR_xxxx, EDGE_xxxx, BF_xxxx)
 	Bf_topright: INTEGER is 6
 			-- Declared in Windows as BF_TOPRIGHT
 
+feature -- DrawState constants (DSS_xxxx, DST_xxxx)
+
+	Dst_bitmap: INTEGER is 4
+			-- Declared in Windows as DST_BITMAP
+
+	Dst_complex: INTEGER is 0
+			-- Declared in Windows as DST_COMPLEX
+
+	Dst_icon: INTEGER is 3
+			-- Declared in Windows as DST_ICON
+
+	Dst_prefixtext: INTEGER is 2
+			-- Declared in Windows as DST_PREFIXTEXT
+
+	Dst_text: INTEGER is 1
+			-- Declared in Windows as DST_TEXT
+
+	Dss_disabled: INTEGER is 32
+			-- Declared in Windows as DSS_DISABLED
+
+	Dss_hideprefix: INTEGER is 512
+			-- Declared in Windows as DSS_HIDEPREFIX
+
+	Dss_mono: INTEGER is 128
+			-- Declared in Windows as DSS_MONO
+
+	Dss_normal: INTEGER is 0
+			-- Declared in Windows as DSS_NORMAL
+
+	Dss_prefixonly: INTEGER is 1024
+			-- Declared in Windows as DSS_PREFIXONLY
+
+	Dss_right: INTEGER is 32768
+			-- Declared in Windows as DSS_RIGHT
+
+	Dss_union: INTEGER is 16
+			-- Declared in Windows as DSS_UNION
+
+feature -- BitBlt and MaskBlt constants
+
+	Srccopy: INTEGER is 13369376
+			-- Declared in Windows as SRCCOPY
+
+	Srcpaint: INTEGER is 15597702
+			-- Declared in Windows as SRCPAINT
+
+	Srcand: INTEGER is 8913094
+			-- Declared in Windows as SRCAND
+
+	Srcinvert: INTEGER is 6684742
+			-- Declared in Windows as SRCINVERT
+
+	Srcerase: INTEGER is 4457256
+			-- Declared in Windows as SRCERASE
+
+	Notsrccopy: INTEGER is 3342344
+			-- Declared in Windows as NOTSRCCOPY
+
+	Notsrcerase: INTEGER is 1114278
+			-- Declared in Windows as NOTSRCERASE
+
+	Mergecopy: INTEGER is 12583114
+			-- Declared in Windows as MERGECOPY
+
+	Mergepaint: INTEGER is 12255782
+			-- Declared in Windows as MERGEPAINT
+
+	Patcopy: INTEGER is 15728673
+			-- Declared in Windows as PATCOPY
+
+	Patpaint: INTEGER is 16452105
+			-- Declared in Windows as PATPAINT
+
+	Patinvert: INTEGER is 5898313
+			-- Declared in Windows as PATINVERT
+
+	Dstinvert: INTEGER is 5570569
+			-- Declared in Windows as DSTINVERT
+
+	Blackness: INTEGER is 66
+			-- Declared in Windows as BLACKNESS
+
+	Whiteness: INTEGER is 16711778
+			-- Declared in Windows as WHITENESS
+
+	Maskpaint: INTEGER is 2229030 -- 0x220326
+
+	R2_black: INTEGER is 1
+
+	R2_notmergepen: INTEGER is 2
+
+	R2_masknotpen: INTEGER is 3
+
+	R2_notcopypen: INTEGER is 4
+
+	R2_maskpennot: INTEGER is 5
+
+	R2_not: INTEGER is 6
+
+	R2_xorpen: INTEGER is 7
+
+	R2_notmaskpen: INTEGER is 8
+
+	R2_maskpen: INTEGER is 9
+
+	R2_notxorpen: INTEGER is 10
+
+	R2_nop: INTEGER is 11
+
+	R2_mergenotpen: INTEGER is 12
+
+	R2_copypen: INTEGER is 13
+
+	R2_mergepennot: INTEGER is 14
+
+	R2_mergepen: INTEGER is 15
+
+	R2_white: INTEGER is 16
+
+feature -- MaskBlt only constants
+
+	Maskcopy: INTEGER is
+		external
+			"C [macro %"wel.h%"]"
+		alias
+			"MAKEROP4(SRCCOPY, PATCOPY)"
+		end
+
+feature -- Status report
+
+	valid_rop2_constant (c: INTEGER): BOOLEAN is
+			-- Is `c' a valid rop2 constant?
+		do
+			Result := c = R2_black or else
+				c = R2_copypen or else
+				c = R2_masknotpen or else
+				c = R2_maskpen or else
+				c = R2_maskpennot or else
+				c = R2_mergenotpen or else
+				c = R2_mergepen or else
+				c = R2_mergepennot or else
+				c = R2_nop or else
+				c = R2_not or else
+				c = R2_notcopypen or else
+				c = R2_notmaskpen or else
+				c = R2_notmergepen or else
+				c = R2_notxorpen or else
+				c = R2_white or else
+				c = R2_xorpen
+		end
+
 end -- class WEL_DRAWING_CONSTANTS
 
 

@@ -36,6 +36,12 @@ Setting up the License
 With your version of ISE Eiffel, you should have received a license code (either permanent or temporary). The code should be of the form XXXXXXXX:YYYYYYYY. Add this code at the first line in the file $ISE_EIFFEL/install/limand/dhost if $ISE_LICENSE is not defined, otherwise in $ISE_LICENSE/limand/dhost.
 
 
+Setting up the examples
+-----------------------
+
+Most of the examples requires that you have a precompiled version of EiffelBase. To build it, simply run the script $ISE_EIFFEL/make_install after having done all the above steps. This script also prompts you to precompile EiffelVision2 which is not required to compile the examples and you can safely skip this step if you do not intend to use a precompiled of EiffelVision2.
+
+
 Gtk+
 ----
 

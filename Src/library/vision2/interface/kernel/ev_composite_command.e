@@ -23,9 +23,19 @@ feature {NONE} -- Initialization
 		ensure
 			children /= Void
 		end
+feature -- Access
+
+	history: EV_HISTORY is
+			-- History in which Current command is to be recorded
+		do
+			check
+				To_be_implemented: False
+			end
+		end
+
 feature -- Basic operation
 
-	add_command (event_id: INTEGER; cmd: EV_COMMAND; arg: EV_ARGUMENT) is
+--	add_command (event_id: INTEGER; cmd: EV_COMMAND; arg: EV_ARGUMENT) is
 
 	execute (arg: EV_ARGUMENT; a_event_data: EV_EVENT_DATA) is
 			-- Execution to be done by the command.
@@ -66,6 +76,14 @@ feature -- Basic operation
 			loop
 				children.item.redo
 				children.forth
+			end
+		end
+
+	failed: BOOLEAN is
+			-- Was the command execution succesful?
+		do
+			check
+				To_be_implemented: False
 			end
 		end
 

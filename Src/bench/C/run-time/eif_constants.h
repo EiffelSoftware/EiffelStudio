@@ -44,9 +44,14 @@ extern "C" {
 following.
  * By default, recursive marking is selected.
  */
-/*#define RECURSIVE_MARKING		/* Select recursive marking, default */
-#define HYBRID_MARKING		/* Select combined marking */
+#ifdef VXWORKS
+#define ITERATIVE_MARKING		/* Select iterative marking */
+#else
 /*#define ITERATIVE_MARKING		/* Select iterative marking */
+/*#define HYBRID_MARKING		/* Select combined marking */
+#define HYBRID_MARKING
+#endif
+
 /*
  * Garbage collector's statistics
  */

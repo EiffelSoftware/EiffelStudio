@@ -25,10 +25,10 @@ feature -- Initialization
 			interface_descriptor := a_descriptor
 			type_kind := Tkind_coclass
 			name := clone (a_descriptor.name)
-			name.append ("_impl")
 			c_type_name := clone (name)
+			name.append ("_impl")
 			
-			eiffel_class_name := name_for_class (name, type_kind, False)
+			eiffel_class_name := name_for_class (name, type_kind, Shared_wizard_environment.client)
 
 			create c_header_file_name.make (0)
 			c_header_file_name.append ("ecom_")

@@ -140,25 +140,27 @@ feature -- DYNAMIC_LIB Exports processing.
 
 				if class_i /= Void then 
 					dl_class := class_i.compiled_class
-					api_feature_table:= dl_class.api_feature_table
-					if api_feature_table.has (t_routine) then
-						dl_routine:= api_feature_table.found_item
-					end
+					if not dl_class.is_precompiled then
+						api_feature_table:= dl_class.api_feature_table
+						if api_feature_table.has (t_routine) then
+							dl_routine:= api_feature_table.found_item
+						end
+	
+						if api_feature_table.has (t_creation) then
+							dl_creation:= api_feature_table.found_item
+						end
+	
+						if t_index/= Void then
+							dl_index:=t_index.to_integer
+						else
+							dl_index := 0
+						end
 
-					if api_feature_table.has (t_creation) then
-						dl_creation:= api_feature_table.found_item
-					end
-
-					if t_index/= Void then
-						dl_index:=t_index.to_integer
-					else
-						dl_index := 0
-					end
-
-					if dl_class /= Void and then
-						dl_creation /= Void and then
-						dl_routine /= Void then
-						add_export_feature (dl_class,dl_creation,dl_routine,dl_index, t_alias, t_call_type)
+						if dl_class /= Void and then
+							dl_creation /= Void and then
+							dl_routine /= Void then
+							add_export_feature (dl_class,dl_creation,dl_routine,dl_index, t_alias, t_call_type)
+						end
 					end
 				end
 			end

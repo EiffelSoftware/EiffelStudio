@@ -75,10 +75,6 @@ feature {NONE} -- Implementation
 			end
 		end
 		
-	image_index: INTEGER is 0
-			-- Index of the pixmaps in the imagelists.
-			-- A separator does not have an image.
-		
 	is_sensitive: BOOLEAN is True
 			-- Is `Current' sensitive?
 		

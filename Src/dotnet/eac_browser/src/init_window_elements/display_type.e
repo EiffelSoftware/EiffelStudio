@@ -135,6 +135,7 @@ feature {NONE} -- Implementation
 			l_line: DISPLAYED_LINE
 			l_entity: ENTITY_LINE
 			cursor_y_position, cursor_x_position: INTEGER
+			l_ico: EV_PIXMAP
 		do
 			output.clear
 			
@@ -154,10 +155,13 @@ feature {NONE} -- Implementation
 					output.fill_rectangle (cursor_x_position + horizontal_scroll_bar.value * Nb_pixel_decal_h_scroll, cursor_y_position, output.width, Nb_pixel_line)
 				end
 
---				if not l_line.path_icon.is_empty then
+				if not l_line.path_icon.is_empty then
+					create l_ico
+					l_ico.set_with_named_file (l_line.path_icon)
+					output.draw_pixmap (cursor_x_position, cursor_y_position, l_ico)
 --					output.draw_text_top_left (cursor_x_position, cursor_y_position, l_line.path_icon)
 --					cursor_x_position := cursor_x_position + (create {EV_FONT}).string_width (l_line.path_icon)
---				end
+				end
 
 				from
 					l_line.entities.start

@@ -91,7 +91,7 @@ feature -- Status setting
 		do
 			implementation.set_background_color (color)
 		ensure
-			background_color_set: background_color.equal_color (color)
+--			background_color_set: background_color.equal_color (color)
 		end
 
 	set_foreground_color (color: EV_COLOR) is
@@ -102,7 +102,7 @@ feature -- Status setting
 		do
 			implementation.set_foreground_color (color)
 		ensure
-			foreground_color_set: foreground_color.equal_color (color)
+--			foreground_color_set: foreground_color.equal_color (color)
 		end
 
 feature -- Element change

@@ -15,7 +15,7 @@ inherit
 	
 feature -- Constants
 	
-	Default_homogeneous: BOOLEAN is False
+	Default_homogeneous: BOOLEAN is True
 	Default_spacing: INTEGER is 0
 	Default_expand: BOOLEAN is True
 	Default_fill: BOOLEAN is True

@@ -39,15 +39,14 @@ feature -- Implementation
 			create cpp_class_writer.make
 			create interface_names.make
 
-			coclass_descriptor := a_descriptor
 
-			cpp_class_writer.set_name (coclass_descriptor.c_type_name)
-			cpp_class_writer.set_header (coclass_descriptor.description)
-			cpp_class_writer.set_header_file_name (coclass_descriptor.c_header_file_name)
-			cpp_class_writer.add_other (clsid_declaration (coclass_descriptor.name))
-			cpp_class_writer.add_other_source (clsid_definition (coclass_descriptor.name, coclass_descriptor.guid))
+			cpp_class_writer.set_name (a_descriptor.c_type_name)
+			cpp_class_writer.set_header (a_descriptor.description)
+			cpp_class_writer.set_header_file_name (a_descriptor.c_header_file_name)
+			cpp_class_writer.add_other (clsid_declaration (a_descriptor.name))
+			cpp_class_writer.add_other_source (clsid_definition (a_descriptor.name, a_descriptor.guid))
 
-			process_interfaces
+			process_interfaces (a_descriptor)
 			cpp_class_writer.parents.wipe_out
 			
 			-- Add default member "p_unknown"
@@ -79,9 +78,9 @@ feature -- Implementation
 				cpp_class_writer.add_function (ccom_last_error_help_file_function, Public)
 			end
 
-			cpp_class_writer.set_destructor (destructor)
-			cpp_class_writer.add_constructor (default_constructor)
-			cpp_class_writer.add_constructor (pointer_constructor)
+			cpp_class_writer.set_destructor (destructor (a_descriptor))
+			cpp_class_writer.add_constructor (default_constructor (a_descriptor))
+			cpp_class_writer.add_constructor (pointer_constructor (a_descriptor))
 
 
 			add_default_function
@@ -102,14 +101,14 @@ feature -- Implementation
 
 feature {NONE} -- Implementation
 
-	process_interfaces is
+	process_interfaces (a_coclass_descriptor: WIZARD_COCLASS_DESCRIPTOR) is
 			-- Process inherited interfaces
 		local
 			a_name, tmp_string: STRING
 			data_member: WIZARD_WRITER_C_MEMBER
 			interface_descriptors: LIST[WIZARD_INTERFACE_DESCRIPTOR]
 		do
-			interface_descriptors := coclass_descriptor.interface_descriptors
+			interface_descriptors := a_coclass_descriptor.interface_descriptors
 
 			-- Find all the features and properties in inherited interfaces
 			if not interface_descriptors.empty then
@@ -118,52 +117,51 @@ feature {NONE} -- Implementation
 				until
 					interface_descriptors.off
 				loop
---					if not is_typeflag_fhidden (interface_descriptors.item.flags) then
-						-- Add parent and import header files
-						cpp_class_writer.add_parent (interface_descriptors.item.c_type_name, Public)
-						cpp_class_writer.add_import (interface_descriptors.item.c_header_file_name)
-						cpp_class_writer.add_other_source (iid_definition (interface_descriptors.item.name, interface_descriptors.item.guid))
+					-- Add parent and import header files
+					cpp_class_writer.add_parent (interface_descriptors.item.c_type_name, Public)
+					cpp_class_writer.add_import (interface_descriptors.item.c_header_file_name)
+					cpp_class_writer.add_other_source (iid_definition (interface_descriptors.item.name, interface_descriptors.item.guid))
 
-						-- Add data member
-						create data_member.make
-						data_member.set_comment (Interface_pointer_comment)
+					-- Add data member
+					create data_member.make
+					data_member.set_comment (Interface_pointer_comment)
 
-						-- Variable name
-						tmp_string := clone (Interface_variable_prepend)
-						tmp_string.append (interface_descriptors.item.c_type_name)
-						data_member.set_name (tmp_string)
+					-- Variable name
+					tmp_string := clone (Interface_variable_prepend)
+					tmp_string.append (interface_descriptors.item.c_type_name)
+					data_member.set_name (tmp_string)
 
-						-- Variable type
-						tmp_string := clone (interface_descriptors.item.c_type_name)
-						tmp_string.append (Space)
-						tmp_string.append (Asterisk)
-						data_member.set_result_type (tmp_string)
+					-- Variable type
+					tmp_string := clone (interface_descriptors.item.c_type_name)
+					tmp_string.append (Space)
+					tmp_string.append (Asterisk)
+					data_member.set_result_type (tmp_string)
 
-						cpp_class_writer.add_member (data_member, Private)
+					cpp_class_writer.add_member (data_member, Private)
 
-						-- Find all features and properties
-						a_name := interface_descriptors.item.c_type_name
-						interface_names.extend (a_name)
+					-- Find all features and properties
+					a_name := interface_descriptors.item.c_type_name
+					interface_names.extend (a_name)
 
-						if interface_descriptors.item.dispinterface or interface_descriptors.item.dual then
-							dispatch_interface := True
-						end
+					if interface_descriptors.item.dispinterface or interface_descriptors.item.dual then
+						dispatch_interface := True
+					end
 
-						generate_functions_and_properties (interface_descriptors.item)
-	
---					end
+					generate_functions_and_properties (a_coclass_descriptor, interface_descriptors.item)
+
 					interface_descriptors.forth
 				end
 			end
 		end
 
-	destructor: STRING is
+	destructor (a_coclass_descriptor: WIZARD_COCLASS_DESCRIPTOR): STRING is
 			-- Desctructor
 		require
-			non_void_coclass_descriptor: coclass_descriptor /= Void
-			non_void_interface_descriptors: coclass_descriptor.interface_descriptors /= Void
-			not_empty_interface_descriptors: not coclass_descriptor.interface_descriptors.empty
+			non_void_coclass_descriptor: a_coclass_descriptor /= Void
+			non_void_interface_descriptors: a_coclass_descriptor.interface_descriptors /= Void
+			not_empty_interface_descriptors: not a_coclass_descriptor.interface_descriptors.empty
 		do
+
 			Result := clone (Tab)
 			Result.append (Iunknown_variable_name)
 			Result.append (Release_function)
@@ -184,12 +182,12 @@ feature {NONE} -- Implementation
 			end
 
 			from
-				coclass_descriptor.interface_descriptors.start
+				a_coclass_descriptor.interface_descriptors.start
 			until
-				coclass_descriptor.interface_descriptors.off
+				a_coclass_descriptor.interface_descriptors.off
 			loop
-				Result.append (release_interface (coclass_descriptor.interface_descriptors.item.name))
-				coclass_descriptor.interface_descriptors.forth
+				Result.append (release_interface (a_coclass_descriptor.interface_descriptors.item.name))
+				a_coclass_descriptor.interface_descriptors.forth
 			end
 
 			Result.append (Co_uninitialize_function)
@@ -198,12 +196,12 @@ feature {NONE} -- Implementation
 			valid_descructor: not Result.empty
 		end
 
-	default_constructor: WIZARD_WRITER_CPP_CONSTRUCTOR is
+	default_constructor (a_coclass_descriptor: WIZARD_COCLASS_DESCRIPTOR): WIZARD_WRITER_CPP_CONSTRUCTOR is
 			-- Constructor.
 		require
-			non_void_coclass_descriptor: coclass_descriptor /= Void
-			non_void_interface_descriptors: coclass_descriptor.interface_descriptors /= Void
-			not_empty_interface_descriptors: not coclass_descriptor.interface_descriptors.empty
+			non_void_coclass_descriptor: a_coclass_descriptor /= Void
+			non_void_interface_descriptors: a_coclass_descriptor.interface_descriptors /= Void
+			not_empty_interface_descriptors: not a_coclass_descriptor.interface_descriptors.empty
 		local
 			constructor_body: STRING
 		do
@@ -221,21 +219,21 @@ feature {NONE} -- Implementation
 			constructor_body.append (co_initialize_ex_function)
 			constructor_body.append (examine_hresult (Hresult_variable_name))
 			constructor_body.append (New_line)
-			constructor_body.append (co_create_instance_ex_function)
+			constructor_body.append (co_create_instance_ex_function (a_coclass_descriptor))
 
 			from 
-				coclass_descriptor.interface_descriptors.start
+				a_coclass_descriptor.interface_descriptors.start
 			until
-				coclass_descriptor.interface_descriptors.off
+				a_coclass_descriptor.interface_descriptors.off
 			loop
 				constructor_body.append (New_line_tab)
 				constructor_body.append (Interface_variable_prepend)
-				constructor_body.append (coclass_descriptor.interface_descriptors.item.name)
+				constructor_body.append (a_coclass_descriptor.interface_descriptors.item.name)
 				constructor_body.append (Space_equal_space)
 				constructor_body.append (Zero)
 				constructor_body.append (Semicolon)
 				constructor_body.append (New_line)
-				coclass_descriptor.interface_descriptors.forth
+				a_coclass_descriptor.interface_descriptors.forth
 			end
 
 			if dispatch_interface then
@@ -261,12 +259,12 @@ feature {NONE} -- Implementation
 			non_void_constructor: Result /= Void
 		end
 
-	pointer_constructor: WIZARD_WRITER_CPP_CONSTRUCTOR is
+	pointer_constructor (a_coclass_descriptor: WIZARD_COCLASS_DESCRIPTOR): WIZARD_WRITER_CPP_CONSTRUCTOR is
 			-- Constructor.
 		require
-			non_void_coclass_descriptor: coclass_descriptor /= Void
-			non_void_interface_descriptors: coclass_descriptor.interface_descriptors /= Void
-			not_empty_interface_descriptors: not coclass_descriptor.interface_descriptors.empty
+			non_void_coclass_descriptor: a_coclass_descriptor /= Void
+			non_void_interface_descriptors: a_coclass_descriptor.interface_descriptors /= Void
+			not_empty_interface_descriptors: not a_coclass_descriptor.interface_descriptors.empty
 		local
 			constructor_body: STRING
 			a_signature: STRING
@@ -313,18 +311,18 @@ feature {NONE} -- Implementation
 			constructor_body.append (New_line)
 
 			from 
-				coclass_descriptor.interface_descriptors.start
+				a_coclass_descriptor.interface_descriptors.start
 			until
-				coclass_descriptor.interface_descriptors.off
+				a_coclass_descriptor.interface_descriptors.off
 			loop
 				constructor_body.append (New_line_tab)
 				constructor_body.append (Interface_variable_prepend)
-				constructor_body.append (coclass_descriptor.interface_descriptors.item.name)
+				constructor_body.append (a_coclass_descriptor.interface_descriptors.item.name)
 				constructor_body.append (Space_equal_space)
 				constructor_body.append (Zero)
 				constructor_body.append (Semicolon)
 
-				coclass_descriptor.interface_descriptors.forth
+				a_coclass_descriptor.interface_descriptors.forth
 			end
 
 			if dispatch_interface then
@@ -350,8 +348,10 @@ feature {NONE} -- Implementation
 			non_void_constructor: Result /= Void
 		end
 
-	co_create_instance_ex_function: STRING is
+	co_create_instance_ex_function (a_coclass_descriptor: WIZARD_COCLASS_DESCRIPTOR): STRING is
 			-- CoCreateInstanceEx function call
+		require
+			non_void_coclass_descriptor: a_coclass_descriptor /= Void
 		do
 			create Result.make (0)
 			Result.append (Tab)
@@ -359,7 +359,7 @@ feature {NONE} -- Implementation
 			Result.append (New_line_tab)
 			Result.append ("hr = CoCreateInstanceEx ")
 			Result.append (Open_parenthesis)
-			Result.append (clsid_name (coclass_descriptor.name))
+			Result.append (clsid_name (a_coclass_descriptor.name))
 			Result.append (Comma_space)
 			Result.append (Null)
 			Result.append (Comma_space)

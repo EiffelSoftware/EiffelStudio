@@ -14,6 +14,11 @@ inherit
 			set_default_ancestors
 		end
 
+	WIZARD_COMPONENT_EIFFEL_SERVER_GENERATOR
+		redefine
+			set_default_ancestors
+		end
+
 feature -- Initialization
 
 	initialize is
@@ -68,7 +73,7 @@ feature {NONE} -- Implementation
 		local
 			tmp_writer: WIZARD_WRITER_INHERIT_CLAUSE
 		do
-			Precursor (an_eiffel_writer)
+			Precursor {WIZARD_COCLASS_EIFFEL_GENERATOR} (an_eiffel_writer)
 
 			create tmp_writer.make
 			tmp_writer.set_name ("INTERNAL")
@@ -376,80 +381,8 @@ feature {NONE} -- Implementation
 			Result.append (Close_parenthesis)
 		end
 
-	generate_functions_and_properties (a_desc: WIZARD_INTERFACE_DESCRIPTOR;
-				a_component_descriptor: WIZARD_COMPONENT_DESCRIPTOR;
-				an_eiffel_writer: WIZARD_WRITER_EIFFEL_CLASS;
-				inherit_clause: WIZARD_WRITER_INHERIT_CLAUSE) is
-			-- Process functions and properties
-		local
-			prop_generator: WIZARD_EIFFEL_SERVER_PROPERTY_GENERATOR
-			func_generator: WIZARD_EIFFEL_SERVER_FUNCTION_GENERATOR
-			tmp_original_name, tmp_changed_name: STRING
-		do
-			if not a_desc.functions.empty then
-				from
-					a_desc.functions.start
-				until
-					a_desc.functions.off
-				loop
-					-- Generate feature writer
-					create func_generator
-					func_generator.generate (a_component_descriptor.name, a_desc.functions.item)
-
-					if func_generator.function_renamed then
-						inherit_clause.add_rename (func_generator.original_name, func_generator.changed_name)
-						tmp_original_name := vartype_namer.user_precondition_name (func_generator.original_name)
-						tmp_changed_name := vartype_namer.user_precondition_name (func_generator.changed_name)
-						inherit_clause.add_rename (tmp_original_name, tmp_changed_name)
-					end
-
-					if func_generator.feature_writer.result_type = Void or else 
-						func_generator.feature_writer.result_type.empty 
-					then
-						an_eiffel_writer.add_feature (func_generator.feature_writer, Basic_operations)
-					else
-						an_eiffel_writer.add_feature (func_generator.feature_writer, Access)
-					end
-					a_desc.functions.forth
-				end
-			end
-			if not a_desc.properties.empty then
-				from
-					a_desc.properties.start
-				until
-					a_desc.properties.off
-				loop
-					-- Generate feature writer
-					create prop_generator
-					prop_generator.generate(a_component_descriptor.eiffel_class_name, a_desc.properties.item)
-					an_eiffel_writer.add_feature (prop_generator.setting_feature, Element_change)
-					an_eiffel_writer.add_feature (prop_generator.access_feature, Access)
-
-					if prop_generator.property_renamed then
-						from
-							prop_generator.changed_names.start
-						until
-							prop_generator.changed_names.off
-						loop
-							inherit_clause.add_rename (prop_generator.changed_names.key_for_iteration, prop_generator.changed_names.item_for_iteration)
-							prop_generator.changed_names.forth
-						end
-					end
-
-					a_desc.properties.forth
-				end
-			end
-
-			if 
-				a_desc.inherited_interface /= Void and not
-				a_desc.inherited_interface.guid.is_equal (Iunknown_guid) and then
-				not a_desc.inherited_interface.guid.is_equal (Idispatch_guid) 
-			then
-				generate_functions_and_properties (a_desc.inherited_interface, a_component_descriptor, an_eiffel_writer, inherit_clause)
-			end		
-		end
-
 	add_creation is
+			-- Add creation procedures.
 		do
 			if not shared_wizard_environment.in_process_server then
 				eiffel_writer.add_creation_routine (Initialize_function_name)
@@ -465,10 +398,6 @@ feature {NONE} -- Implementation
 			inherit_clause_writer.set_name (Arguments_type)
 
 			eiffel_writer.add_inherit_clause (inherit_clause_writer)
-
-			create inherit_clause_writer.make
-			inherit_clause_writer.set_name (Internal_type)
-			eiffel_writer.add_inherit_clause (Inherit_clause_writer)
 
 			eiffel_writer.add_feature (initialize_feature, Initialization)
 

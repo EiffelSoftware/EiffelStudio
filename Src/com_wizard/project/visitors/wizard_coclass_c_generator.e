@@ -16,12 +16,10 @@ feature -- Initialization
 			-- Initialize generator.
 		do
 			cpp_class_writer := Void
-			coclass_descriptor := Void
 			interface_names := Void
 			dispatch_interface := False
 		ensure
 			void_atributes: cpp_class_writer = Void and
-				coclass_descriptor = Void and
 				interface_names = Void and
 				dispatch_interface = False
 		end
@@ -32,23 +30,22 @@ feature {NONE} -- Access
 	interface_names: LINKED_LIST[STRING]
 			-- Interface names
 
-	coclass_descriptor: WIZARD_COCLASS_DESCRIPTOR
-			-- Coclass descriptor
 
 feature {NONE} -- Implementation
 
-	process_interfaces is
+	process_interfaces (a_coclass_descriptor: WIZARD_COCLASS_DESCRIPTOR) is
 			-- Process inherited interfaces
 		require
 			non_void_cpp_class_writer: cpp_class_writer /= Void
-			non_void_coclass_descriptor: coclass_descriptor /= Void
-			non_void_interface_descriptors: coclass_descriptor.interface_descriptors /= Void
+			non_void_component_descriptor: a_coclass_descriptor /= Void
+			non_void_interface_descriptors: a_coclass_descriptor.interface_descriptors /= Void
 		local
 			a_name, tmp_string: STRING
 			data_member: WIZARD_WRITER_C_MEMBER
 			interface_descriptors: LIST[WIZARD_INTERFACE_DESCRIPTOR]
+			coclass_descriptor: WIZARD_COCLASS_DESCRIPTOR
 		do
-			interface_descriptors := coclass_descriptor.interface_descriptors
+			interface_descriptors := a_coclass_descriptor.interface_descriptors
 
 			-- Find all the features and properties in inherited interfaces
 			if not interface_descriptors.empty then
@@ -87,7 +84,7 @@ feature {NONE} -- Implementation
 						dispatch_interface := True
 					end
 
-					generate_functions_and_properties (interface_descriptors.item)
+					generate_functions_and_properties (a_coclass_descriptor, interface_descriptors.item)
 
 					interface_descriptors.forth
 				end

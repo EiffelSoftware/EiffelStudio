@@ -10,6 +10,8 @@ class
 inherit
 	WIZARD_COCLASS_C_GENERATOR
 
+	WIZARD_COMPONENT_C_SERVER_GENERATOR
+
 feature -- Basic operations
 
 	generate (a_descriptor: WIZARD_COCLASS_DESCRIPTOR) is
@@ -17,12 +19,9 @@ feature -- Basic operations
 		local
 			member_writer: WIZARD_WRITER_C_MEMBER
 			a_class_object: WIZARD_CLASS_OBJECT_GENERATOR
-			tmp_coclass_descriptor: WIZARD_COCLASS_DESCRIPTOR
 			a_registration_code_gen: WIZARD_REGISTRATION_CODE_GENERATOR
 			tmp_string: STRING
 		do
-			coclass_descriptor := a_descriptor
-
 			create cpp_class_writer.make
 			create interface_names.make
 
@@ -80,13 +79,13 @@ feature -- Basic operations
 			add_destructor
 
 			-- Process functions
-			process_interfaces				
+			process_interfaces	(a_descriptor)			
 
 			if dispatch_interface then
-				add_get_type_info_function
-				add_get_type_info_count_function
-				add_get_ids_of_names_function
-				add_invoke_function
+				add_get_type_info_function (a_descriptor)
+				add_get_type_info_count_function (a_descriptor)
+				add_get_ids_of_names_function (a_descriptor)
+				add_invoke_function (a_descriptor)
 			end
 
 			-- Implement IUnknown interface
@@ -105,14 +104,13 @@ feature -- Basic operations
 
 			-- Generate code for class object factory.
 			create a_class_object
-			tmp_coclass_descriptor := clone (coclass_descriptor)
 			a_class_object.initialize
-			a_class_object.generate (tmp_coclass_descriptor)
+			a_class_object.generate (a_descriptor)
 
 			-- Generate server registration code
 			create a_registration_code_gen
 			a_registration_code_gen.initialize
-			a_registration_code_gen.generate (coclass_descriptor)
+			a_registration_code_gen.generate (a_descriptor)
 		end
 
 	create_file_name (a_factory: WIZARD_FILE_NAME_FACTORY) is
@@ -121,70 +119,6 @@ feature -- Basic operations
 		end
 
 feature {NONE} -- Implementation
-
-	dispatch_interface_name: STRING
-			-- Name for a dispatch interface
-
-	function_type: ECOM_FUNC_KIND is
-			-- Function type
-		once
-			create Result
-		end
-
-	generate_functions_and_properties (a_desc: WIZARD_INTERFACE_DESCRIPTOR) is
-			-- Generate functions and properties of 'a_desc'
-		local
-			function_generator: WIZARD_CPP_SERVER_FUNCTION_GENERATOR
-			property_generator: WIZARD_CPP_SERVER_PROPERTY_GENERATOR
-		do
-
-			if a_desc.dispinterface or a_desc.dual then
-				dispatch_interface := True
-				if dispatch_interface_name = Void then
-					dispatch_interface_name := clone (a_desc.c_type_name)
-				end
-			end
-
-			if not a_desc.properties.empty then
-				from
-					a_desc.properties.start
-				until
-					a_desc.properties.off
-				loop
-					create property_generator
-
-					property_generator.generate (coclass_descriptor.name, a_desc.properties.item)
-					cpp_class_writer.add_function (property_generator.c_access_feature, Public)
-					cpp_class_writer.add_function (property_generator.c_setting_feature, Public)
-
-					a_desc.properties.forth
-				end
-			end
-
-			if not a_desc.functions.empty then
-				from
-					a_desc.functions.start
-				until
-					a_desc.functions.off
-				loop
-					if a_desc.functions.item.func_kind = function_type.Func_dispatch then
-						create {WIZARD_CPP_DISPATCH_SERVER_FUNCTION_GENERATOR} function_generator
-					else
-						create function_generator
-					end
-					function_generator.generate (coclass_descriptor.name, a_desc.functions.item)
-					cpp_class_writer.add_function (function_generator.ccom_feature_writer, Public)
-
-					a_desc.functions.forth
-				end
-			end
-
-			if a_desc.inherited_interface /= Void and not
-					a_desc.inherited_interface.c_type_name.is_equal (Iunknown_type) and then
-					not a_desc.inherited_interface.c_type_name.is_equal (Idispatch_type) then
-				generate_functions_and_properties (a_desc.inherited_interface)
-			end		
-		end
 
 	add_destructor is
 		local
@@ -239,15 +173,17 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	add_get_type_info_function is
+	add_get_type_info_function (a_coclass_descriptor: WIZARD_COCLASS_DESCRIPTOR) is
 			-- Add GetTypeInfo function.
+		require
+			non_void_coclass_descriptor: a_coclass_descriptor /= Void
 		local
 			func_writer: WIZARD_WRITER_C_FUNCTION
 			tmp_body: STRING
 		do
 			create func_writer.make
 
-			tmp_body := check_type_info
+			tmp_body := check_type_info (a_coclass_descriptor)
 			tmp_body.append (Assert)
 			tmp_body.append (Open_parenthesis)
 			tmp_body.append ("itinfo == 0 && pptinfo != 0")
@@ -280,15 +216,17 @@ feature {NONE} -- Implementation
 			end
 		end
 		
-	add_get_type_info_count_function is
+	add_get_type_info_count_function (a_coclass_descriptor: WIZARD_COCLASS_DESCRIPTOR) is
 			-- Add GetTypeInfoCount function.
+		require
+			non_void_coclass_descriptor: a_coclass_descriptor /= Void
 		local
 			func_writer: WIZARD_WRITER_C_FUNCTION
 			tmp_body: STRING
 		do
 			create func_writer.make
 
-			tmp_body := check_type_info
+			tmp_body := check_type_info (a_coclass_descriptor)
 			tmp_body.append (Assert)
 			tmp_body.append (Open_parenthesis)
 			tmp_body.append ("pctinfo != 0")
@@ -319,15 +257,17 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	add_get_ids_of_names_function is
+	add_get_ids_of_names_function (a_coclass_descriptor: WIZARD_COCLASS_DESCRIPTOR) is
 			-- Add GetIDsOfNames function
+		require
+			non_void_coclass_descriptor: a_coclass_descriptor /= Void
 		local
 			func_writer: WIZARD_WRITER_C_FUNCTION
 			tmp_body: STRING
 		do
 			create func_writer.make
 
-			tmp_body := check_type_info
+			tmp_body := check_type_info (a_coclass_descriptor)
 			tmp_body.append (Assert)
 			tmp_body.append (Open_parenthesis)
 			tmp_body.append (Riid)
@@ -365,15 +305,17 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	add_invoke_function is
+	add_invoke_function (a_coclass_descriptor: WIZARD_COCLASS_DESCRIPTOR) is
 			-- Add Invoke function
+		require
+			non_void_coclass_descriptor: a_coclass_descriptor /= Void
 		local
 			func_writer: WIZARD_WRITER_C_FUNCTION
 			tmp_body: STRING
 		do
 			create func_writer.make
 
-			tmp_body := check_type_info
+			tmp_body := check_type_info (a_coclass_descriptor)
 			tmp_body.append (Assert)
 			tmp_body.append (Open_parenthesis)
 			tmp_body.append (Riid)
@@ -565,8 +507,10 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	check_type_info: STRING is
+	check_type_info (a_coclass_descriptor: WIZARD_COCLASS_DESCRIPTOR): STRING is
 			-- Code to check whether type info exist
+		require
+			non_void_coclass_descriptor: a_coclass_descriptor /= Void
 		local
 			tmp_path: STRING
 			counter: INTEGER
@@ -668,7 +612,7 @@ feature {NONE} -- Implementation
 			Result.append (Struct_selection_operator)
 			Result.append (Get_type_info_of_guid)
 			Result.append (Space_open_parenthesis)
-			Result.append (clsid_name(coclass_descriptor.c_type_name))
+			Result.append (clsid_name(a_coclass_descriptor.c_type_name))
 			Result.append (Comma_space)
 			Result.append (Ampersand)
 			Result.append (Type_info_variable_name)

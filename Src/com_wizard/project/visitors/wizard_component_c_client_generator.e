@@ -26,7 +26,8 @@ inherit
 	
 feature -- Basic operations
 
-	generate_functions_and_properties (a_desc: WIZARD_INTERFACE_DESCRIPTOR) is
+	generate_functions_and_properties (a_component_descriptor: WIZARD_COMPONENT_DESCRIPTOR;
+					a_desc: WIZARD_INTERFACE_DESCRIPTOR) is
 			-- Generate functions and properties of 'a_desc'
 			-- Process interface `a_desc'.
 		local
@@ -88,7 +89,7 @@ feature -- Basic operations
 					a_desc.inherited_interface.guid.is_equal (Iunknown_guid) and then
 					not a_desc.inherited_interface.guid.is_equal (Idispatch_guid) 
 				then
-					generate_functions_and_properties (a_desc.inherited_interface)
+					generate_functions_and_properties (a_component_descriptor, a_desc.inherited_interface)
 				end
 			end
 		end

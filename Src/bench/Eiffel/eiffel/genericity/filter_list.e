@@ -1,12 +1,14 @@
 class FILTER_LIST
 
 inherit
-	LINKED_LIST [GEN_TYPE_I]
+	ARRAYED_LIST [CL_TYPE_I]
 		rename
 			append as list_append,
-			search as list_search
-		redefine
-			make
+			search as list_search,
+			make as list_make
+		export
+			{NONE} all
+			{ANY} start, item, forth, after, extend, cursor, go_to
 		end
 
 create
@@ -16,80 +18,57 @@ feature -- Initialization
 
 	make is
 		do
-			Precursor {LINKED_LIST}
+			list_make (2)
 			compare_objects
 		end
 
 feature -- Search
 
-	search (v: GEN_TYPE_I) is
+	has_item (v: like item): BOOLEAN is
 			-- Patch
+		require
+			v_not_void: v /= Void
 		local
-			stop: BOOLEAN
+			l_area: like area
+			i, nb: INTEGER
 		do
 			from
-				start
+				l_area := area
+				i := 0
+				nb := count - 1
 			until
-				after or else stop
+				i > nb or else Result
 			loop
-				stop := item.same_as (v)
-				if not stop then
-					forth
-				end
+				Result := l_area.item (i).same_as (v)
+				i := i + 1
 			end
-		ensure
-			object_found: (not exhausted and object_comparison) implies (v /= Void and then v.same_as (item))
 		end
 
 	clean is
 			-- Clean the list of all the removed classes
+		local
+			l_area: like area
+			l_new_area: like area
+			i, nb, l_count: INTEGER
+			l_item: like item
 		do
 			from
-				start
+				l_area := area
+				nb := count - 1
+				list_make (count)
+				l_new_area := area
+				i := 0
 			until
-				after
+				i > nb
 			loop
-				if not item.is_valid then
-					remove
-				else
-					forth
+				l_item := l_area.item (i)
+				if l_item.is_valid then
+					l_new_area.put (l_item, l_count)
+					l_count := l_count + 1
 				end
+				i := i + 1
 			end
-		end
-
-feature -- Merging
-
-	append (other: like Current) is
-			-- Append `other' to `Current'.
-			-- Used when merging precompilations.
-		require
-			other_not_void: other /= Void
-		do
-			from
-				other.start
-			until
-				other.after
-			loop
-				search (other.item)
-				if after then
-					extend (other.item)
-				end;
-				other.forth
-			end
-		end
-
-feature
-
-	trace is
-		do
-			from
-				start
-			until
-				after
-			loop
-				item.trace
-				forth
-			end
+			count := l_count
 		end
 
 end

@@ -1,20 +1,20 @@
--- Genericity duplication processor: we call "data" a generic type
--- (instance of GEN_TYPE_A) which has no formal type in its array `generics'.
--- We call filter a generic type which has at least o formal parameter
--- (instance of FORMAL_A) in its array `generics'.
-
--- Call to routine `dispatch' are done in second pass for treating generic
--- types in inheritance clause, at the end of second pass for generic
--- types in feature arguments or result and during third pass while
--- evaluating local types.
+indexing
+	description: "[
+		Find all types in system. It includes reference class types and
+		expanded class types, as well as all generic derivations of a given
+		class.
+		
+		Call to routine `dispatch' are done in second pass for treating generic
+		types in inheritance clause, at the end of second pass for types in
+		feature arguments or result and during third pass while evaluating local types.
+		]"
+	date: "$Date$"
+	revision: "$Revision$"
 
 class INSTANTIATOR 
 
 inherit
 	FILTER_LIST
-		redefine
-			trace
-		end
 
 	SHARED_WORKBENCH
 		undefine
@@ -36,78 +36,76 @@ create
 	
 feature -- Attributes
 
-	dispatch (generic_type: GEN_TYPE_A; a_class: CLASS_C) is
-			-- Treat generic type `generic_type': it is either a new
+	dispatch (a_type: TYPE_A; a_class: CLASS_C) is
+			-- Treat generic type `a_type': it is either a new
 			-- class filter or a new data. If it is a data, the instantiator
 			-- keeps it, or it is a filter then it sends the new filter
 			-- to the class `a_class'.
 		require
-			good_type: generic_type /= Void;
-			good_class: a_class /= Void
---			class_changed: a_class.changed;
+			a_type_not_void: a_type /= Void
+			a_class_not_void: a_class /= Void
 		local
-			type_i: GEN_TYPE_I;
+			type_i: CL_TYPE_I;
 			i, nb: INTEGER;
-			another_generic: GEN_TYPE_A;
 			generics: ARRAY [TYPE_A];
 			insertion_list: FILTER_LIST;
 		do
 				-- Evaluation of a type class
-			type_i := generic_type.type_i
+			type_i ?= a_type.type_i
 
-				-- In case of expanded
-			type_i.set_is_true_expanded (False)
-
-				-- Check if it is a data or a filter
-			if type_i.has_formal then
-					-- It is a filter: the insertion list is the filter
-					-- list of `a_class'
-				insertion_list := a_class.filters
-				check
-					class_has_generics: a_class.generics /= Void
-				end;
-			else
-					-- it is a data: the insertion list is the Current one
-				insertion_list := Current
-			end
-debug
-	io.error.putstring ("Dispatch : ");
-	io.error.putstring (a_class.name);
-	io.error.putint (a_class.class_id);
-	io.error.new_line;
-	io.error.putstring (generic_type.dump);
-	io.error.new_line;
-end;
-
-				-- Look for the item in the insertion list
-			insertion_list.start;
-			insertion_list.search (type_i)
-			if insertion_list.after then
-					-- New data or item
-				insertion_list.put_front (type_i)
-			end
-
-				-- Recursion on the generic types
-			from
-				i := 1
-				generics := generic_type.generics
-				nb := generics.count
-			until
-				i > nb
-			loop
-				another_generic ?= generics.item (i).actual_type
-				if another_generic /= Void then
-					dispatch (another_generic, a_class)
+				-- We do not record various type declaration of BIT x
+				-- as we only need the one from BIT_REF.
+			if type_i /= Void and then not type_i.is_bit then
+					-- Check if it is a data or a filter
+				if type_i.has_formal then
+						-- It is a filter: the insertion list is the filter
+						-- list of `a_class'
+					insertion_list := a_class.filters
+					check
+						class_has_generics: a_class.generics /= Void
+					end;
+				else
+						-- it is a data: the insertion list is the Current one
+					insertion_list := Current
 				end
-				i := i + 1
+
+				debug
+					io.error.putstring ("Dispatch : ");
+					io.error.putstring (a_class.name);
+					io.error.putint (a_class.class_id);
+					io.error.new_line;
+					io.error.putstring (a_type.dump);
+					io.error.new_line;
+				end;
+
+					-- Look for the item in the insertion list
+				insertion_list.start;
+				if not insertion_list.has_item (type_i) then
+						-- New data or item
+					insertion_list.extend (type_i)
+				end
+
+					-- Recursion on the generic types
+				generics := a_type.generics
+				if generics /= Void then
+					from
+						i := 1
+						nb := generics.count
+					until
+						i > nb
+					loop
+						dispatch (generics.item (i).actual_type, a_class)
+						i := i + 1
+					end
+				end
 			end
 		end
 
 	process is
 			-- Process the list in order to find new class types
 		local
-			data: GEN_TYPE_I;
-			local_cursor: LINKABLE [GEN_TYPE_I];
+			data: like item
+			l_area: like area
 			a_class: CLASS_C;
 			types: TYPE_LIST;
 			class_type: CLASS_TYPE;
@@ -130,18 +128,20 @@ end;
 			clean;
 
 			from
-				local_cursor := first_element
+				i := 0
+				nb := count - 1
+				l_area := area
 			until
-				local_cursor = Void
+				i > nb
 			loop
-				data := local_cursor.item;
+				data := l_area.item (i);
 debug
 	io.error.putstring ("Adding data%N");
 	data.trace
 	io.error.new_line;
 end;
 				data.base_class.update_types (data);
-				local_cursor := local_cursor.right;
+				i := i + 1
 			end;
 			derivations.clear_all;
 
@@ -257,7 +257,7 @@ feature
 			generics.put (any_type, 1)
 
 			create Result.make (System.array_id, generics)
-			Result.set_is_true_expanded (False)
+			Result.set_is_expanded (False)
 		end;
 
 	Tuple_type_a: TUPLE_TYPE_A is
@@ -270,7 +270,7 @@ feature
 				-- Not once because tuple_id can change
 			create generics.make (1, 0)
 			create Result.make (System.tuple_id, generics)
-			Result.set_is_true_expanded (False)
+			Result.set_is_expanded (False)
 		end;
 
 	Function_type_a: GEN_TYPE_A is
@@ -292,7 +292,7 @@ feature
 			generics.put (any_type, 3)
 
 			create Result.make (System.function_class_id, generics)
-			Result.set_is_true_expanded (False)
+			Result.set_is_expanded (False)
 		end
 
 	Procedure_type_a: GEN_TYPE_A is
@@ -313,7 +313,7 @@ feature
 			generics.put (Tuple_type_a, 2)
 
 			create Result.make (System.procedure_class_id, generics)
-			Result.set_is_true_expanded (False)
+			Result.set_is_expanded (False)
 		end
 
 feature {STRIP_B, SYSTEM_I, AUXILIARY_FILES, MULTI_TYPE_A}
@@ -355,26 +355,6 @@ feature {STRIP_B, SYSTEM_I, AUXILIARY_FILES, MULTI_TYPE_A}
 			Result := Tuple_type_a.type_i
 		ensure
 			Result_not_void: Result /= Void
-		end;
-
-feature -- Debug
-
-	trace is
-		local
-			data: GEN_TYPE_I;
-			local_cursor: LINKABLE [GEN_TYPE_I];
-		do
-			io.error.putstring ("Instantiator.trace%N");
-			from
-				local_cursor := first_element
-			until
-				local_cursor = Void
-			loop
-				data := local_cursor.item;
-				data.trace
-				io.error.new_line;
-				local_cursor := local_cursor.right;
-			end;
 		end;
 
 end -- class INSTANTIATOR

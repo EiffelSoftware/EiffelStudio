@@ -10,14 +10,22 @@ inherit
 	EV_VERTICAL_BOX
 
 create
+	make_with_parent,
 	make_with_text_and_parent
 
 feature {NONE} -- Initialization
 
+	make_with_parent (win: like parent_window) is
+			-- Create a widget that is made to browse for directory.
+		require
+			win_not_void: win /= Void
+		do
+			make_with_text_and_parent (Void, win)
+		end
+
 	make_with_text_and_parent (t: STRING; win: like parent_window) is
 			-- Create a widget that is made to browse for directory.
 		require
-			t_not_void: t /= Void
 			win_not_void: win /= Void
 		do
 			default_create
@@ -90,16 +98,17 @@ feature {NONE} -- GUI building
 
 	build_widget (t: STRING) is
 			-- Create Current using `t' as text label.
-		require
-			t_not_void: t /= Void
 		local
 			l_label: EV_LABEL
 			l_hbox: EV_HORIZONTAL_BOX
 		do
-			create l_label.make_with_text (t)
-			l_label.align_text_left
-			extend (l_label)
-			disable_item_expand (l_label)
+			if t /= Void then
+				create l_label.make_with_text (t)
+				l_label.align_text_left
+				extend (l_label)
+				disable_item_expand (l_label)			
+			end
+
 			
 			create l_hbox
 			l_hbox.set_padding ((create {EV_LAYOUT_CONSTANTS}).Small_padding_size)

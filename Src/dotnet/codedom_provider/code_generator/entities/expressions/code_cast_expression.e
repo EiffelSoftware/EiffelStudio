@@ -14,7 +14,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make (a_target_type: like target_type; a_source: CODE_EXPRESSION) is
+	make (a_target_type: like target_type; a_source: like source) is
 			-- Initialize `target_type'.
 		require
 			non_void_target_type: a_target_type /= Void
@@ -29,17 +29,17 @@ feature {NONE} -- Initialization
 		
 feature -- Access
 
-	source: CODE_EXPRESSION
-			-- Expression to cast
+	source: STRING
+			-- Cast variable
 			
 	target_type: CODE_TYPE_REFERENCE
-			-- Key from CODE_generated_types table to cast type
+			-- Type of cast target
 			
 	code: STRING is
 			-- | Result := " ?= `expression_to_cast'"
 			-- Eiffel code of cast expression
 		do
-			Result := source.code
+			Result := source
 		end
 		
 feature -- Status Report

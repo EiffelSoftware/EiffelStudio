@@ -3,14 +3,11 @@
 class TUPLE_CONST_BL
 
 inherit
-
 	TUPLE_CONST_B
 		redefine
 			analyze, generate, 
 			register, set_register, 
-			free_register, unanalyze,
-			allocates_memory,
-			has_call
+			free_register, unanalyze
 		end;
 	SHARED_TABLE;
 	SHARED_DECLARATIONS;
@@ -150,23 +147,6 @@ feature
 			end
 			fill_tuple (real_ty.meta_generic)
 		end
-
-	has_call: BOOLEAN is
-		local
-			expr: EXPR_B
-		do
-			from
-				expressions.start
-			until
-				expressions.after or else Result
-			loop
-				expr ?= expressions.item
-				Result := expr.has_call
-				expressions.forth
-			end
-		end
-
-	allocates_memory: BOOLEAN is True
 
 feature {NONE} -- C code generation
 

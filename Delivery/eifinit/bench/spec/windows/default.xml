@@ -455,8 +455,8 @@
 	</TOPIC>
 	<TOPIC TOPIC_ID="Graphics" ICON="icon_preferences_folder">
 		<HEAD>Graphical Elements</HEAD>
-		<TEXT DESCRIPTION="All-purpose editor font">editor_font<FONT>Courier New-r-regular-11-screen</FONT></TEXT>
-		<TEXT DESCRIPTION="Tabulation size">tab_step<INTEGER>4</INTEGER></TEXT>
+		<TEXT DESCRIPTION="All-purpose editor font" IMMEDIATE_EFFECT="no">editor_font<FONT>Courier New-r-regular-11-screen</FONT></TEXT>
+		<TEXT DESCRIPTION="Tabulation size" IMMEDIATE_EFFECT="no">tab_step<INTEGER>4</INTEGER></TEXT>
 		<TEXT DESCRIPTION="Number of projects kept in the recent projects">recent_projects_number<INTEGER>10</INTEGER></TEXT>
 		<TOPIC TOPIC_ID="Default_Colors" ICON="icon_preferences_folder">
 			<HEAD>Colors</HEAD>

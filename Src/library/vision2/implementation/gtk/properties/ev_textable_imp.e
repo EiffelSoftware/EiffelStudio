@@ -23,8 +23,11 @@ feature {NONE} -- Initialization
 	
 	textable_imp_initialize is
 			-- Create a GtkLabel to display the text.
+		local
+			temp_string: ANY
 		do
-			text_label := C.gtk_label_new (eiffel_to_c (""))
+			temp_string := ("").to_c
+			text_label := C.gtk_label_new ($temp_string)
 			C.gtk_widget_show (text_label)
 			C.gtk_misc_set_alignment (text_label, 0.0, 0.5)
 		end

@@ -5,53 +5,25 @@ root
 	TESTER_ROOT_CLASS: make_and_launch
 
 default
-	il_verifiable (no)
+	il_verifiable (yes)
 	cls_compliant (yes)
 	dotnet_naming_convention (yes)
 	use_cluster_name_as_namespace (no)
 	use_all_cluster_name_as_namespace (yes)
 	msil_generation_type ("exe")
-	version ("1.0.0.0")
+	version ("1.0.1215.0")
 	msil_clr_version ("v1.1.4322")
+	precompiled ("$EIFFEL_SRC\dotnet\codedom_provider\build_studio_debug\EiffelSoftware.CodeDom.Vision2")
 	msil_use_optimized_precompile (yes)
-	precompiled ("$EIFFEL_SRC\dotnet\codedom_provider\build_studio\EiffelSoftware.EiffelVision2")
-	assertion (check)
-	assertion (require)
-	assertion (ensure)
-	assertion (loop)
-	assertion (invariant)
-	disabled_debug (yes)
-	disabled_debug ("dlg_dispatcher")
-	disabled_debug ("vision2_windows")
-	disabled_debug ("vision2_windows_gdi")
-	disabled_debug ("wel")
-	disabled_debug ("wel_gdi_count")
-	disabled_debug ("wel_gdi_references")
-	disabled_debug ("win_dispatcher")
-	debug (no)
 	line_generation (yes)
-	profile (no)
-	trace (no)
-	check_vape (yes)
 	console_application (no)
-	syntax_warning (no)
-	address_expression (no)
-	array_optimization (no)
-	dead_code_removal (yes)
-	dynamic_runtime (no)
-	exception_trace (no)
-	inlining (no)
-	multithreaded (no)
-
 
 cluster
 	all root_cluster:		"$EIFFEL_SRC\dotnet\codedom_provider\test\tester\gui"
 
-	codedom_provider:		"$EIFFEL_SRC\dotnet\codedom_provider\common"
-
 	library base_net:		"$EIFFEL_SRC\library.net\base"
 		exclude
-			"CVS";
+			"CVS"; 
 		default
 			namespace ("EiffelSoftware.Library.BaseNet")
 			assertion (no)
@@ -60,7 +32,7 @@ cluster
 
 	library base:		"$EIFFEL_SRC\library\base"
 		exclude
-			"table_eiffel3"; "desc"; "classic"; "CVS";
+			"table_eiffel3"; "desc"; "classic"; "CVS"; 
 		default
 			namespace ("EiffelSoftware.Library.Base")
 			assertion (no)
@@ -69,7 +41,7 @@ cluster
 
 	all wel:		"$EIFFEL_SRC\library\wel"
 		exclude
-			"spec"; "clib"; "classic"; "CVS";
+			"spec"; "clib"; "classic"; "CVS"; 
 		default
 			namespace ("EiffelSoftware.Library.WEL")
 			assertion (no)
@@ -78,7 +50,7 @@ cluster
 
 	all wel_net:		"$EIFFEL_SRC\library.net\wel"
 		exclude
-			"CVS";
+			"CVS"; 
 		default
 			namespace ("EiffelSoftware.Library.WELNet")
 			assertion (no)
@@ -87,7 +59,7 @@ cluster
 
 	all vision2:		"$EIFFEL_SRC\library\vision2"
 		exclude
-			"Clib"; "gtk"; "gtk2"; "assign_attempt.e"; "ev_pixmap_imp_delegate.e"; "ev_pixmap_imp_loader.e"; "CVS";
+			"Clib"; "gtk"; "gtk2"; "assign_attempt.e"; "ev_pixmap_imp_delegate.e"; "ev_pixmap_imp_loader.e"; "CVS"; 
 		default
 			namespace ("EiffelSoftware.Library.Vision2")
 			assertion (no)
@@ -96,7 +68,7 @@ cluster
 
 	all vision2_net:		"$EIFFEL_SRC\library.net\vision2"
 		exclude
-			"CVS";
+			"CVS"; 
 		default
 			namespace ("EiffelSoftware.Library.Vision2Net")
 			assertion (no)
@@ -105,7 +77,7 @@ cluster
 
 	all vision2_extensions:		"$EIFFEL_SRC\library\vision2_extension"
 		exclude
-			"CVS";
+			"CVS"; 
 		default
 			namespace ("EiffelSoftware.Library.Vision2Extension")
 			assertion (no)

@@ -33,32 +33,28 @@ feature	{} -- Initialization of the C/Eiffel interface
 			error := True
 		end
 
-	set_nat8 (v: INTEGER_8) is
+	set_nat8 (v: NATURAL_8) is
 			-- Receive an integer value.
 		do
-			fixme ("Use NATURAL_XX instead when compiler support them.")
-			create {DEBUG_VALUE [INTEGER_8]} item.make (sk_uint8, v)
+			create {DEBUG_VALUE [NATURAL_8]} item.make (sk_uint8, v)
 		end
 
-	set_nat16 (v: INTEGER_16) is
+	set_nat16 (v: NATURAL_16) is
 			-- Receive an integer value.
 		do
-			fixme ("Use NATURAL_XX instead when compiler support them.")
-			create {DEBUG_VALUE [INTEGER_16]} item.make (sk_uint16, 16)
+			create {DEBUG_VALUE [NATURAL_16]} item.make (sk_uint16, 16)
 		end
 
-	set_nat32 (v: INTEGER) is
+	set_nat32 (v: NATURAL_32) is
 			-- Receive an integer value.
 		do
-			fixme ("Use NATURAL_XX instead when compiler support them.")
-			create {DEBUG_VALUE [INTEGER]} item.make (sk_uint32, v)
+			create {DEBUG_VALUE [NATURAL_32]} item.make (sk_uint32, v)
 		end
 		
-	set_nat64 (v: INTEGER_64) is
+	set_nat64 (v: NATURAL_64) is
 			-- Receive an integer value.
 		do
-			fixme ("Use NATURAL_XX instead when compiler support them.")
-			create {DEBUG_VALUE [INTEGER_64]} item.make (sk_uint64, v)
+			create {DEBUG_VALUE [NATURAL_64]} item.make (sk_uint64, v)
 		end
 
 	set_int8 (v: INTEGER_8) is

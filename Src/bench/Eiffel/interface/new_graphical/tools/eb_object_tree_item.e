@@ -102,24 +102,24 @@ feature -- Updating
 			l_dmp: DUMP_VALUE
 			l_text: STRING
 			l_pos: INTEGER
-			l_integer_value: INTEGER
+			l_integer32_value: INTEGER
 			l_integer64_value: INTEGER_64
 		do
 			l_dmp := last_dump_value
 			if l_dmp /= Void then
 				inspect l_dmp.type 
-					when feature {DUMP_VALUE_CONSTANTS}.Type_integer then
+					when feature {DUMP_VALUE_CONSTANTS}.Type_integer_32 then
 						l_text := text
 						l_pos := l_text.index_of ('=', 1) + 1
 						check
 							has_space: l_text.item (l_pos) = ' '
 						end
-						l_integer_value := l_dmp.value_integer
+						l_integer32_value := l_dmp.value_integer_32
 						l_text :=  l_text.substring (1, l_pos)
 						if hexa_mode_enabled then
-							l_text.append_string ("0x" + l_integer_value.to_hex_string)
+							l_text.append_string ("0x" + l_integer32_value.to_hex_string)
 						else
-							l_text.append_string (l_integer_value.out)
+							l_text.append_string (l_integer32_value.out)
 						end
 						set_text (l_text)
 					when feature {DUMP_VALUE_CONSTANTS}.Type_integer_64 then

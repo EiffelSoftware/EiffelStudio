@@ -61,7 +61,10 @@ inherit
 		end
 
 create
-	make_boolean, make_character, make_integer_32, make_integer_64, make_real,
+	make_boolean, make_character, 
+	make_integer_32, make_integer_64,
+	make_natural_32, make_natural_64,
+	make_real,
 	make_double, make_pointer, make_object,	make_manifest_string,
 	make_string_for_dotnet, make_object_for_dotnet, make_bits,
 	make_expanded_object
@@ -91,8 +94,8 @@ feature -- Initialization
 	make_integer_32 (value: INTEGER; dtype: CLASS_C) is
 			-- make a integer item initialized to `value'
 		do
-			value_integer := value
-			type := Type_integer
+			value_integer_32 := value
+			type := Type_integer_32
 			dynamic_class := dtype
 		ensure
 			type /= Type_unknown
@@ -107,6 +110,26 @@ feature -- Initialization
 		ensure
 			type /= Type_unknown
 		end
+		
+	make_natural_32 (value: NATURAL_32; dtype: CLASS_C) is
+			-- make a integer item initialized to `value'
+		do
+			value_natural_32 := value
+			type := Type_natural_32
+			dynamic_class := dtype
+		ensure
+			type /= Type_unknown
+		end
+
+	make_natural_64 (value: NATURAL_64; dtype: CLASS_C) is
+			-- make a integer_64 item initialized to `value'
+		do
+			value_natural_64 := value
+			type := Type_natural_64
+			dynamic_class := dtype
+		ensure
+			type /= Type_unknown
+		end		
 
 	make_real(value: REAL; dtype: CLASS_C) is
 			-- make a real item initialized to `value'
@@ -714,8 +737,8 @@ feature -- Action
 					send_bool_value(value_boolean)
 				when Type_character then
 					send_char_value(value_character)
-				when Type_integer then
-					send_integer_value(value_integer)
+				when Type_integer_32 then
+					send_integer_value (value_integer_32)
 				when Type_integer_64 then
 					send_integer_64_value (value_integer_64)
 				when type_real_32 then
@@ -834,8 +857,12 @@ feature -- Access
 				Result.append ("/ : %'")
 				Result.append (Character_routines.char_text (value_character))
 				Result.append_character ('%'')
-			when Type_integer then
-				Result := value_integer.out
+			when Type_natural_32 then
+				Result := value_natural_32.out
+			when Type_natural_64 then
+				Result := value_natural_64.out
+			when Type_integer_32 then
+				Result := value_integer_32.out
 			when Type_integer_64 then
 				Result := value_integer_64.out
 			when type_real_32 then
@@ -903,8 +930,10 @@ feature {DUMP_VALUE, EB_OBJECT_TREE_ITEM, EIFNET_EXPORTER, DBG_EXPRESSION_EVALUA
 
 	value_boolean	: BOOLEAN
 	value_character	: CHARACTER
-	value_integer	: INTEGER
+	value_integer_32: INTEGER
 	value_integer_64: INTEGER_64
+	value_natural_32: NATURAL_32
+	value_natural_64: NATURAL_64	
 	value_real		: REAL
 	value_double	: DOUBLE
 	value_bits		: STRING
@@ -921,7 +950,7 @@ feature {DUMP_VALUE, EB_OBJECT_TREE_ITEM, EIFNET_EXPORTER, DBG_EXPRESSION_EVALUA
 --	is_type_unknown       : BOOLEAN is do Result := type = Type_unknown end
 	is_type_boolean       : BOOLEAN is do Result := type = Type_boolean end
 --	is_type_character     : BOOLEAN is do Result := type = Type_character end
---	is_type_integer       : BOOLEAN is do Result := type = Type_integer end
+--	is_type_integer_32       : BOOLEAN is do Result := type = Type_integer_32 end
 --	is_type_real          : BOOLEAN is do Result := type = type_real_32 end
 --	is_type_double        : BOOLEAN is do Result := type = type_real_64 end
 --	is_type_bits          : BOOLEAN is do Result := type = Type_bits end

@@ -3,6 +3,10 @@ class EIFFEL_LINE
 inherit
 
 	COMPARABLE
+		undefine
+			is_equal
+		end;
+	ANY
 
 creation
 
@@ -89,6 +93,9 @@ feature
 					!!comment_string.make (position + seeker.position + 2,
 						text.substring (seeker.position + 2, text.count));
 					comment_found := true;
+				elseif seeker.position < text.count then
+					!!comment_string.make (position + seeker.position + 2, "");
+					comment_found := true
 				end;
 			end;
 			Result := comment_string;

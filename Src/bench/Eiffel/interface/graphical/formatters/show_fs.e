@@ -4,7 +4,9 @@ class SHOW_FS
 
 inherit
 
-	FORMATTER
+	FILTERABLE
+		rename
+			filter_context as flatshort_context
 		redefine
 			dark_symbol
 		end;

@@ -5,7 +5,9 @@ class SHOW_CLICK_CL
 
 inherit
 
-	FORMATTER
+	FILTERABLE
+		rename
+			filter_context as clickable_context
 		redefine
 			dark_symbol, text_window, format
 		end;
@@ -43,7 +45,7 @@ feature
 		do
 			root_stone ?= text_window.root_stone;
 			if
-				do_format or else
+				do_format or else filtered or else
 				(text_window.last_format /= Current or
 				not equal (stone, root_stone))
 			then
@@ -70,7 +72,8 @@ feature
 					end;
 					text_window.set_root_stone (stone);
 					text_window.set_last_format (Current);
-				   restore_cursors
+					filtered := false;
+					restore_cursors
 				end
 			end
 		end;

@@ -17,9 +17,7 @@ class FIXED_TREE [G] inherit
 
 	CELL [G]
 		undefine
-			is_equal
-		redefine
-			copy
+			copy, is_equal
 		end
 
 	TREE [G]
@@ -31,7 +29,7 @@ class FIXED_TREE [G] inherit
 			child_off, child_after, child_before,
 			child_item
 		redefine
-			parent, attach_to_parent, copy
+			parent, attach_to_parent
 		select
 			linear_representation,
 			changeable_comparison_criterion,
@@ -84,13 +82,13 @@ class FIXED_TREE [G] inherit
 				fl_lin_rep, fl_empty,
 				fl_fill, fl_full
 			{FIXED_TREE}
-				array_item
+				copy, array_item
 		undefine
 			is_leaf, child_isfirst, child_islast,
 			valid_cursor_index, compare_references,
-			compare_objects, fl_empty, is_equal
+			compare_objects, fl_empty, copy, is_equal
 		redefine
-			duplicate, first_child, copy
+			duplicate, first_child
 		end
 
 create
@@ -242,6 +240,48 @@ feature -- Removal
 			child_removed: child = Void
 		end
 
+	forget_left is
+			-- Forget all left siblings.
+		local
+			i: INTEGER
+			old_idx: INTEGER
+		do
+			if not is_root and then position_in_parent < parent.arity then
+				old_idx := parent.child_index
+				from
+					i := 1
+				until
+					i = position_in_parent
+				loop
+					parent.child_go_i_th (i)
+					parent.remove_child
+					i := i + 1
+				end
+				parent.child_go_i_th (old_idx)
+			end
+		end
+		
+	forget_right is
+			-- Forget all right siblings.
+		local
+			i: INTEGER
+			old_idx: INTEGER
+		do
+			if not is_root and then position_in_parent < parent.arity then
+				old_idx := parent.child_index
+				from
+					i := position_in_parent + 1
+				until
+					i > parent.arity
+				loop
+					parent.child_go_i_th (i)
+					parent.remove_child
+					i := i + 1
+				end
+				parent.child_go_i_th (old_idx)
+			end
+		end
+
 feature -- Duplication
 
 	duplicate (n: INTEGER): like Current is
@@ -267,16 +307,6 @@ feature -- Duplication
 				counter := counter + 1
 			end
 			child_go_to (pos)
-		end
-
-	copy (other: like Current) is
-			-- Copy contents from `other'.
-		local
-			tmp_tree: like Current
-		do
-			create tmp_tree.make (other.arity, other.item)
-			if not other.is_leaf then tree_copy (other, tmp_tree) end
-			standard_copy (tmp_tree)
 		end
 
 feature {FIXED_TREE} -- Implementation
@@ -337,7 +367,17 @@ feature {FIXED_TREE} -- Implementation
 			-- and set `position_in_parent'.
 		do
 			parent := n
-			position_in_parent := n.child_index
+			if n /= Void then
+				position_in_parent := n.child_index
+			else
+				position_in_parent := 0
+			end
+		end
+
+	cut_off_node is
+			-- Cut off all links from current node.
+		do
+			make (arity, item)
 		end
 
 feature {NONE} -- Implementation

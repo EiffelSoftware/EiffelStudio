@@ -167,7 +167,7 @@ rt_public void update(char ignore_updt)
 	dprintf(1)("Reading .UPDT in: %s\n", filename);
 #endif
 
-	if ((melted_file = fopen(filename, "r")) == (FILE *) 0) {
+	if ((melted_file = fopen(filename, "rb")) == (FILE *) 0) {
 		int err = errno;
 #ifdef EIF_VMS
 		if (err == EVMSERR) err = vaxc$errno;

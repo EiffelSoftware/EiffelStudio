@@ -143,7 +143,7 @@ feature -- Basic Operation
 				check
 					window_node_not_void: window_node /= Void
 				end
-				add_to_tree_node_alphabetically (window_node, tree_item)
+				add_to_tree_node_alphabetically (window_node, directory_item)
 					-- Ensure `directory_item' is now visible.
 				tree_item ?= window_node
 				check

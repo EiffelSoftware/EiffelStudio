@@ -823,7 +823,6 @@ feature -- Background color
 	set_bg_color_name (a_color_name: STRING) is
 		local
 			a_color: COLOR;
-			bg_pix: PIXMAP
 		do
 			if a_color_name = Void or else a_color_name.empty then
 				bg_color_name := Void
@@ -842,9 +841,7 @@ feature -- Background color
 			end;
 			if a_color /= Void then
 				if previous_bg_color = Void then
-					bg_pix := widget.background_pixmap;
 					widget.set_background_color (a_color);
-					widget.set_background_pixmap (bg_pix);
 				else
 					previous_bg_color := a_color
 				end;

@@ -21,8 +21,7 @@ inherit
 
 create
 	default_create,
-	make_with_value_range,
-	make_with_range
+	make_with_value_range
 
 feature {EV_ANY_I} -- Implementation
 

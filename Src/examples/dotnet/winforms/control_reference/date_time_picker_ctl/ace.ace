@@ -13,14 +13,17 @@ default
 	il_verifiable (yes)
 	cls_compliant (yes)
 	dotnet_naming_convention (yes)
+	use_cluster_name_as_namespace (yes)
+	use_all_cluster_name_as_namespace (yes)
 	msil_generation_type ("exe")
 	msil_assembly_compatibility ("None")
 	check_vape (yes)
 	console_application (no)
+	address_expression (no)
 
 
 cluster
-	root_cluster:		"$ISE_EIFFEL\examples\dotnet\winforms\control_reference\date_time_picker_ctl"
+	root_cluster:		"$EIFFEL_SRC\examples\dotnet\winforms\control_reference\date_time_picker_ctl"
 
 
 	all base:		"$ISE_EIFFEL\library\base"
@@ -29,6 +32,7 @@ cluster
 		end
 
 	all base_net:		"$ISE_EIFFEL\library.net\base"
+
 
 assembly
 	mscorlib:	"mscorlib","1.0.3300.0","neutral","b77a5c561934e089"

@@ -432,7 +432,7 @@ feature -- Bit operations
 			n_nonnegative: n >= 0
 			n_less_than_64: n < 64
 		do
-			Result := item & (1 |<< n) /= 0
+			Result := item & ((1).to_integer_64 |<< n) /= 0
 		end
 
 	frozen set_bit (b: BOOLEAN; n: INTEGER): INTEGER_64 is
@@ -443,9 +443,9 @@ feature -- Bit operations
 			n_less_than_64: n < 64
 		do
 			if b then
-				Result := item | (1 |<< n)
+				Result := item | ((1).to_integer_64 |<< n)
 			else
-				Result := item & (1 |<< n).bit_not
+				Result := item & ((1).to_integer_64 |<< n).bit_not
 			end
 		end
 

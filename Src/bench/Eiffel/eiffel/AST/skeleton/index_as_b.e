@@ -46,9 +46,21 @@ feature -- Initialization
 
 feature -- Case storage
 
+	is_description_tag: BOOLEAN is
+		local
+			tmp: STRING
+		do
+			if tag /= Void then
+				tmp := clone (tag);
+				tmp.to_lower;
+				Result := tmp.is_equal ("description") 
+			end
+		end;
+
 	storage_info: S_TEXT_DATA is
 		local
-			txt: STRING
+			txt: STRING;
+			tmp: STRING
 		do
 			!! txt.make (0);
 			if tag /= Void then

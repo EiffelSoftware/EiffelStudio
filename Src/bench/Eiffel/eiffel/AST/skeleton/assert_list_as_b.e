@@ -141,7 +141,7 @@ feature {ASSERT_LIST_AS} -- Replication
 			assertions := l
 		end;
 	
-feature {}
+feature {NONE}
 	
 	clause_name (ctxt: FORMAT_CONTEXT): STRING is
 			-- name of the assertion: require, require else, ensure, 
@@ -149,5 +149,28 @@ feature {}
 		do
 		end;
 
+feature {ROUTINE_AS} -- Case Storage
+
+	storage_info (classc: CLASS_C): FIXED_LIST [S_ASSERTION_DATA] is
+			-- Assertion storage info for Case in the 
+			-- context of class `class_c'
+		require
+			 valid_assertions: assertions /= Void
+		local
+			 ctxt: FORMAT_CONTEXT;
+		do
+			!! Result.make (assertions.count);
+			!! ctxt.make_for_case (classc);
+			from
+				Result.start
+				assertions.start
+			until
+				assertions.after
+			loop
+				Result.replace (assertions.item.storage_info (ctxt));
+				Result.forth;
+				assertions.forth
+			end
+		end;
 
 end

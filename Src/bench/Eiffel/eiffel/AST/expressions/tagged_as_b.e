@@ -106,11 +106,20 @@ feature {TAGGED_AS}	-- Replication
 
 feature -- Case Storage
 
-	storage_info: S_ASSERTION_DATA is
+	storage_info (ctxt: FORMAT_CONTEXT): S_ASSERTION_DATA is
+		require
+			valid_context: ctxt /= Void;
+			empty_text: ctxt.text.empty
 		local
 			txt: STRING
 		do
-			!! Result.make (tag.string_value, "toto");
+			expr.format (ctxt);
+			if tag = Void then
+				!! Result.make (Void, ctxt.text.image);
+			else
+				!! Result.make (tag.string_value, ctxt.text.image);
+			end;
+			ctxt.text.wipe_out;
 		end;
 	
 end

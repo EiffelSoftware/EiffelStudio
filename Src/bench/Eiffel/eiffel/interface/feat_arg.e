@@ -265,4 +265,46 @@ feature
 			end
 		end;
 
+feature {FEATURE_I} -- Case storage
+
+	storage_info: FIXED_LIST [S_ARGUMENT_DATA] is
+			-- Storage info for Current arguments.
+		local
+			type_info: S_TYPE_INFO;
+			key: S_CLASS_KEY;
+			arg_name: STRING;
+			type_a: TYPE_A;
+			classc: CLASS_C;
+			arg_data: S_ARGUMENT_DATA
+		do
+			!! Result.make (count);
+			Result.start
+			from
+				argument_names.start
+				start
+			until
+				after
+			loop
+				!! arg_name.make (0);
+				arg_name.append (argument_names.item);
+				type_a ?= item;
+				check
+					valid_type_a: type_a /= Void
+				end;
+				classc := type_a.associated_class;
+				if classc /= Void then
+					-- class type for non like features
+					key := type_a.associated_class.case_class_key;
+					!! type_info.make (Void, key);
+				else
+					!! type_info.make (arg_name, Void);
+				end;
+				!! arg_data.make (arg_name, type_info);
+				Result.replace (arg_data);
+				argument_names.forth;
+				Result.forth;
+				forth
+			end
+		end;
+
 end

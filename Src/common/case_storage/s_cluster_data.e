@@ -32,8 +32,8 @@ feature
 	icon_height: INTEGER;
 			-- Cluster's physical icon_height on drawing area
 
-	classes: FIXED_LIST [S_CLASS_DATA];
-			-- Classes within Current cluster
+	classes: FIXED_LIST [INTEGER];
+			-- Classes within Current cluster base on id
 
 	clusters: FIXED_LIST [S_CLUSTER_DATA];
 			-- Clusters within Current cluster
@@ -70,7 +70,8 @@ feature -- Setting values
 			-- Set classes to `l'.
 		require
 			valid_l: l /= Void;
-			l_not_empty: not l.empty
+			l_not_empty: not l.empty;
+			not_have_zero: not l.has (0)
 		do
 			classes := l
 		ensure
@@ -81,7 +82,8 @@ feature -- Setting values
 			-- Set clusters to `l'.
 		require
 			valid_l: l /= Void;
-			l_not_empty: not l.empty
+			l_not_empty: not l.empty;
+			not_have_void: not l.has (Void)
 		do
 			clusters := l
 		ensure

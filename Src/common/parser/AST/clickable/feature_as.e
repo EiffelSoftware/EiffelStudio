@@ -313,13 +313,28 @@ feature {ASSERT_SERVER, FEATURE_AS, NAMES_ADAPTER}	-- Replication
 			rout_fsas.set_feature_assertions (feat, Current, a);
 		end;
 
-feature -- Case storage
+feature {FEATURE_CLAUSE_AS, FEATURE_CLAUSE_EXPORT} -- Case storage
 
 	storage_info: S_FEATURE_DATA is
 			-- Storage information for Current
 		require
 			not_be_called: False
 		do
-		end
+		end;
+
+feature {FEATURE_AS, CASE_CLUSTER_INFO} -- Case storage
+
+	store_information (classc: CLASS_C; f: S_FEATURE_DATA) is
+			-- Store current information into `f'.
+		require
+			valid_f: f /= Void
+		local
+			rout_as: ROUTINE_AS;
+		do
+			rout_as ?= body.content;
+			if rout_as /= Void then
+				rout_as.store_information (classc, f)
+			end
+		end;
 
 end

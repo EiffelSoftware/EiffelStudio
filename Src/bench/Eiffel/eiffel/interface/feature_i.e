@@ -1934,4 +1934,47 @@ feature -- Didier stuff
 	--		io.putstring ("implement feature_i.compatible%N");
 		end;
 
+feature -- Case storage informatio
+
+	store_case_information (f: S_FEATURE_DATA) is
+			-- Store relevant information into `f'.
+		require
+			valid_f: f /= Void;
+		local
+			result_type: S_RESULT_DATA;
+			type_info: S_TYPE_INFO;	
+			key: S_CLASS_KEY;
+			type_a: TYPE_A;
+			a_class: CLASS_C
+		do
+			type_a ?= type;
+			if type_a /= Void then
+				a_class := type_a.associated_class;
+				if a_class /= Void then
+					!! type_info.make (Void, a_class.case_class_key); 
+					!! result_type.make (Void, type_info);
+					f.set_result_type (result_type)
+				end;
+			end;
+			if is_deferred then
+				f.set_is_deferred
+			end;
+			if is_attribute then
+				f.set_is_attribute
+			end;
+			if arguments /= Void then
+				f.set_arguments (arguments.storage_info)
+			end
+		end;
+
+	case_feature_key: S_FEATURE_KEY is
+			-- Case feature Key for Current
+		local
+			temp: STRING
+		do
+			!! temp.make (0);
+			temp.append (feature_name);
+			!! Result.make (temp, written_class.case_class_key)
+		end;
+
 end

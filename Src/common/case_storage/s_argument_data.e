@@ -14,8 +14,8 @@ feature {NONE}
 			-- Set id to `s' and set
 			-- type to `t'.
 		require
-			both_not_void: id = Void implies type /= Void and then
-						type = Void implies id /= Void
+			both_not_void: id = Void implies t /= Void and then
+						t = Void implies id /= Void
 		do
 			id := i;
 			type := t

@@ -51,6 +51,25 @@ feature -- Dotnet Properties
 	dotnet_module_filename: STRING is
 		do
 		end
+		
+feature
+	
+	display_feature (st: STRUCTURED_TEXT) is
+			-- Display information about associated routine.
+		do
+		end
+		
+	display_locals (st: STRUCTURED_TEXT) is
+			-- Display the local entities and result (if it exists) of
+			-- the routine associated with Current call.
+		do
+		end		
+		
+	display_arguments (st: STRUCTURED_TEXT) is
+			-- Display the arguments passed to the routine
+			-- associated with Current call.
+		do
+		end		
 
 end -- class CALL_STACK_ELEMENT_DOTNET
 

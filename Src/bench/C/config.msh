@@ -69,6 +69,6 @@ input_cmd='/Fd$(INDIR)\\'
 cc='cl'
 resource_compiler='rc'
 extra_object_files=''
-compiler_path='d:\apps\DevStudio\VC'
+compiler_path='d:\apps\MSVC\VC98'
 all_dependency='*.obj: eif_config.h eif_portable.h eif_globals.h eif_eiffel.h eif_macros.h'
 #

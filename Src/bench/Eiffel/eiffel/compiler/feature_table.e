@@ -114,40 +114,6 @@ feature -- Access: compatibility
 			Result := has_id (Names_heap.id_of (s))
 		end
 
-	put (f: FEATURE_I; key: STRING) is
-			-- Insert `f' with `key' if there is no other item
-			-- associated with the same key.
-			-- Make `inserted' true if and only if an insertion has
-			-- been made (i.e. `key' was not present).
-		require
-			key_not_void: key /= Void
-			key_not_empty: not key.is_empty
-			valid_key (Names_heap.id_of (key))
-		do
-			put_id (f, Names_heap.id_of (key))
-		end
-
-	key_for_iteration: STRING is
-			-- Name of associated `key_for_iteration_id'.
-		do
-			Result := Names_heap.item (key_for_iteration_id)
-		ensure
-			Result_not_void: Result /= Void
-			Result_not_empty: not Result.is_empty
-		end
-
-	replace (new: FEATURE_I; key: STRING) is
-			-- Replace item at `key', if present,
-			-- with `new'; do not change associated key.
-			-- Make `replaced' true if and only if a replacement has
-			-- been made (i.e. `key' was present).
-			-- (from HASH_TABLE)
-		require
-			valid_key (Names_heap.id_of (key))
-		do
-			replace_id (new, Names_heap.id_of (key))
-		end
-
 	search (key: STRING) is
 			-- Search for item of key `key'
 			-- If found, set `found' to True, and set
@@ -483,7 +449,7 @@ feature -- Check
 						-- The result type or one of the arguments type is not valid
 debug ("ACTIVITY")
 	io.error.putstring ("Update table: ");
-	io.error.putstring (key_for_iteration);
+	io.error.putstring (Names_heap.item (key_for_iteration_id));
 	io.error.putstring (" removed%N");
 end;
 					Tmp_body_server.desactive (f.body_index);
@@ -884,7 +850,7 @@ feature -- API
 			loop
 				feat := item_for_iteration
 				if feat /= Void then
-					Result.put (feat.api_feature (c_id), key_for_iteration)
+					Result.put (feat.api_feature (c_id), Names_heap.item (key_for_iteration_id))
 				end
 				forth
 			end

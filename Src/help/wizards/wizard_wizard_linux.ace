@@ -64,6 +64,8 @@ external
 	include_path:
 		"\$(EIFFEL_SRC)/library/event/Clib",
 		"\$(EIFFEL_SRC)/library/vision2/spec/include",
+		"\$(EIFFEL_SRC)/C_library/libpng",
+		"\$(EIFFEL_SRC)/C_library/zlib",
 		"\$(EIFFEL_SRC)/library/vision2/implementation/gtk/Clib `gtk-config --cflags`"
 	object:
 		"$(EIFFEL_SRC)/library/vision2/spec/$(ISE_PLATFORM)/lib/gtk_eiffel.o",

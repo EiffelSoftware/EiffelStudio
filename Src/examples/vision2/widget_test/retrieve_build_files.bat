@@ -11,7 +11,7 @@ REM Copy template files
 XCOPY /Y /E /I Delivery\vision2_tour\templates .\templates
 
 REM Copy png files for tests
-XCOPY /Y /E /I Delivery\png .\png
+XCOPY /Y /E /I Delivery\vision2_tour\png .\bitmaps\png
 
 
 REM Copy constants and eiffel environment to interface.

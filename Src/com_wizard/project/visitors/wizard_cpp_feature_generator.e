@@ -321,7 +321,7 @@ feature {NONE} -- Implementation
 			Result.append (Excepinfo_access)
 			Result.append ("scode")
 			Result.append (Space_equal_space)
-			Result.append (Zero)
+ 			Result.append (Zero)
 			Result.append (Semicolon)
 			Result.append (New_line_tab)
 		end
@@ -338,52 +338,16 @@ feature {NONE} -- Implementation
 			Result := clone (Return)
 			Result.append (Space)
  
-			if visitor.is_enumeration then
-				add_warning (Current, Invalid_use_of_enumeration)
-			elseif visitor.is_basic_type then
+			if 
+				visitor.is_enumeration or visitor.is_basic_type and 
+				not is_boolean (type) and not (type = Vt_void) 
+			then
 				Result.append (Open_parenthesis)
-				if is_int (type) then
-					Result.append (Eif_integer)
-					Result.append (Close_parenthesis)
-					Result.append (retval_value_set_up ("intVal"))
-				elseif is_unsigned_int (type) then
-					Result.append (Eif_integer)
-					Result.append (Close_parenthesis)
-					Result.append (retval_value_set_up ("uintVal"))
-				elseif is_character (type) then
-					Result.append (Eif_character)
-					Result.append (Close_parenthesis)
-					Result.append (retval_value_set_up ("cVal"))
-				elseif is_unsigned_char (type) then
-					Result.append (Eif_character)
-					Result.append (Close_parenthesis)
-					Result.append (retval_value_set_up ("bVal"))	
-				elseif is_integer2 (type) then
-					Result.append (Eif_integer)
-					Result.append (Close_parenthesis)
-					Result.append (retval_value_set_up ("iVal"))	
-				elseif is_unsigned_short (type) then
-					Result.append (Eif_integer)
-					Result.append (Close_parenthesis)
-					Result.append (retval_value_set_up ("uiVal"))	
-				elseif is_integer4 (type) then
-					Result.append (Eif_integer)
-					Result.append (Close_parenthesis)
-					Result.append (retval_value_set_up ("lVal"))
-				elseif is_unsigned_long (type) then
-					Result.append (Eif_integer)
-					Result.append (Close_parenthesis)
-					Result.append (retval_value_set_up ("ulVal"))
-				elseif is_real4 (type) then
-					Result.append (Eif_real)
-					Result.append (Close_parenthesis)
-					Result.append (retval_value_set_up ("fltVal"))
-				elseif is_real8 (type) then
-					Result.append (Eif_double)
-					Result.append (Close_parenthesis)
-					Result.append (retval_value_set_up ("dblVal"))
-				end
+				Result.append (visitor.cecil_type)
+				Result.append (Close_parenthesis)
+				Result.append (retval_value_set_up (vartype_namer.variant_field_name (visitor)))
 				Result.append (Semicolon)
+
 			elseif is_boolean (type) then
 				Result.append (Open_parenthesis)
 				Result.append (Eif_boolean)
@@ -392,90 +356,18 @@ feature {NONE} -- Implementation
 				Result.append (Dot)
 				Result.append (visitor.ce_function_name)
 				Result.append (Space_open_parenthesis)
+				Result.append (retval_value_set_up (vartype_namer.variant_field_name (visitor)))
 
-				if is_byref (type) then
-					Result.append (retval_value_set_up ("pboolVal"))
-					if visitor.writable then
-						Result.append (Comma_space)
-						Result.append (Null)
-					end					
-					Result.append (Close_parenthesis)
-				else
-					Result.append (retval_value_set_up ("boolVal"))
-					if visitor.writable then
-						Result.append (Comma_space)
-						Result.append (Null)
-					end					
-				end
 				Result.append (Close_parenthesis)
 				Result.append (Semicolon)
-			elseif visitor.is_basic_type_ref then
-				Result.append (Open_parenthesis)
-				if is_int (type) then
-					Result.append (Eif_integer)
-					Result.append (Close_parenthesis)
-					Result.append (Asterisk)
-					Result.append (Open_parenthesis)
-					Result.append (retval_value_set_up ("pintVal"))
-				elseif is_unsigned_int (type) then
-					Result.append (Eif_integer)
-					Result.append (Close_parenthesis)
-					Result.append (Asterisk)
-					Result.append (Open_parenthesis)
-					Result.append (retval_value_set_up ("puintVal"))
-				
-				elseif is_character (type) then
-					Result.append (Eif_character)
-					Result.append (Close_parenthesis)
-					Result.append (Asterisk)
-					Result.append (Open_parenthesis)
-					Result.append (retval_value_set_up ("pcVal"))
-				elseif is_unsigned_char (type) then
-					Result.append (Eif_character)
-					Result.append (Close_parenthesis)
-					Result.append (Asterisk)
-					Result.append (Open_parenthesis)
-					Result.append (retval_value_set_up ("pbVal"))	
-				elseif is_integer2 (type) then
-					Result.append (Eif_integer)
-					Result.append (Close_parenthesis)
-					Result.append (Asterisk)
-					Result.append (Open_parenthesis)
-					Result.append (retval_value_set_up ("piVal"))	
-				elseif is_unsigned_short (type) then
-					Result.append (Eif_integer)
-					Result.append (Close_parenthesis)
-					Result.append (Asterisk)
-					Result.append (Open_parenthesis)
-					Result.append (retval_value_set_up ("puiVal"))	
-				elseif is_integer4 (type) then
-					Result.append (Eif_integer)
-					Result.append (Close_parenthesis)
-					Result.append (Asterisk)
-					Result.append (Open_parenthesis)
-					Result.append (retval_value_set_up ("plVal"))
-				elseif is_unsigned_long (type) then
-					Result.append (Eif_integer)
-					Result.append (Close_parenthesis)
-					Result.append (Asterisk)
-					Result.append (Open_parenthesis)
-					Result.append (retval_value_set_up ("pulVal"))
-				elseif is_real4 (type) then
-					Result.append (Eif_real)
-					Result.append (Close_parenthesis)
-					Result.append (Asterisk)
-					Result.append (Open_parenthesis)
-					Result.append (retval_value_set_up ("pfltVal"))
-				elseif is_real8 (type) then
-					Result.append (Eif_double)
-					Result.append (Close_parenthesis)
-					Result.append (Asterisk)
-					Result.append (Open_parenthesis)
-					Result.append (retval_value_set_up ("pdblVal"))
-				end
-				Result.append (Close_parenthesis)
-				Result.append (Semicolon)
+
+			elseif type = Vt_void then 
+				Result := (" ")
 			else
+				Result.append (Open_parenthesis)
+				Result.append (Eif_reference)
+				Result.append (Close_parenthesis)
+				Result.append (Open_parenthesis)
 				if visitor.need_generate_ce then
 					Result.append (Generated_ce_mapper)
 				else
@@ -484,70 +376,13 @@ feature {NONE} -- Implementation
 				Result.append (Dot)
 				Result.append (visitor.ce_function_name)
 				Result.append (Space_open_parenthesis)
+				Result.append (retval_value_set_up (vartype_namer.variant_field_name (visitor)))
 
-				if is_array (type) then
-					if is_byref (type) then
-						Result.append (retval_value_set_up ("pparray"))
-					else
-						Result.append (retval_value_set_up ("parray"))
-					end
-				elseif is_error (type) then
-					if is_byref (type) then
-						Result.append (retval_value_set_up ("pscode"))
-					else
-						Result.append (retval_value_set_up ("scode"))
-					end
-				elseif is_currency (type) then
-					if is_byref (type) then
-						Result.append (retval_value_set_up ("pcyVal"))
-					else
-						Result.append (retval_value_set_up ("cyVal"))
-					end
-				elseif is_date (type) then
-					if is_byref (type) then
-						Result.append (retval_value_set_up ("pdate"))
-					else
-						Result.append (retval_value_set_up ("date"))
-					end
-				elseif is_bstr (type) then
-					if is_byref (type) then
-						Result.append (retval_value_set_up ("pbstrVal"))
-					else
-						Result.append (retval_value_set_up ("bstrVal"))
-					end
-				elseif is_decimal (type) then
-					if is_byref (type) then
-						Result.append (retval_value_set_up ("pdecVal"))
-					else
-						add_warning (Current, Not_variant_type)
-					end
-				elseif is_unknown (type) then
-					if is_byref (type) then
-						Result.append (retval_value_set_up ("ppunkVal"))
-					else
-						Result.append (retval_value_set_up ("punkVal"))
-					end
-				elseif is_dispatch (type) then
-					if is_byref (type) then
-						Result.append (retval_value_set_up ("ppdispVal"))
-					else
-						Result.append (retval_value_set_up ("pdispVal"))
-					end
-				elseif is_variant (type) then
-					if is_byref (type) then
-						Result.append (retval_value_set_up ("pvarVal"))
-					else
-						add_warning (Current, Not_variant_type)
-					end
-				elseif is_byref (type) then
-					Result.append (retval_value_set_up ("byref"))
-				else
-					add_warning (Current, Not_variant_type)
-				end
 				if visitor.writable then
 					Result.append (Comma_space)
 					Result.append (Null)
 				end
+				Result.append (Close_parenthesis)
 				Result.append (Close_parenthesis)
 				Result.append (Semicolon)
 			end	

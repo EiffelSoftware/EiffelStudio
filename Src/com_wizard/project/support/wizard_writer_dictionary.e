@@ -785,6 +785,22 @@ feature -- Generator constants -- 8
 
 	A_ref: STRING is "a_ref"
 
+	Last_error_code: STRING is "last_error_code"
+
+	Last_error_description: STRING is "last_error_description"
+
+	Last_error_help_file: STRING is "last_error_help_file"
+
+	Last_source_of_exception: STRING is "last_source_of_exception"
+
+	Ccom_last_error_code: STRING is "ccom_last_error_code"
+
+	Ccom_last_error_description: STRING is "ccom_last_error_description"
+
+	Ccom_last_error_help_file: STRING is "ccom_last_error_help_file"
+
+	Ccom_last_source_of_exception: STRING is "ccom_last_source_of_exception"
+
 feature -- Eiffel types -- 9
 
 	Arguments_type: STRING is "ARGUMENTS"

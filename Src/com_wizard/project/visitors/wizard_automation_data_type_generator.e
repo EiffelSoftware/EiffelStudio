@@ -68,7 +68,6 @@ feature -- Basic operations
 				is_basic_type := True
 
 			elseif a_type = Vt_void then
-				c_type.append ("void")
 				is_basic_type := True
 
 			elseif a_type = Vt_r4 then

@@ -13,6 +13,10 @@
 #ifndef _garcol_h_
 #define _garcol_h_
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 #include "portable.h"
 #include "struct.h"
 #ifndef TEST
@@ -174,5 +178,9 @@ extern long plsc_per;			/* Period of plsc() in acollect() */
 extern int gc_monitor;			/* GC monitoring flag */
 extern int r_fides;				/* moved here from retrieve.c */
 
+
+#ifdef __cplusplus
+}
+#endif
 
 #endif

@@ -10,6 +10,10 @@
 			Include file for printing an Eiffel object
 */
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+ 
 #include "portable.h"
 
 /*
@@ -40,5 +44,9 @@ extern char *c_outp();
  */
 
 extern char *simple_out();		/* Tagged out form for simple types */
+
+#ifdef __cplusplus
+}
+#endif
 
 #endif

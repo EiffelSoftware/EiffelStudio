@@ -13,6 +13,10 @@
 #ifndef _hashin_h
 #define _hashin_h
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 #include "config.h"
 #include "portable.h"
 
@@ -37,5 +41,9 @@ extern void ht_remove();			/* Remove value in H table */
 extern int ht_xtend();				/* Extend size of full H table */
 extern void ht_zero();				/* Initialize H table to zero */
 extern void ht_free();				/* Free hash table */
+
+#ifdef __cplusplus
+}
+#endif
 
 #endif

@@ -2,6 +2,13 @@
 /*
     Object id externals
 */
+
+#ifndef _object_id_h_
+#define _object_id_h_
+
+#ifdef __cplusplus
+extern "C" {
+#endif
  
 extern struct stack object_id_stack;	/* Stack where objects referenced through `object_id' are stored
 										 * See class IDENTIFIED */	
@@ -21,3 +28,8 @@ extern void eif_separate_object_id_free();		/* removes the object from the stack
 
 #endif
 
+#ifdef __cplusplus
+}
+#endif
+
+#endif

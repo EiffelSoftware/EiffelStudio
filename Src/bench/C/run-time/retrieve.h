@@ -13,6 +13,11 @@
 
 #ifndef _retrieve_h_
 #define _retrieve_h_
+
+#ifdef __cplusplus
+extern "C" {
+#endif
+ 
 #include <stdio.h>
 #include "hashin.h"
 #include "cecil.h"
@@ -66,4 +71,9 @@ extern int retrieve_read();
 
 extern int (*retrieve_read_func)();
 
+#ifdef __cplusplus
+}
 #endif
+
+#endif
+

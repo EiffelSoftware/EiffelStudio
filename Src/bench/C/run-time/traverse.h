@@ -13,6 +13,10 @@
 #ifndef _traverse_h_
 #define _traverse_h_
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 #include "hector.h"
 
 /* Flags for traversal */
@@ -31,6 +35,10 @@ extern void map_reset();			/* Reset maping table */
 
 #ifdef DEBUG						/* For copy.c */
 extern long nomark();
+#endif
+
+#ifdef __cplusplus
+}
 #endif
 
 #endif

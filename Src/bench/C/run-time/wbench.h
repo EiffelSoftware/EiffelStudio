@@ -14,6 +14,10 @@
 #ifndef _wbench_h_
 #define _wbench_h_
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 extern fnptr **eif_address_table;		/* Table of $ operator encapsulation functions */
 extern uint32 *onceadd();				/* Add once-routine body_id in a list */
 extern char *(*wfeat())();				/* Feature call */
@@ -83,5 +87,9 @@ extern char desc_fill;					/* Is it an actual insertion or do we
 #define FPatId(x) fpatidtab[x]
 #define DLEMPatId(x) dle_mpatidtab[x]
 #define DLEFPatId(x) dle_fpatidtab[x]
+
+#ifdef __cplusplus
+}
+#endif
 
 #endif

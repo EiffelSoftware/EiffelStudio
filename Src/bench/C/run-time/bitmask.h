@@ -13,6 +13,10 @@
 #ifndef _bitmask_h_
 #define _bitmask_h_
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 #ifdef I_LIMITS
 #include <limits.h>			/* For WORD_BIT */
 #endif
@@ -51,6 +55,10 @@ struct fd_mask {
 #define FD_CLR(n, p)	((p)->fdm_bits[(n)/BPI] &= ~(1 << ((n) % BPI)))
 #undef FD_ISSET
 #define FD_ISSET(n, p)	((p)->fdm_bits[(n)/BPI] & (1 << ((n) % BPI)))
+
+#ifdef __cplusplus
+}
+#endif
 
 #endif
 

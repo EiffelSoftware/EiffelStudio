@@ -13,6 +13,10 @@
 #ifndef _cecil_h_
 #define _cecil_h_
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 #include "plug.h"
 
 /*
@@ -170,5 +174,9 @@ extern void eif_rtinit();				/* Eiffel run-time initialization */
 #endif
 
 extern char *ct_value();				/* Hash table query */
+
+#ifdef __cplusplus
+}
+#endif
 
 #endif

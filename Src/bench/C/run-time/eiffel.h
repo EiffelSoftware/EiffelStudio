@@ -13,6 +13,10 @@
 #ifndef _eiffel_h_
 #define _eiffel_h_
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 #include "config.h"
 
 /* The following includes are needed only because Eiffel has no way to direct
@@ -36,11 +40,13 @@
 
 extern double math_power ();
 
-#endif
-
 #ifdef CONCURRENT_EIFFEL
 #include "curextern.h"
 #endif
 
+#ifdef __cplusplus
+}
+#endif
 
+#endif
 

@@ -13,6 +13,10 @@
 #ifndef _option_h_
 #define _option_h_
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+ 
 /*
  * Options in workbench mode
  */
@@ -89,5 +93,9 @@ extern void prof_stack_rewind();		/* Stops all timer counts in
 						 * updates the table, and
 						 * pops the items from the stack
 						 */
+
+#ifdef __cplusplus
+}
+#endif
 
 #endif

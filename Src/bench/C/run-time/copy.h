@@ -13,6 +13,10 @@
 #ifndef _copy_h_
 #define _copy_h_
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 #include "portable.h"
 
 /* 
@@ -37,6 +41,10 @@ extern void spclearall();		/* Reset special object's items to default */
 #define safe_bcopy(s,d,l) memmove((d),(s),(l))
 #else
 You must define your own version of safe_bcopy
+#endif
+
+#ifdef __cplusplus
+}
 #endif
 
 #endif

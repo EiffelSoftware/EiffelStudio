@@ -13,6 +13,10 @@
 #ifndef _plug_h_
 #define _plug_h_
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+ 
 #include "config.h"
 #include "portable.h"
 
@@ -120,6 +124,10 @@ extern void chkcinv();			/* Creation invariant call */
 
 #ifndef WORKBENCH
 extern void rt_norout();		/* No function pointer */
+#endif
+
+#ifdef __cplusplus
+}
 #endif
 
 #endif

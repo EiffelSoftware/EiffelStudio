@@ -11,7 +11,10 @@
 
 */
 
-
+#ifdef __cplusplus
+extern "C" {
+#endif
+ 
 extern void run_idr_init ();
 extern void run_idr_destroy ();
 extern void check_capacity ();
@@ -32,4 +35,8 @@ extern void ridr_multi_bit ();
 extern void widr_multi_bit ();
 extern char *idr_temp_buf;				/*temporary buffer for idr float and double */
 extern int idr_read_line();
+
+#ifdef __cplusplus
+}
+#endif
 

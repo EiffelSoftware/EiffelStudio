@@ -12,6 +12,11 @@
 
 #ifndef _dir_h_
 #define _dir_h_
+
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 #include "macros.h"
 
 #ifdef I_DIRECT
@@ -52,5 +57,9 @@ extern EIF_POINTER dir_open();
 extern void dir_rewind();
 extern char *dir_search();
 extern char *dir_next();
+
+#ifdef __cplusplus
+}
+#endif
 
 #endif

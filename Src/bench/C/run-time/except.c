@@ -1695,7 +1695,7 @@ rt_public void esfail(EIF_CONTEXT_NOARG)
 	dump_trace_stack();			/* Print the stack */
 
 #ifdef EIF_WIN32
-	eif_console_cleanup();
+	eif_console_cleanup(EIF_TRUE);
 #endif
 
 	EIF_END_GET_CONTEXT

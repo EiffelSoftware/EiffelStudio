@@ -1,5 +1,8 @@
 class FINISH_FREEZING
 
+inherit
+	ARGUMENTS
+
 creation
 	make
 
@@ -14,6 +17,7 @@ feature -- Initialization
 			status_box: STATUS_BOX -- the status box displayed at the end of execution
 		do
 			if not retried then
+				set_option_sign ('-')
 				!!translator.make
 
 				translator.translate
@@ -22,9 +26,10 @@ feature -- Initialization
 				c_error := c_compilation_error
 			end
 
-			make_util := translator.options.get_string ("make", "make utility")
-			!! status_box.make (make_util, retried, c_error)
-
+			if index_of_word_option ("silent") = 0 then
+				make_util := translator.options.get_string ("make", "make utility")
+				!! status_box.make (make_util, retried, c_error)
+			end
 		rescue
 			retried := true
 			retry

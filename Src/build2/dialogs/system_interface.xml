@@ -15,6 +15,10 @@
 		<Name >ok_button_text</Name>
 		<Value >OK</Value>
 		</Constant>
+	<Constant ><type >DIRECTORY</type>
+		<Name >png_location</Name>
+		<Value >C:\Documents and Settings\rogers\Desktop</Value>
+		</Constant>
 	<Constant ><type >INTEGER</type>
 		<Name >default_button_width</Name>
 		<Value >80</Value>
@@ -22,6 +26,13 @@
 	<Constant ><type >STRING</type>
 		<Name >close_text</Name>
 		<Value >Close</Value>
+		</Constant>
+	<Constant ><type >PIXMAP</type>
+		<Name >lightbulb_png</Name>
+		<Value ></Value>
+		<is_absolute >False</is_absolute>
+		<Directory >png_location</Directory>
+		<Filename >lightbulb.png</Filename>
 		</Constant>
 	</item>
 <item type="Directory"><Internal_properties ><name >constants_dialog</name>
@@ -1618,7 +1629,8 @@ Please enter the name of a DIRECTORYconstant which will be used.</Text>
 					<item type="EV_FRAME"><Internal_properties ><id >122</id>
 							<Expanded >1</Expanded>
 							</Internal_properties>
-						<EV_COLORIZABLE />
+						<EV_COLORIZABLE ><Background_color >255255255</Background_color>
+							</EV_COLORIZABLE>
 						<EV_FONTABLE />
 						<EV_SENSITIVE />
 						<EV_TEXTABLE />
@@ -1642,13 +1654,28 @@ Please enter the name of a DIRECTORYconstant which will be used.</Text>
 							<item type="EV_HORIZONTAL_BOX"><Internal_properties ><id >124</id>
 									<Expanded >1</Expanded>
 									</Internal_properties>
-								<EV_COLORIZABLE />
+								<EV_COLORIZABLE ><Background_color >255255255</Background_color>
+									</EV_COLORIZABLE>
 								<EV_SENSITIVE />
 								<EV_WIDGET />
-								<EV_BOX ><Is_item_expanded >01</Is_item_expanded>
+								<EV_BOX ><Is_item_expanded >001</Is_item_expanded>
 									</EV_BOX>
 								<EV_PIXMAPABLE />
 								<EV_CONTAINER />
+								<item type="EV_PIXMAP"><Internal_properties ><id >137</id>
+										<Expanded >0</Expanded>
+										</Internal_properties>
+									<EV_COLORIZABLE />
+									<EV_FONTABLE />
+									<EV_SENSITIVE />
+									<EV_TOOLTIPABLE />
+									<EV_WIDGET ><Minimum_width >39</Minimum_width>
+										<Minimum_height >33</Minimum_height>
+										</EV_WIDGET>
+									<EV_PIXMAP ><Pixmap_path ><Constant >lightbulb_png</Constant>
+											</Pixmap_path>
+										</EV_PIXMAP>
+									</item>
 								<item type="EV_CELL"><Internal_properties ><id >125</id>
 										<Expanded >0</Expanded>
 										</Internal_properties>
@@ -1660,30 +1687,63 @@ Please enter the name of a DIRECTORYconstant which will be used.</Text>
 									<EV_PIXMAPABLE />
 									<EV_CONTAINER />
 									</item>
-								<item type="EV_LABEL"><Internal_properties ><id >126</id>
-										<Expanded >0</Expanded>
+								<item type="EV_VERTICAL_BOX"><Internal_properties ><id >138</id>
+										<Expanded >1</Expanded>
 										</Internal_properties>
 									<EV_COLORIZABLE ><Background_color >255255255</Background_color>
 										</EV_COLORIZABLE>
-									<EV_FONTABLE ><Family >3</Family>
-										<Weight >7</Weight>
-										<Shape >10</Shape>
-										<Height >19</Height>
-										<Preferred_family >Microsoft Sans Serif</Preferred_family>
-										</EV_FONTABLE>
 									<EV_SENSITIVE />
-									<EV_TEXTABLE ><Text >Did you know...</Text>
-										</EV_TEXTABLE>
-									<EV_TOOLTIPABLE />
 									<EV_WIDGET />
-									<EV_TEXT_ALIGNABLE ><Text_alignment >Left</Text_alignment>
-										</EV_TEXT_ALIGNABLE>
+									<EV_BOX ><Is_item_expanded >101</Is_item_expanded>
+										</EV_BOX>
+									<EV_PIXMAPABLE />
+									<EV_CONTAINER />
+									<item type="EV_CELL"><Internal_properties ><id >140</id>
+											<Expanded >0</Expanded>
+											</Internal_properties>
+										<EV_COLORIZABLE ><Background_color >255255255</Background_color>
+											</EV_COLORIZABLE>
+										<EV_SENSITIVE />
+										<EV_WIDGET />
+										<EV_PIXMAPABLE />
+										<EV_CONTAINER />
+										</item>
+									<item type="EV_LABEL"><Internal_properties ><id >126</id>
+											<Expanded >0</Expanded>
+											</Internal_properties>
+										<EV_COLORIZABLE ><Background_color >255255255</Background_color>
+											</EV_COLORIZABLE>
+										<EV_FONTABLE ><Family >3</Family>
+											<Weight >7</Weight>
+											<Shape >10</Shape>
+											<Height >19</Height>
+											<Preferred_family >Microsoft Sans Serif</Preferred_family>
+											</EV_FONTABLE>
+										<EV_SENSITIVE />
+										<EV_TEXTABLE ><Text >Did you know...</Text>
+											</EV_TEXTABLE>
+										<EV_TOOLTIPABLE />
+										<EV_WIDGET />
+										<EV_TEXT_ALIGNABLE ><Text_alignment >Left</Text_alignment>
+											</EV_TEXT_ALIGNABLE>
+										</item>
+									<item type="EV_CELL"><Internal_properties ><id >141</id>
+											<Expanded >0</Expanded>
+											</Internal_properties>
+										<EV_COLORIZABLE ><Background_color >255255255</Background_color>
+											</EV_COLORIZABLE>
+										<EV_SENSITIVE />
+										<EV_WIDGET />
+										<EV_PIXMAPABLE />
+										<EV_CONTAINER />
+										</item>
 									</item>
 								</item>
 							<item type="EV_HORIZONTAL_BOX"><Internal_properties ><id >127</id>
 									<Expanded >1</Expanded>
 									</Internal_properties>
-								<EV_COLORIZABLE />
+								<EV_COLORIZABLE ><Background_color >255255255</Background_color>
+									</EV_COLORIZABLE>
 								<EV_SENSITIVE />
 								<EV_WIDGET />
 								<EV_BOX ><Is_item_expanded >011</Is_item_expanded>

@@ -85,8 +85,7 @@ feature
 						types.after
 					loop
 						c_pattern := info.instantiation_in (types.item.type).c_pattern
-						!!c_pattern_info
-						c_pattern_info.set_pattern (c_pattern)
+						create c_pattern_info.make (c_pattern)
 						if not c_patterns.has (c_pattern_info) then
 							c_pattern_info.set_c_pattern_id (c_pattern_id_counter.next)
 							c_patterns.put (c_pattern_info)
@@ -149,8 +148,13 @@ feature
 
 	Marker: C_PATTERN_INFO is
 			-- Marker for search in `c_patterns'
+		local
+			l_pattern: C_PATTERN
+			l_shared_types: SHARED_TYPE_I
 		once
-			!!Result
+			create l_shared_types
+			create l_pattern.make (l_shared_types.Void_c_type)
+			create Result.make (l_pattern)
 		end
 
 feature -- Generation

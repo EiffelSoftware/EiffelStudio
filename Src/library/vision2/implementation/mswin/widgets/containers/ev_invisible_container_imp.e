@@ -40,7 +40,8 @@ inherit
 			on_right_button_double_click,
 			on_mouse_move,
 			on_char,
-			on_key_up
+			on_key_up,
+			on_draw_item
 		redefine
 			default_style,
 			default_ex_style,
@@ -128,7 +129,6 @@ feature {NONE} -- Implementation : WEL features
 		do
 			if background_color /= Void then
 				!! Result.make_solid (background_color)
---				disable_default_processing
 			end
 		end
 

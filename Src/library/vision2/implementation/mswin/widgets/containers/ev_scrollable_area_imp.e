@@ -38,7 +38,8 @@ inherit
 			on_right_button_double_click,
 			on_mouse_move,
 			on_char,
-			on_key_up
+			on_key_up,
+			on_draw_item
 		redefine
 			default_style,
 			background_brush

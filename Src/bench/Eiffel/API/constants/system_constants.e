@@ -169,9 +169,9 @@ feature {NONE}
 feature {NONE} -- Versioning
 
 	Precompilation_id_tag: STRING is "precompilation_id"
-	Version_number: STRING is "4.3 a"
+	Version_number: STRING is "4.3 B"
 	Version_number_tag: STRING is "version_number"
-	Storable_version_number: STRING is "4.3 a"
+	Storable_version_number: STRING is "4.3 B"
 	Storable_version_number_tag: STRING is "storable_version_number"
 
 feature {NONE}

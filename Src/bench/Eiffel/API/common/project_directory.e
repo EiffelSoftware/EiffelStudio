@@ -13,6 +13,7 @@ inherit
 
 	DIRECTORY
 		rename
+			make as directory_make,
 			mode as file_mode,
 			exists as base_exists,
 			is_readable as is_base_readable,
@@ -23,9 +24,16 @@ inherit
 	SHARED_WORKBENCH
 
 creation
-
 	make
 	
+feature -- Initialization
+
+	make (dn: STRING; project_eiffel_file: PROJECT_EIFFEL_FILE) is
+		do
+			directory_make (dn)
+			set_project_file (project_eiffel_file)
+		end
+
 feature -- Access
 
 	is_new: BOOLEAN is
@@ -46,25 +54,6 @@ feature -- Access
 		ensure
 			not_new_implies_eif_exists:
 				not is_new implies project_eif_file.exists
-		end;
-
-	project_eif_file: PROJECT_EIFFEL_FILE is
-			-- Project.eif file in project directory
-		local
-			fn, ptxt_fn: FILE_NAME
-		do
-			if private_project_eif_file = Void then
-				!! fn.make_from_string (name);
-				fn.extend (Eiffelgen);
-				fn.set_file_name (Dot_workbench);
-				!! ptxt_fn.make_from_string (name);
-				ptxt_fn.extend (Eiffelgen);
-				ptxt_fn.set_file_name (Project_txt);
-				!! private_project_eif_file.make (fn, ptxt_fn)
-			end;
-			Result := private_project_eif_file
-		ensure
-			not_void_result: Result /= Void
 		end;
 
 	valid_project_eif: BOOLEAN is
@@ -90,7 +79,7 @@ feature -- Access
 			!! w_code_dir.make (Workbench_generation_path);
 			!! f_code_dir.make (Final_generation_path);
 			!! comp_dir.make (Compilation_path);
-			!! project_file.make (Project_file_name);
+			!! project_file.make (project_eif_file.name);
 			Result := is_base_readable and then w_code_dir.is_readable
 					and then f_code_dir.is_readable and then comp_dir.is_readable
 					and then project_file.is_readable
@@ -108,7 +97,7 @@ feature -- Access
 			!! w_code_dir.make (Workbench_generation_path);
 			!! f_code_dir.make (Final_generation_path);
 			!! comp_dir.make (Compilation_path);
-			!! project_file.make (Project_file_name);
+			!! project_file.make (project_eif_file.name);
 			Result := is_base_writable and then w_code_dir.is_writable
 					and then f_code_dir.is_writable and then comp_dir.is_writable
 					and then project_file.is_writable
@@ -127,7 +116,7 @@ feature -- Access
 
 	exists: BOOLEAN is
 			-- Does the project exist?
-			--| Ie, Comp, F_code, W_code exist?
+			--| Ie, Comp, F_code, W_code and project file exist?
 		local
 			w_code_dir, f_code_dir, comp_dir: DIRECTORY;
 			project_file: RAW_FILE
@@ -135,7 +124,7 @@ feature -- Access
 			!! w_code_dir.make (Workbench_generation_path);
 			!! f_code_dir.make (Final_generation_path);
 			!! comp_dir.make (Compilation_path);
-			!! project_file.make (Project_file_name);
+			!! project_file.make (project_eif_file.name);
 			Result := base_exists and then w_code_dir.exists
 				and then f_code_dir.exists and then comp_dir.exists
 				and then project_file.exists
@@ -143,12 +132,25 @@ feature -- Access
 				Result := Result and then System.server_controler.exists
 			end
 		end
+
+	eifgen_exists: BOOLEAN is
+			-- Does the `EIFGEN' directory exist?
+		local
+			base: DIRECTORY
+			base_name: DIRECTORY_NAME
+		do
+			!! base_name.make_from_string (Project_directory_name)
+			base_name.extend (Eiffelgen)
+			!! base.make (base_name)
+
+			Result := base_exists and then base.exists
+		end
                
 	has_base_full_access: BOOLEAN is
 		do
 			Result := is_base_readable and then is_base_writable and then
 					is_base_executable                      
-		end                                                              
+		end
 
 	forget_old_project is
 			-- Rename `EIFGEN' to `EIFGEN-old'.
@@ -184,14 +186,25 @@ feature -- Update
 			-- correctly, ie `system' has been correctly created.
 		do
 			initialized := True
+		ensure
+			initialized_set: initialized
 		end
 
+	set_project_file (project_file: PROJECT_EIFFEL_FILE) is
+		require
+			project_file_not_void: project_file /= Void
+		do
+			project_eif_file := project_file
+		ensure
+			project_eif_file_set: project_eif_file = project_file
+		end
+
+feature -- Access
+	
 	initialized: BOOLEAN
 			-- Has the project correctly initialized?
 
-feature {NONE} -- Implementation
-
-	private_project_eif_file: PROJECT_EIFFEL_FILE
-			-- Project.eif file
+	project_eif_file: PROJECT_EIFFEL_FILE
+			-- Project.eif file in project directory
 
 end -- class PROJECT_DIRECTORY

@@ -23,7 +23,7 @@ feature {NONE} -- Eiffel Project Directories
 			!!Result.make (file_name)
 		end
 
-	Project_directory: DIRECTORY_NAME is
+	Project_directory_name: DIRECTORY_NAME is
 			-- Shared project directory
 		once
 			!! Result.make
@@ -38,25 +38,25 @@ feature {NONE} -- Eiffel Project Directories
 	Backup_path: DIRECTORY_NAME is
 			-- Path to the backup directory
 		once
-			!! Result.make_from_string (Project_directory);
+			!! Result.make_from_string (Project_directory_name);
 			Result.extend_from_array (<<Eiffelgen, Backup>>);
 		end
 
 	Case_storage_path: DIRECTORY_NAME is
 		once
-			!! Result.make_from_string (Project_directory);
+			!! Result.make_from_string (Project_directory_name);
 			Result.extend_from_array (<<Casegen , Case_storage>>);
 		end
 
 	Case_gen_path: DIRECTORY_NAME is
 		once
-			!! Result.make_from_string (Project_directory);
+			!! Result.make_from_string (Project_directory_name);
 			Result.extend (Casegen);
 		end
 
 	Documentation_path: DIRECTORY_NAME is
 		once
-			!! Result.make_from_string (Project_directory);
+			!! Result.make_from_string (Project_directory_name);
 			Result.extend (Documentation);
 		end
 
@@ -69,50 +69,34 @@ feature {NONE} -- Eiffel Project Directories
 
 	Eiffel_gen_path: DIRECTORY_NAME is
 		once
-			!! Result.make_from_string (Project_directory);
+			!! Result.make_from_string (Project_directory_name);
 			Result.extend (Eiffelgen);
 		end
 
 	Workbench_generation_path: DIRECTORY_NAME is
 		once
-			!! Result.make_from_string (Project_directory);
+			!! Result.make_from_string (Project_directory_name);
 			Result.extend_from_array (<<Eiffelgen, W_code>>);
 		end
 
 	Final_generation_path: DIRECTORY_NAME is
 		once
-			!! Result.make_from_string (Project_directory);
+			!! Result.make_from_string (Project_directory_name);
 			Result.extend_from_array (<<Eiffelgen, F_code>>);
 		end
 
 	Compilation_path: DIRECTORY_NAME is
 			-- Path to the compilation directory
 		once
-			!! Result.make_from_string (Project_directory);
+			!! Result.make_from_string (Project_directory_name);
 			Result.extend_from_array (<<Eiffelgen, Comp>>);
-		end
-
-	Project_file_name: FILE_NAME is
-			-- Full name of the file where the workbench is stored
-		once
-			!! Result.make_from_string (Project_directory);
-			Result.extend (Eiffelgen);
-			Result.set_file_name (Dot_workbench);
-		end
-
-	Project_txt_name: FILE_NAME is
-			-- Full name of the file where the project text is stored
-		once
-			!! Result.make_from_string (Project_directory);
-			Result.extend (Eiffelgen);
-			Result.set_file_name (Project_txt);
 		end
 
 	Precompilation_file_name: FILE_NAME is
 			-- Full name of file where current precompilation
 			-- information is stored
 		do
-			!! Result.make_from_string (Project_directory);
+			!! Result.make_from_string (Project_directory_name);
 			Result.extend (Eiffelgen);
 			Result.set_file_name (Precomp_eif);
 		end

@@ -538,6 +538,7 @@ feature {EV_TREE_IMP} -- Implementation
 			counter: INTEGER
 			sx: INTEGER
 			sy: INTEGER
+			l_top_parent: EV_TREE_IMP
 		do
 			from
 				loop_parent := Current
@@ -547,12 +548,22 @@ feature {EV_TREE_IMP} -- Implementation
 				loop_parent ?= loop_parent.parent_imp
 				counter := counter + 1
 			end
-			sx := top_parent_imp.indent * counter + 1
-			--|FIXME The relative y_position is always returned as 0.
-			sy := 0
 			create Result
-			Result.put_integer (sx, 1)
-			Result.put_integer (sy, 2) 
+			l_top_parent := top_parent_imp
+			if l_top_parent /= Void then
+					-- Added protection against the case where `top_parent_imp' is Void.
+					-- I do not know why this could occur in a normal EiffelVision2 system,
+					-- but some people have custom implementations which fail sometimes.
+					-- As this feature has no pre-conditions, we protect against this case
+					-- as requested. See bug report 3806. Julian.
+				
+				sx := top_parent_imp.indent * counter + 1
+					--|FIXME The relative y_position is always returned as 0.
+				sy := 0
+				
+				Result.put_integer (sx, 1)
+				Result.put_integer (sy, 2) 
+			end
 		end
 
 feature {NONE} -- Implementation

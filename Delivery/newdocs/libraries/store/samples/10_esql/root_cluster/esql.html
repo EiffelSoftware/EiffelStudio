@@ -1,0 +1,273 @@
+<HTML>
+	<HEAD>
+		
+<META NAME="generator" CONTENT="ISE EiffelBench version 5.0.23">
+		
+<TITLE>ESQL Flat contracts</TITLE>
+		
+<LINK REL="stylesheet" HREF="/default.css" TYPE="text/css">
+
+	</HEAD>
+
+	<BODY>
+<SPAN CLASS="ekeyword">class</SPAN> <SPAN CLASS="ekeyword">interface</SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp;<A CLASS="eclass" HREF="../root_cluster/esql.html">ESQL</A><BR>
+
+<BR>
+
+<SPAN CLASS="ekeyword">create</SPAN> <BR>
+
+<BR>
+
+ &nbsp; &nbsp; &nbsp;<A NAME="f_make"><A CLASS="efeature" HREF="../root_cluster/esql.html#f_make">make</A><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Start SQL_MONITOR</SPAN><BR>
+
+</A><BR>
+
+<SPAN CLASS="ekeyword">feature</SPAN> <SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Initialization</SPAN><BR>
+
+<BR>
+
+ &nbsp; &nbsp; &nbsp;<A NAME="f_login"><A CLASS="efeature" HREF="../estore_db_support/database_appl.html#f_login">login</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">user_name</SPAN><SPAN CLASS="esymbol">,</SPAN> <SPAN CLASS="elocal">password</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="./../../reference/kernel/string.html">STRING</A><SPAN CLASS="esymbol">)</SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Login to database server under </SPAN><SPAN CLASS="equoted">user_name</SPAN><SPAN CLASS="ecomment"> with </SPAN><SPAN CLASS="equoted">password</SPAN><SPAN CLASS="ecomment">.</SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ecomment">--</SPAN> <SPAN CLASS="ecomment">(from </SPAN><A CLASS="eclass" HREF="../estore_db_support/database_appl.html">DATABASE_APPL</A><SPAN CLASS="ecomment">)</SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ekeyword">require</SPAN> <SPAN CLASS="ecomment">--</SPAN> <SPAN CLASS="ecomment">from </SPAN><A CLASS="eclass" HREF="../estore_db_support/database_appl.html">DATABASE_APPL</A><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="etag">user_name_ok</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="efeature" HREF="../estore_db_support/handle_spec.html#f_db_spec">db_spec</A><SPAN CLASS="edot">.</SPAN><A CLASS="efeature" HREF="../estore_db_support/database.html#f_user_name_ok">user_name_ok</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">user_name</SPAN><SPAN CLASS="esymbol">)</SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="etag">password_ok</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="efeature" HREF="../estore_db_support/handle_spec.html#f_db_spec">db_spec</A><SPAN CLASS="edot">.</SPAN><A CLASS="efeature" HREF="../estore_db_support/database.html#f_password_ok">password_ok</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">password</SPAN><SPAN CLASS="esymbol">)</SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ekeyword">ensure</SPAN> <SPAN CLASS="ecomment">--</SPAN> <SPAN CLASS="ecomment">from </SPAN><A CLASS="eclass" HREF="../estore_db_support/database_appl.html">DATABASE_APPL</A><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="etag">is_logged_to_base</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="efeature" HREF="../estore_db_support/database_appl.html#f_is_logged_to_base">is_logged_to_base</A><BR>
+
+</A><BR>
+
+ &nbsp; &nbsp; &nbsp;<A NAME="f_login_and_connect"><A CLASS="efeature" HREF="../estore_db_support/database_appl.html#f_login_and_connect">login_and_connect</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">user_name</SPAN><SPAN CLASS="esymbol">,</SPAN> <SPAN CLASS="elocal">password</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="./../../reference/kernel/string.html">STRING</A><SPAN CLASS="esymbol">)</SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Login under </SPAN><SPAN CLASS="equoted">user_name</SPAN><SPAN CLASS="ecomment"> with </SPAN><SPAN CLASS="equoted">password</SPAN><SPAN CLASS="ecomment"></SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> and immediately connect to Ingres database server,</SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> using a temporary local </SPAN><A CLASS="eclass" HREF="../estore_interface/db_control.html">DB_CONTROL</A><SPAN CLASS="ecomment"> object.</SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ecomment">--</SPAN> <SPAN CLASS="ecomment">(from </SPAN><A CLASS="eclass" HREF="../estore_db_support/database_appl.html">DATABASE_APPL</A><SPAN CLASS="ecomment">)</SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ekeyword">require</SPAN> <SPAN CLASS="ecomment">--</SPAN> <SPAN CLASS="ecomment">from </SPAN><A CLASS="eclass" HREF="../estore_db_support/database_appl.html">DATABASE_APPL</A><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="etag">user_name_ok</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="efeature" HREF="../estore_db_support/handle_spec.html#f_db_spec">db_spec</A><SPAN CLASS="edot">.</SPAN><A CLASS="efeature" HREF="../estore_db_support/database.html#f_user_name_ok">user_name_ok</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">user_name</SPAN><SPAN CLASS="esymbol">)</SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="etag">password_ok</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="efeature" HREF="../estore_db_support/handle_spec.html#f_db_spec">db_spec</A><SPAN CLASS="edot">.</SPAN><A CLASS="efeature" HREF="../estore_db_support/database.html#f_password_ok">password_ok</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">password</SPAN><SPAN CLASS="esymbol">)</SPAN><BR>
+
+</A> &nbsp; &nbsp; &nbsp;<BR>
+
+<SPAN CLASS="ekeyword">feature</SPAN> <SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Access</SPAN><BR>
+
+<BR>
+
+ &nbsp; &nbsp; &nbsp;<A NAME="f_db_spec"><A CLASS="efeature" HREF="../estore_db_support/handle_spec.html#f_db_spec">db_spec</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../estore_db_support/database.html">DATABASE</A><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Handle to actual database</SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ecomment">--</SPAN> <SPAN CLASS="ecomment">(from </SPAN><A CLASS="eclass" HREF="../estore_db_support/handle_spec.html">HANDLE_SPEC</A><SPAN CLASS="ecomment">)</SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ekeyword">ensure</SPAN> <SPAN CLASS="ecomment">--</SPAN> <SPAN CLASS="ecomment">from </SPAN><A CLASS="eclass" HREF="../estore_db_support/handle_spec.html">HANDLE_SPEC</A><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="etag">not_void</SPAN><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="ereserved">Result</SPAN> <SPAN CLASS="esymbol">/=</SPAN> <A CLASS="efeature" HREF="./../../reference/kernel/any.html#f_void">void</A><BR>
+
+</A> &nbsp; &nbsp; &nbsp;<BR>
+
+<SPAN CLASS="ekeyword">feature</SPAN> <SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Status report</SPAN><BR>
+
+<BR>
+
+ &nbsp; &nbsp; &nbsp;<A NAME="f_is_logged_to_base"><A CLASS="efeature" HREF="../estore_db_support/database_appl.html#f_is_logged_to_base">is_logged_to_base</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="./../../reference/kernel/boolean.html">BOOLEAN</A><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Is current handle logged to Ingres server?</SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ecomment">--</SPAN> <SPAN CLASS="ecomment">(from </SPAN><A CLASS="eclass" HREF="../estore_db_support/database_appl.html">DATABASE_APPL</A><SPAN CLASS="ecomment">)</SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ekeyword">ensure</SPAN> <SPAN CLASS="ecomment">--</SPAN> <SPAN CLASS="ecomment">from </SPAN><A CLASS="eclass" HREF="../estore_db_support/database_appl.html">DATABASE_APPL</A><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="etag">test_condition</SPAN><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="ereserved">Result</SPAN> <A CLASS="ekeyword" HREF="./../../reference/kernel/boolean_ref.html#f__infix_implies">implies</A> <SPAN CLASS="esymbol">(</SPAN><A CLASS="efeature" HREF="../estore_db_support/database_appl.html#f_session_login">session_login</A> <SPAN CLASS="esymbol">/=</SPAN> <A CLASS="efeature" HREF="./../../reference/kernel/any.html#f_void">void</A><SPAN CLASS="esymbol">)</SPAN><BR>
+
+</A> &nbsp; &nbsp; &nbsp;<BR>
+
+<SPAN CLASS="ekeyword">feature</SPAN> <SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Status setting</SPAN><BR>
+
+<BR>
+
+ &nbsp; &nbsp; &nbsp;<A NAME="f_set_application"><A CLASS="efeature" HREF="../estore_db_support/database_appl.html#f_set_application">set_application</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">application_name</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="./../../reference/kernel/string.html">STRING</A><SPAN CLASS="esymbol">)</SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Set database application name with </SPAN><SPAN CLASS="equoted">application_name</SPAN><SPAN CLASS="ecomment">.</SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ecomment">--</SPAN> <SPAN CLASS="ecomment">(from </SPAN><A CLASS="eclass" HREF="../estore_db_support/database_appl.html">DATABASE_APPL</A><SPAN CLASS="ecomment">)</SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ekeyword">require</SPAN> <SPAN CLASS="ecomment">--</SPAN> <SPAN CLASS="ecomment">from </SPAN><A CLASS="eclass" HREF="../estore_db_support/database_appl.html">DATABASE_APPL</A><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="etag">argument_exist</SPAN><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="elocal">application_name</SPAN> <SPAN CLASS="esymbol">/=</SPAN> <A CLASS="efeature" HREF="./../../reference/kernel/any.html#f_void">void</A><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ekeyword">ensure</SPAN> <SPAN CLASS="ecomment">--</SPAN> <SPAN CLASS="ecomment">from </SPAN><A CLASS="eclass" HREF="../estore_db_support/database_appl.html">DATABASE_APPL</A><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="etag">is_logged_to_base</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="efeature" HREF="../estore_db_support/database_appl.html#f_is_logged_to_base">is_logged_to_base</A><BR>
+
+</A><BR>
+
+ &nbsp; &nbsp; &nbsp;<A NAME="f_set_base"><A CLASS="efeature" HREF="../estore_db_support/database_appl.html#f_set_base">set_base</A><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Initialize or re-activate database server</SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> after a handle change.</SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ecomment">--</SPAN> <SPAN CLASS="ecomment">(from </SPAN><A CLASS="eclass" HREF="../estore_db_support/database_appl.html">DATABASE_APPL</A><SPAN CLASS="ecomment">)</SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ekeyword">require</SPAN> <SPAN CLASS="ecomment">--</SPAN> <SPAN CLASS="ecomment">from </SPAN><A CLASS="eclass" HREF="../estore_db_support/database_appl.html">DATABASE_APPL</A><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="etag">is_logged_to_base</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="efeature" HREF="../estore_db_support/database_appl.html#f_is_logged_to_base">is_logged_to_base</A><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ekeyword">ensure</SPAN> <SPAN CLASS="ecomment">--</SPAN> <SPAN CLASS="ecomment">from </SPAN><A CLASS="eclass" HREF="../estore_db_support/database_appl.html">DATABASE_APPL</A><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<A CLASS="efeature" HREF="../estore_support/handle_use.html#f_handle">handle</A><SPAN CLASS="edot">.</SPAN><A CLASS="efeature" HREF="../estore_support/handle.html#f_database">database</A> <SPAN CLASS="esymbol">=</SPAN> <A CLASS="efeature" HREF="../estore_db_support/database_appl.html#f_session_database">session_database</A><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<A CLASS="efeature" HREF="../estore_support/handle_use.html#f_handle">handle</A><SPAN CLASS="edot">.</SPAN><A CLASS="efeature" HREF="../estore_support/handle.html#f_process">process</A> <SPAN CLASS="esymbol">=</SPAN> <A CLASS="efeature" HREF="../estore_support/general_appl.html#f_session_process">session_process</A><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<A CLASS="efeature" HREF="../estore_support/handle_use.html#f_handle">handle</A><SPAN CLASS="edot">.</SPAN><A CLASS="efeature" HREF="../estore_support/handle.html#f_status">status</A> <SPAN CLASS="esymbol">=</SPAN> <A CLASS="efeature" HREF="../estore_support/general_appl.html#f_session_status">session_status</A><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<A CLASS="efeature" HREF="../estore_support/handle_use.html#f_handle">handle</A><SPAN CLASS="edot">.</SPAN><A CLASS="efeature" HREF="../estore_support/handle.html#f_execution_type">execution_type</A> <SPAN CLASS="esymbol">=</SPAN> <A CLASS="efeature" HREF="../estore_support/general_appl.html#f_session_execution_type">session_execution_type</A><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<A CLASS="efeature" HREF="../estore_support/handle_use.html#f_handle">handle</A><SPAN CLASS="edot">.</SPAN><A CLASS="efeature" HREF="../estore_support/handle.html#f_login">login</A> <SPAN CLASS="esymbol">=</SPAN> <A CLASS="efeature" HREF="../estore_db_support/database_appl.html#f_session_login">session_login</A><BR>
+
+</A><BR>
+
+ &nbsp; &nbsp; &nbsp;<A NAME="f_set_data_source"><A CLASS="efeature" HREF="../estore_db_support/database_appl.html#f_set_data_source">set_data_source</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">dsn</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="./../../reference/kernel/string.html">STRING</A><SPAN CLASS="esymbol">)</SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Set database source name with </SPAN><SPAN CLASS="equoted">dsn</SPAN><SPAN CLASS="ecomment">.</SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ecomment">--</SPAN> <SPAN CLASS="ecomment">(from </SPAN><A CLASS="eclass" HREF="../estore_db_support/database_appl.html">DATABASE_APPL</A><SPAN CLASS="ecomment">)</SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ekeyword">require</SPAN> <SPAN CLASS="ecomment">--</SPAN> <SPAN CLASS="ecomment">from </SPAN><A CLASS="eclass" HREF="../estore_db_support/database_appl.html">DATABASE_APPL</A><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="etag">argument_exist</SPAN><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="elocal">dsn</SPAN> <SPAN CLASS="esymbol">/=</SPAN> <A CLASS="efeature" HREF="./../../reference/kernel/any.html#f_void">void</A><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ekeyword">ensure</SPAN> <SPAN CLASS="ecomment">--</SPAN> <SPAN CLASS="ecomment">from </SPAN><A CLASS="eclass" HREF="../estore_db_support/database_appl.html">DATABASE_APPL</A><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="etag">is_logged_to_base</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="efeature" HREF="../estore_db_support/database_appl.html#f_is_logged_to_base">is_logged_to_base</A><BR>
+
+</A><BR>
+
+ &nbsp; &nbsp; &nbsp;<A NAME="f_set_group"><A CLASS="efeature" HREF="../estore_db_support/database_appl.html#f_set_group">set_group</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">groupid</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="./../../reference/kernel/string.html">STRING</A><SPAN CLASS="esymbol">)</SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Set database group &nbsp;with </SPAN><SPAN CLASS="equoted">groupId</SPAN><SPAN CLASS="ecomment">.</SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ecomment">--</SPAN> <SPAN CLASS="ecomment">(from </SPAN><A CLASS="eclass" HREF="../estore_db_support/database_appl.html">DATABASE_APPL</A><SPAN CLASS="ecomment">)</SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ekeyword">require</SPAN> <SPAN CLASS="ecomment">--</SPAN> <SPAN CLASS="ecomment">from </SPAN><A CLASS="eclass" HREF="../estore_db_support/database_appl.html">DATABASE_APPL</A><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="etag">argument_exist</SPAN><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="elocal">groupid</SPAN> <SPAN CLASS="esymbol">/=</SPAN> <A CLASS="efeature" HREF="./../../reference/kernel/any.html#f_void">void</A><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ekeyword">ensure</SPAN> <SPAN CLASS="ecomment">--</SPAN> <SPAN CLASS="ecomment">from </SPAN><A CLASS="eclass" HREF="../estore_db_support/database_appl.html">DATABASE_APPL</A><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="etag">is_logged_to_base</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="efeature" HREF="../estore_db_support/database_appl.html#f_is_logged_to_base">is_logged_to_base</A><BR>
+
+</A><BR>
+
+ &nbsp; &nbsp; &nbsp;<A NAME="f_set_hostname"><A CLASS="efeature" HREF="../estore_db_support/database_appl.html#f_set_hostname">set_hostname</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">host_name</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="./../../reference/kernel/string.html">STRING</A><SPAN CLASS="esymbol">)</SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Set database host name with </SPAN><SPAN CLASS="equoted">host_name</SPAN><SPAN CLASS="ecomment">.</SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ecomment">--</SPAN> <SPAN CLASS="ecomment">(from </SPAN><A CLASS="eclass" HREF="../estore_db_support/database_appl.html">DATABASE_APPL</A><SPAN CLASS="ecomment">)</SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ekeyword">require</SPAN> <SPAN CLASS="ecomment">--</SPAN> <SPAN CLASS="ecomment">from </SPAN><A CLASS="eclass" HREF="../estore_db_support/database_appl.html">DATABASE_APPL</A><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="etag">argument_exist</SPAN><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="elocal">host_name</SPAN> <SPAN CLASS="esymbol">/=</SPAN> <A CLASS="efeature" HREF="./../../reference/kernel/any.html#f_void">void</A><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ekeyword">ensure</SPAN> <SPAN CLASS="ecomment">--</SPAN> <SPAN CLASS="ecomment">from </SPAN><A CLASS="eclass" HREF="../estore_db_support/database_appl.html">DATABASE_APPL</A><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="etag">is_logged_to_base</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="efeature" HREF="../estore_db_support/database_appl.html#f_is_logged_to_base">is_logged_to_base</A><BR>
+
+</A><BR>
+
+ &nbsp; &nbsp; &nbsp;<A NAME="f_set_role"><A CLASS="efeature" HREF="../estore_db_support/database_appl.html#f_set_role">set_role</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">roleid</SPAN><SPAN CLASS="esymbol">,</SPAN> <SPAN CLASS="elocal">rolepasswd</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="./../../reference/kernel/string.html">STRING</A><SPAN CLASS="esymbol">)</SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Set database role with </SPAN><SPAN CLASS="equoted">roleId</SPAN><SPAN CLASS="ecomment"> and password(if it has one) with </SPAN><SPAN CLASS="equoted">rolePassWd</SPAN><SPAN CLASS="ecomment">.</SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ecomment">--</SPAN> <SPAN CLASS="ecomment">(from </SPAN><A CLASS="eclass" HREF="../estore_db_support/database_appl.html">DATABASE_APPL</A><SPAN CLASS="ecomment">)</SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ekeyword">require</SPAN> <SPAN CLASS="ecomment">--</SPAN> <SPAN CLASS="ecomment">from </SPAN><A CLASS="eclass" HREF="../estore_db_support/database_appl.html">DATABASE_APPL</A><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="etag">argument_exist</SPAN><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="elocal">roleid</SPAN> <SPAN CLASS="esymbol">/=</SPAN> <A CLASS="efeature" HREF="./../../reference/kernel/any.html#f_void">void</A><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ekeyword">ensure</SPAN> <SPAN CLASS="ecomment">--</SPAN> <SPAN CLASS="ecomment">from </SPAN><A CLASS="eclass" HREF="../estore_db_support/database_appl.html">DATABASE_APPL</A><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="etag">is_logged_to_base</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="efeature" HREF="../estore_db_support/database_appl.html#f_is_logged_to_base">is_logged_to_base</A><BR>
+
+</A> &nbsp; &nbsp; &nbsp;<BR>
+
+<SPAN CLASS="ekeyword">feature</SPAN> <SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Basic operations</SPAN><BR>
+
+<BR>
+
+ &nbsp; &nbsp; &nbsp;<A NAME="f_found"><A CLASS="efeature" HREF="../estore_support/action.html#f_found">found</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="./../../reference/kernel/boolean.html">BOOLEAN</A><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Is there any exit condition found</SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> while iterating on selection results in</SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> </SPAN><SPAN CLASS="equoted">load_result</SPAN><SPAN CLASS="ecomment"> of DB_SELECTION?</SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> (Default: do nothing)</SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ecomment">--</SPAN> <SPAN CLASS="ecomment">(from </SPAN><A CLASS="eclass" HREF="../estore_support/action.html">ACTION</A><SPAN CLASS="ecomment">)</SPAN><BR>
+
+</A><BR>
+
+ &nbsp; &nbsp; &nbsp;<A NAME="f_start"><A CLASS="efeature" HREF="../estore_support/action.html#f_start">start</A><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Execute something whenever</SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> routine </SPAN><SPAN CLASS="equoted">load_result</SPAN><SPAN CLASS="ecomment"> of </SPAN><A CLASS="eclass" HREF="../estore_interface/db_selection.html">DB_SELECTION</A><SPAN CLASS="ecomment"> is</SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> called with Current set as </SPAN><SPAN CLASS="equoted">stop_condition</SPAN><SPAN CLASS="ecomment">,</SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> before iterating on query result.</SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> (Default: do nothing)</SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ecomment">--</SPAN> <SPAN CLASS="ecomment">(from </SPAN><A CLASS="eclass" HREF="../estore_support/action.html">ACTION</A><SPAN CLASS="ecomment">)</SPAN><BR>
+
+</A> &nbsp; &nbsp; &nbsp;<BR>
+
+<SPAN CLASS="ekeyword">feature</SPAN> <BR>
+
+<BR>
+
+ &nbsp; &nbsp; &nbsp;<A NAME="f_make"><A CLASS="efeature" HREF="../root_cluster/esql.html#f_make">make</A><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Start SQL_MONITOR</SPAN><BR>
+
+</A> &nbsp; &nbsp; &nbsp;<BR>
+
+<SPAN CLASS="ekeyword">invariant</SPAN><BR>
+
+<BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ecomment">--</SPAN> <SPAN CLASS="ecomment">from </SPAN><A CLASS="eclass" HREF="./../../reference/kernel/any.html">ANY</A><BR>
+
+ &nbsp; &nbsp; &nbsp;<SPAN CLASS="etag">reflexive_equality</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="efeature" HREF="./../../reference/kernel/any.html#f_standard_is_equal">standard_is_equal</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="ereserved">Current</SPAN><SPAN CLASS="esymbol">)</SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp;<SPAN CLASS="etag">reflexive_conformance</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="efeature" HREF="./../../reference/kernel/any.html#f_conforms_to">conforms_to</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="ereserved">Current</SPAN><SPAN CLASS="esymbol">)</SPAN><BR>
+
+<BR>
+
+<SPAN CLASS="ekeyword">end</SPAN> -- <SPAN CLASS="ecomment">class </SPAN>ESQL<BR>
+
+</BODY>
+
+</HTML>
+<BR>
+

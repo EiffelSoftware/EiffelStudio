@@ -20,17 +20,51 @@ inherit
 			interface
 		end
 
-
-feature -- Status report
+feature -- Access
 
 	selected_item: EV_TREE_ITEM is
-			-- Currently selected item.
+			-- Tree item which is currently selected
+			-- It needs to be in single selection mode
+		deferred
+		end
+
+	selected_items: LINKED_LIST [EV_TREE_ITEM] is
+			-- List of all the selected tree items. For a single
+			-- selection list, it gives a list with only one
+			-- element which is `selected_item'. Therefore, one
+			-- should use `selected_item' rather than 
+			-- `selected_items' for a single selection list
 		require
 		deferred
 		end
 
+feature -- Status setting
+
+	enable_multiple_selection is
+			-- Allow the user to do a multiple selection simply
+			-- by clicking on several choices.
+		require
+		deferred
+		end
+
+	disable_multiple_selection is
+			-- Allow the user to do only one selection. It is the
+			-- default status of the list
+		require
+		deferred
+		end
+
+feature -- Status report
+
 	selected: BOOLEAN is
-			-- Is one item selected ?
+			-- Is at least one tree item selected ?
+		require
+		deferred
+		end
+
+	multiple_selection_enabled: BOOLEAN is
+			-- True if the user can choose several items
+			-- False otherwise
 		require
 		deferred
 		end
@@ -63,6 +97,9 @@ end -- class EV_TREE_I
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.18  2000/02/29 00:02:53  king
+--| Added multiple select features
+--|
 --| Revision 1.17  2000/02/22 23:57:58  king
 --| Added selected_item
 --|

@@ -162,13 +162,13 @@ feature {EIFFEL_CLUSTER_FIGURE} -- Expand/Collapse
 						linkable_figure.hide
 						linkable_figure.disable_sensitive
 						from
-							linkable_figure.internal_links.start
+							linkable_figure.links.start
 						until
-							linkable_figure.internal_links.after
+							linkable_figure.links.after
 						loop
-							linkable_figure.internal_links.item.hide
-							linkable_figure.internal_links.item.disable_sensitive
-							linkable_figure.internal_links.forth
+							linkable_figure.links.item.hide
+							linkable_figure.links.item.disable_sensitive
+							linkable_figure.links.forth
 						end
 						cluster_figure ?= linkable_figure
 						if cluster_figure /= Void and then not cluster_figure.is_iconified then
@@ -205,11 +205,11 @@ feature {EIFFEL_CLUSTER_FIGURE} -- Expand/Collapse
 						linkable_figure.show
 						linkable_figure.enable_sensitive
 						from
-							linkable_figure.internal_links.start
+							linkable_figure.links.start
 						until
-							linkable_figure.internal_links.after
+							linkable_figure.links.after
 						loop
-							l_link := linkable_figure.internal_links.item
+							l_link := linkable_figure.links.item
 							if l_link.source = linkable_figure then
 								l_other := l_link.target
 							else
@@ -219,7 +219,7 @@ feature {EIFFEL_CLUSTER_FIGURE} -- Expand/Collapse
 								l_link.show
 								l_link.enable_sensitive
 							end
-							linkable_figure.internal_links.forth
+							linkable_figure.links.forth
 						end
 						cluster_figure ?= linkable_figure
 						if cluster_figure /= Void and then not cluster_figure.is_iconified then

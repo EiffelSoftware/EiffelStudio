@@ -12,6 +12,7 @@ inherit
             get_cluster_tree,
             get_all_clusters,
             get_cluster_full_name,
+            get_cluster_full_namespace,
             get_cluster_properties,
             get_cluster_properties_by_id,
             change_cluster_name,
@@ -115,10 +116,37 @@ feature -- Access
                 Result := clone(cluster_name)
                 if cluster.has_parent then
                     Result.prepend_character('.')
-                    Result.prepend(get_cluster_full_name(cluster.parent_name))
+                    Result.prepend(get_cluster_full_name (cluster.parent_name))
                 end             
             end
         end
+        
+	get_cluster_full_namespace (cluster_name: STRING): STRING is
+			-- gets full cluster namespace
+        require else
+            non_void_cluster_name: cluster_name /= Void
+            valid_cluster_name: is_valid_cluster_name (cluster_name)
+            has_cluster: has_cluster (cluster_name)
+		local
+            cluster: CLUSTER_PROPERTIES
+        do
+            cluster ?= clusters_table.item (cluster_name)
+            if cluster /= Void then
+            	if cluster.cluster_namespace /= Void and not cluster.cluster_namespace.is_empty then
+	                Result := cluster.cluster_namespace	
+	            else
+	                Result := cluster.name
+            	end
+                if cluster.has_parent then
+                    Result.prepend_character('.')
+                    Result.prepend(get_cluster_full_namespace (cluster.parent_name))
+                end
+                if ace_accesser.default_namespace /= Void and not ace_accesser.default_namespace.is_empty then
+					Result.prepend_character('.')
+					Result.prepend(ace_accesser.default_namespace)	
+                end
+            end			
+		end
         
     get_cluster_properties (a_name: STRING): CLUSTER_PROPERTIES is
             -- Cluster properties.
@@ -294,7 +322,6 @@ feature {NONE} -- Basic Operations
 	        l_idx: INTEGER
 	        l_cluster: CELL [IEIFFEL_CLUSTER_PROPERTIES_INTERFACE]
 	        l_cluster_prop: like a_cluster
-	        l_clusters: LACE_LIST [CLUSTER_SD]
 	    do
 	    	ace_accesser.root_ast.clusters.extend (a_cluster.cluster_sd)
 	        a_cluster.store

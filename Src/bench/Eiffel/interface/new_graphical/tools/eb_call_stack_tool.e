@@ -173,7 +173,6 @@ feature -- Status setting
 				if new_level >= 1 and then count >= new_level then
 					(stack_list @ (new_level)).set_pixmap (Pixmaps.Icon_green_arrow)
 					arrowed_level := new_level
-					Application.set_current_execution_stack (new_level)
 				end
 			end
 		end
@@ -236,6 +235,7 @@ feature {NONE} -- Implementation
 			i: INTEGER
 			stack: EIFFEL_CALL_STACK
 		do
+			ev_application.idle_actions.prune_all (update_agent)			
 			if Application.status /= Void then
 				display_stop_cause
 				stack_list.wipe_out
@@ -259,7 +259,6 @@ feature {NONE} -- Implementation
 					save_call_stack_cmd.disable_sensitive
 				end
 			end
-			ev_application.idle_actions.prune_all (update_agent)			
 		end
 
 	display_stop_cause is

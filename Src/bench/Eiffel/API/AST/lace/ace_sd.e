@@ -102,10 +102,12 @@ feature -- Lace compilation
 				-- Then build the clusters with the files *.e found
 				-- in the clusters
 			build_clusters;
-				-- Second adaptation of Use files
-			adapt_use;
+
 				-- Reset the options of the CLASS_I
 			reset_options;
+
+				-- Second adaptation of Use files
+			adapt_use;
 
 			update_clusters;
 
@@ -150,9 +152,7 @@ feature -- Lace compilation
 			vd38: VD38;
 			vd44: VD44;
 		do
-			if melt_only and then not System.precompilation then
-				Result := Default_precompiled_location
-			elseif defaults /= Void then
+			if defaults /= Void then
 				from
 					defaults.start
 				until
@@ -181,6 +181,11 @@ feature -- Lace compilation
 					defaults.forth
 				end
 			end;
+			if melt_only and then not System.precompilation and then Result = Void then
+					-- For the melt_only version, if no precompiled project is specified,
+					-- return $EIFFEL3/precomp/spec/$PLATFORM/base
+				Result := Default_precompiled_location
+			end
 		end;
 
 	process_system_level_options is

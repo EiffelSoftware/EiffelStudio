@@ -106,7 +106,7 @@ feature -- Basic Operations
 			rename_clause_removed: not is_in_list (rename_clauses, a_clause_text)
 		end
 		
-	update_features (a_clause: RENAME_CLAUSE) is
+	update_features (a_clause: ISE_REFLECTION_RENAMECLAUSE) is
 			-- Check `a_clause' validity (make result available in `is_valid' and update features list accordingly.
 			-- | A rename clause is valid if:
 			-- | source exists and target does not exist OR
@@ -117,18 +117,18 @@ feature -- Basic Operations
 			source_feature: ISE_REFLECTION_EIFFELFEATURE
 			target_feature: ISE_REFLECTION_EIFFELFEATURE
 		do
-			if not exists (eiffel_class, a_clause.source) then
+			if not exists (eiffel_class, a_clause.sourcename) then
 				is_valid := False
 				error_message := No_source
 			else			
 				source_feature := eiffel_feature
-				if recursive_exists (a_clause.target) then
+				if recursive_exists (a_clause.targetname) then
 					is_valid := False
 					error_message := Has_target
 				else
 					is_valid := True
-					rename_feature (source_feature, a_clause.target)
-					update_inheritance_clauses (a_clause.source, a_clause.target)
+					rename_feature (source_feature, a_clause.targetname)
+					update_inheritance_clauses (a_clause.sourcename, a_clause.targetname)
 				end
 			end
 		end
@@ -146,7 +146,6 @@ feature -- Basic Operations
 			Result.put (1, undefine_clauses)
 			Result.put (2, redefine_clauses)
 			Result.put (3, select_clauses)
-			--Result.put (4, create {SYSTEM_COLLECTIONS_ARRAYLIST}.make)
 			create a_list.make
 			Result.put (4, a_list)
 		ensure
@@ -185,22 +184,32 @@ feature {NONE} -- Implementation
 			non_void_redefine_clauses: redefine_clauses /= Void
 			non_void_select_clauses: select_clauses /= Void
 		local
-			rename_clause_text: STRING
 			added: INTEGER
+			a_rename_clause: ISE_REFLECTION_RENAMECLAUSE
+			an_undefine_clause: ISE_REFLECTION_UNDEFINECLAUSE
+			a_redefine_clause: ISE_REFLECTION_REDEFINECLAUSE
+			a_select_clause: ISE_REFLECTION_SELECTCLAUSE
 		do
-			rename_clause_text := rename_clauses_viewer.rename_clause_text_from_info (old_name, new_name)
-			added := rename_clauses.add (rename_clause_text)
+			create a_rename_clause.make_renameclause
+			a_rename_clause.makefrominfo (old_name, new_name)
+			added := rename_clauses.add (a_rename_clause)
 			if is_in_list (undefine_clauses, old_name) then
 				undefine_clauses.removeat (index_in_list)
-				added := undefine_clauses.add (new_name)
+				create an_undefine_clause.make_undefineclause
+				an_undefine_clause.make (new_name)
+				added := undefine_clauses.add (an_undefine_clause)
 			end
 			if is_in_list (redefine_clauses, old_name) then
 				redefine_clauses.removeat (index_in_list)
-				added := redefine_clauses.add (new_name)			
+				create a_redefine_clause.make_redefineclause
+				a_redefine_clause.make (new_name)
+				added := redefine_clauses.add (a_redefine_clause)			
 			end
 			if is_in_list (select_clauses, old_name) then
 				select_clauses.removeat (index_in_list)
-				added := select_clauses.add (new_name)			
+				create a_select_clause.make_selectclause
+				a_select_clause.make (new_name)
+				added := select_clauses.add (a_select_clause)	
 			end
 		ensure
 			not_in_undefine_clauses: not is_in_list (undefine_clauses, old_name)
@@ -311,28 +320,28 @@ feature {NONE} -- Implementation
 
 	rename_clauses: SYSTEM_COLLECTIONS_ARRAYLIST
 			-- Rename clauses for parent with `parent_name' in `eiffel_class'
-			-- | SYSTEM_COLLECTIONS_ARRAYLIST [STRING]
+			-- | SYSTEM_COLLECTIONS_ARRAYLIST [ISE_REFLECTION_INHERITANCECLAUSE]
 		indexing
 			external_name: "RenameClauses"
 		end
 		
 	undefine_clauses: SYSTEM_COLLECTIONS_ARRAYLIST
 			-- Undefine clauses for parent with `parent_name' in `eiffel_class'
-			-- | SYSTEM_COLLECTIONS_ARRAYLIST [STRING]
+			-- | SYSTEM_COLLECTIONS_ARRAYLIST [ISE_REFLECTION_INHERITANCECLAUSE]
 		indexing
 			external_name: "UndefineClauses"
 		end
 
 	redefine_clauses: SYSTEM_COLLECTIONS_ARRAYLIST
 			-- Redefine clauses for parent with `parent_name' in `eiffel_class'
-			-- | SYSTEM_COLLECTIONS_ARRAYLIST [STRING]
+			-- | SYSTEM_COLLECTIONS_ARRAYLIST [ISE_REFLECTION_INHERITANCECLAUSE]
 		indexing
 			external_name: "RedefineClauses"
 		end
 
 	select_clauses: SYSTEM_COLLECTIONS_ARRAYLIST
 			-- Select clauses for parent with `parent_name' in `eiffel_class'
-			-- | SYSTEM_COLLECTIONS_ARRAYLIST [STRING]
+			-- | SYSTEM_COLLECTIONS_ARRAYLIST [ISE_REFLECTION_INHERITANCECLAUSE]
 		indexing
 			external_name: "SelectClauses"
 		end
@@ -348,14 +357,14 @@ feature {NONE} -- Implementation
 			non_void_clauses: a_list /= Void
 		local
 			i: INTEGER
-			a_clause: STRING
+			a_clause: ISE_REFLECTION_INHERITANCECLAUSE
 		do
 			from
 			until
 				i = a_list.count or Result
 			loop
 				a_clause ?= a_list.item (i)
-				if a_clause /= Void and then a_clause.tolower.equals_string (a_feature_name.tolower) then
+				if a_clause /= Void and then a_clause.tostring.tolower.equals_string (a_feature_name.tolower) then
 					index_in_list := i
 					Result := True
 				end

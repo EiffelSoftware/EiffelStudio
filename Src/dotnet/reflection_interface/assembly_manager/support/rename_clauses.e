@@ -74,7 +74,7 @@ indexing
  
  feature -- Basic Operations
  
- 	notify_add (a_rename_clause: RENAME_CLAUSE) is
+ 	notify_add (a_rename_clause: ISE_REFLECTION_RENAMECLAUSE) is
  			-- Notify `agent' that `a_rename_clause' has been added.
  		indexing
  			external_name: "NotifyAdd"
@@ -86,7 +86,7 @@ indexing
  			add_agent.update_add (a_rename_clause)
  		end
   
-  	notify_replace (an_old_clause, a_new_clause: RENAME_CLAUSE) is
+  	notify_replace (an_old_clause, a_new_clause: ISE_REFLECTION_RENAMECLAUSE) is
   			-- Notify `agent' that `an_old_clause' has been replaced by `a_new_clause'.
   		indexing
   			external_name: "NotifyRename"
@@ -99,7 +99,7 @@ indexing
   			replace_agent.update_replace (an_old_clause, a_new_clause)
  		end
  		
- 	add (a_clause: RENAME_CLAUSE) is
+ 	add (a_clause: ISE_REFLECTION_RENAMECLAUSE) is
  			-- Add `a_clause' to `rename_clauses'.
  		indexing
  			external_name: "Add"
@@ -115,7 +115,7 @@ indexing
  			clause_added: rename_clauses.contains (a_clause)
  		end
 
- 	replace (an_old_clause, a_new_clause: RENAME_CLAUSE) is
+ 	replace (an_old_clause, a_new_clause: ISE_REFLECTION_RENAMECLAUSE) is
  			-- Replace `an_old_clause' from `rename_clauses' bu `a_new_clause'.
  		indexing
  			external_name: "Replace"

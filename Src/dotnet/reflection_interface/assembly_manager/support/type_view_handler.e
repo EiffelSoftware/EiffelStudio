@@ -23,7 +23,6 @@ feature {NONE} -- Initialization
 			type_view := a_type_view
 			is_valid := True
 			children := type_view.children
-			build_children_modifications
 			create new_inheritance_clauses.make
 		ensure
 			eiffel_class_set: eiffel_class = an_eiffel_class
@@ -68,13 +67,6 @@ feature -- Access
 			Result := type_view.assembly_types
 		ensure
 			non_void_types: Result /= Void
-		end
-	
-	children_modifications: SYSTEM_COLLECTIONS_HASHTABLE
-			-- Key: Children .NET name
-			-- Value: Instance of `TYPE_MODIFICATIONS'
-		indexing	
-			external_name: "ChildrenModifications"
 		end
 	
 	old_name: STRING
@@ -278,33 +270,6 @@ feature -- Basic Operations
 	
 feature {NONE} -- Implementation
 
-	build_children_modifications is
-			-- Build `children_modifications' from `children'.
-		indexing
-			external_name: "BuildChildrenModifications"
-		require
-			non_void_children: children /= Void
-		local
-			i: INTEGER
-			a_child: ISE_REFLECTION_EIFFELCLASS
-			a_child_modification: TYPE_MODIFICATIONS
-		do
-			from
-				create children_modifications.make
-			until
-				i = children.count
-			loop
-				a_child ?= children.item (i)
-				if a_child /= Void then
-					create a_child_modification.make_from_info (a_child.FullExternalName)
-					children_modifications.add (a_child.FullExternalName, a_child_modification)
-				end
-				i := i + 1
-			end
-		ensure
-			non_void_children_modifications: children_modifications /= Void
-		end
-	
 	new_inheritance_clauses: SYSTEM_COLLECTIONS_HASHTABLE
 			-- Key: Parent name
 			-- Value: List of inheritance clauses
@@ -365,10 +330,8 @@ feature {NONE} -- Implementation
 				i := i + 1
 			end
 			eiffel_class.seteiffelname (new_name)
-			type_view.type_modifications.set_new_class_name (new_name)
 		ensure
 			new_name_set: eiffel_class.eiffelname.equals_string (new_name)
-			modifications_updated: type_view.type_modifications.new_class_name.equals_string (new_name)
 		end
 
 	rename_children_parent (new_name: STRING) is
@@ -624,27 +587,35 @@ feature {NONE} -- Implementation
 			non_void_new_name: new_name /= Void
 			not_empty_new_name: new_name.length > 0
 		local
-			rename_clause_text: STRING
 			added: INTEGER
+			a_rename_clause: ISE_REFLECTION_RENAMECLAUSE
+			an_undefine_clause: ISE_REFLECTION_UNDEFINECLAUSE
+			a_redefine_clause: ISE_REFLECTION_REDEFINECLAUSE
+			a_select_clause: ISE_REFLECTION_SELECTCLAUSE
 		do
 			if has_rename_clause (old_name) then
 				rename_clauses.removeat (index_in_list)
-				rename_clause_text := rename_source
-				rename_clause_text := rename_clause_text.concat_string_string_string_string (rename_clause_text, Space, As_keyword, Space)
-				rename_clause_text := rename_clause_text.concat_string_string (rename_clause_text, new_name)
-				added := rename_clauses.add (rename_clause_text)
+				create a_rename_clause.make_renameclause
+				a_rename_clause.makefrominfo (rename_source, new_name)
+				added := rename_clauses.add (a_rename_clause)
 			end
 			if is_in_list (undefine_clauses, old_name) then
 				undefine_clauses.removeat (index_in_list)
-				added := undefine_clauses.add (new_name)
+				create an_undefine_clause.make_undefineclause
+				an_undefine_clause.make (new_name)
+				added := undefine_clauses.add (an_undefine_clause)
 			end
 			if is_in_list (redefine_clauses, old_name) then
 				redefine_clauses.removeat (index_in_list)
-				added := redefine_clauses.add (new_name)			
+				create a_redefine_clause.make_redefineclause
+				a_redefine_clause.make (new_name)				
+				added := redefine_clauses.add (a_redefine_clause)			
 			end
 			if is_in_list (select_clauses, old_name) then
 				select_clauses.removeat (index_in_list)
-				added := select_clauses.add (new_name)			
+				create a_select_clause.make_selectclause
+				a_select_clause.make (new_name)
+				added := select_clauses.add (a_select_clause)			
 			end
 		ensure
 			not_in_undefine_clauses: not is_in_list (undefine_clauses, old_name)
@@ -838,28 +809,28 @@ feature {NONE} -- Implementation
 
 	rename_clauses: SYSTEM_COLLECTIONS_ARRAYLIST
 			-- Rename clauses for parent with `parent_name' in `eiffel_class'
-			-- | SYSTEM_COLLECTIONS_ARRAYLIST [STRING]
+			-- | SYSTEM_COLLECTIONS_ARRAYLIST [ISE_REFLECTION_INHERITANCECLAUSE]
 		indexing
 			external_name: "RenameClauses"
 		end
 		
 	undefine_clauses: SYSTEM_COLLECTIONS_ARRAYLIST
 			-- Undefine clauses for parent with `parent_name' in `eiffel_class'
-			-- | SYSTEM_COLLECTIONS_ARRAYLIST [STRING]
+			-- | SYSTEM_COLLECTIONS_ARRAYLIST [ISE_REFLECTION_INHERITANCECLAUSE]
 		indexing
 			external_name: "UndefineClauses"
 		end
 
 	redefine_clauses: SYSTEM_COLLECTIONS_ARRAYLIST
 			-- Redefine clauses for parent with `parent_name' in `eiffel_class'
-			-- | SYSTEM_COLLECTIONS_ARRAYLIST [STRING]
+			-- | SYSTEM_COLLECTIONS_ARRAYLIST [ISE_REFLECTION_INHERITANCECLAUSE]
 		indexing
 			external_name: "RedefineClauses"
 		end
 
 	select_clauses: SYSTEM_COLLECTIONS_ARRAYLIST
 			-- Select clauses for parent with `parent_name' in `eiffel_class'
-			-- | SYSTEM_COLLECTIONS_ARRAYLIST [STRING]
+			-- | SYSTEM_COLLECTIONS_ARRAYLIST [ISE_REFLECTION_INHERITANCECLAUSE]
 		indexing
 			external_name: "SelectClauses"
 		end
@@ -875,14 +846,14 @@ feature {NONE} -- Implementation
 			non_void_clauses: a_list /= Void
 		local
 			i: INTEGER
-			a_clause: STRING
+			a_clause: ISE_REFLECTION_INHERITANCECLAUSE
 		do
 			from
 			until
 				i = a_list.count or Result
 			loop
 				a_clause ?= a_list.item (i)
-				if a_clause /= Void and then a_clause.tolower.equals_string (a_feature_name.tolower) then
+				if a_clause /= Void and then a_clause.sourcename.tolower.equals_string (a_feature_name.tolower) then
 					index_in_list := i
 					Result := True
 				end
@@ -905,7 +876,7 @@ feature {NONE} -- Implementation
 			not_empty_name: a_name.length > 0
 		local
 			i: INTEGER
-			an_item: STRING
+			an_item: ISE_REFLECTION_RENAMECLAUSE			
 		do
 			from
 			until
@@ -913,9 +884,9 @@ feature {NONE} -- Implementation
 			loop
 				an_item ?= rename_clauses.item (i)
 				if an_item /= Void then
-					if target_from_text (an_item).tolower.equals_string (a_name.tolower) then
+					if an_item.targetname.tolower.equals_string (a_name.tolower) then
 						index_in_list := i
-						rename_source := source_from_text (an_item)
+						rename_source := an_item.sourcename
 						Result := True
 					end
 				end

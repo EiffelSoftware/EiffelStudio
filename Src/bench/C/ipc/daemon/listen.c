@@ -63,7 +63,7 @@ rt_public void dwide_listen(void)
 	 */
 
 #ifdef EIF_WIN32
- 	if (-1 == add_input(daemon_data.d_cs, drqsthandle)) {
+ 	if (-1 == add_input(daemon_data.d_cs, (HANDLE_FN) drqsthandle)) {
 #else
 	if (-1 == add_input(readfd(daemon_data.d_cs), drqsthandle)) {
 #endif

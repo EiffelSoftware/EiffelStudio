@@ -734,7 +734,7 @@ rt_private void start_app(int s)
 		daemon_data.d_app = (HANDLE) pid;			/* Record its pid */
 		daemon_data.d_as = cp;					/* Set-up stream to talk to child */
 
-		if (-1 == add_input(cp, drqsthandle)) {
+		if (-1 == add_input(cp, (HANDLE_FN) drqsthandle)) {
 #ifdef USE_ADD_LOG
 			add_log(4, "add_input: %s (%s)", s_strerror(), s_strname());
 #endif

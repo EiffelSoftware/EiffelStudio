@@ -4,17 +4,14 @@ class ATTR_ENTRY
 
 inherit
 	ENTRY
+		redefine
+			is_attribute
+		end
 
-feature
+feature -- for dead code removal
 
-	feature_id: INTEGER;
-			-- Feature id of the attribute
-
-	set_feature_id (i: INTEGER) is
-			-- Assign `i' to `feature_id'.
-		do
-			feature_id := i;
-		end;
+	is_attribute: BOOLEAN is True
+			-- is the feature_i associated an attribute ?
 
 feature -- previously in ATTR_UNIT
 

@@ -357,7 +357,7 @@ debug ("ACTIVITY")
 	io.error.putstring (creation_name);
 	io.error.putstring (" inserted in pass2_control.propagators%N");
 end;
-							!!depend_unit.make (a_class.id, resulting_table.found_item.feature_id);
+							!!depend_unit.make (a_class.id, resulting_table.found_item);
 							pass2_control.propagators.extend (depend_unit);
 						end;
 					end;

@@ -65,6 +65,14 @@ feature
 			suppliers := new_suppliers
 		end;
 
+	feature_name: STRING
+			-- name of the feature for which we have the dependances
+	
+	set_feature_name (name: STRING) is
+		do
+			feature_name := name
+		end
+
 feature -- Incrementality
 
 	has_removed_id: BOOLEAN is

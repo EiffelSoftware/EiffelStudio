@@ -155,7 +155,7 @@ feature -- Type check, byte code and dead code removal
 			a_feature := last_class.feature_table.item (feature_name)
 			if a_feature /= Void then
 					-- Supplier dependances update
-				!!depend_unit.make (last_id, a_feature.feature_id)
+				!!depend_unit.make (last_id, a_feature)
 				context.supplier_ids.extend (depend_unit)
 				
 					-- Attachments type check

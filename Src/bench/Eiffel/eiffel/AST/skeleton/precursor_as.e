@@ -210,7 +210,7 @@ feature -- Type check, byte code and dead code removal
 			last_id := last_class.id
 
 				-- Supplier dependances update
-			!! depend_unit.make (last_id, a_feature.feature_id)
+			!! depend_unit.make (last_id, a_feature)
 			context.supplier_ids.extend (depend_unit)
 			
 				-- Attachments type check

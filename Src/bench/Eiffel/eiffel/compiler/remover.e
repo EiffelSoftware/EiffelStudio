@@ -31,24 +31,24 @@ feature
 	record (feat: FEATURE_I; in_class: CLASS_C) is
 			-- Record Eiffel routines reachable by feature `feat' from
 			-- static type `in_class'.
-		require
-			good_argument: feat /= Void and in_class /= Void
-			control_empty: control.empty
 		local
 			next: FEATURE_I
 			traversal_unit: TRAVERSAL_UNIT
 			a_feature: FEATURE_I
+			dep: DEPEND_UNIT
+			static_class: CLASS_C
+			body_id: BODY_ID
 		do
 			from
-				!! traversal_unit.make (feat, in_class)
-				control.extend (traversal_unit)
+				!! dep.make (in_class.id, feat)
+				control.extend (dep)
 			until
 				control.empty
 			loop
-				traversal_unit := control.item
-				next := traversal_unit.a_feature
-				if not (next.is_attribute or else is_marked (next)) then
-					mark (next, traversal_unit.static_class, next.rout_id_set.first)
+				dep := control.item
+				body_id := body_index_table.item (dep.body_index)
+				if not (dep.rout_id.is_attribute or else is_alive (body_id.id)) then
+					mark (dep.feature_id, dep.body_index, body_id, dep.id, dep.written_in, dep.rout_id)
 				end
 				control.remove
 			end
@@ -71,50 +71,47 @@ feature -- Inlining
 
 feature -- Control
 
-	control: LINKED_QUEUE [TRAVERSAL_UNIT]
+	control: LINKED_QUEUE [DEPEND_UNIT]
 			-- Control structure for traversal in breadth first order
 
 feature {NONE}
 
-	propagate_feature (written_class: CLASS_C; original_feature: FEATURE_I
-						depend_list: FEATURE_DEPENDANCE) is
+	propagate_feature (written_class_id: CLASS_ID; original_body_index: BODY_INDEX; original_body_id: BODY_ID; depend_list: FEATURE_DEPENDANCE) is
 		local
 			depend_unit: DEPEND_UNIT
-			depend_feature: FEATURE_I
-			static_class: CLASS_C
-			unit_to_traverse: TRAVERSAL_UNIT
-			local_system: SYSTEM_I
+			body_id: BODY_ID
 		do
 			from
-				local_system := System
 				depend_list.start
 			until
 				depend_list.after
 			loop
 				depend_unit := depend_list.item
 				if not depend_unit.is_special then
-					static_class := local_system.class_of_id (depend_unit.id)
-					depend_feature := static_class.feature_table.feature_of_feature_id (depend_unit.feature_id)
-					if not is_marked (depend_feature) then
-debug ("DEAD_CODE_REMOVAL")
-	io.error.putstring ("Propagated to ")
-	io.error.putstring (depend_feature.feature_name)
-	io.error.putstring (" from ")
-	io.error.putstring (static_class.name)
-	io.error.new_line
+DEBUG ("DEAD_CODE")
+	print_dep (depend_unit)
 end
-						!! unit_to_traverse.make (depend_feature, static_class)
-						control.extend (unit_to_traverse)
+					body_id := body_index_table.item (depend_unit.body_index)
+					if not is_treated (body_id.id, depend_unit.rout_id) then
+						mark_treated (body_id.id, depend_unit.rout_id)
+						control.extend (depend_unit)
 					end
+DEBUG ("DEAD_CODE")
+	if is_treated (body_id.id, depend_unit.rout_id) then
+		io.putstring ("previously treated%N")
+	end
+	if depend_unit.is_special then
+		io.putstring ("special%N")
+	end
+end
 				end
 				depend_list.forth
 			end
-
 				-- Array optimization
-			array_optimizer.process (written_class, original_feature, depend_list)
+			array_optimizer.process (written_class_id.associated_class, original_body_index, original_body_id, depend_list)
 
 				-- Inlining
-			inliner.process (original_feature)
+			--inliner.process (original_body_id)
 		end
 
 	features: INTEGER
@@ -122,10 +119,10 @@ end
 
 	features_per_message: INTEGER is 50
 	
-	mark_alive (feat: FEATURE_I; rout_id_val: ROUTINE_ID) is
+	mark_alive (body_id: INTEGER) is
 			-- Record feature `feat'
 		do
-			{FEAT_ITERATOR} Precursor (feat, rout_id_val)
+			{FEAT_ITERATOR} Precursor (body_id)
 
 			features := features + 1
 			if features = features_per_message then
@@ -138,5 +135,84 @@ end
 				features := 0
 			end
 		end
+
+feature -- for debug purpose
+
+	print_dep (dep: DEPEND_UNIT) is
+		local
+			body_id: BODY_ID
+			a_class: CLASS_C
+		do
+			body_id := body_index_table.item (dep.body_index)
+			a_class := dep.id.associated_class
+			io.putstring (" (bid: ")
+			io.putint (body_id.id)
+			io.putstring ("; fid: ")
+			io.putint (dep.feature_id)
+			io.putstring ("; rid: ")
+			io.putint (dep.rout_id.id)
+			io.putstring (") of ")
+			io.putstring (a_class.lace_class.name)
+			io.putstring (" (")
+			io.putint (a_class.id.id)
+			io.putstring (") originally in ")
+			a_class := dep.written_in.associated_class
+			io.putstring (a_class.lace_class.name)
+			io.putstring (" (")
+			io.putint (a_class.id.id)
+			io.putstring (")%N")
+		end
+			
+	dump_alive is
+		local
+			i, j: INTEGER
+		do
+			io.putstring ("Used Table:%N")
+			from
+				i := 1
+			until
+				i = used_table.upper
+			loop
+				io.putint (i)
+				io.putstring (" : ")
+				io.putbool (used_table.item (i))
+				if used_table.item (i) then
+					j := j + 1
+				end
+				io.putstring ("%N")
+				i := i + 1
+			end
+			io.putstring ("END OF USED TABLE%N")
+			io.putstring ("nb of body_id alive: ")
+			io.putint (j)
+			io.putstring ("%N")
+		end
+
+	dump_marked is
+		local
+			i, j: INTEGER
+			marked: BOOLEAN
+		do
+			io.putstring ("Marked Table:%N")
+			from
+				i := 1
+			until
+				i = used_table.upper
+			loop
+				io.putint (i)
+				io.putstring (" : ")
+				marked := marked_table.item (i) /= Void
+				io.putbool (marked)
+				if marked then
+					j := j + 1
+				end
+				io.putstring ("%N")
+				i := i + 1
+			end
+			io.putstring ("END OF Marked TABLE%N")
+			io.putstring ("nb of body_id marked: ")
+			io.putint (j)
+			io.putstring ("%N%N%N")
+		end		
 
 end

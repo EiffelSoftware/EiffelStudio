@@ -258,7 +258,7 @@ feature
 				i := binary_search (type_id)
 				nb := max_position
 			until
-				local_copy.array_item(i).used or else i > nb
+				local_copy.array_item(i).used or else i = nb
 			loop
 				i := i + 1
 			end

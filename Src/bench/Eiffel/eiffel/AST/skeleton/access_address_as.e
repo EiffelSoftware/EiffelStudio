@@ -68,7 +68,7 @@ feature -- Type check
 				end
 
 					-- Dependance
-				!! depend_unit.make (last_id, a_feature.feature_id)
+				!! depend_unit.make (last_id, a_feature)
 				context.supplier_ids.extend (depend_unit)
 
 					-- Access managment

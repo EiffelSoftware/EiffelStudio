@@ -59,7 +59,7 @@ feature -- Conveniences
 			depend_unit: DEPEND_UNIT 
 		do
 			constant_i ?= context.a_class.feature_table.item (Current)
-			!!depend_unit.make (context.a_class.id, constant_i.feature_id)
+			!!depend_unit.make (context.a_class.id, constant_i)
 			context.supplier_ids.extend (depend_unit)
 		end
 

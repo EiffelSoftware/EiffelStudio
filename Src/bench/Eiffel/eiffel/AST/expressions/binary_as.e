@@ -157,7 +157,7 @@ feature -- Type check, byte code and dead code removal
 			left_id := last_class.id
 
 				-- Suppliers update
-			!!depend_unit.make (left_id, infix_function.feature_id)
+			!!depend_unit.make (left_id, infix_function)
 			context.supplier_ids.extend (depend_unit)
 
 				-- Then type check the right operand

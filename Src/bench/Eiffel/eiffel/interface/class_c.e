@@ -587,6 +587,8 @@ feature -- Third pass: byte code production and type check
 			old_body_id: BODY_ID
 			changed_body_ids: EXTEND_TABLE [CHANGED_BODY_ID_INFO, BODY_ID]
 			changed_body_id_info: CHANGED_BODY_ID_INFO
+			old_invariant_body_id: BODY_ID
+			feature_body_id: BODY_ID
 
 				-- For Concurrent Eiffel
 			body_id_changed: BOOLEAN
@@ -670,7 +672,7 @@ debug ("SEP_DEBUG", "ACTIVITY")
 	io.error.putbool (feature_changed)
 	io.error.new_line
 end
-					f_suppliers := dependances.item (feature_name)
+					f_suppliers := dependances.item (feature_i.body_id)
 
 						-- Feature is considered syntactically changed if
 						-- some of the entities used by it have changed
@@ -762,7 +764,7 @@ end
 										new_suppliers := suppliers.same_suppliers
 									end
 									new_suppliers.remove_occurence (f_suppliers)
-									dependances.remove (feature_name)
+									dependances.remove (feature_i.body_id)
 								end
 										
 								if not feature_i.is_code_replicated then
@@ -779,10 +781,11 @@ end
 										not feature_i.is_constant
 									then
 											-- Make it dependant on `default_rescue'
-										!!def_resc_depend.make (id, def_resc.feature_id)
+										!!def_resc_depend.make (id, def_resc)
 										f_suppliers.extend (def_resc_depend)
 									end
-									dependances.put (f_suppliers, feature_name)
+									f_suppliers.set_feature_name (feature_name)
+									dependances.put (f_suppliers, feature_i.body_id)
 									if new_suppliers = Void then
 										new_suppliers := suppliers.same_suppliers
 									end
@@ -865,11 +868,16 @@ end
 debug ("SEP_DEBUG", "VERBOSE", "ACTIVITY")
 	io.error.putstring ("%TProcessing invariant%N")
 end
-
-			f_suppliers := dependances.item ("_inv_")
+			if invariant_feature /= Void then
+				old_invariant_body_id := invariant_feature.body_id
+				f_suppliers := dependances.item (old_invariant_body_id)
+		
+			end
 
 			if propagators.invariant_removed then
-				dependances.remove ("_inv_")
+				if old_invariant_body_id /= Void then
+					dependances.remove (old_invariant_body_id)
+				end
 				if new_suppliers = Void then
 					new_suppliers := suppliers.same_suppliers
 				end
@@ -915,10 +923,15 @@ end
 								new_suppliers := suppliers.same_suppliers
 							end
 							new_suppliers.remove_occurence (f_suppliers)
-							dependances.remove ("_inv_")
+							if old_invariant_body_id /= Void then
+								dependances.remove (old_invariant_body_id)
+							end
 						end
 						f_suppliers := clone (ast_context.supplier_ids)
-						dependances.put (f_suppliers, "_inv_")
+						if invariant_feature /= Void then
+							f_suppliers.set_feature_name ("_inv_")
+							dependances.put (f_suppliers, invariant_feature.body_id)
+						end
 						if new_suppliers = Void then
 							new_suppliers := suppliers.same_suppliers
 						end
@@ -955,16 +968,16 @@ end
 					removed_features.after
 				loop
 					feature_i := removed_features.item_for_iteration
-					feature_name := feature_i.feature_name
+					feature_body_id := feature_i.body_id
 					if not feature_i.is_code_replicated then
-						f_suppliers := dependances.item (feature_name)
+						f_suppliers := dependances.item (feature_body_id)
 						if f_suppliers /= Void then
 							if new_suppliers = Void then
 								new_suppliers := suppliers.same_suppliers
 							end
 							new_suppliers.remove_occurence (f_suppliers)
 						end
-						dependances.remove (feature_name)
+						dependances.remove (feature_body_id)
 
 					end
 					if
@@ -1073,14 +1086,16 @@ end
 		local
 			feature_name: STRING
 			f_suppliers: FEATURE_DEPENDANCE
+			body_id: BODY_ID
 		do
-			feature_name := feature_i.feature_name
-			if dependances.has (feature_name) then
-				dependances.remove (feature_name)
+			body_id := feature_i.body_id
+			if dependances.has (body_id) then
+				dependances.remove (body_id)
 			end
 			!!f_suppliers.make
+			f_suppliers.set_feature_name (feature_i.feature_name)
 			feature_i.record_suppliers (f_suppliers)
-			dependances.put (f_suppliers, feature_name)
+			dependances.put (f_suppliers, body_id)
 		end
 
 	invariant_pass3 (	dependances: CLASS_DEPENDANCE
@@ -3000,19 +3015,6 @@ feature -- Dispose routine
 		end
 
 feature -- Dead code removal
-
-	mark_dispose (remover: REMOVER) is
-			-- Mark the dispose routine as used
-		local
-			disp_feat: FEATURE_I
-		do
-			disp_feat := dispose_feature
-			if disp_feat /= Void then
-				if disp_feat.written_class = Current then
-					remover.record (disp_feat, Current)
-				end
-			end
-		end
 
 	mark_visible (remover: REMOVER) is
 			-- Dead code removal from the visible features

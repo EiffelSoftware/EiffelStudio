@@ -67,7 +67,7 @@ feature -- Access
 	is_vms: BOOLEAN is
 			-- Is the platform VMS?
 		external
-			"C macro use %"eif_commands.h%""
+			"C macro use %"eif_eiffel.h%""
 		alias
 			"EIF_IS_VMS"
 		end
@@ -75,7 +75,7 @@ feature -- Access
 	is_windows: BOOLEAN is
 			-- Is the platform a windows platform?
 		external
-			"C macro use %"eif_commands.h%""
+			"C macro use %"eif_eiffel.h%""
 		alias
 			"EIF_IS_WINDOWS"
 		end

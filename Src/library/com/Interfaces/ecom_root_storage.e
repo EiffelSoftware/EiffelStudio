@@ -31,7 +31,7 @@ feature -- Basic Operations
 			-- object and any uncommitted changes.
 		require
 			non_void_name: a_name /= Void
-			valid_name: not a_name.empty
+			valid_name: not a_name.is_empty
 		local
 			wide_string: ECOM_WIDE_STRING
 		do

@@ -348,7 +348,7 @@ feature -- Drawing operations
 		local
 			--a_cs: EV_GTK_C_STRING
 			a_pango_layout, a_pango_iter: POINTER
-			a_baseline: INTEGER
+			a_text_count, a_baseline: INTEGER
 			a_y: INTEGER
 			temp_any: ANY
 		do
@@ -358,8 +358,9 @@ feature -- Drawing operations
 				
 					-- Replace when we have UTF16 support
 				a_pango_layout := App_implementation.pango_layout
+				a_text_count := a_text.count
 				temp_any ?= a_text.to_c
-				feature {EV_GTK_DEPENDENT_EXTERNALS}.pango_layout_set_text (a_pango_layout, $temp_any, -1)
+				feature {EV_GTK_DEPENDENT_EXTERNALS}.pango_layout_set_text (a_pango_layout, $temp_any, a_text_count)
 				if internal_font_imp /= Void then
 					feature {EV_GTK_DEPENDENT_EXTERNALS}.pango_layout_set_font_description (a_pango_layout, internal_font_imp.font_description)
 				end

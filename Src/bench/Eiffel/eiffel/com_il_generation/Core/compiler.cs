@@ -111,7 +111,7 @@ feature -- Generation Structure
 
 			ExternalAssemblies = new System.Collections.ArrayList();
 			
-			CAFactory = new CustomAttributesFactory();
+			Ca_factory = new CA_FACTORY();
 
 			// Initialize access to ISE Runtime Classes
 			PrepareISERuntime();
@@ -584,7 +584,7 @@ feature -- Generation Structure
 				", " + AttributeTypeID.ToString()+ ", " + ArgCount.ToString()+ ")");
 		#endif
 		try {
-			CAFactory.StartNewAttribute (TargetTypeID, AttributeTypeID, ArgCount);
+			Ca_factory.StartNewAttribute (TargetTypeID, AttributeTypeID, ArgCount);
 		}
 		catch (Exception error) {
 			LogError (error);
@@ -599,7 +599,7 @@ feature -- Generation Structure
 			Log ("GenerateClassCA()");
 		#endif
 		try {
-			CAFactory.GenerateClassCA();
+			Ca_factory.GenerateClassCA();
 		}
 		catch (Exception error) {
 			LogError (error);
@@ -614,7 +614,7 @@ feature -- Generation Structure
 			Log ("GenerateFeatureCA (" + FeatureID.ToString()+ ")");
 		#endif
 		try {
-			CAFactory.GenerateFeatureCA (FeatureID);
+			Ca_factory.GenerateFeatureCA (FeatureID);
 		}
 		catch (Exception error) {
 			LogError (error);
@@ -627,7 +627,7 @@ feature -- Generation Structure
 			Log ("AddCATypedArg (" + Value.ToString()+ ", " + TypeID.ToString()+ ")");
 		#endif
 		try {
-			CAFactory.AddCAConstructorArg (Value, Classes [TypeID].Builder);
+			Ca_factory.AddCAConstructorArg (Value, Classes [TypeID].Builder);
 		}
 		catch (Exception error) {
 			LogError (error);
@@ -640,7 +640,7 @@ feature -- Generation Structure
 			Log ("AddCAIntegerArg (" + Value.ToString()+ ")");
 		#endif
 		try {
-			CAFactory.AddCAConstructorArg (Value);
+			Ca_factory.AddCAConstructorArg (Value);
 		}
 		catch (Exception error) {
 			LogError (error);
@@ -653,7 +653,7 @@ feature -- Generation Structure
 			Log ("AddCAInteger8Arg (" + Value.ToString()+ ")");
 		#endif
 		try {
-			CAFactory.AddCAConstructorArg (Value);
+			Ca_factory.AddCAConstructorArg (Value);
 		}
 		catch (Exception error) {
 			LogError (error);
@@ -666,7 +666,7 @@ feature -- Generation Structure
 			Log ("AddCAInteger16Arg (" + Value.ToString()+ ")");
 		#endif
 		try {
-			CAFactory.AddCAConstructorArg (Value);
+			Ca_factory.AddCAConstructorArg (Value);
 		}
 		catch (Exception error) {
 			LogError (error);
@@ -679,7 +679,7 @@ feature -- Generation Structure
 			Log ("AddCAInteger64Arg (" + Value.ToString()+ ")");
 		#endif
 		try {
-			CAFactory.AddCAConstructorArg (Value);
+			Ca_factory.AddCAConstructorArg (Value);
 		}
 		catch (Exception error) {
 			LogError (error);
@@ -692,7 +692,7 @@ feature -- Generation Structure
 			Log ("AddCAstringArg (" + Value + ")");
 		#endif
 		try {
-			CAFactory.AddCAConstructorArg (Value);
+			Ca_factory.AddCAConstructorArg (Value);
 		}
 		catch (Exception error) {
 			LogError (error);
@@ -705,7 +705,7 @@ feature -- Generation Structure
 			Log ("AddCARealArg (" + Value.ToString()+ ")");
 		#endif
 		try {
-			CAFactory.AddCAConstructorArg ((float) Value);
+			Ca_factory.AddCAConstructorArg ((float) Value);
 		}
 		catch (Exception error) {
 			LogError (error);
@@ -719,7 +719,7 @@ feature -- Generation Structure
 			Log ("AddCADoubleArg (" + Value.ToString()+ ")");
 		#endif
 		try {
-			CAFactory.AddCAConstructorArg (Value);
+			Ca_factory.AddCAConstructorArg (Value);
 		}
 		catch (Exception error) {
 			LogError (error);
@@ -732,7 +732,7 @@ feature -- Generation Structure
 			Log ("AddCACharacterArg (" + Value.ToString()+ ")");
 		#endif
 		try {
-			CAFactory.AddCAConstructorArg (Value);
+			Ca_factory.AddCAConstructorArg (Value);
 		}
 		catch (Exception error) {
 			LogError (error);
@@ -745,7 +745,7 @@ feature -- Generation Structure
 			Log ("AddCABooleanArg (" + Value.ToString()+ ")");
 		#endif
 		try {
-			CAFactory.AddCAConstructorArg (Value);
+			Ca_factory.AddCAConstructorArg (Value);
 		}
 		catch (Exception error) {
 			LogError (error);
@@ -758,7 +758,7 @@ feature -- Generation Structure
 			Log ("AddCAArrayIntegerArg (" + Value.ToString()+ ")");
 		#endif
 		try {
-			CAFactory.AddCAConstructorArg (Value);
+			Ca_factory.AddCAConstructorArg (Value);
 		}
 		catch (Exception error) {
 			LogError (error);
@@ -771,7 +771,7 @@ feature -- Generation Structure
 			Log ("AddCAArrayInteger8Arg (" + Value.ToString()+ ")");
 		#endif
 		try {
-			CAFactory.AddCAConstructorArg (Value);
+			Ca_factory.AddCAConstructorArg (Value);
 		}
 		catch (Exception error) {
 			LogError (error);
@@ -784,7 +784,7 @@ feature -- Generation Structure
 			Log ("AddCAArrayInteger16Arg (" + Value.ToString()+ ")");
 		#endif
 		try {
-			CAFactory.AddCAConstructorArg (Value);
+			Ca_factory.AddCAConstructorArg (Value);
 		}
 		catch (Exception error) {
 			LogError (error);
@@ -797,7 +797,7 @@ feature -- Generation Structure
 			Log ("AddCAArrayInteger64Arg (" + Value.ToString()+ ")");
 		#endif
 		try {
-			CAFactory.AddCAConstructorArg (Value);
+			Ca_factory.AddCAConstructorArg (Value);
 		}
 		catch (Exception error) {
 			LogError (error);
@@ -810,7 +810,7 @@ feature -- Generation Structure
 			Log ("AddCAArraystringArg (" + Value + ")");
 		#endif
 		try {
-			CAFactory.AddCAConstructorArg (Value);
+			Ca_factory.AddCAConstructorArg (Value);
 		}
 		catch (Exception error) {
 			LogError (error);
@@ -827,7 +827,7 @@ feature -- Generation Structure
 			for (int i = 0; i < Value.Length; i++) {
 				values [i] = (float) Value [i];
 			}
-			CAFactory.AddCAConstructorArg (values);
+			Ca_factory.AddCAConstructorArg (values);
 		}
 		catch (Exception error) {
 			LogError (error);
@@ -840,7 +840,7 @@ feature -- Generation Structure
 			Log ("AddCAArrayDoubleArg (" + Value.ToString()+ ")");
 		#endif
 		try {
-			CAFactory.AddCAConstructorArg (Value);
+			Ca_factory.AddCAConstructorArg (Value);
 		}
 		catch (Exception error) {
 			LogError (error);
@@ -853,7 +853,7 @@ feature -- Generation Structure
 			Log ("AddCAArrayCharacterArg (" + Value.ToString()+ ")");
 		#endif
 		try {
-			CAFactory.AddCAConstructorArg (Value);
+			Ca_factory.AddCAConstructorArg (Value);
 		}
 		catch (Exception error) {
 			LogError (error);
@@ -866,7 +866,7 @@ feature -- Generation Structure
 			Log ("AddCAArrayBooleanArg (" + Value.ToString()+ ")");
 		#endif
 		try {
-			CAFactory.AddCAConstructorArg (Value);
+			Ca_factory.AddCAConstructorArg (Value);
 		}
 		catch (Exception error) {
 			LogError (error);
@@ -2007,7 +2007,7 @@ feature -- Generation Structure
 		CurrentMethod = null;
 		Locals = null;
 		Result = null;
-		CAFactory = null;
+		Ca_factory = null;
 		FileName = null;
 		LastException = null;
 	}
@@ -2062,7 +2062,7 @@ feature -- Private
 */
 	
 	// Custom attributes factory
-	private CustomAttributesFactory CAFactory;
+	private CA_FACTORY Ca_factory;
 	
 	// Referenced assemblies
 	private System.Collections.ArrayList ExternalAssemblies;

@@ -13,7 +13,7 @@ using System.Reflection.Emit;
 
 namespace ISE.Compiler {
 
-internal class CustomAttributesFactory
+internal class CA_FACTORY
 {
 	// Begins creation of new custom attribute
 	public void StartNewAttribute( int targetID, int attributeTypeID, int ArgCount )

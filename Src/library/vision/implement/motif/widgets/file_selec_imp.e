@@ -185,6 +185,10 @@ feature -- Status report
 			Result := ms.to_eiffel_string;
 			ms.destroy
 		end;
+        
+	pattern_name: STRING
+			-- Name of the search pattern.
+
 
 feature -- Status setting
 
@@ -240,6 +244,13 @@ feature -- Status setting
 			mel_set_pattern (ms);
 			ms.destroy
 		end;
+
+	set_pattern_name (a_pattern_name: STRING) is
+			-- Set pattern_name to `a_pattern'.
+		do 
+			pattern_name := a_pattern_name
+		end
+
 
 	set_filter_label (a_label: STRING) is
 			-- Set `a_label' as filter label,

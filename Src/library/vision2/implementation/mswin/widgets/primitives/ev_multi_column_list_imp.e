@@ -191,7 +191,7 @@ feature -- Status report
 			Result := selected_count >= 1
 		end
 
-	is_multiple_selection: BOOLEAN is
+	multiple_selection_enabled: BOOLEAN is
 			-- True if the user can choose several items
 			-- False otherwise
 		do
@@ -252,7 +252,7 @@ feature -- Status setting
 			-- Allow the user to do a multiple selection simply
 			-- by clicking on several choices.
 		do
-			if not is_multiple_selection then
+			if not multiple_selection_enabled then
 				if has_headers then
 					set_style (default_style)
 				else
@@ -265,7 +265,7 @@ feature -- Status setting
 			-- Allow the user to do only one selection. It is the
 			-- default status of the list
 		do
-			if is_multiple_selection then
+			if multiple_selection_enabled then
 				if has_headers then
 					set_style (default_style + Lvs_singlesel)
 				else
@@ -279,7 +279,7 @@ feature -- Status setting
 			-- Show the row of the titles.
 		do
 			if not has_headers then
-				if is_multiple_selection then
+				if multiple_selection_enabled then
 					set_style (default_style)
 				else
 					set_style (default_style + Lvs_singlesel)
@@ -291,7 +291,7 @@ feature -- Status setting
 			-- Hide the row of the titles.
 		do
 			if has_headers then
-				if is_multiple_selection then
+				if multiple_selection_enabled then
 					set_style (default_style + Lvs_nocolumnheader)
 				else
 					set_style (default_style + Lvs_singlesel + 
@@ -809,8 +809,13 @@ end -- class EV_MULTI_COLUMN_LIST_IMP
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.37  2000/03/02 22:19:40  brendel
+--| is_multiple_selection -> multiple_selection_enabled.
+--| Formatted to 80 columns.
+--|
 --| Revision 1.36  2000/03/02 19:58:16  rogers
---| Renamed set_multiple_selection -> enable_multiple_selection and set_eingle_selection -> disable_multiple_selection.
+--| Renamed set_multiple_selection -> enable_multiple_selection and
+--| set_eingle_selection -> disable_multiple_selection.
 --|
 --| Revision 1.35  2000/02/19 06:34:13  oconnor
 --| removed old command stuff

@@ -57,7 +57,7 @@ feature -- Access
 			eiffel_writer.add_feature (external_structure_size (an_external_size_name, a_descriptor), Externals)
 
 			a_record_name := a_descriptor.name
-			a_header_file_name := a_descriptor.c_header_file_name
+			a_header_file_name := impl_header_file_name (a_descriptor.c_header_file_name)
 			from
 				a_descriptor.fields.start
 			until

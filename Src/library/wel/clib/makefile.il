@@ -23,7 +23,8 @@ OBJ = 	disptchr.obj \
 		drawstate.obj \
 		dynload.obj \
 		choose_folder.obj \
-		mousehook.obj
+		mousehook.obj \
+		enum_child_windows.obj
 
 IL_OBJ = $(OBJ)
 

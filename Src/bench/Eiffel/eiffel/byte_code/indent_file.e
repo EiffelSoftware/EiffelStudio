@@ -254,6 +254,7 @@ feature {INDENT_FILE} -- prototype code generation
 				-- Generate funtion declaration using macros
 		local
 			i, nb: INTEGER
+			arg_type: STRING
 		do
 			if protected then
 				putstring ("CPP_WRAPPER_START%N")
@@ -278,7 +279,12 @@ feature {INDENT_FILE} -- prototype code generation
 				if i /= 1 then
 					putstring (", ")
 				end
-				putstring (arg_types @ i)
+				arg_type := arg_types @ i
+				if arg_type.is_equal ("EIF_REAL") then
+					putstring ("EIF_DOUBLE")
+				else
+					putstring (arg_type)
+				end
 				i := i + 1
 			end
 			putstring ("));%N")
@@ -351,7 +357,8 @@ feature -- prototype code generation
 	generate_function_signature (type: STRING; f_name: STRING;
 					extern: BOOLEAN; extern_dec_file: like Current;
 					arg_names: ARRAY [STRING]; arg_types: ARRAY [STRING]) is
-			--- Generate the function signature for both ANSI and K&R
+			-- Generate the function signature for both ANSI and K&R
+			-- including the starting '{'
 		require
 			non_void_args: type /= Void and f_name /= Void and
 				arg_names /= Void and arg_types /= Void
@@ -359,6 +366,7 @@ feature -- prototype code generation
 			valid_lower: arg_names.lower = 1 and arg_types.lower = 1
 		local
 			i, nb: INTEGER
+			arg_type: STRING
 		do
 			extern_dec_file.generate_function_declaration
 				(type, f_name, True, extern, arg_types)
@@ -373,9 +381,15 @@ feature -- prototype code generation
 			until
 				i > nb
 			loop
-				putstring (arg_types @ i)
-				putchar (' ')
-				putstring (arg_names @ i)
+				arg_type := arg_types @ i
+				if arg_type.is_equal ("EIF_REAL") then
+					putstring ("EIF_DOUBLE argd")
+					putint (i-1)
+				else
+					putstring (arg_type)
+					putchar (' ')
+					putstring (arg_names @ i)
+				end
 				if i /= nb then
 					putstring (", ")
 				end
@@ -392,7 +406,13 @@ feature -- prototype code generation
 			until
 				i > nb
 			loop
-				putstring (arg_names @ i)
+				arg_type := arg_types @ i
+				if arg_type.is_equal ("EIF_REAL") then
+					putstring ("argd")
+					putint (i-1)
+				else
+					putstring (arg_names @ i)
+				end
 				if i /= nb then
 					putstring (", ")
 				end
@@ -404,13 +424,37 @@ feature -- prototype code generation
 			until
 				i > nb
 			loop
-				putstring (arg_types @ i)
-				putchar (' ')
-				putstring (arg_names @ i)
+				arg_type := arg_types @ i
+				if arg_type.is_equal ("EIF_REAL") then
+					putstring ("EIF_DOUBLE argd")
+					putint (i-1)
+				else
+					putstring (arg_type)
+					putchar (' ')
+					putstring (arg_names @ i)
+				end
 				putstring (";%N")
 				i := i + 1
 			end 
-			putstring ("#endif%N")
+			putstring ("#endif%N%
+						%{%N")
+
+				-- Reassign REAL arguments to REAL locals
+			from
+                i := 1
+            until
+                i > nb
+            loop
+                arg_type := arg_types @ i
+                if arg_type.is_equal ("EIF_REAL") then
+					putstring ("%TEIF_REAL arg")
+					putint (i-1)
+					putstring (" = (EIF_REAL) argd")
+					putint (i-1)
+					putstring (";%N")
+				end
+				i := i + 1
+			end
 		end
 
 end

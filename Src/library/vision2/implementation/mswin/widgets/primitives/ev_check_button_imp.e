@@ -107,7 +107,7 @@ feature {NONE} -- WEL Implementation
 			-- Not visible or child at creation
 		do
 			Result := Ws_child + Ws_visible + Ws_group
-						+ Ws_tabstop + Bs_autocheckbox
+					+ Ws_tabstop + Bs_autocheckbox
 		end
 
 end -- class EV_CHECK_BUTTON_IMP

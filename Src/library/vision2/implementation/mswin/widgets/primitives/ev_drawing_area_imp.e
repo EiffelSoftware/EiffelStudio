@@ -36,7 +36,6 @@ inherit
 		undefine
 			set_default_options
 		redefine
-			on_key_down,
 			foreground_color_imp,
 			background_color_imp,
 			set_background_color,
@@ -67,10 +66,10 @@ inherit
 			on_kill_focus,
 			on_set_focus,
 			on_set_cursor,
+			on_key_down,
 			on_accelerator_command
 		redefine
 			on_size,
-			on_key_down,
 			on_paint,
 			on_wm_erase_background,
 			background_brush,
@@ -189,19 +188,6 @@ feature {NONE} -- Implementation
 
 feature {NONE} -- WEL Implementation
 
-	on_key_down (virtual_key, key_data: INTEGER) is
-			-- Executed when a key is pressed.
-			-- We verify that there is indeed a command to avoid
-			-- the creation of an object for nothing.
-		local
-			data: EV_KEY_EVENT_DATA
-		do
-			if has_command (Cmd_key_press) then
-				data := get_key_data (virtual_key, key_data)
-				execute_command (Cmd_key_press, data)
-			end
-		end
-
 	on_size (size_type, a_width, a_height: INTEGER) is
 			-- Called when the drawing area is resized.
 		do
@@ -253,7 +239,7 @@ feature {NONE} -- Feature that should be directly implemented by externals
 			-- external feature.
 		do
 			check
-				Inapplicable: False
+				Never_called: False
 			end
 		end
 
@@ -263,7 +249,7 @@ feature {NONE} -- Feature that should be directly implemented by externals
 			-- external feature.
 		do
 			check
-				Inapplicable: False
+				Never_called: False
 			end
 		end
 

@@ -13,7 +13,6 @@ inherit
 
 	EV_PRIMITIVE_IMP
 		redefine
-			on_key_down,
 			set_default_minimum_size
 		end
 
@@ -52,9 +51,9 @@ inherit
 			on_set_focus,
 			on_kill_focus,
 			on_key_up,
+			on_key_down,
 			on_set_cursor
 		redefine
-			on_key_down,
 			default_style,
 			wel_background_color,
 			wel_foreground_color,
@@ -127,19 +126,6 @@ feature -- Element change
 
 feature {NONE} -- WEL Implementation
 
-	on_key_down (virtual_key, key_data: INTEGER) is
-			-- Executed when a key is pressed.
-			-- We verify that there is indeed a command to avoid
-			-- the creation of an object for nothing.
-		local
-			data: EV_KEY_EVENT_DATA
-		do
-			if has_command (Cmd_key_press) then
-				data := get_key_data (virtual_key, key_data)
-				execute_command (Cmd_key_press, data)
-			end
-		end
-
 	basic_style: INTEGER is
 			-- Basic style without any option
 		do
@@ -170,7 +156,7 @@ feature {NONE} -- Feature that should be directly implemented by externals
 			-- external feature.
 		do
 			check
-				Inapplicable: False
+				Never_called: False
 			end
 		end
 
@@ -180,7 +166,7 @@ feature {NONE} -- Feature that should be directly implemented by externals
 			-- external feature.
 		do
 			check
-				Inapplicable: False
+				Never_called: False
 			end
 		end
 

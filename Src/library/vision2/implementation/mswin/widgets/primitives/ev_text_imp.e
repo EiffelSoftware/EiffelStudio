@@ -14,8 +14,6 @@ inherit
 	EV_TEXT_COMPONENT_IMP
 		undefine
 			set_default_options
-		redefine
-			on_key_down
 		end
 
 	WEL_MULTIPLE_LINE_EDIT
@@ -47,6 +45,7 @@ inherit
 			on_mouse_move,
 			on_set_focus,
 			on_kill_focus,
+			on_key_down,
 			on_key_up,
 			on_set_cursor,
 			wel_background_color,
@@ -55,7 +54,8 @@ inherit
 			default_style,
 			default_ex_style,
 			on_en_change,
-			on_key_down
+			enable,
+			disable
 		end
 
 creation
@@ -115,17 +115,24 @@ feature {NONE} -- WEL Implementation
 			execute_command (Cmd_change, Void)
 		end
 
-	on_key_down (virtual_key, key_data: INTEGER) is
-			-- Executed when a key is pressed.
-			-- We verify that there is indeed a command to avoid
-			-- the creation of an object for nothing.
+	enable is
+			-- Enable mouse and keyboard input.
 		local
-			data: EV_KEY_EVENT_DATA
+			default_colors: EV_DEFAULT_COLORS
 		do
-			if has_command (Cmd_key_press) then
-				data := get_key_data (virtual_key, key_data)
-				execute_command (Cmd_key_press, data)
-			end
+			!! default_colors
+			cwin_enable_window (item, True)
+			set_background_color (default_colors.Color_read_write)
+		end
+
+	disable is
+			-- Disable mouse and keyboard input
+		local
+			default_colors: EV_DEFAULT_COLORS
+		do
+			!! default_colors
+			cwin_enable_window (item, False)
+			set_background_color (default_colors.Color_read_only)
 		end
 
 feature {NONE} -- Feature that should be directly implemented by externals
@@ -136,7 +143,7 @@ feature {NONE} -- Feature that should be directly implemented by externals
 			-- external feature.
 		do
 			check
-				Inapplicable: False
+				Never_called: False
 			end
 		end
 
@@ -146,7 +153,7 @@ feature {NONE} -- Feature that should be directly implemented by externals
 			-- external feature.
 		do
 			check
-				Inapplicable: False
+				Never_called: False
 			end
 		end
 

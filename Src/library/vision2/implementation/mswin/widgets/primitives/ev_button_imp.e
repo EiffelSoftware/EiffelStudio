@@ -15,7 +15,8 @@ inherit
 		undefine
 			set_default_minimum_size
 		redefine
-			widget_make
+			widget_make,
+			on_key_down
 		end
    
 	EV_TEXTABLE_IMP
@@ -69,6 +70,7 @@ inherit
 			on_key_up,
 			on_set_cursor
 		redefine
+			default_style,
 			on_bn_clicked,
 			set_text
 		end
@@ -180,10 +182,23 @@ feature -- Event -- removing command association
 
 feature {NONE} -- WEL Implementation
 
+	default_style: INTEGER is
+			-- Default style used to create the control
+		do
+			Result := ws_visible + ws_child + ws_group + ws_tabstop
+		end
+
 	on_bn_clicked is
 			-- When the button is pressed
 		do
 			execute_command (Cmd_click, Void)
+		end
+
+	on_key_down (virtual_key, key_data: INTEGER) is
+			-- A key has been pressed
+		do
+			{EV_PRIMITIVE_IMP} Precursor (virtual_key, key_data)
+			process_tab_key (virtual_key)
 		end
 
 feature {NONE} -- Feature that should be directly implemented by externals

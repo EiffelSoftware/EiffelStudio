@@ -24,7 +24,8 @@ inherit
 		undefine
 			set_default_colors
 		redefine
-			make
+			make,
+			on_key_down
 		end
 
    WEL_LIST_BOX
@@ -56,15 +57,13 @@ inherit
 			on_kill_focus,
 			on_set_cursor,
 			wel_background_color,
-			wel_foreground_color,
-			default_process_message
+			wel_foreground_color
 		redefine
 			wel_select_item,
 			on_lbn_dblclk,
 			on_lbn_selchange,
 			default_style,
-			default_ex_style,
-			default_process_message
+			default_ex_style
 		end
 
 	WEL_LBS_CONSTANTS
@@ -235,6 +234,21 @@ feature {NONE} -- Implementation
 
 feature {NONE} -- Implementation : WEL features
 
+	default_style: INTEGER is
+			-- Default style of the list.
+		do
+			Result := Ws_child + Ws_visible + Ws_group 
+						+ Ws_tabstop + Ws_border + Ws_vscroll
+						+ Lbs_notify --+ Lbs_ownerdrawfixed 
+						+ Lbs_hasstrings + Lbs_nointegralheight
+		end
+
+	default_ex_style: INTEGER is
+			-- Default extended style of the list.
+		do
+			Result := Ws_ex_clientedge
+		end
+
 	on_lbn_selchange is
 			-- The selection has changed.
 			-- We call the selection command of the list and the select
@@ -293,40 +307,12 @@ feature {NONE} -- Implementation : WEL features
 			end
 		end
 
-	default_style: INTEGER is
-			-- Default style of the list.
+	on_key_down (virtual_key, key_data: INTEGER) is
+			-- A key has been pressed
 		do
-			Result := Ws_child + Ws_visible + Ws_group 
-						+ Ws_tabstop + Ws_border + Ws_vscroll
-						+ Lbs_notify --+ Lbs_ownerdrawfixed 
-						+ Lbs_hasstrings + Lbs_nointegralheight
+			{EV_PRIMITIVE_IMP} Precursor (virtual_key, key_data)
+			process_tab_key (virtual_key)
 		end
-
-	default_ex_style: INTEGER is
-			-- Default extended style of the list.
-		do
-			Result := Ws_ex_clientedge
-		end
-
-	default_process_message (msg, wparam, lparam: INTEGER) is
-		   -- Process `msg' which has not been processed by
-		   -- `process_message'.
-		local
-			top: INTEGER
-			paint_dc: WEL_PAINT_DC
-			rect: WEL_RECT
-		do
---			if msg = Wm_erasebkgnd then
---				!! paint_dc.make_by_pointer (Current, cwel_integer_to_pointer(wparam))
---				!! rect.make_client (Current)
---				top := item_height * (count - top_index)
---				if top < rect.bottom then
---					rect.set_top (top)
---					paint_dc.fill_rect (rect, background_brush)
---				end
---				disable_default_processing
---			end
- 		end
 
 	wel_background_color: WEL_COLOR_REF is
 		do
@@ -443,7 +429,9 @@ feature {NONE} -- Feature that should be directly implemented by externals
 			-- because we cannot do a deferred feature become an
 			-- external feature.
 		do
-			Result := cwin_get_next_dlggroupitem (hdlg, hctl, previous)
+			check
+				Never_called: False
+			end
 		end
 
 	mouse_message_x (lparam: INTEGER): INTEGER is

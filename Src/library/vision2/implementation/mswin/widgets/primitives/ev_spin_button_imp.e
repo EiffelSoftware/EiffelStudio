@@ -16,8 +16,9 @@ inherit
 			set_default_colors,
 			set_default_options,
 			set_default_minimum_size,
-			on_key_down,
 			destroy
+		redefine
+			on_key_down
 		end
 
 	EV_TEXT_FIELD_IMP
@@ -29,6 +30,11 @@ inherit
 			move,
 			destroy,
 			on_key_down
+		end
+
+	WEL_UDS_CONSTANTS
+		export
+			{NONE} all
 		end
 
 create
@@ -63,7 +69,7 @@ feature -- Access
 			-- an intermediate window, when we change the parent, nothing
 			-- work anymore.
 
-	up_down: WEL_UP_DOWN_CONTROL
+	up_down: EV_INTERNAL_UP_DOWN_CONTROL
 			-- The up_down buttons.
 
 	value: INTEGER is
@@ -76,7 +82,7 @@ feature -- Access
 			-- Step of the scrolling
 			-- ie : the user clicks on an arrow
 		do
-			-- To implement
+			Result := 1
 		end
 
 	minimum: INTEGER is
@@ -111,12 +117,6 @@ feature -- Element change
 			up_down.set_position (val)
 		end
 
-	set_step (val: INTEGER) is
-			-- Make `val' the new step.
-		do
-			-- To implement
-		end
-
 	set_range (min, max: INTEGER) is
 			-- Make `min' the new minimum and `max' the new maximum.
 		do
@@ -147,6 +147,16 @@ feature -- Basic operation
 			end
 		end
 
+feature {NONE} -- Inapplicable
+
+	set_step (val: INTEGER) is
+			-- Make `val' the new step.
+		do
+			check
+				Inapplicable: False
+			end
+		end
+
 feature {NONE} -- WEL Implementation
 
 	on_scroll (scroll_code, pos: INTEGER) is
@@ -157,22 +167,8 @@ feature {NONE} -- WEL Implementation
 	on_key_down (virtual_key, key_data: INTEGER) is
 			-- We check if the enter key is pressed)
 			-- 13 is the number of the return key.
-		local
-			data: EV_KEY_EVENT_DATA
-			hwnd: POINTER
-			window: WEL_WINDOW
 		do
-			if has_command (Cmd_key_press) then
-				data := get_key_data (virtual_key, key_data)
-				execute_command (Cmd_key_press, data)
-			end
-			if virtual_key = Vk_tab then
-				tab_action (True)
-			elseif virtual_key = Vk_down then
-				arrow_action (True)
-			elseif virtual_key = Vk_up then
-				arrow_action (False)
-			end
+			{EV_GAUGE_IMP} Precursor (virtual_key, key_data)
 			if virtual_key = Vk_return then
 				set_caret_position (0)
 				translate_text

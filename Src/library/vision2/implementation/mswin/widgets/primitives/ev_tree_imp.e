@@ -19,7 +19,8 @@ inherit
 			on_right_button_down,
 			on_left_button_up,
 			on_middle_button_up,
-			on_right_button_up
+			on_right_button_up,
+			on_key_down
 		end
 
 	EV_TREE_ITEM_HOLDER_IMP
@@ -162,7 +163,7 @@ feature {NONE} -- WEL Implementation
 		do
 			Result := Ws_child + Ws_visible + Ws_group
 				+ Ws_tabstop + Ws_border + Tvs_haslines
-				+ Tvs_hasbuttons
+				+ Tvs_hasbuttons + tvs_linesatroot
 		end
 
 	internal_propagate_event (event_id, x_pos, y_pos: INTEGER; ev_data: EV_BUTTON_EVENT_DATA) is
@@ -280,6 +281,13 @@ feature {NONE} -- WEL Implementation
 			internal_propagate_event (Cmd_button_three_release, x_pos, y_pos, ev_data)
 		end
 
+	on_key_down (virtual_key, key_data: INTEGER) is
+			-- A key has been pressed
+		do
+			{EV_PRIMITIVE_IMP} Precursor (virtual_key, key_data)
+			process_tab_key (virtual_key)
+		end
+
 feature {NONE} -- Feature that should be directly implemented by externals
 
 	next_dlgtabitem (hdlg, hctl: POINTER; previous: BOOLEAN): POINTER is
@@ -295,7 +303,9 @@ feature {NONE} -- Feature that should be directly implemented by externals
 			-- because we cannot do a deferred feature become an
 			-- external feature.
 		do
-			Result := cwin_get_next_dlggroupitem (hdlg, hctl, previous)
+			check
+				Never_called: False
+			end
 		end
 
 	mouse_message_x (lparam: INTEGER): INTEGER is

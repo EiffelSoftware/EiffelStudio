@@ -61,6 +61,7 @@
 				`align_text_left', `align_text_right', `align_text_center' and other 
 				miscellaneous features that were missing relevent postconditions.</LI>
 <LI><B>EV_TEXT</B> Added `has_word_wrapping', `enable_word_wrapping' and `disable_word_wrapping'. These features allow you to switch between horizontal word wrapping, in which lines too long to be displayed will be wrapped, and no word wrapping, in which horizontal scroll bars will be displayed, allowing you to view the complete contents of each line. Previously EV_TEXT would always wrap lines, and the default beaviour is `has_word_wrapping' as it was before these changes.</LI>
+		<LI><B>EV_TEXT_COMPONENT</B> - Added `has_selection' precondition to `selected_text' which requires that `has_selection' must be True for you to call `selected_text'.</LI>
 		</ul>
 		<P><b>Breaking changes</b></P>
 		<UL>

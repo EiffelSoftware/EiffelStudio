@@ -284,9 +284,9 @@ feature -- Genericity
 						-- Creation with `like feature' where feature is
 						-- deferred and has no effective version anywhere.
 						-- Create anything - cannot be called anyway
-					buffer.putint (Internal_type)
+					buffer.putint (terminator_type)
 					buffer.putchar (',')
-					buffer.putint (Internal_type)
+					buffer.putint (terminator_type)
 					buffer.putchar (',')
 				else
 					-- Feature has at least one effective version
@@ -364,9 +364,9 @@ feature -- Genericity
 						-- Creation with `like feature' where feature is
 						-- deferred and has no effective version anywhere.
 						-- Create anything - cannot be called anyway
-					buffer.putint (Internal_type)
+					buffer.putint (terminator_type)
 					buffer.putchar (',')
-					buffer.putint (Internal_type)
+					buffer.putint (terminator_type)
 					buffer.putchar (',')
 					dummy := idx_cnt.next
 					dummy := idx_cnt.next

@@ -1,3 +1,23 @@
+-- Duplication (conceptual) and actual duplication (code duplication is handled here).
+-- Each line of the ORIGIN_TABLE is processes separately.
+-- Each line correponds to a routine id, in other words, each line represents one
+-- routine (the notion of routine corresponds to a feature introduced intp a class
+-- without ant predecessors, and all its evolutions throughout the various inheritance
+-- adaptations and branches).
+--
+-- Before repeated inheritance was implemented, the routine `compute_feature_table'
+-- performed the following operations:
+--		1) For each line pick one FEATURE_I that would be the selected one.
+--		1.a) If the FEATURE_I's all have the same body id, the first feature is chosen
+--			arbritrarily
+--		1.b) Otherwise, go through the parent clauses and find the selection. If several
+--			selections ---> VMRC2, otherwise insert the selected name into the global
+--			"Selected" string list. Unselect the other FEATURE_I's, i.e. compute a new routine
+--			id set for them (one element) and insert them as new routines into the SELECT_TABLE
+--		1.c) If nothing found ---> VMRC3
+-- Modifications for correct implementation of the semantics of repeated inheritance:
+--
+
 class ORIGIN_TABLE 
 
 inherit
@@ -100,6 +120,9 @@ feature
 			selected: FEATURE_I;
 			vmrc3: VMRC3;
 		do
+	--io.error.putstring ("========= START TRACE, class ");
+	--io.error.putstring (new_t.associated_class.class_name);
+	--io.error.putstring (" ============%N");
 			from
 				!!computed.make (count);
 				start;
@@ -117,9 +140,13 @@ feature
 					Error_handler.insert_error (vmrc3);
 				else
 					computed.put (selected, key_for_iteration);
+					if selected.is_replicated then
+						new_t.replace (selected, selected.feature_name);
+					end
 				end;
 				forth;
 			end;
+--io.error.putstring ("========= END TRACE ==========%N");
 		end;
 
 	computed: SELECT_TABLE;

@@ -882,22 +882,28 @@ end;
 					not pass2_controler.changed_status.disjoint (feature_i.suppliers))
 							-- The status of one of the suppliers of the feature has changed
 				then
-io.error.putstring ("Is the same ");
-io.error.putbool (is_the_same);
-io.error.putstring ("%Nsupplier_status_modified ");
-io.error.putbool (supplier_status_modified);
-io.error.putstring ("%Nchanged status ");
-io.error.putbool (not pass2_controler.changed_status.disjoint (feature_i.suppliers));
-io.error.putstring ("%Nold_feature_in_class ");
-io.error.putbool (old_feature_in_class);
-io.error.new_line;
+debug ("ACTIVITY")
+	io.error.putstring ("Is the same ");
+	io.error.putbool (is_the_same);
+	io.error.putstring ("%Nsupplier_status_modified ");
+	io.error.putbool (supplier_status_modified);
+	io.error.putstring ("%Nchanged status ");
+	io.error.putbool (not pass2_controler.changed_status.disjoint (feature_i.suppliers));
+	io.error.putstring ("%Nold_feature_in_class ");
+	io.error.putbool (old_feature_in_class);
+	io.error.new_line;
+end;
 
 					-- Feature has changed of body between two 
 					-- recompilations; attribute `body_id' must be renew and the
 					-- old body id should be remove from the body
 					-- server after compilation if successfull.
 					if old_feature_in_class then
-						Tmp_body_server.desactive (old_body_id);
+						if not feature_i.is_replicated then
+							Tmp_body_server.desactive (old_body_id);
+						else
+							Tmp_rep_feat_server.desactive (old_body_id);
+						end;
 					end;
 						-- Computes a new body id for the changed
 						-- feature.

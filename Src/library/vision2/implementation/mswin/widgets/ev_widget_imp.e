@@ -26,7 +26,6 @@ inherit
 
 	EV_SIZEABLE_IMP
 		redefine
-			initialize,
 			interface
 		end
 
@@ -86,10 +85,11 @@ feature {NONE} -- Initialization
 	initialize  is
 			-- Creation of the widget.
 		do
-			Precursor
+			initialize_sizeable
 			set_default_colors
 			set_default_minimum_size
 			show
+			is_initialized := True
 		end
 
 feature -- Access
@@ -932,6 +932,9 @@ end -- class EV_WIDGET_IMP
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.56  2000/03/14 20:02:36  brendel
+--| Rearranged initialization.
+--|
 --| Revision 1.55  2000/03/14 18:45:10  rogers
 --| Uncommented pnd_press in on_right_button_down.
 --|

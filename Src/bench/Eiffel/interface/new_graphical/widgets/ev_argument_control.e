@@ -214,7 +214,9 @@ feature -- Storage
 			if Workbench.system_defined then
       			Lace.argument_list.put_front (saved_argument)
       		end
-           	save_ace_arguments (a_root_ast)
+      		if Ace_modified then
+	           	save_ace_arguments (a_root_ast)	
+      		end
 			save_custom_arguments
 			synch_with_others
 		end
@@ -647,6 +649,7 @@ feature {NONE} -- Element Change
 		do
 			inspect mode 
 				when Ace_mode then
+					ace_modified := True
 					ace_arguments_list := argument_list
 				when User_mode then
 					user_arguments_list := argument_list
@@ -912,6 +915,10 @@ feature {NONE} -- Implementation
 			
 	parent_window: EV_WINDOW
 			-- Parent window.
+
+	ace_modified: BOOLEAN
+			-- Have the Ace file arguments been modified since creation of
+			-- the control?
 
 feature {NONE} -- Constants
 

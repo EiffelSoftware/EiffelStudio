@@ -151,7 +151,6 @@ feature {NONE} -- Output
 			-- Return a string representing `Current'.
 		local
 			ec: CLASS_C;
-			str: STRING
 		do
 			if address = Void then
 				Result := NONE_representation

@@ -35,8 +35,6 @@ feature {NONE} -- Initialization
 
 	make is
 			-- Initialize `Current'.
-		local
-			cmd: E_CMD
 		do
 			Application_notification_controller.on_launched_actions.extend (agent on_application_launched)
 			Application_notification_controller.on_before_stopped_actions.extend (agent on_application_before_stopped)

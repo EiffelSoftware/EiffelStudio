@@ -139,7 +139,6 @@ feature
 				-- retrieve oui widgets before
 				-- calling state storer.
 			state_storer.retrieve (dir_name)
-			state_storer.update_interface
 			states := state_storer.retrieved_data
 			application_storer.retrieve (dir_name)
 			application_storer.rebuild_graph

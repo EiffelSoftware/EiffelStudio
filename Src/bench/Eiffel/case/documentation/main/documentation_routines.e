@@ -412,7 +412,9 @@ feature -- Routines
 			Result.append (f.name)
 			Result.append ("' ")
 			wc := f.written_class
-			anc := f.ancestor_version (wc)
+			if wc.has_feature_table then
+				anc := wc.feature_with_body_index (f.body_index)
+			end
 			if anc /= Void then
 				real_name := anc.name
 			else

@@ -24,4 +24,11 @@ feature -- Server
 
 	Size_limit: INTEGER is 40;
 
+feature -- Access
+
+	id (t: DLE_STATIC_CALLS): INTEGER_ID is
+			-- Id associated with `t'
+		do
+		end
+
 end -- class STAT_CALL_SERVER

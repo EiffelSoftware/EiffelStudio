@@ -119,7 +119,7 @@ feature {NONE} -- Implementation
 			l_capacity: INTEGER
 		do
 			l_capacity := item.count
-			if pos > l_capacity then
+			if pos >= l_capacity then
 				item.resize (pos.max (l_capacity + Default_size))
 			end
 			item.put_integer_8 (val, pos)

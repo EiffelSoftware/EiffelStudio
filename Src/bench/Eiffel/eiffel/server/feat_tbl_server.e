@@ -24,7 +24,7 @@ feature -- Access
 			-- Has the current server or the associated temporary 
 			-- server an item of id `an_id'.
 		do
-			Result := server_has (an_id) or else Tmp_feat_tbl_server.has (an_id)
+			Result := Tmp_feat_tbl_server.has (an_id) or else server_has (an_id)
 		end;
 
 	id (t: FEATURE_TABLE): CLASS_ID is

@@ -29,13 +29,6 @@ inherit
 			is_in_default_state
 		end
 
-	DOUBLE_MATH
-		export
-			{NONE} all
-		undefine
-			default_create, copy
-		end
-
 create
 	default_create
 

@@ -11,13 +11,15 @@ inherit
 feature -- Properties
 
     start_position: INTEGER;
+			-- Start position of clickable
 
     end_position: INTEGER;
+			-- End position of clickable
 
-    node: STONABLE;
-        	-- An AST that is stonable
+    node: CLICKABLE_AST;
+        	-- Node AST that has a position
 
-feature -- Setting
+feature {CLASS_AS_B} 
 
 	set_node (n: like node) is
 			-- Set `node' to `n'.
@@ -25,23 +27,27 @@ feature -- Setting
 			node := n
 		end;
 
-	pass_click_set is
-			-- Pass address of `click_set' and `node_function' to yacc.
+feature {CLICK_AST} 
+
+	click_set is
+			-- Get `node' from yacc arg.
 		do
-			click_indir_getclick_getset ($click_set, $node_function, $start_function)
+			node := click_indir_yacc_arg (0)
 		end;
 
+feature {YACC_LACE}
+	
 	set is
 			-- Get positions from yacc.
 		do
 			start_position := click_indir_yacc_int_arg (0);
 			end_position := click_indir_yacc_int_arg (1)
 		end;
-	
-	click_set is
-			-- Get `node' from yacc arg.
+
+	pass_click_set is
+			-- Pass address of `click_set' and `node_function' to yacc.
 		do
-			node := click_indir_yacc_arg (0)
+			click_indir_getclick_getset ($click_set, $node_function, $start_function)
 		end;
 
 feature {NONE} -- Implementation
@@ -66,7 +72,7 @@ feature {NONE}
 			"getclick_getset"
 		end;
 
-	click_indir_yacc_arg (i: INTEGER): STONABLE is
+	click_indir_yacc_arg (i: INTEGER): CLICKABLE_AST is
 		external
 			"C"
 		alias

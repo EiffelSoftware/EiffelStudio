@@ -3,7 +3,8 @@ deferred class STONE
 inherit
 
 	STONE_TYPES;
-	SHARED_CURSORS
+	SHARED_CURSORS;
+	INTERFACE_W
 	
 feature -- Properties
 
@@ -47,11 +48,12 @@ feature -- Update
 
 feature  -- Access
 
-	help_text: STRING is
+	help_text: LINKED_LIST [STRING] is
 			-- Explaination of what current element means,
 			-- "No help available" by default
 		once
-			Result := "No help available"
+			!! Result.make;
+			Result.put_front (l_No_help_available)
 		end;
 
 	click_list: ARRAY [CLICK_STONE] is 

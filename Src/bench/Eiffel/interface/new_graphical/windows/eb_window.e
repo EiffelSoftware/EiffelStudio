@@ -278,6 +278,12 @@ feature -- Window management / Status Setting
 			--| By default do nothing.			
 		end
 
+	on_compile is
+			-- A new compilation has been launched, update display.
+		do
+			
+		end
+
 feature {EB_WINDOW_MANAGER} -- Window management / Implementation
 
 	show_imp is

@@ -149,7 +149,7 @@ feature -- Access
 	root_node: CLASS_AS
 			-- Root node of AST
 
-	type_node: TYPE
+	type_node: TYPE_AS
 			-- Type node of AST
 			
 	expression_node: EXPR_AS
@@ -320,7 +320,7 @@ feature {NONE} -- Actions
 			click_ast_updated: n.second.node = Result
 		end
 
-	new_declaration_body (args: EIFFEL_LIST [TYPE_DEC_AS]; type: TYPE; content: CONTENT_AS): BODY_AS is
+	new_declaration_body (args: EIFFEL_LIST [TYPE_DEC_AS]; type: TYPE_AS; content: CONTENT_AS): BODY_AS is
 			-- New declaration body AST node;
 			-- Report syntax error if necessary
 		local
@@ -372,7 +372,7 @@ feature {NONE} -- Actions
 			click_ast_updated: f.second.node = Result
 		end
 
-	new_parent_clause (n: PAIR [ID_AS, CLICK_AST]; g: EIFFEL_LIST [TYPE];
+	new_parent_clause (n: PAIR [ID_AS, CLICK_AST]; g: EIFFEL_LIST [TYPE_AS];
 		rn: EIFFEL_LIST [RENAME_AS]; e: EIFFEL_LIST [EXPORT_ITEM_AS];
 		u: EIFFEL_LIST [FEATURE_NAME]; rd: EIFFEL_LIST [FEATURE_NAME];
 		s: EIFFEL_LIST [FEATURE_NAME]): PARENT_AS is
@@ -747,7 +747,7 @@ feature {NONE} -- Clickable factory
 
 feature {NONE} -- Type factory
 
-	new_class_type (ci: PAIR [ID_AS, CLICK_AST]; generics: EIFFEL_LIST [TYPE]; is_ref, is_exp, is_sep: BOOLEAN): TYPE is
+	new_class_type (ci: PAIR [ID_AS, CLICK_AST]; generics: EIFFEL_LIST [TYPE_AS]; is_ref, is_exp, is_sep: BOOLEAN): TYPE_AS is
 			-- New class type (Take care of formal generics);
 			-- Update the clickable list and register the resulting
 			-- type as a supplier of the class being parsed.

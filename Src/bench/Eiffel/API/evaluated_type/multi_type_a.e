@@ -128,7 +128,7 @@ feature -- Output
 
 feature {COMPILER_EXPORTER}
 
-	instantiation_of (type: TYPE; a_class_id: INTEGER): TYPE_A is
+	instantiation_of (type: TYPE_AS; a_class_id: INTEGER): TYPE_A is
 			-- Instantiation of type `type' written in class of id `a_class_id'
 			-- in the context of Current
 		do

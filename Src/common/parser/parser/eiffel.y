@@ -121,7 +121,7 @@ create
 %type <STRING_AS>			Obsolete Manifest_string External_name Non_empty_string
 %type <TAGGED_AS>			Assertion_clause Assertion_clause_impl
 %type <TUPLE_AS>			Manifest_tuple
-%type <TYPE>				Type Type_mark Class_type Creation_type Non_class_type
+%type <TYPE_AS>				Type Type_mark Class_type Creation_type Non_class_type
 %type <TYPE_DEC_AS>			Entity_declaration_group Local_entity_declaration_group
 %type <VARIANT_AS>			Variant
 
@@ -149,7 +149,7 @@ create
 %type <EIFFEL_LIST [RENAME_AS]>			Rename Rename_list
 %type <EIFFEL_LIST [STRING_AS]>			Debug_keys Debug_key_list
 %type <EIFFEL_LIST [TAGGED_AS]>			Assertion Assertion_list Invariant
-%type <EIFFEL_LIST [TYPE]>				Generics Generics_opt Type_list
+%type <EIFFEL_LIST [TYPE_AS]>				Generics Generics_opt Type_list
 %type <EIFFEL_LIST [TYPE_DEC_AS]>		Formal_arguments Entity_declaration_list_opt
 										Entity_declaration_list Local_declarations
 										Local_entity_declaration_list_opt
@@ -160,7 +160,7 @@ create
 %type <PAIR [FEATURE_NAME, CLICK_AST]>					Infix Prefix Feature_name New_feature
 %type <PAIR [STRING_AS, CLICK_AST]>						Infix_operator Prefix_operator
 %type <PAIR [EIFFEL_LIST [FEATURE_NAME], CLICK_AST]>	New_feature_list
-%type <PAIR [TYPE, EIFFEL_LIST [FEATURE_NAME]]>	Constraint
+%type <PAIR [TYPE_AS, EIFFEL_LIST [FEATURE_NAME]]>	Constraint
 
 %type <TOKEN_LOCATION>		Position
 

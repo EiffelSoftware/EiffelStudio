@@ -7,7 +7,7 @@ class
 	LIKE_ID_AS
 
 inherit
-	TYPE
+	TYPE_AS
 		redefine
 			has_like, simple_format
 		end
@@ -70,7 +70,7 @@ feature -- Implementation of inherited deferred features
 			-- type definition, then attribute `actual_type' of Result is Void.
 		local
 			anchor_feature: FEATURE_I
-			anchor_type: TYPE
+			anchor_type: TYPE_AS
 			argument_position: INTEGER
 			rout_id: INTEGER
 			like_argument: LIKE_ARGUMENT

@@ -8,7 +8,7 @@ indexing
 class FORMAL_AS
 
 inherit
-	TYPE
+	TYPE_AS
 		rename
 			start_position as text_position
 		redefine

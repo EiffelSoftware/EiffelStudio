@@ -6,7 +6,7 @@ indexing
 deferred class TYPE_A
 
 inherit
-	TYPE
+	TYPE_AS
 		rename
 			start_position as comment_position
 		redefine

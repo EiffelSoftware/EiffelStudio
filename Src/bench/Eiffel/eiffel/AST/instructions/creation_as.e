@@ -50,7 +50,7 @@ feature -- Visitor
 
 feature -- Attributes
 
-	type: TYPE
+	type: TYPE_AS
 			-- Creation type
 
 	target: ACCESS_AS

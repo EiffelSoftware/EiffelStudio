@@ -14,7 +14,7 @@ inherit
 	
 feature 
 
-	evaluated_type (type: TYPE; feat_table: FEATURE_TABLE; f: FEATURE_I): TYPE_A is
+	evaluated_type (type: TYPE_AS; feat_table: FEATURE_TABLE; f: FEATURE_I): TYPE_A is
 			-- Evaluation of type `type' in the context of the feature
 			-- table `feat_table' and the feature `f'
 		require
@@ -45,7 +45,7 @@ feature
 		end
 
 	evaluated_type_for_format
-		(type: TYPE; feat_table: FEATURE_TABLE; f: FEATURE_I): TYPE_A is
+		(type: TYPE_AS; feat_table: FEATURE_TABLE; f: FEATURE_I): TYPE_A is
 			-- Evaluation of type `type' in the context of the feature
 			-- table `feat_table' and the feature `f'
 		require

@@ -19,7 +19,7 @@ feature -- Access
 	offset: INTEGER
 			-- Offset for accessing to `container'
 
-	container: ARRAY [TYPE]
+	container: ARRAY [TYPE_AS]
 			-- Argument types 
 
 	i_th (i: INTEGER): TYPE_A is

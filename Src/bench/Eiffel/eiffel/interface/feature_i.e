@@ -921,13 +921,13 @@ feature -- Conveniences
 			Result := redefinable
 		end
 
-	type: TYPE is
+	type: TYPE_AS is
 			-- Type of feature
 		do
 			Result := Void_type
 		end
 
-	set_type (t: TYPE) is
+	set_type (t: TYPE_AS) is
 			-- Assign `t' to `type'.
 		do
 			-- Do nothing

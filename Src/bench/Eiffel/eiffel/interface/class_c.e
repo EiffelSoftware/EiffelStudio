@@ -2534,7 +2534,7 @@ feature
 			generics_exists: is_generic
 		local
 			generic_dec: FORMAL_DEC_AS
-			constraint_type: TYPE
+			constraint_type: TYPE_AS
 			l_area: SPECIAL [FORMAL_DEC_AS]
 			i, nb: INTEGER
 		do

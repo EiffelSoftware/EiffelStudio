@@ -7,7 +7,7 @@ indexing
 deferred class BASIC_TYPE
 
 inherit
-	TYPE
+	TYPE_AS
 		redefine
 			format, append_to
 		end

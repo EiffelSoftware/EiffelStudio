@@ -1,12 +1,9 @@
 indexing
-
-	description:
-			"Abstract description of an Eiffel infixed feature name. %
-			%Version for Bench.";
-	date: "$Date$";
+	description: "Abstract description of an Eiffel infixed or prefixed feature name."
+	date: "$Date$"
 	revision: "$Revision$"
 
-class INFIX_AS
+class INFIX_PREFIX_AS
 
 inherit
 	FEATURE_NAME
@@ -73,19 +70,19 @@ feature -- Access
 			-- Is the fix notation valid ?
 		do
 			Result := sc.is_valid_operator (visual_name)
-		end;
+		end
 
 	is_free: BOOLEAN is
 			-- Is the fix notation a free notation ?
 		do
 			Result := sc.is_valid_free_operator (visual_name)
-		end;
+		end
 
 	offset: INTEGER is
 		do
 			if is_frozen then
 				Result := frozen_str.count
-			end;
+			end
 			if is_prefix then
 				Result := Result + prefix_str.count
 			else
@@ -102,8 +99,8 @@ feature -- Conveniences
 
 	infix "<" (other: FEATURE_NAME): BOOLEAN is
 		local
-			infix_feature: INFIX_AS;
-			normal_feature: FEAT_NAME_ID_AS;
+			infix_feature: INFIX_PREFIX_AS
+			normal_feature: FEAT_NAME_ID_AS
 		do
 			normal_feature ?= other
 			infix_feature ?= other
@@ -127,30 +124,30 @@ feature -- Output
 			-- within main features.
 		do
 			if is_frozen then
-				ctxt.put_text_item (ti_Frozen_keyword);
+				ctxt.put_text_item (ti_frozen_keyword)
 				ctxt.put_space
-			end;
+			end
 				-- Use the source type and target type
 				-- of local_adapt
-			ctxt.local_adapt.set_evaluated_type;
+			ctxt.local_adapt.set_evaluated_type
 			if is_infix then
-				ctxt.prepare_for_infix (internal_name, visual_name, Void);
+				ctxt.prepare_for_infix (internal_name, visual_name, Void)
 			else
-				ctxt.prepare_for_prefix (internal_name, visual_name);
-			end;
+				ctxt.prepare_for_prefix (internal_name, visual_name)
+			end
 			adapt_main_feature (ctxt)
-		end;
+		end
 
 	main_feature_format (ctxt: FORMAT_CONTEXT) is
 			-- Reconstitute text for main features of a class.
 		do
 			if is_frozen then 
-				ctxt.put_text_item (ti_Frozen_keyword);
+				ctxt.put_text_item (ti_frozen_keyword)
 				ctxt.put_space
-			end;
-			ctxt.prepare_for_main_feature;
+			end
+			ctxt.prepare_for_main_feature
 			adapt_main_feature (ctxt)
-		end;
+		end
 
 feature {AST_EIFFEL} -- Output
 
@@ -158,24 +155,24 @@ feature {AST_EIFFEL} -- Output
 			-- Reconstitute text.
 		do
 			if is_frozen then
-				ctxt.put_text_item (ti_Frozen_keyword);
+				ctxt.put_text_item (ti_frozen_keyword)
 				ctxt.put_space
-			end;
+			end
 			if is_infix then
-				ctxt.put_text_item (ti_Infix_keyword);
-				ctxt.put_space;
-				ctxt.put_text_item_without_tabs (ti_Double_quote);
-				ctxt.prepare_for_infix (internal_name, visual_name, Void);
+				ctxt.put_text_item (ti_infix_keyword)
+				ctxt.put_space
+				ctxt.put_text_item_without_tabs (ti_double_quote)
+				ctxt.prepare_for_infix (internal_name, visual_name, Void)
 				ctxt.put_infix_feature
 			else
-				ctxt.put_text_item (ti_Prefix_keyword);
-				ctxt.put_space;
-				ctxt.put_text_item_without_tabs (ti_Double_quote);
-				ctxt.prepare_for_prefix (internal_name, visual_name);
+				ctxt.put_text_item (ti_prefix_keyword)
+				ctxt.put_space
+				ctxt.put_text_item_without_tabs (ti_double_quote)
+				ctxt.prepare_for_prefix (internal_name, visual_name)
 				ctxt.put_prefix_feature
-			end;
-			ctxt.put_text_item_without_tabs (ti_Double_quote);
-		end;
+			end
+			ctxt.put_text_item_without_tabs (ti_double_quote)
+		end
 
 feature {COMPILER_EXPORTER}
 
@@ -187,7 +184,7 @@ feature {COMPILER_EXPORTER}
 			else
 				create internal_name.initialize (prefix_str + s + quote_str)
 			end
-		end;
+		end
 
 feature {NONE} -- Implementation
 
@@ -197,4 +194,4 @@ feature {NONE} -- Implementation
 			create Result
 		end
 
-end -- class INFIX_AS
+end -- class INFIX_PREFIX_AS

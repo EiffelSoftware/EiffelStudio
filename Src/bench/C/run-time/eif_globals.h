@@ -28,7 +28,7 @@ extern "C" {
 #include "eif_constants.h"
 #include "eif_types.h"
 #include "eif_threads.h"
-#include "oncekeys.h"
+#include "main.h"
 
 #define GTCX		EIF_GET_CONTEXT
 #define EDCX		EIF_END_GET_CONTEXT
@@ -155,13 +155,15 @@ typedef struct tag_eif_globals		/* Structure containing all global variables to 
 	int esigblk;			/* By default, signals are not blocked */
 	struct s_stack sig_stk;	/* Initialized by initsig() */
 
+		/* main.c */
+	char **EIF_once_values;	/* Once values for a thread */
 
 #ifdef WORKBENCH
 		/* except.c */
 	unsigned char db_ign[EN_NEX];	/* Item set to 1 to ignore exception */ /* %%zmt not extern... */
 #endif
 
-#ifdef EIF_WINDOWS
+#ifdef EIF_WIN32
 		/* except.c */
 	char *exception_trace_string;
 #endif
@@ -178,6 +180,7 @@ typedef struct tag_eif_globals		/* Structure containing all global variables to 
 	int r_fides;					/* File descriptor use for retrieve */
 	char r_fstoretype;				/* File storage type used for retrieve */
 #endif
+
 
 } eif_global_context_t;
 
@@ -291,6 +294,9 @@ typedef struct tag_eif_globals		/* Structure containing all global variables to 
 #define esigblk			(eif_globals->esigblk)		/* rt_shared */
 #define sig_stk			(eif_globals->sig_stk)		/* rt_shared */
 
+	/* main.c */
+#define EIF_once_values	(eif_globals->EIF_once_values)	/* rt_public */
+
 	/* special */
 /* These variables are defined only if
  * __VMS, EIF_OS2 or SYMANTEC_CPP
@@ -326,7 +332,7 @@ extern struct pgcontext d_cxt;	/* Program context */
 
 
 	/* err_msg.h */
-#ifdef EIF_WINDOWS
+#ifdef EIF_WIN32
 extern char *exception_trace_string;
 #endif
 
@@ -387,6 +393,8 @@ extern int nstcall;	/* Nested call global variable: signals a nested call and
 extern int esigblk;				/* Are signals blocked for later delivery? */
 extern struct s_stack sig_stk;	/* The signal stack */
 
+	/* main.c */
+extern char **EIF_once_values;	/* Once values for a thread */
 
 	/* special */
 /* These variables are defined only if

@@ -373,7 +373,8 @@ feature -- Basic operations
 
 feature {NONE} -- Constants
 
-	Readable, Writable: INTEGER is unique
+	Readable: INTEGER is 1
+	Writable: INTEGER is 2
 			-- Mode constants
 			
 feature {NONE} -- Implementation

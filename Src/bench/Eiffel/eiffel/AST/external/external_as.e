@@ -90,13 +90,13 @@ feature -- Byte code
 			extension_bc: EXT_EXT_BYTE_CODE
 			ext_byte_code: EXT_BYTE_CODE
 		do
-			extern ?= context.a_feature
+			extern ?= context.current_feature
 			if extern = Void then
 				create {DEF_BYTE_CODE} Result
 			else
 				check
-					extern_exists: context.a_feature /= Void
-					is_extern: context.a_feature.is_external
+					extern_exists: context.current_feature /= Void
+					is_extern: context.current_feature.is_external
 				end
 
 				extension := language_name.extension

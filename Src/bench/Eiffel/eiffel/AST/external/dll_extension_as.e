@@ -44,10 +44,10 @@ feature -- Type check
 			type_check_signature
 
 				-- For DLL - Windows, a signature is compulsory
-			if context.a_feature.argument_count > 0 and argument_types = Void then
+			if context.current_feature.argument_count > 0 and argument_types = Void then
 				error := True
 			end
-			if context.a_feature.is_function = (return_type = 0) then
+			if context.current_feature.is_function = (return_type = 0) then
 				error := True
 			end
 			if error then

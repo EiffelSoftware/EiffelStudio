@@ -297,12 +297,14 @@ feature {NONE} -- Implementation
 					Result.append ("local%N")
 					increase_tabulation
 					Result.append (snippet_locals.item.code)
+					Result.append_character ('%N')
 					snippet_locals.forth
 				end
 			until
 				snippet_locals.after
 			loop
 				Result.append (snippet_locals.item.code)
+				Result.append_character ('%N')
 				snippet_locals.forth
 			end
 			if snippet_locals.count > 0 then

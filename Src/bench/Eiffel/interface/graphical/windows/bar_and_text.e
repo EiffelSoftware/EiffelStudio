@@ -14,44 +14,45 @@ inherit
 			save_cmd_holder, set_default_format, hole
 		end;
 	COMMAND;
-	TOP_SHELL
-		rename
-			make as shell_make,
-			realize as shell_realize
-		end;
-	TOP_SHELL
-		rename
-			make as shell_make
-		redefine
-			realize
-		select
-			realize
-		end;
 	SET_WINDOW_ATTRIBUTES
 
 creation
 
-	make
+	make_shell, make_form
 
 feature -- Initialization
 
-	make (a_screen: SCREEN) is
+	make_shell (a_shell: EB_SHELL) is
 			-- Create an assembly tool.
+		require
+			a_shell_not_void: a_shell /= Void
 		do
-			shell_make (tool_name, a_screen);
-			!! history.make;
-			!! global_form.make (new_name, Current);
-			build_widgets;
+			bar_and_text_name_chooser := Void;
+			make_form (a_shell.associated_form);
+			eb_shell := a_shell;
+			set_default_size;
+			a_shell.set_action ("<Configure>", Current, remapped);
+			a_shell.set_action ("<Visible>", Current, remapped);
 			if hole.icon_symbol.is_valid then
-				set_icon_pixmap (hole.icon_symbol);
+				eb_shell.set_icon_pixmap (hole.icon_symbol);
 			end;
 			set_icon_name (tool_name);
-			set_action ("<Configure>", Current, remapped);
-			set_action ("<Visible>", Current, remapped);
-			set_delete_command (quit.associated_command);
-			set_composite_attributes (Current);
+			eb_shell.set_delete_command (quit.associated_command);
+			text_window.set_font_to_default;
+			set_composite_attributes (a_shell)
+		end;
+
+	make_form (a_form: FORM) is
+			-- Create Current on a form.
+		require
+			a_form_not_void: a_form /= Void
+		do
+			bar_and_text_name_chooser := Void;
+			eb_shell := Void;
+			global_form := a_form;
+			!! history.make;
+			build_widgets;
 			register;
-			text_window.set_font_to_default
 		end;
 
 feature -- Standard Interface
@@ -60,13 +61,15 @@ feature -- Standard Interface
 			-- Create `text_window' different ways whether
 			-- the tabulation mecanism is disable or not
 		do
-			!!text_window.make (new_name, global_form, Current)
+			!!text_window.make (new_name, Current, Current)
 		end;
 
 	build_widgets is
 			-- Build system widget.
 		do
-			set_default_size;
+			if is_a_shell then
+				set_default_size
+			end;
 			build_text_window;
 			build_menus;
 			!! edit_bar.make (new_name, global_form);
@@ -206,6 +209,32 @@ feature -- Standard Interface
 			global_form.attach_bottom (format_bar, 0);
 		end
 
+feature -- Access
+
+	tool_name_chooser: NAME_CHOOSER_W is
+		do
+			if bar_and_text_name_chooser = Void then
+				bar_and_text_name_chooser := name_chooser (eb_shell)
+			end;
+			Result := bar_and_text_name_chooser
+		end;
+
+	realized: BOOLEAN is
+			-- Is Current realized?
+		require else
+			is_a_shell: is_a_shell
+		do
+			Result := eb_shell.realized
+		end;
+
+	shown: BOOLEAN is
+			-- Is Current shown?
+		require else
+			is_a_shell: is_a_shell
+		do
+			Result := eb_shell.shown
+		end;
+
 feature -- Window Implementation
 
 	fill_menus is
@@ -222,11 +251,49 @@ feature -- Window Implementation
 			!! explain_menu_entry.make (Project_tool.explain_hole_holder.associated_command, help_menu);
 		end;
 
+	set_x_y (new_x, new_y: INTEGER) is
+			-- Set Current's position.
+		require
+			is_a_shell: is_a_shell
+		do
+			eb_shell.set_x_y (new_x, new_y)
+		end;
+
+	destroy is
+			-- Destroy Current.
+		do
+			eb_shell.destroy
+		end;
+
+	show is
+			-- Show Current.
+		require else
+			is_a_shell: is_a_shell
+		do
+			eb_shell.show
+		end;
+
+	hide is
+			-- Hide Current.
+		do
+			eb_shell.hide
+		end;
+
+	raise is
+			-- Raise Current
+		require else
+			is_a_shell: is_a_shell
+		do
+			eb_shell.raise
+		end;
+
 	realize is
 			-- Realize Current.
+		require else
+			is_a_shell: is_a_shell
 		do
 			set_default_position;
-			shell_realize
+			eb_shell.realize
 		end;
 
 	create_edit_buttons is
@@ -292,34 +359,75 @@ feature -- Window Settings
 
 	set_default_size is
 			-- Default size of the windows.
+		require else
+			is_a_shell: is_a_shell
 		do
-			set_size (440, 500)
+			eb_shell.set_size (440, 500)
 		end;
 
 	set_default_position is
 			-- Display the window at the cursor position.
 			-- Try to display the window in the screen.
+		require else
+			is_a_shell: is_a_shell
 		local
-			new_x, new_y: INTEGER
+			new_x, new_y: INTEGER;
+			s: SCREEN
 		do
-			new_x := screen.x;
-			new_y := screen.y;
-			if new_x + width > screen.width then
-				new_x := screen.width - width
+			s := eb_shell.screen;
+			new_x := s.x;
+			new_y := s.y;
+			if new_x + eb_shell.width > s.width then
+				new_x := s.width - eb_shell.width
 			end;
 			if new_x < 0 then
 				new_x := 0
 			end;
-			if new_y + height > screen.height then
-				new_y := screen.height - height
+			if new_y + eb_shell.height > s.height then
+				new_y := s.height - eb_shell.height
 			end;
 			if new_y < 0 then
 				new_y := 0
 			end;
-			set_x_y (new_x, new_y)
+			eb_shell.set_x_y (new_x, new_y)
+		end;
+
+	set_title (s: STRING) is
+			-- Set `title' to `s'.
+		do
+			if is_a_shell then
+				eb_shell.set_title (s)
+			end
+		end;
+
+	set_icon_name (s: STRING) is
+			-- Set `icon_name' to `s'.
+		do
+			if is_a_shell then
+				eb_shell.set_icon_name (s)
+			end
 		end;
 
 feature -- Window Properties
+
+	eb_shell: EB_SHELL;
+			-- Shell to represent Current
+
+	title: STRING is
+			-- Title as displayed in the title bar of `parent'
+		do
+			if is_a_shell then
+				Result := eb_shell.title
+			end
+		end;
+
+	icon_name: STRING is
+			-- String shown when Current is popped down
+		do
+			if is_a_shell then
+				Result := eb_shell.icon_name
+			end
+		end;
 
 	menu_bar: BAR;
 
@@ -337,8 +445,6 @@ feature -- Window Properties
 
 	help_menu: MENU_PULL;
 
-	global_form: FORM;
-
 	hole: HOLE_COMMAND;
 			-- Hole characterizing Current.
 
@@ -350,6 +456,9 @@ feature -- Window Properties
 
 	edit_bar, format_bar: FORM;
 			-- Main and format button bars.
+
+	global_form: FORM;
+			-- Form created by the client of Current
 
 	showtext_frmt_holder: FORMAT_HOLDER;
 			-- Command to show text od text window's root stone,
@@ -423,5 +532,9 @@ feature -- Properties
 		once
 			!!Result
 		end;
+
+feature {NONE} -- Properties
+
+	bar_and_text_name_chooser: NAME_CHOOSER_W
 
 end -- class BAR_AND_TEXT

@@ -1,9 +1,7 @@
 indexing
-
-	description: 
-		"Error object sent by the compiler to the workbench.";
-	date: "$Date$";
-	revision: "$Revision $"
+	description: "Error object sent by the compiler to the workbench."
+	date: "$Date$"
+	revision: "$Revision$"
 
 deferred class ERROR
 
@@ -18,21 +16,29 @@ feature -- Properties
 	code: STRING is
 			-- Code error
 		deferred
-		end;
+		ensure
+			code_not_void: Result /= Void
+		end
 
 	subcode: INTEGER is
+			-- Subcode of error. `0' if none.
 		do
-		end;
+		end
 
 	help_file_name: STRING is
+			-- Associated file name where error explanation is located.
 		do
 			Result := code
+		ensure
+			help_file_name_not_void: Result /= Void
 		end;
 
 	Error_string: STRING is
 		do
-			Result := "Error";
-		end;
+			Result := "Error"
+		ensure
+			error_string_not_void: Result /= Void
+		end
 
 feature -- Access
 
@@ -45,6 +51,7 @@ feature -- Access
 feature -- Output
 
 	trace (st: STRUCTURED_TEXT) is
+			-- Display full error message in `st'.
 		require
 			valid_st: st /= Void;
 			is_defined: is_defined
@@ -54,6 +61,7 @@ feature -- Output
 		end;
 
 	print_error_message (st: STRUCTURED_TEXT) is
+			-- Display error in `st'.
 		require
 			valid_st: st /= Void
 		do
@@ -72,6 +80,7 @@ feature -- Output
 		end;
 
 	print_short_help (st: STRUCTURED_TEXT) is
+			-- Display help in `st'.
 		require
 			valid_st: st /= Void
 		local
@@ -124,9 +133,8 @@ feature -- Output
 		end;
 
 invariant
-
-	non_void_code: code /= Void;
-	non_void_error_message: error_string /= Void;
+	non_void_code: code /= Void
+	non_void_error_message: error_string /= Void
 	non_void_help_file_name: help_file_name /= Void
 	
 end -- class ERROR

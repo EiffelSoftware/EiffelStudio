@@ -413,7 +413,7 @@ feature -- Plug and Makefile file
 			-- Generate plug with run-time
 		local
 			any_cl, string_cl, bit_cl, array_cl, rout_cl: CLASS_C
-			arr_type_id, str_type_id, type_id: INTEGER
+			arr_type_id, str_type_id, tup_type_id, type_id: INTEGER
 			id: INTEGER
 			to_c_feat, set_count_feat, set_make_feat: FEATURE_I
 			creation_feature, correct_mismatch_feat: FEATURE_I
@@ -613,6 +613,11 @@ feature -- Plug and Makefile file
 				-- Dynamic type of class ARRAY[ANY]
 			buffer.putstring ("%Tegc_arr_dtype = ")
 			buffer.putint (arr_type_id - 1)
+			buffer.putstring (";%N")
+
+				-- Dynamic type of class TUPLE
+			buffer.putstring ("%Tegc_tup_dtype = ")
+			buffer.putint (system.tuple_class.compiled_class.types.first.type_id - 1)
 			buffer.putstring (";%N")
 
 				-- Dispose routine id from class MEMORY (if compiled) 

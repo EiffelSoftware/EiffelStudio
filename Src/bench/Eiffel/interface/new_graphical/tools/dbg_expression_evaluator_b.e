@@ -917,7 +917,7 @@ feature -- Concrete evaluation
 			rout_info: ROUT_INFO
 
 			l_ref_type: CL_TYPE_I
-			l_icd_value: ICOR_DEBUG_VALUE
+--			l_icd_value: ICOR_DEBUG_VALUE
 		do
 			debug ("debugger_trace_eval")
 				print (generating_type + ".evaluate_function :%N")

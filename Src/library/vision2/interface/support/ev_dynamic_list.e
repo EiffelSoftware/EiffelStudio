@@ -58,7 +58,7 @@ inherit
 		export
 			{EV_ANY_HANDLER} default_create
 		undefine
-			prune_all,
+			prune_all, fill,
 			changeable_comparison_criterion,
 			default_create, is_equal, copy
 		select

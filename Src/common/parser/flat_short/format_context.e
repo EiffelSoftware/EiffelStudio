@@ -391,6 +391,12 @@ feature -- Output
 			text.add (t)
 		end
 
+	put_front_text_item (t: TEXT_ITEM) is
+			-- Insert `t' to `text' in front of list.
+		do
+			text.put_front (t)
+		end
+
 	put_text_item (t: TEXT_ITEM) is
 			-- Append `t' to `text'. Emit tabs if needed.
 		require

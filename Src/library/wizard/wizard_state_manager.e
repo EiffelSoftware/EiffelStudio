@@ -16,8 +16,6 @@ feature {WIZARD_WINDOW} -- Basic Operations
 			-- Go to the previous state.
 		require
 			possible: history.count>1 and then not history.isfirst
-		local
-			win: WIZARD_STATE_WINDOW
 		do
 			history.back
 			history.item.clean_screen

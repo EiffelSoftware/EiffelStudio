@@ -51,10 +51,10 @@ feature -- Access
 			exists: Result /= Void
 		end
 
-	wizard_bmp_path: STRING is 
+	wizard_pixmaps_path: STRING is 
 			-- Bitmaps location
 		once
-			Result := wizard_source+ "\bmp" 
+			Result := wizard_source+ "\pixmaps" 
 		end
 
 	wizard_resources_path: STRING is
@@ -67,7 +67,28 @@ feature -- Access
 			-- Pixmap on which can be displayed a picture which 
 			-- goes with the state.
 		once
-			Create Result
+			create Result
+		end
+
+	pixmap_icon: EV_PIXMAP is
+			-- Pixmap for the small icon of the wizard
+		once
+			create Result
+		end
+
+	current_application: EV_APPLICATION is
+		do
+			Result:= app_cell.item
+		end
+
+	app_cell: CELL [EV_APPLICATION] is
+		once
+			Create Result.put (Void)
+		end
+
+	set_application (app: EV_APPLICATION) is
+		do
+			app_cell.put (app)
 		end
 
 feature -- Colors
@@ -80,7 +101,7 @@ feature -- Colors
 invariant
 	memory_for_pixmap_allocated: pixmap /= Void
 	wizard_resource_path_exists: wizard_resources_path /= Void
-	wizard_bmp_path_exists: wizard_bmp_path /= Void
+	wizard_pixmaps_path_exists: wizard_pixmaps_path /= Void
 	wizard_source_exists: wizard_source /= Void
 	history_exists: history /= Void
 	window_exists: first_window /= Void

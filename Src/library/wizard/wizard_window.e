@@ -26,13 +26,13 @@ feature -- Initialization
 			v1: EV_VERTICAL_BOX
 		do
 				default_create
-				disable_user_resize
-				set_size(500,386)
+--				disable_user_resize
+				set_size (500,386)
 				Create wizard_page
 				Create v1
-				extend(v1)
-				v1.extend(wizard_page)	
-				build_navigation_bar(v1)
+				extend (v1)
+				v1.extend (wizard_page)	
+				build_navigation_bar (v1)
 
 				load_first_state
 				Create wizard_information.make

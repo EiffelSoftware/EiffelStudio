@@ -18,8 +18,4 @@ cluster
 
 	all eiffeltest: "$ISE_EIFFEL/library/eiffeltest"
 
-external
-	object:
-		"\$(ISE_EIFFEL)/library/time/spec/\$(ISE_PLATFORM)/lib/libdatetime.a"
-
 end

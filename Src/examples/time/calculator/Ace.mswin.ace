@@ -21,11 +21,4 @@ cluster
 			"desc"; "table_eiffel3"; 
 		end
 
-external
-	include_path:
-		"$(ISE_EIFFEL)\library\time\Clib"
-
-	object:
-		"$(ISE_EIFFEL)\library\time\spec\$(ISE_C_COMPILER)\lib\datetime.lib"
-
 end

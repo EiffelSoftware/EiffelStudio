@@ -75,7 +75,7 @@ feature -- Updating
 			set_text (temp)
 		end
 
-feature {EB_CHOICE_WINDOW} -- Execution
+feature {EB_CHOICE_DIALOG} -- Execution
 
 	process (class_i: CLASS_I) is
 		local
@@ -92,7 +92,7 @@ feature {EB_CHOICE_WINDOW} -- Execution
 
 feature {EB_FEATURE_TEXT_FIELD} -- Implementation
 
-	execute (arg: EV_ARGUMENT1 [EB_CHOICE_WINDOW]; data: EV_EVENT_DATA) is
+	execute (arg: EV_ARGUMENT1 [EB_CHOICE_DIALOG]; data: EV_EVENT_DATA) is
 			-- Execution of the command.
 		local
 			choice_position: INTEGER
@@ -230,7 +230,7 @@ feature {NONE} -- Implementation
 		require
 			class_list_not_void: class_list /= Void
 		local
-			choice: EB_CHOICE_WINDOW
+			choice: EB_CHOICE_DIALOG
 			class_names: ARRAYED_LIST [STRING]
 			class_i, last_class: CLASS_I
 			cname, last_name: STRING

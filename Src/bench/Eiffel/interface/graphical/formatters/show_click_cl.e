@@ -12,7 +12,7 @@ inherit
 
 	FILTERABLE
 		rename
-			filter_context_text as clickable_context_text
+			create_structured_text as clickable_context_text
 		redefine
 			dark_symbol, text_window, format, display_temp_header,
 			post_fix
@@ -65,7 +65,7 @@ feature -- Formatting
 				root_stone ?= text_window.root_stone;
 				if
 					do_format or else filtered or else
-					(text_window.last_format_2.associated_command /= Current or
+					(text_window.last_format.associated_command /= Current or
 					not equal (stone, root_stone))
 				then
 					if stone /= Void and then stone.is_valid then
@@ -76,7 +76,7 @@ feature -- Formatting
 							text_window.set_file_name (file_name (stone));
 							display_info (stone);
 							if 
-								text_window.last_format_2 = 
+								text_window.last_format = 
 									text_window.tool.showtext_frmt_holder
 							then
 								last_cursor_position := text_window.cursor_position;
@@ -97,7 +97,7 @@ feature -- Formatting
 								text_window.set_top_character_position (last_top_position)
 							end;
 							text_window.set_root_stone (stone);
-							text_window.set_last_format_2 (holder);
+							text_window.set_last_format (holder);
 							filtered := false;
 							display_header (stone);
 							mp.restore
@@ -139,16 +139,10 @@ feature {NONE} -- Properties
 
 feature {NONE} -- Implementation
 
-	display_info (c: CLASSC_STONE) is
-			-- Display flat|short form of `c'.
-		do
-			text_window.process_text (clickable_context_text (c));	
-		end
-
 	display_temp_header (stone: STONE) is
 			-- Display a temporary header during the format processing.
 		do
-			if text_window.last_format_2.associated_command = Current then
+			if text_window.last_format.associated_command = Current then
 				text_window.display_header ("Producing clickable format...")
 			else
 				text_window.display_header ("Switching to clickable format...")

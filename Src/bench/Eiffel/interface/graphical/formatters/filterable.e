@@ -65,7 +65,7 @@ feature -- Filtering; Properties
 				if filter_file.exists and then filter_file.is_readable then
 					!!text_filter.make_from_filename (full_pathname);
 					file_suffix := text_filter.file_suffix;
-					tmp_text := filter_context_text (stone);
+					tmp_text := create_structured_text (stone);
 					text_filter.process_text (tmp_text);
 					Result := text_filter.image
 				else
@@ -174,13 +174,20 @@ feature -- Filtering; Properties
 
 feature {NONE} -- Attributes
 
-	filter_context_text (stone: STONE): STRUCTURED_TEXT is
+	create_structured_text (stone: STONE): STRUCTURED_TEXT is
 		require
 			not_stone_void: stone /= Void
 		deferred
 		end;
 
 feature {NONE} -- Implementation
+
+	display_info (stone: STONE) is
+			-- Display the information about `stone' with the use
+			-- of `create_structured_text'.
+		do
+			text_window.process_text (create_structured_text (stone))
+		end;
 
 	display_filter_header (stone: STONE; filtername: STRING) is
 			-- Show header.

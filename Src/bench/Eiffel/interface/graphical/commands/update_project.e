@@ -86,7 +86,7 @@ feature {NONE} -- Implementation
 			-- Compile, in the one way or the other.
 		local
 			rescued: BOOLEAN;
-			temp: STRING;
+			st: STRUCTURED_TEXT;
 			title: STRING;
 			mp: MOUSE_PTR
 		do
@@ -106,14 +106,15 @@ feature {NONE} -- Implementation
 					title.append (Project_directory);
 					project_tool.set_title (title);
 					if Eiffel_project.save_error then
-						!! temp.make (0);
-						temp.append ("Could not write to ");
-						temp.append (Project_file_name);
-						temp.append ("%NPlease check permissions and disk space%
+						!! st.make;
+						st.add_string ("Could not write to ");
+						st.add_string (Project_file_name);
+						st.add_string ("%NPlease check permissions and disk space%
 									%%NThen press ");
-						temp.append (name);
-						temp.append (" again%N");
-						error_window.put_string (temp);
+						st.add_string (name);
+						st.add_string (" again%N");
+						error_window.process_text (st);
+						error_window.display
 					else
 						if not finalization_error then
 							launch_c_compilation (argument)
@@ -222,7 +223,7 @@ feature {NONE} -- Implementation
 			create_ace: CREATE_ACE;
 			wizard: WIZARD
 		do
-			!! wiz_dlg.make ("dialog", Project_tool);
+			!! wiz_dlg.make ("Builder", Project_tool);
 			!! create_ace.make (Current);
 			!! wizard.make (Project_tool, wiz_dlg, create_ace);
 			wizard.execute_action;

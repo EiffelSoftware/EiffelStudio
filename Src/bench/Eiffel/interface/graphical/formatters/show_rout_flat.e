@@ -9,7 +9,9 @@ class SHOW_ROUT_FLAT
 
 inherit
 
-	FORMATTER
+	FILTERABLE
+		rename
+			create_structured_text as rout_flat_context_text
 		redefine
 			dark_symbol, display_temp_header
 		end;
@@ -52,12 +54,6 @@ feature {NONE} -- Properties
 		end;
 
 feature {NONE} -- Implementation
-
-	display_info (stone: FEATURE_STONE) is 
-			-- Display flat form of `stone'.
-		do 
-			text_window.process_text (rout_flat_context_text (stone))
-		end;
 
 	display_temp_header (stone: STONE) is
 			-- Display a temporary header during the format processing.

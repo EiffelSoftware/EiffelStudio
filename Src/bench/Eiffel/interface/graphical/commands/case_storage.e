@@ -66,7 +66,7 @@ feature {NONE} -- Implementation
 				(last_confirmer /= Void and argument = last_confirmer)
 			then
 				!! mp.set_watch_cursor;
-				!! format_storage.make (Error_window);
+				!! format_storage.make_with_window (Error_window);
 				format_storage.execute;
 				mp.restore
 			else

@@ -9,7 +9,7 @@ class SHOW_MODIFIED
 
 inherit
 
-	FORMATTER
+	FILTERABLE
 		redefine
 			dark_symbol, display_temp_header, post_fix
 		end
@@ -53,19 +53,22 @@ feature {NONE} -- Properties
 
 	post_fix: STRING is "mod";
 
-feature {NONE} -- Implementation
+feature {NONE} -- Attributes
 
-	display_info (c: CLASSC_STONE) is
-			-- Show modified classes list, in `text_window'.
+	create_structured_text (c: CLASSC_STONE): STRUCTURED_TEXT is
+			-- Display modified classes list.
 		local
 			cmd: E_SHOW_MODIFIED_CLASSES
 		do
-			text_window.put_string ("Classes modified since last compilation:");
-			text_window.new_line;
-			text_window.new_line;
-			!! cmd.make (text_window);
+			!! Result.make;
+			Result.add_string ("Classes modified since last compilation:");
+			Result.add_new_line;
+			Result.add_new_line;
+			!! cmd.make (Result);
 			cmd.execute
 		end;
+
+feature {NONE} -- Implementation
 
 	display_temp_header (stone: STONE) is
 			-- Display a temporary header during the format processing.

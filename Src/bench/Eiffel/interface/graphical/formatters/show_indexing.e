@@ -51,16 +51,17 @@ feature {NONE} -- Properties
 
 	post_fix: STRING is "ind";
 
-feature {NONE} -- Implementation
-
-	display_info (c: CLASSC_STONE) is
-			-- Show indexing clause of classes, in `text_window'.
+	create_structured_text (c: CLASSC_STONE): STRUCTURED_TEXT is
+			-- Show indexing clause of classes.
 		local
-			cmd: E_SHOW_INDEXING_CLAUSE
+			cmd: E_SHOW_INDEXING_CLAUSE;
 		do
-			!! cmd.make (text_window);
-			cmd.execute
+			!! Result.make;
+			!! cmd.make (Result);
+			cmd.execute;
 		end;
+
+feature {NONE} -- Implementation
 
 	display_temp_header (stone: STONE) is
 			-- Display a temporary header during the format processing.

@@ -11,7 +11,7 @@ inherit
 
 	FILTERABLE
 		rename
-			filter_context_text as flatshort_context_text
+			create_structured_text as flatshort_context_text
 		redefine
 			dark_symbol, display_temp_header, post_fix
 		end;
@@ -55,12 +55,6 @@ feature {NONE} -- Properties
 	post_fix: STRING is "fsh";
 
 feature {NONE} -- Implementation
-
-	display_info (c: CLASSC_STONE) is
-			-- Display flat|short form of `c'.
-		do
-			text_window.process_text (flatshort_context_text (c))
-		end
 
 	display_temp_header (stone: STONE) is
 			-- Display a temporary header during the format processing.

@@ -11,7 +11,7 @@ inherit
 
 	FILTERABLE
 		rename
-			filter_context_text as flat_context_text
+			create_structured_text as flat_context_text
 		redefine
 			dark_symbol, display_temp_header, post_fix
 		end;
@@ -57,12 +57,6 @@ feature {NONE} -- Properties
 	post_fix: STRING is "fla";
 
 feature {NONE} -- Implementation
-
-	display_info (c: CLASSC_STONE) is
-			-- Display flat form of 'c'.
-		do
-			text_window.process_text (flat_context_text (c))
-		end;
 
 	display_temp_header (stone: STONE) is
 			-- Display a temporary header during the format processing.

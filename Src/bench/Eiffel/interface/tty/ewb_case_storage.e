@@ -21,7 +21,7 @@ feature {NONE} -- Implementation
 	associated_cmd: E_STORE_CASE_INFO is
 			-- Associated system command to be executed
 		once
-			!! Result.do_nothing
+			!! Result.make_with_window (output_window)
 		end;
 
 end -- class EWB_CASE_STORAGE

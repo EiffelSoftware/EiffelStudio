@@ -16,11 +16,13 @@ inherit
 		undefine
 			copy, setup, consistent, is_equal
 		redefine
-			process_after_class,
+			process_after_class, process_address_text, process_error_text,
 			process_feature_name_text, process_class_name_text,
-			put_address, put_feature_name, put_feature,
+			put_address, put_feature_name, put_feature, process_breakpoint,
 			put_error, put_class, put_classi, put_cluster,
-			put_class_syntax, put_ace_syntax
+			put_class_syntax, put_ace_syntax, process_quoted_text,
+			process_new_line, process_indentation, process_basic_text,
+			process_cl_syntax, process_ace_syntax
 		end
 
 feature -- Properties
@@ -70,6 +72,29 @@ feature -- Input
 		do
 			image.extend ('%N');
 			text_position := text_position + 1
+		end;
+
+	process_error_text (text: ERROR_TEXT) is
+			-- Process the error `text'.
+		do
+			put_error (text.error, text.error_text)
+		end;
+
+	process_cl_syntax (text: CL_SYNTAX_ITEM) is
+			-- Process the syntax error `text'.
+		do
+			put_class_syntax (text.syntax_error, text.e_class, text.error_text)		end;
+
+	process_ace_syntax (text: ACE_SYNTAX_ITEM) is
+			-- Process the syntax error `text'.
+		do
+			put_ace_syntax (text.syntax_error, text.error_text)
+		end;
+
+	process_address_text (text: ADDRESS_TEXT) is
+			-- Process the address `text'.
+		do
+			put_address (text.address, text.e_class)
 		end;
 
 	process_quoted_text (text: QUOTED_TEXT) is
@@ -137,6 +162,12 @@ feature -- Input
 		do
 			!! stone.make (feat, e_class);
 			put_stone (stone, str)
+		end;
+
+	process_breakpoint (bp_item: BREAKPOINT_ITEM) is
+			-- Put `bp_item'.
+		do
+			put_stone (bp_item.breakpoint, bp_item.image);
 		end;
 
 	put_feature_name (f_name: STRING; e_class: E_CLASS) is

@@ -9,7 +9,7 @@ class SHOW_ROUT_HIST
 
 inherit
 
-	FORMATTER
+	FILTERABLE
 		redefine
 			dark_symbol, display_temp_header
 		end;
@@ -50,18 +50,19 @@ feature {NONE} -- Properties
 			Result := l_History
 		end;
 
-feature {NONE} -- Implementation
-
-	display_info (f: FEATURE_STONE)  is
+	create_structured_text (f: FEATURE_STONE): STRUCTURED_TEXT is
 			-- Display history of `f'.
 		local
 			cmd: E_SHOW_ROUTINE_IMPLEMENTERS;
 		do
-			!! cmd.make (f.e_feature, f.e_class, text_window);
+			!! Result.make;
+			!! cmd.make (f.e_feature, f.e_class, Result);
 			if cmd.has_valid_feature then
 				cmd.execute
-			end
+			end;
 		end;
+
+feature {NONE} -- Implementation
 
 	display_temp_header (stone: STONE) is
 			-- Display a temporary header during the format processing.

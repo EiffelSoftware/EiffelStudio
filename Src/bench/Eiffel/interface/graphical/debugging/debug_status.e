@@ -43,11 +43,20 @@ feature {NONE} -- Implementation
 	work (argument: ANY) is
 			-- Display the status of the application, or "Not running" if
 			-- the application is not running.
+		local
+			st: STRUCTURED_TEXT;
 		do
+			!! st.make;
 			if Application.is_running then
-				Application.status.display_status (Debug_window)
+				Application.status.display_status (st);
+				Debug_window.clear_window;
+				Debug_window.process_text (st);
+				Debug_window.display
 			else
-				Debug_window.put_string ("System not launched%N")
+				st.add_string ("System not launched%N");
+				Debug_window.clear_window;
+				Debug_window.process_text (st);
+				Debug_window.display
 			end
 		end;
 

@@ -10,14 +10,14 @@ deferred class LONG_FORMATTER
 
 inherit
 
-	FORMATTER
+	FILTERABLE
 		rename
 			init as formatter_init
 		redefine
 			execute
 		end;
 
-	FORMATTER
+	FILTERABLE
 		redefine
 			execute, init
 		select

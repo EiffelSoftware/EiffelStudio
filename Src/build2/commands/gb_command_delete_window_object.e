@@ -106,9 +106,13 @@ feature -- Basic Operation
 				object_was_window: window_object /= Void
 			end
 			object_handler.mark_existing (window_object)
-			directory_item := window_selector.directory_object_from_name (parent_directory)
+			if parent_directory /= Void then
+					-- Only try to retrieve the directory item if there was one.
+				directory_item := window_selector.directory_object_from_name (parent_directory)
+			end
 			if directory_item = Void then
 				-- Now simply add as root.
+				Window_selector.extend (window_object.window_selector_item)
 			else
 				-- Restore window into original directory.
 				directory_item.extend (window_object.window_selector_item)

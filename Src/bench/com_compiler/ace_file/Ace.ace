@@ -5,7 +5,6 @@ root
 	ECOM_EIF_COMPILER_REGISTRATION: make
 
 default
-	shared_library_definition ("Eif_compiler.def")
 	assertion(require)
 	assertion(ensure)
 	assertion(check)
@@ -17,6 +16,7 @@ default
 	exception_trace(no)
 	inlining(no)
 	multithreaded(no)
+	shared_library_definition("Eif_compiler.def")
 	check_vape(yes)
 	arguments("-embedding")
 	arguments("-regserver")
@@ -26,24 +26,25 @@ default
 	disabled_debug("jvmgen")
 	disabled_debug("check_expanded")
 	disabled_debug("liman")
-	disabled_debug("dead_code")
+	disabled_debug("dle topo")
 	disabled_debug("type_check")
 	disabled_debug("jvm_dbc")
-	disabled_debug("wel")
+	disabled_debug("c_debugger")
+	disabled_debug("debug_recv")
 	disabled_debug("remove_class")
-	disabled_debug("jvm_gen2")
+	disabled_debug("gdi_count")
+	disabled_debug("wel_gdi_references")
 	disabled_debug("comments")
 	disabled_debug("debbugger_hook")
-	disabled_debug("debugger_hook")
+	disabled_debug("debugger")
 	disabled_debug("cache_compiler")
-	disabled_debug("wel_gdi_references")
+	disabled_debug("once")
 	disabled_debug("cecil")
-	disabled_debug("gdi_count")
+	disabled_debug("hector")
 	disabled_debug("verbose")
-	disabled_debug("wel_gdi_count")
+	disabled_debug("jvm_gen2")
 	disabled_debug("replication")
-	disabled_debug("debug_recv")
-	disabled_debug("cache")
+	disabled_debug("wel_gdi_count")
 	disabled_debug("hide_option")
 	disabled_debug("jvm_gen [ ]")
 	disabled_debug("class_of_id")
@@ -53,31 +54,31 @@ default
 	disabled_debug("jvm_agen")
 	disabled_debug("jvm_once")
 	disabled_debug("parse")
-	disabled_debug("hector")
 	disabled_debug("skeleton")
 	disabled_debug("activity")
 	disabled_debug("local_feat_adaptation")
 	disabled_debug("trace_table")
-	disabled_debug("documentation")
+	disabled_debug("cache")
 	disabled_debug("dollar")
 	disabled_debug("cache_server")
-	disabled_debug("once")
-	disabled_debug("c_debugger")
+	disabled_debug("documentation")
 	disabled_debug("genericity")
 	disabled_debug("win_dispatcher")
 	disabled_debug("server")
 	disabled_debug("dead_code_removal")
 	disabled_debug("document")
 	disabled_debug("cache_stat")
-	disabled_debug("dle topo")
+	disabled_debug("debugger_hook")
 	disabled_debug("dlg_dispatcher")
-	disabled_debug("gelex")
+	disabled_debug("dead_code")
 	disabled_debug("cache_research")
 	disabled_debug("optimization")
 	disabled_debug("geyacc")
 	disabled_debug("flush_file")
+	disabled_debug("gelex")
 	disabled_debug("byte_code")
 	disabled_debug("transfer")
+	disabled_debug("wel")
 	disabled_debug("has_calls")
 	disabled_debug("jvm_gen")
 	disabled_debug("sep_debug")
@@ -86,7 +87,6 @@ default
 	disabled_debug("count")
 	disabled_debug("options")
 	disabled_debug("assertions")
-	disabled_debug("debugger")
 	disabled_debug("jvm_stack")
 	debug(no)
 	line_generation(no)
@@ -117,6 +117,10 @@ cluster
 			ieiffel_cluster_descriptor_impl_proxy
 				end
 			ieiffel_feature_descriptor_impl_proxy
+				end
+			ieiffel_project_properties_impl_proxy
+				end
+			ieiffel_cluster_properties_impl_proxy
 				end
 		end
 
@@ -151,6 +155,10 @@ cluster
 			system_browser
 				end
 			cluster_descriptor
+				end
+			ieiffel_project_properties_impl_stub
+				end
+			ieiffel_cluster_properties_impl_stub
 				end
 		end
 

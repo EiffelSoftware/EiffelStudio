@@ -214,21 +214,28 @@ feature {NONE} -- Implementation
 			end
 		end
 
+
 	validate_settings is
-			--
+			-- Validate all settings in `Current'.
 		local
 			warning_dialog: EV_WARNING_DIALOG
 			application_name_lower, class_name_lower, project_name_lower,
-			invalid_text, warning_message: STRING
+			invalid_text, warning_message, constant_name_lower: STRING
+			windows: ARRAYED_LIST [GB_TITLED_WINDOW_OBJECT]
+			l_boolean: BOOLEAN
 		do
+			create hashed_names.make (4)
 					-- Check for invalid eiffel names as language specification.
 			last_validation_successful := True
 			application_name_lower := application_class_name_field.text.as_lower
 			project_name_lower := project_class_name_field.text.as_lower
+			constant_name_lower := constants_class_name_field.text.as_lower
 			if not valid_class_name (application_name_lower) then
 				invalid_text := application_name_lower
 			elseif not valid_class_name (project_name_lower) then
 				invalid_text := project_name_lower
+			elseif not valid_class_name (constant_name_lower) then
+				invalid_text := constant_name_lower
 			end
 			if invalid_text /= Void then
 				warning_message := Class_invalid_name_warning
@@ -242,15 +249,53 @@ feature {NONE} -- Implementation
 				invalid_text := class_name_lower
 			elseif reserved_words.has (project_name_lower) then
 				invalid_text := project_name_lower
+			elseif reserved_words.has (constant_name_lower) then
+				invalid_text := constant_name_lower
 			end
+			if invalid_text = Void then
+				warning_message := " Conflicts with either:%N%NA class name specified in this dialog, or%NA class name of a window.%N%NPlease resolve this conflict, or select %"Cancel%" to revert back to the previous settings."
+			else
+				invalid_text := "'" + invalid_text
+			end
+			windows := window_selector.objects
+			from
+				windows.start
+			until
+				windows.off
+			loop
+				l_boolean := add_hashed_name (windows.item.name.as_lower)
+				l_boolean := add_hashed_name ((windows.item.name + Class_implementation_extension).as_lower)
+				windows.forth
+			end
+			if not add_hashed_name (constant_name_lower) then
+				invalid_text := "The constant class name %"" + constant_name_lower + "%""
+			end
+			if not add_hashed_name (application_name_lower) then
+				invalid_text := "The application class name %"" + application_name_lower + "%""
+			end
+			if not add_hashed_name (project_name_lower) then
+				invalid_text := "The project class name %"" + project_name_lower + "%""
+			end
+			
 			if invalid_text /= Void then
 			--	select_in_parent
-				create warning_dialog.make_with_text ("'" + invalid_text + warning_message)
+				create warning_dialog.make_with_text (invalid_text + warning_message)
 				warning_dialog.show_modal_to_window (main_window)
 				last_validation_successful := False				
 			end
 		end
 		
+	hashed_names: HASH_TABLE [STRING, STRING]
+		-- All names that current class names are not permitted to use.
+		
+	add_hashed_name (a_name: STRING): BOOLEAN is
+			-- Add `a_name' to `hashed_names', with `Result' indicating if
+			-- the name was already included.
+		do
+			Result := not hashed_names.has (a_name)
+			hashed_names.extend (a_name, a_name)
+		end
+
 	last_validation_successful: BOOLEAN
 		-- Was last call to `validate_settings' succesful?
 		-- True if all valication succeeded.

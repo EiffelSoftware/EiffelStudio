@@ -225,7 +225,7 @@ feature -- Basic operations
 			elseif target.substring (1, Create_keyword_length).is_equal (Create_keyword) then
 				-- Creation call
 				set_creation_call
-				if target.count > Create_keyword_length + 2 then -- Minimum create construct is "create a."
+				if target.count > Create_keyword_length + 1 then -- Minimum create construct is "create a."
 					extract_type (target, Create_keyword)
 					if type_extracted then
 						Result := extracted_type

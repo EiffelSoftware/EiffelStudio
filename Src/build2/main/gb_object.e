@@ -71,6 +71,8 @@ inherit
 	GB_SHARED_ID
 	
 	GB_SHARED_STATUS_BAR
+	
+	GB_POST_LOAD_OBJECT_EXPANDER
 
 feature {GB_OBJECT_HANDLER} -- Initialization
 	
@@ -202,6 +204,7 @@ feature {GB_XML_STORE, GB_XML_LOAD, GB_XML_OBJECT_BUILDER}
 			if not name.is_empty then
 				add_element_containing_string (element, name_string, name)
 			end
+			add_element_containing_integer (element, "Expanded", layout_item.is_expanded.to_integer)
 		end
 		
 	modify_from_xml (element: XML_ELEMENT) is
@@ -222,6 +225,12 @@ feature {GB_XML_STORE, GB_XML_LOAD, GB_XML_OBJECT_BUILDER}
 			if element_info /= Void then
 				name := element_info.data
 				layout_item.set_text (name + ": " + short_type)
+			end
+			element_info := full_information @ ("Expanded")
+			if element_info /= Void then
+				if element_info.data.to_integer = 1 then
+					register_object_as_expanded (Current)	
+				end
 			end
 		end
 

@@ -1,5 +1,4 @@
 indexing
-
 	description: 
 		"EiffelVision text field, implementation interface."
 	status: "See notice at end of class"
@@ -8,17 +7,12 @@ indexing
 	revision: "$Revision$"
 	
 deferred class
-	
 	EV_TEXT_FIELD_I
 	
 inherit
-	
 	EV_TEXT_COMPONENT_I
 
 	EV_BAR_ITEM_I
-		undefine
-			build
-		end
 	
 feature -- Event - command association
 

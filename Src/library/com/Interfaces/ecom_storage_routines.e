@@ -6,6 +6,9 @@ indexing
 class
 	ECOM_STORAGE_ROUTINES
 
+inherit 
+	ECOM_ROUTINES
+
 feature -- Basic Operations
 
 	is_compound_file (a_name: STRING): BOOLEAN is
@@ -23,27 +26,28 @@ feature -- Basic Operations
 			
 		end
 
-feature {NONE} -- Implementation
-
-	initializer_routines: POINTER is
-			-- Pointer to structure
-		once
-			Result := ccom_create_e_storage_routines
-		end
-
-
 feature {NONE} -- Externals
-
-	ccom_create_e_storage_routines: POINTER is
-		external
-			"C++ [new E_Storage_Routines %"E_Storage_Routines.h%"]()"
-		end
 
 	ccom_is_compound_file (cpp_obj: POINTER; a_name: POINTER): INTEGER is
 		external
-			"C++ [E_Storage_Routines %"E_Storage_Routines.h%"] (WCHAR *):EIF_INTEGER"
+			"C++ [E_Routines %"E_Routines.h%"] (WCHAR *):EIF_INTEGER"
 		end
 
 end -- class ECOM_STORAGE_ROUTINES
 
+--|----------------------------------------------------------------
+--| EiffelCOM: library of reusable components for ISE Eiffel.
+--| Copyright (C) 1988-1999 Interactive Software Engineering Inc.
+--| All rights reserved. Duplication and distribution prohibited.
+--| May be used only with ISE Eiffel, under terms of user license. 
+--| Contact ISE for any other use.
+--|
+--| Interactive Software Engineering Inc.
+--| ISE Building, 2nd floor
+--| 270 Storke Road, Goleta, CA 93117 USA
+--| Telephone 805-685-1006, Fax 805-685-6869
+--| Electronic mail <info@eiffel.com>
+--| Customer support http://support.eiffel.com
+--| For latest info see award-winning pages: http://www.eiffel.com
+--|----------------------------------------------------------------
 

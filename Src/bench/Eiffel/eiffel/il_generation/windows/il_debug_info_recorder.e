@@ -82,6 +82,7 @@ feature {NONE} -- Initialization
 			last_info_from_class_type := Void
 			last_info_from_module := Void			
 
+			last_class_type_info_cleaned := Void
 			last_module_info_cleaned := Void
 		end		
 
@@ -382,10 +383,13 @@ feature -- line debug recording
 				else
 					
 					debug ("debugger_il_info_trace")
-						print (" - " + a_feat.written_class.name_in_upper + " :: NOP :: ")
-						print (	a_feat.feature_name 						
-								+ " Il_Line=" + a_il_line.to_hex_string
-								+ " Eiffel_Line=" + a_eiffel_line.out
+						print (" - " + a_feat.written_class.name_in_upper
+--						+ " :: NOP :: "
+								+ "."
+								+ a_feat.feature_name 
+								+ " -> "
+								+ " Il Offset=" + a_il_line.to_hex_string
+								+ " Eiffel Line=" + a_eiffel_line.out
 								+ "%N"
 							)
 					end
@@ -564,6 +568,16 @@ feature -- Recorder Once
 				is_debug_info_enabled 
 --				and then a_feature /= Void
 			then
+				debug ("debugger_il_info_trace")
+					print ("[>] Recording Once : "  + a_once_name + " = "
+							+ a_class_type.associated_class.name_in_upper 
+							+ "." + a_feature.feature_name 
+							+ " -> "
+							+ "Done=0x" + a_once_done_token.to_hex_string
+							+ "::"
+							+ "Result=0x" + a_once_result_token.to_hex_string
+							+ "%N")
+				end
 				l_info_from_class_type := info_from_class_type (a_class_type, True)
 				l_info_from_class_type.record_once_tokens (a_once_done_token, a_once_result_token, a_feature)
 			end
@@ -637,7 +651,7 @@ feature {NONE} -- Record processing
 		local
 			l_info_from_module: IL_DEBUG_INFO_FROM_MODULE
 			l_info_from_class_type: IL_DEBUG_INFO_FROM_CLASS_TYPE
-		do
+		do		
 			if ignore_feature (a_feature) then
 				debug ("debugger_il_info_trace")
 					print ("[!] Ignoring feature : " + a_feature.feature_name + "%N")
@@ -649,6 +663,16 @@ feature {NONE} -- Record processing
 					last_class_type_recorded := a_class_type
 				end
 
+				debug ("debugger_il_info_trace")
+					print ("[>] Recording : " 
+							+ a_class_type.associated_class.name_in_upper 
+							+ "." + a_feature.feature_name 
+							+ " -> "
+							+ "0x" + a_class_token.to_hex_string
+							+ "::"
+							+ "0x" + a_feature_token.to_hex_string
+							+ "%N")
+				end
 					--| Record `feature_i' indexed by `feature_token'
 				l_info_from_module := info_from_module (a_module.module_file_name, True)
 				l_info_from_module.record_feature_i (a_class_type, a_feature, a_feature_token)
@@ -680,6 +704,14 @@ feature {NONE} -- Class Specific info
 		local
 			l_info: IL_DEBUG_INFO_FROM_MODULE
 		do
+			debug ("debugger_il_info_trace")
+				print ("[>] Recording Class: " 					
+						+ a_class_type.associated_class.name_in_upper 
+						+ "::" + a_class_type.static_type_id.out
+						+ " -> "
+						+ "0x" + a_class_token.to_hex_string
+						+ "%N")
+			end			
 			l_info := info_from_module (a_module_name, True)
 			l_info.record_class_type (a_class_type, a_class_token)
 		ensure
@@ -701,8 +733,11 @@ feature {NONE} -- Internal access
 
 feature {IL_CODE_GENERATOR} -- Cleaning
 
-	last_module_info_cleaned: IL_DEBUG_INFO_FROM_MODULE
+	last_module_info_cleaned: STRING
 			-- Last cleaned Module
+
+	last_class_type_info_cleaned: CLASS_TYPE
+			-- Last cleaned Class Type
 
 	clean_class_type_info_for (a_class_type: CLASS_TYPE) is
 			-- Clean info related to this `a_class_type'.
@@ -710,29 +745,47 @@ feature {IL_CODE_GENERATOR} -- Cleaning
 			class_type_not_void: a_class_type /= Void
 		local
 			l_class_type: CLASS_TYPE
+			l_module_name: STRING
 			l_info_from_class_type: IL_DEBUG_INFO_FROM_CLASS_TYPE
 			l_info_from_module: IL_DEBUG_INFO_FROM_MODULE
 		do
 			l_class_type := a_class_type
 
 				--| Clean Class Type Info |--
-			l_info_from_class_type := info_from_class_type (l_class_type, False)
-			if l_info_from_class_type /= Void then
+			if last_class_type_info_cleaned /= l_class_type then
+				last_class_type_info_cleaned := l_class_type
 				debug ("debugger_il_info_trace")
-					print ("Cleaning " + l_info_from_class_type.class_type.associated_class.name_in_upper + "%N")
+					print ("Cleaning : " + l_class_type.associated_class.name_in_upper + "%N")
 				end
-				l_info_from_class_type.reset (a_class_type)
+				
+				l_info_from_class_type := info_from_class_type (l_class_type, False)
+				if l_info_from_class_type /= Void then
+					l_info_from_class_type.reset (a_class_type)
+				else
+					debug ("debugger_il_info_trace")
+						print ("  -> nothing to clean (new)%N")
+					end
+				end
 			end
 
 				--| Clean Module Info     |--
-			l_info_from_module := info_from_module (module_file_name_for_class (l_class_type), False)
-			if l_info_from_module /= Void then
-				if last_module_info_cleaned /= l_info_from_module then
-					last_module_info_cleaned := l_info_from_module
-					debug ("debugger_il_info_trace")
-						print ("Cleaning " + l_info_from_module.module_name + "%N")
-					end
+			l_module_name := module_file_name_for_class (l_class_type)
+			if 
+				(last_module_info_cleaned = Void) or else
+				not (last_module_info_cleaned.is_equal (l_module_name))
+			 then
+				last_module_info_cleaned := l_module_name
+				debug ("debugger_il_info_trace")
+					print ("Cleaning : " + l_module_name + "%N")
+				end
+
+				l_info_from_module := info_from_module (l_module_name, False)
+				if l_info_from_module /= Void then
 					l_info_from_module.reset (l_info_from_module.module_name)
+				else
+					debug ("debugger_il_info_trace")
+						print ("  -> nothing to clean (new)%N")
+					end
 				end
 			end
 		end

@@ -56,14 +56,9 @@ feature
 
 	create_oui_widget (a_parent: COMPOSITE) is
 		local
---temp: STRING;
---temp1: ANY	
 		do
 			!!widget.make (entity_name, a_parent);
 			select_widget;
---temp := "resizePolicy";
---temp1 := temp.to_c;
---group_c_set_int (widget.implementation.screen_object, 0, $temp1);
 			group_type.increment_counter;
 		end;
 
@@ -579,14 +574,5 @@ feature
 			retrieved_node.set_name_change (full_name);
 			retrieve_oui_widget;
 		end;
-
-feature {NONE} -- External features
-
-	group_c_set_int (a_w: POINTER; a_val: INTEGER; a_res: ANY)  is
-		external
-			"C"
-		alias
-			"set_int"
-		end; -- group_c_set_int
 
 end

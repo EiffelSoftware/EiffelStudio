@@ -224,7 +224,7 @@ feature
 
 feature {NONE} -- External features
 
-	set_dimension (scr_obj: POINTER; val: INTEGER; resource: ANY) is
+	set_dimension (scr_obj: POINTER; val: INTEGER; resource: POINTER) is
 		external
 			"C"
 		end; 

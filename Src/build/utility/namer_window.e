@@ -17,9 +17,8 @@ feature
 feature {RENAME_COMMAND}
 
     text: TEXT
-    ok_b: PUSH_B
+	ok_p: OK_BUTTON
     cancel_p: CANCEL_BUTTON
-    cancel_b: PUSH_B
     new_name: STRING
 
     make (id: STRING; a_scr: SCREEN; who: RENAME_COMMAND) is
@@ -43,6 +42,7 @@ feature {RENAME_COMMAND}
             form_d_make (id, shell)
             set_title ("Namer")
             set_size (160, 70)
+			set_x_y (a_scr.x - real_x, a_scr.y - real_y)
 
             -- a cancel (pict_color_b)
             !! cancel_p.make ("cancel", Current)
@@ -50,39 +50,23 @@ feature {RENAME_COMMAND}
             attach_right (cancel_p, 3)
 
 			-- an ok button (pict_color_b)
+			!! ok_p.make ("ok", Current)
+			attach_top (ok_p, 3)
+			attach_right_widget (cancel_p, ok_p, 2)
 
 			-- micro help
 			!!focus_label.make ("focus", Current)
+			focus_label.set_text ("")
 			attach_top (focus_label, 3)
 			attach_left (focus_label, 3)
-			attach_right_widget (cancel_p, focus_label, 3)
+			attach_right_widget (ok_p, focus_label, 3)
 
             -- add a text field
             !! text.make ("text", Current)
             attach_left(text, 1)
             attach_right(text, 1)
-			attach_top_widget (focus_label, text, 1)
-
-            -- an ok button
-            !! ok_b.make ("ok", Current)
-            ok_b.set_text ("Ok")
-            ok_b.set_x_y (10, 10)
-            ok_b.set_size (70,20)
-            ok_b.add_activate_action (Current, close_arg)
-            attach_bottom(ok_b, 3)
-            attach_left(ok_b, 3)
-            attach_top_widget(text, ok_b, 2)
-            
-            -- a cancel button
-            !! cancel_b.make ("ok", Current)
-            cancel_b.set_text ("Cancel")
-            cancel_b.set_size (50,20)
-            cancel_b.set_x_y (70, 10)
-            cancel_b.add_activate_action (Current, cancel_arg)
-            attach_bottom(cancel_b, 3)
-            attach_right(cancel_b, 3)
-            attach_left_widget(ok_b, cancel_b, 2)
-            attach_top_widget(text, cancel_b, 2)
+			attach_top_widget (ok_p, text, 1)
+			attach_bottom (text, 1)
 
 			-- add callbacks and modal behaviour
 			text.set_action ("<Key>Return", Current, close_arg)
@@ -103,11 +87,26 @@ feature
 
 	focus_label: LABEL
 
+	cancel is
+		-- discard the changes in the text field
+		-- then close the popup
+		do
+			text.clear 
+			close	
+		end
+
 	close is
 		-- close the popup
 		do
 			set_no_grab
 			destroy
+		end
+
+	set_name is
+		-- set the name to text value
+		do
+			new_name := text.text
+			association.named_object.set_visual_name(text.text)
 		end
 
 feature {NONE} -- Command Actions
@@ -118,11 +117,6 @@ feature {NONE} -- Command Actions
         end
 
     raise_arg: ANY is
-        once
-            !!Result
-        end
-
-    cancel_arg: ANY is
         once
             !!Result
         end
@@ -142,10 +136,6 @@ feature {NONE} -- Command Actions
                 if text /= Void then
                     text.set_selection (0, text.text.count)
                 end
-            end
-
-            if arg = cancel_arg then
-                close
             end
 
             if arg = close_arg then

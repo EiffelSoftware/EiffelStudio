@@ -7,7 +7,7 @@ inherit
 			Bulletin_pixmap as symbol
 		export
 			{NONE} all
-		end;
+		end
 
 	COMPOSITE_C
 		redefine
@@ -21,85 +21,80 @@ feature
 	context_type: CONTEXT_TYPE is
 		do
 			Result := context_catalog.set_page.bulletin_type
-		end;
+		end
 
 	create_oui_widget (a_parent: COMPOSITE) is
 		local
---temp: STRING;
---temp1: ANY	
 		do
-			!!widget.make (entity_name, a_parent);
-			select_widget;
---temp := "resizePolicy";
---temp1 := temp.to_c;
---bulletin_c_set_int (widget.implementation.screen_object, 0, $temp1);
-			set_size (40, 40);
-		end;
+			!!widget.make (entity_name, a_parent)
+			select_widget
+			set_size (40, 40)
+		end
 
-	widget: EB_BULLETIN;
+	widget: EB_BULLETIN
 
 feature {NONE}
 
 	editor_form_cell: CELL [INTEGER] is
 		once
 			!!Result.put (0)
-		end;
+		end
 
 	namer: NAMER is
 		once
-			!!Result.make ("Bulletin");
-		end;
+			!!Result.make ("Bulletin")
+		end
 
 feature 
 
-	eiffel_type: STRING is "EB_BULLETIN";
+	eiffel_type: STRING is "EB_BULLETIN"
 
 	intermediate_name: STRING is
 			-- full name of the context i.e. with root, group, ...
 		local
-			bup: BULLETIN_C;
+			bup: BULLETIN_C
 		do
-			bup ?= parent;
+			bup ?= parent
 			if bup /= Void then
-				result := parent.intermediate_name;
+				result := parent.intermediate_name
 			else
-				Result := parent.full_name;
-			end;
-		end;
+				Result := parent.full_name
+			end
+		end
 
 	is_bulletin: BOOLEAN is
 		do
 			Result := True
-		end;
+		end
 
 	transform_in_group (a_group: GROUP_C) is
 			-- Transform the bulletin and its content in a group instance
 			-- (Creation of the group)
 		do
-			parent.child_start;
-			parent.search_same_child (Current);
-			parent.remove_child;
-			tree.cut (tree_element);
-			context_catalog.clear_editors (Current);
-			transformed_in_group :=  True;
-			group_context :=  a_group;
-			set_new_parent (a_group);
-		end;
+			parent.child_start
+			parent.search_same_child (Current)
+			parent.remove_child
+			tree.cut (tree_element)
+			context_catalog.clear_editors (Current)
+			transformed_in_group :=  True
+			group_context :=  a_group
+			set_new_parent (a_group)
+		end
 
 	transform_in_bulletin is
 			-- Undo the transformation from bulletin to group instance
 		do
-			link_to_parent;
-			widget.set_managed (True);
-			tree.append (tree_element);
-			transformed_in_group := False;
-			set_new_parent (Current);
-		end;
+			link_to_parent
+			widget.set_managed (True)
+			tree.append (tree_element)
+			transformed_in_group := False
+			set_new_parent (Current)
+		end
 
-	group_context: GROUP_C;
+	group_context: GROUP_C
 		-- For the callbacks in the selection manager
 
-	transformed_in_group: BOOLEAN;
+	transformed_in_group: BOOLEAN
 		-- For the callbacks in the selection manager
 
 	original_stone: CONTEXT is
@@ -108,8 +103,8 @@ feature
 				Result := group_context
 			else
 				Result := Current
-			end;
-		end;
+			end
+		end
 
 	
 feature {NONE}
@@ -123,28 +118,16 @@ feature {NONE}
 			until
 				child_offright
 			loop
-				child.set_parent(a_parent);
-				child_forth;
-			end;
-		end;
+				child.set_parent(a_parent)
+				child_forth
+			end
+		end
 
--- ****************
--- Storage features
--- ****************
-	
-feature 
+feature -- Storage 
 
 	stored_node: S_BULLETIN is
 		do
-			!!Result.make (Current);
-		end;
+			!!Result.make (Current)
+		end
 
-feature {NONE} -- External features
-
-	bulletin_c_set_int (a_w: POINTER; a_val: INTEGER; a_res: ANY) is
-		external
-			"C"
-		alias
-			"set_int"
-		end; -- bulletin_c_set_int
 end

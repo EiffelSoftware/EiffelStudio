@@ -274,12 +274,4 @@ feature {NONE}
 			end;
 		end;
 
-
-feature {NONE} -- External
-
-	efb_translation_string: STRING is
-		external
-			"C"
-		end
-
 end

@@ -12,14 +12,14 @@ inherit
 		end;
 	DRAG_SOURCE;
 	LABEL_STONE;
-	SCROLL_LIST
+	SCROLLABLE_LIST
 		rename 
 			make as list_make,
 			merge_right as list_merge_right
 		export
 			{APP_EDITOR} all
 		end;
-	SCROLL_LIST
+	SCROLLABLE_LIST
 		rename		
 			make as list_make
 		export
@@ -66,12 +66,19 @@ feature
 			end;
 		end;
 
-	merge_right (l: SORTED_TWO_WAY_LIST [TRAN_NAME]) is
+	merge_right (l: ARRAYED_LIST [TRAN_NAME]) is
 			-- Merge right of cursor position put `l'. Construct label_names
 			-- from `l'.
 		do
 			l.start;
-			label_names := l.duplicate (l.count);	
+			from
+				l.start
+			until
+				l.after
+			loop
+				label_names.extend (l.item)
+				l.forth
+			end
 			list_merge_right (l);
 		end;
 

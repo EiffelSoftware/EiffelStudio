@@ -21,12 +21,13 @@ inherit
 			init_toolkit
 		end;
 	STATE_STONE;
-	SCROLL_LIST
+	SCROLLABLE_LIST
 		rename 
 			identifier as oui_identifier,
 			make as list_create,
 			init_toolkit as scroll_list_init_toolkit
 		end;
+		
 	REMOVABLE
 
 creation

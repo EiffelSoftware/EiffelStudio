@@ -55,6 +55,7 @@ cd ..
 cd bin
 gacutil -u ISE.Reflection.EiffelComponents
 gacutil -i ISE.Reflection.EiffelComponents.dll
+regasm ISE.Reflection.EiffelComponents.dll
 cd ..
 
 echo *****************************************************************
@@ -151,6 +152,7 @@ cd ..
 cd bin
 gacutil -u ISE.Reflection.CodeGenerator
 gacutil -i ISE.Reflection.CodeGenerator.dll
+regasm ISE.Reflection.CodeGenerator.dll
 cd ..
 
 echo *********************************************************

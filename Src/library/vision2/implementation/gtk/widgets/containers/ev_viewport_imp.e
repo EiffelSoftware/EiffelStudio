@@ -152,9 +152,6 @@ feature -- Element change
 				C.gtk_widget_set_uposition (container_widget, 0, -1)
 				internal_set_value_from_adjustment (horizontal_adjustment, a_x)
 			end
-			if item_imp.resize_actions_internal /= Void then
-				item_imp.resize_actions_internal.resume
-			end
 			internal_x_offset := a_x
 			unblock_resize_actions
 		end

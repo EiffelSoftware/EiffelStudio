@@ -130,14 +130,14 @@ feature
 					project_tool.set_initialized
 				else	
 					warner.set_window (text_window);
-					warner.custom_call (Current, temp, " Ok ", Void, Void);
+					warner.custom_call (Current, temp, " OK ", Void, Void);
 				end
 			else
 				retried := False;
 				warner.set_window (text_window);
 				warner.custom_call (Current, 
 								w_Cannot_retrieve_project (project_dir.name), 
-								" Ok ", Void, Void)
+								" OK ", Void, Void)
 			end
 		rescue
 			if Rescue_status.is_unexpected_exception then

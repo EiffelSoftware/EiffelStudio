@@ -67,11 +67,12 @@ extern "C" {
 	 * WEL_END_GET_CONTEXT is now empty
 	 */
 
-#define WEDCX
 #define WGTCX \
 	wel_global_context_t *wel_globals = \
 		(wel_global_context_t *) TlsGetValue (wel_global_key);
 
+#define WEDCX 
+	
 
 typedef struct tag_wel_globals		
 /* Structure containing all global variables to the run-time */

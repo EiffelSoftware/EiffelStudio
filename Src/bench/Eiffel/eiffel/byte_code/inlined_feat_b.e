@@ -60,7 +60,6 @@ feature
 			if compound /= Void then
 				compound.enlarge_tree
 			end;
-
 			saved_compound := deep_clone (compound);
 
 			inliner.set_inlined_feature (Void);
@@ -332,7 +331,7 @@ feature {NONE}
 
 	inliner: INLINER is
 		do
-			Result := System.remover.inliner
+			Result := System.inliner
 		end
 
 feature {NONE} -- Registers

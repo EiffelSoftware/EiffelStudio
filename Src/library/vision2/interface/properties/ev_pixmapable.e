@@ -9,7 +9,7 @@ indexing
 	revision: "$Revision$"
 	
 deferred class 
-	EV_PIXMAP_CONTAINER
+	EV_PIXMAPABLE
 
 inherit
 	EV_ANY
@@ -19,9 +19,9 @@ inherit
 	
 feature -- Implementation
 	
-	implementation: EV_PIXMAP_CONTAINER_I
+	implementation: EV_PIXMAPABLE_I
 			
-end -- class EV_PIXMAP_CONTAINER
+end -- class EV_PIXMAPABLE
 
 --|----------------------------------------------------------------
 --| EiffelVision: library of reusable components for ISE Eiffel.

@@ -1,8 +1,8 @@
-system ecase
+system
+	help 
 
 root
-	
-	viewer:"make" 
+	viewer(graphical):"make" 
 
 default
 	assertion(all);
@@ -10,8 +10,10 @@ default
 	dead_code_removal (no);
 
 cluster
-	all viewer: 	"d:\help_tool\viewer"
-	structure:		"d:\help_tool\structure"
+	help_base:					"d:\viewer\src\help"
+	graphical(help_base): 		"$\graphical"
+	kernel(help_base):	 		"$\kernel"
+	xml_specific(help_base):	"$\xml_specific"
 	
 	libraries:	"$EIFFEL4\library"
 

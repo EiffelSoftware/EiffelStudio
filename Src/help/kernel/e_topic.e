@@ -8,6 +8,11 @@ class
 inherit
 	COMPARABLE
 
+	FACILITIES
+		undefine
+			is_equal		
+		end
+
 creation
 	make,
 	make_from_xml_tree
@@ -15,6 +20,7 @@ creation
 feature
 
 	make(new_id, new_head:STRING; new_location:FILE_NAME) is
+			-- Not used.
 		require
 			id_not_empty: (new_id /= Void) and then (not new_id.empty)
 			location_not_empty: (new_location /= Void) and then (not new_location.empty)
@@ -32,18 +38,20 @@ feature
 	make_from_xml_tree(node:XML_ELEMENT; path:FILE_NAME) is
 			-- Create this topic from XML-tree.
 		require
-			node_not_void: node /= Void
+			node_not_void: node /= Void and path /= Void
 		local
 			sub: XML_ELEMENT
+			c_item: XML_TEXT
 			node_cursor: DS_BILINKED_LIST_CURSOR [XML_NODE]
 			new_topic: E_TOPIC
 			new_text: E_TEXT
 		do
 			location := path
-			-- First, check if the topic is a reference
+
 			if node.attributes.has("LOCATION") then
+				-- Topic is reference, so come back later.
 				create location.make_from_string(node.attributes.item("LOCATION").value)
-				id := "unknown"
+				id := "unknown" -- Unknown yet.
 				make_from_file_name(location)
 			else
 				-- Get the ID
@@ -61,7 +69,8 @@ feature
 					sub ?= node_cursor.item
 					if sub /= Void then
 						if sub.name.is_equal("HEAD") then
-							head := sub.first.out
+							c_item ?= sub.first
+							head := c_item.string
 						elseif sub.name.is_equal("TOPIC") then
 							-- This is a topic with subtopics. There should be
 							-- no TEXT tags...
@@ -94,7 +103,7 @@ feature
 		end
 
 	make_from_file_name(file_name:FILE_NAME) is
-			-- Create this topic from a file
+			-- Opens the XML file and calls 'make_from_xml_tree'.
 		require
 			file_name_not_void: file_name /= Void
 		local
@@ -103,37 +112,46 @@ feature
 			parser: XML_TREE_PARSER
 			node_cursor: DS_BILINKED_LIST_CURSOR [XML_NODE]
 			doc: XML_ELEMENT
+			err: BOOLEAN
 		do
-			-- TODO: use current path if not specified.
-			create parser.make 
-			create file.make (file_name)
-			if file.exists then
-				file.open_read
-				file.read_stream (file.count)
-				create s.make(file.count)
-				s.append (file.last_string)
-				parser.parse_string(s)
-				parser.set_end_of_file
-				file.close
-
-				-- Now find the first TOPIC-tag...
-				if parser.root_element.name.is_equal("EIFFEL_DOCUMENT") then
-					doc := find_first_node_with_tag("TOPIC", parser.root_element)
-					if doc /= Void then
-						make_from_xml_tree(doc, file_name)
+			if not err then
+				create parser.make 
+				create file.make (file_name)
+				if file.exists then
+					file.open_read
+					file.read_stream (file.count)
+					create s.make(file.count)
+					s.append (file.last_string)
+					parser.parse_string(s)
+					parser.set_end_of_file
+					file.close
+	
+					-- Now find the first TOPIC-tag...
+					if parser.root_element.name.is_equal("EIFFEL_DOCUMENT") then
+						doc := find_first_node_with_tag("TOPIC", parser.root_element)
+						if doc /= Void then
+							make_from_xml_tree(doc, file_name)
+						else
+							head := "No TOPIC-tag found in: "+file_name
+						end
 					else
-						head := "No TOPIC-tag found in: "+file_name
+						head := "No EIFFEL_DOCUMENT-tag found in: "+file_name
 					end
 				else
-					head := "No EIFFEL_DOCUMENT-tag found in: "+file_name
+					s:="The file " + file_name
+					warning("File not found",s,main_window)
 				end
 			else
-				head := "File not found: "+file_name
+				s:="The file " + file_name
+				warning("File not accesible",s,main_window)
 			end
+		rescue
+			err := TRUE
+			retry
 		end
 
 	infix "<" (other: like Current): BOOLEAN is
-			-- Is current object less than `other'?
+			-- Is current object less than `other'? (comparable)
 		local
 			s,os: STRING
 		do
@@ -146,6 +164,8 @@ feature
 
 	find_first_node_with_tag(tag_name:STRING; node:XML_ELEMENT):XML_ELEMENT is
 			-- Search this node for a node with tag_name.
+		require
+			not_void: tag_name /= Void and node /= VOid
 		local
 			node_cursor: DS_BILINKED_LIST_CURSOR [XML_NODE]
 			found: BOOLEAN
@@ -198,29 +218,28 @@ feature
 			Result := subtopics /= Void
 		end
 
-	create_tree_item(parent:EV_TREE_ITEM_HOLDER; com:E_TOPIC_SELECT_COMMAND) is
-			-- make a EV_TREE_ITEM
+	create_tree_item(parent:EV_TREE_ITEM_HOLDER) is
+			-- Make a TOPIC_TREE_ITEM.
 		local
-			item: EV_TREE_ITEM
-			arg: EV_ARGUMENT1[E_TOPIC]
+			item: TOPIC_TREE_ITEM
 		do
-			create item.make_with_text(parent, head)
-			create arg.make(Current)
-			item.add_select_command(com, arg)
+			create item.make_item(parent, Current)
 			if contains_subtopics then
 				from
 					subtopics.start
 				until
 					subtopics.after
 				loop
-					subtopics.item.create_tree_item(item, com)
+					subtopics.item.create_tree_item(item)
 					subtopics.forth
 				end
 			end
 		end
 
 	add_to_list(list: SORTED_TWO_WAY_LIST[E_TOPIC]) is
-			-- make sorted list
+			-- Make sorted list.
+		require
+			not_void: list /= Void
 		do
 			list.extend(Current)
 			if contains_subtopics then
@@ -235,8 +254,30 @@ feature
 			end
 		end
 
+	add_to_in_order_list(list: LINKED_LIST[E_TOPIC]) is
+			-- Make in-order list of text-topics.
+		require
+			not_void: list /= VOid
+		do
+			if contains_text then
+				list.extend(Current)
+			end
+			if contains_subtopics then
+				from
+					subtopics.start
+				until
+					subtopics.after
+				loop
+					subtopics.item.add_to_in_order_list(list)
+					subtopics.forth
+				end
+			end
+		end
+
 	add_to_hash_table(ht: HASH_TABLE[E_TOPIC,STRING]) is
-			-- make hashtable
+			-- Make hashtable.
+		require
+			ht /= Void
 		do
 			ht.force(Current, Current.id)
 			if contains_subtopics then
@@ -251,26 +292,48 @@ feature
 			end
 		end
 
+feature {VIEWER_WINDOW} -- Display
+
 	display(area: E_TOPIC_DISPLAY) is
 			-- Output the text (if any) on 'area'.
+		require
+			not_void: area /= Void
+		local
+			temp: E_TEXT_PART
 		do
 			area.clear
 			area.set_head_format
+			area.set_text(head)
+			area.line_break(0)
 			if contains_text then
-				area.set_text(head)
-				area.line_break
-				area.line_break
 				from
 					paragraphs.start
 				until
 					paragraphs.after
 				loop
+					area.line_break(0)
 					paragraphs.item.display(area)
-					area.line_break
 					paragraphs.forth
 				end
-			else
-				area.set_text("Contains no text")
+			elseif contains_subtopics then
+				create temp.make_empty
+				temp.set_text("Make your choice:")
+				temp.set_line_break(true)
+				temp.display(area)
+				from
+					subtopics.start
+				until
+					subtopics.after
+				loop
+					create temp.make_empty
+					area.line_break(1)
+					temp.set_text(subtopics.item.id+" ("+subtopics.item.head+")")
+					temp.set_hyperlink(subtopics.item.id)
+					temp.set_bullet(true)
+					temp.set_font_color_rgb(255,0,0)
+					temp.display(area)
+					subtopics.forth
+				end
 			end				
 		end
 

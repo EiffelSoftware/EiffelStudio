@@ -1,37 +1,55 @@
 indexing
 	description: "Display for help-topics"
 	author: "Vincent Brendel"
-	date: "$Date$"
-	revision: "$Revision$"
 
 class
 	E_TOPIC_DISPLAY
 
-	-- Replace ANY below by the name of parent class if any (adding more parents
-	-- if necessary); otherwise you can remove inheritance clause altogether.
 inherit
 	EV_RICH_TEXT
 		rename
 			make as make_rich
 		end
 
+	FACILITIES
+
 creation
 	make
 
 feature -- Initialization
 
-	make(par:EV_CONTAINER) is
+	make(par:EV_CONTAINER; vw:VIEWER_WINDOW) is
 			-- Initialize
+		local
+			com: EV_ROUTINE_COMMAND
 		do
 			make_rich(par)
---			set_editable(false)
+			viewer := vw
 			init_head_format
 			create text_format.make
 			reset_text_format
 			create hyperlinks.make
+			create com.make(~link_clicked)
+			add_button_press_command(1, com, Void)
+		end
+
+	link_clicked(args: EV_ARGUMENT; data: EV_EVENT_DATA) is
+			-- Check if there is a link on this position.
+		require
+			link_clicked: data /= Void
+		local
+			md: EV_BUTTON_EVENT_DATA
+			link: E_TOPIC_LINK
+		do
+			md ?= data
+			link := get_link_from_position(md.x, md.y)
+			if link /= Void then
+				viewer.set_selected_topic_by_id(link.topic_id)
+			end
 		end
 
 	init_head_format is
+			-- Initialize the font attributes for topic titles.
 		local
 			font: EV_FONT
 			color: EV_COLOR
@@ -47,6 +65,7 @@ feature -- Initialization
 		end
 
 	reset_text_format is
+			-- Initialize the font attributes for the body of the text.
 		local
 			font: EV_FONT
 			color: EV_COLOR
@@ -61,17 +80,15 @@ feature -- Initialization
 		end
 
 	set_head_format is
+			-- Set head format.
 		do
 			set_character_format(head_format)
 		end
 
-	deep_clone_text_format:EV_CHARACTER_FORMAT is
-		do
-			create Result.make
-			Result := deep_clone(text_format)
-		end
-
 	append_hyperlinked_text(txt, link:STRING) is
+			-- Append Hyperlink.
+		require
+			not_void: txt /= Void and link /= Void
 		local
 			new_link:E_TOPIC_LINK
 			first: INTEGER
@@ -83,11 +100,14 @@ feature -- Initialization
 		end
 
 	remove_all_hyperlinks is
+			-- remove the hyperlinks.
 		do
 			hyperlinks.wipe_out
 		end
 
 	get_link_from_position(ax, ay: INTEGER): E_TOPIC_LINK is
+		require
+			possible: ax >=0 and ay >=0
 		local
 			charpos: INTEGER
 			found: BOOLEAN
@@ -112,23 +132,31 @@ feature -- Initialization
 			remove_all_hyperlinks
 		end
 
-	bulleted_list is
-			-- Insert margin (4 spaces).
-		do
-			append_text("    ")
-		end
-
 	bullet_list_item is
 		do
-			line_break
-			append_text("> ")
+			append_text("- ")
 		end
 
-	line_break is
+	line_break(indent:INTEGER) is
+			-- Insert a Carriage Return.
+		require
+			possible: indent >=0
+		local
+			i: INTEGER
 		do
 			set_position(text_length+1)
 			put_new_line
+			from
+				i := indent
+			until
+				i <= 0
+			loop
+				append_text("    ")
+				i := i - 1
+			end
 		end
+
+feature -- Implementation
 
 	head_format: EV_CHARACTER_FORMAT
 
@@ -136,7 +164,9 @@ feature -- Initialization
 
 	hyperlinks: LINKED_LIST[E_TOPIC_LINK]
 
+	viewer: VIEWER_WINDOW
+
 invariant
-	head_format_exists: head_format /= Void
+	E_TOPIC_DISPLAY_not_void: hyperlinks /= Void and viewer /= Void and text_format /= Void and head_format /= VOid
 
 end -- class E_TOPIC_DISPLAY

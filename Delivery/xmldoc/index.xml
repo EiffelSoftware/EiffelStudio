@@ -1,11 +1,6 @@
 <document title="Online Eiffel Documentation">
 	<meta_data/>
 	<paragraph>
-		<paragraph>
-			Welcome to the new and improved Online Eiffel Documentation.  This is a <bold>beta-version</bold> of the 
-			new documents and the documents herein will be promoted to the first official version soon.
-		</paragraph>
-
 		<output output="studio">
 			<paragraph>Congratulations for installing Eiffel Software's Eiffel, featuring 
 				<link>

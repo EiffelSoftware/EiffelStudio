@@ -16,9 +16,6 @@ inherit
 			forbid_resize as forbid_recompute_size
 		undefine
 			class_background,
-			set_height,
-			set_size, 
-			set_width,
 			child_has_resized,
 			on_destroy,
 			make_with_coordinates,
@@ -29,7 +26,10 @@ inherit
 		redefine
 			class_name,
 			on_size,
+			set_height,
+			set_size, 
 			unrealize,
+			set_width,
 			default_position
 		select
 			unrealize
@@ -68,7 +68,10 @@ inherit
 		redefine
 			class_name,
 			on_size,
-			default_position
+			default_position,
+			set_height,
+			set_size, 
+			set_width
 		end
 
 	BULLETIN_D_I
@@ -87,7 +90,7 @@ feature {NONE} -- Initialization
 			parent ?= oui_parent.implementation
 			a_bulletin_d.set_dialog_imp (Current)
 			managed := True
-			shell_height := title_bar_height + 2 * window_border_height + window_frame_height
+			shell_height := title_bar_height + window_border_height + 2 * window_frame_height
 			shell_width := 2 * window_frame_width
 			max_width := full_screen_client_area_width 
 			max_height := full_screen_client_area_height
@@ -122,6 +125,50 @@ feature -- Status setting
 			-- Class name
 		once
 			Result := "EVisionBulletinDialog"
+		end
+
+	set_height (a_height: INTEGER) is
+			-- Set height to `new_height'.
+		do
+			if private_attributes.height /= a_height then
+				private_attributes.set_height (a_height)
+				if exists then
+					wel_set_height (a_height + shell_height)
+				end
+				if parent /= Void then
+					parent.child_has_resized
+				end
+			end
+		end
+
+	set_size (new_width, new_height: INTEGER) is
+			-- Set size to `new_width' and `new_height'.
+		do
+			if private_attributes.width /= new_width
+			or else private_attributes.height /= new_height then
+				private_attributes.set_height (new_height)
+				private_attributes.set_width (new_width)
+				if exists then 
+					resize (new_width + shell_width, new_height + shell_height)
+				end
+				if parent /= Void then
+					parent.child_has_resized
+				end
+			end
+		end
+
+	set_width (new_width: INTEGER) is
+			-- Set width to `new_width'.
+		do
+			if private_attributes.width /= new_width then
+				private_attributes.set_width (new_width)
+				if exists then
+					wel_set_width (new_width + shell_width)
+				end
+				if parent /= Void then
+					parent.child_has_resized
+				end
+			end
 		end
 
 end -- class BULLETIN_D_IMP

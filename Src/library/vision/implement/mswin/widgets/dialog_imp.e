@@ -12,8 +12,7 @@ inherit
 			destroy as wm_shell_destroy,
 			realize as wm_shell_realize
 		redefine
-			width,
-			height,
+			x,
 			show,
 			default_style,
 			class_name,
@@ -23,8 +22,7 @@ inherit
 
 	WM_SHELL_IMP
 		redefine
-			width,
-			height,
+			x,
 			show,
 			destroy,
 			default_style,
@@ -52,24 +50,15 @@ feature -- Status report
 			Result := realized and then shown
 		end
 
-	width: INTEGER is
-			-- Width of dialog
+	x: INTEGER is
+			-- X axis position.
+			-- If `default_position' is set, we just need to
+			-- set `x' to `cw_usedefault'.
 		do
-			if exists then
-				Result := wel_width
+			if default_position then
+				Result := cw_usedefault
 			else
-				Result := private_attributes.width
-			end
-		end
- 
-
-	height: INTEGER is
-			-- Height of dialog
-		do
-			if exists then
-				Result := wel_height
-			else
-				Result := private_attributes.height
+				Result := Precursor
 			end
 		end
 

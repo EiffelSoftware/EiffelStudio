@@ -29,7 +29,6 @@ feature -- Merging
 				if has (class_id) then
 					common_classes.extend (other.item_for_iteration)
 				else
--- TO DO: Check for class name clashes here.
 					put (other.item_for_iteration, class_id)
 				end
 				other.forth

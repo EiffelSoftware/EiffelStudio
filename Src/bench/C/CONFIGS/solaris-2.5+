@@ -1,13 +1,7 @@
 #!/bin/sh
 #
-# This file was produced by running the Configure script. It holds all the
-# definitions figured out by Configure. Should you modify one of these values,
-# do not forget to propagate your changes by running "Configure -der". You may
-# instead choose to run each of the .SH files by yourself, or "Configure -S".
-#
-
+# Configuration file for solaris 2.5/2.6
 # Configured by: manuelt
-# Target system: sunos dakar 5.6 sparc 
 
 
 d_bsdsig='undef'
@@ -16,15 +10,23 @@ cc='gcc'
 cpp='/usr/ccs/lib/cpp'
 ar='ar'
 ld='ld'
+lngpad_2='8'
 
 mtccflags='-D_REENTRANT -DEIF_THREADS -DSOLARIS_THREADS'
+mtcppflags='-D_REENTRANT -DEIF_THREADS -DSOLARIS_THREADS'
 ccflags=''
+sharedccflags='-fPIC'
 cppflags=''
+sharedsuffix='.so'
+sharedlibversion='.1.0'
 ldflags=''
+ldsharedflags='-G'
 
 libs='-lsocket -lnsl -lm'
+sharedlibs='-lsocket -lnsl -lm'
 mtlibs='-lsocket -lnsl -lm -lthread'
-
+mtsharedlibs='-lsocket -lnsl -lm -lthread'
+sharedlink='ld'
 prefix='lib'
 mt_prefix='mt'
 concurrent_prefix='c'
@@ -45,8 +47,6 @@ eunicefix=':'
 #######################################
 
 
-#added by ET: use default sigwaiting (only on 2.5+)
-d_dftlsigwaiting='define'
 d_bsd='undef'
 d_eunice='undef'
 d_xenix='undef'

@@ -384,7 +384,7 @@ feature -- Basic operations
 			-- Assign `new_name' to `name'.
 		require
 			name_not_void: new_name /= Void
-			no_object_has_name: not object_handler.named_object_exists (new_name, Current)
+			no_object_has_name: not object_handler.name_in_use (new_name, Current)
 		do
 			name := new_name
 			edited_name := new_name

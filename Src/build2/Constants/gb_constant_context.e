@@ -33,6 +33,7 @@ feature -- Status_setting
 	modify (a_constant: GB_CONSTANT; an_object: GB_OBJECT; a_property, an_attribute: STRING) is
 			-- Modify `Current' to reflect arguments.
 		require
+			not_destroyed: not is_destroyed
 			constant_not_void: a_constant /= Void
 			an_object_not_void: an_object /= Void
 			property_valid: a_property /= Void and then not a_property.is_empty
@@ -63,6 +64,9 @@ feature -- Measurement
 	is_equal (other: GB_CONSTANT_CONTEXT): BOOLEAN is
 			-- Is `other' attached to an object considered
 			-- equal to current object?
+		require else
+			not_destroyed: not is_destroyed
+			other_not_void: other /= Void
 		do
 			if constant = other.constant and
 				object = other.object and
@@ -71,6 +75,31 @@ feature -- Measurement
 				Result := True
 			end
 		end
+		
+	is_destroyed: BOOLEAN
+		-- Has `Current' been destroyed?
+		
+feature -- Destruction
+
+	destroy is
+			-- Destroy `Current' and unreference.
+		require
+			not_destroyed: not is_destroyed
+			constant_not_void: constant /= Void
+			object_not_void: object /= Void
+			property_not_void: property /= Void
+			attribute_not_void: attribute /= Void
+			valid_context: object.constants.item (property + attribute) = Current
+		do
+			is_destroyed := True
+			constant.remove_referer (Current)
+			object.constants.remove (property + attribute)
+		ensure
+			is_destroyed: is_destroyed = True
+			unreferenced: not constant.referers.has (Current) and
+				not object.constants.has (property + attribute)
+		end
+		
 
 invariant
 	constant_not_void: constant /= Void

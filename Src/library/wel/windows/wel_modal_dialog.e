@@ -11,7 +11,7 @@ class
 inherit
 	WEL_DIALOG
 
-creation
+create
 	make_by_id,
 	make_by_name,
 	make_by_template

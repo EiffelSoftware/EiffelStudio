@@ -129,7 +129,7 @@ inherit
 
 	EV_BUTTON_ACTION_SEQUENCES_IMP
 	
-creation
+create
 	make
 
 feature {NONE} -- Initialization

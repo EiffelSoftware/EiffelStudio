@@ -21,7 +21,7 @@ inherit
 			set_green as wel_set_green
 		end
 
-creation
+create
 	make
 
 feature -- Initialization

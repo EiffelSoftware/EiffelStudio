@@ -12,7 +12,7 @@ inherit
 	WEL_STRUCTURE
 	WEL_BIT_OPERATIONS
 
-creation
+create
 	make,
 	make_by_pointer
 

@@ -30,7 +30,7 @@ inherit
 			parent_of_items_is_current
 		end
 		
-creation
+create
 	default_create,
 	make_with_text,
 	make_with_function

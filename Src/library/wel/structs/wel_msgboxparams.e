@@ -13,7 +13,7 @@ inherit
 			make as structure_make
 		end
 
-creation
+create
 	make_by_id,
 	make_basic
 

@@ -14,7 +14,7 @@ inherit
 	-- EV_ACTION_SEQUENCE [TUPLE [keystring: STRING]]
 	-- (ETL3 TUPLE with named parameters)
 	
-creation
+create
 	default_create
 
 feature -- Access

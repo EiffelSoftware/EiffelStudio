@@ -23,7 +23,7 @@ inherit
 			class_background			
 		end
 
-creation
+create
 	make,
 	make_with_coordinates
 

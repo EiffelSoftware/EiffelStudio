@@ -13,7 +13,7 @@ inherit
 			default_style
 		end
 
-creation
+create
 	make_child,
 	make_top
 

@@ -18,7 +18,7 @@ inherit
 			is_equal
 		end
 
-creation
+create
 	make_empty,
 	make_elliptic,
 	make_elliptic_indirect,

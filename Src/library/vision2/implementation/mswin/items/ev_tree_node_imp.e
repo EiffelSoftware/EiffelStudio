@@ -88,7 +88,7 @@ inherit
 
 	EV_TREE_NODE_ACTION_SEQUENCES_IMP
 
-creation
+create
 	make
 
 feature {NONE} -- Initialization

@@ -10,7 +10,7 @@ class
 inherit
 	WEL_STRUCTURE
 
-creation
+create
 	make
 
 feature -- Access

@@ -31,7 +31,7 @@ inherit
 			{NONE} all
 		end
 
-creation
+create
 	make,
 	make_with_window,
 	make_by_pointer

@@ -14,7 +14,7 @@ inherit
 			make as structure_make
 		end
 
-creation
+create
 	make
 
 feature {NONE} -- Initialization

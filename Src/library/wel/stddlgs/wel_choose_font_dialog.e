@@ -29,7 +29,7 @@ inherit
 			{ANY} valid_font_type_constant
 		end
 
-creation
+create
 	make
 
 feature {NONE} -- Initialization

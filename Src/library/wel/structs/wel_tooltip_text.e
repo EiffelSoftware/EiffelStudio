@@ -17,7 +17,7 @@ inherit
 			{NONE} all
 		end
 
-creation
+create
 	make,
 	make_by_nmhdr,
 	make_by_pointer

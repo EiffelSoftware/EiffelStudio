@@ -12,7 +12,7 @@ inherit
 	-- EV_ACTION_SEQUENCE [TUPLE [an_x, a_y: INTEGER; a_pick_and_dropable: EV_ABSTRACT_PICK_AND_DROPABLE]]
 	-- (ETL3 TUPLE with named parameters)
 	
-creation
+create
 	default_create
 
 feature -- Access

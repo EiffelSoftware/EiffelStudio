@@ -20,7 +20,7 @@ inherit
 
 	WEL_COLOR_CONTROL
 
-creation
+create
 	make_vertical,
 	make_horizontal,
 	make_by_id

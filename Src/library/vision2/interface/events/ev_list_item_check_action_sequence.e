@@ -13,7 +13,7 @@ inherit
 -- EV_ACTION_SEQUENCE [TUPLE [a_list_item: EV_LIST_ITEM]]
 	-- (ETL3 TUPLE with named parameters)
 	
-creation
+create
 	default_create
 
 feature -- Access

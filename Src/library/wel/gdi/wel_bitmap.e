@@ -31,7 +31,7 @@ inherit
 			{NONE} all
 		end
 
-creation
+create
 	make_by_id,
 	make_by_name,
 	make_by_dib,

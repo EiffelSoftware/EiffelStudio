@@ -10,7 +10,7 @@ class
 inherit
 	WEL_SHARED_MEMORY
 
-creation
+create
 	make_from_handle,
 	make_from_string
 

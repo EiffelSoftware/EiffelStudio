@@ -14,7 +14,7 @@ inherit
 			default_style
 		end
 
-creation
+create
 	make,
 	make_by_id
 

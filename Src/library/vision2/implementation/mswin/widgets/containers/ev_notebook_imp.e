@@ -123,7 +123,7 @@ inherit
 
 	EV_NOTEBOOK_ACTION_SEQUENCES_IMP
 
-creation
+create
 	make
 
 

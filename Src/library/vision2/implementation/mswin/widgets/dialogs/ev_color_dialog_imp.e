@@ -27,7 +27,7 @@ inherit
 			wel_make
 		end
 
-creation
+create
 	make
 
 feature {NONE} -- Implementation

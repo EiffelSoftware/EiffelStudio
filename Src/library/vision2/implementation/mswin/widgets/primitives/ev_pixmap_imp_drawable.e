@@ -32,7 +32,7 @@ inherit
 			destroy
 		end
 
-creation
+create
 	make_with_simple
 
 feature {NONE} -- Initialization

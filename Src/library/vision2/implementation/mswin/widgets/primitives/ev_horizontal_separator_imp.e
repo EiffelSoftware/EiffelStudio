@@ -19,7 +19,7 @@ inherit
 			interface
 		end
 
-creation
+create
 	make
 
 feature -- Status setting

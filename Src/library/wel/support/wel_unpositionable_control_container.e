@@ -19,7 +19,7 @@ inherit
 			on_wm_erase_background
 		end
 
-creation
+create
 	make
 
 feature {NONE} -- Initialization

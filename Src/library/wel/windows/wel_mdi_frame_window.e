@@ -17,7 +17,7 @@ inherit
 			class_background
 		end
 
-creation
+create
 	make_top
 
 feature {NONE} -- Initialization

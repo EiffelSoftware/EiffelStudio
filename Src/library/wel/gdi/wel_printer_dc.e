@@ -10,7 +10,7 @@ class
 inherit
 	WEL_DC
 
-creation
+create
 	make_by_pointer
 
 feature -- Basic operations

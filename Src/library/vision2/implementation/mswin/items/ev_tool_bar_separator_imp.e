@@ -21,7 +21,7 @@ inherit
 			interface
 		end
 
-creation
+create
 	make
 	
 feature {NONE} -- Initialization

@@ -22,7 +22,7 @@ inherit
 					Lvscw_autosize_useheader					 
 		end
 
-creation
+create
 	make,
 	make_by_pointer,
 	make_with_attributes

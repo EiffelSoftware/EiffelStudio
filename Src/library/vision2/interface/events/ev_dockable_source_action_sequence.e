@@ -11,7 +11,7 @@ inherit
 	-- EV_ACTION_SEQUENCE [TUPLE [source: EV_DOCKABLE_SOURCE]]
 	-- (ETL3 TUPLE with named parameters)
 	
-creation
+create
 	default_create
 
 feature -- Access

@@ -62,7 +62,7 @@ inherit
 			class_style
 		end
 
-creation
+create
 	make_with_simple,
 	make_with_drawable
 

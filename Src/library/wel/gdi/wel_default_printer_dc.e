@@ -11,7 +11,7 @@ class
 inherit
 	WEL_PRINTER_DC
 
-creation
+create
 	make
 
 feature {NONE} -- Initialization

@@ -20,7 +20,7 @@ inherit
 			{ANY} valid_dib_colors_constant
 		end
 
-creation
+create
 	make,
 	make_by_dc,
 	make_by_pointer

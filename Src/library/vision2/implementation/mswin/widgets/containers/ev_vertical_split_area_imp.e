@@ -27,7 +27,7 @@ inherit
 			on_mouse_move
 		end
 
-creation
+create
 	make
 
 feature {NONE} -- Status Setting

@@ -7,7 +7,7 @@ indexing
 class
 	WEL_REGISTRY_KEY
 
-creation
+create
 	make
 	
 feature -- Initialization

@@ -14,7 +14,7 @@ inherit
 	-- EV_ACTION_SEQUENCE [TUPLE [x, y, button: INTEGER; x_tilt, y_tilt, pressure: DOUBLE; screen_x, screen_y: INTEGER]]
 	-- (ETL3 TUPLE with named parameters)
 	
-creation
+create
 	default_create
 
 feature -- Access

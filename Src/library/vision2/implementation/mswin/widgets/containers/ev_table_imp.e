@@ -46,7 +46,7 @@ inherit
 			top_level_window_imp
 		end
 
-creation
+create
 	make
 
 feature {NONE} -- Initialization

@@ -10,7 +10,7 @@ indexing
 class
 	EV_TABLE_CHILD_IMP
 
-creation
+create
 	make
 
 feature -- Initialization

@@ -11,7 +11,7 @@ class
 inherit
 	WEL_MESSAGE_INFORMATION
 
-creation
+create
 	make
 
 feature -- Access

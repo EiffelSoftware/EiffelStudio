@@ -16,7 +16,7 @@ inherit
 			destroy_item
 		end						
 
-creation
+create
 	make,
 	make_with_global_alloc,
 	make_by_pointer

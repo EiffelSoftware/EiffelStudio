@@ -14,7 +14,7 @@ inherit
 			initialize as structure_initialize
 		end
 
-creation
+create
 	make,
 	make_by_pointer
 

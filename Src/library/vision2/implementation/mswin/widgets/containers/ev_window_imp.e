@@ -222,14 +222,14 @@ feature -- Status setting
 			-- Lock updates for this window on certain platforms until
 			-- `unlock_update' is called.
 		do
-			{EV_WINDOW_I} Precursor
+			Precursor {EV_WINDOW_I}
 			lock_window_update
 		end
 
 	unlock_update is
 			-- Unlock updates for this window on certain platforms.
 		do
-			{EV_WINDOW_I} Precursor
+			Precursor {EV_WINDOW_I}
 			unlock_window_update
 		end
 

@@ -8,7 +8,7 @@ indexing
 class
 	WEL_DISK_SPACE
 
-creation
+create
 	default_create
 
 feature -- Access

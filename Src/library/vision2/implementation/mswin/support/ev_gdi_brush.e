@@ -14,7 +14,7 @@ inherit
 			item
 		end
 
-creation
+create
 	default_create, make_with_values
 
 feature -- Initialization

@@ -19,7 +19,7 @@ inherit
 		export
 			{NONE} all
 		end
-creation 
+create 
 	make,
 	make_indirect,
 	make_by_pointer

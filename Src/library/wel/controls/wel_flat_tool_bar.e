@@ -25,7 +25,7 @@ inherit
 
 	WEL_WINDOWS_VERSION
 
-creation
+create
 	make
 
 feature {NONE} -- Initialization
@@ -34,7 +34,7 @@ feature {NONE} -- Initialization
 			-- Create a toolbar with `a_parent' as parent and
 			-- `an_id' as id.
 		do
-			{WEL_TOOL_BAR} Precursor(a_parent, an_id)
+			Precursor{WEL_TOOL_BAR} (a_parent, an_id)
 			bitmaps_width := 16		-- Default value
 			bitmaps_height := 15	-- Default value
 			if use_image_list_supported then

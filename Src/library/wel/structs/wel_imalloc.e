@@ -13,7 +13,7 @@ inherit
 			destroy_item
 		end
 
-creation
+create
 	make
 
 feature -- Initialization
@@ -22,7 +22,7 @@ feature -- Initialization
 			-- Initialize interface.
 		do
 			cwin_coinitialize
-			{WEL_STRUCTURE} Precursor
+			Precursor {WEL_STRUCTURE}
 			cwin_sh_get_malloc (item)
 		end
 

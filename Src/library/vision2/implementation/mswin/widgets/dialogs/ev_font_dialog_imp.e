@@ -24,7 +24,7 @@ inherit
 			set_parent as wel_set_parent
 		end
 
-creation
+create
 	make
 
 feature {NONE} -- Implementation

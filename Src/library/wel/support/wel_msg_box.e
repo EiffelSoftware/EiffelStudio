@@ -21,7 +21,7 @@ inherit
 
 	WEL_BIT_OPERATIONS
 
-creation
+create
 	make
 
 feature -- Basic operations

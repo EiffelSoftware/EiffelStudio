@@ -24,7 +24,7 @@ inherit
 			is_equal
 		end
 
-creation
+create
 	make,
 	make_by_pointer,
 	make_by_cursor_position

@@ -301,8 +301,8 @@ feature -- Commands.
 			-- Destroy `Current', but set the parent sensitive
 			-- in case it was set insensitive by the child.
 		do
-			{EV_DRAWABLE_IMP} Precursor
-			{EV_PRIMITIVE_IMP} Precursor
+			Precursor {EV_DRAWABLE_IMP}
+			Precursor {EV_PRIMITIVE_IMP}
 		end
 
 feature {NONE} -- Feature that should be directly implemented by externals.

@@ -17,7 +17,7 @@ inherit
 			call
 		end
 
-creation
+create
 	default_create
 
 feature {NONE} -- Initialization

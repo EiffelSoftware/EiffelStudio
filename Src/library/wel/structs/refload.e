@@ -17,7 +17,7 @@ inherit
 			finish_action
 		end
 
-creation
+create
 	make
 
 feature {NONE} -- Initialization

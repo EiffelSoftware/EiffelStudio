@@ -11,7 +11,7 @@ class
 inherit
 	WEL_STRUCTURE
 
-creation
+create
 	make,
 	make_from_nmhdr,
 	make_by_pointer

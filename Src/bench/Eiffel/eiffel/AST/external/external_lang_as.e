@@ -15,7 +15,10 @@ inherit
 			{NONE} all
 		end
 
-feature {AST_FACTORY} -- Initialization
+create
+	initialize
+
+feature {NONE} -- Initialization
 
 	initialize (l: like language_name; s: like location) is
 			-- Create a new EXTERNAL_LANGUAGE AST node.
@@ -48,7 +51,9 @@ feature -- Comparison
 	is_equivalent (other: like Current): BOOLEAN is
 			-- Is `other' equivalent to the current object ?
 		do
-				-- FIXME: is_equivalent should be done on EXTERNAL_EXTENSION_AS
+				-- It is enough to just compare `language_name' since it stores
+				-- full external specification. And if it is the same specification
+				-- then it is the same external.
 			Result := language_name.is_equivalent (other.language_name)
 		end
 
@@ -57,15 +62,15 @@ feature -- Properties
 	need_encapsulation: BOOLEAN is
 			-- Is an encapsulation needed?
 		do
-			Result := extension /= Void and then extension.need_encapsulation
+			Result := extension.need_encapsulation
 		end
 
 	extension_i: EXTERNAL_EXT_I is
 			-- EXTERNAL_EXT_I corresponding to current extension
 		do
-			if extension /= Void then
-				Result := extension.extension_i
-			end
+			Result := extension.extension_i
+		ensure
+			extension_i_not_void: Result /= Void
 		end
 
 feature {AST_EIFFEL} -- Output
@@ -91,10 +96,14 @@ feature {NONE} -- Implementation
 			if not is_yacc_parsing_successful then
 				old_parse
 			end
+		ensure
+			extension_set: extension /= Void
 		end
 
 	old_parse is
 			-- Parse external declaration
+		require
+			extension_not_yet_set: extension = Void
 		local
 			source, image: STRING
 			ext_language_name: STRING
@@ -111,11 +120,11 @@ feature {NONE} -- Implementation
 			nb: INTEGER
 		do
 			source := language_name.value
-debug
-	io.error.putstring ("Parsing ")
-	io.error.putstring (source)
-	io.error.new_line
-end
+			debug
+				io.error.putstring ("Parsing ")
+				io.error.putstring (source)
+				io.error.new_line
+			end
 				-- getting rid of extra blanks
 			image := clone (source)
 			image.left_adjust
@@ -154,15 +163,15 @@ end
 
 			if not valid_language_name then
 				if ext_language_name = Void then
-debug
-	io.error.putstring ("Void%N")
-end
+					debug
+						io.error.putstring ("Void%N")
+					end
 					raise_external_error ("Unrecognized external language", 1, 1)
 				else
-debug
-	io.error.putstring (ext_language_name)
-	io.error.new_line
-end
+					debug
+						io.error.putstring (ext_language_name)
+						io.error.new_line
+					end
 					pos := source.substring_index (ext_language_name,1)
 					raise_external_error ("Unrecognized external language",
 						pos, pos + ext_language_name.count - 1)
@@ -236,12 +245,12 @@ end
 									-- CPP extension.
 								is_cpp_extension := False
 							elseif special_type.is_equal (dll32_string) then
-								!! dll_ext
+								create dll_ext
 								dll_ext.set_dll_type (dll32_type)
 								dll_ext.set_dll_index (dll_index) 
 								extension := dll_ext
 							elseif special_type.is_equal (dllwin32_string) then
-								!! dll_ext
+								create dll_ext
 								dll_ext.set_dll_type (dllwin32_type)
 								dll_ext.set_dll_index (dll_index) 
 								extension := dll_ext
@@ -279,7 +288,7 @@ end
 					-- Return type
 				if image.count /= 0 and then image.item (1) = ':' then
 					if signature_part = Void then
-						!! signature_part.make (0)
+						create signature_part.make (0)
 					end
 
 					pos := image.index_of ('|', 1)
@@ -310,22 +319,22 @@ end
 					extension.set_signature (signature_part)
 				end
 
-debug
-	if extension /= Void then
-		io.error.putstring ("Extension: ")
-		io.error.putstring (extension.generator)
-		io.error.new_line
-	end
-end
+				debug
+					if extension /= Void then
+						io.error.putstring ("Extension: ")
+						io.error.putstring (extension.generator)
+						io.error.new_line
+					end
+				end
 
 				if image.count /= 0 then
 						-- Extracting the include part
 					if image.item (1) = '|' then
 						extension.set_include_files (image.substring (2, image.count))
 					else
-debug
-	io.error.putstring (image)
-end
+						debug
+							io.error.putstring (image)
+						end
 						raise_external_error ("Extra text at end of external language specification",
 							source.substring_index (image,1), source.count)
 					end
@@ -347,7 +356,7 @@ end
 			ext_error: EXTERNAL_SYNTAX_ERROR
 			line_start: INTEGER
 		do
-			!!ext_error.init
+			create ext_error.init
 			line_start := ext_error.start_position
 			ext_error.set_start_position (line_start + start_p)
 			ext_error.set_end_position (line_start + end_p)
@@ -355,5 +364,10 @@ end
 			Error_handler.insert_error (ext_error)
 			Error_handler.raise_error
 		end
+
+invariant
+	language_name_not_void: language_name /= Void
+	location_not_void: location /= Void
+	extension_not_void: extension /= Void
 
 end -- class EXTERNAL_LANG_AS

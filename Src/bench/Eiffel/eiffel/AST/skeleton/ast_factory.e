@@ -1052,8 +1052,7 @@ feature -- Access
 			l_not_void: l /= Void
 			s_not_void: s /= Void
 		do
-			create Result
-			Result.initialize (l, s)
+			create Result.initialize (l, s)
 		ensure
 			external_lang_as_not_void: Result /= Void
 			language_name_set: Result.language_name = l

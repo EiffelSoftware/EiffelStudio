@@ -9,7 +9,7 @@ inherit
 	EXTERNAL_EXTENSION_AS
 		redefine
 			parse_special_part, is_struct, type_check,
-			byte_node, need_encapsulation
+			byte_node
 		end
 
 create
@@ -154,11 +154,6 @@ feature -- Type check
 				end
 			end
 		end
-
-feature -- Encapsulation
-
-	need_encapsulation: BOOLEAN is True
-			-- A struct needs to be encapsulated for polymorphic purpose.
 
 feature -- Byte code
 

@@ -71,11 +71,6 @@ feature -- Initialization
 			Result.set_dll_name (dll_name)
 		end
 
-feature -- Encapsulation
-
-	need_encapsulation: BOOLEAN is True
-			-- A dll call needs to be encapsulated for polymorphic purpose.
-
 feature -- Type check
 
 	type_check (ext_as_b: EXTERNAL_AS) is

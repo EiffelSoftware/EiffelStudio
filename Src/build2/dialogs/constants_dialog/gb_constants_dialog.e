@@ -395,7 +395,7 @@ feature {NONE} -- Implementation
 			end
 			remove_displayed_input_field
 			entry_selection_parent.extend (color_input)
-			if not display_all_types.is_selected and not currently_selected_type.is_equal (integer_constant_type) then
+			if not display_all_types.is_selected and not currently_selected_type.is_equal (color_constant_type) then
 				rebuild_for_selected_type (color_item.text)
 			end
 			currently_selected_type := Color_constant_type

@@ -69,6 +69,8 @@
 					<item>
 						<bold>EV_TREE</bold> - Fixed bug in `has_recursively' which failed if there were one or more dynamic tree items contained.
 					</item>
+<item><bold>EV_MULTI_COLUMN_LIST</bold> - Fixed bug in `set_column_alignments' which crashed if you called it with an empty list after having previously called it with a non empty list.
+					</item>
 				</list>
 			</item>
 			<item>
@@ -91,11 +93,17 @@
 							<item>Corrected handling of selection for caret positions greater than 64,000 characters. The following features were broken when using caret positions greater than 64,000: `caret_position', `has_selection', `selection_start' and `selection_end'</item>
 						</list>
 					</item>
-					<item>
-						<bold>EV_SPIN_BUTTON</bold> - Corrected positioning in parent container. In many situations, the spin button mis-behaved and would be moved to the 0x0 pixel position in the parent.
+					<item><bold>EV_SPIN_BUTTON</bold>
+						<list ordered="false"> 
+							<item>Corrected positioning in parent container. In many situations, the spin button mis-behaved and would be moved to the 0x0 pixel position in the parent.</item>
+							<item>Fixed tooltips which were never displayed.</item>
+						</list>
 					</item>
 					<item>
 						<bold>EV_LIST_ITEM</bold> - Setting a pixmap to an item that was already displayed in a list and had a text would cause the end of the text to be cut off. This is now fixed.
+					</item>
+<item>
+						<bold>EV_COMBO_BOX</bold> - Fixed tooltips which were  never displayed.
 					</item>
 				</list>
 			</item>

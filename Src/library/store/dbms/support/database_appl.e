@@ -10,7 +10,9 @@ inherit
 
 	GENERAL_APPL
 
-	DATABASE_HANDLE_USE [G]
+	HANDLE_USE
+
+	HANDLE_SPEC [G]
 
 	DB_CONSTANT
 
@@ -54,7 +56,7 @@ feature -- Initialization
 feature -- Status setting
 
 	set_role(roleId, rolePassWd : STRING) is
-			-- Set database role with 'rollID' and password(if it has one) with 'rolePassWd'.
+			-- Set database role with `roleId' and password(if it has one) with `rolePassWd'.
 		require
 			argument_exist: roleId /= Void 
 		do
@@ -66,10 +68,10 @@ feature -- Status setting
 			is_logged_to_base: is_logged_to_base
 		end
 
-	set_data_source(dsn : STRING) is
-			-- Set database name with 'dbName'.
+	set_data_source (dsn : STRING) is
+			-- Set database source name with `dsn'.
 		require
-	--FIXME		argument_exist: dsn /= Void 
+			argument_exist: dsn /= Void 
 		do
 			if not is_logged_to_base then
 				create session_login.make
@@ -113,13 +115,13 @@ feature -- Status setting
 				create session_execution_type.make
 			end
 			handle.set_execution_type (session_execution_type)
-			database_handle.set_login (session_login)
+			handle.set_login (session_login)
 		ensure
 			handle.database = session_database
 			handle.process = session_process
 			handle.status = session_status
 			handle.execution_type = session_execution_type
-			database_handle.login = session_login
+			handle.login = session_login
 		end
 
 	set_application (application_name: STRING) is

@@ -13,7 +13,7 @@ inherit
 			{ANY} is_connected
 		end
 
-	DATABASE_HANDLE_USE [G]
+	HANDLE_SPEC [G]
 
 feature -- Status setting and report
 
@@ -24,14 +24,14 @@ feature -- Status setting and report
 		local
 			temp1, temp2, temp3, temp4, temp5, temp6, temp7, temp8: STRING
 		do
-			temp1 := database_handle.login.name
-			temp2 := database_handle.login.passwd
-			temp3 := database_handle.login.data_source
-			temp4 := database_handle.login.application
-			temp5 := database_handle.login.hostname
-			temp6 := database_handle.login.roleId
-			temp7 := database_handle.login.rolePassWd
-			temp8 := database_handle.login.groupId
+			temp1 := handle.login.name
+			temp2 := handle.login.passwd
+			temp3 := handle.login.data_source
+			temp4 := handle.login.application
+			temp5 := handle.login.hostname
+			temp6 := handle.login.roleId
+			temp7 := handle.login.rolePassWd
+			temp8 := handle.login.groupId
 
 			db_spec.connect (temp1, temp2, temp3, temp4, temp5, temp6, temp7, temp8)
 		end

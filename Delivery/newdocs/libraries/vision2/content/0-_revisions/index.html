@@ -101,6 +101,7 @@
 						<B>EV_DYNAMIC_TREE_ITEM</B> - No longer crashes if your `subtree_function' 
 						returns Void. In this situation, it will now behave as if the `Result' was 
 						empty.</LI>
+					<li>	<B>EV_BOX</B> - Attempting to dock from an EV_DOCKABLE_SOURCE while the box was empty would not work. This has now been fixed.</LI>
 				</ul>
 			<li>
 				<b>Windows</b>
@@ -148,15 +149,15 @@
 					<LI>
 						<STRONG>EV_TREE_NODE</STRONG>
 					- Now expansion state remains the same when 'set_pixmap' is called.
-					<LI>
-						<STRONG>EV_DIALOG</STRONG>
+					</LI>
+					<LI>	<STRONG>EV_DIALOG</STRONG>
 					- Fixed bug where 100 percent of CPU time was being used when dialog was shown 
 					modally.
-					<LI>
-						<STRONG>EV_WINDOW</STRONG>
+					</LI>
+					<LI>	<STRONG>EV_WINDOW</STRONG>
 					- Now sizing invariants are fulfilled when widget is destroyed, preventing 
 					segmentation violation.
-					<LI>
+					</LI>
 						<STRONG>EV_COMBO_BOX</STRONG>
 					- Fixed bug where reselecting an item within the combo box list was in fact 
 					deselecting it.
@@ -164,16 +165,18 @@
 						<STRONG>EV_WINDOW</STRONG>
 					- Fixed querying of positioning which never changes if previously&nbsp;set by 
 					user.
-					<LI>
-						<STRONG>EV_APPLICATION</STRONG>
+					</LI>
+					<LI>	<STRONG>EV_APPLICATION</STRONG>
 					- Priority of `idle_actions' has been changed so that gtk will recalculate 
 					widgets sizes before calling its idle handler, this means that all resizing is 
 					done before idle actions are called.
-					<LI>
+					</LI>
+					<li>
 						<STRONG>EV_WINDOW </STRONG>- Now windows correctly shrink when requested size 
 						is smaller than current size</LI></UL>
 			</li>
 		</UL>
+		<h2>Eiffel Studio 5.3</h2>
 		<p><b>Interface modifications</b></p>
 		<ul class="circle">
 			<li>

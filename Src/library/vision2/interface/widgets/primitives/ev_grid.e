@@ -201,13 +201,23 @@ feature -- Access
 feature -- Status setting
 
 	enable_tree is
-			-- Enable tree functionality for GRID
+			-- Enable tree functionality for `Current'.
 		require
 			not_destroyed: not is_destroyed
 		do
 			implementation.enable_tree
 		ensure
 			tree_enabled: is_tree_enabled
+		end
+		
+	disable_tree is
+			-- Disable tree functionality for `Current'.
+		require
+			not_destroyed: not is_destroyed
+		do
+			implementation.disable_tree
+		ensure
+			tree_disabled: not is_tree_enabled
 		end	
 		
 	show_column (a_column: INTEGER) is

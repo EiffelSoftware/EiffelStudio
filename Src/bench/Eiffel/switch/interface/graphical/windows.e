@@ -29,13 +29,13 @@ end;
 			!!Result.make (project_tool.screen)
 		end;
 
-	ghost_top_shell: TOP_SHELL is
+	ghost_top_shell: OVERRIDE_S is
 			-- Invisible parent of shared windows
 			-- (warner, confirmer, ...)
 		once
-			!!Result.make (new_name, project_tool.screen);
-			Result.set_size (Result.screen.width, Result.screen.height);
-			Result.set_x_y (0, 0)
+			!!Result.make (new_name, project_tool);
+			Result.set_size (1, 1);
+			Result.realize
 		end;
 
 	name_chooser: NAME_CHOOSER_W is

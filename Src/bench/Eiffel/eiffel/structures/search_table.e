@@ -6,6 +6,13 @@ indexing
 class
 	SEARCH_TABLE [H -> HASHABLE]
 
+inherit
+	ANY
+		redefine
+			is_equal,
+			copy
+		end
+
 create
 	make
 
@@ -96,6 +103,16 @@ feature -- Access and queries
 			-- Did last operation find the item sought?
 		do
 			Result := (control = Found_constant)
+		end
+
+feature -- Comparison
+
+	is_equal (other: like Current): BOOLEAN is
+			-- Does table contain the same information as `other'?
+		do
+			Result :=
+				equal (content, other.content) and
+				equal (deleted_marks, other.deleted_marks)
 		end
 
 feature -- Insertion, deletion
@@ -244,6 +261,16 @@ feature -- Number of elements
 
 	count: INTEGER
 			-- Number of items actually inserted in `Current'
+
+feature -- Duplication
+
+	copy (other: like Current) is
+			-- Re-initialize from `other'.
+		do
+			standard_copy (other)
+			content := clone (other.content)
+			deleted_marks := clone (other.deleted_marks)
+		end
 
 feature -- Conversion
 

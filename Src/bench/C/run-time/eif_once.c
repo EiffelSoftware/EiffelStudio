@@ -25,15 +25,15 @@ the once mechanism is once per thread. --Manuelt
 #include "eif_once.h"
 #include "eif_globals.h"	/* EIF_GET_ROOT_CONTEXT */
 #include "eif_threads.h"	/* mutex */
-
+#include "eif_hector.h"
 #define OP_TABLE_SIZE 0x4 /* size of Once per Process Tables */
 
 #ifdef __cplusplus
 extern "C" {
 #endif
 
-#ifdef EIF_THREADS /* Features making sense only in MT-Mode */
-
+#if defined EIF_THREADS && ! defined VXWORKS /* Features making sense only in MT-Mode */
+				/* VXWORKS should be undef because mutex doesn't Work on this platform */
 /* Public features declarations */
 
 rt_public EIF_REFERENCE eif_global_function (EIF_REFERENCE Current, EIF_REFERENCE (*feature_address) (EIF_REFERENCE));
@@ -59,7 +59,7 @@ struct fop_list {
         char *addr;     	 /* Index in the list. Here it is
 							*	 the once per thread
                             * function address */
-        EIF_REFERENCE val;             /* Value of the once per process: FIXME * removed on val */
+        EIF_REFERENCE * val;             /* Value of the once per process: FIXME * removed on val */
         struct fop_list *next;  /* Link to the next element in the list */
 };
  
@@ -124,7 +124,7 @@ rt_private struct fop_list *init_fop_list (EIF_REFERENCE (*feature_address) (EIF
 		enomem();
 
 	new->addr = (char *) feature_address ;
-	new->val = (EIF_REFERENCE) 0;
+	new->val = (EIF_REFERENCE *) 0;
 	new->next = (struct fop_list *) 0;
 	return new;
 } /* init_fop_list */	
@@ -175,7 +175,6 @@ rt_public EIF_REFERENCE eif_global_function (EIF_REFERENCE Current, EIF_REFERENC
 
 
 
-	EIF_REFERENCE result;
 	struct fop_list *list; /* Current pointer on struct fop_list 
 				* containing information about feature */ 
 
@@ -200,16 +199,11 @@ rt_public EIF_REFERENCE eif_global_function (EIF_REFERENCE Current, EIF_REFERENC
 	if (list == (struct fop_list *) 0) {
 		/* First call of feature once in process*/
 		list = (struct fop_list *) init_fop_list (feature_address);
-		result = (char *) (FUNCTION_CAST(EIF_REFERENCE, (EIF_REFERENCE)) feature_address (eif_access (Current)));
+		list->val = (EIF_REFERENCE *) hector_addr ( (char *) (FUNCTION_CAST(EIF_REFERENCE, (EIF_REFERENCE)) feature_address (eif_access (Current))));
 
-	   	      /* a copy of result is put in eif_fop_table
-		       * we do not want the original object reference 
-		       * since it can be removed with the thread that has created it
-		       */
-		list->val = edclone (result); 
 		eif_fop_table [((uint32) feature_address) & OP_TABLE_SIZE] = list;
 		EIF_MUTEX_UNLOCK(eif_fop_table_mutex, "Couldn't unlock once per process table mutex");
-		return result;
+		return ((EIF_REFERENCE) eif_access (list->val));	
 
 	} else {
 
@@ -217,12 +211,10 @@ rt_public EIF_REFERENCE eif_global_function (EIF_REFERENCE Current, EIF_REFERENC
 			/* loop skimming the list of struct fop_list */
 			if (list->next == (struct fop_list *) 0) {
 				list->next =(struct fop_list *) init_fop_list (feature_address);
-				result= (char *) (FUNCTION_CAST(EIF_REFERENCE, (EIF_REFERENCE)) feature_address (eif_access (Current)));
 
-					/* same comments as above: a copy is put in eif_fop_table */
-				list->next->val = edclone (result);
+				list->next->val = (EIF_REFERENCE *) hector_addr ( (char *) (FUNCTION_CAST(EIF_REFERENCE, (EIF_REFERENCE)) feature_address (eif_access (Current))));
 				EIF_MUTEX_UNLOCK(eif_fop_table_mutex, "Couldn't unlock once per process table mutex\n");
-				return result;
+		return ((EIF_REFERENCE) eif_access (list->next->val));	
 			}
 			list = list->next;
 		}
@@ -243,7 +235,7 @@ rt_public EIF_REFERENCE eif_global_function (EIF_REFERENCE Current, EIF_REFERENC
 			 */
 
 			
-		return list->val;
+		return (EIF_REFERENCE) eif_access (list->val);
 	}
 
 }

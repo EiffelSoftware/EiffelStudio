@@ -55,21 +55,38 @@ feature {NONE}
 	process_context (dropped: CONTEXT_STONE) is
 		do
 			associated_box.insert_after (data, 
-							dropped.data)
+						     dropped.data)
 		end;
-
+    
 	remove_yourself is
 		do
 			associated_box.remove_icon (Current)
-		end;
-
-    infix "<" (other: like Current): BOOLEAN is 
-        do
-            if is_vertical then
-                Result := data.y < other.data.y
-            else
-                Result := data.x < other.data.x
+		end
+	
+		
+	infix "<" (other: like Current): BOOLEAN is 
+		do
+			-- If Void data < any non Void data
+			if data = Void then
+				if other.data = Void then
+					Result := False
+				else
+					Result := True
+				end
+			else
+				if other.data = Void then
+					Result := False
+				else
+					-- Neither data is Void, do the normal test
+					
+					if is_vertical then
+						Result := data.y < other.data.y
+					else
+						Result := data.x < other.data.x
+					end 
+				end
 			end
-        end;
+			
+		end; 
 
 end

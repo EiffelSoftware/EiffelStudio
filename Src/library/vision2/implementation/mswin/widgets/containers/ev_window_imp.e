@@ -58,7 +58,9 @@ inherit
 			on_accelerator_command,
 			on_set_cursor,
 			window_process_message,
-			on_color_control
+			on_color_control,
+			on_wm_vscroll,
+			on_wm_hscroll
 		redefine
 			default_ex_style,
 			default_style,
@@ -70,8 +72,6 @@ inherit
 			on_move,
 			closeable,
 			default_process_message
---			on_wm_vscroll,
---			on_wm_hscroll
 		end
 
 	WEL_MA_CONSTANTS
@@ -553,52 +553,6 @@ feature {NONE} -- Implementation
 			execute_command (Cmd_move, Void)
  		end
 
--- 	on_wm_vscroll (wparam, lparam: INTEGER) is
--- 			-- Wm_vscroll message.
--- 		local
--- 			gauge: EV_GAUGE_IMP
--- 			p: POINTER
--- 		do
--- 			p := cwin_get_wm_vscroll_hwnd (wparam, lparam)
--- 			if p /= default_pointer then
--- 				-- The message comes from a gauge
--- 				gauge ?= windows.item (p)
--- 				if gauge /= Void then
--- 					check
--- 						gauge_exists: gauge.exists
--- 					end
--- 					gauge.execute_command (Cmd_gauge, Void)
--- 				end
--- 			else
--- 				-- The message comes from a window scroll bar
--- 				on_vertical_scroll (cwin_get_wm_vscroll_code (wparam, lparam),
--- 					cwin_get_wm_vscroll_pos (wparam, lparam))
--- 			end
--- 		end
--- 
--- 	on_wm_hscroll (wparam, lparam: INTEGER) is
--- 			-- Wm_hscroll message.
--- 		local
--- 			gauge: EV_GAUGE_IMP
--- 			p: POINTER
--- 		do
--- 			p := cwin_get_wm_hscroll_hwnd (wparam, lparam)
--- 			if p /= default_pointer then
--- 				-- The message comes from a gauge
--- 				gauge ?= windows.item (p)
--- 				if gauge /= Void then
--- 					check
--- 						gauge_exists: gauge.exists
--- 					end
--- 					gauge.execute_command (Cmd_gauge, Void)
--- 				end
--- 			else
--- 				-- The message comes from a window scroll bar
--- 				on_horizontal_scroll (cwin_get_wm_hscroll_code (wparam, lparam),
--- 					cwin_get_wm_hscroll_pos (wparam, lparam))
--- 			end
--- 		end
-
 	closeable: BOOLEAN is
 			-- Can the user close the window?
 			-- Yes by default.
@@ -682,6 +636,42 @@ feature {NONE} -- Feature that should be directly implemented by externals
 			-- it would be implemented by an external.
 		do
 			Result := c_mouse_message_y (lparam)
+		end
+
+	get_wm_hscroll_code (wparam, lparam: INTEGER): INTEGER is
+			-- Encapsulation of the external cwin_get_wm_hscroll_code.
+		do
+			Result := cwin_get_wm_hscroll_code (wparam, lparam)
+		end
+
+	get_wm_hscroll_hwnd (wparam, lparam: INTEGER): POINTER is
+			-- Encapsulation of the external cwin_get_wm_hscroll_hwnd
+		do
+			Result := cwin_get_wm_hscroll_hwnd (wparam, lparam)
+		end
+
+	get_wm_hscroll_pos (wparam, lparam: INTEGER): INTEGER is
+			-- Encapsulation of the external cwin_get_wm_hscroll_pos
+		do
+			Result := cwin_get_wm_hscroll_pos (wparam, lparam)
+		end
+
+	get_wm_vscroll_code (wparam, lparam: INTEGER): INTEGER is
+			-- Encapsulation of the external cwin_get_wm_vscroll_code.
+		do
+			Result := cwin_get_wm_vscroll_code (wparam, lparam)
+		end
+
+	get_wm_vscroll_hwnd (wparam, lparam: INTEGER): POINTER is
+			-- Encapsulation of the external cwin_get_wm_vscroll_hwnd
+		do
+			Result := cwin_get_wm_vscroll_hwnd (wparam, lparam)
+		end
+
+	get_wm_vscroll_pos (wparam, lparam: INTEGER): INTEGER is
+			-- Encapsulation of the external cwin_get_wm_vscroll_pos
+		do
+			Result := cwin_get_wm_vscroll_pos (wparam, lparam)
 		end
 
 end -- class EV_UNTITLED_WINDOW_IMP

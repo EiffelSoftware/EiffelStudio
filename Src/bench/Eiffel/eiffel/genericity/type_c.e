@@ -86,7 +86,6 @@ feature
 			good_array: arg_types.lower = 1
 		local
 			i, nb: INTEGER
-			arg_type: STRING
 		do
 			file.putstring ("FUNCTION_CAST(")
 			file.putstring (c_string)
@@ -100,13 +99,7 @@ feature
 				if i /= 1 then
 					file.putstring (", ")
 				end
-				arg_type := arg_types @ i
-				if arg_type.is_equal ("EIF_REAL") then
-					file.putstring ("EIF_REAL") -- ss for ANSI rt
-					--file.putstring ("EIF_DOUBLE")
-				else
-					file.putstring (arg_types @ i)
-				end
+				file.putstring (arg_types @ i)
 				i := i + 1
 			end
 			file.putstring (")) ")

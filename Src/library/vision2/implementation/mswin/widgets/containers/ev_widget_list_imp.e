@@ -184,24 +184,25 @@ feature -- Element change
 feature -- Removal
 
 	prune (v: like item) is
-			-- Remove `v' if present
+			-- Remove `v' if present.
 		local
-			w: EV_WIDGET_IMP
+			v_imp: EV_WIDGET_IMP
+			pos: INTEGER
+			old_index: INTEGER
 		do
-			w ?= v.implementation
-			check
-				implementation_of_item: w /= Void
-			end
-			from
+			v_imp ?= v.implementation
+			if ev_children.has (v_imp) then
+				old_index := ev_children.index
 				ev_children.start
-			until
-				ev_children.after or else ev_children.item = w
-			loop
-				ev_children.forth
-			end
-			if not ev_children.after then
+				pos := ev_children.index_of (v_imp, 1)
+				ev_children.go_i_th (pos)
 				remove
-			end		
+				if old_index > pos then
+					ev_children.go_i_th (old_index - 1)
+				else
+					ev_children.go_i_th (old_index)
+				end
+			end
 		end
 
 	remove is

@@ -84,6 +84,7 @@ feature
 			-- Routine id of the table
 
 	set_rout_id (id: ROUTINE_ID) is
+			-- Assign `id' to `rout_id'.
 		do
 			rout_id := id
 		end

@@ -73,7 +73,7 @@ feature {EV_ANY_I} -- Access
 			"GTK_IS_OBJECT ($a_c_object)"
 		end
 
-feature {EV_ANY, EV_ANY_IMP} -- Command
+feature {EV_ANY, EV_ANY_IMP} -- Implementation
 
 	destroy is
 			-- Destroy `c_object'.

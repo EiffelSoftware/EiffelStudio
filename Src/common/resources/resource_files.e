@@ -32,27 +32,27 @@ feature -- File names
 
 	system_general: STRING is
 			-- General system level resource specification file
-			-- ($EIFFEL3/defauls.eif/application_name/general)
+			-- ($EIFFEL3/eifinit/application_name/general)
 		local
 			fn: FILE_NAME
 		do
 			if Eiffel3 /= Void then
 				!!fn.make_from_string (Eiffel3);
-				fn.extend_from_array (<<"defaults.eif", application_name>>);
-				fn.set_file_name ("general");
+				fn.extend_from_array (<<Eifinit, application_name>>);
+				fn.set_file_name (General);
 				Result := fn
 			end
 		end;
 
 	system_specific: STRING is
 			-- Platform specific system level resource specification file
-			-- ($EIFFEL3/defauls.eif/application_name/spec/$PLATFORM)
+			-- ($EIFFEL3/eifinit/application_name/spec/$PLATFORM)
 		local
 			fn: FILE_NAME
 		do
 			if Eiffel3 /= Void and Platform /= Void then
 				!!fn.make_from_string (Eiffel3);
-				fn.extend_from_array (<<"defaults.eif", application_name, "spec">>);
+				fn.extend_from_array (<<Eifinit, application_name, Spec>>);
 				fn.set_file_name (Platform);
 				Result := fn
 			end
@@ -60,8 +60,8 @@ feature -- File names
 
 	user_general: STRING is
 			-- General user level resource specification file
-			-- ($EIFDEFAULTS/application_name/general or
-			-- $HOME/defaults.eif/application_name/general)
+			-- ($EIF_DEFAULTS/application_name/general or
+			-- $HOME/eifinit/application_name/general)
 		local
 			fn: FILE_NAME
 		do
@@ -69,19 +69,19 @@ feature -- File names
 				!!fn.make_from_string (Eifdefaults);
 			elseif Home /= Void then
 				!!fn.make_from_string (Home);
-				fn.extend ("defaults.eif");
+				fn.extend (Eifinit);
 			end
 			if fn /= Void then
 				fn.extend (application_name);
-				fn.set_file_name ("general");
+				fn.set_file_name (General);
 				Result := fn
 			end
 		end;
 
 	user_specific: STRING is
 			-- Platform specific user level resource specification file
-			-- ($EIFDEFAULTS/application_name/spec/$PLATFORM or
-			-- $HOME/defaults.eif/application_name/spec/$PLATFORM)
+			-- ($EIF_DEFAULTS/application_name/spec/$PLATFORM or
+			-- $HOME/eifinit/application_name/spec/$PLATFORM)
 		local
 			fn: FILE_NAME
 		do
@@ -89,11 +89,11 @@ feature -- File names
 				!!fn.make_from_string (Eifdefaults);
 			elseif Home /= Void and Platform /= Void then
 				!!fn.make_from_string (Home);
-				fn.extend ("defaults.eif");
+				fn.extend (Eifinit);
 			end
 			if fn /= Void then
 				fn.extend (application_name);
-				fn.extend ("spec");
+				fn.extend (Spec);
 				fn.set_file_name (Platform);
 				Result := fn
 			end
@@ -106,6 +106,11 @@ feature {NONE} -- Implementation
 	Home: STRING;
 	Eifdefaults: STRING;
 			-- Environments variables
+
+	Eifinit: STRING is "eifinit";
+	Spec: STRING is "spec";
+	General: STRING is "general";
+			-- File and directory names
 
 	application_name: STRING;
 			-- Application name (bench, build, case, ...)

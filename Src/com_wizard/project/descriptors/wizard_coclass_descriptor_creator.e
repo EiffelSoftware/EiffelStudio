@@ -81,7 +81,7 @@ feature -- Basic operations
 			system_descriptor.add_coclass (Result)
 		ensure then
 			valid_interface_descriptors: interface_descriptors /= Void and then
-				interface_descriptors.count = a_type_info.type_attr.count_implemented_types
+				(interface_descriptors.count + source_interface_descriptors.count)  = a_type_info.type_attr.count_implemented_types
 		end
 
 	add_interface_descriptor (an_interface_descriptor: WIZARD_INTERFACE_DESCRIPTOR) is
@@ -90,6 +90,14 @@ feature -- Basic operations
 			non_void_interface_descriptor: an_interface_descriptor /= Void
 		do
 			interface_descriptors.force (an_interface_descriptor)
+		end
+
+	add_source_interface_descriptor (an_interface_descriptor: WIZARD_INTERFACE_DESCRIPTOR) is
+			-- Add `an_interface_descriptor' to `source_interface_descriptors'.
+		require
+			non_void_interface_descriptor: an_interface_descriptor /= Void
+		do
+			source_interface_descriptors.force (an_interface_descriptor)
 		end
 
 	create_interface_descriptors (a_type_info: ECOM_TYPE_INFO) is
@@ -107,9 +115,13 @@ feature -- Basic operations
 			tmp_library_descriptor: WIZARD_TYPE_LIBRARY_DESCRIPTOR
 			debugg: INTEGER
 			tmp_impl_flag: INTEGER
+			non_resticted_interfaces: LINKED_LIST [WIZARD_INTERFACE_DESCRIPTOR]
 		do
-			count := a_type_info.type_attr.count_implemented_types;
-			create {LINKED_LIST [WIZARD_INTERFACE_DESCRIPTOR]} interface_descriptors.make;
+			count := a_type_info.type_attr.count_implemented_types
+			create {LINKED_LIST [WIZARD_INTERFACE_DESCRIPTOR]} interface_descriptors.make
+			create {LINKED_LIST [WIZARD_INTERFACE_DESCRIPTOR]} source_interface_descriptors.make
+			create non_resticted_interfaces.make
+
 			from
 				i := 0
 			variant
@@ -148,26 +160,32 @@ feature -- Basic operations
 					check
 						interface_descriptor: tmp_interface_descriptor /= Void
 					end
-				end;
-				add_interface_descriptor (tmp_interface_descriptor);
-				if is_fdefault (tmp_impl_flag) then
-					if  (default_interface_descriptor /= Void) then
+				end
+				if is_fsource (tmp_impl_flag) then
+					add_source_interface_descriptor (tmp_interface_descriptor)
+				else
+					add_interface_descriptor (tmp_interface_descriptor)
+					if is_fdefault (tmp_impl_flag) then
 						default_interface_descriptor := tmp_interface_descriptor
+						if 
+							(tmp_type_info.type_attr.type_kind = Tkind_dispatch) 
+						then
+							default_dispinterface_name := clone (tmp_interface_descriptor.c_type_name)
+						end
 					end
-					if 
-						(tmp_type_info.type_attr.type_kind = Tkind_dispatch) 
-					then
-						default_dispinterface_name := clone (tmp_interface_descriptor.c_type_name)
+					if not is_frestricted (tmp_impl_flag) then
+						non_resticted_interfaces.force (tmp_interface_descriptor)
 					end
 				end
 				i := i + 1
 				debugg := a_type_info.type_attr.count_implemented_types
 			end
+			
 			if default_interface_descriptor = Void then
-				default_interface_descriptor := interface_descriptors.first
+				default_interface_descriptor := non_resticted_interfaces.first
 			end
 		ensure 
-			valid_interface_count: interface_descriptors.count = a_type_info.type_attr.count_implemented_types
+			valid_interface_count: (interface_descriptors.count + source_interface_descriptors.count) = a_type_info.type_attr.count_implemented_types
 			non_void_default_interface: default_interface_descriptor /= Void
 		end
 
@@ -184,12 +202,22 @@ feature -- Basic operations
 					a_descriptor.set_default_dispinterface (default_dispinterface_name)
 				end
 				a_descriptor.set_default_interface (default_interface_descriptor)
+				if 
+					source_interface_descriptors /= Void and then 
+					not source_interface_descriptors.empty
+				then
+					a_descriptor.set_source_interface_descriptors (source_interface_descriptors)
+				end
 			end
 
 feature {NONE} -- Implementation
 
 	interface_descriptors: LIST [WIZARD_INTERFACE_DESCRIPTOR]
 			-- Coclass interfaces descriptors
+
+	source_interface_descriptors: LIST [WIZARD_INTERFACE_DESCRIPTOR]
+			-- Interfaces to call back on client implementations,
+			-- not empty implies that coclass supports IConnectionPointConteiner.
 
 	lcid: INTEGER
 			-- Locale of member names and doc strings.

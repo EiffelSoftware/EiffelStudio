@@ -375,7 +375,12 @@ feature -- Element change
 				last_syntax_cell.put (Void)
 				class_ast := build_ast
 				class_ast.set_id (id)
-					-- Mark the class syntactically changed
+					-- Mark the class if it has syntactically changed
+					--| Improvement: We can retrieve the previous version of
+					--| the AST and compare the new one with the old one.
+					--| If they are different, we should put the new one in the
+					--| server and make the old one obsolete (so that it can be
+					--| removed from the server and avoided a growing EIFGEN).
 				set_changed (True)
 				Tmp_ast_server.put (class_ast)
 				pass1_controler.insert_parsed_class (compiled_info)

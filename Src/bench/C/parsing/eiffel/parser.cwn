@@ -19,7 +19,7 @@
 #endif
 
 extern char token_str[];
-/* extern int yacc_current_position; */
+int fclause_pos;
 
 #define CR_EMPTY	0
 #define CR_ROUTINE	1
@@ -1860,7 +1860,7 @@ case 29:
 {list_push(yypvt[-0].node);} break;
 case 30:
 # line 298 "parser.y"
-{yyval.loc = current_location;} break;
+{fclause_pos = current_location->end_position;} break;
 case 31:
 # line 298 "parser.y"
 {list_init();} break;
@@ -1868,7 +1868,7 @@ case 32:
 # line 299 "parser.y"
 {
 		yyval.node = list_new(CONSTRUCT_LIST_AS);
-		yyval.node = (yyval.node == NULL)?NULL:create_fclause_as(yypvt[-2].node,yyval.node,yypvt[-3].loc->start_position);
+		yyval.node = (yyval.node == NULL)?NULL:create_fclause_as(yypvt[-2].node,yyval.node,fclause_pos);
 		} break;
 case 33:
 # line 307 "parser.y"

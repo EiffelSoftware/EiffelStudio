@@ -29,7 +29,7 @@
 #endif
 
 extern char token_str[];
-/* extern int yacc_current_position; */
+int fclause_pos;
 
 #define CR_EMPTY	0
 #define CR_ROUTINE	1
@@ -295,10 +295,10 @@ Feature_clause_list:
 	;
 
 Feature_clause:
-	TE_FEATURE {$<loc>$ = current_location;} Clients {list_init();} Feature_declaration_list
+	TE_FEATURE {fclause_pos = current_location->end_position;} Clients {list_init();} Feature_declaration_list
 		{
 		$$ = list_new(CONSTRUCT_LIST_AS);
-		$$ = ($$ == NULL)?NULL:create_fclause_as($3,$$,$<loc>2->start_position);
+		$$ = ($$ == NULL)?NULL:create_fclause_as($3,$$,fclause_pos);
 		}
 	;
 

@@ -100,7 +100,7 @@ feature -- Access
 			from
 				l.start
 			until
-				l.after or Result
+				l.off or Result
 			loop
 				ct ?= l.item
 				if ct /= Void then

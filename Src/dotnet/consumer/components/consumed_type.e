@@ -81,12 +81,19 @@ feature -- Access
 			
 	entities: ARRAYED_LIST [CONSUMED_ENTITY] is
 			-- All constructors, fields, procedures and functions implemented by type.
+		require
+			constructors_not_void: constructors /= Void
+			fields_not_void: fields /= Void
+			functions_not_void: functions /= Void
+			procedures_not_void: procedures /= Void
 		do
 			create Result.make (0)
 			Result.fill (constructors)
 			Result.fill (fields)
 			Result.fill (functions)
 			Result.fill (procedures)
+		ensure
+			entities_not_void: Result /= Void
 		end		
 
 	is_interface: BOOLEAN is

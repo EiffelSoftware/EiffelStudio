@@ -119,15 +119,18 @@ feature -- Basic Operations
 	Freeze_command_name: STRING is
 			-- Retrieve environment variable `a_env'.
 		once
-			Result := (create {PLATFORM_CONSTANTS}).Finish_freezing_script
+			Result := "%"" + (create {EIFFEL_ENV}).Eiffel_installation_dir_name + Freeze_command_relative_path + (create {PLATFORM_CONSTANTS}).Finish_freezing_script + "%""
 		end
 		
 	Freeze_command_arguments: STRING is
 			-- Retrieve command-line arguments needed by Freeze command.
-		do
-			Result := clone (freeze_command_name + " -silent -vs")
+		once
+			Result := Freeze_command_name + " -silent -vs"
 		end
-		
+
+	Freeze_command_relative_path: STRING is "Compiler\"
+			-- Path to `finish_freezing.exe' in installation
+
 	remove_file_locks is
 			-- Close the open EIFGEN files so that they may be removed by another compiler instance.
 		do

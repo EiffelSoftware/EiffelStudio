@@ -11,8 +11,12 @@ feature
 		local
 			tabs_resource: STRING
 		once
-			tabs_resource := resources.get_string (r_Tabs, Void);
-			Result := tabs_resource /= Void and then tabs_resource.empty
+			if tabs_disabled_for_the_platform then
+				Result := True
+			else
+				tabs_resource := resources.get_string (r_Tabs, Void);
+				Result := tabs_resource /= Void and then tabs_resource.empty
+			end
 		end;
 
 	default_tab_length: INTEGER_REF is
@@ -21,7 +25,8 @@ feature
 			tab_integer: INTEGER
 		once
 			!!Result;
-			tab_integer := resources.get_integer (r_Tab_step, Default_tab_step);			if valid_tab_step (tab_integer) then
+			tab_integer := resources.get_integer (r_Tab_step, Default_tab_step);
+			if valid_tab_step (tab_integer) then
 				Result.set_item (tab_integer)
 			else
 				Result.set_item (Default_tab_step)
@@ -52,6 +57,13 @@ feature
 			Result := tabs_disabled or 
 				(step >= Minimum_step and step <= Maximum_step)
 		end;
+
+feature {NONE} -- Externals
+
+	tabs_disabled_for_the_platform: BOOLEAN is
+		external
+			"C"
+		end
 
 invariant
 

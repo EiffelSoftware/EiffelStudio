@@ -77,7 +77,7 @@ feature -- Input
 			-- from file. Make result available in `last_integer'.
 			-- Taken from the SmallEiffel distribution:
 			--		Copyright (C) 1994-98 LORIA - UHP - CRIN - INRIA - FRANCE
-			--		Dominique COLNET and Suzanne COLLIN - colnet@loria.fr 
+			--		Dominique COLNET and Suzanne COLLIN - colnet@loria.fr
 			--		http://SmallEiffel.loria.fr
 		local
 			state: INTEGER
@@ -96,7 +96,7 @@ feature -- Input
 				state > 2
 			loop
 				read_character
-			inspect 
+			inspect
 				state
 				when 0 then
 					if blanks.has (last_character) then
@@ -128,7 +128,7 @@ feature -- Input
 				end
 
 				if end_of_file then
-					inspect 
+					inspect
 						state
 					when 0 .. 1 then
 						state := 4
@@ -165,7 +165,7 @@ feature -- Input
 			-- from file. Make result available in `last_double'.
 			-- Taken from the SmallEiffel distribution:
 			--		Copyright (C) 1994-98 LORIA - UHP - CRIN - INRIA - FRANCE
-			--		Dominique COLNET and Suzanne COLLIN - colnet@loria.fr 
+			--		Dominique COLNET and Suzanne COLLIN - colnet@loria.fr
 			--		http://SmallEiffel.loria.fr
 		local
 			state: INTEGER
@@ -186,7 +186,7 @@ feature -- Input
 				state >= 4
 			loop
 				read_character
-				inspect 
+				inspect
 					state
 				when 0 then
 					if blanks.has (last_character) then
@@ -221,7 +221,7 @@ feature -- Input
 					else
 						state := 4
 					end
-				else -- 3 
+				else
 					if last_character.is_digit then
 						l_buf.extend (last_character)
 					else
@@ -261,23 +261,25 @@ feature -- Input
 			-- Read a new character.
 			-- Make result available in `last_character'.
 		local
-		  	a_code: INTEGER
+			a_code: INTEGER
 		do
-		  	a_code := reader.read
-		  	if a_code = - 1 then
+			a_code := reader.read
+			if a_code = - 1 then
 				internal_end_of_file := True
-		  	else
-		  			-- If we read `%R', i.e. value 13, then let's
-		  			-- check if next character is `%N'. If it is '%N'
-		  			-- then we return '%N', else we return '%R'.
-		  		if a_code = 13 then
-		  			a_code := reader.peek
-		  			if a_code = 10 then
-		  				a_code := reader.read
-		  			end
-		  		end
+			else
+					-- If we read `%R', i.e. value 13, then let's
+					-- check if next character is `%N'. If it is '%N'
+					-- then we return '%N', else we return '%R'.
+				if a_code = 13 then
+					a_code := reader.peek
+					if a_code = 10 then
+						a_code := reader.read
+					else
+						a_code := 13
+					end
+				end
 				last_character := a_code.to_character
-		  	end
+			end
 		end
 
 feature {NONE} -- Implementation

@@ -21,16 +21,16 @@
 					<label>http://java.sun.com/products/jdk/1.1/index.html</label>
 				</link>)
 			</item>
-			<item>The environment variable CLASSPATH should defined (check with the JDK documentation on how to do so) and that it contains the Java classes     you want to access.</item>
+			<item>The environment variable CLASSPATH should defined (check with the JDK documentation on how to do so) and that it contains the Java classes you want to access.</item>
 			<item>The environment variable JDK_HOME should be set to the installation directory of the JDK (e.g. D:\apps\jdk1.1.8).</item>
 		</list>
 		<heading>
 			<size>3</size>Borland users
 		</heading>
-		<paragraph>On Windows, the JDK includes a set of C libraries which have been    compiled for the Microsoft C compiler. Before being able to use the JDK    from Eiffel you need to perform the following operation:</paragraph>
+		<paragraph>On Windows, the JDK includes a set of C libraries which have been    compiled for the Microsoft C compiler. Before being able to use the JDK from Eiffel you need to perform the following operation:</paragraph>
 		<list ordered="true">
 			<item>In $JDK_HOME\lib, rename javai.lib into javai.lib.microsoft</item>
-			<item>From the DOS command prompt and in the directory $JDK_HOME\lib,     launch the following command
+			<item>From the DOS command prompt and in the directory $JDK_HOME\lib, launch the following command
 				<line_break/>
 				<code_block>
 	%ISE_EIFFEL%\bcc55\bin\implib javai.lib..\bin\javai.dll
@@ -44,7 +44,7 @@
 			<item>In this version, you can only use one JNI environment.</item>
 			<item>Only one thread can interact with the Java Virtual Machine (JVM).</item>
 			<item>It is not possible to call Eiffel features from Java program.</item>
-			<item>The Eiffel feature `destroy_vm' of `JAVA_VM' calls a C function of the Java NativeInterface that is not fully implemented in jdk     1.1.8.   This function, calledDestroyJavaVM, always returns -1 in jdk     1.1.8. For further information, go on theJNI pages at the address   above.</item>
+			<item>The Eiffel feature `destroy_vm' of `JAVA_VM' calls a C function of the Java NativeInterface that is not fully implemented in jdk 1.1.8.  This function, calledDestroyJavaVM, always returns -1 in jdk     1.1.8. For further information, go on theJNI pages at the address above.</item>
 		</list>
 		<heading>
 			<size>2</size>Interface classes

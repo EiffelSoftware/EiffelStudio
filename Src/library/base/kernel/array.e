@@ -88,15 +88,17 @@ feature -- Access
 			-- based on `object_comparison'.)
 		local
 			i: INTEGER
+			upper_bound: INTEGER
 		do
+			upper_bound := upper
 			if object_comparison then
 				if v = void then
-					i := upper + 1
+					i := upper_bound + 1
 				else
 					from
 						i := lower
 					until
-						i > upper or else (item (i) /= Void and then item (i).is_equal(v))
+						i > upper_bound or else (item (i) /= Void and then item (i).is_equal(v))
 					loop
 						i := i + 1;
 					end;
@@ -105,12 +107,12 @@ feature -- Access
 				from
 					i := lower
 				until
-					i > upper or else (item (i) = v)
+					i > upper_bound or else (item (i) = v)
 				loop
 					i := i + 1;
 				end;
 			end
-			Result := not (i > upper);
+			Result := not (i > upper_bound);
 		end;
 
 feature -- Measurement
@@ -393,13 +395,6 @@ feature -- Duplication
 			-- copied: forall `i' in `start_pos' .. `end_pos',
 			--     Result.item (i) = item (i)
 		end
-
-feature -- Obsolete
-
-	duplicate: like Current is obsolete "Use ``clone''"
-		do
-			Result := clone (Current)
-		end;
 
 feature {NONE} -- Inapplicable
 

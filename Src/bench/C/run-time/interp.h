@@ -226,6 +226,38 @@ extern void idump();
 #define BC_RESERVE			(char) 130
 #define BC_POP				(char) 131
 
+#ifdef CONCURRENT_EIFFEL
+/* Instructions for Concurrent Eiffel */
+#define BC_SEP_SET			(char) 150
+#define BC_SEP_UNSET		(char) 151
+#define BC_SEP_RESERVE		(char) 152
+#define BC_SEP_FREE			(char) 153
+#define BC_SEP_TO_SEP		(char) 154
+#define BC_SEP_RAISE_PREC	(char) 155
+#define BC_SEP_CREATE		(char) 156
+#define BC_SEP_CREATE_END	(char) 157
+
+#define BC_SEP_ATTRIBUTE_INV	(char) 158
+#define BC_SEP_EXTERN_INV	(char) 159
+#define BC_SEP_FEATURE_INV	(char) 160
+
+#define BC_SEP_PATTRIBUTE_INV	(char) 161
+#define BC_SEP_PEXTERN_INV	(char) 162
+#define BC_SEP_PFEATURE_INV	(char) 163
+
+#define BC_SEP_EXTERN		(char) 164
+#define BC_SEP_FEATURE		(char) 165
+#define BC_SEP_PEXTERN		(char) 166
+#define BC_SEP_PFEATURE		(char) 167
+
+/* NOTE: We can get rid of the following instructions:
+ * BC_SEP_FEATURE
+ * BC_SEP_PFEATURE
+ * BC_SEP_EXTERN
+ * BC_SEP_PEXTERN
+*/
+#endif
+
 #ifdef __cplusplus
 }
 #endif

@@ -544,12 +544,7 @@ feature -- Stepping
 				print ("++ OPERATION :: APPLICATION_EXECUTION_DOTNET::step_out%N")
 				print ("++++++++++++++++++++++++++++++++++++++++++++++++++++++%N")
 			end
-			if eifnet_debugger.stepping_possible then
-				eifnet_debugger.set_last_control_mode_is_out
-
-				eifnet_debugger.do_step_out
-				status.set_is_stopped (False)
-			end
+			raw_step_out
 		end
 		
 	step_into is
@@ -563,7 +558,7 @@ feature -- Stepping
 				print ("+++++++++++++++++++++++++++++++++++++++++++++++++++++++%N")
 			end			
 			eifnet_debugger.set_last_control_mode_is_into	
-			step_range (True)
+			raw_step_range (True)
 		end
 
 	step_next is
@@ -586,16 +581,28 @@ feature -- Stepping
 			then
 				--| This is an optimisation when we are at the end of a routine
 				--| End of feature, go out ...
-				step_out
+				raw_step_out
 			else
 				eifnet_debugger.set_last_control_mode_is_next
-				step_range (False)
+				raw_step_range (False)
 			end
 		end
 		
 feature {NONE} -- Stepping
+		
+	raw_step_out is
+			-- Effective call to step out
+			-- without calling `process_before_running'
+		do
+			if eifnet_debugger.stepping_possible then
+				eifnet_debugger.set_last_control_mode_is_out
 
-	step_range (a_bstep_in: BOOLEAN) is
+				eifnet_debugger.do_step_out
+				status.set_is_stopped (False)
+			end
+		end
+		
+	raw_step_range (a_bstep_in: BOOLEAN) is
 			-- Step over the next range
 			-- faster than stepping next for each dotnet step.
 		local

@@ -13,6 +13,11 @@ inherit
 			make
 		end
 
+	BENCH_WIZARD_CONSTANTS
+		export
+			{NONE} all
+		end
+
 create
 	make
 
@@ -24,12 +29,12 @@ feature {NONE} -- Implementation
 			set_help_filename (h_filename)
 			Precursor {BENCH_WIZARD_INTERMEDIARY_STATE_WINDOW} (an_info) 
 		end
-		
+
 feature -- Access
 
 	h_filename: STRING is "help/wizards/edotnet/docs/reference/20_application_type_and_project_settings/index.html"
 			-- Path to HTML help file
-			
+
 feature -- Basic Operation
 
 	build is 
@@ -48,7 +53,6 @@ feature -- Basic Operation
 			creation_routine_name.set_label_string_and_size (interface_names.l_Creation_routine_name, 10)
 			creation_routine_name.set_textfield_string (wizard_information.creation_routine_name)
 			creation_routine_name.generate
-			creation_routine_name.change_actions.extend (agent on_change_creation_routine_name)
 
 			choice_box.set_padding (dialog_unit_to_pixels(1))
 			choice_box.extend (rb_project_type_exe)
@@ -70,23 +74,28 @@ feature -- Basic Operation
 			choice_box.disable_item_expand (creation_routine_name.widget)
 			choice_box.extend (create {EV_CELL}) -- expandable item
 
+			choice_box.extend (create {EV_LABEL})
+			create console_app_b.make_with_text (Bench_interface_names.l_Console_application)
+			if wizard_information.console_application then
+				console_app_b.enable_select
+			else
+				console_app_b.disable_select
+			end
+			choice_box.extend (console_app_b)
+
 			if wizard_information.generate_dll then
 				rb_project_type_dll.enable_select
 			else
 				rb_project_type_exe.enable_select
 			end
 
-			set_updatable_entries(<<
+			set_updatable_entries (<<
 				rb_project_type_exe.select_actions,
 				rb_project_type_dll.select_actions,
 				root_class_name.change_actions,
-				creation_routine_name.change_actions
+				creation_routine_name.change_actions,
+				console_app_b.select_actions
 				>>)
-		end
-
-	change_preview is
-			-- Change the pixmap used to preview the application.
-		do
 		end
 
 	proceed_with_current_info is 
@@ -145,7 +154,7 @@ feature -- Basic Operation
 			wizard_information.set_generate_dll (rb_project_type_dll.is_selected)
 			wizard_information.set_root_class_name (root_class_name.text)
 			wizard_information.set_creation_routine_name (creation_routine_name.text)
-			--wizard_information.set_creation_routine_external_name (creation_routine_external_name.text)
+			wizard_information.set_console_application (console_app_b.is_selected)
 			Precursor
 		end
 
@@ -160,7 +169,7 @@ feature {NONE} -- Implementation
 
 	preview_pixmap: EV_PIXMAP
 			-- Pixmap used to preview the application.
-	
+
 	rb_project_type_exe: EV_RADIO_BUTTON
 	rb_project_type_dll: EV_RADIO_BUTTON
 
@@ -210,11 +219,6 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	on_change_creation_routine_name is
-			-- Action performed when the user changes the creation routine name of the application
-		do
-		end
-
 feature {NONE} -- Constants
 
 	Exe_type: STRING is "Executable"
@@ -228,5 +232,8 @@ feature {NONE} -- Constants
 
 	Subtitle_text: STRING is "You can choose to create a .exe or a .dll file%N%
 					%and select the names of the root class and its creation routine."
+
+	console_app_b: EV_CHECK_BUTTON
+			-- Console application check box.
 
 end -- class WIZARD_SECOND_STATE

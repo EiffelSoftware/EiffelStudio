@@ -114,6 +114,10 @@ feature -- Status setting
 	set_object (an_object: GB_OBJECT) is
 			-- Assign `an_object' to `object'.
 			-- Set up `Current' to modify `object'.
+		require
+			an_object_not_void: an_object /= Void
+		local
+			command_name_change: GB_COMMAND_NAME_CHANGE
 		do
 			-- | FIXME - revisit as soon as time allows.
 			-- This really is a hack, but I do not have time to fix it correctly now.
@@ -127,7 +131,10 @@ feature -- Status setting
 						object.cancel_edited_name
 						update_editors_for_name_change (object.object, Current)
 					else
+						create command_name_change.make (object, object.edited_name, object.name)
 						object.accept_edited_name
+						history.cut_off_at_current_position
+						command_name_change.execute
 					end
 				end
 			end
@@ -141,6 +148,8 @@ feature -- Status setting
 			set_title_from_name
 
 			construct_editor
+		ensure
+			an_object_set: object = an_object
 		end
 		
 	make_empty is

@@ -299,7 +299,8 @@ feature -- Status setting
 			i: INTEGER
 		do	
 			pix_imp ?= background_pixmap.implementation
-			a_style := feature {EV_GTK_EXTERNALS}.gtk_style_copy (feature {EV_GTK_EXTERNALS}.gtk_widget_struct_style (visual_widget))
+
+			a_style := feature {EV_GTK_EXTERNALS}.gtk_style_copy (feature {EV_GTK_EXTERNALS}.gtk_widget_struct_style (c_object))
 			pix_ptr := feature {EV_GTK_EXTERNALS}.gdk_pixmap_ref (pix_imp.drawable)
 			from
 				i := 0
@@ -322,6 +323,7 @@ feature -- Status setting
 			end
 			feature {EV_GTK_EXTERNALS}.gtk_widget_set_style (visual_widget, a_style)
 			feature {EV_GTK_EXTERNALS}.gtk_style_unref (a_style)
+			feature {EV_GTK_EXTERNALS}.gtk_style_apply_default_background (a_style, feature {EV_GTK_EXTERNALS}.gtk_widget_struct_window (c_object), True, feature {EV_GTK_EXTERNALS}.gtk_state_normal_enum, default_pointer, 0, 0, 0, 0)
 		end
 		
 	set_background_pixmap (a_pixmap: EV_PIXMAP) is
@@ -378,18 +380,14 @@ feature -- Basic operations
 		end
 
 feature -- Command
-	
+
 	destroy is
-			-- Detatch children.
-			-- Destroy `c_object'.
 			-- Render `Current' unusable.
-			--| We remove all children before destroying
-			--| the `c_object'. This prevents them from
-			--| being destroyed when the container is destroyed.
 		do
-			interface.wipe_out
 			Precursor {EV_WIDGET_IMP}
+			interface.wipe_out
 		end
+
 
 feature -- Event handling
 

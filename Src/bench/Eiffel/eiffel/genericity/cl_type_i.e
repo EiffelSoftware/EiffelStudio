@@ -93,24 +93,12 @@ feature
 			-- Type description for skeletons
 		local
 			exp: EXPANDED_DESC
-			types: TYPE_LIST
 			ref: REFERENCE_DESC
 		do
 			if is_expanded then
 				!! exp
 				is_expanded := False
-
-				types := base_class.types
-
-				check
-						--| The type should be present
-					has_type: types.has_type (Current)
-				end
-
-				if types.has_type (Current) then
-					exp.set_class_type (types.found_item)
-				end
-
+				exp.set_class_type (base_class.types.search_item (Current))
 				is_expanded := True
 				Result := exp
 			elseif is_separate then
@@ -158,21 +146,17 @@ feature
 
 	has_associated_class_type: BOOLEAN is
 			-- Has `Current' an associated class type?
-		local
-			types : TYPE_LIST
 		do
-			types := base_class.types
-
 			if is_expanded then
 				is_expanded := false
-				Result := types.has_type (Current)
+				Result := base_class.types.has_type (Current)
 				is_expanded := true
 			elseif is_separate then
 				is_separate := false
-				Result := types.has_type (Current)
+				Result := base_class.types.has_type (Current)
 				is_separate := true
 			else
-				Result := types.has_type (Current)
+				Result := base_class.types.has_type (Current)
 			end
 		end
 
@@ -188,16 +172,7 @@ feature
 			elseif is_separate then
 				Result := associated_separate_class_type
 			else
-				types := base_class.types
-
-				check
-						--| The type should be present
-					has_type: types.has_type (Current)
-				end
-
-				if types.has_type (Current) then
-					Result := types.found_item
-				end
+				Result := base_class.types.search_item (Current)
 			end
 		end
 

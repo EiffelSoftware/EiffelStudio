@@ -11,7 +11,7 @@ inherit
 			make as old_make
 		undefine
 			is_equal, generate_cid, il_type_name, generate_cid_array,
-			generate_cid_init, is_explicit,
+			generate_cid_init, is_explicit, is_valid,
 			has_true_formal, is_identical, generate_gen_type_il,
 			has_formal, same_as, make_gen_type_byte_code,
 			instantiation_in, meta_generic, true_generics, hash_code, base_class,
@@ -24,7 +24,7 @@ inherit
 		
 	ONE_GEN_TYPE_I
 		undefine
-			is_basic, is_reference, cecil_value, is_void, c_type, is_valid, generate_cecil_value, dump
+			is_basic, is_reference, cecil_value, is_void, c_type, generate_cecil_value, dump
 		redefine
 			is_feature_pointer, type_a, description, sk_value,
 			element_type, tuple_code,
@@ -80,6 +80,7 @@ feature
 			create Result.make (32)
 			Result.append ("expanded ")
 			Result.append (meta_generic.item (1).name)
+			Result.append_character (' ')
 			Result.append_character ('*')
 			Result.append_character (' ')
 		end
@@ -94,13 +95,18 @@ feature
 			-- String generated for the type.
 		local
 			l_str: STRING
-			l_type: TYPE_C
+			l_type_i: TYPE_I
+			l_type_c: TYPE_C
 		do
-			l_type ?= meta_generic.item (1)
-			check
-				l_type_not_void: l_type /= Void
+			l_type_i := meta_generic.item (1)
+			l_type_c ?= l_type_i
+			if l_type_c /= Void then
+				l_str := l_type_c.c_string
+			else
+					-- Case where element type of TYPED_POINTER is expanded.
+					-- We force it to be a reference.
+				l_str := reference_c_type.c_type.c_string
 			end
-			l_str := l_type.c_string
 			create Result.make (l_str.count + 2)
 			Result.append (l_str)
 			Result.append_character ('*')

@@ -57,8 +57,12 @@ feature -- Status report
 	is_basic: BOOLEAN is True
 			-- Type is a basic type.
 
-	is_valid: BOOLEAN is True
+	is_valid: BOOLEAN is
 			-- A Basic type is always in the system
+		do
+				-- Not a constant as TYPED_POINTER_I is using the version from GEN_TYPE_I
+			Result := True
+		end
 
 feature -- Byte code generation
 

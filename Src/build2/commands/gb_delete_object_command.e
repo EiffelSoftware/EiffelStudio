@@ -28,6 +28,16 @@ inherit
 		export
 			{NONE} all
 		end
+		
+	GB_CONSTANTS
+		export
+			{NONE} all
+		end
+		
+	GB_SHARED_OBJECT_HANDLER
+		export
+			{NONE} all
+		end
 
 create
 	make
@@ -82,23 +92,50 @@ feature {GB_WINDOW_SELECTOR} -- Basic operation
 		local
 			command_delete: GB_COMMAND_DELETE_OBJECT
 			command_delete_window: GB_COMMAND_DELETE_WINDOW_OBJECT
-			delete_position: INTEGER
-			titled_window_object: GB_TITLED_WINDOW_OBJECT
+			referenced_dialog: GB_OBJECT_STILL_REFERENCED_DIALOG
 		do
-			titled_window_object ?= an_object
-			if titled_window_object = Void then
-				delete_position := an_object.parent_object.children.index_of (an_object, 1)
+			if not an_object.is_top_level_object then
 				create command_delete.make (an_object)
 				history.cut_off_at_current_position
 				command_delete.execute
 			else
-				create command_delete_window.make (titled_window_object)
-				history.cut_off_at_current_position
-				command_delete_window.execute
+				if not can_delete_object (an_object) then
+						-- Do not allow a top level object to be deleted if instances of it are already
+						-- in use. May provide an option to convert to flat representations.
+					create referenced_dialog.make_with_object (an_object)
+					referenced_dialog.show_modal_to_window (main_window)
+				end
+					-- `referenced_dialog' permits you to flatten all instances so
+					-- we simply check once again if we can now delete the object.
+				if can_delete_object (an_object) then
+					create command_delete_window.make (an_object)
+					history.cut_off_at_current_position
+					command_delete_window.execute
+				end
 			end
 			--| FIXME we have not really performed the delete, as the object still exists.
-			--| Need to clean up.
+			--| Need to clean up. May not be possible, unless we switch to XML representations and
+			--| rebuild on the undo. Could be tricky.
 		end
+		
+	can_delete_object (an_object: GB_OBJECT): BOOLEAN is
+			-- May `an_object' be deleted? Only if it has no refers.
+		require
+			object_not_void: an_object /= Void
+		do
+			Result := True
+			from
+				an_object.instance_referers.start
+			until
+				an_object.instance_referers.off
+			loop
+				if not object_handler.deleted_objects.has (an_object.instance_referers.item_for_iteration) then
+					Result := False
+				end
+				an_object.instance_referers.forth
+			end
+		end
+		
 			
 feature {NONE} -- Implementation
 

@@ -1,4 +1,3 @@
---| FIXME NOT_REVIEWED this file has not been reviewed
 indexing
 	description: "EiffelVision toolbar, mswindows implementation."
 	status: "See notica at end of class."
@@ -110,13 +109,14 @@ creation
 feature {NONE} -- Initialization
 
 	make (an_interface: like interface) is
-			-- Create the tool-bar.
+			-- Create `Current'.
 		do
 			base_make (an_interface)
 			create ev_children.make (2)
 		end
 
 	initialize is
+			-- Initialize `Current'.
 		local
 			ctrl: EV_INTERNAL_TOOL_BAR_IMP
 		do
@@ -132,7 +132,7 @@ feature {NONE} -- Initialization
 feature -- Access
 
 	bar: EV_INTERNAL_TOOL_BAR_IMP is
-			-- WEL container of the tool-bar
+			-- WEL container of `Current'
 		do
 			Result ?= wel_parent
 		end
@@ -144,7 +144,7 @@ feature -- Access
 			-- but it doesn't.
 
 	parent_imp: EV_CONTAINER_IMP is
-			-- Parent container of this tool-bar.
+			-- Parent container of `Current'.
 		do
 			if bar.parent = default_parent then
 				Result := Void
@@ -156,7 +156,7 @@ feature -- Access
 feature -- Status report
 
 	separator_width: INTEGER is
-			-- Current width of a separator
+			-- Current separator width.
 		do
 			Result := 8
 		end
@@ -182,7 +182,7 @@ feature -- Status setting
 feature -- Element change
 
 	insert_item (button: EV_TOOL_BAR_BUTTON_IMP; an_index: INTEGER) is
-			-- Insert `button' at the `an_index' position in the tool-bar.
+			-- Insert `button' at the `an_index' position in `Current'.
 		local
 			but: WEL_TOOL_BAR_BUTTON
 			num: INTEGER
@@ -240,7 +240,7 @@ feature -- Element change
 		end
 
 	remove_item (button: EV_TOOL_BAR_BUTTON_IMP) is
-			-- Remove button from the toolbar.
+			-- Remove `button' from `current'.
 		local
 			id1: INTEGER
 		do
@@ -252,15 +252,14 @@ feature -- Element change
 feature -- Basic operation
 
 	internal_get_index (button: EV_TOOL_BAR_BUTTON_IMP): INTEGER is
-			-- Retrieve the current index of the button with
-			-- `command_id' as id.
+			-- Retrieve the current index of `button'.
 		do
 			Result := cwin_send_message_result (
 				wel_item, Tb_commandtoindex, button.id, 0)
 		end
 
 	compute_minimum_width is
-			-- Update the minimum-size of the tool-bar.
+			-- Update the minimum-size of `Current'.
 		local
 			num: INTEGER
 		do
@@ -276,7 +275,7 @@ feature -- Basic operation
 		end
 
 	compute_minimum_height is
-			-- Update the minimum-size of the tool-bar.
+			-- Update the minimum-size of `Current'.
 		do
 			if comctl32_version >= version_471 then
 					-- New version using API available starting with IE4.
@@ -289,7 +288,7 @@ feature -- Basic operation
 
 	compute_minimum_size is
 			-- Recompute both the minimum_width and then
-			-- minimum_height of the object.
+			-- minimum_height of `Current'.
 		local
 			num: INTEGER
 		do
@@ -315,9 +314,9 @@ feature -- Basic operation
 		end
 
 	find_item_at_position (x_pos, y_pos: INTEGER): EV_TOOL_BAR_BUTTON_IMP is
-			-- Find the item at the given position.
-			-- Position is relative to the toolbar.
-			-- If there is no button at (`x_pos',`y_pox'), the result is Void.
+			-- Find the item at `x_pos', `y_pos'.
+			-- Position is relative to `Current'.
+			-- If there is no button at (`x_pos',`y_pos'), the result is Void.
 		local
 			item_index: INTEGER
 		do
@@ -370,7 +369,7 @@ feature {NONE} -- Implementation
 		end
 
 	separator_count: INTEGER is
-			-- Number of separators in the toolbar.
+			-- Number of separators in `Current'.
 			-- Necessary for the implementation of the minimum_width
 			-- of the toolbar. As soon as the message Tb_getmaxsize
 			-- is available, this feature should not be so usefull.
@@ -396,7 +395,7 @@ feature {NONE} -- Implementation
 feature {NONE} -- Implementation
 
 	add_pixmap(a_pixmap_imp: EV_PIXMAP_IMP) is
-			-- Add a pixmap to the "toolbar" list of bitmaps.
+			-- Add `a_pixmap_imp' to the list of pixmaps in `Current'.
 		local
 			pixmap_icon: WEL_ICON
 		do
@@ -420,7 +419,7 @@ feature {NONE} -- Implementation
 		end
 		
 	add_hot_pixmap(a_pixmap_imp: EV_PIXMAP_IMP) is
-			-- Add a pixmap to the "toolbar" list of hot bitmaps.
+			-- Add `a_pixmap_imp' to the list of hot pixmaps in `Current'
 		local
 			pixmap_icon: WEL_ICON
 		do
@@ -445,13 +444,9 @@ feature {NONE} -- Implementation
 
 feature {NONE} -- WEL Implementation
 
-	wel_move_and_resize (
-		a_x: INTEGER;
-		a_y: INTEGER;
-		a_width: INTEGER;
-		a_height: INTEGER;
-		repaint: BOOLEAN
-	) is
+	wel_move_and_resize ( a_x, ay, a_width, a_height: INTEGER; repaint: BOOLEAN)
+		is
+			-- Move and resize `Current'.
 			-- We must not resize the height of the tool-bar.
 		do
 			bar.move_and_resize (a_x, a_y, a_width, height, repaint)
@@ -459,6 +454,7 @@ feature {NONE} -- WEL Implementation
 		end
 
 	wel_resize (a_width, a_height: INTEGER) is
+			-- Move and resize `Current'.
 			-- We must not resize the height of the tool-bar.
 		do
 			bar.resize (a_width, height)
@@ -466,7 +462,7 @@ feature {NONE} -- WEL Implementation
 		end
 
 	wel_move (a_x, a_y: INTEGER) is
-			-- We need to move the bar only.
+			-- Move `Current'.
 		do
 			bar.move (a_x, a_y)
 		end
@@ -474,7 +470,7 @@ feature {NONE} -- WEL Implementation
 feature {NONE} -- WEL Implementation
 
 	wel_set_parent (a_parent: WEL_WINDOW) is
-			-- Change the parent of the current window.
+			-- Assign `a_parent' as the parent of `Current'. 
 		do
 			bar.set_parent (a_parent)
 		end
@@ -520,8 +516,6 @@ feature {NONE} -- WEL Implementation
 
 	on_mouse_move (keys, x_pos, y_pos: INTEGER) is
 			-- Executed when the mouse move.
-			-- We verify that there is indeed a command to avoid
-			-- the creation of an object for nothing.
 		local
 			it: EV_TOOL_BAR_BUTTON_IMP
 			pt: WEL_POINT
@@ -564,7 +558,7 @@ feature {NONE} -- WEL Implementation
 feature {EV_TOOL_BAR_IMP} -- Implementation
 
 	radio_group: LINKED_LIST [EV_TOOL_BAR_RADIO_BUTTON_IMP]
-			-- Radio items in this container.
+			-- Radio items in `Current'.
 			-- `Current' shares reference with merged containers.
 
 	is_merged (other: EV_TOOL_BAR): BOOLEAN is
@@ -696,7 +690,7 @@ feature {EV_ANY_I}
 
 end -- class EV_TOOL_BAR_IMP
 
---|----------------------------------------------------------------
+--|-----------------------------------------------------------------------------
 --| EiffelVision: library of reusable components for ISE Eiffel.
 --| Copyright (C) 1986-1998 Interactive Software Engineering Inc.
 --| All rights reserved. Duplication and distribution prohibited.
@@ -710,15 +704,15 @@ end -- class EV_TOOL_BAR_IMP
 --| Electronic mail <info@eiffel.com>
 --| Customer support e-mail <support@eiffel.com>
 --| For latest info see award-winning pages: http://www.eiffel.com
---|----------------------------------------------------------------
+--|-----------------------------------------------------------------------------
 
 --|-----------------------------------------------------------------------------
 --| CVS log
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
---| Revision 1.57  2000/04/25 20:31:06  rogers
---| On_left_button_double_click only disables default processing for radio buttons.
+--| Revision 1.58  2000/04/25 20:49:35  rogers
+--| Removed FIXME_NOT_REVIEWED. COmments. Formatting.
 --|
 --| Revision 1.55  2000/04/24 22:26:47  rogers
 --| Removed redundent code.

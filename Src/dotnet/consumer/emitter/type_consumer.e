@@ -173,16 +173,12 @@ feature {NONE} -- Implementation
 			non_void_field_info: info /= Void
 		local
 			dotnet_name: STRING
-			field_type: TYPE
 		do
 			create dotnet_name.make_from_cil (info.get_name)
-			field_type := info.get_field_type
 			create Result.make (
 								unique_feature_name (dotnet_name),
 								dotnet_name,
-								create {CONSUMED_REFERENCED_TYPE}.make (
-										create {STRING}.make_from_cil (field_type.get_full_name),
-										assembly_mapping.item (create {STRING}.make_from_cil (field_type.get_assembly.to_string))),
+								referenced_type_from_type (info.get_field_type),
 								info.get_is_static)
 		end
 

@@ -56,11 +56,6 @@ feature -- Access
 	accelerator: STRING is
 			-- Accelerator action for menu entry
 		do
-			if go_up_one_level then
-				Result := Interface_names.a_Up_stack
-			else
-				Result := Interface_names.a_Down_stack
-			end
 		end;
 
 	symbol: PIXMAP is

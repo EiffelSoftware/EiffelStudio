@@ -1,7 +1,12 @@
 indexing
 	description: "Ingres specification";
+<<<<<<< ingres.e
 	date: "$Date$";
 	revision: "$Revision$"
+=======
+	date: "$Date$";
+	revision: "$Revision$"
+>>>>>>> 1.3
 
 class 
 	INGRES

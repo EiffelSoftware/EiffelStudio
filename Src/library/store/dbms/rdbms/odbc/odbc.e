@@ -40,7 +40,12 @@ feature -- For DATABASE_STATUS
 
 feature -- For DATABASE_CHANGE 
 
-	descriptor_is_available: BOOLEAN is True
+
+	descriptor_is_available: BOOLEAN is 
+		do
+			Result := odbc_available_descriptor /= 0
+		end
+
 
 	hide_qualifier(tmp_strg: STRING): POINTER is
 		local
@@ -101,101 +106,84 @@ feature -- For DATABASE_SELECTION, DATABASE_CHANGE
 						uhandle.status.set (odbc_init_order (descriptor, $c_temp, uht.count))
 					end
 					if para /= Void then
+-- ADDED PGC
+						para.release
 						para.resize(uht.count)
 					else
 						!! para.make(uht.count)
 					end
-					bind_args_value (descriptor, uht, uhandle)
+					bind_args_value (descriptor, uht, uhandle) -- PGC: Pourquoi ???
 				end
-				if para /= Void then
-					para.release
-				end
+--				if para /= Void then
+--					para.release
+--				end
 				Result := True
 			else
-				Result := False
+ 				Result := False
 			end
 		end
 
---	bind_parameter (table: ARRAY [ANY]; parameters: ARRAY [ANY]; descriptor: INTEGER; uhandle: HANDLE; sql: STRING) is
---		local
---			i: INTEGER
---			obj: ANY
---			uht: HASH_TABLE [ANY, STRING]
---		do
---			!! uht.make (table.count)
---			from 
---				i := table.lower
---			until 
---				i > table.upper
---			loop
---				uht.put (table.item (i), i.out)
---				i := i + 1
---			end
---			if para /= Void then
---				para.resize(uht.count)
---			else
---				!! para.make(uht.count)
---			end
---
---			bind_args_value (descriptor, uht, uhandle)
---		end
-
-	bind_parameter (table: ARRAY [ANY]; parameters: ARRAY [ANY]; descriptor: INTEGER; uhandle: HANDLE; sql: STRING)   is
-			-- Append map variables name from to `s'.
-			-- Map variables are used for set input arguments.
-		local 
+	bind_parameter (table: ARRAY [ANY]; parameters: ARRAY [ANY]; descriptor: INTEGER; uhandle: HANDLE; sql: STRING) is
+		local
 			i: INTEGER
+			object : ANY
 			tmp_str: STRING
 			tmp_c: ANY
 			tmp_p: POINTER
 			tmp_date: DATE_TIME
 			type: INTEGER
+			ptr : POINTER_REF
 		do
-			check
-				table_defined: table.lower = 1
-			end
-			!! tmp_str.make(1)
 			if para /= Void then
+				para.release
 				para.resize(table.count)
 			else
 				!! para.make(table.count)
 			end
-
-			from
-				i:= table.lower
-			until
-				i > table.count
+			!! tmp_str.make(1)
+			from 
+				i := table.lower
+			until 
+				i > table.upper
 			loop
 				type := -1
-				if obj_is_string(table.item(i)) then
-					type := c_string_type
-				elseif obj_is_integer(table.item(i)) then
-					type := c_integer_type
-				elseif obj_is_date(table.item(i)) then
-					type := c_date_type
-					tmp_date ?= table.item(i)
-				elseif obj_is_character(table.item(i)) then
-					type := c_character_type
-				elseif obj_is_real(table.item(i)) then
-					type := c_real_type
-				elseif obj_is_double(table.item(i)) then
-					type := c_float_type
-				elseif obj_is_boolean(table.item(i)) then
-					type := c_boolean_type
-				end
-				tmp_str.wipe_out
-				if type = c_date_type  then
-					para.set(odbc_stru_of_date(tmp_date.year, tmp_date.month, tmp_date.day, tmp_date.hour, tmp_date.minute, tmp_date.second, 2), i)
+				object := table.item (i)
+				ptr ?= object
+				if ptr /= Void then -- NULL value
+					para.set (default_pointer, i)
 				else
-					tmp_str.append((table.item(i)).out)
-				        tmp_c := tmp_str.to_c
-					para.set(odbc_str_from_str($tmp_c), i)
-				end
+					if obj_is_string(object) then
+						type := c_string_type
+					elseif obj_is_integer(object) then
+						type := c_integer_type
+					elseif obj_is_date(object) then
+						type := c_date_type
+						tmp_date ?= object
+					elseif obj_is_double(object) then
+						type := c_float_type
+					elseif obj_is_real(object) then
+						type := c_real_type
+					elseif obj_is_character(object) then
+						type := c_character_type
+					elseif obj_is_boolean(object) then
+						type := c_boolean_type
+					end
+					tmp_str.wipe_out
+					if type = c_date_type  then
+						para.set(odbc_stru_of_date(tmp_date.year, tmp_date.month, tmp_date.day, tmp_date.hour, tmp_date.minute, tmp_date.second, 2), i)
+					else
+						tmp_str.append((object).out)
+						para.set (default_pointer, i)
+						tmp_c := tmp_str.to_c
+						para.set(odbc_str_from_str($tmp_c), i)
+					end
+				end -- Null value
 				uhandle.status.set (odbc_set_parameter(descriptor, i, 1, type, para.get(i)))
 				i := i + 1
 			end
 		end
-	  
+
+  
 feature -- For DATABASE_STORE
 
 	put_column_name (repository: DATABASE_REPOSITORY [like Current]; map_table: ARRAY [INTEGER]): STRING is
@@ -499,6 +487,9 @@ feature -- External
 
 	terminate_order (no_descriptor: INTEGER): INTEGER is
 		do
+			if para /= Void then
+				para.release
+			end
 			Result := odbc_terminate_order(no_descriptor)
 		end
 
@@ -1037,12 +1028,12 @@ feature {NONE} -- External features
 				elseif obj_is_date(uht.item(uht.key_for_iteration)) then
 					type := c_date_type
 					tmp_date ?= uht.item(uht.key_for_iteration)
-				elseif obj_is_character(uht.item(uht.key_for_iteration)) then
-					type := c_character_type
-				elseif obj_is_real(uht.item(uht.key_for_iteration)) then
-					type := c_real_type
 				elseif obj_is_double(uht.item(uht.key_for_iteration)) then
 					type := c_float_type
+				elseif obj_is_real(uht.item(uht.key_for_iteration)) then
+					type := c_real_type
+				elseif obj_is_character(uht.item(uht.key_for_iteration)) then
+					type := c_character_type
 				elseif obj_is_boolean(uht.item(uht.key_for_iteration)) then
 					type := c_boolean_type
 				end
@@ -1158,12 +1149,28 @@ feature {NONE} -- External features
 			Result := test /= Void
 		end
 
+--	obj_is_pointer (obj : ANY) : BOOLEAN is
+--		require
+--			argument_not_null: obj /= Void
+--		local
+--			test : POINTER_REF
+--		do
+--			test ?= obj
+--			Result := test /= Void
+--		end
+
 	odbc_set_qualifier(qlf: POINTER) is
 		external
 			"C"
 		end
 
 	odbc_set_owner(owner: POINTER) is
+		external
+			"C"
+		end
+
+
+	odbc_available_descriptor : INTEGER is
 		external
 			"C"
 		end

@@ -34,7 +34,12 @@ feature
 			parsed: BOOLEAN
 			ArgNum: INTEGER
 		do
-			sql_string := clone (s)
+			if sql_string = Void then
+				create sql_string.make (s.count)
+			else
+				sql_string.wipe_out
+			end
+			sql_string.append (s)
 			s.wipe_out
 			s.append (parse (sql_string))
 			ArgNum := s.occurrences('?')
@@ -64,7 +69,8 @@ feature
 		require
 			prepared_statement: is_prepared
 		do
-			db_spec.bind_parameter (parameters_value, parameters_value, descriptor, handle, "")	
+			setup_parameters
+			db_spec.bind_parameter (parameters_value, parameters, descriptor, handle, "")	
 		end
 
 	execute is
@@ -84,7 +90,7 @@ feature
 			next
 			set_executed (TRUE)
 		ensure
-			prepared_statement: is_executed
+			executed_statement: is_executed
 		end
 
 	reset_cursor is
@@ -95,7 +101,6 @@ feature
 				handle.status.set (db_spec.close_cursor (descriptor))
 			end
 		end
-
 
 feature {NONE} -- Implementation
 

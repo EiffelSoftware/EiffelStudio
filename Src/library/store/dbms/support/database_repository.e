@@ -82,9 +82,9 @@ feature -- Basic operations
 			s.append("%Tdescription: %"Class which allows EiffelStore to retrieve/store%%%N")
 			s.append("%T      %%the content relative to a column of the table "+tmp_class_name+"%"%N%N")
 
-			s.append("class "+tmp_class_name+" %N%N")
-			s.append("%Tinherit%N%T%TANY%N%T%Tredefine%N%T%T%Tout%N%T%Tend%N%N")
-			s.append("Creation%N%T%Tmake%N%N")
+			s.append("class%N%T"+tmp_class_name+" %N%N")
+			s.append("inherit%N%TANY%N%T%Tredefine%N%T%T%Tout%N%T%Tend%N%N")
+			s.append("create%N%Tmake%N%N")
 
 			s.append ("%Nfeature -- Access%N%N")
 			
@@ -101,8 +101,8 @@ feature -- Basic operations
 				col_name := clone (el.column_name)
 				col_name.to_lower
 				
-				s1.append("%Tset_"+col_name+"(a_"+col_name+":")
-				s.append ("%T"+col_name+":")
+				s1.append("%Tset_"+col_name+" (a_"+col_name+": ")
+				s.append ("%T"+col_name+": ")
 				el_type := el.eiffel_type
 				if el_type = Integer_type_database then
 					s2 := "INTEGER"
@@ -126,12 +126,12 @@ feature -- Basic operations
 					end
 				elseif el_type = Date_type_database then
 					s2 := "DATE_TIME"
-					s3.append("%T%T%TCreate "+col_name+".make_now%N")
+					s3.append("%T%T%Tcreate "+col_name+".make_now%N")
 				else
 					s2 :=  "ANY"
 				end
 
-				s4.append("%T%T%TResult.append(" + col_name + ".out + %"%%N%")%N")
+				s4.append("%T%T%TResult.append (" + col_name + ".out + %"%%N%")%N")
 
 				s1.append(s2+") is%N%T%T%T--Set the value of "+col_name)
 				s1.append("%N%T%Trequire")
@@ -139,19 +139,19 @@ feature -- Basic operations
 				s1.append("%N%T%Tdo")
 				s1.append("%N%T%T%T"+col_name+" := a_"+col_name)
 				s1.append("%N%T%Tensure")
-				s1.append("%N%T%T%Tset: a_"+col_name+" = "+col_name)
+				s1.append("%N%T%T%T" + col_name + "_set: a_"+col_name+" = "+col_name)
 				s1.append("%N%T%Tend%N%N")
-				s.append (s2+"%N%T%T-- Auto-generated%N%N")
+				s.append (s2+"%N%T%T%T-- Auto-generated.%N%N")
 				table.forth
 			end
 			s3.append("%T%Tend%N%N")
 			s4.append("%T%Tend%N%N")
 
-			s.append(s3)
-			s.append(s1)
-			s.append(s4)
+			s.append (s3)
+			s.append (s1)
+			s.append (s4)
 			s.append ("end -- class "+tmp_class_name+"%N")
-			f.put_string(s)
+			f.put_string (s)
 		end
 
 	execute is

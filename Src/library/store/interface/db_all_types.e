@@ -2,7 +2,7 @@ indexing
 
 	Status: "See notice at end of class";
 	date: "$Date$"
-	revision: "$Revision$"
+--	revision: "$Revision$"
 	product: "EiffelStore"
 	database: "All bases"
 

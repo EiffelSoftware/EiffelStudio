@@ -100,45 +100,51 @@ feature -- Element change
 			d_year, d_month, d_day, d_hour, d_min, d_sec, d_ms: INTEGER
 			date: DATE
 			time: TIME
+			get_metadata : BOOLEAN
 		do
 			if database_string = Void then
 				!! database_string.make (selection_string_size)
 			end
 			count := db_spec.get_count (no_descriptor)
+			get_metadata := False  -- do not get metadata
 			if value = Void then
 				!! value.make (1, count)
 				!! value_size.make (1, count)
 				!! value_max_size.make (1, count)
 				!! value_type.make (1, count)
 				!! select_name.make (1, count)
+				get_metadata := True --PGC
 			elseif value.count < count then
 				value.resize (1, count)
 				value_size.resize (1, count)
 				value_max_size.resize (1, count)
 				value_type.resize (1, count)
 				select_name.resize (1, count)
+				get_metadata := True --PGC
 			end
 			from
 				ind := 1
 			until
 				ind > count
 			loop
-				value_size.put (db_spec.get_data_len (no_descriptor, ind), ind)
-				value_max_size.put (db_spec.get_col_len (no_descriptor, ind), ind)
-				value_type.put (db_spec.get_col_type (no_descriptor, ind), ind)
-				f_string := select_name.item (ind)
-				if f_string = Void then
-					!! f_string.make (1)
-					select_name.put (f_string, ind)
-				else
-					f_string.wipe_out
-				end
-				database_string.get_select_name (no_descriptor, ind)
-					-- Due to a Problem with SQL Server through ODBC
-					-- we need to remove all the %U of the string.
-				
+				if get_metadata then --PGC
+					value_size.put (db_spec.get_data_len (no_descriptor, ind), ind)
+					value_max_size.put (db_spec.get_col_len (no_descriptor, ind), ind)
+					value_type.put (db_spec.get_col_type (no_descriptor, ind), ind)
+					f_string := select_name.item (ind)
+					if f_string = Void then
+						!! f_string.make (1)
+						select_name.put (f_string, ind)
+					else
+						f_string.wipe_out
+					end
+					database_string.get_select_name (no_descriptor, ind)
+						-- Due to a Problem with SQL Server through ODBC
+						-- we need to remove all the %U of the string.
 
-				f_string.append (database_string)
+					f_string.append (database_string)
+				end --PGC
+
 				f_any := value.item (ind)
 
 				-- INTEGER type

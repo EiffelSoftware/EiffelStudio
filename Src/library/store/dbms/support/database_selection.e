@@ -33,6 +33,11 @@ creation -- Creation procedure
 
 	make
 
+feature -- Access
+
+	last_parsed_query : STRING
+			-- Last parsed query
+
 feature -- Basic operations
 
 	query (s: STRING) is
@@ -54,6 +59,7 @@ feature -- Basic operations
 				parsed_s := parse (s)
 				handle.status.set (db_spec.init_order (descriptor, parsed_s))
 			end
+			last_parsed_query := parsed_s
 			if is_ok then
 				handle.status.set (db_spec.start_order (descriptor))
 			end
@@ -109,13 +115,13 @@ feature -- Status setting
 			r_any: ANY
 			tst : BOOLEAN
 			database_data: DATABASE_DATA [G]
-			database: G
+--			database: G
 		do
 			database_data ?= cursor.data
 			if database_data /= Void then
 				from
 					i := 1
-					create database
+--					create database
 				until
 					i > database_data.count or not is_ok
 				loop
@@ -123,7 +129,8 @@ feature -- Status setting
 					pos := database_data.map_table.item (i)
 					if r_any /= Void and pos > 0 then
 						tst := field_copy (pos, object,
-								database.convert_string_type (r_any,
+--								database.convert_string_type (r_any,
+								db_spec.convert_string_type (r_any,
 									  field_name (pos, object), r_any.generator))
 					end
 					i := i + 1

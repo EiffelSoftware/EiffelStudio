@@ -1,5 +1,5 @@
 indexing
-	description: "Types relative to the database of type G."
+	description: "";
 	date: "$Date$";
 	revision: "$Revision$"
 
@@ -13,43 +13,43 @@ inherit
 feature -- Conversion
 
 	String_type_database: INTEGER is
-			-- String type code
+			-- String type code in Ingres
 		once
 			Result := db_spec.c_string_type
 		end
 
 	Character_type_database: INTEGER is
-			-- Character type code
+			-- Character type code in Ingres
 		once
 			Result := db_spec.c_character_type
 		end
 
 	Integer_type_database: INTEGER is
-			-- Integer type code
+			-- Integer type code in Ingres
 		once
 			Result := db_spec.c_integer_type
 		end
 
 	Float_type_database: INTEGER is
-			-- Double type code
+			-- Double type code in Ingres
       once
          Result := db_spec.c_float_type
       end
 	
 	Real_type_database: INTEGER is
-			-- Real type code
+			-- Real type code in Ingres
         once
             Result := db_spec.c_real_type
         end
 
 	Boolean_type_database: INTEGER is
-			-- Boolean type code
+			-- Boolean type code in Ingres
 		once
 			Result := db_spec.c_boolean_type
 		end
 
 	Date_type_database: INTEGER is
-			-- Datetime type code
+			-- Datetime type code in Ingres
 		once
 			Result := db_spec.c_date_type
 		end

@@ -41,6 +41,7 @@ feature {NONE} -- Initialization
 			set_name ("New Project...")
 			set_menu_name ("New Project...")
 			enable_sensitive
+			add_agent (agent execute)
 
 					-- Now add an accelerator for `Current'.
 			create key.make_with_code ((create {EV_KEY_CONSTANTS}).key_n)

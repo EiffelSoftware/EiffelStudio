@@ -119,7 +119,7 @@ feature -- Initialization
 						cancel_agent)
 				end
 			end
-			if (cancel_agent = Void) or else (not cancel_agent.item ([])) then
+			if (cancel_agent = Void) or else (not cancel_agent.item (Void)) then
 				project_directory := project_dir
 				Create_compilation_directory
 				Create_generation_directory
@@ -487,7 +487,7 @@ feature -- Update
 						Application.resynchronize_breakpoints
 					end
 				elseif exit_on_error and then exit_agent /= Void then
-					exit_agent.call ([])
+					exit_agent.call (Void)
 				end
 				if
 					not manager.is_project_loaded and then
@@ -1014,8 +1014,9 @@ feature {NONE} -- Implementation
 			create Result.put (deg_output)
 		end
 
-	exit_agent: PROCEDURE [ANY, TUPLE[]]
-			-- Optional procedure that should be called when an error occurs and `exit_on_error' is set.
+	exit_agent: PROCEDURE [ANY, TUPLE]
+			-- Optional procedure that should be called when an error occurs and
+			-- `exit_on_error' is set.
 
 	mode: BOOLEAN_REF is
 			-- Is the compile in batch mode?

@@ -84,7 +84,7 @@ feature -- Status setting
 				until
 					edition_agents.after
 				loop
-					edition_agents.item.call ([])
+					edition_agents.item.call (Void)
 					edition_agents.forth
 				end
 			end
@@ -156,7 +156,7 @@ feature -- Basic operations
 			until
 				compile_start_agents.after
 			loop
-				compile_start_agents.item.call ([])
+				compile_start_agents.item.call (Void)
 				compile_start_agents.forth
 			end
 		end
@@ -171,7 +171,7 @@ feature -- Basic operations
 			until
 				compile_stop_agents.after
 			loop
-				compile_stop_agents.item.call ([])
+				compile_stop_agents.item.call (Void)
 				compile_stop_agents.forth
 			end
 		end

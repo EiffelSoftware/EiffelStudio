@@ -64,6 +64,8 @@ feature -- Orientation
 
 	is_horizontal: BOOLEAN is
 			-- Is separator oriented horizontal?
+		require
+			exists: not destroyed
 		do
 			Result := implementation.is_horizontal
 		end;
@@ -71,6 +73,8 @@ feature -- Orientation
 	set_horizontal (flag: BOOLEAN) is
 			-- Set orientation of the scale to horizontal if `flag',
 			-- to vertical otherwise.
+		require
+			exists: not destroyed
 		do
 			implementation.set_horizontal (flag)
 		ensure
@@ -81,30 +85,40 @@ feature -- Line type
 
 	set_single_line is
 			-- Set separator display to be single line.
+		require
+			exists: not destroyed
 		do
 			implementation.set_single_line
 		end;
 
 	set_double_line is
 			-- Set separator display to be double line.
+		require
+			exists: not destroyed
 		do
 			implementation.set_double_line
 		end;
 
 	set_single_dashed_line is
 			-- Set separator display to be single dashed line.
+		require
+			exists: not destroyed
 		do
 			implementation.set_single_dashed_line
 		end;
 
 	set_double_dashed_line is
 			-- Set separator display to be double dashed line.
+		require
+			exists: not destroyed
 		do
 			implementation.set_double_dashed_line
 		end;
 
 	set_no_line is
 			-- Make separator invisible.
+		require
+			exists: not destroyed
 		do
 			implementation.set_no_line
 		end 

@@ -7,7 +7,7 @@ indexing
 	date: "$Date$";
 	revision: "$Revision$"
 
-class WM_SHELL 
+deferred class WM_SHELL 
 
 inherit
 	
@@ -16,6 +16,7 @@ feature -- Size
 	set_base_height (a_height: INTEGER) is
 			-- Set `base_height' to `a_height'. 
 		require
+			exists: not destroyed;
 			height_large_enough: a_height >= 0
 		do
 			implementation.set_base_height (a_height)
@@ -29,6 +30,8 @@ feature -- Size
 			-- widgets.
 			-- The preferred heights are `base_heights' plus
 			-- integral multiples of `height_inc'
+		require
+			exists: not destroyed
 		do
 			Result := implementation.base_height
 		ensure
@@ -38,6 +41,7 @@ feature -- Size
 	set_base_width (a_width: INTEGER) is
 			-- Set `base_width' to `a_width'.
 		require
+			exists: not destroyed;
 			width_large_enough: a_width >= 0
 		do
 			implementation.set_base_width (a_width)
@@ -51,6 +55,8 @@ feature -- Size
 			-- widgets.
 			-- The preferred widths are `base_heights' plus
 			-- integral multiples of `width_inc'
+		require
+			exists: not destroyed
 		do
 			Result := implementation.base_width
 		ensure
@@ -60,6 +66,7 @@ feature -- Size
 	set_height_inc (an_increment: INTEGER) is
 			-- Set `height_inc' to `an_increment'.
 		require
+			exists: not destroyed;
 			an_increment_large_enought: an_increment >= 0
 		do
 			implementation.set_height_inc (an_increment)
@@ -71,6 +78,8 @@ feature -- Size
 			-- Increment for a progression of preferred
 			-- heights for the window manager tu use in sizing 
 			-- widgets.
+		require
+			exists: not destroyed
 		do
 			Result := implementation.height_inc
 		ensure
@@ -80,6 +89,7 @@ feature -- Size
 	set_width_inc (an_increment: INTEGER) is
 			-- Set `width_inc' to `an_increment'.
 		require
+			exists: not destroyed;
 			an_increment_large_enough: an_increment >= 0
 		do
 			implementation.set_width_inc (an_increment)
@@ -91,15 +101,18 @@ feature -- Size
 			-- Increment for a progression of preferred
 			-- widths for the window manager tu use in sizing
 			-- widgets.
+		require
+			exists: not destroyed
 		do
 			Result := implementation.width_inc
 		ensure
 			Result >= 0
 		end;
 
-
 	set_max_aspect_x (a_max: INTEGER) is
 			-- Set `max_aspect_x' to `a_max'.
+		require
+			exists: not destroyed
 		do
 			implementation.set_max_aspect_x (a_max)
 		ensure
@@ -109,12 +122,16 @@ feature -- Size
 	max_aspect_x: INTEGER is
 			-- Numerator of maximum aspect ratio (X/Y) that
 			-- application wishes widget instance to have
+		require
+			exists: not destroyed
 		do
 			Result := implementation.max_aspect_x
 		end;
 
 	set_max_aspect_y (a_max: INTEGER) is
 			-- Set `max_aspect_y' to `a_max'.
+		require
+			exists: not destroyed
 		do
 			implementation.set_max_aspect_y (a_max)
 		ensure
@@ -124,6 +141,8 @@ feature -- Size
 	max_aspect_y: INTEGER is
 			-- Denominator of maximum ration (X/Y) that
 			-- application wishes widget instance to have
+		require
+			exists: not destroyed
 		do
 			Result := implementation.max_aspect_y
 		end;
@@ -131,6 +150,7 @@ feature -- Size
 	set_max_height (a_height: INTEGER) is
 			-- Set `max_height' to `a_height'.
 		require
+			exists: not destroyed;
 			a_height_large_enough: a_height >= 1
 		do
 			implementation.set_max_height (a_height)
@@ -141,6 +161,8 @@ feature -- Size
 	max_height: INTEGER is
 			-- Maximum height that application wishes widget
 			-- instance to have
+		require
+			exists: not destroyed
 		do
 			Result := implementation.max_height
 		ensure
@@ -150,6 +172,7 @@ feature -- Size
 	set_max_width (a_max: INTEGER) is
 			-- Set `max_width' to `a_max'.
 		require
+			exists: not destroyed;
 			a_max_large_enough: a_max >= 1
 		do
 			implementation.set_max_width (a_max)
@@ -160,6 +183,8 @@ feature -- Size
 	max_width: INTEGER is
 			-- Maximum width that application wishes widget
 			-- instance to have
+		require
+			exists: not destroyed
 		do
 			Result := implementation.max_width
 		ensure
@@ -168,6 +193,8 @@ feature -- Size
 
 	set_min_aspect_x (a_min: INTEGER) is
 			-- Set `min_aspect_x' to `a_min'.
+		require
+			exists: not destroyed
 		do
 			implementation.set_min_aspect_x (a_min)
 		ensure
@@ -177,12 +204,16 @@ feature -- Size
 	min_aspect_x: INTEGER is
 			-- Numerator of minimum aspect ratio (X/Y) that
 			-- application wishes widget instance to have
+		require
+			exists: not destroyed
 		do
 			Result := implementation.min_aspect_x
 		end;
 
 	set_min_aspect_y (a_min: INTEGER) is
 			-- Set `min_aspect_y' to `a_min'.
+		require
+			exists: not destroyed
 		do
 			implementation.set_min_aspect_y (a_min)
 		ensure
@@ -192,6 +223,8 @@ feature -- Size
 	min_aspect_y: INTEGER is
 			-- Denominator of minimum ration (X/Y) that
 			-- application wishes widget instance to have
+		require
+			exists: not destroyed
 		do
 			Result := implementation.min_aspect_y
 		end;
@@ -199,6 +232,7 @@ feature -- Size
 	set_min_height (a_height: INTEGER) is
 			-- Set `min_height' to `a_height'.
 		require
+			exists: not destroyed;
 			a_height_large_enough: a_height >= 1
 		do
 			implementation.set_min_height (a_height)
@@ -209,6 +243,8 @@ feature -- Size
 	min_height: INTEGER is
 			-- minimum height that application wishes widget
 			-- instance to have
+		require
+			exists: not destroyed
 		do
 			Result := implementation.min_height
 		ensure
@@ -218,6 +254,7 @@ feature -- Size
 	set_min_width (a_min: INTEGER) is
 			-- Set `min_width' to `a_min'.
 		require
+			exists: not destroyed;
 			a_min_large_enough: a_min >= 1
 		do
 			implementation.set_min_width (a_min)
@@ -228,6 +265,8 @@ feature -- Size
 	min_width: INTEGER is
 			-- minimum width that application wishes widget
 			-- instance to have
+		require
+			exists: not destroyed
 		do
 			Result := implementation.min_width
 		ensure
@@ -239,6 +278,7 @@ feature -- Icon representing shell
 	set_icon_mask (a_mask: PIXMAP) is
 			-- Set `icon_mask' to `a_mask'.
 		require
+			exists: not destroyed;
 			not_a_mask_void: not (a_mask = Void)
 		do
 			implementation.set_icon_mask (a_mask)
@@ -248,6 +288,8 @@ feature -- Icon representing shell
 			-- Bitmap that could be used by window manager
 			-- to clip `icon_pixmap' bitmap to make the
 			-- icon nonrectangular 
+		require
+			exists: not destroyed
 		do
 			Result := implementation.icon_mask
 		end;
@@ -255,6 +297,7 @@ feature -- Icon representing shell
 	set_icon_pixmap (a_pixmap: PIXMAP) is
 			-- Set `icon_pixmap' to `a_pixmap'.
 		require
+			exists: not destroyed;
 			not_a_pixmap_void: not (a_pixmap = Void)
 		do
 			implementation.set_icon_pixmap (a_pixmap)
@@ -263,6 +306,8 @@ feature -- Icon representing shell
 	icon_pixmap: PIXMAP is
 			-- Bitmap that could be used by the window manager
 			-- as the application's icon
+		require
+			exists: not destroyed
 		do
 			Result := implementation.icon_pixmap
 		ensure
@@ -271,6 +316,8 @@ feature -- Icon representing shell
 
 	set_icon_x (x_value: INTEGER) is
 			-- Set `icon_x' to `x_value'.
+		require
+			exists: not destroyed
 		do
 			implementation.set_icon_x (x_value)
 		end;
@@ -279,12 +326,16 @@ feature -- Icon representing shell
 			-- Place to put application's icon
 			-- Since the window manager controls icon placement
 			-- policy, this may be ignored.
+		require
+			exists: not destroyed
 		do
 			Result := implementation.icon_x
 		end;
 
 	set_icon_y (y_value: INTEGER) is
 			-- Set `icon_y' to `y_value'.
+		require
+			exists: not destroyed
 		do
 			implementation.set_icon_y (y_value)
 		end;
@@ -293,6 +344,8 @@ feature -- Icon representing shell
 			-- Place to put application's icon
 			-- Since the window manager controls icon placement
 			-- policy, this may be ignored.
+		require
+			exists: not destroyed
 		do
 			Result := implementation.icon_y
 		end;
@@ -302,6 +355,7 @@ feature -- Title
 	set_title (a_title: STRING) is
 			-- Set `title' to `a_title'.
 		require
+			exists: not destroyed;
 			not_a_title_void: not (a_title = Void)
 		do
 			implementation.set_title (a_title)
@@ -310,6 +364,8 @@ feature -- Title
 	title: STRING is
 			-- Application name to be displayed by
 			-- the window manager
+		require
+			exists: not destroyed
 		do
 			Result := implementation.title
 		end;
@@ -318,6 +374,8 @@ feature -- Widget
 
 	set_widget_group (a_widget: WIDGET) is
 			-- Set `widget_group' to `a_widget'.
+		require
+			exists: not destroyed
 		do
 			implementation.set_widget_group (a_widget)
 		end;
@@ -328,9 +386,15 @@ feature -- Widget
 			-- widgets. Window manager will treat all widgets in
 			-- a group in some way; for example, it may move or
 			-- iconify them together
+		require
+			exists: not destroyed
 		do
 			Result := implementation.widget_group
 		end 
+
+	destroyed: BOOLEAN is
+		deferred
+		end;
 
 feature {WM_SHELL_I}
 

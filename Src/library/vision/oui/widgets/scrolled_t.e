@@ -81,36 +81,48 @@ feature -- Scrollbar visibility and orientation
 
 	show_vertical_scrollbar is
 			-- Make vertical scrollbar visible.
+		require
+			exists: not destroyed
 		do
 			implementation.show_vertical_scrollbar
 		end;
 
 	hide_vertical_scrollbar is
 			-- Make vertical scrollbar invisible.
+		require
+			exists: not destroyed
 		do
 			implementation.hide_vertical_scrollbar
 		end;
 
 	show_horizontal_scrollbar is
 			-- Make horizontal scrollbar visible.
+		require
+			exists: not destroyed
 		do
 			implementation.show_horizontal_scrollbar
 		end;
 
 	hide_horizontal_scrollbar is
 			-- Make horizontal scrollbar invisible.
+		require
+			exists: not destroyed
 		do
 			implementation.hide_horizontal_scrollbar
 		end;
 
 	is_vertical_scrollbar: BOOLEAN is
 			-- Is vertical scrollbar visible?
+		require
+			exists: not destroyed
 		do
 			Result := implementation.is_vertical_scrollbar
 		end;
 
 	is_horizontal_scrollbar: BOOLEAN is
 			-- Is horizontal scrollbar visible?
+		require
+			exists: not destroyed
 		do
 			Result := implementation.is_horizontal_scrollbar
 		end

@@ -70,6 +70,8 @@ feature
 
 	selected_button: BUTTON is
 			-- Current Push Button selected in the option menu
+		require
+			exists: not destroyed
 		do
 			Result := implementation.selected_button
 		end;
@@ -77,6 +79,7 @@ feature
 	set_selected_button (button: BUTTON) is
 			-- Set `selected_button' to `button'
 		require
+			exists: not destroyed;
 			button_exists: not (button = Void)
 		do
 			implementation.set_selected_button (button)
@@ -89,6 +92,7 @@ feature
 			-- be the menu which will appear when the button
 			-- is armed.
 		require
+			exists: not destroyed;
 			menu_not_void: not (a_menu = Void);
 			same_parent: a_menu.parent = parent
 		do
@@ -96,26 +100,32 @@ feature
 		end;
 
 	title: STRING is
+		require
+			exists: not destroyed
 		do
 			Result := implementation.title;
 		end;
 
 	set_title (a_title: STRING) is
+		require
+			exists: not destroyed;
 		do
 			implementation.set_title (a_title);
 		end;
 
-
 	remove_title  is
+		require
+			exists: not destroyed
 		do
 			implementation.remove_title;
 		end;
 
 	title_width: INTEGER is
+		require
+			exists: not destroyed
 		do
 			Result := implementation.title_width;
 		end;
-
 
 	set_size (new_width, new_height: INTEGER) is
 		do
@@ -127,7 +137,6 @@ feature
 				manage;
 			end;
 		end;
-
 
 	set_width (new_width: INTEGER) is
 		do

@@ -66,6 +66,8 @@ feature -- Pixmap
 
 	pixmap: PIXMAP is
 			-- Pixmap used
+		require
+			exists: not destroyed
 		do
 			Result := implementation.pixmap
 		ensure
@@ -75,6 +77,7 @@ feature -- Pixmap
 	set_pixmap (a_pixmap: PIXMAP) is
 			-- Draw `a_pixmap' into the picture_button.
 		require
+			exists: not destroyed;
 			a_pixmap_exists: a_pixmap /= Void;
 			a_pixmap_valid: a_pixmap.is_valid
 		do
@@ -86,6 +89,7 @@ feature -- Pixmap
 	set_pixmap_by_name (a_pixmap_name: STRING) is
 			-- Draw `a_pixmap_name' into the picture_button.
 		require
+			exists: not destroyed;
 			a_pixmap_name_exist: a_pixmap_name /= Void
 		local
 			a_pixmap: PIXMAP;

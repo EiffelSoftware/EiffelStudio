@@ -20,18 +20,24 @@ feature -- Windowing
 	is_cascade_grab: BOOLEAN is
 			-- Is the shell popped up with cascade grab (allowing the other
 			-- shells popped up with grab to receive events) ?
+		require
+			exists: not destroyed
 		do
 			Result := implementation.is_cascade_grab
 		end; 
 
 	is_exclusive_grab: BOOLEAN is
 			-- Is the shell popped up with exclusive grab ?
+		require
+			exists: not destroyed
 		do
 			Result := implementation.is_exclusive_grab
 		end;
 
 	is_no_grab: BOOLEAN is
 			-- Is the shell popped up with no grab ?
+		require
+			exists: not destroyed
 		do
 			Result := implementation.is_no_grab
 		end;
@@ -39,18 +45,24 @@ feature -- Windowing
 	is_poped_up: BOOLEAN is
 			-- Is the popup widget popped up on screen ?
 		obsolete "Use is_popped_up, corrected spelling for feature."
+		require
+			exists: not destroyed
 		do
 			Result := implementation.is_popped_up
 		end;
 
 	is_popped_up: BOOLEAN is
 			-- Is the popup widget popped up on screen ?
+		require
+			exists: not destroyed
 		do
 			Result := implementation.is_popped_up
 		end;
 
 	popdown is
 			-- Popdown popup shell.
+		require
+			exists: not destroyed
 		do
 			implementation.popdown
 		ensure
@@ -59,6 +71,8 @@ feature -- Windowing
 
 	popup is
 			-- Popup a popup shell with no grab on it.
+		require
+			exists: not destroyed
 		do
 			implementation.popup
 		ensure
@@ -68,6 +82,8 @@ feature -- Windowing
 	set_cascade_grab is
 			-- Specifies that the shell would be popped up with cascade grab.
 			-- (Allowing the other shells popped up with grab to receive events).
+		require
+			exists: not destroyed
 		do
 			implementation.set_cascade_grab
 		ensure
@@ -77,6 +93,8 @@ feature -- Windowing
 	set_exclusive_grab is
 			-- Specifies that the shell would be popped up with exclusive grab.
 			-- (Allowing only the current shell to receive events);
+		require
+			exists: not destroyed
 		do
 			implementation.set_exclusive_grab
 		ensure
@@ -85,6 +103,8 @@ feature -- Windowing
 
 	set_no_grab is
 			-- Specifies that the shell would be popped up with no grab.
+		require
+			exists: not destroyed
 		do
 			implementation.set_no_grab
 		ensure

@@ -8,21 +8,33 @@ deferred class STACKABLE
 feature
 
 	is_stackable: BOOLEAN is
+		require
+			exists: not destroyed;
 		do
 			Result := implementation.is_stackable;
 		end
 
 	screen_object: POINTER is
 			-- implementation of current widget
+		require
+			exists: not destroyed;
 		do
 			Result := implementation.screen_object;
 		end;
 
+	destroyed: BOOLEAN is
+		deferred
+		end;
+
 	parent: COMPOSITE is
+		require
+			exists: not destroyed;
 		deferred
 		end;
 
 	realized: BOOLEAN is
+		require
+			exists: not destroyed;
 		deferred
 		end;
 

@@ -63,18 +63,25 @@ feature {NONE} -- Creation
 feature
 
 	set_default_position (flag: BOOLEAN) is
+			-- Set default position of Current to `flag'.
+		require
+			exists: not destroyed	
 		do
 			implementation.set_default_position (flag);
 		end;
 
 	circulate_up is
-			--circulate the children of this widget up
+			-- Circulate the children of this widget up
+		require
+			exists: not destroyed
 		do
 			implementation.circulate_up;
 		end;
 
 	circulate_down is
-			--circulate the children of this widget down
+			-- Circulate the children of this widget down
+		require
+			exists: not destroyed
 		do
 			implementation.circulate_down;
 		end;
@@ -83,7 +90,8 @@ feature
 			-- the stackable's in the array have to have the
 			-- same parent.
 		require
-			valid_restackable: valid_stackables( a_stackable_array);
+			exists: not destroyed;
+			valid_restackable: valid_stackables (a_stackable_array);
 		do
 			implementation.restack_children (a_stackable_array);
 		end;
@@ -92,6 +100,7 @@ feature
 			-- check that the array of stackables meets the critea
 			-- require for widgets to be restacked
 		require
+			exists: not destroyed;
 			valid_array: a_stackable_array /= Void and then
 					not a_stackable_array.empty;
 		local

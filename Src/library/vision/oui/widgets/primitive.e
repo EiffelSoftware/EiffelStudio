@@ -33,6 +33,8 @@ feature -- Color
 
 	foreground: COLOR is obsolete "Use ``foreground_color''"
 			-- Foreground color of Current widget
+		require
+			exists: not destroyed
 		do
 			Result := foreground_color
 		ensure
@@ -41,6 +43,8 @@ feature -- Color
 
 	foreground_color: COLOR is
 			-- Foreground color of Current widget
+		require
+			exists: not destroyed
 		do
 			Result:= implementation.foreground_color
 		ensure
@@ -50,6 +54,7 @@ feature -- Color
 	set_foreground_color (new_color: COLOR) is
 			-- Set foreground color to `new_color'.
 		require
+			exists: not destroyed;
 			Valid_color: new_color /= Void
 		do
 			implementation.set_foreground_color (new_color)
@@ -61,6 +66,7 @@ feature -- Color
 			-- Set foreground color to `new_color'.
 		obsolete "Use ``set_foreground_color''"
 		require
+			exists: not destroyed;
 			Valid_color: new_color /= Void
 		do
 			set_foreground_color (new_color)

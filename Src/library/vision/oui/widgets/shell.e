@@ -20,8 +20,8 @@ inherit
 feature -- Windowing
 
 	set_override (flag: BOOLEAN) is
-		local
-			ext_name: ANY;
+		require
+			exists: not destroyed
 		do
 			implementation.set_override (flag);
 		end;
@@ -29,6 +29,8 @@ feature -- Windowing
 	allow_resize is
 			-- Allow geometry resize to all geometry requests
 			-- from its children.
+		require
+			exists: not destroyed
 		do
 			implementation.allow_resize
 		end;
@@ -36,6 +38,8 @@ feature -- Windowing
 	forbid_resize is
 			-- Forbid geometry resize to all geometry requests
 			-- from its children.
+		require
+			exists: not destroyed
 		do
 			implementation.forbid_resize
 		end;

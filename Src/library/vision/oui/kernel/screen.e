@@ -27,8 +27,15 @@ creation
 
 feature 
 
+	destroyed: BOOLEAN is
+		do
+			Result := implementation = Void
+		end;
+
 	buttons: BUTTONS is
 			-- Current state of the mouse buttons
+		require
+			exists: not destroyed
 		do
 			Result := implementation.buttons
 		ensure
@@ -46,12 +53,16 @@ feature
 
 	is_valid: BOOLEAN is
 			-- Is Current screen created?
+		require
+			exists: not destroyed
 		do
 			Result := implementation.is_valid
 		end;
 
 	height: INTEGER is
 			-- Height of screen (in pixel)
+		require
+			exists: not destroyed
 		do
 			Result := implementation.height
 		ensure
@@ -65,6 +76,7 @@ feature
 			-- Does the current screen and `other' representing the
 			-- same screen ?
 		require else
+			exists: not destroyed;
 			other_exists: not (other = Void)
 		do
 			Result := other.implementation = implementation
@@ -75,12 +87,16 @@ feature
 
 	widget_pointed: WIDGET is
 			-- Widget currently pointed by the pointer
+		require
+			exists: not destroyed
 		do
 			Result := implementation.widget_pointed
 		end; -- widget_pointed
 
 	width: INTEGER is
 			-- Width of screen (in pixel)
+		require
+			exists: not destroyed
 		do
 			Result := implementation.width
 		ensure
@@ -89,6 +105,8 @@ feature
 
 	x: INTEGER is
 			-- Current absolute horizontal coordinate of the mouse
+		require
+			exists: not destroyed
 		do
 			Result := implementation.x
 		ensure
@@ -98,6 +116,8 @@ feature
 
 	y: INTEGER is
 			-- Current absolute vertical coordinate of the mouse
+		require
+			exists: not destroyed
 		do
 			Result := implementation.y
 		ensure

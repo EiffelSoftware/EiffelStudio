@@ -26,6 +26,8 @@ feature -- Widget hierarchy
 
 	children_count: INTEGER is
 			-- Number of children
+		require
+			exists: not destroyed
 		do
 			Result:= implementation.children_count
 		ensure

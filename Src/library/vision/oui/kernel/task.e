@@ -30,6 +30,7 @@ feature
 			-- Add `a_command' with `argument' to the list of action to execute
 			-- while the system is waiting for user events.
 		require
+			exists: not destroyed;
 			not_a_command_void: not (a_command = Void)
 		do
 			implementation.add_action (a_command, an_argument)
@@ -52,18 +53,28 @@ feature
 			-- Remove `a_command' with `argument' to the list of action to
 			-- execute while the system is waiting for user events.
 		require
+			exists: not destroyed;
 			not_a_command_void: not (a_command = Void)
 		do
 			implementation.remove_action (a_command, an_argument)
 		end;
 
 	empty: BOOLEAN is
+		require
+			exists: not destroyed
 		do
 			Result := implementation.empty
-		end
+		end;
+
+	destroyed: BOOLEAN is
+		do
+			Result := implementation = Void
+		end;
 
 	destroy is 
 			-- Destroy Current.
+		require
+			exists: not destroyed
 		do
 			implementation.destroy;
 			implementation := Void;

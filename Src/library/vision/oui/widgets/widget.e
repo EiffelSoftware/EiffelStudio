@@ -31,6 +31,7 @@ feature -- Callbacks (adding)
 			-- `argument' will be passed to `a_command' whenever it is
 			-- invoked as a callback.
 		require
+			exists: not destroyed;
 			Valid_command: a_command /= Void
 		do
 			implementation.add_button_motion_action (number, a_command, argument)
@@ -42,6 +43,7 @@ feature -- Callbacks (adding)
 			-- `argument' will be passed to `a_command' whenever it is
 			-- invoked as a callback.
 		require
+			exists: not destroyed;
 			Valid_command: a_command /= Void
 		do
 			implementation.add_button_press_action (number, a_command, argument)
@@ -53,6 +55,7 @@ feature -- Callbacks (adding)
 			-- `argument' will be passed to `a_command' whenever it is
 			-- invoked as a callback.
 		require
+			exists: not destroyed;
 			Valid_command: a_command /= Void
 		do
 			implementation.add_button_release_action (number, a_command, argument)
@@ -64,6 +67,7 @@ feature -- Callbacks (adding)
 		-- `argument' will be passed to `a_command' whenever it is
 		-- invoked as a callback.
 		require
+			exists: not destroyed;
 			Valid_command: a_command /= Void
 		do
 			implementation.add_button_click_action (number, a_command, argument)
@@ -71,16 +75,19 @@ feature -- Callbacks (adding)
 
 	set_multi_click_time (time: INTEGER) is
 		-- Set time granted for clicking
+		require
+			exists: not destroyed
 		do
 			implementation.set_multi_click_time (time)
 		end;
 
 	get_multi_click_time: INTEGER is
-		-- Get time granted for clicking
+			-- Get time granted for clicking
+		require
+			exists: not destroyed
 		do
 			Result := implementation.get_multi_click_time
 		end;
-
 
 	add_destroy_action (a_command: COMMAND; argument: ANY) is
 			-- Add `a_command' to the list of actions to be executed 
@@ -88,6 +95,7 @@ feature -- Callbacks (adding)
 			-- `argument' will be passed to `a_command' whenever it is
 			-- invoked as a callback.
 		require
+			exists: not destroyed;
 			Valid_command: a_command /= Void
 		do
 			implementation.add_destroy_action (a_command, argument)
@@ -99,6 +107,7 @@ feature -- Callbacks (adding)
 			-- `argument' will be passed to `a_command' whenever it is
 			-- invoked as a callback.
 		require
+			exists: not destroyed;
 			Valid_command: a_command /= Void
 		do
 			implementation.add_enter_action (a_command, argument)
@@ -110,6 +119,7 @@ feature -- Callbacks (adding)
 			-- `argument' will be passed to `a_command' whenever it is
 			-- invoked as a callback.
 		require
+			exists: not destroyed;
 			Valid_command: a_command /= Void
 		do
 			implementation.add_key_press_action (a_command, argument)
@@ -121,6 +131,7 @@ feature -- Callbacks (adding)
 			-- `argument' will be passed to `a_command' whenever it is
 			-- invoked as a callback.
 		require
+			exists: not destroyed;
 			Valid_command: a_command /= Void
 		do
 			implementation.add_key_release_action (a_command, argument)
@@ -132,6 +143,7 @@ feature -- Callbacks (adding)
 			-- `argument' will be passed to `a_command' whenever it is
 			-- invoked as a callback.
 		require
+			exists: not destroyed;
 			Valid_command: a_command /= Void
 		do
 			implementation.add_leave_action (a_command, argument)
@@ -143,6 +155,7 @@ feature -- Callbacks (adding)
 			-- `argument' will be passed to `a_command' whenever it is
 			-- invoked as a callback.
 		require
+			exists: not destroyed;
 			Valid_command: a_command /= Void
 		do
 			implementation.add_pointer_motion_action (a_command, argument)
@@ -154,6 +167,7 @@ feature -- Callbacks (adding)
 			-- `argument' will be passed to `a_command' whenever it is
 			-- invoked as a callback.
 		require
+			exists: not destroyed;
 			Valid_command: a_command /= Void;
 			Valid_translation: a_translation /= Void
 		do
@@ -166,6 +180,7 @@ feature -- Callbacks (removing)
 			-- Remove the command executed when `a_translation' occurs.
 			-- Do nothing if no command has been specified.
 		require
+			exists: not destroyed;
 			Valid_translation: a_translation /= Void
 		do
 			implementation.remove_action (a_translation)
@@ -177,6 +192,7 @@ feature -- Callbacks (removing)
 			-- Do nothing if the pair (`a_command', `argument') had not 
 			-- been specified previously.
 		require
+			exists: not destroyed;
 			Valid_command: a_command /= Void
 		do
 			implementation.remove_button_motion_action (number, a_command, argument)
@@ -188,6 +204,7 @@ feature -- Callbacks (removing)
 			-- Do nothing if the pair (`a_command', `argument') had not 
 			-- been specified previously.
 		require
+			exists: not destroyed;
 			Valid_command: a_command /= Void
 		do
 			implementation.remove_button_press_action (number, a_command, argument)
@@ -199,6 +216,7 @@ feature -- Callbacks (removing)
 			-- Do nothing if the pair (`a_command', `argument') had not 
 			-- been specified previously.
 		require
+			exists: not destroyed;
 			Valid_command: a_command /= Void
 		do
 			implementation.remove_button_release_action (number, a_command, argument)
@@ -210,6 +228,7 @@ feature -- Callbacks (removing)
 			-- Do nothing if the pair (`a_command', `argument') had not
 			-- been specified previously.
 		require
+			exists: not destroyed;
 			Valid_command: a_command /= Void
 		do
 			implementation.remove_button_click_action (number, a_command, argument)
@@ -221,6 +240,7 @@ feature -- Callbacks (removing)
 			-- Do nothing if the pair (`a_command', `argument') had not 
 			-- been specified previously.
 		require
+			exists: not destroyed;
 			Valid_command: a_command /= Void
 		do
 			implementation.remove_destroy_action (a_command, argument)
@@ -232,6 +252,7 @@ feature -- Callbacks (removing)
 			-- Do nothing if the pair (`a_command', `argument') had not 
 			-- been specified previously.
 		require
+			exists: not destroyed;
 			Valid_command: a_command /= Void
 		do
 			implementation.remove_enter_action (a_command, argument)
@@ -243,6 +264,7 @@ feature -- Callbacks (removing)
 			-- Do nothing if the pair (`a_command', `argument') had not 
 			-- been specified previously.
 		require
+			exists: not destroyed;
 			Valid_command: a_command /= Void
 		do
 			implementation.remove_key_press_action (a_command, argument)
@@ -254,6 +276,7 @@ feature -- Callbacks (removing)
 			-- Do nothing if the pair (`a_command', `argument') had not 
 			-- been specified previously.
 		require
+			exists: not destroyed;
 			Valid_command: a_command /= Void
 		do
 			implementation.remove_key_release_action (a_command, argument)
@@ -265,6 +288,7 @@ feature -- Callbacks (removing)
 			-- Do nothing if the pair (`a_command', `argument') had not 
 			-- been specified previously.
 		require
+			exists: not destroyed;
 			Valid_command: a_command /= Void
 		do
 			implementation.remove_leave_action (a_command, argument)
@@ -276,6 +300,7 @@ feature -- Callbacks (removing)
 			-- Do nothing if the pair (`a_command', `argument') had not 
 			-- been specified previously.
 		require
+			exists: not destroyed;
 			Valid_command: a_command /= Void
 		do
 			implementation.remove_pointer_motion_action (a_command, argument)
@@ -285,6 +310,8 @@ feature -- Color and pixmap
 
 	background_color: COLOR is
 			-- Background color of Current widget
+		require
+			exists: not destroyed
 		do
 			Result := implementation.background_color
 		ensure
@@ -293,6 +320,8 @@ feature -- Color and pixmap
 
 	background_pixmap: PIXMAP is
 			-- Background pixmap of Current widget
+		require
+			exists: not destroyed
 		do
 			Result := implementation.background_pixmap
 		ensure
@@ -302,6 +331,7 @@ feature -- Color and pixmap
 	set_background_color (new_color: COLOR) is
 			-- Set background color to `new_color'.
 		require
+			exists: not destroyed;
 			Valid_color: new_color /= Void
 		do
 			implementation.set_background_color (new_color)
@@ -313,6 +343,7 @@ feature -- Color and pixmap
 	set_background_pixmap (a_pixmap: PIXMAP) is
 			-- Set background pixmap to `a_pixmap'.
 		require
+			exists: not destroyed;
 			Valid_pixmap: a_pixmap /= Void
 		do
 			implementation.set_background_pixmap (a_pixmap)
@@ -325,6 +356,8 @@ feature -- Cursor
 
 	cursor: SCREEN_CURSOR is
 			-- Cursor of current widget
+		require
+			exists: not destroyed
 		do
 			Result := implementation.cursor
 		end;
@@ -332,6 +365,7 @@ feature -- Cursor
 	set_cursor (a_cursor: SCREEN_CURSOR) is
 			-- Set `cursor' of current widget to `a_cursor'.
 		require
+			exists: not destroyed;
 			Valid_cursor: a_cursor /= Void;
 			Widget_realized: realized
 		do
@@ -342,18 +376,24 @@ feature -- Geometry
 
 	x: INTEGER is
 			-- Horizontal position relative to parent
+		require
+			exists: not destroyed
 		do
 			Result := implementation.x
 		end;
 
 	y: INTEGER is
 			-- Vertical position relative to parent
+		require
+			exists: not destroyed
 		do
 			Result := implementation.y
 		end;
 
 	width: INTEGER is
 			-- Width of widget
+		require
+			exists: not destroyed
 		do
 			Result := implementation.width
 		ensure
@@ -362,6 +402,8 @@ feature -- Geometry
 
 	height: INTEGER is
 			-- Height of widget
+		require
+			exists: not destroyed
 		do
 			Result := implementation.height
 		ensure
@@ -370,12 +412,16 @@ feature -- Geometry
 
 	real_x: INTEGER is
 			-- Vertical position relative to root window
+		require
+			exists: not destroyed
 		do
 			Result := implementation.real_x
 		end; 
 
 	real_y: INTEGER is
 			-- Horizontal position relative to root window
+		require
+			exists: not destroyed
 		do
 			Result := implementation.real_y
 		end; 
@@ -384,6 +430,7 @@ feature -- Geometry
 			-- Set width and height to `new_width'
 			-- and `new_height'.
 		require
+			exists: not destroyed;
 			Positive_width: new_width >= 0;
 			Positive_height: new_height >= 0
 		do
@@ -393,6 +440,7 @@ feature -- Geometry
 	set_width (new_width :INTEGER) is
 			-- Set width to `new_width'.
 		require
+			exists: not destroyed;
 			Positive_width: new_width >= 0;
 		do
 			implementation.set_width (new_width)
@@ -401,6 +449,7 @@ feature -- Geometry
 	set_height (new_height: INTEGER) is
 			-- Set height to `new_height'.
 		require
+			exists: not destroyed;
 			Positive_height: new_height >= 0
 		do
 			implementation.set_height (new_height)
@@ -409,6 +458,8 @@ feature -- Geometry
 	set_x (new_x: INTEGER) is
 			-- Set  horizontal position relative
 			-- to parent to `new_x'.
+		require
+			exists: not destroyed;
 		do
 			implementation.set_x (new_x)
 		end;
@@ -417,6 +468,8 @@ feature -- Geometry
 			-- Set horizontal position and
 			-- vertical position relative to parent
 			-- to `new_x' and `new_y'.
+		require
+			exists: not destroyed;
 		do
 			implementation.set_x_y (new_x, new_y)
 		end;
@@ -424,6 +477,8 @@ feature -- Geometry
 	set_y (new_y: INTEGER) is
 			-- Set vertical position relative
 			-- to parent to `new_y'.
+		require
+			exists: not destroyed;
 		do
 			implementation.set_y (new_y)
 		end
@@ -448,6 +503,7 @@ feature -- Windowing
 	hide is
 			-- Hide Current widget.
 		require
+			exists: not destroyed;
 			widget_realized: realized
 		do
 			implementation.hide
@@ -460,6 +516,7 @@ feature -- Windowing
 	show is
 			-- Show Current widget.
 		require
+			exists: not destroyed;
 			widget_realized: realized
 		do
 			implementation.show
@@ -472,6 +529,7 @@ feature -- Windowing
 	shown: BOOLEAN is
 			-- Is current widget visible?
 		require
+			exists: not destroyed;
 			widget_realized: realized
 		do
 			Result := implementation.shown
@@ -479,6 +537,8 @@ feature -- Windowing
 
 	manage is
 			-- Enable geometry managment.
+		require
+			exists: not destroyed
 		do
 			implementation.set_managed (True)
 		ensure
@@ -489,12 +549,15 @@ feature -- Windowing
 			-- lower current to the bottom
 			-- of its peer stacking order
 		require
+			exists: not destroyed;
 			is_realized: realized;
 		do
 			implementation.lower;
 		end;
 
 	set_managed (b: BOOLEAN) is
+		require
+			exists: not destroyed
 		do
 			if b then
 				manage
@@ -505,6 +568,8 @@ feature -- Windowing
 
 	unmanage is
 			-- Disable geometry managment.
+		require
+			exists: not destroyed
 		do
 			implementation.set_managed (False)
 		ensure
@@ -514,6 +579,8 @@ feature -- Windowing
 	managed: BOOLEAN is
 			-- Is Current widget subject to
 			-- geometry managment?
+		require
+			exists: not destroyed
 		do
 			Result := implementation.managed
 		end;
@@ -522,6 +589,7 @@ feature -- Windowing
 			-- raise the Current widget to the top
 			-- of its peer stacking order
 		require
+			exists: not destroyed;
 			is_realized: realized;
 		do
 			implementation.raise;
@@ -530,6 +598,8 @@ feature -- Windowing
 	realize is
 			-- Create actual screen object of Current
 			-- widget and of all children (recursively) .
+		require
+			exists: not destroyed;
 		do
 			implementation.realize
 		ensure
@@ -539,6 +609,8 @@ feature -- Windowing
 	unrealize is
 			-- Destroy screen window implementation and all
 			-- screen window implementations of its children if `flag'.
+		require
+			exists: not destroyed
 		do
 			implementation.unrealize
 		ensure
@@ -547,12 +619,16 @@ feature -- Windowing
 
 	realized: BOOLEAN is
 			-- Is Current widget realized?
+		require
+			exists: not destroyed;
 		do
 			Result := implementation.realized
 		end;
 
 	screen: SCREEN is
 			-- Screen of Current widget
+		require
+			exists: not destroyed
 		do
 			Result := widget_manager.screen (Current)
 		ensure
@@ -566,12 +642,16 @@ feature -- Event handling
 			-- user actions? (If it is, events will
 			-- not be dispatched to Current widget or
 			-- any of its children)
+		require
+			exists: not destroyed
 		do
 			Result := implementation.insensitive
 		end;
 
 	set_sensitive is
 			-- Make Current widget sensitive.
+		require
+			exists: not destroyed
 		do
 			implementation.set_insensitive (False)
 		ensure
@@ -580,6 +660,8 @@ feature -- Event handling
 
 	set_insensitive is
 			-- Make Current widget insensitive
+		require
+			exists: not destroyed
 		do
 			implementation.set_insensitive (True)
 		ensure
@@ -590,6 +672,7 @@ feature -- Event handling
 			-- Do not propagate events to direct
 			-- parent.
 		require
+			exists: not destroyed;
 			widget_realized: realized
 		do
 			implementation.set_no_event_propagation
@@ -599,6 +682,7 @@ feature -- Event handling
 			-- Propagate events not handled by Current
 			-- widget to direct parent.
 		require
+			exists: not destroyed;
 			widget_realized: realized
 		do
 			implementation.propagate_event
@@ -611,6 +695,7 @@ feature -- Event handling
 			-- If `cursor' is not void, the pointer 
 			-- will have `a_cursor' shape during the grab.
 		require
+			exists: not destroyed;
 			widget_realized: realized
 		do
 			implementation.grab (a_cursor)
@@ -620,6 +705,7 @@ feature -- Event handling
 			-- Release the mouse and the keyboard 
 			-- from an earlier grab.
 		require
+			exists: not destroyed;
 			widget_realized: realized
 		do
 			implementation.ungrab
@@ -634,6 +720,8 @@ feature -- Hierarchy
 
 	top: TOP is
 			-- Top shell or base of Current widget
+		require
+			exists: not destroyed
 		do
 			Result := widget_manager.top (Current)
 		ensure
@@ -642,6 +730,8 @@ feature -- Hierarchy
 
 	parent: WIDGET is
 			-- Parent of Current widget
+		require
+			exists: not destroyed
 		do
 			Result := widget_manager.parent (Current)
 		end;

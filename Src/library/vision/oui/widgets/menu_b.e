@@ -74,8 +74,9 @@ feature -- Attach menus
 			-- be the menu which will appear when the button
 			-- is armed.
 		require
-			Valid_menu: a_menu /= Void;
-			Same_parent: a_menu.parent = parent
+			exists: not destroyed;
+			valid_menu: a_menu /= Void;
+			same_parent: a_menu.parent = parent
 		do
 			implementation.attach_menu (a_menu)
 		end;

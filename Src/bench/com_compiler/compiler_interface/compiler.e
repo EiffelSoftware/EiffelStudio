@@ -211,9 +211,8 @@ feature -- Basic Operations
 						set_default_output
 						Eiffel_project.melt
 					end
-				if Eiffel_project.Workbench.successful then
-						is_successful := True					
-					else
+					if Eiffel_project.successful then
+						is_successful := True
 					end
 				end
 			else
@@ -256,6 +255,9 @@ feature -- Basic Operations
 						set_default_output
 						Eiffel_project.finalize (False)
 					end
+					if Eiffel_project.successful then
+						is_successful := True
+					end
 				end
 			else
 				output_error
@@ -295,6 +297,9 @@ feature -- Basic Operations
 					else
 						set_default_output
 						Eiffel_project.precompile (True)
+					end
+					if Eiffel_project.successful then
+						is_successful := True
 					end
 				end
 			else

@@ -21,14 +21,18 @@
 #define tPRN    1
 #define tTEST 1
 
-#define WIN32
+#include "eif_eiffel.h"
+
+#ifdef EIF_WIN32
 #include <windows.h>
+#else
+#define UNIX
+#endif
 
 #include <stdio.h>
 #include <string.h>
 #include <sql.h>
 #include <sqlext.h>
-#include "eif_eiffel.h"
 #include "odbc.h"
 
 

@@ -53,11 +53,8 @@ feature {NONE} -- Implementation
 			parent_class: CLASS_C;
 			any_id: INTEGER
 		do
-			any_id := Eiffel_system.system.ancestor_class_to_all_classes_id
-			if 
-				(not (c.class_id = any_id)) or else
-				(c = current_class)
-			then
+			any_id := Eiffel_system.system.any_id
+			if (c.class_id /= any_id) or else (c = current_class) then
 				parents := c.parents;
 				if not parents.is_empty then
 					from

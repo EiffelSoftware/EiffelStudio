@@ -176,7 +176,21 @@ feature {NONE} -- Agent Handlers
 		local
 			l_tests: EXTERNAL_PROPERTIES_TESTER
 		do
-			create l_tests.make
+			create l_tests.make (project_manager.project_properties.externals)
+		end
+		
+	on_test_apply (args: ARRAYED_LIST [STRING]) is
+			-- test apply
+		do
+			test_failure_count := 0
+			call_test (agent test_apply, args, False, True)
+			display_failure_count
+		end
+
+	test_apply (args: ARRAYED_LIST [STRING]) is
+			--
+		do
+			project_manager.project_properties.apply
 		end
 		
 feature {NONE} -- Implementation
@@ -184,13 +198,14 @@ feature {NONE} -- Implementation
 	add_menu_items is
 			-- add menu items to menu
 		do
-			menu.add_item (create {CONSOLE_MENU_ITEM}.make ("1", "Test System Properties [system_name]", agent on_system_properties))
-			menu.add_item (create {CONSOLE_MENU_ITEM}.make ("2", "Test Root Properties [root_class] [create_routine]", agent on_root_properties))
+			menu.add_item (create {CONSOLE_MENU_ITEM}.make ("1", "Test System Properties", agent on_system_properties))
+			menu.add_item (create {CONSOLE_MENU_ITEM}.make ("2", "Test Root Properties", agent on_root_properties))
 			menu.add_item (create {CONSOLE_MENU_ITEM}.make ("3", "Test Ace Defaults", agent on_defaults_properties))
-			menu.add_item (create {CONSOLE_MENU_ITEM}.make ("4", "Test Clusters", agent on_cluster_properties))
-			menu.add_item (create {CONSOLE_MENU_ITEM}.make ("5", "Test Assemblies", agent on_assembly_properties))
-			menu.add_item (create {CONSOLE_MENU_ITEM}.make ("6", "Test Externals", agent on_external_properties))
+			menu.add_item (create {CONSOLE_MENU_ITEM}.make ("4", "Test clusters", agent on_cluster_properties))
+			menu.add_item (create {CONSOLE_MENU_ITEM}.make ("5", "Test assemblies", agent on_assembly_properties))
+			menu.add_item (create {CONSOLE_MENU_ITEM}.make ("6", "Test externals", agent on_external_properties))
 			menu.add_item (create {CONSOLE_MENU_ITEM}.make ("a", "Test All Defaults", agent on_test_all_properties))
+			menu.add_item (create {CONSOLE_MENU_ITEM}.make ("s", "Test apply", agent on_test_apply))
 			menu.add_item (create {CONSOLE_MENU_ITEM}.make ("x", "Exit Menu", Void))
 			menu.set_return_item (menu.items.last)
 		end

@@ -6,7 +6,8 @@ indexing
 	date: "$Date$";
 	revision: "$Revision$"
 
-class MOTIF_APP 
+class 
+	MOTIF_APP 
 
 inherit
 
@@ -19,36 +20,7 @@ creation
 
 	make
 
-feature {NONE}
-
-	init_toolkit: MOTIF; 
-			-- Toolkit of the application
-
-feature 
-
-	base: BASE;
-			-- Top level of the application
-
-	screen: SCREEN;
-			-- Default screen of the application
-			-- (take the envirronment variable $DISPLAY)
-
-feature {NONE}
-
-	application_name: STRING;
-			-- Name of the application top level
-
-	set_default is
-			-- Define default parameters for the application.
-		do
-		end;
-
-	build is
-			-- Build an application.
-		do
-		end;
-
-feature 
+feature {NONE} -- Initialization
 
 	make is 
 			-- Create the application.
@@ -62,7 +34,34 @@ feature
 			iterate
 		end;
 
-feature {NONE}
+feature -- Access
+
+	application_name: STRING;
+			-- Name of the application top level
+
+	base: BASE;
+			-- Top level of the application
+
+	screen: SCREEN;
+			-- Default screen of the application
+			-- (take the envirronment variable $DISPLAY)
+
+feature -- Element change
+
+	build is
+			-- Build an application.
+		do
+		end;
+
+feature {NONE} -- Implementation
+
+	set_default is
+			-- Define default parameters for the application.
+		do
+		end;
+
+	init_toolkit: MOTIF; 
+			-- Toolkit of the application
 
 	set_toolkit  is
 			-- Set motif as toolkit.
@@ -71,7 +70,7 @@ feature {NONE}
 			if (toolkit = Void) then end
 		end
 
-end
+end -- class MOTIF_APP
 
 
 --|----------------------------------------------------------------

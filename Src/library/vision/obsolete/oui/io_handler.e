@@ -10,6 +10,9 @@ indexing
 
 class IO_HANDLER 
 
+obsolete
+	"This is only implemented in Motif.  Use add_input callbacks"
+
 inherit
 
 	G_ANY

@@ -246,8 +246,8 @@ internal class COMPILER : MarshalByRefObject, COMPILER_PROXY_I {
 				eiffel_class.SetIsDeferred (ExternalType.IsAbstract);
 				eiffel_class.SetIsExpanded (ExternalType.IsValueType);
 			} else {
-				if (nb_classes_generated % nb_classes_per_module == 0) {
-					string module_name = "internal_module_" + (nb_classes_generated / nb_classes_per_module) + ".dll";
+				if (nb_classes_generated % Nb_classes_per_module == 0) {
+					string module_name = "internal_module_" + (nb_classes_generated / Nb_classes_per_module) + ".dll";
 					module = assembly.DefineDynamicModule (module_name, module_name, is_debugging_enabled);
 				}
 				nb_classes_generated = nb_classes_generated + 1;
@@ -1973,7 +1973,7 @@ feature {NONE} -- Implementation
 	private ModuleBuilder module = null;
 
 	// Number of classes per module
-	private static int nb_classes_per_module = 20;
+	private const int Nb_classes_per_module = 20;
 	private int nb_classes_generated = 0;
 	
 	// Current Method IL Generator

@@ -2,6 +2,7 @@ Configure                    Portability tool
 Jmakefile
 Makefile.SH
 U/
+U/runtime.H
 U/End.U
 U/Myinit.U
 U/add_log.U
@@ -127,7 +128,6 @@ run-time/
 run-time/Jmakefile
 run-time/Makefile.SH
 run-time/U
-run-time/U/workbench.H
 run-time/eif_project.h
 run-time/eif_project.c
 run-time/rout_obj.c
@@ -223,4 +223,3 @@ run-time/include/rt_wbench.h
 run-time/include/x2c.h
 eif_confmagic.h                  Magic symbol remapping
 bench/Makefile.SH
-minilzo/Makefile.SH

@@ -62,8 +62,12 @@ feature {NONE} -- Constants
 
 	void_name_id: INTEGER is
 			-- Value for `System.Void'.
+		local
+			l_names_heap: like names_heap
 		once
-			Result := Names_heap.id_of ("System.Void")
+			l_names_heap := names_heap
+			l_names_heap.put ("System.Void")
+			Result := l_names_heap.found_item
 		ensure
 			result_not_null: Result > 0
 		end

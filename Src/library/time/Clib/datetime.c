@@ -33,40 +33,47 @@ void c_get_date_time ()
 
 EIF_INTEGER c_year_now ()
 {
+	c_get_date_time ();
 	return ((EIF_INTEGER)(1900 + date_time->tm_year));
 }
 
 EIF_INTEGER c_month_now ()
 {
+	c_get_date_time ();
 	return ((EIF_INTEGER)(date_time->tm_mon) + 1);
 }
 
 EIF_INTEGER c_day_now ()
 {
+	c_get_date_time ();
 	return ((EIF_INTEGER)(date_time->tm_mday));
 }
 
 EIF_INTEGER c_hour_now ()
 {
+	c_get_date_time ();
 	return ((EIF_INTEGER)(date_time->tm_hour));
 }
 
 EIF_INTEGER c_minute_now ()
 {
+	c_get_date_time ();
 	return ((EIF_INTEGER)(date_time->tm_min));
 }
 	
 EIF_INTEGER c_second_now ()
 {
+	c_get_date_time ();
 	return ((EIF_INTEGER)(date_time->tm_sec));
 }
 
 EIF_INTEGER c_millisecond_now ()
 {
+	c_get_date_time ();
 #ifdef EIF_WIN32
-  return ((EIF_INTEGER)(date_time_fine.millitm));
+	return ((EIF_INTEGER)(date_time_fine.millitm));
 #else
-  return ((EIF_INTEGER)(date_time_fine.millitm - 1));
+	return ((EIF_INTEGER)(date_time_fine.millitm - 1));
 #endif
 }
 

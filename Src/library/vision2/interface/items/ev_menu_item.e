@@ -27,6 +27,7 @@ feature {NONE} -- Initialization
 			-- container.
 		do
 			!EV_MENU_ITEM_IMP!implementation.make_with_text (par, txt)
+			implementation.set_interface (Current)
 			par.add_menu_item (Current)
 		end	
 

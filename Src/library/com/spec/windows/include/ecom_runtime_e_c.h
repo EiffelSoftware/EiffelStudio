@@ -57,6 +57,10 @@ class ecom_runtime_ec
 		void ** ccom_ec_pointed_pointer (EIF_REFERENCE a_pointer, void ** old);
 
 		// ARRAY
+		char * ccom_ec_array_character (EIF_REFERENCE a_ref, int dimension, char * old);
+		long * ccom_ec_array_long (EIF_REFERENCE a_ref, int dimension, long * old);
+		float * ccom_ec_array_float (EIF_REFERENCE a_ref, int dimension, float * old);
+		double * ccom_ec_array_double (EIF_REFERENCE a_ref, int dimension, double * old);
 		DATE * ccom_ec_array_date (EIF_REFERENCE a_ref, int dimension, DATE * old);
 		short * ccom_ec_array_short (EIF_REFERENCE a_ref, int dimension, short * old);
 		HRESULT * ccom_ec_array_hresult (EIF_REFERENCE a_ref, int dimension, HRESULT * old);

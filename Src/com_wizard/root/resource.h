@@ -35,7 +35,7 @@
 #define Output_Static                   1032
 #define Output_Question_Static          1033
 #define Output_Info_Static              1038
-#define IDBACK                          1040
+#define ID_BACK                         1040
 #define Definition_File_Static          1043
 #define Marshalling_Static              1044
 #define Introduction4_Static            1044

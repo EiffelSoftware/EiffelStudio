@@ -1805,7 +1805,7 @@ feature -- Debugging
 			--| information must thus be generated 
 			--| for each possible instantiation.
 		local
-			type_list: LINKED_LIST [CLASS_TYPE]
+			type_list: TYPE_LIST
 			prev_cluster: CLUSTER_I
 		do
 			if is_debuggable then

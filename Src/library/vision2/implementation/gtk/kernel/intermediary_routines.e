@@ -376,6 +376,15 @@ feature {EV_ANY_IMP} -- Menu intermediary agent routines
 
 feature {EV_ANY_IMP} -- Pick and Drop intermediary agent routines
 
+	start_drag_filter_intermediary (a_c_object: POINTER; a_type: INTEGER; a_x, a_y, a_button: INTEGER; a_x_tilt, a_y_tilt, a_pressure: DOUBLE; a_screen_x, a_screen_y: INTEGER) is
+			-- Start filtering out double-click events
+		local
+			a_pick_and_dropable_imp: EV_WIDGET_IMP
+		do
+			a_pick_and_dropable_imp ?= c_get_eif_reference_from_object_id (a_c_object)
+			a_pick_and_dropable_imp.start_dragable_filter (a_type, a_x, a_y, a_button, a_x_tilt, a_y_tilt, a_pressure, a_screen_x, a_screen_y)
+		end
+
 	start_transport_filter_intermediary (a_c_object: POINTER; a_type: INTEGER; a_x, a_y, a_button: INTEGER; a_x_tilt, a_y_tilt, a_pressure: DOUBLE; a_screen_x, a_screen_y: INTEGER) is
 			-- Start filtering out double-click events
 		local

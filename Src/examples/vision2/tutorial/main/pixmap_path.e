@@ -16,7 +16,7 @@ feature -- Access
 	pixmap_path (name: STRING): STRING is
 			-- A pixmap
 		do
-			Result := "d:\Eiffel45\examples\vision2\tutorial"
+			Result := "c:\Eiffel44\examples\vision2\tutorial"
 --			Result := current_working_directory
 			Result.append ("\bmp\")
 			Result.append (name)

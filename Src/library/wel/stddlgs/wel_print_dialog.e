@@ -10,8 +10,8 @@ class
 
 inherit
 	WEL_STANDARD_DIALOG
-		rename
-			make as standard_dialog_make
+		redefine
+			make
 		end
 
 	WEL_PD_CONSTANTS
@@ -32,7 +32,7 @@ feature {NONE} -- Initialization
 	make is
 			-- Make and setup the structure
 		do
-			standard_dialog_make
+			Precursor {WEL_STANDARD_DIALOG}
 			cwel_print_dlg_set_lstructsize (item, structure_size)
 			set_flags (Pd_returndc)
 		end

@@ -496,7 +496,7 @@ feature -- Modification & Insertion
 			str_append ($area, $s_area, count, s.count);
 			count := new_size
  		ensure then
- 		  new_count: count = old count + s.count
+			new_count: count = old count + s.count
 		end;
 
 	append_integer (i: INTEGER) is
@@ -557,7 +557,7 @@ feature -- Modification & Insertion
 			str_insert ($area, $s_area, count, s.count, i);
 			count := new_size
 		ensure
-		    new_count: count = old count + s.count
+			new_count: count = old count + s.count
 		end;
 
 
@@ -573,7 +573,7 @@ feature -- Removal
 			str_rmchar ($area, count, i);
 			count := count - 1;
  		ensure
- 		  new_count: count = old count - 1;
+			new_count: count = old count - 1;
 		end;
 
 	remove_item (c: CHARACTER) is
@@ -662,7 +662,7 @@ feature -- Ouput
 feature -- Status report	
 
 	extensible: BOOLEAN is true;
-			-- May  new items be added to `Current'?
+			-- May new items be added to `Current'?
 
 
 	valid_index (i: INTEGER): BOOLEAN is

@@ -106,6 +106,14 @@ feature -- Measurement
 			Result := upper - lower + 1
 		end;
 
+
+feature -- Comparison
+
+	array_is_equal (array: like Current): BOOLEAN is
+		do
+			Result := area.is_equal (array.area)
+		end;
+
 	
 feature -- Conversion
 		

@@ -49,7 +49,7 @@ feature -- Initialization
 	make (nb_rows, nb_columns: INTEGER) is
 		  	-- Create a two dimensional array which has `nb_rows'
 			-- rows and `nb_columns' columns,
-			-- with lower bounds starting at 1.(d.H)
+			-- with lower bounds starting at 1.
 		require
 			not_flat: nb_rows > 0;
 			not_thin: nb_columns > 0
@@ -146,7 +146,7 @@ feature -- Resizing
                       	-- `nb_rows' rows and `nb_columns' columns without
   			-- losing any previously
 			-- entered items, nor changing their coordinates;
-			-- do nothing if not possible.(d.H)
+			-- do nothing if not possible.
 		require
 			valid_row: nb_rows >= 1;
 			valid_column: nb_columns >= 1

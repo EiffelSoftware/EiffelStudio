@@ -55,6 +55,14 @@ feature -- Removal
 		do
 		end;
 
+	free (object: ANY) is
+			-- Free `object', by-passing the garbage collector.
+			-- Behavior is undefined if the object is still referenced.
+		do
+			mem_free ($object)
+		end
+ 
+
 feature -- External, Access
 
 	collection_off is
@@ -201,6 +209,12 @@ feature -- External, Removal
 			"C"
 		alias
 			"plsc"
+		end;
+
+	mem_free (obj: ANY) is
+			-- Free object held at `obj'.
+		external
+			"C"
 		end;
 	
 feature -- External, Status report

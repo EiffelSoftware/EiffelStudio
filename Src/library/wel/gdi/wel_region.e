@@ -25,7 +25,8 @@ creation
 	make_polygon_alternate,
 	make_polygon_winding,
 	make_rect,
-	make_rect_indirect
+	make_rect_indirect,
+	make_by_pointer
 
 feature {NONE} -- Initialization
 

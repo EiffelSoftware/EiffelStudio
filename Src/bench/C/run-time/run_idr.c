@@ -26,10 +26,10 @@
 #endif
 #include "eiffel.h"
 #include "bits.h"
-#if !CUSTOM || NEED_RETRIEVE_H
+#if !defined(CUSTOM) || defined(NEED_RETRIEVE_H)
 #include "retrieve.h"
 #endif
-#if !CUSTOM || NEED_STORE_H
+#if !defined(CUSTOM) || defined(NEED_STORE_H)
 #include "store.h"
 #endif
 #include "error.h"

@@ -23,11 +23,16 @@ inherit
 
 feature -- Access
 
-	parent: EV_ITEM_LIST [EV_TOOL_BAR_ITEM] is
+	parent: EV_TOOL_BAR is
 			-- The parent of the Current widget
 			-- Can be void.
 		do
-			Result ?= {EV_SIMPLE_ITEM_I} Precursor
+			if Precursor /= Void then
+				Result ?= Precursor
+				check
+					parent_is_toolbar: Result /= Void
+				end
+			end
 		end
 
 feature -- Access
@@ -101,6 +106,9 @@ end -- class EV_TOOL_BAR_BUTTON_I
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.14  2000/03/29 20:23:29  brendel
+--| Improved `parent'.
+--|
 --| Revision 1.13  2000/03/20 23:36:20  pichery
 --| - Added gray pixmap notion. Added the possibility to attach a gray pixmap
 --|   to a button.

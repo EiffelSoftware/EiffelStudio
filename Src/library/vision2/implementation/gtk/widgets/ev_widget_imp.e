@@ -324,7 +324,7 @@ feature -- Element change
 		do
 			c_gtk_widget_set_bg_color (widget, color.red, color.green, color.blue)
 			if box_widget /= default_pointer then
-				c_gtk_widget_set_bg_color (widget, color.red, color.green, color.blue)
+				c_gtk_widget_set_bg_color (box_widget, color.red, color.green, color.blue)
 			end
 		end
 
@@ -333,7 +333,7 @@ feature -- Element change
 		do
 			c_gtk_widget_set_fg_color (widget, color.red, color.green, color.blue)
 			if box_widget /= default_pointer then
-				c_gtk_widget_set_fg_color (widget, color.red, color.green, color.blue)
+				c_gtk_widget_set_fg_color (box_widget, color.red, color.green, color.blue)
 			end
 		end
 	

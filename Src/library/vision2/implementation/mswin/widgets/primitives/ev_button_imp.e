@@ -507,8 +507,6 @@ feature {EV_ANY_I} -- Drawing implementation
 				-- Equal to `image_pixmap_space' when there is a text, or
 				-- `pixmap_border' // 2 when there is no text.
 				
-			text_gap: INTEGER
-
 			l_background_brush: WEL_BRUSH
 		do
 				-- Local access to information in `draw_item'.
@@ -664,7 +662,6 @@ feature {EV_ANY_I} -- Drawing implementation
 			-- If not `is_sensitive' then perform appropriate
 			-- higlighting on text.
 		local
-			format: INTEGER
 			old_text_color: WEL_COLOR_REF
 		do
 			old_text_color := dc.text_color
@@ -761,8 +758,6 @@ feature {EV_ANY_I} -- Drawing implementation
 			-- `ex', `ey'.
 		local
 			pen: WEL_PEN
-			old_pen: WEL_PEN
-			col: WEL_COLOR_REF
 		do
 			create pen.make_solid (1, color_ref)
 			dc.select_pen (pen)

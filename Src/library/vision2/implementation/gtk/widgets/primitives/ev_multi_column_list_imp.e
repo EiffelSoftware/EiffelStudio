@@ -1005,8 +1005,8 @@ feature {NONE} -- Implementation
 					a_column - 1,
 					a_cs.item,
 					3,
-					feature {EV_GTK_EXTERNALS}.gtk_pixmap_struct_pixmap (pixmap_imp.gtk_pixmap),
-					feature {EV_GTK_EXTERNALS}.gtk_pixmap_struct_mask (pixmap_imp.gtk_pixmap)
+					pixmap_imp.drawable,
+					pixmap_imp.mask
 				)
 			else
 				feature {EV_GTK_EXTERNALS}.gtk_clist_set_text (

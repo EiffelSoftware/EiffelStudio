@@ -91,9 +91,9 @@ extern void eufreeze(char *object);
 #define EIF_TSD_SET(key,val,msg)			\
 	if (!TlsSetValue((key),(EIF_TSD_VAL_TYPE)(val))) eif_thr_panic(msg)
 
-#define EIF_TSD_GET0(key,val)			 	val=TlsGetValue(key);
-#define EIF_TSD_GET(key,val,msg)			\
-	EIF_TSD_GET0(key,val)	\
+#define EIF_TSD_GET0(val_type,key,val)			val = val_type TlsGetValue(key);
+#define EIF_TSD_GET(val_type,key,val,msg)			 \
+	EIF_TSD_GET0(val_type,key,val)	 \
 	if (GetLastError() != NO_ERROR) eif_thr_panic(msg)
 
 #define EIF_TSD_DESTROY(key,msg)			\
@@ -145,9 +145,9 @@ extern void eufreeze(char *object);
 #define EIF_TSD_SET(key,val,msg)	\
 	if (thr_setspecific((key),(EIF_TSD_VAL_TYPE)(val)))	\
 		eif_thr_panic(msg)
-#define EIF_TSD_GET0(key,val)		\
+#define EIF_TSD_GET0(val_type,key,val)		 \
 	thr_getspecific(key,(void **)&(val))
-#define EIF_TSD_GET(key,val,msg)	\
+#define EIF_TSD_GET(val_type,key,val,msg)	 \
 	if (EIF_TSD_GET0(key,val)) 	eif_thr_panic(msg)
 
 #define EIF_TSD_DESTROY(key,errcode)

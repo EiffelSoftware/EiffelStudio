@@ -39,31 +39,17 @@ feature {NONE} -- Initialization
 feature -- Miscellaneous
 
 	on_item_added (an_item: G) is
-			-- `an_item' is about to be added.
+			-- `an_item' has just been added.
 		require
 			an_item_not_void: an_item /= Void
-		deferred
-		end
-
-	on_item_already_added (an_item: G) is
-			-- `an_item' is has been added.
-		require
-			an_item_not_void: an_item /= Void
-		deferred
+		do
 		end
 
 	on_item_removed (an_item: G) is
-			-- `an_item' is about to be removed.
-		require
-			an_item_not_void: an_item /= Void
-		deferred
-		end
-
-	on_item_already_removed (an_item: G) is
 			-- `an_item' has been removed.
 		require
 			an_item_not_void: an_item /= Void
-		deferred
+		do
 		end
 
 feature -- Element Change
@@ -72,8 +58,6 @@ feature -- Element Change
 			-- Add `v' to beginning.
 			-- Do not move cursor.
 		do
-			adding_item (v)
-
 			in_operation := True
 			{LINKED_LIST} Precursor (v)
 			in_operation := False
@@ -85,8 +69,6 @@ feature -- Element Change
 			-- Add `v' to end.
 			-- Do not move cursor.
 		do
-			adding_item (v)
-
 			in_operation := True
 			{LINKED_LIST} Precursor (v)
 			in_operation := False
@@ -98,8 +80,6 @@ feature -- Element Change
 			-- Add `v' to the left of cursor position.
 			-- Do not move cursor.
 		do
-			adding_item (v)
-
 			in_operation := True
 			{LINKED_LIST} Precursor (v)
 			in_operation := False
@@ -111,8 +91,6 @@ feature -- Element Change
 			-- Add `v' to the right of cursor position.
 			-- Do not move cursor.
 		do
-			adding_item (v)
-
 			in_operation := True
 			{LINKED_LIST} Precursor (v)
 			in_operation := False
@@ -126,9 +104,6 @@ feature -- Element Change
 			active_item: like item
 		do
 			active_item := active.item
-
-			removing_item (active_item)
-			adding_item (v)
 
 			in_operation := True
 			Precursor (v)
@@ -146,7 +121,6 @@ feature -- Element Change
 			active_item: like item
 		do
 			active_item := active.item
-			removing_item (active_item)
 
 			in_operation := True
 			Precursor
@@ -166,7 +140,6 @@ feature -- Element Change
 			else
 				item_removed := active.right.item
 			end
-			removing_item (item_removed)
 
 			in_operation := True
 			Precursor
@@ -179,26 +152,22 @@ feature -- Element Change
 			-- Merge `other' into current structure after cursor
 			-- position. Do not move cursor. Empty `other'
 		do
-			add_all (other, True)
-
 			in_operation := True
 			Precursor (other)
 			in_operation := False
 
-			add_all (other, False)
+			add_all (other)
 		end
 
 	merge_right (other: like Current) is
 			-- Merge `other' into current structure before cursor
 			-- position. Do not move cursor. Empty `other'
 		do
-			add_all (other, True)
-
 			in_operation := True
 			Precursor (other)
 			in_operation := False
 
-			add_all (other, False)
+			add_all (other)
 		end
 
 feature -- Removal
@@ -206,6 +175,8 @@ feature -- Removal
 	wipe_out is
 			-- Remove all items.
 		do
+			Precursor
+
 			from
 				start
 			until
@@ -213,15 +184,6 @@ feature -- Removal
 			loop
 				consistency_count := consistency_count - 1
 				on_item_removed (item)
-				forth
-			end
-			Precursor
-			from
-				start
-			until
-				after
-			loop
-				on_item_already_removed (item)
 				forth
 			end
 		end
@@ -244,7 +206,7 @@ feature  {LINKED_LIST} -- Implementation
 
 feature {NONE} -- Implementation
 
-	add_all (other: like Current; increase_count: BOOLEAN) is
+	add_all (other: like Current) is
 			-- Call `on_item_added' for all elements in `other'.
 		local
 			cur: CURSOR
@@ -255,19 +217,14 @@ feature {NONE} -- Implementation
 			until
 				other.after
 			loop
-				if increase_count then
-					consistency_count := consistency_count + 1
-					adding_item (other.item)
-				else
-					added_item (other.item)
-				end
-				
+				consistency_count := consistency_count + 1
+				added_item (other.item)
 				other.forth
 			end
 			other.go_to (cur)
 		end
 
-	remove_all (other: like Current; decrease_count: BOOLEAN) is
+	remove_all (other: like Current) is
 			-- Call `on_item_removed' for all elements in `other'.
 		do
 			from
@@ -275,39 +232,19 @@ feature {NONE} -- Implementation
 			until
 				other.after
 			loop
-				if decrease_count then
-					consistency_count := consistency_count - 1
-					removing_item (other.item)
-				else
-					removed_item (other.item)
-				end
+				consistency_count := consistency_count - 1
+				removed_item (other.item)
 				other.forth
 			end
 		end
 
 feature {NONE} -- Implementation
 
-	adding_item (an_item: G) is
-			-- `an_item' is about to be added.
-		do
-			if not in_operation then
-				on_item_added (an_item)
-			end
-		end
-
 	added_item (an_item: G) is
 			-- `an_item' is has been added.
 		do
 			if not in_operation then
-				on_item_already_added (an_item)
-			end
-		end
-
-	removing_item (an_item: G) is
-			-- `an_item' is about to be removed.
-		do
-			if not in_operation then
-				on_item_removed (an_item)
+				on_item_added (an_item)
 			end
 		end
 
@@ -315,7 +252,7 @@ feature {NONE} -- Implementation
 			-- `an_item' has been removed.
 		do
 			if not in_operation then
-				on_item_already_removed (an_item)
+				on_item_removed (an_item)
 			end
 		end
 
@@ -353,6 +290,11 @@ end -- class ACTIVE_LIST
 --|-----------------------------------------------------------------------------
 --| 
 --| $Log$
+--| Revision 1.4  2000/06/15 22:52:05  pichery
+--| Removed `on_item_already_xxxx',
+--| now `on_item_xxxx' is executed after the
+--| operation has been done.
+--|
 --| Revision 1.3  2000/06/15 03:30:46  pichery
 --| Added 2 new actions: These actions are called
 --| once the items are added/removed. The other

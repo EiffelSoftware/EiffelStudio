@@ -362,7 +362,7 @@ feature -- Type check, byte code and dead code removal
 			vrle1: VRLE1
 			local_name_id: INTEGER
 		do
-			if locals /= Void then
+			if locals /= Void and not locals.is_empty then
 				from
 					f_table := context.feature_table
 					locals.start
@@ -397,6 +397,8 @@ feature -- Type check, byte code and dead code removal
 			-- an argument name of the current analyzed feature.
 			-- Also an external or a deferred routine cannot have
 			-- locals.
+		require
+			locals_not_void: locals /= Void
 		local
 			id_list: ARRAYED_LIST [INTEGER]
 			local_type: TYPE_AS
@@ -427,7 +429,7 @@ feature -- Type check, byte code and dead code removal
 				context.init_error (vrrr2)
 				vrrr2.set_is_deferred (is_deferred)
 				Error_handler.insert_error (vrrr2)
-			else
+			elseif not locals.is_empty then
 				from
 					curr_feat := context.current_feature
 					track_local := curr_feat.written_in = context_class.class_id
@@ -593,7 +595,7 @@ feature -- Type check, byte code and dead code removal
 			local_type: TYPE_AS
 			counter: INTEGER
 		do
-			if locals /= Void then
+			if locals /= Void and not locals.is_empty then
 				from
 					create Result.make (2 * locals.count)
 					feat_tbl := a_feature.written_class.feature_table
@@ -644,7 +646,7 @@ feature -- Format Context
 			local_name_id: INTEGER
 			local_type: TYPE_AS
 		do
-			if locals /= Void then
+			if locals /= Void and then not locals.is_empty then
 				from
 					create Result.make (2 * locals.count)
 					if a_feature /= Void then

@@ -34,6 +34,11 @@ inherit
 		undefine
 			default_create
 		end
+		
+	EB_SHARED_PREFERENCES
+		undefine
+			default_create
+		end
 
 create
 	make
@@ -65,7 +70,7 @@ feature {NONE} -- Initialization
 
 	default_slice_max_value: INTEGER is
 		do
-			Result := parent.debugger_manager.default_expanded_view_size
+			Result := preferences.debugger_data.default_expanded_view_size
 		end		
 
 	user_initialization is

@@ -48,7 +48,7 @@ feature {NONE} -- Implementation
 		do
 			start_c_compilation := True
 			if is_dotnet_project then
-				create cd.make_initialized (3, "confirm_finalize_precompile",
+				create cd.make_initialized (3, preferences.dialog_data.confirm_finalize_precompile_string,
 					Warning_messages.w_Finalize_precompile,
 					interface_names.l_discard_finalize_precompile_dialog)
 				cd.set_ok_action (agent confirm_finalization_and_compile (True))

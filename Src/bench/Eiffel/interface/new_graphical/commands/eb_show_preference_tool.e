@@ -13,6 +13,8 @@ inherit
 		export
 			{NONE} all
 		end
+		
+	EB_SHARED_PREFERENCES
 
 create
 	make
@@ -31,11 +33,10 @@ feature {NONE} -- Execution
 		do
 			if preference_window = Void or else preference_window.is_destroyed then
 					-- Preference tool is not currently displayed, create and display it.
-				create preference_window.make
-			else
-					-- Preference is currently displayed, raise it.
-				preference_window.raise
-			end
+				create preference_window.make (preferences.preferences, window_manager.last_focused_development_window.window)
+			end			
+			preference_window.left_list.first.expand
+			preference_window.raise	
 		end
 
 feature -- Properties
@@ -54,7 +55,7 @@ feature -- Properties
 
 feature {NONE} -- Implementation
 
-	preference_window: PREFERENCE_WINDOW
+	preference_window: EB_PREFERENCES_WINDOW
 			-- Current preference window if any.
 
 end -- class EB_SHOW_PREFERENCE_TOOL

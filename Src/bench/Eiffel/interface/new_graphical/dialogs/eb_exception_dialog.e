@@ -64,7 +64,7 @@ feature {NONE} -- Initialization
 
 			create exception_text.make
 			exception_text.widget.set_minimum_height (Layout_constants.dialog_unit_to_pixels (60))
-			exception_text.load_basic_text (trace)
+			exception_text.load_text (trace)
 			
 			create pixmap_box
 			pixmap_box.extend (error_pixmap)

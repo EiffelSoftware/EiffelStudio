@@ -29,12 +29,9 @@ inherit
 		end
 
 	SHARED_WORKBENCH
+		
 
-		--| FIXME ARNAUD: The option "Create Backup" should not be
-		--| in the preferences of the development window but in the
-		--| preferences of the editor.
-
-	EB_GENERAL_DATA
+	EB_SHARED_PREFERENCES
 		export
 			{NONE} all
 		end
@@ -117,7 +114,7 @@ feature -- Execution
 							tmp_file.open_write
 							if not to_write.is_empty then
 								to_write.prune_all ('%R')
-								if text_mode_is_windows then
+								if preferences.misc_data.text_mode_is_windows then
 									to_write.replace_substring_all ("%N", "%R%N")
 									tmp_file.put_string (to_write)
 								else

@@ -14,7 +14,7 @@ inherit
 			destroy as recycle
 		end
 
-	SHARED_RESOURCES
+	EB_SHARED_PREFERENCES
 
 create
 	make
@@ -46,7 +46,7 @@ feature {NONE} -- Initialization
 feature -- Access
 
 	active: STONE is
-			-- Active item. Void iff history is empty or current stone is invalid.
+			-- Active item. Void if history is empty or current stone is invalid.
 		do
 			if not is_empty then
 				Result := history.i_th (index_active)
@@ -512,7 +512,8 @@ feature {NONE} -- Implementation
 	max_display_size: INTEGER is
 			-- Maximum number of items displayed in the history (in the address combo boxes).
 		do
-			Result := integer_resource_value ("maximum_history_size", 10)
+			Result := preferences.development_window_data.max_history_size
 		end
 	
 end -- class EB_HISTORY_MANAGER
+

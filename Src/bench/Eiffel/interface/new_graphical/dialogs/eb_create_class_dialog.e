@@ -65,7 +65,7 @@ inherit
 			default_create, copy
 		end
 
-	EB_GENERAL_DATA
+	EB_SHARED_PREFERENCES
 		export
 			{NONE} all
 		undefine
@@ -606,7 +606,7 @@ feature {NONE} -- Implementation
 					output.open_write
 					if not in_buf.is_empty then
 						in_buf.prune_all ('%R')
-						if text_mode_is_windows then
+						if preferences.misc_data.text_mode_is_windows then
 							in_buf.replace_substring_all ("%N", "%R%N")
 							output.put_string (in_buf)
 						else

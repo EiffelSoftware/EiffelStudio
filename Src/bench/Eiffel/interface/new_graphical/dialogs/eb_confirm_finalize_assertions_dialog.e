@@ -18,20 +18,6 @@ inherit
 			ok_button_label
 		end
 
-	EB_GENERAL_DATA
-		export
-			{NONE} all
-		undefine
-			default_create, copy
-		end
-
-	EB_DIALOGS_DATA
-		export
-			{NONE} all
-		undefine
-			default_create, copy
-		end
-
 	EB_CONSTANTS
 		export
 			{NONE} all
@@ -80,13 +66,13 @@ feature {NONE} -- Deferred Implementation
 	assume_ok: BOOLEAN is
 			-- Should Discard assertions be assumed as selected?
 		do
-			Result := not confirm_finalize_assertions
+			Result := not preferences.dialog_data.confirm_finalize_assertions
 		end
 
 	save_check_button_state (check_button_checked: BOOLEAN)is
 			-- Save the preferences according to the state of the check button.
 		do
-			set_confirm_finalize_assertions (not check_button_checked)
+			preferences.dialog_data.confirm_finalize_assertions_preference.set_value (not check_button_checked)
 		end
 
 end -- class EB_CONFIRM_FINALIZE_ASSERTIONS_DIALOG

@@ -23,9 +23,7 @@ inherit
 			default_create, copy
 		end
 		
-	EB_DIALOGS_DATA
-		export
-			{NONE} all
+	EB_SHARED_PREFERENCES
 		undefine
 			default_create, copy
 		end

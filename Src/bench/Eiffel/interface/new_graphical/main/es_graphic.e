@@ -33,15 +33,7 @@ inherit
 			copy
 		end
 
-	EB_GENERAL_DATA
-		export
-			{NONE} all
-		undefine
-			default_create,
-			copy
-		end
-
-	EB_PROJECT_TOOL_DATA
+	EB_SHARED_PREFERENCES
 		export
 			{NONE} all
 		undefine
@@ -156,7 +148,7 @@ feature {NONE} -- Implementation (preparation of all widgets)
 				Eiffel_project.set_error_displayer (an_output_manager)
 		
 					-- Create and setup the degree output window.
-				if not graphical_output_disabled then
+				if not preferences.project_tool_data.graphical_output_disabled then
 					create a_progress_dialog
 					set_progress_dialog (a_progress_dialog)
 					create a_graphical_degree_output.make_with_dialog (a_progress_dialog)
@@ -186,7 +178,7 @@ feature {NONE} -- Implementation (preparation of all widgets)
 						create_project (argument (create_project_index + 1), argument (create_ace_index + 1), compile_index /= 0)
 					else
 							-- Show starting dialog.
-						if show_starting_dialog then
+						if preferences.dialog_data.show_starting_dialog then
 							display_starting_dialog
 						end
 					end

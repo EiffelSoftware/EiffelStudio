@@ -8,13 +8,11 @@ class
 	EB_RECENT_PROJECTS_MANAGER
 
 inherit
-	EB_RECENT_PROJECTS
-
+	EB_SHARED_PREFERENCES
+	
 	PROJECT_CONTEXT
 
 	SHARED_EIFFEL_PROJECT
-
-	SHARED_RESOURCES
 
 create
 	make
@@ -30,7 +28,7 @@ feature {NONE} -- Initialization
 				-- Set up the recent project list from registry
 			create recent_projects.make (10)
 			recent_projects.compare_objects
-			projects := last_opened_projects
+			projects := preferences.recent_projects_data.last_opened_projects
 			if not projects.is_empty then
 				from
 					i := projects.lower
@@ -108,7 +106,7 @@ feature -- Basic operations
 					recent_projects.forth
 					i := i + 1
 				end
-				save_last_opened_projects (lop)
+				preferences.recent_projects_data.last_opened_projects_preference.set_value (lop)
 				saving_done := True
 			end
 		end
@@ -163,7 +161,7 @@ feature {NONE} -- Observer pattern / Implementation
 	number_of_recent_projects: INTEGER is
 			-- Number of recent projects the user wants to keep.
 		do
-			Result := integer_resource_value ("recent_projects_number", 10)
+			Result := preferences.recent_projects_data.keep_n_projects
 			if Result <= 0 then
 				Result := 10
 			end

@@ -20,14 +20,18 @@ feature -- Access
 	
 	absolute_x: INTEGER is
 			-- absolute x of the mouse pointer
+			-- calculated by adding `x' to the
+			-- x-coord of the widget's parent window.
 		do
 			check
 				not_yet_implemented: False
-			end
+			end			
 		end
 
 	absolute_y: INTEGER is
 			-- absolute y of the mouse pointer
+			-- calculated by adding `y' to the
+			-- y-coord of the widget's parent window.
 		do
 			check
 				not_yet_implemented: False

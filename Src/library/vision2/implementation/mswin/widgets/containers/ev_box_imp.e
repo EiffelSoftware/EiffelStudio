@@ -219,7 +219,6 @@ feature {NONE} -- Basic operation
 		local
 			wid_imp: EV_WIDGET_IMP
 			an_index: INTEGER
-			value: INTEGER
 		do
 			wid_imp ?= wid.implementation
 			check

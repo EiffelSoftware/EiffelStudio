@@ -1455,29 +1455,34 @@ rt_private void interpret(EIF_CONTEXT int flag, int where)
 		{
 			char *new_obj;						/* New object */
 			unsigned long stagval;
-			short tgtpos, has_tgt, has_args;
-			struct item *addr, *atgt, *atup;
-			char *tgt, *tup;
+			short has_args, has_open, has_closed;
+			struct item *addr, *aargs, *aopen, *aclosed;
+			char *args, *open, *closed;
 
-			tgt = tup = (char *) 0;
-			has_tgt = get_short();  /* Do we have a call target? */
+			args = open = closed = (char *) 0;
 			has_args = get_short(); /* Do we have an argument tuple? */
-			tgtpos = get_short();
+			has_open = get_short(); /* Do we have an open map array? */
+			has_closed = get_short(); /* Do we have a closed map array? */
 			type = get_short();
 			type = get_compound_id(MTC icurrent->it_ref,(short)type);
 			addr = opop();  /* Address of routine */
+			if (has_closed)
+			{
+				aclosed = opop();
+				closed = (char *) (aclosed->it_ref);
+			}
+			if (has_open)
+			{
+				aopen = opop();
+				open = (char *) (aopen->it_ref);
+			}
 			if (has_args)
 			{
-				atup = opop();
-				tup = (char *) (atup->it_ref);
-			}
-			if (has_tgt)
-			{
-				atgt = opop();
-				tgt = (char *) (atgt->it_ref);
+				aargs = opop();
+				args = (char *) (aargs->it_ref);
 			}
 			stagval = tagval;
-			new_obj = RTLNR((int16)type, addr->it_ptr, tgt, tup, tgtpos);		/* Create new object */
+			new_obj = RTLNR((int16)type, addr->it_ptr, args, open, closed);		/* Create new object */
 			last = iget();				/* Push a new value onto the stack */
 			last->type = SK_REF;
 			last->it_ref = new_obj;		/* Now it's safe for GC to see it */
@@ -2349,6 +2354,7 @@ rt_private void interpret(EIF_CONTEXT int flag, int where)
 			struct item *it;
 			long elem_size;
 			char *OLD_IC;
+			short is_tuple;
  
 			stype = get_short();			/* Get the static type */
 			dtype = get_short();			/* Get the static type */
@@ -2358,13 +2364,18 @@ rt_private void interpret(EIF_CONTEXT int flag, int where)
 
 			feat_id = get_short();		  	/* Get the feature id */
 			nbr_of_items = get_long();	  	/* Number of items in array */
+			is_tuple = get_short(); /* Is it actually a TUPLE? */
+
 			stagval = tagval;
 			OLD_IC = IC;					/* Save IC counter */
  
 			new_obj = RTLN(dtype);			/* Create new object */
 
 			epush (&loc_stack, (char *)(&new_obj));   /* Protect new_obj */
-			((void (*)()) RTWF(stype, feat_id, Dtype(new_obj)))(new_obj, 1L, nbr_of_items);
+			if (is_tuple)
+				((void (*)()) RTWF(stype, feat_id, Dtype(new_obj)))(new_obj);
+			else
+				((void (*)()) RTWF(stype, feat_id, Dtype(new_obj)))(new_obj, 1L, nbr_of_items);
 
 			IC = OLD_IC;
 			if (tagval != stagval)
@@ -2442,6 +2453,7 @@ rt_private void interpret(EIF_CONTEXT int flag, int where)
 			struct item *it;
 			long elem_size;
 			char *OLD_IC;
+			short is_tuple;
  
 			origin = get_long();		/* Get the origin class id */
 			ooffset = get_long();		/* Get the offset in origin */
@@ -2451,12 +2463,16 @@ rt_private void interpret(EIF_CONTEXT int flag, int where)
 			dtype = get_compound_id(MTC icurrent->it_ref,dtype);
 
 			nbr_of_items = get_long();	  	/* Number of items in array */
+			is_tuple = get_short(); /* Is it actually a TUPLE?*/
 			stagval = tagval;
 			OLD_IC = IC;					/* Save IC counter */
  
 			new_obj = RTLN(dtype);			/* Create new object */
 			epush (&loc_stack, (char *)(&new_obj));   /* Protect new_obj */
-			((void (*)()) RTWPF(origin, ooffset, Dtype(new_obj)))(new_obj, 1L, nbr_of_items);
+			if (is_tuple)
+				((void (*)()) RTWPF(origin, ooffset, Dtype(new_obj)))(new_obj);
+			else
+				((void (*)()) RTWPF(origin, ooffset, Dtype(new_obj)))(new_obj, 1L, nbr_of_items);
 
 			IC = OLD_IC;
 			if (tagval != stagval)
@@ -6239,6 +6255,8 @@ rt_private void iinternal_dump(FILE *fd, char *start)
 		{
 			short stype, dtype, feat_id;
 			long nbr_of_items;
+			short is_tuple;
+
 			stype = get_short();		/* Get the static type*/
 			dtype = get_short();		/* Get the static type*/
 
@@ -6248,6 +6266,7 @@ rt_private void iinternal_dump(FILE *fd, char *start)
 
 			feat_id = get_short();		/* Get the feature id*/
 			nbr_of_items = get_long();	/* Get the nbr of items in array*/
+			is_tuple = get_short(); /* Is it actually a TUPLE?*/
 			fprintf(fd, "0x%lX %s, st=%d dt=%d fid=%d nbr=%d\n",
 				 	IC - (2*sizeof(short)) - sizeof(long) - 1, 
 					"BC_ARRAY", stype, dtype, feat_id, nbr_of_items);
@@ -6262,6 +6281,7 @@ rt_private void iinternal_dump(FILE *fd, char *start)
 			int32 origin, ooffset;
 			short dtype;
 			long nbr_of_items;
+			short is_tuple;
 
 			origin = get_long();		/* Get the origin class id */
 			ooffset = get_long();		/* Get the offset in origin */
@@ -6271,6 +6291,7 @@ rt_private void iinternal_dump(FILE *fd, char *start)
 			while (get_short () != -1)
 				;
 			nbr_of_items = get_long();	/* Get the nbr of items in array*/
+			is_tuple = get_short(); /* Is it actually a TUPLE?*/
 			fprintf(fd, "0x%lX %s, origin=%ld dt=%d offset=%ld nbr=%d\n",
 				 	IC - (sizeof(short)) - (3*sizeof(long)) - 1, 
 					"BC_PARRAY", origin, dtype, ooffset, nbr_of_items);

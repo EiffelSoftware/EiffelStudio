@@ -39,6 +39,7 @@ Editor,,,,,,,,,,
 ,1,4,Pressing Ctrl+Space when no completion is available makes the redo command button sensitivity toggle,,Xavier,,,,EDT0007,11/29/2001
 ,2,4,Pressing Page up/Page down while the cursor is not visible scrolls from the cursor instead of from what is visible,,Julian,,,,EDT0008,11/29/2001
 ,3,3,When there are several locals on the same line only the first one is taken into account by the completion,,Xavier,,,,EDT0009,11/30/2001
+,4,3,Modifications in the user-defined string do not seem to be taken into account,,Julian,,,,EDT0010,12/17/2001
 
 
 

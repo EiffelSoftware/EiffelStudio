@@ -8,12 +8,18 @@ creation
 
 feature
 
-	make (c: like class_name) is
+	make (c: like class_c) is
 		do
-			class_name := c;
+			class_c := c;
 		end;
 
-	class_name: STRING;
+	class_c: CLASS_C;
 
+	class_name: STRING is
+		do
+			Result := clone (class_c.class_name);
+			Result.to_upper
+		end;
+			
 end
 

@@ -4888,6 +4888,7 @@ rt_public struct item *dynamic_eval(int fid, int stype, int is_extern, int is_pr
 		d_data.db_callstack_depth = db_cstack;
 		RTXSC;
 		tagval = stagval;
+		in_assertion = saved_assertions; /* Corresponds to RTED */
 		return NULL;
 	}
 

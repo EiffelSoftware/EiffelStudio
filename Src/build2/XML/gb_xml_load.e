@@ -10,31 +10,66 @@ class
 	
 inherit
 	TOE_TREE_FACTORY
+		export
+			{NONE} all
+		end	
 	
 	GB_XML_UTILITIES
+		export
+			{NONE} all
+		end	
 	
 	GB_EVENT_UTILITIES
+		export
+			{NONE} all
+		end	
 	
 	GB_SHARED_TOOLS
+		export
+			{NONE} all
+		end	
 	
 	INTERNAL
+		export
+			{NONE} all
+		end	
 	
 	GB_CONSTANTS
+		export
+			{NONE} all
+		end	
 	
 	GB_FILE_CONSTANTS
+		export
+			{NONE} all
+		end	
 	
 	GB_SHARED_SYSTEM_STATUS
+		export
+			{NONE} all
+		end	
 	
 	GB_SHARED_OBJECT_HANDLER
+		export
+			{NONE} all
 		undefine
 			default_create, is_equal, copy
 		end
 		
 	GB_SHARED_DEFERRED_BUILDER
+		export
+			{NONE} all
+		end	
 	
 	GB_SHARED_STATUS_BAR
-	
+		export
+			{NONE} all
+		end	
+
 	GB_POST_LOAD_OBJECT_EXPANDER
+		export
+			{NONE} all
+		end	
 
 feature -- Basic operation
 
@@ -73,24 +108,21 @@ feature -- Basic operation
 
 feature {GB_OBJECT_HANDLER} -- Implementation
 
-	build_window (window: XML_ELEMENT) is
-			-- Build a window representing `window'.
+	build_window (window: XML_ELEMENT; directory_name: STRING) is
+			-- Build a window representing `window', represented in
+			-- directory `directory_name'. if `directory_name' is
+			-- empty, the window will be built int the root of the
+			-- window selector.
 		local
 			current_element: XML_ELEMENT
 			gb_ev_any: GB_EV_ANY
 			current_name: STRING
-			window_object: GB_OBJECT
+			window_object: GB_TITLED_WINDOW_OBJECT
 			layout_constructor_item: GB_LAYOUT_CONSTRUCTOR_ITEM
 		do
-				-- We construct the window immediately, as we know there will be
-				-- one.
-			layout_constructor_item ?= layout_constructor.first
-			check
-				layout_item_not_void: layout_constructor_item /= Void
-			end
-			window_object ?= layout_constructor_item.object
-			check
-				window_object_not_void: window_object /= Void
+			window_object := object_handler.add_root_window
+			if not directory_name.is_empty then
+				Window_selector.directory_object_from_name (directory_name).add_selector_item (window_object.window_selector_item)
 			end
 				--| FIXME we must now look at the current type of `window'
 				--| which must be an EV_TITLED_WINDOW, and then add any attributes that
@@ -280,6 +312,12 @@ feature {NONE} -- Implementation
 		local
 			application_element: XML_ELEMENT
 			window_element: XML_ELEMENT
+			directory_element: XML_ELEMENT
+			current_element: XML_ELEMENT
+			current_name: STRING
+			current_type: STRING
+			directory_name: STRING
+			directory_item: GB_WINDOW_SELECTOR_DIRECTORY_ITEM
 		do
 			application_element := parser.document.root_element
 			from
@@ -287,11 +325,34 @@ feature {NONE} -- Implementation
 			until
 				application_element.off
 			loop
-					--| FIXME We are assuming that an application only
-					--| ever contains windows. This may be wrong.
-				window_element ?= application_element.item_for_iteration
-				if window_element /= Void then
-					build_window (window_element)	
+				current_element ?= application_element.item_for_iteration
+				if current_element /= Void then
+					current_name := current_element.name.to_utf8
+					if current_name.is_equal (Item_string) then
+						current_type := current_element.attribute_by_name (type_string).value.to_utf8
+						if current_type.is_equal (directory_string) then
+							from
+								current_element.start
+							until
+								current_element.off
+							loop
+								window_element ?= current_element.item_for_iteration
+								if window_element /= Void then
+									current_name := window_element.name.to_utf8
+									if current_name.is_equal (Internal_properties_string)  then
+										create directory_item.make_with_name ("")
+										directory_item.modify_from_xml (window_element)
+										window_selector.add_directory_item (directory_item)
+									else
+										build_window (window_element, directory_item.text)
+									end
+								end
+								current_element.forth
+							end
+						else
+							build_window (current_element, "")							
+						end
+					end
 				end
 				application_element.forth
 			end

@@ -375,6 +375,12 @@ feature -- Object cache
 				end
 				index := index + 1
 			end
+			
+			-- added by SM, 01/07/99
+			-- As the `an_object' is just created, its attributes
+			-- and relationships can be considered as loaded.
+			an_object.loading_attrs_done
+			an_object.loading_relationships_done
 		end
 	
 	safe_wean (an_obj: MT_STORABLE) is

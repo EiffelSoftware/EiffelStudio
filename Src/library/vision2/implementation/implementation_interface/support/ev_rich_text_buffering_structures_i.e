@@ -226,8 +226,8 @@ feature {EV_ANY_I} -- Status Setting
 			current_character: CHARACTER
 		do
 			create format_stack.make (8)
-			create all_fonts.make (50)
-			create all_colors.make (50)
+			create all_fonts.make (0, 50)
+			create all_colors.make (0, 50)
 			create all_formats.make (50)
 			first_color_is_auto := False
 			last_colorred := -1
@@ -604,7 +604,7 @@ feature {NONE} -- Implementation
 						if last_fontname /= Void then
 							a_font.preferred_families.extend (last_fontname)
 						end
-						all_fonts.put (a_font, last_fontindex)
+						all_fonts.force (a_font, last_fontindex)
 					end
 				elseif current_character = '\' then
 					process_keyword (rtf_text, main_iterator)
@@ -636,7 +636,7 @@ feature {NONE} -- Implementation
 				depth = 0
 			loop
 				update_main_iterator
-				current_character := get_character (rtf_text, main_iterator)--index + l_index)
+				current_character := get_character (rtf_text, main_iterator)
 				if current_character = '{' then
 						-- Store state on stack
 					depth := depth + 1
@@ -654,7 +654,7 @@ feature {NONE} -- Implementation
 							-- We have found the auto color so record the fact that there is an auto color.
 					else
 						create a_color.make_with_8_bit_rgb (last_colorred, last_colorgreen, last_colorblue)
-						all_colors.put (a_color, last_colorindex)
+						all_colors.force (a_color, last_colorindex)
 					end
 					last_colorindex := last_colorindex + 1
 				end
@@ -677,10 +677,10 @@ feature {NONE} -- Implementation
 	last_colorblue: INTEGER
 		-- Current values read in by parsing RTF.
 	
-	all_fonts: HASH_TABLE [EV_FONT, INTEGER]
+	all_fonts: ARRAY [EV_FONT]
 		-- All fonts retrieved during parsing, accessible through their index in the font table.
 	
-	all_colors: HASH_TABLE [EV_COLOR, INTEGER]
+	all_colors: ARRAY [EV_COLOR]
 		-- All colors retrieved during parsing, accessible through their index in the color table.
 		
 	all_formats: HASH_TABLE [EV_CHARACTER_FORMAT, STRING]

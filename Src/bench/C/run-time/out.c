@@ -124,7 +124,7 @@ rt_shared char *build_out(EIF_OBJECT object)
 
 	if (flags & EO_SPEC) {
 		/* Special object */
-		sprintf(buffero, "SPECIAL [0x%lX]\n", eif_access(object));
+		sprintf(buffero, "SPECIAL [0x%lX]\n", (EIF_REFERENCE) eif_access(object));
 		write_out();
 		/* Print recursively in `tagged_out' */
 		rec_swrite(eif_access(object), 0);
@@ -276,11 +276,11 @@ rt_private void rec_write(register EIF_REFERENCE object, int tab)
 				ref_flags = HEADER(reference)->ov_flags;
 				if (ref_flags & EO_C) {
 					/* C reference */
-					sprintf(buffero, "POINTER = C pointer 0x%lX\n", reference);
+					sprintf(buffero, "POINTER = C pointer 0x%lX\n", (EIF_REFERENCE) reference);
 					write_out();
 				} else if (ref_flags & EO_SPEC) {
 					/* Special object */
-					sprintf(buffero, "SPECIAL [0x%lX]\n", reference);
+					sprintf(buffero, "SPECIAL [0x%lX]\n", (EIF_REFERENCE) reference);
 					write_out();
 					write_tab(tab + 2);
 					sprintf(buffero, "-- begin special object --\n");
@@ -293,7 +293,7 @@ rt_private void rec_write(register EIF_REFERENCE object, int tab)
 					write_out();
 				} else {
 					sprintf(buffero, "%s [0x%lX]\n",
-						System(Dtype(reference)).cn_generator, reference);
+						System(Dtype(reference)).cn_generator, (EIF_REFERENCE) reference);
 					write_out();
 				}
 			} else {
@@ -331,7 +331,7 @@ rt_private void rec_swrite(register EIF_REFERENCE object, int tab)
 			for (o_ref = object + OVERHEAD; count > 0; count--,
 						o_ref += elem_size) {
 				write_tab(tab + 1);
-				sprintf(buffero, "%ld: expanded ", old_count - count);
+				sprintf(buffero, "%ld: expanded ", (long) (old_count - count));
 				write_out();
 				sprintf(buffero, "%s\n", System(Dtype(o_ref)).cn_generator);
 				write_out();
@@ -349,7 +349,7 @@ rt_private void rec_swrite(register EIF_REFERENCE object, int tab)
 			for (o_ref = object; count > 0; count--,
 						o_ref += elem_size) {
 				write_tab(tab + 1);
-				sprintf(buffero, "%ld: ", old_count - count);
+				sprintf(buffero, "%ld: ", (long) (old_count - count));
 				write_out();
 				if (dt_type == egc_sp_char) {
 					write_char(*o_ref, buffero);
@@ -391,10 +391,10 @@ rt_private void rec_swrite(register EIF_REFERENCE object, int tab)
 			if (0 == reference)
 				sprintf(buffero, "Void\n");
 			else if (HEADER(reference)->ov_flags & EO_C)
-				sprintf(buffero, "POINTER = C pointer 0x%lX\n", reference);
+				sprintf(buffero, "POINTER = C pointer 0x%lX\n", (EIF_REFERENCE) reference);
 			else
 				sprintf(buffero, "%s [0x%lX]\n",
-					System(Dtype(reference)).cn_generator, reference);
+					System(Dtype(reference)).cn_generator, (EIF_REFERENCE) reference);
 			write_out();
 		}
 
@@ -481,7 +481,7 @@ rt_public EIF_REFERENCE c_outi(EIF_INTEGER i)
 {
 	EIF_GET_CONTEXT
 	register int len;
-	len = sprintf(buffero, "%ld", i);
+	len = sprintf(buffero, "%ld", (long) i);
 	return makestr(buffero, len);
 }
 
@@ -510,7 +510,7 @@ rt_public EIF_REFERENCE c_outp(EIF_POINTER p)
 {
 	EIF_GET_CONTEXT
 	register int len;
-	len = sprintf(buffero, "0x%lX", p);
+	len = sprintf(buffero, "0x%lX", (EIF_POINTER) p);
 	return makestr(buffero, len);
 }
 

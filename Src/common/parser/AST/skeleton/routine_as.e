@@ -1,6 +1,7 @@
 indexing
 
-	description: "Abstract description of the content of a standard feature.";
+	description: 
+		"AST representation of the content of a standard feature.";
 	date: "$Date$";
 	revision: "$Revision$"
 
@@ -12,6 +13,22 @@ inherit
 		redefine
 			is_require_else, is_ensure_then, has_rescue,
 			has_precondition, has_postcondition
+		end;
+
+feature {NONE} -- Initialization
+
+	set is
+			-- Yacc initialization
+		do
+			obsolete_message ?= yacc_arg (0);
+			precondition ?= yacc_arg (1);
+			locals ?= yacc_arg (2);
+			routine_body ?= yacc_arg (3);
+			postcondition ?= yacc_arg (4);
+			rescue_clause ?= yacc_arg (5);
+			body_start_position := yacc_int_arg (0);
+		ensure then
+			routine_body /= Void
 		end;
 
 feature -- Properties
@@ -37,24 +54,6 @@ feature -- Properties
 
 	rescue_clause: EIFFEL_LIST [INSTRUCTION_AS];
 			-- Rescue compound
-
-feature -- Initialization
-
-	set is
-			-- Yacc initialization
-		do
-			obsolete_message ?= yacc_arg (0);
-			precondition ?= yacc_arg (1);
-			locals ?= yacc_arg (2);
-			routine_body ?= yacc_arg (3);
-			postcondition ?= yacc_arg (4);
-			rescue_clause ?= yacc_arg (5);
-			body_start_position := yacc_int_arg (0);
-		ensure then
-			routine_body /= Void
-		end;
-
-feature -- Conveniences
 
 	is_require_else: BOOLEAN is
 			-- Is the precondition block of the content preceeded by
@@ -114,6 +113,8 @@ feature -- Conveniences
 			Result := routine_body.is_external;
 		end;
 
+feature -- Access
+
 	has_instruction (i: INSTRUCTION_AS): BOOLEAN is
 			-- Does this routine has instruction `i'?
 		do
@@ -126,7 +127,7 @@ feature -- Conveniences
 			Result := routine_body.index_of_instruction (i)
 		end;
 
-feature -- Equivalent
+feature -- Comparison
 
 	is_body_equiv (other: like Current): BOOLEAN is
 			-- Is the current feature equivalent to `other' ?
@@ -151,6 +152,8 @@ feature -- Equivalent
 			Result :=   deep_equal (precondition, other.precondition) and then
 				deep_equal (postcondition, other.postcondition)
 		end;
+
+feature {COMPILER_EXPORTER, ROUTINE_AS}
 
 	reset_locals is
 			-- Reset the positions in the list
@@ -178,7 +181,7 @@ feature -- Equivalent
 			end;
 		end;
 
-feature -- Simple formatting
+feature {AST_EIFFEL} -- Output
 
 	simple_format (ctxt: FORMAT_CONTEXT) is
 			-- Reconstitute text.

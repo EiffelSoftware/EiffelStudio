@@ -271,12 +271,14 @@ feature -- Debuggables (Byte code,...)
 		local
 			body_id: INTEGER
 		do
-			body_id := feature_i.body_id;
-			Result := 
-				new_debuggables.has (body_id) or else 
-				once_debuggables.has (body_id) or else 
-				sent_debuggables.has (body_id)
-		end; -- has_feature
+			if feature_i.body_index /= 0 then
+				body_id := feature_i.body_id;
+				Result := 
+					new_debuggables.has (body_id) or else 
+					once_debuggables.has (body_id) or else 
+					sent_debuggables.has (body_id)
+			end
+		end; 
 
 	debuggables (f: FEATURE_I): LINKED_LIST [DEBUGGABLE] is
 			-- List of debuggables corresponding to `feature_i'

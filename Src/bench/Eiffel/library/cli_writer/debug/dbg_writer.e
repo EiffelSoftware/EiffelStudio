@@ -259,7 +259,7 @@ feature {NONE} -- Implementation
 		external
 			"[
 				C++ ISymUnmanagedWriter signature
-					(LPWSTR, ULONG32, ULONG32, char *, ULONG32, ULONG32, ULONG32,
+					(LPWSTR, ULONG32, ULONG32, unsigned char *, ULONG32, ULONG32, ULONG32,
 					ULONG32, ULONG32, ULONG32): EIF_INTEGER
 				use "cli_headers.h"
 			]"

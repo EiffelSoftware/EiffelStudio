@@ -204,7 +204,7 @@ feature
 			Result.set_is_expanded (False);
 		end;
 
-feature {STRIP_B, SYSTEM_I, MULTI_TYPE_A}
+feature {STRIP_B, SYSTEM_I, AUXILIARY_FILES, MULTI_TYPE_A}
 
 	Array_type: GEN_TYPE_I is
 			-- Default array type

@@ -43,6 +43,9 @@ feature -- Basic operation
 		local
 			container_object: GB_CONTAINER_OBJECT
 			cell_object: GB_CELL_OBJECT
+			tool_bar_object: GB_TOOL_BAR_OBJECT
+			list_object: GB_LIST_OBJECT
+			combo_box_object: GB_COMBO_BOX_OBJECT
 			all_editors_local: ARRAYED_LIST [GB_OBJECT_EDITOR]
 		do
 				-- When we change the type of an object, we keep the
@@ -54,18 +57,41 @@ feature -- Basic operation
 			if new_object.object = Void then
 				new_object.create_object_from_type
 				new_object.build_display_object
-				new_object.set_up_display_object_events (new_object.display_object, new_object.object)
+					-- We must only set up these events for widgets, as items do not have the correct
+					-- events that we can hook to.
+				if type_conforms_to (dynamic_type_from_string (new_object.type), dynamic_type_from_string ("EV_WIDGET")) then
+					new_object.set_up_display_object_events (new_object.display_object, new_object.object)	
+				end
 			end
 			container_object ?= container
 			cell_object ?= container
+			tool_bar_object ?= container
+			list_object ?= container
+			combo_box_object ?= container
 			check
-				must_now_support_items: container_object /= Void or cell_object /= Void
+				unsupported_item_type: container_object /= Void or cell_object /= Void or tool_bar_object /= Void
+				or list_object /= Void or combo_box_object /= Void
 			end
 			if container_object /= Void then
 				container_object.add_child_object (new_object, position)
 			end
 			if cell_object /= Void then
+				check
+					position_is_one: position = 1
+				end
 				cell_object.add_child_object (new_object)
+			end
+			
+			if tool_bar_object /= Void then
+				tool_bar_object.add_child_object (new_object, position)
+			end
+			
+			if list_object /= Void then
+				list_object.add_child_object (new_object, position)
+			end
+			
+			if combo_box_object /= Void then
+				combo_box_object.add_child_object (new_object, position)
 			end
 			
 				-- If we are moving an object within objects, then it will already
@@ -194,8 +220,6 @@ feature -- Basic operation
 			
 				-- Remove `an_object' from its parent.
 			an_object.unparent_during_type_change
-
-			--new_object ?= build_object_from_string (a_type)
 			
 			new_object.set_layout_item (old_layout_item)
 			new_object.layout_item.set_text (new_object.short_type)
@@ -205,10 +229,14 @@ feature -- Basic operation
 				
 			
 				-- Now we must swap the children over.	
-				-- We only do this if `an_object' does not
-				-- represent a primitive.
-			if not is_instance_of (an_object, dynamic_type_from_string (gb_primitive_object_class_name)) and
-			not is_instance_of (new_object, dynamic_type_from_string (gb_primitive_object_class_name)) then
+				-- We only do this if `an_object' is a container or a cell.
+				--| FIXME when we support replacing types of primitives with items, ie
+				--| combo box to list and back, we need to modify this.
+			if (is_instance_of (an_object, dynamic_type_from_string (gb_cell_object_class_name)) or
+				(is_instance_of (an_object, dynamic_type_from_string (gb_container_object_class_name))) and
+				(is_instance_of (new_object, dynamic_type_from_string (gb_cell_object_class_name)) or
+				is_instance_of (new_object, dynamic_type_from_string (gb_container_object_class_name)))) then
+					
 				move_object_contents (new_object, an_object)	
 			end
 			
@@ -288,11 +316,16 @@ feature -- Basic operation
 			split_area_object: GB_SPLIT_AREA_OBJECT
 			table_object: GB_TABLE_OBJECT
 			widget_list_object: GB_WIDGET_LIST_OBJECT
+			tool_bar_item_object: GB_TOOL_BAR_ITEM_OBJECT
+			tool_bar_object: GB_TOOL_BAR_OBJECT
+			list_object: GB_LIST_OBJECT
+			list_item_object: GB_LIST_ITEM_OBJECT
+			combo_box_object: GB_COMBO_BOX_OBJECT
 			current_type: INTEGER
 			text: STRING
 		do
 			text := a_text
-			current_type := dynamic_type_from_string (text)
+			current_type := dynamic_type_from_string (text)		
 			if type_conforms_to (current_type, dynamic_type_from_string ("EV_CELL")) then
 				create cell_object.make_with_type (text)
 				Result ?= cell_object
@@ -312,8 +345,32 @@ feature -- Basic operation
 					end
 				end
 			elseif type_conforms_to (current_type, dynamic_type_from_string ("EV_PRIMITIVE")) then
-				create primitive_object.make_with_type (text)
-				Result ?= primitive_object
+				if type_conforms_to (current_type, dynamic_type_from_string ("EV_TOOL_BAR")) then
+					create tool_bar_object.make_with_type (text)
+					Result := tool_bar_object
+				elseif type_conforms_to (current_type, dynamic_type_from_string ("EV_LIST")) then
+					create list_object.make_with_type (text)
+					Result := list_object
+				elseif type_conforms_to (current_type, dynamic_type_from_string ("EV_COMBO_BOX")) then
+					create combo_box_object.make_with_type (text)
+					Result := combo_box_object	
+				else
+					create primitive_object.make_with_type (text)
+					Result ?= primitive_object
+				end
+			elseif type_conforms_to (current_type, dynamic_type_from_string ("EV_ITEM")) then
+				if type_conforms_to (current_type, dynamic_type_from_string ("EV_TOOL_BAR_ITEM")) then
+					create tool_bar_item_object.make_with_type (text)
+					Result ?= tool_bar_item_object
+				elseif type_conforms_to (current_type, dynamic_type_from_string ("EV_LIST_ITEM")) then
+					create list_item_object.make_with_type (text)
+					Result ?= list_item_object
+				else
+					check
+						invalid_type_conformance: False
+					end
+				end
+				
 			end
 		ensure
 			Result_not_void: Result /= Void
@@ -412,7 +469,7 @@ feature -- Basic operation
 		
 		
 	mark_existing (an_object: GB_OBJECT) is
-			-- Move `an_object' and all children at all leves in to
+			-- Move `an_object' and all children at all levels in to
 			-- `objects'.
 		require
 			an_object_not_void: an_object /= Void
@@ -482,7 +539,10 @@ feature {GB_XML_OBJECT_BUILDER} -- Basic operations
 			if new_object.object = Void then
 				new_object.create_object_from_type
 				new_object.build_display_object
-				new_object.set_up_display_object_events (new_object.display_object, new_object.object)
+					-- We only set up the user events on widgets at the moment.
+				if type_conforms_to (dynamic_type_from_string (new_object.type), dynamic_type_from_string ("EV_WIDGET")) then
+					new_object.set_up_display_object_events (new_object.display_object, new_object.object)
+				end
 			end
 		ensure
 			new_object_layout_item_not_void: new_object.layout_item /= Void

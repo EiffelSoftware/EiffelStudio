@@ -376,10 +376,30 @@ feature {NONE} -- Implementation
 				end
 				supported_types.forth
 			end
+			
+				-- Now we add the button which will bring up the events window.
+			create event_selection_button.make_with_text ("Select events")
+			attribute_editor_box.extend (event_selection_button)
+			attribute_editor_box.disable_item_expand (event_selection_button)
+			event_selection_button.select_actions.extend (agent show_event_dialog)
+			
+			
 			if current_window_parent /= Void and locked_in_here then
 				current_window_parent.unlock_update	
 			end
 		end
+		
+	show_event_dialog is
+			-- Display the event dialog
+		require
+			object_not_void: object /= Void
+		local
+			event_dialog: GB_EVENT_SELECTION_DIALOG
+		do
+			create event_dialog.make_with_object (object)
+			event_dialog.show_modal_to_window (parent_window (Current))
+		end
+		
 		
 	update_visual_representations_on_name_change is
 			-- Update visual representations of `object' to reflect new name
@@ -552,7 +572,7 @@ feature {NONE} -- Implementation
 			end
 		end
 		
-	show_scroll_bar_again (a_timeout: EV_TIMEOUT)is
+	show_scroll_bar_again (a_timeout: EV_TIMEOUT) is
 			-- Call show on `scroll_bar' and destroy `a_timeout'.
 			-- This is needed, as there is a Vision2 resizing bug on Windows
 			-- which stops teh scroll bar being displayed when it is first shown, as you
@@ -578,6 +598,9 @@ feature {NONE} -- Implementation
 		
 	name_field: EV_TEXT_FIELD
 		-- Entry for the object name.
+		
+	event_selection_button: EV_BUTTON
+		-- Brings up the event selection dialog.
 		
 	attribute_editor_box: EV_VERTICAL_BOX
 		-- All attribute editors are placed in here.

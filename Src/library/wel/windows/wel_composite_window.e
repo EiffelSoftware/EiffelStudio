@@ -897,6 +897,8 @@ feature {WEL_DISPATCHER}
 
 	frozen composite_process_message, process_message (hwnd: POINTER;
 			msg, wparam, lparam: INTEGER): INTEGER is
+		local
+			called: BOOLEAN
 		do
 			inspect msg
 			when Wm_paint then
@@ -941,9 +943,18 @@ feature {WEL_DISPATCHER}
 			when Wm_close then
 				on_wm_close
 			else
+				called := True
 				-- Call the `process_message' routine of the
 				-- parent class.
 				Result := window_process_message (hwnd, msg, wparam, lparam)
+			end
+			if not called then
+				if commands /= Void and then
+				   commands_enabled and then
+				   commands.has (msg)
+				then
+					commands.item (msg).execute (Current, msg, wparam, lparam)
+				end		
 			end
 		end
 

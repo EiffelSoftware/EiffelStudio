@@ -83,7 +83,8 @@ inherit
 			on_paint,
 			on_erase_background,
 			class_background,
-			default_style
+			default_style,
+			class_style
 		end
 
 	WEL_CS_CONSTANTS
@@ -122,12 +123,6 @@ feature -- Access
 		do
 			Result := internal_paint_dc
 		end
-
-	internal_paint_dc: WEL_DC
-			-- dc we use when painting
-
-	screen_dc: WEL_CLIENT_DC
-			-- dc we use when painting outside a WM_PAINT message
 
 	wel_parent: WEL_WINDOW is
 			--|---------------------------------------------------------------
@@ -252,8 +247,16 @@ feature {NONE} -- Implementation
 	default_style: INTEGER is
 			-- Default style that memories the drawings.
 		do
-			Result := Ws_child + Ws_visible + Cs_owndc
+			Result := Ws_child + Ws_visible
 		end
+
+	class_style: INTEGER is
+   			-- Standard style used to create the window class.
+   			-- Can be redefined to return a user-defined style.
+   			-- (from WEL_FRAME_WINDOW)
+   		once
+			Result := cs_hredraw + cs_vredraw + cs_dblclks + Cs_owndc + Cs_savebits
+ 		end
 
 feature {NONE} -- Feature that should be directly implemented by externals
 
@@ -518,6 +521,14 @@ feature {NONE} -- Implementation
 
 	interface: EV_DRAWING_AREA
 
+feature {EV_DRAWABLE_IMP} -- Internal datas.
+
+	internal_paint_dc: WEL_DC
+			-- dc we use when painting
+
+	screen_dc: WEL_CLIENT_DC
+			-- dc we use when painting outside a WM_PAINT message
+
 end -- class EV_DRAWING_AREA_IMP
 
 --|----------------------------------------------------------------
@@ -541,6 +552,10 @@ end -- class EV_DRAWING_AREA_IMP
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.34  2000/02/24 05:02:34  pichery
+--| Fixed a bug: The Cs_owndc was set in the Windows Style instead of in the
+--| Class Style....basically it was previously not taken into account by windows!
+--|
 --| Revision 1.33  2000/02/23 04:53:04  pichery
 --| fixed a postcondition violation when executing dc.get (we can only call "dc"
 --| when the internal_dc has been allocated by windows, that is after the

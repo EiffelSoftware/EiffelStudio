@@ -51,6 +51,7 @@ feature -- Access
 			horizontal_box: EV_HORIZONTAL_BOX
 			button: EV_BUTTON
 			frame: EV_FRAME
+			cell: EV_CELL
 		do
 			Result := Precursor {GB_EV_ANY}
 			create color_dialog
@@ -61,16 +62,17 @@ feature -- Access
 			Result.extend (horizontal_box)
 			create frame
 			create b_area
-			b_area.set_minimum_size (32, 16)
 			create button.make_with_text ("Select...")
 			button.set_tooltip ("Select background color")
 			background_color := first_object.background_color	
 			frame.extend (b_area)
-			horizontal_box.set_padding (5)
+			horizontal_box.set_padding (2)
 			horizontal_box.extend (frame)
 			horizontal_box.extend (button)
-			horizontal_box.disable_item_expand (frame)
 			horizontal_box.disable_item_expand (button)
+			create cell
+			cell.set_minimum_width (50)
+			horizontal_box.extend (cell)
 			b_area.expose_actions.force_extend (agent b_area.clear)
 			button.select_actions.extend (agent update_background_color)
 
@@ -81,16 +83,17 @@ feature -- Access
 			Result.extend (horizontal_box)
 			create frame
 			create f_area
-			f_area.set_minimum_size (32, 16)
 			create button.make_with_text ("Select...")
 			button.set_tooltip ("Select foreground color")
 			foreground_color := first_object.foreground_color	
 			frame.extend (f_area)
-			horizontal_box.set_padding (5)
+			horizontal_box.set_padding (2)
 			horizontal_box.extend (frame)
 			horizontal_box.extend (button)
-			horizontal_box.disable_item_expand (frame)
 			horizontal_box.disable_item_expand (button)
+			create cell
+			cell.set_minimum_width (50)
+			horizontal_box.extend (cell)
 			f_area.expose_actions.force_extend (agent f_area.clear)
 			button.select_actions.extend (agent update_foreground_color)
 			

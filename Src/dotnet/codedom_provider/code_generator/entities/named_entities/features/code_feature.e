@@ -14,39 +14,39 @@ inherit
 
 feature {NONE} -- Initialization
 
-	make is
-			-- | Call Precursor {CODE_NAMED_ENTITY}.
-			-- Initialize `feature_clauses', `comments' and `implemented_type'.
+	make (a_name, a_eiffel_name: STRING) is
+			-- Initialize lists.
+		require
+			non_void_name: a_name /= Void
+			non_void_eiffel_name: a_eiffel_name /= Void
 		do
-			default_create
-			create eiffel_feature_name.make_empty
-			create feature_clauses.make
-			create type_feature.make_empty
-			create comments.make
-			create custom_attributes.make
-		ensure then
-			non_void_eiffel_feature_name: eiffel_feature_name /= Void
-			non_void_feature_clauses: feature_clauses /= Void
-			non_void_type_feature: type_feature /= Void
-			non_void_comments: comments /= Void
-			non_void_custom_attributes: custom_attributes /= Void
+			name := a_name
+			eiffel_name := a_eiffel_name
+			create {ARRAYED_LIST [CODE_TYPE_REFERENCE]} feature_clauses.make (1)
+			create {ARRAYED_LIST [CODE_COMMENT]} comments.make (1)
+			create {ARRAYED_LIST [CODE_ATTRIBUTE_DECLARATION]} custom_attributes.make (1)
+		ensure
+			eiffel_name_set: eiffel_name = a_eiffel_name
 		end
-		
+
 feature -- Access
 
-	eiffel_feature_name: STRING
+	eiffel_name: STRING
 			-- Eiffel feature name
 
-	feature_clauses: LINKED_LIST [STRING]
-			-- Linked_list of feature clauses
+	result_type: CODE_TYPE_REFERENCE
+			-- Routine result type if any
+
+	feature_clauses: LIST [CODE_TYPE_REFERENCE]
+			-- Types to which feature is exported
 	
-	type_feature: STRING
-			-- Type feature (Initialization, Status report, ...)
+	feature_kind: STRING
+			-- Feature kind (Initialization, Status report, ...)
 	
-	comments: LINKED_LIST [CODE_COMMENT]
+	comments: LIST [CODE_COMMENT]
 			-- Feature comments
 			
-	custom_attributes: LINKED_LIST [CODE_ATTRIBUTE_DECLARATION]
+	custom_attributes: LIST [CODE_ATTRIBUTE_DECLARATION]
 			-- List of custom attributes.
 
 	is_frozen: BOOLEAN
@@ -59,37 +59,52 @@ feature -- Access
 			-- Is routine name overloaded?
 	
 	is_once_routine: BOOLEAN
-			-- Is routine static (i.e is it a once routine)?
-			
+			-- Is routine static?
+
+	is_deferred: BOOLEAN
+			-- Is routine deferred?
+
+	is_redefined: BOOLEAN
+			-- Is routine overwritten?
+
 feature -- Status Report
 
 	ready: BOOLEAN is
 			-- Is feature ready to be generated?
 		do
-			Result := Precursor {CODE_NAMED_ENTITY} and comments /= Void and not type_feature.is_empty
+			Result := Precursor {CODE_NAMED_ENTITY} and eiffel_name /= Void
 		end
 
-feature -- Status Setting
+feature -- Element Settings
 
-	set_eiffel_name (an_eiffel_name: like eiffel_feature_name) is
-			-- Set `eiffel_feature_name' with `an_eiffel_name'.
+	set_eiffel_name (a_name: like eiffel_name) is
+			-- Set `eiffel_name' with `a_name'
 		require
-			non_void_an_eiffel_name: an_eiffel_name /= Void
-			not_empty_an_eiffel_name: not an_eiffel_name.is_empty
+			non_void_name: a_name /= Void
 		do
-			eiffel_feature_name := an_eiffel_name.as_lower
+			eiffel_name := a_name
 		ensure
-			eiffel_name_set: eiffel_feature_name = an_eiffel_name
+			eiffel_name_set: eiffel_name = a_name
 		end
-
-	set_type_feature (a_type: like type_feature) is
-			-- Set `type_feature' with `a_type'.
+		
+	set_result_type (a_type: like result_type) is
+			-- Set `result_type' with `a_type'
 		require
 			non_void_type: a_type /= Void
 		do
-			type_feature := a_type
+			result_type := a_type
 		ensure
-			type_feature_set: type_feature = a_type
+			result_type_set: result_type = a_type
+		end
+
+	set_feature_kind (a_kind: like feature_kind) is
+			-- Set `feature_kind' with `a_kind'.
+		require
+			non_void_kind: a_kind /= Void
+		do
+			feature_kind := a_kind
+		ensure
+			feature_kind_set: feature_kind = a_kind
 		end
 
 	set_frozen (a_value: like is_frozen) is
@@ -124,9 +139,7 @@ feature -- Status Setting
 			is_once_routine_set: is_once_routine = a_value
 		end
 		
-feature -- Basic Operations
-		
-	add_feature_clause (a_clause: STRING) is
+	add_feature_clause (a_clause: CODE_TYPE_REFERENCE) is
 			-- Add `a_clause' to `feature_clauses'.
 		require
 			non_void_clause: a_clause /= Void
@@ -158,7 +171,6 @@ feature -- Basic Operations
 			a_custom_attribute_added: custom_attributes.has (a_custom_attribute)
 		end
 		
-		
 feature {CODE_GENERATED_TYPE} -- Code Generation
 
 	feature_clause: STRING is
@@ -166,77 +178,61 @@ feature {CODE_GENERATED_TYPE} -- Code Generation
 			-- | Result := "feature [{features_clause, ...}] -- `type_feature'"
 
 			-- Corresponding feature clause 
-		local
-			first_element: BOOLEAN
-			export_type: STRING
 		do
 			create Result.make (80)
-			Result.append (Dictionary.Feature_keyword)
+			Result.append ("feature")
 			from
-				first_element := true
 				feature_clauses.start
+				if not feature_clauses.after then
+					Result.append (" {")
+					Result.append (feature_clauses.item.eiffel_name)
+					feature_clauses.forth
+				end
 			until
-				feature_clauses = Void or else
 				feature_clauses.after
 			loop
-				export_type := feature_clauses.item
-				if export_type /= void then
-					if first_element then
-						Result.append (Dictionary.Space)
-						Result.append (Dictionary.Opening_brace_bracket)
-						Result.append (Resolver.eiffel_type_name (export_type))
-						first_element := false
-					else
-						Result.append (Dictionary.Comma)
-						Result.append (Dictionary.Space)
-						Result.append (Resolver.eiffel_type_name (export_type))
-					end
-				end
+				Result.append (", ")
+				Result.append (feature_clauses.item.eiffel_name)
 				feature_clauses.forth
 			end
-			if not first_element then
-				Result.append (Dictionary.Closing_brace_bracket)
+			if feature_clauses.count > 0 then
+				Result.append_character ('}')
 			end
-
-			Result.append (Dictionary.Space)
-			Result.append (Dictionary.Dashes)
-			Result.append (Dictionary.Space)
-			Result.append (type_feature)
-			Result.append (Dictionary.New_line)
-			Result.append (Dictionary.New_line)
+			if feature_kind /= Void then
+				Result.append (" -- ")
+				Result.append (feature_kind)
+				Result.append ("%N%N")
+			end
 		ensure
-			not_void_result: Result /= void
+			not_void_feature_clause: Result /= void
+			valid_feature_clause: Result.substring_index ("feature", 1) = 1
 		end
 
 	indexing_clause: STRING is
 			-- generate indexing, custom attributes.
 		do
-			create Result.make (200)
 			if custom_attributes.count > 0 then
+				create Result.make (200)
 				Result.append (indent_string)
-				Result.append (Dictionary.Indexing_keyword)
-				Result.append (Dictionary.New_line)
+				Result.append ("indexing%N")
 				increase_tabulation
 				Result.append (indent_string)
-				Result.append (Dictionary.Attribute_keyword)
-				Result.append (Dictionary.Colon)
-				Result.append (Dictionary.Space)
+				Result.append ("metadata: ")
 				from
 					custom_attributes.start
+					Result.append (custom_attributes.item.code)
+					custom_attributes.forth
 				until
 					custom_attributes.after
 				loop
+					Result.append (", ")
 					Result.append (custom_attributes.item.code)
 					custom_attributes.forth
-					if not custom_attributes.after then
-						Result.append (",")
-						Result.append (Dictionary.New_line)
-						Result.append (Dictionary.Tab)
-						Result.append (Dictionary.Tab)
-					end
 				end
 				decrease_tabulation
-				Result.append (Dictionary.New_line)
+				Result.append_character ('%N')
+			else
+				create Result.make_empty
 			end
 		ensure
 			non_void_result: Result /= Void
@@ -244,32 +240,33 @@ feature {CODE_GENERATED_TYPE} -- Code Generation
 
 	comments_code: STRING is
 			-- Feature comments
-		require
-			ready: ready
 		do
-			increase_tabulation
-			increase_tabulation
-			create Result.make (160)
-			from
-				comments.start
-			until
-				comments.after
-			loop
-				Result.append (comments.item.code)
-				comments.forth
-			end				
-			decrease_tabulation
-			decrease_tabulation
+			if not comments.is_empty then
+				increase_tabulation
+				increase_tabulation
+				create Result.make (160)
+				from
+					comments.start
+				until
+					comments.after
+				loop
+					Result.append (comments.item.code)
+					comments.forth
+				end				
+				decrease_tabulation
+				decrease_tabulation
+			else
+				create Result.make_empty
+			end
 		ensure
-			comments_generated: Result /= Void and not Result.is_empty
+			comments_generated: Result /= Void
 		end
 
 invariant
-	non_void_eiffel_feature_name: eiffel_feature_name /= Void
-	non_void_feature_clause: feature_clauses /= Void
-	non_void_type_feature: type_feature /= Void
 	non_void_comments: comments /= Void
 	non_void_custom_attributes: custom_attributes /= Void
+	non_void_feature_clauses: feature_clauses /= Void
+	non_void_eiffel_name: eiffel_name /= Void
 	
 end -- class CODE_FEATURE
 	

@@ -131,6 +131,8 @@ feature {NONE} -- Implementation
 						Missing_default_config)
 			Result.extend (["Missing Current Process File Name", "general", "Could not retrieve current process filename", Error],
 						Missing_current_process_file_name)
+			Result.extend (["Cannot Load Type", "general", "Could not load type `{1}' from assembly `{2}'", Error],
+						Cannot_load_type)
 
 			-- General Warning
 			Result.extend (["Incorrect Result", "general", "The operation returned an incorrect value: {1}", Warning],
@@ -159,15 +161,45 @@ feature {NONE} -- Implementation
 						Missing_current_routine)
 			Result.extend (["Missing Feature Name", "consumer", "Feature name is missing in: {1}", Error],
 						Missing_feature_name)
-			Result.extend (["Non external type", "consumer", "Type is not external and hasn't been registered as generated: {1}", Error],
+			Result.extend (["Non External Type", "consumer", "Type is not external and hasn't been registered as generated: {1}", Error],
 						Non_external_type)
-			Result.extend (["Missing consumed type", "consumer", "Type '{1}' missing from Eiffel Assembly Cache", Error],
+			Result.extend (["Missing Consumed Type", "consumer", "Type '{1}' is missing from Eiffel Assembly Cache", Error],
 						Missing_consumed_type)
-			Result.extend (["No assembly", "consumer", "Type's assembly cannot be retrieved because it is generated: {1}", Error],
+			Result.extend (["No Assembly", "consumer", "Type's assembly cannot be retrieved because it is generated: {1}", Error],
 						No_assembly)
-			Result.extend (["Missing implementing type", "consumer", "Could not find implementing type for feature `{1}'", Error],
+			Result.extend (["Missing Implementing Type", "consumer", "Could not find implementing type for feature `{1}'", Error],
 						Missing_implementing_type)
-			
+			Result.extend (["Missing Variable Type", "consumer", "Could not find type of variable `{1}'", Error],
+						Missing_variable_type)
+			Result.extend (["Missing Feature Type", "consumer", "Could not find type of feature `{2}' from type `{1}'", Error],
+						Missing_feature_type)
+			Result.extend (["Missing Comment Text", "consumer", "Comment in {1} is missing text", Error],
+						Missing_comment_text)
+			Result.extend (["Missing Assignment Target", "consumer", "Assignment target is missing from assignment statement in `{1}'", Error],
+						Missing_assignment_target)
+			Result.extend (["Missing Assignment Source", "consumer", "Assignment source is missing from assignment statement in `{1}'", Error],
+						Missing_assignment_source)
+			Result.extend (["Missing Condition", "consumer", "Condition statement is missing condition expression in `{1}'", Error],
+						Missing_condition)
+			Result.extend (["Missing Expression", "consumer", "Expression statement is missing expression in `{1}'", Error],
+						Missing_expression)
+			Result.extend (["Missing Right Operand", "consumer", "Binary expression is missing right operand in `{1}'", Error],
+						Missing_right_operand)
+			Result.extend (["Missing Left Operand", "consumer", "Binary expression is missing left operand in `{1}'", Error],
+						Missing_left_operand)
+			Result.extend (["Missing Variable Name", "consumer", "Variable name is missing in `{1}'", Error],
+						Missing_variable_name)
+			Result.extend (["Missing Variable", "consumer", "Variable with name `{1}' is missing in `{2}'", Error],
+						Missing_variable)
+			Result.extend (["Missing Array Information", "consumer", "Array creation expression is missing some information in `{1}'", Error],
+						Missing_array_information)
+			Result.extend (["Missing Argument Name", "consumer", "Argument name is missing in argument reference expression in `{1}'", Error],
+						Missing_argument_name)
+			Result.extend (["Missing Argument Type", "consumer", "Argument type of argument `{1}' in `{2}' is missing", Error],
+						Missing_argument_type)
+			Result.extend (["Missing Argument", "consumer", "Argument with name `{1}' is missing in `{2}'", Error],
+						Missing_argument)
+
 			-- Consumer Warnings
 			Result.extend (["Missing Array Size", "consumer", "Array creation expression is missing size information", Warning],
 						Missing_array_size)
@@ -213,6 +245,20 @@ feature {NONE} -- Implementation
 						Invalid_identifier)
 			Result.extend (["Missing Reference", "consumer", "Referenced assembly could not be found: {1}", Warning],
 						Missing_reference)
+			Result.extend (["Type in cache", "consumer", "Type `{1}' is already in cache", Warning],
+						Type_in_cache)
+			Result.extend (["Wrong Feature Kind", "consumer", "Feature `{1}' is not of the right kind", Warning],
+						Wrong_feature_kind)
+			Result.extend (["Missing Return Expression", "consumer", "Return statement in `{1}' is missing expression", Warning],
+						Missing_return_expression)
+			Result.extend (["Missing Snippet Value", "consumer", "Snippet statement in `{1}' is missing value", Warning],
+						Missing_snippet_value)
+			Result.extend (["Missing Test Expression", "consumer", "Loop statement in `{1}' is missing test expression", Warning],
+						Missing_test_expression)
+			Result.extend (["Ambiguous Match", "consumer", "Multiple features found with name `{1}' in type {2}", Warning],
+						Ambiguous_match)
+			Result.extend (["Missing Parent", "consumer", "Parent of feature `{1}' is missing", Warning],
+						Missing_parent)
 
 			-- Consumer Information
 			Result.extend (["Void Argument", "consumer", "Arguments list of feature `{1}' contain a Void reference", Information],

@@ -1,5 +1,5 @@
 indexing 
-	description: "Source code generator for method invokation expressions"
+	description: "Source code generator for method invocation expressions"
 	date: "$$"
 	revision: "$$"
 	
@@ -14,12 +14,16 @@ create
 
 feature {NONE} -- Initialization
 
-	make is
+	make (a_routine: like routine; a_arguments: like arguments) is
 			-- Initialize `routine' and `arguments'.
+		require
+			non_void_routine: a_routine /= Void
 		do
-			create arguments.make
+			routine := a_routine
+			arguments := a_arguments
 		ensure
-			non_void_arguments: arguments /= Void
+			routine_set: routine = a_routine
+			arguments_set: arguments = a_arguments
 		end
 		
 feature -- Access
@@ -27,88 +31,55 @@ feature -- Access
 	routine: CODE_REFERENCE_EXPRESSION
 			-- Routine to invoke
 			
-	arguments: LINKED_LIST [CODE_EXPRESSION] 
+	arguments: LIST [CODE_EXPRESSION] 
 			-- Routine arguments
 			
 	code: STRING is
 			-- | Result := "`routine'[ (`arguments',...)]"
 			-- Eiffel code of routine invoke expression
 		local
-			an_argument: CODE_EXPRESSION
+			l_argument: CODE_EXPRESSION
 		do
-			check
-				non_void_routine: routine /= Void
-			end
-			
 			create Result.make (120)
-			routine.set_routine_arguments (arguments)
 			Result.append (routine.code)
 			
-			from
-				arguments.start
-				if not arguments.after then
-					an_argument := arguments.item
-					if an_argument /= Void then
-						Result.append (Dictionary.Space)
-						Result.append (Dictionary.Opening_round_bracket)
-						Result.append (an_argument.code)
+			if arguments /= Void then
+				from
+					arguments.start
+					if not arguments.after then
+						l_argument := arguments.item
+						if l_argument /= Void then
+							Result.append (" (")
+							Result.append (l_argument.code)
+						end
+						arguments.forth
+					end
+				until
+					arguments.after
+				loop
+					l_argument := arguments.item
+					if l_argument /= Void then
+						Result.append (", ")
+						Result.append (l_argument.code)
 					end
 					arguments.forth
 				end
-			until
-				arguments.after
-			loop
-				an_argument := arguments.item
-				if an_argument /= Void then
-					Result.append (Dictionary.Comma)
-					Result.append (Dictionary.Space)
-					Result.append (an_argument.code)
+				if arguments.count > 0 then
+					Result.append_character (')')
 				end
-				arguments.forth
-			end
-			if arguments.count > 0 then
-				Result.append (Dictionary.Closing_round_bracket)
 			end
 		end
 		
 feature -- Status Report
 
-	ready: BOOLEAN is
-			-- Is routine invoke expression ready to be generated?
-		do
-			Result := routine.ready and arguments /= Void
-		end
-
-	type: TYPE is
+	type: CODE_TYPE_REFERENCE is
 			-- Type
 		do
 			Result := routine.type
 		end
-
-feature -- Status Setting
-
-	set_routine (a_routine: like routine) is
-			-- Set `routine' with `a_routine'.
-		require
-			non_void_routine: a_routine /= Void
-		do
-			routine := a_routine
-		ensure
-			routine_set: routine = a_routine
-		end		
-
-	add_argument (an_argument: CODE_EXPRESSION) is
-			-- Add `an_argument' to `arguments'.
-		require
-			non_void_arguments: an_argument /= Void
-		do
-			arguments.extend (an_argument)
-		ensure
-			arguments_set: arguments.has (an_argument)
-		end	
 		
 invariant
-	non_void_arguments: arguments /= Void
+	non_void_routine: routine /= Void
 	
 end -- class CODE_ROUTINE_INVOKE_EXPRESSION
 

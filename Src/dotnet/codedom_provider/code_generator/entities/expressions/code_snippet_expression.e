@@ -9,17 +9,27 @@ class
 inherit
 	CODE_EXPRESSION
 
+	CODE_STOCK_TYPE_REFERENCES
+		export
+			{NONE} all
+		undefine
+			is_equal
+		end
+		
 create
 	make
 
 feature {NONE} -- Initialization
 
-	make is
-			-- Initialize `value' with empty string.
+	make (a_value: STRING) is
+			-- Initialize `value' with `a_value'.
+		require
+			non_void_value: a_value /= Void
+			valid_value: not a_value.is_empty
 		do
-			create value.make_empty
+			value := a_value
 		ensure
-			non_void_value: value /= Void
+			value_set: value = a_value
 		end
 		
 feature -- Access
@@ -30,40 +40,18 @@ feature -- Access
 	code: STRING is
 			-- Eiffel code of snippet expression
 		do
-			Check
-				not_empty_value: not value.is_empty
-			end
-
-			Result := value.twin
+			Result := value
 		end
 		
 feature -- Status Report
 
-	ready: BOOLEAN is
-			-- Is snippet expression ready to be generated?
-		do
-			Result := value /= Void and not value.is_empty
-		end
-
-	type: TYPE is
+	type: CODE_TYPE_REFERENCE is
 			-- Type
 		do
-			Result := referenced_type_from_name ("System.Object")
+			Result := None_type_reference
+			Event_manager.raise_event (feature {CODE_EVENTS_IDS}.Incorrect_result, ["code snippet expression type"])
 		end
 
-feature -- Status Setting
-
-	set_value (a_value: like value) is
-			-- Set `value' with `a_value'.
-		require
-			non_void_value: a_value /= Void
-			not_empty_value: not a_value.is_empty
-		do
-			value := a_value
-		ensure
-			value_set: value = a_value
-		end
-		
 invariant
 	non_void_value: value /= Void
 	

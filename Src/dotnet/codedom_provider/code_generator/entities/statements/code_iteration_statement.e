@@ -14,12 +14,21 @@ create
 
 feature {NONE} -- Initialization
 
-	make is
+	make (a_init_statement: like init_statement; a_test_expression: like test_expression;
+		a_loop_statements: like loop_statements; a_increment_statement: like increment_statement) is
 			-- Initialize `init_statement', `test_expression', `loop_statements', `increment_statement'.
+		require
+			non_void_test_expression: a_test_expression /= Void
 		do
-			create loop_statements.make
+			test_expression := a_test_expression
+			init_statement := a_init_statement
+			loop_statements := a_loop_statements
+			increment_statement := a_increment_statement
 		ensure
-			non_void_loop_statements: loop_statements /= Void
+			test_expression_set: test_expression = a_test_expression
+			init_statement_set: init_statement = a_init_statement
+			loop_statements_set: loop_statements = a_loop_statements
+			increment_statement_set: increment_statement = a_increment_statement
 		end
 		
 feature -- Access
@@ -30,8 +39,7 @@ feature -- Access
 	test_expression: CODE_EXPRESSION
 			-- Test expression
 	
-	loop_statements: LINKED_LIST [CODE_STATEMENT]
-			-- | ARRAY_LIST [CODE_STATEMENT]
+	loop_statements: LIST [CODE_STATEMENT]
 			-- Loop statements
 			
 	increment_statement: CODE_STATEMENT
@@ -41,106 +49,44 @@ feature -- Access
 			-- | Result := "from `init_statement' until `test_expression' loop `loop_statements' `increment_statement' end
 			-- Eiffel code of iteration statement
 		do
-			check
-				non_void_init_statement: init_statement /= Void
-				non_void_test_expression: test_expression /= Void
-				non_void_increment_statement: increment_statement /= Void
-			end
-			
 			create Result.make (800)
 			Result.append (Indent_string)
-			Result.append (Dictionary.From_keyword)
-			Result.append (Dictionary.New_line)
+			Result.append ("from%N")
 			increase_tabulation
-			Result.append (init_statement.code)
-			Result.append (Dictionary.New_line)
+			if init_statement /= Void then
+				Result.append (init_statement.code)
+				Result.append ("%N")
+			end
 			decrease_tabulation
 			Result.append (Indent_string)
-			Result.append (Dictionary.Until_keyword)
-			Result.append (Dictionary.New_line)
+			Result.append ("until%N")
 			increase_tabulation
 			Result.append (test_expression.code)
-			Result.append (Dictionary.New_line)
+			Result.append ("%N")
 			decrease_tabulation
-			Result.append (Dictionary.Loop_keyword)
-			Result.append (Dictionary.New_line)
+			Result.append ("loop%N")
 			increase_tabulation
-			from
-				loop_statements.start
-			until
-				loop_statements.after
-			loop
-				Result.append (loop_statements.item.code)
-				loop_statements.forth
+			if loop_statements /= Void then
+				from
+					loop_statements.start
+				until
+					loop_statements.after
+				loop
+					Result.append (loop_statements.item.code)
+					loop_statements.forth
+				end
 			end
-			Result.append (increment_statement.code)
-			Result.append (Dictionary.New_line)
+			if increment_statement /= Void then
+				Result.append (increment_statement.code)
+				Result.append ("%N")
+			end
 			decrease_tabulation
 			Result.append (Indent_string)
-			Result.append (Dictionary.End_keyword)
-			Result.append (Dictionary.New_line)
-		end
-		
-feature -- Status Report
-
-	ready: BOOLEAN is
-			-- Is iteration statement ready to be generated?
-		do
-			Result := init_statement.ready and test_expression.ready and increment_statement.ready and loop_statements.for_all (agent is_statement_ready)
-		end
-
-feature -- Status Setting
-
-	set_init_statement (an_init_statement: like init_statement) is
-			-- Set `init_statement' with `an_init_statement'.
-		require
-			non_void_init_statement: an_init_statement /= Void
-		do
-			init_statement := an_init_statement
-		ensure
-			init_statement_set: init_statement = an_init_statement
-		end		
-
-	set_test_expression (a_test_expression: like test_expression) is
-			-- Set `test_expression' with `a_test_expression'.
-		require
-			non_void_test_expression: a_test_expression /= Void
-		do
-			test_expression := a_test_expression
-		ensure
-			test_expression_set: test_expression = a_test_expression
-		end	
-
-	add_loop_statement (a_statement: CODE_STATEMENT) is
-			-- Set `loop_statements' with `a_list'.
-		require
-			non_void_statement: a_statement /= Void
-		do
-			loop_statements.extend (a_statement)
-		ensure
-			loop_statements_set: loop_statements.has (a_statement)
-		end	
-
-	set_increment_statement (an_increment_statement: like increment_statement) is
-			-- Set `increment_statement' with `an_increment_statement'.
-		require
-			non_void_increment_statement: an_increment_statement /= Void
-		do
-			increment_statement := an_increment_statement
-		ensure
-			increment_statement_set: increment_statement = an_increment_statement
-		end
-
-feature {NONE} -- Implementation
-
-	is_statement_ready (a_statement: CODE_STATEMENT): BOOLEAN is
-			-- Is `a_statement' ready for code generation?
-		do
-			Result := a_statement.ready
+			Result.append ("end%N")
 		end
 		
 invariant
-	non_void_loop_statements: loop_statements /= Void
+	non_void_test_expression: test_expression /= Void
 	
 end -- class CODE_ITERATION_STATEMENT
 

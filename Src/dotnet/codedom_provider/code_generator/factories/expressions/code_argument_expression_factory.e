@@ -12,93 +12,71 @@ inherit
 feature {CODE_CONSUMER_FACTORY} -- Visitor features.
 
 	generate_argument_reference_expression (a_source: SYSTEM_DLL_CODE_ARGUMENT_REFERENCE_EXPRESSION) is
-			-- | Check `current_type' is not Void else raise an exception.
-			-- | Create instance of `EG_ARGUMENT_REFERENCE_EXPRESSION'.
-			-- | And initialize this instance with `a_source' -> Call `initialise_argument_reference_expression'
-			-- | Set `last_expression'.
-
 			-- Generate Eiffel code from `a_source'.
 		require
 			non_void_source: a_source /= Void
 		local
-			an_argument: CODE_ARGUMENT_REFERENCE_EXPRESSION
+			l_name: STRING
+			l_routine: CODE_ROUTINE
+			l_arguments: LIST [CODE_PARAMETER_DECLARATION_EXPRESSION]
+			l_variable: CODE_VARIABLE_REFERENCE
 		do
-			if current_type = Void then
-				Event_manager.raise_event (feature {CODE_EVENTS_IDS}.Missing_current_type, ["argument reference expression"])
+			if a_source.parameter_name /= Void then
+				l_name := a_source.parameter_name
 			end
-			
-			create an_argument.make
-			initialize_argument_reference_expression (a_source, an_argument)
-			set_last_expression (an_argument)
+			if l_name /= Void then
+				l_routine := current_routine
+				if l_routine /= Void then	
+					l_arguments := l_routine.arguments
+					from
+						l_arguments.start
+					until
+						l_arguments.after or l_variable /= Void
+					loop
+						if l_arguments.item.variable.name.is_equal (l_name) then
+							l_variable := l_arguments.item.variable
+						end
+						l_arguments.forth
+					end
+					if l_variable /= Void then
+						set_last_expression (create {CODE_ARGUMENT_REFERENCE_EXPRESSION}.make (l_variable))
+					else
+						Event_manager.raise_event (feature {CODE_EVENTS_IDS}.Missing_argument, [l_name, current_context])
+					end
+				else
+					Event_manager.raise_event (feature {CODE_EVENTS_IDS}.Wrong_feature_kind, [current_context])
+					set_last_expression (Empty_expression)
+				end
+			else
+				Event_manager.raise_event (feature {CODE_EVENTS_IDS}.Missing_argument_name, [current_context])
+				set_last_expression (Empty_expression)
+			end
 		ensure
 			non_void_last_expression: last_expression /= Void
-			argument_reference_expression_ready: last_expression.ready
 		end			
 
 	generate_parameter_declaration_expression (a_source: SYSTEM_DLL_CODE_PARAMETER_DECLARATION_EXPRESSION) is
-			-- | Check `current_type' is not Void else raise an exception.
-			-- | Create instance of `EG_ARGUMENT_DECLARATION_EXPRESSION'.
-			-- | And initialize this instance with `a_source' -> Call `initialise_parameter_declaration_expression'
-			-- | Set `last_expression'.
-
 			-- Generate Eiffel code from `a_source'.
 		require
 			non_void_source: a_source /= Void
 		local
-			l_parameter: CODE_PARAMETER_DECLARATION_EXPRESSION
+			l_variable: CODE_VARIABLE_REFERENCE
 		do
-			if current_type = Void then
-				Event_manager.raise_event (feature {CODE_EVENTS_IDS}.Missing_current_type, ["parameter declaration expression"])
+			if a_source.name /= Void then
+				if a_source.type /= Void then
+					create l_variable.make (a_source.name, Type_reference_factory.type_reference_from_reference (a_source.type), Type_reference_factory.type_reference_from_code (current_type))
+					set_last_expression (create {CODE_PARAMETER_DECLARATION_EXPRESSION}.make (l_variable, direction_from_dom (a_source.direction)))
+				else
+					Event_manager.raise_event (feature {CODE_EVENTS_IDS}.Missing_argument_type, [a_source.name, current_context])
+					set_last_expression (Empty_expression)
+				end
+			else
+				Event_manager.raise_event (feature {CODE_EVENTS_IDS}.Missing_argument_name, [current_context])
+				set_last_expression (Empty_expression)
 			end
-
-			create l_parameter.make
-			initialize_parameter_declaration_expression (a_source, l_parameter)
-			set_last_expression (l_parameter)
 		ensure
 			non_void_last_expression: last_expression /= Void
-			argument_reference_expression_ready: last_expression.ready
 		end			
-
-feature {NONE} -- Implementation
-
-	initialize_argument_reference_expression (a_source: SYSTEM_DLL_CODE_ARGUMENT_REFERENCE_EXPRESSION; an_argument: CODE_ARGUMENT_REFERENCE_EXPRESSION) is
-			-- | Set `name'
-			-- Generate Eiffel code from `a_source'.
-		require
-			non_void_source: a_source /= Void
-			non_void_argument: an_argument /= Void
-		do
-			an_argument.set_argument_name (a_source.parameter_name)
-		ensure
-			argument_reference_expression_ready: an_argument.ready
-		end	
-
-	initialize_parameter_declaration_expression (a_source: SYSTEM_DLL_CODE_PARAMETER_DECLARATION_EXPRESSION; a_parameter: CODE_PARAMETER_DECLARATION_EXPRESSION) is
-			-- | Set`name'
-			-- | Set `type'
-			-- | Add parameter to 
-			
-			-- Generate Eiffel code from `a_source'.
-		require
-			non_void_source: a_source /= Void
-			non_void_argument: a_parameter /= Void
-		local
-			argument_type_name: STRING
-		do
-			a_parameter.set_name (a_source.name)
-
-			if a_source.type.array_element_type /= Void then
-				a_parameter.set_is_array (True)
-			end
-
-			create argument_type_name.make_from_cil (a_source.type.base_type)
-			a_parameter.set_parameter_type (argument_type_name)
-			if not Resolver.is_generated_type (argument_type_name) then
-				Resolver.add_external_type (argument_type_name)
-			end
-		ensure
-			argument_reference_expression_ready: a_parameter.ready
-		end	
 
 end -- class CODE_ARGUMENT_EXPRESSION_FACTORY
 

@@ -9,6 +9,13 @@ class
 inherit
 	CODE_REFERENCE_EXPRESSION
 	
+	CODE_SHARED_TYPE_REFERENCE_FACTORY
+		export
+			{NON} all
+		undefine
+			is_equal
+		end
+	
 create
 	make
 
@@ -17,7 +24,6 @@ feature {NONE} -- Initialization
 	make is
 			-- Creation routine
 		do
-			create arguments.make
 		end
 		
 feature -- Access
@@ -26,21 +32,15 @@ feature -- Access
 			-- | Result := "Current"
 			-- Eiffel code of this reference expression
 		do
-			Result := Dictionary.Current_keyword.twin
+			Result := "Current"
 		end
 		
 feature -- Status Report
 
-	ready: BOOLEAN is
-			-- Is this reference expression ready to be generated?
-		do
-			Result := True
-		end
-
-	type: TYPE is
+	type: CODE_TYPE_REFERENCE is
 			-- Type
 		do
-			Result := referenced_type_from_name ("System.Object")
+			Result := Type_reference_factory.type_reference_from_code (current_type)
 		end
 
 end -- class CODE_THIS_REFERENCE_EXPRESSION

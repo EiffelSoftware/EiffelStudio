@@ -9,36 +9,35 @@ class
 inherit
 	CODE_NAMESPACE_INTERFACE
 
+	CODE_SHARED_CLASS_SEPARATOR
+		export
+			{NONE} all
+		undefine
+			default_create,
+			is_equal
+		end
+
 create
 	make
 
 feature -- Access
 
 	code: STRING is
-			-- | Loop on `types': call `type' on each item.
+			-- | Loop on `types': call `type.code' on each item.
 			-- Eiffel code for a namespace
 		local
-			a_type: CODE_GENERATED_TYPE
-			a_text_writer: STREAM_WRITER
-			l_file_name: STRING
+			l_type: CODE_GENERATED_TYPE
 		do
 			from
 				types.start
+				create Result.make (8192)
 			until
 				types.after
 			loop
-				a_type := types.item
-				if a_type /= Void then
-					Resolver.initialize_features (a_type)
-					if types.isfirst then
-						Result := a_type.code
-					else
-						create l_file_name.make_from_string (a_type.name)
-						l_file_name.to_lower
-						a_text_writer := creation_file (l_file_name)
-						a_text_writer.write_string (a_type.code)
-						a_text_writer.close
-					end
+				l_type := types.item
+				if l_type /= Void then
+					Result.append (l_type.code)
+					Result.append (Class_separator)
 				end
 				types.forth
 			end

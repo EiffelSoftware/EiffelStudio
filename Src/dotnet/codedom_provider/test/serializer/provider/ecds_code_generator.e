@@ -26,7 +26,7 @@ feature -- Interface
 
 	generate_code_from_compile_unit (a_compile_unit: SYSTEM_DLL_CODE_COMPILE_UNIT; a_text_writer: TEXT_WRITER; a_options: SYSTEM_DLL_CODE_GENERATOR_OPTIONS) is
 			-- | Create `code_dom_source' and call `generate_code' on it, which calls appropriate code_generator.
-			-- | Call `compile_unit' on current `EG_COMPILE_UNIT' and write code in `a_text_writer'.
+			-- | Call `compile_unit' on current `CODE_COMPILE_UNIT' and write code in `a_text_writer'.
 		do
 			Event_manager.raise_event (feature {CODE_EVENTS_IDS}.log, ["Starting CodeGenerator.GenerateCodeFromCompileUnit"])
 			if a_compile_unit = Void then
@@ -39,7 +39,7 @@ feature -- Interface
 	
 	generate_code_from_namespace (a_namespace: SYSTEM_DLL_CODE_NAMESPACE; a_text_writer: TEXT_WRITER; a_options: SYSTEM_DLL_CODE_GENERATOR_OPTIONS) is
 			-- | Call `generate_namespace_from_dom'.
-			-- | Call `namespace' on `EG_NAMESPACE' and write code in `a_text_writer'.
+			-- | Call `namespace' on `CODE_NAMESPACE' and write code in `a_text_writer'.
 		do
 			Event_manager.raise_event (feature {CODE_EVENTS_IDS}.log, ["Starting CodeGenerator.GenerateCodeFromNamespace"])
 			if a_namespace = Void then
@@ -52,7 +52,7 @@ feature -- Interface
 
 	generate_code_from_type (a_type: SYSTEM_DLL_CODE_TYPE_DECLARATION; a_text_writer: TEXT_WRITER; a_options: SYSTEM_DLL_CODE_GENERATOR_OPTIONS) is
 			-- | Call `generate_type_from_dom'.
-			-- | Call `type' on `EG_GENERATED_TYPE' and write code in `a_text_writer'.
+			-- | Call `type' on `CODE_GENERATED_TYPE' and write code in `a_text_writer'.
 		do
 			Event_manager.raise_event (feature {CODE_EVENTS_IDS}.log, ["Starting CodeGenerator.GenerateCodeFromType"])
 			if a_type = Void then
@@ -65,7 +65,7 @@ feature -- Interface
 
 	generate_code_from_statement (a_statement: SYSTEM_DLL_CODE_STATEMENT; a_text_writer: TEXT_WRITER; a_options: SYSTEM_DLL_CODE_GENERATOR_OPTIONS) is
 			-- | Call `generate_statement_from_dom'.
-			-- | Call `statement' on `EG_STATEMENT' and write code in `a_text_writer'.
+			-- | Call `statement' on `CODE_STATEMENT' and write code in `a_text_writer'.
 		do
 			Event_manager.raise_event (feature {CODE_EVENTS_IDS}.log, ["Starting CodeGenerator.GenerateCodeFromStatement"])
 			if a_statement = Void then
@@ -78,7 +78,7 @@ feature -- Interface
 
 	generate_code_from_expression (a_expression: SYSTEM_DLL_CODE_EXPRESSION; a_text_writer: TEXT_WRITER; a_options: SYSTEM_DLL_CODE_GENERATOR_OPTIONS) is
 			-- | Call `generate_expression_from_dom'
-			-- | Call `expression' on `EG_EXPRESSION' and write code in `a_text_writer'.
+			-- | Call `expression' on `CODE_EXPRESSION' and write code in `a_text_writer'.
 		do
 			Event_manager.raise_event (feature {CODE_EVENTS_IDS}.log, ["Starting CodeGenerator.GenerateCodeFromExpression"])
 			if a_expression = Void then

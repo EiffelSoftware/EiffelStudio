@@ -14,20 +14,22 @@ create
 
 feature {NONE} -- Initialization
 
-	make is
-			-- Initialize `arguments'.
+	make (a_target: CODE_EXPRESSION; a_arguments: LIST [CODE_EXPRESSION]) is
+			-- Initialize instance.
 		do
-			create arguments.make
+			arguments := a_arguments
+			target := a_target
 		ensure
-			non_void_arguments: arguments /= Void
+			arguments_set: arguments = a_arguments
+			target_set: target = a_target
 		end
 		
 feature -- Access
 
-	arguments: LINKED_LIST [CODE_EXPRESSION]
+	arguments: LIST [CODE_EXPRESSION]
 			-- Delegate arguments
 	
-	target_object: CODE_EXPRESSION
+	target: CODE_EXPRESSION
 			-- Target object
 			
 	code: STRING is
@@ -35,15 +37,10 @@ feature -- Access
 			-- Eiffel code of delegate invoke expression
 			-- NOT SUPPORTED YET !!!
 		do
-			Check
-				non_void_target_object: target_object /= Void
-			end
-		
 			create Result.make (120)
-			Result.append ("must be done (EG_DELEGATE_INVOKE_EXPRESSION)")
-			Result.append (target_object.code)
-			Result.append (Dictionary.Space)
-			Result.append (Dictionary.Opening_round_bracket)
+			Result.append ("must be done (CODE_DELEGATE_INVOKE_EXPRESSION)")
+			Result.append (target.code)
+			Result.append (" (")
 			from
 				arguments.start
 				if not arguments.after then
@@ -53,51 +50,25 @@ feature -- Access
 			until
 				arguments.after
 			loop
-				Result.append (Dictionary.Comma)
-				Result.append (Dictionary.Space)
+				Result.append (", ")
 				Result.append (arguments.item.code)
 				arguments.forth
 			end
+			Result.append_character (')')
+			Event_manager.raise_event (feature {CODE_EVENTS_IDS}.not_supported, ["delegate invoke expression"])
 		end
 		
 feature -- Status Report
 	
-	ready: BOOLEAN is
-			-- Is delegate invoke expression ready to be generated?
-		do
-			Result := target_object /= Void and then target_object.ready
-		end
-
-	type: TYPE is
+	type: CODE_TYPE_REFERENCE is
 			-- Type
 		do
-			Result := target_object.type
+			Result := target.type
 		end
-
-feature -- Status Setting
-
-	set_target_object (an_expression: like target_object) is
-			-- Set `target_object' with `an_expression'.
-		require
-			non_void_expression: an_expression /= Void
-		do
-			target_object := an_expression
-		ensure
-			target_object_set: target_object = an_expression
-		end		
-
-	add_argument (an_argument: CODE_EXPRESSION) is
-			-- Add `an_argment' to `arguments'.
-		require
-			non_void_argument: an_argument /= Void
-		do
-			arguments.extend (an_argument)
-		ensure
-			arguments_set: arguments.has (an_argument)
-		end	
-		
+	
 invariant
 	non_void_arguments: arguments /= Void
+	non_void_target: target /= Void
 
 end -- class CODE_DELEGATE_INVOKE_EXPRESSION
 

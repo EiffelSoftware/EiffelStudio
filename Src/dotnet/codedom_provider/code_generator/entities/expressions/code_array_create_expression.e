@@ -14,54 +14,81 @@ create
 
 feature {NONE} -- Initialization
 
-	make is
+	make (a_type: CODE_TYPE_REFERENCE; a_size: INTEGER; a_size_expression: CODE_EXPRESSION; a_initializers: LIST [CODE_EXPRESSION]) is
 			-- Initialize `initializers'.
+		require
+			non_void_type: a_type /= Void
+			valid_arguments: a_size_expression /= Void xor a_size > 0 xor a_initializers /= Void
 		do
-			create initializers.make
+			array_type := a_type
+			size := a_size
+			size_expression := a_size_expression
+			initializers := a_initializers
 		ensure
-			non_void_initializers: initializers /= Void
+			type_set: array_type = a_type
+			size_set: size = a_size
+			size_expression_set: size_expression = a_size_expression
+			initializers_set: initializers = a_initializers
 		end
 		
 feature -- Access
 
-	array_creation_feature: STRING
-			-- Array initialization feature name
+	conversion_feature_name: STRING
+			-- Name of feature used to cast System.Object array into correct type
 
-	array_type: STRING
-			-- array type
+	array_type: CODE_TYPE_REFERENCE
+			-- Array type
 	
-	size: CODE_EXPRESSION
+	size: INTEGER
 			-- Array size
+
+	size_expression: CODE_EXPRESSION
+			-- Array size expression
 	
-	initializers: LINKED_LIST [CODE_EXPRESSION]
+	initializers: LIST [CODE_EXPRESSION]
 			-- Array initializers
-		
+	
+	target: STRING
+			-- Creation target
+
+feature -- Code Generation
+
 	code: STRING is
 			-- Eiffel code for array creation expression
-			-- | 	Result := "create `object_created'.make (1, `size')" if size /= Void
+			-- | 	Result := "create `target'.make (1, `size_expression')" if size_expression /= Void and target /= Void
 			-- | OR
-			-- |	Result := "`array_creation_feature'" if creation of a native_array [X] and X /= SYSTEM_OBJECT
+			-- | 	Result := "create `target'.make (1, `size')" if size > 0 and target /= Void
+			-- | OR
+			-- | 	Result := "create {`array_type'}.make (1, `size_expression')" if size_expression /= Void and target = Void
+			-- | OR
+			-- | 	Result := "create {`array_type'}.make (1, `size')" if size > 0 and target = Void
 			-- | OR 
 			-- |	Result := "[`initializers', `initializers',...]"
+			-- | OR 
+			-- |	Result := "conversion_feature_name ([`initializers', `initializers',...]) if conversion_feature_name /= Void"
 		do
-			check
-				not_empty_array_type: not array_type.is_empty
-			end
-
 			create Result.make (160)
-			if size /= Void then
-				Result.append (Dictionary.Create_keyword)
-				Result.append (Dictionary.Space)
-				Result.append (array_creation_feature)
-				Result.append (Dictionary.Dot_keyword)
-				Result.append (Dictionary.Space)
-				Result.append (Dictionary.Opening_round_bracket)
-				Result.append ("1, ")
-				Result.append (size.code)
-				Result.append (Dictionary.Closing_round_bracket)
-			elseif array_creation_feature /= Void then
-				Result.append (array_creation_feature)
-			else
+			if size_expression /= Void or size > 0 then
+				Result.append ("create ")
+				if target /= Void then
+					Result.append (target)					
+				else
+					Result.append_character ('{')
+					Result.append (array_type.eiffel_name)
+					Result.append_character ('}')
+				end
+				Result.append (".make (0, ")
+				if size_expression /= Void then
+					Result.append (size_expression.code)
+				else
+					Result.append ((size - 1).out)
+				end
+				Result.append_character (')')
+			elseif initializers /= Void then
+				if conversion_feature_name /= Void then
+					Result.append (conversion_feature_name)
+					Result.append (" (")
+				end
 				Result.append ("[")
 				from
 					initializers.start
@@ -72,96 +99,52 @@ feature -- Access
 				until
 					initializers.after
 				loop
-					Result.append (Dictionary.Comma)
-					Result.append (Dictionary.Space)
+					Result.append (", ")
 					Result.append (initializers.item.code)
 				end
 				Result.append ("]")
+				if conversion_feature_name /= Void then
+					Result.append (")")
+				end
 			end
 		end
 		
 feature -- Status Report
 
-	ready: BOOLEAN is
-			-- Is epression ready to be generated?
-		do
-			Result := array_type /= Void and initializers /= Void
-		end
-
-	type: TYPE is
+	type: CODE_TYPE_REFERENCE is
 			-- Type
-		local
-			l_type_name: STRING
 		do
-			create l_type_name.make (array_type.count + 2)
-			l_type_name.append (array_type)
-			l_type_name.append ("[]")
-			Result := known_type (l_type_name)
-			if Result = Void then
---				from
---					Ace_file.Referenced_assemblies.start
---				until
---					Ace_file.Referenced_assemblies.after or l_type /= Void
---				loop
---					l_assembly := Ace_file.Referenced_assemblies.item.assembly
---					l_type := l_assembly.get_type (array_type)
---					Ace_file.Referenced_assemblies.forth
---				end
---				if l_type /= Void then
---					Result := l_assembly.get_type (l_type_name)
---				end
---				check
---					non_void_result: Result /= Void
---				end
---				add_known_type (Result, l_type_name)
-			end
+			Result := array_type
 		end
 
-feature -- Status Setting
+feature -- Element Settings
 
-	set_array_type (a_type: like array_type) is
-			-- Set `array_type' with `a_type'.
+	set_conversion_feature_name (a_name: like conversion_feature_name) is
+			-- Set `conversion_feature_name' with `a_name'.
 		require
-			non_void_type: a_type /= Void
+			non_void_creation_feature_name: a_name /= Void
 		do
-			array_type := a_type
+			conversion_feature_name := a_name
 		ensure
-			array_type_set: array_type = a_type
-		end		
+			name_set: conversion_feature_name = a_name
+		end
+	
+feature {CODE_ASSIGN_STATEMENT} -- Element Settings
 
-	set_size (a_size: like size) is
-			-- Set `size' with `a_size'.
+	set_target (a_target: like target) is
+			-- Set `target' with `a_target'.
 		require
-			non_void_size: a_size /= Void
+			non_void_target: a_target /= Void
 		do
-			size := a_size
+			target := a_target
 		ensure
-			size_set: size = a_size
-		end	
-
-	add_initializer (an_initializer: CODE_EXPRESSION) is
-			-- add `an_initializer' to `initializers'.
-		require
-			non_void_list: an_initializer /= Void
-		do
-			initializers.extend (an_initializer)
-		ensure
-			initializers_set: initializers.has (an_initializer)
-		end	
-
-	set_array_creation_feature (a_array_creation_feature: like array_creation_feature) is
-			-- Set `array_creation_feature' with `a_array_creation_feature'.
-		require
-			non_void_array_creation_feature: a_array_creation_feature /= Void
-			not_empty_array_creation_feature: not array_creation_feature.is_empty
-		do
-			array_creation_feature := a_array_creation_feature
-		ensure
-			array_creation_featureset: array_creation_feature = a_array_creation_feature
-		end		
+			target_set: target = a_target
+		end
 		
 invariant
-	non_void_initializers: initializers /= Void
+	non_void_element_type: array_type /= Void
+	one_and_only_one_info: size_expression /= Void xor size > 0 xor initializers /= Void
+	size_if_target: target /= Void implies (size > 0 or size_expression /= Void)
 	
 end -- class CODE_ARRAY_CREATE_EXPRESSION
 

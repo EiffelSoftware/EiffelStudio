@@ -12,75 +12,55 @@ inherit
 			{NONE} all
 		end
 
-feature -- Access
-
-	variable_type (a_name: STRING): STRING is
-			-- Type of feature `a_name'
-		do
-			Variables.search (a_name)
-			if Variables.found then
-				Result := Variables.found_item
-			else
-				Event_manager.raise_event (feature {CODE_EVENTS_IDS}.Variable_name_not_found, [a_name])
-			end
+	CODE_SHARED_TYPE_REFERENCE_FACTORY
+		export
+			{NONE} all
 		end
+
+	CODE_SHARED_GENERATION_CONTEXT
+		export
+			{NONE} all
+		end
+
+feature -- Access
 
 	is_variable (a_name: STRING): BOOLEAN is
 			-- Is `a_name' a variable name?
 		do
-			Result := Variables.has (a_name)
+			from
+				Variables.start
+			until
+				Variables.after or Result
+			loop
+				Result := Variables.item.eiffel_name.is_equal (a_name)
+				Variables.forth
+			end
 		end
 
-	cast_variable_suffix: STRING is
-			-- Assignment attempt assignee suffix
-		do
-			Result := Cast_variable_number.out
-		end
-	
 feature -- Basic Operations
-
-	increase_cast_variable_suffix is
-			-- Increase number for assignment attempt assignee suffix
-		do
-			Cast_variable_number.put (Cast_variable_number.item + 1)
-		end
 		
-	add_variable (a_type_name: STRING; a_unique_variable_name: STRING) is
+	add_variable (a_dotnet_name: STRING; a_type: CODE_TYPE) is
 			-- Add variable `a_unique_variable_name' with type `a_type_name' to `Variables'.
 		require
-			non_void_a_type_name: a_type_name /= Void
-			not_empty_a_type_name: not a_type_name.is_empty
-			non_void_a_variable_name: a_unique_variable_name /= Void
-			not_empty_a_variable_name: not a_unique_variable_name.is_empty
+			non_void_name: a_dotnet_name /= Void
+			valid_name: not a_dotnet_name.is_empty
+			non_void_type: a_type /= Void
 		do
-			Variables.put (a_type_name, a_unique_variable_name)
-		ensure
-			variable_set: Variables.has_item (a_type_name)
+			Variables.extend (create {CODE_VARIABLE}.make (create {CODE_VARIABLE_REFERENCE}.make (a_dotnet_name, Type_reference_factory.type_reference_from_code (a_type), Type_reference_factory.type_reference_from_code (current_type))))
 		end
 
 	clear_all_local_variables is
 			-- clear all content of `variables'
 		do
-			Variables.clear_all
-			Cast_variable_number.put (1)
+			Variables.wipe_out
 		end
 
 feature {NONE} -- Implementation
 
-	Variables: HASH_TABLE [STRING, STRING] is
+	Variables: LIST [CODE_VARIABLE] is
 			-- All variables in current_feature: parameters and locals
-			-- Value: `STRING' corresponding to Eiffel type name
-			-- Key: ID corresponding to the Eiffel variable name]
 		once
-			create Result.make (20)
-		ensure
-			non_void_result: Result /= Void
-		end
-
-	Cast_variable_number: CELL [INTEGER] is
-			-- number of cast local variable.
-		once
-			create Result.put (1)
+			create {ARRAYED_LIST [CODE_VARIABLE]} Result.make (20)
 		ensure
 			non_void_result: Result /= Void
 		end

@@ -6,94 +6,55 @@ indexing
 class
 	CODE_PARENT
 
-inherit
-	CODE_NAMED_ENTITY
-		redefine
-			ready
-		end
-
 create
 	make
 	
 feature -- Initialization
 
-	make is
-			-- Call Precursor {CODE_NAMED_ENTITY}
+	make (a_type: like type) is
+			-- Set `type' with `a_type'
+		require
+			non_void_type: a_type /= Void
 		do
-			default_create
-			create rename_clauses.make
-			create undefine_clauses.make
-			create redefine_clauses.make
-			create select_clauses.make
-			create export_clauses.make
+			type := a_type
+			create {ARRAYED_LIST [CODE_UNDEFINE_CLAUSE]} undefine_clauses.make (4)
+			create {ARRAYED_LIST [CODE_REDEFINE_CLAUSE]} redefine_clauses.make (4)
 		ensure then
-			non_void_name: name /= Void
+			type_set: type = a_type
+			non_void_undefine_clauses: undefine_clauses /= Void
+			non_void_redefine_clauses: redefine_clauses /= Void
 		end
 		
 feature	-- Access
 
-	rename_clauses: LINKED_LIST [CODE_RENAME_CLAUSE]
+	type: CODE_TYPE_REFERENCE
+			-- Associated type
+
+	undefine_clauses: LIST [CODE_UNDEFINE_CLAUSE]
 			-- Rename inheritance clauses
 
-	undefine_clauses: LINKED_LIST [CODE_UNDEFINE_CLAUSE]
-			-- Rename inheritance clauses
-
-	redefine_clauses: LINKED_LIST [CODE_REDEFINE_CLAUSE]
-			-- Rename inheritance clauses
-
-	select_clauses: LINKED_LIST [CODE_SELECT_CLAUSE]
-			-- Rename inheritance clauses
-
-	export_clauses: LINKED_LIST [CODE_EXPORT_CLAUSE]
+	redefine_clauses: LIST [CODE_REDEFINE_CLAUSE]
 			-- Rename inheritance clauses
 
 	code: STRING is
 			-- | Result := "`name' [`inheritace_clauses']"
 		do
-			check
-				name_set: not name.is_empty
-			end
 			create Result.make (250)
 			
-			Result.append (dictionary.Tab)
-			Result.append (Resolver.eiffel_type_name (name))
-			Result.append (dictionary.New_line)
+			Result.append_character ('%T')
+			Result.append (type.eiffel_name)
+			Result.append_character ('%N')
 
-			Result.append (generate_clauses (rename_clauses, Dictionary.Rename_keyword))
-			Result.append (generate_clauses (undefine_clauses, Dictionary.Undefine_keyword))
-			Result.append (generate_clauses (redefine_clauses, Dictionary.Redefine_keyword))
-			Result.append (generate_clauses (select_clauses, Dictionary.Select_keyword))
-			Result.append (generate_clauses (export_clauses, Dictionary.Export_keyword))
-			
+			Result.append (clauses_code (undefine_clauses))
+			Result.append (clauses_code (redefine_clauses))
 
-			if  rename_clauses.count > 0 or undefine_clauses.count > 0 or redefine_clauses.count > 0
-			or select_clauses.count > 0 or export_clauses.count > 0 then
-				Result.append (dictionary.Tab)
-				Result.append (dictionary.Tab)
-				Result.append (Dictionary.End_keyword)
-				Result.append (Dictionary.New_line)
+			if undefine_clauses.count > 0 or redefine_clauses.count > 0 then
+				Result.append ("%T%Tend%N")
+				Result.append ("%N")
 			end
 		end
 		
-feature -- Status Report
-
-	ready: BOOLEAN is
-			-- Is attribute ready to be generated?
-		do
-			Result := True
-		end
-
 feature -- Status Setting Inheritance Clauses
-
-	add_rename_clause (a_clause: CODE_RENAME_CLAUSE) is
-			-- Add `a_clause' to `inheritance_clauses' for parent `a_parent'.
-		require
-			non_void_inheritance_clause: a_clause /= Void
-		do
-			rename_clauses.extend (a_clause)
-		ensure
-			rename_clause_added: rename_clauses.has (a_clause)
-		end
 
 	add_undefine_clause (a_clause: CODE_UNDEFINE_CLAUSE) is
 			-- Add `a_clause' to `inheritance_clauses' for parent `a_parent'.
@@ -115,67 +76,39 @@ feature -- Status Setting Inheritance Clauses
 			redefine_clause_added: redefine_clauses.has (a_clause)
 		end
 
-	add_select_clause (a_clause: CODE_SELECT_CLAUSE) is
-			-- Add `a_clause' to `inheritance_clauses' for parent `a_parent'.
-		require
-			non_void_inheritance_clause: a_clause /= Void
-		do
-			select_clauses.extend (a_clause)
-		ensure
-			select_clause_added: select_clauses.has (a_clause)
-		end
-
-	add_export_clause (a_clause: CODE_EXPORT_CLAUSE) is
-			-- Add `a_clause' to `inheritance_clauses' for parent `a_parent'.
-		require
-			non_void_inheritance_clause: a_clause /= Void
-		do
-			export_clauses.extend (a_clause)
-		ensure
-			export_clause_added: export_clauses.has (a_clause)
-		end
-
 feature {NONE} -- Implementation
 	
-	generate_clauses (a_list: LINKED_LIST [CODE_INHERITANCE_CLAUSE]; keyword: STRING): STRING is
-			-- 
+	clauses_code (a_list: LIST [CODE_INHERITANCE_CLAUSE]): STRING is
+			-- Code for `a_list'
 		require
-			a_list_internalt: a_list = rename_clauses or a_list = undefine_clauses or a_list = redefine_clauses or a_list = select_clauses or a_list = export_clauses
-			keword: keyword = Dictionary.Rename_keyword or keyword = Dictionary.Undefine_keyword or keyword = Dictionary.Redefine_keyword or keyword = Dictionary.Select_keyword or keyword = Dictionary.Export_keyword
-		local
-			first_element: BOOLEAN
+			non_void_list: a_list /= Void
 		do
 			create Result.make (120)
 					
 			from
 				a_list.start
-				first_element := True
+				if not a_list.after then
+					Result.append ("%T%T")
+					Result.append (a_list.item.keyword)
+					Result.append_character ('%N')
+					a_list.forth
+				end
 			until
 				a_list.after
 			loop
-				if first_element then
-					Result.append (dictionary.Tab)
-					Result.append (dictionary.Tab)
-					Result.append (keyword)
-					Result.append (dictionary.New_line)
-					first_element := False
-				else
-					Result.append (Dictionary.Comma)
-					Result.append (Dictionary.New_line)
-				end
-				Result.append (dictionary.Tab)
-				Result.append (dictionary.Tab)
-				Result.append (dictionary.Tab)
+				Result.append (",%N%T%T%T")
 				Result.append (a_list.item.code)
 				a_list.forth
 			end
-			if not first_element then
-				Result.append (Dictionary.New_line)
+			if a_list.count > 0 then
+				Result.append_character ('%N')
 			end
 		end
 
 invariant
-	non_void_name: name /= Void
+	non_void_type: type /= Void
+	non_void_undefine_clauses: undefine_clauses /= Void
+	non_void_redefine_clauses: redefine_clauses /= Void
 
 end -- class CODE_PARENT
 

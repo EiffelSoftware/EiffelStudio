@@ -8,9 +8,8 @@ class
 
 inherit
 	CODE_FEATURE
-		redefine
-			make,
-			ready
+		rename
+			make as feature_make
 		end
 
 create
@@ -18,14 +17,18 @@ create
 
 feature {NONE} -- Initialization
 
-	make is
-			-- Initialize `value' with empty string.
+	make (a_eiffel_name: like eiffel_name; a_value: like value) is
+			-- Initialize `value' with `a_value'.
 		do
-			Precursor {CODE_FEATURE}
-			set_type_feature ("Snippet Features")
-			set_name ("Snippet Features")
-		ensure then
-			non_void_value: value /= Void
+			set_feature_kind ("Snippet Features")
+			value := a_value
+			create {LINKED_LIST [CODE_COMMENT]} comments.make
+			create {LINKED_LIST [CODE_ATTRIBUTE_DECLARATION]} custom_attributes.make
+			create {LINKED_LIST [CODE_TYPE_REFERENCE]} feature_clauses.make
+			eiffel_name := a_eiffel_name
+			name := a_eiffel_name
+		ensure
+			value_set: value = a_value
 		end
 		
 feature -- Access
@@ -38,31 +41,12 @@ feature -- Access
 		do
 			create Result.make (value.count + 1)
 			Result.append (value)
-			Result.append (Dictionary.New_line)
-		end
-		
-feature -- Status Report
-
-	ready: BOOLEAN is
-			-- Is snippet compile unit ready to be generated?
-		do
-			Result := Precursor {CODE_FEATURE} and value /= Void
+			Result.append_character ('%N')
 		end
 
-feature -- Status Setting
+invariant
+	non_void_value: value /= Void
 
-	set_value (a_value: like value) is
-			-- Set `value' with `a_value'.
-			-- `a_value' must be formatted
-		require
-			non_void_value: a_value /= Void
-			not_empty_value: not a_value.is_empty
-		do
-			value := a_value
-		ensure
-			value_set: value = a_value
-		end
-	
 end -- class CODE_SNIPPET_FEATURE
 
 --+--------------------------------------------------------------------

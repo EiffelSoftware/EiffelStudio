@@ -8,26 +8,43 @@ class
 	
 inherit
 	CODE_TYPE
+		rename
+			make as code_make
+		end
 
 create
 	make
 
 feature {NONE} -- Initialization
 
-	make is
-			-- | Call Precursor {CODE_TYPE}
-			-- Initialize attributes.
+	make (a_type: CODE_TYPE_REFERENCE) is
+			-- Initialize instance with arguments.
+		require
+			non_void_type: a_type /= Void
+			valid_type: a_type.dotnet_type /= Void
 		do
-			default_create
+			code_make (a_type)
+			dotnet_type := a_type.dotnet_type
+			create assembly.make (dotnet_type.assembly)
 		end
 		
 feature -- Access
 
-	type: TYPE is
-			-- type associated to `name'
+	code: STRING is
+			-- Type source code
 		do
-			Result := Dotnet_types.dotnet_type (name)
+			Result := eiffel_name
 		end
+
+	assembly: CODE_REFERENCED_ASSEMBLY
+			-- Assembly to which type belongs to
+
+	dotnet_type: TYPE
+			-- type associated to `name'
+
+invariant
+	non_void_type: dotnet_type /= Void
+	non_void_assembly: assembly /= Void
 
 end -- class CODE_EXTERNAL_CLASS
 

@@ -1,9 +1,18 @@
 indexing
-	-- Representation of a referenced assembly
+	description:	"Codedom referenced assembly."
+	date:			"$Date$"
+	revision:		"$Revision$"
 
 class
 	CODE_REFERENCED_ASSEMBLY
 
+inherit
+	CODE_CONFIGURATION
+		rename
+			assembly_prefix as config_assembly_prefix
+		export
+			{NONE} all
+		end
 create 
 	make,
 	make_with_prefix
@@ -17,9 +26,9 @@ feature {NONE} -- Initialization
 			non_void_an_assembly: an_assembly /= Void
 		do
 			assembly := an_assembly
-			assembly_prefix := (create {CODE_ASSEMBLY_PREFIX_FACTORY}).assembly_prefix (assembly.get_name.name)
+			assembly_prefix := config_assembly_prefix (assembly.location)
 		ensure
-			assembly_prefix_set: assembly_prefix.is_equal ((create {CODE_ASSEMBLY_PREFIX_FACTORY}).assembly_prefix (assembly.get_name.name))
+			assembly_prefix_set: assembly_prefix /= Void
 			assembly_set: assembly = an_assembly
 		end
 
@@ -52,3 +61,14 @@ invariant
 	non_void_assembly: assembly /= Void
 
 end -- Class CODE_REFERENCED_ASSEMBLY
+
+--+--------------------------------------------------------------------
+--| Eiffel CodeDOM Provider
+--| Copyright (C) 2001-2004 Eiffel Software
+--| Eiffel Software Confidential
+--| All rights reserved. Duplication and distribution prohibited.
+--|
+--| Eiffel Software
+--| 356 Storke Road, Goleta, CA 93117 USA
+--| http://www.eiffel.com
+--+--------------------------------------------------------------------

@@ -21,15 +21,9 @@ feature {NONE} -- Code Generation
 			-- Class declaration (including class name and qualifiers like deferred, expanded or frozen)
 		do
 			create Result.make (100)
-			Result.append (dictionary.Frozen_keyword)
-			Result.append (dictionary.Space)
-			Result.append (dictionary.Expanded_keyword)
-			Result.append (dictionary.Space)
-			Result.append (dictionary.Class_keyword)
-			Result.append (dictionary.New_line)
-			Result.append (dictionary.Tab)
+			Result.append ("frozen expanded class%N%T")
 			Result.append (name.twin)
-			Result.append (dictionary.New_line)
+			Result.append_character ('%N')
 		end
 
 end -- class CODE_FROZEN_EXPANDED_TYPE

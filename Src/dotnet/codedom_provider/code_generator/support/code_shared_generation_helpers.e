@@ -6,20 +6,12 @@ indexing
 	revision: "$Revision$"
 
 class
-	CODE_SHARED_CODE_GENERATOR_CONTEXT
+	CODE_SHARED_GENERATION_HELPERS
 
 feature -- Access
 
 	Resolver: CODE_ENTITY_NAME_RESOLVER is
 			-- Name resolvers and caches access
-		once
-			create Result
-		ensure
-			exists: Result /= Void
-		end
-		
-	Dotnet_types: CODE_DOTNET_TYPES is
-			-- .NET types cache
 		once
 			create Result
 		ensure
@@ -34,7 +26,7 @@ feature -- Access
 			exists: Result /= Void
 		end
 		
-end -- class CODE_SHARED_CODE_GENERATOR_CONTEXT
+end -- class CODE_SHARED_GENERATION_HELPERS
 
 --+--------------------------------------------------------------------
 --| Eiffel CodeDOM Provider

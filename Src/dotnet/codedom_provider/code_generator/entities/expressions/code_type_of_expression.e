@@ -12,6 +12,15 @@ inherit
 	CODE_SHARED_EVENT_MANAGER
 		export
 			{NONE} all
+		undefine
+			is_equal
+		end
+
+	CODE_STOCK_TYPE_REFERENCES
+		export
+			{NONE} all
+		undefine
+			is_equal
 		end
 
 create
@@ -19,73 +28,47 @@ create
 
 feature {NONE} -- Initialization
 
-	make is
+	make (a_target: like target) is
 			-- Creation routine
+		require
+			non_void_target: a_target /= Void
 		do
-			create target.make_empty
+			target := a_target
 		ensure
-			non_void_target: target /= Void
+			target_set: target = a_target
 		end
 		
 feature -- Access
 
-	target: STRING
+	target: CODE_TYPE_REFERENCE
 			-- Type of expression target
 			
 	code: STRING is
 			-- | Result := "feature {TYPE}.get_type_string (type)"
 			-- | Result C# := "typeof(`type_name')"
 			-- Eiffel code of `type of' expression
-			-- NOT SUPPORTED YET !!!
-		local
-			retried: BOOLEAN
 		do
-			Check
-				not_empty_target: not target.is_empty
-			end
-			if not retried then
-				create Result.make (120)
-				Result.append ("feature {TYPE}.get_type_string (")
-				Result.append (Resolver.dotnet_type_name (target))
-				Result.append (Dictionary.Closing_round_bracket)
+			create Result.make (120)
+			Result.append ("feature {TYPE}.get_type (%"")
+			if not Resolver.is_generated (target) then
+				Result.append (target.dotnet_type.full_name)
 			else
-				create Result.make_from_string (target)
+				Event_manager.raise_event (feature {CODE_EVENTS_IDS}.Not_supported, ["typeof expression on generated type"])
+				Result.append (target.eiffel_name)
 			end
-		rescue
-			Event_manager.raise_event (feature {CODE_EVENTS_IDS}.Rescued_exception, [feature {ISE_RUNTIME}.last_exception])
-			retried := True
-			retry
+			Result.append ("%")")
 		end
 		
 feature -- Status Report
 
-	ready: BOOLEAN is
-			-- Is expression ready to be generated?
-		do
-			Result := True
-		end
-
-	type: TYPE is
+	type: CODE_TYPE_REFERENCE is
 			-- Type
 		do
-			Result := feature {TYPE}.get_type_string ("System.Type")
+			Result := Type_type_reference
 		end
 
-feature -- Status Setting
-
-	set_target (a_target: like target) is
-			-- Set `target' with `a_target'.
-		require
-			non_void_target: a_target /= Void
-			not_empty_target: not a_target.is_empty
-		do
-			target := a_target
-		ensure
-			target_set: target = a_target
-		end		
-
 invariant
-	non_void_type: type /= Void
+	non_void_target: target /= Void
 	
 end -- class CODE_TYPE_OF_EXPRESSION
 

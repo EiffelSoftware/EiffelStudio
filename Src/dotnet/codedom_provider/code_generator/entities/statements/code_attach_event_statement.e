@@ -8,16 +8,28 @@ class
 
 inherit
 	CODE_STATEMENT
-	EVENT_TYPE
+
+	CODE_EVENT_METHOD_KIND
+		undefine
+			is_equal
+		end
 
 create
 	make
 
 feature {NONE} -- Initialization
 
-	make is
+	make (a_event: like attached_event; a_listener: like listener) is
 			-- Creation routine
+		require
+			non_void_event: a_event /= Void
+			non_void_listener: a_listener /= Void
 		do
+			attached_event := a_event
+			listener := a_listener
+		ensure
+			attached_event_set: attached_event = a_event
+			listener_set: listener = a_listener
 		end
 		
 feature -- Access
@@ -32,74 +44,34 @@ feature -- Access
 			-- | Result := "`attached_event' (`listener')"
 			-- Eiffel code of attach event statement
 		do
-			check
-				attached_event_set: attached_event /= Void
-				listener_set: listener /= Void
-			end
-
 			create Result.make (120)
 			Result.append (indent_string)
 			set_new_line (False)
 			Result.append (attached_event.code)
-			Result.append (event_call)
-			Result.append (Dictionary.Space)
-			Result.append (Dictionary.Opening_round_bracket)
+			Result.append (adder_eiffel_name)
+			Result.append (" (")
 			set_new_line (False)
 			Result.append (listener.code)
-			Result.append (Dictionary.Closing_round_bracket)
-			Result.append (Dictionary.New_line)
-		end
-
-feature -- Status Report
-
-	ready: BOOLEAN is 
-			-- Is statement ready to be generated?
-		do
-			Result := attached_event /= Void and then attached_event.ready
-		end
-
-feature -- Statur Setting
-
-	set_attached_event (an_event: like attached_event) is
-			-- Set `attached_event' with `an_event'
-		require
-			non_void_event: an_event /= Void
-		do
-			attached_event := an_event
-		ensure
-			attached_event_set: attached_event = an_event
-		end
-
-	set_listener (a_listener: like listener) is
-			-- Set `a_listener' with `listener'
-		require
-			non_void_listener: a_listener /= Void
-		do
-			listener := a_listener
-		ensure
-			listener_set: listener = a_listener
+			Result.append (")%N")
 		end
 
 feature {NONE} -- Implementation
 
-	event_call: STRING is
-			-- Event name corresponding to attach event of `attached_event'.
+	adder_eiffel_name: STRING is
+			-- Eiffel name of adder method
 		local
-			l_feature_arguments: LINKED_LIST [CODE_EXPRESSION]
-			feature_arguments: NATIVE_ARRAY [TYPE]
+			l_name: STRING
 		do
-			create l_feature_arguments.make
-			l_feature_arguments.extend (listener)
-			attached_event.set_event_type (Adder)
-			attached_event.set_routine_arguments (l_feature_arguments)
-
-			create feature_arguments.make (1)
-			feature_arguments.put (0, listener.type)
-			Result := Feature_finder.eiffel_feature_name_from_static_args (attached_event.target_object.type, Adder + attached_event.event_name, feature_arguments)
-		ensure
-			non_void_generate_event_name: Result /= Void
+			create l_name.make (method_prefix (Adder).count + attached_event.event_name.count)
+			l_name.append (method_prefix (Adder))
+			l_name.append (attached_event.event_name)
+			Result := attached_event.target.type.member_from_name (l_name).eiffel_name
 		end
-
+		
+invariant
+	non_void_attached_event: attached_event /= Void
+	non_void_listener: listener /= Void
+	
 end -- class CODE_ATTACH_EVENT_STATEMENT
 
 --+--------------------------------------------------------------------

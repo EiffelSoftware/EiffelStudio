@@ -19,55 +19,44 @@ inherit
 
 feature -- Access
 
-	referenced_assemblies: LINKED_LIST [CODE_REFERENCED_ASSEMBLY] is
+	Referenced_assemblies: LIST [CODE_REFERENCED_ASSEMBLY] is
 			-- Linked list of assemblies used by the codeDOM.
 		once
-			create Result.make
+			create {ARRAYED_LIST [CODE_REFERENCED_ASSEMBLY]} Result.make (16)
 			add_referenced_assembly ("mscorlib.dll")
 		ensure
 			non_void_result: Result /= Void
 		end		
 
-	assemblies_initialized: BOOLEAN is
-			-- Is referenced assemblies initialized?
-		do
-			Result := (Referenced_assemblies.count > 0)
-		end
-
 feature -- Status Report
-
-	has_file_name (a_assembly: CODE_REFERENCED_ASSEMBLY; a_file_name: STRING): BOOLEAN is
-			-- Does assembly `a_assembly' have file name `a_name'?
-			-- Can be either simple name of full path name with or without extension
-		require
-			non_void_assembly: a_assembly /= Void
-			non_void_name: a_file_name /= Void
-		local
-			l_name, l_full_name, l_assembly_name, l_location: STRING
-			l_index: INTEGER
-		do
-			l_index := a_file_name.last_index_of ('.', a_file_name.count)
-			if l_index > 1 then
-				l_name := a_file_name.substring (1, l_index - 1)
-			else
-				l_name := a_file_name
-			end
-			l_assembly_name := a_assembly.assembly.get_name.name
-			Result := l_assembly_name.is_equal (l_name)
-			if not Result then
-				l_location := a_assembly.assembly.location
-				if l_location /= Void then
-					create l_full_name.make (l_location.count + l_assembly_name.count + 1)
-					l_full_name.append (l_location)
-					l_full_name.append_character ((create {OPERATING_ENVIRONMENT}).Directory_separator)
-					l_full_name.append (l_assembly_name)
-					Result := l_full_name.is_equal (l_name)
-				end
-			end
-		end
 
 	assembly_added: BOOLEAN
 			-- Was last call to `add_referenced_assembly_from_file_name' successful?
+
+	has_file_name (a_assembly: CODE_REFERENCED_ASSEMBLY; a_file_name: STRING): BOOLEAN is
+			-- Does assembly have file name `a_name'?
+			-- Can be either simple name of full path name with or without extension
+		require
+			non_void_name: a_file_name /= Void
+			non_void_assembly: a_assembly /= Void
+		local
+			l_location: STRING
+			l_index: INTEGER
+		do
+			l_location := a_assembly.assembly.location
+			Result := a_file_name.is_equal (l_location)
+			if not Result then
+				l_index := l_location.last_index_of (Directory_separator, l_location.count)
+				if l_index > 1 then
+					l_location.keep_tail (l_location.count - l_index)
+					Result := a_file_name.is_equal (l_location)
+					if not Result then
+						l_location.keep_head ((l_location.last_index_of ('.', l_location.count) - 1).max (1))
+						Result := a_file_name.is_equal (l_location)
+					end
+				end
+			end
+		end
 
 feature -- Status Setting
 
@@ -106,6 +95,14 @@ feature -- Status Setting
 			Event_manager.raise_event (feature {CODE_EVENTS_IDS}.Rescued_exception, [(create {EXCEPTIONS}).exception_trace])
 			l_retried := True
 			retry
+		end
+
+feature {NONE} -- Implementation
+
+	Directory_separator: CHARACTER is
+			-- Platform specific directory separator
+		once
+			Result := (create {OPERATING_ENVIRONMENT}).Directory_separator
 		end
 
 end -- Class CODE_REFERENCED_ASSEMBLIES

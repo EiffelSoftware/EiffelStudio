@@ -14,22 +14,25 @@ create
 
 feature {NONE} -- Initialization
 
-	make is
+	make (a_type: like type; a_arguments: like arguments) is
 			-- Initialization
+		require
+			non_void_type: a_type /= Void
 		do
-			default_create
-			create arguments.make
-		ensure then
-			non_void_arguments: arguments /= Void
+			arguments := a_arguments
+			type := a_type
+		ensure
+			type_set: type = a_type
+			arguments_set: arguments = a_arguments
 		end
 		
 feature -- Access
 
-	arguments: LINKED_LIST [CODE_ATTRIBUTE_ARGUMENT]
+	arguments: LIST [CODE_ATTRIBUTE_ARGUMENT]
 			-- List of arguments.
 
-	constructor_name: STRING
-			-- Constructor name
+	type: CODE_TYPE_REFERENCE
+			-- Type of created custom attribute
 			
 	code: STRING is
 			-- | Result := "create {`name'}.constructor_name [('arguments')] [[`arguments']] end"
@@ -38,93 +41,56 @@ feature -- Access
 			l_properties_setting: BOOLEAN
 		do
 			create Result.make (120)
-			Result.append (Dictionary.Create_keyword)
-			Result.append (Dictionary.Space)
-			Result.append (Dictionary.Opening_brace_bracket)
-			Result.append (Resolver.eiffel_type_name (name))
-			Result.append (Dictionary.Closing_brace_bracket)
-			Result.append (constructor_call)
+			Result.append ("create {")
+			Result.append (type.eiffel_name)
+			Result.append ("}.make")
 
 				-- Constructor arguments.
-			from
-				arguments.start
-				if not arguments.after then
-					Result.append (Dictionary.Space)
-					Result.append (Dictionary.Opening_round_bracket)
+			if arguments /= Void then
+				from
+					arguments.start
+					if not arguments.after then
+						Result.append (" (")
+						Result.append (arguments.item.code)
+						arguments.forth
+					end
+				until
+					arguments.after or else not arguments.item.name.is_empty
+				loop
+					Result.append (", ")
 					Result.append (arguments.item.code)
 					arguments.forth
 				end
-			until
-				arguments.after or else not arguments.item.name.is_empty
-			loop
-				Result.append (Dictionary.Comma)
-				Result.append (Dictionary.Space)
-				Result.append (arguments.item.code)
-				arguments.forth
-			end
-			if arguments.count > 0 then
-				Result.append (Dictionary.Closing_round_bracket)
-			end
-			
-				-- Properties setting.
-			l_properties_setting := not arguments.after
-			from
+				if arguments.count > 0 then
+					Result.append_character (')')
+				end
+		
+					-- Properties setting.
+				l_properties_setting := not arguments.after
+				from
+					if l_properties_setting then
+						Result.append_character ('[')
+						Result.append (arguments.item.code)
+						arguments.forth
+					end
+				until
+					arguments.after
+				loop
+					Result.append (", ")
+					Result.append (arguments.item.code)
+					arguments.forth
+				end
 				if l_properties_setting then
-					arguments.item.set_type (name)
-					Result.append (arguments.item.code)
-					arguments.forth
+					Result.append_character (']')
 				end
-			until
-				arguments.after
-			loop
-				Result.append (Dictionary.Comma)
-				Result.append (Dictionary.Space)
-				arguments.item.set_type (name)
-				Result.append (arguments.item.code)
-				arguments.forth
 			end
-			if l_properties_setting then
-				Result.append ("]")
-			end
-			Result.append (Dictionary.Space)
-			Result.append (Dictionary.End_keyword)
-		end
 
-feature -- Status Setting
-
-	set_constructor_name (a_name: like constructor_name) is
-			-- Set `constructor_name' with `a_name'.
-		require
-			non_void_name: a_name /= Void
-		do
-			constructor_name := a_name
-		ensure
-			constructor_name_set: constructor_name = a_name
-		end
-
-	add_attribute (an_attribute: CODE_ATTRIBUTE_ARGUMENT) is
-			-- Add `an_attribute' to `arguments'.
-		require
-			non_void_an_attribute: an_attribute /= Void
-		do
-			arguments.extend (an_attribute)
-		ensure
-			an_attribute_added: arguments.has (an_attribute)
-		end
-
-feature {NONE} -- Implementation
-
-	constructor_call: STRING is
-			-- Generate constructor name.
-			--| `.make'
-		do
-			Result := ".make"
-		ensure
-			non_void_result: Result /= Void
+			Result.append (" end")
 		end
 
 invariant
 	non_void_arguments: arguments /= Void
+	non_void_type: type /= Void
 
 end -- class CODE_ATTRIBUTE_DECLARATION
 

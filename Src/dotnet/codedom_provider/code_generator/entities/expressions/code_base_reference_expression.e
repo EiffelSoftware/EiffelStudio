@@ -9,6 +9,13 @@ class
 inherit
 	CODE_EXPRESSION
 
+	CODE_STOCK_TYPE_REFERENCES
+		export
+			{NONE} all
+		undefine
+			is_equal
+		end
+
 create
 	make
 
@@ -26,23 +33,16 @@ feature -- Access
 			-- Eiffel code of base reference expression
 			-- NOT SUPPORTED YET !!!
 		do
-			create Result.make (120)
-			Result.append (indent_string)
-			Result.append ("NOT SUPPORTED YET !!! (EG_BASE_REFERENCE_EXPRESSION)")
+			Event_manager.raise_event (feature {CODE_EVENTS_IDS}.not_supported, ["base reference expression"])
 		end
 		
 feature -- Status Report
 
-	ready: BOOLEAN is 
-			-- Is expression ready to be generated?
-		do
-			Result := True
-		end
-		
-	type: TYPE is
+	type: CODE_TYPE_REFERENCE is
 			-- Type
 		do
-			Result := Void
+			Event_manager.raise_event (feature {CODE_EVENTS_IDS}.not_supported, ["base reference expression"])
+			Result := None_type_reference
 		end
 
 end -- class CODE_BASE_REFERENCE_EXPRESSION

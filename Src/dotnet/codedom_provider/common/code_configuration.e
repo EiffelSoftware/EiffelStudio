@@ -13,10 +13,14 @@ indexing
 							<log_name>System</log_name>
 						</general>
 						<prefixes>
-							<prefix value="SYSTEM_DLL_" assembly="system.dll"/>
-							<prefix value="XML_" assembly="system.xml.dll"/>
-							<prefix value="DRAWING_" assembly="system.drawing.dll"/>
-							<prefix value="WINFORMS_" assembly="system.windows.forms.dll"/>
+							<prefix value="SYSTEM_DLL_" assembly="System.dll"/>
+							<prefix value="XML_" assembly="System.Xml.dll"/>
+							<prefix value="DRAWING_" assembly="System.Drawing.dll"/>
+							<prefix value="WINFORMS_" assembly="System.Windows.Forms.dll"/>
+							<prefix value="DATA_" assembly="System.Data.dll"/>
+							<prefix value="WEB_" assembly="System.Web.dll"/>
+							<prefix value="WEB_" assembly="System.Web.RegularExpressions.dll"/>
+							<prefix value="WEB_" assembly="System.Web.Services.dll"/>
 						</prefixes>
 						<compiler>
 							<default_root_class>ANY</default_root_class>
@@ -143,10 +147,14 @@ feature -- Access
 			-- Default prefixes that should not be modified
 		once
 			create Result.make (4)
-			Result.extend ("SYSTEM_DLL_", "system.dll")
-			Result.extend ("XML_", "system.xml.dll")
-			Result.extend ("DRAWING_", "system.drawing.dll")
-			Result.extend ("WINFORMS_", "system.windows.forms.dll")
+			Result.extend ("SYSTEM_DLL_", "System.dll")
+			Result.extend ("XML_", "System.Xml.dll")
+			Result.extend ("DRAWING_", "System.Drawing.dll")
+			Result.extend ("WINFORMS_", "System.Windows.Forms.dll")
+			Result.extend ("DATA_", "System.Data.dll")
+			Result.extend ("WEB_", "System.Web.dll")
+			Result.extend ("WEB_", "System.Web.RegularExpressions.dll")
+			Result.extend ("WEB_", "System.Web.Services.dll")
 		end
 		
 feature -- Basic Operations

@@ -8,14 +8,28 @@ class
 
 inherit
 	CODE_COMPILE_UNIT
+		rename
+			make as parent_make
 		redefine
-			ready,
 			code
 		end
 
 create
 	make
-	
+
+feature {NONE} -- Initialization
+
+	make (a_value: like value) is
+			-- Initialize `namespaces' and `referenced_assemblies'.
+		require
+			non_void_value: a_value /= Void
+		do
+			create {ARRAYED_LIST [CODE_NAMESPACE]} namespaces.make (0)
+			value := a_value
+		ensure
+			value_set: value = a_value
+		end
+
 feature -- Access
 
 	value: STRING
@@ -26,27 +40,10 @@ feature -- Access
 		do
 			Result := value.twin
 		end
-		
-feature -- Status Report
 
-	ready: BOOLEAN is
-			-- Is snippet compile unit ready to be generated?
-		do
-			Result := Precursor {CODE_COMPILE_UNIT} and value /= Void
-		end
+invariant
+	non_void_value: value /= Void
 
-feature -- Status Setting
-
-	set_value (a_value: like value) is
-			-- Set `value' with `a_value'.
-		require
-			non_void_value: a_value /= Void
-		do
-			value := a_value
-		ensure
-			value_set: value = a_value
-		end
-	
 end -- class CODE_SNIPPET_COMPILE_UNIT
 
 --+--------------------------------------------------------------------

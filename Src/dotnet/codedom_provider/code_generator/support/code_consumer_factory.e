@@ -12,14 +12,9 @@ inherit
 			{NONE} all
 		end
 
-create
-	make
-
-feature {NONE} -- Initialization
-
-	make is
-			-- Creation routine
-		do
+	CODE_SHARED_FACTORIES
+		export
+			{NONE} all
 		end
 
 feature {CODE_GENERATOR, CODE_FACTORY} -- Basic Operations
@@ -28,9 +23,15 @@ feature {CODE_GENERATOR, CODE_FACTORY} -- Basic Operations
 			-- Call `generate_code_dom_compile_unit'.
 		require
 			non_void_compile_unit: a_compile_unit /= Void
-		do
-				-- Create `code_dom_source'.
-			generate_code_dom_compile_unit (a_compile_unit)
+		local
+			l_snippet_compile_unit: SYSTEM_DLL_CODE_SNIPPET_COMPILE_UNIT
+		do	
+			l_snippet_compile_unit ?= a_compile_unit
+			if l_snippet_compile_unit /= Void then 
+				Eiffel_factory.generate_snippet_compile_unit (l_snippet_compile_unit)
+			else
+				Eiffel_factory.generate_compile_unit (a_compile_unit)
+			end
 		end
 
 	generate_namespace_from_dom (a_namespace: SYSTEM_DLL_CODE_NAMESPACE) is
@@ -39,165 +40,74 @@ feature {CODE_GENERATOR, CODE_FACTORY} -- Basic Operations
 			non_void_namespace: a_namespace /= Void
 		do		
 				-- Create `code_dom_source'.
-			generate_code_dom_namespace (a_namespace)
+			Eiffel_factory.generate_namespace (a_namespace)
 		end
 
 	generate_type_from_dom (a_type: SYSTEM_DLL_CODE_TYPE_DECLARATION) is
 			-- Call `generate_code_dom_type'.
 		require
 			non_void_type: a_type /= Void
-		do	
-				-- Create `code_dom_source'.
-			generate_code_dom_type (a_type)
+		local
+			l_delegate: SYSTEM_DLL_CODE_TYPE_DELEGATE
+		do
+			l_delegate ?= a_type
+			if l_delegate /= Void then
+				Event_manager.raise_event (feature {CODE_EVENTS_IDS}.Not_implemented, ["delegate type generation"])
+			else
+				Type_factory.generate_type (a_type)
+			end
 		end
 		
 	generate_member_from_dom (a_member: SYSTEM_DLL_CODE_TYPE_MEMBER) is
 			-- Call `generate_code_dom_member'.
 		require
 			non_void_member: a_member /= Void
-		do
-				-- Create `code_dom_source'.
-			generate_code_dom_member (a_member)
-		end
-		
-	generate_statement_from_dom (a_statement: SYSTEM_DLL_CODE_STATEMENT) is
-			-- Call `generate_code_dom_statement'.
-		require
-			non_void_statement: a_statement /= Void
-		do
-				-- Create `code_dom_source'.
-			generate_code_dom_statement (a_statement)
-		end		
-		
-	generate_expression_from_dom (an_expression: SYSTEM_DLL_CODE_EXPRESSION) is
-			-- Call `generate_code_dom_expression'.
-		require
-			non_void_expression: an_expression /= Void
-		do	
-				-- Create `code_dom_source'.
-			generate_code_dom_expression (an_expression)
-		end
-		
-	generate_type_reference_from_dom (a_type_reference: SYSTEM_DLL_CODE_TYPE_REFERENCE) is
-			-- Call `generate_type_reference'.
-		require
-			non_void_a_type_reference: a_type_reference /= Void
-		do
-				-- Create `code_dom_source'.
-			(create {CODE_TYPE_REFERENCE_FACTORY}).generate_type_reference (a_type_reference)
-
-		end
-		
-	generate_custom_attribute_declaration (an_argument: SYSTEM_DLL_CODE_ATTRIBUTE_DECLARATION) is
-			-- Call `initialize_custom_attribute_declaration'.
-		require
-			non_void_an_argument: an_argument /= Void
-		do
-				-- Create `code_dom_source'.
-			(create {CODE_CUSTOM_ATTRIBUTE_FACTORY}).initialize_custom_attribute_declaration (an_argument)
-		end
-
-	generate_custom_attribute_argument (an_argument: SYSTEM_DLL_CODE_ATTRIBUTE_ARGUMENT) is
-			-- Call `initialize_custom_attribute_argument'.
-		require
-			non_void_an_argument: an_argument /= Void
-		do
-				-- Create `code_dom_source'.
-			(create {CODE_CUSTOM_ATTRIBUTE_FACTORY}).initialize_custom_attribute_argument (an_argument)
-		end
-
-feature {NONE} -- Implementation
-	
-	generate_code_dom_compile_unit (a_compile_unit: SYSTEM_DLL_CODE_COMPILE_UNIT) is
-			-- Call appropriate feature depending on dynamique type of `a_coma_compile_unit'.
-		require
-			non_void_compile_unit: a_compile_unit /= Void
 		local
-			snippet_compile_unit: SYSTEM_DLL_CODE_SNIPPET_COMPILE_UNIT
-		do	
-			snippet_compile_unit ?= a_compile_unit
-			if snippet_compile_unit /= Void then 
-				(create {CODE_EIFFEL_FACTORY}).generate_snippet_compile_unit (snippet_compile_unit)
-			else
-				(create {CODE_EIFFEL_FACTORY}).generate_compile_unit (a_compile_unit)
-			end
-		end
-
-	generate_code_dom_namespace (a_namespace: SYSTEM_DLL_CODE_NAMESPACE) is
-			-- Call `generate_namespace'.
-		require
-			non_void_namespace: a_namespace /= Void
-		do	
-			(create {CODE_EIFFEL_FACTORY}).generate_namespace (a_namespace)
-		end
-
-	generate_code_dom_type (a_type: SYSTEM_DLL_CODE_TYPE_DECLARATION) is
-			-- Call appropriate feature depending on dynamique type of `a_type'.
-		require
-			non_void_type: a_type /= Void
-		local
-			delegate: SYSTEM_DLL_CODE_TYPE_DELEGATE
+			l_snippet_type_member: SYSTEM_DLL_CODE_SNIPPET_TYPE_MEMBER
+			l_event: SYSTEM_DLL_CODE_MEMBER_EVENT
+			l_field: SYSTEM_DLL_CODE_MEMBER_FIELD
+			l_property: SYSTEM_DLL_CODE_MEMBER_PROPERTY
+			l_constructor: SYSTEM_DLL_CODE_CONSTRUCTOR
+			l_entry_point_method: SYSTEM_DLL_CODE_ENTRY_POINT_METHOD
+			l_method: SYSTEM_DLL_CODE_MEMBER_METHOD
+			l_delegate: SYSTEM_DLL_CODE_TYPE_DELEGATE
+			l_type: SYSTEM_DLL_CODE_TYPE_DECLARATION
 		do
-			delegate ?= a_type
-			if delegate /= Void then
-				Event_manager.raise_event (feature {CODE_EVENTS_IDS}.Not_implemented, ["delegate type generation"])
-				--(create {CODE_TYPE_FACTORY}).generate_delegate (delegate)
+			l_snippet_type_member ?= a_member
+			if l_snippet_type_member /= Void then
+				Member_factory.generate_snippet_feature (l_snippet_type_member)
 			else
-				(create {CODE_TYPE_FACTORY}).generate_type (a_type)
-			end
-		end
-
-	generate_code_dom_member (a_member: SYSTEM_DLL_CODE_TYPE_MEMBER) is
-			-- Call appropriate feature depending on dynamique type of `a_member'.
-		require
-			non_void_member: a_member /= Void
-		local
-			snippet_type_member: SYSTEM_DLL_CODE_SNIPPET_TYPE_MEMBER
-			event: SYSTEM_DLL_CODE_MEMBER_EVENT
-			field: SYSTEM_DLL_CODE_MEMBER_FIELD
-			property: SYSTEM_DLL_CODE_MEMBER_PROPERTY
-			constructor: SYSTEM_DLL_CODE_CONSTRUCTOR
-			entry_point_method: SYSTEM_DLL_CODE_ENTRY_POINT_METHOD
-			method: SYSTEM_DLL_CODE_MEMBER_METHOD
-			delegate: SYSTEM_DLL_CODE_TYPE_DELEGATE
-			type: SYSTEM_DLL_CODE_TYPE_DECLARATION
-		do
-			snippet_type_member ?= a_member
-			if snippet_type_member /= Void then
-				(create {CODE_MEMBER_FACTORY}).generate_snippet_feature (snippet_type_member)
-			else
-				event ?= a_member
-				if event /= Void then
-					(create {CODE_MEMBER_FACTORY}).generate_event (event)
+				l_event ?= a_member
+				if l_event /= Void then
+					Member_factory.generate_event (l_event)
 				else
-					field ?= a_member
-					if field /= Void then
-						(create {CODE_MEMBER_FACTORY}).generate_attribute (field)
+					l_field ?= a_member
+					if l_field /= Void then
+						Member_factory.generate_attribute (l_field)
 					else
-						property ?= a_member
-						if property /= Void then
-							(create {CODE_ROUTINE_FACTORY}).generate_property (property)
+						l_property ?= a_member
+						if l_property /= Void then
+							Routine_factory.generate_property (l_property)
 						else
-							constructor ?= a_member
-							if constructor /= Void then
-								(create {CODE_ROUTINE_FACTORY}).generate_creation_routine (constructor)
+							l_constructor ?= a_member
+							if l_constructor /= Void then
+								Routine_factory.generate_creation_routine (l_constructor)
 							else
-								entry_point_method ?= a_member
-								if entry_point_method /= Void then
-									(create {CODE_ROUTINE_FACTORY}).generate_root_procedure (entry_point_method)
+								l_entry_point_method ?= a_member
+								if l_entry_point_method /= Void then
+									Routine_factory.generate_root_procedure (l_entry_point_method)
 								else
-									method ?= a_member
-									if method /= Void then
-										(create {CODE_ROUTINE_FACTORY}).generate_routine (method)
+									l_method ?= a_member
+									if l_method /= Void then
+										Routine_factory.generate_routine (l_method)
 									else
-										delegate ?= a_member
-										if delegate /= Void then
+										l_delegate ?= a_member
+										if l_delegate /= Void then
 											Event_manager.raise_event (feature {CODE_EVENTS_IDS}.Not_implemented, ["delegate type generation"])
-										--	(create {CODE_TYPE_FACTORY}).generate_delegate (delegate)
 										else
-											type ?= a_member
-											if type /= Void then
-												(create {CODE_TYPE_FACTORY}).generate_type (type)
+											l_type ?= a_member
+											if l_type /= Void then
+												Type_factory.generate_type (l_type)
 											end
 										end
 									end
@@ -208,9 +118,9 @@ feature {NONE} -- Implementation
 				end
 			end
 		end
-
-	generate_code_dom_statement (a_statement: SYSTEM_DLL_CODE_STATEMENT) is
-			-- Call appropriate feature depending on dynamique type of `a_statement'.
+		
+	generate_statement_from_dom (a_statement: SYSTEM_DLL_CODE_STATEMENT) is
+			-- Call `generate_code_dom_statement'.
 		require
 			non_void_statement: a_statement /= Void
 		local
@@ -224,11 +134,11 @@ feature {NONE} -- Implementation
 			l_agent ?= Statements_table.item (l_statement_type)
 			l_agent.call ([a_statement])
 		end
-
-	generate_code_dom_expression (an_expression: SYSTEM_DLL_CODE_EXPRESSION) is
-			-- Call appropriate feature depending on dynamique type of `an_expression'.
+		
+	generate_expression_from_dom (an_expression: SYSTEM_DLL_CODE_EXPRESSION) is
+			-- Call `generate_code_dom_expression'.
 		require
-			non_void_statement: an_expression /= Void
+			non_void_expression: an_expression /= Void
 		local
 			l_exp_type: TYPE
 			l_agent: PROCEDURE [CODE_CONSUMER_FACTORY, TUPLE [SYSTEM_DLL_CODE_EXPRESSION]]
@@ -239,6 +149,24 @@ feature {NONE} -- Implementation
 			end
 			l_agent ?= Expressions_table.item (l_exp_type)
 			l_agent.call ([an_expression])
+		end
+		
+	generate_custom_attribute_declaration (an_argument: SYSTEM_DLL_CODE_ATTRIBUTE_DECLARATION) is
+			-- Call `initialize_custom_attribute_declaration'.
+		require
+			non_void_an_argument: an_argument /= Void
+		do
+				-- Create `code_dom_source'.
+			Custom_attribute_factory.initialize_custom_attribute_declaration (an_argument)
+		end
+
+	generate_custom_attribute_argument (an_argument: SYSTEM_DLL_CODE_ATTRIBUTE_ARGUMENT) is
+			-- Call `initialize_custom_attribute_argument'.
+		require
+			non_void_an_argument: an_argument /= Void
+		do
+				-- Create `code_dom_source'.
+			Custom_attribute_factory.initialize_custom_attribute_argument (an_argument)
 		end
 
 feature {NONE} -- Agent tables.
@@ -306,7 +234,7 @@ feature {NONE} -- Statements agents.
 			check
 				non_void_assign_statement: assign_statement /= Void
 			end
-			(create {CODE_STATEMENT_FACTORY}).generate_assign_statement (assign_statement)
+			Statement_factory.generate_assign_statement (assign_statement)
 		end
 
 	generate_attach_event_statement (a_statement: SYSTEM_DLL_CODE_STATEMENT) is
@@ -318,7 +246,7 @@ feature {NONE} -- Statements agents.
 			check
 				non_void_attach_event_statement: attach_event_statement /= Void
 			end
-			(create {CODE_EVENT_STATEMENT_FACTORY}).generate_attach_event_statement (attach_event_statement)
+			Event_statement_factory.generate_attach_event_statement (attach_event_statement)
 		end
 
 	generate_comment_statement (a_statement: SYSTEM_DLL_CODE_STATEMENT) is
@@ -330,7 +258,7 @@ feature {NONE} -- Statements agents.
 			check
 				non_void_comment_statement: comment_statement /= Void
 			end
-			(create {CODE_STATEMENT_FACTORY}).generate_comment_statement (comment_statement)
+			Statement_factory.generate_comment_statement (comment_statement)
 		end
 
 	generate_condition_statement (a_statement: SYSTEM_DLL_CODE_STATEMENT) is
@@ -342,7 +270,7 @@ feature {NONE} -- Statements agents.
 			check
 				non_void_condition_statement: condition_statement /= Void
 			end
-			(create {CODE_STATEMENT_FACTORY}).generate_condition_statement (condition_statement)
+			Statement_factory.generate_condition_statement (condition_statement)
 		end
 
 	generate_expression_statement (a_statement: SYSTEM_DLL_CODE_STATEMENT) is
@@ -354,7 +282,7 @@ feature {NONE} -- Statements agents.
 			check
 				non_void_expression_statement: expression_statement /= Void
 			end
-			(create {CODE_STATEMENT_FACTORY}).generate_expression_statement (expression_statement)
+			Statement_factory.generate_expression_statement (expression_statement)
 		end
 
 	generate_iteration_statement (a_statement: SYSTEM_DLL_CODE_STATEMENT) is
@@ -366,7 +294,7 @@ feature {NONE} -- Statements agents.
 			check
 				non_void_iteration_statement: iteration_statement /= Void
 			end
-			(create {CODE_STATEMENT_FACTORY}).generate_iteration_statement (iteration_statement)
+			Statement_factory.generate_iteration_statement (iteration_statement)
 		end
 
 	generate_method_return_statement (a_statement: SYSTEM_DLL_CODE_STATEMENT) is
@@ -378,7 +306,7 @@ feature {NONE} -- Statements agents.
 			check
 				non_void_method_return_statement: method_return_statement /= Void
 			end
-			(create {CODE_STATEMENT_FACTORY}).generate_routine_return_statement (method_return_statement)
+			Statement_factory.generate_routine_return_statement (method_return_statement)
 		end
 
 	generate_remove_event_statement (a_statement: SYSTEM_DLL_CODE_STATEMENT) is
@@ -390,7 +318,7 @@ feature {NONE} -- Statements agents.
 			check
 				non_void_remove_event_statement: remove_event_statement /= Void
 			end
-			(create {CODE_EVENT_STATEMENT_FACTORY}).generate_remove_event_statement (remove_event_statement)
+			Event_statement_factory.generate_remove_event_statement (remove_event_statement)
 		end
 
 	generate_snippet_statement (a_statement: SYSTEM_DLL_CODE_STATEMENT) is
@@ -402,7 +330,7 @@ feature {NONE} -- Statements agents.
 			check
 				non_void_snippet_statement: snippet_statement /= Void
 			end
-			(create {CODE_STATEMENT_FACTORY}).generate_snippet_statement (snippet_statement)
+			Statement_factory.generate_snippet_statement (snippet_statement)
 		end
 
 	generate_try_catch_statement (a_statement: SYSTEM_DLL_CODE_STATEMENT) is
@@ -414,7 +342,7 @@ feature {NONE} -- Statements agents.
 			check
 				non_void_try_catch_statement: try_catch_statement /= Void
 			end
-			(create {CODE_EXCEPTION_STATEMENT_FACTORY}).generate_try_catch_finally_statement (try_catch_statement)
+			Exception_statement_factory.generate_try_catch_finally_statement (try_catch_statement)
 		end
 
 	generate_variable_declaration_statement (a_statement: SYSTEM_DLL_CODE_STATEMENT) is
@@ -426,7 +354,7 @@ feature {NONE} -- Statements agents.
 			check
 				non_void_variable_declaration_statement: variable_declaration_statement /= Void
 			end
-			(create {CODE_STATEMENT_FACTORY}).generate_variable_declaration_statement (variable_declaration_statement)
+			Statement_factory.generate_variable_declaration_statement (variable_declaration_statement)
 		end
 
 feature {NONE} -- Expression agents.
@@ -440,7 +368,7 @@ feature {NONE} -- Expression agents.
 			check
 				non_void_argument_reference_expression: argument_reference_expression /= Void
 			end
-			(create {CODE_ARGUMENT_EXPRESSION_FACTORY}).generate_argument_reference_expression (argument_reference_expression)
+			Argument_expression_factory.generate_argument_reference_expression (argument_reference_expression)
 		end
 
 	generate_array_create_expression (an_expression: SYSTEM_DLL_CODE_EXPRESSION) is
@@ -452,7 +380,7 @@ feature {NONE} -- Expression agents.
 			check
 				non_void_array_create_expression: array_create_expression /= Void
 			end
-			(create {CODE_ARRAY_EXPRESSION_FACTORY}).generate_array_create_expression (array_create_expression)
+			Array_expression_factory.generate_array_create_expression (array_create_expression)
 		end
 
 	generate_array_indexer_expression (an_expression: SYSTEM_DLL_CODE_EXPRESSION) is
@@ -464,7 +392,7 @@ feature {NONE} -- Expression agents.
 			check
 				non_void_array_indexer_expression: array_indexer_expression /= Void
 			end
-			(create {CODE_ARRAY_EXPRESSION_FACTORY}).generate_array_indexer_expression (array_indexer_expression)
+			Array_expression_factory.generate_array_indexer_expression (array_indexer_expression)
 		end
 
 	generate_base_reference_expression (an_expression: SYSTEM_DLL_CODE_EXPRESSION) is
@@ -476,7 +404,7 @@ feature {NONE} -- Expression agents.
 			check
 				non_void_base_reference_expression: base_reference_expression /= Void
 			end
-			(create {CODE_PROPERTY_EXPRESSION_FACTORY}).generate_base_reference_expression (base_reference_expression)
+			Property_expression_factory.generate_base_reference_expression (base_reference_expression)
 		end
 
 	generate_binary_operator_expression (an_expression: SYSTEM_DLL_CODE_EXPRESSION) is
@@ -488,7 +416,7 @@ feature {NONE} -- Expression agents.
 			check
 				non_void_binary_operator_expression: binary_operator_expression /= Void
 			end
-			(create {CODE_EXPRESSION_FACTORY}).generate_binary_operator_expression (binary_operator_expression)
+			Expression_factory.generate_binary_operator_expression (binary_operator_expression)
 		end
 
 	generate_cast_expression (an_expression: SYSTEM_DLL_CODE_EXPRESSION) is
@@ -500,7 +428,7 @@ feature {NONE} -- Expression agents.
 			check
 				non_void_cast_expression: cast_expression /= Void
 			end
-			(create {CODE_EXPRESSION_FACTORY}).generate_cast_expression (cast_expression)
+			Expression_factory.generate_cast_expression (cast_expression)
 		end
 
 	generate_delegate_create_expression (an_expression: SYSTEM_DLL_CODE_EXPRESSION) is
@@ -512,7 +440,7 @@ feature {NONE} -- Expression agents.
 			check
 				non_void_delegate_create_expression: delegate_create_expression /= Void
 			end
-			(create {CODE_DELEGATE_EXPRESSION_FACTORY}).generate_delegate_create_expression (delegate_create_expression)
+			Delegate_expression_factory.generate_delegate_create_expression (delegate_create_expression)
 		end
 
 	generate_delegate_invoke_expression (an_expression: SYSTEM_DLL_CODE_EXPRESSION) is
@@ -524,7 +452,7 @@ feature {NONE} -- Expression agents.
 			check
 				non_void_delegate_invoke_expression: delegate_invoke_expression /= Void
 			end
-			(create {CODE_DELEGATE_EXPRESSION_FACTORY}).generate_delegate_invoke_expression (delegate_invoke_expression)
+			Delegate_expression_factory.generate_delegate_invoke_expression (delegate_invoke_expression)
 		end
 
 	generate_event_reference_expression (an_expression: SYSTEM_DLL_CODE_EXPRESSION) is
@@ -536,7 +464,7 @@ feature {NONE} -- Expression agents.
 			check
 				non_void_event_reference_expression: event_reference_expression /= Void
 			end
-			(create {CODE_EXPRESSION_FACTORY}).generate_event_reference_expression (event_reference_expression)
+			Expression_factory.generate_event_reference_expression (event_reference_expression)
 		end
 
 	generate_field_reference_expression (an_expression: SYSTEM_DLL_CODE_EXPRESSION) is
@@ -548,7 +476,7 @@ feature {NONE} -- Expression agents.
 			check
 				non_void_field_reference_expression: field_reference_expression /= Void
 			end
-			(create {CODE_EXPRESSION_FACTORY}).generate_attribute_reference_expression (field_reference_expression)
+			Expression_factory.generate_attribute_reference_expression (field_reference_expression)
 		end
 
 	generate_indexer_expression (an_expression: SYSTEM_DLL_CODE_EXPRESSION) is
@@ -560,7 +488,7 @@ feature {NONE} -- Expression agents.
 			check
 				non_void_indexer_expression: indexer_expression /= Void
 			end
-			(create {CODE_EXPRESSION_FACTORY}).generate_indexer_expression (indexer_expression)
+			Expression_factory.generate_indexer_expression (indexer_expression)
 		end
 
 	generate_method_invoke_expression (an_expression: SYSTEM_DLL_CODE_EXPRESSION) is
@@ -572,7 +500,7 @@ feature {NONE} -- Expression agents.
 			check
 				non_void_method_invoke_expression: method_invoke_expression /= Void
 			end
-			(create {CODE_ROUTINE_EXPRESSION_FACTORY}).generate_routine_invoke_expression (method_invoke_expression)
+			Routine_expression_factory.generate_routine_invoke_expression (method_invoke_expression)
 		end
 
 	generate_method_reference_expression (an_expression: SYSTEM_DLL_CODE_EXPRESSION) is
@@ -584,7 +512,7 @@ feature {NONE} -- Expression agents.
 			check
 				non_void_method_reference_expression: method_reference_expression /= Void
 			end
-			(create {CODE_ROUTINE_EXPRESSION_FACTORY}).generate_routine_reference_expression (method_reference_expression)
+			Routine_expression_factory.generate_routine_reference_expression (method_reference_expression)
 		end
 
 	generate_object_create_expression (an_expression: SYSTEM_DLL_CODE_EXPRESSION) is
@@ -596,7 +524,7 @@ feature {NONE} -- Expression agents.
 			check
 				non_void_object_create_expression: object_create_expression /= Void
 			end
-			(create {CODE_EXPRESSION_FACTORY}).generate_object_create_expression (object_create_expression)
+			Expression_factory.generate_object_create_expression (object_create_expression)
 		end
 
 	generate_parameter_declaration_expression (an_expression: SYSTEM_DLL_CODE_EXPRESSION) is
@@ -608,7 +536,7 @@ feature {NONE} -- Expression agents.
 			check
 				non_void_parameter_declaration_expression: parameter_declaration_expression /= Void
 			end
-			(create {CODE_ARGUMENT_EXPRESSION_FACTORY}).generate_parameter_declaration_expression (parameter_declaration_expression)
+			Argument_expression_factory.generate_parameter_declaration_expression (parameter_declaration_expression)
 		end
 
 	generate_primitive_expression (an_expression: SYSTEM_DLL_CODE_EXPRESSION) is
@@ -620,7 +548,7 @@ feature {NONE} -- Expression agents.
 			check
 				non_void_primitive_expression: primitive_expression /= Void
 			end
-			(create {CODE_EXPRESSION_FACTORY}).generate_primitive_expression (primitive_expression)
+			Expression_factory.generate_primitive_expression (primitive_expression)
 		end
 
 	generate_property_set_value_reference_expression (an_expression: SYSTEM_DLL_CODE_EXPRESSION) is
@@ -632,7 +560,7 @@ feature {NONE} -- Expression agents.
 			check
 				non_void_property_set_value_reference_expression: property_set_value_reference_expression /= Void
 			end
-			(create {CODE_PROPERTY_EXPRESSION_FACTORY}).generate_property_set_value_reference_expression (property_set_value_reference_expression)
+			Property_expression_factory.generate_property_set_value_reference_expression (property_set_value_reference_expression)
 		end
 
 	generate_snippet_expression (an_expression: SYSTEM_DLL_CODE_EXPRESSION) is
@@ -644,7 +572,7 @@ feature {NONE} -- Expression agents.
 			check
 				non_void_snippet_expression: snippet_expression /= Void
 			end
-			(create {CODE_EXPRESSION_FACTORY}).generate_snippet_expression (snippet_expression)
+			Expression_factory.generate_snippet_expression (snippet_expression)
 		end
 
 	generate_this_reference_expression (an_expression: SYSTEM_DLL_CODE_EXPRESSION) is
@@ -656,7 +584,7 @@ feature {NONE} -- Expression agents.
 			check
 				non_void_this_reference_expression: this_reference_expression /= Void
 			end
-			(create {CODE_EXPRESSION_FACTORY}).generate_this_reference_expression (this_reference_expression)
+			Expression_factory.generate_this_reference_expression (this_reference_expression)
 		end
 
 	generate_type_of_expression (an_expression: SYSTEM_DLL_CODE_EXPRESSION) is
@@ -668,7 +596,7 @@ feature {NONE} -- Expression agents.
 			check
 				non_void_type_of_expression: type_of_expression /= Void
 			end
-			(create {CODE_EXPRESSION_FACTORY}).generate_type_of_expression (type_of_expression)
+			Expression_factory.generate_type_of_expression (type_of_expression)
 		end
 
 	generate_type_reference_expression (an_expression: SYSTEM_DLL_CODE_EXPRESSION) is
@@ -680,7 +608,7 @@ feature {NONE} -- Expression agents.
 			check
 				non_void_type_reference_expression: type_reference_expression /= Void
 			end
-			(create {CODE_EXPRESSION_FACTORY}).generate_type_reference_expression (type_reference_expression)
+			Expression_factory.generate_type_reference_expression (type_reference_expression)
 		end
 
 	generate_variable_reference_expression (an_expression: SYSTEM_DLL_CODE_EXPRESSION) is
@@ -692,7 +620,7 @@ feature {NONE} -- Expression agents.
 			check
 				non_void_variable_reference_expression: variable_reference_expression /= Void
 			end
-			(create {CODE_EXPRESSION_FACTORY}).generate_variable_reference_expression (variable_reference_expression)
+			Expression_factory.generate_variable_reference_expression (variable_reference_expression)
 		end
 
 	generate_property_reference_expression (an_expression: SYSTEM_DLL_CODE_EXPRESSION) is
@@ -704,7 +632,7 @@ feature {NONE} -- Expression agents.
 			check
 				non_void_property_reference_expression: property_reference_expression /= Void
 			end
-			(create {CODE_PROPERTY_EXPRESSION_FACTORY}).generate_property_reference_expression (property_reference_expression)
+			Property_expression_factory.generate_property_reference_expression (property_reference_expression)
 		end
 
 end -- class CODE_CONSUMER_FACTORY

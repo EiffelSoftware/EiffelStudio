@@ -9,190 +9,255 @@ class
 inherit
 	CODE_STATEMENT
 
+	CODE_SHARED_EMPTY_ENTITIES
+		export
+			{NONE} all
+		undefine
+			is_equal
+		end
+
 create
 	make
 
 feature {NONE} -- Initialization
 
-	make is
-			-- Initialize `try_statements', `finally_statements' and `catch_clauses'.
+	make (a_try_statements, a_finally_statements: like try_statements; a_catch_clauses: like catch_clauses) is
+			-- Initialize instance.
 		do
-			create try_statements.make
-			create finally_statements.make
-			create catch_clauses.make	
+			try_statements := a_try_statements
+			finally_statements := a_finally_statements
+			catch_clauses := a_catch_clauses
 		ensure
-			non_void_try_statements: try_statements /= Void
-			non_void_finally_statements: finally_statements /= Void
-			non_void_catch_clauses: catch_clauses /= Void
+			statements_set: try_statements = a_try_statements
+			finally_statements_set: finally_statements = a_finally_statements
+			catch_clauses_set: catch_clauses = a_catch_clauses
 		end
 		
 feature -- Access
 
-	try_statements: LINKED_LIST [CODE_STATEMENT]
+	try_statements: LIST [CODE_STATEMENT]
 			-- Statements in try clause
 			
-	finally_statements: LINKED_LIST [CODE_STATEMENT]
+	finally_statements: LIST [CODE_STATEMENT]
 			-- Statements in finally clause
 			
-	catch_clauses: LINKED_LIST [CODE_STATEMENT]
+	catch_clauses: LIST [CODE_CATCH_CLAUSE]
 			-- Catch clauses
 						
 	code: STRING is
 			-- Eiffel code of try catch finally statement
-			-- TO BE FINISHED!!!
-			-- | Already implemented :
+			-- | Insert new routine with following code and calls routine:
 			-- | 		local 
-			-- |			not_first_try: BOOLEAN
+			-- |			l_retried: BOOLEAN
 			-- |		do 
-			-- |		...
-			-- | Result :=			if not not_first_try then
-			-- |						`try_statements'
-			-- |					end
-			-- |					`finally_statements'
-			-- |				rescue
-			-- |					if exception = `catch_clauses'.item.name then
-			-- |						`catch_clauses'.item	
-			-- |						not_first_try := TRUE
-			-- |						Retry
-			-- |					end"
-			-- |		...
-			-- | 		end
+			-- |			if not l_retried then
+			-- |				`try_statements'
+			-- |			end
+			-- |			`finally_statements'
+			-- |		rescue
+			-- |			`catch_clauses'
+			-- |		end"
 		local
-			a_event_manager: CODE_EVENT_MANAGER
+			l_arguments: LIST [CODE_PARAMETER_DECLARATION_EXPRESSION]
+			l_locals: LIST [CODE_VARIABLE_DECLARATION_STATEMENT]
 		do
-			a_event_manager.raise_event (feature {CODE_EVENTS_IDS}.Not_implemented, ["try catch finally statement"])
-			create Result.make (500)
-			Result.append (Indent_string) 
-			Result.append ("if not not_first_try then")
-			Result.append (Dictionary.New_line)
-			increase_tabulation
-			Result.append (statements_code)
-			decrease_tabulation
-			Result.append (Indent_string)
-			Result.append (Dictionary.End_keyword)
-			Result.append (Dictionary.New_line)
-			Result.append (finally_statements_code)
-			decrease_tabulation
-			Result.append (Indent_string)
-			Result.append (Dictionary.Rescue_keyword)
-			Result.append (Dictionary.New_line)
-			increase_tabulation
-			Result.append (rescue_clause)
+			if current_routine /= Void then
+				create Result.make (100)
+				Result.append (Indent_string)
+				Result.append (implementation_feature_name)
+				l_locals := current_routine.locals
+				l_arguments := current_routine.arguments
+				if l_locals.count > 0 or l_arguments.count > 0 then
+					Result.append (" (")
+					from
+						l_arguments.start
+						if not l_arguments.after then
+							Result.append (l_arguments.item.variable.eiffel_name)
+							l_arguments.forth
+						end
+					until
+						l_arguments.after
+					loop
+						Result.append (", ")
+						Result.append (l_arguments.item.variable.eiffel_name)
+						l_arguments.forth
+					end
+					from
+						l_locals.start
+						if not l_locals.after then
+							Result.append (l_locals.item.variable.eiffel_name)
+							l_locals.forth
+						end
+					until
+						l_locals.after
+					loop
+						Result.append (", ")
+						Result.append (l_locals.item.variable.eiffel_name)
+						l_locals.forth
+					end
+					Result.append (")%N")
+				end
+				generate_implementation_feature
+			end
 		end
-
-feature -- Status Report
-
-	ready: BOOLEAN is
-			-- Is try catch finally statement ready to be generated?
-		do
-			Result := try_statements /= Void and finally_statements /= Void and catch_clauses /= Void
-		end
-
-feature -- Status Setting
-
-	add_try_statement (a_statement: CODE_STATEMENT) is
-			-- add `a_statement' to `try_statements'.
-		require
-			non_void_list: a_statement /= Void
-		do
-			try_statements.extend (a_statement)
-		ensure
-			try_statements_set: try_statements.has (a_statement)
-		end	
-
-	add_finally_statement (a_statement: CODE_STATEMENT) is
-			-- Add `a_statement' to `finally_statements'.
-		require
-			non_void_list: a_statement /= Void
-		do
-			finally_statements.extend (a_statement)
-		ensure
-			finally_statements_set: finally_statements.has (a_statement)
-		end	
 		
-	add_catch_clause (a_clause: CODE_STATEMENT) is
-			-- Add `a_clause' to `catch_clauses'.
-		require
-			non_void_list: a_clause /= Void
-		do
-			catch_clauses.extend (a_clause)
-		ensure
-			catch_clauses_set: catch_clauses.has (a_clause)
-		end	
-
 feature {NONE} -- Code Generation
 		
-	statements_code: STRING is
-			-- code generation statements
+	implementation_feature_name: STRING is
+			-- Implementation feature name
+		local
+			l_features: HASH_TABLE [CODE_FEATURE, STRING]
+			l_implementation_features: HASH_TABLE [CODE_FEATURE, STRING]
+			i: INTEGER
+			l_ok: BOOLEAN
 		do
-			create Result.make (120)
-			from
-				try_statements.start
-			until
-				try_statements.after
-			loop
-				Result.append (try_statements.item.code)
-				try_statements.forth
+			if internal_feature_name = Void then
+				create internal_feature_name.make (current_feature.eiffel_name.count + 5)
+				internal_feature_name.append ("safe_")
+				internal_feature_name.append (current_feature.eiffel_name)
+				l_features := current_type.features
+				l_implementation_features := current_type.implementation_features
+				from
+					l_ok := not l_features.has (internal_feature_name) and not l_implementation_features.has (internal_feature_name)
+					if not l_ok then
+						internal_feature_name.append ("_2")
+						l_ok := not l_features.has (internal_feature_name) and not l_implementation_features.has (internal_feature_name)
+					end
+					i := 3
+				until
+					l_ok
+				loop
+					internal_feature_name.keep_head (internal_feature_name.last_index_of ('_', internal_feature_name.count))
+					internal_feature_name.append (i.out)
+					i := i + 1
+					l_ok := not l_features.has (internal_feature_name) and not l_implementation_features.has (internal_feature_name)				
+				end
 			end
+			Result := internal_feature_name
 		ensure
-			non_void_result: Result /= Void
-		end
-
-	finally_statements_code: STRING is
-			-- code generation finally statements
-		do
-			create Result.make (120)
-			from
-				finally_statements.start
-			until
-				finally_statements.after
-			loop
-				Result.append (finally_statements.item.code)
-				finally_statements.forth
-			end
-		ensure
-			non_void_result: Result /= Void
+			non_void_feature_name: Result /= Void
 		end
 		
-	rescue_clause: STRING is
-			-- code generation rescues
+	generate_implementation_feature is
+				-- Generate implementation feature that actually implements the try/catch paradigm.
+				-- Add the implementation feature to the currently generated type.
+		require
+			non_void_current_routine: current_routine /= Void
 		local
-			first_rescue_clause: BOOLEAN
+			l_feature: CODE_SNIPPET_FEATURE
+			l_arguments: LIST [CODE_PARAMETER_DECLARATION_EXPRESSION]
+			l_locals: LIST [CODE_VARIABLE_DECLARATION_STATEMENT]
+			l_old_indent_string: STRING
+			l_code: STRING
 		do
-			create Result.make (120)
-			From
+			create l_code.make (500)
+			l_code.append_character ('%T')
+			l_code.append (implementation_feature_name)
+			l_locals := current_routine.locals
+			l_arguments := current_routine.arguments
+			if l_locals.count > 0 or l_arguments.count > 0 then
+				l_code.append (" (")
+				from
+					l_arguments.start
+					if not l_arguments.after then
+						l_code.append (l_arguments.item.variable.eiffel_name)
+						l_code.append (": ")
+						l_code.append (l_arguments.item.variable.type.eiffel_name)
+						l_arguments.forth
+					end
+				until
+					l_arguments.after
+				loop
+					l_code.append ("; ")
+					l_code.append (l_arguments.item.variable.eiffel_name)
+					l_code.append (": ")
+					l_code.append (l_arguments.item.variable.type.eiffel_name)
+					l_arguments.forth
+				end
+				from
+					l_locals.start
+					if not l_locals.after then
+						l_code.append (l_locals.item.variable.eiffel_name)
+						l_code.append (": ")
+						l_code.append (l_locals.item.variable.type.eiffel_name)
+						l_locals.forth
+					end
+				until
+					l_locals.after
+				loop
+					l_code.append ("; ")
+					l_code.append (l_locals.item.variable.eiffel_name)
+					l_code.append (": ")
+					l_code.append (l_locals.item.variable.type.eiffel_name)
+					l_locals.forth
+				end
+				l_code.append_character (')')
+			end
+			l_code.append (" is%N")
+			l_code.append ("%T%Tlocal%N")
+			from
 				catch_clauses.start
-				first_rescue_clause := true
 			until
 				catch_clauses.after
 			loop
-				if first_rescue_clause then
-					Result.append (Indent_string)
-					Result.append ("if ")
-					first_rescue_clause := false
-				else
-					Result.append (Indent_string)
-					Result.append ("elseif")
-				end
-				Result.append (" exception = `catch_clauses'.item.name then")
-				Result.append (Dictionary.New_line)
-				increase_tabulation
-				Result.append (catch_clauses.item.code)
-				Result.append (Indent_string)
-				Result.append ("not_first_try := TRUE")
-				Result.append (Dictionary.New_line)
-				Result.append (Indent_string)
-				Result.append (Dictionary.Retry_keyword)
-				Result.append (Dictionary.New_line)
-				decrease_tabulation
-				Result.append (Indent_string)
-				Result.append (Dictionary.End_keyword)
-				Result.append (Dictionary.New_line)
+				l_code.append ("%T%T%T")
+				l_code.append (catch_clauses.item.variable.variable.eiffel_name)
+				l_code.append (": ")
+				l_code.append (catch_clauses.item.variable.variable.type.eiffel_name)
+				l_code.append_character ('%N')
 				catch_clauses.forth
 			end
-		ensure
-			non_void_result: Result /= Void
+			l_code.append ("%T%T%Tl_retried: BOOLEAN%N")
+			l_code.append ("%T%Tdo%N")
+			l_code.append ("%T%T%Tif not l_retried then%N")
+			l_old_indent_string := indent_string
+			if try_statements /= Void then
+				set_indent_string ("%T%T%T%T")
+				from
+					try_statements.start
+				until
+					try_statements.after
+				loop
+					l_code.append (try_statements.item.code)
+					try_statements.forth
+				end
+			end
+			l_code.append ("%T%T%Tend%N")
+			if finally_statements /= Void then
+				set_indent_string ("%T%T%T")
+				from
+					finally_statements.start
+				until
+					finally_statements.after
+				loop
+					l_code.append (finally_statements.item.code)
+					finally_statements.forth
+				end
+			end
+			l_code.append ("%T%Trescue%N")
+			if catch_clauses /= Void then
+				set_indent_string ("%T%T%T")
+				from
+					catch_clauses.start
+				until
+					catch_clauses.after
+				loop
+					l_code.append (catch_clauses.item.code)
+					catch_clauses.forth
+				end
+			end
+			l_code.append ("%T%Tend%N")
+			set_indent_string (l_old_indent_string)
+			create l_feature.make (implementation_feature_name, l_code)
+			l_feature.set_feature_kind ("Support")
+			l_feature.add_feature_clause (None_type_reference)
+			current_type.add_implementation_feature (l_feature)
 		end
+
+feature {NONE} -- Private Access
+
+	internal_feature_name: STRING
+			-- Cached implementation feature name
 
 invariant
 	non_void_try_statements: try_statements /= Void

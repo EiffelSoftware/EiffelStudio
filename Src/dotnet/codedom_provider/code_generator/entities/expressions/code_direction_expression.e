@@ -12,15 +12,25 @@ inherit
 	CODE_SHARED_EVENT_MANAGER
 		export
 			{NONE} all
+		undefine
+			is_equal
 		end
+
 create
 	make
 
 feature {NONE} -- Initialization
 
-	make is
-			-- Initialize `arguments'.
+	make (a_expression: like expression; a_is_byref: like is_byref) is
+			-- Initialize instance.
+		require
+			non_void_expression: a_expression /= Void
 		do
+			expression := a_expression
+			is_byref := a_is_byref
+		ensure
+			expression_set: expression = a_expression
+			is_byref_set: is_byref = a_is_byref
 		end
 
 feature -- Access
@@ -42,13 +52,7 @@ feature -- Access
 			end
 		end
 
-	ready: BOOLEAN is
-			-- Can `code' be called?
-		do
-			Result := expression /= Void and then expression.ready
-		end
-
-	type: TYPE is
+	type: CODE_TYPE_REFERENCE is
 			-- Type of expression
 		do
 			if is_byref then
@@ -64,27 +68,10 @@ feature -- Access
 	
 	expression: CODE_EXPRESSION
 			-- Expression direction applies to
-			
-feature -- Element settings
 
-	set_byref (a_bool: BOOLEAN) is
-			-- Set `is_byref' with `a_bool'
-		do
-			is_byref := a_bool
-		ensure
-			is_byref_set: is_byref = a_bool
-		end
+invariant
+	non_void_expression: expression /= Void
 
-	set_expression (an_expression: CODE_EXPRESSION) is
-			-- Set `expression' with `an_expression'
-		require
-			non_void_expression: an_expression /= Void
-		do
-			expression := an_expression
-		ensure
-			expression_set: expression = an_expression
-		end
-		
 end -- class CODE_DIRECTION_EXPRESSION
 
 --+--------------------------------------------------------------------

@@ -9,7 +9,7 @@ class
 inherit
 	SYSTEM_DLL_ICODE_GENERATOR
 
-	CODE_GENERATION_CONTEXT
+	CODE_SHARED_GENERATION_CONTEXT
 		redefine
 			default_rescue
 		end
@@ -21,6 +21,12 @@ inherit
 			default_rescue
 		end
 
+	CODE_SHARED_FACTORIES
+		export
+			{NONE} all
+		undefine
+			default_rescue
+		end
 create
 	default_create,
 	make_with_filename,
@@ -57,17 +63,15 @@ feature -- Interface
 
 	generate_code_from_compile_unit (a_compile_unit: SYSTEM_DLL_CODE_COMPILE_UNIT; a_text_writer: TEXT_WRITER; a_options: SYSTEM_DLL_CODE_GENERATOR_OPTIONS) is
 			-- | Create `code_dom_source' and call `generate_code' on it, which calls appropriate code_generator.
-			-- | Call `compile_unit' on current `EG_COMPILE_UNIT' and write code in `a_text_writer'.
+			-- | Call `compile_unit' on current `CODE_COMPILE_UNIT' and write code in `a_text_writer'.
 		do
 			Event_manager.raise_event (feature {CODE_EVENTS_IDS}.log, ["Starting CodeGenerator.GenerateCodeFromCompileUnit"])
 			if a_compile_unit = Void then
 				Event_manager.raise_event (feature {CODE_EVENTS_IDS}.Missing_input, ["GenerateCodeFromCompileUnit"])
 			else
 				initialize (a_text_writer, a_options)
-				factory.generate_compile_unit_from_dom (a_compile_unit)
-				output.write_string ((create {CODE_EIFFEL_FACTORY}).last_compile_unit.code)
-				output.flush
-				output.close
+				code_dom_generator.generate_compile_unit_from_dom (a_compile_unit)
+				output.write_string (last_compile_unit.code)
 				output := Void
 			end
 			Event_manager.raise_event (feature {CODE_EVENTS_IDS}.log, ["Ending CodeGenerator.GenerateCodeFromCompileUnit"])
@@ -75,17 +79,15 @@ feature -- Interface
 		
 	generate_code_from_namespace (a_namespace: SYSTEM_DLL_CODE_NAMESPACE; a_text_writer: TEXT_WRITER; a_options: SYSTEM_DLL_CODE_GENERATOR_OPTIONS) is
 			-- | Call `generate_namespace_from_dom'.
-			-- | Call `namespace' on `EG_NAMESPACE' and write code in `a_text_writer'.
+			-- | Call `namespace' on `CODE_NAMESPACE' and write code in `a_text_writer'.
 		do
 			Event_manager.raise_event (feature {CODE_EVENTS_IDS}.log, ["Starting CodeGenerator.GenerateCodeFromNamespace"])
 			if a_namespace = Void then
 				Event_manager.raise_event (feature {CODE_EVENTS_IDS}.Missing_input, ["GenerateCodeFromNamespace"])
 			else
 				initialize (a_text_writer, a_options)
-				factory.generate_namespace_from_dom (a_namespace)
-				output.write_string ((create {CODE_EIFFEL_FACTORY}).last_namespace.code)
-				output.flush
-				output.close
+				code_dom_generator.generate_namespace_from_dom (a_namespace)
+				output.write_string (last_namespace.code)
 				output := Void
 			end
 			Event_manager.raise_event (feature {CODE_EVENTS_IDS}.log, ["Ending CodeGenerator.GenerateCodeFromNamespace"])
@@ -93,17 +95,15 @@ feature -- Interface
 
 	generate_code_from_type (a_type: SYSTEM_DLL_CODE_TYPE_DECLARATION; a_text_writer: TEXT_WRITER; a_options: SYSTEM_DLL_CODE_GENERATOR_OPTIONS) is
 			-- | Call `generate_type_from_dom'.
-			-- | Call `type' on `EG_GENERATED_TYPE' and write code in `a_text_writer'.
+			-- | Call `type' on `CODE_GENERATED_TYPE' and write code in `a_text_writer'.
 		do
 			Event_manager.raise_event (feature {CODE_EVENTS_IDS}.log, ["Starting CodeGenerator.GenerateCodeFromType"])
 			if a_type = Void then
 				Event_manager.raise_event (feature {CODE_EVENTS_IDS}.Missing_input, ["GenerateCodeFromType"])
 			else
 				initialize (a_text_writer, a_options)
-				factory.generate_type_from_dom (a_type)
-				output.write_string ((create {CODE_EIFFEL_FACTORY}).last_type.code)
-				output.flush
-				output.close
+				code_dom_generator.generate_type_from_dom (a_type)
+				output.write_string (last_type.code)
 				output := Void
 			end
 			Event_manager.raise_event (feature {CODE_EVENTS_IDS}.log, ["Ending CodeGenerator.GenerateCodeFromType"])
@@ -111,17 +111,15 @@ feature -- Interface
 
 	generate_code_from_statement (a_statement: SYSTEM_DLL_CODE_STATEMENT; a_text_writer: TEXT_WRITER; a_options: SYSTEM_DLL_CODE_GENERATOR_OPTIONS) is
 			-- | Call `generate_statement_from_dom'.
-			-- | Call `statement' on `EG_STATEMENT' and write code in `a_text_writer'.
+			-- | Call `statement' on `CODE_STATEMENT' and write code in `a_text_writer'.
 		do
 			Event_manager.raise_event (feature {CODE_EVENTS_IDS}.log, ["Starting CodeGenerator.GenerateCodeFromStatement"])
 			if a_statement = Void then
 				Event_manager.raise_event (feature {CODE_EVENTS_IDS}.Missing_input, ["GenerateCodeFromStatement"])
 			else
 				initialize (a_text_writer, a_options)
-				factory.generate_statement_from_dom (a_statement)
-				output.write_string ((create {CODE_EIFFEL_FACTORY}).last_statement.code)
-				output.flush
-				output.close
+				code_dom_generator.generate_statement_from_dom (a_statement)
+				output.write_string (last_statement.code)
 				output := Void
 			end
 			Event_manager.raise_event (feature {CODE_EVENTS_IDS}.log, ["Ending CodeGenerator.GenerateCodeFromStatement"])
@@ -129,17 +127,15 @@ feature -- Interface
 
 	generate_code_from_expression (a_expression: SYSTEM_DLL_CODE_EXPRESSION; a_text_writer: TEXT_WRITER; a_options: SYSTEM_DLL_CODE_GENERATOR_OPTIONS) is
 			-- | Call `generate_expression_from_dom'
-			-- | Call `expression' on `EG_EXPRESSION' and write code in `a_text_writer'.
+			-- | Call `expression' on `CODE_EXPRESSION' and write code in `a_text_writer'.
 		do
 			Event_manager.raise_event (feature {CODE_EVENTS_IDS}.log, ["Starting CodeGenerator.GenerateCodeFromExpression"])
 			if a_expression = Void then
 				Event_manager.raise_event (feature {CODE_EVENTS_IDS}.Missing_input, ["GenerateCodeFromExpression"])
 			else
 				initialize (a_text_writer, a_options)
-				factory.generate_expression_from_dom (a_expression)
-				output.write_string ((create {CODE_EIFFEL_FACTORY}).last_expression.code)
-				output.flush
-				output.close
+				code_dom_generator.generate_expression_from_dom (a_expression)
+				output.write_string (last_expression.code)
 				output := Void
 			end
 			Event_manager.raise_event (feature {CODE_EVENTS_IDS}.log, ["Ending CodeGenerator.GenerateCodeFromExpression"])
@@ -265,7 +261,7 @@ feature -- Interface
 		do
 			Event_manager.raise_event (feature {CODE_EVENTS_IDS}.log, ["Starting CodeGenerator.GetTypeOutput"])
 			l_type := feature {TYPE}.get_type (a_type.base_type)
-			if l_type /= Void then
+			if l_type /= Void and then cache.type_name (l_type) /= Void then
 				Result := cache.type_name (l_type)
 			else
 				Result := (create {NAME_FORMATTER}).full_formatted_type_name (a_type.base_type)
@@ -276,14 +272,6 @@ feature -- Interface
 		end
 
 feature -- Access
-
-	factory: CODE_CONSUMER_FACTORY is
-			-- eiffel CodeDOM factory.
-		once
-			Create Result.make
-		ensure
-			factory_created: Result /= Void
-		end
 
 	output: SYSTEM_DLL_INDENTED_TEXT_WRITER
 			-- Text writer to write the result of the code generation.
@@ -329,11 +317,8 @@ feature {NONE} -- Implementation
 
 	default_rescue is
 			-- Handle exceptions
-		local
-			l_event_manager: CODE_EVENT_MANAGER
 		do
-			create l_event_manager
-			l_event_manager.process_exception
+			Event_manager.process_exception
 		end
 
 end -- class CODE_GENERATOR

@@ -1,10 +1,10 @@
 indexing
-	description: "Eiffel undefine inheritance clause"
+	description: "Eiffel redefine inheritance clause"
 	date: "$$"
 	revision: "$$"	
-	
+
 class
-	CODE_UNDEFINE_CLAUSE
+	CODE_REDEFINE_CLAUSE
 
 inherit
 	CODE_INHERITANCE_CLAUSE
@@ -12,25 +12,12 @@ inherit
 create
 	make
 
-feature -- Initialisation
-
-	make (a_name:STRING) is
-			-- Initialize name with `a_name'
-		do
-			default_create
-			set_name (a_name)
-		end
-
-
 feature -- Access
 
-	code: STRING is
-			-- Eiffel code of undefine clause
-		do
-			Result := name.twin
-		end
+	keyword: STRING is "redefine"
+			-- Associated Eiffel keyword
 
-end -- class CODE_UNDEFINE_CLAUSE
+end -- class CODE_REDEFINE_CLAUSE
 
 --+--------------------------------------------------------------------
 --| Eiffel CodeDOM Provider

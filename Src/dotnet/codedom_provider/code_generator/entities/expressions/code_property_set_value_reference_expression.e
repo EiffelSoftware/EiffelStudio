@@ -1,5 +1,7 @@
 indexing 
-	-- Eiffel representation of a CodeDom property set value reference expression
+	description: "Eiffel representation of a CodeDom property set value reference expression"
+	date: "$Date$"
+	revision: "$Revision$"
 
 class
 	CODE_PROPERTY_SET_VALUE_REFERENCE_EXPRESSION
@@ -12,34 +14,38 @@ create
 
 feature {NONE} -- Initialization
 
-	make is
+	make (a_property_type: CODE_TYPE_REFERENCE) is
 			-- Creation routine
+		require
+			non_void_property_type: a_property_type /= Void
 		do
-			create arguments.make
+			property_type := a_property_type
+		ensure
+			property_type_set: property_type = a_property_type
 		end
 		
 feature -- Access
 			
+	property_type: CODE_TYPE_REFERENCE
+			-- Associated property type
+
 	code: STRING is
 			-- | Result C# := "value"
 			-- Eiffel code of property set value reference expression
 		do
-			Result := ("value").twin
+			Result := "value"
 		end
 		
 feature -- Status Report
-
-	ready: BOOLEAN is
-			-- Is property reference expression ready to be generated?
-		do
-			Result := True
-		end
 	
-	type: TYPE is
+	type: CODE_TYPE_REFERENCE is
 			-- Type
 		do
-			Result := Void
+			Result := property_type
 		end
+
+invariant
+	non_void_property_type: property_type /= Void
 
 end -- class CODE_PROPERTY_SET_VALUE_REFERENCE_EXPRESSION
 

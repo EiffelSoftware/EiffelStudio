@@ -19,8 +19,6 @@ feature -- Interface
 
 	parse (code_stream: TEXT_READER): SYSTEM_DLL_CODE_COMPILE_UNIT is
 			-- implementation of parse feature.
-		require else
-			referenced_assemblies_initialized: (create {CODE_REFERENCED_ASSEMBLIES}).assemblies_initialized
 		local
 			l_eiffel_parser: EIFFEL_PARSER
 			l_class_to_parse: STRING

@@ -1,28 +1,53 @@
 indexing
-	description: "Objects that represent the different type of events."
+	description: "Objects that represent the different kind of event methods."
 
 class
-	EVENT_TYPE
+	CODE_EVENT_METHOD_KIND
 
-feature {NONE} -- Implementation
+feature -- Access
 
-	adder: STRING is "add_"
-			-- Adder event.
+	Adder: INTEGER is 1
+			-- Method to add an event handler
+	
+	Remover: INTEGER is 2
+			-- Method to remove an event handler
+	
+	Raiser: INTEGER is 3
+			-- Method to raise an event
 
-	remover: STRING is "remove_"
-			-- Remover event.
-
-	raiser: STRING is "raise_"
-			-- Raiser event.
-
-feature -- Status Repport
-
-	valid_event_type (an_event_type: STRING): BOOLEAN is
-			-- Is `an_event_type' valid?
+	method_prefix (a_kind: INTEGER): STRING is
+			-- Prefix for event methods of kind `a_kind'
 		require
-			non_void_an_event_type: an_event_type /= Void
+			valid_event_method_kind (a_kind)
 		do
-			Result := an_event_type.is_equal (adder) or an_event_type.is_equal (remover) or an_event_type.is_equal (raiser)
+			Result := Event_methods_prefixes.item (a_kind)
 		end
 		
-end -- class EVENT_TYPE
+feature {NONE} -- Implementation
+
+	Event_methods_prefixes: ARRAY [STRING] is
+			-- Event methods prefixes
+		once
+			Result := <<"add_", "remove_", "raise_">>
+		end
+		
+feature -- Status Repport
+
+	valid_event_method_kind (a_kind: INTEGER): BOOLEAN is
+			-- Is `a_kind' a valid event method kind?
+		do
+			Result := (a_kind >= Adder) and (a_kind <= Raiser)
+		end
+
+end -- class CODE_EVENT_METHOD_KIND
+
+--+--------------------------------------------------------------------
+--| Eiffel CodeDOM Provider
+--| Copyright (C) 2001-2004 Eiffel Software
+--| Eiffel Software Confidential
+--| All rights reserved. Duplication and distribution prohibited.
+--|
+--| Eiffel Software
+--| 356 Storke Road, Goleta, CA 93117 USA
+--| http://www.eiffel.com
+--+--------------------------------------------------------------------

@@ -52,7 +52,6 @@ feature {NONE}-- Initialization
 			create case_sensitive_check_button
 			create codedom_trees_frame
 			create codedom_trees_box
-			create codedoms_tree
 			create codedom_tree_buttons_box
 			create left_buttons_padding_cell
 			create add_button
@@ -205,7 +204,6 @@ feature {NONE}-- Initialization
 			case_sensitive_box.extend (case_sensitive_check_button)
 			left_box.extend (codedom_trees_frame)
 			codedom_trees_frame.extend (codedom_trees_box)
-			codedom_trees_box.extend (codedoms_tree)
 			codedom_trees_box.extend (codedom_tree_buttons_box)
 			codedom_tree_buttons_box.extend (left_buttons_padding_cell)
 			codedom_tree_buttons_box.extend (add_button)
@@ -341,10 +339,6 @@ feature {NONE}-- Initialization
 			tests_notebook.extend (output_text)
 			
 			set_title ("Eiffel CodeDom Provider Tester")
-			main_box.set_minimum_width (655)
-			main_box.set_padding_width (5)
-			main_box.set_border_width (5)
-			main_box.disable_item_expand (left_box)
 			left_box.set_padding_width (5)
 			left_box.set_border_width (5)
 			left_box.disable_item_expand (codedom_provider_frame)
@@ -692,8 +686,6 @@ feature {NONE}-- Initialization
 				--Connect events.
 			provider_combo_box.change_actions.extend (agent on_provider_update)
 			provider_browse_button.select_actions.extend (agent on_provider_browse)
-			codedoms_tree.select_actions.extend (agent on_codedom_tree_select)
-			codedoms_tree.deselect_actions.extend (agent on_codedom_tree_deselect)
 			add_button.select_actions.extend (agent on_add_codedom_tree)
 			remove_button.select_actions.extend (agent on_remove_codedom_tree)
 			tests_notebook.selection_actions.extend (agent on_change_notebook_tab)
@@ -731,14 +723,7 @@ feature {NONE}-- Initialization
 
 feature -- Access
 
-	main_box, provider_box, file_extension_box, case_sensitive_box, codedom_tree_buttons_box, 
-	blank_lines_box, else_on_closing_box, indent_string_box, generation_path_box, 
-	generate_box, identifier_box, escaped_identifier_box, valid_identifier_box, is_valid_identifier_box, 
-	type_box, output_type_box, properties_title_box, supports_box, compile_from_dom_box, 
-	compile_from_file_title_box, compile_from_file_file_box, compile_from_source_title_box, 
-	generate_executable_box, generate_in_memory_box, include_debug_box, compiler_options_box, 
-	main_class_box, output_assembly_box, resource_box, new_reference_box, referenced_assemblies_list_buttons, 
-	parse_file_box, serialized_file_box, parse_button_box: EV_HORIZONTAL_BOX
+	main_box: EV_HORIZONTAL_SPLIT_AREA
 	left_box, code_provider_box, codedom_trees_box, code_generator_box, generation_tests_box, 
 	generation_filename_box, identifier_tests_box, type_output_test_box, properties_box, 
 	compiler_box, compiler_tests_box, compile_from_file_box, compile_from_source_box, 
@@ -756,6 +741,14 @@ feature -- Access
 	include_debug_label, compiler_options_label, main_class_label, output_assembly_label, 
 	resource_label, referenced_assemblies_label, file_to_parse_label, serialized_folder_label, 
 	serialized_filename_label: EV_LABEL
+	provider_box, file_extension_box, case_sensitive_box, codedom_tree_buttons_box, 
+	blank_lines_box, else_on_closing_box, indent_string_box, generation_path_box, 
+	generate_box, identifier_box, escaped_identifier_box, valid_identifier_box, is_valid_identifier_box, 
+	type_box, output_type_box, properties_title_box, supports_box, compile_from_dom_box, 
+	compile_from_file_title_box, compile_from_file_file_box, compile_from_source_title_box, 
+	generate_executable_box, generate_in_memory_box, include_debug_box, compiler_options_box, 
+	main_class_box, output_assembly_box, resource_box, new_reference_box, referenced_assemblies_list_buttons, 
+	parse_file_box, serialized_file_box, parse_button_box: EV_HORIZONTAL_BOX
 	provider_combo_box: EV_COMBO_BOX
 	provider_browse_button, add_button, remove_button, browse_button, generate_button, 
 	compile_from_dom_button, compile_from_file_button, browse_source_button, compile_from_source_button, 
@@ -764,7 +757,6 @@ feature -- Access
 	parse_button: EV_BUTTON
 	case_sensitive_check_button, blank_lines_check_button, else_at_closing_check_button, 
 	generate_executable_check_button, generate_in_memory_check_button, include_debug_check_button: EV_CHECK_BUTTON
-	codedoms_tree: EV_TREE
 	left_buttons_padding_cell, right_buttons_padding_cell, referenced_assemblies_right_padding_cell, 
 	parse_button_padding_cell, code_parser_padding_cell: EV_CELL
 	tests_notebook: EV_NOTEBOOK
@@ -799,16 +791,6 @@ feature {NONE} -- Implementation
 	
 	on_provider_browse is
 			-- Called by `select_actions' of `provider_browse_button'.
-		deferred
-		end
-	
-	on_codedom_tree_select is
-			-- Called by `select_actions' of `codedoms_tree'.
-		deferred
-		end
-	
-	on_codedom_tree_deselect is
-			-- Called by `deselect_actions' of `codedoms_tree'.
 		deferred
 		end
 	

@@ -9,14 +9,32 @@ class
 inherit
 	CODE_EXPRESSION
 
+	CODE_STOCK_TYPE_REFERENCES
+		export
+			{NONE} all
+		undefine
+			is_equal
+		end
+
 create
 	make
 
 feature {NONE} -- Initialization
 
-	make is
-			-- Initialize `left_operand' and `right_operand'.
+	make (a_left_operand, a_right_operand: like left_operand; a_operator: like operator) is
+			-- Initialize `left_operand', `right_operand' and `operator'.
+		require
+			non_void_left_operand: a_left_operand /= Void
+			non_void_right_operand: a_right_operand /= Void
+			non_void_operator: a_operator /= Void
 		do
+			left_operand := a_left_operand
+			right_operand := a_right_operand
+			operator := a_operator
+		ensure
+			left_operand_set: left_operand = a_left_operand
+			right_operand_set: right_operand = a_right_operand
+			operator_set: operator = a_operator
 		end
 		
 feature -- Access
@@ -34,73 +52,61 @@ feature -- Access
 			-- | Result := "`left_operand' operator `right_operand'"
 			-- Eiffel code of binary operator expression
 		do
-			check
-				non_void_left_operand: left_operand /= Void
-				non_void_right_operand: right_operand /= Void
-				non_void_operator: operator /= Void
-			end
-			
 			create Result.make (120)
 			Result.append (left_operand.code)
-			Result.append (dictionary.space)
-			Result.append (generate_operator)
-			Result.append (dictionary.space)
+			Result.append_character (' ')
+			Result.append (operator_code)
+			Result.append_character (' ')
 			Result.append (right_operand.code)
 		end
 		
 feature -- Status Report
 
-	ready: BOOLEAN is
-			-- Is binary operator expression ready to be generated?
-		do
-			Result := left_operand.ready and right_operand.ready
-		end
-
-	type: TYPE is
+	type: CODE_TYPE_REFERENCE is
 			-- Type
 		do
-			Result := referenced_type_from_name ("System.Boolean")
+			if operator = feature{SYSTEM_DLL_CODE_BINARY_OPERATOR_TYPE}.add then
+				Result := left_operand.type
+			elseif operator = feature{SYSTEM_DLL_CODE_BINARY_OPERATOR_TYPE}.assign_ then
+				Result := None_type_reference
+			elseif operator = feature{SYSTEM_DLL_CODE_BINARY_OPERATOR_TYPE}.bitwise_and then
+				Result := left_operand.type
+			elseif operator = feature{SYSTEM_DLL_CODE_BINARY_OPERATOR_TYPE}.bitwise_or then
+				Result := left_operand.type
+			elseif operator = feature{SYSTEM_DLL_CODE_BINARY_OPERATOR_TYPE}.boolean_and then
+				Result := Boolean_type_reference
+			elseif operator = feature{SYSTEM_DLL_CODE_BINARY_OPERATOR_TYPE}.boolean_or then
+				Result := Boolean_type_reference
+			elseif operator = feature{SYSTEM_DLL_CODE_BINARY_OPERATOR_TYPE}.divide then
+				Result := Double_type_reference
+			elseif operator = feature{SYSTEM_DLL_CODE_BINARY_OPERATOR_TYPE}.greater_than then
+				Result := Boolean_type_reference
+			elseif operator = feature{SYSTEM_DLL_CODE_BINARY_OPERATOR_TYPE}.greater_than_or_equal then
+				Result := Boolean_type_reference
+			elseif operator = feature{SYSTEM_DLL_CODE_BINARY_OPERATOR_TYPE}.identity_equality then
+				Result := Boolean_type_reference
+			elseif operator = feature{SYSTEM_DLL_CODE_BINARY_OPERATOR_TYPE}.identity_inequality then
+				Result := Boolean_type_reference
+			elseif operator = feature{SYSTEM_DLL_CODE_BINARY_OPERATOR_TYPE}.less_than then
+				Result := Boolean_type_reference
+			elseif operator = feature{SYSTEM_DLL_CODE_BINARY_OPERATOR_TYPE}.less_than_or_equal  then
+				Result := Boolean_type_reference
+			elseif operator = feature{SYSTEM_DLL_CODE_BINARY_OPERATOR_TYPE}.modulus then
+				Result := left_operand.type
+			elseif operator = feature{SYSTEM_DLL_CODE_BINARY_OPERATOR_TYPE}.multiply then
+				Result := left_operand.type
+			elseif operator = feature{SYSTEM_DLL_CODE_BINARY_OPERATOR_TYPE}.subtract then
+				Result := left_operand.type
+			elseif operator = feature{SYSTEM_DLL_CODE_BINARY_OPERATOR_TYPE}.value_equality then
+				Result := Boolean_type_reference
+			end
 		end
-
-feature -- Status Setting
-
-	set_left_operand (an_expression: like left_operand) is
-			-- Set `left_operand' with `an_expression'.
-		require
-			non_void_expression: an_expression /= Void
-		do
-			left_operand := an_expression
-		ensure
-			left_operand_set: left_operand = an_expression
-		end		
-		
-	set_right_operand (an_expression: like right_operand) is
-			-- Set `right_operand' with `an_expression'.
-		require
-			non_void_expression: an_expression /= Void
-		do
-			right_operand := an_expression
-		ensure
-			right_operand_set: right_operand = an_expression
-		end	
-	
-	set_operator (an_operator: like operator) is
-			-- Set `operator' with `an_operator'.
-		require
-			non_void_operator: an_operator /= Void
-		do
-			operator := an_operator
-		ensure
-			operator_set: operator = an_operator
-		end	
 
 feature -- Implementation
 
-	generate_operator: STRING is
+	operator_code: STRING is
 			-- | Result := "`operator'"
 			-- generate corresponding operator (+, -, =, /, ...)
-		require
-			non_void_operator: operator /= Void
 		do
 			if operator = feature{SYSTEM_DLL_CODE_BINARY_OPERATOR_TYPE}.add then
 				Result := ("+").twin
@@ -138,10 +144,10 @@ feature -- Implementation
 				Result := ("=").twin
 			end
 		ensure
-			non_void_result: Result /= Void
-			not_empty_result: not Result.is_empty
+			non_void_code: Result /= Void
+			not_empty_code: not Result.is_empty
 		end
-  		
+
 invariant
 
 end -- class CODE_BINARY_OPERATOR_EXPRESSION

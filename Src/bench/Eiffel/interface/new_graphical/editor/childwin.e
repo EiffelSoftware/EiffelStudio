@@ -83,6 +83,7 @@ feature -- Initialization
 				-- Retrieve user preferences (syntax highligting, tabulation width, ...).
 			editor_preferences.set_tabulation_spaces(4)
 			editor_preferences.show_invisible_symbols
+			editor_preferences.turn_smart_ident_on
 
 				-- Read and parse the file.
 			read_and_analyse_file (a_name)
@@ -641,7 +642,11 @@ feature {NONE} -- Handle keystokes
 				if has_selection then
 					delete_selection
 				end
-				history.record_insert_eol
+				if editor_preferences.smart_identation then
+					history.record_paste ("%N"+cursor.line.identation)
+				else
+					history.record_insert_eol
+				end
 				cursor.insert_eol
 				invalidate
 				update

@@ -59,8 +59,10 @@ feature -- Access
 			combo_box.select_actions.extend (agent selection_changed)
 			combo_box.select_actions.extend (agent update_editors)
 			
-			create label.make_with_text ("Item text")
-			Result.extend (label)
+			if not first.is_empty then
+				create label.make_with_text ("Item texts:")
+				Result.extend (label)
+			end
 			from
 				first.start
 			until

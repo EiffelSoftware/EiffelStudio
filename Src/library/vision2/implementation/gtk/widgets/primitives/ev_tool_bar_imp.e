@@ -37,29 +37,19 @@ feature {NONE} -- Implementation
 		do
 			base_make (an_interface)
 			set_c_object (C.gtk_hbox_new (False, 0))
-			create radio_group.make
 		end
 
 feature -- Implementation
-
-	radio_group: LINKED_LIST [EV_TOOL_BAR_RADIO_BUTTON_IMP]
-		-- List of the tool bars
 
 	add_to_container (v: like item) is
 			-- Add `v' to tool bar, set to non-expandable.
 		local
 			old_expand, fill, pad, pack_type: INTEGER
 			wid_imp: EV_WIDGET_IMP
-			radio_imp: EV_TOOL_BAR_RADIO_BUTTON_IMP
+			
 		do
 			Precursor (v)
 			wid_imp ?= v.implementation
-			radio_imp ?= wid_imp
-
-			if radio_imp /= Void then
-				radio_group.extend (radio_imp)
-			end
-
 			C.gtk_box_query_child_packing (
 				list_widget,
 				wid_imp.c_object,
@@ -76,6 +66,7 @@ feature -- Implementation
 				pad,
 				pack_type
 			)
+			add_radio_button (v)
 		end
 
 	gtk_reorder_child (a_container, a_child: POINTER; a_position: INTEGER) is
@@ -83,6 +74,47 @@ feature -- Implementation
 		do
 			C.gtk_box_reorder_child (a_container, a_child, a_position)
 		end
+
+	add_radio_button (w: like item) is
+			-- Connect radio button to tool bar group.
+		require
+			w_not_void: w /= Void
+		local
+			r: EV_TOOL_BAR_RADIO_BUTTON_IMP
+		do
+			r ?= w.implementation
+			if r /= Void then
+				if radio_group /= Default_pointer then
+					r.disable_select
+				end
+				radio_group := C.g_slist_append (radio_group, r.c_object)
+			end
+		end
+
+	remove_radio_button (w: EV_TOOL_BAR_ITEM) is
+			-- Called every time a widget is removed from the container.
+		require
+			w_not_void: w /= Void
+		local
+			r: EV_TOOL_BAR_RADIO_BUTTON_IMP
+		do
+			r ?= w.implementation
+			if r /= Void then
+				--set_radio_group (C.g_slist_remove (radio_group, r.c_object))
+				--C.gtk_radio_button_set_group (r.c_object, Default_pointer)
+				if r.is_selected then
+					if radio_group /= Default_pointer then
+					--	C.gtk_toggle_button_set_active (C.gslist_struct_data (radio_group), True)
+					end
+				else
+					--C.gtk_toggle_button_set_active (r.c_object, True)
+				end
+			end
+		end
+
+feature {EV_TOOL_BAR_RADIO_BUTTON_IMP} -- Implementation
+
+	radio_group: POINTER
 
 feature {EV_ANY_I} -- Implementation
 
@@ -111,6 +143,9 @@ end -- class EV_TOOL_BAR_IMP
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.19  2000/04/13 22:10:30  king
+--| Added radio peering functionality
+--|
 --| Revision 1.18  2000/04/12 00:19:58  king
 --| Added initial radio grouping features
 --|

@@ -9,15 +9,9 @@ class MESSAGE_M
 
 inherit
 
-	MESSAGE_R_M
-		export
-			{NONE} all
-		end;
+	MESSAGE_R_M;
 
-	MESSAGE_I
-		export
-			{NONE} all
-		end;
+	MESSAGE_I;
 
 	TERMINAL_M
 		rename 
@@ -55,6 +49,46 @@ feature {NONE} -- Creation
 				parent_screen_object (a_message, widget_index),
 				man);
 		end
+
+feature {NONE} -- Color
+
+	update_other_fg_color (pixel: POINTER) is
+		do
+		end;
+
+	update_other_bg_color (pixel: POINTER) is
+		do
+			xm_set_children_bg_color (pixel, screen_object)
+		end;
+
+feature {NONE} -- Font
+
+	update_text_font (f_ptr: POINTER) is
+		do
+		end;
+
+	update_label_font (f_ptr: POINTER) is
+		do
+			set_primitive_font (xm_message_box_get_child
+					(screen_object, MDIALOG_MESSAGE_LABEL),
+					f_ptr)
+		end;
+
+	update_button_font (f_ptr: POINTER) is
+		do
+			set_primitive_font (xm_message_box_get_child
+					(screen_object, MDIALOG_CANCEL_BUTTON),
+					f_ptr)
+			set_primitive_font (xm_message_box_get_child
+					(screen_object, MDIALOG_DEFAULT_BUTTON),
+					f_ptr)
+			set_primitive_font (xm_message_box_get_child
+					(screen_object, MDIALOG_HELP_BUTTON),
+					f_ptr)
+			set_primitive_font (xm_message_box_get_child
+					(screen_object, MDIALOG_OK_BUTTON),
+					f_ptr)
+		end;
 
 feature {NONE}
 

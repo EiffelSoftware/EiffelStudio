@@ -19,6 +19,11 @@ inherit
 			interface
 		end
 
+	WEL_INPUT_EVENT
+		export
+			{NONE} all
+		end
+
 creation
 	make
 
@@ -61,34 +66,64 @@ feature -- Basic operation
 
 	set_pointer_position (x, y: INTEGER) is
 			-- Set `pointer_position' to (`x',`y`).
+		local
+			abs_x: INTEGER
+			abs_y: INTEGER
 		do
-			(create {WEL_WINDOWS_ROUTINES}).set_cursor_position (x, y)
+			abs_x := (65535 * x) // System_metrics_constants.screen_width
+			abs_y := (65535 * y) // System_metrics_constants.screen_height
+			check
+				width_ok: width = System_metrics_constants.screen_width
+				height_ok: height = System_metrics_constants.screen_height
+			end
+			
+			send_mouse_absolute_move (abs_x, abs_y)
 		end
 
 	fake_pointer_button_press (a_button: INTEGER) is
 			-- Simulate the user pressing a `a_button'
 			-- on the pointing device.
 		do
-			check fixme:false end
+			inspect a_button
+			when 1 then
+				send_mouse_left_button_down
+			when 2 then
+				send_mouse_right_button_down
+			when 3 then
+				send_mouse_middle_button_down
+			end
 		end
 
 	fake_pointer_button_release (a_button: INTEGER) is
 			-- Simulate the user releasing a `a_button'
 			-- on the pointing device.
 		do
-			check fixme:false end
+			inspect a_button
+			when 1 then
+				send_mouse_left_button_up
+			when 2 then
+				send_mouse_right_button_up
+			when 3 then
+				send_mouse_middle_button_up
+			end
 		end
 
 	fake_key_press (a_key: EV_KEY) is
 			-- Simulate the user pressing a `key'.
+		local
+			vk_code: INTEGER
 		do
-			check fixme:false end
+			vk_code := Key_conversion.key_code_to_wel(a_key.code)
+			send_keyboard_key_down (vk_code)
 		end
 
 	fake_key_release (a_key: EV_KEY) is
 			-- Simulate the user releasing a `key'.
+		local
+			vk_code: INTEGER
 		do
-			check fixme:false end
+			vk_code := Key_conversion.key_code_to_wel(a_key.code)
+			send_keyboard_key_up (vk_code)
 		end
 
 feature -- Measurement
@@ -119,6 +154,20 @@ feature -- Implementation
 	
 	interface: EV_SCREEN
 
+
+feature {NONE} -- Constants
+
+	System_metrics_constants: WEL_SYSTEM_METRICS is
+			-- System metrics constants
+		once
+			create Result
+		end
+	
+	Key_conversion: EV_WEL_KEY_CONVERSION is
+		once
+			create Result
+		end
+
 end -- class EV_SCREEN_IMP
 
 --|----------------------------------------------------------------
@@ -142,6 +191,10 @@ end -- class EV_SCREEN_IMP
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.14  2000/04/26 22:34:39  pichery
+--| Implemented features "not yet implemented"
+--| features.
+--|
 --| Revision 1.13  2000/04/13 00:24:18  pichery
 --| - Removed useless features
 --|

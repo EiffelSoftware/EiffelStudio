@@ -15,9 +15,26 @@ inherit
 
 creation
 
-	make
+	make,
+	make_for_screen
 
-feature 
+feature {NONE} -- Initialization
+
+	make is
+			-- Create a pixmap.
+		do
+			implementation := toolkit.pixmap (Current)
+		end;
+
+	make_for_screen (a_screen: SCREEN) is
+			-- Create a pixmap for `a_screen'.
+		require
+			valid_screen: a_screen /= Void and then a_screen.is_valid
+		do
+			implementation := toolkit.pixmap_for_screen (Current, a_screen)
+		end;
+
+feature
 
 	copy_from (a_widget: WIDGET; x, y, p_width, p_height: INTEGER) is
 			-- Copy the area specified by `x', `y', `p_width', `p_height' of
@@ -35,12 +52,6 @@ feature
 			implementation.copy_from (a_widget.implementation, x, y, p_width, p_height)
 		ensure
 			last_operation_correct implies is_valid
-		end;
-
-	make is
-			-- Create a bitmap.
-		do
-			implementation := toolkit.pixmap (Current)
 		end;
 
 	depth: INTEGER is
@@ -139,7 +150,7 @@ feature
 			Result := implementation.width
 		ensure
 			valid_reuslt: Result >= 1
-		end
+		end;
 
 invariant
 
@@ -148,7 +159,7 @@ invariant
 	is_valid implies (height > 0);
 	is_valid implies (depth > 0);
 	is_valid implies ((hot_x >= 0) and (hot_x < width));
-	is_valid implies ((hot_y >= 0) and (hot_x < height))
+	is_valid implies ((hot_y >= 0) and (hot_y < height))
 
 end -- class PIXMAP
 

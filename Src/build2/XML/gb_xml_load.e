@@ -100,6 +100,8 @@ feature -- Basic operation
 				-- Load and parse file `filename'.
 			load_and_parse_xml_file (filename)
 			
+			object_handler.update_all_associated_objects
+			
 				-- Build deferred parts.
 			deferred_builder.build
 
@@ -154,7 +156,7 @@ feature {GB_OBJECT_HANDLER} -- Implementation
 			internal_build_window (window, directory_name, Void)
 		end
 
-	internal_build_window (window: XM_ELEMENT; directory_name: STRING; titled_window_object: GB_TITLED_WINDOW_OBJECT) is
+	internal_build_window (window: XM_ELEMENT; directory_name: STRING; object: GB_OBJECT) is
 			-- Build a window representing `window', represented in
 			-- directory `directory_name'. if `directory_name' is
 			-- empty, the window will be built into the root of the
@@ -163,21 +165,22 @@ feature {GB_OBJECT_HANDLER} -- Implementation
 			current_element: XM_ELEMENT
 			gb_ev_any: GB_EV_ANY
 			current_name: STRING
-			window_object: GB_TITLED_WINDOW_OBJECT
 			directory_item: GB_WINDOW_SELECTOR_DIRECTORY_ITEM
+			an_object: GB_OBJECT
+			a_display_object: GB_DISPLAY_OBJECT
 		do
-			if titled_window_object = Void then
-					-- As `titled_window_object' = Void, it means that we are building a new object,
+			if object = Void then
+					-- As `object' = Void, it means that we are building a new object,
 					-- and hence we must create it accordingly.
-				window_object := object_handler.add_root_window (window.attribute_by_name (type_string).value)
+				an_object := object_handler.add_root_window (window.attribute_by_name (type_string).value)
 				if not directory_name.is_empty then
 					directory_item := Window_selector.directory_object_from_name (directory_name)
-					unparent_tree_node (window_object.window_selector_item)
-					directory_item.extend (window_object.window_selector_item)
+					unparent_tree_node (an_object.window_selector_item)
+					directory_item.extend (an_object.window_selector_item)
 					directory_item.expand
 				end
 			else
-				window_object := titled_window_object
+				an_object := object
 			end
 			from
 				window.start
@@ -188,19 +191,20 @@ feature {GB_OBJECT_HANDLER} -- Implementation
 				if current_element /= Void then
 					current_name := current_element.name
 					if current_name.is_equal (Item_string) then
-						if titled_window_object = Void then
+						if object = Void then
 								-- As `titled_window_object' = Void it means we must rebuild all the children,
 								-- as we are not updating an existing object, and the children must be created.
-							build_new_object (current_element, window_object)
+							build_new_object (current_element, an_object)
 						end
 					else
 							-- We must check for internal properties, else set the properties of the component
 						if current_name.is_equal (Internal_properties_string) then
-							window_object.modify_from_xml (current_element)
+							an_object.modify_from_xml (current_element)
+							object_handler.add_object_to_objects (an_object)
 						elseif current_name.is_equal (Events_string) then
 								-- We now add the event information from `current_element'
 								-- into `window_object'.
-							extract_event_information (current_element, window_object)						
+							extract_event_information (current_element, an_object)						
 						else						
 							-- Create the class.
 						gb_ev_any ?= new_instance_of (dynamic_type_from_string ("GB_" + current_name))
@@ -208,7 +212,7 @@ feature {GB_OBJECT_HANDLER} -- Implementation
 							-- Call default_create on `gb_ev_any'
 						gb_ev_any.default_create
 						
-						gb_ev_any.set_object (window_object)
+						gb_ev_any.set_object (an_object)
 						
 							-- Ensure that the new class exists.
 						check
@@ -216,8 +220,15 @@ feature {GB_OBJECT_HANDLER} -- Implementation
 						end
 						
 							-- Add the appropriate objects to `objects'.
-						gb_ev_any.add_object (window_object.object)
-						gb_ev_any.add_object (window_object.display_object)
+						gb_ev_any.add_object (an_object.object)
+							-- Now that we support widgets at the top level, we must
+							-- check and support display objects correctly.
+						a_display_object ?= an_object.display_object
+						if a_display_object /= Void then
+							gb_ev_any.add_object (a_display_object.child)
+						else
+							gb_ev_any.add_object (an_object.display_object)
+						end
 						
 							-- Call `modify_from_xml' which should modify the objects.
 						gb_ev_any.modify_from_xml (current_element)
@@ -256,7 +267,10 @@ feature {NONE} -- Implementation
 			new_object := object_handler.build_object_from_string (element.attribute_by_name (type_string).value)
 			object_handler.add_object (object, new_object, object.children.count + 1)
 			modify_from_xml (element, new_object)
+			object_handler.add_object_to_objects (new_object)
 		end
+		
+feature {GB_OBJECT_HANDLER} -- Implementation
 		
 	modify_from_xml (element: XM_ELEMENT; object: GB_OBJECT) is
 			-- Update properties of `object' based on information in `element'.
@@ -317,6 +331,8 @@ feature {NONE} -- Implementation
 				element.forth
 			end
 		end
+		
+feature {NONE} -- Implementation
 
 	extract_event_information (element: XM_ELEMENT; object: GB_OBJECT) is
 			-- Generate event information into `object', from `element'.

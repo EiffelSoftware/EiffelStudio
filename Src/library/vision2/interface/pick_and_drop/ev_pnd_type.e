@@ -12,7 +12,7 @@ inherit
 	HASHABLE
 
 creation
-	make, make_with_id--, make_with_cursor
+	make, make_with_cursor, make_with_id
 
 feature {NONE} -- Initialization
 
@@ -23,13 +23,12 @@ feature {NONE} -- Initialization
 			identifier := counter.item
 		end
 
--- 	make_with_cursor (curs: EV_SCREEN_CURSOR) is
--- 			-- Create a pick and drop type with a cursor.
--- 		do
---			counter.set_item (counter.item + 1)
---			identifier := counter.item
--- 			set_cursor (curs)
--- 		end
+	make_with_cursor (curs: EV_CURSOR) is
+			-- Create a pick and drop type with a cursor.
+		do
+			make
+			set_cursor (curs)
+		end
 
 	make_with_id (id: INTEGER) is
 			-- Create a pick and drop with an identifier.
@@ -42,19 +41,19 @@ feature -- Attribute
 	identifier: INTEGER
 			-- Idendifier of the current type
 
---	cursor: EV_SCREEN_CURSOR
+	cursor: EV_CURSOR
 			-- Cursor associated with
 			-- current data during transport
 	
 feature -- Access
 
---	set_cursor (curs: EV_SCREEN_CURSOR) is
---			-- Set the `cursor' of the current type.
---		require
---			valid_cursor: curs /= Void
---		do
---			cursor := curs
---		end
+	set_cursor (curs: EV_CURSOR) is
+			-- Set the `cursor' of the current type.
+		require
+			valid_cursor: curs /= Void
+		do
+			cursor := curs
+		end
 
 feature {EV_PND_TARGET_I} -- Implementation
 

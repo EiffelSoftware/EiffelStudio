@@ -14,7 +14,7 @@ wecom_eiffelcomcompiler_ieiffelcompilerevents_impl_stub.obj \
 
 all:: ecom_server.lib ecom_server_final.lib
 
-ecom.lib: $(WOBJ)
+ecom_server.lib: $(WOBJ)
 	if exist $@ del $@
 	lib -OUT:$@ $(WOBJ)
 	del *.obj
@@ -22,7 +22,7 @@ ecom.lib: $(WOBJ)
 	$(MV) $@ msc
 	del $@
 
-ecom_final.lib: $(OBJ)
+ecom_server_final.lib: $(OBJ)
 	if exist $@ del $@
 	lib -OUT:$@ $(OBJ)
 	del *.obj

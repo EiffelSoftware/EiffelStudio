@@ -18,7 +18,8 @@ inherit
 	EV_PRIMITIVE_IMP
 		redefine
 			interface,
-			destroy
+			destroy,
+			initialize
 		end
 
 	EV_ITEM_LIST_IMP [EV_TREE_ITEM]
@@ -52,6 +53,40 @@ feature {NONE} -- Initialization
 			C.gtk_scrolled_window_add_with_viewport (c_object, list_widget)
 		end
 
+	initialize is
+			-- Connect action sequences to signals.
+		local
+			temp_c_object: POINTER
+		do
+			{EV_PRIMITIVE_IMP} Precursor
+			temp_c_object := c_object
+			c_object := list_widget
+			signal_connect ("select_child", ~select_callback)
+			signal_connect ("unselect_child", ~deselect_callback)
+			c_object := temp_c_object
+		end
+
+	select_callback (a_tree_item: POINTER) is
+			-- Called when a tree item is selected
+		local
+			t_item: EV_TREE_ITEM
+		do
+		 	t_item ?= eif_object_from_c (a_tree_item).interface
+			t_item.select_actions.call ([])
+			interface.select_actions.call ([])
+		end
+
+	deselect_callback (a_tree_item: POINTER) is
+			-- Called when a tree item is deselected
+		local
+			t_item: EV_TREE_ITEM
+		do
+		 	t_item ?= eif_object_from_c (a_tree_item).interface
+			t_item.deselect_actions.call ([])
+			interface.deselect_actions.call ([])	
+		end
+
+
 feature -- Status report
 
 	selected_item: EV_TREE_ITEM is
@@ -63,7 +98,7 @@ feature -- Status report
 			o: EV_ANY_IMP
 		do
 			p := C.gtk_tree_struct_selection (list_widget)
-			if p/= Default_pointer then
+			if p /= Default_pointer then
 				p := C.g_list_nth_data (p, 0)
 				if p /= Default_pointer then
 					o := eif_object_from_c (p)
@@ -75,7 +110,7 @@ feature -- Status report
 	selected: BOOLEAN is
 			-- Is one item selected ?
 		do
-			--Result := (selected_item /= Void)
+			Result := (selected_item /= Void)
 		end
 
 
@@ -150,6 +185,9 @@ end -- class EV_TREE_IMP
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.22  2000/02/24 01:50:37  king
+--| Implemented event handling
+--|
 --| Revision 1.21  2000/02/22 23:57:32  king
 --| Implemented selecrted_item
 --|

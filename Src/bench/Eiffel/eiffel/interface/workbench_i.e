@@ -8,7 +8,7 @@ inherit
 	SHARED_RESCUE_STATUS;
 	SHARED_PASS;
 	STORABLE;
-	SHARED_RESOURCES;
+	SHARED_CONFIGURE_RESOURCES;
 	PROJECT_CONTEXT
 		rename
 			extendible_directory as shared_extendible_directory
@@ -91,6 +91,7 @@ feature -- Initialization
 			!! universe.make;
 			!! precompiled_directories.make (5);
 			!! lace;
+			compilation_counter := 1;
 			init
 		ensure
 			initialized: universe /= Void and then
@@ -136,29 +137,36 @@ feature -- Commands
 		do
 			if not retried then
 
-				compilation_counter := compilation_counter + 1
-
 				if automatic_backup then
 					create_backup_directory
 				end
 					-- Clear error handler
 				Error_handler.wipe_out;
 
-				Lace.recompile;
+				if Compilation_modes.is_quick_melt then
+					record_changed_classes
+				else
+					Lace.recompile;
+				end;
 
 				System.recompile;
 
 				Compilation_modes.reset_modes;
 			else
+
 				retried := False
 			end;
 
 				-- Store the System info even after an error
 				-- (the next compilation will be stored in a different
-				-- directroy)
+				-- directory)
 			if automatic_backup then
 				save_backup_info
-			end
+				compilation_counter := compilation_counter + 1
+				create_backup_directory
+			else
+				compilation_counter := compilation_counter + 1
+			end;
 		ensure
 			increment_compilation_counter: compilation_counter = old compilation_counter + 1
 		rescue
@@ -199,13 +207,40 @@ feature -- Commands
 			pass1_controler.insert_new_class (class_to_recompile);
 		end;
 		
+	record_changed_classes is
+			-- Record all the classes in the universe that
+			-- have changed.
+		local
+			classes: ARRAY [CLASS_C];
+			classc: CLASS_C;
+			classi: CLASS_I;
+			i, c: INTEGER
+		do
+			classes := System.project_classes;
+			from
+				c := classes.count;
+				i := 1
+			until
+				i > c
+			loop
+				classc := classes.item (i)
+				if classc /= Void then
+					classi := classc.lace_class;
+					if classi.date_has_changed then
+						change_class (classi);
+						classi.set_date	
+					end
+				end;
+				i := i + 1
+			end;
+		end;
+
 	change_all is
 			-- Record all the classes in the universe as
 			-- changed (for precompilation)
 		local
 			class_list: EXTEND_TABLE [CLASS_I, STRING];
-			c: CLUSTER_I;
-			i: INTEGER;
+			c: CLUSTER_I
 		do
 			from
 				Universe.clusters.start
@@ -220,7 +255,6 @@ feature -- Commands
 					until
 						class_list.after
 					loop
-						i := i + 1;
 						change_class (class_list.item_for_iteration);
 						class_list.forth
 					end
@@ -364,8 +398,8 @@ feature -- Automatic backup
 
 	automatic_backup: BOOLEAN is
 			-- Is the automatic backup on?
-		Once
-			Result := resources.get_boolean (r_AutomaticBackup, False)
+		once
+			Result := Configure_resources.get_boolean (r_AutomaticBackup, True)
 		end
 
 	create_backup_directory is

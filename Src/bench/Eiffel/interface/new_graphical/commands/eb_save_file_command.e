@@ -9,7 +9,6 @@ class
 inherit
 	EB_FILEABLE_COMMAND
 		redefine
-			executable,
 			make
 		end
 

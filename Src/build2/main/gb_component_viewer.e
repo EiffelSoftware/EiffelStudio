@@ -119,6 +119,7 @@ feature -- Basic operation
 			menu: EV_MENU
 			temp_menu: EV_MENU
 			label: EV_LABEL
+			menu_item: EV_MENU_ITEM
 		do
 				-- Rest our previous widgets, as `component'
 				-- has now changed.
@@ -173,7 +174,16 @@ feature -- Basic operation
 					else
 						label.pointer_button_press_actions.force_extend (agent menu.show)
 					end
-				end
+				else
+					menu_item ?= an_item
+					if menu_item /= Void then
+						create label.make_with_text ("Component is a menu item. Click to display.")
+						component_holder.extend (label)
+						create temp_menu.make_with_text ("Component is child.")
+						temp_menu.extend (menu_item)
+						label.pointer_button_press_actions.force_extend (agent temp_menu.show)
+					end
+				end	
 			else
 				display_button.enable_sensitive
 				builder_button.enable_sensitive

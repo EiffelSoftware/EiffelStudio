@@ -494,7 +494,7 @@ void c_gtk_window_set_modal (GtkWindow* window, gboolean modal)
 
 EIF_INTEGER c_gtk_window_maximum_height (GtkWidget *w)
 {
-	GtkWindowGeometryInfo * info;
+	GtkWindowGeometryInfo *info;
 	
 	if GTK_WIDGET_VISIBLE(w)
 	{		
@@ -507,7 +507,7 @@ EIF_INTEGER c_gtk_window_maximum_height (GtkWidget *w)
 
 EIF_INTEGER c_gtk_window_maximum_width (GtkWidget *w)
 {
-	GtkWindowGeometryInfo * info;
+	GtkWindowGeometryInfo *info;
 			
 	if GTK_WIDGET_VISIBLE(w)
 	{		
@@ -1071,23 +1071,25 @@ void c_gtk_text_insert (GtkWidget *widget, const char *txt)
 
 void c_gtk_text_full_insert (GtkWidget *widget, GdkFont *font, int r, int g, int b, const char *txt, gint length)
 {
-	GdkColor *fore;
-	GdkColor *back;
+	GdkColor fore;
+	GdkColor back;
 	GtkStyle *style;
 	
 	/* We create the foreground color */
 	r *= 257; g *= 257; b *= 257;
-	fore->red = r;
-	fore->green = g;
-	fore->blue = b;
+	fore.pixel = 0;
+	fore.red = r;
+	fore.green = g;
+	fore.blue = b;
 	
 	/* We create the background color */
 	style = GTK_WIDGET(widget)->style;
-	back->red = style->base[GTK_STATE_NORMAL].red;
-	back->green = style->base[GTK_STATE_NORMAL].green;
-	back->blue = style->base[GTK_STATE_NORMAL].blue;
+	back.pixel = 0;
+	back.red = style->base[GTK_STATE_NORMAL].red;
+	back.green = style->base[GTK_STATE_NORMAL].green;
+	back.blue = style->base[GTK_STATE_NORMAL].blue;
 
-	gtk_text_insert (GTK_TEXT (widget), font, fore, back, txt, length);
+	gtk_text_insert (GTK_TEXT (widget), font, &fore, &back, txt, length);
 }
 
 /*********************************

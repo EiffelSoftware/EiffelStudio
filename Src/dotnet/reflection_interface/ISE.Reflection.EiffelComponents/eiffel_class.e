@@ -1,7 +1,7 @@
 indexing
 	description: "Include all the information needed to produce class Eiffel code and XML file."
 	external_name: "ISE.Reflection.EiffelClass"
-	attribute:	create {SYSTEM_RUNTIME_INTEROPSERVICES_CLASSINTERFACEATTRIBUTE}.make_classinterfaceattribute ((create {SYSTEM_RUNTIME_INTEROPSERVICES_CLASSINTERFACETYPE}).auto_dual) end
+--	attribute: create {SYSTEM_RUNTIME_INTEROPSERVICES_CLASSINTERFACEATTRIBUTE}.make_classinterfaceattribute (2) end
 
 class
 	EIFFEL_CLASS
@@ -497,35 +497,35 @@ feature -- Status Setting
 		
 feature -- Basic Operations
 
-	add_parent (a_name: STRING; rename_clauses, undefine_clauses, redefine_clauses, select_clauses, export_clauses: SYSTEM_COLLECTIONS_ARRAYLIST) is
-			-- | Inheritance clauses: SYSTEM_COLLECTIONS_ARRAYLIST [INHERITANCE_CLAUSE]
+	add_parent (a_parent: PARENT) is
 		indexing
 			description: "[
-						Add new parent to `parents' with `a_name' as key and inheritance clauses as value.
-						Inheritance clauses are built from `rename_clauses', `undefine_clauses', `redefine_clauses', `select_clauses', `export_clauses'.
+						Add new parent to `parents' with `a_parent' name as key and inheritance clauses as value.
+						Inheritance clauses are built from `rename_clauses', `undefine_clauses', `redefine_clauses', `select_clauses', `export_clauses' of `a_parent'.
 					  ]"
 			external_name: "AddParent"
 		require
-			non_void_name: a_name /= Void
-			not_empty_name: a_name.get_length > 0
-			non_void_rename_clauses: rename_clauses /= Void
-			non_void_undefine_clauses: undefine_clauses /= Void
-			non_void_redefine_clauses: redefine_clauses /= Void
-			non_void_select_clauses: select_clauses /= Void
-			non_void_export_clauses: export_clauses /= Void
+			non_void_parent: a_parent /= Void
+			non_void_name: a_parent.name /= Void
+			not_empty_name: a_parent.name.get_length > 0
+			non_void_rename_clauses: a_parent.rename_clauses /= Void
+			non_void_undefine_clauses: a_parent.undefine_clauses /= Void
+			non_void_redefine_clauses: a_parent.redefine_clauses /= Void
+			non_void_select_clauses: a_parent.select_clauses /= Void
+			non_void_export_clauses: a_parent.export_clauses /= Void
 		local
 			inheritance_clauses: ARRAY [SYSTEM_COLLECTIONS_ARRAYLIST]
 		do
 			create inheritance_clauses.make (5)
-			inheritance_clauses.put (0, rename_clauses)
-			inheritance_clauses.put (1, undefine_clauses)
-			inheritance_clauses.put (2, redefine_clauses)
-			inheritance_clauses.put (3, select_clauses)
-			inheritance_clauses.put (4, export_clauses)
+			inheritance_clauses.put (0, a_parent.rename_clauses)
+			inheritance_clauses.put (1, a_parent.undefine_clauses)
+			inheritance_clauses.put (2, a_parent.redefine_clauses)
+			inheritance_clauses.put (3, a_parent.select_clauses)
+			inheritance_clauses.put (4, a_parent.export_clauses)
 			
-			parents.put_i_th (a_name, inheritance_clauses)
+			parents.Add (a_parent.name, inheritance_clauses)
 		ensure
-			parent_added: parents.Contains_Key (a_name)
+			parent_added: parents.Contains_Key (a_parent.name)
 		end
 	
 	add_creation_routine (a_name: STRING) is
@@ -538,9 +538,9 @@ feature -- Basic Operations
 		local
 			routine_added: INTEGER
 		do
-			routine_added := creation_routines.extend (a_name)
+			routine_added := creation_routines.Add (a_name)
 		ensure
-			routine_added: creation_routines.has (a_name)
+			routine_added: creation_routines.Contains (a_name)
 		end
 
 	add_initialization_feature (a_feature: EIFFEL_FEATURE) is
@@ -552,9 +552,9 @@ feature -- Basic Operations
 		local
 			feature_added: INTEGER
 		do
-			feature_added := initialization_features.extend (a_feature)
+			feature_added := initialization_features.Add (a_feature)
 		ensure
-			feature_added: initialization_features.has (a_feature)
+			feature_added: initialization_features.Contains (a_feature)
 		end
 		
 	add_access_feature (a_feature: EIFFEL_FEATURE) is
@@ -566,9 +566,9 @@ feature -- Basic Operations
 		local
 			feature_added: INTEGER
 		do
-			feature_added := access_features.extend (a_feature)
+			feature_added := access_features.Add (a_feature)
 		ensure
-			feature_added: access_features.has (a_feature)
+			feature_added: access_features.Contains (a_feature)
 		end
 		
 	add_element_change_feature (a_feature: EIFFEL_FEATURE) is
@@ -580,9 +580,9 @@ feature -- Basic Operations
 		local
 			feature_added: INTEGER
 		do
-			feature_added := element_change_features.extend (a_feature)
+			feature_added := element_change_features.Add (a_feature)
 		ensure
-			feature_added: element_change_features.has (a_feature)
+			feature_added: element_change_features.Contains (a_feature)
 		end
 		
 	add_basic_operation (a_feature: EIFFEL_FEATURE) is
@@ -594,9 +594,9 @@ feature -- Basic Operations
 		local
 			feature_added: INTEGER
 		do
-			feature_added := basic_operations.extend (a_feature)
+			feature_added := basic_operations.Add (a_feature)
 		ensure
-			feature_added: basic_operations.has (a_feature)
+			feature_added: basic_operations.Contains (a_feature)
 		end
 		
 	add_unary_operator (a_feature: EIFFEL_FEATURE) is
@@ -608,9 +608,9 @@ feature -- Basic Operations
 		local
 			feature_added: INTEGER
 		do
-			feature_added := unary_operators_features.extend (a_feature)
+			feature_added := unary_operators_features.Add (a_feature)
 		ensure
-			feature_added: unary_operators_features.has (a_feature)
+			feature_added: unary_operators_features.Contains (a_feature)
 		end
 		
 	add_binary_operator (a_feature: EIFFEL_FEATURE) is
@@ -622,9 +622,9 @@ feature -- Basic Operations
 		local
 			feature_added: INTEGER
 		do
-			feature_added := binary_operators_features.extend (a_feature)
+			feature_added := binary_operators_features.Add (a_feature)
 		ensure
-			feature_added: binary_operators_features.has (a_feature)
+			feature_added: binary_operators_features.Contains (a_feature)
 		end
 		
 	add_special_feature (a_feature: EIFFEL_FEATURE) is
@@ -636,9 +636,9 @@ feature -- Basic Operations
 		local
 			feature_added: INTEGER
 		do
-			feature_added := special_features.extend (a_feature)
+			feature_added := special_features.Add (a_feature)
 		ensure
-			feature_added: special_features.has (a_feature)
+			feature_added: special_features.Contains (a_feature)
 		end
 		
 	add_implementation_feature (a_feature: EIFFEL_FEATURE) is
@@ -650,9 +650,9 @@ feature -- Basic Operations
 		local
 			feature_added: INTEGER
 		do
-			feature_added := implementation_features.extend (a_feature)
+			feature_added := implementation_features.Add (a_feature)
 		ensure
-			feature_added: implementation_features.has (a_feature)
+			feature_added: implementation_features.Contains (a_feature)
 		end
 	
 	add_invariant (a_tag, a_text: STRING) is
@@ -670,7 +670,7 @@ feature -- Basic Operations
 			create an_invariant.make (2)
 			an_invariant.put (0, a_tag)
 			an_invariant.put (1, a_text)
-			invariant_added := invariants.extend (an_invariant)	
+			invariant_added := invariants.Add (an_invariant)	
 		end
 
 feature {NONE} -- Implementation

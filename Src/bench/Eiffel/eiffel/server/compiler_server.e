@@ -182,7 +182,7 @@ end;
 			an_id := id (t);
 			init_file (server_file);
 			position := store_append
-				(server_file.descriptor, $t, $make_index, $Current);
+				(server_file.descriptor, $t, $make_index, $need_index, $Current);
 			!!info.make (position, server_file.id);
 			server_file.add_occurence;
 
@@ -537,10 +537,17 @@ end
 			-- Do nothing
 		end;
 
-	 make_index (obj: ANY; file_position, object_count: INTEGER) is
+	make_index (obj: ANY; file_position, object_count: INTEGER) is
 			-- Index building
+		require
+			need_index (obj)
 		do
 		end;
+
+	need_index (obj: ANY): BOOLEAN is
+			-- Is an index needed for `obj'?
+		do
+		end
 
 feature -- Duplication
 
@@ -574,7 +581,7 @@ feature -- Comparison
 
 feature {NONE} -- External features
 
-	store_append (f_desc: INTEGER; o: POINTER; r: POINTER; s: POINTER): INTEGER is
+	store_append (f_desc: INTEGER; o, r, need_index_ptr, s: POINTER): INTEGER is
 		external
 			"C"
 		end;

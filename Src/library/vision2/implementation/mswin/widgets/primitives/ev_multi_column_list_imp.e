@@ -504,14 +504,6 @@ feature -- Element change
 
 feature {EV_MULTI_COLUMN_LIST_ROW_I} -- Implementation
 
---	item_type: EV_MULTI_COLUMN_LIST_ROW_IMP is
-			-- An empty feature to give a type.
-			-- We don't use the genericity because it is
-			-- too complicated with the multi-platform design.
-			-- Need to be redefined.
-	--	do
-	--	end
-
 	insert_item (item_imp: EV_MULTI_COLUMN_LIST_ROW_IMP; an_index: INTEGER) is
 			-- Insert `item_imp' at `index'.
 		local
@@ -860,6 +852,9 @@ end -- class EV_MULTI_COLUMN_LIST_IMP
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.70  2000/03/27 20:43:49  brendel
+--| Removed obsolete `item_type'.
+--|
 --| Revision 1.69  2000/03/27 18:09:50  brendel
 --| Improved implementation of `add_column'.
 --| Clean-up.

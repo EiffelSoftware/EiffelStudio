@@ -80,34 +80,6 @@ feature -- Access
 			end
 		end
 
-	--selected_items: LINKED_LIST [EV_LIST_ITEM] is
-			-- Items which are currently selected.
-	--	local
-	--		list_pointer, item_pointer: POINTER
-	--		o: EV_ANY_IMP
-	--		a_counter: INTEGER
-	--		current_item: EV_LIST_ITEM
-	--	do
-	--		create Result.make
-	--		list_pointer := C.gtk_list_struct_selection (list_widget)
-	--		if list_pointer /= Default_pointer then
-	--			from
-	--				a_counter := 0
-	--			until
-	--				a_counter = C.g_list_length (list_pointer)
-	--			loop
-	--				item_pointer := C.g_list_nth_data (
-	--					list_pointer,
-	--					a_counter
-	--				)
-	--				o := eif_object_from_c (item_pointer)
-	--				current_item ?= o.interface
-	--				Result.extend (current_item)
-	--				a_counter := a_counter + 1
-	--			end
-	--		end	
-	--	end
-
 feature -- Status report
 
 	selected: BOOLEAN is
@@ -235,6 +207,9 @@ end -- class EV_LIST_IMP
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.26  2000/02/29 19:07:50  king
+--| Removed now platform independent selected_items
+--|
 --| Revision 1.25  2000/02/29 18:43:41  king
 --| Tidied up code
 --|

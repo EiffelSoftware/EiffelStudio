@@ -67,7 +67,7 @@ feature {NONE}-- Initialization
 			create blank_lines_check_button
 			create else_on_closing_box
 			create else_on_closing_label
-			create else_on_closing_check_button
+			create else_at_closing_check_button
 			create indent_string_box
 			create indent_string_label
 			create indent_string_text_field
@@ -220,7 +220,7 @@ feature {NONE}-- Initialization
 			blank_lines_box.extend (blank_lines_check_button)
 			generation_tests_box.extend (else_on_closing_box)
 			else_on_closing_box.extend (else_on_closing_label)
-			else_on_closing_box.extend (else_on_closing_check_button)
+			else_on_closing_box.extend (else_at_closing_check_button)
 			generation_tests_box.extend (indent_string_box)
 			indent_string_box.extend (indent_string_label)
 			indent_string_box.extend (indent_string_text_field)
@@ -428,7 +428,7 @@ feature {NONE}-- Initialization
 			blank_lines_label.align_text_left
 			else_on_closing_box.set_padding_width (5)
 			else_on_closing_box.disable_item_expand (else_on_closing_label)
-			else_on_closing_box.disable_item_expand (else_on_closing_check_button)
+			else_on_closing_box.disable_item_expand (else_at_closing_check_button)
 			else_on_closing_label.set_text ("Append else at closing of if blocks:")
 			else_on_closing_label.set_minimum_width (180)
 			else_on_closing_label.align_text_left
@@ -765,7 +765,7 @@ feature -- Access
 	resource_browse_button, new_reference_browse_button, referenced_assemblies_add_button, 
 	referenced_assemblies_remove_button, parse_file_browse_button, serialized_folder_browse_button, 
 	parse_button: EV_BUTTON
-	case_sensitive_check_button, blank_lines_check_button, else_on_closing_check_button, 
+	case_sensitive_check_button, blank_lines_check_button, else_at_closing_check_button, 
 	generate_executable_check_button, generate_in_memory_check_button, include_debug_check_button: EV_CHECK_BUTTON
 	codedoms_tree: EV_TREE
 	left_buttons_padding_cell, right_buttons_padding_cell, referenced_assemblies_right_padding_cell, 

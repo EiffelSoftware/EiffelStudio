@@ -44,29 +44,72 @@ feature {NONE} -- Initialization
 			-- can be added here.
 		local
 			l_config: CODE_MACHINE_CONFIGURATION
-			l_languages: LIST [STRING]
+			l_string_list: LIST [STRING]
+			l_assemblies: STRING
 		do
 			Event_manager.set_output_displayer (agent display_output)
 			make
 			close_request_actions.extend (agent on_close)
 			create l_config.make
-			l_languages := l_config.languages
+			l_string_list := l_config.languages
 			from
-				l_languages.start
+				l_string_list.start
 			until
-				l_languages.after
+				l_string_list.after
 			loop
-				provider_combo_box.extend (create {EV_LIST_ITEM}.make_with_text (l_languages.item))
-				l_languages.forth
+				provider_combo_box.extend (create {EV_LIST_ITEM}.make_with_text (l_string_list.item))
+				l_string_list.forth
 			end
-			provider_combo_box.set_text (saved_codedom_provider)
-			set_x_position (saved_x)
-			set_y_position (saved_y)
-			set_width (saved_width)
-			set_height (saved_height)
-			generate_label.set_text ("Select codedom tree")
-			indent_string_text_field.set_text ("%T%T%T")
+			provider_combo_box.set_text (text_setting (Codedom_provider_key))
+			set_x_position (setting (X_key))
+			set_y_position (setting (Y_key))
+			set_width (setting (Width_key))
+			set_height (setting (Height_key))
+			generate_label.set_text (select_codedom_tree_label)
 			referenced_assemblies_list.enable_multiple_selection
+			indent_string_text_field.set_text (text_setting (Indent_string_Key))
+			if saved_blank_lines then
+				blank_lines_check_button.enable_select
+			end
+			if saved_else_at_closing then
+				else_at_closing_check_button.enable_select
+			end
+			indent_string_text_field.set_text (text_setting (Indent_string_key))
+			generation_path_text_field.set_text (text_setting (Generated_file_folder_key))
+			generated_filename_text_field.set_text (text_setting (Generated_filename_key))
+			identifier_text_field.set_text (text_setting (Identifier_key))
+			type_text_field.set_text (text_setting (Type_key))
+			source_filename_text_field.set_text (text_setting (Source_filename_key))
+			source_text.set_text (text_setting (Source_key))
+			if saved_generate_executable then
+				generate_executable_check_button.enable_select
+			end
+			if saved_generate_in_memory then
+				generate_in_memory_check_button.enable_select
+			end
+			if saved_include_debug then
+				include_debug_check_button.enable_select
+			end
+			compiler_options_text_field.set_text (text_setting (Compiler_options_key))
+			main_class_text_field.set_text (text_setting (Main_class_key))
+			output_assembly_text_field.set_text (text_setting (Output_assembly_key))
+			resource_text_field.set_text (text_setting (Resource_key))
+			l_assemblies := text_setting (Referenced_assemblies_key)
+			l_string_list := l_assemblies.split (';')
+			from
+				l_string_list.start
+			until
+				l_string_list.after
+			loop
+				if not l_string_list.item.is_empty then
+					referenced_assemblies_list.extend (create {EV_LIST_ITEM}.make_with_text (l_string_list.item))
+				end
+				l_string_list.forth
+			end
+			parse_file_text_field.set_text (text_setting (Parsed_file_key))
+			serialized_folder_text_field.set_text (text_setting (Saved_serialized_folder_key))
+			output_text.append_text ("%N%N----------------------------------------------------------%N")
+			output_text.append_text ("Tool started " + feature {SYSTEM_DATE_TIME}.now.to_string)
 			create store.load
 			update_tree
 		end
@@ -115,6 +158,7 @@ feature {NONE} -- Events
 			l_text_writer: STREAM_WRITER
 			l_options: SYSTEM_DLL_CODE_GENERATOR_OPTIONS
 			l_retried: BOOLEAN
+			l_path: STRING
 		do
 			if not l_retried then
 				l_type := selected_tree_item_type
@@ -122,8 +166,15 @@ feature {NONE} -- Events
 				create l_options.make
 				l_options.set_blank_lines_between_members (blank_lines_check_button.is_selected)
 				l_options.set_indent_string (indent_string_text_field.text)
-				l_options.set_else_on_closing (else_on_closing_check_button.is_selected)
-				create l_text_writer.make_from_path (generation_path_text_field.text + (create {OPERATING_ENVIRONMENT}).Directory_separator.out + generated_filename_text_field.text + codedom_provider.file_extension)
+				l_options.set_else_on_closing (else_at_closing_check_button.is_selected)
+				create l_path.make (240)
+				l_path.append (generation_path_text_field.text)
+				if l_path.item (l_path.count) /= '\' then
+					l_path.append_character ('\')
+				end
+				l_path.append (generated_filename_text_field.text)
+				l_path.append (language_extension)
+				create l_text_writer.make_from_path (l_path)
 				inspect
 					l_type
 				when codedom_compile_unit_type then
@@ -159,6 +210,9 @@ feature {NONE} -- Events
 				else
 					Event_manager.raise_event (create {TESTER_EVENT}.make ("Cannot generate: Invalid codedom tree.", True))
 				end
+				l_text_writer.flush
+				l_text_writer.close
+				Event_manager.raise_event (create {TESTER_EVENT}.make ("Code successfully generated in: " + l_path, False))
 			end
 		rescue
 			l_retried := True
@@ -340,6 +394,7 @@ feature {NONE} -- Events
 				remove_button.disable_sensitive
 				compile_from_dom_button.disable_sensitive
 			end
+			check_can_generate
 		end
 	
 	on_codedom_tree_deselect is
@@ -361,7 +416,7 @@ feature {NONE} -- Events
 			-- Called by `select_actions' of `browse_source_button'.
 			-- Show browse dialog, put result in text field.
 		do
-			browse_for_file ("Browse for Eiffel Source file...", "*.es", agent source_filename_text_field.set_text)
+			browse_for_file ("Browse for Source file...", "*" + language_extension, agent source_filename_text_field.set_text)
 		end
 
 	on_source_file_name_change is
@@ -423,12 +478,17 @@ feature {NONE} -- Events
 			-- Enable `Add' reference button if text field not empty.
 		do
 			if new_reference_text_field.text.is_empty then
-				if add_button.is_sensitive then
-					add_button.disable_sensitive
+				if referenced_assemblies_add_button.is_sensitive then
+					referenced_assemblies_add_button.disable_sensitive
 				end
 			else
-				if not add_button.is_sensitive then
-					add_button.enable_sensitive
+				if feature {SYSTEM_FILE}.exists (new_reference_text_field.text) then
+					new_reference_text_field.set_foreground_color (Black)
+					if not referenced_assemblies_add_button.is_sensitive then
+						referenced_assemblies_add_button.enable_sensitive
+					end
+				else
+					new_reference_text_field.set_foreground_color (Red)
 				end
 			end
 		end
@@ -531,12 +591,48 @@ feature {NONE} -- Events
 
 	on_close is
 			-- Save all settings then quit.
+		local
+			l_string: STRING
 		do
-			set_saved_height (height)
-			set_saved_width (width)
-			set_saved_x (x_position)
-			set_saved_y (y_position)
-			set_saved_codedom_provider (provider_combo_box.text)
+			set_setting (Height_key, height)
+			set_setting (Width_key, width)
+			set_setting (X_key, x_position)
+			set_setting (Y_key, y_position)
+			set_text_setting (Codedom_provider_key, provider_combo_box.text)
+			set_text_setting (Generated_filename_key, generated_filename_text_field.text)
+			set_text_setting (Identifier_key, identifier_text_field.text)
+			set_text_setting (Type_key, type_text_field.text)
+			set_saved_blank_lines (blank_lines_check_button.is_selected)
+			set_saved_else_at_closing (else_at_closing_check_button.is_selected)
+			set_text_setting (Indent_string_key, indent_string_text_field.text)
+			set_text_setting (Source_filename_key, source_filename_text_field.text)
+			set_text_setting (Source_key, source_text.text)
+			set_saved_generate_executable (generate_executable_check_button.is_selected)
+			set_saved_generate_in_memory (generate_in_memory_check_button.is_selected)
+			set_saved_include_debug (include_debug_check_button.is_selected)
+			set_text_setting (Compiler_options_key, compiler_options_text_field.text)
+			set_text_setting (Main_class_key, main_class_text_field.text)
+			set_text_setting (Output_assembly_key, output_assembly_text_field.text)
+			set_text_setting (Resource_key, resource_text_field.text)
+			from
+				referenced_assemblies_list.start
+				if not referenced_assemblies_list.after then
+					l_string := referenced_assemblies_list.item.text
+					referenced_assemblies_list.forth
+				else
+					l_string := ""
+				end
+			until
+				referenced_assemblies_list.after
+			loop
+				l_string.append_character (';')
+				l_string.append (referenced_assemblies_list.item.text)
+				referenced_assemblies_list.forth
+			end
+			set_text_setting (Referenced_assemblies_key, l_string)
+			set_text_setting (Parsed_file_key, parse_file_text_field.text)
+			set_text_setting (Serialized_filename_key, serialized_filename_text_field.text)
+			store.store;
 			(create {EV_ENVIRONMENT}).application.destroy
 		end
 	
@@ -623,7 +719,7 @@ feature {NONE} -- Implementation
 					else
 						create l_node.make_with_text ("Compile unit " + i.out)
 					end
-					l_node.set_pixmap (Compile_units_node.pixmap)
+					l_node.set_pixmap (Compile_unit_png)
 					l_node.set_tooltip (store.compile_units_paths.item)
 					l_node.set_data (store.compile_units.item)
 					Compile_units_node.extend (l_node)
@@ -642,7 +738,7 @@ feature {NONE} -- Implementation
 					store.namespaces.after
 				loop
 					create l_node.make_with_text (store.namespaces.item.name)
-					l_node.set_pixmap (Namespaces_node.pixmap)
+					l_node.set_pixmap (Namespace_png)
 					l_node.set_tooltip (store.namespaces_paths.item)
 					l_node.set_data (store.namespaces.item)
 					Namespaces_node.extend (l_node)
@@ -660,7 +756,7 @@ feature {NONE} -- Implementation
 					store.types.after
 				loop
 					create l_node.make_with_text (store.types.item.name)
-					l_node.set_pixmap (Types_node.pixmap)
+					l_node.set_pixmap (Type_png)
 					l_node.set_tooltip (store.types_paths.item)
 					l_node.set_data (store.types.item)
 					Types_node.extend (l_node)
@@ -678,7 +774,7 @@ feature {NONE} -- Implementation
 					store.expressions.after
 				loop
 					create l_node.make_with_text ("Expression " + store.expressions.index.out)
-					l_node.set_pixmap (Expressions_node.pixmap)
+					l_node.set_pixmap (Expression_png)
 					l_node.set_tooltip (store.expressions_paths.item)
 					l_node.set_data (store.expressions.item)
 					Expressions_node.extend (l_node)
@@ -696,7 +792,7 @@ feature {NONE} -- Implementation
 					store.statements.after
 				loop
 					create l_node.make_with_text ("Statement " + store.expressions.index.out)
-					l_node.set_pixmap (Statements_node.pixmap)
+					l_node.set_pixmap (Statement_png)
 					l_node.set_tooltip (store.statements_paths.item)
 					l_node.set_data (store.statements.item)
 					Statements_node.extend (l_node)
@@ -713,7 +809,8 @@ feature {NONE} -- Implementation
 		require
 			non_void_output: a_output /= Void
 		do
-			output_text.append_text (a_output)
+			output_text.set_caret_position (1)
+			output_text.insert_text (a_output)
 			tests_notebook.select_item (output_text)
 		end
 		
@@ -722,7 +819,7 @@ feature {NONE} -- Implementation
 			-- 0 otherwise
 			-- See class TESTER_CODEDOM_TYPES for possible values
 		do
-			if codedoms_tree.selected_item /= Void then
+			if codedoms_tree.selected_item /= Void and then not codedoms_tree.selected_item.tooltip.is_empty then
 				Result := (create {TESTER_TREE_DESERIALIZER}).codedom_type_from_file (codedoms_tree.selected_item.tooltip)
 			end
 		ensure
@@ -734,6 +831,8 @@ feature {NONE} -- Implementation
 		local
 			l_generator: SYSTEM_DLL_ICODE_GENERATOR
 		do
+			on_output_type_update
+			on_identifier_change
 			supports_list.wipe_out
 			non_supports_list.wipe_out
 			l_generator := codedom_provider.create_generator
@@ -976,6 +1075,20 @@ feature {NONE} -- Implementation
 				a_processor.call ([l_dir])
 			end
 		end
+
+	language_extension: STRING is
+			-- Selected language extension if any
+		do
+			create Result.make (4)
+			if codedom_provider /= Void then
+				if codedom_provider.file_extension.chars (0) /= '.' then
+					Result.append_character ('.')
+				end
+				Result.append (codedom_provider.file_extension)
+			end
+		ensure
+			valid_extension: Result /= Void implies Result.item (1) = '.'
+		end
 		
 feature {NONE} -- Private Access
 
@@ -1036,11 +1149,11 @@ feature {NONE} -- Private Access
 		end
 
 invariant
-	generate_button_disabled_if_no_provider: codedom_provider = Void implies not generate_button.is_sensitive
-	compile_from_dom_button_disabled_if_no_provider: codedom_provider = Void implies not compile_from_dom_button.is_sensitive
-	compile_from_file_button_disabled_if_no_provider: codedom_provider = Void implies not compile_from_file_button.is_sensitive
-	compile_from_source_button_disabled_if_no_provider: codedom_provider = Void implies not compile_from_source_button.is_sensitive
-	parse_button_disabled_if_no_provider: codedom_provider = Void implies not parse_button.is_sensitive
+	generate_button_disabled_if_no_provider: is_show_requested and codedom_provider = Void implies not generate_button.is_sensitive
+	compile_from_dom_button_disabled_if_no_provider: is_show_requested and codedom_provider = Void implies not compile_from_dom_button.is_sensitive
+	compile_from_file_button_disabled_if_no_provider: is_show_requested and codedom_provider = Void implies not compile_from_file_button.is_sensitive
+	compile_from_source_button_disabled_if_no_provider: is_show_requested and codedom_provider = Void implies not compile_from_source_button.is_sensitive
+	parse_button_disabled_if_no_provider: is_show_requested and codedom_provider = Void implies not parse_button.is_sensitive
 
 end -- class TESTER_TESTER_MAIN_WINDOW
 

@@ -39,16 +39,26 @@ feature -- Access
 			set_with_named_file (Result, a_file_name)
 		end
 
-	compile_compile_unit_label: STRING is
-			-- `Result' is STRING constant named `compile_compile_unit_label'.
+	generate_namespace_label: STRING is
+			-- `Result' is STRING constant named `generate_namespace_label'.
 		once
-			Result := "Compile assembly from compile unit"
+			Result := "Generate from namespace"
 		end
 
 	icons_directory: STRING is
 			-- `Result' is DIRECTORY constant named `icons_directory'.
 		once
-			Result := "E:\Sources\dotnet\codedom_provider\test\tester\gui\icons"
+			Result := "E:\Sources\dotnet\codedom_provider\test\tester\icons"
+		end
+
+	expression_png: EV_PIXMAP is
+		local
+			a_file_name: FILE_NAME
+		Once
+			create Result
+			create a_file_name.make_from_string (icons_directory)
+			a_file_name.set_file_name ("expression.png")
+			set_with_named_file (Result, a_file_name)
 		end
 
 	generator_tab_title: STRING is
@@ -73,14 +83,10 @@ feature -- Access
 			set_with_named_file (Result, a_file_name)
 		end
 
-	expression_png: EV_PIXMAP is
-		local
-			a_file_name: FILE_NAME
-		Once
-			create Result
-			create a_file_name.make_from_string (icons_directory)
-			a_file_name.set_file_name ("expression.png")
-			set_with_named_file (Result, a_file_name)
+	compile_compile_unit_label: STRING is
+			-- `Result' is STRING constant named `compile_compile_unit_label'.
+		once
+			Result := "Compile assembly from compile unit"
 		end
 
 	generate_expression_label: STRING is
@@ -131,12 +137,6 @@ feature -- Access
 			create a_file_name.make_from_string (icons_directory)
 			a_file_name.set_file_name ("statement.png")
 			set_with_named_file (Result, a_file_name)
-		end
-
-	generate_namespace_label: STRING is
-			-- `Result' is STRING constant named `generate_namespace_label'.
-		once
-			Result := "Generate from namespace"
 		end
 
 

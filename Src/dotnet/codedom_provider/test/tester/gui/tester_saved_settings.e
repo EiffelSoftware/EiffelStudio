@@ -29,72 +29,96 @@ feature {NONE} -- Initialization
 			Default_values.put (650, Width_key)
 			Default_values.put (650, Height_key)
 			Default_text_values.put ("Eiffel", Codedom_provider_key)
+			Default_text_values.put ("%T%T%T", Indent_string_key)
 		end
 		
 feature -- Access
 
-	saved_x: INTEGER is
-			-- Saved starting x
+	saved_blank_lines: BOOLEAN is
 		do
-			Result := setting (X_key)
+			Result := setting (Blank_lines_key) = 1
 		end
-		
-	saved_y: INTEGER is
-			-- Saved starting y
+
+	saved_else_at_closing: BOOLEAN is
 		do
-			Result := setting (Y_key)
+			Result := setting (Else_at_closing_key) = 1
 		end
-		
-	saved_width: INTEGER is
-			-- Saved starting width
+
+	saved_generate_executable: BOOLEAN is
 		do
-			Result := setting (Width_key)
+			Result := setting (Generate_executable_key) = 1
 		end
-		
-	saved_height: INTEGER is
-			-- Saved starting height
+
+	saved_generate_in_memory: BOOLEAN is
 		do
-			Result := setting (Height_key)
+			Result := setting (Generate_in_memory_key) = 1
 		end
-	
-	saved_codedom_provider: STRING is
-			-- Saved codedom provider
+
+	saved_include_debug: BOOLEAN is
 		do
-			Result := text_setting (Codedom_provider_key)
+			Result := setting (Include_debug_key) = 1
 		end
-		
+
 feature -- Basic Implementation
 
-	set_saved_x (a_x: INTEGER) is
-			-- Set `saved_x' with `a_x'.
+	set_saved_blank_lines (a_blank_lines: BOOLEAN) is
+			-- Set `saved_blank_lines' with `a_blank_lines'.
 		do
-			set_setting (x_key, a_x)	
+			if a_blank_lines then
+				set_setting (Blank_lines_key, 1)
+			else
+				set_setting (Blank_lines_key, 2)
+			end
+		ensure
+			set: saved_blank_lines = a_blank_lines
 		end
-		
-	set_saved_y (a_y: INTEGER) is
-			-- Set `saved_y' with `a_y'.
+
+	set_saved_else_at_closing (a_else_at_closing: BOOLEAN) is
+			-- Set `saved_else_at_closing' with `a_else_at_closing'.
 		do
-			set_setting (y_key, a_y)	
+			if a_else_at_closing then
+				set_setting (Else_at_closing_key, 1)
+			else
+				set_setting (Else_at_closing_key, 2)
+			end
+		ensure
+			set: saved_else_at_closing = a_else_at_closing
 		end
-		
-	set_saved_width (a_width: INTEGER) is
-			-- Set `saved_width' with `a_width'.
+
+	set_saved_generate_executable (a_generate_executable: BOOLEAN) is
+			-- Set `saved_generate_executable' with `a_generate_executable'.
 		do
-			set_setting (width_key, a_width)	
+			if a_generate_executable then
+				set_setting (Generate_executable_key, 1)
+			else
+				set_setting (Generate_executable_key, 2)
+			end
+		ensure
+			set: saved_generate_executable = a_generate_executable
 		end
-		
-	set_saved_height (a_height: INTEGER) is
-			-- Set `saved_height' with `a_height'.
+
+	set_saved_generate_in_memory (a_generate_in_memory: BOOLEAN) is
+			-- Set `saved_generate_in_memory' with `a_generate_in_memory'.
 		do
-			set_setting (height_key, a_height)	
+			if a_generate_in_memory then
+				set_setting (Generate_in_memory_key, 1)
+			else
+				set_setting (Generate_in_memory_key, 2)
+			end
+		ensure
+			set: saved_generate_in_memory = a_generate_in_memory
 		end
-		
-	set_saved_codedom_provider (a_codedom_provider: STRING) is
-			-- Set `saved_codedom_provider' with `a_codedom_provider'.
-		require
-			non_void_provider: a_codedom_provider /= Void
+
+	set_saved_include_debug (a_include_debug: BOOLEAN) is
+			-- Set `saved_include_debug' with `a_include_debug'.
 		do
-			set_text_setting (Codedom_provider_key, a_codedom_provider)
+			if a_include_debug then
+				set_setting (Include_debug_key, 1)
+			else
+				set_setting (Include_debug_key, 2)
+			end
+		ensure
+			set: saved_include_debug = a_include_debug
 		end
 
 end -- class TESTER_SAVED_SETTINGS

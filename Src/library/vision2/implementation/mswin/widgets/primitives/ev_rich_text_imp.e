@@ -47,7 +47,6 @@ inherit
 			line_number_from_position
 		select
 			wel_line_index,
-			wel_item,
 			wel_current_line_number,
 			wel_selection_start,
 			wel_line_count,
@@ -85,7 +84,8 @@ inherit
 			text_length as wel_text_length,
 			set_text as wel_set_text,
 			line as wel_line,
-			line_number_from_position as wel_line_number_from_position
+			line_number_from_position as wel_line_number_from_position,
+			item as wel_item
 		undefine
 			hide,
 			line_count,
@@ -141,7 +141,6 @@ inherit
 			text_stream_in,
 			insert_rtf_stream_in,
 			rtf_stream_in,
-			default_process_notification,
 			on_erase_background
 		end
 		
@@ -156,6 +155,16 @@ inherit
 		end
 		
 	WEL_UNIT_CONVERSION
+		export
+			{NONE} all
+		end
+		
+	WEL_PFM_CONSTANTS
+		export
+			{NONE} all
+		end
+		
+	WEL_PFA_CONSTANTS
 		export
 			{NONE} all
 		end
@@ -179,6 +188,9 @@ feature {NONE} -- Initialization
 			show_vertical_scroll_bar
 			set_text_limit (2560000)
 			enable_all_notifications
+			PRINT ("SIMPLE : " + to_simplelinebreak.OUT + " " + to_advancedtypography.out)
+			cwin_send_message (wel_item, Em_settypographyoptions, to_advancedtypography, to_advancedtypography)
+			
 			
 				-- Connect events to `tab_positions' to update `Current' as values
 				-- change.
@@ -194,7 +206,6 @@ feature {NONE} -- Initialization
 			screen_dc.release
 			tab_width := logical_pixels // 2
 		end
-		
 
 	default_style: INTEGER is
 			-- Default style used to create the control
@@ -270,6 +281,35 @@ feature -- Status report
 			unlock_window_update
 		end
 		
+	paragraph_format (caret_index: INTEGER): EV_PARAGRAPH_FORMAT is
+			-- `Result' is paragraph_format at caret position `caret_index'.
+		local
+			wel_paragraph_format: WEL_PARAGRAPH_FORMAT2
+			alignment: INTEGER
+		do
+			lock_window_update
+			safe_store_caret
+			
+			set_selection (caret_index - 1, caret_index - 1)
+			create wel_paragraph_format.make
+			cwin_send_message (wel_item, em_getparaformat, 1, wel_paragraph_format.to_integer)
+			create Result
+			alignment := wel_paragraph_format.alignment
+			inspect alignment
+			when pfa_left then
+				Result.enable_left_alignment
+			when pfa_center then
+				Result.enable_center_alignment
+			when pfa_right then
+				Result.enable_right_alignment
+			when pfa_justify then
+				Result.enable_justification
+			end
+			
+			safe_restore_caret
+			unlock_window_update
+		end	
+		
 	formatting_contiguous (start_index, end_index: INTEGER): BOOLEAN is
 			-- Is formatting from caret position `start_index' to `end_index' contiguous?
 		local
@@ -294,6 +334,8 @@ feature -- Status report
 		
 	formatting_range_information (start_index, end_index: INTEGER): EV_CHARACTER_FORMAT_RANGE_INFORMATION is
 			-- Formatting range information from caret position `start_index' to `end_index'.
+			-- All attributes in `Result' are set to `True' if they remain consitent from `start_index' to
+			--`end_index' and `False' otherwise.
 			-- `Result' is a snapshot of `Current', and does not remain consistent as the contents
 			-- are subsequently changed.
 		local
@@ -448,6 +490,34 @@ feature -- Status setting
 			set_character_format_selection (wel_character_format)
 		end
 		
+	format_paragraph (start_line, end_line: INTEGER; format: EV_PARAGRAPH_FORMAT) is
+			-- Apply paragraph formatting `format' to lines `start_line', `end_line' inclusive.
+		local
+			paragraph: WEL_PARAGRAPH_FORMAT2
+			temp: INTEGER
+			sel_start, sel_end: INTEGER
+		do
+			lock_window_update
+			safe_store_caret
+			
+			set_selection (first_position_from_line_number (start_line), last_position_from_line_number (end_line))
+			create paragraph.make
+			paragraph.set_mask (pfm_alignment)
+			if format.is_left_aligned then
+				paragraph.set_left_alignment
+			elseif format.is_center_aligned then
+				paragraph.set_center_alignment
+			elseif format.is_right_aligned then
+				paragraph.set_right_alignment
+			elseif format.is_justified then
+				paragraph.set_alignment (pfa_justify)
+			end
+			set_paragraph_format (paragraph)
+			
+			safe_restore_caret
+			unlock_window_update
+		end
+		
 	modify_region (start_position, end_position: INTEGER; format: EV_CHARACTER_FORMAT; applicable_attributes: EV_CHARACTER_FORMAT_RANGE_INFORMATION) is
 			-- Modify formatting from `start_position' to `end_position' applying all attributes of `format' that are set to
 			-- `True' within `applicable_attributes', ignoring others.
@@ -545,7 +615,7 @@ feature -- Status setting
 				hashed_formats.put (format, hashed_character_format)
 				formats.extend (format)
 				heights.extend (format.font.height * 2)
-				format_offsets.extend (hashed_formats.count, hashed_character_format)
+				format_offsets.put (hashed_formats.count, hashed_character_format)
 			end
 			format_index := format_offsets.item (hashed_character_format) 
 			temp_string := "\cf"
@@ -851,6 +921,7 @@ feature -- Status setting
 			end
 			
 			set_options (Ecoop_set, Eco_autovscroll + Eco_autohscroll)
+			cwin_send_message (wel_item, Em_settypographyoptions, to_advancedtypography, to_advancedtypography)
 			set_text_limit (2560000)
 			set_default_font
 			cwin_send_message (wel_item, Em_limittext, 0, 0)

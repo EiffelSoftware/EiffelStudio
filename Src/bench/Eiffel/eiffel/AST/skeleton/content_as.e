@@ -130,14 +130,14 @@ feature -- Type check and byte code
 		do
 		end
 
-	local_table (f: FEATURE_I): EXTEND_TABLE [LOCAL_INFO, STRING] is
+	local_table (f: FEATURE_I): HASH_TABLE [LOCAL_INFO, STRING] is
 			-- Local table of eiffel routine
 		require
 			good_argument: f /= Void
 		do
 		end
 
-	local_table_for_format (f: FEATURE_I): EXTEND_TABLE [LOCAL_INFO, STRING] is
+	local_table_for_format (f: FEATURE_I): HASH_TABLE [LOCAL_INFO, STRING] is
 			-- Local table for format of eiffel routine
 		do
 		end

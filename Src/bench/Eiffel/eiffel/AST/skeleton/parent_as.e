@@ -108,7 +108,7 @@ feature -- Compiled parent computation
 			--	selecting clauses (which are more efficient than
 			--	simple fixed lists for queries).
 		local
-			renaming_c: EXTEND_TABLE [STRING, STRING]
+			renaming_c: HASH_TABLE [STRING, STRING]
 			rename_pair: RENAME_AS
 			old_name, new_name: FEATURE_NAME
 			vhrc2: VHRC2

@@ -6,8 +6,13 @@
 		</heading>
 		<list ordered="false">
 			<item>Full support for new <code><keyword>convert</keyword></code> keyword.</item>
-			<item>Made <code><keyword>Void,</keyword></code> previously a feature of <code><class_name>ANY</class_name></code>, a keyword. This prevents the renaming of <code><feature_name>Void</feature_name></code> into <code><feature_name>not_void</feature_name></code> previously possible when it was a routine of <code><class_name>ANY</class_name></code>.</item>			
-			<item>Added support for reference and expanded constraints on a formal generic parameter.</item>
+			<item>Made <code><keyword>Void,</keyword></code> previously a feature of <code><class_name>ANY</class_name></code>, a keyword. This prevents the renaming of <code><feature_name>Void</feature_name></code> into <code><feature_name>not_void</feature_name></code> previously possible when it was a routine of <code><class_name>ANY</class_name></code>.</item>
+			<item>Addition of the <code><keyword>reference</keyword></code> keyword used in generic constraints (See next point).</item>
+			<item>Added support for reference and expanded constraints on a formal generic parameter. In other word, one can now write:
+				<code_block><keyword>class</keyword> <class_name>A</class_name> [<keyword>reference</keyword> G]  ... <keyword>end</keyword>
+<keyword>class</keyword> <class_name>B</class_name> [<keyword>expanded</keyword> G] ... <keyword>end</keyword></code_block>
+				to say that the valid actual generic parameters for <code><class_name>A</class_name></code> are always reference types, and for <code><class_name>B</class_name></code> are always expanded types.
+			</item>
 			<item>Added support for Microsoft .NET 2.0 runtime.</item>
 			<item>Allowed agent creation on infix or prefix routines.</item>
 		</list>
@@ -21,17 +26,53 @@
 			<size>2</size>Changes
 		</heading>
 		<list ordered="false">
-			<item>Compiler is now checking that you cannot redeclare a formal generic parameter into a reference type unless the formal generic parameter is being constraint to be always a reference type.</item>
+			<item>Compiler is now checking that you cannot redeclare a formal generic parameter into a reference type unless the formal generic parameter is being constraint to be always a reference type (See the <bold>What's new</bold> section above).</item>
 			<item>Removed obsolete <code><feature_name>eifcid</feature_name></code>, <code><feature_name>eif_expand</feature_name></code> and <code><feature_name>eifexp</feature_name> </code>from the CECIL interface, one has to use <code><feature_name>eif_type_id</feature_name> </code>instead.</item>
 			<item>In .NET, changed the naming conventions of resources included in an assembly. The extension `.resources' is appended for resources that are originally provided as `.resx' or `.txt' files. Other files are embedded as is in the assembly and the name of the resource is the name of the file.</item>
-			<item>In .NET, now all classes inherit from <code><class_name>ANY</class_name></code>. Before all classes inherited from <code><class_name>SYSTEM_OBJECT</class_name></code>. As a consequence you can now have Eiffel generic classes where the generic parameter is a .NET class.</item>
-			<item>Now on .NET the following assignment attempt will succeed whereas it failed before because <code><class_name>SYSTEM_OBJECT</class_name></code> did not inherit from <code><class_name>ANY</class_name></code>:<code_block>a: <class_name>ANY</class_name>
+			<item>In .NET, now all classes inherit from <code><class_name>ANY</class_name></code>. Before all classes inherited from <code><class_name>SYSTEM_OBJECT</class_name></code>. The consequences are:
+				<list ordered="false">
+					<item>You can write an Eiffel generic classes where the actual generic parameter is a .NET class.</item>
+					<item>If you used to inherit from .NET classes and Eiffel classes you can replace the inheritance clause below:
+					<code_block><keyword>class</keyword> <class_name>A</class_name>
+<keyword>inherit</keyword>
+	<class_name>APPLICATION_EXCEPTION</class_name>
+		<keyword>undefine</keyword>
+			<feature_name>finalize</feature_name>,
+			<feature_name>equals</feature_name>,
+			<feature_name>to_string</feature_name>,
+			<feature_name>get_hash_code</feature_name>
+		<keyword>end</keyword>
+	
+	<class_name>ANY</class_name></code_block>
+					by the much simpler inheritance clause:
+					<code_block><keyword>class</keyword> <class_name>A</class_name>
+<keyword>inherit</keyword>
+	<class_name>APPLICATION_EXCEPTION</class_name>
+</code_block>
+					</item>
+					<item>If you were using a feature of <code><class_name>SYSTEM_OBJECT</class_name></code> directly on Eiffel classes, now you need to assign the value to a variable entity of type <code><class_name>SYSTEM_OBJECT</class_name></code>. In other word:
+					<code_block>e: <class_name>EIFFEL_CLASS</class_name>
+o: <class_name>SYSTEM_OBJECT</class_name>
+...
+o := e
+o.<feature_name>feature_of_system_object</feature_name></code_block>
+					</item>
+				<item>The following assignment attempt will succeed whereas it failed before because <code><class_name>SYSTEM_OBJECT</class_name></code> did not inherit from <code><class_name>ANY</class_name></code>:<code_block>a: <class_name>ANY</class_name>
 o: <class_name>SYSTEM_OBJECT</class_name>
 ...
 <keyword>check</keyword> o /= Void <keyword>and</keyword> a = Void <keyword>end</keyword>
 a ?= o
 <keyword>check</keyword> o /= Void <keyword>and</keyword> a /= Void <keyword>end</keyword></code_block></item>
+				</list>
+			</item>
 			<item>New format of the independent storable files which takes into account internal changes made for a better generic conformance in classic mode.</item>
+			<item>New validity rule for expanded types: It is valid to use an expanded type of base class <code><class_name>C</class_name></code> in the text of a class <code><class_name>B</class_name></code> if and only if it satisfies the following conditions:
+				<list ordered="false">
+					<item><code><class_name>C</class_name></code> is not a deferred class</item>
+					<item><code><class_name>C</class_name></code>'s version of the procedure <code><feature_name>default_create</feature_name></code> (inherited from <code><class_name>ANY</class_name></code>) is one of the creation procedures of <code><class_name>C</class_name></code> available to <code><class_name>B</class_name></code> for creation.</item>
+				</list>
+			</item>
+			<item>New validity rule for expanded class: An expanded class <code><class_name>C</class_name></code> needs to have the version of the procedure <code><feature_name>default_create</feature_name></code> (inherited from <code><class_name>ANY</class_name></code>) as one of its creation procedure.</item>
 		</list>
 		<heading>
 			<size>2</size>Bug fixes

@@ -10,6 +10,10 @@
 	Externals for class MEMORY.
 */
 
+/*
+doc:<file name="memory.c" header="eif_memory.h" version="$Id$" summary="Externals for MEMORY class">
+*/
+
 #ifdef __cplusplus
 extern "C" {
 #endif
@@ -29,7 +33,14 @@ extern "C" {
 #include "rt_boehm.h"
 #endif
 
-/* Global variable to find out if we are performing the final collect */
+/*
+doc:	<attribute name="eif_is_in_final_collect" return_type="EIF_BOOLEAN" export="public">
+doc:		<summary>Global variable to find out if we are performing the final collect</summary>
+doc:		<access>Read/Write</access>
+doc:		<thread_safety>Safe</thread_safety>
+doc:		<synchronization>Modified only at the very end of a system execution.</synchronization>
+doc:	</attribute>
+*/
 rt_public EIF_BOOLEAN eif_is_in_final_collect = EIF_FALSE;
 
 rt_public void mem_free(EIF_REFERENCE object)
@@ -122,7 +133,16 @@ rt_public void mem_tiny(void)
  * Memory coalescing.
  */
 #ifdef ISE_GC
-rt_private int m_largest = 0;		/* Size of the largest coalesced block */ /* %%ss mt */
+/*
+doc:	<attribute name="m_largest" return_type="int" export="private">
+doc:		<summary>Size of largest coalesced block.</summary>
+doc:		<access>Read/Write</access>
+doc:		<thread_safety>Not safe</thread_safety>
+doc:		<synchronization>None</synchronization>
+doc:		<fixme>Issue because between a call to `mem_coalesc' and `mem_largest', a second call to `mem_coalesc' could have been made making `mem_largest' obsolete. I think MEMORY should be equipped with an attribute instead to avoid this race condition.</fixme>
+doc:	</attribute>
+*/
+rt_private int m_largest = 0;
 #endif
 
 rt_public EIF_INTEGER mem_largest(void)
@@ -195,7 +215,16 @@ rt_public void mem_pset(long int value)
  * Memory usage.
  */
 #ifdef ISE_GC
-rt_private struct emallinfo mem_stats; /* %%ss mt */
+/*
+doc:	<attribute name="mem_stats" return_type="struct emallinfo" export="private">
+doc:		<summary>Collect memory statistics for either C, Eiffel or both.</summary>
+doc:		<access>Read/Write</access>
+doc:		<thread_safety>Not safe</thread_safety>
+doc:		<synchronization>None</synchronization>
+doc:		<fixme>Issue the `mem_stats' structure could be shared between two threads. Instead a copy should be done at the level of MEMORY or MEM_INFO (see m_largest)</fixme>
+doc:	</attribute>
+*/
+rt_private struct emallinfo mem_stats;
 #endif
 
 rt_public void mem_stat(long int type)
@@ -242,7 +271,26 @@ rt_public long mem_info(long int field)
  * GC statistics.
  */
 #ifdef ISE_GC
+/*
+doc:	<attribute name="gc_stats" return_type="struct gacstat" export="private">
+doc:		<summary>Access to GC statistics buffer used by gc_info routine.</summary>
+doc:		<access>Read/Write</access>
+doc:		<thread_safety>Not safe</thread_safety>
+doc:		<synchronization>None</synchronization>
+doc:		<fixme>See `m_largest' fixme for fix</fixme>
+doc:	</attribute>
+*/
 rt_private struct gacstat gc_stats;
+
+/*
+doc:	<attribute name="gc_count" return_type="long" export="private">
+doc:		<summary>Number of full or partial collection so far.</summary>
+doc:		<access>Read/Write</access>
+doc:		<thread_safety>Note safe</thread_safety>
+doc:		<synchronization>None</synchronization>
+doc:		<fixme>Like for `m_largest' this value should be stored at the Eiffel MEMORY class level.</fixme>
+doc:	</attribute>
+*/
 rt_private long gc_count;
 #endif
 
@@ -455,3 +503,6 @@ rt_public EIF_INTEGER eif_get_chunk_size (void)
 }
 #endif
 
+/*
+doc:</file>
+*/

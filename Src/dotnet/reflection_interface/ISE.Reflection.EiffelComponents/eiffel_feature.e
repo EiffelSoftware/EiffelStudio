@@ -168,6 +168,12 @@ feature -- Status Report
 			description: "Is feature an infix?"
 			external_name: "IsInfix"
 		end
+
+	modified: BOOLEAN
+		indexing
+			description: "Has current feature been modified (i.e. has name changed or have arguments been renamed)?"
+			external_name: "Modified"
+		end
 		
 --##FIXME
 	postcondition: BOOLEAN
@@ -252,6 +258,16 @@ feature -- Status Setting
 			is_infix := a_value
 		ensure
 			infix_set: is_infix = a_value
+		end
+
+	set_modified is
+		indexing
+			description: "Set `modified' with `True'."
+			external_name: "SetModified"
+		do
+			modified := True
+		ensure
+			modified: modified
 		end
 		
 	set_eiffel_name (a_name: like eiffel_name) is

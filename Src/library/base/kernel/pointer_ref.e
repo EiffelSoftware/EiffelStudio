@@ -10,9 +10,9 @@ indexing
 
 class POINTER_REF inherit
 
-	ANY
+	HASHABLE
 		redefine
-			out
+			out, is_hashable
 		end
 
 feature -- Access
@@ -72,8 +72,8 @@ end -- class POINTER_REF
 
 --|----------------------------------------------------------------
 --| EiffelBase: library of reusable components for ISE Eiffel 3.
---| Copyright (C) 1986, 1990, 1993, 1994, Interactive Software
---|   Engineering Inc.
+--| Copyright (C) 1986, 1990, 1993, 1994, 1995
+--|   Interactive Software Engineering Inc.
 --| All rights reserved. Duplication and distribution prohibited.
 --|
 --| 270 Storke Road, Suite 7, Goleta, CA 93117 USA

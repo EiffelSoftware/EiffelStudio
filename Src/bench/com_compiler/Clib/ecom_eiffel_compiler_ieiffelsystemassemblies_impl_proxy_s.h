@@ -73,13 +73,13 @@ public:
 	/*-----------------------------------------------------------
 	Add a signed assembly to the project.
 	-----------------------------------------------------------*/
-	void ccom_add_signed_assembly(  /* [in] */ EIF_OBJECT assembly_identifier,  /* [in] */ EIF_OBJECT a_name,  /* [in] */ EIF_OBJECT a_version,  /* [in] */ EIF_OBJECT a_culture,  /* [in] */ EIF_OBJECT a_publickey );
+	void ccom_add_signed_assembly(  /* [in] */ EIF_OBJECT assembly_prefix,  /* [in] */ EIF_OBJECT assembly_identifier,  /* [in] */ EIF_OBJECT a_name,  /* [in] */ EIF_OBJECT a_version,  /* [in] */ EIF_OBJECT a_culture,  /* [in] */ EIF_OBJECT a_publickey );
 
 
 	/*-----------------------------------------------------------
 	Add a unsigned (local) assembly to the project.
 	-----------------------------------------------------------*/
-	void ccom_add_unsigned_assembly(  /* [in] */ EIF_OBJECT assembly_identifier,  /* [in] */ EIF_OBJECT a_path );
+	void ccom_add_unsigned_assembly(  /* [in] */ EIF_OBJECT assembly_prefix,  /* [in] */ EIF_OBJECT assembly_identifier,  /* [in] */ EIF_OBJECT a_path );
 
 
 	/*-----------------------------------------------------------
@@ -131,7 +131,25 @@ public:
 
 
 	/*-----------------------------------------------------------
-	Return all of the assemblies in an enumerator
+	Is 'prefix' a valid assembly prefix
+	-----------------------------------------------------------*/
+	EIF_BOOLEAN ccom_is_valid_prefix(  /* [in] */ EIF_OBJECT assembly_prefix );
+
+
+	/*-----------------------------------------------------------
+	Has the 'prefix' already been allocated to another assembly
+	-----------------------------------------------------------*/
+	EIF_BOOLEAN ccom_is_prefix_allocated(  /* [in] */ EIF_OBJECT assembly_prefix );
+
+
+	/*-----------------------------------------------------------
+	Rename the assembly identifier
+	-----------------------------------------------------------*/
+	void ccom_rename_assembly(  /* [in] */ EIF_OBJECT assembly_new_identifier,  /* [in] */ EIF_OBJECT assembly_old_identifier );
+
+
+	/*-----------------------------------------------------------
+	Returns all of the assemblies in an enumerator
 	-----------------------------------------------------------*/
 	EIF_REFERENCE ccom_assemblies(  );
 

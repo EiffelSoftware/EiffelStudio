@@ -199,6 +199,20 @@ feature -- Status Report
 			Result := True
 		end
 
+	working_directory_user_precondition: BOOLEAN is
+			-- User-defined preconditions for `working_directory'.
+			-- Redefine in descendants if needed.
+		do
+			Result := True
+		end
+
+	set_working_directory_user_precondition (return_value: STRING): BOOLEAN is
+			-- User-defined preconditions for `set_working_directory'.
+			-- Redefine in descendants if needed.
+		do
+			Result := True
+		end
+
 	update_project_ace_file_user_precondition (project_ace_file_name: STRING): BOOLEAN is
 			-- User-defined preconditions for `update_project_ace_file'.
 			-- Redefine in descendants if needed.
@@ -447,6 +461,23 @@ feature -- Basic Operations
 			-- Assemblies.
 		require
 			assemblies_user_precondition: assemblies_user_precondition
+		deferred
+
+		end
+
+	working_directory: STRING is
+			-- Project working directory.
+		require
+			working_directory_user_precondition: working_directory_user_precondition
+		deferred
+
+		end
+
+	set_working_directory (return_value: STRING) is
+			-- Project working directory.
+			-- `return_value' [in].  
+		require
+			set_working_directory_user_precondition: set_working_directory_user_precondition (return_value)
 		deferred
 
 		end

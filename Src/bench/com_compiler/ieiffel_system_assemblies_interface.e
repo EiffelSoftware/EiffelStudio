@@ -17,14 +17,14 @@ feature -- Status Report
 			Result := True
 		end
 
-	add_signed_assembly_user_precondition (assembly_identifier: STRING; a_name: STRING; a_version: STRING; a_culture: STRING; a_publickey: STRING): BOOLEAN is
+	add_signed_assembly_user_precondition (assembly_prefix: STRING; assembly_identifier: STRING; a_name: STRING; a_version: STRING; a_culture: STRING; a_publickey: STRING): BOOLEAN is
 			-- User-defined preconditions for `add_signed_assembly'.
 			-- Redefine in descendants if needed.
 		do
 			Result := True
 		end
 
-	add_unsigned_assembly_user_precondition (assembly_identifier: STRING; a_path: STRING): BOOLEAN is
+	add_unsigned_assembly_user_precondition (assembly_prefix: STRING; assembly_identifier: STRING; a_path: STRING): BOOLEAN is
 			-- User-defined preconditions for `add_unsigned_assembly'.
 			-- Redefine in descendants if needed.
 		do
@@ -87,6 +87,27 @@ feature -- Status Report
 			Result := True
 		end
 
+	is_valid_prefix_user_precondition (assembly_prefix: STRING): BOOLEAN is
+			-- User-defined preconditions for `is_valid_prefix'.
+			-- Redefine in descendants if needed.
+		do
+			Result := True
+		end
+
+	is_prefix_allocated_user_precondition (assembly_prefix: STRING): BOOLEAN is
+			-- User-defined preconditions for `is_prefix_allocated'.
+			-- Redefine in descendants if needed.
+		do
+			Result := True
+		end
+
+	rename_assembly_user_precondition (assembly_new_identifier: STRING; assembly_old_identifier: STRING): BOOLEAN is
+			-- User-defined preconditions for `rename_assembly'.
+			-- Redefine in descendants if needed.
+		do
+			Result := True
+		end
+
 	assemblies_user_precondition: BOOLEAN is
 			-- User-defined preconditions for `assemblies'.
 			-- Redefine in descendants if needed.
@@ -104,25 +125,27 @@ feature -- Basic Operations
 
 		end
 
-	add_signed_assembly (assembly_identifier: STRING; a_name: STRING; a_version: STRING; a_culture: STRING; a_publickey: STRING) is
+	add_signed_assembly (assembly_prefix: STRING; assembly_identifier: STRING; a_name: STRING; a_version: STRING; a_culture: STRING; a_publickey: STRING) is
 			-- Add a signed assembly to the project.
+			-- `assembly_prefix' [in].  
 			-- `assembly_identifier' [in].  
 			-- `a_name' [in].  
 			-- `a_version' [in].  
 			-- `a_culture' [in].  
 			-- `a_publickey' [in].  
 		require
-			add_signed_assembly_user_precondition: add_signed_assembly_user_precondition (assembly_identifier, a_name, a_version, a_culture, a_publickey)
+			add_signed_assembly_user_precondition: add_signed_assembly_user_precondition (assembly_prefix, assembly_identifier, a_name, a_version, a_culture, a_publickey)
 		deferred
 
 		end
 
-	add_unsigned_assembly (assembly_identifier: STRING; a_path: STRING) is
+	add_unsigned_assembly (assembly_prefix: STRING; assembly_identifier: STRING; a_path: STRING) is
 			-- Add a unsigned (local) assembly to the project.
+			-- `assembly_prefix' [in].  
 			-- `assembly_identifier' [in].  
 			-- `a_path' [in].  
 		require
-			add_unsigned_assembly_user_precondition: add_unsigned_assembly_user_precondition (assembly_identifier, a_path)
+			add_unsigned_assembly_user_precondition: add_unsigned_assembly_user_precondition (assembly_prefix, assembly_identifier, a_path)
 		deferred
 
 		end
@@ -205,8 +228,36 @@ feature -- Basic Operations
 
 		end
 
+	is_valid_prefix (assembly_prefix: STRING): BOOLEAN is
+			-- Is 'prefix' a valid assembly prefix
+			-- `assembly_prefix' [in].  
+		require
+			is_valid_prefix_user_precondition: is_valid_prefix_user_precondition (assembly_prefix)
+		deferred
+
+		end
+
+	is_prefix_allocated (assembly_prefix: STRING): BOOLEAN is
+			-- Has the 'prefix' already been allocated to another assembly
+			-- `assembly_prefix' [in].  
+		require
+			is_prefix_allocated_user_precondition: is_prefix_allocated_user_precondition (assembly_prefix)
+		deferred
+
+		end
+
+	rename_assembly (assembly_new_identifier: STRING; assembly_old_identifier: STRING) is
+			-- Rename the assembly identifier
+			-- `assembly_new_identifier' [in].  
+			-- `assembly_old_identifier' [in].  
+		require
+			rename_assembly_user_precondition: rename_assembly_user_precondition (assembly_new_identifier, assembly_old_identifier)
+		deferred
+
+		end
+
 	assemblies: IENUM_ASSEMBLY_INTERFACE is
-			-- Return all of the assemblies in an enumerator
+			-- Returns all of the assemblies in an enumerator
 		require
 			assemblies_user_precondition: assemblies_user_precondition
 		deferred

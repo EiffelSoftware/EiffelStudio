@@ -229,6 +229,18 @@ public:
 
 
 	/*-----------------------------------------------------------
+	Project working directory.
+	-----------------------------------------------------------*/
+	EIF_REFERENCE ccom_working_directory(  );
+
+
+	/*-----------------------------------------------------------
+	Project working directory.
+	-----------------------------------------------------------*/
+	void ccom_set_working_directory(  /* [in] */ EIF_OBJECT return_value );
+
+
+	/*-----------------------------------------------------------
 	Update the project Ace file according to the current settings.
 	-----------------------------------------------------------*/
 	void ccom_update_project_ace_file(  /* [in] */ EIF_OBJECT project_ace_file_name );

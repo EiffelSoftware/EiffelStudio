@@ -116,6 +116,12 @@ feature -- Access
 			Result := ccom_assemblies (initializer)
 		end
 
+	working_directory: STRING is
+			-- Project working directory.
+		do
+			Result := ccom_working_directory (initializer)
+		end
+
 feature -- Status Report
 
 	last_error_code: INTEGER is
@@ -226,6 +232,13 @@ feature -- Basic Operations
 			-- `return_value' [in].  
 		do
 			ccom_set_default_namespace (initializer, return_value)
+		end
+
+	set_working_directory (return_value: STRING) is
+			-- Project working directory.
+			-- `return_value' [in].  
+		do
+			ccom_set_working_directory (initializer, return_value)
 		end
 
 	update_project_ace_file (project_ace_file_name: STRING) is
@@ -418,6 +431,18 @@ feature {NONE}  -- Externals
 			-- Assemblies.
 		external
 			"C++ [ecom_eiffel_compiler::IEiffelProjectProperties_impl_proxy %"ecom_eiffel_compiler_IEiffelProjectProperties_impl_proxy_s.h%"](): EIF_REFERENCE"
+		end
+
+	ccom_working_directory (cpp_obj: POINTER): STRING is
+			-- Project working directory.
+		external
+			"C++ [ecom_eiffel_compiler::IEiffelProjectProperties_impl_proxy %"ecom_eiffel_compiler_IEiffelProjectProperties_impl_proxy_s.h%"](): EIF_REFERENCE"
+		end
+
+	ccom_set_working_directory (cpp_obj: POINTER; return_value: STRING) is
+			-- Project working directory.
+		external
+			"C++ [ecom_eiffel_compiler::IEiffelProjectProperties_impl_proxy %"ecom_eiffel_compiler_IEiffelProjectProperties_impl_proxy_s.h%"](EIF_OBJECT)"
 		end
 
 	ccom_update_project_ace_file (cpp_obj: POINTER; project_ace_file_name: STRING) is

@@ -68,13 +68,13 @@ public:
 	/*-----------------------------------------------------------
 	Add a signed assembly to the project.
 	-----------------------------------------------------------*/
-	virtual STDMETHODIMP add_signed_assembly(  /* [in] */ BSTR assembly_identifier, /* [in] */ BSTR a_name, /* [in] */ BSTR a_version, /* [in] */ BSTR a_culture, /* [in] */ BSTR a_publickey ) = 0;
+	virtual STDMETHODIMP add_signed_assembly(  /* [in] */ BSTR assembly_prefix, /* [in] */ BSTR assembly_identifier, /* [in] */ BSTR a_name, /* [in] */ BSTR a_version, /* [in] */ BSTR a_culture, /* [in] */ BSTR a_publickey ) = 0;
 
 
 	/*-----------------------------------------------------------
 	Add a unsigned (local) assembly to the project.
 	-----------------------------------------------------------*/
-	virtual STDMETHODIMP add_unsigned_assembly(  /* [in] */ BSTR assembly_identifier, /* [in] */ BSTR a_path ) = 0;
+	virtual STDMETHODIMP add_unsigned_assembly(  /* [in] */ BSTR assembly_prefix, /* [in] */ BSTR assembly_identifier, /* [in] */ BSTR a_path ) = 0;
 
 
 	/*-----------------------------------------------------------
@@ -126,7 +126,25 @@ public:
 
 
 	/*-----------------------------------------------------------
-	Return all of the assemblies in an enumerator
+	Is 'prefix' a valid assembly prefix
+	-----------------------------------------------------------*/
+	virtual STDMETHODIMP is_valid_prefix(  /* [in] */ BSTR assembly_prefix, /* [out, retval] */ VARIANT_BOOL * return_value ) = 0;
+
+
+	/*-----------------------------------------------------------
+	Has the 'prefix' already been allocated to another assembly
+	-----------------------------------------------------------*/
+	virtual STDMETHODIMP is_prefix_allocated(  /* [in] */ BSTR assembly_prefix, /* [out, retval] */ VARIANT_BOOL * return_value ) = 0;
+
+
+	/*-----------------------------------------------------------
+	Rename the assembly identifier
+	-----------------------------------------------------------*/
+	virtual STDMETHODIMP rename_assembly(  /* [in] */ BSTR assembly_new_identifier, /* [in] */ BSTR assembly_old_identifier ) = 0;
+
+
+	/*-----------------------------------------------------------
+	Returns all of the assemblies in an enumerator
 	-----------------------------------------------------------*/
 	virtual STDMETHODIMP assemblies(  /* [out, retval] */ ecom_eiffel_compiler::IEnumAssembly * * return_value ) = 0;
 

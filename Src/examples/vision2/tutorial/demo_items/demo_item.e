@@ -14,6 +14,8 @@ inherit
 			make as wel_make
 		end
 
+	FILE_PATHS
+
 feature {NONE} -- Initialization
 
 	make_with_title (par:EV_TREE_ITEM_HOLDER; txt: STRING) is
@@ -39,6 +41,21 @@ feature {NONE} -- Initialization
 
 feature -- Access
 
+
+	
+	read_text (path: STRING) : STRING is
+			-- reads text information from file for use in text area
+		local
+			
+			file: PLAIN_TEXT_FILE
+		do
+			!!file.make(path)
+			file.open_read
+			file.start
+			file.readstream(file.count)
+			result:=file.laststring
+		end
+
 	demo_page: EV_VERTICAL_BOX is
 			-- A HOLDER for the demo of the widget.
 		once
@@ -57,6 +74,18 @@ feature -- Access
 			!! Result.make (Void)
 		end
 
+	example_page: EV_RICH_TEXT is
+			-- The class text of the current demo window
+		once
+			!! Result.make (Void)
+		end
+
+	event_box: EV_LIST is
+			-- A list to display the events that occurs
+		once
+			!! Result.make (Void)
+		end
+
 	current_demo: CELL [EV_WIDGET] is
 			-- Demo currently in action
 		once
@@ -65,6 +94,9 @@ feature -- Access
 
 	demo_window: EV_WIDGET
 		-- Demo window associated to the item
+
+	control_window: CONTROL_WINDOW
+		-- Window to control the options of the widgets.
 
 feature {DEMO_ITEM} -- Execution commands
 
@@ -86,6 +118,9 @@ feature {DEMO_ITEM} -- Execution commands
 				demo_window.set_parent (demo_page)
 			end
 			current_demo.put (demo_window)
+			example_page.set_text(clone(read_text(example_path)))
+			class_page.set_text(clone(read_text(class_path)))	
+			text_page.set_text(clone(read_text(docs_path)))
 		end
  
 end -- class DEMO_ITEM

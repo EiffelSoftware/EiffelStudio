@@ -403,8 +403,6 @@ feature {NONE} -- Implementation
 					Result := element_info.data.to_integer
 				end
 			end
-		ensure
-			Result_not_void: Result /= Void
 		end
 		
 	retrieve_string_setting (a_type_name: STRING): STRING is

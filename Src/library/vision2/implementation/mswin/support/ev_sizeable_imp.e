@@ -1,4 +1,4 @@
-indexing 
+indexing
 	description: "A class for MS-Windows to simulate resizing by children";
 	status: "See notice at end of class"; 
 	date: "$Date$"; 
@@ -8,13 +8,13 @@ deferred class
 	EV_SIZEABLE_IMP
 
 feature -- Measurement
-	
+
 	minimum_width: INTEGER 
 			-- Minimum width of widget, `0' by default
-	
+
 	minimum_height: INTEGER
 			-- Minimum height of widget, `0' by default
-	
+
 feature -- Resizing
 
 	set_size (new_width:INTEGER; new_height: INTEGER) is
@@ -25,7 +25,7 @@ feature -- Resizing
 			set_width (new_width)
 			set_height (new_height)
 		end
-	
+
 	set_width (value:INTEGER) is
 			-- Make `value' the new width and notify the parent
 			-- of the change.
@@ -33,7 +33,7 @@ feature -- Resizing
 			child_cell.set_width (value.max (minimum_width))
 			move_and_resize (x, y, child_cell.width, height, True)
 		end
-		
+
 	set_height (value: INTEGER) is
 			-- Make `value' the new `height' and notify the
 			-- parent of the change.
@@ -41,7 +41,7 @@ feature -- Resizing
 			child_cell.set_height (value.max (minimum_height))
 			move_and_resize (x, y, width, child_cell.height, True)
 		end
-	
+
 	set_minimum_height (value: INTEGER) is
 			-- Make `value' the new `minimum_height' and
 			-- notify the parent of the change. If this new minimum is
@@ -186,11 +186,11 @@ feature {EV_SIZEABLE_IMP} -- Implementation
 			if resize_type = 3 then
 				move_and_resize (cc.x, cc.y, cc.width, cc.height, True)
 			elseif resize_type = 2 then
-				move_and_resize ((cc.width - width)//2 + cc.x, cc.y, minimum_width, cc.height, True)
+				move_and_resize ((cc.width - minimum_width)//2 + cc.x, cc.y, minimum_width, cc.height, True)
 			elseif resize_type = 1 then
-				move_and_resize (cc.x, (cc.height - height)//2 + cc.y, cc.width, minimum_height, True)
+				move_and_resize (cc.x, (cc.height - minimum_height)//2 + cc.y, cc.width, minimum_height, True)
 			else
-				move_and_resize ((cc.width - width)//2 + cc.x, (cc.height - height)//2 + cc.y, minimum_width, minimum_height, True)
+				move_and_resize ((cc.width - minimum_width)//2 + cc.x, (cc.height - minimum_height)//2 + cc.y, minimum_width, minimum_height, True)
 			end
 		end
 

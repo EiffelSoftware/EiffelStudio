@@ -192,7 +192,6 @@ feature -- Element change
 			-- Assign `titles' to titles of columns in order.
 		require
 			titles_not_void: titles /= Void
-			titles_count_is_column_count: titles.count = column_count
 		local
 			i: INTEGER
 			old_count: INTEGER
@@ -246,7 +245,6 @@ feature -- Element change
 			-- Assign `widths' to column widths in order.
 		require
 			widths_not_void: widths /= Void
-			widths_count_is_column_count: widths.count = column_count
 		local
 			i: INTEGER
 			old_count: INTEGER
@@ -433,6 +431,9 @@ end -- class EV_MULTI_COLUMN_LIST_I
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.40  2000/03/27 19:32:01  brendel
+--| Removed obsolete preconditions.
+--|
 --| Revision 1.39  2000/03/27 17:18:15  brendel
 --| Removed commented implementation of deferred feature
 --| expand_column_count_to.

@@ -60,15 +60,15 @@ feature -- Tool management
 
 feature -- Resize
 
-	set_size (min_x, min_y: INTEGER) is
+	set_tool_size (t: EB_TOOL; new_width, new_height: INTEGER) is
 		deferred
 		end
 
-	set_width (new_width: INTEGER) is
+	set_tool_width (t: EB_TOOL; new_width: INTEGER) is
 		deferred
 		end
 
-	set_height (new_height: INTEGER) is
+	set_tool_height (t: EB_TOOL; new_height: INTEGER) is
 		deferred
 		end
 

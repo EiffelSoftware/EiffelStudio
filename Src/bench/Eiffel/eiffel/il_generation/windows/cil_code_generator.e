@@ -1622,7 +1622,9 @@ feature -- IL Generation
 				l_type_token := md_emit.define_type (uni_string, l_attributes,
 					current_module.object_type_token, Void)
 
-				class_type.set_last_create_type_token (l_type_token)
+				if not System.in_final_mode then
+					class_type.set_last_create_type_token (l_type_token)
+				end
 
 				current_class_token := l_type_token
 				current_class_type := class_type

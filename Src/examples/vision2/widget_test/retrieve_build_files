@@ -1,13 +1,21 @@
 #/bin/bash
 
+# Check out the appropriate tag depending on arguments
+if [ $# -eq 0 ]  
+then
+	cvstag="HEAD"
+else
+	cvstag=$1
+fi
+
 # Check out Build source.
-cvs co Src/build2
+cvs co -r $cvstag Src/build2
 
 # Check out bitmaps from Build delivery
-cvs co Delivery/build/bitmaps
+cvs co -r $cvstag Delivery/build/bitmaps
 
 # Check out files from vision2_tour
-cvs co Delivery/vision2_tour
+cvs co -r $cvstag Delivery/vision2_tour
 
 # Copy template files
 cp -r Delivery/vision2_tour/templates/ ./

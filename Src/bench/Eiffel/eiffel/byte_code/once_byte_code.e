@@ -5,9 +5,10 @@ class ONCE_BYTE_CODE
 inherit
 	STD_BYTE_CODE
 		redefine
-			is_once, generate_once,
+			is_once, is_global_once,
 			pre_inlined_code, inlined_byte_code, generate_once_declaration,
-			generate_global_once_termination, generate_il, is_global_once
+			generate_once_data, generate_once_prologue, generate_once_epilogue,
+			generate_il
 		end
 
 feature -- Access
@@ -51,23 +52,70 @@ feature -- C code generation
 	is_once: BOOLEAN is True;
 			-- Is the current byte code relative to a once feature ?
 
-	generate_once (name: STRING) is
-			-- Generate test at the head of once routines
+	generate_once_data (name: STRING) is
+			-- Generate once-specific data
+		local
+			buf: like buffer
 		do
 			if is_global_once then
-				generate_global_once (name)
+				buf := buffer
+					-- Generate locals for global once routine
+				buf.put_string ("RTOPD")
+				buf.put_new_line
 			elseif System.has_multithreaded or else not context.final_mode then
 				generate_safe_once
-			else
-				generate_optimized_once (name)
 			end
+			init_dftype
+			init_dtype
+		end
+	
+	generate_once_prologue (name: STRING) is
+			-- Generate test at the head of once routines
+		local
+			buf: like buffer
+			l_res_name: STRING
+		do
+			buf := buffer
+			if is_global_once then
+				buf.put_string ("RTOPP (")
+				buf.put_string (mutex_name (name))
+				buf.put_string (");")
+				buf.put_new_line
+				if context.result_used then
+					if real_type(result_type).c_type.is_pointer then
+						buf.put_new_line
+						buf.put_string ("RTOC_GLOBAL(")
+						buf.put_string ("Result")
+						buf.put_string (");")
+					end
+				end
+			elseif System.has_multithreaded or else not context.final_mode then
+				buf.put_string ("RTOTP;")
+			else
+				buf.put_string ("RTOSP (")
+				buf.put_string (name)
+				buf.put_string (");")
+				l_res_name := result_name (name)
+				if context.result_used then
+					if real_type(result_type).c_type.is_pointer then
+						buf.put_new_line
+						buf.put_string ("RTOC_NEW(")
+						buf.put_string (l_res_name)
+						buf.put_string (");")
+					end
+				end
+				buf.put_new_line
+				buf.put_string ("%N#define Result ")
+				buf.put_string (l_res_name)
+			end
+			buf.put_new_line
 		end
 
 	generate_once_declaration (name, type: STRING; is_procedure: BOOLEAN) is
 			-- Generate declaration of static
 		local
 			head_buf, buf: GENERATION_BUFFER
-			l_res_name, l_done_name: STRING
+			l_res_name: STRING
 		do
 			if is_global_once then
 					-- Generate static mutex used to initialize global once
@@ -101,10 +149,9 @@ feature -- C code generation
 					head_buf.put_character (';')
 				end
 				head_buf.put_new_line
-				l_done_name := done_name (name)
-				head_buf.put_string ("extern EIF_BOOLEAN ")
-				head_buf.put_string (l_done_name)
-				head_buf.put_character (';')
+				head_buf.put_string ("RTOSH(")
+				head_buf.put_string (name)
+				head_buf.put_character (')')
 				head_buf.put_new_line
 				head_buf.put_new_line
 
@@ -118,23 +165,31 @@ feature -- C code generation
 					buf.put_string (") 0;")
 				end
 				buf.put_new_line
-				buf.put_string ("EIF_BOOLEAN ")
-				buf.put_string (l_done_name)
-				buf.put_string (" = EIF_FALSE;")
+				buf.put_string ("RTOSD(")
+				buf.put_string (name)
+				buf.put_character (')')
 				buf.put_new_line
 				buf.put_new_line
 			end
 		end
 
-	generate_global_once_termination (a_name: STRING) is
-			-- Generate end of global once block.
+	generate_once_epilogue (a_name: STRING) is
+			-- Generate end of a once block.
 		local
 			l_buf: like buffer
 		do
 			l_buf := context.buffer
-			l_buf.put_string ("RTOPE (");
-			l_buf.put_string (mutex_name (a_name))
-			l_buf.put_string (");")
+			if is_global_once then
+				l_buf.put_string ("RTOPE (");
+				l_buf.put_string (mutex_name (a_name))
+				l_buf.put_string (");")
+			elseif System.has_multithreaded or else not context.final_mode then
+				l_buf.put_string ("RTOTE;")
+			else
+				l_buf.put_string ("RTOSE (")
+				l_buf.put_string (a_name)
+				l_buf.put_string (");")
+			end
 			l_buf.put_new_line
 		end
 		
@@ -159,163 +214,69 @@ feature -- Inlining
 
 feature {NONE} -- Implementation
 
-	generate_global_once (name: STRING) is
-			-- Generate test at the head of once routine `name'.
-		require
-			multithreaded_mode: System.has_multithreaded
-			is_global_once: internal_is_global_once
-			name_not_void: name /= Void
-		local
-			buf: like buffer
-		do
-			buf := buffer
-			buf.put_string ("RTOPP (")
-			buf.put_string (mutex_name (name))
-			buf.put_string (");")
-			buf.put_new_line
-
-			if context.result_used then
-				if real_type(result_type).c_type.is_pointer then
-					buf.put_new_line
-					buf.put_string ("RTOC_GLOBAL(")
-					buf.put_string ("Result")
-					buf.put_string (");")
-				end
-			end
-
-			buf.put_new_line
-			init_dftype
-			init_dtype
-		end
-
-	generate_optimized_once (name: STRING) is
-			-- Generate test at the head of once routines
-		local
-			type_i		: TYPE_I
-			buf			: GENERATION_BUFFER
-			l_res_name, l_done_name	: STRING
-		do
-			buf := buffer
-			l_res_name := result_name (name)
-			l_done_name := done_name (name)
-
-			type_i := real_type (result_type)
-
-			buf.put_string ("if (")
-			buf.put_string (l_done_name)
-			buf.put_string (") return")
-			if result_type /= Void and then not result_type.is_void then
-				buf.put_character (' ')
-				buf.put_string (l_res_name)
-			end
-			buf.put_character (';')
-
-			buf.put_new_line
-			buf.put_string (l_done_name)
-			buf.put_string (" = EIF_TRUE;")
-
-			if context.result_used then
-				if real_type(result_type).c_type.is_pointer then
-					buf.put_new_line
-					buf.put_string ("RTOC_NEW(")
-					buf.put_string (l_res_name)
-					buf.put_string (");")
-				end
-			end
-
-			buf.put_new_line
-			buf.put_string ("%N#define Result ")
-			buf.put_string (l_res_name)
-			buf.put_new_line
-			init_dftype
-			init_dtype
-		end;
-		
 	generate_safe_once is
 			-- Generate test at the head of once routines
 		local
-			type_i: TYPE_I;
+			type_i: TYPE_I
 			buf: GENERATION_BUFFER
 			class_id: INTEGER
 		do
 			buf := buffer
-			buf.put_string ("%N#define Result *PResult")
-			buf.put_new_line
-			type_i := real_type (result_type);
+			type_i := real_type (result_type)
 			class_id := context.original_class_type.static_type_id
-			buf.put_string ("if (MTOG((");
-			type_i.c_type.generate (buf);
-			buf.put_string ("*),*(EIF_once_values + EIF_oidx_off")
-			buf.put_integer (class_id)
-			buf.put_string (" + ");
-			buf.put_integer (context.once_index);
-			buf.put_string ("),PResult))");
-			buf.put_new_line;
-			buf.indent;
-				-- Full generation for a once function, but a single
-				-- return for procedures.
-			buf.put_string ("return");
-			if result_type /= Void and then not result_type.is_void then
-				buf.put_character (' ');
-				if context.result_used then
-					buf.put_string ("*PResult");
-				else
-					type_i.c_type.generate_cast (buf);
-					buf.put_character ('0');
-				end;
-			end;
-			buf.put_string (";%N");
-			buf.exdent;
-				-- Detach this block
-			buf.put_new_line;
-			buf.put_string ("PResult = (");
-			type_i.c_type.generate (buf);
 			if
 				result_type /= Void and then not result_type.is_void and then
 				(context.workbench_mode or else context.result_used)
 			then
-				if real_type(result_type).c_type.is_pointer then
-						-- Record once by allocating room in once_set stack.
-						-- This room will be updated to point to Result,
-						-- only if it is a reference. This will raise an
-						-- exception if the address cannot be recorded and
-						-- 'PResult' won't be set via the key.
-					buf.put_string ("*) RTOC(0);");
+				if type_i.c_type.is_pointer then
+						-- Define "Result" macro for reference result type
+					buf.put_string ("%N#define Result RTOTRR(")
 				else
-						-- If not a reference, we need to allocate some place
-						-- where to store the Result (We can't store Result
-						-- directly, since it might be 0...)
-					buf.put_string ("*) cmalloc(");
-					type_i.c_type.generate_size (buf)
-					buf.put_string (");");
-					buf.put_new_line
-					buf.put_string ("Result = ")
-					type_i.c_type.generate_cast (buf);
-					buf.put_string ("0;");
-				end;
+						-- Define "Result" macro for basic result type
+					buf.put_string ("%N#define Result RTOTRB(")
+				end
+				if type_i.is_feature_pointer then
+					buf.put_string ("EIF_POINTER")
+				else
+					buf.put_string (type_i.c_type.c_string)
+				end
+				buf.put_character (')')
+				buf.put_new_line
+				if type_i.c_type.is_pointer then
+						-- Declare and initialize once data for reference result type
+					buf.put_string ("RTOTDR(")
+				else
+						-- Declare and initialize once data for basic result type
+					buf.put_string ("RTOTDB(")
+						-- Use "EIF_POINTER" C type for TYPED_POINTER and CECIL type name for other types
+					if type_i.is_feature_pointer then
+						buf.put_string ("EIF_POINTER")
+					else
+						buf.put_string (type_i.c_type.c_string)
+					end
+					buf.put_string (gc_comma)
+				end
 			else
-				buf.put_string ("*) 1;");
-			end;
-			buf.put_new_line;
-			buf.put_string ("MTOS(*(EIF_once_values + EIF_oidx_off")
+					-- Declare once data without initializing any result value
+				buf.put_string ("RTOTDV(")
+			end
+			buf.put_string ("EIF_oidx_off")
 			buf.put_integer (class_id)
-			buf.put_string (" + ");
-			buf.put_integer (context.once_index);
-			buf.put_string ("),PResult);");
-			buf.put_new_line;
+			buf.put_string (" + ")
+			buf.put_integer (context.once_index)
+			buf.put_string (gc_rparan_semi_c)
+			buf.put_new_line
 			if context.workbench_mode then
 					-- Real body id to be stored in the id list of already
 					-- called once routines to prevent supermelting them
 					-- (losing in that case their memory (already called and
 					-- result)) and to allow result inspection.
-				buf.put_string ("RTWO(");
+				buf.put_string ("RTOTW(")
 				buf.put_real_body_id (real_body_id)
-				buf.put_string (gc_rparan_semi_c);
+				buf.put_string (gc_rparan_semi_c)
 				buf.put_new_line
-			end;
-			init_dftype
-			init_dtype;
-		end;
+			end
+		end
 
 feature {NONE} -- Convenience
 

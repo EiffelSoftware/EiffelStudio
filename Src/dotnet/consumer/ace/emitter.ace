@@ -2,14 +2,15 @@ system
 	"emitter"
 
 root
-	EMITTER: make
+	emitter: make
 
 default
 	assertion (no)
 	msil_generation (yes)
+	arguments (" ")
 	disabled_debug (yes)
 	debug (no)
-	line_generation (yes)
+	line_generation (no)
 	il_verifiable (yes)
 	cls_compliant (yes)
 	dotnet_naming_convention (no)
@@ -37,10 +38,10 @@ cluster
 		exclude
 			"CVS"; "EIFGEN"; 
 		visible
-			COM_ISE_CACHE_MANAGER
-			end
-			COM_ASSEMBLY_INFORMATION
-			end
+			com_ise_cache_manager
+				end
+			com_assembly_information
+				end
 		end
 
 	all helpers:		"$EIFFEL_SRC\dotnet\helpers"
@@ -58,11 +59,13 @@ assembly
 
 	system_:	"System","1.0.3300.0","neutral","b77a5c561934e089"
 		prefix
-			"SYSTEM_DLL_"
+			SYSTEM_DLL_
 		end
 
 	system_xml:	"System.Xml","1.0.3300.0","neutral","b77a5c561934e089"
 		prefix
-			"XML_"
+			XML_
 		end
+
+
 end

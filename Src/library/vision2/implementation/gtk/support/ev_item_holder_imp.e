@@ -1,9 +1,11 @@
 indexing
 	description:
 		"EiffelVision item holder, implementation."
+	keywords: item
 	status: "See notice at end of class."
 	date: "$Date$"
 	revision: "$Revision$"
+
 
 deferred class
 	EV_ITEM_HOLDER_IMP

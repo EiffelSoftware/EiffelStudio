@@ -580,14 +580,16 @@ feature {CASE_CLASS_INFO} -- Case storage output
 				until
 					creators.after
 				loop
-					from
-						f_l := creators.item.feature_list
-						f_l.start
-					until
-						f_l.after
-					loop
-						c_l.extend (f_l.item.visual_name)
-						f_l.forth
+					f_l := creators.item.feature_list
+					if f_l /= Void then
+						from
+							f_l.start
+						until
+							f_l.after
+						loop
+							c_l.extend (f_l.item.visual_name)
+							f_l.forth
+						end
 					end
 					creators.forth
 				end

@@ -363,7 +363,7 @@ feature -- Drawing operations
 					a_baseline := feature {EV_GTK_DEPENDENT_EXTERNALS}.pango_layout_iter_get_baseline (App_implementation.pango_iter) // feature {EV_GTK_DEPENDENT_EXTERNALS}.pango_scale
 					a_y := y - a_baseline
 				else
-					a_y := y - 3 -- This takes the spacing in to account
+					a_y := y - 2
 				end
 				feature {EV_GTK_DEPENDENT_EXTERNALS}.gdk_draw_layout (drawable, gc, x, a_y, a_pango_layout)
 			end

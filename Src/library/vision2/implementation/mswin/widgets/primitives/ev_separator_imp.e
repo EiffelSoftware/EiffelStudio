@@ -41,6 +41,17 @@ inherit
 			background_brush
 		end
 
+feature {NONE} -- Initialization
+
+ 	make (par: EV_CONTAINER) is
+ 			-- Make seperator
+		local
+			par_imp: WEL_COMPOSITE_WINDOW
+		do
+			par_imp ?= par.implementation
+			make_with_coordinates (par_imp, "Separator", 0, 0, 2, 0)
+ 		end
+
 feature {NONE} -- Implementation
 
 	background_brush: WEL_BRUSH is

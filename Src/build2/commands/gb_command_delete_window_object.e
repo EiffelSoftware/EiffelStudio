@@ -63,21 +63,22 @@ create
 	
 feature {NONE} -- Initialization
 
-	make (window: GB_TITLED_WINDOW_OBJECT) is
+	make (an_object: GB_OBJECT) is
 			-- Create `Current' with `child' to be removed from `parent' at
 			-- position `position'.
 		require
-			window_not_void: window /= Void
+			object_not_void: an_object /= Void
+			object_is_top_level: an_object.is_top_level_object 
 		local
 			parent_item: EV_TREE_ITEM
 		do
 			History.cut_off_at_current_position
-			parent_item ?= window.window_selector_item.parent
+			parent_item ?= an_object.window_selector_item.parent
 			if parent_item /= Void then
 					-- If held in a directory, store the directory name.
 				parent_directory := parent_item.text
 			end
-			original_id := window.id
+			original_id := an_object.id
 		end
 
 feature -- Basic Operation
@@ -85,23 +86,24 @@ feature -- Basic Operation
 	execute is
 			-- Execute `Current'.
 		local
-			window_object: GB_TITLED_WINDOW_OBJECT
+			object: GB_OBJECT
 		do
-			window_object ?= Object_handler.deep_object_from_id (original_id)
+			object ?= Object_handler.deep_object_from_id (original_id)
 			check
-				object_was_window: window_object /= Void
+				object_not_void: object /= Void
+				object_is_top_level_object: object.is_top_level_object
 			end
 				-- If the root window is being deleted, select the next window.
-			if Object_handler.root_window_object = window_object then
+			if Object_handler.root_window_object = object then
 				Window_selector.mark_next_window_as_root (1)
 			end
 			object_handler.update_for_delete (original_id)
-			object_handler.update_object_editors_for_delete (window_object, Void)
-			window_object.layout_item.unparent
-			window_object.window_selector_item.unparent
-			object_handler.mark_as_deleted (window_object)
+			object_handler.update_object_editors_for_delete (object, Void)
+			object.layout_item.unparent
+			object.window_selector_item.unparent
+			object_handler.mark_as_deleted (object)
 			
-				-- Store and delete all files associated with `window_object' if any.
+				-- Store and delete all files associated with `object' if any.
 				-- Files associated are only there if already generated.
 			delete_files
 			
@@ -119,29 +121,35 @@ feature -- Basic Operation
 			-- the system to its previous state.
 		local
 			directory_item: GB_WINDOW_SELECTOR_DIRECTORY_ITEM
-			window_object: GB_TITLED_WINDOW_OBJECT
+			object: GB_OBJECT
+			titled_window_object: GB_TITLED_WINDOW_OBJECT
 		do
-			window_object ?= Object_handler.deep_object_from_id (original_id)
+			object ?= Object_handler.deep_object_from_id (original_id)
 			check
-				object_was_window: window_object /= Void
+				object_not_void: object /= Void
+				object_is_top_level_object: object.is_top_level_object
 			end
-			object_handler.mark_existing (window_object)
+			object_handler.mark_existing (object)
 			if parent_directory /= Void then
 					-- Only try to retrieve the directory item if there was one.
 				directory_item := window_selector.directory_object_from_name (parent_directory)
 			end
 			if directory_item = Void then
 				-- Now simply add as root.
-				Window_selector.extend (window_object.window_selector_item)
+				Window_selector.extend (object.window_selector_item)
 			else
 				-- Restore window into original directory.
-				directory_item.extend (window_object.window_selector_item)
+				directory_item.extend (object.window_selector_item)
 				directory_item.expand
 			end
+			
 				-- If this is the only window contained, select it.
 			if window_selector.objects.count = 1 then
-				window_object.window_selector_item.enable_select
-				window_selector.change_root_window_to (window_object)
+				object.window_selector_item.enable_select
+				titled_window_object ?= object
+				if titled_window_object /= Void then
+					window_selector.change_root_window_to (titled_window_object)
+				end
 			end
 				-- Restore all files associated with `window_object' if any.
 			restore_files
@@ -153,16 +161,17 @@ feature -- Basic Operation
 			-- Text representation of command exectuted.
 		local
 			window_name: STRING
-			window_object: GB_TITLED_WINDOW_OBJECT
+			object: GB_OBJECT
 		do
-			window_object ?= Object_handler.deep_object_from_id (original_id)
+			object ?= Object_handler.deep_object_from_id (original_id)
 			check
-				object_was_window: window_object /= Void
+				object_not_void: object /= Void
+				object_is_top_level_object: object.is_top_level_object
 			end
-			if not window_object.name.is_empty then
-				window_name := window_object.name
+			if not object.name.is_empty then
+				window_name := object.name
 			else
-				window_name := window_object.short_type
+				window_name := object.short_type
 			end
 			Result := window_name + " removed from the project"
 		end

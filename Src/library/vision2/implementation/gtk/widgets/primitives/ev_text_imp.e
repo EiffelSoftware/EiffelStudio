@@ -266,7 +266,7 @@ feature -- Basic operation
 
 	scroll_to_line (i: INTEGER) is
 		do
-			C.gtk_adjustment_set_value (right_adjustment_struct, (i - 1) * line_height)
+			C.gtk_adjustment_set_value (vertical_adjustment_struct, (i - 1) * line_height)
 		end
 
 feature -- Assertions
@@ -282,14 +282,14 @@ feature -- Assertions
 		
 feature {NONE} -- Implementation
 
-	right_adjustment_struct: POINTER is
-			-- 
+	vertical_adjustment_struct: POINTER is
+			-- Pointer to vertical adjustment struct use in the scrollbar.
 		do
 			Result := C.gtk_range_struct_adjustment (C.gtk_scrolled_window_struct_vscrollbar (c_object))
 		end
 
 	line_height: INTEGER is
-			-- 
+			-- Height of the text lines in the widget.
 		do
 			if private_font /= Void then
 				Result := private_font.ascent + private_font.descent

@@ -12,6 +12,11 @@ inherit
 	CACHE_ERRORS
 	
 	CACHE_SETTINGS
+	
+	SHARED_CACHE_MUTEX_GUARD
+		export 
+			{NONE} all
+		end
 		
 	SAFE_ASSEMBLY_LOADER
 		export
@@ -72,6 +77,7 @@ feature -- Basic Operations
 			l_retried: BOOLEAN
 			i: INTEGER
 		do
+			guard.lock
 			if not l_retried then
 				l_assembly := load_from_gac_or_path (a_path)
 				
@@ -185,6 +191,7 @@ feature -- Basic Operations
 					set_error (Assembly_not_found_error, a_path)
 				end
 			end
+			guard.unlock
 		rescue
 			l_retried := True
 			retry
@@ -202,6 +209,7 @@ feature -- Basic Operations
 			l_info: CACHE_INFO
 			l_retried: BOOLEAN
 		do
+			guard.lock
 			if not l_retried then
 				if status_printer /= Void then
 					create l_string_tuple
@@ -218,6 +226,7 @@ feature -- Basic Operations
 			else
 				set_error (Update_error, a_path)
 			end
+			guard.unlock
 		rescue
 			l_retried := True
 			retry
@@ -234,6 +243,7 @@ feature -- Basic Operations
 			l_retried: BOOLEAN
 			i: INTEGER
 		do
+			guard.lock
 			if not l_retried then
 				remove_assembly_internal (a_path)
 				l_ca := consumed_assembly_from_path (a_path)
@@ -252,6 +262,7 @@ feature -- Basic Operations
 			else
 				set_error (Remove_error, a_path)
 			end
+			guard.unlock
 		rescue
 			l_retried := True
 			retry
@@ -268,6 +279,7 @@ feature -- Basic Operations
 			l_retried: BOOLEAN
 			i: INTEGER
 		do
+			guard.lock
 			if not l_retried then								
 				create l_cache_folder.make (cache_reader.eiffel_assembly_cache_path)
 				if l_cache_folder.exists then
@@ -306,6 +318,7 @@ feature -- Basic Operations
 					end
 				end	
 			end
+			guard.unlock
 		rescue
 			l_retried := True
 			retry
@@ -319,6 +332,7 @@ feature -- Basic Operations
 			l_removed: BOOLEAN
 			i: INTEGER
 		do
+			guard.lock
 			l_info := cache_reader.info
 			l_assemblies := l_info.assemblies
 			from
@@ -335,6 +349,7 @@ feature -- Basic Operations
 			if l_removed then
 				update_info (l_info)
 			end
+			guard.unlock
 		end		
 		
 	consumed_assembly_from_path (a_path: STRING): CONSUMED_ASSEMBLY is
@@ -347,6 +362,7 @@ feature -- Basic Operations
 			l_id: STRING
 			l_info: CACHE_INFO
 		do
+			guard.lock
 			if cache_reader.is_assembly_in_cache (a_path, False) then
 				Result := cache_reader.consumed_assembly_from_path (a_path)
 			else
@@ -357,6 +373,7 @@ feature -- Basic Operations
 				l_info.add_assembly (Result)
 				update_info (l_info)
 			end
+			guard.unlock
 		ensure
 			result_not_void: Result /= Void
 		end
@@ -369,9 +386,11 @@ feature -- Basic Operations
 			l_absolute_xml_info_path: STRING
 			serializer: EIFFEL_XML_SERIALIZER
 		do
+			guard.lock
 			l_absolute_xml_info_path := cache_reader.Absolute_info_path
 			create serializer
 			serializer.serialize (a_info, l_absolute_xml_info_path)
+			guard.unlock
 		end
 
 feature {NONE} -- Implementation
@@ -425,6 +444,7 @@ feature {NONE} -- Implementation
 			l_info: CACHE_INFO
 			l_retried: BOOLEAN
 		do
+			guard.lock
 			if not l_retried then
 				l_ca := consumed_assembly_from_path (a_path)
 				create l_dir.make (cache_reader.absolute_assembly_path_from_consumed_assembly (l_ca))
@@ -439,6 +459,7 @@ feature {NONE} -- Implementation
 			else
 				set_error (Remove_error, a_path)
 			end
+			guard.unlock
 		rescue
 			l_retried := True
 			retry
@@ -505,6 +526,7 @@ feature {NONE} -- Implementation
 			l_ref_ca: like consumed_assembly_from_path
 			i: INTEGER
 		do
+			guard.lock
 			create l_serializer
 			l_mappings := cache_reader.assembly_mapping_from_consumed_assembly (a_assembly)
 			
@@ -522,6 +544,7 @@ feature {NONE} -- Implementation
 				i := i + 1
 			end
 			l_serializer.serialize (l_mappings, cache_reader.absolute_assembly_mapping_path_from_consumed_assembly (a_assembly))
+			guard.unlock
 		end
 
 	update_client_assembly_mappings (a_assembly: CONSUMED_ASSEMBLY) is
@@ -533,6 +556,7 @@ feature {NONE} -- Implementation
 			l_clients: ARRAY [CONSUMED_ASSEMBLY]
 			i: INTEGER
 		do
+			guard.lock
 			l_clients := cache_reader.client_assemblies (a_assembly)
 			from
 				i := 1
@@ -542,6 +566,7 @@ feature {NONE} -- Implementation
 				update_assembly_mappings (l_clients.item (i))
 				i := i + 1
 			end
+			guard.unlock
 		end
 		
 	cache_reader: CACHE_READER

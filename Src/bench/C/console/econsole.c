@@ -25,7 +25,6 @@
 #include "server.h"	/* For `debug_mode' */
 #endif
 
-static HANDLE eif_conin, eif_conout, eif_conerr;
 static BOOL eif_console_allocated = FALSE;
 
 #ifdef EIF_THREADS
@@ -107,6 +106,7 @@ rt_public void eif_show_console(void)
 	/* Create a new DOS console if needed (i.e. in case of a Windows application. */
 {
 	if (!eif_console_allocated) {
+		HANDLE eif_conin, eif_conout, eif_conerr;
 		CONSOLE_SCREEN_BUFFER_INFO csbi;
 		BOOL bLaunched;
 		BOOL bSuccess;

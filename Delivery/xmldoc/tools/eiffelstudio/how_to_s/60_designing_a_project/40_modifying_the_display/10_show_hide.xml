@@ -26,13 +26,13 @@
 					<url>/images/eiffelstudio/icons/icon_supplier_color.gif</url>
 				</image>
 			</item>
-			<item>To toggle visibility of all inheritance links, click
+			<item>To toggle visibility of all inheritance links, click 
 				<bold>Show/hide inheritance links</bold>. 
 				<image>
 					<url>/images/eiffelstudio/icons/icon_inherit_color.gif</url>
 				</image>
 			</item>
-			<item>To toggle visibility of all client link labels, click
+			<item>To toggle visibility of all client link labels, click 
 				<bold>Show/hide client-supplier links</bold>. 
 				<image>
 					<url>/images/eiffelstudio/icons/icon_display_labels_color.gif</url>

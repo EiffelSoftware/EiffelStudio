@@ -8,7 +8,7 @@
 		</help>
 	</meta_data>
 	<paragraph>
-		<heading></heading>
+		<heading><size>1</size>Defining scope comparison metrics</heading>
 		<paragraph>To define a scope comparison metric, you must have already clicked on 
 			<image>
 				<border>0</border>

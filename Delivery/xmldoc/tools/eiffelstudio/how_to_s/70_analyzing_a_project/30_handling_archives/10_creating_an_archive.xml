@@ -17,7 +17,7 @@
 				<width>16</width>
 				<url>/images/eiffelstudio/icons/icon_delete_small_color.gif</url>
 				<border>0</border>
-			</image> in the "Metric" tab of the contexttool.
+			</image> in the "Metric" tab of the context tool.
 		</paragraph>
 		<paragraph>
 			<image>
@@ -42,14 +42,17 @@
 				<url>20_updating_an_archive.xml</url>
 				<label>Updating an archive</label>
 			</link>
+			<line_break></line_break>
 			<link>
 				<url>30_comparing_to_an_archive.xml</url>
 				<label>Comparing to an archive</label>
 			</link>
+			<line_break></line_break>
 			<link>
 				<url>40_evaluating_a_metric_over_an_archive.xml</url>
 				<label>Evaluating a metric over an archive</label>
 			</link>
+			<line_break></line_break>
 		</seealso>
 	</paragraph>
 </document>

@@ -19,7 +19,7 @@
 		<paragraph>To do this:</paragraph>
 		<list ordered="false">
 			<item>In the startup dialog, select 
-				<bold>Open compiled project</bold>. If the .epr file you want to open is not in the list, click
+				<bold>Open compiled project</bold>. If the .epr file you want to open is not in the list, click 
 				<bold>Browse</bold> and indicate the location of the .epr file.
 			</item>
 		</list>

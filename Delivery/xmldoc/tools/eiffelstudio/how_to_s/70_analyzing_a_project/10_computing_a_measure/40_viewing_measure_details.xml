@@ -33,13 +33,10 @@
 				<link>
 					<url>/tools/eiffelstudio/reference/60_metric_tool/metric_toolbar.html#hide details</url>
 					<label>details</label>
-				</link> 
-				<link>
-					<url>40_viewing_measure_details.xml</url>
 				</link>.
 			</item>
 		</list>
-		<paragraph>Here is an example of the details obtained after a measurecalculation:</paragraph>
+		<paragraph>Here is an example of the details obtained after a measure calculation:</paragraph>
 		<paragraph>
 			<image>
 				<height>534</height>
@@ -55,9 +52,10 @@
 				<url>10_calculating_a_measure.xml</url>
 				<label>Calculating measures</label>
 			</link>
+			<line_break></line_break>
 			<link>
 				<url>20_saving_a_measure.xml</url>
-				<label>saving measures</label>
+				<label>Saving measures</label>
 			</link>
 			<line_break></line_break>
 		</seealso>

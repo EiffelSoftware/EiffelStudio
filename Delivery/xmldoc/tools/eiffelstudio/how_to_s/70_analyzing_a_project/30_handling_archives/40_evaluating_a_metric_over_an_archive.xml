@@ -1,12 +1,10 @@
 <document title="Evaluating a metric over an archive." output="studio">
-	<meta_data>
-		<help></help>
-	</meta_data>
+	<meta_data/>
 	<paragraph>
 		<heading>
 			<size>1</size>Evaluating a metric over an archive.
 		</heading>
-		<paragraph>In the metric tool, evaluating a metric over an archive is not different from evaluating it over another and more classical scope(see 
+		<paragraph>In the metric tool, evaluating a metric over an archive is not different from evaluating it over another and more classical scope (see 
 			<link>
 				<url>/tools/eiffelstudio/how_to_s/70_analyzing_a_project/10_computing_a_measure/10_calculating_a_measure.xml</url>
 				<label>calculating a measure</label>

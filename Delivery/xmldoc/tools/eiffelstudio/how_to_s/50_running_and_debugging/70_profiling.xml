@@ -27,7 +27,7 @@
 			</item>
 			<item>In the 
 				<bold>Debug/Profile</bold> tab, check the 
-				<bold>Profiling</bold>check box.
+				<bold>Profiling</bold> check box.
 			</item>
 			<item>Click 
 				<bold>Apply</bold> or 
@@ -88,76 +88,44 @@
 			<bold>Tip</bold>: To profile only part of a program, turnoff the profiler at the very beginning of the program, turn it on just before the part of the code that should be profiled, and turn it back off after this section. Typically, it results in the following code:
 		</tip>
 		<paragraph>In the root feature:</paragraph> 
-		<code></code>
 		<paragraph>
-			<code>
-				<keyword>local</keyword>
-				<line_break></line_break>     ps: 
-				<link>
-					<url>/libraries/base/reference/support/profiling_setting.xml</url>
-				</link>
-				<line_break></line_break>         
-				<comment>-- Other local variables if necessary.</comment>
-				<line_break></line_break> 
-				<keyword>do</keyword>
-				<line_break></line_break>     
-				<keyword>create</keyword> ps
-				<line_break></line_break>     ps.
-				<link>
-					<url>/libraries/base/reference/support/profiling_setting.html#f_stop_profiling</url>
-					<label></label>
-				</link>
-				<line_break></line_break>         
-				<comment>-- Real program execution.</comment>
-				<line_break></line_break>     ps.
-				<link>
-					<url>/libraries/base/reference/support/profiling_setting.html#f_start_profiling</url>
-					<label></label>
-				</link>
-				<line_break></line_break> 
-				<keyword>end</keyword>
-			</code>
+<code_block>
+<keyword>local</keyword>
+	ps: PROFILER_SETTING
+		<comment>-- Other local variables if necessary.</comment>
+<keyword>do</keyword>  
+	<keyword>create</keyword> ps
+	ps.stop_profiling
+		<comment>-- Real program execution.</comment>
+	ps.start_profiling
+<keyword>end</keyword>	
+		
+</code_block>
 		</paragraph>
 		<paragraph>And in the feature(s) that needs to be profiled:</paragraph> 
 		<code></code>
 		<paragraph>
-			<code>
-				<keyword>local</keyword>
-				<line_break></line_break>     ps: 
-				<link>
-					<url>/libraries/base/reference/support/profiling_setting.xml</url>
-				</link>
-				<line_break></line_break>         
-				<comment>-- Other local variables if necessary.</comment>
-				<line_break></line_break> 
-				<keyword>do</keyword>
-				<line_break></line_break>     
-				<keyword>create</keyword> ps
-				<line_break></line_break>     ps.
-				<link>
-					<url>/libraries/base/reference/support/profiling_setting.html#f_start_profiling</url>
-					<label></label>
-				</link>
-				<line_break></line_break>         
-				<comment>-- What needs to be profiled.</comment>
-				<line_break></line_break>     ps.
-				<link>
-					<url>/libraries/base/reference/support/profiling_setting.html#f_stop_profiling</url>
-					<label></label>
-				</link>
-				<line_break></line_break> 
-				<keyword>end</keyword>
-			</code>
+			<code_block>
+<keyword>local</keyword>
+	ps: PROFILER_SETTING
+		<comment>-- Other local variables if necessary.</comment>
+<keyword>do</keyword>  
+	<keyword>create</keyword> ps
+	ps.start_profiling
+		<comment>-- What needs to be profiled.</comment>
+	ps.stop_profiling
+<keyword>end</keyword>
+</code_block>
 		</paragraph>
-		<paragraph> </paragraph>
+		
 		<note>
 			<bold>Note</bold>: Even if the profiler should only work in certain sections of code, the 
-			<bold>Profiling</bold> check box of the
+			<bold>Profiling</bold> check box of the 
 			<link>
 				<url>/tools/eiffelstudio/reference/25_project_settings/20_debug.xml</url>
 				<label>System Settings</label>
 			</link> dialog must be checked or the 
-			<bold>profile</bold>option must be set in certain clusters.
+			<bold>profile</bold> option must be set in certain clusters.
 		</note>
 		<paragraph>Once the profiler has been enabled and the program has been recompiled, it is necessary to launch the program.</paragraph>
 		<tip>

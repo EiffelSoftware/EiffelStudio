@@ -13,7 +13,7 @@
 		</heading>
 		<paragraph></paragraph>
 		<list ordered="true">
-			<item>To delete a view, select the view you want to remove using the
+			<item>To delete a view, select the view you want to remove using the 
 				<bold>View</bold> combo box.
 				<line_break></line_break> 
 				<image>
@@ -32,7 +32,7 @@
 		<line_break></line_break>
 		<line_break></line_break> 
 		<note>
-			<bold>Note</bold>: you cannot delete the view "DEFAULT".
+			<bold>Note</bold>: You cannot delete the view "DEFAULT".
 		</note>
 	</paragraph>
 </document>

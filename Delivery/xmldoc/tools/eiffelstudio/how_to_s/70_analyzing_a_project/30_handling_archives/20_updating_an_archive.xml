@@ -38,10 +38,12 @@
 				<url>10_creating_an_archive.xml</url>
 				<label>Creating an archive</label>
 			</link>
+			<line_break></line_break>
 			<link>
 				<url>30_comparing_to_an_archive.xml</url>
 				<label>Comparing to an archive</label>
 			</link>
+			<line_break></line_break>
 			<link>
 				<url>40_evaluating_a_metric_over_an_archive.xml</url>
 				<label>Evaluating a metric over an archive</label>

@@ -31,21 +31,20 @@
 			<code></code>
 		</paragraph>
 		<paragraph>
-			<code>#ifdef MY_DEBUG_FLAG
-				<line_break></line_break> /* Debug code is here */
-				<line_break></line_break> #endif
-			</code>
+<code_block>
+	#ifdef MY_DEBUG_FLAG
+		/* Debug code is here */
+	 #endif
+</code_block>
 		</paragraph>
 		<paragraph>The corresponding construct in Eiffel is provided by the debug keyword. It is possible to wrap code inside a debug clause like this:</paragraph> 
 		<code></code>
 		<paragraph>
-			<code>
-				<keyword>debug</keyword>("MY_DEBUG_FLAG")
-				<line_break></line_break>     
-				<comment>-- Debug code is here.</comment>
-				<line_break></line_break> 
-				<keyword>end</keyword>
-			</code>
+<code_block>
+	<keyword>debug</keyword>("MY_DEBUG_FLAG")
+		<comment>-- Debug code is here.</comment>
+	<keyword>end</keyword>
+</code_block>
 		</paragraph>
 		<paragraph>It is then possible to enable or disable debug clauses globally.</paragraph>
 		<paragraph>To modify the debug clauses status:</paragraph>

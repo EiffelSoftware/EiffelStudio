@@ -19,7 +19,7 @@
 			</image>
 		</paragraph>
 		<tip>
-			<bold>Tip</bold>: The nicest output is produced by the
+			<bold>Tip</bold>: The nicest output is produced by the 
 			<bold>html-stylesheet</bold> format.
 		</tip>
 		<paragraph>Now the wizard asks you to select the clusters you want to produce documentation for:</paragraph>

@@ -24,7 +24,7 @@
 					<url>../../reference/05_general_interface_description/30_main_toolbars.xml</url>
 					<label>standard toolbar</label>
 				</link> or select 
-				<bold>Remove current item</bold> in the
+				<bold>Remove current item</bold> in the 
 				<bold>Tools</bold> menu.
 			</item>
 			<item>
@@ -49,14 +49,13 @@
 				</link>.
 			</item>
 			<item>Use the cluster tab in the project configuration window.</item>
-		</list>
-		<div>See Also</div>
-		<paragraph>
-			<line_break></line_break>
+		</list>		
+		<seealso>
+			<bold>Seealso</bold><line_break></line_break>
 			<link>
 				<url>10_adding_a_cluster.xml</url>
 				<label>Adding a cluster</label>
 			</link>
-		</paragraph>
+		</seealso>
 	</paragraph>
 </document>

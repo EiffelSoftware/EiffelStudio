@@ -1,7 +1,5 @@
 <document title="Handling exceptions" output="studio">
-	<meta_data>
-		<help></help>
-	</meta_data>
+	<meta_data/>
 	<paragraph>
 		<heading>
 			<size>1</size>Handling exceptions
@@ -15,7 +13,7 @@
 		<paragraph>The EXCEPTIONS class also provides ways to raise exception, via its feature 
 			<link>
 				<url>/libraries/base/reference/kernel/exceptions.html#f_raise</url>
-				<label>`raise'</label>
+				<label>'raise'</label>
 			</link>.
 		</paragraph>
 		<paragraph>When an exception is raised while the application is being debugged, the application stops immediately and the debugger displays the context in which the exception occurred, whether or not the exception is rescued.</paragraph>

@@ -77,14 +77,17 @@
 				<url>10_calculating_a_measure.xml</url>
 				<label>Calculating measures</label>
 			</link>
+			<line_break></line_break>
 			<link>
 				<url>50_updating_recorded_measures.xml</url>
 				<label>Updating measures</label>
 			</link>
+<line_break></line_break>
 			<link>
 				<url>30_deleting_measures.xml</url>
 				<label>Deleting measures</label>
 			</link>
+<line_break></line_break>
 			<link>
 				<url>40_viewing_measure_details.xml</url>
 				<label>Detailing measures</label>

@@ -1,7 +1,5 @@
 <document title="Creating a new project" output="studio">
-	<meta_data>
-		<help></help>
-	</meta_data>
+	<meta_data/>
 	<paragraph>
 		<heading>
 			<size>1</size>Creating a new project
@@ -33,10 +31,10 @@
 				</link>. This is the perfect choice to start a platform-independent graphic application, or even any graphic application, since EiffelVision2 is easier to use than platform-specific libraries. This option is available on all platforms and all packages.
 			</item>
 			<item>
-				<bold>WEL application</bold> generates a project using the
+				<bold>WEL application</bold> generates a project using the 
 				<link>
 					<url>/libraries/wel/index.xml</url>
-					<label> Windows Eiffel Library(WEL)</label>
+					<label>Windows Eiffel Library(WEL)</label>
 				</link>. This option is recommended for projects needing advanced Windows features, or Windows applications that are time-critical, since the graphic functionality provided by WEL is more efficient than the one provided by Vision2, which on the other hand provides a platform-independent abstract interface. This wizard is only available on Windows.
 			</item>
 		</list>All those options are also available in the
@@ -57,7 +55,7 @@
 			<line_break></line_break> 
 			<link>
 				<url>20_retrieving_a_project_from_an_ace_file.xml</url>
-				<label>Retrievinga project from an Ace file</label>
+				<label>Retrieving a project from an Ace file</label>
 			</link>
 			<line_break></line_break> 
 			<link>

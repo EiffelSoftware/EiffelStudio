@@ -24,7 +24,7 @@
 			<label>centered</label>
 		</link> on the same cluster, class or feature. It is possible to make the context tool independent from the editor. It has then its own address bar and can display information on a totally different component than the one on which the editor is centered. 
 		<paragraph>To do so, click on or select 
-			<bold>Isolate context tool</bold> in the
+			<bold>Isolate context tool</bold> in the 
 			<bold>View</bold> menu. To go back to the previous configuration, click on the same icon again or select 
 			<bold>Merge context tool</bold> in the
 			<bold>View</bold> menu.
@@ -39,7 +39,7 @@
 				<label>preferences window</label>
 			</link> by choosing 
 			<bold>Preferences...</bold> in the 
-			<bold>Tools</bold>menu. Select then the "context tool" sub-category in the "Tools" of the preferences tree. Lastly click on "Share addresses between the editor and the context tool" and set it to 
+			<bold>Tools</bold> menu. Select then the "context tool" sub-category in the "Tools" of the preferences tree. Lastly click on "Share addresses between the editor and the context tool" and set it to 
 			<bold>False</bold>.
 			<line_break></line_break>Click on save and exit to complete the change.
 		</paragraph>
@@ -48,12 +48,12 @@
 			<line_break></line_break>
 			<link>
 				<url>../../reference/85_preferences/10_overview.xml</url>
-				<label>Preference window description.</label>
+				<label>Preference window description</label>
 			</link>
 			<line_break></line_break>
 			<link>
 				<url>../../reference/85_preferences/20_preferences_reference/00_introduction.xml</url>
-				<label>Preferences reference.</label>
+				<label>Preferences reference</label>
 			</link>
 		</seealso>
 	</paragraph>

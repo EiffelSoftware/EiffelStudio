@@ -454,6 +454,7 @@ feature {EV_MULTI_COLUMN_LIST_ROW_I} -- Implementation
 					litem.to_integer)
 				list.forth
 			end
+			invalidate
 		end
 
 	move_item (item_imp: EV_MULTI_COLUMN_LIST_ROW_IMP; an_index: INTEGER) is
@@ -984,6 +985,9 @@ end -- class EV_MULTI_COLUMN_LIST_IMP
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.98  2000/05/03 00:07:07  brendel
+--| Added call to invalidate.
+--|
 --| Revision 1.97  2000/04/27 23:23:10  rogers
 --| Undefined on_left_button_up from EV_PRIMITIVE_IMP.
 --|

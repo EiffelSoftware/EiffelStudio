@@ -173,9 +173,9 @@ feature {EMITTER} -- Element Change
 	set_internal_eiffel_path (a_path: STRING) is
 			-- set `internal_eiffel_path' to 'a_path'
 		require
-			not_already_set: internal_eiffel_path.item = Void
 			non_void_path: a_path /= Void
 			valid_path: not a_path.is_empty
+			not_already_set: internal_eiffel_path.item = Void or a_path.is_equal (internal_eiffel_path.item)
 		do
 			internal_eiffel_path.put (a_path)
 		end
@@ -189,6 +189,7 @@ feature {NONE} -- Implementation
 			l_str: SYSTEM_STRING
 			l_registry_key: REGISTRY_KEY
 			l_obj: SYSTEM_OBJECT
+			l_file_info: FILE_INFO
 		once
 			if not retried then
 				if internal_eiffel_path.item = Void then
@@ -198,7 +199,12 @@ feature {NONE} -- Implementation
 						l_registry_key := l_registry_key.open_sub_key ("SOFTWARE")
 						l_registry_key := l_registry_key.open_sub_key ("ISE")
 						l_registry_key := l_registry_key.open_sub_key ("Eiffel55")
-						l_registry_key := l_registry_key.open_sub_key ("EiffelSoftware.MetadataConsumer")
+						
+						l_obj := Current
+						create l_file_info.make (l_obj.get_type.assembly.location)
+						l_str := l_file_info.name.substring_integer_integer (0, l_file_info.name.length - 4)
+						l_registry_key := l_registry_key.open_sub_key (l_str)
+						
 						l_obj := l_registry_key.get_value (Ise_key)
 						l_str ?= l_obj
 						

@@ -126,7 +126,7 @@ feature -- Status setting
 					-- mouse movement then we raise the window containing `Current'
 					-- to the foreground.
 				elseif awaiting_movement then
-						original_top_level_window_imp.move_to_foreground
+						top_level_window_imp.move_to_foreground
 				end
 				original_x := -1
 				original_y := -1
@@ -740,6 +740,9 @@ end -- class EV_PICK_AND_DROPABLE_IMP
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.32  2001/07/06 18:34:48  rogers
+--| ev_pick_and_dropable_imp.e
+--|
 --| Revision 1.31  2001/06/07 23:08:12  rogers
 --| Merged DEVEL branch into Main trunc.
 --|

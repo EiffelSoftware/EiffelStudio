@@ -8,7 +8,7 @@ class CREATE_TYPE
 inherit
 	CREATE_INFO
 		redefine
-			generate_cid, generate_reverse, is_explicit
+			generate, generate_cid, is_explicit
 		end
 
 create
@@ -44,6 +44,27 @@ feature -- C code generation
 			end
 		end
 	
+	generate_type_id (buffer: GENERATION_BUFFER; final_mode: BOOLEAN) is
+			-- Generate creation type id.
+		local
+			cl_type_i : CL_TYPE_I
+			gen_type_i: GEN_TYPE_I
+		do
+			cl_type_i ?= context.creation_type (type)
+			gen_type_i ?= cl_type_i
+			if gen_type_i /= Void then
+				buffer.put_string ("typres")
+			else
+				if final_mode then
+					buffer.put_type_id (cl_type_i.type_id)
+				else
+					buffer.put_string ("RTUD(")
+					buffer.put_static_type_id (cl_type_i.associated_class_type.static_type_id)
+					buffer.put_character (')')
+				end
+			end
+		end
+
 	generate is
 			-- Generate creation type.
 		local
@@ -53,6 +74,7 @@ feature -- C code generation
 			l_tuple_type: TUPLE_TYPE_I
 			l_is_tuple: BOOLEAN
 		do
+				
 			l_buffer := context.buffer
 			l_final_mode := not context.workbench_mode
 			l_cl_type := type_to_create
@@ -61,7 +83,7 @@ feature -- C code generation
 			
 			if l_final_mode and not l_is_tuple then
 				l_buffer.put_string ("RTLNS(")
-				generate_cid (l_buffer, l_final_mode)
+				generate_type_id (l_buffer, l_final_mode)
 				l_buffer.put_string (", ")
 				l_buffer.put_type_id (l_cl_type.type_id)
 				l_buffer.put_string (", ")
@@ -72,7 +94,7 @@ feature -- C code generation
 				else
 					l_buffer.put_string ("RTLN(")
 				end
-				generate_cid (l_buffer, l_final_mode)
+				generate_type_id (l_buffer, l_final_mode)
 			end
 			if l_is_tuple then
 					-- Add `count' parameter and if it is full of basic types.
@@ -164,47 +186,14 @@ feature -- Generic conformance
 
 	generate_cid (buffer: GENERATION_BUFFER; final_mode : BOOLEAN) is
 			-- Generate creation type.
-		local
-			cl_type_i : CL_TYPE_I
-			gen_type  : GEN_TYPE_I
 		do
-			cl_type_i ?= context.creation_type (type)
-			gen_type  ?= cl_type_i
-
-			if gen_type /= Void then
-				buffer.put_string ("typres")
-			else
-				if final_mode then
-					buffer.put_type_id (cl_type_i.type_id)
-				else
-					buffer.put_string ("RTUD(")
-					buffer.put_static_type_id (cl_type_i.associated_class_type.static_type_id)
-					buffer.put_character (')')
-				end
-			end
+			generate_type_id (buffer, final_mode)
+			buffer.put_character (',')
 		end
 
 	type_to_create : CL_TYPE_I is
 		do
 			Result ?= context.creation_type (type)
-		end
-
-feature -- Assignment attempt
-
-	generate_reverse (buffer: GENERATION_BUFFER; final_mode : BOOLEAN) is
-			-- Generate computed type of creation for assignment attempt.
-		local
-			cl_type_i : CL_TYPE_I
-		do
-			cl_type_i ?= context.creation_type (type)
-
-			if final_mode then
-				buffer.put_type_id (cl_type_i.type_id)
-			else
-				buffer.put_string ("RTUD(")
-				buffer.put_static_type_id (cl_type_i.associated_class_type.static_type_id)
-				buffer.put_character (')')
-			end
 		end
 
 end -- class CREATE_TYPE

@@ -32,9 +32,22 @@ feature -- C code generation
 
 	generate is
 			-- Generate creation type
-		deferred
+		local
+			buffer: GENERATION_BUFFER
+		do
+			buffer := context.buffer
+			buffer.put_string ("RTLNSMART(")
+			generate_type_id (buffer, context.final_mode)
+			buffer.put_character (')')
 		end
 
+	generate_type_id (buffer: GENERATION_BUFFER; final_mode: BOOLEAN) is
+			-- Generate creation type id.
+		require
+			buffer_not_void: buffer /= Void
+		deferred
+		end
+		
 feature -- IL code generation
 
 	generate_il is
@@ -143,17 +156,6 @@ feature -- Generic conformance
 		do
 			gen_type ?= type_to_create
 			Result := (gen_type /= Void)
-		end
-	
-feature -- Assignment attempt
-
-	generate_reverse (buffer: GENERATION_BUFFER; final_mode: BOOLEAN) is
-			-- Additional info for assignment
-			-- attempts with anchored types.
-		require
-			valid_buffer: buffer /= Void
-		do
-			-- Do nothing
 		end
 
 end -- class CREATE_INFO

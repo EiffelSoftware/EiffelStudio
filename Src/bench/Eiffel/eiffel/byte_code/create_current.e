@@ -10,8 +10,7 @@ inherit
 	CREATE_INFO
 		redefine
 			generate_cid, make_gen_type_byte_code,
-			generate_reverse, generate_cid_array,
-			generate_cid_init
+			generate_cid_array, generate_cid_init
 		end
 
 	SHARED_GENERATION
@@ -33,21 +32,8 @@ feature -- C code generation
 			context.add_dftype_current
 		end
 
-	generate is
+	generate_type_id (buffer: GENERATION_BUFFER; final_mode: BOOLEAN) is
 			-- Generate creation type id (dynamic type) of current	
-		local
-			buffer: GENERATION_BUFFER
-		do
-			buffer := context.buffer
-			buffer.put_string ("RTLNC(")
-			context.Current_register.print_register
-			buffer.put_character (')')
-		end
-
-feature -- Assignment attempt
-
-	generate_reverse (buffer: GENERATION_BUFFER; final_mode : BOOLEAN) is
-
 		do
 			context.generate_current_dftype
 		end
@@ -89,6 +75,7 @@ feature -- Generic conformance
 
 		do
 			context.generate_current_dftype
+			context.buffer.put_character (',')
 		end
 
 	make_gen_type_byte_code (ba : BYTE_ARRAY) is

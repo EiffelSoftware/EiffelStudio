@@ -334,8 +334,8 @@ interface IEiffelFeatureDescriptor: IUnknown
 ]
 interface IEiffelProjectProperties: IDispatch
 {
-  [id (101), propget, helpstring ("Open Ace file.")]
-  HRESULT open_ace_file ([in] BSTR ace_file_name);
+  [id (101), propget, helpstring ("Apply changes")]
+  HRESULT appply ();
   
   [id (DISPID_VALUE), propget, helpstring ("System name.")]
   HRESULT system_name ([out, retval] BSTR * return_value);

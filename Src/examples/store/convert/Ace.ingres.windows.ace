@@ -43,9 +43,9 @@ cluster
 external
 
 	object:		
-		"$ISE_EIFFEL/library/store/spec/$(ISE_COMPILER)/lib/support.lib",
-		"$(ISE_EIFFEL)/library/time/spec/$(ISE_COMPILER)/lib/datetime.lib",
-		"$ISE_EIFFEL/library/store/spec/$(ISE_COMPILER)/lib/ingres_store.lib",
+		"$ISE_EIFFEL/library/store/spec/$(ISE_C_COMPILER)/lib/support.lib",
+		"$(ISE_EIFFEL)/library/time/spec/$(ISE_C_COMPILER)/lib/datetime.lib",
+		"$ISE_EIFFEL/library/store/spec/$(ISE_C_COMPILER)/lib/ingres_store.lib",
 		"$(II_SYSTEM)/ingres/lib/ingres.lib"
 
 end

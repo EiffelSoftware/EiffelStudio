@@ -70,6 +70,14 @@ feature -- Access
 			bridge_ok: Result = implementation.selected_items
 		end
 
+	row_height: INTEGER is
+			-- Height in pixels of each row.
+		do
+			Result := implementation.row_height
+		ensure
+			bridge_ok: Result = implementation.row_height
+		end
+
 feature -- Status report
 
 	multiple_selection_enabled: BOOLEAN is
@@ -370,6 +378,9 @@ end -- class EV_MULTI_COLUMN_LIST
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.45  2000/03/24 01:35:42  brendel
+--| Added `row_height'.
+--|
 --| Revision 1.44  2000/03/23 18:18:54  brendel
 --| Commented out line that uses set_cell_text. get back to this.
 --|

@@ -20,7 +20,9 @@ feature
 			-- `start_pos' and `end_pos'.
 		require
 			good_argument: f /= void;
-			file_not_open: f.is_closed
+			file_not_open: f.is_closed;
+			file_exists: f.exists;
+			file_readable: f.is_readable
 		local
 			p_line,comment_line: EIFFEL_LINE;
 			comment: EIFFEL_COMMENTS;	-- a comment
@@ -66,7 +68,9 @@ feature
 			-- the file should not be open before the call
 		require
 			good_argument: f /= void;
-			file_not_open: f.is_closed
+			file_not_open: f.is_closed;
+			file_exists: f.exists;
+			file_readable: f.is_readable
 		local
 			p_line,comment_line: EIFFEL_LINE;
 			comment: EIFFEL_COMMENTS;	-- a comment

@@ -26,8 +26,6 @@ feature {NONE}-- Initialization
 
 	initialize is
 			-- Initialize `Current'.
-		local
-			internal_pixmap: EV_PIXMAP
 		do
 			Precursor {EV_TITLED_WINDOW}
 			initialize_constants
@@ -183,7 +181,6 @@ feature {NONE}-- Initialization
 			create report_label
 			create l_ev_frame_8
 			create line_pos_label
-			create internal_pixmap
 			
 				-- Build_widget_structure.
 			set_menu_bar (l_ev_menu_bar_1)
@@ -465,26 +462,20 @@ feature {NONE}-- Initialization
 			toc_vertical_toolbar.disable_item_expand (toc_merge_button)
 			toc_vertical_toolbar.disable_item_expand (toc_sort_button)
 			toc_new_button.set_tooltip ("New Table of Contents")
-			internal_pixmap.set_with_named_file ("D:\Src\tools\doc_builder\resources\icons\icon_new_doc.ico")
-			toc_new_button.set_pixmap (internal_pixmap)
+			toc_new_button.set_pixmap (icon_new_doc_ico)
 			toc_open_button.set_tooltip ("Open Table of Contents")
-			internal_pixmap.set_with_named_file ("D:\Src\tools\doc_builder\resources\icons\icon_open_file.ico")
-			toc_open_button.set_pixmap (internal_pixmap)
+			toc_open_button.set_pixmap (icon_open_file_ico)
 			toc_save_button.set_tooltip ("Save")
 			toc_save_button.set_minimum_width (24)
 			toc_save_button.set_minimum_height (24)
-			internal_pixmap.set_with_named_file ("D:\Src\tools\doc_builder\resources\icons\icon_save.ico")
-			toc_save_button.set_pixmap (internal_pixmap)
+			toc_save_button.set_pixmap (icon_save_ico)
 			l_ev_cell_4.set_minimum_height (20)
 			toc_new_heading.set_tooltip ("New Topic Heading")
-			internal_pixmap.set_with_named_file ("D:\Src\tools\doc_builder\resources\icons\icon_toc_folder_open.ico")
-			toc_new_heading.set_pixmap (internal_pixmap)
+			toc_new_heading.set_pixmap (icon_toc_folder_open_ico)
 			toc_new_page.set_tooltip ("New Topic File")
-			internal_pixmap.set_with_named_file ("D:\Src\tools\doc_builder\resources\icons\icon_format_text_color.ico")
-			toc_new_page.set_pixmap (internal_pixmap)
+			toc_new_page.set_pixmap (icon_format_text_color_ico)
 			toc_remove_topic.set_tooltip ("Delete Topic")
-			internal_pixmap.set_with_named_file ("D:\Src\tools\doc_builder\resources\icons\icon_file_close.ico")
-			toc_remove_topic.set_pixmap (internal_pixmap)
+			toc_remove_topic.set_pixmap (icon_file_close_ico)
 			l_ev_cell_5.set_minimum_height (20)
 			toc_list_button.set_tooltip ("Loaded Table of Contents")
 			toc_list_button.set_pixmap (icon_down_triangle_ico)

@@ -529,7 +529,6 @@ feature {GB_OBJECT_HANDLER, GB_TITLED_WINDOW_OBJECT} -- Implementation
 			pick_and_dropable ?= display_object
 			if pick_and_dropable /= Void then
 				pick_and_dropable.set_pebble_function (agent retrieve_pebble)
-				pick_and_dropable.set_pebble_function (agent retrieve_pebble)
 				pick_and_dropable.drop_actions.extend (agent add_new_component_wrapper (?))
 				pick_and_dropable.drop_actions.extend (agent add_new_object_wrapper (?))
 				pick_and_dropable.drop_actions.set_veto_pebble_function (agent can_add_child (?))

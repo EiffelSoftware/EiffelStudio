@@ -96,7 +96,7 @@ feature {NONE}
 			valid_a_parent: a_parent /= Void;
 			editor_already_set: editor /= Void
 		do
-			form_create_unmanaged (a_name, a_parent);
+			form_create (a_name, a_parent);
 			if Resources.background_color /= Void then
 				set_background_color (Resources.background_color);
 			end;
@@ -116,11 +116,9 @@ feature {NONE}
 			!! set_colors;
 			set_colors.execute (Current);
 			editor.attach_attributes_form (Current);
-			manage;
 			show;
 		ensure
 			shown: shown;
-			managed: managed;
 		end;
 
 end

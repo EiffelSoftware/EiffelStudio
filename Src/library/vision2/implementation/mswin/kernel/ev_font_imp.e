@@ -254,7 +254,7 @@ feature {EV_ANY_I} -- Access
 	wel_font: WEL_FONT
 			-- Basic WEL font.
 
-feature {EV_FONTABLE_IMP, EV_FONT_DIALOG_IMP} -- Access
+feature {EV_FONTABLE_IMP, EV_FONT_DIALOG_IMP, EV_CHARACTER_FORMAT_IMP, EV_ENVIRONMENT_IMP} -- Access
 
 	set_by_wel_font (wf: WEL_FONT) is
 			-- Set state by passing an already created WEL_FONT.
@@ -310,6 +310,8 @@ feature {EV_ANY_I} -- Implementation
 		local
 			lower_face: STRING
 			found: BOOLEAN
+			dc: WEL_MEMORY_DC
+			text_metric: WEL_TEXT_METRIC
 		do
 				-- First, set the family
 			inspect family
@@ -350,6 +352,7 @@ feature {EV_ANY_I} -- Implementation
 				end
 				if found then
 					Wel_log_font.set_face_name (lower_face)
+					wel_log_font.set_char_set (font_enumerator.text_metrics.item (lower_face).character_set)
 				else
 						-- Preferred face not found, leave Windows do
 						-- its best.
@@ -365,7 +368,22 @@ feature {EV_ANY_I} -- Implementation
 			wel_font.set_indirect (Wel_log_font)
 
 				-- retrieve values set by windows
-			Wel_log_font.update_by_font(wel_font)
+			Wel_log_font.update_by_font (wel_font)
+			
+			if found then
+					-- `Current' may not always have the char set correctly set when created by passing a preferred family.
+					-- To determine the actual char set from the face name, we must select the font into a DC,
+					-- and query the DC directly. The new font we create now has the correct char set.
+				create dc.make
+				dc.select_font (wel_font)
+				create text_metric.make (dc)
+				wel_log_font.set_char_set (text_metric.character_set)
+				dc.unselect_all
+				dc.release		
+				create wel_font.make_indirect (wel_log_font)
+					-- retrieve values set by windows
+				Wel_log_font.update_by_font(wel_font)
+			end
 
 				-- Update internal attributes.
 			internal_face_name := Wel_log_font.face_name.twin

@@ -339,7 +339,6 @@ feature {NONE} -- Initialization
 		local
 			error: EV_INFORMATION_DIALOG
 		once
-			(create {CLI_COM}).initialize_com
 			create assembly_interface.make
 			if not assembly_interface.exists then
 				create error.make_with_text ("Unable to load FusionSupport.dll")

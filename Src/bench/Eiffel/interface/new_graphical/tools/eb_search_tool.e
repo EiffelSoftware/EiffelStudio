@@ -565,7 +565,7 @@ feature {NONE} -- Implementation
 		end
 
 	replace is
-			-- replace the current occurence of the searched word
+			-- replace the current occurrence of the searched word
 		require
 			replace_via_search_box_only: shown
 		do

@@ -214,7 +214,7 @@ feature -- Execution
 				status := Application.status
 				if status /= Void and then status.is_stopped then
 					-- Application is stopped. Continue execution.
-					debug("DEBUGGER") io.putstring (generator+": Contine execution%N"); end
+					debug("DEBUGGER") io.putstring (generator+": Continue execution%N"); end
 					create mp.set_watch_cursor
 
 						-- Ask the application to wean objects the

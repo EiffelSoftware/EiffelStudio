@@ -50,7 +50,7 @@ feature {NONE} -- Execution
 			prof_invoker: PROFILER_INVOKER
 		do
 			!! conf_load.make_and_load (profiler);
-			if conf_load.error_occured then
+			if conf_load.error_occurred then
 				raise_config_error;
 			else
 				!! prof_invoker.make (conf_load.profiler_type, arguments, proffile_dir, compile_type);
@@ -75,10 +75,10 @@ feature {NONE} -- Attributes
 feature {NONE} -- Implementation
 
 	raise_config_error is
-			-- Explains that an error occured while loading the
+			-- Explains that an error occurred while loading the
 			-- profiler specific configuration file.
 		do
-			output_window.put_string ("An error occured while loading the configuration for your profiler.");
+			output_window.put_string ("An error occurred while loading the configuration for your profiler.");
 			output_window.new_line;
 			output_window.put_string ("Please check with your system administrator whether your profiler is supported.");
 			output_window.new_line;

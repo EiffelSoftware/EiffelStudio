@@ -42,7 +42,7 @@ feature -- Command execution
 				dlg.destroy;
 
 				!! conf_load.make_and_load (profiler);
-				if conf_load.error_occured then
+				if conf_load.error_occurred then
 					raise_config_error;
 				else
 					!! prof_invoker.make (profiler, current_cmd_line_argument, profinfo, compile);
@@ -96,7 +96,7 @@ feature {NONE} -- Implementation
 	dlg: GENERATION_OPTIONS_DLG
 
 	raise_config_error is
-			-- Explains that an error occured while loading the
+			-- Explains that an error occurred while loading the
 			-- profiler specific configuration file.
 		local
 			error_dlg: ERROR_WINDOW

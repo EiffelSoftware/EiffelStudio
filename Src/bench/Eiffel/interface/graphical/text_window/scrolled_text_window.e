@@ -332,7 +332,7 @@ feature -- Update
 		end
 
 	search_text (s: STRING; is_case_sensitive: BOOLEAN) is
-			-- Highlight and show next occurence of `s'.
+			-- Highlight and show next occurrence of `s'.
 		local
 			start_position: INTEGER
 		do
@@ -352,7 +352,7 @@ feature -- Update
 		end
 			
 	replace_text (s, r: STRING replace_all, is_case_sensitive: BOOLEAN) is
-			-- Replace next occurence of `s' with `r'.
+			-- Replace next occurrence of `s' with `r'.
 		local
 			start_position: INTEGER
 			c_position: INTEGER

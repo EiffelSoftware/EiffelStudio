@@ -280,7 +280,7 @@ feature -- Project retrieval
 		rescue
 			l_retried := True
 			io.error.putstring ("An error occurred during removal of previous project.%N")
-			io.error.putstring ("Please make sure to have full permission to your exisiting project.%N")
+			io.error.putstring ("Please make sure to have full permission to your existing project.%N")
 			error_occurred := True
 			retry
 		end

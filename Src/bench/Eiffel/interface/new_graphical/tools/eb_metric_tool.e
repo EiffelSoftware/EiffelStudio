@@ -860,7 +860,7 @@ feature -- Metric retrieving and setting.
 			decimals, integer_result: INTEGER
 		do
 			if a_result = -123456 then
-				Result := "Division over 0"
+				Result := "Division by 0"
 			else
 				if not a_percentage then
 					displayed_result := a_result

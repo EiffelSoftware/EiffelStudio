@@ -1033,6 +1033,13 @@ feature -- C enums
 			"GDK_POINTER_MOTION_MASK"
 		end
 
+	frozen gdk_pointer_motion_hint_mask_enum: INTEGER is
+		external
+			"C inline use <gtk/gtk.h>"
+		alias
+			"GDK_POINTER_MOTION_HINT_MASK"
+		end
+
 	frozen gdk_button1_mask_enum: INTEGER is
 		external
 			"C inline use <gtk/gtk.h>"

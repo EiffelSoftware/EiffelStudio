@@ -11,6 +11,7 @@
 */
 
 #include "eif_err_msg.h"
+#include "eif_gen_conf.h"
 #include "yacc.h"
 
 /*
@@ -90,7 +91,7 @@ void c_get_address (int32 n, char *obj, fnptr rout)
 {
 	/* Initialize Eiffel-yacc interface for dynamic type `n'. */
 
-	yy_dt_array[n] = Dftype(obj);
+	yy_dt_array[n] = Dtype(obj);
 	init_array[n] = rout;
 }
 
@@ -143,9 +144,11 @@ char *list_new(int list_type)
 	 * list.
 	 */
 
-	char *result;		/* Eiffel fixed list to create */
-	int list_count;		/* Count of the fixed list */
-	char *area;			/* Special object */
+	char *result;			/* Eiffel fixed list to create */
+	int list_count;			/* Count of the fixed list */
+	char *area;				/* Special object */
+	int16 typearr [4];		/* Type array for the generic creation of the FIXED_LIST */
+	int16 dynamic_list_type;/* Dynamic type of the current list */
 
 	/* Creation of an Eiffel fixed list and allocation of an special
 	 * object for it.
@@ -156,10 +159,20 @@ char *list_new(int list_type)
 	if (list_count == 0)
 		return 0;
 
+		/* Update index of the object stack */
+	object_top -= list_count;
+
 	/* Creation of an instance of CONSTRUCT_LIST and call of the creation
 	 * precedure of ARRAY in order to create a special object.
 	 */
-	result = create_node(list_type);
+	dynamic_list_type = rtud_inv[yy_dt_array[list_type]];
+
+	typearr [0] = -1;			/* No static call context */
+	typearr [1] = dynamic_list_type;	/* Base type of FIXED_LIST */
+	typearr [2] = rtud_inv[Dftype(object_stack [object_top])];			/* Parameter type */
+	typearr [3] = -1;			/* To specify the end of the array */
+
+	result = emalloc (eif_compound_id ((int16 *)0, (char *)0, (int16) dynamic_list_type, typearr));
 
 	(*init_array[list_type])(result, (long) list_count);
 
@@ -167,9 +180,6 @@ char *list_new(int list_type)
 	 * class ARRAY.
 	 */
 	area = ((char *(*)()) c_list_area)(result);
-
-	/* Update index of the object stack */
-	object_top -= list_count;
 
 #ifdef DEBUG
 	printf("Creating new list with %d items [%d]\n", list_count, object_top);

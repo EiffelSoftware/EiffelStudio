@@ -30,6 +30,34 @@ feature -- Status report
 		
 	buffer_locked_in_append_mode: BOOLEAN
 			-- Is buffered appending underway?
+			
+	index_from_position (an_x_position, a_y_position: INTEGER): INTEGER is
+			-- Index of character closest to position `x_position', `y_position'.
+		require
+			position_valid: an_x_position >= 0 and an_x_position <= width and
+				a_y_position >= 0 and a_y_position <= height
+		deferred
+		ensure
+			index_valid: Result >= 1 and Result <= text_length
+		end
+		
+	position_from_index (an_index: INTEGER): EV_COORDINATE is
+			-- Position of character at index `an_index'.
+		require
+			index_valid: an_index >= 1 and an_index <= text_length
+			character_displayed: character_displayed (an_index)
+		deferred
+		ensure
+			position_valid: Result.x >= 0 and Result.x <= width and
+				Result.y >= 0 and Result.y <= height
+		end
+		
+	character_displayed (an_index: INTEGER): BOOLEAN is
+			-- Is character `an_index' currently visible in `Current'?
+		require
+			index_valid: an_index >= 1 and an_index <= text_length
+		deferred
+		end
 
 feature -- Status setting
 

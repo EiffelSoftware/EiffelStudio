@@ -234,6 +234,44 @@ feature -- Status report
 				create {EV_COLOR}.make_with_8_bit_rgb (color_ref.red, color_ref.blue, color_ref.green),
 				character_effects)
 		end
+		
+	index_from_position (an_x_position, a_y_position: INTEGER): INTEGER is
+			-- Index of character closest to position `x_position', `y_position'. 
+		local
+			new_lines_to_caret_position, position: INTEGER
+		do
+			position := character_index_from_position (an_x_position, a_y_position)
+			new_lines_to_caret_position := wel_text.substring (1, position).occurrences ('%R')
+			Result := position + 1 - new_lines_to_caret_position
+		end
+		
+	position_from_index (an_index: INTEGER): EV_COORDINATE is
+			-- Position of character at index `an_index'.
+		do
+			Result := internal_position_from_index (an_index)
+		end
+
+	internal_position_from_index (an_index: INTEGER): EV_COORDINATE is
+			-- Position of character at index `an_index'.
+			-- Internal version which has no precondition, as we implement `character_displayed'
+			-- using the result of this call. Using `position_from_index' directly is not
+			-- possible due to its precondition.
+		local
+			wel: WEL_POINT
+		do
+			wel := position_from_character_index (an_index - 1)
+			create Result.set (wel.x, wel.y)
+		end
+
+	character_displayed (an_index: INTEGER): BOOLEAN is
+			-- Is character `an_index' currently visible in `Current'?
+		local
+			pos: EV_COORDINATE
+		do
+			pos := internal_position_from_index (an_index)
+			Result := pos.x >= 0 and pos.x <= width and
+				pos.y >= 0 and pos.y <= height
+		end
 
 feature -- Status setting
 

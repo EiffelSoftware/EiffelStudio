@@ -7,12 +7,12 @@ inherit
 			same_as, associated_eiffel_class,
 			append_to
 		redefine
-			bits_symbol, is_deep_equal
+			bits_symbol
 		end;
 
 	BASIC_TYPE_B
 		undefine
-			set, is_deep_equal
+			set, is_equivalent
 		redefine
 			append_to
 		end
@@ -23,16 +23,6 @@ feature -- Attributes
 			-- Bits value
 
 feature 
-
-	is_deep_equal (other: TYPE_B): BOOLEAN is
-			-- ATTENTION: May be this feature should be deferred now...
-		local
-			o: BITS_SYMBOL_AS_B
-		do
-			o ?= other;
-			Result := o /= Void and then
-				bits_symbol.is_equal (o.bits_symbol)
-		end;
 
 	solved_type (feat_table: FEATURE_TABLE; f: FEATURE_I): BITS_SYMBOL_A is
 		local

@@ -97,7 +97,7 @@ rt_public unsigned char ex_ign[EN_NEX];	/* Item set to 1 to ignore exception */ 
 /* Stack of current exception flags. This is used to control the assertion
  * checking (e.g. disable it when already in assertion checking).
  */
-rt_public struct eif_except exdata = {
+rt_public struct eif_exception exdata = {
 	1,				/* ex_chk */
 	0,				/* ex_val */
 	0,				/* ex_nomem */
@@ -835,19 +835,10 @@ rt_public void eraise(EIF_CONTEXT char *tag, long num)
 			case EN_SIG:				/* Received a signal */
 				trace->ex_sig = echsig;	/* Record its number */
 				break;
-#ifdef EIF_WIN32
-			case EN_SYS:				/* Operating system error */
-				trace->ex_errno = errno;
-				break;
-			case EN_IO:					/* I/O error */
-				trace->ex_errno = _doserrno;
-				break;
-#else
 			case EN_SYS:				/* Operating system error */
 			case EN_IO:					/* I/O error */
 				trace->ex_errno = errno;
 				break;
-#endif
 			default:
 				trace->ex_name = tag;	/* Record its tag */
 				trace->ex_where = 0;	/* Unknown location (yet) */

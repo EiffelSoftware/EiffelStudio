@@ -1713,6 +1713,10 @@ feature -- Class initialization
 		local
 			old_parents: like parents
 			old_generics: like generics
+			old_is_expanded: BOOLEAN
+			old_is_separate: BOOLEAN
+			old_is_deferred: BOOLEAN
+			old_is_frozen: BOOLEAN
 			parents_as: EIFFEL_LIST [PARENT_AS]
 			p: ARRAY [PARENT_AS]
 			lower, upper: INTEGER
@@ -1725,15 +1729,10 @@ feature -- Class initialization
 			ve04: VE04
 			vhpr1: VHPR1
 			dummy_list: LINKED_LIST [INTEGER]
-			is_exp, old_is_expanded: BOOLEAN
-			old_is_separate: BOOLEAN
-			old_is_deferred: BOOLEAN
 			a_client: CLASS_C
-			changed_status: BOOLEAN
 			class_i: CLASS_I
-			changed_generics: BOOLEAN
-			changed_expanded: BOOLEAN
-			changed_separate: BOOLEAN
+			changed_status: BOOLEAN
+			is_exp, changed_generics, changed_expanded, changed_separate: BOOLEAN
 			pars: like parents
 			gens: like generics
 			obs_msg: like obsolete_message
@@ -1825,7 +1824,17 @@ feature -- Class initialization
 
 				-- Class status
 			is_external := ast_b.is_external
+			old_is_frozen := is_frozen
 			is_frozen := ast_b.is_frozen
+
+			if System.il_generation and then old_is_frozen /= is_frozen then
+					-- Class has its `frozen' status changed. We have to
+					-- reset its `types' so that it is recomputed.
+				if has_types then
+					types.wipe_out
+				end
+				changed_status := True
+			end
 
 			if (is_separate /= old_is_separate and then old_parents /= Void) then
 				Degree_4.set_separate_modified (Current)

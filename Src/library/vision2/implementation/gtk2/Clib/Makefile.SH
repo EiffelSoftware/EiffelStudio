@@ -46,7 +46,7 @@ ALL_OBJECTS = $(OBJECTS) #$(MT_OBJECTS)
 all: $(ALL_OBJECTS)
 	$(MKDIR) ../../../spec/$(ISE_PLATFORM)/lib
 	$(MV) $? ../../../spec/$(ISE_PLATFORM)/lib
-#	make clobber
+	make clobber
 
 MTgtk_eiffel.o: gtk_eiffel.c
 	$(CC) -c $(MTCFLAGS) $? -o $@

@@ -112,11 +112,6 @@ feature  -- Access
 		deferred
 		end
 
-	blocking_window: EV_WINDOW is
-			-- Window this dialog is a transient for.
-		deferred
-		end
-
 feature -- Status setting
 
 	enable_modal is
@@ -131,11 +126,6 @@ feature -- Status setting
 		deferred
 		ensure
 			not_is_modal: not is_modal
-		end
-
-	set_blocking_window (a_window: EV_WINDOW) is
-			-- Set as transient for `a_window'.
-		deferred
 		end
 
 	set_x_position (a_x: INTEGER) is
@@ -321,6 +311,9 @@ end -- class EV_WINDOW_I
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.14  2000/05/03 00:26:14  pichery
+--| Removed useless `blocking_window'
+--|
 --| Revision 1.13  2000/04/28 22:04:13  brendel
 --| Commented out strange redefintion of `has'.
 --|

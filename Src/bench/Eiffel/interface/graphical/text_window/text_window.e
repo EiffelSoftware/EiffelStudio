@@ -183,7 +183,8 @@ feature -- Update
 	search (s: STRING) is
 			-- Highlight and show next occurence of `s'.
 		require
-			valid_s: s /= Void
+			valid_s: s /= Void;
+			s_not_empty: not s.empty
 		deferred
 		end
 

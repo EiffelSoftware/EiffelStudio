@@ -7,7 +7,7 @@ deferred external class
 	ISYNCHRONIZEINVOKE
 
 inherit
-	ANY
+	SYSTEM_OBJECT
 		undefine
 			finalize,
 			get_hash_code,
@@ -26,21 +26,21 @@ feature -- Access
 
 feature -- Basic Operations
 
-	begin_invoke (method: DELEGATE; args: NATIVE_ARRAY [ANY]): IASYNC_RESULT is
+	begin_invoke (method: DELEGATE; args: NATIVE_ARRAY [SYSTEM_OBJECT]): IASYNC_RESULT is
 		external
 			"IL deferred signature (System.Delegate, System.Object[]): System.IAsyncResult use System.ComponentModel.ISynchronizeInvoke"
 		alias
 			"BeginInvoke"
 		end
 
-	end_invoke (result_: IASYNC_RESULT): ANY is
+	end_invoke (result_: IASYNC_RESULT): SYSTEM_OBJECT is
 		external
 			"IL deferred signature (System.IAsyncResult): System.Object use System.ComponentModel.ISynchronizeInvoke"
 		alias
 			"EndInvoke"
 		end
 
-	invoke (method: DELEGATE; args: NATIVE_ARRAY [ANY]): ANY is
+	invoke (method: DELEGATE; args: NATIVE_ARRAY [SYSTEM_OBJECT]): SYSTEM_OBJECT is
 		external
 			"IL deferred signature (System.Delegate, System.Object[]): System.Object use System.ComponentModel.ISynchronizeInvoke"
 		alias

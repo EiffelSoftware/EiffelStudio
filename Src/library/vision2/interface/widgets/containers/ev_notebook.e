@@ -23,8 +23,7 @@ inherit
 	EV_WIDGET_LIST
 		redefine
 			implementation,
-			is_in_default_state,
-			wipe_out
+			is_in_default_state
 		end
 
 	EV_NOTEBOOK_ACTION_SEQUENCES
@@ -148,16 +147,6 @@ feature -- Status setting
 			implementation.select_item (an_item)
 		ensure
 			item_selected: selected_item = an_item
-		end
-
-feature -- Removal
-
-	wipe_out is
-			-- Remove all items.
-		do
-			selection_actions.block
-			Precursor {EV_WIDGET_LIST}
-			selection_actions.resume
 		end
 
 feature -- Constants

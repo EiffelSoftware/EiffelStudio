@@ -11,6 +11,7 @@
 
 #include "eif_config.h"
 #include "eif_file.h"
+#include "rt_assert.h"
 
 char *win_eif_getenv (char *k, char *app)
 /*
@@ -25,7 +26,7 @@ char *win_eif_getenv (char *k, char *app)
 	else {
 		char *key, *lower_k;
 		static unsigned char buf[1024];
-		int appl_len, key_len;
+		size_t appl_len, key_len;
 		char modulename [PATH_MAX + 1];
 		HKEY hkey;
 		DWORD bsize;
@@ -37,7 +38,7 @@ char *win_eif_getenv (char *k, char *app)
 		else
 			appl_len = strlen (app);
 		key_len = strlen (k);
-		if ((key = (char *) calloc (appl_len + 57+key_len, 1)) == NULL)
+		if ((key = (char *) calloc (appl_len + 57 + key_len, 1)) == NULL)
 			return result;
 	
 		if ((lower_k = (char *) calloc (key_len+1, 1)) == NULL) {
@@ -46,7 +47,8 @@ char *win_eif_getenv (char *k, char *app)
 		}
 	
 		strcpy (lower_k, k);
-		CharLowerBuff (lower_k, key_len);
+		CHECK ("Valid length", key_len <= INT32_MAX);
+		CharLowerBuff (lower_k, (DWORD) key_len);
 	
 		strcpy (key, "Software\\ISE\\Eiffel56\\");
 		if (app == NULL)

@@ -94,6 +94,9 @@ feature -- Initialization
 				-- Setup the scroll bars.
 			set_vertical_range (1, vertical_range_max)
 
+				-- Initialize history
+			create history.make (Current)
+
 				-- Initialize the cursor
 			create cursor.make_from_absolute_pos (0, 1, Current)
 
@@ -149,6 +152,9 @@ feature -- Access
 			-- the text. This position can be below the current
 			-- cursor (and therefore represent the end of the
 			-- selection)
+
+	history: UNDO_REDO_STACK
+			-- List of undo and redo commands
 
 feature -- Basic operations
 
@@ -271,6 +277,7 @@ feature -- Basic operations
 					-- There was a selection, but we destroy it.
 				action.call([])
 				has_selection := False
+				history.record_move
 
 					-- we have to redraw the entire screen
 					--| FIXME ARNAUD: we only need to redraw the old selected part.
@@ -282,6 +289,8 @@ feature -- Basic operations
 	on_key_down (virtual_key: INTEGER; key_data: INTEGER) is
 			-- Process Wm_keydown message corresponding to the
 			-- key `virtual_key' and the associated data `key_data'.
+		local
+			ch: CHARACTER
 		do
 			if virtual_key = Vk_left then
 					-- Left arrow action
@@ -312,6 +321,7 @@ feature -- Basic operations
 				if has_selection then
 					delete_selection
 				else
+					history.record_delete (cursor.item)
 					cursor.delete_char
 				end
 				invalidate
@@ -322,6 +332,7 @@ feature -- Basic operations
 				if has_selection then
 					delete_selection
 				else
+					history.wipe_out
 					cursor.delete_previous
 				end
 				invalidate
@@ -338,25 +349,45 @@ feature -- Basic operations
 				if has_selection then
 					delete_selection
 				end
+				history.record_insert_eol
 				cursor.insert_eol
 				invalidate
 				update
 
-			elseif ctrled_key then
-				--------------------
-				-- CTRLed key handle
-				--------------------
-				if virtual_key = Vk_x then
+			elseif virtual_key = 88 then
+				if ctrled_key then
 						-- Ctrl-X (cut)
 					cut_selection
 					invalidate
 					update
-				elseif virtual_key = Vk_c then
+				end
+
+			elseif virtual_key = 67 then
+				if ctrled_key then
 						-- Ctrl-C (copy)
 					copy_selection
-				elseif virtual_key = Vk_v then
+				end
+
+			elseif virtual_key = 86 then
+				if ctrled_key then
 						-- Ctrl-V (paste)
 					paste_selection
+					invalidate
+					update
+				end
+
+			elseif virtual_key = 90 then
+				if ctrled_key then
+						-- Ctrl-Z (undo)
+					history.undo
+					invalidate
+					update
+				end
+
+			elseif virtual_key = 82 then
+				if ctrled_key then
+						-- Ctrl-R (redo)
+					history.redo
 					invalidate
 					update
 				end
@@ -392,7 +423,7 @@ feature -- Basic operations
    			-- Process Wm_char message
    			-- See class WEL_VK_CONSTANTS for `character_code' value.
 		local
-			c		: CHARACTER
+			c: CHARACTER
 			wel_rect: WEL_RECT
    		do
 			if (character_code >= 32) then
@@ -400,6 +431,7 @@ feature -- Basic operations
 				c := character_code.ascii_char
 				if has_selection then
 					delete_selection
+					history.record_insert (c)
 					cursor.insert_char (c)
 					invalidate
 					update
@@ -407,8 +439,10 @@ feature -- Basic operations
 					invalidate_cursor_rect (False)
 
 					if insert_mode then
+						history.wipe_out
 						cursor.replace_char (c)
 					else
+						history.record_insert (c)
 						cursor.insert_char (c)
 					end
 
@@ -457,6 +491,7 @@ feature -- Basic operations
 
 				-- Setup the new cursor.
 			cursor := new_cursor
+			history.record_move
 			invalidate
 			update
 		end
@@ -489,6 +524,7 @@ feature -- Basic operations
 
 					-- Setup the new cursor.
 				cursor := new_cursor
+				history.record_move
 				invalidate
 				update
 			end
@@ -519,7 +555,6 @@ feature -- Selection Handling
 				else
 					clipboard := text_displayed.string_selected (selection_start, cursor)
 				end
-				io.put_string ("Put %""+ clipboard+"%" in clipboard%N")
 			end
 		end
 
@@ -528,6 +563,7 @@ feature -- Selection Handling
 			if has_selection then
 				delete_selection
 			end
+			history.record_paste (clipboard)
 			cursor.insert_string (clipboard)
 		end
 
@@ -538,9 +574,11 @@ feature -- Selection Handling
 		do
 			if (cursor < selection_start) then
 				begin := cursor
+				history.record_delete_selection (text_displayed.string_selected (cursor, selection_start))
 				text_displayed.delete_selection (cursor, selection_start)
 			else
 				begin := selection_start
+				history.record_delete_selection (text_displayed.string_selected (selection_start, cursor))
 				text_displayed.delete_selection (selection_start, cursor)
 			end
 			cursor.make_from_absolute_pos (begin.x_in_pixels, begin.y_in_lines, Current)
@@ -814,7 +852,7 @@ feature {NONE} -- Private Characteristics of the window
 			-- Is the left button of the mouse down?
 
 	clipboard: STRING
-			-- clipboard string.
+			-- Clipboard string.
 
 feature {NONE} -- Private Constants
 

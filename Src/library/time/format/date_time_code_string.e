@@ -8,6 +8,7 @@ class DATE_TIME_CODE_STRING	inherit
 	FIND_SEPARATOR_FACILITY
 
 create
+
 	make
 
 feature -- Creation
@@ -19,7 +20,6 @@ feature -- Creation
 		local
 			code, code_separator: DATE_TIME_CODE
 			i, pos1, pos2: INTEGER
-			substrg, substrg2, tmp_strg: STRING
 			date_constants: DATE_CONSTANTS
 		do
 			create value.make(20)
@@ -34,20 +34,21 @@ feature -- Creation
 				pos1 >= s.count 
 			loop
 				pos2 := find_separator (s, pos1)
-				substrg := s.substring(pos1, pos2 - 1)
-				substrg2 := s.substring (pos2, pos2)
+				extract_substrings (s, pos1, pos2)
+				pos2 := abs (pos2)
 				substrg.to_lower
-				if substrg = "pm" or tmp_strg = "am" then
+				if substrg = "pm" or substrg = "am" then
 					pos1 := s.count + 1
 				else
 					if substrg.count > 0 then
 						create code.make (substrg)
 						value.put (code, i)
-						i := i + 1
 					end
 					if substrg2.count > 0 then
 						create code_separator.make (substrg2)
+						i := i + 1
 						value.put (code_separator, i)
+						separators_used := True
 					end
 					pos1 := pos2 + 1
 					i := i + 1
@@ -125,6 +126,9 @@ feature -- Status report
 			Result := parser.is_date or parser.is_time or parser.is_date_time
 		end
 
+	separators_used: BOOLEAN
+			-- Does the code string contain any separators?
+			
 feature -- Status setting
 
 	set_base_century (c: INTEGER) is
@@ -145,8 +149,8 @@ feature -- Interface
 			s_exists: s /= Void
 		local
 			pos1, pos2, i: INTEGER
-			substrg, substrg2, tmp_strg: STRING
 			code: DATE_TIME_CODE
+			has_seps: BOOLEAN
 		do
 			pos1 := 1
 			pos2 := 1
@@ -155,6 +159,7 @@ feature -- Interface
 				Result := False
 			else
 				Result := True
+				has_seps := has_separators (s)
 			end
 			from
 				i := 1
@@ -162,17 +167,19 @@ feature -- Interface
 				pos1 > s.count
 				or Result = False
 			loop
-				pos2 := find_separator (s, pos1)
-				substrg := s.substring(pos1, pos2 - 1)
-				substrg2 := s.substring (pos2, pos2)
-				tmp_strg := substrg
-				tmp_strg.to_upper
-				if tmp_strg.is_equal ("PM") or tmp_strg.is_equal ("AM") then
+				code := value.item (i)
+				if has_seps then
+					pos2 := find_separator (s, pos1)
+				else
+					pos2 := (pos1 + code.count_max - 1) * -1
+				end
+				extract_substrings (s, pos1, pos2)
+				pos2 := abs (pos2)
+				if substrg.is_equal ("PM") or substrg.is_equal ("AM") then
 					pos1 := s.count + 1
 					am_pm_index := pos1
 					pos1 := pos2 + 1
 				else
-					code := value.item (i)
 					if code /= Void then
 						Result := substrg.count <= code.count_max and 
 						substrg.count >= code.count_min
@@ -186,18 +193,22 @@ feature -- Interface
 							end
 						else
 							if code.is_day_text (code.value) then 
-								Result := Result and days.has (tmp_strg)
+								Result := Result and days.has (substrg)
 							else
-								Result := Result and months.has (tmp_strg)
+								Result := Result and months.has (substrg)
 							end
 						end
-						code := value.item (i+1)
-						if code /= Void then
-							Result := Result and (pos2 /= s.count) and 
-								substrg2.is_equal (code.value)
+						if has_seps then
+							code := value.item (i+1)
+							if code /= Void then
+								Result := Result and (pos2 /= s.count) and 
+									substrg2.is_equal (code.value)
+							end
+							i := i + 2
+						else
+							i := i + 1
 						end
 						pos1 := pos2 + 1
-						i := i + 2
 					else
 						Result := False
 					end
@@ -394,22 +405,36 @@ feature -- Interface
 		do
 			tmp_ht := clone (value)
 			i := value.count + 1
-			create tmp_code.make (" ")
-			value.put (tmp_code, i)
-			create tmp_code.make ("hh")
-			value.put (tmp_code, i+1)
-			create tmp_code.make (":")
-			value.put (tmp_code, i+2)
-			create tmp_code.make ("mi")
-			value.put (tmp_code, i+3)
-			create tmp_code.make (":")
-			value.put (tmp_code, i+4)
-			create tmp_code.make ("ss")
-			value.put (tmp_code, i+5)
-			s.append (" 0:0:0")
-			Result := create_date_time (s).date
-			s.replace_substring_all (" 0:0:0", "")
-			value := tmp_ht
+			if has_separators (s) then
+				create tmp_code.make (" ")
+				value.put (tmp_code, i)
+				create tmp_code.make ("hh")
+				value.put (tmp_code, i + 1)
+				create tmp_code.make (":")
+				value.put (tmp_code, i + 2)
+				create tmp_code.make ("mi")
+				value.put (tmp_code, i + 3)
+				create tmp_code.make (":")
+				value.put (tmp_code, i + 4)
+				create tmp_code.make ("ss")
+				value.put (tmp_code, i + 5)
+				s.append (" 0:0:0")
+				Result := create_date_time (s).date
+				s.replace_substring_all (" 0:0:0", "")
+			else
+				tmp_ht := clone (value)
+				i := value.count + 1
+				create tmp_code.make ("[0]hh")
+				value.put (tmp_code, i)
+				create tmp_code.make ("[0]mi")
+				value.put (tmp_code, i + 1)
+				create tmp_code.make ("[0]ss")
+				value.put (tmp_code, i + 2)
+				s.append ("000000")
+				Result := create_date_time (s).date
+				s.head (s.count - 6)
+			end
+				value := tmp_ht
 		ensure
 			date_exists: Result /= Void
 			day_text_equal_day: right_day_text
@@ -428,21 +453,33 @@ feature -- Interface
 		do
 			tmp_ht := clone (value)
 			i := value.count + 1
-			create tmp_code.make (" ")
-			value.put (tmp_code, i)
-			create tmp_code.make ("dd")
-			value.put (tmp_code, i+1)
-			create tmp_code.make ("/")
-			value.put (tmp_code, i+2)
-			create tmp_code.make ("mm")
-			value.put (tmp_code, i+3)
-			create tmp_code.make ("/")
-			value.put (tmp_code, i+4)
-			create tmp_code.make ("yy")
-			value.put (tmp_code, i+5)
-			s.append (" 1/1/01")
-			Result := create_date_time (s).time
-			s.replace_substring_all (" 1/1/01", "")
+			if has_separators (s) then
+				create tmp_code.make (" ")
+				value.put (tmp_code, i)
+				create tmp_code.make ("dd")
+				value.put (tmp_code, i + 1)
+				create tmp_code.make ("/")
+				value.put (tmp_code, i + 2)
+				create tmp_code.make ("mm")
+				value.put (tmp_code, i + 3)
+				create tmp_code.make ("/")
+				value.put (tmp_code, i + 4)
+				create tmp_code.make ("yy")
+				value.put (tmp_code, i + 5)
+				s.append (" 1/1/01")
+				Result := create_date_time (s).time
+				s.replace_substring_all (" 1/1/01", "")
+			else
+				create tmp_code.make ("[0]dd")
+				value.put (tmp_code, i)
+				create tmp_code.make ("[0]mm")
+				value.put (tmp_code, i + 1)
+				create tmp_code.make ("yy")
+				value.put (tmp_code, i + 2)
+				s.append ("010101")
+				Result := create_date_time (s).time
+				s.head (s.count - 6)
+			end
 			value := tmp_ht
 		ensure
 			time_exists: Result /= Void
@@ -476,16 +513,30 @@ feature -- Interface
 			loop
 				code := clone (value.item (i))
 				type := code.type
-				inspect
-					type
-				when 1, 2 then
-					has_day := True
-				when 4, 5 then
-					has_year := True
-				when 6, 7, 8 then
-					has_month := True
+				if separators_used then
+					inspect
+						type
+					when 1, 2 then
+						has_day := True
+					when 4, 5 then
+						has_year := True
+					when 6, 7, 8 then
+						has_month := True
+					else
+						-- Wrong format
+					end
 				else
-					-- Has_day, has_year and has_month not modified.
+					inspect
+						type
+					when 2 then
+						has_day := True
+					when 4, 5 then
+						has_year := True
+					when 7 then
+						has_month := True
+					else
+						-- Wrong format
+					end
 				end
 				i := i + 1
 			end
@@ -509,16 +560,30 @@ feature -- Interface
 			loop
 				code := clone (value.item (i))
 				type := code.type
-				inspect
-					type
-				when 9, 10, 11 then
-					has_hour := True
-				when 12, 13 then
-					has_minute := True
-				when 14, 15 then
-					has_second := True
+				if separators_used then
+					inspect
+						type
+					when 9, 10, 11 then
+						has_hour := True
+					when 12, 13 then
+						has_minute := True
+					when 14, 15 then
+						has_second := True
+					else
+						-- Wrong format
+					end
 				else
-					-- Has_hour, has_minute, has_second not modified.
+					inspect
+						type
+					when 10 then
+						has_hour := True
+					when 13 then
+						has_minute := True
+					when 15 then
+						has_second := True
+					else
+						-- Wrong format
+					end
 				end
 				i := i + 1
 			end
@@ -538,6 +603,16 @@ feature {NONE} -- Implementation
 	parser: DATE_TIME_PARSER
 			-- Instance of date-time string parser
 
+	days: ARRAY [STRING]
+
+	months: ARRAY [STRING]	
+
+	right_day_text: BOOLEAN
+			-- Is the name of the day the right one?
+
+	am_pm_index: INTEGER 
+			-- Index of the am/pm notation
+
 	build_parser (s: STRING) is
 			-- Build parser from `s'.
 		require
@@ -554,16 +629,6 @@ feature {NONE} -- Implementation
 		ensure
 			parser_created: parser /= Void
 		end
-
-	days: ARRAY [STRING]
-
-	months: ARRAY [STRING]	
-
-	right_day_text: BOOLEAN
-			-- Is the name of the day the right one?
-
-	am_pm_index: INTEGER 
-			-- Index of the am/pm notation
 
 end -- class DATE_TIME_CODE_STRING
 

@@ -4,46 +4,117 @@ indexing
 	date: "$Date$"
 	revision: "$Revision$"
 
-class 
-	FIND_SEPARATOR_FACILITY
+class FIND_SEPARATOR_FACILITY inherit
+
+	BASIC_ROUTINES
+		export
+			{NONE} all
+		end
+
+	CODE_VALIDITY_CHECKER
+		export
+			{NONE} all
+		end
+
+feature {NONE} -- Constants
+
+	Separator_characters: STRING is ":/-, ."
 
 feature {NONE} -- Implementation
 
+	substrg, substrg2: STRING
+	
 	find_separator (s: STRING; i: INTEGER): INTEGER is
-			-- Position of the next separator in s starting at ith character.
+			-- Position of the next separator in `s' starting at 
+			-- `i'-th character.
 			-- ":", "/", "-", ",", " ", "."
 		require
 			s_exists: s /= Void
-			i_exists: i /= Void
-			i_small: i <= s.count
+			i_in_range: 1 <= i and i <= s.count
 		local
-			int: ARRAY [INTEGER]
-			j, int_tmp: INTEGER
+			j, pos: INTEGER
+			ch: CHARACTER
+			tmp_strg: STRING
+			sep_found: BOOLEAN
 		do
-			create int.make (0, 5)
-			int.put (s.index_of (':', i), 0)
-			int.put (s.index_of ('/', i), 1)
-			int.put (s.index_of ('-', i), 2)
-			int.put (s.index_of (',', i), 3)
-			int.put (s.index_of (' ', i), 4)
-			int.put (s.index_of ('.', i), 5)
 			Result := s.count + 1
 			from 
-				j := 0
+				j := 1
+			invariant
+				inside_bounds: Result >= i and Result <= s.count + 1
 			until 
-				j > 5
+				j > Separator_characters.count
 			loop
-				int_tmp := int.item (j)
-				if int_tmp /= 0 and int_tmp < Result then
-					Result := int_tmp
+				pos := s.index_of (Separator_characters @ j, 1)
+				if pos /= 0 then
+					sep_found := True
+					pos := s.index_of (Separator_characters @ j, i)
+					if pos /= 0 and pos < Result then
+						Result := pos
+					end
 				end
 				j := j + 1
 			end
+			if not sep_found then
+				from
+					j := i
+					tmp_strg := s.substring (j, j + 2)
+					if equal (tmp_strg, "[0]") then
+						j := j + 3
+					end
+					ch := s @ j
+				until
+					j > s.count or else (s @ j) /= ch
+				loop
+					j := j + 1
+					if ch = 'm' and then (s @ j) = 'i' then
+						ch := s @ j
+					end
+				end
+				Result := (j - 1) * -1
+			end
 		ensure
-			index_exists: Result /= Void
-			next_index: Result > i
+			not_zero: Result /= 0
 		end
 		
+	extract_substrings (s: STRING; pos1, pos2: INTEGER) is
+			-- Extract `substrg' and `substrg2' from `s' and specified by the
+			-- range `pos1'..`pos2'.
+		require
+			string_exists: s /= Void
+			range_correct: pos1 <= abs (pos2)
+		local
+			upper: INTEGER
+		do
+			if pos2 > 0 then
+				substrg := s.substring (pos1, pos2 - 1)
+				substrg2 := s.substring (pos2, pos2)
+			else
+				upper := abs (pos2)
+				substrg := s.substring (pos1, upper)
+				create substrg2.make (0)
+			end
+		ensure
+			substrings_extracted: substrg /= Void and substrg2 /= Void
+		end
+
+	has_separators (s: STRING): BOOLEAN is
+			-- Does date string `s' contain any separators?
+		require
+			string_exists: s /= Void
+		local
+			i: INTEGER
+		do
+			from
+				i := 1
+			until
+				i > s.count or Result
+			loop
+				Result := is_separator (s.substring (i, i))
+				i := i + 1
+			end
+		end
+
 end -- class FIND_SEPARATOR_FACILITY
 
 --|----------------------------------------------------------------

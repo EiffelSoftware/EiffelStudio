@@ -191,11 +191,11 @@ feature -- Basic operations
 		require
 			setup_complete: is_set_up
 		local
-			substrg: STRING
 			pos1, pos2, i, j: INTEGER
 			type: INTEGER
 			second_val: INTEGER
 			s: STRING
+			has_seps: BOOLEAN
 		do
 			s := clone (source_string)
 			s.to_upper
@@ -207,13 +207,19 @@ feature -- Basic operations
 			fine_second_val := 0
 			pos1 := 1
 			pos2 := 1
+			has_seps := has_separators (s)
 			from 
 				i := 1
 			until 
 				pos1 > s.count
 			loop
-				pos2 := find_separator (s, pos1)
-				substrg := s.substring (pos1, pos2-1)
+				if has_seps then
+					pos2 := find_separator (s, pos1)
+				else
+					pos2 := (pos1 + code.item (i).count_max - 1) * -1
+				end
+				extract_substrings (s, pos1, pos2)
+				pos2 := abs (pos2)
 				if substrg.is_equal ("AM") or substrg.is_equal ("PM") then
 					pos1 := pos2 + 1
 				else
@@ -292,7 +298,11 @@ feature -- Basic operations
 							fine_second_val := substrg.to_double / 
 								(10 ^ (substrg.count))
 						end
-						i := i + 2
+						if has_seps then
+							i := i + 2
+						else
+							i := i + 1
+						end
 						pos1 := pos2 + 1
 					end
 				end

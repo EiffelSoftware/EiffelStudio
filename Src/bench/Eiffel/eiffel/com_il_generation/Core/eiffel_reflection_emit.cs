@@ -1451,9 +1451,7 @@ internal class EiffelReflectionEmit : MarshalByRefObject, ICore {
 		else if (TypeID == PointerID)
 			MethodIL.Emit (OpCodes.Ldind_I);
 		else
-			LogError (
-				new ApplicationException ("Cannot unmetamorphose non-basic type (TypeID :" +
-					TypeID.ToString()+ ")."));
+			MethodIL.Emit (OpCodes.Ldobj);
 	}
 
 /* Array Manipulation */

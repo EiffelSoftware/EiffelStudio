@@ -133,6 +133,7 @@ feature -- Basic operation
 				done
 			loop
 				msg.peek_all
+				
 				if msg.last_boolean_result then
 					process_message (msg)
 				else
@@ -460,7 +461,16 @@ feature {NONE} -- Implementation
 					then
 							-- It is a dialog window
 						msg.process_dialog_message (focused_window.wel_item)
-						if not msg.last_boolean_result then
+						if msg.last_boolean_result then
+							if focused_window.accelerators /= Void then
+								msg.translate_accelerator (focused_window,
+									focused_window.accelerators)
+								if not msg.last_boolean_result then
+									msg.translate
+									msg.dispatch
+								end
+							end
+						else
 							msg.translate
 							msg.dispatch
 						end

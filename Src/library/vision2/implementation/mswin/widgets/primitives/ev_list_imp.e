@@ -25,10 +25,10 @@ inherit
 		end
 
 	EV_PRIMITIVE_IMP
+		undefine
+			initialize_colors
 		redefine
 			make
-		select
-			destroy
 		end
 
 	WEL_SINGLE_SELECTION_LIST_BOX
@@ -54,7 +54,9 @@ inherit
 			on_right_button_double_click,
 			on_mouse_move,
 			on_char,
-			on_key_up
+			on_key_up,
+			background_color,
+			foreground_color
 		redefine
 			selected,
 			select_item,
@@ -86,13 +88,17 @@ inherit
 			on_right_button_double_click,
 			on_mouse_move,
 			on_char,
-			on_key_up
+			on_key_up,
+			background_color,
+			foreground_color
 		redefine
 			selected,
 			select_item,
 			on_lbn_dblclk,
 			on_lbn_selchange,
 			default_style
+		select
+			wel_destroy
 		end
 
 creation
@@ -107,7 +113,7 @@ feature {NONE} -- Initialization
 			-- use set_selection to change it into a multiple
 			-- selection list.
 		local
-			par_imp: EV_CONTAINER_IMP
+			par_imp: WEL_WINDOW
 		do
 			par_imp ?= par.implementation
 			check
@@ -201,20 +207,26 @@ feature -- Status setting
 	set_multiple_selection is
 			-- Allow the user to do a multiple selection simply
 			-- by clicking on several choices.
+		local
+			wel_imp: WEL_WINDOW
 		do
 			is_multiple_selection := True
 			wel_destroy
-			wel_make (parent_imp, 0, 0, 0, 0, 0)
+			wel_imp ?= parent_imp
+			wel_make (wel_imp, 0, 0, 0, 0, 0)
 			copy_list (Current)
 		end
 
 	set_single_selection is
 			-- Allow the user to do only one selection. It is the
 			-- default status of the list
+		local
+			wel_imp: WEL_WINDOW
 		do
 			is_multiple_selection := False
 			wel_destroy
-			wel_make (parent_imp, 0, 0, 0, 0, 0)
+			wel_imp ?= parent_imp
+			wel_make (wel_imp, 0, 0, 0, 0, 0)
 			copy_list (Current)
 		end
 

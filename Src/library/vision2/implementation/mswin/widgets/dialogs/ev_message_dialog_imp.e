@@ -27,6 +27,8 @@ feature {NONE} -- Initialization
 			-- Create a dialog, but do not display it.
 		do
 			parent_imp ?= par.implementation
+		ensure then
+			parent_not_void: parent_imp /= Void
 		end
 
 	make_default (par: EV_CONTAINER; txt, title: STRING) is
@@ -35,6 +37,8 @@ feature {NONE} -- Initialization
 			-- an displays it.
 		do
 			parent_imp ?= par.implementation
+		ensure then
+			parent_not_void: parent_imp /= Void
 		end
 
 feature -- Acces
@@ -68,9 +72,11 @@ feature -- Miscellaneous
 			-- created with default options.
 		local
 			a_msgboxparams: WEL_MSGBOXPARAMS
+			wel_imp: WEL_WINDOW
 		do
 			wel_make
-			!! a_msgboxparams.make_basic (parent_imp, txt, title, dialog_style, language, sublanguage)
+			wel_imp ?= parent_imp
+			!! a_msgboxparams.make_basic (wel_imp, txt, title, dialog_style, language, sublanguage)
 			message_box_result := cwin_message_box_indirect (a_msgboxparams.item)
 			dispatch_events (message_box_result)
 		end

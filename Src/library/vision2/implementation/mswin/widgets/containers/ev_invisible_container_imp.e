@@ -1,5 +1,4 @@
 indexing
-
 	description: 
 		"EiffelVision invisible container. Allow several children.%
 	     % Mswindows implementation."
@@ -9,7 +8,6 @@ indexing
 	revision: "$Revision$"
 	
 deferred class
-	
 	EV_INVISIBLE_CONTAINER_IMP
 	
 inherit
@@ -27,12 +25,13 @@ inherit
 	WEL_CONTROL_WINDOW
 		rename
 			make as wel_make,
-			parent as wel_parent
+			parent as wel_parent,
+			destroy as wel_destroy
 		undefine
 			set_width,
 			set_height,
 			remove_command,
-			destroy,
+--			destroy,
 			on_left_button_down,
 			on_right_button_down,
 			on_left_button_up,
@@ -43,7 +42,8 @@ inherit
 			on_char,
 			on_key_up
 		redefine
-			default_style
+			default_style,
+			background_brush
 		end
 
 feature {NONE} -- Initialization
@@ -90,6 +90,15 @@ feature {NONE} -- Implementation : WEL features
 		once
 			Result := Ws_child + Ws_visible 
 				+ Ws_clipchildren + Ws_clipsiblings
+		end
+
+	background_brush: WEL_BRUSH is
+			-- Current window background color used to refresh the window when
+			-- requested by the WM_ERASEBKGND windows message.
+			-- By default there is no background
+		do
+			!! Result.make_solid (background_color)
+			disable_default_processing
 		end
 
 end -- class EV_INVISIBLE_CONTAINER_IMP

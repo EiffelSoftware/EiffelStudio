@@ -22,8 +22,8 @@ creation
 feature -- Initialization
 
 	make (a_command: EV_COMMAND; an_arg: EV_ARGUMENTS) is
-			-- Create the adapter by setting `event', `command' and `arg'
-			-- to the new values
+			-- Create the adapter by setting `event', `command'
+			-- and `arg' to the new values.
 		require
 			a_command_not_void: a_command /= Void
 		do
@@ -34,7 +34,6 @@ feature -- Initialization
 			argument_set: arg = an_arg
 		end
 
-
 feature -- Access
 
 	command: EV_COMMAND
@@ -42,7 +41,6 @@ feature -- Access
 
 	arg: EV_ARGUMENTS
 			-- Argument to be given to `command' before execution
-
 	
 feature {NONE} -- Implementation
 

@@ -36,13 +36,25 @@ feature -- Event -- command association
 	on_menu_command (menu_id: INTEGER) is
 			-- The `menu_id' has been choosen from the menu.
 		do
-			ev_children.i_th(menu_id).execute_command (Cmd_item_activate ,Void)
+			ev_children.i_th(menu_id).on_activate
 		end
 
 feature -- Implementation
 
+	add_menu (an_item: EV_MENU) is
+			-- Add a sub-menu `an_item' into container.
+		local
+			menu_imp: EV_MENU_IMP
+		do
+			menu_imp ?= an_item.implementation
+			check
+				menu_imp /= Void
+			end
+			append_popup (menu_imp, menu_imp.text)
+		end
+
 	add_menu_item (an_item: EV_MENU_ITEM) is
-			-- Add menu item into container
+			-- Add `an_item' into container.
 		local
 			item_imp: EV_MENU_ITEM_IMP
 		do
@@ -53,19 +65,6 @@ feature -- Implementation
 			ev_children.extend (item_imp)
 			append_string (name_item, ev_children.count)
 			item_imp.set_id (ev_children.count)
-		end
-
-	add_menu (menu: EV_MENU) is
-			-- Add a menu into container.
-			-- The menu is then a submenu.
-		local
-			menu_imp: EV_MENU_IMP
-		do
-			menu_imp ?= menu.implementation
-			check
-				menu_imp /= Void
-			end
-			append_popup (menu_imp, menu_imp.text)
 		end
 
 	remove_item (id: INTEGER) is
@@ -94,6 +93,23 @@ feature -- Implementation
 			-- Pas forcement vrai tout ca, a faire.
 		end
 
+	uncheck_radio_items is
+			-- Uncheck all the radio-items of the container.
+		local
+			item_test: EV_RADIO_MENU_ITEM_IMP
+		do
+			from
+				ev_children.start
+			until
+				ev_children.after
+			loop
+				item_test ?= ev_children.item
+				if item_test /= Void then
+					item_test.set_state (false)
+				end
+				ev_children.forth
+			end
+		end
 end -- class EV_MENU_ITEM_CONTAINER_IMP
 
 --|----------------------------------------------------------------

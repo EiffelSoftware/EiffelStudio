@@ -24,15 +24,17 @@ inherit
 			make as wel_make,
 			parent as wel_parent,
 			font as wel_font,
-			set_font as wel_set_font
+			set_font as wel_set_font,
+			set_text as wel_set_text,
+			destroy as wel_destroy
 		undefine
 			-- We undefine the features redefined by EV_WIDGET_IMP,
 			-- and EV_PRIMITIVE_IMP
 			remove_command,
 			set_width,
 			set_height,
-			destroy,
-			set_text,
+--			destroy,
+--			set_text,
 			on_bn_clicked,
 			on_left_button_down,
 			on_right_button_down,

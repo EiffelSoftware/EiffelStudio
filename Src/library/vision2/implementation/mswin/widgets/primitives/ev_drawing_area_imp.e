@@ -59,7 +59,7 @@ feature {NONE} -- Initialization
 	make (par: EV_CONTAINER) is
 			-- Create an empty drawing area.
 		local
-			par_imp: EV_CONTAINER_IMP
+			par_imp: WEL_COMPOSITE_WINDOW
 		do
 			par_imp ?= par.implementation
 			check

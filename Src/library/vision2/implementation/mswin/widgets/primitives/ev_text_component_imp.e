@@ -1,48 +1,20 @@
 indexing
 	description: "EiffelVision text component. %
 				  % Mswindows implementation"
+	note: "This class would be the equivalent of a WEL_EDIT%
+			% in the wel hierarchy."
 	date: "$Date$"
 	revision: "$Revision$"
 
 deferred class
-
 	EV_TEXT_COMPONENT_IMP
 
 inherit
-
 	EV_TEXT_COMPONENT_I
 
 	EV_PRIMITIVE_IMP
-
-	WEL_EDIT
-		rename
-			make as wel_make,
-			parent as wel_parent,
-			font as wel_font,
-			set_font as wel_set_font
 		undefine
-			-- We undefine the features that are redefine by WEL objects
-			height,
-			process_notification,
-			unselect,
-			text_length,
-			class_name,
-			default_ex_style,
-			-- We undefine the features redefined by EV_WIDGET_IMP,
-			-- and EV_PRIMITIVE_IMP
-			remove_command,
-			set_width,
-			set_height,
-			destroy,
-			on_left_button_down,
-			on_right_button_down,
-			on_left_button_up,
-			on_right_button_up,
-			on_left_button_double_click,
-			on_right_button_double_click,
-			on_mouse_move,
-			on_char,
-			on_key_up
+			initialize_colors
 		end
 
 feature -- Access
@@ -148,6 +120,30 @@ feature -- Basic operation
 			check
 				not_yet_implemented: False
 			end
+		end
+
+feature -- Implementation : deferred features of WEL_EDIT that 
+		-- are used here but not defined
+
+	caret_position: INTEGER is
+			-- Caret position
+		deferred
+		end
+
+	set_caret_position (a_position: INTEGER) is
+			-- Set the caret position with `position'.
+		deferred
+		end
+
+	set_selection (start_position, end_position: INTEGER) is
+			-- Set the selection between `start_position'
+			-- and `end_position'.
+		deferred
+		end
+
+	set_text (a_text: STRING) is
+   			-- Set the window text
+		deferred
 		end
 
 end -- class EV_TEXT_COMPONENT_IMP

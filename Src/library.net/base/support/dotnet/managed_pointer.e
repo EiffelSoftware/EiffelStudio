@@ -410,7 +410,7 @@ feature -- Access: Little-endian format
 		local
 			l_high, l_low: INTEGER_16
 		do
-			l_low := 0x00FF & read_integer_8 (pos)
+			l_low := (0x00FF).to_integer_16 & read_integer_8 (pos)
 			l_high := read_integer_8 (pos + integer_8_bytes)
 			Result := (l_high.to_integer_16 |<< 8) | l_low
 		end
@@ -512,7 +512,7 @@ feature -- Access: Big-endian format
 			l_high, l_low: INTEGER_16
 		do
 			l_high := read_integer_8 (pos)
-			l_low := 0x00FF & read_integer_8 (pos + integer_8_bytes)
+			l_low := (0x00FF).to_integer_16 & read_integer_8 (pos + integer_8_bytes)
 			Result := (l_high.to_integer_16 |<< 8) | l_low
 		end
 

@@ -1,4 +1,5 @@
 /*
+
  ######     #    ######
  #          #    #
  #####      #    #####
@@ -31,7 +32,6 @@
 	and is particularly efficient when manupilating big arrays of objects.
 	The time spent to scan an special object full of references is no longer 
 	proportionnal to its size but to the number of new references that it has.
-	
 		
 */
 
@@ -40,22 +40,27 @@
 #include "eif_tools.h"
 #include "eif_special_table.h"
 #include "eif_malloc.h"
-#include "eif_except.h"	/* for eif_panic() */
+#include "eif_except.h"			/* For eif_panic() */
 
 #ifdef I_STRING
-#include <string.h>		/* For memset(), bzero() */
+#include <string.h>				/* For memset(), bzero() */
 #else
 #include <strings.h>
 #endif
 
 rt_public int is_in_spt (struct special_table *spt, EIF_REFERENCE object)	
 {
-	int 	i;		/* index. */
+	/* 
+	 * For Assertions checkings: check if the `object' is in the
+	 * special table `spt'.
+	 */
+
+	int 	i;					/* index. */
 	char 	**hvalues;
-	long *hkeys;
+	long 	*hkeys;
 	int32 	count;
 
-	assert (object != (EIF_REFERENCE)  0);		/* Cannot be Void. */
+	assert (object != (EIF_REFERENCE)  0);			/* Cannot be Void. */
 	assert (!(HEADER (object)->ov_size & B_FWD));	/* Cannot be forwarded. */
 	if (spt == (struct special_table *) 0)
 		return 0;
@@ -70,20 +75,90 @@ rt_public int is_in_spt (struct special_table *spt, EIF_REFERENCE object)
 			return 1;
 	}
 	return 0;
-}
+}	/* is_in_spt () */
 		
-		
-rt_public int spt_create(struct special_table *spt, int32 size)
+rt_public int spt_realloc (struct special_table *spt, EIF_INTEGER size)
 {
-	/* Create the special table with size `n'. */
+	/* 
+	 * Reallocate the special table up to size `n'. 
+	 */
 
-	long *hkeys;		/* For key array creation. */
-	EIF_REFERENCE *hvalues;		/* For values array creation. */
+	EIF_INTEGER 	*hkeys;			/* For key array creation. */
+	EIF_REFERENCE 	*hvalues;		/* For values array creation. */
+	EIF_REFERENCE 	*oldvalues;		/* For old values. */
+	EIF_INTEGER		gain;			/* Number of new free entries. */
+	EIF_INTEGER		index;			/* Index of first free entry. */
+	void			*temp;			/* Return value of realloc(). */
+#ifndef NDEBUG
+	EIF_INTEGER		old_count = spt->count;
+	EIF_INTEGER		old_size  = spt->h_size;
+#endif	/* !NDEBUG */
+	
+	
+	/************************
+ 	 * Preconditions		*
+	 ************************/
+	assert (spt != (struct special_table *) 0);	/* Must be preallocated. */
+	assert (spt->count == spt->h_size);			/* Must be full. */
+	assert (size > spt->count);					/* Must be necessary. */
+	/* End of preconditions. */
+
+	temp = (void *) realloc (spt->h_keys, size * LNGSIZ);	
+									/* Mallocs array of keys */
+	if (temp == (void *) 0)			/* Has reallocation failed? */
+		return -1;					/* Reallocation failed. */	
+	spt->h_keys = (EIF_INTEGER *) temp;	/* Update h_keys. */
+
+	temp = (void *) realloc (spt->h_values, size * REFSIZ);
+	if (temp == (void *) 0) {		/* Did it fail? */
+		free(spt->h_keys);			/* Free keys array.*/
+		return -1;					/* Reallocation failed. */
+	}
+	spt->h_values = (EIF_REFERENCE *) temp;/* Update h_values. */
+
+	temp = (void *) realloc (spt->old_values, size * REFSIZ);
+									/* Reallocate array of old values. */
+	if (temp == (void *) 0) {		/* Did it fail? */
+		free(spt->h_keys);			/* Free keys array. */
+		free(spt->h_values);		/* Free pointers array. */
+		return -1;					/* Reallocation failed. */
+	}
+	spt->old_values = (EIF_REFERENCE *) temp;
+									/* Where array of old values is stored. */
+
+	gain = size - spt->h_size;		/* Number of new free entries. */ 
+	spt->h_size = size;				/* New size of special table. */
+	assert (gain > 0);				/* Must be positive. */
+	index = spt->count;				/* Index of first free entry. */
+	
+	/* Initialize free entries to zero. */
+	bzero(spt->h_keys + index, gain * LNGSIZ);
+	bzero(spt->h_values + index, gain * REFSIZ);
+	bzero(spt->old_values + index, gain * REFSIZ);
+
+	/************************
+	 *	Postconditions.		*
+	 ************************/
+	assert (spt->h_size > old_size);		/* Bigger. */	
+	assert (spt->count == old_count);	/* Count did not change. */
+	/**** End of postconditions. */
+
+	return 0;						/* Creation was ok */
+}	/* spt_realloc () */
+		
+rt_public int spt_create(struct special_table *spt, EIF_INTEGER size)
+{
+	/* 
+	 * Create the special table with size `n'. 
+	 */
+
+	long *hkeys;					/* For key array creation. */
+	EIF_REFERENCE *hvalues;			/* For values array creation. */
 	EIF_REFERENCE *oldvalues;		/* For old values. */
 	
 	
 	/************************
- 	 * Preconditions	*
+ 	 * Preconditions		*
 	 ************************/
 	assert (spt != (struct special_table *) 0);	/* Must be preallocated. */
 	assert (size > 0);				/* Size strictly positive, for resizing. */
@@ -92,54 +167,66 @@ rt_public int spt_create(struct special_table *spt, int32 size)
 	hkeys = (long  *) calloc(size, sizeof(long));	/* Mallocs array of keys */
 	if (hkeys == (long *) 0)
 		return -1;					/* Malloc failed */
-	spt->h_keys = hkeys;		/* Where array of keys is stored */
+	spt->h_keys = hkeys;			/* Where array of keys is stored */
 
-	hvalues = (EIF_REFERENCE *) malloc(size * REFSIZ);			/* Mallocs array of values */
+	hvalues = (EIF_REFERENCE *) malloc(size * REFSIZ);
+									/* Mallocs array of values */
 	if (hvalues == (EIF_REFERENCE *) 0) {
 		free(spt->h_keys);			/* Free keys array */
 		return -1;					/* Malloc failed */
 	}
-	spt->h_values = hvalues;			/* Where array of values is stored */
+	spt->h_values = hvalues;		/* Where array of values is stored */
 
-	oldvalues = (EIF_REFERENCE *) malloc(size * REFSIZ);			/* Mallocs array of old values */
+	oldvalues = (EIF_REFERENCE *) malloc(size * REFSIZ);
+									/* Mallocs array of old values */
 	if (oldvalues == (EIF_REFERENCE *) 0) {
 		free(spt->h_keys);			/* Free keys array */
-		free(spt->h_values);			/* Free pointers array */
+		free(spt->h_values);		/* Free pointers array */
 		return -1;					/* Malloc failed */
 	}
-	spt->old_values = oldvalues;			/* Where array of old values is stored */
+	spt->old_values = oldvalues;	/* Where array of old values is stored */
 	spt->h_size = size;				/* Size of hash table */
 	spt->count  = 0;				/* Initially no items. */
-	spt->old_count  = 0;				/* Initially no previous items. */
+	spt->old_count  = 0;			/* Initially no previous items. */
 
-	spt_zero (spt);			/* Clean it. */
-	return 0;			/* Creation was ok */
-}
+	spt_zero (spt);					/* Clean it. */
+
+	return 0;						/* Creation was ok */
+}	/* spt_create () */
 
 rt_public void spt_zero(struct special_table *spt)
 {
-	/* Initialize the special table with zeros */
+	/* 
+	 * Initialize the special table with zeros.
+	 */
 
 	int32 hsize = spt->h_size;
 
 	bzero(spt->h_keys, hsize * LNGSIZ);
 	bzero(spt->h_values, hsize * REFSIZ);
 	bzero(spt->old_values, hsize * REFSIZ);
-}
+}	/* spt_zero () */
  
-void spt_force(struct special_table *spt, register long key, EIF_REFERENCE val)
+rt_public void spt_force(struct special_table *spt, register long key, EIF_REFERENCE val)
 {
-	if (-1 == spt_put(spt, key, val)) {		/* Insertion failed => special table full */
+	/* 
+	 * Same as `spt_put' and eventually resize the table when necessary. 
+	 */
+
+	if (-1 == spt_put(spt, key, val)) {	
+								/* Insertion failed => special table full */
 		if (spt_xtend(spt))		/* Extend the special table */
 			eraise("special table extension failure", EN_FATAL);
-		if (-1 == spt_put(spt, key, val)) 	/* Insertion failed again => Bailing out */
+		if (-1 == spt_put(spt, key, val)) 	
+								/* Insertion failed again => Bailing out */
 			eraise("Special insertion failure", EN_FATAL);
 	}
-}
+}	/* spt_force () */
 
 rt_public int spt_put_old(struct special_table *spt, EIF_REFERENCE val)
 {
-	/* Puts an old value held at 'val' in special table 'spt'. If
+	/* 
+	 * Puts an old value held at 'val' in special table 'spt'. If
 	 * insertion was successful, the address of the value is returned and the
 	 * value is copied in the array. Otherwise, return a null pointer.
 	 */
@@ -152,15 +239,15 @@ rt_public int spt_put_old(struct special_table *spt, EIF_REFERENCE val)
 		return 0;
 
 	/************************
-	 * Preconditions	*
+	 * Preconditions		*
 	 ************************/
-
 #ifndef NDEBUG
 	assert (spt != (struct special_table *) 0);
 	assert (HEADER((EIF_REFERENCE) val)->ov_flags & EO_REF);	
 	{
 	int32 old_count = spt->count;
 #endif	/* !NDEBUG */
+	/* End of Preconditions. */
 
 	/* Initializations */
 
@@ -169,12 +256,10 @@ rt_public int spt_put_old(struct special_table *spt, EIF_REFERENCE val)
 	hvalues = spt->old_values;
 
 	/************************
-	 * Check.		*
+	 * Check.				*
 	 ************************/
-
 	 assert (count <= hsize );
-	
-	/* End of preconditions. */
+	/* End of Checks. */
 
 	/* Update. */
 	count++;	/* Number of elements. */
@@ -193,33 +278,37 @@ rt_public int spt_put_old(struct special_table *spt, EIF_REFERENCE val)
 	spt->old_count = count;
 
 	/************************
-	 * Postconditions. 	*
+	 * Postconditions.	 	*
 	 ************************/	
 #ifndef NDEBUG
 	assert (spt->old_count == old_count + 1);
 	}
 #endif	/* !NDEBUG */
 	/* End of postconditions. */
-	return 0;	/* Insertion successfull. */
+
+	return 0;				/* Insertion successfull. */
+
 }	/* spt_put_old () */
 
-rt_public int spt_put(struct special_table *spt, register long key, EIF_REFERENCE val)
+rt_public int spt_put 	(struct special_table *spt, register long key, 
+						EIF_REFERENCE val)
 {
-	/* Puts value held at 'val' tagged with key 'key' in special table 'spt'. If
+	/* 
+	 * Puts value held at 'val' tagged with key 'key' in special table 'spt'. If
 	 * insertion was successful, the address of the value is returned and the
 	 * value is copied in the array. Otherwise, return a null pointer.
 	 */
 
 	register2 char 		**hvalues;	/* Array of values. */
 	register3 int32 	hsize;		/* Size of special table */
-	register4 long *hkeys;		/* Array of keys */
+	register4 long 		*hkeys;		/* Array of keys */
 	int32 count;
 
 	if (val == (EIF_REFERENCE)  0)	/* No need to put a Void object. */
 		return 0;
 
 	/************************
-	 * Preconditions	*
+	 * Preconditions		*
 	 ************************/
 
 #ifndef NDEBUG
@@ -293,11 +382,9 @@ rt_public int spt_put(struct special_table *spt, register long key, EIF_REFERENC
 	hvalues = spt->h_values;
 
 	/************************
-	 * Check.		*
+	 * Check.				*
 	 ************************/
-
 	 assert (count <= hsize );
-	
 	/* End of preconditions. */
 
 	/* Update. */
@@ -323,7 +410,7 @@ rt_public int spt_put(struct special_table *spt, register long key, EIF_REFERENC
 	spt->count = count;
 
 	/************************
-	 * Postconditions. 	*
+	 * Postconditions. 		*
 	 ************************/	
 #ifndef NDEBUG
 	assert (spt->count == old_count + 1);
@@ -349,7 +436,7 @@ rt_public int spt_replace(struct special_table *spt, EIF_REFERENCE old, EIF_REFE
 	printf ("SPT_REPLACE: Replace in table %x, object %x by new %x\n", spt, old, val);
 #endif	/* SPT_REPLACE_DEBUG. */
 	/************************
-	 * Precondition.	*
+	 * Precondition.		*
 	 ************************/
 	assert (spt != (struct special_table *) 0);
 	assert (old != (EIF_REFERENCE)  0);
@@ -371,7 +458,7 @@ rt_public int spt_replace(struct special_table *spt, EIF_REFERENCE old, EIF_REFE
 	}
 
 	/************************
-	 * Postcondition.	*
+	 * Postcondition.		*
 	 ************************/
 #ifndef NDEBUG
 	/* No more occurrences of `old' in `spt'. */
@@ -389,7 +476,8 @@ rt_public int spt_replace(struct special_table *spt, EIF_REFERENCE old, EIF_REFE
 
 rt_public int spt_xtend(struct special_table *spt)
 {
-	/* The special table 'spt' is full and needs resizing. We add 50% of old size and
+	/* The special table 'spt' is full and needs resizing. 
+	 * We add 50% of old size and
 	 * copy the old table in the new one, before freeing the old one. Note that
 	 * h_create multiplies the number we give by 5/4, so 5/4*3/2 yields ~2, i.e.
 	 * the final size will be the double of the previous one (modulo next prime
@@ -397,71 +485,40 @@ rt_public int spt_xtend(struct special_table *spt)
 	 * Return 0 if extension was ok, -1 otherwise.
 	 */
 
-	register1 int size;				/* Size of old special table */
-	register2 int sval = REFSIZ;		/* Size of an special table item */
-	register3 long *keys;			/* To loop over keys */
-	register4 EIF_REFERENCE *vals;			/* To loop over values */
-	register EIF_REFERENCE *oldvals;			/* To loop over old values */
-	int i;
-	struct special_table new_spt;
-	int32 old_size = spt->h_size;
-	int32	count;
-	int32	old_count = spt->old_count;
-	count = spt->count;
+	EIF_INTEGER				size;		/* Size before reallocation. */
+#ifndef NDEBUG
+	EIF_INTEGER 			count = spt->count;			/* For postcondition. */
+	EIF_INTEGER				old_count = spt->old_count;	/* For postcondition. */
+	EIF_INTEGER 			old_size = spt->h_size;		/* For postcondition. */
+#endif	/* !NDEBUG */
 
 	/************************
 	 * Preconditions.		*
 	 ************************/
-#ifndef NDEBUG
-
-	 assert (count == spt->h_size);	/* Special table full. */
-#endif	/* !NDEBUG */
-	
+	 assert (count == spt->h_size);		/* Special table full. */
 	/* End of preconditions. */
 
 	size = spt->h_size;
-	if (-1 == spt_create(&new_spt, 2 * size ))
-		return -1;		/* Extension of special table failed */
-
-	keys  = spt->h_keys;				/* Start of array of keys */
-	vals = spt->h_values;				/* Start of array of values */
-
-	/* Now loop over the whole table, inserting each item in the new one */
-
-	for (i = 0; i < count; i++)
-	{
-		(void) spt_put(&new_spt, keys [i], vals [i]);
-	}
-
-	for (i = 0; i < old_count; i++)
-	{
-		(void) spt_put_old (&new_spt, oldvals [i]);
-	}
-
-	/* Free old special table and set special table descriptor */
-	free(spt->old_values);			/* Free in allocation order */
-	free(spt->h_values);			/* Free in allocation order */
-	free(spt->h_keys);				/* To make eif_free happy (coalescing) */
-	bcopy(&new_spt, spt, sizeof(struct special_table));
+	if (-1 == spt_realloc (spt, 2 * size ))
+		return -1;						/* Extension of special table failed. */
 
 	/************************
 	 * Postconditions.	*
 	 ************************/
-
 	 assert (count == spt->count);	/* Special table count remains the same. */
 	 assert ((old_size * 2) == spt->h_size);	/* Special table bigger. */
-	 assert (count < spt->h_size);	/* Special table not full. */
-	
+	 assert (count < spt->h_size);		/* Special table not full. */
 	/* End of postconditions. */
-	return 0;		/* Extension was ok */
+
+	return 0;		/* Extension was ok. */
 }	/* spt_xtend () */
 
 rt_public void spt_free(struct special_table *spt)
 {
-	/* Free hash table arrays and descriptor */
+	/* Free hash table arrays and descriptor. */
 
 	free(spt->h_values);
 	free(spt->h_keys);
 	free((char *) spt);
-}
+}	/* spt_free () */
 

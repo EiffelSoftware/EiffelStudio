@@ -43,6 +43,27 @@ feature -- Status report
 			-- Spacing between edge of `Current' and items.
 		deferred
 		end
+		
+	item_column_position (widget: EV_WIDGET): INTEGER is
+			-- `Result' is column coordinate of `widget'.
+		deferred
+		end
+		
+	item_row_position (widget: EV_WIDGET): INTEGER is
+			-- `Result' is row coordinate of `widget'.
+		deferred
+		end
+		
+		
+	item_row_span (widget: EV_WIDGET): INTEGER is
+			-- `Result' is number of rows taken by `widget'.
+		deferred
+		end
+		
+	item_column_span (widget: EV_WIDGET): INTEGER is
+			-- `Result' is number of columns taken by `widget'.
+		deferred
+		end
 
 feature -- Status settings
 
@@ -87,6 +108,16 @@ feature -- Status settings
 		require
 			a_column_positive: a_column >= 1
 			a_row_positive: a_row >= 1
+		deferred
+		end
+		
+	set_item_position (v: EV_WIDGET; a_column, a_row: INTEGER) is
+			-- Move `v' to position `a_column', `a_row'.
+		deferred
+		end
+		
+	set_item_span (v: EV_WIDGET; column_span, row_span: INTEGER) is
+			-- Resize `v' to occupy `column_span' columns and `row_span' rows.
 		deferred
 		end
 

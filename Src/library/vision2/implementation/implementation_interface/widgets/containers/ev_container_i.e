@@ -50,6 +50,16 @@ feature -- Element change
 		deferred
 		end
 
+feature -- Status setting
+
+	connect_radio_grouping (a_container: EV_CONTAINER) is
+			-- Join radio grouping of `a_container' to Current.
+		require
+			a_container_not_void: a_container /= Void
+		do
+			check to_be_implemented: False end
+		end
+
 feature -- Basic operations
 
 	propagate_foreground_color is
@@ -127,6 +137,9 @@ end -- class EV_CONTAINER_I
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.10  2000/02/16 23:38:47  king
+--| Added connect_radio_grouping
+--|
 --| Revision 1.9  2000/02/14 11:40:37  oconnor
 --| merged changes from prerelease_20000214
 --|

@@ -75,6 +75,16 @@ feature -- Access
 			end
 		end
 
+feature -- Status setting
+
+	connect_radio_grouping (a_container: EV_CONTAINER) is
+			-- Join radio grouping of `a_container' to Current.
+		require
+			a_container_not_void: a_container /= Void
+		do
+			implementation.connect_radio_grouping (a_container)
+		end
+
 feature -- Status report
 
 	writable: BOOLEAN is
@@ -245,6 +255,9 @@ end -- class EV_CONTAINER
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.14  2000/02/16 23:38:52  king
+--| Added connect_radio_grouping
+--|
 --| Revision 1.13  2000/02/14 11:40:51  oconnor
 --| merged changes from prerelease_20000214
 --|

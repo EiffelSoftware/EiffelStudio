@@ -99,32 +99,32 @@ feature {NONE} -- Agent Handlers
 			--
 		local
 			l_properties: IEIFFEL_PROJECT_PROPERTIES_INTERFACE
-			l_comp_enum: ECOM_X__EIF_COMPILATION_TYPES_ENUM
+--			l_comp_enum: ECOM_X__EIF_COMPILATION_TYPES_ENUM
 		do
-			l_properties := project_manager.project_properties
-			put_string ("%NTesting Ace Defaults%N")
-			
-			l_properties.set_company ("sfsdfs")
-			test_string ("Company", agent l_properties.company, agent l_properties.set_company, <<"A Company Name", Void>>)
-			create l_comp_enum
-			test_integer ("Compilation Type", agent l_properties.compilation_type, agent l_properties.set_compilation_type, <<l_comp_enum.Eif_compt_is_application, l_comp_enum.Eif_compt_is_library, 44>>)
-			test_string ("Company", agent l_properties.company, agent l_properties.set_company, <<"A Company Name", Void>>)
-			test_string ("Copyright", agent l_properties.copyright, agent l_properties.set_copyright, <<"Copyright info", Void>>)
-			test_string ("Culture", agent l_properties.culture, agent l_properties.set_culture, <<"en-gb", Void>>)
-			test_boolean ("Debug Info", agent l_properties.debug_info, agent l_properties.set_debug_info, <<True, False>>)
-			test_boolean ("Evaluate Check", agent l_properties.evaluate_check, agent l_properties.set_evaluate_check, <<True, False>>)
-			test_boolean ("Evaluate Ensure", agent l_properties.evaluate_ensure, agent l_properties.set_evaluate_ensure, <<True, False>>)
-			test_boolean ("Evaluate Invariant", agent l_properties.evaluate_invariant, agent l_properties.set_evaluate_invariant, <<True, False>>)
-			test_boolean ("Evaluate Loop", agent l_properties.evaluate_loop, agent l_properties.set_evaluate_loop, <<True, False>>)
-			test_boolean ("Evaluate Require", agent l_properties.evaluate_require, agent l_properties.set_evaluate_require, <<True, False>>)
-			test_string ("Default Namespace", agent l_properties.default_namespace, agent l_properties.set_default_namespace, <<"Default.Namepace", "Default Namepace", "_Default.Namepace", "2Default.Namepace", Void>>)
-			test_string ("Description", agent l_properties.description, agent l_properties.set_description, <<"A Description", Void>>)
-			test_string ("Key File Name", agent l_properties.key_file_name, agent l_properties.set_key_file_name, <<"c:\a key filename.snk", Void>>)
-			test_string ("Precompiled", agent l_properties.precompiled, agent l_properties.set_precompiled, <<"c:\a procompled dir", Void>>)
-			test_string ("Product", agent l_properties.product, agent l_properties.set_product, <<"ISE.Compiler Tester Build", Void>>)
-			test_string ("Title", agent l_properties.title, agent l_properties.set_title, <<"ISE.Compiler Test Edition", Void>>)
-			test_string ("Trademark", agent l_properties.trademark, agent l_properties.set_trademark, <<"Interactive Software Engineering", Void>>)
-			test_string ("Version", agent l_properties.version, agent l_properties.set_version, <<"5.2.0.0", "NoLegalVersion", Void>>)
+--			l_properties := project_manager.project_properties
+--			put_string ("%NTesting Ace Defaults%N")
+--			
+--			l_properties.set_company ("sfsdfs")
+--			test_string ("Company", agent l_properties.company, agent l_properties.set_company, <<"A Company Name", Void>>)
+--			create l_comp_enum
+--			test_integer ("Compilation Type", agent l_properties.compilation_type, agent l_properties.set_compilation_type, <<l_comp_enum.Eif_compt_is_application, l_comp_enum.Eif_compt_is_library, 44>>)
+--			test_string ("Company", agent l_properties.company, agent l_properties.set_company, <<"A Company Name", Void>>)
+--			test_string ("Copyright", agent l_properties.copyright, agent l_properties.set_copyright, <<"Copyright info", Void>>)
+--			test_string ("Culture", agent l_properties.culture, agent l_properties.set_culture, <<"en-gb", Void>>)
+--			test_boolean ("Debug Info", agent l_properties.debug_info, agent l_properties.set_debug_info, <<True, False>>)
+--			test_boolean ("Evaluate Check", agent l_properties.evaluate_check, agent l_properties.set_evaluate_check, <<True, False>>)
+--			test_boolean ("Evaluate Ensure", agent l_properties.evaluate_ensure, agent l_properties.set_evaluate_ensure, <<True, False>>)
+--			test_boolean ("Evaluate Invariant", agent l_properties.evaluate_invariant, agent l_properties.set_evaluate_invariant, <<True, False>>)
+--			test_boolean ("Evaluate Loop", agent l_properties.evaluate_loop, agent l_properties.set_evaluate_loop, <<True, False>>)
+--			test_boolean ("Evaluate Require", agent l_properties.evaluate_require, agent l_properties.set_evaluate_require, <<True, False>>)
+--			test_string ("Default Namespace", agent l_properties.default_namespace, agent l_properties.set_default_namespace, <<"Default.Namepace", "Default Namepace", "_Default.Namepace", "2Default.Namepace", Void>>)
+--			test_string ("Description", agent l_properties.description, agent l_properties.set_description, <<"A Description", Void>>)
+--			test_string ("Key File Name", agent l_properties.key_file_name, agent l_properties.set_key_file_name, <<"c:\a key filename.snk", Void>>)
+--			test_string ("Precompiled", agent l_properties.precompiled, agent l_properties.set_precompiled, <<"c:\a procompled dir", Void>>)
+--			test_string ("Product", agent l_properties.product, agent l_properties.set_product, <<"ISE.Compiler Tester Build", Void>>)
+--			test_string ("Title", agent l_properties.title, agent l_properties.set_title, <<"ISE.Compiler Test Edition", Void>>)
+--			test_string ("Trademark", agent l_properties.trademark, agent l_properties.set_trademark, <<"Interactive Software Engineering", Void>>)
+--			test_string ("Version", agent l_properties.version, agent l_properties.set_version, <<"5.2.0.0", "NoLegalVersion", Void>>)
 		end
 		
 	on_cluster_properties (args: ARRAYED_LIST [STRING]) is

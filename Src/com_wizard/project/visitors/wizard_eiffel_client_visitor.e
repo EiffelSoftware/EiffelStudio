@@ -30,12 +30,13 @@ feature -- Processing
 	process_alias (alias_descriptor: WIZARD_ALIAS_DESCRIPTOR) is
 			-- process alias
 			-- generate code for alias described in `alias_descriptor'
+		local
+			alias_client_generator: WIZARD_ALIAS_EIFFEL_CLIENT_GENERATOR
 		do
-			if not shared_wizard_environment.server then
-				Precursor (alias_descriptor)
-				alias_client_generator.initialize
-				alias_client_generator.generate (alias_descriptor)
-			end
+			Precursor (alias_descriptor)
+			create alias_client_generator
+			alias_client_generator.initialize
+			alias_client_generator.generate (alias_descriptor)
 		end
 
 	process_coclass (coclass_descriptor: WIZARD_COCLASS_DESCRIPTOR ) is
@@ -45,8 +46,11 @@ feature -- Processing
 				-- call `process_interface'
 				-- generate C calls for every function of interface
 				-- add deferred interface class as parent
+		local
+			coclass_client_generator: WIZARD_COCLASS_EIFFEL_CLIENT_GENERATOR
 		do
 			Precursor (coclass_descriptor)
+			create coclass_client_generator
 			coclass_client_generator.initialize
 			coclass_client_generator.generate (coclass_descriptor)
 		end
@@ -58,8 +62,11 @@ feature -- Processing
 				-- call `process_interface'
 				-- generate C calls for every function of interface
 				-- add deferred interface class as parent
+		local
+			implemented_interface_generator: WIZARD_IMPLEMENTED_INTERFACE_EIFFEL_CLIENT_GENERATOR
 		do
 			Precursor (implemented_interface_descriptor)
+			create implemented_interface_generator
 			implemented_interface_generator.initialize
 			implemented_interface_generator.generate (implemented_interface_descriptor)
 		end
@@ -69,12 +76,13 @@ feature -- Processing
 			-- generated deffered class for interface
 			-- `inteface_descriptor' must provide information on
 			-- every functiom of interface
+		local
+			interface_client_generator: WIZARD_INTERFACE_EIFFEL_CLIENT_GENERATOR
 		do
-			if not shared_wizard_environment.server then
-				Precursor (interface_descriptor)
-				interface_client_generator.initialize
-				interface_client_generator.generate (interface_descriptor)
-			end
+			Precursor (interface_descriptor)
+			create interface_client_generator
+			interface_client_generator.initialize
+			interface_client_generator.generate (interface_descriptor)
 		end
 
 	process_enum (enum_descriptor: WIZARD_ENUM_DESCRIPTOR) is
@@ -82,12 +90,13 @@ feature -- Processing
 			-- generate code for enumeration described by `enum_descriptor'
 			-- for every constant in `enum_descriptor'
 				-- generate code for constant
+		local
+			enum_client_generator: WIZARD_ENUM_EIFFEL_CLIENT_GENERATOR
 		do
-			if not shared_wizard_environment.server then
-				Precursor (enum_descriptor)
-				enum_client_generator.initialize
-				enum_client_generator.generate (enum_descriptor)
-			end
+			Precursor (enum_descriptor)
+			create enum_client_generator
+			enum_client_generator.initialize
+			enum_client_generator.generate (enum_descriptor)
 		end
 
 	process_record (record_descriptor: WIZARD_RECORD_DESCRIPTOR) is
@@ -104,51 +113,16 @@ feature -- Processing
 					-- 
 				-- if field type is union then
 					--
+		local
+			record_client_generator: WIZARD_RECORD_EIFFEL_CLIENT_GENERATOR
 		do
-			if not shared_wizard_environment.server then
-				Precursor (record_descriptor)
-				record_client_generator.initialize
-				record_client_generator.generate (record_descriptor)
-			end
+			Precursor (record_descriptor)
+			create record_client_generator
+			record_client_generator.initialize
+			record_client_generator.generate (record_descriptor)
 		end
 
 feature {NONE}
-
-	alias_client_generator: WIZARD_ALIAS_EIFFEL_CLIENT_GENERATOR is
-			-- Alias eiffel client generator
-		once
-			create Result
-		end
-
-	coclass_client_generator: WIZARD_COCLASS_EIFFEL_CLIENT_GENERATOR is
-			-- Coclass eiffel client generator
-		once
-			create Result
-		end
-
-	enum_client_generator: WIZARD_ENUM_EIFFEL_CLIENT_GENERATOR is
-			-- Enum eiffel client generator
-		once
-			create Result
-		end			
-
-	interface_client_generator: WIZARD_INTERFACE_EIFFEL_CLIENT_GENERATOR is
-			-- Interface eiffel client generator
-		once
-			create Result
-		end
-
-	implemented_interface_generator: WIZARD_IMPLEMENTED_INTERFACE_EIFFEL_CLIENT_GENERATOR is
-			-- Implemented interface Eiffel client generator
-		once
-			create Result
-		end
-
-	record_client_generator: WIZARD_RECORD_EIFFEL_CLIENT_GENERATOR is
-			-- Record eiffel client generator
-		once
-			create Result
-		end
 
 	language: STRING is
 			-- Lanuage currently generated

@@ -11,19 +11,19 @@ inherit
 
 	CONSTANTS
 		undefine
-			consistent, copy, setup, is_equal
+			copy, is_equal
 		end;
 	EC_OPEN_FIG
 		undefine
-			consistent, copy, setup, is_equal
+			copy, is_equal
 		end;
 	EC_CLOSED_FIG
 		undefine
-			consistent, copy, setup, is_equal
+			copy, is_equal
 		end;
 	BASIC_ROUTINES
 		undefine
-			consistent, copy, setup, is_equal
+			copy, is_equal
 		end;
 	FIXED_LIST [EC_COORD_XY]
 		rename
@@ -57,8 +57,8 @@ feature -- Initialization
 			!!path.make;
 			!!interior.make;
 		ensure
-			has_path: path /= void;
-			has_interior: interior /= void;
+			has_path: path /= Void;
+			has_interior: interior /= Void;
 		end -- make
 
 feature -- Properties

@@ -785,6 +785,7 @@ void c_ev_load_png_file(LoadPixmapCtx *pCtx)
 	/* close the file */
 	fclose(fp);
 
+#ifndef EIF_WIN32
 	sRowSize = 4 * ((width * 24 + 31) / 32);
 	pImage = (unsigned char *) malloc(sRowSize * height + 40);
 	pData = pImage;
@@ -867,7 +868,9 @@ void c_ev_load_png_file(LoadPixmapCtx *pCtx)
 			iData++;
 			}
 		}
+#else
 
+#endif ndef EIF_WIN32
 
 	/* Free the memory */
 	for (row = 0; row < height; row++)

@@ -127,43 +127,9 @@ feature -- Status setting
 			parent_imp.set_child_owner_draw (Current, False)
 		end
 
-	--|FIXME implement as now pick and dropable
-
 feature {NONE} -- Implementation
 
 	interface: EV_STATUS_BAR_ITEM
-
-	set_capture is
-			-- Grap user input
-		do
-			check
-				to_be_implemented: FALSE
-			end
-		end
-
-	release_capture is
-			-- Release user input
-		do
-			check
-				to_be_implemented: FALSE
-			end
-		end
-
-	set_heavy_capture is
-			-- Grap user input
-		do
-			check
-				to_be_implemented: FALSE
-			end
-		end
-
-	release_heavy_capture is
-			-- Release user input
-		do
-			check
-				to_be_implemented: FALSE
-			end
-		end
 
 end -- class EV_STATUS_BAR_ITEM_IMP
 
@@ -188,6 +154,10 @@ end -- class EV_STATUS_BAR_ITEM_IMP
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.21  2000/04/21 21:57:18  rogers
+--| Removed set_capture, release_capture, set_heavy_capture,
+--| release_heavy_capture.
+--|
 --| Revision 1.20  2000/04/07 22:31:51  brendel
 --| Removed EV_SIMPLE_ITEM_IMP from inheritance.
 --|

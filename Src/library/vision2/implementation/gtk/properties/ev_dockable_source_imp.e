@@ -101,7 +101,6 @@ feature -- Status setting
 			--| This is executed every time the pointer is moved over
 			--| `Current' while pick/drag and drop is in process.
 		do
-			io.putstring ("dragable_motion%N")
 			if dawaiting_movement then
 				if (original_screen_x - a_screen_x).abs > drag_and_drop_starting_movement or
 					(original_screen_y - a_screen_y).abs > drag_and_drop_starting_movement
@@ -139,7 +138,7 @@ feature {NONE} -- Implementation
 			drag_button_release_connection_id := last_signal_connection_id
 		end
 		
-		drag_button_release_connection_id, drag_motion_notify_connection_id: INTEGER
+	drag_button_release_connection_id, drag_motion_notify_connection_id: INTEGER
 			-- Signal id's for drag event connection.
 
 	real_start_dragging (a_x, a_y, a_button: INTEGER; a_x_tilt, a_y_tilt,
@@ -158,6 +157,7 @@ feature {NONE} -- Implementation
 			-- Terminate the pick and drop mechanism.
 		do
 			io.putstring ("end_dragable%N")
+			disable_capture
 --			if orig_cursor /= Void then
 --					-- Restore the cursor style of `Current' if necessary.
 --				internal_set_pointer_style (orig_cursor)
@@ -178,7 +178,7 @@ feature {NONE} -- Implementation
 			elseif dawaiting_movement then
 				dawaiting_movement := False
 			end
-			disable_capture
+			
 				-- Return capture type to capture_normal.
 			if drag_button_release_connection_id > 0 then
 				signal_disconnect (drag_button_release_connection_id)

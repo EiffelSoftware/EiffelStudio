@@ -1900,7 +1900,7 @@ feature -- Debugging
 			--| In the latter case, the new real body id is kept
 			--| in DEBUGGABLE objects.
 		require
-			is_debuggable: is_debuggable or else (is_constant and is_once)
+			is_debuggable: valid_body_id
 		local
 			du: DISPATCH_UNIT;
 			class_type: CLASS_TYPE;
@@ -1916,6 +1916,15 @@ feature -- Debugging
 			du := Dispatch_table.last_unit;
 			Result := du.real_body_id;
 			Inst_context.set_cluster (old_cluster)
+		end;
+
+	valid_body_id: BOOLEAN is
+			-- the use of this routine as precondition for real_body_id
+			-- allows the enhancement of the external functions
+			-- Indeed, if an external has to be encapsulated (macro, signature)
+			-- an EXECUTION_UNIT is created instead of an EXT_EXECUTION_UNIT
+		do
+			Result := is_debuggable or else (is_constant and is_once);
 		end;
 
 feature -- Didier stuff

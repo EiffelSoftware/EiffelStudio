@@ -53,7 +53,7 @@ feature -- Access
 		require
 			valid_member: text_is_valid
 		do
-			!! Result.make (0)
+			create Result.make (0)
 			Result.from_c (cwel_tv_item_get_psztext (item))
 		ensure
 			result_not_void: Result /= Void
@@ -103,12 +103,16 @@ feature -- Status report
 
 feature -- Element change
 
-	set_mask (a_mask: INTEGER) is
-			-- Set `mask' with `a_mask'.
+	set_mask (a_mask_value: INTEGER) is
+			-- Set `mask' with `a_mask_value'.
 		do
-			cwel_tv_item_set_mask (item, a_mask)
-		ensure
-			mask_set: mask = a_mask
+			cwel_tv_item_set_mask (item, a_mask_value)
+		end
+
+	add_mask (a_mask_value: INTEGER) is
+			-- add `a_mask_value' to the current mask.
+		do
+			cwel_tv_item_add_mask (item, mask, a_mask_value)
 		end
 
 	set_text (a_text: STRING) is
@@ -116,7 +120,7 @@ feature -- Element change
 		require
 			a_text_not_void: a_text /= Void
 		do
-			!! str_text.make (a_text)
+			create str_text.make (a_text)
 			cwel_tv_item_set_psztext (item, str_text.item)
 			cwel_tv_item_set_cchtextmax (item, a_text.count)
 		ensure
@@ -137,6 +141,18 @@ feature -- Element change
 			cwel_tv_item_set_state (item, a_state)
 		ensure
 			state_set: state = a_state
+		end
+
+	set_image (image_normal: INTEGER; image_selected: INTEGER) is
+			-- Set the image for the tree item to `image_normal'.
+			-- and `image_selected' for the image displayed when this
+			-- item is selected.
+			-- `image_normal' and `image_selected' are the index of
+			-- an image in the image list associated with the treeview.
+		do
+			cwel_tv_item_set_iimage (item, image_normal)
+			cwel_tv_item_set_iselectedimage (item, image_selected)
+			add_mask(Tvif_image + Tvif_selectedimage)
 		end
 
 feature -- Measurement
@@ -176,6 +192,11 @@ feature {NONE} -- Externals
 		end
 
 	cwel_tv_item_set_mask (ptr: POINTER; value: INTEGER) is
+		external
+			"C [macro <tvitem.h>]"
+		end
+
+	cwel_tv_item_add_mask (ptr: POINTER; mask_to_modify: INTEGER; value_to_add: INTEGER) is
 		external
 			"C [macro <tvitem.h>]"
 		end

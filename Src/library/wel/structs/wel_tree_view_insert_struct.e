@@ -42,7 +42,7 @@ feature -- Access
 	tree_view_item: WEL_TREE_VIEW_ITEM is
 			-- Item to insert
 		do
-			!! Result.make_by_pointer (cwel_insertstruct_get_item (item))
+			create Result.make_by_pointer (cwel_insertstruct_get_item (item))
 		ensure
 			result_not_void: Result /= Void
 		end

@@ -1,0 +1,221 @@
+indexing
+	description	: "Object that holds a list of images (Bitmaps or Icons)"
+	author		: "Arnaud PICHERY [ aranud@mail.dotcom.fr ]"
+	note		: "The common controls dll (WEL_COMMON_CONTROLS_DLL) needs to be loaded to use this control."
+	status		: "See notice at end of class."
+	date		: "$Date$"
+	revision	: "$Revision$"
+
+class
+	WEL_IMAGE_LIST
+
+inherit
+	WEL_ANY
+
+	WEL_ILC_CONSTANTS
+		export {NONE}
+			all
+		end
+
+creation
+	make, make_by_pointer
+
+feature -- Initialization
+
+	make(given_width: INTEGER; given_height: INTEGER; image_type: INTEGER) is
+			-- Initialization with an empty image list. Images located
+			-- in this imageList must have the a width equal to `given_width'
+			-- and a height equal to `given_height'. 
+			-- The flag `image_type' determines the color depth of the bitmaps.
+			-- (bitmaps with a different color depth than indicated in
+			-- `image_type' will automatically be converted)
+		local
+			h_image_list: POINTER
+		do
+				-- remember the width and the height for further check.
+			bitmaps_width := given_width
+			bitmaps_height := given_height
+
+				-- Create the image list
+			h_image_list := cwel_imagelist_create(bitmaps_width, bitmaps_height, image_type, 1, 1)
+
+				-- Create the item.
+			make_by_pointer(h_image_list)
+		end
+
+feature {NONE} -- Removal
+
+	destroy_item is
+			-- Called by the `dispose' routine to
+			-- destroy `item' by calling the
+			-- corresponding Windows function and
+			-- set `item' to `default_pointer'.
+		do
+				-- destroy the list.
+			cwel_imagelist_destroy(item)
+		end
+
+
+feature -- Access
+
+	last_position: INTEGER
+			-- Position of last image inserted/deleted.
+			-- updated by `add_image'.
+
+
+feature -- Basic operations
+
+	add_bitmap(bitmap_to_add: WEL_BITMAP) is
+			-- Add the bitmap `bitmap_to_add' into the image list.
+		require
+			bitmap_not_void: bitmap_to_add /= Void
+			compatible_width_for_bitmap: bitmap_to_add.width = bitmaps_width
+			compatible_height_for_bitmap: bitmap_to_add.height = bitmaps_height
+		do
+			last_position := cwel_imagelist_add(item, bitmap_to_add.item, Default_pointer)
+		end
+
+	add_masked_bitmap(bitmap_to_add: WEL_BITMAP; bitmap_mask: WEL_BITMAP) is
+			-- Add the bitmap `bitmap_to_add' into the image list.
+			-- `bitmap_mask' represents the mask for the bitmap.
+		require
+			bitmap_not_void: bitmap_to_add /= Void
+			mask_not_void: bitmap_mask /= Void
+			compatible_width_for_bitmap: bitmap_to_add.width = bitmaps_width
+			compatible_height_for_bitmap: bitmap_to_add.height = bitmaps_height
+			compatible_width_for_mask: bitmap_mask.width = bitmaps_width
+			compatible_height_for_mask: bitmap_mask.height = bitmaps_height
+		do
+			last_position := cwel_imagelist_add(item, bitmap_to_add.item, bitmap_mask.item)
+		end
+
+	add_color_masked_bitmap(bitmap_to_add: WEL_BITMAP; mask_color: WEL_COLOR_REF) is
+			-- Add the bitmap `bitmap_to_add' into the image list.
+			-- `mask_color' represents the color used to generate the mask. 
+			-- Each pixel of this color in the specified bitmap is changed to black
+			-- and the corresponding bit in the mask is set to 1.
+			--
+			-- Note: Bitmaps with color depth greater than 8bpp are not supported
+
+		require
+			bitmap_not_void: bitmap_to_add /= Void
+			mask_color_not_void: mask_color /= Void
+			compatible_width_for_bitmap: bitmap_to_add.width = bitmaps_width
+			compatible_height_for_bitmap: bitmap_to_add.height = bitmaps_height
+		do
+			last_position := cwel_imagelist_add_masked(item, bitmap_to_add.item, mask_color.item)
+		end
+
+	add_icon (icon_to_add: WEL_ICON) is
+			-- Adds the icon or cursor `icon_to_add' to this image list
+		require
+			icon_not_void: icon_to_add /= Void
+		do
+			last_position := cwel_imagelist_add_icon(item, icon_to_add.item)
+		end
+
+	set_background_color(new_color: WEL_COLOR_REF) is
+			-- Sets the background color for this image list.
+		require
+			new_color_not_void: new_color /= Void
+ 		do
+			cwel_imagelist_set_bkcolor (item, new_color.item)
+		end
+
+feature -- Status report
+	
+	bitmaps_width: INTEGER
+			-- width of all bitmaps located in this imageList
+
+	bitmaps_height: INTEGER
+			-- height of all bitmaps located in this imageList
+
+	get_background_color: WEL_COLOR_REF is
+			-- Retrieves the current background color for this image list. 
+		do
+			create Result.make_by_color(cwel_imagelist_get_bkcolor(item))
+		ensure
+			Result_not_void: Result /= Void
+		end
+
+
+feature {NONE} -- Externals
+
+	cwel_imagelist_create (cx: INTEGER; cy: INTEGER; flag: INTEGER; c_initial: INTEGER; c_grow: INTEGER): POINTER is
+		external
+			"C [macro %"wel_image_list.h%"] (int, int, UINT, int, int): HIMAGELIST"
+		alias
+			"ImageList_Create"
+		end
+
+	cwel_imagelist_destroy (ptr: POINTER) is
+		external
+			"C [macro %"wel_image_list.h%"] (HIMAGELIST)"
+		alias
+			"ImageList_Destroy"
+		end
+
+	cwel_imagelist_add (ptr: POINTER; bitmap_to_add: POINTER; mask_bitmap_to_add: POINTER): INTEGER is
+		external
+			"C [macro %"wel_image_list.h%"] (HIMAGELIST, HBITMAP, HBITMAP): int"
+		alias
+			"ImageList_Add"
+		end
+
+	cwel_imagelist_add_masked (ptr: POINTER; bitmap_to_add: POINTER; mask_color: INTEGER): INTEGER is
+		external
+			"C [macro %"wel_image_list.h%"] (HIMAGELIST, HBITMAP, COLORREF): int"
+		alias
+			"ImageList_AddMasked"
+		end
+
+	cwel_imagelist_add_icon (ptr: POINTER; icon_to_add: POINTER): INTEGER is
+		external
+			"C [macro %"wel_image_list.h%"] (HIMAGELIST, HICON): int"
+		alias
+			"ImageList_AddIcon"
+		end
+
+	cwel_imagelist_get_bkcolor (ptr: POINTER): INTEGER is
+		external
+			"C [macro %"wel_image_list.h%"] (HIMAGELIST): COLORREF"
+		alias
+			"ImageList_GetBkColor"
+		end
+
+	cwel_imagelist_set_bkcolor (ptr: POINTER; bkcolor: INTEGER) is
+		external
+			"C [macro %"wel_image_list.h%"] (HIMAGELIST, COLORREF)"
+		alias
+			"ImageList_SetBkColor"
+		end
+
+feature {NONE} -- Private Constants
+
+	Initial_size	: INTEGER is 1
+		-- Number of images that the image list initially contains. 
+
+	Grow_parameter	: INTEGER is 1
+		-- Number of images by which the image list can grow when the
+		-- system needs to make room for new images. This attribute 
+		-- represents the number of new images that the resized image
+		-- list can contain. 
+
+end -- class WEL_IMAGE_LIST
+
+--|----------------------------------------------------------------
+--| Windows Eiffel Library: library of reusable components for ISE Eiffel.
+--| Copyright (C) 1986-1998 Interactive Software Engineering Inc.
+--| All rights reserved. Duplication and distribution prohibited.
+--| May be used only with ISE Eiffel, under terms of user license. 
+--| Contact ISE for any other use.
+--|
+--| Interactive Software Engineering Inc.
+--| ISE Building, 2nd floor
+--| 270 Storke Road, Goleta, CA 93117 USA
+--| Telephone 805-685-1006, Fax 805-685-6869
+--| Electronic mail <info@eiffel.com>
+--| Customer support e-mail <support@eiffel.com>
+--| For latest info see award-winning pages: http://www.eiffel.com
+--|----------------------------------------------------------------
+

@@ -26,17 +26,20 @@ feature -- Initialization
 		do
 			{ANY_TAB} Precursor (par)
 
-			create cmd2.make (~rows)
-			create f1.make (Current, "Rows", Void, cmd2)
-			create cmd2.make (~columns)
-			create f2.make (Current, "Columns", Void, cmd2)
+			create cmd2.make (~get_rows)
+			create f1.make (Current, 0, 0, "Rows", Void, cmd2)
+
+			create cmd2.make (~get_columns)
+			create f2.make (Current, 1, 0, "Columns", Void, cmd2)
+
 			create cmd1.make (~set_left_alignment)
-			create f3.make (Current, "Set Left Alignment", cmd1, cmd1)
+			create f3.make (Current, 2, 0, "Set Left Alignment", cmd1, cmd1)
+
 			create cmd1.make (~set_center_alignment)
-			create f4.make (Current, "Set Center Alignment", cmd1, cmd1)
+			create f4.make (Current, 3, 0, "Set Center Alignment", cmd1, cmd1)
+
 			create cmd1.make (~set_right_alignment)
-			create f5.make (Current, "Set Right Alignment", cmd1, cmd1)
-			
+			create f5.make (Current, 4, 0, "Set Right Alignment", cmd1, cmd1)
 
 			create cmd1.make (~multiple_or_single)
 			create b1.make_with_text (Current,"Currently Single Selection. Click to change.")
@@ -50,7 +53,6 @@ feature -- Initialization
 			create b3.make_with_text (Current, "Hide Title Row")
 			b3.add_click_command (cmd1, Void)
 			b3.set_vertical_resize (False)
-				
 		end
 
 feature -- Access
@@ -73,13 +75,13 @@ feature -- Access
 feature -- Execution Feature
 
 
-	rows (arg: EV_ARGUMENT; data: EV_EVENT_DATA) is
+	get_rows (arg: EV_ARGUMENT; data: EV_EVENT_DATA) is
 			-- Returns the number of rows in the list.
 		do
-			f1.set_text (current_widget.rows.out)
+			f1.set_text (current_widget.count.out)
 		end
 
-	columns (arg: EV_ARGUMENT; data: EV_EVENT_DATA) is
+	get_columns (arg: EV_ARGUMENT; data: EV_EVENT_DATA) is
 			-- Returns the number of columns in the list.
 		do
 			f2.set_text (current_widget.columns.out)

@@ -27,34 +27,25 @@ feature -- Initialization
 		do
 			{ANY_TAB} Precursor (par)
 				
-
-				-- Create the features of the window	
-
-					
-
-				-- Creates the commands for the buttons	
-
+			-- Creates the commands for the buttons	
 			!!cmd1.make (~set_xcoor)
 			!!cmd2.make (~get_xcoor)
-			create f1.make(Current, "X", cmd1, cmd2)
+			create f1.make(Current, 0, 0, "X", cmd1, cmd2)
 			!!cmd1.make (~set_ycoor)
 			!!cmd2.make (~get_ycoor)
-			create f2.make (Current, "Y", cmd1, cmd2)
+			create f2.make (Current, 1, 0, "Y", cmd1, cmd2)
 			!!cmd1.make (~set_width_val)
 			!!cmd2.make (~get_width)
-			create f3.make (Current, "Width", cmd1, cmd2)
+			create f3.make (Current, 2, 0, "Width", cmd1, cmd2)
 			!!cmd1.make (~set_height_val)
 			!!cmd2.make (~get_height)
-			create f4.make (Current, "Height", cmd1, cmd2)
+			create f4.make (Current, 3, 0, "Height", cmd1, cmd2)
 			!!cmd1.make (~set_min_width)
 			!!cmd2.make (~get_min_width)
-			create f5.make (Current, "Min Width", cmd1, cmd2)
+			create f5.make (Current, 4, 0, "Min Width", cmd1, cmd2)
 			!!cmd1.make (~set_min_height)
 			!!cmd2.make (~get_min_height)
-			create f6.make (Current, "Min Height", cmd1, cmd2)
-
-			set_parent(par) 
-
+			create f6.make (Current, 5, 0, "Min Height", cmd1, cmd2)
 		end
 
 feature -- element change

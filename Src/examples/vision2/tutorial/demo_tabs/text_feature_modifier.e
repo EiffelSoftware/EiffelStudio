@@ -15,17 +15,16 @@ creation
 
 feature -- Initialization
 
-	make (par: EV_CONTAINER; title: STRING; cmd1: EV_COMMAND; cmd2: EV_COMMAND) is
+	make (par: EV_TABLE; top, left: INTEGER; title: STRING; cmd1: EV_COMMAND; cmd2: EV_COMMAND) is
 			-- Create the label and the text.
 		require
-			valid_command: cmd2 /= Void
 			valid_title: title /= Void
 		do
-			initialize (par, title, cmd2)
-			create text_field.make (Current)
-			set_child_position (text_field, 0, 1, 1, 2)
+			initialize (par, top, left, title, cmd2)
+			create text_field.make (par)
+			par.set_child_position (text_field, top, left + 1, top + 1, left + 2)
 			if cmd1 /= Void then
-				text_field.add_activate_command (cmd1, Void)
+				text_field.add_return_command (cmd1, Void)
 			else
 				disable_text
 			end

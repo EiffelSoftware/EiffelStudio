@@ -28,22 +28,28 @@ feature -- Initialization
 				--Create the objects and their commands
 			create cmd1.make (~set_horizontal_value)
 			create cmd2.make (~get_horizontal_value)
-			create f1.make (Current, "Horizontal Value", cmd1, cmd2)
+			create f1.make (Current, 0, 0, "Horizontal Value", cmd1, cmd2)
+
 			create cmd1.make (~set_vertical_value)
 			create cmd2.make (~get_vertical_value)
-			create f2.make (Current, "Vertical Value", cmd1, cmd2)
+			create f2.make (Current, 1, 0, "Vertical Value", cmd1, cmd2)
+
 			create cmd1.make (~set_horizontal_step)
 			create cmd2.make (~get_horizontal_step)
-			create f3.make (Current, "Horizontal Step", cmd1, cmd2)
+			create f3.make (Current, 2, 0, "Horizontal Step", cmd1, cmd2)
+
 			create cmd1.make (~set_vertical_step)
 			create cmd2.make (~get_vertical_step)
-			create f4.make (Current, "Vertical Step", cmd1, cmd2)
+			create f4.make (Current, 3, 0, "Vertical Step", cmd1, cmd2)
+
 			create cmd1.make (~set_horizontal_leap)
 			create cmd2.make (~get_horizontal_leap)
-			create f5.make (Current, "Horizontal Leap", cmd1, cmd2)
+			create f5.make (Current, 4, 0, "Horizontal Leap", cmd1, cmd2)
+
 			create cmd1.make (~set_vertical_leap)
 			create cmd2.make (~get_vertical_leap)
-			create f6.make (Current, "Vertical Leap", cmd1, cmd2)
+			create f6.make (Current, 5, 0, "Vertical Leap", cmd1, cmd2)
+
 			--******* minimum and maximum
 			
 			set_parent(par)

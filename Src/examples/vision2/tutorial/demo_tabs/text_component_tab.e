@@ -32,7 +32,7 @@ feature -- Initialization
 			-- Creates the objects and their commands
 			create cmd1.make (~set_text)
 			create cmd2.make (~get_text)	
-			create f1.make (Current, "Text", cmd1, cmd2)
+			create f1.make (Current, 0, 0, "Text", cmd1, cmd2)
 			create b1.make_with_text (Current,"Copy Selection")
 			b1.set_vertical_resize (False)
 			create cmd1.make (~copy_text)

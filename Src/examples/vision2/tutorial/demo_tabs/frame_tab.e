@@ -29,7 +29,7 @@ feature -- Initialization
 			-- Creates the objects and their commands
 			create cmd1.make (~set_text1)
 			create cmd2.make (~get_text1)
-			create f1.make (Current, "Frame Text", cmd1, cmd2)
+			create f1.make (Current, 0, 0, "Frame Text", cmd1, cmd2)
 
 			set_parent(par)
 		end

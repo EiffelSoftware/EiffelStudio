@@ -27,7 +27,7 @@ feature -- Initialization
 			{ANY_TAB} Precursor (Void)
 			create cmd1.make (~set_leap)
 			create cmd2.make (~get_leap)
-			create f1.make (Current, "Leap Value", cmd1, cmd2)
+			create f1.make (Current, 0, 0, "Leap Value", cmd1, cmd2)
 			
 			create b1.make_with_text(Current, "Increase Leap")
 			create cmd1.make (~leap_forward)

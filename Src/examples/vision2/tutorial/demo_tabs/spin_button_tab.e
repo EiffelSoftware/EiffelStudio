@@ -27,7 +27,7 @@ feature -- Initialization
 			{ANY_TAB} Precursor (Void)
 			create cmd1.make (~set_step)
 			create cmd2.make (~get_step)
-			create f1.make (Current, "Step Value", cmd1, cmd2)
+			create f1.make (Current, 0, 0, "Step Value", cmd1, cmd2)
 			
 		end
 

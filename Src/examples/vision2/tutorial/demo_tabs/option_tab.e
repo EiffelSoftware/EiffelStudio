@@ -29,9 +29,10 @@ feature -- Initialization
 			
 				-- Creates the objects and their commands
 			create cmd2.make(~selected_item)
-			create f1.make (Current, "Selected Item", Void, cmd2)
+			create f1.make (Current, 0, 0, "Selected Item", Void, cmd2)
+
 			create cmd2.make (~child_menu)
-			create f2.make (Current, "Child Menu", Void, cmd2)
+			create f2.make (Current, 1, 0, "Child Menu", Void, cmd2)
 --			set_parent(par)
 		end
 

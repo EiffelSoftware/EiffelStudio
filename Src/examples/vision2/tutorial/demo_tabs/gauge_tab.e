@@ -27,23 +27,22 @@ feature -- Initialization
 		once
 			{ANY_TAB} Precursor (Void)
 				
-				-- Create the features of the window	
-
-					
-
-				-- Creates the commands for the buttons	
+			-- Creates the commands for the buttons	
 			!!cmd1.make (~set_max)
 			!!cmd2.make (~get_max)
-			create f1.make(Current, "X", cmd1, cmd2)
+			create f1.make(Current, 0, 0, "X", cmd1, cmd2)
+
 			!!cmd1.make (~set_min)
 			!!cmd2.make (~get_min)
-			create f2.make (Current, "Y", cmd1, cmd2)
+			create f2.make (Current, 1, 0, "Y", cmd1, cmd2)
+
 			!!cmd1.make (~set_step)
 			!!cmd2.make (~get_step)
-			create f3.make (Current, "Width", cmd1, cmd2)
+			create f3.make (Current, 2, 0, "Width", cmd1, cmd2)
+
 			!!cmd1.make (~set_value)
 			!!cmd2.make (~get_value)
-			create f4.make (Current, "Height", cmd1, cmd2)
+			create f4.make (Current, 3, 0, "Height", cmd1, cmd2)
 
 			set_parent(par)	
 			 

@@ -29,7 +29,7 @@ feature -- Initialization
 		{ANY_TAB} Precursor (Void)
 
 		create cmd1.make (~search)
-		create f1.make (Current, "Find Text", cmd1, cmd1)
+		create f1.make (Current, 0, 0, "Find Text", cmd1, cmd1)
 		create cmd1.make (~put_new_line)
 		create b1.make_with_text (Current, "Put New Line")
 		b1.set_vertical_resize (False)
@@ -66,7 +66,7 @@ feature -- Execution Feature
 			search_result: INTEGER
 		do
 			if f1.get_text.count>0 then
-				search_result := current_widget.search (f1.get_text)
+				search_result := current_widget.search (f1.get_text, 1)
 				if search_result < 0 then
 					f1.set_text ("Void - No match was found")
 				else

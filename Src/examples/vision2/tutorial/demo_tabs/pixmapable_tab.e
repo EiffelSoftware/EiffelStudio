@@ -31,7 +31,7 @@ feature -- Initialization
 		
 				-- Creates the objects and their commands
 				create cmd2.make (~set_pixmap)
-				create f1.make (Current, "Set Pixmap", cmd2, cmd2)		
+				create f1.make (Current, 0, 0, "Set Pixmap", cmd2, cmd2)		
 				f1.combo.set_editable (True)
 				f1.button.set_text ("Set Pixmap")
 				create cmd1.make (~unset_pixmap)

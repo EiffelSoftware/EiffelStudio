@@ -12,9 +12,20 @@ inherit
 		rename
 			make as sr_make,
 			set_actual_value as sr_set_actual_value,
+			actual_value as sr_actual_value,
+			is_valid as string_is_valid
+		redefine
+			set_value
+		end;
+	STRING_RESOURCE
+		rename
+			make as sr_make,
+			set_actual_value as sr_set_actual_value,
 			actual_value as sr_actual_value
 		redefine
 			set_value, is_valid
+		select
+			is_valid
 		end
 
 creation
@@ -62,9 +73,10 @@ feature -- Access
 		local
 			parser: RESOURCE_PARSER
 		do
-			if a_value /= Void and then not a_value.empty then
-				!! parser
-				parser.parse_resource_value (a_value)
+			if string_is_valid (a_value) then
+				Result := True
+			else
+				Result := False
 			end
 		end
 

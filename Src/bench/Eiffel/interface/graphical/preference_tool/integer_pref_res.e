@@ -13,8 +13,7 @@ inherit
 			make as form_make
 		redefine
 			associated_resource
-		end;
-	COMMAND
+		end
 
 creation
 	make
@@ -37,26 +36,14 @@ feature -- Validation
 	validate is
 			-- Validate Current's new value.
 		local
-			str: STRING;
-			warning_d: WARNING_D;
-			msg: STRING
+			str: STRING
 		do
 			if text /= Void then
 				str := text.text;
 				if not str.is_equal (associated_resource.value) then
 					if not str.is_integer then
 						is_resource_valid := False;
-						!! warning_d.make ("Warning", Current);
-						!! msg.make (0);
-						msg.append ("Resource `");
-						msg.append (associated_resource.name);
-						msg.append ("' must be an integer.");
-						warning_d.set_message (msg);
-						warning_d.hide_help_button;
-						warning_d.hide_cancel_button;
-						warning_d.add_ok_action (Current, warning_d);
-						warning_d.popup;
-						warning_d.raise
+						raise_warner ("an integer");
 					else
 						is_resource_valid := True
 					end
@@ -72,8 +59,6 @@ feature {PREFERENCE_CATEGORY} -- User Interface
 
 	display is
 			-- Display Current
-		--local
-			--int: INTEGER
 		do
 			init;
 			text.enable_resize_width;
@@ -142,19 +127,5 @@ feature {NONE} -- Properties
 
 	text: TEXT
 			-- Text field to represent Current's value
-
-feature {NONE} -- Execution
-
-	execute (arg: ANY) is
-			-- Execute Current
-		local
-			wd: WARNING_D
-		do
-			wd ?= arg;
-			if wd /= Void then
-				wd.popdown;
-				wd.destroy
-			end
-		end
 
 end -- class STRING_PREF_RES

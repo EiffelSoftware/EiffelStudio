@@ -29,11 +29,6 @@ inherit
 			default_create, copy
 		end
 		
-	GB_ACCESSIBLE_OBJECT_HANDLER
-		undefine
-			default_create, copy
-		end
-		
 	GB_COMMAND_HANDLER
 		undefine
 			default_create, copy
@@ -75,14 +70,6 @@ feature {NONE} -- Implementation
 			pick_ended_actions.force_extend (agent destroy_shift_timer)
 		end
 		
-	force_object_to_component (an_object: GB_OBJECT) is
-			-- Remove `an_object' from the object list
-		do
-			object_handler.objects.prune_all (an_object)
-		end
-		
-		
-
 	generate_pebble: GB_COMPONENT is
 			-- `Result' is used for a pick and drop.
 		local
@@ -91,8 +78,7 @@ feature {NONE} -- Implementation
 			widget: EV_WIDGET
 			component: GB_COMPONENT
 		do
-			an_object ?= new_object (xml_handler.xml_element_representing_named_component (text))
-			object_handler.recursive_do_all (an_object, agent force_object_to_component)
+			an_object ?= new_object (xml_handler.xml_element_representing_named_component (text), True)
 			create environment
 			if environment.application.ctrl_pressed then				
 				widget ?= an_object.display_object

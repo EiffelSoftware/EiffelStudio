@@ -14,6 +14,7 @@ inherit
 			identifier_quoter,
 			qualifier_seperator,
 			parse,
+			parse_dyn,
 			put_column_name,
 			update_map_table_error,
 			user_name_ok,
@@ -114,6 +115,24 @@ feature -- For DATABASE_SELECTION, DATABASE_CHANGE
 			else
 				Result := False
 			end
+		end
+
+	parse_dyn (descriptor: INTEGER; parameters: ARRAY[ANY]; uht: HASH_TABLE [ANY, STRING]; uhandle: HANDLE; sql: STRING): BOOLEAN is
+		local
+			c_temp: ANY
+		do
+			c_temp := sql.to_c
+			uhandle.status.set (odbc_init_order (descriptor, $c_temp, parameters.count))
+
+			if para /= Void then
+				para.resize(parameters.count)
+			else
+				!! para.make(parameters.count)
+			end
+			if para /= Void then
+				para.release
+			end
+			Result := TRUE
 		end
 
 	bind_parameter (table: ARRAY [ANY]; parameters: ARRAY [ANY]; descriptor: INTEGER; uhandle: HANDLE; sql: STRING) is
@@ -962,27 +981,21 @@ feature {NONE} -- External features
 				uht.off
 			loop
 				type := -1
-				if obj_is_character(uht.item(uht.key_for_iteration)) then
-					type := c_character_type
-				end
-				if obj_is_integer(uht.item(uht.key_for_iteration)) then
-					type := c_integer_type
-				end
-				if obj_is_real(uht.item(uht.key_for_iteration)) then
-					type := c_real_type
-				end
-				if obj_is_double(uht.item(uht.key_for_iteration)) then
-					type := c_float_type
-				end
 				if obj_is_string(uht.item(uht.key_for_iteration)) then
 					type := c_string_type
-				end
-				if obj_is_boolean(uht.item(uht.key_for_iteration)) then
-					type := c_boolean_type
-				end
-				if obj_is_date(uht.item(uht.key_for_iteration)) then
+				elseif obj_is_integer(uht.item(uht.key_for_iteration)) then
+					type := c_integer_type
+				elseif obj_is_date(uht.item(uht.key_for_iteration)) then
 					type := c_date_type
 					tmp_date ?= uht.item(uht.key_for_iteration)
+				elseif obj_is_character(uht.item(uht.key_for_iteration)) then
+					type := c_character_type
+				elseif obj_is_real(uht.item(uht.key_for_iteration)) then
+					type := c_real_type
+				elseif obj_is_double(uht.item(uht.key_for_iteration)) then
+					type := c_float_type
+				elseif obj_is_boolean(uht.item(uht.key_for_iteration)) then
+					type := c_boolean_type
 				end
 				tmp_str.wipe_out
 				if type = c_date_type  then
@@ -1068,7 +1081,7 @@ feature {NONE} -- External features
 
 	obj_is_character(obj: ANY): BOOLEAN is
 		require
-			agrument_not_null: obj /= Void
+			argument_not_null: obj /= Void
 		local
 			test: CHARACTER_REF
 		do

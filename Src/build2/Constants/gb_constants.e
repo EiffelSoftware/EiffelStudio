@@ -216,6 +216,14 @@ feature -- Generation constants
 			Result := "<ATTRIBUTE>"
 		end
 		
+	application_tag: STRING is
+			-- `Result' is tag used in templates for
+			-- the application declaration.
+		once
+			Result := "<APPLICATION>"
+		end
+		
+	
 		
 	indent: STRING is
 			-- String representing standard indent
@@ -352,6 +360,10 @@ feature -- Dialogs
 
 	Save_prompt: STRING is "Do you wish to save the current project?"
 	
+	application_class_name_prompt: STRING is "Application class name :"
+	
+	window_class_name_prompt: STRING is "Window class name :"
+	
 feature -- Warning Dialogs
 
 	Exit_warning: STRING is "Are you sure you wish to Exit?"
@@ -369,7 +381,7 @@ feature -- Warning Dialogs
 	Invalid_project_warning: STRING is "Invalid build project file. Please select a different file."
 		-- Warning displayed when a user attempts to open an invalid build project.
 
-	Duplicate_name_warning_part1: STRING is "'"--"An object exists with the name '"
+	Duplicate_name_warning_part1: STRING is "'"
 		-- First part of warning used when a name that already exists is entered.
 		
 	Duplicate_name_warning_part2: STRING is "' Is not a valid object name.%N%NPossible causes include :-%N   Name already used as object name in system.%N   Name already used as feature name in system%N   Name is an Eiffel reserved word.%N%NSelecting 'Modify' will allow editing of current invalid name.%NSelecting 'Cancel' will restore old name."
@@ -394,5 +406,7 @@ feature -- Warning Dialogs
 	Windows_unsupported_pixmap_type: STRING is "File type not supported. BMP, ICO and PNG file types supported."
 	
 	Unix_unsupported_pixmap_type: STRING is "File type not supported. PNG and XPM file types supported."
+	
+	Matching_class_and_application_names_warning: STRING is "Application and class names conflict."
 
 end -- class GB_CONSTANTS

@@ -447,7 +447,7 @@ feature -- Basic operations
 				Result.append (get_interface_pointer_pointer 
 					(Iunknown, a_variable_name, a_variant_name, Variant_ppunkval, counter))
 				
-				Result.append ("else if (" + a_variant_name + "->t = (VT_DISPATCH |VT_BYREF))")
+				Result.append ("else if (" + a_variant_name + "->vt = (VT_DISPATCH |VT_BYREF))")
 				Result.append (get_interface_pointer_pointer 
 					(Idispatch, a_variable_name, a_variant_name, Variant_ppdispval, counter))
 				
@@ -501,6 +501,7 @@ feature -- Basic operations
 				Result.append (Space)
 				Result.append (a_variable_name)
 				Result.append (Space_equal_space)
+				Result.append ("(" +visitor.c_type + ")")
 				Result.append (a_variant_name)
 				Result.append ("->")
 				Result.append (vartype_namer.variant_field_name (visitor))

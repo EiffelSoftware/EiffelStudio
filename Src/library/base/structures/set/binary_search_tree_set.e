@@ -269,7 +269,7 @@ feature {NONE} -- Implementation
 			h: HASHABLE
 		do
 			h ?= v
-			if h /= Void and object_comparison then
+			if h /= Void then
 				create {SUBSET_STRATEGY_HASHABLE [G]} Result
 			elseif object_comparison and same_type (other) then
 				create {SUBSET_STRATEGY_TREE [G]} Result

@@ -108,7 +108,7 @@ feature {NONE} -- Implementation
 			h: HASHABLE
 		do
 			h ?= v
-			if h /= Void and object_comparison then
+			if h /= Void then
 				create {SUBSET_STRATEGY_HASHABLE [G]} Result
 			else
 				create {SUBSET_STRATEGY_GENERIC [G]} Result

@@ -844,6 +844,8 @@ feature {GB_EV_WIDGET_EDITOR_CONSTRUCTOR} -- Implementation
 			old_builder_contents: EV_WIDGET
 			locked_in_here: BOOLEAN
 			old_window_selector_item: GB_WINDOW_SELECTOR_ITEM
+			old_window_menu_bar: EV_MENU_BAR
+			old_builder_menu_bar: EV_MENU_BAR
 		do
 			if ((create {EV_ENVIRONMENT}).application.locked_window = Void) then
 				locked_in_here := True
@@ -942,6 +944,9 @@ feature {GB_EV_WIDGET_EDITOR_CONSTRUCTOR} -- Implementation
 				old_builder_contents := titled_window_object.display_object.child.item
 				old_builder_window ?= titled_window_object.display_object.child
 				old_window_selector_item ?= titled_window_object.window_selector_item
+				old_window_menu_bar ?= titled_window_object.object.menu_bar
+				new_window ?= titled_window_object.display_object.child
+				old_builder_menu_bar := new_window.menu_bar
 
 				create store
 				create load
@@ -971,6 +976,12 @@ feature {GB_EV_WIDGET_EDITOR_CONSTRUCTOR} -- Implementation
 					Command_handler.Show_hide_display_window_command.execute
 					Command_handler.Show_hide_display_window_command.execute
 				end
+					-- Now handle menu bars as a special case.
+				if old_window_menu_bar /= Void then
+					old_window_menu_bar.parent.remove_menu_bar
+					new_window.set_menu_bar (old_window_menu_bar)
+				end
+				
 				old_window.destroy
 				
 				titled_window_object.set_window_selector_item (old_window_selector_item)
@@ -985,6 +996,12 @@ feature {GB_EV_WIDGET_EDITOR_CONSTRUCTOR} -- Implementation
 					Command_handler.Show_hide_builder_window_command.execute
 					Command_handler.Show_hide_builder_window_command.execute
 				end
+						-- Now handle menu bars as a special case.
+					if old_builder_menu_bar /= Void then
+						old_builder_menu_bar.parent.remove_menu_bar
+						new_builder_window.set_menu_bar (old_builder_menu_bar)
+					end
+				
 				old_builder_window.destroy
 			end
 			if locked_in_here then

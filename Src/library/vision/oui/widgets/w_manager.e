@@ -190,13 +190,13 @@ feature -- Basic operations
 		   	from
 				i := 1
 			until
-				Result /= Void
+				i > count or else Result /= Void
 			loop
 				widget := widget_area.item (i - 1);
 				if widget.implementation = widget_i then
 					Result := widget
 				end;
-				i := i+1
+				i := i + 1
 			end;
 			Result := widget
 		ensure

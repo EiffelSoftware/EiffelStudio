@@ -1,6 +1,7 @@
 indexing
-	description: "EiffelVision drawing:%
-				% figure composed of a number of subfigures."
+	description:
+		" EiffelVision drawing:%
+		% figure composed of a number of subfigures."
 	status: "See notice at end of class"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -21,7 +22,7 @@ inherit
 			clip_draw
 		end
 
-	LINKED_LIST [FIGURE]
+	LINKED_LIST [EV_FIGURE]
 		rename
 			extend as add
 		redefine
@@ -214,6 +215,7 @@ feature -- Output
 feature {NONE} -- Access
 
 	linked_list_cursor: CURSOR
+			-- Cursor of the link list.
 
 feature {NONE} -- Element change
 

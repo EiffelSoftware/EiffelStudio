@@ -56,7 +56,7 @@ feature -- Code generation
 			if not shared_include_queue.has (class_header_file) then
 				shared_include_queue.extend (class_header_file)
 				if not context.final_mode then
-					buf := buffer
+					buf := header_generation_buffer
 					buf.putstring ("#include ")
 					buf.putstring (class_header_file)
 					buf.new_line

@@ -24,7 +24,7 @@ feature -- Code generation
 			if not shared_include_queue.has (special_file_name) then
 				shared_include_queue.extend (special_file_name)
 				if not context.final_mode then
-					buf := buffer
+					buf := header_generation_buffer
 					buf.putstring ("#include ");
 					buf.putstring (special_file_name);
 					buf.new_line;

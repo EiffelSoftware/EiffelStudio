@@ -63,7 +63,7 @@ feature -- Code generation
 					i := header_files.lower
 					nb := header_files.upper
 					queue := shared_include_queue
-					buf := buffer
+					buf := header_generation_buffer
 				until
 					i > nb
 				loop

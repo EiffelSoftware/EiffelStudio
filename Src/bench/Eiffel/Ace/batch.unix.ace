@@ -138,7 +138,7 @@ cluster
 
 	all preferences:	"$EIFFEL_SRC/library/preferences"
 		exclude
-			"registry_implementation"; "graphical"; "interface";
+			"registry_implementation"; "graphical";
 		end		
 
 external

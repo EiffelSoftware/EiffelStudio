@@ -62,7 +62,7 @@ feature -- Access
 			found_or_not_found: Result = -1 or else (Result >= 0 and then Result < count)
 		end
 		
-	frozen element_address (i: INTEGER): POINTER is
+	frozen item_address (i: INTEGER): POINTER is
 			-- Address of element at position `i'.
 		require
 			index_big_enough: i >= 0

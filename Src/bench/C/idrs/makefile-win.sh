@@ -2,7 +2,7 @@ TOP = ..
 OUTDIR= .
 INDIR= .
 CC = $cc
-JCFLAGS = $ccflags $optimize -I$(TOP)
+JCFLAGS = $ccflags -I$(TOP)\run-time -I$(TOP)\ipc\shared $optimize -I$(TOP)
 MV = copy
 RM = del
 

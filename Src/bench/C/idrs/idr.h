@@ -33,6 +33,12 @@
 #include <strings.h>
 #endif
 
+#ifdef EIF_WIN32
+#include "io.h"
+#else
+#include "unistd.h"
+#endif
+
 #include "idrs.h"
 
 /* Make sure the buffer can hold 'x' bytes, return false if this is not

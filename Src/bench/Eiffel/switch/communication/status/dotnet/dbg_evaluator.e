@@ -170,30 +170,36 @@ feature -- Access
 				--| Get the real adapted class_type
 			l_ctype := adapted_class_type (ctype, f)
 			
-				--| and now the other data
-			l_icd_function := eifnet_debugger.icd_function_by_feature (l_ctype, f)
-			if l_icd_function /= Void then
-
-				debug ("debugger_trace_eval_data")
-					display_funct_info_on_object (l_icd_function)
-				end
-
-				if dvalue = Void then
-					l_icdv_obj := icd_value_by_address (addr)
-						-- FIXME JFIAT: l_icdv_obj might be Void if object not found ...
-						-- how come ?
-						-- should be fixed now, but .. may occur regarding to .NET GC
+				--| Get the target object : `l_icdv_obj'
+			if dvalue = Void then
+				l_icdv_obj := icd_value_by_address (addr)
+					-- FIXME JFIAT: l_icdv_obj might be Void if object not found ... how come ?
+					-- should be fixed now, but .. may occur regarding to .NET GC
+			else
+				if dvalue.is_basic then
+					l_icdv_obj := dotnet_metamorphose_basic_to_reference_value (dvalue).value_dotnet
 				else
-					if dvalue.is_basic then
-						l_icdv_obj := dotnet_metamorphose_basic_to_reference_value (dvalue).value_dotnet				
-					else
-						l_icdv_obj := dvalue.value_dotnet
-					end
-					if l_icdv_obj = Void then
-						l_icdv_obj := dump_value_to_reference_icdv (dvalue)
-					end
+					l_icdv_obj := dvalue.value_dotnet
 				end
-				if l_icdv_obj /= Void then
+				if l_icdv_obj = Void then
+					l_icdv_obj := dump_value_to_reference_icdv (dvalue)
+				end
+			end
+
+			if l_icdv_obj = Void then
+				error_occurred := True
+			else
+					--| Get the ICorDebugFunction to call.
+				l_icd_function := eifnet_debugger.icd_function_by_feature (l_icdv_obj, l_ctype, f)
+
+					--| And then let's process the following ...
+				if l_icd_function = Void then
+					error_occurred := True
+				else
+					debug ("debugger_trace_eval_data")
+						display_funct_info_on_object (l_icd_function)
+					end
+
 					l_icd_frame := l_icdv_obj.associated_frame
 					if l_icd_frame = Void then
 							-- In case `associated_frame' is not set
@@ -221,7 +227,7 @@ feature -- Access
 							end
 							debug ("debugger_trace_eval_data")
 								print (generating_type + ".dotnet_evaluate_function: param ... %N")
-								display_info_on_object (l_icdv_param)								
+								display_info_on_object (l_icdv_param)
 							end
 							l_icdv_args.put (l_icdv_param, l_param_i + 1)
 								-- we'll set the first arg later
@@ -233,7 +239,7 @@ feature -- Access
 					if not error_occurred then
 						debug ("debugger_trace_eval_data")
 							print (generating_type + ".dotnet_evaluate_function: target ... %N")
-							display_info_on_object (l_icdv_obj)							
+							display_info_on_object (l_icdv_obj)
 						end
 						
 						l_icdv_args.put (l_icdv_obj, 1) -- First arg is the obj on which the evaluation is done.
@@ -244,11 +250,11 @@ feature -- Access
 						if not error_occurred then
 							l_adv := debug_value_from_icdv (l_result)
 							Result := l_adv.dump_value	
-						end			
+						end
 					end
 				end
 			end
-				
+			
 			debug ("debugger_trace_eval_data")
 				if l_result /= Void then
 						print (generating_type + ".dotnet_evaluate_function: result ... %N")

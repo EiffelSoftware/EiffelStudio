@@ -393,12 +393,12 @@ feature {NONE} -- Type description
 								-- Generate correspondance between Eiffel IDs and
 								-- CIL information.
 							il_generator.generate_class_interfaces (cl_type, class_c)
-							if cl_type.is_generated and then not l_class_counted then
+							if cl_type.is_generated then
 								cl_type.set_il_type_name
-								if is_class_generated (class_c) then
+								if not l_class_counted then
 									compiled_classes_count := compiled_classes_count + 1
+									l_class_counted := True
 								end
-								l_class_counted := True
 							end
 
 							types.forth

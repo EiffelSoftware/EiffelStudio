@@ -288,7 +288,7 @@ feature {NONE} -- Implementation
 	c_dynamic_type (object: POINTER): INTEGER is
 			-- Dynamic type of `object'
 		external
-			"C"
+			"C | <internal.h>"
 		alias
 			"ei_dtype"
 		end;
@@ -296,7 +296,7 @@ feature {NONE} -- Implementation
 	c_field (i: INTEGER; object: POINTER): ANY is
 			-- Object referenced by the `i'-th field of `object'
 		external
-			"C"
+			"C | <internal.h>"
 		alias
 			"ei_field"
 		end;
@@ -304,7 +304,7 @@ feature {NONE} -- Implementation
 	c_field_name (i: INTEGER; object: POINTER): STRING is
 			-- Name of `i'-th field of `object'
 		external
-			"C"
+			"C | <internal.h>"
 		alias
 			"ei_field_name"
 		end;
@@ -312,7 +312,7 @@ feature {NONE} -- Implementation
 	c_field_type (i: INTEGER; object: POINTER): INTEGER is
 			-- Type of `i'-th field of `object'
 		external
-			"C"
+			"C | <internal.h>"
 		alias
 			"ei_field_type"
 		end;
@@ -320,7 +320,7 @@ feature {NONE} -- Implementation
 	c_expanded_type (i: INTEGER; object: POINTER): STRING is
 			-- Class name of the `i'-th expanded field of `object'
 		external
-			"C"
+			"C | <internal.h>"
 		alias
 			"ei_exp_type"
 		end;
@@ -328,7 +328,7 @@ feature {NONE} -- Implementation
 	c_character_field (i: INTEGER; object: POINTER): CHARACTER is
 			-- Character value of `i'-th field of `object'
 		external
-			"C"
+			"C | <internal.h>"
 		alias
 			"ei_char_field"
 		end;
@@ -336,7 +336,7 @@ feature {NONE} -- Implementation
 	c_boolean_field (i: INTEGER; object: POINTER): BOOLEAN is
 			-- Boolean value of `i'-th field of `object'
 		external
-			"C"
+			"C | <internal.h>"
 		alias
 			"ei_bool_field"
 		end;
@@ -344,7 +344,7 @@ feature {NONE} -- Implementation
 	c_integer_field (i: INTEGER; object: POINTER): INTEGER is
 			-- Integer value of `i'-th field of `object'
 		external
-			"C"
+			"C | <internal.h>"
 		alias
 			"ei_int_field"
 		end;
@@ -352,7 +352,7 @@ feature {NONE} -- Implementation
 	c_real_field (i: INTEGER; object: POINTER): REAL is
 			-- Real value of `i'-th field of `object'
 		external
-			"C"
+			"C | <internal.h>"
 		alias
 			"ei_float_field"
 		end;
@@ -360,7 +360,7 @@ feature {NONE} -- Implementation
 	c_pointer_field (i: INTEGER; object: POINTER): POINTER is
 			-- Pointer value of `i'-th field of `object'
 		external
-			"C"
+			"C | <internal.h>"
 		alias
 			"ei_ptr_field"
 		end;
@@ -368,7 +368,7 @@ feature {NONE} -- Implementation
 	c_double_field (i: INTEGER; object: POINTER): DOUBLE is
 			-- Double precision value of `i'-th field of `object'
 		external
-			"C"
+			"C | <internal.h>"
 		alias
 			"ei_double_field"
 		end;
@@ -376,7 +376,7 @@ feature {NONE} -- Implementation
 	c_is_special (object: POINTER): BOOLEAN is
 			-- Is `object' a special object?
 		external
-			"C"
+			"C | <internal.h>"
 		alias
 			"ei_special"
 		end;
@@ -384,7 +384,7 @@ feature {NONE} -- Implementation
 	c_field_offset (i: INTEGER; object: POINTER): INTEGER is
 			-- Offset of `i'-th field of `object'
 		external
-			"C"
+			"C | <internal.h>"
 		alias
 			"ei_offset"
 		end;
@@ -392,7 +392,7 @@ feature {NONE} -- Implementation
 	c_field_count (object: POINTER): INTEGER is
 			-- Number of logical fields in `object'
 		external
-			"C"
+			"C | <internal.h>"
 		alias
 			"ei_count_field"
 		end;
@@ -400,7 +400,7 @@ feature {NONE} -- Implementation
 	c_bit_size (i: INTEGER; object: POINTER): INTEGER is
 			-- Size (in bit) of the `i'-th bit field of `object'
 		external
-			"C"
+			"C | <internal.h>"
 		alias
 			"ei_bit_size"
 		end;
@@ -408,56 +408,56 @@ feature {NONE} -- Implementation
 	c_size (object: POINTER): INTEGER is
 			-- Physical size of `object'
 		external
-			"C"
+			"C | <internal.h>"
 		alias
 			"ei_size"
 		end;
 
 	c_set_reference_field (i: INTEGER; object: POINTER; value: POINTER) is
 		external
-			"C"
+			"C | <internal.h>"
 		alias
 			"ei_set_reference_field"
 		end;
 
 	c_set_double_field (i: INTEGER; object: POINTER; value: DOUBLE) is
 		external
-			"C"
+			"C | <internal.h>"
 		alias
 			"ei_set_double_field"
 		end;
 
 	c_set_character_field (i: INTEGER; object: POINTER; value: CHARACTER) is
 		external
-			"C"
+			"C | <internal.h>"
 		alias
 			"ei_set_char_field"
 		end;
 
 	c_set_boolean_field (i: INTEGER; object: POINTER; value: BOOLEAN) is
 		external
-			"C"
+			"C | <internal.h>"
 		alias
 			"ei_set_boolean_field"
 		end;
 
 	c_set_integer_field (i: INTEGER; object: POINTER; value: INTEGER) is
 		external
-			"C"
+			"C | <internal.h>"
 		alias
 			"ei_set_integer_field"
 		end;
 
 	c_set_real_field (i: INTEGER; object: POINTER; value: REAL) is
 		external
-			"C"
+			"C | <internal.h>"
 		alias
 			"ei_set_float_field"
 		end;
 
 	c_set_pointer_field (i: INTEGER; object: POINTER; value: POINTER) is
 		external
-			"C"
+			"C | <internal.h>"
 		alias
 			"ei_set_pointer_field"
 		end;

@@ -26,7 +26,7 @@ feature -- Access
 	is_defined (sig: INTEGER): BOOLEAN is
 			-- Is `sig' a signal defined for this platform?
 		external
-			"C"
+			"C | <sig.h>"
 		alias
 			"esigdefined"
 		end;
@@ -274,7 +274,7 @@ feature -- Status report
 	signal: INTEGER is
 			-- Code of last signal
 		external
-			"C"
+			"C | <sig.h>"
 		alias
 			"esignum"
 		end;
@@ -288,7 +288,7 @@ feature -- Status setting
 			-- (This is the default for all signals.)
 			-- No effect if signal not defined.
 		external
-			"C"
+			"C | <sig.h>"
 		alias
 			"esigcatch"
 		end;
@@ -298,7 +298,7 @@ feature -- Status setting
 			-- will be ignored. (This is not the default.)
 			-- No effect if signal not defined.
 		external
-			"C"
+			"C | <sig.h>"
 		alias
 			"esigignore"
 		end;
@@ -307,7 +307,7 @@ feature -- Status setting
 			-- Make sure that all exceptions will lead to their
 			-- default handling.
 		external
-			"C"
+			"C | <sig.h>"
 		alias
 			"esigresall"
 		end
@@ -318,7 +318,7 @@ feature -- Status setting
 		require
 			is_defined (sig)
 		external
-			"C"
+			"C | <sig.h>"
 		alias
 			"esigresdef"
 		end
@@ -328,21 +328,21 @@ feature {NONE} -- Implementation
 	is_caught (sig: INTEGER): BOOLEAN is
 			-- Is `sig' currently set to be caught?
 		external
-			"C"
+			"C | <sig.h>"
 		alias
 			"esigiscaught"
 		end;
 
 	c_signal_map (i: INTEGER): INTEGER is
 		external
-			"C"
+			"C | <sig.h>"
 		alias
 			"esigmap"
 		end;
 
 	c_signal_name (i: INTEGER): POINTER is
 		external
-			"C"
+			"C | <sig.h>"
 		alias
 			"esigname"
 		end;

@@ -105,62 +105,62 @@ feature {NONE} -- Implementation
 
 	math_rcos (v: REAL): REAL is
 		external
-			"C"
+			"C | <eiffel.h>"
 		end;
 
 	math_racos (v: REAL): REAL is
 		external
-			"C"
+			"C | <eiffel.h>"
 		end;
 
 	math_rfabs (v: REAL): REAL is
 		external
-			"C"
+			"C | <eiffel.h>"
 		end;
 
 	math_rceil (v: REAL): REAL is
 		external
-			"C"
+			"C | <eiffel.h>"
 		end;
 
 	math_rfloor (v: REAL): REAL is
 		external
-			"C"
+			"C | <eiffel.h>"
 		end;
 
 	math_rlog10 (v: REAL): REAL is
 		external
-			"C"
+			"C | <eiffel.h>"
 		end;
 
 	math_rlog (v: REAL): REAL is
 		external
-			"C"
+			"C | <eiffel.h>"
 		end;
 
 	math_rsqrt (v: REAL): REAL is
 		external
-			"C"
+			"C | <eiffel.h>"
 		end;
 
 	math_rtan (v: REAL): REAL is
 		external
-			"C"
+			"C | <eiffel.h>"
 		end;
 
 	math_ratan (v: REAL): REAL is
 		external
-			"C"
+			"C | <eiffel.h>"
 		end;
 
 	math_rsin (v: REAL): REAL is
 		external
-			"C"
+			"C | <eiffel.h>"
 		end;
 
 	math_rasin (v: REAL): REAL is
 		external
-			"C"
+			"C | <eiffel.h>"
 		end;
 
 end -- class SINGLE_MATH

@@ -162,44 +162,44 @@ feature {NONE} -- Implementation
 	bl_str_and (a1, a2, a3: POINTER; size: INTEGER) is
 			-- Apply logic and on `a1' with `a2'.
 		external
-			"C"
+			"C | <boolstr.h>"
 		end;
 
 	bl_str_or (a1, a2, a3: POINTER; size: INTEGER) is
 			-- Apply logic or on `a1' with `a2'.
 		external
-			"C"
+			"C | <boolstr.h>"
 		end;
 
 	bl_str_xor (a1, a2, a3: POINTER; size: INTEGER) is
 			-- Apply exclusive or on `a1' with `a2'.
 		external
-			"C"
+			"C | <boolstr.h>"
 		end;
 
 	bl_str_not (a1, a2: POINTER; size: INTEGER) is
 			-- Negation of `a1'.
 		external
-			"C"
+			"C | <boolstr.h>"
 		end;
 
 	bl_str_shiftr (a1, a2: POINTER; size, value: INTEGER) is
 			-- Right shifted `a1' by `n' positions.
 		external
-			"C"
+			"C | <boolstr.h>"
 		end;
 
 	bl_str_shiftl (a1, a2: POINTER; size, value: INTEGER) is
 			-- Left shifted `a1' by `n' positions.
 		external
-			"C"
+			"C | <boolstr.h>"
 		end;
 
 	bl_str_set (a1: POINTER; size, value: INTEGER) is
 			-- Set all booleans to true if `value' = 1
 			-- or false if `value' = 0.
 		external
-			"C"
+			"C | <boolstr.h>"
 		end;
 
 end -- class BOOL_STRING

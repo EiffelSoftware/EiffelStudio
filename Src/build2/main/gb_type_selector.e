@@ -33,7 +33,7 @@ feature -- Initialization
 			-- Fill with supported Widgets.
 		local
 			tree_item1, tree_item2, tree_item3, tree_item4,
-			tree_item5, tree_item6: EV_TREE_ITEM
+			tree_item5: EV_TREE_ITEM
 			
 		do
 			Precursor {EV_TREE}

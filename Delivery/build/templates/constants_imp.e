@@ -48,7 +48,7 @@ feature -- Access
 			name_valid: a_name /= Void and not a_name.is_empty
 			has_constant (a_name)
 		do
-			Result := clone (all_constants.item (a_name))
+			Result := (all_constants.item (a_name)).twin
 		ensure
 			Result_not_void: Result /= Void
 		end
@@ -62,7 +62,7 @@ feature -- Access
 		local
 			l_string: STRING
 		do
-			l_string := clone (all_constants.item (a_name))
+			l_string := (all_constants.item (a_name)).twin
 			check
 				is_integer: l_string.is_integer
 			end
@@ -144,7 +144,7 @@ feature {NONE} -- Implementation
 				Result := content.substring (1, new_line_index)
 				content.keep_tail (content.count - new_line_index)
 			else
-				Result := clone (content)
+				Result := content.twin
 				content.keep_head (0)
 			end
 		ensure

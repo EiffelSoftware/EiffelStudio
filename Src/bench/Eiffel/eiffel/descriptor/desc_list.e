@@ -22,7 +22,11 @@ inherit
 	SHARED_ARRAY_BYTE
 		undefine
 			twin
-		end
+		end;
+	SHARED_BODY_ID
+		undefine
+			twin
+		end;
 
 creation
 
@@ -64,6 +68,27 @@ feature
 			-- Current descriptor list
 	
 feature -- Insertion
+
+	put_invariant (f: INVARIANT_FEAT_I) is
+		local
+			u: POLY_UNIT
+		do
+			if f.has_poly_unit then
+				u := f.new_poly_unit (Invariant_id);
+			end;
+			from
+				class_types.start;
+				start
+			until
+				class_types.after
+			loop
+				if u /= Void then
+					item.set_invariant_entry (u.entry (class_types.item));
+				end;
+				class_types.forth;
+				forth
+			end
+		end;
 
 	put (r_id: INTEGER; f: FEATURE_I) is
 			-- Insert the routine id `r_id' into the descriptors 

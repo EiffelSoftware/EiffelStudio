@@ -2,7 +2,7 @@ class REQUIRE_I
 
 inherit
 
-	LOOP_I
+	NO_I
 		redefine
 			check_precond, generation_value, byte_code
 		end

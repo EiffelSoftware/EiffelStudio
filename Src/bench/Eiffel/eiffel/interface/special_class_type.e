@@ -85,24 +85,29 @@ feature
 			if	(not final_mode) or else assertion_level.check_precond then
 				if not final_mode then
 					file.putstring
-						("%Tif (WASC(Dtype(Current)) & CK_REQUIRE) {%N");
+						("%Tif (~in_assertion & WASC(Dtype(Current)) & CK_REQUIRE) {%N");
+				else
+					file.putstring
+						("%Tif (~in_assertion) {%N");
 				end;
 				file.putstring ("%
 					%%TRTCT(%"index_large_enough%", EX_PRE);%N%
-					%%Tif (arg2 >= 0)%N%
+					%%Tif (arg2 >= 0) {%N%
 					%%T%TRTCK;%N%
-					%%Telse%N%
-					%%T%TRTCF;%N");
+					%%T} else {%N%
+					%%T%TRTCF;%N%T}%N");
 
 				file.putstring ("%
 					%%TRTCT(%"index_small_enough%", EX_PRE);%N%
 					%%Tif (arg2 < *(long *) %
 						%(Current + (HEADER(Current)->ov_size & B_SIZE)%
-						% - LNGPAD(2)))%N%
+						% - LNGPAD(2))) {%N%
 					%%T%TRTCK;%N%
-					%%Telse%N%
-					%%T%TRTCF;%N");
+					%%T} else {%N%
+					%%T%TRTCF;%N%T}%N");
 				if not final_mode then
+					file.putstring ("%T}%N");
+				else
 					file.putstring ("%T}%N");
 				end;
 			end;
@@ -184,24 +189,29 @@ feature
 			if (not final_mode) or else assertion_level.check_precond then
 				if not final_mode then
 					file.putstring
-						("%Tif (WASC(Dtype(Current)) & CK_REQUIRE) {%N");
+						("%Tif (~in_assertion & WASC(Dtype(Current)) & CK_REQUIRE) {%N");
+				else
+					file.putstring
+						("%Tif (~in_assertion) {%N");
 				end;
 				file.putstring ("%
 					%%TRTCT(%"index_large_enough%", EX_PRE);%N%
-					%%Tif (arg1 >= 0)%N%
+					%%Tif (arg1 >= 0) {%N%
 					%%T%TRTCK;%N%
-					%%Telse%N%
-					%%T%TRTCF;%N");
+					%%T } else {%N%
+					%%T%TRTCF;%N%T}%N");
 	
 				file.putstring ("%
 					%%TRTCT(%"index_small_enough%", EX_PRE);%N%
 					%%Tif (arg1 < *(long *) %
 						%(Current + (HEADER(Current)->ov_size & B_SIZE) %
-						%- LNGPAD(2)))%N%
+						%- LNGPAD(2))) {%N%
 					%%T%TRTCK;%N%
-					%%Telse%N%
-					%%T%TRTCF;%N");
+					%%T } else {%N%
+					%%T%TRTCF;%N%T}%N");
 				if not final_mode then
+					file.putstring ("%T}%N");
+				else
 					file.putstring ("%T}%N");
 				end;
 			end;

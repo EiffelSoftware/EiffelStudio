@@ -11,7 +11,7 @@ inherit
 	SHARED_HISTORY_CONTROL
 		undefine
 			twin
-		end
+		end;
 
 creation
 
@@ -85,6 +85,9 @@ feature -- Generation
 			-- with class `c'
 		do
 			!! Result.make (c, count);
+			if c.has_invariant then
+				Result.put_invariant (c.invariant_feature);
+			end;
 			from
 				start
 			until

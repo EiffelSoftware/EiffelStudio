@@ -560,7 +560,7 @@ end;
 			end;
 		end;
 			
-	generate (file: FILE) is
+	generate (file: UNIX_FILE) is
 			-- Generate routine id array in `file'.
 		require
 			good_argument: file /= Void;

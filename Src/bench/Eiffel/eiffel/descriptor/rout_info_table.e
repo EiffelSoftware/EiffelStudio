@@ -144,8 +144,10 @@ feature -- Generation
 				-- C tables start at 0, we want to start at 1, to
 				-- that effect we insert a dummy entry.
 			Result.append ("%T{(int16) -1, (int16) -1},%N");
+				-- Entry for the invariant "routine"
+			Result.append ("%T{(int16) 0, (int16) 0},%N");
 			from
-				i := 1	
+				i := 2	
 			until
 				i > nb_elements
 			loop
@@ -188,8 +190,12 @@ feature -- Melting
 			Byte_array.append_short_integer (-1);
 			Byte_array.append_short_integer (-1);
 
+				-- Entry for the invariant "routine"
+			Byte_array.append_short_integer (0);
+			Byte_array.append_short_integer (0);
+
 			from
-				i := 1	
+				i := 2	
 			until
 				i > nb_elements
 			loop

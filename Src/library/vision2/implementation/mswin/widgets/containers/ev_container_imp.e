@@ -61,10 +61,10 @@ feature -- Status setting
 
 feature -- Element change
 
-	add_child (child_imp: EV_WIDGET_I) is
+	add_child (child_imp: EV_WIDGET_IMP) is
 			-- Add child into composite
 		do
-			child ?= child_imp
+			child := child_imp
 		end
 
 feature {EV_WIDGET_IMP} -- Implementation
@@ -91,18 +91,37 @@ feature {EV_WIDGET_IMP} -- Implementation
 			{EV_WIDGET_IMP} Precursor
 		end
 
+	on_draw_item (control_id: INTEGER; draw_item: WEL_DRAW_ITEM_STRUCT) is
+			-- Wm_drawitem message.
+			-- A owner-draw control identified by `control_id' has
+			-- been changed and must be drawn. `draw_item' contains
+			-- information about the item to be drawn and the type
+			-- of drawing required.
+		local
+			pixcon: EV_PIXMAP_CONTAINER_IMP
+			itemcon: EV_ITEM_CONTAINER_IMP
+		do
+			pixcon ?= draw_item.window_item
+			if pixcon /= Void then
+				pixcon.on_draw (draw_item)
+			else
+				itemcon ?= draw_item.window_item
+				if itemcon /= Void then
+					itemcon.on_draw (draw_item)
+				end
+			end
+		end
+
+
 feature -- Implementation : deferred features of 
 		-- WEL_COMPOSITE_WINDOW that are used here but not 
 		-- defined
 
 	client_rect: WEL_RECT is
-			-- Client rectangle
 		deferred
 		end
 
 	wel_destroy is
-			-- Destroy the window and quit the application
-			-- if `Current' is the application's main window.
 		deferred
 		end	
 

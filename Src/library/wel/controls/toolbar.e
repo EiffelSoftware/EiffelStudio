@@ -364,7 +364,7 @@ feature -- Element change
 			exists: exists
 			button_not_void: button /= Void
 			index_large_enough: index >= 0
-			index_small_enough: index < button_count
+			index_small_enough: index <= button_count
 		do
 			cwin_send_message (item, Tb_insertbutton, index,
 				button.to_integer)
@@ -387,8 +387,7 @@ feature -- Element change
 			until
 				j > buttons.upper
 			loop
-				cwin_send_message (item, Tb_insertbutton, i,
-					buttons.item (j).to_integer)
+				insert_button (i, buttons.item (j))
 				i := i + 1
 				j := j + 1
 			end

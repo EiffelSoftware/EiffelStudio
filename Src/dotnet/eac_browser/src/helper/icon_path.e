@@ -36,6 +36,40 @@ feature -- Implementation
 			non_void_result: Result /= Void
 		end
 
+	Path_icon_constructor: STRING is
+			-- Path of constructor icon.
+		once
+			Result := Eiffel_path + eac_resource + "icon_constructor.ico"
+		ensure
+			non_void_result: Result /= Void
+		end
+
+	Path_icon_inherited_features: STRING is
+			-- Path of inherited features icon.
+		once
+			Result := Eiffel_path + eac_resource + "icon_inherited_features.ico"
+		ensure
+			non_void_result: Result /= Void
+		end
+	
+	Path_icon_all_features: STRING is
+			-- Path of inherited features icon.
+		once
+			Result := Eiffel_path + eac_resource + "icon_all_features.ico"
+		ensure
+			non_void_result: Result /= Void
+		end
+	
+	Path_icon_ancestors: STRING is
+			-- Path of inherited features icon.
+		once
+			Result := Eiffel_path + eac_resource + "icon_ancestors.ico"
+		ensure
+			non_void_result: Result /= Void
+		end
+
+feature -- Class Icon
+
 	Path_icon_class: STRING is
 			-- Path of class icon.
 		once
@@ -76,21 +110,6 @@ feature -- Implementation
 			non_void_result: Result /= Void
 		end
 
-	Path_icon_constructor: STRING is
-			-- Path of constructor icon.
-		once
-			Result := Eiffel_path + eac_resource + "icon_constructor.ico"
-		ensure
-			non_void_result: Result /= Void
-		end
-
-	Path_icon_inherited_features: STRING is
-			-- Path of inherited features icon.
-		once
-			Result := Eiffel_path + eac_resource + "icon_inherited_features.ico"
-		ensure
-			non_void_result: Result /= Void
-		end
 
 feature -- Eiffel Icon
 

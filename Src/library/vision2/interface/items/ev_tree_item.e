@@ -1,9 +1,11 @@
 indexing	
 	description: 
-		"Item for use with EV_TREE.%N%
-		%A tree item is also a tree-item container because if%
-		%we create a tree-item with a tree-item as parent, the%
-		%parent will become a subtree."
+		"[
+			Item for use with EV_TREE.
+			A tree item is also a tree-item container because if
+			we create a tree-item with a tree-item as parent, the
+			parent will become a subtree.
+		]"
 	status: "See notice at end of class"
 	keywords: "tree, item, leaf, node, branch"
 	date: "$Date$"

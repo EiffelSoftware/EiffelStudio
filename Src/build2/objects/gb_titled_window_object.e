@@ -220,7 +220,6 @@ feature -- Access
 			-- `set_menu_bar', an the window can already be full, and
 			-- have a menu bar added.
 		local
-			display_object_window: EV_TITLED_WINDOW
 			command_add: GB_COMMAND_ADD_OBJECT
 		do
 			-- This should always be approximately concurrent with

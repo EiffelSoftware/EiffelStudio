@@ -45,6 +45,7 @@ RT_LNK EIF_INTEGER eif_generation_object_limit (void);
 RT_LNK void eif_set_coalesce_period (EIF_INTEGER p); /* Set clsc_per */
 RT_LNK EIF_INTEGER eif_get_max_mem(void); /* Return max_mem */
 RT_LNK EIF_INTEGER eif_get_chunk_size(void); /* Return chunk_size */
+RT_LNK EIF_BOOLEAN eif_is_in_final_collect;	/* Are we performing the final collection? */
 
 #ifdef __cplusplus
 }

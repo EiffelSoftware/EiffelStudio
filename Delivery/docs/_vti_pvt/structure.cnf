@@ -1,5 +1,5 @@
 3.0.0.507
-1103
+1106
 1033,release_notes.html,0,Release Notes,0,942281138,1
 vti_globalpage:BW|true
 1018,papers/index.html,0,Technology Papers,0,942202015,1
@@ -18,6 +18,7 @@ vti_globalpage:BW|true
 1076,papers/eiffelstore.html,0,EiffelStore,1018,942435569,0
 1077,papers/eiffeltime.html,0,EiffelTime,1018,942435569,0
 1080,papers/web/intro.html,0,EiffelWeb,1018,942451386,0
+1104,papers/mel.html,0,MEL,1018,942693268,0
 1078,papers/eiffelmath.html,0,EiffelMath,1018,942450249,0
 1092,papers/rb/intro.html,0,Resource Bench,1018,942686196,0
 1102,papers/eiffelvision.html,0,EiffelVision,1018,942692414,0
@@ -34,10 +35,10 @@ vti_globalpage:BW|true
 1019,papers/c_compilers.html,0,C Compilers,1018,942202973,0
 1079,Eiffel/style.html,0,Style Rules,1000,942687365,0
 1032,platforms.html,0,Platform Requirements,1005,942280409,0
-1050,Eiffel/language/precursor_construct.html,0,Precursor,1031,942296391,0
 1034,Eiffel/language/assertions.maker.html,0,Assertions,1031,942285323,0
 1035,Eiffel/language/BOOK.maker.html,0,Table of Contents,1031,942285323,0
 1036,Eiffel/language/classes.maker.html,0,Classes,1031,942285323,0
+1105,Eiffel/language/precursor_description.html,0,The Precursor construct,1031,942694098,0
 1037,Eiffel/language/deferred.maker.html,0,Deferred Classes,1031,942285323,0
 1042,Eiffel/language/inheritance.maker.html,0,Inheritance,1031,942285323,0
 1044,Eiffel/language/principles.maker.html,0,Principles,1031,942285323,0
@@ -91,3 +92,5 @@ vti_globalpage:BW|true
 1059,papers/wel/step7.html,0,Windows Eiffel Library (WEL) Tutorial,1048,942301521,0
 1060,papers/wel/step8.html,0,Windows Eiffel Library (WEL) Tutorial,1048,942301521,0
 1054,papers/wel/step2.html,0,Windows Eiffel Library (WEL) Tutorial,1048,942301426,0
+1050,Eiffel/language/precursor_construct.html,0,ISE implementation of Precursor,1105,942694098,0
+1103,Eiffel/language/old_precursor_construct.html,0,Old Precursor Specification,1105,942694098,0

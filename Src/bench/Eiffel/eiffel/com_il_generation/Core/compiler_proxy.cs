@@ -774,8 +774,8 @@ public class COMPILER_PROXY : COMPILER_PROXY_I {
 		core.GenerateBitwiseNot();
 	}
 
-	public void PutLineInfo (int n) {
-		core.PutLineInfo (n);
+	public void put_line_info (int line_number, int start_column, int end_column) {
+		core.put_line_info (line_number, start_column, end_column);
 	}
 
 	public int CreateLabel() {

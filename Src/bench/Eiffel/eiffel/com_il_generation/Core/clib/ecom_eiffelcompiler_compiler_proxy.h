@@ -1008,7 +1008,7 @@ public:
 	/*-----------------------------------------------------------
 	No description available.
 	-----------------------------------------------------------*/
-	void ccom_put_line_info(  /* [in] */ EIF_INTEGER n );
+	void ccom_put_line_info(  /* [in] */ EIF_INTEGER line_number,  /* [in] */ EIF_INTEGER start_column,  /* [in] */ EIF_INTEGER end_column );
 
 
 	/*-----------------------------------------------------------

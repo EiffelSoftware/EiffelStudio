@@ -5,7 +5,7 @@
 #include "ecom_EiffelCompiler_COMPILER_PROXY.h"
 static const CLSID CLSID_COMPILER_PROXY_ = {0xe3895019,0xe9fd,0x345e,{0x8f,0x63,0x00,0xc6,0x68,0x3c,0x1d,0x1a}};
 
-static const IID IID_COMPILER_PROXY_I_ = {0x473a4eab,0x5ca2,0x3f90,{0xbb,0x94,0xf1,0xf5,0xf7,0xbf,0x7e,0x01}};
+static const IID IID_COMPILER_PROXY_I_ = {0x0137a789,0x12a5,0x3504,{0x9b,0x31,0xb3,0x23,0x3d,0x27,0xd4,0xe7}};
 
 #ifdef __cplusplus
 extern "C" {
@@ -5075,7 +5075,7 @@ void ecom_EiffelCompiler::COMPILER_PROXY::ccom_generate_bitwise_not()
 };
 /*----------------------------------------------------------------------------------------------------------------------*/
 
-void ecom_EiffelCompiler::COMPILER_PROXY::ccom_put_line_info(  /* [in] */ EIF_INTEGER n )
+void ecom_EiffelCompiler::COMPILER_PROXY::ccom_put_line_info(  /* [in] */ EIF_INTEGER line_number,  /* [in] */ EIF_INTEGER start_column,  /* [in] */ EIF_INTEGER end_column )
 
 /*-----------------------------------------------------------
 	No description available.
@@ -5092,10 +5092,14 @@ void ecom_EiffelCompiler::COMPILER_PROXY::ccom_put_line_info(  /* [in] */ EIF_IN
 		com_eraise (f.c_format_message (hr), EN_PROG);
 	};
 	};
-	LONG tmp_n = 0;
-	tmp_n = (LONG)n;
+	LONG tmp_line_number = 0;
+	tmp_line_number = (LONG)line_number;
+	LONG tmp_start_column = 0;
+	tmp_start_column = (LONG)start_column;
+	LONG tmp_end_column = 0;
+	tmp_end_column = (LONG)end_column;
 	
-	hr = p_COMPILER_PROXY_I->PutLineInfo(tmp_n);
+	hr = p_COMPILER_PROXY_I->put_line_info(tmp_line_number,tmp_start_column,tmp_end_column);
 	if (FAILED (hr))
 	{
 		if ((HRESULT_FACILITY (hr)  ==  FACILITY_ITF) && (HRESULT_CODE (hr) > 1024) && (HRESULT_CODE (hr) < 1053))

@@ -45,8 +45,9 @@ extern char *c_outp();
 
 extern char *simple_out();		/* Tagged out form for simple types */
 
+#endif /* WORKBENCH */
+
 #ifdef __cplusplus
 }
 #endif
 
-#endif

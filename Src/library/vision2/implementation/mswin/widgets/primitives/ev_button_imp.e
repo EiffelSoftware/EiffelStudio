@@ -64,7 +64,8 @@ inherit
 			on_set_focus,
 			on_kill_focus,
 			on_key_down,
-			on_key_up
+			on_key_up,
+			on_set_cursor
 		redefine
 			on_bn_clicked,
 			default_process_message

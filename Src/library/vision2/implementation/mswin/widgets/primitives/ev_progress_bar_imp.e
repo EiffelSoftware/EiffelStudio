@@ -35,6 +35,7 @@ inherit
 			on_set_focus,
 			on_kill_focus,
 			on_key_up,
+			on_set_cursor,
 			default_style
 		redefine
 			on_key_down

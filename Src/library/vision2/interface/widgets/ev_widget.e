@@ -282,7 +282,6 @@ feature -- Element change
 			-- Make `value' the new cursor of the widget
 		require
 			exists: not destroyed
-			valid_cursor: cur /= Void
 		do
 			implementation.set_cursor (cur)
 		end

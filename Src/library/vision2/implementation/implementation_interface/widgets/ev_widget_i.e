@@ -240,7 +240,6 @@ feature -- Element change
 			-- Make `value' the new cursor of the widget
 		require
 			exists: not destroyed
-			valid_cursor: is_valid (cur)
 		deferred
 		end
 

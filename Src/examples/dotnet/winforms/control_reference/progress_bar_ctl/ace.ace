@@ -7,7 +7,6 @@ root
 default
 	assertion (no)
 	msil_generation (yes)
-	arguments (" ")
 	disabled_debug (yes)
 	debug (no)
 	line_generation (no)
@@ -15,14 +14,14 @@ default
 	cls_compliant (yes)
 	dotnet_naming_convention (yes)
 	msil_generation_type ("exe")
-	msil_culture ("n/a")
 	msil_assembly_compatibility ("None")
 	check_vape (yes)
-	console_application (yes)
+	console_application (no)
 
 
 cluster
 	root_cluster:		"$ISE_EIFFEL\examples\dotnet\winforms\control_reference\progress_bar_ctl"
+
 
 	all base:		"$ISE_EIFFEL\library\base"
 		exclude
@@ -31,32 +30,32 @@ cluster
 
 	all base_net:		"$ISE_EIFFEL\library.net\base"
 
-
 assembly
-	mscorlib:   "mscorlib",   "1.0.3300.0", "neutral", "b77a5c561934e089"
+	mscorlib:	"mscorlib","1.0.3300.0","neutral","b77a5c561934e089"
 
-	system_:    "System",     "1.0.3300.0", "neutral", "b77a5c561934e089"
-				prefix
-							"SYSTEM_DLL_"
-				end
+	system_:	"System","1.0.3300.0","neutral","b77a5c561934e089"
+		prefix
+			SYSTEM_DLL_
+		end
 
-	system_xml: "System.Xml", "1.0.3300.0", "neutral", "b77a5c561934e089"
-				prefix
-						   "XML_"
-				end
+	system_xml:	"System.Xml","1.0.3300.0","neutral","b77a5c561934e089"
+		prefix
+			XML_
+		end
 
-	system_drawing: "System.Drawing","1.0.3300.0","neutral","b03f5f7f11d50a3a"
-				prefix
-							"DRAWING_"
-				end
+	system_drawing:	"System.Drawing","1.0.3300.0","neutral","b03f5f7f11d50a3a"
+		prefix
+			DRAWING_
+		end
 
-	accessibility:     "Accessibility","1.0.3300.0","neutral","b03f5f7f11d50a3a"
+	accessibility:	"Accessibility","1.0.3300.0","neutral","b03f5f7f11d50a3a"
 
-	system_runtime_serialization_formatters_soap:            "System.Runtime.Serialization.Formatters.Soap","1.0.3300.0","neutral","b03f5f7f11d50a3a"
+	system_runtime_serialization_formatters_soap:	"System.Runtime.Serialization.Formatters.Soap","1.0.3300.0","neutral","b03f5f7f11d50a3a"
 
-	system_windows_forms: "System.Windows.Forms", "1.0.3300.0", "neutral", "b77a5c561934e089"
-				prefix
-							"WINFORMS_"
-				end
+	system_windows_forms:	"System.Windows.Forms","1.0.3300.0","neutral","b77a5c561934e089"
+		prefix
+			WINFORMS_
+		end
+
 
 end

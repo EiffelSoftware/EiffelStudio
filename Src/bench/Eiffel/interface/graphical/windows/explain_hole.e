@@ -31,7 +31,7 @@ feature -- Properties
 
 	name: STRING is
 		do
-			Result := l_Explain
+			Result := l_New_explain
 		end;
 
     stone_type: INTEGER is

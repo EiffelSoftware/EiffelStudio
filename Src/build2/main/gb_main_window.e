@@ -67,6 +67,8 @@ feature {NONE} -- Implementation
 			file_menu: EV_MENU
 			about_menu: EV_MENU
 			settings_menu: EV_MENU
+			menu_separator: EV_MENU_SEPARATOR
+			file_exit: EV_MENU_ITEM
 		do
 			create a_menu_bar
 			set_menu_bar (a_menu_bar)
@@ -77,6 +79,11 @@ feature {NONE} -- Implementation
 			create about_menu.make_with_text (gb_about_menu_text)
 			a_menu_bar.extend (about_menu)
 			about_menu.select_actions.extend (agent show_about_dialog)
+			
+			create menu_separator
+			file_menu.extend (menu_separator)
+			create file_exit.make_with_text ("Exit")
+			file_menu.extend (file_exit)
 		end
 		
 	build_widget_structure is

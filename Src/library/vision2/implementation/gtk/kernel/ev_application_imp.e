@@ -93,7 +93,7 @@ feature {NONE} -- Initialization
 				internal_idle_actions.extend (idle_actions_agent)
 			end
 			
-			if gtk_mic_ver < 8 then
+			if gtk_maj_ver = 1 and then gtk_min_ver <= 2 and then gtk_mic_ver < 8 then
 				print ("This application is designed for Gtk 1.2.8 and above, your current version is 1.2." + gtk_mic_ver.out + " and may cause some unexpected behavior%N")
 			end
 			is_in_gtk_main := True

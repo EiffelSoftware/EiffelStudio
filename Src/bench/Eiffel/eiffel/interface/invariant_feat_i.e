@@ -3,16 +3,13 @@
 class INVARIANT_FEAT_I 
 
 inherit
-
 	DYN_PROC_I
 		redefine
 			melt, execution_unit,
 			can_be_inlined
-		end;
-	SHARED_ROUT_ID
-		rename
-			same_type as general_same_type
 		end
+
+	SHARED_ROUT_ID
 
 creation
 

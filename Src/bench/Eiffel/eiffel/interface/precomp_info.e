@@ -1,22 +1,23 @@
-class PRECOMP_INFO
+class
+	PRECOMP_INFO
 
 inherit
-
 	HASH_TABLE [INTEGER, STRING]
 		rename
 			make as ht_make
-		end;
+		end
+
 	SHARED_WORKBENCH
 		undefine
 			copy, is_equal
-		end;
+		end
+
 	SYSTEM_CONSTANTS
 		undefine
 			copy, is_equal
 		end
 
 creation
-
 	make
 
 feature {NONE} -- Initialization

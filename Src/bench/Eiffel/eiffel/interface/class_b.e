@@ -3,13 +3,14 @@
 class CLASS_B 
 
 inherit
-
 	CLASS_C
 		redefine
 			actual_type, valid_redeclaration, is_basic
 		end
-creation
 
+	SHARED_TYPES
+
+creation
 	make
 	
 feature 

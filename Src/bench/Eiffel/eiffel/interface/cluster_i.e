@@ -426,8 +426,7 @@ end;				-- Check if the path is valid
 				until
 					i > ex_l.count
 				loop
-					file_name := Environ.interpreted_string
-									(ex_l.i_th (i).file__name);
+					file_name := Environ.interpreted_string (ex_l.i_th (i).file__name);
 					!!class_path.make_from_string (path);
 					class_path.set_file_name (file_name);
 					!!class_file.make (class_path)

@@ -12,7 +12,7 @@ create
 feature {NONE} -- Implementation
 
 	make (dn, en: STRING;
-			is_inter, is_abstract, is_sealed, is_value_type: BOOLEAN;
+			is_inter, is_abstract, is_sealed, is_value_type, is_enumerator: BOOLEAN;
 			par: like parent;
 			inter: like interfaces) is
 			-- Initialize instance.
@@ -29,6 +29,7 @@ feature {NONE} -- Implementation
 			is_deferred := is_abstract
 			is_frozen := is_sealed
 			is_expanded := is_value_type
+			is_enum := is_enumerator
 			parent := par
 			interfaces := inter
 		ensure

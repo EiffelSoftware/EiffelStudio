@@ -208,6 +208,11 @@ feature -- Pngs
 			Result := build_classic_pixmap ("missing_pixmap_small")
 		end
 		
+	Icon_locked: ARRAY [EV_PIXMAP] is
+		once
+			Result := build_classic_pixmap ("locked")
+		end
+		
 	pixmap_by_name (a_name: STRING): EV_PIXMAP is
 			-- `Result' is a pixmap loaded from file matching
 			-- `a_name' in Build bitmaps location.

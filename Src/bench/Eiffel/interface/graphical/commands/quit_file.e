@@ -36,7 +36,7 @@ feature -- Callbacks
 	loose_changes (argument: ANY) is
 			-- The user has been warned that he will lose his stuff
 		do
-			window_manager.close (text_window.tool);
+			window_manager.close (tool);
 		end;
 
 feature -- Properties
@@ -56,9 +56,9 @@ feature {NONE} -- Implementation
 			else
 				-- First click on open
 				if text_window.changed then
-					warner (text_window).call (Current, l_File_changed)
+					warner (popup_parent).call (Current, l_File_changed)
 				else
-					window_manager.close (text_window.tool)
+					window_manager.close (tool)
 				end
 			end
 		end;

@@ -47,18 +47,18 @@ feature {NONE} -- Execution
 		do
 			system_name := clone (Eiffel_system.name);
 			if system_name = Void then
-				warner (text_window).gotcha_call ("You must finalize ypur project first.")
+				warner (popup_parent).gotcha_call ("You must finalize ypur project first.")
 			else
 				appl_name := Eiffel_system.application_name (False);
 				!! f.make (appl_name);
 				if not f.exists then
-					warner (text_window).gotcha_call ("The system doesn't exist.")
+					warner (popup_parent).gotcha_call ("The system doesn't exist.")
 				else
 					!! f_name.make_from_string (Final_generation_path);
 					f_name.set_file_name (Makefile_SH);
 					!! make_f.make (f_name);
 					if make_f.exists and then make_f.date > f.date then
-						warner (text_window). gotcha_call ("The Makefile.SH is more recent than the system.")
+						warner (popup_parent). gotcha_call ("The Makefile.SH is more recent than the system.")
 					else
 						!! mp.set_watch_cursor;
 						appl_name.extend (' ');

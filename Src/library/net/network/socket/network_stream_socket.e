@@ -44,6 +44,9 @@ feature -- Initialization
 			family := af_inet;
 			type := sock_stream;
 			make_socket
+			timeout := default_timeout
+		ensure
+			timeout_set_to_default: timeout = default_timeout
 		end;
 
 	make_client_by_port (a_peer_port: INTEGER; a_peer_host: STRING) is

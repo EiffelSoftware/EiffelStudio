@@ -41,12 +41,11 @@ feature {NONE} -- Initialization
 
 feature {NONE} -- Implementation
 
-	frozen window_procedure (hwnd: POINTER; msg, wparam,
-			lparam: INTEGER): INTEGER is
+	frozen window_procedure (hwnd: POINTER; msg: INTEGER; wparam, lparam: POINTER): POINTER is
 			-- Window messages dispatcher routine
 		local
 			window: WEL_WINDOW
-			returned_value: INTEGER
+			returned_value: POINTER
 			has_return_value: BOOLEAN
 		do
 			window := window_of_item (hwnd)
@@ -84,12 +83,11 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	frozen dialog_procedure (hwnd: POINTER; msg, wparam,
-			lparam: INTEGER): INTEGER is
+	frozen dialog_procedure (hwnd: POINTER; msg: INTEGER; wparam, lparam: POINTER): POINTER is
 			-- Dialog box messages dispatcher routine
 		local
 			window: WEL_WINDOW
-			last_result: INTEGER
+			last_result: POINTER
 		do
 			debug ("dlg_dispatcher")
 				io.print ("in dlg_proc ")
@@ -120,7 +118,7 @@ feature {NONE} -- Implementation
 					Result := window.process_message (hwnd, msg, wparam, lparam)
 					window.decrement_level
 				end
-				Result := 1
+				Result := to_lresult (1)
 			else
 				window := window_of_item (hwnd)
 				if window /= Void and window.exists then
@@ -130,9 +128,9 @@ feature {NONE} -- Implementation
 						Result := window.message_return_value
 					else
 						if not window.default_processing then
-							Result := 1
+							Result := to_lresult (1)
 						else
-							Result := 0
+							Result := to_lresult (0)
 						end
 					end
 					window.decrement_level
@@ -179,8 +177,7 @@ feature {NONE} -- Externals
 			"C [macro %"disptchr.h%"]"
 		end
 
-	cwin_def_window_proc (hwnd: POINTER; msg, wparam,
-			lparam: INTEGER): INTEGER is
+	cwin_def_window_proc (hwnd: POINTER; msg: INTEGER; wparam, lparam: POINTER): POINTER is
 			-- SDK DefWindowProc
 		external
 			"C [macro <windows.h>] (HWND, UINT, WPARAM, LPARAM): EIF_INTEGER"

@@ -19,8 +19,6 @@ inherit
 	EV_BOX_IMP
 		redefine
 			add_child,
-			child_width_changed,
-			child_height_changed,
 			child_minwidth_changed,
 			child_minheight_changed
 		end
@@ -33,15 +31,17 @@ feature {NONE} -- Basic operation
 	set_local_height (new_height: INTEGER) is
 			-- Set `new_height' to the box and all the children.
 		do
-			resize (width, minimum_height.max (new_height))
-			if not ev_children.empty then
-				from
-					ev_children.start
-				until
-					ev_children.after
-				loop
-					ev_children.item.parent_ask_resize(ev_children.item.child_cell.width, height)
-					ev_children.forth
+			if new_height /= height then
+				resize (width, minimum_height.max (new_height))
+				if not ev_children.empty then
+					from
+						ev_children.start
+					until
+						ev_children.after
+					loop
+						ev_children.item.parent_ask_resize(ev_children.item.child_cell.width, height)
+						ev_children.forth
+					end
 				end
 			end
 		end
@@ -59,143 +59,147 @@ feature {NONE} -- Basic operation
 			rate: INTEGER
 			mark: INTEGER
 		do
-			if already_displayed then
-				temp_width := minimum_width.max (new_width)
-				if not ev_children.empty then
+			if new_width /= width then
+				if already_displayed then
+					temp_width := minimum_width.max (new_width)
+					if not ev_children.empty then
+
+						-- Homogeneous state : only the visible children are
+						-- importante.
+						if is_homogeneous then
+							if childvisible_nb > 0 then
+								rate := (temp_width - width) // childvisible_nb
+								total_rest := (temp_width - width) \\ childvisible_nb
 	
-					-- Homogeneous state : only the visible children are
-					-- importante.
-					if is_homogeneous then
-						if childvisible_nb > 0 then
-							rate := (temp_width - width) // childvisible_nb
-							total_rest := (temp_width - width) \\ childvisible_nb
-	
-							-- A first loop to see who will have a rest.
-							-- The loop is different is the window grow or reduce.
-							if childvisible_nb /= ev_children.count then
-								if rate >= 0 then
-									from
-										ev_children.go_i_th (index)
-									until
-										ev_children.index = modulo(index - 1, ev_children.count) or
-										modulo(ev_children.index - index, ev_children.count) = total_rest
-									loop
-										if not ev_children.item.shown then
-											total_rest := total_rest + 1
+								-- A first loop to see who will have a rest.
+								-- The loop is different is the window grow or reduce.
+								if childvisible_nb /= ev_children.count then
+									if rate >= 0 then
+										from
+											ev_children.go_i_th (index)
+										until
+											ev_children.index = modulo(index - 1, ev_children.count) or
+											modulo(ev_children.index - index, ev_children.count) = total_rest
+										loop
+											if not ev_children.item.shown then
+												total_rest := total_rest + 1
+											end
+											if ev_children.islast then
+												ev_children.start
+											else
+												ev_children.forth
+											end
 										end
-										if ev_children.islast then
-											ev_children.start
-										else
-											ev_children.forth
+									else
+										from
+											ev_children.go_i_th (modulo (index - 1, ev_children.count))
+										until
+											ev_children.index = index or
+												modulo(ev_children.index - index, ev_children.count) > total_rest
+										loop
+											if not ev_children.item.shown then
+												total_rest := total_rest - 1
+											end
+											if ev_children.isfirst then
+												ev_children.finish
+											else
+												ev_children.back
+											end
 										end
 									end
-								else
-									from
-										ev_children.go_i_th (modulo (index - 1, ev_children.count))
-									until
-										ev_children.index = index or
-											modulo(ev_children.index - index, ev_children.count) > total_rest
-									loop
-										if not ev_children.item.shown then
-											total_rest := total_rest - 1
+								end
+		
+								-- Then, we ask the children to move and resize.
+								from
+									mark := 0
+									ev_children.start
+								until
+									ev_children.after
+								loop
+									if ev_children.item.shown or else not shown then
+										ev_children.item.set_move_and_size (mark, 0, ev_children.item.child_cell.width + rate + rest (total_rest), height)
+										mark := mark + spacing + ev_children.item.child_cell.width
+									end
+									ev_children.forth
+								end
+								mark := mark - spacing
+							end
+		
+						-- Non homogeneous state : we have to be carefull to the non
+						-- expanded children too.
+						else
+							if childexpand_nb > 0 then
+								rate := (temp_width - width) // childexpand_nb
+								total_rest := (temp_width - width) \\ childexpand_nb
+			
+								-- A first loop to see who will have a rest.
+								-- The loop is different is the window grow or reduce.
+								if childvisible_nb /= ev_children.count or childexpand_nb /= ev_children.count then
+									if rate >= 0 then
+										from
+											ev_children.go_i_th (index)
+										until
+											ev_children.index = modulo (index - 1, ev_children.count) or
+												modulo(ev_children.index - index, ev_children.count) = total_rest
+										loop
+											if not ev_children.item.shown or not ev_children.item.expandable then
+												total_rest := total_rest + 1
+											end
+											if ev_children.islast then
+												ev_children.start
+											else
+												ev_children.forth
+											end
 										end
-										if ev_children.isfirst then
-											ev_children.finish
-										else
-											ev_children.back
+									else
+										from
+											ev_children.go_i_th (modulo (index - 1, ev_children.count))
+										until
+											ev_children.index = index or
+												modulo(ev_children.index - index, ev_children.count) > total_rest
+										loop
+											if not ev_children.item.shown or not ev_children.item.expandable then
+												total_rest := total_rest - 1
+											end
+											if ev_children.isfirst then
+												ev_children.finish
+											else
+												ev_children.back
+											end
 										end
 									end
 								end
 							end
-	
+		
 							-- Then, we ask the children to move and resize.
+							-- Be carefull to the expanded child.
 							from
-								mark := spacing // 2
+								mark := 0
 								ev_children.start
 							until
 								ev_children.after
 							loop
 								if ev_children.item.shown or else not shown then
-									ev_children.item.set_move_and_size (mark, 0, ev_children.item.child_cell.width + rate + rest (total_rest), height)
+									if ev_children.item.expandable then
+										ev_children.item.set_move_and_size (mark, 0, ev_children.item.child_cell.width + rate + rest (total_rest), height)
+									else
+										ev_children.item.set_move_and_size (mark, 0, ev_children.item.child_cell.width, height)
+									end
 									mark := mark + spacing + ev_children.item.child_cell.width
 								end
 								ev_children.forth
 							end
-						end
+							mark := mark - spacing
 	
-					-- Non homogeneous state : we have to be carefull to the non
-					-- expanded children too.
-					else
-						if childexpand_nb > 0 then
-							rate := (temp_width - width) // childexpand_nb
-							total_rest := (temp_width - width) \\ childexpand_nb
-		
-							-- A first loop to see who will have a rest.
-							-- The loop is different is the window grow or reduce.
-							if childvisible_nb /= ev_children.count or childexpand_nb /= ev_children.count then
-								if rate >= 0 then
-									from
-										ev_children.go_i_th (index)
-									until
-										ev_children.index = modulo (index - 1, ev_children.count) or
-											modulo(ev_children.index - index, ev_children.count) = total_rest
-									loop
-										if not ev_children.item.shown or not ev_children.item.expandable then
-											total_rest := total_rest + 1
-										end
-										if ev_children.islast then
-											ev_children.start
-										else
-											ev_children.forth
-										end
-									end
-								else
-									from
-										ev_children.go_i_th (modulo (index - 1, ev_children.count))
-									until
-										ev_children.index = index or
-											modulo(ev_children.index - index, ev_children.count) > total_rest
-									loop
-										if not ev_children.item.shown or not ev_children.item.expandable then
-											total_rest := total_rest - 1
-										end
-										if ev_children.isfirst then
-											ev_children.finish
-										else
-											ev_children.back
-										end
-									end
-								end
-							end
 						end
-	
-						-- Then, we ask the children to move and resize.
-						-- Be carefull to the expanded child.
-						from
-							mark := spacing // 2
-							ev_children.start
-						until
-							ev_children.after
-						loop
-							if ev_children.item.shown or else not shown then
-								if ev_children.item.expandable then
-									ev_children.item.set_move_and_size (mark, 0, ev_children.item.child_cell.width + rate + rest (total_rest), height)
-								else
-									ev_children.item.set_move_and_size (mark, 0, ev_children.item.child_cell.width, height)
-									end
-								mark := mark + spacing + ev_children.item.child_cell.width
-							end
-							ev_children.forth
-						end
-		
+
+					index := modulo (index + total_rest, ev_children.count)
 					end
-	
-				index := modulo (index + total_rest, ev_children.count)
-				end
-	
-				-- At the end, we resize the window
-				resize (mark, height)
-			end		
+
+					-- At the end, we resize the window
+					resize (mark, height)
+				end		
+			end
 		end
 
 	initialize_length_at_minimum is
@@ -215,7 +219,7 @@ feature {NONE} -- Basic operation
 				from
 					childvisible_nb := 0
 					ev_children.start
-					mark := spacing // 2
+					mark := 0
 				until
 					ev_children.after
 				loop
@@ -226,6 +230,7 @@ feature {NONE} -- Basic operation
 					end
 					ev_children.forth
 				end
+				mark := mark - spacing
 
 				-- In case it is not homegeneous, we must count the number of 
 				-- expand children to distribute the extra-space later.
@@ -233,7 +238,7 @@ feature {NONE} -- Basic operation
 				from
 					childexpand_nb := 0
 					ev_children.start
-					mark := spacing // 2
+					mark := 0
 				until
 					ev_children.after
 				loop
@@ -246,6 +251,7 @@ feature {NONE} -- Basic operation
 					end
 					ev_children.forth
 				end
+				mark := mark - spacing
 			end
 
 				-- Then, we set the minimum size of the widget and we resize it.
@@ -260,7 +266,7 @@ feature {NONE} -- Basic operation
 		do
 			old_width := width
 			initialize_length_at_minimum
-			if old_width >= minimum_width and shown then
+			if old_width >= minimum_width and already_displayed then
 				set_local_width (old_width)
 			else
 				set_width (minimum_width)
@@ -286,56 +292,29 @@ feature {NONE} -- Basic operation
 			end
 		end
 
-	child_height_changed (value: INTEGER; the_child: EV_WIDGET_IMP) is
-			-- Resize and replace all its children according 
-			-- to the resize of one of them.
+	child_minwidth_changed (value: INTEGER; the_child: EV_WIDGET_IMP) is
+			-- Change the current minimum_height because the child did.
 		do
-			if already_displayed then
-				if value > minimum_height then
-					set_height (value)
+			if value > child.minimum_width then
+				child := the_child
+				if shown and then (value > the_child.child_cell.width or not is_homogeneous) then
+					initialize_display
 				else
-					set_height (minimum_height)
-				end
-			end
-		end
-
-	child_width_changed (value:INTEGER; the_child: EV_WIDGET_IMP) is
-			-- Resize and replace all its children according
-			-- to the resize of one of them.
-		do
-			if already_displayed then
-				if value > child.minimum_width then
-					set_width (value * ev_children.count + total_spacing)
-				else
-					initialize_length_at_minimum
+					if is_homogeneous then
+						set_minimum_width (child.minimum_width * ev_children.count + total_spacing)
+					else
+						set_minimum_width (add_children_minimum_width + total_spacing)
+					end
 				end
 			end
 		end
 
 	child_minheight_changed (value: INTEGER; the_child: EV_WIDGET_IMP) is
-			-- Change the current minimum height because the child did.
-			-- We can't call set minimimum_height because th widget
-			-- musn't be resized.
-		do
-			if value > minimum_height then
-					set_minimum_height (value)
-			end
-		end
-
-	child_minwidth_changed (value: INTEGER; the_child: EV_WIDGET_IMP) is
-			-- Change the current minimum_height because the child did.
-		do
-			if is_homogeneous then
-				if value > child.minimum_width then
-					set_minimum_width (value * ev_children.count + total_spacing)
-				end
-			else
-				set_minimum_width (add_children_minimum_width + total_spacing)
-			end
-			if value > child.minimum_width then
-				child := the_child
-			end
-		end
+   			-- Change the minimum width of the container because
+   			-- the child changed his own minimum width.
+   		do
+ 			set_minimum_height (value.max (minimum_height))
+ 		end
 
 	add_child (child_imp: EV_WIDGET_IMP) is
 			-- Add a child to the box, it also resize the box
@@ -344,10 +323,6 @@ feature {NONE} -- Basic operation
 				child := child_imp
 			end
 			ev_children.extend (child_imp)
-			if already_displayed then
-				initialize_length_at_minimum
-				child_cell.set_width (minimum_width)
-			end
 	  	end
 	
 end -- class EV_VERTICAL_BOX_IMP

@@ -421,7 +421,7 @@ feature {COMPILER_EXPORTER} -- Lace compilation
 			l_compiled_assembly, l_old_assembly: ASSEMBLY_I
 			l_precomp_assembly: ASSEMBLY_I
 			l_cluster_of_name, l_cluster_of_path: CLUSTER_I
-			l_new_assemblies: ARRAYED_LIST [ASSEMBLY_I]
+			l_new_assemblies, l_local_assemblies: ARRAYED_LIST [ASSEMBLY_I]
 			vdcn: VDCN
 			vd28: VD28
 		do
@@ -432,6 +432,7 @@ feature {COMPILER_EXPORTER} -- Lace compilation
 				from
 					assemblies.start
 					create l_new_assemblies.make (assemblies.count)
+					create l_local_assemblies.make (assemblies.count)
 				until
 					assemblies.after
 				loop
@@ -476,7 +477,11 @@ feature {COMPILER_EXPORTER} -- Lace compilation
 						Error_handler.raise_error
 					elseif l_old_assembly = Void then
 							-- Add it to top cluster list of system and to universe.
-						l_new_assemblies.extend (l_compiled_assembly)
+						if l_compiled_assembly.is_local then
+							l_local_assemblies.extend (l_compiled_assembly)
+						else
+							l_new_assemblies.extend (l_compiled_assembly)
+						end
 						Eiffel_system.add_sub_cluster (l_compiled_assembly)
 						Universe.insert_cluster (l_compiled_assembly)
 					else
@@ -501,6 +506,14 @@ feature {COMPILER_EXPORTER} -- Lace compilation
 				loop
 					l_new_assemblies.item.import_data
 					l_new_assemblies.forth
+				end
+
+					-- Now consumes local assemblies.
+				if not l_local_assemblies.is_empty then
+					l_compiled_assembly := l_local_assemblies.first
+					l_local_assemblies.start
+					l_local_assemblies.remove
+					l_compiled_assembly.consume_assemblies (l_local_assemblies)
 				end
 			end
 		end

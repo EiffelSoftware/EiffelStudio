@@ -20,7 +20,7 @@ feature -- Status report
 			path, path_name: WEL_STRING
 			s: STRING
 		once
-			if not retried then
+			if not retried and is_dotnet_installed then
 					-- We try to call `get_error'. If the DLL exists, it 
 					-- will work, if it does not exist it will not reach
 					-- `Result := True', thus `Result' will be False.

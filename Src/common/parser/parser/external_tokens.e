@@ -1,13 +1,14 @@
 indexing
 
 	description: "Parser token codes"
-	generator: "geyacc version 3.1"
+	generator: "geyacc version 3.3"
 
 class EXTERNAL_TOKENS
 
 inherit
 
 	YY_PARSER_TOKENS
+
 
 feature -- Access
 
@@ -147,4 +148,4 @@ feature -- Token codes
 	TE_ID: INTEGER is 296
 	TE_INCLUDE_ID: INTEGER is 297
 
-end -- class EXTERNAL_TOKENS
+end

@@ -837,14 +837,13 @@ feature -- Basic operation
 			-- to `deleted_objects'.
 		require
 			an_object_not_void: an_object /= Void
-			an_object_not_deleted: objects.has (an_object.id)
 			-- All children objects contained in `objects'.
 		local
 			all_children_recursive: ARRAYED_LIST [GB_OBJECT]
 			current_object: GB_OBJECT
 		do
 			objects.remove (an_object.id)
-			deleted_objects.extend (an_object, an_object.id)
+			deleted_objects.put (an_object, an_object.id)
 			create all_children_recursive.make (40)
 			an_object.all_children_recursive (all_children_recursive)
 			from
@@ -853,12 +852,10 @@ feature -- Basic operation
 				all_children_recursive.off
 			loop
 				current_object := all_children_recursive.item
-				check
-					object_exists: objects.has (current_object.id)
-					object_not_deleted: not deleted_objects.has (current_object.id)
+				if not deleted_objects.has (current_object.id) then
+					objects.remove (current_object.id)
+					deleted_objects.extend (current_object, current_object.id)
 				end
-				objects.remove (current_object.id)
-				deleted_objects.extend (current_object, current_object.id)
 				all_children_recursive.forth
 			end
 		ensure
@@ -877,7 +874,7 @@ feature -- Basic operation
 			current_object: GB_OBJECT
 		do
 			deleted_objects.remove (an_object.id)
-			objects.extend (an_object, an_object.id)
+			objects.put (an_object, an_object.id)
 			
 			create all_children_recursive.make (40)
 			an_object.all_children_recursive (all_children_recursive)
@@ -887,12 +884,10 @@ feature -- Basic operation
 				all_children_recursive.off
 			loop
 				current_object := all_children_recursive.item
-				check
-					object_not_exists: not objects.has (current_object.id)
-					object_deleted: deleted_objects.has (current_object.id)
+				if not objects.has (current_object.id) then
+					deleted_objects.remove (current_object.id)
+					objects.extend (current_object, current_object.id)
 				end
-				deleted_objects.remove (current_object.id)
-				objects.extend (current_object, current_object.id)
 				all_children_recursive.forth
 			end
 		ensure

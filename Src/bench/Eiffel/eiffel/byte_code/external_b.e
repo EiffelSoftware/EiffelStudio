@@ -193,96 +193,16 @@ feature -- IL code generation
 			end
 		end
 
+	generate_il_creation is
+			-- Generate byte code for call to an external creation feature.
+		do
+			internal_generate_il_call (False, True)
+		end
+
 	generate_il_call (invariant_checked: BOOLEAN) is
 			-- Generate byte code for call to an external feature.
-		local
-			cl_type: CL_TYPE_I
-			il_ext: IL_EXTENSION_I
-			real_metamorphose: BOOLEAN
 		do
-			if not extension.is_il then
-					-- Generate call to C external.
-				generate_il_c_call (invariant_checked)
-			else
-				il_ext ?= extension
-					-- Type of object on which we are performing call to Current.
-				cl_type ?= context_type
-
-				check
-					il_ext_not_void: il_ext /= Void
-					cl_type_not_void: cl_type /= Void
-				end
-
-				if cl_type.is_expanded then
-						-- Current type is expanded. We need to find out if
-						-- we need to generate a box operation, meaning that
-						-- the feature is inherited from a non-expanded class.
-					real_metamorphose := need_real_metamorphose (cl_type)
-				end
-
-				if is_first and then need_current (il_ext.type) then
-						-- First call in dot expression, we need to generate Current
-						-- only when we do not call a static feature.
-					if cl_type.is_reference then
-							-- Normal call, we simply push current object.
-						il_generator.generate_current
-					else
-						if real_metamorphose then
-								-- Feature is written in an inherited class of current
-								-- expanded class. We need to box.
-							il_generator.generate_metamorphose (cl_type)
-						end
-					end
-				elseif cl_type.is_expanded then
-						-- No need to do anything special in case of a call to
-						-- a constructor. The generation of `parent.target' already
-						-- did any special transformation to perfom call.
-					if il_ext.type /= creator_type then
-						if parent.target.is_predefined then
-								-- For same reason we don't do anything for a call to
-								-- a constructor, when `parent.target' is predefined
-								-- any special transformation have already been done.
-							if real_metamorphose then
-									-- Feature is written in an inherited class of current
-									-- expanded class. We need to box.
-								il_generator.generate_metamorphose (cl_type)
-							end
-						else
-								-- In all other cases we will generate the metamorphose.
-							if written_in = cl_type.class_id then
-								generate_il_metamorphose (cl_type, cl_type, real_metamorphose)
-							else							
-								generate_il_metamorphose (cl_type, Void, real_metamorphose)
-							end
-						end
-					end
-				end
-				
-				if parameters /= Void then
-						-- Generate parameters if any.
-					parameters.generate_il
-				end
-
-				if context.il_external_creation or else il_ext.type /= creator_type then
-						-- We are not performing a creation call, neither a call
-						-- to a constructor.
-					if is_static_call or else precursor_type /= Void then
-							-- A call to precursor or a static call is never polymorphic.
-						il_ext.generate_call (False)
-					else
-							-- Standard call to an external feature.
-							-- Call will be polymorphic if it target of call is a reference
-							-- or if target has been boxed, or if type of external
-							-- forces a static binding (eg static features).
-						il_ext.generate_call (cl_type.is_reference or else real_metamorphose)
-					end
-				else
-						-- Current external is a creation, we perform a slightly different
-						-- call to constructor, but basically it is very close to `generate_call'
-						-- but doing a static binding.
-					il_ext.generate_creation_call
-				end
-			end
+			internal_generate_il_call (invariant_checked, False)
 		end
 
 	generate_il_c_call (inv_checked: BOOLEAN) is
@@ -404,6 +324,102 @@ feature -- IL code generation
 						il_generator.generate_invariant_checking (cl_type)
 						il_generator.generate_local (local_number)
 					end
+				end
+			end
+		end
+
+feature {NONE} -- Implementation
+
+	internal_generate_il_call (invariant_checked, is_creation: BOOLEAN) is
+			-- Generate byte code for call to an external feature.
+		require
+			il_generation: system.il_generation
+		local
+			cl_type: CL_TYPE_I
+			il_ext: IL_EXTENSION_I
+			real_metamorphose: BOOLEAN
+		do
+			if not extension.is_il then
+					-- Generate call to C external.
+				generate_il_c_call (invariant_checked)
+			else
+				il_ext ?= extension
+					-- Type of object on which we are performing call to Current.
+				cl_type ?= context_type
+
+				check
+					il_ext_not_void: il_ext /= Void
+					cl_type_not_void: cl_type /= Void
+				end
+
+				if cl_type.is_expanded then
+						-- Current type is expanded. We need to find out if
+						-- we need to generate a box operation, meaning that
+						-- the feature is inherited from a non-expanded class.
+					real_metamorphose := need_real_metamorphose (cl_type)
+				end
+
+				if is_first and then need_current (il_ext.type) then
+						-- First call in dot expression, we need to generate Current
+						-- only when we do not call a static feature.
+					if cl_type.is_reference then
+							-- Normal call, we simply push current object.
+						il_generator.generate_current
+					else
+						if real_metamorphose then
+								-- Feature is written in an inherited class of current
+								-- expanded class. We need to box.
+							il_generator.generate_metamorphose (cl_type)
+						end
+					end
+				elseif cl_type.is_expanded then
+						-- No need to do anything special in case of a call to
+						-- a constructor. The generation of `parent.target' already
+						-- did any special transformation to perfom call.
+					if il_ext.type /= creator_type then
+						if parent.target.is_predefined then
+								-- For same reason we don't do anything for a call to
+								-- a constructor, when `parent.target' is predefined
+								-- any special transformation have already been done.
+							if real_metamorphose then
+									-- Feature is written in an inherited class of current
+									-- expanded class. We need to box.
+								il_generator.generate_metamorphose (cl_type)
+							end
+						else
+								-- In all other cases we will generate the metamorphose.
+							if written_in = cl_type.class_id then
+								generate_il_metamorphose (cl_type, cl_type, real_metamorphose)
+							else							
+								generate_il_metamorphose (cl_type, Void, real_metamorphose)
+							end
+						end
+					end
+				end
+				
+				if parameters /= Void then
+						-- Generate parameters if any.
+					parameters.generate_il
+				end
+
+				if is_creation or else il_ext.type /= creator_type then
+						-- We are not performing a creation call, neither a call
+						-- to a constructor.
+					if is_static_call or else precursor_type /= Void then
+							-- A call to precursor or a static call is never polymorphic.
+						il_ext.generate_call (False)
+					else
+							-- Standard call to an external feature.
+							-- Call will be polymorphic if it target of call is a reference
+							-- or if target has been boxed, or if type of external
+							-- forces a static binding (eg static features).
+						il_ext.generate_call (cl_type.is_reference or else real_metamorphose)
+					end
+				else
+						-- Current external is a creation, we perform a slightly different
+						-- call to constructor, but basically it is very close to `generate_call'
+						-- but doing a static binding.
+					il_ext.generate_creation_call
 				end
 			end
 		end

@@ -4,7 +4,8 @@ inherit
 
 	VALUE_I
 		redefine
-			is_string, append_clickable_signature
+			is_string, append_clickable_signature,
+			string_value
 		end;
 	SHARED_WORKBENCH;
 	CHARACTER_ROUTINES
@@ -70,6 +71,11 @@ feature
 			a_clickable.put_char ('"');
 			a_clickable.put_string (eiffel_string (str_val));
 			a_clickable.put_char ('"');
+		end;
+
+	string_value: STRING is
+		do
+			Result := eiffel_string (str_val)
 		end
 
 end

@@ -34,32 +34,26 @@ EIF_INTEGER unix_address_size()
 	return (EIF_INTEGER) sizeof(struct sockaddr_un);
 }
 
-void set_unix_family(add, family)
+void set_unix_family(EIF_POINTER add, EIF_INTEGER family)
 	/*x set the unix domain socket family (?!) */
-EIF_POINTER add;
-EIF_INTEGER family;
 {
 	((struct sockaddr_un *) add)->sun_family = (u_short) family;
 }
 
-EIF_INTEGER get_unix_family(add)
+EIF_INTEGER get_unix_family(EIF_POINTER add)
 	/*x get the unix domain socket family (?!) */
-EIF_POINTER add;
 {
 	return (EIF_INTEGER) ((struct sockaddr_un *) add)->sun_family;
 }
 
-void set_unix_sock_path(add, path)
+void set_unix_sock_path(EIF_POINTER add, EIF_POINTER path)
 	/*x set the unix domain socket path name */
-EIF_POINTER add;
-EIF_POINTER path;
 {
 	strncpy(((struct sockaddr_un *)add)->sun_path, (char *) path, strlen((char *) path));
 }
 
-EIF_POINTER get_unix_sock_path(add)
+EIF_POINTER get_unix_sock_path(EIF_POINTER add)
 	/*x get the unix domain socket path name */
-EIF_POINTER add;
 {
 	return (EIF_POINTER) ((struct sockaddr_un *)add)->sun_path;
 }

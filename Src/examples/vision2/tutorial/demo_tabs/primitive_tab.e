@@ -27,9 +27,10 @@ feature -- Initialization
 			f1: EV_LABEL
 		do
 			{ANY_TAB} Precursor (par)
-		
-			-- Creates the objects and their commands
-			create f1.make_with_text(Current,"EV_PRIMITIVE is a deferred class and therefore, there has no features that can be modified.")
+				-- Creates the objects and their commands
+
+			create f1.make_with_text(Current,"EV_PRIMITIVE is a deferred class and therefore has no features that can be modified.")
+			set_parent(par)
 		end
 
 feature -- Access

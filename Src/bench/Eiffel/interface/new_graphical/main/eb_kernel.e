@@ -61,7 +61,6 @@ feature {NONE} -- Initialization
 		local
 			compiler: ES
 			eifgen_init: INIT_SERVERS
-			memory: MEMORY
 			new_resources: TTY_RESOURCES
 			pref_strs: RESOURCES_STRING_CONSTANTS
 			fn: FILE_NAME
@@ -102,11 +101,6 @@ feature {NONE} -- Initialization
 				-- Initialization of compiler resources.
 			create new_resources.initialize
 			if not new_resources.error_occurred then
-				create memory
-				memory.set_collection_period (
-						Configure_resources.get_integer (r_collection_period,
-								memory.collection_period))
-
 					-- Read the resource files
 				if argument_count > 0 and then
 					(argument (1).is_equal ("-bench") or

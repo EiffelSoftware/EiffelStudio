@@ -200,61 +200,62 @@ feature {NONE} -- C code generation
 				a_class := l_values.item (i)
 				if a_class /= Void then
 					l_is_generic := a_class.is_generic
-					if for_expanded then
-						buffer.putstring ("static int32 exp_patterns")
-					else
-						buffer.putstring ("static int32 patterns")
-					end
-					buffer.putint (a_class.class_id)
-					buffer.putstring (" [] = {%N")
-					from
-						l_types := a_class.types
-						l_types.start
-					until
-						l_types.after
-					loop
-						if
-							(for_expanded and l_types.item.is_expanded) or
-							(not for_expanded and not l_types.item.is_expanded)
-						then
-							if l_is_generic then
-								gen_type ?= l_types.item.type
-								check
-									gen_type_not_void: gen_type /= Void
+					if l_is_generic then
+						if for_expanded then
+							buffer.putstring ("static int32 exp_patterns")
+						else
+							buffer.putstring ("static int32 patterns")
+						end
+						buffer.putint (a_class.class_id)
+						buffer.putstring (" [] = {%N")
+						from
+							l_types := a_class.types
+							l_types.start
+						until
+							l_types.after
+						loop
+							if
+								(for_expanded and l_types.item.is_expanded) or
+								(not for_expanded and not l_types.item.is_expanded)
+							then
+								if l_is_generic then
+									gen_type ?= l_types.item.type
+									check
+										gen_type_not_void: gen_type /= Void
+									end
+									gen_type.meta_generic.generate_cecil_values (buffer)
+								else
+									l_types.item.type.generate_cecil_value (buffer)
+									buffer.putstring (",%N")
 								end
-								gen_type.meta_generic.generate_cecil_values (buffer)
-							else
-								l_types.item.type.generate_cecil_value (buffer)
+							end
+							l_types.forth
+						end
+						buffer.putstring ("SK_INVALID%N};%N%N")
+						
+						if for_expanded then
+							buffer.putstring ("static int16 exp_dyn_types")
+						else
+							buffer.putstring ("static int16 dyn_types")
+						end
+						buffer.putint (a_class.class_id)
+						buffer.putstring (" [] = {%N")
+						from
+							l_types.start
+						until
+							l_types.after
+						loop
+							if
+								(for_expanded and l_types.item.is_expanded) or
+								(not for_expanded and not l_types.item.is_expanded)
+							then
+								buffer.putint (l_types.item.type_id - 1)
 								buffer.putstring (",%N")
 							end
+							l_types.forth
 						end
-						l_types.forth
+						buffer.putstring ("};%N%N")
 					end
-					buffer.putstring ("SK_INVALID%N};%N%N")
-					
-					if for_expanded then
-						buffer.putstring ("static int16 exp_dyn_types")
-					else
-						buffer.putstring ("static int16 dyn_types")
-					end
-					buffer.putint (a_class.class_id)
-					buffer.putstring (" [] = {%N")
-					from
-						l_types.start
-					until
-						l_types.after
-					loop
-						if
-							(for_expanded and l_types.item.is_expanded) or
-							(not for_expanded and not l_types.item.is_expanded)
-						then
-							buffer.putint (l_types.item.type_id - 1)
-							buffer.putstring (",%N")
-						end
-						l_types.forth
-					end
-					buffer.putstring ("};%N%N")
-
 				end
 				i := i + 1
 			end
@@ -272,24 +273,26 @@ feature {NONE} -- C code generation
 			loop
 				a_class := l_values.item (i)
 				if a_class = Void then
-					buffer.putstring ("{(int) 0, (int32 *) 0, (int16 *) 0}")
+					buffer.putstring ("{(int) 0, (int16) 0, NULL, NULL}")
 				else
 					buffer.putstring ("{(int) ")
 					if a_class.is_generic then
 						buffer.putint (a_class.generics.count)
+						if for_expanded then
+							buffer.putstring (", (int16) 0, exp_patterns")
+							buffer.putint (a_class.class_id)
+							buffer.putstring (", exp_dyn_types")
+							buffer.putint (a_class.class_id)
+						else
+							buffer.putstring (", (int16) 0, patterns")
+							buffer.putint (a_class.class_id)
+							buffer.putstring (", dyn_types")
+							buffer.putint (a_class.class_id)
+						end
 					else
-						buffer.putint (0)
-					end
-					if for_expanded then
-						buffer.putstring (", exp_patterns")
-						buffer.putint (a_class.class_id)
-						buffer.putstring (", exp_dyn_types")
-						buffer.putint (a_class.class_id)
-					else
-						buffer.putstring (", patterns")
-						buffer.putint (a_class.class_id)
-						buffer.putstring (", dyn_types")
-						buffer.putint (a_class.class_id)
+						buffer.putstring ("0, (int16) ")
+						buffer.putint (a_class.types.first.type_id - 1)
+						buffer.putstring (", NULL, NULL")
 					end
 					buffer.putchar ('}')
 				end

@@ -69,6 +69,12 @@ feature -- Basic Operations
 			ccom_finalize (initializer)
 		end
 
+	remove_file_locks is
+			-- Remove file locks
+		do
+			ccom_remove_file_locks (initializer)
+		end
+
 feature {NONE}  -- Implementation
 
 	delete_wrapper is
@@ -119,6 +125,12 @@ feature {NONE}  -- Externals
 			-- Eiffel Freeze command arguments
 		external
 			"C++ [ecom_eiffel_compiler::IEiffelCompiler_impl_proxy %"ecom_eiffel_compiler_IEiffelCompiler_impl_proxy_s.h%"](): EIF_REFERENCE"
+		end
+
+	ccom_remove_file_locks (cpp_obj: POINTER) is
+			-- Remove file locks
+		external
+			"C++ [ecom_eiffel_compiler::IEiffelCompiler_impl_proxy %"ecom_eiffel_compiler_IEiffelCompiler_impl_proxy_s.h%"]()"
 		end
 
 	ccom_delete_ieiffel_compiler_impl_proxy (a_pointer: POINTER) is

@@ -221,6 +221,23 @@ STDMETHODIMP ecom_eiffel_compiler::CEiffelCompiler::freeze_command_arguments(  /
 };
 /*----------------------------------------------------------------------------------------------------------------------*/
 
+STDMETHODIMP ecom_eiffel_compiler::CEiffelCompiler::remove_file_locks( void )
+
+/*-----------------------------------------------------------
+	Remove file locks
+-----------------------------------------------------------*/
+{
+	ECATCH;
+EIF_PROCEDURE eiffel_procedure;
+	eiffel_procedure = eif_procedure ("remove_file_locks", type_id);
+
+	(FUNCTION_CAST ( void, (EIF_REFERENCE))eiffel_procedure) (eif_access (eiffel_object));
+	
+	END_ECATCH;
+	return S_OK;
+};
+/*----------------------------------------------------------------------------------------------------------------------*/
+
 STDMETHODIMP ecom_eiffel_compiler::CEiffelCompiler::EnumConnectionPoints( /* [out] */ IEnumConnectionPoints ** ppEnum )
 
 /*-----------------------------------------------------------

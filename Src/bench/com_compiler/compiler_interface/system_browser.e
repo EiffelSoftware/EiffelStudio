@@ -111,9 +111,21 @@ feature -- Access
 		
 	cluster_count: INTEGER is
 			-- Number of top-level clusters in system.
+		local
+			list: LINKED_LIST [CLUSTER_I]
 		do
 			if Eiffel_project.initialized then
-				Result := system_clusters.count
+				list := Eiffel_universe.clusters
+				from
+					list.start
+				until
+					list.after
+				loop
+					if list.item.parent_cluster = Void then
+						Result := Result + 1
+					end
+					list.forth
+				end
 			end
 		end
 		

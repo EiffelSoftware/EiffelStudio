@@ -200,6 +200,23 @@ STDMETHODIMP ecom_eiffel_compiler::IEiffelCompiler_impl_stub::freeze_command_arg
 };
 /*----------------------------------------------------------------------------------------------------------------------*/
 
+STDMETHODIMP ecom_eiffel_compiler::IEiffelCompiler_impl_stub::remove_file_locks( void )
+
+/*-----------------------------------------------------------
+	Remove file locks
+-----------------------------------------------------------*/
+{
+	ECATCH;
+EIF_PROCEDURE eiffel_procedure;
+	eiffel_procedure = eif_procedure ("remove_file_locks", type_id);
+
+	(FUNCTION_CAST ( void, (EIF_REFERENCE))eiffel_procedure) (eif_access (eiffel_object));
+	
+	END_ECATCH;
+	return S_OK;
+};
+/*----------------------------------------------------------------------------------------------------------------------*/
+
 STDMETHODIMP_(ULONG) ecom_eiffel_compiler::IEiffelCompiler_impl_stub::Release()
 
 /*-----------------------------------------------------------

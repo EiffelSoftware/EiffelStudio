@@ -10,8 +10,8 @@ inherit
 		end;
 	ASSERT_TYPE;
 	SHARED_ARRAY_BYTE;
-	SHARED_SERVER
-
+	SHARED_SERVER;
+	SHARED_GENERATION_CONSTANTS
 
 creation
 
@@ -49,13 +49,8 @@ feature
 			Result := not generation_mode;
 		end;
 
-	current_type: CL_TYPE_I is
+	current_type: CL_TYPE_I;
 			-- Current class type in which byte code is processed
-		require
-			valid_type: class_type /= Void
-		do
-			Result := class_type.type
-		end;
 
 	class_type: CLASS_TYPE;
 			-- The class type which we are generating
@@ -134,12 +129,20 @@ feature
 	is_prec_first_block: BOOLEAN;
 			-- Is precondition in first block  
 
-	Current_register: CURRENT_B is
+	Current_register: REGISTRABLE is
 			-- An instance of Current register for local var index computation
-		once
-			!! Result;
+		do
+			Result := inlined_current_register
+			if Result = Void then
+				Result := Current_b
+			end
 		end;
-	
+
+	Current_b: CURRENT_BL is
+		once
+			!! Result
+		end
+
 	Result_register: RESULT_B is
 			-- An instace of Result register for local var index computation
 		local
@@ -202,11 +205,14 @@ feature
 	has_postcondition: BOOLEAN is
 			-- Do we have to generate any postcondition ?
 		do
-			Result := 	workbench_mode
+			Result :=	workbench_mode
 						or else
 						(	assertion_level.check_postcond
 							and
-							byte_code.postcondition /= Void
+							(	byte_code.postcondition /= Void
+								or else
+								inherited_assertion.has_postcondition
+							)
 						)
 		end;
 	
@@ -324,6 +330,15 @@ feature
 			good_argument: t /= Void;
 		do
 			class_type := t;
+			current_type := t.type
+		end;
+
+	set_current_type (t: CL_TYPE_I) is
+			-- Assign `t' to `current_type'
+		require
+			good_argument: t /= Void;
+		do
+			current_type := t
 		end;
 
 	add_non_gc_vars is
@@ -383,7 +398,7 @@ feature
 			-- local variable array
 		do
 			if not current_used then
-				set_local_index ("Current", Current_register);
+				set_local_index ("Current", Current_b);
 				current_used := true;
 			end;
 		end;
@@ -752,7 +767,7 @@ feature
 				until
 					i > j
 				loop
-					generated_file.putstring("char *xp");
+					generated_file.putstring ("char *xp");
 					generated_file.putint (i);
 					generated_file.putchar (';');
 					generated_file.new_line;
@@ -768,17 +783,17 @@ feature
 			inspect
 				ctype
 			when C_long then
-				generated_file.putstring("long ti");
+				generated_file.putstring ("long ti");
 			when C_ref then
-				generated_file.putstring("char *tp");
+				generated_file.putstring ("char *tp");
 			when C_float then
-				generated_file.putstring("float tf");
+				generated_file.putstring ("float tf");
 			when C_char then
-				generated_file.putstring("char tc");
+				generated_file.putstring ("char tc");
 			when C_double then
-				generated_file.putstring("double td");
+				generated_file.putstring ("double td");
 			when C_pointer then
-				generated_file.putstring ("char *ta");
+				generated_file.putstring ("fnptr ta");
 			end;
 			generated_file.putint (num);
 			generated_file.putchar (';');
@@ -817,7 +832,7 @@ feature
 					generated_file.putstring ("RTXI(");
 				end;
 				generated_file.putint (nb_refs);
-				generated_file.putstring (");");
+				generated_file.putstring (gc_rparan_comma);
 				generated_file.new_line;
 				from
 					hash_table := local_index_table;
@@ -844,16 +859,16 @@ feature
 						generated_file.putint (nb_exp);
 						generated_file.putstring ("] = RTOF(arg");
 						generated_file.putint (argument_b.position);
-						generated_file.putstring (");");
+						generated_file.putstring (gc_rparan_comma);
 						generated_file.new_line;
 						generated_file.putstring ("l[");
 						generated_file.putint (position);
 						generated_file.putstring ("] = RTEO(arg");
 						generated_file.putint (argument_b.position);
-						generated_file.putstring (");");
+						generated_file.putstring (gc_rparan_comma);
 						generated_file.new_line;
 						generated_file.exdent;
-						generated_file.putstring ("} else {");
+						generated_file.putstring (gc_lacc_else_r_acc);
 						generated_file.new_line;
 						generated_file.indent;
 						generated_file.putstring ("l[");
@@ -1033,5 +1048,15 @@ feature -- Debugger
 				end;
 			end;
 		end;
+
+feature -- Inlining
+
+	inlined_current_register: REGISTRABLE
+			-- pseudo Current register for inlined code
+
+	set_inlined_current_register (r: REGISTRABLE) is
+		do
+			inlined_current_register := r
+		end
 
 end

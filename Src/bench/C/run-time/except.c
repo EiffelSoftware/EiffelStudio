@@ -210,6 +210,12 @@ private int ex_tagc[] = {
 	EN_OSTK,		/* EX_OSTK */
 };
 
+#ifdef EIF_WINDOWS
+int save_exception_trace = 0;
+char *exception_trace_string = NULL;
+#endif
+
+
 /* Strings used as separator for Eiffel stack dumps */
 private char *retried =
 "===============================================================================";
@@ -979,11 +985,11 @@ public void ereturn()
 
 	if (rescue != (char *) 0)
 #ifdef __VMS
- #ifndef __ALPHA
+#ifndef __ALPHA
 		longjmp((int *)rescue, echval);/* Setjmp will return the exception code */
- #else
+#else
 		longjmp((__int64 *)rescue, echval);/* Setjmp will return the exception code */
- #endif
+#endif
 #else
 		longjmp(rescue, echval);	/* Setjmp will return the exception code */
 #endif
@@ -1441,6 +1447,16 @@ public void esfail()
 	if (!print_history_table)
 		return;
 
+#ifdef EIF_WIN32
+	exception_trace_string = malloc (32000);
+	if (exception_trace_string == NULL)
+		save_exception_trace = 0;
+	else
+		{
+		save_exception_trace = 1;
+		*exception_trace_string = '\0';
+		}
+#endif
 
 	/* Signals failure. If the out of memory flags are set, mention it */
 	print_err_msg(stderr, "\n%s: system execution failed.\n", ename);
@@ -1553,6 +1569,9 @@ char *msg;
 	echtg = msg;					/* Associated tag */
 	esfail();						/* Raise system failure and stack dump */
 	print_err_msg(stderr, "\n");	/* Skip one line */
+#ifdef EIF_WINDOWS
+	show_trace();
+#endif
 	dump_core();					/* Before dumping a core */
 	/* NOTREACHED */
 }
@@ -1601,6 +1620,9 @@ char *msg;
     echclass = 0;                   /* No current class */
 	esfail();						/* Raise system failure and stack dump */
 
+#ifdef EIF_WINDOWS
+	show_trace();
+#endif
 	reclaim();						/* Reclaim all the objects */
 	exit(1);						/* Abnormal termination */
 

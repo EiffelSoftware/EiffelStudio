@@ -1175,9 +1175,8 @@ void c_get_data(EIF_OBJ rdata_obj, EIF_OBJ pdata_obj, EIF_INTEGER count)
 void c_shutdown(EIF_INTEGER sock, EIF_INTEGER how)
 	/*x shut down a socket with `how' modality */
 {
-	if (shutdown((int) sock,(int) how) < 0)
-		eio();
-	}
+	shutdown((int) sock,(int) how);
+}
 
 
 

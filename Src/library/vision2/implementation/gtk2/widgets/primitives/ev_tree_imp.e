@@ -199,7 +199,7 @@ feature {NONE} -- Initialization
 		do
 			t := [a_x, a_y, a_button, a_x_tilt, a_y_tilt, a_pressure,
 				a_screen_x, a_screen_y]
-			
+
 			create a_property.make ("expander-size")
 			feature {EV_GTK_DEPENDENT_EXTERNALS}.gtk_widget_style_get_integer (tree_view, a_property.item, $a_expander_size)
 			create a_property.make ("horizontal-separator")
@@ -216,7 +216,7 @@ feature {NONE} -- Initialization
 			tree_item_imp := row_from_y_coord (a_y)
 
 			if a_type = feature {EV_GTK_EXTERNALS}.GDK_BUTTON_PRESS_ENUM then
-				if not is_transport_enabled and then pointer_button_press_actions_internal /= Void then
+				if pointer_button_press_actions_internal /= Void then
 					pointer_button_press_actions_internal.call (t)
 				end
 				if not avoid_item_events and then tree_item_imp /= Void and then tree_item_imp.pointer_button_press_actions_internal /= Void then
@@ -346,10 +346,10 @@ feature -- Implementation
 				button_release_not_connected: button_release_connection_id = 0
 			end
 			if button_press_connection_id > 0 then
-				feature {EV_GTK_DEPENDENT_EXTERNALS}.signal_disconnect (visual_widget, button_press_connection_id)
+				feature {EV_GTK_DEPENDENT_EXTERNALS}.signal_disconnect (event_widget, button_press_connection_id)
 			end
 			real_signal_connect (
-				visual_widget,
+				event_widget,
 				"button-press-event", 
 				agent (App_implementation.gtk_marshal).tree_start_transport_filter_intermediary (c_object, ?, ?, ?, ?, ?, ?, ?, ?, ?), 
 				App_implementation.default_translate)
@@ -422,7 +422,8 @@ feature -- Implementation
 				a_x, a_y, a_button,
 				a_x_tilt, a_y_tilt, a_pressure,
 				a_screen_x, a_screen_y)
-			end			
+			end
+			call_press_actions (interface, a_x, a_y, a_button, a_x_tilt, a_y_tilt, a_pressure, a_screen_x, a_screen_y)
 		end
 
 	pnd_row_imp: EV_TREE_NODE_IMP
@@ -514,10 +515,10 @@ feature -- Implementation
 			if a_button > 0 then
 				if pnd_row_imp /= Void and not is_destroyed then
 					if pnd_row_imp.mode_is_pick_and_drop then
-						signal_emit_stop (visual_widget, "button-press-event")
+						signal_emit_stop (event_widget, "button-press-event")
 					end
 				elseif mode_is_pick_and_drop and not is_destroyed then
-						signal_emit_stop (visual_widget, "button-press-event")
+						signal_emit_stop (event_widget, "button-press-event")
 				end				
 			end
 			

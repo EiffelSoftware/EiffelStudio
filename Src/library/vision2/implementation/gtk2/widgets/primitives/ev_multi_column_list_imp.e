@@ -206,7 +206,7 @@ feature {NONE} -- Implementation
 					-- This follows the Windows behavior of clearing selection if list is clicked on
 			end
 			if a_type = feature {EV_GTK_EXTERNALS}.gDK_BUTTON_PRESS_ENUM then
-				if not is_transport_enabled and then pointer_button_press_actions_internal /= Void then
+				if pointer_button_press_actions_internal /= Void then
 					pointer_button_press_actions_internal.call (t)
 				end
 				if
@@ -215,7 +215,7 @@ feature {NONE} -- Implementation
 				then
 					clicked_row.pointer_button_press_actions_internal.call (t)
 				end
-			elseif a_type = feature {EV_GTK_EXTERNALS}.gDK_2BUTTON_PRESS_ENUM then --and not is_transport_enabled then
+			elseif a_type = feature {EV_GTK_EXTERNALS}.gDK_2BUTTON_PRESS_ENUM then
 				if pointer_double_press_actions_internal /= Void then
 					pointer_double_press_actions_internal.call (t)
 				end
@@ -907,10 +907,10 @@ feature -- Implementation
 			if a_button > 0  then
 				if pnd_row_imp /= Void and not is_destroyed then
 					if pnd_row_imp.mode_is_pick_and_drop then
-						signal_emit_stop (visual_widget, "button-press-event")
+						signal_emit_stop (event_widget, "button-press-event")
 					end
 				elseif mode_is_pick_and_drop and not is_destroyed then
-						signal_emit_stop (visual_widget, "button-press-event")
+						signal_emit_stop (event_widget, "button-press-event")
 				end				
 			end
 

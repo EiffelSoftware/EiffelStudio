@@ -416,6 +416,88 @@ feature -- Color edit
 			end
 		end
 		
+feature -- Tree Edit
+
+	display_tree_type (an_assembly: CONSUMED_ASSEMBLY; a_dotnet_type_name: STRING) is
+			-- display type in a tree.
+		require
+			non_void_an_assembly: an_assembly /= Void
+			non_void_a_type_name: a_dotnet_type_name /= Void
+			not_empty_a_type_name: not a_dotnet_type_name.is_empty
+		local
+			tree_display: DISPLAY_TYPE_TREE
+		do
+			parent_window.notebook.select_item (parent_window.right_tree)
+
+			create tree_display.make (parent_window)
+
+			tree_display.print_type (an_assembly, a_dotnet_type_name)
+		end
+	
+	display_imediat_features (an_assembly: CONSUMED_ASSEMBLY; a_dotnet_type_name: STRING) is
+			-- display type in a tree.
+		require
+			non_void_an_assembly: an_assembly /= Void
+			non_void_a_type_name: a_dotnet_type_name /= Void
+			not_empty_a_type_name: not a_dotnet_type_name.is_empty
+		local
+			tree_display: DISPLAY_TYPE_TREE
+		do
+			parent_window.notebook.select_item (parent_window.right_tree)
+
+			create tree_display.make (parent_window)
+
+			tree_display.print_type_imediat_features (an_assembly, a_dotnet_type_name)
+		end
+
+	display_inherited_features (an_assembly: CONSUMED_ASSEMBLY; a_dotnet_type_name: STRING) is
+			-- display type in a tree.
+		require
+			non_void_an_assembly: an_assembly /= Void
+			non_void_a_type_name: a_dotnet_type_name /= Void
+			not_empty_a_type_name: not a_dotnet_type_name.is_empty
+		local
+			tree_display: DISPLAY_TYPE_TREE
+		do
+			parent_window.notebook.select_item (parent_window.right_tree)
+
+			create tree_display.make (parent_window)
+
+			tree_display.print_type_inherited_features (an_assembly, a_dotnet_type_name)
+		end
+
+	display_tree_constructors (an_assembly: CONSUMED_ASSEMBLY; a_dotnet_type_name: STRING) is
+			-- display type in a tree.
+		require
+			non_void_an_assembly: an_assembly /= Void
+			non_void_a_type_name: a_dotnet_type_name /= Void
+			not_empty_a_type_name: not a_dotnet_type_name.is_empty
+		local
+			tree_display: DISPLAY_TYPE_TREE
+		do
+			parent_window.notebook.select_item (parent_window.right_tree)
+
+			create tree_display.make (parent_window)
+
+			tree_display.print_constructors (an_assembly, a_dotnet_type_name)
+		end
+		
+	display_tree_all_features (an_assembly: CONSUMED_ASSEMBLY; a_dotnet_type_name: STRING) is
+			-- display type in a tree.
+		require
+			non_void_an_assembly: an_assembly /= Void
+			non_void_a_type_name: a_dotnet_type_name /= Void
+			not_empty_a_type_name: not a_dotnet_type_name.is_empty
+		local
+			tree_display: DISPLAY_TYPE_TREE
+		do
+			parent_window.notebook.select_item (parent_window.right_tree)
+
+			create tree_display.make (parent_window)
+
+			tree_display.print_all_features (an_assembly, a_dotnet_type_name)
+		end
+	
 invariant
 	non_void_parent_window: parent_window /= Void
 

@@ -74,10 +74,10 @@ feature {NONE} -- Implementation
 			--| FIXME VB To be checked by Sam.
 			--| ref comes from item list and not in widget list?
 			--| Is it necessary?
-			C.gtk_widget_ref (p)
+			C.gtk_object_ref (p)
 			C.gtk_container_remove (list_widget, p)
 			C.set_gtk_widget_struct_parent (p, NULL)
-			C.gtk_widget_unref (p)
+			C.gtk_object_unref (p)
 		end
 	
 --| FIXME Direct implementation of extend.

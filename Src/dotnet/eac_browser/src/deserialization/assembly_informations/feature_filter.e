@@ -71,19 +71,17 @@ feature
 		do
 			if not retried then
 				if current_tag.last.is_equal (See_str) then
-					check
-						a_local_part.is_equal (Cref_str)
-					end
 					l_name := a_value
-					l_name.keep_tail (l_name.count - 2)
+					if a_local_part.is_equal (Cref_str) then
+						l_name.keep_tail (l_name.count - 2)
+					end
 					current_comment.append (l_name)
 				elseif current_tag.last.is_equal (member_str) then
 					a_member.reset
-					check
-						a_local_part.is_equal (Name_str)
-					end
 					l_name := a_value
-					l_name.keep_tail (l_name.count - 2)
+					if a_local_part.is_equal (Name_str) then
+						l_name.keep_tail (l_name.count - 2)
+					end
 					a_member.set_name (l_name)
 				elseif current_tag.last.is_equal (Param_str) then
 					check

@@ -125,5 +125,23 @@ feature -- Externals
 		alias
 			"generating_type"
 		end
-	
+
+feature -- Exceptions
+
+	frozen last_exception: EXCEPTION is
+		external
+			"IL static_field signature :System.Exception use ISE.Runtime.RUN_TIME"
+		alias
+			"last_exception"
+		end
+
+feature -- Basic Operations
+
+	frozen raise (e: EXCEPTION) is
+		external
+			"IL static signature (System.Exception): System.Void use ISE.Runtime.RUN_TIME"
+		alias
+			"raise"
+		end
+
 end -- class ISE_RUNTIME

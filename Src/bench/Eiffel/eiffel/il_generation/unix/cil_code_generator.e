@@ -119,6 +119,34 @@ feature -- Access
 	once_generation: BOOLEAN
 			-- Are we currently generating a once feature?
 
+feature {IL_CODE_GENERATOR} -- Access
+
+	is_console_application: BOOLEAN
+			-- Is current a console application?
+			
+	is_dll: BOOLEAN
+			-- Is current generated as a DLL?
+
+	is_verifiable: BOOLEAN
+			-- Does code generation has to be verifiable?
+
+	is_debug_info_enabled: BOOLEAN
+			-- Are we generating debug information?
+			
+	is_cls_compliant: BOOLEAN
+			-- Does code generation generate CLS compliant code?
+			
+	any_type_id: INTEGER
+			-- Type id of ANY class.
+
+	local_count: INTEGER
+			-- Number of meaningful local variables.
+
+feature {NONE} -- Once per type definition
+
+	current_class_token: INTEGER
+			-- Token of current class being generated.
+
 feature -- Settings
 
 	set_current_class_type (cl_type: like current_class_type) is
@@ -631,7 +659,6 @@ feature -- Local variable info generation
 		require
 			valid_count: a_count >= 0
 		do
-			local_count := a_count
 		ensure
 			local_count_set: local_count = a_count
 		end
@@ -641,10 +668,6 @@ feature -- Local variable info generation
 		require
 			type_i_not_void: type_i /= Void
 		do
-			if not once_generation then
-				result_position := 0
-				local_types.extend (create {PAIR [TYPE_I, STRING]}.make (type_i, "Result"))
-			end
 		end
 
 	put_local_info (type_i: TYPE_I; name_id: INTEGER) is
@@ -652,8 +675,6 @@ feature -- Local variable info generation
 		require
 			type_i_not_void: type_i /= Void
 		do
-			local_types.extend (create {PAIR [TYPE_I, STRING]}.make (type_i,
-				Names_heap.item (name_id)))
 		end
 
 	put_nameless_local_info (type_i: TYPE_I; name_id: INTEGER) is
@@ -661,7 +682,6 @@ feature -- Local variable info generation
 		require
 			type_i_not_void: type_i /= Void
 		do
-			local_types.extend (create {PAIR [TYPE_I, STRING]}.make (type_i, "_" + name_id.out))
 		end
 
 	put_dummy_local_info (type_i: TYPE_I; name_id: INTEGER) is
@@ -669,8 +689,6 @@ feature -- Local variable info generation
 		require
 			type_i_not_void: type_i /= Void
 		do
-			local_types.extend (create {PAIR [TYPE_I, STRING]}.make (type_i,
-				"_dummy_" + name_id.out))
 		end
 
 feature -- Object creation
@@ -680,36 +698,22 @@ feature -- Object creation
 		require
 			valid_type_id: a_type_id > 0
 		do
-			method_body.put_call (feature {MD_OPCODES}.Newobj,
-				constructor_token.item (a_type_id), 0, True)
 		end
 
 	create_like_object is
 			-- Create object of same type as object on top of stack.
 		do
-			internal_generate_external_call (ise_runtime_token, 0, generic_conformance_class_name,
-				"create_like_object", Static_type, <<type_info_class_name>>,
-				type_info_class_name,
-				False)			
 		end
 
 	load_type is
 			-- Load on stack type of object on top of stack.
 		do
-			internal_generate_external_call (ise_runtime_token, 0, generic_conformance_class_name,
-				"load_type_of_object", Static_type, <<type_info_class_name>>,
-				type_class_name,
-				False)			
 		end
 		
 	create_type is
 			-- Given info on stack, it will create a new instance of a generic formal
 			-- parameter.
 		do
-			internal_generate_external_call (ise_runtime_token, 0, generic_conformance_class_name,
-				"create_type", Static_type, <<type_class_name,
-				type_info_class_name>>, type_info_class_name,
-				False)			
 		end
 
 feature -- IL stack managment
@@ -1380,41 +1384,6 @@ feature {IL_CODE_GENERATOR} -- Implementation: convenience
 				feature_table.item_id (feature {PREDEFINED_NAMES}.make_from_cil_name_id).feature_id
 		end
 
-feature {NONE} -- Predefine custom attributes
-
-	define_custom_attribute (token: INTEGER; ctor_token: INTEGER; data: MD_CUSTOM_ATTRIBUTE) is
-			-- Define a custom attribute on `token' using constructor `ctor_token' with
-			-- arguments `data'.
-			-- Same as `md_emit.define_custom_attribuyte' but we do not care about return type.
-		local
-			l_ca_token: INTEGER
-		do
-			l_ca_token := md_emit.define_custom_attribute (token, ctor_token, data)
-			check
-				l_ca_token_set: l_ca_token & 0xFF000000 = feature {MD_TOKEN_TYPES}.custom_attribute
-			end
-		end
-
-	not_cls_compliant_ca: MD_CUSTOM_ATTRIBUTE is
-			-- Blob for not CLS compliant attribute
-		once
-			create Result.make
-			Result.put_integer_8 (0)
-			Result.put_integer_16 (0)
-		end
-
-	debugger_step_through_ca: MD_CUSTOM_ATTRIBUTE is
-			-- Blobl for `System.Diagnostics.DebuggerStepThroughAttribute' attribute.
-		once
-			create Result.make
-		end
-
-	debugger_hidden_ca: MD_CUSTOM_ATTRIBUTE is
-			-- Blobl for `System.Diagnostics.DebuggerHiddenAttribute' attribute.
-		once
-			create Result.make
-		end
-			
 feature {NONE} -- Constants
 
 	runtime_namespace: STRING is "ISE.Runtime"
@@ -1433,6 +1402,11 @@ feature {NONE} -- Constants
 	override_prefix: STRING is "__"
 	setter_prefix: STRING is "_set_"
 			-- Prefix for automatically generated features.
+
+feature {NONE} -- Mapping between Eiffel compiler and generated tokens
+
+	class_mapping: ARRAY [INTEGER]
+			-- Array of type token indexed by their `type_id'.
 
 feature {NONE} -- Implementation
 

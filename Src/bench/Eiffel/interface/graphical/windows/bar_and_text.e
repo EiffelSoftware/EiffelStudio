@@ -59,15 +59,25 @@ feature -- Standard Interface
 
 	build_widgets is
 			-- Build system widget.
+		local
+			popup_cmd: TOOLBAR_CMD
 		do
 			if is_a_shell then
 				set_default_size
 			end;
+
+			!! toolbar_parent.make (new_name, global_form, Current);
+			toolbar_parent.set_column_layout;
+			toolbar_parent.set_free_size;
+			!! popup_cmd.make (Current);
+			toolbar_parent.add_button_press_action (3, popup_cmd, Void);
+			
 			build_text_windows;
 			build_menus;
-			!! edit_bar.make (new_name, global_form);
+			!! edit_bar.make (l_Command_bar_name, toolbar_parent, Current);
 			build_bar;
-			!! format_bar.make (new_name, global_form);
+			!! toolbar_separator.make (new_name, toolbar_parent);
+			!! format_bar.make (l_Format_bar_name, toolbar_parent, Current);
 			build_format_bar;
 			set_last_format (default_format);
 			attach_all
@@ -175,43 +185,32 @@ feature -- Standard Interface
 
 	attach_all is
 			-- Attach button bar and windows below together.
-		local
-			separator: SEPARATOR
 		do
 			global_form.attach_left (menu_bar, 0);
 			global_form.attach_right (menu_bar, 0);
 			global_form.attach_top (menu_bar, 0);
 
-			global_form.attach_left (edit_bar, 0);
-			global_form.attach_right (edit_bar, 0);
-			global_form.attach_top_widget (menu_bar, edit_bar, 0);
-
-			!! separator.make ("", global_form);
-			global_form.attach_left (separator, 0);
-			global_form.attach_right (separator, 0);
-			global_form.attach_top_widget (edit_bar, separator, 1);
-
-			global_form.attach_left (format_bar, 0);
-			global_form.attach_right (format_bar, 0);
-			global_form.attach_top_widget (separator, format_bar, 1);
+			global_form.attach_left (toolbar_parent, 0);
+			global_form.attach_right (toolbar_parent, 0);
+			global_form.attach_top_widget (menu_bar, toolbar_parent, 0);
 
 			if editable_text_window /= read_only_text_window then
 				global_form.attach_left (editable_text_window.widget, 0);
 				global_form.attach_right (editable_text_window.widget, 0);
 				global_form.attach_bottom (editable_text_window.widget, 0);
-				global_form.attach_top_widget (format_bar, 
+				global_form.attach_top_widget (toolbar_parent, 
 						editable_text_window.widget, 0);
 
 				global_form.attach_left (read_only_text_window.widget, 0);
 				global_form.attach_right (read_only_text_window.widget, 0);
 				global_form.attach_bottom (read_only_text_window.widget, 0);
-				global_form.attach_top_widget (format_bar, 
+				global_form.attach_top_widget (toolbar_parent, 
 						read_only_text_window.widget, 0);
 			else
 				global_form.attach_left (text_window.widget, 0);
 				global_form.attach_right (text_window.widget, 0);
 				global_form.attach_bottom (text_window.widget, 0);
-				global_form.attach_top_widget (format_bar, text_window.widget, 0);
+				global_form.attach_top_widget (toolbar_parent, text_window.widget, 0);
 			end;
 		end
 
@@ -446,7 +445,7 @@ feature -- Window Properties
 	hole_holder: HOLE_HOLDER;
 			-- Holder for both the button and the hole.
 
-	edit_bar, format_bar: FORM;
+	edit_bar, format_bar: TOOLBAR;
 			-- Main and format button bars.
 
 	global_form: FORM;
@@ -474,7 +473,7 @@ feature -- Window Properties
 		do
 		end;
 
-	save_cmd_holder: COMMAND_HOLDER is
+	save_cmd_holder: TWO_STATE_CMD_HOLDER is
 			-- Command to save a file.
 			-- (Only used when the file already is known, i.e.
 			--  there is a filename.)

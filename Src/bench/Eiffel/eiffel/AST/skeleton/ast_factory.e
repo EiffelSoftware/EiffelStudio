@@ -1111,30 +1111,33 @@ feature -- Access
 			is_frozen_set: Result.is_frozen = b
 		end
 
-	new_formal_as (p: INTEGER): FORMAL_AS is
+	new_formal_as (n: ID_AS; is_ref, is_exp: BOOLEAN): FORMAL_AS is
 			-- New FORMAL AST node
 		do
 			create Result
-			Result.initialize (p)
+			Result.initialize (n, is_ref, is_exp)
 		ensure
 			formal_as_not_void: Result /= Void
-			position_set: Result.position = p
+			formal_name_set: Result.name = n
+			is_reference_set: Result.is_reference = is_ref
+			is_expanded_set: Result.is_expanded = is_exp
 		end
 
-	new_formal_dec_as (n: ID_AS; c: TYPE;
-		cf: EIFFEL_LIST [FEATURE_NAME]; p: INTEGER): FORMAL_DEC_AS is
+	new_formal_dec_as (f: FORMAL_AS; c: TYPE; cf: EIFFEL_LIST [FEATURE_NAME]): FORMAL_DEC_AS is
 			-- New FORMAL_DECLARATION AST node
 		require
-			n_not_void: n /= Void
+			f_not_void: f /= Void
 		do
 			create Result
-			Result.initialize (n, c, cf, p)
+			Result.initialize (f, c, cf)
 		ensure
 			formal_dec_as_not_void: Result /= Void
-			formal_name_set: Result.formal_name = n
+			formal_name_set: Result.name = f.name
 			constraint_set: Result.constraint = c
 			creation_feature_list_set: Result.creation_feature_list = cf
-			position_set: Result.position = p
+			position_set: Result.position = f.position
+			is_reference_set: Result.is_reference = f.is_reference
+			is_expanded_set: Result.is_expanded = f.is_expanded
 		end
 
 	new_if_as (cnd: EXPR_AS; cmp: EIFFEL_LIST [INSTRUCTION_AS];

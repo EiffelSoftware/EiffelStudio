@@ -18,21 +18,22 @@ inherit
 
 feature {AST_FACTORY} -- Initialization
 
-	initialize (n: like formal_name; c: like constraint;
-		cf: like creation_feature_list; p: INTEGER) is
+	initialize (f: FORMAL_AS; c: like constraint; cf: like creation_feature_list) is
 			-- Create a new FORMAL_DECLARATION AST node.
 		require
-			n_not_void: n /= Void
+			f_not_void: f /= Void
 		do
-			formal_name := n
+			name := f.name
 			constraint := c
 			creation_feature_list := cf
-			position := p
+			position := f.position
+			is_reference := f.is_reference
 		ensure
-			formal_name_set: formal_name = n
+			name_set: name = f.name
 			constraint_set: constraint = c
 			creation_feature_list_set: creation_feature_list = cf
-			position_set: position = p
+			position_set: position = f.position
+			is_reference_set: is_reference = f.is_reference
 		end
 
 feature -- Visitor
@@ -44,9 +45,6 @@ feature -- Visitor
 		end
 
 feature -- Attributes
-
-	formal_name: ID_AS
-			-- Formal generic parameter name
 
 	constraint: EIFFEL_TYPE
 			-- Constraint of the formal generic
@@ -74,10 +72,10 @@ feature -- Comparison
 	is_equivalent (other: like Current): BOOLEAN is
 			-- Is `other' equivalent to the current object ?
 		do
-			Result := equivalent (formal_name, other.formal_name)
+			Result := equivalent (name, other.name)
 				and then equivalent (constraint, other.constraint)
 				and then equivalent (creation_feature_list, other.creation_feature_list)
-				and then position = other.position
+				and then Precursor {FORMAL_AS} (other)
 		end
 
 feature -- Output
@@ -88,7 +86,12 @@ feature -- Output
 			feature_name: FEAT_NAME_ID_AS
 		do
 			create Result.make (50)
-			Result.append (formal_name)
+			if is_reference then
+				Result.append ("reference ")
+			elseif is_expanded then
+				Result.append ("expanded ")
+			end
+			Result.append (name)
 			if has_constraint then
 				Result.append (" -> ")
 				Result.append (constraint.dump)
@@ -112,87 +115,5 @@ feature -- Output
 				end
 			end
 		end
-
---	append_signature (st: STRUCTURED_TEXT) is
---			-- Append the signature of current class in `st'
---			--| We do not produce the creation constraint clause since
---			--| it is useless in this case.
---		require
---			non_void_st: st /= Void
---		local
---			c_name: STRING
---			feature_name: FEAT_NAME_ID_AS
---		do
---			c_name := clone (formal_name)
---			c_name.to_upper
---			st.add_string (c_name)
---			if has_constraint then
---				st.add (ti_Space)
---				st.add (ti_Constraint)
---				st.add (ti_Space)
---				constraint.append_to (st)
---				if has_creation_constraint then
---					from
---						creation_feature_list.start
---						st.add (ti_Space)
---						st.add (ti_Create_keyword)
---						st.add (ti_Space)
---						feature_name ?= creation_feature_list.item
---						st.add_string (feature_name.feature_name)
---						creation_feature_list.forth
---					until
---						creation_feature_list.after
---					loop
---						st.add (ti_Comma)
---						st.add (ti_Space)
---						feature_name ?= creation_feature_list.item
---						st.add_string (feature_name.feature_name)
---						creation_feature_list.forth
---					end
---					st.add (ti_Space)
---					st.add (ti_End_keyword)
---				end
---			end
---		end
-
---feature {AST_EIFFEL} -- Output
---
---	simple_format (ctxt: FORMAT_CONTEXT) is
---			-- Reconstitute text.
---		local
---			s: STRING
---			feature_name: FEAT_NAME_ID_AS
---		do
---			s := clone (formal_name)
---			s.to_upper
---			ctxt.put_string (s)
---			if has_constraint then
---				ctxt.put_space
---				ctxt.put_text_item_without_tabs (ti_Constraint)
---				ctxt.put_space
---				ctxt.format_ast (constraint)
---				if has_creation_constraint then
---					from
---						creation_feature_list.start
---						ctxt.put_space
---						ctxt.put_text_item (ti_Create_keyword);
---						ctxt.put_space
---						feature_name ?= creation_feature_list.item
---						ctxt.put_string (feature_name.feature_name)
---						creation_feature_list.forth
---					until
---						creation_feature_list.after
---					loop
---						ctxt.put_text_item (ti_Comma)
---						ctxt.put_space
---						feature_name ?= creation_feature_list.item
---						ctxt.put_string (feature_name.feature_name)
---						creation_feature_list.forth
---					end
---					ctxt.put_space
---					ctxt.put_text_item (ti_End_keyword);
---				end
---			end
---		end
 
 end -- class FORMAL_DEC_AS

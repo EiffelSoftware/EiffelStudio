@@ -22,21 +22,24 @@ inherit
 
 feature {AST_FACTORY} -- Initialization
 
-	initialize (n: like formal_name; c: like constraint;
-		cf: like creation_feature_list; p: INTEGER) is
+	initialize (f: FORMAL_AS; c: like constraint; cf: like creation_feature_list) is
 			-- Create a new FORMAL_DECLARATION AST node.
 		require
-			n_not_void: n /= Void
+			f_not_void: f /= Void
 		do
-			formal_name := n
+			name := f.name
 			constraint := c
 			creation_feature_list := cf
-			position := p
+			position := f.position
+			is_reference := f.is_reference
+			is_expanded := f.is_expanded
 		ensure
-			formal_name_set: formal_name = n
+			name_set: name = f.name
 			constraint_set: constraint = c
 			creation_feature_list_set: creation_feature_list = cf
-			position_set: position = p
+			position_set: position = f.position
+			is_reference_set: is_reference = f.is_reference
+			is_expanded_set: is_expanded = f.is_expanded
 		end
 
 feature -- Visitor
@@ -48,9 +51,6 @@ feature -- Visitor
 		end
 
 feature -- Attributes
-
-	formal_name: ID_AS
-			-- Formal generic parameter name
 
 	constraint: TYPE
 			-- Constraint of the formal generic
@@ -82,10 +82,10 @@ feature -- Comparison
 	is_equivalent (other: like Current): BOOLEAN is
 			-- Is `other' equivalent to the current object ?
 		do
-			Result := equivalent (formal_name, other.formal_name)
+			Result := equivalent (name, other.name)
 				and then equivalent (constraint, other.constraint)
 				and then equivalent (creation_feature_list, other.creation_feature_list)
-				and then position = other.position
+				and then Precursor {FORMAL_AS} (other)
 		end
 
 	equiv (other: like Current): BOOLEAN is
@@ -96,17 +96,23 @@ feature -- Comparison
 		local
 			ct, o_ct: TYPE_A
 		do
-				-- Test on void is done only to
-				-- protect incorrect generic constraints
-			ct := constraint_type
-			o_ct := other.constraint_type
-			if ct /= Void then
-				if o_ct /= Void then
-					Result := ct.same_as (o_ct)
+			Result := position = other.position and then
+				is_reference = other.is_reference and then
+				is_expanded = other.is_expanded
+			if Result then
+					-- Test on void is done only to
+					-- protect incorrect generic constraints
+				ct := constraint_type
+				o_ct := other.constraint_type
+				if ct /= Void then
+					if o_ct /= Void then
+						Result := ct.same_as (o_ct)
+					end
+					Result := Result and then
+						equivalent (creation_feature_list, other.creation_feature_list)
+				else
+					Result := o_ct = Void
 				end
-				Result := Result and then equivalent (creation_feature_list, other.creation_feature_list)
-			else
-				Result := o_ct = Void
 			end
 		end
 
@@ -282,7 +288,12 @@ feature -- Output
 			feature_name: FEAT_NAME_ID_AS
 		do
 			create Result.make (50)
-			Result.append (formal_name)
+			if is_reference then
+				Result.append ("reference ")
+			elseif is_expanded then
+				Result.append ("expanded ")
+			end
+			Result.append (name)
 			Result.to_upper
 			if has_constraint then
 				Result.append (" -> ")
@@ -318,7 +329,14 @@ feature -- Output
 			c_name: STRING
 			eiffel_name: STRING
 		do
-			c_name := formal_name.as_upper
+			if is_reference then
+				st.add (ti_reference_keyword)
+				st.add_space
+			elseif is_expanded then
+				st.add (ti_expanded_keyword)
+				st.add_space
+			end
+			c_name := name.as_upper
 			st.add (create {GENERIC_TEXT}.make (c_name))
 			if has_constraint then
 				st.add_space
@@ -361,7 +379,14 @@ feature -- Output
 			end
 
 			if new_type = Void then
-				s := formal_name.as_upper
+				if is_reference then
+					ctxt.put_text_item (ti_reference_keyword)
+					ctxt.put_space
+				elseif is_expanded then
+					ctxt.put_text_item (ti_expanded_keyword)
+					ctxt.put_space
+				end
+				s := name.as_upper
 				ctxt.put_text_item (create {GENERIC_TEXT}.make (s))
 				if has_constraint then
 					ctxt.put_space
@@ -403,7 +428,14 @@ feature {AST_EIFFEL} -- Output
 			s: STRING
 			feature_name: FEAT_NAME_ID_AS
 		do
-			s := formal_name.as_upper
+			if is_reference then
+				ctxt.put_text_item (ti_reference_keyword)
+				ctxt.put_space
+			elseif is_expanded then
+				ctxt.put_text_item (ti_expanded_keyword)
+				ctxt.put_space
+			end
+			s := name.as_upper
 			ctxt.put_string (s)
 			if has_constraint then
 				ctxt.put_space

@@ -22,12 +22,18 @@ inherit
 
 feature {AST_FACTORY} -- Initialization
 
-	initialize (p: INTEGER) is
+	initialize (n: ID_AS; is_ref, is_exp: BOOLEAN) is
 			-- Create a new FORMAL AST node.
+		require
+			n_not_void: n /= Void
 		do
-			position := p
+			name := n
+			is_reference := is_ref
+			is_expanded := is_exp
 		ensure
-			position_set: position = p
+			name_set: name = n
+			is_reference_set: is_reference = is_ref
+			is_expanded_set: is_expanded = is_exp
 		end
 
 feature -- Visitor
@@ -40,9 +46,18 @@ feature -- Visitor
 
 feature -- Properties
 
+	name: ID_AS
+			-- Formal generic parameter name
+
 	position: INTEGER
 			-- Position of the formal parameter in the declaration
 			-- array
+			
+	is_reference: BOOLEAN
+			-- Is Current formal to be always instantiated as a reference type?
+			
+	is_expanded: BOOLEAN
+			-- Is Current formal to be always instantiated as an expanded type?
 
 	is_class: BOOLEAN is True
 			-- Does the Current AST represent a class?
@@ -52,7 +67,8 @@ feature -- Comparison
 	is_equivalent (other: like Current): BOOLEAN is
 			-- Is `other' equivalent to the current object ?
 		do
-			Result := position = other.position
+			Result := position = other.position and then is_reference = other.is_reference
+				and then is_expanded = other.is_expanded
 		end
 
 feature
@@ -67,8 +83,7 @@ feature
 	actual_type: FORMAL_A is
 			-- Actual type for formal generic
 		do
-			create Result
-			Result.set_position (position)
+			create Result.make (is_reference, is_expanded, position)
 		end
 
 feature -- Output

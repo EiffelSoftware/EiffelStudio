@@ -89,6 +89,7 @@ create
 %type <FEATURE_AS>			Feature_declaration
 %type <FEATURE_CLAUSE_AS>	Feature_clause
 %type <FEATURE_SET_AS>		Feature_set
+%type <FORMAL_AS>			Formal_parameter
 %type <FORMAL_DEC_AS>		Formal_generic
 %type <ID_AS>				Identifier_as_lower Index Free_operator Feature_name_for_call
 %type <IF_AS>				Conditional
@@ -1166,8 +1167,7 @@ Formal_generic_list: Formal_generic
 			}
 	;
 
-Formal_generic:
-		TE_ID
+Formal_parameter: TE_REFERENCE TE_ID 
 			{
 				if None_classname.is_equal (token_buffer) then
 						-- Trigger an error when constraint is NONE.
@@ -1181,13 +1181,56 @@ Formal_generic:
 					if not case_sensitive then
 						token_buffer.to_upper
 					end
-					formal_parameters.extend (create {ID_AS}.initialize (token_buffer))
+					$$ := new_formal_as (create {ID_AS}.initialize (token_buffer), True, False)
 				end
 			}
-		Constraint
+	| TE_EXPANDED TE_ID 
 			{
-				check formal_exists: not formal_parameters.is_empty end
-				$$ := new_formal_dec_as (formal_parameters.last, $3.first, $3.second, formal_parameters.count)
+				if None_classname.is_equal (token_buffer) then
+						-- Trigger an error when constraint is NONE.
+						-- Needs to be done manually since current test for
+						-- checking that `token_buffer' is not a class name
+						-- will fail for NONE, whereas before there were some
+						-- syntactic conflict since `NONE' was a keyword and
+						-- therefore not part of `TE_ID'.
+					raise_error
+				else
+					if not case_sensitive then
+						token_buffer.to_upper
+					end
+					$$ := new_formal_as (create {ID_AS}.initialize (token_buffer), False, True)
+				end
+			}
+
+	|	TE_ID
+			{
+				if None_classname.is_equal (token_buffer) then
+						-- Trigger an error when constraint is NONE.
+						-- Needs to be done manually since current test for
+						-- checking that `token_buffer' is not a class name
+						-- will fail for NONE, whereas before there were some
+						-- syntactic conflict since `NONE' was a keyword and
+						-- therefore not part of `TE_ID'.
+					raise_error
+				else
+					if not case_sensitive then
+						token_buffer.to_upper
+					end
+					$$ := new_formal_as (create {ID_AS}.initialize (token_buffer), False, False)
+				end
+			}
+	;
+
+Formal_generic: Formal_parameter
+			{
+					-- Needs to be done here, in case current formal is used in
+					-- Constraint.
+				formal_parameters.extend ($1)
+				$1.set_position (formal_parameters.count)
+			}
+			Constraint
+			{
+				$$ := new_formal_dec_as ($1, $3.first, $3.second)
 			}
 	;
 

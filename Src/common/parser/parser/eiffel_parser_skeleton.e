@@ -158,7 +158,7 @@ feature -- Access
 	suppliers: SUPPLIERS_AS
 			-- Suppliers of class being parsed
 
-	formal_parameters: ARRAYED_LIST [ID_AS]
+	formal_parameters: ARRAYED_LIST [FORMAL_AS]
 			-- Name of formal generic parameters
 			-- of class being parsed
 
@@ -756,7 +756,6 @@ feature {NONE} -- Type factory
 			class_name_not_void: ci.first /= Void
 			click_ast_not_void: ci.second /= Void
 		local
-			i: INTEGER
 			class_name: ID_AS
 			click_ast: CLICK_AST
 			formal_type: FORMAL_AS
@@ -769,11 +768,11 @@ feature {NONE} -- Type factory
 			else
 				if generics = Void then
 					from formal_parameters.start until formal_parameters.after loop
-						i := i + 1
-						if class_name.is_equal (formal_parameters.item) then
-							formal_type := new_formal_as (i)
+						formal_type := formal_parameters.item
+						if class_name.is_equal (formal_type.name) then
 								-- Shouldn't we just remove the formal type
 								-- name from the clickable list instead? (ericb)
+							formal_type := formal_type.twin
 							click_ast.set_node (formal_type)
 							Result := formal_type
 								-- Jump out of the loop.

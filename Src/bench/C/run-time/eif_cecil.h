@@ -145,7 +145,7 @@ struct gt_info {
 extern struct ctable fce_rname[];		/* Routine names -> function pointer */
 #endif
 
-RT_LINK  void eifvisex (void);          /* Enable the visible exception (in current thread) */
+RT_LNK  void eifvisex (void);          /* Enable the visible exception (in current thread) */
 RT_LNK void eifuvisex (void);          /* Disable visible exception (in current thread) */
 RT_LNK int eifreturntype (char *class_name, EIF_TYPE_ID cid);
 										/* Return type of `cid' from `class_name' */

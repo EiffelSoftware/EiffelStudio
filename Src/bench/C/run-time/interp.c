@@ -4393,12 +4393,12 @@ rt_private void eif_interp_gt(struct item *f, struct item *s) {
 		break;
 	case SK_DOUBLE:
 		switch (s->type & SK_HEAD) {
-		case SK_INT8: f->it_char = f->it_float > (EIF_DOUBLE) s->it_int8; break;
-		case SK_INT16: f->it_char = f->it_float > (EIF_DOUBLE) s->it_int16; break;
-		case SK_INT32: f->it_char = f->it_float > (EIF_DOUBLE) s->it_int32; break;
-		case SK_INT64: f->it_char = f->it_float > (EIF_DOUBLE) s->it_int64; break;
+		case SK_INT8: f->it_char = f->it_double > (EIF_DOUBLE) s->it_int8; break;
+		case SK_INT16: f->it_char = f->it_double > (EIF_DOUBLE) s->it_int16; break;
+		case SK_INT32: f->it_char = f->it_double > (EIF_DOUBLE) s->it_int32; break;
+		case SK_INT64: f->it_char = f->it_double > (EIF_DOUBLE) s->it_int64; break;
 		case SK_FLOAT: f->it_char = f->it_double > (EIF_DOUBLE) s->it_float; break;
-		case SK_DOUBLE: f->it_char = (EIF_BOOLEAN) (f->it_double > s->it_double); break;
+		case SK_DOUBLE: f->it_char = f->it_double > s->it_double; break;
 		default: eif_panic(MTC botched);
 		}
 		break;
@@ -4467,10 +4467,10 @@ rt_private void eif_interp_lt(struct item *f, struct item *s) {
 		break;
 	case SK_DOUBLE:
 		switch (s->type & SK_HEAD) {
-		case SK_INT8: f->it_char = f->it_float < (EIF_DOUBLE) s->it_int8; break;
-		case SK_INT16: f->it_char = f->it_float < (EIF_DOUBLE) s->it_int16; break;
-		case SK_INT32: f->it_char = f->it_float < (EIF_DOUBLE) s->it_int32; break;
-		case SK_INT64: f->it_char = f->it_float < (EIF_DOUBLE) s->it_int64; break;
+		case SK_INT8: f->it_char = f->it_double < (EIF_DOUBLE) s->it_int8; break;
+		case SK_INT16: f->it_char = f->it_double < (EIF_DOUBLE) s->it_int16; break;
+		case SK_INT32: f->it_char = f->it_double < (EIF_DOUBLE) s->it_int32; break;
+		case SK_INT64: f->it_char = f->it_double < (EIF_DOUBLE) s->it_int64; break;
 		case SK_FLOAT: f->it_char = f->it_double < (EIF_DOUBLE) s->it_float; break;
 		case SK_DOUBLE: f->it_char = (EIF_BOOLEAN) (f->it_double < s->it_double); break;
 		default: eif_panic(MTC botched);
@@ -4542,12 +4542,12 @@ rt_private void eif_interp_eq (struct item *f, struct item *s) {
 		break;
 	case SK_DOUBLE:
 		switch (s->type & SK_HEAD) {
-		case SK_INT8: f->it_char = f->it_float == (EIF_DOUBLE) s->it_int8; break;
-		case SK_INT16: f->it_char = f->it_float == (EIF_DOUBLE) s->it_int16; break;
-		case SK_INT32: f->it_char = f->it_float == (EIF_DOUBLE) s->it_int32; break;
-		case SK_INT64: f->it_char = f->it_float == (EIF_DOUBLE) s->it_int64; break;
+		case SK_INT8: f->it_char = f->it_double == (EIF_DOUBLE) s->it_int8; break;
+		case SK_INT16: f->it_char = f->it_double == (EIF_DOUBLE) s->it_int16; break;
+		case SK_INT32: f->it_char = f->it_double == (EIF_DOUBLE) s->it_int32; break;
+		case SK_INT64: f->it_char = f->it_double == (EIF_DOUBLE) s->it_int64; break;
 		case SK_FLOAT: f->it_char = f->it_double == (EIF_DOUBLE) s->it_float; break;
-		case SK_DOUBLE: f->it_char = (EIF_BOOLEAN) (f->it_double == s->it_double); break;
+		case SK_DOUBLE: f->it_char = f->it_double == s->it_double; break;
 		default: eif_panic(MTC botched);
 		}
 		break;

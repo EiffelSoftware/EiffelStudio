@@ -27,7 +27,7 @@ EIF_BOOLEAN cwel_hook_mouse(HWND hWnd)
 	if (hLibrary == NULL)
 		{
 		// Display an error box
-		MessageBox(hWnd, "An error occurred while loading the file 'win_hook.dll'\nCheck that it can be found in your path or your working directory", "Unable to load a DLL..", MB_OK | MB_ICONERROR | MB_TOPMOST);
+		MessageBox(hWnd, "An error occurred while loading the file 'wel_hook.dll'\nCheck that it can be found in your path or your working directory", "Unable to load a DLL..", MB_OK | MB_ICONERROR | MB_TOPMOST);
 		return FALSE;
 		}
 

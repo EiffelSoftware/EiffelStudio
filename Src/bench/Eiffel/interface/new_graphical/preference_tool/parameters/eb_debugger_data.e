@@ -17,6 +17,11 @@ feature -- Access
 			Result := integer_resource_value ("debugger__stack_element_width", 200)
 		end
 
+	default_maximum_stack_depth: INTEGER is
+		do
+			Result := integer_resource_value ("debugger__default_maximum_stack_depth", 100)
+		end
+
 	show_text_in_project_toolbar: BOOLEAN is
 			-- Show selected text in the project toolbar?
 		do

@@ -71,4 +71,10 @@ feature -- Element change
 			set_string ("last_saved_stack_path", new_path)
 		end
 
+	set_max_stack_depth (new_depth: INTEGER) is
+			-- Set `max_stack_depth' to `new_depth'.
+		do
+			set_integer ("debugger__default_maximum_stack_depth", new_depth)
+		end
+
 end -- class EB_DEBUG_TOOL_DATA

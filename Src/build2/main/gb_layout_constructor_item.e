@@ -190,7 +190,8 @@ feature {NONE} -- Implementation
 					-- is that when rebuilding new projects, it seems that
 					-- selection change events from the layout tree items
 					-- are somewhat unusual. There will be no side
-					-- effect from performing this protection. Julian.
+					-- effect from performing this protection. Julian.				
+				force_name_change_completion_on_all_editors
 				docked_object_editor.set_object (object)
 			end
 		end

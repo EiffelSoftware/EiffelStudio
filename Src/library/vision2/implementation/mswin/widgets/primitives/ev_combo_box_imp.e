@@ -61,7 +61,7 @@ inherit
 	WEL_DROP_DOWN_COMBO_BOX_EX
 		rename
 			make as wel_make,
-			parent as wel_window_parent,
+			parent as wel_parent,
 			set_parent as wel_set_parent,
 			font as wel_font,
 			set_font as wel_set_font,
@@ -127,8 +127,7 @@ feature {NONE} -- Initialization
 		do
 			base_make (an_interface)
 			internal_window_make (default_parent, Void, default_style +
-				Cbs_dropdown,
-				0, 0, 0, 90, 0, default_pointer)
+				Cbs_dropdown, 0, 0, 0, 90, 0, default_pointer)
 			create ev_children.make (2)
  			id := 0
 		end
@@ -144,19 +143,6 @@ feature {NONE} -- Initialization
 
 feature -- Access
 
-	wel_parent: WEL_WINDOW is
-			--|---------------------------------------------------------------
-			--| FIXME ARNAUD
-			--|---------------------------------------------------------------
-			--| Small hack in order to avoid a SEGMENTATION VIOLATION
-			--| with Compiler 4.6.008. To remove the hack, simply remove
-			--| this feature and replace "parent as wel_window_parent" with
-			--| "parent as wel_parent" in the inheritance clause of this class
-			--|---------------------------------------------------------------
-		do
-			Result := wel_window_parent
-		end
-
 	text_field: EV_INTERNAL_COMBO_FIELD_IMP
 			-- An internal text field that forwards the events to the
 			-- current combo-box-ex.
@@ -169,13 +155,13 @@ feature -- Measurement
 
 	height: INTEGER is
 			-- height of the combo-box when the list is hidden
-			-- it is a constant
+			-- it is a constant.
 		do
 			Result := window_rect.height
 		end
 
 	extended_height: INTEGER is
-			-- height of the combo-box when the list is shown
+			-- height of the combo-box when the list is shown.
 		do
 			Result := dropped_rect.height
 		end
@@ -183,7 +169,7 @@ feature -- Measurement
 feature -- Status report
 
 	item_height: INTEGER is
-			-- height needed for an item
+			-- height needed for an item.
 		do
 			Result := wel_font.log_font.height
 		end
@@ -202,8 +188,8 @@ feature -- Status report
 			new_selected_item: EV_LIST_ITEM_IMP
 		do
 			if selected then
-					--| Arrays are zero-based in WEL and one-based in Vision2.
 				new_selected_item := ev_children @ (wel_selected_item + 1)
+					--| Arrays are zero-based in WEL and one-based in Vision2.
 				Result := new_selected_item.interface
 			end
 		end
@@ -214,7 +200,7 @@ feature -- Status report
 			wel_sel: INTEGER
 			start_pos, end_pos: INTEGER
 				-- starting and ending character positions of the 
-				-- current selection in an edit control
+				-- current selection in the edit control
 		do
 			wel_sel := cwin_send_message_result (edit_item, Em_getsel, 0, 0)
 			start_pos := cwin_hi_word (wel_sel)
@@ -226,7 +212,7 @@ feature -- Status report
 		end
 
 	internal_caret_position: INTEGER is
-			-- Caret position
+			-- Caret position.
 		local
 			wel_sel: INTEGER
 		do
@@ -283,8 +269,8 @@ feature -- Status setting
 		end
 
 	set_editable (flag: BOOLEAN) is
-			-- `flag' true make the component read-write and
-			-- `flag' false make the component read-only.
+			-- If `flag' then make `Current' read-write.
+			-- If not `flag' then make `Current' read only.
 		do
 			if flag then
 				set_read_write
@@ -296,7 +282,7 @@ feature -- Status setting
 	set_extended_height (value: INTEGER) is
 			-- Make `value' the new extended-height of the box.
 		do
-			wel_resize (width, value)
+			wel_resize (wel_width, value)
 		end
 
 	internal_set_caret_position (pos: INTEGER) is
@@ -427,22 +413,26 @@ feature {NONE} -- Implementation
 			-- Destroy the existing combo box and recreate
 			-- a new one with `creation_flag' in the style
 		local
-			par_imp: WEL_WINDOW
-			a, b, c: INTEGER
+			par_imp		: WEL_WINDOW
+			cur_x		: INTEGER
+			cur_y		: INTEGER
+			cur_width	: INTEGER
+			cur_height	: INTEGER
 		do
-				-- We keep some useful informations
+				-- We keep some useful informations that will be
+				-- destroyed when calling `wel_destroy'
 			par_imp ?= parent_imp
-			a := x_position
-			b := y_position
-			c := width
+			cur_x := x_position
+			cur_y := y_position
+			cur_width := wel_width
+			cur_height := wel_height
 
 				-- We destroy the old combo
 			wel_destroy
 
 				-- We create the new combo.
-			internal_window_make (par_imp, Void, default_style +
-				creation_flag,
-				a, b, c, 90, 0, default_pointer)
+			internal_window_make (par_imp, Void, default_style + creation_flag,
+				cur_x, cur_y, cur_width, cur_height, 0, default_pointer)
  			id := 0
 			internal_copy_list
 		end
@@ -472,7 +462,7 @@ feature {NONE} -- Implementation
 		end
 
 	read_only: BOOLEAN is
-			-- Is the combo-box read-only?
+			-- Is `Current' read-only?
 		do
 			Result := flag_set (style, Cbs_dropdownlist)
 		end
@@ -516,7 +506,7 @@ feature {EV_INTERNAL_COMBO_FIELD_IMP, EV_INTERNAL_COMBO_BOX_IMP}
 	-- WEL Implementation
 
 	on_key_down (virtual_key, key_data: INTEGER) is
-			-- We check if the enter key is pressed)
+			-- We check if the enter key is pressed.
 			-- 13 is the number of the return key.
 		local
 			list: like ev_children
@@ -557,7 +547,7 @@ feature {EV_INTERNAL_COMBO_FIELD_IMP, EV_INTERNAL_COMBO_BOX_IMP}
 feature {NONE} -- WEL Implementation
 
 	default_style: INTEGER is
-			-- Style used to create the window.
+			-- Style used to create `Current'.
 		do
 			Result := Ws_child + Ws_visible + Ws_group
 						+ Ws_tabstop + Ws_vscroll
@@ -565,7 +555,7 @@ feature {NONE} -- WEL Implementation
 		end
 
 	old_selected_item: EV_LIST_ITEM_IMP
-			-- The previously selected item
+			-- The previously selected item.
 
 	last_edit_change: STRING
 			-- The string resulting from the last edit change.
@@ -580,7 +570,7 @@ feature {NONE} -- WEL Implementation
 		end
 
 	on_cbn_selchange is
-			-- The selection is about to be changed.
+			-- The selection is about to change.
 		local
 			new_selected_item: EV_LIST_ITEM_IMP
 		do
@@ -596,13 +586,15 @@ feature {NONE} -- WEL Implementation
 					-- to the combo box.
 				if old_selected_item /= Void then
 					old_selected_item.interface.deselect_actions.call ([])
-					interface.deselect_actions.call ([old_selected_item.interface])
+					interface.deselect_actions.call
+						([old_selected_item.interface])
 				end
 					-- Send a "Select Action" to the new item, and
 					-- to the combo box.
 				if new_selected_item /= Void then
 					new_selected_item.interface.select_actions.call ([])
-					interface.select_actions.call ([new_selected_item.interface])
+					interface.select_actions.call
+						([new_selected_item.interface])
 				end
 					-- Remember the current selected item.
 				old_selected_item := new_selected_item
@@ -654,6 +646,7 @@ Feature -- Temp
 			-- Make `nb' characters visible on one line.
 			-- We add nine for the borders.
 		do
+			--|FIXME Magic numbers.
 			set_minimum_width (nb * 6 + 9)
 		end
 
@@ -731,8 +724,8 @@ end -- class EV_COMBO_BOX_IMP
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
---| Revision 1.78  2000/06/07 17:28:01  oconnor
---| merged from DEVEL tag MERGED_TO_TRUNK_20000607
+--| Revision 1.79  2000/06/09 01:38:09  manus
+--| MErged version 1.50.2.7 from DEVEL branch to trunc
 --|
 --| Revision 1.50.2.7  2000/05/30 16:01:14  rogers
 --| Removed unreferenced variables.
@@ -744,9 +737,15 @@ end -- class EV_COMBO_BOX_IMP
 --| Comments and formatting.
 --|
 --| Revision 1.50.2.4  2000/05/03 22:35:04  brendel
---|
---| Revision 1.77  2000/05/03 20:13:27  brendel
 --| Fixed resize_actions.
+--|
+--| Revision 1.50.2.3  2000/05/03 22:17:18  pichery
+--| - Cosmetics / Optimization with local variables
+--| - Replaced calls to `width' to calls to `wel_width'
+--|   and same for `height'.
+--|
+--| Revision 1.50.2.2  2000/05/03 19:09:49  oconnor
+--| mergred from HEAD
 --|
 --| Revision 1.76  2000/04/27 23:24:04  rogers
 --| Undefined on_left_button_up from EV_TEXT_COMPONENT_IMP.

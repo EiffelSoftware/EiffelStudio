@@ -63,6 +63,21 @@ inherit
 		undefine
 			default_create
 		end
+		
+	CDATA_HANDLER
+		export
+			{NONE} all
+		undefine
+			default_create
+		end
+		
+	GB_GENERAL_UTILITIES
+		export
+			{NONE} all
+		undefine
+			default_create
+		end
+	
 
 feature -- Initialization
 		
@@ -331,6 +346,50 @@ feature {NONE} -- Implementation
 				else
 					Result := element_info.data.to_integer
 				end
+			end
+		ensure
+			Result_not_void: Result /= Void
+		end
+		
+	retrieve_string_setting (a_type_name: STRING): STRING is
+			-- Result is string representation of data associated with `a_type_name''.
+		require
+			type_not_not_void: a_type_name /= Void
+		local
+			constant: GB_CONSTANT
+			element_info: ELEMENT_INFORMATION
+			constant_context: GB_CONSTANT_CONTEXT
+		do
+			element_info := full_information @ a_type_name
+			if element_info /= Void then
+				if element_info.is_constant then
+					constant ?= Constants.all_constants.item (element_info.data)
+					Result := constant.name
+				else
+					Result := "%"" + escape_special_characters (strip_cdata (element_info.data)) + "%""
+				end
+			end	
+		ensure
+			Result_not_void: Result /= Void
+		end
+		
+	retrieve_integer_setting (a_type_name: STRING): STRING is
+			-- Result is string representation of data associated with `a_type_name''.
+		require
+			type_not_not_void: a_type_name /= Void
+		local
+			constant: GB_CONSTANT
+			element_info: ELEMENT_INFORMATION
+			constant_context: GB_CONSTANT_CONTEXT
+		do
+			element_info := full_information @ a_type_name
+			if element_info /= Void then
+				if element_info.is_constant then
+					constant ?= Constants.all_constants.item (element_info.data)
+					Result := constant.name
+				else
+					Result := strip_cdata (element_info.data)
+				end
 			end				
 		end
 		
@@ -397,6 +456,15 @@ feature {NONE} -- Implementation
 			an_attribute_not_void: an_attribute /= Void
 		do
 			Result := object.constants.item (type + an_attribute) /= Void
+		end
+		
+	attribute_set (an_attribute: STRING): BOOLEAN is
+			-- Has attribute named `an_attribute' been set?
+		require
+			an_attribute_not_void: an_attribute /= Void
+			full_information_not_void: full_information /= Void
+		do
+			Result := full_information @ (an_attribute) /= Void
 		end
 
 	full_information: HASH_TABLE [ELEMENT_INFORMATION, STRING]

@@ -38,18 +38,18 @@ feature -- Open, close buffer operations
 			emitted := False
 		end
 
-	open_write_c is
+	open_write_c, start_c_specific_code is
 			-- Write at beginning of buffer that it will be a C file with the
 			-- extern C declaration in case a C++ compiler is used.
 		do
-			append ("#ifdef __cplusplus%Nextern %"C%" {%N#endif%N%N")
+			append ("%N#ifdef __cplusplus%Nextern %"C%" {%N#endif%N%N")
 		end
 
-	close_c is
+	close_c, end_c_specific_code is
 			-- Write at end of buffer that it will be a C file with the
 			-- extern C declaration in case a C++ compiler is used.
 		do
-			append ("%N#ifdef __cplusplus%N}%N#endif%N")
+			append ("%N#ifdef __cplusplus%N}%N#endif%N%N")
 		end
 
 feature -- Element change

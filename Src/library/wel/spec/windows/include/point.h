@@ -13,12 +13,6 @@
 extern "C" {
 #endif
 
-#define cwel_point_set_x(_ptr_, _value_) (((POINT *) _ptr_)->x = (int) (_value_))
-#define cwel_point_set_y(_ptr_, _value_) (((POINT *) _ptr_)->y = (int) (_value_))
-
-#define cwel_point_get_x(_ptr_) ((EIF_INTEGER) (((POINT *) _ptr_)->x))
-#define cwel_point_get_y(_ptr_) ((EIF_INTEGER) (((POINT *) _ptr_)->y))
-
 #define cwin_window_from_point(_ptr_) ((EIF_POINTER) WindowFromPoint (*(POINT *) _ptr_))
 
 #ifdef __cplusplus

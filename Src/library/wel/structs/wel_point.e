@@ -149,22 +149,30 @@ feature {NONE} -- Externals
 
 	cwel_point_set_x (ptr: POINTER; value: INTEGER) is
 		external
-			"C [macro <point.h>]"
+			"C [struct <point.h>] (POINT, LONG)"
+		alias
+			"x"
 		end
 
 	cwel_point_set_y (ptr: POINTER; value: INTEGER) is
 		external
-			"C [macro <point.h>]"
+			"C [struct <point.h>] (POINT, LONG)"
+		alias
+			"y"
 		end
 
 	cwel_point_get_x (ptr: POINTER): INTEGER is
 		external
-			"C [macro <point.h>]"
+			"C [struct <point.h>] (POINT): EIF_INTEGER"
+		alias
+			"x"
 		end
 
 	cwel_point_get_y (ptr: POINTER): INTEGER is
 		external
-			"C [macro <point.h>]"
+			"C [struct <point.h>] (POINT): EIF_INTEGER"
+		alias
+			"y"
 		end
 
 	cwin_window_from_point (ptr: POINTER): POINTER is

@@ -202,13 +202,17 @@ feature {NONE} -- Implementation
 	chcode (c: like item): INTEGER is
 			-- Associated integer value
 		external
-			"C [macro %"eif_misc.h%"]"
+			"C inline use %"eif_eiffel.h%""
+		alias
+			"((EIF_INTEGER) ($c))"
 		end
 
 	chconv (i: INTEGER): CHARACTER is
 			-- Character associated with integer value `i'
 		external
-			"C [macro %"eif_misc.h%"]"
+			"C inline use %"eif_eiffel.h%""
+		alias
+			"((EIF_CHARACTER) ($i))"
 		end
 
 	c_outc (c: CHARACTER): STRING is
@@ -219,32 +223,44 @@ feature {NONE} -- Implementation
 
 	chupper (c: CHARACTER): CHARACTER is
 		external
-			"C [macro %"eif_misc.h%"]"
+			"C signature (int): int use <ctype.h>"
+		alias
+			"toupper"
 		end
 
 	chlower (c: CHARACTER): CHARACTER is
 		external
-			"C [macro %"eif_misc.h%"]"
+			"C signature (int): int use <ctype.h>"
+		alias
+			"tolower"
 		end
 
 	chis_lower (c: CHARACTER): BOOLEAN is
 		external
-			"C [macro %"eif_misc.h%"]"
+			"C inline use <ctype.h>"
+		alias
+			"EIF_TEST(islower($c))"
 		end
 
 	chis_upper (c: CHARACTER): BOOLEAN is
 		external
-			"C [macro %"eif_misc.h%"]"
+			"C inline use <ctype.h>"
+		alias
+			"EIF_TEST(isupper($c))"
 		end
 
 	chis_digit (c: CHARACTER): BOOLEAN is
 		external
-			"C [macro %"eif_misc.h%"]"
+			"C inline use <ctype.h>"
+		alias
+			"EIF_TEST(isdigit($c))"
 		end
 
 	chis_alpha (c: CHARACTER): BOOLEAN is
 		external
-			"C [macro %"eif_misc.h%"]"
+			"C inline use <ctype.h>"
+		alias
+			"EIF_TEST(isalpha($c))"
 		end
 
 indexing

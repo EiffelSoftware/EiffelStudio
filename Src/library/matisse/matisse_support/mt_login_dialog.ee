@@ -1,0 +1,305 @@
+indexing
+	description: "MATISSE-Eiffel Binding: A dialog for login";
+	date: "$Date$";
+	revision: "$Revision$"
+
+class
+	MT_LOGIN_DIALOG
+
+inherit
+	FORM_D
+		rename
+			make as form_d_make
+		end
+
+	COMMAND
+	
+	MT_EXCEPTIONS
+		rename
+			raise as raise_exception
+		end
+		
+creation
+	make
+	
+feature {NONE} -- Initialization
+
+	make(a_name: STRING; a_parent: COMPOSITE; a_mt_appl: MATISSE_APPL) is
+		require
+			name_not_void: a_name /= Void;
+			parent_not_void: a_parent /= Void
+		do
+			form_d_make (a_name, a_parent);
+			mt_appl := a_mt_appl
+			set_size (340,200);
+			!!hostname_label.make("hostname_label", Current)
+			!!hostname_text_field.make("hostname_text_field", Current)
+			!!db_name_label.make("db_name_label", Current)
+			!!db_name_text_field.make("db_name_text_field", Current)
+			!!user_name_label.make("user_name_label", Current)
+			!!user_name_text_field.make("user_name_text_field", Current)
+			!!password_label.make("password_label", Current)
+			!!password_text_field.make("password_text_field", Current)
+			!!version_button.make("version_button", Current)
+			!!ok_button.make("ok_button", Current)
+			!!cancel_button.make("cancel_button", Current)
+			
+			set_widget_values
+			
+			set_widget_position
+			
+			set_actions
+			
+			set_initial_input_focus(hostname_text_field)
+			forbid_resize
+			connection_action := True
+		end
+	
+feature -- Status
+	
+	ok_pressed: BOOLEAN
+
+	hostname: STRING is
+		do
+			Result := hostname_text_field.text
+		end
+	
+	database_name: STRING is
+		do
+			Result := db_name_text_field.text
+		end
+	
+	user_name: STRING is
+		do
+			Result := user_name_text_field.text
+		end
+	
+feature -- Status setting
+
+	set_hostname(a_hostname: STRING) is
+		do
+			hostname_text_field.set_text(clone(a_hostname))
+		end
+	
+	set_database_name(a_name: STRING) is
+		do
+			db_name_text_field.set_text(clone(a_name))
+		end
+	
+	set_user_name(a_name: STRING) is
+		do
+			user_name_text_field.set_text(clone(a_name))
+		end
+	
+	set_password(a_password: STRING) is
+		do
+			password_text_field.set_text(clone(a_password))
+		end
+		
+	set_no_connection_action is
+		-- The routine 'execute' will not execute connection to the database.
+		do
+			connection_action := False
+		end
+	
+	set_connection_action is
+		-- The routine 'execute' will execute connection to the database.
+		do
+			connection_action := True
+		end
+	
+feature -- Command
+
+	execute(argument: ANY) is
+		local
+			retried: BOOLEAN
+			dialog: WARNING_D
+			close_com: POPDOWN_COM
+		do
+			if not warning_opened then
+				-- Regular case
+				ok_pressed := True
+				if not hostname.empty then
+					mt_appl.set_hostname(clone(hostname))
+				end
+				if not database_name.empty then
+					mt_appl.set_database_name(clone(database_name))
+				end
+				if not user_name.empty then
+					mt_appl.set_user_name(clone(user_name))
+				end
+				if not password.empty then
+					mt_appl.set_password(clone(password))
+				end
+				popdown
+				if connection_action then
+					if not try_db_connection then
+						!!dialog.make("Connection fails", parent)
+						dialog.set_message(error_message)
+						dialog.set_exclusive_grab
+						!!close_com
+						dialog.add_ok_action(Current, dialog)
+						dialog.hide_cancel_button
+						dialog.hide_help_button
+						warning_opened := True
+						dialog.popup
+							-- Popup a warning dialog.
+							-- 'ok_button' action will popup the current login dialog again.
+					end
+				end
+			else
+				-- Close a warning dialog and popup the (current) login dialog again.
+				dialog ?= argument
+				dialog.popdown
+				warning_opened := False
+				popup
+			end
+		end
+
+
+
+feature {NONE} -- Implementation
+
+	set_widget_values is
+		local
+			label_width, label_height, field_width, field_height: INTEGER
+		do
+			label_width := 100
+			label_height := 30
+			field_width := 200
+			field_height := 30
+			set_background_color(version_button.background_color)
+
+			hostname_label.set_text("Host:")
+			hostname_label.set_right_alignment
+			--hostname_label.set_width(label_width)
+			hostname_label.set_background_color(version_button.background_color)
+			
+			db_name_label.set_text("Database:")
+			db_name_label.set_right_alignment
+			--db_name_label.set_width(label_width)
+			
+			user_name_label.set_text("User Name:")
+			user_name_label.set_right_alignment
+			--user_name_label.set_width(label_width)
+			
+			password_label.set_text("Password:")
+			password_label.set_right_alignment
+			--password_label.set_width(label_width)
+			
+			hostname_text_field.set_width(field_width)
+			db_name_text_field.set_width(field_width)
+			user_name_text_field.set_width(field_width)
+			password_text_field.set_width(field_width)
+			
+			version_button.set_toggle_off
+			version_button.set_text("Choose version")
+			--version_button.set_width(field_width)
+			
+			ok_button.set_text("OK")
+			ok_button.forbid_recompute_size
+			ok_button.set_size(80, 25)
+			
+			cancel_button.set_text("Cancel")
+			cancel_button.forbid_recompute_size
+			cancel_button.set_size(80, 25)
+			
+			--forbid_recompute_size
+		end
+
+	set_widget_position is
+		do
+			attach_top_position(hostname_label, 10)
+			attach_right_position(hostname_label, 25)
+			
+			attach_top_position(db_name_label, 23)
+			attach_right_position(db_name_label, 25)
+			
+			attach_top_position(user_name_label, 36)
+			attach_right_position(user_name_label, 25)
+			
+			attach_top_position(password_label, 49)
+			attach_right_position(password_label, 25)
+			
+			attach_left_widget(hostname_label, hostname_text_field, 20)
+			attach_top_position(hostname_text_field, 10)
+			
+			attach_left_widget(db_name_label, db_name_text_field, 20)
+			attach_top_position(db_name_text_field, 23)
+			
+			attach_left_widget(user_name_label, user_name_text_field, 20)
+			attach_top_position(user_name_text_field, 36)
+			
+			attach_left_widget(password_label, password_text_field, 20)
+			attach_top_position(password_text_field, 49)
+			
+			attach_left_widget(password_label, version_button, 20)
+			attach_top_position(version_button, 60)
+			
+			attach_top_position(ok_button, 80)
+			attach_left_position(ok_button, 25)
+			
+			attach_top_position(cancel_button, 80)
+			attach_left_widget(ok_button, cancel_button, 25)
+		end
+
+	set_actions is
+		do
+			cancel_button.add_activate_action(close_command, Current)
+			ok_button.add_activate_action(Current, Current)
+		end
+
+	try_db_connection : BOOLEAN is
+		local
+			rescued: BOOLEAN
+		do
+			if not rescued then
+				mt_appl.connect
+				Result := True
+			else
+				Result := False
+			end
+		rescue
+			rescued := True
+			error_message := clone(developer_exception_name)
+			retry
+		end
+		
+	hostname_label: LABEL
+	hostname_text_field: TEXT_FIELD
+	
+	db_name_label: LABEL
+	db_name_text_field: TEXT_FIELD
+	
+	user_name_label: LABEL
+	user_name_text_field: TEXT_FIELD
+	
+	password_label: LABEL
+	password_text_field: PASSWORD
+	
+	version_button: TOGGLE_B
+	
+	ok_button: PUSH_B
+	cancel_button: PUSH_B
+	
+	close_command: POPDOWN_COM is
+		once
+			!!Result
+		end
+	
+	mt_appl: MATISSE_APPL
+	
+	password: STRING is
+		do
+			Result := password_text_field.text
+		end
+	
+	connection_action : BOOLEAN
+		-- Should 'execute' execute connection to the database?
+		
+	warning_opened: BOOLEAN
+		-- When a warning dialog is opened, this is set to True.
+	
+	error_message: STRING
+		
+end -- class MT_LOGIN_DIALOG

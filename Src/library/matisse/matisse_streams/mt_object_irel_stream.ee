@@ -1,0 +1,26 @@
+indexing
+	description: "MATISSE-Eiffel Binding";
+	date: "$Date$";
+	revision: "$Revision$"
+
+class 
+	MT_OBJECT_IREL_STREAM 
+
+inherit 
+	MT_STREAM
+
+	MT_OBJECT_IREL_STREAM_EXTERNAL
+
+Creation 
+	make
+
+
+feature {RELATIONSHIP} -- Implementation
+
+	make (one_object: MT_OBJECT) is
+		-- Open Stream
+		do
+			c_stream := c_open_inverse_relationships_stream (one_object.oid)
+		end
+
+end -- class MT_OBJECT_IREL_STREAM

@@ -1,0 +1,20 @@
+class 
+	MT_OBJECT_ATT_STREAM
+
+inherit 
+	MT_STREAM
+
+	MT_OBJECT_ATT_STREAM_EXTERNAL
+
+Creation 
+	make
+
+feature {RELATIONSHIP} -- Implementation
+
+	make (one_object: MT_OBJECT) is
+		-- Open Stream
+		do
+			c_stream := c_open_attributes_stream (one_object.oid)
+		end -- make
+
+end -- class MT_OBJECT_ATT_STREAM

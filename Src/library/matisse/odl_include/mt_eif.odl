@@ -1,0 +1,44 @@
+//
+// Meta-Schema Extension for MATISSE-Eiffel Binding
+//----------------------
+
+//
+// You can write an interface definition using one of the 
+// meta-schema extension as follows:
+//
+//  interface FOO : persistent {
+//  	relationship List<BAR> a_list[0, -1]
+//  	  inverse another_list
+//  	  mt_instance_of CompositeRelationship;
+//  };
+//
+
+// For composite object
+interface CompositeRelationship : "Mt Relationship" : persistent {
+};
+
+// For hash_table
+interface HashTableRelationship : "Mt Relationship" : persistent {
+};
+
+
+mt_relationship List<Any> hash_table_of_void_key_value
+  inverse HASH_TABLE::void_key_obj_value;
+mt_relationship List<Any> hash_table_of_value
+  inverse HASH_TABLE::obj_values;
+mt_relationship List<Any> hash_table_of_key
+  inverse HASH_TABLE::obj_keys;
+  
+interface HASH_TABLE : persistent {
+  attribute {MT_NULL, Array<Octet>, Array<MtS16>, Array<MtU16>, Array<MtS32>, Array<MtU32>, Array<MtFloat>, Array<MtDouble>, Array<MtAsciiString>, Array<MtString>} att_keys;
+  attribute {MT_NULL, Array<Octet>, Array<MtS16>, Array<MtU16>, Array<MtS32>, Array<MtU32>, Array<MtFloat>, Array<MtDouble>, Array<MtAsciiString>, Array<MtString>} att_values;
+  attribute {MT_NULL, Array<MtS32>} value_index;
+  attribute {MT_NULL, MtU8, MtS16, MtU16, MtS32, MtU32, MtFloat, MtDouble, MtAsciiChar, MtChar, MtAsciiString, MtString} void_key_att_value;
+  relationship List<Any> obj_keys
+    inverse hash_table_of_key;
+  relationship List<Any> obj_values
+    inverse hash_table_of_value;
+  relationship Any void_key_obj_value[0, 1]
+    inverse hash_table_of_void_key_value;
+  attribute MtBoolean has_default = MT_FALSE;
+};

@@ -485,13 +485,26 @@ feature {NONE}  -- precursor table
 			p_list: HASH_TABLE [CL_TYPE_A, STRING]
 			i, rc: INTEGER
 			pair: PAIR [CL_TYPE_A, ROUTINE_ID]
+			r_class_i: CLASS_I
+			a_cluster: CLUSTER_I
 		do
 			rout_id_set := context.a_feature.rout_id_set
 			rc := rout_id_set.count
 
 			if parent_name /= Void then
-				spec_p_name := Clone (parent_name.string_value)
-				spec_p_name.to_upper
+				-- Take class renaming into account
+				a_cluster := context.a_class.cluster
+				r_class_i := Universe.class_named (parent_name, a_cluster)
+
+				if r_class_i /= Void then
+					spec_p_name := Clone (r_class_i.name)
+					spec_p_name.to_upper
+				else
+					-- A class of name `parent_name' does not exist
+					-- in the universe. Use an empty name to trigger
+					-- an error message later.
+					spec_p_name := ""
+				end
 			end
 
 			from
@@ -527,6 +540,8 @@ feature {NONE}  -- precursor table
 							pair.set_first (parents.item)
 							pair.set_second (rout_id)
 							Result.extend (pair)
+
+								-- Register parent
 							p_list.put (parents.item, p_name)
 							i := rc -- terminate loop
 						end

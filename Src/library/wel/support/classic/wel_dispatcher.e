@@ -180,7 +180,7 @@ feature {NONE} -- Externals
 
 	cwel_set_dispatcher_object (dispatcher: like Current) is
 		external
-			"C [macro %"disptchr.h%"]"
+			"C macro signature (EIF_OBJECT) use %"disptchr.h%""
 		end
 
 	cwel_release_dispatcher_object is

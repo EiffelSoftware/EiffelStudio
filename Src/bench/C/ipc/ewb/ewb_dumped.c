@@ -22,12 +22,11 @@
 #include "eif_io.h"
 #include "eif_in.h"
 
-typedef void (*EIF_PROC_REF_REAL) (EIF_REFERENCE, EIF_REAL); /* No conversion into DOUBLE */
 EIF_PROC set_rout;
 EIF_PROC set_integer;
 EIF_PROC set_bool;
 EIF_PROC set_char;
-EIF_PROC_REF_REAL set_real;
+EIF_PROC set_real;
 EIF_PROC set_double;
 EIF_PROC set_ref;
 EIF_PROC set_pointer;
@@ -90,8 +89,10 @@ rt_public void c_recv_rout_info (EIF_OBJ target)
 						dtype = hack << 16;
 						dtype >>= 16;
 
-						(set_rout) (eif_access (target),
-							(EIF_BOOLEAN) dump.dmp_type == DMP_MELTED,
+						(FUNCTION_CAST(void, (EIF_REFERENCE, EIF_BOOLEAN, EIF_BOOLEAN, EIF_REFERENCE,
+											EIF_INTEGER, EIF_INTEGER, EIF_REFERENCE)) set_rout)
+							(eif_access (target),
+							(EIF_BOOLEAN) (dump.dmp_type == DMP_MELTED),
 							(EIF_BOOLEAN) 0,
 							obj_addr,
 							orig, dtype,
@@ -104,10 +105,12 @@ rt_public void c_recv_rout_info (EIF_OBJ target)
 						break; /* send error */
 				}
 			case ACKNLGE:	/* send exhausted */
-				(set_rout) (eif_access (target),
+				(FUNCTION_CAST(void, (EIF_REFERENCE, EIF_BOOLEAN, EIF_BOOLEAN, EIF_REFERENCE,
+											EIF_INTEGER, EIF_INTEGER, EIF_REFERENCE)) set_rout)
+					(eif_access (target),
 					(EIF_BOOLEAN) 0,
 					(EIF_BOOLEAN) 1, /* exhausted is true */
-					(EIF_REFERENCE) 0, 0L, (EIF_REFERENCE) 0);
+					(EIF_REFERENCE) 0, 0L, 0L, (EIF_REFERENCE) 0);
 				return;
 			default:
 				request_dispatch (pack); /* treat asynchronous request */
@@ -115,7 +118,7 @@ rt_public void c_recv_rout_info (EIF_OBJ target)
 		}
 	}
 	else
-		(set_error) (eif_access (target));
+		(FUNCTION_CAST(void, (EIF_REFERENCE)) set_error) (eif_access (target));
 	return;
 }
 
@@ -147,32 +150,33 @@ rt_public void c_recv_value (EIF_OBJ target)
 				type_flag = item.type;
 				switch (type_flag & SK_HEAD) {
 					case SK_BOOL:
-						set_bool (eif_access (target), item.it_char);
+						(FUNCTION_CAST(void, (EIF_REFERENCE, EIF_BOOLEAN)) set_bool) (eif_access (target), item.it_char);
 						return;
 					case SK_CHAR:
-						set_char (eif_access (target), item.it_char);
+						(FUNCTION_CAST(void, (EIF_REFERENCE, EIF_CHARACTER)) set_char) (eif_access (target), item.it_char);
 						return;
 					case SK_INT:
-						set_integer (eif_access (target), item.it_long);
+						(FUNCTION_CAST(void, (EIF_REFERENCE, EIF_INTEGER)) set_integer) (eif_access (target), item.it_long);
 						return;
 					case SK_FLOAT:
-						set_real (eif_access (target), item.it_float);
+						(FUNCTION_CAST(void, (EIF_REFERENCE, EIF_REAL)) set_real) (eif_access (target), item.it_float);
 						return;
 					case SK_DOUBLE:
-						set_double (eif_access (target), item.it_double);
+						(FUNCTION_CAST(void, (EIF_REFERENCE, EIF_DOUBLE)) set_double) (eif_access (target), item.it_double);
 						return;
 					case SK_POINTER:
-						set_pointer (eif_access (target), item.it_ptr);
+						(FUNCTION_CAST(void, (EIF_REFERENCE, EIF_POINTER)) set_pointer) (eif_access (target), item.it_ptr);
 						return;
 					case SK_REF:
 					case SK_EXP:
-						set_ref (eif_access (target),
+						(FUNCTION_CAST(void, (EIF_REFERENCE, EIF_POINTER, EIF_INTEGER)) set_ref)
+								(eif_access (target),
 								item.it_ref,
 								type_flag & SK_DTYPE);
 							/* reference and dynamic type */
 						return;
 					case SK_BIT:
-						set_bits (eif_access (target),
+						(FUNCTION_CAST(void, (EIF_REFERENCE, EIF_POINTER, EIF_INTEGER)) set_bits) (eif_access (target),
 							item.it_ref,
 							type_flag & SK_BMASK);
 							/* reference and number of bits */
@@ -182,18 +186,18 @@ rt_public void c_recv_value (EIF_OBJ target)
 				}
 			} else if (pack.rq_dump.dmp_type == DMP_VOID) {
 				/* No more values to be received */
-				(set_void) (eif_access (target));
+				(FUNCTION_CAST(void, (EIF_REFERENCE)) set_void) (eif_access (target));
 				return;
 			}
 		} else {
 			request_dispatch (pack);
 		}
 	}
-	(set_error) (eif_access (target));
+	(FUNCTION_CAST(void, (EIF_REFERENCE)) set_error) (eif_access (target));
 }
 
 
-rt_public void c_pass_recv_routines (EIF_PROC d_int, EIF_PROC d_bool, EIF_PROC d_char, EIF_PROC_REF_REAL d_real, EIF_PROC d_double, EIF_PROC d_ref, EIF_PROC d_point, EIF_PROC d_bits, EIF_PROC d_error, EIF_PROC d_void)
+rt_public void c_pass_recv_routines (EIF_PROC d_int, EIF_PROC d_bool, EIF_PROC d_char, EIF_PROC d_real, EIF_PROC d_double, EIF_PROC d_ref, EIF_PROC d_point, EIF_PROC d_bits, EIF_PROC d_error, EIF_PROC d_void)
 /*
  *	Register the routines to communicate with a RECV_VALUE
  */

@@ -1608,6 +1608,29 @@ feature -- Stone process
 		end
 
 	set_stone (a_stone: STONE) is
+			-- Change the currently focused stone.
+		local
+			cd: EB_STANDARD_DISCARDABLE_CONFIRMATION_DIALOG
+			cv_cst: CLASSI_STONE
+			l: LIST [EB_DEVELOPMENT_WINDOW]
+		do
+			cv_cst ?= a_stone
+			if cv_cst /= Void then
+				l := Window_manager.development_windows_with_class (cv_cst.class_i.name)
+				if l.is_empty or else l.count = 1 and then l.first = Current then
+						-- We're not editing the class in another window.
+					set_stone_after_first_check (a_stone)
+				else
+					create cd.make_initialized (2, "already_editing_class", warning_messages.w_Class_already_edited, Interface_names.L_do_not_show_again)
+					cd.set_ok_action (~set_stone_after_first_check (a_stone))
+					cd.show_modal_to_window (window)
+				end
+			else
+				set_stone_after_first_check (a_stone)
+			end
+		end
+
+	set_stone_after_first_check (a_stone: STONE) is
 			-- Display text associated with `a_stone', if any and if possible
 		local
 			feature_stone: FEATURE_STONE

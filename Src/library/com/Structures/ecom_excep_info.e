@@ -14,20 +14,20 @@ creation
 	make,
 	make_from_pointer
 
-feature -- Measurement
-
-	structure_size: INTEGER is
-			-- Size of EXCEPINFO structure
-		do
-			Result := c_size_of_excep_info
-		end
-
 feature {NONE} -- Initialization
 
 	make_from_pointer (a_pointer: POINTER) is
 			-- Make from pointer.
 		do
 			make_by_pointer (a_pointer)
+		end
+
+feature -- Measurement
+
+	structure_size: INTEGER is
+			-- Size of EXCEPINFO structure
+		do
+			Result := c_size_of_excep_info
 		end
 
 feature {NONE} -- Externals

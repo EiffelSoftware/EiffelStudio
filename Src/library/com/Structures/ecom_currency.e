@@ -38,7 +38,15 @@ feature -- Initialization
 			-- Create with value 'dec_value'
 		do
 			make
-		--	ccom_currency_from_decimal (dec_value.item, item)
+			ccom_currency_from_decimal (dec_value.item, item)
+		end
+
+feature {NONE} -- Initialization
+
+	make_from_pointer (a_pointer: POINTER) is
+			-- Make from pointer.
+		do
+			make_by_pointer (a_pointer)
 		end
 
 feature  -- Access
@@ -313,14 +321,6 @@ feature {NONE} -- Externals
 	ccom_currency_subtract (ptr_1, ptr_2, ptr_3: POINTER) is
 		external
 			"c [macro %"E_Currency.h%"] (CY *, CY *, CY *)"
-		end
-
-feature {NONE} -- Initialization
-
-	make_from_pointer (a_pointer: POINTER) is
-			-- Make from pointer.
-		do
-			make_by_pointer (a_pointer)
 		end
 
 end -- class ECOM_CURRENCY

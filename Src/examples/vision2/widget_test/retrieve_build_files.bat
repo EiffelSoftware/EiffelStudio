@@ -67,13 +67,11 @@ XCOPY /E /I /Y Src\Build2\interface\events .\interface\events
 
 
 XCOPY /Y Src\Build2\interface\widgets\primitives\gb_ev_gauge_editor_constructor.e .\interface
-XCOPY /Y Src\Build2\interface\widgets\primitives\gb_ev_pixmap_editor_constructor.e .\interface
 XCOPY /Y Src\Build2\interface\widgets\primitives\gb_ev_text_component_editor_constructor.e .\interface
 
 XCOPY /Y Src\Build2\interface\properties\gb_ev_colorizable_editor_constructor.e .\interface
 XCOPY /Y Src\Build2\interface\properties\gb_ev_deselectable_editor_constructor.e .\interface
 XCOPY /Y Src\Build2\interface\properties\gb_ev_fontable_editor_constructor.e .\interface
-XCOPY /Y Src\Build2\interface\properties\gb_ev_pixmapable_editor_constructor.e .\interface
 XCOPY /Y Src\Build2\interface\properties\gb_ev_sensitive_editor_constructor.e .\interface
 XCOPY /Y Src\Build2\interface\properties\gb_ev_text_alignable_editor_constructor.e .\interface
 XCOPY /Y Src\Build2\interface\properties\gb_ev_textable_editor_constructor.e .\interface

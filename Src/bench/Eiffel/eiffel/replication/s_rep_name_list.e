@@ -20,7 +20,7 @@ creation
 
 feature
 
-	parent_clause: INTEGER;
+	parent_clause: CLASS_ID;
 			-- Parent clause where replication came from 
 
 	replicated_features: LINKED_LIST [S_REP_NAME];
@@ -28,7 +28,7 @@ feature
 			-- The origin of these features were written_in the same
 			-- class 
 
-	make (p: INTEGER) is
+	make (p: CLASS_ID) is
 			-- Make current with parent `p'.
 		do
 			parent_clause := p;

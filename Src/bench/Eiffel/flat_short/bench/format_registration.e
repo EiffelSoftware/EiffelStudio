@@ -162,7 +162,7 @@ feature -- Element change
 			valid_target_class: target_class /= Void
 		do
 		-- initialize
-			target_feature_table := feat_tbl_server.item (target_class.id);
+			target_feature_table := feat_tbl_server.item (target_class.id.id);
 			if not current_class_only then
 				target_replicated_feature_table := 
 					target_feature_table.replicated_features;
@@ -391,7 +391,7 @@ debug ("FLAT_SHORT")
 	io.error.new_line;
 end;
 				current_feature_table := current_class.feature_table;
-				Result := Ast_server.item (current_class.id)
+				Result := Ast_server.item (current_class.id.id)
 			else
 debug ("FLAT_SHORT")
 	io.error.putstring ("Reparsing class ast: ");
@@ -475,8 +475,8 @@ end;
 			-- Register the current_ast in the format registration.
 		do
 			if current_class.is_precompiled then
-				if Class_comments_server.has (current_class.id) then
-					class_comments := Class_comments_server.disk_item (current_class.id);
+				if Class_comments_server.has (current_class.id.id) then
+					class_comments := Class_comments_server.disk_item (current_class.id.id);
 				else
 					!! class_comments.make (current_class.id, 0);
 				end;

@@ -75,7 +75,7 @@ feature
 		require
 			class_type_exists: class_type /= Void
 		do
-			Result := class_type.id
+			Result := class_type.id.id
 		end;
 
 	is_valid: BOOLEAN is

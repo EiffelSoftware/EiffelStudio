@@ -54,7 +54,7 @@ feature -- Properties
 	origin: FEATURE_I;
 			-- Feature where assertions are defined
 
-	written_in: INTEGER is
+	written_in: CLASS_ID is
 			-- Written in id of origin feature
 		require
 			origin_set: origin /= Void

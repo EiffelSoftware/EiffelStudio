@@ -13,6 +13,7 @@ inherit
 		end;
 	SHARED_SERVER;
 	SHARED_WORKBENCH;
+	COMPILER_EXPORTER
 
 creation
 
@@ -100,7 +101,7 @@ end;
 		end;
 
 	update_new_features (f_table: FEATURE_TABLE;
-						orig_written_in: INTEGER) is
+						orig_written_in: CLASS_ID) is
 			-- Update Current list using f_table. (update
 			-- the new feature attribute of rep_name); 
 			-- Record the dependencies between the origin (old_feature)
@@ -112,14 +113,14 @@ end;
 			dependencies: REP_CLASS_DEPEND;
 			feat_dependence: REP_FEATURE_DEPEND;
 			depend_unit: REP_DEPEND_UNIT;
-			written_in: INTEGER;
+			written_in: CLASS_ID;
 		do
 debug ("REPLICATION")
 	--io.error.putstring ("in update new features%N");
 end;
 			written_in := f_table.feat_tbl_id;
-			if Rep_depend_server.has (orig_written_in) then
-				dependencies := Rep_depend_server.item (orig_written_in);
+			if Rep_depend_server.has (orig_written_in.id) then
+				dependencies := Rep_depend_server.item (orig_written_in.id);
 			else
 				!!dependencies.make (2);
 				dependencies.set_id (orig_written_in);
@@ -143,7 +144,7 @@ end;
 				if 
 					old_feat /= Void and then
 					not old_feat.is_deferred and then
-					old_feat.written_in = orig_written_in
+					equal (old_feat.written_in, orig_written_in)
 				then
 debug ("REPLICATION")
 	--io.error.putstring ("%Tcreating rep depend unit for: ");
@@ -175,7 +176,7 @@ end;
 		end;
 
 	update_old_features (f_table: FEATURE_TABLE;
-						orig_written_in: INTEGER) is
+						orig_written_in: CLASS_ID) is
 			-- Update old features of Current list.
 		require
 			not_empty: not empty
@@ -221,7 +222,7 @@ end;
 		end;
 
 	old_feature_from_table (rep_feat: FEATURE_I; 
-							written_in: INTEGER): FEATURE_I is
+							written_in: CLASS_ID): FEATURE_I is
 			-- Feature in `written_in' using rep_feat routine id
 			-- set.
 		local
@@ -231,7 +232,7 @@ end;
 			rout_id: ROUTINE_ID;
 		do
 			s_table := Feat_tbl_server.item
-							(written_in).origin_table;
+							(written_in.id).origin_table;
 			rout_id_set := rep_feat.rout_id_set;
 			from
 				count := rout_id_set.count;

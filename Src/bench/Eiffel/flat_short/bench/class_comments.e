@@ -17,7 +17,7 @@ inherit
 			{NONE} all;
 			{ANY} put, clear_all, remove, item, empty
 		end;
-	IDABLE
+	COMPILER_IDABLE
 		rename
 			id as class_id
 		export
@@ -36,7 +36,7 @@ feature {NONE} -- Initialization
 			-- Create precompiled comments with class_id `id'
 			-- with initial size `init_size'.
 		require
-			valid_id: id > 0
+			valid_id: id /= Void
 		do
 			table_make (init_size);
 			class_id := id
@@ -46,7 +46,7 @@ feature {NONE} -- Initialization
 
 feature -- Properties
 
-	class_id: INTEGER;
+	class_id: CLASS_ID;
 			-- Class id for class comments
 
 feature {NONE} -- Implementation
@@ -75,6 +75,6 @@ feature -- Debug
 
 invariant
 
-	positive_class_id: class_id > 0
+	class_id_not_void: class_id /= Void
 
-end -- class PRECOMPILED_COMMENTS
+end -- class CLASS_COMMENTS

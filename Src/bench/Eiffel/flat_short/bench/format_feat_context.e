@@ -92,11 +92,11 @@ feature -- Execution
 				start_pos := f_ast.start_position;
 				if written_in_class.is_precompiled then
 					if Class_comments_server.has 
-							(written_in_class.id) 
+							(written_in_class.id.id) 
 					then
 						c_comments := 
 							Class_comments_server.disk_item 
-									(written_in_class.id);
+									(written_in_class.id.id);
 						feature_comments := c_comments.item (start_pos)
 					end
 				else

@@ -36,7 +36,7 @@ feature
 	last_offset: INTEGER;
 			-- Offset of the last introduced class
 
-	last_id: INTEGER;
+	last_id: CLASS_ID;
 			-- Id of the current inserted class
 
 	make is

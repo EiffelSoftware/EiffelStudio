@@ -10,7 +10,8 @@ class COMMENT_REGISTRATION
 inherit
 
 	AST_REGISTRATION;
-	SHARED_TMP_SERVER
+	SHARED_TMP_SERVER;
+	COMPILER_EXPORTER
 
 creation
 	
@@ -50,7 +51,7 @@ feature -- Update
 			end
 		ensure
 			in_tmp_class_comments_server: not class_comments.empty implies
-						Tmp_class_comments_server.has (class_ast.id)
+						Tmp_class_comments_server.has (class_ast.id.id)
 		end;
 
 feature {AST_EIFFEL} -- Element change

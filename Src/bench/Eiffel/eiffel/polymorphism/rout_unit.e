@@ -12,7 +12,7 @@ feature
 	body_index: INTEGER;
 			-- Body index of the unit
 
-	written_in: INTEGER;
+	written_in: CLASS_ID;
 			-- Id of the class where the associated feature of the
 			-- unit is written in
 
@@ -25,7 +25,7 @@ feature
 			body_index := i
 		end;
 
-	set_written_in (i: INTEGER) is
+	set_written_in (i: CLASS_ID) is
 			-- Assign `i' to `written_in'.
 		do
 			written_in := i

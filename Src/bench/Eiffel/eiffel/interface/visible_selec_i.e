@@ -20,6 +20,7 @@ inherit
 	SHARED_AST_CONTEXT;
 	SHARED_SERVER;
 	SHARED_CECIL;
+	COMPILER_EXPORTER
 	
 feature 
 
@@ -191,7 +192,7 @@ feature -- DLE
 			elseif a_class.has_dynamic then
 				prepare_table (a_class.feature_table);
 				Cecil_file.putstring ("extern char **cl");
-				Cecil_file.putint (a_class.id);
+				Cecil_file.putint (a_class.id.id);
 				Cecil_file.putstring (";%N%N");
 				if byte_context.final_mode then
 					from

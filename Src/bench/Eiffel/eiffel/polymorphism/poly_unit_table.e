@@ -10,6 +10,7 @@ inherit
 		end;
 	IDABLE;
 	SHARED_WORKBENCH;
+	COMPILER_EXPORTER
 
 feature
 
@@ -30,10 +31,10 @@ feature
 			rout_id := i
 		end;
 
-	remove_unit_of_id (i: INTEGER) is
+	remove_unit_of_id (i: CLASS_ID) is
 			-- Remove polymorhic unit of id `i'.
 		local
-			item_id: INTEGER;
+			item_id: CLASS_ID;
 			stop: BOOLEAN;
 		do
 			from
@@ -42,7 +43,7 @@ feature
 				after or else stop
 			loop
 				item_id := item.id;
-				if item_id = i then
+				if equal (item_id, i) then
 					remove;
 					stop := True;
 				elseif item_id > i then
@@ -62,7 +63,7 @@ feature
 			if not_empty then
 				search_after (v)
 			end;
-			if off or else item.id /= v.id then
+			if off or else not equal (item.id, v.id) then
 				put_left (v);
 				if not_empty then
 					back

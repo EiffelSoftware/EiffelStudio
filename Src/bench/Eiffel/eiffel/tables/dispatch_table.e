@@ -79,7 +79,7 @@ end;
 				if u.is_valid then
 debug ("DLE SPY")
 io.error.put_string ("%Tstatic type #");
-io.error.put_integer (u.class_type.id);
+io.error.put_integer (u.class_type.id.id);
 io.error.put_string (", dtype #");
 io.error.put_integer (u.class_type.type_id);
 io.error.new_line;

@@ -22,11 +22,11 @@ feature -- Initialization
 
 	make is
 		do
-			create birthday_actions.make ("birthday", <<"age","name">>)
+			create birthday_actions.make
 			birthday_actions.extend (~send_card (?, ?, "Sam"))
 			birthday_actions.extend (~buy_gift (?, ?, "cigars", "Sam"))
 			birthday_actions.extend (~buy_gift (?, ?, "wine", "Sam"))
-			birthday_actions.extend (~birthday_wrapper (?, ?, ~ print ("doing nothing...%N")))
+			birthday_actions.extend (birthday_actions~wrapper (?, ?, ~ print ("doing nothing...%N")))
 
 			create nirvana_actions.make ("nirvana", <<>>)
 			nirvana_actions.extend (~bliss_out)
@@ -60,14 +60,7 @@ feature -- Initialization
 
 feature -- Event handlers
 
-	birthday_data: TUPLE [INTEGER, STRING]
-		 -- (age, name)
-	birthday_actions: ACTION_SEQUENCE [like birthday_data]
-
-	birthday_wrapper (age: INTEGER; name: STRING; p: PROCEDURE [ANY, TUPLE]) is
-		do
-			p.call ([age, name])
-		end 
+	birthday_actions: BIRTHDAY_ACTION_SEQUENCE
 
 	nirvana_actions:  ACTION_SEQUENCE [TUPLE []]
 

@@ -25,7 +25,7 @@ feature {NONE} -- Initialization
 		local
 			a_wel_string: WEL_STRING
 		do
-			!! a_wel_string.make (dll_name)
+			create a_wel_string.make (dll_name)
 			item := cwin_load_library (a_wel_string.item)
 		end
 
@@ -39,9 +39,9 @@ feature -- Access
 			a_wel_string: WEL_STRING
 			nb: INTEGER
 		do
-			!! Result.make (Max_name_length + 1)
+			create Result.make (Max_name_length + 1)
 			Result.fill_blank
-			!! a_wel_string.make (Result)
+			create a_wel_string.make (Result)
 			nb := cwin_get_module_file_name (item, a_wel_string.item,
 				Max_name_length + 1)
 			Result := a_wel_string.string

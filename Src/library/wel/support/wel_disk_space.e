@@ -48,7 +48,7 @@ feature -- Access
 			-- the feature `query_disk_space'.
 			--
 			-- This value is only valid if the free disk space
-			-- is less than 1 Go. Otherwise, it can not be represented
+			-- is less than 2 Gb. Otherwise, it can not be represented
 			-- by an INTEGER which is a signed 32 bits value.
 		require
 			result_meaningfull: last_free_space < 2047
@@ -63,7 +63,7 @@ feature -- Access
 			-- the feature `query_disk_space'.
 			--
 			-- This value is only valid if the free disk space
-			-- is less than 1 Go. Otherwise, it can not be represented
+			-- is less than 2 Gb. Otherwise, it can not be represented
 			-- by an INTEGER which is a signed 32 bits value.
 		require
 			result_meaningfull: last_total_space < 2047

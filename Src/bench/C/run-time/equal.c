@@ -10,10 +10,13 @@
 		Equality C externals
 */
 
+/*
+doc:<file name="equal.c" header="eif_equal.h" version="$Id$" summary="Equality on Eiffel objects">
+*/
 #include "eif_portable.h"
 #include "eif_eiffel.h"			/* For standard macros */
 #include "eif_equal.h"			/* For Eiffel boolean */
-#include "eif_struct.h"			/* For skeleton structure */
+#include "rt_struct.h"			/* For skeleton structure */
 #include "eif_traverse.h"		/* For traversing objects */
 #include "x2c.h"			/* For macro LNGPAD */
 #include "eif_tools.h"			/* For `nprime' */
@@ -34,15 +37,13 @@ rt_private char *rcsid =
 #endif
 
 /*
-doc:<file name="equal.c" header="eif_equal.h">
-doc:	<attribute name="table" return_type="struct s_table *">
+doc:	<attribute name="table" return_type="struct s_table *" export="private">
 doc:		<summary>Search table for deep equality.</summary>
 doc:		<thread_safety>Not safe</thread_safety>
 doc:		<synchronization>None</synchronization>
 doc:		<eiffel_classes>ANY</eiffel_classes>
 doc:		<fixme>table access is not protected. Therefore to do a deep equality in two different threads at the same time will certainly fail. Solution is to put `table' in the `eif_globals' structure, so that two threads can perform parallel deep equality.</fixme>
 doc:	</attribute>
-doc:</file>
 */
 rt_private struct s_table *table;		/* Search table for deep equal */
 
@@ -728,3 +729,8 @@ rt_private EIF_BOOLEAN e_field_iso(register EIF_REFERENCE target,
 	}
 	return EIF_TRUE;
 }
+
+/*
+doc:</file>
+*/
+

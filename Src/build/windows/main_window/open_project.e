@@ -14,6 +14,9 @@ feature
 
 	rescued: BOOLEAN;
 
+	to_create_project: BOOLEAN;
+			-- Create project?
+
 	execute (argument: STRING) is
 		local
 			dir: PLAIN_TEXT_FILE;
@@ -26,6 +29,10 @@ feature
 			storage_file: PLAIN_TEXT_FILE
 			proj_dir: STRING
 		do
+			if main_panel.project_initialized then
+                clear_project
+            end;
+			to_create_project := False;
 			proj_dir := Environment.project_directory;
 			proj_dir.wipe_out;
 			proj_dir.append (argument);	
@@ -58,7 +65,10 @@ feature
 						history_window.set_saved_application;
 					end;
 				else
-					handle_error (Messages.not_eb_project_er, bpdir.name);
+					to_create_project := True;
+					question_box.popup (Current,
+						Messages.not_eb_project_qu, 
+						Environment.project_directory);
 				end;
 			else
 				handle_error (Messages.eb_project_not_exists_er, proj_dir);
@@ -66,15 +76,24 @@ feature
 		end;
 
 	question_ok_action is
+		local
+			create_project: CREATE_PROJECT
 		do
-			retrieve_project (Environment.restore_directory)
-			history_window.set_unsaved_application;
+			if to_create_project then
+				!! create_project;
+				create_project.execute (clone (Environment.project_directory))
+			else
+				retrieve_project (Environment.restore_directory)
+				history_window.set_unsaved_application;
+			end
 		end;
 
 	question_cancel_action is
 		do
-			retrieve_project (Environment.storage_directory);
-			history_window.set_saved_application;
+			if not to_create_project then
+				retrieve_project (Environment.storage_directory);
+				history_window.set_saved_application;
+			end
 		end;	
 
 feature {NONE}

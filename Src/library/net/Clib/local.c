@@ -2,7 +2,7 @@
 	Unix domain specifics
 */
 
-#include "config.h"
+#include "eif_config.h"
 
 #include <sys/types.h>
 #include <sys/time.h>
@@ -11,7 +11,7 @@
 #define BSD_COMP
 #endif
 #include <sys/ioctl.h>
-#include "cecil.h"
+#include "eif_cecil.h"
 
 #ifdef I_SYS_SOCKET
 #include <sys/socket.h>
@@ -26,7 +26,7 @@
 #endif
 #include <sys/un.h>
 
-#include "bitmask.h"
+#include "eif_bitmask.h"
 
 EIF_INTEGER unix_address_size()
 	/*x Size of unix domain address data structure */

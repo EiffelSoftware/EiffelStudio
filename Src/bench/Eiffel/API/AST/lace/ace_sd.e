@@ -88,7 +88,6 @@ feature -- Status report
 		local
 			d_options: LACE_LIST [D_OPTION_SD]
 			fopt: FREE_OPTION_SD
-			l_ast: ACE_SD
 		do
 			d_options := defaults
 			if d_options /= Void then

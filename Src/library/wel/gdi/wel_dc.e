@@ -50,7 +50,8 @@ inherit
 	WEL_TA_CONSTANTS
 		export
 			{NONE} all
-			{ANY} valid_text_alignment_constant
+			{ANY} valid_text_alignment_constant, valid_htext_alignment_constant,
+				valid_vtext_alignment_constant
 		end
 
 	WEL_MM_CONSTANTS

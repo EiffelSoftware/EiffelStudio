@@ -159,6 +159,15 @@ RT_LNK void eif_exit_eiffel_code(void);
 #define RTEB(x,y)			b_equal(x,y)
 #define RTLX(x)				cr_exp(x)
 #ifdef WORKBENCH
+#define RTLXI(x)			init_exp(x)
+#else
+#define RTLXI(x)	\
+	{ \
+		void *(*cp)(EIF_REFERENCE) = (void *(*) (EIF_REFERENCE)) egc_exp_create [Dtype(x)]; \
+		if (cp) cp(x); \
+	}
+#endif
+#ifdef WORKBENCH
 RT_LNK int fcount;
 #define RTUD(x)				((x)>=fcount?(x):egc_fdtypes[x])  /* Updated dynamic type */
 #else

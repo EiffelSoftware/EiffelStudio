@@ -75,7 +75,7 @@ feature {GB_CODE_GENERATOR} -- Output
 			element_info := full_information @ (pixmap_path_string)
 			if element_info /= Void then
 				data := element_info.data
-				data := data.substring (data.last_index_of ('\', data.count), data.count)
+				data := data.substring (data.last_index_of (Directory_seperator, data.count), data.count)
 				data := "constant_by_name (%"pixmap_location%") + %"" + data
 				Result := info.name + ".set_with_named_file (" + data + "%")"
 			end

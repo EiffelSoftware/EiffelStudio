@@ -15,7 +15,8 @@ inherit
 		redefine
 			child_minwidth_changed,
 			child_minheight_changed,
-			set_default_minimum_size
+			set_default_minimum_size,
+			on_first_display
 		end
 
 creation
@@ -61,6 +62,13 @@ feature -- Element change
 			set_minimum_size (size, 0)
 		end
 
+	set_position (value: INTEGER) is
+			-- Make `value' the new position of the splitter.
+			-- `value' is given in percentage.
+		do
+			resize_children ((value * width) // 100)
+		end
+
 feature {NONE} -- Basic operation
 
 	resize_children (a_level: INTEGER) is
@@ -68,10 +76,10 @@ feature {NONE} -- Basic operation
 			-- splitter.
 		do
 			if child1 /= Void then
-				child1.split_ask_resize (a_level, height)
+				child1.parent_ask_resize (a_level, height)
 			end
 			if child2 /= Void then
-				child2.split_move_and_size (a_level + size, 0, 
+				child2.set_move_and_size (a_level + size, 0, 
 							width - a_level - size, height)
 			end
 			refresh
@@ -146,6 +154,12 @@ feature {NONE} -- Implementation
 			ldc.set_rop2 (old_rop2)
 			ldc.release
 		end
+
+  	on_first_display is
+   		do
+			{EV_SPLIT_AREA_IMP} Precursor
+			resize_children (child1.minimum_width)
+ 		end
 
 feature {NONE} -- WEL Implementation
 

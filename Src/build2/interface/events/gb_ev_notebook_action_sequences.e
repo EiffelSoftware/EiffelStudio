@@ -37,9 +37,23 @@ feature -- Access
 	
 	connect_event_output_agent (widget: EV_WIDGET; action_sequence: STRING; adding: BOOLEAN; string_handler: ORDERED_STRING_HANDLER) is
 			-- If `adding', then connect an agent to `action_sequence' actions of `widget' which will display name of 
-			-- action sequence and all arguments in `string_handler'. If no `adding' then `wipe_out' `action_sequence'.
+			-- action sequence and all arguments in `textable'. If no `adding' then `wipe_out' `action_sequence'.
+		local
+			notify_sequence: GB_EV_NOTIFY_ACTION_SEQUENCE
+			notebook: EV_NOTEBOOK
 		do
-			--| FIXME implement
+			notebook ?= widget
+			check
+				notebook_not_void: notebook /= Void
+			end
+			if action_sequence.is_equal (names @ 1) then
+				if adding then
+					create notify_sequence
+					notebook.selection_actions.extend (notify_sequence.display_agent (action_sequence, string_handler))
+				else
+					notebook.selection_actions.wipe_out
+				end
+			end	
 		end
 
 end -- class GB_EV_NOTEBOOK_ACTION_SEQUENCES

@@ -728,7 +728,7 @@ feature -- Status setting
 			set_grid_y (Default_grid_y)
 		end
 
-feature {EB_CONTEXT_EDITOR} -- Status setting
+feature {EB_CONTEXT_EDITOR, EB_SELECT_DEPTH_COMMAND} -- Status setting
 
 	cancel is
 			-- Cancel construction of `Current'.

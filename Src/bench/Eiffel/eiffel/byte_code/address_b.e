@@ -19,17 +19,34 @@ feature -- Attributes
 	rout_id: INTEGER;
 			-- Routine id of the feature
 
-	
 feature  -- Initialization
 
-	init (f: FEATURE_I) is
+	init (class_id: INTEGER; f: FEATURE_I) is
 			-- Initialization
 		require
 			good_argument: f /= Void;
 		do
 			feature_id := f.feature_id;
 			rout_id := f.rout_id_set.first;
+
+			record_feature (class_id, feature_id);
 		end; -- init
+
+feature -- Address table
+
+	record_feature (class_id, f_id: INTEGER) is
+			-- Record the feature in the address table if it is not there.
+			-- A refreezing will occur.
+		local
+			address_table: ADDRESS_TABLE
+		do
+			address_table := System.address_table
+
+			if not address_table.has (class_id, f_id) then
+					-- Record the feature
+				address_table.record (class_id, f_id)
+			end
+		end
 
 feature
 
@@ -59,13 +76,11 @@ feature
 			rout_table: ROUT_TABLE;
 		do
 			if context.workbench_mode then
-				generated_file.putstring ("RTWP(");
+				generated_file.putstring ("RTWPP(");
 				generated_file.putint
 					(context.current_type.associated_class_type.id - 1);
 				generated_file.putstring (gc_comma);
 				generated_file.putint (feature_id);
-				generated_file.putstring (gc_comma);
-				context.generate_current_dtype;
 				generated_file.putchar (')');
 			else
 				entry := Eiffel_table.item_id (rout_id);
@@ -73,26 +88,16 @@ feature
 						-- Function pointer associated to a deferred feature
 						-- without any implementation
 					generated_file.putstring ("(char *(*)()) 0");
---				elseif entry.is_polymorphic (context.current_type.type_id) then
-				elseif True then
-					table_name := clone (Encoder.table_name (rout_id));
-					generated_file.putchar ('(');
-                    generated_file.putstring (table_name);
-                    generated_file.putchar ('-');
-                    generated_file.putint (entry.min_used - 1);
-                    generated_file.putchar (')');
-                    generated_file.putchar ('[');
-					context.generate_current_dtype;
-                    generated_file.putchar (']');
+				else
 						-- Mark table used
                     Eiffel_table.mark_used (rout_id);
+
+					table_name := clone (Encoder.address_table_name (context.current_type.type_id, feature_id))
+
+                    generated_file.putstring (table_name);
+
                         -- Remember extern declarations
-                    Extern_declarations.add_routine_table (table_name);
-				else
-					rout_table ?= entry;
-					internal_name := rout_table.feature_name
-						(context.current_type.type_id);
-					generated_file.putstring (internal_name);
+                    Extern_declarations.add_routine (type, table_name);
 				end;
 			end;
 		end;

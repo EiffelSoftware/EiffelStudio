@@ -15,7 +15,6 @@ inherit
 			set_width as widget_set_width
 		export {NONE}
 			box,
-			label_widget,
 			initialize,
 			create_text_label
 		redefine
@@ -25,7 +24,9 @@ inherit
 			set_text,
 			text,
 			set_pixmap,
-			unset_pixmap
+			unset_pixmap,
+			set_foreground_color,
+			set_background_color
 		end
 
 creation
@@ -45,6 +46,9 @@ feature -- Initialization
 			a := status_bar_description.to_c
 			context_id := gtk_statusbar_get_context_id (widget, $a)
 			message_id := 0
+
+			-- Pointer to the gtk_box and gtk_label of the status bar.
+			set_label_widget (c_gtk_statusbar_item_label (widget))
 		end
 
 	make_with_text (txt: STRING) is
@@ -158,6 +162,19 @@ feature -- Element change
 			end
 		end
 	
+	set_foreground_color (color: EV_COLOR) is
+			-- Make `color' the new `foreground_color'
+		do
+			c_gtk_widget_set_fg_color (widget, color.red, color.green, color.blue)
+			c_gtk_widget_set_fg_color (label_widget, color.red, color.green, color.blue)
+		end
+
+	set_background_color (color: EV_COLOR) is
+			-- Make `color' the new `foreground_color'
+		do
+			c_gtk_statusbar_item_set_bg_color (widget, color.red, color.green, color.blue)
+		end
+
 feature {NONE} -- Implementation
 
 	set_pixmap (pix: EV_PIXMAP) is

@@ -17,7 +17,7 @@ create
 
 feature -- Basic metrics creation
 
-	list_of_basic_metrics (tl: EB_METRIC_TOOL): LINKED_LIST [EB_METRIC_BASIC] is
+	list_of_basic_metrics (tl: EB_METRIC_TOOL): ARRAYED_LIST [EB_METRIC_BASIC] is
 			-- List of all basic metrics available by default for users.
 			-- Clssify basic metrics into raw and derived.
 		require
@@ -43,7 +43,7 @@ feature -- Basic metrics creation
 				-- `functionality' is created just to call features of EB_METRIC_BASIC_FUNCTIONALITIES.
 			create functionality
 
-			create Result.make
+			create Result.make (30)
 
 			create classes.make (interface_names.metric_classes, interface_names.metric_class_unit, tl, Cluster_scope,
 				<< [Cluster_scope, agent functionality.number_of_classes_in_cluster],
@@ -180,15 +180,22 @@ feature -- Basic metrics creation
 					<< [Class_scope, agent functionality.number_of_imm_routines] >>)
 				Result.extend (imm_routines)
 
-			create all_feature_assertions.make (interface_names.metric_all_feature_assertions, interface_names.metric_contract_clause_unit, tl, Feature_scope,
+			create all_feature_assertions.make (interface_names.metric_all_feature_assertions,
+				interface_names.metric_contract_clause_unit, tl, Feature_scope, Void)
+			all_feature_assertions.override_processors_with (
 				<< [Feature_scope, agent functionality.number_of_feature_assertions_in_feature],
 					[Class_scope, agent all_feature_assertions.default_class_value_inherited] >>)
 			Result.extend (all_feature_assertions)
-				create all_postcondition_clauses.make (interface_names.metric_all_postcondition_clauses, interface_names.metric_contract_clause_unit, tl, Feature_scope,
+				create all_postcondition_clauses.make (interface_names.metric_all_postcondition_clauses,
+					interface_names.metric_contract_clause_unit, tl, Feature_scope, Void)
+				all_postcondition_clauses.override_processors_with (
 					<< [Feature_scope, agent functionality.number_of_postcondition_clauses_in_feature],
 						[Class_scope, agent all_postcondition_clauses.default_class_value_inherited] >>)
 				Result.extend (all_postcondition_clauses)
-				create all_precondition_clauses.make (interface_names.metric_all_precondition_clauses, interface_names.metric_contract_clause_unit, tl, Feature_scope,
+				create all_precondition_clauses.make
+					(interface_names.metric_all_precondition_clauses,
+					interface_names.metric_contract_clause_unit, tl, Feature_scope, Void)
+				all_precondition_clauses.override_processors_with (
 					<< [Feature_scope, agent functionality.number_of_precondition_clauses_in_feature],
 						[Class_scope, agent all_precondition_clauses.default_class_value_inherited] >>)
 				Result.extend (all_precondition_clauses)
@@ -210,7 +217,9 @@ feature -- Basic metrics creation
 					<< [Class_scope, agent functionality.number_of_formal_generics_constrained] >>)
 				Result.extend (formal_generics_constrained)
 
-			create all_formal_arguments.make (interface_names.metric_formals, interface_names.metric_local_unit, tl, Feature_scope,
+			create all_formal_arguments.make (interface_names.metric_formals,
+				interface_names.metric_local_unit, tl, Feature_scope, Void)
+			all_formal_arguments.override_processors_with (
 				<< [Feature_scope, agent functionality.number_of_formal_arguments],
 					[Class_scope, agent all_formal_arguments.default_class_value_inherited] >>)
 			Result.extend (all_formal_arguments)
@@ -244,7 +253,7 @@ feature -- Basic metrics creation
 --			Result.extend (comment_lines)
 
 
-			create raw_metric_list.make
+			create raw_metric_list.make (15)
 			raw_metric_list.extend (classes)
 			raw_metric_list.extend (clusters)
 			raw_metric_list.extend (compilations)
@@ -259,7 +268,7 @@ feature -- Basic metrics creation
 			raw_metric_list.extend (lines)
 			raw_metric_list.extend (all_locals)
 
-			create derived_metric_list.make
+			create derived_metric_list.make (45)
 			derived_metric_list.extend (deferred_class)
 			derived_metric_list.extend (effective_class)
 			derived_metric_list.extend (invariant_equipped)
@@ -462,10 +471,10 @@ feature -- Basic metrics creation
 			Result.extend (create {EV_MENU_SEPARATOR})
 		end
 
-	raw_metric_list: LINKED_LIST [EB_METRIC]
+	raw_metric_list: ARRAYED_LIST [EB_METRIC]
 		-- List of all raw metrics.
 
-	derived_metric_list: LINKED_LIST [EB_METRIC]
+	derived_metric_list: ARRAYED_LIST [EB_METRIC]
 		-- List of all derived metrics.
 
 end -- class EB_METRIC_BASIC_FACTORY

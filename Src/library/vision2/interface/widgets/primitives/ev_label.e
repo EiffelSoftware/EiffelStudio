@@ -12,7 +12,8 @@ class
 inherit
 	EV_PRIMITIVE
 		redefine
-			make, implementation
+			make,
+			implementation
 		end
 	
 	EV_BAR_ITEM
@@ -35,12 +36,19 @@ creation
 	make_with_text
 
 feature {NONE} -- Initialization
-		
+
+	make (par: EV_CONTAINER) is
+			-- Label with 'par' as parent.
+		do
+			!EV_LABEL_IMP!implementation.make
+			widget_make (par)
+		end
+
 	make_with_text (par: EV_CONTAINER; txt: STRING) is
 			-- Label with 'par' as parent and 'txt' as 
-			-- text label
+			-- text label.
 		do
-			!EV_LABEL_IMP!implementation.make_with_text (par, txt)
+			!EV_LABEL_IMP!implementation.make_with_text (txt)
 			widget_make (par)
 		end
 	

@@ -22,7 +22,8 @@ inherit
 		end
 
 creation
-	make
+	make,
+	make_with_text
 	
 feature {NONE} -- Initialization
 
@@ -30,10 +31,17 @@ feature {NONE} -- Initialization
 			-- Create a text field with, `par' as
 			-- parent
 		do
-			!EV_TEXT_FIELD_IMP!implementation.make (par)
+			!EV_TEXT_FIELD_IMP!implementation.make
 			widget_make (par)
 		end
-	
+
+	make_with_text (par: EV_CONTAINER; txt: STRING) is
+			-- Create a text area with `par' as
+			-- parent and `txt' as text.
+		do
+			!EV_TEXT_FIELD_IMP!implementation.make_with_text (txt)
+			widget_make (par)
+		end
 
 feature -- Event - command association
 	

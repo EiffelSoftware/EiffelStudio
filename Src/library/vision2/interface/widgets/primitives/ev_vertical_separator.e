@@ -21,7 +21,7 @@ feature {NONE} -- Initialization
  	make (par: EV_CONTAINER) is
  			-- Make seperator
 		do
- 			!EV_VERTICAL_SEPARATOR_IMP!implementation.make (par)
+ 			!EV_VERTICAL_SEPARATOR_IMP!implementation.make
  			widget_make (par)
  		end
 

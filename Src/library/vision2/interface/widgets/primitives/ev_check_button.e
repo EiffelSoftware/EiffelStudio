@@ -25,7 +25,7 @@ feature {NONE} -- Initialization
 	make (par: EV_CONTAINER) is
 		-- Empty check button
 		do
-			!EV_CHECK_BUTTON_IMP!implementation.make (par)
+			!EV_CHECK_BUTTON_IMP!implementation.make
 			widget_make (par)
 		end	
 	
@@ -33,7 +33,7 @@ feature {NONE} -- Initialization
 			-- Check button with `par' as parent and `txt' as
 			-- text label
 		do
-			!EV_CHECK_BUTTON_IMP!implementation.make_with_text (par, txt)
+			!EV_CHECK_BUTTON_IMP!implementation.make_with_text (txt)
 			widget_make (par)
 		end
 

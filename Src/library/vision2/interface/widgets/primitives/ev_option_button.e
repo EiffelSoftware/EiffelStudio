@@ -33,7 +33,7 @@ feature {NONE} -- Initialization
 			-- than a menu in a window. A menu is an option of a
 			-- window
 		do
-			!EV_OPTION_BUTTON_IMP!implementation.make (par)
+			!EV_OPTION_BUTTON_IMP!implementation.make
 			managed := par.manager
 			widget_make (par)
 		end	

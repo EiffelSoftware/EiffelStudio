@@ -28,7 +28,7 @@ feature {NONE} -- Initialization
 	make (par: EV_CONTAINER) is
 		-- Empty button
 		do
-			!EV_TOGGLE_BUTTON_IMP!implementation.make (par)
+			!EV_TOGGLE_BUTTON_IMP!implementation.make
 			widget_make (par)
 		end	
 	
@@ -36,7 +36,7 @@ feature {NONE} -- Initialization
 			-- Button with 'par' as parent and 'txt' as 
 			-- text label
 		do
-			!EV_TOGGLE_BUTTON_IMP!implementation.make_with_text (par, txt)
+			!EV_TOGGLE_BUTTON_IMP!implementation.make_with_text (txt)
 			widget_make (par)
 		end			
 		

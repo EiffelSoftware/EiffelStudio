@@ -1,6 +1,6 @@
 indexing
 	description: "List of default colors used by the system."
-	author: ""
+	status: "See notice at end of class."
 	date: "$Date$"
 	revision: "$Revision$"
 

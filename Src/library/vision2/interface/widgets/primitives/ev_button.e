@@ -19,7 +19,7 @@ inherit
 		redefine
 			implementation
 		end
-		
+
 	EV_TEXTABLE
 		redefine
 			implementation
@@ -66,7 +66,7 @@ feature -- Event - command association
 			valid_command: cmd /= Void
 		do
 			implementation.add_click_command (cmd, arg)
-		end	
+		end
 
 feature -- Event -- removing command association
 

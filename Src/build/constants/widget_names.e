@@ -166,7 +166,7 @@ feature -- Widget Names used in context editor and catalog
 	Icon_name_name: STRING is "Icon name";
 	Icon_pix_name: STRING is "Icon pixmap";
 	Iconic_state_name: STRING is "Iconic state (at start of application)";
-	Item_name: STRING is "Item";
+	Item_name: STRING is "List item";
 	Label_name: STRING is "Label";
 	Label_position_name: STRING is "Label position";
 	Label_t_f_form_name: STRING is "Label_t_f_form";

@@ -56,21 +56,6 @@ feature -- Access
 		deferred
 		end
 
---	text: LINKED_LIST [STRING] is
---			-- Return the text of the row
---		require
---			exists: not destroyed
---		deferred
---		end
-
---	cell_text (column: INTEGER): STRING is
---			-- Return the text of the cell number `column' 
---		require
---			exists: not destroyed
---			valid_column: column >= 1 and column <= columns
---		deferred
---		end
-
 feature -- Status report
 	
 	is_selected: BOOLEAN is
@@ -112,18 +97,18 @@ feature -- Status setting
 
 feature -- Event : command association
 
-	add_activate_command (cmd: EV_COMMAND; arg: EV_ARGUMENT) is
+	add_select_command (cmd: EV_COMMAND; arg: EV_ARGUMENT) is
 			-- Add `cmd' to the list of commands to be executed
-			-- when the item is activated.
+			-- when the item is selected.
 		require
 			exists: not destroyed
 			valid_command: cmd /= Void
 		deferred
 		end	
 
-	add_deactivate_command (cmd: EV_COMMAND; arg: EV_ARGUMENT) is
+	add_unselect_command (cmd: EV_COMMAND; arg: EV_ARGUMENT) is
 			-- Add `cmd' to the list of commands to be executed
-			-- when the item is deactivated.
+			-- when the item is unselected.
 		require
 			exists: not destroyed
 			valid_command: cmd /= Void
@@ -132,17 +117,17 @@ feature -- Event : command association
 
 feature -- Event -- removing command association
 
-	remove_activate_commands is
+	remove_select_commands is
 			-- Empty the list of commands to be executed
-			-- when the item is activated.
+			-- when the item is selected.
 		require
 			exists: not destroyed
 		deferred			
 		end	
 
-	remove_deactivate_commands is
+	remove_unselect_commands is
 			-- Empty the list of commands to be executed
-			-- when the item is deactivated.
+			-- when the item is unselected.
 		require
 			exists: not destroyed
 		deferred		

@@ -12,31 +12,11 @@ deferred class
 inherit
 	EV_MENU_ITEM_I
 	
-feature -- Status report
-	
-	state: BOOLEAN is
-			-- Is current menu-item checked ?.
-		require
-			exists: not destroyed
-		deferred
-		end 
-	
-feature -- Status setting
-
-	set_state (flag: BOOLEAN) is
-			-- Make `flag' the new state of the menu-item.
-		require
-			exists: not destroyed
-		deferred
-		ensure
-			correct_state: state = flag
-		end
-
 feature -- Event : command association
 
-	add_deactivate_command (cmd: EV_COMMAND; arg: EV_ARGUMENT) is
+	add_unselect_command (cmd: EV_COMMAND; arg: EV_ARGUMENT) is
 			-- Add `cmd' to the list of commands to be executed
-			-- when the item is unactivated.
+			-- when the item is unselected.
 		require
 			exists: not destroyed
 			valid_command: cmd /= Void
@@ -45,9 +25,9 @@ feature -- Event : command association
 
 feature -- Event -- removing command association
 
-	remove_deactivate_commands is
+	remove_unselect_commands is
 			-- Empty the list of commands to be executed when
-			-- the item is deactivated.
+			-- the item is unselected.
 		require
 			exists: not destroyed
 		deferred	

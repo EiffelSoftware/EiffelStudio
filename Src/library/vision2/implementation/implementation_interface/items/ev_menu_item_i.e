@@ -40,10 +40,13 @@ feature -- Status setting
    		deferred
    		end
 
-	set_selected is
+	set_selected (flag: BOOLEAN) is
    			-- Set current item as the selected one.
 			-- We use it only when the grand parent is an option button.
-   		deferred
+		require
+			exists: not destroyed
+  --			valid_grand_parent: grand_parent_is_option_button
+ 		deferred
    		end
 
 feature -- Element change
@@ -67,15 +70,16 @@ feature -- Assertion
 			-- False otherwise.
 			-- We use it only when the grand parent is an option button.
    		require
-			valid_grand_parent: grand_parent_is_option_button
+			exists: not destroyed
+--			valid_grand_parent: grand_parent_is_option_button
 		deferred
 		end
 
 feature -- Event : command association
 
-	add_activate_command (cmd: EV_COMMAND; arg: EV_ARGUMENT) is
+	add_select_command (cmd: EV_COMMAND; arg: EV_ARGUMENT) is
 			-- Add `cmd' to the list of commands to be executed
-			-- when the item is activated.
+			-- when the item is selected.
 		require
 			exists: not destroyed
 			valid_command: cmd /= Void
@@ -84,9 +88,9 @@ feature -- Event : command association
 
 feature -- Event -- removing command association
 
-	remove_activate_commands is
+	remove_select_commands is
 			-- Empty the list of commands to be executed when
-			-- the item is activated.
+			-- the item is selected.
 		require
 			exists: not destroyed
 		deferred			

@@ -1,11 +1,11 @@
-<document title="EiffelStudio 5.5 for Solaris">
+<document title="EiffelStudio 5.5 for HP OpenVMS">
 	<meta_data></meta_data>
 	<paragraph>
 		<heading><size>2</size>Requirements</heading>
 		<paragraph>
 			<table>
-				<row><cell><bold>Computer/Processor</bold></cell><cell>UltraSparc.</cell></row>
-				<row><cell><bold>Operating System</bold></cell><cell>Solaris 8.0 or greater with either Gnome 2.6 or GTK+ 2.4.</cell></row>
+				<row><cell><bold>Computer/Processor</bold></cell><cell>AlphaServer.</cell></row>
+				<row><cell><bold>Operating System</bold></cell><cell>HP OpenVMS 7.3 with GTK+ 2.4.</cell></row>
 				<row><cell><bold>Memory</bold></cell><cell>256 MB of RAM (512Mb recommended).</cell></row>
 				<row><cell><bold>Hard Disk</bold></cell><cell>400Mb uncompressed hard disk space (700Mb recommended).</cell></row>
 				<row><cell><bold>Drive</bold></cell><cell>CD-ROM or DVD drive (not required for Free Edition downloads).</cell></row>
@@ -25,18 +25,18 @@ tar xvfz /tmp/Eiffel55.tgz</code_block>
 		<paragraph>Once this is done, you should define the following environment variables in order to run EiffelStudio:
 			<list ordered="false">
 				<item><bold>ISE_EIFFEL</bold> to /usr/local/Eiffel55</item>
-				<item><bold>ISE_PLATFORM</bold> to solaris-2.5+</item>
+				<item><bold>ISE_PLATFORM</bold> to alphavms</item>
 			</list>
 		and add $<bold>ISE_EIFFEL</bold>/studio/spec/$<bold>ISE_PLATFORM</bold>/bin to your <bold>PATH</bold> environment variable.
 		</paragraph>
 		<paragraph>Using sh or bash as a shell, it suffices to type the following commands:<code_block>
 export ISE_EIFFEL=/usr/local/Eiffel55
-export ISE_PLATFORM=solaris-2.5+
+export ISE_PLATFORM=alphavms
 export PATH=$PATH:$<bold>ISE_EIFFEL</bold>/studio/spec/$<bold>ISE_PLATFORM</bold>/bin</code_block>
 		</paragraph>
 		<paragraph>Using csh or tcsh as a shell, it suffices to type the following commands:<code_block>
 setenv ISE_EIFFEL /usr/local/Eiffel55
-setenv ISE_PLATFORM solaris-2.5+
+setenv ISE_PLATFORM alphavms
 set path = ($path $<bold>ISE_EIFFEL</bold>/studio/spec/$<bold>ISE_PLATFORM</bold>/bin)</code_block>
 		</paragraph>
 		<paragraph>Once this is done you can jump to the "Using EiffelStudio" section at the end of this document.</paragraph>
@@ -50,18 +50,18 @@ cp -r /mnt/cdrom/Eiffel55 .</code_block>
 		<paragraph>Once this is done, you should define the following environment variables in order to run EiffelStudio:
 			<list ordered="false">
 				<item><bold>ISE_EIFFEL</bold> to /usr/local/Eiffel55</item>
-				<item><bold>ISE_PLATFORM</bold> to solaris-2.5+</item>
+				<item><bold>ISE_PLATFORM</bold> to alphavms</item>
 			</list>
 		and add $<bold>ISE_EIFFEL</bold>/studio/spec/$<bold>ISE_PLATFORM</bold>/bin to your <bold>PATH</bold> environment variable.
 		</paragraph>
 		<paragraph>Using sh or bash as a shell, it suffices to type the following commands:<code_block>
 export ISE_EIFFEL=/usr/local/Eiffel55
-export ISE_PLATFORM=solaris-2.5+
+export ISE_PLATFORM=alphavms
 export PATH=$PATH:$<bold>ISE_EIFFEL</bold>/studio/spec/$<bold>ISE_PLATFORM</bold>/bin</code_block>
 		</paragraph>
 		<paragraph>Using csh or tcsh as a shell, it suffices to type the following commands:<code_block>
 setenv ISE_EIFFEL /usr/local/Eiffel55
-setenv ISE_PLATFORM solaris-2.5+
+setenv ISE_PLATFORM alphavms
 set path = ($path $<bold>ISE_EIFFEL</bold>/studio/spec/$<bold>ISE_PLATFORM</bold>/bin)</code_block>
 		</paragraph>
 		<paragraph>Once this is done you can jump to the "Using EiffelStudio" section at the end of this document.</paragraph>
@@ -75,18 +75,18 @@ cp -r /mnt/cdrom/Eiffel55 .</code_block>
 		<paragraph>Once this is done, you should define the following environment variables in order to run EiffelStudio:
 			<list ordered="false">
 				<item><bold>ISE_EIFFEL</bold> to /usr/local/Eiffel55</item>
-				<item><bold>ISE_PLATFORM</bold> to solaris-2.5+</item>
+				<item><bold>ISE_PLATFORM</bold> to alphavms</item>
 			</list>
 		and add $<bold>ISE_EIFFEL</bold>/studio/spec/$<bold>ISE_PLATFORM</bold>/bin to your <bold>PATH</bold> environment variable.
 		</paragraph>
 		<paragraph>Using sh or bash as a shell, it suffices to type the following commands:<code_block>
 export ISE_EIFFEL=/usr/local/Eiffel55
-export ISE_PLATFORM=solaris-2.5+
+export ISE_PLATFORM=alphavms
 export PATH=$PATH:$<bold>ISE_EIFFEL</bold>/studio/spec/$<bold>ISE_PLATFORM</bold>/bin</code_block>
 		</paragraph>
 		<paragraph>Using csh or tcsh as a shell, it suffices to type the following commands:<code_block>
 setenv ISE_EIFFEL /usr/local/Eiffel55
-setenv ISE_PLATFORM solaris-2.5+
+setenv ISE_PLATFORM alphavms
 set path = ($path $<bold>ISE_EIFFEL</bold>/studio/spec/$<bold>ISE_PLATFORM</bold>/bin)</code_block>
 		<paragraph>Once the files are copied and once the environment variables are properly set, you need to register EiffelStudio. To do so type the following commands:</paragraph>
 		<code_block>cd $ISE_EIFFEL

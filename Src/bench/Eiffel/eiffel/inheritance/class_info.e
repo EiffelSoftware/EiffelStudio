@@ -39,6 +39,9 @@ feature -- Access
 
 	creators: EIFFEL_LIST [CREATE_AS];
 			-- Creators
+			
+	convertors: EIFFEL_LIST [CONVERT_FEAT_AS]
+			-- Convertors
 
 	unique_values: HASH_TABLE [INTEGER, STRING];
 			-- Stores the values of the unique attributes
@@ -177,5 +180,16 @@ feature -- Settings
 		do
 			unique_values := u;
 		end;
+		
+	set_convertors (c: like convertors) is
+			-- Assign `c' to `convertors'.
+		require
+			c_valid: c /= Void implies not c.is_empty
+		do
+			convertors := c
+		ensure
+			convertors_set: convertors = c
+		end
+		
 
 end

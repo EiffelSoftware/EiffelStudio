@@ -711,9 +711,6 @@ feature -- Status setting
 			locked_in_here := (create {EV_ENVIRONMENT}).application.locked_window = Void
 			if locked_in_here then
 				parent_window (Current).lock_update	
-			end		
-			if not platform_is_windows then
-				application.process_events
 			end
 			if top_widget_resizing then
 				from

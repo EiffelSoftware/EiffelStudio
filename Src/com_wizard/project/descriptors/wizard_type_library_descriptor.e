@@ -48,7 +48,7 @@ inherit
 			is_equal
 		end
 
-	WIZARD_REJECTED_TYPE_LIBRARIES
+	WIZARD_SPECIAL_TYPE_LIBRARIES
 		export
 			{NONE} all
 		undefine

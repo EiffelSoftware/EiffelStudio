@@ -683,6 +683,11 @@ feature {EV_GRID_DRAWER_I} -- Implementation
 		-- Cumulative offset of each column in pixels.
 		-- For example, if there are 5 columns, each with a width of 80 pixels,
 		-- `column_offsets' contains 0, 80, 160, 240, 320, 400 (Note this is 6 items)
+		
+	row_offsets: ARRAYED_LIST [INTEGER]
+		-- Cumulative offset of each row in pixels.
+		-- For example, if there are 5 rows, each with a height of 16 pixels,
+		-- `column_offsets' contains 0, 16, 32, 48, 64, 80 (Note this is 6 items)
 
 	drawable: EV_DRAWING_AREA
 		-- Drawing area for `Current' on which all drawing operations are performed.
@@ -693,7 +698,7 @@ feature {EV_GRID_DRAWER_I} -- Implementation
 	virtual_y_position: INTEGER
 			-- Virtual Y coordinate of `viewport' relative to top edge of grid.
 		
-	vertical_item_ofFset: INTEGER is
+	vertical_item_offset: INTEGER is
 			--
 		do
 			Result := vertical_scroll_bar.value
@@ -730,7 +735,9 @@ feature {NONE} -- Drawing implementation
 			create drawable
 			drawable.set_minimum_size (buffered_drawable_size, buffered_drawable_size)
 			create vertical_scroll_bar
+			vertical_scroll_bar.hide
 			vertical_scroll_bar.set_leap (default_scroll_bar_leap)
+			vertical_scroll_bar.change_actions.extend (agent vertical_scroll_bar_changed)
 			create horizontal_scroll_bar
 			horizontal_scroll_bar.set_step (default_scroll_bar_leap)
 			horizontal_scroll_bar.change_actions.extend (agent horizontal_scroll_bar_changed)
@@ -792,6 +799,32 @@ feature {NONE} -- Drawing implementation
 			counts_equal: column_offsets.count = column_count + 1
 		end
 		
+	recompute_row_offsets (an_index: INTEGER) is
+			-- Recompute contents of `row_offsets' from row index
+			-- `an_index' to `row_count'.
+		require
+			an_index_valid: an_index >= 0 and an_index <= row_count
+		local
+			i: INTEGER
+		do
+			if row_offsets = Void then
+				create row_offsets.make (row_count)
+				row_offsets.extend (0)
+				grid_rows.start
+			else
+				i := row_offsets @ (an_index)
+				grid_rows.go_i_th (an_index)
+			end
+			from			
+			until
+				grid_rows.off
+			loop
+				i := i + grid_rows.item.height
+				row_offsets.extend (i)
+				grid_rows.forth
+			end
+		end
+
 	header_item_resizing (header_item: EV_HEADER_ITEM) is
 			-- Respond to `header_item' being resized.
 		require
@@ -949,11 +982,108 @@ feature {NONE} -- Drawing implementation
 		
 	recompute_vertical_scroll_bar is
 			-- Recompute dimensions of `vertical_scroll_bar'.
+		local
+			l_total_row_height: INTEGER
+			l_client_height: INTEGER
+			average_row_height: INTEGER
+			previous_scroll_bar_value: INTEGER
 		do
-			vertical_scroll_bar.value_range.adapt (create {INTEGER_INTERVAL}.make (0, row_count))
-			vertical_scroll_bar.set_leap (height // 16)
+				-- Retrieve the final row offset as this is the virtual height required for all rows.
+			if row_offsets = Void then
+					fixme ("Ensure that `row_offsets' does not need special `Void' handling.")
+				l_total_row_height := 0
+			else
+				l_total_row_height := row_offsets.last
+			end
+			
+			l_client_height := viewport.height
+				-- Note that `height' was not used as we want it to represent only the height of
+				-- the "client area" which is `viewport'.
+			
+				
+			if l_total_row_height > l_client_height then
+					-- The rows are higher than the visible client area.
+				if not vertical_scroll_bar.is_show_requested then
+						-- Show `vertical_scroll_bar' if not already shown.
+					vertical_scroll_bar.show
+					update_scroll_bar_spacer
+				end
+					-- Update the range and leap of `vertical_scroll_bar' to reflect the relationship between
+					-- `l_total_row_height' and `l_client_height'. Note that the behavior depends on the state of
+					-- `is_vertical_scrolling_per_item'.
+--				if has_horizontal_scrolling_per_item_just_changed then
+--					previous_scroll_bar_value := horizontal_scroll_bar.value
+--				end
+				if is_vertical_scrolling_per_item then					
+					vertical_scroll_bar.value_range.adapt (create {INTEGER_INTERVAL}.make (0, row_count - 1))
+					average_row_height := (l_total_row_height // row_count)
+					vertical_scroll_bar.set_leap (l_client_height // average_row_height)
+--					if has_horizontal_scrolling_per_item_just_changed then
+--							-- If we are just switching from per pixel to per item horizontal
+--							-- scrolling, we must approximate the previous position of the scroll bar.
+--						horizontal_scroll_bar.set_value (previous_scroll_bar_value // average_column_width)
+--					end
+				else
+--					horizontal_scroll_bar.value_range.adapt (create {INTEGER_INTERVAL}.make (0, l_total_header_width - l_client_width))
+--					horizontal_scroll_bar.set_leap (width)
+--					if has_horizontal_scrolling_per_item_just_changed then
+--							-- If we are just switching from per item to per pixel horizontal
+--							-- scrolling, we can set the position of the scroll bar exactly to match it's
+--							-- previous position.
+--						horizontal_scroll_bar.set_value (column_offsets @ (previous_scroll_bar_value + 1))
+--					end
+				end
+			else
+					-- The rows are not as high as the visible client area.
+				if vertical_scroll_bar.is_show_requested then
+						-- Hide `vertical_scroll_bar' as it is not required.
+					vertical_scroll_bar.hide
+					update_scroll_bar_spacer
+				end
+			end
+--			
+--			if viewport.x_offset > 0 and (l_total_header_width - viewport.x_offset < viewport.width) then
+--					-- If `header' and `drawable' currently have a position that starts before the client area of
+--					-- `viewport' and the total header width is small enough so that at the current position, `header' and
+--					-- `drawable' do not reach to the very left-hand edge of the `viewport', update the horizontal offset
+--					-- so that they do reach the very left-hand edge of `viewport'
+--				horizontal_scroll_bar.change_actions.block
+--				viewport.set_x_offset ((l_total_header_width - viewport.width).max (0))
+--				header_viewport.set_x_offset ((l_total_header_width - viewport.width).max (0))
+--				
+--				horizontal_scroll_bar.change_actions.resume
+--			end
 		end
 		
+	vertical_scroll_bar_changed (a_value: INTEGER) is
+			-- Respond to a change in value from `vertical_scroll_bar'.
+		require
+			a_value_non_negative: a_value >= 0
+		local
+			buffer_space: INTEGER
+			current_buffer_position: INTEGER
+		do
+--			if is_horizontal_scrolling_per_item then
+--				virtual_x_position := column_offsets.i_th (a_value + 1)
+--			else
+--				virtual_x_position := a_value
+--			end
+--			buffer_space := (buffered_drawable_size - viewport.width)
+--			current_buffer_position := viewport.x_offset
+--			
+--			if (virtual_x_position > last_horizontal_scroll_bar_value) and ((virtual_x_position - last_horizontal_scroll_bar_value) + (current_buffer_position)) >= buffer_space then
+--				viewport.set_x_offset (0)
+--				drawable.redraw
+--			elseif (virtual_x_position < last_horizontal_scroll_bar_value) and ((virtual_x_position - last_horizontal_scroll_bar_value) + (current_buffer_position)) <= 0 then
+--				viewport.set_x_offset (buffer_space)
+--				drawable.redraw
+--			else
+--				viewport.set_x_offset (current_buffer_position + virtual_x_position - last_horizontal_scroll_bar_value)
+--			end
+--			header_viewport.set_x_offset (virtual_x_position)
+--			
+--			last_horizontal_scroll_bar_value := virtual_x_position
+		end
 
 	horizontal_scroll_bar_changed (a_value: INTEGER) is
 			-- Respond to a change in value from `horizontal_scroll_bar'.
@@ -971,22 +1101,31 @@ feature {NONE} -- Drawing implementation
 			buffer_space := (buffered_drawable_size - viewport.width)
 			current_buffer_position := viewport.x_offset
 			
-			if (virtual_x_position > last_value) and ((virtual_x_position - last_value) + (current_buffer_position)) >= buffer_space then
+			if (virtual_x_position > last_horizontal_scroll_bar_value) and ((virtual_x_position - last_horizontal_scroll_bar_value) + (current_buffer_position)) >= buffer_space then
 				viewport.set_x_offset (0)
 				drawable.redraw
-			elseif (virtual_x_position < last_value) and ((virtual_x_position - last_value) + (current_buffer_position)) <= 0 then
+			elseif (virtual_x_position < last_horizontal_scroll_bar_value) and ((virtual_x_position - last_horizontal_scroll_bar_value) + (current_buffer_position)) <= 0 then
 				viewport.set_x_offset (buffer_space)
 				drawable.redraw
 			else
-				viewport.set_x_offset (current_buffer_position + virtual_x_position - last_value)
+				viewport.set_x_offset (current_buffer_position + virtual_x_position - last_horizontal_scroll_bar_value)
 			end
 			header_viewport.set_x_offset (virtual_x_position)
 			
-			last_value := virtual_x_position
+			last_horizontal_scroll_bar_value := virtual_x_position
 		end
 		
+	last_horizontal_scroll_bar_value: INTEGER
+		-- Last value of `horizontal_scroll_bar' used within `horizontal_scroll_bar_changed'
+		-- to determine how far the scroll bar has moved and whether or not the position of the virtual drawable
+		-- needs to be "flipped". Although removing this computation may initially appear to work, there are
+		-- drawing issues in the case that two consecutive scroll bar positions are greater than the excess space for
+		-- virtual drawing.
 		
-	last_value: INTEGER
+	last_vertical_scroll_bar_value: INTEGER
+		-- Last value of `vertical_scroll_bar' used within `vertical_scroll_bar_changed'. See
+		-- comment of `last_horizontal_scroll_bar_value' for details of it's use.
+		
 
 	update_scroll_bar_spacer is
 			-- Update `scroll_bar_spacer' so that it has the appropriate minimum dimensions
@@ -1011,8 +1150,9 @@ feature {NONE} -- Drawing implementation
 					-- Update horizontal scroll bar size and position.
 				recompute_horizontal_scroll_bar
 			end
-			
-			recompute_vertical_scroll_bar
+			if row_count /= 0 then
+				recompute_vertical_scroll_bar
+			end
 		ensure
 			viewport_item_at_least_as_big_as_viewport: viewport.item.width >= viewport.width and
 				viewport.item.height >= viewport.height
@@ -1131,8 +1271,8 @@ feature {NONE} -- Implementation
 			else
 				grid_rows.put_left (a_grid_row.implementation)
 			end
-			header_item_resizing (header.last)
-			header_item_resize_ended (header.last)
+			recompute_row_offsets (a_index)
+			recompute_vertical_scroll_bar
 		end
 
 	enlarge_row_list (new_count: INTEGER) is

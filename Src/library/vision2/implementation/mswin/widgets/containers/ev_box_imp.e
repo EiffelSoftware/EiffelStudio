@@ -260,7 +260,7 @@ feature {NONE} -- Basic operation
 					non_expandable_children.off
 				loop
 					if non_expandable_children.item >= an_index then
-						non_expandable_children.replace (an_index + 1)
+						non_expandable_children.replace (non_expandable_children.item + 1)
 					end
 					non_expandable_children.forth
 				end

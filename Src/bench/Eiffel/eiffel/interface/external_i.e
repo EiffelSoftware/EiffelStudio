@@ -9,7 +9,7 @@ inherit
 	PROCEDURE_I
 		redefine
 			transfer_to, equiv, update_api,
-			melt, generate, duplicate, extension,
+			generate, duplicate, extension,
 			access_for_feature, is_external,
 			set_renamed_name, set_renamed_name_id, external_name_id, undefinable,
 			init_arg
@@ -236,12 +236,6 @@ feature
 			else
 				system.removed_log_file.add (class_type, feature_name)				
 			end
-		end
-
-	melt (exec: EXECUTION_UNIT) is
-			-- Generate byte code for the current feature
-		do
-			-- Nothing to be done since it is an external.
 		end
 
 feature {NONE} -- Api

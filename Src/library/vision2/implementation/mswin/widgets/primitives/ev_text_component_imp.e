@@ -86,6 +86,13 @@ feature -- Status setting
 			set_text_limit (value)
 		end
 
+	get_maximum_text_length: INTEGER is
+			-- Return the maximum number of characters
+			-- that the user may enter.
+		do
+			Result := get_text_limit
+		end
+
 feature -- element change
 
 	insert_text (txt: STRING) is
@@ -193,6 +200,11 @@ feature {NONE} -- Deferred features
 
 	set_text_limit (value: INTEGER) is
 			-- Make `value' the new maximal length of the text.
+		deferred
+		end
+
+	get_text_limit: INTEGER is
+			-- Return the maximum text length.
 		deferred
 		end
 

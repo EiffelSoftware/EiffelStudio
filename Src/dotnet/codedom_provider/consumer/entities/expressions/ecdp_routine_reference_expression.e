@@ -9,6 +9,8 @@ class
 inherit
 	ECDP_REFERENCE_EXPRESSION
 
+	ECDP_SHARED_CONSUMER_CONTEXT
+
 create
 	make
 
@@ -49,8 +51,8 @@ feature -- Access
 			-- | Set `dummy_variable' to true if `returned_type_routine' /= Void
 			-- Eiffel code of routine reference expression
 		local
-			target_name: STRING
-			type_ref_exp: ECDP_TYPE_REFERENCE_EXPRESSION
+			l_target_name, l_current: STRING
+			l_type_ref_exp: ECDP_TYPE_REFERENCE_EXPRESSION
 			l_returned_type_name: STRING
 		do
 			check
@@ -60,25 +62,23 @@ feature -- Access
 
 			create Result.make (120)
 			if target_object /= Void then
-				type_ref_exp ?= target_object
-				if type_ref_exp /= Void then
-					Result.append (Dictionary.Feature_keyword)
-					Result.append (Dictionary.Space)
-					Result.append (Dictionary.Opening_brace_bracket)
-					Result.append (target_object.code)
-					Result.append (Dictionary.Closing_brace_bracket)
-					Result.append (Dictionary.Dot_keyword)
+				l_type_ref_exp ?= target_object
+				if l_type_ref_exp /= Void then
+					Result.append ("feature {")
+					Result.append (l_type_ref_exp.code)
+					Result.append ("}.")
 				else
-					target_name := target_object.code
-					if 
-						not target_name.is_equal (current_namespace + Dictionary.Dot_keyword + current_class)
-						and not target_name.is_equal (Dictionary.Current_keyword)
-					then
-						Result.append (target_name)
-						Result.append (Dictionary.Dot_keyword)
+					l_target_name := target_object.code
+					create l_current.make (current_namespace.count + current_class.count + 1)
+					l_current.append (current_namespace)
+					l_current.append (".")
+					l_current.append (current_class)
+					if  not l_target_name.is_equal (l_current) and not l_target_name.is_equal ("Current") then
+						Result.append (l_target_name)
+						Result.append (".")
 					end
 					if caller_type /= Void then
-						l_returned_type_name := Eiffel_types.returned_type_feature (caller_type, routine_name, arguments)
+						l_returned_type_name := Resolver.feature_result_type (caller_type, routine_name, arguments)
 						if l_returned_type_name /= Void and then not l_returned_type_name.is_equal ("System.Void") then
 							set_dummy_variable (True) 
 						end
@@ -102,9 +102,9 @@ feature -- Status Report
 		local
 			l_dotnet_type_name: STRING
 		do
-			l_dotnet_type_name := Eiffel_types.returned_type_feature (caller_type, routine_name, arguments)
+			l_dotnet_type_name := Resolver.feature_result_type (caller_type, routine_name, arguments)
 			if l_dotnet_type_name /= Void then
-				Result := Eiffel_types.dotnet_type (l_dotnet_type_name)
+				Result := Dotnet_types.dotnet_type (l_dotnet_type_name)
 			else
 					-- just to not return Void. But it is incorrect!!!
 				Result := target_object.type
@@ -158,31 +158,32 @@ feature -- Status Setting
 feature {NONE} -- Implementation
 
 	generated_routine_name: STRING is
-			-- call `Eiffel_types.routine_name'
+			-- call `Resolver.routine_name'
 		require
 			routine_name_set: not routine_name.is_empty
 		local
-			this_target_object: ECDP_THIS_REFERENCE_EXPRESSION
+			l_this_target_object: ECDP_THIS_REFERENCE_EXPRESSION
 		do
 			if target_object /= Void then
-				this_target_object ?= target_object
+				l_this_target_object ?= target_object
 	
-				if caller_type /= Void and this_target_object = Void then
-					Result := Eiffel_types.eiffel_feature_name_from_dynamic_args (caller_type, routine_name, arguments)
+				if caller_type /= Void and l_this_target_object = Void then
+					Result := Feature_finder.eiffel_feature_name_from_dynamic_args (caller_type, routine_name, arguments)
 				else
-					Result := Eiffel_types.find_variable_name (routine_name)
+					Result := Resolver.eiffel_entity_name (routine_name)
 				end
 			else
-				Result := Eiffel_types.find_variable_name (routine_name)
+				Result := Resolver.eiffel_entity_name (routine_name)
 			end
 		ensure
 			non_void_result: Result /= Void
 		end
 
 	internal_caller_type: TYPE
+			-- Cached value for `caller_type'
 	
 	caller_type: TYPE is
-			-- dotnet name of the caller's type.
+			-- Caller type
 		require
 			routine_name_set: not routine_name.is_empty
 			target_object_set: target_object /= Void
@@ -191,18 +192,22 @@ feature {NONE} -- Implementation
 			argument_target_object: ECDP_ARGUMENT_REFERENCE_EXPRESSION
 			variable_target_object: ECDP_VARIABLE_REFERENCE_EXPRESSION
 			type_target_object: ECDP_TYPE_REFERENCE_EXPRESSION
-			parent_name: STRING
+			l_parent_name: STRING
 		do
 			if internal_caller_type /= Void then
 				Result := internal_caller_type
 			else
 				this_target_object ?= target_object
 				if this_target_object /= Void then
-					parent_name := Eiffel_types.where_is_implemented_feature (current_class, routine_name, arguments)
-					if parent_name /= Void and then parent_name.is_equal (current_class) then
-						Result := this_target_object.type
+					l_parent_name := implementing_type (current_class, routine_name, arguments)
+					if l_parent_name = Void then
+						(create {ECDP_EVENT_MANAGER}).raise_event (feature {ECDP_EVENTS_IDS}.Missing_implementing_type, [current_class, routine_name])
 					else
-						Result := Eiffel_types.dotnet_type (parent_name)
+						if l_parent_name.is_equal (current_class) then
+							Result := this_target_object.type
+						else
+							Result := Dotnet_types.dotnet_type (l_parent_name)
+						end
 					end
 				else
 					argument_target_object ?= target_object
@@ -217,13 +222,47 @@ feature {NONE} -- Implementation
 							if variable_target_object /= Void then
 								Result := variable_target_object.type
 							else
-								Result := Void
+								(create {ECDP_EVENT_MANAGER}).raise_event (feature {ECDP_EVENTS_IDS}.Missing_target_object, ["routine reference expression"])
 							end
 						end
 					end
 				end
 				internal_caller_type := Result
 			end
+		end
+
+	implementing_type (a_dotnet_type_name: STRING; a_dotnet_feature_name: STRING; feature_arguments: LINKED_LIST [ECDP_EXPRESSION]): STRING is
+			-- .NET type name of type where `a_dotnet_feature_name' is last implemented
+		require
+			non_void_a_dotnet_type: a_dotnet_type_name /= Void
+			not_empty_a_dotnet_type_name: not a_dotnet_type_name.is_empty
+			non_void_feature_name: a_dotnet_feature_name /= Void
+			not_empty_feature_name: not a_dotnet_feature_name.is_empty
+			non_void_feature_arguments: feature_arguments /= Void
+		local
+			l_generated_type: ECDP_GENERATED_TYPE
+			l_parents: LINKED_LIST [ECDP_PARENT]
+		do
+			if Resolver.is_generated_type (a_dotnet_type_name) then
+				l_generated_type := Resolver.generated_type (a_dotnet_type_name)
+				if l_generated_type.has_immediate_feature (a_dotnet_feature_name) then
+					Result := a_dotnet_type_name
+				else
+					from
+						l_parents := l_generated_type.parents
+						l_parents.start
+					until
+						l_parents.after or Result /= Void
+					loop
+						if Feature_finder.has_feature (l_parents.item.name, a_dotnet_feature_name, feature_arguments) then
+							Result := l_parents.item.name
+						end
+						l_parents.forth
+					end
+				end
+			else
+				(create {ECDP_EVENT_MANAGER}).raise_event (feature {ECDP_EVENTS_IDS}.Non_generated_type, [a_dotnet_type_name, "implementing_type", "routine reference expression"])
+			end			
 		end
 
 invariant

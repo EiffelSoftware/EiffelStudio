@@ -149,6 +149,14 @@ feature {NONE} -- Once per type definition
 
 feature -- Settings
 
+	set_current_module_with (a_class_type: CLASS_TYPE) is
+			-- Update `current_module' so that it refers to module in which
+			-- `a_class_type' is generated.
+		require
+			a_class_type_not_void: a_class_type /= Void
+		do
+		end
+
 	set_current_class_type (cl_type: like current_class_type) is
 			-- Set `current_class_type' to `cl_type'.
 		require
@@ -295,13 +303,17 @@ feature -- Settings
 
 feature -- Generation Structure
 
-	start_assembly_generation (assembly_name, a_file_name,
-			a_key_pair_file_name, location: STRING; assembly_info: ASSEMBLY_INFO)
+	start_assembly_generation (
+			a_assembly_name, a_file_name: STRING;
+			a_public_key: MD_PUBLIC_KEY;
+			location: STRING;
+			assembly_info: ASSEMBLY_INFO;
+			debug_mode: BOOLEAN)
 		is
 			-- Create Assembly with `name'.
 		require
-			assembly_name_not_void: assembly_name /= Void
-			assembly_name_not_empty: not assembly_name.is_empty
+			a_assembly_name_not_void: a_assembly_name /= Void
+			a_assembly_name_not_empty: not a_assembly_name.is_empty
 			a_file_name_not_void: a_file_name /= Void
 			a_file_name_not_empty: not a_file_name.is_empty
 			location_not_void: location /= Void
@@ -309,21 +321,19 @@ feature -- Generation Structure
 		do
 		end
 
-	start_module_generation (name: STRING; debug_mode: BOOLEAN) is
-			-- Create Module `name' within current assembly.
-			-- In debug mode if `debug_mode' is true.
-		require
-			name_not_void: name /= Void
-			name_not_empty: not name.is_empty
+	start_module_generation (a_module_id: INTEGER) is
+			-- Start generation of `a_module_id'.
 		do
 		end
 
-	define_entry_point (creation_type_id, a_type_id: INTEGER; a_feature_id: INTEGER) is
+	define_entry_point
+			(creation_type_id: INTEGER; a_class_type: CLASS_TYPE; a_feature_id: INTEGER)
+		is
 			-- Define entry point for IL component from `a_feature_id' in
 			-- class `a_type_id'.
 		require
 			positive_creation_type_id: creation_type_id > 0
-			positive_type_id: a_type_id > 0
+			a_class_type_not_void: a_class_type /= Void
 			positive_feature_id: a_feature_id > 0
 		do
 		end
@@ -333,7 +343,7 @@ feature -- Generation Structure
 		do
 		end
 
-	end_module_generation is
+	end_module_generation (has_root_class: BOOLEAN) is
 			-- Finish creation of current module.
 		do
 		end
@@ -379,6 +389,11 @@ feature -- Generation Info
 
 feature -- Class info
 
+	initialize_class_mappings (class_count: INTEGER) is
+			-- Initialize structures that holds some system data during code generation.
+		do
+		end
+
 	start_class_mappings (class_count: INTEGER) is
 			-- Following calls to current will only be `generate_class_mappings'.
 		do
@@ -395,6 +410,14 @@ feature -- Class info
 			-- Create correspondance between `runtime_type_id' and ISE.Runtime.TYPE.
 		require
 			runtime_type_id_set: runtime_type_id > 0
+		do
+		end
+
+	generate_class_interfaces (class_type: CLASS_TYPE; class_c: CLASS_C) is
+			-- Initialize `class_interface' from `class_type' with info from `class_c'.
+		require
+			class_type_not_void: class_type /= Void
+			class_c_not_void: class_c /= Void
 		do
 		end
 
@@ -811,7 +834,7 @@ feature -- Variables access
 		do
 		end
 
-	generate_attribute (type_i: TYPE_I; a_feature_id: INTEGER) is
+	generate_attribute (need_target: BOOLEAN; type_i: TYPE_I; a_feature_id: INTEGER) is
 			-- Generate access to attribute of `a_feature_id' in `type_i'.
 		require
 			type_i_not_void: type_i /= Void
@@ -966,7 +989,7 @@ feature -- Assignments
 		do
 		end
 
-	generate_attribute_assignment (type_i: TYPE_I; a_feature_id: INTEGER) is
+	generate_attribute_assignment (need_target: BOOLEAN; type_i: TYPE_I; a_feature_id: INTEGER) is
 			-- Generate assignment to attribute of `a_feature_id' in current class.
 		require
 			type_i_not_void: type_i /= Void

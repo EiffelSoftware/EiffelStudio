@@ -9,11 +9,12 @@ indexing
 class EB_GRAPHICAL_DEGREE_OUTPUT
 
 inherit
-	EV_DIALOG
-		redefine
-			make
-		end
+--	EV_DIALOG
+--		redefine
+--			make
+--		end
 
+	EV_ANY
 	EB_SHARED_INTERFACE_TOOLS
 --	WINDOW_ATTRIBUTES
 	EV_COMMAND
@@ -43,8 +44,7 @@ feature {NONE} -- Initialization
 
 	make (par: EV_WINDOW) is
 		do
-			Precursor (par)
-			create_window
+			parent := par
 		end
 
 feature -- Start output features
@@ -55,8 +55,8 @@ feature -- Start output features
 		local
 			i_name: STRING
 		do
-			if not shown then
-				show
+			if not is_valid (dialog) then
+				create_window
 			end
 			total_number := total_nbr
 			current_degree := 6
@@ -179,9 +179,9 @@ feature -- Start output features
 --				Project_tool.set_icon_name (icon_name)
 --				icon_name := Void
 --			end
---			if not destroyed then
---				unmanage
---			end
+			if is_valid (dialog) then
+				dialog.destroy
+			end
 		end
 
 	put_start_reverse_engineering (total_num: integer) is
@@ -199,12 +199,12 @@ feature -- Start output features
 --			set_project_icon_name (Interface_names.d_Reverse_engineering)
 		end
 
-	put_start_documentation (total_num: INTEGER type: STRING) is
+	put_start_documentation (total_num: INTEGER; type: STRING) is
 			-- Initialize the document generation.
 		do
 			total_number := total_num
 			processed := 0
-			show
+			dialog.show
 --			parent.set_title (Interface_names.d_Documentation) 
 --			icon_name := Project_tool.icon_name	
 			total_number := total_num
@@ -226,8 +226,8 @@ feature -- Start output features
 	put_case_message (a_message: STRING) is
 			-- Put `a_message' to the output window.
 		do
-			if not shown then	
-				show
+			if not is_valid (dialog) then	
+				create_window
 				degree_l.set_text (Empty_string)
 				degree_l.set_text (Empty_string)
 				entity_l.set_text (Empty_string)
@@ -390,8 +390,8 @@ feature {NONE} -- Implementation
 	put_string (a_message: STRING) is
 			-- Put `a_message' to output window.
 		do
-			if not shown then 
-				show
+			if not is_valid (dialog) then 
+				create_window
 			end
 			put_non_degree_message (a_message)
 		end
@@ -420,6 +420,10 @@ feature {NONE} -- Implementation
 		end
 
 feature {NONE} -- Implementation
+
+	dialog: EV_DIALOG
+
+	parent: EV_WINDOW
 
 --	icon_name: STRING
 			-- Icon name of project tool
@@ -463,24 +467,26 @@ feature {NONE} -- Implementation
 
 	create_window is
 			-- Create the compilation progress window.
+		require
+			dialog_non_valid: not is_valid (dialog)
 		local
 			frame: EV_FRAME
 		do
 --			icon_name := Project_tool.icon_name
---			make (parent)
---			parent.set_title (Interface_names.d_Compilation_progress)
-			create degree_l.make (display_area)	
-			create entity_l.make (display_area)	
-			create nbr_to_go_l.make (display_area)	
-			create current_degree_l.make (display_area)	
-			create current_entity_l.make (display_area)	
-			create current_nbr_to_go_l.make (display_area)	
-			create frame.make (display_area)	
+			create dialog.make (parent)
+			dialog.set_title (Interface_names.d_Compilation_progress)
+			create degree_l.make (dialog.display_area)	
+			create entity_l.make (dialog.display_area)	
+			create nbr_to_go_l.make (dialog.display_area)	
+			create current_degree_l.make (dialog.display_area)	
+			create current_entity_l.make (dialog.display_area)	
+			create current_nbr_to_go_l.make (dialog.display_area)	
+			create frame.make (dialog.display_area)	
 			create progress_bar.make (frame)	
-			create cancel_b.make_with_text (action_area, "Cancel")	
-			create percentage_l.make_with_text (display_area, "100%%")	
+			create cancel_b.make_with_text (dialog.action_area, "Cancel")	
+			create percentage_l.make_with_text (dialog.display_area, "100%%")	
 
-			show
+			dialog.show
 
 --			app_context := application_context
 --			cancel_b.set_activate_callback (Current, Void)
@@ -566,7 +572,7 @@ feature {NONE} -- Implementation
 --			parent.set_min_width (width)
 --			cursor_imp ?= mp.watch_cursor.implementation
 --			define_cursor (cursor_imp)
-			show
+			dialog.show
 		end
 
 	process_events is

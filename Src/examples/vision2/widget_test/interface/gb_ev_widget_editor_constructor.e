@@ -39,8 +39,8 @@ feature -- Access
 		do
 			create Result
 			initialize_attribute_editor (Result)
-			create minimum_width_entry.make (Current, Result, gb_ev_widget_minimum_width, gb_ev_widget_minimum_width_tooltip, agent set_minimum_width (?), agent valid_minimum_dimension (?))
-			create minimum_height_entry.make (Current, Result, gb_ev_widget_minimum_height, gb_ev_widget_minimum_height_tooltip, agent set_minimum_height (?), agent valid_minimum_dimension (?))
+			create minimum_width_entry.make (Current, Result, Minimum_width_string, gb_ev_widget_minimum_width, gb_ev_widget_minimum_width_tooltip, agent set_minimum_width (?), agent valid_minimum_dimension (?))
+			create minimum_height_entry.make (Current, Result, Minimum_height_string, gb_ev_widget_minimum_height, gb_ev_widget_minimum_height_tooltip, agent set_minimum_height (?), agent valid_minimum_dimension (?))
 			
 			update_attribute_editor
 			

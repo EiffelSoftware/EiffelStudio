@@ -274,7 +274,7 @@ char *create_id(char *s)
 	/* Memory allocation */
 	result = create_node(ID_AS);
 	/* Set attribute `count' of instance of ID_AS `id_string' */
-	(eif_strset)(id_string, strlen(s));
+	(egc_strset)(id_string, strlen(s));
 
 	/* Initialization of the new Eiffel instance of ID_AS through
 	 * feature `Create' of class ID_AS.

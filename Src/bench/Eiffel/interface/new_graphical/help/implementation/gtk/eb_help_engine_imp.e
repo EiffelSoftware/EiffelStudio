@@ -38,7 +38,7 @@ feature -- Basic Operations
 			root: STRING
 			exists: BOOLEAN
 		do
-			cmd := string_resource_value ("internet_browser", "")
+			cmd := clone (string_resource_value ("internet_browser", ""))
 			if cmd.is_empty then
 				last_show_successful := False
 				last_error_message := warning_messages.w_No_internet_browser_selected
@@ -58,7 +58,7 @@ feature -- Basic Operations
 					end
 					exists := (create {RAW_FILE}.make (url)).exists
 					if exists then
-						cmd.append (url)
+						cmd.replace_substring_all ("$url", url)
 						(create {EXECUTION_ENVIRONMENT}).launch (cmd)
 						last_show_successful := True
 					else

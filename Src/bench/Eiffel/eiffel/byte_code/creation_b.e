@@ -84,11 +84,17 @@ feature -- IL code generation
 			is_external: BOOLEAN
 			cl_type: CL_TYPE_I
 			l_ext: EXTERNAL_B
+			l_attr: ATTRIBUTE_B
+			l_class: CLASS_C
 		do
 			generate_il_line_info
 			target_type := Context.real_type (target.type)
+			l_class := context.associated_class
 
-			if target_type.is_reference then
+			if
+				target_type.is_reference or else
+				(target.is_attribute and not (l_class.is_frozen or l_class.is_single))
+			then
 
 					-- Analyze type of creation
 				create_type ?= info	
@@ -128,11 +134,20 @@ feature -- IL code generation
 				end
 			else
 					-- Creation on expanded or basic types
-					-- Issue current object if needed for assignment
+					-- We first generate address of expanded type.
 				target.generate_il_start_assignment
-				target.generate_il_assignment (target_type)
+				target.generate_il_address
 				if call /= Void then
 					call.message.generate_il
+				end
+					-- Some time if it is an attribute we need to assign new
+					-- computed value.
+				if target.is_attribute then
+					l_attr ?= target
+					cl_type ?= l_attr.context_type
+					il_generator.generate_expanded_attribute_assignment (
+						il_generator.implemented_type (l_attr.written_in, cl_type),
+						l_attr.attribute_id)
 				end
 			end
 		end

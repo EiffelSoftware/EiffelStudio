@@ -74,8 +74,6 @@ feature -- Properties
 	document,
 	dynamic_runtime,
 	exception_stack_managed,
-	hide,
-	hide_implementation,
 	msil_generation,
 	msil_generation_type,
 	msil_culture,
@@ -128,13 +126,9 @@ feature -- Duplication
 feature {COMPILER_EXPORTER}
 
 	is_system_level: BOOLEAN is
-		local
-			opt: INTEGER
+			-- Is Current free option a system level one?
 		do
-			opt := code
-			Result := opt /= hide and then
-				opt /= document and then
-				opt /= profile
+			Result := code /= document and then code /= profile
 		end;
 
 feature {NONE} -- Codes and names.
@@ -159,8 +153,6 @@ feature {NONE} -- Codes and names.
 			Result.force (console_application, "console_application")
 			Result.force (shared_library_definition, "shared_library_definition")
 			Result.force (check_vape, "check_vape");
-			Result.force (hide, "hide");
-			Result.force (hide_implementation, "hide_implementation");
 			Result.force (server_file_size, "server_file_size");
 			Result.force (java_generation, "java_generation")
 			Result.force (msil_generation, "msil_generation");
@@ -186,20 +178,12 @@ feature {COMPILER_EXPORTER}
 			list: LACE_LIST [ID_SD]) is
 			-- Adapt should not process the system level options
 		local
-			hide_sd: HIDE_SD;
 			document_sd: DOCUMENT_SD;
 			profile_sd: PROFILE_SD;
-			hide_imp_sd: HIDE_IMPLEMENTATION_SD;
 			opt: INTEGER
 		do
 			opt := code
 			inspect opt
-			when hide then
-				create hide_sd
-				hide_sd.adapt (value, classes, list)	
-			when hide_implementation then
-				create hide_imp_sd
-				hide_imp_sd.adapt (value, classes, list)	
 			when document then
 				create document_sd
 				document_sd.adapt (value, classes, list)	
@@ -474,9 +458,6 @@ feature {COMPILER_EXPORTER}
 						error_found := True
 					end
 
-				when hide then
-						-- This has been taken care of in `adapt'.
-
 				when document then
 					string_value := value.value;
 					!! path.make_from_string (string_value);
@@ -485,13 +466,6 @@ feature {COMPILER_EXPORTER}
 					else
 						error_found := True
 					end;
-
-				when hide_implementation then
-						-- Processing for each class is done
-						-- in `adapt'
-					if not compilation_modes.is_precompiling then
-						error_found := True
-					end
 
 				when shared_library_definition then
 					if value.is_name then

@@ -51,7 +51,7 @@ feature -- Access
 		end
 
 	vertical_resolution: INTEGER is
-			-- Height of the display, in pixels
+			-- Height of the display, in raster lines
 		external
 			"C [macro <wel.h>]"
 		alias

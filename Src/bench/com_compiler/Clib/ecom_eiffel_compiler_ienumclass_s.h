@@ -1,5 +1,5 @@
 /*-----------------------------------------------------------
- Help file: 
+Eiffel Class Enumeration.  Help file: 
 -----------------------------------------------------------*/
 
 #ifndef __ECOM_EIFFEL_COMPILER_IENUMCLASS_S_H__

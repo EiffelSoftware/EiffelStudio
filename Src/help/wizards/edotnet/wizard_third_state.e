@@ -42,7 +42,7 @@ feature {NONE} -- Implementation
 		
 feature -- Access
 
-	h_filename: STRING is "help\wizards\edotnet\docs\reference\30_assembly_selection\index.html"
+	h_filename: STRING is "help/wizards/edotnet/docs/reference/30_assembly_selection/index.html"
 			-- Path to HTML help file
 			
 feature -- Basic Operation
@@ -67,14 +67,14 @@ feature -- Basic Operation
 				-- Create tables.
 			create references_to_add
 			references_to_add.set_column_titles (<< "Name", "Version", "Culture", "Public Key" >>)
-			references_to_add.set_column_widths (<<135, 70, 70, 122>>)
+			references_to_add.set_column_widths (<<157, 70, 70, 100>>)
 			references_to_add.set_minimum_height (110)
 			references_to_add.select_actions.extend (agent update_buttons_state)
 			references_to_add.deselect_actions.extend (agent update_buttons_state)
 			
 			create added_references
 			added_references.set_column_titles (<< "Name", "Version", "Culture", "Public Key" >>)
-			added_references.set_column_widths (<<135, 70, 70, 122>>)
+			added_references.set_column_widths (<<157, 70, 70, 100>>)
 			added_references.set_minimum_height (80)
 			added_references.select_actions.extend (agent update_buttons_state)
 			added_references.deselect_actions.extend (agent update_buttons_state)

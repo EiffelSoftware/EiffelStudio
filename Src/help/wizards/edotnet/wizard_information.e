@@ -106,6 +106,73 @@ feature -- Access
 			non_void_proxy: Result /= Void
 		end
 		
+	dependencies: LINKED_LIST [ASSEMBLY_INFORMATION] is
+			-- Dependencies corresponding to `selected_assemblies'
+		require
+			non_void_selected_assemblies: selected_assemblies /= Void
+			not_empty_selected_assemblies: not selected_assemblies.is_empty
+		local
+			an_assembly: ASSEMBLY_INFORMATION
+			an_assembly_dependencies: LINKED_LIST [ASSEMBLY_INFORMATION]
+			a_dependency: ASSEMBLY_INFORMATION
+			tmp_list: LINKED_LIST [ASSEMBLY_INFORMATION]
+		do
+			from
+				create tmp_list.make
+				selected_assemblies.start
+			until
+				selected_assemblies.after
+			loop
+				an_assembly := selected_assemblies.item
+				an_assembly_dependencies := assembly_dependencies (an_assembly)
+				from
+					an_assembly_dependencies.start
+				until
+					an_assembly_dependencies.after
+				loop
+					a_dependency := an_assembly_dependencies.item					
+					if not a_dependency.name.is_equal ("mscorlib") and not has_assembly (tmp_list, a_dependency) then
+						tmp_list.extend (a_dependency)
+					end
+					an_assembly_dependencies.forth
+				end
+				selected_assemblies.forth
+			end	
+			from
+				create Result.make
+				tmp_list.start
+			until
+				tmp_list.after
+			loop
+				an_assembly := tmp_list.item
+				if not has_assembly (selected_assemblies, an_assembly) then
+					Result.extend (an_assembly)
+				end
+				tmp_list.forth
+			end
+		end
+	
+	has_assembly (a_list: LINKED_LIST [ASSEMBLY_INFORMATION]; an_assembly: ASSEMBLY_INFORMATION): BOOLEAN is
+			-- Does `a_list' contain `an_assembly'?
+		require
+			non_void_list: a_list /= Void
+			non_void_assembly: an_assembly /= Void
+		local
+			an_info: ASSEMBLY_INFORMATION
+		do
+			from
+				a_list.start
+			until
+				a_list.after or Result
+			loop
+				an_info := a_list.item
+				Result := an_info.name.is_equal (an_assembly.name) and an_info.version.is_equal (an_assembly.version) and
+						an_info.culture.is_equal (an_assembly.culture) and an_info.public_key.is_equal (an_assembly.public_key) and
+						an_info.eiffel_cluster_path.is_equal (an_assembly.eiffel_cluster_path)
+				a_list.forth
+			end
+		end
+		
 feature -- Basic operation
 
 	retrieve_available_assemblies is
@@ -171,6 +238,40 @@ feature {NONE} -- Implementation
 			-- Default project name
 		do
 			Result := "my_dotnet_application"
+		end
+
+	assembly_dependencies (info: ASSEMBLY_INFORMATION): LINKED_LIST [ASSEMBLY_INFORMATION] is
+			-- Dependencies from assembly corresponding to `info'.
+		require
+			non_void_info: info /= Void
+		local
+			retrieved_dependencies: ECOM_ARRAY [STRING]
+			a_name: STRING
+			a_version: STRING
+			a_culture: STRING
+			a_public_key: STRING
+			a_path: STRING
+			i: INTEGER
+			a_dependency: ASSEMBLY_INFORMATION
+		do
+			retrieved_dependencies := proxy.assembly_dependencies (info.name, info.version, info.culture, info.public_key)
+			check
+				unidimensional_array: retrieved_dependencies.dimension_count = 1
+			end
+			from
+				create Result.make
+			until
+				i = retrieved_dependencies.count
+			loop
+				a_name := retrieved_dependencies.array_item (i)
+				a_version := retrieved_dependencies.array_item (i + 1)
+				a_culture := retrieved_dependencies.array_item (i + 2)
+				a_public_key := retrieved_dependencies.array_item (i + 3)
+				a_path := retrieved_dependencies.array_item (i + 4)
+				create a_dependency.make_from_info (a_name, a_version, a_culture, a_public_key, a_path)
+				Result.extend (a_dependency)
+				i := i + 5
+			end
 		end
 		
 end -- class WIZARD_INFORMATION

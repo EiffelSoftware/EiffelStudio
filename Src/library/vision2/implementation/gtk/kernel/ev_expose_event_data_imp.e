@@ -10,21 +10,11 @@ class
 	
 inherit
 	EV_EXPOSE_EVENT_DATA_I
-		select
-			interface
-		end
 	
 	EV_EVENT_DATA_IMP
-		rename
-			interface as x_interface
 		redefine
 			initialize
 		end
-	
-	
-creation
-	make
-	
 
 feature -- Initialization
 	
@@ -32,7 +22,7 @@ feature -- Initialization
 			-- Creation and initialization of 'parent's 
 			-- fields according to C pointer 'p'
 		local
-			c: EV_COORD
+			c: EV_POINT
 			rec: EV_RECTANGLE
 		do
 			Precursor (p)			
@@ -43,11 +33,26 @@ feature -- Initialization
 			!!rec.set (c, c_gdk_event_rectangle_width (p), 
 				   c_gdk_event_rectangle_height (p))
 			
-			interface.set_clip_region (rec)
-
+			set_clip_region (rec)
 		end
 	
-			
-end
+end -- class EV_EXPOSE_EVENT_DATA_IMP
+
+--|----------------------------------------------------------------
+--| EiffelVision: library of reusable components for ISE Eiffel.
+--| Copyright (C) 1986-1998 Interactive Software Engineering Inc.
+--| All rights reserved. Duplication and distribution prohibited.
+--| May be used only with ISE Eiffel, under terms of user license. 
+--| Contact ISE for any other use.
+--|
+--| Interactive Software Engineering Inc.
+--| ISE Building, 2nd floor
+--| 270 Storke Road, Goleta, CA 93117 USA
+--| Telephone 805-685-1006, Fax 805-685-6869
+--| Electronic mail <info@eiffel.com>
+--| Customer support e-mail <support@eiffel.com>
+--| For latest info see award-winning pages: http://www.eiffel.com
+--|----------------------------------------------------------------
+
 			
 	

@@ -11,6 +11,9 @@ feature -- Access
 	observers: ARRAYED_LIST [OBSERVER]
 			-- Observers of Current
 
+	is_updating: BOOLEAN
+			-- Is Current currently updating?
+
 feature -- Commands
 
 	attach (o: OBSERVER) is
@@ -51,7 +54,10 @@ feature {NONE} -- Implementation
 
 	notify_observers is
 			-- Notify observers of change
+		require
+			not_busy: not is_updating
 		do
+			is_updating := True
 			if has_observers then
 				from
 					observers.start
@@ -64,6 +70,7 @@ feature {NONE} -- Implementation
 					observers.forth
 				end
 			end
+			is_updating := False
 		end
 
 end -- class OBSERVED

@@ -101,7 +101,9 @@ feature -- Basic operations
 			create feature_names.make
 			create_function_descriptors (a_type_info)
 			create_property_descriptors (a_type_info)
-			create Result.make (Current)
+			if not (inherited_interface = Void) or c_type_name.is_equal (Iunknown_type) then
+				create Result.make (Current)
+			end
 		ensure then
 			valid_guid: guid /= Void
 			valid_functions: a_type_info.type_attr.count_func > 0 implies

@@ -109,12 +109,6 @@ feature -- Properties
 		do
 			-- Do nothing
 		end
-
-	is_out: BOOLEAN is
-			-- Is current actual type represent a out parameter type?
-		do
-			-- Do nothing
-		end
 		
 	is_none: BOOLEAN is
 			-- Is the current actual type a none type ?

@@ -533,18 +533,28 @@ feature {NONE} -- Implementation
 					-- Used to disable certain key behavior such as Tab focus.
 				if a_key_press then
 					if focus_widget.default_key_processing_blocked (a_key) then
-						a_cs := "key-press-event"
-						feature {EV_GTK_EXTERNALS}.signal_emit_stop_by_name (c_object, a_cs.item)
+						feature {EV_GTK_EXTERNALS}.signal_emit_stop_by_name (c_object, key_press_event_string.item)
 						focus_widget.on_key_event (a_key, a_key_string, a_key_press)
 					end
 				else
 					if focus_widget.default_key_processing_blocked (a_key) then
-						a_cs := "key-release-event"
-						feature {EV_GTK_EXTERNALS}.signal_emit_stop_by_name (c_object, a_cs.item)
+						feature {EV_GTK_EXTERNALS}.signal_emit_stop_by_name (c_object, key_release_event_string.item)
 						focus_widget.on_key_event (a_key, a_key_string, a_key_press)
 					end
 				end	
 			end
+		end
+
+	key_press_event_string: EV_GTK_C_STRING is
+			-- key-press-event string constant
+		do
+			Result := "key-press-event"
+		end
+
+	key_release_event_string: EV_GTK_C_STRING is
+			-- key-release-event string constant
+		do
+			Result := "key-release-event"
 		end
 
 	initialize is
@@ -608,7 +618,7 @@ feature {NONE} -- Implementation
 
 			feature {EV_GTK_EXTERNALS}.gtk_box_pack_start (vbox, bar_imp.c_object, False, True, 0)
 
-			app_implementation.window_oids.extend (object_id)
+			app_implementation.window_oids.extend (internal_id)
 		end
 
 feature {EV_ACCELERATOR_IMP} -- Implementation

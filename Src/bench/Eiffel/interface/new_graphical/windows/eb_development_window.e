@@ -2301,7 +2301,10 @@ feature {NONE} -- Implementation
 						else
 							if not changed then
 									--| Enable all formatters.
-								if not feature_stone_already_processed then
+								if
+									not feature_stone_already_processed or
+									not managed_main_formatters.first.selected
+								then
 									from
 										managed_main_formatters.start
 									until

@@ -62,7 +62,9 @@ feature -- Basic operations
 				if show_actions_internal /= Void then
 					show_actions_internal.call ([])
 				end
-				interface.set_menu_bar (other_menu_bar)
+				if other_menu_bar /= Void then
+					interface.set_menu_bar (other_menu_bar)	
+				end
 			end
 		end
 

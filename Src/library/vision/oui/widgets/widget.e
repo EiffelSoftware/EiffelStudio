@@ -62,10 +62,12 @@ feature -- Callbacks (adding)
 		end; 
 
 	add_button_click_action (number: INTEGER; a_command: COMMAND; argument: ANY) is
-		-- Add `a_command' to the list of actions to be executed
-		-- when the `number'-th mouse button is clicked
-		-- `argument' will be passed to `a_command' whenever it is
-		-- invoked as a callback.
+			-- Add `a_command' to the list of actions to be executed
+			-- when the `number'-th mouse button is clicked
+			-- `argument' will be passed to `a_command' whenever it is
+			-- invoked as a callback.
+		obsolete
+			"Use `add_button_press_action' and `add_button_release_action' instead"
 		require
 			exists: not destroyed;
 			Valid_command: a_command /= Void
@@ -74,7 +76,7 @@ feature -- Callbacks (adding)
 		end;
 
 	set_multi_click_time (time: INTEGER) is
-		-- Set time granted for clicking
+			-- Set time granted for clicking
 		require
 			exists: not destroyed
 		do
@@ -227,6 +229,8 @@ feature -- Callbacks (removing)
 			-- `number'-th mouse button is clicked.
 			-- Do nothing if the pair (`a_command', `argument') had not
 			-- been specified previously.
+		obsolete
+			"Use `remove_button_press_action' and `remove_button_release_action' instead"
 		require
 			exists: not destroyed;
 			Valid_command: a_command /= Void

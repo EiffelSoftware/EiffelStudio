@@ -273,9 +273,9 @@ feature -- Status report
 			dc: WEL_CLIENT_DC
 			tm: WEL_TEXT_METRIC
 		do
-			!! dc.make (Current)
+			create dc.make (Current)
 			dc.get
-			!! tm.make (dc)
+			create tm.make (dc)
 			dc.release
 			Result := tm.height
 		ensure
@@ -311,7 +311,7 @@ feature -- Basic operations
 		local
 			a_wel_string: WEL_STRING
 		do
-			!! a_wel_string.make (a_string)
+			create a_wel_string.make (a_string)
 			Result := cwin_send_message_result (item,
 				Lb_findstring, index,
 				cwel_pointer_to_integer (a_wel_string.item))
@@ -330,7 +330,7 @@ feature -- Basic operations
 		local
 			a_wel_string: WEL_STRING
 		do
-			!! a_wel_string.make (a_string)
+			create a_wel_string.make (a_string)
 			Result := cwin_send_message_result (item,
 				Lb_findstringexact, index,
 				cwel_pointer_to_integer (a_wel_string.item))

@@ -2,11 +2,7 @@ class EXPAND_PARENT_HOLE
 
 inherit
 
-	HOLE
-		redefine
-			process_context
-		end;
-	EB_BUTTON 
+	TREE_HOLE
 
 creation
 
@@ -17,25 +13,6 @@ feature {NONE}
 	focus_string: STRING is
 		do
 			Result := Focus_labels.expand_parent_label
-		end;
-
-	focus_label: FOCUS_LABEL;
-
-	make (a_parent: COMPOSITE; l: like focus_label) is
-		do
-			focus_label := l;
-			make_visible (a_parent);
-			register
-		end;
-
-	target: WIDGET is
-		do
-			Result := Current;
-		end;
-
-	stone_type: INTEGER is
-		do
-			Result := Stone_types.context_type
 		end;
 
 	process_context (dropped: CONTEXT_STONE) is

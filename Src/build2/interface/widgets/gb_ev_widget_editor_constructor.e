@@ -109,6 +109,17 @@ feature -- Access
 
 feature {NONE} -- Implementation
 
+	initialize_agents is
+			-- Initialize `validate_agents' and `execution_agents' to
+			-- contain all agents required for modification of `Current.
+		do
+			
+			execution_agents.extend (agent set_minimum_height (?), Minimum_height_string)
+			validate_agents.extend (agent valid_minimum_dimension (?), Minimum_height_string)
+			execution_agents.extend (agent set_minimum_width (?), Minimum_width_string)
+			validate_agents.extend (agent valid_minimum_dimension (?), Minimum_width_string)
+		end
+
 	reset_width is
 			-- Reset minimum width of object referenced by `Current'.
 		local

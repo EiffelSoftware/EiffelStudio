@@ -119,6 +119,18 @@ feature -- Access
 			is_homogeneous_check.select_actions.resume
 		end
 
+feature {NONE} -- Implementation
+
+	initialize_agents is
+			-- Initialize `validate_agents' and `execution_agents' to
+			-- contain all agents required for modification of `Current.
+		do
+			execution_agents.extend (agent set_padding (?), Padding_string)
+			validate_agents.extend (agent valid_input (?), Padding_string)
+			execution_agents.extend (agent set_border (?), Border_string)
+			validate_agents.extend (agent valid_input (?), Border_string)
+		end
+
 	update_widget_expanded (check_button: EV_CHECK_BUTTON; w: EV_WIDGET) is
 			-- Change the expanded status of `w'.
 		local
@@ -135,8 +147,6 @@ feature -- Access
 			end
 			enable_project_modified
 		end
-		
-feature {NONE} -- Implementation
 
 	update_homogeneous is
 			-- Update homogeneous state of items in `objects' depending on

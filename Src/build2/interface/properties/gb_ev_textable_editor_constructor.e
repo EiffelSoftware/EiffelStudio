@@ -51,6 +51,14 @@ feature -- Access
 
 feature {NONE} -- Implementation
 
+	initialize_agents is
+			-- Initialize `validate_agents' and `execution_agents' to
+			-- contain all agents required for modification of `Current.
+		do
+			execution_agents.extend (agent set_text (?), text_string)
+			validate_agents.extend (agent validate_true (?), text_string)
+		end
+
 	update_attribute_editor is
 			-- Update status of `attribute_editor' to reflect information
 			-- from `objects.first'.

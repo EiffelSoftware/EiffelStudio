@@ -57,6 +57,13 @@ feature -- Access
 		
 feature {NONE} -- Implementation
 
+	initialize_agents is
+			-- Initialize `validate_agents' and `execution_agents' to
+			-- contain all agents required for modification of `Current.
+		do
+			-- Nothing to perform here.
+		end
+
 	set_up_user_events (vision2_object, an_object: like ev_type) is
 			-- Add events necessary for `vision2_object'.
 		do

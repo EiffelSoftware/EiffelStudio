@@ -96,10 +96,19 @@ feature -- Access
 			align_labels_left (Result)
 		end
 		
-		new_merge (an_object: GB_OBJECT) is
-				-- Merge radio group of `an_object' with `Current'.
-			deferred
-			end
+feature {NONE} -- Implementation
+
+	initialize_agents is
+			-- Initialize `validate_agents' and `execution_agents' to
+			-- contain all agents required for modification of `Current.
+		do
+			-- Nothing to do here.
+		end
+
+	new_merge (an_object: GB_OBJECT) is
+			-- Merge radio group of `an_object' with `Current'.
+		deferred
+		end
 
 	update_attribute_editor is
 			-- Update status of `attribute_editor' to reflect information
@@ -107,24 +116,22 @@ feature -- Access
 		deferred
 		end
 		
-		update_linked_names is
-				-- For all items in `merged_list', update
-				-- their texts to reflect the current state of
-				-- associated object names.
-			deferred
-			end
-			
-		unlink_group (group_link: GB_RADIO_GROUP_LINK) is
-				--
-			deferred
-			end
-			
-		update_object_editors_for_radio_unmerge (unmerged_object: GB_OBJECT; calling_editor: GB_OBJECT_EDITOR) is
-				-- For every item in `editors', updated, to reflect an unmerging of `merged_object'.
-			deferred
-			end
-
-feature {NONE} -- Implementation
+	update_linked_names is
+			-- For all items in `merged_list', update
+			-- their texts to reflect the current state of
+			-- associated object names.
+		deferred
+		end
+		
+	unlink_group (group_link: GB_RADIO_GROUP_LINK) is
+			--
+		deferred
+		end
+		
+	update_object_editors_for_radio_unmerge (unmerged_object: GB_OBJECT; calling_editor: GB_OBJECT_EDITOR) is
+			-- For every item in `editors', updated, to reflect an unmerging of `merged_object'.
+		deferred
+		end
 
 	veto_merge (an_object: GB_OBJECT): BOOLEAN is
 			-- Stop invalid radio_group_merges.

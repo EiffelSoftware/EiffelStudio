@@ -848,7 +848,7 @@ feature {SYSTEM_CLUSTERS} -- Element Changes
 			is_override_cluster: BOOLEAN
 		do
 			is_override_cluster := override
-			id_sd := new_id_sd (a_name, False)
+			id_sd := new_id_sd (a_name, True)
 			cluster_sd.set_cluster_name (id_sd)
 				
 			-- reset override cluster

@@ -41,7 +41,7 @@ default
 cluster
 	all root_cluster:		"."
 		exclude
-			"templates"
+			"templates"; "generation_only"
 		end
 
 

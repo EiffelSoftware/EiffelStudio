@@ -15,6 +15,9 @@ inherit
 	EV_DRAWING_AREA_I
 
 	EV_DRAWABLE_IMP
+		redefine
+			pixmap_size_changed
+		end
 		
 	EV_WIDGET_IMP
 
@@ -70,6 +73,13 @@ feature {NONE} -- Initialization
 
 feature {NONE} -- Implementation
 
+	pixmap_size_changed is
+			-- Pixmap sized has changed.
+		do
+			set_minimum_width (pixmap_imp.width)
+			set_minimum_height (pixmap_imp.height)
+		end
+
 	on_paint (paint_dc: WEL_PAINT_DC; invalid_rect: WEL_RECT) is
 			-- Wm_paint message.
 			-- May be redefined to paint something on
@@ -90,8 +100,6 @@ feature {NONE} -- Implementation
 			end
 			{WEL_CONTROL_WINDOW} Precursor
 		end
-
-feature {NONE} -- Implementation
 
 	on_wm_erase_background (wparam: INTEGER) is
    			-- Wm_erasebkgnd message.

@@ -79,10 +79,6 @@ feature -- Access
 						Result := False
 					end
 				end
-			else
-				Result := any_type_table.has (feat.feature_name_id) and then
-					context.real_type (feat.parameters.i_th (1).type).is_basic
-				function_type := any_type_table.found_item
 			end
 		end
 
@@ -131,7 +127,7 @@ feature -- IL code generation
 				generate_il_operation_code (bit_shift_left_type)
 				generate_il_operation_code (bit_and_type)
 
-			when is_equal_type, equal_type then
+			when is_equal_type then
 				check
 					parameters_not_void: parameters /= Void
 				end
@@ -228,20 +224,11 @@ feature -- IL code generation
 
 feature {NONE} -- C and Byte code corresponding Eiffel function calls
 		
-	any_type_table: HASH_TABLE [INTEGER, INTEGER] is
-		once
-			create Result.make (40)
-			Result.put (equal_type, equal_name_id)
-		end
-
 	basic_type_table: HASH_TABLE [INTEGER, INTEGER] is
 		once
 			create Result.make (100)
-			Result.put (equal_type, equal_name_id)
 			Result.put (is_equal_type, is_equal_name_id)
 			Result.put (is_equal_type, standard_is_equal_name_id)
-			Result.put (equal_type, deep_equal_name_id)
-			Result.put (equal_type, standard_deep_equal_name_id)
 			Result.put (zero_type, zero_name_id)
 			Result.put (one_type, one_name_id)
 			Result.put (to_integer_32_type, truncated_to_integer_name_id)
@@ -289,7 +276,7 @@ feature {NONE} -- C and Byte code corresponding Eiffel function calls
 feature -- Fast access to feature name
 
 	min_type_id: INTEGER is 1
-	equal_type: INTEGER is 1
+	unused_1: INTEGER is 1
 	set_item_type: INTEGER is 2
 	out_type: INTEGER is 3
 	hash_code_type: INTEGER is 4

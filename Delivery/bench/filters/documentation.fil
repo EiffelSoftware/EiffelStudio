@@ -18,7 +18,7 @@ class_declaration		|<HTML>%N%T<HEAD>%N%T%T%N%
 						%<LINK REL="stylesheet" HREF="/default.css" TYPE="text/css">%N%N%
 						%%T</HEAD>%N%N%
 						%%T<BODY>%N%
-						%*<BR>%N%N%
+						%<PRE>*</PRE>%N%N%
 						%</BODY>%N%N%
 						%</HTML>%N
 
@@ -58,8 +58,8 @@ generic				|<SPAN CLASS="egeneric">*</SPAN>
 .					|<SPAN CLASS="edot">*</SPAN>
 
 -- Whitespace
-new_line				|<BR>*%N
-tab					| &nbsp%; &nbsp%; &nbsp%;
+new_line				|*
+tab					|%T
 
 -- In case there are sequential spaces, use this for all subsequent spaces.
 multiple_spaces			|&nbsp%;

@@ -328,21 +328,24 @@ feature -- Status report
 			result_not_void: Result /= Void
 		end
 
-	text: STRING is
+	 text: STRING is
 			-- Window text
 		require
 			exists: exists
 		local
 			length: INTEGER
-			a: ANY
+			a_wel_string: WEL_STRING
+			nb: INTEGER
 		do
 			length := text_length
 			if length > 0 then
 				length := length + 1
 				!! Result.make (length)
 				Result.fill_blank
-				a := Result.to_c
-				Result.head (cwin_get_window_text (item, $a, length))
+				!! a_wel_string.make (Result)
+				nb := cwin_get_window_text (item, a_wel_string.item, length)
+				Result := a_wel_string.string
+				Result.head (nb)
 			else
 				!! Result.make (0)
 			end
@@ -572,10 +575,10 @@ feature -- Element change
 			exists: exists
 			a_text_not_void: a_text /= Void
 		local
-			a: ANY
+			a_wel_string: WEL_STRING
 		do
-			a := a_text.to_c
-			cwin_set_window_text (item, $a)
+			!! a_wel_string.make (a_text)
+			cwin_set_window_text (item, a_wel_string.item)
 		ensure
 			text_set: text.is_equal (a_text)
 		end
@@ -785,6 +788,7 @@ feature -- Basic operations
 		end
 
 	message_box (a_text, a_title: STRING; a_style: INTEGER): INTEGER is
+		obsolete "Use class WEL_MSG_BOX instead"
 			-- Show an information message box with `Current'
 			-- as parent with `a_text' and `a_title'.
 			-- See class WEL_MB_CONSTANTS for `a_style' value.
@@ -794,15 +798,16 @@ feature -- Basic operations
 			text_not_void: a_text /= Void
 			title_not_void: a_title /= Void
 		local
-			a1, a2: ANY
+			a_wel_string1, a_wel_string2: WEL_STRING
 		do
-			a1 := a_text.to_c
-			a2 := a_title.to_c
-			Result := cwin_message_box_result (item, $a1, $a2,
+			!! a_wel_string1.make (a_text)
+			!! a_wel_string2.make (a_title)
+			Result := cwin_message_box_result (item, a_wel_string1.item, a_wel_string2.item,
 				a_style)
 		end
 
 	information_message_box (a_text, a_title: STRING) is
+		obsolete "Use class WEL_MSG_BOX instead"
 			-- Show an information message box with `Current'
 			-- as parent with `a_text' and `a_title'.
 		require
@@ -810,15 +815,16 @@ feature -- Basic operations
 			text_not_void: a_text /= Void
 			title_not_void: a_title /= Void
 		local
-			a1, a2: ANY
+			a_wel_string1, a_wel_string2: WEL_STRING
 		do
-			a1 := a_text.to_c
-			a2 := a_title.to_c
-			cwin_message_box (item, $a1, $a2,
+			!! a_wel_string1.make (a_text)
+			!! a_wel_string2.make (a_title)
+			cwin_message_box (item, a_wel_string1.item, a_wel_string2.item,
 				Mb_ok + Mb_iconinformation)
 		end
 
 	warning_message_box (a_text, a_title: STRING) is
+		obsolete "Use class WEL_MSG_BOX instead"
 			-- Show a warning message box with `Current'
 			-- as parent with `a_text' and `a_title'.
 		require
@@ -826,29 +832,31 @@ feature -- Basic operations
 			text_not_void: a_text /= Void
 			title_not_void: a_title /= Void
 		local
-			a1, a2: ANY
+			a_wel_string1, a_wel_string2: WEL_STRING
 		do
-			a1 := a_text.to_c
-			a2 := a_title.to_c
-			cwin_message_box (item, $a1, $a2,
+			!! a_wel_string1.make (a_text)
+			!! a_wel_string2.make (a_title)
+			cwin_message_box (item, a_wel_string1.item, a_wel_string2.item,
 				Mb_ok + Mb_iconexclamation)
 		end
 
 	error_message_box (a_text: STRING) is
+		obsolete "Use class WEL_MSG_BOX instead"
 			-- Show an error message box with `Current' as
 			-- parent with `a_text' and error as title.
 		require
 			exists: exists
 			text_not_void: a_text /= Void
 		local
-			a1: ANY
+			a_wel_string: WEL_STRING
 		do
-			a1 := a_text.to_c
-			cwin_message_box (item, $a1, default_pointer,
+			!! a_wel_string.make (a_text)
+			cwin_message_box (item, a_wel_string.item, default_pointer,
 				Mb_ok + Mb_iconhand)
 		end
 
 	question_message_box (a_text, a_title: STRING): BOOLEAN is
+		obsolete "Use class WEL_MSG_BOX instead"
 			-- Show a question message box with `Current'
 			-- as parent with `a_text' and `a_title'.
 			-- True is returned if the user answers yes, False
@@ -858,11 +866,11 @@ feature -- Basic operations
 			text_not_void: a_text /= Void
 			title_not_void: a_title /= Void
 		local
-			a1, a2: ANY
+			a_wel_string1, a_wel_string2: WEL_STRING
 		do
-			a1 := a_text.to_c
-			a2 := a_title.to_c
-			Result := cwin_message_box_result (item, $a1, $a2,
+			!! a_wel_string1.make (a_text)
+			!! a_wel_string2.make (a_title)
+			Result := cwin_message_box_result (item, a_wel_string1.item, a_wel_string2.item,
 				Mb_yesno + Mb_iconquestion) = Idyes
 		end
 
@@ -962,10 +970,10 @@ feature -- Basic operations
 			exists: exists
 			help_file_not_void: help_file /= Void
 		local
-			a: ANY
+			 a_wel_string: WEL_STRING
 		do
-			a := help_file.to_c
-			cwin_win_help (item, $a, a_command, data)
+			!! a_wel_string.make (help_file)
+			cwin_win_help (item, a_wel_string.item, a_command, data)
 		end
 
 feature -- Removal
@@ -1176,17 +1184,22 @@ feature {NONE} -- Implementation
 			data: POINTER) is
 			-- Create the window
 		local
-			a1, a2: ANY
+			a_wel_string1, a_wel_string2: WEL_STRING
 		do
 			parent := a_parent
-			a1 := class_name.to_c
+			!! a_wel_string1.make (class_name)
 			if a_name /= Void then
-				a2 := a_name.to_c
-			end
-			item := cwin_create_window_ex (default_ex_style,
-				$a1, $a2, a_style, a_x, a_y, a_w, a_h,
+				!! a_wel_string2.make (a_name)
+				item := cwin_create_window_ex (default_ex_style,
+				a_wel_string1.item, a_wel_string2.item, a_style, a_x, a_y, a_w, a_h,
 				parent_item, an_id,
 				main_args.current_instance.item, data)
+			else
+				item := cwin_create_window_ex (default_ex_style,
+				a_wel_string1.item, default_pointer, a_style, a_x, a_y, a_w, a_h,
+				parent_item, an_id,
+				main_args.current_instance.item, data)
+			end
 			if item /= default_pointer then
 				exists := True
 				register_window (Current)

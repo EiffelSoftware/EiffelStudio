@@ -643,6 +643,8 @@ feature {NONE} -- Implementation
 					warning_dialog.set_cancel_action (agent undo_client_change)
 					warning_dialog.set_ok_action (agent internal_update_client_setting)
 					warning_dialog.show_modal_to_window (parent_window (Current))
+				else
+					internal_update_client_setting
 				end
 			else
 				internal_update_client_setting

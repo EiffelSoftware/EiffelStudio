@@ -18,8 +18,7 @@ inherit
 			make as kmp_make
 		redefine
 			found_at
-		end
-
+		end;
 	KMP_MATCHER
 		rename
 			search_for_pattern as kmp_search,
@@ -34,7 +33,7 @@ inherit
 creation
 	make, make_empty
 
-feature -- Initialization
+feature {NONE} -- Initialization
 
 	make (new_pattern, new_text: STRING) is
 			-- Create a matcher to search pattern
@@ -45,9 +44,9 @@ feature -- Initialization
 			new_text_non_void: new_text /= Void;
 			not_new_text_empty: not new_text.empty
 		do
+			character_representation := '?';
+			string_representation := '*'
 			kmp_make (new_pattern, new_text);
-			char_rep := Void;
-			str_rep := Void
 		ensure
 			pattern_is_new_pattern: pattern = new_pattern;
 			text_is_new_text: text = new_text
@@ -66,9 +65,10 @@ feature -- Status setting
 			-- Set `string_representation' to
 			-- `new_str_rep'.
 		require
-			new_str_rep_non_void: new_str_rep /= Void
+			new_str_rep_not_nul_char: new_str_rep /= '%U';
+			new_str_rep_different: new_str_rep /= character_representation
 		do
-			str_rep := new_str_rep
+			string_representation := new_str_rep
 		ensure
 			string_representation_is_new_str_rep: string_representation = new_str_rep
 		end;
@@ -77,39 +77,28 @@ feature -- Status setting
 			-- Set `character_representation' to
 			-- `new_char_rep'.
 		require
-			new_char_rep_non_void: new_char_rep /= Void
+			new_char_rep_not_nul_char: new_char_rep /= '%U';
+			new_char_rep_different: new_char_rep /= string_representation
 		do
-			char_rep := new_char_rep
+			character_representation := new_char_rep
 		ensure
 			character_representation_is_new_char_rep: character_representation = new_char_rep
 		end;
 
 feature -- Status report
 
-	found_at: INTEGER
+	found_at: INTEGER;
 		-- Index in `text' where `pattern' was found.
 		
-	character_representation: CHARACTER is
+	character_representation: CHARACTER;
 			-- The character that represents any single
-			-- character in `text'. Default: '?'
-		do
-			if char_rep = Void then
-				Result := '?'
-			else
-				Result := char_rep
-			end
-		end;
+			-- character in `text'
+			--|Default: '?'
 
-	string_representation: CHARACTER is
+	string_representation: CHARACTER
 			-- The character that represents any string
-			-- in `text'. Default: '*'
-		do
-			if str_rep = Void then
-				Result := '*'
-			else
-				Result := str_rep
-			end;
-		end;
+			-- in `text'
+			--| Default: '*'
 
 feature -- Search
 
@@ -126,9 +115,9 @@ feature -- Search
 			from
 				found := false;
 				!! sr.make (0);
-				sr.extend (str_rep);
+				sr.extend (string_representation);
 				!! cr.make (0);
-				cr.extend (char_rep);
+				cr.extend (character_representation);
 				i := index;
 				tc := text.count;
 				pc := pattern.count;
@@ -176,7 +165,7 @@ feature -- Search
 			if found then
 				found_at := fa
 			end
-		end;
+		end
 
 feature {NONE} -- Implementation
 
@@ -194,9 +183,9 @@ feature {NONE} -- Implementation
 				!! string_list.make;
 				!! str.make (0);
 				!! sr.make (0);
-				sr.extend (str_rep);
+				sr.extend (string_representation);
 				!! cr.make (0);
-				cr.extend (char_rep);
+				cr.extend (character_representation);
 				pa := pattern.area;
 				i := 0;
 				pc := pattern.count;
@@ -204,12 +193,12 @@ feature {NONE} -- Implementation
 			until
 				i = pc
 			loop
-				if pa.item (i).is_equal (str_rep) then
+				if pa.item (i).is_equal (string_representation) then
 					sl.extend (str);
 					sl.extend (sr);
 					!! str.make (0);
 					i := i + 1
-				elseif pa.item (i).is_equal (char_rep) then
+				elseif pa.item (i).is_equal (character_representation) then
 					sl.extend (str);
 					sl.extend (cr);
 					!! str.make (0);
@@ -250,14 +239,13 @@ feature {NONE} -- Implementation
 feature {NONE} -- Attributes
 
 	string_list: LINKED_LIST [STRING]
+			-- List of strings
+			--| Parts not containing `string_representation' and
+			--| `character_representation' are held as items.
 
-	char_rep: CHARACTER
-			-- The character that represents any single
-			-- character in `text'.
+invariant
 
-	str_rep: CHARACTER
-			-- The character that represents any string
-			-- in `text'.
+	different_character_and_string_representation: string_representation /= character_representation
 
 end -- class KMP_WILD
 

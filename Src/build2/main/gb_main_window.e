@@ -264,6 +264,58 @@ feature -- Basic operation
 				recent_projects_menu.disable_sensitive
 			end
 		end
+		
+	smart_disable_sensitive is
+			-- Disable all contents of `Current', except the status bar.
+		require
+			not_in_wizard_mode: not System_status.is_wizard_system
+		local
+			vertical_box: EV_VERTICAL_BOX
+		do
+			vertical_box ?= item
+			from
+				vertical_box.start
+			until
+				vertical_box.index = vertical_box.count
+			loop
+				vertical_box.item.disable_sensitive
+				vertical_box.forth
+			end
+			from
+				menu_bar.start
+			until
+				menu_bar.off
+			loop
+				menu_bar.item.disable_sensitive
+				menu_bar.forth
+			end
+		end
+		
+	smart_enable_sensitive is
+			-- Enable all contents of `Current', except the status bar.
+		require
+			not_in_wizard_mode: not System_status.is_wizard_system
+		local
+			vertical_box: EV_VERTICAL_BOX
+		do
+			vertical_box ?= item
+			from
+				vertical_box.start
+			until
+				vertical_box.index = vertical_box.count
+			loop
+				vertical_box.item.enable_sensitive
+				vertical_box.forth
+			end
+			from
+				menu_bar.start
+			until
+				menu_bar.off
+			loop
+				menu_bar.item.enable_sensitive
+				menu_bar.forth
+			end
+		end
 
 feature {NONE} -- Implementation
 
@@ -314,6 +366,7 @@ feature {NONE} -- Implementation
 			create recent_projects_menu.make_with_text ("Recent Projects")
 			update_recent_projects
 			file_menu.extend (recent_projects_menu)
+			file_menu.extend (command_handler.import_project_command.new_menu_item)
 			file_menu.extend (create {EV_MENU_SEPARATOR})
 			file_menu.extend (command_handler.save_command.new_menu_item)
 			file_menu.extend (command_handler.close_project_command.new_menu_item)
@@ -387,7 +440,7 @@ feature {NONE} -- Implementation
 			end
 			main_menu_bar.extend (help_menu)
 		end
-		
+	
 	build_widget_structure (a_tool_holder: EV_VERTICAL_BOX) is
 			-- create and layout "widgets" within `Current'.
 			-- if `a_tool_holder' not Void then build widgets into

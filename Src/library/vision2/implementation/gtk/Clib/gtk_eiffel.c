@@ -2226,16 +2226,44 @@ void c_gtk_pixmap_gdk_unref (GtkWidget *pixmap)
 }
 
 /*==============================================================================
+ gtk_toolbar functions
+==============================================================================*/
+
+/*********************************
+ *
+ * Function : `c_gtk_toolbar_new'			(1)
+ *
+ * Note : (1) Default creation of the toolbar.
+ *
+ * Author : King
+ *
+ *********************************/
+
+EIF_POINTER c_gtk_toolbar_new_horizontal (void)
+{
+  return (EIF_POINTER) gtk_toolbar_new ( GTK_ORIENTATION_HORIZONTAL, GTK_TOOLBAR_BOTH);
+}
+
+/*==============================================================================
  gtk_progressbar functions
 ==============================================================================*/
 
 /*********************************
  *
  * Function : `c_gtk_progress_bar_style'			(1)
+ *            `c_gtk_progress_bar_new_with_adjustment		(2)
+ *            `c_gtk_progress_bar_set_adjustment		(3)
+ *            `c_gtk_progress_bar_set_step'			(4)
+ *            `c_gtk_progress_bar_set_minimum			(5)
+ *            `c_gtk_progress_bar_set_maximum			(6)
+ *	      `c_gtk_progress_bar_get_step			(7)
+ *	      `c_gtk_progress_bar_get_minimum			(8)
+ *	      `c_gtk_progress_bar_get_maximum			(9)
  *
  * Note : (1) Style of the progress bar.
  *
- * Author : Alex
+ * Author : Alex (1,2,4)
+ * 	  : King (4,5,6,7,8,9)
  *
  *********************************/
 

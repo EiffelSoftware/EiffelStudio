@@ -80,7 +80,7 @@ feature
 			io.put_string ("Testing if string void ...%N")
 			io.put_string ("Enter a string: (press enter if you want to raise an Eiffel exception)%N")
 			io.read_line
-			s := clone (io.last_string)	
+			s := io.last_string.twin
 			if s.is_equal("") then print ("Ooops!%N"); s := Void  end
 			io.putstring (s)
 		end;

@@ -375,7 +375,9 @@ rt_shared void map_reset(int emergency)
 	 * exception in the middle of the traversal...
 	 */
 
+#ifdef ISE_GC
 	epop(&hec_stack, obj_nb);		/* Remove stacked EIF_OBJECT pointers */
+#endif
 }
 
 rt_private EIF_REFERENCE referers_target = NULL;
@@ -474,11 +476,13 @@ rt_private EIF_REFERENCE matching (void (*action_fnptr) (EIF_REFERENCE, EIF_REFE
 		/* Traverse all stacks and root object to find objects matching `action_fnptr'. */
 	match_object (root_obj, action_fnptr);
 
+#ifdef ISE_GC
 	match_simple_stack (&hec_saved, action_fnptr);
 	match_simple_stack (&hec_stack, action_fnptr);
 
 	match_stack (&loc_set, action_fnptr);
 	match_stack (&loc_stack, action_fnptr);
+#endif
 
 #ifdef WORKBENCH
 	match_simple_stack (&once_set, action_fnptr);

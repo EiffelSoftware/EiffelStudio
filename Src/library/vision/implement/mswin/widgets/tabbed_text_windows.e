@@ -28,8 +28,9 @@ feature -- Initialization
 		do
 			make_text (a_scrolled_text, man, oui_parent);
 			tab_length := 8
+			private_text := ""
 		end
-		
+
 	realize is
 			-- Realize current widget
 		local
@@ -49,6 +50,8 @@ feature -- Initialization
 				resize_for_shell
 				wc ?= parent
 				wel_make (wc, text, x, y, width, height, id_default)
+				set_text_limit (90000)
+				set_tab_length (tab_length)
 				if private_background_color /= Void then
 					set_background_color (private_background_color)
 				end
@@ -67,6 +70,11 @@ feature -- Initialization
 				if is_multi_line_mode then
 					set_top_character_position (private_top_character_position)
 				end
+				if not managed then
+					wel_hide
+				elseif parent.shown then
+					shown := true
+				end
 			end
 		end
 
@@ -77,7 +85,7 @@ feature -- Status setting
 		do
 			tab_length := new_length
 			if exists then
-				set_tab_stops (tab_length * 4)
+				set_tab_stops (tab_length * 124)
 				invalidate
 			end
 		end

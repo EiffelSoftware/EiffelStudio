@@ -249,7 +249,7 @@ feature {NONE} -- Display functions
 			last_line_to_draw: INTEGER
 		do
 				-- Draw all lines
-			dc.select_font(current_font)
+--			dc.select_font(current_font)
 			first_line_to_draw := (first_line_displayed + top // line_increment - 1).max(1)
 			last_line_to_draw := (first_line_displayed + bottom // line_increment).min(number_of_lines)
 
@@ -266,8 +266,12 @@ feature {NONE} -- Display functions
 					text_displayed.forth
 				end
 			end
-			dc.unselect_font
+--			dc.unselect_font
 		end
+--| FIXME
+--| Christophe, 28 jan 2000
+--| are select/unselect instructions necessary, as they are also present in
+--| `display_line'? They were commented to avoid a crash.
 
 	display_line (d_x: INTEGER; a_line: INTEGER; line: EDITOR_LINE; dc: WEL_DC) is
 			-- Display `line' at the coordinates (`d_x',`d_y') on the

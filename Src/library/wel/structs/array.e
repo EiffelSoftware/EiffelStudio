@@ -42,7 +42,7 @@ feature -- Element change
 			an_item_not_void: an_item /= Void
 			valid_item_size: item_size = an_item.structure_size
 			index_large_enough: index >= 0
-			index_small_enpugh: index < count
+			index_small_enough: index < count
 		do
 			c_memcpy (cwel_integer_to_pointer (
 				to_integer + (index * item_size)),

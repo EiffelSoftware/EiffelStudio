@@ -195,7 +195,6 @@ feature {NONE} -- Implementation
 			create parser.make
 			parser.set_callbacks (pipe_callback.start)
 			parser.parse_from_string (buffer)
-			parser.finish_incremental
 		end
 		
 	parser: XM_EIFFEL_PARSER

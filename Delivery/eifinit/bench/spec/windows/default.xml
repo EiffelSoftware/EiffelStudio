@@ -79,7 +79,7 @@
 			<TEXT>class_tool_command_bar<BOOLEAN>True</BOOLEAN></TEXT>
 			<TEXT>class_tool_format_bar<BOOLEAN>True</BOOLEAN></TEXT>
 			<TEXT>parse_ace_after_saving<BOOLEAN>True</BOOLEAN></TEXT>
-			<TEXT>unified_stone<BOOLEAN>False</BOOLEAN></TEXT>
+			<TEXT>unified_stone<BOOLEAN>True</BOOLEAN></TEXT>
 			<TEXT>development_window__show_address_toolbar<BOOLEAN>True</BOOLEAN></TEXT>
 			<TEXT>development_window__show_project_toolbar<BOOLEAN>True</BOOLEAN></TEXT>
 			<TEXT>development_window__show_general_toolbar<BOOLEAN>True</BOOLEAN></TEXT>

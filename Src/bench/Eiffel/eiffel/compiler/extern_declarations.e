@@ -83,10 +83,10 @@ feature
 			type_tables.clear_all;
 		end;
 
-	generate_header_files (f: INDENT_FILE) is
-			-- Generate header files in `f'.
+	generate_header_files (buffer: GENERATION_BUFFER) is
+			-- Generate header files in `buffer'.
 		require
-			file_exists: f /= Void;
+			buffer_exists: buffer /= Void;
 		local
 			queue: like shared_include_queue
 		do
@@ -96,27 +96,27 @@ feature
 				until
 					queue.empty
 				loop
-					f.putstring ("#include ");
-					f.putstring (queue.item);
-					f.new_line;
+					buffer.putstring ("#include ");
+					buffer.putstring (queue.item);
+					buffer.new_line;
 					queue.remove;
 				end;
 			end;
 		end;
 
-	generate_header (f: INDENT_FILE) is
+	generate_header (buffer: GENERATION_BUFFER) is
 			-- Generate the run-time header file includes
 		require
-			file_exists: f /= Void and then f.exists
+			buffer_not_void: buffer /= Void
 		do
-			f.putstring ("#include %"eif_portable.h%"%N%
+			buffer.putstring ("#include %"eif_portable.h%"%N%
 					%#include %"eif_macros.h%"%N%N");
 		end
 
-	generate (f: INDENT_FILE) is
+	generate (buffer: GENERATION_BUFFER) is
 			-- Generate declarations in a file of name `file_name'.
 		require
-			file_exists: f /= Void and then f.exists
+			buffer_not_void: buffer /= Void
 		local
 			local_routines: EXTEND_TABLE [TYPE_C, STRING]
 			local_routine_tables: SEARCH_TABLE [STRING]
@@ -124,7 +124,7 @@ feature
 			local_type_tables: SEARCH_TABLE [STRING]
 		do
 				-- generate the include files required by externals
-			generate_header_files (f);
+			generate_header_files (buffer);
 
 			from
 				local_routines := routines
@@ -132,10 +132,10 @@ feature
 			until
 				local_routines.after
 			loop
-				f.putstring ("extern ");
-				local_routines.item_for_iteration.generate (f);
-				f.putstring (local_routines.key_for_iteration);
-				f.putstring ("();%N");
+				buffer.putstring ("extern ");
+				local_routines.item_for_iteration.generate (buffer);
+				buffer.putstring (local_routines.key_for_iteration);
+				buffer.putstring ("();%N");
 				local_routines.forth;
 			end;
 
@@ -145,9 +145,9 @@ feature
 			until
 				local_routine_tables.after
 			loop
-				f.putstring ("extern fnptr ");
-				f.putstring (local_routine_tables.item_for_iteration);
-				f.putstring ("[];%N");
+				buffer.putstring ("extern fnptr ");
+				buffer.putstring (local_routine_tables.item_for_iteration);
+				buffer.putstring ("[];%N");
 				local_routine_tables.forth;
 			end;
 
@@ -157,9 +157,9 @@ feature
 			until
 				local_attribute_tables.after
 			loop
-				f.putstring ("extern long ");
-				f.putstring (local_attribute_tables.item_for_iteration);
-				f.putstring ("[];%N");
+				buffer.putstring ("extern long ");
+				buffer.putstring (local_attribute_tables.item_for_iteration);
+				buffer.putstring ("[];%N");
 				local_attribute_tables.forth;
 			end;
 
@@ -169,12 +169,12 @@ feature
 			until
 				local_type_tables.after
 			loop
-				f.putstring ("extern int16 ");
-				f.putstring (local_type_tables.item_for_iteration);
-				f.putstring ("[];%N");
-				f.putstring ("extern int16 *");
-				f.putstring (local_type_tables.item_for_iteration);
-				f.putstring ("_gen_type [];%N");
+				buffer.putstring ("extern int16 ");
+				buffer.putstring (local_type_tables.item_for_iteration);
+				buffer.putstring ("[];%N");
+				buffer.putstring ("extern int16 *");
+				buffer.putstring (local_type_tables.item_for_iteration);
+				buffer.putstring ("_gen_type [];%N");
 				local_type_tables.forth;
 			end;
 		end;

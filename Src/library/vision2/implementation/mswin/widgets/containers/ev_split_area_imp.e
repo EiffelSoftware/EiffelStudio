@@ -36,8 +36,7 @@ inherit
 		rename
 			make as ev_wel_control_container_make
 		redefine	
-			top_level_window_imp,
-			on_left_button_down
+			top_level_window_imp
 		end
 
 	EV_SYSTEM_PEN_IMP

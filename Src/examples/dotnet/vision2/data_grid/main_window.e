@@ -45,10 +45,6 @@ feature {NONE} -- Initialization
 			build_main_container
 			extend (main_container)
 
-				-- Execute `request_close_window' when the user clicks
-				-- on the cross in the title bar.
-			close_request_actions.extend (agent request_close_window)
-
 				-- Set the title of the window
 			set_title (Window_title)
 
@@ -221,7 +217,7 @@ feature {NONE} -- Implementation, Close event
 				(create {EV_ENVIRONMENT}).application.destroy
 			end
 		end
-
+		
 feature {NONE} -- Implementation
 
 	main_container: EV_VERTICAL_BOX
@@ -277,7 +273,7 @@ feature {NONE} -- Implementation
 
 			create winform_container
 			create data_grid.make
-			data_grid.set_caption_text (("Winform data grid inside a Vision2 container").to_cil)
+			data_grid.set_caption_text ("Winform data grid inside a Vision2 container")
 			winform_container.extend (data_grid)
 			l_vbox.extend (winform_container)
 			
@@ -288,7 +284,7 @@ feature {NONE} -- Implementation
 
 feature {NONE} -- Implementation / Constants
 
-	Window_title: STRING is "ado_application"
+	Window_title: STRING is "ADO Application"
 			-- Title of the window.
 
 	Window_width: INTEGER is 400
@@ -305,7 +301,7 @@ feature -- Database code
 			standard_status_label.set_text ("Populating data grid...")
 			(create {EV_ENVIRONMENT}).application.process_events
 			do_populate
-			data_grid.set_data_binding(data_set, ("Suppliers").to_cil)
+			data_grid.set_data_binding (data_set, "Suppliers")
 			standard_status_label.set_text ("Data grid populated.")
 		end
 		
@@ -339,66 +335,50 @@ feature {NONE} -- Implementation
 				-- create a DATA_SQL_CONNECTION from the given connection string.
 				-- Change the data source value to the name of your computer.
 			connection_string := "server="
-			append_cil (connection_string, server_field.text.to_cil)
+			connection_string.append (server_field.text)
 			connection_string.append (";Trusted_Connection=yes;database=")
-			append_cil (connection_string, database_field.text.to_cil)
-			create northwind_connection.make_from_connection_string (connection_string.to_cil)
+			connection_string.append (database_field.text)
+			create northwind_connection.make (connection_string)
 
 				-- Create a DATA_SQL_DATA_ADAPTER for the Suppliers table.
 			create suppliers_adapter.make
 			
 				-- A table mapping tells the adapter what to call the table.
-			a_mapping := suppliers_adapter.table_mappings.add_string (("Table").to_cil,
-				("Suppliers").to_cil)
+			a_mapping := suppliers_adapter.table_mappings.add ("Table", "Suppliers")
 
 			northwind_connection.open
-			create command_on_suppliers.make_from_cmd_text_and_connection (
-				("SELECT * FROM Suppliers").to_cil, northwind_connection)
+			create command_on_suppliers.make ("SELECT * FROM Suppliers", northwind_connection)
 
 			command_on_suppliers.set_command_type (feature {DATA_COMMAND_TYPE}.Text)
 			suppliers_adapter.set_select_command (command_on_suppliers)
 
-			feature {SYSTEM_CONSOLE}.write (("The connection is open.").to_cil)
-			feature {SYSTEM_CONSOLE}.write_line
-			create data_set.make_from_data_set_name (("Customers").to_cil)
+			io.put_string ("The connection is open.%N")
+
+			create data_set.make ("Customers")
 			l_count := suppliers_adapter.fill_data_set (data_set)
 
 				-- Create a second DATA_SQL_DATA_ADAPTER and DATA_SQL_COMMAND to get
 				-- the Products table, a child table of Suppliers.
 
 			create products_adapter.make
-			a_mapping := products_adapter.table_mappings.add_string (("Table").to_cil,
-				("Products").to_cil)
+			a_mapping := products_adapter.table_mappings.add ("Table", "Products")
 
-			create command_on_products.make_from_cmd_text_and_connection (
-				("SELECT * FROM Products").to_cil, northwind_connection)
+			create command_on_products.make ("SELECT * FROM Products", northwind_connection)
 
 			products_adapter.set_select_command (command_on_products)
 			l_count := products_adapter.fill_data_set (data_set)
 			northwind_connection.Close
 
-			feature {SYSTEM_CONSOLE}.write (("The connection is closed.").to_cil)
-			feature {SYSTEM_CONSOLE}.write_line
+			io.put_string ("The connection is closed.%N")
 
 				-- You must create a DATA_DATA_RELATION to link the two tables.
 				-- Get the parent and child columns of the two tables.
 
-			data_column_1 := data_set.tables.item_string (
-				("Suppliers").to_cil).columns.item_string(("SupplierID").to_cil)
-			data_column_2 := data_set.tables.item_string (
-				("Products").to_cil).columns.item_string(("SupplierID").to_cil)
+			data_column_1 := data_set.tables.item ("Suppliers").columns.item ("SupplierID")
+			data_column_2 := data_set.tables.item ("Products").columns.item ("SupplierID")
 
-			create data_relation.make_from_relation_name_and_parent_column_and_child_column (
-				("suppliers2products").to_cil, data_column_1, data_column_2)
+			create data_relation.make ("suppliers2products", data_column_1, data_column_2)
 			data_set.relations.add (data_relation)
-		end
-
-	append_cil (a_string: STRING; a_system_string: SYSTEM_STRING) is
-		local
-			s: STRING
-		do
-			create s.make_from_cil (a_system_string)
-			a_string.append (s)
 		end
 
 end -- class MAIN_WINDOW

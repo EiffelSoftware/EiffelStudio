@@ -77,8 +77,20 @@ feature -- Access
 		do
 			Result := Names_heap.item (feature_name_id)
 		ensure
-			Result_not_void: Result /= Void
-			Result_not_empty: not Result.is_empty
+			feature_name_not_void: Result /= Void
+			feature_name_not_empty: not Result.is_empty
+		end
+		
+	escaped_feature_name: STRING is
+			-- Final name of feature with escape for C code generation
+		local
+			l_string_converter: STRING_CONVERTER
+		do
+			create l_string_converter
+			Result := l_string_converter.escaped_string (feature_name)
+		ensure
+			feature_name_not_void: Result /= Void
+			feature_name_not_empty: not Result.is_empty
 		end
 
 	feature_name_id: INTEGER
@@ -909,12 +921,6 @@ feature -- Conveniences
 			Result := redefinable
 		end
 
-	is_none_attribute: BOOLEAN is
-			-- is feature an attribute of type NONE ?
-		do
-			-- Do nothing
-		end
-
 	type: TYPE is
 			-- Type of feature
 		do
@@ -1453,7 +1459,7 @@ end
 
 					-- `set_type' has been called in `check_types' so
 					-- the reverse assignment is valid.
-				solved_type ?= type
+				solved_type ?= type.actual_type
 				if	solved_type.has_expanded then
 					if 	solved_type.expanded_deferred then
 						create vtec1
@@ -1549,12 +1555,12 @@ debug ("ACTIVITY")
 	io.error.new_line
 end
 
-			if not current_class.valid_redeclaration (old_type, new_type) then
+			if not new_type.conform_to (old_type) then
 				create vdrd51
 				vdrd51.init (old_feature, Current)
 				Error_handler.insert_error (vdrd51)
 			elseif
-				new_type.is_true_expanded /= old_type.is_true_expanded
+				new_type.is_expanded /= old_type.is_expanded
 			then
 				create ve02
 				ve02.init (old_feature, Current)
@@ -1594,14 +1600,12 @@ debug ("ACTIVITY")
 	end
 	io.error.new_line
 end
-					if not
-						current_class.valid_redeclaration (old_type, new_type)
-					then
+					if not new_type.conform_to (old_type) then
 						create vdrd53
 						vdrd53.init (old_feature, Current)
 						Error_handler.insert_error (vdrd53)
 					elseif
-						new_type.is_true_expanded /= old_type.is_true_expanded
+						new_type.is_expanded /= old_type.is_expanded
 					then
 						create ve02a
 						ve02a.init (old_feature, Current)
@@ -1913,31 +1917,22 @@ feature -- Replication
 feature -- Genericity
 
 	update_instantiator2 (a_class: CLASS_C) is
-			-- Look for generic types in result and arguments in order
+			-- Look for generic/expanded types in result and arguments in order
 			-- to update instantiator.
 		require
 			good_argument: a_class /= Void
 			good_context: a_class.changed
 		local
-			gen_type: GEN_TYPE_A
 			i, arg_count: INTEGER
 		do
-			gen_type ?= type.actual_type
-			if gen_type /= Void then
-					-- Found generic result type
-				Instantiator.dispatch (gen_type, a_class)
-			end
+			Instantiator.dispatch (type.actual_type, a_class)
 			from
 				i := 1
 				arg_count := argument_count
 			until
 				i > arg_count
 			loop	
-				gen_type ?= arguments.i_th (i).actual_type
-				if gen_type /= Void then
-						-- Found generic argument type
-					Instantiator.dispatch (gen_type, a_class)
-				end
+				Instantiator.dispatch (arguments.i_th (i).actual_type, a_class)
 				i := i + 1
 			end
 		end

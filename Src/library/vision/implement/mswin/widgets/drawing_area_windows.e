@@ -42,6 +42,8 @@ inherit
 			on_left_button_up, on_right_button_down,
 			on_mouse_move, on_destroy, on_set_cursor,
 			on_key_up,
+			on_size,
+			on_move,
 			on_key_down
 		redefine
 			class_name,
@@ -355,15 +357,6 @@ feature -- Element change
 			character_actions.add (Current, command, arg)
 		end
 
-	add_resize_action (command: COMMAND; arg: ANY) is
-			-- Add `a_command' to the list of action to be executed when
-			-- current area is resized.
-			-- `argument' will be passed to `a_command' whenever it is
-			-- invoked as a callback.
-		do
-			resize_actions.add (Current, command, arg)
-		end
-
 feature -- Removal
 
 	remove_input_action (command: COMMAND; arg: ANY) is
@@ -377,12 +370,6 @@ feature -- Removal
 			character_actions.remove (Current, command, arg)
 		end
 
-	remove_resize_action (command: COMMAND; arg: ANY) is
-			-- Remove `a_command' with `argument' from the list of action
-			-- to be executed when current area is resized.
-		do
-			resize_actions.remove (Current, command, arg)
-		end
 
 feature {NONE} -- Implementation
 

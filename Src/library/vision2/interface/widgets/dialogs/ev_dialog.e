@@ -30,7 +30,7 @@ feature {NONE} -- Initialization
 		do
 			!EV_DIALOG_IMP!implementation.make (par)
 			implementation.set_interface (Current)
-			implementation.test_and_set_parent (par)
+			implementation.initialize_colors
 			implementation.build
 		end
 

@@ -69,16 +69,16 @@ feature -- Status report
 
 feature -- Element change
 
-	add_element (a_string: STRING) is
+--	add_element (a_string: STRING) is
 			-- Add an element with the text `a_string' 
 			-- to the combo-box.
 			-- If string is `Void', it add an element with 
 			-- an empty string "".
-		require
-			exists: not destroyed
-		do
-			implementation.add_element (a_string)
-		end
+--		require
+--			exists: not destroyed
+--		do
+--			implementation.add_element (a_string)
+--		end
 
 	insert_element (a_string: STRING; index: INTEGER) is
 			-- Insert an element with the text `a_string'
@@ -94,16 +94,16 @@ feature -- Element change
 			implementation.insert_element (a_string, index)
 		end				
 
-	remove_element (index: INTEGER) is
+--	remove_element (index: INTEGER) is
 			-- Remove the element at the zero-based
 			-- `index' position of the combo-box.
-		require
-			exists: not destroyed
-			index_large_enough: index >= 0
-			index_small_enough: index < count
-		do
-			implementation.remove_element (index)
-		end
+--		require
+--			exists: not destroyed
+--			index_large_enough: index >= 0
+--			index_small_enough: index < count
+--		do
+--			implementation.remove_element (index)
+--		end
 
 	remove_all_elements is
 			-- Remove all the elements of the combo-box.

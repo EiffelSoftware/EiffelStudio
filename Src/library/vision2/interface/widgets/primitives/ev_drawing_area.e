@@ -2,6 +2,9 @@ indexing
 	description: "EiffelVision drawing area. A drawing area%
 			% is a primitive on which the user can draw%
 			% pixmaps or his own figures."
+	note: "A drawing area as a (0, 0) minimum_size by default%
+			% and a (10, 10) size. A non nul size because then,%
+			% the user doesn't wonder why nothing appear."
 	status: "See notice at end of class"
 	id: "$Id$"
 	date: "$Date$"

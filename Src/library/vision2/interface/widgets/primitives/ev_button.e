@@ -1,8 +1,6 @@
 indexing
-
-	description: 
-	"EiffelVision button. Basic GUI push button. This is also a% 
-	%base class for other buttons classes"
+	description: "EiffelVision button. Basic GUI push button.%
+				% This is also a base class for other buttons classes"
 	status: "See notice at end of class"
 	id: "$Id$"
 	date: "$Date$"
@@ -24,6 +22,11 @@ inherit
 			implementation, make
 		end
 
+--	EV_PIXMAP_CONTAINER
+--		redefine
+--			implementation
+--		end
+
 	EV_FONTABLE
 		redefine
 			implementation
@@ -31,7 +34,6 @@ inherit
 
 creation
 	make, make_with_text
-
 	
 feature {NONE} -- Initialization
 	
@@ -39,7 +41,8 @@ feature {NONE} -- Initialization
  		-- Empty button
 		do
  			!EV_BUTTON_IMP!implementation.make (par)
- 			initialize (par)
+--			implementation.initialize (Current)
+ 			widget_make (par)
  		end
 	
 	make_with_text (par: EV_CONTAINER; txt: STRING) is
@@ -47,34 +50,33 @@ feature {NONE} -- Initialization
 			-- text label
 		do
 			!EV_BUTTON_IMP!implementation.make_with_text (par, txt)
-			initialize (par)
-		end			
-	
-	initialize (par: EV_CONTAINER) is
-		-- Common initialization for buttons
-		do
+--			implementation.initialize (Current)
 			widget_make (par)
-			!!pixmap_container.make_from_primitive (Current)
 		end
 	
+--	initialize (par: EV_CONTAINER) is
+--		-- Common initialization for buttons
+--		do
+--			widget_make (par)
+	--		!!pixmap_container.make_from_primitive (Current)
+--		end
 	
 feature -- Access
 
 	pixmap_container: EV_PIXMAP_CONTAINER
 			-- Pixmap inside button
 	
-	
 feature -- Event - command association
 	
-	add_click_command ( command: EV_COMMAND; 
+	add_click_command (command: EV_COMMAND; 
 			    arguments: EV_ARGUMENTS) is
 			-- Add 'command' to the list of commands to be
 			-- executed when the button is pressed
 		require
 			valid_command: command /= Void
 		do
-			implementation.add_click_command ( command, 
-							   arguments )
+			implementation.add_click_command (command, 
+							   arguments)
 		end	
 	
 feature {EV_PIXMAP_CONTAINER_IMP} -- Implementation
@@ -83,7 +85,6 @@ feature {EV_PIXMAP_CONTAINER_IMP} -- Implementation
 			-- Implementation of button
 	
 end -- class EV_BUTTON
-
 
 --|----------------------------------------------------------------
 --| EiffelVision: library of reusable components for ISE Eiffel.
@@ -100,6 +101,3 @@ end -- class EV_BUTTON
 --| Customer support e-mail <support@eiffel.com>
 --| For latest info see award-winning pages: http://www.eiffel.com
 --|----------------------------------------------------------------
-
-
-

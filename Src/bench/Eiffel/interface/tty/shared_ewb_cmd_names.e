@@ -1,8 +1,8 @@
 indexing
 
 	description: 
-		"Command names for menu entries.";
-	date: "$Date$";
+		"Command names for menu entries."
+	date: "$Date$"
 	revision: "$Revision $"
 
 class SHARED_EWB_CMD_NAMES
@@ -29,7 +29,7 @@ feature {NONE}
 
 	class_cmd_name: STRING is "class"
 
-	class_list_cmd_name: STRING is "classes";
+	class_list_cmd_name: STRING is "classes"
 
 	clients_cmd_name: STRING is "clients"
 
@@ -39,15 +39,15 @@ feature {NONE}
 
 	compile_cmd_name: STRING is "compile"
 
-	Convert_profile_cmd_name: STRING is "convert";
+	Convert_profile_cmd_name: STRING is "convert"
 
-	Defaults_cmd_name: STRING is "defaults";
+	Defaults_cmd_name: STRING is "defaults"
 
 	deferred_cmd_name: STRING is "deferred"
 
 	descendants_cmd_name: STRING is "descendants"
 
-	Documentation_cmd_name: STRING is "documentation";
+	Documentation_cmd_name: STRING is "documentation"
 
 	dversions_cmd_name: STRING is "dversions"
 
@@ -55,7 +55,7 @@ feature {NONE}
 
 	edit_class_cmd_name: STRING is "edit"
 
-	exported_cmd_name: STRING is "exported";
+	exported_cmd_name: STRING is "exported"
 
 	externals_cmd_name: STRING is "externals"
 
@@ -63,11 +63,11 @@ feature {NONE}
 
 	feature_cmd_name: STRING is "feature"
 
-	Featurename_cmd_name: STRING is "featurename";
+	Featurename_cmd_name: STRING is "featurename"
 
 	file_cmd_name: STRING is "file"
 
-	filter_cmd_name: STRING is "filter";
+	filter_cmd_name: STRING is "filter"
 
 	finalize_cmd_name: STRING is "finalize"
 
@@ -77,7 +77,7 @@ feature {NONE}
 
 	freeze_cmd_name: STRING is "freeze"
 
-	Generate_cmd_name: STRING is "generate";
+	Generate_cmd_name: STRING is "generate"
 
 	help_cmd_name: STRING is "help"
 
@@ -87,9 +87,9 @@ feature {NONE}
 
 	indexing_cmd_name: STRING is "indexing"
 
-	Input_cmd_name: STRING is "input";
+	Input_cmd_name: STRING is "input"
 
-	Language_cmd_name: STRING is "language";
+	Language_cmd_name: STRING is "language"
 
 	loop_cmd_name: STRING is "loop"
 
@@ -101,17 +101,17 @@ feature {NONE}
 
 	modified_cmd_name: STRING is "modifications"
 
-	Number_of_calls_cmd_name: STRING is "calls";
+	Number_of_calls_cmd_name: STRING is "calls"
 
 	once_cmd_name: STRING is "once"
 
-	parent_cmd_name: STRING is "parent menu";
+	parent_cmd_name: STRING is "parent menu"
 
-	Percentage_cmd_name: STRING is "percentage";
+	Percentage_cmd_name: STRING is "percentage"
 
 	precompile_cmd_name: STRING is "precompile"
 
-	Profile_cmd_name: STRING is "profile";
+	Profile_cmd_name: STRING is "profile"
 
 	project_path_cmd_name: STRING is "project_path"
 
@@ -131,13 +131,13 @@ feature {NONE}
 
 	run_cmd_name: STRING is "run"
 
-	Self_sec_cmd_name: STRING is "self";
+	Self_sec_cmd_name: STRING is "self"
 
 	short_cmd_name: STRING is "short"
 
-	show_subqueries_cmd_name: STRING is "show";
+	show_subqueries_cmd_name: STRING is "show"
 
-	statistics_cmd_name: STRING is "statistics";
+	statistics_cmd_name: STRING is "statistics"
 
 	stop_cmd_name: STRING is "stop"
 
@@ -151,7 +151,7 @@ feature {NONE}
 
 	text_cmd_name: STRING is "text"
 
-	Total_sec_cmd_name: STRING is "total";
+	Total_sec_cmd_name: STRING is "total"
 
 	yank_cmd_name: STRING is "yank"
 
@@ -165,6 +165,6 @@ feature {NONE}
 
 	text_doc_cmd_name: STRING is "Documentation (Text)"
 
-	version: STRING is "version"
+	version_cmd_name: STRING is "version"
 
 end

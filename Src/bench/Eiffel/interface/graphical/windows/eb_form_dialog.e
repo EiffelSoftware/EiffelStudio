@@ -9,7 +9,6 @@ indexing
 class EB_FORM_DIALOG
 
 inherit
-
 	TOOLTIP_INITIALIZER;
 	EB_SHELL
 		undefine
@@ -37,18 +36,11 @@ feature -- Initialization
 			valid_parent: a_parent /= Void
 		do
 			old_make (a_name, a_parent);
+			tooltip_initialize (Current)
 			set_default_position (False)
 		ensure
 			parent_set: parent = a_parent;
 			identifier_set: identifier.is_equal (a_name)
-		end;
-
-feature -- Access
-
-	tooltip_parent: COMPOSITE is
-			-- Tooltip parent
-		do
-			Result := Current
 		end;
 
 feature -- Properties

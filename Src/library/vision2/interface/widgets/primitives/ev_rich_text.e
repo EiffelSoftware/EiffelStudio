@@ -3,6 +3,7 @@ indexing
 		EiffelVision rich text area, supporting multiple lines of text, with font and color
 		formatting applicable on a character by character basis.
 		]"
+	status: "See notice at end of class"
 	date: "$Date$"
 	revision: "$Revision$"
 
@@ -222,7 +223,7 @@ feature -- Access
 				old selection_start = selection_start and old selection_end = selection_end
 		end
 		
-	tab_positions: ACTIVE_LIST [INTEGER] is
+	tab_positions: EV_ACTIVE_LIST [INTEGER] is
 			-- Width of each tab position in pixels, from left to right.
 			-- Insert values to update tab widths used in `Current'.
 			-- All additional tab positions use `tab_width'.

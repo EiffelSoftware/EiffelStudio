@@ -17,7 +17,13 @@ feature -- Basic operations
 
 	generate_source_interface_features (an_interface: WIZARD_INTERFACE_DESCRIPTOR) is
 			-- Generate source interface features.
+		local
+			eiffel_client_visitor: WIZARD_EIFFEL_CLIENT_VISITOR
+			source_generator: WIZARD_SOURCE_INTERFACE_EIFFEL_SERVER_GENERATOR
 		do
+			create eiffel_client_visitor
+			eiffel_client_visitor.visit (an_interface.implemented_interface)
+			create source_generator.generate (an_interface, coclass, eiffel_writer)
 		end
 
 	generate_functions_and_properties (an_interface: WIZARD_INTERFACE_DESCRIPTOR;

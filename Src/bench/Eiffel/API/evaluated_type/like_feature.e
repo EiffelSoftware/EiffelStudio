@@ -188,6 +188,7 @@ end
 			updated_feature_id: INTEGER
 			feat_tbl: FEATURE_TABLE
 			feat_i: FEATURE_I
+			l_class: CLASS_C
 		do
 				--| FIXME: `feature_id' refers to the feature_id in class that declares
 				--| `feature_name'. However most of times, we need to perform call on
@@ -198,10 +199,12 @@ end
 				--| If feature_table does not exist, it means that we are in current
 				--| class and it is enough to take stored `feature_id'.
 			if System.in_pass3 then
-				feat_tbl := context.actual_class_type.associated_class.feature_table
+				l_class := context.current_class
+				feat_tbl := l_class.feature_table
 			else
-				if System.feat_tbl_server.has (System.current_class.class_id) then
-					feat_tbl := System.current_class.feature_table
+				l_class := System.current_class
+				if System.feat_tbl_server.has (l_class.class_id) then
+					feat_tbl := l_class.feature_table
 				end
 			end
 			if feat_tbl /= Void then
@@ -215,7 +218,7 @@ end
 				updated_feature_id := feature_id
 			end
 
-			create Result.make (updated_feature_id, routine_id)
+			create Result.make (updated_feature_id, routine_id, l_class)
 		end
 
 feature -- Comparison

@@ -1388,7 +1388,9 @@ rt_private void full_mark (EIF_CONTEXT_NOARG)
 	 * object is marked.
 	 */
 
+#ifdef EIF_THREADS
 	int i;
+#endif
 	int moving = g_data.status & (GC_PART | GC_GEN);
 
 		/* Initialize our overflow depth */

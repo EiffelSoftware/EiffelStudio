@@ -119,7 +119,7 @@ feature {HISTORY_LIST}
 			-- Insert `a_command' after the cursor position, and place
 			-- cursor upon it
 		do
-			scroll_list.add_right (a_command_name);
+			scroll_list.put_right (a_command_name);
 			scroll_list.deselect_item;
 			scroll_list.forth;
 			update_widgets
@@ -170,7 +170,7 @@ feature
 				until
 					i > history_list.count
 				loop
-					scroll_list.add_left (history_list.i_th (i).n_ame);
+					scroll_list.put_left (history_list.i_th (i).name);
 					i := i+1
 				end;
 				if not scroll_list.empty then

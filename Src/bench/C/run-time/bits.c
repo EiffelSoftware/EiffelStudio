@@ -157,6 +157,9 @@ char *b;
 	register3 uint32 *addr_a;	/* Pointer into the arena of 'a' */
 	register4 uint32 *addr_b;	/* Pointer into the arena of 'b' */
 	register5 uint32 *last;		/* Last bit unit in 'a' */
+	char *bita;
+	char *bitb;
+	
 
 	if (a == b)					/* Pointer to the same object */
 		return TRUE;			/* Means objects are identical */
@@ -164,8 +167,23 @@ char *b;
 	len_a = LENGTH(a);
 	len_b = LENGTH(b);
 
-	if (len_a != len_b)			/* Bits do not have the same size */
-		return FALSE;			/* They can't be equal */
+	if (len_a != len_b) {			/* Bits do not have the same size */
+		if (len_a > len_b) {
+			bitb = bmalloc (len_a);/* Need to pad out bit (on right) */
+			b_copy (b, bitb);
+			bita = a;
+		}
+		else {
+			bita = bmalloc (len_b);/* Need to pad out bit (on right) */
+			b_copy (a, bita);
+			bitb = b;
+		}
+	}
+	else {							/* Bits have same size */
+		bita = a;
+		bitb = b;
+	}
+		/*return FALSE;			/* They can't be equal */
 
 	addr_a = ARENA(a);
 	addr_b = ARENA(b);

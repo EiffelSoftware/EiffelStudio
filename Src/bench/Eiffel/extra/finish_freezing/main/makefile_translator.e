@@ -993,7 +993,11 @@ feature {NONE} -- Translation
 				lastline.substring (1, 28).is_equal ("clean: sub_clean local_clean")
 			then
 					-- Add resource file dependency for IL system
-				makefile.putstring (options.get_string ("il_resource", Void))
+				replacement := options.get_string ("il_resource", Void)
+				subst_eiffel (replacement)
+				subst_platform (replacement)
+				subst_compiler (replacement)
+				makefile.putstring (replacement)
 				makefile.putstring ("%N")
 				makefile.putstring (lastline)
 			else

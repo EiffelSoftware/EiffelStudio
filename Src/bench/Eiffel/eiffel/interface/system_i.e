@@ -2193,7 +2193,7 @@ end;
 			class_type: CLASS_TYPE;
 		do
 			from
-				!!rout_table;
+				!!rout_table.make;
 				rout_table.set_rout_id (Initialization_id);
 				i := 1;
 				nb := Type_id_counter.value;

@@ -9,12 +9,23 @@ class
 inherit
 	GB_OBJECT_STONE
 		redefine
-			object
+			object,
+			default_create
 		end
 		
 	GB_SHARED_CLIPBOAD
 		export
 			{NONE} all
+		redefine
+			default_create
+		end
+		
+feature {NONE} -- Initialization
+
+	default_create is
+			-- Create `Current' and initialize `all_contained_instances'.
+		do
+			create all_contained_instances.make (10)
 		end
 
 feature -- Access
@@ -33,7 +44,7 @@ feature -- Access
 			Result := clipboard.object_type
 		end
 		
-feature {GB_CLIPBOARD_COMMAND} -- Implementation
+feature {GB_CLIPBOARD} -- Implementation
 		
 	set_associated_top_level_object (an_id: INTEGER) is
 			-- Assign `an_id' to `associated_top_level_object'.

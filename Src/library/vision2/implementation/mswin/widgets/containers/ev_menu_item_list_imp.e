@@ -15,8 +15,7 @@ inherit
 
 	EV_ITEM_LIST_IMP [EV_MENU_ITEM]
 		redefine
-			interface,
-			initialize
+			interface
 		end
 
 	WEL_MENU
@@ -28,13 +27,12 @@ inherit
 
 feature {NONE} -- Initialization
 
-	initialize is
+	make (an_interface: like interface) is
 		do
-			Precursor
+			base_make (an_interface)
 			create ev_children.make (2)
-			is_initialized := True
 		end
-
+			
 feature -- Standard output
 
 	print_radio_groups is
@@ -343,6 +341,9 @@ end -- class EV_MENU_ITEM_LIST_IMP
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.14  2000/04/10 16:27:56  brendel
+--| Modified creation sequence.
+--|
 --| Revision 1.13  2000/04/07 01:33:52  brendel
 --| Improved separator_imp_by_index.
 --|

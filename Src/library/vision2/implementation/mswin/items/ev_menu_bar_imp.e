@@ -15,6 +15,7 @@ inherit
 
 	EV_MENU_ITEM_LIST_IMP
 		redefine
+			make,
 			interface
 		end
 
@@ -26,7 +27,7 @@ feature {NONE} -- Initialization
 	make (an_interface: like interface) is
 			-- Create the menu bar.
 		do
-			base_make (an_interface)
+			Precursor (an_interface)
 			wel_make
 		end
 
@@ -57,6 +58,9 @@ end -- class EV_MENU_BAR_IMP
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.8  2000/04/10 16:27:57  brendel
+--| Modified creation sequence.
+--|
 --| Revision 1.7  2000/02/19 05:45:01  oconnor
 --| released
 --|

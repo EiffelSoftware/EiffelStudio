@@ -165,7 +165,7 @@ feature -- Status setting
 			if pixmap_imp /= Void then
 				w := pixmap_imp.width + 8
 				h := pixmap_imp.height + 8
-			elseif text /= Void and then not text.is_empty then
+			elseif not text.is_empty then
 				if private_font /= Void then
 					fw ?= private_font.implementation
 					check

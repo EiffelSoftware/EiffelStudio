@@ -110,6 +110,16 @@ feature -- Access
 			result_greater_than_or_equal_to_one: Result >= 1
 		end
 
+	filter_index: INTEGER is
+			-- Index of the selected filter
+		require
+			selected: selected
+		do
+			Result := cwel_open_file_name_get_nfilterindex (item)
+		ensure
+			positive_result: Result >= 0
+		end
+
 	Max_file_name_length: INTEGER is 1024
 			-- Maximum file name length
 
@@ -192,6 +202,8 @@ feature -- Element change
 			filter_names_not_void: filter_names /= Void
 			filter_patterns_not_void: filter_patterns /= Void
 			same_count: filter_names.count = filter_patterns.count
+			no_void_name: not filter_names.has (Void)
+			no_void_pattern: not filter_patterns.has (Void)
 		local
 			i: INTEGER
 			s: STRING
@@ -218,6 +230,17 @@ feature -- Element change
 			!! str_filter.make (s)
 			cwel_open_file_name_set_lpstrfilter (item,
 				str_filter.item)
+		end
+
+	set_filter_index (a_filter_index: INTEGER) is
+			-- Set `filter_index' with `a_filter_index'.
+		require
+			positive_filter_index: a_filter_index >= 0
+		do
+			cwel_open_file_name_set_nfilterindex (item,
+				a_filter_index)
+		ensure
+			filter_index_set: filter_index = a_filter_index
 		end
 
 	set_initial_directory (directory: STRING) is
@@ -325,6 +348,11 @@ feature {NONE} -- Externals
 			"C [macro <ofn.h>]"
 		end
 
+	cwel_open_file_name_set_nfilterindex (ptr: POINTER; value: INTEGER) is
+		external
+			"C [macro <ofn.h>]"
+		end
+
 	cwel_open_file_name_set_lpstrfile (ptr, value: POINTER) is
 		external
 			"C [macro <ofn.h>]"
@@ -376,6 +404,11 @@ feature {NONE} -- Externals
 		end
 
 	cwel_open_file_name_get_lpstrfilter (ptr: POINTER): POINTER is
+		external
+			"C [macro <ofn.h>]"
+		end
+
+	cwel_open_file_name_get_nfilterindex (ptr: POINTER): INTEGER is
 		external
 			"C [macro <ofn.h>]"
 		end

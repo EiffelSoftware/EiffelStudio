@@ -76,10 +76,9 @@
                 is valid if and only if it satisfies one of the following two
                 conditions:
                 <ul>
-                  <p><img src="http://www.eiffel.com/icons/greenball.gif" width="10" height="10">
-                  1. Its <font color="#aa00ff">Feature_of_call</font> is the
+                  <p>1. Its <font color="#aa00ff">Feature_of_call</font> is the
                   final name of a feature of <font color="#0000a0"><i>C</i></font>.
-                  <p><img src="http://www.eiffel.com/icons/greenball.gif" width="10" height="10">
+                  <p>
                   2. Its <font color="#aa00ff">Feature_of_call</font> is of the <font color="#aa00ff">Precursor</font>
                   kind.</p>
                 </ul>
@@ -88,16 +87,16 @@
               <ul>
                 A <font color="#aa00ff">Precursor</font> is valid if and only if
                 it satisfies the following three conditions:
-                <p><img src="http://www.eiffel.com/icons/greenball.gif" width="10" height="10">
+                <p>
                 1. It appears in the <font color="#aa00ff">Routine_body</font>
                 or the <font color="#aa00ff">Rescue</font> clause of the
                 declaration of exactly one routine <font color="#0000a0"><i>r</i></font>
                 of <font color="#0000a0"><i>C</i></font>.
-                <p><img src="http://www.eiffel.com/icons/greenball.gif" width="10" height="10">
+                <p>
                 2. If the <font color="#aa00ff">Parent_qualification</font> part
                 is present, its <font color="#aa00ff">Class_name</font> is the
                 name of a parent <font color="#0000a0"><i>P</i></font> of <font color="#0000a0"><i>C</i></font>.
-                <p><img src="http://www.eiffel.com/icons/greenball.gif" width="10" height="10">
+                <p>
                 3. The declaration of <font color="#0000a0"><i>r</i></font> in <font color="#0000a0"><i>C</i></font>
                 is the redefinition of a routine that has exactly one version
                 inherited by <font color="#0000a0"><i>C</i></font> as effective
@@ -148,8 +147,7 @@
               the one implemented in ISE Eiffel 4.3 and later. The differences with the
               original proposal are:
               <ul>
-                <p><img src="http://www.eiffel.com/icons/greenball.gif" width="10" height="10">
-                Syntax: the <font color="#aa00ff">Parent_qualification</font>,
+                <p>Syntax: the <font color="#aa00ff">Parent_qualification</font>,
                 if present, now appears after the <font color="#0000a0">Precursor</font>
                 keyword. The other order is still supported, so no
                 incompatibility should result. Reason for the change: better
@@ -157,14 +155,14 @@
                 dominant Eiffel style of &quot;qualified before qualifier&quot;
                 and &quot;most important information first&quot; (LL-like
                 style).
-                <p><img src="http://www.eiffel.com/icons/greenball.gif" width="10" height="10">
+                <p>
                 Validity: shortening and rewriting of the validity constraint.
                 Purposes: simpler, more clear definition; taking care of some
                 special cases that had been overlooked in the initial
                 discussion. Also, permitting the use of <font color="#0000a0">Precursor</font>
                 not only in a <font color="#0000a0">Routine_body</font> as
                 before but also in a <font color="#0000a0">Rescue</font> clause.
-                <p><img src="http://www.eiffel.com/icons/greenball.gif" width="10" height="10">
+                <p>
                 Web page cosmetics: more systematic use of colors (different
                 colors for <font color="#aa00ff">Syntactical constructs</font>
                 and for actual <font color="#0000a0">Eiffel text examples</font>.</p>

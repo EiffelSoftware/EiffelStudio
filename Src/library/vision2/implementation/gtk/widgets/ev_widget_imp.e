@@ -136,7 +136,7 @@ feature {EV_WINDOW_IMP, EV_INTERMEDIARY_ROUTINES} -- Implementation
 			temp_key_string: STRING
 			a_capture_widget_imp: EV_WIDGET_IMP
 		do
-			if App_implementation.capture_widget /= Void and then a_key_press and then a_key /= Void and then a_key.code = feature {EV_KEY_CONSTANTS}.Key_escape then
+			if App_implementation.is_in_transport and then a_key_press and then a_key /= Void and then a_key.code = feature {EV_KEY_CONSTANTS}.Key_escape then
 					-- If a PND is in action and the Esc key is pressed then cancel it
 				a_capture_widget_imp ?= App_implementation.capture_widget.implementation
 				a_capture_widget_imp.end_transport (0, 0, 0, 0, 0 ,0 ,0 ,0)
@@ -200,36 +200,34 @@ feature {EV_WINDOW_IMP, EV_INTERMEDIARY_ROUTINES} -- Implementation
 				INTEGER, INTEGER]
 			mouse_wheel_delta: INTEGER
 		do
-			if widget_imp_at_pointer_position = Current then
-				t := [a_x, a_y, a_button, a_x_tilt, a_y_tilt, a_pressure,
-					a_screen_x, a_screen_y]
-				-- Mouse Wheel implementation.
-				if a_type = feature {EV_GTK_EXTERNALS}.GDK_BUTTON_PRESS_ENUM then
-					mouse_wheel_delta := 1
-				elseif a_type = feature {EV_GTK_EXTERNALS}.GDK_2BUTTON_PRESS_ENUM then
-					mouse_wheel_delta := 1
-				elseif a_type = feature {EV_GTK_EXTERNALS}.GDK_3BUTTON_PRESS_ENUM then
-					mouse_wheel_delta := 1
+			t := [a_x, a_y, a_button, a_x_tilt, a_y_tilt, a_pressure,
+				a_screen_x, a_screen_y]
+			-- Mouse Wheel implementation.
+			if a_type = feature {EV_GTK_EXTERNALS}.GDK_BUTTON_PRESS_ENUM then
+				mouse_wheel_delta := 1
+			elseif a_type = feature {EV_GTK_EXTERNALS}.GDK_2BUTTON_PRESS_ENUM then
+				mouse_wheel_delta := 1
+			elseif a_type = feature {EV_GTK_EXTERNALS}.GDK_3BUTTON_PRESS_ENUM then
+				mouse_wheel_delta := 1
+			end
+			if a_button = 4 and mouse_wheel_delta > 0 then
+				-- This is for scrolling up
+				if mouse_wheel_actions_internal /= Void then
+					mouse_wheel_actions_internal.call ([mouse_wheel_delta])
 				end
-				if a_button = 4 and mouse_wheel_delta > 0 then
-					-- This is for scrolling up
-					if mouse_wheel_actions_internal /= Void then
-						mouse_wheel_actions_internal.call ([mouse_wheel_delta])
-					end
-				elseif a_button = 5 and mouse_wheel_delta > 0 then
-					-- This is for scrolling down
-					if mouse_wheel_actions_internal /= Void then
-						mouse_wheel_actions_internal.call ([- mouse_wheel_delta])
-					end
-				end	
-				if a_type = feature {EV_GTK_EXTERNALS}.GDK_BUTTON_PRESS_ENUM and not is_transport_enabled then
-					if pointer_button_press_actions_internal /= Void then
-						pointer_button_press_actions_internal.call (t)
-					end
-				elseif a_type = feature {EV_GTK_EXTERNALS}.GDK_2BUTTON_PRESS_ENUM then
-					if pointer_double_press_actions_internal /= Void then
-						pointer_double_press_actions_internal.call (t)
-					end
+			elseif a_button = 5 and mouse_wheel_delta > 0 then
+				-- This is for scrolling down
+				if mouse_wheel_actions_internal /= Void then
+					mouse_wheel_actions_internal.call ([- mouse_wheel_delta])
+				end
+			end	
+			if a_type = feature {EV_GTK_EXTERNALS}.GDK_BUTTON_PRESS_ENUM and not is_transport_enabled then
+				if pointer_button_press_actions_internal /= Void then
+					pointer_button_press_actions_internal.call (t)
+				end
+			elseif a_type = feature {EV_GTK_EXTERNALS}.GDK_2BUTTON_PRESS_ENUM then
+				if pointer_double_press_actions_internal /= Void then
+					pointer_double_press_actions_internal.call (t)
 				end
 			end
        end
@@ -259,11 +257,11 @@ feature {EV_WINDOW_IMP, EV_INTERMEDIARY_ROUTINES} -- Implementation
 		do
 			if a_has_focus then
 				if focus_in_actions_internal /= Void then
-					focus_in_actions_internal.call ((App_implementation.gtk_marshal).Empty_tuple)
+					focus_in_actions_internal.call (Void)
 				end
 			else
 				if focus_out_actions_internal /= Void then
-					focus_out_actions_internal.call ((App_implementation.gtk_marshal).Empty_tuple)
+					focus_out_actions_internal.call (Void)
 				end
 			end
 		end
@@ -390,11 +388,14 @@ feature -- Status setting
 				feature {EV_GTK_EXTERNALS}.GDK_BUTTON_RELEASE_MASK_ENUM +
 				feature {EV_GTK_EXTERNALS}.GDK_BUTTON_PRESS_MASK_ENUM +
 				feature {EV_GTK_EXTERNALS}.GDK_BUTTON_MOTION_MASK_ENUM +
-				--feature {EV_GTK_EXTERNALS}.GDK_POINTER_MOTION_HINT_MASK_ENUM +
 				feature {EV_GTK_EXTERNALS}.GDK_POINTER_MOTION_MASK_ENUM,
 				NULL,						-- GdkWindow* confine_to 
 				NULL,						-- GdkCursor *cursor
 				0)							-- guint32 time
+			i := feature {EV_GTK_EXTERNALS}.gdk_keyboard_grab (
+				feature {EV_GTK_EXTERNALS}.gtk_widget_struct_window (c_object),
+				True, -- gint owner events
+				0) -- guint32 time
 		end
 
 	disable_capture is
@@ -405,7 +406,8 @@ feature -- Status setting
 			feature {EV_GTK_EXTERNALS}.gtk_grab_remove (c_object)
 			feature {EV_GTK_EXTERNALS}.gdk_pointer_ungrab (
 				0 -- guint32 time
-			) 
+			)
+			feature {EV_GTK_EXTERNALS}.gdk_keyboard_ungrab (0) -- guint32 time
 		end
 
 feature -- Element change

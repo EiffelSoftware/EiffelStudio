@@ -8,6 +8,7 @@ indexing
 */
 	
 using System;
+using ISE.Runtime.CA;
 
 namespace ISE.Runtime {
 

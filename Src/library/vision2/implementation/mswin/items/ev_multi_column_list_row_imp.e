@@ -99,6 +99,16 @@ feature -- Element Change
 			end
 		end
 
+feature {EV_PICK_AND_DROPABLE_I} -- Pick and Drop
+
+	set_pointer_style (c: EV_CURSOR) is
+		--| FIXME Still under progress 
+		do
+			if parent_imp /= Void then
+				parent_imp.set_pointer_style (c)
+			end
+		end
+
 feature {EV_MULTI_COLUMN_LIST_IMP} -- Implementation
 
 	set_capture is
@@ -148,6 +158,9 @@ end -- class EV_MULTI_COLUMN_LIST_ROW_IMP
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.26  2000/03/21 01:22:27  rogers
+--| Added set_pointer_style.
+--|
 --| Revision 1.25  2000/03/17 23:26:50  rogers
 --| Undefined set_pointer_style from EV_PICK_AND_AND_DROPABLE_IMP.
 --|

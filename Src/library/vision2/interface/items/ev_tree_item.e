@@ -16,8 +16,6 @@ class
 
 inherit
 	EV_TREE_NODE
-		undefine
-			initialize
 		redefine
 			implementation,
 			is_in_default_state

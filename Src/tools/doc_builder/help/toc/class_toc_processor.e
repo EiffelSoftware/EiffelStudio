@@ -68,8 +68,10 @@ feature -- Process
 			l_filename: FILE_NAME
 			l_node: like chart_node
 			l_mem: MEMORY
+			l_consts: SHARED_OBJECTS
 		do
 			create l_mem
+			create l_consts
 			l_filename_string := code_file.name			
 			create chart_node.make (next_id, parent, l_filename_string, class_name)
 			l_filename_string := clone (l_filename_string.substring (1, l_filename_string.count - 10) + Contract_suffix + ".xml")
@@ -82,21 +84,24 @@ feature -- Process
 			l_filename.add_extension (xml_extension)
 			create l_chart_file.make (l_filename.string)
 			if l_chart_file.exists then
-				l_anchors := generated_anchors (l_chart_file)
-				if l_anchors /= Void and then not l_anchors.is_empty then
-					from
-						l_anchors.start
-					until
-						l_anchors.after
-					loop
-						l_anchor_title := l_anchors.item_for_iteration
-						l_anchor_href := l_filename_string + l_anchors.key_for_iteration					
-						create l_node.make (next_id, chart_node, l_anchor_href, l_anchor_title)
-						l_node.set_icon (feature_icon)
-						chart_node.add_node (l_node)						
-						l_anchors.forth
-					end
-					chart_node.sort
+					-- Read the individual features
+				if not l_consts.shared_constants.help_constants.is_web_help then							
+					l_anchors := generated_anchors (l_chart_file)
+					if l_anchors /= Void and then not l_anchors.is_empty then
+						from
+							l_anchors.start
+						until
+							l_anchors.after
+						loop
+							l_anchor_title := l_anchors.item_for_iteration
+							l_anchor_href := l_filename_string + l_anchors.key_for_iteration					
+							create l_node.make (next_id, chart_node, l_anchor_href, l_anchor_title)
+							l_node.set_icon (feature_icon)
+							chart_node.add_node (l_node)						
+							l_anchors.forth
+						end
+						chart_node.sort
+					end				
 				end
 			end
 			l_mem.full_collect

@@ -13,7 +13,9 @@ inherit
 		redefine
 			eiffelized_consumed_entities,
 			dotnet_name,
-			is_property
+			is_property,
+			is_public,
+			is_static
 		end
 
 create
@@ -34,6 +36,8 @@ feature {NONE} -- Initialization
 			args: ARRAY [CONSUMED_ARGUMENT]
 		do
 			dotnet_name := dn
+			is_public := pub
+			is_static := stat
 			entity_make (en, pub, decl_type)
 			if has_getter then
 				create getter.make (
@@ -69,6 +73,12 @@ feature -- ConsumerWrapper functions
 		do
 			Result := True
 		end
+		
+	is_public: BOOLEAN
+			-- Is `Current' public.
+			
+	is_static: BOOLEAN
+			-- Is `Current' static.
 
 feature -- Access
 

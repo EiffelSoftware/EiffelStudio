@@ -45,7 +45,9 @@ feature {NONE} -- Initialization
 			start_position := -1;
 			end_position := -1;
 			e_feature := a_feature;
-			e_class := a_feature.associated_class
+			if a_feature /= Void then
+				e_class := a_feature.associated_class
+			end
 		end;
 
 feature -- Properties
@@ -259,7 +261,7 @@ feature -- dragging
 		local
 			body_as: FEATURE_AS
 		do
-			if start_position = -1 then
+			if start_position = -1 and then e_feature /= Void then
 					-- Position has not been initialized
 				body_as := e_feature.ast;
 				if body_as /= Void then

@@ -56,8 +56,6 @@ feature -- Basic Operations
 			-- Set `can_run' to `True' if product can
 			-- be started, `False' otherwise.
 		require
-			has_application: (create {EV_ENVIRONMENT}).application /= Void
-			application_started: not (create {EV_ENVIRONMENT}).application.is_destroyed
 			a_next_action_not_void: a_next_action /= Void
 		deferred
 		end

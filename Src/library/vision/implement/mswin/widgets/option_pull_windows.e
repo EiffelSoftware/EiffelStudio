@@ -122,7 +122,7 @@ feature -- Access
 
 feature -- Element change
 
-	manage_item (bw: BUTTON_WINDOWS) is
+	manage_item (bw: WIDGET_WINDOWS) is
 			-- Manage a item in the combobox.
 		local
 			b: BUTTON
@@ -132,7 +132,7 @@ feature -- Element change
 			adjust_size (b)
 		end
 
-	unmanage_item (bw: BUTTON_WINDOWS) is
+	unmanage_item (bw: WIDGET_WINDOWS) is
 			-- Unmanage a item in the combobox.
 		local
 			b: BUTTON

@@ -107,8 +107,9 @@ feature {EB_CONTEXT_EDITOR} -- Save/Restore
 			cc := universe.class_named (ccn, cl)
 			
 			esc := model.class_from_interface (cc)
-			check
-				esc_in_graph: esc /= Void
+			if esc = Void then
+				create esc.make (cc)
+				model.add_node (esc)
 			end
 			model.set_center_class (esc)
 		end

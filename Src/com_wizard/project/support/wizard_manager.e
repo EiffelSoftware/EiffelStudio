@@ -66,6 +66,10 @@ feature -- Basic Operations
 		local
 			idl_file_generator: WIZARD_IDL_GENERATOR
 		do
+			if shared_wizard_environment.project_name /= Void then 
+				message_output.add_title (Current, 
+						"Processing %"" + shared_wizard_environment.project_name + "%"")
+			end
 			if not shared_wizard_environment.abort then
 				message_output.initialize_log_file
 
@@ -210,7 +214,7 @@ feature {NONE} -- Implementation
 			Clib_folder_name: STRING
 		do
 			-- Compiling generated C code
-			message_output.add_title (Current, Compilation_title)
+			message_output.add_title (Current, Compilation_title_c)
 			execution_environment.change_working_directory (shared_wizard_environment.destination_folder)
 			if not shared_wizard_environment.abort then
 				Clib_folder_name := clone (Client)
@@ -232,20 +236,18 @@ feature {NONE} -- Implementation
 				compiler.compile_folder (Clib_folder_name)
 				progress_report.step
 			end
-			if not shared_wizard_environment.abort then
-				Clib_folder_name := clone (Common)
-				Clib_folder_name.append_character (Directory_separator)
-				Clib_folder_name.append (Clib)
-				progress_report.set_title (C_common_compilation_title)
-				progress_report.set_range (1)
-				progress_report.start
-				compiler.compile_folder (Clib_folder_name)
-				progress_report.step
+			if 
+				not shared_wizard_environment.abort 
+			then		
+				message_output.add_message (Current, Compilation_Successful)
+			else
+				message_output.add_error (Current, Compilation_failed)
 			end
-
+			
 			-- Compiling Eiffel
+			message_output.add_title (Current, Compilation_title_eiffel)
 			if not Shared_wizard_environment.abort and Shared_wizard_environment.compile_eiffel then
-				message_output.set_forced_display
+	--			message_output.set_forced_display
 				if Shared_wizard_environment.client then
 					progress_report.set_title (Eiffel_compilation_title)
 					progress_report.set_range (1)
@@ -261,8 +263,12 @@ feature {NONE} -- Implementation
 					progress_report.step
 				end
 			end
-			if not shared_wizard_environment.abort then		
-				message_output.add_message (Current, Compilation_Successful)
+			if 
+				not shared_wizard_environment.abort 
+			then		
+				message_output.add_title (Current, Compilation_Successful)
+			else
+				message_output.add_error (Current, Compilation_failed)
 			end
 		end
 
@@ -405,7 +411,10 @@ feature {NONE} -- Implementation
 	Standard_failure_error_message: STRING is "Failed"
 			-- Generic failure message.
 	
-	Compilation_title: STRING is "Compiling generated code"
+	Compilation_title_c: STRING is "Compiling generated C code"
+			-- Compilation message.
+
+	Compilation_title_eiffel: STRING is "Compiling generated Eiffel code"
 			-- Compilation message.
 
 	C_client_compilation_title: STRING is "Compiling generated C client code"
@@ -419,6 +428,9 @@ feature {NONE} -- Implementation
 
 	Compilation_successful: STRING is "Compilation completed."
 			-- Compilation successful message.
+
+	Compilation_failed: STRING is "Compilation failed."
+			-- Compilation failed message.
 
 	Eiffel_compilation_title: STRING is "Compiling Eiffel code"
 			-- Eiffel compilation message.

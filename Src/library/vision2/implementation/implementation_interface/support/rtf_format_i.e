@@ -68,19 +68,19 @@ feature -- Access
 			-- seperate out fetaure for each of these set of attributes.
 		do
 			Result := ""
-			Result.append (character_format.out)
-			Result.append (font_height.out)
-			Result.append (text_color.out)
 			Result.append (highlight_color.out)
 			Result.append (is_bold.out)
+			Result.append (character_format.out)
 			Result.append (is_italic.out)
+			Result.append (font_height.out)
 			Result.append (is_striked_out.out)
+			Result.append (text_color.out)
 			Result.append (is_underlined.out)
 			Result.append (vertical_offset.out)
 			Result.append (highlight_set.out)
 			Result.append (color_set.out)
 		end
-			
+		
 feature -- Access
 	
 	alignment: INTEGER

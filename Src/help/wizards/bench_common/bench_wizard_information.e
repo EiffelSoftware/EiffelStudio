@@ -19,7 +19,7 @@ feature {NONE} -- Initialization
 			compile_project := True
 			ace_location := ""
 
-			if Eiffel_projects_directory /= Void then
+			if Eiffel_projects_directory /= Void and then not Eiffel_projects_directory.is_empty then
 				project_location := clone (Eiffel_projects_directory)
 			else
 				if not platform_is_unix then

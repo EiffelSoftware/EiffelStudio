@@ -186,6 +186,9 @@ feature -- Status setting
 					resize_type := 0
 				end				
 			end
+			if parent_imp /= Void then
+				parent_imp.child_packing_changed (Current)
+			end
 		end
 
 	set_vertical_resize (flag: BOOLEAN) is
@@ -203,6 +206,9 @@ feature -- Status setting
 				else
 					resize_type := 0
 				end				
+			end
+			if parent_imp /= Void then
+				parent_imp.child_packing_changed (Current)
 			end
 		end
 
@@ -613,7 +619,18 @@ feature -- Postconditions
 feature {EV_WIDGET_IMP} -- Implementation
 	
 	widget: POINTER
-                        -- pointer to the C structure representing this widgetf
+                        -- pointer to the C structure representing this widget
+	box_widget: POINTER
+                        -- pointer to the C structure representing the
+			-- box in which the widget will be in.
+			-- we need this vbox or hbox only to allow
+			-- vertical or horizontal resizing options
+
+	set_box_widget (box_wid: POINTER) is
+			-- sets `box_widget' to `box_wid'
+		do
+			box_widget := box_wid
+		end
 
 end -- class EV_WIDGET_IMP
 

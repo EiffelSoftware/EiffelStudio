@@ -2,40 +2,17 @@
  * Jmakefile for IDR library
  */
 
-+RUN_TIME=../run-time
+#include "../U/runtime.H"
 
-DPFLAGS = -I$(TOP) -I$(RUN_TIME)
+>JMTCFLAGS
+
+DPFLAGS = -I$(TOP) -I$(TOP)/run-time
 CFLAGS = $(DPFLAGS)
 
-LSRC = \
-	idr_double.c \
-	idr_float.c \
-	idr_array.c \
-	idr_char.c \
-	idr_getpos.c \
-	idr_int.c \
-	idr_long.c \
-	idr_opaque.c \
-	idr_poly.c \
-	idr_read.c \
-	idr_setpos.c \
-	idr_short.c \
-	idr_size.c \
-	idr_stack.c \
-	idr_string.c \
-	idr_uchar.c \
-	idr_uint.c \
-	idr_ulong.c \
-	idr_union.c \
-	idr_ushort.c \
-	idr_vector.c \
-	idr_void.c \
-	idr_write.c \
-	idrf_creat.c \
-	idrf_dstry.c \
-	idrf_pos.c \
-	idrm_creat.c \
-	idrm_dstry.c
+LSRC = idr_double.c idr_float.c idr_array.c idr_char.c idr_getpos.c idr_int.c idr_long.c \
+	idr_opaque.c idr_poly.c idr_read.c idr_setpos.c idr_short.c idr_size.c idr_stack.c \
+	idr_string.c idr_uchar.c idr_uint.c idr_ulong.c idr_union.c idr_ushort.c idr_vector.c \
+	idr_void.c idr_write.c idrf_creat.c idrf_dstry.c idrf_pos.c idrm_creat.c idrm_dstry.c
 
 /* Object files are derived from source files */
 LOBJ = \
@@ -43,6 +20,20 @@ LOBJ = \
 	!f:\.c=.o \
 -expand \\
 
-NormalLibraryTarget(idr,$(LSRC),$(LOBJ))
+MT_LOBJ = \
+|expand f!$(LSRC)!
+	MT!f:\.c=.o \
+-expand \\
+
+|expand f!$(LSRC)!
+MT!f:\.c=.o: !f
+        $(CC) -c $(JMTCFLAGS) $? -o $@
+
+-expand
+
+AddSource($(LSRC))
+NormalObjectRule()
+CustomLibraryTarget(idr,$(LOBJ))
+CustomLibraryTarget(mtidr,$(MT_LOBJ))
 DependTarget()
 LintTarget()

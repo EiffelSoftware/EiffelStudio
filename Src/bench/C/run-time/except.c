@@ -344,9 +344,17 @@ public struct ex_vect *exft()
 	if (vector == (struct ex_vect *) 0)		/* No more memory */
 		enomem();							/* Critical exception */
 
+	bzero(vector, sizeof(struct ex_vect));	/* Make sure there is no garbage in the vector */
+
+	/* Maybe there is no stack dump but there is some marking done or at least
+	 * the marking is called even if no object is present on the stack
+	 * In the long run, it will not be a problem but it's safer to initialize
+	 * the entire structure anyway.Xavier
+	 */
+
 	vector->ex_type = EX_CALL;		/* Signals entry in a new routine */
-	vector->ex_retry = 0;			/* Function not retried (yet!) */
-	vector->ex_jbuf = (char *) 0;	/* As far as we know, no rescue clause */
+
+	/* No need to set the other values as the bzero took care of everything */
 
 	SIGRESUME;			/* End of critical section, dispatch queued signals */
 

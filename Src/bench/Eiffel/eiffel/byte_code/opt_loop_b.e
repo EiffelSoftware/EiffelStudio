@@ -52,6 +52,8 @@ feature -- Inlining
 
 	size: INTEGER is
 		do
+				-- Inlining will not be done if the feature
+				-- optimizes array access
 			Result := 100000
 		end
 

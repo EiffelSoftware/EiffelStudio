@@ -36,8 +36,11 @@ feature
 			Result := context.byte_code.locals.item (position);
 		end;
 
-	is_local: BOOLEAN is True;
+	is_local: BOOLEAN is
 			-- Is Current an access to a local variable ?
+		do
+			Result := True
+		end
 
 	is_creatable: BOOLEAN is True;
 			-- Can an access to a local variable be the target for

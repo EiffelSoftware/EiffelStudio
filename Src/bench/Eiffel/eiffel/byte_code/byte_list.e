@@ -170,6 +170,7 @@ feature -- Inlining
 
 	inlined_byte_code: like Current is
 		do
+			Result := Current
 			from
 				start
 			until

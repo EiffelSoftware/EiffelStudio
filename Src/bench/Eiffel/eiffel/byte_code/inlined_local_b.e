@@ -4,7 +4,8 @@ inherit
 	LOCAL_B
 		redefine
 			type, propagate, analyze, generate, free_register,
-			print_register, enlarged
+			print_register, enlarged, Current_register,
+			is_local
 		end
 
 feature
@@ -25,7 +26,16 @@ feature
 			Result := Current
 		end
 
+	is_local: BOOLEAN is
+		do
+		end
+
 feature -- Register and code generation
+
+	Current_register: INLINED_CURRENT_B is
+		once
+			!!Result
+		end
 
 	propagate (r: REGISTRABLE) is
 			-- Do nothing

@@ -112,6 +112,8 @@ feature -- Inlining
 
 	size: INTEGER is
 		do
+				-- Inlining will not be done if the feature
+				-- has a creation instruction
 			Result := 100000
 		end
 
@@ -123,9 +125,8 @@ feature -- Inlining
 	inlined_byte_code: like Current is
 		do
 			Result := Current
-			if call /= Void then
-				call := call.inlined_byte_code
-			end
+				-- The special register makes it difficult to
+				-- inline 
 		end
 
 end

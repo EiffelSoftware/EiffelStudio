@@ -4,7 +4,8 @@ inherit
 	RESULT_B
 		redefine
 			enlarged, propagate, analyze, generate,
-			free_register, print_register
+			free_register, print_register, type,
+			Current_register, is_result
 		end
 
 feature
@@ -14,7 +15,16 @@ feature
 			Result := Current
 		end
 
+	is_result: BOOLEAN is
+		do
+		end
+
 feature -- Register and code generation
+
+	Current_register: INLINED_CURRENT_B is
+		once
+			!!Result
+		end
 
 	propagate (r: REGISTRABLE) is
 			-- Do nothing
@@ -42,5 +52,11 @@ feature -- Register and code generation
 				.result_reg.print_register
 		end;
 
+feature
+
+	type: TYPE_I is
+		do
+			Result := System.remover.inliner.inlined_feature.type
+		end
 
 end

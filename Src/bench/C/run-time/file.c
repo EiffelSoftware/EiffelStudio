@@ -687,7 +687,7 @@ EIF_INTEGER start;		/* Amount of characters already held in buffer */
 	 */
 
 	EIF_INTEGER amount;	/* Amount of bytes to be read */
-	int c;			/* Last char read */
+	int c = '\0';			/* Last char read */
 	EIF_INTEGER read;		/* Number of characters read */
 
 	amount = bound - start;		/* Characters to be read */
@@ -1634,12 +1634,12 @@ EIF_BOOLEAN eif_group_in_list(gid)
 int gid;
 {
 	Groups_t group_list[NGROUPS_MAX];
-	int i;
+	int i, nb_groups;
 
-	if (getgroups(NGROUPS_MAX, group_list) == -1)
+	if ((nb_groups = getgroups(NGROUPS_MAX, group_list)) == -1)
 		eio();
 
-	for (i=0; i< NGROUPS_MAX; i++)
+	for (i=0; i< nb_groups; i++)
 		if (group_list[i] == gid)
 			return (EIF_BOOLEAN) '\01';
 

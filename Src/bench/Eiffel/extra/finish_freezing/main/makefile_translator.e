@@ -854,6 +854,9 @@ feature {NONE} -- Translation
 			subst_dir_sep (lastline)
 
 			-- intermediate files
+			if lastline.count>8 and then lastline.substring_index ("$(CREATE_TEST)", 1) >0 then
+				lastline := ""
+			end
 			if lastline.count>8 and then lastline.substring_index ("$(LD) $(LDFLAGS) -r -o", 1) >0 then
 				lastline := clone  (options.get_string ("make_intermediate", Void))
 
@@ -877,6 +880,7 @@ feature {NONE} -- Translation
 					lastline.replace_substring_all ("$dir_obj", dir)
 				end
 			end
+
 
 			-- externals
 			if lastline.count>8 and then lastline.substring (1,9).is_equal (options.get_string("externals_text", Void)) then

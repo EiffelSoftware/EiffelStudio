@@ -90,9 +90,9 @@ feature -- Execution
 					end
 				end
 				st.add_new_line
-				debug_window.hide
+				debug_window.freeze
 				debug_window.process_text (st)
-				debug_window.show
+				debug_window.thaw
 			end
 		end
 

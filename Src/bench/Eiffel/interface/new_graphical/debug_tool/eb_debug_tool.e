@@ -369,12 +369,12 @@ feature
 			create st.make
 			Application.status.display_status (st)
 			text_window.clear_window
-			text_window.hide
+			text_window.freeze
 			text_window.process_text (st)
 			if saved_cursor /= Void then
 				text_window.go_to (saved_cursor)
 			end
-			text_window.show
+			text_window.thaw
 		end
 
 	save_current_cursor_position is

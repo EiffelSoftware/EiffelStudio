@@ -8,13 +8,16 @@ indexing
 class VHPR1 
 
 inherit
-
-	SHARED_EIFFEL_PROJECT;
 	ERROR
 		redefine
 			build_explain, subcode
 		end
-	
+
+	SHARED_EIFFEL_PROJECT
+		undefine
+			is_equal
+		end
+
 feature -- Properties
 
 	involved_classes: LINKED_LIST [CLASS_ID];

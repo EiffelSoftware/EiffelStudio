@@ -6,11 +6,14 @@ indexing
 class VDRD5 
 
 inherit
-
-	SHARED_WORKBENCH
 	EIFFEL_ERROR
 		redefine
 			build_explain, is_defined
+		end
+
+	SHARED_WORKBENCH
+		undefine
+			is_equal
 		end
 	
 feature -- Properties

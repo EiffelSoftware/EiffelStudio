@@ -30,7 +30,7 @@ inherit
 feature {NONE} -- Initialization
 
 	make_with_title (a_title: STRING) is
-			-- Initialize with `a_title'.
+			-- Initialize `Current' and assign `a_title' to `title'.
 		require
 			a_title_not_void: a_title /= Void
 		do

@@ -92,7 +92,8 @@ feature -- Initialization
 			add_default_callbacks;
 			set_accelerators;
 			!! matcher.make_empty;
-			old_set_font (g_Text_font)
+			set_scrolled_text_background_color (implementation, g_Bg_color)
+			old_set_font (g_String_text_font)
 		end;
 
 feature -- Drag source/Hole properties
@@ -167,7 +168,7 @@ feature -- Changing
 	set_background_color (a_color: COLOR) is
 			-- Set `background_color' to `a_color'.
 		do
-			old_set_background_color (a_color)
+			old_set_background_color (a_color);
 			set_scrolled_text_background_color (implementation, g_Bg_color)
 		end;
 

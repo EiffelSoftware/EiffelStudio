@@ -15,6 +15,17 @@ create
 
 feature -- Access
 
+	type_name (t: TYPE): STRING is
+			-- Eiffel name of .NET type `t'.
+		local
+			ct: CONSUMED_TYPE
+		do
+			ct := consumed_type (t)
+			if ct /= Void then
+				Result := clone (ct.eiffel_name)
+			end
+		end
+
 	feature_name (t: TYPE; dotnet_name: STRING; args: NATIVE_ARRAY [TYPE]): STRING is
 			-- Eiffel name of .NET function `dotnet_name' from type `t' with arguments `args'.
 		require

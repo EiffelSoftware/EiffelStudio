@@ -163,6 +163,9 @@ feature -- Access
 	Wm_notify: INTEGER is 78
 			-- Declared in Windows as WM_NOTIFY
 
+	Wm_geticon: INTEGER is 127
+			-- Declared in Windows as WM_GETICON
+
 	Wm_seticon: INTEGER is 128
 			-- Declared in Windows as WM_SETICON
 

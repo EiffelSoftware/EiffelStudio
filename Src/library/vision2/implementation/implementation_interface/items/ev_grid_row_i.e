@@ -33,11 +33,12 @@ feature {NONE} -- Initialization
 	initialize is
 			-- Initialize `Current'.
 		do
+			is_initialized := True
 		end
 
-feature {NONE} -- Initialization
+feature {EV_GRID_I} -- Initialization
 
-	make_with_grid_i (a_grid_i: EV_GRID_I) is
+	set_grid_i (a_grid_i: EV_GRID_I) is
 			-- Make `Current' associated with `a_grid_i'
 		require
 			a_grid_i_not_void: a_grid_i /= Void
@@ -160,7 +161,9 @@ feature -- Status report
 	count: INTEGER is
 			-- Number of items in current
 		do
-			to_implement ("EV_GRID_ROW.count")
+			if parent_grid_i /= Void then
+				Result := parent_grid_i.column_count
+			end
 		ensure
 			count_positive: count > 0
 		end

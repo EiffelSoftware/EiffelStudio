@@ -440,9 +440,8 @@ feature {NONE} -- WEL Implemenation
 	init_application is
 			-- Load the dll needed sometimes.
 		do
-			create controls_dll.make_with_flags (Icc_userex_classes
-					+ Icc_win95_classes + Icc_cool_classes
-					+ Icc_bar_classes + Icc_updown_class)
+			create controls_dll.make_with_flags (Icc_win95_classes |
+				Icc_date_classes | Icc_userex_classes | Icc_cool_classes)
 			create rich_edit_dll.make
 		end
 

@@ -1305,6 +1305,10 @@ feature -- Features info
 			sorted_array: SORTABLE_ARRAY [FEATURE_I]
 		do
 			is_single_class := True
+			debug ("debugger_il_info_trace")
+				print ("### SINGLE CLEANING " + class_type.associated_class.name_in_upper + "---%N")				
+			end
+			clean_debug_information (class_type)
 			from
 				select_tbl := class_c.feature_table.origin_table
 				features := class_type.class_interface.features
@@ -1829,7 +1833,7 @@ feature -- Features info
 			end
 
 			if is_debug_info_enabled and l_is_attribute then
-				Il_debug_info_recorder.set_record_context (l_is_attribute, is_static, in_interface)
+				Il_debug_info_recorder.set_record_context (is_single_class, l_is_attribute, is_static, in_interface)
 				Il_debug_info_recorder.record_il_feature_info (current_module, current_class_type, feat, current_class_token, l_meth_token)
 			end
 		end
@@ -2311,7 +2315,7 @@ feature -- IL Generation
 						--| feature is not attribute |--
 						-- we assume the feature concerned by `generate_feature_code' 
 						-- here are static and not in_interface
-					Il_debug_info_recorder.set_record_context (False, True, False)	
+					Il_debug_info_recorder.set_record_context (is_single_class, False, True, False)	
 					Il_debug_info_recorder.record_il_feature_info (current_module, 
 								current_class_type, feat, current_class_token, l_meth_token)
 				end

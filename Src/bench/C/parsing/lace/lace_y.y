@@ -312,23 +312,23 @@ Option_value            : Standard_value
                         ;
 
 Standard_value          : LAC_YES
-							{$$ = create_node1(YES_SD,lace_id("yes",start_position,end_position));}
+							{$$ = create_node1(YES_SD,lace_id("yes"));}
                         | LAC_NO
-							{$$ = create_node1(NO_SD,lace_id("no",start_position,end_position));}
+							{$$ = create_node1(NO_SD,lace_id("no"));}
                         | LAC_ALL
-							{$$ = create_node1(ALL_SD,lace_id("all",start_position,end_position));}
+							{$$ = create_node1(ALL_SD,lace_id("all"));}
                         ;
 
 Class_value             : LAC_REQUIRE
-							{$$ = create_node1(REQUIRE_SD,lace_id("require",start_position,end_position));}
+							{$$ = create_node1(REQUIRE_SD,lace_id("require"));}
                         | LAC_ENSURE
-							{$$ = create_node1(ENSURE_SD,lace_id("ensure",start_position,end_position));}
+							{$$ = create_node1(ENSURE_SD,lace_id("ensure"));}
                         | LAC_INVARIANT
-							{$$ = create_node1(INVARIANT_SD,lace_id("invariant",start_position,end_position));}
+							{$$ = create_node1(INVARIANT_SD,lace_id("invariant"));}
                         | LAC_LOOP
-							{$$ = create_node1(LOOP_SD,lace_id("loop",start_position,end_position));}
+							{$$ = create_node1(LOOP_SD,lace_id("loop"));}
                         | LAC_CHECK
-							{$$ = create_node1(CHECK_SD,lace_id("check",start_position,end_position));}
+							{$$ = create_node1(CHECK_SD,lace_id("check"));}
                         ;
 
 Externals               : /* empty */
@@ -351,19 +351,19 @@ Language_contrib        : /* empty */
 
 Language_name           : LAC_C
 							{$$ =
-		create_node1(C_NAME_SD,lace_id("c",start_position,end_position));}
+		create_node1(C_NAME_SD,lace_id("c"));}
 						| LAC_INCLUDE_PATH
 							{$$ =
-		create_node1(INCLUDE_PATH_NAME_SD,lace_id("include_path",start_position,end_position));}
+		create_node1(INCLUDE_PATH_NAME_SD,lace_id("include_path"));}
 						| LAC_MAKE
 							{$$ =
-		create_node1(MAKE_NAME_SD,lace_id("make",start_position,end_position));}
+		create_node1(MAKE_NAME_SD,lace_id("make"));}
 						| LAC_OBJECT
 							{$$ =
-		create_node1(OBJECT_NAME_SD,lace_id("object",start_position,end_position));}
+		create_node1(OBJECT_NAME_SD,lace_id("object"));}
 						| LAC_EXECUTABLE
 							{$$ =
-		create_node1(EXECUTABLE_NAME_SD,lace_id("executable",start_position,end_position));}
+		create_node1(EXECUTABLE_NAME_SD,lace_id("executable"));}
                         | Name
 							{$$ = create_node1(LANGUAGE_NAME_SD,$1);}
                         ;
@@ -463,9 +463,9 @@ ExternaL_rename_pair    : /* empty */
                         ;
 
 Name                    : LAC_IDENTIFIER
-							{$$ = lace_id (token_str,start_position,end_position);}
+							{$$ = lace_id (token_str);}
                         | LAC_STRING
-							{$$ = lace_id (token_str,start_position,end_position);}
+							{$$ = lace_id (token_str);}
                         ;
 
 %%

@@ -919,8 +919,8 @@ feature {EV_NOTEBOOK_TAB_IMP} -- Implementation
 				end
 				image_list.add_pixmap (a_pixmap)
 					-- Set the `iimage' to the index of the image to be used
-					-- from the image list. We subtract one as it is zero based.
-				a_wel_item.set_iimage (image_list.last_position - 1)
+					-- from the image list.
+				a_wel_item.set_iimage (image_list.last_position)
 			else
 					-- An `iimage' value of -1 signifies that no image
 					-- is associated with a tab.

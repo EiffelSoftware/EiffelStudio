@@ -405,6 +405,9 @@ feature -- Generation Structure
 			create ass.make
 			uni_string.set_string (assembly_name)
 			main_module_token := md_emit.define_assembly (uni_string, 0, ass)
+
+			define_custom_attribute (main_module_token, com_visible_ctor_token,
+				not_com_visible_ca)
 		end
 
 	start_module_generation (name: STRING; debug_mode: BOOLEAN) is
@@ -3612,16 +3615,26 @@ feature {NONE} -- Predefine custom attributes
 			Result.put_integer_16 (0)
 		end
 
+	not_com_visible_ca: MD_CUSTOM_ATTRIBUTE is
+			-- Blob for not COM Visible attribute.
+		once
+			create Result.make
+			Result.put_integer_8 (0)
+			Result.put_integer_16 (0)
+		end
+
 	debugger_step_through_ca: MD_CUSTOM_ATTRIBUTE is
 			-- Blobl for `System.Diagnostics.DebuggerStepThroughAttribute' attribute.
 		once
 			create Result.make
+			Result.put_integer_16 (0)
 		end
 
 	debugger_hidden_ca: MD_CUSTOM_ATTRIBUTE is
 			-- Blobl for `System.Diagnostics.DebuggerHiddenAttribute' attribute.
 		once
 			create Result.make
+			Result.put_integer_16 (0)
 		end
 			
 feature {NONE} -- Constants
@@ -3720,6 +3733,9 @@ feature {NONE} -- Once per modules being generated.
 	cls_compliant_ctor_token: INTEGER
 			-- Token for `System.CLSCompliantAttribute' constructor.
 
+	com_visible_ctor_token: INTEGER
+			-- Token for `System.Runtime.InteropServices.ComVisibleAttribute' constructor.
+
 	debugger_hidden_ctor_token, debugger_step_through_ctor_token: INTEGER
 			-- Token for constructor of `System.Diagnostics.DebuggerHiddenAttribute' and
 			-- `System.Diagnostics.DebuggerStepThroughAttribute'.
@@ -3792,6 +3808,7 @@ feature {NONE} -- Once per modules being generated.
 		local
 			l_sig: like method_sig
 			l_cls_compliant_token: INTEGER
+			l_com_visible_token: INTEGER
 			l_debugger_step_through_token: INTEGER
 			l_debugger_hidden_token: INTEGER
 		do
@@ -3809,7 +3826,9 @@ feature {NONE} -- Once per modules being generated.
 			l_debugger_hidden_token := md_emit.define_type_ref (
 				create {UNI_STRING}.make ("System.Diagnostics.DebuggerStepThroughAttribute"),
 				mscorlib_token)
-			
+			l_com_visible_token := md_emit.define_type_ref (
+				create {UNI_STRING}.make ("System.Runtime.InteropServices.ComVisibleAttribute"),
+				mscorlib_token)
 			uni_string.set_string (".ctor")
 
 				-- Define `.ctor' from `System.Exception'.
@@ -3831,7 +3850,8 @@ feature {NONE} -- Once per modules being generated.
 			object_ctor_token := md_emit.define_member_ref (uni_string, object_type_token,
 				default_sig)
 
-				-- Define `.ctor' from `System.CLSCompliantAttribute'.
+				-- Define `.ctor' from `System.CLSCompliantAttribute' and
+				-- `System.Runtime.InteropServices.ComVisibleAttribute'.
 			l_sig := method_sig
 			l_sig.reset
 			l_sig.set_method_type (feature {MD_SIGNATURE_CONSTANTS}.Has_current)
@@ -3841,6 +3861,14 @@ feature {NONE} -- Once per modules being generated.
 
 			cls_compliant_ctor_token := md_emit.define_member_ref (uni_string,
 				l_cls_compliant_token, l_sig)
+
+			com_visible_ctor_token := md_emit.define_member_ref (uni_string,
+				l_com_visible_token, l_sig)
+
+			l_sig.reset
+			l_sig.set_method_type (feature {MD_SIGNATURE_CONSTANTS}.Has_current)
+			l_sig.set_parameter_count (0)
+			l_sig.set_return_type (feature {MD_SIGNATURE_CONSTANTS}.Element_type_void, 0)
 
 			debugger_hidden_ctor_token := md_emit.define_member_ref (uni_string,
 				l_debugger_hidden_token, l_sig)

@@ -62,7 +62,7 @@ feature -- Ids creation
 	compute_new_id is
 			-- Compute a new server file id and assign it to `last_computed_id'.
 		local
-			local_files: HASH_TABLE [SERVER_FILE, INTEGER]
+			local_files: like removed_files
 			new_file: SERVER_FILE
 			id: INTEGER
 		do
@@ -79,6 +79,7 @@ feature -- Ids creation
 			create new_file.make (id)
 			files.put (new_file, id)
 			last_computed_id := id
+			
 debug ("SERVER")
 	io.error.put_string ("Creating new file: ")
 	io.error.put_string (new_file.file_name (id))
@@ -88,59 +89,22 @@ end
 
 feature -- File operations
 
-	forget_file (f: SERVER_FILE) is
-			-- Close the server file and remove it
-			-- from the cache.
-		require
-			good_argument: f /= Void
-		do
-			if remove_right_away then
-				remove_file (f)
-			else
-				if f.is_open then
-						-- If the file is open then it is in the cache
-					f.close
-					remove_id (f.file_id)
-debug ("SERVER")
-	io.error.put_string ("Forget file: ")
-	io.error.put_string (f.file_name (f.file_id))
-	io.error.put_new_line
-end
-				end
-				files.remove (f.file_id)
-				add_to_removed_files (f)
-			end
-		end
-
 	remove_file (f: SERVER_FILE) is
 			-- Remove file from Current
 		require
 			good_argument: f /= Void
+			not_precompiled: not f.precompiled
 		do
 			if f.is_open then
-					-- If the file is open then it is in the cache
-				f.close
-				remove_id (f.file_id)
+				close_file (f)
 			end
+
 				-- Remove `f' from the controler
 			files.remove (f.file_id)
-			add_to_removed_files (f)
+			removed_files.put (f, f.file_id)
 
 				-- Remove file from the disk
 			f.delete
-debug ("SERVER")
-	io.error.put_string ("Remove file: ")
-	io.error.put_string (f.file_name (f.file_id))
-	io.error.put_new_line
-end
-		end
-
-	add_to_removed_files (f: SERVER_FILE) is
-			-- Move `f' in `removed_files' only if it is possible
-		do
-			if not f.precompiled then
-				removed_files.put (f, f.file_id)
-			end
 		end
 
 	remove_useless_files is
@@ -151,13 +115,13 @@ end
 		do
 				-- Delete files from disk which are already not used
 			from
-				local_files := removed_files
+				local_files := files
 				local_files.start
 			until
 				local_files.after
 			loop
 				file := local_files.item_for_iteration
-				if file.exists and then not file.precompiled then
+				if file.exists and then not file.precompiled and file.occurrence = 0 then
 					remove_file (file)
 				end
 				local_files.forth
@@ -167,8 +131,7 @@ end
 	file_of_id (i: INTEGER): SERVER_FILE is
 			-- File of id `i'.
 		require
-			id_not_void: i /= 0
-			file_exists: files.has (i)
+			id_not_void: i > 0
 		do
 			Result := files.item (i)
 		end
@@ -187,13 +150,22 @@ end
 					not_in_cache: not has_id (last_removed_item.file_id)
 				end
 			end
-debug ("SERVER")
-	io.error.put_string ("Opening file: ")
-	io.error.put_string (f.file_name (f.file_id))
-	io.error.put_new_line
-end
 		ensure
 			is_open: f.is_open
+		end
+		
+	close_file (f: SERVER_FILE) is
+			-- Close file `f'
+		require
+			f_not_void: f /= Void
+			is_open: f.is_open
+			has_id: has_id (f.file_id)
+		do
+			f.close
+			remove_id (f.file_id)
+		ensure
+			f_closed: not f.is_open
+			not_in_cache: not has_id (f.file_id)
 		end
 
 	Default_size: INTEGER is 20
@@ -218,7 +190,7 @@ feature -- Status report
 			-- Are the server files readable?
 		local
 			file: SERVER_FILE
-			local_files: HASH_TABLE [SERVER_FILE, INTEGER]
+			local_files: like files
 		do
 			from
 				Result := True
@@ -239,7 +211,7 @@ feature -- Status report
 			-- Are the server files readable and writable?
 		local
 			file: SERVER_FILE
-			local_files: HASH_TABLE [SERVER_FILE, INTEGER]
+			local_files: like files
 		do
 			from
 				Result := True
@@ -263,7 +235,7 @@ feature -- Status report
 	exists: BOOLEAN is
 			-- Do the server files exist?
 		local
-			local_files: HASH_TABLE [SERVER_FILE, INTEGER]
+			local_files: like files
 		do
 			from
 				Result := True
@@ -282,7 +254,7 @@ feature -- Initialization
 	init is
 			-- Update the path names of the various server files.
 		local
-			local_files: HASH_TABLE [SERVER_FILE, INTEGER]
+			local_files: like files
 		do
 			from
 				local_files := files
@@ -314,23 +286,6 @@ feature -- SERVER_FILE sizes
 	set_block_size (s: INTEGER) is
 		do
 			block_size := s
-		end
-
-feature -- Debug
-
-	trace is
-		local
-			local_files: HASH_TABLE [SERVER_FILE, INTEGER]
-		do
-			from
-				local_files := files
-				local_files.start
-			until
-				local_files.after
-			loop
-				local_files.item_for_iteration.trace
-				local_files.forth
-			end
 		end
 
 end -- class SERVER_CONTROL

@@ -38,13 +38,13 @@ feature {EV_ANY_IMP} -- Timeout intermediary agent routine
 
 feature {EV_ANY_IMP} -- Notebook intermediary agent routines
 
-	on_notebook_page_switch_intermediary (a_c_object: POINTER; a_page: INTEGER) is
+	on_notebook_page_switch_intermediary (a_c_object: POINTER; a_page: NATURAL_32) is
 			-- Notebook page is switched
 		local
 			a_notebook_imp: EV_NOTEBOOK_IMP
 		do
 			a_notebook_imp ?= c_get_eif_reference_from_object_id (a_c_object)
-			a_notebook_imp.page_switch (a_page)
+			a_notebook_imp.page_switch (a_page.to_integer_32)
 		end
 
 feature {EV_ANY_IMP} -- Drawing Area intermediary agent routines
@@ -201,10 +201,6 @@ feature {EV_ANY_IMP} -- Button intermediary agent routines
 					-- We don't want button press events from gtk is PND is enabled as these are handled via PND implementation
 			else
 				a_widget.button_press_switch (a_type, a_x, a_y, a_button, a_x_tilt, a_y_tilt, a_pressure, a_screen_x, a_screen_y)
-				if a_type = {EV_GTK_ENUMS}.gdk_button_press_enum and then (a_button = 4 or a_button = 5) then
-					{EV_GTK_EXTERNALS}.gtk_widget_queue_draw (a_c_object)
-						-- This is a hack to get the Studio editor to redraw properly upon mouse scrolling
-				end
 			end
 		end
 

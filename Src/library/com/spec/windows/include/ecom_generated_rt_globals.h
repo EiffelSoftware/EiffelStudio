@@ -9,15 +9,12 @@
 //
 //--------------------------------------------------------------------------
 
-#ifndef __ECOM_RUNTIME_GLOBALS_H_INC__
-#define __ECOM_RUNTIME_GLOBALS_H_INC__
+#ifndef __ECOM_GENERATED_RUNTIME_GLOBALS_H_INC__
+#define __ECOM_GENERATED_RUNTIME_GLOBALS_H_INC__
 
-#include "ecom_exception.h"
-#include "ecom_runtime_c_e.h"
 #include "ecom_runtime_e_c.h"
 
-extern Formatter  f;
-extern ecom_runtime_ce rt_ce;
-extern ecom_runtime_ec rt_ec;
+extern ecom_generated_ec rt_generated_ec;
+extern ecom_generated_ce rt_generated_ce;
 
-#endif // !__ECOM_RUNTIME_GLOBALS_H_INC__
+#endif // !__ECOM_GENERATED_RUNTIME_GLOBALS_H_INC__

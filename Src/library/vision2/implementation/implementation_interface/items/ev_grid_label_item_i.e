@@ -54,12 +54,18 @@ feature -- Element change
 			-- Assign `a_text' to `text'.
 		do
 			internal_text := a_text
+			if parent_i /= Void then
+				parent_i.redraw_client_area
+			end
 		end
 		
 	set_font (ft: EV_FONT) is
 			-- Make `ft' new font of `Current'.
 		do
 			internal_font := ft
+			if parent_i /= Void then
+				parent_i.redraw_client_area
+			end
 		end
 
 feature {EV_GRID_DRAWER_I} -- Implementation
@@ -69,6 +75,13 @@ feature {EV_GRID_DRAWER_I} -- Implementation
 
 	internal_font: EV_FONT
 		-- Font used to display `text' on screen
+		
+	internal_default_font: EV_FONT is
+			--
+		once
+			create Result
+		end
+		
 		
 	redraw (an_x, a_y, a_width, a_height: INTEGER; drawable: EV_DRAWABLE) is
 			-- Redraw `Current'.
@@ -94,6 +107,11 @@ feature {EV_GRID_DRAWER_I} -- Implementation
 			end
 			
 			drawable.set_copy_mode
+			if internal_font /= Void then
+				drawable.set_font (internal_font)
+			else
+				drawable.set_font (internal_default_font)
+			end
 			if internal_text /= Void then
 				drawable.draw_ellipsed_text_top_left (an_x, a_y, internal_text, a_width)
 			end

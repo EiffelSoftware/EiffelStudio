@@ -64,7 +64,7 @@ feature -- Basic Operations
 			"ToString"
 		end
 
-	equals (obj: ANY): BOOLEAN is
+	is_equal (obj: ANY): BOOLEAN is
 		external
 			"IL signature (System.Object): System.Boolean use System.ComponentModel.LicenseContext"
 		alias

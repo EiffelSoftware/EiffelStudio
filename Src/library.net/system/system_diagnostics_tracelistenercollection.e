@@ -15,25 +15,25 @@ inherit
 		end
 	SYSTEM_COLLECTIONS_ILIST
 		rename
-			copy_to as system_collections_icollection_copy_to,
-			get_is_synchronized as system_collections_icollection_get_is_synchronized,
-			get_sync_root as system_collections_icollection_get_sync_root,
-			remove as system_collections_ilist_remove,
-			insert as system_collections_ilist_insert,
-			index_of as system_collections_ilist_index_of,
-			has as system_collections_ilist_contains,
-			extend as system_collections_ilist_add,
-			get_is_fixed_size as system_collections_ilist_get_is_fixed_size,
-			get_is_read_only as system_collections_ilist_get_is_read_only,
-			put_i_th as system_collections_ilist_set_item,
-			get_item as system_collections_ilist_get_item
+			copy_to as icollection_copy_to,
+			get_is_synchronized as icollection_get_is_synchronized,
+			get_sync_root as icollection_get_sync_root,
+			remove as ilist_remove,
+			insert as ilist_insert,
+			index_of as ilist_index_of,
+			has as ilist_has,
+			extend as ilist_extend,
+			get_is_fixed_size as ilist_get_is_fixed_size,
+			get_is_read_only as ilist_get_is_read_only,
+			put_i_th as ilist_put_i_th,
+			get_item as ilist_get_item
 		end
 	SYSTEM_COLLECTIONS_IENUMERABLE
 	SYSTEM_COLLECTIONS_ICOLLECTION
 		rename
-			copy_to as system_collections_icollection_copy_to,
-			get_is_synchronized as system_collections_icollection_get_is_synchronized,
-			get_sync_root as system_collections_icollection_get_sync_root
+			copy_to as icollection_copy_to,
+			get_is_synchronized as  icollection_get_is_synchronized,
+			get_sync_root as icollection_get_sync_root
 		end
 
 create {NONE}
@@ -63,7 +63,7 @@ feature -- Access
 
 feature -- Element Change
 
-	frozen set_item (i: INTEGER; value: SYSTEM_DIAGNOSTICS_TRACELISTENER) is
+	frozen put_i_th (i: INTEGER; value: SYSTEM_DIAGNOSTICS_TRACELISTENER) is
 		external
 			"IL signature (System.Int32, System.Diagnostics.TraceListener): System.Void use System.Diagnostics.TraceListenerCollection"
 		alias
@@ -79,7 +79,7 @@ feature -- Basic Operations
 			"ToString"
 		end
 
-	frozen add (listener: SYSTEM_DIAGNOSTICS_TRACELISTENER): INTEGER is
+	frozen extend (listener: SYSTEM_DIAGNOSTICS_TRACELISTENER): INTEGER is
 		external
 			"IL signature (System.Diagnostics.TraceListener): System.Int32 use System.Diagnostics.TraceListenerCollection"
 		alias
@@ -135,7 +135,7 @@ feature -- Basic Operations
 			"Clear"
 		end
 
-	frozen contains (listener: SYSTEM_DIAGNOSTICS_TRACELISTENER): BOOLEAN is
+	frozen has (listener: SYSTEM_DIAGNOSTICS_TRACELISTENER): BOOLEAN is
 		external
 			"IL signature (System.Diagnostics.TraceListener): System.Boolean use System.Diagnostics.TraceListenerCollection"
 		alias
@@ -170,7 +170,7 @@ feature -- Basic Operations
 			"Remove"
 		end
 
-	frozen remove_at (index: INTEGER) is
+	frozen prune_i_th (index: INTEGER) is
 		external
 			"IL signature (System.Int32): System.Void use System.Diagnostics.TraceListenerCollection"
 		alias
@@ -179,77 +179,77 @@ feature -- Basic Operations
 
 feature {NONE} -- Implementation
 
-	frozen system_collections_ilist_add (value: ANY): INTEGER is
+	frozen ilist_extend (value: ANY): INTEGER is
 		external
 			"IL signature (System.Object): System.Int32 use System.Diagnostics.TraceListenerCollection"
 		alias
 			"System.Collections.IList.Add"
 		end
 
-	frozen system_collections_ilist_set_item (index: INTEGER; value: ANY) is
+	frozen ilist_put_i_th (index: INTEGER; value: ANY) is
 		external
 			"IL signature (System.Int32, System.Object): System.Void use System.Diagnostics.TraceListenerCollection"
 		alias
 			"System.Collections.IList.set_Item"
 		end
 
-	frozen system_collections_icollection_get_sync_root: ANY is
+	frozen icollection_get_sync_root: ANY is
 		external
 			"IL signature (): System.Object use System.Diagnostics.TraceListenerCollection"
 		alias
 			"System.Collections.ICollection.get_SyncRoot"
 		end
 
-	frozen system_collections_ilist_get_is_read_only: BOOLEAN is
+	frozen ilist_get_is_read_only: BOOLEAN is
 		external
 			"IL signature (): System.Boolean use System.Diagnostics.TraceListenerCollection"
 		alias
 			"System.Collections.IList.get_IsReadOnly"
 		end
 
-	frozen system_collections_ilist_index_of (value: ANY): INTEGER is
+	frozen ilist_index_of (value: ANY): INTEGER is
 		external
 			"IL signature (System.Object): System.Int32 use System.Diagnostics.TraceListenerCollection"
 		alias
 			"System.Collections.IList.IndexOf"
 		end
 
-	frozen system_collections_ilist_remove (value: ANY) is
+	frozen ilist_remove (value: ANY) is
 		external
 			"IL signature (System.Object): System.Void use System.Diagnostics.TraceListenerCollection"
 		alias
 			"System.Collections.IList.Remove"
 		end
 
-	frozen system_collections_icollection_copy_to (array: SYSTEM_ARRAY; index: INTEGER) is
+	frozen icollection_copy_to (array: SYSTEM_ARRAY; index: INTEGER) is
 		external
 			"IL signature (System.Array, System.Int32): System.Void use System.Diagnostics.TraceListenerCollection"
 		alias
 			"System.Collections.ICollection.CopyTo"
 		end
 
-	frozen system_collections_ilist_get_item (index: INTEGER): ANY is
+	frozen ilist_get_item (index: INTEGER): ANY is
 		external
 			"IL signature (System.Int32): System.Object use System.Diagnostics.TraceListenerCollection"
 		alias
 			"System.Collections.IList.get_Item"
 		end
 
-	frozen system_collections_icollection_get_is_synchronized: BOOLEAN is
+	frozen icollection_get_is_synchronized: BOOLEAN is
 		external
 			"IL signature (): System.Boolean use System.Diagnostics.TraceListenerCollection"
 		alias
 			"System.Collections.ICollection.get_IsSynchronized"
 		end
 
-	frozen system_collections_ilist_contains (value: ANY): BOOLEAN is
+	frozen ilist_has (value: ANY): BOOLEAN is
 		external
 			"IL signature (System.Object): System.Boolean use System.Diagnostics.TraceListenerCollection"
 		alias
 			"System.Collections.IList.Contains"
 		end
 
-	frozen system_collections_ilist_get_is_fixed_size: BOOLEAN is
+	frozen ilist_get_is_fixed_size: BOOLEAN is
 		external
 			"IL signature (): System.Boolean use System.Diagnostics.TraceListenerCollection"
 		alias
@@ -263,7 +263,7 @@ feature {NONE} -- Implementation
 			"Finalize"
 		end
 
-	frozen system_collections_ilist_insert (index: INTEGER; value: ANY) is
+	frozen ilist_insert (index: INTEGER; value: ANY) is
 		external
 			"IL signature (System.Int32, System.Object): System.Void use System.Diagnostics.TraceListenerCollection"
 		alias

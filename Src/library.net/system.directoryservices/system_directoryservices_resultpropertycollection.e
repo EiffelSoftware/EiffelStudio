@@ -9,28 +9,28 @@ inherit
 	SYSTEM_COLLECTIONS_DICTIONARYBASE
 	SYSTEM_COLLECTIONS_ICOLLECTION
 		rename
-			get_enumerator as system_collections_ienumerable_get_enumerator,
-			get_sync_root as system_collections_icollection_get_sync_root,
-			get_is_synchronized as system_collections_icollection_get_is_synchronized
+			get_enumerator as ienumerable_get_enumerator,
+			get_sync_root as icollection_get_sync_root,
+			get_is_synchronized as icollection_get_is_synchronized
 		end
 	SYSTEM_COLLECTIONS_IENUMERABLE
 		rename
-			get_enumerator as system_collections_ienumerable_get_enumerator
+			get_enumerator as ienumerable_get_enumerator
 		end
 	SYSTEM_COLLECTIONS_IDICTIONARY
 		rename
-			get_enumerator as system_collections_ienumerable_get_enumerator,
-			remove as system_collections_idictionary_remove,
-			add as system_collections_idictionary_add,
-			contains as system_collections_idictionary_contains,
-			set_item as system_collections_idictionary_set_item,
-			get_item as system_collections_idictionary_get_item,
-			get_values as system_collections_idictionary_get_values,
-			get_sync_root as system_collections_icollection_get_sync_root,
-			get_keys as system_collections_idictionary_get_keys,
-			get_is_synchronized as system_collections_icollection_get_is_synchronized,
-			get_is_fixed_size as system_collections_idictionary_get_is_fixed_size,
-			get_is_read_only as system_collections_idictionary_get_is_read_only
+			get_enumerator as ienumerable_get_enumerator,
+			remove as idictionary_remove,
+			extend as idictionary_extend,
+			has as idictionary_has,
+			put_i_th as idictionary_put_i_th,
+			get_item as idictionary_get_item,
+			get_values as idictionary_get_values,
+			get_sync_root as icollection_get_sync_root,
+			get_keys as idictionary_get_keys,
+			get_is_synchronized as icollection_get_is_synchronized,
+			get_is_fixed_size as idictionary_get_is_fixed_size,
+			get_is_read_only as idictionary_get_is_read_only
 		end
 
 create {NONE}
@@ -60,7 +60,7 @@ feature -- Access
 
 feature -- Basic Operations
 
-	frozen contains (property_name: STRING): BOOLEAN is
+	frozen has (property_name: STRING): BOOLEAN is
 		external
 			"IL signature (System.String): System.Boolean use System.DirectoryServices.ResultPropertyCollection"
 		alias

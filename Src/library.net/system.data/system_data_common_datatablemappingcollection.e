@@ -10,27 +10,27 @@ inherit
 	SYSTEM_MARSHALBYREFOBJECT
 	SYSTEM_COLLECTIONS_ILIST
 		rename
-			put_i_th as system_collections_ilist_set_item,
-			get_item as system_collections_ilist_get_item,
-			get_sync_root as system_collections_icollection_get_sync_root,
-			get_is_synchronized as system_collections_icollection_get_is_synchronized,
-			get_is_fixed_size as system_collections_ilist_get_is_fixed_size,
-			get_is_read_only as system_collections_ilist_get_is_read_only
+			put_i_th as ilist_put_i_th,
+			get_item as ilist_get_item,
+			get_sync_root as icollection_get_sync_root,
+			get_is_synchronized as icollection_get_is_synchronized,
+			get_is_fixed_size as ilist_get_is_fixed_size,
+			get_is_read_only as ilist_get_is_read_only
 		end
 	SYSTEM_DATA_ITABLEMAPPINGCOLLECTION
 		rename
 			get_by_data_set_table as system_data_itable_mapping_collection_get_by_data_set_table,
-			set_item as system_collections_ilist_set_item,
-			get_item as system_collections_ilist_get_item,
-			get_sync_root as system_collections_icollection_get_sync_root,
-			get_is_synchronized as system_collections_icollection_get_is_synchronized,
-			get_is_fixed_size as system_collections_ilist_get_is_fixed_size,
-			get_is_read_only as system_collections_ilist_get_is_read_only
+			put_i_th as ilist_put_i_th,
+			get_item as ilist_get_item,
+			get_sync_root as icollection_get_sync_root,
+			get_is_synchronized as icollection_get_is_synchronized,
+			get_is_fixed_size as ilist_get_is_fixed_size,
+			get_is_read_only as ilist_get_is_read_only
 		end
 	SYSTEM_COLLECTIONS_ICOLLECTION
 		rename
-			get_sync_root as system_collections_icollection_get_sync_root,
-			get_is_synchronized as system_collections_icollection_get_is_synchronized
+			get_sync_root as icollection_get_sync_root,
+			get_is_synchronized as icollection_get_is_synchronized
 		end
 
 create
@@ -75,7 +75,7 @@ feature -- Element Change
 			"set_Item"
 		end
 
-	frozen set_item (source_table: STRING; value: SYSTEM_DATA_COMMON_DATATABLEMAPPING) is
+	frozen put_i_th (source_table: STRING; value: SYSTEM_DATA_COMMON_DATATABLEMAPPING) is
 		external
 			"IL signature (System.String, System.Data.Common.DataTableMapping): System.Void use System.Data.Common.DataTableMappingCollection"
 		alias
@@ -84,7 +84,7 @@ feature -- Element Change
 
 feature -- Basic Operations
 
-	frozen remove_at (index: INTEGER) is
+	frozen prune_i_th (index: INTEGER) is
 		external
 			"IL signature (System.Int32): System.Void use System.Data.Common.DataTableMappingCollection"
 		alias
@@ -119,7 +119,7 @@ feature -- Basic Operations
 			"IndexOf"
 		end
 
-	frozen add (value: ANY): INTEGER is
+	frozen extend (value: ANY): INTEGER is
 		external
 			"IL signature (System.Object): System.Int32 use System.Data.Common.DataTableMappingCollection"
 		alias
@@ -168,7 +168,7 @@ feature -- Basic Operations
 			"RemoveAt"
 		end
 
-	frozen contains (value: ANY): BOOLEAN is
+	frozen has (value: ANY): BOOLEAN is
 		external
 			"IL signature (System.Object): System.Boolean use System.Data.Common.DataTableMappingCollection"
 		alias
@@ -212,21 +212,21 @@ feature {NONE} -- Implementation
 			"System.Data.ITableMappingCollection.GetByDataSetTable"
 		end
 
-	frozen system_collections_ilist_set_item (index: INTEGER; value: ANY) is
+	frozen ilist_put_i_th (index: INTEGER; value: ANY) is
 		external
 			"IL signature (System.Int32, System.Object): System.Void use System.Data.Common.DataTableMappingCollection"
 		alias
 			"System.Collections.IList.set_Item"
 		end
 
-	frozen system_collections_icollection_get_sync_root: ANY is
+	frozen icollection_get_sync_root: ANY is
 		external
 			"IL signature (): System.Object use System.Data.Common.DataTableMappingCollection"
 		alias
 			"System.Collections.ICollection.get_SyncRoot"
 		end
 
-	frozen system_collections_ilist_get_is_read_only: BOOLEAN is
+	frozen ilist_get_is_read_only: BOOLEAN is
 		external
 			"IL signature (): System.Boolean use System.Data.Common.DataTableMappingCollection"
 		alias
@@ -240,21 +240,21 @@ feature {NONE} -- Implementation
 			"System.Data.ITableMappingCollection.get_Item"
 		end
 
-	frozen system_collections_ilist_get_item (index: INTEGER): ANY is
+	frozen ilist_get_item (index: INTEGER): ANY is
 		external
 			"IL signature (System.Int32): System.Object use System.Data.Common.DataTableMappingCollection"
 		alias
 			"System.Collections.IList.get_Item"
 		end
 
-	frozen system_collections_icollection_get_is_synchronized: BOOLEAN is
+	frozen icollection_get_is_synchronized: BOOLEAN is
 		external
 			"IL signature (): System.Boolean use System.Data.Common.DataTableMappingCollection"
 		alias
 			"System.Collections.ICollection.get_IsSynchronized"
 		end
 
-	frozen system_collections_ilist_get_is_fixed_size: BOOLEAN is
+	frozen ilist_get_is_fixed_size: BOOLEAN is
 		external
 			"IL signature (): System.Boolean use System.Data.Common.DataTableMappingCollection"
 		alias

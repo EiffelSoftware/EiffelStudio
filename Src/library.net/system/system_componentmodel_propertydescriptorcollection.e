@@ -15,49 +15,49 @@ inherit
 		end
 	SYSTEM_COLLECTIONS_IDICTIONARY
 		rename
-			get_enumerator as system_collections_ienumerable_get_enumerator,
-			get_sync_root as system_collections_icollection_get_sync_root,
-			get_is_synchronized as system_collections_icollection_get_is_synchronized,
-			get_count as system_collections_icollection_get_count,
-			remove as system_collections_idictionary_remove,
-			get_values as system_collections_idictionary_get_values,
-			get_keys as system_collections_idictionary_get_keys,
-			put_i_th as system_collections_idictionary_set_item,
-			get_item as system_collections_idictionary_get_item,
-			get_is_read_only as system_collections_idictionary_get_is_read_only,
-			get_is_fixed_size as system_collections_idictionary_get_is_fixed_size,
-			has as system_collections_idictionary_contains,
-			clear as system_collections_idictionary_clear,
-			extend as system_collections_idictionary_add
+			get_enumerator as ienumerable_get_enumerator,
+			get_sync_root as icollection_get_sync_root,
+			get_is_synchronized as icollection_get_is_synchronized,
+			get_count as icollection_get_count,
+			remove as idictionary_remove,
+			get_values as idictionary_get_values,
+			get_keys as idictionary_get_keys,
+			put_i_th as idictionary_put_i_th,
+			get_item as idictionary_get_item,
+			get_is_read_only as idictionary_get_is_read_only,
+			get_is_fixed_size as idictionary_get_is_fixed_size,
+			has as idictionary_has,
+			clear as idictionary_clear,
+			extend as idictionary_extend
 		end
 	SYSTEM_COLLECTIONS_ILIST
 		rename
-			get_enumerator as system_collections_ienumerable_get_enumerator,
-			get_sync_root as system_collections_icollection_get_sync_root,
-			get_is_synchronized as system_collections_icollection_get_is_synchronized,
-			get_is_fixed_size as system_collections_ilist_get_is_fixed_size,
-			get_is_read_only as system_collections_ilist_get_is_read_only,
-			get_count as system_collections_icollection_get_count,
-			prune_i_th as system_collections_ilist_remove_at,
-			remove as system_collections_ilist_remove,
-			insert as system_collections_ilist_insert,
-			index_of as system_collections_ilist_index_of,
-			has as system_collections_ilist_contains,
-			clear as system_collections_ilist_clear,
-			extend as system_collections_ilist_add,
-			put_i_th as system_collections_ilist_set_item,
-			get_item as system_collections_ilist_get_item
+			get_enumerator as ienumerable_get_enumerator,
+			get_sync_root as icollection_get_sync_root,
+			get_is_synchronized as icollection_get_is_synchronized,
+			get_is_fixed_size as ilist_get_is_fixed_size,
+			get_is_read_only as ilist_get_is_read_only,
+			get_count as icollection_get_count,
+			prune_i_th as ilist_prune_i_th,
+			remove as ilist_remove,
+			insert as ilist_insert,
+			index_of as ilist_index_of,
+			has as ilist_has,
+			clear as ilist_clear,
+			extend as ilist_extend,
+			put_i_th as ilist_put_i_th,
+			get_item as ilist_get_item
 		end
 	SYSTEM_COLLECTIONS_IENUMERABLE
 		rename
-			get_enumerator as system_collections_ienumerable_get_enumerator
+			get_enumerator as ienumerable_get_enumerator
 		end
 	SYSTEM_COLLECTIONS_ICOLLECTION
 		rename
-			get_enumerator as system_collections_ienumerable_get_enumerator,
-			get_sync_root as system_collections_icollection_get_sync_root,
-			get_is_synchronized as system_collections_icollection_get_is_synchronized,
-			get_count as system_collections_icollection_get_count
+			get_enumerator as ienumerable_get_enumerator,
+			get_sync_root as icollection_get_sync_root,
+			get_is_synchronized as icollection_get_is_synchronized,
+			get_count as icollection_get_count
 		end
 
 create
@@ -223,28 +223,28 @@ feature -- Basic Operations
 
 feature {NONE} -- Implementation
 
-	frozen system_collections_ienumerable_get_enumerator: SYSTEM_COLLECTIONS_IENUMERATOR is
+	frozen ienumerable_get_enumerator: SYSTEM_COLLECTIONS_IENUMERATOR is
 		external
 			"IL signature (): System.Collections.IEnumerator use System.ComponentModel.PropertyDescriptorCollection"
 		alias
 			"System.Collections.IEnumerable.GetEnumerator"
 		end
 
-	frozen system_collections_ilist_remove_at (index: INTEGER) is
+	frozen ilist_prune_i_th (index: INTEGER) is
 		external
 			"IL signature (System.Int32): System.Void use System.ComponentModel.PropertyDescriptorCollection"
 		alias
 			"System.Collections.IList.RemoveAt"
 		end
 
-	frozen system_collections_idictionary_clear is
+	frozen idictionary_clear is
 		external
 			"IL signature (): System.Void use System.ComponentModel.PropertyDescriptorCollection"
 		alias
 			"System.Collections.IDictionary.Clear"
 		end
 
-	frozen system_collections_idictionary_remove (key: ANY) is
+	frozen idictionary_remove (key: ANY) is
 		external
 			"IL signature (System.Object): System.Void use System.ComponentModel.PropertyDescriptorCollection"
 		alias
@@ -258,21 +258,21 @@ feature {NONE} -- Implementation
 			"InternalSort"
 		end
 
-	frozen system_collections_idictionary_get_item (key: ANY): ANY is
+	frozen idictionary_get_item (key: ANY): ANY is
 		external
 			"IL signature (System.Object): System.Object use System.ComponentModel.PropertyDescriptorCollection"
 		alias
 			"System.Collections.IDictionary.get_Item"
 		end
 
-	frozen system_collections_ilist_set_item (index: INTEGER; value: ANY) is
+	frozen ilist_put_i_th (index: INTEGER; value: ANY) is
 		external
 			"IL signature (System.Int32, System.Object): System.Void use System.ComponentModel.PropertyDescriptorCollection"
 		alias
 			"System.Collections.IList.set_Item"
 		end
 
-	frozen system_collections_icollection_get_is_synchronized: BOOLEAN is
+	frozen icollection_get_is_synchronized: BOOLEAN is
 		external
 			"IL signature (): System.Boolean use System.ComponentModel.PropertyDescriptorCollection"
 		alias
@@ -286,70 +286,70 @@ feature {NONE} -- Implementation
 			"InternalSort"
 		end
 
-	frozen system_collections_ilist_remove (value: ANY) is
+	frozen ilist_remove (value: ANY) is
 		external
 			"IL signature (System.Object): System.Void use System.ComponentModel.PropertyDescriptorCollection"
 		alias
 			"System.Collections.IList.Remove"
 		end
 
-	frozen system_collections_idictionary_get_is_fixed_size: BOOLEAN is
+	frozen idictionary_get_is_fixed_size: BOOLEAN is
 		external
 			"IL signature (): System.Boolean use System.ComponentModel.PropertyDescriptorCollection"
 		alias
 			"System.Collections.IDictionary.get_IsFixedSize"
 		end
 
-	frozen system_collections_idictionary_add (key: ANY; value: ANY) is
+	frozen idictionary_extend (key: ANY; value: ANY) is
 		external
 			"IL signature (System.Object, System.Object): System.Void use System.ComponentModel.PropertyDescriptorCollection"
 		alias
 			"System.Collections.IDictionary.Add"
 		end
 
-	frozen system_collections_ilist_insert (index: INTEGER; value: ANY) is
+	frozen ilist_insert (index: INTEGER; value: ANY) is
 		external
 			"IL signature (System.Int32, System.Object): System.Void use System.ComponentModel.PropertyDescriptorCollection"
 		alias
 			"System.Collections.IList.Insert"
 		end
 
-	frozen system_collections_ilist_add (value: ANY): INTEGER is
+	frozen ilist_extend (value: ANY): INTEGER is
 		external
 			"IL signature (System.Object): System.Int32 use System.ComponentModel.PropertyDescriptorCollection"
 		alias
 			"System.Collections.IList.Add"
 		end
 
-	frozen system_collections_idictionary_contains (key: ANY): BOOLEAN is
+	frozen idictionary_has (key: ANY): BOOLEAN is
 		external
 			"IL signature (System.Object): System.Boolean use System.ComponentModel.PropertyDescriptorCollection"
 		alias
 			"System.Collections.IDictionary.Contains"
 		end
 
-	frozen system_collections_ilist_get_item (index: INTEGER): ANY is
+	frozen ilist_get_item (index: INTEGER): ANY is
 		external
 			"IL signature (System.Int32): System.Object use System.ComponentModel.PropertyDescriptorCollection"
 		alias
 			"System.Collections.IList.get_Item"
 		end
 
-	frozen system_collections_ilist_get_is_fixed_size: BOOLEAN is
+	frozen ilist_get_is_fixed_size: BOOLEAN is
 		external
 			"IL signature (): System.Boolean use System.ComponentModel.PropertyDescriptorCollection"
 		alias
 			"System.Collections.IList.get_IsFixedSize"
 		end
 
-	frozen system_collections_idictionary_set_item (key: ANY; value: ANY) is
+	frozen idictionary_put_i_th (key: ANY; value: ANY) is
 		external
 			"IL signature (System.Object, System.Object): System.Void use System.ComponentModel.PropertyDescriptorCollection"
 		alias
 			"System.Collections.IDictionary.set_Item"
 		end
 
-	frozen system_collections_icollection_get_count: INTEGER is
+	frozen icollection_get_count: INTEGER is
 		external
 			"IL signature (): System.Int32 use System.ComponentModel.PropertyDescriptorCollection"
 		alias
@@ -363,35 +363,35 @@ feature {NONE} -- Implementation
 			"System.Collections.IDictionary.GetEnumerator"
 		end
 
-	frozen system_collections_idictionary_get_keys: SYSTEM_COLLECTIONS_ICOLLECTION is
+	frozen idictionary_get_keys: SYSTEM_COLLECTIONS_ICOLLECTION is
 		external
 			"IL signature (): System.Collections.ICollection use System.ComponentModel.PropertyDescriptorCollection"
 		alias
 			"System.Collections.IDictionary.get_Keys"
 		end
 
-	frozen system_collections_ilist_contains (value: ANY): BOOLEAN is
+	frozen ilist_has (value: ANY): BOOLEAN is
 		external
 			"IL signature (System.Object): System.Boolean use System.ComponentModel.PropertyDescriptorCollection"
 		alias
 			"System.Collections.IList.Contains"
 		end
 
-	frozen system_collections_ilist_index_of (value: ANY): INTEGER is
+	frozen ilist_index_of (value: ANY): INTEGER is
 		external
 			"IL signature (System.Object): System.Int32 use System.ComponentModel.PropertyDescriptorCollection"
 		alias
 			"System.Collections.IList.IndexOf"
 		end
 
-	frozen system_collections_idictionary_get_values: SYSTEM_COLLECTIONS_ICOLLECTION is
+	frozen idictionary_get_values: SYSTEM_COLLECTIONS_ICOLLECTION is
 		external
 			"IL signature (): System.Collections.ICollection use System.ComponentModel.PropertyDescriptorCollection"
 		alias
 			"System.Collections.IDictionary.get_Values"
 		end
 
-	frozen system_collections_icollection_get_sync_root: ANY is
+	frozen icollection_get_sync_root: ANY is
 		external
 			"IL signature (): System.Object use System.ComponentModel.PropertyDescriptorCollection"
 		alias
@@ -405,21 +405,21 @@ feature {NONE} -- Implementation
 			"Finalize"
 		end
 
-	frozen system_collections_idictionary_get_is_read_only: BOOLEAN is
+	frozen idictionary_get_is_read_only: BOOLEAN is
 		external
 			"IL signature (): System.Boolean use System.ComponentModel.PropertyDescriptorCollection"
 		alias
 			"System.Collections.IDictionary.get_IsReadOnly"
 		end
 
-	frozen system_collections_ilist_clear is
+	frozen ilist_clear is
 		external
 			"IL signature (): System.Void use System.ComponentModel.PropertyDescriptorCollection"
 		alias
 			"System.Collections.IList.Clear"
 		end
 
-	frozen system_collections_ilist_get_is_read_only: BOOLEAN is
+	frozen ilist_get_is_read_only: BOOLEAN is
 		external
 			"IL signature (): System.Boolean use System.ComponentModel.PropertyDescriptorCollection"
 		alias

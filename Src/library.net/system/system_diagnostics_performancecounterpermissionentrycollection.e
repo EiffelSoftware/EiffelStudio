@@ -8,18 +8,18 @@ external class
 inherit
 	SYSTEM_COLLECTIONS_ILIST
 		rename
-			insert as system_collections_ilist_insert,
-			index_of as system_collections_ilist_index_of,
-			remove as system_collections_ilist_remove,
-			extend as system_collections_ilist_add,
-			has as system_collections_ilist_contains,
-			put_i_th as system_collections_ilist_set_item,
-			get_item as system_collections_ilist_get_item,
-			copy_to as system_collections_icollection_copy_to,
-			get_sync_root as system_collections_icollection_get_sync_root,
-			get_is_synchronized as system_collections_icollection_get_is_synchronized,
-			get_is_fixed_size as system_collections_ilist_get_is_fixed_size,
-			get_is_read_only as system_collections_ilist_get_is_read_only
+			insert as ilist_insert,
+			index_of as ilist_index_of,
+			remove as ilist_remove,
+			extend as ilist_extend,
+			has as ilist_has,
+			put_i_th as ilist_put_i_th,
+			get_item as ilist_get_item,
+			copy_to as icollection_copy_to,
+			get_sync_root as icollection_get_sync_root,
+			get_is_synchronized as icollection_get_is_synchronized,
+			get_is_fixed_size as ilist_get_is_fixed_size,
+			get_is_read_only as ilist_get_is_read_only
 		end
 	SYSTEM_COLLECTIONS_COLLECTIONBASE
 		redefine
@@ -31,9 +31,9 @@ inherit
 	SYSTEM_COLLECTIONS_IENUMERABLE
 	SYSTEM_COLLECTIONS_ICOLLECTION
 		rename
-			copy_to as system_collections_icollection_copy_to,
-			get_sync_root as system_collections_icollection_get_sync_root,
-			get_is_synchronized as system_collections_icollection_get_is_synchronized
+			copy_to as icollection_copy_to,
+			get_sync_root as icollection_get_sync_root,
+			get_is_synchronized as icollection_get_is_synchronized
 		end
 
 create {NONE}
@@ -49,7 +49,7 @@ feature -- Access
 
 feature -- Element Change
 
-	frozen set_item (index: INTEGER; value: SYSTEM_DIAGNOSTICS_PERFORMANCECOUNTERPERMISSIONENTRY) is
+	frozen put_i_th (index: INTEGER; value: SYSTEM_DIAGNOSTICS_PERFORMANCECOUNTERPERMISSIONENTRY) is
 		external
 			"IL signature (System.Int32, System.Diagnostics.PerformanceCounterPermissionEntry): System.Void use System.Diagnostics.PerformanceCounterPermissionEntryCollection"
 		alias
@@ -93,7 +93,7 @@ feature -- Basic Operations
 			"Remove"
 		end
 
-	frozen contains (value: SYSTEM_DIAGNOSTICS_PERFORMANCECOUNTERPERMISSIONENTRY): BOOLEAN is
+	frozen has (value: SYSTEM_DIAGNOSTICS_PERFORMANCECOUNTERPERMISSIONENTRY): BOOLEAN is
 		external
 			"IL signature (System.Diagnostics.PerformanceCounterPermissionEntry): System.Boolean use System.Diagnostics.PerformanceCounterPermissionEntryCollection"
 		alias
@@ -107,7 +107,7 @@ feature -- Basic Operations
 			"AddRange"
 		end
 
-	frozen add (value: SYSTEM_DIAGNOSTICS_PERFORMANCECOUNTERPERMISSIONENTRY): INTEGER is
+	frozen extend (value: SYSTEM_DIAGNOSTICS_PERFORMANCECOUNTERPERMISSIONENTRY): INTEGER is
 		external
 			"IL signature (System.Diagnostics.PerformanceCounterPermissionEntry): System.Int32 use System.Diagnostics.PerformanceCounterPermissionEntryCollection"
 		alias

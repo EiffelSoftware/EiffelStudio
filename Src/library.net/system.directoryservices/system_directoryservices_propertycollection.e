@@ -31,13 +31,13 @@ inherit
 			get_is_synchronized as system_collections_icollection_get_is_synchronized,
 			get_enumerator as system_collections_ienumerable_get_enumerator,
 			remove as system_collections_idictionary_remove,
-			contains as system_collections_idictionary_contains,
+			has as system_collections_idictionary_contains,
 			clear as system_collections_idictionary_clear,
-			add as system_collections_idictionary_add,
+			extend as system_collections_idictionary_add,
 			get_keys as system_collections_idictionary_get_keys,
 			get_is_read_only as system_collections_idictionary_get_is_read_only,
 			get_is_fixed_size as system_collections_idictionary_get_is_fixed_size,
-			set_item as system_collections_idictionary_set_item,
+			put_i_th as system_collections_idictionary_set_item,
 			get_item as system_collections_idictionary_get_item
 		end
 
@@ -82,14 +82,14 @@ feature -- Basic Operations
 			"GetHashCode"
 		end
 
-	frozen contains (property_name: STRING): BOOLEAN is
+	frozen has (property_name: STRING): BOOLEAN is
 		external
 			"IL signature (System.String): System.Boolean use System.DirectoryServices.PropertyCollection"
 		alias
 			"Contains"
 		end
 
-	frozen get_enumerator_idictionary_enumerator: SYSTEM_COLLECTIONS_IDICTIONARYENUMERATOR is
+	frozen get_dictionary_enumerator: SYSTEM_COLLECTIONS_IDICTIONARYENUMERATOR is
 		external
 			"IL signature (): System.Collections.IDictionaryEnumerator use System.DirectoryServices.PropertyCollection"
 		alias

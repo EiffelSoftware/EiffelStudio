@@ -17,16 +17,16 @@ inherit
 		end
 	SYSTEM_COLLECTIONS_ILIST
 		rename
-			put_i_th as system_collections_ilist_set_item,
-			get_item as system_collections_ilist_get_item,
-			remove as system_collections_ilist_remove,
-			insert as system_collections_ilist_insert,
-			index_of as system_collections_ilist_index_of,
-			has as system_collections_ilist_contains,
-			extend as system_collections_ilist_add,
-			get_is_fixed_size as system_collections_ilist_get_is_fixed_size,
-			get_is_synchronized as system_collections_icollection_get_is_synchronized,
-			get_sync_root as system_collections_icollection_get_sync_root,
+			put_i_th as ilist_put_i_th,
+			get_item as ilist_get_item,
+			remove as ilist_remove,
+			insert as ilist_insert,
+			index_of as ilist_index_of,
+			has as ilist_has,
+			extend as ilist_extend,
+			get_is_fixed_size as ilist_get_is_fixed_size,
+			get_is_synchronized as icollection_get_is_synchronized,
+			get_sync_root as icollection_get_sync_root,
 			is_equal as equals_object
 		end
 	SYSTEM_ICLONEABLE
@@ -40,8 +40,8 @@ inherit
 		end
 	SYSTEM_COLLECTIONS_ICOLLECTION
 		rename
-			get_is_synchronized as system_collections_icollection_get_is_synchronized,
-			get_sync_root as system_collections_icollection_get_sync_root,
+			get_is_synchronized as icollection_get_is_synchronized,
+			get_sync_root as icollection_get_sync_root,
 			is_equal as equals_object
 		end
 
@@ -187,28 +187,28 @@ feature -- Basic Operations
 
 feature {NONE} -- Implementation
 
-	frozen system_collections_ilist_set_item (index: INTEGER; value: ANY) is
+	frozen ilist_put_i_th (index: INTEGER; value: ANY) is
 		external
 			"IL signature (System.Int32, System.Object): System.Void use System.Windows.Forms.Control+ControlCollection"
 		alias
 			"System.Collections.IList.set_Item"
 		end
 
-	frozen system_collections_icollection_get_sync_root: ANY is
+	frozen icollection_get_sync_root: ANY is
 		external
 			"IL signature (): System.Object use System.Windows.Forms.Control+ControlCollection"
 		alias
 			"System.Collections.ICollection.get_SyncRoot"
 		end
 
-	frozen system_collections_ilist_index_of (control: ANY): INTEGER is
+	frozen ilist_index_of (control: ANY): INTEGER is
 		external
 			"IL signature (System.Object): System.Int32 use System.Windows.Forms.Control+ControlCollection"
 		alias
 			"System.Collections.IList.IndexOf"
 		end
 
-	frozen system_collections_ilist_remove (control: ANY) is
+	frozen ilist_remove (control: ANY) is
 		external
 			"IL signature (System.Object): System.Void use System.Windows.Forms.Control+ControlCollection"
 		alias
@@ -222,35 +222,35 @@ feature {NONE} -- Implementation
 			"System.ICloneable.Clone"
 		end
 
-	frozen system_collections_ilist_add (control: ANY): INTEGER is
+	frozen ilist_extend (control: ANY): INTEGER is
 		external
 			"IL signature (System.Object): System.Int32 use System.Windows.Forms.Control+ControlCollection"
 		alias
 			"System.Collections.IList.Add"
 		end
 
-	frozen system_collections_ilist_get_item (index: INTEGER): ANY is
+	frozen ilist_get_item (index: INTEGER): ANY is
 		external
 			"IL signature (System.Int32): System.Object use System.Windows.Forms.Control+ControlCollection"
 		alias
 			"System.Collections.IList.get_Item"
 		end
 
-	frozen system_collections_icollection_get_is_synchronized: BOOLEAN is
+	frozen icollection_get_is_synchronized: BOOLEAN is
 		external
 			"IL signature (): System.Boolean use System.Windows.Forms.Control+ControlCollection"
 		alias
 			"System.Collections.ICollection.get_IsSynchronized"
 		end
 
-	frozen system_collections_ilist_contains (control: ANY): BOOLEAN is
+	frozen ilist_has (control: ANY): BOOLEAN is
 		external
 			"IL signature (System.Object): System.Boolean use System.Windows.Forms.Control+ControlCollection"
 		alias
 			"System.Collections.IList.Contains"
 		end
 
-	frozen system_collections_ilist_get_is_fixed_size: BOOLEAN is
+	frozen ilist_get_is_fixed_size: BOOLEAN is
 		external
 			"IL signature (): System.Boolean use System.Windows.Forms.Control+ControlCollection"
 		alias
@@ -264,7 +264,7 @@ feature {NONE} -- Implementation
 			"Finalize"
 		end
 
-	frozen system_collections_ilist_insert (index: INTEGER; value: ANY) is
+	frozen ilist_insert (index: INTEGER; value: ANY) is
 		external
 			"IL signature (System.Int32, System.Object): System.Void use System.Windows.Forms.Control+ControlCollection"
 		alias

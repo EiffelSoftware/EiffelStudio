@@ -7,8 +7,6 @@ external class
 
 inherit
 	SYSTEM_WINDOWS_FORMS_LISTBOX
-		rename
-			get_item_height as get_item_height_int32
 		redefine
 			wm_reflect_command,
 			on_measure_item,
@@ -17,7 +15,7 @@ inherit
 			set_selection_mode,
 			get_selection_mode,
 			set_item_height,
-			get_item_height_int32,
+			get_item_height,
 			set_draw_mode,
 			get_draw_mode,
 			on_selected_index_changed,
@@ -65,7 +63,7 @@ feature -- Access
 			"get_SelectionMode"
 		end
 
-	get_item_height_int32: INTEGER is
+	get_item_height: INTEGER is
 		external
 			"IL signature (): System.Int32 use System.Windows.Forms.CheckedListBox"
 		alias

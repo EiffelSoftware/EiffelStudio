@@ -10,7 +10,7 @@ inherit
 		redefine
 			finalize,
 			get_hash_code,
-			equals,
+			is_equal,
 			to_string
 		end
 	SYSTEM_ISERVICEPROVIDER
@@ -222,7 +222,7 @@ feature -- Basic Operations
 			"RewritePath"
 		end
 
-	equals (obj: ANY): BOOLEAN is
+	is_equal (obj: ANY): BOOLEAN is
 		external
 			"IL signature (System.Object): System.Boolean use System.Web.HttpContext"
 		alias

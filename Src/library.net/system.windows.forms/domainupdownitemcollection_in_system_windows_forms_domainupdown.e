@@ -13,11 +13,11 @@ inherit
 	SYSTEM_ICLONEABLE
 	SYSTEM_COLLECTIONS_ARRAYLIST
 		redefine
-			remove_at,
+			prune_i_th,
 			remove,
 			insert,
-			add,
-			set_item,
+			extend,
+			put_i_th,
 			get_item
 		end
 	SYSTEM_COLLECTIONS_IENUMERABLE
@@ -39,7 +39,7 @@ feature -- Access
 
 feature -- Element Change
 
-	set_item (index: INTEGER; value: ANY) is
+	put_i_th (index: INTEGER; value: ANY) is
 		external
 			"IL signature (System.Int32, System.Object): System.Void use System.Windows.Forms.DomainUpDown+DomainUpDownItemCollection"
 		alias
@@ -48,14 +48,14 @@ feature -- Element Change
 
 feature -- Basic Operations
 
-	remove_at (item: INTEGER) is
+	prune_i_th (item: INTEGER) is
 		external
 			"IL signature (System.Int32): System.Void use System.Windows.Forms.DomainUpDown+DomainUpDownItemCollection"
 		alias
 			"RemoveAt"
 		end
 
-	add (item: ANY): INTEGER is
+	extend (item: ANY): INTEGER is
 		external
 			"IL signature (System.Object): System.Int32 use System.Windows.Forms.DomainUpDown+DomainUpDownItemCollection"
 		alias

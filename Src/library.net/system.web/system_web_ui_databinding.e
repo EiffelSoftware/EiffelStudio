@@ -8,7 +8,7 @@ frozen external class
 inherit
 	ANY
 		rename
-			equals as equals_object
+			is_equal as equals_object
 		redefine
 			get_hash_code,
 			equals_object

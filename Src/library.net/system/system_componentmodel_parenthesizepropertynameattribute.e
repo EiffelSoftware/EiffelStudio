@@ -10,7 +10,7 @@ inherit
 		redefine
 			is_default_attribute,
 			get_hash_code,
-			equals_object
+			is_equal
 		end
 
 create
@@ -61,7 +61,7 @@ feature -- Basic Operations
 			"GetHashCode"
 		end
 
-	equals_object (o: ANY): BOOLEAN is
+	is_equal (o: ANY): BOOLEAN is
 		external
 			"IL signature (System.Object): System.Boolean use System.ComponentModel.ParenthesizePropertyNameAttribute"
 		alias

@@ -10,7 +10,7 @@ inherit
 		undefine
 			finalize,
 			get_hash_code,
-			equals,
+			is_equal,
 			to_string
 		end
 

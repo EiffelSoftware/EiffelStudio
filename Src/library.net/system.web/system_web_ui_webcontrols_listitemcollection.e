@@ -10,7 +10,7 @@ inherit
 		redefine
 			finalize,
 			get_hash_code,
-			equals,
+			is_equal,
 			to_string
 		end
 	SYSTEM_WEB_UI_ISTATEMANAGER
@@ -22,14 +22,14 @@ inherit
 		end
 	SYSTEM_COLLECTIONS_ILIST
 		rename
-			remove as system_collections_ilist_remove,
-			get_is_fixed_size as system_collections_ilist_get_is_fixed_size,
-			insert as system_collections_ilist_insert,
-			index_of as system_collections_ilist_index_of,
-			has as system_collections_ilist_contains,
-			extend as system_collections_ilist_add,
-			put_i_th as system_collections_ilist_set_item,
-			get_item as system_collections_ilist_get_item
+			remove as ilist_remove,
+			get_is_fixed_size as ilist_get_is_fixed_size,
+			insert as ilist_insert,
+			index_of as ilist_index_of,
+			has as ilist_has,
+			extend as ilist_extend,
+			put_i_th as ilist_put_i_th,
+			get_item as ilist_get_item
 		end
 	SYSTEM_COLLECTIONS_IENUMERABLE
 	SYSTEM_COLLECTIONS_ICOLLECTION
@@ -99,7 +99,7 @@ feature -- Element Change
 
 feature -- Basic Operations
 
-	frozen remove_at (index: INTEGER) is
+	frozen prune_i_th (index: INTEGER) is
 		external
 			"IL signature (System.Int32): System.Void use System.Web.UI.WebControls.ListItemCollection"
 		alias
@@ -127,14 +127,14 @@ feature -- Basic Operations
 			"IndexOf"
 		end
 
-	equals (obj: ANY): BOOLEAN is
+	is_equal (obj: ANY): BOOLEAN is
 		external
 			"IL signature (System.Object): System.Boolean use System.Web.UI.WebControls.ListItemCollection"
 		alias
 			"Equals"
 		end
 
-	frozen add (item: SYSTEM_WEB_UI_WEBCONTROLS_LISTITEM) is
+	frozen extend (item: SYSTEM_WEB_UI_WEBCONTROLS_LISTITEM) is
 		external
 			"IL signature (System.Web.UI.WebControls.ListItem): System.Void use System.Web.UI.WebControls.ListItemCollection"
 		alias
@@ -176,7 +176,7 @@ feature -- Basic Operations
 			"Insert"
 		end
 
-	frozen contains (item: SYSTEM_WEB_UI_WEBCONTROLS_LISTITEM): BOOLEAN is
+	frozen has (item: SYSTEM_WEB_UI_WEBCONTROLS_LISTITEM): BOOLEAN is
 		external
 			"IL signature (System.Web.UI.WebControls.ListItem): System.Boolean use System.Web.UI.WebControls.ListItemCollection"
 		alias
@@ -234,28 +234,28 @@ feature {NONE} -- Implementation
 			"System.Web.UI.IStateManager.get_IsTrackingViewState"
 		end
 
-	frozen system_collections_ilist_add (item: ANY): INTEGER is
+	frozen ilist_extend (item: ANY): INTEGER is
 		external
 			"IL signature (System.Object): System.Int32 use System.Web.UI.WebControls.ListItemCollection"
 		alias
 			"System.Collections.IList.Add"
 		end
 
-	frozen system_collections_ilist_set_item (index: INTEGER; value: ANY) is
+	frozen ilist_put_i_th (index: INTEGER; value: ANY) is
 		external
 			"IL signature (System.Int32, System.Object): System.Void use System.Web.UI.WebControls.ListItemCollection"
 		alias
 			"System.Collections.IList.set_Item"
 		end
 
-	frozen system_collections_ilist_contains (item: ANY): BOOLEAN is
+	frozen ilist_has (item: ANY): BOOLEAN is
 		external
 			"IL signature (System.Object): System.Boolean use System.Web.UI.WebControls.ListItemCollection"
 		alias
 			"System.Collections.IList.Contains"
 		end
 
-	frozen system_collections_ilist_index_of (item: ANY): INTEGER is
+	frozen ilist_index_of (item: ANY): INTEGER is
 		external
 			"IL signature (System.Object): System.Int32 use System.Web.UI.WebControls.ListItemCollection"
 		alias
@@ -283,21 +283,21 @@ feature {NONE} -- Implementation
 			"System.Web.UI.IStateManager.LoadViewState"
 		end
 
-	frozen system_collections_ilist_get_item (index: INTEGER): ANY is
+	frozen ilist_get_item (index: INTEGER): ANY is
 		external
 			"IL signature (System.Int32): System.Object use System.Web.UI.WebControls.ListItemCollection"
 		alias
 			"System.Collections.IList.get_Item"
 		end
 
-	frozen system_collections_ilist_remove (item: ANY) is
+	frozen ilist_remove (item: ANY) is
 		external
 			"IL signature (System.Object): System.Void use System.Web.UI.WebControls.ListItemCollection"
 		alias
 			"System.Collections.IList.Remove"
 		end
 
-	frozen system_collections_ilist_get_is_fixed_size: BOOLEAN is
+	frozen ilist_get_is_fixed_size: BOOLEAN is
 		external
 			"IL signature (): System.Boolean use System.Web.UI.WebControls.ListItemCollection"
 		alias
@@ -311,7 +311,7 @@ feature {NONE} -- Implementation
 			"Finalize"
 		end
 
-	frozen system_collections_ilist_insert (index: INTEGER; item: ANY) is
+	frozen ilist_insert (index: INTEGER; item: ANY) is
 		external
 			"IL signature (System.Int32, System.Object): System.Void use System.Web.UI.WebControls.ListItemCollection"
 		alias

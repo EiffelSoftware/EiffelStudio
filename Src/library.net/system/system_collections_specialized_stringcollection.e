@@ -15,26 +15,26 @@ inherit
 		end
 	SYSTEM_COLLECTIONS_ILIST
 		rename
-			get_enumerator as system_collections_ienumerable_get_enumerator,
-			copy_to as system_collections_icollection_copy_to,
-			remove as system_collections_ilist_remove,
-			insert as system_collections_ilist_insert,
-			index_of as system_collections_ilist_index_of,
-			has as system_collections_ilist_contains,
-			extend as system_collections_ilist_add,
-			put_i_th as system_collections_ilist_set_item,
-			get_item as system_collections_ilist_get_item,
-			get_is_fixed_size as system_collections_ilist_get_is_fixed_size,
-			get_is_read_only as system_collections_ilist_get_is_read_only
+			get_enumerator as ienumerable_get_enumerator,
+			copy_to as icollection_copy_to,
+			remove as ilist_remove,
+			insert as ilist_insert,
+			index_of as ilist_index_of,
+			has as ilist_has,
+			extend as ilist_extend,
+			put_i_th as ilist_put_i_th,
+			get_item as ilist_get_item,
+			get_is_fixed_size as ilist_get_is_fixed_size,
+			get_is_read_only as ilist_get_is_read_only
 		end
 	SYSTEM_COLLECTIONS_IENUMERABLE
 		rename
-			get_enumerator as system_collections_ienumerable_get_enumerator
+			get_enumerator as ienumerable_get_enumerator
 		end
 	SYSTEM_COLLECTIONS_ICOLLECTION
 		rename
-			get_enumerator as system_collections_ienumerable_get_enumerator,
-			copy_to as system_collections_icollection_copy_to
+			get_enumerator as ienumerable_get_enumerator,
+			copy_to as icollection_copy_to
 		end
 
 create
@@ -179,7 +179,7 @@ feature -- Basic Operations
 			"Remove"
 		end
 
-	frozen remove_at (index: INTEGER) is
+	frozen prune_i_th (index: INTEGER) is
 		external
 			"IL signature (System.Int32): System.Void use System.Collections.Specialized.StringCollection"
 		alias
@@ -188,70 +188,70 @@ feature -- Basic Operations
 
 feature {NONE} -- Implementation
 
-	frozen system_collections_ilist_set_item (index: INTEGER; value: ANY) is
+	frozen ilist_put_i_th (index: INTEGER; value: ANY) is
 		external
 			"IL signature (System.Int32, System.Object): System.Void use System.Collections.Specialized.StringCollection"
 		alias
 			"System.Collections.IList.set_Item"
 		end
 
-	frozen system_collections_ilist_get_is_read_only: BOOLEAN is
+	frozen ilist_get_is_read_only: BOOLEAN is
 		external
 			"IL signature (): System.Boolean use System.Collections.Specialized.StringCollection"
 		alias
 			"System.Collections.IList.get_IsReadOnly"
 		end
 
-	frozen system_collections_ilist_index_of (value: ANY): INTEGER is
+	frozen ilist_index_of (value: ANY): INTEGER is
 		external
 			"IL signature (System.Object): System.Int32 use System.Collections.Specialized.StringCollection"
 		alias
 			"System.Collections.IList.IndexOf"
 		end
 
-	frozen system_collections_ilist_remove (value: ANY) is
+	frozen ilist_remove (value: ANY) is
 		external
 			"IL signature (System.Object): System.Void use System.Collections.Specialized.StringCollection"
 		alias
 			"System.Collections.IList.Remove"
 		end
 
-	frozen system_collections_ienumerable_get_enumerator: SYSTEM_COLLECTIONS_IENUMERATOR is
+	frozen ienumerable_get_enumerator: SYSTEM_COLLECTIONS_IENUMERATOR is
 		external
 			"IL signature (): System.Collections.IEnumerator use System.Collections.Specialized.StringCollection"
 		alias
 			"System.Collections.IEnumerable.GetEnumerator"
 		end
 
-	frozen system_collections_ilist_add (value: ANY): INTEGER is
+	frozen ilist_extend (value: ANY): INTEGER is
 		external
 			"IL signature (System.Object): System.Int32 use System.Collections.Specialized.StringCollection"
 		alias
 			"System.Collections.IList.Add"
 		end
 
-	frozen system_collections_ilist_get_item (index: INTEGER): ANY is
+	frozen ilist_get_item (index: INTEGER): ANY is
 		external
 			"IL signature (System.Int32): System.Object use System.Collections.Specialized.StringCollection"
 		alias
 			"System.Collections.IList.get_Item"
 		end
 
-	frozen system_collections_ilist_contains (value: ANY): BOOLEAN is
+	frozen ilist_has (value: ANY): BOOLEAN is
 		external
 			"IL signature (System.Object): System.Boolean use System.Collections.Specialized.StringCollection"
 		alias
 			"System.Collections.IList.Contains"
 		end
 
-	frozen system_collections_icollection_copy_to (array: SYSTEM_ARRAY; index: INTEGER) is
+	frozen icollection_copy_to (array: SYSTEM_ARRAY; index: INTEGER) is
 		external
 			"IL signature (System.Array, System.Int32): System.Void use System.Collections.Specialized.StringCollection"
 		alias
 			"System.Collections.ICollection.CopyTo"
 		end
 
-	frozen system_collections_ilist_get_is_fixed_size: BOOLEAN is
+	frozen ilist_get_is_fixed_size: BOOLEAN is
 		external
 			"IL signature (): System.Boolean use System.Collections.Specialized.StringCollection"
 		alias
@@ -265,7 +265,7 @@ feature {NONE} -- Implementation
 			"Finalize"
 		end
 
-	frozen system_collections_ilist_insert (index: INTEGER; value: ANY) is
+	frozen ilist_insert (index: INTEGER; value: ANY) is
 		external
 			"IL signature (System.Int32, System.Object): System.Void use System.Collections.Specialized.StringCollection"
 		alias

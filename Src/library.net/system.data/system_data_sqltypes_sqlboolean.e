@@ -7,6 +7,8 @@ frozen expanded external class
 
 inherit
 	VALUE_TYPE
+		rename
+			is_equal as equals_object
 		redefine
 			get_hash_code,
 			equals_object,

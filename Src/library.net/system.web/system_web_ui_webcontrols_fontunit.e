@@ -9,7 +9,7 @@ inherit
 	VALUE_TYPE
 		redefine
 			get_hash_code,
-			equals_object,
+			is_equal,
 			to_string
 		end
 
@@ -144,7 +144,7 @@ feature -- Basic Operations
 			"GetHashCode"
 		end
 
-	equals_object (obj: ANY): BOOLEAN is
+	is_equal (obj: ANY): BOOLEAN is
 		external
 			"IL signature (System.Object): System.Boolean use System.Web.UI.WebControls.FontUnit"
 		alias

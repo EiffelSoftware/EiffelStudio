@@ -15,26 +15,26 @@ inherit
 		end
 	SYSTEM_COLLECTIONS_ILIST
 		rename
-			copy_to as system_collections_icollection_copy_to,
-			prune_i_th as system_collections_ilist_remove_at,
-			remove as system_collections_ilist_remove,
-			insert as system_collections_ilist_insert,
-			clear as system_collections_ilist_clear,
-			extend as system_collections_ilist_add,
-			index_of as system_collections_ilist_index_of,
-			has as system_collections_ilist_contains,
-			get_is_fixed_size as system_collections_ilist_get_is_fixed_size,
-			get_is_synchronized as system_collections_icollection_get_is_synchronized,
-			get_sync_root as system_collections_icollection_get_sync_root,
-			put_i_th as system_collections_ilist_set_item,
-			get_item as system_collections_ilist_get_item
+			copy_to as icollection_copy_to,
+			prune_i_th as ilist_prune_i_th,
+			remove as ilist_remove,
+			insert as ilist_insert,
+			clear as ilist_clear,
+			extend as ilist_extend,
+			index_of as ilist_index_of,
+			has as ilist_has,
+			get_is_fixed_size as ilist_get_is_fixed_size,
+			get_is_synchronized as icollection_get_is_synchronized,
+			get_sync_root as icollection_get_sync_root,
+			put_i_th as ilist_put_i_th,
+			get_item as ilist_get_item
 		end
 	SYSTEM_COLLECTIONS_IENUMERABLE
 	SYSTEM_COLLECTIONS_ICOLLECTION
 		rename
-			copy_to as system_collections_icollection_copy_to,
-			get_is_synchronized as system_collections_icollection_get_is_synchronized,
-			get_sync_root as system_collections_icollection_get_sync_root
+			copy_to as icollection_copy_to,
+			get_is_synchronized as icollection_get_is_synchronized,
+			get_sync_root as icollection_get_sync_root
 		end
 
 create
@@ -86,7 +86,7 @@ feature -- Basic Operations
 			"GetEnumerator"
 		end
 
-	frozen contains (checked_index: INTEGER): BOOLEAN is
+	frozen has (checked_index: INTEGER): BOOLEAN is
 		external
 			"IL signature (System.Int32): System.Boolean use System.Windows.Forms.ListView+CheckedIndexCollection"
 		alias
@@ -116,84 +116,84 @@ feature -- Basic Operations
 
 feature {NONE} -- Implementation
 
-	frozen system_collections_ilist_set_item (index: INTEGER; value: ANY) is
+	frozen ilist_put_i_th (index: INTEGER; value: ANY) is
 		external
 			"IL signature (System.Int32, System.Object): System.Void use System.Windows.Forms.ListView+CheckedIndexCollection"
 		alias
 			"System.Collections.IList.set_Item"
 		end
 
-	frozen system_collections_icollection_get_sync_root: ANY is
+	frozen icollection_get_sync_root: ANY is
 		external
 			"IL signature (): System.Object use System.Windows.Forms.ListView+CheckedIndexCollection"
 		alias
 			"System.Collections.ICollection.get_SyncRoot"
 		end
 
-	frozen system_collections_ilist_index_of (checked_index: ANY): INTEGER is
+	frozen ilist_index_of (checked_index: ANY): INTEGER is
 		external
 			"IL signature (System.Object): System.Int32 use System.Windows.Forms.ListView+CheckedIndexCollection"
 		alias
 			"System.Collections.IList.IndexOf"
 		end
 
-	frozen system_collections_ilist_remove (value: ANY) is
+	frozen ilist_remove (value: ANY) is
 		external
 			"IL signature (System.Object): System.Void use System.Windows.Forms.ListView+CheckedIndexCollection"
 		alias
 			"System.Collections.IList.Remove"
 		end
 
-	frozen system_collections_ilist_add (value: ANY): INTEGER is
+	frozen ilist_extend (value: ANY): INTEGER is
 		external
 			"IL signature (System.Object): System.Int32 use System.Windows.Forms.ListView+CheckedIndexCollection"
 		alias
 			"System.Collections.IList.Add"
 		end
 
-	frozen system_collections_ilist_get_item (index: INTEGER): ANY is
+	frozen ilist_get_item (index: INTEGER): ANY is
 		external
 			"IL signature (System.Int32): System.Object use System.Windows.Forms.ListView+CheckedIndexCollection"
 		alias
 			"System.Collections.IList.get_Item"
 		end
 
-	frozen system_collections_icollection_get_is_synchronized: BOOLEAN is
+	frozen icollection_get_is_synchronized: BOOLEAN is
 		external
 			"IL signature (): System.Boolean use System.Windows.Forms.ListView+CheckedIndexCollection"
 		alias
 			"System.Collections.ICollection.get_IsSynchronized"
 		end
 
-	frozen system_collections_ilist_contains (checked_index: ANY): BOOLEAN is
+	frozen ilist_has (checked_index: ANY): BOOLEAN is
 		external
 			"IL signature (System.Object): System.Boolean use System.Windows.Forms.ListView+CheckedIndexCollection"
 		alias
 			"System.Collections.IList.Contains"
 		end
 
-	frozen system_collections_ilist_clear is
+	frozen ilist_clear is
 		external
 			"IL signature (): System.Void use System.Windows.Forms.ListView+CheckedIndexCollection"
 		alias
 			"System.Collections.IList.Clear"
 		end
 
-	frozen system_collections_icollection_copy_to (dest: SYSTEM_ARRAY; index: INTEGER) is
+	frozen icollection_copy_to (dest: SYSTEM_ARRAY; index: INTEGER) is
 		external
 			"IL signature (System.Array, System.Int32): System.Void use System.Windows.Forms.ListView+CheckedIndexCollection"
 		alias
 			"System.Collections.ICollection.CopyTo"
 		end
 
-	frozen system_collections_ilist_remove_at (index: INTEGER) is
+	frozen ilist_prune_i_th (index: INTEGER) is
 		external
 			"IL signature (System.Int32): System.Void use System.Windows.Forms.ListView+CheckedIndexCollection"
 		alias
 			"System.Collections.IList.RemoveAt"
 		end
 
-	frozen system_collections_ilist_get_is_fixed_size: BOOLEAN is
+	frozen ilist_get_is_fixed_size: BOOLEAN is
 		external
 			"IL signature (): System.Boolean use System.Windows.Forms.ListView+CheckedIndexCollection"
 		alias
@@ -207,7 +207,7 @@ feature {NONE} -- Implementation
 			"Finalize"
 		end
 
-	frozen system_collections_ilist_insert (index: INTEGER; value: ANY) is
+	frozen ilist_insert (index: INTEGER; value: ANY) is
 		external
 			"IL signature (System.Int32, System.Object): System.Void use System.Windows.Forms.ListView+CheckedIndexCollection"
 		alias

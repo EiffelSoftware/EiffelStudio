@@ -9,7 +9,7 @@ inherit
 	VALUE_TYPE
 		redefine
 			get_hash_code,
-			equals_object
+			is_equal
 		end
 
 
@@ -69,7 +69,7 @@ feature -- Basic Operations
 			"GetHashCode"
 		end
 
-	equals_object (o: ANY): BOOLEAN is
+	is_equal (o: ANY): BOOLEAN is
 		external
 			"IL signature (System.Object): System.Boolean use System.Windows.Forms.LinkArea"
 		alias

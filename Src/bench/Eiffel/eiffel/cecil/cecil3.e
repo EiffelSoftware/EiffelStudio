@@ -415,7 +415,7 @@ feature {NONE} -- Byte code generation
 									end
 									gen_type.meta_generic.make_byte_code (ba)
 								else
-									ba.append_int32_integer (l_types.item.type.cecil_value)
+									ba.append_integer_32 (l_types.item.type.cecil_value)
 								end
 							end
 							l_types.forth

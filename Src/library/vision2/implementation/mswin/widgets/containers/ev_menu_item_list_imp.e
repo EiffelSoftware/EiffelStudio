@@ -26,6 +26,61 @@ feature {NONE} -- Initialization
 			is_initialized := True
 		end
 
+feature -- Standard output
+
+	print_radio_groups is
+		local
+			cur: CURSOR
+			sep_imp: EV_MENU_SEPARATOR_IMP
+			list_imp: EV_MENU_ITEM_LIST_IMP
+		do
+			cur := ev_children.cursor
+			from
+				io.put_string ("Menu:%N")
+				print_radio_group (radio_group)
+				ev_children.start
+			until
+				ev_children.off
+			loop
+				sep_imp ?= ev_children.item
+				if sep_imp /= Void then
+					io.put_string ("Separator:%N")
+					print_radio_group (sep_imp.radio_group)
+				end
+				list_imp ?= ev_children.item
+				if list_imp /= Void then
+					list_imp.print_radio_groups
+				end
+				ev_children.forth
+			end
+			ev_children.go_to (cur)
+		end
+
+	print_radio_group (g: like radio_group) is
+		local
+			cur: CURSOR
+		do
+			if g = Void then
+				io.put_string ("%T(no radio-group)%N")
+			elseif g.empty then
+				io.put_string ("%T(empty group)%N")
+			else
+				cur := g.cursor
+				from
+					g.start
+				until
+					g.off
+				loop
+					if g.item.is_selected then
+						io.put_string ("->")
+					end
+					io.put_string ("%T" + g.item.text + "%N")
+					g.forth
+				end
+				g.go_to (cur)
+			end
+		end
+
 feature {NONE} -- Implementation
 
 	ev_children: ARRAYED_LIST [EV_MENU_ITEM_IMP]
@@ -40,6 +95,7 @@ feature {NONE} -- Implementation
 			menu_item_imp: EV_MENU_ITEM_IMP
 			radio_imp: EV_RADIO_MENU_ITEM_IMP
 			pix_imp: EV_PIXMAP_IMP
+			rgroup: LINKED_LIST [EV_RADIO_MENU_ITEM_IMP]
 		do
 			menu_item_imp ?= item_imp
 
@@ -48,6 +104,25 @@ feature {NONE} -- Implementation
 
 			sep_imp ?= item_imp
 			if sep_imp /= Void then
+				from
+					ev_children.go_i_th (pos + 1)
+				until
+					ev_children.after or else is_menu_separator_imp (ev_children.item)
+				loop
+					radio_imp ?= ev_children.item
+					if radio_imp /= Void then
+						if rgroup = Void then
+							create rgroup.make
+						else
+							uncheck_item (radio_imp.id)
+						end
+						radio_imp.set_radio_group (rgroup)
+					end							
+					ev_children.forth
+				end
+				if rgroup /= Void then
+					sep_imp.set_radio_group (rgroup)
+				end
 				insert_separator (pos - 1)
 			else
 				menu_imp ?= item_imp
@@ -64,16 +139,21 @@ feature {NONE} -- Implementation
 
 					radio_imp ?= item_imp
 					if radio_imp /= Void then
+						-- Attach it to a radio group.
 						sep_imp := separator_imp_by_index (pos)
 						if sep_imp /= Void then
+							-- It follows a separator.
 							if sep_imp.radio_group = Void then
 								sep_imp.create_radio_group
+								-- First item inserted in the group is selected.
 								radio_imp.enable_select
 							end
 							radio_imp.set_radio_group (sep_imp.radio_group)
 						else
+							-- It is above any separator.
 							if radio_group = Void then
 								create radio_group.make
+								-- First item inserted in the group is selected.
 								radio_imp.enable_select
 							end
 							radio_imp.set_radio_group (radio_group)
@@ -81,6 +161,15 @@ feature {NONE} -- Implementation
 					end
 				end
 			end
+			ev_children.go_i_th (pos - 1)
+		end
+
+	is_menu_separator_imp (item_imp: EV_ITEM_IMP): BOOLEAN is
+		local
+			sep_imp: EV_MENU_SEPARATOR_IMP
+		do
+			sep_imp ?= item_imp
+			Result := sep_imp /= Void
 		end
 
 	remove_item (item_imp: EV_ITEM_IMP) is
@@ -88,16 +177,59 @@ feature {NONE} -- Implementation
 		local
 			pos: INTEGER
 			menu_item_imp: EV_MENU_ITEM_IMP
+			sep_imp: EV_MENU_SEPARATOR_IMP
+			radio_imp: EV_RADIO_MENU_ITEM_IMP
+			rgroup: like radio_group
 		do
 			menu_item_imp ?= item_imp
 			pos := ev_children.index_of (menu_item_imp, 1)
+
+				-- Handle radio grouping.
+			sep_imp ?= item_imp
+			radio_imp ?= item_imp
+			if sep_imp /= Void or else radio_imp /= Void then
+				-- Find the radio-group we need to modify.
+				from
+					rgroup := radio_group
+					ev_children.start
+				until
+					ev_children.item = menu_item_imp
+				loop
+					sep_imp ?= ev_children.item
+					if sep_imp /= Void then
+						rgroup := sep_imp.radio_group
+					end
+					ev_children.forth
+				end
+				-- `rgroup' is now the group above `item_imp'.
+				if radio_imp /= Void then
+					-- Remove from `rgroup'.
+					radio_imp.remove_from_radio_group
+				else
+					sep_imp ?= item_imp
+					if sep_imp.radio_group /= Void then
+						-- Merge `rgroup' with the one from `sep_imp'.
+						from
+							sep_imp.radio_group.last.enable_select
+							sep_imp.radio_group.start
+						until
+							sep_imp.radio_group.empty
+						loop
+							uncheck_item (sep_imp.radio_group.item.id)
+							sep_imp.radio_group.item.set_radio_group (rgroup)
+						end
+						sep_imp.remove_radio_group
+					end
+				end
+			end
+
 			delete_position (pos - 1)
-			ev_children.go_i_th (pos)
-			ev_children.remove
+			ev_children.prune (menu_item_imp)
 		end
 
 	destroy is
 		do
+			--| FIXME
 		end
 
 	radio_group: LINKED_LIST [EV_RADIO_MENU_ITEM_IMP]
@@ -105,7 +237,7 @@ feature {NONE} -- Implementation
 	separator_imp_by_index (an_index: INTEGER): EV_MENU_SEPARATOR_IMP is
 			-- Get the impl. of last separator or `Void'.
 		require
-			index_within_bounds: index > 0 and then index <= ev_children.count
+			index_within_bounds: an_index > 0 and then an_index <= ev_children.count
 		local
 			cur: CURSOR
 			cur_item: INTEGER
@@ -177,6 +309,9 @@ end -- class EV_MENU_ITEM_LIST_IMP
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.6  2000/02/24 01:41:22  brendel
+--| Fully implemented radio item grouping.
+--|
 --| Revision 1.5  2000/02/23 02:23:16  brendel
 --| Implemented radio grouping separated by menu-separators.
 --| Added feature `menu_item_clicked' that tries to find the menu-item that

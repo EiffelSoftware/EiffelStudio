@@ -90,6 +90,12 @@ feature {WIZARD_WINDOW} -- Basic Operations
 			ready_to_exit: history.count=0
 		end
 
+	show_help is
+			-- Show contextual help.
+		do
+			history.item.display_help
+		end
+		
 feature {NONE} -- Internal Operations
 
 	proceed_with_new_state(a_window: WIZARD_STATE_WINDOW) is

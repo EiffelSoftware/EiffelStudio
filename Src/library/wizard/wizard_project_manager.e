@@ -9,6 +9,9 @@ class
 
 inherit
 	EV_APPLICATION
+		undefine
+			help_engine
+		end
 
 	WIZARD_SHARED
 		undefine

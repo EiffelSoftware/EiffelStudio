@@ -30,6 +30,7 @@ feature -- Basic Operations
 			local_pixmap: EV_PIXMAP
 			interior_box: EV_HORIZONTAL_BOX
 			message_and_title_box: EV_VERTICAL_BOX
+			tuple: TUPLE
 		do
 			create title
 			title.set_background_color (white_color)
@@ -68,7 +69,10 @@ feature -- Basic Operations
 			interior_box.extend (vertical_separator)
 			interior_box.disable_item_expand (vertical_separator)
 			interior_box.extend (message_and_title_box) -- Expandable item
-			main_box.extend (interior_box)			
+			main_box.extend (interior_box)
+
+			create tuple.make
+			choice_box.set_help_context (~create_help_context (tuple))
 		end
 
 	pixmap_location: FILE_NAME is
@@ -118,7 +122,14 @@ feature -- Basic Operations
 			end
 		end
 
-
+	current_help_context: WIZARD_HELP_CONTEXT is
+			-- Help context for this window
+		local
+			hc: FUNCTION [ANY, TUPLE, EV_HELP_CONTEXT]
+		do
+			hc := choice_box.help_context
+			Result ?= hc.item (hc.operands)		
+		end		
 
 	choice_box: EV_VERTICAL_BOX
 

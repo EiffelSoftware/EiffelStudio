@@ -28,7 +28,8 @@ inherit
 			destroy,
 			interface,
 			pnd_press,
-			set_pixmap
+			set_pixmap,
+			on_parented
 		end
 
 	EV_ARRAYED_LIST_ITEM_HOLDER_IMP [EV_TREE_ITEM]
@@ -124,6 +125,45 @@ feature -- {EV_TREE_IMP}
 
 	set_pixmap (p: EV_PIXMAP) is
 			-- Assign `p' to the displayed pixmap.
+		do
+			if pixmap = Void then
+				create pixmap
+			end
+			pixmap.copy (p)
+				-- We copy `p' into pixmap.
+			if top_parent_imp /= Void then
+				-- If the item is currently contained in the tree then
+				set_pixmap_in_parent
+					-- Update the parent's image list.
+			end
+		end
+
+	on_parented is
+			-- `Current' has just been parented.
+			-- Because this message is only recieved when a tree item becomes the child of a tree,
+			-- we need to recurse through all children of the item and send this message.
+		local
+			original_index: INTEGER
+		do
+			original_index := ev_children.index
+			from
+				ev_children.start
+			until
+				ev_children.off
+			loop
+				ev_children.item.on_parented
+				ev_children.forth
+			end
+			ev_children.go_i_th (original_index)
+			if pixmap /= Void then
+				set_pixmap_in_parent
+			end
+		ensure then
+			index_not_changed: ev_children.index = old ev_children.index
+		end
+
+	set_pixmap_in_parent is
+			-- Add the pixmap to the parent by updating the parent's image list.
 		local
 			p_imp: EV_PIXMAP_IMP
 			loc_image_list: WEL_IMAGE_LIST
@@ -131,9 +171,6 @@ feature -- {EV_TREE_IMP}
 			current_images: HASH_TABLE [INTEGER, INTEGER]
 			item_value: INTEGER
 		do
-			create pixmap
-			pixmap.copy (p)
-				-- We copy `p' into pixmap.
 			p_imp := pixmap_imp
 			loc_top_parent_imp := top_parent_imp
 			loc_image_list := loc_top_parent_imp.image_list
@@ -426,6 +463,9 @@ end -- class EV_TREE_ITEM_IMP
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.42  2000/03/24 20:51:52  rogers
+--| Added on_parented and set_pixmap_in_parent. This allows the pixmaps to be set before parenting the items.
+--|
 --| Revision 1.41  2000/03/24 19:16:20  rogers
 --| Redefined initialize from EV_ARRAYED_LIST_ITEM_HOLDER_IMP. Removed commented PND inheritence.
 --|

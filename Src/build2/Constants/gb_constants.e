@@ -530,9 +530,7 @@ feature -- Warning Dialogs
 		
 	Reserved_word_warning: STRING is "' is a reserved word.%NPlease select a different class name."
 
-	Component_invalid_name_warning: STRING is " is not a valid Component name.%NComponent names should only include%N%
-		%alphanumeric characters or underscores,%Nand start with an alphabetic character.%N%
-		%please select a different component name."
+	Component_invalid_name_warning: STRING is " is not a valid Component name.%N%NComponent names must be unique, start with an alphabetic character%Nand only include alphanumeric characters and underscores.%N%NPlease select a different component name."
 		
 	Event_feature_name_warning: STRING is "Please correct invalid feature names (highlighted in red).%N%NPossible causes include :-%N   Name already used as object name in system.%N   Name already used as feature name in system%N   Name is an Eiffel reserved word."
 	

@@ -6,7 +6,7 @@
 		<paragraph>The windows tool (
 			<image>
 				<url>/images/eiffelstudio/icons/icon_windows_color.gif</url>
-			</image> ) gives a list of opened development windows.
+			</image>) gives a list of opened development windows.
 		</paragraph>
 		<paragraph>
 			<image>
@@ -22,9 +22,7 @@
 		<paragraph>It is also linked to the 
 			<link>
 				<url>20_window_menu.xml</url>
-				<label>
-					<bold>Window</bold>
-				</label>
+				<label>Window menu</label>
 			</link> menu.
 		</paragraph>
 	</paragraph></document>

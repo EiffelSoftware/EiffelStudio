@@ -25,7 +25,7 @@
 			</image>
 		</paragraph>
 		<paragraph>Fig. 1: Search panel</paragraph>
-		<paragraph>In the top part, you will find a combo box and a check box. The title of this text field is "Search for": it will be used to enter the pattern you want to look for. The button is labeled "Replace with". If you click on it, another text field will appear. If you click again, the second text field will be hidden. This text field will be used to enter the word which you want the editor to use to replace found patterns.
+		<paragraph>In the top part, you will find a combo box and a check box. The title of this text field is "Search for:", it will be used to enter the pattern you want to look for. The button is labeled "Replace with". If you click on it, another text field will appear. If you click again, the second text field will be hidden. This text field will be used to enter the word which you want the editor to use to replace found patterns.
 			<line_break/> In the middle part of the search panel, you will find search options. They are described below.
 			<line_break/> The bottom part contains two buttons: "Search" and "Replace". Click on the first one to launch the search for the pattern entered in the "Search for" field. The "Replace" button will be active only if the "Replace with" field is displayed. Press this button if you want to replace the last found pattern by the contents of the "Replace with" text field.
 		</paragraph>
@@ -57,9 +57,10 @@
 		<seealso>
 			<bold>See Also</bold>
 			<line_break/>
-			<link>
+			There are keyboard shortcuts and menu entries to launch searches without using the search tool directly. They are described the 			<link>
 				<url>../20_editor/50_search_functionality.xml</url>
-				<label>Editor section</label>
-			</link>
+				<label>editor section</label>
+			</link> of this help. 
+
 		</seealso>
 	</paragraph></document>

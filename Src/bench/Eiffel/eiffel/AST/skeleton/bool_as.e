@@ -50,8 +50,7 @@ feature -- Type check
 	byte_node: BOOL_CONST_B is
 			-- Associated byte code
 		do
-			!! Result
-			Result.set_value (value)
+			create Result.make (value)
 		end
 
 feature -- Output

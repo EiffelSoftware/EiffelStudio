@@ -9,27 +9,7 @@ indexing
 deferred class
 	EV_FONTABLE_IMP
 
-inherit
---	WEL_CONTROL
---		rename
---			font as wel_font,
---			set_font as wel_set_font 
---		undefine
-				-- We undefine all the features that are not necessaty here,
-				-- and that have been redefine by EV_WIDGET_IMP or 
-				-- EV_PRIMITIVE_IMP
---			set_width,
---			set_height,
---			destroy,
---			remove_command
---		end
-
 feature -- Access
-
---	wel_window: WEL_CONTROL is
-			-- Actual wel_window
---		deferred
---		end
 
 	font: EV_FONT is
 			-- font of current primitive

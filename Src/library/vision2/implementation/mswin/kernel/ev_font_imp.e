@@ -12,6 +12,7 @@ inherit
 	
 creation
 	make,
+	make_by_name,
 	make_by_wel
 
 feature  -- Initialization
@@ -21,6 +22,14 @@ feature  -- Initialization
 		do
 			!WEL_SYSTEM_FONT! wel_font.make
 			!! wel_log_font.make_by_font (wel_font)
+		end
+
+	make_by_name (a_font: EV_FONT; a_name: STRING) is
+			-- Create the font corresponding to the given name.
+			-- The font is directly readed on a file.
+		do
+			!! wel_log_font.make (10, a_name)
+			!! wel_font.make_indirect (wel_log_font)
 		end
 
 	make_by_wel (a_wel_font: WEL_FONT) is
@@ -51,22 +60,31 @@ feature -- Status report
 			Result := text_metrics.ascent
 		end
 
-	average_width: INTEGER is
+	descent: INTEGER is
+			-- Descent value in pixel of the font loaded for `a_widget'.
+		do
+			Result := text_metrics.descent
+		end
+
+	average_character_width: INTEGER is
 			-- Width of all characters in the font in tenth of pixel
 		do
 			Result := text_metrics.average_character_width
 		end
 
+	maximum_character_width: INTEGER is
+			-- Width of the widest character in the font
+		do
+			Result := text_metrics.maximum_character_width
+		end
+
+	--XX Are the three following features usefull ?
+	--XX And anyway, what does it do ?
+
 	character_set: STRING is
 			-- (iso8859-1, ...)
 		do
 			Result := "*-*" 
-		end
-
-	descent: INTEGER is
-			-- Descent value in pixel of the font loaded for `a_widget'.
-		do
-			Result := text_metrics.descent
 		end
 
 	family: STRING is
@@ -80,6 +98,8 @@ feature -- Status report
 		do
 			Result := "*" 
 		end
+
+	--XX
 
 	horizontal_resolution: INTEGER
 			-- Horizontal resolution of screen for which
@@ -234,6 +254,7 @@ feature -- Status report
 	point: INTEGER
 			-- Size of font in tenth of points (1 point = 1/72 of an inch)
 
+-- XX is this usefull ?
 	slant: CHARACTER is
 			-- Slant of font (o, r, i...)
 		do
@@ -337,6 +358,7 @@ feature -- Status report
 	vertical_resolution: INTEGER
 			-- Vertical resolution of screen for which the font is designed
 
+	--XX same question, what is this.
 	weight: STRING is
 			-- Weight of font (Bold, Medium...)
 		do
@@ -359,7 +381,7 @@ feature -- Status setting
 		end
 
 	set_charset (a_charset: STRING) is
-			-- Set the charset to a vlaue based on `a_charset'
+			-- Set the charset to a value based on `a_charset'
 		do
 			if a_charset.is_equal ("ansi") then
 				wel_log_font.set_ansi_character_set

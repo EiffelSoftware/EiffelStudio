@@ -21,7 +21,8 @@ inherit
 			set_height,
 			set_size,
 			set_x,
-			set_y
+			set_y,
+			destroy
 		end
 
 	PRIMITIVE_WINDOWS
@@ -34,7 +35,8 @@ inherit
 			set_height,
 			set_size,
 			set_x,
-			set_y
+			set_y,
+			destroy
 		select
 			set_managed
 		end
@@ -282,17 +284,17 @@ feature -- Status setting
 			local_menu: WEL_MENU
 			wc:WEL_COMPOSITE_WINDOW
 		do
-			if not realized then
-				if not in_menu then
+			if not in_menu then
+				if not realized then
 					wc ?= parent
 					make_with_coordinates (wc, "", x, y, width, height)
-				else
-					local_menu ?= parent
-					check
-						local_menu_exists: local_menu /= Void
-					end
-					local_menu.append_separator
 				end
+			else
+				local_menu ?= parent
+				check
+					local_menu_exists: local_menu /= Void
+				end
+				local_menu.append_separator
 			end
 		end
 
@@ -366,6 +368,33 @@ feature -- Status setting
 			double := False
 			if exists then
 				invalidate
+			end
+		end
+
+feature -- Removal
+
+	destroy (wid_list: LINKED_LIST [WIDGET]) is
+			-- Destroy Current.
+		local
+			ww: WIDGET_WINDOWS
+		do
+			if
+				in_menu and then
+				managed
+			then
+				set_managed (False)
+			end
+			if exists then
+				wel_destroy
+			end
+			from
+				wid_list.start
+			until
+				wid_list.after
+			loop
+				ww ?= wid_list.item.implementation
+				actions_manager_list.deregister (ww)
+				wid_list.forth
 			end
 		end
 

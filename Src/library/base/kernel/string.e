@@ -792,6 +792,17 @@ feature -- Removal
 			Empty_area: capacity = 0
 		end;
 
+	clear_all is
+			-- Reset all characters and keep current `capacity
+		require
+			area_exists: area /= Void
+		do
+			count := 0
+		ensure
+			Empty_string: count = 0
+			Same_area: capacity = old capacity
+		end
+
 feature -- Resizing
 
 	adapt_size is

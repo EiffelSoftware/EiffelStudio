@@ -44,10 +44,7 @@ feature
 					-- Not in cache and the routine id is not associated
 					-- to a routine table of deferred features only.
 				Result := Tmp_poly_server.item (rout_id);
-				if is_full then
-					remove;
-				end;
-				put (Result);
+				force (Result)
 			end;
 		end;
 

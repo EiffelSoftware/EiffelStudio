@@ -404,16 +404,11 @@ feature -- Update
 
 feature -- Focus Access
 
-	initial_x: INTEGER is
-			-- Initial x coordinate for drag
+	initial_coord: COORD_XY is
+			-- Initial coordinate for drag
 		do
-			Result := x_coordinate (focus_start) + real_x;
-		end;
-
-	initial_y: INTEGER is
-			-- Initial y coordinate for drag
-		do
-			Result := y_coordinate (focus_start) + real_y;
+			Result := coordinate (focus_start);
+			Result.set (Result.x + real_x, Result.y + real_y);
 		end;
 
 feature -- Update

@@ -10,25 +10,26 @@ deferred class
 
 inherit
 	EV_TEXT_FIELD_I
+		
 
-feature -- Access
-
-	get_item (index: INTEGER): EV_COMBO_BOX_ITEM is
-			-- Text at the one-based `index'
-		require
-			exists: not destroyed
-			index_large_enough: index > 0
-			index_small_enough: index < count
-		deferred
-		ensure
-			result_not_void: Result /= Void
+	EV_LIST_I
+		undefine
+			build
 		end
 
-	selected_item: EV_COMBO_BOX_ITEM is
-			-- Give the item which is currently selected
-		require
-			exists: not destroyed
-		deferred
+feature -- Status Report
+
+	is_multiple_selection: BOOLEAN is
+			-- Combo box does not allow multiple selection
+		do
+			Result := False
+		end
+
+feature -- Status setting
+
+	set_single_selection is
+			-- Do nothing, combo box is always single selection
+		do
 		end
 
 feature -- Measurement
@@ -39,53 +40,16 @@ feature -- Measurement
 		require
 			exists: not destroyed
 		deferred
-		end
+	end
 
-feature -- Status report
+feature {NONE} -- Implemntation
 
-	count: INTEGER is
-			-- number of items in the list of the combo-box
-		require
-			exists: not destroyed
-		deferred
-		end
-
-feature -- Status setting
-
-	select_item (index: INTEGER) is
-			-- Select an item at the one-based `index' of the list.
-		require
-			exists: not destroyed
-			index_large_enough: index > 0
-			index_small_enough: index <= count
-		deferred
-		end
-
-feature -- Element change
-
-	clear_items is
-			-- Remove all the elements of the combo-box.
-		require
-			exists: not destroyed
-		deferred
-		end
-
-feature -- Event : command association
-
-	add_selection_command (cmd: EV_COMMAND; arg: EV_ARGUMENTS) is	
-			-- Add `cmd' to the list of commands to be executed
-			-- when the selection has changed.
-		require
-			exists: not destroyed
-			valid_command: cmd /= Void
-		deferred
-		end
-
-feature {EV_COMBO_BOX_ITEM} -- Implementation
-
-	add_item (an_item: EV_COMBO_BOX_ITEM) is
-			-- Add an item to the list of the combo-box
-		deferred
+	set_multiple_selection is
+			-- Not allowed for a combo box
+		do
+			check
+				not_allowed_for_combo_box: False
+			end
 		end
 
 end -- class EV_COMBO_BOX_I

@@ -91,9 +91,6 @@ feature {NONE} -- Initialization
 			else
 				real_signal_connect (c_object, "size-allocate", agent gtk_marshal.on_size_allocate_intermediate (c_object, ?, ?, ?, ?), size_allocate_translate_agent)
 			end
-			
-	real_signal_connect (c_object, "configure-event", agent do_nothing, Void)
-	--| FIXME This is a hack to prevent the implementation object from saying goodbye.
 	
 			on_key_event_intermediary_agent := agent gtk_marshal.on_key_event_intermediary (c_object, ?, ?, ?)
 			real_signal_connect (visual_widget, "key_press_event", on_key_event_intermediary_agent, key_event_translate_agent)
@@ -579,27 +576,39 @@ feature {EV_WINDOW_IMP} -- Implementation
 			Result := False
 		end
 
+feature {EV_CONTAINER_IMP} -- Implementation
+
+	set_parent_imp (a_container_imp: EV_CONTAINER_IMP) is
+			-- Set `parent_imp' to `a_container_imp'.
+		do
+			parent_imp := a_container_imp
+		end
+		
 feature {NONE} -- Implementation
 
-	parent_imp: EV_CONTAINER_IMP is
+	--| IEK Reimplemented as an attribute to keep an explicit reference on parent container.
+	--| This coupling prevents the container from being unnecessarily disposed when the
+	--| parent container interface is not referenced from Eiffel and is unparented.
+	--| This unnecessary disposal would inturn force gtk to destroy `c_object'.
+	parent_imp: EV_CONTAINER_IMP-- is
 			-- Container widget that contains `Current'.
 			-- (Void if `Current' is not in a container)
 			--| Search back up through GtkWidget->parent to find a GtkWidget
 			--| with an EV_ANY_IMP attached.
-		local
-			c_parent: POINTER
-		do
-			from
-				c_parent := c_object
-			until
-				Result /= Void or c_parent = NULL
-			loop
-				c_parent := C.gtk_widget_struct_parent (c_parent)
-				if c_parent /= NULL then
-					Result ?= eif_object_from_c (c_parent)
-				end
-			end
-		end
+--		local
+--			c_parent: POINTER
+--		do
+--			from
+--				c_parent := c_object
+--			until
+--				Result /= Void or c_parent = NULL
+--			loop
+--				c_parent := C.gtk_widget_struct_parent (c_parent)
+--				if c_parent /= NULL then
+--					Result ?= eif_object_from_c (c_parent)
+--				end
+--			end
+--		end
 
 	top_level_window_imp: EV_WINDOW_IMP is
 		local

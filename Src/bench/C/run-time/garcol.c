@@ -205,20 +205,6 @@ rt_public int gc_running = 0;			/* Is the GC running */ /* %%zmt */
 rt_public double last_gc_time = 0; 		/* The time spent on the last collect, sweep or whatever the GC did */ /* %%zmt */
 rt_public int gc_ran = 0;				/* Has the GC been running */ /* %%zmt */
 
-
-/* For historical reasons, these definitions were moved here for VMS. 
- * The reasons were specious, and the definitions have been restored to 
- * retrieve.c, at least for VMS. I don't know about other platforms.
- * -dss
- *  Back to retrieve.c for all platforms -ET
- */
-/*#if defined EIF_VMS || defined EIF_OS2 || defined SYMANTEC_CPP
-/*#else	/* %%ss added */
-/*rt_public int r_fides;	/* moved here from retrieve.c */ /* %%zmt */
-/*rt_public char r_fstoretype;	/* moved here from retrieve.c */ /* %%zmt %/
-	 */
-#endif
-
 /* Spoilt chunks are put into a search table, to avoid taking them as 'from'
  * space more than once: for each spoilt chunk we find, we have to allocate a
  * new 'to' zone at the next partial scavenge.

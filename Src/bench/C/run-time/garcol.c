@@ -29,7 +29,7 @@
 #if ! defined CUSTOM || defined NEED_TIMER_H
 #include "eif_timer.h"
 #endif
-#include "eif_macros.h"
+#include "rt_macros.h"
 #include "eif_sig.h"
 #include "eif_urgent.h"
 #include "eif_search.h"
@@ -1996,6 +1996,8 @@ marked:		/* I need this goto label to avoid code duplication */
 
 	if (flags & EO_SPEC) {				/* Special object */
 
+		EIF_REFERENCE o_ref;
+
 		/* Special objects may have no references (e.g. an array of
 		 * integer or a string), so we have to skip those.
 		 */
@@ -2008,9 +2010,9 @@ marked:		/* I need this goto label to avoid code duplication */
 		 * second is the size of each item (for expandeds, the overhead of the
 		 * header is not taken into account).
 		 */
-		size = zone->ov_size & B_SIZE;		/* Fetch size of block */
-		size -= LNGPAD_2;					/* Go backward to 'count' */
-		offset = *(long *) (root + size);	/* Get the count (# of items) */
+
+		o_ref = RT_SPECIAL_INFO_WITH_ZONE(root, zone);
+		offset = RT_SPECIAL_COUNT_WITH_INFO(o_ref);	/* Get the count (# of items) */
 
 		/* Treat arrays of expanded object here, because we have a special
 		 * way of looping over the array (we must take the size of each item
@@ -2020,7 +2022,7 @@ marked:		/* I need this goto label to avoid code duplication */
 		 * to slow down the normal loop--RAM.
 		 */
 		 if (flags & EO_COMP) {
-			size = *(long *) (root + size + sizeof(long));	/* Item's size */
+			size = RT_SPECIAL_ELEM_SIZE_WITH_INFO(o_ref);	/* Item's size */
 			if (g_data.status & (GC_PART | GC_GEN)) {	/* Moving objects */
 				object = (EIF_REFERENCE *) (root + OVERHEAD);	/* First expanded */
 				for (; offset > 0; offset--) {			/* Loop over array */
@@ -2207,6 +2209,7 @@ marked: /* Goto label needed to avoid code duplication */
 		 */
 
 		if (flags & EO_SPEC) {
+			EIF_REFERENCE o_ref;
 
 			/* Special objects may have no references (e.g. an array of
 			 * integer or a string), so we have to skip those.
@@ -2221,9 +2224,8 @@ marked: /* Goto label needed to avoid code duplication */
 			 * second is the size of each item (for expandeds, the overhead of
 			 * the header is not taken into account).
 			 */
-			size = zone->ov_size & B_SIZE;			/* Fetch size of block */
-			size -= LNGPAD_2;						/* Go backward to 'count' */
-			count = offset = *(long *) (current + size);	/* Get # of items */
+			o_ref = RT_SPECIAL_INFO_WITH_ZONE(current, zone);
+			count = offset = RT_SPECIAL_COUNT_WITH_INFO(o_ref);	/* Get # of items */
 
 			/* Treat arrays of expanded object here, because we have a special
 			 * way of looping over the array (we must take the size of each item
@@ -2233,7 +2235,7 @@ marked: /* Goto label needed to avoid code duplication */
 			 * want to to slow down the normal loop--RAM.
 			 */
 			if (flags & EO_COMP) {
-				size = *(long *) (current + size + sizeof(long));	/* Item's size */
+				size = RT_SPECIAL_ELEM_SIZE_WITH_INFO(o_ref);	/* Item's size */
 				if (g_data.status & (GC_PART | GC_GEN)) {	/* Moving objects */
 					object = (EIF_REFERENCE *) (current + OVERHEAD);/* First expanded */
 					for (; offset > 1; offset--) {		/* Loop over array */
@@ -2463,9 +2465,7 @@ marked:
 			 * second is the size of each item (for expandeds, the overhead of
 			 * the header is not taken into account).
 			 */
-			size = zone->ov_size & B_SIZE;		/* Fetch size of block */
-			size -= LNGPAD_2;					/* Go backward to 'count' */
-			offset = *(long *) (node + size);	/* Get the count (# of items) */
+			offset = RT_SPECIAL_COUNT_WITH_ZONE(node, zone);	/* Get the count (# of items) */
 		} else
 			offset = References(Deif_bid(flags));	/* # of references */
 
@@ -2571,10 +2571,7 @@ not_explorable:
 			node = parent;
 			flags = HEADER(node)->ov_flags;
 			if (flags & EO_SPEC) {
-				zone = HEADER(node);
-				size = zone->ov_size & B_SIZE;
-				size -= LNGPAD_2;
-				offset = *(long *) (node + size);
+				offset = RT_SPECIAL_COUNT(node);
 			} else
 				offset = References(Deif_bid(flags));
 
@@ -2584,7 +2581,7 @@ not_explorable:
 				epush (&path_stack, (EIF_REFERENCE) position);
 
 			if ((flags & EO_SPEC) && (flags & EO_COMP)) {
-				size = *(long *) (node + size + sizeof(long));
+				size = RT_SPECIAL_ELEM_SIZE(node);
 				child = (EIF_REFERENCE) (node + OVERHEAD + (position - 1) * (size + OVERHEAD));
 			} else {
 				object = (EIF_REFERENCE *) node;
@@ -4150,6 +4147,7 @@ rt_private EIF_REFERENCE generation_mark(EIF_REFERENCE root)
 	 */
 
 	if (flags & EO_SPEC) {				/* Special object */
+		EIF_REFERENCE o_ref;
 
 		/* Special objects may have no references (e.g. an array of
 		 * integer or a string), so we have to skip those.
@@ -4163,9 +4161,9 @@ rt_private EIF_REFERENCE generation_mark(EIF_REFERENCE root)
 		 * second is the size of each item (for expandeds, the overhead of the
 		 * header is not taken into account).
 		 */
-		size = zone->ov_size & B_SIZE;		/* Fetch size of block */
-		size -= LNGPAD_2;					/* Go backward to 'count' */
-		offset = *(long *) (root + size);	/* Get the count (# of items) */
+
+		o_ref = RT_SPECIAL_INFO_WITH_ZONE(root, zone);
+		offset = RT_SPECIAL_COUNT_WITH_INFO(o_ref);	/* Get the count (# of items) */
 
 		/* Treat arrays of expanded object here, because we have a special
 		 * way of looping over the array (we must take the size of each item
@@ -4173,7 +4171,7 @@ rt_private EIF_REFERENCE generation_mark(EIF_REFERENCE root)
 		 */
 
 		 if (flags & EO_COMP) {
-			size = *(long *) (root + size + sizeof(long));	/* Item's size */
+			size = RT_SPECIAL_ELEM_SIZE_WITH_INFO(o_ref);	/* Item's size */
 			if (gen_scavenge & GS_ON) {					/* Moving objects */
 				object = (EIF_REFERENCE *) (root + OVERHEAD);	/* First expanded */
 				for (; offset > 0; offset--) {			/* Loop over array */
@@ -4359,6 +4357,7 @@ rt_private EIF_REFERENCE hybrid_gen_mark(EIF_REFERENCE root)
 		 * required. Special objects full of references are also explored.
 		 */
 		if (flags & EO_SPEC) {				/* Special object */
+			EIF_REFERENCE o_ref;
 
 			/* Special objects may have no references (e.g. an array of
 			 * integer or a string), so we have to skip those.
@@ -4372,9 +4371,8 @@ rt_private EIF_REFERENCE hybrid_gen_mark(EIF_REFERENCE root)
 			 * second is the size of each item (for expandeds, the overhead of
 			 * the header is not taken into account).
 			 */
-			size = zone->ov_size & B_SIZE;		/* Fetch size of block */
-			size -= LNGPAD_2;					/* Go backward to 'count' */
-			count = offset = *(long *) (current + size);	/* Get # items */
+			o_ref = RT_SPECIAL_INFO_WITH_ZONE(current, zone);
+			count = offset = RT_SPECIAL_COUNT_WITH_INFO(o_ref);	/* Get # items */
 
 			/* Treat arrays of expanded object here, because we have a special
 			 * way of looping over the array (we must take the size of each item
@@ -4382,7 +4380,7 @@ rt_private EIF_REFERENCE hybrid_gen_mark(EIF_REFERENCE root)
 			 */
 
 			if (flags & EO_COMP) {
-				size = *(long *) (current + size + sizeof(long));	/* Item's size */
+				size = RT_SPECIAL_ELEM_SIZE_WITH_INFO(o_ref);	/* Item's size */
 				if (gen_scavenge & GS_ON) {					/* Moving objects */
 					object = (EIF_REFERENCE *) (current + OVERHEAD);/* First expanded */
 					for (; offset > 1; offset--) {		/* Loop over array */
@@ -4580,9 +4578,7 @@ rt_private EIF_REFERENCE it_gen_mark(EIF_REFERENCE root)
 			 * second is the size of each item (for expandeds, the overhead of
 			 * the header is not taken into account).
 			 */
-			size = zone->ov_size & B_SIZE;		/* Fetch size of block */
-			size -= LNGPAD_2;					/* Go backward to 'count' */
-			offset = *(long *) (node + size);	/* Get the count (# of items) */
+			offset = RT_SPECIAL_COUNT_WITH_ZONE(node, zone);	/* Get the count (# of items) */
 		} else
 			offset = References(Deif_bid(flags));	/* # of references */
 
@@ -4688,10 +4684,7 @@ not_explorable:
 			node = parent;
 			flags = HEADER(node)->ov_flags;
 			if (flags & EO_SPEC) {
-				zone = HEADER(node);
-				size = zone->ov_size & B_SIZE;
-				size -= LNGPAD_2;
-				offset = *(long *) (node + size);
+				offset = RT_SPECIAL_COUNT(node);
 			} else
 				offset = References(Deif_bid(flags));
 
@@ -4701,7 +4694,7 @@ not_explorable:
 				epush (&path_stack, (EIF_REFERENCE) position);
 
 			if ((flags & EO_SPEC) && (flags & EO_COMP)) {
-				size = *(long *) (node + size + sizeof(long));
+				size = RT_SPECIAL_ELEM_SIZE(node);
 				child = (EIF_REFERENCE) (node + OVERHEAD + (position - 1) * (size + OVERHEAD));
 			} else {
 				object = (EIF_REFERENCE *) node;
@@ -5934,7 +5927,7 @@ rt_private int all_subreferences_processed (EIF_REFERENCE root)
 		return 1;
 	}
 	
-	refs = *(long *) (root + ((HEADER (root)->ov_size & B_SIZE) - LNGPAD_2));
+	refs = RT_SPECIAL_COUNT(root);
 
 	for (i = 0; i < refs; i++)
 	{
@@ -5983,15 +5976,13 @@ rt_private int refers_new_object_not_updated(register EIF_REFERENCE object)
 	register2 uint32 flags;			/* Eiffel flags */
 	register3 int refs;				/* Number of references */
 	register4 EIF_REFERENCE root;			/* Address of referred object */
-	register5 uint32 size;			/* Size in bytes of an item */
 
 	REQUIRE ("Special rememvered set valid", object);
 	REQUIRE ("Special", HEADER (object)->ov_flags & EO_SPEC);
 	REQUIRE ("Full of references", HEADER (object)->ov_flags & EO_REF);
 
 	flags = HEADER(object)->ov_flags;	/* Fetch Eiffel flags */
-	size = (HEADER(object)->ov_size & B_SIZE) - LNGPAD(2);
-	refs = *(long *) (object + size);
+	refs = RT_SPECIAL_COUNT(object);
 
 	for (; refs != 0; refs--, object += REFSIZ) {
 		root = *(EIF_REFERENCE *) object;			/* Get reference */
@@ -6031,12 +6022,13 @@ rt_shared int refers_new_object(register EIF_REFERENCE object)
 	size = REFSIZ;
 	flags = HEADER(object)->ov_flags;	/* Fetch Eiffel flags */
 	if (flags & EO_SPEC) {				/* Special object */
+		EIF_REFERENCE o_ref;
 		if (!(flags & EO_REF))			/* (see recursive_mark() for details) */
 			return 0;					/* No references at all */
-		size = (HEADER(object)->ov_size & B_SIZE) - LNGPAD_2;
-		refs = *(long *) (object + size);
+		o_ref = RT_SPECIAL_INFO(object);
+		refs = RT_SPECIAL_COUNT_WITH_INFO(o_ref);
 		if (flags & EO_COMP)			/* Composite object = has expandeds */
-			size = *(long *) (object + size + LNGSIZ) + OVERHEAD;
+			size = RT_SPECIAL_ELEM_SIZE_WITH_INFO(o_ref) + OVERHEAD;
 		else
 			size = REFSIZ;		/* Usual item size */
 	} else

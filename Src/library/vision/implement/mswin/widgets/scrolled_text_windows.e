@@ -192,8 +192,11 @@ feature {NONE} -- Implementation
 		local
 			options: INTEGER
 		do
-			options := Eco_autowordselection + Eco_nohidesel +
-				eco_savesel
+			options := Eco_autovscroll + Eco_nohidesel + 
+					Eco_selectionbar + eco_savesel
+			if not is_word_wrap_mode then
+				options := options + Eco_autohscroll
+			end
 			set_options (Ecoop_set, options)
 		end
 

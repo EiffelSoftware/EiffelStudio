@@ -58,6 +58,7 @@ interface,,,,,,,
 ,3,Use `append' on Vision2 lists and trees instead of `extend' to help GTK optimize things,Ian,INT0053
 ,4,Enable user to define their own command. Where the command should contain the name of the command to launch and where with some place holders filled by EiffelStudio (such as $target and others…),Paul Crismer,INT0054
 ,3,It would be nice to sort clusters alphabetically in the projects settings,Xavier,INT0055
+,2,Gray out minimize buttons on tools when only one tool is displayed,Julian,INT0056
 
 
 
@@ -136,6 +137,8 @@ editor,,,,
 ,2,Add a reload command to discard all unsaved changes,Xavier,EDT0010
 ,2,Use a different highlight for found/picked words and for the selection,Xavier,EDT0011
 ,3,Shift F3 should be able to search the selection backwards for symmetry with F3,Raphael,EDT0012
+,3,Only display syntax errors once per class instead of once per editor,Julian,EDT0013
+,5,Give a warning when loading a class that is already being edited elsewhere,Julian,EDT0014
 
 
 

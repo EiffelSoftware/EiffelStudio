@@ -45,15 +45,15 @@ rt_public struct s_table *s_create(uint32 size)
 
 rt_public int s_put(struct s_table *tbl, char *object)
 {
-	/* Insert `object' in `h_table'. Return `S_CONFLICT' if already in it,
-	 * otherwise return `S_OK'.
+	/* Insert `object' in `h_table'. Return `EIF_SEARCH_CONFLICT' if already in it,
+	 * otherwise return `EIF_SEARCH_OK'.
 	 */
 
 	int32 pos; 		/* Table position */
 
 	pos = s_search(tbl,object);
-	if (pos == S_FOUND)
-		return S_CONFLICT;
+	if (pos == EIF_SEARCH_FOUND)
+		return EIF_SEARCH_CONFLICT;
 	else {
 		if ((tbl->s_size * 80) <= (tbl->s_count * 100)) {
 			s_resize(tbl);
@@ -61,13 +61,13 @@ rt_public int s_put(struct s_table *tbl, char *object)
 		}
 		tbl->s_keys[pos] = object;
 		tbl->s_count++;
-		return S_OK;
+		return EIF_SEARCH_OK;
 	}
 }
 
 rt_public int32 s_search(struct s_table *tbl, char *object)
 {
-	/* Internal search of `object' in `tbl'. Return S_FOUND if found, otherwise
+	/* Internal search of `object' in `tbl'. Return EIF_SEARCH_FOUND if found, otherwise
 	 * position where to insert it.
 	 */
 
@@ -84,7 +84,7 @@ rt_public int32 s_search(struct s_table *tbl, char *object)
 		if (old_key == (char *) 0)
 			return position;			/* `object' not found */
 		else if (old_key == object)
-			return S_FOUND;				/* `object' found */
+			return EIF_SEARCH_FOUND;				/* `object' found */
 	}
 }
 

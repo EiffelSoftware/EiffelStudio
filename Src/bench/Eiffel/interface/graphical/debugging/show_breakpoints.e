@@ -31,13 +31,12 @@ creation
 
 	make
 
-
 feature -- Initialization
 
-	make (a_text_window: TEXT_WINDOW) is
+	make (a_tool: TOOL_W) is
 			-- Initialize the command.
 		do
-			init (a_text_window);
+			init (a_tool);
 			if tool = Project_tool then
 				do_flat := 
 					Project_tool_resources.debugger_do_flat_in_breakpoints.actual_value
@@ -60,10 +59,10 @@ feature -- Execution
 			end
 		end;
 
-	execute_ok_action (a_cust_tool: like associated_custom_tool) is
+	execute_save_action (a_cust_tool: like associated_custom_tool) is
 			-- Action performed when ok button is activated
 		do
-				-- *** FIXME need to save resource
+				-- ******* FIXME need to save resource
 			execute_apply_action (a_cust_tool)
 		end;
 

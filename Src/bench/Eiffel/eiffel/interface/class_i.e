@@ -346,7 +346,28 @@ feature {COMPILER_EXPORTER} -- Properties
 	changed: BOOLEAN
 			-- Must the class be recompiled ?
 
+feature {COMPILER_EXPORTER, EB_FILEABLE} -- Setting
+
+	set_date is
+			-- Assign `d' to `date'
+		local
+			str: ANY
+		do
+			str := file_name.to_c
+			date := eif_date ($str)
+		end
+
 feature {COMPILER_EXPORTER, EB_CLUSTERS} -- Setting
+
+	set_cluster (c: like cluster) is
+			-- Assign `c' to `cluster'.
+		do
+			cluster := c
+		ensure
+			cluster_set: cluster = c
+		end
+
+feature {COMPILER_EXPORTER} -- Setting
 
 	reset_options is
 			-- Reset option values of class.
@@ -384,23 +405,6 @@ feature {COMPILER_EXPORTER, EB_CLUSTERS} -- Setting
 			compiled_class := Void
 		ensure
 			void_compiled_class: compiled_class = Void
-		end
-
-	set_date is
-			-- Assign `d' to `date'
-		local
-			str: ANY
-		do
-			str := file_name.to_c
-			date := eif_date ($str)
-		end
-
-	set_cluster (c: like cluster) is
-			-- Assign `c' to `cluster'.
-		do
-			cluster := c
-		ensure
-			cluster_set: cluster = c
 		end
 
 	reset_class_c_information (cl: CLASS_C) is

@@ -298,7 +298,7 @@ feature {NONE} -- Implementation
 				names.forth
 			end
 		end
-		
+
 	serialize_consumed_types is
 			-- Build `consumed_types'.
 		local
@@ -336,7 +336,7 @@ feature {NONE} -- Implementation
 						-- An error occured during the initialization of type.
 						-- Notice the problem on this specific type and try the next type.
 					if type_consumer.consumed_type.dotnet_name /= Void then
-						set_error (Type_initialization_error, "One of the features of "+ type_consumer.consumed_type.dotnet_name +" is invalid.")
+						set_error (Type_initialization_error, "One of the features of " + type_consumer.consumed_type.dotnet_name +" is invalid.")
 					else	
 						set_error (Type_initialization_error, "")
 					end

@@ -244,7 +244,7 @@ typedef unsigned char YY_CHAR;
 typedef int xx_state_type;
 
 #define YY_USES_REJECT
-FILE *xxin = stdin, *xxout = stdout;
+FILE *xxin = NULL, *xxout = NULL;
 extern int xxlineno;
 int xxlineno = 1;
 extern char xxtext[];

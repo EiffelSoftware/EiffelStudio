@@ -90,7 +90,7 @@ feature {NONE} -- Processing
 			class_id := a_class.class_id
 			ext_class ?= a_class
 			if ext_class /= Void then
-				ext_class.initialize_from_xml_data
+				ext_class.process_degree_5
 			else
 				if a_class.parsing_needed then
 						-- Parse class and save a backup if requested.

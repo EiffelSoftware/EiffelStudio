@@ -573,9 +573,9 @@ feature {NONE} -- Implementation
 							l_factory.new_id_sd (l_missing.item.cluster_name, True),
 							l_factory.new_id_sd (l_missing.item.assembly_name, True),
 							l_factory.new_id_sd (l_missing.item.prefix_name, True),
-							l_factory.new_id_sd (l_missing.item.version, True),
-							l_factory.new_id_sd (l_missing.item.culture, True),
-							l_factory.new_id_sd (l_missing.item.public_key_token, True))
+							Void,
+							Void,
+							Void)
 						ast.assemblies.extend (l_assembly)
 						l_missing.forth
 					end

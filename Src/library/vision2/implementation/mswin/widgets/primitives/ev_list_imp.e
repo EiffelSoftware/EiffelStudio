@@ -211,11 +211,6 @@ feature -- Status setting
 			else
 				ss_select_item (an_index - 1)
 			end
-			--| FIXME VB Presumed not to be needed anymore, since
-			--| redefinition of onlbn_selcancel
-			--|cwin_send_message (parent_item, Wm_command,
-			--|	Lbn_selchange * 65536 + id,
-			--|	cwel_pointer_to_integer (wel_item))
 		end
 
 	deselect_item (an_index: INTEGER) is
@@ -227,11 +222,6 @@ feature -- Status setting
 				if ss_selected and then ss_selected_item = an_index - 1 then
 					ss_unselect
 				end
-				--| FIXME VB Presumed not to be needed anymore, since
-				--| redefinition of onlbn_selcancel
-				--|cwin_send_message (wel_item, Lb_setcursel, -1, 0)
-				--|on_lbn_selchange
-				--|last_selected_item := Void
 			end
 		end
 
@@ -242,13 +232,6 @@ feature -- Status setting
 				ms_unselect_all
 			else
 				ss_unselect
-				--| FIXME VB Presumed not to be needed anymore, since
-				--| redefinition of onlbn_selcancel
-				--|if last_selected_item /= Void then
-				--|	-- If there is a selected item then
-				--|	on_lbn_selchange
-				--|nd
-				--|last_selected_item := Void
 			end
 		end
 
@@ -356,20 +339,23 @@ feature {EV_LIST_ITEM_IMP} -- Implementation
 		end
 
 	internal_propagate_pointer_press (keys, x_pos, y_pos, button: INTEGER) is
-			-- Propagate `keys', `x_pos' and `y_pos' to the appropriate item event.
+			-- Propagate `keys', `x_pos' and `y_pos' to the appropriate
+			-- item event.
 		local
 			it: EV_LIST_ITEM_IMP
 			pt: WEL_POINT
 		do
 			it := find_item_at_position (x_pos, y_pos)
 			pt := client_to_screen (x_pos, y_pos)
-				if it /= Void and it.is_transport_enabled and not parent_is_pnd_source then
+				if it /= Void and it.is_transport_enabled and not
+						parent_is_pnd_source then
 					it.pnd_press (x_pos, y_pos, button, pt.x, pt.y)
 				elseif pnd_item_source /= Void then 
 					pnd_item_source.pnd_press (x_pos, y_pos, button, pt.x, pt.y)
 				end
 			if it /= Void then
-				it.interface.pointer_button_press_actions.call ([x_pos,y_pos - it.relative_y, button, 0.0, 0.0, 0.0, pt.x, pt.y])
+				it.interface.pointer_button_press_actions.call ([x_pos,y_pos -
+					it.relative_y, button, 0.0, 0.0, 0.0, pt.x, pt.y])
 			end
 		end
 
@@ -424,7 +410,8 @@ feature {EV_ANY_I} -- Implementation
 			else
 				if ss_selected then
 					li_imp := ev_children @ (ss_selected_item + 1)
-					if last_selected_item /= Void and then li_imp /= last_selected_item then
+					if last_selected_item /= Void and then li_imp /=
+							last_selected_item then
 						notify_deselect (last_selected_item.interface)
 					end
 					notify_select (li_imp.interface)
@@ -441,9 +428,7 @@ feature {EV_ANY_I} -- Implementation
 	on_lbn_selcancel is
 			-- Cancel the selection.
 		do
-			if multiple_selection_enabled then
-				--| FIXME Do we have to do stuff here?
-			else
+			if not multiple_selection_enabled then
 				notify_deselect (last_selected_item.interface)
 				last_selected_item := Void
 			end
@@ -478,7 +463,8 @@ feature {EV_ANY_I} -- Implementation
 			-- List resized.
 		do
 			Precursor (size_type, a_height, a_width)
-			interface.resize_actions.call ([screen_x, screen_y, a_width, a_height])
+			interface.resize_actions.call ([screen_x, screen_y, a_width,
+				height])
 		end
 
 	on_mouse_move (keys, x_pos, y_pos: INTEGER) is
@@ -491,7 +477,8 @@ feature {EV_ANY_I} -- Implementation
 			it := find_item_at_position (x_pos, y_pos)
 			pt := client_to_screen (x_pos, y_pos)
 			if it /= Void then
-				it.interface.pointer_motion_actions.call ([x_pos,y_pos - it.relative_y, 0.0, 0.0, 0.0, pt.x, pt.y])
+				it.interface.pointer_motion_actions.call ([x_pos,y_pos -
+					lative_y, 0.0, 0.0, 0.0, pt.x, pt.y])
 			end
 			if pnd_item_source /= Void then
 				pnd_item_source.pnd_motion (x_pos, y_pos, pt.x, pt.y)
@@ -562,27 +549,31 @@ feature {EV_ANY_I} -- Implementation
 
 end -- class EV_LIST_IMP
 
---|----------------------------------------------------------------
---| EiffelVision: library of reusable components for ISE Eiffel.
---| Copyright (C) 1986-1998 Interactive Software Engineering Inc.
---| All rights reserved. Duplication and distribution prohibited.
---| May be used only with ISE Eiffel, under terms of user license. 
---| Contact ISE for any other use.
---|
---| Interactive Software Engineering Inc.
---| ISE Building, 2nd floor
---| 270 Storke Road, Goleta, CA 93117 USA
---| Telephone 805-685-1006, Fax 805-685-6869
---| Electronic mail <info@eiffel.com>
---| Customer support e-mail <support@eiffel.com>
---| For latest info see award-winning pages: http://www.eiffel.com
---|---------------------------------------------------------------
+--!-----------------------------------------------------------------------------
+--! EiffelVision2: library of reusable components for ISE Eiffel.
+--! Copyright (C) 1986-2000 Interactive Software Engineering Inc.
+--! All rights reserved. Duplication and distribution prohibited.
+--! May be used only with ISE Eiffel, under terms of user license. 
+--! Contact ISE for any other use.
+--!
+--! Interactive Software Engineering Inc.
+--! ISE Building, 2nd floor
+--! 270 Storke Road, Goleta, CA 93117 USA
+--! Telephone 805-685-1006, Fax 805-685-6869
+--! Electronic mail <info@eiffel.com>
+--! Customer support e-mail <support@eiffel.com>
+--! For latest info see award-winning pages: http://www.eiffel.com
+--!-----------------------------------------------------------------------------
 
 --|-----------------------------------------------------------------------------
 --| CVS log
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.64  2000/04/11 19:01:25  brendel
+--| Removed resolved FIXME's.
+--| Formatted for 80 columns.
+--|
 --| Revision 1.63  2000/04/11 16:59:51  rogers
 --| Removed direct inheritance from EV_PICK_AND_DROPABLE_ITEM_HOLDER_IMP.
 --|
@@ -637,16 +628,23 @@ end -- class EV_LIST_IMP
 --| Redefined initialize from EV_LIST_ITEM_HOLDER_IMP.
 --|
 --| Revision 1.51  2000/03/21 01:25:54  rogers
---| Renamed child_source -> pnd_child_source, set_child_source -> set_pnd_child_source. Added pnd_press.
+--| Renamed child_source -> pnd_child_source, set_child_source ->
+--| set_pnd_child_source. Added pnd_press.
 --|
 --| Revision 1.50  2000/03/17 23:40:34  rogers
---| Added the following features: list_is_pnd_source, child_source, set_child_Source, set_source_true, set_source_false. These fatures are now being reviewed and will be modified further. Implemented on_mouse_move and pnd_press.
+--| Added the following features: list_is_pnd_source, child_source,
+--| set_child_Source, set_source_true, set_source_false. These fatures are
+--| now being reviewed and will be modified further. Implemented on_mouse_move
+--| and pnd_press.
 --|
 --| Revision 1.49  2000/03/15 17:06:36  rogers
---| Removed commented code. Added internal_propagate_pointer_press, on_left_button_down, on_middle_button_down, on_right_button_down. Removed on_lbn_dblclick.
+--| Removed commented code. Added internal_propagate_pointer_press,
+--| on_left_button_down, on_middle_button_down, on_right_button_down.
+--| Removed on_lbn_dblclick.
 --|
 --| Revision 1.47  2000/03/14 23:53:09  rogers
---| Redefined on_mouse_move from EV_PRIMITIVE_IMP so items events can be called. Added find_item_at_position.
+--| Redefined on_mouse_move from EV_PRIMITIVE_IMP so items events can be
+--| called. Added find_item_at_position.
 --|
 --| Revision 1.46  2000/03/14 19:24:14  rogers
 --| renamed
@@ -661,25 +659,34 @@ end -- class EV_LIST_IMP
 --| Redefined on_size from WEL_LIST_BOX, so the resize_actions can be called.
 --|
 --| Revision 1.44  2000/03/07 00:11:56  rogers
---| The select actions are now always called on the child first before the list
+--| The select actions are now always called on the child first before the
+--| list
 --|
 --| Revision 1.43  2000/03/06 20:47:36  rogers
---| The list select and deselect action sequences now only return the selected item, so any calls to these action sequences have been modified.
+--| The list select and deselect action sequences now only return the selected
+--| item, so any calls to these action sequences have been modified.
 --|
 --| Revision 1.42  2000/02/29 23:13:24  rogers
---| Removed selected_item as it is no longer platform dependent, it now comes from EV_LIST_I.
+--| Removed selected_item as it is no longer platform dependent, it now comes
+--| from EV_LIST_I.
 --|
 --| Revision 1.41  2000/02/29 19:35:21  rogers
---| Selected item now returns the first item that is selected in the list when multiple selection is enabled.
+--| Selected item now returns the first item that is selected in the list when
+--| multiple selection is enabled.
 --|
 --| Revision 1.40  2000/02/25 21:41:12  rogers
---| In on_lbn_selchange, added code to handle the possibility of an item being destroyed within an action sequence.
+--| In on_lbn_selchange, added code to handle the possibility of an item
+--| being destroyed within an action sequence.
 --|
 --| Revision 1.39  2000/02/25 00:34:41  rogers
---| Clear selection, will only now call on_lbn_selchange when not in multiple_selection mode when there was an item selected. Fixes bug where an attempt to call the events on last_selected_item when it is Voidlast.interface.deselect_actions.call ([])
+--| Clear selection, will only now call on_lbn_selchange when not in
+--| multiple_selection mode when there was an item selected. Fixes bug where
+--| an attempt to call the events on last_selected_item when it is Void
+--| last.interface.deselect_actions.call ([])
 --|
 --| Revision 1.38  2000/02/24 21:18:58  rogers
---| Connected the select and de-select events to the list when in single selection mode. Multiple selection mode still needs connecting.
+--| Connected the select and de-select events to the list when in single
+--| selection mode. Multiple selection mode still needs connecting.
 --|
 --| Revision 1.37  2000/02/19 05:45:01  oconnor
 --| released
@@ -688,10 +695,13 @@ end -- class EV_LIST_IMP
 --| merged changes from prerelease_20000214
 --|
 --| Revision 1.35.6.9  2000/02/10 18:01:12  rogers
---| Removed the old command association. Implemented part of the new event system calls.
+--| Removed the old command association. Implemented part of the new event
+--| system calls.
 --|
 --| Revision 1.35.6.8  2000/02/09 17:36:49  rogers
---| Altered inheritence of interface. Now redefined and selected from EV_LIST_I, redefined from EV_LIST_ITEM_HOLDER_IMP, and renamed to ev_primitive_imp_interface from EV_PRIMITIVE_IMP.
+--| Altered inheritence of interface. Now redefined and selected from
+--| EV_LIST_I, redefined from EV_LIST_ITEM_HOLDER_IMP, and renamed to
+--| ev_primitive_imp_interface from EV_PRIMITIVE_IMP.
 --|
 --| Revision 1.35.6.7  2000/02/02 20:49:50  rogers
 --| Altered the inheritcance of interfaces slightly. See diff.
@@ -710,10 +720,12 @@ end -- class EV_LIST_IMP
 --| 	is_multiple_selection -> multiple_selection_enabled
 --|
 --| Revision 1.35.6.3  2000/01/15 01:47:40  rogers
---| Modified to comply with the major vision2 changes. For redefinitions, see diff. Implemanted interface.
+--| Modified to comply with the major vision2 changes. For redefinitions, see
+--| diff. Implemanted interface.
 --|
 --| Revision 1.35.6.2  1999/12/17 00:38:43  rogers
---| Altered to fit in with the review branch. Basic alterations, redefinitaions of name clashes etc. Make now takes an interface.
+--| Altered to fit in with the review branch. Basic alterations, redefinitaions
+--| of name clashes etc. Make now takes an interface.
 --|
 --| Revision 1.35.6.1  1999/11/24 17:30:32  oconnor
 --| merged with DEVEL branch

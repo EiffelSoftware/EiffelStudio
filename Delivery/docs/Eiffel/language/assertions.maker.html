@@ -217,7 +217,7 @@ had on routine entry. </P>
 
 <P>In its last version above, the class now includes a creation procedure,
 <I>make</I>. With the first version of <I>ACCOUNT</I>, clients used creation
-instructions such as !! <I>acc1</I> to create accounts; but then the default
+instructions such as <B><FONT COLOR="#0000FF">old</FONT></B> <I>acc1</I> to create accounts; but then the default
 initialization, setting balance to zero, violated the invariant. By having
 one or more creation procedures, listed in the <B><I><FONT COLOR="#0000FF">creation</FONT></I></B>
 clause at the beginning of the class text, a class offers a way to override
@@ -227,7 +227,7 @@ the default initializations. The effect of <BR>
 
     <ul>
 <DL>
-<DT>!!<I> acc1.make (5_500)</I> </DT>
+<DT><B><FONT COLOR="#0000FF">create</FONT></B><I> acc1.make (5_500)</I> </DT>
 </DL>
     </ul>
 

@@ -116,7 +116,7 @@ feature -- Status setting
 			end
 
 			if selected_button /= Void then
-				if selected_button.is_equal (ev_ok) then
+				if selected_button.is_equal (internal_accept) then
 					interface.ok_actions.call ([])
 				elseif selected_button.is_equal (ev_cancel) then
 					interface.cancel_actions.call ([])

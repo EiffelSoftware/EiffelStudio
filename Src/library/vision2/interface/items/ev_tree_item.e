@@ -17,25 +17,10 @@ class
 inherit
 	EV_TREE_NODE
 		undefine
-			off,
-			index_of,
-			search,
-			changeable_comparison_criterion,
-			occurrences,
-			has,
-			initialize,
-			is_equal
+			initialize
 		redefine
 			implementation,
 			is_in_default_state
-		end
-
-	EV_TREE_NODE_LIST
-		redefine
-			implementation,
-			is_in_default_state
-		select
-			parent
 		end
 
 create
@@ -47,7 +32,7 @@ feature -- Contract support
 	is_expandable: BOOLEAN is
 			-- Is `Current' able to expand or collapse.
 		do
-			Result := count > 0
+			Result := parent_tree /= Void and count > 0
 		end
 
 feature {NONE} -- Contract support
@@ -55,7 +40,7 @@ feature {NONE} -- Contract support
 	is_in_default_state: BOOLEAN is
 			-- Is `Current' in its default state?
 		do
-			Result := Precursor {EV_TREE_NODE} and Precursor {EV_TREE_NODE_LIST} 
+			Result := Precursor {EV_TREE_NODE}
 		end
 		
 feature {EV_ANY_I}-- Implementation

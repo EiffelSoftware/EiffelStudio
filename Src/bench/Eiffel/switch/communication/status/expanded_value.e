@@ -18,7 +18,7 @@ inherit
 			append_type_and_value,
 			type_and_value, expandable,
 			children, kind, append_value,
-			output_value
+			output_value, dump_value
 		end
 
 create {DEBUG_VALUE_EXPORTER}
@@ -83,6 +83,14 @@ feature -- Output
 				st.add_string (" = Unknown")
 			end
 		end;
+
+feature -- Access
+
+	dump_value: DUMP_VALUE is
+			-- Dump_value corresponding to `Current'.
+		do
+			create Result.make_expanded_object (dynamic_class)
+		end
 
 feature {ABSTRACT_DEBUG_VALUE} -- Output
 

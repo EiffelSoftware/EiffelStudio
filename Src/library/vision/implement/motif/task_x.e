@@ -163,7 +163,7 @@ feature {NONE} -- External features
 			"C"
 		end; 
 
-	c_task_create (context: POINTER; obj: G_ANY_I; cb: POINTER): POINTER is
+	c_task_create (app_ctxt: POINTER; obj: G_ANY_I; cb: POINTER): POINTER is
 		external
 			"C"
 		end; 

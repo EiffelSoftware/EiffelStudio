@@ -76,14 +76,71 @@ feature -- Constants
 			create Result.make_with_cursor (Cursors.transition_cursor)
 		end
 
+feature -- Context types
+
 	type_data_type: EV_PND_TYPE is
 		once
 			create Result.make_with_cursor (Cursors.type_cursor)
 		end
 
-	window_type: EV_PND_TYPE is
+	perm_wind_type: EV_PND_TYPE is
+			-- Type for perm windows context (PERM_WIND_C)
 		once
 			create Result.make_with_cursor (Cursors.window_cursor)
+		end
+
+	window_child_type: EV_PND_TYPE is
+			-- Type for context that accept only a window as parent
+		once
+			create Result.make_with_cursor (Cursors.type_cursor)
+		end
+
+	widget_type: EV_PND_TYPE is
+			-- Type for widget context that accept only a container as parent
+		once
+			create Result.make_with_cursor (Cursors.type_cursor)
+		end
+
+	menu_child_type: EV_PND_TYPE is
+			-- Type for context that accept only a menu holder as parent
+		once
+			create Result.make_with_cursor (Cursors.type_cursor)
+		end
+
+	menu_item_type: EV_PND_TYPE is
+			-- Type for menu_item that accept only a menu item holder as parent
+		once
+			create Result.make_with_cursor (Cursors.type_cursor)
+		end
+
+	toolbar_item_type: EV_PND_TYPE is
+			-- Type for context that accept only a tool-bar as parent
+		once
+			create Result.make_with_cursor (Cursors.type_cursor)
+		end
+
+	status_bar_item_type: EV_PND_TYPE is
+			-- Type for status bar item that accept only a status bar as parent
+		once
+			create Result.make_with_cursor (Cursors.type_cursor)
+		end
+
+	list_item_type: EV_PND_TYPE is
+			-- Type for list item that accept only a list as parent
+		once
+			create Result.make_with_cursor (Cursors.type_cursor)
+		end
+
+	multi_column_row_type: EV_PND_TYPE is
+			-- Type for m. c. row that accept only a m. c. list holder as parent
+		once
+			create Result.make_with_cursor (Cursors.type_cursor)
+		end
+
+	tree_item_type: EV_PND_TYPE is
+			-- Type for tree_item that accept only a tree item holder as parent
+		once
+			create Result.make_with_cursor (Cursors.type_cursor)
 		end
 
 end -- class PND_TYPES

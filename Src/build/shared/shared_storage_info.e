@@ -78,7 +78,7 @@ feature {NONE}
 			insert_commands
 		end
 
-	context_type_table: INT_H_TABLE [CONTEXT_TYPE] is
+	context_type_table: INT_H_TABLE [CONTEXT_TYPE [CONTEXT]] is
 		once
 			create Result.make (100)
 		end

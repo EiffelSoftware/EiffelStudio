@@ -29,6 +29,10 @@ feature {NONE} -- Initialization
 			<BUILD>
 
 				-- Initialize properties of all widgets.<SET>
+
+				-- Close the application when an interface close
+				-- request is recieved on `Current'. i.e. the cross is clicked.
+			close_request_actions.extend (agent ((create {EV_ENVIRONMENT}).application).destroy)
 		end
 
 end -- class <CLASS_NAME>

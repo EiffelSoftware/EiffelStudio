@@ -27,10 +27,8 @@ feature {NONE} -- Initialization
 		do
 			address := addr
 			initialize
-			timeout := default_timeout
 		ensure
 			address_set: address = addr
-			default_timeout_set: timeout = default_timeout
 		end
 		
 	initialize is
@@ -75,9 +73,6 @@ feature -- Access
 			Result := address.location
 		end
 
-	timeout: INTEGER
-			-- Duration of timeout in seconds
-		
 feature -- Measurement
 
 	count: INTEGER is
@@ -200,6 +195,9 @@ feature -- Status report
 		deferred
 		end
 	 
+	 timeout: INTEGER
+	 		-- Connection timeout
+			
 feature -- Status setting
 
 	open is
@@ -303,8 +301,9 @@ feature -- Status setting
 			address.set_password (pw)
 		end
 		
+		
 	set_timeout (n: INTEGER) is
-			-- Set timeout to `n' seconds.
+			-- Set connection timeout to `n'.
 		require
 			non_negative: n >= 0
 		do
@@ -313,14 +312,6 @@ feature -- Status setting
 			timeout_set: timeout = n
 		end
 
-	set_timeout_to_default is
-			-- Set timeout to default value.
-		do
-			timeout := default_timeout
-		ensure
-			default_timeout_set: timeout = default_timeout
-		end
-		
 	reset_proxy is
 			-- Reset proxy information.
 		do

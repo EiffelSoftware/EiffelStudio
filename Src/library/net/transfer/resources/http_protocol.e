@@ -87,6 +87,7 @@ feature -- Status setting
 					create main_socket.make_client_by_port 
 							(address.port, address.host)
 				end
+				main_socket.set_timeout (timeout)
 				main_socket.connect
 			end
 			if not is_open then

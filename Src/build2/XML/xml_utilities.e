@@ -447,6 +447,43 @@ feature -- Access
 			end
 		end
 		
+	all_elements_by_name (element: XM_ELEMENT; node_name: STRING): ARRAYED_LIST [XM_ELEMENT] is
+			-- Recursively remove all nodes named `node_name' from `element'.
+		require
+			element_not_void: element /= Void
+			node_name_not_void: node_name /= Void
+		do
+			create Result.make (10)
+			all_elements_by_name_internal (element, node_name, Result)
+		end
+		
+	all_elements_by_name_internal (element: XM_ELEMENT; node_name: STRING; elements: ARRAYED_LIST [XM_ELEMENT]) is
+			-- Recursively remove all nodes named `node_name' from `element'.
+		require
+			element_not_void: element /= Void
+			node_name_not_void: node_name /= Void
+			elements_not_void: elements /= Void
+		local
+			current_element: XM_ELEMENT
+			current_name: STRING
+		do
+			from
+				element.start
+			until
+				element.off
+			loop
+				current_element ?= element.item_for_iteration
+				if current_element /= Void then
+					current_name := current_element.name
+					if current_name.is_equal (node_name) then
+						elements.extend (current_element)
+					end
+					all_elements_by_name_internal (current_element, node_name, elements)
+				end
+				element.forth
+			end
+		end
+		
 feature {NONE} -- Implementation
 
 	data_valid (current_data: STRING):BOOLEAN is

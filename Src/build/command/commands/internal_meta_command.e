@@ -15,6 +15,7 @@ inherit
 		rename
 			current_mode as editing_or_executing_mode
 		end
+	WINDOWS
 
 creation
 	make
@@ -42,11 +43,34 @@ feature
 			-- mode is `Editing_mode'.
 		do
 			if editing_or_executing_mode = Executing_mode then
-				associated_meta_command.execute (arg)
+				execute_meta_command (arg)
 			elseif editing_command /= Void then
 				editing_command.execute (arg)
 			end
 		end
+
+feature {NONE} -- Executing Mode
+
+	execute_meta_command (arg: ANY) is
+			-- Execute `associated_meta_command'.
+		local
+			retried: BOOLEAN
+			warner: WARNING_BOX
+		do
+			if not retried then
+				associated_meta_command.execute (arg)
+			else
+				!! warner.make ("Warning", transporter)
+				warner.set_message ("Some arguments are uninstantiated.%NThis command can%'t be executed.")
+				warner.popup
+			end
+		rescue
+			if not retried then
+				retried := True
+				retry
+			end
+		end
+
 
 feature -- Access 
 

@@ -82,6 +82,13 @@ feature  -- Access
 			Result := signature 
 		end;
 
+	history_name: STRING is 
+			-- Name used in the history list
+			-- (By default, it is the signature)
+		do 
+			Result := signature 
+		end;
+
 	is_valid: BOOLEAN is
 			-- Is `Current' a valid stone?
 		do
@@ -101,5 +108,12 @@ feature  -- Access
 		ensure
 			valid_stone: Result /= Void implies Result.is_valid
 		end;
+
+	same_as (other: like Current): BOOLEAN is
+			-- Is `other' same as Current?
+			--| By default: Result = equal (Current, other).
+		do
+			Result := equal (Current, other)
+		end
 
 end -- class STONE

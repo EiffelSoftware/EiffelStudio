@@ -1,6 +1,11 @@
--- Internal representation of a class. Instance of CLASS_I represent
--- non-compiled classes, but instance of CLASS_C already compiled
--- classes.
+indexing
+
+	description: 
+		"Internal representation of a class. Instance of CLASS_I represent%
+		%non-compiled classes, but instance of CLASS_C already compiled%
+		%classes.";
+	date: "$Date$";
+	revision: "$Revision $"
 
 class CLASS_I 
 
@@ -17,20 +22,17 @@ inherit
 	COMPARABLE
 		undefine
 			is_equal
-		end
+		end;
+	COMPILER_EXPORTER
 
 creation
 
 	make
 
-	
-feature 
+feature -- Properties
 
 	class_name: STRING;
 			-- Class name
-
-	visible_name: STRING;
-			-- Visible name
 
 	cluster: CLUSTER_I;
 			-- Cluster to which the class belongs to
@@ -54,23 +56,25 @@ feature
 	date: INTEGER;
 			-- Date of the file
 
-	changed: BOOLEAN;
-			-- Must the class be recompiled ?
+	compiled_class: CLASS_C is
+			-- Compiled class
+		local
+			ec: E_CLASS
+		do
+			ec := compiled_eclass;
+			if ec /= Void then
+				Result := ec.compiled_info
+			end
+		end;
 
-	pass2_done: BOOLEAN;
-			-- Pass2 has been done?
-
-	compiled_class: CLASS_C;
+	compiled_eclass: E_CLASS 
 			-- Compiled class
 
 	assertion_level: ASSERTION_I;
 			-- Assertion checking level
 
-	trace_level: OPTION_I;
+	trace_level: TRACE_I;
 			-- Tracing level
-
-	profile_level: OPTION_I;
-			-- Profile level
 
 	optimize_level: OPTIMIZE_I;
 			-- Optimization level
@@ -80,9 +84,6 @@ feature
 
 	visible_level: VISIBLE_I;
 			-- Visible level
-
-	dynamic_calls: DYNAMIC_I;
-			-- Feature calls that have to be dynamically bound
 
 	make is
 			-- initialization
@@ -95,64 +96,21 @@ feature
 			end;
 		end;
 
-	reset_options is
-			-- Reset the option values of the class
-		do
-debug
-	io.error.putstring ("reset_options: ");
-	if class_name /= Void then
-		io.error.putstring (class_name);
-	end;
-	io.error.new_line;
-end;
-			assertion_level := Default_level;
-			trace_level := No_option;
-			profile_level := No_option;
-			optimize_level := No_optimize;
-			debug_level := No_debug;
-			visible_level := Visible_default;
-			dynamic_calls := No_dynamic;
-			hidden := False
-		end;
-
-	set_class_name (s: STRING) is
-			-- Assign `s' to `class_name'.
-		do
-			class_name := s;
-		end;
-
 	set_base_name (s: STRING) is
 			-- Assign `s' to `file_name'.
 		do
 			base_name := s;	
 		end;
 
-	set_cluster (c: like cluster) is
-			-- Assign `c' to `cluster'.
-		do
-			cluster := c
-		end;
+feature -- Access
 
-	set_date is
-			-- Assign `d' to `date'
-		local
-			str: ANY;
+	compiled: BOOLEAN is
+			-- Is the class already compiled ?
 		do
-			str := file_name.to_c;
-			date := eif_date ($str);
-		end;
-
-	set_changed (b: BOOLEAN) is
-			-- Assign `b' to `changed'.
-		do
-			changed := b;
-		end;
-
-	set_compiled_class (c: CLASS_C) is
-			-- Assign `c' to `compiled_class'.
-		do
-			compiled_class := c;
-		end;
+			Result := compiled_class /= Void;
+		ensure
+			compiled: Result implies compiled_class /= Void
+		end; 
 
 	date_has_changed: BOOLEAN is
 		local
@@ -164,7 +122,25 @@ end;
 			Result := new_date /= date;
 		end;
 
-feature -- Drag and drop
+feature -- Setting
+
+	set_class_name (s: like class_name) is
+			-- Assign `s' to `class_name'.
+		do
+			class_name := s;
+		ensure
+			set: class_name = s
+		end;
+
+feature -- Comparison
+
+	infix "<" (other: like Current): BOOLEAN is
+			-- Class name alphabetic order
+		do
+			Result := class_name < other.class_name
+		end;
+
+feature -- Output
 
 	stone: CLASSI_STONE is
 		do
@@ -181,7 +157,69 @@ feature -- Drag and drop
 			a_clickable.put_clickable_string (stone, c_name);
 		end;
 
-feature -- Compiled class
+feature {COMPILER_EXPORTER} -- Properties
+
+	visible_name: STRING;
+			-- Visible name
+
+	changed: BOOLEAN;
+			-- Must the class be recompiled ?
+
+	pass2_done: BOOLEAN;
+			-- Pass2 has been done?
+
+	dynamic_calls: DYNAMIC_I;
+			-- Feature calls that have to be dynamically bound
+
+feature {COMPILER_EXPORTER} -- Setting
+
+	reset_options is
+			-- Reset the option values of the class
+		do
+debug
+	io.error.putstring ("reset_options: ");
+	if class_name /= Void then
+		io.error.putstring (class_name);
+	end;
+	io.error.new_line;
+end;
+			assertion_level := Default_level;
+			trace_level := No_trace;
+			optimize_level := No_optimize;
+			debug_level := No_debug;
+			visible_level := Visible_default;
+			dynamic_calls := No_dynamic;
+			hidden := False
+		end;
+
+	set_changed (b: BOOLEAN) is
+			-- Assign `b' to `changed'.
+		do
+			changed := b;
+		end;
+
+	set_compiled_class (c: CLASS_C) is
+			-- Assign `c' to `compiled_class'.
+		do
+			compiled_eclass := c.e_class;
+		end;
+
+	set_date is
+			-- Assign `d' to `date'
+		local
+			str: ANY;
+		do
+			str := file_name.to_c;
+			date := eif_date ($str);
+		end;
+
+	set_cluster (c: like cluster) is
+			-- Assign `c' to `cluster'.
+		do
+			cluster := c
+		end;
+
+feature {COMPILER_EXPORTER} -- Compiled class
 
 	class_to_recompile: CLASS_C is
 			-- Instance of a class to remcompile
@@ -189,56 +227,52 @@ feature -- Compiled class
 			class_name_exists: class_name /= Void;
 		local
 			local_system: SYSTEM_I;
+			e_class: E_CLASS
 		do
+			!! e_class.make (Current);
 			local_system := system;
 			if Current = local_system.boolean_class then
-				!BOOLEAN_B! Result.make (Current)
+				!BOOLEAN_B! Result.make (e_class)
 			elseif Current = local_system.character_class then
-				!CHARACTER_B! Result.make (Current)
+				!CHARACTER_B! Result.make (e_class)
 			elseif Current = local_system.integer_class then
-				!INTEGER_B! Result.make (Current)
+				!INTEGER_B! Result.make (e_class)
 			elseif Current = local_system.real_class then
-				!REAL_B! Result.make (Current)
+				!REAL_B! Result.make (e_class)
 			elseif Current = local_system.double_class then
-				!DOUBLE_B! Result.make (Current)
+				!DOUBLE_B! Result.make (e_class)
 			elseif Current = local_system.pointer_class then
-				!POINTER_B! Result.make (Current)
+				!POINTER_B! Result.make (e_class)
 			elseif Current = local_system.any_class then
-				!ANY_B! Result.make (Current)
+				!ANY_B! Result.make (e_class)
 			elseif Current = local_system.special_class then
-				!SPECIAL_B! Result.make (Current)
+				!SPECIAL_B! Result.make (e_class)
 			elseif Current = local_system.to_special_class then
-				!TO_SPECIAL_B! Result.make (Current)
+				!TO_SPECIAL_B! Result.make (e_class)
 			elseif Current = local_system.array_class then
-				!ARRAY_CLASS_B! Result.make (Current)
+				!ARRAY_CLASS_B! Result.make (e_class)
 			elseif Current = local_system.string_class then
-				!STRING_CLASS_B! Result.make (Current)
+				!STRING_CLASS_B! Result.make (e_class)
 			elseif Current = local_system.character_ref_class then
-				!CHARACTER_REF_B! Result.make (Current)
+				!CHARACTER_REF_B! Result.make (e_class)
 			elseif Current = local_system.boolean_ref_class then
-				!BOOLEAN_REF_B! Result.make (Current)
+				!BOOLEAN_REF_B! Result.make (e_class)
 			elseif Current = local_system.integer_ref_class then
-				!INTEGER_REF_B! Result.make (Current)
+				!INTEGER_REF_B! Result.make (e_class)
 			elseif Current = local_system.real_ref_class then
-				!REAL_REF_B! Result.make (Current)
+				!REAL_REF_B! Result.make (e_class)
 			elseif Current = local_system.double_ref_class then
-				!DOUBLE_REF_B! Result.make (Current)
+				!DOUBLE_REF_B! Result.make (e_class)
 			elseif Current = local_system.pointer_ref_class then
-				!POINTER_REF_B! Result.make (Current)
+				!POINTER_REF_B! Result.make (e_class)
 			else
-				!!Result.make (Current);
+				!! Result.make (e_class);
 			end;
 		ensure
 			Result_exists: Result /= Void;
 		end;
 
-	compiled: BOOLEAN is
-			-- Is the class already compiled ?
-		do
-			Result := not (compiled_class = Void);
-		end; -- compiled
-
-feature -- Setting
+feature {COMPILER_EXPORTER} -- Setting
 
 	set_assertion_level (l: ASSERTION_I) is
 			-- Assign `l' to `assertion_level'.
@@ -252,16 +286,10 @@ debug
 end;
 		end;
 
-	set_trace_level (t: like trace_level) is
+	set_trace_level (t: TRACE_I) is
 			-- Assign `t' to `trace_level'.
 		do
 			trace_level := t;
-		end;
-
-	set_profile_level (t: like profile_level) is
-			-- Assign `t' to `trace_level'.
-		do
-			profile_level := t;
 		end;
 
 	set_hide_level (b: BOOLEAN) is
@@ -354,21 +382,12 @@ end;
 		do
 			debug_level := other.debug_level;
 			trace_level := other.trace_level;
-			profile_level := other.profile_level;
 			optimize_level := other.optimize_level;
 			assertion_level := other.assertion_level;
 			visible_level := other.visible_level;
 			visible_name := other.visible_name;
 			dynamic_calls := other.dynamic_calls
 			hidden := other.hidden;
-		end;
-
-feature -- Comparison
-
-	infix "<" (other: like Current): BOOLEAN is
-			-- Class name alphabetic order
-		do
-			Result := class_name < other.class_name
 		end;
 
 feature {NONE} -- Externals

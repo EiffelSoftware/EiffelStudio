@@ -11,8 +11,12 @@ class
 
 inherit
 	MEMORY
-		redefine dispose end
+		redefine
+			dispose
+		end
+
 	OBJECT_CONTROL
+
 	OBJECT_OWNER
 
 creation

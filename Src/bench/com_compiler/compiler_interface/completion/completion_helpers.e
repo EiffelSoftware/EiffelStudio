@@ -17,6 +17,11 @@ inherit
 			{NONE} all
 		end
 
+	SHARED_EIFFEL_PROJECT
+		export
+			{NONE} all
+		end
+
 feature -- Access
 
 	Standard_call, Agent_call, Static_call, Creation_call, Precursor_call: INTEGER is unique
@@ -34,43 +39,48 @@ feature -- Access
 
 feature -- Basic operations
 
-	extract_description (a_feature_i: FEATURE_I; a_class_i: CLASS_I) is
-			-- Extract contracts from feature `l_feature_i' in class `a_class_i'.
+	extract_description (a_feature_i: FEATURE_I; a_class_i: CLASS_I; a_feature_name: STRING) is
+			-- Extract description of feature `l_feature_i' with name `a_feature_name' in class `a_class_i'.
+			-- Set `extracted_description' with the result.
+			--| We need to give the Eiffelized overloaded name for overloaded features.
 		require
 			non_void_feature: a_feature_i /= Void
 			non_void_class: a_class_i /= Void
+			non_void_name: a_feature_name /= Void
 		local
 			l_ctxt: FEATURE_TEXT_FORMATTER;
-			l_dotnet_ctxt: DOTNET_FEATURE_TEXT_FORMATTER
 			l_reader: EIFFEL_XML_DESERIALIZER
-			l_consumed_type: CONSUMED_TYPE
-			l_file_name: STRING
+			l_file_name, l_docs: STRING
+			l_dictionary: IDM_DICTIONARY_INTERFACE
+			l_external_class: EXTERNAL_CLASS_I
 		do
+			extracted_description := ""
 			if a_feature_i.is_il_external then
-				l_file_name := a_class_i.file_name
-				consumed_types_cache.search (l_file_name)
-				if not consumed_types_cache.found then
-					create l_reader				
-					l_consumed_type ?= l_reader.new_object_from_file (l_file_name)
-					consumed_types_cache.put (l_consumed_type, l_file_name)
-				else
-					l_consumed_type := consumed_types_cache.found_item
+				extracted_description := external_signature (a_feature_i, a_feature_name)
+				l_external_class ?= a_feature_i.written_class.lace_class
+				check
+					non_void_external_class: l_external_class /= Void
 				end
-				if l_consumed_type /= Void then
-					create l_dotnet_ctxt
-					l_dotnet_ctxt.format_short (a_feature_i.api_feature (a_class_i.compiled_class.class_id), l_consumed_type)
-					format (l_dotnet_ctxt.text)
-				else
-					extracted_description := ""
+				l_file_name := path_from_assembly (l_external_class.assembly)
+				if (create {RAW_FILE}.make (l_file_name)).exists then
+					l_dictionary := Documentation_manager.dictionary (l_file_name)
+					if l_dictionary.is_initialized then
+						l_dictionary.set_type (l_external_class.external_name)
+						l_docs := l_dictionary.feature_documentation (a_feature_i.external_name, dotnet_arguments (a_feature_i))
+						if l_docs /= Void and then not l_docs.is_empty then
+							extracted_description.append_character ('%N')
+							extracted_description.append (l_docs)
+						end
+					end
 				end
 			else
-				create {FEATURE_TEXT_FORMATTER} l_ctxt
+				create l_ctxt
 				l_ctxt.format_short (a_feature_i.api_feature (a_class_i.compiled_class.class_id), False)
 				format (l_ctxt.text)
 			end
 			extracted_description.replace_substring_all ("%T%T-- ", "")
 			extracted_description.replace_substring_all ("%T", "  ")
-		end
+ 		end
 
 	features_list_from_table (table: FEATURE_TABLE; class_i: CLASS_I; use_overloading: BOOLEAN): SORTABLE_ARRAY [FEATURE_DESCRIPTOR] is
 			-- Convert `table' into an instance of LIST [FEATURE_DESCRIPTOR].
@@ -334,6 +344,93 @@ feature -- Basic operations
 
 feature {NONE} -- Implementation
 
+	external_signature (a_feature_i: FEATURE_I; a_feature_name: STRING): STRING is
+			-- Signature of `a_feature_i'
+		require
+			non_void_feature: a_feature_i /= Void
+		local
+			l_args: FEAT_ARG
+			i, l_count: INTEGER
+		do
+			create Result.make (256)
+			Result.append (a_feature_name)
+			if a_feature_i.has_arguments then
+				l_args := a_feature_i.arguments
+				l_count := l_args.count
+				l_args.start
+				Result.append (" (")
+				Result.append (l_args.item_name (1))
+				Result.append (": ")
+				Result.append (l_args.item.dump)
+				from
+					l_args.forth
+					i := 2
+				until
+					l_args.after
+				loop
+					Result.append ("; ")
+					Result.append (l_args.item_name (i))
+					Result.append (": ")
+					Result.append (l_args.item.dump)
+					i := i + 1
+					l_args.forth
+				end
+				Result.append_character (')')
+			end
+			if a_feature_i.has_return_value then
+				Result.append (": ")
+				Result.append (a_feature_i.type.dump)
+			end
+		ensure
+			non_void_signature: Result /= Void
+		end
+		
+	path_from_assembly (a_assembly: ASSEMBLY_I): STRING is
+			-- 	Path of `a_assembly'
+			--| We have to guess until path are used in the ace file
+		require
+			non_void_assembly: a_assembly /= Void
+		do
+			if a_assembly.is_local then
+				Result := a_assembly.assembly_path
+			else
+				Result := Assembly_information.path_to_assembly_dll (a_assembly.assembly_name)
+			end
+		end
+		
+	dotnet_arguments (a_feature: FEATURE_I): STRING is
+			-- List of .NET argument types or empty if no arguments
+			-- Format: (System.String,System.Int32)
+		require
+			non_void_feature: a_feature /= Void
+			external_feature: a_feature.is_il_external
+		local
+			l_args: FEAT_ARG
+		do
+			if a_feature.argument_count = 0 then
+				Result := "()"
+			else
+				Result := "("
+				l_args := a_feature.arguments
+				from
+					l_args.start
+					Result.append (l_args.item.actual_type.associated_class.external_class_name)
+					l_args.forth
+				until
+					l_args.after
+				loop
+					Result.append_character (',')
+					Result.append (l_args.item.actual_type.associated_class.external_class_name)
+					l_args.forth
+				end
+				Result.append (")")
+			end
+		ensure
+			non_void_arguments: Result /= Void
+			empty_if_no_arguments: a_feature.argument_count = 0 implies Result.is_empty
+			valid_format: a_feature.argument_count > 0 implies Result.item (1) = '(' and Result.item (Result.count) = ')'
+		end
+		
 	format (a_text: STRUCTURED_TEXT) is
 			-- Format `a_text' as ASCII string and put result in `extracted_description'.
 		require
@@ -525,10 +622,16 @@ feature {NONE} -- Implementation
 	type_extracted: BOOLEAN
 			-- Was last call to `extract_type' successful?
 
-	consumed_types_cache: HASH_TABLE [CONSUMED_TYPE, STRING] is
-			-- Cache of consumed types so as not to deserialize each time
+	Documentation_manager: DOCUMENTATION_MANAGER_PROXY is
+			-- 	Documentation manager
 		once
-			create Result.make (128)
+			create Result.make
+		end
+		
+	Assembly_information: ASSEMBLY_INFORMATION is
+			-- 
+		once
+			create Result.make (Eiffel_project.system.System.clr_runtime_version)
 		end
 
 end -- class COMPLETION_HELPERS

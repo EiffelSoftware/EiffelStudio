@@ -52,6 +52,13 @@ feature {NONE}
 			Result.append ("F000000");
 		end;
 
+	Offset_buffer: STRING is
+			-- Buffer to generate class id offset coded name
+		once
+			!!Result.make (7);
+			Result.append ("O000000");
+		end;
+
 	P_buffer: STRING is
 		once
 			!!Result.make (7);

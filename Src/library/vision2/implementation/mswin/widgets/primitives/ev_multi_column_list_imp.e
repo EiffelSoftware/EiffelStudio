@@ -30,6 +30,7 @@ inherit
 
 	EV_ITEM_LIST_IMP [EV_MULTI_COLUMN_LIST_ROW]
 		redefine
+			initialize,
 			interface,
 			extend,
 			put_front,
@@ -116,6 +117,7 @@ feature {NONE} -- Initialization
 	initialize is
 		do
 			{EV_PRIMITIVE_IMP} Precursor
+			{EV_ITEM_LIST_IMP} Precursor
 			{EV_MULTI_COLUMN_LIST_I} Precursor
 		end
 
@@ -141,7 +143,7 @@ feature {NONE} -- Initialization
 			end
 		end
 
-feature {NONE} -- Implementation
+feature {EV_MULTI_COLUMN_LIST_ROW_IMP} -- implementation
 
 	update_child (child: EV_MULTI_COLUMN_LIST_ROW_IMP; a_row: INTEGER) is
 			-- Update `child'.
@@ -1001,6 +1003,9 @@ end -- class EV_MULTI_COLUMN_LIST_IMP
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.63  2000/03/24 19:06:21  rogers
+--| Redefined initialize from EV_ITEM_LIST_IMP.
+--|
 --| Revision 1.62  2000/03/24 18:15:45  brendel
 --| Now adds columns if necessary. Seems to work.
 --|

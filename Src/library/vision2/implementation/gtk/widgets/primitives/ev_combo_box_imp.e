@@ -83,10 +83,9 @@ feature {NONE} -- Initialization
 
 			-- Pointer to the list of items.
 			list_widget := C.gtk_combo_struct_list (container_widget)
-		--	C.gtk_combo_disable_activate (container_widget)
 			C.gtk_combo_set_use_arrows (container_widget, 0)
 			C.gtk_combo_set_case_sensitive (container_widget, 1)
-		--	gtk_widget_set_flags (c_object, C.GTK_CAN_FOCUS_ENUM)
+
 			real_signal_connect (
 					entry_widget,
 					"key_press_event",

@@ -1,0 +1,43 @@
+system
+	"simple"
+
+root
+	example (root_cluster): "make"	 
+
+default
+	assertion (require)
+	msil_generation (yes)
+	il_verifiable (yes)
+	cls_compliant (yes)
+	use_cluster_name_as_namespace (yes)
+	use_all_cluster_name_as_namespace (yes)
+	msil_generation_type ("exe")
+	check_vape (yes)
+	console_application (no)
+
+cluster
+	root_cluster:		"$ISE_EIFFEL\examples\studio\debuggin"
+
+	all base:		"$ISE_EIFFEL\library\base"
+		exclude
+			"table_eiffel3"; "desc"; "classic"; 
+		end
+
+	all base_net:		"$ISE_EIFFEL\library.net\base"
+
+assembly
+	mscorlib:	"$ISE_DOTNET_FRAMEWORK\mscorlib.dll"
+
+	system_:	"$ISE_DOTNET_FRAMEWORK\System.dll"
+		prefix
+			"SYSTEM_DLL_"
+		end
+
+	system_xml:	"$ISE_DOTNET_FRAMEWORK\System.Xml.dll"
+		prefix
+			"XML_"
+		end
+
+
+end
+

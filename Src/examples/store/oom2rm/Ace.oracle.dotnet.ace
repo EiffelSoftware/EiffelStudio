@@ -1,0 +1,61 @@
+system
+	"sample"
+
+root
+	sample (root_cluster): "make"
+
+default
+	assertion (require)
+	msil_generation (yes)
+	il_verifiable (yes)
+	cls_compliant (yes)
+	use_cluster_name_as_namespace (yes)
+	use_all_cluster_name_as_namespace (yes)
+	msil_generation_type ("exe")
+	check_vape (yes)
+	console_application (yes)
+
+cluster
+	root_cluster:		"$ISE_EIFFEL\examples\store\oom2rm";
+	estore_examples_objects:"$ISE_EIFFEL\examples\store\Utilities";
+	oracle_handle:		"$ISE_EIFFEL\examples\store\Utilities\oracle";
+	
+	estore_support:		"$ISE_EIFFEL\library\store\support";
+	estore_interface:	"$ISE_EIFFEL\library\store\interface";
+	estore_db_support:	"$ISE_EIFFEL\library\store\dbms\support";
+	estore_oracle:		"$ISE_EIFFEL\library\store\dbms\rdbms\oracle";
+
+	time:				"$ISE_EIFFEL\library\time";
+	time_format(time):		"$\format";
+	english_format(time_format):	"$\english";
+
+	all base:		"$ISE_EIFFEL\library\base"
+		exclude
+			"table_eiffel3"; "desc"; "classic"; 
+		end
+
+	all base_net:	"$ISE_EIFFEL\library.net\base"
+
+assembly
+	mscorlib:	"$ISE_DOTNET_FRAMEWORK\mscorlib.dll"
+
+	system_:	"$ISE_DOTNET_FRAMEWORK\System.dll"
+		prefix
+			"SYSTEM_DLL_"
+		end
+
+	system_xml:	"$ISE_DOTNET_FRAMEWORK\System.Xml.dll"
+		prefix
+			"XML_"
+		end
+
+external
+	include_path: "$(ISE_EIFFEL)\library\store\dbms\rdbms\oracle\Clib",
+		"$(ORACLE_HOME)\OCI\include"
+
+	object:
+		"$(ISE_EIFFEL)\library\store\spec\$(ISE_C_COMPILER)\lib\oracle_store.lib",
+		"$(ORACLE_HOME)\OCI\lib\msvc\oci.lib"
+
+
+end

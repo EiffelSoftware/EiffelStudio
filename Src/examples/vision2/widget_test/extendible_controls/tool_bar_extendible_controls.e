@@ -19,6 +19,8 @@ inherit
 		end
 		
 	EV_ANY_HANDLER
+		export
+			{NONE} all
 		undefine
 			copy, is_equal, default_create
 		end

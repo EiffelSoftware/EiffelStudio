@@ -14,6 +14,8 @@ inherit
 		end
 	
 	WIDGET_TEST_SHARED
+		export
+			{NONE} all
 		undefine
 			copy, default_create, is_equal
 		end
@@ -22,7 +24,7 @@ inherit
 		undefine
 			copy, default_create, is_equal
 		end
-	
+		
 feature {NONE} -- Initialization
 
 	initialize is
@@ -82,7 +84,7 @@ feature -- Access
 	selected_test_name: STRING is
 			-- `Result' is name of currently selected test.
 		do
-			Result := clone (class_names @ test_notebook.selected_item_index)
+			Result := (class_names @ test_notebook.selected_item_index).twin
 		end
 		
 

@@ -277,6 +277,8 @@ del run-time\wtools.c
 del run-time\wtravers.c
 del run-time\wumain.c
 del run-time\wurgent.c
+del run-time\wurgent.c
+del run-time\wgenconf.c
 del cleanup.bat
 
 :end

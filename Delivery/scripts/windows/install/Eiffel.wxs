@@ -1,20 +1,20 @@
-<?xml version='1.0' encoding='windows-1252'?>
-<Wix xmlns='http://schemas.microsoft.com/wix/2003/01/wi'>
-	<Product Name='EiffelStudio 5.6' Id="0A21C24B-51D8-49b9-ABD2-BD8E7BF59BC6"
-			Language='1033' Codepage='1252' Version='5.6' Manufacturer='Eiffel Software'>
+<?xml version="1.0" encoding="windows-1252"?>
+<Wix xmlns="http://schemas.microsoft.com/wix/2003/01/wi">
+	<Product Name="EiffelStudio 5.6" Id="0A21C24B-51D8-49b9-ABD2-BD8E7BF59BC6"
+			Language="1033" Codepage="1252" Version="5.6" Manufacturer="Eiffel Software">
 
-		<Package Id="????????-????-????-????-????????????" Keywords='Installer' Description="EiffelStudio 5.6 Installer"
-			Comments='EiffelStudio is a registered trademark of Eiffel Software' Manufacturer='Eiffel Software'
-			InstallerVersion='100' Languages='1033' Compressed='yes' SummaryCodepage='1252' />
+		<Package Id="????????-????-????-????-????????????" Keywords="Installer" Description="EiffelStudio 5.6 Installer"
+			Comments="EiffelStudio is a registered trademark of Eiffel Software" Manufacturer="Eiffel Software"
+			InstallerVersion="150" Languages="1033" Compressed="yes" SummaryCodepage="1252" />
 
 		<Property Id="FRAMEWORKPATH">empty<RegistrySearch Id="AppReg1" Root="HKLM" Key="SOFTWARE\Microsoft\.NETFramework" Name="InstallRoot" Type="registry" /></Property>
 		<Property Id="SELECTEDCCOMPILER">bcb<RegistrySearch Id="AppReg" Root="HKLM" Key="SOFTWARE\ISE\Eiffel56\ec" Name="ISE_C_COMPILER" Type="registry" /></Property>
-		<Condition Message='This installation can only run in full UI mode.'>Installed OR UILevel = 5</Condition>
+		<Condition Message="This installation can only run in full UI mode.">Installed OR UILevel = 5</Condition>
 
-		<Media Id='1' Cabinet='Sample.cab' EmbedCab='yes' DiskPrompt="EiffelStudio 5.6 Installation CD-ROM" />
+		<Media Id="1" Cabinet="Sample.cab" EmbedCab="yes" DiskPrompt="EiffelStudio 5.6 Installation CD-ROM" />
 
-		<Directory Id='TARGETDIR' Name='SourceDir'>
-			<Directory Id='INSTALLDIR' Name='Eiffel56'>
+		<Directory Id="TARGETDIR" Name="SourceDir">
+			<Directory Id="INSTALLDIR" Name="Eiffel56">
 				<Component Id="display_icon" Guid="4FBFB3EE-4F75-46C7-8464-2710DD1E44A7">
 					<Registry Id="registry" Root="HKLM" Key="Software\Microsoft\Windows\CurrentVersion\Uninstall\[ProductCode]" Name="DisplayIcon" Type="string" Value="[INSTALLDIR]studio\spec\$(env.ISE_PLATFORM)\bin\estudio.exe,0" />
 				</Component>
@@ -22,17 +22,18 @@
 					<Merge Id="ec" Language="1033" src="MSMs\ec_free.msm" DiskId="1" />
 					<Merge Id="build" Language="1033" src="MSMs\build_free.msm" DiskId="1" />
 				<?elseif $(var.EDITION)="university" ?>
+					<Merge Id="build" Language="1033" src="MSMs\build_enterprise.msm" DiskId="1" />
 					<Merge Id="ec" Language="1033" src="MSMs\ec_university.msm" DiskId="1" />
-					<Merge Id="build" Language="1033" src="MSMs\build_enterprise.msm" DiskId="1" />
+					<Merge Id="eiffel_com" Language="1033" src="MSMs\eiffel_com.msm" DiskId="1" />
 				<?else?>
-					<Merge Id="ec" Language="1033" src="MSMs\ec_enterprise.msm" DiskId="1" />
 					<Merge Id="build" Language="1033" src="MSMs\build_enterprise.msm" DiskId="1" />
+					<Merge Id="ec" Language="1033" src="MSMs\ec_enterprise.msm" DiskId="1" />
+					<Merge Id="eiffel_com" Language="1033" src="MSMs\eiffel_com.msm" DiskId="1" />
 				<?endif?>
 				<Merge Id="base_libraries" Language="1033" src="MSMs\base_libraries.msm" DiskId="1" />
 				<Merge Id="borland" Language="1033" src="MSMs\borland.msm" DiskId="1" />
 				<Merge Id="c_library" Language="1033" src="MSMs\c_library.msm" DiskId="1" />
 				<Merge Id="dotnet" Language="1033" src="MSMs\dotnet.msm" DiskId="1" />
-				<Merge Id="eiffel_com" Language="1033" src="MSMs\eiffel_com.msm" DiskId="1" />
 				<Merge Id="free_add_ons" Language="1033" src="MSMs\free_add_ons.msm" DiskId="1" />
 				<Merge Id="graphical_libraries" Language="1033" src="MSMs\graphical_libraries.msm" DiskId="1" />
 				<Merge Id="studio_core" Language="1033" src="MSMs\studio_core.msm" DiskId="1" />
@@ -40,33 +41,50 @@
 			</Directory>
 
 			<Directory Id="PROJECTDIR" Name="79f10432.412" LongName="MyProjects" />
-
-			<Directory Id="ProgramMenuFolder" Name="PMenu" LongName="Programs">
-				<Directory Id="ProgramMenuDir" Name="Eiffel56" />
-			</Directory>
-
-			<Directory Id="DesktopFolder" Name="Desktop" />
 		</Directory>
 
-		<Feature Id='Complete' Title='EiffelStudio 5.6' Description='The complete package.'
-				TypicalDefault='install' Display='expand' Level='1'
-				ConfigurableDirectory='INSTALLDIR'>
+		<Feature Id="Complete" Title="EiffelStudio 5.6" Description="The complete package."
+				TypicalDefault="install" Display="expand" Level="3" ConfigurableDirectory="INSTALLDIR">
 
-			<Feature Id='MainProgram' Title='Program' Description='The main executable.' TypicalDefault='install' Level='1'>
-				<ComponentRef Id='display_icon' />
+			<Feature Id="MainProgram" Title="Program" TypicalDefault="install" Level="3" Display="hidden">
+				<ComponentRef Id="display_icon" />
+			</Feature>
+
+			<Feature Id="EiffelBuild" Title="EiffelBuild" TypicalDefault="install" Level="3" Display="hidden">
 				<MergeRef Id="build" />
+			</Feature>
+
+			<Feature Id="Libraries" Title="Eiffel Libraries" TypicalDefault="install" Level="3" Display="hidden">
 				<MergeRef Id="base_libraries" />
 				<MergeRef Id="c_library" />
-				<MergeRef Id="dotnet" />
-				<MergeRef Id="ec" />
-				<MergeRef Id="eiffel_com" />
-				<MergeRef Id="free_add_ons" />
 				<MergeRef Id="graphical_libraries" />
+			</Feature>
+
+			<Feature Id="dotnet" Title=".NET components" TypicalDefault="install" Level="3" Display="hidden">
+				<Condition Level="0"><![CDATA[FRAMEWORKPATH = "empty"]]></Condition>
+				<MergeRef Id="dotnet" />
+			</Feature>
+
+			<Feature Id="EiffelStudio" Title="EiffelStudio" TypicalDefault="install" Level="3" Display="hidden">
+				<MergeRef Id="ec" />
 				<MergeRef Id="studio_core" />
+			</Feature>
+
+			<?if $(var.EDITION)!="free" ?>
+				<Feature Id="EiffelCOM" Title="EiffelCOM" TypicalDefault="install" Level="3" Display="hidden">
+					<MergeRef Id="eiffel_com" />
+				</Feature>
+			<?endif?>
+
+			<Feature Id="FreeAddOns" Title="Free Additional libraries" TypicalDefault="install" Level="3" Display="hidden">
+				<MergeRef Id="free_add_ons" />
+			</Feature>
+
+			<Feature Id="vision2_tour" Title="EiffelVision2 Tour" TypicalDefault="install" Level="3" Display="hidden">
 				<MergeRef Id="vision2_tour" />
 			</Feature>
 
-			<Feature Id="Borland" Title="Borland" Display="hidden" Level="3" AllowAdvertise="system">
+			<Feature Id="Borland" Title="Borland" TypicalDefault="install" Display="hidden" Level="3" >
 				<Condition Level="0"><![CDATA[SELECTEDCCOMPILER <> "bcb"]]></Condition>
 				<MergeRef Id="borland" />
 			</Feature>

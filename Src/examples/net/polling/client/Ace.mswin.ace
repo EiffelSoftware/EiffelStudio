@@ -2,38 +2,62 @@ system
 	polling_client
 
 root
-	polling_client (ROOT_CLUSTER): "make"
+	POLLING_CLIENT: make
 
 default
-	precompiled ("$ISE_EIFFEL/precomp/spec/$ISE_PLATFORM/base")
+	assertion(no)
+	arguments("localhost 6000")
+	arguments(" ")
+	disabled_debug(yes)
+	debug(no)
+	line_generation(no)
+	profile(no)
+	trace(no)
+	il_verifiable(yes)
+	msil_generation_type("exe")
+	check_vape(yes)
+	console_application(yes)
+	address_expression(no)
+	array_optimization(no)
+	dead_code_removal(yes)
+	dynamic_runtime(no)
+	exception_trace(no)
+	inlining(no)
+	multithreaded(no)
+
 
 cluster
-	ROOT_CLUSTER: 	"$ISE_EIFFEL/examples/net/polling/client";
-	common_classes:	"$ISE_EIFFEL/examples/net/polling/common";
-
-		-- EiffelNet
-	net:				"$ISE_EIFFEL/library/net";
-	abstract_socket (net):		"$/abstract/socket";
-	net_socket (net):		"$/network/socket";
-	local_socket (net):		"$/local/socket";
-
-	polling_abstract (net):		"$/polling/abstract";
-	polling_implementation (net):	"$/polling/implementation";
+	root_cluster:		"$ISE_EIFFEL\examples\net\polling\client"
 
 
-	abstract_client_server (net):	"$/abstract/client_server";
-	net_client_server (net):	"$/network/client_server";
-	local_client_server (net):	"$/local/client_server";
+	common_classes:		"$ISE_EIFFEL\examples\net\polling\common"
 
-		-- EiffelBase
-	all base:			"$ISE_EIFFEL/library/base"
+	net:		"$ISE_EIFFEL\library\net"
+
+	abstract_socket (net):		"$\abstract\socket"
+
+	net_socket (net):		"$\network\socket"
+
+	local_socket (net):		"$\local\socket"
+
+	polling_abstract (net):		"$\polling\abstract"
+
+	polling_implementation (net):		"$\polling\implementation"
+
+	abstract_client_server (net):		"$\abstract\client_server"
+
+	net_client_server (net):		"$\network\client_server"
+
+	local_client_server (net):		"$\local\client_server"
+
+	all base:		"$ISE_EIFFEL\library\base"
 		exclude
-			"desc";"table_eiffel3"
+			"desc"; "table_eiffel3"; 
 		end
 
 external
-	-- External EiffelNet library 
+
 	object:
--- unix		"$(ISE_EIFFEL)/library/net/spec/$(ISE_PLATFORM)/lib/libnet.a"
-		"$(ISE_EIFFEL)/library/net/spec/$(ISE_C_COMPILER)/lib/net.lib"
+		"$(ISE_EIFFEL)\library\net\spec\$(ISE_C_COMPILER)\lib\net.lib"
+
 end

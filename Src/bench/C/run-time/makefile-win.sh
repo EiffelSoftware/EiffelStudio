@@ -37,7 +37,7 @@ WOBJECTS = $(NETWORK) wmath.obj wmalloc.obj wgarcol.obj wlocal.obj wexcept.obj \
 	wobject_id.obj $(TOP)\console\econsole.lib \
 	compress.obj weif_threads.obj $extra_object_files
 
-EOBJ = wmath.obj wmalloc.obj wgarcol.obj wlocal.obj bexcept.obj wstore.obj \
+EOBJECTS = wmath.obj wmalloc.obj wgarcol.obj wlocal.obj bexcept.obj wstore.obj \
 	wretrieve.obj whash.obj wtravers.obj whashin.obj wtools.obj winterna.obj \
 	wplug.obj wcopy.obj wequal.obj wout.obj wtimer.obj \
 	wurgent.obj wsig.obj whector.obj wcecil.obj wbits.obj wfile.obj wdir.obj \
@@ -72,16 +72,16 @@ wkbench.lib: $(WOBJECTS)
 	$(MAKE)
 	cd ..\run-time
 
-#all:: ebench.lib
+all:: ebench.lib
 
 ..\ipc\app\network.lib: ..\ipc\app\proto.c
 	cd ..\ipc\app
 	$(MAKE)
 	cd ..\..\run-time
 
-ebench.lib: $(EOBJ)
+ebench.lib: $(EOBJECTS)
 	$(RM) $@
-	$(LIB_EXE)$@ $(EOBJ)
+	$link_eline
 
 all:: x2c.exe
 

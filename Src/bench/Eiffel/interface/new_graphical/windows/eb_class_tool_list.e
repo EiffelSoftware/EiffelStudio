@@ -46,6 +46,26 @@ feature -- Access
 			go_to (c)
 		end
 
+feature -- Save command
+
+	save_all is
+		local
+			c: CURSOR
+		do
+			from
+				c := cursor
+				start
+			until
+				after
+			loop
+				if item.text_window.changed then
+					item.save_text
+				end
+				forth
+			end
+			go_to (c)
+		end
+
 feature -- Update
 
 	dispatch_modified_resource (mod_res: EB_MODIFIED_RESOURCE) is

@@ -186,8 +186,8 @@ feature {NONE} -- Implementation
 			menus_not_initialized: menus_initialized = False
 		local
 			help_about, file_exit: EV_MENU_ITEM
+			view_preferences, view_tools: EV_MENU
 			menu_separator: EV_MENU_SEPARATOR
-			
 		do
 				-- Initialize the file menu.
 			create file_menu.make_with_text (Gb_file_menu_text)
@@ -204,18 +204,22 @@ feature {NONE} -- Implementation
 				-- Initialize the view menu.
 			create view_menu.make_with_text (Gb_view_menu_text)
 			a_menu_bar.extend (view_menu)
-			view_menu.extend (command_handler.show_hide_builder_window_command.new_menu_item)
-			view_menu.extend (command_handler.show_hide_display_window_command.new_menu_item)
-			view_menu.extend (command_handler.show_hide_component_viewer_command.new_menu_item)
+			create view_tools.make_with_text (Gb_view_tools_text)
+			view_menu.extend (view_tools)
+			view_tools.extend (command_handler.show_hide_builder_window_command.new_menu_item)
+			view_tools.extend (command_handler.show_hide_display_window_command.new_menu_item)
+			view_tools.extend (command_handler.show_hide_component_viewer_command.new_menu_item)
+			view_tools.extend (command_handler.show_hide_history_command.new_menu_item)
 			create menu_separator
 			view_menu.extend (menu_separator)
 			view_menu.extend (command_handler.expand_layout_tree_command.new_menu_item)
 			view_menu.extend (command_handler.collapse_layout_tree_command.new_menu_item)
-			
-			
 			create menu_separator
 			view_menu.extend (menu_separator)
-			view_menu.extend (command_handler.show_hide_history_command.new_menu_item)
+			create view_preferences.make_with_text (Gb_view_preferences_text)
+			view_menu.extend (view_preferences)
+			
+			view_preferences.extend (command_handler.tools_always_on_top_command.new_menu_item)
 
 				-- Initialize the project menu.
 			create project_menu.make_with_text (Gb_project_menu_text)

@@ -95,7 +95,7 @@ feature -- Incrementality
 			if other_constant /= Void then
 				Result :=   basic_equiv (other_constant)
 							and then
-							value.equiv (other_constant.value);
+							value.is_propagation_equivalent (other_constant.value);
 			end;
 		end;
 	

@@ -4,10 +4,18 @@ inherit
 
 	VALUE_I
 		redefine
-			generate, is_character, equiv,
+			generate, is_character, is_propagation_equivalent,
 			append_signature, string_value
 		end
 	CHARACTER_ROUTINES
+
+feature -- Comparison
+
+	is_equivalent (other: like Current): BOOLEAN is
+			-- Is `other' equivalent to the current object ?
+		do
+			Result := char_val = other.char_val
+		end
 
 feature 
 
@@ -26,9 +34,9 @@ feature
 			Result := True;
 		end;
 
-	equiv (other: CHAR_VALUE_I): BOOLEAN is
+	is_propagation_equivalent (other: CHAR_VALUE_I): BOOLEAN is
 		do
-			Result := char_val = other.char_val
+			Result := same_type (other) and then char_val = other.char_val
 		end;
 
 	valid_type (t: TYPE_A): BOOLEAN is

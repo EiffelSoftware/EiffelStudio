@@ -93,7 +93,7 @@ C_specification:
 			}
 	|	TE_INLINE Use_opt
 			{
-				$$ := Void
+				create {INLINE_EXTENSION_AS} $$.initialize (False, $2)
 			}
 	;
 
@@ -114,7 +114,7 @@ CPP_specification:
 			}
 	|	TE_INLINE Use_opt
 			{
-				$$ := Void
+				create {INLINE_EXTENSION_AS} $$.initialize (True, $2)
 			}
 	;
 

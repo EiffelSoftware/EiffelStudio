@@ -91,6 +91,7 @@ feature {NONE} -- Implementation
 			a_font_not_void: a_font /= Void
 		do
 			for_all_objects (agent {EV_FONTABLE}.set_font (a_font))
+			update_editors
 		end
 		
 	valid_font (a_font: EV_FONT): BOOLEAN is
@@ -116,6 +117,7 @@ feature {NONE} -- Implementation
 			fontable ?= default_object_by_type (class_name (first))
 			for_all_objects (agent {EV_FONTABLE}.set_font (fontable.font))
 			font_entry.update_constant_display (first.font)
+			update_editors
 		end
 
 	font_dialog: EV_FONT_DIALOG

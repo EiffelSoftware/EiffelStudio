@@ -95,7 +95,7 @@ feature {EV_RICH_TEXT_IMP} -- Implementation
 	new_text_tag: POINTER is
 			-- Create a new text tag based on state of `Current'
 		local
-			propname, propvalue: C_STRING
+			propname, propvalue: EV_GTK_C_UTF8_STRING
 			color_struct: POINTER
 			tempbool: BOOLEAN
 			font_desc: POINTER
@@ -106,7 +106,7 @@ feature {EV_RICH_TEXT_IMP} -- Implementation
 			if internal_font_imp /= Void then
 				font_desc := internal_font_imp.font_description_from_values
 				create propname.make ("font-desc")
-				feature {EV_GTK_DEPENDENT_EXTERNALS}.g_object_set (Result, propname.item, font_desc, default_pointer)
+				feature {EV_GTK_DEPENDENT_EXTERNALS}.g_object_set_pointer (Result, propname.item, font_desc, default_pointer)
 				feature {EV_GTK_DEPENDENT_EXTERNALS}.pango_font_description_free (font_desc)
 			end
 
@@ -120,7 +120,7 @@ feature {EV_RICH_TEXT_IMP} -- Implementation
 				check
 					color_has_been_allocated: tempbool
 				end
-				feature {EV_GTK_DEPENDENT_EXTERNALS}.g_object_set (Result, propname.item, color_struct, default_pointer)
+				feature {EV_GTK_DEPENDENT_EXTERNALS}.g_object_set_pointer (Result, propname.item, color_struct, default_pointer)
 				color_struct.memory_free				
 			end
 

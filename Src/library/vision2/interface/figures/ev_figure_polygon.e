@@ -17,7 +17,8 @@ inherit
 
 creation
 	default_create,
-	make_with_point_list
+	make_with_point_list,
+	make_for_test
 
 feature {NONE}-- Initialization
 
@@ -25,6 +26,28 @@ feature {NONE}-- Initialization
 			-- Initialize without points
 		do
 			Precursor
+		end
+
+	make_for_test is
+			-- Create interesting to display.
+		do
+			default_create
+			from until point_count = 5 loop
+				add_point (create {EV_RELATIVE_POINT})
+			end
+			get_point_by_index (1).set_x (3)
+			get_point_by_index (1).set_y (3)
+			get_point_by_index (2).set_x (30)
+			get_point_by_index (2).set_y (50)
+			get_point_by_index (3).set_x (90)
+			get_point_by_index (3).set_y (10)
+			get_point_by_index (4).set_x (80)
+			get_point_by_index (5).set_y (190)
+			get_point_by_index (5).set_x (130)
+			get_point_by_index (5).set_y (150)
+			set_foreground_color (create {EV_COLOR}.make_with_rgb (0.5, 1.0, 0.5))
+			set_fill_color (create {EV_COLOR}.make_with_rgb (0.0, 1.0, 0.0))
+			set_line_width (3)
 		end
 
 feature -- Status report
@@ -73,63 +96,6 @@ feature -- Events
 			-- Is the point (`x', `y') contained in this figure?
 		do
 			Result := point_on_polygon (x, y, point_array)
-		end
-
-	dummy (x, y: INTEGER):BOOLEAN is
-		local
-			hits, y_save, n, i, j, dx, dy, rx, ry: INTEGER
-			s: REAL
-		do
-			-- Find a vertex that is not on the halfline
-			from
-				i := 0
-			until
-				not (i < points.count and then get_point_by_index (i + 1).y_abs = y)
-			loop
-				i := i + 1
-			end
-
-			-- Walk the edges of the polygon
-			from
-				n := 0
-			until
-				n >= points.count
-			loop
-				j := (i + 1) \\ points.count
-
-				dx := get_point_by_index (j + 1).x_abs - get_point_by_index (i + 1).x_abs
-				dy := get_point_by_index (j + 1).y_abs - get_point_by_index (i + 1).y_abs
-
-				-- Ignore horizontal edges completely
-				if dy /= 0 then
-					-- Check to see if the edge intersects the
-					-- horizontal halfline through (x, y)
-					rx := x - get_point_by_index (i + 1).x_abs
-					ry := y - get_point_by_index (i + 1).y_abs
-
-					-- Deal with edges starting or ending the halfline
-					if get_point_by_index (j + 1).y_abs = y and then get_point_by_index (j + 1).x_abs >= x then
-						y_save := get_point_by_index (i + 1).y_abs
-					end
-
-					if get_point_by_index (i + 1).y_abs = y and then get_point_by_index (i + 1).x_abs >= x then
-						if (y_save > y) /= (get_point_by_index (j + 1).y_abs > y) then
-							hits := hits - 1
-						end
-					end
-
-					-- Tally intersections with halfline
-					s := ry / dy
-					if s >= 0.0 and then s <= 1.0 and then (s * dx) >= rx then
-						hits := hits + 1
-					end
-				end
-				i := j
-				n := n + 1
-			end
-
-			-- Inside if number of intersections odd
-			Result := (hits \\ 2) /= 0
 		end
 
 feature -- Contract support

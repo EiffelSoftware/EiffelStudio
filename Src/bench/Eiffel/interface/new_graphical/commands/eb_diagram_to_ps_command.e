@@ -9,7 +9,6 @@ class
 inherit
 	EB_CONTEXT_DIAGRAM_COMMAND
 		redefine
-			new_toolbar_item,
 			menu_name
 		end
 		
@@ -93,14 +92,6 @@ feature -- Basic operations
 		rescue
 			error := 1
 			retry
-		end
-
-	new_toolbar_item (display_text: BOOLEAN; use_gray_icons: BOOLEAN): EB_COMMAND_TOOL_BAR_BUTTON is
-			-- Create a new toolbar button for this command.
-		do
-			Result := Precursor (display_text, use_gray_icons)
-			Result.select_actions.wipe_out
-			Result.select_actions.extend (agent execute)
 		end
 
 	pixmap: ARRAY [EV_PIXMAP] is

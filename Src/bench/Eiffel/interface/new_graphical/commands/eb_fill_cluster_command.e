@@ -59,8 +59,6 @@ feature -- Basic operations
 			-- Create a new toolbar button for this command.
 		do
 			Result := Precursor (display_text, use_gray_icons)
-			Result.select_actions.wipe_out
-			Result.select_actions.extend (agent execute)
 			Result.drop_actions.extend (agent execute_with_cluster_stone)
 		end
 

@@ -86,9 +86,6 @@ feature -- Basic operations
 	new_mini_toolbar_item: EB_COMMAND_TOGGLE_TOOL_BAR_BUTTON is
 			-- Create a new mini toolbar button for this command.
 		do
-			if managed_toolbar_items = void then
-				create managed_toolbar_items.make (1)
-			end
 			create Result.make (Current)
 			Result.set_pixmap (mini_pixmap @ 1)
 			if is_sensitive then

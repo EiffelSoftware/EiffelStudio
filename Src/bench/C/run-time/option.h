@@ -68,10 +68,7 @@ extern int is_debug();		/* Debug level query */
 
 extern int trace_call_level;			/* Call level to report at E-TRACE output */
 
-struct profile_stack *prof_stack;	/* Stack that maintains profile information
-					 * IMPORTANT: This stack is needed for
-					 *	      recursive features during internal profiling
-					 */
+struct profile_stack *prof_stack;		/* Stack that maintains profile information
 
 extern void check_options();			/* Dispatches to start_profile and start_trace */
 extern void check_options_stop();		/* Dispatches to stop_profile and stop_trace */
@@ -85,7 +82,8 @@ extern void exitprf();				/* Saves table as textfile */
 extern void start_profile();			/* Starts profiling of a certain feature */
 extern void stop_profile();			/* Stops profiling of a certain feature */
 
-extern void p_rewind();				/* Stops all timer counts in the stack items,
+extern void prof_stack_rewind();		/* Stops all timer counts in
+						 * the stack items,
 						 * updates the table, and
 						 * pops the items from the stack
 						 */

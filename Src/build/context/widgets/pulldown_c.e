@@ -12,27 +12,19 @@ inherit
 			context_initialization as old_context_initialization
 		redefine
 			set_visual_name, widget, 
-			retrieve_set_visual_name,  source,
-			add_widget_callbacks
+			retrieve_set_visual_name 
 		end;
 
 	MENU_C
 		redefine
 			set_visual_name, context_initialization, copy_attributes, 
 			undo_cut, cut, widget, reset_modified_flags,
-			source, retrieve_set_visual_name
+			retrieve_set_visual_name
 		select
 			cut, undo_cut, copy_attributes, context_initialization, 
 			reset_modified_flags
 		end;
 	
-feature {NONE} -- Transportation/Callbacks
-
-	source: WIDGET is
-		do
-			Result := widget.button
-		end;
-
 feature
 
 	widget: PULLDOWN;

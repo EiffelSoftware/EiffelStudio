@@ -5,7 +5,7 @@ indexing
 	revision: "$Revision$"
 
 class
-	WINDOWS_APP 
+	WINDOWS_APP
 
 inherit
 	GRAPHICS
@@ -16,21 +16,35 @@ inherit
 creation
 	make
 
-feature {NONE}
+feature {NONE} -- Initialization
 
-	init_toolkit: MS_WINDOWS;
-			-- Toolkit of the application
+	make is 
+			-- Create the application.
+		local
+			bw: BASE_WINDOWS
+		do
+			set_toolkit
+			set_default
+			!! screen.make ("")
+			!! base.make (application_name, screen)
+			build
+			base.realize
+			iterate
+		rescue
+			bw ?= base.implementation
+			bw.wel_destroy
+		end
 
-feature 
+feature -- Access
 
-	base: BASE;
+	base: BASE
 			-- Top level of the application
 
-	screen: SCREEN;
+	screen: SCREEN
 			-- Default screen of the application
 			-- (take the envirronment variable $DISPLAY)
 
-feature {NONE}
+feature {NONE} -- Implementation
 
 	application_name: STRING;
 			-- Name of the application top level
@@ -38,42 +52,24 @@ feature {NONE}
 	set_default is
 			-- Define default parameters for the application.
 		do
-		end;
+		end
 
 	build is
 			-- Build an application.
 		do
-		end;
+		end
 
-feature 
-
-	make is 
-			-- Create the application.
-		local
-			bw: BASE_WINDOWS
-		do
-			set_toolkit;
-			set_default;
-			!! screen.make ("");
-			!! base.make (application_name, screen);
-			build;
-			base.realize;
-			iterate
-		rescue
-			bw ?= base.implementation
-			bw.wel_destroy
-		end;
-
-feature {NONE} -- Implementation
+	init_toolkit: MS_WINDOWS
+			-- Toolkit of the application
 
 	set_toolkit  is
 			-- Set MS-Windows as toolkit.
-		do	
-			!! init_toolkit.make (application_name);
+		do
+			!! init_toolkit.make (application_name)
 			if (toolkit = Void ) then end
 		end
 
-end
+end -- class WINDOWS_APP
 
 --|----------------------------------------------------------------
 --| EiffelVision: library of reusable components for ISE Eiffel 3.

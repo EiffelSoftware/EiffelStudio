@@ -54,7 +54,7 @@ feature {G_ANY, G_ANY_I, WIDGET_I, TOOLKIT}
 
 invariant
 
-	Valid_parent: parent /= Void implies depth > 0
+	valid_parent: (not destroyed and then parent /= Void) implies depth > 0
 
 end
 

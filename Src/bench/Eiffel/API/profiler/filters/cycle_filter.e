@@ -1,3 +1,11 @@
+indexing
+
+	description:
+		"Profile filter to check whether `check_item' its argument conforms to %
+		%CYCLE_PROFILE_DATA";
+	date: "$Date$";
+	revision: "$Revision$"
+
 class CYCLE_FILTER
 
 inherit

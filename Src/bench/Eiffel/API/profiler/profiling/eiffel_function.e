@@ -1,3 +1,10 @@
+indexing
+
+	description:
+		"Information about an Eiffel feature.";
+	date: "$Date$";
+	revision: "$Revision$"
+
 class EIFFEL_FUNCTION
 
 inherit

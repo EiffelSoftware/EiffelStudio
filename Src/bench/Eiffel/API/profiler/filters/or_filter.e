@@ -1,3 +1,11 @@
+indexing
+
+	description:
+		"Profile filter used to perform the OR operation between %
+		%two other filters.";
+	date: "$Date$";
+	revision: "$Revision$"
+
 class OR_FILTER
 
 inherit

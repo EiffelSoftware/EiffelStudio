@@ -3,8 +3,8 @@ indexing
 	description:
 			"Information about the name of a certain function %
 			%  or feature.";
-	date:		"$Date$";
-	revision:	"$Revision $"
+	date: "$Date$";
+	revision: "$Revision$"
 
 deferred class FUNCTION
 
@@ -51,9 +51,9 @@ feature -- Status report
 			Result := name;
 		end;
 
-feature {GPROF_CONVERTER} -- Attributes
+feature {NONE} -- Attributes
 
 	cycle_num: INTEGER
-		-- `Current' is member of cycle `cycle_number'
+			-- Number of the cycle of which this function is a member.
 
 end -- class FUNCTION

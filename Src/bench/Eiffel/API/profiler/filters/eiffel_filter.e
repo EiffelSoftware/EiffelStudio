@@ -1,3 +1,11 @@
+indexing
+
+	description:
+		"Profile filter used to check whether `check_item' its argument's type %
+		%conforms to EIFFEL_PROFILE_DATA.";
+	date: "$Date$";
+	revision: "$Revision$"
+
 class EIFFEL_FILTER
 
 inherit

@@ -1,3 +1,10 @@
+indexing
+
+	description:
+		"Output options as specified by the user.";
+	date: "$Date$";
+	revision: "$Revision$"
+
 class PROFILER_OPTIONS
 
 feature -- Status setting

@@ -1,3 +1,10 @@
+indexing
+
+	description:
+		"Abstract notion of a class containing profile information.";
+	date: "$Date$";
+	revision: "$Revision$"
+
 deferred class PROFILE_DATA
 
 inherit

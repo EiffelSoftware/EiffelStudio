@@ -1,3 +1,11 @@
+indexing
+
+	description:
+		"Profile filter used to check whether the name of a function matches %
+		%the name specified by the user.";
+	date: "$Date$";
+	revision: "$Revision$"
+
 class NAME_FILTER
 
 inherit

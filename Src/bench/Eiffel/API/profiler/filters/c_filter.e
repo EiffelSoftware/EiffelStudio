@@ -1,3 +1,11 @@
+indexing
+
+	description:
+		"Profile filter to check whether the type of the argument of `check_item' %
+		%conforms to C_PROFILE_DATA";
+	date: "$Date$";
+	revision: "$Revision$"
+
 class C_FILTER
 
 inherit

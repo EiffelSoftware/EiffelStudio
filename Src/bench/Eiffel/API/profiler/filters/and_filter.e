@@ -1,3 +1,10 @@
+indexing
+
+	description:
+		"Profile filter to filter with the AND operation.";
+	date: "$Date$";
+	revision: "$Revision$"
+
 class AND_FILTER
 
 inherit

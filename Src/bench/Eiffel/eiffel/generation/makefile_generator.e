@@ -597,6 +597,13 @@ feature -- Generation, Header
 			make_file.putstring ("SHAREDLINK = $sharedlink%N")
 			make_file.putstring ("SHAREDLIBS = $sharedlibs%N")
 
+			if System.makefile_names /= Void then
+				generate_makefile_names -- EXTERNAL_MAKEFILES = ...
+				make_file.putstring ("COMMAND_MAKEFILE = $command_makefile%N")
+			else
+				make_file.putstring ("COMMAND_MAKEFILE = %N")
+			end
+
 			make_file.putstring ("%
 				%!GROK!THIS!%N%
 				%$spitshell >>Makefile <<'!NO!SUBS!'%N")
@@ -756,7 +763,7 @@ feature -- Generation, External archives and object files.
 		do
 			makefile_names := System.makefile_names
 			from
-				make_file.putstring ("MAKEFILES= ")
+				make_file.putstring ("EXTERNAL_MAKEFILES = ")
 				i := 1
 				nb := makefile_names.count
 			until
@@ -794,9 +801,6 @@ feature -- Generation (Linking rules)
 			generate_system_objects_macros
 			make_file.putstring ("%N") 
 
-			if System.makefile_names /= Void then
-				generate_makefile_names
-			end
 			make_file.new_line
 			make_file.putstring (system_name)
 			make_file.putstring (": ")
@@ -807,7 +811,7 @@ feature -- Generation (Linking rules)
 			make_file.putstring ("/emain.o Makefile%N%T$(RM) ") 
 			make_file.putstring (system_name)
 			make_file.new_line
-			make_file.putstring ("%Tfor %%i in ($(MAKEFILES)) do %%i %N")
+			make_file.putstring ("%T$(COMMAND_MAKEFILE)%N")
 			if System.externals.has_cpp_externals then
 				make_file.putstring ("%T$(CPP")
 			else

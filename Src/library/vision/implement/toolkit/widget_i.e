@@ -116,9 +116,13 @@ feature
 		deferred
 		end;
 
-	destroy is
+	destroy (wid_list: LINKED_LIST [WIDGET]) is
 			-- Destroy screen widget implementation and all
-			-- screen widget implementations of its children.
+			-- screen widget implementations of its children
+			-- contained in `wid_list;.
+		require
+			non_void_list: wid_list /= Void;
+			list_not_empty: not wid_list.empty
 		deferred
 		end; -- destroy
 
@@ -455,6 +459,25 @@ feature
 			-- Vertical position relative to parent
 		deferred
 		end -- y
+
+feature 
+
+	clean_up is
+			-- Clean up data information for destroyed widget.
+		deferred
+		end;
+
+	widget_index: INTEGER is
+			-- Index entry of widget in widget_manager
+		deferred
+		end;
+
+    set_widget_index (index: INTEGER) is
+            -- Set widget_index to `index'.
+		require
+			positive_value: index > 0
+        deferred
+        end;
 
 invariant
 

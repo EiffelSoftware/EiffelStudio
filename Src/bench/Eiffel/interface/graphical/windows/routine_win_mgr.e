@@ -40,8 +40,8 @@ feature -- Update
 
 	resynchronize_debugger (feat: E_FEATURE) is
 			-- Resynchronize debugged routine window with feature `feat'.
-		require
-			feat_non_void: feat /= Void
+			-- If `feat' is void resynchronize debugged routine window
+			-- regardless.
 		do
 			from
 				active_editors.start

@@ -12,6 +12,10 @@ inherit
 	SHARED_EIFFEL_PROJECT
 
 	EB_CONTEXT_TOOL_DATA
+		select
+			initialize_resources,
+			resources_initialized
+		end
 
 	EB_WINDOW_MANAGER_OBSERVER
 		redefine
@@ -44,6 +48,20 @@ inherit
 			default_create
 		end
 		
+	RESOURCE_OBSERVATION_MANAGER
+		export
+			{NONE} all
+		undefine
+			default_create
+		end
+
+	OBSERVER
+		rename
+			update as retrieve_depth_preferences
+		undefine
+			default_create
+		end
+		
 create
 	make_with_tool
 
@@ -69,6 +87,7 @@ feature {NONE} -- Initialization
 			Eiffel_project.manager.close_agents.extend (project_close_agent)
 			development_window.window_manager.add_observer (Current)
 
+			
 			create a_class_graph.make (Current)
 			create empty_world.make (a_class_graph, Current)
 			create world_cell.make_with_world_and_tool (empty_world, Current)
@@ -91,6 +110,14 @@ feature {NONE} -- Initialization
 			build_tool_bar
 			disable_toolbar
 			widget.extend (border_frame)
+			
+			retrieve_depth_preferences
+			add_observer ("subcluster_depth", Current)
+			add_observer ("supercluster_depth", Current)
+			add_observer ("client_depth", Current)
+			add_observer ("supplier_depth", Current)
+			add_observer ("ancestor_depth", Current)
+			add_observer ("descendant_depth", Current)
 
 			development_window.editor_tool.text_area.add_edition_observer (Current)
 		end
@@ -108,6 +135,7 @@ feature {NONE} -- Initialization
 			delete_cmd.enable_displayed
 			create create_new_links_cmd.make (Current)
 			create_new_links_cmd.enable_displayed
+			create_new_links_cmd.select_type (create_new_links_cmd.Inheritance)
 			create change_color_cmd.make (Current)
 			change_color_cmd.enable_displayed
 			create trash_cmd.make (Current)
@@ -444,6 +472,7 @@ feature -- Status settings.
 			toggle_cluster_legend_cmd.disable_sensitive
 			toggle_uml_cmd.disable_sensitive
 			fit_to_screen_cmd.disable_sensitive
+			toggle_quality_cmd.disable_sensitive
 		end
 		
 	enable_toolbar is
@@ -547,7 +576,7 @@ feature -- Status settings.
 feature -- Element change
 
 	clear_area is
-			-- Make `area' empty because a diagram has been cancelled.
+			-- Make `area' empty.
 		local
 			a_class_graph: ES_CLASS_GRAPH
 			a_class_view: BON_CLASS_DIAGRAM
@@ -562,6 +591,7 @@ feature -- Element change
 			world.drop_actions.extend (agent on_cluster_drop)
 			projector.full_project
 			crop_diagram
+			disable_toolbar
 		end
 
 	create_link_tool (a_stone: LINK_STONE) is
@@ -602,13 +632,17 @@ feature -- Element change
 				world.drop_actions.wipe_out
 				create a_class_graph.make (Current)
 				if class_graph /= Void then
-					a_class_graph.set_ancestor_depth (class_graph.ancestor_depth)
-					a_class_graph.set_descendant_depth (class_graph.descendant_depth)
-					a_class_graph.set_client_depth (class_graph.client_depth)
-					a_class_graph.set_supplier_depth (class_graph.supplier_depth)
+					default_ancestor_depth := class_graph.ancestor_depth
+					default_descendant_depth := class_graph.descendant_depth
+					default_client_depth := class_graph.client_depth
+					default_supplier_depth := class_graph.supplier_depth
 					a_class_graph.set_include_all_classes_of_cluster (class_graph.include_all_classes_of_cluster)
 					a_class_graph.set_include_only_classes_of_cluster (class_graph.include_only_classes_of_cluster)
 				end
+				a_class_graph.set_ancestor_depth (default_ancestor_depth)
+				a_class_graph.set_descendant_depth (default_descendant_depth)
+				a_class_graph.set_client_depth (default_client_depth)
+				a_class_graph.set_supplier_depth (default_supplier_depth)
 				if world.is_uml then
 					create {UML_CLASS_DIAGRAM} a_class_view.make (a_class_graph, Current)
 					layout.set_spacing (150, 150)
@@ -739,9 +773,11 @@ feature -- Element change
 				world.drop_actions.wipe_out
 				create l_cluster_graph.make (Current)
 				if cluster_graph /= Void then
-					l_cluster_graph.set_subcluster_depth (cluster_graph.subcluster_depth)
-					l_cluster_graph.set_supercluster_depth (cluster_graph.supercluster_depth)
+					default_subcluster_depth := cluster_graph.subcluster_depth
+					default_supercluster_depth := cluster_graph.supercluster_depth
 				end
+				l_cluster_graph.set_subcluster_depth (default_subcluster_depth)
+				l_cluster_graph.set_supercluster_depth (default_supercluster_depth)
 				if world.is_uml then
 					create {UML_CLUSTER_DIAGRAM} l_cluster_view.make (l_cluster_graph, Current)
 					layout.set_spacing (150, 150)
@@ -855,9 +891,13 @@ feature -- Element change
 			-- Contexts need to be updated because of recompilation
 			-- or similar action that needs resynchonization.
 		do
-			graph.synchronize
-			reset_history
-			projector.full_project
+			if tool.is_diagram_selected then	
+				graph.synchronize
+				reset_history
+				projector.full_project
+			else
+				is_synchronization_needed := True
+			end
 		end
 		
 	crop_diagram is
@@ -1044,8 +1084,12 @@ feature {EB_CONTEXT_TOOL} -- Context tool
 			elseif cluster_stone /= Void then
 				set_stone (cluster_stone)
 			end
+			if is_synchronization_needed then
+				graph.synchronize
+				reset_history
+				is_synchronization_needed := False
+			end
 		end
-
 
 	set_focus is
 			-- Give the focus to the drawing_area.
@@ -1077,6 +1121,7 @@ feature {EB_CONTEXT_TOOL} -- Context tool
 							is_rebuild_world_needed := False
 							store
 							create_class_view (class_stone.class_i, True)
+							is_synchronization_needed := False
 						end
 					else
 						if cluster_stone /= Void then
@@ -1090,10 +1135,13 @@ feature {EB_CONTEXT_TOOL} -- Context tool
 								is_rebuild_world_needed := False
 								store
 								create_cluster_view (cluster_stone.cluster_i, True)
+								is_synchronization_needed := False
 							end
 						end
 					end
 				end
+			else
+				clear_area
 			end
 		end
 		
@@ -1313,7 +1361,7 @@ feature {NONE} -- Events
 			-- An undoable command has been done.
 			-- Enable `undo_cmd'.
 		do
-			if not history.undo_list.is_empty then
+			if not history.undo_exhausted then
 				undo_cmd.enable_sensitive
 			end
 		end
@@ -1322,7 +1370,7 @@ feature {NONE} -- Events
 			-- An undoable command has been undone.
 			-- Enable `redo_cmd'.
 		do
-			if not history.undo_list.is_empty then
+			if not history.redo_exhausted then
 				redo_cmd.enable_sensitive
 			end
 		end
@@ -1529,7 +1577,42 @@ feature {EB_FIT_TO_SCREEN_COMMAND} -- Implementation
 	world_cell: EIFFEL_FIGURE_WORLD_CELL
 			-- Cell showing the graph.
 		
-feature {NONE} -- Implementation.
+feature {NONE} -- Implementation
+
+	default_subcluster_depth: INTEGER
+	default_supercluster_depth: INTEGER
+	default_client_depth: INTEGER
+	default_supplier_depth: INTEGER
+	default_ancestor_depth: INTEGER
+	default_descendant_depth: INTEGER
+	
+	retrieve_depth_preferences is
+			-- Retrieve values for default depth from preferences.
+		do
+			default_subcluster_depth := integer_resource_value ("subcluster_depth", 1)
+			default_supercluster_depth := integer_resource_value ("supercluster_depth", 1)
+			default_client_depth := integer_resource_value ("client_depth", 0)
+			default_supplier_depth := integer_resource_value ("supplier_depth", 0)
+			default_ancestor_depth := integer_resource_value ("ancestor_depth", 1)
+			default_descendant_depth := integer_resource_value ("descendant_depth", 1)
+			
+			if class_graph /= Void then
+				class_graph.set_descendant_depth (default_descendant_depth)
+				class_graph.set_ancestor_depth (default_ancestor_depth)
+				class_graph.set_supplier_depth (default_supplier_depth)
+				class_graph.set_client_depth (default_client_depth)
+				if class_graph.center_class /= Void then
+					create_class_view (class_graph.center_class.class_i, False)
+				end
+			elseif cluster_graph /= Void then
+				cluster_graph.set_subcluster_depth (default_subcluster_depth)
+				cluster_graph.set_supercluster_depth (default_supercluster_depth)
+				create_cluster_view (cluster_graph.center_cluster.cluster_i, False)
+			end
+		end
+		
+	is_synchronization_needed: BOOLEAN
+			-- Is synchronization needed when `Current' gets selected in the tabs?
 
 	is_right_angles_blocked: BOOLEAN
 			-- Is not right angles applayed at force stop?
@@ -1622,27 +1705,7 @@ feature {NONE} -- Implementation.
 	reset_tool_bar_for_uml_class_view is
 			-- Set toolbar for uml class view
 		do
-			zoom_selector.enable_sensitive
-			create_class_cmd.enable_sensitive
-			delete_cmd.enable_sensitive
-			create_new_links_cmd.select_type (create_new_links_cmd.Inheritance)
-			create_new_links_cmd.enable_sensitive
-			trash_cmd.enable_sensitive
-			change_header_cmd.enable_sensitive
-			link_tool_cmd.enable_sensitive
-			toggle_inherit_cmd.enable_sensitive
-			toggle_supplier_cmd.enable_sensitive
-			toggle_labels_cmd.enable_sensitive
-			select_depth_cmd.enable_sensitive
-			undo_cmd.disable_sensitive
-			history_cmd.enable_sensitive
-			redo_cmd.disable_sensitive
-			zoom_in_cmd.enable_sensitive
-			zoom_out_cmd.enable_sensitive
-			delete_view_cmd.enable_sensitive
-			diagram_to_ps_cmd.enable_sensitive
-			crop_cmd.enable_sensitive
-			toggle_uml_cmd.enable_sensitive
+			reset_toolbar
 			
 			change_color_cmd.disable_sensitive
 			fill_cluster_cmd.disable_sensitive
@@ -1651,7 +1714,6 @@ feature {NONE} -- Implementation.
 			remove_anchor_cmd.disable_sensitive
 			toggle_cluster_legend_cmd.disable_sensitive
 			toggle_cluster_cmd.disable_sensitive
-			fit_to_screen_cmd.enable_sensitive
 		end
 		
 	reset_tool_bar_for_uml_cluster_view is
@@ -1665,34 +1727,16 @@ feature {NONE} -- Implementation.
 	reset_tool_bar_for_class_view is
 			-- Set toolbar for class_view.
 		do
-			zoom_selector.enable_sensitive
-			create_class_cmd.enable_sensitive
-			delete_cmd.enable_sensitive
-			create_new_links_cmd.select_type (create_new_links_cmd.Inheritance)
-			create_new_links_cmd.enable_sensitive
-			change_color_cmd.enable_sensitive
-			trash_cmd.enable_sensitive
-			change_header_cmd.enable_sensitive
-			link_tool_cmd.enable_sensitive
-			toggle_inherit_cmd.enable_sensitive
-			toggle_supplier_cmd.enable_sensitive
-			toggle_labels_cmd.enable_sensitive
-			select_depth_cmd.enable_sensitive
-			fill_cluster_cmd.disable_sensitive
-			undo_cmd.disable_sensitive
-			history_cmd.enable_sensitive
-			redo_cmd.disable_sensitive
-			zoom_in_cmd.enable_sensitive
-			zoom_out_cmd.enable_sensitive
-			delete_view_cmd.enable_sensitive
-			diagram_to_ps_cmd.enable_sensitive
-			crop_cmd.enable_sensitive
-			toggle_quality_cmd.enable_sensitive
+			reset_toolbar
+	
 			toggle_force_cmd.enable_sensitive
 			remove_anchor_cmd.enable_sensitive
 			toggle_cluster_legend_cmd.enable_sensitive
-			toggle_uml_cmd.enable_sensitive
-			fit_to_screen_cmd.enable_sensitive
+			change_color_cmd.enable_sensitive
+			toggle_quality_cmd.enable_sensitive
+			
+			fill_cluster_cmd.disable_sensitive
+			toggle_cluster_cmd.disable_sensitive
 		end
 
 	reset_tool_bar_for_cluster_view is
@@ -1702,6 +1746,41 @@ feature {NONE} -- Implementation.
 			fill_cluster_cmd.enable_sensitive
 			toggle_cluster_cmd.enable_sensitive
 		end
+		
+	reset_toolbar is
+			-- Set toolbar for all views.
+		do
+			zoom_selector.enable_sensitive
+			create_class_cmd.enable_sensitive
+			delete_cmd.enable_sensitive
+			create_new_links_cmd.enable_sensitive
+			trash_cmd.enable_sensitive
+			change_header_cmd.enable_sensitive
+			link_tool_cmd.enable_sensitive
+			toggle_inherit_cmd.enable_sensitive
+			toggle_supplier_cmd.enable_sensitive
+			toggle_labels_cmd.enable_sensitive
+			select_depth_cmd.enable_sensitive
+			if not history.undo_exhausted then
+				undo_cmd.enable_sensitive
+			else
+				undo_cmd.disable_sensitive
+			end
+			history_cmd.enable_sensitive
+			if not history.redo_exhausted then
+				redo_cmd.enable_sensitive
+			else
+				redo_cmd.disable_sensitive
+			end
+			zoom_in_cmd.enable_sensitive
+			zoom_out_cmd.enable_sensitive
+			delete_view_cmd.enable_sensitive
+			diagram_to_ps_cmd.enable_sensitive
+			crop_cmd.enable_sensitive
+			toggle_uml_cmd.enable_sensitive
+			fit_to_screen_cmd.enable_sensitive
+		end
+		
 		
 	project_close_agent: PROCEDURE [ANY, TUPLE]
 			-- The agent that is called when the project is closed.

@@ -82,9 +82,6 @@ feature -- Basic operations
 			cpp_class_writer.add_other (Extern_lock_module)
 			cpp_class_writer.add_other (Extern_unlock_module)
 
-			-- Set type id feature
-			cpp_class_writer.add_function (set_type_id_feature, Public)
-
 			-- Member
 			create member_writer.make
 			member_writer.set_name (Type_id)
@@ -106,32 +103,28 @@ feature -- Basic operations
 
 feature {NONE} -- Implementations
 
-	set_type_id_feature: WIZARD_WRITER_C_FUNCTION is
-			-- Code to setup set_type_id feature
-		local
-			tmp_string: STRING
-		do
-			create Result.make
-			Result.set_name (Set_type_id_function_name)
-			Result.set_comment ("Set type id.")
-			Result.set_result_type (Void_c_keyword)
-
-			Result.set_signature ("EIF_TYPE_ID tid")
-
-			tmp_string := clone (Tab)
-			tmp_string.append (Type_id)
-			tmp_string.append (Space_equal_space)
-			tmp_string.append (Type_id_variable_name)
-			tmp_string.append (Semicolon)
-
-			Result.set_body (tmp_string)
-	end
-
 	constructor: WIZARD_WRITER_CPP_CONSTRUCTOR is
 			--  Constructor of class factory
+		local
+			tmp_body: STRING 
 		do
 			create Result.make
-			Result.set_body("")
+			create tmp_body.make (0)
+			tmp_body.append (Tab)
+			tmp_body.append (Type_id)
+			tmp_body.append (Space_equal_space)
+			tmp_body.append (Eif_type_id_function_name)
+			tmp_body.append (Space)
+			tmp_body.append (Open_parenthesis)
+			tmp_body.append (Double_quote)
+			tmp_body.append (coclass_descriptor.eiffel_class_name)
+			tmp_body.append (Underscore)
+			tmp_body.append ("IMP")
+			tmp_body.append (Double_quote)
+			tmp_body.append (Close_parenthesis)
+			tmp_body.append (Semicolon)
+
+			Result.set_body(tmp_body)
 		end
 
 	lock_server_feature: WIZARD_WRITER_C_FUNCTION is

@@ -93,18 +93,6 @@ feature {NONE} -- Implementation
 	Unregister_server: STRING is "unregister_server"
 			-- Used for code generation.
 
-	Ccom_initialize_com: STRING is "ccom_initialize_com"
-			-- Used for code generation.
-
-	Ccom_cleanup_com: STRING is "ccom_cleanup_com"
-			-- Used for code generation.
-
-	Ccom_register_server: STRING is "ccom_register_server"
-			-- Used for code generation.
-
-	Ccom_unregister_server: STRING is "ccom_unregister_server"
-			-- Used for code generation.
-
 	set_default_ancestors (an_eiffel_writer: WIZARD_WRITER_EIFFEL_CLASS) is
 			-- Set default ancestors.
 		local
@@ -560,10 +548,14 @@ feature {NONE} -- Implementation
 
 			tmp_body := clone (Tab_tab_tab)
 			tmp_body.append (Double_quote)
-			tmp_body.append ("C |")
+			tmp_body.append ("C++")
+			tmp_body.append (Open_bracket)
+			tmp_body.append (Macro)
+			tmp_body.append (Space)
 			tmp_body.append (Percent_double_quote)
 			tmp_body.append ("server_registration.h")
 			tmp_body.append (Percent_double_quote)
+			tmp_body.append (Close_bracket)
 			tmp_body.append (Double_quote)
 
 			Result.set_body (tmp_body)
@@ -585,10 +577,14 @@ feature {NONE} -- Implementation
 
 			tmp_body := clone (Tab_tab_tab)
 			tmp_body.append (Double_quote)
-			tmp_body.append ("C |")
+			tmp_body.append ("C++")
+			tmp_body.append (Open_bracket)
+			tmp_body.append (Macro)
+			tmp_body.append (Space)
 			tmp_body.append (Percent_double_quote)
 			tmp_body.append ("server_registration.h")
 			tmp_body.append (Percent_double_quote)
+			tmp_body.append (Close_bracket)
 			tmp_body.append (Double_quote)
 
 			Result.set_body (tmp_body)
@@ -610,10 +606,14 @@ feature {NONE} -- Implementation
 
 			tmp_body := clone (Tab_tab_tab)
 			tmp_body.append (Double_quote)
-			tmp_body.append ("C |")
+			tmp_body.append ("C++")
+			tmp_body.append (Open_bracket)
+			tmp_body.append (Macro)
+			tmp_body.append (Space)
 			tmp_body.append (Percent_double_quote)
 			tmp_body.append ("server_registration.h")
 			tmp_body.append (Percent_double_quote)
+			tmp_body.append (Close_bracket)
 			tmp_body.append (Double_quote)
 
 			Result.set_body (tmp_body)
@@ -635,10 +635,14 @@ feature {NONE} -- Implementation
 
 			tmp_body := clone (Tab_tab_tab)
 			tmp_body.append (Double_quote)
-			tmp_body.append ("C |")
+			tmp_body.append ("C++")
+			tmp_body.append (Open_bracket)
+			tmp_body.append (Macro)
+			tmp_body.append (Space)
 			tmp_body.append (Percent_double_quote)
 			tmp_body.append ("server_registration.h")
 			tmp_body.append (Percent_double_quote)
+			tmp_body.append (Close_bracket)
 			tmp_body.append (Double_quote)
 
 			Result.set_body (tmp_body)
@@ -646,9 +650,6 @@ feature {NONE} -- Implementation
 			non_void_writer: Result /= Void
 			valid_writer: Result.can_generate
 		end
-
-invariant
-	invariant_clause: -- Your invariant here
 
 end -- class WIZARD_OUTPROC_EIFFEL_REGISTRATION_GENERATOR
 

@@ -75,6 +75,17 @@ feature -- Basic operations
 					tmp_string.append (New_line)
 
 					c_writer.add_other_source (tmp_string)
+
+					tmp_string := clone (system_descriptor.coclasses.item.c_type_name)
+					tmp_string.append (Underscore)
+					tmp_string.append (Factory)
+					tmp_string.append (Space)
+					tmp_string.append (system_descriptor.coclasses.item.c_type_name)
+					tmp_string.append (Underscore)
+					tmp_string.append (Class_object_variable_name)
+					tmp_string.append (Semicolon)
+					c_writer.add_other_source (tmp_string)
+
 				end
 				system_descriptor.coclasses.forth
 			end
@@ -95,23 +106,6 @@ feature -- Basic operations
 			tmp_string.append ("ws_file_name[MAX_PATH];")
 			c_writer.add_other_source (tmp_string)
 
-			from
-				system_descriptor.coclasses.start
-			until
-				system_descriptor.coclasses.after
-			loop
-				tmp_string := clone (system_descriptor.coclasses.item.c_type_name)
-				tmp_string.append (Underscore)
-				tmp_string.append (Factory)
-				tmp_string.append (Space)
-				tmp_string.append (system_descriptor.coclasses.item.c_type_name)
-				tmp_string.append (Underscore)
-				tmp_string.append (Class_object_variable_name)
-				tmp_string.append (Semicolon)
-				c_writer.add_other_source (tmp_string)
-				
-				system_descriptor.coclasses.forth
-			end
 			
 			-- REG_DATA structure
 			c_writer.add_other (reg_data_struct)
@@ -131,69 +125,6 @@ feature -- Basic operations
 				c_writer.add_function (dll_unregister_server_feature)
 				c_writer.add_function (dll_can_unload_now_feature)
 
-				-- define macros for previous four features
-
-				tmp_string := clone (Hash_define)
-				tmp_string.append (Space)
-				tmp_string.append (Register_dll_server_function_name)
-				tmp_string.append (Space_open_parenthesis)
-				tmp_string.append (Open_parenthesis)
-				tmp_string.append (Eif_integer)
-				tmp_string.append (Close_parenthesis)
-				tmp_string.append (Space)
-				tmp_string.append (Ccom_register_dll_server_function_name)
-				tmp_string.append (Open_parenthesis)
-				tmp_string.append (Close_parenthesis)
-				tmp_string.append (Close_parenthesis)
-				c_writer.add_other (tmp_string)
-
-				tmp_string := clone (Hash_define)
-				tmp_string.append (Space)
-				tmp_string.append (Unregister_dll_server_function_name)
-				tmp_string.append (Space_open_parenthesis)
-				tmp_string.append (Open_parenthesis)
-				tmp_string.append (Eif_integer)
-				tmp_string.append (Close_parenthesis)
-				tmp_string.append (Space)
-				tmp_string.append (Ccom_unregister_dll_server_function_name)
-				tmp_string.append (Open_parenthesis)
-				tmp_string.append (Close_parenthesis)
-				tmp_string.append (Close_parenthesis)
-				c_writer.add_other (tmp_string)
-
-				tmp_string := clone (Hash_define)
-				tmp_string.append (Space)
-				tmp_string.append (Can_unload_dll_now_function_name)
-				tmp_string.append (Space_open_parenthesis)
-				tmp_string.append (Open_parenthesis)
-				tmp_string.append (Eif_integer)
-				tmp_string.append (Close_parenthesis)
-				tmp_string.append (Space)
-				tmp_string.append (Ccom_can_unload_dll_now_function_name)
-				tmp_string.append (Open_parenthesis)
-				tmp_string.append (Close_parenthesis)
-				tmp_string.append (Close_parenthesis)
-				c_writer.add_other (tmp_string)
-
-				tmp_string := clone (Hash_define)
-				tmp_string.append (Space)
-				tmp_string.append (Ccom_get_class_object_function_name)
-				tmp_string.append (Open_parenthesis)
-				tmp_string.append ("tid, clsid, riid, ppv")
-				tmp_string.append (Close_parenthesis)
-				tmp_string.append (Space_open_parenthesis)
-				tmp_string.append (Open_parenthesis)
-				tmp_string.append (Eif_integer)
-				tmp_string.append (Close_parenthesis)
-				tmp_string.append (Space)
-
-				tmp_string.append (Get_clause)
-				tmp_string.append (Get_class_object_function_name)
-				tmp_string.append (Open_parenthesis)
-				tmp_string.append ("tid, clsid, riid, ppv")
-				tmp_string.append (Close_parenthesis)
-				tmp_string.append (Close_parenthesis)
-				c_writer.add_other (tmp_string)
 
 				c_writer.add_function (dll_unlock_module_feature)
 				c_writer.add_function (dll_lock_module_feature)
@@ -207,53 +138,11 @@ feature -- Basic operations
 				c_writer.add_other_source ("DWORD threadID = GetCurrentThreadId ();")
 				c_writer.add_function (exe_lock_module_feature)
 				c_writer.add_function (exe_unlock_module_feature)
-	--			c_writer.add_function (ccom_embedding_feature)
 				c_writer.add_function (ccom_regserver_feature)
 				c_writer.add_function (ccom_unregserver_feature)
+ 				c_writer.add_function (ccom_initialize_com_feature)
+ 				c_writer.add_function (ccom_cleanup_com_feature)
 
-				-- define macros for features ccom_embedding_feature, ccom_regserver_feature, ccom_unregserver_feature
-				tmp_string := clone (Hash_define)
-				tmp_string.append (Space)
-				tmp_string.append (Embedding_feature_name)
-				tmp_string.append (Open_parenthesis)
-				tmp_string.append (Type_id_variable_name)
-				tmp_string.append (Close_parenthesis)
-				tmp_string.append (Space_open_parenthesis)
-				tmp_string.append (Ccom_embedding_feature_name)
-				tmp_string.append (Open_parenthesis)
-				tmp_string.append (Type_id_variable_name)
-				tmp_string.append (Close_parenthesis)
-				tmp_string.append (Close_parenthesis)
-				c_writer.add_other (tmp_string)
-
-				tmp_string := clone (Hash_define)
-				tmp_string.append (Space)
-				tmp_string.append (Regserver_feature_name)
-				tmp_string.append (Open_parenthesis)
-				tmp_string.append (Type_id_variable_name)
-				tmp_string.append (Close_parenthesis)
-				tmp_string.append (Space_open_parenthesis)
-				tmp_string.append (Ccom_regserver_feature_name)
-				tmp_string.append (Open_parenthesis)
-				tmp_string.append (Type_id_variable_name)
-				tmp_string.append (Close_parenthesis)
-				tmp_string.append (Close_parenthesis)
-				c_writer.add_other (tmp_string)
-
-				tmp_string := clone (Hash_define)
-				tmp_string.append (Space)
-				tmp_string.append (Unregserver_feature_name)
-				tmp_string.append (Open_parenthesis)
-				tmp_string.append (Type_id_variable_name)
-				tmp_string.append (Close_parenthesis)
-				tmp_string.append (Space_open_parenthesis)
-				tmp_string.append (Ccom_unregserver_feature_name)
-				tmp_string.append (Open_parenthesis)
-				tmp_string.append (Type_id_variable_name)
-				tmp_string.append (Close_parenthesis)
-				tmp_string.append (Close_parenthesis)
-				c_writer.add_other (tmp_string)
- 
 			end
 
 			check
@@ -364,86 +253,115 @@ feature {NONE} -- Implementation
 			tmp_string.append (Semicolon)
 			tmp_string.append (New_line_tab)
 
+			-- if (FAILED (hr))
+			tmp_string.append (If_keyword)
+			tmp_string.append (Space_open_parenthesis)
+			tmp_string.append (Failed)
+			tmp_string.append (Space_open_parenthesis)
+			tmp_string.append (Hresult_variable_name)
+			tmp_string.append (Close_parenthesis)
+			tmp_string.append (Close_parenthesis)
+			tmp_string.append (New_line_tab)
+			tmp_string.append (Open_curly_brace)
+			tmp_string.append (New_line_tab_tab)
+
+			--	com_eraise (f.c_format_message (hr), HRESULT_CODE (hr));
+
+			tmp_string.append (Com_eraise)
+			tmp_string.append (Space_open_parenthesis)
+			tmp_string.append (Formatter)
+			tmp_string.append (Dot)
+			tmp_string.append (Format_message)
+			tmp_string.append (Space_open_parenthesis)
+			tmp_string.append (Hresult_variable_name)
+			tmp_string.append (Close_parenthesis)
+			tmp_string.append (Comma_space)
+			tmp_string.append (Hresult_code)
+			tmp_string.append (Space_open_parenthesis)
+			tmp_string.append (Hresult_variable_name)
+			tmp_string.append (Close_parenthesis)
+			tmp_string.append (Close_parenthesis)
+			tmp_string.append (Semicolon)
+			tmp_string.append (New_line_tab)
+			tmp_string.append (Close_curly_brace)
+			tmp_string.append (New_line_tab)
+
 			from
 				system_descriptor.coclasses.start
 			until
 				system_descriptor.coclasses.after
 			loop
-				-- DWORD 'class_object_registration_token'
-				-- hr = CoRegisterClassObject ('Class_id', static_case<IClassFactory*> ('class_object'),
-				-- CLSCTX_LOCAL_SERVER, REGCLS_SINGLEUSE, &'class_object_registration_token')
-				-- ** Allow the implementors to choice between REGCLS_SINGLEUSE or REGCLS_MULTIPLEUSE later.
+				if not Non_generated_type_libraries.has (system_descriptor.coclasses.item.type_library_descriptor.guid) then
+					-- hr = CoRegisterClassObject ('Class_id', static_case<IClassFactory*> ('class_object'),
+					-- CLSCTX_LOCAL_SERVER, REGCLS_SINGLEUSE, &'class_object_registration_token')
+					-- ** Allow the implementors to choice between REGCLS_SINGLEUSE or REGCLS_MULTIPLEUSE later.
 
-				tmp_string.append (New_line_tab)
-				tmp_string.append (Dword)
-				tmp_string.append (Space)
-				tmp_string.append (Class_object_registration_token)
-				tmp_string.append (Semicolon)
-				tmp_string.append (New_line_tab)
-				
-				tmp_string.append (Hresult_variable_name)
-				tmp_string.append (Space_equal_space)
-				tmp_string.append (Co_register_class_object)
-				tmp_string.append (Space_open_parenthesis)
-				tmp_string.append (Clsid_type)
-				tmp_string.append (Underscore)
-				tmp_string.append (system_descriptor.coclasses.item.c_type_name)
-				tmp_string.append (Comma_space)
-				tmp_string.append (Static_cast)
-				tmp_string.append (Less)
-				tmp_string.append (Class_factory)
-				tmp_string.append (Asterisk)
-				tmp_string.append (More)
-				tmp_string.append (Open_parenthesis)
-				tmp_string.append (Ampersand)
-				tmp_string.append (system_descriptor.coclasses.item.c_type_name)
-				tmp_string.append (Underscore)
-				tmp_string.append (Class_object_variable_name)
-				tmp_string.append (Close_parenthesis)
-				tmp_string.append (Comma_space)
-				tmp_string.append (Clsctx_local_server)
-				tmp_string.append (Comma_space)
-				tmp_string.append (Regcls_single_use)
-				tmp_string.append (Comma_space)
-				tmp_string.append (Ampersand)
-				tmp_string.append (Class_object_registration_token)
-				tmp_string.append (Close_parenthesis)
-				tmp_string.append (Semicolon)
-				tmp_string.append (New_line_tab)
-				
-			
-				-- if (FAILED (hr))
-				tmp_string.append (If_keyword)
-				tmp_string.append (Space_open_parenthesis)
-				tmp_string.append (Failed)
-				tmp_string.append (Space_open_parenthesis)
-				tmp_string.append (Hresult_variable_name)
-				tmp_string.append (Close_parenthesis)
-				tmp_string.append (Close_parenthesis)
-				tmp_string.append (New_line_tab)
-				tmp_string.append (Open_curly_brace)
-				tmp_string.append (New_line_tab_tab)
+					tmp_string.append (Hresult_variable_name)
+					tmp_string.append (Space_equal_space)
+					tmp_string.append (Co_register_class_object)
+					tmp_string.append (Space_open_parenthesis)
+					tmp_string.append (Clsid_type)
+					tmp_string.append (Underscore)
+					tmp_string.append (system_descriptor.coclasses.item.c_type_name)
+					tmp_string.append (Comma_space)
+					tmp_string.append (Static_cast)
+					tmp_string.append (Less)
+					tmp_string.append (Class_factory)
+					tmp_string.append (Asterisk)
+					tmp_string.append (More)
+					tmp_string.append (Open_parenthesis)
+					tmp_string.append (Ampersand)
+					tmp_string.append (system_descriptor.coclasses.item.c_type_name)
+					tmp_string.append (Underscore)
+					tmp_string.append (Class_object_variable_name)
+					tmp_string.append (Close_parenthesis)
+					tmp_string.append (Comma_space)
+					tmp_string.append (Clsctx_local_server)
+					tmp_string.append (Comma_space)
+					tmp_string.append (Regcls_single_use)
+					tmp_string.append (Comma_space)
+					tmp_string.append (Ampersand)
+					tmp_string.append (Class_object_registration_token)
+					tmp_string.append (Underscore)
+					tmp_string.append (system_descriptor.coclasses.item.c_type_name)
+					tmp_string.append (Close_parenthesis)
+					tmp_string.append (Semicolon)
+					tmp_string.append (New_line_tab)
 
-				--	com_eraise (f.c_format_message (hr), HRESULT_CODE (hr));
 
-				tmp_string.append (Com_eraise)
-				tmp_string.append (Space_open_parenthesis)
-				tmp_string.append (Formatter)
-				tmp_string.append (Dot)
-				tmp_string.append (Format_message)
-				tmp_string.append (Space_open_parenthesis)
-				tmp_string.append (Hresult_variable_name)
-				tmp_string.append (Close_parenthesis)
-				tmp_string.append (Comma_space)
-				tmp_string.append (Hresult_code)
-				tmp_string.append (Space_open_parenthesis)
-				tmp_string.append (Hresult_variable_name)
-				tmp_string.append (Close_parenthesis)
-				tmp_string.append (Close_parenthesis)
-				tmp_string.append (Semicolon)
-				tmp_string.append (New_line_tab)
-				tmp_string.append (Close_curly_brace)
-				tmp_string.append (New_line_tab)
+					-- if (FAILED (hr))
+					tmp_string.append (If_keyword)
+					tmp_string.append (Space_open_parenthesis)
+					tmp_string.append (Failed)
+					tmp_string.append (Space_open_parenthesis)
+					tmp_string.append (Hresult_variable_name)
+					tmp_string.append (Close_parenthesis)
+					tmp_string.append (Close_parenthesis)
+					tmp_string.append (New_line_tab)
+					tmp_string.append (Open_curly_brace)
+					tmp_string.append (New_line_tab_tab)
+
+					--	com_eraise (f.c_format_message (hr), HRESULT_CODE (hr));
+
+					tmp_string.append (Com_eraise)
+					tmp_string.append (Space_open_parenthesis)
+					tmp_string.append (Formatter)
+					tmp_string.append (Dot)
+					tmp_string.append (Format_message)
+					tmp_string.append (Space_open_parenthesis)
+					tmp_string.append (Hresult_variable_name)
+					tmp_string.append (Close_parenthesis)
+					tmp_string.append (Comma_space)
+					tmp_string.append (Hresult_code)
+					tmp_string.append (Space_open_parenthesis)
+					tmp_string.append (Hresult_variable_name)
+					tmp_string.append (Close_parenthesis)
+					tmp_string.append (Close_parenthesis)
+					tmp_string.append (Semicolon)
+					tmp_string.append (New_line_tab)
+					tmp_string.append (Close_curly_brace)
+					tmp_string.append (New_line_tab)
+				end
 				
 				system_descriptor.coclasses.forth
 			end
@@ -458,22 +376,34 @@ feature {NONE} -- Implementation
 			tmp_string: STRING
 		do
 			create Result.make
-			Result.set_name ("ccom_initialize_com")
-			Result.set_comment ("Initialize server.")
+			Result.set_name ("ccom_cleanup_com")
+			Result.set_comment ("Clean up COM.")
 			Result.set_result_type (Void_c_keyword)
+
+			create tmp_string.make (0)
+			tmp_string.append (Tab)
+			from
+				system_descriptor.coclasses.start
+			until
+				system_descriptor.coclasses.after
+			loop
+				if not Non_generated_type_libraries.has (system_descriptor.coclasses.item.type_library_descriptor.guid) then
 		
-			tmp_string.append (Co_revoke_class_object)
-			tmp_string.append (Space_open_parenthesis)
-			tmp_string.append (Class_object_registration_token)
-			tmp_string.append (Close_parenthesis)
-			tmp_string.append (Semicolon)
-			tmp_string.append (New_line_tab)
-			tmp_string.append (New_line_tab)
+					tmp_string.append (Co_revoke_class_object)
+					tmp_string.append (Space_open_parenthesis)
+					tmp_string.append (Class_object_registration_token)
+					tmp_string.append (Underscore)
+					tmp_string.append (system_descriptor.coclasses.item.c_type_name)
+					tmp_string.append (Close_parenthesis)
+					tmp_string.append (Semicolon)
+					tmp_string.append (New_line_tab)
+					tmp_string.append (New_line_tab)
+				end
+				
+				system_descriptor.coclasses.forth
+			end
 			
 			tmp_string.append (Co_uninitialize_function)
-			tmp_string.append (New_line_tab)
-			tmp_string.append (Return)
-			tmp_string.append (Semicolon)
 
 			Result.set_body (tmp_string)
 		end
@@ -489,23 +419,9 @@ feature {NONE} -- Implementation
             	Result.set_comment ("Unregister server.")
 			Result.set_result_type (Void_c_keyword)
 
-			tmp_string := clone (Eif_type_id)
-			tmp_string.append (Space)
-			tmp_string.append (Type_id_variable_name)
-
-			Result.set_signature (tmp_string)
-
 			-- HRESULT hr = CoInitialize (0)
 			tmp_string := clone (Tab)
-			tmp_string.append (Class_object_variable_name)
-			tmp_string.append (Dot)
-			tmp_string.append (Set_type_id_function_name)
-			tmp_string.append (Space_open_parenthesis)
-			tmp_string.append (Type_id_variable_name)
-			tmp_string.append (Close_parenthesis)
-			tmp_string.append (Semicolon)
-			tmp_string.append (New_line)
-			tmp_string.append (New_line_tab)
+
 			tmp_string.append (Hresult)
 			tmp_string.append (Space)
 			tmp_string.append (Hresult_variable_name)
@@ -546,31 +462,49 @@ feature {NONE} -- Implementation
 	            Result.set_comment ("Register server.")
 			Result.set_result_type (Void_c_keyword)
 
-			tmp_string := clone (Eif_type_id)
-			tmp_string.append (Space)
-			tmp_string.append (Type_id_variable_name)
-
-			Result.set_signature (tmp_string)
-
-			-- class_object.set_type_id (tid)
-			tmp_string := clone (Class_object_variable_name)
-			tmp_string.append (Dot)
-			tmp_string.append (Set_type_id_function_name)
-			tmp_string.append (Space_open_parenthesis)
-			tmp_string.append (Type_id_variable_name)
-			tmp_string.append (Close_parenthesis)
-			tmp_string.append (Semicolon)
-			tmp_string.append (New_line)
+			tmp_string := clone (Tab)
 
 			-- HRESULT hr = CoInitialize (0)
 
-			tmp_string.append (New_line_tab)
 			tmp_string.append (Hresult)
 			tmp_string.append (Space)
 			tmp_string.append (Hresult_variable_name)
 			tmp_string.append (Space_equal_space)
 			tmp_string.append (Co_initialize)
 			tmp_string.append (Semicolon)
+			tmp_string.append (New_line_tab)
+
+			-- if (FAILED (hr))
+			tmp_string.append (If_keyword)
+			tmp_string.append (Space_open_parenthesis)
+			tmp_string.append (Failed)
+			tmp_string.append (Space_open_parenthesis)
+			tmp_string.append (Hresult_variable_name)
+			tmp_string.append (Close_parenthesis)
+			tmp_string.append (Close_parenthesis)
+			tmp_string.append (New_line_tab)
+			tmp_string.append (Open_curly_brace)
+			tmp_string.append (New_line_tab_tab)
+
+			--	com_eraise (f.c_format_message (hr), HRESULT_CODE (hr));
+
+			tmp_string.append (Com_eraise)
+			tmp_string.append (Space_open_parenthesis)
+			tmp_string.append (Formatter)
+			tmp_string.append (Dot)
+			tmp_string.append (Format_message)
+			tmp_string.append (Space_open_parenthesis)
+			tmp_string.append (Hresult_variable_name)
+			tmp_string.append (Close_parenthesis)
+			tmp_string.append (Comma_space)
+			tmp_string.append (Hresult_code)
+			tmp_string.append (Space_open_parenthesis)
+			tmp_string.append (Hresult_variable_name)
+			tmp_string.append (Close_parenthesis)
+			tmp_string.append (Close_parenthesis)
+			tmp_string.append (Semicolon)
+			tmp_string.append (New_line_tab)
+			tmp_string.append (Close_curly_brace)
 			tmp_string.append (New_line_tab)
 
 			tmp_string.append (Module_file_name_set_up)
@@ -589,9 +523,6 @@ feature {NONE} -- Implementation
 			-- return;
 			tmp_string.append (New_line_tab)
 			tmp_string.append (Co_uninitialize_function)
-			tmp_string.append (New_line_tab)
-			tmp_string.append (Return)
-			tmp_string.append (Semicolon)
 
 			Result.set_body (tmp_string)
 		end
@@ -870,14 +801,17 @@ feature {NONE} -- Implementation
 			create Result.make
 			Result.set_name (Unregister)
 			Result.set_comment ("Unregister Server/Component")
-			Result.set_result_type (Std_method_imp)
+			Result.set_result_type (Eif_integer)
 			Result.set_signature ("const REG_DATA *rgEntries, int cEntries")
 
 			create tmp_string.make (0)
+			tmp_string.append (Tab)
 			tmp_string.append (libid_definition (system_descriptor.name, 
 								system_descriptor.type_lib_guid))
+			tmp_string.append (New_line_tab)
+			
 			-- HRESULT hr = UnregisterTypeLib (LIBID_'library_name', 1,0,0, SYS_WIN32);
-			tmp_string.append ("%THRESULT hr = UnRegisterTypeLib (")
+			tmp_string.append ("HRESULT hr = UnRegisterTypeLib (")
 			tmp_string.append (Libid_type)
 			tmp_string.append (Underscore)
 			tmp_string.append (system_descriptor.name)
@@ -931,7 +865,7 @@ feature {NONE} -- Implementation
 			create Result.make
 			Result.set_name (Register)
 			Result.set_comment ("Register Server")
-			Result.set_result_type (Std_method_imp)
+			Result.set_result_type (Eif_integer)
 
 			Result.set_signature ("const REG_DATA *rgEntries, int cEntries")
 

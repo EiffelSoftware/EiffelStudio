@@ -260,6 +260,10 @@ feature {NONE} -- Implementation
 						create outproc_reg_gen
 						outproc_reg_gen.generate
 					end
+					if shared_wizard_environment.in_process_server then
+						create inproc_reg_gen
+						inproc_reg_gen.generate
+					end
 					create c_reg_gen
 					c_reg_gen.generate
 

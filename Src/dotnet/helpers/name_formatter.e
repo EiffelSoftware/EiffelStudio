@@ -218,8 +218,10 @@ feature -- Basic Operations
 			non_void_name: name /= Void
 			name_not_empty: not name.is_empty
 		local
-			l_name: STRING
+			l_name, l_escaped: STRING
 			l_var: like variable_mapping_table
+			l_char: CHARACTER
+			i: INTEGER
 		do
 				-- resolve conflict names	
 			create l_name.make_from_string (name)
@@ -229,46 +231,76 @@ feature -- Basic Operations
 			if l_var.found then
 				Result := l_var.found_item
 			else
-				create Result.make_from_string (name)
+				if name.item (1) = '_' then
+					create Result.make (name.count + 1)
+					Result.append_character ('a')
+					Result.append (name)
+				else
+					create Result.make_from_string (name)
+				end
 				if Result.item (Result.count) = '&' then
 					Result.keep_head (Result.count - 1)
+				end
+				l_char := Result.item (1)
+				if not l_char.is_alpha then
+					l_escaped := escaped_character (l_char)
+					Result.replace_substring (l_escaped, 1, 1)
+				end
+				from
+					i := l_escaped.count + 1
+				until
+					i > Result.count
+				loop
+					l_char := Result.item (i)
+					if not l_char.is_alpha and not l_char.is_digit and l_char /= '_' then
+						l_escaped := escaped_character (l_char)
+						Result.replace_substring (l_escaped, i, i)
+						i := i + l_escaped.count
+					else
+						i := i + 1
+					end
 				end
 				Result.replace_substring_all (Single_dot_string, Single_underscore_string)
 				Result.replace_substring_all (Triple_underscore_string, Single_underscore_string)
 				Result.replace_substring_all (Double_underscore_string, Single_underscore_string)
-				if Result.item (1) = '_' then
-					Result.prepend_character ('a')
-				end
 			end
 		ensure
-			non_void_result: Result /= Void
+			non_void_name: Result /= Void
+			valid_name: is_valid_variable_name (Result)
 		end
 
 	is_valid_variable_name (a_name: STRING): BOOLEAN is
 			-- Is `a_name' a valid variable name?
 		require
 			non_void_a_name: a_name /= Void
+		local
+			i, l_count: INTEGER
 		do
-			if
-				a_name.is_empty or
-				variable_mapping_table.has (a_name) or
-				a_name.has (' ') or
-				a_name.has ('.') or
-				a_name.has ('&') or
-				a_name.has ('#') or
-				a_name.has ('@')
-			then
-				Result := False
-			else
-				Result := True
+			from
+				i := 2
+				l_count := a_name.count
+				Result := not a_name.is_empty and then not variable_mapping_table.has (a_name) and then a_name.item (1).is_alpha
+			until
+				i > l_count or not Result
+			loop
+				Result := a_name.item (i).is_alpha or a_name.item (i).is_digit or a_name.item (i) = '_'
+				i := i + 1
 			end
 		end
 		
 
 feature {NONE} -- Implementation
 
+	escaped_character (a_character: CHARACTER): STRING is
+			-- Escape `a_character' so that it is a valid Eiffel identifier string
+		do
+			create Result.make (4)
+			Result.append_character ('x')
+			Result.append (a_character.code.out)
+		end
+			
 	trim_end_digits (s: STRING) is
-			-- 	Remove end digits from `s' and append `_' if needed.
+			-- Remove end digits from `s' and append `_' if needed.
 		require
 			non_void_string: s /= Void
 		local

@@ -2,16 +2,16 @@
  Help file: 
 -----------------------------------------------------------*/
 
-#include "ecom_Core_Core.h"
-static const CLSID CLSID_Core_ = {0x1983257d,0x4e69,0x3885,{0x82,0x5a,0xd2,0xe1,0x42,0xc4,0xef,0xa7}};
+#include "ecom_EiffelCompiler_Core.h"
+static const CLSID CLSID_Core_ = {0x9daf83a1,0x15d7,0x3a80,{0xab,0x8f,0x0e,0x03,0x4f,0x47,0x9c,0x3f}};
 
-static const IID IID_ICore_ = {0x07819c00,0x1269,0x3f38,{0xb7,0xcf,0xf3,0xd7,0xf0,0xf5,0x56,0xb6}};
+static const IID IID_ICore_ = {0x75fa3a63,0xb835,0x3feb,{0x9a,0x33,0x34,0x79,0xc1,0x93,0x78,0xcf}};
 
 #ifdef __cplusplus
 extern "C" {
 #endif
 
-ecom_Core::Core::Core()
+ecom_EiffelCompiler::Core::Core()
 {
 	HRESULT hr;
 	hr = CoInitializeEx (NULL, COINIT_APARTMENTTHREADED);
@@ -44,7 +44,7 @@ ecom_Core::Core::Core()
 };
 /*----------------------------------------------------------------------------------------------------------------------*/
 
-ecom_Core::Core::Core( IUnknown * a_pointer )
+ecom_EiffelCompiler::Core::Core( IUnknown * a_pointer )
 {
 	HRESULT hr, hr2;
 	hr = CoInitializeEx (NULL, COINIT_APARTMENTTHREADED);
@@ -74,7 +74,7 @@ ecom_Core::Core::Core( IUnknown * a_pointer )
 };
 /*----------------------------------------------------------------------------------------------------------------------*/
 
-ecom_Core::Core::~Core()
+ecom_EiffelCompiler::Core::~Core()
 {
 	p_unknown->Release ();
 	if (p_ICore!=NULL)
@@ -83,7 +83,7 @@ ecom_Core::Core::~Core()
 };
 /*----------------------------------------------------------------------------------------------------------------------*/
 
-void ecom_Core::Core::ccom_set_console_application()
+void ecom_EiffelCompiler::Core::ccom_set_console_application()
 
 /*-----------------------------------------------------------
 	No description available.
@@ -110,7 +110,7 @@ void ecom_Core::Core::ccom_set_console_application()
 };
 /*----------------------------------------------------------------------------------------------------------------------*/
 
-void ecom_Core::Core::ccom_set_window_application()
+void ecom_EiffelCompiler::Core::ccom_set_window_application()
 
 /*-----------------------------------------------------------
 	No description available.
@@ -137,7 +137,7 @@ void ecom_Core::Core::ccom_set_window_application()
 };
 /*----------------------------------------------------------------------------------------------------------------------*/
 
-void ecom_Core::Core::ccom_set_dll()
+void ecom_EiffelCompiler::Core::ccom_set_dll()
 
 /*-----------------------------------------------------------
 	No description available.
@@ -164,7 +164,7 @@ void ecom_Core::Core::ccom_set_dll()
 };
 /*----------------------------------------------------------------------------------------------------------------------*/
 
-void ecom_Core::Core::ccom_start_assembly_generation(  /* [in] */ EIF_OBJECT name,  /* [in] */ EIF_OBJECT fname,  /* [in] */ EIF_OBJECT location )
+void ecom_EiffelCompiler::Core::ccom_start_assembly_generation(  /* [in] */ EIF_OBJECT name,  /* [in] */ EIF_OBJECT fname,  /* [in] */ EIF_OBJECT location )
 
 /*-----------------------------------------------------------
 	No description available.
@@ -203,7 +203,7 @@ rt_ce.free_memory_bstr (tmp_location);
 };
 /*----------------------------------------------------------------------------------------------------------------------*/
 
-void ecom_Core::Core::ccom_add_assembly_reference(  /* [in] */ EIF_OBJECT name )
+void ecom_EiffelCompiler::Core::ccom_add_assembly_reference(  /* [in] */ EIF_OBJECT name )
 
 /*-----------------------------------------------------------
 	No description available.
@@ -236,7 +236,7 @@ void ecom_Core::Core::ccom_add_assembly_reference(  /* [in] */ EIF_OBJECT name )
 };
 /*----------------------------------------------------------------------------------------------------------------------*/
 
-void ecom_Core::Core::ccom_start_module_generation(  /* [in] */ EIF_OBJECT name,  /* [in] */ EIF_BOOLEAN debug1 )
+void ecom_EiffelCompiler::Core::ccom_start_module_generation(  /* [in] */ EIF_OBJECT name,  /* [in] */ EIF_BOOLEAN debug1 )
 
 /*-----------------------------------------------------------
 	No description available.
@@ -271,7 +271,7 @@ void ecom_Core::Core::ccom_start_module_generation(  /* [in] */ EIF_OBJECT name,
 };
 /*----------------------------------------------------------------------------------------------------------------------*/
 
-void ecom_Core::Core::ccom_end_assembly_generation()
+void ecom_EiffelCompiler::Core::ccom_end_assembly_generation()
 
 /*-----------------------------------------------------------
 	No description available.
@@ -298,34 +298,7 @@ void ecom_Core::Core::ccom_end_assembly_generation()
 };
 /*----------------------------------------------------------------------------------------------------------------------*/
 
-void ecom_Core::Core::ccom_end_module_generation()
-
-/*-----------------------------------------------------------
-	No description available.
------------------------------------------------------------*/
-{
-	HRESULT hr;
-	if (p_ICore == NULL)
-	{
-		hr = p_unknown->QueryInterface (IID_ICore_, (void **)&p_ICore);
-	if (FAILED (hr))
-	{
-		if ((HRESULT_FACILITY (hr)  ==  FACILITY_ITF) && (HRESULT_CODE (hr) > 1024) && (HRESULT_CODE (hr) < 1053))
-			com_eraise (rt_ec.ccom_ec_lpstr (eename(HRESULT_CODE (hr) - 1024), NULL),HRESULT_CODE (hr) - 1024);
-		com_eraise (f.c_format_message (hr), EN_PROG);
-	};
-	};
-	hr = p_ICore->EndModuleGeneration ();
-	if (FAILED (hr))
-	{
-		if ((HRESULT_FACILITY (hr)  ==  FACILITY_ITF) && (HRESULT_CODE (hr) > 1024) && (HRESULT_CODE (hr) < 1053))
-			com_eraise (rt_ec.ccom_ec_lpstr (eename(HRESULT_CODE (hr) - 1024), NULL),HRESULT_CODE (hr) - 1024);
-		com_eraise (f.c_format_message (hr), EN_PROG);
-	};	
-};
-/*----------------------------------------------------------------------------------------------------------------------*/
-
-void ecom_Core::Core::ccom_start_class_mappings(  /* [in] */ EIF_INTEGER class_count )
+void ecom_EiffelCompiler::Core::ccom_start_class_mappings(  /* [in] */ EIF_INTEGER class_count )
 
 /*-----------------------------------------------------------
 	No description available.
@@ -357,7 +330,7 @@ void ecom_Core::Core::ccom_start_class_mappings(  /* [in] */ EIF_INTEGER class_c
 };
 /*----------------------------------------------------------------------------------------------------------------------*/
 
-void ecom_Core::Core::ccom_generate_class_mappings(  /* [in] */ EIF_OBJECT class_name1,  /* [in] */ EIF_INTEGER type_id,  /* [in] */ EIF_OBJECT source_file_name )
+void ecom_EiffelCompiler::Core::ccom_generate_class_mappings(  /* [in] */ EIF_OBJECT class_name1,  /* [in] */ EIF_INTEGER type_id,  /* [in] */ EIF_INTEGER interface_id,  /* [in] */ EIF_OBJECT source_file_name,  /* [in] */ EIF_OBJECT element_type_name )
 
 /*-----------------------------------------------------------
 	No description available.
@@ -378,10 +351,14 @@ void ecom_Core::Core::ccom_generate_class_mappings(  /* [in] */ EIF_OBJECT class
 	tmp_class_name1 = (BSTR)rt_ec.ccom_ec_bstr (eif_access (class_name1));
 	LONG tmp_type_id = 0;
 	tmp_type_id = (LONG)type_id;
+	LONG tmp_interface_id = 0;
+	tmp_interface_id = (LONG)interface_id;
 	BSTR tmp_source_file_name = 0;
 	tmp_source_file_name = (BSTR)rt_ec.ccom_ec_bstr (eif_access (source_file_name));
+	BSTR tmp_element_type_name = 0;
+	tmp_element_type_name = (BSTR)rt_ec.ccom_ec_bstr (eif_access (element_type_name));
 	
-	hr = p_ICore->GenerateClassMappings(tmp_class_name1,tmp_type_id,tmp_source_file_name);
+	hr = p_ICore->GenerateClassMappings(tmp_class_name1,tmp_type_id,tmp_interface_id,tmp_source_file_name,tmp_element_type_name);
 	if (FAILED (hr))
 	{
 		if ((HRESULT_FACILITY (hr)  ==  FACILITY_ITF) && (HRESULT_CODE (hr) > 1024) && (HRESULT_CODE (hr) < 1053))
@@ -391,49 +368,12 @@ void ecom_Core::Core::ccom_generate_class_mappings(  /* [in] */ EIF_OBJECT class
 	
 	rt_ce.free_memory_bstr (tmp_class_name1);
 rt_ce.free_memory_bstr (tmp_source_file_name);
-
-};
-/*----------------------------------------------------------------------------------------------------------------------*/
-
-void ecom_Core::Core::ccom_generate_array_class_mappings(  /* [in] */ EIF_OBJECT class_name1,  /* [in] */ EIF_OBJECT element_type_name,  /* [in] */ EIF_INTEGER type_id )
-
-/*-----------------------------------------------------------
-	No description available.
------------------------------------------------------------*/
-{
-	HRESULT hr;
-	if (p_ICore == NULL)
-	{
-		hr = p_unknown->QueryInterface (IID_ICore_, (void **)&p_ICore);
-	if (FAILED (hr))
-	{
-		if ((HRESULT_FACILITY (hr)  ==  FACILITY_ITF) && (HRESULT_CODE (hr) > 1024) && (HRESULT_CODE (hr) < 1053))
-			com_eraise (rt_ec.ccom_ec_lpstr (eename(HRESULT_CODE (hr) - 1024), NULL),HRESULT_CODE (hr) - 1024);
-		com_eraise (f.c_format_message (hr), EN_PROG);
-	};
-	};
-	BSTR tmp_class_name1 = 0;
-	tmp_class_name1 = (BSTR)rt_ec.ccom_ec_bstr (eif_access (class_name1));
-	BSTR tmp_element_type_name = 0;
-	tmp_element_type_name = (BSTR)rt_ec.ccom_ec_bstr (eif_access (element_type_name));
-	LONG tmp_type_id = 0;
-	tmp_type_id = (LONG)type_id;
-	
-	hr = p_ICore->GenerateArrayClassMappings(tmp_class_name1,tmp_element_type_name,tmp_type_id);
-	if (FAILED (hr))
-	{
-		if ((HRESULT_FACILITY (hr)  ==  FACILITY_ITF) && (HRESULT_CODE (hr) > 1024) && (HRESULT_CODE (hr) < 1053))
-			com_eraise (rt_ec.ccom_ec_lpstr (eename(HRESULT_CODE (hr) - 1024), NULL),HRESULT_CODE (hr) - 1024);
-		com_eraise (f.c_format_message (hr), EN_PROG);
-	};
-	
-	rt_ce.free_memory_bstr (tmp_class_name1);
 rt_ce.free_memory_bstr (tmp_element_type_name);
 
 };
 /*----------------------------------------------------------------------------------------------------------------------*/
 
-void ecom_Core::Core::ccom_generate_class_header(  /* [in] */ EIF_BOOLEAN is_interface,  /* [in] */ EIF_BOOLEAN deferred1,  /* [in] */ EIF_BOOLEAN expanded1,  /* [in] */ EIF_BOOLEAN is_external,  /* [in] */ EIF_INTEGER type_id )
+void ecom_EiffelCompiler::Core::ccom_generate_class_header(  /* [in] */ EIF_BOOLEAN is_interface,  /* [in] */ EIF_BOOLEAN deferred1,  /* [in] */ EIF_BOOLEAN is_frozen,  /* [in] */ EIF_BOOLEAN expanded1,  /* [in] */ EIF_BOOLEAN is_external,  /* [in] */ EIF_INTEGER type_id )
 
 /*-----------------------------------------------------------
 	No description available.
@@ -454,6 +394,8 @@ void ecom_Core::Core::ccom_generate_class_header(  /* [in] */ EIF_BOOLEAN is_int
 	tmp_is_interface = (VARIANT_BOOL)rt_ec.ccom_ec_boolean (is_interface);
 	VARIANT_BOOL tmp_deferred1 = 0;
 	tmp_deferred1 = (VARIANT_BOOL)rt_ec.ccom_ec_boolean (deferred1);
+	VARIANT_BOOL tmp_is_frozen = 0;
+	tmp_is_frozen = (VARIANT_BOOL)rt_ec.ccom_ec_boolean (is_frozen);
 	VARIANT_BOOL tmp_expanded1 = 0;
 	tmp_expanded1 = (VARIANT_BOOL)rt_ec.ccom_ec_boolean (expanded1);
 	VARIANT_BOOL tmp_is_external = 0;
@@ -461,7 +403,7 @@ void ecom_Core::Core::ccom_generate_class_header(  /* [in] */ EIF_BOOLEAN is_int
 	LONG tmp_type_id = 0;
 	tmp_type_id = (LONG)type_id;
 	
-	hr = p_ICore->GenerateClassHeader(tmp_is_interface,tmp_deferred1,tmp_expanded1,tmp_is_external,tmp_type_id);
+	hr = p_ICore->GenerateClassHeader(tmp_is_interface,tmp_deferred1,tmp_is_frozen,tmp_expanded1,tmp_is_external,tmp_type_id);
 	if (FAILED (hr))
 	{
 		if ((HRESULT_FACILITY (hr)  ==  FACILITY_ITF) && (HRESULT_CODE (hr) > 1024) && (HRESULT_CODE (hr) < 1053))
@@ -473,7 +415,7 @@ void ecom_Core::Core::ccom_generate_class_header(  /* [in] */ EIF_BOOLEAN is_int
 };
 /*----------------------------------------------------------------------------------------------------------------------*/
 
-void ecom_Core::Core::ccom_end_class()
+void ecom_EiffelCompiler::Core::ccom_end_class()
 
 /*-----------------------------------------------------------
 	No description available.
@@ -500,7 +442,7 @@ void ecom_Core::Core::ccom_end_class()
 };
 /*----------------------------------------------------------------------------------------------------------------------*/
 
-void ecom_Core::Core::ccom_add_to_parents_list(  /* [in] */ EIF_INTEGER type_id )
+void ecom_EiffelCompiler::Core::ccom_add_to_parents_list(  /* [in] */ EIF_INTEGER type_id )
 
 /*-----------------------------------------------------------
 	No description available.
@@ -532,7 +474,39 @@ void ecom_Core::Core::ccom_add_to_parents_list(  /* [in] */ EIF_INTEGER type_id 
 };
 /*----------------------------------------------------------------------------------------------------------------------*/
 
-void ecom_Core::Core::ccom_end_parents_list()
+void ecom_EiffelCompiler::Core::ccom_add_interface(  /* [in] */ EIF_INTEGER type_id )
+
+/*-----------------------------------------------------------
+	No description available.
+-----------------------------------------------------------*/
+{
+	HRESULT hr;
+	if (p_ICore == NULL)
+	{
+		hr = p_unknown->QueryInterface (IID_ICore_, (void **)&p_ICore);
+	if (FAILED (hr))
+	{
+		if ((HRESULT_FACILITY (hr)  ==  FACILITY_ITF) && (HRESULT_CODE (hr) > 1024) && (HRESULT_CODE (hr) < 1053))
+			com_eraise (rt_ec.ccom_ec_lpstr (eename(HRESULT_CODE (hr) - 1024), NULL),HRESULT_CODE (hr) - 1024);
+		com_eraise (f.c_format_message (hr), EN_PROG);
+	};
+	};
+	LONG tmp_type_id = 0;
+	tmp_type_id = (LONG)type_id;
+	
+	hr = p_ICore->AddInterface(tmp_type_id);
+	if (FAILED (hr))
+	{
+		if ((HRESULT_FACILITY (hr)  ==  FACILITY_ITF) && (HRESULT_CODE (hr) > 1024) && (HRESULT_CODE (hr) < 1053))
+			com_eraise (rt_ec.ccom_ec_lpstr (eename(HRESULT_CODE (hr) - 1024), NULL),HRESULT_CODE (hr) - 1024);
+		com_eraise (f.c_format_message (hr), EN_PROG);
+	};
+	
+	
+};
+/*----------------------------------------------------------------------------------------------------------------------*/
+
+void ecom_EiffelCompiler::Core::ccom_end_parents_list()
 
 /*-----------------------------------------------------------
 	No description available.
@@ -559,7 +533,7 @@ void ecom_Core::Core::ccom_end_parents_list()
 };
 /*----------------------------------------------------------------------------------------------------------------------*/
 
-void ecom_Core::Core::ccom_start_features_list(  /* [in] */ EIF_INTEGER type_id )
+void ecom_EiffelCompiler::Core::ccom_start_features_list(  /* [in] */ EIF_INTEGER type_id )
 
 /*-----------------------------------------------------------
 	No description available.
@@ -591,34 +565,7 @@ void ecom_Core::Core::ccom_start_features_list(  /* [in] */ EIF_INTEGER type_id 
 };
 /*----------------------------------------------------------------------------------------------------------------------*/
 
-void ecom_Core::Core::ccom_end_features_list()
-
-/*-----------------------------------------------------------
-	No description available.
------------------------------------------------------------*/
-{
-	HRESULT hr;
-	if (p_ICore == NULL)
-	{
-		hr = p_unknown->QueryInterface (IID_ICore_, (void **)&p_ICore);
-	if (FAILED (hr))
-	{
-		if ((HRESULT_FACILITY (hr)  ==  FACILITY_ITF) && (HRESULT_CODE (hr) > 1024) && (HRESULT_CODE (hr) < 1053))
-			com_eraise (rt_ec.ccom_ec_lpstr (eename(HRESULT_CODE (hr) - 1024), NULL),HRESULT_CODE (hr) - 1024);
-		com_eraise (f.c_format_message (hr), EN_PROG);
-	};
-	};
-	hr = p_ICore->EndFeaturesList ();
-	if (FAILED (hr))
-	{
-		if ((HRESULT_FACILITY (hr)  ==  FACILITY_ITF) && (HRESULT_CODE (hr) > 1024) && (HRESULT_CODE (hr) < 1053))
-			com_eraise (rt_ec.ccom_ec_lpstr (eename(HRESULT_CODE (hr) - 1024), NULL),HRESULT_CODE (hr) - 1024);
-		com_eraise (f.c_format_message (hr), EN_PROG);
-	};	
-};
-/*----------------------------------------------------------------------------------------------------------------------*/
-
-void ecom_Core::Core::ccom_mark_invariant(  /* [in] */ EIF_INTEGER feature_id )
+void ecom_EiffelCompiler::Core::ccom_mark_invariant(  /* [in] */ EIF_INTEGER feature_id )
 
 /*-----------------------------------------------------------
 	No description available.
@@ -650,7 +597,7 @@ void ecom_Core::Core::ccom_mark_invariant(  /* [in] */ EIF_INTEGER feature_id )
 };
 /*----------------------------------------------------------------------------------------------------------------------*/
 
-void ecom_Core::Core::ccom_mark_creation_routines(  /* [in] */ EIF_OBJECT feature_id )
+void ecom_EiffelCompiler::Core::ccom_mark_creation_routines(  /* [in] */ EIF_OBJECT feature_id )
 
 /*-----------------------------------------------------------
 	No description available.
@@ -683,7 +630,7 @@ void ecom_Core::Core::ccom_mark_creation_routines(  /* [in] */ EIF_OBJECT featur
 };
 /*----------------------------------------------------------------------------------------------------------------------*/
 
-void ecom_Core::Core::ccom_start_feature_description(  /* [in] */ EIF_INTEGER arg_count )
+void ecom_EiffelCompiler::Core::ccom_start_feature_description(  /* [in] */ EIF_INTEGER arg_count )
 
 /*-----------------------------------------------------------
 	No description available.
@@ -715,45 +662,7 @@ void ecom_Core::Core::ccom_start_feature_description(  /* [in] */ EIF_INTEGER ar
 };
 /*----------------------------------------------------------------------------------------------------------------------*/
 
-void ecom_Core::Core::ccom_generate_feature_nature(  /* [in] */ EIF_BOOLEAN redefined,  /* [in] */ EIF_BOOLEAN deferred1,  /* [in] */ EIF_BOOLEAN frozen1,  /* [in] */ EIF_BOOLEAN is_attribute )
-
-/*-----------------------------------------------------------
-	No description available.
------------------------------------------------------------*/
-{
-	HRESULT hr;
-	if (p_ICore == NULL)
-	{
-		hr = p_unknown->QueryInterface (IID_ICore_, (void **)&p_ICore);
-	if (FAILED (hr))
-	{
-		if ((HRESULT_FACILITY (hr)  ==  FACILITY_ITF) && (HRESULT_CODE (hr) > 1024) && (HRESULT_CODE (hr) < 1053))
-			com_eraise (rt_ec.ccom_ec_lpstr (eename(HRESULT_CODE (hr) - 1024), NULL),HRESULT_CODE (hr) - 1024);
-		com_eraise (f.c_format_message (hr), EN_PROG);
-	};
-	};
-	VARIANT_BOOL tmp_redefined = 0;
-	tmp_redefined = (VARIANT_BOOL)rt_ec.ccom_ec_boolean (redefined);
-	VARIANT_BOOL tmp_deferred1 = 0;
-	tmp_deferred1 = (VARIANT_BOOL)rt_ec.ccom_ec_boolean (deferred1);
-	VARIANT_BOOL tmp_frozen1 = 0;
-	tmp_frozen1 = (VARIANT_BOOL)rt_ec.ccom_ec_boolean (frozen1);
-	VARIANT_BOOL tmp_is_attribute = 0;
-	tmp_is_attribute = (VARIANT_BOOL)rt_ec.ccom_ec_boolean (is_attribute);
-	
-	hr = p_ICore->GenerateFeatureNature(tmp_redefined,tmp_deferred1,tmp_frozen1,tmp_is_attribute);
-	if (FAILED (hr))
-	{
-		if ((HRESULT_FACILITY (hr)  ==  FACILITY_ITF) && (HRESULT_CODE (hr) > 1024) && (HRESULT_CODE (hr) < 1053))
-			com_eraise (rt_ec.ccom_ec_lpstr (eename(HRESULT_CODE (hr) - 1024), NULL),HRESULT_CODE (hr) - 1024);
-		com_eraise (f.c_format_message (hr), EN_PROG);
-	};
-	
-	
-};
-/*----------------------------------------------------------------------------------------------------------------------*/
-
-void ecom_Core::Core::ccom_generate_feature_identification(  /* [in] */ EIF_OBJECT name,  /* [in] */ EIF_INTEGER feature_id,  /* [in] */ EIF_OBJECT routine_ids,  /* [in] */ EIF_BOOLEAN in_current_class,  /* [in] */ EIF_INTEGER written_type_id )
+void ecom_EiffelCompiler::Core::ccom_generate_interface_feature_identification(  /* [in] */ EIF_OBJECT name,  /* [in] */ EIF_INTEGER feature_id,  /* [in] */ EIF_BOOLEAN is_attribute )
 
 /*-----------------------------------------------------------
 	No description available.
@@ -774,14 +683,10 @@ void ecom_Core::Core::ccom_generate_feature_identification(  /* [in] */ EIF_OBJE
 	tmp_name = (BSTR)rt_ec.ccom_ec_bstr (eif_access (name));
 	LONG tmp_feature_id = 0;
 	tmp_feature_id = (LONG)feature_id;
-	SAFEARRAY *  tmp_routine_ids = 0;
-	tmp_routine_ids = (SAFEARRAY * )rt_ec.ccom_ec_safearray_long (eif_access (routine_ids));
-	VARIANT_BOOL tmp_in_current_class = 0;
-	tmp_in_current_class = (VARIANT_BOOL)rt_ec.ccom_ec_boolean (in_current_class);
-	LONG tmp_written_type_id = 0;
-	tmp_written_type_id = (LONG)written_type_id;
+	VARIANT_BOOL tmp_is_attribute = 0;
+	tmp_is_attribute = (VARIANT_BOOL)rt_ec.ccom_ec_boolean (is_attribute);
 	
-	hr = p_ICore->GenerateFeatureIdentification(tmp_name,tmp_feature_id,tmp_routine_ids,tmp_in_current_class,tmp_written_type_id);
+	hr = p_ICore->GenerateInterfaceFeatureIdentification(tmp_name,tmp_feature_id,tmp_is_attribute);
 	if (FAILED (hr))
 	{
 		if ((HRESULT_FACILITY (hr)  ==  FACILITY_ITF) && (HRESULT_CODE (hr) > 1024) && (HRESULT_CODE (hr) < 1053))
@@ -790,12 +695,58 @@ void ecom_Core::Core::ccom_generate_feature_identification(  /* [in] */ EIF_OBJE
 	};
 	
 	rt_ce.free_memory_bstr (tmp_name);
-rt_ce.free_memory_safearray (tmp_routine_ids);
 
 };
 /*----------------------------------------------------------------------------------------------------------------------*/
 
-void ecom_Core::Core::ccom_generate_external_identification(  /* [in] */ EIF_OBJECT name,  /* [in] */ EIF_OBJECT com_name,  /* [in] */ EIF_INTEGER external_kind,  /* [in] */ EIF_INTEGER feature_id,  /* [in] */ EIF_INTEGER routine_id,  /* [in] */ EIF_BOOLEAN in_current_class,  /* [in] */ EIF_INTEGER written_type_id,  /* [in] */ EIF_OBJECT parameters,  /* [in] */ EIF_OBJECT return_type )
+void ecom_EiffelCompiler::Core::ccom_generate_feature_identification(  /* [in] */ EIF_OBJECT name,  /* [in] */ EIF_INTEGER feature_id,  /* [in] */ EIF_BOOLEAN is_redefined,  /* [in] */ EIF_BOOLEAN is_deferred,  /* [in] */ EIF_BOOLEAN is_frozen,  /* [in] */ EIF_BOOLEAN is_attribute,  /* [in] */ EIF_BOOLEAN is_c_external,  /* [in] */ EIF_BOOLEAN is_static )
+
+/*-----------------------------------------------------------
+	No description available.
+-----------------------------------------------------------*/
+{
+	HRESULT hr;
+	if (p_ICore == NULL)
+	{
+		hr = p_unknown->QueryInterface (IID_ICore_, (void **)&p_ICore);
+	if (FAILED (hr))
+	{
+		if ((HRESULT_FACILITY (hr)  ==  FACILITY_ITF) && (HRESULT_CODE (hr) > 1024) && (HRESULT_CODE (hr) < 1053))
+			com_eraise (rt_ec.ccom_ec_lpstr (eename(HRESULT_CODE (hr) - 1024), NULL),HRESULT_CODE (hr) - 1024);
+		com_eraise (f.c_format_message (hr), EN_PROG);
+	};
+	};
+	BSTR tmp_name = 0;
+	tmp_name = (BSTR)rt_ec.ccom_ec_bstr (eif_access (name));
+	LONG tmp_feature_id = 0;
+	tmp_feature_id = (LONG)feature_id;
+	VARIANT_BOOL tmp_is_redefined = 0;
+	tmp_is_redefined = (VARIANT_BOOL)rt_ec.ccom_ec_boolean (is_redefined);
+	VARIANT_BOOL tmp_is_deferred = 0;
+	tmp_is_deferred = (VARIANT_BOOL)rt_ec.ccom_ec_boolean (is_deferred);
+	VARIANT_BOOL tmp_is_frozen = 0;
+	tmp_is_frozen = (VARIANT_BOOL)rt_ec.ccom_ec_boolean (is_frozen);
+	VARIANT_BOOL tmp_is_attribute = 0;
+	tmp_is_attribute = (VARIANT_BOOL)rt_ec.ccom_ec_boolean (is_attribute);
+	VARIANT_BOOL tmp_is_c_external = 0;
+	tmp_is_c_external = (VARIANT_BOOL)rt_ec.ccom_ec_boolean (is_c_external);
+	VARIANT_BOOL tmp_is_static = 0;
+	tmp_is_static = (VARIANT_BOOL)rt_ec.ccom_ec_boolean (is_static);
+	
+	hr = p_ICore->GenerateFeatureIdentification(tmp_name,tmp_feature_id,tmp_is_redefined,tmp_is_deferred,tmp_is_frozen,tmp_is_attribute,tmp_is_c_external,tmp_is_static);
+	if (FAILED (hr))
+	{
+		if ((HRESULT_FACILITY (hr)  ==  FACILITY_ITF) && (HRESULT_CODE (hr) > 1024) && (HRESULT_CODE (hr) < 1053))
+			com_eraise (rt_ec.ccom_ec_lpstr (eename(HRESULT_CODE (hr) - 1024), NULL),HRESULT_CODE (hr) - 1024);
+		com_eraise (f.c_format_message (hr), EN_PROG);
+	};
+	
+	rt_ce.free_memory_bstr (tmp_name);
+
+};
+/*----------------------------------------------------------------------------------------------------------------------*/
+
+void ecom_EiffelCompiler::Core::ccom_generate_external_identification(  /* [in] */ EIF_OBJECT name,  /* [in] */ EIF_OBJECT com_name,  /* [in] */ EIF_INTEGER external_kind,  /* [in] */ EIF_INTEGER feature_id,  /* [in] */ EIF_INTEGER routine_id,  /* [in] */ EIF_BOOLEAN in_current_class,  /* [in] */ EIF_INTEGER written_type_id,  /* [in] */ EIF_OBJECT parameters,  /* [in] */ EIF_OBJECT return_type )
 
 /*-----------------------------------------------------------
 	No description available.
@@ -847,7 +798,7 @@ rt_ce.free_memory_bstr (tmp_return_type);
 };
 /*----------------------------------------------------------------------------------------------------------------------*/
 
-void ecom_Core::Core::ccom_generate_feature_return_type(  /* [in] */ EIF_INTEGER type_id )
+void ecom_EiffelCompiler::Core::ccom_generate_feature_return_type(  /* [in] */ EIF_INTEGER type_id )
 
 /*-----------------------------------------------------------
 	No description available.
@@ -879,7 +830,7 @@ void ecom_Core::Core::ccom_generate_feature_return_type(  /* [in] */ EIF_INTEGER
 };
 /*----------------------------------------------------------------------------------------------------------------------*/
 
-void ecom_Core::Core::ccom_generate_feature_argument(  /* [in] */ EIF_OBJECT name,  /* [in] */ EIF_INTEGER type_id )
+void ecom_EiffelCompiler::Core::ccom_generate_feature_argument(  /* [in] */ EIF_OBJECT name,  /* [in] */ EIF_INTEGER type_id )
 
 /*-----------------------------------------------------------
 	No description available.
@@ -914,7 +865,7 @@ void ecom_Core::Core::ccom_generate_feature_argument(  /* [in] */ EIF_OBJECT nam
 };
 /*----------------------------------------------------------------------------------------------------------------------*/
 
-void ecom_Core::Core::ccom_create_feature_description()
+void ecom_EiffelCompiler::Core::ccom_create_feature_description()
 
 /*-----------------------------------------------------------
 	No description available.
@@ -941,61 +892,7 @@ void ecom_Core::Core::ccom_create_feature_description()
 };
 /*----------------------------------------------------------------------------------------------------------------------*/
 
-void ecom_Core::Core::ccom_check_renaming()
-
-/*-----------------------------------------------------------
-	No description available.
------------------------------------------------------------*/
-{
-	HRESULT hr;
-	if (p_ICore == NULL)
-	{
-		hr = p_unknown->QueryInterface (IID_ICore_, (void **)&p_ICore);
-	if (FAILED (hr))
-	{
-		if ((HRESULT_FACILITY (hr)  ==  FACILITY_ITF) && (HRESULT_CODE (hr) > 1024) && (HRESULT_CODE (hr) < 1053))
-			com_eraise (rt_ec.ccom_ec_lpstr (eename(HRESULT_CODE (hr) - 1024), NULL),HRESULT_CODE (hr) - 1024);
-		com_eraise (f.c_format_message (hr), EN_PROG);
-	};
-	};
-	hr = p_ICore->CheckRenaming ();
-	if (FAILED (hr))
-	{
-		if ((HRESULT_FACILITY (hr)  ==  FACILITY_ITF) && (HRESULT_CODE (hr) > 1024) && (HRESULT_CODE (hr) < 1053))
-			com_eraise (rt_ec.ccom_ec_lpstr (eename(HRESULT_CODE (hr) - 1024), NULL),HRESULT_CODE (hr) - 1024);
-		com_eraise (f.c_format_message (hr), EN_PROG);
-	};	
-};
-/*----------------------------------------------------------------------------------------------------------------------*/
-
-void ecom_Core::Core::ccom_check_renaming_and_redefinition()
-
-/*-----------------------------------------------------------
-	No description available.
------------------------------------------------------------*/
-{
-	HRESULT hr;
-	if (p_ICore == NULL)
-	{
-		hr = p_unknown->QueryInterface (IID_ICore_, (void **)&p_ICore);
-	if (FAILED (hr))
-	{
-		if ((HRESULT_FACILITY (hr)  ==  FACILITY_ITF) && (HRESULT_CODE (hr) > 1024) && (HRESULT_CODE (hr) < 1053))
-			com_eraise (rt_ec.ccom_ec_lpstr (eename(HRESULT_CODE (hr) - 1024), NULL),HRESULT_CODE (hr) - 1024);
-		com_eraise (f.c_format_message (hr), EN_PROG);
-	};
-	};
-	hr = p_ICore->CheckRenamingAndRedefinition ();
-	if (FAILED (hr))
-	{
-		if ((HRESULT_FACILITY (hr)  ==  FACILITY_ITF) && (HRESULT_CODE (hr) > 1024) && (HRESULT_CODE (hr) < 1053))
-			com_eraise (rt_ec.ccom_ec_lpstr (eename(HRESULT_CODE (hr) - 1024), NULL),HRESULT_CODE (hr) - 1024);
-		com_eraise (f.c_format_message (hr), EN_PROG);
-	};	
-};
-/*----------------------------------------------------------------------------------------------------------------------*/
-
-void ecom_Core::Core::ccom_define_entry_point(  /* [in] */ EIF_INTEGER type_id,  /* [in] */ EIF_INTEGER feature_id )
+void ecom_EiffelCompiler::Core::ccom_define_entry_point(  /* [in] */ EIF_INTEGER type_id,  /* [in] */ EIF_INTEGER feature_id )
 
 /*-----------------------------------------------------------
 	No description available.
@@ -1029,7 +926,7 @@ void ecom_Core::Core::ccom_define_entry_point(  /* [in] */ EIF_INTEGER type_id, 
 };
 /*----------------------------------------------------------------------------------------------------------------------*/
 
-EIF_REFERENCE ecom_Core::Core::ccom_last_error(  )
+EIF_REFERENCE ecom_EiffelCompiler::Core::ccom_last_error(  )
 
 /*-----------------------------------------------------------
 	No description available.
@@ -1063,7 +960,7 @@ EIF_REFERENCE ecom_Core::Core::ccom_last_error(  )
 };
 /*----------------------------------------------------------------------------------------------------------------------*/
 
-void ecom_Core::Core::ccom_add_ca(  /* [in] */ EIF_INTEGER target_type_id,  /* [in] */ EIF_INTEGER attribute_type_id,  /* [in] */ EIF_INTEGER arg_count )
+void ecom_EiffelCompiler::Core::ccom_add_ca(  /* [in] */ EIF_INTEGER target_type_id,  /* [in] */ EIF_INTEGER attribute_type_id,  /* [in] */ EIF_INTEGER arg_count )
 
 /*-----------------------------------------------------------
 	No description available.
@@ -1099,7 +996,7 @@ void ecom_Core::Core::ccom_add_ca(  /* [in] */ EIF_INTEGER target_type_id,  /* [
 };
 /*----------------------------------------------------------------------------------------------------------------------*/
 
-void ecom_Core::Core::ccom_generate_class_ca()
+void ecom_EiffelCompiler::Core::ccom_generate_class_ca()
 
 /*-----------------------------------------------------------
 	No description available.
@@ -1126,7 +1023,7 @@ void ecom_Core::Core::ccom_generate_class_ca()
 };
 /*----------------------------------------------------------------------------------------------------------------------*/
 
-void ecom_Core::Core::ccom_generate_feature_ca(  /* [in] */ EIF_INTEGER feature_id )
+void ecom_EiffelCompiler::Core::ccom_generate_feature_ca(  /* [in] */ EIF_INTEGER feature_id )
 
 /*-----------------------------------------------------------
 	No description available.
@@ -1158,7 +1055,7 @@ void ecom_Core::Core::ccom_generate_feature_ca(  /* [in] */ EIF_INTEGER feature_
 };
 /*----------------------------------------------------------------------------------------------------------------------*/
 
-void ecom_Core::Core::ccom_add_catyped_arg(  /* [in] */ EIF_INTEGER a_value,  /* [in] */ EIF_INTEGER type_id )
+void ecom_EiffelCompiler::Core::ccom_add_catyped_arg(  /* [in] */ EIF_INTEGER a_value,  /* [in] */ EIF_INTEGER type_id )
 
 /*-----------------------------------------------------------
 	No description available.
@@ -1192,7 +1089,7 @@ void ecom_Core::Core::ccom_add_catyped_arg(  /* [in] */ EIF_INTEGER a_value,  /*
 };
 /*----------------------------------------------------------------------------------------------------------------------*/
 
-void ecom_Core::Core::ccom_add_cainteger_arg(  /* [in] */ EIF_INTEGER a_value )
+void ecom_EiffelCompiler::Core::ccom_add_cainteger_arg(  /* [in] */ EIF_INTEGER a_value )
 
 /*-----------------------------------------------------------
 	No description available.
@@ -1224,7 +1121,7 @@ void ecom_Core::Core::ccom_add_cainteger_arg(  /* [in] */ EIF_INTEGER a_value )
 };
 /*----------------------------------------------------------------------------------------------------------------------*/
 
-void ecom_Core::Core::ccom_add_castring_arg(  /* [in] */ EIF_OBJECT a_value )
+void ecom_EiffelCompiler::Core::ccom_add_castring_arg(  /* [in] */ EIF_OBJECT a_value )
 
 /*-----------------------------------------------------------
 	No description available.
@@ -1257,7 +1154,7 @@ void ecom_Core::Core::ccom_add_castring_arg(  /* [in] */ EIF_OBJECT a_value )
 };
 /*----------------------------------------------------------------------------------------------------------------------*/
 
-void ecom_Core::Core::ccom_add_careal_arg(  /* [in] */ EIF_REAL a_value )
+void ecom_EiffelCompiler::Core::ccom_add_careal_arg(  /* [in] */ EIF_REAL a_value )
 
 /*-----------------------------------------------------------
 	No description available.
@@ -1289,7 +1186,7 @@ void ecom_Core::Core::ccom_add_careal_arg(  /* [in] */ EIF_REAL a_value )
 };
 /*----------------------------------------------------------------------------------------------------------------------*/
 
-void ecom_Core::Core::ccom_add_cadouble_arg(  /* [in] */ EIF_DOUBLE a_value )
+void ecom_EiffelCompiler::Core::ccom_add_cadouble_arg(  /* [in] */ EIF_DOUBLE a_value )
 
 /*-----------------------------------------------------------
 	No description available.
@@ -1321,7 +1218,7 @@ void ecom_Core::Core::ccom_add_cadouble_arg(  /* [in] */ EIF_DOUBLE a_value )
 };
 /*----------------------------------------------------------------------------------------------------------------------*/
 
-void ecom_Core::Core::ccom_add_cacharacter_arg(  /* [in] */ EIF_INTEGER a_value )
+void ecom_EiffelCompiler::Core::ccom_add_cacharacter_arg(  /* [in] */ EIF_INTEGER a_value )
 
 /*-----------------------------------------------------------
 	No description available.
@@ -1353,7 +1250,7 @@ void ecom_Core::Core::ccom_add_cacharacter_arg(  /* [in] */ EIF_INTEGER a_value 
 };
 /*----------------------------------------------------------------------------------------------------------------------*/
 
-void ecom_Core::Core::ccom_add_caboolean_arg(  /* [in] */ EIF_BOOLEAN a_value )
+void ecom_EiffelCompiler::Core::ccom_add_caboolean_arg(  /* [in] */ EIF_BOOLEAN a_value )
 
 /*-----------------------------------------------------------
 	No description available.
@@ -1385,7 +1282,7 @@ void ecom_Core::Core::ccom_add_caboolean_arg(  /* [in] */ EIF_BOOLEAN a_value )
 };
 /*----------------------------------------------------------------------------------------------------------------------*/
 
-void ecom_Core::Core::ccom_add_caarray_integer_arg(  /* [in] */ EIF_OBJECT a_value )
+void ecom_EiffelCompiler::Core::ccom_add_caarray_integer_arg(  /* [in] */ EIF_OBJECT a_value )
 
 /*-----------------------------------------------------------
 	No description available.
@@ -1418,7 +1315,7 @@ void ecom_Core::Core::ccom_add_caarray_integer_arg(  /* [in] */ EIF_OBJECT a_val
 };
 /*----------------------------------------------------------------------------------------------------------------------*/
 
-void ecom_Core::Core::ccom_add_caarray_string_arg(  /* [in] */ EIF_OBJECT a_value )
+void ecom_EiffelCompiler::Core::ccom_add_caarray_string_arg(  /* [in] */ EIF_OBJECT a_value )
 
 /*-----------------------------------------------------------
 	No description available.
@@ -1451,7 +1348,7 @@ void ecom_Core::Core::ccom_add_caarray_string_arg(  /* [in] */ EIF_OBJECT a_valu
 };
 /*----------------------------------------------------------------------------------------------------------------------*/
 
-void ecom_Core::Core::ccom_add_caarray_real_arg(  /* [in] */ EIF_OBJECT a_value )
+void ecom_EiffelCompiler::Core::ccom_add_caarray_real_arg(  /* [in] */ EIF_OBJECT a_value )
 
 /*-----------------------------------------------------------
 	No description available.
@@ -1484,7 +1381,7 @@ void ecom_Core::Core::ccom_add_caarray_real_arg(  /* [in] */ EIF_OBJECT a_value 
 };
 /*----------------------------------------------------------------------------------------------------------------------*/
 
-void ecom_Core::Core::ccom_add_caarray_double_arg(  /* [in] */ EIF_OBJECT a_value )
+void ecom_EiffelCompiler::Core::ccom_add_caarray_double_arg(  /* [in] */ EIF_OBJECT a_value )
 
 /*-----------------------------------------------------------
 	No description available.
@@ -1517,7 +1414,7 @@ void ecom_Core::Core::ccom_add_caarray_double_arg(  /* [in] */ EIF_OBJECT a_valu
 };
 /*----------------------------------------------------------------------------------------------------------------------*/
 
-void ecom_Core::Core::ccom_add_caarray_character_arg(  /* [in] */ EIF_OBJECT a_value )
+void ecom_EiffelCompiler::Core::ccom_add_caarray_character_arg(  /* [in] */ EIF_OBJECT a_value )
 
 /*-----------------------------------------------------------
 	No description available.
@@ -1550,7 +1447,7 @@ void ecom_Core::Core::ccom_add_caarray_character_arg(  /* [in] */ EIF_OBJECT a_v
 };
 /*----------------------------------------------------------------------------------------------------------------------*/
 
-void ecom_Core::Core::ccom_add_caarray_boolean_arg(  /* [in] */ EIF_OBJECT a_value )
+void ecom_EiffelCompiler::Core::ccom_add_caarray_boolean_arg(  /* [in] */ EIF_OBJECT a_value )
 
 /*-----------------------------------------------------------
 	No description available.
@@ -1583,7 +1480,7 @@ void ecom_Core::Core::ccom_add_caarray_boolean_arg(  /* [in] */ EIF_OBJECT a_val
 };
 /*----------------------------------------------------------------------------------------------------------------------*/
 
-void ecom_Core::Core::ccom_start_il_generation(  /* [in] */ EIF_INTEGER type_id )
+void ecom_EiffelCompiler::Core::ccom_start_il_generation(  /* [in] */ EIF_INTEGER type_id )
 
 /*-----------------------------------------------------------
 	No description available.
@@ -1615,7 +1512,43 @@ void ecom_Core::Core::ccom_start_il_generation(  /* [in] */ EIF_INTEGER type_id 
 };
 /*----------------------------------------------------------------------------------------------------------------------*/
 
-void ecom_Core::Core::ccom_generate_feature_il(  /* [in] */ EIF_INTEGER feature_id )
+void ecom_EiffelCompiler::Core::ccom_generate_feature_il(  /* [in] */ EIF_INTEGER feature_id,  /* [in] */ EIF_INTEGER type_id,  /* [in] */ EIF_INTEGER code_feature_id )
+
+/*-----------------------------------------------------------
+	No description available.
+-----------------------------------------------------------*/
+{
+	HRESULT hr;
+	if (p_ICore == NULL)
+	{
+		hr = p_unknown->QueryInterface (IID_ICore_, (void **)&p_ICore);
+	if (FAILED (hr))
+	{
+		if ((HRESULT_FACILITY (hr)  ==  FACILITY_ITF) && (HRESULT_CODE (hr) > 1024) && (HRESULT_CODE (hr) < 1053))
+			com_eraise (rt_ec.ccom_ec_lpstr (eename(HRESULT_CODE (hr) - 1024), NULL),HRESULT_CODE (hr) - 1024);
+		com_eraise (f.c_format_message (hr), EN_PROG);
+	};
+	};
+	LONG tmp_feature_id = 0;
+	tmp_feature_id = (LONG)feature_id;
+	LONG tmp_type_id = 0;
+	tmp_type_id = (LONG)type_id;
+	LONG tmp_code_feature_id = 0;
+	tmp_code_feature_id = (LONG)code_feature_id;
+	
+	hr = p_ICore->GenerateFeatureIL(tmp_feature_id,tmp_type_id,tmp_code_feature_id);
+	if (FAILED (hr))
+	{
+		if ((HRESULT_FACILITY (hr)  ==  FACILITY_ITF) && (HRESULT_CODE (hr) > 1024) && (HRESULT_CODE (hr) < 1053))
+			com_eraise (rt_ec.ccom_ec_lpstr (eename(HRESULT_CODE (hr) - 1024), NULL),HRESULT_CODE (hr) - 1024);
+		com_eraise (f.c_format_message (hr), EN_PROG);
+	};
+	
+	
+};
+/*----------------------------------------------------------------------------------------------------------------------*/
+
+void ecom_EiffelCompiler::Core::ccom_generate_feature_internal_clone(  /* [in] */ EIF_INTEGER feature_id )
 
 /*-----------------------------------------------------------
 	No description available.
@@ -1635,7 +1568,7 @@ void ecom_Core::Core::ccom_generate_feature_il(  /* [in] */ EIF_INTEGER feature_
 	LONG tmp_feature_id = 0;
 	tmp_feature_id = (LONG)feature_id;
 	
-	hr = p_ICore->GenerateFeatureIL(tmp_feature_id);
+	hr = p_ICore->GenerateFeatureInternalClone(tmp_feature_id);
 	if (FAILED (hr))
 	{
 		if ((HRESULT_FACILITY (hr)  ==  FACILITY_ITF) && (HRESULT_CODE (hr) > 1024) && (HRESULT_CODE (hr) < 1053))
@@ -1647,7 +1580,75 @@ void ecom_Core::Core::ccom_generate_feature_il(  /* [in] */ EIF_INTEGER feature_
 };
 /*----------------------------------------------------------------------------------------------------------------------*/
 
-void ecom_Core::Core::ccom_generate_creation_feature_il(  /* [in] */ EIF_INTEGER feature_id )
+void ecom_EiffelCompiler::Core::ccom_generate_implementation_feature_il(  /* [in] */ EIF_INTEGER feature_id )
+
+/*-----------------------------------------------------------
+	No description available.
+-----------------------------------------------------------*/
+{
+	HRESULT hr;
+	if (p_ICore == NULL)
+	{
+		hr = p_unknown->QueryInterface (IID_ICore_, (void **)&p_ICore);
+	if (FAILED (hr))
+	{
+		if ((HRESULT_FACILITY (hr)  ==  FACILITY_ITF) && (HRESULT_CODE (hr) > 1024) && (HRESULT_CODE (hr) < 1053))
+			com_eraise (rt_ec.ccom_ec_lpstr (eename(HRESULT_CODE (hr) - 1024), NULL),HRESULT_CODE (hr) - 1024);
+		com_eraise (f.c_format_message (hr), EN_PROG);
+	};
+	};
+	LONG tmp_feature_id = 0;
+	tmp_feature_id = (LONG)feature_id;
+	
+	hr = p_ICore->GenerateImplementationFeatureIL(tmp_feature_id);
+	if (FAILED (hr))
+	{
+		if ((HRESULT_FACILITY (hr)  ==  FACILITY_ITF) && (HRESULT_CODE (hr) > 1024) && (HRESULT_CODE (hr) < 1053))
+			com_eraise (rt_ec.ccom_ec_lpstr (eename(HRESULT_CODE (hr) - 1024), NULL),HRESULT_CODE (hr) - 1024);
+		com_eraise (f.c_format_message (hr), EN_PROG);
+	};
+	
+	
+};
+/*----------------------------------------------------------------------------------------------------------------------*/
+
+void ecom_EiffelCompiler::Core::ccom_generate_method_impl(  /* [in] */ EIF_INTEGER feature_id,  /* [in] */ EIF_INTEGER parent_type_id,  /* [in] */ EIF_INTEGER parent_feature_id )
+
+/*-----------------------------------------------------------
+	No description available.
+-----------------------------------------------------------*/
+{
+	HRESULT hr;
+	if (p_ICore == NULL)
+	{
+		hr = p_unknown->QueryInterface (IID_ICore_, (void **)&p_ICore);
+	if (FAILED (hr))
+	{
+		if ((HRESULT_FACILITY (hr)  ==  FACILITY_ITF) && (HRESULT_CODE (hr) > 1024) && (HRESULT_CODE (hr) < 1053))
+			com_eraise (rt_ec.ccom_ec_lpstr (eename(HRESULT_CODE (hr) - 1024), NULL),HRESULT_CODE (hr) - 1024);
+		com_eraise (f.c_format_message (hr), EN_PROG);
+	};
+	};
+	LONG tmp_feature_id = 0;
+	tmp_feature_id = (LONG)feature_id;
+	LONG tmp_parent_type_id = 0;
+	tmp_parent_type_id = (LONG)parent_type_id;
+	LONG tmp_parent_feature_id = 0;
+	tmp_parent_feature_id = (LONG)parent_feature_id;
+	
+	hr = p_ICore->GenerateMethodImpl(tmp_feature_id,tmp_parent_type_id,tmp_parent_feature_id);
+	if (FAILED (hr))
+	{
+		if ((HRESULT_FACILITY (hr)  ==  FACILITY_ITF) && (HRESULT_CODE (hr) > 1024) && (HRESULT_CODE (hr) < 1053))
+			com_eraise (rt_ec.ccom_ec_lpstr (eename(HRESULT_CODE (hr) - 1024), NULL),HRESULT_CODE (hr) - 1024);
+		com_eraise (f.c_format_message (hr), EN_PROG);
+	};
+	
+	
+};
+/*----------------------------------------------------------------------------------------------------------------------*/
+
+void ecom_EiffelCompiler::Core::ccom_generate_creation_feature_il(  /* [in] */ EIF_INTEGER feature_id )
 
 /*-----------------------------------------------------------
 	No description available.
@@ -1679,7 +1680,7 @@ void ecom_Core::Core::ccom_generate_creation_feature_il(  /* [in] */ EIF_INTEGER
 };
 /*----------------------------------------------------------------------------------------------------------------------*/
 
-void ecom_Core::Core::ccom_generate_external_call(  /* [in] */ EIF_OBJECT external_type_name,  /* [in] */ EIF_OBJECT name,  /* [in] */ EIF_INTEGER external_kind,  /* [in] */ EIF_OBJECT parameter_types,  /* [in] */ EIF_OBJECT return_type,  /* [in] */ EIF_BOOLEAN is_virtual,  /* [in] */ EIF_INTEGER type_id,  /* [in] */ EIF_INTEGER feature_id )
+void ecom_EiffelCompiler::Core::ccom_generate_external_call(  /* [in] */ EIF_OBJECT external_type_name,  /* [in] */ EIF_OBJECT name,  /* [in] */ EIF_INTEGER external_kind,  /* [in] */ EIF_OBJECT parameter_types,  /* [in] */ EIF_OBJECT return_type,  /* [in] */ EIF_BOOLEAN is_virtual,  /* [in] */ EIF_INTEGER type_id,  /* [in] */ EIF_INTEGER feature_id )
 
 /*-----------------------------------------------------------
 	No description available.
@@ -1729,7 +1730,7 @@ rt_ce.free_memory_bstr (tmp_return_type);
 };
 /*----------------------------------------------------------------------------------------------------------------------*/
 
-void ecom_Core::Core::ccom_put_result_info(  /* [in] */ EIF_INTEGER type_id )
+void ecom_EiffelCompiler::Core::ccom_put_result_info(  /* [in] */ EIF_INTEGER type_id )
 
 /*-----------------------------------------------------------
 	No description available.
@@ -1761,7 +1762,7 @@ void ecom_Core::Core::ccom_put_result_info(  /* [in] */ EIF_INTEGER type_id )
 };
 /*----------------------------------------------------------------------------------------------------------------------*/
 
-void ecom_Core::Core::ccom_put_local_info(  /* [in] */ EIF_INTEGER type_id,  /* [in] */ EIF_OBJECT name )
+void ecom_EiffelCompiler::Core::ccom_put_local_info(  /* [in] */ EIF_INTEGER type_id,  /* [in] */ EIF_OBJECT name )
 
 /*-----------------------------------------------------------
 	No description available.
@@ -1796,7 +1797,7 @@ void ecom_Core::Core::ccom_put_local_info(  /* [in] */ EIF_INTEGER type_id,  /* 
 };
 /*----------------------------------------------------------------------------------------------------------------------*/
 
-void ecom_Core::Core::ccom_create_like_current_object()
+void ecom_EiffelCompiler::Core::ccom_create_like_current_object()
 
 /*-----------------------------------------------------------
 	No description available.
@@ -1823,7 +1824,7 @@ void ecom_Core::Core::ccom_create_like_current_object()
 };
 /*----------------------------------------------------------------------------------------------------------------------*/
 
-void ecom_Core::Core::ccom_create_object(  /* [in] */ EIF_INTEGER type_id )
+void ecom_EiffelCompiler::Core::ccom_create_object(  /* [in] */ EIF_INTEGER type_id )
 
 /*-----------------------------------------------------------
 	No description available.
@@ -1855,7 +1856,7 @@ void ecom_Core::Core::ccom_create_object(  /* [in] */ EIF_INTEGER type_id )
 };
 /*----------------------------------------------------------------------------------------------------------------------*/
 
-void ecom_Core::Core::ccom_create_attribute_object(  /* [in] */ EIF_INTEGER type_id,  /* [in] */ EIF_INTEGER feature_id )
+void ecom_EiffelCompiler::Core::ccom_create_attribute_object(  /* [in] */ EIF_INTEGER type_id,  /* [in] */ EIF_INTEGER feature_id )
 
 /*-----------------------------------------------------------
 	No description available.
@@ -1889,7 +1890,7 @@ void ecom_Core::Core::ccom_create_attribute_object(  /* [in] */ EIF_INTEGER type
 };
 /*----------------------------------------------------------------------------------------------------------------------*/
 
-void ecom_Core::Core::ccom_duplicate_top()
+void ecom_EiffelCompiler::Core::ccom_duplicate_top()
 
 /*-----------------------------------------------------------
 	No description available.
@@ -1916,7 +1917,7 @@ void ecom_Core::Core::ccom_duplicate_top()
 };
 /*----------------------------------------------------------------------------------------------------------------------*/
 
-void ecom_Core::Core::ccom_pop()
+void ecom_EiffelCompiler::Core::ccom_pop()
 
 /*-----------------------------------------------------------
 	No description available.
@@ -1943,7 +1944,7 @@ void ecom_Core::Core::ccom_pop()
 };
 /*----------------------------------------------------------------------------------------------------------------------*/
 
-void ecom_Core::Core::ccom_generate_metamorphose(  /* [in] */ EIF_INTEGER type_id )
+void ecom_EiffelCompiler::Core::ccom_generate_metamorphose(  /* [in] */ EIF_INTEGER type_id )
 
 /*-----------------------------------------------------------
 	No description available.
@@ -1975,7 +1976,7 @@ void ecom_Core::Core::ccom_generate_metamorphose(  /* [in] */ EIF_INTEGER type_i
 };
 /*----------------------------------------------------------------------------------------------------------------------*/
 
-void ecom_Core::Core::ccom_generate_unmetamorphose(  /* [in] */ EIF_INTEGER type_id )
+void ecom_EiffelCompiler::Core::ccom_generate_unmetamorphose(  /* [in] */ EIF_INTEGER type_id )
 
 /*-----------------------------------------------------------
 	No description available.
@@ -2007,7 +2008,7 @@ void ecom_Core::Core::ccom_generate_unmetamorphose(  /* [in] */ EIF_INTEGER type
 };
 /*----------------------------------------------------------------------------------------------------------------------*/
 
-void ecom_Core::Core::ccom_generate_check_cast(  /* [in] */ EIF_INTEGER source_type_id,  /* [in] */ EIF_INTEGER target_type_id )
+void ecom_EiffelCompiler::Core::ccom_generate_check_cast(  /* [in] */ EIF_INTEGER source_type_id,  /* [in] */ EIF_INTEGER target_type_id )
 
 /*-----------------------------------------------------------
 	No description available.
@@ -2041,7 +2042,250 @@ void ecom_Core::Core::ccom_generate_check_cast(  /* [in] */ EIF_INTEGER source_t
 };
 /*----------------------------------------------------------------------------------------------------------------------*/
 
-void ecom_Core::Core::ccom_generate_current()
+void ecom_EiffelCompiler::Core::ccom_convert_to_native_int()
+
+/*-----------------------------------------------------------
+	No description available.
+-----------------------------------------------------------*/
+{
+	HRESULT hr;
+	if (p_ICore == NULL)
+	{
+		hr = p_unknown->QueryInterface (IID_ICore_, (void **)&p_ICore);
+	if (FAILED (hr))
+	{
+		if ((HRESULT_FACILITY (hr)  ==  FACILITY_ITF) && (HRESULT_CODE (hr) > 1024) && (HRESULT_CODE (hr) < 1053))
+			com_eraise (rt_ec.ccom_ec_lpstr (eename(HRESULT_CODE (hr) - 1024), NULL),HRESULT_CODE (hr) - 1024);
+		com_eraise (f.c_format_message (hr), EN_PROG);
+	};
+	};
+	hr = p_ICore->ConvertToNativeInt ();
+	if (FAILED (hr))
+	{
+		if ((HRESULT_FACILITY (hr)  ==  FACILITY_ITF) && (HRESULT_CODE (hr) > 1024) && (HRESULT_CODE (hr) < 1053))
+			com_eraise (rt_ec.ccom_ec_lpstr (eename(HRESULT_CODE (hr) - 1024), NULL),HRESULT_CODE (hr) - 1024);
+		com_eraise (f.c_format_message (hr), EN_PROG);
+	};	
+};
+/*----------------------------------------------------------------------------------------------------------------------*/
+
+void ecom_EiffelCompiler::Core::ccom_convert_to_boolean()
+
+/*-----------------------------------------------------------
+	No description available.
+-----------------------------------------------------------*/
+{
+	HRESULT hr;
+	if (p_ICore == NULL)
+	{
+		hr = p_unknown->QueryInterface (IID_ICore_, (void **)&p_ICore);
+	if (FAILED (hr))
+	{
+		if ((HRESULT_FACILITY (hr)  ==  FACILITY_ITF) && (HRESULT_CODE (hr) > 1024) && (HRESULT_CODE (hr) < 1053))
+			com_eraise (rt_ec.ccom_ec_lpstr (eename(HRESULT_CODE (hr) - 1024), NULL),HRESULT_CODE (hr) - 1024);
+		com_eraise (f.c_format_message (hr), EN_PROG);
+	};
+	};
+	hr = p_ICore->ConvertToBoolean ();
+	if (FAILED (hr))
+	{
+		if ((HRESULT_FACILITY (hr)  ==  FACILITY_ITF) && (HRESULT_CODE (hr) > 1024) && (HRESULT_CODE (hr) < 1053))
+			com_eraise (rt_ec.ccom_ec_lpstr (eename(HRESULT_CODE (hr) - 1024), NULL),HRESULT_CODE (hr) - 1024);
+		com_eraise (f.c_format_message (hr), EN_PROG);
+	};	
+};
+/*----------------------------------------------------------------------------------------------------------------------*/
+
+void ecom_EiffelCompiler::Core::ccom_convert_to_character()
+
+/*-----------------------------------------------------------
+	No description available.
+-----------------------------------------------------------*/
+{
+	HRESULT hr;
+	if (p_ICore == NULL)
+	{
+		hr = p_unknown->QueryInterface (IID_ICore_, (void **)&p_ICore);
+	if (FAILED (hr))
+	{
+		if ((HRESULT_FACILITY (hr)  ==  FACILITY_ITF) && (HRESULT_CODE (hr) > 1024) && (HRESULT_CODE (hr) < 1053))
+			com_eraise (rt_ec.ccom_ec_lpstr (eename(HRESULT_CODE (hr) - 1024), NULL),HRESULT_CODE (hr) - 1024);
+		com_eraise (f.c_format_message (hr), EN_PROG);
+	};
+	};
+	hr = p_ICore->ConvertToCharacter ();
+	if (FAILED (hr))
+	{
+		if ((HRESULT_FACILITY (hr)  ==  FACILITY_ITF) && (HRESULT_CODE (hr) > 1024) && (HRESULT_CODE (hr) < 1053))
+			com_eraise (rt_ec.ccom_ec_lpstr (eename(HRESULT_CODE (hr) - 1024), NULL),HRESULT_CODE (hr) - 1024);
+		com_eraise (f.c_format_message (hr), EN_PROG);
+	};	
+};
+/*----------------------------------------------------------------------------------------------------------------------*/
+
+void ecom_EiffelCompiler::Core::ccom_convert_to_integer8()
+
+/*-----------------------------------------------------------
+	No description available.
+-----------------------------------------------------------*/
+{
+	HRESULT hr;
+	if (p_ICore == NULL)
+	{
+		hr = p_unknown->QueryInterface (IID_ICore_, (void **)&p_ICore);
+	if (FAILED (hr))
+	{
+		if ((HRESULT_FACILITY (hr)  ==  FACILITY_ITF) && (HRESULT_CODE (hr) > 1024) && (HRESULT_CODE (hr) < 1053))
+			com_eraise (rt_ec.ccom_ec_lpstr (eename(HRESULT_CODE (hr) - 1024), NULL),HRESULT_CODE (hr) - 1024);
+		com_eraise (f.c_format_message (hr), EN_PROG);
+	};
+	};
+	hr = p_ICore->ConvertToInteger8 ();
+	if (FAILED (hr))
+	{
+		if ((HRESULT_FACILITY (hr)  ==  FACILITY_ITF) && (HRESULT_CODE (hr) > 1024) && (HRESULT_CODE (hr) < 1053))
+			com_eraise (rt_ec.ccom_ec_lpstr (eename(HRESULT_CODE (hr) - 1024), NULL),HRESULT_CODE (hr) - 1024);
+		com_eraise (f.c_format_message (hr), EN_PROG);
+	};	
+};
+/*----------------------------------------------------------------------------------------------------------------------*/
+
+void ecom_EiffelCompiler::Core::ccom_convert_to_integer16()
+
+/*-----------------------------------------------------------
+	No description available.
+-----------------------------------------------------------*/
+{
+	HRESULT hr;
+	if (p_ICore == NULL)
+	{
+		hr = p_unknown->QueryInterface (IID_ICore_, (void **)&p_ICore);
+	if (FAILED (hr))
+	{
+		if ((HRESULT_FACILITY (hr)  ==  FACILITY_ITF) && (HRESULT_CODE (hr) > 1024) && (HRESULT_CODE (hr) < 1053))
+			com_eraise (rt_ec.ccom_ec_lpstr (eename(HRESULT_CODE (hr) - 1024), NULL),HRESULT_CODE (hr) - 1024);
+		com_eraise (f.c_format_message (hr), EN_PROG);
+	};
+	};
+	hr = p_ICore->ConvertToInteger16 ();
+	if (FAILED (hr))
+	{
+		if ((HRESULT_FACILITY (hr)  ==  FACILITY_ITF) && (HRESULT_CODE (hr) > 1024) && (HRESULT_CODE (hr) < 1053))
+			com_eraise (rt_ec.ccom_ec_lpstr (eename(HRESULT_CODE (hr) - 1024), NULL),HRESULT_CODE (hr) - 1024);
+		com_eraise (f.c_format_message (hr), EN_PROG);
+	};	
+};
+/*----------------------------------------------------------------------------------------------------------------------*/
+
+void ecom_EiffelCompiler::Core::ccom_convert_to_integer32()
+
+/*-----------------------------------------------------------
+	No description available.
+-----------------------------------------------------------*/
+{
+	HRESULT hr;
+	if (p_ICore == NULL)
+	{
+		hr = p_unknown->QueryInterface (IID_ICore_, (void **)&p_ICore);
+	if (FAILED (hr))
+	{
+		if ((HRESULT_FACILITY (hr)  ==  FACILITY_ITF) && (HRESULT_CODE (hr) > 1024) && (HRESULT_CODE (hr) < 1053))
+			com_eraise (rt_ec.ccom_ec_lpstr (eename(HRESULT_CODE (hr) - 1024), NULL),HRESULT_CODE (hr) - 1024);
+		com_eraise (f.c_format_message (hr), EN_PROG);
+	};
+	};
+	hr = p_ICore->ConvertToInteger32 ();
+	if (FAILED (hr))
+	{
+		if ((HRESULT_FACILITY (hr)  ==  FACILITY_ITF) && (HRESULT_CODE (hr) > 1024) && (HRESULT_CODE (hr) < 1053))
+			com_eraise (rt_ec.ccom_ec_lpstr (eename(HRESULT_CODE (hr) - 1024), NULL),HRESULT_CODE (hr) - 1024);
+		com_eraise (f.c_format_message (hr), EN_PROG);
+	};	
+};
+/*----------------------------------------------------------------------------------------------------------------------*/
+
+void ecom_EiffelCompiler::Core::ccom_convert_to_integer64()
+
+/*-----------------------------------------------------------
+	No description available.
+-----------------------------------------------------------*/
+{
+	HRESULT hr;
+	if (p_ICore == NULL)
+	{
+		hr = p_unknown->QueryInterface (IID_ICore_, (void **)&p_ICore);
+	if (FAILED (hr))
+	{
+		if ((HRESULT_FACILITY (hr)  ==  FACILITY_ITF) && (HRESULT_CODE (hr) > 1024) && (HRESULT_CODE (hr) < 1053))
+			com_eraise (rt_ec.ccom_ec_lpstr (eename(HRESULT_CODE (hr) - 1024), NULL),HRESULT_CODE (hr) - 1024);
+		com_eraise (f.c_format_message (hr), EN_PROG);
+	};
+	};
+	hr = p_ICore->ConvertToInteger64 ();
+	if (FAILED (hr))
+	{
+		if ((HRESULT_FACILITY (hr)  ==  FACILITY_ITF) && (HRESULT_CODE (hr) > 1024) && (HRESULT_CODE (hr) < 1053))
+			com_eraise (rt_ec.ccom_ec_lpstr (eename(HRESULT_CODE (hr) - 1024), NULL),HRESULT_CODE (hr) - 1024);
+		com_eraise (f.c_format_message (hr), EN_PROG);
+	};	
+};
+/*----------------------------------------------------------------------------------------------------------------------*/
+
+void ecom_EiffelCompiler::Core::ccom_convert_to_double()
+
+/*-----------------------------------------------------------
+	No description available.
+-----------------------------------------------------------*/
+{
+	HRESULT hr;
+	if (p_ICore == NULL)
+	{
+		hr = p_unknown->QueryInterface (IID_ICore_, (void **)&p_ICore);
+	if (FAILED (hr))
+	{
+		if ((HRESULT_FACILITY (hr)  ==  FACILITY_ITF) && (HRESULT_CODE (hr) > 1024) && (HRESULT_CODE (hr) < 1053))
+			com_eraise (rt_ec.ccom_ec_lpstr (eename(HRESULT_CODE (hr) - 1024), NULL),HRESULT_CODE (hr) - 1024);
+		com_eraise (f.c_format_message (hr), EN_PROG);
+	};
+	};
+	hr = p_ICore->ConvertToDouble ();
+	if (FAILED (hr))
+	{
+		if ((HRESULT_FACILITY (hr)  ==  FACILITY_ITF) && (HRESULT_CODE (hr) > 1024) && (HRESULT_CODE (hr) < 1053))
+			com_eraise (rt_ec.ccom_ec_lpstr (eename(HRESULT_CODE (hr) - 1024), NULL),HRESULT_CODE (hr) - 1024);
+		com_eraise (f.c_format_message (hr), EN_PROG);
+	};	
+};
+/*----------------------------------------------------------------------------------------------------------------------*/
+
+void ecom_EiffelCompiler::Core::ccom_convert_to_real()
+
+/*-----------------------------------------------------------
+	No description available.
+-----------------------------------------------------------*/
+{
+	HRESULT hr;
+	if (p_ICore == NULL)
+	{
+		hr = p_unknown->QueryInterface (IID_ICore_, (void **)&p_ICore);
+	if (FAILED (hr))
+	{
+		if ((HRESULT_FACILITY (hr)  ==  FACILITY_ITF) && (HRESULT_CODE (hr) > 1024) && (HRESULT_CODE (hr) < 1053))
+			com_eraise (rt_ec.ccom_ec_lpstr (eename(HRESULT_CODE (hr) - 1024), NULL),HRESULT_CODE (hr) - 1024);
+		com_eraise (f.c_format_message (hr), EN_PROG);
+	};
+	};
+	hr = p_ICore->ConvertToReal ();
+	if (FAILED (hr))
+	{
+		if ((HRESULT_FACILITY (hr)  ==  FACILITY_ITF) && (HRESULT_CODE (hr) > 1024) && (HRESULT_CODE (hr) < 1053))
+			com_eraise (rt_ec.ccom_ec_lpstr (eename(HRESULT_CODE (hr) - 1024), NULL),HRESULT_CODE (hr) - 1024);
+		com_eraise (f.c_format_message (hr), EN_PROG);
+	};	
+};
+/*----------------------------------------------------------------------------------------------------------------------*/
+
+void ecom_EiffelCompiler::Core::ccom_generate_current()
 
 /*-----------------------------------------------------------
 	No description available.
@@ -2068,7 +2312,7 @@ void ecom_Core::Core::ccom_generate_current()
 };
 /*----------------------------------------------------------------------------------------------------------------------*/
 
-void ecom_Core::Core::ccom_generate_result()
+void ecom_EiffelCompiler::Core::ccom_generate_result()
 
 /*-----------------------------------------------------------
 	No description available.
@@ -2095,7 +2339,7 @@ void ecom_Core::Core::ccom_generate_result()
 };
 /*----------------------------------------------------------------------------------------------------------------------*/
 
-void ecom_Core::Core::ccom_generate_attribute(  /* [in] */ EIF_INTEGER type_id,  /* [in] */ EIF_INTEGER feature_id )
+void ecom_EiffelCompiler::Core::ccom_generate_attribute(  /* [in] */ EIF_INTEGER type_id,  /* [in] */ EIF_INTEGER feature_id )
 
 /*-----------------------------------------------------------
 	No description available.
@@ -2129,7 +2373,7 @@ void ecom_Core::Core::ccom_generate_attribute(  /* [in] */ EIF_INTEGER type_id, 
 };
 /*----------------------------------------------------------------------------------------------------------------------*/
 
-void ecom_Core::Core::ccom_generate_feature_access(  /* [in] */ EIF_INTEGER type_id,  /* [in] */ EIF_INTEGER feature_id,  /* [in] */ EIF_BOOLEAN is_virtual )
+void ecom_EiffelCompiler::Core::ccom_generate_feature_access(  /* [in] */ EIF_INTEGER type_id,  /* [in] */ EIF_INTEGER feature_id,  /* [in] */ EIF_BOOLEAN is_virtual )
 
 /*-----------------------------------------------------------
 	No description available.
@@ -2165,7 +2409,41 @@ void ecom_Core::Core::ccom_generate_feature_access(  /* [in] */ EIF_INTEGER type
 };
 /*----------------------------------------------------------------------------------------------------------------------*/
 
-void ecom_Core::Core::ccom_generate_argument(  /* [in] */ EIF_INTEGER n )
+void ecom_EiffelCompiler::Core::ccom_generate_precursor_feature_access(  /* [in] */ EIF_INTEGER type_id,  /* [in] */ EIF_INTEGER feature_id )
+
+/*-----------------------------------------------------------
+	No description available.
+-----------------------------------------------------------*/
+{
+	HRESULT hr;
+	if (p_ICore == NULL)
+	{
+		hr = p_unknown->QueryInterface (IID_ICore_, (void **)&p_ICore);
+	if (FAILED (hr))
+	{
+		if ((HRESULT_FACILITY (hr)  ==  FACILITY_ITF) && (HRESULT_CODE (hr) > 1024) && (HRESULT_CODE (hr) < 1053))
+			com_eraise (rt_ec.ccom_ec_lpstr (eename(HRESULT_CODE (hr) - 1024), NULL),HRESULT_CODE (hr) - 1024);
+		com_eraise (f.c_format_message (hr), EN_PROG);
+	};
+	};
+	LONG tmp_type_id = 0;
+	tmp_type_id = (LONG)type_id;
+	LONG tmp_feature_id = 0;
+	tmp_feature_id = (LONG)feature_id;
+	
+	hr = p_ICore->GeneratePrecursorFeatureAccess(tmp_type_id,tmp_feature_id);
+	if (FAILED (hr))
+	{
+		if ((HRESULT_FACILITY (hr)  ==  FACILITY_ITF) && (HRESULT_CODE (hr) > 1024) && (HRESULT_CODE (hr) < 1053))
+			com_eraise (rt_ec.ccom_ec_lpstr (eename(HRESULT_CODE (hr) - 1024), NULL),HRESULT_CODE (hr) - 1024);
+		com_eraise (f.c_format_message (hr), EN_PROG);
+	};
+	
+	
+};
+/*----------------------------------------------------------------------------------------------------------------------*/
+
+void ecom_EiffelCompiler::Core::ccom_generate_argument(  /* [in] */ EIF_INTEGER n )
 
 /*-----------------------------------------------------------
 	No description available.
@@ -2197,7 +2475,7 @@ void ecom_Core::Core::ccom_generate_argument(  /* [in] */ EIF_INTEGER n )
 };
 /*----------------------------------------------------------------------------------------------------------------------*/
 
-void ecom_Core::Core::ccom_generate_local(  /* [in] */ EIF_INTEGER n )
+void ecom_EiffelCompiler::Core::ccom_generate_local(  /* [in] */ EIF_INTEGER n )
 
 /*-----------------------------------------------------------
 	No description available.
@@ -2229,7 +2507,7 @@ void ecom_Core::Core::ccom_generate_local(  /* [in] */ EIF_INTEGER n )
 };
 /*----------------------------------------------------------------------------------------------------------------------*/
 
-void ecom_Core::Core::ccom_generate_in_assertion_test(  /* [in] */ EIF_INTEGER end_of_assert_label )
+void ecom_EiffelCompiler::Core::ccom_generate_in_assertion_test(  /* [in] */ EIF_INTEGER end_of_assert_label )
 
 /*-----------------------------------------------------------
 	No description available.
@@ -2261,7 +2539,7 @@ void ecom_Core::Core::ccom_generate_in_assertion_test(  /* [in] */ EIF_INTEGER e
 };
 /*----------------------------------------------------------------------------------------------------------------------*/
 
-void ecom_Core::Core::ccom_generate_set_assertion_status()
+void ecom_EiffelCompiler::Core::ccom_generate_set_assertion_status()
 
 /*-----------------------------------------------------------
 	No description available.
@@ -2288,7 +2566,7 @@ void ecom_Core::Core::ccom_generate_set_assertion_status()
 };
 /*----------------------------------------------------------------------------------------------------------------------*/
 
-void ecom_Core::Core::ccom_generate_restore_assertion_status()
+void ecom_EiffelCompiler::Core::ccom_generate_restore_assertion_status()
 
 /*-----------------------------------------------------------
 	No description available.
@@ -2315,7 +2593,7 @@ void ecom_Core::Core::ccom_generate_restore_assertion_status()
 };
 /*----------------------------------------------------------------------------------------------------------------------*/
 
-void ecom_Core::Core::ccom_generate_assertion_check(  /* [in] */ EIF_INTEGER assert_type,  /* [in] */ EIF_OBJECT tag )
+void ecom_EiffelCompiler::Core::ccom_generate_assertion_check(  /* [in] */ EIF_INTEGER assert_type,  /* [in] */ EIF_OBJECT tag )
 
 /*-----------------------------------------------------------
 	No description available.
@@ -2350,7 +2628,7 @@ void ecom_Core::Core::ccom_generate_assertion_check(  /* [in] */ EIF_INTEGER ass
 };
 /*----------------------------------------------------------------------------------------------------------------------*/
 
-void ecom_Core::Core::ccom_generate_precondition_check(  /* [in] */ EIF_OBJECT tag,  /* [in] */ EIF_INTEGER label_id )
+void ecom_EiffelCompiler::Core::ccom_generate_precondition_check(  /* [in] */ EIF_OBJECT tag,  /* [in] */ EIF_INTEGER label_id )
 
 /*-----------------------------------------------------------
 	No description available.
@@ -2385,7 +2663,7 @@ void ecom_Core::Core::ccom_generate_precondition_check(  /* [in] */ EIF_OBJECT t
 };
 /*----------------------------------------------------------------------------------------------------------------------*/
 
-void ecom_Core::Core::ccom_generate_precondition_violation()
+void ecom_EiffelCompiler::Core::ccom_generate_precondition_violation()
 
 /*-----------------------------------------------------------
 	No description available.
@@ -2412,7 +2690,7 @@ void ecom_Core::Core::ccom_generate_precondition_violation()
 };
 /*----------------------------------------------------------------------------------------------------------------------*/
 
-void ecom_Core::Core::ccom_generate_invariant_checking(  /* [in] */ EIF_INTEGER type_id )
+void ecom_EiffelCompiler::Core::ccom_generate_invariant_checking(  /* [in] */ EIF_INTEGER type_id )
 
 /*-----------------------------------------------------------
 	No description available.
@@ -2444,7 +2722,7 @@ void ecom_Core::Core::ccom_generate_invariant_checking(  /* [in] */ EIF_INTEGER 
 };
 /*----------------------------------------------------------------------------------------------------------------------*/
 
-void ecom_Core::Core::ccom_generate_start_exception_block()
+void ecom_EiffelCompiler::Core::ccom_generate_start_exception_block()
 
 /*-----------------------------------------------------------
 	No description available.
@@ -2471,7 +2749,7 @@ void ecom_Core::Core::ccom_generate_start_exception_block()
 };
 /*----------------------------------------------------------------------------------------------------------------------*/
 
-void ecom_Core::Core::ccom_generate_start_rescue()
+void ecom_EiffelCompiler::Core::ccom_generate_start_rescue()
 
 /*-----------------------------------------------------------
 	No description available.
@@ -2498,7 +2776,7 @@ void ecom_Core::Core::ccom_generate_start_rescue()
 };
 /*----------------------------------------------------------------------------------------------------------------------*/
 
-void ecom_Core::Core::ccom_generate_end_exception_block()
+void ecom_EiffelCompiler::Core::ccom_generate_end_exception_block()
 
 /*-----------------------------------------------------------
 	No description available.
@@ -2525,7 +2803,7 @@ void ecom_Core::Core::ccom_generate_end_exception_block()
 };
 /*----------------------------------------------------------------------------------------------------------------------*/
 
-void ecom_Core::Core::ccom_generate_is_instance_of(  /* [in] */ EIF_INTEGER type_id )
+void ecom_EiffelCompiler::Core::ccom_generate_is_instance_of(  /* [in] */ EIF_INTEGER type_id )
 
 /*-----------------------------------------------------------
 	No description available.
@@ -2557,7 +2835,7 @@ void ecom_Core::Core::ccom_generate_is_instance_of(  /* [in] */ EIF_INTEGER type
 };
 /*----------------------------------------------------------------------------------------------------------------------*/
 
-void ecom_Core::Core::ccom_generate_attribute_assignment(  /* [in] */ EIF_INTEGER feature_id )
+void ecom_EiffelCompiler::Core::ccom_generate_attribute_assignment(  /* [in] */ EIF_INTEGER type_id,  /* [in] */ EIF_INTEGER feature_id )
 
 /*-----------------------------------------------------------
 	No description available.
@@ -2574,10 +2852,12 @@ void ecom_Core::Core::ccom_generate_attribute_assignment(  /* [in] */ EIF_INTEGE
 		com_eraise (f.c_format_message (hr), EN_PROG);
 	};
 	};
+	LONG tmp_type_id = 0;
+	tmp_type_id = (LONG)type_id;
 	LONG tmp_feature_id = 0;
 	tmp_feature_id = (LONG)feature_id;
 	
-	hr = p_ICore->GenerateAttributeAssignment(tmp_feature_id);
+	hr = p_ICore->GenerateAttributeAssignment(tmp_type_id,tmp_feature_id);
 	if (FAILED (hr))
 	{
 		if ((HRESULT_FACILITY (hr)  ==  FACILITY_ITF) && (HRESULT_CODE (hr) > 1024) && (HRESULT_CODE (hr) < 1053))
@@ -2589,7 +2869,7 @@ void ecom_Core::Core::ccom_generate_attribute_assignment(  /* [in] */ EIF_INTEGE
 };
 /*----------------------------------------------------------------------------------------------------------------------*/
 
-void ecom_Core::Core::ccom_generate_local_assignment(  /* [in] */ EIF_INTEGER n )
+void ecom_EiffelCompiler::Core::ccom_generate_local_assignment(  /* [in] */ EIF_INTEGER n )
 
 /*-----------------------------------------------------------
 	No description available.
@@ -2621,7 +2901,7 @@ void ecom_Core::Core::ccom_generate_local_assignment(  /* [in] */ EIF_INTEGER n 
 };
 /*----------------------------------------------------------------------------------------------------------------------*/
 
-void ecom_Core::Core::ccom_generate_result_assignment()
+void ecom_EiffelCompiler::Core::ccom_generate_result_assignment()
 
 /*-----------------------------------------------------------
 	No description available.
@@ -2648,7 +2928,7 @@ void ecom_Core::Core::ccom_generate_result_assignment()
 };
 /*----------------------------------------------------------------------------------------------------------------------*/
 
-void ecom_Core::Core::ccom_generate_local_address(  /* [in] */ EIF_INTEGER n )
+void ecom_EiffelCompiler::Core::ccom_generate_local_address(  /* [in] */ EIF_INTEGER n )
 
 /*-----------------------------------------------------------
 	No description available.
@@ -2680,7 +2960,7 @@ void ecom_Core::Core::ccom_generate_local_address(  /* [in] */ EIF_INTEGER n )
 };
 /*----------------------------------------------------------------------------------------------------------------------*/
 
-void ecom_Core::Core::ccom_generate_routine_address(  /* [in] */ EIF_INTEGER type_id,  /* [in] */ EIF_INTEGER feature_id )
+void ecom_EiffelCompiler::Core::ccom_generate_routine_address(  /* [in] */ EIF_INTEGER type_id,  /* [in] */ EIF_INTEGER feature_id )
 
 /*-----------------------------------------------------------
 	No description available.
@@ -2714,7 +2994,7 @@ void ecom_Core::Core::ccom_generate_routine_address(  /* [in] */ EIF_INTEGER typ
 };
 /*----------------------------------------------------------------------------------------------------------------------*/
 
-void ecom_Core::Core::ccom_generate_result_address()
+void ecom_EiffelCompiler::Core::ccom_generate_result_address()
 
 /*-----------------------------------------------------------
 	No description available.
@@ -2741,7 +3021,7 @@ void ecom_Core::Core::ccom_generate_result_address()
 };
 /*----------------------------------------------------------------------------------------------------------------------*/
 
-void ecom_Core::Core::ccom_generate_current_address()
+void ecom_EiffelCompiler::Core::ccom_generate_current_address()
 
 /*-----------------------------------------------------------
 	No description available.
@@ -2768,7 +3048,7 @@ void ecom_Core::Core::ccom_generate_current_address()
 };
 /*----------------------------------------------------------------------------------------------------------------------*/
 
-void ecom_Core::Core::ccom_generate_attribute_address(  /* [in] */ EIF_INTEGER type_id,  /* [in] */ EIF_INTEGER feature_id )
+void ecom_EiffelCompiler::Core::ccom_generate_attribute_address(  /* [in] */ EIF_INTEGER type_id,  /* [in] */ EIF_INTEGER feature_id )
 
 /*-----------------------------------------------------------
 	No description available.
@@ -2802,7 +3082,7 @@ void ecom_Core::Core::ccom_generate_attribute_address(  /* [in] */ EIF_INTEGER t
 };
 /*----------------------------------------------------------------------------------------------------------------------*/
 
-void ecom_Core::Core::ccom_generate_argument_address(  /* [in] */ EIF_INTEGER n )
+void ecom_EiffelCompiler::Core::ccom_generate_argument_address(  /* [in] */ EIF_INTEGER n )
 
 /*-----------------------------------------------------------
 	No description available.
@@ -2834,7 +3114,7 @@ void ecom_Core::Core::ccom_generate_argument_address(  /* [in] */ EIF_INTEGER n 
 };
 /*----------------------------------------------------------------------------------------------------------------------*/
 
-void ecom_Core::Core::ccom_generate_load_from_address(  /* [in] */ EIF_INTEGER type_id )
+void ecom_EiffelCompiler::Core::ccom_generate_load_from_address(  /* [in] */ EIF_INTEGER type_id )
 
 /*-----------------------------------------------------------
 	No description available.
@@ -2866,7 +3146,7 @@ void ecom_Core::Core::ccom_generate_load_from_address(  /* [in] */ EIF_INTEGER t
 };
 /*----------------------------------------------------------------------------------------------------------------------*/
 
-void ecom_Core::Core::ccom_generate_array_access(  /* [in] */ EIF_INTEGER kind )
+void ecom_EiffelCompiler::Core::ccom_generate_array_access(  /* [in] */ EIF_INTEGER kind )
 
 /*-----------------------------------------------------------
 	No description available.
@@ -2898,7 +3178,7 @@ void ecom_Core::Core::ccom_generate_array_access(  /* [in] */ EIF_INTEGER kind )
 };
 /*----------------------------------------------------------------------------------------------------------------------*/
 
-void ecom_Core::Core::ccom_generate_array_write(  /* [in] */ EIF_INTEGER kind )
+void ecom_EiffelCompiler::Core::ccom_generate_array_write(  /* [in] */ EIF_INTEGER kind )
 
 /*-----------------------------------------------------------
 	No description available.
@@ -2930,7 +3210,7 @@ void ecom_Core::Core::ccom_generate_array_write(  /* [in] */ EIF_INTEGER kind )
 };
 /*----------------------------------------------------------------------------------------------------------------------*/
 
-void ecom_Core::Core::ccom_generate_array_creation(  /* [in] */ EIF_INTEGER type_id )
+void ecom_EiffelCompiler::Core::ccom_generate_array_creation(  /* [in] */ EIF_INTEGER type_id )
 
 /*-----------------------------------------------------------
 	No description available.
@@ -2962,7 +3242,7 @@ void ecom_Core::Core::ccom_generate_array_creation(  /* [in] */ EIF_INTEGER type
 };
 /*----------------------------------------------------------------------------------------------------------------------*/
 
-void ecom_Core::Core::ccom_generate_return()
+void ecom_EiffelCompiler::Core::ccom_generate_return()
 
 /*-----------------------------------------------------------
 	No description available.
@@ -2989,7 +3269,7 @@ void ecom_Core::Core::ccom_generate_return()
 };
 /*----------------------------------------------------------------------------------------------------------------------*/
 
-void ecom_Core::Core::ccom_generate_return_value()
+void ecom_EiffelCompiler::Core::ccom_generate_return_value()
 
 /*-----------------------------------------------------------
 	No description available.
@@ -3016,7 +3296,7 @@ void ecom_Core::Core::ccom_generate_return_value()
 };
 /*----------------------------------------------------------------------------------------------------------------------*/
 
-void ecom_Core::Core::ccom_generate_once_done_info(  /* [in] */ EIF_OBJECT name )
+void ecom_EiffelCompiler::Core::ccom_generate_once_done_info(  /* [in] */ EIF_OBJECT name )
 
 /*-----------------------------------------------------------
 	No description available.
@@ -3049,7 +3329,7 @@ void ecom_Core::Core::ccom_generate_once_done_info(  /* [in] */ EIF_OBJECT name 
 };
 /*----------------------------------------------------------------------------------------------------------------------*/
 
-void ecom_Core::Core::ccom_generate_once_result_info(  /* [in] */ EIF_OBJECT name,  /* [in] */ EIF_INTEGER type_id )
+void ecom_EiffelCompiler::Core::ccom_generate_once_result_info(  /* [in] */ EIF_OBJECT name,  /* [in] */ EIF_INTEGER type_id )
 
 /*-----------------------------------------------------------
 	No description available.
@@ -3084,7 +3364,7 @@ void ecom_Core::Core::ccom_generate_once_result_info(  /* [in] */ EIF_OBJECT nam
 };
 /*----------------------------------------------------------------------------------------------------------------------*/
 
-void ecom_Core::Core::ccom_generate_once_test()
+void ecom_EiffelCompiler::Core::ccom_generate_once_test()
 
 /*-----------------------------------------------------------
 	No description available.
@@ -3111,7 +3391,7 @@ void ecom_Core::Core::ccom_generate_once_test()
 };
 /*----------------------------------------------------------------------------------------------------------------------*/
 
-void ecom_Core::Core::ccom_generate_once_result()
+void ecom_EiffelCompiler::Core::ccom_generate_once_result()
 
 /*-----------------------------------------------------------
 	No description available.
@@ -3138,7 +3418,7 @@ void ecom_Core::Core::ccom_generate_once_result()
 };
 /*----------------------------------------------------------------------------------------------------------------------*/
 
-void ecom_Core::Core::ccom_generate_once_store_result()
+void ecom_EiffelCompiler::Core::ccom_generate_once_store_result()
 
 /*-----------------------------------------------------------
 	No description available.
@@ -3165,7 +3445,7 @@ void ecom_Core::Core::ccom_generate_once_store_result()
 };
 /*----------------------------------------------------------------------------------------------------------------------*/
 
-void ecom_Core::Core::ccom_generate_array_lower()
+void ecom_EiffelCompiler::Core::ccom_generate_array_lower()
 
 /*-----------------------------------------------------------
 	No description available.
@@ -3192,7 +3472,7 @@ void ecom_Core::Core::ccom_generate_array_lower()
 };
 /*----------------------------------------------------------------------------------------------------------------------*/
 
-void ecom_Core::Core::ccom_generate_array_upper()
+void ecom_EiffelCompiler::Core::ccom_generate_array_upper()
 
 /*-----------------------------------------------------------
 	No description available.
@@ -3219,7 +3499,7 @@ void ecom_Core::Core::ccom_generate_array_upper()
 };
 /*----------------------------------------------------------------------------------------------------------------------*/
 
-void ecom_Core::Core::ccom_generate_array_count()
+void ecom_EiffelCompiler::Core::ccom_generate_array_count()
 
 /*-----------------------------------------------------------
 	No description available.
@@ -3246,7 +3526,7 @@ void ecom_Core::Core::ccom_generate_array_count()
 };
 /*----------------------------------------------------------------------------------------------------------------------*/
 
-void ecom_Core::Core::ccom_put_void()
+void ecom_EiffelCompiler::Core::ccom_put_void()
 
 /*-----------------------------------------------------------
 	No description available.
@@ -3273,7 +3553,7 @@ void ecom_Core::Core::ccom_put_void()
 };
 /*----------------------------------------------------------------------------------------------------------------------*/
 
-void ecom_Core::Core::ccom_put_manifest_string(  /* [in] */ EIF_OBJECT s )
+void ecom_EiffelCompiler::Core::ccom_put_manifest_string(  /* [in] */ EIF_OBJECT s )
 
 /*-----------------------------------------------------------
 	No description available.
@@ -3306,7 +3586,71 @@ void ecom_Core::Core::ccom_put_manifest_string(  /* [in] */ EIF_OBJECT s )
 };
 /*----------------------------------------------------------------------------------------------------------------------*/
 
-void ecom_Core::Core::ccom_put_integer32_constant(  /* [in] */ EIF_INTEGER i )
+void ecom_EiffelCompiler::Core::ccom_put_integer8_constant(  /* [in] */ EIF_INTEGER i )
+
+/*-----------------------------------------------------------
+	No description available.
+-----------------------------------------------------------*/
+{
+	HRESULT hr;
+	if (p_ICore == NULL)
+	{
+		hr = p_unknown->QueryInterface (IID_ICore_, (void **)&p_ICore);
+	if (FAILED (hr))
+	{
+		if ((HRESULT_FACILITY (hr)  ==  FACILITY_ITF) && (HRESULT_CODE (hr) > 1024) && (HRESULT_CODE (hr) < 1053))
+			com_eraise (rt_ec.ccom_ec_lpstr (eename(HRESULT_CODE (hr) - 1024), NULL),HRESULT_CODE (hr) - 1024);
+		com_eraise (f.c_format_message (hr), EN_PROG);
+	};
+	};
+	LONG tmp_i = 0;
+	tmp_i = (LONG)i;
+	
+	hr = p_ICore->PutInteger8Constant(tmp_i);
+	if (FAILED (hr))
+	{
+		if ((HRESULT_FACILITY (hr)  ==  FACILITY_ITF) && (HRESULT_CODE (hr) > 1024) && (HRESULT_CODE (hr) < 1053))
+			com_eraise (rt_ec.ccom_ec_lpstr (eename(HRESULT_CODE (hr) - 1024), NULL),HRESULT_CODE (hr) - 1024);
+		com_eraise (f.c_format_message (hr), EN_PROG);
+	};
+	
+	
+};
+/*----------------------------------------------------------------------------------------------------------------------*/
+
+void ecom_EiffelCompiler::Core::ccom_put_integer16_constant(  /* [in] */ EIF_INTEGER i )
+
+/*-----------------------------------------------------------
+	No description available.
+-----------------------------------------------------------*/
+{
+	HRESULT hr;
+	if (p_ICore == NULL)
+	{
+		hr = p_unknown->QueryInterface (IID_ICore_, (void **)&p_ICore);
+	if (FAILED (hr))
+	{
+		if ((HRESULT_FACILITY (hr)  ==  FACILITY_ITF) && (HRESULT_CODE (hr) > 1024) && (HRESULT_CODE (hr) < 1053))
+			com_eraise (rt_ec.ccom_ec_lpstr (eename(HRESULT_CODE (hr) - 1024), NULL),HRESULT_CODE (hr) - 1024);
+		com_eraise (f.c_format_message (hr), EN_PROG);
+	};
+	};
+	LONG tmp_i = 0;
+	tmp_i = (LONG)i;
+	
+	hr = p_ICore->PutInteger16Constant(tmp_i);
+	if (FAILED (hr))
+	{
+		if ((HRESULT_FACILITY (hr)  ==  FACILITY_ITF) && (HRESULT_CODE (hr) > 1024) && (HRESULT_CODE (hr) < 1053))
+			com_eraise (rt_ec.ccom_ec_lpstr (eename(HRESULT_CODE (hr) - 1024), NULL),HRESULT_CODE (hr) - 1024);
+		com_eraise (f.c_format_message (hr), EN_PROG);
+	};
+	
+	
+};
+/*----------------------------------------------------------------------------------------------------------------------*/
+
+void ecom_EiffelCompiler::Core::ccom_put_integer32_constant(  /* [in] */ EIF_INTEGER i )
 
 /*-----------------------------------------------------------
 	No description available.
@@ -3338,7 +3682,39 @@ void ecom_Core::Core::ccom_put_integer32_constant(  /* [in] */ EIF_INTEGER i )
 };
 /*----------------------------------------------------------------------------------------------------------------------*/
 
-void ecom_Core::Core::ccom_put_double_constant(  /* [in] */ EIF_DOUBLE d )
+void ecom_EiffelCompiler::Core::ccom_put_integer64_constant(  /* [in] */ EIF_INTEGER i )
+
+/*-----------------------------------------------------------
+	No description available.
+-----------------------------------------------------------*/
+{
+	HRESULT hr;
+	if (p_ICore == NULL)
+	{
+		hr = p_unknown->QueryInterface (IID_ICore_, (void **)&p_ICore);
+	if (FAILED (hr))
+	{
+		if ((HRESULT_FACILITY (hr)  ==  FACILITY_ITF) && (HRESULT_CODE (hr) > 1024) && (HRESULT_CODE (hr) < 1053))
+			com_eraise (rt_ec.ccom_ec_lpstr (eename(HRESULT_CODE (hr) - 1024), NULL),HRESULT_CODE (hr) - 1024);
+		com_eraise (f.c_format_message (hr), EN_PROG);
+	};
+	};
+	LONG tmp_i = 0;
+	tmp_i = (LONG)i;
+	
+	hr = p_ICore->PutInteger64Constant(tmp_i);
+	if (FAILED (hr))
+	{
+		if ((HRESULT_FACILITY (hr)  ==  FACILITY_ITF) && (HRESULT_CODE (hr) > 1024) && (HRESULT_CODE (hr) < 1053))
+			com_eraise (rt_ec.ccom_ec_lpstr (eename(HRESULT_CODE (hr) - 1024), NULL),HRESULT_CODE (hr) - 1024);
+		com_eraise (f.c_format_message (hr), EN_PROG);
+	};
+	
+	
+};
+/*----------------------------------------------------------------------------------------------------------------------*/
+
+void ecom_EiffelCompiler::Core::ccom_put_double_constant(  /* [in] */ EIF_DOUBLE d )
 
 /*-----------------------------------------------------------
 	No description available.
@@ -3370,7 +3746,39 @@ void ecom_Core::Core::ccom_put_double_constant(  /* [in] */ EIF_DOUBLE d )
 };
 /*----------------------------------------------------------------------------------------------------------------------*/
 
-void ecom_Core::Core::ccom_put_character_constant(  /* [in] */ EIF_INTEGER c )
+void ecom_EiffelCompiler::Core::ccom_put_real_constant(  /* [in] */ EIF_REAL d )
+
+/*-----------------------------------------------------------
+	No description available.
+-----------------------------------------------------------*/
+{
+	HRESULT hr;
+	if (p_ICore == NULL)
+	{
+		hr = p_unknown->QueryInterface (IID_ICore_, (void **)&p_ICore);
+	if (FAILED (hr))
+	{
+		if ((HRESULT_FACILITY (hr)  ==  FACILITY_ITF) && (HRESULT_CODE (hr) > 1024) && (HRESULT_CODE (hr) < 1053))
+			com_eraise (rt_ec.ccom_ec_lpstr (eename(HRESULT_CODE (hr) - 1024), NULL),HRESULT_CODE (hr) - 1024);
+		com_eraise (f.c_format_message (hr), EN_PROG);
+	};
+	};
+	FLOAT tmp_d = 0;
+	tmp_d = (FLOAT)d;
+	
+	hr = p_ICore->PutRealConstant(tmp_d);
+	if (FAILED (hr))
+	{
+		if ((HRESULT_FACILITY (hr)  ==  FACILITY_ITF) && (HRESULT_CODE (hr) > 1024) && (HRESULT_CODE (hr) < 1053))
+			com_eraise (rt_ec.ccom_ec_lpstr (eename(HRESULT_CODE (hr) - 1024), NULL),HRESULT_CODE (hr) - 1024);
+		com_eraise (f.c_format_message (hr), EN_PROG);
+	};
+	
+	
+};
+/*----------------------------------------------------------------------------------------------------------------------*/
+
+void ecom_EiffelCompiler::Core::ccom_put_character_constant(  /* [in] */ EIF_INTEGER c )
 
 /*-----------------------------------------------------------
 	No description available.
@@ -3402,7 +3810,7 @@ void ecom_Core::Core::ccom_put_character_constant(  /* [in] */ EIF_INTEGER c )
 };
 /*----------------------------------------------------------------------------------------------------------------------*/
 
-void ecom_Core::Core::ccom_put_boolean_constant(  /* [in] */ EIF_BOOLEAN b )
+void ecom_EiffelCompiler::Core::ccom_put_boolean_constant(  /* [in] */ EIF_BOOLEAN b )
 
 /*-----------------------------------------------------------
 	No description available.
@@ -3434,7 +3842,7 @@ void ecom_Core::Core::ccom_put_boolean_constant(  /* [in] */ EIF_BOOLEAN b )
 };
 /*----------------------------------------------------------------------------------------------------------------------*/
 
-void ecom_Core::Core::ccom_branch_on_true(  /* [in] */ EIF_INTEGER label )
+void ecom_EiffelCompiler::Core::ccom_branch_on_true(  /* [in] */ EIF_INTEGER label )
 
 /*-----------------------------------------------------------
 	No description available.
@@ -3466,7 +3874,7 @@ void ecom_Core::Core::ccom_branch_on_true(  /* [in] */ EIF_INTEGER label )
 };
 /*----------------------------------------------------------------------------------------------------------------------*/
 
-void ecom_Core::Core::ccom_branch_on_false(  /* [in] */ EIF_INTEGER label )
+void ecom_EiffelCompiler::Core::ccom_branch_on_false(  /* [in] */ EIF_INTEGER label )
 
 /*-----------------------------------------------------------
 	No description available.
@@ -3498,7 +3906,7 @@ void ecom_Core::Core::ccom_branch_on_false(  /* [in] */ EIF_INTEGER label )
 };
 /*----------------------------------------------------------------------------------------------------------------------*/
 
-void ecom_Core::Core::ccom_branch_to(  /* [in] */ EIF_INTEGER label )
+void ecom_EiffelCompiler::Core::ccom_branch_to(  /* [in] */ EIF_INTEGER label )
 
 /*-----------------------------------------------------------
 	No description available.
@@ -3530,7 +3938,7 @@ void ecom_Core::Core::ccom_branch_to(  /* [in] */ EIF_INTEGER label )
 };
 /*----------------------------------------------------------------------------------------------------------------------*/
 
-void ecom_Core::Core::ccom_mark_label(  /* [in] */ EIF_INTEGER label )
+void ecom_EiffelCompiler::Core::ccom_mark_label(  /* [in] */ EIF_INTEGER label )
 
 /*-----------------------------------------------------------
 	No description available.
@@ -3562,7 +3970,7 @@ void ecom_Core::Core::ccom_mark_label(  /* [in] */ EIF_INTEGER label )
 };
 /*----------------------------------------------------------------------------------------------------------------------*/
 
-void ecom_Core::Core::ccom_generate_lt()
+void ecom_EiffelCompiler::Core::ccom_generate_lt()
 
 /*-----------------------------------------------------------
 	No description available.
@@ -3589,7 +3997,7 @@ void ecom_Core::Core::ccom_generate_lt()
 };
 /*----------------------------------------------------------------------------------------------------------------------*/
 
-void ecom_Core::Core::ccom_generate_le()
+void ecom_EiffelCompiler::Core::ccom_generate_le()
 
 /*-----------------------------------------------------------
 	No description available.
@@ -3616,7 +4024,7 @@ void ecom_Core::Core::ccom_generate_le()
 };
 /*----------------------------------------------------------------------------------------------------------------------*/
 
-void ecom_Core::Core::ccom_generate_gt()
+void ecom_EiffelCompiler::Core::ccom_generate_gt()
 
 /*-----------------------------------------------------------
 	No description available.
@@ -3643,7 +4051,7 @@ void ecom_Core::Core::ccom_generate_gt()
 };
 /*----------------------------------------------------------------------------------------------------------------------*/
 
-void ecom_Core::Core::ccom_generate_ge()
+void ecom_EiffelCompiler::Core::ccom_generate_ge()
 
 /*-----------------------------------------------------------
 	No description available.
@@ -3670,7 +4078,7 @@ void ecom_Core::Core::ccom_generate_ge()
 };
 /*----------------------------------------------------------------------------------------------------------------------*/
 
-void ecom_Core::Core::ccom_generate_star()
+void ecom_EiffelCompiler::Core::ccom_generate_star()
 
 /*-----------------------------------------------------------
 	No description available.
@@ -3697,34 +4105,7 @@ void ecom_Core::Core::ccom_generate_star()
 };
 /*----------------------------------------------------------------------------------------------------------------------*/
 
-void ecom_Core::Core::ccom_generate_slash()
-
-/*-----------------------------------------------------------
-	No description available.
------------------------------------------------------------*/
-{
-	HRESULT hr;
-	if (p_ICore == NULL)
-	{
-		hr = p_unknown->QueryInterface (IID_ICore_, (void **)&p_ICore);
-	if (FAILED (hr))
-	{
-		if ((HRESULT_FACILITY (hr)  ==  FACILITY_ITF) && (HRESULT_CODE (hr) > 1024) && (HRESULT_CODE (hr) < 1053))
-			com_eraise (rt_ec.ccom_ec_lpstr (eename(HRESULT_CODE (hr) - 1024), NULL),HRESULT_CODE (hr) - 1024);
-		com_eraise (f.c_format_message (hr), EN_PROG);
-	};
-	};
-	hr = p_ICore->GenerateSlash ();
-	if (FAILED (hr))
-	{
-		if ((HRESULT_FACILITY (hr)  ==  FACILITY_ITF) && (HRESULT_CODE (hr) > 1024) && (HRESULT_CODE (hr) < 1053))
-			com_eraise (rt_ec.ccom_ec_lpstr (eename(HRESULT_CODE (hr) - 1024), NULL),HRESULT_CODE (hr) - 1024);
-		com_eraise (f.c_format_message (hr), EN_PROG);
-	};	
-};
-/*----------------------------------------------------------------------------------------------------------------------*/
-
-void ecom_Core::Core::ccom_generate_power()
+void ecom_EiffelCompiler::Core::ccom_generate_power()
 
 /*-----------------------------------------------------------
 	No description available.
@@ -3751,7 +4132,130 @@ void ecom_Core::Core::ccom_generate_power()
 };
 /*----------------------------------------------------------------------------------------------------------------------*/
 
-void ecom_Core::Core::ccom_generate_plus()
+void ecom_EiffelCompiler::Core::ccom_generate_max(  /* [in] */ EIF_INTEGER type_id )
+
+/*-----------------------------------------------------------
+	No description available.
+-----------------------------------------------------------*/
+{
+	HRESULT hr;
+	if (p_ICore == NULL)
+	{
+		hr = p_unknown->QueryInterface (IID_ICore_, (void **)&p_ICore);
+	if (FAILED (hr))
+	{
+		if ((HRESULT_FACILITY (hr)  ==  FACILITY_ITF) && (HRESULT_CODE (hr) > 1024) && (HRESULT_CODE (hr) < 1053))
+			com_eraise (rt_ec.ccom_ec_lpstr (eename(HRESULT_CODE (hr) - 1024), NULL),HRESULT_CODE (hr) - 1024);
+		com_eraise (f.c_format_message (hr), EN_PROG);
+	};
+	};
+	LONG tmp_type_id = 0;
+	tmp_type_id = (LONG)type_id;
+	
+	hr = p_ICore->GenerateMax(tmp_type_id);
+	if (FAILED (hr))
+	{
+		if ((HRESULT_FACILITY (hr)  ==  FACILITY_ITF) && (HRESULT_CODE (hr) > 1024) && (HRESULT_CODE (hr) < 1053))
+			com_eraise (rt_ec.ccom_ec_lpstr (eename(HRESULT_CODE (hr) - 1024), NULL),HRESULT_CODE (hr) - 1024);
+		com_eraise (f.c_format_message (hr), EN_PROG);
+	};
+	
+	
+};
+/*----------------------------------------------------------------------------------------------------------------------*/
+
+void ecom_EiffelCompiler::Core::ccom_generate_min(  /* [in] */ EIF_INTEGER type_id )
+
+/*-----------------------------------------------------------
+	No description available.
+-----------------------------------------------------------*/
+{
+	HRESULT hr;
+	if (p_ICore == NULL)
+	{
+		hr = p_unknown->QueryInterface (IID_ICore_, (void **)&p_ICore);
+	if (FAILED (hr))
+	{
+		if ((HRESULT_FACILITY (hr)  ==  FACILITY_ITF) && (HRESULT_CODE (hr) > 1024) && (HRESULT_CODE (hr) < 1053))
+			com_eraise (rt_ec.ccom_ec_lpstr (eename(HRESULT_CODE (hr) - 1024), NULL),HRESULT_CODE (hr) - 1024);
+		com_eraise (f.c_format_message (hr), EN_PROG);
+	};
+	};
+	LONG tmp_type_id = 0;
+	tmp_type_id = (LONG)type_id;
+	
+	hr = p_ICore->GenerateMin(tmp_type_id);
+	if (FAILED (hr))
+	{
+		if ((HRESULT_FACILITY (hr)  ==  FACILITY_ITF) && (HRESULT_CODE (hr) > 1024) && (HRESULT_CODE (hr) < 1053))
+			com_eraise (rt_ec.ccom_ec_lpstr (eename(HRESULT_CODE (hr) - 1024), NULL),HRESULT_CODE (hr) - 1024);
+		com_eraise (f.c_format_message (hr), EN_PROG);
+	};
+	
+	
+};
+/*----------------------------------------------------------------------------------------------------------------------*/
+
+void ecom_EiffelCompiler::Core::ccom_generate_abs(  /* [in] */ EIF_INTEGER type_id )
+
+/*-----------------------------------------------------------
+	No description available.
+-----------------------------------------------------------*/
+{
+	HRESULT hr;
+	if (p_ICore == NULL)
+	{
+		hr = p_unknown->QueryInterface (IID_ICore_, (void **)&p_ICore);
+	if (FAILED (hr))
+	{
+		if ((HRESULT_FACILITY (hr)  ==  FACILITY_ITF) && (HRESULT_CODE (hr) > 1024) && (HRESULT_CODE (hr) < 1053))
+			com_eraise (rt_ec.ccom_ec_lpstr (eename(HRESULT_CODE (hr) - 1024), NULL),HRESULT_CODE (hr) - 1024);
+		com_eraise (f.c_format_message (hr), EN_PROG);
+	};
+	};
+	LONG tmp_type_id = 0;
+	tmp_type_id = (LONG)type_id;
+	
+	hr = p_ICore->GenerateAbs(tmp_type_id);
+	if (FAILED (hr))
+	{
+		if ((HRESULT_FACILITY (hr)  ==  FACILITY_ITF) && (HRESULT_CODE (hr) > 1024) && (HRESULT_CODE (hr) < 1053))
+			com_eraise (rt_ec.ccom_ec_lpstr (eename(HRESULT_CODE (hr) - 1024), NULL),HRESULT_CODE (hr) - 1024);
+		com_eraise (f.c_format_message (hr), EN_PROG);
+	};
+	
+	
+};
+/*----------------------------------------------------------------------------------------------------------------------*/
+
+void ecom_EiffelCompiler::Core::ccom_generate_to_string()
+
+/*-----------------------------------------------------------
+	No description available.
+-----------------------------------------------------------*/
+{
+	HRESULT hr;
+	if (p_ICore == NULL)
+	{
+		hr = p_unknown->QueryInterface (IID_ICore_, (void **)&p_ICore);
+	if (FAILED (hr))
+	{
+		if ((HRESULT_FACILITY (hr)  ==  FACILITY_ITF) && (HRESULT_CODE (hr) > 1024) && (HRESULT_CODE (hr) < 1053))
+			com_eraise (rt_ec.ccom_ec_lpstr (eename(HRESULT_CODE (hr) - 1024), NULL),HRESULT_CODE (hr) - 1024);
+		com_eraise (f.c_format_message (hr), EN_PROG);
+	};
+	};
+	hr = p_ICore->GenerateToString ();
+	if (FAILED (hr))
+	{
+		if ((HRESULT_FACILITY (hr)  ==  FACILITY_ITF) && (HRESULT_CODE (hr) > 1024) && (HRESULT_CODE (hr) < 1053))
+			com_eraise (rt_ec.ccom_ec_lpstr (eename(HRESULT_CODE (hr) - 1024), NULL),HRESULT_CODE (hr) - 1024);
+		com_eraise (f.c_format_message (hr), EN_PROG);
+	};	
+};
+/*----------------------------------------------------------------------------------------------------------------------*/
+
+void ecom_EiffelCompiler::Core::ccom_generate_plus()
 
 /*-----------------------------------------------------------
 	No description available.
@@ -3778,7 +4282,7 @@ void ecom_Core::Core::ccom_generate_plus()
 };
 /*----------------------------------------------------------------------------------------------------------------------*/
 
-void ecom_Core::Core::ccom_generate_mod()
+void ecom_EiffelCompiler::Core::ccom_generate_mod()
 
 /*-----------------------------------------------------------
 	No description available.
@@ -3805,7 +4309,7 @@ void ecom_Core::Core::ccom_generate_mod()
 };
 /*----------------------------------------------------------------------------------------------------------------------*/
 
-void ecom_Core::Core::ccom_generate_minus()
+void ecom_EiffelCompiler::Core::ccom_generate_minus()
 
 /*-----------------------------------------------------------
 	No description available.
@@ -3832,7 +4336,7 @@ void ecom_Core::Core::ccom_generate_minus()
 };
 /*----------------------------------------------------------------------------------------------------------------------*/
 
-void ecom_Core::Core::ccom_generate_div()
+void ecom_EiffelCompiler::Core::ccom_generate_div()
 
 /*-----------------------------------------------------------
 	No description available.
@@ -3859,7 +4363,7 @@ void ecom_Core::Core::ccom_generate_div()
 };
 /*----------------------------------------------------------------------------------------------------------------------*/
 
-void ecom_Core::Core::ccom_generate_xor()
+void ecom_EiffelCompiler::Core::ccom_generate_xor()
 
 /*-----------------------------------------------------------
 	No description available.
@@ -3886,7 +4390,7 @@ void ecom_Core::Core::ccom_generate_xor()
 };
 /*----------------------------------------------------------------------------------------------------------------------*/
 
-void ecom_Core::Core::ccom_generate_or()
+void ecom_EiffelCompiler::Core::ccom_generate_or()
 
 /*-----------------------------------------------------------
 	No description available.
@@ -3913,7 +4417,7 @@ void ecom_Core::Core::ccom_generate_or()
 };
 /*----------------------------------------------------------------------------------------------------------------------*/
 
-void ecom_Core::Core::ccom_generate_and()
+void ecom_EiffelCompiler::Core::ccom_generate_and()
 
 /*-----------------------------------------------------------
 	No description available.
@@ -3940,7 +4444,7 @@ void ecom_Core::Core::ccom_generate_and()
 };
 /*----------------------------------------------------------------------------------------------------------------------*/
 
-void ecom_Core::Core::ccom_generate_implies()
+void ecom_EiffelCompiler::Core::ccom_generate_implies()
 
 /*-----------------------------------------------------------
 	No description available.
@@ -3967,7 +4471,7 @@ void ecom_Core::Core::ccom_generate_implies()
 };
 /*----------------------------------------------------------------------------------------------------------------------*/
 
-void ecom_Core::Core::ccom_generate_eq()
+void ecom_EiffelCompiler::Core::ccom_generate_eq()
 
 /*-----------------------------------------------------------
 	No description available.
@@ -3994,7 +4498,7 @@ void ecom_Core::Core::ccom_generate_eq()
 };
 /*----------------------------------------------------------------------------------------------------------------------*/
 
-void ecom_Core::Core::ccom_generate_shl()
+void ecom_EiffelCompiler::Core::ccom_generate_shl()
 
 /*-----------------------------------------------------------
 	No description available.
@@ -4021,7 +4525,7 @@ void ecom_Core::Core::ccom_generate_shl()
 };
 /*----------------------------------------------------------------------------------------------------------------------*/
 
-void ecom_Core::Core::ccom_generate_shr()
+void ecom_EiffelCompiler::Core::ccom_generate_shr()
 
 /*-----------------------------------------------------------
 	No description available.
@@ -4048,7 +4552,7 @@ void ecom_Core::Core::ccom_generate_shr()
 };
 /*----------------------------------------------------------------------------------------------------------------------*/
 
-void ecom_Core::Core::ccom_generate_ne()
+void ecom_EiffelCompiler::Core::ccom_generate_ne()
 
 /*-----------------------------------------------------------
 	No description available.
@@ -4075,34 +4579,7 @@ void ecom_Core::Core::ccom_generate_ne()
 };
 /*----------------------------------------------------------------------------------------------------------------------*/
 
-void ecom_Core::Core::ccom_generate_uplus()
-
-/*-----------------------------------------------------------
-	No description available.
------------------------------------------------------------*/
-{
-	HRESULT hr;
-	if (p_ICore == NULL)
-	{
-		hr = p_unknown->QueryInterface (IID_ICore_, (void **)&p_ICore);
-	if (FAILED (hr))
-	{
-		if ((HRESULT_FACILITY (hr)  ==  FACILITY_ITF) && (HRESULT_CODE (hr) > 1024) && (HRESULT_CODE (hr) < 1053))
-			com_eraise (rt_ec.ccom_ec_lpstr (eename(HRESULT_CODE (hr) - 1024), NULL),HRESULT_CODE (hr) - 1024);
-		com_eraise (f.c_format_message (hr), EN_PROG);
-	};
-	};
-	hr = p_ICore->GenerateUPlus ();
-	if (FAILED (hr))
-	{
-		if ((HRESULT_FACILITY (hr)  ==  FACILITY_ITF) && (HRESULT_CODE (hr) > 1024) && (HRESULT_CODE (hr) < 1053))
-			com_eraise (rt_ec.ccom_ec_lpstr (eename(HRESULT_CODE (hr) - 1024), NULL),HRESULT_CODE (hr) - 1024);
-		com_eraise (f.c_format_message (hr), EN_PROG);
-	};	
-};
-/*----------------------------------------------------------------------------------------------------------------------*/
-
-void ecom_Core::Core::ccom_generate_uminus()
+void ecom_EiffelCompiler::Core::ccom_generate_uminus()
 
 /*-----------------------------------------------------------
 	No description available.
@@ -4129,7 +4606,7 @@ void ecom_Core::Core::ccom_generate_uminus()
 };
 /*----------------------------------------------------------------------------------------------------------------------*/
 
-void ecom_Core::Core::ccom_generate_not()
+void ecom_EiffelCompiler::Core::ccom_generate_not()
 
 /*-----------------------------------------------------------
 	No description available.
@@ -4156,7 +4633,34 @@ void ecom_Core::Core::ccom_generate_not()
 };
 /*----------------------------------------------------------------------------------------------------------------------*/
 
-void ecom_Core::Core::ccom_put_line_info(  /* [in] */ EIF_INTEGER n )
+void ecom_EiffelCompiler::Core::ccom_generate_bitwise_not()
+
+/*-----------------------------------------------------------
+	No description available.
+-----------------------------------------------------------*/
+{
+	HRESULT hr;
+	if (p_ICore == NULL)
+	{
+		hr = p_unknown->QueryInterface (IID_ICore_, (void **)&p_ICore);
+	if (FAILED (hr))
+	{
+		if ((HRESULT_FACILITY (hr)  ==  FACILITY_ITF) && (HRESULT_CODE (hr) > 1024) && (HRESULT_CODE (hr) < 1053))
+			com_eraise (rt_ec.ccom_ec_lpstr (eename(HRESULT_CODE (hr) - 1024), NULL),HRESULT_CODE (hr) - 1024);
+		com_eraise (f.c_format_message (hr), EN_PROG);
+	};
+	};
+	hr = p_ICore->GenerateBitwiseNot ();
+	if (FAILED (hr))
+	{
+		if ((HRESULT_FACILITY (hr)  ==  FACILITY_ITF) && (HRESULT_CODE (hr) > 1024) && (HRESULT_CODE (hr) < 1053))
+			com_eraise (rt_ec.ccom_ec_lpstr (eename(HRESULT_CODE (hr) - 1024), NULL),HRESULT_CODE (hr) - 1024);
+		com_eraise (f.c_format_message (hr), EN_PROG);
+	};	
+};
+/*----------------------------------------------------------------------------------------------------------------------*/
+
+void ecom_EiffelCompiler::Core::ccom_put_line_info(  /* [in] */ EIF_INTEGER n )
 
 /*-----------------------------------------------------------
 	No description available.
@@ -4188,7 +4692,7 @@ void ecom_Core::Core::ccom_put_line_info(  /* [in] */ EIF_INTEGER n )
 };
 /*----------------------------------------------------------------------------------------------------------------------*/
 
-EIF_INTEGER ecom_Core::Core::ccom_create_label(  )
+EIF_INTEGER ecom_EiffelCompiler::Core::ccom_create_label(  )
 
 /*-----------------------------------------------------------
 	No description available.
@@ -4221,7 +4725,61 @@ EIF_INTEGER ecom_Core::Core::ccom_create_label(  )
 };
 /*----------------------------------------------------------------------------------------------------------------------*/
 
-EIF_POINTER ecom_Core::Core::ccom_item()
+void ecom_EiffelCompiler::Core::ccom_set_for_interfaces()
+
+/*-----------------------------------------------------------
+	No description available.
+-----------------------------------------------------------*/
+{
+	HRESULT hr;
+	if (p_ICore == NULL)
+	{
+		hr = p_unknown->QueryInterface (IID_ICore_, (void **)&p_ICore);
+	if (FAILED (hr))
+	{
+		if ((HRESULT_FACILITY (hr)  ==  FACILITY_ITF) && (HRESULT_CODE (hr) > 1024) && (HRESULT_CODE (hr) < 1053))
+			com_eraise (rt_ec.ccom_ec_lpstr (eename(HRESULT_CODE (hr) - 1024), NULL),HRESULT_CODE (hr) - 1024);
+		com_eraise (f.c_format_message (hr), EN_PROG);
+	};
+	};
+	hr = p_ICore->SetForInterfaces ();
+	if (FAILED (hr))
+	{
+		if ((HRESULT_FACILITY (hr)  ==  FACILITY_ITF) && (HRESULT_CODE (hr) > 1024) && (HRESULT_CODE (hr) < 1053))
+			com_eraise (rt_ec.ccom_ec_lpstr (eename(HRESULT_CODE (hr) - 1024), NULL),HRESULT_CODE (hr) - 1024);
+		com_eraise (f.c_format_message (hr), EN_PROG);
+	};	
+};
+/*----------------------------------------------------------------------------------------------------------------------*/
+
+void ecom_EiffelCompiler::Core::ccom_set_for_implementations()
+
+/*-----------------------------------------------------------
+	No description available.
+-----------------------------------------------------------*/
+{
+	HRESULT hr;
+	if (p_ICore == NULL)
+	{
+		hr = p_unknown->QueryInterface (IID_ICore_, (void **)&p_ICore);
+	if (FAILED (hr))
+	{
+		if ((HRESULT_FACILITY (hr)  ==  FACILITY_ITF) && (HRESULT_CODE (hr) > 1024) && (HRESULT_CODE (hr) < 1053))
+			com_eraise (rt_ec.ccom_ec_lpstr (eename(HRESULT_CODE (hr) - 1024), NULL),HRESULT_CODE (hr) - 1024);
+		com_eraise (f.c_format_message (hr), EN_PROG);
+	};
+	};
+	hr = p_ICore->SetForImplementations ();
+	if (FAILED (hr))
+	{
+		if ((HRESULT_FACILITY (hr)  ==  FACILITY_ITF) && (HRESULT_CODE (hr) > 1024) && (HRESULT_CODE (hr) < 1053))
+			com_eraise (rt_ec.ccom_ec_lpstr (eename(HRESULT_CODE (hr) - 1024), NULL),HRESULT_CODE (hr) - 1024);
+		com_eraise (f.c_format_message (hr), EN_PROG);
+	};	
+};
+/*----------------------------------------------------------------------------------------------------------------------*/
+
+EIF_POINTER ecom_EiffelCompiler::Core::ccom_item()
 
 /*-----------------------------------------------------------
 	IUnknown interface

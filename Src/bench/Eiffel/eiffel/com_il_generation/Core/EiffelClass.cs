@@ -5,21 +5,20 @@ using System.Reflection.Emit;
 using System.Diagnostics;
 using System.Runtime.InteropServices;
 
-#if BETA2
-[ClassInterfaceAttribute (ClassInterfaceType.None)]
-#endif
-internal class EiffelClass : Globals
+internal class EiffelClass
 {
 	public EiffelClass( ModuleBuilder ModuleB )
 	{
 		Interfaces = new System.Collections.ArrayList();
-		BaseType = NoValue;
+		BaseType = EiffelReflectionEmit.NoValue;
 		Module = ModuleB;
-		TypeBuilderCreated = false;
+		#if ASSERTIONS
+			TypeBuilderCreated = false;
+		#endif
 	}
 	
 	// Type ID
-	public int TypeID;
+	public int TypeID, InterfaceID;
 	
 	// Base type
 	public int BaseType;
@@ -33,6 +32,9 @@ internal class EiffelClass : Globals
 	// Is class deferred?
 	public bool IsDeferred;
 	
+	// Is class frozen?
+	public bool IsFrozen;
+		
 	// Is class external?
 	public bool IsExternal;
 	
@@ -48,7 +50,7 @@ internal class EiffelClass : Globals
 	// Does current class have a parent?
 	public bool HasParent()
 	{
-		return( BaseType != NoValue );
+		return( BaseType != EiffelReflectionEmit.NoValue );
 	}
 	
 	// Type name of ARRAY Class
@@ -65,7 +67,7 @@ internal class EiffelClass : Globals
 	public void SetInvariant (int FeatureID)
 	{
 		InvariantRoutine = (EiffelMethod) FeatureIDTable [FeatureID];
-		InvariantRoutine.SetIsInvariant();
+		InvariantRoutine.SetIsInvariant(true);
 	}
 
 	// Assign all routine with `FeatureIDs' to be creation routine
@@ -77,7 +79,7 @@ internal class EiffelClass : Globals
 
 		for (int i = 0; i < nb; i++) {
 			CreationRoutines [i] = (EiffelMethod) FeatureIDTable [FeatureIDs [i]];
-			CreationRoutines [i].SetIsCreationRoutine();
+			CreationRoutines [i].SetIsCreationRoutine(true);
 		}
 	}
 
@@ -102,62 +104,109 @@ internal class EiffelClass : Globals
 	// Methods
 	// key: RoutineID
 	// value: EiffelMethod
-	public System.Collections.Hashtable RoutIDTable;
+	public System.Collections.Hashtable StaticFeatureIDTable;
 
 	// Default Constructor for Eiffel objects
-	public ConstructorInfo DefaultConstructor;
-
-	// Set `IsDeferred' with `true'
-	public void SetDeferred()
-	{
-		if( TypeBuilderCreated )
-			throw new ApplicationException( "SetDeferred: Type Builder already created" );
-		if( IsExpanded )
-			throw new ApplicationException( "SetDeferred: Type cannot be both expanded and an interface or deferred (" + Name + ")" );
-		IsDeferred = true;
-	}
-	
-	// Set `IsExternal' with `true'
-	public void SetExternal()
-	{
-		if( TypeBuilderCreated )
-			throw new ApplicationException( "SetDeferred: Type Builder already created" );
-		IsExternal = true;
-	}
-	
-	// Set `IsExpanded' with `true'
-	public void SetExpanded()
-	{
-		if( TypeBuilderCreated )
-			throw new ApplicationException( "SetExpanded: Type Builder already created" );
-		if( IsInterface )
-			throw new ApplicationException( "SetExpanded: Type cannot be both expanded and an interface" );
-		// Might be deferred, c.f. System.ValueType
-		IsExpanded = true;
-	}
-	
-	// Set `IsInterface' with `true'
-	public void SetInterface()
-	{
-		if( TypeBuilderCreated )
-			throw new ApplicationException( "IsInterface: Type Builder already created" );
-		if( IsExpanded )
-			throw new ApplicationException( "IsInterface: Type cannot be both expanded and an interface or deferred" );
-		IsInterface = true;
+	protected ConstructorInfo InternalDefaultConstructor;
+	public ConstructorInfo DefaultConstructor {
+		get {
+			if
+				((InternalDefaultConstructor == null) &&
+				EiffelReflectionEmit.Classes [TypeID].IsExternal &&
+				!EiffelReflectionEmit.Classes [TypeID].IsArray)
+			{
+				EiffelReflectionEmit.Classes [TypeID].SetDefaultConstructor (
+					EiffelReflectionEmit.Classes [TypeID].Builder.GetConstructor (
+						BindingFlags.NonPublic | BindingFlags.Public | BindingFlags.Instance,
+						null, Type.EmptyTypes, null));
+			}
+			return InternalDefaultConstructor;
+		}
 	}
 
-	// Set `IsInterface' with `true'
+	// Set `IsDeferred' with `val'
+	public void SetIsDeferred(bool val)
+	{
+		#if ASSERTIONS
+			if( TypeBuilderCreated )
+				throw new ApplicationException( "SetIsDeferred: Type Builder already created" );
+			if( IsExpanded )
+				throw new ApplicationException( "SetIsDeferred: Type cannot be both expanded " +
+					"and an interface or deferred (" + Name + ")" );
+		#endif
+		IsDeferred = val;
+	}
+
+	// Set `IsFrozen' with `val'
+	public void SetIsFrozen(bool val)
+	{
+		#if ASSERTIONS
+			if( TypeBuilderCreated )
+				throw new ApplicationException( "SetIsFrozen: Type Builder already created" );
+		#endif
+		IsFrozen = val;
+	}
+		
+	// Set `IsExternal' with `val'
+	public void SetIsExternal(bool val)
+	{
+		#if ASSERTIONS
+			if( TypeBuilderCreated )
+				throw new ApplicationException( "SetIsExternal: Type Builder already created" );
+		#endif
+		IsExternal = val;
+	}
+	
+	// Set `IsExpanded' with `val'
+	public void SetIsExpanded(bool val)
+	{
+		#if ASSERTIONS
+			if( TypeBuilderCreated )
+				throw new ApplicationException( "SetIsExpanded: Type Builder already created" );
+			if( IsInterface )
+				throw new ApplicationException( "SetIsExpanded: Type cannot be both expanded and an interface" );
+		#endif
+		IsExpanded = val;
+	}
+	
+	// Set `IsInterface' with `val'
+	public void SetIsInterface(bool val)
+	{
+		#if ASSERTIONS
+			if( TypeBuilderCreated )
+				throw new ApplicationException( "SetIsInterface: Type Builder already created" );
+			if( IsExpanded )
+				throw new ApplicationException( "SetIsInterface: Type cannot be both expanded " +
+					"and an interface or deferred" );
+		#endif
+		IsInterface = val;
+	}
+
+	// Set `TypeID' with `ID'
 	public void SetTypeID( int ID )
 	{
-		if( TypeBuilderCreated )
-			throw new ApplicationException( "SetTypeID: Type Builder already created" );
+		#if ASSERTIONS
+			if( TypeBuilderCreated )
+				throw new ApplicationException( "SetTypeID: Type Builder already created" );
+		#endif
 		TypeID = ID;
 	}
 
-	// Set `IsArray' with `true'
-	public void SetIsArray ()
+	// Set `InterfaceID' with `ID'
+	public void SetInterfaceID( int ID )
 	{
-		IsArray = true;
+		#if ASSERTIONS
+			if( TypeBuilderCreated )
+				throw new ApplicationException( "SetTypeID: Type Builder already created" );
+		#endif
+		InterfaceID = ID;
+	}
+
+
+	// Set `IsArray' with `true'
+	public void SetIsArray (bool val)
+	{
+		IsArray = val;
 	}
 
 	// Set `SetArrayElementName' with `a_name'
@@ -169,32 +218,40 @@ internal class EiffelClass : Globals
 	// Set `Document' with `Doc'
 	public void SetDocument( System.Diagnostics.SymbolStore.ISymbolDocumentWriter Doc )
 	{
-		if( TypeBuilderCreated )
-			throw new ApplicationException( "SetDocument: Type Builder already created" );
+		#if ASSERTIONS
+			if( TypeBuilderCreated )
+				throw new ApplicationException( "SetDocument: Type Builder already created" );
+		#endif
 		Document = Doc;
 	}
 	
 	// Set `IsInterface' with `true'
 	public void SetName( String ClassName )
 	{
-		if( TypeBuilderCreated )
-			throw new ApplicationException( "SetName: Type Builder already created" );
+	  	#if ASSERTIONS
+			if( TypeBuilderCreated )
+				throw new ApplicationException( "SetName: Type Builder already created" );
+		#endif
 		Name = ClassName;
 	}
 	
 	// Add Class with TypeID `ID' to list of parents
 	public void AddParent( int ID )
 	{
-		if( TypeBuilderCreated )
-			throw new ApplicationException( "AddParent: Type Builder already created" );
-		if((( EiffelClass )ClassTable [ID]).IsInterface )
-			Interfaces.Add( ID );
-		else
-		{
-			if( BaseType != NoValue )
-				throw new ApplicationException( "AddParent: Class " + Name + " already has a base type (" + ClassTable [BaseType].Builder +")");
-			if( IsInterface )
-				throw new ApplicationException( "AddParent: Class " + Name + " is an interface." );
+		#if ASSERTIONS
+			if( TypeBuilderCreated )
+				throw new ApplicationException( "AddParent: Type Builder already created" );
+		#endif
+		if (EiffelReflectionEmit.Classes [ID].IsInterface) {
+			Interfaces.Add (ID);
+		} else {
+			#if ASSERTIONS
+				if( BaseType != EiffelReflectionEmit.NoValue )
+					throw new ApplicationException( "AddParent: Class " + Name +
+						" already has a base type (" + EiffelReflectionEmit.Classes [BaseType].Builder +")");
+				if( IsInterface )
+					throw new ApplicationException( "AddParent: Class " + Name + " is an interface." );
+			#endif
 			BaseType = ID;
 		}
 	}
@@ -202,17 +259,22 @@ internal class EiffelClass : Globals
 	// Set feature id table
 	public void SetFeatureIDTable( System.Collections.Hashtable Table )
 	{
-		if( FeatureIDTable != null )
-			throw new ApplicationException( "SetFeatureIDTable: Feature ID table already exists" );
+		#if ASSERTIONS
+			if( FeatureIDTable != null )
+				throw new ApplicationException( "SetFeatureIDTable: Feature ID table already exists" );
+		#endif
 		FeatureIDTable = Table;
 	}
 	
 	// Set method table
-	public void SetRoutIDTable( System.Collections.Hashtable Table )
+	public void SetStaticFeatureIDTable( System.Collections.Hashtable Table )
 	{
-		if( RoutIDTable != null )
-			throw new ApplicationException( "SetRoutIDTable: Routine ID table already exists" );
-		RoutIDTable = Table;
+		#if ASSERTIONS
+			if( StaticFeatureIDTable != null )
+				throw new ApplicationException (
+					"SetStaticFeatureIDTable: Routine ID table already exists");
+		#endif
+		StaticFeatureIDTable = Table;
 	}
 	
 	// Set `Builder' with `TypeBuilder'.
@@ -220,13 +282,15 @@ internal class EiffelClass : Globals
 	public void SetTypeBuilder( Type TypeBuilder )
 	{
 		Builder = TypeBuilder;
-		TypeBuilderCreated = true;
+		#if ASSERTIONS
+			TypeBuilderCreated = true;
+		#endif
 	}
 	
 	// Set `DefaultConstructor' with `Cons'.
 	public void SetDefaultConstructor( ConstructorInfo Cons )
 	{
-		DefaultConstructor = Cons;
+		InternalDefaultConstructor = Cons;
 	}
 	
 	// Create Type Builder
@@ -238,11 +302,11 @@ internal class EiffelClass : Globals
 		int i;
 		LocalInterfaces = new Type[ Interfaces.Count ];
 		for( i = 0; i < Interfaces.Count; i++ )
-			LocalInterfaces [i] = ClassTable [( int )Interfaces [i]].Builder;
-		if( BaseType != NoValue )
-			ParentType = ClassTable [BaseType].Builder;
+			LocalInterfaces [i] = EiffelReflectionEmit.Classes [( int )Interfaces [i]].Builder;
+		if( BaseType != EiffelReflectionEmit.NoValue )
+			ParentType = EiffelReflectionEmit.Classes [BaseType].Builder;
 		else
-			ParentType = ObjectType;
+			ParentType = EiffelReflectionEmit.ObjectType;
 		if( IsDeferred && !IsInterface )
 		{
 			Builder = Module.DefineType( Name, TypeAttributes.Public | TypeAttributes.Abstract, ParentType, LocalInterfaces );
@@ -263,7 +327,9 @@ internal class EiffelClass : Globals
 					}
 				}
 		}
-		TypeBuilderCreated = true;
+		#if ASSERTIONS
+			TypeBuilderCreated = true;
+		#endif
 	}
 	
 	// Build constructor that calls parent constructor
@@ -273,19 +339,19 @@ internal class EiffelClass : Globals
 		ILGenerator generator;
 		EiffelClass parent_class;
 
-		if (BaseType != NoValue)
-			parent_class = ClassTable [BaseType];
+		if (BaseType != EiffelReflectionEmit.NoValue)
+			parent_class = EiffelReflectionEmit.Classes [BaseType];
 		else
 			parent_class = null;
 
 		if
-			((BaseType == NoValue) ||
+			((BaseType == EiffelReflectionEmit.NoValue) ||
 			((parent_class.IsExternal) && (parent_class.DefaultConstructor != null)))
 		{
 				// There is no parent, or there is an external parent that defines
 				// a default constructor, we can define our default constructor
 				// that calls the parent one.
-			DefaultConstructor =(( TypeBuilder )Builder )
+			InternalDefaultConstructor =(( TypeBuilder )Builder )
 				.DefineDefaultConstructor( MethodAttributes.Public );
 		} else {
 			constructor =(( TypeBuilder )Builder )
@@ -299,14 +365,16 @@ internal class EiffelClass : Globals
 				generator.Emit( OpCodes.Call, parent_class.DefaultConstructor);
 			}
 			generator.Emit( OpCodes.Ret );
-			DefaultConstructor = constructor;
+			InternalDefaultConstructor = constructor;
 		}
 	}
 
 	// Module that contains type
 	protected ModuleBuilder Module;
 	
+#if ASSERTIONS
 	// Was `CreateTypeBuilder' called?
 	protected bool TypeBuilderCreated;
+#endif
 
 }

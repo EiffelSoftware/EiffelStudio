@@ -26,23 +26,17 @@ public interface ICore
 	// `CreateAssembly' should have been called before.
 	void EndAssemblyGeneration();
 
-	// Finish creation of current module.
-	// `CreateModule' should have been called before.
-	void EndModuleGeneration();
-
 /* Class info */
 
 	// Set number of classes to generate
 	void StartClassMappings( int ClassCount );
 	
 	// Generate a class map between name and TypeID
-	void GenerateClassMappings( string ClassName, int TypeID, string SourceFileName );
-
-	// Generate an array class map between name and TypeID
-	void GenerateArrayClassMappings( string ClassName, string ElementTypeName, int TypeID );
+	void GenerateClassMappings (string ClassName, int TypeID, int InterfaceID,
+		string SourceFileName, string ElementTypeName);
 
 	// Generate class name and its specifier.
-	void GenerateClassHeader( Boolean IsInterface, Boolean Deferred, Boolean Expanded, Boolean IsExternal, int TypeID );
+	void GenerateClassHeader( bool IsInterface, bool Deferred, bool IsFrozen, bool Expanded, bool IsExternal, int TypeID );
 	
 	// Bake .NET type
 	void EndClass();
@@ -50,6 +44,9 @@ public interface ICore
 	// Add class with id `TypeID' into list of parents of current type.
 	// `StartParentsLt' should have been called before.
 	void AddToParentsList( int TypeID );
+
+	// Add interface with id `TypeID' into list of parents of current tyep.
+	void AddInterface (int TypeID);
 
 	// Finish inheritance part description
 	// `StartParentsList' should have been called before.
@@ -60,9 +57,6 @@ public interface ICore
 	// Start enumeration of features written in class with TypeID `TypeID'.
 	void StartFeaturesList( int TypeID );
 
-	// Finish enumeration of features written in current class.
-	void EndFeaturesList();
-
 	// Mark the invariant routine
 	void MarkInvariant( int FeatureID );
 
@@ -72,15 +66,17 @@ public interface ICore
 	// Start enumeration of features written in current class.
 	void StartFeatureDescription(int arg_count);
 
+	// Generate info about current feature knowing that it is going 
+	// to be generated in interface only.
+	void GenerateInterfaceFeatureIdentification (string Name, int FeatureID, bool IsAttribute);
+
 	// Generate info about current feature.
-	void GenerateFeatureNature( Boolean Redefined, Boolean Deferred, Boolean Frozen, Boolean IsAttribute );
-	
-	// Generate info about current feature.
-	// Called for both features generated in Current type and parent types
-	void GenerateFeatureIdentification( string Name, int FeatureID, int[] RoutineIDs, Boolean InCurrentClass, int WrittenTypeID );
+	void GenerateFeatureIdentification
+		(string Name, int FeatureID, bool IsRedefined, bool IsDeferred, bool IsFrozen,
+		bool IsAttribute, bool Is_C_External, bool IsStatic);
 
 	// Generate info about external feature.
-	void GenerateExternalIdentification( string Name, string ComName, int ExternalKind, int FeatureID, int RoutineID, Boolean InCurrentClass, int WrittenTypeID, string[] Parameters, string ReturnType );
+	void GenerateExternalIdentification( string Name, string ComName, int ExternalKind, int FeatureID, int RoutineID, bool InCurrentClass, int WrittenTypeID, string[] Parameters, string ReturnType );
 
 	// Generate info about current feature.
 	void GenerateFeatureReturnType( int TypeID );
@@ -90,14 +86,6 @@ public interface ICore
 
 	// Freeze current Method.
 	void CreateFeatureDescription();
-
-	// Check need for renaming
-	// Use MethodImpl to implement it if needed
-	void CheckRenaming();
-	
-	// Check for covariance and renaming
-	// Use MethodImpl to emulate these mechanisms
-	void CheckRenamingAndRedefinition();
 
 	// Define system entry point( root feature of root class );
 	void DefineEntryPoint( int TypeID, int FeatureID );
@@ -192,7 +180,13 @@ public interface ICore
 	void StartIlGeneration( int TypeID );
 	
 	// Generate info about current feature.
-	void GenerateFeatureIL( int FeatureID );
+	void GenerateFeatureIL (int FeatureID, int TypeID, int CodeFeatureID);
+	void GenerateFeatureInternalClone (int FeatureID);
+	void GenerateImplementationFeatureIL (int FeatureID);
+
+	// Generate a MethodImpl from `ParentTypeID::ParentFeatureID' into 
+	// `CurrentTypeID::FeatureID'.
+	void GenerateMethodImpl (int FeatureID, int ParentTypeID, int ParentFeatureID);
 
 	// Generate info about current feature.
 	void GenerateCreationFeatureIL( int FeatureID );
@@ -239,6 +233,18 @@ public interface ICore
 	// Generate Cast
 	void GenerateCheckCast (int SourceTypeID, int TargetTypeID);
 
+	// Convert Object on top of stack into appropriate type.
+	void ConvertToNativeInt ();
+	void ConvertToBoolean ();
+	void ConvertToCharacter ();
+	void ConvertToInteger8 ();
+	void ConvertToInteger16 ();
+	void ConvertToInteger32 ();
+	void ConvertToInteger64 ();
+	void ConvertToDouble ();
+	void ConvertToReal ();
+
+
 	// Generate access to `Current'.
 	void GenerateCurrent();
 
@@ -250,6 +256,7 @@ public interface ICore
 
 	// Generate feature access
 	void GenerateFeatureAccess( int TypeID, int FeatureID, bool IsVirtual );
+	void GeneratePrecursorFeatureAccess( int TypeID, int FeatureID);
 	
 	// Generate access to `n'-th argument of current feature.
 	// Cannot be `0', reserved for `Current'.
@@ -301,7 +308,7 @@ public interface ICore
 	void GenerateIsInstanceOf( int TypeID );
 
 	// Generate assignment to attribute of `Name' in current class.
-	void GenerateAttributeAssignment( int FeatureID );
+	void GenerateAttributeAssignment (int TypeID, int FeatureID);
 	
 	// Generate assignment to `n'-th local variable of current feature.
 	void GenerateLocalAssignment( int n );
@@ -380,10 +387,14 @@ public interface ICore
 	void PutManifestString( string s );
 	
 	// Put `i' on IL stack.
+	void PutInteger8Constant( Int32 i  );
+	void PutInteger16Constant( Int32 i  );
 	void PutInteger32Constant( Int32 i  );
+	void PutInteger64Constant( Int32 i  );
 
 	// Put `d' on IL stack.
 	void PutDoubleConstant( double d );
+	void PutRealConstant( float d );
 
 	// Put `c' on IL stack.
 	void PutCharacterConstant( char c );
@@ -424,11 +435,12 @@ public interface ICore
 	// Generate `*' operator.
 	void GenerateStar();
 
-	// Generate `/' operator.
-	void GenerateSlash();
-
-	// Generate `^' operator.
+	// Generate `^' and other basic math operations.
 	void GeneratePower();
+	void GenerateMax (int TypeID);
+	void GenerateMin (int TypeID);
+	void GenerateAbs (int TypeID);
+	void GenerateToString ();
 
 	// Generate `+' operator.
 	void GeneratePlus();
@@ -439,7 +451,7 @@ public interface ICore
 	// Generate `-' operator.
 	void GenerateMinus();
 
-	// Generate `//' operator.
+	// Generate `/' operator.
 	void GenerateDiv();
 
 	// Generate `xor' operator.
@@ -466,15 +478,14 @@ public interface ICore
 
 /* Unary operator generation */
 
-
-	// Generate '+' operator.
-	void GenerateUPlus();
-
 	// Generate '-' operator.
 	void GenerateUMinus();
 
 	// Generate 'not' operator.
 	void GenerateNot();
+
+	// Generate bitwise not operator.
+	void GenerateBitwiseNot();
 
 /* Line info */
 
@@ -486,5 +497,10 @@ public interface ICore
 
 	// Create a new label and return corresponding index.
 	int CreateLabel();
+
+/* Code generation switch between generation of interfaces and implementation */
+
+	void SetForInterfaces ();
+	void SetForImplementations ();
 
 }

@@ -34,19 +34,19 @@ public:
 	/*-----------------------------------------------------------
 	Convert BSTR *  to CELL [STRING].
 	-----------------------------------------------------------*/
-	EIF_REFERENCE ccom_ce_pointed_cell_4( BSTR * a_pointer, EIF_OBJECT an_object );
+	EIF_REFERENCE ccom_ce_pointed_cell_3( BSTR * a_pointer, EIF_OBJECT an_object );
 
 
 	/*-----------------------------------------------------------
 	Free memory of BSTR *.
 	-----------------------------------------------------------*/
-	void ccom_free_memory_pointed_4( BSTR * a_pointer );
+	void ccom_free_memory_pointed_3( BSTR * a_pointer );
 
 
 	/*-----------------------------------------------------------
 	Free memory of LONG *.
 	-----------------------------------------------------------*/
-	void ccom_free_memory_pointed_12( LONG * a_pointer );
+	void ccom_free_memory_pointed_11( LONG * a_pointer );
 
 
 

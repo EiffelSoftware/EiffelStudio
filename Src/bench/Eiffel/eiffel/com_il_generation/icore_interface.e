@@ -59,13 +59,6 @@ feature -- Status Report
 			Result := True
 		end
 
-	end_module_generation_user_precondition: BOOLEAN is
-			-- User-defined preconditions for `end_module_generation'.
-			-- Redefine in descendants if needed.
-		do
-			Result := True
-		end
-
 	start_class_mappings_user_precondition (class_count: INTEGER): BOOLEAN is
 			-- User-defined preconditions for `start_class_mappings'.
 			-- Redefine in descendants if needed.
@@ -73,21 +66,14 @@ feature -- Status Report
 			Result := True
 		end
 
-	generate_class_mappings_user_precondition (class_name1: STRING; type_id: INTEGER; source_file_name: STRING): BOOLEAN is
+	generate_class_mappings_user_precondition (class_name1: STRING; type_id: INTEGER; interface_id: INTEGER; source_file_name: STRING; element_type_name: STRING): BOOLEAN is
 			-- User-defined preconditions for `generate_class_mappings'.
 			-- Redefine in descendants if needed.
 		do
 			Result := True
 		end
 
-	generate_array_class_mappings_user_precondition (class_name1: STRING; element_type_name: STRING; type_id: INTEGER): BOOLEAN is
-			-- User-defined preconditions for `generate_array_class_mappings'.
-			-- Redefine in descendants if needed.
-		do
-			Result := True
-		end
-
-	generate_class_header_user_precondition (is_interface: BOOLEAN; deferred1: BOOLEAN; expanded1: BOOLEAN; is_external: BOOLEAN; type_id: INTEGER): BOOLEAN is
+	generate_class_header_user_precondition (is_interface: BOOLEAN; deferred1: BOOLEAN; is_frozen: BOOLEAN; expanded1: BOOLEAN; is_external: BOOLEAN; type_id: INTEGER): BOOLEAN is
 			-- User-defined preconditions for `generate_class_header'.
 			-- Redefine in descendants if needed.
 		do
@@ -108,6 +94,13 @@ feature -- Status Report
 			Result := True
 		end
 
+	add_interface_user_precondition (type_id: INTEGER): BOOLEAN is
+			-- User-defined preconditions for `add_interface'.
+			-- Redefine in descendants if needed.
+		do
+			Result := True
+		end
+
 	end_parents_list_user_precondition: BOOLEAN is
 			-- User-defined preconditions for `end_parents_list'.
 			-- Redefine in descendants if needed.
@@ -117,13 +110,6 @@ feature -- Status Report
 
 	start_features_list_user_precondition (type_id: INTEGER): BOOLEAN is
 			-- User-defined preconditions for `start_features_list'.
-			-- Redefine in descendants if needed.
-		do
-			Result := True
-		end
-
-	end_features_list_user_precondition: BOOLEAN is
-			-- User-defined preconditions for `end_features_list'.
 			-- Redefine in descendants if needed.
 		do
 			Result := True
@@ -150,14 +136,14 @@ feature -- Status Report
 			Result := True
 		end
 
-	generate_feature_nature_user_precondition (redefined: BOOLEAN; deferred1: BOOLEAN; frozen1: BOOLEAN; is_attribute: BOOLEAN): BOOLEAN is
-			-- User-defined preconditions for `generate_feature_nature'.
+	generate_interface_feature_identification_user_precondition (name: STRING; feature_id: INTEGER; is_attribute: BOOLEAN): BOOLEAN is
+			-- User-defined preconditions for `generate_interface_feature_identification'.
 			-- Redefine in descendants if needed.
 		do
 			Result := True
 		end
 
-	generate_feature_identification_user_precondition (name: STRING; feature_id: INTEGER; routine_ids: ECOM_ARRAY [INTEGER]; in_current_class: BOOLEAN; written_type_id: INTEGER): BOOLEAN is
+	generate_feature_identification_user_precondition (name: STRING; feature_id: INTEGER; is_redefined: BOOLEAN; is_deferred: BOOLEAN; is_frozen: BOOLEAN; is_attribute: BOOLEAN; is_c_external: BOOLEAN; is_static: BOOLEAN): BOOLEAN is
 			-- User-defined preconditions for `generate_feature_identification'.
 			-- Redefine in descendants if needed.
 		do
@@ -187,20 +173,6 @@ feature -- Status Report
 
 	create_feature_description_user_precondition: BOOLEAN is
 			-- User-defined preconditions for `create_feature_description'.
-			-- Redefine in descendants if needed.
-		do
-			Result := True
-		end
-
-	check_renaming_user_precondition: BOOLEAN is
-			-- User-defined preconditions for `check_renaming'.
-			-- Redefine in descendants if needed.
-		do
-			Result := True
-		end
-
-	check_renaming_and_redefinition_user_precondition: BOOLEAN is
-			-- User-defined preconditions for `check_renaming_and_redefinition'.
 			-- Redefine in descendants if needed.
 		do
 			Result := True
@@ -339,8 +311,29 @@ feature -- Status Report
 			Result := True
 		end
 
-	generate_feature_il_user_precondition (feature_id: INTEGER): BOOLEAN is
+	generate_feature_il_user_precondition (feature_id: INTEGER; type_id: INTEGER; code_feature_id: INTEGER): BOOLEAN is
 			-- User-defined preconditions for `generate_feature_il'.
+			-- Redefine in descendants if needed.
+		do
+			Result := True
+		end
+
+	generate_feature_internal_clone_user_precondition (feature_id: INTEGER): BOOLEAN is
+			-- User-defined preconditions for `generate_feature_internal_clone'.
+			-- Redefine in descendants if needed.
+		do
+			Result := True
+		end
+
+	generate_implementation_feature_il_user_precondition (feature_id: INTEGER): BOOLEAN is
+			-- User-defined preconditions for `generate_implementation_feature_il'.
+			-- Redefine in descendants if needed.
+		do
+			Result := True
+		end
+
+	generate_method_impl_user_precondition (feature_id: INTEGER; parent_type_id: INTEGER; parent_feature_id: INTEGER): BOOLEAN is
+			-- User-defined preconditions for `generate_method_impl'.
 			-- Redefine in descendants if needed.
 		do
 			Result := True
@@ -430,6 +423,69 @@ feature -- Status Report
 			Result := True
 		end
 
+	convert_to_native_int_user_precondition: BOOLEAN is
+			-- User-defined preconditions for `convert_to_native_int'.
+			-- Redefine in descendants if needed.
+		do
+			Result := True
+		end
+
+	convert_to_boolean_user_precondition: BOOLEAN is
+			-- User-defined preconditions for `convert_to_boolean'.
+			-- Redefine in descendants if needed.
+		do
+			Result := True
+		end
+
+	convert_to_character_user_precondition: BOOLEAN is
+			-- User-defined preconditions for `convert_to_character'.
+			-- Redefine in descendants if needed.
+		do
+			Result := True
+		end
+
+	convert_to_integer8_user_precondition: BOOLEAN is
+			-- User-defined preconditions for `convert_to_integer8'.
+			-- Redefine in descendants if needed.
+		do
+			Result := True
+		end
+
+	convert_to_integer16_user_precondition: BOOLEAN is
+			-- User-defined preconditions for `convert_to_integer16'.
+			-- Redefine in descendants if needed.
+		do
+			Result := True
+		end
+
+	convert_to_integer32_user_precondition: BOOLEAN is
+			-- User-defined preconditions for `convert_to_integer32'.
+			-- Redefine in descendants if needed.
+		do
+			Result := True
+		end
+
+	convert_to_integer64_user_precondition: BOOLEAN is
+			-- User-defined preconditions for `convert_to_integer64'.
+			-- Redefine in descendants if needed.
+		do
+			Result := True
+		end
+
+	convert_to_double_user_precondition: BOOLEAN is
+			-- User-defined preconditions for `convert_to_double'.
+			-- Redefine in descendants if needed.
+		do
+			Result := True
+		end
+
+	convert_to_real_user_precondition: BOOLEAN is
+			-- User-defined preconditions for `convert_to_real'.
+			-- Redefine in descendants if needed.
+		do
+			Result := True
+		end
+
 	generate_current_user_precondition: BOOLEAN is
 			-- User-defined preconditions for `generate_current'.
 			-- Redefine in descendants if needed.
@@ -453,6 +509,13 @@ feature -- Status Report
 
 	generate_feature_access_user_precondition (type_id: INTEGER; feature_id: INTEGER; is_virtual: BOOLEAN): BOOLEAN is
 			-- User-defined preconditions for `generate_feature_access'.
+			-- Redefine in descendants if needed.
+		do
+			Result := True
+		end
+
+	generate_precursor_feature_access_user_precondition (type_id: INTEGER; feature_id: INTEGER): BOOLEAN is
+			-- User-defined preconditions for `generate_precursor_feature_access'.
 			-- Redefine in descendants if needed.
 		do
 			Result := True
@@ -549,7 +612,7 @@ feature -- Status Report
 			Result := True
 		end
 
-	generate_attribute_assignment_user_precondition (feature_id: INTEGER): BOOLEAN is
+	generate_attribute_assignment_user_precondition (type_id: INTEGER; feature_id: INTEGER): BOOLEAN is
 			-- User-defined preconditions for `generate_attribute_assignment'.
 			-- Redefine in descendants if needed.
 		do
@@ -724,6 +787,20 @@ feature -- Status Report
 			Result := True
 		end
 
+	put_integer8_constant_user_precondition (i: INTEGER): BOOLEAN is
+			-- User-defined preconditions for `put_integer8_constant'.
+			-- Redefine in descendants if needed.
+		do
+			Result := True
+		end
+
+	put_integer16_constant_user_precondition (i: INTEGER): BOOLEAN is
+			-- User-defined preconditions for `put_integer16_constant'.
+			-- Redefine in descendants if needed.
+		do
+			Result := True
+		end
+
 	put_integer32_constant_user_precondition (i: INTEGER): BOOLEAN is
 			-- User-defined preconditions for `put_integer32_constant'.
 			-- Redefine in descendants if needed.
@@ -731,8 +808,22 @@ feature -- Status Report
 			Result := True
 		end
 
+	put_integer64_constant_user_precondition (i: INTEGER): BOOLEAN is
+			-- User-defined preconditions for `put_integer64_constant'.
+			-- Redefine in descendants if needed.
+		do
+			Result := True
+		end
+
 	put_double_constant_user_precondition (d: DOUBLE): BOOLEAN is
 			-- User-defined preconditions for `put_double_constant'.
+			-- Redefine in descendants if needed.
+		do
+			Result := True
+		end
+
+	put_real_constant_user_precondition (d: REAL): BOOLEAN is
+			-- User-defined preconditions for `put_real_constant'.
 			-- Redefine in descendants if needed.
 		do
 			Result := True
@@ -815,15 +906,36 @@ feature -- Status Report
 			Result := True
 		end
 
-	generate_slash_user_precondition: BOOLEAN is
-			-- User-defined preconditions for `generate_slash'.
+	generate_power_user_precondition: BOOLEAN is
+			-- User-defined preconditions for `generate_power'.
 			-- Redefine in descendants if needed.
 		do
 			Result := True
 		end
 
-	generate_power_user_precondition: BOOLEAN is
-			-- User-defined preconditions for `generate_power'.
+	generate_max_user_precondition (type_id: INTEGER): BOOLEAN is
+			-- User-defined preconditions for `generate_max'.
+			-- Redefine in descendants if needed.
+		do
+			Result := True
+		end
+
+	generate_min_user_precondition (type_id: INTEGER): BOOLEAN is
+			-- User-defined preconditions for `generate_min'.
+			-- Redefine in descendants if needed.
+		do
+			Result := True
+		end
+
+	generate_abs_user_precondition (type_id: INTEGER): BOOLEAN is
+			-- User-defined preconditions for `generate_abs'.
+			-- Redefine in descendants if needed.
+		do
+			Result := True
+		end
+
+	generate_to_string_user_precondition: BOOLEAN is
+			-- User-defined preconditions for `generate_to_string'.
 			-- Redefine in descendants if needed.
 		do
 			Result := True
@@ -913,13 +1025,6 @@ feature -- Status Report
 			Result := True
 		end
 
-	generate_uplus_user_precondition: BOOLEAN is
-			-- User-defined preconditions for `generate_uplus'.
-			-- Redefine in descendants if needed.
-		do
-			Result := True
-		end
-
 	generate_uminus_user_precondition: BOOLEAN is
 			-- User-defined preconditions for `generate_uminus'.
 			-- Redefine in descendants if needed.
@@ -934,6 +1039,13 @@ feature -- Status Report
 			Result := True
 		end
 
+	generate_bitwise_not_user_precondition: BOOLEAN is
+			-- User-defined preconditions for `generate_bitwise_not'.
+			-- Redefine in descendants if needed.
+		do
+			Result := True
+		end
+
 	put_line_info_user_precondition (n: INTEGER): BOOLEAN is
 			-- User-defined preconditions for `put_line_info'.
 			-- Redefine in descendants if needed.
@@ -943,6 +1055,20 @@ feature -- Status Report
 
 	create_label_user_precondition: BOOLEAN is
 			-- User-defined preconditions for `create_label'.
+			-- Redefine in descendants if needed.
+		do
+			Result := True
+		end
+
+	set_for_interfaces_user_precondition: BOOLEAN is
+			-- User-defined preconditions for `set_for_interfaces'.
+			-- Redefine in descendants if needed.
+		do
+			Result := True
+		end
+
+	set_for_implementations_user_precondition: BOOLEAN is
+			-- User-defined preconditions for `set_for_implementations'.
 			-- Redefine in descendants if needed.
 		do
 			Result := True
@@ -1012,14 +1138,6 @@ feature -- Basic Operations
 
 		end
 
-	end_module_generation is
-			-- No description available.
-		require
-			end_module_generation_user_precondition: end_module_generation_user_precondition
-		deferred
-
-		end
-
 	start_class_mappings (class_count: INTEGER) is
 			-- No description available.
 			-- `class_count' [in].  
@@ -1029,37 +1147,29 @@ feature -- Basic Operations
 
 		end
 
-	generate_class_mappings (class_name1: STRING; type_id: INTEGER; source_file_name: STRING) is
+	generate_class_mappings (class_name1: STRING; type_id: INTEGER; interface_id: INTEGER; source_file_name: STRING; element_type_name: STRING) is
 			-- No description available.
 			-- `class_name1' [in].  
 			-- `type_id' [in].  
+			-- `interface_id' [in].  
 			-- `source_file_name' [in].  
-		require
-			generate_class_mappings_user_precondition: generate_class_mappings_user_precondition (class_name1, type_id, source_file_name)
-		deferred
-
-		end
-
-	generate_array_class_mappings (class_name1: STRING; element_type_name: STRING; type_id: INTEGER) is
-			-- No description available.
-			-- `class_name1' [in].  
 			-- `element_type_name' [in].  
-			-- `type_id' [in].  
 		require
-			generate_array_class_mappings_user_precondition: generate_array_class_mappings_user_precondition (class_name1, element_type_name, type_id)
+			generate_class_mappings_user_precondition: generate_class_mappings_user_precondition (class_name1, type_id, interface_id, source_file_name, element_type_name)
 		deferred
 
 		end
 
-	generate_class_header (is_interface: BOOLEAN; deferred1: BOOLEAN; expanded1: BOOLEAN; is_external: BOOLEAN; type_id: INTEGER) is
+	generate_class_header (is_interface: BOOLEAN; deferred1: BOOLEAN; is_frozen: BOOLEAN; expanded1: BOOLEAN; is_external: BOOLEAN; type_id: INTEGER) is
 			-- No description available.
 			-- `is_interface' [in].  
 			-- `deferred1' [in].  
+			-- `is_frozen' [in].  
 			-- `expanded1' [in].  
 			-- `is_external' [in].  
 			-- `type_id' [in].  
 		require
-			generate_class_header_user_precondition: generate_class_header_user_precondition (is_interface, deferred1, expanded1, is_external, type_id)
+			generate_class_header_user_precondition: generate_class_header_user_precondition (is_interface, deferred1, is_frozen, expanded1, is_external, type_id)
 		deferred
 
 		end
@@ -1081,6 +1191,15 @@ feature -- Basic Operations
 
 		end
 
+	add_interface (type_id: INTEGER) is
+			-- No description available.
+			-- `type_id' [in].  
+		require
+			add_interface_user_precondition: add_interface_user_precondition (type_id)
+		deferred
+
+		end
+
 	end_parents_list is
 			-- No description available.
 		require
@@ -1094,14 +1213,6 @@ feature -- Basic Operations
 			-- `type_id' [in].  
 		require
 			start_features_list_user_precondition: start_features_list_user_precondition (type_id)
-		deferred
-
-		end
-
-	end_features_list is
-			-- No description available.
-		require
-			end_features_list_user_precondition: end_features_list_user_precondition
 		deferred
 
 		end
@@ -1134,28 +1245,29 @@ feature -- Basic Operations
 
 		end
 
-	generate_feature_nature (redefined: BOOLEAN; deferred1: BOOLEAN; frozen1: BOOLEAN; is_attribute: BOOLEAN) is
+	generate_interface_feature_identification (name: STRING; feature_id: INTEGER; is_attribute: BOOLEAN) is
 			-- No description available.
-			-- `redefined' [in].  
-			-- `deferred1' [in].  
-			-- `frozen1' [in].  
+			-- `name' [in].  
+			-- `feature_id' [in].  
 			-- `is_attribute' [in].  
 		require
-			generate_feature_nature_user_precondition: generate_feature_nature_user_precondition (redefined, deferred1, frozen1, is_attribute)
+			generate_interface_feature_identification_user_precondition: generate_interface_feature_identification_user_precondition (name, feature_id, is_attribute)
 		deferred
 
 		end
 
-	generate_feature_identification (name: STRING; feature_id: INTEGER; routine_ids: ECOM_ARRAY [INTEGER]; in_current_class: BOOLEAN; written_type_id: INTEGER) is
+	generate_feature_identification (name: STRING; feature_id: INTEGER; is_redefined: BOOLEAN; is_deferred: BOOLEAN; is_frozen: BOOLEAN; is_attribute: BOOLEAN; is_c_external: BOOLEAN; is_static: BOOLEAN) is
 			-- No description available.
 			-- `name' [in].  
 			-- `feature_id' [in].  
-			-- `routine_ids' [in].  
-			-- `in_current_class' [in].  
-			-- `written_type_id' [in].  
+			-- `is_redefined' [in].  
+			-- `is_deferred' [in].  
+			-- `is_frozen' [in].  
+			-- `is_attribute' [in].  
+			-- `is_c_external' [in].  
+			-- `is_static' [in].  
 		require
-			non_void_routine_ids: routine_ids /= Void
-			generate_feature_identification_user_precondition: generate_feature_identification_user_precondition (name, feature_id, routine_ids, in_current_class, written_type_id)
+			generate_feature_identification_user_precondition: generate_feature_identification_user_precondition (name, feature_id, is_redefined, is_deferred, is_frozen, is_attribute, is_c_external, is_static)
 		deferred
 
 		end
@@ -1201,22 +1313,6 @@ feature -- Basic Operations
 			-- No description available.
 		require
 			create_feature_description_user_precondition: create_feature_description_user_precondition
-		deferred
-
-		end
-
-	check_renaming is
-			-- No description available.
-		require
-			check_renaming_user_precondition: check_renaming_user_precondition
-		deferred
-
-		end
-
-	check_renaming_and_redefinition is
-			-- No description available.
-		require
-			check_renaming_and_redefinition_user_precondition: check_renaming_and_redefinition_user_precondition
 		deferred
 
 		end
@@ -1399,11 +1495,42 @@ feature -- Basic Operations
 
 		end
 
-	generate_feature_il (feature_id: INTEGER) is
+	generate_feature_il (feature_id: INTEGER; type_id: INTEGER; code_feature_id: INTEGER) is
+			-- No description available.
+			-- `feature_id' [in].  
+			-- `type_id' [in].  
+			-- `code_feature_id' [in].  
+		require
+			generate_feature_il_user_precondition: generate_feature_il_user_precondition (feature_id, type_id, code_feature_id)
+		deferred
+
+		end
+
+	generate_feature_internal_clone (feature_id: INTEGER) is
 			-- No description available.
 			-- `feature_id' [in].  
 		require
-			generate_feature_il_user_precondition: generate_feature_il_user_precondition (feature_id)
+			generate_feature_internal_clone_user_precondition: generate_feature_internal_clone_user_precondition (feature_id)
+		deferred
+
+		end
+
+	generate_implementation_feature_il (feature_id: INTEGER) is
+			-- No description available.
+			-- `feature_id' [in].  
+		require
+			generate_implementation_feature_il_user_precondition: generate_implementation_feature_il_user_precondition (feature_id)
+		deferred
+
+		end
+
+	generate_method_impl (feature_id: INTEGER; parent_type_id: INTEGER; parent_feature_id: INTEGER) is
+			-- No description available.
+			-- `feature_id' [in].  
+			-- `parent_type_id' [in].  
+			-- `parent_feature_id' [in].  
+		require
+			generate_method_impl_user_precondition: generate_method_impl_user_precondition (feature_id, parent_type_id, parent_feature_id)
 		deferred
 
 		end
@@ -1524,6 +1651,78 @@ feature -- Basic Operations
 
 		end
 
+	convert_to_native_int is
+			-- No description available.
+		require
+			convert_to_native_int_user_precondition: convert_to_native_int_user_precondition
+		deferred
+
+		end
+
+	convert_to_boolean is
+			-- No description available.
+		require
+			convert_to_boolean_user_precondition: convert_to_boolean_user_precondition
+		deferred
+
+		end
+
+	convert_to_character is
+			-- No description available.
+		require
+			convert_to_character_user_precondition: convert_to_character_user_precondition
+		deferred
+
+		end
+
+	convert_to_integer8 is
+			-- No description available.
+		require
+			convert_to_integer8_user_precondition: convert_to_integer8_user_precondition
+		deferred
+
+		end
+
+	convert_to_integer16 is
+			-- No description available.
+		require
+			convert_to_integer16_user_precondition: convert_to_integer16_user_precondition
+		deferred
+
+		end
+
+	convert_to_integer32 is
+			-- No description available.
+		require
+			convert_to_integer32_user_precondition: convert_to_integer32_user_precondition
+		deferred
+
+		end
+
+	convert_to_integer64 is
+			-- No description available.
+		require
+			convert_to_integer64_user_precondition: convert_to_integer64_user_precondition
+		deferred
+
+		end
+
+	convert_to_double is
+			-- No description available.
+		require
+			convert_to_double_user_precondition: convert_to_double_user_precondition
+		deferred
+
+		end
+
+	convert_to_real is
+			-- No description available.
+		require
+			convert_to_real_user_precondition: convert_to_real_user_precondition
+		deferred
+
+		end
+
 	generate_current is
 			-- No description available.
 		require
@@ -1557,6 +1756,16 @@ feature -- Basic Operations
 			-- `is_virtual' [in].  
 		require
 			generate_feature_access_user_precondition: generate_feature_access_user_precondition (type_id, feature_id, is_virtual)
+		deferred
+
+		end
+
+	generate_precursor_feature_access (type_id: INTEGER; feature_id: INTEGER) is
+			-- No description available.
+			-- `type_id' [in].  
+			-- `feature_id' [in].  
+		require
+			generate_precursor_feature_access_user_precondition: generate_precursor_feature_access_user_precondition (type_id, feature_id)
 		deferred
 
 		end
@@ -1674,11 +1883,12 @@ feature -- Basic Operations
 
 		end
 
-	generate_attribute_assignment (feature_id: INTEGER) is
+	generate_attribute_assignment (type_id: INTEGER; feature_id: INTEGER) is
 			-- No description available.
+			-- `type_id' [in].  
 			-- `feature_id' [in].  
 		require
-			generate_attribute_assignment_user_precondition: generate_attribute_assignment_user_precondition (feature_id)
+			generate_attribute_assignment_user_precondition: generate_attribute_assignment_user_precondition (type_id, feature_id)
 		deferred
 
 		end
@@ -1890,6 +2100,24 @@ feature -- Basic Operations
 
 		end
 
+	put_integer8_constant (i: INTEGER) is
+			-- No description available.
+			-- `i' [in].  
+		require
+			put_integer8_constant_user_precondition: put_integer8_constant_user_precondition (i)
+		deferred
+
+		end
+
+	put_integer16_constant (i: INTEGER) is
+			-- No description available.
+			-- `i' [in].  
+		require
+			put_integer16_constant_user_precondition: put_integer16_constant_user_precondition (i)
+		deferred
+
+		end
+
 	put_integer32_constant (i: INTEGER) is
 			-- No description available.
 			-- `i' [in].  
@@ -1899,11 +2127,29 @@ feature -- Basic Operations
 
 		end
 
+	put_integer64_constant (i: INTEGER) is
+			-- No description available.
+			-- `i' [in].  
+		require
+			put_integer64_constant_user_precondition: put_integer64_constant_user_precondition (i)
+		deferred
+
+		end
+
 	put_double_constant (d: DOUBLE) is
 			-- No description available.
 			-- `d' [in].  
 		require
 			put_double_constant_user_precondition: put_double_constant_user_precondition (d)
+		deferred
+
+		end
+
+	put_real_constant (d: REAL) is
+			-- No description available.
+			-- `d' [in].  
+		require
+			put_real_constant_user_precondition: put_real_constant_user_precondition (d)
 		deferred
 
 		end
@@ -2002,18 +2248,45 @@ feature -- Basic Operations
 
 		end
 
-	generate_slash is
-			-- No description available.
-		require
-			generate_slash_user_precondition: generate_slash_user_precondition
-		deferred
-
-		end
-
 	generate_power is
 			-- No description available.
 		require
 			generate_power_user_precondition: generate_power_user_precondition
+		deferred
+
+		end
+
+	generate_max (type_id: INTEGER) is
+			-- No description available.
+			-- `type_id' [in].  
+		require
+			generate_max_user_precondition: generate_max_user_precondition (type_id)
+		deferred
+
+		end
+
+	generate_min (type_id: INTEGER) is
+			-- No description available.
+			-- `type_id' [in].  
+		require
+			generate_min_user_precondition: generate_min_user_precondition (type_id)
+		deferred
+
+		end
+
+	generate_abs (type_id: INTEGER) is
+			-- No description available.
+			-- `type_id' [in].  
+		require
+			generate_abs_user_precondition: generate_abs_user_precondition (type_id)
+		deferred
+
+		end
+
+	generate_to_string is
+			-- No description available.
+		require
+			generate_to_string_user_precondition: generate_to_string_user_precondition
 		deferred
 
 		end
@@ -2114,14 +2387,6 @@ feature -- Basic Operations
 
 		end
 
-	generate_uplus is
-			-- No description available.
-		require
-			generate_uplus_user_precondition: generate_uplus_user_precondition
-		deferred
-
-		end
-
 	generate_uminus is
 			-- No description available.
 		require
@@ -2134,6 +2399,14 @@ feature -- Basic Operations
 			-- No description available.
 		require
 			generate_not_user_precondition: generate_not_user_precondition
+		deferred
+
+		end
+
+	generate_bitwise_not is
+			-- No description available.
+		require
+			generate_bitwise_not_user_precondition: generate_bitwise_not_user_precondition
 		deferred
 
 		end
@@ -2151,6 +2424,22 @@ feature -- Basic Operations
 			-- No description available.
 		require
 			create_label_user_precondition: create_label_user_precondition
+		deferred
+
+		end
+
+	set_for_interfaces is
+			-- No description available.
+		require
+			set_for_interfaces_user_precondition: set_for_interfaces_user_precondition
+		deferred
+
+		end
+
+	set_for_implementations is
+			-- No description available.
+		require
+			set_for_implementations_user_precondition: set_for_implementations_user_precondition
 		deferred
 
 		end

@@ -6,12 +6,12 @@ using System.Reflection.Emit;
 // Used to access Debugger class
 //using System.Diagnostics;
 
-internal class CustomAttributesFactory : Globals
+internal class CustomAttributesFactory
 {
 	// Begins creation of new custom attribute
 	public void StartNewAttribute( int targetID, int attributeTypeID, int ArgCount )
 	{
-		if( ClassTable [attributeTypeID] == null )
+		if( EiffelReflectionEmit.Classes [attributeTypeID] == null )
 			throw new ApplicationException( "Could not find custom attribute type " + attributeTypeID.ToString());
 		ConstructorArguments = new Object [ArgCount];
 		TargetID = targetID;
@@ -24,7 +24,7 @@ internal class CustomAttributesFactory : Globals
 	public void AddCAConstructorArg( Object Value )
 	{
 		if( CurrentArgIndex >= ConstructorArguments.Length )
-			throw new ApplicationException( "Too many arguments for constructor of " + ClassTable [AttributeTypeID].Name );
+			throw new ApplicationException( "Too many arguments for constructor of " + EiffelReflectionEmit.Classes [AttributeTypeID].Name );
 		ConstructorArguments [CurrentArgIndex] = Value;
 		ConstructorArgsTypes [CurrentArgIndex] = Value.GetType();
 		CurrentArgIndex++;
@@ -34,7 +34,7 @@ internal class CustomAttributesFactory : Globals
 	public void AddCAConstructorArg( Object Value, Type ArgType )
 	{
 		if( CurrentArgIndex >= ConstructorArguments.Length )
-			throw new ApplicationException( "Too many arguments for constructor of " + ClassTable [AttributeTypeID].Name );
+			throw new ApplicationException( "Too many arguments for constructor of " + EiffelReflectionEmit.Classes [AttributeTypeID].Name );
 		ConstructorArguments [CurrentArgIndex] = Value;
 		ConstructorArgsTypes [CurrentArgIndex] = ArgType;
 		CurrentArgIndex++;
@@ -43,7 +43,7 @@ internal class CustomAttributesFactory : Globals
 	// Add custom attribute to class defined by `TargetID'.
 	public void GenerateClassCA()
 	{
-		EiffelClass CurrentClass = ClassTable [TargetID];
+		EiffelClass CurrentClass = EiffelReflectionEmit.Classes [TargetID];
 		if( CurrentClass == null )
 			throw new ApplicationException( "Cannot find type with identifier " + TargetID.ToString());
 		(( TypeBuilder )CurrentClass.Builder ).SetCustomAttribute( GetCABuilder());
@@ -52,12 +52,12 @@ internal class CustomAttributesFactory : Globals
 	// Add custom attribute to method of `TargetID' with id `FeatureID'.
 	public void GenerateFeatureCA( int FeatureID )
 	{
-		EiffelClass CurrentClass = ClassTable [TargetID];
+		EiffelClass CurrentClass = EiffelReflectionEmit.Classes [TargetID];
 		if( CurrentClass == null )
 			throw new ApplicationException( "Cannot find type with identifier " + TargetID.ToString());
 		EiffelMethod CurrentMethod = ( EiffelMethod ) CurrentClass.FeatureIDTable [FeatureID];
 		if( CurrentMethod == null )
-			throw new ApplicationException( "Cannot find method with identifier " + FeatureID.ToString() + " in class " + ClassTable [TargetID].Name );
+			throw new ApplicationException( "Cannot find method with identifier " + FeatureID.ToString() + " in class " + EiffelReflectionEmit.Classes [TargetID].Name );
 		if( CurrentMethod.IsAttribute )
 			(( FieldBuilder )CurrentMethod.AttributeBuilder ).SetCustomAttribute( GetCABuilder());
 		else
@@ -67,7 +67,7 @@ internal class CustomAttributesFactory : Globals
 	// Custom attribute builder
 	protected CustomAttributeBuilder GetCABuilder()
 	{
-		EiffelClass AttributeClass = ClassTable [AttributeTypeID];
+		EiffelClass AttributeClass = EiffelReflectionEmit.Classes [AttributeTypeID];
 		if( AttributeClass == null )
 			throw new ApplicationException( "Cannot find custom attribute type with identifier " + AttributeTypeID.ToString());
 		ConstructorInfo Constr = AttributeClass.Builder.GetConstructor( ConstructorArgsTypes );

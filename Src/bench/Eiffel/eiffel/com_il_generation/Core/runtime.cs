@@ -1,13 +1,17 @@
-namespace ISE.Runtime
-{
-    using System;
+using System;
+namespace ISE.Runtime {
 
-    public class RUN_TIME
-    {
-        public RUN_TIME()
-		{
+	public abstract class ANY {
+		public object c_standard_clone () {
+			return MemberwiseClone();
 		}
 
+		~ANY () {
+		}
+	}
+
+	public class RUN_TIME
+	{
 		public static bool in_assertion;
 				// Flag used during assertion checking to make sure
 				// that assertions are not checked within an assertion
@@ -25,7 +29,7 @@ namespace ISE.Runtime
 			return tmp;
 		}
 
-    }
+	}
 
 	public class EXCEPTION_MANAGER
 	{

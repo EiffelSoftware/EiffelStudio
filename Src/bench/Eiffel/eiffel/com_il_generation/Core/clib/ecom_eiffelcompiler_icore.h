@@ -2,16 +2,19 @@
  Help file: 
 -----------------------------------------------------------*/
 
-#ifndef __ECOM_CORE_CORE_H__
-#define __ECOM_CORE_CORE_H__
+#ifndef __ECOM_EIFFELCOMPILER_ICORE_H__
+#define __ECOM_EIFFELCOMPILER_ICORE_H__
 #ifdef __cplusplus
 extern "C" {
 
 
-namespace ecom_Core
+#ifndef __ecom_EiffelCompiler_ICore_FWD_DEFINED__
+#define __ecom_EiffelCompiler_ICore_FWD_DEFINED__
+namespace ecom_EiffelCompiler
 {
-class Core;
+class ICore;
 }
+#endif
 
 }
 #endif
@@ -20,833 +23,932 @@ class Core;
 
 #include "eif_eiffel.h"
 
-#include "ecom_Core_ICore.h"
-
-#include "ecom_grt_globals_core_c.h"
-
 #ifdef __cplusplus
 extern "C" {
 #endif
 
 #ifdef __cplusplus
 extern "C" {
-namespace ecom_Core
+#ifndef __ecom_EiffelCompiler_ICore_INTERFACE_DEFINED__
+#define __ecom_EiffelCompiler_ICore_INTERFACE_DEFINED__
+namespace ecom_EiffelCompiler
 {
-class Core
+class ICore : public IUnknown
 {
 public:
-	Core ();
-	Core (IUnknown * a_pointer);
-	virtual ~Core ();
+	ICore () {};
+	~ICore () {};
 
 	/*-----------------------------------------------------------
 	No description available.
 	-----------------------------------------------------------*/
-	void ccom_set_console_application();
+	virtual STDMETHODIMP SetConsoleApplication( void ) = 0;
 
 
 	/*-----------------------------------------------------------
 	No description available.
 	-----------------------------------------------------------*/
-	void ccom_set_window_application();
+	virtual STDMETHODIMP SetWindowApplication( void ) = 0;
 
 
 	/*-----------------------------------------------------------
 	No description available.
 	-----------------------------------------------------------*/
-	void ccom_set_dll();
+	virtual STDMETHODIMP SetDll( void ) = 0;
 
 
 	/*-----------------------------------------------------------
 	No description available.
 	-----------------------------------------------------------*/
-	void ccom_start_assembly_generation(  /* [in] */ EIF_OBJECT name,  /* [in] */ EIF_OBJECT fname,  /* [in] */ EIF_OBJECT location );
+	virtual STDMETHODIMP StartAssemblyGeneration(  /* [in] */ BSTR name, /* [in] */ BSTR fname, /* [in] */ BSTR location ) = 0;
 
 
 	/*-----------------------------------------------------------
 	No description available.
 	-----------------------------------------------------------*/
-	void ccom_add_assembly_reference(  /* [in] */ EIF_OBJECT name );
+	virtual STDMETHODIMP AddAssemblyReference(  /* [in] */ BSTR name ) = 0;
 
 
 	/*-----------------------------------------------------------
 	No description available.
 	-----------------------------------------------------------*/
-	void ccom_start_module_generation(  /* [in] */ EIF_OBJECT name,  /* [in] */ EIF_BOOLEAN debug1 );
+	virtual STDMETHODIMP StartModuleGeneration(  /* [in] */ BSTR name, /* [in] */ VARIANT_BOOL debug1 ) = 0;
 
 
 	/*-----------------------------------------------------------
 	No description available.
 	-----------------------------------------------------------*/
-	void ccom_end_assembly_generation();
+	virtual STDMETHODIMP EndAssemblyGeneration( void ) = 0;
 
 
 	/*-----------------------------------------------------------
 	No description available.
 	-----------------------------------------------------------*/
-	void ccom_end_module_generation();
+	virtual STDMETHODIMP StartClassMappings(  /* [in] */ LONG class_count ) = 0;
 
 
 	/*-----------------------------------------------------------
 	No description available.
 	-----------------------------------------------------------*/
-	void ccom_start_class_mappings(  /* [in] */ EIF_INTEGER class_count );
+	virtual STDMETHODIMP GenerateClassMappings(  /* [in] */ BSTR class_name1, /* [in] */ LONG type_id, /* [in] */ LONG interface_id, /* [in] */ BSTR source_file_name, /* [in] */ BSTR element_type_name ) = 0;
 
 
 	/*-----------------------------------------------------------
 	No description available.
 	-----------------------------------------------------------*/
-	void ccom_generate_class_mappings(  /* [in] */ EIF_OBJECT class_name1,  /* [in] */ EIF_INTEGER type_id,  /* [in] */ EIF_OBJECT source_file_name );
+	virtual STDMETHODIMP GenerateClassHeader(  /* [in] */ VARIANT_BOOL is_interface, /* [in] */ VARIANT_BOOL deferred1, /* [in] */ VARIANT_BOOL is_frozen, /* [in] */ VARIANT_BOOL expanded1, /* [in] */ VARIANT_BOOL is_external, /* [in] */ LONG type_id ) = 0;
 
 
 	/*-----------------------------------------------------------
 	No description available.
 	-----------------------------------------------------------*/
-	void ccom_generate_array_class_mappings(  /* [in] */ EIF_OBJECT class_name1,  /* [in] */ EIF_OBJECT element_type_name,  /* [in] */ EIF_INTEGER type_id );
+	virtual STDMETHODIMP EndClass( void ) = 0;
 
 
 	/*-----------------------------------------------------------
 	No description available.
 	-----------------------------------------------------------*/
-	void ccom_generate_class_header(  /* [in] */ EIF_BOOLEAN is_interface,  /* [in] */ EIF_BOOLEAN deferred1,  /* [in] */ EIF_BOOLEAN expanded1,  /* [in] */ EIF_BOOLEAN is_external,  /* [in] */ EIF_INTEGER type_id );
+	virtual STDMETHODIMP AddToParentsList(  /* [in] */ LONG type_id ) = 0;
 
 
 	/*-----------------------------------------------------------
 	No description available.
 	-----------------------------------------------------------*/
-	void ccom_end_class();
+	virtual STDMETHODIMP AddInterface(  /* [in] */ LONG type_id ) = 0;
 
 
 	/*-----------------------------------------------------------
 	No description available.
 	-----------------------------------------------------------*/
-	void ccom_add_to_parents_list(  /* [in] */ EIF_INTEGER type_id );
+	virtual STDMETHODIMP EndParentsList( void ) = 0;
 
 
 	/*-----------------------------------------------------------
 	No description available.
 	-----------------------------------------------------------*/
-	void ccom_end_parents_list();
+	virtual STDMETHODIMP StartFeaturesList(  /* [in] */ LONG type_id ) = 0;
 
 
 	/*-----------------------------------------------------------
 	No description available.
 	-----------------------------------------------------------*/
-	void ccom_start_features_list(  /* [in] */ EIF_INTEGER type_id );
+	virtual STDMETHODIMP MarkInvariant(  /* [in] */ LONG feature_id ) = 0;
 
 
 	/*-----------------------------------------------------------
 	No description available.
 	-----------------------------------------------------------*/
-	void ccom_end_features_list();
+	virtual STDMETHODIMP MarkCreationRoutines(  /* [in] */ SAFEARRAY *  feature_id ) = 0;
 
 
 	/*-----------------------------------------------------------
 	No description available.
 	-----------------------------------------------------------*/
-	void ccom_mark_invariant(  /* [in] */ EIF_INTEGER feature_id );
+	virtual STDMETHODIMP StartFeatureDescription(  /* [in] */ LONG arg_count ) = 0;
 
 
 	/*-----------------------------------------------------------
 	No description available.
 	-----------------------------------------------------------*/
-	void ccom_mark_creation_routines(  /* [in] */ EIF_OBJECT feature_id );
+	virtual STDMETHODIMP GenerateInterfaceFeatureIdentification(  /* [in] */ BSTR name, /* [in] */ LONG feature_id, /* [in] */ VARIANT_BOOL is_attribute ) = 0;
 
 
 	/*-----------------------------------------------------------
 	No description available.
 	-----------------------------------------------------------*/
-	void ccom_start_feature_description(  /* [in] */ EIF_INTEGER arg_count );
+	virtual STDMETHODIMP GenerateFeatureIdentification(  /* [in] */ BSTR name, /* [in] */ LONG feature_id, /* [in] */ VARIANT_BOOL is_redefined, /* [in] */ VARIANT_BOOL is_deferred, /* [in] */ VARIANT_BOOL is_frozen, /* [in] */ VARIANT_BOOL is_attribute, /* [in] */ VARIANT_BOOL is_c_external, /* [in] */ VARIANT_BOOL is_static ) = 0;
 
 
 	/*-----------------------------------------------------------
 	No description available.
 	-----------------------------------------------------------*/
-	void ccom_generate_feature_nature(  /* [in] */ EIF_BOOLEAN redefined,  /* [in] */ EIF_BOOLEAN deferred1,  /* [in] */ EIF_BOOLEAN frozen1,  /* [in] */ EIF_BOOLEAN is_attribute );
+	virtual STDMETHODIMP GenerateExternalIdentification(  /* [in] */ BSTR name, /* [in] */ BSTR com_name, /* [in] */ LONG external_kind, /* [in] */ LONG feature_id, /* [in] */ LONG routine_id, /* [in] */ VARIANT_BOOL in_current_class, /* [in] */ LONG written_type_id, /* [in] */ SAFEARRAY *  parameters, /* [in] */ BSTR return_type ) = 0;
 
 
 	/*-----------------------------------------------------------
 	No description available.
 	-----------------------------------------------------------*/
-	void ccom_generate_feature_identification(  /* [in] */ EIF_OBJECT name,  /* [in] */ EIF_INTEGER feature_id,  /* [in] */ EIF_OBJECT routine_ids,  /* [in] */ EIF_BOOLEAN in_current_class,  /* [in] */ EIF_INTEGER written_type_id );
+	virtual STDMETHODIMP GenerateFeatureReturnType(  /* [in] */ LONG type_id ) = 0;
 
 
 	/*-----------------------------------------------------------
 	No description available.
 	-----------------------------------------------------------*/
-	void ccom_generate_external_identification(  /* [in] */ EIF_OBJECT name,  /* [in] */ EIF_OBJECT com_name,  /* [in] */ EIF_INTEGER external_kind,  /* [in] */ EIF_INTEGER feature_id,  /* [in] */ EIF_INTEGER routine_id,  /* [in] */ EIF_BOOLEAN in_current_class,  /* [in] */ EIF_INTEGER written_type_id,  /* [in] */ EIF_OBJECT parameters,  /* [in] */ EIF_OBJECT return_type );
+	virtual STDMETHODIMP GenerateFeatureArgument(  /* [in] */ BSTR name, /* [in] */ LONG type_id ) = 0;
 
 
 	/*-----------------------------------------------------------
 	No description available.
 	-----------------------------------------------------------*/
-	void ccom_generate_feature_return_type(  /* [in] */ EIF_INTEGER type_id );
+	virtual STDMETHODIMP CreateFeatureDescription( void ) = 0;
 
 
 	/*-----------------------------------------------------------
 	No description available.
 	-----------------------------------------------------------*/
-	void ccom_generate_feature_argument(  /* [in] */ EIF_OBJECT name,  /* [in] */ EIF_INTEGER type_id );
+	virtual STDMETHODIMP DefineEntryPoint(  /* [in] */ LONG type_id, /* [in] */ LONG feature_id ) = 0;
 
 
 	/*-----------------------------------------------------------
 	No description available.
 	-----------------------------------------------------------*/
-	void ccom_create_feature_description();
+	virtual STDMETHODIMP LastError(  /* [out, retval] */ BSTR * p_ret_val ) = 0;
 
 
 	/*-----------------------------------------------------------
 	No description available.
 	-----------------------------------------------------------*/
-	void ccom_check_renaming();
+	virtual STDMETHODIMP AddCA(  /* [in] */ LONG target_type_id, /* [in] */ LONG attribute_type_id, /* [in] */ LONG arg_count ) = 0;
 
 
 	/*-----------------------------------------------------------
 	No description available.
 	-----------------------------------------------------------*/
-	void ccom_check_renaming_and_redefinition();
+	virtual STDMETHODIMP GenerateClassCA( void ) = 0;
 
 
 	/*-----------------------------------------------------------
 	No description available.
 	-----------------------------------------------------------*/
-	void ccom_define_entry_point(  /* [in] */ EIF_INTEGER type_id,  /* [in] */ EIF_INTEGER feature_id );
+	virtual STDMETHODIMP GenerateFeatureCA(  /* [in] */ LONG feature_id ) = 0;
 
 
 	/*-----------------------------------------------------------
 	No description available.
 	-----------------------------------------------------------*/
-	EIF_REFERENCE ccom_last_error(  );
+	virtual STDMETHODIMP AddCATypedArg(  /* [in] */ LONG a_value, /* [in] */ LONG type_id ) = 0;
 
 
 	/*-----------------------------------------------------------
 	No description available.
 	-----------------------------------------------------------*/
-	void ccom_add_ca(  /* [in] */ EIF_INTEGER target_type_id,  /* [in] */ EIF_INTEGER attribute_type_id,  /* [in] */ EIF_INTEGER arg_count );
+	virtual STDMETHODIMP AddCAIntegerArg(  /* [in] */ LONG a_value ) = 0;
 
 
 	/*-----------------------------------------------------------
 	No description available.
 	-----------------------------------------------------------*/
-	void ccom_generate_class_ca();
+	virtual STDMETHODIMP AddCAStringArg(  /* [in] */ BSTR a_value ) = 0;
 
 
 	/*-----------------------------------------------------------
 	No description available.
 	-----------------------------------------------------------*/
-	void ccom_generate_feature_ca(  /* [in] */ EIF_INTEGER feature_id );
+	virtual STDMETHODIMP AddCARealArg(  /* [in] */ FLOAT a_value ) = 0;
 
 
 	/*-----------------------------------------------------------
 	No description available.
 	-----------------------------------------------------------*/
-	void ccom_add_catyped_arg(  /* [in] */ EIF_INTEGER a_value,  /* [in] */ EIF_INTEGER type_id );
+	virtual STDMETHODIMP AddCADoubleArg(  /* [in] */ double a_value ) = 0;
 
 
 	/*-----------------------------------------------------------
 	No description available.
 	-----------------------------------------------------------*/
-	void ccom_add_cainteger_arg(  /* [in] */ EIF_INTEGER a_value );
+	virtual STDMETHODIMP AddCACharacterArg(  /* [in] */ USHORT a_value ) = 0;
 
 
 	/*-----------------------------------------------------------
 	No description available.
 	-----------------------------------------------------------*/
-	void ccom_add_castring_arg(  /* [in] */ EIF_OBJECT a_value );
+	virtual STDMETHODIMP AddCABooleanArg(  /* [in] */ VARIANT_BOOL a_value ) = 0;
 
 
 	/*-----------------------------------------------------------
 	No description available.
 	-----------------------------------------------------------*/
-	void ccom_add_careal_arg(  /* [in] */ EIF_REAL a_value );
+	virtual STDMETHODIMP AddCAArrayIntegerArg(  /* [in] */ SAFEARRAY *  a_value ) = 0;
 
 
 	/*-----------------------------------------------------------
 	No description available.
 	-----------------------------------------------------------*/
-	void ccom_add_cadouble_arg(  /* [in] */ EIF_DOUBLE a_value );
+	virtual STDMETHODIMP AddCAArrayStringArg(  /* [in] */ SAFEARRAY *  a_value ) = 0;
 
 
 	/*-----------------------------------------------------------
 	No description available.
 	-----------------------------------------------------------*/
-	void ccom_add_cacharacter_arg(  /* [in] */ EIF_INTEGER a_value );
+	virtual STDMETHODIMP AddCAArrayRealArg(  /* [in] */ SAFEARRAY *  a_value ) = 0;
 
 
 	/*-----------------------------------------------------------
 	No description available.
 	-----------------------------------------------------------*/
-	void ccom_add_caboolean_arg(  /* [in] */ EIF_BOOLEAN a_value );
+	virtual STDMETHODIMP AddCAArrayDoubleArg(  /* [in] */ SAFEARRAY *  a_value ) = 0;
 
 
 	/*-----------------------------------------------------------
 	No description available.
 	-----------------------------------------------------------*/
-	void ccom_add_caarray_integer_arg(  /* [in] */ EIF_OBJECT a_value );
+	virtual STDMETHODIMP AddCAArrayCharacterArg(  /* [in] */ SAFEARRAY *  a_value ) = 0;
 
 
 	/*-----------------------------------------------------------
 	No description available.
 	-----------------------------------------------------------*/
-	void ccom_add_caarray_string_arg(  /* [in] */ EIF_OBJECT a_value );
+	virtual STDMETHODIMP AddCAArrayBooleanArg(  /* [in] */ SAFEARRAY *  a_value ) = 0;
 
 
 	/*-----------------------------------------------------------
 	No description available.
 	-----------------------------------------------------------*/
-	void ccom_add_caarray_real_arg(  /* [in] */ EIF_OBJECT a_value );
+	virtual STDMETHODIMP StartIlGeneration(  /* [in] */ LONG type_id ) = 0;
 
 
 	/*-----------------------------------------------------------
 	No description available.
 	-----------------------------------------------------------*/
-	void ccom_add_caarray_double_arg(  /* [in] */ EIF_OBJECT a_value );
+	virtual STDMETHODIMP GenerateFeatureIL(  /* [in] */ LONG feature_id, /* [in] */ LONG type_id, /* [in] */ LONG code_feature_id ) = 0;
 
 
 	/*-----------------------------------------------------------
 	No description available.
 	-----------------------------------------------------------*/
-	void ccom_add_caarray_character_arg(  /* [in] */ EIF_OBJECT a_value );
+	virtual STDMETHODIMP GenerateFeatureInternalClone(  /* [in] */ LONG feature_id ) = 0;
 
 
 	/*-----------------------------------------------------------
 	No description available.
 	-----------------------------------------------------------*/
-	void ccom_add_caarray_boolean_arg(  /* [in] */ EIF_OBJECT a_value );
+	virtual STDMETHODIMP GenerateImplementationFeatureIL(  /* [in] */ LONG feature_id ) = 0;
 
 
 	/*-----------------------------------------------------------
 	No description available.
 	-----------------------------------------------------------*/
-	void ccom_start_il_generation(  /* [in] */ EIF_INTEGER type_id );
+	virtual STDMETHODIMP GenerateMethodImpl(  /* [in] */ LONG feature_id, /* [in] */ LONG parent_type_id, /* [in] */ LONG parent_feature_id ) = 0;
 
 
 	/*-----------------------------------------------------------
 	No description available.
 	-----------------------------------------------------------*/
-	void ccom_generate_feature_il(  /* [in] */ EIF_INTEGER feature_id );
+	virtual STDMETHODIMP GenerateCreationFeatureIL(  /* [in] */ LONG feature_id ) = 0;
 
 
 	/*-----------------------------------------------------------
 	No description available.
 	-----------------------------------------------------------*/
-	void ccom_generate_creation_feature_il(  /* [in] */ EIF_INTEGER feature_id );
+	virtual STDMETHODIMP GenerateExternalCall(  /* [in] */ BSTR external_type_name, /* [in] */ BSTR name, /* [in] */ LONG external_kind, /* [in] */ SAFEARRAY *  parameter_types, /* [in] */ BSTR return_type, /* [in] */ VARIANT_BOOL is_virtual, /* [in] */ LONG type_id, /* [in] */ LONG feature_id ) = 0;
 
 
 	/*-----------------------------------------------------------
 	No description available.
 	-----------------------------------------------------------*/
-	void ccom_generate_external_call(  /* [in] */ EIF_OBJECT external_type_name,  /* [in] */ EIF_OBJECT name,  /* [in] */ EIF_INTEGER external_kind,  /* [in] */ EIF_OBJECT parameter_types,  /* [in] */ EIF_OBJECT return_type,  /* [in] */ EIF_BOOLEAN is_virtual,  /* [in] */ EIF_INTEGER type_id,  /* [in] */ EIF_INTEGER feature_id );
+	virtual STDMETHODIMP PutResultInfo(  /* [in] */ LONG type_id ) = 0;
 
 
 	/*-----------------------------------------------------------
 	No description available.
 	-----------------------------------------------------------*/
-	void ccom_put_result_info(  /* [in] */ EIF_INTEGER type_id );
+	virtual STDMETHODIMP PutLocalInfo(  /* [in] */ LONG type_id, /* [in] */ BSTR name ) = 0;
 
 
 	/*-----------------------------------------------------------
 	No description available.
 	-----------------------------------------------------------*/
-	void ccom_put_local_info(  /* [in] */ EIF_INTEGER type_id,  /* [in] */ EIF_OBJECT name );
+	virtual STDMETHODIMP CreateLikeCurrentObject( void ) = 0;
 
 
 	/*-----------------------------------------------------------
 	No description available.
 	-----------------------------------------------------------*/
-	void ccom_create_like_current_object();
+	virtual STDMETHODIMP CreateObject(  /* [in] */ LONG type_id ) = 0;
 
 
 	/*-----------------------------------------------------------
 	No description available.
 	-----------------------------------------------------------*/
-	void ccom_create_object(  /* [in] */ EIF_INTEGER type_id );
+	virtual STDMETHODIMP CreateAttributeObject(  /* [in] */ LONG type_id, /* [in] */ LONG feature_id ) = 0;
 
 
 	/*-----------------------------------------------------------
 	No description available.
 	-----------------------------------------------------------*/
-	void ccom_create_attribute_object(  /* [in] */ EIF_INTEGER type_id,  /* [in] */ EIF_INTEGER feature_id );
+	virtual STDMETHODIMP DuplicateTop( void ) = 0;
 
 
 	/*-----------------------------------------------------------
 	No description available.
 	-----------------------------------------------------------*/
-	void ccom_duplicate_top();
+	virtual STDMETHODIMP Pop( void ) = 0;
 
 
 	/*-----------------------------------------------------------
 	No description available.
 	-----------------------------------------------------------*/
-	void ccom_pop();
+	virtual STDMETHODIMP GenerateMetamorphose(  /* [in] */ LONG type_id ) = 0;
 
 
 	/*-----------------------------------------------------------
 	No description available.
 	-----------------------------------------------------------*/
-	void ccom_generate_metamorphose(  /* [in] */ EIF_INTEGER type_id );
+	virtual STDMETHODIMP GenerateUnmetamorphose(  /* [in] */ LONG type_id ) = 0;
 
 
 	/*-----------------------------------------------------------
 	No description available.
 	-----------------------------------------------------------*/
-	void ccom_generate_unmetamorphose(  /* [in] */ EIF_INTEGER type_id );
+	virtual STDMETHODIMP GenerateCheckCast(  /* [in] */ LONG source_type_id, /* [in] */ LONG target_type_id ) = 0;
 
 
 	/*-----------------------------------------------------------
 	No description available.
 	-----------------------------------------------------------*/
-	void ccom_generate_check_cast(  /* [in] */ EIF_INTEGER source_type_id,  /* [in] */ EIF_INTEGER target_type_id );
+	virtual STDMETHODIMP ConvertToNativeInt( void ) = 0;
 
 
 	/*-----------------------------------------------------------
 	No description available.
 	-----------------------------------------------------------*/
-	void ccom_generate_current();
+	virtual STDMETHODIMP ConvertToBoolean( void ) = 0;
 
 
 	/*-----------------------------------------------------------
 	No description available.
 	-----------------------------------------------------------*/
-	void ccom_generate_result();
+	virtual STDMETHODIMP ConvertToCharacter( void ) = 0;
 
 
 	/*-----------------------------------------------------------
 	No description available.
 	-----------------------------------------------------------*/
-	void ccom_generate_attribute(  /* [in] */ EIF_INTEGER type_id,  /* [in] */ EIF_INTEGER feature_id );
+	virtual STDMETHODIMP ConvertToInteger8( void ) = 0;
 
 
 	/*-----------------------------------------------------------
 	No description available.
 	-----------------------------------------------------------*/
-	void ccom_generate_feature_access(  /* [in] */ EIF_INTEGER type_id,  /* [in] */ EIF_INTEGER feature_id,  /* [in] */ EIF_BOOLEAN is_virtual );
+	virtual STDMETHODIMP ConvertToInteger16( void ) = 0;
 
 
 	/*-----------------------------------------------------------
 	No description available.
 	-----------------------------------------------------------*/
-	void ccom_generate_argument(  /* [in] */ EIF_INTEGER n );
+	virtual STDMETHODIMP ConvertToInteger32( void ) = 0;
 
 
 	/*-----------------------------------------------------------
 	No description available.
 	-----------------------------------------------------------*/
-	void ccom_generate_local(  /* [in] */ EIF_INTEGER n );
+	virtual STDMETHODIMP ConvertToInteger64( void ) = 0;
 
 
 	/*-----------------------------------------------------------
 	No description available.
 	-----------------------------------------------------------*/
-	void ccom_generate_in_assertion_test(  /* [in] */ EIF_INTEGER end_of_assert_label );
+	virtual STDMETHODIMP ConvertToDouble( void ) = 0;
 
 
 	/*-----------------------------------------------------------
 	No description available.
 	-----------------------------------------------------------*/
-	void ccom_generate_set_assertion_status();
+	virtual STDMETHODIMP ConvertToReal( void ) = 0;
 
 
 	/*-----------------------------------------------------------
 	No description available.
 	-----------------------------------------------------------*/
-	void ccom_generate_restore_assertion_status();
+	virtual STDMETHODIMP GenerateCurrent( void ) = 0;
 
 
 	/*-----------------------------------------------------------
 	No description available.
 	-----------------------------------------------------------*/
-	void ccom_generate_assertion_check(  /* [in] */ EIF_INTEGER assert_type,  /* [in] */ EIF_OBJECT tag );
+	virtual STDMETHODIMP GenerateResult( void ) = 0;
 
 
 	/*-----------------------------------------------------------
 	No description available.
 	-----------------------------------------------------------*/
-	void ccom_generate_precondition_check(  /* [in] */ EIF_OBJECT tag,  /* [in] */ EIF_INTEGER label_id );
+	virtual STDMETHODIMP GenerateAttribute(  /* [in] */ LONG type_id, /* [in] */ LONG feature_id ) = 0;
 
 
 	/*-----------------------------------------------------------
 	No description available.
 	-----------------------------------------------------------*/
-	void ccom_generate_precondition_violation();
+	virtual STDMETHODIMP GenerateFeatureAccess(  /* [in] */ LONG type_id, /* [in] */ LONG feature_id, /* [in] */ VARIANT_BOOL is_virtual ) = 0;
 
 
 	/*-----------------------------------------------------------
 	No description available.
 	-----------------------------------------------------------*/
-	void ccom_generate_invariant_checking(  /* [in] */ EIF_INTEGER type_id );
+	virtual STDMETHODIMP GeneratePrecursorFeatureAccess(  /* [in] */ LONG type_id, /* [in] */ LONG feature_id ) = 0;
 
 
 	/*-----------------------------------------------------------
 	No description available.
 	-----------------------------------------------------------*/
-	void ccom_generate_start_exception_block();
+	virtual STDMETHODIMP GenerateArgument(  /* [in] */ LONG n ) = 0;
 
 
 	/*-----------------------------------------------------------
 	No description available.
 	-----------------------------------------------------------*/
-	void ccom_generate_start_rescue();
+	virtual STDMETHODIMP GenerateLocal(  /* [in] */ LONG n ) = 0;
 
 
 	/*-----------------------------------------------------------
 	No description available.
 	-----------------------------------------------------------*/
-	void ccom_generate_end_exception_block();
+	virtual STDMETHODIMP GenerateInAssertionTest(  /* [in] */ LONG end_of_assert_label ) = 0;
 
 
 	/*-----------------------------------------------------------
 	No description available.
 	-----------------------------------------------------------*/
-	void ccom_generate_is_instance_of(  /* [in] */ EIF_INTEGER type_id );
+	virtual STDMETHODIMP GenerateSetAssertionStatus( void ) = 0;
 
 
 	/*-----------------------------------------------------------
 	No description available.
 	-----------------------------------------------------------*/
-	void ccom_generate_attribute_assignment(  /* [in] */ EIF_INTEGER feature_id );
+	virtual STDMETHODIMP GenerateRestoreAssertionStatus( void ) = 0;
 
 
 	/*-----------------------------------------------------------
 	No description available.
 	-----------------------------------------------------------*/
-	void ccom_generate_local_assignment(  /* [in] */ EIF_INTEGER n );
+	virtual STDMETHODIMP GenerateAssertionCheck(  /* [in] */ LONG assert_type, /* [in] */ BSTR tag ) = 0;
 
 
 	/*-----------------------------------------------------------
 	No description available.
 	-----------------------------------------------------------*/
-	void ccom_generate_result_assignment();
+	virtual STDMETHODIMP GeneratePreconditionCheck(  /* [in] */ BSTR tag, /* [in] */ LONG label_id ) = 0;
 
 
 	/*-----------------------------------------------------------
 	No description available.
 	-----------------------------------------------------------*/
-	void ccom_generate_local_address(  /* [in] */ EIF_INTEGER n );
+	virtual STDMETHODIMP GeneratePreconditionViolation( void ) = 0;
 
 
 	/*-----------------------------------------------------------
 	No description available.
 	-----------------------------------------------------------*/
-	void ccom_generate_routine_address(  /* [in] */ EIF_INTEGER type_id,  /* [in] */ EIF_INTEGER feature_id );
+	virtual STDMETHODIMP GenerateInvariantChecking(  /* [in] */ LONG type_id ) = 0;
 
 
 	/*-----------------------------------------------------------
 	No description available.
 	-----------------------------------------------------------*/
-	void ccom_generate_result_address();
+	virtual STDMETHODIMP GenerateStartExceptionBlock( void ) = 0;
 
 
 	/*-----------------------------------------------------------
 	No description available.
 	-----------------------------------------------------------*/
-	void ccom_generate_current_address();
+	virtual STDMETHODIMP GenerateStartRescue( void ) = 0;
 
 
 	/*-----------------------------------------------------------
 	No description available.
 	-----------------------------------------------------------*/
-	void ccom_generate_attribute_address(  /* [in] */ EIF_INTEGER type_id,  /* [in] */ EIF_INTEGER feature_id );
+	virtual STDMETHODIMP GenerateEndExceptionBlock( void ) = 0;
 
 
 	/*-----------------------------------------------------------
 	No description available.
 	-----------------------------------------------------------*/
-	void ccom_generate_argument_address(  /* [in] */ EIF_INTEGER n );
+	virtual STDMETHODIMP GenerateIsInstanceOf(  /* [in] */ LONG type_id ) = 0;
 
 
 	/*-----------------------------------------------------------
 	No description available.
 	-----------------------------------------------------------*/
-	void ccom_generate_load_from_address(  /* [in] */ EIF_INTEGER type_id );
+	virtual STDMETHODIMP GenerateAttributeAssignment(  /* [in] */ LONG type_id, /* [in] */ LONG feature_id ) = 0;
 
 
 	/*-----------------------------------------------------------
 	No description available.
 	-----------------------------------------------------------*/
-	void ccom_generate_array_access(  /* [in] */ EIF_INTEGER kind );
+	virtual STDMETHODIMP GenerateLocalAssignment(  /* [in] */ LONG n ) = 0;
 
 
 	/*-----------------------------------------------------------
 	No description available.
 	-----------------------------------------------------------*/
-	void ccom_generate_array_write(  /* [in] */ EIF_INTEGER kind );
+	virtual STDMETHODIMP GenerateResultAssignment( void ) = 0;
 
 
 	/*-----------------------------------------------------------
 	No description available.
 	-----------------------------------------------------------*/
-	void ccom_generate_array_creation(  /* [in] */ EIF_INTEGER type_id );
+	virtual STDMETHODIMP GenerateLocalAddress(  /* [in] */ LONG n ) = 0;
 
 
 	/*-----------------------------------------------------------
 	No description available.
 	-----------------------------------------------------------*/
-	void ccom_generate_return();
+	virtual STDMETHODIMP GenerateRoutineAddress(  /* [in] */ LONG type_id, /* [in] */ LONG feature_id ) = 0;
 
 
 	/*-----------------------------------------------------------
 	No description available.
 	-----------------------------------------------------------*/
-	void ccom_generate_return_value();
+	virtual STDMETHODIMP GenerateResultAddress( void ) = 0;
 
 
 	/*-----------------------------------------------------------
 	No description available.
 	-----------------------------------------------------------*/
-	void ccom_generate_once_done_info(  /* [in] */ EIF_OBJECT name );
+	virtual STDMETHODIMP GenerateCurrentAddress( void ) = 0;
 
 
 	/*-----------------------------------------------------------
 	No description available.
 	-----------------------------------------------------------*/
-	void ccom_generate_once_result_info(  /* [in] */ EIF_OBJECT name,  /* [in] */ EIF_INTEGER type_id );
+	virtual STDMETHODIMP GenerateAttributeAddress(  /* [in] */ LONG type_id, /* [in] */ LONG feature_id ) = 0;
 
 
 	/*-----------------------------------------------------------
 	No description available.
 	-----------------------------------------------------------*/
-	void ccom_generate_once_test();
+	virtual STDMETHODIMP GenerateArgumentAddress(  /* [in] */ LONG n ) = 0;
 
 
 	/*-----------------------------------------------------------
 	No description available.
 	-----------------------------------------------------------*/
-	void ccom_generate_once_result();
+	virtual STDMETHODIMP GenerateLoadFromAddress(  /* [in] */ LONG type_id ) = 0;
 
 
 	/*-----------------------------------------------------------
 	No description available.
 	-----------------------------------------------------------*/
-	void ccom_generate_once_store_result();
+	virtual STDMETHODIMP GenerateArrayAccess(  /* [in] */ LONG kind ) = 0;
 
 
 	/*-----------------------------------------------------------
 	No description available.
 	-----------------------------------------------------------*/
-	void ccom_generate_array_lower();
+	virtual STDMETHODIMP GenerateArrayWrite(  /* [in] */ LONG kind ) = 0;
 
 
 	/*-----------------------------------------------------------
 	No description available.
 	-----------------------------------------------------------*/
-	void ccom_generate_array_upper();
+	virtual STDMETHODIMP GenerateArrayCreation(  /* [in] */ LONG type_id ) = 0;
 
 
 	/*-----------------------------------------------------------
 	No description available.
 	-----------------------------------------------------------*/
-	void ccom_generate_array_count();
+	virtual STDMETHODIMP GenerateReturn( void ) = 0;
 
 
 	/*-----------------------------------------------------------
 	No description available.
 	-----------------------------------------------------------*/
-	void ccom_put_void();
+	virtual STDMETHODIMP GenerateReturnValue( void ) = 0;
 
 
 	/*-----------------------------------------------------------
 	No description available.
 	-----------------------------------------------------------*/
-	void ccom_put_manifest_string(  /* [in] */ EIF_OBJECT s );
+	virtual STDMETHODIMP GenerateOnceDoneInfo(  /* [in] */ BSTR name ) = 0;
 
 
 	/*-----------------------------------------------------------
 	No description available.
 	-----------------------------------------------------------*/
-	void ccom_put_integer32_constant(  /* [in] */ EIF_INTEGER i );
+	virtual STDMETHODIMP GenerateOnceResultInfo(  /* [in] */ BSTR name, /* [in] */ LONG type_id ) = 0;
 
 
 	/*-----------------------------------------------------------
 	No description available.
 	-----------------------------------------------------------*/
-	void ccom_put_double_constant(  /* [in] */ EIF_DOUBLE d );
+	virtual STDMETHODIMP GenerateOnceTest( void ) = 0;
 
 
 	/*-----------------------------------------------------------
 	No description available.
 	-----------------------------------------------------------*/
-	void ccom_put_character_constant(  /* [in] */ EIF_INTEGER c );
+	virtual STDMETHODIMP GenerateOnceResult( void ) = 0;
 
 
 	/*-----------------------------------------------------------
 	No description available.
 	-----------------------------------------------------------*/
-	void ccom_put_boolean_constant(  /* [in] */ EIF_BOOLEAN b );
+	virtual STDMETHODIMP GenerateOnceStoreResult( void ) = 0;
 
 
 	/*-----------------------------------------------------------
 	No description available.
 	-----------------------------------------------------------*/
-	void ccom_branch_on_true(  /* [in] */ EIF_INTEGER label );
+	virtual STDMETHODIMP GenerateArrayLower( void ) = 0;
 
 
 	/*-----------------------------------------------------------
 	No description available.
 	-----------------------------------------------------------*/
-	void ccom_branch_on_false(  /* [in] */ EIF_INTEGER label );
+	virtual STDMETHODIMP GenerateArrayUpper( void ) = 0;
 
 
 	/*-----------------------------------------------------------
 	No description available.
 	-----------------------------------------------------------*/
-	void ccom_branch_to(  /* [in] */ EIF_INTEGER label );
+	virtual STDMETHODIMP GenerateArrayCount( void ) = 0;
 
 
 	/*-----------------------------------------------------------
 	No description available.
 	-----------------------------------------------------------*/
-	void ccom_mark_label(  /* [in] */ EIF_INTEGER label );
+	virtual STDMETHODIMP PutVoid( void ) = 0;
 
 
 	/*-----------------------------------------------------------
 	No description available.
 	-----------------------------------------------------------*/
-	void ccom_generate_lt();
+	virtual STDMETHODIMP PutManifestString(  /* [in] */ BSTR s ) = 0;
 
 
 	/*-----------------------------------------------------------
 	No description available.
 	-----------------------------------------------------------*/
-	void ccom_generate_le();
+	virtual STDMETHODIMP PutInteger8Constant(  /* [in] */ LONG i ) = 0;
 
 
 	/*-----------------------------------------------------------
 	No description available.
 	-----------------------------------------------------------*/
-	void ccom_generate_gt();
+	virtual STDMETHODIMP PutInteger16Constant(  /* [in] */ LONG i ) = 0;
 
 
 	/*-----------------------------------------------------------
 	No description available.
 	-----------------------------------------------------------*/
-	void ccom_generate_ge();
+	virtual STDMETHODIMP PutInteger32Constant(  /* [in] */ LONG i ) = 0;
 
 
 	/*-----------------------------------------------------------
 	No description available.
 	-----------------------------------------------------------*/
-	void ccom_generate_star();
+	virtual STDMETHODIMP PutInteger64Constant(  /* [in] */ LONG i ) = 0;
 
 
 	/*-----------------------------------------------------------
 	No description available.
 	-----------------------------------------------------------*/
-	void ccom_generate_slash();
+	virtual STDMETHODIMP PutDoubleConstant(  /* [in] */ double d ) = 0;
 
 
 	/*-----------------------------------------------------------
 	No description available.
 	-----------------------------------------------------------*/
-	void ccom_generate_power();
+	virtual STDMETHODIMP PutRealConstant(  /* [in] */ FLOAT d ) = 0;
 
 
 	/*-----------------------------------------------------------
 	No description available.
 	-----------------------------------------------------------*/
-	void ccom_generate_plus();
+	virtual STDMETHODIMP PutCharacterConstant(  /* [in] */ USHORT c ) = 0;
 
 
 	/*-----------------------------------------------------------
 	No description available.
 	-----------------------------------------------------------*/
-	void ccom_generate_mod();
+	virtual STDMETHODIMP PutBooleanConstant(  /* [in] */ VARIANT_BOOL b ) = 0;
 
 
 	/*-----------------------------------------------------------
 	No description available.
 	-----------------------------------------------------------*/
-	void ccom_generate_minus();
+	virtual STDMETHODIMP BranchOnTrue(  /* [in] */ LONG label ) = 0;
 
 
 	/*-----------------------------------------------------------
 	No description available.
 	-----------------------------------------------------------*/
-	void ccom_generate_div();
+	virtual STDMETHODIMP BranchOnFalse(  /* [in] */ LONG label ) = 0;
 
 
 	/*-----------------------------------------------------------
 	No description available.
 	-----------------------------------------------------------*/
-	void ccom_generate_xor();
+	virtual STDMETHODIMP BranchTo(  /* [in] */ LONG label ) = 0;
 
 
 	/*-----------------------------------------------------------
 	No description available.
 	-----------------------------------------------------------*/
-	void ccom_generate_or();
+	virtual STDMETHODIMP MarkLabel(  /* [in] */ LONG label ) = 0;
 
 
 	/*-----------------------------------------------------------
 	No description available.
 	-----------------------------------------------------------*/
-	void ccom_generate_and();
+	virtual STDMETHODIMP GenerateLt( void ) = 0;
 
 
 	/*-----------------------------------------------------------
 	No description available.
 	-----------------------------------------------------------*/
-	void ccom_generate_implies();
+	virtual STDMETHODIMP GenerateLe( void ) = 0;
 
 
 	/*-----------------------------------------------------------
 	No description available.
 	-----------------------------------------------------------*/
-	void ccom_generate_eq();
+	virtual STDMETHODIMP GenerateGt( void ) = 0;
 
 
 	/*-----------------------------------------------------------
 	No description available.
 	-----------------------------------------------------------*/
-	void ccom_generate_shl();
+	virtual STDMETHODIMP GenerateGe( void ) = 0;
 
 
 	/*-----------------------------------------------------------
 	No description available.
 	-----------------------------------------------------------*/
-	void ccom_generate_shr();
+	virtual STDMETHODIMP GenerateStar( void ) = 0;
 
 
 	/*-----------------------------------------------------------
 	No description available.
 	-----------------------------------------------------------*/
-	void ccom_generate_ne();
+	virtual STDMETHODIMP GeneratePower( void ) = 0;
 
 
 	/*-----------------------------------------------------------
 	No description available.
 	-----------------------------------------------------------*/
-	void ccom_generate_uplus();
+	virtual STDMETHODIMP GenerateMax(  /* [in] */ LONG type_id ) = 0;
 
 
 	/*-----------------------------------------------------------
 	No description available.
 	-----------------------------------------------------------*/
-	void ccom_generate_uminus();
+	virtual STDMETHODIMP GenerateMin(  /* [in] */ LONG type_id ) = 0;
 
 
 	/*-----------------------------------------------------------
 	No description available.
 	-----------------------------------------------------------*/
-	void ccom_generate_not();
+	virtual STDMETHODIMP GenerateAbs(  /* [in] */ LONG type_id ) = 0;
 
 
 	/*-----------------------------------------------------------
 	No description available.
 	-----------------------------------------------------------*/
-	void ccom_put_line_info(  /* [in] */ EIF_INTEGER n );
+	virtual STDMETHODIMP GenerateToString( void ) = 0;
 
 
 	/*-----------------------------------------------------------
 	No description available.
 	-----------------------------------------------------------*/
-	EIF_INTEGER ccom_create_label(  );
+	virtual STDMETHODIMP GeneratePlus( void ) = 0;
 
 
 	/*-----------------------------------------------------------
-	IUnknown interface
+	No description available.
+	-----------------------------------------------------------*/
+	virtual STDMETHODIMP GenerateMod( void ) = 0;
+
+
+	/*-----------------------------------------------------------
+	No description available.
+	-----------------------------------------------------------*/
+	virtual STDMETHODIMP GenerateMinus( void ) = 0;
+
+
+	/*-----------------------------------------------------------
+	No description available.
+	-----------------------------------------------------------*/
+	virtual STDMETHODIMP GenerateDiv( void ) = 0;
+
+
+	/*-----------------------------------------------------------
+	No description available.
+	-----------------------------------------------------------*/
+	virtual STDMETHODIMP GenerateXor( void ) = 0;
+
+
+	/*-----------------------------------------------------------
+	No description available.
+	-----------------------------------------------------------*/
+	virtual STDMETHODIMP GenerateOr( void ) = 0;
+
+
+	/*-----------------------------------------------------------
+	No description available.
+	-----------------------------------------------------------*/
+	virtual STDMETHODIMP GenerateAnd( void ) = 0;
+
+
+	/*-----------------------------------------------------------
+	No description available.
+	-----------------------------------------------------------*/
+	virtual STDMETHODIMP GenerateImplies( void ) = 0;
+
+
+	/*-----------------------------------------------------------
+	No description available.
+	-----------------------------------------------------------*/
+	virtual STDMETHODIMP GenerateEq( void ) = 0;
+
+
+	/*-----------------------------------------------------------
+	No description available.
+	-----------------------------------------------------------*/
+	virtual STDMETHODIMP GenerateShl( void ) = 0;
+
+
+	/*-----------------------------------------------------------
+	No description available.
+	-----------------------------------------------------------*/
+	virtual STDMETHODIMP GenerateShr( void ) = 0;
+
+
+	/*-----------------------------------------------------------
+	No description available.
+	-----------------------------------------------------------*/
+	virtual STDMETHODIMP GenerateNe( void ) = 0;
+
+
+	/*-----------------------------------------------------------
+	No description available.
+	-----------------------------------------------------------*/
+	virtual STDMETHODIMP GenerateUMinus( void ) = 0;
+
+
+	/*-----------------------------------------------------------
+	No description available.
+	-----------------------------------------------------------*/
+	virtual STDMETHODIMP GenerateNot( void ) = 0;
+
+
+	/*-----------------------------------------------------------
+	No description available.
+	-----------------------------------------------------------*/
+	virtual STDMETHODIMP GenerateBitwiseNot( void ) = 0;
+
+
+	/*-----------------------------------------------------------
+	No description available.
+	-----------------------------------------------------------*/
+	virtual STDMETHODIMP PutLineInfo(  /* [in] */ LONG n ) = 0;
+
+
+	/*-----------------------------------------------------------
+	No description available.
+	-----------------------------------------------------------*/
+	virtual STDMETHODIMP CreateLabel(  /* [out, retval] */ LONG * p_ret_val ) = 0;
+
+
+	/*-----------------------------------------------------------
+	No description available.
+	-----------------------------------------------------------*/
+	virtual STDMETHODIMP SetForInterfaces( void ) = 0;
+
+
+	/*-----------------------------------------------------------
+	No description available.
 	-----------------------------------------------------------*/
-	EIF_POINTER ccom_item();
+	virtual STDMETHODIMP SetForImplementations( void ) = 0;
 
 
 
@@ -854,29 +956,16 @@ protected:
 
 
 private:
-	/*-----------------------------------------------------------
-	Interface pointer
-	-----------------------------------------------------------*/
-	ecom_Core::ICore * p_ICore;
-
-
-	/*-----------------------------------------------------------
-	Default IUnknown interface pointer
-	-----------------------------------------------------------*/
-	IUnknown * p_unknown;
-
-
 
 
 };
 }
+#endif
 }
 #endif
 
 #ifdef __cplusplus
 }
 #endif
-#include "ecom_grt_globals_core_c.h"
-
 
 #endif

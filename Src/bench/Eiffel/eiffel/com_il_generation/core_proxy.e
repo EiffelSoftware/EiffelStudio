@@ -95,12 +95,6 @@ feature -- Basic Operations
 			ccom_end_assembly_generation (initializer)
 		end
 
-	end_module_generation is
-			-- No description available.
-		do
-			ccom_end_module_generation (initializer)
-		end
-
 	start_class_mappings (class_count: INTEGER) is
 			-- No description available.
 			-- `class_count' [in].  
@@ -108,33 +102,27 @@ feature -- Basic Operations
 			ccom_start_class_mappings (initializer, class_count)
 		end
 
-	generate_class_mappings (class_name1: STRING; type_id: INTEGER; source_file_name: STRING) is
+	generate_class_mappings (class_name1: STRING; type_id: INTEGER; interface_id: INTEGER; source_file_name: STRING; element_type_name: STRING) is
 			-- No description available.
 			-- `class_name1' [in].  
 			-- `type_id' [in].  
+			-- `interface_id' [in].  
 			-- `source_file_name' [in].  
-		do
-			ccom_generate_class_mappings (initializer, class_name1, type_id, source_file_name)
-		end
-
-	generate_array_class_mappings (class_name1: STRING; element_type_name: STRING; type_id: INTEGER) is
-			-- No description available.
-			-- `class_name1' [in].  
 			-- `element_type_name' [in].  
-			-- `type_id' [in].  
 		do
-			ccom_generate_array_class_mappings (initializer, class_name1, element_type_name, type_id)
+			ccom_generate_class_mappings (initializer, class_name1, type_id, interface_id, source_file_name, element_type_name)
 		end
 
-	generate_class_header (is_interface: BOOLEAN; deferred1: BOOLEAN; expanded1: BOOLEAN; is_external: BOOLEAN; type_id: INTEGER) is
+	generate_class_header (is_interface: BOOLEAN; deferred1: BOOLEAN; is_frozen: BOOLEAN; expanded1: BOOLEAN; is_external: BOOLEAN; type_id: INTEGER) is
 			-- No description available.
 			-- `is_interface' [in].  
 			-- `deferred1' [in].  
+			-- `is_frozen' [in].  
 			-- `expanded1' [in].  
 			-- `is_external' [in].  
 			-- `type_id' [in].  
 		do
-			ccom_generate_class_header (initializer, is_interface, deferred1, expanded1, is_external, type_id)
+			ccom_generate_class_header (initializer, is_interface, deferred1, is_frozen, expanded1, is_external, type_id)
 		end
 
 	end_class is
@@ -150,6 +138,13 @@ feature -- Basic Operations
 			ccom_add_to_parents_list (initializer, type_id)
 		end
 
+	add_interface (type_id: INTEGER) is
+			-- No description available.
+			-- `type_id' [in].  
+		do
+			ccom_add_interface (initializer, type_id)
+		end
+
 	end_parents_list is
 			-- No description available.
 		do
@@ -161,12 +156,6 @@ feature -- Basic Operations
 			-- `type_id' [in].  
 		do
 			ccom_start_features_list (initializer, type_id)
-		end
-
-	end_features_list is
-			-- No description available.
-		do
-			ccom_end_features_list (initializer)
 		end
 
 	mark_invariant (feature_id: INTEGER) is
@@ -190,25 +179,27 @@ feature -- Basic Operations
 			ccom_start_feature_description (initializer, arg_count)
 		end
 
-	generate_feature_nature (redefined: BOOLEAN; deferred1: BOOLEAN; frozen1: BOOLEAN; is_attribute: BOOLEAN) is
-			-- No description available.
-			-- `redefined' [in].  
-			-- `deferred1' [in].  
-			-- `frozen1' [in].  
-			-- `is_attribute' [in].  
-		do
-			ccom_generate_feature_nature (initializer, redefined, deferred1, frozen1, is_attribute)
-		end
-
-	generate_feature_identification (name: STRING; feature_id: INTEGER; routine_ids: ECOM_ARRAY [INTEGER]; in_current_class: BOOLEAN; written_type_id: INTEGER) is
+	generate_interface_feature_identification (name: STRING; feature_id: INTEGER; is_attribute: BOOLEAN) is
 			-- No description available.
 			-- `name' [in].  
 			-- `feature_id' [in].  
-			-- `routine_ids' [in].  
-			-- `in_current_class' [in].  
-			-- `written_type_id' [in].  
+			-- `is_attribute' [in].  
 		do
-			ccom_generate_feature_identification (initializer, name, feature_id, routine_ids, in_current_class, written_type_id)
+			ccom_generate_interface_feature_identification (initializer, name, feature_id, is_attribute)
+		end
+
+	generate_feature_identification (name: STRING; feature_id: INTEGER; is_redefined: BOOLEAN; is_deferred: BOOLEAN; is_frozen: BOOLEAN; is_attribute: BOOLEAN; is_c_external: BOOLEAN; is_static: BOOLEAN) is
+			-- No description available.
+			-- `name' [in].  
+			-- `feature_id' [in].  
+			-- `is_redefined' [in].  
+			-- `is_deferred' [in].  
+			-- `is_frozen' [in].  
+			-- `is_attribute' [in].  
+			-- `is_c_external' [in].  
+			-- `is_static' [in].  
+		do
+			ccom_generate_feature_identification (initializer, name, feature_id, is_redefined, is_deferred, is_frozen, is_attribute, is_c_external, is_static)
 		end
 
 	generate_external_identification (name: STRING; com_name: STRING; external_kind: INTEGER; feature_id: INTEGER; routine_id: INTEGER; in_current_class: BOOLEAN; written_type_id: INTEGER; parameters: ECOM_ARRAY [STRING]; return_type: STRING) is
@@ -245,18 +236,6 @@ feature -- Basic Operations
 			-- No description available.
 		do
 			ccom_create_feature_description (initializer)
-		end
-
-	check_renaming is
-			-- No description available.
-		do
-			ccom_check_renaming (initializer)
-		end
-
-	check_renaming_and_redefinition is
-			-- No description available.
-		do
-			ccom_check_renaming_and_redefinition (initializer)
 		end
 
 	define_entry_point (type_id: INTEGER; feature_id: INTEGER) is
@@ -388,11 +367,36 @@ feature -- Basic Operations
 			ccom_start_il_generation (initializer, type_id)
 		end
 
-	generate_feature_il (feature_id: INTEGER) is
+	generate_feature_il (feature_id: INTEGER; type_id: INTEGER; code_feature_id: INTEGER) is
+			-- No description available.
+			-- `feature_id' [in].  
+			-- `type_id' [in].  
+			-- `code_feature_id' [in].  
+		do
+			ccom_generate_feature_il (initializer, feature_id, type_id, code_feature_id)
+		end
+
+	generate_feature_internal_clone (feature_id: INTEGER) is
 			-- No description available.
 			-- `feature_id' [in].  
 		do
-			ccom_generate_feature_il (initializer, feature_id)
+			ccom_generate_feature_internal_clone (initializer, feature_id)
+		end
+
+	generate_implementation_feature_il (feature_id: INTEGER) is
+			-- No description available.
+			-- `feature_id' [in].  
+		do
+			ccom_generate_implementation_feature_il (initializer, feature_id)
+		end
+
+	generate_method_impl (feature_id: INTEGER; parent_type_id: INTEGER; parent_feature_id: INTEGER) is
+			-- No description available.
+			-- `feature_id' [in].  
+			-- `parent_type_id' [in].  
+			-- `parent_feature_id' [in].  
+		do
+			ccom_generate_method_impl (initializer, feature_id, parent_type_id, parent_feature_id)
 		end
 
 	generate_creation_feature_il (feature_id: INTEGER) is
@@ -486,6 +490,60 @@ feature -- Basic Operations
 			ccom_generate_check_cast (initializer, source_type_id, target_type_id)
 		end
 
+	convert_to_native_int is
+			-- No description available.
+		do
+			ccom_convert_to_native_int (initializer)
+		end
+
+	convert_to_boolean is
+			-- No description available.
+		do
+			ccom_convert_to_boolean (initializer)
+		end
+
+	convert_to_character is
+			-- No description available.
+		do
+			ccom_convert_to_character (initializer)
+		end
+
+	convert_to_integer8 is
+			-- No description available.
+		do
+			ccom_convert_to_integer8 (initializer)
+		end
+
+	convert_to_integer16 is
+			-- No description available.
+		do
+			ccom_convert_to_integer16 (initializer)
+		end
+
+	convert_to_integer32 is
+			-- No description available.
+		do
+			ccom_convert_to_integer32 (initializer)
+		end
+
+	convert_to_integer64 is
+			-- No description available.
+		do
+			ccom_convert_to_integer64 (initializer)
+		end
+
+	convert_to_double is
+			-- No description available.
+		do
+			ccom_convert_to_double (initializer)
+		end
+
+	convert_to_real is
+			-- No description available.
+		do
+			ccom_convert_to_real (initializer)
+		end
+
 	generate_current is
 			-- No description available.
 		do
@@ -513,6 +571,14 @@ feature -- Basic Operations
 			-- `is_virtual' [in].  
 		do
 			ccom_generate_feature_access (initializer, type_id, feature_id, is_virtual)
+		end
+
+	generate_precursor_feature_access (type_id: INTEGER; feature_id: INTEGER) is
+			-- No description available.
+			-- `type_id' [in].  
+			-- `feature_id' [in].  
+		do
+			ccom_generate_precursor_feature_access (initializer, type_id, feature_id)
 		end
 
 	generate_argument (n: INTEGER) is
@@ -602,11 +668,12 @@ feature -- Basic Operations
 			ccom_generate_is_instance_of (initializer, type_id)
 		end
 
-	generate_attribute_assignment (feature_id: INTEGER) is
+	generate_attribute_assignment (type_id: INTEGER; feature_id: INTEGER) is
 			-- No description available.
+			-- `type_id' [in].  
 			-- `feature_id' [in].  
 		do
-			ccom_generate_attribute_assignment (initializer, feature_id)
+			ccom_generate_attribute_assignment (initializer, type_id, feature_id)
 		end
 
 	generate_local_assignment (n: INTEGER) is
@@ -768,6 +835,20 @@ feature -- Basic Operations
 			ccom_put_manifest_string (initializer, s)
 		end
 
+	put_integer8_constant (i: INTEGER) is
+			-- No description available.
+			-- `i' [in].  
+		do
+			ccom_put_integer8_constant (initializer, i)
+		end
+
+	put_integer16_constant (i: INTEGER) is
+			-- No description available.
+			-- `i' [in].  
+		do
+			ccom_put_integer16_constant (initializer, i)
+		end
+
 	put_integer32_constant (i: INTEGER) is
 			-- No description available.
 			-- `i' [in].  
@@ -775,11 +856,25 @@ feature -- Basic Operations
 			ccom_put_integer32_constant (initializer, i)
 		end
 
+	put_integer64_constant (i: INTEGER) is
+			-- No description available.
+			-- `i' [in].  
+		do
+			ccom_put_integer64_constant (initializer, i)
+		end
+
 	put_double_constant (d: DOUBLE) is
 			-- No description available.
 			-- `d' [in].  
 		do
 			ccom_put_double_constant (initializer, d)
+		end
+
+	put_real_constant (d: REAL) is
+			-- No description available.
+			-- `d' [in].  
+		do
+			ccom_put_real_constant (initializer, d)
 		end
 
 	put_character_constant (c: INTEGER) is
@@ -854,16 +949,37 @@ feature -- Basic Operations
 			ccom_generate_star (initializer)
 		end
 
-	generate_slash is
-			-- No description available.
-		do
-			ccom_generate_slash (initializer)
-		end
-
 	generate_power is
 			-- No description available.
 		do
 			ccom_generate_power (initializer)
+		end
+
+	generate_max (type_id: INTEGER) is
+			-- No description available.
+			-- `type_id' [in].  
+		do
+			ccom_generate_max (initializer, type_id)
+		end
+
+	generate_min (type_id: INTEGER) is
+			-- No description available.
+			-- `type_id' [in].  
+		do
+			ccom_generate_min (initializer, type_id)
+		end
+
+	generate_abs (type_id: INTEGER) is
+			-- No description available.
+			-- `type_id' [in].  
+		do
+			ccom_generate_abs (initializer, type_id)
+		end
+
+	generate_to_string is
+			-- No description available.
+		do
+			ccom_generate_to_string (initializer)
 		end
 
 	generate_plus is
@@ -938,12 +1054,6 @@ feature -- Basic Operations
 			ccom_generate_ne (initializer)
 		end
 
-	generate_uplus is
-			-- No description available.
-		do
-			ccom_generate_uplus (initializer)
-		end
-
 	generate_uminus is
 			-- No description available.
 		do
@@ -956,11 +1066,29 @@ feature -- Basic Operations
 			ccom_generate_not (initializer)
 		end
 
+	generate_bitwise_not is
+			-- No description available.
+		do
+			ccom_generate_bitwise_not (initializer)
+		end
+
 	put_line_info (n: INTEGER) is
 			-- No description available.
 			-- `n' [in].  
 		do
 			ccom_put_line_info (initializer, n)
+		end
+
+	set_for_interfaces is
+			-- No description available.
+		do
+			ccom_set_for_interfaces (initializer)
+		end
+
+	set_for_implementations is
+			-- No description available.
+		do
+			ccom_set_for_implementations (initializer)
 		end
 
 feature {NONE}  -- Implementation
@@ -976,829 +1104,937 @@ feature {NONE}  -- Externals
 	ccom_set_console_application (cpp_obj: POINTER) is
 			-- No description available.
 		external
-			"C++ [ecom_Core::Core %"ecom_Core_Core.h%"]()"
+			"C++ [ecom_EiffelCompiler::Core %"ecom_EiffelCompiler_Core.h%"]()"
 		end
 
 	ccom_set_window_application (cpp_obj: POINTER) is
 			-- No description available.
 		external
-			"C++ [ecom_Core::Core %"ecom_Core_Core.h%"]()"
+			"C++ [ecom_EiffelCompiler::Core %"ecom_EiffelCompiler_Core.h%"]()"
 		end
 
 	ccom_set_dll (cpp_obj: POINTER) is
 			-- No description available.
 		external
-			"C++ [ecom_Core::Core %"ecom_Core_Core.h%"]()"
+			"C++ [ecom_EiffelCompiler::Core %"ecom_EiffelCompiler_Core.h%"]()"
 		end
 
 	ccom_start_assembly_generation (cpp_obj: POINTER; name: STRING; fname: STRING; location: STRING) is
 			-- No description available.
 		external
-			"C++ [ecom_Core::Core %"ecom_Core_Core.h%"](EIF_OBJECT,EIF_OBJECT,EIF_OBJECT)"
+			"C++ [ecom_EiffelCompiler::Core %"ecom_EiffelCompiler_Core.h%"](EIF_OBJECT,EIF_OBJECT,EIF_OBJECT)"
 		end
 
 	ccom_add_assembly_reference (cpp_obj: POINTER; name: STRING) is
 			-- No description available.
 		external
-			"C++ [ecom_Core::Core %"ecom_Core_Core.h%"](EIF_OBJECT)"
+			"C++ [ecom_EiffelCompiler::Core %"ecom_EiffelCompiler_Core.h%"](EIF_OBJECT)"
 		end
 
 	ccom_start_module_generation (cpp_obj: POINTER; name: STRING; debug1: BOOLEAN) is
 			-- No description available.
 		external
-			"C++ [ecom_Core::Core %"ecom_Core_Core.h%"](EIF_OBJECT,EIF_BOOLEAN)"
+			"C++ [ecom_EiffelCompiler::Core %"ecom_EiffelCompiler_Core.h%"](EIF_OBJECT,EIF_BOOLEAN)"
 		end
 
 	ccom_end_assembly_generation (cpp_obj: POINTER) is
 			-- No description available.
 		external
-			"C++ [ecom_Core::Core %"ecom_Core_Core.h%"]()"
-		end
-
-	ccom_end_module_generation (cpp_obj: POINTER) is
-			-- No description available.
-		external
-			"C++ [ecom_Core::Core %"ecom_Core_Core.h%"]()"
+			"C++ [ecom_EiffelCompiler::Core %"ecom_EiffelCompiler_Core.h%"]()"
 		end
 
 	ccom_start_class_mappings (cpp_obj: POINTER; class_count: INTEGER) is
 			-- No description available.
 		external
-			"C++ [ecom_Core::Core %"ecom_Core_Core.h%"](EIF_INTEGER)"
+			"C++ [ecom_EiffelCompiler::Core %"ecom_EiffelCompiler_Core.h%"](EIF_INTEGER)"
 		end
 
-	ccom_generate_class_mappings (cpp_obj: POINTER; class_name1: STRING; type_id: INTEGER; source_file_name: STRING) is
+	ccom_generate_class_mappings (cpp_obj: POINTER; class_name1: STRING; type_id: INTEGER; interface_id: INTEGER; source_file_name: STRING; element_type_name: STRING) is
 			-- No description available.
 		external
-			"C++ [ecom_Core::Core %"ecom_Core_Core.h%"](EIF_OBJECT,EIF_INTEGER,EIF_OBJECT)"
+			"C++ [ecom_EiffelCompiler::Core %"ecom_EiffelCompiler_Core.h%"](EIF_OBJECT,EIF_INTEGER,EIF_INTEGER,EIF_OBJECT,EIF_OBJECT)"
 		end
 
-	ccom_generate_array_class_mappings (cpp_obj: POINTER; class_name1: STRING; element_type_name: STRING; type_id: INTEGER) is
+	ccom_generate_class_header (cpp_obj: POINTER; is_interface: BOOLEAN; deferred1: BOOLEAN; is_frozen: BOOLEAN; expanded1: BOOLEAN; is_external: BOOLEAN; type_id: INTEGER) is
 			-- No description available.
 		external
-			"C++ [ecom_Core::Core %"ecom_Core_Core.h%"](EIF_OBJECT,EIF_OBJECT,EIF_INTEGER)"
-		end
-
-	ccom_generate_class_header (cpp_obj: POINTER; is_interface: BOOLEAN; deferred1: BOOLEAN; expanded1: BOOLEAN; is_external: BOOLEAN; type_id: INTEGER) is
-			-- No description available.
-		external
-			"C++ [ecom_Core::Core %"ecom_Core_Core.h%"](EIF_BOOLEAN,EIF_BOOLEAN,EIF_BOOLEAN,EIF_BOOLEAN,EIF_INTEGER)"
+			"C++ [ecom_EiffelCompiler::Core %"ecom_EiffelCompiler_Core.h%"](EIF_BOOLEAN,EIF_BOOLEAN,EIF_BOOLEAN,EIF_BOOLEAN,EIF_BOOLEAN,EIF_INTEGER)"
 		end
 
 	ccom_end_class (cpp_obj: POINTER) is
 			-- No description available.
 		external
-			"C++ [ecom_Core::Core %"ecom_Core_Core.h%"]()"
+			"C++ [ecom_EiffelCompiler::Core %"ecom_EiffelCompiler_Core.h%"]()"
 		end
 
 	ccom_add_to_parents_list (cpp_obj: POINTER; type_id: INTEGER) is
 			-- No description available.
 		external
-			"C++ [ecom_Core::Core %"ecom_Core_Core.h%"](EIF_INTEGER)"
+			"C++ [ecom_EiffelCompiler::Core %"ecom_EiffelCompiler_Core.h%"](EIF_INTEGER)"
+		end
+
+	ccom_add_interface (cpp_obj: POINTER; type_id: INTEGER) is
+			-- No description available.
+		external
+			"C++ [ecom_EiffelCompiler::Core %"ecom_EiffelCompiler_Core.h%"](EIF_INTEGER)"
 		end
 
 	ccom_end_parents_list (cpp_obj: POINTER) is
 			-- No description available.
 		external
-			"C++ [ecom_Core::Core %"ecom_Core_Core.h%"]()"
+			"C++ [ecom_EiffelCompiler::Core %"ecom_EiffelCompiler_Core.h%"]()"
 		end
 
 	ccom_start_features_list (cpp_obj: POINTER; type_id: INTEGER) is
 			-- No description available.
 		external
-			"C++ [ecom_Core::Core %"ecom_Core_Core.h%"](EIF_INTEGER)"
-		end
-
-	ccom_end_features_list (cpp_obj: POINTER) is
-			-- No description available.
-		external
-			"C++ [ecom_Core::Core %"ecom_Core_Core.h%"]()"
+			"C++ [ecom_EiffelCompiler::Core %"ecom_EiffelCompiler_Core.h%"](EIF_INTEGER)"
 		end
 
 	ccom_mark_invariant (cpp_obj: POINTER; feature_id: INTEGER) is
 			-- No description available.
 		external
-			"C++ [ecom_Core::Core %"ecom_Core_Core.h%"](EIF_INTEGER)"
+			"C++ [ecom_EiffelCompiler::Core %"ecom_EiffelCompiler_Core.h%"](EIF_INTEGER)"
 		end
 
 	ccom_mark_creation_routines (cpp_obj: POINTER; feature_id: ECOM_ARRAY [INTEGER]) is
 			-- No description available.
 		external
-			"C++ [ecom_Core::Core %"ecom_Core_Core.h%"](EIF_OBJECT)"
+			"C++ [ecom_EiffelCompiler::Core %"ecom_EiffelCompiler_Core.h%"](EIF_OBJECT)"
 		end
 
 	ccom_start_feature_description (cpp_obj: POINTER; arg_count: INTEGER) is
 			-- No description available.
 		external
-			"C++ [ecom_Core::Core %"ecom_Core_Core.h%"](EIF_INTEGER)"
+			"C++ [ecom_EiffelCompiler::Core %"ecom_EiffelCompiler_Core.h%"](EIF_INTEGER)"
 		end
 
-	ccom_generate_feature_nature (cpp_obj: POINTER; redefined: BOOLEAN; deferred1: BOOLEAN; frozen1: BOOLEAN; is_attribute: BOOLEAN) is
+	ccom_generate_interface_feature_identification (cpp_obj: POINTER; name: STRING; feature_id: INTEGER; is_attribute: BOOLEAN) is
 			-- No description available.
 		external
-			"C++ [ecom_Core::Core %"ecom_Core_Core.h%"](EIF_BOOLEAN,EIF_BOOLEAN,EIF_BOOLEAN,EIF_BOOLEAN)"
+			"C++ [ecom_EiffelCompiler::Core %"ecom_EiffelCompiler_Core.h%"](EIF_OBJECT,EIF_INTEGER,EIF_BOOLEAN)"
 		end
 
-	ccom_generate_feature_identification (cpp_obj: POINTER; name: STRING; feature_id: INTEGER; routine_ids: ECOM_ARRAY [INTEGER]; in_current_class: BOOLEAN; written_type_id: INTEGER) is
+	ccom_generate_feature_identification (cpp_obj: POINTER; name: STRING; feature_id: INTEGER; is_redefined: BOOLEAN; is_deferred: BOOLEAN; is_frozen: BOOLEAN; is_attribute: BOOLEAN; is_c_external: BOOLEAN; is_static: BOOLEAN) is
 			-- No description available.
 		external
-			"C++ [ecom_Core::Core %"ecom_Core_Core.h%"](EIF_OBJECT,EIF_INTEGER,EIF_OBJECT,EIF_BOOLEAN,EIF_INTEGER)"
+			"C++ [ecom_EiffelCompiler::Core %"ecom_EiffelCompiler_Core.h%"](EIF_OBJECT,EIF_INTEGER,EIF_BOOLEAN,EIF_BOOLEAN,EIF_BOOLEAN,EIF_BOOLEAN,EIF_BOOLEAN,EIF_BOOLEAN)"
 		end
 
 	ccom_generate_external_identification (cpp_obj: POINTER; name: STRING; com_name: STRING; external_kind: INTEGER; feature_id: INTEGER; routine_id: INTEGER; in_current_class: BOOLEAN; written_type_id: INTEGER; parameters: ECOM_ARRAY [STRING]; return_type: STRING) is
 			-- No description available.
 		external
-			"C++ [ecom_Core::Core %"ecom_Core_Core.h%"](EIF_OBJECT,EIF_OBJECT,EIF_INTEGER,EIF_INTEGER,EIF_INTEGER,EIF_BOOLEAN,EIF_INTEGER,EIF_OBJECT,EIF_OBJECT)"
+			"C++ [ecom_EiffelCompiler::Core %"ecom_EiffelCompiler_Core.h%"](EIF_OBJECT,EIF_OBJECT,EIF_INTEGER,EIF_INTEGER,EIF_INTEGER,EIF_BOOLEAN,EIF_INTEGER,EIF_OBJECT,EIF_OBJECT)"
 		end
 
 	ccom_generate_feature_return_type (cpp_obj: POINTER; type_id: INTEGER) is
 			-- No description available.
 		external
-			"C++ [ecom_Core::Core %"ecom_Core_Core.h%"](EIF_INTEGER)"
+			"C++ [ecom_EiffelCompiler::Core %"ecom_EiffelCompiler_Core.h%"](EIF_INTEGER)"
 		end
 
 	ccom_generate_feature_argument (cpp_obj: POINTER; name: STRING; type_id: INTEGER) is
 			-- No description available.
 		external
-			"C++ [ecom_Core::Core %"ecom_Core_Core.h%"](EIF_OBJECT,EIF_INTEGER)"
+			"C++ [ecom_EiffelCompiler::Core %"ecom_EiffelCompiler_Core.h%"](EIF_OBJECT,EIF_INTEGER)"
 		end
 
 	ccom_create_feature_description (cpp_obj: POINTER) is
 			-- No description available.
 		external
-			"C++ [ecom_Core::Core %"ecom_Core_Core.h%"]()"
-		end
-
-	ccom_check_renaming (cpp_obj: POINTER) is
-			-- No description available.
-		external
-			"C++ [ecom_Core::Core %"ecom_Core_Core.h%"]()"
-		end
-
-	ccom_check_renaming_and_redefinition (cpp_obj: POINTER) is
-			-- No description available.
-		external
-			"C++ [ecom_Core::Core %"ecom_Core_Core.h%"]()"
+			"C++ [ecom_EiffelCompiler::Core %"ecom_EiffelCompiler_Core.h%"]()"
 		end
 
 	ccom_define_entry_point (cpp_obj: POINTER; type_id: INTEGER; feature_id: INTEGER) is
 			-- No description available.
 		external
-			"C++ [ecom_Core::Core %"ecom_Core_Core.h%"](EIF_INTEGER,EIF_INTEGER)"
+			"C++ [ecom_EiffelCompiler::Core %"ecom_EiffelCompiler_Core.h%"](EIF_INTEGER,EIF_INTEGER)"
 		end
 
 	ccom_last_error (cpp_obj: POINTER): STRING is
 			-- No description available.
 		external
-			"C++ [ecom_Core::Core %"ecom_Core_Core.h%"](): EIF_REFERENCE"
+			"C++ [ecom_EiffelCompiler::Core %"ecom_EiffelCompiler_Core.h%"](): EIF_REFERENCE"
 		end
 
 	ccom_add_ca (cpp_obj: POINTER; target_type_id: INTEGER; attribute_type_id: INTEGER; arg_count: INTEGER) is
 			-- No description available.
 		external
-			"C++ [ecom_Core::Core %"ecom_Core_Core.h%"](EIF_INTEGER,EIF_INTEGER,EIF_INTEGER)"
+			"C++ [ecom_EiffelCompiler::Core %"ecom_EiffelCompiler_Core.h%"](EIF_INTEGER,EIF_INTEGER,EIF_INTEGER)"
 		end
 
 	ccom_generate_class_ca (cpp_obj: POINTER) is
 			-- No description available.
 		external
-			"C++ [ecom_Core::Core %"ecom_Core_Core.h%"]()"
+			"C++ [ecom_EiffelCompiler::Core %"ecom_EiffelCompiler_Core.h%"]()"
 		end
 
 	ccom_generate_feature_ca (cpp_obj: POINTER; feature_id: INTEGER) is
 			-- No description available.
 		external
-			"C++ [ecom_Core::Core %"ecom_Core_Core.h%"](EIF_INTEGER)"
+			"C++ [ecom_EiffelCompiler::Core %"ecom_EiffelCompiler_Core.h%"](EIF_INTEGER)"
 		end
 
 	ccom_add_catyped_arg (cpp_obj: POINTER; a_value: INTEGER; type_id: INTEGER) is
 			-- No description available.
 		external
-			"C++ [ecom_Core::Core %"ecom_Core_Core.h%"](EIF_INTEGER,EIF_INTEGER)"
+			"C++ [ecom_EiffelCompiler::Core %"ecom_EiffelCompiler_Core.h%"](EIF_INTEGER,EIF_INTEGER)"
 		end
 
 	ccom_add_cainteger_arg (cpp_obj: POINTER; a_value: INTEGER) is
 			-- No description available.
 		external
-			"C++ [ecom_Core::Core %"ecom_Core_Core.h%"](EIF_INTEGER)"
+			"C++ [ecom_EiffelCompiler::Core %"ecom_EiffelCompiler_Core.h%"](EIF_INTEGER)"
 		end
 
 	ccom_add_castring_arg (cpp_obj: POINTER; a_value: STRING) is
 			-- No description available.
 		external
-			"C++ [ecom_Core::Core %"ecom_Core_Core.h%"](EIF_OBJECT)"
+			"C++ [ecom_EiffelCompiler::Core %"ecom_EiffelCompiler_Core.h%"](EIF_OBJECT)"
 		end
 
 	ccom_add_careal_arg (cpp_obj: POINTER; a_value: REAL) is
 			-- No description available.
 		external
-			"C++ [ecom_Core::Core %"ecom_Core_Core.h%"](EIF_REAL)"
+			"C++ [ecom_EiffelCompiler::Core %"ecom_EiffelCompiler_Core.h%"](EIF_REAL)"
 		end
 
 	ccom_add_cadouble_arg (cpp_obj: POINTER; a_value: DOUBLE) is
 			-- No description available.
 		external
-			"C++ [ecom_Core::Core %"ecom_Core_Core.h%"](EIF_DOUBLE)"
+			"C++ [ecom_EiffelCompiler::Core %"ecom_EiffelCompiler_Core.h%"](EIF_DOUBLE)"
 		end
 
 	ccom_add_cacharacter_arg (cpp_obj: POINTER; a_value: INTEGER) is
 			-- No description available.
 		external
-			"C++ [ecom_Core::Core %"ecom_Core_Core.h%"](EIF_INTEGER)"
+			"C++ [ecom_EiffelCompiler::Core %"ecom_EiffelCompiler_Core.h%"](EIF_INTEGER)"
 		end
 
 	ccom_add_caboolean_arg (cpp_obj: POINTER; a_value: BOOLEAN) is
 			-- No description available.
 		external
-			"C++ [ecom_Core::Core %"ecom_Core_Core.h%"](EIF_BOOLEAN)"
+			"C++ [ecom_EiffelCompiler::Core %"ecom_EiffelCompiler_Core.h%"](EIF_BOOLEAN)"
 		end
 
 	ccom_add_caarray_integer_arg (cpp_obj: POINTER; a_value: ECOM_ARRAY [INTEGER]) is
 			-- No description available.
 		external
-			"C++ [ecom_Core::Core %"ecom_Core_Core.h%"](EIF_OBJECT)"
+			"C++ [ecom_EiffelCompiler::Core %"ecom_EiffelCompiler_Core.h%"](EIF_OBJECT)"
 		end
 
 	ccom_add_caarray_string_arg (cpp_obj: POINTER; a_value: ECOM_ARRAY [STRING]) is
 			-- No description available.
 		external
-			"C++ [ecom_Core::Core %"ecom_Core_Core.h%"](EIF_OBJECT)"
+			"C++ [ecom_EiffelCompiler::Core %"ecom_EiffelCompiler_Core.h%"](EIF_OBJECT)"
 		end
 
 	ccom_add_caarray_real_arg (cpp_obj: POINTER; a_value: ECOM_ARRAY [REAL]) is
 			-- No description available.
 		external
-			"C++ [ecom_Core::Core %"ecom_Core_Core.h%"](EIF_OBJECT)"
+			"C++ [ecom_EiffelCompiler::Core %"ecom_EiffelCompiler_Core.h%"](EIF_OBJECT)"
 		end
 
 	ccom_add_caarray_double_arg (cpp_obj: POINTER; a_value: ECOM_ARRAY [DOUBLE]) is
 			-- No description available.
 		external
-			"C++ [ecom_Core::Core %"ecom_Core_Core.h%"](EIF_OBJECT)"
+			"C++ [ecom_EiffelCompiler::Core %"ecom_EiffelCompiler_Core.h%"](EIF_OBJECT)"
 		end
 
 	ccom_add_caarray_character_arg (cpp_obj: POINTER; a_value: ECOM_ARRAY [INTEGER]) is
 			-- No description available.
 		external
-			"C++ [ecom_Core::Core %"ecom_Core_Core.h%"](EIF_OBJECT)"
+			"C++ [ecom_EiffelCompiler::Core %"ecom_EiffelCompiler_Core.h%"](EIF_OBJECT)"
 		end
 
 	ccom_add_caarray_boolean_arg (cpp_obj: POINTER; a_value: ECOM_ARRAY [BOOLEAN]) is
 			-- No description available.
 		external
-			"C++ [ecom_Core::Core %"ecom_Core_Core.h%"](EIF_OBJECT)"
+			"C++ [ecom_EiffelCompiler::Core %"ecom_EiffelCompiler_Core.h%"](EIF_OBJECT)"
 		end
 
 	ccom_start_il_generation (cpp_obj: POINTER; type_id: INTEGER) is
 			-- No description available.
 		external
-			"C++ [ecom_Core::Core %"ecom_Core_Core.h%"](EIF_INTEGER)"
+			"C++ [ecom_EiffelCompiler::Core %"ecom_EiffelCompiler_Core.h%"](EIF_INTEGER)"
 		end
 
-	ccom_generate_feature_il (cpp_obj: POINTER; feature_id: INTEGER) is
+	ccom_generate_feature_il (cpp_obj: POINTER; feature_id: INTEGER; type_id: INTEGER; code_feature_id: INTEGER) is
 			-- No description available.
 		external
-			"C++ [ecom_Core::Core %"ecom_Core_Core.h%"](EIF_INTEGER)"
+			"C++ [ecom_EiffelCompiler::Core %"ecom_EiffelCompiler_Core.h%"](EIF_INTEGER,EIF_INTEGER,EIF_INTEGER)"
+		end
+
+	ccom_generate_feature_internal_clone (cpp_obj: POINTER; feature_id: INTEGER) is
+			-- No description available.
+		external
+			"C++ [ecom_EiffelCompiler::Core %"ecom_EiffelCompiler_Core.h%"](EIF_INTEGER)"
+		end
+
+	ccom_generate_implementation_feature_il (cpp_obj: POINTER; feature_id: INTEGER) is
+			-- No description available.
+		external
+			"C++ [ecom_EiffelCompiler::Core %"ecom_EiffelCompiler_Core.h%"](EIF_INTEGER)"
+		end
+
+	ccom_generate_method_impl (cpp_obj: POINTER; feature_id: INTEGER; parent_type_id: INTEGER; parent_feature_id: INTEGER) is
+			-- No description available.
+		external
+			"C++ [ecom_EiffelCompiler::Core %"ecom_EiffelCompiler_Core.h%"](EIF_INTEGER,EIF_INTEGER,EIF_INTEGER)"
 		end
 
 	ccom_generate_creation_feature_il (cpp_obj: POINTER; feature_id: INTEGER) is
 			-- No description available.
 		external
-			"C++ [ecom_Core::Core %"ecom_Core_Core.h%"](EIF_INTEGER)"
+			"C++ [ecom_EiffelCompiler::Core %"ecom_EiffelCompiler_Core.h%"](EIF_INTEGER)"
 		end
 
 	ccom_generate_external_call (cpp_obj: POINTER; external_type_name: STRING; name: STRING; external_kind: INTEGER; parameter_types: ECOM_ARRAY [STRING]; return_type: STRING; is_virtual: BOOLEAN; type_id: INTEGER; feature_id: INTEGER) is
 			-- No description available.
 		external
-			"C++ [ecom_Core::Core %"ecom_Core_Core.h%"](EIF_OBJECT,EIF_OBJECT,EIF_INTEGER,EIF_OBJECT,EIF_OBJECT,EIF_BOOLEAN,EIF_INTEGER,EIF_INTEGER)"
+			"C++ [ecom_EiffelCompiler::Core %"ecom_EiffelCompiler_Core.h%"](EIF_OBJECT,EIF_OBJECT,EIF_INTEGER,EIF_OBJECT,EIF_OBJECT,EIF_BOOLEAN,EIF_INTEGER,EIF_INTEGER)"
 		end
 
 	ccom_put_result_info (cpp_obj: POINTER; type_id: INTEGER) is
 			-- No description available.
 		external
-			"C++ [ecom_Core::Core %"ecom_Core_Core.h%"](EIF_INTEGER)"
+			"C++ [ecom_EiffelCompiler::Core %"ecom_EiffelCompiler_Core.h%"](EIF_INTEGER)"
 		end
 
 	ccom_put_local_info (cpp_obj: POINTER; type_id: INTEGER; name: STRING) is
 			-- No description available.
 		external
-			"C++ [ecom_Core::Core %"ecom_Core_Core.h%"](EIF_INTEGER,EIF_OBJECT)"
+			"C++ [ecom_EiffelCompiler::Core %"ecom_EiffelCompiler_Core.h%"](EIF_INTEGER,EIF_OBJECT)"
 		end
 
 	ccom_create_like_current_object (cpp_obj: POINTER) is
 			-- No description available.
 		external
-			"C++ [ecom_Core::Core %"ecom_Core_Core.h%"]()"
+			"C++ [ecom_EiffelCompiler::Core %"ecom_EiffelCompiler_Core.h%"]()"
 		end
 
 	ccom_create_object (cpp_obj: POINTER; type_id: INTEGER) is
 			-- No description available.
 		external
-			"C++ [ecom_Core::Core %"ecom_Core_Core.h%"](EIF_INTEGER)"
+			"C++ [ecom_EiffelCompiler::Core %"ecom_EiffelCompiler_Core.h%"](EIF_INTEGER)"
 		end
 
 	ccom_create_attribute_object (cpp_obj: POINTER; type_id: INTEGER; feature_id: INTEGER) is
 			-- No description available.
 		external
-			"C++ [ecom_Core::Core %"ecom_Core_Core.h%"](EIF_INTEGER,EIF_INTEGER)"
+			"C++ [ecom_EiffelCompiler::Core %"ecom_EiffelCompiler_Core.h%"](EIF_INTEGER,EIF_INTEGER)"
 		end
 
 	ccom_duplicate_top (cpp_obj: POINTER) is
 			-- No description available.
 		external
-			"C++ [ecom_Core::Core %"ecom_Core_Core.h%"]()"
+			"C++ [ecom_EiffelCompiler::Core %"ecom_EiffelCompiler_Core.h%"]()"
 		end
 
 	ccom_pop (cpp_obj: POINTER) is
 			-- No description available.
 		external
-			"C++ [ecom_Core::Core %"ecom_Core_Core.h%"]()"
+			"C++ [ecom_EiffelCompiler::Core %"ecom_EiffelCompiler_Core.h%"]()"
 		end
 
 	ccom_generate_metamorphose (cpp_obj: POINTER; type_id: INTEGER) is
 			-- No description available.
 		external
-			"C++ [ecom_Core::Core %"ecom_Core_Core.h%"](EIF_INTEGER)"
+			"C++ [ecom_EiffelCompiler::Core %"ecom_EiffelCompiler_Core.h%"](EIF_INTEGER)"
 		end
 
 	ccom_generate_unmetamorphose (cpp_obj: POINTER; type_id: INTEGER) is
 			-- No description available.
 		external
-			"C++ [ecom_Core::Core %"ecom_Core_Core.h%"](EIF_INTEGER)"
+			"C++ [ecom_EiffelCompiler::Core %"ecom_EiffelCompiler_Core.h%"](EIF_INTEGER)"
 		end
 
 	ccom_generate_check_cast (cpp_obj: POINTER; source_type_id: INTEGER; target_type_id: INTEGER) is
 			-- No description available.
 		external
-			"C++ [ecom_Core::Core %"ecom_Core_Core.h%"](EIF_INTEGER,EIF_INTEGER)"
+			"C++ [ecom_EiffelCompiler::Core %"ecom_EiffelCompiler_Core.h%"](EIF_INTEGER,EIF_INTEGER)"
+		end
+
+	ccom_convert_to_native_int (cpp_obj: POINTER) is
+			-- No description available.
+		external
+			"C++ [ecom_EiffelCompiler::Core %"ecom_EiffelCompiler_Core.h%"]()"
+		end
+
+	ccom_convert_to_boolean (cpp_obj: POINTER) is
+			-- No description available.
+		external
+			"C++ [ecom_EiffelCompiler::Core %"ecom_EiffelCompiler_Core.h%"]()"
+		end
+
+	ccom_convert_to_character (cpp_obj: POINTER) is
+			-- No description available.
+		external
+			"C++ [ecom_EiffelCompiler::Core %"ecom_EiffelCompiler_Core.h%"]()"
+		end
+
+	ccom_convert_to_integer8 (cpp_obj: POINTER) is
+			-- No description available.
+		external
+			"C++ [ecom_EiffelCompiler::Core %"ecom_EiffelCompiler_Core.h%"]()"
+		end
+
+	ccom_convert_to_integer16 (cpp_obj: POINTER) is
+			-- No description available.
+		external
+			"C++ [ecom_EiffelCompiler::Core %"ecom_EiffelCompiler_Core.h%"]()"
+		end
+
+	ccom_convert_to_integer32 (cpp_obj: POINTER) is
+			-- No description available.
+		external
+			"C++ [ecom_EiffelCompiler::Core %"ecom_EiffelCompiler_Core.h%"]()"
+		end
+
+	ccom_convert_to_integer64 (cpp_obj: POINTER) is
+			-- No description available.
+		external
+			"C++ [ecom_EiffelCompiler::Core %"ecom_EiffelCompiler_Core.h%"]()"
+		end
+
+	ccom_convert_to_double (cpp_obj: POINTER) is
+			-- No description available.
+		external
+			"C++ [ecom_EiffelCompiler::Core %"ecom_EiffelCompiler_Core.h%"]()"
+		end
+
+	ccom_convert_to_real (cpp_obj: POINTER) is
+			-- No description available.
+		external
+			"C++ [ecom_EiffelCompiler::Core %"ecom_EiffelCompiler_Core.h%"]()"
 		end
 
 	ccom_generate_current (cpp_obj: POINTER) is
 			-- No description available.
 		external
-			"C++ [ecom_Core::Core %"ecom_Core_Core.h%"]()"
+			"C++ [ecom_EiffelCompiler::Core %"ecom_EiffelCompiler_Core.h%"]()"
 		end
 
 	ccom_generate_result (cpp_obj: POINTER) is
 			-- No description available.
 		external
-			"C++ [ecom_Core::Core %"ecom_Core_Core.h%"]()"
+			"C++ [ecom_EiffelCompiler::Core %"ecom_EiffelCompiler_Core.h%"]()"
 		end
 
 	ccom_generate_attribute (cpp_obj: POINTER; type_id: INTEGER; feature_id: INTEGER) is
 			-- No description available.
 		external
-			"C++ [ecom_Core::Core %"ecom_Core_Core.h%"](EIF_INTEGER,EIF_INTEGER)"
+			"C++ [ecom_EiffelCompiler::Core %"ecom_EiffelCompiler_Core.h%"](EIF_INTEGER,EIF_INTEGER)"
 		end
 
 	ccom_generate_feature_access (cpp_obj: POINTER; type_id: INTEGER; feature_id: INTEGER; is_virtual: BOOLEAN) is
 			-- No description available.
 		external
-			"C++ [ecom_Core::Core %"ecom_Core_Core.h%"](EIF_INTEGER,EIF_INTEGER,EIF_BOOLEAN)"
+			"C++ [ecom_EiffelCompiler::Core %"ecom_EiffelCompiler_Core.h%"](EIF_INTEGER,EIF_INTEGER,EIF_BOOLEAN)"
+		end
+
+	ccom_generate_precursor_feature_access (cpp_obj: POINTER; type_id: INTEGER; feature_id: INTEGER) is
+			-- No description available.
+		external
+			"C++ [ecom_EiffelCompiler::Core %"ecom_EiffelCompiler_Core.h%"](EIF_INTEGER,EIF_INTEGER)"
 		end
 
 	ccom_generate_argument (cpp_obj: POINTER; n: INTEGER) is
 			-- No description available.
 		external
-			"C++ [ecom_Core::Core %"ecom_Core_Core.h%"](EIF_INTEGER)"
+			"C++ [ecom_EiffelCompiler::Core %"ecom_EiffelCompiler_Core.h%"](EIF_INTEGER)"
 		end
 
 	ccom_generate_local (cpp_obj: POINTER; n: INTEGER) is
 			-- No description available.
 		external
-			"C++ [ecom_Core::Core %"ecom_Core_Core.h%"](EIF_INTEGER)"
+			"C++ [ecom_EiffelCompiler::Core %"ecom_EiffelCompiler_Core.h%"](EIF_INTEGER)"
 		end
 
 	ccom_generate_in_assertion_test (cpp_obj: POINTER; end_of_assert_label: INTEGER) is
 			-- No description available.
 		external
-			"C++ [ecom_Core::Core %"ecom_Core_Core.h%"](EIF_INTEGER)"
+			"C++ [ecom_EiffelCompiler::Core %"ecom_EiffelCompiler_Core.h%"](EIF_INTEGER)"
 		end
 
 	ccom_generate_set_assertion_status (cpp_obj: POINTER) is
 			-- No description available.
 		external
-			"C++ [ecom_Core::Core %"ecom_Core_Core.h%"]()"
+			"C++ [ecom_EiffelCompiler::Core %"ecom_EiffelCompiler_Core.h%"]()"
 		end
 
 	ccom_generate_restore_assertion_status (cpp_obj: POINTER) is
 			-- No description available.
 		external
-			"C++ [ecom_Core::Core %"ecom_Core_Core.h%"]()"
+			"C++ [ecom_EiffelCompiler::Core %"ecom_EiffelCompiler_Core.h%"]()"
 		end
 
 	ccom_generate_assertion_check (cpp_obj: POINTER; assert_type: INTEGER; tag: STRING) is
 			-- No description available.
 		external
-			"C++ [ecom_Core::Core %"ecom_Core_Core.h%"](EIF_INTEGER,EIF_OBJECT)"
+			"C++ [ecom_EiffelCompiler::Core %"ecom_EiffelCompiler_Core.h%"](EIF_INTEGER,EIF_OBJECT)"
 		end
 
 	ccom_generate_precondition_check (cpp_obj: POINTER; tag: STRING; label_id: INTEGER) is
 			-- No description available.
 		external
-			"C++ [ecom_Core::Core %"ecom_Core_Core.h%"](EIF_OBJECT,EIF_INTEGER)"
+			"C++ [ecom_EiffelCompiler::Core %"ecom_EiffelCompiler_Core.h%"](EIF_OBJECT,EIF_INTEGER)"
 		end
 
 	ccom_generate_precondition_violation (cpp_obj: POINTER) is
 			-- No description available.
 		external
-			"C++ [ecom_Core::Core %"ecom_Core_Core.h%"]()"
+			"C++ [ecom_EiffelCompiler::Core %"ecom_EiffelCompiler_Core.h%"]()"
 		end
 
 	ccom_generate_invariant_checking (cpp_obj: POINTER; type_id: INTEGER) is
 			-- No description available.
 		external
-			"C++ [ecom_Core::Core %"ecom_Core_Core.h%"](EIF_INTEGER)"
+			"C++ [ecom_EiffelCompiler::Core %"ecom_EiffelCompiler_Core.h%"](EIF_INTEGER)"
 		end
 
 	ccom_generate_start_exception_block (cpp_obj: POINTER) is
 			-- No description available.
 		external
-			"C++ [ecom_Core::Core %"ecom_Core_Core.h%"]()"
+			"C++ [ecom_EiffelCompiler::Core %"ecom_EiffelCompiler_Core.h%"]()"
 		end
 
 	ccom_generate_start_rescue (cpp_obj: POINTER) is
 			-- No description available.
 		external
-			"C++ [ecom_Core::Core %"ecom_Core_Core.h%"]()"
+			"C++ [ecom_EiffelCompiler::Core %"ecom_EiffelCompiler_Core.h%"]()"
 		end
 
 	ccom_generate_end_exception_block (cpp_obj: POINTER) is
 			-- No description available.
 		external
-			"C++ [ecom_Core::Core %"ecom_Core_Core.h%"]()"
+			"C++ [ecom_EiffelCompiler::Core %"ecom_EiffelCompiler_Core.h%"]()"
 		end
 
 	ccom_generate_is_instance_of (cpp_obj: POINTER; type_id: INTEGER) is
 			-- No description available.
 		external
-			"C++ [ecom_Core::Core %"ecom_Core_Core.h%"](EIF_INTEGER)"
+			"C++ [ecom_EiffelCompiler::Core %"ecom_EiffelCompiler_Core.h%"](EIF_INTEGER)"
 		end
 
-	ccom_generate_attribute_assignment (cpp_obj: POINTER; feature_id: INTEGER) is
+	ccom_generate_attribute_assignment (cpp_obj: POINTER; type_id: INTEGER; feature_id: INTEGER) is
 			-- No description available.
 		external
-			"C++ [ecom_Core::Core %"ecom_Core_Core.h%"](EIF_INTEGER)"
+			"C++ [ecom_EiffelCompiler::Core %"ecom_EiffelCompiler_Core.h%"](EIF_INTEGER,EIF_INTEGER)"
 		end
 
 	ccom_generate_local_assignment (cpp_obj: POINTER; n: INTEGER) is
 			-- No description available.
 		external
-			"C++ [ecom_Core::Core %"ecom_Core_Core.h%"](EIF_INTEGER)"
+			"C++ [ecom_EiffelCompiler::Core %"ecom_EiffelCompiler_Core.h%"](EIF_INTEGER)"
 		end
 
 	ccom_generate_result_assignment (cpp_obj: POINTER) is
 			-- No description available.
 		external
-			"C++ [ecom_Core::Core %"ecom_Core_Core.h%"]()"
+			"C++ [ecom_EiffelCompiler::Core %"ecom_EiffelCompiler_Core.h%"]()"
 		end
 
 	ccom_generate_local_address (cpp_obj: POINTER; n: INTEGER) is
 			-- No description available.
 		external
-			"C++ [ecom_Core::Core %"ecom_Core_Core.h%"](EIF_INTEGER)"
+			"C++ [ecom_EiffelCompiler::Core %"ecom_EiffelCompiler_Core.h%"](EIF_INTEGER)"
 		end
 
 	ccom_generate_routine_address (cpp_obj: POINTER; type_id: INTEGER; feature_id: INTEGER) is
 			-- No description available.
 		external
-			"C++ [ecom_Core::Core %"ecom_Core_Core.h%"](EIF_INTEGER,EIF_INTEGER)"
+			"C++ [ecom_EiffelCompiler::Core %"ecom_EiffelCompiler_Core.h%"](EIF_INTEGER,EIF_INTEGER)"
 		end
 
 	ccom_generate_result_address (cpp_obj: POINTER) is
 			-- No description available.
 		external
-			"C++ [ecom_Core::Core %"ecom_Core_Core.h%"]()"
+			"C++ [ecom_EiffelCompiler::Core %"ecom_EiffelCompiler_Core.h%"]()"
 		end
 
 	ccom_generate_current_address (cpp_obj: POINTER) is
 			-- No description available.
 		external
-			"C++ [ecom_Core::Core %"ecom_Core_Core.h%"]()"
+			"C++ [ecom_EiffelCompiler::Core %"ecom_EiffelCompiler_Core.h%"]()"
 		end
 
 	ccom_generate_attribute_address (cpp_obj: POINTER; type_id: INTEGER; feature_id: INTEGER) is
 			-- No description available.
 		external
-			"C++ [ecom_Core::Core %"ecom_Core_Core.h%"](EIF_INTEGER,EIF_INTEGER)"
+			"C++ [ecom_EiffelCompiler::Core %"ecom_EiffelCompiler_Core.h%"](EIF_INTEGER,EIF_INTEGER)"
 		end
 
 	ccom_generate_argument_address (cpp_obj: POINTER; n: INTEGER) is
 			-- No description available.
 		external
-			"C++ [ecom_Core::Core %"ecom_Core_Core.h%"](EIF_INTEGER)"
+			"C++ [ecom_EiffelCompiler::Core %"ecom_EiffelCompiler_Core.h%"](EIF_INTEGER)"
 		end
 
 	ccom_generate_load_from_address (cpp_obj: POINTER; type_id: INTEGER) is
 			-- No description available.
 		external
-			"C++ [ecom_Core::Core %"ecom_Core_Core.h%"](EIF_INTEGER)"
+			"C++ [ecom_EiffelCompiler::Core %"ecom_EiffelCompiler_Core.h%"](EIF_INTEGER)"
 		end
 
 	ccom_generate_array_access (cpp_obj: POINTER; kind: INTEGER) is
 			-- No description available.
 		external
-			"C++ [ecom_Core::Core %"ecom_Core_Core.h%"](EIF_INTEGER)"
+			"C++ [ecom_EiffelCompiler::Core %"ecom_EiffelCompiler_Core.h%"](EIF_INTEGER)"
 		end
 
 	ccom_generate_array_write (cpp_obj: POINTER; kind: INTEGER) is
 			-- No description available.
 		external
-			"C++ [ecom_Core::Core %"ecom_Core_Core.h%"](EIF_INTEGER)"
+			"C++ [ecom_EiffelCompiler::Core %"ecom_EiffelCompiler_Core.h%"](EIF_INTEGER)"
 		end
 
 	ccom_generate_array_creation (cpp_obj: POINTER; type_id: INTEGER) is
 			-- No description available.
 		external
-			"C++ [ecom_Core::Core %"ecom_Core_Core.h%"](EIF_INTEGER)"
+			"C++ [ecom_EiffelCompiler::Core %"ecom_EiffelCompiler_Core.h%"](EIF_INTEGER)"
 		end
 
 	ccom_generate_return (cpp_obj: POINTER) is
 			-- No description available.
 		external
-			"C++ [ecom_Core::Core %"ecom_Core_Core.h%"]()"
+			"C++ [ecom_EiffelCompiler::Core %"ecom_EiffelCompiler_Core.h%"]()"
 		end
 
 	ccom_generate_return_value (cpp_obj: POINTER) is
 			-- No description available.
 		external
-			"C++ [ecom_Core::Core %"ecom_Core_Core.h%"]()"
+			"C++ [ecom_EiffelCompiler::Core %"ecom_EiffelCompiler_Core.h%"]()"
 		end
 
 	ccom_generate_once_done_info (cpp_obj: POINTER; name: STRING) is
 			-- No description available.
 		external
-			"C++ [ecom_Core::Core %"ecom_Core_Core.h%"](EIF_OBJECT)"
+			"C++ [ecom_EiffelCompiler::Core %"ecom_EiffelCompiler_Core.h%"](EIF_OBJECT)"
 		end
 
 	ccom_generate_once_result_info (cpp_obj: POINTER; name: STRING; type_id: INTEGER) is
 			-- No description available.
 		external
-			"C++ [ecom_Core::Core %"ecom_Core_Core.h%"](EIF_OBJECT,EIF_INTEGER)"
+			"C++ [ecom_EiffelCompiler::Core %"ecom_EiffelCompiler_Core.h%"](EIF_OBJECT,EIF_INTEGER)"
 		end
 
 	ccom_generate_once_test (cpp_obj: POINTER) is
 			-- No description available.
 		external
-			"C++ [ecom_Core::Core %"ecom_Core_Core.h%"]()"
+			"C++ [ecom_EiffelCompiler::Core %"ecom_EiffelCompiler_Core.h%"]()"
 		end
 
 	ccom_generate_once_result (cpp_obj: POINTER) is
 			-- No description available.
 		external
-			"C++ [ecom_Core::Core %"ecom_Core_Core.h%"]()"
+			"C++ [ecom_EiffelCompiler::Core %"ecom_EiffelCompiler_Core.h%"]()"
 		end
 
 	ccom_generate_once_store_result (cpp_obj: POINTER) is
 			-- No description available.
 		external
-			"C++ [ecom_Core::Core %"ecom_Core_Core.h%"]()"
+			"C++ [ecom_EiffelCompiler::Core %"ecom_EiffelCompiler_Core.h%"]()"
 		end
 
 	ccom_generate_array_lower (cpp_obj: POINTER) is
 			-- No description available.
 		external
-			"C++ [ecom_Core::Core %"ecom_Core_Core.h%"]()"
+			"C++ [ecom_EiffelCompiler::Core %"ecom_EiffelCompiler_Core.h%"]()"
 		end
 
 	ccom_generate_array_upper (cpp_obj: POINTER) is
 			-- No description available.
 		external
-			"C++ [ecom_Core::Core %"ecom_Core_Core.h%"]()"
+			"C++ [ecom_EiffelCompiler::Core %"ecom_EiffelCompiler_Core.h%"]()"
 		end
 
 	ccom_generate_array_count (cpp_obj: POINTER) is
 			-- No description available.
 		external
-			"C++ [ecom_Core::Core %"ecom_Core_Core.h%"]()"
+			"C++ [ecom_EiffelCompiler::Core %"ecom_EiffelCompiler_Core.h%"]()"
 		end
 
 	ccom_put_void (cpp_obj: POINTER) is
 			-- No description available.
 		external
-			"C++ [ecom_Core::Core %"ecom_Core_Core.h%"]()"
+			"C++ [ecom_EiffelCompiler::Core %"ecom_EiffelCompiler_Core.h%"]()"
 		end
 
 	ccom_put_manifest_string (cpp_obj: POINTER; s: STRING) is
 			-- No description available.
 		external
-			"C++ [ecom_Core::Core %"ecom_Core_Core.h%"](EIF_OBJECT)"
+			"C++ [ecom_EiffelCompiler::Core %"ecom_EiffelCompiler_Core.h%"](EIF_OBJECT)"
+		end
+
+	ccom_put_integer8_constant (cpp_obj: POINTER; i: INTEGER) is
+			-- No description available.
+		external
+			"C++ [ecom_EiffelCompiler::Core %"ecom_EiffelCompiler_Core.h%"](EIF_INTEGER)"
+		end
+
+	ccom_put_integer16_constant (cpp_obj: POINTER; i: INTEGER) is
+			-- No description available.
+		external
+			"C++ [ecom_EiffelCompiler::Core %"ecom_EiffelCompiler_Core.h%"](EIF_INTEGER)"
 		end
 
 	ccom_put_integer32_constant (cpp_obj: POINTER; i: INTEGER) is
 			-- No description available.
 		external
-			"C++ [ecom_Core::Core %"ecom_Core_Core.h%"](EIF_INTEGER)"
+			"C++ [ecom_EiffelCompiler::Core %"ecom_EiffelCompiler_Core.h%"](EIF_INTEGER)"
+		end
+
+	ccom_put_integer64_constant (cpp_obj: POINTER; i: INTEGER) is
+			-- No description available.
+		external
+			"C++ [ecom_EiffelCompiler::Core %"ecom_EiffelCompiler_Core.h%"](EIF_INTEGER)"
 		end
 
 	ccom_put_double_constant (cpp_obj: POINTER; d: DOUBLE) is
 			-- No description available.
 		external
-			"C++ [ecom_Core::Core %"ecom_Core_Core.h%"](EIF_DOUBLE)"
+			"C++ [ecom_EiffelCompiler::Core %"ecom_EiffelCompiler_Core.h%"](EIF_DOUBLE)"
+		end
+
+	ccom_put_real_constant (cpp_obj: POINTER; d: REAL) is
+			-- No description available.
+		external
+			"C++ [ecom_EiffelCompiler::Core %"ecom_EiffelCompiler_Core.h%"](EIF_REAL)"
 		end
 
 	ccom_put_character_constant (cpp_obj: POINTER; c: INTEGER) is
 			-- No description available.
 		external
-			"C++ [ecom_Core::Core %"ecom_Core_Core.h%"](EIF_INTEGER)"
+			"C++ [ecom_EiffelCompiler::Core %"ecom_EiffelCompiler_Core.h%"](EIF_INTEGER)"
 		end
 
 	ccom_put_boolean_constant (cpp_obj: POINTER; b: BOOLEAN) is
 			-- No description available.
 		external
-			"C++ [ecom_Core::Core %"ecom_Core_Core.h%"](EIF_BOOLEAN)"
+			"C++ [ecom_EiffelCompiler::Core %"ecom_EiffelCompiler_Core.h%"](EIF_BOOLEAN)"
 		end
 
 	ccom_branch_on_true (cpp_obj: POINTER; label: INTEGER) is
 			-- No description available.
 		external
-			"C++ [ecom_Core::Core %"ecom_Core_Core.h%"](EIF_INTEGER)"
+			"C++ [ecom_EiffelCompiler::Core %"ecom_EiffelCompiler_Core.h%"](EIF_INTEGER)"
 		end
 
 	ccom_branch_on_false (cpp_obj: POINTER; label: INTEGER) is
 			-- No description available.
 		external
-			"C++ [ecom_Core::Core %"ecom_Core_Core.h%"](EIF_INTEGER)"
+			"C++ [ecom_EiffelCompiler::Core %"ecom_EiffelCompiler_Core.h%"](EIF_INTEGER)"
 		end
 
 	ccom_branch_to (cpp_obj: POINTER; label: INTEGER) is
 			-- No description available.
 		external
-			"C++ [ecom_Core::Core %"ecom_Core_Core.h%"](EIF_INTEGER)"
+			"C++ [ecom_EiffelCompiler::Core %"ecom_EiffelCompiler_Core.h%"](EIF_INTEGER)"
 		end
 
 	ccom_mark_label (cpp_obj: POINTER; label: INTEGER) is
 			-- No description available.
 		external
-			"C++ [ecom_Core::Core %"ecom_Core_Core.h%"](EIF_INTEGER)"
+			"C++ [ecom_EiffelCompiler::Core %"ecom_EiffelCompiler_Core.h%"](EIF_INTEGER)"
 		end
 
 	ccom_generate_lt (cpp_obj: POINTER) is
 			-- No description available.
 		external
-			"C++ [ecom_Core::Core %"ecom_Core_Core.h%"]()"
+			"C++ [ecom_EiffelCompiler::Core %"ecom_EiffelCompiler_Core.h%"]()"
 		end
 
 	ccom_generate_le (cpp_obj: POINTER) is
 			-- No description available.
 		external
-			"C++ [ecom_Core::Core %"ecom_Core_Core.h%"]()"
+			"C++ [ecom_EiffelCompiler::Core %"ecom_EiffelCompiler_Core.h%"]()"
 		end
 
 	ccom_generate_gt (cpp_obj: POINTER) is
 			-- No description available.
 		external
-			"C++ [ecom_Core::Core %"ecom_Core_Core.h%"]()"
+			"C++ [ecom_EiffelCompiler::Core %"ecom_EiffelCompiler_Core.h%"]()"
 		end
 
 	ccom_generate_ge (cpp_obj: POINTER) is
 			-- No description available.
 		external
-			"C++ [ecom_Core::Core %"ecom_Core_Core.h%"]()"
+			"C++ [ecom_EiffelCompiler::Core %"ecom_EiffelCompiler_Core.h%"]()"
 		end
 
 	ccom_generate_star (cpp_obj: POINTER) is
 			-- No description available.
 		external
-			"C++ [ecom_Core::Core %"ecom_Core_Core.h%"]()"
-		end
-
-	ccom_generate_slash (cpp_obj: POINTER) is
-			-- No description available.
-		external
-			"C++ [ecom_Core::Core %"ecom_Core_Core.h%"]()"
+			"C++ [ecom_EiffelCompiler::Core %"ecom_EiffelCompiler_Core.h%"]()"
 		end
 
 	ccom_generate_power (cpp_obj: POINTER) is
 			-- No description available.
 		external
-			"C++ [ecom_Core::Core %"ecom_Core_Core.h%"]()"
+			"C++ [ecom_EiffelCompiler::Core %"ecom_EiffelCompiler_Core.h%"]()"
+		end
+
+	ccom_generate_max (cpp_obj: POINTER; type_id: INTEGER) is
+			-- No description available.
+		external
+			"C++ [ecom_EiffelCompiler::Core %"ecom_EiffelCompiler_Core.h%"](EIF_INTEGER)"
+		end
+
+	ccom_generate_min (cpp_obj: POINTER; type_id: INTEGER) is
+			-- No description available.
+		external
+			"C++ [ecom_EiffelCompiler::Core %"ecom_EiffelCompiler_Core.h%"](EIF_INTEGER)"
+		end
+
+	ccom_generate_abs (cpp_obj: POINTER; type_id: INTEGER) is
+			-- No description available.
+		external
+			"C++ [ecom_EiffelCompiler::Core %"ecom_EiffelCompiler_Core.h%"](EIF_INTEGER)"
+		end
+
+	ccom_generate_to_string (cpp_obj: POINTER) is
+			-- No description available.
+		external
+			"C++ [ecom_EiffelCompiler::Core %"ecom_EiffelCompiler_Core.h%"]()"
 		end
 
 	ccom_generate_plus (cpp_obj: POINTER) is
 			-- No description available.
 		external
-			"C++ [ecom_Core::Core %"ecom_Core_Core.h%"]()"
+			"C++ [ecom_EiffelCompiler::Core %"ecom_EiffelCompiler_Core.h%"]()"
 		end
 
 	ccom_generate_mod (cpp_obj: POINTER) is
 			-- No description available.
 		external
-			"C++ [ecom_Core::Core %"ecom_Core_Core.h%"]()"
+			"C++ [ecom_EiffelCompiler::Core %"ecom_EiffelCompiler_Core.h%"]()"
 		end
 
 	ccom_generate_minus (cpp_obj: POINTER) is
 			-- No description available.
 		external
-			"C++ [ecom_Core::Core %"ecom_Core_Core.h%"]()"
+			"C++ [ecom_EiffelCompiler::Core %"ecom_EiffelCompiler_Core.h%"]()"
 		end
 
 	ccom_generate_div (cpp_obj: POINTER) is
 			-- No description available.
 		external
-			"C++ [ecom_Core::Core %"ecom_Core_Core.h%"]()"
+			"C++ [ecom_EiffelCompiler::Core %"ecom_EiffelCompiler_Core.h%"]()"
 		end
 
 	ccom_generate_xor (cpp_obj: POINTER) is
 			-- No description available.
 		external
-			"C++ [ecom_Core::Core %"ecom_Core_Core.h%"]()"
+			"C++ [ecom_EiffelCompiler::Core %"ecom_EiffelCompiler_Core.h%"]()"
 		end
 
 	ccom_generate_or (cpp_obj: POINTER) is
 			-- No description available.
 		external
-			"C++ [ecom_Core::Core %"ecom_Core_Core.h%"]()"
+			"C++ [ecom_EiffelCompiler::Core %"ecom_EiffelCompiler_Core.h%"]()"
 		end
 
 	ccom_generate_and (cpp_obj: POINTER) is
 			-- No description available.
 		external
-			"C++ [ecom_Core::Core %"ecom_Core_Core.h%"]()"
+			"C++ [ecom_EiffelCompiler::Core %"ecom_EiffelCompiler_Core.h%"]()"
 		end
 
 	ccom_generate_implies (cpp_obj: POINTER) is
 			-- No description available.
 		external
-			"C++ [ecom_Core::Core %"ecom_Core_Core.h%"]()"
+			"C++ [ecom_EiffelCompiler::Core %"ecom_EiffelCompiler_Core.h%"]()"
 		end
 
 	ccom_generate_eq (cpp_obj: POINTER) is
 			-- No description available.
 		external
-			"C++ [ecom_Core::Core %"ecom_Core_Core.h%"]()"
+			"C++ [ecom_EiffelCompiler::Core %"ecom_EiffelCompiler_Core.h%"]()"
 		end
 
 	ccom_generate_shl (cpp_obj: POINTER) is
 			-- No description available.
 		external
-			"C++ [ecom_Core::Core %"ecom_Core_Core.h%"]()"
+			"C++ [ecom_EiffelCompiler::Core %"ecom_EiffelCompiler_Core.h%"]()"
 		end
 
 	ccom_generate_shr (cpp_obj: POINTER) is
 			-- No description available.
 		external
-			"C++ [ecom_Core::Core %"ecom_Core_Core.h%"]()"
+			"C++ [ecom_EiffelCompiler::Core %"ecom_EiffelCompiler_Core.h%"]()"
 		end
 
 	ccom_generate_ne (cpp_obj: POINTER) is
 			-- No description available.
 		external
-			"C++ [ecom_Core::Core %"ecom_Core_Core.h%"]()"
-		end
-
-	ccom_generate_uplus (cpp_obj: POINTER) is
-			-- No description available.
-		external
-			"C++ [ecom_Core::Core %"ecom_Core_Core.h%"]()"
+			"C++ [ecom_EiffelCompiler::Core %"ecom_EiffelCompiler_Core.h%"]()"
 		end
 
 	ccom_generate_uminus (cpp_obj: POINTER) is
 			-- No description available.
 		external
-			"C++ [ecom_Core::Core %"ecom_Core_Core.h%"]()"
+			"C++ [ecom_EiffelCompiler::Core %"ecom_EiffelCompiler_Core.h%"]()"
 		end
 
 	ccom_generate_not (cpp_obj: POINTER) is
 			-- No description available.
 		external
-			"C++ [ecom_Core::Core %"ecom_Core_Core.h%"]()"
+			"C++ [ecom_EiffelCompiler::Core %"ecom_EiffelCompiler_Core.h%"]()"
+		end
+
+	ccom_generate_bitwise_not (cpp_obj: POINTER) is
+			-- No description available.
+		external
+			"C++ [ecom_EiffelCompiler::Core %"ecom_EiffelCompiler_Core.h%"]()"
 		end
 
 	ccom_put_line_info (cpp_obj: POINTER; n: INTEGER) is
 			-- No description available.
 		external
-			"C++ [ecom_Core::Core %"ecom_Core_Core.h%"](EIF_INTEGER)"
+			"C++ [ecom_EiffelCompiler::Core %"ecom_EiffelCompiler_Core.h%"](EIF_INTEGER)"
 		end
 
 	ccom_create_label (cpp_obj: POINTER): INTEGER is
 			-- No description available.
 		external
-			"C++ [ecom_Core::Core %"ecom_Core_Core.h%"](): EIF_INTEGER"
+			"C++ [ecom_EiffelCompiler::Core %"ecom_EiffelCompiler_Core.h%"](): EIF_INTEGER"
+		end
+
+	ccom_set_for_interfaces (cpp_obj: POINTER) is
+			-- No description available.
+		external
+			"C++ [ecom_EiffelCompiler::Core %"ecom_EiffelCompiler_Core.h%"]()"
+		end
+
+	ccom_set_for_implementations (cpp_obj: POINTER) is
+			-- No description available.
+		external
+			"C++ [ecom_EiffelCompiler::Core %"ecom_EiffelCompiler_Core.h%"]()"
 		end
 
 	ccom_create_core_coclass: POINTER is
 			-- Creation
 		external
-			"C++ [new ecom_Core::Core %"ecom_Core_Core.h%"]()"
+			"C++ [new ecom_EiffelCompiler::Core %"ecom_EiffelCompiler_Core.h%"]()"
 		end
 
 	ccom_delete_core_coclass (a_pointer: POINTER) is
 			-- Release resource
 		external
-			"C++ [delete ecom_Core::Core %"ecom_Core_Core.h%"]()"
+			"C++ [delete ecom_EiffelCompiler::Core %"ecom_EiffelCompiler_Core.h%"]()"
 		end
 
 	ccom_create_core_coclass_from_pointer (a_pointer: POINTER): POINTER is
 			-- Create from pointer
 		external
-			"C++ [new ecom_Core::Core %"ecom_Core_Core.h%"](IUnknown *)"
+			"C++ [new ecom_EiffelCompiler::Core %"ecom_EiffelCompiler_Core.h%"](IUnknown *)"
 		end
 
 	ccom_item (cpp_obj: POINTER): POINTER is
 			-- Item
 		external
-			"C++ [ecom_Core::Core %"ecom_Core_Core.h%"]():EIF_POINTER"
+			"C++ [ecom_EiffelCompiler::Core %"ecom_EiffelCompiler_Core.h%"]():EIF_POINTER"
 		end
 
 end -- CORE_PROXY

@@ -34,7 +34,7 @@ creation
 
 feature {NONE} -- Initialization
 
-	make (a_parent: WEL_COMPOSITE_WINDOW; an_id: INTEGER) is
+	make (a_parent: WEL_WINDOW; an_id: INTEGER) is
 			-- Create a tooltip control with `a_parent' as parent
 			-- and `an_id' as id.
 		require

@@ -16,27 +16,50 @@ inherit
 		end
 
 create
-	make
+	make,
+	make_for_constant
 
-feature -- Initialization
+feature {NONE} -- Initialization
 
 	make (n: INTEGER) is
 			-- Create instance of INTEGER_A represented by `n' bits.
 		require
 			valid_n: n = 8 or n = 16 or n = 32 or n = 64
 		do
-			size := n
+			size := n.to_integer_8
+			compatibility_size := n.to_integer_8
 		ensure
 			size_set: size = n
+			compatibility_size_set: compatibility_size = n
 		end
-	
+
+	make_for_constant (n, m: INTEGER) is
+			-- Create instance of INTEGER_A represented by `n' bits
+			-- whose value can hold at list `m' bits.
+		require
+			valid_n: n = 32 or n = 64
+			valid_m: m = 8 or m = 16 or m = 32 or m = 64
+		do
+			size := n.to_integer_8
+			compatibility_size := m.to_integer_8
+		ensure
+			size_set: size = n
+			compatibility_size_set: compatibility_size = m
+		end
+
 feature -- Property
 
 	is_integer: BOOLEAN is True
 			-- Is the current type an integer type ?
 
-	size: INTEGER
+	size: INTEGER_8
 			-- Current is stored on `size' bits.
+	
+	compatibility_size: INTEGER_8
+			-- Minimum integer size that can hold current.
+			-- Used for manifest integers that are of size `32' or `64'
+			-- by default, but their value might be able to fit
+			-- on an integer of size `8' or `16' as well.
 
 feature -- Access
 
@@ -78,7 +101,7 @@ feature {COMPILER_EXPORTER}
 							or else other.is_double
 				if not Result and then other.is_integer then
 					int ?= other
-					Result := int.size >= size
+					Result := int.compatibility_size >= compatibility_size
 				end
 			end
 		end
@@ -106,7 +129,7 @@ feature {COMPILER_EXPORTER}
 		end
 
 invariant
-
 	correct_size: size = 8 or size = 16 or size = 32 or size = 64
+	valid_compatibility_size: compatibility_size <= size
 
 end -- class INTEGER_A

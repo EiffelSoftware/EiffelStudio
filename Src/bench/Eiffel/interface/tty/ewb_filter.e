@@ -1,14 +1,20 @@
--- Build a filtered version (troff, ..) of the class text.
+indexing
+
+	description: 
+		"Build a filtered version (troff, ..) of the class text%
+		%and display the result in output_window.";
+	date: "$Date$";
+	revision: "$Revision $"
 
 class EWB_FILTER 
 
 inherit
 
-	EWB_CMD
+	EWB_COMPILED_CLASS
 		rename
-			name as filter_cmd_name,
-			help_message as filter_help,
-			abbreviation as filter_abb
+			make as class_make
+		redefine
+			process_compiled_class
 		end
 
 creation
@@ -18,62 +24,68 @@ creation
 feature -- Creation
 
 	make (cn, fn: STRING) is
+			-- Initialize Current with class_name as `cn'
+			-- and filter_name as `fn'.
 		require
 			cn_not_void: cn /= Void;
 			fn_not_void: fn /= Void
 		do
-			class_name := cn;
-			class_name.to_lower;
+			class_make (class_name);
 			filter_name := fn
+		ensure
+			filter_set: filter_name = fn
 		end;
 
-	class_name: STRING;
+feature -- Properties
 
 	filter_name: STRING;
 			-- Name of the filter to be used
 
-	set_filter_name (fn: STRING) is
-			-- Assign `fn' to `filter_name'.
-		require
-			fn_not_void: fn /= Void
+	name: STRING is
 		do
-			filter_name := fn
+			Result := filter_cmd_name;
 		end;
 
-feature
-
-	execute is
-		local
-			class_c: CLASS_C;
-			ctxt: FORMAT_CONTEXT_B;
-			class_i: CLASS_I;
-			text_filter: TEXT_FILTER
+	help_message: STRING is
 		do
-			init_project;
-			if not (error_occurred or project_is_new) then
-				retrieve_project;
-				if not error_occurred then
-					class_i := Universe.unique_class (class_name);
-					if class_i /= Void then
-						class_c := class_i.compiled_class;
-						if class_c = Void then
-							io.error.putstring (class_name);
-							io.error.putstring (" is not in the system%N");
-						else
-							!!ctxt.make (class_c);
-							ctxt.set_current_class_only;
-							ctxt.set_order_same_as_text;
-							ctxt.execute;
-							!!text_filter.make (filter_name);
-							text_filter.process_text (ctxt.text);
-							output_window.put_string (text_filter.image)
-						end;
-					else
-						io.error.putstring (class_name);
-						io.error.putstring (" is not in the universe%N");
-					end
-				end;
-			end;
+			Result := filter_help
+		end;
+
+	abbreviation: CHARACTER is
+		do
+			Result := filter_abb
+		end;
+
+feature {NONE} -- Execution
+
+	associated_cmd: E_SHOW_CLASS_FILTERED_TEXT is
+			-- Associated class command to be executed
+			-- after successfully retrieving the compiled
+			-- class
+		once
+			!! Result.do_nothing
+		end;
+
+	process_compiled_class (class_c: CLASS_C) is
+			-- Execute associated command
+		local
+			cmd: like associated_cmd;
+			ctxt: FORMAT_CONTEXT_B
+		do
+			cmd := clone (associated_cmd);
+			!! ctxt.make (class_c);
+			set_context_attributes (ctxt);
+			cmd.set (class_c, output_window);
+			cmd.set_filter_name (filter_name);	
+			cmd.set_text_formatter (ctxt);	
+			cmd.execute
+		end;
+
+	set_context_attributes (ctxt: FORMAT_CONTEXT_B) is
+			-- Set context attributes `ctxt'.
+		do
+			ctxt.set_current_class_only;
+			ctxt.set_order_same_as_text;
 		end;
 
 invariant

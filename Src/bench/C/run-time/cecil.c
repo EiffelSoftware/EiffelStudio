@@ -396,7 +396,10 @@ rt_public void *eif_field_safe (EIF_REFERENCE object, char *name, int type_int, 
 		eif_panic ("Object has no type id.");/* Should not happen. */
 
 	if (eif_attribute_type (name, tid) != type_int)  	/* Do types match. */
+	{
 		*ret = EIF_WRONG_TYPE;	/* Wrong type. */
+		return &eif_default_pointer;
+	}
 
 	return addr;	/* Return "addr" anyway. */
 

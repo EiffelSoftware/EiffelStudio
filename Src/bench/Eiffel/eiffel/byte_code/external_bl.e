@@ -103,7 +103,8 @@ feature
 		do
 			type_i := context_type;
 			class_type ?= type_i;
-			is_polymorphic_access := not type_i.is_basic and then
+			is_polymorphic_access := not is_static_call and then
+					not type_i.is_basic and then
 					class_type /= Void and then
 					Eiffel_table.is_polymorphic (routine_id, class_type.type_id, True) >= 0;
 			if reg.is_current and is_polymorphic_access then
@@ -156,7 +157,13 @@ feature
 			type_c := real_type (type).c_type;
 			buf := buffer
 
-			array_index := Eiffel_table.is_polymorphic (routine_id, typ.type_id, True)
+			if is_static_call then
+					-- No polymorphic here, set `array_index' to not go to the
+					-- polymorphic call handling.
+				array_index := -1
+			else
+				array_index := Eiffel_table.is_polymorphic (routine_id, typ.type_id, True)
+			end
 			if array_index >= 0 then
 					-- The call is polymorphic, so generate access to the
 					-- routine table. The dereferenced function pointer has
@@ -304,7 +311,8 @@ feature
 				-- Now generate the parameters of the call, if needed.
 			buf := buffer
 			if final_mode then
-				not_polymorphic := Eiffel_table.is_polymorphic (routine_id, class_type.type_id, True) < 0
+				not_polymorphic := is_static_call or else
+					Eiffel_table.is_polymorphic (routine_id, class_type.type_id, True) < 0
 
 				if is_macro_extension then
 					if not not_polymorphic or else parameters /= Void then

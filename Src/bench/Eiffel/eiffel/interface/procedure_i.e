@@ -9,7 +9,7 @@ inherit
 	FEATURE_I
 		redefine
 			transfer_to, duplicate,
-			is_procedure, arguments,
+			is_routine, arguments,
 			obsolete_message, assert_id_set, set_assert_id_set,
 			check_local_names, duplicate_arguments
 		end
@@ -28,7 +28,7 @@ feature -- Access
 
 feature -- Status report
 
-	is_procedure: BOOLEAN is True
+	is_routine: BOOLEAN is True
 			-- Current is a procedure.
 
 feature -- Settings

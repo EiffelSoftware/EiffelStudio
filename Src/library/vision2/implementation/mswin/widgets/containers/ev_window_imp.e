@@ -78,7 +78,6 @@ inherit
 			on_key_up,
 			on_set_focus,
 			on_kill_focus,
-			on_menu_command,
 			background_brush,
 			on_draw_item,
 			on_accelerator_command,
@@ -98,7 +97,8 @@ inherit
 			on_move,
 			closeable,
 			default_process_message,
-			move_and_resize
+			move_and_resize,
+			on_menu_command
 		end
 
 	WEL_MA_CONSTANTS
@@ -421,6 +421,20 @@ feature -- Resizing
 				internal_changes := set_bit (internal_changes, 128, True)
 				wel_set_height (value)
 			end
+		end
+
+feature {NONE} -- Implementation
+
+	on_menu_command (menu_id: INTEGER) is
+			-- `menu_id' has been chosen from the menu.
+		local
+			sbi: EV_MENU_BAR_IMP
+		do
+			check
+				has_menu_bar: menu_bar /= Void
+			end
+			sbi ?= menu_bar.implementation
+			sbi.menu_item_clicked (menu_id)
 		end
 
 feature -- Event - command association
@@ -880,6 +894,10 @@ end -- class EV_WINDOW_IMP
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.24  2000/02/23 02:25:28  brendel
+--| Now redefines on_menu_command to propagate the given `id' to the menu-bar,
+--| assuming that it has one when this feature is called.
+--|
 --| Revision 1.23  2000/02/22 20:15:15  rogers
 --| Removed FIXME on set_parent as this has always worked correctly, and the FIXME was added mistakenly.
 --|

@@ -1,0 +1,89 @@
+What's new:
+===========
+
+ISE Eiffel 4.2 is a major new release which incorporates
+many new features and improvements to existing mechanisms.
+Highlights:
+
+- EiffelCom library for use of Eiffel with COM, OLE.
+
+- Eiffel2Java library: call Java applets and other
+  Java facilities from Eiffel.
+
+- EiffelThreads library: full-fledged implementation
+  of multithreading (Windows, Posix/Linux, Solaris,
+  VxWorks), with an extensive set of threads
+  capabilities and close connection with the
+  garbage collection mechanism (one GC per
+  thread, enabling independent execution).
+
+- Full implementation of the Precursor construct
+  as described in "Object-Oriented Software Construction",
+  2nd edition (and, we know, awaited impatiently
+  by many users).
+
+- Considerably faster compilation.
+
+- Graphical profiler, for detailed analysis of running
+  times.
+
+- A greatly improved EiffelCase analysis and design
+  workbench. This is the only tool we know that truly
+  fulfils the promise of seamless development offered
+  by object technology: going back and forth between
+  high-level graphical views of systems, and their
+  actual source text. EiffelCase in particular has
+  a great reverse engineering facility, which produces
+  clear graphical views of systems, which can then be
+  modified to re-generate code. A "Merging Tool" enables
+  users to reconcile, feature by feature, the changes
+  they may have made separately to the textual view
+  (Eiffel text) and to the graphical view (EiffelCase
+  diagrams). As an example application, we now systematically
+  use EiffelCase for our hands-on object technology
+  classes, as well for our analysis/design/implementation
+  consulting, and have found it to be attractive to both
+  beginners and seasoned software engineers, as well
+  as to managers who need to see global schemata of
+  system architecture, system dictionaries/glossaries
+  etc.
+
+- Numerous improvements, both functional and of speed,
+  to the EiffelBench graphical development environment.
+  The interface has also been enriched with new, intuitive
+  user interaction mechanisms. "Clickable" elements are
+  underlined, HTML-browser style, for even more intuitive
+  browsing. Searching is faster as well as drag-and-drop
+  and other operations.
+
+- New, improved version of the Legacy++ tool for wrapping
+  C++ classes into Eiffel classes (now handles many subtle
+  facilities of Visual C++). Helps move away from C++
+  without losing one's investment.
+
+- More information in generated C code, enabling the
+  use of a C debugger. (Although most Eiffel users will never
+  need to see the generated C, even less debug it -- there
+  is a powerful Eiffel debugger in EiffelBench to avoid that --,
+  this facility is of great interest to some projects, in
+  particular to users of Embedded Eiffel who may need to
+  perform debugging on a target platform that only has
+  C tools.)
+
+- Many improvements to other tools and libraries, such as
+  EiffelNet (client-server object management system),
+  EiffelBase (the fundamental library of data structures
+  and algorithms), EiffelVision (portable graphics),
+  WEL (the Windows Eiffel Library -- for programming
+  graphical applications under Windows).
+
+- Eiffel generator for Cayenne's Object Team analysis
+  tool, supporting UML and OMT.
+
+Interactive Software Engineering, Inc.
+ISE Building, 2nd floor, 270 Storke Road, Goleta CA 93117
+Telephone 805-685-1006
+Fax 805-685-6869
+Information e-mail <info@eiffel.com>
+Customer support e-mail <support@eiffel.com>
+Web: www.eiffel.com

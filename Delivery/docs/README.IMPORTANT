@@ -1,0 +1,210 @@
+---------------------------------------------------------------------
+To find out about the documentation available for ISE Eiffel,
+see file roadmap.txt in this directory, or print the file roadmap.ps
+which has the same information in Postscript format.
+---------------------------------------------------------------------
+
+Other than `roadmap.txt' and `language.txt', the files included in this directory
+are compressed Postscript files extracted from the ISE Eiffel manuals
+on EiffelBench, EiffelBuild and EiffelCase.
+	
+These files are mostly useful if you are using a demonstration copy of ISE
+Eiffel and do not have access to the manuals. For any more extensive
+use of the environment you will need to obtain the complete set of
+manuals in printed form from ISE.
+
+In addition, subdirectory `html' contains HTML versions of some of the manuals
+for on-line browsing.
+
+ISE EIFFEL 3 VERSUS ISE EIFFEL 4
+--------------------------------
+
+Not all of the manuals have been updated for ISE Eiffel 4.
+In the documentation you will find some references to ISE Eiffel 3,
+most of which are still applicable to ISE Eiffel 4. 
+
+
+FILE CONTENTS: GENERAL
+----------------------
+In this directory:
+
+	File license.ps includes information about how to get a license
+	(appendix C of ``ISE Eiffel: The Environment'').
+
+	File install.ps includes information about installation
+	(appendix B of ``ISE Eiffel: The Environment'').
+
+	File roadmap.ps is the Roadmap to Eiffel Documentation. Its contents
+	are also available in ASCII form as file roadmap.txt.
+
+	File language.ps is a short introduction to the Eiffel language
+	(from appendix C of ``ISE Eiffel: The Environment''). Its contents
+	are also available in ASCII form as file language.txt.
+
+FILE CONTENTS: HTML VERSIONS FOR ON-LINE BROWSING
+-------------------------------------------------
+
+In the subdirectory `html':
+
+	On-line manuals and manual extracts
+	See the file README in the subdirectory.
+
+FILE CONTENTS: EIFFELBENCH
+--------------------------
+In subdirectory `bench':
+
+	File preface.ps is the preface.
+
+	File intro.ps is the introduction (``Getting Started'', chapter 1).
+
+	File tour.ps is the Guided Tour of EiffelBench (chapter 2).
+
+
+FILE CONTENTS: EIFFELBASE LIBRARIES
+-----------------------------------
+
+In subdirectory `library/base':
+
+	File preface.ps is the preface.
+
+	File intro.ps is the introduction (chapter 1).
+
+FILE CONTENTS: EIFFELBUILD
+--------------------------
+In subdirectory `build':
+
+	File preface.ps is the preface.
+
+	File concepts.ps is the description of basic EiffelBuild concepts (chapter 1).
+
+	File math.ps presents the mathematical background (chapter 2).
+
+	File starting.ps is the chapter on setup (``Getting started'', chapter 3).
+
+	File demo.ps is the EiffelBuild example session (chapter 4).
+
+FILE CONTENTS: EIFFELCASE
+-------------------------
+In subdirectory `case':
+
+	File preface.ps is the preface.
+
+	File intro.ps is the introduction (``The concepts of EiffelCase'', chapter 1).
+
+	File starting.ps is the chapter on setup (``Getting started'', chapter 2).
+
+	File example.ps is the EiffelCase example session (chapter 3).
+
+FILE CONTENTS: EIFFELNET
+------------------------
+In subdirectory `net':
+
+	File book.ps is the entire documentation.
+
+FILE CONTENTS: OBJEDIT
+------------------------
+In subdirectory `objedit':
+
+	File README is an overview.
+
+	File manual.text is the manual.	
+
+
+UNCOMPRESSING THE FILES
+-----------------------
+
+To save space on your machine, the files are included in compressed form,
+with the names preface.ps.Z, intro.ps.Z etc.
+
+To use them, uncompress them with the `uncompress' command in the appropriate
+directory, for example (in the `bench' subdirectory):
+	
+	uncompress tour.ps
+
+which will replace `tour.ps.Z' by `tour.ps' (`uncompress tour.ps.Z' will
+also work.)
+
+Warning: once uncompressed, the files `tour.ps' (EiffelBench), `example.ps'
+(EiffelCase) and `demo.ps' (EiffelBuild) are large; for example `tour.ps'
+is about 3 Megabytes whereas the compressed version only occupies about 363
+Kilobytes.
+This is due to the presence of many screen shots; the
+
+
+IMPORTANT PRINTING RESTRICTIONS
+-------------------------------
+
+In connection with your use of a demonstration copy of ISE Eiffel you
+are permitted to view these files using a screen Postscript previewer, or to
+print a single copy for your personal use.
+
+Any other use or duplication is a violation of the copyright.
+
+NOTE ON PRINTING THE FILES
+--------------------------
+
+The files `tour.ps', `demo.ps' and `example.ps', as mentioned, are large;
+to print them you will need lots of disk space (up to 10 MB) and
+lots of patience. These files are mainly meant for on-screen viewing,
+using a Postscript previewer (see next).
+
+The other Postscript files are of much smaller size and should not cause any
+particular problem. (But see below about printing on paper or international
+A4 format.)
+
+
+POSTSCRIPT PREVIEWER
+--------------------
+
+On SunOS and Solaris, a Postscript previewer is available as the
+command `pageview'. On Silicon Graphics systems you can use the
+previewer available in the standard `demos' menu.
+
+On other platforms please check with your system administrator.
+Postscript previewers are also available in the public domain.
+
+PRINTING ON INTERNATIONAL (A4) FORMAT
+-------------------------------------
+
+(These instructions do not apply to the EiffelBase documentation
+in `library/base'.)
+
+The documents have been prepared for printing in US LTR format. With some
+printers you may be unable to print it on paper of A4 (international) format.
+If this happens, here is how to fix the problem - with thanks to
+Roger Browne of Everything Eiffel (UK) for his help.
+
+In each Postscript file, find the first line of the form
+
+	n1 n2 ... FMDOCUMENT
+
+where n1, n2, ... are some numbers. (Note that this will be the
+second occurrence of the string FMDOCUMENT in the text; the first
+one is the definition of that operation. The one sketched above,
+is a call to the operation, where we need to change the arguments.)
+
+On that line, you should (according to Roger Browne, Eiffel in the UK,
+who tested it on some sample files) replace the numbers
+
+	612 792
+
+by
+
+	595 841
+
+That's all, but again remember to do this on every Postscript file
+(using for example a text editor such as Vi).
+
+MANUALS FOR PURCHASED COPIES
+----------------------------
+
+All purchased copies of ISE Eiffel include a complete set
+of printed manuals corresponding to the purchased components.
+
+TO OBTAIN PRINTED COPIES OF THE MANUALS
+---------------------------------------
+
+If you wish to order separate printed copies of the manuals,
+use the order form included in file `order_form' in this
+directory (also included in the `products' directory
+of the delivery).

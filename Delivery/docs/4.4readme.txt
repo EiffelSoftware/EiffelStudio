@@ -1,0 +1,29 @@
+ISE EiffelBench 4.4
+===================
+
+New functionalities:
+--------------------
+
+- Implementation of `default_create'.
+
+- Updated EiffelStore and EiffelTime library.
+
+- Run-time in DLL: they now work for all kind of configurations, ie:
+	single_threaded in DLL
+	multithreaded in DLL
+
+- New Console: it won't ask you to press enter to finish the execution if you started
+    your program from a DOS console, it will ask you only if you did not launch if from
+	a DOS console.
+
+­ Creation of generic parameters: it has been improved to follow completely the semantic.
+
+
+Bug fixes from 4.3:
+-------------------
+
+- Loosing precision when using `independent_store' to store DOUBLEs.
+
+- Fixed some problems related to the C code generation when using an external C
+  routine in DLL.
+

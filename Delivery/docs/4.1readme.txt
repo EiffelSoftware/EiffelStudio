@@ -1,0 +1,52 @@
+README.TXT
+==========
+
+RELEASE NOTES for version 4.1:
+
+- Ace file option to enable multithreading:
+  	multithreaded (all | yes | no);
+			-- all and yes have the same meaning; default is no.
+
+- Fixed the `hide_implementation' bug: Even if you said `no',
+  `hide_implementation' was set to `yes'.
+
+- New environment variable set by the installation procedure:
+  COMPILER, denoting the C compiler. Current possible values are msc
+  (Microsoft) and bcc (Borland).
+
+- The `PLATFORM' environment variable is automatically set to `windows'
+  (for both(  Windows 95 and Windows NT).
+
+- CURRENT USERS: note the change with previous conventions, which used
+  different PLATFORM values for each compiler (w32msc and w32bcc).
+  The new convention simplifies management and saves space on disk.
+
+- New console: this is now a standard DOS console (with more flexibility
+  on NT than on 95).
+
+- The compiler now only generates C-ANSI code.
+
+- You can now use several external editors concurrently. Note, however,
+  that external editors will only work for classes whose clusters are
+  specified with absolute path names in the Ace file.
+
+- In Workbench mode, the current directory is now the one where the
+  workbench program is (for consistency with Unix versions).
+
+- Scrolling bug fixed: when you move the arrow keys past the window
+  borders, the text will now scroll automatically.
+
+- Important precompilation note: a precompiled library must be compiled
+  in the same mode, multithreaded or not, as the system using it. The
+  precompiled libraries currently available for downloading are compiled
+  for non-multithreaded, so if you want to use precompiled libraries
+  with a multithreaded system you will have to precompile them yourself.
+
+
+Interactive Software Engineering, Inc.
+270 Storke Road, Suite 7, Goleta, CA 93117 USA
+Telephone 805-685-1006
+Fax 805-685-6869
+Information e-mail <info@eiffel.com>
+Customer support e-mail <support@eiffel.com>
+Web: www.eiffel.com

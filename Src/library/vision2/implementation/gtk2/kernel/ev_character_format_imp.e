@@ -53,6 +53,16 @@ feature -- Access
 				Result := (create {EV_STOCK_COLORS}).black
 			end
 		end
+
+	background_color: EV_COLOR is
+			-- Background Color of the current format
+		do
+			if internal_background_color_imp /= Void then
+				Result := internal_background_color_imp.interface
+			else
+				Result := (create {EV_STOCK_COLORS}).white
+			end
+		end
 		
 	effects: EV_CHARACTER_FORMAT_EFFECTS is
 			-- Character format effects applicable to `font'
@@ -70,71 +80,128 @@ feature -- Status setting
 			-- Make `value' the new font
 		do
 			internal_font_imp ?= a_font.implementation
-			last_text_tag := default_pointer
 		end
 
 	set_color (a_color: EV_COLOR) is
 			-- Make `value' the new color
 		do
 			internal_color_imp ?= a_color.implementation
-			last_text_tag := default_pointer
+		end
+
+	set_background_color (a_color: EV_COLOR) is
+			-- Make `value' the new color
+		do
+			internal_background_color_imp ?= a_color.implementation
 		end
 		
 	set_effects (an_effect: EV_CHARACTER_FORMAT_EFFECTS) is
 			-- Make `an_effect' the new `effects'
 		do
 			internal_effects := an_effect.twin
-			last_text_tag := default_pointer
 		end
 
 feature {EV_RICH_TEXT_IMP} -- Implementation
 
-	last_text_tag: POINTER
-		-- Last text tag generated from `new_text_tag'
-
 	new_text_tag: POINTER is
 			-- Create a new text tag based on state of `Current'
+		do
+			Result := new_text_tag_from_applicable_attributes (dummy_character_format_range_information)
+		end
+		
+	dummy_character_format_range_information: EV_CHARACTER_FORMAT_RANGE_INFORMATION is
+			-- Used for creating a fully set GtkTextTag
 		local
-			propname: EV_GTK_C_UTF8_STRING
+			a: INTEGER
+		once
+			create Result.make_with_flags (
+				feature {EV_CHARACTER_FORMAT_CONSTANTS}.font_family
+				| feature {EV_CHARACTER_FORMAT_CONSTANTS}.font_weight
+				| feature {EV_CHARACTER_FORMAT_CONSTANTS}.font_shape
+				| feature {EV_CHARACTER_FORMAT_CONSTANTS}.font_height
+				| feature {EV_CHARACTER_FORMAT_CONSTANTS}.color
+				| feature {EV_CHARACTER_FORMAT_CONSTANTS}.background_color
+				| feature {EV_CHARACTER_FORMAT_CONSTANTS}.effects_striked_out
+				| feature {EV_CHARACTER_FORMAT_CONSTANTS}.effects_underlined
+				| feature {EV_CHARACTER_FORMAT_CONSTANTS}.effects_double_underlined
+				| feature {EV_CHARACTER_FORMAT_CONSTANTS}.effects_vertical_offset
+			)
+		end
+
+	new_text_tag_from_applicable_attributes (applicable_attributes: EV_CHARACTER_FORMAT_RANGE_INFORMATION): POINTER is
+			-- Create a new text tag based on state of `Current'
+		local
 			color_struct: POINTER
-			tempbool: BOOLEAN
 			font_desc: POINTER
+			propname, propvalue: EV_GTK_C_STRING
+			a_font_imp: EV_FONT_IMP
+			a_color_imp: EV_COLOR_IMP
+			a_effects: EV_CHARACTER_FORMAT_EFFECTS
 		do
 			
 			Result := feature {EV_GTK_DEPENDENT_EXTERNALS}.gtk_text_tag_new (default_pointer)
 			
-			if internal_font_imp /= Void then
-				font_desc := internal_font_imp.font_description_from_values
-				create propname.make ("font-desc")
-				feature {EV_GTK_DEPENDENT_EXTERNALS}.g_object_set_pointer (Result, propname.item, font_desc, default_pointer)
-				feature {EV_GTK_DEPENDENT_EXTERNALS}.pango_font_description_free (font_desc)
+			if (applicable_attributes.font_family or else applicable_attributes.font_height or else applicable_attributes.font_shape or else applicable_attributes.font_weight) then
+				a_font_imp ?= font.implementation
+				if applicable_attributes.font_family then
+					create propname.make ("family")
+					create propvalue.make (a_font_imp.pango_family_string)
+					feature {EV_GTK_DEPENDENT_EXTERNALS}.g_object_set_string (Result, propname.item, propvalue.item)					
+				end
+				if applicable_attributes.font_height then
+					create propname.make ("size")
+					feature {EV_GTK_DEPENDENT_EXTERNALS}.g_object_set_integer (Result, propname.item, a_font_imp.pango_height)	
+				end
+				if applicable_attributes.font_shape then
+					create propname.make ("style")
+					feature {EV_GTK_DEPENDENT_EXTERNALS}.g_object_set_integer (Result, propname.item, a_font_imp.pango_style)		
+				end
+				if applicable_attributes.font_weight then
+					create propname.make ("weight")
+					feature {EV_GTK_DEPENDENT_EXTERNALS}.g_object_set_integer (Result, propname.item, a_font_imp.pango_weight)					
+				end
 			end
 
-			if internal_color_imp /= Void then
+			if applicable_attributes.color then
+				a_color_imp ?= color.implementation
 				create propname.make ("foreground-gdk")
 				color_struct := feature {EV_GTK_EXTERNALS}.c_gdk_color_struct_allocate
-				feature {EV_GTK_EXTERNALS}.set_gdk_color_struct_red (color_struct, internal_color_imp.red_16_bit)
-				feature {EV_GTK_EXTERNALS}.set_gdk_color_struct_green (color_struct, internal_color_imp.green_16_bit)
-				feature {EV_GTK_EXTERNALS}.set_gdk_color_struct_blue (color_struct, internal_color_imp.blue_16_bit)
-				tempbool := feature {EV_GTK_EXTERNALS}.gdk_colormap_alloc_color (feature {EV_GTK_EXTERNALS}.gdk_rgb_get_cmap, color_struct, False, True)
-				check
-					color_has_been_allocated: tempbool
-				end
+				feature {EV_GTK_EXTERNALS}.set_gdk_color_struct_red (color_struct, a_color_imp.red_16_bit)
+				feature {EV_GTK_EXTERNALS}.set_gdk_color_struct_green (color_struct, a_color_imp.green_16_bit)
+				feature {EV_GTK_EXTERNALS}.set_gdk_color_struct_blue (color_struct, a_color_imp.blue_16_bit)
 				feature {EV_GTK_DEPENDENT_EXTERNALS}.g_object_set_pointer (Result, propname.item, color_struct, default_pointer)
 				color_struct.memory_free				
 			end
 
-			if internal_effects /= Void then
-				create propname.make ("strikethrough")
-				feature {EV_GTK_DEPENDENT_EXTERNALS}.g_object_set_boolean (Result, propname.item, internal_effects.is_striked_out)
-				create propname.make ("underline")
-				feature {EV_GTK_DEPENDENT_EXTERNALS}.g_object_set_boolean (Result, propname.item, internal_effects.is_underlined)
+			if applicable_attributes.background_color then
+				a_color_imp ?= background_color.implementation
+				create propname.make ("background-gdk")
+				color_struct := feature {EV_GTK_EXTERNALS}.c_gdk_color_struct_allocate
+				feature {EV_GTK_EXTERNALS}.set_gdk_color_struct_red (color_struct, a_color_imp.red_16_bit)
+				feature {EV_GTK_EXTERNALS}.set_gdk_color_struct_green (color_struct, a_color_imp.green_16_bit)
+				feature {EV_GTK_EXTERNALS}.set_gdk_color_struct_blue (color_struct, a_color_imp.blue_16_bit)
+				feature {EV_GTK_DEPENDENT_EXTERNALS}.g_object_set_pointer (Result, propname.item, color_struct, default_pointer)
+				color_struct.memory_free				
 			end
-			last_text_tag := Result
+
+			if (applicable_attributes.effects_striked_out or else applicable_attributes.effects_underlined or else applicable_attributes.effects_vertical_offset) then
+				a_effects := effects
+				if applicable_attributes.effects_striked_out then
+					create propname.make ("strikethrough")
+					feature {EV_GTK_DEPENDENT_EXTERNALS}.g_object_set_boolean (Result, propname.item, a_effects.is_striked_out)
+				end
+				if applicable_attributes.effects_underlined then
+					create propname.make ("underline")
+					feature {EV_GTK_DEPENDENT_EXTERNALS}.g_object_set_boolean (Result, propname.item, a_effects.is_underlined)
+				end
+				if applicable_attributes.effects_vertical_offset then
+					create propname.make ("rise")
+					feature {EV_GTK_DEPENDENT_EXTERNALS}.g_object_set_integer (Result, propname.item, a_effects.vertical_offset)
+				end
+			end
 		end
 
-feature {NONE} -- Implementation
 
+feature {NONE} -- Implementation
 
 	internal_font_imp: EV_FONT_IMP
 			-- Font of the current format
@@ -142,6 +209,9 @@ feature {NONE} -- Implementation
 	internal_color_imp: EV_COLOR_IMP
 			-- Color of the current format
 		
+	internal_background_color_imp: EV_COLOR_IMP
+			-- Background Color of the current format
+	
 	internal_effects: EV_CHARACTER_FORMAT_EFFECTS
 			-- Character format effects applicable to `font'
 
@@ -150,6 +220,7 @@ feature {NONE} -- Implementation
 		do
 			internal_font_imp := Void
 			internal_color_imp := Void
+			internal_background_color_imp := Void
 			internal_effects := Void
 		end
 

@@ -152,7 +152,8 @@ feature {NONE} -- Implementation
 			common_make
 			widget.set_minimum_height (tool_minimum_height)
 			widget.drop_actions.set_veto_pebble_function (agent veto_drop)
-			widget.drop_actions.extend (agent add_new_object (?, Current))			
+			widget.drop_actions.extend (agent add_new_object (?, Current))
+			widget.drop_actions.extend (agent add_new_component (?, Current))
 			widget.key_press_actions.extend (agent check_for_object_delete)
 			widget.select_actions.extend (agent tool_bar.update_select_root_window_command)
 		end
@@ -436,10 +437,20 @@ feature {GB_COMMAND_DELETE_WINDOW_OBJECT, GB_COMMAND_ADD_WINDOW} -- Implementati
 
 feature {GB_WINDOW_SELECTOR_DIRECTORY_ITEM} -- Implementation
 
+	add_new_component (a_component: GB_COMPONENT; parent_item: GB_WINDOW_SELECTOR_COMMON_ITEM) is
+			-- Add a new object representing `a_component' to `parent_item'.
+		require
+			a_component_not_void: a_component /= Void
+			parent_item_not_void: parent_item /= Void
+		do
+			add_new_object (a_component.object, parent_item)
+		end
+
 	add_new_object (an_object: GB_OBJECT; parent_item: GB_WINDOW_SELECTOR_COMMON_ITEM) is
 			-- Add an associated window item for `window_object'.
 		require
 			an_object_not_void: an_object /= Void
+			parent_item_not_void: parent_item /= Void
 		local
 			command_move_window: GB_COMMAND_MOVE_WINDOW
 			command_add_window: GB_COMMAND_ADD_WINDOW
@@ -469,7 +480,7 @@ feature {GB_WINDOW_SELECTOR_DIRECTORY_ITEM} -- Implementation
 						end
 					end
 				else
-					if an_object.layout_item = Void then
+					if an_object.layout_item = Void or else an_object.layout_item.parent = Void then
 						window_object ?= an_object
 						if window_object /= Void then
 							object_handler.add_new_window (window_object)

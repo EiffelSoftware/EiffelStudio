@@ -87,11 +87,24 @@ feature -- Access
 			--		BAR
 			--		end
 
+	has_syntax_warning: BOOLEAN
+			-- Do we create SYNTAX_WARNING instances for obsolte syntactical constructs?
+
 feature -- Osolete
 
 	error_code: INTEGER is 0
 	error_message: STRING is ""
 			-- Compatibility with parser written in C with yacc
+
+feature -- Settings
+
+	set_has_syntax_warning (b: BOOLEAN) is
+			-- Set `has_syntax_warning' to `b'
+		do
+			has_syntax_warning := b
+		ensure
+			has_syntax_warning_set: has_syntax_warning = b
+		end
 
 feature -- Error handling
 

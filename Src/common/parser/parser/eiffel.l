@@ -229,6 +229,40 @@ U		([0-9]|[0-9][0-9]|[0-9][0-9][0-9])
 				current_position.go_to (2)
 				last_token := TE_AS
 			}
+[aA][sS][sS][iI][gG][nN] {
+					-- Note: Identifiers are converted to lower-case.
+				token_buffer.clear_all
+				append_text_to_string (token_buffer)
+				if not Case_sensitive then
+					token_buffer.to_lower
+				end
+
+				current_position.go_to (6)
+				last_token := TE_ID
+				if has_syntax_warning then
+					Error_handler.insert_warning (
+						create {SYNTAX_WARNING}.make (current_position.start_position,
+							current_position.end_position, filename, 0,
+							"Use of `assign', possibly a new keyword in future definition of `Eiffel'."))
+				end
+			}
+[aA][tT][tT][rR][iI][bB][uU][tT][eE] {
+					-- Note: Identifiers are converted to lower-case.
+				token_buffer.clear_all
+				append_text_to_string (token_buffer)
+				if not Case_sensitive then
+					token_buffer.to_lower
+				end
+
+				current_position.go_to (9)
+				last_token := TE_ID
+				if has_syntax_warning then
+					Error_handler.insert_warning (
+						create {SYNTAX_WARNING}.make (current_position.start_position,
+							current_position.end_position, filename, 0,
+							"Use of `attribute', possibly a new keyword in future definition of `Eiffel'."))
+				end
+			}
 [bB][iI][tT]	{
 				current_position.go_to (3)
 				last_token := TE_BIT

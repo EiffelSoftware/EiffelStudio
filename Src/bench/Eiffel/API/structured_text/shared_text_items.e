@@ -183,489 +183,470 @@ feature {NONE} -- Filter marks
 	
 feature {NONE} -- Keywords
 
-	ti_Alias_keyword: BASIC_TEXT is
+	ti_Alias_keyword: KEYWORD_TEXT is
 			-- "alias" keyword
 		once
-			!!Result.make ("alias");
-			Result.set_is_keyword
+			!!Result.make ("alias")
 		end;
 	
-	ti_All_keyword: BASIC_TEXT is
+	ti_All_keyword: KEYWORD_TEXT is
 			-- "all" keyword
 		once
-			!!Result.make ("all");
-			Result.set_is_keyword
+			!!Result.make ("all")
 		end;
 	
-	ti_As_keyword: BASIC_TEXT is
+	ti_As_keyword: KEYWORD_TEXT is
 			-- "as" keyword
 		once
-			!!Result.make ("as");
-			Result.set_is_keyword
+			!!Result.make ("as")
 		end;
 	
-	ti_Check_keyword: BASIC_TEXT is
+	ti_Check_keyword: KEYWORD_TEXT is
 			-- "check" keyword
 		once
-			!!Result.make ("check");
-			Result.set_is_keyword
+			!!Result.make ("check")
 		end;
 	
-	ti_Class_keyword: BASIC_TEXT is
+	ti_Class_keyword: KEYWORD_TEXT is
 			-- "class" keyword
 		once
-			!!Result.make ("class");
-			Result.set_is_keyword
+			!!Result.make ("class")
 		end;
 	
-	ti_Creation_keyword: BASIC_TEXT is
+	ti_Creation_keyword: KEYWORD_TEXT is
 			-- "creation" keyword
 		once
-			!!Result.make ("creation");
-			Result.set_is_keyword
+			!!Result.make ("creation")
 		end;
 	
-	ti_Debug_keyword: BASIC_TEXT is
+	ti_Debug_keyword: KEYWORD_TEXT is
 			-- "debug" keyword
 		once
-			!!Result.make ("debug");
-			Result.set_is_keyword
+			!!Result.make ("debug")
 		end;
 	
-	ti_Deferred_keyword: BASIC_TEXT is
+	ti_Deferred_keyword: KEYWORD_TEXT is
 			-- "deferred" keyword
 		once
-			!!Result.make ("deferred");
-			Result.set_is_keyword
+			!!Result.make ("deferred")
 		end;
 	
-	ti_Do_keyword: BASIC_TEXT is
+	ti_Do_keyword: KEYWORD_TEXT is
 			-- "do" keyword
 		once
-			!!Result.make ("do");
-			Result.set_is_keyword
+			!!Result.make ("do")
 		end;
 	
-	ti_Else_keyword: BASIC_TEXT is
+	ti_Else_keyword: KEYWORD_TEXT is
 			-- "else" keyword
 		once
-			!!Result.make ("else");
-			Result.set_is_keyword
+			!!Result.make ("else")
 		end;
 	
-	ti_Elseif_keyword: BASIC_TEXT is
+	ti_Elseif_keyword: KEYWORD_TEXT is
 			-- "elseif" keyword
 		once
-			!!Result.make ("elseif");
-			Result.set_is_keyword
+			!!Result.make ("elseif")
 		end;
 	
-	ti_End_keyword: BASIC_TEXT is
+	ti_End_keyword: KEYWORD_TEXT is
 			-- "end" keyword
 		once
-			!!Result.make ("end");
-			Result.set_is_keyword
+			!!Result.make ("end")
 		end;
 	
-	ti_Ensure_keyword: BASIC_TEXT is
+	ti_Ensure_keyword: KEYWORD_TEXT is
 			-- "ensure" keyword
 		once
-			!!Result.make ("ensure");
-			Result.set_is_keyword
+			!!Result.make ("ensure")
 		end;
 	
-	ti_Expanded_keyword: BASIC_TEXT is
+	ti_Expanded_keyword: KEYWORD_TEXT is
 			-- "expanded" keyword
 		once
-			!!Result.make ("expanded");
-			Result.set_is_keyword
+			!!Result.make ("expanded")
 		end;
 	
-	ti_Export_keyword: BASIC_TEXT is
+	ti_Export_keyword: KEYWORD_TEXT is
 			-- "export" keyword
 		once
-			!!Result.make ("export");
-			Result.set_is_keyword
+			!!Result.make ("export")
 		end;
 	
-	ti_External_keyword: BASIC_TEXT is
+	ti_External_keyword: KEYWORD_TEXT is
 			-- "external" keyword
 		once
-			!!Result.make ("external");
-			Result.set_is_keyword
+			!!Result.make ("external")
 		end;
 	
-	ti_False_keyword: BASIC_TEXT is
+	ti_False_keyword: KEYWORD_TEXT is
 			-- "false" keyword
 		once
-			!!Result.make ("false");
-			Result.set_is_keyword
+			!!Result.make ("false")
 		end;
 	
-	ti_Feature_keyword: BASIC_TEXT is
+	ti_Feature_keyword: KEYWORD_TEXT is
 			-- "feature" keyword
 		once
-			!!Result.make ("feature");
-			Result.set_is_keyword
+			!!Result.make ("feature")
 		end;
 	
-	ti_From_keyword: BASIC_TEXT is
+	ti_From_keyword: KEYWORD_TEXT is
 			-- "from" keyword
 		once
-			!!Result.make ("from");
-			Result.set_is_keyword
+			!!Result.make ("from")
 		end;
 	
-	ti_Frozen_keyword: BASIC_TEXT is
+	ti_Frozen_keyword: KEYWORD_TEXT is
 			-- "frozen" keyword
 		once
-			!!Result.make ("frozen");
-			Result.set_is_keyword
+			!!Result.make ("frozen")
 		end;
 	
-	ti_If_keyword: BASIC_TEXT is
+	ti_If_keyword: KEYWORD_TEXT is
 			-- "if" keyword
 		once
-			!!Result.make ("if");
-			Result.set_is_keyword
+			!!Result.make ("if")
 		end;
 	
-	ti_Indexing_keyword: BASIC_TEXT is
+	ti_Indexing_keyword: KEYWORD_TEXT is
 			-- "indexing" keyword
 		once
-			!!Result.make ("indexing");
-			Result.set_is_keyword
+			!!Result.make ("indexing")
 		end;
 	
-	ti_Infix_keyword: BASIC_TEXT is
+	ti_Infix_keyword: KEYWORD_TEXT is
 			-- "infix" keyword
 		once
-			!!Result.make ("infix");
-			Result.set_is_keyword
+			!!Result.make ("infix")
 		end;
 	
-	ti_Inherit_keyword: BASIC_TEXT is
+	ti_Inherit_keyword: KEYWORD_TEXT is
 			-- "inherit" keyword
 		once
-			!!Result.make ("inherit");
-			Result.set_is_keyword
+			!!Result.make ("inherit")
 		end;
 	
-	ti_Inspect_keyword: BASIC_TEXT is
+	ti_Inspect_keyword: KEYWORD_TEXT is
 			-- "inspect" keyword
 		once
-			!!Result.make ("inspect");
-			Result.set_is_keyword
+			!!Result.make ("inspect")
 		end;
 	
-	ti_Interface_keyword: BASIC_TEXT is
+	ti_Interface_keyword: KEYWORD_TEXT is
 			-- "interface" keyword (used in the short form)
 		once
-			!!Result.make ("interface");
-			Result.set_is_keyword
+			!!Result.make ("interface")
 		end;
 	
-	ti_Invariant_keyword: BASIC_TEXT is
+	ti_Invariant_keyword: KEYWORD_TEXT is
 			-- "invariant" keyword
 		once
-			!!Result.make ("invariant");
-			Result.set_is_keyword
+			!!Result.make ("invariant")
 		end;
 	
-	ti_Is_keyword: BASIC_TEXT is
+	ti_Is_keyword: KEYWORD_TEXT is
 			-- "is" keyword
 		once
-			!!Result.make ("is");
-			Result.set_is_keyword
+			!!Result.make ("is")
 		end;
 	
-	ti_Like_keyword: BASIC_TEXT is
+	ti_Like_keyword: KEYWORD_TEXT is
 			-- "like" keyword
 		once
-			!!Result.make ("like");
-			Result.set_is_keyword
+			!!Result.make ("like")
 		end;
 	
-	ti_Local_keyword: BASIC_TEXT is
+	ti_Local_keyword: KEYWORD_TEXT is
 			-- "local" keyword
 		once
-			!!Result.make ("local");
-			Result.set_is_keyword
+			!!Result.make ("local")
 		end;
 	
-	ti_Loop_keyword: BASIC_TEXT is
+	ti_Loop_keyword: KEYWORD_TEXT is
 			-- "loop" keyword
 		once
-			!!Result.make ("loop");
-			Result.set_is_keyword
+			!!Result.make ("loop")
 		end;
 	
-	ti_Obsolete_keyword: BASIC_TEXT is
+	ti_Obsolete_keyword: KEYWORD_TEXT is
 			-- "obsolete" keyword
 		once
-			!!Result.make ("obsolete");
-			Result.set_is_keyword
+			!!Result.make ("obsolete")
 		end;
 
-	ti_Old_keyword: BASIC_TEXT is
+	ti_Old_keyword: KEYWORD_TEXT is
 			-- "old" keyword
 		once
-			!!Result.make ("old");
-			Result.set_is_keyword
+			!!Result.make ("old")
 		end;
 	
-	ti_Once_keyword: BASIC_TEXT is
+	ti_Once_keyword: KEYWORD_TEXT is
 			-- "once" keyword
 		once
-			!!Result.make ("once");
-			Result.set_is_keyword
+			!!Result.make ("once")
 		end;
 	
-	ti_Prefix_keyword: BASIC_TEXT is
+	ti_Prefix_keyword: KEYWORD_TEXT is
 			-- "prefix" keyword
 		once
-			!!Result.make ("prefix");
-			Result.set_is_keyword
+			!!Result.make ("prefix")
 		end;
 	
-	ti_Redefine_keyword: BASIC_TEXT is
+	ti_Redefine_keyword: KEYWORD_TEXT is
 			-- "redefine" keyword
 		once
-			!!Result.make ("redefine");
-			Result.set_is_keyword
+			!!Result.make ("redefine")
 		end;
 	
-	ti_Rename_keyword: BASIC_TEXT is
+	ti_Rename_keyword: KEYWORD_TEXT is
 			-- "rename" keyword
 		once
-			!!Result.make ("rename");
-			Result.set_is_keyword
+			!!Result.make ("rename")
 		end;
 	
-	ti_Require_keyword: BASIC_TEXT is
+	ti_Require_keyword: KEYWORD_TEXT is
 			-- "require" keyword
 		once
-			!!Result.make ("require");
-			Result.set_is_keyword
+			!!Result.make ("require")
 		end;
 	
-	ti_Rescue_keyword: BASIC_TEXT is
+	ti_Rescue_keyword: KEYWORD_TEXT is
 			-- "rescue" keyword
 		once
-			!!Result.make ("rescue");
-			Result.set_is_keyword
+			!!Result.make ("rescue")
 		end;
 	
-	ti_Retry_keyword: BASIC_TEXT is
+	ti_Retry_keyword: KEYWORD_TEXT is
 			-- "retry" keyword
 		once
-			!!Result.make ("retry");
-			Result.set_is_keyword
+			!!Result.make ("retry")
 		end;
 	
-	ti_Select_keyword: BASIC_TEXT is
+	ti_Select_keyword: KEYWORD_TEXT is
 			-- "select" keyword
 		once
-			!!Result.make ("select");
-			Result.set_is_keyword
+			!!Result.make ("select")
 		end;
 	
-	ti_Strip_keyword: BASIC_TEXT is
+	ti_Strip_keyword: KEYWORD_TEXT is
 			-- "strip" keyword
 		once
-			!!Result.make ("strip");
-			Result.set_is_keyword
+			!!Result.make ("strip")
 		end;
 	
-	ti_Then_keyword: BASIC_TEXT is
+	ti_Then_keyword: KEYWORD_TEXT is
 			-- "then" keyword
 		once
-			!!Result.make ("then");
-			Result.set_is_keyword
+			!!Result.make ("then")
 		end;
 	
-	ti_True_keyword: BASIC_TEXT is
+	ti_True_keyword: KEYWORD_TEXT is
 			-- "true" keyword
 		once
-			!!Result.make ("true");
-			Result.set_is_keyword
+			!!Result.make ("true")
 		end;
 	
-	ti_Undefine_keyword: BASIC_TEXT is
+	ti_Undefine_keyword: KEYWORD_TEXT is
 			-- "undefine" keyword
 		once
-			!!Result.make ("undefine");
-			Result.set_is_keyword
+			!!Result.make ("undefine")
 		end;
 	
-	ti_Unique_keyword: BASIC_TEXT is
+	ti_Unique_keyword: KEYWORD_TEXT is
 			-- "unique" keyword
 		once
-			!!Result.make ("unique");
-			Result.set_is_keyword
+			!!Result.make ("unique")
 		end;
 	
-	ti_Until_keyword: BASIC_TEXT is
+	ti_Until_keyword: KEYWORD_TEXT is
 			-- "until" keyword
 		once
-			!!Result.make ("until");
-			Result.set_is_keyword
+			!!Result.make ("until")
 		end;
 	
-	ti_Variant_keyword: BASIC_TEXT is
+	ti_Variant_keyword: KEYWORD_TEXT is
 			-- "variant" keyword
 		once
-			!!Result.make ("variant");
-			Result.set_is_keyword
+			!!Result.make ("variant")
 		end;
 	
-	ti_When_keyword: BASIC_TEXT is
+	ti_When_keyword: KEYWORD_TEXT is
 			-- "when" keyword
 		once
-			!!Result.make ("when");
-			Result.set_is_keyword
+			!!Result.make ("when")
 		end;
 	
-feature {NONE} -- Special characters
+feature {NONE} -- Symbol names
 
-	ti_Assign: BASIC_TEXT is
+	ti_Assign: SYMBOL_TEXT is
 			-- ":=" characters
 		once
-			!!Result.make (":=");
-			Result.set_is_special
+			!!Result.make (":=")
 		end;
 
-	ti_Colon: BASIC_TEXT is
+	ti_Colon: SYMBOL_TEXT is
 			-- ":" character
 		once
-			!!Result.make (":");
-			Result.set_is_special
+			!!Result.make (":")
 		end;
 
-	ti_Comma: BASIC_TEXT is
+	ti_Comma: SYMBOL_TEXT is
 			-- "," character
 		once
-			!!Result.make (",");
-			Result.set_is_special
+			!!Result.make (",")
 		end;
 
-	ti_Constraint: BASIC_TEXT is
+	ti_Constraint: SYMBOL_TEXT is
 			-- "->" characters
 		once
-			!!Result.make ("->");
-			Result.set_is_special
+			!!Result.make ("->")
 		end;
 
-	ti_Creation_mark: BASIC_TEXT is
+	ti_Creation_mark: SYMBOL_TEXT is
 			-- "!!" characters
 		once
-			!!Result.make ("!!");
-			Result.set_is_special
+			!!Result.make ("!!")
 		end;
 
-	ti_Dashdash: BASIC_TEXT is
+	ti_Dashdash: SYMBOL_TEXT is
 			-- "--" characters
 		once
-			!!Result.make ("--");
-			Result.set_is_special
+			!!Result.make ("--")
 		end;
 
-	ti_Dollar: BASIC_TEXT is
+	ti_Dollar: SYMBOL_TEXT is
 			-- "$" character
 		once
-			!!Result.make ("$");
-			Result.set_is_special
+			!!Result.make ("$")
 		end;
 
-	ti_Dot: BASIC_TEXT is
+	ti_Dot: SYMBOL_TEXT is
 			-- "." character
 		once
-			!!Result.make (".");
-			Result.set_is_special
+			!!Result.make (".")
 		end;
 
-	ti_Dotdot: BASIC_TEXT is
+	ti_Dotdot: SYMBOL_TEXT is
 			-- ".." characters
 		once
-			!!Result.make ("..");
-			Result.set_is_special
+			!!Result.make ("..")
 		end;
 
-	ti_Double_quote: BASIC_TEXT is
+	ti_Double_quote: SYMBOL_TEXT is
 			-- '"' character
 		once
-			!!Result.make ("%"");
-			Result.set_is_special
+			!!Result.make ("%"")
 		end;
 
-	ti_Equal: BASIC_TEXT is
+	ti_Equal: SYMBOL_TEXT is
 			-- "=" character
 		once
-			!!Result.make ("=");
-			Result.set_is_special
+			!!Result.make ("=")
 		end;
 
-	ti_Exclamation: BASIC_TEXT is
+	ti_Exclamation: SYMBOL_TEXT is
 			-- "!" character
 		once
-			!!Result.make ("!");
-			Result.set_is_special
+			!!Result.make ("!")
 		end;
 
-	ti_Greater_than: BASIC_TEXT is
+	ti_Greater_than: SYMBOL_TEXT is
 			-- ">" character
 		once
-			!!Result.make (">");
-			Result.set_is_special
+			!!Result.make (">")
 		end;
 
-	ti_Greater_equal: BASIC_TEXT is
+	ti_Greater_equal: SYMBOL_TEXT is
 			-- ">=" characters
 		once
-			!!Result.make (">=");
-			Result.set_is_special
+			!!Result.make (">=")
 		end;
 
-	ti_L_array: BASIC_TEXT is
+	ti_L_array: SYMBOL_TEXT is
 			-- "<<" characters
 		once
-			!!Result.make ("<<");
-			Result.set_is_special
+			!!Result.make ("<<")
 		end;
 
-	ti_L_bracket: BASIC_TEXT is
+	ti_L_bracket: SYMBOL_TEXT is
 			-- "[" character
 		once
-			!!Result.make ("[");
-			Result.set_is_special
+			!!Result.make ("[")
 		end;
 
-	ti_L_curly: BASIC_TEXT is
+	ti_L_curly: SYMBOL_TEXT is
 			-- "{" character
 		once
-			!!Result.make ("{");
-			Result.set_is_special
+			!!Result.make ("{")
 		end;
 
-	ti_L_parenthesis: BASIC_TEXT is
+	ti_L_parenthesis: SYMBOL_TEXT is
 			-- "(" character
 		once
-			!!Result.make ("(");
-			Result.set_is_special
+			!!Result.make ("(")
 		end;
 
-	ti_Less_than: BASIC_TEXT is
+	ti_Less_than: SYMBOL_TEXT is
 			-- "<" character
 		once
-			!!Result.make ("<");
-			Result.set_is_special
+			!!Result.make ("<")
 		end;
 
-	ti_Less_equal: BASIC_TEXT is
+	ti_Less_equal: SYMBOL_TEXT is
 			-- "<=" characters
 		once
-			!!Result.make ("<=");
-			Result.set_is_special
+			!!Result.make ("<=")
+		end;
+
+	ti_Quote: SYMBOL_TEXT is
+			-- "'" characters
+		once
+			!!Result.make ("%'")
+		end;
+
+	ti_R_array: SYMBOL_TEXT is
+			-- ">>" characters
+		once
+			!!Result.make (">>")
+		end;
+
+	ti_R_bracket: SYMBOL_TEXT is
+			-- "]" character
+		once
+			!!Result.make ("]")
+		end;
+
+	ti_R_curly: SYMBOL_TEXT is
+			-- "}" character
+		once
+			!!Result.make ("}")
+		end;
+
+	ti_R_parenthesis: SYMBOL_TEXT is
+			-- ")" character
+		once
+			!!Result.make (")")
+		end;
+
+	ti_Reverse_assign: SYMBOL_TEXT is
+			-- "?=" characters
+		once
+			!!Result.make ("?=")
+		end;
+
+	ti_Semi_colon: SYMBOL_TEXT is
+			-- ";" character
+		once
+			!!Result.make (";")
+		end;
+
+feature {NONE} -- Basic text
+
+	ti_Padded_debug_mark: PADDED_ITEM is
+			-- Breakpoint item
+		once
+			!! Result
 		end;
 
 	ti_New_line: NEW_LINE_ITEM is
@@ -673,63 +654,6 @@ feature {NONE} -- Special characters
 		once
 			!! Result.make
 		end;
-
-	ti_Padded_debug_mark: BASIC_TEXT is
-			-- Breakpoint item 
-		once
-			!! Result.make ("    ")
-		end;
-
-	ti_Quote: BASIC_TEXT is
-			-- "'" characters
-		once
-			!!Result.make ("%'");
-			Result.set_is_special
-		end;
-
-	ti_R_array: BASIC_TEXT is
-			-- ">>" characters
-		once
-			!!Result.make (">>");
-			Result.set_is_special
-		end;
-
-	ti_R_bracket: BASIC_TEXT is
-			-- "]" character
-		once
-			!!Result.make ("]");
-			Result.set_is_special
-		end;
-
-	ti_R_curly: BASIC_TEXT is
-			-- "}" character
-		once
-			!!Result.make ("}");
-			Result.set_is_special
-		end;
-
-	ti_R_parenthesis: BASIC_TEXT is
-			-- ")" character
-		once
-			!!Result.make (")");
-			Result.set_is_special
-		end;
-
-	ti_Reverse_assign: BASIC_TEXT is
-			-- "?=" characters
-		once
-			!!Result.make ("?=");
-			Result.set_is_special
-		end;
-
-	ti_Semi_colon: BASIC_TEXT is
-			-- ";" character
-		once
-			!!Result.make (";");
-			Result.set_is_special
-		end;
-
-feature {NONE} -- Basic text
 
 	ti_Breakpoint: BREAKPOINT_ITEM is
 			-- Breakpoint item 

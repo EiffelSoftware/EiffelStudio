@@ -166,6 +166,7 @@ feature {NONE} -- Implementation
 		local
 			label: EV_LABEL
 		do
+			test_class_display.set_background_color ((create {EV_STOCK_COLORS}).white)
 			main_split_area.prune (main_box)
 			create label.make_with_text ("Please select a widget to begin exploration")
 			main_split_area.extend (label)

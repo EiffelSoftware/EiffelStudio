@@ -230,7 +230,7 @@ feature {NONE}-- Initialization
 			
 				--Connect events.
 			close_request_actions.extend (agent close_test)
-			file_menu.select_actions.extend (agent close_test)
+			file_exit.select_actions.extend (agent close_test)
 			l_notebook_1.selection_actions.extend (agent clear_events)
 			select_all.select_actions.extend (agent select_all_events)
 			clear_all.select_actions.extend (agent clear_all_events)

@@ -95,9 +95,9 @@ extern "C" {
 #define GS_ZONE_SZ_DEFAULT 307200	/* Size is 300K by default. */
 #endif	/* EIF_STRING_OPTIMIZATION */
 #endif	/* VXWORKS */
-#define GS_FLOATMARK (eif_scavenge_size >> 2 + \
-					  eif_scavenge_size >> 3 + \
-					  eif_scavenge_size >> 5)	/* Leave that much free, this is
+#define GS_FLOATMARK ((eif_scavenge_size >> 2) + \
+					  (eif_scavenge_size >> 3) + \
+					  (eif_scavenge_size >> 5))	/* Leave that much free, this is
 												 * equal to x * 0.40625
 												 * We are doing this to improve the 
 												 * preformance of the computation */

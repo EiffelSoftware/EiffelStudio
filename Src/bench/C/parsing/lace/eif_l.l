@@ -19,6 +19,10 @@
 #include "limits.h"
 #include <ctype.h>
 
+#ifdef EIF_OS2
+#include <io.h>
+#endif
+
 /* private functions for lex */
 static int get_string();
 static int eif_char();

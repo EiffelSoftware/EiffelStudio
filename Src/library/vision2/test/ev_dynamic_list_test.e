@@ -1,6 +1,5 @@
 indexing
 	description: "Test of tests."
-	author: "Vincent Brendel", "brendel@eiffel.com"
 	date: "$Date$"
 	revision: "$Revision$"
 

@@ -1,7 +1,6 @@
 indexing
 	description: "Objects that hold both a name, a piece of data%
 		% and an XML_ELEMENT. For use by application generator."
-	author: "Julian Rogers"
 	date: "$Date$"
 	revision: "$Revision$"
 

@@ -1,6 +1,5 @@
 indexing
 	description: "Objects that provide useful functions for APPLICATION_GENERATOR"
-	author: "Julian Rogers"
 	date: "$Date$"
 	revision: "$Revision$"
 

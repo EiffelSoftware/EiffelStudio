@@ -351,6 +351,7 @@ feature -- Properties
 
 			if il_generation then
 				local_workbench.change_class (system_object_class)
+				local_workbench.change_class (system_value_type_class)
 			end
 			local_workbench.change_class (any_class)
 			local_workbench.change_class (special_class)
@@ -402,6 +403,7 @@ feature -- Properties
 
 			if il_generation then
 				system_object_class.compiled_class.record_precompiled_class_in_system
+				system_value_type_class.compiled_class.record_precompiled_class_in_system
 			end
 			any_class.compiled_class.record_precompiled_class_in_system
 			double_class.compiled_class.record_precompiled_class_in_system
@@ -1098,6 +1100,7 @@ end
 
 			if il_generation then
 				system_object_class.compiled_class.mark_class (marked_classes)
+				system_value_type_class.compiled_class.mark_class (marked_classes)
 			end
 			any_class.compiled_class.mark_class (marked_classes)
 			double_class.compiled_class.mark_class (marked_classes)
@@ -1228,10 +1231,27 @@ end
 			old_value: INTEGER
 		do
 			old_value := type_id_counter.value
-				-- Initialize types of non-generic classes.
-			Degree_2.initialize_non_generic_types
-				-- For generic classes, compute the types.
+
+				-- ANY needs to be processed first so that it has static type
+				-- of 1.
+			if not any_class.compiled_class.has_types then
+				any_class.compiled_class.init_types
+			end
+
+				-- Processing of root class if any to make it easy to find
+				-- it in generated C code
+			if
+				root_class /= Void and then root_class.is_compiled and then
+				not root_class.compiled_class.has_types
+			then
+				root_class.compiled_class.init_types
+			end
+
+				-- Compute the types.
 			Instantiator.process
+
+				-- Initialize types of non-generic classes which haven't been initialized yet.
+			Degree_2.initialize_non_generic_types
 
 				-- If first compilation, re-order dynamic types
 			if old_value = 0 then
@@ -2478,6 +2498,51 @@ feature -- Dead code removal
 			l_class := any_class.compiled_class
 			remover.record (l_class.feature_table.item_id (feature {PREDEFINED_NAMES}.Internal_correct_mismatch_name_id), l_class)
 
+				-- Protection of feature `set_item' of `reference BOOLEAN'
+			l_class := boolean_class.compiled_class
+			remover.record (l_class.feature_table.item_id (feature {PREDEFINED_NAMES}.set_item_name_id), l_class)
+
+				-- Protection of feature `set_item' of `reference CHARACTER'
+			l_class := character_class.compiled_class
+			remover.record (l_class.feature_table.item_id (feature {PREDEFINED_NAMES}.set_item_name_id), l_class)
+
+				-- Protection of feature `set_item' of `reference WIDE_CHARACTER'
+			l_class := wide_char_class.compiled_class
+			remover.record (l_class.feature_table.item_id (feature {PREDEFINED_NAMES}.set_item_name_id), l_class)
+
+				-- Protection of feature `set_item' of `reference POINTER'
+			l_class := pointer_class.compiled_class
+			remover.record (l_class.feature_table.item_id (feature {PREDEFINED_NAMES}.set_item_name_id), l_class)
+
+				-- Protection of feature `set_item' of `reference TYPED_POINTER_ [G]'
+			l_class := typed_pointer_class.compiled_class
+			remover.record (l_class.feature_table.item_id (feature {PREDEFINED_NAMES}.set_item_name_id), l_class)
+
+				-- Protection of feature `set_item' of `reference REAL'
+			l_class := real_class.compiled_class
+			remover.record (l_class.feature_table.item_id (feature {PREDEFINED_NAMES}.set_item_name_id), l_class)
+
+				-- Protection of feature `set_item' of `reference DOUBLE'
+			l_class := double_class.compiled_class
+			remover.record (l_class.feature_table.item_id (feature {PREDEFINED_NAMES}.set_item_name_id), l_class)
+
+				-- Protection of feature `set_item' of `reference INTEGER_8'
+			l_class := integer_8_class.compiled_class
+			remover.record (l_class.feature_table.item_id (feature {PREDEFINED_NAMES}.set_item_name_id), l_class)
+
+				-- Protection of feature `set_item' of `reference INTEGER_16'
+			l_class := integer_16_class.compiled_class
+			remover.record (l_class.feature_table.item_id (feature {PREDEFINED_NAMES}.set_item_name_id), l_class)
+
+				-- Protection of feature `set_item' of `reference INTEGER_32'
+			l_class := integer_32_class.compiled_class
+			remover.record (l_class.feature_table.item_id (feature {PREDEFINED_NAMES}.set_item_name_id), l_class)
+
+				-- Protection of feature `set_item' of `reference INTEGER_64'
+			l_class := integer_64_class.compiled_class
+			remover.record (l_class.feature_table.item_id (feature {PREDEFINED_NAMES}.set_item_name_id), l_class)
+
+
 debug ("DEAD_CODE")
 			remover.dump_alive
 			remover.dump_marked
@@ -2760,11 +2825,12 @@ end
 
 			buffer.start_c_specific_code
 			
-			max_id := 0;
 
 			from
 				i := 1;
+				max_id := 0;
 				nb := Type_id_counter.value;
+				create used_ids.make (0, nb);
 			until
 				i > nb
 			loop
@@ -2772,12 +2838,7 @@ end
 				if cl_type /= Void then
 					cl_type.generate_parent_table (buffer, final_mode);
 					cid := cl_type.type.generated_id (final_mode);
-
-					if cid <= -256 then
-							-- Expanded reference
-						cid := -256-cid
-					end
-
+					used_ids.put (True, cid);
 					if cid > max_id then
 						max_id := cid;
 					end
@@ -2785,30 +2846,7 @@ end
 				i := i + 1;
 			end;
 
-			-- Now create 'used_ids' array and fill it
-
-			create used_ids.make (0, max_id);
-
-			from
-				i := 1;
-				nb := Type_id_counter.value;
-			until
-				i > nb
-			loop
-				cl_type := class_types.item (i);
-				if cl_type /= Void then
-					cid := cl_type.type.generated_id (final_mode);
-
-					if cid <= -256 then
-							-- Expanded reference
-						cid := -256-cid
-					end
-					used_ids.put (True, cid);
-				end;
-				i := i + 1;
-			end;
-
-			buffer.putstring ("int    egc_partab_size_init = ")
+			buffer.putstring ("int egc_partab_size_init = ")
 			buffer.putint (max_id);
 			buffer.putstring (";%N");
 			buffer.putstring ("struct eif_par_types *egc_partab_init[] = {%N");
@@ -2822,12 +2860,12 @@ end
 					buffer.putstring ("&par");
 					buffer.putint (i);
 				else
-					buffer.putstring ("(struct eif_par_types *)0");
+					buffer.putstring ("NULL");
 				end;
 				buffer.putstring (",%N");
 				i := i + 1;
 			end;
-			buffer.putstring ("(struct eif_par_types *)0};%N");
+			buffer.putstring ("NULL};%N");
 			buffer.end_c_specific_code
 
 			create parents_file.make_c_code_file (gen_file_name (final_mode, Eparents));
@@ -2970,7 +3008,7 @@ if cl_type /= Void then
 					else
 							-- Type not inserted in system because it was coming
 							-- from a precompiled library.
-						buffer.putstring ("{ 0, %"INVALID_TYPE%", (char**)0,0,0,0,0,0}")
+						buffer.putstring ("{0L,%"INVALID_TYPE%",NULL,NULL,NULL,NULL,(uint16)0L,NULL,NULL}")
 					end
 				else
 					cl_type.generate_skeleton2 (buffer)
@@ -2978,13 +3016,13 @@ if cl_type /= Void then
 else
 		-- FIXME
 	if final_mode then
-		buffer.putstring ("{ 0, %"INVALID_TYPE%", (char**)0,0,0,0,0,0}")
+		buffer.putstring ("{0L,%"INVALID_TYPE%",NULL,NULL,NULL,NULL,(uint16)0L,NULL,NULL}")
 	else
 		buffer.putstring 
-			("{%N0L,%N%"INVALID_TYPE%",%N(char**) 0,%N(int*) 0,%N%
-			%(uint32*) 0,%N(int16**) 0,%N(int32*) 0,%N0L,%N0L,%N'\0',%N'\0',%N%
-			%(int32) 0,(int32) 0,'\0',%N(int32*) 0,%N%
-			%{(int32) 0, (int) 0, (char**) 0, (char*) 0}}")
+			("{%N0L,%N%"INVALID_TYPE%",%NNULL,%NNULL,%N%
+			%NULL,%NNULL,%N(uint16) 0L,%NNULL,%N0L,%N0L,%N%
+			%(int32) 0L,(int32) 0L,%NNULL,%N%
+			%{(int32) 0, (int) 0, NULL, NULL}}")
 	end
 end
 				buffer.putstring (",%N")

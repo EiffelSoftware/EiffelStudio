@@ -15,7 +15,8 @@ inherit
 
 	EV_GAUGE_IMP
 		redefine
-			interface
+			interface,
+			make
 		end
 
 feature {NONE} -- Implementation
@@ -23,8 +24,7 @@ feature {NONE} -- Implementation
 	make (an_interface: like interface) is
 			-- Create the progress bar.
 		do
-			base_make (an_interface)
-			adjustment := C.gtk_adjustment_new (1, 1, 100, 1, 10, 10)
+			Precursor (an_interface)
 			set_c_object (C.gtk_event_box_new)		
 			gtk_progress_bar := C.gtk_progress_bar_new_with_adjustment (adjustment)
 			C.gtk_widget_show (gtk_progress_bar)
@@ -36,9 +36,12 @@ feature -- Access
 	proportion: REAL is
 			-- Proportion of bar filled. Range: [0,1].
 		do
-			--Result := (value - minimum) / (maximum - minimum)
-			if not is_destroyed then
-				Result := C.gtk_progress_get_current_percentage (gtk_progress_bar)
+			if maximum = minimum then
+				Result := 1.0
+			else
+				if not is_destroyed then
+					Result := C.gtk_progress_get_current_percentage (gtk_progress_bar)
+				end	
 			end
 		end
 
@@ -100,6 +103,11 @@ end -- class EV_PROGRESS_BAR_IMP
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.12  2000/02/16 04:11:48  brendel
+--| Implemented `proportion' to comply with new definition. See invariant
+--| in EV_PROGRESS_BAR.
+--| Added redefinition of make. Adjustment is now initialized in Precursor.
+--|
 --| Revision 1.11  2000/02/14 11:40:32  oconnor
 --| merged changes from prerelease_20000214
 --|

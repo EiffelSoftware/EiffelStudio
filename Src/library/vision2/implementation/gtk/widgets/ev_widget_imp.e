@@ -739,7 +739,7 @@ feature -- Obsolete
 		-- Check if the dimensions of the widget are set to 
 		-- the values given or the minimum values possible 
 		-- for that widget.
-		-- XXXXXXXXXXXXXXXXXXXXXX fix
+	
 		obsolete "dont use it"
 		do
                 --       Result := (width = new_width or else width = minimum_width or else (not shown and width = 1)) and then
@@ -818,6 +818,9 @@ end -- class EV_WIDGET_IMP
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.60  2000/03/01 18:05:25  king
+--| Removed XXXX
+--|
 --| Revision 1.59  2000/02/22 18:39:37  oconnor
 --| updated copyright date and formatting
 --|

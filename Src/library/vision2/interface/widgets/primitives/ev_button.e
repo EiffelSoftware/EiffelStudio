@@ -58,7 +58,7 @@ feature {NONE} -- Initialization
 feature -- Event handling
 
 	press_actions: EV_NOTIFY_ACTION_SEQUENCE
-			-- Actions performed when button is pressed and then released.
+			-- Actions to be performed when button is pressed and then released.
 
 feature {NONE} -- Implementation
 
@@ -115,6 +115,9 @@ end -- class EV_BUTTON
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.27  2000/03/20 20:25:35  oconnor
+--| comments
+--|
 --| Revision 1.26  2000/03/06 19:47:39  oconnor
 --| added make_for_test
 --|

@@ -29,8 +29,7 @@ feature {EV_ANY} -- Initialization
 			{EV_BUTTON} Precursor
 			create menu
 			press_actions.extend (menu~show)
---|FIXME add item_select_actions to EV_MENU
---|			menu.item_select_actions.extend (~on_item_select)
+|			menu.item_select_actions.extend (~on_item_select)
 		end
 
 feature -- Access
@@ -122,6 +121,9 @@ end -- class EV_OPTION_BUTTON
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.18  2000/03/20 20:25:35  oconnor
+--| comments
+--|
 --| Revision 1.17  2000/03/20 20:05:22  oconnor
 --| proposed new platform independant implementation.
 --|

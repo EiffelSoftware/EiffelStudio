@@ -96,7 +96,7 @@ LSRC = math.c malloc.c garcol.c local.c store.c retrieve.c \
 	copy.c equal.c lmalloc.c out.c timer.c urgent.c sig.c \
 	hector.c cecil.c bits.c file.c dir.c string.c misc.c \
 	pattern.c error.c umain.c memory.c argv.c boolstr.c search.c \
-	run_idr.c path_name.c dle.c object_id.c eif_threads.c
+	run_idr.c path_name.c dle.c object_id.c eif_threads.c eif_project.c
 
 OTHER = main.c except.c
 
@@ -147,7 +147,8 @@ WSRC = \
 	wobject_id.c \
 	weif_threads.c \
 	wmain.c \
-	wexcept.c 
+	wexcept.c \
+	weif_project.c
 
 ESRC = \
 	compress.c \
@@ -191,7 +192,8 @@ ESRC = \
 	wobject_id.c \
 	weif_threads.c \
 	bmain.c \
-	bexcept.c 
+	bexcept.c \
+	weif_project.c
 
 LOBJ = \
 	eif_once.o \
@@ -237,7 +239,8 @@ LOBJ = \
 	object_id.o \
 	eif_threads.o \
 	main.o \
-	except.o 
+	except.o \
+	eif_project.o 
 
 WOBJ = \
 	$(NETWORK) \
@@ -288,7 +291,8 @@ WOBJ = \
 	debug.o \
 	interp.o \
 	update.o \
-	wbench.o 
+	wbench.o \
+	weif_project.o
 
 EOBJ = \
 	woption.o \
@@ -338,7 +342,8 @@ EOBJ = \
 	debug.o \
 	interp.o \
 	update.o \
-	wbench.o 
+	wbench.o  \
+	weif_project.o
 
 all:: eif_size.h
 
@@ -686,6 +691,15 @@ woption.c: option.c
 remove::
 	$(RM) woption.c
 
+weif_project.c: eif_project.c
+	$(RM) weif_project.c
+	$(LN) eif_project.c weif_project.c
+remove::
+	$(RM) weif_project.c
+
+weif_project.c: weif_project.c
+	$(CC) -c $(JCFLAGS) -DWORKBENCH $*.c
+	$(RM) $*.c
 
 woption.o: woption.c
 	$(CC) -c $(JCFLAGS) -DWORKBENCH $*.c

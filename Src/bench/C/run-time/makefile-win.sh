@@ -23,7 +23,9 @@ OBJECTS = lmalloc.obj math.obj malloc.obj garcol.obj local.obj except.obj store.
 	boolstr.obj search.obj main.obj dle.obj option.obj \
 	console.obj run_idr.obj  $(TOP)\ipc\shared\networku.obj $(TOP)\ipc\shared\shword.obj \
 	path_name.obj object_id.obj $(TOP)\console\econsole.lib \
-	compress.obj eif_threads.obj eif_cond_var.obj eif_once.obj $extra_object_files
+	compress.obj eif_threads.obj eif_cond_var.obj eif_once.obj \
+	eif_project.obj \
+	$extra_object_files
 
 WOBJECTS = $(NETWORK) wlmalloc.obj wmath.obj wmalloc.obj wgarcol.obj wlocal.obj wexcept.obj \
 	wstore.obj wretrieve.obj whash.obj wtravers.obj whashin.obj wtools.obj \
@@ -34,7 +36,9 @@ WOBJECTS = $(NETWORK) wlmalloc.obj wmath.obj wmalloc.obj wgarcol.obj wlocal.obj 
 	debug.obj interp.obj woption.obj update.obj wbench.obj  \
 	wconsole.obj wrun_idr.obj wdle.obj $(TOP)\idrs\idr.lib wpath_name.obj \
 	wobject_id.obj $(TOP)\console\econsole.lib \
-	compress.obj weif_threads.obj weif_cond_var.obj weif_once.obj $extra_object_files
+	compress.obj weif_threads.obj weif_cond_var.obj weif_once.obj \
+	weif_project.obj \
+	$extra_object_files
 
 EOBJECTS = wlmalloc.obj wmath.obj wmalloc.obj wgarcol.obj \
 	wlocal.obj bexcept.obj wstore.obj wretrieve.obj whash.obj wtravers.obj whashin.obj \
@@ -45,7 +49,8 @@ EOBJECTS = wlmalloc.obj wmath.obj wmalloc.obj wgarcol.obj \
 	woption.obj update.obj wbench.obj wconsole.obj wrun_idr.obj \
 	$(TOP)\ipc\shared\networku.obj wdle.obj \
 	wpath_name.obj wobject_id.obj $(TOP)\console\econsole.lib \
-	compress.obj weif_threads.obj weif_cond_var.obj weif_once.obj
+	compress.obj weif_threads.obj weif_cond_var.obj weif_once.obj \
+	weif_project.obj
 
 all:: eif_size.h
 
@@ -225,6 +230,12 @@ wobject_id.c : object_id.c
 
 wdle.c : dle.c
 	$(LN) dle.c wdle.c
+
+weif_project.c : eif_project.c
+	$(LN) eif_project.c weif_project.c
+
+weif_project.obj : weif_project.c
+	$(CC)  $(JCFLAGS) -DWORKBENCH $*.c
 
 wmath.obj : wmath.c
 	$(CC)  $(JCFLAGS) -DWORKBENCH $*.c

@@ -28,7 +28,6 @@ feature
 			-- Execution of the pass level 4.
 		local
 			pass4_c: PASS4_C
-			pass_c: PASS_C
 			deg_output: DEGREE_OUTPUT
 			classes_left: INTEGER
 			local_changed_classes: PART_SORTED_TWO_WAY_LIST [PASS4_C]
@@ -62,9 +61,9 @@ feature
 				until
 					local_changed_classes.after
 				loop
-					pass_c := local_changed_classes.item
-					System.set_current_class (pass_c.associated_class)
-					pass_c.execute (deg_output, classes_left)
+					pass4_c := local_changed_classes.item
+					System.set_current_class (pass4_c.associated_class)
+					pass4_c.melt (deg_output, classes_left)
 					classes_left := classes_left - 1
 
 					local_changed_classes.forth

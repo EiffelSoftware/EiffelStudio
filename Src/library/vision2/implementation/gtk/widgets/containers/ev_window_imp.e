@@ -37,7 +37,12 @@ feature {NONE} -- Initialization
 	make is
 		do
 			widget := gtk_window_new (GTK_WINDOW_TOPLEVEL)
+-- alex
+			gtk_widget_set_all_events(widget)
+				-- set the events to be handled by the window
+
 			initialize
+
 		end
 
         make_with_owner (par: EV_WINDOW) is
@@ -82,21 +87,25 @@ feature  -- Access
 			-- Maximum width that application wishes widget
 			-- instance to have
 		do
+			Result := c_gtk_window_maximum_width (widget) 
 		end	
 	
 	maximum_height: INTEGER is
 			-- Maximum height that application wishes widget
 			-- instance to have
 		do
+			Result := c_gtk_window_maximum_height (widget)
 		end
 
 	title: STRING is
 			-- Application name to be displayed by
 			-- the window manager
+		local
+			p : POINTER
 		do
-			check
-                                not_yet_implemented: False
-                        end
+			p := c_gtk_window_title(widget)
+			create Result.make (0)
+			Result.from_c (p)
                 end
 
 	icon_name: STRING is
@@ -106,8 +115,8 @@ feature  -- Access
 		do
 			check
                                 not_yet_implemented: False
-                        end	
-                end
+                        end
+		end
 
         icon_mask: EV_PIXMAP is
                         -- Bitmap that could be used by window manager
@@ -155,11 +164,13 @@ feature -- Status setting
 	forbid_resize is
 			-- Forbid the resize of the window.
 		do
+			gtk_window_set_policy (widget, False, False,False)
 		end
 
 	allow_resize is
 			-- Allow the resize of the window.
 		do
+			gtk_window_set_policy (widget, True, True, False)
 		end
 
         set_iconic_state is
@@ -205,11 +216,15 @@ feature -- Element change
 	set_maximum_width (max_width: INTEGER) is
 			-- Set `maximum_width' to `max_width'.
 		do
+				-- to be tested
+			gdk_window_set_hints(widget, x, y, 0, 0, max_width, maximum_height, True)
 		end 
 
 	set_maximum_height (max_height: INTEGER) is
 			-- Set `maximum_height' to `max_height'.
 		do
+				-- to be tested
+			gdk_window_set_hints(widget, x, y, 0, 0, maximum_width, max_height, True)
 		end
 
         set_title (new_title: STRING) is
@@ -217,16 +232,14 @@ feature -- Element change
                 local
                         a: ANY
 		do
-			a ?= new_title.to_c	
+			a := new_title.to_c	
 			gtk_window_set_title (widget, $a)
                 end
 
         set_icon_name (new_name: STRING) is
                         -- Set `icon_name' to `new_name'.
 		do
-			check
-                                not_yet_implemented: False
-                        end
+			gdk_window_set_icon_name(widget, new_name)
                 end
 
         set_icon_mask (mask: EV_PIXMAP) is
@@ -276,7 +289,7 @@ feature -- Event - command association
 
 	add_move_command (cmd: EV_COMMAND; arg: EV_ARGUMENT) is
 			-- Add `cmd' to the list of commands to be executed when the
-			-- widget is resized.
+			-- widget is moved.
 		local
 			ev_data: EV_EVENT_DATA		
 		do
@@ -290,22 +303,22 @@ feature -- Event -- removing command association
 			-- Empty the list of commands to be executed
 			-- when the window is closed.
 		do
-			check False end
 			has_close_command := False
+			remove_commands (close_event_id)
 		end
 
 	remove_resize_commands is
 			-- Empty the list of commands to be executed
 			-- when the window is resized.
 		do
-			check False end
+			remove_commands (resize_event_id)
 		end
 
 	remove_move_commands is
 			-- Empty the list of commands to be executed
 			-- when the widget is resized.
 		do
-			check False end
+			remove_commands (move_event_id)
 		end
 
 feature -- Assertion test
@@ -349,7 +362,7 @@ feature {EV_APPLICATION_IMP} -- Implementation
 			-- Temporary XXX!
 			!!s.make (0)
 			s := "destroy"
-			a ?= s.to_c
+			a := s.to_c
 					
 			-- Connect the signal
 			i := c_gtk_signal_connect (widget, $a, exit_function, 
@@ -403,6 +416,18 @@ feature {EV_STATIC_MENU_BAR_IMP} -- Implementation
 			-- Add a static menu bar at the top of the window.
 		do
 			gtk_box_pack_start (vbox, menu.widget, False, True, 0)
+		end
+
+feature {EV_STATUS_BAR_IMP} -- Implementation
+
+	add_status_bar (status_bar: EV_STATUS_BAR_IMP) is
+			-- Add a status bar at the bottom of the window.
+		do
+			gtk_object_ref (hbox)
+			gtk_container_remove (vbox, hbox)
+			gtk_box_pack_end (vbox, status_bar.widget, False, True, 0)
+			gtk_box_pack_end (vbox, hbox, True, True, 0)
+			gtk_object_unref (hbox)
 		end
 
 feature {EV_APPLICATION_IMP} -- Implementation

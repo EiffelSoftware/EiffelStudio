@@ -96,20 +96,39 @@ feature -- Element change
 		do
 			extend (interval.item.lower, interval.item.upper, true, true, interval, interval, 1)
 		ensure
+			is_extended_implies_count_inremented: is_extended implies count > old count
+			lower_unchanged:
+				upper <= interval.item.lower implies
+				(lower = old lower and then lower_interval = old lower_interval)
+			upper_unchanged:
+				interval.item.upper <= lower implies
+				(upper = old upper and then upper_interval = old upper_interval)
+			lower_interval_unchanged:
+				not is_extended implies lower_interval = old lower_interval
+			upper_interval_unchanged:
+				not is_extended implies upper_interval = old upper_interval
 			added_as_lower:
-				count > old count and then interval.item.upper <= lower implies
-				(is_lower_included and then
-				lower = interval.item.lower and then upper = old upper and then
-				lower_interval = interval and then upper_interval = old upper_interval)
+				is_extended and then interval.item.upper <= lower implies
+				(is_lower_included and then lower = interval.item.lower and then lower_interval = interval)
 			added_as_upper:
-				count > old count and then upper <= interval.item.lower implies 
-				(is_upper_included and then
-				upper = interval.item.upper and then lower = old lower and then
-				upper_interval = interval and then lower_interval = old lower_interval)
-			count_incremented_by_1:
-				count > old count and then (interval.item.upper.is_next (old lower) or else (old upper).is_next (interval.item.lower)) implies count = old count + 1
-			count_incremented_by_2:
-				count = old count or else interval.item.upper.is_next (old lower) or else (old upper).is_next (interval.item.lower) or else count = old count + 2
+				is_extended and then upper <= interval.item.lower implies 
+				(is_upper_included and then upper = interval.item.upper and then upper_interval = interval)
+			enlarged_at_lower:
+				not is_extended and count > old count and then interval.item.upper <= lower implies
+				(not is_lower_included and then lower = interval.item.upper)
+			enlarged_at_upper:
+				not is_extended and count > old count and then upper <= interval.item.lower implies
+				(not is_upper_included and then upper = interval.item.lower)
+			count_incremented_by_1_if_extended:
+				is_extended and then 
+				(interval.item.upper.is_next (old lower) or else (old upper).is_next (interval.item.lower)) implies
+				count = old count + 1
+			count_incremented_by_2_if_extended:
+				is_extended and then 
+				not interval.item.upper.is_next (old lower) and then not (old upper).is_next (interval.item.lower) implies
+				count = old count + 2
+			count_incremented_by_1_if_not_extended:
+				not is_extended and then count > old count implies count = old count + 1
 		end
 		
 	extend_with_lower_gap (value: like lower; is_value_included: BOOLEAN) is

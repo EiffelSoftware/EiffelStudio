@@ -399,7 +399,7 @@ feature -- Status report
 			-- By default there is no background
 		do
 		ensure
-			new_object: Result /= background_brush
+			new_object: Result /= Void implies Result /= background_brush
 		end
 
 	commands_enabled: BOOLEAN is

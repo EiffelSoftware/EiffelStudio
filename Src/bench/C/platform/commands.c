@@ -74,7 +74,7 @@ void eif_call_finish_freezing(EIF_OBJ c_code_dir, EIF_OBJ freeze_cmd_name)
 	chdir(eif_access(c_code_dir));
 
 	eiffel_dir = (char *) eif_getenv("EIFFEL4");
-	cmd = cmalloc (45 + strlen (eiffel_dir));
+	cmd = malloc (45 + strlen (eiffel_dir));
 	if (cmd == (char *)0)
 		enomem();
 	sprintf (cmd, "%s\\bench\\spec\\", eiffel_dir);
@@ -108,7 +108,7 @@ void eif_call_finish_freezing(EIF_OBJ c_code_dir, EIF_OBJ freeze_cmd_name)
 		CloseHandle (procinfo.hProcess);
 		CloseHandle (procinfo.hThread);
 	}
-	xfree(cmd);
+	free(cmd);
 
 	chdir(current_dir);
 	free(current_dir);
@@ -126,7 +126,7 @@ void eif_call_finish_freezing(EIF_OBJ c_code_dir, EIF_OBJ freeze_cmd_name)
 	chdir(eif_access(c_code_dir));
 
 	eiffel_dir = (char *) eif_getenv("EIFFEL4");
-	cmd = cmalloc (45 + strlen (eiffel_dir));
+	cmd = malloc (45 + strlen (eiffel_dir));
 	if (cmd == (char *)0)
 		enomem();
 	sprintf (cmd, "%s\\bench\\spec\\", eiffel_dir);
@@ -139,7 +139,7 @@ void eif_call_finish_freezing(EIF_OBJ c_code_dir, EIF_OBJ freeze_cmd_name)
                     Envs,                /* Environment string           */
                     &ChildRC,            /* Termination codes            */
 					cmd);				 /* Program file name			 */
-	xfree (cmd);
+	free (cmd);
 	chdir(current_dir);
     free(current_dir);
 
@@ -154,14 +154,14 @@ void eif_call_finish_freezing(EIF_OBJ c_code_dir, EIF_OBJ freeze_cmd_name)
 	if ((char *)dir_search(dirp, "finish_freezing") == (char *)0){
 
 				/* Actual copy */
-			cmd = cmalloc(15 + strlen(eif_access(c_code_dir)) + strlen(eif_access(freeze_cmd_name)));
+			cmd = malloc(15 + strlen(eif_access(c_code_dir)) + strlen(eif_access(freeze_cmd_name)));
 			if (cmd == (char *)0)
 				enomem();
 
 			sprintf(cmd, "cp %s %s", eif_access(freeze_cmd_name), eif_access(c_code_dir));
 
 			(void) eif_system(cmd);
-			xfree(cmd);
+			free(cmd);
 		}
 	(void) closedir(dirp);
 
@@ -183,7 +183,7 @@ void eif_gr_call_finish_freezing(EIF_OBJ request, EIF_OBJ c_code_dir, EIF_OBJ fr
 	DIR *dirp;
 	char *cmd;
 
-	cmd = cmalloc(40 + 2*strlen(eif_access(c_code_dir)) + strlen(eif_access(freeze_cmd_name)));
+	cmd = malloc(40 + 2*strlen(eif_access(c_code_dir)) + strlen(eif_access(freeze_cmd_name)));
 	if (cmd == (char *)0)
 		enomem();
 
@@ -209,7 +209,7 @@ void eif_gr_call_finish_freezing(EIF_OBJ request, EIF_OBJ c_code_dir, EIF_OBJ fr
 	(*set_proc)(eif_access(request), RTMS (cmd));
 	(*send_proc)(eif_access(request));
 
-	xfree(cmd);
+	free(cmd);
 #endif
 }
 
@@ -225,19 +225,18 @@ void eif_link_driver (EIF_OBJ c_code_dir, EIF_OBJ system_name, EIF_OBJ prelink_c
 
 		/* Given abc\EIFGEN\W_code */
 		/* The starting directory is abc or abc\EIFGEN\W_code - 14 characters */
-	start_dir = cmalloc (strlen(eif_access(c_code_dir)));	/* %%ss removed 2nd parameter ,1 */
+	start_dir = malloc (strlen(eif_access(c_code_dir)));
 	strncpy (start_dir, eif_access(c_code_dir), strlen(eif_access(c_code_dir))-14);
 
 		/* Link */
 
 	eiffel_dir = (char *) eif_getenv("EIFFEL4");
-	src = cmalloc(strlen(eif_access(driver_name))+1);
+	src = malloc(strlen(eif_access(driver_name))+1);
 	if (src == (char *)0)
 		enomem();
 	strcpy (src, eif_access (driver_name));
 	fi = fopen (src, "rb");
-	system_exe = cmalloc (strlen (eif_access (system_name)) +
-							strlen (eif_access (c_code_dir)) + 5);
+	system_exe = malloc (strlen (eif_access (system_name)) + strlen (eif_access (c_code_dir)) + 5);
 	sprintf (system_exe, "%s\\%s.EXE", eif_access (c_code_dir), eif_access (system_name));
 	fo = fopen (system_exe, "wb");
 
@@ -250,14 +249,13 @@ void eif_link_driver (EIF_OBJ c_code_dir, EIF_OBJ system_name, EIF_OBJ prelink_c
 
 	fclose (fi);
 	fclose (fo);
-	xfree (src);
-	xfree (system_exe);
+	free (src);
+	free (start_dir);
+	free (system_exe);
 #elif defined __VMS
 	char *cmd;
 
-	cmd = cmalloc(15 + strlen(eif_access(driver_name))
-		 + strlen(eif_access(c_code_dir))
-		 + strlen(eif_access(system_name)) );
+	cmd = malloc(15 + strlen(eif_access(driver_name)) + strlen(eif_access(c_code_dir)) + strlen(eif_access(system_name)) );
 	if (cmd == (char *)0)
 		enomem();
 
@@ -265,12 +263,12 @@ void eif_link_driver (EIF_OBJ c_code_dir, EIF_OBJ system_name, EIF_OBJ prelink_c
 		 eif_access(c_code_dir), eif_access(system_name));
 	printf("%s\n",cmd);
 	(void) eif_system(cmd);
-	xfree(cmd);
+	free(cmd);
 
 #else
 	char *cmd;
 
-	cmd = cmalloc(20 + strlen(eif_access(c_code_dir)) + strlen(eif_access(system_name)) +
+	cmd = malloc(20 + strlen(eif_access(c_code_dir)) + strlen(eif_access(system_name)) +
 					strlen(eif_access(prelink_command_name)) + strlen(eif_access(driver_name)));
 	if (cmd == (char *)0)
 		enomem();
@@ -280,7 +278,7 @@ void eif_link_driver (EIF_OBJ c_code_dir, EIF_OBJ system_name, EIF_OBJ prelink_c
 		 eif_access(system_name));
 
 	(void) eif_system(cmd);
-	xfree(cmd);
+	free(cmd);
 #endif
 }
 
@@ -291,7 +289,7 @@ void eif_gr_link_driver (EIF_OBJ request, EIF_OBJ c_code_dir, EIF_OBJ system_nam
 #else
 	char *cmd;
 
-	cmd = cmalloc(15 + strlen(eif_access(c_code_dir)) + strlen (eif_access(system_name)) +
+	cmd = malloc(15 + strlen(eif_access(c_code_dir)) + strlen (eif_access(system_name)) +
 					strlen(eif_access(prelink_command_name)) + strlen(eif_access(driver_name)));
 	if (cmd == (char *)0)
 		enomem();
@@ -301,7 +299,7 @@ void eif_gr_link_driver (EIF_OBJ request, EIF_OBJ c_code_dir, EIF_OBJ system_nam
 	(*set_proc)(eif_access(request), RTMS (cmd));
 	(*send_proc)(eif_access(request));
 
-	xfree(cmd);
+	free(cmd);
 #endif
 }
 

@@ -9,7 +9,7 @@ inherit
 			append
 		end
 
-creation
+create
 	make
 
 feature -- Initialization

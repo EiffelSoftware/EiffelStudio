@@ -8,7 +8,7 @@ inherit
 			make as old_make
 		end
 
-creation
+create
 	make
 
 feature -- Initialization

@@ -77,15 +77,15 @@ feature -- Basic Operations
 			void_type_storer: type_storer = Void
 		end
 
-	replace_type (an_assembly_descriptor: ISE_REFLECTION_ASSEMBLYDESCRIPTOR; an_eiffel_class: ISE_REFLECTION_EIFFELCLASS) is
+	replace_type (an_eiffel_class: ISE_REFLECTION_EIFFELCLASS) is
 		indexing
 			description: "Replace type corresponding to `an_eiffel_class' in assembly corresponding to `an_assembly_descriptor'."
 			external_name: "ReplaceType"
 		require
-			non_void_assembly_descriptor: an_assembly_descriptor /= Void
 			non_void_eiffel_class: an_eiffel_class /= Void
+			non_void_assembly_descriptor: an_eiffel_class.get_assembly_descriptor /= Void			
 		do
-			type_storer := cache_handler.replace_type (an_assembly_descriptor, an_eiffel_class)
+			type_storer := cache_handler.type_storer_from_class (an_eiffel_class)
 			type_storer.add_type (an_eiffel_class, True)
 			type_storer.commit
 			type_storer := Void

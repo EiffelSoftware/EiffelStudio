@@ -63,6 +63,8 @@ feature -- Execution
 							set_order_same_as_text;
 							initialize_view_ids;
 							process_clusters;
+							Degree_output.put_start_reverse_engineering
+								(System.nb_of_classes);
 							convert_to_case_format;
 							remove_old_classes;
 							clear_shared_case_information;
@@ -88,6 +90,7 @@ feature -- Execution
 		rescue
 			Case_file_server.remove_tmp_files;
 			clear_shared_case_information;
+			Degree_output.finish_degree_output;
 			if Rescue_status.is_error_exception then
 				Rescue_status.set_is_error_exception (False);
 				Error_handler.trace;
@@ -116,16 +119,20 @@ feature {NONE} -- Implementation
 			s_system_data.set_class_id_number (System.class_counter.total_count);
 			s_system_data.set_cluster_view_number (Old_case_info.cluster_view_number);
 			Case_file_server.tmp_save_system (s_system_data);
-			io.error.putstring ("Saving EiffelCase project to CASEGEN directory.%N");
+			Degree_output.put_case_message 
+				("Saving EiffelCase project to CASEGEN directory.");
 			Case_file_server.save_eiffelcase_format;
-			io.error.putstring ("Updating EiffelBench project.%N");
+			Degree_output.put_case_message 
+				("Updating EiffelBench project.");
 			update_eiffel_project;
+			Degree_output.finish_degree_output
 		rescue
 			if Case_file_server.had_io_problems then
-				io.error.put_string ("Cannot store EiffelCase format to CASEGEN directory.%N");
+				output_window.put_string ("Cannot store EiffelCase format to CASEGEN directory.");
 			elseif Case_file_server.is_saving then
-				io.error.put_string ("EiffelCase format maybe corrupted.%N");
+				output_window.put_string ("EiffelCase format maybe corrupted.");
 			end;
+			output_window.new_line
 		end;
 
 	remove_old_classes is
@@ -134,7 +141,8 @@ feature {NONE} -- Implementation
 		do
 			Old_case_info.remove_old_classes;
 		rescue
-			io.error.put_string ("Error: Could not remove old classes from CASEGEN directory.%N");
+			output_window.put_string ("Error: Could not remove old classes from CASEGEN directory.");
+			output_window.new_line
 		end;
 
 	initialize_view_ids is

@@ -30,10 +30,10 @@ feature {NONE} -- Initialization
 feature -- Basic operations
 
 	start_document (title: STRING) is
-			-- Start the job on the printer
+			-- Start the job `title' on the printer
 		require
-			title_not_void: title /= Void		
 			exists: exists
+			title_not_void: title /= Void		
 		local
 			a: ANY
 		do
@@ -156,7 +156,7 @@ feature {NONE} -- Externals
 			input_struct, output_struct: POINTER) is
 			-- SDK Escape
 		external
-			"C [macro <wel.h>] (HDC, int, int, LPCSTR,%
+			"C [macro <wel.h>] (HDC, int, int, LPCSTR, %
 				%void *)"
 		alias
 			"Escape"

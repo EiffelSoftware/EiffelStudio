@@ -20,12 +20,18 @@ feature {NONE}
 			-- Remove `observer' from `observed_command'
 		do
 			observed_command.remove_observer (observer)
+			if command_tool /= Void and then command_tool.realized then
+				command_tool.remove_observed_command (observed_command)
+			end
 		end
 
 	undo is
 			-- Undo `command_work'.
 		do
 			observed_command.add_observer (observer)
+			if command_tool /= Void and then command_tool.realized then
+				command_tool.add_observed_command (observed_command)
+			end
 		end
 
 	c_name: STRING is

@@ -492,7 +492,7 @@ feature {NONE} -- Detection of safe/unsafe features
 				depend_list.after or else unsafe
 			loop
 				depend_unit := depend_list.item
-				if not depend_unit.is_special then
+				if depend_unit.is_needed_for_dead_code_removal then
 					body_index := depend_unit.body_index
 					if
 						not (System.routine_id_counter.is_attribute (depend_unit.rout_id) or else

@@ -85,18 +85,7 @@ feature {NONE}
 				depend_list.after
 			loop
 				depend_unit := depend_list.item
-DEBUG ("DEAD_CODE")
-	if depend_unit.is_special then
-		io.putstring ("special%N")
-	end
-end
-				if not depend_unit.is_special then
-DEBUG ("DEAD_CODE")
-	print_dep (depend_unit)
-	if is_treated (depend_unit.body_index, depend_unit.rout_id) then
-		io.putstring ("previously treated%N")
-	end
-end
+				if depend_unit.is_needed_for_dead_code_removal then
 					rout_id := depend_unit.rout_id
 					if
 						not System.Routine_id_counter.is_attribute (rout_id) and then

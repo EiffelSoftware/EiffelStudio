@@ -22,16 +22,16 @@ creation
 
 feature {NONE} -- Initialization
 
-	initialize_button (a_cmd: like associated_command; a_parent: MENU) is
+	make (a_cmd: like associated_command; a_parent: MENU) is
 			-- Initializes the button part.
 		local
 			act: STRING
 		do
 			button_make (a_cmd.menu_name, a_parent);
 			act := a_cmd.accelerator;
-            if act /= Void then
-                set_accelerator_action (act)
-            end
+			if act /= Void then
+				set_accelerator_action (act)
+			end
 			add_activate_action (a_cmd, a_cmd.tool)
 		end;
 

@@ -12,7 +12,9 @@
 	</ul>
 <P>For each window or dialog class in the system, the following heirarchy is generated:</P>
 <P align="center"><IMG SRC="/images/eiffelbuild/screenshots/class_project_diagram.png"></p>
-<P CLASS="note"><B>Note</B>: The screenshot above shows the window inheriting from EV_TITLED_WINDOW. If "client of windows" is selected from the <A HREF="/tools/eiffelbuild/reference/80_project_settings/index.html">project_settings</A>, a client supplier relationship exists instead.</P>
+<p>If "client of windows" is selected from the <A HREF="/tools/eiffelbuild/reference/80_project_settings/index.html">project_settings</A>, a client supplier relationship exists between the generated window class and the EiffelVision window, as illustrated below:</p> 
+<P align="center"><IMG SRC="/images/eiffelbuild/screenshots/class_project_diagram_client.png"></p>
+<P CLASS="note"><B>Note</B>: All other diagrams on this page show only the non client version of the settings, where the generated window inherits from the EiffelVision class.</P>
 <H2>Project build type</H2>
 <P>If <A HREF="/tools/eiffelbuild/reference/80_project_settings/20_build.html#build_type">build type</A> is selected as <B>Project</B> in the <A HREF="/tools/eiffelbuild/reference/80_project_settings/index.html">project_settings</A>, then all the classes listed above in "Generated classes" are generated, along with the following:</P>
 	<UL>

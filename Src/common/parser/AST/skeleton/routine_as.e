@@ -145,15 +145,13 @@ feature -- Comparison
 
 	is_body_equiv (other: like Current): BOOLEAN is
 			-- Is the current feature equivalent to `other' ?
-		require else
-			valid_other: other /= Void
 		do
 			reset_locals;
 			other.reset_locals;
-			Result :=	deep_equal (routine_body, other.routine_body) and then
-						deep_equal (locals, other.locals) and then
-						deep_equal (rescue_clause, other.rescue_clause) and then
-						deep_equal (obsolete_message, other.obsolete_message)
+			Result := equivalent (routine_body, other.routine_body) and then
+				equivalent (locals, other.locals) and then
+				deep_equal (rescue_clause, other.rescue_clause) and then
+				deep_equal (obsolete_message, other.obsolete_message)
 		end;
  
 	is_assertion_equiv (other: like Current): BOOLEAN is
@@ -169,7 +167,7 @@ feature -- Comparison
 
 feature {COMPILER_EXPORTER, ROUTINE_AS}
 
-	reset_locals is
+	reset_locals is obsolete "use is_equivalent"
 			-- Reset the positions in the list
 		do
 			if locals /= Void then

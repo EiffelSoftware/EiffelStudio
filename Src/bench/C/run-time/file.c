@@ -46,13 +46,15 @@
 #endif
 
 
+#define FILE_TYPE_MAX  4	/* max size of fopen type string (like "a+b") */
+
 #ifdef EIF_VMS
+#include <assert.h>
+static int err;		/* for debugging - save errno value */
 struct utimbuf {
     time_t actime;      /* access time */
     time_t modtime;     /* modification time */
 };
-#define lib$rename_file		LIB$RENAME_FILE
-#define lib$delete_file		LIB$DELETE_FILE
 #include <lib$routines.h>
 #include <descrip.h>
 #include <rmsdef.h>
@@ -115,11 +117,7 @@ rt_private void swallow_nl(FILE *f);		/* Swallow next character if new line */
 
 #ifndef HAS_UTIME
 /* rt_private int utime(); */ /* %%ss removed and replaced by below */
-#ifdef EIF_VMSxxx
-rt_private int utime(char *path, char *times);		/* %%ss */
-#else
 rt_private int utime(char *path, struct utimbuf *times);	/* %%ss */
-#endif
 #endif
 
 #ifndef HAS_UNLINK
@@ -135,7 +133,7 @@ rt_private int unlink(char *path);
 
 rt_public char *file_open_mode (int how, char mode)
 {
-	static char type [4];
+	static char type [FILE_TYPE_MAX];
 
 	type[3] = '\0';
 	type[2] = '\0';
@@ -163,7 +161,7 @@ rt_public EIF_POINTER file_open(char *name, int how)
 {
 	/* Open file `name' with the corresponding type 'how'. */
 
-#ifdef EIF_WINDOWS
+#if defined EIF_WINDOWS || defined EIF_VMS
 	if (how < 10)
 		return (EIF_POINTER) file_fopen(name, file_open_mode(how,'t'));
 	else
@@ -208,7 +206,7 @@ rt_public EIF_POINTER file_binary_open(char *name, int how)
 {
 	/* Open file `name' with the corresponding type 'how'. */
 
-#if defined EIF_WINDOWS || defined EIF_OS2
+#if defined EIF_WINDOWS || defined EIF_OS2 || defined EIF_VMS
 	return (EIF_POINTER) file_fopen(name, file_open_mode(how,'b'));
 #else
 	return (EIF_POINTER) file_fopen(name, file_open_mode(how,'\0'));
@@ -233,7 +231,7 @@ rt_public EIF_POINTER file_binary_reopen(char *name, int how, FILE *old)
 	 * to another place, for instance.
 	 */
 
-#if defined  EIF_WINDOWS  ||  EIF_VMS || defined EIF_OS2
+#if defined  EIF_WINDOWS || defined EIF_OS2
 	return (EIF_POINTER) file_freopen(name, file_open_mode(how,'b'), old);
 #else
 	return (EIF_POINTER) file_freopen(name, file_open_mode(how,'\0'), old);
@@ -244,6 +242,20 @@ rt_public EIF_POINTER file_binary_reopen(char *name, int how, FILE *old)
 #include <windows.h>
 #endif
 
+#ifdef EIF_VMS
+/* copies type to vms_type, removing 't' if present. returns TRUE if 't' was present, else FALSE. */
+rt_private int file_open_type_text (const char* type, char* vms_type)
+{
+    char *p;
+    strcpy (vms_type, type);
+    if ( (p=strchr(vms_type,'t')) ) {	/* if 't' present in copied string */
+	strcpy (p, p+1);		/* then remove it */
+	return 1;
+    }
+    else return 0;
+} /* end file_open_type_text () */
+#endif /* EIF_VMS */
+
 rt_private char *file_fopen(char *name, char *type)
 {
 	/* Issue the fopen() call and raise exception if it fails, or return the
@@ -253,10 +265,20 @@ rt_private char *file_fopen(char *name, char *type)
 	FILE *fp;
 
 	errno = 0;
+#ifdef EIF_VMS
+	{
+	    char vms_type[FILE_TYPE_MAX+4];  /* must be at least as big as static char type[] in file_open_mode()  */
+	    assert (strlen(type) < sizeof vms_type);
+	    if (file_open_type_text (type, vms_type) && (type[0] == 'w' || 1))
+		 fp = fopen (name, vms_type, "rat=cr","rfm=stmlf", "shr=get");
+	    else fp = fopen (name, vms_type, "shr=get");
+	    err = (errno == EVMSERR ? vaxc$errno : errno);
+	}
+#else
 	fp = (FILE *) fopen(name, type);
+#endif
 	if (fp == (FILE *) 0)
 		esys();				/* Open failed, raise exception */
-
 	return (char *) fp;
 }
 
@@ -270,6 +292,19 @@ rt_private char *file_fdopen(int fd, char *type)
 
 	errno = 0;
 	fp = (FILE *) fdopen(fd, type);
+#ifdef EIF_VMS
+	if (fp == NULL && errno == EINVAL) {
+	    /* VMS: ***TBS*** - if errno=emode, remove 'b' and try again */
+	    char *p = strchr(type, 'b');
+	    if (p) {
+		off_t len = p - type;
+		char vms_type[FILE_TYPE_MAX+4];  /* must be at least as big as static char type[] in file_open_mode()  */
+		strncpy (vms_type, type, len);
+		strcpy (vms_type + len, ++p);
+		fp = (FILE*)file_fdopen (fd, vms_type);
+	    }
+	}
+#endif
 	if (fp == (FILE *) 0)
 		esys();				/* Open failed, raise exception */
 
@@ -305,17 +340,19 @@ rt_public void file_close(FILE *fp)
 		esys();				/* Close failed, raise exception */
 }
 
-rt_public void file_flush(FILE *fp)
+rt_public void file_flush (FILE *fp)
 {
 	/* Flush data held in stdio buffer */
 
 	errno = 0;
-#ifdef EIF_VMS
-	if (0 != fsync(fileno(fp)))
-#else
 	if (0 != fflush(fp))
+	    esys();				/* Flush failed, raise exception */
+#ifdef EIF_VMS	/* VMS: flush RMS buffers (shouldn't this be done on other platforms also?) */
+	if (0 != fsync(fileno(fp))) {
+	    err = errno;
+	    esys();
+	}
 #endif
-		esys();				/* Flush failed, raise exception */
 }
 
 rt_public  EIF_INTEGER file_size (FILE *fp)
@@ -328,9 +365,9 @@ rt_public  EIF_INTEGER file_size (FILE *fp)
 
 	errno = 0;
 
-#ifdef EIF_VMS
-	fd = fileno (fp);
+#ifdef EIF_VMSxxx
 	/* handle vms bug by positioning to end before fsync-ing --mark howard*/
+	fd = fileno (fp);
 	current_pos = lseek(fd,0,SEEK_CUR);
 	lseek(fd,0,SEEK_END);
 	if (0 != fsync (fd))	/* have to flush all the way! */
@@ -813,9 +850,6 @@ rt_public void file_stat (char *path, struct stat *buf)
 	/* This is an encapsulation of the stat() system call. The routine either
 	 * succeeds and returns or fails and raises the appropriate exception.
 	 */
-#ifdef EIF_VMS
-#define UID_MASK 0x0000FFFF	/* in VMS, uid contains gid in upper word */
-#endif
 
 	int status;			/* System call status */
 	
@@ -826,9 +860,6 @@ rt_public void file_stat (char *path, struct stat *buf)
 		status = stat(path, buf);		/* Watch for symbolic links */
 #else
 		status = stat(path, buf);		/* Get file statistics */
-#ifdef EIF_VMS
-		buf->st_uid = buf->st_uid & UID_MASK;
-#endif
 #endif
 		if (status == -1) {				/* An error occurred */
 			if (errno == EINTR)			/* Interrupted by signal */
@@ -838,6 +869,9 @@ rt_public void file_stat (char *path, struct stat *buf)
 		}
 		break;
 	}
+#ifdef EIF_VMS
+	buf->st_uid &= 0x0000FFFF ;		/* VMS: mask out group id */
+#endif
 }
 
 rt_public EIF_INTEGER file_info (struct stat *buf, int op)
@@ -850,7 +884,12 @@ rt_public EIF_INTEGER file_info (struct stat *buf, int op)
 	case 0:	/* File permission mode */
 		return (EIF_INTEGER) (buf->st_mode & ST_MODE);
 	case 1:	/* Inode number */
+#ifdef EIF_VMS
+		return (EIF_INTEGER) *(int*)buf->st_ino;	/* VMS: return 32 bits of 40/48 bit inode */
+		/*** VMS: ***TBS*** assert (buf->st_ino[2] == 0? );  */
+#else
 		return (EIF_INTEGER) buf->st_ino;
+#endif
 	case 2:	/* Device inode resides on */
 		return (EIF_INTEGER) buf->st_dev;
 	case 3:	/* Device type */
@@ -1415,6 +1454,7 @@ rt_public EIF_BOOLEAN file_creatable(char *path)
 	/* Check whether the file `path' may be created: we need write permissions
 	 * in the parent directory and there must not be any file bearing that name
 	 * with no write permissions...
+	     VMS: ***TBS*** (on VMS, there can be an unwritable file because a new version is created)
 	 */
 
 	struct stat buf;			/* Buffer to get parent directory statistics */

@@ -67,7 +67,7 @@ feature
 			prepare_table (a_class.feature_table);
 
 				-- Generation
-			Cecil1.generate_name_table (buffer, a_class.class_id);
+			cecil_routine_table.generate_name_table (buffer, a_class.class_id);
 			if byte_context.final_mode then
 				from
 					types := a_class.types;
@@ -75,13 +75,13 @@ feature
 				until
 					types.after
 				loop
-					Cecil1.generate_final (buffer, types.item.type_id);
+					cecil_routine_table.generate_final (buffer, types.item);
 					types.forth
 				end;
 			elseif a_class.is_precompiled then
-				Cecil1.generate_precomp_workbench (buffer, a_class.class_id);
+				cecil_routine_table.generate_precomp_workbench (buffer, a_class.class_id);
 			else
-				Cecil1.generate_workbench (buffer, a_class.class_id);
+				cecil_routine_table.generate_workbench (buffer, a_class.class_id);
 			end;
 		end;
 
@@ -90,7 +90,7 @@ feature
 		do
 			prepare_table (feat_table);
 
-			Cecil1.make_byte_code (ba);
+			cecil_routine_table.make_byte_code (ba);
 		end;
 
 	prepare_table (feat_table: FEATURE_TABLE) is
@@ -100,15 +100,15 @@ feature
 			a_class: CLASS_C;
 			class_id: INTEGER
 		do
-			Cecil1.wipe_out;
+			cecil_routine_table.wipe_out;
 
 			a_class := feat_table.associated_class;
 			class_id := a_class.class_id
 
 				-- Insertion in the cecil table of the effective features
 			from
-				Cecil1.init (prime_size (visible_features.count));
-				a_class.set_visible_table_size (Cecil1.capacity)
+				cecil_routine_table.init (visible_features.count)
+				a_class.set_visible_table_size (cecil_routine_table.capacity)
 				visible_features.start
 			until
 				visible_features.after
@@ -119,7 +119,7 @@ feature
 					-- FIXME: Illegal feature specified
 				else
 					if not (a_feature.is_deferred or else a_feature.is_attribute) then
-						Cecil1.put (a_feature, real_name (a_feature, class_id));
+						cecil_routine_table.put (a_feature, real_name (a_feature, class_id));
 					end;
 				end
 				visible_features.forth;

@@ -28,20 +28,6 @@ feature
 			-- Do nothing
 		end;
 
-feature {NONE}
-
-	primes: PRIMES is
-			-- Prime number evaluator
-		once
-			create Result;
-		end;
-
-	prime_size (i: INTEGER): INTEGER is
-			-- Prime number greater than 5 * i / 4
-		do
-			Result := primes.higher_prime ((5 * i) // 4);
-		end;
-
 feature 
 
 	real_name (feat: FEATURE_I; class_id: INTEGER): STRING is

@@ -211,6 +211,7 @@ feature {NONE} -- Initialization
 			logical_pixels := get_device_caps (screen_dc.item, logical_pixels_x)
 			screen_dc.release
 			tab_width := logical_pixels // 2
+			initialize_buffering_structures
 		end
 
 	default_style: INTEGER is
@@ -809,6 +810,8 @@ feature -- Status setting
 			character: CHARACTER
 			format_underlined, format_striked, format_bold, format_italic: BOOLEAN
 			screen_dc: WEL_SCREEN_DC
+			hashed_color, hashed_back_color: STRING
+			color, back_color: EV_COLOR
 		do
 			if not buffer_locked_in_append_mode then
 				start_formats.clear_all
@@ -826,6 +829,8 @@ feature -- Status setting
 				is_current_format_bold := False
 				is_current_format_italic := False
 				current_vertical_offset := 0
+				initialize_buffering_structures
+				color_text := "{\colortbl ;"
 			end
 			hashed_character_format := format.hash_value
 			if not hashed_formats.has (hashed_character_format) then
@@ -833,12 +838,15 @@ feature -- Status setting
 				formats.extend (format)
 				heights.extend (format.font.height * 2)
 				format_offsets.put (hashed_formats.count, hashed_character_format)
+			
+				build_color_from_format (format)
 			end
+
 			format_index := format_offsets.item (hashed_character_format)
 			temp_string := "\highlight"
-			temp_string.append ((format_index * 2 ).out)
+			temp_string.append (back_color_offset.i_th (format_index).out)
 			temp_string.append ("\cf")
-			temp_string.append ((format_index * 2 - 1).out)
+			temp_string.append (color_offset.i_th (format_index).out)
 			
 			format_underlined := formats.i_th (format_index).effects.is_underlined
 			if not is_current_format_underlined and format_underlined then
@@ -932,7 +940,7 @@ feature -- Status setting
 					-- character positions, and not caret positions.
 				set_selection (start_position - 1, end_position)
 			end
-			generate_rtf_heading
+			generate_rtf_heading_for_buffered_append
 			create stream.make (internal_text)
 			insert_rtf_stream_in (stream)
 			stream.release_stream
@@ -945,14 +953,24 @@ feature -- Status setting
 			set_caret_position (original_position)
 		end
 		
+	initialize_buffering_structures is
+			-- Initialize structures used in buffering to default values.
+		do
+			create hashed_colors.make (20)
+			create color_offset.make (20)
+			create back_color_offset.make (20)
+			
+				-- Reset the count of found colors back to 0.
+			color_count := 0
+		end
+		
 
 	flush_buffer is
 			-- Flush any buffered operations.
 		local
 			last_end_value, counter, format_index, original_position, vertical_offset: INTEGER
 			stream: WEL_RICH_EDIT_BUFFER_LOADER
-			temp_string, font_text, color_text, default_font_format: STRING
-			a_color: EV_COLOR
+			temp_string, font_text, default_font_format: STRING
 			format_underlined, format_striked, format_bold, format_italic: BOOLEAN
 			screen_dc: WEL_SCREEN_DC
 		do
@@ -963,9 +981,11 @@ feature -- Status setting
 				-- as there is nothing to flush. A user may call them however, as there
 				-- is no need to restrict against such calls.
 			if buffer_locked_in_format_mode then
-				-- Create a screen DC for access to metrics
-					create screen_dc
-					screen_dc.get
+					-- Reset buffering structures
+				initialize_buffering_structures
+					-- Create a screen DC for access to metrics
+				create screen_dc
+				screen_dc.get
 					
 				buffered_text := text.twin
 					-- Generate an insertion string to use for default font
@@ -994,47 +1014,18 @@ feature -- Status setting
 					-- Generate RTF Header corresponding to all colors used in formatting.
 					--	{\colortbl ;\red255\green0\blue0;\red0\green255\blue0;}
 				color_text := "{\colortbl ;"
-					-- The foreground color of the control is always the first entry in the color table.
-				a_color := interface.foreground_color
-				color_text.append ("\red")
-				color_text.append (a_color.red_8_bit.out)
-				color_text.append ("\green")
-				color_text.append (a_color.green_8_bit.out)
-				color_text.append ("\blue")
-				color_text.append (a_color.blue_8_bit.out)
-				color_text.append (";")
-				a_color := interface.background_color
-				color_text.append ("\red")
-				color_text.append (a_color.red_8_bit.out)
-				color_text.append ("\green")
-				color_text.append (a_color.green_8_bit.out)
-				color_text.append ("\blue")
-				color_text.append (a_color.blue_8_bit.out)
-				color_text.append (";")
+
+					-- Now perform buffering of colors.
 				from
 					formats.start
 				until
 					formats.off
 				loop
-					a_color := formats.item.color
-					color_text.append ("\red")
-					color_text.append (a_color.red_8_bit.out)
-					color_text.append ("\green")
-					color_text.append (a_color.green_8_bit.out)
-					color_text.append ("\blue")
-					color_text.append (a_color.blue_8_bit.out)
-					color_text.append (";")
-					a_color := formats.item.background_color
-					color_text.append ("\red")
-					color_text.append (a_color.red_8_bit.out)
-					color_text.append ("\green")
-					color_text.append (a_color.green_8_bit.out)
-					color_text.append ("\blue")
-					color_text.append (a_color.blue_8_bit.out)
-					color_text.append (";")
+					build_color_from_format (formats.item)
 					formats.forth
 				end
-				color_text := color_text + "}"
+
+				color_text.append ("}")
 				
 				internal_text := font_text.twin 
 				internal_text.append ("%R%N")
@@ -1051,9 +1042,10 @@ feature -- Status setting
 					if start_formats.item (counter) /= Void then
 						format_index := formats_index.item (counter)
 						temp_string := "\highlight"
-						temp_string.append ((format_index * 2 + 2).out)
+						
+						temp_string.append (back_color_offset.i_th (format_index).out)
 						temp_string.append ("\cf")
-						temp_string.append ((format_index * 2 + 1).out)
+						temp_string.append (color_offset.i_th (format_index).out)
 						format_underlined := formats.i_th (format_index).effects.is_underlined
 						if not is_current_format_underlined and format_underlined then
 							temp_string.append ("\ul")
@@ -1120,7 +1112,7 @@ feature -- Status setting
 				stream.release_stream
 			elseif buffer_locked_in_append_mode then
 				
-				generate_rtf_heading				
+				generate_rtf_heading_for_buffered_append			
 				buffered_text := Void
 				create stream.make (internal_text)
 				rtf_stream_in (stream)
@@ -1136,7 +1128,7 @@ feature -- Status setting
 			set_caret_position (original_position)
 		end
 		
-	generate_rtf_heading is
+	generate_rtf_heading_for_buffered_append is
 			-- Generate the rtf heading for buffered operations into `internal_text'.
 			-- Current contents of `internal_text' are lost.
 		require
@@ -1144,7 +1136,6 @@ feature -- Status setting
 		local
 			a_color: EV_COLOR
 			font_text: STRING
-			color_text: STRING
 			internal_text_twin: STRING
 		do
 				-- Generate the representation of fonts used.
@@ -1161,32 +1152,10 @@ feature -- Status setting
 			end
 			font_text.append ("}")
 			
-				-- Now generate text corresponding to all colors.
-			color_text := "{\colortbl ;"
-			from
-				formats.start
-			until
-				formats.off
-			loop
-				a_color := formats.item.color
-				color_text.append ("\red")
-				color_text.append (a_color.red_8_bit.out)
-				color_text.append ("\green")
-				color_text.append (a_color.green_8_bit.out)
-				color_text.append ("\blue")
-				color_text.append (a_color.blue_8_bit.out)
-				color_text.append (";")
-				a_color := formats.item.background_color
-				color_text.append ("\red")
-				color_text.append (a_color.red_8_bit.out)
-				color_text.append ("\green")
-				color_text.append (a_color.green_8_bit.out)
-				color_text.append ("\blue")
-				color_text.append (a_color.blue_8_bit.out)
-				color_text.append (";")
-				formats.forth
-			end
+				-- `color_text' contents is generated by each call to `buffered_append',
+				-- so simply close the tag.
 			color_text.append ("}")
+			
 			internal_text_twin := internal_text.twin
 			internal_text := font_text.twin
 			internal_text.append ("%R%N")
@@ -1195,6 +1164,58 @@ feature -- Status setting
 			internal_text.append (internal_text_twin)
 			internal_text.append ("}")
 		end
+		
+	build_color_from_format (a_format: EV_CHARACTER_FORMAT) is
+			-- 
+		local
+			color, back_color: EV_COLOR
+			hashed_color, hashed_back_color: STRING
+		do
+					color := a_format.color
+					hashed_color := ("\red")
+					hashed_color.append (color.red_8_bit.out)
+					hashed_color.append ("\green")
+					hashed_color.append (color.green_8_bit.out)
+					hashed_color.append ("\blue")
+					hashed_color.append (color.blue_8_bit.out)
+					hashed_color.append (";")
+
+					hashed_colors.search (hashed_color)
+						-- If the color does not already exist.
+					if not hashed_colors.found then
+							-- Add the color to `colors' for later retrieval.
+						color_count := color_count + 1
+						hashed_colors.put (color_count, hashed_color)
+							-- Store the offset from the character index to the new color index for retrieval.
+						color_offset.force (hashed_colors.found_item)
+						color_text.append (hashed_color)
+					else
+						color_offset.force (hashed_colors.item (hashed_color))
+					end
+					
+					back_color := a_format.background_color
+					hashed_back_color := ("\red")
+					hashed_back_color.append (back_color.red_8_bit.out)
+					hashed_back_color.append ("\green")
+					hashed_back_color.append (back_color.green_8_bit.out)
+					hashed_back_color.append ("\blue")
+					hashed_back_color.append (back_color.blue_8_bit.out)
+					hashed_back_color.append (";")
+
+					hashed_colors.search (hashed_back_color)
+						-- If the color does not already exist.
+					if not hashed_colors.found then
+						-- Add the color to `colors' for later retrieval.
+						color_count := color_count + 1
+						hashed_colors.put (color_count, hashed_back_color)
+							-- Store the offset from the character index to the new color index for retrieval.
+						back_color_offset.force (hashed_colors.found_item)
+						color_text.append (hashed_back_color)
+					else
+						back_color_offset.force (hashed_colors.item (hashed_back_color))
+					end
+		end
+		
 		
 	enable_word_wrapping is
 			-- Ensure `has_word_wrap' is True.
@@ -1502,7 +1523,7 @@ feature {EV_CONTAINER_IMP} -- Implementation
 	must_fire_final_selection: BOOLEAN
 		-- Must the selection change actions be fired when there is no selection, notifying
 		-- that the selection has been lost. This is only fired once, hence the need for this boolean.
-		
+
 feature {NONE} -- Implementation
 
 	is_current_format_underlined: BOOLEAN
@@ -1527,6 +1548,12 @@ feature {NONE} -- Implementation
 		once
 			create Result.make (10)			
 		end
+		
+	hashed_fonts: HASH_TABLE [STRING, STRING] is
+			--
+		once
+			create Result.make (10)
+		end 
 
 	format_offsets: HASH_TABLE [INTEGER, STRING] is
 			-- The index of each format in `hashed_formats' within the RTF document that must be generated.
@@ -1648,6 +1675,34 @@ feature {NONE} -- Implementation
 			cwin_send_message (wel_item, wm_setredraw, 1, 0)	
 			invalidate_without_background
 		end
+		
+feature {NONE} -- Implementation
+
+			-- These attributes are used to stop multiple versions of the same color being
+			-- generated in the RTF.
+
+	hashed_colors: HASH_TABLE [INTEGER, STRING]
+			-- All colors currently stored for buffering, accessible via the
+			-- actual RTF output, in the form ";\red255\green0\blue0". The integer `item'
+			-- corresponds to the offset of the color in `colors'.
+		
+	color_offset: ARRAYED_LIST [INTEGER]
+			-- All color indexes to use for foreground colors in document,
+			-- indexed by their corresponding character format index.
+			-- So, for example, item 20 would correspond to the color offset to use from
+			-- the color table for the 20th character format.
+		
+	back_color_offset: ARRAYED_LIST [INTEGER]
+			-- All color indexes to use for background colors in document,
+			-- indexed by their corresponding character format index.
+			-- So, for example, item 20 would correspond to the color offset to use from
+			-- the color table for the 20th character format.
+			
+	color_count: INTEGER
+		-- Number of colors currently buffered.		
+	
+	color_text: STRING
+		-- The RTF string correponding to all colors in the document.
 
 feature {EV_ANY_I} -- Implementation
 

@@ -33,6 +33,7 @@ feature -- Interface
 			attach_left (radio_b, 10);
 			attach_top (radio_b, 10);
 			attach_bottom (radio_b, 50);
+			attach_right (radio_b, 10);
 			show_current
 		end;
 

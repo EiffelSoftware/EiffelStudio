@@ -15,7 +15,7 @@ extern "C" {
 /* FUNC: cwel_enum_child_windows                                             */
 /*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*/
-void cwel_enum_child_windows_procedure (void *pCurrObject, void *fnptr, HWND hWndParent);
+void cwel_enum_child_windows_procedure (EIF_REFERENCE pCurrObject, void *fnptr, HWND hWndParent);
 
 #ifdef __cplusplus
 }

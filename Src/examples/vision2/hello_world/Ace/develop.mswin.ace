@@ -3,7 +3,7 @@ system
 
 root
 
-	hello_world (main): "make"
+	hello_world (ROOT_CLUSTER): "make"
 
 default
 

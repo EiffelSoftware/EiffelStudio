@@ -154,6 +154,7 @@ feature {NONE} -- Implementation
 			e_not_void: e /= Void
 		local
 			l_elements: DS_LIST [XM_ELEMENT]
+			l_schema: STRING
 		do
 			if e.name.is_equal ("project_name") then
 				Shared_project.set_name (e.text)
@@ -162,13 +163,17 @@ feature {NONE} -- Implementation
 			Shared_project.set_root_directory (e.text)
 			end
 			if e.name.is_equal ("schema") then
-				Shared_document_manager.initialize_schema (e.text)
+				if (create {PLAIN_TEXT_FILE}.make (e.text)).exists then
+					Shared_document_manager.initialize_schema (e.text)	
+				end				
 			end
 			if e.name.is_equal ("xsl") then
 				Shared_document_manager.initialize_xslt (e.text)
 			end
 			if e.name.is_equal ("html_css") then
-				set_css_file (e.text)
+				if (create {PLAIN_TEXT_FILE}.make (e.text)).exists then
+					set_css_file (e.text)
+				end			
 			end
 			
 					-- Process sub_elements

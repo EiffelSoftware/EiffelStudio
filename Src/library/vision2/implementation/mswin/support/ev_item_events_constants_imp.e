@@ -17,16 +17,38 @@ feature -- General events for items
 	Cmd_item_deactivate: INTEGER is 2
 			-- The item has been deselected
 
-	Cmd_item_dblclk: INTEGER is 3
+	Cmd_item_button_one_press: INTEGER is 3
+			-- The first button of the mouse is pressed
+
+	Cmd_item_button_two_press: INTEGER is 4
+			-- The second button of the mouse is pressed
+
+	Cmd_item_button_three_press: INTEGER is 5
+			-- The third button of the mouse is pressed
+
+	Cmd_item_button_one_release: INTEGER is 6
+			-- The first button of the mouse is released
+
+	Cmd_item_button_two_release: INTEGER is 7
+			-- The second button of the mouse is released
+
+	Cmd_item_button_three_release: INTEGER is 8
+			-- The third button of the mouse is released
+
+feature -- Event for list item
+
+	Cmd_item_dblclk: INTEGER is 9
 			-- The user dblclk on the item
 
-	Cmd_item_subtree: INTEGER is 3
+feature -- Event for tree item
+
+	Cmd_item_subtree: INTEGER is 9
 			-- The user has expanded or collapsed a subtree
 			-- item
 
 feature -- Upper constants value
 
-	command_count: INTEGER is 3
+	command_count: INTEGER is 9
 			-- Size of the list that contains the commands or the
 			-- arguments.
 

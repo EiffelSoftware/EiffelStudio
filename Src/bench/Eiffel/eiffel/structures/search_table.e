@@ -55,6 +55,12 @@ feature -- Access and queries
 			Result := content.item (n)
 		end;
 
+	empty: BOOLEAN is
+			-- Is structure empty?
+		do
+			Result := (count = 0)
+		end
+
 feature -- Insertion, deletion
 
 	put (key: H) is

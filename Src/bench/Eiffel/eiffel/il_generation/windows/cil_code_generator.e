@@ -763,7 +763,7 @@ feature -- Generation Structure
 			end
 			l_assert_ca.put_string (l_type_name)
 			l_assert_ca.put_integer_16 (0)
-			define_custom_attribute (class_type_token (class_type.implementation_id),
+			define_custom_attribute (actual_class_type_token (class_type.implementation_id),
 				current_module.ise_interface_type_attr_ctor_token, l_assert_ca)
 		end
 		
@@ -967,11 +967,11 @@ feature -- Class info
 			l_attributes := l_class.custom_attributes
 			if l_attributes /= Void then
 				l_ca_factory.generate_custom_attributes (
-					class_type_token (class_type.implementation_id), l_attributes)
+					actual_class_type_token (class_type.implementation_id), l_attributes)
 					-- Generate custome attribute on interface if it is generated.
 				if class_type.static_type_id /= class_type.implementation_id then
 					l_ca_factory.generate_custom_attributes (
-						class_type_token (class_type.static_type_id), l_attributes)
+						actual_class_type_token (class_type.static_type_id), l_attributes)
 				end
 			end
 	
@@ -981,12 +981,12 @@ feature -- Class info
 				l_attributes := l_class.class_custom_attributes
 				if l_attributes /= Void then
 					l_ca_factory.generate_custom_attributes (
-						class_type_token (class_type.implementation_id), l_attributes)
+						actual_class_type_token (class_type.implementation_id), l_attributes)
 				end
 				l_attributes := l_class.interface_custom_attributes
 				if l_attributes /= Void then
 					l_ca_factory.generate_custom_attributes (
-						class_type_token (class_type.static_type_id), l_attributes)
+						actual_class_type_token (class_type.static_type_id), l_attributes)
 				end
 			end
 			define_interface_type (class_type)
@@ -1041,7 +1041,7 @@ feature -- Class info
 			l_class_name: STRING
 			l_meth_attr: INTEGER
 		do
-			l_class_token := class_type_token (class_type.implementation_id)
+			l_class_token := actual_class_type_token (class_type.implementation_id)
 			l_class_name := class_type.associated_class.name_in_upper
 
 			create l_name_ca.make
@@ -1234,7 +1234,7 @@ feature -- Features info
 			set_current_class_type (class_type)
 			set_current_class (class_c)
 			set_current_type_id (class_type.static_type_id)
-			current_class_token := class_type_token (current_type_id)
+			current_class_token := actual_class_type_token (current_type_id)
 
 				-- Generate interface features on Eiffel classes
 			inst_context.set_cluster (class_c.cluster)
@@ -1384,7 +1384,7 @@ feature -- Features info
 			l_current_class_type: CLASS_TYPE
 		do
 			l_class_type := class_types.item (a_type_id)
-			l_class_token := class_type_token (a_type_id)
+			l_class_token := actual_class_type_token (a_type_id)
 			l_feat := l_class_type.associated_class.feature_of_feature_id (a_feature_id)
 			l_is_single_class := l_class_type.is_generated_as_single_type
 
@@ -2220,7 +2220,7 @@ feature -- IL Generation
 						generate_argument (i)
 						if is_verifiable and l_cur_sig.item (i) /= l_impl_sig.item (i) then
 							method_body.put_opcode_mdtoken (feature {MD_OPCODES}.Castclass,
-								class_type_token (l_impl_sig.item (i)))
+								mapped_class_type_token (l_impl_sig.item (i)))
 						end
 						i := i + 1
 					end
@@ -2233,7 +2233,7 @@ feature -- IL Generation
 					if feat.has_return_value then
 						if is_verifiable and l_cur_sig.item (0) /= l_impl_sig.item (0) then
 							method_body.put_opcode_mdtoken (feature {MD_OPCODES}.Castclass,
-								class_type_token (l_cur_sig.item (0)))
+								mapped_class_type_token (l_cur_sig.item (0)))
 						end
 					end
 					generate_return (feat.has_return_value)
@@ -2486,7 +2486,7 @@ feature -- IL Generation
 					generate_argument (i)
 					if is_verifiable and l_cur_sig.item (i) /= l_inh_sig.item (i) then
 						method_body.put_opcode_mdtoken (feature {MD_OPCODES}.Castclass,
-							class_type_token (l_cur_sig.item (i)))
+							mapped_class_type_token (l_cur_sig.item (i)))
 					end
 					i := i + 1
 				end
@@ -2496,7 +2496,7 @@ feature -- IL Generation
 				if cur_feat.has_return_value then
 					if is_verifiable and l_cur_sig.item (0) /= l_inh_sig.item (0) then
 						method_body.put_opcode_mdtoken (feature {MD_OPCODES}.Castclass,
-							class_type_token (l_inh_sig.item (0)))
+							mapped_class_type_token (l_inh_sig.item (0)))
 					end
 				end
 				generate_return (cur_feat.has_return_value)
@@ -2530,7 +2530,7 @@ feature -- IL Generation
 					generate_argument (1)
 					if is_verifiable and l_cur_sig.item (0) /= l_inh_sig.item (0) then
 						method_body.put_opcode_mdtoken (feature {MD_OPCODES}.Castclass,
-							class_type_token (l_cur_sig.item (0)))
+							mapped_class_type_token (l_cur_sig.item (0)))
 					end
 						-- Hard coded `1' for number of arguments since there is one,
 						-- we cannot use `nb' as it is `0' for attributes.
@@ -3137,7 +3137,7 @@ feature -- Variables access
 			-- Put token associated to `a_type_id' on stack.
 		do
 			method_body.put_opcode_mdtoken (feature {MD_OPCODES}.Ldtoken,
-				class_type_token (a_type_id))
+				actual_class_type_token (a_type_id))
 		end
 
 	put_method_token (type_i: TYPE_I; a_feature_id: INTEGER) is
@@ -3202,7 +3202,7 @@ feature -- Variables access
 			type_i_not_void: type_i /= Void
 		do
 			method_body.put_opcode_mdtoken (feature {MD_OPCODES}.Box,
-				class_type_token (type_i.static_type_id))
+				actual_class_type_token (type_i.static_type_id))
 		end
 
 
@@ -3216,7 +3216,7 @@ feature -- Variables access
 		do
 			l_type_id := type_i.static_type_id
 			method_body.put_opcode_mdtoken (feature {MD_OPCODES}.Unbox,
-				class_type_token (l_type_id))
+				actual_class_type_token (l_type_id))
 			generate_load_from_address (type_i)
 		end
 
@@ -3342,7 +3342,7 @@ feature -- Addresses
 			when feature {MD_SIGNATURE_CONSTANTS}.Element_type_i then
 				method_body.put_opcode (feature {MD_OPCODES}.Ldind_i)
 			else
-				method_body.put_opcode_mdtoken (feature {MD_OPCODES}.Ldobj, class_type_token (a_type.static_type_id))
+				method_body.put_opcode_mdtoken (feature {MD_OPCODES}.Ldobj, actual_class_type_token (a_type.static_type_id))
 			end
 		end
 
@@ -3353,8 +3353,13 @@ feature -- Assignments
 		require
 			type_i_not_void: type_i /= Void
 		do
+				-- We use `mapped_class_type_token' because if we do:
+				-- a: ANY
+				-- o: SYSTEM_OBJECT
+				-- a := o -- valid because SYSTEM_OBJECT inherits from ANY
+				-- a ?= o -- should also be valid.
 			method_body.put_opcode_mdtoken (feature {MD_OPCODES}.Isinst,
-				class_type_token (type_i.static_type_id))
+				mapped_class_type_token (type_i.static_type_id))
 		end
 
 	generate_check_cast (source_type, target_type: TYPE_I) is
@@ -3373,19 +3378,8 @@ feature -- Assignments
 					not l_source.base_class.simple_conform_to (l_target.base_class)
 				then
 					method_body.put_opcode_mdtoken (feature {MD_OPCODES}.Castclass,
-						class_type_token (target_type.static_type_id))
+						mapped_class_type_token (target_type.static_type_id))
 				end
-			end
-		end
-
-	generate_cast_to_implementation (target_type: TYPE_I) is
-			-- Generate `cast' to implementation of `target_type'.
-		require
-			target_type_not_void: target_type /= Void
-		do
-			if is_verifiable and not target_type.is_expanded then
-				method_body.put_opcode_mdtoken (feature {MD_OPCODES}.Castclass,
-					class_type_token (target_type.implementation_id))
 			end
 		end
 
@@ -3439,7 +3433,7 @@ feature -- Assignments
 				not l_class_type.is_generated_as_single_type
 			then
 				method_body.put_opcode_mdtoken (feature {MD_OPCODES}.Ldobj,
-					class_type_token (attr_type.static_type_id))
+					actual_class_type_token (attr_type.static_type_id))
 				method_body.put_call (feature {MD_OPCODES}.Callvirt,
 					setter_token (type_i.static_type_id, a_feature_id), 1, False)
 			end
@@ -3673,7 +3667,7 @@ feature -- Array manipulation
 			l_token: INTEGER
 		do
 			if kind = Il_expanded then
-				l_token := class_type_token (a_type_id)
+				l_token := actual_class_type_token (a_type_id)
 				method_body.put_opcode_mdtoken (feature {MD_OPCODES}.Ldelema, l_token)
 				method_body.put_opcode_mdtoken (feature {MD_OPCODES}.Ldobj, l_token)
 			else
@@ -3705,7 +3699,7 @@ feature -- Array manipulation
 			type_id_valid: a_type_id > 0
 		do
 			method_body.put_opcode_mdtoken (feature {MD_OPCODES}.Ldelema,
-				class_type_token (a_type_id))
+				actual_class_type_token (a_type_id))
 		end
 		
 	generate_array_write (kind: INTEGER; a_type_id: INTEGER) is
@@ -3718,7 +3712,7 @@ feature -- Array manipulation
 		do
 			if kind = il_expanded then
 				method_body.put_opcode_mdtoken (feature {MD_OPCODES}.Stobj,
-					class_type_token (a_type_id))
+					actual_class_type_token (a_type_id))
 			else
 				inspect kind
 				when Il_i1, Il_u1 then l_opcode := feature {MD_OPCODES}.Stelem_i1
@@ -3743,7 +3737,7 @@ feature -- Array manipulation
 			-- to type id of `A'.
 		do
 			method_body.put_opcode_mdtoken (feature {MD_OPCODES}.Newarr,
-				class_type_token (a_type_id))
+				actual_class_type_token (a_type_id))
 		end
 
 	generate_array_count is
@@ -4382,12 +4376,8 @@ feature -- Basic feature
 			basic_type: type.is_basic
 		local
 			l_abs_token: INTEGER
-			l_type_token: INTEGER
 			l_sig: like method_sig
-			l_type_id: INTEGER
 		do
-			l_type_id := type.static_type_id
-			l_type_token := class_type_token (l_type_id)
 			create l_sig.make
 			l_sig.set_method_type (feature {MD_SIGNATURE_CONSTANTS}.Default_sig)
 			l_sig.set_parameter_count (1)
@@ -4995,12 +4985,24 @@ feature -- Mapping between Eiffel compiler and generated tokens
 			constructor_token_valid: Result /= Void
 		end
 
-	class_type_token (a_type_id: INTEGER): INTEGER is
+	actual_class_type_token (a_type_id: INTEGER): INTEGER is
 			-- Given `a_type_id' returns its associated metadata token.
 		require
 			valid_type_id: a_type_id > 0
 		do
-			Result := current_module.class_type_token (a_type_id)
+			Result := current_module.actual_class_type_token (a_type_id)
+		ensure
+			class_token_valid: Result /= 0
+		end
+
+	mapped_class_type_token (a_type_id: INTEGER): INTEGER is
+			-- Given `a_type_id' returns its associated metadata token
+			-- to be used in signatures and code generation token where
+			-- ANY needs to be mapped into System.Object.
+		require
+			valid_type_id: a_type_id > 0
+		do
+			Result := current_module.mapped_class_type_token (a_type_id)
 		ensure
 			class_token_valid: Result /= 0
 		end

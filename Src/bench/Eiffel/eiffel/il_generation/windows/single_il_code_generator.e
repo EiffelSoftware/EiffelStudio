@@ -72,7 +72,7 @@ feature -- IL Generation
 			set_current_class (class_c)
 			set_current_class_type (class_type)
 			set_current_type_id (class_type.implementation_id)
-			current_class_token := class_type_token (current_type_id)
+			current_class_token := actual_class_type_token (current_type_id)
 
 				-- Clean IL recorded information
 			clean_debug_information (class_type)

@@ -1,41 +1,47 @@
+indexing
+	description: "Change the start state (hidden/shown) of the window."
+	Id: "$Id$"
+	Date: "$Date$"
+	Revision: "$Revision$"
 
-class PERM_SHOWN_CMD 
+class PERM_SHOWN_CMD
 
 inherit
-
 	CONTEXT_CMD
 		redefine
-			context
+			context, undo
 		end
-	
-feature {NONE}
+
+feature {NONE} -- Implementation
 
 	associated_form: INTEGER is
 		do
-			Result := Context_const.perm_wind_att_form_nbr
-		end;
+			Result := Context_const.window_att_form_nbr
+		end
 
-	c_name: STRING is
+	name: STRING is
 		do
 			Result := Command_names.cont_perm_shown_cmd_name
-		end;
+		end
 
-	context: PERM_WIND_C;
+	context: WINDOW_C
 
-	old_hidden: BOOLEAN;
+	old_hidden: BOOLEAN
 
-	context_work is
+	work is
 		do
-			old_hidden := context.start_hidden;
-		end;
+			old_hidden := context.start_hidden
+		end
 
-	context_undo is
+	undo is
 		local
-			new_hidden: BOOLEAN;
+			new_hidden: BOOLEAN
 		do
-			new_hidden := context.start_hidden;
-			context.set_start_hidden (old_hidden);
-			old_hidden := new_hidden;
-		end;
+			new_hidden := context.start_hidden
+			context.set_start_hidden (old_hidden)
+			old_hidden := new_hidden
+			{CONTEXT_CMD} Precursor
+		end
 
-end
+end -- class PERM_SHOWN_CMD
+

@@ -1,41 +1,47 @@
+indexing
+	description: "Set the title of a permanent window."
+	Id: "$Id$"
+	Date: "$Date$"
+	Revision: "$Revision$"
 
-class PERM_TITLE_CMD 
+class PERM_TITLE_CMD
 
 inherit
-
 	CONTEXT_CMD
 		redefine
-			context
-		end;
+			context, undo
+		end
 
-feature {NONE}
+feature {NONE} -- Implementation
 
 	associated_form: INTEGER is
 		do
-			Result := Context_const.perm_wind_att_form_nbr
-		end;
+			Result := Context_const.window_att_form_nbr
+		end
 
-	c_name: STRING is
+	name: STRING is
 		do
 			Result := Command_names.cont_perm_title_cmd_name
-		end;
+		end
 
-	context: PERM_WIND_C;
+	context: WINDOW_C
 
-	old_title: STRING;
+	old_title: STRING
 
-	context_work is
+	work is
 		do
-			old_title := context.title;
-		end;
+			old_title := context.title
+		end
 
-	context_undo is
+	undo is
 		local
-			new_title: STRING;
+			new_title: STRING
 		do
-			new_title := context.title;
-			context.set_visual_name (old_title);
-			old_title := new_title;
-		end;
+			new_title := context.title
+			context.set_visual_name (old_title)
+			old_title := new_title
+			{CONTEXT_CMD} Precursor
+		end
 
-end
+end -- class PERM_TITLE_CMD
+

@@ -1,42 +1,52 @@
+indexing
+	description: "Change the position of a context."
+	Id: "$Id$"
+	Date: "$Date$"
+	Revision: "$Revision$"
 
-class SET_POSITION_CMD 
+class SET_POSITION_CMD
 
 inherit
-
 	CONTEXT_CMD
-	
-		
-feature {NONE} --Implementation
+		redefine
+			context, undo
+		end
+
+feature {NONE} -- Implementation
 
 	associated_form: INTEGER is
 		do
 			Result := Context_const.geometry_form_nbr
-		end;
+		end
 
-	c_name: STRING is
+	name: STRING is
 		do
 			Result := Command_names.cont_set_position_cmd_name
-		end;
+		end
 
-	old_x: INTEGER;
+	context: WIDGET_C
 
-	old_y: INTEGER;
+	old_x: INTEGER
 
-	context_work is
+	old_y: INTEGER
+
+	work is
 		do
-			old_x := context.x;
-			old_y := context.y;
-		end;
+			old_x := context.x
+			old_y := context.y
+		end
 
-	context_undo is
+	undo is
 		local
 			new_x, new_y: INTEGER
 		do
-			new_x := context.x;
-			new_y := context.y;
-			context.set_x_y (old_x, old_y);
-			old_x := new_x;
-			old_y := new_y;
-		end;
+			new_x := context.x
+			new_y := context.y
+			context.set_x_y (old_x, old_y)
+			old_x := new_x
+			old_y := new_y
+			{CONTEXT_CMD} Precursor
+		end
 
-end
+end -- class SET_POSITION_CMD
+

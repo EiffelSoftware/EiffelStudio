@@ -1,10 +1,11 @@
 indexing
-	description: "Change the horizontal resizement policy."
+	description: "Set the default text of a text component."
 	id: "$Id$"
 	date: "$Date$"
 	revision: "$Revision$"
 
-class TEXT_READ_CMD 
+class
+	SET_DEFAULT_TEXT_CMD
 
 inherit
 	CONTEXT_CMD
@@ -25,27 +26,27 @@ feature {NONE} -- Implementation
 
 	name: STRING is
 		do
-			Result := Command_names.cont_text_read_cmd_name
+			Result := Command_names.cont_set_default_text_cmd_name
 		end
 
 	context: TEXT_COMPONENT_C
 
-	old_is_editable: BOOLEAN
+	old_defaut_text: STRING
 
 	work is
 		do
-			old_is_editable := context.is_editable
+			old_defaut_text := context.default_text
 		end
 
 	undo is
 		local
-			new_is_editable: BOOLEAN
+			new_txt: STRING
 		do
-			new_is_editable := context.is_editable
-			context.set_editable (old_is_editable)
-			old_is_editable := new_is_editable
+			new_txt := context.default_text
+			context.set_default_text (old_defaut_text)
+			old_defaut_text := new_txt
 			{CONTEXT_CMD} Precursor
 		end
 
-end -- class TEXT_READ_CMD
+end -- class SET_DEFAULT_TEXT_CMD
 

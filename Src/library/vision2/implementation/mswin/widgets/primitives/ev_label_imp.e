@@ -14,11 +14,15 @@ inherit
 			build
 		end
 
-	EV_BAR_ITEM_IMP
+	EV_PRIMITIVE_IMP
 		redefine
-			wel_window,
 			build
 		end
+
+	EV_BAR_ITEM_IMP
+--		redefine
+--			build
+--		end
 
 	EV_TEXT_CONTAINER_IMP
 		redefine
@@ -27,21 +31,53 @@ inherit
 
 	EV_FONTABLE_IMP
 
+	WEL_STATIC
+		rename
+			make as wel_make,
+			parent as wel_parent,
+			font as wel_font,
+			set_font as wel_set_font
+		undefine
+			-- We undefine the features redefined by EV_WIDGET_IMP,
+			-- and EV_PRIMITIVE_IMP
+			remove_command,
+			set_width,
+			set_height,
+			destroy,
+			set_text,
+			on_left_button_down,
+			on_right_button_down,
+			on_left_button_up,
+			on_right_button_up,
+			on_left_button_double_click,
+			on_right_button_double_click,
+			on_mouse_move,
+			on_char,
+			on_key_up
+		end
+
 creation
 	make_with_text
 
-feature {NONE} -- Initialization
+feature -- Initialization
 
 	make (par: EV_CONTAINER) is
+			-- Create an empty label
 		do
+			make_with_text (par, "")
 		end
 
-	make_with_text (a_parent: EV_CONTAINER; txt: STRING) is
-				-- Create a wel_static (i.e.: a mswin label)
+	make_with_text (par: EV_CONTAINER; txt: STRING) is
+			-- Create the label with `txt' as label.
+		local
+			par_imp: EV_CONTAINER_IMP
 		do
-			test_and_set_parent (a_parent)
-			!!wel_window.make (parent_imp.wel_window, txt, 0, 0, 0, 0, 0)
-		end				
+			par_imp ?= par.implementation
+			check
+				par_imp /= Void
+			end
+			wel_make (par_imp, txt, 0, 0, 0, 0, 0)
+		end
 
 	build is
 			-- Called after creation. Set the current size and
@@ -68,11 +104,6 @@ feature -- Basic operation
 		end
 
 	Extra_width: INTEGER is 10
-
-
-feature -- Implementation
-
-	wel_window: WEL_STATIC
 
 end -- class EV_LABEL_IMP
 

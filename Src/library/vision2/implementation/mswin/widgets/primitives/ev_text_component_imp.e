@@ -13,21 +13,44 @@ inherit
 	EV_TEXT_COMPONENT_I
 
 	EV_PRIMITIVE_IMP
-		redefine
-			wel_window
+
+	WEL_EDIT
+		rename
+			make as wel_make,
+			parent as wel_parent,
+			font as wel_font,
+			set_font as wel_set_font
+		undefine
+			-- We undefine the features that are redefine by WEL objects
+			height,
+			process_notification,
+			unselect,
+			text_length,
+			class_name,
+			default_ex_style,
+			-- We undefine the features redefined by EV_WIDGET_IMP,
+			-- and EV_PRIMITIVE_IMP
+			remove_command,
+			set_width,
+			set_height,
+			destroy,
+			on_left_button_down,
+			on_right_button_down,
+			on_left_button_up,
+			on_right_button_up,
+			on_left_button_double_click,
+			on_right_button_double_click,
+			on_mouse_move,
+			on_char,
+			on_key_up
 		end
 
 feature -- Access
 
-	text: STRING is
-		do
-			Result := wel_window.text
-		end
-
 	position: INTEGER is
 			-- Current position of the caret.
 		do
-			Result := wel_window.caret_position
+			Result := caret_position
 		end
 
 feature -- Status setting
@@ -62,7 +85,7 @@ feature -- Status setting
 	set_position (pos: INTEGER) is
 			-- set current insertion position
 		do
-			wel_window.set_caret_position (pos)
+			set_caret_position (pos)
 		end
 
 	set_maximum_line_lenght (lenght: INTEGER) is
@@ -77,7 +100,7 @@ feature -- Status setting
 			-- Select (hilight) the text between 
 			-- 'start_pos' and 'end_pos'
 		do
-			wel_window.set_selection (start_pos, end_pos)
+			set_selection (start_pos, end_pos)
 		end
 
 feature -- Basic operation
@@ -126,11 +149,6 @@ feature -- Basic operation
 				not_yet_implemented: False
 			end
 		end
-
-feature -- Implementation
-
-	wel_window: WEL_EDIT
-			-- Current wel_window
 
 end -- class EV_TEXT_COMPONENT_IMP
 

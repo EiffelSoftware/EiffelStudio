@@ -12,37 +12,62 @@ inherit
 	EV_TEXT_AREA_I
 		
 	EV_TEXT_COMPONENT_IMP
+		undefine
+			scroll,
+			set_caret_position,
+			set_selection
 		redefine
-			wel_window
+			default_ex_style
+		end
+
+	WEL_MULTIPLE_LINE_EDIT
+		rename
+			make as wel_make,
+			parent as wel_parent,
+			font as wel_font,
+			set_font as wel_set_font
+		undefine
+				-- We undefine the features redefined by EV_WIDGET_IMP,
+				-- and EV_PRIMITIVE_IMP
+			remove_command,
+			set_width,
+			set_height,
+			destroy,
+			on_left_button_down,
+			on_right_button_down,
+			on_left_button_up,
+			on_right_button_up,
+			on_left_button_double_click,
+			on_right_button_double_click,
+			on_mouse_move,
+			on_char,
+			on_key_up
 		end
 
 creation
 
 	make
 
-
-feature {NONE} -- Initialization
+feature -- Initialization
 
 	make (par: EV_CONTAINER) is
-			-- Create the `wel_multiple_line_edit'
+			-- Create the label with an empty label.
 		do
-			test_and_set_parent (par)
-			!! wel_window.make (parent_imp.wel_window, "", 0, 0, 0, 0, 0)
+			make_with_text (par, "")
 		end
 
-feature -- Status setting
-
-	set_text (txt: STRING) is
-			-- set text in component to 'txt'
-			-- To go to a new line, write "%N%R"
+	make_with_text (par: EV_CONTAINER; txt: STRING) is
+			-- Create the label with `txt'.
+		local
+			par_imp: EV_CONTAINER_IMP
 		do
-			wel_window.set_text (txt)	
+			par_imp ?= par.implementation
+			check
+				par_imp /= Void
+			end
+			wel_make (par_imp, txt, 0, 0, 0, 0, 0)
 		end
 
-feature -- Implementation
-
-	wel_window: WEL_MULTIPLE_LINE_EDIT
-			-- Current wel_window
 
 end -- class EV_TEXT_AREA_IMP
 

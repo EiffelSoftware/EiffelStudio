@@ -15,21 +15,60 @@ inherit
 		end
 		
 	EV_TOGGLE_BUTTON_IMP
+		undefine
+			default_style
 		redefine
-			make_with_text
+			make, make_with_text
 		end
+
+	WEL_CHECK_BOX
+		rename
+			make as wel_make,
+			parent as wel_parent,
+			font as wel_font,
+			set_font as wel_set_font
+		undefine
+			-- We undefine the features redefined by EV_WIDGET_IMP,
+			-- and EV_PRIMITIVE_IMP
+			remove_command,
+			set_width,
+			set_height,
+			destroy,
+			set_text,
+			on_bn_clicked,
+			on_left_button_down,
+			on_right_button_down,
+			on_left_button_up,
+			on_right_button_up,
+			on_left_button_double_click,
+			on_right_button_double_click,
+			on_mouse_move,
+			on_char,
+			on_key_up
+		end	
 
 creation
 	make, make_with_text
 
-
 feature -- Initialization
 
-	make_with_text (par: EV_CONTAINER; txt: STRING) is
-        		-- Create a wel toggle button.
+	make (par: EV_CONTAINER) is
+			-- Create the label with an empty label.
 		do
-			test_and_set_parent (par)
-			!! wel_window.make (parent_imp.wel_window, txt, 0, 0, 10, 10, 0)
+			make_with_text (par, "")
+		end
+
+	make_with_text (par: EV_CONTAINER; txt: STRING) is
+			-- Create the label with `txt' as label.
+		local
+			par_imp: EV_CONTAINER_IMP
+		do
+			par_imp ?= par.implementation
+			check
+				par_imp /= Void
+			end
+			wel_make (par_imp, txt, 0, 0, 0, 0, 0)
+			extra_width := 20
 		end
 
 end -- class EV_CHECK_BUTTON_IMP

@@ -190,7 +190,7 @@ feature -- Access
 			Result.append (header_protector (header_file_name))
 			Result.append (New_line)
 
-			Result.append (cpp_protector_start)
+			Result.append (cpp_protector_start1)
 			Result.append (New_line)
 			Result.append (New_line)
 
@@ -223,7 +223,7 @@ feature -- Access
 			end
 			Result.append (New_line)
 
-			Result.append (cpp_protector_end)
+			Result.append (cpp_protector_end1)
 			Result.append (New_line)
 			Result.append (New_line)
 
@@ -284,6 +284,7 @@ feature -- Access
 				extern_functions.forth
 			end
 
+			Result.append (cpp_protector_start1)
 			if abstract then
 				class_protector := clone (name)
 				class_protector.prepend ("__")
@@ -397,6 +398,8 @@ feature -- Access
 				Result.append (Hash_end_if)
 				Result.append (New_line)
 			end
+			Result.append (cpp_protector_end1)
+			Result.append (New_line)
 			Result.append (New_line)
 
 			from

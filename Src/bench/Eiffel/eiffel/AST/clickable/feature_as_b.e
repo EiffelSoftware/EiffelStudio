@@ -12,8 +12,7 @@ inherit
 
 	FEATURE_AS
 		redefine
-			feature_names, body, set_unique_values,
-			new_ast, set
+			feature_names, body, set_unique_values, set
 		end;
 
 	AST_EIFFEL_B
@@ -91,6 +90,27 @@ feature -- Initialization
 			end
 		end;
 
+feature -- Access
+
+	feature_with_name (n: STRING): FEATURE_AS_B is
+			-- Feature ast with internal name `n'
+		local
+			cur: CURSOR;
+		do
+			cur := feature_names.cursor;
+			from
+				feature_names.start
+			until
+				feature_names.after or else Result /= Void
+			loop
+				if n.is_equal (feature_names.item.internal_name) then
+					Result := Current
+				end;
+				feature_names.forth
+			end
+			feature_names.go_to (cur)
+		end;
+
 feature -- Type check, byte code and dead code removal
 
 	type_check is
@@ -123,6 +143,11 @@ feature -- Type check, byte code and dead code removal
 			Result := body.local_table (f);
 		end;
 
+	local_table_for_format (f: FEATURE_I): EXTEND_TABLE [LOCAL_INFO, STRING] is
+		do
+			Result := body.local_table_for_format (f);
+		end;
+
 feature -- Stoning
  
 	stone (reference_class: CLASS_C): FEATURE_STONE is
@@ -146,10 +171,12 @@ feature -- Debugger
 			body.find_breakable;	-- Traverse tree to record instructions
 		end;
 
-feature -- Formatter
-
 	format (ctxt: FORMAT_CONTEXT_B) is
 			-- Reconstitute text.
+		local
+			comments: EIFFEL_COMMENTS;
+			cont: CONTENT_AS_B;
+			is_const_or_att: BOOLEAN;
 		do
 			ctxt.begin;
 			ctxt.new_line;
@@ -157,43 +184,42 @@ feature -- Formatter
 			ctxt.set_space_between_tokens;
 			ctxt.abort_on_failure;
 			ctxt.put_text_item (ti_Before_feature_declaration);
-				--| Should only be one feature name
-			feature_names.first.main_feature_format (ctxt)
+			if ctxt.has_feature_i then
+					--| Should only be one feature name
+				feature_names.first.main_feature_format (ctxt)
+			else
+				feature_names.format (ctxt)
+			end;
 			if not ctxt.last_was_printed then
 				ctxt.rollback;
 			else
 				body.format (ctxt);
-				if not ctxt.is_short then
-					ctxt.put_text_item (ti_Semi_colon)
+				if ctxt.is_short then
+					ctxt.put_text_item_without_tabs (ti_After_feature_declaration)
+				else
+					ctxt.put_text_item_without_tabs (ti_Semi_colon);
+					ctxt.put_text_item_without_tabs (ti_After_feature_declaration)
+					ctxt.new_line;
 				end;
-				ctxt.put_text_item (ti_After_feature_declaration)
-				ctxt.new_line;
+					-- Print comment if the content of the body is
+					-- an attribute or a constant.
+				cont := body.content;
+				is_const_or_att := cont = Void or else cont.is_constant;
+				if is_const_or_att then
+					ctxt.indent;
+					ctxt.indent;
+					if ctxt.is_short then
+						ctxt.new_line;
+					end;
+					comments := ctxt.feature_comments;
+					if comments /= Void then
+						ctxt.put_comments (comments);
+					end;
+					ctxt.put_origin_comment;
+					ctxt.exdent;
+					ctxt.exdent;
+				end;
 				ctxt.commit;
-			end;
-			format_comment (ctxt);		
-			ctxt.end_feature;
-		end;
-
-	new_ast: FEATURE_AS_B is
-		local
-			rout_as: ROUTINE_AS_B;
-			rout_fsas: ROUTINE_FSAS;
-		do
-			rout_as ?= body.content;
-			if rout_as = Void then
-				Result := Current
-			else
-				!! Result;
-				Result.set_content (Current);
-					!! rout_fsas;
-					rout_fsas.set_precondition (rout_as.precondition);
-					rout_fsas.set_locals (rout_as.locals);
-					rout_fsas.set_routine_body (rout_as.routine_body); 
-					rout_fsas.set_postcondition (rout_as.postcondition);
-					rout_fsas.set_rescue_clause (rout_as.rescue_clause);
-					rout_fsas.set_obsolete_message (rout_as.obsolete_message);
-				Result.body.set_content (rout_fsas);
-				Result.set_names (feature_names);
 			end;
 		end;
 

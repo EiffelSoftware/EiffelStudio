@@ -1,6 +1,10 @@
 #ifndef _eif_cond_var_h_
 #define _eif_cond_var_h_
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 #ifdef EIF_THREADS
 
 #include <windows.h>
@@ -41,4 +45,9 @@ extern int pthread_cond_signal (pthread_cond_t *cv);
 extern int pthread_cond_destroy (pthread_cond_t *cv) ;
 
 #endif  /* EIF_THREADS */
+
+#ifdef __cplusplus
+}
+#endif
+
 #endif  /* _eif_cond_var_h_ */

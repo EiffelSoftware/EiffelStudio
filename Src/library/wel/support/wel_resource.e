@@ -35,7 +35,7 @@ feature {NONE} -- Initialization
 		local
 			a_wel_string: WEL_STRING
 		do
-			!! a_wel_string.make (name)
+			create a_wel_string.make (name)
 			load_item (main_args.current_instance.item, a_wel_string.item)
 		ensure
 			not_shared: not shared
@@ -62,7 +62,7 @@ feature {NONE} -- Implementation
 
 	main_args: WEL_MAIN_ARGUMENTS is
 		once
-			!! Result
+			create Result
 		ensure
 			result_not_void: Result /= Void
 		end

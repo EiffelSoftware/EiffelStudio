@@ -218,6 +218,7 @@ feature -- Bridge to Debugger
 			if not retried then
 				l_icd_exception := eifnet_debugger.new_active_exception_value
 				if l_icd_exception /= Void then
+					l_icd_exception.add_ref
 					create l_exception_info.make (l_icd_exception)
 					l_class_details := l_exception_info.value_class_name
 					l_module_details := l_exception_info.value_module_file_name
@@ -244,6 +245,7 @@ feature -- Bridge to Debugger
 		do
 			if not retried then
 				l_icd_exception := eifnet_debugger.new_active_exception_value
+				l_icd_exception.add_ref
 				create l_exception_info.make (l_icd_exception)
 				l_icdov := l_exception_info.interface_debug_object_value
 				if l_icdov /= Void then
@@ -275,9 +277,11 @@ feature -- Bridge to Debugger
 			if not retried then
 				l_icd_exception := eifnet_debugger.new_active_exception_value
 				if l_icd_exception /= Void then
+					l_icd_exception.add_ref
 					create l_exception_info.make (l_icd_exception)
 					l_icdov := l_exception_info.interface_debug_object_value
-					if l_icdov /=Void then
+					if l_icdov /= Void then
+						l_icdov.add_ref
 						Result := eifnet_debugger.get_message_value_from_exception_object_value (Void, 
 							l_icd_exception, 
 							l_icdov						

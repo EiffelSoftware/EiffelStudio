@@ -11,9 +11,6 @@ inherit
 	EV_SIMPLE_ITEM_I
 
 	EV_ITEM_IMP
-		undefine
-			set_foreground_color
-		end
 
 	EV_TEXTABLE_IMP
 
@@ -25,7 +22,9 @@ inherit
 			add_double_click_command as old_add_dblclk,
 			remove_double_click_commands as old_remove_dblclk
 		undefine
-			has_parent
+			has_parent,
+			set_foreground_color,
+			set_background_color
 		end
 
 end -- class EV_SIMPLE_ITEM_IMP

@@ -334,7 +334,7 @@ feature {CASE_CLASS_INFO} -- Case storage output
 			if indexes /= Void then
 				!! s_chart;
 				from
-					!! i_l.make (indexes.count);
+					!! i_l.make_filled (indexes.count);
 					i_l.start;
 					indexes.start
 				until
@@ -348,7 +348,7 @@ feature {CASE_CLASS_INFO} -- Case storage output
 				Result.set_chart (s_chart);
 			end;
 			if generics /= Void then
-				!! g_l.make (generics.count);
+				!! g_l.make_filled (generics.count);
 				from
 					generics.start;
 					g_l.start

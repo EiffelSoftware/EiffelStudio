@@ -411,7 +411,7 @@ feature {APPLICATION_EXECUTION, FAILURE_HDLR}
 			cell2: CELL2 [E_FEATURE, LIST [INTEGER]]
 		do
 			from
-				!! Result.make (list.count)
+				!! Result.make_filled (list.count)
 				Result.start;
 				list.start
 			until

@@ -142,7 +142,7 @@ feature {ROUTINE_AS_B} -- Case Storage
 		local
 			 ctxt: FORMAT_CONTEXT;
 		do
-			!! Result.make (assertions.count);
+			!! Result.make_filled (assertions.count);
 			!! ctxt.make_for_case;
 			from
 				Result.start

@@ -37,18 +37,28 @@ feature {NONE} -- Implementation
 		do
 			base_make (an_interface)
 			set_c_object (C.gtk_hbox_new (False, 0))
+			create radio_group.make
 		end
 
 feature -- Implementation
+
+	radio_group: LINKED_LIST [EV_TOOL_BAR_RADIO_BUTTON_IMP]
+		-- List of the tool bars
 
 	add_to_container (v: like item) is
 			-- Add `v' to tool bar, set to non-expandable.
 		local
 			old_expand, fill, pad, pack_type: INTEGER
 			wid_imp: EV_WIDGET_IMP
+			radio_imp: EV_TOOL_BAR_RADIO_BUTTON_IMP
 		do
 			Precursor (v)
 			wid_imp ?= v.implementation
+			radio_imp ?= wid_imp
+
+			if radio_imp /= Void then
+				radio_group.extend (radio_imp)
+			end
 
 			C.gtk_box_query_child_packing (
 				list_widget,
@@ -101,8 +111,8 @@ end -- class EV_TOOL_BAR_IMP
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
---| Revision 1.17  2000/04/11 23:25:55  king
---| Removed connect_radio_grouping
+--| Revision 1.18  2000/04/12 00:19:58  king
+--| Added initial radio grouping features
 --|
 --| Revision 1.16  2000/04/06 23:50:07  brendel
 --| Removed assignment to list_widget.

@@ -371,7 +371,7 @@ feature -- Status setting
 			-- will use its current value.
 		require
 			not_destroyed: not is_destroyed
-			valid_positions: start_position < end_position and start_position >= 1 and end_position <= text_length 
+			valid_positions: start_position < end_position and start_position >= 1 and end_position <= text_length + 1
 			format_not_void: format /= Void
 			buffer_not_locked_for_append: not buffer_locked_in_append_mode
 		do

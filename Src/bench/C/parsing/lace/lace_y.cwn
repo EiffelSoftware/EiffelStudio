@@ -1015,6 +1015,9 @@ case 101:
 {xxval.node = NULL;}
 break;
 case 102:
+#line 357 "lace_y.y"
+{list_init();}
+break;
 case 103:
 #line 358 "lace_y.y"
 {xxval.node = create_node2 (LANG_TRIB_SD,xxvsp[-3].node,list_new(CONSTRUCT_LIST_SD));}

@@ -75,7 +75,7 @@ feature {NONE} -- Implementation
 		do
 			Precursor {EV_DIALOG}
 			set_title ("Component viewer ")
-			set_icon_pixmap ((create {GB_SHARED_PIXMAPS}).Icon_component_window @ 1)
+			set_icon_pixmap (icon)
 				-- Set up cancel actions on `Current'.
 			fake_cancel_button (Current, agent show_hide_component_viewer_command.execute)
 			create vertical_box
@@ -98,7 +98,7 @@ feature {NONE} -- Implementation
 			display_button.select_actions.extend (agent set_display_view)
 			
 			create builder_button
-			builder_button.set_pixmap (icon)
+			builder_button.set_pixmap ((create {GB_SHARED_PIXMAPS}).icon_component_build_view)
 			builder_button.select_actions.extend (agent set_build_view)
 			builder_button.set_tooltip ("Builder view")
 			tool_bar.extend (builder_button)

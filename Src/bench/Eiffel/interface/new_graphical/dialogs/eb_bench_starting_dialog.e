@@ -108,7 +108,7 @@ feature {NONE} -- Initialization
 			default_create
 			set_title (Interface_names.t_Starting_dialog)
 			set_icon_pixmap (Pixmaps.Icon_dialog_window)
-			
+
 				-- New projects item
 			create new_project_frame
 			create new_project_vb
@@ -145,7 +145,7 @@ feature {NONE} -- Initialization
 				vb.extend (do_not_display_dialog_button)
 				vb.disable_item_expand (do_not_display_dialog_button)
 				vb.extend (create {EV_CELL})
-			end	
+			end
 			
 				--| Action buttons box
 			create ok_button
@@ -153,7 +153,7 @@ feature {NONE} -- Initialization
 				ok_button.set_text (Interface_names.b_Ok)
 			else
 				ok_button.set_text (Interface_names.b_Next)
-			end				
+			end
 			ok_button.select_actions.extend (agent on_ok)
 			Layout_constants.set_default_size_for_button (ok_button)
 			create cancel_button.make_with_text_and_action (Interface_names.b_Cancel, agent on_cancel)
@@ -192,8 +192,6 @@ feature {NONE} -- Initialization
 			if show_open_project_frame then
 				open_epr_project_rb.select_actions.extend (agent lookup_selection)
 
-				compiled_projects_list.pointer_double_press_actions.extend (agent dbl_clk_action)
-				
 				if show_starting_dialog then
 					do_not_display_dialog_button.disable_select
 				else
@@ -234,7 +232,7 @@ feature {NONE} -- Initialization
 		local
 			hb: EV_HORIZONTAL_BOX
 		do
-				-- Connect the radio button with `ok_ok' via the wrapper `on_double_click_radio_button'
+				-- Connect the radio button with `on_ok' via the wrapper `on_double_click_radio_button'
 			a_radio_button.pointer_double_press_actions.extend (agent on_double_click_radio_button)
 	
 			create hb
@@ -294,7 +292,7 @@ feature -- Status report
 		end
 
 feature -- Basic operations
-	
+
 	show_modal_to_window (a_window: EV_WINDOW) is
 			-- Show and wait until `Current' is closed.
 			-- `Current' is shown modal with respect to `a_window'.
@@ -350,10 +348,22 @@ feature {NONE} -- Execution
 			update_preferences
 		end
 		
-	on_double_click_radio_button (a_x: INTEGER; a_y: INTEGER; a_button: INTEGER; a_x_tilt: DOUBLE; a_y_tilt: DOUBLE; a_pressure: DOUBLE; a_screen_x: INTEGER; a_screen_y: INTEGER) is
+	on_double_click_radio_button (a_x: INTEGER; a_y: INTEGER; a_button: INTEGER;
+					a_x_tilt: DOUBLE; a_y_tilt: DOUBLE; a_pressure: DOUBLE;
+					a_screen_x: INTEGER; a_screen_y: INTEGER) is
 			-- A radio button has been double clicked
 		do
 				-- Execute the selected radio button
+			on_ok
+		end
+
+	on_double_click_project_list,
+	on_double_click_wizard_list (a_x: INTEGER; a_y: INTEGER; a_button: INTEGER;
+					a_x_tilt: DOUBLE; a_y_tilt: DOUBLE; a_pressure: DOUBLE;
+					a_screen_x: INTEGER; a_screen_y: INTEGER) is
+			-- The `wizards_list' or the `projects_list' has been double clicked
+		do
+				-- Execute the selected wizard or project
 			on_ok
 		end
 
@@ -511,16 +521,6 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	dbl_clk_action (a_x: INTEGER; a_y: INTEGER; a_button: INTEGER;
-					a_x_tilt: DOUBLE; a_y_tilt: DOUBLE; a_pressure: DOUBLE;
-					a_screen_x: INTEGER; a_screen_y: INTEGER) is
-			-- Action performed when the list is double-clicked.
-		do
-			if a_button = 1 then
-				on_ok
-			end
-		end
-
 	create_and_fill_wizards_list is
 			-- Create and fill `wizards_list'
 		local
@@ -528,7 +528,10 @@ feature {NONE} -- Implementation
 		do
 			create wizards_list
 			wizards_list.set_minimum_height (layout_constants.dialog_unit_to_pixels (80))
-			
+
+				-- Connect the list with `on_ok' via the wrapper `on_double_click_wizard_list'
+			wizards_list.pointer_double_press_actions.extend (agent on_double_click_wizard_list)
+
 			if not retried then
 				load_available_wizards
 				fill_list_with_available_wizards
@@ -571,6 +574,9 @@ feature {NONE} -- Implementation
 					end
 				end
 			end
+			
+				-- Connect the list with `on_ok' via the wrapper `on_double_click_project_list'
+			compiled_projects_list.pointer_double_press_actions.extend (agent on_double_click_project_list)
 		ensure
 			compiled_projects_list_created: compiled_projects_list /= Void
 		rescue
@@ -758,7 +764,7 @@ feature {NONE} -- Implementation
 						end
 						result_parameters.forth
 					end
-	
+
 					check
 						ace_filename_initialized: ace_filename /= Void
 						directory_name_initialized: directory_name /= Void

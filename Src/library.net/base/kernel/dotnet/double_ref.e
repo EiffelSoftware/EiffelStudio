@@ -147,6 +147,17 @@ feature -- Conversion
 			end
 		end
 
+	truncated_to_integer_64: INTEGER_64 is
+			-- Integer part (Same sign, largest absolute
+			-- value no greater than current object's)
+		do
+			if item >= 0.0 then
+				Result := feature {CONVERT}.to_int_64_double (feature {MATH}.floor (item))
+			else
+				Result := feature {CONVERT}.to_int_64_double (feature {MATH}.ceiling (item))
+			end
+		end
+
 	truncated_to_real: REAL is
 			-- Real part (Same sign, largest absolute
 			-- value no greater than current object's)

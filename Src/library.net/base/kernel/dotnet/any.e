@@ -252,14 +252,32 @@ feature -- Duplication
  		do
  		end
 
+feature -- Retrieval
+
+	correct_mismatch is
+			-- Attempt to correct object mismatch using `mismatch_information'.
+		local
+			msg: STRING
+			exc: EXCEPTIONS
+		do
+			create msg.make_from_string ("Mismatch: ")
+			create exc
+			msg.append (generating_type)
+			exc.raise_retrieval_exception (msg)
+		end
+
+	mismatch_information: MISMATCH_INFORMATION is
+			-- Original attribute values of mismatched object
+		once
+			create Result
+		end
+
 feature {NONE} -- Retrieval
 
 	frozen internal_correct_mismatch is
 			-- Called from runtime to peform a proper dynamic dispatch on `correct_mismatch'.
 		do
-			check
-				not_implemented: False
-			end
+			correct_mismatch
 		end
 
 feature -- Output

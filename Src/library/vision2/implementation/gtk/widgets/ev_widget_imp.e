@@ -216,6 +216,7 @@ obj := objects
 			if vbox_widget /= default_pointer then
 				-- The widget is in `vbox_widget'.
 	                        gtk_widget_hide (vbox_widget)
+				gtk_widget_hide (widget)
 			else
 	                        gtk_widget_hide (widget)
 			end
@@ -224,7 +225,12 @@ obj := objects
 	show is
 			-- Make widget visible on the screen. (default)
 		do
-			gtk_widget_show (widget)
+			if vbox_widget /= default_pointer then
+				gtk_widget_show (widget)
+				gtk_widget_show (vbox_widget)
+			else
+				gtk_widget_show (widget)
+			end
 		end
 
 	set_focus is

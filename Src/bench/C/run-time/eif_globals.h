@@ -90,43 +90,6 @@ extern struct stack hec_saved;	/* Saved indirection pointers */
  *                                      *
  ****************************************/
 
-	/*
-	 * Definition of the macros EIF_GET_CONTEXT
-	 *
-	 * EIF_GET_CONTEXT used to contain an opening curly brace `{'. It is
-	 * now changed in order not to need it anymore: it is part of the local
-	 * variables declarations.
-	 */
-
-#if defined EIF_POSIX_THREADS	/* POSIX Threads */
-#if defined EIF_NONPOSIX_TSD || defined POSIX_10034A
-#define EIF_GET_CONTEXT \
-	eif_global_context_t * EIF_VOLATILE eif_globals; \
-	(void) pthread_getspecific(eif_global_key,(void **)&eif_globals);
-#else /* EIF_NONPOSIX_TSD */
-#define EIF_GET_CONTEXT \
-	eif_global_context_t * EIF_VOLATILE eif_globals = pthread_getspecific (eif_global_key);
-#endif /* EIF_NONPOSIX_TSD */
-
-#elif defined VXWORKS			/* VxWorks Threads */
-#define EIF_GET_CONTEXT \
-	eif_global_context_t * EIF_VOLATILE eif_globals = eif_global_key;
-
-#elif defined EIF_WIN32			/* Windows Threads */
-#define EIF_GET_CONTEXT \
-	eif_global_context_t * EIF_VOLATILE eif_globals = \
-		(eif_global_context_t *) TlsGetValue (eif_global_key);
-
-#elif defined SOLARIS_THREADS	/* Solaris Threads */
-#define EIF_GET_CONTEXT \
-	eif_global_context_t * EIF_VOLATILE eif_globals; \
-	(void) thr_getspecific (eif_global_key, (void **)&eif_globals);
-
-#else
-	Platform not supported for multithreading, check that you are using
-	the correct EIFFEL flags
-#endif
-
 
 typedef struct tag_eif_globals		/* Structure containing all global variables to the run-time */
 {
@@ -223,6 +186,53 @@ typedef struct tag_eif_globals		/* Structure containing all global variables to 
 	struct stack free_stack_cx;		/* Entries free in hector */
 
 } eif_global_context_t;
+
+
+	/*
+	 * Definition of the macros EIF_GET_CONTEXT
+	 *
+	 * EIF_GET_CONTEXT used to contain an opening curly brace `{'. It is
+	 * now changed in order not to need it anymore: it is part of the local
+	 * variables declarations.
+	 */
+
+#if defined EIF_POSIX_THREADS	/* POSIX Threads */
+#if defined EIF_NONPOSIX_TSD || defined POSIX_10034A
+rt_private eif_global_context_t * eif_pthread_getspecific (EIF_TSD_TYPE global_key) {
+	eif_global_context_t * Result;
+	(void) pthread_getspecific(global_key,(void **)&Result);
+	return Result;
+}
+#define EIF_GET_CONTEXT \
+	eif_global_context_t * EIF_VOLATILE eif_globals = eif_pthread_getspecific(eif_global_key);
+#else /* EIF_NONPOSIX_TSD */
+#define EIF_GET_CONTEXT \
+	eif_global_context_t * EIF_VOLATILE eif_globals = pthread_getspecific (eif_global_key);
+#endif /* EIF_NONPOSIX_TSD */
+
+#elif defined VXWORKS			/* VxWorks Threads */
+#define EIF_GET_CONTEXT \
+	eif_global_context_t * EIF_VOLATILE eif_globals = eif_global_key;
+
+#elif defined EIF_WIN32			/* Windows Threads */
+#define EIF_GET_CONTEXT \
+	eif_global_context_t * EIF_VOLATILE eif_globals = \
+		(eif_global_context_t *) TlsGetValue (eif_global_key);
+
+#elif defined SOLARIS_THREADS	/* Solaris Threads */
+rt_private eif_global_context_t * eif_thr_getspecific (EIF_TSD_TYPE global_key) {
+	eif_global_context_t * Result;
+	(void) thr_getspecific(global_key,(void **)&Result);
+	return Result;
+}
+#define EIF_GET_CONTEXT \
+	eif_global_context_t * EIF_VOLATILE eif_globals = eif_thr_getspecific (eif_global_key);
+
+#else
+	Platform not supported for multithreading, check that you are using
+	the correct EIFFEL flags
+#endif
+	
 
 /*
  *	Macros definitions.

@@ -14,9 +14,9 @@ default
 
 cluster
 	
-	root_cluster: "$LIBRARY\com\Wizard\root";
+	root_cluster: "$EIFFEL4\com_wizard\root";
 
-	all wizard: "$LIBRARY\com\Wizard\project"
+	all wizard: "$EIFFEL4\com_wizard\project"
 		option
 			assertion (require):ECOM_SAFE_ARRAY_BOUND;
 		visible
@@ -45,7 +45,7 @@ cluster
 	all wel:						"$LIBRARY\wel"
 
 	-- EiffelCOM
-	all ecom:						"$LIBRARY\com\library"
+	all ecom:						"$LIBRARY\com"
 		visible
 			ECOM_CURRENCY;
 			ECOM_DECIMAL;
@@ -60,11 +60,10 @@ cluster
 
 external
 	include_path:	"$LIBRARY\wel\spec\windows\include",
-					"$LIBRARY\com\library\include",
-					"$LIBRARY\com\runtime\include";
+					"$LIBRARY\com\spec\windows\include"
 
 	object: 		"$(LIBRARY)\wel\spec\$(COMPILER)\lib\wel.lib",
 					"$(LIBRARY)\time\spec\msc\lib\datetime.lib",
-					"$(LIBRARY)\com\Library\lib\com.lib",
-					"$(LIBRARY)\com\Runtime\lib\com_runtime.lib";
+					"$(LIBRARY)\com\spec\msc\lib\com.lib",
+					"$(LIBRARY)\com\spec\msc\lib\com_runtime.lib";
 end

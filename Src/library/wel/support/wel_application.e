@@ -11,6 +11,11 @@ deferred class
 inherit
 	WEL_APPLICATION_MAIN_WINDOW
 
+	WEL_WINDOWS_ROUTINES
+		export
+			{NONE} all
+		end
+	
 	WEL_GWL_CONSTANTS
 		export
 			{NONE} all

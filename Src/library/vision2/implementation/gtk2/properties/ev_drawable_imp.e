@@ -344,6 +344,22 @@ feature -- Drawing operations
 		do
 			draw_text_internal (x, y, a_text, True)
 		end
+
+	draw_ellipsed_text (x, y: INTEGER; a_text: STRING; clipping_width: INTEGER) is
+			-- Draw `a_text' with left of baseline at (`x', `y') using `font'.
+			-- Text is clipped to `clipping_width' in pixels and ellipses are displayed
+			-- to show truncated characters if any.
+		do
+			--| FIXME IEK Implement me
+		end
+
+	draw_ellipsed_text_top_left (x, y: INTEGER; a_text: STRING; clipping_width: INTEGER) is
+			-- Draw `a_text' with top left corner at (`x', `y') using `font'.
+			-- Text is clipped to `clipping_width' in pixels and ellipses are displayed
+			-- to show truncated characters if any.
+		do
+			--| FIXME IEK Implement me
+		end
 		
 	draw_text_internal (x, y: INTEGER; a_text: STRING; draw_from_baseline: BOOLEAN) is
 			-- Draw `a_text' at (`x', `y') using `font'.

@@ -54,7 +54,17 @@ feature -- Status setting
 		do
 		end
 
-feature {NONE} -- Invalidate
+feature {NONE} -- Implementation
+
+	parent_set (par: like parent): BOOLEAN is
+			-- Is the parent set
+		do
+			if parent_imp /= Void then
+				Result := parent_imp.interface = par
+			else
+				Result := par = Void
+			end
+		end
 
 	invalidate is
 			-- Should invalidate the top parent.
@@ -84,6 +94,9 @@ end -- class EV_ITEM_IMP
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.10  2000/02/22 23:08:37  rogers
+--| Added parent_set which was taken from EV_ITEM_I, and improved comment on implementation feature clause.
+--|
 --| Revision 1.9  2000/02/19 05:44:59  oconnor
 --| released
 --|

@@ -378,6 +378,7 @@ feature {NONE} -- Initialization
 			l_literal: CONSUMED_LITERAL_FIELD
 			l_constructor: CONSUMED_CONSTRUCTOR
 			l_args: ARRAY [CONSUMED_ARGUMENT]
+			l_arg: CONSUMED_ARGUMENT
 			l_arg_ids: ARRAY [INTEGER]
 			i, j, k, l, m, nb, l_record_pos: INTEGER
 			l_orig_tbl: SELECT_TABLE
@@ -545,9 +546,13 @@ feature {NONE} -- Initialization
 						m := 0
 						j := l_args.lower
 						k := l_args.upper
-						if not l_member.is_artificially_added and (l_member.is_infix or l_member.is_prefix) then
+						if
+							not l_member.is_artificially_added and
+							(l_member.is_infix or l_member.is_prefix)
+						then
 							check
-								l_args_big_enough: l_member.is_infix implies l_args.lower + 1 <= l_args.upper
+								l_args_big_enough:
+									l_member.is_infix implies l_args.lower + 1 <= l_args.upper
 								l_args_big_enough2: l_member.is_prefix implies l_args.count = 1
 							end
 							l_record_pos := j + 1
@@ -559,16 +564,18 @@ feature {NONE} -- Initialization
 					until
 						j > k
 					loop
+						l_arg := l_args.item (j)
 						if j >= l_record_pos then
 							l_external_type := internal_type_from_consumed_type (True,
-								l_args.item (j).type)
+								l_arg.type)
+							l_external_type.set_is_out (l_arg.is_out)
 							l_feat_arg.put_i_th (l_external_type, m + 1)
-							l_names_heap.put (l_args.item (j).eiffel_name)
+							l_names_heap.put (l_arg.eiffel_name)
 							l_feat_arg.argument_names.put (l_names_heap.found_item, m)
 							m := m + 1
 						end
 
-						l_names_heap.put (l_args.item (j).type.name)
+						l_names_heap.put (l_arg.type.name)
 						l_arg_ids.put (l_names_heap.found_item, l + 1)
 
 						l := l + 1

@@ -250,6 +250,8 @@ feature -- Generation
 			l_file_name: STRING
 			l_has_local, retried: BOOLEAN
 			l_precomp: REMOTE_PROJECT_DIRECTORY
+			l_viop: VIOP
+			l_use_optimized_precomp: BOOLEAN
 		do
 			if not retried then
 					-- Copy referenced local assemblies
@@ -281,8 +283,16 @@ feature -- Generation
 						l_precomp := Workbench.Precompilation_directories.item_for_iteration
 							-- Copy assembly file
 							-- Copy associated libXXX.dll file if any.
-						copy_to_local (l_precomp.assembly_driver)
-						copy_to_local (l_precomp.assembly_helper_driver)
+						l_use_optimized_precomp := l_precomp.is_precompile_finalized and system.msil_use_optimized_precompile
+						if system.msil_use_optimized_precompile and not l_precomp.is_precompile_finalized then
+								-- generate warning informing them they is no ompitzed precompiled library
+							create l_viop.make (l_precomp.name)
+							error_handler.insert_warning (l_viop)
+						end
+						
+						copy_to_local (l_precomp.assembly_driver (l_use_optimized_precomp))
+						copy_to_local (l_precomp.assembly_helper_driver (l_use_optimized_precomp))
+						copy_to_local (l_precomp.assembly_debug_info (l_use_optimized_precomp))
 
 						Workbench.Precompilation_directories.forth
 					end
@@ -976,42 +986,53 @@ feature {NONE} -- File copying
 			l_source, l_target: RAW_FILE
 			l_target_name: FILE_NAME
 			l_pos: INTEGER
+			l_vicf: VICF
+			l_retried: BOOLEAN
 		do
-			create_local_assemblies_directory
-			l_path := a_source
-
-			l_pos := l_path.last_index_of (
-				Platform_constants.Directory_separator, l_path.count)
-				
-			create l_source.make (l_path)
-			if is_finalizing then
-				create l_target_name.make_from_string (Final_bin_generation_path)
-			else
-				create l_target_name.make_from_string (Workbench_bin_generation_path)
-			end
-
-			if l_pos > 0 then
-				l_target_name.set_file_name (l_path.substring (l_pos,
-					l_path.count))
-			else
-				l_target_name.set_file_name (l_path)
-			end
-	
-			create l_target.make (l_target_name)
+			if not l_retried then
+				create_local_assemblies_directory
+				l_path := a_source
+		
+				l_pos := l_path.last_index_of (
+					Platform_constants.Directory_separator, l_path.count)
+					
+				create l_source.make (l_path)
+				if is_finalizing then
+					create l_target_name.make_from_string (Final_bin_generation_path)
+				else
+					create l_target_name.make_from_string (Workbench_bin_generation_path)
+				end
+		
+				if l_pos > 0 then
+					l_target_name.set_file_name (l_path.substring (l_pos + 1,
+						l_path.count))
+				else
+					l_target_name.set_file_name (l_path)
+				end
 			
-				-- Only copy the file if it is not already there or if the original
-				-- file is more recent.
-			if
-				l_source.exists and then
-				(not l_target.exists or else l_target.date < l_source.date)
-			then
-				l_source.open_read
-				l_target.open_write
-				l_source.copy_to (l_target)
-				l_source.close
-				l_target.close
-				l_target.set_date (l_source.date)
+				create l_target.make (l_target_name)
+				
+					-- Only copy the file if it is not already there or if the original
+					-- file is more recent.
+				if not l_target.exists or else l_target.date < l_source.date then
+					l_source.open_read
+					l_target.open_write
+					l_source.copy_to (l_target)
+					l_source.close
+					l_target.close
+					l_target.set_date (l_source.date)
+				end
+			else
+				if l_target_name /= Void then
+					create l_vicf.make (a_source, l_target_name)
+				else
+					create l_vicf.make (a_source, "Unknown target")
+				end
+				error_handler.insert_warning (l_vicf)
 			end
+		rescue
+			l_retried := True
+			retry
 		end
 
 feature {NONE} -- Progression

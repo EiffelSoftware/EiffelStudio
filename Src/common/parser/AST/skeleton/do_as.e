@@ -12,4 +12,4 @@ feature {}
 			Result := ti_Do_keyword
 		end;
 
-end
+end -- class DO_AS

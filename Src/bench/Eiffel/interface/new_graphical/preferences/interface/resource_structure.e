@@ -16,6 +16,7 @@ feature {NONE} -- Initialization
 		local
 			imp: RESOURCE_STRUCTURE_IMP
 		do
+			defaults_file_name := default_file_name
 			create imp.make (Current)
 			implementation := imp
 			imp.initialize (default_file_name, location)
@@ -85,6 +86,12 @@ feature -- Modification
 		do
 			implementation.replace_resource (res)
 		end
+		
+	load_defaults is
+			-- Wipe out the contents of `Current' and load preferences in the default file instead.
+		do
+			implementation.make_default (defaults_file_name)
+		end
 
 feature -- Saving
 
@@ -104,5 +111,8 @@ feature -- Implementation
 feature {NONE} -- Implementation
 
 	implementation: RESOURCE_STRUCTURE_I
+	
+	defaults_file_name: STRING
+			-- Name of the file in which the defaults are stored.
 
 end -- class RESOURCE_STRUCTURE

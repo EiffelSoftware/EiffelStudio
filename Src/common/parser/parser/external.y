@@ -152,7 +152,7 @@ DLLwin_specification: TE_DLLWIN_LANGUAGE Dll_identifier DLL_index Signature_opt 
 	;
 
 DLL_index:	-- Empty
-		  {$$ := 0}
+		  {$$ := -1}
 	|	TE_INTEGER
 		{ $$ := token_buffer.to_integer}
 	;

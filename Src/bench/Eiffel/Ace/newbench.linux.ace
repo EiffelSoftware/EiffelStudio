@@ -2,17 +2,16 @@ system
 	"ec"
 
 root
-	EB_KERNEL: make
+	eb_kernel: make
 
 default
 	assertion (check)
 	assertion (require)
 	assertion (ensure)
-	arguments ("-from_bench")
-	arguments (" ")
 	disabled_debug (yes)
 	disabled_debug ("activity")
 	disabled_debug ("actual_replication")
+	disabled_debug ("anchored_features")
 	disabled_debug ("assertion")
 	disabled_debug ("assertions")
 	disabled_debug ("byte_code")
@@ -48,15 +47,13 @@ default
 	disabled_debug ("filters")
 	disabled_debug ("flat_short")
 	disabled_debug ("flush_file")
+	disabled_debug ("formal_generic")
 	disabled_debug ("gelex")
 	disabled_debug ("genericity")
 	disabled_debug ("geyacc")
 	disabled_debug ("has_calls")
 	disabled_debug ("hector")
-	disabled_debug ("hide_option")
 	disabled_debug ("license_manager")
-	disabled_debug ("liman")
-	disabled_debug ("limand_log")
 	disabled_debug ("local_feat_adaptation")
 	disabled_debug ("once")
 	disabled_debug ("optimization")
@@ -90,9 +87,6 @@ cluster
 	all base:		"$EIFFEL_SRC/library/base"
 		exclude
 			"table"; "CVS"; 
-		default
-			assertion (require)
-			assertion (ensure)
 		end
 
 	gel:		"$EIFFEL_SRC/library/gel"
@@ -108,14 +102,16 @@ cluster
 	all vision:		"$EIFFEL_SRC/library/vision2"
 		exclude
 			"CVS"; "mswin"; "obsolete"; 
-		default
-			assertion (require)
-			assertion (ensure)
 		end
 
 	all net:		"$EIFFEL_SRC/library/net"
 		exclude
 			"CVS"; 
+		end
+
+	all time:		"$EIFFEL_SRC/library/time"
+		exclude
+			"CVS"; "french"; "german"; 
 		end
 
 	liman:		"$EIFFEL_SRC/Eiffel/limand"
@@ -129,6 +125,9 @@ cluster
 	liman_bench_graphical (liman):		"$/bench_graphical"
 
 	liman_abstract (liman):		"$/abstract"
+		exclude
+			"shared_license.e"; 
+		end
 
 	liman_graphical (liman):		"$/graphical"
 
@@ -182,7 +181,7 @@ cluster
 
 	all compiler:		"$EIFFEL_SRC/Eiffel/eiffel"
 		exclude
-			"CVS"; "com_il_generation"; "kernel"; "windows" 
+			"CVS"; "com_il_generation"; "kernel"; "windows"; 
 		end
 
 	all compiler_api:		"$EIFFEL_SRC/Eiffel/API"
@@ -242,6 +241,16 @@ cluster
 	all eac_components:		"$EIFFEL_SRC/dotnet/consumer/components"
 
 	eac_documentation:		"$EIFFEL_SRC/dotnet/eac_browser/src/deserialization/assembly_informations"
+
+	all activation_checker:		"$EIFFEL_SRC/Eiffel/library/activation"
+		exclude
+			"free"; "command_line"; "windows"; "CVS"; 
+		end
+
+	all keygen:		"$EIFFEL_SRC/library/keygen"
+		exclude
+			"eiffel_envision_10"; "windows"; "CVS"; "EIFGEN"; 
+		end
 
 external
 

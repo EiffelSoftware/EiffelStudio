@@ -31,6 +31,8 @@ create
 feature -- Initialization
 
 	make_from_absolute_pos (x, y : INTEGER; a_window: CHILD_WINDOW) is
+			-- Create a cursor in `a_window', at position given by
+			-- `x' (in pixels) and `y' (in lines).
 		require
 			a_window_valid: a_window /= Void
 			x_valid: x >= 0
@@ -44,6 +46,8 @@ feature -- Initialization
 
 	make_from_relative_pos (a_line: EDITOR_LINE; a_token: EDITOR_TOKEN;
 				pos: INTEGER; a_window: CHILD_WINDOW) is
+			-- Create a cursor in `a_window', at position given by
+			-- `a_line', `a_token' and `pos'.
 		do
 			associated_window := a_window
 			whole_text := a_window.text_displayed
@@ -51,16 +55,18 @@ feature -- Initialization
 			set_current_char (a_token, pos)
 		end
 
-	make_from_character_pos (x_in_ch,y : INTEGER; a_window: CHILD_WINDOW) is
+	make_from_character_pos (ch_num, y: INTEGER; a_window: CHILD_WINDOW) is
+			-- Create a cursor in `a_window', at the `ch_num'th
+			-- character in line `y'.
 		require
 			a_window_valid: a_window /= Void
-			x_valid: x_in_ch >= 1
+			ch_num_valid: ch_num >= 1
 			y_valid: y >= 1
 		do
 			associated_window := a_window
 			whole_text := a_window.text_displayed
 			set_y_in_lines (y)
-			set_x_in_characters (x_in_ch)
+			set_x_in_characters (ch_num)
 		end
 
 feature -- Access
@@ -80,10 +86,12 @@ feature -- Access
 
 	x_in_pixels: INTEGER
 			-- Theoric horizontal position of Current, in pixels
-			--| (Caution! Unlike all others, this argument is 0-based.)
+			--| (Caution! Unlike all others, this attribute is 0-based.)
 
 	y_in_lines: INTEGER
 			-- Line number of Current in the whole text
+
+		--| Character-based position
 
 	x_in_characters: INTEGER is
 			-- Horizontal position of Current, in characters.
@@ -124,12 +132,12 @@ feature -- Element change
 			current_width: INTEGER
 			current_token: EDITOR_TOKEN
 		do
-				-- update the attributes.
+				-- Update the attributes.
 			token := a_token
 			pos_in_token := a_position
 			
 				-- Compute the size of the current token.
-			current_width := a_token.get_substring_width(a_position - 1)
+			current_width := a_token.get_substring_width (a_position - 1)
 
 				-- Rewind the tokens of the line to get
 				-- the width of each one.
@@ -155,7 +163,7 @@ feature -- Element change
 			x_in_pixels := x
 
 				-- Update the current token and the
-				-- the position in it
+				-- the position in it.
 			update_current_char
 		end
 
@@ -167,8 +175,8 @@ feature -- Element change
 		do
 			y_in_lines := y
 
-				-- update the line attribute
-			whole_text.go_i_th(y)
+				-- Update the line attribute.
+			whole_text.go_i_th (y)
 			line := whole_text.item
 			update_current_char
 		end
@@ -221,7 +229,7 @@ feature -- Element change
 feature -- Cursor movement
 
 	go_right_char is
-			-- Move to next character.
+			-- Move to next character, if there is one.
 		do
 			if pos_in_token = token.length then
 					-- Go to next token, first character.
@@ -240,7 +248,7 @@ feature -- Cursor movement
 		end
 
 	go_left_char is
-			-- Move to previous character.
+			-- Move to previous character, if there is one.
 		do
 			if pos_in_token = 1 then
 					-- Go to previous token, last character.
@@ -259,14 +267,14 @@ feature -- Cursor movement
 		end
 
 	go_up_line is
-			-- Move up one line (to preceding line).
+			-- Move up one line (to preceding line), if possible.
 		do
 			set_line_to_previous
 			update_current_char
 		end
 
 	go_down_line is
-			-- Move down one line (to next line).
+			-- Move down one line (to next line), if possible.
 		do
 			set_line_to_next
 			update_current_char
@@ -301,6 +309,7 @@ feature -- Comparison
 feature -- Transformation
 
 	insert_char (c: CHARACTER) is
+			-- Insert `c' in text, at Current position.
 		local
 			t_before, t_after: EDITOR_TOKEN
 			s: STRING
@@ -308,13 +317,18 @@ feature -- Transformation
 			if c = '%N' then
 				insert_eol
 			else
+					--| Update x_in_pixels, for retrieving cursor position later.
 				update_x_in_pixels
-				s := clone (token.image)
+					--| Add `c' in token image.
 				if token = line.eol_token then
 					s := c.out
 				else
+					s := clone (token.image)
 					s.insert (c.out, pos_in_token)
 				end
+					--| As a simple insertion can change the whole line,
+					--| We are obliged to retrieve previous and following
+					--| tokens.
 				from
 					t_before := token.previous
 				until
@@ -333,8 +347,10 @@ feature -- Transformation
 						t_after := t_after.next
 					end
 				end
+					--| New line parsing.
 				whole_text.lexer.execute (s)
 				line.make_from_lexer (whole_text.lexer)
+					--| Cursor update.
 				update_current_char
 				go_right_char
 			end
@@ -377,6 +393,85 @@ feature -- Transformation
 				line.make_from_lexer (whole_text.lexer)
 			end
 			update_current_char				
+		end
+
+	delete_n_chars (n: INTEGER) is
+		require
+				n_big_enough: n > 0
+		local
+			s, aux: STRING
+			cline: EDITOR_LINE
+			t : EDITOR_TOKEN
+			pos : INTEGER
+		do
+				--| Retrieving line before Current.
+			t := token
+			if t /= line.eol_token then
+				from
+					s := t.image.substring (1, pos_in_token - 1)
+					t := t.previous
+				until
+					t = Void
+				loop
+					s.prepend (t.image)
+					t := t.previous
+				end
+			else
+				s := line.image
+			end
+				--| Computing last position (given by `cline', `t', `pos').
+				--| Erase lines as they are completely scanned
+				--| (except first and last line, of course).
+			cline := line
+			t := token
+			if token.length <= pos_in_token + n then
+					--| All the characters to erase are in the same token.
+				pos := pos_in_token + n
+			else
+				from
+					pos := n - token.length + pos_in_token
+					t := token.next
+					if t = Void and then cline.next /= Void then
+							--| No next token? go to next line, if possible.
+						cline := cline.next
+						t := cline.first_token
+					end
+				until
+					pos <= t.length or else t = Void
+				loop
+					pos := pos - t.length
+					t := t.next
+					if t = Void and then cline.next /= Void then
+							--| No next token? go to next line, if possible.
+						cline := cline.next
+						if cline.previous /= line then
+								--| Delete unwanted line.
+							cline.previous.delete
+						end
+						t := cline.first_token
+					end
+				end
+			end	
+				--| Retrieving line after last position (given by `cline', `t', `pos').
+			if t /= Void and then t /= line.eol_token then
+				from
+					s.append (t.image.substring (pos, t.image.count))
+					t := t.next
+				until
+					t = line.eol_token
+				loop
+					s.append (t.image)
+					t := t.next
+				end
+			end
+				-- Removing last line, if different from first.
+			if cline /= line then
+				cline.delete
+			end
+				-- Rebuild line with previously collected parts.
+			whole_text.lexer.execute (s)
+			line.make_from_lexer (whole_text.lexer)
+			update_current_char
 		end
 
 	replace_char (c: CHARACTER) is

@@ -38,7 +38,7 @@ feature -- Basic operations
 		end
 
 
-	unique_name (existing_names: ARRAYED_LIST [STRING]; hint_name: STRING): STRING is
+	unique_name_from_array (existing_names: ARRAYED_LIST [STRING]; hint_name: STRING): STRING is
 			-- `Result' is a STRING guaranteed not to be contained in `existing_names',
 			-- which is the value of `hint_name' with an underscore and a number appended to it.
 			-- The algorithm used does not guarantee that this is the first available number.
@@ -91,6 +91,30 @@ feature -- Basic operations
 				Result_is_uniqe_name: not names.has (Result)
 			end
 		end
+		
+	unique_name_from_hash_table (existing_names: HASH_TABLE [STRING, STRING]; hint_name: STRING): STRING is
+			-- `Result' is a STRING guaranteed not to exist in `existing_names', based on `hint_name.
+		require
+			existing_names_not_void: existing_names /= Void
+			hint_name_not_void: hint_name /= Void
+		local
+			counter: INTEGER
+		do
+			from
+				counter := 1
+				Result := hint_name
+			until
+				not existing_names.has (Result)
+			loop
+				Result := hint_name + "_" + counter.out
+				counter := counter + 1
+			end
+				-- Unable to provide a postcondition, so we have a check instead.
+			check
+				Result_is_uniqe_name: not existing_names.has (Result)
+			end
+		end
+		
 
 	undo_last_character (text_field: EV_TEXT_FIELD) is
 			-- Remove last character added to `text_field'.

@@ -37,20 +37,22 @@ feature -- Access
 			l_type: INTEGER
 			l_icd_ref: ICOR_DEBUG_REFERENCE_VALUE
 			l_icd_prepared: ICOR_DEBUG_VALUE
-			l_is_null: BOOLEAN
+--			l_is_null: BOOLEAN
 		do
 			l_icd_prepared := Debug_value_formatter.prepared_debug_value (a_icd)
 			if l_icd_prepared /= Void then -- and then l_icd_prepared.last_call_succeed then
 				l_icd_ref := l_icd_prepared.query_interface_icor_debug_reference_value
-				if l_icd_ref /= Void and then l_icd_prepared.last_call_succeed then
-					l_is_null := l_icd_ref.is_null
-				end	
+--				if l_icd_ref /= Void and then l_icd_prepared.last_call_succeed then
+--					l_is_null := l_icd_ref.is_null
+--				end	
 			
 				l_type := l_icd_prepared.get_type
 				inspect l_type
 				when feature {MD_SIGNATURE_CONSTANTS}.element_type_end then
+--					do_nothing
 --				when feature {MD_SIGNATURE_CONSTANTS}.element_type_sentinel then
 				when feature {MD_SIGNATURE_CONSTANTS}.element_type_void then
+--					do_nothing
 --					Result := "Void" -- FIXME
 				when feature {MD_SIGNATURE_CONSTANTS}.element_type_boolean then
 					create {EIFNET_DEBUG_BASIC_VALUE [BOOLEAN]} Result.make (Debug_value_formatter.prepared_icor_debug_value_as_boolean (l_icd_prepared))
@@ -60,9 +62,11 @@ feature -- Access
 					create {EIFNET_DEBUG_BASIC_VALUE [INTEGER_16]} Result.make (Debug_value_formatter.prepared_icor_debug_value_as_integer_8 (l_icd_prepared))
 --				when feature {MD_SIGNATURE_CONSTANTS}.element_type_pinned then
 				when feature {MD_SIGNATURE_CONSTANTS}.element_type_u1 then
+--					do_nothing
 				when feature {MD_SIGNATURE_CONSTANTS}.element_type_i2 then
 					create {EIFNET_DEBUG_BASIC_VALUE [INTEGER_16]} Result.make (Debug_value_formatter.prepared_icor_debug_value_as_integer_16 (l_icd_prepared))
 				when feature {MD_SIGNATURE_CONSTANTS}.element_type_u2 then
+--					do_nothing
 				when 
 					feature {MD_SIGNATURE_CONSTANTS}.element_type_i4,
 					feature {MD_SIGNATURE_CONSTANTS}.element_type_i
@@ -75,12 +79,15 @@ feature -- Access
 				when feature {MD_SIGNATURE_CONSTANTS}.element_type_i8 then
 					create {EIFNET_DEBUG_BASIC_VALUE [INTEGER_64]} Result.make (Debug_value_formatter.prepared_icor_debug_value_as_integer_64 (l_icd_prepared))
 				when feature {MD_SIGNATURE_CONSTANTS}.element_type_u8 then
+--					do_nothing
 				when feature {MD_SIGNATURE_CONSTANTS}.element_type_r4 then
 					create {EIFNET_DEBUG_BASIC_VALUE [REAL]} Result.make (Debug_value_formatter.prepared_icor_debug_value_as_real (l_icd_prepared))
 				when feature {MD_SIGNATURE_CONSTANTS}.element_type_r8 then
 					create {EIFNET_DEBUG_BASIC_VALUE [DOUBLE]} Result.make (Debug_value_formatter.prepared_icor_debug_value_as_double (l_icd_prepared))
 				when feature {MD_SIGNATURE_CONSTANTS}.element_type_ptr then
+--					do_nothing
 				when feature {MD_SIGNATURE_CONSTANTS}.element_type_byref then
+					create {EIFNET_DEBUG_REFERENCE_VALUE} Result.make (a_icd, l_icd_prepared, icd_frame)
 				when 
 					feature {MD_SIGNATURE_CONSTANTS}.element_type_class,
 					feature {MD_SIGNATURE_CONSTANTS}.element_type_object,
@@ -94,13 +101,21 @@ feature -- Access
 				when feature {MD_SIGNATURE_CONSTANTS}.element_type_szarray then
 					create {EIFNET_DEBUG_NATIVE_ARRAY_VALUE} Result.make (l_icd_prepared, icd_frame)
 				when feature {MD_SIGNATURE_CONSTANTS}.element_type_array then
+--					do_nothing
 				when feature {MD_SIGNATURE_CONSTANTS}.element_type_typedbyref then
+--					do_nothing
 				when feature {MD_SIGNATURE_CONSTANTS}.element_type_fnptr then
+--					do_nothing
 				when feature {MD_SIGNATURE_CONSTANTS}.element_type_cmod_reqd then
+--					do_nothing
 				when feature {MD_SIGNATURE_CONSTANTS}.element_type_cmod_opt then
+--					do_nothing
 				when feature {MD_SIGNATURE_CONSTANTS}.element_type_internal then
+--					do_nothing
 				when feature {MD_SIGNATURE_CONSTANTS}.element_type_max then
+--					do_nothing
 				when feature {MD_SIGNATURE_CONSTANTS}.element_type_modifier then
+--					do_nothing
 				else			
 				end
 			end

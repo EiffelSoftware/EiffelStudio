@@ -621,6 +621,8 @@ feature -- Generator constants -- 8
 
 	Argument_name: STRING is "a_value"
 
+	Return_value_name: STRING is "ret_value"
+
 	Struct_selection_operator: STRING is "->"
 
 	Ce_boolean: STRING is "ccom_ce_boolean"

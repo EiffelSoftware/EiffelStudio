@@ -478,7 +478,7 @@ feature {NONE} -- Implementation
 			non_void_visitor: visitor /= Void
 		do
 			create Result.make (0)
-			if visitor.is_basic_type_ref or else visitor.is_basic_type then
+			if visitor.is_basic_type then
 				if is_int (visitor.vt_type) or is_integer2 (visitor.vt_type) or is_integer4 (visitor.vt_type) or is_unsigned_int (visitor.vt_type)
 						or is_unsigned_long (visitor.vt_type) or is_unsigned_short (visitor.vt_type) then
 					Result := cecil_function_code (Eif_integer_function, Eif_integer_function_name)
@@ -497,27 +497,19 @@ feature {NONE} -- Implementation
 					Result.append (New_line_tab)
 					Result.append (Eif_double)
 				end
-				Result.append (Space)
-				Result.append (Tmp_variable_name)
-				Result.append (Space_equal_space)
-				Result.append (Eiffel_function_variable_name)
 			elseif is_boolean (visitor.vt_type) then
 				Result := cecil_function_code (Eif_boolean_function, Eif_boolean_function_name)
 				Result.append (New_line_tab)
 				Result.append (Eif_boolean)
-				Result.append (Space)
-				Result.append (Tmp_variable_name)
-				Result.append (Space_equal_space)
-				Result.append (Eiffel_function_variable_name)
 			else
 				Result := cecil_function_code (Eif_reference_function, Eif_reference_function_name)
 				Result.append (New_line_tab)
 				Result.append (Eif_reference)
-				Result.append (Space)
-				Result.append (Tmp_variable_name)
-				Result.append (Space_equal_space)
-				Result.append (Eiffel_function_variable_name)
 			end
+			Result.append (Space)
+			Result.append (Tmp_variable_name)
+			Result.append (Space_equal_space)
+			Result.append (Eiffel_function_variable_name)
 		end
 
 	cecil_function_code (function_type, function_name: STRING): STRING is
@@ -554,18 +546,24 @@ feature {NONE} -- Implementation
 	empty_argument_body: STRING is
 			-- Eiffel procedure call body
 		do
-			Result := clone (Tab)
-			Result.append (Eif_procedure)
+			Result := clone (Eif_procedure)
 			Result.append (Space)
 			Result.append (Eiffel_procedure_variable_name)
 			Result.append (Semicolon)
 			Result.append (New_line_tab)
+
+
 			Result.append (Eiffel_procedure_variable_name)
 			Result.append (Space_equal_space)
 			Result.append (Eif_procedure_name)
 			Result.append (Space_open_parenthesis)
 			Result.append (Double_quote)
-			Result.append (func_desc.name)
+			if func_desc.coclass_eiffel_names.has (coclass_name) then
+				Result.append (func_desc.coclass_eiffel_names.item (coclass_name))
+			else
+				Result.append (func_desc.interface_eiffel_name)
+			end
+
 			Result.append (Double_quote)
 			Result.append (Comma_space)
 			Result.append (Type_id)
@@ -580,6 +578,7 @@ feature {NONE} -- Implementation
 			Result.append (Close_parenthesis)
 			Result.append (Close_parenthesis)
 			Result.append (Semicolon)
+			Result.append (New_line_tab)
 		end
 
 	signature: STRING is

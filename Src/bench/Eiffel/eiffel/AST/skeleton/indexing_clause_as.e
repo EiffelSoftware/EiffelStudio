@@ -170,6 +170,7 @@ feature -- Element change
 		local
 			l_index: like item
 		do
+			Precursor {EIFFEL_LIST} (v)
 			if v.tag /= Void then
 				lookup_table.search (v.tag)
 				if lookup_table.found then
@@ -177,11 +178,9 @@ feature -- Element change
 					l_index := lookup_table.found_item
 					l_index.index_list.append (v.index_list)
 				else
-					Precursor {EIFFEL_LIST} (v)
-					lookup_table.put (v, v.tag)
+					create l_index.initialize (v.tag, clone (v.index_list))
+					lookup_table.put (l_index, l_index.tag)
 				end
-			else
-				Precursor {EIFFEL_LIST} (v)
 			end
 		end
 

@@ -70,9 +70,11 @@ feature -- Insertion/Removal
 			l_s: SEARCH_TABLE [INTEGER]
 		do
 			l_s := item (ext.written_in)
-			l_s.remove (ext.feature_name_id)
-			if l_s.is_empty then
-				remove (ext.written_in)
+			if l_s /= Void then
+				l_s.remove (ext.feature_name_id)
+				if l_s.is_empty then
+					remove (ext.written_in)
+				end
 			end
 		end
 		

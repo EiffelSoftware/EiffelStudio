@@ -72,6 +72,7 @@ feature -- Access
 		do
 			Result := Precursor
 			Result.drop_actions.extend (~on_stone_dropped)
+			Result.drop_actions.set_veto_pebble_function (~accepts_stone)
 		end
 
 feature -- Measurement
@@ -166,6 +167,12 @@ feature {NONE} -- Implementation
 		do
 			pop_up_new_dialog
 			last_opened_dialog.set_stone (st)
+		end
+
+	accepts_stone (st: OBJECT_STONE): BOOLEAN is
+			-- Can the user drop `st'?
+		do
+			Result := (create {DUMP_VALUE}.make_object (st.object_address, st.dynamic_class)).has_formatted_output
 		end
 
 	opened_dialogs: ARRAYED_LIST [EB_PRETTY_PRINT_DIALOG]

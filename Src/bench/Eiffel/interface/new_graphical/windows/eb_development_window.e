@@ -65,12 +65,22 @@ inherit
 
 	EB_SHARED_GRAPHICAL_COMMANDS
 
-		-- Ressources
-	EB_RESOURCE_USER
-
+		-- Resources
 	EB_PROJECT_TOOL_DATA
+		rename
+			initialized as resources_initialized
+		export
+			{NONE} all
+		undefine
+			context_unified_stone
+		end
 
 	EB_GENERAL_DATA
+		rename
+			initialized as resources_initialized
+		export
+			{NONE} all
+		end
 
 	EV_STOCK_PIXMAPS
 
@@ -87,6 +97,11 @@ inherit
 		end
 
 	EB_FORMATTER_DATA
+		rename
+			initialized as resources_initialized
+		export
+			{NONE} all
+		end
 
 	EB_SHARED_EDITOR_DATA
 	
@@ -132,9 +147,6 @@ feature {NONE} -- Initialization
 			build_formatters
 			address_manager.set_formatters (managed_main_formatters)
 
-				-- Register to the preferences manager
-			register
-
 				-- Init commands, build interface, build menus, ...
 			Precursor
 
@@ -176,12 +188,12 @@ feature {NONE} -- Initialization
 			screen: EV_SCREEN
 		do
 			create screen
-			default_width := window_preferences.width.min (screen.width)
-			default_height := window_preferences.height.min (screen.height)
+			default_width := width.min (screen.width)
+			default_height := height.min (screen.height)
 			window.set_size (default_width, default_height)
 
 				-- Maximize window if needed.
-			if window_preferences.is_maximized then
+			if is_maximized then
 				window.maximize
 			end
 		end
@@ -831,8 +843,8 @@ feature -- Graphical Interface
 		do
 				-- Create the toolbar.
 			create general_toolbar
-			general_customizable_toolbar := window_preferences.retrieve_general_toolbar (toolbarable_commands)
-			if window_preferences.show_text_in_general_toolbar then
+			general_customizable_toolbar := retrieve_general_toolbar (toolbarable_commands)
+			if show_text_in_general_toolbar then
 				general_customizable_toolbar.enable_text_displayed
 			end
 			create hbox
@@ -858,7 +870,7 @@ feature -- Graphical Interface
 				-- Create the command to show/hide this toolbar.
 			create show_general_toolbar_command.make (general_toolbar, Interface_names.m_General_toolbar)
 			show_toolbar_commands.extend (show_general_toolbar_command)
-			if window_preferences.show_general_toolbar then
+			if show_general_toolbar then
 				show_general_toolbar_command.enable_visible
 			else
 				show_general_toolbar_command.disable_visible
@@ -920,7 +932,7 @@ feature -- Graphical Interface
 			create show_address_toolbar_command.make (address_toolbar, Interface_names.m_Address_toolbar)
 			show_toolbar_commands.extend (show_address_toolbar_command)
 
-			if window_preferences.show_address_toolbar then
+			if show_address_toolbar then
 				show_address_toolbar_command.enable_visible
 			else
 				show_address_toolbar_command.disable_visible
@@ -955,7 +967,7 @@ feature -- Graphical Interface
 				-- Create the command to show/hide this toolbar.
 			create show_project_toolbar_command.make (project_toolbar, Interface_names.m_Project_toolbar)
 			show_toolbar_commands.extend (show_project_toolbar_command)
-			if window_preferences.show_project_toolbar then
+			if show_project_toolbar then
 				show_project_toolbar_command.enable_visible
 			else
 				show_project_toolbar_command.disable_visible
@@ -1823,28 +1835,28 @@ feature -- Resource Update
 			-- Update Current with the registered resources.
 		do
 				-- Show/hide general toolbar
-			if window_preferences.show_general_toolbar then
+			if show_general_toolbar then
 				show_general_toolbar_command.enable_visible
 			else
 				show_general_toolbar_command.disable_visible
 			end
 
 				-- Show/hide address toolbar
-			if window_preferences.show_address_toolbar then
+			if show_address_toolbar then
 				show_address_toolbar_command.enable_visible
 			else
 				show_address_toolbar_command.disable_visible
 			end
 
 				-- Show/hide project toolbar
-			if window_preferences.show_project_toolbar then
+			if show_project_toolbar then
 				show_project_toolbar_command.enable_visible
 			else
 				show_project_toolbar_command.disable_visible
 			end
 
-			left_panel.load_from_resource (window_preferences.left_panel_layout)
-			right_panel.load_from_resource (window_preferences.right_panel_layout)
+			left_panel.load_from_resource (left_panel_layout)
+			right_panel.load_from_resource (right_panel_layout)
 		end
 
 	update_splitters is
@@ -2195,13 +2207,13 @@ feature {EB_WINDOW_MANAGER} -- Window management / Implementation
 				-- To avoid reentrance
 			if not is_destroying then
 				is_destroying := True
-				window_preferences.save_left_panel_layout (left_panel.save_to_resource)
-				window_preferences.save_right_panel_layout (right_panel.save_to_resource)
-				window_preferences.save_search_tool_options (search_tool)
+				save_left_panel_layout (left_panel.save_to_resource)
+				save_right_panel_layout (right_panel.save_to_resource)
+				save_search_tool_options (search_tool)
 				hide
 
 					-- Commit saves
-				window_preferences.save_resources
+				save_resources
 
 					-- If a launched application is still running, kill it.
 				if

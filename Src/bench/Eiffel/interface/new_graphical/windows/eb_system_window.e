@@ -14,6 +14,8 @@ inherit
 		end
 
 	EB_GENERAL_DATA
+		rename
+			initialized as resources_initialized
 		export
 			{NONE} all
 		end

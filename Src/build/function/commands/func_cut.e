@@ -90,7 +90,7 @@ feature {NONE}
 			end
 		end; -- worked_on
 
-feature {STATE}
+feature {BUILD_STATE}
 
 	set_not_record is
 		do

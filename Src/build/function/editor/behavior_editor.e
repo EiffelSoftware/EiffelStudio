@@ -42,7 +42,7 @@ feature -- Editing features
 
 	edited_function: BEHAVIOR;
 
-	current_state: STATE;
+	current_state: BUILD_STATE;
 
 	associated_context_editor: CONTEXT_EDITOR;
 
@@ -62,7 +62,7 @@ feature -- Editing features
 			output_stone.reset
 		end;
 
-	set_current_state (s: STATE) is
+	set_current_state (s: BUILD_STATE) is
 			-- Set current_state to `s'. Also update
 			-- the label in the menu_bar.
 		do

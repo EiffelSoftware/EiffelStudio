@@ -15,7 +15,7 @@ creation
 		
 feature {NONE}
 
-	function: STATE;
+	function: BUILD_STATE;
 
 	associated_function: STATE_EDITOR;
 			-- Function associated with current hole

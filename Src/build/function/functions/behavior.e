@@ -208,9 +208,9 @@ feature {NONE} -- Attribute
 	corresponding_internal_meta_command: INTERNAL_META_COMMAND
 			-- Internal meta command added to the interface
 
-feature {STATE} -- Interface command
+feature {BUILD_STATE} -- Interface command
 
-	add_interface_command_from_storage (a_context: CONTEXT a_state: STATE) is
+	add_interface_command_from_storage (a_context: CONTEXT a_state: BUILD_STATE) is
 			-- Add the command corresponding to `output_data'
 			-- on the widget corresponding to `a_context'.
 		require

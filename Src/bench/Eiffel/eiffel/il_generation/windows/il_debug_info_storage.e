@@ -15,12 +15,18 @@ feature {NONE} -- Initialization
 	make is
 			-- Initialize `Current'.
 		do
+			system_name := Void
+			project_path := Void			
 			modules_debugger_info := Void
 			class_types_debugger_info := Void
 			entry_point_token := 0
 		end
 
 feature -- Data
+
+	system_name: STRING
+
+	project_path: STRING
 
 	modules_debugger_info: HASH_TABLE [IL_DEBUG_INFO_FROM_MODULE, STRING]
 
@@ -30,6 +36,20 @@ feature -- Data
 
 feature -- Change
 
+	set_system_name (val: like system_name) is
+			-- Change value
+		require
+		do
+			system_name := val
+		end
+
+	set_project_path (val: like project_path) is
+			-- Change value
+		require
+		do
+			project_path := val
+		end
+		
 	set_modules_debugger_info (val: like modules_debugger_info) is
 			-- Change value
 		require

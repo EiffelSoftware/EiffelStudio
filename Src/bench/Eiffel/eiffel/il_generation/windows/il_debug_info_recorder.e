@@ -80,7 +80,7 @@ feature {NONE} -- Initialization
 			ignoring_next_debug_info := False
 			last_class_type_recorded := Void
 			last_info_from_class_type := Void
-			last_info_from_module := Void			
+			last_info_from_module := Void
 
 			last_class_type_info_cleaned := Void
 			last_module_info_cleaned := Void
@@ -114,59 +114,59 @@ feature -- Access
 		
 feature -- Access from debugger
 
-	has_class_info_about_module_class_token (a_module_name: STRING; a_class_token: INTEGER): BOOLEAN is
-			-- Do we have information for Class identified by `a_module_name' and `a_class_token' ?
+	has_class_info_about_module_class_token (a_module_filename: STRING; a_class_token: INTEGER): BOOLEAN is
+			-- Do we have information for Class identified by `a_module_filename' and `a_class_token' ?
 		require
-			module_name_valid: a_module_name /= Void
-								and then not a_module_name.is_empty
+			module_filename_valid: a_module_filename /= Void
+								and then not a_module_filename.is_empty
 			token_not_null: a_class_token /= 0	
 		local
 			l_info_from_module: IL_DEBUG_INFO_FROM_MODULE
 		do
-			l_info_from_module := info_from_module (a_module_name, False)
+			l_info_from_module := info_from_module_if_exists (a_module_filename)
 			if l_info_from_module /= Void then
 				Result := l_info_from_module.know_class_from_token (a_class_token)
 			end
 		end
 
-	class_type_for_module_class_token (a_module_name: STRING; a_class_token: INTEGER): CLASS_TYPE is
-			-- CLASS_TYPE identified by `a_module_name' and `a_class_token'
+	class_type_for_module_class_token (a_module_filename: STRING; a_class_token: INTEGER): CLASS_TYPE is
+			-- CLASS_TYPE identified by `a_module_filename' and `a_class_token'
 		require
-			module_name_valid: a_module_name /= Void 
-								and then not a_module_name.is_empty
+			module_filename_valid: a_module_filename /= Void 
+								and then not a_module_filename.is_empty
 			token_not_null: a_class_token /= 0
 		local
 			l_info_from_module: IL_DEBUG_INFO_FROM_MODULE
 		do
-			l_info_from_module := info_from_module (a_module_name, False)
+			l_info_from_module := info_from_module_if_exists (a_module_filename)
 			if l_info_from_module /= Void then
 				Result := l_info_from_module.class_type_for_token (a_class_token)
 			end
 		end
 
-	has_feature_info_about_module_class_token (a_module_name: STRING; a_class_token: INTEGER; a_feature_token: INTEGER): BOOLEAN is
-			-- Do we have information for feature identified by `a_module_name' , `a_class_token', and `a_feature_token' ?
+	has_feature_info_about_module_class_token (a_module_filename: STRING; a_class_token: INTEGER; a_feature_token: INTEGER): BOOLEAN is
+			-- Do we have information for feature identified by `a_module_filename' , `a_class_token', and `a_feature_token' ?
 		require
-			module_name_valid: a_module_name /= Void and then not a_module_name.is_empty
+			module_filename_valid: a_module_filename /= Void and then not a_module_filename.is_empty
 			class_token_not_null: a_class_token > 0
 			feat_token_not_null: a_feature_token > 0
 		local
 			l_info_from_module: IL_DEBUG_INFO_FROM_MODULE
 		do		
-			l_info_from_module := info_from_module (a_module_name, False)
+			l_info_from_module := info_from_module_if_exists (a_module_filename)
 			if l_info_from_module /= Void then
 				Result := l_info_from_module.know_feature_from_token (a_feature_token)
 			end
 		end
 
-	feature_i_by_module_class_token (a_module_name: STRING; a_class_token: INTEGER; a_feature_token: INTEGER): FEATURE_I is -- class_id, feature_id
-			-- Feature_i identified by `a_module_name' , `a_class_token', and `a_feature_token'
-			--| FIXME jfiat [2003/10/13 - 14:16]: a_class_token is useless
+	feature_i_by_module_feature_token (a_module_filename: STRING; a_feature_token: INTEGER): FEATURE_I is
+			-- Feature_i identified by `a_module_filename'  and `a_feature_token'
+			--| Nota: class token is useless
 			--| since in a ICorDebugModule feature_token are unique
 		local
 			l_info_from_module: IL_DEBUG_INFO_FROM_MODULE
 		do
-			l_info_from_module := info_from_module (a_module_name, False)
+			l_info_from_module := info_from_module_if_exists (a_module_filename)
 			if l_info_from_module /= Void then
 				Result := l_info_from_module.feature_i_for_token (a_feature_token)
 			end
@@ -174,13 +174,7 @@ feature -- Access from debugger
 
 feature -- Class token access from eStudio
 
-	class_token_for_class_type (a_class_type: CLASS_TYPE): INTEGER is
-			-- Class token for CLASS_TYPE.
-		do
-			Result := class_token (Void, a_class_type)
-		end
-		
-	class_token (a_module_name: STRING; a_class_type: CLASS_TYPE): INTEGER is
+	class_token (a_module_filename: STRING; a_class_type: CLASS_TYPE): INTEGER is
 			-- Class token for CLASS_TYPE.
 		local
 			l_info_from_module: IL_DEBUG_INFO_FROM_MODULE
@@ -192,10 +186,10 @@ feature -- Class token access from eStudio
 				
 				Result := internal_requested_class_tokens.item (l_id)
 				if Result = 0 then --| Not yet known, no requested yet
-					if a_module_name = Void then
-						l_info_from_module := info_from_module (module_file_name_for_class (a_class_type), False)
+					if a_module_filename = Void then
+						l_info_from_module := info_from_module_if_exists (module_file_name_for_class (a_class_type))
 					else
-						l_info_from_module := info_from_module (a_module_name, False)
+						l_info_from_module := info_from_module_if_exists (a_module_filename)
 					end
 					if l_info_from_module /= Void then --| no module known for it .. (external)
 					
@@ -209,6 +203,8 @@ feature -- Class token access from eStudio
 		ensure
 			class_token_positive: Result /= 0
 		end
+
+feature {NONE} -- Implementation for class token finder
 
 	internal_requested_class_tokens: HASH_TABLE [INTEGER, INTEGER]
 			-- [Class token] <= [Class type]
@@ -243,25 +239,68 @@ feature -- Feature token access from eStudio
 
 feature -- From compiler world
 
-	precompilation_module_name (a_system_name: STRING): FILE_NAME is
+	module_directory_name: STRING is
+			-- Directory path where module are located
 		do
-			create Result.make_from_string (Workbench_bin_generation_path)
-			Result.set_file_name (a_system_name)
-			Result.add_extension ("dll")
+				-- MEGA BIG FIX HERE !!!! how can one know if we are in wb or final ?
+				-- FOR NOW WE ASSUME WE DEBUG ONLY WORKBENCH PROGR		
+			Result := Workbench_generation_path
+		end
+		
+	assembly_directory_name: STRING is
+			-- Directory path where assemblies are located
+			-- that is also valid for precompilation assemblies
+		do
+				-- MEGA BIG FIX HERE !!!! how can one know if we are in wb or final ?
+				-- FOR NOW WE ASSUME WE DEBUG ONLY WORKBENCH PROGR			
+			Result := Workbench_bin_generation_path
+		end		
+		
+	precompilation_module_filename (a_system_name: STRING): FILE_NAME is
+		do
+			create Result.make_from_string (assembly_directory_name)
+			Result.set_file_name (precompilation_module_name (a_system_name))
 		end
 
+	precompilation_module_name (a_system_name: STRING): STRING is
+		do
+			Result := a_system_name + ".dll"
+		end		
+		
 	module_file_name_for_class (a_class_type: CLASS_TYPE): STRING is
+			-- Computed module file name for `a_class_type'
+			--| we use CLASS_TYPE for the precompiled case .
+		require
+			class_type_not_void: a_class_type /= Void
+		local
+			l_location_path: STRING
+			l_output: FILE_NAME
+			l_module_filename: STRING
+		do
+				--| Please make sure this computing is similar to 
+				--| the one inside IL_CODE_GENERATOR.il_module
+
+			if a_class_type.is_precompiled then
+				l_output := precompilation_module_filename (a_class_type.assembly_info.assembly_name)
+			else
+				l_location_path := module_directory_name
+				create l_output.make_from_string (l_location_path)
+				l_module_filename := module_name_for_class (a_class_type)
+				l_output.set_file_name (l_module_filename)
+			end
+
+			Result := l_output
+		end
+		
+	module_name_for_class (a_class_type: CLASS_TYPE): STRING is
 			-- Computed module name for `a_class_type'
 			--| we use CLASS_TYPE for the precompiled case .
 		require
 			class_type_not_void: a_class_type /= Void
 		local
 			l_type_id: INTEGER
-			l_location_path: STRING
 			l_assembly_name: STRING
-			l_output: FILE_NAME
 			l_module_name: STRING
-
 			l_is_single_module: BOOLEAN
 		do
 				--| Please make sure this computing is similar to 
@@ -272,52 +311,46 @@ feature -- From compiler world
 			
 			if a_class_type.is_precompiled then
 				l_is_single_module := True
-				l_output := precompilation_module_name (a_class_type.assembly_info.assembly_name)
+				l_module_name := precompilation_module_name (a_class_type.assembly_info.assembly_name)
 			else
 				l_assembly_name := System.name
-
-					-- MEGA BIG FIX HERE !!!! how can one know if we are in wb or final ?
-					-- FOR NOW WE ASSUME WE DEBUG ONLY WORKBENCH PROGR
-				l_location_path := Workbench_generation_path
 
 				if l_is_single_module then
 					l_type_id := 1
 				else
 					l_type_id := a_class_type.associated_class.class_id // System.msil_classes_per_module + 1
 				end
-				create l_output.make_from_string (l_location_path)
 				l_module_name := l_assembly_name + "_module_" + l_type_id.out + ".dll"
-				l_output.set_file_name (l_module_name)
 			end
 
-			Result := l_output
-		end
+			Result := l_module_name
+		end		
 
 feature -- To compiler world
 
-	compiled_class_for_class_token_and_module (a_class_token: INTEGER; a_module_name: STRING): CLASS_C is
-			-- Compiled CLASS_C identified by `class_token' and `a_module_name'
+	compiled_class_for_class_token_and_module (a_class_token: INTEGER; a_module_filename: STRING): CLASS_C is
+			-- Compiled CLASS_C identified by `class_token' and `a_module_filename'
 		require
 			class_token_valid: a_class_token > 0
-			module_name_valid: a_module_name /= Void and then not a_module_name.is_empty 
+			module_filename_valid: a_module_filename /= Void and then not a_module_filename.is_empty 
 		local
 			l_type: CLASS_TYPE
 		do
-			l_type:= class_type_for_module_class_token (a_module_name, a_class_token)
+			l_type:= class_type_for_module_class_token (a_module_filename, a_class_token)
 			if l_type /= Void then
 				Result := l_type.associated_class
 			end
 		end
 		
-	class_name_for_class_token_and_module (a_class_token: INTEGER; a_module_name: STRING): STRING is
-			-- Class name for CLASS_C identified by `class_token' and `a_module_name'
+	class_name_for_class_token_and_module (a_class_token: INTEGER; a_module_filename: STRING): STRING is
+			-- Class name for CLASS_C identified by `class_token' and `a_module_filename'
 		require
 			class_token_positive: a_class_token > 0
-			module_name_not_empty: a_module_name /= Void and then not a_module_name.is_empty 
+			module_filename_not_empty: a_module_filename /= Void and then not a_module_filename.is_empty 
 		local
 			l_class_c: CLASS_C
 		do
-			l_class_c := compiled_class_for_class_token_and_module (a_class_token, a_module_name)
+			l_class_c := compiled_class_for_class_token_and_module (a_class_token, a_module_filename)
 			if l_class_c /= Void then
 				Result := l_class_c.name_in_upper
 			else
@@ -369,7 +402,7 @@ feature {NONE} -- entry point token
 					and then a_feat.written_class.is_equal (System.root_class.compiled_class)
 		end
 
-feature -- line debug recording
+feature {IL_CODE_GENERATOR} -- line debug recording
 
 	ignore_next_debug_info is
 			-- Ignore recording of debug info (nop) for next recording
@@ -388,9 +421,7 @@ feature -- line debug recording
 			if is_debug_info_enabled then			
 				if ignoring_next_debug_info then
 					ignoring_next_debug_info := False
---				elseif a_feat /= Void then --FIXME: JFIAT
 				else
-					
 					debug ("debugger_il_info_trace")
 						print (" - " + a_feat.written_class.name_in_upper
 								+ "."
@@ -611,7 +642,7 @@ feature {NONE} -- line debug exploitation
 			end
 		end
 		
-feature -- Recorder Once
+feature -- Access for Onces
 
 	once_feature_tokens_for_feat_and_class_type (a_feat: FEATURE_I; a_class_type: CLASS_TYPE): TUPLE [INTEGER, INTEGER] is
 			-- `_done' and `_result' Tokens for the once `a_feat'
@@ -627,6 +658,8 @@ feature -- Recorder Once
 				Result := l_info_from_class_type.once_tokens (a_feat)
 			end
 		end
+
+feature {IL_CODE_GENERATOR} -- Recorder for Onces
 
 	record_once_info (a_class_type: CLASS_TYPE; a_feature: FEATURE_I; a_once_name: STRING; a_once_done_token, a_once_result_token: INTEGER;) is
 			--  Record `_done' and `_result' tokens for once `a_once_name' from `a_class_type'.
@@ -663,7 +696,7 @@ feature {NONE} -- Record context
 	in_interface : BOOLEAN
 			-- is current generated feature is in_interface ?
 
-feature -- Recorder feature and attribute
+feature {IL_CODE_GENERATOR} -- Recorder feature and attribute
 
 	set_record_context (a_is_attr, a_is_static, a_in_interface: BOOLEAN) is
 			-- Save generation context in order to determine what to record.
@@ -743,7 +776,7 @@ feature {NONE} -- Record processing
 							+ "%N")
 				end
 					--| Record `feature_i' indexed by `feature_token'
-				l_info_from_module := info_from_module (a_module.module_file_name, True)
+				l_info_from_module := info_from_module_or_create (a_module.module_file_name, a_module.module_name)
 				l_info_from_module.record_feature_i (a_class_type, a_feature, a_feature_token)
 
 					--| Record `feature_token' indexed by `feature_i'
@@ -761,13 +794,13 @@ feature {NONE} -- Class Specific info
 			class_type_not_void: a_class_type /= Void
 			class_token_positive: a_class_token > 0
 		do
-			internal_record_class_type (a_module.module_file_name, a_class_type, a_class_token)
+			internal_record_class_type (a_module.module_file_name, a_module.module_name, a_class_type, a_class_token)
 		end
 		
-	internal_record_class_type (a_module_name: STRING; a_class_type: CLASS_TYPE; a_class_token: INTEGER) is
+	internal_record_class_type (a_module_filename: STRING; a_module_name: STRING; a_class_type: CLASS_TYPE; a_class_token: INTEGER) is
 				--| New mecanism
 		require
-			module_name_not_empty: a_module_name /= Void and then not a_module_name.is_empty
+			module_filename_not_empty: a_module_filename /= Void and then not a_module_filename.is_empty
 			class_type_not_void: a_class_type /= Void
 			class_token_positive: a_class_token > 0
 		local
@@ -781,20 +814,20 @@ feature {NONE} -- Class Specific info
 						+ "0x" + a_class_token.to_hex_string
 						+ "%N")
 			end			
-			l_info := info_from_module (a_module_name, True)
+			l_info := info_from_module_or_create (a_module_filename, a_module_name)
 			l_info.record_class_type (a_class_type, a_class_token)
 		ensure
-			dbg_info_modules.has (module_key (a_module_name))
+			dbg_info_modules.has (module_key (a_module_filename))
 		end		
 
 feature {NONE} -- Internal access
 
-	module_key (a_mod_name: STRING): STRING is
-			-- Module key for `a_mod_name' used for indexation
+	module_key (a_mod_filename: STRING): STRING is
+			-- Module key for `a_mod_filename' used for indexation
 		require
-			mod_name_valid: a_mod_name /= Void and then not a_mod_name.is_empty
+			mod_name_valid: a_mod_filename /= Void and then not a_mod_filename.is_empty
 		do
-			Result := a_mod_name.as_lower
+			Result := a_mod_filename.as_lower -- So this is a twin lowered 
 		ensure
 			Result_valid: Result /= Void and then not Result.is_empty
 		end
@@ -813,7 +846,7 @@ feature {IL_CODE_GENERATOR} -- Cleaning
 			class_type_not_void: a_class_type /= Void
 		local
 			l_class_type: CLASS_TYPE
-			l_module_name: STRING
+			l_module_filename: STRING
 			l_info_from_class_type: IL_DEBUG_INFO_FROM_CLASS_TYPE
 			l_info_from_module: IL_DEBUG_INFO_FROM_MODULE
 		do
@@ -837,19 +870,19 @@ feature {IL_CODE_GENERATOR} -- Cleaning
 			end
 
 				--| Clean Module Info     |--
-			l_module_name := module_file_name_for_class (l_class_type)
+			l_module_filename := module_file_name_for_class (l_class_type)
 			if 
 				(last_module_info_cleaned = Void) or else
-				not (last_module_info_cleaned.is_equal (l_module_name))
+				not (last_module_info_cleaned.is_equal (l_module_filename))
 			 then
-				last_module_info_cleaned := l_module_name
+				last_module_info_cleaned := l_module_filename
 				debug ("debugger_il_info_trace")
-					print ("Cleaning : " + l_module_name + "%N")
+					print ("Cleaning : " + l_module_filename + "%N")
 				end
 
-				l_info_from_module := info_from_module (l_module_name, False)
+				l_info_from_module := info_from_module_if_exists (l_module_filename)
 				if l_info_from_module /= Void then
-					l_info_from_module.reset (l_info_from_module.module_name)
+					l_info_from_module.reset (l_info_from_module.module_filename)
 				else
 					debug ("debugger_il_info_trace")
 						print ("  -> nothing to clean (new)%N")
@@ -891,17 +924,38 @@ feature {NONE} -- Debugger Info List Access
 	last_info_from_module: like info_from_module
  			-- Last IL_DEBUG_INFO_FROM_MODULE used
 
-	info_from_module (a_module_name: STRING; a_create_if_not_found: BOOLEAN): IL_DEBUG_INFO_FROM_MODULE is
-			-- Info from Module_name
+	info_from_module_or_create (a_module_filename: STRING; a_module_name: STRING): IL_DEBUG_INFO_FROM_MODULE is
+			-- Info from Module_filename
 		require
-			module_name_not_empty: a_module_name /= Void and then not a_module_name.is_empty
+			module_filename_not_empty: a_module_filename /= Void and then not a_module_filename.is_empty
+		do
+			Result := info_from_module (a_module_filename, True)
+			Result.set_module_name (a_module_name.twin)
+		ensure
+			result_not_void: Result /= Void
+		end
+
+	info_from_module_if_exists (a_module_filename: STRING): IL_DEBUG_INFO_FROM_MODULE is
+			-- Info from Module_filename
+		require
+			module_filename_not_empty: a_module_filename /= Void and then not a_module_filename.is_empty
+		do
+			Result := info_from_module (a_module_filename, False)
+		end
+
+	info_from_module (a_module_filename: STRING; a_create_if_not_found: BOOLEAN): IL_DEBUG_INFO_FROM_MODULE is
+			-- Info from Module_filename
+			--| Should not be called directly anymore, 
+			--| use `info_from_module_or_create' or `info_from_module_if_exists'
+		require
+			module_filename_not_empty: a_module_filename /= Void and then not a_module_filename.is_empty
 		local
 			l_module_key: STRING
 		do
-			l_module_key := module_key (a_module_name)
+			l_module_key := module_key (a_module_filename)
 			if 
 				last_info_from_module /= Void and then
-				last_info_from_module.module_name.is_equal (l_module_key)
+				last_info_from_module.module_filename.is_equal (l_module_key)
 			then
 				Result := last_info_from_module
 			else			
@@ -929,28 +983,39 @@ feature {SHARED_IL_DEBUG_INFO_RECORDER} -- Persistence
 	save is
 			-- Save info into file.
 		local
-			l_il_info_file: RAW_FILE	
 			l_object_to_save: IL_DEBUG_INFO_STORAGE
 		do
 			if is_debug_info_enabled then
 				debug ("debugger_il_info_trace")
-					print ("Saving IL Tokens %N")
+					print ("Saving IL debug info %N")
 				end
 
 					--| Prepare object to be saved
 				create l_object_to_save.make
 
+				l_object_to_save.set_system_name (system.name)
+				l_object_to_save.set_project_path (module_key (module_directory_name))				
 				l_object_to_save.set_modules_debugger_info (dbg_info_modules)
 				l_object_to_save.set_class_types_debugger_info (dbg_info_class_types)
 				l_object_to_save.set_entry_point_token (entry_point_token)
-
-					--| Save into file
-				create l_il_info_file.make (Il_info_file_name)
-				l_il_info_file.open_write
-				l_il_info_file.independent_store (l_object_to_save)
-				l_il_info_file.close
+				
+				save_storable_data (l_object_to_save)
 			end
 		end
+		
+	save_storable_data (d: IL_DEBUG_INFO_STORAGE) is
+			-- Save Storable data
+		require
+			data_valid: d /= Void
+		local
+			l_il_info_file: RAW_FILE			
+		do
+				--| Save into file
+			create l_il_info_file.make (Il_info_file_name)
+			l_il_info_file.open_write
+			l_il_info_file.independent_store (d)
+			l_il_info_file.close
+		end		
 
 	load_successful: BOOLEAN
 			-- Is last loading successful ?
@@ -1037,11 +1102,15 @@ feature {SHARED_IL_DEBUG_INFO_RECORDER} -- Persistence
 			l_retrieved: ANY
 			l_retrieved_object: IL_DEBUG_INFO_STORAGE
 
+			l_dbg_system_name: STRING
+			l_dbg_info_project_path: STRING
 			l_dbg_info_modules: like dbg_info_modules
+			l_patched_dbg_info_modules: like dbg_info_modules
 			l_dbg_info_class_types: like dbg_info_class_types
 			l_entry_point_token: like entry_point_token		
 			l_il_info_file: RAW_FILE
 
+			l_current_project_path: STRING
 			l_info_module: IL_DEBUG_INFO_FROM_MODULE
 		do
 			if not retried then
@@ -1061,43 +1130,96 @@ feature {SHARED_IL_DEBUG_INFO_RECORDER} -- Persistence
 						--| Get values
 					l_retrieved_object ?= l_retrieved
 					if l_retrieved_object /= Void then
-						l_dbg_info_modules     := l_retrieved_object.modules_debugger_info
-						l_dbg_info_class_types := l_retrieved_object.class_types_debugger_info
-						l_entry_point_token    := l_retrieved_object.entry_point_token
-					end
-					
-						--| Assign values
-					if is_from_precompiled then
-							--| Update and Merge data
-							--| regarding about module name
-							--| since we move assemblies/precompilation module under
-							--| W_code/assemblies/..
-						from
-							l_dbg_info_modules.start
-						until
-							l_dbg_info_modules.after
-						loop
-							l_info_module := l_dbg_info_modules.item_for_iteration
-							update_imported_info_module (a_system_name, l_info_module)
+						l_dbg_system_name		:= l_retrieved_object.system_name
+						l_dbg_info_project_path	:= l_retrieved_object.project_path
+						l_dbg_info_modules      := l_retrieved_object.modules_debugger_info
+						l_dbg_info_class_types  := l_retrieved_object.class_types_debugger_info
+						l_entry_point_token     := l_retrieved_object.entry_point_token
 
-							debug ("debugger_il_info_trace")
-								print (" :: Importing Module from [" + l_info_module.module_name + "] %N")
-							end							
-							
-							if dbg_info_modules.has (l_info_module.module_name) then
-								dbg_info_modules.item (l_info_module.module_name).merge (l_info_module)
-							else
-								dbg_info_modules.put (l_info_module, l_info_module.module_name)							
+							--| Assign values
+						
+						l_current_project_path := module_key (module_directory_name)
+						if not is_from_precompiled then
+								--| First, we check if the project didn't moved to a new location
+							if 
+								l_dbg_info_project_path /= Void and then 
+								not l_dbg_info_project_path.same_string (l_current_project_path)
+							then
+									--| This is the current project, since it is not a precompilation
+									--| We need to update these data, since the location changed
+								check 
+									l_dbg_system_name /= Void
+									l_dbg_info_project_path /= Void
+								end
+								io.error.put_string ("Your project's location changed !!!%N")
+								io.error.put_string (" [Previous] %N")
+								io.error.put_string ("  - System   = " + l_dbg_system_name + "%N")
+								io.error.put_string ("  - Location = " + l_dbg_info_project_path +"%N")
+								io.error.put_string (" [Current ] %N")
+								io.error.put_string ("  - System   = " + system.name + "%N")
+								io.error.put_string ("  - Location = " + l_current_project_path +"%N")		
+								io.error.put_string (" => Updating data ... ")
+								from
+									create l_patched_dbg_info_modules.make (l_dbg_info_modules.count)
+									l_dbg_info_modules.start
+								until
+									l_dbg_info_modules.after
+								loop
+									l_info_module := l_dbg_info_modules.item_for_iteration
+									update_imported_project_info_module (l_current_project_path, l_info_module)
+
+									check
+										item_not_already_inside: not l_patched_dbg_info_modules.has (l_info_module.module_filename)
+									end
+									l_patched_dbg_info_modules.put (l_info_module, l_info_module.module_filename)
+									check 
+										item_inserted: l_patched_dbg_info_modules.inserted
+									end
+									
+									l_dbg_info_modules.forth
+								end
+								l_retrieved_object.set_modules_debugger_info (l_patched_dbg_info_modules)
+								l_retrieved_object.set_project_path (l_current_project_path)
+								io.error.put_string (" done.%N")														
+								save_storable_data (l_retrieved_object)
+								io.error.put_string (" [!] Updated data saved.%N")
+
+								l_dbg_info_modules := l_retrieved_object.modules_debugger_info		
+								l_dbg_info_project_path	:= l_retrieved_object.project_path
+									--| Now the data are patched and ready to be used
+							end		
+						
+							dbg_info_modules.merge (l_dbg_info_modules)
+							entry_point_token := l_entry_point_token
+						else
+								--| Update and Merge data
+								--| regarding about module name
+								--| since we move assemblies/precompilation module under
+								--| W_code/assemblies/..
+							from
+								l_dbg_info_modules.start
+							until
+								l_dbg_info_modules.after
+							loop
+								l_info_module := l_dbg_info_modules.item_for_iteration
+								update_imported_precompilation_info_module (a_system_name, l_info_module)
+	
+								debug ("debugger_il_info_trace")
+									print (" :: Importing Module from [" + l_info_module.module_filename + "] %N")
+								end
+								
+								if dbg_info_modules.has (l_info_module.module_filename) then
+									dbg_info_modules.item (l_info_module.module_filename).merge (l_info_module)
+								else
+									dbg_info_modules.put (l_info_module, l_info_module.module_filename)							
+								end
+								
+								l_dbg_info_modules.forth
 							end
-							
-							l_dbg_info_modules.forth
 						end
-					else
-						dbg_info_modules.merge (l_dbg_info_modules)
-						entry_point_token := l_entry_point_token
+						
+						dbg_info_class_types.merge (l_dbg_info_class_types)
 					end
-
-					dbg_info_class_types.merge (l_dbg_info_class_types)
 				end
 			else
 				Result := False
@@ -1108,10 +1230,20 @@ feature {SHARED_IL_DEBUG_INFO_RECORDER} -- Persistence
 			retry
 		end
 
-	update_imported_info_module (a_system_name: STRING; a_info_module: IL_DEBUG_INFO_FROM_MODULE) is
-			-- Update imported module name to effective module name.
+	update_imported_project_info_module (a_project_path: STRING; a_info_module: IL_DEBUG_INFO_FROM_MODULE) is
+			-- Update imported project module name to effective module name.
+		local
+			l_fn: FILE_NAME
 		do
-			a_info_module.update_module_name (module_key (precompilation_module_name (a_info_module.system_name)))
+			create l_fn.make_from_string (a_project_path)
+			l_fn.set_file_name (a_info_module.module_name)
+			a_info_module.update_module_filename (module_key (l_fn))
+		end
+		
+	update_imported_precompilation_info_module (a_system_name: STRING; a_info_module: IL_DEBUG_INFO_FROM_MODULE) is
+			-- Update imported precompilation module name to effective module name.
+		do
+			a_info_module.update_module_filename (module_key (precompilation_module_filename (a_info_module.system_name)))
 		end
 
 	Il_info_file_name: FILE_NAME is

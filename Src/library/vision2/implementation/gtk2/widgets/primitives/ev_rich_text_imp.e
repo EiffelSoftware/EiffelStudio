@@ -20,6 +20,23 @@ inherit
 
 create
 	make
+
+feature -- Status Report
+
+	index_from_position (an_x_position, a_y_position: INTEGER): INTEGER is
+			-- Index of character closest to position `x_position', `y_position'.
+		do
+		end
+		
+	position_from_index (an_index: INTEGER): EV_COORDINATE is
+			-- Position of character at index `an_index'.
+		do
+		end
+		
+	character_displayed (an_index: INTEGER): BOOLEAN is
+			-- Is character `an_index' currently visible in `Current'?
+		do
+		end
 	
 feature -- Status report
 
@@ -33,7 +50,20 @@ feature -- Status setting
 	format_region (start_position, end_position: INTEGER; format: EV_CHARACTER_FORMAT) is
 			-- Apply `format' to all characters between the caret positions `start_position' and `end_position'.
 			-- Formatting is applied immediately. May or may not change the cursor position.
+		local
+			a_start_iter, a_end_iter: EV_GTK_TEXT_ITER_STRUCT
+			a_format_imp: EV_CHARACTER_FORMAT_IMP
+			a_tag_table: POINTER
 		do
+			a_format_imp ?= format.implementation
+			create a_start_iter.make
+			create a_end_iter.make
+			feature {EV_GTK_DEPENDENT_EXTERNALS}.gtk_text_buffer_get_iter_at_offset (text_buffer, a_start_iter.item, start_position - 1)
+			feature {EV_GTK_DEPENDENT_EXTERNALS}.gtk_text_buffer_get_iter_at_offset (text_buffer, a_end_iter.item, end_position)
+			feature {EV_GTK_DEPENDENT_EXTERNALS}.gtk_text_buffer_remove_all_tags (text_buffer, a_start_iter.item, a_end_iter.item)
+			a_tag_table := feature {EV_GTK_DEPENDENT_EXTERNALS}.gtk_text_buffer_get_tag_table (text_buffer)
+			feature {EV_GTK_DEPENDENT_EXTERNALS}.gtk_text_tag_table_add (a_tag_table, a_format_imp.text_tag)
+			feature {EV_GTK_DEPENDENT_EXTERNALS}.gtk_text_buffer_apply_tag (text_buffer, a_format_imp.text_tag, a_start_iter.item, a_end_iter.item)
 		end
 		
 	buffered_format (start_position, end_position: INTEGER; format: EV_CHARACTER_FORMAT) is

@@ -61,7 +61,9 @@
 #ifdef WORKBENCH
 extern void dbreak_create_table(void); /* defined in debug.c */
 #elif defined( NON_COMMERCIAL )
+#ifdef EIF_WIN32
 #include "splashcom.x"
+#endif
 rt_private void display_non_commercial(void);
 
 #endif

@@ -95,6 +95,24 @@ feature -- Status report
 
 feature -- Status setting
 
+	raise is
+			-- Raise a window. ie: put the window on the front
+			-- of the screen.
+		require
+			exists: not destroyed
+		do
+			implementation.raise
+		end
+
+	lower is
+			-- Lower a window. ie: put the window on the back
+			-- of the screen.
+		require
+			exists: not destroyed
+		do
+			implementation.lower
+		end
+
 	set_iconic_state is
 			-- Set start state of the application
 			-- to be iconic.

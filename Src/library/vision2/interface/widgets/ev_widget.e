@@ -27,7 +27,7 @@ feature {NONE} -- Initialization
 			implementation.test_and_set_parent (par)
 			implementation.parent_imp.add_child (implementation)
 			implementation.build
-			implementation.initialize_colors
+--			implementation.initialize_colors
 			managed := par.manager
  		ensure
  			exists: not destroyed
@@ -202,7 +202,7 @@ feature -- Status setting
 			-- Make `color' the new `background_color'
 		require
 			exists: not destroyed
-			color_not_void: color /= Void
+--			color_not_void: color /= Void
 		do
 			implementation.set_background_color (color)
 		ensure
@@ -213,7 +213,7 @@ feature -- Status setting
 			-- Make `color' the new `foreground_color'
 		require
 			exists: not destroyed
-			color_not_void: color /= Void
+--			color_not_void: color /= Void
 		do
 			implementation.set_foreground_color (color)
 		ensure
@@ -252,7 +252,6 @@ feature -- Measurement
 			-- Horizontal position relative to parent
 		require
 			exists: not destroyed
-			unmanaged: not managed
 		do
 			Result := implementation.x
 		end
@@ -261,7 +260,6 @@ feature -- Measurement
 			-- Vertical position relative to parent
 		require
 			exists: not destroyed
-			unmanaged: not managed
 		do
 			Result := implementation.y
 		end

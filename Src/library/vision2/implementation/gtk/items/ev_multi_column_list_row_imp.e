@@ -170,6 +170,30 @@ feature -- Status setting
 				
 		end
 
+feature -- PND
+
+enable_transport is do end
+
+disable_transport is do end
+
+draw_rubber_band is do end
+
+erase_rubber_band is do end
+
+enable_capture is do end
+
+disable_capture is do end
+
+start_transport (
+        a_x, a_y, a_button: INTEGER;
+        a_x_tilt, a_y_tilt, a_pressure: DOUBLE;
+        a_screen_x, a_screen_y: INTEGER) is 
+do end
+
+end_transport (a_x, a_y, a_button: INTEGER) is do end
+
+pointed_target: EV_PICK_AND_DROPABLE is do end
+
 feature -- Element Change
 
 	set_cell_text (column: INTEGER; a_text: STRING) is
@@ -327,6 +351,9 @@ end -- class EV_MULTI_COLUMN_LIST_ROW_IMP
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.35  2000/03/09 01:16:37  king
+--| Added unimplemented pick and drop features
+--|
 --| Revision 1.34  2000/03/04 00:23:46  king
 --| Commented out redundant color features
 --|

@@ -728,6 +728,7 @@
 								<File Id="std_files.e" Name="STD_FI~1.E" LongName="std_files.e" />
 								<File Id="string_handler.e" Name="STRING~1.E" LongName="string_handler.e" />
 								<File Id="to_special.e" Name="TO_SPE~1.E" LongName="to_special.e" />
+								<File Id="typed_pointer_e" Name="TYPED_~1.E" LongName="typed_pointer.e" />
 							</Component>
 							<Directory Id="classic1" Name="classic">
 								<Component Id="classic1" Guid="5428EF01-4C20-4B89-91D3-AC8BFC9A9EFB">
@@ -773,7 +774,6 @@
 									<File Id="pointer_ref.e" Name="POINTE~1.E" LongName="pointer_ref.e" />
 									<File Id="platform.e" Name="platform.e" />
 									<File Id="routine.e" Name="routine.e" />
-									<File Id="typed_pointer.e" Name="TYPED_~1.E" LongName="typed_pointer.e" />
 									<File Id="disposable.e" Name="DISPOS~1.E" LongName="disposable.e" />
 								</Component>
 							</Directory>

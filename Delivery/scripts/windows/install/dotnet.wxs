@@ -89,7 +89,6 @@
 								<Component Id="raw_file.e" Guid="23DA1C36-A57B-4A5D-9B1A-CA6B2D4AF39A">
 									<File Id="raw_file.e" Name="raw_file.e" KeyPath="yes" />
 									<File Id="procedure.e" Name="PROCED~1.E" LongName="procedure.e" />
-									<File Id="typed_pointer.e" Name="TYPED_~1.E" LongName="typed_pointer.e" />
 									<File Id="routine.e" Name="routine.e" />
 									<File Id="path_name.e" Name="PATH_N~1.E" LongName="path_name.e" />
 									<File Id="gc_info.e" Name="gc_info.e" />

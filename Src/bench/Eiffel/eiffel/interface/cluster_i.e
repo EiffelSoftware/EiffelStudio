@@ -585,8 +585,7 @@ end;
 						a_class.set_base_name (file_name);
 						a_class.set_cluster (Current);
 						str := class_path.to_c;
-						file_date := eif_date ($str);
-						if a_class.date /= file_date then
+						if eif_file_has_changed ($str, a_class.date) then
 							if a_class.compiled then
 									-- The class has changed
 								Workbench.change_class (a_class);
@@ -981,7 +980,7 @@ end;
 			ptr: ANY
 		do
 			ptr := path.to_c;
-			Result := eif_directory_has_changed ($ptr, date);
+			Result := eif_file_has_changed ($ptr, date);
 			
 			if not Result and then not Has_smart_file_system and then Platform_constants.is_windows then
 					-- We need to check on Windows FAT file systems the content of a non-changed
@@ -991,7 +990,7 @@ end;
 					-- know if we are on NTFS or not, that's why we are doing this check
 					--
 					-- FIXME: when the only file system will be NTFS or equivalent, we should remove
-					-- this test since the value returned by `eif_directory_has_changed' will
+					-- this test since the value returned by `eif_file_has_changed' will
 					-- be coherent
 					-- %%MANU
 
@@ -1256,7 +1255,7 @@ feature {NONE} -- Externals
 			"C"
 		end;
 
-	eif_directory_has_changed (cluster_path: POINTER; old_date: INTEGER): BOOLEAN is
+	eif_file_has_changed (cluster_path: POINTER; old_date: INTEGER): BOOLEAN is
 			-- Does the directory have new entries?
 		external
 			"C"

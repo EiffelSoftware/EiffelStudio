@@ -115,6 +115,10 @@ feature {NONE} -- Implementation
 
 	interface: EV_DYNAMIC_LIST [G]
 
+invariant
+	list_widget_not_void:
+		is_useable implies list_widget /= Default_pointer
+
 end -- class EV_DYNAMIC_LIST_IMP
 
 --!-----------------------------------------------------------------------------
@@ -138,6 +142,9 @@ end -- class EV_DYNAMIC_LIST_IMP
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.3  2000/04/06 02:06:23  brendel
+--| Added invariant.
+--|
 --| Revision 1.2  2000/04/05 21:16:09  brendel
 --| Merged changes from LIST_REFACTOR_BRANCH.
 --|

@@ -25,6 +25,7 @@
 #define eif_adopt		eadopt				/* The C adopts an object */
 #define eif_wean		ewean				/* The C weans adopted object */
 #define eif_unfreeze	eufreeze			/* Forget a frozen memory address */
+#define eif_frozen(object)	(HEADER(object)->ov_size & B_C)			/* Is object frozen? */
 
 /* Declarations of exported stacks */
 extern struct stack hec_stack;		/* Indirection table "hector" */

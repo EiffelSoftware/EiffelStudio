@@ -51,7 +51,7 @@ feature -- Implementation of inherited deferred features
 			!! Result.make (anchor)
 		end
 
-	solved_type (feat_table: FEATURE_TABLE f: FEATURE_I): TYPE_A is
+	solved_type (feat_table: FEATURE_TABLE; f: FEATURE_I): TYPE_A is
 			-- Calculated type in function of the feauure `f' which has
 			-- the type Current and the feautre table `feat_table'
 			-- Case of errors: Result is Void if anchored type cannot be

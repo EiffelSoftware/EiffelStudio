@@ -445,8 +445,7 @@ feature -- Output
 			class_i: CLASS_I
 			c_name: STRING
 		do
-			c_name := clone (class_name)
-			c_name.to_lower
+			c_name := class_name.as_lower
 			class_i := associated_classi
 			c_name.to_upper
 			if class_i = Void then
@@ -503,8 +502,7 @@ feature {AST_EIFFEL} -- Output
 		local
 			s: STRING
 		do
-			s := clone (class_name)
-			s.to_upper
+			s := class_name.as_upper
 
 			ctxt.put_class_name (s)
 			if generics /= Void then
@@ -537,8 +535,7 @@ feature {COMPILER_EXPORTER} -- Conveniences
 			dumped_class_name: STRING
 		do
 			create Result.make (class_name.count)
-			dumped_class_name := clone (class_name)
-			dumped_class_name.to_upper
+			dumped_class_name := class_name.as_upper
 			Result.append (dumped_class_name)
 			if generics /= Void then
 				from

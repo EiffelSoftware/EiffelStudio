@@ -56,9 +56,10 @@ feature {NONE}
 					to_write := text_window.text; 
 					if not to_write.empty then
 						new_file.putstring (to_write);
-						if to_write.item (to_write.count) /= '%N' then 
+						char := to_write.item (to_write.count);
+						if char /= '%N' and then char /= '%R' then 
 							-- Add a carriage return like vi if there's none at the end 
-							new_file.putchar ('%N')
+							new_file.new_line
 						end; 
 					end;
 					new_file.close;

@@ -140,6 +140,7 @@ feature {NONE}
 			a_text_not_void: a_text /= Void;
 			a_filename_not_void: a_filename /= Void
 		local
+			char: CHARACTER;
 			new_file: PLAIN_TEXT_FILE
 		do
 			if not a_filename.empty then
@@ -157,10 +158,11 @@ feature {NONE}
 					new_file.open_write;
 					if not a_text.empty then
 						new_file.putstring (a_text);
-						if a_text.item (a_text.count) /= '%N' then
+						char := a_text.item (a_text.count);
+						if char /= '%N' and then char /= '%R' then
 								-- Add a carriage return like vi 
 								-- if there's none at the end
-							new_file.putchar ('%N')
+							new_file.new_line
 						end
 					end;
 					new_file.close

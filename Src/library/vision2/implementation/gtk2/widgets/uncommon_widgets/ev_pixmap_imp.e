@@ -393,7 +393,7 @@ feature {EV_STOCK_PIXMAPS_IMP, EV_PIXMAPABLE_IMP} -- Implementation
 		do
 			set_size (48, 48)
 			a_pixbuf := feature {EV_GTK_DEPENDENT_EXTERNALS}.gtk_widget_render_icon (gtk_image, a_stock_id, gtk_icon_size_dialog, NULL)
-			a_pixbuf := feature {EV_GTK_DEPENDENT_EXTERNALS}.gdk_pixbuf_scale_simple (a_pixbuf, 48, 48, feature {EV_GTK_DEPENDENT_EXTERNALS}.gdk_interp_bilinear)		
+			a_pixbuf := feature {EV_GTK_DEPENDENT_EXTERNALS}.gdk_pixbuf_scale_simple (a_pixbuf, 48, 48, feature {EV_GTK_DEPENDENT_EXTERNALS}.gdk_interp_hyper)		
 			a_drawable_pixbuf := feature {EV_GTK_DEPENDENT_EXTERNALS}.gdk_pixbuf_get_from_drawable (default_pointer, drawable, default_pointer, 0, 0, 0, 0, -1, -1)
 			feature {EV_GTK_DEPENDENT_EXTERNALS}.gdk_pixbuf_composite (a_pixbuf, a_drawable_pixbuf, 0, 0, -1, -1, 1, 1, 1, 1, feature {EV_GTK_DEPENDENT_EXTERNALS}.gdk_interp_bilinear, 0)
 			set_pixmap_from_pixbuf (a_pixbuf)

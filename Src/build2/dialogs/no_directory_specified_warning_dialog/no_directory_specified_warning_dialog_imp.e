@@ -31,56 +31,56 @@ feature {NONE}-- Initialization
 			Precursor {EV_DIALOG}
 			initialize_constants
 			
-			create l_vertical_box_18
-			create l_horizontal_box_19
-			create l_vertical_box_19
-			create l_cell_6
-			create pixmap_cell
-			create l_cell_7
-			create l_label_6
-			create l_horizontal_box_20
-			create l_label_7
-			create directory_name_field
-			create l_cell_8
-			create l_horizontal_box_21
+			create l_vertical_box_21
+			create l_horizontal_box_22
+			create l_vertical_box_22
 			create l_cell_9
+			create pixmap_cell
+			create l_cell_10
+			create l_label_9
+			create l_horizontal_box_23
+			create l_label_10
+			create directory_name_field
+			create l_cell_11
+			create l_horizontal_box_24
+			create l_cell_12
 			create ok_button
 			create cancel_button
 			
-			extend (l_vertical_box_18)
-			l_vertical_box_18.extend (l_horizontal_box_19)
-			l_horizontal_box_19.extend (l_vertical_box_19)
-			l_vertical_box_19.extend (l_cell_6)
-			l_vertical_box_19.extend (pixmap_cell)
-			l_vertical_box_19.extend (l_cell_7)
-			l_horizontal_box_19.extend (l_label_6)
-			l_vertical_box_18.extend (l_horizontal_box_20)
-			l_horizontal_box_20.extend (l_label_7)
-			l_horizontal_box_20.extend (directory_name_field)
-			l_vertical_box_18.extend (l_cell_8)
-			l_vertical_box_18.extend (l_horizontal_box_21)
-			l_horizontal_box_21.extend (l_cell_9)
-			l_horizontal_box_21.extend (ok_button)
-			l_horizontal_box_21.extend (cancel_button)
+			extend (l_vertical_box_21)
+			l_vertical_box_21.extend (l_horizontal_box_22)
+			l_horizontal_box_22.extend (l_vertical_box_22)
+			l_vertical_box_22.extend (l_cell_9)
+			l_vertical_box_22.extend (pixmap_cell)
+			l_vertical_box_22.extend (l_cell_10)
+			l_horizontal_box_22.extend (l_label_9)
+			l_vertical_box_21.extend (l_horizontal_box_23)
+			l_horizontal_box_23.extend (l_label_10)
+			l_horizontal_box_23.extend (directory_name_field)
+			l_vertical_box_21.extend (l_cell_11)
+			l_vertical_box_21.extend (l_horizontal_box_24)
+			l_horizontal_box_24.extend (l_cell_12)
+			l_horizontal_box_24.extend (ok_button)
+			l_horizontal_box_24.extend (cancel_button)
 			
-			set_title ("No matching DIRECTORY constant")
-			l_vertical_box_18.set_padding_width (10)
-			l_vertical_box_18.disable_item_expand (l_horizontal_box_19)
-			l_vertical_box_18.disable_item_expand (l_horizontal_box_20)
-			l_vertical_box_18.disable_item_expand (l_horizontal_box_21)
-			l_horizontal_box_19.set_padding_width (10)
-			l_horizontal_box_19.set_border_width (10)
-			l_horizontal_box_19.disable_item_expand (l_vertical_box_19)
-			l_label_6.set_text ("You have not specified a DIRECTORY constant for one or more relative PIXMAP%Nconstants, and no matching directory constant is available. %NPlease enter the name of a DIRECTORYconstant which will be used.")
-			l_label_6.align_text_left
-			l_horizontal_box_20.set_padding_width (10)
-			l_horizontal_box_20.set_border_width (10)
-			l_horizontal_box_20.disable_item_expand (l_label_7)
-			l_label_7.set_text ("Use DIRECTORY constant named:")
-			l_horizontal_box_21.set_padding_width (10)
-			l_horizontal_box_21.set_border_width (10)
-			l_horizontal_box_21.disable_item_expand (ok_button)
-			l_horizontal_box_21.disable_item_expand (cancel_button)
+			set_title (no_directory_dialog)
+			l_vertical_box_21.set_padding_width (10)
+			l_vertical_box_21.disable_item_expand (l_horizontal_box_22)
+			l_vertical_box_21.disable_item_expand (l_horizontal_box_23)
+			l_vertical_box_21.disable_item_expand (l_horizontal_box_24)
+			l_horizontal_box_22.set_padding_width (10)
+			l_horizontal_box_22.set_border_width (10)
+			l_horizontal_box_22.disable_item_expand (l_vertical_box_22)
+			l_label_9.set_text ("You have not specified a DIRECTORY constant for one or more relative PIXMAP%Nconstants, and no matching directory constant is available. %NPlease enter the name of a DIRECTORYconstant which will be used.")
+			l_label_9.align_text_left
+			l_horizontal_box_23.set_padding_width (10)
+			l_horizontal_box_23.set_border_width (10)
+			l_horizontal_box_23.disable_item_expand (l_label_10)
+			l_label_10.set_text ("Use DIRECTORY constant named:")
+			l_horizontal_box_24.set_padding_width (10)
+			l_horizontal_box_24.set_border_width (10)
+			l_horizontal_box_24.disable_item_expand (ok_button)
+			l_horizontal_box_24.disable_item_expand (cancel_button)
 			ok_button.set_text (ok_button_text)
 			ok_button.set_minimum_width (default_button_width)
 			cancel_button.set_text (cancel_button_text)
@@ -110,10 +110,10 @@ feature {NONE} -- Implementation
 		deferred
 		end
 	
-	l_vertical_box_18, l_vertical_box_19: EV_VERTICAL_BOX
-	l_horizontal_box_19, l_horizontal_box_20, l_horizontal_box_21: EV_HORIZONTAL_BOX
-	l_cell_6, pixmap_cell, l_cell_7, l_cell_8, l_cell_9: EV_CELL
-	l_label_6, l_label_7: EV_LABEL
+	l_vertical_box_21, l_vertical_box_22: EV_VERTICAL_BOX
+	l_horizontal_box_22, l_horizontal_box_23, l_horizontal_box_24: EV_HORIZONTAL_BOX
+	l_cell_9, pixmap_cell, l_cell_10, l_cell_11, l_cell_12: EV_CELL
+	l_label_9, l_label_10: EV_LABEL
 	directory_name_field: EV_TEXT_FIELD
 	ok_button, cancel_button: EV_BUTTON
 	

@@ -1,31 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?><application xsi="http://www.w3.org/1999/XMLSchema-instance">
 <item type="Constants"><Constant ><type >STRING</type>
-		<Name >cancel_button_text</Name>
-		<Value >Cancel</Value>
+		<Name >no_directory_dialog</Name>
+		<Value >No Matching DIRECTORY Constant</Value>
 		</Constant>
 	<Constant ><type >INTEGER</type>
-		<Name >large_spacing_width</Name>
-		<Value >12</Value>
-		</Constant>
-	<Constant ><type >STRING</type>
-		<Name >next_tip_text</Name>
-		<Value >Next tip</Value>
-		</Constant>
-	<Constant ><type >STRING</type>
-		<Name >ok_button_text</Name>
-		<Value >OK</Value>
-		</Constant>
-	<Constant ><type >DIRECTORY</type>
-		<Name >png_location</Name>
-		<Value >C:\Documents and Settings\rogers\Desktop</Value>
-		</Constant>
-	<Constant ><type >INTEGER</type>
-		<Name >default_button_width</Name>
-		<Value >80</Value>
-		</Constant>
-	<Constant ><type >STRING</type>
-		<Name >close_text</Name>
-		<Value >Close</Value>
+		<Name >negative</Name>
+		<Value >-100</Value>
 		</Constant>
 	<Constant ><type >PIXMAP</type>
 		<Name >lightbulb_png</Name>
@@ -33,6 +13,54 @@
 		<is_absolute >False</is_absolute>
 		<Directory >png_location</Directory>
 		<Filename >lightbulb.png</Filename>
+		</Constant>
+	<Constant ><type >STRING</type>
+		<Name >constants_dialog_title</Name>
+		<Value >Constants</Value>
+		</Constant>
+	<Constant ><type >STRING</type>
+		<Name >next_tip_text</Name>
+		<Value >Next tip</Value>
+		</Constant>
+	<Constant ><type >STRING</type>
+		<Name >system_window_title</Name>
+		<Value >Project Configuration</Value>
+		</Constant>
+	<Constant ><type >STRING</type>
+		<Name >tip_of_day_dialog_title</Name>
+		<Value >Tip of the Day</Value>
+		</Constant>
+	<Constant ><type >INTEGER</type>
+		<Name >small_padding</Name>
+		<Value >4</Value>
+		</Constant>
+	<Constant ><type >STRING</type>
+		<Name >pixmap_settings_dialog_title</Name>
+		<Value >Pixmap Selection</Value>
+		</Constant>
+	<Constant ><type >INTEGER</type>
+		<Name >default_button_width</Name>
+		<Value >80</Value>
+		</Constant>
+	<Constant ><type >STRING</type>
+		<Name >ok_button_text</Name>
+		<Value >OK</Value>
+		</Constant>
+	<Constant ><type >INTEGER</type>
+		<Name >large_spacing_width</Name>
+		<Value >12</Value>
+		</Constant>
+	<Constant ><type >STRING</type>
+		<Name >cancel_button_text</Name>
+		<Value >Cancel</Value>
+		</Constant>
+	<Constant ><type >STRING</type>
+		<Name >close_text</Name>
+		<Value >Close</Value>
+		</Constant>
+	<Constant ><type >DIRECTORY</type>
+		<Name >png_location</Name>
+		<Value >D:\Eiffel54\build\bitmaps\png</Value>
 		</Constant>
 	</item>
 <item type="Directory"><Internal_properties ><name >constants_dialog</name>
@@ -46,7 +74,8 @@
 		<EV_WIDGET ><Minimum_width >640</Minimum_width>
 			<Minimum_height >480</Minimum_height>
 			</EV_WIDGET>
-		<EV_WINDOW ><Title ><![CDATA[Constants]]></Title>
+		<EV_WINDOW ><Title ><Constant >constants_dialog_title</Constant>
+				</Title>
 			</EV_WINDOW>
 		<EV_PIXMAPABLE />
 		<EV_CONTAINER />
@@ -93,7 +122,7 @@
 						<EV_WIDGET />
 						<EV_BOX ><Padding >1</Padding>
 							<Border >2</Border>
-							<Is_item_expanded >10000</Is_item_expanded>
+							<Is_item_expanded >100000</Is_item_expanded>
 							</EV_BOX>
 						<EV_PIXMAPABLE />
 						<EV_CONTAINER />
@@ -139,119 +168,272 @@
 									</Events>
 								</item>
 							</item>
-						<item type="EV_HORIZONTAL_BOX"><Internal_properties ><id >9</id>
+						<item type="EV_HORIZONTAL_SEPARATOR"><Internal_properties ><id >9</id>
+								<Expanded >0</Expanded>
+								</Internal_properties>
+							<EV_COLORIZABLE />
+							<EV_SENSITIVE />
+							<EV_TOOLTIPABLE />
+							<EV_WIDGET />
+							</item>
+						<item type="EV_HORIZONTAL_BOX"><Internal_properties ><id >10</id>
 								<Expanded >1</Expanded>
 								</Internal_properties>
 							<EV_COLORIZABLE />
 							<EV_SENSITIVE />
 							<EV_WIDGET />
-							<EV_BOX ><Padding >5</Padding>
+							<EV_BOX ><Is_homogeneous >True</Is_homogeneous>
+								<Padding >5</Padding>
 								<Is_item_expanded >111</Is_item_expanded>
 								</EV_BOX>
 							<EV_PIXMAPABLE />
 							<EV_CONTAINER />
-							<item type="EV_COMBO_BOX"><Internal_properties ><id >10</id>
-									<name >type_combo_box</name>
+							<item type="EV_VERTICAL_BOX"><Internal_properties ><id >11</id>
 									<Expanded >1</Expanded>
 									</Internal_properties>
 								<EV_COLORIZABLE />
-								<EV_FONTABLE />
 								<EV_SENSITIVE />
-								<EV_TEXTABLE ><Text >DIRECTORY</Text>
-									</EV_TEXTABLE>
-								<EV_TOOLTIPABLE />
-								<EV_WIDGET ><Minimum_width >80</Minimum_width>
-									</EV_WIDGET>
-								<EV_TEXT_COMPONENT ><Is_editable >False</Is_editable>
-									</EV_TEXT_COMPONENT>
-								<item type="EV_LIST_ITEM"><Internal_properties ><id >11</id>
-										<name >string_item</name>
-										<Expanded >0</Expanded>
+								<EV_WIDGET />
+								<EV_BOX ><Padding ><Constant >small_padding</Constant>
+										</Padding>
+									<Is_item_expanded >01</Is_item_expanded>
+									</EV_BOX>
+								<EV_PIXMAPABLE />
+								<EV_CONTAINER />
+								<item type="EV_HORIZONTAL_BOX"><Internal_properties ><id >12</id>
+										<Expanded >1</Expanded>
 										</Internal_properties>
-									<EV_DESELECTABLE />
-									<EV_TEXTABLE ><Text >STRING</Text>
-										</EV_TEXTABLE>
-									<EV_TOOLTIPABLE />
+									<EV_COLORIZABLE />
+									<EV_SENSITIVE />
+									<EV_WIDGET />
+									<EV_BOX ><Is_item_expanded >01</Is_item_expanded>
+										</EV_BOX>
 									<EV_PIXMAPABLE />
-									<Events ><Event >select_actions EV_LIST_ITEM_ACTION_SEQUENCES string_item_selected</Event>
-										</Events>
+									<EV_CONTAINER />
+									<item type="EV_CELL"><Internal_properties ><id >13</id>
+											<Expanded >0</Expanded>
+											</Internal_properties>
+										<EV_COLORIZABLE />
+										<EV_SENSITIVE />
+										<EV_WIDGET ><Minimum_width ><Constant >small_padding</Constant>
+												</Minimum_width>
+											</EV_WIDGET>
+										<EV_PIXMAPABLE />
+										<EV_CONTAINER />
+										</item>
+									<item type="EV_LABEL"><Internal_properties ><id >14</id>
+											<Expanded >0</Expanded>
+											</Internal_properties>
+										<EV_COLORIZABLE />
+										<EV_FONTABLE />
+										<EV_SENSITIVE />
+										<EV_TEXTABLE ><Text >Type</Text>
+											</EV_TEXTABLE>
+										<EV_TOOLTIPABLE />
+										<EV_WIDGET />
+										<EV_TEXT_ALIGNABLE ><Text_alignment >Left</Text_alignment>
+											</EV_TEXT_ALIGNABLE>
+										</item>
 									</item>
-								<item type="EV_LIST_ITEM"><Internal_properties ><id >12</id>
-										<name >integer_item</name>
-										<Expanded >0</Expanded>
+								<item type="EV_COMBO_BOX"><Internal_properties ><id >15</id>
+										<name >type_combo_box</name>
+										<Expanded >1</Expanded>
 										</Internal_properties>
-									<EV_DESELECTABLE />
-									<EV_TEXTABLE ><Text >INTEGER</Text>
-										</EV_TEXTABLE>
-									<EV_TOOLTIPABLE />
-									<EV_PIXMAPABLE />
-									<Events ><Event >select_actions EV_LIST_ITEM_ACTION_SEQUENCES integer_item_selected</Event>
-										</Events>
-									</item>
-								<item type="EV_LIST_ITEM"><Internal_properties ><id >13</id>
-										<name >directory_item</name>
-										<Expanded >0</Expanded>
-										</Internal_properties>
-									<EV_DESELECTABLE ><Is_selected >True</Is_selected>
-										</EV_DESELECTABLE>
+									<EV_COLORIZABLE />
+									<EV_FONTABLE />
+									<EV_SENSITIVE />
 									<EV_TEXTABLE ><Text >DIRECTORY</Text>
 										</EV_TEXTABLE>
 									<EV_TOOLTIPABLE />
-									<EV_PIXMAPABLE />
-									<Events ><Event >select_actions EV_LIST_ITEM_ACTION_SEQUENCES directory_item_selected</Event>
-										</Events>
-									</item>
-								<item type="EV_LIST_ITEM"><Internal_properties ><id >14</id>
-										<name >file_name_item</name>
-										<Expanded >0</Expanded>
-										</Internal_properties>
-									<EV_DESELECTABLE />
-									<EV_TEXTABLE ><Text >FILE_NAME</Text>
-										</EV_TEXTABLE>
-									<EV_TOOLTIPABLE />
-									<EV_PIXMAPABLE />
-									<Events ><Event >select_actions EV_LIST_ITEM_ACTION_SEQUENCES file_name_item_selected</Event>
-										</Events>
-									</item>
-								<item type="EV_LIST_ITEM"><Internal_properties ><id >15</id>
-										<name >pixmap_item</name>
-										<Expanded >0</Expanded>
-										</Internal_properties>
-									<EV_DESELECTABLE />
-									<EV_TEXTABLE ><Text >PIXMAP</Text>
-										</EV_TEXTABLE>
-									<EV_TOOLTIPABLE />
-									<EV_PIXMAPABLE />
-									<Events ><Event >select_actions EV_LIST_ITEM_ACTION_SEQUENCES pixmap_item_selected</Event>
-										</Events>
+									<EV_WIDGET ><Minimum_width >80</Minimum_width>
+										</EV_WIDGET>
+									<EV_TEXT_COMPONENT ><Is_editable >False</Is_editable>
+										</EV_TEXT_COMPONENT>
+									<item type="EV_LIST_ITEM"><Internal_properties ><id >16</id>
+											<name >string_item</name>
+											<Expanded >0</Expanded>
+											</Internal_properties>
+										<EV_DESELECTABLE />
+										<EV_TEXTABLE ><Text >STRING</Text>
+											</EV_TEXTABLE>
+										<EV_TOOLTIPABLE />
+										<EV_PIXMAPABLE />
+										<Events ><Event >select_actions EV_LIST_ITEM_ACTION_SEQUENCES string_item_selected</Event>
+											</Events>
+										</item>
+									<item type="EV_LIST_ITEM"><Internal_properties ><id >17</id>
+											<name >integer_item</name>
+											<Expanded >0</Expanded>
+											</Internal_properties>
+										<EV_DESELECTABLE />
+										<EV_TEXTABLE ><Text >INTEGER</Text>
+											</EV_TEXTABLE>
+										<EV_TOOLTIPABLE />
+										<EV_PIXMAPABLE />
+										<Events ><Event >select_actions EV_LIST_ITEM_ACTION_SEQUENCES integer_item_selected</Event>
+											</Events>
+										</item>
+									<item type="EV_LIST_ITEM"><Internal_properties ><id >18</id>
+											<name >directory_item</name>
+											<Expanded >0</Expanded>
+											</Internal_properties>
+										<EV_DESELECTABLE ><Is_selected >True</Is_selected>
+											</EV_DESELECTABLE>
+										<EV_TEXTABLE ><Text >DIRECTORY</Text>
+											</EV_TEXTABLE>
+										<EV_TOOLTIPABLE />
+										<EV_PIXMAPABLE />
+										<Events ><Event >select_actions EV_LIST_ITEM_ACTION_SEQUENCES directory_item_selected</Event>
+											</Events>
+										</item>
+									<item type="EV_LIST_ITEM"><Internal_properties ><id >19</id>
+											<name >file_name_item</name>
+											<Expanded >0</Expanded>
+											</Internal_properties>
+										<EV_DESELECTABLE />
+										<EV_TEXTABLE ><Text >FILE_NAME</Text>
+											</EV_TEXTABLE>
+										<EV_TOOLTIPABLE />
+										<EV_PIXMAPABLE />
+										<Events ><Event >select_actions EV_LIST_ITEM_ACTION_SEQUENCES file_name_item_selected</Event>
+											</Events>
+										</item>
+									<item type="EV_LIST_ITEM"><Internal_properties ><id >20</id>
+											<name >pixmap_item</name>
+											<Expanded >0</Expanded>
+											</Internal_properties>
+										<EV_DESELECTABLE />
+										<EV_TEXTABLE ><Text >PIXMAP</Text>
+											</EV_TEXTABLE>
+										<EV_TOOLTIPABLE />
+										<EV_PIXMAPABLE />
+										<Events ><Event >select_actions EV_LIST_ITEM_ACTION_SEQUENCES pixmap_item_selected</Event>
+											</Events>
+										</item>
 									</item>
 								</item>
-							<item type="EV_TEXT_FIELD"><Internal_properties ><id >16</id>
-									<name >name_field</name>
+							<item type="EV_VERTICAL_BOX"><Internal_properties ><id >21</id>
 									<Expanded >0</Expanded>
 									</Internal_properties>
 								<EV_COLORIZABLE />
-								<EV_FONTABLE />
-								<EV_SENSITIVE />
-								<EV_TEXTABLE />
-								<EV_TOOLTIPABLE />
-								<EV_WIDGET />
-								<EV_TEXT_COMPONENT />
-								<Events ><Event >change_actions EV_TEXT_COMPONENT_ACTION_SEQUENCES validate_constant_name</Event>
-									</Events>
-								</item>
-							<item type="EV_CELL"><Internal_properties ><id >17</id>
-									<name >entry_selection_parent</name>
-									<Expanded >0</Expanded>
-									</Internal_properties>
-								<EV_COLORIZABLE />
 								<EV_SENSITIVE />
 								<EV_WIDGET />
+								<EV_BOX ><Padding ><Constant >small_padding</Constant>
+										</Padding>
+									<Is_item_expanded >01</Is_item_expanded>
+									</EV_BOX>
 								<EV_PIXMAPABLE />
 								<EV_CONTAINER />
+								<item type="EV_HORIZONTAL_BOX"><Internal_properties ><id >22</id>
+										<Expanded >1</Expanded>
+										</Internal_properties>
+									<EV_COLORIZABLE />
+									<EV_SENSITIVE />
+									<EV_WIDGET />
+									<EV_BOX ><Is_item_expanded >01</Is_item_expanded>
+										</EV_BOX>
+									<EV_PIXMAPABLE />
+									<EV_CONTAINER />
+									<item type="EV_CELL"><Internal_properties ><id >23</id>
+											<Expanded >0</Expanded>
+											</Internal_properties>
+										<EV_COLORIZABLE />
+										<EV_SENSITIVE />
+										<EV_WIDGET ><Minimum_width ><Constant >small_padding</Constant>
+												</Minimum_width>
+											</EV_WIDGET>
+										<EV_PIXMAPABLE />
+										<EV_CONTAINER />
+										</item>
+									<item type="EV_LABEL"><Internal_properties ><id >24</id>
+											<Expanded >0</Expanded>
+											</Internal_properties>
+										<EV_COLORIZABLE />
+										<EV_FONTABLE />
+										<EV_SENSITIVE />
+										<EV_TEXTABLE ><Text >Name</Text>
+											</EV_TEXTABLE>
+										<EV_TOOLTIPABLE />
+										<EV_WIDGET />
+										<EV_TEXT_ALIGNABLE ><Text_alignment >Left</Text_alignment>
+											</EV_TEXT_ALIGNABLE>
+										</item>
+									</item>
+								<item type="EV_TEXT_FIELD"><Internal_properties ><id >25</id>
+										<name >name_field</name>
+										<Expanded >0</Expanded>
+										</Internal_properties>
+									<EV_COLORIZABLE />
+									<EV_FONTABLE />
+									<EV_SENSITIVE />
+									<EV_TEXTABLE />
+									<EV_TOOLTIPABLE />
+									<EV_WIDGET />
+									<EV_TEXT_COMPONENT />
+									<Events ><Event >change_actions EV_TEXT_COMPONENT_ACTION_SEQUENCES validate_constant_name</Event>
+										</Events>
+									</item>
+								</item>
+							<item type="EV_VERTICAL_BOX"><Internal_properties ><id >26</id>
+									<Expanded >0</Expanded>
+									</Internal_properties>
+								<EV_COLORIZABLE />
+								<EV_SENSITIVE />
+								<EV_WIDGET />
+								<EV_BOX ><Padding ><Constant >small_padding</Constant>
+										</Padding>
+									<Is_item_expanded >01</Is_item_expanded>
+									</EV_BOX>
+								<EV_PIXMAPABLE />
+								<EV_CONTAINER />
+								<item type="EV_HORIZONTAL_BOX"><Internal_properties ><id >27</id>
+										<Expanded >1</Expanded>
+										</Internal_properties>
+									<EV_COLORIZABLE />
+									<EV_SENSITIVE />
+									<EV_WIDGET />
+									<EV_BOX ><Is_item_expanded >01</Is_item_expanded>
+										</EV_BOX>
+									<EV_PIXMAPABLE />
+									<EV_CONTAINER />
+									<item type="EV_CELL"><Internal_properties ><id >28</id>
+											<Expanded >0</Expanded>
+											</Internal_properties>
+										<EV_COLORIZABLE />
+										<EV_SENSITIVE />
+										<EV_WIDGET ><Minimum_width ><Constant >small_padding</Constant>
+												</Minimum_width>
+											</EV_WIDGET>
+										<EV_PIXMAPABLE />
+										<EV_CONTAINER />
+										</item>
+									<item type="EV_LABEL"><Internal_properties ><id >29</id>
+											<Expanded >0</Expanded>
+											</Internal_properties>
+										<EV_COLORIZABLE />
+										<EV_FONTABLE />
+										<EV_SENSITIVE />
+										<EV_TEXTABLE ><Text >Value</Text>
+											</EV_TEXTABLE>
+										<EV_TOOLTIPABLE />
+										<EV_WIDGET />
+										<EV_TEXT_ALIGNABLE ><Text_alignment >Left</Text_alignment>
+											</EV_TEXT_ALIGNABLE>
+										</item>
+									</item>
+								<item type="EV_CELL"><Internal_properties ><id >30</id>
+										<name >entry_selection_parent</name>
+										<Expanded >0</Expanded>
+										</Internal_properties>
+									<EV_COLORIZABLE />
+									<EV_SENSITIVE />
+									<EV_WIDGET />
+									<EV_PIXMAPABLE />
+									<EV_CONTAINER />
+									</item>
 								</item>
 							</item>
-						<item type="EV_CELL"><Internal_properties ><id >18</id>
+						<item type="EV_CELL"><Internal_properties ><id >31</id>
 								<Expanded >0</Expanded>
 								</Internal_properties>
 							<EV_COLORIZABLE />
@@ -261,18 +443,18 @@
 							<EV_PIXMAPABLE />
 							<EV_CONTAINER />
 							</item>
-						<item type="EV_HORIZONTAL_BOX"><Internal_properties ><id >19</id>
+						<item type="EV_HORIZONTAL_BOX"><Internal_properties ><id >32</id>
 								<Expanded >1</Expanded>
 								</Internal_properties>
 							<EV_COLORIZABLE />
 							<EV_SENSITIVE />
 							<EV_WIDGET />
 							<EV_BOX ><Padding >5</Padding>
-								<Is_item_expanded >100</Is_item_expanded>
+								<Is_item_expanded >1000</Is_item_expanded>
 								</EV_BOX>
 							<EV_PIXMAPABLE />
 							<EV_CONTAINER />
-							<item type="EV_CELL"><Internal_properties ><id >20</id>
+							<item type="EV_CELL"><Internal_properties ><id >33</id>
 									<Expanded >0</Expanded>
 									</Internal_properties>
 								<EV_COLORIZABLE />
@@ -281,7 +463,17 @@
 								<EV_PIXMAPABLE />
 								<EV_CONTAINER />
 								</item>
-							<item type="EV_BUTTON"><Internal_properties ><id >21</id>
+							<item type="EV_CELL"><Internal_properties ><id >34</id>
+									<name >new_button_holder</name>
+									<Expanded >0</Expanded>
+									</Internal_properties>
+								<EV_COLORIZABLE />
+								<EV_SENSITIVE />
+								<EV_WIDGET />
+								<EV_PIXMAPABLE />
+								<EV_CONTAINER />
+								</item>
+							<item type="EV_BUTTON"><Internal_properties ><id >35</id>
 									<name >add_button</name>
 									<Expanded >0</Expanded>
 									</Internal_properties>
@@ -299,7 +491,7 @@
 								<Events ><Event >select_actions EV_BUTTON_ACTION_SEQUENCES add_constant</Event>
 									</Events>
 								</item>
-							<item type="EV_BUTTON"><Internal_properties ><id >22</id>
+							<item type="EV_BUTTON"><Internal_properties ><id >36</id>
 									<name >remove_button</name>
 									<Expanded >0</Expanded>
 									</Internal_properties>
@@ -321,7 +513,7 @@
 							</item>
 						</item>
 					</item>
-				<item type="EV_VERTICAL_BOX"><Internal_properties ><id >23</id>
+				<item type="EV_VERTICAL_BOX"><Internal_properties ><id >37</id>
 						<Expanded >1</Expanded>
 						</Internal_properties>
 					<EV_COLORIZABLE />
@@ -332,7 +524,7 @@
 						</EV_BOX>
 					<EV_PIXMAPABLE />
 					<EV_CONTAINER />
-					<item type="EV_BUTTON"><Internal_properties ><id >24</id>
+					<item type="EV_BUTTON"><Internal_properties ><id >38</id>
 							<name >ok_button</name>
 							<Expanded >0</Expanded>
 							</Internal_properties>
@@ -351,7 +543,7 @@
 						<Events ><Event >select_actions EV_BUTTON_ACTION_SEQUENCES ok_pressed</Event>
 							</Events>
 						</item>
-					<item type="EV_CELL"><Internal_properties ><id >25</id>
+					<item type="EV_CELL"><Internal_properties ><id >39</id>
 							<Expanded >1</Expanded>
 							</Internal_properties>
 						<EV_COLORIZABLE />
@@ -367,20 +559,21 @@
 	</item>
 <item type="Directory"><Internal_properties ><name >system_window_dialog</name>
 		</Internal_properties>
-	<item type="EV_DIALOG"><Internal_properties ><id >26</id>
+	<item type="EV_DIALOG"><Internal_properties ><id >40</id>
 			<name >gb_system_window</name>
 			<Expanded >1</Expanded>
 			</Internal_properties>
 		<EV_COLORIZABLE />
 		<EV_SENSITIVE />
 		<EV_WIDGET />
-		<EV_WINDOW ><Title ><![CDATA[Display window]]></Title>
+		<EV_WINDOW ><Title ><Constant >system_window_title</Constant>
+				</Title>
 			</EV_WINDOW>
 		<EV_PIXMAPABLE />
 		<EV_CONTAINER />
 		<Events ><Event >show_actions EV_WINDOW_ACTION_SEQUENCES display_project_information</Event>
 			</Events>
-		<item type="EV_HORIZONTAL_BOX"><Internal_properties ><id >27</id>
+		<item type="EV_HORIZONTAL_BOX"><Internal_properties ><id >41</id>
 				<Expanded >1</Expanded>
 				</Internal_properties>
 			<EV_COLORIZABLE />
@@ -390,7 +583,7 @@
 				</EV_BOX>
 			<EV_PIXMAPABLE />
 			<EV_CONTAINER />
-			<item type="EV_FRAME"><Internal_properties ><id >28</id>
+			<item type="EV_FRAME"><Internal_properties ><id >42</id>
 					<Expanded >1</Expanded>
 					</Internal_properties>
 				<EV_COLORIZABLE />
@@ -402,7 +595,7 @@
 				<EV_TEXT_ALIGNABLE />
 				<EV_PIXMAPABLE />
 				<EV_CONTAINER />
-				<item type="EV_VERTICAL_BOX"><Internal_properties ><id >29</id>
+				<item type="EV_VERTICAL_BOX"><Internal_properties ><id >43</id>
 						<Expanded >1</Expanded>
 						</Internal_properties>
 					<EV_COLORIZABLE />
@@ -413,7 +606,7 @@
 						</EV_BOX>
 					<EV_PIXMAPABLE />
 					<EV_CONTAINER />
-					<item type="EV_HORIZONTAL_BOX"><Internal_properties ><id >30</id>
+					<item type="EV_HORIZONTAL_BOX"><Internal_properties ><id >44</id>
 							<Expanded >1</Expanded>
 							</Internal_properties>
 						<EV_COLORIZABLE />
@@ -425,7 +618,7 @@
 							</EV_BOX>
 						<EV_PIXMAPABLE />
 						<EV_CONTAINER />
-						<item type="EV_LABEL"><Internal_properties ><id >31</id>
+						<item type="EV_LABEL"><Internal_properties ><id >45</id>
 								<Expanded >0</Expanded>
 								</Internal_properties>
 							<EV_COLORIZABLE />
@@ -437,7 +630,7 @@
 							<EV_WIDGET />
 							<EV_TEXT_ALIGNABLE />
 							</item>
-						<item type="EV_TEXT_FIELD"><Internal_properties ><id >32</id>
+						<item type="EV_TEXT_FIELD"><Internal_properties ><id >46</id>
 								<name >location_field</name>
 								<Expanded >0</Expanded>
 								</Internal_properties>
@@ -450,17 +643,18 @@
 							<EV_TEXT_COMPONENT />
 							</item>
 						</item>
-					<item type="EV_NOTEBOOK"><Internal_properties ><id >33</id>
+					<item type="EV_NOTEBOOK"><Internal_properties ><id >47</id>
 							<Expanded >1</Expanded>
 							</Internal_properties>
 						<EV_COLORIZABLE />
+						<EV_FONTABLE />
 						<EV_SENSITIVE />
 						<EV_WIDGET />
 						<EV_NOTEBOOK ><Item_text >Build^Generation</Item_text>
 							</EV_NOTEBOOK>
 						<EV_PIXMAPABLE />
 						<EV_CONTAINER />
-						<item type="EV_VERTICAL_BOX"><Internal_properties ><id >34</id>
+						<item type="EV_VERTICAL_BOX"><Internal_properties ><id >48</id>
 								<Expanded >1</Expanded>
 								</Internal_properties>
 							<EV_COLORIZABLE />
@@ -470,7 +664,7 @@
 								</EV_BOX>
 							<EV_PIXMAPABLE />
 							<EV_CONTAINER />
-							<item type="EV_FRAME"><Internal_properties ><id >35</id>
+							<item type="EV_FRAME"><Internal_properties ><id >49</id>
 									<Expanded >1</Expanded>
 									</Internal_properties>
 								<EV_COLORIZABLE />
@@ -482,7 +676,7 @@
 								<EV_TEXT_ALIGNABLE />
 								<EV_PIXMAPABLE />
 								<EV_CONTAINER />
-								<item type="EV_VERTICAL_BOX"><Internal_properties ><id >36</id>
+								<item type="EV_VERTICAL_BOX"><Internal_properties ><id >50</id>
 										<Expanded >1</Expanded>
 										</Internal_properties>
 									<EV_COLORIZABLE />
@@ -492,7 +686,7 @@
 										</EV_BOX>
 									<EV_PIXMAPABLE />
 									<EV_CONTAINER />
-									<item type="EV_FRAME"><Internal_properties ><id >37</id>
+									<item type="EV_FRAME"><Internal_properties ><id >51</id>
 											<Expanded >1</Expanded>
 											</Internal_properties>
 										<EV_COLORIZABLE />
@@ -505,7 +699,7 @@
 										<EV_TEXT_ALIGNABLE />
 										<EV_PIXMAPABLE />
 										<EV_CONTAINER />
-										<item type="EV_VERTICAL_BOX"><Internal_properties ><id >38</id>
+										<item type="EV_VERTICAL_BOX"><Internal_properties ><id >52</id>
 												<Expanded >1</Expanded>
 												</Internal_properties>
 											<EV_COLORIZABLE />
@@ -515,7 +709,7 @@
 												</EV_BOX>
 											<EV_PIXMAPABLE />
 											<EV_CONTAINER />
-											<item type="EV_HORIZONTAL_BOX"><Internal_properties ><id >39</id>
+											<item type="EV_HORIZONTAL_BOX"><Internal_properties ><id >53</id>
 													<Expanded >1</Expanded>
 													</Internal_properties>
 												<EV_COLORIZABLE />
@@ -524,9 +718,9 @@
 												<EV_BOX ><Is_item_expanded >11</Is_item_expanded>
 													</EV_BOX>
 												<EV_PIXMAPABLE />
-												<EV_CONTAINER ><merged_radio_button_groups >42</merged_radio_button_groups>
+												<EV_CONTAINER ><merged_radio_button_groups >56</merged_radio_button_groups>
 													</EV_CONTAINER>
-												<item type="EV_RADIO_BUTTON"><Internal_properties ><id >40</id>
+												<item type="EV_RADIO_BUTTON"><Internal_properties ><id >54</id>
 														<name >project_radio_button</name>
 														<Expanded >0</Expanded>
 														</Internal_properties>
@@ -542,7 +736,7 @@
 													<Events ><Event >select_actions EV_BUTTON_ACTION_SEQUENCES project_build_type_selected</Event>
 														</Events>
 													</item>
-												<item type="EV_CHECK_BUTTON"><Internal_properties ><id >41</id>
+												<item type="EV_CHECK_BUTTON"><Internal_properties ><id >55</id>
 														<name >rebuild_ace_file_check_button</name>
 														<Expanded >0</Expanded>
 														</Internal_properties>
@@ -558,7 +752,7 @@
 													<EV_PIXMAPABLE />
 													</item>
 												</item>
-											<item type="EV_HORIZONTAL_BOX"><Internal_properties ><id >42</id>
+											<item type="EV_HORIZONTAL_BOX"><Internal_properties ><id >56</id>
 													<Expanded >1</Expanded>
 													</Internal_properties>
 												<EV_COLORIZABLE />
@@ -567,9 +761,9 @@
 												<EV_BOX ><Is_item_expanded >1</Is_item_expanded>
 													</EV_BOX>
 												<EV_PIXMAPABLE />
-												<EV_CONTAINER ><merged_radio_button_groups >39</merged_radio_button_groups>
+												<EV_CONTAINER ><merged_radio_button_groups >53</merged_radio_button_groups>
 													</EV_CONTAINER>
-												<item type="EV_RADIO_BUTTON"><Internal_properties ><id >43</id>
+												<item type="EV_RADIO_BUTTON"><Internal_properties ><id >57</id>
 														<name >class_radio_button</name>
 														<Expanded >0</Expanded>
 														</Internal_properties>
@@ -588,7 +782,7 @@
 												</item>
 											</item>
 										</item>
-									<item type="EV_FRAME"><Internal_properties ><id >44</id>
+									<item type="EV_FRAME"><Internal_properties ><id >58</id>
 											<name >class_naming_frame</name>
 											<Expanded >1</Expanded>
 											</Internal_properties>
@@ -602,7 +796,7 @@
 										<EV_TEXT_ALIGNABLE />
 										<EV_PIXMAPABLE />
 										<EV_CONTAINER />
-										<item type="EV_VERTICAL_BOX"><Internal_properties ><id >45</id>
+										<item type="EV_VERTICAL_BOX"><Internal_properties ><id >59</id>
 												<Expanded >1</Expanded>
 												</Internal_properties>
 											<EV_COLORIZABLE />
@@ -612,7 +806,7 @@
 												</EV_BOX>
 											<EV_PIXMAPABLE />
 											<EV_CONTAINER />
-											<item type="EV_LABEL"><Internal_properties ><id >46</id>
+											<item type="EV_LABEL"><Internal_properties ><id >60</id>
 													<Expanded >0</Expanded>
 													</Internal_properties>
 												<EV_COLORIZABLE />
@@ -625,7 +819,7 @@
 												<EV_TEXT_ALIGNABLE ><Text_alignment >Left</Text_alignment>
 													</EV_TEXT_ALIGNABLE>
 												</item>
-											<item type="EV_TEXT_FIELD"><Internal_properties ><id >47</id>
+											<item type="EV_TEXT_FIELD"><Internal_properties ><id >61</id>
 													<name >project_class_name_field</name>
 													<Expanded >0</Expanded>
 													</Internal_properties>
@@ -637,7 +831,7 @@
 												<EV_WIDGET />
 												<EV_TEXT_COMPONENT />
 												</item>
-											<item type="EV_LABEL"><Internal_properties ><id >48</id>
+											<item type="EV_LABEL"><Internal_properties ><id >62</id>
 													<Expanded >0</Expanded>
 													</Internal_properties>
 												<EV_COLORIZABLE />
@@ -650,7 +844,7 @@
 												<EV_TEXT_ALIGNABLE ><Text_alignment >Left</Text_alignment>
 													</EV_TEXT_ALIGNABLE>
 												</item>
-											<item type="EV_TEXT_FIELD"><Internal_properties ><id >49</id>
+											<item type="EV_TEXT_FIELD"><Internal_properties ><id >63</id>
 													<name >application_class_name_field</name>
 													<Expanded >0</Expanded>
 													</Internal_properties>
@@ -667,7 +861,7 @@
 									</item>
 								</item>
 							</item>
-						<item type="EV_VERTICAL_BOX"><Internal_properties ><id >50</id>
+						<item type="EV_VERTICAL_BOX"><Internal_properties ><id >64</id>
 								<Expanded >1</Expanded>
 								</Internal_properties>
 							<EV_COLORIZABLE />
@@ -677,7 +871,7 @@
 								</EV_BOX>
 							<EV_PIXMAPABLE />
 							<EV_CONTAINER />
-							<item type="EV_FRAME"><Internal_properties ><id >51</id>
+							<item type="EV_FRAME"><Internal_properties ><id >65</id>
 									<Expanded >1</Expanded>
 									</Internal_properties>
 								<EV_COLORIZABLE />
@@ -689,7 +883,7 @@
 								<EV_TEXT_ALIGNABLE />
 								<EV_PIXMAPABLE />
 								<EV_CONTAINER />
-								<item type="EV_VERTICAL_BOX"><Internal_properties ><id >52</id>
+								<item type="EV_VERTICAL_BOX"><Internal_properties ><id >66</id>
 										<Expanded >1</Expanded>
 										</Internal_properties>
 									<EV_COLORIZABLE />
@@ -699,7 +893,7 @@
 										</EV_BOX>
 									<EV_PIXMAPABLE />
 									<EV_CONTAINER />
-									<item type="EV_CHECK_BUTTON"><Internal_properties ><id >53</id>
+									<item type="EV_CHECK_BUTTON"><Internal_properties ><id >67</id>
 											<name >local_check_button</name>
 											<Expanded >0</Expanded>
 											</Internal_properties>
@@ -714,7 +908,7 @@
 										<EV_TEXT_ALIGNABLE />
 										<EV_PIXMAPABLE />
 										</item>
-									<item type="EV_CHECK_BUTTON"><Internal_properties ><id >54</id>
+									<item type="EV_CHECK_BUTTON"><Internal_properties ><id >68</id>
 											<name >attributes_local_check_button</name>
 											<Expanded >0</Expanded>
 											</Internal_properties>
@@ -729,7 +923,7 @@
 										<EV_TEXT_ALIGNABLE />
 										<EV_PIXMAPABLE />
 										</item>
-									<item type="EV_CHECK_BUTTON"><Internal_properties ><id >55</id>
+									<item type="EV_CHECK_BUTTON"><Internal_properties ><id >69</id>
 											<name >debugging_check_button</name>
 											<Expanded >0</Expanded>
 											</Internal_properties>
@@ -744,7 +938,7 @@
 										<EV_TEXT_ALIGNABLE />
 										<EV_PIXMAPABLE />
 										</item>
-									<item type="EV_CHECK_BUTTON"><Internal_properties ><id >56</id>
+									<item type="EV_CHECK_BUTTON"><Internal_properties ><id >70</id>
 											<name >client_check_button</name>
 											<Expanded >0</Expanded>
 											</Internal_properties>
@@ -759,7 +953,7 @@
 										<EV_TEXT_ALIGNABLE />
 										<EV_PIXMAPABLE />
 										</item>
-									<item type="EV_CHECK_BUTTON"><Internal_properties ><id >57</id>
+									<item type="EV_CHECK_BUTTON"><Internal_properties ><id >71</id>
 											<name >load_constants_check_button</name>
 											<Expanded >0</Expanded>
 											</Internal_properties>
@@ -780,7 +974,7 @@
 						</item>
 					</item>
 				</item>
-			<item type="EV_VERTICAL_BOX"><Internal_properties ><id >58</id>
+			<item type="EV_VERTICAL_BOX"><Internal_properties ><id >72</id>
 					<Expanded >1</Expanded>
 					</Internal_properties>
 				<EV_COLORIZABLE />
@@ -792,7 +986,7 @@
 					</EV_BOX>
 				<EV_PIXMAPABLE />
 				<EV_CONTAINER />
-				<item type="EV_BUTTON"><Internal_properties ><id >59</id>
+				<item type="EV_BUTTON"><Internal_properties ><id >73</id>
 						<name >ok_button</name>
 						<Expanded >0</Expanded>
 						</Internal_properties>
@@ -811,7 +1005,7 @@
 					<Events ><Event >select_actions EV_BUTTON_ACTION_SEQUENCES ok_pressed</Event>
 						</Events>
 					</item>
-				<item type="EV_BUTTON"><Internal_properties ><id >60</id>
+				<item type="EV_BUTTON"><Internal_properties ><id >74</id>
 						<name >cancel_button</name>
 						<Expanded >0</Expanded>
 						</Internal_properties>
@@ -830,7 +1024,7 @@
 					<Events ><Event >select_actions EV_BUTTON_ACTION_SEQUENCES cancel_pressed</Event>
 						</Events>
 					</item>
-				<item type="EV_CELL"><Internal_properties ><id >61</id>
+				<item type="EV_CELL"><Internal_properties ><id >75</id>
 						<Expanded >0</Expanded>
 						</Internal_properties>
 					<EV_COLORIZABLE />
@@ -845,18 +1039,19 @@
 	</item>
 <item type="Directory"><Internal_properties ><name >pixmap_setting_dialog</name>
 		</Internal_properties>
-	<item type="EV_DIALOG"><Internal_properties ><id >62</id>
+	<item type="EV_DIALOG"><Internal_properties ><id >76</id>
 			<name >gb_pixmap_settings_dialog</name>
 			<Expanded >1</Expanded>
 			</Internal_properties>
 		<EV_COLORIZABLE />
 		<EV_SENSITIVE />
 		<EV_WIDGET />
-		<EV_WINDOW ><Title ><![CDATA[Display window]]></Title>
+		<EV_WINDOW ><Title ><Constant >pixmap_settings_dialog_title</Constant>
+				</Title>
 			</EV_WINDOW>
 		<EV_PIXMAPABLE />
 		<EV_CONTAINER />
-		<item type="EV_HORIZONTAL_BOX"><Internal_properties ><id >63</id>
+		<item type="EV_HORIZONTAL_BOX"><Internal_properties ><id >77</id>
 				<Expanded >1</Expanded>
 				</Internal_properties>
 			<EV_COLORIZABLE />
@@ -868,7 +1063,7 @@
 				</EV_BOX>
 			<EV_PIXMAPABLE />
 			<EV_CONTAINER />
-			<item type="EV_VERTICAL_BOX"><Internal_properties ><id >64</id>
+			<item type="EV_VERTICAL_BOX"><Internal_properties ><id >78</id>
 					<Expanded >1</Expanded>
 					</Internal_properties>
 				<EV_COLORIZABLE />
@@ -879,7 +1074,7 @@
 					</EV_BOX>
 				<EV_PIXMAPABLE />
 				<EV_CONTAINER />
-				<item type="EV_HORIZONTAL_BOX"><Internal_properties ><id >65</id>
+				<item type="EV_HORIZONTAL_BOX"><Internal_properties ><id >79</id>
 						<Expanded >1</Expanded>
 						</Internal_properties>
 					<EV_COLORIZABLE />
@@ -889,7 +1084,7 @@
 						</EV_BOX>
 					<EV_PIXMAPABLE />
 					<EV_CONTAINER />
-					<item type="EV_VERTICAL_BOX"><Internal_properties ><id >66</id>
+					<item type="EV_VERTICAL_BOX"><Internal_properties ><id >80</id>
 							<Expanded >1</Expanded>
 							</Internal_properties>
 						<EV_COLORIZABLE />
@@ -900,7 +1095,7 @@
 							</EV_BOX>
 						<EV_PIXMAPABLE />
 						<EV_CONTAINER />
-						<item type="EV_HORIZONTAL_BOX"><Internal_properties ><id >67</id>
+						<item type="EV_HORIZONTAL_BOX"><Internal_properties ><id >81</id>
 								<Expanded >1</Expanded>
 								</Internal_properties>
 							<EV_COLORIZABLE />
@@ -910,7 +1105,7 @@
 								</EV_BOX>
 							<EV_PIXMAPABLE />
 							<EV_CONTAINER />
-							<item type="EV_BUTTON"><Internal_properties ><id >68</id>
+							<item type="EV_BUTTON"><Internal_properties ><id >82</id>
 									<name >select_pixmap_button</name>
 									<Expanded >0</Expanded>
 									</Internal_properties>
@@ -927,7 +1122,7 @@
 									</Events>
 								</item>
 							</item>
-						<item type="EV_HORIZONTAL_BOX"><Internal_properties ><id >69</id>
+						<item type="EV_HORIZONTAL_BOX"><Internal_properties ><id >83</id>
 								<Expanded >1</Expanded>
 								</Internal_properties>
 							<EV_COLORIZABLE />
@@ -937,7 +1132,7 @@
 								</EV_BOX>
 							<EV_PIXMAPABLE />
 							<EV_CONTAINER />
-							<item type="EV_BUTTON"><Internal_properties ><id >70</id>
+							<item type="EV_BUTTON"><Internal_properties ><id >84</id>
 									<name >select_directory_button</name>
 									<Expanded >0</Expanded>
 									</Internal_properties>
@@ -956,7 +1151,7 @@
 							</item>
 						</item>
 					</item>
-				<item type="EV_HORIZONTAL_BOX"><Internal_properties ><id >71</id>
+				<item type="EV_HORIZONTAL_BOX"><Internal_properties ><id >85</id>
 						<Expanded >1</Expanded>
 						</Internal_properties>
 					<EV_COLORIZABLE />
@@ -966,7 +1161,7 @@
 						</EV_BOX>
 					<EV_PIXMAPABLE />
 					<EV_CONTAINER />
-					<item type="EV_FRAME"><Internal_properties ><id >72</id>
+					<item type="EV_FRAME"><Internal_properties ><id >86</id>
 							<Expanded >1</Expanded>
 							</Internal_properties>
 						<EV_COLORIZABLE />
@@ -980,7 +1175,7 @@
 						<EV_TEXT_ALIGNABLE />
 						<EV_PIXMAPABLE />
 						<EV_CONTAINER />
-						<item type="EV_VERTICAL_BOX"><Internal_properties ><id >73</id>
+						<item type="EV_VERTICAL_BOX"><Internal_properties ><id >87</id>
 								<Expanded >1</Expanded>
 								</Internal_properties>
 							<EV_COLORIZABLE />
@@ -990,7 +1185,7 @@
 								</EV_BOX>
 							<EV_PIXMAPABLE />
 							<EV_CONTAINER />
-							<item type="EV_CHECKABLE_LIST"><Internal_properties ><id >74</id>
+							<item type="EV_CHECKABLE_LIST"><Internal_properties ><id >88</id>
 									<name >pixmap_list</name>
 									<Expanded >0</Expanded>
 									</Internal_properties>
@@ -1002,7 +1197,7 @@
 									<Event >uncheck_actions EV_CHECKABLE_LIST_ACTION_SEQUENCES item_unchecked</Event>
 									</Events>
 								</item>
-							<item type="EV_HORIZONTAL_BOX"><Internal_properties ><id >75</id>
+							<item type="EV_HORIZONTAL_BOX"><Internal_properties ><id >89</id>
 									<name >check_buttons_box</name>
 									<Expanded >1</Expanded>
 									</Internal_properties>
@@ -1016,7 +1211,7 @@
 									</EV_BOX>
 								<EV_PIXMAPABLE />
 								<EV_CONTAINER />
-								<item type="EV_BUTTON"><Internal_properties ><id >76</id>
+								<item type="EV_BUTTON"><Internal_properties ><id >90</id>
 										<name >check_all_button</name>
 										<Expanded >0</Expanded>
 										</Internal_properties>
@@ -1033,7 +1228,7 @@
 									<Events ><Event >select_actions EV_BUTTON_ACTION_SEQUENCES check_all_button_selected</Event>
 										</Events>
 									</item>
-								<item type="EV_BUTTON"><Internal_properties ><id >77</id>
+								<item type="EV_BUTTON"><Internal_properties ><id >91</id>
 										<name >uncheck_all_button</name>
 										<Expanded >0</Expanded>
 										</Internal_properties>
@@ -1054,7 +1249,7 @@
 							</item>
 						</item>
 					</item>
-				<item type="EV_HORIZONTAL_BOX"><Internal_properties ><id >78</id>
+				<item type="EV_HORIZONTAL_BOX"><Internal_properties ><id >92</id>
 						<Expanded >1</Expanded>
 						</Internal_properties>
 					<EV_COLORIZABLE />
@@ -1064,7 +1259,7 @@
 						</EV_BOX>
 					<EV_PIXMAPABLE />
 					<EV_CONTAINER />
-					<item type="EV_LABEL"><Internal_properties ><id >79</id>
+					<item type="EV_LABEL"><Internal_properties ><id >93</id>
 							<name >pixmap_location_label</name>
 							<Expanded >0</Expanded>
 							</Internal_properties>
@@ -1079,7 +1274,7 @@
 						<EV_TEXT_ALIGNABLE ><Text_alignment >Left</Text_alignment>
 							</EV_TEXT_ALIGNABLE>
 						</item>
-					<item type="EV_LABEL"><Internal_properties ><id >80</id>
+					<item type="EV_LABEL"><Internal_properties ><id >94</id>
 							<name >pixmap_path_label</name>
 							<Expanded >0</Expanded>
 							</Internal_properties>
@@ -1092,7 +1287,7 @@
 						<EV_TEXT_ALIGNABLE />
 						</item>
 					</item>
-				<item type="EV_FRAME"><Internal_properties ><id >81</id>
+				<item type="EV_FRAME"><Internal_properties ><id >95</id>
 						<name >built_from_frame</name>
 						<Expanded >1</Expanded>
 						</Internal_properties>
@@ -1107,7 +1302,7 @@
 					<EV_TEXT_ALIGNABLE />
 					<EV_PIXMAPABLE />
 					<EV_CONTAINER />
-					<item type="EV_VERTICAL_BOX"><Internal_properties ><id >82</id>
+					<item type="EV_VERTICAL_BOX"><Internal_properties ><id >96</id>
 							<Expanded >1</Expanded>
 							</Internal_properties>
 						<EV_COLORIZABLE />
@@ -1118,7 +1313,7 @@
 							</EV_BOX>
 						<EV_PIXMAPABLE />
 						<EV_CONTAINER />
-						<item type="EV_HORIZONTAL_BOX"><Internal_properties ><id >83</id>
+						<item type="EV_HORIZONTAL_BOX"><Internal_properties ><id >97</id>
 								<Expanded >1</Expanded>
 								</Internal_properties>
 							<EV_COLORIZABLE />
@@ -1128,7 +1323,7 @@
 								</EV_BOX>
 							<EV_PIXMAPABLE />
 							<EV_CONTAINER />
-							<item type="EV_VERTICAL_BOX"><Internal_properties ><id >84</id>
+							<item type="EV_VERTICAL_BOX"><Internal_properties ><id >98</id>
 									<Expanded >1</Expanded>
 									</Internal_properties>
 								<EV_COLORIZABLE />
@@ -1137,9 +1332,9 @@
 								<EV_BOX ><Is_item_expanded >0</Is_item_expanded>
 									</EV_BOX>
 								<EV_PIXMAPABLE />
-								<EV_CONTAINER ><merged_radio_button_groups >89</merged_radio_button_groups>
+								<EV_CONTAINER ><merged_radio_button_groups >103</merged_radio_button_groups>
 									</EV_CONTAINER>
-								<item type="EV_RADIO_BUTTON"><Internal_properties ><id >85</id>
+								<item type="EV_RADIO_BUTTON"><Internal_properties ><id >99</id>
 										<name >absolute_constant_radio_button</name>
 										<Expanded >0</Expanded>
 										</Internal_properties>
@@ -1156,7 +1351,7 @@
 										</Events>
 									</item>
 								</item>
-							<item type="EV_HORIZONTAL_BOX"><Internal_properties ><id >86</id>
+							<item type="EV_HORIZONTAL_BOX"><Internal_properties ><id >100</id>
 									<name >absolute_constant_box1</name>
 									<Expanded >1</Expanded>
 									</Internal_properties>
@@ -1167,7 +1362,7 @@
 									</EV_BOX>
 								<EV_PIXMAPABLE />
 								<EV_CONTAINER />
-								<item type="EV_TEXT_FIELD"><Internal_properties ><id >87</id>
+								<item type="EV_TEXT_FIELD"><Internal_properties ><id >101</id>
 										<name >absolute_text</name>
 										<Expanded >0</Expanded>
 										</Internal_properties>
@@ -1184,7 +1379,7 @@
 									</item>
 								</item>
 							</item>
-						<item type="EV_HORIZONTAL_SEPARATOR"><Internal_properties ><id >88</id>
+						<item type="EV_HORIZONTAL_SEPARATOR"><Internal_properties ><id >102</id>
 								<Expanded >0</Expanded>
 								</Internal_properties>
 							<EV_COLORIZABLE />
@@ -1192,7 +1387,7 @@
 							<EV_TOOLTIPABLE />
 							<EV_WIDGET />
 							</item>
-						<item type="EV_HORIZONTAL_BOX"><Internal_properties ><id >89</id>
+						<item type="EV_HORIZONTAL_BOX"><Internal_properties ><id >103</id>
 								<Expanded >1</Expanded>
 								</Internal_properties>
 							<EV_COLORIZABLE />
@@ -1201,9 +1396,9 @@
 							<EV_BOX ><Is_item_expanded >01</Is_item_expanded>
 								</EV_BOX>
 							<EV_PIXMAPABLE />
-							<EV_CONTAINER ><merged_radio_button_groups >84</merged_radio_button_groups>
+							<EV_CONTAINER ><merged_radio_button_groups >98</merged_radio_button_groups>
 								</EV_CONTAINER>
-							<item type="EV_RADIO_BUTTON"><Internal_properties ><id >90</id>
+							<item type="EV_RADIO_BUTTON"><Internal_properties ><id >104</id>
 									<name >relative_constant_radio_button</name>
 									<Expanded >0</Expanded>
 									</Internal_properties>
@@ -1218,7 +1413,7 @@
 								<Events ><Event >select_actions EV_BUTTON_ACTION_SEQUENCES relative_radio_button_selected</Event>
 									</Events>
 								</item>
-							<item type="EV_VERTICAL_BOX"><Internal_properties ><id >91</id>
+							<item type="EV_VERTICAL_BOX"><Internal_properties ><id >105</id>
 									<name >relative_constant_box</name>
 									<Expanded >1</Expanded>
 									</Internal_properties>
@@ -1230,7 +1425,7 @@
 									</EV_BOX>
 								<EV_PIXMAPABLE />
 								<EV_CONTAINER />
-								<item type="EV_HORIZONTAL_BOX"><Internal_properties ><id >92</id>
+								<item type="EV_HORIZONTAL_BOX"><Internal_properties ><id >106</id>
 										<Expanded >1</Expanded>
 										</Internal_properties>
 									<EV_COLORIZABLE />
@@ -1240,7 +1435,7 @@
 										</EV_BOX>
 									<EV_PIXMAPABLE />
 									<EV_CONTAINER />
-									<item type="EV_LABEL"><Internal_properties ><id >93</id>
+									<item type="EV_LABEL"><Internal_properties ><id >107</id>
 											<Expanded >0</Expanded>
 											</Internal_properties>
 										<EV_COLORIZABLE />
@@ -1252,7 +1447,7 @@
 										<EV_WIDGET />
 										<EV_TEXT_ALIGNABLE />
 										</item>
-									<item type="EV_TEXT_FIELD"><Internal_properties ><id >94</id>
+									<item type="EV_TEXT_FIELD"><Internal_properties ><id >108</id>
 											<name >relative_text</name>
 											<Expanded >0</Expanded>
 											</Internal_properties>
@@ -1268,7 +1463,7 @@
 											</Events>
 										</item>
 									</item>
-								<item type="EV_HORIZONTAL_BOX"><Internal_properties ><id >95</id>
+								<item type="EV_HORIZONTAL_BOX"><Internal_properties ><id >109</id>
 										<Expanded >1</Expanded>
 										</Internal_properties>
 									<EV_COLORIZABLE />
@@ -1279,7 +1474,7 @@
 										</EV_BOX>
 									<EV_PIXMAPABLE />
 									<EV_CONTAINER />
-									<item type="EV_LABEL"><Internal_properties ><id >96</id>
+									<item type="EV_LABEL"><Internal_properties ><id >110</id>
 											<Expanded >0</Expanded>
 											</Internal_properties>
 										<EV_COLORIZABLE />
@@ -1291,7 +1486,7 @@
 										<EV_WIDGET />
 										<EV_TEXT_ALIGNABLE />
 										</item>
-									<item type="EV_COMBO_BOX"><Internal_properties ><id >97</id>
+									<item type="EV_COMBO_BOX"><Internal_properties ><id >111</id>
 											<name >relative_directory_combo</name>
 											<Expanded >0</Expanded>
 											</Internal_properties>
@@ -1311,7 +1506,7 @@
 						</item>
 					</item>
 				</item>
-			<item type="EV_VERTICAL_BOX"><Internal_properties ><id >98</id>
+			<item type="EV_VERTICAL_BOX"><Internal_properties ><id >112</id>
 					<Expanded >1</Expanded>
 					</Internal_properties>
 				<EV_COLORIZABLE />
@@ -1322,7 +1517,7 @@
 					</EV_BOX>
 				<EV_PIXMAPABLE />
 				<EV_CONTAINER />
-				<item type="EV_BUTTON"><Internal_properties ><id >99</id>
+				<item type="EV_BUTTON"><Internal_properties ><id >113</id>
 						<name >ok_button</name>
 						<Expanded >0</Expanded>
 						</Internal_properties>
@@ -1342,7 +1537,7 @@
 					<Events ><Event >select_actions EV_BUTTON_ACTION_SEQUENCES ok_button_pressed</Event>
 						</Events>
 					</item>
-				<item type="EV_BUTTON"><Internal_properties ><id >100</id>
+				<item type="EV_BUTTON"><Internal_properties ><id >114</id>
 						<name >cancel_button</name>
 						<Expanded >0</Expanded>
 						</Internal_properties>
@@ -1361,7 +1556,7 @@
 					<Events ><Event >select_actions EV_BUTTON_ACTION_SEQUENCES cancel_button_pressed</Event>
 						</Events>
 					</item>
-				<item type="EV_CELL"><Internal_properties ><id >101</id>
+				<item type="EV_CELL"><Internal_properties ><id >115</id>
 						<Expanded >0</Expanded>
 						</Internal_properties>
 					<EV_COLORIZABLE />
@@ -1376,7 +1571,7 @@
 	</item>
 <item type="Directory"><Internal_properties ><name >no_directory_specified_warning_dialog</name>
 		</Internal_properties>
-	<item type="EV_DIALOG"><Internal_properties ><id >102</id>
+	<item type="EV_DIALOG"><Internal_properties ><id >116</id>
 			<name >no_directory_specified_warning_dialog</name>
 			<Expanded >1</Expanded>
 			<Is_root_window >True</Is_root_window>
@@ -1384,11 +1579,12 @@
 		<EV_COLORIZABLE />
 		<EV_SENSITIVE />
 		<EV_WIDGET />
-		<EV_WINDOW ><Title ><![CDATA[No matching DIRECTORY constant]]></Title>
+		<EV_WINDOW ><Title ><Constant >no_directory_dialog</Constant>
+				</Title>
 			</EV_WINDOW>
 		<EV_PIXMAPABLE />
 		<EV_CONTAINER />
-		<item type="EV_VERTICAL_BOX"><Internal_properties ><id >103</id>
+		<item type="EV_VERTICAL_BOX"><Internal_properties ><id >117</id>
 				<Expanded >1</Expanded>
 				</Internal_properties>
 			<EV_COLORIZABLE />
@@ -1399,7 +1595,7 @@
 				</EV_BOX>
 			<EV_PIXMAPABLE />
 			<EV_CONTAINER />
-			<item type="EV_HORIZONTAL_BOX"><Internal_properties ><id >104</id>
+			<item type="EV_HORIZONTAL_BOX"><Internal_properties ><id >118</id>
 					<Expanded >1</Expanded>
 					</Internal_properties>
 				<EV_COLORIZABLE />
@@ -1411,7 +1607,7 @@
 					</EV_BOX>
 				<EV_PIXMAPABLE />
 				<EV_CONTAINER />
-				<item type="EV_VERTICAL_BOX"><Internal_properties ><id >105</id>
+				<item type="EV_VERTICAL_BOX"><Internal_properties ><id >119</id>
 						<Expanded >1</Expanded>
 						</Internal_properties>
 					<EV_COLORIZABLE />
@@ -1421,7 +1617,7 @@
 						</EV_BOX>
 					<EV_PIXMAPABLE />
 					<EV_CONTAINER />
-					<item type="EV_CELL"><Internal_properties ><id >106</id>
+					<item type="EV_CELL"><Internal_properties ><id >120</id>
 							<Expanded >0</Expanded>
 							</Internal_properties>
 						<EV_COLORIZABLE />
@@ -1430,7 +1626,7 @@
 						<EV_PIXMAPABLE />
 						<EV_CONTAINER />
 						</item>
-					<item type="EV_CELL"><Internal_properties ><id >107</id>
+					<item type="EV_CELL"><Internal_properties ><id >121</id>
 							<name >pixmap_cell</name>
 							<Expanded >0</Expanded>
 							</Internal_properties>
@@ -1440,7 +1636,7 @@
 						<EV_PIXMAPABLE />
 						<EV_CONTAINER />
 						</item>
-					<item type="EV_CELL"><Internal_properties ><id >108</id>
+					<item type="EV_CELL"><Internal_properties ><id >122</id>
 							<Expanded >0</Expanded>
 							</Internal_properties>
 						<EV_COLORIZABLE />
@@ -1450,7 +1646,7 @@
 						<EV_CONTAINER />
 						</item>
 					</item>
-				<item type="EV_LABEL"><Internal_properties ><id >109</id>
+				<item type="EV_LABEL"><Internal_properties ><id >123</id>
 						<Expanded >0</Expanded>
 						</Internal_properties>
 					<EV_COLORIZABLE />
@@ -1466,7 +1662,7 @@ Please enter the name of a DIRECTORYconstant which will be used.</Text>
 						</EV_TEXT_ALIGNABLE>
 					</item>
 				</item>
-			<item type="EV_HORIZONTAL_BOX"><Internal_properties ><id >110</id>
+			<item type="EV_HORIZONTAL_BOX"><Internal_properties ><id >124</id>
 					<Expanded >1</Expanded>
 					</Internal_properties>
 				<EV_COLORIZABLE />
@@ -1478,7 +1674,7 @@ Please enter the name of a DIRECTORYconstant which will be used.</Text>
 					</EV_BOX>
 				<EV_PIXMAPABLE />
 				<EV_CONTAINER />
-				<item type="EV_LABEL"><Internal_properties ><id >111</id>
+				<item type="EV_LABEL"><Internal_properties ><id >125</id>
 						<Expanded >0</Expanded>
 						</Internal_properties>
 					<EV_COLORIZABLE />
@@ -1490,7 +1686,7 @@ Please enter the name of a DIRECTORYconstant which will be used.</Text>
 					<EV_WIDGET />
 					<EV_TEXT_ALIGNABLE />
 					</item>
-				<item type="EV_TEXT_FIELD"><Internal_properties ><id >112</id>
+				<item type="EV_TEXT_FIELD"><Internal_properties ><id >126</id>
 						<name >directory_name_field</name>
 						<Expanded >0</Expanded>
 						</Internal_properties>
@@ -1505,7 +1701,7 @@ Please enter the name of a DIRECTORYconstant which will be used.</Text>
 						</Events>
 					</item>
 				</item>
-			<item type="EV_CELL"><Internal_properties ><id >113</id>
+			<item type="EV_CELL"><Internal_properties ><id >127</id>
 					<Expanded >0</Expanded>
 					</Internal_properties>
 				<EV_COLORIZABLE />
@@ -1514,7 +1710,7 @@ Please enter the name of a DIRECTORYconstant which will be used.</Text>
 				<EV_PIXMAPABLE />
 				<EV_CONTAINER />
 				</item>
-			<item type="EV_HORIZONTAL_BOX"><Internal_properties ><id >114</id>
+			<item type="EV_HORIZONTAL_BOX"><Internal_properties ><id >128</id>
 					<Expanded >1</Expanded>
 					</Internal_properties>
 				<EV_COLORIZABLE />
@@ -1526,7 +1722,7 @@ Please enter the name of a DIRECTORYconstant which will be used.</Text>
 					</EV_BOX>
 				<EV_PIXMAPABLE />
 				<EV_CONTAINER />
-				<item type="EV_CELL"><Internal_properties ><id >115</id>
+				<item type="EV_CELL"><Internal_properties ><id >129</id>
 						<Expanded >1</Expanded>
 						</Internal_properties>
 					<EV_COLORIZABLE />
@@ -1535,7 +1731,7 @@ Please enter the name of a DIRECTORYconstant which will be used.</Text>
 					<EV_PIXMAPABLE />
 					<EV_CONTAINER />
 					</item>
-				<item type="EV_BUTTON"><Internal_properties ><id >116</id>
+				<item type="EV_BUTTON"><Internal_properties ><id >130</id>
 						<name >ok_button</name>
 						<Expanded >0</Expanded>
 						</Internal_properties>
@@ -1554,7 +1750,7 @@ Please enter the name of a DIRECTORYconstant which will be used.</Text>
 					<Events ><Event >select_actions EV_BUTTON_ACTION_SEQUENCES ok_button_pressed</Event>
 						</Events>
 					</item>
-				<item type="EV_BUTTON"><Internal_properties ><id >117</id>
+				<item type="EV_BUTTON"><Internal_properties ><id >131</id>
 						<name >cancel_button</name>
 						<Expanded >0</Expanded>
 						</Internal_properties>
@@ -1579,20 +1775,21 @@ Please enter the name of a DIRECTORYconstant which will be used.</Text>
 	</item>
 <item type="Directory"><Internal_properties ><name >tip_of_the_day_dialog</name>
 		</Internal_properties>
-	<item type="EV_DIALOG"><Internal_properties ><id >118</id>
+	<item type="EV_DIALOG"><Internal_properties ><id >132</id>
 			<name >gb_tip_of_the_day_dialog</name>
 			<Expanded >1</Expanded>
 			</Internal_properties>
 		<EV_COLORIZABLE />
 		<EV_SENSITIVE />
 		<EV_WIDGET />
-		<EV_WINDOW ><Title ><![CDATA[Tip of the Day]]></Title>
+		<EV_WINDOW ><Title ><Constant >tip_of_day_dialog_title</Constant>
+				</Title>
 			</EV_WINDOW>
 		<EV_PIXMAPABLE />
 		<EV_CONTAINER />
 		<Events ><Event >show_actions EV_WINDOW_ACTION_SEQUENCES window_shown</Event>
 			</Events>
-		<item type="EV_VERTICAL_BOX"><Internal_properties ><id >119</id>
+		<item type="EV_VERTICAL_BOX"><Internal_properties ><id >133</id>
 				<Expanded >1</Expanded>
 				</Internal_properties>
 			<EV_COLORIZABLE />
@@ -1606,7 +1803,7 @@ Please enter the name of a DIRECTORYconstant which will be used.</Text>
 				</EV_BOX>
 			<EV_PIXMAPABLE />
 			<EV_CONTAINER />
-			<item type="EV_HORIZONTAL_BOX"><Internal_properties ><id >120</id>
+			<item type="EV_HORIZONTAL_BOX"><Internal_properties ><id >134</id>
 					<Expanded >1</Expanded>
 					</Internal_properties>
 				<EV_COLORIZABLE />
@@ -1616,7 +1813,7 @@ Please enter the name of a DIRECTORYconstant which will be used.</Text>
 					</EV_BOX>
 				<EV_PIXMAPABLE />
 				<EV_CONTAINER />
-				<item type="EV_VERTICAL_BOX"><Internal_properties ><id >121</id>
+				<item type="EV_VERTICAL_BOX"><Internal_properties ><id >135</id>
 						<Expanded >1</Expanded>
 						</Internal_properties>
 					<EV_COLORIZABLE />
@@ -1626,7 +1823,7 @@ Please enter the name of a DIRECTORYconstant which will be used.</Text>
 						</EV_BOX>
 					<EV_PIXMAPABLE />
 					<EV_CONTAINER />
-					<item type="EV_FRAME"><Internal_properties ><id >122</id>
+					<item type="EV_FRAME"><Internal_properties ><id >136</id>
 							<Expanded >1</Expanded>
 							</Internal_properties>
 						<EV_COLORIZABLE ><Background_color >255255255</Background_color>
@@ -1639,7 +1836,7 @@ Please enter the name of a DIRECTORYconstant which will be used.</Text>
 						<EV_TEXT_ALIGNABLE />
 						<EV_PIXMAPABLE />
 						<EV_CONTAINER />
-						<item type="EV_VERTICAL_BOX"><Internal_properties ><id >123</id>
+						<item type="EV_VERTICAL_BOX"><Internal_properties ><id >137</id>
 								<Expanded >1</Expanded>
 								</Internal_properties>
 							<EV_COLORIZABLE ><Background_color >255255255</Background_color>
@@ -1651,7 +1848,7 @@ Please enter the name of a DIRECTORYconstant which will be used.</Text>
 								</EV_BOX>
 							<EV_PIXMAPABLE />
 							<EV_CONTAINER />
-							<item type="EV_HORIZONTAL_BOX"><Internal_properties ><id >124</id>
+							<item type="EV_HORIZONTAL_BOX"><Internal_properties ><id >138</id>
 									<Expanded >1</Expanded>
 									</Internal_properties>
 								<EV_COLORIZABLE ><Background_color >255255255</Background_color>
@@ -1662,7 +1859,7 @@ Please enter the name of a DIRECTORYconstant which will be used.</Text>
 									</EV_BOX>
 								<EV_PIXMAPABLE />
 								<EV_CONTAINER />
-								<item type="EV_PIXMAP"><Internal_properties ><id >137</id>
+								<item type="EV_PIXMAP"><Internal_properties ><id >139</id>
 										<Expanded >0</Expanded>
 										</Internal_properties>
 									<EV_COLORIZABLE />
@@ -1676,7 +1873,7 @@ Please enter the name of a DIRECTORYconstant which will be used.</Text>
 											</Pixmap_path>
 										</EV_PIXMAP>
 									</item>
-								<item type="EV_CELL"><Internal_properties ><id >125</id>
+								<item type="EV_CELL"><Internal_properties ><id >140</id>
 										<Expanded >0</Expanded>
 										</Internal_properties>
 									<EV_COLORIZABLE ><Background_color >255255255</Background_color>
@@ -1687,7 +1884,7 @@ Please enter the name of a DIRECTORYconstant which will be used.</Text>
 									<EV_PIXMAPABLE />
 									<EV_CONTAINER />
 									</item>
-								<item type="EV_VERTICAL_BOX"><Internal_properties ><id >138</id>
+								<item type="EV_VERTICAL_BOX"><Internal_properties ><id >141</id>
 										<Expanded >1</Expanded>
 										</Internal_properties>
 									<EV_COLORIZABLE ><Background_color >255255255</Background_color>
@@ -1698,7 +1895,7 @@ Please enter the name of a DIRECTORYconstant which will be used.</Text>
 										</EV_BOX>
 									<EV_PIXMAPABLE />
 									<EV_CONTAINER />
-									<item type="EV_CELL"><Internal_properties ><id >140</id>
+									<item type="EV_CELL"><Internal_properties ><id >142</id>
 											<Expanded >0</Expanded>
 											</Internal_properties>
 										<EV_COLORIZABLE ><Background_color >255255255</Background_color>
@@ -1708,7 +1905,7 @@ Please enter the name of a DIRECTORYconstant which will be used.</Text>
 										<EV_PIXMAPABLE />
 										<EV_CONTAINER />
 										</item>
-									<item type="EV_LABEL"><Internal_properties ><id >126</id>
+									<item type="EV_LABEL"><Internal_properties ><id >143</id>
 											<Expanded >0</Expanded>
 											</Internal_properties>
 										<EV_COLORIZABLE ><Background_color >255255255</Background_color>
@@ -1727,7 +1924,7 @@ Please enter the name of a DIRECTORYconstant which will be used.</Text>
 										<EV_TEXT_ALIGNABLE ><Text_alignment >Left</Text_alignment>
 											</EV_TEXT_ALIGNABLE>
 										</item>
-									<item type="EV_CELL"><Internal_properties ><id >141</id>
+									<item type="EV_CELL"><Internal_properties ><id >144</id>
 											<Expanded >0</Expanded>
 											</Internal_properties>
 										<EV_COLORIZABLE ><Background_color >255255255</Background_color>
@@ -1739,7 +1936,7 @@ Please enter the name of a DIRECTORYconstant which will be used.</Text>
 										</item>
 									</item>
 								</item>
-							<item type="EV_HORIZONTAL_BOX"><Internal_properties ><id >127</id>
+							<item type="EV_HORIZONTAL_BOX"><Internal_properties ><id >145</id>
 									<Expanded >1</Expanded>
 									</Internal_properties>
 								<EV_COLORIZABLE ><Background_color >255255255</Background_color>
@@ -1750,7 +1947,7 @@ Please enter the name of a DIRECTORYconstant which will be used.</Text>
 									</EV_BOX>
 								<EV_PIXMAPABLE />
 								<EV_CONTAINER />
-								<item type="EV_CELL"><Internal_properties ><id >128</id>
+								<item type="EV_CELL"><Internal_properties ><id >146</id>
 										<Expanded >0</Expanded>
 										</Internal_properties>
 									<EV_COLORIZABLE ><Background_color >255255255</Background_color>
@@ -1761,7 +1958,7 @@ Please enter the name of a DIRECTORYconstant which will be used.</Text>
 									<EV_PIXMAPABLE />
 									<EV_CONTAINER />
 									</item>
-								<item type="EV_LABEL"><Internal_properties ><id >129</id>
+								<item type="EV_LABEL"><Internal_properties ><id >147</id>
 										<name >tip_label</name>
 										<Expanded >0</Expanded>
 										</Internal_properties>
@@ -1780,7 +1977,7 @@ Please enter the name of a DIRECTORYconstant which will be used.</Text>
 									<EV_TEXT_ALIGNABLE ><Text_alignment >Left</Text_alignment>
 										</EV_TEXT_ALIGNABLE>
 									</item>
-								<item type="EV_CELL"><Internal_properties ><id >130</id>
+								<item type="EV_CELL"><Internal_properties ><id >148</id>
 										<Expanded >0</Expanded>
 										</Internal_properties>
 									<EV_COLORIZABLE ><Background_color >255255255</Background_color>
@@ -1792,7 +1989,7 @@ Please enter the name of a DIRECTORYconstant which will be used.</Text>
 									<EV_CONTAINER />
 									</item>
 								</item>
-							<item type="EV_CELL"><Internal_properties ><id >131</id>
+							<item type="EV_CELL"><Internal_properties ><id >149</id>
 									<Expanded >0</Expanded>
 									</Internal_properties>
 								<EV_COLORIZABLE ><Background_color >255255255</Background_color>
@@ -1807,7 +2004,7 @@ Please enter the name of a DIRECTORYconstant which will be used.</Text>
 						</item>
 					</item>
 				</item>
-			<item type="EV_HORIZONTAL_BOX"><Internal_properties ><id >132</id>
+			<item type="EV_HORIZONTAL_BOX"><Internal_properties ><id >150</id>
 					<Expanded >1</Expanded>
 					</Internal_properties>
 				<EV_COLORIZABLE />
@@ -1819,7 +2016,7 @@ Please enter the name of a DIRECTORYconstant which will be used.</Text>
 					</EV_BOX>
 				<EV_PIXMAPABLE />
 				<EV_CONTAINER />
-				<item type="EV_CHECK_BUTTON"><Internal_properties ><id >133</id>
+				<item type="EV_CHECK_BUTTON"><Internal_properties ><id >151</id>
 						<name >show_tips_button</name>
 						<Expanded >0</Expanded>
 						</Internal_properties>
@@ -1834,7 +2031,7 @@ Please enter the name of a DIRECTORYconstant which will be used.</Text>
 					<EV_TEXT_ALIGNABLE />
 					<EV_PIXMAPABLE />
 					</item>
-				<item type="EV_CELL"><Internal_properties ><id >134</id>
+				<item type="EV_CELL"><Internal_properties ><id >152</id>
 						<Expanded >0</Expanded>
 						</Internal_properties>
 					<EV_COLORIZABLE />
@@ -1843,7 +2040,7 @@ Please enter the name of a DIRECTORYconstant which will be used.</Text>
 					<EV_PIXMAPABLE />
 					<EV_CONTAINER />
 					</item>
-				<item type="EV_BUTTON"><Internal_properties ><id >135</id>
+				<item type="EV_BUTTON"><Internal_properties ><id >153</id>
 						<name >next_tip_button</name>
 						<Expanded >0</Expanded>
 						</Internal_properties>
@@ -1862,7 +2059,7 @@ Please enter the name of a DIRECTORYconstant which will be used.</Text>
 					<Events ><Event >select_actions EV_BUTTON_ACTION_SEQUENCES next_tip_selected</Event>
 						</Events>
 					</item>
-				<item type="EV_BUTTON"><Internal_properties ><id >136</id>
+				<item type="EV_BUTTON"><Internal_properties ><id >154</id>
 						<name >close_button</name>
 						<Expanded >0</Expanded>
 						</Internal_properties>

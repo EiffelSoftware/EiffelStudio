@@ -80,8 +80,32 @@ inherit
 		undefine
 			copy, is_equal, default_create
 		end
+		
+	GB_SHARED_OBJECT_EDITORS
+		export
+			{NONE} all
+		undefine
+			default_create, copy
+		end
+		
+create
+	default_create,
+	make_in_modify_mode
 
 feature {NONE} -- Initialization
+
+	make_in_modify_mode (a_pixmap_name: STRING) is
+			-- Create `Current' in mode for modification of a pre-existing pixmap.
+		do
+			mode_is_modify := True
+			default_create
+				-- Modify the interface appropriately.
+			select_directory_button.hide
+			absolute_text.set_text (a_pixmap_name)
+			relative_text.set_text (a_pixmap_name)
+			absolute_text.disable_sensitive
+			relative_text.disable_sensitive
+		end
 
 	user_initialization is
 			-- called by `initialize'.
@@ -139,95 +163,171 @@ feature {NONE} -- Implementation
 			warning_dialog: NO_DIRECTORY_SPECIFIED_WARNING_DIALOG
 			cancelled: BOOLEAN
 			added_directory_name: STRING
+			directory_constant: GB_DIRECTORY_CONSTANT
+			add_constant_command: GB_COMMAND_ADD_CONSTANT
+			editors: ARRAYED_LIST [GB_OBJECT_EDITOR]
 		do
 			check
 				item_selected_in_list: pixmap_list.selected_item /= Void
 			end
-			from
-				pixmap_list.start
-			until
-				pixmap_list.off or cancelled
-			loop
-				pixmap_constant ?= pixmap_list.item.data
+			if mode_is_modify then
+				-- A new pixmap must not be added, but the existing one must be modified.
+				pixmap_constant ?= Constants.all_constants.item (absolute_text.text)
 				check
-					data_was_pixmap_constant: pixmap_constant /= Void
+					pixmap_constant_not_void: pixmap_constant /= Void
 				end
-				if pixmap_list.item.is_selected then
-						-- We must update the information regarding the selected
-						-- item, as it will not be up to date.
-					if relative_constant_radio_button.is_selected then
-						if relative_directory_combo.text.is_empty then
-							pixmap_constant.set_attributes (relative_text.text, pixmap_constant.value, file_path, pixmap_constant.filename, pixmap_constant.is_absolute)
-						else
-							pixmap_constant.set_attributes (relative_text.text, pixmap_constant.value, relative_directory_combo.text, pixmap_constant.filename, pixmap_constant.is_absolute)
-						end
+				if relative_constant_radio_button.is_selected then
+					if relative_directory_combo.text.is_empty then
+						pixmap_constant.set_attributes (relative_text.text, pixmap_constant.value, file_path, file_title, False)
 					else
-						pixmap_constant.set_attributes (absolute_text.text, pixmap_constant.value, pixmap_constant.directory, pixmap_constant.filename, pixmap_constant.is_absolute)						
+						pixmap_constant.set_attributes (relative_text.text, pixmap_constant.value, relative_directory_combo.text, file_title, False)
+					end
+				else
+					pixmap_constant.set_attributes (absolute_text.text, pixmap_constant.value, file_path, file_title, True)						
+				end
+				if not pixmap_constant.is_absolute and pixmap_constant.directory.is_equal (file_path) and 
+					Constants.matching_directory_constant_name (file_path) = Void then
+					create warning_dialog
+					warning_dialog.show_modal_to_window (Current)
+					if not warning_dialog.cancelled then
+						added_directory_name := warning_dialog.directory_name
+						create directory_constant.make_with_name_and_value (added_directory_name, file_path)
+						create add_constant_command.make (directory_constant)
+						add_constant_command.execute
+						pixmap_constant.set_attributes (pixmap_constant.name, pixmap_constant.value, added_directory_name, pixmap_constant.filename, pixmap_constant.is_absolute)
+					else
+						cancelled := True
+					end
+				elseif (Constants.matching_directory_constant_name (pixmap_constant.directory.as_lower) = Void) and
+						(Constants.directory_constant_by_name (pixmap_constant.directory.as_lower) = Void) then
+							-- No directory exists matching the specified name, so make it and create the pixmap relative to it.
+					--	add_relative_directory_and_constant (pixmap_constant, pixmap_constant.directory)
+					create directory_constant.make_with_name_and_value (pixmap_constant.directory, file_path)
+					create add_constant_command.make (directory_constant)
+					add_constant_command.execute
+				else
+					if constants.matching_directory_constant_name (pixmap_constant.directory) /= Void and not pixmap_constant.is_absolute then
+							-- A directory matches the name set for the directory of this relative pixmap, so
+							-- create a pixmap relative to this.
+						pixmap_constant.set_attributes (pixmap_constant.name, pixmap_constant.value, constants.matching_directory_constant_name (pixmap_constant.directory), pixmap_constant.filename, pixmap_constant.is_absolute)
+--					else
+--						check
+--							directory_is_constant: constants.directory_constant_by_name (pixmap_constant.directory) /= Void
+--						end
+					end
+--				--	add_relative_constant (pixmap_constant)
+				end
+				if not cancelled then
+					pixmap_constant.update
+					editors := all_editors
+					from
+						editors.start
+					until
+						editors.off
+					loop
+						editors.i_th (editors.index).constant_changed (pixmap_constant)
+						editors.forth
 					end
 				end
-				if pixmap_list.is_item_checked (pixmap_list.item) then
-					if pixmap_constant.is_absolute then
-							constant_matching_absolute := constants.matching_absolute_pixmap_constant (pixmap_constant.value)
-							if constant_matching_absolute /= Void then
-								create confirmation_dialog.make_initialized (2, show_repeated_absolute_constant_warning, "An absolute pixmap constant named %"" +
-									constant_matching_absolute + "%" already references this image file.%NAre you sure you wish to add another?", "Do not show this dialog again, and always add.")
-								confirmation_dialog.set_ok_action (agent add_absolute_constant)
-								confirmation_dialog.show_modal_to_window (Current)
+				hide
+			else
+				--Add one or more new pixmaps to the system.
+				from
+					pixmap_list.start
+				until
+					pixmap_list.off or cancelled
+				loop
+					pixmap_constant ?= pixmap_list.item.data
+					check
+						data_was_pixmap_constant: pixmap_constant /= Void
+					end
+					if pixmap_list.item.is_selected then
+							-- We must update the information regarding the selected
+							-- item, as it will not be up to date.
+						if relative_constant_radio_button.is_selected then
+							if relative_directory_combo.text.is_empty then
+								pixmap_constant.set_attributes (relative_text.text, pixmap_constant.value, file_path, pixmap_constant.filename, False)
 							else
-								add_absolute_constant (pixmap_constant)
+								pixmap_constant.set_attributes (relative_text.text, pixmap_constant.value, relative_directory_combo.text, pixmap_constant.filename, False)
 							end
-					else
-						if not pixmap_constant.is_absolute and pixmap_constant.directory.is_equal (file_path) and added_directory_name = Void and--then (Constants.matching_directory_constant_name (pixmap_constant.directory.as_lower) = Void) then
-							Constants.matching_directory_constant_name (file_path) = Void then
-							create warning_dialog
-							warning_dialog.show_modal_to_window (Current)
-							if not warning_dialog.cancelled then
-								added_directory_name := warning_dialog.directory_name
-								add_relative_directory_and_constant (pixmap_constant, added_directory_name)
-							else
-								cancelled := True
-							end
-						elseif not pixmap_constant.is_absolute and pixmap_constant.directory.is_equal (file_path) and added_directory_name /= Void then
-							pixmap_constant.set_attributes (pixmap_constant.name, pixmap_constant.value, added_directory_name, pixmap_constant.filename, pixmap_constant.is_absolute)
-							add_relative_constant (pixmap_constant)
-						elseif (Constants.matching_directory_constant_name (pixmap_constant.directory.as_lower) = Void) and
-							(Constants.directory_constant_by_name (pixmap_constant.directory.as_lower) = Void) then
-							add_relative_directory_and_constant (pixmap_constant, pixmap_constant.directory)
 						else
-							if constants.matching_directory_constant_name (pixmap_constant.directory) /= Void then
-								pixmap_constant.set_attributes (pixmap_constant.name, pixmap_constant.value, constants.matching_directory_constant_name (pixmap_constant.directory), pixmap_constant.filename, pixmap_constant.is_absolute)
-							else
-								check
-									directory_is_constant: constants.directory_constant_by_name (pixmap_constant.directory) /= Void
+							pixmap_constant.set_attributes (absolute_text.text, pixmap_constant.value, pixmap_constant.directory, pixmap_constant.filename, True)						
+						end
+					end
+					if pixmap_list.is_item_checked (pixmap_list.item) then
+						if pixmap_constant.is_absolute then
+								-- We are dealing with an absolute constant.
+								constant_matching_absolute := constants.matching_absolute_pixmap_constant (pixmap_constant.value)
+								if constant_matching_absolute /= Void then
+										-- If an absolute constant already exists, warn for duplication
+									create confirmation_dialog.make_initialized (2, show_repeated_absolute_constant_warning, "An absolute pixmap constant named %"" +
+										constant_matching_absolute + "%" already references this image file.%NAre you sure you wish to add another?", "Do not show this dialog again, and always add.")
+									confirmation_dialog.set_ok_action (agent add_absolute_constant)
+									confirmation_dialog.show_modal_to_window (Current)
+								else
+										-- Add a new absolute constant.
+									add_absolute_constant (pixmap_constant)
 								end
+						else
+							if not pixmap_constant.is_absolute and pixmap_constant.directory.is_equal (file_path) and added_directory_name = Void and
+								Constants.matching_directory_constant_name (file_path) = Void then
+									-- If constant is relative, and a name has not been entered for a directory, and the add directory has
+									-- not already been shown, then retrieve a name for the directroy, and add both,
+								create warning_dialog
+								warning_dialog.show_modal_to_window (Current)
+								if not warning_dialog.cancelled then
+									added_directory_name := warning_dialog.directory_name
+									add_relative_directory_and_constant (pixmap_constant, added_directory_name)
+								else
+									cancelled := True
+								end
+							elseif not pixmap_constant.is_absolute and pixmap_constant.directory.is_equal (file_path) and added_directory_name /= Void then
+									-- If constant is relative, no directory name has been specified, and a directory has already been selected from
+									-- `warning_dialog', add the constant relative to that directory. May only occur if multiple pixmaps are being added.
+								pixmap_constant.set_attributes (pixmap_constant.name, pixmap_constant.value, added_directory_name, pixmap_constant.filename, pixmap_constant.is_absolute)
+								add_relative_constant (pixmap_constant)
+							elseif (Constants.matching_directory_constant_name (pixmap_constant.directory.as_lower) = Void) and
+								(Constants.directory_constant_by_name (pixmap_constant.directory.as_lower) = Void) then
+									-- No directory exists matching the specified name, so make it and create the pixmap relative to it.
+								add_relative_directory_and_constant (pixmap_constant, pixmap_constant.directory)
+							else
+								if constants.matching_directory_constant_name (pixmap_constant.directory) /= Void then
+										-- A directory matches the name set for the directory of this relative pixmap, so
+										-- create a pixmap relative to this.
+									pixmap_constant.set_attributes (pixmap_constant.name, pixmap_constant.value, constants.matching_directory_constant_name (pixmap_constant.directory), pixmap_constant.filename, pixmap_constant.is_absolute)
+								else
+									check
+										directory_is_constant: constants.directory_constant_by_name (pixmap_constant.directory) /= Void
+									end
+								end
+								add_relative_constant (pixmap_constant)
 							end
-							add_relative_constant (pixmap_constant)
 						end
+						pixmap_list.forth
+			--| FIXME These warning have been turned off for the time being.
+			--| When turning them on, they must be implemented correctly. Just uncommenting the code may not be enough.
+			--				if absolute_constant_radio_button.is_selected then
+			--					constant_matching_absolute := constants.matching_absolute_pixmap_constant (last_pixmap_name.as_lower)
+			--					if constant_matching_absolute /= Void then
+			--						create confirmation_dialog.make_initialized (2, show_repeated_absolute_constant_warning, "An absolute pixmap constant named %"" +
+			--							constant_matching_absolute + "%" already references this image file.%NAre you sure you wish to add another?", "Do not show this dialog again, and always add.")
+			--						confirmation_dialog.set_ok_action (agent add_absolute_constant)
+			--						confirmation_dialog.show_modal_to_window (Current)
+			--					else
+			--						add_absolute_constant
+			--					end
+			--				elseif relative_constant_radio_button.is_selected then
+			--					if constants.directory_constant_by_name (relative_directory_combo.text) = Void then -- Add check here
+			--					create confirmation_dialog.make_initialized (2, show_create_new_directory_constant_warning,
+			--						"You have entered a directory constant that does not exist.%NWould you like to create both the PIXMAP constant%Nand DIRECTORY constant %"" + relative_directory_combo.text.as_lower + "%" on which it relies?",
+			--						"Do not show this dialog again, and always create new directory constants.")	
+			--						confirmation_dialog.set_ok_action (agent add_relative_directory_and_constant)
+			--						confirmation_dialog.show_modal_to_window (Current)
+			--					else
+			--						add_relative_constant
+			--					end
+			--				end
 					end
-					pixmap_list.forth
-		--| FIXME These warning have been turned off for the time being.
-		--| When turning them on, they must be implemented correctly. Just uncommenting the code may not be enough.
-		--				if absolute_constant_radio_button.is_selected then
-		--					constant_matching_absolute := constants.matching_absolute_pixmap_constant (last_pixmap_name.as_lower)
-		--					if constant_matching_absolute /= Void then
-		--						create confirmation_dialog.make_initialized (2, show_repeated_absolute_constant_warning, "An absolute pixmap constant named %"" +
-		--							constant_matching_absolute + "%" already references this image file.%NAre you sure you wish to add another?", "Do not show this dialog again, and always add.")
-		--						confirmation_dialog.set_ok_action (agent add_absolute_constant)
-		--						confirmation_dialog.show_modal_to_window (Current)
-		--					else
-		--						add_absolute_constant
-		--					end
-		--				elseif relative_constant_radio_button.is_selected then
-		--					if constants.directory_constant_by_name (relative_directory_combo.text) = Void then -- Add check here
-		--					create confirmation_dialog.make_initialized (2, show_create_new_directory_constant_warning,
-		--						"You have entered a directory constant that does not exist.%NWould you like to create both the PIXMAP constant%Nand DIRECTORY constant %"" + relative_directory_combo.text.as_lower + "%" on which it relies?",
-		--						"Do not show this dialog again, and always create new directory constants.")	
-		--						confirmation_dialog.set_ok_action (agent add_relative_directory_and_constant)
-		--						confirmation_dialog.show_modal_to_window (Current)
-		--					else
-		--						add_relative_constant
-		--					end
-		--				end
 				end
 			end
 		end
@@ -447,8 +547,10 @@ feature {NONE} -- Implementation
 				end
 			end
 			if not dialog.selected_button.is_equal ((create {EV_DIALOG_CONSTANTS}).ev_cancel) then
-				absolute_text.set_text (pixmap_file_title_to_constant_name (file_title))
-				relative_text.set_text (pixmap_file_title_to_constant_name (file_title))
+				if not mode_is_modify then
+					absolute_text.set_text (pixmap_file_title_to_constant_name (file_title))
+					relative_text.set_text (pixmap_file_title_to_constant_name (file_title))
+				end
 				if Constants.matching_directory_constant_name (file_path) /= Void then
 					directory_constant ?= constants.all_constants.item (Constants.matching_directory_constant_name (file_path))
 					check
@@ -470,7 +572,6 @@ feature {NONE} -- Implementation
 			files: ARRAYED_LIST [STRING]
 			current_filename: STRING
 			filename_ext: STRING
-			scrollable_area: EV_SCROLLABLE_AREA
 			pixmap: EV_PIXMAP
 			filename: FILE_NAME
 			list_item: EV_LIST_ITEM
@@ -544,8 +645,10 @@ feature {NONE} -- Implementation
 			else
 				relative_constant_radio_button.enable_select
 			end
-			absolute_text.set_text (pixmap_constant.name)
-			relative_text.set_text (pixmap_constant.name)
+			if not mode_is_modify then
+				absolute_text.set_text (pixmap_constant.name)
+				relative_text.set_text (pixmap_constant.name)
+			end
 			if pixmap_constant.directory.is_empty then
 				relative_directory_combo.remove_text
 			end
@@ -609,6 +712,9 @@ feature {NONE} -- Implementation
 	file_title: STRING
 	
 	file_path: STRING
+	
+	mode_is_modify: BOOLEAN
+		-- Is `Current' in modify mode, where the pixmap may be modified only?
 
 end -- class GB_PIXMAP_SETTINGS_DIALOG
 

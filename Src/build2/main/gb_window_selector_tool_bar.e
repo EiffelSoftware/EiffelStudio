@@ -180,7 +180,7 @@ feature {NONE} -- Implementation
 			if show_hide_empty_directories_button.is_selected then
 				window_selector.recursive_do_all (agent internal_hide_directory)
 			else
-				window_Selector.recursive_do_all (agent internal_show_directory)
+				window_selector.recursive_do_all (agent internal_show_directory)
 			end
 		end
 		
@@ -208,15 +208,13 @@ feature {NONE} -- Implementation
 		do
 			directory ?= selector_item
 			if directory /= Void then
-				if directory.tree_item.parent = Void then
-					if directory.parent.tree_item /= Void then
-						add_to_tree_node_alphabetically (directory.parent.tree_item, directory.tree_item)
-					else
-						check
-							parent_is_window_selector: directory.parent = window_selector
-						end
-						add_to_tree_node_alphabetically (window_selector.widget, directory.tree_item)
+				if directory.parent /= window_selector then
+					add_to_tree_node_alphabetically (directory.parent.tree_item, directory.tree_item)
+				else
+					check
+						parent_is_window_selector: directory.parent = window_selector
 					end
+					add_to_tree_node_alphabetically (window_selector.widget, directory.tree_item)
 				end
 			end
 		end

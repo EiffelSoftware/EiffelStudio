@@ -133,32 +133,63 @@ feature
 			-- Widget currently pointed by the pointer
 		
 		local
-			window: POINTER;
+			last_widget_c: POINTER;
+			widget_c: POINTER;
 			void_pointer: POINTER;
 			found: BOOLEAN
 		do
 			from
-				window := x_query_window_pointer (display_pointer, root_window_object)
+				widget_c := x_query_window_pointer (display_pointer, root_window_object)
 			until
-				window = void_pointer
+				widget_c = void_pointer
 			loop
-				from
-					found := false;
-					widget_manager.start
-				until	
-					found or widget_manager.after
-				loop
-					if window = xt_window (widget_manager.item.implementation.screen_object) then
-						Result := widget_manager.item;
-						found := true
-					end;
-					widget_manager.forth
+				last_widget_c := widget_c
+				widget_c := x_query_window_pointer (display_pointer, widget_c)
+			end;
+			from
+				widget_manager.start
+			until	
+				Result /= Void or widget_manager.after
+			loop
+				if last_widget_c = 
+					xt_window (widget_manager.item.implementation.screen_object) 
+				then
+					Result := widget_manager.item;
 				end;
-				window := x_query_window_pointer (display_pointer, window)
+				widget_manager.forth
+			end;
+			if Result = Void then
+				--| Cannot find widget in widget_manager.
+				--| This means that this widget was created on the
+				--| C side and hasn't been recorded in the widget_manager.
+				--| The best we can do is to get the parent that has
+				--| been recorded in the w_manager.
+				from
+					widget_c := x_query_window_pointer 
+						(display_pointer, root_window_object)
+				until
+					widget_c = void_pointer
+				loop
+					from
+						found := false;
+						widget_manager.start
+					until
+						found or widget_manager.after
+					loop
+						if widget_c = xt_window 
+							(widget_manager.item.implementation.screen_object) 
+						then
+							Result := widget_manager.item;
+							found := true
+						end;
+						widget_manager.forth
+					end;
+					widget_c := x_query_window_pointer 
+									(display_pointer, widget_c)
+				end
 			end
 		end;
 
-	
 feature {NONE}
 
 	width: INTEGER is

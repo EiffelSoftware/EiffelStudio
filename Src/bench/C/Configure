@@ -57,12 +57,6 @@ esac
 
 : Proper PATH separator
 p_=:
-: On OS/2 this directory should exist if this is not floppy only system :-]
-if test -d c:/.; then
-	p_=\;
-	PATH=`cmd /c "echo %PATH%" | tr '\\\\' / `
-	OS2_SHELL=`cmd /c "echo %OS2_SHELL%" | tr '\\\\' / | tr '[A-Z]' '[a-z]'`
-fi
 
 : Proper PATH setting
 paths='/bin /usr/bin /usr/local/bin /usr/ucb /usr/local /usr/lbin'

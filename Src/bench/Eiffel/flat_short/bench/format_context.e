@@ -293,6 +293,14 @@ feature -- Access
 
 feature -- Setting
 
+	set_last_was_printed (v: BOOLEAN) is
+			-- Set `v' to `last_was_printed'.
+		do
+			last_was_printed := v
+		ensure
+			last_was_printed_set: last_was_printed = v
+		end
+
 	set_class_c (c: CLASS_C) is
 		do
 			class_c := c

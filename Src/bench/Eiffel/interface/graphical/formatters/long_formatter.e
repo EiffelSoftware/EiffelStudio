@@ -80,7 +80,7 @@ feature -- Execution
 				end;
 				if formatted = Void then
 					execute_licenced (Void)
-				else
+				elseif formatted /= Void and then formatted.clickable then
 					confirmer (popup_parent).call (Current, 
 						"This format requires exploring the entire%N%
 						%system and may take a long time...", "Continue")

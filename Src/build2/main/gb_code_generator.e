@@ -609,10 +609,55 @@ feature {NONE} -- Implementation
 							generated_constants_string := generated_constants_string + Indent_less_two + font_constant.name + ": EV_FONT is" +
 							indent + "-- `Result' is EV_FONT constant named `" + font_constant.name + "'." + 
 							indent_less_one + "once" + indent + "create Result" + Indent +
-							"Result.set_family (" + font_constant.value.family.out + ")" + Indent +
-							"Result.set_weight (" + font_constant.value.weight.out + ")" + Indent +
-							"Result.set_shape (" + font_constant.value.shape.out + ")" + Indent + 
-							"Result.set_height_in_points (" + font_constant.value.height_in_points.out + ")"
+							"Result.set_family (feature {EV_FONT_CONSTANTS}."
+							
+							inspect font_constant.value.family
+							when feature {EV_FONT_CONSTANTS}.Family_screen then
+								generated_constants_string.append ("Family_screen)")
+							when feature {EV_FONT_CONSTANTS}.Family_roman then
+								generated_constants_string.append ("Family_roman)")
+							when feature {EV_FONT_CONSTANTS}.Family_sans then
+								generated_constants_string.append ("Family_sans)")
+							when feature {EV_FONT_CONSTANTS}.Family_typewriter then
+								generated_constants_string.append ("Family_typewriter)")
+							when feature {EV_FONT_CONSTANTS}.Family_modern then
+								generated_constants_string.append ("Family_modern)")
+							else
+								check
+									Invalid_value: False
+								end
+							end
+							generated_constants_string.append (indent)
+							generated_constants_string.append ("Result.set_weight (feature {EV_FONT_CONSTANTS}.")
+							
+							inspect font_constant.value.weight
+							when feature {EV_FONT_CONSTANTS}.weight_thin then
+								generated_constants_string.append ("Weight_thin)")
+							when feature {EV_FONT_CONSTANTS}.weight_regular then
+								generated_constants_string.append ("Weight_regular)")
+							when feature {EV_FONT_CONSTANTS}.weight_bold then
+								generated_constants_string.append ("Weight_bold)")
+							when feature {EV_FONT_CONSTANTS}.weight_black then
+								generated_constants_string.append ("Weight_black)")
+							else
+								check
+									Invalid_value: False
+								end
+							end			
+							generated_constants_string.append (indent)
+							generated_constants_string.append ("Result.set_shape (feature {EV_FONT_CONSTANTS}.")
+							inspect font_constant.value.shape
+							
+							when feature {EV_FONT_CONSTANTS}.shape_regular then
+								generated_constants_string.append ("Shape_regular)")
+							when feature {EV_FONT_CONSTANTS}.shape_italic then
+								generated_constants_string.append ("Shape_italic)")
+							else
+								check
+									Invalid_value: False
+								end
+							end	
+							generated_constants_string := generated_constants_string + Indent + "Result.set_height_in_points (" + font_constant.value.height_in_points.out + ")"
 							if not font_constant.value.preferred_families.is_empty then
 								generated_constants_string := generated_constants_string + Indent + "Result.preferred_families.extend (%"" + font_constant.value.preferred_families.i_th (1) + "%")"
 							end

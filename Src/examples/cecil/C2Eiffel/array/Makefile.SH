@@ -50,9 +50,11 @@ cecil: $(OBJECT) $(EIFLIB)
 
 clean:
 	$(RM) core
+	$(RM) config.sh
 	$(RM) *.o 
 	$(RM) cecil 
 	$(RM) cecil.melted
 	$(RM) cecil.epr
+	$(RM) Makefile
 	$(DELDIR) EIFGEN
 	

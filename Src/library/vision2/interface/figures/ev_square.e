@@ -51,15 +51,24 @@ feature -- Output
 
 	draw is
 			-- Draw the square.
+		local
+			lint: EV_INTERIOR
+			lpath: EV_PATH
 		do
 			if drawing.is_drawable then
 				if interior /= Void then
+					create lint.make
+					lint.get_drawing_attributes (drawing)
 					interior.set_drawing_attributes (drawing)
 					drawing.fill_rectangle (center, size_of_side, size_of_side, orientation)
+					lint.set_drawing_attributes (drawing)
 				end
 				if path /= Void then
+					create lpath.make
+					lpath.get_drawing_attributes (drawing)
 					path.set_drawing_attributes (drawing)
 					drawing.draw_rectangle (center, size_of_side, size_of_side, orientation)
+					lpath.set_drawing_attributes (drawing)
 				end
 			end
 		end

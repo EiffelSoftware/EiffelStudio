@@ -171,6 +171,8 @@ feature -- Output
 			a_point: EV_POINT
 			i: INTEGER
 			angle: INTEGER
+			lint: EV_INTERIOR
+			lpath: EV_PATH
 		do
 			if drawing.is_drawable then
 				!! polygon.make 
@@ -195,12 +197,18 @@ feature -- Output
 				polygon.attach_drawing (drawing)
 --				drawing.set_join_style (join_style)
 				if interior /= Void then
+					create lint.make
+					lint.get_drawing_attributes (drawing)
 					interior.set_drawing_attributes (drawing)
 					drawing.fill_polygon (polygon.to_array)
+					lint.set_drawing_attributes (drawing)
 				end
 				if path /= Void then
+					create lpath.make
+					lpath.get_drawing_attributes (drawing)
 					path.set_drawing_attributes (drawing)
 					drawing.draw_polyline (polygon.to_array, true)
+					lpath.set_drawing_attributes (drawing)
 				end
 			end
 		end

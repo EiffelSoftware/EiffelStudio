@@ -166,16 +166,25 @@ feature -- Output
 
 	draw is
 			-- Draw the polygon.
+		local
+			lint: EV_INTERIOR
+			lpath: EV_PATH
 		do
 			if (count > 2) and then drawing.is_drawable then
 --				drawing.set_join_style (join_style)
 				if interior /= Void then
+					create lint.make
+					lint.get_drawing_attributes (drawing)
 					interior.set_drawing_attributes (drawing)
 					drawing.fill_polygon (to_array)
+					lint.set_drawing_attributes (drawing)
 				end
 				if path /= Void then
+					create lpath.make
+					lpath.get_drawing_attributes (drawing)
 					path.set_drawing_attributes (drawing)
 					drawing.draw_polyline (to_array, True)
+					lpath.set_drawing_attributes (drawing)
 				end
 			end
 		end

@@ -197,16 +197,25 @@ feature -- Output
 
 	draw is
 			-- Draw the rectangle.
+		local
+			lint: EV_INTERIOR
+			lpath: EV_PATH
 		do
 			if drawing.is_drawable then
 --				drawing.set_join_style (join_style)
 				if interior /= Void then
+					create lint.make
+					lint.get_drawing_attributes (drawing)
 					interior.set_drawing_attributes (drawing)
 					drawing.fill_rectangle (center, width, height, orientation)
+					lint.set_drawing_attributes (drawing)
 				end
 				if path /= Void then
+					create lpath.make
+					lpath.get_drawing_attributes (drawing)
 					path.set_drawing_attributes (drawing)
 					drawing.draw_rectangle (center, width, height, orientation)
+					lpath.set_drawing_attributes (drawing)
 				end
 			end
 		end

@@ -15,9 +15,9 @@ inherit
 	SHARED_EWB_HELP;
 	SHARED_EWB_CMD_NAMES;
 	WINDOWS;
-	SHARED_RESCUE_STATUS;
 	SHARED_EXEC_ENVIRONMENT;
-	COMMAND_LINE_PROJECT
+	COMMAND_LINE_PROJECT;
+	SHARED_RESOURCES
 
 creation
 
@@ -86,9 +86,9 @@ feature -- Initialization
 				io.error.putstring (temp);
 			end;
 			io.error.new_line;
-			if not Rescue_status.fail_on_rescue then
+			if not resources.get_boolean (r_Fail_on_rescue, False) then
 				retried := True;
-				--retry
+				retry
 			end;
 		end;
 

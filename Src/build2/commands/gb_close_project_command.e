@@ -23,6 +23,10 @@ inherit
 	
 	GB_ACCESSIBLE_OBJECT_EDITOR
 	
+	GB_SHARED_COMPONENT_VIEWER
+	
+	GB_ACCESSIBLE
+	
 	GB_CONSTANTS
 	
 	EV_DIALOG_CONSTANTS
@@ -85,6 +89,10 @@ feature -- Basic operations
 				system_status.close_current_project
 				system_status.main_window.hide_tools
 				destroy_floating_editors
+				component_viewer.hide
+					-- Hide the display and builder windows.
+				display_window.hide
+				builder_window.hide
 				command_handler.update	
 			end
 

@@ -6,37 +6,69 @@
 }
 "Configurations"
 {
-    "Debug|.NET"
+"AssemblyName" = "${ProjectName}"
+"DefaultNamespace" = "${ProjectName}"
+"OutputType" = "4"
+"DotnetNamingConvention" = "true"
+"ClusterNamespaceFormat" = "2"
+"SupportCLRVersion" = "0"
+"TargetCLRVersion" = "0"
+"AssemblyTitle" = "${ProjectName}"
+"AssemblyDescription" = ""
+"AssemblyCompany" = ""
+"AssemblyProduct" = ""
+"AssemblyTrademark" = ""
+"AssemblyCopyright" = ""
+"AssemblyVersion" = "2.0.0.0"
+"AssemblyCulture" = "Neutral, n/a"
+"AssemblyOriginatorKeyFile" = "E:\\dotnet\\helpers\\isekey.snk"
+    "ConfigDependent"
     {
-    "ConfigurationRoot" = "obj\\Debug"
-    "AceFile" = "ace.ace"
-    "OutputType" = "PRECOMPLIBRARYROOT"
-    "OptimizeCode" = "0"
-    "DiscardOptimAssertions" = "0"
-    "CompileOnLoad" = "0"
-    "RegisterForCOMInterop" = "0"
-    "DisplayWarnings" = "1"
-    }
-    "Release|.NET"
-    {
-    "ConfigurationRoot" = "obj\\Release"
-    "AceFile" = "ace.ace"
-    "OutputType" = "PRECOMPLIBRARY"
-    "OptimizeCode" = "1"
-    "DiscardOptimAssertions" = "0"
-    "CompileOnLoad" = "0"
-    "RegisterForCOMInterop" = "0"
-    "DisplayWarnings" = "0"
+        "Debug"
+        {
+        "RootClass" = "ANY"
+        "CreationRoutine" = ""
+        "PrecompiledLibrary" = "${EIFFEL_SRC}\\dotnet\\codedom_provider\\build\\ISE.Base\\obj\\Debug"
+        "OptimizeCode" = "false"
+        "GenerateCLSCompliantCode" = "true"
+        "GenerateVerifiableCode" = "true"
+        "ShowCompilerWarnings" = "true"
+        "RegisterForCOMInterop" = "false"
+        "GenerateDebugInfo" = "true"
+        "EvalPostconditions" = "false"
+        "EvalPreconditions" = "true"
+        "EvalChecks" = "false"
+        "EvalLoops" = "true"
+        "EvalInvariants" = "false"
+        "IncludePaths" = ""
+        "ObjectFiles" = ""
+        "CompileOnLoad" = "false"
+        }
+        "Release"
+        {
+        "RootClass" = "ANY"
+        "CreationRoutine" = ""
+        "PrecompiledLibrary" = "${EIFFEL_SRC}\\dotnet\\codedom_provider\\build\\ISE.Base\\obj\\Release"
+        "OptimizeCode" = "true"
+        "GenerateCLSCompliantCode" = "true"
+        "GenerateVerifiableCode" = "true"
+        "ShowCompilerWarnings" = "true"
+        "RegisterForCOMInterop" = "false"
+        "GenerateDebugInfo" = "false"
+        "EvalPostconditions" = "false"
+        "EvalPreconditions" = "false"
+        "EvalChecks" = "false"
+        "EvalLoops" = "true"
+        "EvalInvariants" = "false"
+        "IncludePaths" = ""
+        "ObjectFiles" = ""
+        "CompileOnLoad" = "false"
+        }
     }
 }
+
 "References"
 {
-    "Accessibility"
-    {
-"AssemblyFolder" = "{F580F9AD-5B17-4558-8133-FC4E7E7F04EA}"
-"Path" = "C:\\WINDOWS\\Microsoft.NET\\Framework\\v1.1.4322\\Accessibility.dll"
-"Prefix" = ""
-    }
     "mscorlib"
     {
 "AssemblyFolder" = "{F580F9AD-5B17-4558-8133-FC4E7E7F04EA}"
@@ -49,24 +81,6 @@
 "Path" = "C:\\WINDOWS\\Microsoft.NET\\Framework\\v1.1.4322\\System.dll"
 "Prefix" = "SYSTEM_DLL_"
     }
-    "System.Drawing"
-    {
-"AssemblyFolder" = "{F580F9AD-5B17-4558-8133-FC4E7E7F04EA}"
-"Path" = "C:\\WINDOWS\\Microsoft.NET\\Framework\\v1.1.4322\\System.Drawing.dll"
-"Prefix" = "DRAWING_"
-    }
-    "System.Runtime.Serialization.Formatters.Soap"
-    {
-"AssemblyFolder" = "{F580F9AD-5B17-4558-8133-FC4E7E7F04EA}"
-"Path" = "C:\\WINDOWS\\Microsoft.NET\\Framework\\v1.1.4322\\System.Runtime.Serialization.Formatters.Soap.dll"
-"Prefix" = ""
-    }
-    "System.Windows.Forms"
-    {
-"AssemblyFolder" = "{F580F9AD-5B17-4558-8133-FC4E7E7F04EA}"
-"Path" = "C:\\WINDOWS\\Microsoft.NET\\Framework\\v1.1.4322\\System.Windows.Forms.dll"
-"Prefix" = "WINFORMS_"
-    }
     "System.Xml"
     {
 "AssemblyFolder" = "{F580F9AD-5B17-4558-8133-FC4E7E7F04EA}"
@@ -74,52 +88,36 @@
 "Prefix" = "XML_"
     }
 }
-"Files"
+"Clusters"
 {
-    "Eiffel Source Files"
+    "emitter"
     {
-"ProjRelPath" = "F"
-"NodeType" = "Directory"
+    "RelPath" = "${EIFFEL_SRC}\\dotnet\\consumer"
+    "Namespace" = ""
+    "Library" = "false"
+    "IncSubDir" = "true"
+    "Override" = "false"
+    "ExcludedItems" = "CVS;"
+    "UseDefaults" = "true"
+    "EvalPostconditions" = "true"
+    "EvalPreconditions" = "false"
+    "EvalChecks" = "false"
+    "EvalLoops" = "false"
+    "EvalInvariants" = "false"
     }
-    "SEPNODE"
+    "helpers"
     {
-"ProjRelPath" = ""
-"NodeType" = "SEPNODE"
+    "RelPath" = "${EIFFEL_SRC}\\dotnet\\helpers"
+    "Namespace" = ""
+    "Library" = "true"
+    "IncSubDir" = "true"
+    "Override" = "false"
+    "ExcludedItems" = "CVS;"
+    "UseDefaults" = "true"
+    "EvalPostconditions" = "true"
+    "EvalPreconditions" = "false"
+    "EvalChecks" = "false"
+    "EvalLoops" = "false"
+    "EvalInvariants" = "false"
     }
-    "Other Files"
-    {
-"ProjRelPath" = "F"
-"NodeType" = "Directory"
-    }
-    "obj\\debug\\ace.ace"
-    {
-"ProjRelPath" = "T"
-"NodeType" = "File"
-    }
-    "SEPNODE"
-    {
-"ProjRelPath" = ""
-"NodeType" = "SEPNODE"
-    }
-    "obj\\release\\ace.ace"
-    {
-"ProjRelPath" = "T"
-"NodeType" = "File"
-    }
-    "SEPNODE"
-    {
-"ProjRelPath" = ""
-"NodeType" = "SEPNODE"
-    }
-    "SEPNODE"
-    {
-"ProjRelPath" = ""
-"NodeType" = "SEPNODE"
-    }
-}
-"ProjStartupServices"
-{
-}
-"Globals"
-{
 }

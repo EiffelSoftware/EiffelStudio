@@ -255,12 +255,10 @@ feature
 		do
 				-- Not once because array_id and any_id can change
 			create generics.make (1, 1)
-			create any_type
-			any_type.set_base_class_id (System.any_id)
+			create any_type.make (System.any_id)
 			generics.put (any_type, 1)
 
-			create Result.make (generics)
-			Result.set_base_class_id (System.array_id)
+			create Result.make (System.array_id, generics)
 			Result.set_is_true_expanded (False)
 		end;
 
@@ -273,8 +271,7 @@ feature
 		do
 				-- Not once because tuple_id can change
 			create generics.make (1, 0)
-			create Result.make (generics)
-			Result.set_base_class_id (System.tuple_id)
+			create Result.make (System.tuple_id, generics)
 			Result.set_is_true_expanded (False)
 		end;
 
@@ -291,14 +288,12 @@ feature
 		do
 				-- Not once because function_id can change
 			create generics.make (1, 3)
-			create any_type
-			any_type.set_base_class_id (System.any_id)
+			create any_type.make (System.any_id)
 			generics.put (any_type, 1)
 			generics.put (Tuple_type_a, 2)
 			generics.put (any_type, 3)
 
-			create Result.make (generics)
-			Result.set_base_class_id (System.function_class_id)
+			create Result.make (System.function_class_id, generics)
 			Result.set_is_true_expanded (False)
 		end
 
@@ -315,13 +310,11 @@ feature
 		do
 				-- Not once because procedure_id can change
 			create generics.make (1, 2)
-			create any_type
-			any_type.set_base_class_id (System.any_id)
+			create any_type.make (System.any_id)
 			generics.put (any_type, 1)
 			generics.put (Tuple_type_a, 2)
 
-			create Result.make (generics)
-			Result.set_base_class_id (System.procedure_class_id)
+			create Result.make (System.procedure_class_id, generics)
 			Result.set_is_true_expanded (False)
 		end
 

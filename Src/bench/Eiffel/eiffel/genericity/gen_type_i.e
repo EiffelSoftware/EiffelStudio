@@ -291,8 +291,7 @@ feature -- Access
 				array.put (l_meta.item (i).type_a, i)
 				i := i - 1
 			end
-			create Result.make (array)
-			Result.set_base_class_id (base_id)
+			create Result.make (class_id, array)
 			Result.set_is_true_expanded (is_true_expanded)
 		end
 
@@ -450,7 +449,7 @@ feature -- Comparison
 			-- Is `other' attached to an object considered
 			-- equal to current object?
 		do
-			Result := base_id = other.base_id
+			Result := class_id = other.class_id
 					and then is_true_expanded = other.is_true_expanded
 					and then is_separate = other.is_separate
 					and then meta_generic.same_as (other.meta_generic)
@@ -467,7 +466,7 @@ feature -- Comparison
 		do
 			gen_type_i ?= other
 			if gen_type_i /= Void then
-				Result := base_id = gen_type_i.base_id
+				Result := class_id = gen_type_i.class_id
 						and then is_true_expanded = gen_type_i.is_true_expanded
 						and then is_separate = gen_type_i.is_separate
 						and then meta_generic.same_as (gen_type_i.meta_generic)
@@ -493,7 +492,7 @@ feature -- Comparison
 		do
 			gen_type_i ?= other
 			if gen_type_i /= Void then
-				Result := base_id = gen_type_i.base_id
+				Result := class_id = gen_type_i.class_id
 						and then is_true_expanded = gen_type_i.is_true_expanded
 						and then is_separate = gen_type_i.is_separate
 						and then meta_generic.same_as (gen_type_i.meta_generic)

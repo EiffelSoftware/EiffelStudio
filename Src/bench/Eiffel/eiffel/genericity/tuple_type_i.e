@@ -51,8 +51,7 @@ feature
 				i := i - 1
 			end
 
-			create Result.make (array)
-			Result.set_base_class_id (base_id)
+			create Result.make (class_id, array)
 			Result.set_is_true_expanded (is_true_expanded)
 		end
 

@@ -1007,7 +1007,7 @@ feature {NONE} -- open new class
 					process_feature_class
 				end
 			else
-				cname.to_lower
+				cname.to_upper
 				create matcher.make_empty
 				matcher.set_pattern (cname)
 				if not matcher.has_wild_cards then
@@ -1386,7 +1386,7 @@ feature {NONE} -- open new class
 			if Workbench.system_defined and enable_feature_complete then
 				clist := system.classes
 				ccname := class_address.text
-				ccname.to_lower
+				ccname.to_upper
 				from
 					i := 1
 				until
@@ -1428,7 +1428,7 @@ feature {NONE} -- open new class
 				class_address.change_actions.block
 				str.left_adjust
 				str.right_adjust
-				str.to_lower
+				str.to_upper
 				nb := str.count
 				do_not_complete :=	last_key_was_delete or
 									not enable_complete or

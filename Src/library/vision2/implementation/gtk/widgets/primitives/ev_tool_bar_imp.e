@@ -26,36 +26,38 @@ feature {NONE} -- Implementation
 	make is
 			-- Create the tool-bar.
 		do
+			check
+				To_be_implemented: False
+			end
 		end
 
 	make_with_size (w, h: INTEGER) is
 			-- Create the tool-bar with `par' as parent.
 		do
+			check
+				To_be_implemented: False
+			end
 		end
 
-	count: INTEGER is
-			-- Number of direct children of the holder.
-		do
-		end
+--	count: INTEGER is
+--			-- Number of direct children of the holder.
+--		do
+--		end
 
-	get_item (index: INTEGER): EV_ITEM is
-			-- Give the item of the list at the zero-base
-			-- `index'.
-		do
-		end
+--	get_item (index: INTEGER): EV_ITEM is
+--			-- Give the item of the list at the zero-base
+--			-- `index'.
+--		do
+--		end
 
 feature -- Element change
 
 	clear_items is
 			-- Clear all the items of the list.
 		do
-		end
-
-feature -- Basic operations
-
-	find_item_by_data (data: ANY): EV_ITEM is
-			-- Find a child with data equal to `data'.
-		do
+			check
+				To_be_implemented: False
+			end
 		end
 
 feature -- Implementation

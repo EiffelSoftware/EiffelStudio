@@ -30,9 +30,8 @@ inherit
 			set_maximum_text_length,
 			select_region,
 			add_return_command,
-			add_activate_command,
 			add_change_command,
-			remove_activate_commands,
+			remove_return_commands,
 			remove_change_commands,
 			cut_selection,
 			copy_selection,
@@ -59,9 +58,6 @@ inherit
 			selected_item,
 			rows,
 			selected,
---			clear_items,
-			add_selection_command,
-			remove_selection_commands,
 			add_item,
 			remove_item,
 			destroy,
@@ -319,21 +315,6 @@ feature -- Basic operation
 
 feature -- Event : command association
 
-	add_selection_command (a_command: EV_COMMAND; arguments: EV_ARGUMENT) is	
-			-- Make `command' executed when an item is
-			-- selected or unselected.
-			-- WARNING: So far, due to GTK, the callback will be also called
-			-- if we add a first item.
-		do
-			add_command (list_widget, "select_child", a_command, arguments, default_pointer)
-		end
-
-	add_activate_command (cmd: EV_COMMAND; arg: EV_ARGUMENT) is
-			-- Add 'cmd' to the list of commands to be
-			-- executed when the "Return" button is pressed
-		do
-			add_return_command (cmd, arg)
-		end
 	add_return_command (cmd: EV_COMMAND; arg: EV_ARGUMENT) is
 			-- Add 'cmd' to the list of commands to be
 			-- executed when the "Return" button is pressed
@@ -350,19 +331,7 @@ feature -- Event : command association
 
 feature -- Event -- removing command association
 
-	remove_selection_commands is	
-			-- Empty the list of commands to be executed
-			-- when the selection has changed.
-		local
-			p: POINTER
-		do
-			p := widget
-			widget := list_widget
-			remove_commands (widget, select_child_id)
-			widget := p
-		end
-
-	remove_activate_commands is
+	remove_return_commands is
 			-- Empty the list of commands to be executed
 			-- when the text field is activated, ie when the user
 			-- press the enter key.

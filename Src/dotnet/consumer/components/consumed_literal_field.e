@@ -28,7 +28,7 @@ feature {NONE} -- Initialization
 			valid_eiffel_name: not en.is_empty
 			non_void_dotnet_name: dn /= Void
 			valid_dotnet_name: not dn.is_empty
-			non_void_return_type: return_type /= Void
+			non_void_return_type: rt /= Void
 			non_void_value: val /= Void
 			a_type_not_void: a_type /= Void
 		do

@@ -318,7 +318,8 @@ feature {NONE} -- Implementation
 	event_selector_list: EV_CHECKABLE_LIST
 	select_all, clear_all, search_button: EV_BUTTON
 	l_vertical_split_area_1: EV_VERTICAL_SPLIT_AREA
-	test_class_display, flat_short_display: EV_TEXT
+	test_class_display: EV_TEXT
+	flat_short_display: EV_RICH_TEXT
 	search_field: EV_TEXT_FIELD
 	match_case_button: EV_CHECK_BUTTON
 	modify_text_size: EV_SPIN_BUTTON

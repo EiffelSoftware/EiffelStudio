@@ -12,7 +12,7 @@ class
 inherit
 	COM_OBJECT
 
-create {COM_ISE_CACHE_MANAGER}
+create {COM_CACHE_MANAGER}
 	make_by_pointer
 	
 feature -- Access
@@ -69,12 +69,35 @@ feature -- Access
 			success: last_call_success = 0
 		end
 		
+	is_consumed: BOOLEAN is
+			-- has assembly been consumed?
+		local
+			res: reference BOOLEAN
+		do
+			create res
+			last_call_success := c_is_consumed (item, res)
+			Result := res
+		end	
+		
+	consumed_folder_name: STRING is
+			-- assembly consumed folder name
+		local
+			res: POINTER
+		do
+			last_call_success := c_consumed_folder_name (item, $res)
+			if res /= default_pointer then
+				Result := (create {UNI_STRING}.make_by_pointer (res)).string
+			end
+		ensure
+			success: last_call_success = 0
+		end
+		
 feature {NONE} -- Implementation
 	
 	c_name (ap:POINTER; aret_val: POINTER): INTEGER is
 			-- assembly name
 		external
-			"C++ ISE_Cache_COM_ASSEMBLY_INFORMATION signature (LPWSTR*):EIF_INTEGER use %"ise_cache_manager.h%""
+			"C++ EiffelSoftware_MetadataConsumer_COM_ASSEMBLY_INFORMATION signature (LPWSTR*):EIF_INTEGER use %"metadata_consumer.h%""
 		alias
 			"name"
 		end
@@ -82,7 +105,7 @@ feature {NONE} -- Implementation
 	c_version (ap:POINTER; aret_val: POINTER): INTEGER is
 			-- assembly version
 		external
-			"C++ ISE_Cache_COM_ASSEMBLY_INFORMATION signature (LPWSTR*):EIF_INTEGER use %"ise_cache_manager.h%""
+			"C++ EiffelSoftware_MetadataConsumer_COM_ASSEMBLY_INFORMATION signature (LPWSTR*):EIF_INTEGER use %"metadata_consumer.h%""
 		alias
 			"version"
 		end
@@ -90,7 +113,7 @@ feature {NONE} -- Implementation
 	c_culture (ap:POINTER; aret_val: POINTER): INTEGER is
 			-- asssembly culture
 		external
-			"C++ ISE_Cache_COM_ASSEMBLY_INFORMATION signature (LPWSTR*):EIF_INTEGER use %"ise_cache_manager.h%""
+			"C++ EiffelSoftware_MetadataConsumer_COM_ASSEMBLY_INFORMATION signature (LPWSTR*):EIF_INTEGER use %"metadata_consumer.h%""
 		alias
 			"culture"
 		end
@@ -98,9 +121,25 @@ feature {NONE} -- Implementation
 	c_public_key_token (ap:POINTER; aret_val: POINTER): INTEGER is
 			-- assembly public key token
 		external
-			"C++ ISE_Cache_COM_ASSEMBLY_INFORMATION signature (LPWSTR*):EIF_INTEGER use %"ise_cache_manager.h%""
+			"C++ EiffelSoftware_MetadataConsumer_COM_ASSEMBLY_INFORMATION signature (LPWSTR*):EIF_INTEGER use %"metadata_consumer.h%""
 		alias
 			"public_key_token"
+		end
+
+	c_is_consumed (ap:POINTER; aret_val: reference BOOLEAN): INTEGER is
+			-- assembly consumed folder name
+		external
+			"C++ EiffelSoftware_MetadataConsumer_COM_ASSEMBLY_INFORMATION signature (VARIANT_BOOL*):EIF_INTEGER use %"metadata_consumer.h%""
+		alias
+			"is_consumed"
+		end
+
+	c_consumed_folder_name (ap:POINTER; aret_val: POINTER): INTEGER is
+			-- assembly consumed folder name
+		external
+			"C++ EiffelSoftware_MetadataConsumer_COM_ASSEMBLY_INFORMATION signature (LPWSTR*):EIF_INTEGER use %"metadata_consumer.h%""
+		alias
+			"consumed_folder_name"
 		end
 
 end -- class COM_ASSEMBLY_INFORMATION

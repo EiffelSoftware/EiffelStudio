@@ -144,6 +144,16 @@ feature -- Access
 			a: MEMBER_INFO
 			cv_f: FIELD_INFO
 			cv_p: PROPERTY_INFO
+			an_obj: SYSTEM_OBJECT
+			an_int8: INTEGER_8
+			an_int16: INTEGER_16
+			an_int32: INTEGER
+			an_int64: INTEGER_64
+			a_char: CHARACTER
+			a_boolean: BOOLEAN
+			a_real: REAL
+			a_double: DOUBLE
+			a_pointer: POINTER
 		do
 			m := get_members (dynamic_type (object))
 			if m /= Void and then m.valid_index (i) then
@@ -151,9 +161,57 @@ feature -- Access
 				cv_f ?= a
 				cv_p ?= a
 				if cv_f /= Void then
-					Result ?= cv_f.get_value (object)
+					an_obj := cv_f.get_value (object)
 				elseif cv_p /= Void then
-					Result ?= cv_p.get_value (object, Void)
+					an_obj := cv_p.get_value (object, Void)
+				end
+				
+				Result ?= an_obj
+				if an_obj /= Void and then Result = Void then
+						-- We are most likely facing a basic type or a non-Eiffel type
+					inspect
+						field_type (i, object)
+					when Pointer_type then
+						a_pointer ?= an_obj
+						Result := a_pointer
+						
+					when Character_type then
+						a_char ?= an_obj
+						Result := a_char
+						
+					when Boolean_type then
+						a_boolean ?= an_obj
+						Result := a_boolean
+						
+					when Integer_8_type then
+						an_int8 ?= an_obj
+						Result := an_int8
+						
+					when Integer_16_type then
+						an_int16 ?= an_obj
+						Result := an_int16
+						
+					when Integer_32_type then
+						an_int32 ?= an_obj
+						Result := an_int32
+						
+					when Integer_64_type then
+						an_int64 ?= an_obj
+						Result := an_int64
+						
+					when Real_type then
+						a_real ?= an_obj
+						Result := a_real
+						
+					when Double_type then
+						a_double ?= an_obj
+						Result := a_double
+						
+					else
+						check
+							not_supported: False
+						end
+					end
 				end
 			end
 		end
@@ -347,23 +405,8 @@ feature -- Element change
 			index_large_enough: i >= 1
 			index_small_enough: i <= field_count (object)
 			reference_field: field_type (i, object) = Reference_type
-		local
-			m: ARRAYED_LIST [CLI_CELL [MEMBER_INFO]]
-			a: MEMBER_INFO
-			cv_f: FIELD_INFO
-			cv_p: PROPERTY_INFO
 		do
-			m := get_members (dynamic_type (object))
-			if m /= Void and then m.valid_index (i) then
-				a := m.i_th (i).item
-				cv_f ?= a
-				cv_p ?= a
-				if cv_f /= Void then
-					cv_f.set_value (object, value)
-				elseif cv_p /= Void then
-					cv_p.set_value (object, value, Void)
-				end
-			end
+			internal_set_reference_field (i, object, value)
 		end
 
 	set_double_field (i: INTEGER; object: ANY; value: DOUBLE) is
@@ -373,7 +416,7 @@ feature -- Element change
 			index_small_enough: i <= field_count (object)
 			double_field: field_type (i, object) = Double_type
 		do
-			set_reference_field (i, object, value)
+			internal_set_reference_field (i, object, value)
 		end
 
 	set_character_field (i: INTEGER; object: ANY; value: CHARACTER) is
@@ -384,7 +427,7 @@ feature -- Element change
 			index_small_enough: i <= field_count (object)
 			character_field: field_type (i, object) = Character_type
 		do
-			set_reference_field (i, object, value)
+			internal_set_reference_field (i, object, value)
 		end
 
 	set_boolean_field (i: INTEGER; object: ANY; value: BOOLEAN) is
@@ -394,7 +437,7 @@ feature -- Element change
 			index_small_enough: i <= field_count (object)
 			boolean_field: field_type (i, object) = Boolean_type
 		do
-			set_reference_field (i, object, value)
+			internal_set_reference_field (i, object, value)
 		end
 
 	set_integer_field (i: INTEGER; object: ANY; value: INTEGER) is
@@ -404,7 +447,7 @@ feature -- Element change
 			index_small_enough: i <= field_count (object)
 			integer_field: field_type (i, object) = Integer_type
 		do
-			set_reference_field (i, object, value)
+			internal_set_reference_field (i, object, value)
 		end
 
 	set_real_field (i: INTEGER; object: ANY; value: REAL) is
@@ -414,7 +457,7 @@ feature -- Element change
 			index_small_enough: i <= field_count (object)
 			real_field: field_type (i, object) = Real_type
 		do
-			set_reference_field (i, object, value)
+			internal_set_reference_field (i, object, value)
 		end
 
 	set_pointer_field (i: INTEGER; object: ANY; value: POINTER) is
@@ -424,7 +467,7 @@ feature -- Element change
 			index_small_enough: i <= field_count (object)
 			pointer_field: field_type (i, object) = Pointer_type
 		do
-			set_reference_field (i, object, value)
+			internal_set_reference_field (i, object, value)
 		end
 
 feature -- Measurement
@@ -570,6 +613,31 @@ feature {NONE} -- Implementation
 						Result.extend (create {CLI_CELL [MEMBER_INFO]}.put (allm.item(i)))
 					end
 					i := i + 1
+				end
+			end
+		end
+
+	internal_set_reference_field (i: INTEGER; object: ANY; value: SYSTEM_OBJECT) is
+		require
+			object_not_void: object /= Void
+			index_large_enough: i >= 1
+			index_small_enough: i <= field_count (object)
+			reference_field: field_type (i, object) = Reference_type
+		local
+			m: ARRAYED_LIST [CLI_CELL [MEMBER_INFO]]
+			a: MEMBER_INFO
+			cv_f: FIELD_INFO
+			cv_p: PROPERTY_INFO
+		do
+			m := get_members (dynamic_type (object))
+			if m /= Void and then m.valid_index (i) then
+				a := m.i_th (i).item
+				cv_f ?= a
+				cv_p ?= a
+				if cv_f /= Void then
+					cv_f.set_value (object, value)
+				elseif cv_p /= Void then
+					cv_p.set_value (object, value, Void)
 				end
 			end
 		end

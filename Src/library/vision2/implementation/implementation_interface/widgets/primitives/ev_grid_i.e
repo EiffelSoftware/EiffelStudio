@@ -232,6 +232,9 @@ feature -- Access
 	subrow_indent: INTEGER
 			-- Number of pixels horizontally by which each subrow is indented
 			-- from its `parent_row'.
+			
+	are_tree_node_connectors_shown: BOOLEAN
+			-- Are connectors between tree nodes shown in `Current'?
 
 feature -- Status setting
 
@@ -688,6 +691,24 @@ feature -- Status setting
 			redraw_client_area
 		ensure
 			pixmaps_set: expand_node_pixmap = an_expand_node_pixmap and collapse_node_pixmap = a_collapse_node_pixmap
+		end
+		
+	show_tree_node_connectors is
+			-- Ensure connectors are displayed between nodes of tree structure in `Current'.
+		do
+			are_tree_node_connectors_shown := True
+			redraw_client_area
+		ensure
+			tree_node_connectors_shown: are_tree_node_connectors_shown
+		end
+		
+	hide_tree_node_connectors is
+			-- Ensure no connectors are displayed between nodes of tree structure in `Current'.
+		do
+			are_tree_node_connectors_shown := False
+			redraw_client_area
+		ensure
+			tree_node_connectors_hidden: not are_tree_node_connectors_shown
 		end
 
 feature -- Status report
@@ -1389,6 +1410,7 @@ feature {NONE} -- Drawing implementation
 			row_height := 16
 			is_row_height_fixed := True
 			subrow_indent := 0
+			are_tree_node_connectors_shown := True
 			build_expand_node_pixmap
 			build_collapse_node_pixmap
 			

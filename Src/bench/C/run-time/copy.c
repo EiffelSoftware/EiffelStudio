@@ -128,8 +128,11 @@ char *source;
 	 * our structures.
 	 */
 
+	{
+	RTXD;							/* Save stack contexts */
 	excatch((char *) exenv);		/* Record pseudo-execution vector */
 	if (setjmp(exenv)) {
+		RTXSC;						/* Restore stack contexts */
 		map_reset(1);				/* Reset in emergency situation */
 		ereturn();					/* And propagate the exception */
 	}
@@ -174,6 +177,7 @@ char *source;
 
 	epop(&loc_stack, 1);		/* Release GC protection */
 	expop(&eif_stack);			/* Remove pseudo execution vector */
+	}
 
 	return anchor.boot;			/* The cloned object tree */
 }

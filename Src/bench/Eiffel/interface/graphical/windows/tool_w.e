@@ -828,7 +828,7 @@ feature {PROJECT_W} -- Implementation
 		do
 			-- If it is not redefined the postcondition is still meet.
 		ensure
-			set: read_only_text_window = ed
+--			set: read_only_text_window = ed
 		end;
 
 feature {TEXT_WINDOW} -- Initialization

@@ -54,7 +54,6 @@ feature -- Operations
 			color_command.execute(Void,Void)
 		end
 
-
 invariant
 	data_exists: data /= Void
 	workarea_consistent: workarea /= Void and then workarea.analysis_window /= Void

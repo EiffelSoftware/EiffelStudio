@@ -220,20 +220,20 @@ feature -- Graphical properties
 	inherit_list: GRAPH_REL_LIST [GRAPH_INHERIT];
 		-- List of all inheritance link figures.
 
-	cli_sup_list: GRAPH_REL_LIST [GRAPH_CLI_SUP];
+	cli_sup_list: GRAPH_REL_LIST [GRAPH_CLI_SUP]
 		-- List of all client/supplier link figures.
 
-	aggreg_list: GRAPH_REL_LIST [GRAPH_AGGREG];
+	aggreg_list: GRAPH_REL_LIST [GRAPH_AGGREG]
 		-- List of all aggregation link figures.
 
 	form_list: GRAPH_LIST[GRAPH_FORM] is
 			-- List of all figures of current workarea
 			-- (At the moment just classes and clusters)
 		do
-			Result := group_form_list;
-			Result.merge (inherit_list);
-			Result.merge (cli_sup_list);
-			Result.merge (aggreg_list);
+			Result := group_form_list
+			Result.merge (inherit_list)
+			Result.merge (cli_sup_list)
+			Result.merge (aggreg_list)
 		end
 
 feature -- Callbacks properties
@@ -1432,28 +1432,28 @@ feature -- Output
 			clip_closure.set (refresh_clip.upper_left.x, 
 					refresh_clip.upper_left.y,
 					refresh_clip.width, 
-					refresh_clip.height);
+					refresh_clip.height)
 
 			if grid /= Void then
-				grid.draw_in (clip_closure);
+				grid.draw_in (clip_closure)
 			end
 
 			if cluster_list /= Void then
-				cluster_list.draw_in (clip_closure);
+				cluster_list.draw_in (clip_closure)
 			end
 
 			if icon_list /= Void then
-				icon_list.draw_in (clip_closure);
+				icon_list.draw_in (clip_closure)
 			end
 
 			if class_list /= Void then
-				class_list.draw_in (clip_closure);
+				class_list.draw_in (clip_closure)
 			end
 
 			if not System.is_aggreg_hidden then
 				if aggreg_list /= Void then
-					!! list.make;
-					aggreg_list.draw_in_and_update_list (clip_closure, list);
+					!! list.make
+					aggreg_list.draw_in_and_update_list (clip_closure, list)
 						-- Erase middle for relations that have
 						-- handles which are shared.
 					from
@@ -1461,7 +1461,7 @@ feature -- Output
 					until
 						list.after
 					loop
-						list.item.erase_middle;
+						list.item.erase_middle
 						list.forth
 					end
 				end
@@ -1496,16 +1496,16 @@ feature -- Output
 	refresh_all is
 			-- Refresh the whole window.
 		do
-			set_background_color (resources.drawing_bg_color) ;
-			clear;
+			set_background_color (resources.drawing_bg_color) 
+			clear
 				-- It will be larger than the actual exposed area
 				-- of the workarea but it beats redrawing the whole
 				-- workarea when this routine is called.
-		--	to_refresh.set (- x, - y,
-	--			- x + analysis_window.width,
-		--		- y + analysis_window.height);
-			refresh;
-		end; 
+			--to_refresh.set (- x, - y,
+			--	- x + analysis_window.width,
+			--	- y + analysis_window.height)
+			refresh
+		end
 
 	group_to_refresh (data_list: LINKED_LIST [DATA]) is
 			-- Refresh the forms whose data is in data_list
@@ -1520,24 +1520,24 @@ feature -- Output
 			until
 				data_list.after
 			loop
-				graph_form := find (data_list.item);
+				graph_form := find (data_list.item)
 				if graph_form /= Void then
-					graph_form.update_clip_area;
-					graph_linkable ?= graph_form;
+					graph_form.update_clip_area
+					graph_linkable ?= graph_form
 					if graph_linkable /= Void and then
 					graph_linkable.data.visible_descendant_of
 										(data)
 					then
 						inherit_list.update_form_if_associated_with
-									(graph_linkable, System.is_inheritance_hidden);
+									(graph_linkable, System.is_inheritance_hidden)
 						cli_sup_list.update_form_if_associated_with
-									(graph_linkable, System.is_client_hidden);
+									(graph_linkable, System.is_client_hidden)
 						aggreg_list.update_form_if_associated_with
 									(graph_linkable, System.is_aggreg_hidden)
 					end
-				end;
+				end
 				data_list.forth
-			end;
+			end
 			refresh
 		end
 
@@ -1548,25 +1548,23 @@ feature -- Output
 			w, h: INTEGER
 		do
 			if not to_refresh.empty then
-
-					if refresh_clip.upper_left /= Void then
-						inverted_painter.draw_rectangle (refresh_clip.upper_left.x - 2, refresh_clip.upper_left.y -2, refresh_clip.width +4, refresh_clip.height+4)
-					end
-
+				if refresh_clip.upper_left /= Void then
+					inverted_painter.draw_rectangle (refresh_clip.upper_left.x - 2, refresh_clip.upper_left.y -2, refresh_clip.width +4, refresh_clip.height+4)
+				end
 				refresh_upper_left.set (to_refresh.up_left_x - 1,
-						to_refresh.up_left_y - 1);
-				w := to_refresh.down_right_x - to_refresh.up_left_x + 2;
-				h := to_refresh.down_right_y - to_refresh.up_left_y + 2;
+						to_refresh.up_left_y - 1)
+				w := to_refresh.down_right_x - to_refresh.up_left_x + 2
+				h := to_refresh.down_right_y - to_refresh.up_left_y + 2
 				if w > 0 and then h > 0 then
-					refresh_clip.set (refresh_upper_left, w, h);
-					--set_clip (refresh_clip);
+					refresh_clip.set (refresh_upper_left, w, h)
+					--set_clip (refresh_clip)
 					display
-					--set_no_clip;
-					to_refresh.wipe_out;
+					--set_no_clip
+					to_refresh.wipe_out
 					debug ("DRAWING")
 						inverted_painter.draw_rectangle (refresh_clip.upper_left.x -2, refresh_clip.upper_left.y -2, refresh_clip.width+4, refresh_clip.height+4)
-					end;
-				end;
+					end
+				end
 			end
 		end
 

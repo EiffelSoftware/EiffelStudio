@@ -10,32 +10,6 @@ class GRAPH_CLI_SUP
 inherit
 
 	GRAPH_CLIENTELE
-		rename
-			set_color as clientele_set_color,
-			build_label as build_standard_label, 
-			build_link_body as build_clientele_link_body,
-			build_handles as build_standard_handles,
-			attach_attributes_drawing as attach_clientele_attributes_drawing,
-			recompute_attributes_closure as
-						recompute_clientele_attributes_closure,
-			attributes_closure as clientele_attributes_closure,
-			build_attributes as build_clientele_attributes,
-			draw_attributes as draw_clientele_attributes,
-			erase_attributes as erase_clientele_attributes,
-			make_attributes as make_clientele_attributes,
-			make_relation as old_make_relation,
-			add_reverse_link as add_clientele_reverse_link,
-			remove_reverse_link as remove_clientele_reverse_link,
-			build_multiple_text as build_clientele_multiple_text,
-			build_reverse_multiple_text as
-						build_clientele_reverse_multiple_text,
-			remove_multiplicity as remove_clientele_multiplicity,
-			handle_at as standard_handle_at
-		redefine
-			data, link_head, build_multiple_rhomb
-		end;
-
-	GRAPH_CLIENTELE
 		redefine
 			build_label, build_link_body, data, link_head, build_handles,
 			attach_attributes_drawing, build_attributes, draw_attributes,
@@ -44,14 +18,6 @@ inherit
 			build_multiple_text, build_reverse_multiple_text,
 			remove_multiplicity, handle_at,
 			build_multiple_rhomb, set_color,
-			make_relation
-		select
-			build_label, build_link_body, build_handles,
-			attach_attributes_drawing, build_attributes, draw_attributes,
-			erase_attributes, make_attributes, recompute_attributes_closure,
-			attributes_closure, add_reverse_link, remove_reverse_link,
-			build_multiple_text, build_reverse_multiple_text,
-			remove_multiplicity, handle_at, set_color,
 			make_relation
 		end
 
@@ -67,26 +33,31 @@ feature {NONE} -- Initialization
 			has_client_link: a_cli_sup /= Void;
 			has_workarea: a_workarea /= Void;
 			data_not_aggrege: not a_cli_sup.is_aggregation
+		local
+			colo: EV_COLOR
 		do
 			workarea := a_workarea;
 			data := a_cli_sup;
 			-- pascalf
 			if data.color_name = Void then
-				if resources.link_color/= Void then
-					data.set_color_name (resources.link_color.name)
-				else
-					data.set_color_name (resources.cli_link_color.name)
-				end
+				--if resources.link_color/= Void then
+				--	data.set_color_name (resources.link_color.name)
+				--else
+				--	data.set_color_name (resources.cli_link_color.name)
+				--end
+				!! colo.make_rgb(0,255,255)
+				data.set_color(colo)
 			end
 		--
-			client := a_workarea.find_linkable (data.client);
-			supplier := a_workarea.find_linkable (data.supplier);
+			client := a_workarea.find_linkable (data.client)
+			supplier := a_workarea.find_linkable (data.supplier)
 			if client /= Void and then supplier /= Void then
-				a_workarea.cli_sup_list.add_form (Current);
-				!! link_body.make;
-				make_relation (a_workarea);
-				update_clip_area;
-			end;
+				a_workarea.cli_sup_list.add_form (Current)
+				!! link_body.make
+				make_relation (a_workarea)
+				update_clip_area
+			end
+			!! multiple_text.make
 		ensure
 			data_correctly_set: data = a_cli_sup;
 		end; -- make
@@ -155,16 +126,16 @@ feature -- Graphical properties
 	attributes_closure: EC_CLOSURE is
 		do
 			if is_shared then
-				Result := clientele_attributes_closure;
+				Result := precursor
 				if has_reverse then
 					Result.merge (reverse_link_head.closure);
 					Result.merge (reverse_label.closure)
 				end;
 				Result.merge (shared_circle.closure)
 			else
-				Result := clientele_attributes_closure
+				Result := precursor
 			end
-		end; -- attributes_closure
+		end
 
 feature -- Access
 			
@@ -176,7 +147,7 @@ feature -- Access
 			if data.is_reflexive then
 				Result := 0
 			else
-				Result := standard_handle_at (x_coord, y_coord)
+				Result := precursor (x_coord, y_coord)
 			end
 		end; 
 
@@ -187,34 +158,34 @@ feature -- Shared and multiple management
 		local
 			a_color: EV_COLOR
 		do
-			a_color := data.color;
+			a_color := data.color
 			if reverse_side then
-				make_reverse_shared;
-				--reverse_multiple_text.attach_drawing (workarea);
-				--reverse_multiple_text.set_foreground_color (a_color);
+				make_reverse_shared
+				--reverse_multiple_text.attach_drawing (workarea)
+				--reverse_multiple_text.set_foreground_color (a_color)
 			else
-				make_shared;
-				--multiple_text.attach_drawing (workarea);
-				--multiple_text.set_foreground_color (a_color);
-			end;
+				make_shared
+				multiple_text.attach_drawing (workarea)
+				multiple_text.set_foreground_color (a_color)
+			end
 			if not (data.shared /= 0 and data.reverse_shared /= 0) then
-				shared_circle.attach_drawing (workarea);
-				shared_circle.set_color (a_color);
+				shared_circle.attach_drawing (workarea)
+				shared_circle.set_color (a_color)
 				--if has_reverse then
-					--multiple_bar.attach_drawing (workarea);
+					--multiple_bar.attach_drawing (workarea)
 					--multiple_bar.path.set_foreground_color (a_color)
 				--end
 			end
 		ensure
 			is_shared: is_shared
-		end; -- add_shared
+		end
 
 feature -- Element change
 
 	add_reverse_link is
 			-- Add reverse link.
 		do
-			add_clientele_reverse_link;
+			precursor
 			if is_shared then
 				shared_circle.set_radius (shared_radius);
 				if not is_multiple then
@@ -235,7 +206,7 @@ feature -- Removal
 
 	remove_reverse_link is
 		do
-			remove_clientele_reverse_link;
+			precursor
 			if is_shared and not is_multiple then
 				multiple_bar := Void
 			end
@@ -293,7 +264,7 @@ feature -- Removal
 					multiple_rhomb := Void
 				end;
 			else
-				remove_clientele_multiplicity (reverse_side)
+				precursor (reverse_side)
 			end
 		end; -- remove_multiplicity
 
@@ -302,7 +273,7 @@ feature -- Output
 	draw_attributes is
 			-- Draw the attribute figures.
 		do
-			draw_clientele_attributes;
+			precursor
 			if is_shared then
 				shared_circle.draw;
 			end
@@ -311,7 +282,7 @@ feature -- Output
 	erase_attributes is
 			-- Erase the attribute figures.
 		do
-			erase_clientele_attributes;
+			precursor
 			if is_shared then
 				shared_circle.erase;
 			end
@@ -323,17 +294,16 @@ feature {NONE} -- Implementation
 			-- Make shared attributes (circle & text - & bar -)
 		do
 			if not is_shared then
-				!!shared_circle.make (shared_radius);
-				--if has_reverse and (multiple_bar = Void) then
-					--!!multiple_bar.make
-				--end
-			end;
-			--if not has_multiplicity then
-			--	!!multiple_text.make;
-			--	multiple_text.set_text ("1");
-			--	multiple_text.set_font (Resources.link_digit_font);
-			--end
-		end; -- make_shared
+				!!shared_circle.make (shared_radius)
+				if has_reverse and (multiple_bar = Void) then
+					!!multiple_bar.make
+				end
+			end
+			if not has_multiplicity then
+				multiple_text.set_text ("1")
+				multiple_text.set_font (Resources.link_digit_font)
+			end
+		end
 
 	make_reverse_shared is
 			-- Make shared attributes (circle & text - & bar -)
@@ -418,7 +388,7 @@ feature {NONE} -- Implementation
 						(height // 2) - 1)
 				end
 			else
-				build_clientele_multiple_text
+				precursor
 			end
 		end; -- build_multiple_text
 
@@ -458,21 +428,21 @@ feature {NONE} -- Implementation
 						(height // 2) + 3)
 				end
 			else
-				build_clientele_reverse_multiple_text
+				precursor
 			end
 		end 
 
 	attach_attributes_drawing (a_drawing: EV_DRAWABLE) is
 		do
-			attach_clientele_attributes_drawing (a_drawing)
+			precursor (a_drawing)
 			if is_shared then
 				shared_circle.attach_drawing (a_drawing);
 			end
-		end; -- attach_attributes_drawing
+		end
 
 	recompute_attributes_closure is
 		do
-			recompute_clientele_attributes_closure
+			precursor
 			if is_shared then
 				shared_circle.recompute_closure
 			end
@@ -480,7 +450,7 @@ feature {NONE} -- Implementation
 
 	make_attributes is
 		do
-			make_clientele_attributes;
+			precursor
 			if data.shared /= 0 then
 				make_shared
 			end;
@@ -492,7 +462,7 @@ feature {NONE} -- Implementation
 	build_attributes is
 			-- Build the attribute figures.
 		do
-			build_clientele_attributes;
+			precursor
 			if is_shared then
 				build_shared_circle;
 			end
@@ -559,7 +529,7 @@ feature {NONE} -- Implementation
 				from_point.set (start.x, start.y);
 				to_point.set (final.x, final.y);
 			else
-				build_clientele_link_body
+				precursor
 			end
 		end; -- build_link_body
 
@@ -584,9 +554,9 @@ feature {NONE} -- Implementation
 							- label_width - 10,
 							start.y - label_data.y_offset - additional_height)
 			else
-				build_standard_label
+				precursor
 			end
-		end -- build_label
+		end
 
 	make_reflexive_relation (a_workarea: WORKAREA) is
 			-- Make the graphical representation of current relation
@@ -623,7 +593,7 @@ feature {NONE} -- Implementation
 		do
 			!! start_point;
 			!! final_point;
-			old_make_relation (a_workarea);
+			precursor (a_workarea);
 		end;
 
 	build_handles is
@@ -633,17 +603,20 @@ feature {NONE} -- Implementation
 				handles.first.set (start.x, start.y);
 				handles.last.set (final.x, final.y);
 			else
-				build_standard_handles
+				precursor
 			end
 		end;
 
 	set_color is
 			-- Set the color to the current link.
 		do
-			clientele_set_color
+			precursor
 			if is_shared then
 				shared_circle.set_color (data.color)
 			end
 		end
+
+invariant
+	GRAPH_CLI_SUP_multiple_text_exists: multiple_text /= Void
 
 end -- class GRAPH_CLI_SUP

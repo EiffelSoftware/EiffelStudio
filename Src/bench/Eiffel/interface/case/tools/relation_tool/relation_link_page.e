@@ -29,7 +29,7 @@ creation
 
 feature -- Initialization
 
-	make (noteb: EV_NOTEBOOK; ent: ANY) is
+	make (noteb: EV_NOTEBOOK; ent: ANY;caller: EC_RELATION_WINDOW) is
 			-- Initialize
 		local
 			link_box: EV_VERTICAL_BOX
@@ -41,6 +41,7 @@ feature -- Initialization
 			multiplicity_command: ADD_REMOVE_MULTIPLICITY
 			multiplicity_scale_command: CHANGE_MULTIPLICITY
 		do
+			caller_window := caller
 			make_editor_window_page ( noteb, ent)
 			notebook.append_page(page, widget_names.link)
 

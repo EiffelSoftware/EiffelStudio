@@ -1,7 +1,6 @@
 indexing
 
-	description: 
-		"Graphic management for list of graphical figures.";
+	description: "Graphic management for list of graphical figures.";
 	date: "$Date$";
 	revision: "$Revision $"
 
@@ -14,7 +13,9 @@ inherit
 			duplicate as list_duplicate
 		export
 			{ANY} extend
-		end;
+		redefine
+			wipe_out
+		end
 	ONCES
 		undefine
 			copy, setup
@@ -23,6 +24,29 @@ inherit
 creation
 
 	make
+
+
+feature -- Removal
+
+	wipe_out is
+			-- Wipe out Current list.
+			-- Withdraw elements from the observer lists.
+		local
+			obs: OBSERVER
+		do
+			from
+				start
+			until
+				after
+			loop
+				obs ?= item
+				if obs /= Void then
+					observer_management.remove_observer(item.data,obs)
+				end
+				forth
+			end
+			precursor
+		end
 
 feature -- Properties
 

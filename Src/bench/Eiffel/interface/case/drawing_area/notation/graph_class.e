@@ -26,13 +26,6 @@ inherit
 			is_equal
 		end
 
-	OBSERVER
-		rename
-			update as observer_update
-		undefine
-			is_equal
-		end
-
 creation
 
 	make
@@ -99,15 +92,6 @@ feature {NONE} -- Initialization
 		ensure
 			data_set: data = a_class
 		end -- make
-
-
-feature -- Updates
-
-	observer_update is
-		do
-			update_clip_area
-			workarea.refresh
-		end
 
 feature -- Properties
 

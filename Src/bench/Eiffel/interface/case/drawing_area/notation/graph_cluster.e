@@ -9,28 +9,34 @@ class GRAPH_CLUSTER
 inherit
 
 	GRAPH_GROUP
-		rename
-			cluster_at as old_cluster_at
-		undefine
-			is_equal
-		end;
-	GRAPH_GROUP
 		undefine
 			is_equal
 		redefine
 			cluster_at
-		select
-			cluster_at
-		end;
+		end
+
 	GRAPH_LINKABLE
 		redefine
 			unselect, select_it, data, draw_in,
-			partial_draw
-		end;
+			partial_draw,observer_update
+		end
 
 creation
 
 	make
+
+feature -- Update
+
+	observer_update is
+			-- Update the drawing, according to data.
+		do
+			erase_rectangle_title.draw
+			update_form
+ 			update_clip_area
+			set_color
+			cluster_title.draw
+			title.draw
+		end
 
 feature {NONE} -- Initialization
 
@@ -43,7 +49,9 @@ feature {NONE} -- Initialization
 			interior: EC_INTERIOR;
 			cluster_path: EC_PATH
 		do
-			data := a_cluster;
+			data := a_cluster
+			observer_management.add_observer(data,Current)
+		
 			!!center;
 			!!cluster_list.make;
 			!!class_list.make;
@@ -204,15 +212,15 @@ feature -- Access
 		local
 			p: EC_COORD_XY
 		do
-			!!p;
-			p.set (x_coord, y_coord);
+			!!p
+			p.set (x_coord, y_coord)
 			if cluster.contains (p) then
-				Result := old_cluster_at (x_coord, y_coord);
+				Result := precursor (x_coord, y_coord)
 				if Result = Void then
 					Result := Current
-				end;
+				end
 			end
-		end;
+		end
 
 	figure_at (x_coord, y_coord: INTEGER): GRAPH_FORM is
 			-- Figure pointed by `x_coord' and `y_coord'.

@@ -12,10 +12,28 @@ inherit
 	GRAPH_FORM
 		redefine
 			data
-		end;
+		end
+
 	ALIGN_GRID
 		undefine
 			is_equal
+		end
+
+	OBSERVER
+		rename
+			update as observer_update
+		undefine
+			is_equal
+		end
+
+feature -- Updates
+
+	observer_update is
+			-- Update the drawing, according to data.
+		do
+			workareas.change_data(data)
+			set_color
+			draw
 		end
 
 feature -- Properties

@@ -83,33 +83,43 @@ char ignore_updt;
 
 /* TEMPORARY */
 #ifdef __WINDOWS_386__
-#define UPDTLEN 10
-#define UPDT_NAME "\\melted.eif"
+ #define UPDTLEN 10		/* Note, changed indenting for readability TNH */
+ #define UPDT_NAME "\\melted.eif"
 
-inipath = eif_getenv ("ES3INI");
-GetPrivateProfileString   ("Environment", "MELT_PATH", "", buf, 128, inipath);
-WritePrivateProfileString ("Environment", "MELT_PATH",NULL, inipath);
-if (strlen(buf)){
-	meltpath = buf;
-#else
-#define UPDTLEN 10
-#define UPDT_NAME "/melted.eif"
-meltpath = eif_getenv ("MELT_PATH");
-if (meltpath) {
+	inipath = eif_getenv ("ES3INI");
+	GetPrivateProfileString   ("Environment", "MELT_PATH", "", buf, 128, inipath);
+	WritePrivateProfileString ("Environment", "MELT_PATH",NULL, inipath);
+	if (strlen(buf)){
+		meltpath = buf;
+#else	/* not windows */
+ #define UPDTLEN 10
+ #ifdef __VMS
+  #define UPDT_NAME "melted.eif"
+ #else
+  #define UPDT_NAME "/melted.eif"
+ #endif
+	meltpath = eif_getenv ("MELT_PATH");
+	if (meltpath) {
 #endif
-	filename = (char *)cmalloc (strlen (meltpath) + UPDTLEN + 2);
+		filename = (char *)cmalloc (strlen (meltpath) + UPDTLEN + 2);
 	}
-else {
-	meltpath = NULL;
-	filename = (char *)cmalloc (UPDTLEN + 3);
+	else {
+		meltpath = NULL;
+		filename = (char *)cmalloc (UPDTLEN + 3);
 	}
-if (filename == (char *)0){
-	enomem();	
-	exit (1);	
-}
-if (meltpath) strcpy (filename, meltpath);
-else strcpy (filename, ".");
-strcat(filename, UPDT_NAME);
+	if (filename == (char *)0){
+		enomem();	
+		exit (1);	
+	}
+	if (meltpath)
+		strcpy (filename, meltpath);
+	else 
+#ifdef __VMS
+		strcpy (filename, "[]");
+#else
+		strcpy (filename, ".");
+#endif /* __VMS */
+	strcat(filename, UPDT_NAME);
 
 #ifdef DEBUG
 	dprintf(1)("Frozen level = %d\n", zeroc);

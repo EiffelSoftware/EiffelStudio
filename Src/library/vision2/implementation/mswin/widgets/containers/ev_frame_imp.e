@@ -193,8 +193,13 @@ feature {NONE} -- WEL Implementation
 			!! dc.make (Current)
 			dc.get
 			dc.select_font (a_font)
-			set_minimum_height (box_text_height + 2 * box_width)
-			set_minimum_width (dc.string_width (text) + 2 * box_width + 10)
+			if child /= Void then
+				set_minimum_height (box_text_height + 2 * box_width + child.minimum_height)
+				set_minimum_width (dc.string_width (text) + 2 * box_width + 10 + child.minimum_width)
+			else
+				set_minimum_height (box_text_height + 2 * box_width)
+				set_minimum_width (dc.string_width (text) + 2 * box_width + 10)
+			end
 			dc.release
 		end
 

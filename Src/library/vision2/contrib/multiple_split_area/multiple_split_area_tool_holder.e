@@ -254,10 +254,6 @@ feature {MULTIPLE_SPLIT_AREA} -- Implemnetation
 			-- Remove any "minimum" height set through `simulate_minimum_height'.
 		do
 			minimum_size_cell.set_minimum_height (0)
-			if parent_area /= Void then
-					-- This is a hack for linux to make sure the split area takes the new cell minimum_size in to account
-				parent_area.set_minimum_height (parent_area.minimum_height)
-			end
 		ensure
 			minimum_size_removed: minimum_size_cell.minimum_height = 0
 		end

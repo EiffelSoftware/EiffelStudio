@@ -26,6 +26,8 @@ feature {NONE} -- Initialization
 			Precursor
 			set_title ("Information")
 			set_buttons (<<"OK">>)
+			set_default_push_button(button ("OK"))
+			set_default_cancel_button(button ("OK"))
 		end
 
 end -- class EV_INFORMATION_DIALOG
@@ -51,6 +53,10 @@ end -- class EV_INFORMATION_DIALOG
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.14  2000/04/29 03:37:24  pichery
+--| Changed Dialogs. Added default & cancel
+--| buttons, Default pixmaps, ...
+--|
 --| Revision 1.13  2000/03/06 19:17:42  oconnor
 --| Added make_with_text_and_actions,
 --| moved make_with_text from decendants to EV_MESSAGE_DIALOG.

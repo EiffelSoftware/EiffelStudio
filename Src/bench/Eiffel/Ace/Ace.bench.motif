@@ -119,6 +119,7 @@ external
 		"$(BENCH)/C/parsing/eiffel/libeiffel.a";
 		"$(BENCH)/C/parsing/lace/liblace.a";
 		"$(BENCH)/C/parsing/shared/libparsing.a";
+		"$(BENCH)/C/platform/libplatform.a";
 		"$(BENCH)/C/clicking/shared/archix.o";
 		"$(BENCH)/C/clicking/motif/libclick.a";
 		"$(BENCH)/Eiffel/library/vision/implement/motif/Clib/motif_Clib.a";

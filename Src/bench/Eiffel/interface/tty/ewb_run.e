@@ -20,13 +20,15 @@ feature
 		local
 			appl_name: STRING;
 			makefile_sh_name: STRING;
-			args: STRING;
 			f: UNIX_FILE;
 			make_f: UNIX_FILE;
 			error: BOOLEAN;
-			root_creation_name: STRING;
-			root_feat: FEATURE_I;
+			system_name: STRING
 		do
+			system_name := System.system_name;
+			if system_name = Void then
+				io.putstring ("You must compile a project first.%N");
+			else
 			!!appl_name.make (0);
 			!!makefile_sh_name.make (0);
 			if melt_only then
@@ -35,7 +37,7 @@ feature
 			else
 				appl_name.append (Workbench_generation_path);
 				appl_name.append_character (Directory_separator);
-				appl_name.append (System.system_name);
+				appl_name.append (system_name);
 				appl_name.append (Executable_suffix);
 			end;
 			!!f.make (appl_name);
@@ -57,22 +59,13 @@ feature
 					end;
 				end;
 				if not error then
-					root_creation_name := System.creation_name;
-					if root_creation_name /= Void then
-						root_feat := System.root_class.compiled_class.
-							feature_table.item (root_creation_name);
-						if root_feat.argument_count = 1 then
-
-								-- Get the arguments
-							appl_name.append_character (' ');
-							io.putstring ("--> Arguments: ");
-							wait_for_return;
-							appl_name.append (io.laststring);
-						end;
-					end;
+						-- Get the arguments
+					appl_name.append_character (' ');
+					appl_name.append (arguments);
 					Execution_environment.put (Workbench_generation_path, "MELT_PATH");
 					Execution_environment.system (appl_name);
 				end;
+			end
 			end
 		end;
 

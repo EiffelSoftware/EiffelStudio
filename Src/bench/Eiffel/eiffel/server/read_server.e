@@ -99,7 +99,7 @@ feature
 				end;
 				offset := info.offset + server_info.position;
 				Result := partial_retrieve
-					(server_file.file_pointer, offset, info.object_count);
+					(server_file.descriptor, offset, info.object_count);
 					-- Insert it in the queue
 				if cache.full then
 						-- If cache is full, oldest is removed
@@ -143,7 +143,7 @@ feature
 
 feature {NONE}
 
-	partial_retrieve (fil: POINTER; pos, nb_obj: INTEGER): T is
+	partial_retrieve (file_desc: INTEGER; pos, nb_obj: INTEGER): T is
 		external
 			"C"
 		end;

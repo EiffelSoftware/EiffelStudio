@@ -22,7 +22,7 @@ feature
 
 	make (a_text_window: TEXT_WINDOW) is
 		do
-            text_window := a_text_window
+			text_window := a_text_window
 		end;
 
 	

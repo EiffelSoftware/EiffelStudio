@@ -156,6 +156,14 @@ feature -- C code generation
 					file.new_line;
 					file.putstring ("RTOC;");
 					file.new_line;
+					if byte_context.workbench_mode then
+							-- Real body id to be stored in the id list of 
+							-- already called once routines.
+						file.putstring ("RTWO(");
+						file.putint (real_body_id - 1);
+						file.putstring (");");
+						file.new_line
+					end;
 					file.putstring ("return Result;");
 				else
 					file.putstring ("return ");
@@ -217,6 +225,9 @@ feature -- Byte code generation
 				ba.append ('%/001/');
 					-- Once not done
 				ba.append ('%U');
+					-- Real body id to be stored in the id list of 
+					-- already called once routines.
+				ba.append_integer (real_body_id - 1);
 				ba.allocate_space (Reference_c_type);
 			else
 				ba.append ('%U');

@@ -43,7 +43,7 @@ feature
 			put_string (first.file_name);
 			new_line;
 			put_string ("Second file: ");
-			put_string (second.class_name);
+			put_string (second.file_name);
 			new_line;
 		end;
 

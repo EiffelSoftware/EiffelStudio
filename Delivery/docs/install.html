@@ -5,7 +5,7 @@
 <meta http-equiv="Content-Type" content="text/html; charset=windows-1252">
 <meta name="GENERATOR" content="Microsoft FrontPage 4.0">
 <meta name="ProgId" content="FrontPage.Editor.Document">
-<title>ISE EiffelBench</title>
+<title>Installation Instructions</title>
 <link rev="made" href="mailto:webmaster@eiffel.com">
 <link rel="stylesheet" type="text/css" href="styles/tech.css">
 <meta name="Microsoft Border" content="t, default">
@@ -19,7 +19,7 @@
   </tr>
   <tr>
     <td colspan="2" valign="top" width="100%">
-<p align="right"><nobr>[&nbsp;<a href="index.html">Home</a>&nbsp;]</nobr> <nobr>[&nbsp;<a href="papers/index.html">Technology&nbsp;Papers</a>&nbsp;]</nobr> <nobr>[&nbsp;Installation&nbsp;Notes&nbsp;]</nobr> <nobr>[&nbsp;<a href="Eiffel/index.html">About&nbsp;Eiffel</a>&nbsp;]</nobr>
+<p align="right"><nobr>[&nbsp;<a href="index.html">Home</a>&nbsp;]</nobr> <nobr>[&nbsp;<a href="release_notes.html">Release&nbsp;Notes</a>&nbsp;]</nobr> <nobr>[&nbsp;<a href="papers/index.html">Technology&nbsp;Papers</a>&nbsp;]</nobr> <nobr>[&nbsp;Installation&nbsp;Notes&nbsp;]</nobr> <nobr>[&nbsp;<a href="Eiffel/index.html">About&nbsp;Eiffel</a>&nbsp;]</nobr>
     </td>
   </tr>
 </table></td></tr><!--msnavigation--></table><!--msnavigation--><table border="0" cellpadding="0" cellspacing="0" width="100%"><tr><!--msnavigation--><td valign="top"><table cols="1" cellpadding="5" cellspacing="0" border="0">
@@ -68,7 +68,8 @@ an entry for ISE Eiffel will be added to your start menu.</p>
 </table>
 <h2>&nbsp;</h2>
 <h3>Launching ISE Eiffel for the first time</h3>
-<p>The first time you will launch ISE Eiffel you will see the following screen
+<p>Launch ISE Eiffel by choosing the entry EiffelBench from your Start Menu or
+from the shortcut located on your desktop. The first time you will launch ISE Eiffel you will see the following screen
 used to ask you to enter your personnal identification license code:</p>
 <p align="center"><img border="0" src="images/instal16.gif" width="770" height="429"></p>
 <p>&nbsp;</p>
@@ -77,12 +78,121 @@ and a key. To enter them, simply click the `Purchase' button a screen will
 appear with two edit fields where you can put your username and your key:</p>
 <p align="center"><img border="0" src="images/instal17.gif" width="362" height="327"></p>
 <p>After entering them, you should be able to run ISE EiffelBench.</p>
-<p>&nbsp;</p>
 <p>The same process is required for ISE EiffelCase.</p>
+<p>After registering your product, you are ready to enjoy Eiffel.</p>
 <p>&nbsp;</p>
 <h2><a name="unix">Unix</a></h2>
+<h3>Installing the files</h3>
+<p>The installation of the files are done simply by copying the files from the delivery medium to the hard disk, for example, to directory
+/usr/local/Eiffel4xx, where `xx' represents the version number (e.g. if you have
+the 4.5 version, it will be Eiffel45).</p>
+<p>If you have a directory called Eiffelxx on CD-ROM, you can either copy the whole directory
+Eiffelxx to your hard disk or run directly from the CD-ROM.</p>
+<p>To copy the files, mount your cd-rom drive. For example,&nbsp;</p>
+<blockquote>
+<p>	mount /mnt/cdrom</p>
+</blockquote>
+<p>Then do the copy. For example,</p>
+<blockquote>
+<p>	cp -r /mnt/cdrom/Eiffelxx /usr/local/</p>
+</blockquote>
+<p>If the delivery medium is a gzipped tar file, you need to untar the file to the desired location. For example,</p>
+<blockquote>
+<p>cd /usr/local<br>
+gunzip -c _delivery_file.tar.gz | tar xvf -</p>
+</blockquote>
 <p>&nbsp;</p>
+<h3>Setting the environment variables</h3>
+<p>Set environment variable <b> EIFFEL4</b> to the Eiffelxx directory you want to run
+Eiffel from. This directory can be on your hard disk (for example /usr/local/Eiffelxx) or on CD-ROM.</p>
+<p>Set your <b> PLATFORM</b> environment variable to specify you platform. Click
+<a href="platforms.html">here</a> to know what the value of <b>PLATFORM</b>
+should be for your particular platform.</p>
+<p>Add the following directory to your path: <b>$EIFFEL4</b>/bench/spec/<b>$PLATFORM</b>/bin.</p>
+<p>If you chose to run Eiffel from the CD-ROM you have to copy the directory Eiffel4/install to you hard disk and set environment variable
+<b> EIF_LICENSE</b> to point there.</p>
+<p>&nbsp;</p>
+<h3><a name="single">Individual License</a></h3>
+<p>If you are evaluating Eiffel for a trial period or if you have purchased a multi-user license,
+<a href="#multiple"> go directly to the next chapter</a>.</p>
+<p>If you have purchased an individual license of Eiffel, add at the beginning
+of the license file the User-key code that you should have received with your
+purchase. The license file is either <b>$EIFFEL4</b>/install/limand/dhost (if you run Eiffel from your hard
+disk) or <b> $</b><b>EIF_LICENSE</b>/limand/dhost (if you run Eiffel from the CD-ROM).</p>
+<p>When done go to the last section to learn how to launch EiffelBench.</p>
+<p><b><font color="#FF0000">Note: </font></b>The User-key is independent from
+the IP address. No `<i>eifdaemon</i>' or `<i>eifid</i>' is required.<br>
+</p>
+<p>&nbsp;</p>
+<h3><a name="multiple">Multiple License</a></h3>
+<p>If you have purchased an individual license of Eiffel, <a href="#single"> go directly to
+the previoust chapter</a>.</p>
+<p>If you are evaluating Eiffel for a trial period or if you have purchased a multi-user license, you need to follow the instruction above to set
+the license manager up.</p>
+<p>Run the command `<i>eifid</i>' and send the output to <a href="mailto:register@eiffel.com">register@eiffel.com</a>.</p>
+<p>If you have problems running `<i>eifid</i>', for example, error message saying
+invalid hostname, check that your hostname and network is set up correctly.</p>
+<table border="0" width="100%" cellspacing="0" cellpadding="0">
+  <tr>
+    <td bgcolor="#FFFFE1" valign="top"><img border="0" src="images/danger.gif" width="45" height="39"></td>
+    <td bgcolor="#F5F5F5">The name of your host must not be localhost! If it is, change it in the
+      file /etc/HOSTNAME and run hostname -F /etc/HOSTNAME. Even if your machine
+      is not on a network, a minimum configuration of the network is required (looback device in particular).</td>
+  </tr>
+</table>
+<p>We will send you registration keys for the products you have purchased. The keys should be put at the end of the file
+<b>$EIFFEL4</b>/install/registration if you run Eiffel from your hard disk, or <b>$EIF_LICENSE</b>/registration if you run Eiffel from a CD-ROM. After
+that you should run the command `<i>eiflicense'</i>, which will install the license
+keys.</p>
+<p>Then edit the file <b>$EIFFEL4</b>/install/limand/dhost or <b>$EIF_LICENSE</b>/limand/dhost
+and enter the host name of the machine used when generating the `<i>eifid</i>'.
+For example, one can do:</p>
+<blockquote>
+<p>        % hostname > dhost</p>
+</blockquote>
+<p>Run the license manager in the background:</p>
+<blockquote>
+<p>        % eifdaemon &amp;</p>
+</blockquote>
+<p>Or better:</p>
+<blockquote>
+<p>        % (nohup eifdaemon &amp;)</p>
+</blockquote>
+<p>Or, if you want a log of the connections to eifdaemon:</p>
+<blockquote>
+<p>        % (nohup eifdaemon -l &amp;)</p>
+</blockquote>
+<p>        &nbsp;</p>
+<p>        When you are done with this sequence, you are ready to launch our
+products.</p>
+<p>For later: if you turn off the machine, you will need to restart eifdaemon when you turn it back on. To avoid having to restart eifdaemon manually, you
+may consider putting a call to that command in the boot scripts for your machine.</p>
+<p><b><font color="#FF0000">Note:</font></b> They rely on the IP address of the
+host, where `<i>eifdaemon</i>' is running. The `<i>eifdaemon</i>' must run in
+background on the host, which `eifid' is used to generate the license keys. The
+license key is an encrypted code and it can also be used to grant temporary
+license.<br>
+<br>
+</p>
+<table border="0" width="100%" cellspacing="0" cellpadding="0">
+  <tr>
+    <td bgcolor="#FFFFE1" valign="top"><img border="0" src="images/danger.gif" width="45" height="39">
+      <p><font color="#FF0000" size="3"><b>Linux</b></font></p>
+    </td>
+    <td bgcolor="#F5F5F5">On Linux, the license manager is kernel dependent.
+      Make sure you read the section about setting your PLATFORM variable. If
+      you still cannot use the license manager, it is recommended to run the `<i>eifdaemon</i>'
+      on another Unix platform, on which the `<i>eifdaemon</i>' is more stable
+      (Solaris for instance). Otherwise, you can ask ISE for providing you with
+      a temporary license key, which is kernel independent or a User-key (for
+      Eiffelbench and Eiffelcase only)</td>
+  </tr>
+</table>
+<p>
 <h2><a name="vms">VMS</a>
+
+</h2>
+<p>To be completed soon.
 
   </td></tr></table>&nbsp;<!--msnavigation--></td></tr><!--msnavigation--></table></body>
 

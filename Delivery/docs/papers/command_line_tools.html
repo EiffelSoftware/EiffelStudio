@@ -19,12 +19,12 @@
   </tr>
   <tr>
     <td colspan="2" valign="top" width="100%">
-<p align="right"><nobr>[&nbsp;<a href="../index.html">Home</a>&nbsp;]</nobr> <nobr>[&nbsp;<a href="index.html">Technology&nbsp;Papers</a>&nbsp;]</nobr> <nobr>[&nbsp;<a href="../install.html">Installation&nbsp;Notes</a>&nbsp;]</nobr> <nobr>[&nbsp;<a href="../Eiffel/index.html">About&nbsp;Eiffel</a>&nbsp;]</nobr>
+<p align="right"><nobr>[&nbsp;<a href="../index.html">Home</a>&nbsp;]</nobr> <nobr>[&nbsp;<a href="../release_notes.html">Release&nbsp;Notes</a>&nbsp;]</nobr> <nobr>[&nbsp;<a href="index.html">Technology&nbsp;Papers</a>&nbsp;]</nobr> <nobr>[&nbsp;<a href="../install.html">Installation&nbsp;Notes</a>&nbsp;]</nobr> <nobr>[&nbsp;<a href="../Eiffel/index.html">About&nbsp;Eiffel</a>&nbsp;]</nobr>
     </td>
   </tr>
 </table></td></tr><!--msnavigation--></table><!--msnavigation--><table border="0" cellpadding="0" cellspacing="0" width="100%"><tr><!--msnavigation--><td valign="top"><table cols="1" cellpadding="5" cellspacing="0" border="0">
 <tr><td>
-<h1>Eiffel batch compiler - es4</h1>
+<h2>Eiffel batch compiler - es4</h2>
     <pre>Usage:
 	es4 [-help | -version | -batch -freeze | -finalize [-keep] | -precompile |
 	-loop | -quick_melt | -clients [-filter filtername] class |
@@ -80,29 +80,93 @@ For example:
 
 <p>&nbsp;</p>
 
-<h1>finish_freezing</h1>
+<h2>finish_freezing</h2>
 
-<p>On Unix there is no option for finish_freezing, on Windows they are the following:
+<p>On Unix there is no special options for finish_freezing, on Windows they are
+only two:
     <ul>
       <li><b>-location</b> location_path: enables to launch `finish_freezing' on a
     remote directory.</li>
-      <li><b>-silent</b>: does not prompt the user to tell him if the compilation
-    either succeeded or failed.</li>
+      <li><b>-silent</b>: does not prompt the user with the message box where
+        the status of the C compilation appears.</li>
     </ul>
 <p>&nbsp;</p>
 
 
-<h1 align="left"><a name="batch">Batch compilation</a></h1>
+<h2 align="left"><a name="batch">Batch compilation</a></h2>
 <p>Since the introduction of ISE EiffelBench 4.3, you can do some batch
 processing on Windows. Until then it was only possible on Unix platforms. With
 the introduction of ISE EiffelBench 4.5 new options has been added (see above
 for a list of options).</p>
-<p>In order to launch a compilation which can either be successful or
-unsuccessful you have to specify the `-batch' switch in the `es4' command line,
-otherwise the Eiffel compilation will be blocked. When compiling</p>
-<h2>Unix</h2>
+<p>In order to launch a compilation without user intervention you need to specify the `-batch' switch in the `es4' command line,
+otherwise the Eiffel compilation will be blocked. We will present below a
+typical example of batch processing on both Unix and Windows platforms where we
+want to compile a project in both frozen and finalized mode, then to launch the
+C compilations. At the same time we want to save the output of `es4' and the C
+compilations.</p>
 <p>&nbsp;</p>
-<h2>Windows</h2>
+<h3>Unix</h3>
+<p>In a file called `launch_es4' you can have the following:</p>
+<center>
+<table>
+  <tr>
+    <td bgcolor="#FFFFE3">
+      <pre>#!/bin/sh
+
+output_file=&quot;/output_path/OUTPUT&quot;
+
+cd /your_project_path
+
+#Launch Eiffel compilation
+es4 -batch -ace Ace.ace -finalize 2&gt; $output_file
+
+#Launch C compilation for frozen code
+cd EIFGEN/W_code
+finish_freezing &gt; $output_file
+
+#Launch C compilation for finalized code
+cd EIFGEN/F_code
+finish_freezing &gt; $output_file</pre>
+    </td>
+  </tr>
+</table>
+</center>
+<p>It will go the directory where your project is located and compile your
+Eiffel code using the `Ace.ace' file located in your project directory and
+compile automatically the C code. All outputs will be stored in the file `/output_path/OUTPUT'.</p>
+<p><b><font color="#FF0000">Note:</font></b> All output from `es4' are going to
+the error output, so do not forget to redirect the error output when you want to
+see the results</p>
+<p>&nbsp;</p>
+<h3>Windows</h3>
+
+<p>In a file called `launched_es4.bat' you can have the following:</p>
+
+<p>&nbsp;</p>
+<center>
+<table>
+  <tr>
+    <td bgcolor="#FFFFE3">
+      <pre>cd C:\your_project_path
+
+#Launch Eiffel compilation
+es4 -batch -ace Ace.ace -finalize &gt; c:\output_path\OUTPUT
+
+#Launch C compilation for frozen code
+cd EIFGEN\W_code
+finish_freezing &gt; c:\output_path\OUTPUT
+
+#Launch C compilation for finalized code
+cd EIFGEN\F_code
+finish_freezing &gt; c:\output_path\OUTPUT</pre>
+    </td>
+  </tr>
+</table>
+</center>
+<p>It will go the directory where your project is located and compile your
+Eiffel code using the `Ace.ace' file located in your project directory and
+compile automatically the C code. All outputs will be stored in the file
+`c:\output_path/OUTPUT'.</p>
 
   </td></tr></table>&nbsp;<!--msnavigation--></td></tr><!--msnavigation--></table></body>
 

@@ -5,7 +5,7 @@
 <meta http-equiv="Content-Type" content="text/html; charset=windows-1252">
 <meta name="GENERATOR" content="Microsoft FrontPage 4.0">
 <meta name="ProgId" content="FrontPage.Editor.Document">
-<title>ISE EiffelBench</title>
+<title>Platform Requirements</title>
 <link rev="made" href="mailto:webmaster@eiffel.com">
 <link rel="stylesheet" href="styles/tech.css" type="text/css">
 <meta name="Microsoft Border" content="t, default">
@@ -15,15 +15,30 @@
   <tr>
     <td valign="top" bgcolor="#000063" width="291"><b><font face="Arial" size="4" color="#FFFFFF">Interactive<br>
       Software Engineering</font></b></td>
-    <td valign="top" bgcolor="#000063" width="720"><b><font face="Arial" size="6" color="#FFFFCC"></font></b></td>
+    <td valign="top" bgcolor="#000063" width="720"><b><font face="Arial" size="6" color="#FFFFCC">Platform Requirements</font></b></td>
   </tr>
   <tr>
     <td colspan="2" valign="top" width="100%">
-<p align="right">
+<p align="right"><nobr>[&nbsp;<a href="index.html">Home</a>&nbsp;]</nobr> <nobr>[&nbsp;<a href="release_notes.html">Release&nbsp;Notes</a>&nbsp;]</nobr> <nobr>[&nbsp;<a href="papers/index.html">Technology&nbsp;Papers</a>&nbsp;]</nobr> <nobr>[&nbsp;<a href="install.html">Installation&nbsp;Notes</a>&nbsp;]</nobr> <nobr>[&nbsp;<a href="Eiffel/index.html">About&nbsp;Eiffel</a>&nbsp;]</nobr>
     </td>
   </tr>
 </table></td></tr><!--msnavigation--></table><!--msnavigation--><table border="0" cellpadding="0" cellspacing="0" width="100%"><tr><!--msnavigation--><td valign="top"><table cols="1" cellpadding="5" cellspacing="0" border="0">
 <tr><td>
+
+<h1><a name="Windows">Windows</a></h1>
+
+<blockquote>
+  <p>ISE products run smoothly on Windows 95/98/NT/2000. Look at the <a href="papers/c_compilers.html">C
+  compilers</a> pages to know more about Windows requirements.</p>
+
+<p>Due to the way Windows 95/98 manage the graphical user resources you will
+notice sometimes that some icons of EiffelBench, EiffelCase or EiffelBuild will
+disappear. This just means that you are running too low on graphical user
+resources, closing some applications should fix the problem.</p>
+
+</blockquote>
+
+<p>&nbsp;</p>
 
 <h1>
 <a name="Linux">
@@ -142,19 +157,9 @@ Linux kernel.
 
 </p>
 
-<h1><a name="Windows">Windows</a></h1>
-
-<p>ISE products run smoothly on Windows 95/98/NT/2000. Look at the <a href="papers/c_compilers.html">C
-compiler</a> pages to know more about Windows requirements.</p>
-
-<p>Due to the way Windows 95/98 manage the graphical user resources you will
-notice sometimes that some icons of EiffelBench, EiffelCase or EiffelBuild will
-disappear. This just means that you are running to low on graphical user
-resources, closing some applications should fix the problem.</p>
-
-<p>&nbsp;</p>
-
 <h1><a name="alpha">Digital Unix</a></h1>
+
+<blockquote>
 
 <p>To run ISE Eiffel on this platform, please set your environment variable PLATFORM:
 <blockquote>
@@ -173,18 +178,25 @@ resources, closing some applications should fix the problem.</p>
 <p>ISE EiffelBench doesn't support any multithreaded mechanism on Digital Unix. However, you can compile multi-threaded programs using the POSIX libraries,
 since ISE Eiffel 4.5 provides with Beta-test multi-threaded run-times.&nbsp;
 
+</blockquote>
+
 <h1>&nbsp;</h1>
 
 <h1><a name="SGI">SGI</a></h1>
+
+<blockquote>
 
 <p>This release has been compiled on IRIX64 sgi 6.5 with cc.
 
 <p>Please your PLATFORM environment variable to sgi if you are running on sgi 6.x.  This release is not compatible
 with sgi-5.x.
 
+</blockquote>
+
 <p>&nbsp;
 
 <h1><a name="Solaris24">Solaris 2.4</a></h1>
+<blockquote>
 <p>This note does not apply to any version other than Solaris 2.4.</p>
     <ul>
       <li> C compiler:<br>
@@ -203,12 +215,17 @@ The following do NOT cause any problem:
 <br>
 	- Executing other tools of the environment, in particular EiffelBuild.</li>
     </ul>
+</blockquote>
 <h1>&nbsp;</h1>
 
 <h1><a name="Solaris25+">Solaris 2.5 and greater</a></h1>
 
+<blockquote>
+
 <p>This version is the same as the SOLARIS-2.4 release (PLATFORM = solaris)&nbsp;
 except in multithreaded mode. Please read the entry concerning Solaris 2.4.
+
+</blockquote>
 
 <h1>&nbsp;</h1>
 
@@ -311,19 +328,40 @@ Updating PLATFORM:<br>
 
 <h2>Limitation of the process memory</h2>
 
+<blockquote>
+
 <p>Under csh, type `limit' to display the limits associated with the current user. `limit -h' display the limits built in the Unix kernel.
 
 <p>If the maximum memory is limited, use the "System Tuner" (in the Admin Tools folder) to set the value to unlimited:
 
-<p>In the process limit parameter section, modify the values for SVMMLIM and HVMMLIM to 0x7FFFFFFF (unlimited).
-
-<h2>&nbsp;</h2>
+<p>In the process limit parameter section, modify the values for SVMMLIM and HVMMLIM to 0x7FFFFFFF (unlimited).<p>This
+  release has been compiled on UnixWare 2.1.
+</blockquote>
+<p>&nbsp;
 
 <h2>No shared library of the ISE Eiffel runtimes.</h2>
 
 <p>&nbsp;
 
+<h1><a name="vms">VMS</a></h1>
+
+<font SIZE="1">
+<blockquote>
+  <p>This release has been compiled for OpenVMS/Alpha Version 7.1 or greater and
+  requires:</p>
+  <ul>
+    <li>DEC C compiler (V5.4 or greater)</li>
+    <li>DEC MMS or Madgoat Software MMK or Gnu make</li>
+  </ul>
+  <p>&nbsp;</p>
+  <p>The &quot;official&quot; operating system name is OpenVMS/Alpha (or OpenVMS/VAX).</p>
+  <p>OpenVMS/VAX is not supported at this time.</p>
+</blockquote>
+<p>&nbsp;</p>
+</font>
+
 <h1><a name="Motif12">Motif 1.2</a></h1>
+<blockquote>
 <p>Most of the Unix version of ISE products are linked either dynamically or
 statically with the Motif 1.2 version given with the corresponding Platform. Due
 to limitations or Motif 1.2 certains graphical functionality of some ISE
@@ -337,11 +375,13 @@ products are limited:</p>
 
 <p>List of Platforms using Motif 1.2:
     <ul>
-      <li><a href="#Solaris24">Solaris</a></li>
+      <li><a href="#Solaris24">All Solaris platformss</a></li>
       <li><a href="#sgi">SGI</a></li>
       <li><a href="#alpha">Digital Unix</a></li>
       <li><a href="#unixware">UnixWare</a></li>
+      <li><a href="#vms">VMS</a></li>
     </ul>
+</blockquote>
   </td></tr></table>&nbsp;<!--msnavigation--></td></tr><!--msnavigation--></table></body>
 
 </html>

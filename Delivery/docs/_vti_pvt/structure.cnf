@@ -1,5 +1,7 @@
 3.0.0.507
-1032
+1034
+1033,release_notes.html,0,Release Notes,0,942281138,1
+vti_globalpage:BW|true
 1018,papers/index.html,0,Technology Papers,0,942202015,1
 vti_globalpage:BW|true
 1000,index.html,0,Technology,0,942192567,0
@@ -19,3 +21,4 @@ vti_globalpage:BW|true
 1021,papers/cecil.html,0,CECIL: Using Eiffel from C\, C++ and other languages,1018,942202015,0
 1020,papers/c++.html,0,Legacy++ and the C++ interface,1018,942202015,0
 1019,papers/c_compilers.html,0,C Compilers,1018,942202973,0
+1032,platforms.html,0,Platform Requirements,1005,942280409,0

@@ -89,7 +89,7 @@ feature -- Status setting
 				end
 				main_socket.connect
 			end
-			if not is_open then
+			if not (is_open or main_socket.socket_ok) then
 				error_code := Connection_refused
 			else
 				bytes_transferred := 0
@@ -98,7 +98,7 @@ feature -- Status setting
 				content_length := 0
 			end
 		ensure then
-			open_implies_correct_socket: is_open implies main_socket.socket_ok
+			correct_socket_if_not_error: not error = main_socket.socket_ok
 		rescue
 			error_code := Connection_refused
 		end

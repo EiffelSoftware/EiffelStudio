@@ -287,7 +287,7 @@ end;				-- Check if the path is valid
 				-- Process the include and exclude lists
 			if ex_l /= Void then
 				from
-					!!exclude_list.make (ex_l.count);
+					!!exclude_list.make_filled (ex_l.count);
 					i := 1;
 				until
 					i > ex_l.count
@@ -311,7 +311,7 @@ end;				-- Check if the path is valid
 			end;
 			if inc_l /= Void then
 				from
-					!!include_list.make (inc_l.count);
+					!!include_list.make_filled (inc_l.count);
 					i := 1;
 				until
 					i > inc_l.count

@@ -100,10 +100,19 @@ feature
 
 	set_text (a_string: STRING) is
 			-- Set `text' to `a_string'
+		local
+			was_managed: BOOLEAN
 		do
 			text_modified := True;
 			text := a_string;
+			if widget.managed then
+				was_managed := True;
+				widget.unmanage;
+			end;
 			widget.set_text (a_string)
+			if was_managed then
+				widget.manage;
+			end;
 		end;
 
 	is_maximum_right_bottom: BOOLEAN is

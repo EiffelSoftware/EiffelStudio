@@ -13,6 +13,8 @@ inherit
 	GB_SHARED_OBJECT_EDITORS
 		export
 			{NONE} all
+		undefine
+			is_equal, copy, default_create
 		end
 	
 	GB_GENERAL_UTILITIES

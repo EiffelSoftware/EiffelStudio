@@ -1055,13 +1055,13 @@ feature {NONE} -- Implementation
 					if a_feature.type.generics.item (l_cnt).has_associated_class then
 						full_type_name.append ("," + a_feature.type.generics.item (l_cnt).associated_class.name_in_upper)
 					else
-						full_type_name.append ("," + a_feature.associated_class.generics.i_th (l_cnt).formal_name)
+						full_type_name.append ("," + a_feature.associated_class.generics.i_th (l_cnt).name)
 					end	
 				else
 					if a_feature.type.generics.item (l_cnt).has_associated_class then
 						full_type_name.append (a_feature.type.generics.item (l_cnt).associated_class.name_in_upper)
 					else
-						full_type_name.append (a_feature.associated_class.generics.i_th (l_cnt).formal_name)
+						full_type_name.append (a_feature.associated_class.generics.i_th (l_cnt).name)
 					end	
 					l_multiple_generics := True
 				end

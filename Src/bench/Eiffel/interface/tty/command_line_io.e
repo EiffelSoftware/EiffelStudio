@@ -77,7 +77,7 @@ feature -- Input/output
 			wait_for_return;
 			count := io.laststring.count;
 			!! arg.make (count);
-			command_arguments.discard_items;
+			command_arguments.wipe_out;
 			from
 				i := 1;
 				j := 1;

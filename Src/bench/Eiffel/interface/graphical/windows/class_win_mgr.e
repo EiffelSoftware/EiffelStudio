@@ -30,11 +30,11 @@ creation
 
 feature -- Initialization
 
-	make (a_screen: SCREEN; i: INTEGER) is
+	make (a_screen: SCREEN) is
 			-- Initialize Current.
 		do
-			mgr_make (a_screen, i);
-			Class_tool_resources.add_user (Current)
+			mgr_make (a_screen);
+			Class_resources.add_user (Current)
 		end
 
 feature -- Access
@@ -63,9 +63,9 @@ feature -- Update
 			-- if the value of `new_res' is applicable.
 			-- Also update the interface.
 		local
-			cr: like Class_tool_resources
+			cr: like Class_resources
 		do
-			cr := Class_tool_resources;
+			cr := Class_resources;
 			if old_res = cr.feature_clause_order then
 				clear_class_tables
 			end

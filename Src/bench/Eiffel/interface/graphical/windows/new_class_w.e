@@ -9,11 +9,10 @@ class NEW_CLASS_W
 
 inherit
 
-	FORM_D
+	EB_FORM_DIALOG
 		rename
 			make as form_d_make
 		end;
-	INTERFACE_W;
 	EB_CONSTANTS;
 	COMMAND;
 	WARNER_CALLBACKS
@@ -53,7 +52,7 @@ feature -- Initialization
 			cluster_form.attach_left (cluster_name, 0);
 			cluster_form.attach_right (cluster_list, 0);
 			cluster_form.attach_left_widget (cluster_name, cluster_list, 5);
-			cluster_form.attach_bottom (cluster_list, 0);
+			cluster_form.attach_bottom (cluster_list, 5);
 			file_form.attach_left (file_label, 0);
 			file_form.attach_right (file_entry, 0);
 			file_form.attach_left_widget (file_label, file_entry, 5);
@@ -63,7 +62,7 @@ feature -- Initialization
 			attach_left (cluster_form, 10);
 			attach_top_widget (class_l, file_form, 5);
 			attach_top_widget (file_form, cluster_form, 5);
-			attach_bottom_widget (separator, cluster_form, 5);
+			attach_bottom_widget (separator, cluster_form, 0);
 			attach_bottom_widget (form, separator, 5);
 			attach_left (separator, 5);
 			attach_right (separator, 5);
@@ -86,6 +85,7 @@ feature -- Initialization
 			cancel_b.add_activate_action (Current, cancel);
 			create_b.add_activate_action (Current, create);
 			set_composite_attributes (Current);
+			realize;
 			set_exclusive_grab
 		end;
 
@@ -192,7 +192,7 @@ feature -- Access
 			else
 				create_b.set_insensitive
 			end;
-			popup
+			display
 		end;
 
 	change_cluster is
@@ -243,18 +243,15 @@ feature -- Execution
 						!! stone.make (class_i);
 						if not file.exists then
 							load_default_class_text (file);
-							unrealize;
 							popdown;
 						elseif
 							not (file.is_readable and then file.is_plain)
 						then
-							unrealize;
 							popdown;
 							warner (tool.popup_parent).gotcha_call (Warning_messages.w_Cannot_read_file (f_name))
 						else
 								--| Reading in existing file (created outside
 								--| ebench). Ask for confirmation
-							unrealize;
 							popdown;
 							warner (tool.popup_parent).custom_call
 								(Current, Warning_messages.w_File_exists_edit_it (f_name),
@@ -263,7 +260,6 @@ feature -- Execution
 					end;
 				end;
 			elseif argument = cancel then
-				unrealize;
 				popdown
 				if last_warner /= Void then
 					last_warner.popdown

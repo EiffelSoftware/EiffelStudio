@@ -119,7 +119,7 @@ feature -- Properties
 	default_color : EV_COLOR is
 		--default color
 		do
-				Result := Resources.inh_link_color
+				Result := Resources.get_color("link_inherit")
 		end;
 
 	has_parent_name	( s : STRING )	: BOOLEAN	is

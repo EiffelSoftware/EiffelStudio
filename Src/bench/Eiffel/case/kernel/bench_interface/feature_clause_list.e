@@ -36,21 +36,21 @@ feature {NONE} -- Initialization
 		local
 			f_clause: FEATURE_CLAUSE_DATA
 		do
-			make (c_data);
-			from
-				s.start
-			until
-				s.after
-			loop
-				!! f_clause.make_from_storer (s.item, c_data)
-				put_right (f_clause);
-				forth;
-				s.forth
-			end
-			if not empty then
-				current_feature_clause := first
-				current_feature_clause.set_is_current
-			end
+			--make (c_data);
+			--from
+			--	s.start
+			--until
+			--	s.after
+			--loop
+			--	!! f_clause.make_from_storer (s.item, c_data)
+			--	put_right (f_clause);
+			--	forth;
+			--	s.forth
+			--end
+			--if not empty then
+			--	current_feature_clause := first
+			--	current_feature_clause.set_is_current
+			--end
 		end;
 
 feature -- Properties
@@ -66,15 +66,15 @@ feature -- Access
 	find_clause (f_data: FEATURE_DATA): FEATURE_CLAUSE_DATA is
 			-- Find clause with feature `f_data'
 		do
-			from
-				start
-			until
-				after or else
-				item.features.has (f_data)
-			loop
-				forth
-			end;
-			Result := item
+		--	from
+		--		start
+		--	until
+		--		after or else
+		--		item.features.has (f_data)
+		--	loop
+		--		forth
+		--	end;
+		--	Result := item
 		end
 
 feature -- Setting
@@ -86,11 +86,11 @@ feature -- Setting
 			not_already: current_feature_clause /= fc
 			fc_in_current_list: has (fc)
 		do
-			if current_feature_clause /= Void then
-				current_feature_clause.unset_is_current
-			end
-			current_feature_clause := fc
-			current_feature_clause.set_is_current
+		--	if current_feature_clause /= Void then
+		--		current_feature_clause.unset_is_current
+		--	end
+		--	current_feature_clause := fc
+		--	current_feature_clause.set_is_current
 		ensure
 			current_feature_clause_set: current_feature_clause = fc
 		end
@@ -102,14 +102,14 @@ feature -- Output
 		require
 			valid_text_area: text_area /= Void
 		do
-			from
-				start
-			until
-				after
-			loop
-				item.generate_feature_names (text_area)
-				forth;
-			end
+		--	from
+		--		start
+		--	until
+		--		after
+		--	loop
+		--		item.generate_feature_names (text_area)
+		--		forth;
+		--	end
 		end;
 
 	generate_modified_feature_names (text_area: TEXT_AREA) is
@@ -117,14 +117,14 @@ feature -- Output
 		require
 			valid_text_area: text_area /= Void
 		do
-			from
-				start
-			until
-				after
-			loop
-				item.generate_modified_feature_names (text_area)
-				forth;
-			end
+		--	from
+		--		start
+		--	until
+		--		after
+		--	loop
+		--		item.generate_modified_feature_names (text_area)
+		--		forth;
+		--	end
 		end;
 
 	generate (text_area: TEXT_AREA; is_spec: BOOLEAN ) is
@@ -132,31 +132,31 @@ feature -- Output
 		require
 			valid_text_area: text_area /= Void
 		do
-			from
-				start
-			until
-				after
-			loop
-				if not is_spec or else not item.export_i.is_none then
-					item.generate	( text_area	, is_spec );
-				end;
-				forth;
-			end
+		--	from
+		--		start
+		--	until
+		--		after
+		--	loop
+			--	if not is_spec or else not item.export_i.is_none then
+			--		item.generate	( text_area	, is_spec );
+			--	end;
+			--	forth;
+		--	end
 		end;
 
 feature -- Storage
 
 	storage_info: ARRAYED_LIST [S_FEATURE_CLAUSE] is
 		do
-			!! Result.make (count);
-			from
-				start
-			until
-				after
-			loop
-				Result.extend (item.storage_info)
-				forth
-			end
+		--	!! Result.make (count);
+		--	from
+		--		start
+		--	until
+		--		after
+		--	loop
+		--		Result.extend (item.storage_info)
+		--		forth
+		--	end
 		end;
 
 end -- class FEATURE_CLAUSE_LIST

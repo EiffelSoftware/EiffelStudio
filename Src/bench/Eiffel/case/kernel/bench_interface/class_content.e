@@ -48,15 +48,15 @@ feature -- Access
 
 	features: FEATURE_LIST is
 		do
-			!! Result.make;
-			from
-				feature_clause_list.start
-			until
-				feature_clause_list.after
-			loop
-				Result.append (feature_clause_list.item.features);
-				feature_clause_list.forth
-			end
+			--!! Result.make;
+			--from
+			--	feature_clause_list.start
+			--until
+			--	feature_clause_list.after
+			--loop
+			--	Result.append (feature_clause_list.item.features);
+			--	feature_clause_list.forth
+			--end
 		ensure
 			valid_features: Result /= Void
 		end;

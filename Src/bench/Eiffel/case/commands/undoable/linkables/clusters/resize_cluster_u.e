@@ -143,13 +143,13 @@ feature {NONE} -- Implementation
 			entity.set_width (align_grid (entity.x + entity.width + relative_x) - entity.x);
 			entity.set_height (align_grid (entity.y + entity.height + relative_y) - entity.y);
 
-			tag_width := Resources.cluster_name_font.string_width (entity.name) 
+			tag_width := resources.get_font("cluster_name_font").string_width (entity.name) 
 						+ Resources.cluster_title_margin * 2;
 
 			if entity.tag_relative_x + tag_width > entity.width then
 				entity.set_tag_relative_x (entity.width - tag_width);
 			end;
-		end; -- move_figure
+		end
 
 	unmove_figure is
 		do

@@ -18,12 +18,11 @@ class HASH_TABLE [G, H -> HASHABLE] inherit
 
 	TABLE [G, H]
 		rename
-			has as has_item,
-			wipe_out as clear_all
+			has as has_item
 		export
 			{NONE} prune_all
 		redefine
-			copy, is_equal, clear_all, has_item
+			copy, is_equal, wipe_out, has_item
 		end
 
 creation
@@ -453,7 +452,7 @@ feature -- Removal
 			removed: not has (key)
 		end;
 
-	clear_all is
+	wipe_out, clear_all is
 			-- Reset all items to default values.
 		do
 			content.clear_all;

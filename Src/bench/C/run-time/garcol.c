@@ -619,14 +619,31 @@ public void reclaim()
 	 * are known not to have any dispose routine (cf emalloc).
 	 */
 
+#ifdef EIF_WINDOWS
+	struct chunk *c, *cn;
+#endif
+
 #ifdef DEBUG
 	dprintf(1)("reclaim: collecting all objects...\n");
 #endif
 
 	full_sweep();				/* Reclaim ALL the objects in the system */
 
-#ifdef __WINDOWS_386__
+#ifdef EIF_WINDOWS
+#ifdef EIF_WIN_31
 	eif_free_dlls();
+#else
+#ifdef EIF_WIN32
+	eif_cleanup();
+#endif
+	for (c = cklst.ck_head; c != (struct chunk *) 0; c = cn)
+		{
+		cn = c->ck_next;
+		free (c);
+		}
+
+	eif_free_dlls();
+#endif
 #endif
 
 #ifdef DEBUG

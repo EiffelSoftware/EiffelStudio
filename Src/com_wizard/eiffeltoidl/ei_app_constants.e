@@ -12,7 +12,7 @@ feature {NONE} -- Access
 
 	Return_value_variable_name: STRING is "return_value"
 
-	-- Constant for input parser
+feature -- Constants for input parser
 	
 	Feature_indicator: STRING is "#feature#"
 

@@ -71,6 +71,7 @@ feature -- Access
 			if not (t.is_selected) then
 				t.enable_select
 			end
+			(create {EV_ENVIRONMENT}.application.process_events
 		end
 		
 end -- class MAIN_WINDOW

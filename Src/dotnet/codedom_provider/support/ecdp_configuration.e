@@ -33,6 +33,11 @@ inherit
 			{NONE} all
 		end
 
+	ECDP_REGISTRY_KEYS
+		export
+			{NONE} all
+		end
+
 create
 	reload
 	
@@ -48,7 +53,7 @@ feature {NONE} -- Initialization
 			l_key: REGISTRY_KEY
 		do
 			if not l_retried then
-				l_key := feature {REGISTRY}.local_machine.open_sub_key ("Software\ISE\EiffelCodeDomProvider\Configs", False)
+				l_key := feature {REGISTRY}.local_machine.open_sub_key (Configurations_key, False)
 				if l_key = Void then
 					(create {ECDP_EVENT_MANAGER}).raise_event (feature {ECDP_EVENTS_IDS}.Missing_configs, [])
 				else

@@ -90,6 +90,11 @@
 
 #ifdef EIF_WIN32
 #define EIFNET_ERROR_HAPPENED SOCKET_ERROR
+	/* Clean up function */
+typedef void (* EIF_CLEANUP)(EIF_BOOLEAN);
+
+	/* Register `f' as a clean up function */
+extern void eif_register_cleanup(EIF_CLEANUP f);
 #else
 #define EIFNET_ERROR_HAPPENED -1
 #endif
@@ -166,7 +171,7 @@ void do_init(void)
 
 #ifdef EIF_WIN32
 
-void eif_winsock_cleanup(void)
+void eif_winsock_cleanup(EIF_BOOLEAN f)
 {
 	eif_net_check(WSACleanup());
 }
@@ -175,7 +180,7 @@ void do_init(void)
 {
 	WORD wVersionRequested;
 	WSADATA wsaData;
-	int err = 0;
+	int err;
 	static BOOL done = FALSE;
 
 	if (!done) {

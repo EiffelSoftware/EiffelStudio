@@ -107,8 +107,8 @@ feature {NONE}
 			else
 				coeff := (dist / temp);
 				Result.set (pt2.x - pt1.x, pt2.y - pt1.y);
-				Result.set (real_to_integer (Result.x * coeff),
-					real_to_integer (Result.y * coeff));
+				Result.set ((Result.x * coeff).truncated_to_integer,
+					(Result.y * coeff).truncated_to_integer);
 			end;
 		end; -- calculate_vector
 
@@ -132,8 +132,8 @@ feature {NONE}
 			else
 				point.set (hd.y - p.y, p.x - hd.x);
 							coeff := ((wi * 0.5) / temp);
-				point.set (real_to_integer (point.x * coeff),
-				real_to_integer (point.y * coeff));
+				point.set ((point.x * coeff).truncated_to_integer,
+					(point.y * coeff).truncated_to_integer);
 			end;
 			pl := clone (p);
 			pr := clone (p);

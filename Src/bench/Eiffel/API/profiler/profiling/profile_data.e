@@ -15,11 +15,6 @@ inherit
 			out, is_equal
 		end;
 
-	STORABLE
-		undefine
-			copy, is_equal, out
-		end
-
 feature -- Creation feature
 
 	make(num_call : INTEGER; time, self_s, descen: REAL) is

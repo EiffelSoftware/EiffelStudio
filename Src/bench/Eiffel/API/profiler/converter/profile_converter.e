@@ -9,9 +9,9 @@ class PROFILE_CONVERTER
 
 inherit
 
-	STORABLE;
 	SHARED_EIFFEL_PROJECT;
-	COMPILER_EXPORTER
+	COMPILER_EXPORTER;
+	STORABLE
 
 creation
 	make
@@ -143,7 +143,7 @@ debug("PROFILE_CONVERT")
 	profile_information.spit_info;
 	io.error.putstring ("Store is called right now ...%N");
 end;
-				profile_information.independent_store (file);
+				file.independent_store (profile_information);
 debug("PROFILE_CONVERT")
 	io.error.putstring ("`");
 	io.error.putstring (profilename);
@@ -757,7 +757,7 @@ feature {NONE} -- Commands
 				functions.put (new_function, c_name)
 			end
 			!! object_file.make_open_write (filename)
-			functions.independent_store(object_file)
+			object_file.independent_store(functions)
 			object_file.close
 		end
 

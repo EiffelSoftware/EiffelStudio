@@ -45,19 +45,27 @@ feature
 
 feature {NONE}
 
+	first_line: STRING is
+		once
+			Result := "Cancel"
+		end;
+
+	no_item_line: STRING is
+		once
+			Result := "-- no items --"
+		end;
+	
 	fill (l: LINKED_LIST [STRING]) is
 		do
 			list.wipe_out;
 			if l.empty then
-				list.put_right ("Cancel");
-				list.forth;
-				list.put_right ("--no items--");
-				list.set_visible_item_count (2);
+				list.put_right (no_item_line);
+				list.set_visible_item_count (1);
 			else
 				from
 					list.start;
 					l.start;
-					list.put_right ("Cancel");
+					list.put_right (first_line);
 					list.forth;
 				until
 					l.after

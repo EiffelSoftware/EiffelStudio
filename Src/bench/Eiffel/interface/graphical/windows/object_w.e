@@ -19,7 +19,7 @@ inherit
 			build_format_bar, hole, build_widgets, attach_all,
 			tool_name, set_default_format, stone, stone_type, synchronize,
 			process_object, build_basic_bar,
-			close,
+			close, set_default_size,
 			update_boolean_resource,
 			update_integer_resource
 		end;
@@ -31,7 +31,7 @@ inherit
 			tool_name, build_widgets, attach_all, set_default_format,
 			stone, stone_type, synchronize, process_object,
 			build_basic_bar, close, make_shell, reset,
-			update_boolean_resource,
+			update_boolean_resource, set_default_size,
 			update_integer_resource
 		select
 			close_windows, make_shell, reset
@@ -265,6 +265,16 @@ feature -- Settings
 		do
 			set_last_format (default_format);
 		end;
+
+    set_default_size is
+            -- Set the size of Current to its default.
+        do
+            if eb_shell /= Void then
+                eb_shell.set_size 
+                    (Object_tool_resources.tool_width.actual_value,
+                    Object_tool_resources.tool_height.actual_value)
+            end
+        end;
 		
 feature -- Commands
 

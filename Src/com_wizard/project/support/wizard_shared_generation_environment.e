@@ -881,7 +881,7 @@ feature -- Access
 		local
 			a_file: PLAIN_TEXT_FILE
 			a_directory: DIRECTORY
-			tmp_path, a_line, tmp_string1, tmp_string2, tmp_string3: STRING
+			tmp_path, a_line: STRING
 			a_count, i: INTEGER
 		once
 			create Result.make (500)
@@ -889,22 +889,27 @@ feature -- Access
 
 			tmp_path := eiffel4_location + "\wizards\com\config\wizard_winapi_names.cfg"
 
-			create a_directory.make_open_read (eiffel4_location + "\wizards\com\config")
-			if a_directory.has_entry ("wizard_winapi_names.cfg") then
-				create a_file.make_open_read (tmp_path)
+			create a_directory.make (eiffel4_location + "\wizards\com\config")
+			if a_directory.exists then
+				a_directory.open_read
+				if a_directory.has_entry ("wizard_winapi_names.cfg") then
+					create a_file.make_open_read (tmp_path)
 
-				from
-					a_file.start
-				until
-					a_file.end_of_file
-				loop
-					a_file.read_line
-					a_line := clone (a_file.last_string)
-					if not a_line.empty then
-						Result.put (a_line, a_line)
+					from
+						a_file.start
+					until
+						a_file.end_of_file
+					loop
+						a_file.read_line
+						a_line := clone (a_file.last_string)
+						if not a_line.empty then
+							Result.put (a_line, a_line)
+						end
 					end
 				end
 			end
+		ensure
+			non_void_api: Result /= Void
 		end
 
 	problematic_structures: HASH_TABLE [STRING, STRING] is

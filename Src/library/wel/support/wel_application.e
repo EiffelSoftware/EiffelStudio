@@ -240,7 +240,7 @@ feature {NONE} -- Implementation
 		require
 			dispatcher_void: dispatcher = Void
 		do
-			!! dispatcher.make
+			create dispatcher.make
 		ensure
 			dispatcher_not_void: dispatcher /= Void
 		end

@@ -1,0 +1,9 @@
+<table style="header">
+	<row>
+		<cell style="header">[!product!]</cell>
+	</row>
+	<row>
+		<cell style="subheader">[!title!]</cell>
+		<cell>[!navigation!]</cell>
+	</row>
+</table>

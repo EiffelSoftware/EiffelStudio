@@ -22,7 +22,7 @@ feature -- Properties
 			ctxt: CLASS_TEXT_FORMATTER
 		do
 			if flat_table.has (stone) then
-				Result := flat_table.item (stone)
+				Result := flat_table.found_item
 			else
 				!! ctxt;
 				ctxt.set_clickable;
@@ -45,7 +45,7 @@ feature -- Properties
 			ctxt: CLASS_TEXT_FORMATTER
 		do
 			if flatshort_table.has (stone) then
-				Result := flatshort_table.item (stone)
+				Result := flatshort_table.found_item
 			else
 				!! ctxt;
 				ctxt.set_clickable;
@@ -69,7 +69,7 @@ feature -- Properties
 			ctxt: CLASS_TEXT_FORMATTER
 		do
 			if short_table.has (stone) then
-				Result := short_table.item (stone)
+				Result := short_table.found_item
 			else
 				!! ctxt;
 				ctxt.set_clickable;
@@ -94,7 +94,7 @@ feature -- Properties
 			ctxt: CLASS_TEXT_FORMATTER
 		do
 			if clickable_table.has (stone) then
-				Result := clickable_table.item (stone)
+				Result := clickable_table.found_item
 			else
 				!! ctxt;
 				ctxt.set_clickable;
@@ -118,11 +118,12 @@ feature -- Properties
 			ctxt: FEATURE_TEXT_FORMATTER
 		do
 			if rout_flat_table.has (stone) then
-				Result := rout_flat_table.item (stone)
+				Result := rout_flat_table.found_item
 			else
 				!! ctxt;
 				ctxt.set_clickable;
-				ctxt.format (stone.e_feature);
+					--| Show flat form of the routine (False)
+				ctxt.format (stone.e_feature, False);
 				if not ctxt.error then
 					Result := ctxt.text;
 					rout_flat_table.put (Result, stone);
@@ -140,11 +141,12 @@ feature -- Properties
 			ctxt: FEATURE_TEXT_FORMATTER
 		do
 			if debug_table.has (stone) then
-				Result := debug_table.item (stone)
+				Result := debug_table.found_item
 			else
 				!! ctxt;
 				ctxt.set_clickable;
-				ctxt.format_debuggable (stone.e_feature);
+					--| Show flat form with debug point (True)
+				ctxt.format (stone.e_feature, True);
 				if not ctxt.error then
 					Result := ctxt.text;
 					debug_table.put (Result, stone);
@@ -163,7 +165,7 @@ feature -- Properties
 			ctxt: FEATURE_TEXT_FORMATTER
 		do
 			if debug_table.has (stone) then
-				Result := debug_table.item (stone)
+				Result := debug_table.found_item
 			else
 				!! ctxt;
 				ctxt.simple_format_debuggable (stone.e_feature);

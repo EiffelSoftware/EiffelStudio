@@ -71,7 +71,6 @@ feature {EV_ANY_I} -- Implementation
 		do
 			control_move_and_resize (a_x, a_y, a_width, a_height, repaint)
 			if child /= Void then
-				--| FIXME necessary???
 				child.set_move_and_size (0, 0, 
 					client_width, client_height)
 			end
@@ -130,8 +129,8 @@ end -- class EV_CELL_IMP
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
---| Revision 1.9  2000/03/23 19:31:13  brendel
---| Uncommented useful code.
+--| Revision 1.10  2000/03/23 19:33:26  brendel
+--| Removed FIXME related to previous commital.
 --|
 --| Revision 1.8  2000/03/22 22:49:12  brendel
 --| Changed to avoid segmentation violation because of bug in compiler.

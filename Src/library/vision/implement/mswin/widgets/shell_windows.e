@@ -86,8 +86,6 @@ feature -- Initialization
 
 	make_with_coordinates (a_parent: WEL_COMPOSITE_WINDOW; a_name: STRING; a_x, a_y, a_width, a_height: INTEGER) is
 		require
-			a_parent_not_void: a_parent /= Void
-			a_parent_exists: a_parent.exists
 			a_name_not_void: a_name /= Void
 		do
 			register_class

@@ -25,7 +25,7 @@ feature
 		deferred
 		ensure
 			Result >= 0
-		end; -- ascent
+		end;
 
 	average_width: INTEGER is
 			-- Width of all characters in the font in tenth of pixel
@@ -35,7 +35,7 @@ feature
 		deferred
 		ensure
 			average_width >= 0
-		end; -- average_width
+		end;
 
 	character_set: STRING is
 			-- (iso8859-1...)
@@ -45,7 +45,7 @@ feature
 		deferred
 		ensure
 			not (Result = Void)
-		end; -- character_set
+		end;
 
 	descent (a_widget: WIDGET_I): INTEGER is
 			-- Descent value in pixel of the font loaded for `a_widget'.
@@ -56,7 +56,7 @@ feature
 		deferred
 		ensure
 			Result >= 0
-		end; -- descent
+		end;
 
 	family: STRING is
 			-- Family name (Courier, Helvetica...)
@@ -66,7 +66,7 @@ feature
 		deferred
 		ensure
 			not (Result = Void)
-		end; -- family
+		end;
 
 	foundry: STRING is
 			-- Foundry name (Adobe...)
@@ -76,7 +76,7 @@ feature
 		deferred
 		ensure
 			not (Result = Void)
-		end; -- foundry
+		end;
 
 	horizontal_resolution: INTEGER is
 			-- Horizontal resolution of screen for which the font is designed
@@ -86,7 +86,7 @@ feature
 		deferred
 		ensure
 			Result > 0
-		end; -- horizontal_resolution
+		end;
 
 	is_proportional: BOOLEAN is
 			-- Is the font proportional ?
@@ -94,26 +94,26 @@ feature
 			font_specified: is_specified;
 			font_standard: is_standard
 		deferred
-		end; -- is_proportional
+		end;
 
 	is_specified: BOOLEAN is
 			-- Is the font specified ?
 		deferred
-		end; -- is_specified
+		end;
 
 	is_standard: BOOLEAN is
 			-- Is the font standard and informations available (except for name) ?
 		require
 			font_specified: is_specified
 		deferred
-		end; -- is_standard
+		end;
 
 	is_valid (a_widget: WIDGET_I): BOOLEAN is
 			-- Is the font valid in `a_widget''s display ?
 		require
 			font_specified: is_specified
 		deferred
-		end; -- is_valid
+		end;
 
 	name: STRING is
 			-- Name of the font
@@ -122,13 +122,7 @@ feature
 		deferred
 		ensure
 			not (Result = Void)
-		end; -- n_ame
-
-	n_ame: STRING is  obsolete "Use ``name''"
-			-- Name of the font
-		do
-			Result := name
-		end; -- n_ame
+		end;
 
 	pixel_size: INTEGER is
 			-- Size of font in pixel
@@ -138,7 +132,7 @@ feature
 		deferred
 		ensure
 			Result > 0
-		end; -- pixel_size
+		end;
 
 	point: INTEGER is
 			-- Size of font in tenth of points (1 point = 1/72 of an inch)
@@ -148,7 +142,7 @@ feature
 		deferred
 		ensure
 			Result > 0
-		end; -- point
+		end;
 
 	set_name (a_name: STRING) is
 			-- Set `n_ame' to `a_name'.
@@ -157,7 +151,7 @@ feature
 		deferred
 		ensure
 			is_specified implies a_name.is_equal (a_name)
-		end; -- set_name
+		end;
 
 	slant: CHARACTER is
 			-- Slant of font (o, r, i...)
@@ -165,7 +159,7 @@ feature
 			font_specified: is_specified;
 			font_standard: is_standard
 		deferred
-		end; -- slant
+		end;
 
 	string_width (a_widget: WIDGET_I; a_text: STRING): INTEGER is
 			-- Width in pixel of `a_text' in the current font loaded for `a_widget'.
@@ -177,7 +171,7 @@ feature
 		deferred
 		ensure
 			Result >= 0
-		end; -- string_width
+		end;
 
 	vertical_resolution: INTEGER is
 			-- Vertical resolution of screen for which the font is designed
@@ -187,7 +181,7 @@ feature
 		deferred
 		ensure
 			Result > 0
-		end; -- vertical_resolution
+		end;
 
 	weight: STRING is
 			-- Weight of font (Bold, Medium...)
@@ -197,7 +191,7 @@ feature
 		deferred
 		ensure
 			not (Result = Void)
-		end; -- weight
+		end;
 
 	width: STRING is
 			-- Width of font (Normal, Condensed...)
@@ -207,7 +201,7 @@ feature
 		deferred
 		ensure
 			not (Result = Void)
-		end -- width
+		end
 
 end -- class FONT_I
 

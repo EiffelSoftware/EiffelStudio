@@ -33,15 +33,6 @@ feature
 		deferred
 		end;
 
-	add_left (an_item: STRING) is
-			-- Put `an_item' to the left of cursor position.
-			-- Do not move cursor.
-		obsolete
-			"Use `put_left' instead."
-		do
-			put_left (an_item)
-		end;
-
 	put_left (an_item: STRING) is
 			-- Add `an_item' to the left of cursor position.
 			-- Do not move cursor.
@@ -57,15 +48,6 @@ feature
 			not_a_command_void: a_command /= Void
 		deferred
 		end;
-
-	add_right (an_item: STRING) is
-			-- Add `an_item' to the right of cursor position.
-			-- Do not move cursor.
-		obsolete
-			"Use `put_right' instead."
-		do
-			put_right (an_item)
-		end
 
 	put_right (an_item: STRING) is
 			-- Add `an_item' to the right of cursor position.
@@ -128,7 +110,7 @@ feature
 		deferred
 		ensure
 			at_last: not empty implies islast
-		end; -- finish
+		end;
 
 	first: STRING is
 			-- Item at first index
@@ -307,15 +289,6 @@ feature
 		ensure
 			count_changed: count = old count-1;
 			after_when_empty: empty implies after
-		end;
-
-	remove_all_occurrences (an_item: STRING) is
-			-- Remove all items `an_item' from list.
-			-- Put cursor after.
-		obsolete
-			"Use `prune_all' instead."
-		do
-			prune_all (an_item)
 		end;
 
 	prune_all (an_item: STRING) is

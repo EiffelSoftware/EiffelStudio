@@ -16,7 +16,7 @@ feature
 			a_widget_exists: not (a_widget = Void);
 			a_widget_realized: a_widget.realized
 		deferred
-		end; -- allocated_blue
+		end;
 
 	allocated_green (a_widget: WIDGET_I): INTEGER is
 			-- Allocated green saturation level for `a_widget'
@@ -24,7 +24,7 @@ feature
 			a_widget_exists: not (a_widget = Void);
 			a_widget_realized: a_widget.realized
 		deferred
-		end; -- allocated_green
+		end;
 
 	allocated_red (a_widget: WIDGET_I): INTEGER is
 			-- Allocated red saturation level for `a_widget'
@@ -32,45 +32,39 @@ feature
 			a_widget_exists: not (a_widget = Void);
 			a_widget_realized: a_widget.realized
 		deferred
-		end; -- allocated_red
+		end;
 
 	blue: INTEGER is
 			-- Blue saturation level
 		require
 			color_not_specified_by_name: (name = Void)
 		deferred
-		end; -- blue
+		end;
 
 	green: INTEGER is
 			-- Green saturation level
 		require
 			color_not_specified_by_name: (name = Void)
 		deferred
-		end; -- green
+		end;
 
 	is_white_by_default: BOOLEAN is
 			-- Default color used in case of failure
 			-- to allocate desire color
 		deferred
-		end; -- is_white_by_default
+		end;
 
 	name: STRING is
 			-- name of desired color for current
 		deferred
-		end; -- name
-
-	n_ame: STRING is obsolete "Use ``name''"
-			-- name of desired color for current
-		do
-			Result := name
-		end; -- n_ame
+		end;
 
 	red: INTEGER is
 			-- Red saturation level
 		require
 			color_not_specified_by_name: (name = Void)
 		deferred
-		end; -- red
+		end;
 
 	set_black_default is
 			-- Set black color to be used by default if
@@ -78,7 +72,7 @@ feature
 		deferred
 		ensure
 			not is_white_by_default
-		end; -- set_black_default
+		end;
 
 	set_blue (blue_value: INTEGER) is
 			-- Set blue saturation level to `blue_value'.
@@ -89,7 +83,7 @@ feature
 		ensure
 			(name = Void);
 			blue = blue_value
-		end; -- set_blue
+		end;
 
 	set_green (green_value: INTEGER) is
 			-- Set green saturation level to `green_value'.
@@ -100,7 +94,7 @@ feature
 		ensure
 			(name = Void);
 			green = green_value
-		end; -- set_green
+		end;
 
 	set_name (a_name: STRING) is
 			-- Set color name to `a_name'.
@@ -110,7 +104,7 @@ feature
 		ensure
 			not (name = Void);
 			name.is_equal (a_name)
-		end; -- set_name
+		end;
 
 	set_red (red_value: INTEGER) is
 			-- Set red saturation level to `red_value'.
@@ -121,7 +115,7 @@ feature
 		ensure
 			(name = Void);
 			red = red_value
-		end; -- set_red
+		end;
 
 	set_rgb (red_value, green_value, blue_value: INTEGER) is
 			-- Set red, green and blue saturation level respectivly to
@@ -139,7 +133,7 @@ feature
 			red = red_value;
 			green = green_value;
 			blue = blue_value
-		end; -- set_rgb
+		end;
 
 	set_white_default is
 			-- Set white color to be used by default if
@@ -147,7 +141,7 @@ feature
 		deferred
 		ensure
 			is_white_by_default
-		end -- set_white_default
+		end
 
 end -- class COLOR_I
 

@@ -37,7 +37,7 @@ rt_private void hash_table_create (int size);	/* Create HASH_TABLE [INTEGER, ADD
 rt_private void hash_table_free ();	/* Free HASH_TABLE [INTEGER, ADDRESS] */
 rt_private char *buffer_write (char *tmp_buffer, void *data, int size);
 rt_private char *buffer_read (char *tmp_buffer, void *data, int size);
-rt_private int store_object (EIF_REFERENCE object, int object_count);
+rt_private int store_object (EIF_REFERENCE object, int a_object_count);
 rt_private EIF_REFERENCE retrieve_objects (EIF_INTEGER nb_obj);
 rt_private int st_write_cid (char **tmp_buffer, uint32 dftype);	/* Store generic info */
 rt_private char *rt_read_cid (char *tmp_buffer, uint32 *crflags, uint32 *nflags, uint32 oflags);
@@ -47,10 +47,9 @@ rt_private struct store_htable *address_table;	/* HASH_TABLE [INTEGER, ADDRESS] 
 rt_private int max_object_id;	/* Current maximum allowed object id */
 rt_private char *buffer;	/* Memory area when storage is done */
 rt_private EIF_INTEGER current_buffer_pos;	/* Offset where we are writing at the moment */
-rt_private EIF_INTEGER buffer_size = MAX_BUFFER_SIZE;	/* Size of buffer */
 rt_private fnptr make_index, need_index;	/* Hook functions. */
 rt_private int file_position;	/* File position as given */
-rt_private EIF_INTEGER obj_nb;	/* Numberof stored objects computed by `traversal'. */
+rt_private EIF_INTEGER pstore_obj_nb;	/* Numberof stored objects computed by `traversal'. */
 
 rt_public long store_append(
 		EIF_INTEGER f_desc,
@@ -77,7 +76,7 @@ rt_public long store_append(
 	tmp_buffer = buffer;
 	size = current_buffer_pos - sizeof(EIF_INTEGER);
 	tmp_buffer = buffer_write (tmp_buffer, &size, sizeof(EIF_INTEGER));
-	tmp_buffer = buffer_write (tmp_buffer, &obj_nb, sizeof(EIF_INTEGER));
+	tmp_buffer = buffer_write (tmp_buffer, &pstore_obj_nb, sizeof(EIF_INTEGER));
 	write (f_desc, buffer, current_buffer_pos);
 	
 	hash_table_free ();
@@ -284,13 +283,13 @@ rt_private void partial_store_append(EIF_REFERENCE object, fnptr mid, fnptr nid)
 				 * this to happen, since we keep a non-protected reference on objects */
 
 		/* Do the complete traversals of objects that needs to be stored */
-		/* Number of objects is stored in global variables `obj_nb'      */
-	obj_nb = 0;
+		/* Number of objects is stored in global variables `pstore_obj_nb'      */
+	pstore_obj_nb = 0;
 	new_traversal (object);
 
 	need_index = nid;
 	make_index = mid;
-	hash_table_create (obj_nb);
+	hash_table_create (pstore_obj_nb);
 	
 		/* `max_object_id' is initialized to `1' because `store_ht_value' already returns 
 		 * `0' when it does not find an item */
@@ -303,13 +302,13 @@ rt_private void partial_store_append(EIF_REFERENCE object, fnptr mid, fnptr nid)
 	current_buffer_pos += 2*sizeof(EIF_INTEGER);
 
 	nb_stored_object = store_object (object, 0);
-	CHECK("Stored all objects", (obj_nb == nb_stored_object));	/* Check that all objects have been stored */
+	CHECK("Stored all objects", (pstore_obj_nb == nb_stored_object));	/* Check that all objects have been stored */
 
 	if (!gc_stopped)
 		gc_run();
 }
 
-rt_private int store_object (EIF_REFERENCE object, int object_count)
+rt_private int store_object (EIF_REFERENCE object, int a_object_count)
 	/* Store `object' to `buffer' */
 {
 	EIF_BOOLEAN object_needs_index;
@@ -317,7 +316,7 @@ rt_private int store_object (EIF_REFERENCE object, int object_count)
 	union overhead *zone = HEADER(object);
 	EIF_INTEGER saved_buffer_pos, object_id, written_byte = 0;
 	EIF_INTEGER i, nb_ref, object_size, dtype, ref_size;
-	EIF_INTEGER saved_object_count = object_count;
+	EIF_INTEGER saved_object_count = a_object_count;
 	EIF_REFERENCE o_ref, o_ptr, null_value = NULL;
 	char *saved_buffer;
 
@@ -343,7 +342,7 @@ rt_private int store_object (EIF_REFERENCE object, int object_count)
 	CHECK("Not expanded", (!((flags & EO_EXP) != (uint32) 0)));	/* Check that `object' is not expanded */
 
 		/* One more stored object */
-	object_count++;
+	a_object_count++;
 
 		/* Store object information */
 	saved_buffer = buffer_write (saved_buffer, &flags, sizeof(uint32));
@@ -388,7 +387,7 @@ rt_private int store_object (EIF_REFERENCE object, int object_count)
 						object_id = ++max_object_id;
 
 							/* Recursion for storing sub-objects */
-						object_count = store_object(o_ref, object_count);
+						a_object_count = store_object(o_ref, a_object_count);
 					} else {
 							/* Retrieve `object_id' of already stored Eiffel object */
 						object_id = (int) store_ht_value (address_table, (long unsigned int) o_ref);
@@ -429,7 +428,7 @@ rt_private int store_object (EIF_REFERENCE object, int object_count)
 					object_id = ++max_object_id;
 
 						/* Recursion for storing sub-objects */
-					object_count = store_object(o_ref, object_count);
+					a_object_count = store_object(o_ref, a_object_count);
 				} else {
 						/* Retrieve `object_id' of already stored Eiffel object */
 					object_id = (int) store_ht_value (address_table, (long unsigned int) o_ref);
@@ -455,10 +454,10 @@ rt_private int store_object (EIF_REFERENCE object, int object_count)
 			make_index)(server,
 						object,
 						file_position + saved_buffer_pos,	/* Check why we need to read 4 bytes less */
-						object_count - saved_object_count,
+						a_object_count - saved_object_count,
 						current_buffer_pos - saved_buffer_pos);
 
-	return object_count;
+	return a_object_count;
 }
 
 
@@ -506,7 +505,7 @@ rt_private void hash_table_free ()
 rt_private char *rt_read_cid (char *tmp_buffer, uint32 *crflags, uint32 *nflags, uint32 oflags)
 {
 	int16 count, dftype;
-	static int16 cidarr [256];
+	static int16 l_cidarr [256];
 
 	*nflags = oflags;   /* default */
 	*crflags = oflags;
@@ -516,11 +515,11 @@ rt_private char *rt_read_cid (char *tmp_buffer, uint32 *crflags, uint32 *nflags,
 	if (count < 2)  /* Nothing to read */
 		return tmp_buffer;
 
-	*cidarr = count;
-	tmp_buffer = buffer_read (tmp_buffer, cidarr+1, count * sizeof (int16));
-	cidarr [count+1] = -1;
+	*l_cidarr = count;
+	tmp_buffer = buffer_read (tmp_buffer, l_cidarr+1, count * sizeof (int16));
+	l_cidarr [count+1] = -1;
 
-	dftype = eif_gen_id_from_cid (cidarr, (int *)0);
+	dftype = eif_gen_id_from_cid (l_cidarr, (int *)0);
 
 	*nflags = (oflags & EO_UPPER) | dftype;
 
@@ -534,19 +533,19 @@ rt_private char *rt_read_cid (char *tmp_buffer, uint32 *crflags, uint32 *nflags,
 rt_private int st_write_cid (char **tmp_buffer, uint32 dftype)
 
 {
-	int16 *cidarr, count;
+	int16 *l_cidarr, count;
 	int result = 0;
 	char *tmp=*tmp_buffer;
 
-	cidarr = eif_gen_cid ((int16) dftype);
-	count  = *cidarr;
+	l_cidarr = eif_gen_cid ((int16) dftype);
+	count  = *l_cidarr;
 
 	*tmp_buffer = buffer_write (*tmp_buffer, &count, sizeof(int16));
 	
 	/* If count = 1 then we don't need to write more data */
 
 	if (count > 1)
-		*tmp_buffer = buffer_write (*tmp_buffer, cidarr+1, count * sizeof (int16));
+		*tmp_buffer = buffer_write (*tmp_buffer, l_cidarr+1, count * sizeof (int16));
 
 	return (int) (*tmp_buffer - tmp);
 }
@@ -567,7 +566,7 @@ rt_private void new_traversal (EIF_REFERENCE object)
 		return;
 
 	zone->ov_flags |= EO_STORE;	/* We marked object as traversed. */
-	obj_nb++;
+	pstore_obj_nb++;
 
 	if (flags & EO_SPEC) {	/* Special object */
 		CHECK("Not tuple", !(flags & EO_TUPLE));

@@ -10,6 +10,8 @@ deferred class
 inherit
 	EV_PROGRESS_BAR_I
 
+	EV_GAUGE_IMP
+
 	EV_PRIMITIVE_IMP
 
 feature -- Implementation
@@ -25,6 +27,12 @@ feature -- Implementation
 			-- Create a gauge with `min' as minimum, `max' as maximum
 			-- and `par' as parent.
 		do
+			-- Parameters are:
+			-- value, lower, upper, step_increment, page_increment.
+			widget := c_gtk_progress_bar_new_with_adjustment (min, min, max, 1, 5)
+
+			adjustment_widget := c_gtk_progress_bar_adjustment (widget)
+			gtk_object_ref (widget)
 		end
 
 feature -- Access
@@ -68,16 +76,6 @@ feature -- Status report
 
 feature -- Status setting
 
-	step_forward is
-			-- Increase the current value of one step.
-		do
-		end
-
-	step_backward is
-			-- Decrease the current value of one step.
-		do
-		end
-
 	set_percentage (val: INTEGER) is
 			-- Make `value' the new percentage filled by the
 			-- progress bar.
@@ -116,29 +114,6 @@ feature -- Element change
 
 	set_maximum (val: INTEGER) is
 			-- Make `val' the new maximum.
-		do
-		end
-
-	set_range (min, max: INTEGER) is
-			-- Make `min' the new minimum and `max' the new maximum.
-		do
-		end
-
-feature -- Event - command association
-	
-	add_change_value_command (cmd: EV_COMMAND; arg: EV_ARGUMENT) is
-			-- Add 'cmd' to the list of commands to be executed 
-			-- when the user is about to change
-			-- the value of the gauge.
-		do
-		end
-
-feature -- Event -- removing command association
-
-	remove_change_value_commands is
-			-- Empty the list of commands to be executed
-			-- when the user is about to change
-			-- the value of the gauge.
 		do
 		end
 

@@ -258,7 +258,7 @@ plibpth=''
 xlibpth='/usr/lib/386 /lib/386'
 
 libs='-lsocket -lnsl -lm'
-mtlibs='-lsocket -lnsl -lm -lthread'
+mtlibs='-lsocket -lnsl -lm -ldl -lthread'
 
 lns='/usr/bin/ln -s'
 longsize='4'

@@ -42,13 +42,17 @@ feature -- Update
 			-- Send inpect request to application.
 		local
 			dynamic_class_name: STRING;
-			type_id: INTEGER
+			type_id: INTEGER;
+			obj_addr: STRING;
+			l: LINKED_LIST [CLASS_I];
+			d_type: INTEGER
 		do
 			send_rqst_3 (Rqst_sp_lower, 0, 0, sp_lower);
 			send_rqst_3 (Rqst_sp_upper, 0, 0, sp_upper);
 			send_rqst_3 (request_code, In_h_addr, 0, 
 								hex_to_integer (object_address));
 			dynamic_class_name := c_tread;
+			type_id := c_tread.to_integer + 1;
 			if dynamic_class_name.is_equal ("SPECIAL") then
 				is_special := true;
 				!! attributes.make;
@@ -58,9 +62,10 @@ feature -- Update
 			else
 				is_special := false;
 				!SORTED_TWO_WAY_LIST [DEBUG_VALUE]! attributes.make;
-				type_id := c_tread.to_integer + 1;
+
 				if Eiffel_system.valid_dynamic_id (type_id) then
-					recv_attributes (attributes, Eiffel_system.class_of_dynamic_id (type_id))
+					recv_attributes (attributes, 
+						Eiffel_system.class_of_dynamic_id (type_id))
 				else
 					recv_attributes (attributes, Void)
 				end;
@@ -90,6 +95,7 @@ feature {NONE} -- Implementation
 			spec_attr: SPECIAL_VALUE;
 			type_id: INTEGER;
 			class_type: CLASS_TYPE
+toto: STRING
 		do
 			attr_nb := c_tread.to_integer;
 			from
@@ -123,7 +129,8 @@ feature {NONE} -- Implementation
 					!! exp_attr.make_attribute (attr_name, e_class, type_id);
 					attr := exp_attr;
 					if Eiffel_system.valid_dynamic_id (type_id) then
-						recv_attributes (exp_attr.attributes, Eiffel_system.class_of_dynamic_id (type_id))
+						recv_attributes (exp_attr.attributes,
+							Eiffel_system.class_of_dynamic_id (type_id))
 					else
 						recv_attributes (exp_attr.attributes, Void)
 					end;
@@ -139,7 +146,9 @@ feature {NONE} -- Implementation
 					attr := spec_attr;
 					recv_attributes (spec_attr.items, Void)
 				else
-					type_id := c_tread.to_integer + 1;
+					if not type_name.is_equal ("Void") then	
+						type_id := c_tread.to_integer + 1;
+					end;
 					!REFERENCE_VALUE! attr.make_attribute (attr_name, e_class, 
 													type_id, c_tread)
 				end

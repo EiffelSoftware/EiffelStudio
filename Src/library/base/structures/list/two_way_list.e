@@ -128,7 +128,7 @@ feature -- Cursor movement
 			-- Move cursor `i' positions. The cursor
 			-- may end up `off' if the offset is to big.
 		local
-	c: CURSOR;
+			c: CURSOR;
 			counter: INTEGER;
 			p: like first_element
 		do
@@ -250,7 +250,11 @@ feature -- Element change
 				if empty then
 					last_element := other_last_element;
 					first_element := other_first_element;
-					active := first_element;
+					if before then
+						active := first_element;
+					else -- after because of invariant 'empty_property'
+						active := last_element;
+					end
 				elseif isfirst then
 					other_last_element.put_right (first_element);
 					first_element := other_first_element;
@@ -350,36 +354,41 @@ feature -- Removal
 			actual_number, active_index: INTEGER;
 			p_elem, s_elem, e_elem, n_elem: like first_element;
 		do
-				-- recognize first breakpoint
-			active_index := index;
-			if active_index + n > count + 1 then
-				actual_number := count + 1 - active_index
+			if n = 0 then
+					--just create new empty sublist
+				!!sublist.make
 			else
-				actual_number := n
-			end;
-			s_elem := active;
-			p_elem := previous;
-				-- recognize second breakpoint
-			move (actual_number - 1);
-			e_elem := active;
-			n_elem := next;
-				-- make sublist
-			s_elem.forget_left;
-			e_elem.forget_right;
-			!! sublist.make_sublist (s_elem, e_elem, actual_number);
-				-- fix `Current'
-			count := count - actual_number;
-			if p_elem /= Void then
-				p_elem.put_right (n_elem)
-			else
-				first_element := n_elem
-			end;
-			if n_elem /= Void then
-				active := n_elem
-			else
-				last_element := p_elem;
-				active := p_elem;
-				after := true
+					-- recognize first breakpoint
+				active_index := index;
+				if active_index + n > count + 1 then
+					actual_number := count + 1 - active_index
+				else
+					actual_number := n
+				end;
+				s_elem := active;
+				p_elem := previous;
+					-- recognize second breakpoint
+				move (actual_number - 1);
+				e_elem := active;
+				n_elem := next;
+					-- make sublist
+				s_elem.forget_left;
+				e_elem.forget_right;
+				!! sublist.make_sublist (s_elem, e_elem, actual_number);
+					-- fix `Current'
+				count := count - actual_number;
+				if p_elem /= Void then
+					p_elem.put_right (n_elem)
+				else
+					first_element := n_elem
+				end;
+				if n_elem /= Void then
+					active := n_elem
+				else
+					last_element := p_elem;
+					active := p_elem;
+					after := true
+				end
 			end
 		end;
 

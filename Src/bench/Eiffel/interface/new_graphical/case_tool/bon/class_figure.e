@@ -735,7 +735,7 @@ feature {NONE} -- Implementation
 						world.add_inheritance_relation (a_stone.source, Current)
 					else
 						create dial.make_with_text_and_actions (
-							"An inheritance circle was created.%N%
+							"An inheritance cycle was created.%N%
 								%Do you still want to add this link?",
 							<<world~add_inheritance_relation (a_stone.source, Current)>>)
 						dial.show_modal_to_window (world.context_editor.development_window.window)

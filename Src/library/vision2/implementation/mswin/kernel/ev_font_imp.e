@@ -21,6 +21,7 @@ inherit
 	
 creation
 	make,
+	make_by_name,
 	make_by_system_name,
 	make_by_wel
 
@@ -33,6 +34,17 @@ feature {EV_FONTABLE_IMP} -- Initialization
 			!! wel_log_font.make_by_font (wel_font)
 		end
 
+	make_by_name (str: STRING) is
+			-- Create a font from the given face name
+		require
+			valid_name: str /= Void and not str.empty
+			face_name_only: str.occurrences (',') = 0
+		do
+			create wel_log_font.make (0, str)
+			allocate
+		end
+
+
 	make_by_system_name (str: STRING) is
 			-- Create the font corresponding to the given system
 			-- name.
@@ -41,8 +53,8 @@ feature {EV_FONTABLE_IMP} -- Initialization
 			valid_arguments_count: str.occurrences (',') = 12
 			valid_name: str /= Void and not str.empty
 		do
-				make
-				parse_font_string (str)
+			make
+			parse_font_string (str)
 		end
 
 	make_by_wel (a_wel_font: WEL_FONT) is
@@ -258,13 +270,20 @@ feature -- Status setting
 feature -- Element change
 
 	set_name (str: STRING) is
-			-- determines the correct font setup procedure to use
-			-- based on the format of the string passed
+			-- sets the name of the current font
 		require else
 			valid_name: str /= Void and not str.empty and str.occurrences (',') = 0
+		local
+			h: INTEGER
 		do
-			make
-			wel_log_font.set_face_name (str)
+			if not allocated then
+				h := height
+				create wel_log_font.make (h, str)
+				allocate
+			else
+				wel_log_font.set_face_name (str)
+				re_allocate
+			end
 		end
 
 	parse_font_string (str: STRING) is
@@ -345,7 +364,7 @@ feature -- Element change
 					-- along the display height) / 72 pixels per inch
 				create screen_dc
 				screen_dc.get
-				real_size := - mul_div (value,
+				real_size :=   mul_div (value,
 								get_device_caps (screen_dc.item, logical_pixels_y), 72)
 				screen_dc.release
 
@@ -355,6 +374,7 @@ feature -- Element change
 					-- Set the default height to the current font.
 				wel_log_font.set_height (0)
 			end
+			re_allocate
 		end
 
 	set_weight (value: INTEGER) is
@@ -468,7 +488,14 @@ feature {NONE} -- Bizarre
 			-- Allocate the WEL_FONT
 		do
 			!! wel_font.make_indirect (wel_log_font)
-			allocated := true
+			allocated := True
+		end
+
+	re_allocate is
+			-- Re-allocate the WEL_FONT (doesn't make new object)
+		do
+			wel_font.set_indirect (wel_log_font)
+			allocated := True
 		end
 
 	set_charset (a_charset: STRING) is

@@ -247,7 +247,7 @@ rt_private void rec_write(register EIF_REFERENCE object, int tab)
 			{		
 				EIF_REFERENCE str = b_out(o_ref);
 
-				sprintf(buffero, "BIT %ld = ", LENGTH(o_ref));
+				sprintf(buffero, "BIT %lu = ", (unsigned long) LENGTH(o_ref));
 				write_out();
 				write_string(str);
 				sprintf(buffero, "\n");
@@ -373,7 +373,7 @@ rt_private void rec_swrite(register EIF_REFERENCE object, int tab)
 					/* Must be bit */
 					EIF_REFERENCE str = b_out(o_ref);
 
-					sprintf(buffero, "BIT %ld = ", LENGTH(o_ref));
+					sprintf(buffero, "BIT %lu = ", (unsigned long) LENGTH(o_ref));
 					write_out();
 					write_string(str);
 					sprintf(buffero, "\n");

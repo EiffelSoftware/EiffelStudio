@@ -189,8 +189,13 @@ rt_private void dprocess_request(int s, Request *rqst)
 		write_application_interruption_flag(INTERRUPT_APPLICATION);
 #else	/* EIF_WIN32 */
 #ifdef USE_SIGNAL
-		write_application_interruption_flag(INTERRUPT_APPLICATION);
-		kill(daemon_data.d_app, SIGTRAP);	/* send a SIGTRAP signal to the application */
+		if (daemon_data.d_app != 0)
+			/* If we send the signal too early, d_app is not initialized, 
+			 * and in this case kill sends the signal to estudio, which kills it */
+		{
+			write_application_interruption_flag(INTERRUPT_APPLICATION);
+			kill(daemon_data.d_app, SIGTRAP);	/* send a SIGTRAP signal to the application */
+		}
 #endif 	/* USE_SIGNAL */
 #endif	/* EIF_WIN32 */
 		break;

@@ -66,9 +66,14 @@ feature -- Comparison
 
 	is_equal (other: like Current): BOOLEAN is
 			-- Is `other' translation_string equal to Current?
+		local
+			a: like Current
 		do
-			Result := type = other.type and then 
-				translation_string.is_equal (other.translation_string)
+			a ?= other
+			if a /= Void then
+				Result := type = a.type and then 
+					translation_string.is_equal (a.translation_string)
+			end
 		end;
 
 feature -- Output

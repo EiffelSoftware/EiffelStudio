@@ -110,7 +110,7 @@ feature -- GUI Elements
 			open_button, new_button, save_button, launch_button,
 			clear_button, separator_button: WEL_TOOL_BAR_BUTTON
 			rebar_info: WEL_REBARBANDINFO
-			tool_bar, too: WEL_TOOL_BAR
+			tool_bar: WEL_TOOL_BAR
 		once
 			create Result.make (Current, -1)
 			create tool_bar.make (Current, -1)

@@ -111,7 +111,7 @@ rt_public void eif_thr_register(void)
 			/* needs malloc; crashes otherwise on some pure C-ansi compiler (SGI)*/
 		if (EIF_once_values == (EIF_REFERENCE *) 0) /* Out of memory */
 			enomem();
-		bzero((EIF_REFERENCE) EIF_once_values, EIF_once_count * REFSIZ);
+		memset ((EIF_REFERENCE) EIF_once_values, 0, EIF_once_count * REFSIZ);
 	} else 
 	{
 		once = 1;
@@ -171,7 +171,7 @@ rt_private void eif_init_context(eif_global_context_t *eif_globals)
 	 * fields.
 	 */
 
-	bzero((char *)eif_globals,sizeof(eif_global_context_t));
+	memset (eif_globals, 0, sizeof(eif_global_context_t));
 	
 		/*----------*/
 		/* cecil.c  */

@@ -16,4 +16,9 @@ feature {NONE}
 		do
 		end
 
+	is_able_to_freeze: BOOLEAN is
+		do
+			Result := True
+		end
+
 end

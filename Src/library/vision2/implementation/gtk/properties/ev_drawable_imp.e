@@ -18,6 +18,8 @@ inherit
 
 	EV_C_UTIL
 
+	PLATFORM
+
 feature {NONE} -- Initialization
 
 	init_default_values is
@@ -570,6 +572,9 @@ end -- class EV_DRAWABLE_IMP
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.12  2000/03/09 23:25:14  oconnor
+--| inherit platform
+--|
 --| Revision 1.11  2000/02/22 18:39:36  oconnor
 --| updated copyright date and formatting
 --|

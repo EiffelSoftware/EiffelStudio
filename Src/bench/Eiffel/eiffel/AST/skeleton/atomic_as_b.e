@@ -10,10 +10,7 @@ deferred class ATOMIC_AS_B
 
 inherit
 
-	ATOMIC_AS
-		redefine
-			string_value
-		end;
+	ATOMIC_AS;
 
 	AST_EIFFEL_B
 		redefine
@@ -48,8 +45,13 @@ feature -- Type check and dead code removal
 		end;
 
 	string_value: STRING is
+			-- String representation of value_i
 		do
-			Result := value_i.dump
+			if value_i = Void then
+				Result := ""
+			else
+				Result := value_i.dump
+			end
 		end;
 
 end -- class ATOMIC_AS_B

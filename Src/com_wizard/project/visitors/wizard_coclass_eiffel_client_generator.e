@@ -101,8 +101,9 @@ feature {NONE} -- Implementation
 			until
 				coclass_descriptor.interface_descriptors.off
 			loop
-				if coclass_descriptor.interface_descriptors.item.dispinterface or else
-					coclass_descriptor.interface_descriptors.item.dual
+				if 
+					coclass_descriptor.interface_descriptors.item.dispinterface and 
+					not coclass_descriptor.interface_descriptors.item.dual
 				then
 					dispatch_interface := True
 				end

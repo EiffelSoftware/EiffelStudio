@@ -16,12 +16,18 @@ feature {NONE} -- Execution
 			default_argument := Project_tool.text_window;
 			if argument = melt_acc then
 				Project_tool.update_command.execute (default_argument)
+			elseif argument = melt_no_c_acc then
+				Project_tool.update_command.execute (generate_code_only)
 			elseif argument = run_acc then
 				Project_tool.debug_run_command.execute (default_argument)
 			elseif argument = freeze_acc then
 				Project_tool.freeze_command.execute (default_argument)
+			elseif argument = freeze_no_c_acc then
+				Project_tool.freeze_command.execute (generate_code_only)
 			elseif argument = finalize_acc then
 				Project_tool.finalize_command.execute (default_argument)
+			elseif argument = finalize_no_c_acc then
+				Project_tool.finalize_command.execute (generate_code_only)
 			elseif argument = quit_acc then
 				Project_tool.quit_command.execute (default_argument)
 			elseif argument = kill_it then

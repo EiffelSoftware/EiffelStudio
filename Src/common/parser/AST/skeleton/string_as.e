@@ -79,6 +79,4 @@ feature -- formatter
 			value := s;
 		end;
 
-
-
 end

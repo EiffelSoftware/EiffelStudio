@@ -739,12 +739,12 @@ feature -- Element change
 			end
 				--| We copy the substring.
 			from
-				i := 0
+				i := s_count - 1
 			until
-				i = s_count
+				i < 0
 			loop
 				internal_string_builder.set_chars (i + start0, s_area.chars (i))
-				i := i + 1
+				i := i - 1
 			end
 		ensure
 			new_count: count = old count + old s.count - end_index + start_index - 1

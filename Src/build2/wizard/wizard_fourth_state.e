@@ -11,7 +11,8 @@ inherit
 		redefine
 			update_state_information,
 			proceed_with_current_info,
-			build
+			build,
+			build_frame
 		end
 
 	GB_SHARED_TOOLS
@@ -30,8 +31,11 @@ feature -- Basic Operation
 	build is 
 			-- Build entries.
 		do 
-			command_handler.update
-			graphically_replace_window (main_window, first_window)
+			choice_box.set_minimum_size (640, 480)
+				-- We only want to generate the interface once.
+			if choice_box.is_empty then
+				(create {GB_MAIN_WINDOW}).generate_interface (choice_box)	
+			end
 			set_updatable_entries(<<>>)
 		end
 
@@ -40,6 +44,7 @@ feature -- Basic Operation
 		do
 			Precursor
 			proceed_with_new_state(create {WIZARD_FINAL_STATE}.make(wizard_information))
+			first_window.set_size (dialog_unit_to_pixels(503).max (first_window.width), dialog_unit_to_pixels(385))
 		end
 
 	update_state_information is
@@ -53,9 +58,131 @@ feature {NONE} -- Implementation
 	display_state_text is
 			-- Set the messages for this state.
 		do
-			title.set_text ("Add Your Title Here (Step 5).")
+			title.set_text ("Add Your fdsfsdfsdfTitle Here (Step 5).")
 			subtitle.set_text ("Add your subtitle here.")
 			message.set_text ("Add your message for this step here.")
+		end
+
+	build_frame is
+			-- Build widgets.
+			-- This has been redefined, as we need to place the EiffelBuild
+			-- interface in the window, and hence need to build the contents
+			-- of the frame differently.
+		require
+			main_box_empty: main_box.count=0
+		local
+			title_white_box: EV_HORIZONTAL_BOX	-- Box where is displayed the state title and an icon (white bkgroud).
+			horizontal_separator: EV_HORIZONTAL_SEPARATOR
+			empty_space: EV_CELL
+			cell: EV_CELL
+			icon_pixmap: EV_PIXMAP
+			vb: EV_VERTICAL_BOX
+			hb: EV_HORIZONTAL_BOX
+			tuple: TUPLE
+		do
+				-----------------------------------------------------------
+				-- Create the box that will receive the title and the icon.
+				-----------------------------------------------------------
+			create title_white_box
+			title_white_box.set_border_width (dialog_unit_to_pixels(5))
+			title_white_box.set_background_color (white_color)
+			title_white_box.set_minimum_height (dialog_unit_to_pixels(58))
+
+				-- Empty space on the left of the title
+			create cell
+			cell.set_background_color (white_color)
+			cell.set_minimum_width (Title_border_width)
+			title_white_box.extend (cell)
+			title_white_box.disable_item_expand (cell)
+
+				-- Title
+			create title
+			title.set_background_color (white_color)
+			title.align_text_left
+			title.set_font (interior_title_font)
+			create hb
+			create cell
+			cell.set_minimum_width(Subtitle_border_width)
+			cell.set_background_color (white_color)
+			hb.extend (cell)
+			hb.disable_item_expand (cell)
+			create subtitle
+			subtitle.align_text_left
+			subtitle.set_background_color (white_color)
+			subtitle.set_font (interior_font)
+			hb.extend (subtitle)
+
+			create vb
+			vb.set_background_color (white_color)
+			vb.set_padding (dialog_unit_to_pixels(3))
+			vb.extend (title)
+			vb.disable_item_expand (title)
+			vb.extend (hb)
+			vb.disable_item_expand (hb)
+			create cell
+			cell.set_background_color (white_color)
+			vb.extend (cell)
+			title_white_box.extend (vb)
+
+				-- Space between the title and the pixmap.
+			create cell
+			cell.set_minimum_width (Title_right_border_width)
+			cell.set_background_color (white_color)
+			title_white_box.extend (cell)
+
+				-- Icon Pixmap
+			icon_pixmap := clone (pixmap)
+			icon_pixmap.set_minimum_width (dialog_unit_to_pixels(48))
+			icon_pixmap.set_minimum_height (dialog_unit_to_pixels(48))
+			title_white_box.extend (icon_pixmap)
+			title_white_box.disable_item_expand (icon_pixmap)
+
+				-----------------------------------------------------------
+				-- Separator
+				-----------------------------------------------------------
+			create horizontal_separator
+
+				-----------------------------------------------------------
+				-- Interior box
+				-----------------------------------------------------------
+
+				-- Message box --------------------------------------------
+			create message_box
+			create cell
+			cell.set_minimum_width (Interior_border_width)
+			message_box.extend (cell)
+			message_box.disable_item_expand (cell)
+			create message
+			message.align_text_left
+			message_box.extend (message)
+			create cell			
+			cell.set_minimum_width (Interior_border_width)
+			message_box.extend (cell)
+			message_box.disable_item_expand (cell)
+
+				-- Empty space between message box and actions box --------
+			create empty_space
+			empty_space.set_minimum_height (dialog_unit_to_pixels(2))
+
+				-- Only construct the choice box once.
+			if choice_box = Void then
+				create choice_box	
+			end
+	
+			--------------------------------------------
+			-- Create the main box from the other box.
+			--------------------------------------------
+			main_box.extend (title_white_box)
+			main_box.disable_item_expand (title_white_box)
+			main_box.extend (horizontal_separator)
+			main_box.disable_item_expand (horizontal_separator)
+			main_box.extend (choice_box) -- Expandable item.
+			display_state_text
+
+			create tuple.make
+			choice_box.set_help_context (~create_help_context (tuple))
+		ensure
+			main_box_has_at_least_one_element: main_box.count > 0
 		end
 
 end -- class WIZARD_FOURTH_STATE

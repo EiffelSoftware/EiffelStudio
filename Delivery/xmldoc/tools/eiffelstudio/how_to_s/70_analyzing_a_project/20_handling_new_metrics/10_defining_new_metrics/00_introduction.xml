@@ -1,71 +1,71 @@
 <document title="Defining new metrics" output="studio">
-	<meta_data>
-		<help>
-			<meta>
-				<content>Metric,new,define</content>
-				<name>MS-HKWD</name>
+	<meta_data >
+		<help >
+			<meta >
+				<meta_content >Metric,new,define</meta_content>
+				<name >MS-HKWD</name>
 			</meta>
 		</help>
 	</meta_data>
-	<paragraph>
-		<heading>
-			<size>1</size> Defining new metrics 
+	<paragraph >
+		<heading >
+			<size >1</size> Defining new metrics 
 		</heading>
-		<paragraph>The metric interface provides by default a set of basic metrics. However, user may want to define other metrics, such as linear sums or different ratios, or combining some criteria... This is possible thanks to the 
-			<image>
-				<url>/images/eiffelstudio/icons/icon_new_metric_color.gif</url>
-				<border>0</border>
+		<paragraph >The metric interface provides by default a set of basic metrics. However, user may want to define other metrics, such as linear sums or different ratios, or combining some criteria... This is possible thanks to the 
+			<image >
+				<url >/images/eiffelstudio/icons/icon_new_metric_color.gif</url>
+				<border >0</border>
 			</image>button of the context tool. An interface, "New metric" dialog, allows then the creation of four different kinds of metrics:
 		</paragraph>
 		<list ordered="false">
-			<item>
-				<link>
-					<url>10_defining_derived_metrics.xml</url>
-					<label>Derived metrics</label>
+			<item >
+				<link >
+					<url >10_defining_derived_metrics.xml</url>
+					<label >Derived metrics</label>
 				</link>
 			</item>
-			<item>
-				<link>
-					<url>20_defining_linear_metrics.xml</url>
-					<label>Linear metrics</label>
+			<item >
+				<link >
+					<url >20_defining_linear_metrics.xml</url>
+					<label >Linear metrics</label>
 				</link>
 			</item>
-			<item>
-				<link>
-					<url>30_defining_ratio_metrics.xml</url>
-					<label>Ratio metrics</label>
+			<item >
+				<link >
+					<url >30_defining_ratio_metrics.xml</url>
+					<label >Ratio metrics</label>
 				</link>
 			</item>
-			<item>
-				<link>
-					<url>40_defining_scope_comparison_metrics.xml</url>
-					<label>Scope comparison metrics</label>
+			<item >
+				<link >
+					<url >40_defining_scope_comparison_metrics.xml</url>
+					<label >Scope comparison metrics</label>
 				</link>
 			</item>
 		</list>
-		<paragraph>New metrics are increasingly added to the 
-			<link>
-				<url>/tools/eiffelstudio/reference/60_metric_tool/metric_toolbar.html#new metric</url>
-				<label>metric menu</label>
+		<paragraph >New metrics are increasingly added to the 
+			<link >
+				<url >/tools/eiffelstudio/reference/60_metric_tool/metric_toolbar.html#new metric</url>
+				<label >metric menu</label>
 			</link>, and are available for 
-			<link>
-				<url>/tools/eiffelstudio/how_to_s/70_analyzing_a_project/10_computing_a_measure/10_calculating_a_measure.xml</url>
-				<label>calculation</label>
+			<link >
+				<url >/tools/eiffelstudio/how_to_s/70_analyzing_a_project/10_computing_a_measure/10_calculating_a_measure.xml</url>
+				<label >calculation</label>
 			</link>.
 		</paragraph>
-		<seealso>
-			<bold>See Also</bold>
-			<line_break></line_break>
-			<link>
-				<url>/tools/eiffelstudio/how_to_s/70_analyzing_a_project/10_computing_a_measure/10_calculating_a_measure.xml</url>
-				<label>Calculating a measure</label>
+		<seealso >
+			<bold >See Also</bold>
+			<line_break />
+			<link >
+				<url >/tools/eiffelstudio/how_to_s/70_analyzing_a_project/10_computing_a_measure/10_calculating_a_measure.xml</url>
+				<label >Calculating a measure</label>
 			</link>
-			<line_break></line_break>
-			<link>
-				<url>/tools/eiffelstudio/how_to_s/70_analyzing_a_project/20_handling_new_metrics/20_managing_new_metrics/00_introduction.xml</url>
-				<label>Managing new metrics</label>
+			<line_break />
+			<link >
+				<url >/tools/eiffelstudio/how_to_s/70_analyzing_a_project/20_handling_new_metrics/20_managing_new_metrics/00_introduction.xml</url>
+				<label >Managing new metrics</label>
 			</link>
 		</seealso>
-		<paragraph> </paragraph>
+		<paragraph > </paragraph>
 	</paragraph>
 </document>

@@ -1,72 +1,72 @@
 <document title="New attribute layout" output="studio">
-	<meta_data>
-		<help>
-			<meta>
-				<content>new feature dialog, new attribute layout</content>
-				<name>MS-HKWD</name>
+	<meta_data >
+		<help >
+			<meta >
+				<meta_content >new feature dialog, new attribute layout</meta_content>
+				<name >MS-HKWD</name>
 			</meta>
 		</help>
 	</meta_data>
-	<paragraph>
-		<heading>
-			<size>1</size>New attribute layout
+	<paragraph >
+		<heading >
+			<size >1</size>New attribute layout
 		</heading>
-		<div>
-			<image>
-				<border>0</border>
-				<url>/images/eiffelstudio/dialogs_and_wizards/feature-wizard-attribute.png</url>
+		<div >
+			<image >
+				<border >0</border>
+				<url >/images/eiffelstudio/dialogs_and_wizards/feature-wizard-attribute.png</url>
 			</image>
 		</div>
-		<paragraph>When clicking 
-			<bold>Attribute</bold>, the window changes to the attribute layout. It has the following components:
+		<paragraph >When clicking 
+			<bold >Attribute</bold>, the window changes to the attribute layout. It has the following components:
 		</paragraph>
 		<list ordered="false">
-			<item>
-				<link>
-					<url>50_feature_properties_modification/00_feature_clauses.xml</url>
-					<label>Feature clause selection</label>
+			<item >
+				<link >
+					<url >50_feature_properties_modification/00_feature_clauses.xml</url>
+					<label >Feature clause selection</label>
 				</link>
 			</item>
-			<item>
-				<link>
-					<url>50_feature_properties_modification/10_name_field.xml</url>
-					<label>Feature name field</label>
+			<item >
+				<link >
+					<url >50_feature_properties_modification/10_name_field.xml</url>
+					<label >Feature name field</label>
 				</link>
 			</item>
-			<item>
-				<link>
-					<url>50_feature_properties_modification/80_type_selection.xml</url>
-					<label>Type selection</label>
+			<item >
+				<link >
+					<url >50_feature_properties_modification/80_type_selection.xml</url>
+					<label >Type selection</label>
 				</link>
 			</item>
-			<item>
-				<link>
-					<url>50_feature_properties_modification/30_comment_field.xml</url>
-					<label>Header comment field</label>
+			<item >
+				<link >
+					<url >50_feature_properties_modification/30_comment_field.xml</url>
+					<label >Header comment field</label>
 				</link>
 			</item>
-			<item>
-				<link>
-					<url>50_feature_properties_modification/90_invariant_field.xml</url>
-					<label>Invariant field</label>
+			<item >
+				<link >
+					<url >50_feature_properties_modification/90_invariant_field.xml</url>
+					<label >Invariant field</label>
 				</link>
 			</item>
-			<item>
-				<link>
-					<url>50_feature_properties_modification/95_set_procedure.xml</url>
-					<label>Set-procedure checkbox</label>
+			<item >
+				<link >
+					<url >50_feature_properties_modification/95_set_procedure.xml</url>
+					<label >Set-procedure checkbox</label>
 				</link>
 			</item>
 		</list>
-		<heading>
-			<size>2</size>Example
+		<heading >
+			<size >2</size>Example
 		</heading>
-		<div>
-			<image>
-				<url>/images/eiffelstudio/dialogs_and_wizards/feature-wizard-attribute-example.png</url>
+		<div >
+			<image >
+				<url >/images/eiffelstudio/dialogs_and_wizards/feature-wizard-attribute-example.png</url>
 			</image>
 		</div>
-		<code_block>
+		<code_block >
 class
     PRODUCT
 
@@ -80,7 +80,7 @@ feature -- Element change
     set_price (a_price: DOUBLE) is
             -- Assign `a_price' to `price'.
         require
-            a_price_non_negative: a_price >= 0.0
+            a_price_non_negative: a_price &amp;gt;= 0.0
         do
             price := a_price
         ensure
@@ -88,7 +88,7 @@ feature -- Element change
         end
 
 invariant
-    price_non_negative: price >= 0.0
+    price_non_negative: price &amp;gt;= 0.0
 
 end -- class PRODUCT
 		</code_block>

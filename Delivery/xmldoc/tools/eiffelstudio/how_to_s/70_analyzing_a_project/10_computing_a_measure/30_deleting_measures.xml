@@ -1,57 +1,57 @@
 <document title="Deleting measures" output="studio">
-	<meta_data>
-		<help>
-			<meta>
-				<content>Measure,delete</content>
-				<name>MS-HKWD</name>
+	<meta_data >
+		<help >
+			<meta >
+				<meta_content >Measure,delete</meta_content>
+				<name >MS-HKWD</name>
 			</meta>
 		</help>
 	</meta_data>
-	<paragraph>
-		<heading>
-			<size>1</size>Deleting measures
+	<paragraph >
+		<heading >
+			<size >1</size>Deleting measures
 		</heading>
-		<paragraph>To delete a set of measures, you must have 
-			<link>
-				<url>20_saving_a_measure.xml</url>
-				<label>saved</label>
+		<paragraph >To delete a set of measures, you must have 
+			<link >
+				<url >20_saving_a_measure.xml</url>
+				<label >saved</label>
 			</link> some of them previously. Recorded measures are displayed in the multi column list. Here is an example of a non-empty multi column list:
 		</paragraph>
-		<paragraph>
-			<image>
-				<height>266</height>
-				<width>739</width>
-				<url>/images/eiffelstudio/metrics_png/delete.png</url>
-				<border>0</border>
+		<paragraph >
+			<image >
+				<height >266</height>
+				<width >739</width>
+				<url >/images/eiffelstudio/metrics_png/delete.png</url>
+				<border >0</border>
 			</image>
 		</paragraph>
 		<list ordered="true">
-			<item>Select a row (or a set of rows using SHIFT or CTRL keys) from the multi column list.</item>
-			<item>Click on the 
-				<link>
-					<url>/tools/eiffelstudio/reference/60_metric_tool/metric_toolbar.html#delete</url>
-					<label>delete</label>
+			<item >Select a row (or a set of rows using SHIFT or CTRL keys) from the multi column list.</item>
+			<item >Click on the 
+				<link >
+					<url >/tools/eiffelstudio/reference/60_metric_tool/metric_toolbar.html#delete</url>
+					<label >delete</label>
 				</link> 
-				<link>
-					<url>30_deleting_measures.xml</url>
+				<link >
+					<url >30_deleting_measures.xml</url>
 				</link> button. Selected row (s) will disappear from both multi column list and from the recording file located in the "Metrics" subfolder of the current project.
 			</item>
 		</list>
-		<warning>
-			<bold>Caution</bold>: Delete operation is not undoable!
+		<warning >
+			<bold >Caution</bold>: Delete operation is not undoable!
 		</warning>
-		<seealso>
-			<bold>See Also</bold>
-			<line_break></line_break>
-			<link>
-				<url>10_calculating_a_measure.xml</url>
-				<label>Calculating measures</label>
+		<seealso >
+			<bold >See Also</bold>
+			<line_break />
+			<link >
+				<url >10_calculating_a_measure.xml</url>
+				<label >Calculating measures</label>
 			</link>
-			<link>
-				<url>20_saving_a_measure.xml</url>
-				<label>saving measures</label>
+			<link >
+				<url >20_saving_a_measure.xml</url>
+				<label >saving measures</label>
 			</link>
-			<line_break></line_break>
+			<line_break />
 		</seealso>
 	</paragraph>
 </document>

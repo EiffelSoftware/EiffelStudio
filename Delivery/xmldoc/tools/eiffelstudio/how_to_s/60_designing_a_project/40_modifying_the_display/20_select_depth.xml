@@ -1,36 +1,36 @@
 <document title="Changing system exploration depth" output="studio">
-	<meta_data>
-		<help>
-			<meta>
-				<content>Context</content>
-				<name>MS-HKWD</name>
+	<meta_data >
+		<help >
+			<meta >
+				<meta_content >Context</meta_content>
+				<name >MS-HKWD</name>
 			</meta>
 		</help>
 	</meta_data>
-	<paragraph>
-		<heading>
-			<size>1</size>Changing system exploration depth
+	<paragraph >
+		<heading >
+			<size >1</size>Changing system exploration depth
 		</heading>
-		<paragraph></paragraph>
+		<paragraph />
 		<list ordered="false">
-			<item>If you want to change the context of the current cluster or class in the diagram, click the 
-				<bold>Select depth of relations</bold> button. 
-				<image>
-					<url>/images/eiffelstudio/icons/icon_select_depth_color.gif</url>
+			<item >If you want to change the context of the current cluster or class in the diagram, click the 
+				<bold >Select depth of relations</bold> button. 
+				<image >
+					<url >/images/eiffelstudio/icons/icon_select_depth_color.gif</url>
 				</image>
-				<line_break></line_break> The 
-				<bold>Context</bold> dialog appears. The layout depends on whether the current context is one of a class or cluster. 
+				<line_break /> The 
+				<bold >Context</bold> dialog appears. The layout depends on whether the current context is one of a class or cluster. 
 				<list ordered="false">
-					<item>Context is a class:
-						<line_break></line_break> 
-						<image>
-							<url>/images/eiffelstudio/dialogs_and_wizards/context-dialog-class.png</url>
+					<item >Context is a class:
+						<line_break /> 
+						<image >
+							<url >/images/eiffelstudio/dialogs_and_wizards/context-dialog-class.png</url>
 						</image>
 					</item>
-					<item>Context is a cluster:
-						<line_break></line_break> 
-						<image>
-							<url>/images/eiffelstudio/dialogs_and_wizards/context-dialog-cluster.png</url>
+					<item >Context is a cluster:
+						<line_break /> 
+						<image >
+							<url >/images/eiffelstudio/dialogs_and_wizards/context-dialog-cluster.png</url>
 						</image>
 					</item>
 				</list>

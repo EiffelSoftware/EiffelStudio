@@ -1,34 +1,34 @@
 <document title="User interface basics" output="studio">
-	<meta_data>
-		<help>
-			<meta>
-				<content>keyword here</content>
-				<name>MS-HKWD</name>
+	<meta_data >
+		<help >
+			<meta >
+				<meta_content >keyword here</meta_content>
+				<name >MS-HKWD</name>
 			</meta>
 		</help>
 	</meta_data>
-	<paragraph>
-		<heading>
-			<size>1</size>User interface basics
+	<paragraph >
+		<heading >
+			<size >1</size>User interface basics
 		</heading>
-		<paragraph>ISE Eiffel 5 environment includes a Metric tool based on the previously defined metric theory. This tool provides many facilities like computing measures over a project, including smaller scopes, defining new metrics according to users' needs and handling archives to compare projects</paragraph>
+		<paragraph >ISE Eiffel 5 environment includes a Metric tool based on the previously defined metric theory. This tool provides many facilities like computing measures over a project, including smaller scopes, defining new metrics according to users' needs and handling archives to compare projects</paragraph>
 		<list ordered="false">
-			<item>
-				<link>
-					<url>10_measuring.xml</url>
-					<label>Measuring</label>
+			<item >
+				<link >
+					<url >10_measuring.xml</url>
+					<label >Measuring</label>
 				</link>
 			</item>
-			<item>
-				<link>
-					<url>20_defining_composite_metrics/00_introduction.xml</url>
-					<label>Defining composite metrics</label>
+			<item >
+				<link >
+					<url >20_defining_composite_metrics/00_introduction.xml</url>
+					<label >Defining composite metrics</label>
 				</link>
 			</item>
-			<item>
-				<link>
-					<label>Archives</label>
-					<url>30_archives.xml</url>
+			<item >
+				<link >
+					<label >Archives</label>
+					<url >30_archives.xml</url>
 				</link>
 			</item>
 		</list>

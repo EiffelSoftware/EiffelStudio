@@ -1,133 +1,133 @@
 <document title="Metric toolbar" output="studio">
-	<meta_data>
-		<help>
-			<meta>
-				<content>Metric,toolbar</content>
-				<name>MS-HKWD</name>
+	<meta_data >
+		<help >
+			<meta >
+				<meta_content >Metric,toolbar</meta_content>
+				<name >MS-HKWD</name>
 			</meta>
-			<meta>
-				<content>Metric,buttons,fields</content>
-				<name>MS-HKWD</name>
+			<meta >
+				<meta_content >Metric,buttons,fields</meta_content>
+				<name >MS-HKWD</name>
 			</meta>
 		</help>
 	</meta_data>
-	<paragraph>
-		<heading>
-			<size>1</size>Metric toolbar
+	<paragraph >
+		<heading >
+			<size >1</size>Metric toolbar
 		</heading>
-		<paragraph>The toolbar of the metric tools contains the following fields:</paragraph>
-		<paragraph>
-			<image>
-				<url>/images/eiffelstudio/metrics_png/fields.png</url>
-				<border>0</border>
+		<paragraph >The toolbar of the metric tools contains the following fields:</paragraph>
+		<paragraph >
+			<image >
+				<url >/images/eiffelstudio/metrics_png/fields.png</url>
+				<border >0</border>
 			</image>
 		</paragraph>
 		<list ordered="false">
-			<item> 
-				<link>
-					<url></url>
-					<label>name</label>
+			<item > 
+				<link >
+					<url />
+					<label >name</label>
 				</link>: to enter a name when saving a measure.
 			</item>
-			<item> 
-				<link>
-					<url></url>
-					<label>scope</label>
+			<item > 
+				<link >
+					<url />
+					<label >scope</label>
 				</link>: a combo box to select a scope type.
 			</item>
-			<item> 
-				<link>
-					<url></url>
-					<label>metric</label>
+			<item > 
+				<link >
+					<url />
+					<label >metric</label>
 				</link>: a menu containing all available metrics.
 			</item>
-			<item> 
-				<link>
-					<url></url>
-					<label>unit</label>
+			<item > 
+				<link >
+					<url />
+					<label >unit</label>
 				</link>: displays the selected metric's unit.
 			</item>
 		</list>
-		<paragraph>And the following buttons:</paragraph>
+		<paragraph >And the following buttons:</paragraph>
 		<list ordered="false">
-			<item>
-				<image>
-					<height>16</height>
-					<width>16</width>
-					<url>/images/eiffelstudio/icons/icon_new_measure_color.gif</url>
-					<border>0</border>
+			<item >
+				<image >
+					<height >16</height>
+					<width >16</width>
+					<url >/images/eiffelstudio/icons/icon_new_measure_color.gif</url>
+					<border >0</border>
 				</image>
-				<link>
-					<url></url>
-					<label>calculate</label>
+				<link >
+					<url />
+					<label >calculate</label>
 				</link>: evaluate a metric over ascope.
 			</item>
-			<item>
-				<image>
-					<height>16</height>
-					<width>16</width>
-					<url>/images/eiffelstudio/icons/icon_save_measure_color.gif</url>
-					<border>0</border>
+			<item >
+				<image >
+					<height >16</height>
+					<width >16</width>
+					<url >/images/eiffelstudio/icons/icon_save_measure_color.gif</url>
+					<border >0</border>
 				</image>
-				<link>
-					<url></url>
-					<label>add</label>
+				<link >
+					<url />
+					<label >add</label>
 				</link>: add a measure to the multi-column list and save it.
 			</item>
-			<item>
-				<image>
-					<height>16</height>
-					<width>16</width>
-					<url>/images/eiffelstudio/icons/icon_delete_measure_color.gif</url>
-					<border>0</border>
+			<item >
+				<image >
+					<height >16</height>
+					<width >16</width>
+					<url >/images/eiffelstudio/icons/icon_delete_measure_color.gif</url>
+					<border >0</border>
 				</image>
-				<link>
-					<url></url>
-					<label>delete</label>
+				<link >
+					<url />
+					<label >delete</label>
 				</link>: delete a set of measures from the multi-column list.
 			</item>
-			<item>
-				<link>
-					<url></url>
-					<label>management</label>
+			<item >
+				<link >
+					<url />
+					<label >management</label>
 				</link>: reorder, delete or edit metrics.
 			</item>
-			<item>
-				<image>
-					<height>16</height>
-					<width>16</width>
-					<url>/images/eiffelstudio/icons/icon_new_metric_color.gif</url>
-					<border>0</border>
+			<item >
+				<image >
+					<height >16</height>
+					<width >16</width>
+					<url >/images/eiffelstudio/icons/icon_new_metric_color.gif</url>
+					<border >0</border>
 				</image>
-				<link>
-					<url></url>
-					<label>new metric</label>
+				<link >
+					<url />
+					<label >new metric</label>
 				</link>: create a new composite metric.
 			</item>
-			<item>
-				<image>
-					<height>16</height>
-					<width>16</width>
-					<url>/images/eiffelstudio/icons/icon_view_measure_plus_color.gif</url>
-					<border>0</border>
+			<item >
+				<image >
+					<height >16</height>
+					<width >16</width>
+					<url >/images/eiffelstudio/icons/icon_view_measure_plus_color.gif</url>
+					<border >0</border>
 				</image> show 
-				<link>
-					<url></url>
-					<label>details</label>
+				<link >
+					<url />
+					<label >details</label>
 				</link>: show details of a measure.
 			</item>
-			<item>
-				<image>
-					<height>16</height>
-					<width>16</width>
-					<url>/images/eiffelstudio/icons/icon_view_measure_minus_color.gif</url>
-					<border>0</border>
+			<item >
+				<image >
+					<height >16</height>
+					<width >16</width>
+					<url >/images/eiffelstudio/icons/icon_view_measure_minus_color.gif</url>
+					<border >0</border>
 				</image> hide details: hide details of ameasure.
 			</item>
-			<item>
-				<link>
-					<url></url>
-					<label>archive</label>
+			<item >
+				<link >
+					<url />
+					<label >archive</label>
 				</link>: create, update or compare archive files.
 			</item>
 		</list>

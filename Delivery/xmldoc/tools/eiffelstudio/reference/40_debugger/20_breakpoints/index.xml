@@ -1,69 +1,69 @@
 <document title="Breakpoints" output="studio">
-	<meta_data>
-		<help>
-			<meta>
-				<content>breakpoints</content>
-				<name>MS-HKWD</name>
+	<meta_data >
+		<help >
+			<meta >
+				<meta_content >breakpoints</meta_content>
+				<name >MS-HKWD</name>
 			</meta>
-			<meta>
-				<content>stop points</content>
-				<name>MS-HKWD</name>
+			<meta >
+				<meta_content >stop points</meta_content>
+				<name >MS-HKWD</name>
 			</meta>
 		</help>
 	</meta_data>
-	<paragraph>
-		<heading>
-			<size>1</size>Breakpoints
+	<paragraph >
+		<heading >
+			<size >1</size>Breakpoints
 		</heading>
 		<list ordered="false">
-			<item>
-				<link>
-					<url>00_introduction.xml</url>
-					<label>Introduction</label>
+			<item >
+				<link >
+					<url >00_introduction.xml</url>
+					<label >Introduction</label>
 				</link>
 			</item>
-			<item>
-				<link>
-					<url>10_breakpoint_menu.xml</url>
-					<label>Breakpoint menu</label>
+			<item >
+				<link >
+					<url >10_breakpoint_menu.xml</url>
+					<label >Breakpoint menu</label>
 				</link>
 			</item>
-			<item>
-				<image>
-					<height>16</height>
-					<width>16</width>
-					<url>../../../../../images/eiffelstudio/icons/icon_enable_bkpt_color.gif</url>
+			<item >
+				<image >
+					<height >16</height>
+					<width >16</width>
+					<url >../../../../../images/eiffelstudio/icons/icon_enable_bkpt_color.gif</url>
 				</image> 
-				<image>
-					<height>16</height>
-					<width>16</width>
-					<url>../../../../../images/eiffelstudio/icons/icon_disable_bkpt_color.gif</url>
+				<image >
+					<height >16</height>
+					<width >16</width>
+					<url >../../../../../images/eiffelstudio/icons/icon_disable_bkpt_color.gif</url>
 				</image> 
-				<image>
-					<height>16</height>
-					<width>16</width>
-					<url>../../../../../images/eiffelstudio/icons/icon_del_bkpt_color.gif</url>
+				<image >
+					<height >16</height>
+					<width >16</width>
+					<url >../../../../../images/eiffelstudio/icons/icon_del_bkpt_color.gif</url>
 				</image> 
-				<link>
-					<url>20_breakpoint_commands.xml</url>
-					<label>Breakpoint commands</label>
+				<link >
+					<url >20_breakpoint_commands.xml</url>
+					<label >Breakpoint commands</label>
 				</link>
 			</item>
-			<item>
-				<image>
-					<height>16</height>
-					<width>16</width>
-					<url>../../../../../images/eiffelstudio/icons/icon_bkpt_info_color.gif</url>
+			<item >
+				<image >
+					<height >16</height>
+					<width >16</width>
+					<url >../../../../../images/eiffelstudio/icons/icon_bkpt_info_color.gif</url>
 				</image> 
-				<link>
-					<url>30_breakpoint_information.xml</url>
-					<label>Breakpoint information command</label>
+				<link >
+					<url >30_breakpoint_information.xml</url>
+					<label >Breakpoint information command</label>
 				</link>
 			</item>
-			<item>
-				<link>
-					<url>40_conditional_breakpoints.xml</url>
-					<label>Conditional breakpoints</label>
+			<item >
+				<link >
+					<url >40_conditional_breakpoints.xml</url>
+					<label >Conditional breakpoints</label>
 				</link>
 			</item>
 		</list>

@@ -1,39 +1,39 @@
 <document title="Syntax auto complete" output="studio">
-	<meta_data>
-		<help>
-			<meta>
-				<content>Editor, Syntax auto-complete</content>
-				<name>MS-HKWD</name>
+	<meta_data >
+		<help >
+			<meta >
+				<meta_content >Editor, Syntax auto-complete</meta_content>
+				<name >MS-HKWD</name>
 			</meta>
 		</help>
 	</meta_data>
-	<paragraph>
-		<heading>
-			<size>1</size>Syntax auto complete
+	<paragraph >
+		<heading >
+			<size >1</size>Syntax auto complete
 		</heading>
-		<paragraph>Syntax auto-complete in EiffelStudio editor is twofold :</paragraph>
+		<paragraph >Syntax auto-complete in EiffelStudio editor is twofold :</paragraph>
 		<list ordered="false">
-			<item>
-				<paragraph>The editor can close brackets ("(", "{" and "[") and quotes(""", "'" and "`") automatically. This feature is disabled by default. It can be activated in the editor preferences.</paragraph>
+			<item >
+				<paragraph >The editor can close brackets ("(", "{" and "[") and quotes(""", "'" and "`") automatically. This feature is disabled by default. It can be activated in the editor preferences.</paragraph>
 			</item>
-			<item>
-				<paragraph>The editor can complete syntactic structures or part of them. The auto-complete is triggered when "Enter" or "Space" keys are pressed after a reserved word included in the following list:</paragraph>
-				<paragraph>The way these key words are completed is fully 
-					<link>
-						<url>../../85_preferences/20_preferences_reference/20_tools/30_editor/30_automatic_completion_preferences/20_syntax_autocomplete/index.xml</url>
-						<label>customizable</label>
+			<item >
+				<paragraph >The editor can complete syntactic structures or part of them. The auto-complete is triggered when "Enter" or "Space" keys are pressed after a reserved word included in the following list:</paragraph>
+				<paragraph >The way these key words are completed is fully 
+					<link >
+						<url >../../85_preferences/20_preferences_reference/20_tools/30_editor/30_automatic_completion_preferences/20_syntax_autocomplete/index.xml</url>
+						<label >customizable</label>
 					</link>.
 				</paragraph>
 			</item>
 		</list>
-		<seealso>
-			<bold>See Also</bold>
-			<line_break></line_break>
-			<link>
-				<url>../../85_preferences/20_preferences_reference/20_tools/30_editor/30_automatic_completion_preferences/20_syntax_autocomplete/index.xml</url>
-				<label>Syntax auto-complete preferences</label>
+		<seealso >
+			<bold >See Also</bold>
+			<line_break />
+			<link >
+				<url >../../85_preferences/20_preferences_reference/20_tools/30_editor/30_automatic_completion_preferences/20_syntax_autocomplete/index.xml</url>
+				<label >Syntax auto-complete preferences</label>
 			</link>
-			<line_break></line_break>
+			<line_break />
 		</seealso>
 	</paragraph>
 </document>

@@ -1,72 +1,72 @@
 <document title="Attribute symbols" output="studio">
-	<meta_data>
-		<help>
-			<meta>
-				<content>attribute symbols</content>
-				<name>MS-HKWD</name>
+	<meta_data >
+		<help >
+			<meta >
+				<meta_content >attribute symbols</meta_content>
+				<name >MS-HKWD</name>
 			</meta>
 		</help>
 	</meta_data>
-	<paragraph>
-		<heading>
-			<size>1</size>Attribute symbols
+	<paragraph >
+		<heading >
+			<size >1</size>Attribute symbols
 		</heading>
-		<paragraph>In both trees of the 
-			<link>
-				<url>00_introduction.xml</url>
-				<label>object tool</label>
+		<paragraph >In both trees of the 
+			<link >
+				<url >00_introduction.xml</url>
+				<label >object tool</label>
 			</link>, objects are displayed. Two categories are made for each objects: its attributes (grouped under the `attributes' folder 
-			<image>
-				<height>16</height>
-				<width>16</width>
-				<url>../../../../../images/eiffelstudio/icons/icon_attribute_symbol.gif</url>
+			<image >
+				<height >16</height>
+				<width >16</width>
+				<url >../../../../../images/eiffelstudio/icons/icon_attribute_symbol.gif</url>
 			</image> ) and its once routines (grouped under the `once routines' folder 
-			<image>
-				<height>16</height>
-				<width>16</width>
-				<url>../../../../../images/eiffelstudio/icons/icon_once_symbol.gif</url>
+			<image >
+				<height >16</height>
+				<width >16</width>
+				<url >../../../../../images/eiffelstudio/icons/icon_once_symbol.gif</url>
 			</image> ).
 		</paragraph>
-		<paragraph>All follow the following symbol scheme to describe the kind of each item:</paragraph>
+		<paragraph >All follow the following symbol scheme to describe the kind of each item:</paragraph>
 		<list ordered="false">
-			<item>
-				<image>
-					<height>16</height>
-					<width>16</width>
-					<url>../../../../../images/eiffelstudio/icons/icon_immediate_value.gif</url>
+			<item >
+				<image >
+					<height >16</height>
+					<width >16</width>
+					<url >../../../../../images/eiffelstudio/icons/icon_immediate_value.gif</url>
 				</image> An attribute of a basic type, such as 
-				<code>
-					<class_name>
-						<label>INTEGER</label>
-						<url>/libraries/base/reference/kernel/integer.html</url>
+				<code >
+					<class_name >
+						<label >INTEGER</label>
+						<url >/libraries/base/reference/kernel/integer.html</url>
 					</class_name>
 				</code>, 
-				<code>
-					<class_name>
-						<label>DOUBLE</label>
-						<url>/libraries/base/reference/kernel/double.html</url>
+				<code >
+					<class_name >
+						<label >DOUBLE</label>
+						<url >/libraries/base/reference/kernel/double.html</url>
 					</class_name>
 				</code>,...
 			</item>
-			<item>
-				<image>
-					<height>16</height>
-					<width>16</width>
-					<url>../../../../../images/eiffelstudio/icons/icon_object_symbol.gif</url>
+			<item >
+				<image >
+					<height >16</height>
+					<width >16</width>
+					<url >../../../../../images/eiffelstudio/icons/icon_object_symbol.gif</url>
 				</image> An attribute that is a reference to anobject
 			</item>
-			<item>
-				<image>
-					<height>16</height>
-					<width>16</width>
-					<url>../../../../../images/eiffelstudio/icons/icon_void_pointer.gif</url>
+			<item >
+				<image >
+					<height >16</height>
+					<width >16</width>
+					<url >../../../../../images/eiffelstudio/icons/icon_void_pointer.gif</url>
 				</image> A Void reference
 			</item>
-			<item>
-				<image>
-					<height>16</height>
-					<width>16</width>
-					<url>../../../../../images/eiffelstudio/icons/icon_expanded_object.gif</url>
+			<item >
+				<image >
+					<height >16</height>
+					<width >16</width>
+					<url >../../../../../images/eiffelstudio/icons/icon_expanded_object.gif</url>
 				</image> An object that is expanded
 			</item>
 		</list> 

@@ -1,105 +1,105 @@
 <document title="Running an application" output="studio">
-	<meta_data>
-		<help>
-			<meta>
-				<content>application, running</content>
-				<name>MS-HKWD</name>
+	<meta_data >
+		<help >
+			<meta >
+				<meta_content >application, running</meta_content>
+				<name >MS-HKWD</name>
 			</meta>
-			<meta>
-				<content>running an application</content>
-				<name>MS-HKWD</name>
+			<meta >
+				<meta_content >running an application</meta_content>
+				<name >MS-HKWD</name>
 			</meta>
-			<meta>
-				<content>launching an application</content>
-				<name>MS-HKWD</name>
+			<meta >
+				<meta_content >launching an application</meta_content>
+				<name >MS-HKWD</name>
 			</meta>
-			<meta>
-				<content>starting an application</content>
-				<name>MS-HKWD</name>
+			<meta >
+				<meta_content >starting an application</meta_content>
+				<name >MS-HKWD</name>
 			</meta>
 		</help>
 	</meta_data>
-	<paragraph>
-		<heading>
-			<size>1</size> Running an application
+	<paragraph >
+		<heading >
+			<size >1</size> Running an application
 		</heading>
-		<paragraph>There are several ways to launch an application. Not all are available depending on the way you compiled your system.</paragraph>
-		<paragraph>Melted and frozen executables can be debugged. Several methods can be used to launch such an executable:</paragraph>
+		<paragraph >There are several ways to launch an application. Not all are available depending on the way you compiled your system.</paragraph>
+		<paragraph >Melted and frozen executables can be debugged. Several methods can be used to launch such an executable:</paragraph>
 		<list ordered="false">
-			<item>The default 
-				<link>
-					<url>/tools/eiffelstudio/reference/40_debugger/10_execution/10_run_and_debug.xml</url>
-					<label> command</label>
+			<item >The default 
+				<link >
+					<url >/tools/eiffelstudio/reference/40_debugger/10_execution/10_run_and_debug.xml</url>
+					<label > command</label>
 				</link>. It launches the executable located in the EIFGEN/W_code directory under the project directory. The execution stops whenever a breakpoint is encountered.
 			</item>
-			<item>The 
-				<link>
-					<url>/tools/eiffelstudio/reference/40_debugger/10_execution/20_run_without_breakpoints.xml</url>
-					<label>command</label>
+			<item >The 
+				<link >
+					<url >/tools/eiffelstudio/reference/40_debugger/10_execution/20_run_without_breakpoints.xml</url>
+					<label >command</label>
 				</link>. It has the same behavior except that the execution won't stop when a breakpoint is met.
 			</item>
-			<item>The step commands, which execute only a small part of the program at a time: 
+			<item >The step commands, which execute only a small part of the program at a time: 
 				<list ordered="false">
-					<item>The 
-						<link>
-							<url>/tools/eiffelstudio/reference/40_debugger/10_execution/40_step_into_a_feature.xml</url>
-							<label>command</label>
+					<item >The 
+						<link >
+							<url >/tools/eiffelstudio/reference/40_debugger/10_execution/40_step_into_a_feature.xml</url>
+							<label >command</label>
 						</link>, which tries to enter the feature that is about to be called.
 					</item>
-					<item>The 
-						<link>
-							<url>/tools/eiffelstudio/reference/40_debugger/10_execution/50_step_by_step.xml</url>
-							<label>command</label>
+					<item >The 
+						<link >
+							<url >/tools/eiffelstudio/reference/40_debugger/10_execution/50_step_by_step.xml</url>
+							<label >command</label>
 						</link>, which executes one execution line.
 					</item>
-					<item>The 
-						<link>
-							<url>/tools/eiffelstudio/reference/40_debugger/10_execution/60_step_out.xml</url>
-							<label>command</label>
+					<item >The 
+						<link >
+							<url >/tools/eiffelstudio/reference/40_debugger/10_execution/60_step_out.xml</url>
+							<label >command</label>
 						</link>, which launches the application and stops it as soon as the application exits the feature it is stopped in.
 					</item>
 				</list>
 			</item>
 		</list>
-		<tip>
-			<bold>Tip</bold>: All the above commands can be accessed either in the 
-			<bold>Project</bold> toolbar or in the 
-			<bold>Debug</bold> menu.
-			<line_break></line_break> They can be used either to launch the program or to resume its execution after it has been paused.
+		<tip >
+			<bold >Tip</bold>: All the above commands can be accessed either in the 
+			<bold >Project</bold> toolbar or in the 
+			<bold >Debug</bold> menu.
+			<line_break /> They can be used either to launch the program or to resume its execution after it has been paused.
 		</tip>
 		<list ordered="false">
-			<item>It is also possible to select 
-				<bold>Run to breakpoint</bold> in a 
-				<link>
-					<url>/tools/eiffelstudio/reference/40_debugger/20_breakpoints/10_breakpoint_menu.xml</url>
-					<label>breakpoint context menu</label>
+			<item >It is also possible to select 
+				<bold >Run to breakpoint</bold> in a 
+				<link >
+					<url >/tools/eiffelstudio/reference/40_debugger/20_breakpoints/10_breakpoint_menu.xml</url>
+					<label >breakpoint context menu</label>
 				</link> to have the application be launched and executed until it reaches the selected execution line.
 			</item>
 		</list>
-		<paragraph>Finalized executables can also be run, but they are not debuggable and cannot be interrupted. To run a finalized executable, use the 
-			<link>
-				<url>/tools/eiffelstudio/reference/40_debugger/10_execution/30_run_a_finalized_executable.xml</url>
-				<label> command</label>
+		<paragraph >Finalized executables can also be run, but they are not debuggable and cannot be interrupted. To run a finalized executable, use the 
+			<link >
+				<url >/tools/eiffelstudio/reference/40_debugger/10_execution/30_run_a_finalized_executable.xml</url>
+				<label > command</label>
 			</link>, located in the 
-			<bold>Project</bold> menu and the 
-			<bold>Project</bold> toolbar.
+			<bold >Project</bold> menu and the 
+			<bold >Project</bold> toolbar.
 		</paragraph>
-		<seealso>
-			<bold>See Also</bold>
-			<line_break></line_break>
-			<link>
-				<url>../40_compiling/10_generating_executables.xml</url>
-				<label>Compiling an executable</label>
+		<seealso >
+			<bold >See Also</bold>
+			<line_break />
+			<link >
+				<url >../40_compiling/10_generating_executables.xml</url>
+				<label >Compiling an executable</label>
 			</link>
-			<line_break></line_break>
-			<link>
-				<url>35_using_breakpoints.xml</url>
-				<label>Using breakpoints</label>
+			<line_break />
+			<link >
+				<url >35_using_breakpoints.xml</url>
+				<label >Using breakpoints</label>
 			</link>
-			<line_break></line_break>
-			<link>
-				<url>20_interrupting_an_application.xml</url>
-				<label>Interrupting an application</label>
+			<line_break />
+			<link >
+				<url >20_interrupting_an_application.xml</url>
+				<label >Interrupting an application</label>
 			</link>
 		</seealso>
 	</paragraph>

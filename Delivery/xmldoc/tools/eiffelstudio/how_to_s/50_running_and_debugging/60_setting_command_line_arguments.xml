@@ -1,63 +1,63 @@
 <document title="Setting the command line arguments" output="studio">
-	<meta_data>
-		<help>
-			<meta>
-				<content>command line arguments, using</content>
-				<name>MS-HKWD</name>
+	<meta_data >
+		<help >
+			<meta >
+				<meta_content >command line arguments, using</meta_content>
+				<name >MS-HKWD</name>
 			</meta>
-			<meta>
-				<content>setting command line arguments</content>
-				<name>MS-HKWD</name>
+			<meta >
+				<meta_content >setting command line arguments</meta_content>
+				<name >MS-HKWD</name>
 			</meta>
-			<meta>
-				<content>using command line arguments</content>
-				<name>MS-HKWD</name>
+			<meta >
+				<meta_content >using command line arguments</meta_content>
+				<name >MS-HKWD</name>
 			</meta>
 		</help>
 	</meta_data>
-	<paragraph>
-		<heading>
-			<size>1</size>Setting the command line arguments
+	<paragraph >
+		<heading >
+			<size >1</size>Setting the command line arguments
 		</heading>
-		<paragraph>To debug a program that uses command line parameters, it is possible to have the debugger call the generated program with certain command line arguments automatically.</paragraph>
-		<paragraph>To change the command line arguments used when debugging:</paragraph>
+		<paragraph >To debug a program that uses command line parameters, it is possible to have the debugger call the generated program with certain command line arguments automatically.</paragraph>
+		<paragraph >To change the command line arguments used when debugging:</paragraph>
 		<list ordered="false">
-			<item>Open the 
-				<link>
-					<url>/tools/eiffelstudio/reference/25_project_settings/20_debug.xml</url>
-					<label>System Settings</label>
+			<item >Open the 
+				<link >
+					<url >/tools/eiffelstudio/reference/25_project_settings/20_debug.xml</url>
+					<label >System Settings</label>
 				</link> dialog.
 			</item>
-			<item>In the 
-				<bold>Debug/Profile</bold> tab, type the command line arguments you want to use when debugging in the 
-				<bold>Program arguments</bold> entry.
+			<item >In the 
+				<bold >Debug/Profile</bold> tab, type the command line arguments you want to use when debugging in the 
+				<bold >Program arguments</bold> entry.
 			</item>
-			<item>Click 
-				<bold>Apply</bold> or 
-				<bold>OK</bold>.
+			<item >Click 
+				<bold >Apply</bold> or 
+				<bold >OK</bold>.
 			</item>
-			<item>You must 
-				<link>
-					<url>../40_compiling/10_generating_executables.xml</url>
-					<label>recompile</label>
+			<item >You must 
+				<link >
+					<url >../40_compiling/10_generating_executables.xml</url>
+					<label >recompile</label>
 				</link> your project for the changes to take effect.
 			</item>
 		</list>
-		<note>
-			<bold>Note</bold>: All command line arguments are automatically saved, which makes it easy to switch between different command lines.
-			<line_break></line_break> To remove a command line definitely, click the delete 
-			<image>
-				<height>16</height>
-				<width>16</width>
-				<url>/images/eiffelstudio/icons/icon_delete_color.gif</url>
+		<note >
+			<bold >Note</bold>: All command line arguments are automatically saved, which makes it easy to switch between different command lines.
+			<line_break /> To remove a command line definitely, click the delete 
+			<image >
+				<height >16</height>
+				<width >16</width>
+				<url >/images/eiffelstudio/icons/icon_delete_color.gif</url>
 			</image> button on the right of the 
-			<bold>Program arguments</bold> entry.
+			<bold >Program arguments</bold> entry.
 		</note>
-		<tip>
-			<bold>Tip</bold>: To get the command line arguments in a program, it is possible to either define the root feature as taking an array of STRING objects, or to use the 
-			<link>
-				<url>/libraries/base/reference/kernel/arguments.xml</url>
-				<label>ARGUMENTS class</label>
+		<tip >
+			<bold >Tip</bold>: To get the command line arguments in a program, it is possible to either define the root feature as taking an array of STRING objects, or to use the 
+			<link >
+				<url >/libraries/base/reference/kernel/arguments.xml</url>
+				<label >ARGUMENTS class</label>
 			</link>, which provides a lot of functionality linked with command line arguments.
 		</tip>
 	</paragraph>

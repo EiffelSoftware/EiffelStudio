@@ -1,47 +1,47 @@
 <document title="Ratio metrics" output="studio">
-	<meta_data>
-		<help>
-			<meta>
-				<content>Metric,ratio metrics</content>
-				<name>MS-HKWD</name>
+	<meta_data >
+		<help >
+			<meta >
+				<meta_content >Metric,ratio metrics</meta_content>
+				<name >MS-HKWD</name>
 			</meta>
 		</help>
 	</meta_data>
-	<paragraph>
-		<heading>
-			<size>1</size>Ratio metrics
+	<paragraph >
+		<heading >
+			<size >1</size>Ratio metrics
 		</heading>
-		<paragraph>Notation: a / b</paragraph>
-		<paragraph>Applicability: a and b are metrics, not necessarily with the same unit, but neither of them RATIO.</paragraph>
-		<paragraph>Semantics: division</paragraph>
-		<paragraph>Resulting unit: RATIO</paragraph>
-		<paragraph>Note that the presence of both linear combinations and ratios make it possible to define any metric of the form</paragraph>
-		<paragraph>k.m  / l.n</paragraph> 
-		<span></span>
-		<paragraph>in terms of elementary metrics m, n
-			<span>. If necessary, the interface can provide a shortcut to define such a formula in one step, without first defining the numerator and denominator as linear combinations.</span>
+		<paragraph >Notation: a / b</paragraph>
+		<paragraph >Applicability: a and b are metrics, not necessarily with the same unit, but neither of them RATIO.</paragraph>
+		<paragraph >Semantics: division</paragraph>
+		<paragraph >Resulting unit: RATIO</paragraph>
+		<paragraph >Note that the presence of both linear combinations and ratios make it possible to define any metric of the form</paragraph>
+		<paragraph >k.m  / l.n</paragraph> 
+		<span />
+		<paragraph >in terms of elementary metrics m, n
+			<span >. If necessary, the interface can provide a shortcut to define such a formula in one step, without first defining the numerator and denominator as linear combinations.</span>
 		</paragraph>
-		<paragraph>The metric tool provides a command for defining linear metrics. Button 
-			<image>
-				<url>/images/eiffelstudio/icons/icon_new_metric_color.gif</url>
-				<border>0</border>
+		<paragraph >The metric tool provides a command for defining linear metrics. Button 
+			<image >
+				<url >/images/eiffelstudio/icons/icon_new_metric_color.gif</url>
+				<border >0</border>
 			</image>pops-up the following dialog. Select the metric ratio tab to obtain:
 		</paragraph>
-		<paragraph>
-			<image>
-				<url>/images/eiffelstudio/metrics_png/mratio.png</url>
-				<border>0</border>
+		<paragraph >
+			<image >
+				<url >/images/eiffelstudio/metrics_png/mratio.png</url>
+				<border >0</border>
 			</image>
 		</paragraph>
-		<paragraph>and to define any ratio metrics.</paragraph>
-		<seealso>
-			<bold>See Also</bold>
-			<line_break></line_break>
-			<link>
-				<url>/tools/eiffelstudio/how_to_s/70_analyzing_a_project/20_handling_new_metrics/10_defining_new_metrics/30_defining_ratio_metrics.xml</url>
-				<label>Defining ratio metrics</label>
+		<paragraph >and to define any ratio metrics.</paragraph>
+		<seealso >
+			<bold >See Also</bold>
+			<line_break />
+			<link >
+				<url >/tools/eiffelstudio/how_to_s/70_analyzing_a_project/20_handling_new_metrics/10_defining_new_metrics/30_defining_ratio_metrics.xml</url>
+				<label >Defining ratio metrics</label>
 			</link>
 		</seealso>
-		<paragraph> </paragraph>
+		<paragraph > </paragraph>
 	</paragraph>
 </document>

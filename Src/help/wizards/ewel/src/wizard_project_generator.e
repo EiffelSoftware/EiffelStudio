@@ -44,12 +44,12 @@ feature {NONE} -- Implementation
 			create map_list.make
 			add_common_parameters (map_list)
 
-			create tuple.make
+			create tuple
 			tuple.put ("<FL_MAIN_CLASS>", 1)
 			tuple.put ("MAIN_WINDOW", 2)
 			map_list.extend (tuple)
 
-			create tuple.make
+			create tuple
 			tuple.put ("<FL_APPLICATION_TYPE>", 1)
 			tuple.put ("WEL_MAIN_DIALOG", 2)
 			map_list.extend (tuple)
@@ -59,7 +59,7 @@ feature {NONE} -- Implementation
 			main_dialog_id.to_lower
 			main_dialog_id.prepend ("Idd_")
 			main_dialog_id.append ("_dialog")
-			create tuple.make
+			create tuple
 			tuple.put ("<FL_CREATION>", 1)
 			tuple.put ("make_by_id ("+main_dialog_id+")", 2)
 			map_list.extend (tuple)

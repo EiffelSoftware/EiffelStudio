@@ -52,15 +52,15 @@ extern "C" {
  */
  
 typedef struct {
-    EIF_OBJECT current;				/* Root object of Thread creator. */
-    EIF_POINTER routine;			/* routine `execute' of thread. */
-	EIF_INTEGER *is_initialized;	/* Has thread been launched? */
-    EIF_MUTEX_TYPE *children_mutex;	/* Mutex for `join_all' */
-    int *addr_n_children;			/* Number of thread children. */
+	EIF_OBJECT current;				/* Root object of Thread creator. */
+	EIF_POINTER routine;			/* routine `execute' of thread. */
+	volatile EIF_INTEGER * volatile is_initialized;	/* Has thread been launched? */
+	EIF_MUTEX_TYPE *children_mutex;	/* Mutex for `join_all' */
+	int *addr_n_children;			/* Number of thread children. */
 #ifndef EIF_NO_CONDVAR
-    EIF_COND_TYPE *children_cond;	/* For `join_all'.*/
+	EIF_COND_TYPE *children_cond;	/* For `join_all'.*/
 #endif  
-    EIF_THR_TYPE *tid;				/* Thread id of new thread. */
+	EIF_THR_TYPE *tid;				/* Thread id of new thread. */
 } start_routine_ctxt_t;
 
 

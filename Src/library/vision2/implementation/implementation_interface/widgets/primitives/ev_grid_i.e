@@ -482,7 +482,7 @@ feature -- Measurements
 			end
 		end
 
-feature {EV_GRID_COLUMN_I, EV_GRID_I, EV_GRID_DRAWER_I} -- Implementation
+feature {EV_GRID_COLUMN_I, EV_GRID_I, EV_GRID_DRAWER_I, EV_GRID_ROW_I} -- Implementation
 
 	row_list: SPECIAL [SPECIAL [EV_GRID_ITEM_I]]
 		-- Array of individual row's data, row by row

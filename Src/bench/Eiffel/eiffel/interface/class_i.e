@@ -123,7 +123,10 @@ feature -- Status report
 			else
 					-- We need to clone as the result maybe used for string operation and we do not 
 					-- want it to change some internal data from Current.
-				l_namespace := clone (namespace)
+				l_namespace := namespace
+				if namespace /= Void then
+					l_namespace := l_namespace.twin
+				end
 				
 				if
 					not System.use_all_cluster_as_namespace and then
@@ -140,7 +143,7 @@ feature -- Status report
 						if l_namespace /= Void then
 							Result := l_namespace
 						else
-							Result := clone (cluster.top_of_recursive_cluster.cluster_name)
+							Result := cluster.top_of_recursive_cluster.cluster_name.twin
 						end
 					else
 						if cluster.belongs_to_all then
@@ -155,7 +158,7 @@ feature -- Status report
 									is_equal (l_start_name)
 						end
 						
-						Result := clone (cluster.cluster_name)
+						Result := cluster.cluster_name.twin
 
 						if l_namespace /= Void then
 							Result.replace_substring (l_namespace, 1, l_start_name.count)
@@ -171,7 +174,7 @@ feature -- Status report
 						Result.prepend_character ('.')
 						Result.prepend (System.system_namespace)
 					else
-						Result := clone (System.system_namespace)
+						Result := System.system_namespace.twin
 					end
 				end
 
@@ -187,9 +190,9 @@ feature -- Status report
 	name_in_upper: STRING is
 			-- Class name in upper case.
 		do
-			Result := clone (name)
+			Result := name
 			if Result /= Void then
-				Result.to_upper
+				Result := Result.as_upper
 			else
 				Result := "Name not yet set"
 			end
@@ -222,7 +225,10 @@ feature -- Status report
 					a_file.open_read
 					a_file.readstream (a_file.count)
 					a_file.close
-					Result := clone (a_file.laststring)
+						-- No need to duplicate `last_string' since
+						-- its owner, the file will not go outside this
+						-- routine and therefore there will be no aliasing.
+					Result := a_file.last_string
 				end
 			else
 				Result := Void
@@ -328,12 +334,8 @@ feature -- Output
 			-- Append the name ot the current class in `a_clickable'
 		require
 			non_void_st: st /= Void
-		local
-			c_name: STRING
 		do
-			c_name := clone (name)
-			c_name.to_upper
-			st.add_classi (Current, c_name) 
+			st.add_classi (Current, name_in_upper) 
 		end
 
 feature {COMPILER_EXPORTER} -- Properties

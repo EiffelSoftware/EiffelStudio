@@ -61,6 +61,19 @@ feature -- Access
 			create Result.make
 		end
 		
+	show_hide_builder_window_command: GB_SHOW_HIDE_BUILDER_WINDOW_COMMAND is
+			-- Command representing a show/hide builder window request.
+		once
+			create Result.make
+		end
+		
+	show_hide_display_window_command: GB_SHOW_HIDE_DISPLAY_WINDOW_COMMAND is
+			-- Command representing a show/hide display window request.
+		once
+			create Result.make
+		end
+		
+		
 
 feature -- Basic operation
 

@@ -126,11 +126,11 @@ rt_public EIF_BOOLEAN b_equal(EIF_REFERENCE a, EIF_REFERENCE b)
 {
 	/* Standard equality between two bits */
 
-	register1 uint32 len_a;		/* Length of the bit field a */
-	register2 uint32 len_b;		/* Length of the bit field b */
-	register3 uint32 *addr_a;	/* Pointer into the arena of 'a' */
-	register4 uint32 *addr_b;	/* Pointer into the arena of 'b' */
-	register5 uint32 *last;		/* Last bit unit in 'a' */
+	uint32 len_a;		/* Length of the bit field a */
+	uint32 len_b;		/* Length of the bit field b */
+	uint32 *addr_a;	/* Pointer into the arena of 'a' */
+	uint32 *addr_b;	/* Pointer into the arena of 'b' */
+	uint32 *last;		/* Last bit unit in 'a' */
 	EIF_REFERENCE bita;
 	EIF_REFERENCE bitb;
 
@@ -191,12 +191,12 @@ rt_public void b_copy(EIF_REFERENCE a, EIF_REFERENCE b)
 	 */
 
 
-	register1 int len1;				/* Macro evaluates its argument twice */
-	register2 int len2;
-	register3 uint32 *arena1;
-	register4 uint32 *arena2;
-	/* register5 union overhead *zone;*/ /* %%ss removed */
-	/* register6 union overhead *zone2;*/ /* %%ss removed */
+	int len1;				/* Macro evaluates its argument twice */
+	int len2;
+	uint32 *arena1;
+	uint32 *arena2;
+	/* union overhead *zone;*/ /* %%ss removed */
+	/* union overhead *zone2;*/ /* %%ss removed */
 	int nb_pack1, nb_pack2, gap, idx;
 	uint32 mask, val;
 	if ((EIF_REFERENCE ) 0 == a)
@@ -339,11 +339,11 @@ rt_private EIF_REFERENCE b_right_shift(EIF_REFERENCE bit, long int s)
 	int len;					/* Length of the bit field */
 	int i;						/* Loop over the bit field */
 	int units;					/* Number of bit units */
-	register1 int bshift;		/* Byte/bit shifting amount */
-	register2 uint32 mask;		/* Mask used to save shifted bytes */
-	register3 uint32 buffer;	/* Buffer for shifting */
-	register4 uint32 previous;	/* Previous buffer to be merged */
-	register5 uint32 *arena;	/* Where bit array starts */
+	int bshift;		/* Byte/bit shifting amount */
+	uint32 mask;		/* Mask used to save shifted bytes */
+	uint32 buffer;	/* Buffer for shifting */
+	uint32 previous;	/* Previous buffer to be merged */
+	uint32 *arena;	/* Where bit array starts */
 	EIF_REFERENCE new;					/* New bit object */
 
 	len = LENGTH(bit);			/* Length of bit field */
@@ -397,11 +397,11 @@ rt_private EIF_REFERENCE b_left_shift(EIF_REFERENCE bit, long int s)
 	int len;					/* Length of the bit field */
 	int i;						/* Loop over the bit field */
 	int units;					/* Number of bit units */
-	register1 int bshift;		/* Byte/bit shifting amount */
-	register2 uint32 mask;		/* Mask used to save shifted bytes */
-	register3 uint32 buffer;	/* Buffer for shifting */
-	register4 uint32 previous;	/* Previous buffer to be merged */
-	register5 uint32 *arena;	/* Where bit array starts */
+	int bshift;		/* Byte/bit shifting amount */
+	uint32 mask;		/* Mask used to save shifted bytes */
+	uint32 buffer;	/* Buffer for shifting */
+	uint32 previous;	/* Previous buffer to be merged */
+	uint32 *arena;	/* Where bit array starts */
 	EIF_REFERENCE new;					/* New bit object */
 
 	len = LENGTH(bit);			/* Length of bit field */
@@ -480,11 +480,11 @@ rt_private EIF_REFERENCE b_right_rotate(EIF_REFERENCE bit, long int s)
 	int i;					/* Loop over the bit field */
 	int units;				/* Number of bit units */
 	int idx;				/* Index of bit unit where garbage bits arrived */
-	register1 int bshift;		/* Byte/bit shifting amount */
-	register2 uint32 mask;		/* Mask used to save shifted bytes */
-	register3 uint32 buffer;	/* Buffer for shifting */
-	register4 uint32 previous;	/* Previous buffer to be merged */
-	register5 uint32 *arena;	/* Where bit array starts */
+	int bshift;		/* Byte/bit shifting amount */
+	uint32 mask;		/* Mask used to save shifted bytes */
+	uint32 buffer;	/* Buffer for shifting */
+	uint32 previous;	/* Previous buffer to be merged */
+	uint32 *arena;	/* Where bit array starts */
 	uint32 last;				/* Saves value of last bit unit (rightmost) */
 	EIF_REFERENCE new;					/* New bit object */
 
@@ -586,11 +586,11 @@ rt_private EIF_REFERENCE b_left_rotate(EIF_REFERENCE bit, long int s)
 	int i;					/* Loop over the bit field */
 	int units;				/* Number of bit units */
 	int idx;				/* Index of bit unit where garbage bits arrived */
-	register1 int bshift;		/* Byte/bit shifting amount */
-	register2 uint32 mask;		/* Mask used to save shifted bytes */
-	register3 uint32 buffer;	/* Buffer for shifting */
-	register4 uint32 previous;	/* Previous buffer to be merged */
-	register5 uint32 last;		/* Saves value of last bit unit (leftmost) */
+	int bshift;		/* Byte/bit shifting amount */
+	uint32 mask;		/* Mask used to save shifted bytes */
+	uint32 buffer;	/* Buffer for shifting */
+	uint32 previous;	/* Previous buffer to be merged */
+	uint32 last;		/* Saves value of last bit unit (leftmost) */
 	uint32 *arena;				/* Where bit array starts */
 	EIF_REFERENCE new;					/* The new bit object */
 
@@ -692,11 +692,11 @@ rt_public EIF_REFERENCE b_and (EIF_REFERENCE a, EIF_REFERENCE b)
 	 */
 
 	EIF_GET_CONTEXT
-	register1 uint32 len_a;		/* Length of the bit field a */
-	register2 uint32 len_b;		/* Length of the bit field b */
-	register3 uint32 *addr_a;	/* Pointer into the arena of 'a' */
-	register4 uint32 *addr_b;	/* Pointer into the arena of 'b' */
-	register5 uint32 *last;		/* Last bit unit in 'b' */
+	uint32 len_a;		/* Length of the bit field a */
+	uint32 len_b;		/* Length of the bit field b */
+	uint32 *addr_a;	/* Pointer into the arena of 'a' */
+	uint32 *addr_b;	/* Pointer into the arena of 'b' */
+	uint32 *last;		/* Last bit unit in 'b' */
 
 	RT_GC_PROTECT(b);
 	a = b_clone(a);
@@ -746,11 +746,11 @@ rt_public EIF_REFERENCE b_implies(EIF_REFERENCE a, EIF_REFERENCE b)
 	 */
 
 	EIF_GET_CONTEXT
-	register1 uint32 len_a;		/* Length of the bit field a */
-	register2 uint32 len_b;		/* Length of the bit field b */
-	register3 uint32 *addr_a;	/* Pointer into the arena of 'a' */
-	register4 uint32 *addr_b;	/* Pointer into the arena of 'b' */
-	register5 uint32 *last;		/* Last bit unit in 'b' */
+	uint32 len_a;		/* Length of the bit field a */
+	uint32 len_b;		/* Length of the bit field b */
+	uint32 *addr_a;	/* Pointer into the arena of 'a' */
+	uint32 *addr_b;	/* Pointer into the arena of 'b' */
+	uint32 *last;		/* Last bit unit in 'b' */
 
 	RT_GC_PROTECT(b);
 	a = b_clone(a);
@@ -803,11 +803,11 @@ rt_public EIF_REFERENCE b_or(EIF_REFERENCE a, EIF_REFERENCE b)
 	 */
 
 	EIF_GET_CONTEXT
-	register1 uint32 len_a;		/* Length of the bit field a */
-	register2 uint32 len_b;		/* Length of the bit field b */
-	register3 uint32 *addr_a;	/* Pointer into the arena of 'a' */
-	register4 uint32 *addr_b;	/* Pointer into the arena of 'b' */
-	register5 uint32 *last;		/* Last bit unit in 'b' */
+	uint32 len_a;		/* Length of the bit field a */
+	uint32 len_b;		/* Length of the bit field b */
+	uint32 *addr_a;	/* Pointer into the arena of 'a' */
+	uint32 *addr_b;	/* Pointer into the arena of 'b' */
+	uint32 *last;		/* Last bit unit in 'b' */
 
 	RT_GC_PROTECT(b);
 	a = b_clone(a);
@@ -853,10 +853,10 @@ rt_public EIF_REFERENCE b_xor(EIF_REFERENCE a, EIF_REFERENCE b)
 	 */
 
 	EIF_GET_CONTEXT
-	register2 uint32 len_b;		/* Length of the bit field b */
-	register3 uint32 *addr_a;	/* Pointer into the arena of 'a' */
-	register4 uint32 *addr_b;	/* Pointer into the arena of 'b' */
-	register5 uint32 *last;		/* Last bit unit in 'b' */
+	uint32 len_b;		/* Length of the bit field b */
+	uint32 *addr_a;	/* Pointer into the arena of 'a' */
+	uint32 *addr_b;	/* Pointer into the arena of 'b' */
+	uint32 *last;		/* Last bit unit in 'b' */
 
 	RT_GC_PROTECT(b);
 	a = b_clone(a);
@@ -895,9 +895,9 @@ rt_public EIF_REFERENCE b_not(EIF_REFERENCE a)
 {
 	/* Performs the logical NOT operation on `a' */
 
-	register1 uint32 len_a;		/* Length of the bit field a */
-	register2 uint32 *addr_a;	/* Pointer into the arena of 'a' */
-	register3 uint32 *last;		/* Last bit unit in 'a' */
+	uint32 len_a;		/* Length of the bit field a */
+	uint32 *addr_a;	/* Pointer into the arena of 'a' */
+	uint32 *last;		/* Last bit unit in 'a' */
 
 	a = b_clone(a);
 	len_a = LENGTH(a);

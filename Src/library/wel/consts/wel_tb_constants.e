@@ -121,13 +121,6 @@ feature -- Access
 			"TB_GETBUTTONTEXT"
 		end
 
-	Tb_getbuttonsize: INTEGER is
-		external
-			"C [macro %"cctrl.h%"]"
-		alias
-			"TB_GETBUTTONSIZE"
-		end
-
 	Tb_getitemrect: INTEGER is
 		external
 			"C [macro %"cctrl.h%"]"
@@ -274,6 +267,73 @@ feature -- Access
 		alias
 			"TB_SETTOOLTIPS"
 		end
+
+feature -- Access (Windows95 + IE3 and above)
+
+	--|------------------------------------------------------|
+	--| Note, Arnaud PICHERY [ aranud@mail.dotcom.fr ]       |
+	--|------------------------------------------------------|
+	--| The following constants are not declared as usual    |
+	--| to allow Win95 users to compile without getting an   |
+	--| Error during C compilation because TB_XXX is not     |
+	--| defined...                                           |
+	--|------------------------------------------------------|
+
+	Tb_setindent: INTEGER is 1071
+			-- Sets the indentation for the first button in a toolbar control
+
+	Tb_setimagelist: INTEGER is 1072
+			-- Set the image list that the toolbar will use 
+			-- to display buttons that are in their default state.
+
+	Tb_getimagelist: INTEGER is 1073
+			-- Retrieves the image list that a toolbar control uses to display
+			-- buttons in their default state. A toolbar control uses this
+			-- image list to display buttons when they are not hot or disabled
+
+	Tb_loadimages: INTEGER is 1074
+			-- Loads bitmaps into a toolbar control's image list. 
+
+	Tb_getrect: INTEGER is 1075
+			-- Retrieves the bounding rectangle for a specified toolbar button
+
+	Tb_sethotimagelist: INTEGER is 1076
+			-- Sets the image list that the toolbar control will use to
+			-- display hot buttons.
+
+	Tb_gethotimagelist: INTEGER is 1077
+			-- Retrieves the image list that a toolbar control uses to display
+			-- hot buttons.
+
+	Tb_setdisabledimagelist: INTEGER is 1078
+			-- Sets the image list that the toolbar control will use to display
+			-- disabled buttons.
+
+	Tb_getdisabledimagelist: INTEGER is 1079
+			-- Retrieves the image list that a toolbar control uses to display
+			-- disabled buttons.
+
+	Tb_setstyle: INTEGER is 1080
+			-- Sets the style for a toolbar control.
+
+	Tb_getstyle: INTEGER is 1081
+			-- Retrieves the styles currently in use for a toolbar control.
+
+	Tb_getbuttonsize: INTEGER is 1082
+			-- Retrieves the current width and height of toolbar buttons, in
+			-- pixels.
+
+	Tb_setbuttonwidth: INTEGER is 1083
+			-- Sets the minimum and maximum button widths in the toolbar
+			-- control.
+
+	Tb_setmaxtextrows: INTEGER is 1084
+			-- Sets the maximum number of text rows displayed on a toolbar 
+			-- button.
+
+	Tb_gettextrows: INTEGER is 1085
+			-- Retrieves the maximum number of text rows that can be
+			-- displayed on a toolbar button.
 
 end -- class WEL_TB_CONSTANTS
 

@@ -98,7 +98,7 @@ feature -- Access
 			-- because it is not yet included in latest versions of "shlobj.h".
 
 	Bif_validate: INTEGER is
-			-- Requires MVC Version 4.71 or greater. If the user types an
+			-- Requires Shell32.dll Version 4.71 or greater. If the user types an
 			-- invalid name into the edit box, the browse dialog will call
 			-- the application's BrowseCallbackProc with the
 			-- BFFM_VALIDATEFAILED message. This flag is ignored if

@@ -202,9 +202,13 @@ feature -- Basic operations
 				elseif scroll_code = Sb_lineup then
 					new_pos := old_pos - line
 				elseif scroll_code = Sb_thumbposition then
-					new_pos := pos
+					scroll_info_struct.set_mask (sif_trackpos)
+					cwin_get_scroll_info (item, Sb_ctl, scroll_info_struct.item)
+					new_pos := scroll_info_struct.track_position
 				elseif scroll_code = Sb_thumbtrack then
-					new_pos := pos
+					scroll_info_struct.set_mask (sif_trackpos)
+					cwin_get_scroll_info (item, Sb_ctl, scroll_info_struct.item)
+					new_pos := scroll_info_struct.track_position
 				elseif scroll_code = Sb_top then
 					new_pos := min
 				elseif scroll_code = Sb_bottom then
@@ -215,7 +219,6 @@ feature -- Basic operations
 				elseif new_pos < min then
 					new_pos := min
 				end
-
 				set_position (new_pos)
 			end
 		end

@@ -11,7 +11,7 @@ inherit
 	ACCESS_AS
 		redefine
 			type_check, byte_node, replicate,
-			is_equivalent
+			is_equivalent, format
 		end
 
 	SHARED_TYPES
@@ -87,6 +87,13 @@ feature -- Type check, byte code and dead code removal
 			access_line.forth
 		end
 
+	format (ctxt: FORMAT_CONTEXT) is
+			-- Reconstitute text.
+		do
+			ctxt.prepare_for_result
+			ctxt.put_text_item (ti_Result)
+		end
+
 feature -- Replication
 
 	replicate (ctxt: REP_CONTEXT): like Current is
@@ -100,7 +107,7 @@ feature {AST_EIFFEL} -- Output
 	simple_format (ctxt: FORMAT_CONTEXT) is
 			-- Reconstitute text.
 		do
-			ctxt.prepare_for_result
+			ctxt.case_prepare_for_result
 			ctxt.put_text_item (ti_Result)
 		end
 

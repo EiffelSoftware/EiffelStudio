@@ -426,7 +426,8 @@ end
 			-- Reconstitute text.
 		do
 			ctxt.begin
-			simple_format (ctxt)
+			ctxt.prepare_for_feature (feature_name, parameters)
+			ctxt.put_current_feature
 			if ctxt.last_was_printed then
 				ctxt.commit
 			else
@@ -482,8 +483,8 @@ feature {AST_EIFFEL} -- Output
 	simple_format (ctxt: FORMAT_CONTEXT) is
 			-- Reconstitute text.
 		do
-			ctxt.prepare_for_feature (feature_name, parameters)
-			ctxt.put_current_feature
+			ctxt.case_prepare_for_feature (feature_name, parameters)
+			ctxt.case_put_current_feature
 		end
 
 feature {COMPILER_EXPORTER} -- Replication {ACCESS_FEAT_AS, USER_CMD, CMD}

@@ -111,13 +111,17 @@ int size;
 	rqst.rq_ack.ak_type = size;
 
 #ifdef DEBUG
+#ifdef USE_ADD_LOG
 	add_log(20, "sending leading request on #%d", writefd(sp));
+#endif
 #endif
 
 	send_packet(writefd(sp), &rqst);
 
 #ifdef DEBUG
+#ifdef USE_ADD_LOG
 	add_log(20, "sending %d bytes to remote process", size);
+#endif
 #endif
 
 	return net_send(writefd(sp), buffer, size);

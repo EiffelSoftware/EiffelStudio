@@ -95,7 +95,7 @@ feature
 				retried := True;
 				io.error.putstring ("ISE Eiffel3: Session aborted%N");
 				io.error.putstring ("Exception tag: ");
-				io.error.putstring (programmer_exception_name);
+				io.error.putstring (developer_exception_name);
 				io.error.new_line;
 				retry
 			end;

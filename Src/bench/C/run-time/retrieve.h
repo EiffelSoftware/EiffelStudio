@@ -53,10 +53,11 @@ extern char *eretrieve();		/* Retrieve object store in file */
 /*
  * Utilities
  */
+extern int r_fides; 	        /* File descriptor use for retrieve */
 extern char *rt_make();			/* Retrieve object graph */
 extern char *rt_nmake();		/* Retrieve `n' objects */
-extern FILE *rt_file;			/* File used for retrieve */
 extern struct htable *rt_table;	/* Table used for solving references */
 extern int32 nb_recorded;		/* Number of items recorded in Hector */
 extern char rt_kind;
+
 #endif

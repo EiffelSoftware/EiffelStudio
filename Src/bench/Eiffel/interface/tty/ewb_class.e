@@ -4,6 +4,9 @@ deferred class EWB_CLASS
 inherit
 
 	EWB_CMD
+		redefine
+			loop_execute
+		end
 
 feature -- Creation
 
@@ -21,8 +24,7 @@ feature
 		do
 			get_class_name;
 			class_name := last_input;
-			class_name.to_lower;
-			execute;
+			check_arguments_and_execute;
 		end;
 
 	current_class: CLASS_C;
@@ -38,13 +40,16 @@ feature
 					class_i := Universe.unique_class (class_name);
 					if class_i /= Void then
 						current_class := class_i.compiled_class;
-					end;
-
-					if current_class = Void then
-						io.error.putstring (class_name);
-						io.error.putstring (" is not in the system%N");
+						if current_class = Void then
+							io.error.putstring (class_name);
+							io.error.putstring (" is not in the system%N");
+						else
+							display (current_class);
+						end;
 					else
-						display (current_class);
+						current_class := Void;
+						io.error.putstring (class_name);
+						io.error.putstring (" is not in the universe%N");
 					end;
 				end;
 			end;

@@ -351,10 +351,10 @@ long s;
 	 * the right, otherwise to the left. A null value does nothing.
 	 */
 
-	if (s == 0)					/* Null operation */
+	if (s == 0L)					/* Null operation */
 		return b_clone(bit);	/* No side effect wanted */
 
-	if (s > 0)
+	if (s > 0L)
 		return b_right_shift(bit, s);
 	else
 		return b_left_shift(bit, -s);
@@ -495,10 +495,10 @@ long s;
 	 * the right, otherwise to the left. A null value does nothing.
 	 */
 
-	if (s == 0)					/* A null operation */
+	if (s == 0L)					/* A null operation */
 		return b_clone(bit);	/* No side effect wanted */
 
-	if (s > 0)
+	if (s > 0L)
 		return b_right_rotate(bit, s);
 	else
 		return b_left_rotate(bit, -s);

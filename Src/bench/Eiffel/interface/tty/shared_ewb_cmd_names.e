@@ -29,6 +29,8 @@ feature {NONE}
 
 	externals_cmd_name: STRING is "externals"
 
+	f_compile_cmd_name: STRING is "F-compile"
+
 	file_cmd_name: STRING is "file"
 
 	finalize_cmd_name: STRING is "finalize"
@@ -74,5 +76,7 @@ feature {NONE}
 	text_cmd_name: STRING is "text"
 
 	yank_cmd_name: STRING is "yank"
+
+	w_compile_cmd_name: STRING is "W-compile"
 
 end

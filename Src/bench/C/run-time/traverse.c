@@ -280,7 +280,9 @@ char *obj;
 	/* Check if there is no object marked EO_STORE under `obj'. */
 	struct htable *tbl;
 	long result;
+	char gc_stopped;
 
+	gc_stopped = !gc_ison();
 	gc_stop();
 
 	tbl = (struct htable *) cmalloc(sizeof(struct htable));
@@ -290,7 +292,7 @@ char *obj;
 		enomem();
 	result = chknomark(obj,tbl,0);
 	ht_free(tbl);
-	gc_run();
+	if (!gc_stopped) gc_run();
 	return result;
 }
 

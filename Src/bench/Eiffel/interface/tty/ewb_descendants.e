@@ -37,7 +37,7 @@ feature
 			until
 				j > i
 			loop
-				Result.append_character ('%T');
+				Result.append ("    ");
 				j := j + 1
 			end;
 		end;

@@ -80,7 +80,7 @@ feature {NONE}
 
 feature {NONE}
 
-	Max_non_encrypted: INTEGER is 7
+	Max_non_encrypted: INTEGER is 3
 		-- Maximum number of non encrypted characters during
 		-- code generation
 		--| The class FEATURE_I will be generated in the file 'feature<n>.c'

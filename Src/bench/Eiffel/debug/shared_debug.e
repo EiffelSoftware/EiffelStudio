@@ -16,7 +16,7 @@ feature
 	quit_cmd: DEBUG_QUIT is
 			-- Kills the child if any
 		once
-			!!Result.do_nothing
+			!!Result.non_gui_make
 		end;
 
 end

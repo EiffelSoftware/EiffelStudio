@@ -282,48 +282,106 @@ feature {NONE} -- I/O
 
 	last_input: STRING;
 
+	get_last_input is
+		do
+			last_input := cmd_arguments.current_item;
+		end;
+
+	no_more_arguments: BOOLEAN is
+		do
+			Result := cmd_arguments.no_more_arguments
+		end;
+
+	check_arguments_and_execute is
+		local
+			not_first: BOOLEAN
+		do
+			if not no_more_arguments then
+				io.error.putstring ("%
+					%Too many arguments. The following arguments will be ignored:%N");
+				from
+				until
+					cmd_arguments.no_more_arguments
+				loop
+					if not_first then
+						io.error.putchar (' ');
+					end;
+					not_first := True;
+					io.error.putstring (cmd_arguments.current_item);
+				end;
+				io.error.new_line;
+				io.error.new_line;
+			end;
+			if not abort then
+				execute
+			else
+				abort := False;
+			end;
+		end;
+
 	get_name is
 		local
-			i: INTEGER;
-			done: BOOLEAN
+			i, j: INTEGER;
+			done: BOOLEAN;
+			item: CHARACTER;
+			arg: STRING;
+			count: INTEGER
 		do
 			wait_for_return;
-			!! last_input.make (io.laststring.count);
+			count := io.laststring.count;
+			!! arg.make (count);
+			cmd_arguments.wipe_out;
 			from
-				i := 1
+				i := 1;
+				j := 1;
 			until
-				(i > io.laststring.count) or else
-				done
+				(i > count)
 			loop
+				item := io.laststring.item (i);
 				if
-					(io.laststring.item (i) = ' ') or else
-					(io.laststring.item (i) = '%T')
+					(item = ' ') or else
+					(item = '%T')
 				then
-					done := True
+					if arg.count /= 0 then
+						cmd_arguments.force (arg, j);
+						j := j + 1;
+						!!arg.make (count -i);
+					end;
 				else
-					last_input.append_character (io.laststring.item (i))
+					arg.append_character (item)
 				end;
 				i := i + 1
+			end;
+			if j = 1 or else arg.count /= 0 then
+					-- If we are processing more than one word, we don't
+					-- want to keep the trailing white spaces
+				cmd_arguments.force (arg, j);
 			end;
 		end;
 
 	get_class_name is
 		do
-			io.putstring ("--> Class name: ");
-			get_name;
+			if no_more_arguments then
+				io.putstring ("--> Class name: ");
+				get_name;
+			end;
+			get_last_input;
 			last_input.to_lower;
 			if last_input.empty then
-				get_class_name
+				abort := True
 			end;
 		end;
 
 	get_feature_name is
 		do
-			io.putstring ("--> Feature name: ");
-			get_name;
+			if no_more_arguments then
+				io.putstring ("--> Feature name: ");
+				get_name;
+			end;
+			get_last_input;
 			last_input.to_lower;
 			if last_input.empty then
-				get_feature_name
+				abort := True
 			end;
 		end;
 
@@ -333,6 +391,14 @@ feature {NONE} -- I/O
 		once
 			!!Result.make;
 		end;
+
+	cmd_arguments: EWB_ARGUMENTS is
+		once
+			!!Result.make (1, 2);
+		end;
+
+	abort: BOOLEAN;
+			-- Does the user want to abort the command?
 
 	prompt_finish_freezing (finalized_dir: BOOLEAN) is
 		do
@@ -413,15 +479,13 @@ feature -- Input/Output
 		deferred
 		end;
 
-	confirmed: BOOLEAN is
+	confirmed (message: STRING): BOOLEAN is
 		do
---			io.putstring ("Do you wish to ");
---			io.putstring (name);
---			io.putstring (" the system [y/n]? ");
---			io.readchar;
---			io.next_line;	
---			Result := ((io.lastchar = 'Y') or (io.lastchar = 'y'))
-			Result := True
+			io.putstring (message);
+			io.putstring (" [y/n]? ");
+			io.readchar;
+			io.next_line;	
+			Result := ((io.lastchar = 'Y') or (io.lastchar = 'y'))
 		end;
 
 	print_header is
@@ -464,7 +528,8 @@ feature -- Execution
 		end;
 
 	loop_execute is
-		deferred
+		do
+			check_arguments_and_execute
 		end;
 
 end

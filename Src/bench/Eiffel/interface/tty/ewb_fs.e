@@ -4,6 +4,9 @@ class EWB_FS
 inherit
 
 	EWB_CMD
+		redefine
+			loop_execute
+		end
 
 creation
 
@@ -47,10 +50,9 @@ feature
 		do
 			get_class_name;
 			class_name := last_input;
-			class_name.to_lower;
 			troffed := False;
 			only_current_class := False;
-			execute;
+			check_arguments_and_execute;
 		end;
 
 	execute is
@@ -64,31 +66,34 @@ feature
 			if not (error_occurred or project_is_new) then
 				retrieve_project;
 				if not error_occurred then
-                    class_i := Universe.unique_class (class_name);
-                    if class_i /= Void then
-                        class_c := class_i.compiled_class;
-                    end;
-					if class_c = Void then
-						io.error.putstring (class_name);
-						io.error.putstring (" is not in the system%N");
-					else
-						!!ctxt.make (class_c);
-						if troffed then
-							ctxt.set_troff_format;
-						end;
-						ctxt.set_is_short;
-						if only_current_class then
-							ctxt.set_current_class_only
-						end;
-						ctxt.execute;
-						if troffed then
-							!! troffer.make;
-							troffer.process_text (ctxt.text);
-							output_window.put_string (troffer.image)
+					class_i := Universe.unique_class (class_name);
+					if class_i /= Void then
+						class_c := class_i.compiled_class;
+						if class_c = Void then
+							io.error.putstring (class_name);
+							io.error.putstring (" is not in the system%N");
 						else
-							output_window.put_string (ctxt.text.image)
+							!!ctxt.make (class_c);
+							if troffed then
+								ctxt.set_troff_format;
+							end;
+							ctxt.set_is_short;
+							if only_current_class then
+								ctxt.set_current_class_only
+							end;
+							ctxt.execute;
+							if troffed then
+								!! troffer.make;
+								troffer.process_text (ctxt.text);
+								output_window.put_string (troffer.image)
+							else
+								output_window.put_string (ctxt.text.image)
+							end
 						end
-					end
+					else
+						io.error.putstring (class_name);
+						io.error.putstring (" is not in the universe%N");
+					end;
 				end;
 			end;
 		end;

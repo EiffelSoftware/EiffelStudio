@@ -30,7 +30,17 @@ extern void estore();			/* Store by file name */
 /*
  * Utilities
  */
-extern FILE *st_file;			/* File used bu `st_write' */
+extern int fides;			/* File descriptor used by `store_write' */
 extern void st_write();			/* Write an object in file */
 extern char *account;			/* Array of traversed dyn types */
+
+extern void store_write();
+extern void buffer_write();
+
+extern int current_position;
+extern char * general_buffer;
+extern int buffer_size;
+extern int end_of_buffer;
+
+
 #endif

@@ -8,6 +8,8 @@ inherit
 			name as flat_cmd_name,
 			help_message as flat_help,
 			abbreviation as flat_abb
+		redefine
+			loop_execute
 		end
 
 creation
@@ -30,8 +32,7 @@ feature
 		do
 			get_class_name;
 			class_name := last_input;
-			class_name.to_lower;
-			execute;
+			check_arguments_and_execute;
 		end;
 
 	execute is
@@ -47,16 +48,18 @@ feature
                     class_i := Universe.unique_class (class_name);
                     if class_i /= Void then
                         class_c := class_i.compiled_class;
-                    end;
-
-					if class_c = Void then
-						io.error.putstring (class_name);
-						io.error.putstring (" is not in the system%N");
+						if class_c = Void then
+							io.error.putstring (class_name);
+							io.error.putstring (" is not in the system%N");
+						else
+							!!ctxt.make (class_c);
+							ctxt.execute;
+							output_window.put_string (ctxt.text.image)
+						end;
 					else
-						!!ctxt.make (class_c);
-						ctxt.execute;
-						output_window.put_string (ctxt.text.image)
-					end;
+						io.error.putstring (class_name);
+						io.error.putstring (" is not in the universe%N");
+					end
 				end;
 			end;
 		end;

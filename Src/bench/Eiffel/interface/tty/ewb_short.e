@@ -32,10 +32,9 @@ feature
 		do
 			get_class_name;
 			class_name := last_input;
-			class_name.to_lower;
 			troffed := False;
 			only_current_class := True;
-			execute;
+			check_arguments_and_execute;
 		end;
 
 end

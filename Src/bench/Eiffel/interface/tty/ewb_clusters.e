@@ -12,11 +12,6 @@ inherit
 
 feature
 
-	loop_execute is
-		do
-			execute;
-		end;
-
 	execute is
 		do
 			init_project;
@@ -92,7 +87,7 @@ feature
 			until
 				sorted_class_names.after
 			loop
-				output_window.put_char ('%T');
+				output_window.put_string ("    ");
 				a_classi := classes.item (sorted_class_names.item);
 				a_classc := a_classi.compiled_class;
 				if a_classc /= Void  then

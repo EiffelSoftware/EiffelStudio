@@ -12,11 +12,8 @@ inherit
 
 feature
 
-	loop_execute is do end;
-
 	execute is
 		do
-			if confirmed then
 				print_header;
 				init_project;
 				if project_is_new then
@@ -37,6 +34,5 @@ feature
 					io.error.putstring ("%" already exists.%N%
 						%It needs to be deleted before a precompilation.%N");
 				end
-			end
 		end;
 end

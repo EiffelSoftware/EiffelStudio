@@ -5196,7 +5196,7 @@ xxx=`./findhdr pwd.h`
 if $test "$xxx"; then
 	i_pwd="$define"
 	echo "<pwd.h> found." >&4
-	$cppstdin $cppflags < $xxx >$$.h
+	$cppstdin $cppminus $cppflags < $xxx >$$.h
 	if $contains 'pw_quota' $$.h >/dev/null 2>&1; then
 		d_pwquota="$define"
 	else

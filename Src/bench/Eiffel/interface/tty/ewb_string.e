@@ -29,10 +29,6 @@ feature -- Creation
 
 feature
 
-	loop_execute is
-		do
-		end;
-
 	execute is
 		do
 		end;

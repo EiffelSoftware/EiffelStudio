@@ -30,13 +30,15 @@ feature
 
 	Compile_abb: CHARACTER is 'i';
 
+	F_compile_abb: CHARACTER is 'c';
+
 	Flatshort_abb: CHARACTER is 'i';
 
 	Loop_abb: CHARACTER is 'l';
 
 	Main_abb: CHARACTER is 'm';
 
-	Melt_abb: CHARACTER is 'c';
+	Melt_abb: CHARACTER is 'l';
 
 	Once_abb: CHARACTER is 'o';
 
@@ -53,6 +55,8 @@ feature
 	System_abb: CHARACTER is 's';
 
 	Text_abb: CHARACTER is 't';
+
+	W_compile_abb: CHARACTER is 'w'
 
 	Suppliers_abb: CHARACTER is 'u';
 

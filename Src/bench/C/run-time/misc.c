@@ -185,6 +185,12 @@ EIF_OBJ v,k;
 	return (EIF_INTEGER) putenv (new_string);
 }
 
+public EIF_OBJ eif_getenv (k)
+EIF_OBJ k;
+{
+	return (EIF_OBJ) getenv (k);
+}
+
 /***************************************/
 
 public char *arycpy(area, i, j, k)

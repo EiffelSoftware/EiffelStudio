@@ -163,7 +163,7 @@ Pid_t *child_pid;	/* Where pid of the child is writtten */
 			putenv (envstring); 
 
 			execvp(argv[0], argv);
-			fprintf (stderr,"errno = %i\n", errno);
+			fprintf (stderr,"ERROR could not launch '%s'", argv[0]);
 #ifdef USE_ADD_LOG
 			reopen_log();
 			add_log(1, "SYSERR: exec: %m (%e)");

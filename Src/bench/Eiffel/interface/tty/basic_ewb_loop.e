@@ -12,8 +12,6 @@ inherit
 
 feature
 
-	loop_execute is do end;
-
 	execute is
 		do
 			init_project;
@@ -196,8 +194,11 @@ feature -- Initialization
 				until
 					done
 				loop
-					io.putstring ("--> File name: ");
-					get_name;
+					if no_more_arguments then
+						io.putstring ("--> File name: ");
+						get_name;
+					end;
+					get_last_input;
 					if not last_input.empty then
 						!!file_w.make (last_input);
 						if file_w.exists then
@@ -210,6 +211,9 @@ feature -- Initialization
 								done := True
 							end;
 						end;
+					else
+							-- Exit on empty string
+						done := True;
 					end;
 				end;
 			end;
@@ -229,6 +233,7 @@ feature -- Initialization
 			loop
 				io.putstring ("Command => ");
 				get_name;
+				get_last_input;
 				if last_input.empty then
 					-- do nothing
 				else

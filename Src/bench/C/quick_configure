@@ -79,16 +79,6 @@ elif [ $# = 1 ]; then
 elif [ $# = 2 ]; then
 	runtimes=$2
 fi
-if [ $runtimes = all ]; then
-	echo Skip lex/yacc? [y]?
-	read rep
-	if [ $rep != y ]; then 
-		echo Will generate file with lex/yacc 
-	else
-		echo Skipping lex/yacc
-		skiplex
-	fi
-fi
 if [ $# -gt 0 ]; then
 	if [ $1 = -help ]; then
 		help
@@ -109,6 +99,16 @@ if [ $# -gt 0 ]; then
 	fi
 fi
 
+if [ $runtimes = all ]; then
+	echo Skip lex/yacc? [y]?
+	read rep
+	if [ $rep != y ]; then 
+		echo Will generate file with lex/yacc 
+	else
+		echo Skipping lex/yacc
+		skiplex
+	fi
+fi
 
 if [ -f Makefile ]; then
 	echo Makefile exists, make clobber [y]?

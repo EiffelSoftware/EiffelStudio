@@ -43,7 +43,7 @@ feature
 				file.putstring ("[])() = {%N");
 				i := 1;
 				nb := final_table_size;
-				exists := upper /= 0
+				exists := max_position /= 0
 				if exists then
 					goto_used (i);
 					index := position
@@ -54,7 +54,7 @@ feature
 			loop
 				if exists then
 					entry := local_copy.array_item (index);
-					if (index <= upper) and then i = entry.type_id then
+					if (index <= max_position) and then i = entry.type_id then
 						r_name := entry.routine_name;
 						file.putstring (function_ptr_cast_string);
 						file.putstring (r_name);
@@ -89,12 +89,10 @@ feature
 feature -- Sort
 
 	sort_till_position is
-			-- Sort from `lower' to last inserted `position'.
+			-- Sort from `lower' to last inserted `max_position'.
 		do
-			upper := position - 1
-			area := arycpy ($area, upper, 0, upper)
-			if upper /= 0 then
-				quick_sort (lower, position - 1)
+			if max_position > 0 then
+				quick_sort (lower, max_position)
 			end
 		end
 

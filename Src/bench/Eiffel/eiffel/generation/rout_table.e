@@ -37,12 +37,11 @@ feature
 			-- the maximum entry id ?
 		local
 			first_body_id: BODY_ID;
-			first_type_id, second_type_id: INTEGER;
+			second_type_id: INTEGER;
 			entry, first_entry: ROUT_ENTRY;
 			cl_type: CLASS_TYPE;
 			first_class: CLASS_C;
-			found: BOOLEAN;
-			is_deferred: BOOLEAN;
+			found, is_deferred, same_type_id: BOOLEAN;
 			i, nb, old_position: INTEGER
 			local_copy: ROUT_TABLE
 			save_value: BOOLEAN
@@ -61,8 +60,10 @@ feature
 
 				local_copy := Current
 				first_entry := local_copy.array_item (i)
-				first_type_id := first_entry.type_id
-				if first_type_id = type_id and then first_entry.is_set then
+
+					-- Check if we are currently looking at a deferred feature
+				same_type_id := first_entry.type_id = type_id
+				if same_type_id and then first_entry.is_set then
 						-- If current feature corresponding to `type_id' is
 						-- not deferred, we can retrieve the previously computed
 						-- value.
@@ -70,7 +71,7 @@ feature
 				else
 						-- We never compute the value for this entry, so we need to do it
 					from
-						nb := upper
+						nb := max_position
 						is_deferred := True;
 						cl_type := system_i.class_type_of_id (type_id);
 						first_class := cl_type.associated_class;
@@ -103,7 +104,7 @@ feature
 						-- Memorize the value in `first_entry' if it is not a deferred
 						-- feature, since this kind of call needs to be recomputed each
 						-- time (it depends from where we are calling it).
-					if first_type_id = type_id then
+					if same_type_id then
 						first_entry.set_polymorphic (Result)
 					end
 				end
@@ -111,7 +112,7 @@ feature
 					-- Not a Poofter finalization (still use the old mechanism)
 				from
 					i := lower
-					nb := upper
+					nb := max_position
 					local_copy := Current
 					is_deferred := True;
 					cl_type := system_i.class_type_of_id (type_id);
@@ -197,7 +198,7 @@ feature
 			-- in a static type greater than `type_id'.
 		do
 			goto_used (type_id);
-			if position <= upper then
+			if position <= max_position then
 				Result := item.routine_name
 			else
 				Result := "((void (*)()) RTNR)"
@@ -209,7 +210,7 @@ feature
 			-- in a static type greater than `type_id'.
 		do
 			goto_used (type_id);
-			Result := position <= upper 
+			Result := position <= max_position 
 		end
 
 	workbench_c_type: STRING is "struct ca_info";

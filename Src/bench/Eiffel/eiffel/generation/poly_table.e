@@ -59,7 +59,6 @@ feature -- Initialization
 			large_enough: n > 0
 		do
 			array_make (1,n)
-			position := 1
 		end	
 
 	extend_block (n: INTEGER) is
@@ -68,8 +67,9 @@ feature -- Initialization
 			large_enough: n > 0
 			not_empty: not empty
 		do
-			position := upper + 1
-			increase_size (n)
+			if (max_position > upper) or else (upper - max_position < n) then
+				increase_size (n.max (upper // 2))
+			end
 		end
 
 feature
@@ -142,7 +142,7 @@ feature
 		require
 			not empty
 		do
-			Result := array_item (upper).type_id
+			Result := array_item (max_position).type_id
 		end
 
 	min_used: INTEGER is
@@ -158,7 +158,7 @@ feature
 			from
 				local_copy := Current
 				i := lower
-				nb := upper
+				nb := max_position
 			until
 				Result > 0
 			loop
@@ -182,7 +182,7 @@ feature
 		do
 			from
 				local_copy := Current
-				i := upper
+				i := max_position
 				nb := lower
 			until
 				Result > 0
@@ -205,7 +205,7 @@ feature
 			from
 				local_copy := Current
 				i := lower
-				nb := upper
+				nb := max_position
 			until
 				Result or else i > nb
 			loop
@@ -262,7 +262,7 @@ feature
 			from
 				local_copy := Current
 				i := binary_search (type_id)
-				nb := upper
+				nb := max_position
 			until
 				local_copy.array_item(i).used or else i > nb
 			loop
@@ -290,7 +290,7 @@ feature
 				i := lower
 				first_type := local_copy.array_item (i).feature_type_id
 				i := i + 1
-				nb := upper
+				nb := max_position
 				Result := true
 			until
 				i > nb or else not Result
@@ -418,7 +418,7 @@ feature
 			from
 				local_copy := Current
 				i := lower
-				nb := upper
+				nb := max_position
 			until
 				i > nb
 			loop
@@ -429,7 +429,7 @@ feature
 			if has_type_table then
 				ba.append ('%/001/')
 				from
-					i := lower	-- nb has already been computed and set to `upper'
+					i := lower	-- nb has already been computed and set to `max_position'
 				until
 					i > nb
 				loop
@@ -492,7 +492,7 @@ feature -- Iteration
 
 	after: BOOLEAN is
 		do
-			Result := (position > upper)
+			Result := (position > max_position)
 		end
 
 	go_to (pos: INTEGER) is
@@ -503,6 +503,9 @@ feature -- Iteration
 	position: INTEGER
 			-- Actual position in the POLY_TABLE
 
+	max_position: INTEGER
+			-- Position of the last item
+
 	first: T is
 		do
 			Result := array_item (lower)
@@ -512,8 +515,8 @@ feature -- Insertion
 
 	extend (v: T) is
 		do
-			put (v, position)
-			position := position + 1
+			max_position := max_position + 1
+			put (v, max_position)
 		end
 
 	merge (other: like Current) is
@@ -521,9 +524,12 @@ feature -- Insertion
 		local
 			i: INTEGER
 		do
-			i := upper
-			increase_size (other.count)
-			subcopy (other, other.lower, other.upper, i + 1)
+			i := max_position
+			max_position := i + other.max_position
+			if (max_position > upper) then
+				increase_size (max_position - i)
+			end
+			subcopy (other, other.lower, other.max_position, i + 1)
 		end
 
 feature -- Status
@@ -531,7 +537,7 @@ feature -- Status
 	empty: BOOLEAN is
 			-- Is there an element?
 		do
-			Result := position = 0
+			Result := max_position = 0
 		end
 
 feature -- Sort
@@ -539,7 +545,7 @@ feature -- Sort
 	sort is
 			-- Sort Current object in ascending order.
 		do
-			quick_sort (lower, upper)
+			quick_sort (lower, max_position)
 		end
 
 feature {NONE} -- Implementation of quick sort algorithm
@@ -624,7 +630,7 @@ feature {NONE} -- Implementation
 			local_copy: POLY_TABLE [T]
 		do
 			local_copy := Current
-			j := local_copy.upper
+			j := max_position
 			if j = 1 then
 				Result := 1
 			else

@@ -26,7 +26,7 @@
 #include <errno.h>
 #include <stdio.h>				/* For sprintf() */
 
-#ifdef __VMS
+#if defined EIF_VMS && !defined sigmask
 #define sigmask(m)	(1<<((m)-1))
 #endif
 

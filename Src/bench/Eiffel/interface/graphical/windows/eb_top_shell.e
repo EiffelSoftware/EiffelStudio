@@ -44,17 +44,12 @@ feature -- Initialization
 					-- For unix we need this for the X resource file
 				old_make (Interface_names.n_X_resource_name, a_screen);
 			end;
+
+			tooltip_initialize (Current)
 			!! associated_form.make ("", Current);
+
 		ensure
 			screen_set: equal (screen, a_screen)
-		end;
-
-feature -- Access
-
-	tooltip_parent: COMPOSITE is
-			-- Tooltip parent
-		do
-			Result := Current
 		end;
 
 feature -- Properties

@@ -3,7 +3,8 @@ class REPLICATOR
 
 inherit
 
-	SHARED_SERVER
+	SHARED_SERVER;
+	COMPILER_EXPORTER
 
 creation
 

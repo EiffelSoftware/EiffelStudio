@@ -94,7 +94,6 @@ feature -- Store/Retrieve
 			-- Store content of widget into `root_ast'.
 		local
 			defaults: LACE_LIST [D_OPTION_SD]
-			wd: STRING
 		do
 			defaults := root_ast.defaults
 			if defaults = Void then
@@ -410,7 +409,7 @@ feature {NONE} -- Graphical initialization
 				-- Argument Control
 			create arguments_control.make (system_window.window)
 			Result.extend (arguments_control)
-			Result.set_item_text (arguments_control, "Program Arguments")
+			Result.set_item_text (arguments_control, "Program Execution")
 		end
 
 	miscellaneous_frame (st: STRING): EV_FRAME is

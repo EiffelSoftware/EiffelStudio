@@ -18,6 +18,8 @@ inherit
 		end
 
 	EV_TEXT_FIELD_IMP
+		undefine
+			pebble_over_widget
 		redefine
 			initialize,
 			make,
@@ -216,6 +218,9 @@ end -- class EV_COMBO_BOX_IMP
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.28  2000/03/22 22:01:30  king
+--| Undefined pebble_over_widget from text_field
+--|
 --| Revision 1.27  2000/03/15 18:29:50  king
 --| Uncommented disable_activate external
 --|

@@ -24,8 +24,9 @@ cluster
 -- ES3 SPECIFIC CLUSTERS
 
 
-		liman_common:		"$BENCH/Eiffel/limand/common";
 		liman_bench:		"$BENCH/Eiffel/limand/bench";
+		liman_client:		"$BENCH/Eiffel/limand/client";
+		liman_shared:		"$BENCH/Eiffel/limand/shared";
 		beurk:				"$BENCH/Eiffel/beurk";
 		replication:		"$BENCH/Eiffel/eiffel/replication";
 

@@ -169,37 +169,37 @@ feature -- Access
 	width: INTEGER is
 			-- Horizontal size.
 		do
-			Result := body.point_b.x
+			Result := right - left
 		end
 
 	height: INTEGER is
 			-- Vertical size.
 		do
-			Result := body.point_b.y
+			Result := bottom - top
 		end
 
 	left: INTEGER is
 			-- Absolute left position.
 		do
-			Result := body.point_a.x_abs
+			Result := (body.point_a.x_abs).min (name_area.point_a.x_abs)
 		end
 
 	top: INTEGER is
 			-- Absolute top position.
 		do
-			Result := body.point_a.y_abs
+			Result := (body.point_a.y_abs).min (name_area.point_a.y_abs)
 		end
 
 	right: INTEGER is
 			-- Absolute right position.
 		do
-			Result := body.point_b.x_abs
+			Result := (body.point_b.x_abs).max (name_area.point_b.x_abs)
 		end
 
 	bottom: INTEGER is
 			-- Absolute bottom position.
 		do
-			Result := body.point_b.y_abs
+			Result := (body.point_b.y_abs).max (name_area.point_b.y_abs)
 		end
 
 	x_position: INTEGER is
@@ -239,10 +239,10 @@ feature -- Status report
 
 feature -- Figures
 
-	body: EV_FIGURE_ROUNDED_RECTANGLE
+	body: BON_CLUSTER_RECTANGLE_FIGURE
 			-- Body of `Current', containing class figures.
 
-	name_area: EV_FIGURE_ROUNDED_RECTANGLE
+	name_area: BON_CLUSTER_RECTANGLE_FIGURE
 			-- Figure containing `name'.
 
 	name_mover: EV_MOVE_HANDLE
@@ -315,8 +315,8 @@ feature -- Status setting
 			resize_area_bottom_left.point_a.set_position (0, - 20)			
 			resize_area_bottom_left.point_b.set_position (20, 20)
 
-			half_height := height // 2
-			half_width := width // 2
+			half_height := body.point_b.y // 2
+			half_width := body.point_b.x // 2
 			if name_is_top then
 				name_mover.point.set_y (- half_height - name_area_bottom)
 				name_area.point_a.set_y (- half_height - name_area_bottom)
@@ -332,7 +332,7 @@ feature -- Status setting
 			end
 
 			if name_is_top or name_is_bottom then
-				name_shift_x := center_point.x + name_area_left + name_area_right - width
+				name_shift_x := center_point.x + name_area_left + name_area_right - a_width
 				if name_shift_x > 0 then
 					name_mover.point.set_x ((name_area_left - name_shift_x).max (- half_width))
 					name_area.point_a.set_x ((name_area_left - name_shift_x).max (- half_width))
@@ -653,9 +653,9 @@ feature {BON_DIAGRAM_FACTORY} -- Drawing
 			d.enable_dashed_line_style
 			d.set_foreground_color (bon_cluster_line_color)
 			d.set_line_width (1)
-			d.draw_polyline (body.polygon_array, True)
+			d.draw_polyline (offset_coordinates (body.polygon_array), True)
 		
-			d.draw_polyline (name_area.polygon_array, True)
+			d.draw_polyline (offset_coordinates (name_area.polygon_array), True)
 			d.disable_dashed_line_style			
 
 			d.set_foreground_color (bon_cluster_name_color)
@@ -672,7 +672,11 @@ feature {BON_DIAGRAM_FACTORY} -- Drawing
 					fig_txt.font.height)
 				name_font.set_height ((name_font.height * cluster_diagram.point.scale_y).rounded)
 				d.set_font (name_font)
-				d.draw_text_top_left (fig_txt.point.x_abs, fig_txt.point.y_abs, fig_txt.text)
+				d.draw_text_top_left (
+					fig_txt.point.x_abs - drawable_position.x,
+					fig_txt.point.y_abs - drawable_position.y,
+					fig_txt.text
+				)
 				name_figures.forth
 			end
 
@@ -749,9 +753,9 @@ feature {NONE} -- Implementation
 	
 			iconified := False
 
-			name_mover.point.set_position (- width // 2, - height // 2 - name_area.point_b.y)
+			name_mover.point.set_position (- body.point_b.x // 2, - body.point_b.y // 2 - name_area.point_b.y)
 			name_moving_area.point_b.set_position (name_area.point_b.x, name_area.point_b.y)
-			name_area.point_a.set_position (- width // 2, - height // 2 - name_area.point_b.y)
+			name_area.point_a.set_position (- body.point_b.x // 2, - body.point_b.x // 2 - name_area.point_b.y)
 
 			resizer_bottom_right.set_minimum_x (name_area.point_b.x)
 			resizer_bottom_right.set_minimum_y (name_area.point_b.y)
@@ -791,8 +795,8 @@ feature {NONE} -- Implementation
 				name_y := name_y + nf.height
 				name_figures.forth
 			end
-			name_mover.point.set_position (- width // 2, - height // 2 - (name_y + 2))
-			name_area.point_a.set_position (- width // 2, - height // 2 - (name_y + 2))
+			name_mover.point.set_position (- body.point_b.x // 2, - body.point_b.y // 2 - (name_y + 2))
+			name_area.point_a.set_position (- body.point_b.x // 2, - body.point_b.y // 2 - (name_y + 2))
 			name_area.point_b.set_position (max_token_length * 3 // 2, name_y + 2) 
 			reset_name_position
 			name_is_top := True
@@ -1053,32 +1057,35 @@ feature {NONE} -- Events
 		local
 			adjust_x, adjust_y: REAL
 			name_area_width, name_area_height: INTEGER
+			body_width, body_height: INTEGER
 		do
 			name_area_width := name_area.point_b.x
 			name_area_height := name_area.point_b.y
-			adjust_x := x / width
-			adjust_y := y / height
+			body_width := body.point_b.x
+			body_height := body.point_b.y
+			adjust_x := x / body_width
+			adjust_y := y / body_height
 			if adjust_y.abs > adjust_x.abs then
 				if adjust_y >= 0 then
-					Result := [x.min (width // 2 - name_area_width).max (- width // 2), height // 2]
-					name_area.point_a.set_position (x.min (width // 2 - name_area_width).max (- width // 2), height // 2)
+					Result := [x.min (body_width // 2 - name_area_width).max (- body_width // 2), body_height // 2]
+					name_area.point_a.set_position (x.min (body_width // 2 - name_area_width).max (- body_width // 2), body_height // 2)
 					reset_name_position
 					name_is_bottom := True
 				else
-					Result := [x.min (width // 2 - name_area_width).max (- width // 2), - height // 2 - name_area_height]
-					name_area.point_a.set_position (x.min (width // 2 - name_area_width).max (- width // 2), - height // 2 - name_area_height)
+					Result := [x.min (body_width // 2 - name_area_width).max (- body_width // 2), - body_height // 2 - name_area_height]
+					name_area.point_a.set_position (x.min (body_width // 2 - name_area_width).max (- body_width // 2), - body_height // 2 - name_area_height)
 					reset_name_position
 					name_is_top := True
 				end
 			else
 				if adjust_x >= 0 then
-					Result := [width // 2, y.max (- height // 2).min (height // 2)]
-					name_area.point_a.set_position (width // 2, y.max (- height // 2).min ( height // 2 - name_area_height))
+					Result := [body_width // 2, y.max (- body_height // 2).min (body_height // 2)]
+					name_area.point_a.set_position (body_width // 2, y.max (- body_height // 2).min ( body_height // 2 - name_area_height))
 					reset_name_position
 					name_is_right := True
 				else
-					Result := [- width // 2 - name_area_width, y.max (- height // 2).min (height // 2)]
-					name_area.point_a.set_position (- width // 2 - name_area_width, y.max (- height // 2).min ( height // 2 - name_area_height))
+					Result := [- body_width // 2 - name_area_width, y.max (- body_height // 2).min (body_height // 2)]
+					name_area.point_a.set_position (- body_width // 2 - name_area_width, y.max (- body_height // 2).min ( body_height // 2 - name_area_height))
 					reset_name_position
 					name_is_left := True
 				end

@@ -36,13 +36,13 @@ feature -- Creation
 				if (temp = Void) or else temp.empty then
 					io.error.putstring
 					("ISE Eiffel3: the environment variable $EIFFEL3 is not set%N");
-					die (-1)
+					new_die (-1)
 				end;
 				temp := Execution_environment.get ("PLATFORM");
 				if (temp = Void) or else temp.empty then
 					io.error.putstring
 					("ISE Eiffel3: the environment variable $PLATFORM is not set%N");
-					die (-1)
+					new_die (-1)
 				end;
 
 				analyze_options;
@@ -62,7 +62,7 @@ feature -- Creation
 					discard_licence
 				end;
 			else
-				die (-1)
+				new_die (-1)
 			end;
 		rescue
 			discard_licence;

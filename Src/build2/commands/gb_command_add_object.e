@@ -10,14 +10,29 @@ class
 inherit
 	
 	GB_SHARED_OBJECT_HANDLER
+		export
+			{NONE} all
+		end
 	
 	GB_COMMAND
+		export
+			{NONE} all
+		end
 	
 	GB_SHARED_HISTORY
+		export
+			{NONE} all
+		end
 	
 	GB_SHARED_OBJECT_EDITORS
+		export
+			{NONE} all
+		end
 	
 	GB_WIDGET_UTILITIES
+		export
+			{NONE} all
+		end
 	
 create
 	make
@@ -34,6 +49,7 @@ feature {NONE} -- Initialization
 		local
 			previous_parent_object: GB_OBJECT
 		do
+			history.cut_off_at_current_position
 			parent_id := parent.id
 			child_id := child.id
 			previous_parent_object := child.parent_object

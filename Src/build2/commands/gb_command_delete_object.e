@@ -41,6 +41,7 @@ feature {NONE} -- Initialization
 			-- Create `Current' with `child' to be removed from `parent' at
 			-- position `position'.
 		do
+			history.cut_off_at_current_position
 			original_id := child.id
 			parent_id := parent.id
 			position := a_position

@@ -42,6 +42,7 @@ feature {NONE} -- Initialization
 	make (a_directory: STRING) is
 			-- Create `Current' with directory named `a_directory'.
 		do
+			history.cut_off_at_current_position
 			directory_name := a_directory
 		end
 

@@ -1267,7 +1267,7 @@ feature -- Access
 	deleted_objects: ARRAYED_LIST [GB_OBJECT]
 		-- All objects that have been deleted in
 		-- this session of the application.
-		-- Mutually exclusivve with `objects'.
+		-- Mutually exclusive with `objects'.
 		
 	root_window_object: GB_TITLED_WINDOW_OBJECT
 		-- The object representing the window that will be launched by the application.

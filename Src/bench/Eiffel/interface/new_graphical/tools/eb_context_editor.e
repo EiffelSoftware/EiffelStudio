@@ -1753,8 +1753,6 @@ feature {NONE} -- Implementation
 		do
 			reset_toolbar
 	
-			toggle_force_cmd.enable_sensitive
-			force_settings_cmd.enable_sensitive
 			remove_anchor_cmd.enable_sensitive
 			toggle_cluster_legend_cmd.enable_sensitive
 			change_color_cmd.enable_sensitive
@@ -1806,6 +1804,8 @@ feature {NONE} -- Implementation
 			reset_view_cmd.enable_sensitive
 			view_selector.enable_sensitive
 			view_menu_button.enable_sensitive
+			toggle_force_cmd.enable_sensitive
+			force_settings_cmd.enable_sensitive
 		end
 		
 	project_close_agent: PROCEDURE [ANY, TUPLE]

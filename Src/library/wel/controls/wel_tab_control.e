@@ -140,6 +140,12 @@ feature -- Status report
 			consistent_result: Result >= 0 and Result < count
 		end
 
+	selected_window: WEL_WINDOW is
+			-- Window corresponding to currently selected tab
+		do
+			Result := get_item (current_selection).window
+		end
+
 	get_item (index: INTEGER): WEL_TAB_CONTROL_ITEM is
 			-- Give the item at the zero-based index of tab.
 			-- As we must give a maximum size for the retrieving
@@ -147,15 +153,9 @@ feature -- Status report
 			-- label is longer, it will be cut.
 		require
 			exists: exists
-		local
-			buffer: STRING
 		do
-			!! Result.make
-			!! buffer.make (buffer_size)
-			buffer.fill_blank
-			Result.set_text (buffer)
-			Result.set_cchtextmax (buffer_size)
-			cwin_send_message (item, Tcm_getitem, index, Result.to_integer)
+			cwin_send_message (item, Tcm_getitem, index, dummy_tab_item.to_integer)
+			Result := dummy_tab_item
 		end
 
 feature -- Status setting
@@ -272,11 +272,11 @@ feature {NONE} -- Basic operation
 		require
 			exists: exists
 		local
-			selected_item: WEL_TAB_CONTROL_ITEM
+			selected_item: WEL_WINDOW
 		do
-			selected_item := get_item (current_selection)
-			if selected_item.window /= Void and then selected_item.window.exists then
-				selected_item.window.hide
+			selected_item := get_item (current_selection).window
+			if selected_item /= Void and then selected_item.exists then
+				selected_item.hide
 			end
 		end
 
@@ -285,11 +285,11 @@ feature {NONE} -- Basic operation
 		require
 			exists: exists
 		local
-			selected_item: WEL_TAB_CONTROL_ITEM
+			selected_item: WEL_WINDOW
 		do
-			selected_item := get_item (current_selection)
-			if selected_item.window /= Void and then selected_item.window.exists then
-				selected_item.window.show
+			selected_item := get_item (current_selection).window
+			if selected_item /= Void and then selected_item.exists then
+				selected_item.show
 			end
 		end
 
@@ -298,15 +298,13 @@ feature {NONE} -- Basic operation
 			-- to the current size.
 		local
 			index: INTEGER
-			child_item: WEL_TAB_CONTROL_ITEM
 		do
 			from
 				index := 0
 			until
 				index = count
 			loop
-				child_item := get_item (index)
-				child_item.window.move_and_resize (sheet_rect.left, sheet_rect.top, sheet_rect.width, sheet_rect.height, False)
+				get_item (index).window.move_and_resize (sheet_rect.left, sheet_rect.top, sheet_rect.width, sheet_rect.height, False)
 				index := index + 1
 			end
 		end
@@ -370,6 +368,11 @@ feature {NONE} -- Implementation
    			-- Need to do nothing
    		do
  		end
+
+	dummy_tab_item: WEL_TAB_CONTROL_ITEM is
+		once
+			!! Result.make
+		end
 
 feature {NONE} -- Externals
 

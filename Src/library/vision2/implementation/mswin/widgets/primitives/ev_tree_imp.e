@@ -51,10 +51,14 @@ inherit
 			insert_item as wel_insert_item,
 			count as total_count,
 			item as wel_item,
-			move as move_to,
+			move as wel_move,
 			enabled as is_sensitive, 
 			width as wel_width,
-			height as wel_height
+			height as wel_height,
+			x as x_position,
+			y as y_position,
+			resize as wel_resize,
+			move_and_resize as wel_move_and_resize 
 		undefine
 			window_process_message,
 			remove_command,
@@ -265,9 +269,9 @@ feature {NONE} -- WEL Implementation
 			pt: WEL_POINT
 			offsets: TUPLE [INTEGER, INTEGER]
 		do
-			pt := client_to_screen (x_pos, y_pos)
 			it := find_item_at_position (x_pos, y_pos)
 			if it /= Void then
+				pt := client_to_screen (x_pos, y_pos)
 				offsets := it.relative_position
 				it.interface.pointer_button_press_actions.call ([x_pos - offsets.integer_arrayed @ 1 + 1,
 				y_pos - offsets.integer_arrayed @ 2, button, 0.0, 0.0, 0.0, pt.x, pt.y])
@@ -477,6 +481,14 @@ end -- class EV_TREE_IMP
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.50  2000/03/14 18:39:12  rogers
+--| Renamed
+--| 	move -> wel_move
+--| 	x -> x_position
+--| 	y -> y_position
+--| 	resize -> wel_resize
+--| 	move_and_resize -> wel_move_and_resize
+--|
 --| Revision 1.49  2000/03/13 22:39:03  rogers
 --| Moved the client_to_screen feature call to within the if statement in on_mouse_move.
 --|

@@ -7,7 +7,7 @@ indexing
 class
 	MERGING_EXAMPLE
  
-	creation
+	create
 	make
 
 feature -- Init

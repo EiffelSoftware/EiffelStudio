@@ -30,7 +30,7 @@ inherit
 	XM_MARKUP_CONSTANTS
 		export {NONE} all end
 
-creation
+create
 
 	make
 
@@ -39,7 +39,7 @@ feature {NONE} -- Initialization
 	make is
 			-- Create a new XML formatter.
 		do
-			!! last_string.make (0)
+			create last_string.make (0)
 		end
 
 feature -- Initialization
@@ -176,9 +176,6 @@ feature -- Non standard processor routines
 			from a_cursor.start until a_cursor.after loop
 				if a_cursor.item /= Void then
 					l_elt ?= a_cursor.item
-					if l_elt /= Void and then l_elt.name.is_equal ("EV_COLORIZABLE") then
-						do_nothing
-					end
 					a_cursor.item.process (Current)
 				end
 				a_cursor.forth

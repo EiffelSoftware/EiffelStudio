@@ -22,7 +22,7 @@ inherit
 			y as center_y
 		end
 
-creation
+create
 	make
 
 feature -- Initialization

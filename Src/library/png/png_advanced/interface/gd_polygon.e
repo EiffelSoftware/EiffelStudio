@@ -22,7 +22,7 @@ inherit
 			fill_polygon
 		end
 
-creation
+create
 	 make
 
 feature -- Drawing

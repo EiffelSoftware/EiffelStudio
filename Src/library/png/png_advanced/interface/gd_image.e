@@ -20,7 +20,7 @@ inherit
 
 	GD_COLOR_PROPERTIES
 
-creation
+create
 	make,make_from_file
 
 feature -- Initialization
@@ -76,7 +76,7 @@ feature -- Basic Operations
 			file: RAW_FILE
 			fd_file: POINTER
 		do
-			!! file.make_create_read_write(file_name)
+			create file.make_create_read_write(file_name)
 			file.open_write
 			fd_file := file.file_pointer
 			GdImagePng(image, fd_file)

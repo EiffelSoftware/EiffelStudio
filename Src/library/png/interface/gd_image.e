@@ -15,7 +15,7 @@ inherit
 
 	GD_FONTS
 
-creation
+create
 	make,make_from_file
 
 feature -- Initialization
@@ -38,7 +38,7 @@ feature -- Initialization
 			file: RAW_FILE
 			fd_file: POINTER
 		do
-			!! file.make_open_read(file_name)
+			create file.make_open_read(file_name)
 			fd_file := file.file_pointer
 			image := gdImageCreateFromPng(fd_file)
 			file.close
@@ -55,7 +55,7 @@ feature -- Basic Operations
 			file: RAW_FILE
 			fd_file: POINTER
 		do
-			!! file.make_create_read_write(file_name)
+			create file.make_create_read_write(file_name)
 			file.open_write
 			fd_file := file.file_pointer
 			GdImagePng(image, fd_file)

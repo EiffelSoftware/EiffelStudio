@@ -286,19 +286,20 @@ feature {NONE} -- Tools
 			-- Is `a_string' present in `list_of_strings'?
 			-- The comparison is made upon upon object content rather than object references and
 			-- is made using a non case sensitive comparison.
+		require
+			list_of_strings_not_void: list_of_strings /= Void
+			a_string_not_void: a_string /= Void
 		local
 			cur_item: STRING
 			ref_item: STRING
 		do
-			ref_item := clone (a_string)
-			ref_item.to_lower
+			ref_item := a_string.as_lower
 			from
 				list_of_strings.start
 			until
 				Result or list_of_strings.after
 			loop
-				cur_item := clone (list_of_strings.item)
-				cur_item.to_lower
+				cur_item := list_of_strings.item.as_lower
 				Result := cur_item.is_equal (ref_item)
 				list_of_strings.forth
 			end
@@ -482,7 +483,7 @@ feature {NONE} -- Tools
 				check ref_info_lib_not_void: ref_info_lib /= Void end
 				ref_ace ?= ref_info_lib.item (1)
 				check ref_ace_not_void: ref_ace /= Void end
-				ref_ace.to_lower
+				ref_ace := ref_ace.as_lower
 				from
 					a_mc_list.start
 				until
@@ -493,8 +494,7 @@ feature {NONE} -- Tools
 					check cur_info_lib_not_void: cur_info_lib /= Void end
 					cur_ace ?= cur_info_lib.item (1)
 					check cur_ace_not_void: cur_ace /= Void end
-					cur_ace.to_lower
-					Result := ref_ace.is_equal (cur_ace)
+					Result := ref_ace.is_equal (cur_ace.as_lower)
 					
 					a_mc_list.forth
 				end

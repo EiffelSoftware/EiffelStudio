@@ -112,7 +112,6 @@ feature {ICOR_EXPORTER} -- Access
 			-- GetElement returns a value representing the given element in the array.
 		local
 			l_p: POINTER
-			l_indexes_count: INTEGER
 			l_mp_indexes: MANAGED_POINTER
 			l_integer_size: INTEGER
 			i: INTEGER

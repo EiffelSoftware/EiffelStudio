@@ -99,6 +99,7 @@ char *all_buffer ()
 
 EIF_INTEGER eif_console_readint()
 {
+	EIF_GET_CONTEXT
 	long lastint;
 	DWORD buffer_length = (DWORD) 0;
 
@@ -117,10 +118,12 @@ EIF_INTEGER eif_console_readint()
 		eio();
 
 	return lastint;
+	EIF_END_GET_CONTEXT
 }
 
 EIF_REAL eif_console_readreal()
 {
+	EIF_GET_CONTEXT
 	float lastreal;
 	DWORD buffer_length = (DWORD) 0;
 
@@ -138,10 +141,12 @@ EIF_REAL eif_console_readreal()
 		eio();
 
 	return lastreal;
+	EIF_END_GET_CONTEXT
 }
 
 EIF_CHARACTER eif_console_readchar()
 {
+	EIF_GET_CONTEXT
 	DWORD buffer_length = (DWORD) 0;
 
 	if (!eif_console_allocated)
@@ -155,10 +160,12 @@ EIF_CHARACTER eif_console_readchar()
 	}
 
 	return eif_console_buffer [0];
+	EIF_END_GET_CONTEXT
 }
 
 double eif_console_readdouble()
 {
+	EIF_GET_CONTEXT
 	double lastdouble;
 	DWORD buffer_length = (DWORD) 0;
 
@@ -176,13 +183,15 @@ double eif_console_readdouble()
 		eio();
 
 	return lastdouble;
+	EIF_END_GET_CONTEXT
 }
 
 long eif_console_readline(char *s,long bound,long start)
 {
+	EIF_GET_CONTEXT
 	long amount, read;
-	static char *c = NULL;
-	static BOOL done = FALSE;
+	static char *c = NULL;	/* declared as static: the value of `c' will be stored for the next call */
+	static BOOL done = FALSE;					    
 	DWORD buffer_length = (DWORD) 0;
 
 	if (!eif_console_allocated)
@@ -191,7 +200,7 @@ long eif_console_readline(char *s,long bound,long start)
 	read = 0;
 
 	if (!done) {
-		c = NULL;
+		c = NULL;	  /* useless? */
 		done = TRUE;
 	}
 	if (c == NULL) {
@@ -229,6 +238,8 @@ long eif_console_readline(char *s,long bound,long start)
 		return (read + 1);
 
 	return bound - start + 1;
+
+	EIF_END_GET_CONTEXT
 }
 
 long eif_console_readstream(char *s, long bound)
@@ -239,6 +250,7 @@ long eif_console_readstream(char *s, long bound)
 	 * return the number of characters read.
 	 */
 
+	EIF_GET_CONTEXT
 	EIF_INTEGER amount = bound;	/* Number of characters to be read */
 	int c;					/* Last char read */
 	int i = 0;					/* Counter */
@@ -258,6 +270,7 @@ long eif_console_readstream(char *s, long bound)
 		return bound - amount - 1;	/* Number of characters read */
 	} else
 		return 0;
+	EIF_END_GET_CONTEXT
 }
 
 
@@ -274,6 +287,7 @@ long eif_console_readword(char *s, long bound, long start)
 	 * spaces are skipped.
 	 */
 
+	EIF_GET_CONTEXT
 	EIF_INTEGER amount;	/* Amount of bytes to be read */
 	int c;   /* Last char read */
 	long i = 0;   /* Counter */
@@ -326,10 +340,12 @@ long eif_console_readword(char *s, long bound, long start)
 
 		return bound - start + 1;			/* Error condition */
 	}
+	EIF_END_GET_CONTEXT
 }
 
 void eif_console_putint (long l)
 {
+	EIF_GET_CONTEXT
 	int t = 0;
 	char transfer_buffer [BUFFER_SIZE];
 
@@ -341,10 +357,12 @@ void eif_console_putint (long l)
 		eif_PutWindowedOutput (transfer_buffer, t);
 	else
 		WriteConsole(eif_conoutfile,transfer_buffer, t, &dummy_length, NULL);
+	EIF_END_GET_CONTEXT
 }
 
 void eif_console_putchar (EIF_CHARACTER c)
 {
+	EIF_GET_CONTEXT
 	char transfer_buffer [1];
 
 	if (!eif_console_allocated)
@@ -355,22 +373,24 @@ void eif_console_putchar (EIF_CHARACTER c)
 		eif_PutWindowedOutput (transfer_buffer, 1);
 	else
 		WriteConsole(eif_conoutfile,transfer_buffer,1, &dummy_length, NULL);
+	EIF_END_GET_CONTEXT
 }
 
 void eif_console_putstring (BYTE *s, long length)
 {
-    EIF_GET_CONTEXT
+	EIF_GET_CONTEXT
 	if (!eif_console_allocated)
 		eif_make_console();
 	if (windowed_application)
 		eif_PutWindowedOutput (s, length);
 	else
 		WriteConsole(eif_conoutfile,s, length, &dummy_length, NULL);
-    EIF_END_GET_CONTEXT
+	EIF_END_GET_CONTEXT
 }
 
 void eif_console_putreal (double r)
 {
+	EIF_GET_CONTEXT
 	char transfer_buffer [BUFFER_SIZE];
 	int t = 0;
 
@@ -382,10 +402,12 @@ void eif_console_putreal (double r)
 		eif_PutWindowedOutput (transfer_buffer, t);
 	else
 		WriteConsole(eif_conoutfile,transfer_buffer, t, &dummy_length, NULL);
+	EIF_END_GET_CONTEXT
 }
 
 void eif_console_putdouble (double d)
 {
+	EIF_GET_CONTEXT
 	char transfer_buffer [BUFFER_SIZE];
 	int t = 0;
 
@@ -397,16 +419,21 @@ void eif_console_putdouble (double d)
 		eif_PutWindowedOutput (transfer_buffer, t);
 	else
 		WriteConsole(eif_conoutfile,transfer_buffer, t, &dummy_length, NULL);
+	EIF_END_GET_CONTEXT
 }
 
 EIF_BOOLEAN eif_console_eof ()
 {
+	EIF_GET_CONTEXT
 	return (eif_console_eof_value == 1 ? '\01' : '\00');
+	EIF_END_GET_CONTEXT
 }
 
 void eif_console_next_line()
 {
+	EIF_GET_CONTEXT
 	eif_PutWindowedOutput ("\n", 1);
+	EIF_END_GET_CONTEXT
 }
 
 int print_err_msg (FILE *err, char *StrFmt, ...)
@@ -433,7 +460,6 @@ int print_err_msg (FILE *err, char *StrFmt, ...)
 		*c = '\0';
 		}
 	eif_console_putstring (s, strlen(s));
-
 	return r;
 	EIF_END_GET_CONTEXT
 }
@@ -444,6 +470,7 @@ BOOL CALLBACK exception_trace_dialog (HWND hwnd, UINT umsg, WPARAM wparam, LPARA
 */
 {
 	EIF_GET_CONTEXT
+
 	OPENFILENAME ofn;
 	FILE *f;
 	static char *szFilter [] = {    "Log Files (*.LOG)", "*.LOG",
@@ -511,31 +538,27 @@ void eif_console_cleanup ()
 							  "Execution terminated", MB_OKCANCEL + MB_ICONQUESTION + MB_TASKMODAL + MB_TOPMOST);
 			DestroyWindow (eif_conout_window);
 		} else {
-
-#ifdef EIF_THREADS
-if (eif_thr_is_root()) 
-{
+#ifdef EIF_THREAD
+			if (eif_thr_is_root())
 #endif
-			eif_console_putstring("\nPress Return to finish the execution...\0", 40);
-			if (!ReadConsole(eif_coninfile, eif_console_buffer, BUFFER_SIZE, &buffer_length, NULL))
-				eio ();
-
-			CloseHandle (eif_coninfile);
-			CloseHandle (eif_conoutfile);
-
-			b = FreeConsole ();
-#ifdef EIF_THREADS
-} /* eif_thr_is_root() */
-#endif
+			{
+				eif_console_putstring("\nPress Return to finish the execution...\0", 40);
+				if (!ReadConsole(eif_coninfile, eif_console_buffer, BUFFER_SIZE, &buffer_length, NULL))
+					eio ();
+	
+				CloseHandle (eif_coninfile);
+				CloseHandle (eif_conoutfile);
+				b = FreeConsole ();
+			}
 		}
 		eif_console_allocated = FALSE;
-	}
+	}  
 	EIF_END_GET_CONTEXT
 }
 
 void eif_make_console()
 {
-    EIF_GET_CONTEXT
+	EIF_GET_CONTEXT
 	if (windowed_application) {
 		WNDCLASS wc;
 
@@ -583,8 +606,8 @@ void eif_make_console()
 	}
 	eif_register_cleanup (eif_console_cleanup);
 	eif_console_allocated = TRUE;
-    EIF_END_GET_CONTEXT
 
+	EIF_END_GET_CONTEXT
 }
 
 void eif_GetWindowedInput()

@@ -51,12 +51,12 @@ feature -- Update
 				create l_concat_filter.make_null
 				l_parser.set_callbacks (standard_callbacks_pipe (<<l_concat_filter, l_tree_pipe.start>>))
 				l_parser.parse_from_stream (l_file)
-				check
-					ok_parsing: l_parser.is_correct
-				end
 				l_file.close
 				
-				if not l_tree_pipe.document.root_element.name.is_equal ("EIFFEL_DOCUMENT") then
+				if
+					not l_parser.is_correct or else
+					not l_tree_pipe.document.root_element.name.is_equal ("EIFFEL_DOCUMENT")
+				then
 					io.put_string (w_Invalid_preference_file_root (file_name))
 				else
 					xml_data := l_tree_pipe.document.root_element
@@ -238,7 +238,8 @@ feature {NONE} -- Implementation
 			-- file named `file_name' is not an XML file with "EIFFEL_DOCUMENT" as
 			-- root tag.
 		do
-			Result := "EIFFEL_DOCUMENT tag missing in file: "+ file_name + "."
+			Result := "%NEIFFEL_DOCUMENT tag missing in file: "+ file_name + ".%N"
+			Result.append ("Your preferences will be overridden by the default settings.%N")
 		end
 
 end -- class RESOURCE_FOLDER_IMP

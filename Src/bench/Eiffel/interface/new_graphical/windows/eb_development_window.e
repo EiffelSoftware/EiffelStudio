@@ -2504,7 +2504,11 @@ feature {NONE} -- Implementation
 					else
 							-- if a feature_stone has been dropped
 							-- scroll to the corresponding feature in the basic text format
-						if feature_stone.e_feature.ast /= Void and not during_synchronization then
+							-- FIXME NC: Doesn't work for .NET features
+						if 
+							feature_stone.e_feature.ast /= Void and 
+							not feature_stone.e_feature.is_external and
+							not during_synchronization then
 							scroll_to_feature (feature_stone.e_feature.ast, new_class_stone.class_i)
 						end
 					end

@@ -72,7 +72,8 @@ feature -- Element change
 			a_color_not_void: a_color /= Void
 		deferred
 		ensure
-			-- background_color_assigned: background_color.is_equal (a_color)
+			background_color_assigned: 
+				interface.background_color.is_equal (a_color)
 		end
 
 	set_foreground_color (a_color: EV_COLOR) is
@@ -81,7 +82,8 @@ feature -- Element change
 			a_color_not_void: a_color /= Void
 		deferred
 		ensure
-			-- foreground_color_assigned: foreground_color.is_equal (a_color)
+			foreground_color_assigned: 
+				interface.foreground_color.is_equal (a_color)
 		end
 
 	set_line_width (a_width: INTEGER) is
@@ -90,7 +92,8 @@ feature -- Element change
 			a_width_positive_or_zero: a_width >= 0
 		deferred
 		ensure
-			line_width_assigned: line_width = a_width
+			line_width_assigned: 
+				interface.line_width = a_width
 		end
 
 	set_drawing_mode (a_mode: INTEGER) is
@@ -99,7 +102,8 @@ feature -- Element change
 			a_mode_valid: valid_drawing_mode (a_mode)
 		deferred
 		ensure
-			drawing_mode_assigned: drawing_mode = a_mode
+			drawing_mode_assigned: 
+				interface.drawing_mode = a_mode
 		end
 
 	set_clip_area (an_area: EV_RECTANGLE) is
@@ -108,14 +112,16 @@ feature -- Element change
 			an_area_not_void: an_area /= Void
 		deferred
 		ensure
-			clip_area_assigned: clip_area.is_equal (an_area)
+			clip_area_assigned: 
+				interface.clip_area.is_equal (an_area)
 		end
 
 	remove_clip_area is
 			-- Do not apply any clipping.
 		deferred
 		ensure
-			clip_area_void: clip_area = Void
+			clip_area_void: 
+				interface.clip_area = Void
 		end
 
 	set_tile (a_pixmap: EV_PIXMAP) is
@@ -125,28 +131,32 @@ feature -- Element change
 			a_pixmap_not_void: a_pixmap /= Void
 		deferred
 		ensure
-			tile_assigned: tile /= Void
+			tile_assigned: 
+				interface.tile /= Void
 		end
 
 	remove_tile is
 			-- Do not apply a tile when filling.
 		deferred
 		ensure
-			tile_void: tile = Void
+			tile_void: 
+				interface.tile = Void
 		end
 
 	enable_dashed_line_style is
 			-- Draw lines dashed.
 		deferred
 		ensure
-			dashed_line_style_enabled: dashed_line_style
+			dashed_line_style_enabled: 
+				interface.dashed_line_style
 		end
 
 	disable_dashed_line_style is
 			-- Draw lines solid.
 		deferred
 		ensure
-			dashed_line_style_disabled: not dashed_line_style
+			dashed_line_style_disabled: 
+				not interface.dashed_line_style
 		end
 
 	set_font (a_font: EV_FONT) is
@@ -155,7 +165,8 @@ feature -- Element change
 			a_font_not_void: a_font /= Void
 		deferred
 		ensure
-			assigned: font.is_equal (a_font)
+			assigned: 
+				interface.font.is_equal (a_font)
 		end
 
 feature -- Clearing and drawing operations
@@ -319,6 +330,10 @@ end -- class EV_DRAWABLE_I
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.18  2000/04/11 19:27:07  pichery
+--| Changed postcondition from xxx to interface.xxx in order to be able to
+--| delegate some feature to another class.
+--|
 --| Revision 1.17  2000/02/22 18:39:41  oconnor
 --| updated copyright date and formatting
 --|

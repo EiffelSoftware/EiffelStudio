@@ -128,6 +128,7 @@ feature {NONE}-- Initialization
 			l_ev_horizontal_box_2.set_padding_width (medium_padding)
 			l_ev_horizontal_box_2.disable_item_expand (l_ev_label_1)
 			l_ev_label_1.set_text ("Project Location:")
+			location_field.disable_edit
 			l_ev_notebook_1.set_item_text (l_ev_vertical_box_2, "Build")
 			l_ev_notebook_1.set_item_text (l_ev_vertical_box_5, "Generation")
 			l_ev_vertical_box_2.set_padding_width (small_padding)
@@ -135,6 +136,7 @@ feature {NONE}-- Initialization
 			l_ev_vertical_box_2.disable_item_expand (l_ev_frame_1)
 			l_ev_vertical_box_2.disable_item_expand (class_naming_frame)
 			l_ev_frame_1.set_text ("Build Type")
+			l_ev_horizontal_box_3.disable_item_expand (project_radio_button)
 			l_ev_horizontal_box_3.merge_radio_button_groups (l_ev_horizontal_box_4)
 			project_radio_button.set_text ("Project")
 			rebuild_ace_file_check_button.set_text ("Always rebuild ace?")
@@ -147,7 +149,6 @@ feature {NONE}-- Initialization
 			l_ev_label_3.align_text_left
 			l_ev_label_4.set_text ("Constants class name:")
 			l_ev_label_4.align_text_left
-			l_ev_vertical_box_5.hide
 			l_ev_vertical_box_5.set_padding_width (small_padding)
 			l_ev_vertical_box_5.set_border_width (small_padding)
 			l_ev_vertical_box_5.disable_item_expand (l_ev_frame_2)

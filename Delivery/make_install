@@ -24,20 +24,21 @@ read prec_vision2
 
 INIT_DIR=`pwd`
 
-echo Compile the C code of the libraries
-source compile_libraries
-
-echo Generate the proper Ace files for precompilation
-mv $ISE_EIFFEL/precomp/spec/unix $ISE_EIFFEL/precomp/spec/$ISE_PLATFORM
-
 if [ "$prec_base" != "n" ]; then
 	echo Precompile EiffelBase
 	cd $ISE_EIFFEL/precomp/spec/$ISE_PLATFORM/base
-	ec -precompile -ace Ace.ace
+	rm -rf EIFGEN
+	$ISE_EIFFEL/studio/spec/$ISE_PLATFORM/bin/ec -precompile -ace Ace.ace
+	cd EIFGEN/W_code
+	$ISE_EIFFEL/studio/spec/$ISE_PLATFORM/bin/finish_freezing
 fi
 if [ "$prec_vision2" != "n" ]; then
 	echo Precompile EiffelVision2
 	cd $ISE_EIFFEL/precomp/spec/$ISE_PLATFORM/vision2
-	ec -precompile -ace Ace.ace
+	rm -rf EIFGEN
+	$ISE_EIFFEL/studio/spec/$ISE_PLATFORM/bin/ec -precompile -ace Ace.ace
+	cd EIFGEN/W_code
+	$ISE_EIFFEL/studio/spec/$ISE_PLATFORM/bin/finish_freezing
 fi
 
+cd $INIT_DIR

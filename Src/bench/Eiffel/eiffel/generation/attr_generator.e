@@ -6,15 +6,20 @@ inherit
 
 	TABLE_GENERATOR
 
-creation
-
-	make
-
-	
 feature
 
 	Infix_file_name: STRING is "/Eattr";
 			-- Infix string for file names
+
+	Postfix_file_name: CHARACTER is
+			-- Postfix character for file names
+		do
+			if context.final_mode then
+				Result := 'x'
+			else
+				Result := 'c'
+			end
+		end;
 
 	Size_limit: INTEGER is 10000;
 			-- Limit of size for each generated file

@@ -6,12 +6,7 @@ indexing
 
 class
 	GB_COMMAND_ADD_OBJECT
-	
-	--| FIXME This is messy, we should pass the layout items
-	-- directly when creating `Current'. At the moment, we have to handle
-	-- the first execution and then subsequent executions differently
-	-- which becomes messy. See in `execute' as we handle this here. Julian.
-	
+
 inherit
 	
 	GB_SHARED_OBJECT_HANDLER
@@ -37,18 +32,23 @@ feature {NONE} -- Initialization
 			parent_not_void: parent /= Void
 			child_not_void: child /= Void
 			an_insert_position_valid: an_insert_position >= 1 and an_insert_position <= parent.layout_item.count + 1
+		local
+			previous_parent_object: GB_OBJECT
 		do
-			parent_object := parent
+			parent_layout_item := parent.layout_item
+			child_layout_item := child.layout_item
 			child_object := child
 			previous_parent_object := child.parent_object
+			if previous_parent_object /= Void then
+				previous_parent_layout_item := previous_parent_object.layout_item			
+			end
 			insert_position := an_insert_position
 			if previous_parent_object /= Void then
 				previous_position_in_parent := previous_parent_object.layout_item.index_of (child.layout_item, 1)	
 			end
 		ensure
-			parent_object = parent
-			child_object = child
-			previous_parent_object = child.parent_object
+			parent_layout_item = parent.layout_item
+			child_layout_item = child.layout_item
 			insert_position = an_insert_position
 		end
 		
@@ -60,39 +60,22 @@ feature -- Basic Operation
 		local
 			a_previous_parent: GB_OBJECT
 		do
-			if not executed then
-				if previous_parent_object /= Void then
-					a_previous_parent := child_object.parent_object
-					child_object.unparent
-					update_parent_object_editors (child_object, a_previous_parent, all_editors)
-				end
-				object_handler.add_object (parent_object, child_object, insert_position)
-			else
-				if previous_parent_layout_item /= Void then
-					a_previous_parent := child_layout_item.object.parent_object
-					child_layout_item.object.unparent
-					update_parent_object_editors (child_layout_item.object, a_previous_parent, all_editors)
-				end
-				object_handler.add_object (parent_layout_item.object, child_layout_item.object, insert_position)
+			if previous_parent_layout_item /= Void then
+				a_previous_parent := child_layout_item.object.parent_object
+				child_layout_item.object.unparent
+				update_parent_object_editors (child_layout_item.object, a_previous_parent, all_editors)
 			end
-			if not executed then
+			if child_layout_item = Void then
+					-- As the child layout item is void, this means we have picked from the type selector.
+					-- We then use the actual object, and then store the layout item.
+				object_handler.add_object (parent_layout_item.object, child_object, insert_position)
 				child_layout_item := child_object.layout_item
-				parent_layout_item := parent_object.layout_item
-				if previous_parent_object /= Void then
-					previous_parent_layout_item := previous_parent_object.layout_item
-				end
-					-- As execute has already been called, we assign `Void'
-					-- to these attributes, as we must now use the layout versions instead.
-				child_object := Void
-				parent_object := Void
-				previous_parent_object := Void
+			else
+				object_handler.add_object (parent_layout_item.object, child_layout_item.object, insert_position)
 			end
 			if not history.command_list.has (Current) then
 				history.add_command (Current)
 			end
-				-- Assign `True' to `executed' so next time `execute' is called,
-				-- we can use the correct objects to perform the settings.
-			executed := True
 			command_handler.update
 		end
 		
@@ -140,16 +123,9 @@ feature -- Basic Operation
 		
 feature {NONE} -- Implementation
 
-	parent_object: GB_OBJECT
-		-- New parent of `child_object'.
-		
 	child_object: GB_OBJECT
 		-- Object to be added to `parent_object'.
-	
-	previous_parent_object: GB_OBJECT
-		-- The parent of `child_object' before `execute'
-		-- May be void if none.
-	
+
 	parent_layout_item: GB_LAYOUT_CONSTRUCTOR_ITEM
 		-- Layout constructor representation of `parent_object'.
 		
@@ -166,17 +142,7 @@ feature {NONE} -- Implementation
 	insert_position: INTEGER
 		-- The position `execute' will insert `child_object'
 		-- in `parent_object'.
-	
-	executed: BOOLEAN
-		-- Has execute already been called on `Current'?
-		-- This is needed as type changes cause problems. i.e. they
-		-- create new objects and our references no longer make any sense.
-		-- Therefore, we use the layout constructor items defined above
-		-- every time we call execute after the first time, as they will give
-		-- us a reference to the real objects. The layout constructor items
-		-- should not be changed when a type is changed.
-		
-		
+
 	update_parent_object_editors (deleted_object, a_parent_object: GB_OBJECT; editors: ARRAYED_LIST [GB_OBJECT_EDITOR]) is
 			-- For every item in `editors', update to reflect removal of `deleted_object'.
 		local

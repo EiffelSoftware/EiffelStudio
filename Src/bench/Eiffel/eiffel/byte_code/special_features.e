@@ -21,16 +21,22 @@ inherit
 
 feature -- Access
 
-	has (feature_name: STRING; compilation_type: BOOLEAN): BOOLEAN is
+	has (feature_name: STRING; compilation_type: BOOLEAN; target_type: BASIC_I): BOOLEAN is
 			-- Does Current have `feature_name'?
 		require
 			feature_name_not_void: feature_name /= Void
 			feature_name_exists: feature_name.count > 0
+		local
+			char: CHAR_I
 		do
 			if compilation_type then
 				Result := c_type_table.has (feature_name)
 				if Result then
 					function_type := c_type_table.found_item
+					if function_type = out_type and then target_type.is_char then
+						char ?= target_type
+						Result := not char.is_wide
+					end
 				end
 			else
 				Result := byte_type_table.has (feature_name)
@@ -436,13 +442,10 @@ feature {NONE} -- C code generation
 				inspect
 					type_of_basic
 				when character_type then
-					if is_wide then
-							-- FIXME: we only support ASCII character set
-							-- from Unicode.
-						buffer.putstring ("c_outc((EIF_CHARACTER)")
-					else
-						buffer.putstring ("c_outc(")
+					check
+						not_is_wide: not is_wide
 					end
+					buffer.putstring ("c_outc(")
 				when integer_type then
 					inspect
 						integer_size

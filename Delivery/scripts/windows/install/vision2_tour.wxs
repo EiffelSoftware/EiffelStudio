@@ -361,10 +361,18 @@
                 <File Id="radio_button_grouping_test.e" Name="RADIO_~2.E" LongName="radio_button_grouping_test.e" />
               </Component>
             </Directory>
+            <Directory Id="rich_text" Name="RICH_T~1" LongName="rich_text">
+              <Component Id="rich_text" Guid="9058BA86-55E4-4e90-9CBE-B6C84D5ED65A">
+                <File Id="rich_text_basic_test.e" Name="RICH_T~1.E" LongName="rich_text_basic_test.e" KeyPath="yes" />
+                <File Id="rich_text_buffering_test.e" Name="RICH_T~2.E" LongName="rich_text_buffering_test.e" />
+                <File Id="rich_text_tab_test.e" Name="RICH_T~3.E" LongName="rich_text_tab_test.e" />
+              </Component>
+            </Directory>
             <Directory Id="pixmap" Name="pixmap">
               <Component Id="pixmap" Guid="2D45AA62-C412-4E8A-BF6F-59E1BB31F920">
                 <File Id="pixmap_drawing_test.e" Name="PIXMAP~2.E" LongName="pixmap_drawing_test.e" KeyPath="yes" />
                 <File Id="pixmap_basic_test.e" Name="PIXMAP~1.E" LongName="pixmap_basic_test.e" />
+                <File Id="pixmap_figure_string_size_test.e" Name="PIXMAP~3.E" LongName="pixmap_figure_string_size_test.e" />
               </Component>
             </Directory>
             <Directory Id="cell" Name="cell">

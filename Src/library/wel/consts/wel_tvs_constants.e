@@ -9,69 +9,47 @@ class
 
 feature -- Access
 
-	Tvs_hasbuttons: INTEGER is
+	Tvs_hasbuttons: INTEGER is 1
 			-- Displays plus (+) and minus (-) buttons next to
 			-- parent items. The user clicks the buttons to expand
 			-- or collapse a parent item's list of child items. To
 			-- include buttons with items at the root of the tree
 			-- view, Tvs_linesatroot must also be specified.
-		external
-			"C [macro %"cctrl.h%"]"
-		alias
-			"TVS_HASBUTTONS"
-		end
+			--
+			-- Declared in Windows as TVS_HASBUTTONS
 
-	Tvs_haslines: INTEGER is
+	Tvs_haslines: INTEGER is 2
 			-- Uses lines to show the hierarchy of items.
-		external
-			"C [macro %"cctrl.h%"]"
-		alias
-			"TVS_HASLINES"
-		end
+			--
+			-- Declared in Windows as TVS_HASLINES
 
-	Tvs_linesatroot: INTEGER is
+	Tvs_linesatroot: INTEGER is 4
 			-- Uses lines to link items at the root of the
 			-- tree-view control. This value is ignored if
 			-- Tvs_haslines is not also specified.
-		external
-			"C [macro %"cctrl.h%"]"
-		alias
-			"TVS_LINESATROOT"
-		end
+			--
+			-- Declared in Windows as TVS_LINESATROOT
 
-	Tvs_editlabels: INTEGER is
+	Tvs_editlabels: INTEGER is 8
 			-- Allows the user to edit the labels of tree-view
 			-- items.
-		external
-			"C [macro %"cctrl.h%"]"
-		alias
-			"TVS_EDITLABELS"
-		end
+			--
+			-- Declared in Windows as TVS_EDITLABELS
 
-	Tvs_disabledragdrop: INTEGER is
+	Tvs_disabledragdrop: INTEGER is 16
 			-- Prevents the tree-view control from sending
 			-- Tvn_begindrag notification messages.
-		external
-			"C [macro %"cctrl.h%"]"
-		alias
-			"TVS_DISABLEDRAGDROP"
-		end
+			--
+			-- Declared in Windows as TVS_DISABLEDRAGDROP
 
-	Tvs_showselalways: INTEGER is
+	Tvs_showselalways: INTEGER is 32
 			-- Causes a selected item to remain selected when the
 			-- tree-view control loses focus.
-		external
-			"C [macro %"cctrl.h%"]"
-		alias
-			"TVS_SHOWSELALWAYS"
-		end
+			--
+			-- Declared in Windows as TVS_SHOWSELALWAYS
 
-	Tvs_infotip: INTEGER is
-		external
-			"C [macro %"cctrl.h%"]"
-		alias
-			"TVS_INFOTIP"
-		end
+	Tvs_infotip: INTEGER is 2048
+			-- Declared in Windows as TVS_INFOTIP
 
 end -- class WEL_TVS_CONSTANTS
 

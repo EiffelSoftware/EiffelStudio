@@ -106,6 +106,7 @@ extern void file_tnil();
 extern long file_gi();
 extern float file_gr();
 extern double file_gd();
+extern char	*file_def();
 extern char	file_gc();
 extern long file_gs();
 extern long file_gss();

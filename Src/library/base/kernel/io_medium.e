@@ -143,6 +143,7 @@ feature -- Output
 			-- Write `s' to medium
 		require
 			extendible: extendible
+			non_void: s /= Void
 		deferred
 		end;
 

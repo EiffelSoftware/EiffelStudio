@@ -196,6 +196,7 @@ rt_private void eif_interp_eq (struct item *f, struct item *s);			/* == operatio
 rt_private uint32 eif_expression_type (uint32 first, uint32 second);	/* type of a numeric binary expression */
 
 /* Min and max operation */
+rt_private void eif_three_way_comparison (void);	/* Execute `three_way_comparison'. */
 rt_private void eif_interp_min_max (int code);	/* Execute `min' or `max' depending
 														   on value of `type' */
 rt_private void eif_interp_generator (void);	/* generate the name of the basic type */
@@ -4788,6 +4789,44 @@ rt_private void eif_interp_min_max (int code)
 #undef EIF_MIN
 }
 
+/*
+doc:	<routine name="eif_three_way_comparison" return_type="void" export="private">
+doc:		<summary>Emulate call to `three_way_comparison' for basic types inheriting from COMPARABLE.</summary>
+doc:		<thread_safety>Safe</thread_safety>
+doc:		<synchronization>Per thread data.</synchronization>
+doc:	</routine>
+*/
+
+rt_private void eif_three_way_comparison (void)
+{
+#define EIF_THREE_WAY_COMPARISON(a,b) ((a)<(b)? -1 : ((b)<(a) ? 1 : 0))
+
+	struct item *second;		/* Second operand */
+	struct item *first;			/* First operand */
+	
+	second = opop();			/* Fetch second operand */
+	first = otop();				/* First operand will be replace by result */
+
+	REQUIRE("Same type", (first->type & SK_HEAD) == (second->type & SK_HEAD));
+
+	switch(first->type & SK_HEAD) {
+		case SK_CHAR: first->it_int32 = (EIF_INTEGER_32) EIF_THREE_WAY_COMPARISON(first->it_char, second->it_char); break;
+		case SK_WCHAR: first->it_int32 = (EIF_INTEGER_32) EIF_THREE_WAY_COMPARISON(first->it_wchar, second->it_wchar); break;
+		case SK_INT8: first->it_int32 = (EIF_INTEGER_32) EIF_THREE_WAY_COMPARISON(first->it_int8, second->it_int8); break;
+		case SK_INT16: first->it_int32 = (EIF_INTEGER_32) EIF_THREE_WAY_COMPARISON(first->it_int16, second->it_int16); break;
+		case SK_INT32: first->it_int32 = (EIF_INTEGER_32) EIF_THREE_WAY_COMPARISON(first->it_int32, second->it_int32); break;
+		case SK_INT64: first->it_int32 = (EIF_INTEGER_32) EIF_THREE_WAY_COMPARISON(first->it_int64, second->it_int64); break;
+		case SK_FLOAT: first->it_int32 = (EIF_INTEGER_32) EIF_THREE_WAY_COMPARISON(first->it_float, second->it_float); break;
+		case SK_DOUBLE: first->it_int32 = (EIF_INTEGER_32) EIF_THREE_WAY_COMPARISON(first->it_double, second->it_double); break;
+		default: eif_panic(MTC RT_BOTCHED_MSG);
+	}
+
+	first->type = SK_INT32;
+
+	ENSURE("New type", (first->type & SK_HEAD) == SK_INT32);
+#undef EIF_THREE_WAY_COMPARISON
+}
+
 rt_private void eif_interp_offset(void)
 {
 	/* Execute the `+' operator on CHARACTER or POINTER type and push
@@ -4827,6 +4866,11 @@ rt_private void eif_interp_basic_operations (void)
 		case BC_MIN:
 		case BC_MAX:
 			eif_interp_min_max (code);
+			break;
+
+			/* `three_way_comparison' on comparable basic types. */
+		case BC_THREE_WAY_COMPARISON:
+			eif_three_way_comparison ();
 			break;
 
 			/* `generator' and `generating_type' function calls */

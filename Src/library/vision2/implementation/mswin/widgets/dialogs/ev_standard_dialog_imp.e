@@ -11,9 +11,13 @@ deferred class
 inherit
 	EV_STANDARD_DIALOG_I
 
+	EV_EVENT_HANDLER_IMP
+
+	EV_DIALOG_EVENTS_CONSTANTS_IMP
+
 feature {NONE} -- Initialization
 
-	make (par: EV_WINDOW) is
+	make (par: EV_CONTAINER) is
 			-- Create a window with a parent.
 		do
 			parent_imp ?= par.implementation

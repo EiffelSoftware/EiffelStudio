@@ -238,9 +238,11 @@ feature {EV_INTERMEDIARY_ROUTINES} -- Implementation
 			-- Call appropriate selection and deselection action sequences
 		local
 			new_selection: ARRAYED_LIST [EV_LIST_ITEM]
+			newly_selected_items: ARRAYED_LIST [EV_LIST_ITEM_IMP]
 			an_item: EV_LIST_ITEM_IMP
 		do
 			new_selection := selected_items
+			create newly_selected_items.make (0)
 			from
 				new_selection.start
 			until
@@ -248,12 +250,7 @@ feature {EV_INTERMEDIARY_ROUTINES} -- Implementation
 			loop
 				if not previous_selection.has (new_selection.item) then
 					an_item ?= new_selection.item.implementation
-					if an_item.select_actions_internal /= Void then
-						an_item.select_actions_internal.call ((App_implementation.gtk_marshal).empty_tuple)
-					end
-					if select_actions_internal /= Void then
-						select_actions_internal.call ([an_item.interface])
-					end
+					newly_selected_items.extend (an_item)
 				end
 				previous_selection.prune_all (new_selection.item)
 				new_selection.forth
@@ -271,6 +268,19 @@ feature {EV_INTERMEDIARY_ROUTINES} -- Implementation
 					deselect_actions_internal.call ([an_item.interface])
 				end
 				previous_selection.forth
+			end
+			from
+				newly_selected_items.start
+			until
+				newly_selected_items.off
+			loop
+				if newly_selected_items.item.select_actions_internal /= Void then
+					newly_selected_items.item.select_actions_internal.call (Void)
+				end
+				if select_actions_internal /= Void then
+					select_actions_internal.call ([newly_selected_items.item.interface])
+				end
+				newly_selected_items.forth
 			end
 			previous_selection := new_selection
 		end

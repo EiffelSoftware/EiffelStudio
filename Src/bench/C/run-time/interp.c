@@ -4739,25 +4739,61 @@ rt_private void eif_interp_bit_operations (void)
 
 	switch (code) {
 		case BC_INT_BIT_AND:
-			first->it_int32 = eif_bit_and (first->it_int32, second->it_int32);
+			switch (first->type & SK_HEAD) {
+				case SK_INT8: first->it_int8 = eif_bit_and (first->it_int8, second->it_int8); break;
+				case SK_INT16: first->it_int16 = eif_bit_and (first->it_int16, second->it_int16); break;
+				case SK_INT32: first->it_int32 = eif_bit_and (first->it_int32, second->it_int32); break;
+				case SK_INT64: first->it_int64 = eif_bit_and (first->it_int64, second->it_int64); break;
+				}
 			break;
 		case BC_INT_BIT_OR:
-			first->it_int32 = eif_bit_or (first->it_int32, second->it_int32);
+			switch (first->type & SK_HEAD) {
+				case SK_INT8: first->it_int8 = eif_bit_or (first->it_int8, second->it_int8); break;
+				case SK_INT16: first->it_int16 = eif_bit_or (first->it_int16, second->it_int16); break;
+				case SK_INT32: first->it_int32 = eif_bit_or (first->it_int32, second->it_int32); break;
+				case SK_INT64: first->it_int64 = eif_bit_or (first->it_int64, second->it_int64); break;
+				}
 			break;
 		case BC_INT_BIT_XOR:
-			first->it_int32 = eif_bit_xor (first->it_int32, second->it_int32);
+			switch (first->type & SK_HEAD) {
+				case SK_INT8: first->it_int8 = eif_bit_xor (first->it_int8, second->it_int8); break;
+				case SK_INT16: first->it_int16 = eif_bit_xor (first->it_int16, second->it_int16); break;
+				case SK_INT32: first->it_int32 = eif_bit_xor (first->it_int32, second->it_int32); break;
+				case SK_INT64: first->it_int64 = eif_bit_xor (first->it_int64, second->it_int64); break;
+				}
 			break;
 		case BC_INT_BIT_NOT:
-			first->it_int32 = eif_bit_not (first->it_int32);
+			switch (first->type & SK_HEAD) {
+				case SK_INT8: first->it_int8 = eif_bit_not (first->it_int8); break;
+				case SK_INT16: first->it_int16 = eif_bit_not (first->it_int16); break;
+				case SK_INT32: first->it_int32 = eif_bit_not (first->it_int32); break;
+				case SK_INT64: first->it_int64 = eif_bit_not (first->it_int64); break;
+				}
 			break;
 		case BC_INT_BIT_SHIFT_LEFT:
-			first->it_int32 = eif_bit_shift_left (first->it_int32, second->it_int32);
+			switch (first->type & SK_HEAD) {
+				case SK_INT8: first->it_int8 = eif_bit_shift_left (first->it_int8, second->it_int32); break;
+				case SK_INT16: first->it_int16 = eif_bit_shift_left (first->it_int16, second->it_int32); break;
+				case SK_INT32: first->it_int32 = eif_bit_shift_left (first->it_int32, second->it_int32); break;
+				case SK_INT64: first->it_int64 = eif_bit_shift_left (first->it_int64, second->it_int32); break;
+				}
 			break;
 		case BC_INT_BIT_SHIFT_RIGHT:
-			first->it_int32 = eif_bit_shift_right (first->it_int32, second->it_int32);
+			switch (first->type & SK_HEAD) {
+				case SK_INT8: first->it_int8 = eif_bit_shift_right (first->it_int8, second->it_int32); break;
+				case SK_INT16: first->it_int16 = eif_bit_shift_right (first->it_int16, second->it_int32); break;
+				case SK_INT32: first->it_int32 = eif_bit_shift_right (first->it_int32, second->it_int32); break;
+				case SK_INT64: first->it_int64 = eif_bit_shift_right (first->it_int64, second->it_int32); break;
+				}
 			break;
 		case BC_INT_BIT_TEST:
-			first->it_int32 = eif_bit_test (first->it_int32, second->it_int32);
+			switch (first->type & SK_HEAD) {
+				case SK_INT8: first->it_char = eif_bit_test (first->it_int8, second->it_int32); break;
+				case SK_INT16: first->it_char = eif_bit_test (first->it_int16, second->it_int32); break;
+				case SK_INT32: first->it_char = eif_bit_test (first->it_int32, second->it_int32); break;
+				case SK_INT64: first->it_char = eif_bit_test (first->it_int64, second->it_int32); break;
+				}
+			first->type = SK_BOOL;
 			break;
 		default: eif_panic (botched);
 	}

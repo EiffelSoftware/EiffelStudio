@@ -80,6 +80,34 @@ feature -- Properties
 	comment_list: ARRAYED_LIST [STRING]
 			-- List of comments usually associated with `default' clause.
 
+feature -- Status report
+
+	is_dotnet_project: BOOLEAN is
+			-- Does current Ace has the `msil_generation (yes)' option to
+			-- generate IL code?
+		local
+			d_options: LACE_LIST [D_OPTION_SD]
+			fopt: FREE_OPTION_SD
+			l_ast: ACE_SD
+		do
+			d_options := defaults
+			if d_options /= Void then
+				from 
+					d_options.start
+				until
+					d_options.after
+				loop
+					if d_options.item.option.is_free_option then
+						fopt ?= d_options.item.option
+						if fopt.code = feature {FREE_OPTION_SD}.msil_generation then
+							Result := d_options.item.value.is_yes
+						end	
+					end
+					d_options.forth
+				end
+			end
+		end
+
 feature -- Setting
 
 	set_defaults (d: like defaults) is

@@ -70,19 +70,19 @@ feature -- Initialization
 			project_eif_ok: project_dir.valid_project_eif;
 			prev_read_write_error: not read_write_error
 		local
-			workb: WORKBENCH_I;
 			init_work: INIT_WORKBENCH;
 			precomp_r: PRECOMP_R;
 			extendible_r: EXTENDIBLE_R;
 			temp: STRING;
 			e_project: like Current;
 			retried: BOOLEAN;
-			p_eif: RAW_FILE
+			p_eif: RAW_FILE;
+			precomp_dirs: EXTEND_TABLE [REMOTE_PROJECT_DIRECTORY, INTEGER];
+			remote_dir: REMOTE_PROJECT_DIRECTORY
 		do
 			if not retried then
 				p_eif := project_dir.project_eif_file;
 				set_error_status (Ok_status);
-				!! workb;
 				p_eif.open_read;
 				e_project ?= retrieved (p_eif);
 				if e_project = Void then
@@ -99,13 +99,29 @@ feature -- Initialization
 				Workbench.init;
 				Compilation_modes.set_is_extendible (Comp_system.extendible);
 				Compilation_modes.set_is_extending (Comp_system.is_dynamic);
-				if Comp_system.uses_precompiled then
-					!! precomp_r;
-					precomp_r.set_precomp_dir
-				end;
-				if Comp_system.is_dynamic then
-					!! extendible_r;
-					extendible_r.set_extendible_dir
+				if Comp_system.is_precompiled then
+            		precomp_dirs := Workbench.precompiled_directories;
+            		from
+                		precomp_dirs.start
+            		until
+                		precomp_dirs.after
+            		loop
+                		precomp_dirs.item_for_iteration.update_path;
+                		precomp_dirs.forth
+            		end;
+            		Precompilation_directories.copy (precomp_dirs);
+					!! remote_dir.make (project_dir.name);
+					Precompilation_directories.force
+                            (remote_dir, Comp_system.compilation_id);
+				else
+					if Comp_system.uses_precompiled then
+						!! precomp_r;
+						precomp_r.set_precomp_dir
+					end;
+					if Comp_system.is_dynamic then
+						!! extendible_r;
+						extendible_r.set_extendible_dir
+					end;
 				end;
 
 				Comp_system.server_controler.init;
@@ -204,12 +220,14 @@ feature -- Access
 			Result := not is_read_only and then
 				initialized and then
 				ace.file_name /= Void and then
-				error_displayer /= Void
+				error_displayer /= Void and then
+				not is_compiling
 		ensure
 			yes_if_ok: Result implies not is_read_only and then
 					initialized and then 
 					ace.file_name /= Void and then
-					error_displayer /= Void
+					error_displayer /= Void and then
+					not is_compiling
 		end;
 
 	was_saved: BOOLEAN is
@@ -257,6 +275,12 @@ feature -- Access
 		do
 			Result := mode.item
 		end;
+
+	is_compiling: BOOLEAN is
+			-- Is it compiling?
+		do
+			Result := is_compiling_ref.item
+		end
 
 feature -- Error status
 
@@ -340,9 +364,20 @@ feature -- Status setting
 	set_batch_mode (compiler_mode: BOOLEAN) is
 			-- Set `batch_mode' to `compiler_mode'
 		do
-			mode.put (compiler_mode)
+			mode.set_item (compiler_mode)
 		ensure
 			set: compiler_mode = batch_mode
+		end;
+
+feature -- Element change
+
+	interrupt_compilation is
+			-- Interrupt current compilations.
+		require
+			is_compiling: degree_output.current_degree <= 6;
+			is_before_degree_3: degree_output.current_degree >= 3
+		do
+			Error_handler.insert_interrupt_error
 		end;
 
 feature -- Update
@@ -355,7 +390,8 @@ feature -- Update
 		require
 			able_to_compile: able_to_compile
 		do
-			Workbench.recompile
+			is_compiling_ref.set_item (True);
+			Workbench.recompile;
 			if successful then
 				save_project;
 				if Comp_system.is_dynamic then
@@ -368,7 +404,8 @@ feature -- Update
 					Application.resynchronize_breakpoints;
 					Degree_output.put_resynchronizing_breakpoints_message;
 				end;
-			end
+			end;
+			is_compiling_ref.set_item (False);
 		ensure
 			was_saved: successful and then not
 				error_occurred implies was_saved
@@ -408,10 +445,12 @@ feature -- Update
 				melt;
 				if successful and then not melt_only then
 					set_error_status (Ok_status);
+					is_compiling_ref.set_item (True);
 					finalize_system (keep_assertions);
 					if Comp_system.extendible then
 						save_project
-					end
+					end;
+					is_compiling_ref.set_item (False);
 				end
 			end
 		ensure
@@ -572,7 +611,7 @@ feature {NONE} -- Implementation
 			valid_project_dir: project_dir /= Void;
 			status_ok: not error_occurred
 		do
-			if project_dir.is_project_writable then
+			if not system.is_precompiled and then project_dir.is_project_writable then
 				set_file_status (write_status)
 			elseif project_dir.is_project_readable then
 				set_file_status (read_only_status)
@@ -666,9 +705,17 @@ feature {NONE} -- Implementation
 			!! Result.put (deg_output)
 		end;
 
-	mode: CELL [BOOLEAN] is
+	mode: BOOLEAN_REF is
+			-- Is the compile in batch mode?
 		once
-			!! Result.put (True)
+			!! Result;
+			Result.set_item (True)
+		end;
+
+	is_compiling_ref: BOOLEAN_REF is
+			-- Is it compiling?
+		once
+			!! Result
 		end;
 
 	link_driver is

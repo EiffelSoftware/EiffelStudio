@@ -727,7 +727,7 @@ feature {NONE} -- Implementation
 			x_pos <= width and y_pos <= height then
 					-- Create a WEL_TRACK_MOUSE_EVENT structure so
 					-- we will recieve the Wm_mouse_leave notification
-					-- message when the pointer leaves `Current'. 
+					-- message when the pointer leaves `Current'.
 				create track_mouse.make
 				track_mouse.set_hwndtrack (wel_item)
 				track_mouse.set_dwflags (feature {WEL_TME_CONSTANTS}.tme_leave)
@@ -884,12 +884,23 @@ feature {NONE} -- Implementation
 			character_string: STRING
 		do
 			if key_press_string_actions_internal /= Void then
-				create character_string.make(1)
-				character_string.append_character(character_code.to_character)
-				key_press_string_actions_internal.call ([character_string])
+				inspect character_code
+				when 8, 27 then
+					-- Do not fire `key_press_string_actions' if Backspace or Esc
+					-- are pressed as they are not displayable charcters.
+				when 13 then
+						-- On Windows, the Enter key gives us "%R" but we need to
+						-- substitute this with "%N" which is the Eiffel newline character.
+					character_string := "%N"
+					key_press_string_actions_internal.call ([character_string])
+				else
+					create character_string.make(1)
+					character_string.append_character(character_code.to_character)
+					key_press_string_actions_internal.call ([character_string])
+				end
 			end
 		end
-		
+
 	on_mouse_wheel (delta, keys, x_pos, y_pos: INTEGER) is
 			-- Wm_mousewheel received.
 		do			

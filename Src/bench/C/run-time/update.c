@@ -20,6 +20,7 @@
 #include "update.h"
 #include "cecil.h"
 #include "misc.h"
+#include "err_msg.h"
 
 #ifdef __WATCOMC__
 #include "windows.h"
@@ -100,7 +101,7 @@ else {
 	}
 if (filename == (char *)0){
 	enomem();	
-	exit (0);	
+	exit (1);	
 }
 if (meltpath) strcpy (filename, meltpath);
 else strcpy (filename, ".");
@@ -112,8 +113,8 @@ strcat(filename, UPDT_NAME);
 #endif
 
 if ((fil = fopen(filename, "r")) == (FILE *) 0) {
-	fprintf(stderr, "Error: could not open Eiffel update file\n");
-	exit(0);
+	print_err_msg(stderr, "Error: could not open Eiffel update file\n");
+	exit(1);
 }
 	xfree (filename);
 	wread(&c, 1);				/* Is there something to update ? */
@@ -252,8 +253,8 @@ int nbytes;
 	dprintf(8)("Reading %d bytes at %d%\n", nbytes, ftell(fil));
 #endif
 	if (nbytes != fread(buffer, sizeof(char), nbytes, fil)) {
-		fprintf(stderr, "Error: could not read Eiffel update file\n");
-		exit(0);
+		print_err_msg(stderr, "Error: could not read Eiffel update file\n");
+		exit(1);
 	}
 #ifdef DEBUG
 {

@@ -3327,7 +3327,7 @@ feature -- Main file generation
 				%extern void emain();%N%
 				%extern void reclaim();%N");
 			if Concurrent_Eiffel then
-				Main_file.putstring ("%#include %"curserver.h%"%N")
+				Main_file.putstring ("#include %"curserver.h%"%N")
 			else
 				Main_file.putstring ("extern void failure();%N")
 			end

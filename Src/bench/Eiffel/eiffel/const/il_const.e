@@ -47,7 +47,7 @@ feature -- Constants for binary expression
 	Il_shl: INTEGER is 20
 	Il_shr: INTEGER is 21
 
-feature {NONE} -- Constants for unary expression
+feature -- Constants for unary expression
 
 	Il_uplus: INTEGER is 16
 	Il_not: INTEGER is 17
@@ -55,7 +55,7 @@ feature {NONE} -- Constants for unary expression
 	Il_old: INTEGER is 19
 	Il_bitwise_not: INTEGER is 22
 
-feature {NONE} -- Constants for variable kind
+feature -- Constants for variable kind
 
 	il_i1: INTEGER is 30
 	il_i2: INTEGER is 31
@@ -65,5 +65,9 @@ feature {NONE} -- Constants for variable kind
 	il_r8: INTEGER is 35
 	il_ref: INTEGER is 36
 	il_i: INTEGER is 37
+	il_u1: INTEGER is 38
+	il_u2: INTEGER is 39
+	il_u4: INTEGER is 40
+	il_u8: INTEGER is 41
 	
 end -- class IL_CONST

@@ -162,18 +162,6 @@ feature
 			dir: REMOTE_PROJECT_DIRECTORY
 		do
 			if System.uses_precompiled then
-				if
-					not Compilation_modes.is_precompiling or
-					Desc_generator.file_counter = 0
-				then
-						-- Uses precompilations but is not the result
-						-- of the merging of precompilations.
-					Make_file.putstring ("%T%T");
-					Make_file.putstring (Precompilation_descobj);
-					Make_file.putchar (' ');
-					Make_file.putchar (Continuation);
-					Make_file.new_line
-				end;
 				from
 					precomp := Precompilation_directories;
 					precomp.start 

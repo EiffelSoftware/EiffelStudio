@@ -15,7 +15,7 @@ default
 	il_verifiable(no)
 	msil_generation_type("exe")
 	check_vape(yes)
-	console_application(no)
+	console_application(yes)
 	address_expression(no)
 	array_optimization(no)
 	dead_code_removal(yes)

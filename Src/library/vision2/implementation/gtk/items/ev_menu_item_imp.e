@@ -76,9 +76,7 @@ feature {NONE} -- Initialization
 			C.gtk_container_add (c_object, box)
 			C.gtk_widget_show (box)
 			C.gtk_box_pack_start (box, pixmap_box, False, True, 0)
-			C.gtk_widget_hide (pixmap_box)
 			C.gtk_box_pack_start (box, text_label, True, True, 0)
-			C.gtk_widget_show (text_label)
 		ensure
 			menu_item_box /= NULL
 		end

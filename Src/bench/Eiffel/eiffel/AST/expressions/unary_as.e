@@ -77,6 +77,7 @@ feature -- Type check, byte code and dead code removal
 			vwoe: VWOE
 			vhne: VHNE
 			vuex: VUEX
+			vape: VAPE
 		do
 				-- Check operand
 			expr.type_check
@@ -114,7 +115,20 @@ feature -- Type check, byte code and dead code removal
 				Error_handler.insert_error (vuex)
 				Error_handler.raise_error
 			end
- 
+
+			if
+				not System.do_not_check_vape and then
+				context.level4 and then context.check_for_vape and then
+				not context.current_feature.export_status.is_subset (prefix_feature.export_status) 
+			then
+					-- In precondition and checking for vape
+				create vape
+				context.init_error (vape)
+				vape.set_exported_feature (context.current_feature)
+				Error_handler.insert_error (vape)
+				Error_handler.raise_error
+			end
+
 				-- Suppliers update
 			!!depend_unit.make (last_class.class_id, prefix_feature)
 			context.supplier_ids.extend (depend_unit)

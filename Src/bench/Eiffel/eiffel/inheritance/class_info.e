@@ -17,7 +17,7 @@ inherit
 		export
 			{ANY} all
 		end;
-	COMPILER_IDABLE;
+	IDABLE;
 	COMPILER_EXPORTER
 
 feature 
@@ -28,7 +28,7 @@ feature
 	parents: PARENT_LIST;
 			-- Compiled parent clause
 
-	index: HASH_TABLE [READ_INFO, INTEGER];
+	index: HASH_TABLE [READ_INFO, FEATURE_AS_ID];
 			-- Indexes left by the server `Tmp_ast_server' during
 			-- execution of feature `pass1' of CLASS_C. Useful
 			-- for second pass
@@ -81,12 +81,12 @@ feature
 	features: EIFFEL_LIST_B [FEATURE_CLAUSE_AS_B] is
 			-- Feature abstract syntax
 		require
-			ast_server_ok: Tmp_ast_server.has (id.id) or else Ast_server.has (id.id);
+			ast_server_ok: Tmp_ast_server.has (id) or else Ast_server.has (id);
 		do
-			if Tmp_ast_server.has (id.id) then
-				Result := Tmp_ast_server.item (id.id).features;
+			if Tmp_ast_server.has (id) then
+				Result := Tmp_ast_server.item (id).features;
 			else
-				Result := Ast_server.item (id.id).features;
+				Result := Ast_server.item (id).features;
 			end;
 		end;
 

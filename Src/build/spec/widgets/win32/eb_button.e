@@ -1,4 +1,11 @@
--- Eiffelbuild button that is focusable and has a symbol. 
+indexing
+	description: "Eiffelbuild button that is focusable, has a symbol %
+				% and whose borders are shown only when the mouse pointer %
+				% enter the button."
+	date: "$Date$"
+	id: "$Id$"
+	revision: "$Revision$"
+
 deferred class EB_BUTTON
 
 inherit

@@ -48,8 +48,7 @@ feature -- Access
 			ext := s.to_c
 			c_string := eif_getenv($ext)
 			if c_string /= void_pointer then
-				!!Result.make (0)
-				Result.from_c (c_string)
+				create Result.make_from_c (c_string)
 			end
 		end
 

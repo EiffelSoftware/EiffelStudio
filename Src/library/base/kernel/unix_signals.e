@@ -17,8 +17,7 @@ feature -- Access
 			-- A message in English describing what `sig' is
 		do
 			if is_defined (sig) then
-				!! Result.make (0);
-				Result.from_c (c_signal_name (sig));
+				create Result.make_from_c (c_signal_name (sig));
 			end
 		end
 

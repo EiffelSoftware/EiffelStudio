@@ -242,8 +242,7 @@ feature -- Access
 	face_name: STRING is
 			-- Face name of current font
 		do
-			!! Result.make (0)
-			Result.from_c (cwel_log_font_get_facename (item))
+			create Result.make_from_c (cwel_log_font_get_facename (item))
 		ensure
 			result_exists: Result /= Void
 		end

@@ -104,8 +104,7 @@ feature {NONE} -- Implementation
 	class_name: STRING is
 			-- Window class name to create
 		once
-			!! Result.make (0)
-			Result.from_c (cwin_progress_class)
+			create Result.make_from_c (cwin_progress_class)
 		end
 
 	default_style: INTEGER is

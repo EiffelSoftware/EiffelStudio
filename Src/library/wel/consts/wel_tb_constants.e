@@ -121,6 +121,13 @@ feature -- Access
 			"TB_GETBUTTONTEXT"
 		end
 
+	Tb_getbuttonsize: INTEGER is
+		external
+			"C [macro %"cctrl.h%"]"
+		alias
+			"TB_GETBUTTONSIZE"
+		end
+
 	Tb_getitemrect: INTEGER is
 		external
 			"C [macro %"cctrl.h%"]"

@@ -126,12 +126,14 @@ feature
 				ba.append_integer (rout_info.origin.id);
 				ba.append_integer (rout_info.offset);	
 				ba.append_short_integer (real_ty.associated_class_type.type_id - 1);
+				ba.append_short_integer (context.class_type.id.id - 1)
 				real_ty.make_gen_type_byte_code (ba, true)
 				ba.append_short_integer (-1);
 			else
 				ba.append (Bc_array);
 				ba.append_short_integer (real_ty.associated_class_type.id.id - 1);
 				ba.append_short_integer (real_ty.associated_class_type.type_id - 1);
+				ba.append_short_integer (context.current_type.associated_class_type.id.id - 1)
 				real_ty.make_gen_type_byte_code (ba, true)
 				ba.append_short_integer (-1);
 				feat_id := feat_i.feature_id;

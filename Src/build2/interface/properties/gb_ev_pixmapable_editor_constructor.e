@@ -13,7 +13,7 @@ inherit
 			default_create
 		end
 		
-	EIFFEL_ENV
+	GB_EV_PIXMAP_HANDLER
 		undefine
 			default_create
 		end
@@ -115,11 +115,7 @@ feature {NONE} -- Implementation
 						opened_file := True
 					elseif not dialog.file_name.is_empty then
 						create error_dialog
-						if Eiffel_platform.is_equal ("windows") then
-							error_dialog.set_text (Windows_unsupported_pixmap_type)
-						else
-							error_dialog.set_text (Unix_unsupported_pixmap_type)
-						end
+						error_dialog.set_text (invalid_type_warning)
 						error_dialog.show_modal_to_window (parent_window (parent_editor))
 					end
 				end
@@ -136,23 +132,7 @@ feature {NONE} -- Implementation
 				rebuild_associated_editors (first)
 			end	
 		end
-		
-	valid_file_extension (extension: STRING): BOOLEAN is
-			-- Is `extension' a valid file format for
-			-- a pixmap on the current platform?
-		require
-			extension_length_3: extension.count = 3
-		do
-			extension.to_upper
-			if Eiffel_platform.is_equal ("windows") and
-				(extension.is_equal ("BMP") or extension.is_equal ("ICO") or
-				extension.is_equal ("PNG")) then
-				Result := True
-			elseif (extension.is_equal ("PNG") or extension.is_equal ("XPM")) then
-				Result := True
-			end
-		end
-		
+
 	add_pixmap_to_pixmap_container (pixmap: EV_PIXMAP) is
 			-- Add `pixmap' to `pixmap_container'.
 		local

@@ -107,8 +107,6 @@ feature -- Implementation
 			end
 			if description /= Void then
 				value.set_description (description)
-			else
-				value.set_description (name)
 			end
 		end
 

@@ -151,7 +151,7 @@ feature -- Object basket managment
 				partial_system_objects := partial_system_objects + 1
 			end
 		end
-
+	
 feature -- Cecil
 
 	add_cecil_objects is
@@ -163,7 +163,7 @@ feature -- Cecil
 			libname: STRING
 		do
 			!! libname.make (0)
-			libname.append ("lib")
+--			libname.append ("lib")
 			libname.append (system_name)
 			libname.append (".a")
 
@@ -176,19 +176,23 @@ feature -- Cecil
 			make_file.new_line
 			make_file.putstring (libname)
 			make_file.putstring (": ")
-			generate_objects_macros
+--			generate_objects_macros
+--			make_file.putchar (' ')
+--			generate_system_objects_macros
 			make_file.putchar (' ')
-			generate_system_objects_macros
-			make_file.putstring (" Makefile%N%T$(AR) x ")
+			make_file.putstring ("$(OBJECTS) %N")
+--			make_file.putstring (" Makefile%N")
+			make_file.putstring ("%T$(AR) x ")
 			make_file.putstring ("$(EIFLIB)")
 			make_file.new_line
 			make_file.putstring ("%T$(AR) cr ")
 			make_file.putstring (libname)
 			make_file.putchar (' ')
-			generate_objects_macros
-			make_file.putchar (' ')
-			generate_system_objects_macros
-			make_file.putchar (' ')
+--			generate_objects_macros
+--			make_file.putchar (' ')
+--			generate_system_objects_macros
+--			make_file.putchar (' ')
+			make_file.putstring ("$(OBJECTS) ")
 			make_file.putchar (continuation)
 			make_file.new_line
 			generate_other_objects
@@ -198,9 +202,21 @@ feature -- Cecil
 			make_file.putstring (libname)
 			make_file.new_line
 			make_file.putstring ("%T$(RM) $(RCECIL) ")
-			generate_objects_macros
-			make_file.putchar (' ')
-			generate_system_objects_macros
+			make_file.putstring ("$(OBJECTS)")
+			make_file.new_line
+			make_file.new_line
+
+-- SHAREDTARGET
+			make_file.putstring ("SHAREDTARGET= ")
+			make_file.putstring (system_name)
+			make_file.putstring (".so %N")
+			make_file.putstring ("dynamic_cecil: $(SHAREDTARGET) %N")
+			make_file.putstring ("SHAREDOBJECT= $(OBJECTS) $(EXTERNALS) $(EOBJECTS) $(EIFLIB) %"E1/emain.o%" $precompilelibs %N")
+			make_file.putstring ("SHAREDFLAGS= $(LDSHAREDFLAGS) %N");
+			make_file.putstring ("%"$(SHAREDTARGET)%" : $(SHAREDOBJECT) %N")
+			make_file.putstring ("%T$(RM) %"$(SHAREDTARGET)%" %N")
+			make_file.putstring ("%T$(SHAREDLINK) $(SHAREDFLAGS) $(SHAREDOBJECT) $(SHAREDLIB) %N")
+			
 			make_file.new_line
 			make_file.new_line
 		end
@@ -494,6 +510,14 @@ feature -- Generation, Header
 				make_file.putstring (" $ldflags")
 			end
 
+			make_file.new_line
+			make_file.putstring ("LDSHAREDFLAGS = ")
+			if System.has_multithreaded then
+				make_file.putstring (" $mtldsharedflags")
+			else
+				make_file.putstring (" $ldsharedflags")
+			end
+
 			make_file.putstring ("%NEIFLIB = ")
 			make_file.putstring (run_time)
 
@@ -510,7 +534,10 @@ feature -- Generation, Header
 				%MV = $mv%N%
 				%RANLIB = $ranlib%N%
 				%RM = $rm -f%N%
-				%RMDIR = $rmdir%N%N")
+				%RMDIR = $rmdir%N")
+			make_file.putstring ("SHAREDLINK = $sharedlink%N")
+			make_file.putstring ("SHAREDLIB = $sharedlib%N")
+
 			make_file.putstring ("%
 				%!GROK!THIS!%N%
 				%$spitshell >>Makefile <<'!NO!SUBS!'%N")

@@ -41,6 +41,9 @@ feature {NONE} -- Initialization
 			if require_shift then
 				enable_shift_required
 			end
+		ensure
+			control_set_correctly: require_control implies control_required
+			control_set_correctly: not require_control implies not control_required
 		end
 
 feature -- Events

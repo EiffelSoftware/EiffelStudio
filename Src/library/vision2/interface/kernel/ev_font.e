@@ -58,6 +58,11 @@ feature {NONE} -- Initialization
 				a_height,
 				empty_list
 			)
+		ensure
+			a_family_set: family = a_family
+			a_weight_set: weight = a_weight
+			a_shape_set: shape = a_shape
+			a_height_set: height = a_height
 		end
 
 feature -- Access

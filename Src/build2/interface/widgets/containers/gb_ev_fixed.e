@@ -522,12 +522,15 @@ feature {NONE} -- Implementation
 		local
 			second: like ev_type
 		do
-			first.set_item_x_position (widget, x_pos)
-			second := objects @ 2
-			second.set_item_x_position (second @ first.index_of (widget, 1), x_pos)
-			must_update_editors := True
-				-- Update project.
-			enable_project_modified
+				-- Only set position if changed.
+			if first.x_position /= x_pos then
+				first.set_item_x_position (widget, x_pos)
+				second := objects @ 2
+				second.set_item_x_position (second @ first.index_of (widget, 1), x_pos)
+				must_update_editors := True
+					-- Update project.
+				enable_project_modified
+			end
 		end
 		
 	set_y_position (widget: EV_WIDGET; y_pos: INTEGER) is
@@ -535,12 +538,15 @@ feature {NONE} -- Implementation
 		local
 			second: like ev_type
 		do
-			first.set_item_y_position (widget, y_pos)
-			second := objects @ 2
-			second.set_item_y_position (second @ first.index_of (widget, 1), y_pos)
-			must_update_editors := True
-				-- Update project.
-			enable_project_modified
+				-- Only set position if changed.
+			if first.y_position /= y_pos then
+				first.set_item_y_position (widget, y_pos)
+				second := objects @ 2
+				second.set_item_y_position (second @ first.index_of (widget, 1), y_pos)
+				must_update_editors := True
+					-- Update project.
+				enable_project_modified
+			end
 		end
 		
 	set_item_width (widget: EV_WIDGET; new_width: INTEGER) is
@@ -548,12 +554,15 @@ feature {NONE} -- Implementation
 		local
 			second: like ev_type
 		do
-			first.set_item_width (widget, new_width)
-			second := objects @ 2
-			second.set_item_width (second @ first.index_of (widget, 1), new_width)
-			must_update_editors := True
-				-- Update project.
-			enable_project_modified
+				-- Only set width if changed.
+			if widget.width /= new_width then
+				first.set_item_width (widget, new_width)
+				second := objects @ 2
+				second.set_item_width (second @ first.index_of (widget, 1), new_width)
+				must_update_editors := True
+					-- Update project.
+				enable_project_modified
+			end
 		end
 		
 	set_item_height (widget: EV_WIDGET; new_height: INTEGER) is
@@ -561,12 +570,15 @@ feature {NONE} -- Implementation
 		local
 			second: like ev_type
 		do
-			first.set_item_height (widget, new_height)
-			second := objects @ 2
-			second.set_item_height (second @ first.index_of (widget, 1), new_height)
-			must_update_editors := True
-				-- Update project.
-			enable_project_modified
+				-- Only set if height changed.
+			if widget.height /= new_height then
+				first.set_item_height (widget, new_height)
+				second := objects @ 2
+				second.set_item_height (second @ first.index_of (widget, 1), new_height)
+				must_update_editors := True
+					-- Update project.
+				enable_project_modified
+			end
 		end	
 		
 

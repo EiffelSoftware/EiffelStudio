@@ -76,10 +76,10 @@ feature -- Standard Interface
 			
 			build_text_windows;
 			build_menus;
-			!! edit_bar.make (l_Command_bar_name, toolbar_parent);
-			!! sep.make ("", toolbar_parent);
+			!! edit_bar.make (Interface_names.t_Empty, toolbar_parent);
+			!! sep.make (Interface_names.t_Empty, toolbar_parent);
 			build_bar;
-			!! format_bar.make (l_Format_bar_name, toolbar_parent);
+			!! format_bar.make (Interface_names.t_Empty, toolbar_parent);
 			build_format_bar;
 			build_toolbar_menu;
 			set_last_format (default_format);
@@ -92,7 +92,7 @@ feature -- Standard Interface
 			sep: SEPARATOR;
 			toolbar_t: TOGGLE_B
 		do
-			!! sep.make ("", special_menu);
+			!! sep.make (Interface_names.t_Empty, special_menu);
 			!! toolbar_t.make (edit_bar.identifier, special_menu);
 			edit_bar.init_toggle (toolbar_t);
 			!! toolbar_t.make (format_bar.identifier, special_menu);
@@ -103,12 +103,12 @@ feature -- Standard Interface
 			-- Create the menus.
 		do
 			!! menu_bar.make (new_name, global_form);
-			!! file_menu.make ("File", menu_bar);
-			!! edit_menu.make ("Edit", menu_bar);
-			!! format_menu.make ("Formats", menu_bar);
-			!! special_menu.make ("Special", menu_bar);
-			!! window_menu.make ("Windows", menu_bar);
-			!! help_menu.make ("Help", menu_bar);
+			!! file_menu.make (Interface_names.m_File, menu_bar);
+			!! edit_menu.make (Interface_names.m_Edit, menu_bar);
+			!! format_menu.make (Interface_names.m_Formats, menu_bar);
+			!! special_menu.make (Interface_names.m_Special, menu_bar);
+			!! window_menu.make (Interface_names.m_Windows, menu_bar);
+			!! help_menu.make (Interface_names.m_Help, menu_bar);
 			menu_bar.set_help_button (help_menu.menu_button)
 		end;
 

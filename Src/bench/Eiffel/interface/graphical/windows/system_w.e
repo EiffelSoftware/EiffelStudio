@@ -335,10 +335,10 @@ feature {NONE} -- Implementation; Graphical Interface
 
 			build_text_windows;
 			build_menus;
-			!! edit_bar.make (l_Command_bar_name, toolbar_parent);
-			!! sep.make ("", toolbar_parent);
+			!! edit_bar.make (Interface_names.t_Empty, toolbar_parent);
+			!! sep.make (Interface_names.t_Empty, toolbar_parent);
 			build_bar;
-			!! format_bar.make (l_Format_bar_name, toolbar_parent);
+			!! format_bar.make (Interface_names.t_Empty, toolbar_parent);
 			build_format_bar;
 			build_command_menu;
 			fill_menus;
@@ -443,7 +443,7 @@ feature {WINDOWS} -- Attributes
 	tool_name: STRING is
 			-- Name of the tool representwed by Current.
 		do
-			Result := l_System
+			Result := Interface_names.t_System
 		end;
 
 feature {NONE} -- Attributes

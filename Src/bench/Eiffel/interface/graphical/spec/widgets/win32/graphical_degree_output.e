@@ -49,9 +49,9 @@ feature -- Start output
 			current_degree := 6;
 
 			degree_text.set_width (saved_width);
-			degree_text.set_text (l_Degree);
-			entity_text.set_text (l_Compilation_cluster);
-			nbr_to_go_text.set_text (l_Clusters_to_go);
+			degree_text.set_text (Interface_names.d_Degree);
+			entity_text.set_text (Interface_names.d_Compilation_cluster);
+			nbr_to_go_text.set_text (Interface_names.d_Clusters_to_go);
 			current_degree_text.set_text (current_degree.out);
 			current_entity_text.set_text (Empty_string);
 			current_nbr_to_go_text.set_text (total_nbr.out);
@@ -59,7 +59,7 @@ feature -- Start output
 
 			i_name := clone (icon_name);
 			i_name.extend (' ');
-			i_name.append (l_Degree);
+			i_name.append (Interface_names.d_Degree);
 			i_name.append (current_degree.out);
 			Project_tool.set_icon_name (i_name);
 
@@ -77,10 +77,10 @@ feature -- Start output
 			processed := 0;
 
 			degree_text.set_width (saved_width);
-			degree_text.set_text (l_Degree);
+			degree_text.set_text (Interface_names.d_Degree);
 
-			entity_text.set_text (l_Compilation_class);
-			nbr_to_go_text.set_text (l_Classes_to_go);
+			entity_text.set_text (Interface_names.d_Compilation_class);
+			nbr_to_go_text.set_text (Interface_names.d_Classes_to_go);
 
 			current_nbr_to_go_text.set_text (total_nbr.out);
 			current_degree_text.set_text (degree_nbr.out);
@@ -90,7 +90,7 @@ feature -- Start output
 			progress_bar.set_position (0);
 			i_name := clone (icon_name);
 			i_name.extend (' ');
-			i_name.append (l_Degree);
+			i_name.append (Interface_names.d_Degree);
 			i_name.append (current_degree.out);
 			Project_tool.set_icon_name (i_name);
 
@@ -122,7 +122,7 @@ feature -- Start output
 		do
 			set_project_icon_name (removing_dead_code_message);
 			put_non_degree_message (removing_dead_code_message);
-			nbr_to_go_text.set_text (l_features_processed);
+			nbr_to_go_text.set_text (Interface_names.d_Features_processed);
 
 			process_messages
 		end
@@ -130,14 +130,14 @@ feature -- Start output
 	put_start_reverse_engineering (total_num: INTEGER) is
 			-- Initialize the reverse engineering part.
 		do
-			set_text (l_Reverse_engineering);
+			set_text (Interface_names.d_Reverse_engineering);
 			icon_name := Project_tool.icon_name;
 			total_number := total_num;
 			processed := 0;
 
-			degree_text.set_text (l_Compilation_cluster);
-			entity_text.set_text (l_Compilation_class);
-			nbr_to_go_text.set_text (l_Classes_to_go);
+			degree_text.set_text (Interface_names.d_Compilation_cluster);
+			entity_text.set_text (Interface_names.d_Compilation_class);
+			nbr_to_go_text.set_text (Interface_names.d_Classes_to_go);
 			current_nbr_to_go_text.set_text (total_num.out);
 			current_entity_text.set_text (Empty_string)
 
@@ -169,7 +169,7 @@ feature -- Start output
 			-- Put a message to indicate that the
 			-- breakpoints are being resynchronized.
 		do
-			put_non_degree_message (l_Resynchronizing_breakpoints)
+			put_non_degree_message (Interface_names.d_Resynchronizing_breakpoints)
 		end
 
 feature -- End output

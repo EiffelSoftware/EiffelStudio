@@ -11,7 +11,8 @@ inherit
 
 	DEFAULT_HOLE_COMMAND
 		redefine
-			symbol, full_symbol, icon_symbol, name, stone_type
+			symbol, full_symbol, icon_symbol, name, 
+			stone_type, menu_name, accelerator
 		end
 
 creation
@@ -23,24 +24,35 @@ feature -- Properties
 	symbol: PIXMAP is
 			-- Icon for the object tool
 		once
-			Result := bm_Object
+			Result := Pixmaps.bm_Object
 		end;
 
 	full_symbol: PIXMAP is
 			-- Icon for the class tool
 		once
-			Result := bm_Object_dot
+			Result := Pixmaps.bm_Object_dot
 		end;
 
 	icon_symbol: PIXMAP is
 			-- Icon for the object tool
 		once
-			Result := bm_Object_icon
+			Result := Pixmaps.bm_Object_icon
 		end;
 
 	name: STRING is
 		do
-			Result := l_New_object
+			Result := Interface_names.f_New_object
+		end;
+
+	menu_name: STRING is
+			-- Name used in menu entry
+		do
+			Result := Interface_names.m_New_object
+		end;
+
+	accelerator: STRING is
+			-- Accelerator action for menu entry
+		do
 		end;
 
     stone_type: INTEGER is

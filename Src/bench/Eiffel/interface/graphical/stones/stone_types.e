@@ -7,7 +7,7 @@ indexing
 
 class STONE_TYPES
 
-feature
+feature -- Access
 
 	Any_type: INTEGER is 1;
 	System_type: INTEGER is 2;

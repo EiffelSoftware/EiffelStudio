@@ -13,16 +13,16 @@ inherit
 		rename
 			make as form_d_make
 		end;
-	TOOL_COMMAND
-		redefine
-			tool
-		end;
+	INTERFACE_W;
+	EB_CONSTANTS;
+	COMMAND;
 	WARNER_CALLBACKS
 		rename
 			execute_warner_help as choose_different_name,
 			execute_warner_ok as keep_name
 		end;
 	SHARED_EIFFEL_PROJECT;
+	WINDOWS;
 	EIFFEL_ENV;
 	WINDOW_ATTRIBUTES
 
@@ -34,21 +34,21 @@ feature -- Initialization
 
 	make (a_tool: CLASS_W) is
 		do
-			init (a_tool);
-			form_d_make (name, a_tool.popup_parent);
-			set_title (name);
-			!! class_l.make ("", Current);
-			!! cluster_form.make ("", Current);
-			!! cluster_name.make ("", cluster_form);
-			!! cluster_list.make ("", cluster_form);
-			!! file_form.make ("", Current);
-			!! file_label.make ("", file_form);
-			!! file_entry.make ("", file_form);
-			!! form.make ("", Current);
-			!! separator.make ("", Current);
+			tool := a_tool;
+			form_d_make (Interface_names.t_Empty, a_tool.popup_parent);
+			set_title (Interface_names.t_New_class);
+			!! class_l.make (Interface_names.t_Empty, Current);
+			!! cluster_form.make (Interface_names.t_Empty, Current);
+			!! cluster_name.make (Interface_names.t_Empty, cluster_form);
+			!! cluster_list.make (Interface_names.t_Empty, cluster_form);
+			!! file_form.make (Interface_names.t_Empty, Current);
+			!! file_label.make (Interface_names.t_Empty, file_form);
+			!! file_entry.make (Interface_names.t_Empty, file_form);
+			!! form.make (Interface_names.t_Empty, Current);
+			!! separator.make (Interface_names.t_Empty, Current);
 			form.set_fraction_base (2);
-			!! create_b.make ("Create", form);
-			!! cancel_b.make (l_Cancel, form);
+			!! create_b.make (Interface_names.b_Create, form);
+			!! cancel_b.make (Interface_names.b_Cancel, form);
 			cluster_form.attach_top (cluster_list, 0);
 			cluster_form.attach_left (cluster_name, 0);
 			cluster_form.attach_right (cluster_list, 0);
@@ -80,18 +80,14 @@ feature -- Initialization
 			attach_left (form, 5);
 			attach_right (form, 5);
 			attach_bottom (form, 5);
-			cluster_name.set_text ("Cluster: ");
-			file_label.set_text ("File name: ");
+			cluster_name.set_text (Interface_names.l_Cluster);
+			file_label.set_text (Interface_names.l_File_name);
 			file_entry.add_activate_action (Current, create);
 			cancel_b.add_activate_action (Current, cancel);
 			create_b.add_activate_action (Current, create);
 			set_composite_attributes (Current);
 			set_exclusive_grab
 		end;
-
-feature -- Access
-	
-	name: STRING is "New class"
 
 feature -- Callbacks
 
@@ -210,7 +206,7 @@ feature -- Access
 			clu := Eiffel_universe.cluster_of_name (clun);
 			if clu = Void then
 				aok := False;
-				warner (popup_parent).gotcha_call (w_Invalid_cluster_name)
+				warner (tool.popup_parent).gotcha_call (Warning_messages.w_Invalid_cluster_name)
 			else
 				aok := True;
 				cluster := clu
@@ -219,7 +215,7 @@ feature -- Access
 
 feature -- Execution
 
-	work (argument: ANY) is
+	execute (argument: ANY) is
 		local
 			f_name: FILE_NAME;
 			file: PLAIN_TEXT_FILE;
@@ -238,11 +234,11 @@ feature -- Execution
 					class_i.set_file_details (class_name, base_name);
 					if cluster.has_base_name (base_name) then
 						warner (tool.popup_parent).gotcha_call 
-							(w_Class_already_in_cluster (base_name));
+							(Warning_messages.w_Class_already_in_cluster (base_name));
 					elseif
 						(not file.exists and then not file.is_creatable)
 					then
-						warner (popup_parent).gotcha_call (w_Cannot_create_file (f_name))
+						warner (tool.popup_parent).gotcha_call (Warning_messages.w_Cannot_create_file (f_name))
 					else 
 						!! stone.make (class_i);
 						if not file.exists then
@@ -254,14 +250,14 @@ feature -- Execution
 						then
 							unrealize;
 							popdown;
-							warner (popup_parent).gotcha_call (w_Cannot_read_file (f_name))
+							warner (tool.popup_parent).gotcha_call (Warning_messages.w_Cannot_read_file (f_name))
 						else
 								--| Reading in existing file (created outside
 								--| ebench). Ask for confirmation
 							unrealize;
 							popdown;
-							warner (popup_parent).custom_call
-								(Current, w_File_exists_edit_it (f_name),
+							warner (tool.popup_parent).custom_call
+								(Current, Warning_messages.w_File_exists_edit_it (f_name),
 								" Edit ", "Select another file", Void)
 						end;
 					end;

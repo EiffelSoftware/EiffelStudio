@@ -9,16 +9,15 @@ class ROUTINE_CLASS_TEXT_FIELD
 
 inherit
 
-	TOOL_COMMAND
-		redefine
-			tool, execute
-		end
+	INTERFACE_W;
+	WINDOWS;
+	EB_CONSTANTS;
+	COMMAND;
 	TEXT_FIELD
 		rename
 			make as text_field_make
 		end;
-	SHARED_EIFFEL_PROJECT;
-	NAMER
+	SHARED_EIFFEL_PROJECT
 
 creation
 
@@ -30,9 +29,9 @@ feature -- Initialization
 			-- Initialize the text field "Class_name".
 			-- Set up the activate actions.
 		do
-			text_field_make (name, a_parent);
+			text_field_make ("", a_parent);
 			add_activate_action (Current, Void);
-			init (a_tool)
+			tool := a_tool
 		end;
 
 feature -- Updating
@@ -67,8 +66,6 @@ feature -- Properties
 
 	tool: ROUTINE_W;
 			-- Tool of the routine.
-
-	name: STRING is "change routine";
 
 feature -- Closure
 
@@ -126,7 +123,7 @@ feature {ROUTINE_TEXT_FIELD} -- Implementation
 					cname.left_adjust;
 					cname.right_adjust;
 					if cname.empty then
-						warner (popup_parent).gotcha_call (w_Specify_a_class)
+						warner (tool.popup_parent).gotcha_call (Warning_messages.w_Specify_a_class)
 					else
 						cname.to_lower;
 						!! pattern.make (0);
@@ -139,7 +136,8 @@ feature {ROUTINE_TEXT_FIELD} -- Implementation
 								mp.restore;
 								if class_list.empty then
 									class_list := Void;
-									warner (popup_parent).gotcha_call (w_Cannot_find_class (cname))
+									warner (tool.popup_parent).gotcha_call
+										(Warning_messages.w_Cannot_find_class (cname))
 								elseif class_list.count = 1 then
 									class_i := class_list.first;
 									class_list := Void
@@ -160,11 +158,13 @@ feature {ROUTINE_TEXT_FIELD} -- Implementation
 								cluster := Eiffel_universe.cluster_of_name (cluster_name);
 								mp.restore;
 								if cluster = Void then
-									warner (popup_parent).gotcha_call (w_Cannot_find_cluster (cluster_name))
+									warner (tool.popup_parent).gotcha_call 
+										(Warning_messages.w_Cannot_find_cluster (cluster_name))
 								else
 									class_i := cluster.classes.item (cname)
 									if class_i = Void then
-										warner (popup_parent).gotcha_call (w_Cannot_find_class (cname))
+										warner (tool.popup_parent).gotcha_call 
+											(Warning_messages.w_Cannot_find_class (cname))
 									end
 								end
 							end
@@ -212,11 +212,6 @@ feature {ROUTINE_TEXT_FIELD} -- Implementation
 		end;
 
 feature {NONE} -- Implementation
-
-	work (arg: ANY) is
-			-- Work that is to be done for the command.
-		do
-		end;
 
 	display_choice is
 				-- Display class names from `class_list' to `choice'.

@@ -11,9 +11,9 @@ deferred class TOOL_W
 inherit
 
 	NAMER;
-	SHARED_PIXMAPS;
 	WINDOWS;
 	INTERFACE_W;
+	EB_CONSTANTS;
 	HOLE
 		export
 			{ANY} receive
@@ -635,7 +635,7 @@ feature {PROJECT_W} -- Implementation
 			!! paste_cmd.make_paste (Current);
 			!! paste_button.make (paste_cmd, edit_menu);
 
-			!! sep.make ("", edit_menu);
+			!! sep.make (Interface_names.t_Empty, edit_menu);
 
             !! search_cmd.make (Current);
             !! search_button.make (search_cmd, search_button_parent);

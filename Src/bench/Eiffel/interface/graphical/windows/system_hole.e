@@ -12,7 +12,8 @@ inherit
 	PROJECT_CONTEXT;
 	DEFAULT_HOLE_COMMAND
 		redefine
-			work, symbol, full_symbol, name, stone_type
+			work, symbol, full_symbol, name, stone_type,
+			menu_name, accelerator
 		end
 	WARNER_CALLBACKS
 		rename
@@ -37,6 +38,7 @@ feature -- Callbacks
 			chooser: NAME_CHOOSER_W
 		do
 			chooser := name_chooser (popup_parent);
+			chooser.set_open_file;
 			chooser.call (Current);
 		end;
 
@@ -45,18 +47,29 @@ feature -- Properties
 	symbol: PIXMAP is
 			-- Icon for the system tool.
 		once
-			Result := bm_System
+			Result := Pixmaps.bm_System
 		end;
 
 	full_symbol: PIXMAP is
 			-- Icon for the system tool
 		once
-			Result := bm_System_dot
+			Result := Pixmaps.bm_System_dot
 		end;
 
 	name: STRING is
 		do
-			Result := l_System
+			Result := Interface_names.f_System
+		end;
+
+	menu_name: STRING is
+			-- Name used in menu entry
+		do
+			Result := Interface_names.m_System
+		end;
+
+	accelerator: STRING is
+			-- Accelerator action for menu entry
+		do
 		end;
 
     stone_type: INTEGER is
@@ -93,22 +106,22 @@ feature {NONE} -- Execution
 								work (Current);
 							elseif f.exists and then not f.is_plain then
 								warner (project_tool.popup_parent).custom_call 
-									(Current, w_Not_a_file_retry (fn), 
-									l_Ok, Void, l_Cancel)
+									(Current, Warning_messages.w_Not_a_file_retry (fn), 
+									Interface_names.b_Ok, Void, Interface_names.b_Cancel)
 							else
 								warner (project_tool.popup_parent).custom_call 
-									(Current, w_Cannot_read_file_retry (fn), 
-									l_Ok, Void, l_Cancel)
+									(Current, Warning_messages.w_Cannot_read_file_retry (fn), 
+									Interface_names.b_Ok, Void, Interface_names.b_Cancel)
 							end
 						else
 							warner (project_tool.popup_parent).custom_call 
-								(Current, w_Not_a_file_retry (fn), 
-								l_Ok, Void, l_Cancel)
+								(Current, Warning_messages.w_Not_a_file_retry (fn), 
+								Interface_names.b_Ok, Void, Interface_names.b_Cancel)
 						end
 					else
 						warner (project_tool.popup_parent).custom_call 
-							(Current, l_Specify_ace, l_Browse, 
-							l_Build, l_Cancel);
+							(Current, Interface_names.t_Specify_ace, Interface_names.b_Browse, 
+							Interface_names.b_Build, Interface_names.b_Cancel);
 					end;	
 				else
 					!! system_stone;

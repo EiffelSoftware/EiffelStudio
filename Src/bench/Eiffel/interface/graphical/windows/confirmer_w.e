@@ -36,8 +36,8 @@ feature -- Initialization
 	make (a_composite: COMPOSITE) is
 			-- Create a confirmer window.
 		do
-			question_create (l_Confirm, a_composite);
-			set_title (l_Confirm);
+			question_create (Interface_names.n_X_resource_name, a_composite);
+			set_title (Interface_names.t_Confirm);
 			hide_help_button;
 			add_ok_action (Current, Current);
 			add_cancel_action (Current, Void);

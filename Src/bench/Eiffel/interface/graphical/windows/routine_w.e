@@ -500,10 +500,10 @@ feature -- Graphical Interface
 
 			create_toolbar_parent (global_form);
 
-			!! edit_bar.make (l_Command_bar_name, toolbar_parent);
+			!! edit_bar.make (Interface_names.t_Empty, toolbar_parent);
 			build_bar;
-			!! sep.make ("", toolbar_parent);
-			!! format_bar.make (l_Format_bar_name, toolbar_parent);
+			!! sep.make (Interface_names.t_Empty, toolbar_parent);
+			!! format_bar.make (Interface_names.t_Empty, toolbar_parent);
 			build_format_bar;
 			build_command_bar;
 			if create_menus then
@@ -808,7 +808,7 @@ feature {NONE} -- Implementation; Graphical Interface
 			!! stop_hole_holder.make_plain (stop_hole);
 			stop_hole_holder.set_button (stop_hole_button);
 			!! routine_text_field.make (edit_bar, Current);
-			!! label.make ("", edit_bar);
+			!! label.make (Interface_names.t_Empty, edit_bar);
 			!! class_text_field.make (edit_bar, Current);
 			!! quit_cmd.make (Current);
 			!! quit_button.make (quit_cmd, edit_bar);
@@ -877,7 +877,7 @@ feature {TEXT_WINDOW} -- Properties
 
 	tool_name: STRING is
 		do
-			Result := l_Empty_routine
+			Result := Interface_names.t_Empty_routine
 		end;
 
 end -- class ROUTINE_W

@@ -34,14 +34,14 @@ feature -- Access
 			-- Cursor associated with Current stone during transport
 			-- when widget at cursor position is compatible with Current stone
 		do
-			Result := cur_Setstop
+			Result := Cursors.cur_Setstop
 		end;
 
 	x_stone_cursor: SCREEN_CURSOR is
 			-- Cursor associated with Current stone during transport
 			-- when widget at cursor position is not compatible with Current stone
 		do
-			Result := cur_X_setstop
+			Result := Cursors.cur_X_setstop
 		end;
 
 	stone_type: INTEGER is 

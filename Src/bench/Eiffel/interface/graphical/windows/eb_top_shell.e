@@ -22,6 +22,7 @@ inherit
 			implementation
 		end;
 	WINDOWS;
+	EB_CONSTANTS;
 	INTERFACE_W
 
 creation
@@ -34,7 +35,7 @@ feature -- Initialization
 		require
 			valid_screen: a_screen /= Void
 		do
-			old_make (l_X_resourse_name, a_screen);
+			old_make (Interface_names.n_X_resource_name, a_screen);
 			!! associated_form.make ("", Current);
 		ensure
 			screen_set: equal (screen, a_screen)

@@ -1,0 +1,24 @@
+system
+	example2
+
+root
+	APPLICATION (src): "make"
+
+default
+	assertion (all)
+	console_application (yes)
+
+cluster
+	src:	        "..\src"
+
+	-- ECLOP
+	all eclop:      "..\..\..\eclop"
+
+	-- EiffelBase
+	all base:	"$ISE_EIFFEL\library\base"
+		exclude
+			"desc" "table_eiffel3"
+		end
+
+end
+

@@ -176,19 +176,35 @@ feature -- Properties
 				end
 			end
 		end
+
+feature -- Properties .NET
 		
 	flatshort_dotnet_text (a_consumed: CONSUMED_TYPE; a_classi: CLASS_I): STRUCTURED_TEXT is
 			-- Format .NET consumed type, flat short.
 		require
 			a_consumed_void: a_consumed /= Void
 		local
+			an_item_and_table: CELL2 [HASHABLE, 
+							HASH_TABLE [STRUCTURED_TEXT, HASHABLE]]
 			dntxt: DOTNET_TEXT_FORMATTER
 		do
-			create dntxt
-			dntxt.set_is_flat_short
-			dntxt.format (a_consumed, a_classi)
-			if not dntxt.error then
-				Result := dntxt.text
+			if flatshort_dotnet_table.has (a_classi.name) then
+				create an_item_and_table.make (a_classi.name, flatshort_dotnet_table)
+				Result := flatshort_dotnet_table.found_item
+				history_list.start
+				history_list.search (an_item_and_table)
+				if not history_list.exhausted then
+					history_list.remove
+				end
+				history_list.extend (an_item_and_table)
+			else
+				create dntxt
+				dntxt.set_is_flat_short
+				dntxt.format (a_consumed, a_classi)
+				if not dntxt.error then
+					Result := dntxt.text
+					record_in_history (a_classi.name, flatshort_dotnet_table, Result)
+				end
 			end
 		end
 		
@@ -198,12 +214,26 @@ feature -- Properties
 			a_consumed_void: a_consumed /= Void
 			a_classi_not_void: a_classi /= Void
 		local
+			an_item_and_table: CELL2 [HASHABLE, 
+							HASH_TABLE [STRUCTURED_TEXT, HASHABLE]]
 			dntxt: DOTNET_TEXT_FORMATTER
 		do
-			create dntxt
-			dntxt.format (a_consumed, a_classi)
-			if not dntxt.error then
-				Result := dntxt.text
+			if short_dotnet_table.has (a_classi.name) then
+				create an_item_and_table.make (a_classi.name, short_dotnet_table)
+				Result := short_dotnet_table.found_item
+				history_list.start
+				history_list.search (an_item_and_table)
+				if not history_list.exhausted then
+					history_list.remove
+				end
+				history_list.extend (an_item_and_table)
+			else
+				create dntxt
+				dntxt.format (a_consumed, a_classi)
+				if not dntxt.error then
+					Result := dntxt.text
+					record_in_history (a_classi.name, short_dotnet_table, Result)
+				end
 			end
 		end
 		
@@ -317,6 +347,26 @@ feature {NONE} -- Attributes
 			Result.compare_objects
 		end		
 
+feature {NONE} -- Attributes .NET
+
+	flatshort_dotnet_table: HASH_TABLE [STRUCTURED_TEXT, STRING] is
+			-- Table of last .NET flat short formats.
+		once
+			create Result.make (History_size)
+		end
+		
+	short_dotnet_table: HASH_TABLE [STRUCTURED_TEXT, STRING] is
+			-- Table of last .NET short formats.
+		once
+			create Result.make (History_size)
+		end
+		
+	rout_flat_dotnet_table: HASH_TABLE [STRUCTURED_TEXT, E_FEATURE] is
+			-- Table of last .NET flat routine formats.
+		once
+			create Result.make (History_size)
+		end
+	
 feature {NONE} -- Implementation
 
 	record_in_history (an_item: HASHABLE;

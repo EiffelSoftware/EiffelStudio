@@ -5,8 +5,8 @@
 //
 //  File:		ecom_runtime_ce_arrays.c
 //
-//  Contents:	Runtime conversion functions from C to Eiffel 
-//				
+//  Contents:	Runtime conversion functions from C to Eiffel
+//
 //--------------------------------------------------------------------------
 
 #include "ecom_runtime_c_e.h"
@@ -17,13 +17,13 @@ EIF_OBJECT ecom_runtime_ce::ccom_create_array (char * element_name, EIF_INTEGER 
 
 // Create `dim_count' dimmensional array
 {
-	EIF_OBJECT eif_lower_indeces, eif_element_count, result;
-	EIF_TYPE_ID type_id, int_array_id;
-	EIF_PROCEDURE make, put;
-	char * array_name;
-	int i, element_name_lenth;
-	EIF_INTEGER * lower_indeces;
-	
+	EIF_OBJECT eif_lower_indeces = 0, eif_element_count = 0, result = 0;
+	EIF_TYPE_ID type_id = -1, int_array_id = -1;
+	EIF_PROCEDURE make = 0, put = 0;
+	char * array_name = 0;
+	int i = 0, element_name_lenth = 0;
+	EIF_INTEGER * lower_indeces = 0;
+
 	if (dim_count <= 0)
 	{
 		result = NULL;
@@ -41,7 +41,7 @@ EIF_OBJECT ecom_runtime_ce::ccom_create_array (char * element_name, EIF_INTEGER 
 		make = eif_procedure ("make", type_id);
 		result = eif_create (type_id);
 		make (eif_access (result), 1, *element_count);
-	}	
+	}
 	else
 	{
 		// Create array of lower indeces
@@ -49,20 +49,20 @@ EIF_OBJECT ecom_runtime_ce::ccom_create_array (char * element_name, EIF_INTEGER 
 		make = eif_procedure ("make", int_array_id);
 		eif_lower_indeces = eif_create (int_array_id);
 		make (eif_access (eif_lower_indeces), 1, dim_count);
-		
+
 		lower_indeces = (EIF_INTEGER *) calloc (dim_count, sizeof (EIF_INTEGER));
 		for ( i = 0; i < dim_count; i++)
 			lower_indeces [i] = 1;
-		
+
 		eif_make_from_c (eif_access (eif_lower_indeces), lower_indeces, dim_count, EIF_INTEGER);
 		free (lower_indeces);
-		
+
 		// Create array of element counts
 		eif_element_count = eif_create (int_array_id);
 		make (eif_access (eif_element_count), 1, dim_count);
-		
+
 		eif_make_from_c (eif_access (eif_element_count), element_count, dim_count, EIF_INTEGER);
-		
+
 		// Create array
 		element_name_lenth = strlen (element_name);
 		array_name = (char *)malloc (14 + element_name_lenth);
@@ -85,9 +85,9 @@ int ecom_runtime_ce::ccom_flat_index (int dim_count, int * element_count, int * 
 // In assumption that multidimmensional array is contiguous
 // calculate flattened index from arrayed_index
 {
-	int result, inter_dim;
-	int i, j;
-			
+	int result = 0, inter_dim = 0;
+	int i = 0, j = 0;
+
 	result = 0;
 	for (i = 0; i < dim_count; i++)
 	{
@@ -108,10 +108,10 @@ int ecom_runtime_ce::ccom_next_index (int dim_count, int * element_count, int * 
 // Returns 0 if ther is no next index, i.e. array is traversed.
 // Otherwise returns 1.
 {
-	int result, i;
+	int result = 0, i = 0;
 	result = 0;
 	i = dim_count - 1;
-			
+
 	while ((result == 0) && (i >= 0))
 	{
 		if (index[i] < element_count[i] - 1)
@@ -133,8 +133,8 @@ int ecom_runtime_ce::ccom_element_number (EIF_INTEGER dim_count, EIF_INTEGER * e
 
 // Calculate total number of elements in array
 {
-	int result, i;
-	
+	int result = 0, i = 0;
+
 	result = 1;
 	for (i = 0; i < dim_count; i++)
 	{
@@ -144,17 +144,17 @@ int ecom_runtime_ce::ccom_element_number (EIF_INTEGER dim_count, EIF_INTEGER * e
 };
 //-----------------------------------------------------------------------------
 
-int ecom_runtime_ce::ccom_safearray_next_index (EIF_INTEGER dim_count, 
+int ecom_runtime_ce::ccom_safearray_next_index (EIF_INTEGER dim_count,
 			EIF_INTEGER * lower_indeces, EIF_INTEGER * upper_indeces, EIF_INTEGER * index)
 
 // Generate next index
 // Returns 0 if ther is no next index, i.e. array is traversed.
 // Otherwise returns 1.
 {
-	int result, i;
+	int result = 0, i = 0;
 	result = 0;
 	i = dim_count - 1;
-			
+
 	while ((result == 0) && (i >= 0))
 	{
 		if (index[i] < upper_indeces[i])
@@ -181,12 +181,12 @@ int ecom_runtime_ce::ccom_safearray_next_index (EIF_INTEGER dim_count,
 
 //--------------------------------------------------------------------------
 
-	
-	
+
+
 //--------------------------------------------------------------------------
-	
-	
-	
+
+
+
 //--------------------------------------------------------------------------
 
 

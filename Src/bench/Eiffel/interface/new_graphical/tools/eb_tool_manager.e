@@ -9,11 +9,14 @@ deferred class
 
 inherit
 	EB_WINDOW
+		rename
+			destroy_recyclable_items as recycle
 		redefine
 			make,
 			build_menus,
 			build_menu_bar,
-			destroy_imp
+			destroy_imp,
+			recycle
 		end
 
 	EB_EXPLORER_BAR_MANAGER
@@ -29,7 +32,7 @@ inherit
 	EB_HISTORY_OWNER
 		undefine
 			default_create
-		select
+		redefine
 			recycle
 		end
 
@@ -341,11 +344,12 @@ feature -- Memory management
 --			favorites_menu.recycle
 			general_customizable_toolbar.recycle
 				-- Recycle the history manager.
-			recycle
+				-- This is called polymorphically by EV_WINDOW.
+--			recycle
 --			history_manager.recycle
+			Precursor {EB_WINDOW}
 			toolbars_area.destroy
 			view_menu.destroy
-			Precursor {EB_WINDOW}
 			panel.destroy
 			container.destroy
 		end
@@ -611,6 +615,13 @@ feature {NONE} -- Initialization flags
 
 	tools_initialized: BOOLEAN
 			-- Are the tools initialized?
+
+	recycle is
+			-- Destroy `Current'.
+		do
+			Precursor {EB_HISTORY_OWNER}
+			Precursor {EB_WINDOW}
+		end
 
 feature {NONE} -- Constants
 

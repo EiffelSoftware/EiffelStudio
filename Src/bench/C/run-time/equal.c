@@ -407,6 +407,7 @@ register2 char *source;
 
 	register3 long count;				/* Reference number */
 	register4 char *s_ref;
+	register5 char *t_ref;
 
 	/* Evaluation of the number of references: and iteration on it */
 	for (
@@ -417,10 +418,18 @@ register2 char *source;
 			target = (char *) ((char **) target + 1)
 	)  {
 		s_ref = *(char **)source;
+		t_ref = *(char **)target;
 		/* One test an a de-reference is only useful since the source and
 		 * the target are isomorhic
 		 */
-		if (!(s_ref == 0 || rdeepiso(*(char **)target, s_ref)))
+		if (s_ref == 0)
+			if (t_ref == 0)
+				continue;
+			else
+				return FALSE;
+		else if (t_ref == 0)
+			return FALSE;
+		else if (!(rdeepiso(*(char **)target, s_ref)))
 			return FALSE;
 	}
 	return TRUE;

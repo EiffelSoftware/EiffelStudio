@@ -93,6 +93,8 @@ feature -- Status setting
 			transfer_initiated := False
 			is_packet_pending := False
 			content_length := 0
+		rescue
+			error_code := Connection_refused
 		end
 
 	close is
@@ -103,6 +105,8 @@ feature -- Status setting
 			main_socket := Void
 			last_packet := Void
 			is_packet_pending := False
+		rescue
+			error_code := Transmission_error
 		end
 	
 	initiate_transfer is

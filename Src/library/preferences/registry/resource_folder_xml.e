@@ -33,7 +33,6 @@ feature -- Update
 			parser: XM_EIFFEL_PARSER
 			error_message: STRING
 			l_file: KL_BINARY_INPUT_FILE
-			s: STRING
 			l_tree_pipe: XM_TREE_CALLBACKS_PIPE
 			l_concat_filter: XM_CONTENT_CONCATENATOR
 		do

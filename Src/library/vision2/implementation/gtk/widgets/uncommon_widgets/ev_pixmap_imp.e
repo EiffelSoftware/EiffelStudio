@@ -118,12 +118,6 @@ feature -- Element change
 			end
 		end	
 
-feature -- Assertion
-
-	is_locked: BOOLEAN
-			-- Is the pixmap free and then can be added in a
-			-- control?
-
 feature {NONE} -- Implementation
 
 	parent_widget: POINTER

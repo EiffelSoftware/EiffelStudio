@@ -205,7 +205,7 @@ feature -- Status setting
 			end
 			lock_level := lock_level + 1
 		ensure
-			lock_level_incremented: lock_level = old lock_level - 1
+			lock_level_incremented: lock_level = old lock_level + 1
 		end
 
 	unlock_update is

@@ -78,6 +78,7 @@ feature {GB_OBJECT_HANDLER} -- Initialization
 			create constants.make (0)
 			create edited_name.make (0)
 			expanded_in_box := True
+			create children.make (0)
 		ensure
 			type_assigned: type = a_type
 		end
@@ -96,6 +97,7 @@ feature {GB_OBJECT_HANDLER} -- Initialization
 			create events.make (0)
 			create constants.make (0)
 			create edited_name.make (0)
+			create children.make (0)
 			expanded_in_box := True
 			id := new_id
 		ensure
@@ -149,22 +151,9 @@ feature -- Access
 			Result_correct : ("EV_" + Result).is_equal (type)
 		end
 		
-	parent_object: GB_OBJECT is
+	parent_object: GB_OBJECT
 			-- `Result' is object containing `Current'.
 			-- `Void' if none.
-		local
-			layout_parent_item: GB_LAYOUT_CONSTRUCTOR_ITEM
-		do
-			if layout_item /= Void then
-				layout_parent_item ?= layout_item.parent
-					-- If the object is a window then the layout parent will be Void
-				if layout_parent_item /= Void then
-					Result ?= layout_parent_item.object		
-				end
-			end	
-		ensure
-			window_has_no_parent_object: is_instance_of (object, dynamic_type_from_string (ev_window_string)) implies Result = Void
-		end
 		
 	top_level_parent_object: GB_OBJECT is
 			-- `Result' is top level object containing `Current'.
@@ -187,7 +176,6 @@ feature -- Access
 		ensure
 			result_not_void: Result /= Void
 		end
-		
 		
 	all_children_recursive (a_list: ARRAYED_LIST [GB_OBJECT]) is
 			-- Add all children of `Current' recursively, to
@@ -212,31 +200,11 @@ feature -- Access
 			end
 		end
 		
-	children: ARRAYED_LIST [GB_OBJECT] is
+	children: ARRAYED_LIST [GB_OBJECT]
 			-- `Result' is all children of `Current'.
 			--| FIXME, this should no longer be a query, allowing the
 			-- display in the layout constructor to be decoupled from the
-			-- actual widget structure.
-		local
-			current_item: GB_LAYOUT_CONSTRUCTOR_ITEM
-		do
-			create Result.make (1)
-			from
-				layout_item.start
-			until
-				layout_item.off
-			loop
-				current_item ?= layout_item.item
-				check
-					current_item_not_void: current_item /= Void
-				end
-				Result.extend (current_item.object)
-				layout_item.forth
-			end
-		ensure
-			Result_not_void: Result /= Void
-		end
-		
+			-- actual widget structure.		
 		
 feature {GB_EV_BOX_EDITOR_CONSTRUCTOR} -- Basic operation
 
@@ -251,6 +219,16 @@ feature {GB_EV_BOX_EDITOR_CONSTRUCTOR} -- Basic operation
 		do
 			expanded_in_box := False
 		end
+		
+feature {GB_OBJECT} -- Status Setting
+
+	set_parent (a_parent_object: GB_OBJECT) is
+			-- Assign `a_parent_object' to `parent_object'.
+			-- `a_parent_object' may be Void, when removing from a parent.
+		do
+			parent_object := a_parent_object
+		end
+		
 
 feature {GB_OBJECT_HANDLER, GB_OBJECT, GB_COMMAND_CHANGE_TYPE} -- Deletion
 			
@@ -322,25 +300,26 @@ feature {GB_LAYOUT_CONSTRUCTOR_ITEM, GB_OBJECT_HANDLER, GB_WINDOW_SELECTOR} -- S
 		
 feature {GB_OBJECT_HANDLER, GB_COMMAND_DELETE_OBJECT, GB_OBJECT, GB_COMMAND_ADD_OBJECT} -- Status setting
 
-	unparent is
-			-- Removed `Current' from its parents. All representations
-			-- of `an_object' must be removed from their parents to
-			-- concide with this change.
-		
-		do
-			unparent_ev_object (object)
-			unparent_ev_object (display_object)
+--	unparent is
+--			-- Removed `Current' from its parents. All representations
+--			-- of `an_object' must be removed from their parents to
+--			-- concide with this change.
+--		do
+--		--	unparent_ev_object (object)
+--		--	unparent_ev_object (display_object)
+--
+--		--	layout_item.unparent
+--		--	parent_object.remove_child_object (Current)
+--			parent_object.remove_child (Current)
+--			
+--				-- Notify the system that we have modified something.
+--			system_status.enable_project_modified
+--			command_handler.update
+--		ensure
+--			layout_item_parent_void: layout_item.parent = Void
+--		end
 
-			layout_item.unparent
-			
-				-- Notify the system that we have modified something.
-			system_status.enable_project_modified
-			command_handler.update
-		ensure
-			layout_item_parent_void: layout_item.parent = Void
-		end
-
-feature {GB_OBJECT_HANDLER} -- Status setting
+feature {GB_OBJECT_HANDLER, GB_OBJECT, GB_COMMAND_DELETE_OBJECT, GB_COMMAND_ADD_OBJECT} -- Status setting
 
 	unparent_during_type_change is
 			-- Removed `Current' from its parent during a type change.
@@ -355,6 +334,29 @@ feature {GB_OBJECT_HANDLER} -- Status setting
 			system_status.enable_project_modified
 			command_handler.update
 		end
+		
+	remove_child (an_object: GB_OBJECT) is
+			-- Removed `an_object' and all its representations from `Current'.
+		require
+			contained: children.has (an_object)
+	--	local
+	--		cursor: CURSOR
+		do
+	--		cursor := layout_item.cursor
+			unparent_ev_object (an_object.object)
+			unparent_ev_object (an_object.display_object)
+	
+			layout_item.prune_all (an_object.layout_item)
+			remove_child_from_children (an_object)
+			
+				-- Notify the system that we have modified something.
+			system_status.enable_project_modified
+			command_handler.update
+	--		layout_item.go_to (cursor)
+		ensure
+			not_contained: not children.has (an_object)
+		end
+		
 		
 feature {GB_OBJECT_HANDLER, GB_ID_COMPRESSOR} -- Status setting
 
@@ -832,7 +834,9 @@ feature {NONE} -- Implementation
 			passed := feature {ISE_RUNTIME}.check_assert (False)
 			an_object ?= new_instance_of (dynamic_type_from_string (type))
 			an_object.default_create
-			passed := feature {ISE_RUNTIME}.check_assert (True)
+			if passed then
+				passed := feature {ISE_RUNTIME}.check_assert (True)
+			end
 			Result := an_object
 		ensure
 			result_not_void: Result /= Void
@@ -874,5 +878,57 @@ feature {NONE} -- Implementation
 				set_status_text ("Cannot parent " + new_type + " in one of its children.")
 			end
 		end
+		
+	layout_items_consistent_with_children: BOOLEAN is
+			-- This is a temporary function, used in the change from
+			-- replying on the layout items to the newly added `children'
+			-- for accessing children of an object.
+			-- This ensures that the handling of children is exactly in line
+			-- with `layout_item' which we used previously.
+		local
+			local_children: ARRAYED_LIST [GB_OBJECT]
+			a_layout_item, a_layout_item2: GB_LAYOUT_CONSTRUCTOR_ITEM
+		do
+			local_children := children
+			if layout_item = Void then
+				Result := local_children.is_empty
+			else
+				Result := local_children.count = layout_item.count
+				from
+					local_children.start
+				until
+					local_children.off or not Result
+				loop
+					a_layout_item2 ?= layout_item.i_th (local_children.index)
+					Result := local_children.item = a_layout_item2.object
+					local_children.forth
+				end
+			end
+		end
+		
+	add_child (an_object: GB_OBJECT; position: INTEGER) is
+			-- Add `an_object' to child list of `Current'.
+		require
+			not_contained: not children.has (an_object)
+		do
+			children.go_i_th (position)
+			children.put_left (an_object)
+			an_object.set_parent (Current)
+		ensure
+			contained: children.has (an_object)
+		end
+		
+feature {GB_OBJECT_HANDLER} -- Implementation
+
+	remove_child_from_children (an_object: GB_OBJECT) is
+			-- Remove `an_object' from `Current'.
+		do
+			children.prune_all (an_object)
+			an_object.set_parent (Void)
+		end
+
+invariant
+	children_not_void: children /= Void
+	children_constant: layout_items_consistent_with_children
 
 end -- class GB_OBJECT

@@ -24,7 +24,8 @@
 			<item type="EV_MENU_ITEM"><Internal_properties ><id >4</id>
 					<name >file_generate</name>
 					</Internal_properties>
-				<EV_SENSITIVE />
+				<EV_SENSITIVE ><Is_sensitive >False</Is_sensitive>
+					</EV_SENSITIVE>
 				<EV_TEXTABLE ><Text >Generate</Text>
 					</EV_TEXTABLE>
 				<EV_PIXMAPABLE />

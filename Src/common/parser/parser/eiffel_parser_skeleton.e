@@ -90,7 +90,7 @@ feature -- Status report
 
 feature -- Parsing
 
-	parse (a_file: IO_MEDIUM) is
+	parse (a_file: KL_BINARY_INPUT_FILE) is
 			-- Parse Eiffel class text from `a_file'.
 			-- Make result available in `root_node'.
 			-- An exception is raised if a syntax error is found.

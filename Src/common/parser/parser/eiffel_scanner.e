@@ -45,13 +45,22 @@ feature {NONE} -- Implementation
 		do
 			inspect yy_act
 when 1 then
---|#line 39
+--|#line 39 "eiffel.l"
+debug ("GELEX")
+	std.error.put_line ("Executing scanner user-code from file 'eiffel.l' at line 39")
+end
 current_position.go_to (text_count)
 when 2 then
---|#line 44
+--|#line 44 "eiffel.l"
+debug ("GELEX")
+	std.error.put_line ("Executing scanner user-code from file 'eiffel.l' at line 44")
+end
 current_position.go_to (text_count)
 when 3 then
---|#line 45
+--|#line 45 "eiffel.l"
+debug ("GELEX")
+	std.error.put_line ("Executing scanner user-code from file 'eiffel.l' at line 45")
+end
 
 				line_number := line_number + text_count
 				current_position.reset_column_positions
@@ -59,211 +68,316 @@ when 3 then
 				current_position.set_line_number (line_number)
 			
 when 4 then
---|#line 55
+--|#line 55 "eiffel.l"
+debug ("GELEX")
+	std.error.put_line ("Executing scanner user-code from file 'eiffel.l' at line 55")
+end
 
 				current_position.go_to (1)
 				last_token := TE_SEMICOLON
 			
 when 5 then
---|#line 59
+--|#line 59 "eiffel.l"
+debug ("GELEX")
+	std.error.put_line ("Executing scanner user-code from file 'eiffel.l' at line 59")
+end
 
 				current_position.go_to (1)
 				last_token := TE_COLON
 			
 when 6 then
---|#line 63
+--|#line 63 "eiffel.l"
+debug ("GELEX")
+	std.error.put_line ("Executing scanner user-code from file 'eiffel.l' at line 63")
+end
 
 				current_position.go_to (1)
 				last_token := TE_COMMA
 			
 when 7 then
---|#line 67
+--|#line 67 "eiffel.l"
+debug ("GELEX")
+	std.error.put_line ("Executing scanner user-code from file 'eiffel.l' at line 67")
+end
 
 				current_position.go_to (2)
 				last_token := TE_DOTDOT
 			
 when 8 then
---|#line 71
+--|#line 71 "eiffel.l"
+debug ("GELEX")
+	std.error.put_line ("Executing scanner user-code from file 'eiffel.l' at line 71")
+end
 
 				current_position.go_to (1)
 				last_token := TE_QUESTION
 			
 when 9 then
---|#line 75
+--|#line 75 "eiffel.l"
+debug ("GELEX")
+	std.error.put_line ("Executing scanner user-code from file 'eiffel.l' at line 75")
+end
 
 				current_position.go_to (1)
 				last_token := TE_TILDE
 			
 when 10 then
---|#line 79
+--|#line 79 "eiffel.l"
+debug ("GELEX")
+	std.error.put_line ("Executing scanner user-code from file 'eiffel.l' at line 79")
+end
 
 				current_position.go_to (2)
 				last_token := TE_CURLYTILDE
 			
 when 11 then
---|#line 83
+--|#line 83 "eiffel.l"
+debug ("GELEX")
+	std.error.put_line ("Executing scanner user-code from file 'eiffel.l' at line 83")
+end
 
 				current_position.go_to (1)
 				last_token := TE_DOT
 			
 when 12 then
---|#line 87
+--|#line 87 "eiffel.l"
+debug ("GELEX")
+	std.error.put_line ("Executing scanner user-code from file 'eiffel.l' at line 87")
+end
 
 				current_position.go_to (1)
 				last_token := TE_ADDRESS
 			
 when 13 then
---|#line 91
+--|#line 91 "eiffel.l"
+debug ("GELEX")
+	std.error.put_line ("Executing scanner user-code from file 'eiffel.l' at line 91")
+end
 
 				current_position.go_to (2)
 				last_token := TE_ASSIGN
 			
 when 14 then
---|#line 95
+--|#line 95 "eiffel.l"
+debug ("GELEX")
+	std.error.put_line ("Executing scanner user-code from file 'eiffel.l' at line 95")
+end
 
 				current_position.go_to (2)
 				last_token := TE_ACCEPT
 			
 when 15 then
---|#line 99
+--|#line 99 "eiffel.l"
+debug ("GELEX")
+	std.error.put_line ("Executing scanner user-code from file 'eiffel.l' at line 99")
+end
 
 				current_position.go_to (1)
 				last_token := TE_EQ
 			
 when 16 then
---|#line 103
+--|#line 103 "eiffel.l"
+debug ("GELEX")
+	std.error.put_line ("Executing scanner user-code from file 'eiffel.l' at line 103")
+end
 
 				current_position.go_to (1)
 				last_token := TE_LT
 			
 when 17 then
---|#line 107
+--|#line 107 "eiffel.l"
+debug ("GELEX")
+	std.error.put_line ("Executing scanner user-code from file 'eiffel.l' at line 107")
+end
 
 				current_position.go_to (1)
 				last_token := TE_GT
 			
 when 18 then
---|#line 111
+--|#line 111 "eiffel.l"
+debug ("GELEX")
+	std.error.put_line ("Executing scanner user-code from file 'eiffel.l' at line 111")
+end
 
 				current_position.go_to (2)
 				last_token := TE_LE
 			
 when 19 then
---|#line 115
+--|#line 115 "eiffel.l"
+debug ("GELEX")
+	std.error.put_line ("Executing scanner user-code from file 'eiffel.l' at line 115")
+end
 
 				current_position.go_to (2)
 				last_token := TE_GE
 			
 when 20 then
---|#line 119
+--|#line 119 "eiffel.l"
+debug ("GELEX")
+	std.error.put_line ("Executing scanner user-code from file 'eiffel.l' at line 119")
+end
 
 				current_position.go_to (2)
 				last_token := TE_NE
 			
 when 21 then
---|#line 123
+--|#line 123 "eiffel.l"
+debug ("GELEX")
+	std.error.put_line ("Executing scanner user-code from file 'eiffel.l' at line 123")
+end
 
 				current_position.go_to (1)
 				last_token := TE_LPARAN
 			
 when 22 then
---|#line 127
+--|#line 127 "eiffel.l"
+debug ("GELEX")
+	std.error.put_line ("Executing scanner user-code from file 'eiffel.l' at line 127")
+end
 
 				current_position.go_to (1)
 				last_token := TE_RPARAN
 			
 when 23 then
---|#line 131
+--|#line 131 "eiffel.l"
+debug ("GELEX")
+	std.error.put_line ("Executing scanner user-code from file 'eiffel.l' at line 131")
+end
 
 				current_position.go_to (1)
 				last_token := TE_LCURLY
 			
 when 24 then
---|#line 135
+--|#line 135 "eiffel.l"
+debug ("GELEX")
+	std.error.put_line ("Executing scanner user-code from file 'eiffel.l' at line 135")
+end
 
 				current_position.go_to (1)
 				last_token := TE_RCURLY
 			
 when 25 then
---|#line 139
+--|#line 139 "eiffel.l"
+debug ("GELEX")
+	std.error.put_line ("Executing scanner user-code from file 'eiffel.l' at line 139")
+end
 
 				current_position.go_to (1)
 				last_token := TE_LSQURE
 			
 when 26 then
---|#line 143
+--|#line 143 "eiffel.l"
+debug ("GELEX")
+	std.error.put_line ("Executing scanner user-code from file 'eiffel.l' at line 143")
+end
 
 				current_position.go_to (1)
 				last_token := TE_RSQURE
 			
 when 27 then
---|#line 147
+--|#line 147 "eiffel.l"
+debug ("GELEX")
+	std.error.put_line ("Executing scanner user-code from file 'eiffel.l' at line 147")
+end
 
 				current_position.go_to (1)
 				last_token := TE_PLUS
 			
 when 28 then
---|#line 151
+--|#line 151 "eiffel.l"
+debug ("GELEX")
+	std.error.put_line ("Executing scanner user-code from file 'eiffel.l' at line 151")
+end
 
 				current_position.go_to (1)
 				last_token := TE_MINUS
 			
 when 29 then
---|#line 155
+--|#line 155 "eiffel.l"
+debug ("GELEX")
+	std.error.put_line ("Executing scanner user-code from file 'eiffel.l' at line 155")
+end
 
 				current_position.go_to (1)
 				last_token := TE_STAR
 			
 when 30 then
---|#line 159
+--|#line 159 "eiffel.l"
+debug ("GELEX")
+	std.error.put_line ("Executing scanner user-code from file 'eiffel.l' at line 159")
+end
 
 				current_position.go_to (1)
 				last_token := TE_SLASH
 			
 when 31 then
---|#line 163
+--|#line 163 "eiffel.l"
+debug ("GELEX")
+	std.error.put_line ("Executing scanner user-code from file 'eiffel.l' at line 163")
+end
 
 				current_position.go_to (1)
 				last_token := TE_POWER
 			
 when 32 then
---|#line 167
+--|#line 167 "eiffel.l"
+debug ("GELEX")
+	std.error.put_line ("Executing scanner user-code from file 'eiffel.l' at line 167")
+end
 
 				current_position.go_to (2)
 				last_token := TE_CONSTRAIN
 			
 when 33 then
---|#line 171
+--|#line 171 "eiffel.l"
+debug ("GELEX")
+	std.error.put_line ("Executing scanner user-code from file 'eiffel.l' at line 171")
+end
 
 				current_position.go_to (1)
 				last_token := TE_BANG
 			
 when 34 then
---|#line 175
+--|#line 175 "eiffel.l"
+debug ("GELEX")
+	std.error.put_line ("Executing scanner user-code from file 'eiffel.l' at line 175")
+end
 
 				current_position.go_to (2)
 				last_token := TE_LARRAY
 			
 when 35 then
---|#line 179
+--|#line 179 "eiffel.l"
+debug ("GELEX")
+	std.error.put_line ("Executing scanner user-code from file 'eiffel.l' at line 179")
+end
 
 				current_position.go_to (2)
 				last_token := TE_RARRAY
 			
 when 36 then
---|#line 183
+--|#line 183 "eiffel.l"
+debug ("GELEX")
+	std.error.put_line ("Executing scanner user-code from file 'eiffel.l' at line 183")
+end
 
 				current_position.go_to (2)
 				last_token := TE_DIV
 			
 when 37 then
---|#line 187
+--|#line 187 "eiffel.l"
+debug ("GELEX")
+	std.error.put_line ("Executing scanner user-code from file 'eiffel.l' at line 187")
+end
 
 				current_position.go_to (2)
 				last_token := TE_MOD
 			
 when 38 then
---|#line 195
+--|#line 195 "eiffel.l"
+debug ("GELEX")
+	std.error.put_line ("Executing scanner user-code from file 'eiffel.l' at line 195")
+end
 
 
 					-- Note: Free operators are converted to lower-case.
@@ -276,433 +390,649 @@ when 38 then
 				last_token := TE_FREE
 			
 when 39 then
---|#line 210
+--|#line 210 "eiffel.l"
+debug ("GELEX")
+	std.error.put_line ("Executing scanner user-code from file 'eiffel.l' at line 210")
+end
 
 				current_position.go_to (5)
 				last_token := TE_AGENT
 			
 when 40 then
---|#line 214
+--|#line 214 "eiffel.l"
+debug ("GELEX")
+	std.error.put_line ("Executing scanner user-code from file 'eiffel.l' at line 214")
+end
 
 				current_position.go_to (5)
 				last_token := TE_ALIAS
 			
 when 41 then
---|#line 218
+--|#line 218 "eiffel.l"
+debug ("GELEX")
+	std.error.put_line ("Executing scanner user-code from file 'eiffel.l' at line 218")
+end
 
 				current_position.go_to (3)
 				last_token := TE_ALL
 			
 when 42 then
---|#line 222
+--|#line 222 "eiffel.l"
+debug ("GELEX")
+	std.error.put_line ("Executing scanner user-code from file 'eiffel.l' at line 222")
+end
 
 				current_position.go_to (3)
 				last_token := TE_AND
 			
 when 43 then
---|#line 226
+--|#line 226 "eiffel.l"
+debug ("GELEX")
+	std.error.put_line ("Executing scanner user-code from file 'eiffel.l' at line 226")
+end
 
 				current_position.go_to (2)
 				last_token := TE_AS
 			
 when 44 then
---|#line 230
+--|#line 230 "eiffel.l"
+debug ("GELEX")
+	std.error.put_line ("Executing scanner user-code from file 'eiffel.l' at line 230")
+end
 
 				current_position.go_to (3)
 				last_token := TE_BIT
 			
 when 45 then
---|#line 234
+--|#line 234 "eiffel.l"
+debug ("GELEX")
+	std.error.put_line ("Executing scanner user-code from file 'eiffel.l' at line 234")
+end
 
 				current_position.go_to (5)
 				last_token := TE_CHECK
 			
 when 46 then
---|#line 238
+--|#line 238 "eiffel.l"
+debug ("GELEX")
+	std.error.put_line ("Executing scanner user-code from file 'eiffel.l' at line 238")
+end
 
 				current_position.go_to (5)
 				last_token := TE_CLASS
 			
 when 47 then
---|#line 242
+--|#line 242 "eiffel.l"
+debug ("GELEX")
+	std.error.put_line ("Executing scanner user-code from file 'eiffel.l' at line 242")
+end
 
 				current_position.go_to (6)
 				last_token := TE_CREATE
 			
 when 48 then
---|#line 246
+--|#line 246 "eiffel.l"
+debug ("GELEX")
+	std.error.put_line ("Executing scanner user-code from file 'eiffel.l' at line 246")
+end
 
 				current_position.go_to (8)
 				last_token := TE_CREATION
 			
 when 49 then
---|#line 250
+--|#line 250 "eiffel.l"
+debug ("GELEX")
+	std.error.put_line ("Executing scanner user-code from file 'eiffel.l' at line 250")
+end
 
 				current_position.go_to (7)
 				last_token := TE_CURRENT
 			
 when 50 then
---|#line 254
+--|#line 254 "eiffel.l"
+debug ("GELEX")
+	std.error.put_line ("Executing scanner user-code from file 'eiffel.l' at line 254")
+end
 
 				current_position.go_to (5)
 				last_token := TE_DEBUG
 			
 when 51 then
---|#line 258
+--|#line 258 "eiffel.l"
+debug ("GELEX")
+	std.error.put_line ("Executing scanner user-code from file 'eiffel.l' at line 258")
+end
 
 				current_position.go_to (8)
 				last_token := TE_DEFERRED
 			
 when 52 then
---|#line 262
+--|#line 262 "eiffel.l"
+debug ("GELEX")
+	std.error.put_line ("Executing scanner user-code from file 'eiffel.l' at line 262")
+end
 
 				current_position.go_to (2)
 				last_token := TE_DO
 			
 when 53 then
---|#line 266
+--|#line 266 "eiffel.l"
+debug ("GELEX")
+	std.error.put_line ("Executing scanner user-code from file 'eiffel.l' at line 266")
+end
 
 				current_position.go_to (4)
 				last_token := TE_ELSE
 			
 when 54 then
---|#line 270
+--|#line 270 "eiffel.l"
+debug ("GELEX")
+	std.error.put_line ("Executing scanner user-code from file 'eiffel.l' at line 270")
+end
 
 				current_position.go_to (6)
 				last_token := TE_ELSEIF
 			
 when 55 then
---|#line 274
+--|#line 274 "eiffel.l"
+debug ("GELEX")
+	std.error.put_line ("Executing scanner user-code from file 'eiffel.l' at line 274")
+end
 
 				current_position.go_to (3)
 				last_token := TE_END
 			
 when 56 then
---|#line 278
+--|#line 278 "eiffel.l"
+debug ("GELEX")
+	std.error.put_line ("Executing scanner user-code from file 'eiffel.l' at line 278")
+end
 
 				current_position.go_to (6)
 				last_token := TE_ENSURE
 			
 when 57 then
---|#line 282
+--|#line 282 "eiffel.l"
+debug ("GELEX")
+	std.error.put_line ("Executing scanner user-code from file 'eiffel.l' at line 282")
+end
 
 				current_position.go_to (8)
 				last_token := TE_EXPANDED
 			
 when 58 then
---|#line 286
+--|#line 286 "eiffel.l"
+debug ("GELEX")
+	std.error.put_line ("Executing scanner user-code from file 'eiffel.l' at line 286")
+end
 
 				current_position.go_to (6)
 				last_token := TE_EXPORT
 			
 when 59 then
---|#line 290
+--|#line 290 "eiffel.l"
+debug ("GELEX")
+	std.error.put_line ("Executing scanner user-code from file 'eiffel.l' at line 290")
+end
 
 				current_position.go_to (8)
 				last_token := TE_EXTERNAL
 			
 when 60 then
---|#line 294
+--|#line 294 "eiffel.l"
+debug ("GELEX")
+	std.error.put_line ("Executing scanner user-code from file 'eiffel.l' at line 294")
+end
 
 				current_position.go_to (5)
 				last_token := TE_FALSE
 			
 when 61 then
---|#line 298
+--|#line 298 "eiffel.l"
+debug ("GELEX")
+	std.error.put_line ("Executing scanner user-code from file 'eiffel.l' at line 298")
+end
 
 				current_position.go_to (7)
 				last_token := TE_FEATURE
 			
 when 62 then
---|#line 302
+--|#line 302 "eiffel.l"
+debug ("GELEX")
+	std.error.put_line ("Executing scanner user-code from file 'eiffel.l' at line 302")
+end
 
 				current_position.go_to (4)
 				last_token := TE_FROM
 			
 when 63 then
---|#line 306
+--|#line 306 "eiffel.l"
+debug ("GELEX")
+	std.error.put_line ("Executing scanner user-code from file 'eiffel.l' at line 306")
+end
 
 				current_position.go_to (6)
 				last_token := TE_FROZEN
 			
 when 64 then
---|#line 310
+--|#line 310 "eiffel.l"
+debug ("GELEX")
+	std.error.put_line ("Executing scanner user-code from file 'eiffel.l' at line 310")
+end
 
 				current_position.go_to (2)
 				last_token := TE_IF
 			
 when 65 then
---|#line 314
+--|#line 314 "eiffel.l"
+debug ("GELEX")
+	std.error.put_line ("Executing scanner user-code from file 'eiffel.l' at line 314")
+end
 
 				current_position.go_to (7)
 				last_token := TE_IMPLIES
 			
 when 66 then
---|#line 318
+--|#line 318 "eiffel.l"
+debug ("GELEX")
+	std.error.put_line ("Executing scanner user-code from file 'eiffel.l' at line 318")
+end
 
 				current_position.go_to (8)
 				last_token := TE_INDEXING
 			
 when 67 then
---|#line 322
+--|#line 322 "eiffel.l"
+debug ("GELEX")
+	std.error.put_line ("Executing scanner user-code from file 'eiffel.l' at line 322")
+end
 
 				current_position.go_to (5)
 				last_token := TE_INFIX
 			
 when 68 then
---|#line 326
+--|#line 326 "eiffel.l"
+debug ("GELEX")
+	std.error.put_line ("Executing scanner user-code from file 'eiffel.l' at line 326")
+end
 
 				current_position.go_to (7)
 				last_token := TE_INHERIT
 			
 when 69 then
---|#line 330
+--|#line 330 "eiffel.l"
+debug ("GELEX")
+	std.error.put_line ("Executing scanner user-code from file 'eiffel.l' at line 330")
+end
 
 				current_position.go_to (7)
 				last_token := TE_INSPECT
 			
 when 70 then
---|#line 334
+--|#line 334 "eiffel.l"
+debug ("GELEX")
+	std.error.put_line ("Executing scanner user-code from file 'eiffel.l' at line 334")
+end
 
 				current_position.go_to (9)
 				last_token := TE_INVARIANT
 			
 when 71 then
---|#line 338
+--|#line 338 "eiffel.l"
+debug ("GELEX")
+	std.error.put_line ("Executing scanner user-code from file 'eiffel.l' at line 338")
+end
 
 				current_position.go_to (2)
 				last_token := TE_IS
 			
 when 72 then
---|#line 342
+--|#line 342 "eiffel.l"
+debug ("GELEX")
+	std.error.put_line ("Executing scanner user-code from file 'eiffel.l' at line 342")
+end
 
 				current_position.go_to (4)
 				last_token := TE_LIKE
 			
 when 73 then
---|#line 346
+--|#line 346 "eiffel.l"
+debug ("GELEX")
+	std.error.put_line ("Executing scanner user-code from file 'eiffel.l' at line 346")
+end
 
 				current_position.go_to (5)
 				last_token := TE_LOCAL
 			
 when 74 then
---|#line 350
+--|#line 350 "eiffel.l"
+debug ("GELEX")
+	std.error.put_line ("Executing scanner user-code from file 'eiffel.l' at line 350")
+end
 
 				current_position.go_to (4)
 				last_token := TE_LOOP
 			
 when 75 then
---|#line 354
+--|#line 354 "eiffel.l"
+debug ("GELEX")
+	std.error.put_line ("Executing scanner user-code from file 'eiffel.l' at line 354")
+end
 
 				current_position.go_to (3)
 				last_token := TE_NOT
 			
 when 76 then
---|#line 358
+--|#line 358 "eiffel.l"
+debug ("GELEX")
+	std.error.put_line ("Executing scanner user-code from file 'eiffel.l' at line 358")
+end
 
 				current_position.go_to (8)
 				last_token := TE_OBSOLETE
 			
 when 77 then
---|#line 362
+--|#line 362 "eiffel.l"
+debug ("GELEX")
+	std.error.put_line ("Executing scanner user-code from file 'eiffel.l' at line 362")
+end
 
 				current_position.go_to (3)
 				last_token := TE_OLD
 			
 when 78 then
---|#line 366
+--|#line 366 "eiffel.l"
+debug ("GELEX")
+	std.error.put_line ("Executing scanner user-code from file 'eiffel.l' at line 366")
+end
 
 				current_position.go_to (4)
 				last_token := TE_ONCE
 			
 when 79 then
---|#line 370
+--|#line 370 "eiffel.l"
+debug ("GELEX")
+	std.error.put_line ("Executing scanner user-code from file 'eiffel.l' at line 370")
+end
 
 				current_position.go_to (2)
 				last_token := TE_OR
 			
 when 80 then
---|#line 374
+--|#line 374 "eiffel.l"
+debug ("GELEX")
+	std.error.put_line ("Executing scanner user-code from file 'eiffel.l' at line 374")
+end
 
 				current_position.go_to (9)
 				last_token := TE_PRECURSOR
 			
 when 81 then
---|#line 378
+--|#line 378 "eiffel.l"
+debug ("GELEX")
+	std.error.put_line ("Executing scanner user-code from file 'eiffel.l' at line 378")
+end
 
 				current_position.go_to (6)
 				last_token := TE_PREFIX
 			
 when 82 then
---|#line 382
+--|#line 382 "eiffel.l"
+debug ("GELEX")
+	std.error.put_line ("Executing scanner user-code from file 'eiffel.l' at line 382")
+end
 
 				current_position.go_to (8)
 				last_token := TE_REDEFINE
 			
 when 83 then
---|#line 386
+--|#line 386 "eiffel.l"
+debug ("GELEX")
+	std.error.put_line ("Executing scanner user-code from file 'eiffel.l' at line 386")
+end
 
 				current_position.go_to (6)
 				last_token := TE_RENAME
 			
 when 84 then
---|#line 390
+--|#line 390 "eiffel.l"
+debug ("GELEX")
+	std.error.put_line ("Executing scanner user-code from file 'eiffel.l' at line 390")
+end
 
 				current_position.go_to (7)
 				last_token := TE_REQUIRE
 			
 when 85 then
---|#line 394
+--|#line 394 "eiffel.l"
+debug ("GELEX")
+	std.error.put_line ("Executing scanner user-code from file 'eiffel.l' at line 394")
+end
 
 				current_position.go_to (6)
 				last_token := TE_RESCUE
 			
 when 86 then
---|#line 398
+--|#line 398 "eiffel.l"
+debug ("GELEX")
+	std.error.put_line ("Executing scanner user-code from file 'eiffel.l' at line 398")
+end
 
 				current_position.go_to (6)
 				last_token := TE_RESULT
 			
 when 87 then
---|#line 402
+--|#line 402 "eiffel.l"
+debug ("GELEX")
+	std.error.put_line ("Executing scanner user-code from file 'eiffel.l' at line 402")
+end
 
 				current_position.go_to (5)
 				last_token := TE_RETRY
 			
 when 88 then
---|#line 406
+--|#line 406 "eiffel.l"
+debug ("GELEX")
+	std.error.put_line ("Executing scanner user-code from file 'eiffel.l' at line 406")
+end
 
 				current_position.go_to (6)
 				last_token := TE_SELECT
 			
 when 89 then
---|#line 410
+--|#line 410 "eiffel.l"
+debug ("GELEX")
+	std.error.put_line ("Executing scanner user-code from file 'eiffel.l' at line 410")
+end
 
 				current_position.go_to (8)
 				last_token := TE_SEPARATE
 			
 when 90 then
---|#line 414
+--|#line 414 "eiffel.l"
+debug ("GELEX")
+	std.error.put_line ("Executing scanner user-code from file 'eiffel.l' at line 414")
+end
 
 				current_position.go_to (5)
 				last_token := TE_STRIP
 			
 when 91 then
---|#line 418
+--|#line 418 "eiffel.l"
+debug ("GELEX")
+	std.error.put_line ("Executing scanner user-code from file 'eiffel.l' at line 418")
+end
 
 				current_position.go_to (4)
 				last_token := TE_THEN
 			
 when 92 then
---|#line 422
+--|#line 422 "eiffel.l"
+debug ("GELEX")
+	std.error.put_line ("Executing scanner user-code from file 'eiffel.l' at line 422")
+end
 
 				current_position.go_to (4)
 				last_token := TE_TRUE
 			
 when 93 then
---|#line 426
+--|#line 426 "eiffel.l"
+debug ("GELEX")
+	std.error.put_line ("Executing scanner user-code from file 'eiffel.l' at line 426")
+end
 
 				current_position.go_to (8)
 				last_token := TE_UNDEFINE
 			
 when 94 then
---|#line 430
+--|#line 430 "eiffel.l"
+debug ("GELEX")
+	std.error.put_line ("Executing scanner user-code from file 'eiffel.l' at line 430")
+end
 
 				current_position.go_to (6)
 				last_token := TE_UNIQUE
 			
 when 95 then
---|#line 434
+--|#line 434 "eiffel.l"
+debug ("GELEX")
+	std.error.put_line ("Executing scanner user-code from file 'eiffel.l' at line 434")
+end
 
 				current_position.go_to (5)
 				last_token := TE_UNTIL
 			
 when 96 then
---|#line 438
+--|#line 438 "eiffel.l"
+debug ("GELEX")
+	std.error.put_line ("Executing scanner user-code from file 'eiffel.l' at line 438")
+end
 
 				current_position.go_to (7)
 				last_token := TE_VARIANT
 			
 when 97 then
---|#line 442
+--|#line 442 "eiffel.l"
+debug ("GELEX")
+	std.error.put_line ("Executing scanner user-code from file 'eiffel.l' at line 442")
+end
 
 				current_position.go_to (4)
 				last_token := TE_WHEN
 			
 when 98 then
---|#line 446
+--|#line 446 "eiffel.l"
+debug ("GELEX")
+	std.error.put_line ("Executing scanner user-code from file 'eiffel.l' at line 446")
+end
 
 				current_position.go_to (3)
 				last_token := TE_XOR
 			
 when 99 then
---|#line 454
+--|#line 454 "eiffel.l"
+debug ("GELEX")
+	std.error.put_line ("Executing scanner user-code from file 'eiffel.l' at line 454")
+end
 
 				current_position.go_to (7)
 				last_token := TE_BOOLEAN_ID
 			
 when 100 then
---|#line 458
+--|#line 458 "eiffel.l"
+debug ("GELEX")
+	std.error.put_line ("Executing scanner user-code from file 'eiffel.l' at line 458")
+end
 
 				current_position.go_to (9)
 				last_token := TE_CHARACTER_ID
 			
 when 101 then
---|#line 462
+--|#line 462 "eiffel.l"
+debug ("GELEX")
+	std.error.put_line ("Executing scanner user-code from file 'eiffel.l' at line 462")
+end
 
 				current_position.go_to (6)
 				last_token := TE_DOUBLE_ID
 			
 when 102 then
---|#line 466
+--|#line 466 "eiffel.l"
+debug ("GELEX")
+	std.error.put_line ("Executing scanner user-code from file 'eiffel.l' at line 466")
+end
 
 				current_position.go_to (9)
 				last_token := TE_INTEGER_8_ID
 			
 when 103 then
---|#line 470
+--|#line 470 "eiffel.l"
+debug ("GELEX")
+	std.error.put_line ("Executing scanner user-code from file 'eiffel.l' at line 470")
+end
 
 				current_position.go_to (10)
 				last_token := TE_INTEGER_16_ID
 			
 when 104 then
---|#line 474
+--|#line 474 "eiffel.l"
+debug ("GELEX")
+	std.error.put_line ("Executing scanner user-code from file 'eiffel.l' at line 474")
+end
 
 				current_position.go_to (7)
 				last_token := TE_INTEGER_ID
 			
 when 105 then
---|#line 478
+--|#line 478 "eiffel.l"
+debug ("GELEX")
+	std.error.put_line ("Executing scanner user-code from file 'eiffel.l' at line 478")
+end
 
 				current_position.go_to (10)
 				last_token := TE_INTEGER_64_ID
 			
 when 106 then
---|#line 482
+--|#line 482 "eiffel.l"
+debug ("GELEX")
+	std.error.put_line ("Executing scanner user-code from file 'eiffel.l' at line 482")
+end
 
 				current_position.go_to (4)
 				last_token := TE_NONE_ID
 			
 when 107 then
---|#line 486
+--|#line 486 "eiffel.l"
+debug ("GELEX")
+	std.error.put_line ("Executing scanner user-code from file 'eiffel.l' at line 486")
+end
 
 				current_position.go_to (7)
 				last_token := TE_POINTER_ID
 			
 when 108 then
---|#line 490
+--|#line 490 "eiffel.l"
+debug ("GELEX")
+	std.error.put_line ("Executing scanner user-code from file 'eiffel.l' at line 490")
+end
 
 				current_position.go_to (4)
 				last_token := TE_REAL_ID
 			
 when 109 then
---|#line 494
+--|#line 494 "eiffel.l"
+debug ("GELEX")
+	std.error.put_line ("Executing scanner user-code from file 'eiffel.l' at line 494")
+end
 
 				current_position.go_to (14)
 				last_token := TE_WIDE_CHAR_ID
 			
 when 110 then
---|#line 498
+--|#line 498 "eiffel.l"
+debug ("GELEX")
+	std.error.put_line ("Executing scanner user-code from file 'eiffel.l' at line 498")
+end
 
 					-- Note: Identifiers are converted to lower-case.
 				token_buffer.clear_all
@@ -714,7 +1044,10 @@ when 110 then
 				last_token := TE_ID
 			
 when 111 then
---|#line 512
+--|#line 512 "eiffel.l"
+debug ("GELEX")
+	std.error.put_line ("Executing scanner user-code from file 'eiffel.l' at line 512")
+end
 
 				token_buffer.clear_all
 				append_text_substring_to_string (1, text_count - 1, token_buffer)
@@ -722,7 +1055,10 @@ when 111 then
 				last_token := TE_A_BIT
 			
 when 112 then
---|#line 522
+--|#line 522 "eiffel.l"
+debug ("GELEX")
+	std.error.put_line ("Executing scanner user-code from file 'eiffel.l' at line 522")
+end
 		-- This a trick to avoid having:
 					--     when 1..2 then
 					-- to be be erroneously recognized as:
@@ -736,8 +1072,11 @@ when 112 then
 				last_token := TE_INTEGER
 			
 when 113 then
-	yy_position := yy_position - 2
---|#line 523
+	yy_end := yy_end - 2
+--|#line 523 "eiffel.l"
+debug ("GELEX")
+	std.error.put_line ("Executing scanner user-code from file 'eiffel.l' at line 523")
+end
 		-- This a trick to avoid having:
 					--     when 1..2 then
 					-- to be be erroneously recognized as:
@@ -751,7 +1090,10 @@ when 113 then
 				last_token := TE_INTEGER
 			
 when 114 then
---|#line 536
+--|#line 536 "eiffel.l"
+debug ("GELEX")
+	std.error.put_line ("Executing scanner user-code from file 'eiffel.l' at line 536")
+end
 
 				token_buffer.clear_all
 				append_without_underscores (text, token_buffer)
@@ -759,7 +1101,10 @@ when 114 then
 				last_token := TE_INTEGER
 			
 when 115 then
---|#line 543
+--|#line 543 "eiffel.l"
+debug ("GELEX")
+	std.error.put_line ("Executing scanner user-code from file 'eiffel.l' at line 543")
+end
 		-- Recognizes hexadecimal integer numbers.
 				token_buffer.clear_all
 				append_text_to_string (token_buffer)
@@ -767,7 +1112,10 @@ when 115 then
 				last_token := TE_INTEGER
 			
 when 116 then
---|#line 552
+--|#line 552 "eiffel.l"
+debug ("GELEX")
+	std.error.put_line ("Executing scanner user-code from file 'eiffel.l' at line 552")
+end
 
 				token_buffer.clear_all
 				append_text_to_string (token_buffer)
@@ -778,7 +1126,10 @@ when 116 then
 				last_token := TE_REAL
 			
 when 117 then
---|#line 565
+--|#line 565 "eiffel.l"
+debug ("GELEX")
+	std.error.put_line ("Executing scanner user-code from file 'eiffel.l' at line 565")
+end
 
 				token_buffer.clear_all
 				token_buffer.append_character (text_item (2))
@@ -786,7 +1137,10 @@ when 117 then
 				last_token := TE_CHAR
 			
 when 118 then
---|#line 571
+--|#line 571 "eiffel.l"
+debug ("GELEX")
+	std.error.put_line ("Executing scanner user-code from file 'eiffel.l' at line 571")
+end
 
 					-- This is not correct Eiffel!
 				token_buffer.clear_all
@@ -795,7 +1149,10 @@ when 118 then
 				last_token := TE_CHAR
 			
 when 119 then
---|#line 578
+--|#line 578 "eiffel.l"
+debug ("GELEX")
+	std.error.put_line ("Executing scanner user-code from file 'eiffel.l' at line 578")
+end
 
 				token_buffer.clear_all
 				token_buffer.append_character ('%A')
@@ -803,7 +1160,10 @@ when 119 then
 				last_token := TE_CHAR
 			
 when 120 then
---|#line 584
+--|#line 584 "eiffel.l"
+debug ("GELEX")
+	std.error.put_line ("Executing scanner user-code from file 'eiffel.l' at line 584")
+end
 
 				token_buffer.clear_all
 				token_buffer.append_character ('%B')
@@ -811,7 +1171,10 @@ when 120 then
 				last_token := TE_CHAR
 			
 when 121 then
---|#line 590
+--|#line 590 "eiffel.l"
+debug ("GELEX")
+	std.error.put_line ("Executing scanner user-code from file 'eiffel.l' at line 590")
+end
 
 				token_buffer.clear_all
 				token_buffer.append_character ('%C')
@@ -819,7 +1182,10 @@ when 121 then
 				last_token := TE_CHAR
 			
 when 122 then
---|#line 596
+--|#line 596 "eiffel.l"
+debug ("GELEX")
+	std.error.put_line ("Executing scanner user-code from file 'eiffel.l' at line 596")
+end
 
 				token_buffer.clear_all
 				token_buffer.append_character ('%D')
@@ -827,7 +1193,10 @@ when 122 then
 				last_token := TE_CHAR
 			
 when 123 then
---|#line 602
+--|#line 602 "eiffel.l"
+debug ("GELEX")
+	std.error.put_line ("Executing scanner user-code from file 'eiffel.l' at line 602")
+end
 
 				token_buffer.clear_all
 				token_buffer.append_character ('%F')
@@ -835,7 +1204,10 @@ when 123 then
 				last_token := TE_CHAR
 			
 when 124 then
---|#line 608
+--|#line 608 "eiffel.l"
+debug ("GELEX")
+	std.error.put_line ("Executing scanner user-code from file 'eiffel.l' at line 608")
+end
 
 				token_buffer.clear_all
 				token_buffer.append_character ('%H')
@@ -843,7 +1215,10 @@ when 124 then
 				last_token := TE_CHAR
 			
 when 125 then
---|#line 614
+--|#line 614 "eiffel.l"
+debug ("GELEX")
+	std.error.put_line ("Executing scanner user-code from file 'eiffel.l' at line 614")
+end
 
 				token_buffer.clear_all
 				token_buffer.append_character ('%L')
@@ -851,7 +1226,10 @@ when 125 then
 				last_token := TE_CHAR
 			
 when 126 then
---|#line 620
+--|#line 620 "eiffel.l"
+debug ("GELEX")
+	std.error.put_line ("Executing scanner user-code from file 'eiffel.l' at line 620")
+end
 
 				token_buffer.clear_all
 				token_buffer.append_character ('%N')
@@ -859,7 +1237,10 @@ when 126 then
 				last_token := TE_CHAR
 			
 when 127 then
---|#line 626
+--|#line 626 "eiffel.l"
+debug ("GELEX")
+	std.error.put_line ("Executing scanner user-code from file 'eiffel.l' at line 626")
+end
 
 				token_buffer.clear_all
 				token_buffer.append_character ('%Q')
@@ -867,7 +1248,10 @@ when 127 then
 				last_token := TE_CHAR
 			
 when 128 then
---|#line 632
+--|#line 632 "eiffel.l"
+debug ("GELEX")
+	std.error.put_line ("Executing scanner user-code from file 'eiffel.l' at line 632")
+end
 
 				token_buffer.clear_all
 				token_buffer.append_character ('%R')
@@ -875,7 +1259,10 @@ when 128 then
 				last_token := TE_CHAR
 			
 when 129 then
---|#line 638
+--|#line 638 "eiffel.l"
+debug ("GELEX")
+	std.error.put_line ("Executing scanner user-code from file 'eiffel.l' at line 638")
+end
 
 				token_buffer.clear_all
 				token_buffer.append_character ('%S')
@@ -883,7 +1270,10 @@ when 129 then
 				last_token := TE_CHAR
 			
 when 130 then
---|#line 644
+--|#line 644 "eiffel.l"
+debug ("GELEX")
+	std.error.put_line ("Executing scanner user-code from file 'eiffel.l' at line 644")
+end
 
 				token_buffer.clear_all
 				token_buffer.append_character ('%T')
@@ -891,7 +1281,10 @@ when 130 then
 				last_token := TE_CHAR
 			
 when 131 then
---|#line 650
+--|#line 650 "eiffel.l"
+debug ("GELEX")
+	std.error.put_line ("Executing scanner user-code from file 'eiffel.l' at line 650")
+end
 
 				token_buffer.clear_all
 				token_buffer.append_character ('%U')
@@ -899,7 +1292,10 @@ when 131 then
 				last_token := TE_CHAR
 			
 when 132 then
---|#line 656
+--|#line 656 "eiffel.l"
+debug ("GELEX")
+	std.error.put_line ("Executing scanner user-code from file 'eiffel.l' at line 656")
+end
 
 				token_buffer.clear_all
 				token_buffer.append_character ('%V')
@@ -907,7 +1303,10 @@ when 132 then
 				last_token := TE_CHAR
 			
 when 133 then
---|#line 662
+--|#line 662 "eiffel.l"
+debug ("GELEX")
+	std.error.put_line ("Executing scanner user-code from file 'eiffel.l' at line 662")
+end
 
 				token_buffer.clear_all
 				token_buffer.append_character ('%%')
@@ -915,7 +1314,10 @@ when 133 then
 				last_token := TE_CHAR
 			
 when 134 then
---|#line 668
+--|#line 668 "eiffel.l"
+debug ("GELEX")
+	std.error.put_line ("Executing scanner user-code from file 'eiffel.l' at line 668")
+end
 
 				token_buffer.clear_all
 				token_buffer.append_character ('%'')
@@ -923,7 +1325,10 @@ when 134 then
 				last_token := TE_CHAR
 			
 when 135 then
---|#line 674
+--|#line 674 "eiffel.l"
+debug ("GELEX")
+	std.error.put_line ("Executing scanner user-code from file 'eiffel.l' at line 674")
+end
 
 				token_buffer.clear_all
 				token_buffer.append_character ('%"')
@@ -931,7 +1336,10 @@ when 135 then
 				last_token := TE_CHAR
 			
 when 136 then
---|#line 680
+--|#line 680 "eiffel.l"
+debug ("GELEX")
+	std.error.put_line ("Executing scanner user-code from file 'eiffel.l' at line 680")
+end
 
 				token_buffer.clear_all
 				token_buffer.append_character ('%(')
@@ -939,7 +1347,10 @@ when 136 then
 				last_token := TE_CHAR
 			
 when 137 then
---|#line 686
+--|#line 686 "eiffel.l"
+debug ("GELEX")
+	std.error.put_line ("Executing scanner user-code from file 'eiffel.l' at line 686")
+end
 
 				token_buffer.clear_all
 				token_buffer.append_character ('%)')
@@ -947,7 +1358,10 @@ when 137 then
 				last_token := TE_CHAR
 			
 when 138 then
---|#line 692
+--|#line 692 "eiffel.l"
+debug ("GELEX")
+	std.error.put_line ("Executing scanner user-code from file 'eiffel.l' at line 692")
+end
 
 				token_buffer.clear_all
 				token_buffer.append_character ('%<')
@@ -955,7 +1369,10 @@ when 138 then
 				last_token := TE_CHAR
 			
 when 139 then
---|#line 698
+--|#line 698 "eiffel.l"
+debug ("GELEX")
+	std.error.put_line ("Executing scanner user-code from file 'eiffel.l' at line 698")
+end
 
 				token_buffer.clear_all
 				token_buffer.append_character ('%>')
@@ -963,13 +1380,19 @@ when 139 then
 				last_token := TE_CHAR
 			
 when 140 then
---|#line 704
+--|#line 704 "eiffel.l"
+debug ("GELEX")
+	std.error.put_line ("Executing scanner user-code from file 'eiffel.l' at line 704")
+end
 
 				current_position.go_to (text_count)
 				process_character_code (text_substring (4, text_count - 2).to_integer)
 			
 when 141, 142 then
---|#line 708
+--|#line 708 "eiffel.l"
+debug ("GELEX")
+	std.error.put_line ("Executing scanner user-code from file 'eiffel.l' at line 708")
+end
 
 					-- Unrecognized character.
 					-- (catch-all rules (no backing up))
@@ -977,73 +1400,109 @@ when 141, 142 then
 				report_character_missing_quote_error (text)
 			
 when 143 then
---|#line 719
+--|#line 719 "eiffel.l"
+debug ("GELEX")
+	std.error.put_line ("Executing scanner user-code from file 'eiffel.l' at line 719")
+end
 
 				current_position.go_to (3)
 				last_token := TE_STR_LT
 			
 when 144 then
---|#line 723
+--|#line 723 "eiffel.l"
+debug ("GELEX")
+	std.error.put_line ("Executing scanner user-code from file 'eiffel.l' at line 723")
+end
 
 				current_position.go_to (3)
 				last_token := TE_STR_GT
 			
 when 145 then
---|#line 727
+--|#line 727 "eiffel.l"
+debug ("GELEX")
+	std.error.put_line ("Executing scanner user-code from file 'eiffel.l' at line 727")
+end
 
 				current_position.go_to (4)
 				last_token := TE_STR_LE
 			
 when 146 then
---|#line 731
+--|#line 731 "eiffel.l"
+debug ("GELEX")
+	std.error.put_line ("Executing scanner user-code from file 'eiffel.l' at line 731")
+end
 
 				current_position.go_to (4)
 				last_token := TE_STR_GE
 			
 when 147 then
---|#line 735
+--|#line 735 "eiffel.l"
+debug ("GELEX")
+	std.error.put_line ("Executing scanner user-code from file 'eiffel.l' at line 735")
+end
 
 				current_position.go_to (3)
 				last_token := TE_STR_PLUS
 			
 when 148 then
---|#line 739
+--|#line 739 "eiffel.l"
+debug ("GELEX")
+	std.error.put_line ("Executing scanner user-code from file 'eiffel.l' at line 739")
+end
 
 				current_position.go_to (3)
 				last_token := TE_STR_MINUS
 			
 when 149 then
---|#line 743
+--|#line 743 "eiffel.l"
+debug ("GELEX")
+	std.error.put_line ("Executing scanner user-code from file 'eiffel.l' at line 743")
+end
 
 				current_position.go_to (3)
 				last_token := TE_STR_STAR
 			
 when 150 then
---|#line 747
+--|#line 747 "eiffel.l"
+debug ("GELEX")
+	std.error.put_line ("Executing scanner user-code from file 'eiffel.l' at line 747")
+end
 
 				current_position.go_to (3)
 				last_token := TE_STR_SLASH
 			
 when 151 then
---|#line 751
+--|#line 751 "eiffel.l"
+debug ("GELEX")
+	std.error.put_line ("Executing scanner user-code from file 'eiffel.l' at line 751")
+end
 
 				current_position.go_to (3)
 				last_token := TE_STR_POWER
 			
 when 152 then
---|#line 755
+--|#line 755 "eiffel.l"
+debug ("GELEX")
+	std.error.put_line ("Executing scanner user-code from file 'eiffel.l' at line 755")
+end
 
 				current_position.go_to (4)
 				last_token := TE_STR_DIV
 			
 when 153 then
---|#line 759
+--|#line 759 "eiffel.l"
+debug ("GELEX")
+	std.error.put_line ("Executing scanner user-code from file 'eiffel.l' at line 759")
+end
 
 				current_position.go_to (4)
 				last_token := TE_STR_MOD
 			
 when 154 then
---|#line 763
+--|#line 763 "eiffel.l"
+debug ("GELEX")
+	std.error.put_line ("Executing scanner user-code from file 'eiffel.l' at line 763")
+end
 
 				token_buffer.clear_all
 				append_text_substring_to_string (2, 4, token_buffer)
@@ -1051,7 +1510,10 @@ when 154 then
 				last_token := TE_STR_AND
 			
 when 155 then
---|#line 769
+--|#line 769 "eiffel.l"
+debug ("GELEX")
+	std.error.put_line ("Executing scanner user-code from file 'eiffel.l' at line 769")
+end
 
 				token_buffer.clear_all
 				append_text_substring_to_string (2, 9, token_buffer)
@@ -1059,7 +1521,10 @@ when 155 then
 				last_token := TE_STR_AND_THEN
 			
 when 156 then
---|#line 775
+--|#line 775 "eiffel.l"
+debug ("GELEX")
+	std.error.put_line ("Executing scanner user-code from file 'eiffel.l' at line 775")
+end
 
 				token_buffer.clear_all
 				append_text_substring_to_string (2, 8, token_buffer)
@@ -1067,7 +1532,10 @@ when 156 then
 				last_token := TE_STR_IMPLIES
 			
 when 157 then
---|#line 781
+--|#line 781 "eiffel.l"
+debug ("GELEX")
+	std.error.put_line ("Executing scanner user-code from file 'eiffel.l' at line 781")
+end
 
 				token_buffer.clear_all
 				append_text_substring_to_string (2, 4, token_buffer)
@@ -1075,7 +1543,10 @@ when 157 then
 				last_token := TE_STR_NOT
 			
 when 158 then
---|#line 787
+--|#line 787 "eiffel.l"
+debug ("GELEX")
+	std.error.put_line ("Executing scanner user-code from file 'eiffel.l' at line 787")
+end
 
 				token_buffer.clear_all
 				append_text_substring_to_string (2, 3, token_buffer)
@@ -1083,7 +1554,10 @@ when 158 then
 				last_token := TE_STR_OR
 			
 when 159 then
---|#line 793
+--|#line 793 "eiffel.l"
+debug ("GELEX")
+	std.error.put_line ("Executing scanner user-code from file 'eiffel.l' at line 793")
+end
 
 				token_buffer.clear_all
 				append_text_substring_to_string (2, 8, token_buffer)
@@ -1091,7 +1565,10 @@ when 159 then
 				last_token := TE_STR_OR_ELSE
 			
 when 160 then
---|#line 799
+--|#line 799 "eiffel.l"
+debug ("GELEX")
+	std.error.put_line ("Executing scanner user-code from file 'eiffel.l' at line 799")
+end
 
 				token_buffer.clear_all
 				append_text_substring_to_string (2, 4, token_buffer)
@@ -1099,7 +1576,10 @@ when 160 then
 				last_token := TE_STR_XOR
 			
 when 161 then
---|#line 805
+--|#line 805 "eiffel.l"
+debug ("GELEX")
+	std.error.put_line ("Executing scanner user-code from file 'eiffel.l' at line 805")
+end
 
 				token_buffer.clear_all
 				append_text_substring_to_string (2, text_count - 1, token_buffer)
@@ -1107,14 +1587,20 @@ when 161 then
 				last_token := TE_STR_FREE
 			
 when 162 then
---|#line 811
+--|#line 811 "eiffel.l"
+debug ("GELEX")
+	std.error.put_line ("Executing scanner user-code from file 'eiffel.l' at line 811")
+end
 
 					-- Empty string.
 				current_position.go_to (2)
 				last_token := TE_EMPTY_STRING
 			
 when 163 then
---|#line 816
+--|#line 816 "eiffel.l"
+debug ("GELEX")
+	std.error.put_line ("Executing scanner user-code from file 'eiffel.l' at line 816")
+end
 
 					-- Regular string.
 				token_buffer.clear_all
@@ -1123,7 +1609,10 @@ when 163 then
 				last_token := TE_STRING
 			
 when 164 then
---|#line 823
+--|#line 823 "eiffel.l"
+debug ("GELEX")
+	std.error.put_line ("Executing scanner user-code from file 'eiffel.l' at line 823")
+end
 
 					-- Verbatim string.
 				token_buffer.clear_all
@@ -1133,7 +1622,10 @@ when 164 then
 				set_start_condition (VERBATIM_STR3)
 			
 when 165 then
---|#line 834
+--|#line 834 "eiffel.l"
+debug ("GELEX")
+	std.error.put_line ("Executing scanner user-code from file 'eiffel.l' at line 834")
+end
 
 				line_number := line_number + 1
 				current_position.reset_column_positions
@@ -1142,7 +1634,10 @@ when 165 then
 				set_start_condition (VERBATIM_STR1)
 			
 when 166 then
---|#line 841
+--|#line 841 "eiffel.l"
+debug ("GELEX")
+	std.error.put_line ("Executing scanner user-code from file 'eiffel.l' at line 841")
+end
 
 					-- No final bracket-double-quote.
 				current_position.go_to (text_count)
@@ -1151,7 +1646,10 @@ when 166 then
 				report_missing_end_of_verbatim_string_error (token_buffer)
 			
 when 167 then
---|#line 857
+--|#line 857 "eiffel.l"
+debug ("GELEX")
+	std.error.put_line ("Executing scanner user-code from file 'eiffel.l' at line 857")
+end
 
 				if is_verbatim_string_closer then
 					current_position.go_to (text_count)
@@ -1183,14 +1681,20 @@ when 167 then
 				end
 			
 when 168 then
---|#line 887
+--|#line 887 "eiffel.l"
+debug ("GELEX")
+	std.error.put_line ("Executing scanner user-code from file 'eiffel.l' at line 887")
+end
 
 				current_position.go_to (text_count)
 				append_text_to_string (token_buffer)
 				set_start_condition (VERBATIM_STR2)
 			
 when 169 then
---|#line 892
+--|#line 892 "eiffel.l"
+debug ("GELEX")
+	std.error.put_line ("Executing scanner user-code from file 'eiffel.l' at line 892")
+end
 
 				line_number := line_number + 1
 				current_position.reset_column_positions
@@ -1199,7 +1703,10 @@ when 169 then
 				append_text_to_string (token_buffer)
 			
 when 170 then
---|#line 899
+--|#line 899 "eiffel.l"
+debug ("GELEX")
+	std.error.put_line ("Executing scanner user-code from file 'eiffel.l' at line 899")
+end
 
 					-- No final bracket-double-quote.
 				current_position.go_to (text_count)
@@ -1208,7 +1715,10 @@ when 170 then
 				report_missing_end_of_verbatim_string_error (token_buffer)
 			
 when 171 then
---|#line 915
+--|#line 915 "eiffel.l"
+debug ("GELEX")
+	std.error.put_line ("Executing scanner user-code from file 'eiffel.l' at line 915")
+end
 
 				line_number := line_number + 1
 				current_position.reset_column_positions
@@ -1218,7 +1728,10 @@ when 171 then
 				set_start_condition (VERBATIM_STR1)
 			
 when 172 then
---|#line 923
+--|#line 923 "eiffel.l"
+debug ("GELEX")
+	std.error.put_line ("Executing scanner user-code from file 'eiffel.l' at line 923")
+end
 
 					-- No final bracket-double-quote.
 				current_position.go_to (text_count)
@@ -1227,7 +1740,10 @@ when 172 then
 				report_missing_end_of_verbatim_string_error (token_buffer)
 			
 when 173 then
---|#line 936
+--|#line 936 "eiffel.l"
+debug ("GELEX")
+	std.error.put_line ("Executing scanner user-code from file 'eiffel.l' at line 936")
+end
 
 					-- String with special characters.
 				token_buffer.clear_all
@@ -1238,145 +1754,217 @@ when 173 then
 				set_start_condition (SPECIAL_STR)
 			
 when 174 then
---|#line 946
+--|#line 946 "eiffel.l"
+debug ("GELEX")
+	std.error.put_line ("Executing scanner user-code from file 'eiffel.l' at line 946")
+end
 
 				current_position.go_to (text_count)
 				append_text_to_string (token_buffer)
 			
 when 175 then
---|#line 950
+--|#line 950 "eiffel.l"
+debug ("GELEX")
+	std.error.put_line ("Executing scanner user-code from file 'eiffel.l' at line 950")
+end
 
 				current_position.go_to (2)
 				token_buffer.append_character ('%A')
 			
 when 176 then
---|#line 954
+--|#line 954 "eiffel.l"
+debug ("GELEX")
+	std.error.put_line ("Executing scanner user-code from file 'eiffel.l' at line 954")
+end
 
 				current_position.go_to (2)
 				token_buffer.append_character ('%B')
 			
 when 177 then
---|#line 958
+--|#line 958 "eiffel.l"
+debug ("GELEX")
+	std.error.put_line ("Executing scanner user-code from file 'eiffel.l' at line 958")
+end
 
 				current_position.go_to (2)
 				token_buffer.append_character ('%C')
 			
 when 178 then
---|#line 962
+--|#line 962 "eiffel.l"
+debug ("GELEX")
+	std.error.put_line ("Executing scanner user-code from file 'eiffel.l' at line 962")
+end
 
 				current_position.go_to (2)
 				token_buffer.append_character ('%D')
 			
 when 179 then
---|#line 966
+--|#line 966 "eiffel.l"
+debug ("GELEX")
+	std.error.put_line ("Executing scanner user-code from file 'eiffel.l' at line 966")
+end
 
 				current_position.go_to (2)
 				token_buffer.append_character ('%F')
 			
 when 180 then
---|#line 970
+--|#line 970 "eiffel.l"
+debug ("GELEX")
+	std.error.put_line ("Executing scanner user-code from file 'eiffel.l' at line 970")
+end
 
 				current_position.go_to (2)
 				token_buffer.append_character ('%H')
 			
 when 181 then
---|#line 974
+--|#line 974 "eiffel.l"
+debug ("GELEX")
+	std.error.put_line ("Executing scanner user-code from file 'eiffel.l' at line 974")
+end
 
 				current_position.go_to (2)
 				token_buffer.append_character ('%L')
 			
 when 182 then
---|#line 978
+--|#line 978 "eiffel.l"
+debug ("GELEX")
+	std.error.put_line ("Executing scanner user-code from file 'eiffel.l' at line 978")
+end
 
 				current_position.go_to (2)
 				token_buffer.append_character ('%N')
 			
 when 183 then
---|#line 982
+--|#line 982 "eiffel.l"
+debug ("GELEX")
+	std.error.put_line ("Executing scanner user-code from file 'eiffel.l' at line 982")
+end
 
 				current_position.go_to (2)
 				token_buffer.append_character ('%Q')
 			
 when 184 then
---|#line 986
+--|#line 986 "eiffel.l"
+debug ("GELEX")
+	std.error.put_line ("Executing scanner user-code from file 'eiffel.l' at line 986")
+end
 
 				current_position.go_to (2)
 				token_buffer.append_character ('%R')
 			
 when 185 then
---|#line 990
+--|#line 990 "eiffel.l"
+debug ("GELEX")
+	std.error.put_line ("Executing scanner user-code from file 'eiffel.l' at line 990")
+end
 
 				current_position.go_to (2)
 				token_buffer.append_character ('%S')
 			
 when 186 then
---|#line 994
+--|#line 994 "eiffel.l"
+debug ("GELEX")
+	std.error.put_line ("Executing scanner user-code from file 'eiffel.l' at line 994")
+end
 
 				current_position.go_to (2)
 				token_buffer.append_character ('%T')
 			
 when 187 then
---|#line 998
+--|#line 998 "eiffel.l"
+debug ("GELEX")
+	std.error.put_line ("Executing scanner user-code from file 'eiffel.l' at line 998")
+end
 
 				current_position.go_to (2)
 				token_buffer.append_character ('%U')
 			
 when 188 then
---|#line 1002
+--|#line 1002 "eiffel.l"
+debug ("GELEX")
+	std.error.put_line ("Executing scanner user-code from file 'eiffel.l' at line 1002")
+end
 
 				current_position.go_to (2)
 				token_buffer.append_character ('%V')
 			
 when 189 then
---|#line 1006
+--|#line 1006 "eiffel.l"
+debug ("GELEX")
+	std.error.put_line ("Executing scanner user-code from file 'eiffel.l' at line 1006")
+end
 
 				current_position.go_to (2)
 				token_buffer.append_character ('%%')
 			
 when 190 then
---|#line 1010
+--|#line 1010 "eiffel.l"
+debug ("GELEX")
+	std.error.put_line ("Executing scanner user-code from file 'eiffel.l' at line 1010")
+end
 
 				current_position.go_to (2)
 				token_buffer.append_character ('%'')
 			
 when 191 then
---|#line 1014
+--|#line 1014 "eiffel.l"
+debug ("GELEX")
+	std.error.put_line ("Executing scanner user-code from file 'eiffel.l' at line 1014")
+end
 
 				current_position.go_to (2)
 				token_buffer.append_character ('%"')
 			
 when 192 then
---|#line 1018
+--|#line 1018 "eiffel.l"
+debug ("GELEX")
+	std.error.put_line ("Executing scanner user-code from file 'eiffel.l' at line 1018")
+end
 
 				current_position.go_to (2)
 				token_buffer.append_character ('%(')
 			
 when 193 then
---|#line 1022
+--|#line 1022 "eiffel.l"
+debug ("GELEX")
+	std.error.put_line ("Executing scanner user-code from file 'eiffel.l' at line 1022")
+end
 
 				current_position.go_to (2)
 				token_buffer.append_character ('%)')
 			
 when 194 then
---|#line 1026
+--|#line 1026 "eiffel.l"
+debug ("GELEX")
+	std.error.put_line ("Executing scanner user-code from file 'eiffel.l' at line 1026")
+end
 
 				current_position.go_to (2)
 				token_buffer.append_character ('%<')
 			
 when 195 then
---|#line 1030
+--|#line 1030 "eiffel.l"
+debug ("GELEX")
+	std.error.put_line ("Executing scanner user-code from file 'eiffel.l' at line 1030")
+end
 
 				current_position.go_to (2)
 				token_buffer.append_character ('%>')
 			
 when 196 then
---|#line 1034
+--|#line 1034 "eiffel.l"
+debug ("GELEX")
+	std.error.put_line ("Executing scanner user-code from file 'eiffel.l' at line 1034")
+end
 
 				current_position.go_to (text_count)
 				process_string_character_code (text_substring (3, text_count - 1).to_integer)
 			
 when 197 then
---|#line 1038
+--|#line 1038 "eiffel.l"
+debug ("GELEX")
+	std.error.put_line ("Executing scanner user-code from file 'eiffel.l' at line 1038")
+end
 
 					-- This regular expression should actually be: %\n[ \t\r]*%
 					-- Left as-is for compatibility with previous releases.
@@ -1386,7 +1974,10 @@ when 197 then
 				current_position.set_line_number (line_number)
 			
 when 198 then
---|#line 1046
+--|#line 1046 "eiffel.l"
+debug ("GELEX")
+	std.error.put_line ("Executing scanner user-code from file 'eiffel.l' at line 1046")
+end
 
 				if text_count > 1 then
 					append_text_substring_to_string (1, text_count - 1, token_buffer)
@@ -1401,7 +1992,10 @@ when 198 then
 				end
 			
 when 199 then
---|#line 1059
+--|#line 1059 "eiffel.l"
+debug ("GELEX")
+	std.error.put_line ("Executing scanner user-code from file 'eiffel.l' at line 1059")
+end
 
 					-- Bad special character.
 				current_position.go_to (1)
@@ -1409,7 +2003,10 @@ when 199 then
 				report_string_bad_special_character_error
 			
 when 200 then
---|#line 1065
+--|#line 1065 "eiffel.l"
+debug ("GELEX")
+	std.error.put_line ("Executing scanner user-code from file 'eiffel.l' at line 1065")
+end
 
 					-- No final double-quote.
 				line_number := line_number + 1
@@ -1420,13 +2017,19 @@ when 200 then
 				report_string_missing_quote_error (token_buffer)
 			
 when 201 then
---|#line 1092
+--|#line 1092 "eiffel.l"
+debug ("GELEX")
+	std.error.put_line ("Executing scanner user-code from file 'eiffel.l' at line 1092")
+end
 
 				current_position.go_to (1)
 				report_unknown_token_error (text_item (1))
 			
 when 202 then
---|#line 0
+--|#line 0 "eiffel.l"
+debug ("GELEX")
+	std.error.put_line ("Executing scanner user-code from file 'eiffel.l' at line 0")
+end
 last_token := yyError_token
 fatal_error ("scanner jammed")
 			else
@@ -1440,7 +2043,10 @@ fatal_error ("scanner jammed")
 		do
 			inspect yy_sc
 when 0 then
---|#line 0
+--|#line 0 "eiffel.l"
+debug ("GELEX")
+	std.error.put_line ("Executing scanner user-code from file 'eiffel.l' at line 0")
+end
 
 				if inherit_context then
 					inherit_context := False
@@ -1450,28 +2056,40 @@ when 0 then
 				end
 			
 when 1 then
---|#line 0
+--|#line 0 "eiffel.l"
+debug ("GELEX")
+	std.error.put_line ("Executing scanner user-code from file 'eiffel.l' at line 0")
+end
 
 					-- No final double-quote.
 				set_start_condition (INITIAL)
 				report_string_missing_quote_error (token_buffer)
 			
 when 2 then
---|#line 0
+--|#line 0 "eiffel.l"
+debug ("GELEX")
+	std.error.put_line ("Executing scanner user-code from file 'eiffel.l' at line 0")
+end
 
 					-- No final bracket-double-quote.
 				set_start_condition (INITIAL)
 				report_missing_end_of_verbatim_string_error (token_buffer)
 			
 when 3 then
---|#line 0
+--|#line 0 "eiffel.l"
+debug ("GELEX")
+	std.error.put_line ("Executing scanner user-code from file 'eiffel.l' at line 0")
+end
 
 					-- No final bracket-double-quote.
 				set_start_condition (INITIAL)
 				report_missing_end_of_verbatim_string_error (token_buffer)
 			
 when 4 then
---|#line 0
+--|#line 0 "eiffel.l"
+debug ("GELEX")
+	std.error.put_line ("Executing scanner user-code from file 'eiffel.l' at line 0")
+end
 
 					-- No final bracket-double-quote.
 				set_start_condition (INITIAL)
@@ -2289,6 +2907,12 @@ feature {NONE} -- Constants
 
 	yyEnd_of_buffer: INTEGER is 203
 			-- End of buffer rule code
+
+	yyLine_used: BOOLEAN is false
+			-- Are line and column numbers used?
+
+	yyPosition_used: BOOLEAN is false
+			-- Is `position' used?
 
 	INITIAL: INTEGER is 0
 	SPECIAL_STR: INTEGER is 1

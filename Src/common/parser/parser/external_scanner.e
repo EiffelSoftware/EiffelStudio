@@ -48,241 +48,364 @@ feature {NONE} -- Implementation
 		do
 			inspect yy_act
 when 1 then
---|#line 36
+--|#line 36 "external.l"
+debug ("GELEX")
+	std.error.put_line ("Executing scanner user-code from file 'external.l' at line 36")
+end
 current_position.go_to (text_count)
 when 2 then
---|#line 37
+--|#line 37 "external.l"
+debug ("GELEX")
+	std.error.put_line ("Executing scanner user-code from file 'external.l' at line 37")
+end
 current_position.go_to (text_count)
 when 3 then
---|#line 41
+--|#line 41 "external.l"
+debug ("GELEX")
+	std.error.put_line ("Executing scanner user-code from file 'external.l' at line 41")
+end
 
 				current_position.go_to (1)
 				last_token := TE_COLON
 			
 when 4 then
---|#line 45
+--|#line 45 "external.l"
+debug ("GELEX")
+	std.error.put_line ("Executing scanner user-code from file 'external.l' at line 45")
+end
 
 				current_position.go_to (1)
 				last_token := TE_LPARAN
 			
 when 5 then
---|#line 49
+--|#line 49 "external.l"
+debug ("GELEX")
+	std.error.put_line ("Executing scanner user-code from file 'external.l' at line 49")
+end
 
 				current_position.go_to (1)
 				last_token := TE_RPARAN
 			
 when 6 then
---|#line 53
+--|#line 53 "external.l"
+debug ("GELEX")
+	std.error.put_line ("Executing scanner user-code from file 'external.l' at line 53")
+end
 
 				current_position.go_to (1)
 				last_token := TE_COMMA
 			
 when 7 then
---|#line 57
+--|#line 57 "external.l"
+debug ("GELEX")
+	std.error.put_line ("Executing scanner user-code from file 'external.l' at line 57")
+end
 
 				current_position.go_to (1)
 				last_token := TE_STAR
 			
 when 8 then
---|#line 61
+--|#line 61 "external.l"
+debug ("GELEX")
+	std.error.put_line ("Executing scanner user-code from file 'external.l' at line 61")
+end
 
 				current_position.go_to (1)
 				last_token := TE_ADDRESS
 			
 when 9 then
---|#line 65
+--|#line 65 "external.l"
+debug ("GELEX")
+	std.error.put_line ("Executing scanner user-code from file 'external.l' at line 65")
+end
 
 				current_position.go_to (1)
 				last_token := TE_LT
 			
 when 10 then
---|#line 69
+--|#line 69 "external.l"
+debug ("GELEX")
+	std.error.put_line ("Executing scanner user-code from file 'external.l' at line 69")
+end
 
 				current_position.go_to (1)
 				last_token := TE_GT
 			
 when 11 then
---|#line 73
+--|#line 73 "external.l"
+debug ("GELEX")
+	std.error.put_line ("Executing scanner user-code from file 'external.l' at line 73")
+end
 
 				current_position.go_to (1)
 				last_token := TE_DQUOTE
 			
 when 12 then
---|#line 79
+--|#line 79 "external.l"
+debug ("GELEX")
+	std.error.put_line ("Executing scanner user-code from file 'external.l' at line 79")
+end
 
 				current_position.go_to (6)
 				last_token := TE_ACCESS
 			
 when 13 then
---|#line 83
+--|#line 83 "external.l"
+debug ("GELEX")
+	std.error.put_line ("Executing scanner user-code from file 'external.l' at line 83")
+end
 
 				current_position.go_to (1)
 				last_token := TE_C_LANGUAGE
 			
 when 14 then
---|#line 87
+--|#line 87 "external.l"
+debug ("GELEX")
+	std.error.put_line ("Executing scanner user-code from file 'external.l' at line 87")
+end
 
 				current_position.go_to (16)
 				last_token := TE_C_LANGUAGE
 			
 when 15 then
---|#line 91
+--|#line 91 "external.l"
+debug ("GELEX")
+	std.error.put_line ("Executing scanner user-code from file 'external.l' at line 91")
+end
 
 				current_position.go_to (22)
 				last_token := TE_C_LANGUAGE
 			
 when 16 then
---|#line 95
+--|#line 95 "external.l"
+debug ("GELEX")
+	std.error.put_line ("Executing scanner user-code from file 'external.l' at line 95")
+end
 
 				current_position.go_to (3)
 				last_token := TE_CPP_LANGUAGE
 			
 when 17 then
---|#line 99
+--|#line 99 "external.l"
+debug ("GELEX")
+	std.error.put_line ("Executing scanner user-code from file 'external.l' at line 99")
+end
 
 				current_position.go_to (7)
 				last_token := TE_CREATOR
 			
 when 18 then
---|#line 103
+--|#line 103 "external.l"
+debug ("GELEX")
+	std.error.put_line ("Executing scanner user-code from file 'external.l' at line 103")
+end
 
 				current_position.go_to (8)
 				last_token := TE_DEFERRED
 			
 when 19 then
---|#line 107
+--|#line 107 "external.l"
+debug ("GELEX")
+	std.error.put_line ("Executing scanner user-code from file 'external.l' at line 107")
+end
 
 				current_position.go_to (6)
 				last_token := TE_DELETE
 			
 when 20 then
---|#line 111
+--|#line 111 "external.l"
+debug ("GELEX")
+	std.error.put_line ("Executing scanner user-code from file 'external.l' at line 111")
+end
 
 				current_position.go_to (3)
 				last_token := TE_DLL_LANGUAGE
 			
 when 21 then
---|#line 115
+--|#line 115 "external.l"
+debug ("GELEX")
+	std.error.put_line ("Executing scanner user-code from file 'external.l' at line 115")
+end
 
 				current_position.go_to (6)
 				last_token := TE_DLLWIN_LANGUAGE
 			
 when 22 then
---|#line 119
+--|#line 119 "external.l"
+debug ("GELEX")
+	std.error.put_line ("Executing scanner user-code from file 'external.l' at line 119")
+end
 
 				current_position.go_to (4)
 				last_token := TE_ENUM
 			
 when 23 then
---|#line 123
+--|#line 123 "external.l"
+debug ("GELEX")
+	std.error.put_line ("Executing scanner user-code from file 'external.l' at line 123")
+end
 
 				current_position.go_to (5)
 				last_token := TE_FIELD
 			
 when 24 then
---|#line 127
+--|#line 127 "external.l"
+debug ("GELEX")
+	std.error.put_line ("Executing scanner user-code from file 'external.l' at line 127")
+end
 
 				current_position.go_to (12)
 				last_token := TE_GET_PROPERTY
 			
 when 25 then
---|#line 131
+--|#line 131 "external.l"
+debug ("GELEX")
+	std.error.put_line ("Executing scanner user-code from file 'external.l' at line 131")
+end
 
 				current_position.go_to (2)
 				last_token := TE_IL_LANGUAGE
 			
 when 26 then
---|#line 135
+--|#line 135 "external.l"
+debug ("GELEX")
+	std.error.put_line ("Executing scanner user-code from file 'external.l' at line 135")
+end
 
 				current_position.go_to (6)
 				last_token := TE_INLINE
 			
 when 27 then
---|#line 139
+--|#line 139 "external.l"
+debug ("GELEX")
+	std.error.put_line ("Executing scanner user-code from file 'external.l' at line 139")
+end
 
 				current_position.go_to (3)
 				last_token := TE_JAVA_LANGUAGE
 			
 when 28 then
---|#line 143
+--|#line 143 "external.l"
+debug ("GELEX")
+	std.error.put_line ("Executing scanner user-code from file 'external.l' at line 143")
+end
 
 				current_position.go_to (5)
 				last_token := TE_MACRO
 			
 when 29 then
---|#line 147
+--|#line 147 "external.l"
+debug ("GELEX")
+	std.error.put_line ("Executing scanner user-code from file 'external.l' at line 147")
+end
 
 				current_position.go_to (8)
 				last_token := TE_OPERATOR
 			
 when 30 then
---|#line 151
+--|#line 151 "external.l"
+debug ("GELEX")
+	std.error.put_line ("Executing scanner user-code from file 'external.l' at line 151")
+end
 
 				current_position.go_to (9)
 				last_token := TE_SET_FIELD
 			
 when 31 then
---|#line 155
+--|#line 155 "external.l"
+debug ("GELEX")
+	std.error.put_line ("Executing scanner user-code from file 'external.l' at line 155")
+end
 
 				current_position.go_to (12)
 				last_token := TE_SET_PROPERTY
 			
 when 32 then
---|#line 159
+--|#line 159 "external.l"
+debug ("GELEX")
+	std.error.put_line ("Executing scanner user-code from file 'external.l' at line 159")
+end
 
 				current_position.go_to (16)
 				last_token := TE_SET_STATIC_FIELD
 			
 when 33 then
---|#line 163
+--|#line 163 "external.l"
+debug ("GELEX")
+	std.error.put_line ("Executing scanner user-code from file 'external.l' at line 163")
+end
 
 				current_position.go_to (9)
 				last_token := TE_SIGNATURE
 			
 when 34 then
---|#line 167
+--|#line 167 "external.l"
+debug ("GELEX")
+	std.error.put_line ("Executing scanner user-code from file 'external.l' at line 167")
+end
 
 				current_position.go_to (8)
 				last_token := TE_SIGNED
 			
 when 35 then
---|#line 171
+--|#line 171 "external.l"
+debug ("GELEX")
+	std.error.put_line ("Executing scanner user-code from file 'external.l' at line 171")
+end
 
 				current_position.go_to (6)
 				last_token := TE_STATIC
 			
 when 36 then
---|#line 175
+--|#line 175 "external.l"
+debug ("GELEX")
+	std.error.put_line ("Executing scanner user-code from file 'external.l' at line 175")
+end
 
 				current_position.go_to (12)
 				last_token := TE_STATIC_FIELD
 			
 when 37 then
---|#line 179
+--|#line 179 "external.l"
+debug ("GELEX")
+	std.error.put_line ("Executing scanner user-code from file 'external.l' at line 179")
+end
 
 				current_position.go_to (6)
 				last_token := TE_STRUCT
 			
 when 38 then
---|#line 183
+--|#line 183 "external.l"
+debug ("GELEX")
+	std.error.put_line ("Executing scanner user-code from file 'external.l' at line 183")
+end
 
 				current_position.go_to (4)
 				last_token := TE_TYPE
 			
 when 39 then
---|#line 187
+--|#line 187 "external.l"
+debug ("GELEX")
+	std.error.put_line ("Executing scanner user-code from file 'external.l' at line 187")
+end
 
 				current_position.go_to (8)
 				last_token := TE_UNSIGNED
 			
 when 40 then
---|#line 191
+--|#line 191 "external.l"
+debug ("GELEX")
+	std.error.put_line ("Executing scanner user-code from file 'external.l' at line 191")
+end
 
 				current_position.go_to (3)
 				last_token := TE_USE
 			
 when 41 then
---|#line 197
+--|#line 197 "external.l"
+debug ("GELEX")
+	std.error.put_line ("Executing scanner user-code from file 'external.l' at line 197")
+end
 
 				token_buffer.clear_all
 				append_text_to_string (token_buffer)
@@ -291,7 +414,10 @@ when 41 then
 				last_token := TE_INTEGER
 			
 when 42 then
---|#line 205
+--|#line 205 "external.l"
+debug ("GELEX")
+	std.error.put_line ("Executing scanner user-code from file 'external.l' at line 205")
+end
 
 					-- To escape external keywords.
 				token_buffer.clear_all
@@ -301,7 +427,10 @@ when 42 then
 				last_token := TE_ID
 			
 when 43 then
---|#line 214
+--|#line 214 "external.l"
+debug ("GELEX")
+	std.error.put_line ("Executing scanner user-code from file 'external.l' at line 214")
+end
 
 					-- Traditional identifier
 				token_buffer.clear_all
@@ -310,7 +439,10 @@ when 43 then
 				last_token := TE_ID
 			
 when 44 then
---|#line 221
+--|#line 221 "external.l"
+debug ("GELEX")
+	std.error.put_line ("Executing scanner user-code from file 'external.l' at line 221")
+end
 
 					-- Special identifier for include files that specifies
 					-- a path, e.g. <sys/timeb.h>
@@ -320,12 +452,18 @@ when 44 then
 				last_token := TE_INCLUDE_ID
 			
 when 45 then
---|#line 230
+--|#line 230 "external.l"
+debug ("GELEX")
+	std.error.put_line ("Executing scanner user-code from file 'external.l' at line 230")
+end
 
 				current_position.go_to (1)
 			
 when 46 then
---|#line 0
+--|#line 0 "external.l"
+debug ("GELEX")
+	std.error.put_line ("Executing scanner user-code from file 'external.l' at line 0")
+end
 last_token := yyError_token
 fatal_error ("scanner jammed")
 			else
@@ -337,10 +475,7 @@ fatal_error ("scanner jammed")
 	yy_execute_eof_action (yy_sc: INTEGER) is
 			-- Execute EOF semantic action.
 		do
-			inspect yy_sc
-			else
-				terminate
-			end
+			terminate
 		end
 
 feature {NONE} -- Table templates
@@ -764,6 +899,12 @@ feature {NONE} -- Constants
 
 	yyEnd_of_buffer: INTEGER is 47
 			-- End of buffer rule code
+
+	yyLine_used: BOOLEAN is false
+			-- Are line and column numbers used?
+
+	yyPosition_used: BOOLEAN is false
+			-- Is `position' used?
 
 	INITIAL: INTEGER is 0
 			-- Start condition codes

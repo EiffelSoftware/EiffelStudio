@@ -1,9 +1,106 @@
 indexing
 
 	description: "Parser token codes"
-	generator: "geyacc version 1.5"
+	generator: "geyacc version 3.1"
 
 class EXTERNAL_TOKENS
+
+inherit
+
+	YY_PARSER_TOKENS
+
+feature -- Access
+
+	token_name (a_token: INTEGER): STRING is
+			-- Name of token `a_token'
+		do
+			inspect a_token
+			when 0 then
+				Result := "EOF token"
+			when -1 then
+				Result := "Error token"
+			when TE_COLON then
+				Result := "TE_COLON"
+			when TE_LPARAN then
+				Result := "TE_LPARAN"
+			when TE_RPARAN then
+				Result := "TE_RPARAN"
+			when TE_COMMA then
+				Result := "TE_COMMA"
+			when TE_ADDRESS then
+				Result := "TE_ADDRESS"
+			when TE_STAR then
+				Result := "TE_STAR"
+			when TE_LT then
+				Result := "TE_LT"
+			when TE_GT then
+				Result := "TE_GT"
+			when TE_DQUOTE then
+				Result := "TE_DQUOTE"
+			when TE_ACCESS then
+				Result := "TE_ACCESS"
+			when TE_C_LANGUAGE then
+				Result := "TE_C_LANGUAGE"
+			when TE_CPP_LANGUAGE then
+				Result := "TE_CPP_LANGUAGE"
+			when TE_INLINE then
+				Result := "TE_INLINE"
+			when TE_DELETE then
+				Result := "TE_DELETE"
+			when TE_DLL_LANGUAGE then
+				Result := "TE_DLL_LANGUAGE"
+			when TE_DLLWIN_LANGUAGE then
+				Result := "TE_DLLWIN_LANGUAGE"
+			when TE_ENUM then
+				Result := "TE_ENUM"
+			when TE_GET_PROPERTY then
+				Result := "TE_GET_PROPERTY"
+			when TE_IL_LANGUAGE then
+				Result := "TE_IL_LANGUAGE"
+			when TE_MACRO then
+				Result := "TE_MACRO"
+			when TE_FIELD then
+				Result := "TE_FIELD"
+			when TE_JAVA_LANGUAGE then
+				Result := "TE_JAVA_LANGUAGE"
+			when TE_DEFERRED then
+				Result := "TE_DEFERRED"
+			when TE_OPERATOR then
+				Result := "TE_OPERATOR"
+			when TE_INTEGER then
+				Result := "TE_INTEGER"
+			when TE_SET_FIELD then
+				Result := "TE_SET_FIELD"
+			when TE_SET_PROPERTY then
+				Result := "TE_SET_PROPERTY"
+			when TE_SIGNATURE then
+				Result := "TE_SIGNATURE"
+			when TE_STATIC then
+				Result := "TE_STATIC"
+			when TE_CREATOR then
+				Result := "TE_CREATOR"
+			when TE_STATIC_FIELD then
+				Result := "TE_STATIC_FIELD"
+			when TE_SET_STATIC_FIELD then
+				Result := "TE_SET_STATIC_FIELD"
+			when TE_STRUCT then
+				Result := "TE_STRUCT"
+			when TE_TYPE then
+				Result := "TE_TYPE"
+			when TE_SIGNED then
+				Result := "TE_SIGNED"
+			when TE_UNSIGNED then
+				Result := "TE_UNSIGNED"
+			when TE_USE then
+				Result := "TE_USE"
+			when TE_ID then
+				Result := "TE_ID"
+			when TE_INCLUDE_ID then
+				Result := "TE_INCLUDE_ID"
+			else
+				Result := yy_character_token_name (a_token)
+			end
+		end
 
 feature -- Token codes
 

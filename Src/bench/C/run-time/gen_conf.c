@@ -1707,14 +1707,11 @@ rt_shared int16 eif_gen_id_from_cid (int16 *a_cidarr, int *dtype_map)
 					dtype = RTUD_INV(dtype);
 					a_cidarr [i] = dtype;
 				} else if (dtype == TUPLE_TYPE) {
-						/* We simply update uniformizer and number of generic
-						 * parameters of the tuple */
-					i = i + 1;
-					dtype = a_cidarr [i];
-					dtype  = (int16) dtype_map [dtype];
-					dtype = RTUD_INV(dtype);
-					a_cidarr [i] = dtype;
-					i = i + 1;
+						/* We simply skip uniformizer and number of generic
+						 * parameters of the tuple as they are not really used
+						 * and only update TUPLE dynamic type */
+					i = i + 3;
+					a_cidarr [i]  = RTUD_INV((int16) dtype_map [a_cidarr [i]]);
 				}
 			}
 		}
@@ -1731,13 +1728,11 @@ rt_shared int16 eif_gen_id_from_cid (int16 *a_cidarr, int *dtype_map)
 					dtype = RTUD_INV(dtype);
 					a_cidarr [i] = dtype;
 				} else if (dtype == TUPLE_TYPE) {
-						/* We simply update uniformizer and number of generic
-						 * parameters of the tuple */
-					i = i + 1;
-					dtype = a_cidarr [i];
-					dtype = RTUD_INV(dtype);
-					a_cidarr [i] = dtype;
-					i = i + 1;
+						/* We simply skip uniformizer and number of generic
+						 * parameters of the tuple as they are not really used
+						 * and only update TUPLE dynamic type */
+					i = i + 3;
+					a_cidarr [i]  = RTUD_INV(a_cidarr [i]);
 				}
 			}
 		}

@@ -93,7 +93,9 @@ feature {EIFNET_DEBUGGER, EIFNET_EXPORTER} -- Trigger eStudio done
 				end
 			end
 			callback_notification_processed := True
-			print ("End of estudio notification%N")
+			debug ("debugger_trace_callback")
+				print ("End of estudio notification%N")
+			end
 		end
 
 feature {EIFNET_EXPORTER, EB_EXPRESSION_EVALUATOR}  -- Trigger eStudio status

@@ -324,7 +324,7 @@ feature -- Conceptual Replication
 				inh_info := item
 				curr_feat := item.a_feature
 				replication := curr_feat.replicated
-				new_t.replace (replication, replication.feature_name)
+				new_t.replace_id (replication, replication.feature_name_id)
 				inh_info.set_a_feature (replication)
 				forth
 			end

@@ -149,10 +149,19 @@ feature -- Access
 			Result := implementation.is_vertical_scrolling_per_item
 		end
 		
+	dynamic_content_function: FUNCTION [ANY, TUPLE [INTEGER, INTEGER], EV_GRID_ITEM] is
+			-- Function which computes the item that resides in a particular position of the
+			-- grid while `is_content_partially_dynamic' or `is_content_completely_dynamic.
+		require
+			not_is_destroyed: not is_destroyed
+		do
+			Result := implementation.dynamic_content_function
+		end
+
 	is_content_partially_dynamic: BOOLEAN is
 			-- Is the content of `Current' partially dynamic? If `True' then
 			-- whenever an item must be re-drawn and it is not already set within `Current',
-			-- then it is queried via `content_requested_actions'. The returned item is added
+			-- then it is queried via execution of `dynamic_content_function'. The returned item is added
 			-- to `Current' so the query only occurs once.
 		require
 			not_destroyed: not is_destroyed
@@ -162,8 +171,8 @@ feature -- Access
 		
 	is_content_completely_dynamic: BOOLEAN is
 			-- Is the content of `Current' completely dynamic? If `True' then
-			-- whenever an item must be re-drawn it is always queried via `content_requested_actions'
-			-- and not added to `Current'.
+			-- whenever an item must be re-drawn it is always queried via execution
+			-- of `dynamic_content_function' and not added to `Current'.
 		require
 			not_destroyed: not is_destroyed
 		do
@@ -419,8 +428,8 @@ feature -- Status setting
 		end
 		
 	enable_complete_dynamic_content is
-			-- Ensure contents of `Current' must be retrieved when required via
-			-- `content_requested_actions'. Contents are requested each time they
+			-- Ensure contents of `Current' must be retrieved when required via execution of
+			-- `dynamic_content_function'. Contents are requested each time they
 			-- are displayed even if already contained in `Current'.
 		require
 			not_destroyed: not is_destroyed
@@ -431,8 +440,8 @@ feature -- Status setting
 		end
 		
 	enable_partial_dynamic_content is
-			-- Ensure contents of `Current' must be retrieved when required via
-			-- `content_requested_actions' only if the item is not already set
+			-- Ensure contents of `Current' must be retrieved when required via execution of
+			-- `dynamic_content_function' only if the item is not already set
 			-- in `Current'.
 		require
 			not_destroyed: not is_destroyed
@@ -494,6 +503,18 @@ feature -- Status setting
 			implementation.set_row_count_to (a_row_count)
 		ensure
 			row_count_set: row_count = a_row_count
+		end
+		
+	set_dynamic_content_function (a_function: FUNCTION [ANY, TUPLE [INTEGER, INTEGER], EV_GRID_ITEM]) is
+			-- Function which computes the item that resides in a particular position of the
+			-- grid while `is_content_partially_dynamic' or `is_content_completely_dynamic.
+		require
+			not_destroyed: not is_destroyed
+			a_function_not_void: a_function /= Void
+		do
+			implementation.set_dynamic_content_function (a_function)
+		ensure
+			dynamic_content_function_set: dynamic_content_function = a_function
 		end
 
 feature -- Status report

@@ -8,7 +8,7 @@ class
 	KERNEL_GENERATOR
 
 inherit
-	SHARED
+	WIZARD_SHARED
 
 Creation
 	make

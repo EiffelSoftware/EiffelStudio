@@ -9,7 +9,7 @@ class
 
 
 inherit
-	STATE_WINDOW
+	WIZARD_STATE_WINDOW
 		redefine
 			proceed_with_current_info,
 			make

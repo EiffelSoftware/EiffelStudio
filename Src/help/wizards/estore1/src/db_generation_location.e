@@ -9,7 +9,7 @@ class
 
 
 inherit
-	STATE_WINDOW
+	WIZARD_STATE_WINDOW
 		redefine
 			update_state_information,
 			proceed_with_current_info
@@ -109,7 +109,7 @@ feature -- basic Operations
 
 feature -- Implementation
 
-	location,project_location: SMART_TEXT_FIELD
+	location,project_location: WIZARD_SMART_TEXT_FIELD
 
 	pixmap_location: STRING is "essai.bmp"
 			-- Pixmap location

@@ -621,8 +621,7 @@ feature {NONE} -- Implementation
 				error_dialog.show_modal_to_window (Current)
 			end
 				-- Update system to reflect a change.
-			system_status.enable_project_modified
-			command_handler.update
+			(create {GB_GLOBAL_STATUS}).mark_as_dirty
 		end
 		
 	key_pressed_on_constants_list (a_key: EV_KEY) is
@@ -770,8 +769,7 @@ feature {NONE} -- Implementation
 				integer_input.remove_text
 	
 					-- Update system to reflect a change.
-				system_status.enable_project_modified
-				command_handler.update
+				;(create {GB_GLOBAL_STATUS}).mark_as_dirty
 			end
 		end
 		

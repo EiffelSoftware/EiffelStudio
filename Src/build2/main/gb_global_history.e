@@ -90,8 +90,7 @@ feature -- Basic operation
 			set_current_position (finish)
 			
 				-- Update modified status of project.
-			System_status.enable_project_modified
-			command_handler.update
+			(create {GB_GLOBAL_STATUS}).mark_as_dirty
 		ensure
 			current_position = finish
 		end
@@ -110,8 +109,7 @@ feature -- Basic operation
 			end
 			
 				-- Update modified status of project.
-			System_status.enable_project_modified
-			command_handler.update
+			(create {GB_GLOBAL_STATUS}).mark_as_dirty
 		end
 		
 	redo is
@@ -128,8 +126,7 @@ feature -- Basic operation
 			history_dialog.select_item (current_position + 1)
 			
 				-- Update modified status of project.
-			System_status.enable_project_modified
-			command_handler.update
+			(create {GB_GLOBAL_STATUS}).mark_as_dirty
 		end
 		
 	cut_off_at_current_position is

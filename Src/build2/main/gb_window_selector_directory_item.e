@@ -127,8 +127,7 @@ feature -- Implementation
 			a_component_not_void: a_component /= Void
 		do
 			add_object (a_component.object)
-			system_status.enable_project_modified
-			command_handler.update
+			(create {GB_GLOBAL_STATUS}).mark_as_dirty
 		end
 
 	add_object (an_object: GB_OBJECT) is
@@ -137,8 +136,7 @@ feature -- Implementation
 			an_object_not_void: an_object /= Void
 		do
 			window_selector.add_new_object (an_object, Current)
-			system_status.enable_project_modified
-			command_handler.update
+			(create {GB_GLOBAL_STATUS}).mark_as_dirty
 		end
 		
 	restrict_drop_to_valid_types (an_object: GB_OBJECT): BOOLEAN is

@@ -670,8 +670,7 @@ feature {NONE} -- Implementation
 			else
 				object.disable_client_generation
 			end
-			system_status.enable_project_modified
-			command_handler.update
+			(create {GB_GLOBAL_STATUS}).mark_as_dirty
 		end
 
 	show_event_dialog is
@@ -706,8 +705,7 @@ feature {NONE} -- Implementation
 					-- Must be performed after we have actually changed the name of the object.
 				update_editors_for_name_change
 					-- We now inform the system that the user has modified something
-				system_status.enable_project_modified
-				command_handler.update	
+				;(create {GB_GLOBAL_STATUS}).mark_as_dirty
 			else
 				undo_last_character (name_field)
 			end

@@ -189,8 +189,7 @@ feature {GB_XML_STORE} -- Output
 				loop
 					first.set_item_text (first.i_th (names.index), names.item)
 					(objects @ 2).set_item_text ((objects @ 2).i_th (names.index), names.item)
-					system_status.enable_project_modified
-					command_handler.update
+					(create {GB_GLOBAL_STATUS}).mark_as_dirty
 
 					names.forth
 				end

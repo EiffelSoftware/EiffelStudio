@@ -375,12 +375,7 @@ feature {NONE} -- Implementation
 			-- Call enable_project_modified on `system_status' and
 			-- update commands to reflect this.
 		do	
-			-- We update the system settings to reflect
-			-- the fact that a user modification has taken place.
-			-- This enables us to do things such as enable the save
-			-- options.
-			system_status.enable_project_modified
-			command_handler.update
+			(create {GB_GLOBAL_STATUS}).mark_as_dirty
 		end
 		
 	retrieve_and_set_integer_value (a_type_name: STRING): INTEGER is

@@ -130,6 +130,12 @@ feature -- Access
 	changed4: BOOLEAN
 			-- Has the class a new class type ?
 
+	is_generic: BOOLEAN is
+			-- Is current class generic?
+		do
+			Result := generics /= Void
+		end
+
 	is_removable: BOOLEAN is
 			-- May current class be removed from system?
 		do
@@ -2286,7 +2292,7 @@ feature
 			-- Check validity formal generic parameter declaration.
 			-- Validity rule VCFG (page 52)
 		require
-			generics_exists: generics /= Void
+			generics_exists: is_generic
 		local
 			generic_dec, next_dec: FORMAL_DEC_AS
 			generic_name: ID_AS
@@ -2372,7 +2378,7 @@ feature
 			-- Check validity formal generic parameter declaration.
 			-- Validity rule VCFG1 (page 52)
 		require
-			generics_exists: generics /= Void
+			generics_exists: is_generic
 		local
 			generic_dec: FORMAL_DEC_AS
 			generic_name: ID_AS
@@ -2404,7 +2410,7 @@ feature
 			-- I.e. that the specified creation procedures does exist
 			-- in the constraint class.
 		require
-			generics_exists: generics /= Void
+			generics_exists: is_generic
 		local
 			generic_dec: FORMAL_DEC_AS
 			l_area: SPECIAL [FORMAL_DEC_AS]
@@ -2428,7 +2434,7 @@ feature
 	check_constraint_genericity is
 			-- Check validity of constraint genericity
 		require
-			generics_exists: generics /= Void
+			generics_exists: is_generic
 		local
 			generic_dec: FORMAL_DEC_AS
 			constraint_type: TYPE
@@ -3040,7 +3046,7 @@ end
 			-- I-th constraint of the class
 		require
 			positive_argument: i > 0
-			has_generics: generics /= Void
+			generics_exists: is_generic
 			index_small_enough: i <= generics.count
 		do
 			Result := generics.i_th (i).constraint_type
@@ -3077,7 +3083,7 @@ end
 			-- Standard initialization of attribute `types' for non
 			-- generic classes.
 		require
-			no_generic: generics = Void
+			no_generic: not is_generic
 		local
 			class_type: CLASS_TYPE
 			type_i: CL_TYPE_I
@@ -3397,7 +3403,7 @@ feature -- Cecil
 	generate_cecil_value is
 			-- Generate Cecil type value for a non generic class
 		require
-			no_generics: generics = Void
+			no_generics: not is_generic
 		local
 			buffer: GENERATION_BUFFER
 		do
@@ -3412,7 +3418,7 @@ feature -- Cecil
 	cecil_value: INTEGER is
 			-- Cecil type value for a non generic class
 		require
-			no_generics: generics = Void
+			no_generics: not is_generic
 			one_type_only: types.count = 1
 		do
 			if is_expanded then

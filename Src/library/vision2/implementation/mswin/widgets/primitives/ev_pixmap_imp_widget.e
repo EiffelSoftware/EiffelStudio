@@ -59,7 +59,7 @@ inherit
 			wel_font, wel_set_font
 		redefine
 			on_paint, on_erase_background, class_background, default_style,
-			class_style, on_size
+			class_style
 		end
 
 creation

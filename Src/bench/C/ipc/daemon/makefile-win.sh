@@ -34,7 +34,7 @@ $microsoft-ebench.exe: $(LIBS) ebench.lmk
 	link $(LDFLAGS) $(LIBS) -OUT:$@ @ebench.lmk
 
 ebench.res: ebench.rc
-	rc -r ebench.rc
+	$resource_compiler -r ebench.rc
 
 ebench.lmk: $(OBJECTS) ebench.res
 	del ebench.lmk
@@ -42,14 +42,13 @@ ebench.lmk: $(OBJECTS) ebench.res
 	echo GDI32.LIB ADVAPI32.LIB USER32.LIB ebench.res >> ebench.lmk
 
 $borland-ebench.exe: $(LIBS) ebench.lbk
-	tlink32 @ebench.lbk
+	ilink32 @ebench.lbk
 
-ebench.lbk: $(OBJECTS)
-	echo -m -n c:\bc45\lib\c0x32.$obj + >> ebench.lbk
-	&echo $** + >> ebench.lbk
-	echo , ebench.exb,, IMPORT32.LIB+CW32.LIB+>> ebench.lbk
-	echo ..\shared\ipc.lbb + >> ebench.lbk
-	echo $(TOP)\idrs\idr.lbb,,ebench.res >> ebench.lbk
+ebench.lbk: $(OBJECTS) ebench.res
+	del ebench.lbk
+	echo $compiler_path\lib\c0w32.$obj $(OBJECTS), \
+	ebench.exe,, CW32 IMPORT32 ..\shared\ipc.lib \
+	$(TOP)\idrs\idr.lib,,ebench.res >> ebench.lbk
 
 $watcom-ebench.exe: $(LIBS) ebench.lwk
 	wlink @ebench.lwk

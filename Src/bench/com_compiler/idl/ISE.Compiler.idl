@@ -261,6 +261,9 @@ interface IEiffelSupport: IDispatch
 	
 	[id (DISPID_EiffelComCompiler_EiffelClassNameToDotnetName), helpstring ("Takes an Eiffel class name and converts it to .NET convention.")]
 	HRESULT EiffelClassNameToDotnetName ([in] BSTR bstrClassName, [out, retval] BSTR* pbstrFormattedName);
+
+	[id (DISPID_EiffelComCompiler_GetProcessId), helpstring ("Compiler Process Identifier.")]
+	HRESULT GetProcessId ([out] DWORD* pID);
 };
 
 

@@ -15,12 +15,21 @@ inherit
 	IEIFFEL_SUPPORT_IMPL_STUB
 		redefine
 			expand_path,
-			eiffel_class_name_to_dotnet_name
+			eiffel_class_name_to_dotnet_name,
+			get_process_id
 		end
 		
 create
 	default_create
 
+feature -- Access
+
+	get_process_id (pid: INTEGER_REF) is
+			-- Get Current Process Handle
+		do
+			pid.set_item (cwin_get_current_process_id)
+		end
+		
 feature -- Basic Operations
 
 	expand_path (a_path: STRING): STRING is
@@ -112,4 +121,14 @@ feature -- Basic Operations
 			Result := pascal_casing (True, a_class_name.as_lower, feature {IL_CASING_CONVERSION}.upper_case)
 		end
 
+feature {NONE} -- External
+
+	cwin_get_current_process_id: INTEGER is
+			-- Platform SDK GetCurrentProcess
+		external
+			"C [macro %"windows.h%"]: EIF_INTEGER"
+		alias
+			"GetCurrentProcessId()"
+		end
+		
 end -- class COM_COMPILER_SUPPORT

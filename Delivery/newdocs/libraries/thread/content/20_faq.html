@@ -1,0 +1,39 @@
+<!DOCTYPE HTML public "-//W3C//DTD HTML 4.0 Frameset//EN">
+<HTML>
+	<HEAD>
+		<TITLE>Multithread FAQ</TITLE>
+		<META NAME="MS-HKWD" CONTENT="multithreaded systems FAQ">
+		<LINK REL=Stylesheet HREF="../../../default.css" TYPE="text/css">
+	</HEAD>
+
+	<BODY>
+<H1>Multithread FAQ</H1>
+<h3>I've launched several threads and they do not seem to be executed:</h3>
+<blockquote>
+  <p>The thread that launched the several threads may be dead before its
+  children.</p>
+</blockquote>
+<h3>Two threads can lock the same mutex, however none of them unlocks it:</h3>
+<blockquote>
+  <p>Same problem as above. Maybe the first thread that locked the shared mutex
+  died before the second tried to lock it: thus, the first one
+  automatically unlocked it when it died. You should put a join_all or an infinite
+  loop in the parent thread.</p>
+</blockquote>
+<h3>I've added the option multithreaded in the project settings and it crashes:</h3>
+<blockquote>
+  <p>If you have already compiled your system in non-MT mode, you cannot change
+  the mode of compilation and simply relaunch your compilation
+  (the generated C-code would be incompatible). Delete all your object files in
+  your W_code or F_code directory and freeze or finalize the system again.</p>
+</blockquote>
+<h3>My once function changed during my MT-Eiffel-program:</h3>
+<blockquote>
+  <p>The once functions are once per thread in Multithreaded mode. Hence, each
+  once function is thread-specific and is initialized the first time it is
+  called in a thread.</p>
+  <p>You can create a once per process by following <a href="../../../tools/eiffelstudio/reference/30_compiler/40_advanced_topics/30_multithreaded_applications/20_once_features.html">these
+  instructions</a>.</p>
+</blockquote>
+</BODY>
+</HTML>

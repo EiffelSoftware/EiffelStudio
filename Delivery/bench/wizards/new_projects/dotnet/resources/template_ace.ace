@@ -5,7 +5,7 @@ system
 	<FL_PROJECT_NAME>
 
 root
-	<FL_ROOT_CLASS_NAME>: "<FL_CREATION_ROUTINE_NAME>"
+	<FL_ROOT_CLASS_NAME> (root_cluster): "<FL_CREATION_ROUTINE_NAME>"
 
 default
 	assertion (no)
@@ -18,7 +18,7 @@ cluster
 	root_cluster: "<FL_LOCATION>"
 
 		-- EiffelBase.NET
-	library base: "$ISE_EIFFEL\library.net\base"
+	library base: "$ISE_EIFFEL\library.net\base.net"
 <FL_EXTERNAL_CLASSES>	
 <FL_EXTERNAL_ASSEMBLIES>
 end

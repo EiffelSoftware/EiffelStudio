@@ -154,6 +154,7 @@ feature {NONE} -- Implementation
 			widget.drop_actions.set_veto_pebble_function (agent veto_drop)
 			widget.drop_actions.extend (agent add_new_object (?, Current))
 			widget.drop_actions.extend (agent add_new_component (?, Current))
+			widget.drop_actions.extend (agent add_new_directory_direct)
 			widget.key_press_actions.extend (agent check_for_object_delete)
 			widget.select_actions.extend (agent tool_bar.update_select_root_window_command)
 			widget.focus_in_actions.extend (agent command_handler.update)
@@ -1242,7 +1243,7 @@ feature {NONE} -- Implementation
 			position_not_changed: widget.index = old widget.index
 		end
 		
-feature {GB_WINDOW_SELECTOR_TOOL_BAR} -- Implementation
+feature {GB_WINDOW_SELECTOR_TOOL_BAR, GB_WINDOW_SELECTOR_COMMON_ITEM} -- Implementation
 		
 	internal_include_all_directories (directory: DIRECTORY; represented_path: ARRAYED_LIST [STRING]) is
 			-- Include all dirs reachable from the project location, to the current project
@@ -1297,7 +1298,22 @@ feature {GB_WINDOW_SELECTOR_TOOL_BAR} -- Implementation
 			end
 		end
 		
-	add_new_directory is
+	add_new_directory_direct (directory_pebble: GB_NEW_DIRECTORY_PEBBLE) is
+			--
+		do
+			add_new_directory (Current)
+		end
+		
+	add_new_directory_via_pick_and_drop (directory_pebble: GB_NEW_DIRECTORY_PEBBLE) is
+			-- Add a new directory within `Current'.
+			-- `directory_pebble' is used to type the agent for pick and drop purposes.
+		require
+			directory_pebble_not_void: directory_pebble /= Void
+		do
+			add_new_directory (Current)
+		end
+
+	add_new_directory (directory_pebble: GB_WINDOW_SELECTOR_COMMON_ITEM) is
 			-- Display a dialog for inputting a new name, that is only valid if
 			-- not contained in `directory_names'. Create a new dialog
 			-- from the name as entered by the user.
@@ -1310,7 +1326,7 @@ feature {GB_WINDOW_SELECTOR_TOOL_BAR} -- Implementation
 			l_directory_names: ARRAYED_LIST [STRING]
 		do
 			if retried then
-					-- Ensure that the tmeporary directory is deleted. It was not deleted
+					-- Ensure that the temporary directory is deleted. It was not deleted
 					-- in this case as an exception was raised before the deleting code
 					-- was executed, so we perform it here in this case.
 				command_add_directory.test_directory.delete
@@ -1319,14 +1335,19 @@ feature {GB_WINDOW_SELECTOR_TOOL_BAR} -- Implementation
 				dialog.show_actions.wipe_out
 				dialog.show_actions.extend (agent show_invalid_directory_warning (dialog, last_dialog_name))
 			else
-				l_selected_directory := selected_directory
+				if directory_pebble /= Void then
+					l_selected_directory ?= directory_pebble
+				else
+					l_selected_directory := selected_directory
+				end
+				
 				if l_selected_directory = Void then
 					-- We are adding to the root of `Current'
 					l_directory_names := directory_names
 				else
 					l_directory_names := l_selected_directory.directory_names
 				end
-				create dialog.make_with_values (unique_name_from_array (l_directory_names, "directory"), "New directory", "Please specify the directory name:"," is an invalid directory name.%N%NPlease ensure that it is not in use,%Nand is valid for the current platform.", agent valid_directory_name (?, selected_directory))
+				create dialog.make_with_values (unique_name_from_array (l_directory_names, "directory"), "New directory", "Please specify the directory name:"," is an invalid directory name.%N%NPlease ensure that it is not in use,%Nand is valid for the current platform.", agent valid_directory_name (?, l_selected_directory))
 				dialog.set_icon_pixmap (Icon_build_window @ 1)
 			end
 			
@@ -1334,8 +1355,8 @@ feature {GB_WINDOW_SELECTOR_TOOL_BAR} -- Implementation
 			
 			if not dialog.cancelled then
 				last_dialog_name := dialog.name
-				if selected_directory /= Void then
-					create command_add_directory.make (selected_directory, last_dialog_name)
+				if l_selected_directory /= Void then
+					create command_add_directory.make (l_selected_directory, last_dialog_name)
 				else
 					create command_add_directory.make (Void, last_dialog_name)
 				end

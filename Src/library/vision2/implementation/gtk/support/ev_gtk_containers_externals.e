@@ -27,15 +27,27 @@ feature {NONE} -- GTK C functions for general containers
 		end
 
 	c_gtk_container_nb_children (container: POINTER): INTEGER is
-		external "C [macro %"gtk_eiffel.h%"]"
+		external
+			"C | %"gtk_eiffel.h%""
 		end
 
 	c_gtk_container_ith_child (container: POINTER; i: INTEGER): POINTER is
-		external "C [macro %"gtk_eiffel.h%"]"
+		external
+			"C | %"gtk_eiffel.h%""
 		end
 
 	c_gtk_container_has_child (container, child: POINTER): BOOLEAN is
-		external "C [macro %"gtk_eiffel.h%"]"
+		external
+			"C | %"gtk_eiffel.h%""
+		end
+
+	c_gtk_scrollable_area_add (scroll_area, widget: POINTER) is
+		external "C | <gtk/gtk.h>"
+		end
+
+	c_gtk_scrollable_area_has_child (container, child: POINTER): BOOLEAN is
+		external
+			"C | %"gtk_eiffel.h%""
 		end
 
 feature {NONE} -- GTK C functions for windows
@@ -135,6 +147,10 @@ feature {NONE} -- GTK C functions for tables
 		end
 
 	c_gtk_table_columns (table: POINTER):INTEGER is
+		external "C | <gtk/gtk.h>"
+		end
+
+	c_gtk_table_set_spacing_if_needed (table: POINTER) is
 		external "C | <gtk/gtk.h>"
 		end
 

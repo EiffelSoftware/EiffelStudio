@@ -123,6 +123,12 @@ feature -- Access
 
 feature -- Status report
 
+	is_varflag_freadonly (flag: INTEGER): BOOLEAN is
+			-- Is flag FREADONLY?
+		do
+			Result := binary_and (flag, Varflag_freadonly) = Varflag_freadonly
+		end
+
 	is_varflag_frestricted (flag: INTEGER): BOOLEAN is
 			-- Is flag FRESTRICTED?
 		do
@@ -198,7 +204,8 @@ feature -- Status report
 	is_valid_varflag (flag: INTEGER): BOOLEAN is
 			-- Is `flag' a valid combination of varflags?
 		do
-			Result := is_varflag_frestricted (flag) or
+			Result := is_varflag_freadonly (flag) or
+					is_varflag_frestricted (flag) or
 					is_varflag_fsource (flag) or
 					is_varflag_fbindable (flag) or
 					is_varflag_frequestedit (flag) or
@@ -210,7 +217,8 @@ feature -- Status report
 					is_varflag_fuidefault (flag) or
 					is_varflag_fnonbrowsable (flag) or
 					is_varflag_freplaceable (flag) or
-					is_varflag_fimmediatebind (flag)
+					is_varflag_fimmediatebind (flag) or
+					flag = 0
 		end
 		
 end -- class ECOM_FUNC_FLAGS

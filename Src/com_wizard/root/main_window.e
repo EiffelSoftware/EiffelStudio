@@ -186,7 +186,7 @@ feature -- GUI Elements
 		once
 			create Result.make
 			Result.add_flag (Ofn_filemustexist)
-			Result.set_filter (<<"EiffelCOM Wizard Project (*.ewz)", "All Files (*.*)">>, <<"*.ewz", "*.*">>)
+			Result.set_filter (<<Wizard_filter, "All Files (*.*)">>, <<Wizard_wild_card, "*.*">>)
 		end
 
 	save_file_dialog: WEL_SAVE_FILE_DIALOG is
@@ -194,7 +194,7 @@ feature -- GUI Elements
 		once
 			create Result.make
 			Result.add_flag (Ofn_pathmustexist)
-			Result.set_filter (<<"EiffelCOM Wizard Project (*.ewz)", "All Files (*.*)">>, <<"*.ewz", "*.*">>)
+			Result.set_filter (<<Wizard_filter, "All Files (*.*)">>, <<Wizard_wild_card, "*.*">>)
 		end
 
 	Background_color: WEL_COLOR_REF is
@@ -233,14 +233,14 @@ feature -- Element Change
 			-- Begin a new line.
 		do
 			add_text ("%R%N")
+			process_messages
 		end
 
-	add_text (a_text: STRING) is
+	add_message (a_text: STRING) is
 			-- Add text `a_text' into window's text.
 		do
-			output_edit.set_caret_position (output_edit.count)
-			output_edit.insert_text (a_text)
-			output_edit.set_caret_position (output_edit.count)
+			add_text (a_text)
+			new_line
 		end
 	
 	add_title (a_title: STRING) is
@@ -253,6 +253,7 @@ feature -- Element Change
 			output_edit.set_character_format_word (Text_format)
 			output_edit.set_caret_position (output_edit.count)
 			new_line
+			process_messages
 		end
 
 	add_warning (a_warning: STRING) is
@@ -265,6 +266,7 @@ feature -- Element Change
 			output_edit.set_character_format_word (Text_format)
 			output_edit.set_caret_position (output_edit.count)
 			new_line
+			process_messages
 		end
 
 	add_error (a_error: STRING) is
@@ -277,30 +279,14 @@ feature -- Element Change
 			output_edit.set_character_format_word (Text_format)
 			output_edit.set_caret_position (output_edit.count)
 			new_line
+			process_messages
 		end
 
 	clear is
 			-- Clear window text.
 		do
 			output_edit.set_text (Initial_text)
-		end
-
-feature {WIZARD_MANAGER} -- Basic Operations
-
-	process_messages is
-			-- Process messages in queue.
-		do
-			from
-				win_msg.peek_all
-			until
-				not win_msg.last_boolean_result
-			loop
-				if win_msg.last_boolean_result then
-					win_msg.translate
-					win_msg.dispatch
-				end
-				win_msg.peek_all
-			end
+			process_messages
 		end
 
 feature {NONE} -- State management
@@ -358,7 +344,7 @@ feature {NONE} -- State management
 			elseif move_to_next then
 				previous_states.extend (state)
 				inspect
-					state
+					state	
 				when Initial_state then
 					if shared_wizard_environment.idl then
 						state := Idl_state
@@ -382,6 +368,33 @@ feature {NONE} -- State management
 		end
 
 feature {NONE} -- Implementation
+
+	add_text (a_text: STRING) is
+			-- Add text `a_text' into window's text.
+		do
+			output_edit.set_caret_position (output_edit.count)
+			output_edit.insert_text (a_text)
+			output_edit.set_caret_position (output_edit.count)
+			process_messages
+		end
+	
+	should_process_messages: BOOLEAN
+
+	process_messages is
+			-- Process messages in queue.
+		do
+			from
+				win_msg.peek_all
+			until
+				not win_msg.last_boolean_result
+			loop
+				if win_msg.last_boolean_result then
+					win_msg.translate
+					win_msg.dispatch
+				end
+				win_msg.peek_all
+			end
+		end
 
 	setup_output_edit is
 			-- Initialize output edit.
@@ -492,14 +505,14 @@ feature {NONE} -- Implementation
 				an_environment ?= retrieve_by_name (a_project)
 				if an_environment /= Void then
 					set_shared_wizard_environment (an_environment)
-					add_text (Open_message)
+					add_message (Open_message)
 					new_line
 				else
-					add_text (Open_error_message)
+					add_message (Open_error_message)
 					new_line
 				end
 			else
-				add_text (Open_error_message)
+				add_message (Open_error_message)
 				new_line
 			end
 		rescue
@@ -512,12 +525,15 @@ feature {NONE} -- Implementation
 		local
 			retried: BOOLEAN
 		do
+			if not a_project.substring (a_project.count  - Wizard_extension.count + 1, a_project.count).is_equal (Wizard_extension) then
+				a_project.append (Wizard_extension)
+			end
 			if not retried then
 				shared_wizard_environment.store_by_name (a_project)
-				add_text (Save_message)
+				add_message (Save_message)
 				new_line
 			else
-				add_text (Save_error_message)
+				add_message (Save_error_message)
 				new_line
 			end
 		rescue

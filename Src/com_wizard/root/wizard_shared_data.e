@@ -27,6 +27,25 @@ feature -- Access
 	Def_file_name: STRING is "$ecom.def"
 			-- Path to definition file
 
+	Wizard_extension: STRING is ".ewz"
+			-- Wizard file extension
+
+	Wizard_wild_card: STRING is
+			-- Wizard project file wild card
+		once
+			Result := "*"
+			Result.append (Wizard_extension)
+		end
+
+	Wizard_filter: STRING is
+			-- Wizard open/save file dialog filter title
+		once
+			Result := "EiffelCOM Wizard Project"
+			Result.append_character ('(')
+			Result.append (Wizard_wild_card)
+			Result.append_character (')')
+		end
+
 feature -- Element Change
 
 	set_shared_wizard_environment (an_environment: WIZARD_ENVIRONMENT) is

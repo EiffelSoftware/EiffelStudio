@@ -74,7 +74,6 @@ feature -- Basic Operations
 				finish
 			else
 				parent.add_title (Idl_compilation_title)
-				parent.process_messages
 				Idl_compiler.compile_idl
 				if shared_wizard_environment.abort then
 					finish
@@ -83,28 +82,24 @@ feature -- Basic Operations
 					if not shared_wizard_environment.use_universal_marshaller then
 						-- Compile c iid file
 						parent.add_title (Iid_compilation_title)
-						parent.process_messages
 						Idl_compiler.compile_iid
 						if shared_wizard_environment.abort then
 							finish
 						else
 							-- Compile c dlldata file
 							parent.add_title (Data_compilation_title)
-							parent.process_messages
 							Idl_compiler.compile_data
 							if shared_wizard_environment.abort then
 								finish
 							else
 								-- Compile c proxy/stub file
 								parent.add_title (Ps_compilation_title)
-								parent.process_messages
 								Idl_compiler.compile_ps
 								if shared_wizard_environment.abort then
 									finish
 								else
 									-- Final link
 									parent.add_title (Link_title)
-									parent.process_messages
 									Idl_compiler.link
 									if shared_wizard_environment.abort then
 										finish
@@ -128,7 +123,6 @@ feature {NONE} -- Implementation
 			-- Generate Eiffel/C++ code
 		do
 			parent.add_title (Analysis_title)
-			parent.process_messages
 			set_system_descriptor (create {WIZARD_SYSTEM_DESCRIPTOR}.make)
 			system_descriptor.generate (shared_wizard_environment.type_library_file_name)
 		end

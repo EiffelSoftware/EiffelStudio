@@ -97,12 +97,22 @@ feature -- Element change
 	set_text (a_text: STRING) is
 			-- Assign `a_text' to `text'.
 		local
-			temp_string: ANY
+			temp_string: STRING
+			dummy_string: ANY
 		do
 			real_text := clone (a_text)
-			temp_string := u_lined_filter (a_text).to_c
-			key := C.gtk_label_parse_uline (text_label,
-				$temp_string)
+			
+			if a_text.has ('&') then
+				temp_string := a_text
+				filter_ampersand (temp_string, '_')
+				dummy_string := temp_string.to_c
+				key := C.gtk_label_parse_uline (text_label,
+				$dummy_string)
+			else
+				key := 0
+				dummy_string := a_text.to_c
+				C.gtk_label_set_text (text_label, $dummy_string)
+			end	
 			C.gtk_widget_show (text_label)
 		end
 
@@ -155,24 +165,6 @@ feature {EV_ANY_I} -- Implementation
 			s.replace_substring_all ("&&", "&")
 		end
 
-	filter (s: STRING): STRING is
-			-- Copy of `s' with filtered out ampersands.
-			-- (If `s' does not contain ampersands, return `s'.)
-		require
-			s_not_void: s /= Void
-		do
-			if s.has ('&') then
-				Result := clone (s)
-				filter_ampersand (Result, ' ')
-			else
-				Result := s
-			end
-		ensure
-			copied_only_if_s_had_ampersand:
-				((old clone (s)).has ('&')) = (s /= Result)
-			s_not_changed: (old clone (s)).is_equal (s) 
-		end
-
 	u_lined_filter (s: STRING): STRING is
 			-- Copy of `s' with underscores instead of ampersands.
 			-- (If `s' does not contain ampersands, return `s'.)
@@ -206,14 +198,6 @@ feature {EV_ANY_I} -- Implementation
 			if select_actions_internal /= Void then
 				select_actions_internal.call (empty_tuple)
 			end
-		end
-		
-	default_menu_item_imp: EV_MENU_ITEM_IMP is
-		local
-			int: like interface
-		once
-			create int
-			Result ?= int.implementation
 		end
 
 	menu_item_box: POINTER is

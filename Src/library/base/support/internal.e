@@ -75,7 +75,22 @@ feature -- Access
 			object_not_void: object /= Void
 		do
 			Result := c_dynamic_type ($object)
+		ensure
+			Result > 0
 		end;
+
+	dynamic_type_from_type_name (name: STRING): INTEGER is
+			-- Dynamic type of objects of `name'ed type.
+		require
+			name_not_void: name /= Void
+		local
+			a: ANY
+		do
+			a := name.to_c
+			Result := c_dynamic_type_from_type_name ($a)
+		ensure
+			Result >= -1
+		end
 
 	field (i: INTEGER; object: ANY): ANY is
 			-- Object attached to the `i'-th field of `object'
@@ -342,6 +357,14 @@ feature {NONE} -- Implementation
 			"C | %"eif_internal.h%""
 		alias
 			"ei_dtype"
+		end;
+
+	c_dynamic_type_from_type_name (name: POINTER): INTEGER is
+			-- Dynamic type of objects of `name'ed type.
+		external
+			"C | %"eif_internal.h%""
+		alias
+			"eif_type_id"
 		end;
 
 	c_field (i: INTEGER; object: POINTER): ANY is

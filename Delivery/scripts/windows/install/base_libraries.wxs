@@ -445,7 +445,7 @@
 								<File Id="question.e" Name="question.e" />
 								<File Id="calculator.e" Name="CALCUL~1.E" LongName="calculator.e" />
 								<File Id="Ace.unix.ace48" Name="ACEUNI~2.ACE" LongName="Ace.unix.ace" />
-								<File Id="Ace.dotnet.ace3" Name="ACEDOT~1.ACE" LongName="Ace.dotnet.ace" />
+								<File Id="Ace.dotnet.ace13" Name="ACEDOT~1.ACE" LongName="Ace.dotnet.ace" />
 								<File Id="multiply.e" Name="multiply.e" />
 								<File Id="Readme50" Name="Readme" />
 								<File Id="plus.e" Name="plus.e" />

@@ -34,6 +34,7 @@
 							<File Id="c0s32.obj" Name="c0s32.obj" />
 							<File Id="wininet.lib9" Name="wininet.lib" />
 							<File Id="c0d32w.obj" Name="c0d32w.obj" />
+							<File Id="ws2_32_lib" Name="ws2_32.lib" />
 						</Component>
 						<Directory Id="Psdk" Name="Psdk">
 							<Component Id="Psdk" Guid="BFA8E92A-F608-4023-AC68-B8B8855188C1">
@@ -203,6 +204,7 @@
 								<File Id="nal.lib" Name="nal.lib" />
 								<File Id="aclcls.lib" Name="aclcls.lib" />
 								<File Id="sfc.lib" Name="sfc.lib" />
+								<File Id="nmapi_lib" Name="nmapi.lib" />
 							</Component>
 						</Directory>
 					</Directory>
@@ -1237,6 +1239,7 @@
 							<File Id="alloc.h" Name="alloc.h" />
 							<File Id="agterr.h" Name="agterr.h" />
 							<File Id="mblogon.h" Name="mblogon.h" />
+							<File Id="reconcil.h" Name="reconcil.h" />
 						</Component>
 						<Directory Id="Rw" Name="Rw">
 							<Component Id="Rw" Guid="48549F3F-1ED3-4B78-A5EA-C4B20A25E887">
@@ -1514,6 +1517,7 @@
 								<File Id="codecvt.cpp" Name="codecvt.cpp" />
 								<File Id="alg5.cpp" Name="alg5.cpp" />
 								<File Id="stlexam.h" Name="stlexam.h" />
+								<File Id="strngbuf_cpp" Name="strngbuf.cpp" />
 							</Component>
 						</Directory>
 					</Directory>

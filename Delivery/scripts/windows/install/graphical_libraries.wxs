@@ -743,6 +743,21 @@
 								<File Id="eg_node.e" Name="eg_node.e" />
 							</Component>
 						</Directory>
+						<Directory Id="physics" Name="physics">
+							<Component Id="physics" Guid="3E835E6F-20C9-4de5-A240-6CB382E4BF46">
+								<File Id="eg_force_directed_layout_e" Name="EG_FOR~1.E" LongName="eg_force_directed_layout.e" />
+								<File Id="eg_force_directed_physics_properties_e" Name="EG_FOR~2.E" LongName="eg_force_directed_physics_properties.e" />
+								<File Id="eg_particle_e" Name="EG_PAR~1.E" LongName="eg_particle.e" />
+								<File Id="eg_particle_simulation_bh_e" Name="EG_PAR~2.E" LongName="eg_particle_simulation_bh.e" />
+								<File Id="eg_particle_simulation_n2_e" Name="EG_PAR~3.E" LongName="eg_particle_simulation_n2.e" />
+								<File Id="eg_quad_tree_node_e" Name="EG_QUA~1.E" LongName="eg_quad_tree_node.e" />
+								<File Id="eg_spring_energy_e" Name="EG_SPR~1.E" LongName="eg_spring_energy.e" />
+								<File Id="eg_spring_particle.e" Name="EG_SRI~1.E" LongName="eg_spring_particle.e" />
+								<File Id="particle_simulation_e" Name="PARTIC~1.E" LongName="particle_simulation.e" />
+								<File Id="vector_e" Name="vector.e" />
+								<File Id="vector2d_e" Name="vector2d.e" />
+							</Component>
+						</Directory>
 						<Directory Id="view" Name="view">
 							<Component Id="view" Guid="C039B825-B267-45ac-9F3D-1CD796689FCB">
 								<File Id="eg_circle_layout.e" Name="EG_CIR~1.E" LongName="eg_circle_layout.e" />

@@ -198,6 +198,15 @@
 							</File>
 							<File Id="com_wizard.exe" Name="COM_WI~1.EXE" LongName="com_wizard.exe" />
 						</Component>
+						<Directory Id="resources" Name="RESOUR~1" LongName="resources">
+							<Component Id="resources" Guid="38533650-72BB-4328-8325-3E7038E7480D">
+								<File Id="eiffel_software_png" Name="EIFFEL~1.PNG" LongName="eiffel_software.png" />
+								<File Id="help_png" Name="help.png" />
+								<File Id="output_png" Name="output.png" />
+								<File Id="settings_png" Name="settings.png" />
+								<File Id="wizard_ico" Name="wizard.ico" />
+							</Component>
+						</Directory>
 						<Directory Id="config" Name="config">
 							<Component Id="config" Guid="78E866BF-4C04-4509-8F1C-864C54055C76">
 								<File Id="melted_path.reg" Name="MELTED~1.REG" LongName="melted_path.reg" KeyPath="yes" />

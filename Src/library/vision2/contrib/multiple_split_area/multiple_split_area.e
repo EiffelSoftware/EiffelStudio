@@ -278,38 +278,39 @@ feature -- Status setting
 			dockable_dialog: EV_DOCKABLE_DIALOG
 			tool: EV_WIDGET
 		do
-			if count /= 0 then
-				rebuilding_locked := True
-				stored_splitter_widths.wipe_out
-				all_split_areas.wipe_out
-				from
-					linear_representation.start
-				until
-					linear_representation.off
-				loop
-					index := linear_representation.index
-					remove_implementation (linear_representation.item)
-					update_maximized_minimized_post_removal (all_holders.i_th (index))
-				end
-				from
-					external_representation.start
-				until
-					external_representation.off
-				loop
-					tool := external_representation.item
-					dockable_dialog ?= parent_window (tool)
-					check
-						parent_window_was_dialog: dockable_dialog /= Void
-					end
-					dockable_dialog.wipe_out
-					dockable_dialog.destroy
-					if tool.parent /= Void then
-						tool.parent.prune_all (tool)
-					end
-					external_representation.remove
-				end
-				rebuilding_locked := False
+			rebuilding_locked := True
+			stored_splitter_widths.wipe_out
+			all_split_areas.wipe_out
+			from
+				linear_representation.start
+			until
+				linear_representation.off
+			loop
+				index := linear_representation.index
+				remove_implementation (linear_representation.item)
+				update_maximized_minimized_post_removal (all_holders.i_th (index))
 			end
+			from
+				external_representation.start
+			until
+				external_representation.off
+			loop
+				tool := external_representation.item
+				dockable_dialog ?= parent_window (tool)
+				check
+					parent_window_was_dialog: dockable_dialog /= Void
+				end
+				dockable_dialog.wipe_out
+				dockable_dialog.destroy
+				if tool.parent /= Void then
+					tool.parent.prune_all (tool)
+				end
+				external_representation.remove
+			end
+			rebuilding_locked := False
+		ensure
+			empty: count = 0
+			no_external_tools: external_representation.is_empty
 		end
 		
 	maximize_item (a_widget: EV_WIDGET) is

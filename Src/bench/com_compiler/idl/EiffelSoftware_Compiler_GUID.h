@@ -60,6 +60,9 @@
 #define UUID_IEIFFELHTMLDOCUMENTATIONGENERATOR  E1FFE119-790F-48CB-8869-DB06184f97b4
 #define UUID_IEIFFELHTMLDOCUMENTATIONEVENTS     E1FFE13E-ED26-4DED-AAFB-21FA8B28e879
 #define UUID_IEIFFELSUPPORT						E1FFE14A-52C6-4692-B12E-49E0331E74FF
+#define UUID_IEIFFELASSERTIONDESCRIPTOR			E1FFE185-EC30-4AF4-ADAA-509C7D6AF897
+#define UUID_IENUMASSERTION						E1FFE1E7-B094-4C16-978C-56D480D4DDE0
+
 
 // =========================================================================
 //                                                                 Enum GUID
@@ -260,6 +263,7 @@ enum
 
     // DISPID_EiffelComCompiler_Name,
     // DISPID_EiffelComCompiler_Description,
+    DISPID_EiffelComCompiler_Summary,
     DISPID_EiffelComCompiler_ExternalName,
     // DISPID_EiffelComCompiler_ToolTip,
     DISPID_EiffelComCompiler_IsInSystem,
@@ -286,7 +290,15 @@ enum
     DISPID_EiffelComCompiler_IsTrueExternal,
     DISPID_EiffelComCompiler_IsGeneric,
     // DISPID_EiffelComCompiler_IsLibrary,
+    DISPID_EiffelComCompiler_IsExpanded,
+    DISPID_EiffelComCompiler_IsFrozen,
     DISPID_EiffelComCompiler_MemberOf,
+
+	// IEiffelAssertionDescriptor dispatch ID's
+
+	DISPID_EiffelComCompiler_Tag,
+	DISPID_EiffelComCompiler_Expressions,
+
 
     // IEnumFeature dispatch ID's
 
@@ -305,8 +317,10 @@ enum
     DISPID_EiffelComCompiler_EvaluatedClass,
     DISPID_EiffelComCompiler_Signature,
     // DISPID_EiffelComCompiler_Description,
+	//DISPID_EiffelComCompiler_Summary,
     DISPID_EiffelComCompiler_Parameters,
     DISPID_EiffelComCompiler_ReturnType,
+    DISPID_EiffelComCompiler_Exports,
     DISPID_EiffelComCompiler_FeatureLocation,
     DISPID_EiffelComCompiler_AllCallers,
     DISPID_EiffelComCompiler_AllCallersCount,
@@ -325,7 +339,7 @@ enum
     // DISPID_EiffelComCompiler_IsExternal,
     // DISPID_EiffelComCompiler_IsDeferred,
     DISPID_EiffelComCompiler_IsConstant,
-    DISPID_EiffelComCompiler_IsFrozen,
+    //DISPID_EiffelComCompiler_IsFrozen,
     DISPID_EiffelComCompiler_IsInfix,
     DISPID_EiffelComCompiler_IsPrefix,
     DISPID_EiffelComCompiler_IsAttribute,
@@ -333,8 +347,11 @@ enum
     DISPID_EiffelComCompiler_IsFunction,
     DISPID_EiffelComCompiler_IsUnique,
     DISPID_EiffelComCompiler_IsObsolete,
+    DISPID_EiffelComCompiler_ObsoleteMessage,
     DISPID_EiffelComCompiler_HasPrecondition,
+	DISPID_EiffelComCompiler_Postconditions,
     DISPID_EiffelComCompiler_HasPostcondition,
+    DISPID_EiffelComCompiler_Preconditions,
 
     // IEnumParameter dispatch ID's
 
@@ -348,6 +365,7 @@ enum
     // IEiffelParameterDescriptor dispatch ID's
 
     // DISPID_EiffelComCompiler_Name,
+    DISPID_EiffelComCompiler_Type,
     DISPID_EiffelComCompiler_Display,
 
     // IEiffelSystemClusters dispatch ID's

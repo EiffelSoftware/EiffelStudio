@@ -502,6 +502,56 @@ interface IEiffelHtmlDocumentationGenerator: IDispatch
 	HRESULT UnadviseStatusCallback ([in] IEiffelHtmlDocumentationEvents* pIEiffelHtmlDocumentationEvents);
 };
 
+/*
+//---------------------------------------------------------------------
+// IEiffelAssertionDescriptor
+//---------------------------------------------------------------------
+[
+	object,
+	dual,
+	uuid (UUID_IEIFFELASSERTIONDESCRIPTOR),
+	helpstring ("Feature parameter info.")
+]
+interface IEiffelAssertionDescriptor: IDispatch
+{
+	[id (DISPID_EiffelComCompiler_Tag), helpstring ("Assertion tag name"), propget]
+	HRESULT Tag ([out, retval] BSTR* pbstrTag);
+
+	[id (DISPID_EiffelComCompiler_Expressions), helpstring ("Assertion extression"), propget]
+	HRESULT Expressions ([out, retval] BSTR* pbstrExpression);
+};
+
+//---------------------------------------------------------------------
+// IEnumParameter
+//---------------------------------------------------------------------
+[
+	object,
+	dual,
+	uuid (UUID_IENUMASSERTION),
+	helpstring ("Assertion enumeration.")
+]
+interface IEnumAssertion: IDispatch
+{
+	[id (DISPID_EiffelComCompiler_Next), helpstring ("Go to next item in enumerator")]
+	HRESULT Next([out] IEiffelAssertionDescriptor** ppIEiffelAssertionDescriptor , [out] ULONG *pulFetched);
+
+	[id (DISPID_EiffelComCompiler_Skip), helpstring ("Skip `ulCount' items.")]
+	HRESULT Skip([in] ULONG ulCount);
+
+	[id (DISPID_EiffelComCompiler_Reset), helpstring ("Reset enumerator.")]
+	HRESULT Reset();
+
+	[id (DISPID_EiffelComCompiler_Clone), helpstring ("Clone enumerator.")]
+	HRESULT Clone([out] IEnumAssertion** ppIEnumAssertion);
+
+	[id (DISPID_EiffelComCompiler_IthItem), helpstring ("Retrieve enumerators ith item at `ulIndex'.")]
+	HRESULT IthItem ([in] ULONG ulIndex, [out] IEiffelAssertionDescriptor** ppIEiffelAssertionDescriptor);
+
+	[id (DISPID_EiffelComCompiler_Count), helpstring("Retrieve enumerator item count."), propget]
+	HRESULT Count ([out, retval] ULONG *ulCount);
+};
+*/
+
 //---------------------------------------------------------------------
 // IEiffelParameterDescriptor
 //---------------------------------------------------------------------
@@ -515,6 +565,9 @@ interface IEiffelParameterDescriptor: IDispatch
 {
 	[id (DISPID_EiffelComCompiler_Name), helpstring ("Parameter name"), propget]
 	HRESULT Name ([out, retval] BSTR* pbstrName);
+
+	[id (DISPID_EiffelComCompiler_Type), helpstring ("Parameter type"), propget]
+	HRESULT Type ([out, retval] BSTR* pbstrType);
 
 	[id (DISPID_EiffelComCompiler_Display), helpstring ("Parameter display"), propget]
 	HRESULT Display ([out, retval] BSTR* pbstrDisplay);
@@ -576,14 +629,20 @@ interface IEiffelFeatureDescriptor: IDispatch
 	[id (DISPID_EiffelComCompiler_Signature), helpstring ("Feature signature."), propget]
 	HRESULT Signature ([out, retval] BSTR* pbstrSignature);
 
-	[id (DISPID_EiffelComCompiler_Description), helpstring ("Feature description."), propget]
+	[id (DISPID_EiffelComCompiler_Description), helpstring ("Complete feature description."), propget]
 	HRESULT Description ([out, retval] BSTR* pbstrDescription);
+	
+	[id (DISPID_EiffelComCompiler_Summary), helpstring ("Feature summary description."), propget]
+	HRESULT Summary ([out, retval] BSTR* pbstrSummary);
 
 	[id (DISPID_EiffelComCompiler_Parameters), helpstring ("Feature parameters.")]
 	HRESULT Parameters ([out, retval] IEnumParameter** ppIEnumParameter);
 
 	[id (DISPID_EiffelComCompiler_ReturnType), helpstring ("Feature return type."), propget]
 	HRESULT ReturnType ([out, retval] BSTR* pbstrReturnType);
+	
+	[id (DISPID_EiffelComCompiler_Exports), helpstring ("Feature export status.")]
+	HRESULT Exports ([out, retval] IEiffelEnumString** ppExports);	
 
 	[id (DISPID_EiffelComCompiler_FeatureLocation), helpstring ("Feature location, full path to file and line number")]
 	HRESULT FeatureLocation ([out] BSTR* pbstrPath, [out] ULONG* pulLine);
@@ -663,11 +722,20 @@ interface IEiffelFeatureDescriptor: IDispatch
 	[id (DISPID_EiffelComCompiler_IsObsolete), helpstring ("Is obsolete feature?"), propget]
 	HRESULT IsObsolete ([out, retval] VARIANT_BOOL* pvbObsolete);
 
+	[id (DISPID_EiffelComCompiler_ObsoleteMessage), helpstring ("Obsolete feature message?"), propget]
+	HRESULT ObsoleteMessage ([out, retval] BSTR* pbstrMessage);
+
 	[id (DISPID_EiffelComCompiler_HasPrecondition), helpstring ("Does feature have precondition?"), propget]
 	HRESULT HasPrecondition([out, retval] VARIANT_BOOL* pvbPrecondition);
 
+	[id (DISPID_EiffelComCompiler_Preconditions), helpstring ("Feature preconditions"), propget]
+	HRESULT Preconditions ([out, retval] BSTR* pbstrConditions);
+
 	[id (DISPID_EiffelComCompiler_HasPostcondition), helpstring ("Does feature have postcondition?"), propget]
 	HRESULT HasPostcondition([out, retval] VARIANT_BOOL* pvbPostcondition);
+	
+	[id (DISPID_EiffelComCompiler_Postconditions), helpstring ("Feature postconditions"), propget]
+	HRESULT Postconditions ([out, retval] BSTR* pbstrConditions);
 	
 	[id (DISPID_EiffelComCompiler_MemberOf), helpstring ("Retrieve class feature is member of"), propget]
 	HRESULT MemberOf([out, retval] IEiffelClassDescriptor** ppMember);
@@ -717,8 +785,11 @@ interface IEiffelClassDescriptor: IDispatch
 	[id (DISPID_EiffelComCompiler_Name), helpstring ("Class name."), propget]
 	HRESULT Name ([out, retval] BSTR* pbstrName);
 
-	[id (DISPID_EiffelComCompiler_Description), helpstring ("Class description."), propget]
+	[id (DISPID_EiffelComCompiler_Description), helpstring ("Full class description."), propget]
 	HRESULT Description ([out, retval] BSTR* pbstrDescription);
+	
+	[id (DISPID_EiffelComCompiler_Summary), helpstring ("Is class expanded?"), propget]
+	HRESULT Summary ([out, retval] BSTR* pbstrSummary);
 
 	[id (DISPID_EiffelComCompiler_ExternalName), helpstring ("Class external name."), propget]
 	HRESULT ExternalName ([out, retval] BSTR* pbstrExternalName);
@@ -797,6 +868,18 @@ interface IEiffelClassDescriptor: IDispatch
 
 	[id (DISPID_EiffelComCompiler_IsLibrary), helpstring ("Is class part of a library?"), propget]
 	HRESULT IsLibrary ([out, retval] VARIANT_BOOL* pvbLibrary);
+	
+	[id (DISPID_EiffelComCompiler_IsExpanded), helpstring ("Is class expanded?"), propget]
+	HRESULT IsExpanded ([out, retval] VARIANT_BOOL* pvbExpanded);
+	
+	[id (DISPID_EiffelComCompiler_IsFrozen), helpstring ("Is class frozen?"), propget]
+	HRESULT IsFrozen ([out, retval] VARIANT_BOOL* pvbFrozen);
+	
+	[id (DISPID_EiffelComCompiler_IsObsolete), helpstring ("Is obsolete class?"), propget]
+	HRESULT IsObsolete ([out, retval] VARIANT_BOOL* pvbObsolete);
+	
+	[id (DISPID_EiffelComCompiler_ObsoleteMessage), helpstring ("Obsolete feature message?"), propget]
+	HRESULT ObsoleteMessage ([out, retval] BSTR* pbstrMessage);
 	
 	[id (DISPID_EiffelComCompiler_MemberOf), helpstring ("Retrieve cluster feature is member of"), propget]
 	HRESULT MemberOf([out, retval] IEiffelClusterDescriptor** ppMember);
@@ -1282,10 +1365,10 @@ interface IEiffelSystemBrowser: IDispatch
 	HRESULT FeatureDescriptor ([in] BSTR bstrClassName, [in] BSTR bstrFeatureName, [out, retval] IEiffelFeatureDescriptor** ppIEiffelFeatureDescriptor);
 
 	[id (DISPID_EiffelComCompiler_SearchClasses), helpstring ("Search classes with names matching `a_string'.")]
-	HRESULT SearchClasses ([in] BSTR bstrSearchStr, [in] VARIANT_BOOL vbIsSubstring, [out, retval] IEnumEiffelClass** ppIEnumEiffelClass);
+	HRESULT SearchClasses ([in] BSTR bstrSearchStr, [in] VARIANT_BOOL vbMatchCase, [in] VARIANT_BOOL vbIsSubstring, [in] VARIANT_BOOL vbIsPrefix, [out, retval] IEnumEiffelClass** ppIEnumEiffelClass);
 
 	[id (DISPID_EiffelComCompiler_SearchFeatures), helpstring ("Search feature with names matching `a_string'.")]
-	HRESULT SearchFeatures ([in] BSTR bstrSearchStr, [in] VARIANT_BOOL vbIsSubstring, [out, retval] IEnumFeature ** ppIEnumFeature);
+	HRESULT SearchFeatures ([in] BSTR bstrSearchStr, [in] VARIANT_BOOL vbMatchCase, [in] VARIANT_BOOL vbIsSubstring, [in] VARIANT_BOOL vbIsPrefix, [out, retval] IEnumFeature ** ppIEnumFeature);
 
 	[id (DISPID_EiffelComCompiler_DescriptionFromDotnetType), helpstring ("Retrieve description from dotnet type")]
 	HRESULT DescriptionFromDotnetType ([in] BSTR bstrAssemblyName, [in] BSTR bstrFullDotnetName, [out, retval] BSTR *pbstrDescription);
@@ -1548,6 +1631,8 @@ library EiffelComCompiler
 	interface IEiffelClusterDescriptor;
 	interface IEnumEiffelClass;
 	interface IEiffelClassDescriptor;
+	//interface IEiffelAssertionDescriptor;
+	//interface IEnumAssertion;
 	interface IEnumFeature;
 	interface IEiffelFeatureDescriptor;
 	interface IEnumParameter;

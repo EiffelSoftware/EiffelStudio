@@ -10,6 +10,9 @@ class INTERRUPT_ERROR
 inherit
 
 	ERROR
+		redefine
+			help_file_name
+		end
 
 feature -- Status report
 
@@ -32,6 +35,12 @@ feature -- Output
 
 	code: STRING is 
 			-- Interrupt code
+		do
+			Result := "INTERRUPT"
+		end;
+
+	help_file_name: STRING is 
+			-- File name for the interrupt message
 		do
 			if is_during_compilation then
 				Result := "COMP_INT"

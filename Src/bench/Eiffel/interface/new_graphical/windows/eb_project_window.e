@@ -259,30 +259,6 @@ feature -- Modifiable menus
 	precompile_menu_item: EV_MENU_ITEM
 			-- Precompile menu entry
 
-feature -- Progress Dialog
-
-	progress_dialog: DEGREE_OUTPUT
-			-- Progress dialog associated with the project.
-			-- It can be a graphical one or a text mode one.
-
-	set_progress_dialog (new_progress_dialog: DEGREE_OUTPUT) is
-			-- Set `progress_dialog' to `new_progress_dialog'.
-			-- Set also `Eiffel_project' progress_dialog which needs to know
-			-- that we changed the kind of `progress_dialog'.
-		local
---			graphical_version: GRAPHICAL_DEGREE_OUTPUT
-		do
---			progress_dialog := new_progress_dialog
---			Eiffel_project.set_degree_output (progress_dialog)
---
---				-- If `process_dialog' is a graphical dialog then
---				-- We need to give him its parent.
---			graphical_version ?= progress_dialog
---			if graphical_version /= Void then
---				graphical_version.set_parent_window (implementation)
---			end
-		end
-
 feature -- Update
 
 	close_windows is
@@ -295,10 +271,10 @@ feature -- Update
 		local
 			sep: SEPARATOR
 			case_storage_cmd: CASE_STORAGE
-			case_storage_menu_entry: EB_MENU_ENTRY
+			case_storage_menu_entry: EV_MENU_ITEM
 			document_submenu: EV_MENU
 			generate_doc_cmd: DOCUMENT_GENERATION
-			generate_menu_entry: EB_MENU_ENTRY
+			generate_menu_entry: EV_MENU_ITEM
 			generate_submenu: EV_MENU
 		do
 			create menu_bar.make (Current)
@@ -313,7 +289,9 @@ feature -- Update
 
 			build_file_menu (file_menu)
 			build_compile_menu
-			build_toolbar_menu
+			debug_tool.build_edit_menu (debug_menu)
+			debug_tool.build_special_menu (debug_menu)
+			build_special_menu
 			build_windows_menu (window_menu)
 --			build_help_menu
 
@@ -344,16 +322,16 @@ feature -- Update
 --
 --			create sep.make (Interface_names.t_Empty, special_menu)
 --			create case_storage_cmd
---			create case_storage_menu_entry.make_default (case_storage_cmd, special_menu)
+--			create case_storage_menu_item.make_with_text_default (case_storage_cmd, special_menu)
 --			create generate_submenu.make (Interface_names.m_Document, special_menu)
 --			create generate_doc_cmd.make_flat
---			create generate_menu_entry.make (generate_doc_cmd, generate_submenu)
+--			create generate_menu_item.make_with_text (generate_doc_cmd, generate_submenu)
 --			create generate_doc_cmd.make_flat_short
---			create generate_menu_entry.make (generate_doc_cmd, generate_submenu)
+--			create generate_menu_item.make_with_text (generate_doc_cmd, generate_submenu)
 --			create generate_doc_cmd.make_short
---			create generate_menu_entry.make (generate_doc_cmd, generate_submenu)
+--			create generate_menu_item.make_with_text (generate_doc_cmd, generate_submenu)
 --			create generate_doc_cmd.make_text
---			create generate_menu_entry.make (generate_doc_cmd, generate_submenu)
+--			create generate_menu_item.make_with_text (generate_doc_cmd, generate_submenu)
 
 			build_top
 		end
@@ -388,17 +366,17 @@ feature -- Update
 		local
 			melt_cmd: EB_MELT_PROJECT_CMD
 			quick_melt_cmd: EB_QUICK_MELT_PROJECT_CMD
---			freeze_cmd: FREEZE_PROJECT
---			finalize_cmd: FINALIZE_PROJECT
---			precompile_cmd: PRECOMPILE_PROJECT
+--			freeze_cmd: EB_FREEZE_PROJECT_CMD
+--			finalize_cmd: EB_FINALIZE_PROJECT_CMD
+--			precompile_cmd: EB_PRECOMPILE_PROJECT_CMD
 			c_compilation: EB_C_COMPILATION_CMD
 			c_compile_menu: EV_MENU_ITEM
 			i: EV_MENU_ITEM
 			arg: EV_ARGUMENT1 [EB_PROJECT_TOOL]
 --			sep: SEPARATOR
 		do
---			!! special_cmd.make (Current)
---			!! special_cmd_holder.make_plain (special_cmd)
+--			create special_cmd.make (Current)
+--			create special_cmd_holder.make_plain (special_cmd)
 -- This becomes a general purpose about box.
 
 			create arg.make (tool)
@@ -434,6 +412,17 @@ feature -- Update
 			i.add_select_command (c_compilation, Void)
 		end
 		
+	build_special_menu is
+			-- Build the special menu
+		local
+			open_case_cmd: EB_OPEN_CASE_CMD
+			i: EV_MENU_ITEM
+		do
+			create open_case_cmd
+			create i.make_with_text (special_menu, "Case tool...")
+			i.add_select_command (open_case_cmd, Void)
+		end
+
 	build_toolbar_menu is
 			-- Build the toolbar menu under the special sub menu.
 		local
@@ -466,6 +455,7 @@ feature -- Update
 			object_menu_item: EV_MENU_ITEM
 
 			show_system_tool: EB_SHOW_SYSTEM_TOOL
+			show_dynamic_lib_tool: EB_SHOW_DYNAMIC_LIB_TOOL
 			show_profiler: EB_SHOW_PROFILE_TOOL
 			show_preferences: EB_SHOW_PREFERENCE_TOOL
 
@@ -506,6 +496,10 @@ feature -- Update
 			create i.make_with_text (a_menu, Interface_names.m_System)
 			i.add_select_command (show_system_tool, Void)
 
+			create show_dynamic_lib_tool.make (Current)
+			create i.make_with_text (a_menu, Interface_names.m_New_dynamic_lib)
+			i.add_select_command (show_dynamic_lib_tool, Void)
+
 			create show_profiler
 			create i.make_with_text (a_menu, Interface_names.m_Profile_tool)
 			i.add_select_command (show_profiler, Void)
@@ -520,48 +514,28 @@ feature -- Update
 		local
 --			tool_action: TOOLS_MANAGEMENT
 --			tool_action_menu_entry: EV_MENU_ITEM
---			explain_cmd: EXPLAIN_HOLE
---			explain_menu_entry: EV_MENU_ITEM
---			system_cmd: SYSTEM_HOLE
---			system_menu_entry: EV_MENU_ITEM
-
---			shell_cmd: SHELL_COMMAND
---			clear_bp_cmd: DEBUG_CLEAR_STOP_POINTS_HOLE
---			clear_bp_menu_entry: EB_MENU_ENTRY
---			stop_points_cmd: DEBUG_STOPIN_HOLE
---			stop_points_menu_entry: EB_MENU_ENTRY
---			stop_points_status_cmd: STOPPOINTS_STATUS
---			stop_points_status_menu_entry: EB_MENU_ENTRY
-
---			dynamic_lib_cmd: DYNAMIC_LIB_HOLE
---			dynamic_lib_button: EB_BUTTON_HOLE
---			dynamic_lib_menu_entry: EB_MENU_ENTRY
-
---			show_pref_cmd: EB_LAUNCHER1
---			show_pref_menu_entry: EB_MENU_ENTRY
 
 --			show_prof_cmd: EB_SHOW_PROFILE_TOOL
---			show_prof_menu_entry: EB_MENU_ENTRY
+--			show_prof_menu_entry: EV_MENU_ITEM
 
 --			sep: SEPARATOR
 --			sep1, sep2: THREE_D_SEPARATOR
 --			display_feature_cmd: DISPLAY_ROUTINE_PORTION
 --			display_feature_button: EB_BUTTON
---			display_feature_menu_entry: EB_MENU_ENTRY
+--			display_feature_menu_entry: EV_MENU_ITEM
 --			display_object_cmd: DISPLAY_OBJECT_PORTION
 --			display_object_button: EB_BUTTON
---			display_object_menu_entry: EB_MENU_ENTRY
+--			display_object_menu_entry: EV_MENU_ITEM
 --			update_cmd: UPDATE_PROJECT
 --			update_button: EB_BUTTON
 --			quick_update_cmd: UPDATE_PROJECT
 --			quick_update_button: EB_BUTTON
 --  			version_button: PUSH_B
 
---			about_menu_entry: EB_MENU_ENTRY
+--			about_menu_entry: EV_MENU_ITEM
 --			about_cmd: EB_LAUNCHER3
 --			about_tool: EB_ABOUT_WINDOW
 			local_menu: EV_MENU_ITEM
---			do_nothing_cmd: DO_NOTHING_CMD
 		do
 
 			-- Help Menu
@@ -569,100 +543,12 @@ feature -- Update
 
 --			create about_tool.make ("About_Dialog", screen)
 --			create about_cmd.make (about_tool)
---			create about_menu_entry.make_default (about_cmd, help_menu)
-
-				-- Edit Menu
---			build_edit_menu (project_toolbar)
-
---			create sep.make (Interface_names.t_Empty, edit_menu)
---			create show_pref_cmd.make (Project_resources)
---			create show_pref_menu_entry.make_default (show_pref_cmd, edit_menu)
-
-				-- Close all command
---			create tool_action.make_close_all
---			create tool_action_menu_entry.make_default (tool_action, window_menu)
-
---			create tool_action.make_raise_all
---			create tool_action_menu_entry.make_default (tool_action, window_menu)
-
---			create sep.make (Interface_names.t_Empty, window_menu)
-
---			create sep.make (window_menu)
+--			create about_menu_item.make_with_text_default (about_cmd, help_menu)
 
 				-- Regular menu entries.
---			create explain_cmd.make (Current)
---			create explain_button.make (explain_cmd, project_toolbar)
---			create explain_menu_entry.make (explain_cmd, open_explain_menu)
---			create explain_hole_holder.make (explain_cmd, explain_button, explain_menu_entry)
-
---			create system_cmd.make (Current)
---			create system_button.make (system_cmd, project_toolbar)
---			create system_menu_entry.make (system_cmd, window_menu)
---			create system_hole_holder.make (system_cmd, system_button, system_menu_entry)
-			
---			create dynamic_lib_cmd.make (Current)
---			create dynamic_lib_button.make (dynamic_lib_cmd, project_toolbar)
---			create dynamic_lib_menu_entry.make (dynamic_lib_cmd, window_menu)
---			create dynamic_lib_hole_holder.make (dynamic_lib_cmd, dynamic_lib_button, dynamic_lib_menu_entry)
-
 --			create shell_cmd.make (Current)
 --			create shell_button.make (shell_cmd, project_toolbar)
 --			shell_button.add_third_button_action
-
---			create stop_points_cmd.make (Current)
---			create stop_points_button.make (stop_points_cmd, project_toolbar)
---			create stop_points_menu_entry.make (stop_points_cmd, debug_menu)
---			create stop_points_hole_holder.make (stop_points_cmd, stop_points_button, stop_points_menu_entry)
-
---			create clear_bp_cmd.make (Current)
---			create clear_bp_button.make (clear_bp_cmd, project_toolbar)
---			clear_bp_button.set_action ("c<Btn1Down>", 
---						clear_bp_cmd, clear_bp_cmd.clear_it_action)
---			create clear_bp_menu_entry.make (clear_bp_cmd, debug_menu)
---			create clear_bp_cmd_holder.make (clear_bp_cmd, clear_bp_button, clear_bp_menu_entry)
-
---			create stop_points_status_cmd.make_enabled
---			create stop_points_status_menu_entry.make_default (stop_points_status_cmd, debug_menu)
---			create stop_points_status_cmd.make_disabled
---			create stop_points_status_menu_entry.make_default (stop_points_status_cmd, debug_menu)
---			create sep.make (Interface_names.t_Empty, debug_menu)
-
---			create show_prof_cmd
---			create show_prof_menu_entry.make_default (show_prof_cmd, window_menu)
-
---			create display_feature_cmd.make (Current)
---			create display_feature_button.make (display_feature_cmd, project_toolbar)
---			create display_feature_menu_entry.make (display_feature_cmd, format_menu)
---			create display_feature_cmd_holder.make (display_feature_cmd, display_feature_button, display_feature_menu_entry)
---			display_feature_cmd.set_holder (display_feature_cmd_holder)
---
---			create display_object_cmd.make (Current)
---			create display_object_button.make (display_object_cmd, project_toolbar)
---			create display_object_menu_entry.make (display_object_cmd, format_menu)
---			create display_object_cmd_holder.make (display_object_cmd, display_object_button, display_object_menu_entry)
---			display_object_cmd.set_holder (display_object_cmd_holder)
---
---			create update_cmd.make (Current)
---			create update_button.make (update_cmd, project_toolbar)
---			update_button.set_action ("c<Btn1Down>", update_cmd, update_cmd.generate_code_only)
---			create melt_menu_entry.make (update_cmd, compile_menu)
---			create update_cmd_holder.make (update_cmd, update_button, melt_menu_entry)
---
---			create quick_update_cmd.make (Current)
---			quick_update_cmd.set_quick_melt
---			create quick_update_button.make (quick_update_cmd, project_toolbar)
---			quick_update_button.set_action ("c<Btn1Down>", quick_update_cmd, quick_update_cmd.generate_code_only)
---			create quick_melt_menu_entry.make (quick_update_cmd, compile_menu)
---			create quick_update_cmd_holder.make (quick_update_cmd, quick_update_button, quick_melt_menu_entry)
---
---			create sep1.make (interface_names.t_empty, project_toolbar)
---			sep1.set_horizontal (False)
---
---			create sep2.make (interface_names.t_empty, project_toolbar)
---			sep2.set_horizontal (False)
---
---			create do_nothing_cmd
---			project_toolbar.set_action ("c<Btn1Down>", do_nothing_cmd, Void)
 		end
 
 --	build_recent_project_menu_entries is
@@ -674,7 +560,7 @@ feature -- Update
 --			local_menu: MENU_PULL
 --			sep: SEPARATOR
 --			open_cmd: OPEN_PROJECT
---			open_menu_entry: EB_MENU_ENTRY
+--			open_menu_entry: EV_MENU_ITEM
 --		do
 --			create environment_variable
 --
@@ -697,7 +583,7 @@ feature -- Update
 --					old_pos := pos + 1
 --					i := i + 1
 --					create open_cmd.make_from_project_file (Current, project_file_name)
---					create open_menu_entry.make (open_cmd, recent_project_menu)
+--					create open_menu_item.make_with_text (open_cmd, recent_project_menu)
 --					recent_project_list.extend (project_file_name)
 --				end
 --				if nb > 0 then
@@ -722,7 +608,7 @@ feature {NONE} -- Implementation
 --				create sep.make (Interface_names.t_Empty, a_menu)
 --			end
 --			create cmd.make (a_tool)
---			create entry.make (cmd, a_menu, a_tool)
+--			create item.make_with_text (cmd, a_menu, a_tool)
 --			a_font := Graphical_resources.font.actual_value
 --			if a_font /= Void then
 --				entry.set_font (a_font)

@@ -1,21 +1,14 @@
 /**********************************************
 
-  Version:  0.2 - to be used with gtk+-0.99.4
-                  and with ISE Eiffel 4.2.
-  Date: 3/3/98
+EiffelVision/GTK 
+
+external C library
+					       
+  Date: 5/22/98
 
 **************************************** */
 
-#include <gtk/gtk.h>
-#include "eif_eiffel.h"
-#include "eif_argv.h"
-
-typedef  struct callback_data {
-    EIF_PROC rtn;
-    EIF_OBJ obj;
-    EIF_OBJ argument;
-} callback_data_t;
-
+#include "gtk_eiffel.h"
 
 void c_free_call_back_block (callback_data_t *p) 
 {
@@ -263,7 +256,8 @@ void c_gtk_widget_set_name (GtkWidget *widget, const gchar *name)
 }
 
 
-				/* For message dialog */
+				/* message dialog */
+
 
 				/* Create message dialog buttons */
 void c_gtk_create_message_d_buttons (GtkWidget *dialog, GtkWidget *ok,
@@ -317,3 +311,19 @@ GtkWidget* c_gtk_get_label_widget (GtkWidget *button)
     glist = gtk_container_children( GTK_CONTAINER(button) );
     return GTK_WIDGET( glist->data );
 }
+
+
+				/* Text */
+
+/* The length of the string in text widget */
+int c_gtk_get_text_length (GtkWidget* text)
+{
+    return GTK_ENTRY (text)->text_length;
+}
+
+/* The maximum length of string in text widget */
+int c_gtk_get_text_max_length (GtkWidget* text)
+{
+    return GTK_ENTRY (text)->text_max_length;
+}
+

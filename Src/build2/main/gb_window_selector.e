@@ -1059,107 +1059,68 @@ feature {NONE} -- Implementation
 			builder_win: GB_BUILDER_WINDOW
 			builder_shown, display_shown: BOOLEAN
 			titled_window_object: GB_TITLED_WINDOW_OBJECT
-			a_widget: EV_WIDGET
-			display_object: GB_DISPLAY_OBJECT
+			containable: EV_CONTAINABLE
 		do
 				-- There should be no need to check that the window has not already changed,
 				-- but it appears when selecting windows in the window selector, this
 				-- feature is called twice. This check reduces the flicker of hiding and showing
 				-- the same window twice.
 			titled_window_object ?= an_object
-			if titled_window_object /= Void then
-				a_widget ?= titled_window_object.object
-			else
-				a_widget ?= an_object.object
+				-- Firstly hide the existing windows if shown
+			if builder_window.is_displayed then
+				command_handler.show_hide_builder_window_command.execute
+				builder_shown := True
 			end
+			if display_window.is_displayed then
+				command_handler.Show_hide_display_window_command.execute
+				display_shown := True
+			end
+	
+			containable ?= an_object.object
 			check
-				a_widget_not_void: a_widget /= Void
+				object_containable: containable /= Void
 			end
+			display_win ?= parent_window (containable)
 			
-			if (titled_window_object /= Void and then a_widget /= display_window) or (a_widget.parent /= display_window) then
-
-					-- Firstly hide the existing windows if shown
-				if builder_window.is_displayed then
-					command_handler.show_hide_builder_window_command.execute
-					builder_shown := True
+			check
+				display_win_not_void: display_win /= Void
+			end
+			set_display_window (display_win)
+			if titled_window_object /= Void then
+				if titled_window_object.display_object /= Void then
+					builder_win ?= titled_window_object.display_object.child
+					check
+						display_object_item_is_window: builder_win /= Void
+					end
+					set_builder_window (builder_win)
 				end
-				if display_window.is_displayed then
-					command_handler.Show_hide_display_window_command.execute
-					display_shown := True
-				end
-		
-					-- Then set the new windows.
-				if titled_window_object /= Void then
-					display_win ?= a_widget
-				else
-					display_win ?= a_widget.parent
-				end
+			else
+				containable ?= an_object.display_object
 				check
-					display_win_not_void: display_win /= Void
+					object_containable: containable /= Void
 				end
-				set_display_window (display_win)
-				if titled_window_object /= Void then
-					if titled_window_object.display_object /= Void then
-						builder_win ?= titled_window_object.display_object.child
-						check
-							display_object_item_is_window: builder_win /= Void
-						end
-						set_builder_window (builder_win)
-					end
-				else
-					if an_object.display_object /= Void then
-						display_object ?= an_object.display_object
-							-- `display_object' may be Void when the type of widget is a primitive
-							-- as it is simply an instance of EV_WIDGET instead of GB_DISPLAY_OBJECT.
-						if display_object /= Void then
-							builder_win ?= display_object.parent
-							check
-								builder_win_found: builder_win /= Void
-							end
-							set_builder_window (builder_win)
-						else
-							a_widget ?= an_object.display_object
-							check
-								display_object_was_widget: a_widget /= Void
-								widget_has_parent: a_widget.parent /= Void
-							end
-							builder_win ?= a_widget.parent
-							check
-								parent_was_builder_window: builder_win /= Void
-							end
-							set_builder_window (builder_win)
-						end
-					end
-				end
-		
-				if builder_shown then
-					command_handler.Show_hide_builder_window_command.execute
-				end
-				if display_shown then
-					Command_handler.Show_hide_display_window_command.execute
-				end
-				if application.is_launched then
-						-- Force the newly displayed window to redraw immediately.
-					application.process_events
-				end
+				builder_win ?= parent_window (containable)
+				set_builder_window (builder_win)
+			end
+	
+			if builder_shown then
+				command_handler.Show_hide_builder_window_command.execute
+			end
+			if display_shown then
+				Command_handler.Show_hide_display_window_command.execute
+			end
+			if application.is_launched then
+					-- Force the newly displayed window to redraw immediately.
+				application.process_events
 			end
 		end
 
 	veto_drop (an_object: GB_OBJECT): BOOLEAN is
 			-- Veto drop of `an_object'.
-		local
-			type: STRING
+		require
+			an_object_not_void: an_object /= Void
 		do
-			type := an_object.generating_type
-				-- Any object except items may be inserted, as long as it has not already
-				-- been created. `object' is Void until an obejct is fully
-				-- created and in the system. While picking from the type selector,
-				-- `object' is still Void.
-				-- Note that checked for `_ITEM' is a quick method of determining if
-				-- an item is represented.
-			Result := type.substring_index ("_ITEM_", 1) = 0
-				and type.substring_index ("MENU", 1) = 0
-				and an_object.associated_top_level_object = 0
+			Result := an_object.associated_top_level_object = 0
 		end
 		
 	check_for_object_delete (a_key: EV_KEY) is

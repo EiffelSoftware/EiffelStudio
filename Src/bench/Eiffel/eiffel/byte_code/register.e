@@ -7,7 +7,7 @@ inherit
 	REGISTRABLE
 		redefine
 			get_register, free_register,
-			is_temporary
+			is_temporary, is_predefined
 		end;
 
 	SHARED_BYTE_CONTEXT;
@@ -92,8 +92,12 @@ feature
 			Result.append(regnum.out);
 		end;
 
-	is_temporary: BOOLEAN is true;
+	is_temporary: BOOLEAN is True
 			-- Register is a temporary one.
+			
+	is_predefined: BOOLEAN is True
+			-- It is a predefined register, since it stores temporarly
+			-- object.
 
 invariant
 

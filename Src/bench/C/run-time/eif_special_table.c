@@ -525,7 +525,7 @@ rt_public void spt_free(struct special_table *spt)
 
 	eif_free(spt->h_values);
 	eif_free(spt->h_keys);
-	eif_free((char *) spt);
+	eif_free(spt);
 }	/* spt_free () */
 
 #endif /* EIF_REM_SET_OPTIMIZATION */

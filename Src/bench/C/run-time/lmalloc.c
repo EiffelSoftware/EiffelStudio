@@ -109,7 +109,6 @@ rt_private int lm_create () {
 rt_private int lm_put (void *ptr) {
 
 	struct lm_entry *ne;
-	struct lm_entry *cur = *lm;
 	
 	EIF_LM_LOCK
 	if (!lm) {
@@ -223,7 +222,7 @@ rt_shared void eif_lm_display () {
 		return;
 	}
 	for (cur = *lm; cur != NULL; cur = cur->next) 
-		fprintf (stderr, "0x%x\n", cur->ptr);
+		fprintf (stderr, "0x%x\n", (size_t) cur->ptr);
 	EIF_LM_UNLOCK;	
 }
 	
@@ -274,7 +273,7 @@ rt_public Malloc_t eif_calloc (unsigned int nelem, unsigned int elsize)
 
 	ret = (Malloc_t) calloc (nelem, elsize);
 	if (lm_put (ret))	
-		fprintf (stderr, "Warning: cannot lm calloc %d * %d \n", nelem * elsize);
+		fprintf (stderr, "Warning: cannot lm calloc %d * %d \n", (unsigned int) nelem, (unsigned int) elsize);
 #ifdef LMALLOC_DEBUG
 	fprintf (stderr, "EIF_CALLOC: 0x%x\t(%d elts * %d bytes = %d bytes)\n", ret, nelem, elsize, nelem*elsize);	
 #endif
@@ -292,9 +291,9 @@ rt_public Malloc_t eif_realloc (register void *ptr, register unsigned int nbytes
 	ret = (Malloc_t) realloc (ptr, nbytes);
 	if (ptr != ret) {
 	if (lm_remove (ptr))	
-		fprintf (stderr, "Warning: cannot lm remove-realloc 0x%x\n", ptr);
+		fprintf (stderr, "Warning: cannot lm remove-realloc 0x%x\n", (size_t) ptr);
 	if (lm_put (ret))	
-		fprintf (stderr, "Warning: cannot lm realloc 0x%x with %d bytes\n", ptr, nbytes);
+		fprintf (stderr, "Warning: cannot lm realloc 0x%x with %d bytes\n", (size_t) ptr, nbytes);
 	}
 #ifdef LMALLOC_DEBUG
 	fprintf (stderr, "EIF_REALLOC: 0x%x\t(old 0x%x, %d bytes)\n", ret, ptr, nbytes);	
@@ -308,11 +307,9 @@ rt_public Malloc_t eif_realloc (register void *ptr, register unsigned int nbytes
 void eif_free(register void *ptr)
 {
 #ifdef LMALLOC_CHECK
-	Malloc_t ret;
-
 	free (ptr);
 	if (lm_remove (ptr))	
-		fprintf (stderr, "Warning: cannot lm free 0x%x\n", ptr);
+		fprintf (stderr, "Warning: cannot lm free 0x%x\n", (size_t) ptr);
 #ifdef LMALLOC_DEBUG
 	fprintf (stderr, "tEIF_FREE: 0x%x\n", ptr);	
 #endif

@@ -16,12 +16,13 @@
 #include <stdio.h>
 */
 
+#include <string.h>
 #include "eif_project.h"
 #include "eif_config.h"
 #ifdef EIF_WIN32
 #define WIN32_LEAN_AND_MEAN
 #include "eif_console.h"
-#include <direct.h>		/* %%ss added for chdir, getcwd */
+#include <direct.h>		
 #include <windows.h>
 #endif
 

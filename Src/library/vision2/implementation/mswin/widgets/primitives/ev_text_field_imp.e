@@ -88,6 +88,11 @@ feature {NONE} -- Initialization
 		do
 			base_make (an_interface)
 			wel_make (default_parent, "", 0, 0, 0, 0, 0)
+
+			--| FIXME We need text fields not te resize vertically.
+			--| Horizontally still depends on `disable_item_expand'.
+			--| Redefine function somehow.
+			internal_changes := set_bit (internal_changes, 32, False)
 		end
 
 feature {NONE} -- WEL Implementation
@@ -212,6 +217,9 @@ feature {NONE} -- Implementation
 
 	interface: EV_TEXT_FIELD
 
+invariant
+	not_vertically_resizable: not vertical_resizable
+
 end -- class EV_TEXT_FIELD_IMP
 
 --|----------------------------------------------------------------
@@ -235,6 +243,9 @@ end -- class EV_TEXT_FIELD_IMP
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.39  2000/05/02 16:13:59  brendel
+--| First implementation to disable ugly vertical resizing.
+--|
 --| Revision 1.38  2000/04/27 23:18:02  pichery
 --| Changed the default font for EV_TEXT_COMPONENT
 --| and its descendants.

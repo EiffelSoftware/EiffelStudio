@@ -25,10 +25,11 @@ inherit
 			foreground_color as wel_foreground_color,
 			font as wel_font,
 			set_font as wel_set_font,
-			destroy as wel_destroy
+			destroy as wel_destroy,
+			clip_cut as cut_selection,
+			clip_copy as copy_selection,
+			unselect as deselect_all
 		undefine
-				-- We undefine the features redefined by EV_WIDGET_IMP,
-				-- and EV_PRIMITIVE_IMP
 			remove_command,
 			set_width,
 			set_height,
@@ -68,6 +69,51 @@ feature -- Initialization
 			wel_make (default_parent.item, txt, 0, 0, 0, 0, 0)
 		end
 
+feature -- Status setting
+
+	set_maximum_line_length (lenght: INTEGER) is
+			-- Maximum number of charachters on line
+		do
+			check
+				not_yet_implemented: False
+			end
+		end
+
+feature -- Basic operation
+
+	search (str: STRING): INTEGER is
+			-- Search the string `str' in the text.
+			-- If `str' is find, it returns its start
+			-- index in the text, otherwise, it returns
+			-- `Void'
+		do
+			check
+				not_yet_implemented: False
+			end
+		end
+
+feature {NONE} -- Inapplicable
+
+	next_dlgtabitem (hdlg, hctl: POINTER; previous: BOOLEAN): POINTER is
+			-- Encapsulation of the SDK GetNextDlgTabItem,
+			-- because we cannot do a deferred feature become an
+			-- external feature.
+		do
+			check
+				Inapplicable: False
+			end
+		end
+
+	next_dlggroupitem (hdlg, hctl: POINTER; previous: BOOLEAN): POINTER is
+			-- Encapsulation of the SDK GetNextDlgGroupItem,
+			-- because we cannot do a deferred feature become an
+			-- external feature.
+		do
+			check
+				Inapplicable: False
+			end
+		end
+
 feature {NONE} -- Implementation
  
 	default_style: INTEGER is
@@ -84,22 +130,6 @@ feature {NONE} -- Implementation
 			-- Default style used to create the control
 		do
 			Result := Ws_ex_clientedge
-		end
-
-	next_dlgtabitem (hdlg, hctl: POINTER; previous: BOOLEAN): POINTER is
-			-- Encapsulation of the SDK GetNextDlgTabItem,
-			-- because we cannot do a deferred feature become an
-			-- external feature.
-		do
-			Result := cwin_get_next_dlgtabitem (hdlg, hctl, previous)
-		end
-
-	next_dlggroupitem (hdlg, hctl: POINTER; previous: BOOLEAN): POINTER is
-			-- Encapsulation of the SDK GetNextDlgGroupItem,
-			-- because we cannot do a deferred feature become an
-			-- external feature.
-		do
-			Result := cwin_get_next_dlggroupitem (hdlg, hctl, previous)
 		end
 
 end -- class EV_TEXT_AREA_IMP

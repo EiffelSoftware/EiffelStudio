@@ -28,6 +28,8 @@ feature {AST_EIFFEL, COMPILER_EXPORTER} -- Output
 
 	simple_format (ctxt: FORMAT_CONTEXT) is
 			-- Reconsitute text according to context.
+		require
+			ctxt_not_void: ctxt /= Void
 		deferred
 		end
 

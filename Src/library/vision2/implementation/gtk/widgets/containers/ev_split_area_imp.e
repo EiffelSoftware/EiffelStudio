@@ -47,7 +47,6 @@ feature
 			a_h_box: EV_HORIZONTAL_BOX
 			a_v_split: EV_SPLIT_AREA_IMP
 		do
-			update_request_size
 			Result := Precursor {EV_CONTAINER_IMP}
 			-- Hack to retrieve correct height if geometry calculation has not been done yet.
 			
@@ -74,7 +73,6 @@ feature
 			a_v_box: EV_VERTICAL_BOX
 			a_split: EV_SPLIT_AREA
 		do
-			update_request_size
 			Result := Precursor {EV_CONTAINER_IMP}
 			-- Hack to retrieve correct width if geometry calculation has not been done yet.
 			a_box ?= parent_imp

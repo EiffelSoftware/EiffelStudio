@@ -13,8 +13,6 @@ inherit
 
 	EV_ITEM_CONTAINER_IMP
 
-	EV_ITEM_EVENTS_CONSTANTS_IMP
-
 feature -- Access
 
 	ev_children: HASH_TABLE [EV_MENU_ITEM_IMP, INTEGER]

@@ -14,6 +14,9 @@ inherit
 	EV_ANY_I
 
 	EV_ITEM_EVENTS_CONSTANTS_IMP
+		rename
+			command_count as item_command_count
+		end
 
 feature {NONE} -- Implementation
 

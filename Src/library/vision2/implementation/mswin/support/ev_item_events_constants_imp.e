@@ -26,7 +26,7 @@ feature -- General events for items
 
 feature -- Upper constants value
 
-	item_command_count: INTEGER is 3
+	command_count: INTEGER is 3
 			-- Size of the list that contains the commands or the
 			-- arguments.
 

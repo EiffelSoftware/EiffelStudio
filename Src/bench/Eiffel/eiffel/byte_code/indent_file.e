@@ -371,7 +371,7 @@ feature -- prototype code generation
 		do
 			extern_dec_file.generate_function_declaration
 				(type, f_name, True, extern, arg_types)
-			putstring ("#ifdef __STDC__%N")
+			putstring ("#if defined(__STDC__) || defined(__cplusplus)%N")
 			if not extern then
 				putstring ("static ")
 			end

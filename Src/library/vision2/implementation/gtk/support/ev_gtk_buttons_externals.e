@@ -25,7 +25,7 @@ feature {NONE} -- GTK C functions for toggle buttons
 		external "C | <gtk/gtk.h>"
 		end
 
-	gtk_toggle_button_set_state (button: POINTER; state: BOOLEAN) is
+	gtk_toggle_button_set_active (button: POINTER; state: BOOLEAN) is
 		external "C | <gtk/gtk.h>"
 		end
 	

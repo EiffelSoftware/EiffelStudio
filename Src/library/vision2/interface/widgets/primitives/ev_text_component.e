@@ -14,38 +14,19 @@ inherit
 			implementation,
 			is_in_default_state
 		end
+		
+	EV_TEXTABLE
+		redefine
+			implementation,
+			is_in_default_state
+		end
 
 	EV_TEXT_COMPONENT_ACTION_SEQUENCES
 		redefine
 			implementation
 		end
-		
-feature {NONE} -- Initialization
-
-	make_with_text (a_text: STRING) is
-			-- Create `Current' and assign `a_text' to `text'
-		require
-			a_text_not_void: a_text /= Void
-		do
-			default_create
-			set_text (a_text)
-		ensure
-			text_assigned: text.is_equal (a_text) and text /= a_text
-		end
 
 feature -- Access
-
-	text: STRING is
-			-- Text of `Current'.
-		require
-			not_destroyed: not is_destroyed
-		do
-			Result := implementation.text
-		ensure
-			bridge_ok: equal (Result, implementation.text)
-			not_void: Result /= Void
-			cloned: Result /= implementation.text
-		end 
 
 	text_length: INTEGER is
 			-- Number of characters making up `text'.
@@ -170,28 +151,6 @@ feature -- Status setting
 		end
 
 feature -- Element change
-
-	set_text (a_text: STRING) is
-			-- Assign `a_text' to `text'.
-		require
-			not_destroyed: not is_destroyed
-			text_not_void: a_text /= Void
-			no_carriage_returns: not a_text.has ('%R')
-		do
-			implementation.set_text (a_text)
-		ensure
-			text_set: check_text_modification ("", a_text)
-		end
-
-	remove_text is
-			-- Make `text' empty.
-		require
-			not_destroyed: not is_destroyed
-		do
-			set_text ("")
-		ensure
-			text_empty: text.is_empty
-		end
 
 	insert_text (a_text: STRING) is
 			-- Insert `a_text' to right of `caret_position'.

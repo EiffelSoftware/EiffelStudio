@@ -19,6 +19,12 @@ feature -- Color Resources
 	background_figure_color: COLOR;
 			-- Background color for all figures
 
+	catalog_background_color: COLOR
+			-- Background color for the catalogs
+
+	catalog_foreground_color: COLOR
+			-- Foreground color for the catalogs
+
 	foreground_color: COLOR;
 			-- Foreground color for interface
 
@@ -54,6 +60,10 @@ feature {NONE} -- Color initialization
 										"background_color", Void);
 			background_figure_color := get_color (resource, 
 										"background_figure_color", "white");
+			catalog_background_color := get_color (resource, 
+										"catalog_background_color", "DarkGrey");
+			catalog_foreground_color := get_color (resource, 
+										"catalog_foreground_color", "white");
 			foreground_color := get_color (resource, 
 										"foreground_color", Void);
 			foreground_figure_color := get_color (resource, 
@@ -190,25 +200,21 @@ feature -- Window sizes
 	app_ed_y: INTEGER;
 
 		-- Command Catalog
-	cmd_cat_width: INTEGER;
-	cmd_cat_height: INTEGER;
-	cmd_cat_x: INTEGER;
-	cmd_cat_y: INTEGER;
+-- 	cmd_cat_width: INTEGER;
+-- 	cmd_cat_height: INTEGER;
+-- 	cmd_cat_x: INTEGER;
+-- 	cmd_cat_y: INTEGER;
 
-		-- Command Instance Editor
+		-- Command Tool
 	cmd_inst_ed_width: INTEGER;
 	cmd_inst_ed_height: INTEGER;
-
-		-- Command Type Editor
-	-- cmd_type_ed_width: INTEGER;
-	-- cmd_type_ed_height: INTEGER;
 	cmd_ed_height: INTEGER
 	
 		-- Context Catalog
-	cont_cat_width: INTEGER;
-	cont_cat_height: INTEGER;
-	cont_cat_x: INTEGER;
-	cont_cat_y: INTEGER;
+-- 	cont_cat_width: INTEGER;
+-- 	cont_cat_height: INTEGER;
+-- 	cont_cat_x: INTEGER;
+-- 	cont_cat_y: INTEGER;
 
 		-- Context Editor
 	cont_ed_width: INTEGER;
@@ -242,10 +248,10 @@ feature -- Window sizes
 	trans_ed_height: INTEGER;
 
 		-- Context Tree
-	tree_width: INTEGER;
-	tree_height: INTEGER;
-	tree_x: INTEGER;
-	tree_y: INTEGER;
+-- 	tree_width: INTEGER;
+-- 	tree_height: INTEGER;
+-- 	tree_x: INTEGER;
+-- 	tree_y: INTEGER;
 
 		-- Object tool generator
 	object_tool_generator_width: INTEGER
@@ -257,7 +263,7 @@ feature -- Window sizes
 	object_command_generator_width: INTEGER
 	object_command_generator_height: INTEGER
 
-		-- Class selector
+		-- Class importer
 	class_importer_width: INTEGER
 	class_importer_height: INTEGER
 	class_importer_x: INTEGER
@@ -271,14 +277,14 @@ feature {NONE} -- Integer Values initialization
 			app_ed_height := resource.get_pos_integer ("app_ed_height", 400);
 			app_dr_area_width := resource.get_pos_integer ("app_dr_area_width", 500);
 			app_dr_area_height := resource.get_pos_integer ("app_dr_area_height", 500);
-			app_ed_x := resource.get_integer ("app_ed_x", 500);
-			app_ed_y := resource.get_integer ("app_ed_y", 500);
+			app_ed_x := resource.get_integer ("app_ed_x", 200);
+			app_ed_y := resource.get_integer ("app_ed_y", 200);
 
-			cmd_cat_width := resource.get_pos_integer ("cmd_cat_width", 420);
-			cmd_cat_height := resource.get_pos_integer ("cmd_cat_height", 270);
-			cmd_cat_x := resource.get_integer ("cmd_cat_x", 0);
-			cmd_cat_y := resource.get_integer ("cmd_cat_y", 315);
-
+-- 			cmd_cat_width := resource.get_pos_integer ("cmd_cat_width", 420);
+-- 			cmd_cat_height := resource.get_pos_integer ("cmd_cat_height", 270);
+-- 			cmd_cat_x := resource.get_integer ("cmd_cat_x", 0);
+-- 			cmd_cat_y := resource.get_integer ("cmd_cat_y", 315);
+ 
 			cmd_inst_ed_width := resource.get_pos_integer ("cmd_inst_ed_width", 365);
 			cmd_inst_ed_height := resource.get_pos_integer ("cmd_inst_ed_height", 167);
 
@@ -286,11 +292,11 @@ feature {NONE} -- Integer Values initialization
 			-- cmd_type_ed_height := resource.get_pos_integer ("cmd_type_ed_height", 650);
 			cmd_ed_height := resource.get_pos_integer ("cmd_ed_height", 400);
 
-			cont_cat_width := resource.get_pos_integer ("cont_cat_width", 320);
-			cont_cat_height := resource.get_pos_integer ("cont_cat_height", 270);
-			cont_cat_x := resource.get_integer ("cont_cat_x", 0);
-			cont_cat_y := resource.get_integer ("cont_cat_y", 0);
-
+-- 			cont_cat_width := resource.get_pos_integer ("cont_cat_width", 320);
+-- 			cont_cat_height := resource.get_pos_integer ("cont_cat_height", 270);
+-- 			cont_cat_x := resource.get_integer ("cont_cat_x", 0);
+-- 			cont_cat_y := resource.get_integer ("cont_cat_y", 0);
+ 
 			cont_ed_width := resource.get_pos_integer ("cont_ed_width", 310);
 			cont_ed_height := resource.get_pos_integer ("cont_ed_height", 410);
 
@@ -300,8 +306,8 @@ feature {NONE} -- Integer Values initialization
 			history_wnd_width := resource.get_pos_integer ("history_wnd_width", 200);
 			history_wnd_height := resource.get_pos_integer ("history_wnd_height", 300);
 
-			main_panel_width := resource.get_pos_integer ("main_panel_width", 550);
-			main_panel_height := resource.get_pos_integer ("main_panel_height", 180);
+			main_panel_width := resource.get_pos_integer ("main_panel_width", 430);
+			main_panel_height := resource.get_pos_integer ("main_panel_height", 450);
 			main_panel_x := resource.get_integer ("main_panel_x", -1);
 			main_panel_y := resource.get_integer ("main_panel_y", 0);
 
@@ -314,10 +320,10 @@ feature {NONE} -- Integer Values initialization
 			trans_ed_width := resource.get_pos_integer ("trans_ed_width", 170);
 			trans_ed_height := resource.get_pos_integer ("trans_ed_height", 120);
 
-			tree_width := resource.get_pos_integer ("tree_width", 320);
-			tree_height := resource.get_pos_integer ("tree_height", 270);
-			tree_x := resource.get_integer ("tree_x", 345);
-			tree_y := resource.get_integer ("tree_y", 0);
+-- 			tree_width := resource.get_pos_integer ("tree_width", 320);
+-- 			tree_height := resource.get_pos_integer ("tree_height", 270);
+-- 			tree_x := resource.get_integer ("tree_x", 345);
+-- 			tree_y := resource.get_integer ("tree_y", 0);
 
 			object_tool_generator_width := resource.get_pos_integer ("object_tool_generator_width", 505)
 			object_tool_generator_height := resource.get_pos_integer ("object_tool_generator_height", 580)

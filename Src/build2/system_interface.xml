@@ -161,10 +161,6 @@
 <item type="Directory"><Internal_properties>
 	<name>component_viewer</name>
 	</Internal_properties>
-<item type="Directory"><Internal_properties>
-	<name>CVS</name>
-	</Internal_properties>
-</item>
 <item type="EV_DIALOG"><Internal_properties>
 	<id>220</id>
 	<name>gb_component_viewer</name>
@@ -307,14 +303,14 @@
 </item>
 </item>
 </item>
-</item>
-<item type="Directory"><Internal_properties>
-	<name>constants_dialog</name>
-	</Internal_properties>
 <item type="Directory"><Internal_properties>
 	<name>CVS</name>
 	</Internal_properties>
 </item>
+</item>
+<item type="Directory"><Internal_properties>
+	<name>constants_dialog</name>
+	</Internal_properties>
 <item type="EV_DIALOG"><Internal_properties>
 	<id>1</id>
 	<name>gb_constants_dialog</name>
@@ -569,7 +565,7 @@
 	</Events>
 </item>
 <item type="EV_LIST_ITEM"><Internal_properties>
-	<id>261</id>
+	<id>260</id>
 	<name>color_item</name>
 	<Expanded>0</Expanded>
 	</Internal_properties>
@@ -582,7 +578,7 @@
 	</Events>
 </item>
 <item type="EV_LIST_ITEM"><Internal_properties>
-	<id>262</id>
+	<id>261</id>
 	<name>font_item</name>
 	<Expanded>0</Expanded>
 	</Internal_properties>
@@ -870,6 +866,10 @@
 </item>
 </item>
 </item>
+<item type="Directory"><Internal_properties>
+	<name>CVS</name>
+	</Internal_properties>
+</item>
 </item>
 <item type="Directory"><Internal_properties>
 	<name>CVS</name>
@@ -878,10 +878,6 @@
 <item type="Directory"><Internal_properties>
 	<name>gb_fixed_positioner</name>
 	</Internal_properties>
-<item type="Directory"><Internal_properties>
-	<name>CVS</name>
-	</Internal_properties>
-</item>
 <item type="EV_DIALOG"><Internal_properties>
 	<id>170</id>
 	<name>gb_fixed_positioner</name>
@@ -1180,14 +1176,14 @@
 </item>
 </item>
 </item>
-</item>
-<item type="Directory"><Internal_properties>
-	<name>gb_naming_dialog</name>
-	</Internal_properties>
 <item type="Directory"><Internal_properties>
 	<name>CVS</name>
 	</Internal_properties>
 </item>
+</item>
+<item type="Directory"><Internal_properties>
+	<name>gb_naming_dialog</name>
+	</Internal_properties>
 <item type="EV_DIALOG"><Internal_properties>
 	<id>158</id>
 	<name>gb_naming_dialog</name>
@@ -1352,14 +1348,14 @@
 </item>
 </item>
 </item>
-</item>
-<item type="Directory"><Internal_properties>
-	<name>gb_table_positioner</name>
-	</Internal_properties>
 <item type="Directory"><Internal_properties>
 	<name>CVS</name>
 	</Internal_properties>
 </item>
+</item>
+<item type="Directory"><Internal_properties>
+	<name>gb_table_positioner</name>
+	</Internal_properties>
 <item type="EV_DIALOG"><Internal_properties>
 	<id>192</id>
 	<name>gb_table_positioner</name>
@@ -1643,14 +1639,14 @@
 </item>
 </item>
 </item>
-</item>
-<item type="Directory"><Internal_properties>
-	<name>history_dialog</name>
-	</Internal_properties>
 <item type="Directory"><Internal_properties>
 	<name>CVS</name>
 	</Internal_properties>
 </item>
+</item>
+<item type="Directory"><Internal_properties>
+	<name>history_dialog</name>
+	</Internal_properties>
 <item type="EV_DIALOG"><Internal_properties>
 	<id>214</id>
 	<name>gb_history_dialog</name>
@@ -1732,14 +1728,14 @@
 </item>
 </item>
 </item>
-</item>
-<item type="Directory"><Internal_properties>
-	<name>import_dialog</name>
-	</Internal_properties>
 <item type="Directory"><Internal_properties>
 	<name>CVS</name>
 	</Internal_properties>
 </item>
+</item>
+<item type="Directory"><Internal_properties>
+	<name>import_dialog</name>
+	</Internal_properties>
 <item type="EV_DIALOG"><Internal_properties>
 	<id>232</id>
 	<name>gb_import_dialog</name>
@@ -1843,14 +1839,14 @@
 </item>
 </item>
 </item>
-</item>
-<item type="Directory"><Internal_properties>
-	<name>invalid_environment_dialog</name>
-	</Internal_properties>
 <item type="Directory"><Internal_properties>
 	<name>CVS</name>
 	</Internal_properties>
 </item>
+</item>
+<item type="Directory"><Internal_properties>
+	<name>invalid_environment_dialog</name>
+	</Internal_properties>
 <item type="EV_TITLED_WINDOW"><Internal_properties>
 	<id>239</id>
 	<name>invalid_environment_dialog</name>
@@ -2000,14 +1996,14 @@
 </item>
 </item>
 </item>
-</item>
-<item type="Directory"><Internal_properties>
-	<name>no_directory_specified_warning_dialog</name>
-	</Internal_properties>
 <item type="Directory"><Internal_properties>
 	<name>CVS</name>
 	</Internal_properties>
 </item>
+</item>
+<item type="Directory"><Internal_properties>
+	<name>no_directory_specified_warning_dialog</name>
+	</Internal_properties>
 <item type="EV_DIALOG"><Internal_properties>
 	<id>118</id>
 	<name>no_directory_specified_warning_dialog</name>
@@ -2238,14 +2234,14 @@ Please enter the name of a DIRECTORYconstant which will be used.]]></Text>
 </item>
 </item>
 </item>
-</item>
-<item type="Directory"><Internal_properties>
-	<name>object_still_referenced_dialog</name>
-	</Internal_properties>
 <item type="Directory"><Internal_properties>
 	<name>CVS</name>
 	</Internal_properties>
 </item>
+</item>
+<item type="Directory"><Internal_properties>
+	<name>object_still_referenced_dialog</name>
+	</Internal_properties>
 <item type="EV_DIALOG"><Internal_properties>
 	<id>250</id>
 	<name>gb_object_still_referenced_dialog</name>
@@ -2254,7 +2250,8 @@ Please enter the name of a DIRECTORYconstant which will be used.]]></Text>
 <EV_COLORIZABLE></EV_COLORIZABLE>
 <EV_SENSITIVE></EV_SENSITIVE>
 <EV_WIDGET></EV_WIDGET>
-<EV_WINDOW><Title><![CDATA[Cannot Delete - Object still referenced]]></Title>
+<EV_WINDOW><User_can_resize>False</User_can_resize>
+	<Title><![CDATA[Object still referenced]]></Title>
 	</EV_WINDOW>
 <EV_PIXMAPABLE></EV_PIXMAPABLE>
 <EV_CONTAINER></EV_CONTAINER>
@@ -2265,7 +2262,7 @@ Please enter the name of a DIRECTORYconstant which will be used.]]></Text>
 <EV_COLORIZABLE></EV_COLORIZABLE>
 <EV_SENSITIVE></EV_SENSITIVE>
 <EV_WIDGET></EV_WIDGET>
-<EV_BOX><Is_item_expanded>11</Is_item_expanded>
+<EV_BOX><Is_item_expanded>00</Is_item_expanded>
 	</EV_BOX>
 <EV_PIXMAPABLE></EV_PIXMAPABLE>
 <EV_CONTAINER></EV_CONTAINER>
@@ -2311,7 +2308,7 @@ Please enter the name of a DIRECTORYconstant which will be used.]]></Text>
 </item>
 </item>
 <item type="EV_HORIZONTAL_BOX"><Internal_properties>
-	<id>259</id>
+	<id>258</id>
 	<Expanded>1</Expanded>
 	</Internal_properties>
 <EV_COLORIZABLE></EV_COLORIZABLE>
@@ -2321,12 +2318,12 @@ Please enter the name of a DIRECTORYconstant which will be used.]]></Text>
 		</Padding>
 	<Border><Constant>large_spacing_width</Constant>
 		</Border>
-	<Is_item_expanded>10001</Is_item_expanded>
+	<Is_item_expanded>1001</Is_item_expanded>
 	</EV_BOX>
 <EV_PIXMAPABLE></EV_PIXMAPABLE>
 <EV_CONTAINER></EV_CONTAINER>
 <item type="EV_CELL"><Internal_properties>
-	<id>260</id>
+	<id>259</id>
 	<Expanded>0</Expanded>
 	</Internal_properties>
 <EV_COLORIZABLE></EV_COLORIZABLE>
@@ -2343,10 +2340,13 @@ Please enter the name of a DIRECTORYconstant which will be used.]]></Text>
 <EV_COLORIZABLE></EV_COLORIZABLE>
 <EV_FONTABLE></EV_FONTABLE>
 <EV_SENSITIVE></EV_SENSITIVE>
-<EV_TEXTABLE><Text><![CDATA[Flatten All and Delete]]></Text>
+<EV_TEXTABLE><Text><Constant>ok_button_text</Constant>
+		</Text>
 	</EV_TEXTABLE>
 <EV_TOOLTIPABLE></EV_TOOLTIPABLE>
-<EV_WIDGET></EV_WIDGET>
+<EV_WIDGET><Minimum_width><Constant>default_button_width</Constant>
+		</Minimum_width>
+	</EV_WIDGET>
 <EV_TEXT_ALIGNABLE></EV_TEXT_ALIGNABLE>
 <EV_PIXMAPABLE></EV_PIXMAPABLE>
 <Events><Event>select_actions EV_BUTTON_ACTION_SEQUENCES flatten_all_instances</Event>
@@ -2354,22 +2354,6 @@ Please enter the name of a DIRECTORYconstant which will be used.]]></Text>
 </item>
 <item type="EV_BUTTON"><Internal_properties>
 	<id>257</id>
-	<name>view_next_button</name>
-	<Expanded>0</Expanded>
-	</Internal_properties>
-<EV_COLORIZABLE></EV_COLORIZABLE>
-<EV_FONTABLE></EV_FONTABLE>
-<EV_SENSITIVE></EV_SENSITIVE>
-<EV_TEXTABLE></EV_TEXTABLE>
-<EV_TOOLTIPABLE></EV_TOOLTIPABLE>
-<EV_WIDGET></EV_WIDGET>
-<EV_TEXT_ALIGNABLE></EV_TEXT_ALIGNABLE>
-<EV_PIXMAPABLE></EV_PIXMAPABLE>
-<Events><Event>select_actions EV_BUTTON_ACTION_SEQUENCES view_next</Event>
-	</Events>
-</item>
-<item type="EV_BUTTON"><Internal_properties>
-	<id>258</id>
 	<name>cancel_button</name>
 	<Expanded>0</Expanded>
 	</Internal_properties>
@@ -2380,7 +2364,9 @@ Please enter the name of a DIRECTORYconstant which will be used.]]></Text>
 		</Text>
 	</EV_TEXTABLE>
 <EV_TOOLTIPABLE></EV_TOOLTIPABLE>
-<EV_WIDGET></EV_WIDGET>
+<EV_WIDGET><Minimum_width><Constant>default_button_width</Constant>
+		</Minimum_width>
+	</EV_WIDGET>
 <EV_TEXT_ALIGNABLE></EV_TEXT_ALIGNABLE>
 <EV_PIXMAPABLE></EV_PIXMAPABLE>
 <Events><Event>select_actions EV_BUTTON_ACTION_SEQUENCES cancel_selected</Event>
@@ -2399,14 +2385,14 @@ Please enter the name of a DIRECTORYconstant which will be used.]]></Text>
 </item>
 </item>
 </item>
-</item>
-<item type="Directory"><Internal_properties>
-	<name>pixmap_setting_dialog</name>
-	</Internal_properties>
 <item type="Directory"><Internal_properties>
 	<name>CVS</name>
 	</Internal_properties>
 </item>
+</item>
+<item type="Directory"><Internal_properties>
+	<name>pixmap_setting_dialog</name>
+	</Internal_properties>
 <item type="EV_DIALOG"><Internal_properties>
 	<id>76</id>
 	<name>gb_pixmap_settings_dialog</name>
@@ -3003,14 +2989,14 @@ Please enter the name of a DIRECTORYconstant which will be used.]]></Text>
 </item>
 </item>
 </item>
-</item>
-<item type="Directory"><Internal_properties>
-	<name>system_window_dialog</name>
-	</Internal_properties>
 <item type="Directory"><Internal_properties>
 	<name>CVS</name>
 	</Internal_properties>
 </item>
+</item>
+<item type="Directory"><Internal_properties>
+	<name>system_window_dialog</name>
+	</Internal_properties>
 <item type="EV_DIALOG"><Internal_properties>
 	<id>39</id>
 	<name>gb_system_window</name>
@@ -3418,7 +3404,7 @@ Please enter the name of a DIRECTORYconstant which will be used.]]></Text>
 	</Events>
 </item>
 <item type="EV_RADIO_BUTTON"><Internal_properties>
-	<id>264</id>
+	<id>263</id>
 	<name>attributes_class_check_button</name>
 	<Expanded>0</Expanded>
 	</Internal_properties>
@@ -3435,7 +3421,7 @@ Please enter the name of a DIRECTORYconstant which will be used.]]></Text>
 	</Events>
 </item>
 <item type="EV_HORIZONTAL_BOX"><Internal_properties>
-	<id>265</id>
+	<id>264</id>
 	<Expanded>1</Expanded>
 	</Internal_properties>
 <EV_COLORIZABLE></EV_COLORIZABLE>
@@ -3447,7 +3433,7 @@ Please enter the name of a DIRECTORYconstant which will be used.]]></Text>
 <EV_PIXMAPABLE></EV_PIXMAPABLE>
 <EV_CONTAINER></EV_CONTAINER>
 <item type="EV_CELL"><Internal_properties>
-	<id>266</id>
+	<id>265</id>
 	<Expanded>0</Expanded>
 	</Internal_properties>
 <EV_COLORIZABLE></EV_COLORIZABLE>
@@ -3458,7 +3444,7 @@ Please enter the name of a DIRECTORYconstant which will be used.]]></Text>
 <EV_CONTAINER></EV_CONTAINER>
 </item>
 <item type="EV_VERTICAL_BOX"><Internal_properties>
-	<id>263</id>
+	<id>262</id>
 	<name>attribute_class_box</name>
 	<Expanded>1</Expanded>
 	</Internal_properties>
@@ -3500,7 +3486,7 @@ Please enter the name of a DIRECTORYconstant which will be used.]]></Text>
 <EV_PIXMAPABLE></EV_PIXMAPABLE>
 </item>
 <item type="EV_RADIO_BUTTON"><Internal_properties>
-	<id>267</id>
+	<id>266</id>
 	<name>attributes_not_exported_check_button</name>
 	<Expanded>0</Expanded>
 	</Internal_properties>
@@ -3635,14 +3621,14 @@ Please enter the name of a DIRECTORYconstant which will be used.]]></Text>
 </item>
 </item>
 </item>
-</item>
-<item type="Directory"><Internal_properties>
-	<name>tip_of_the_day_dialog</name>
-	</Internal_properties>
 <item type="Directory"><Internal_properties>
 	<name>CVS</name>
 	</Internal_properties>
 </item>
+</item>
+<item type="Directory"><Internal_properties>
+	<name>tip_of_the_day_dialog</name>
+	</Internal_properties>
 <item type="EV_DIALOG"><Internal_properties>
 	<id>135</id>
 	<name>gb_tip_of_the_day_dialog</name>
@@ -3969,6 +3955,10 @@ Please enter the name of a DIRECTORYconstant which will be used.]]></Text>
 </item>
 </item>
 </item>
+</item>
+<item type="Directory"><Internal_properties>
+	<name>CVS</name>
+	</Internal_properties>
 </item>
 </item>
 </item>

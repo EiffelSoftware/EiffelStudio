@@ -12,6 +12,7 @@ inherit
 		redefine
 			make
 		end
+	DEMO_WINDOW
 
 creation
 	make
@@ -28,20 +29,41 @@ feature {NONE} -- Initialization
 			set_horizontal_resize (False)
 			!! cmd.make (~execute1)
 			add_click_command (cmd, Void)
+			set_parent (par)
 		end
 
 feature -- Access
 
-	window: EV_WINDOW
+	current_widget: EV_WINDOW
 		-- The window
 
 feature -- Execution features
 
 	execute1 (arg: EV_ARGUMENT; data: EV_EVENT_DATA) is
 			-- Executed when we press the first button
+		local
+			cmd: EV_ROUTINE_COMMAND
 		do
-			!! window.make_top_level
-			window.set_title ("Window")
+			if current_widget = Void then
+				!! current_widget.make_top_level
+				current_widget.set_title ("Window")	
+				!!cmd.make (~hide_window)
+				current_widget.add_close_command (cmd, Void)
+				current_widget.set_width(640)
+				current_widget.set_height(480)
+				current_widget.set_minimum_width(400)
+				current_widget.set_minimum_height(320)
+				set_container_tabs
+				tab_list.extend (window_tab)
+				create action_window.make (current_widget, tab_list)
+			end
+			current_widget.show
+		end
+
+	hide_window  (arg: EV_ARGUMENT; data: EV_EVENT_DATA) is
+			-- Executed when the window is closed
+		do
+			current_widget.hide
 		end
 
 end -- class WINDOW_WINDOW

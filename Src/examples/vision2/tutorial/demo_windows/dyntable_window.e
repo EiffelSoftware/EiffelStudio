@@ -12,6 +12,7 @@ inherit
 		redefine
 			make
 		end
+	DEMO_WINDOW
 
 creation
 	make
@@ -44,12 +45,41 @@ feature {NONE} -- Initialization
 			set_column_spacing (5)
 
 			set_parent (par)
+			!!button_list.make
+
+				-- Sets the tabs for the action window
+			set_container_tabs
+			tab_list.extend(table_tab)
+			tab_list.extend(dyntable_tab)
+			create action_window.make(Current,tab_list)
 		end
+
+feature -- Execution
+
+	remove_button is
+			-- Removes a button from the table
+		do
+			if not button_list.empty then
+				button_list.finish
+	--			button_list.item.destroy
+				button_list.remove
+			end
+		end
+
+
+	add_to_list(current_button:EV_BUTTON) is
+			-- Adds the created button to the list of created buttons
+		do
+			button_list.extend(current_button)
+		end
+
 
 feature -- Access
 
 	button: EV_BUTTON
 		-- A button for the demo
+	
+	button_list:LINKED_LIST[EV_BUTTON]
 
 end -- class DYNTABLE_WINDOW
 

@@ -4,36 +4,116 @@ indexing
 		% demonstration";
 	date: "$Date$";
 	revision: "$Revision$"
-
 class
 	DEMO_WINDOW
 
-creation
-	make_demo
+feature -- 
 
-feature {NONE} -- Initialization
-
-	make_demo (par: EV_CONTAINER; a_title: STRING) is
-			-- Create the demo in `par'.
-			-- Need to be redefine
+	show_action_window is
+			-- Shows the action window.
 		do
-			check
-				is_redefined: False
+			if (action_window /= Void) then
+				action_window.show
 			end
 		end
 
-feature -- Element change
-
-	set_parent (par: EV_CONTAINER) is
-			-- Make `par' the new parent of the widget.
-			-- `par' can be Void then the parent is the screen.
-			-- Need to be undefine
+	hide_action_window is
+			-- Hides the action window.
 		do
-			check
-				is_undefined: False
+			if (action_window /= Void) then
+				action_window.hide
 			end
 		end
+	
+	set_widget_tabs is
+			-- Sets the widget tabs
+		do
+			create tab_list.make
+			tab_list.extend(widget_tab)
+		end
+	set_container_tabs is
+			-- Sets the container tabs
+		do
+			set_widget_tabs
+			tab_list.extend(container_tab)
+		end
 
+	set_primitive_tabs is
+			-- Sets the primitive tabs
+		do
+			set_widget_tabs
+			tab_list.extend(primitive_tab)
+		end
+
+	tab_list:LINKED_LIST[ANY_TAB]
+
+	action_window:ACTION_WINDOW
+
+	widget_tab:WIDGET_TAB IS
+			-- Creation of the widget_tab.
+			-- Only done once.
+		once
+			 create Result.make (Void)
+		end
+
+	container_tab:CONTAINER_TAB is
+			-- Creation of the box_tab.
+			-- Only done once.
+		once
+			create Result.make (Void)
+		end
+
+	box_tab:BOX_TAB is
+			-- Creation of the box_tab.
+			-- Only done once.
+		once
+			create Result.make (Void)
+		end
+
+	table_tab:TABLE_TAB is
+			-- Creation of the table_tab.
+			-- Only done once.
+		once
+			create Result.make (Void)
+		end
+
+	scrollable_area_tab: SCROLLABLE_AREA_TAB is
+			-- Creation of the scrollable_area_tab.
+			-- Only done once.
+		once
+			create Result.make (Void)
+		end
+
+	notebook_tab: NOTEBOOK_TAB is
+			-- Creation of the notebook_tab.
+			-- Only done once.
+		once
+			create Result.make (Void)
+		end
+	dyntable_tab: DYNTABLE_TAB is
+			-- Creation of the dynamic_table_tab.
+		once
+			create Result.make (Void)
+		end
+
+	window_tab: WINDOW_TAB is
+			-- Creation of the window_tab.
+		once
+			create Result.make (Void)
+		end
+
+	split_area_tab: SPLIT_AREA_TAB is
+			-- Creation of the split area tab.
+		once
+			create Result.make (Void)
+		end
+
+	primitive_tab: PRIMITIVE_TAB is
+			-- Creation of the primitive tab.
+		once
+			create Result.make (Void)
+		end
+		
 end -- class DEMO_WINDOW
 
 --|----------------------------------------------------------------

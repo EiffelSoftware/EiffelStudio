@@ -12,6 +12,7 @@ inherit
 		redefine
 			make
 		end
+	DEMO_WINDOW
 
 creation
 	make
@@ -35,7 +36,13 @@ feature {NONE} -- Initialization
 			button2.set_text ("Me too!")
 			button2.set_default_minimum_size
 			button1.set_x_y (10, 20)
-			button2.set_x_y (10, 50)
+			button2.set_x_y (200, 50)
+			xvel:=20
+			yvel:=20
+
+				--Sets the tabs for the action window
+			set_container_tabs
+			create action_window.make(Current,tab_list)
 		end
 
 feature -- Access
@@ -46,12 +53,21 @@ feature -- Access
 	button2: EV_BUTTON
 			-- a button for the demo
 
+	xvel: INTEGER
+	yvel: INTEGER
+
 feature -- Execution features
 
 	execute1 (arg: EV_ARGUMENT; data: EV_EVENT_DATA) is
 			-- Executed when we press the first button
 		do
-			button2.set_x_y (button2.x + 10, button2.y + 10)
+			button2.set_x_y (button2.x + xvel, button2.y + yvel)
+			if (button2.x>=current.width-button2.width-xvel) or (button2.x<=-xvel) then
+				xvel:=0-xvel
+			elseif (button2.y>=current.height-button2.height-yvel) or (button2.y<=-yvel) then
+				yvel:=0-yvel
+			end
+
 		end
 
 end -- class FIXED_WINDOW

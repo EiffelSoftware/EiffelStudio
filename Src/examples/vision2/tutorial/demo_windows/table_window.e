@@ -12,6 +12,7 @@ inherit
 		redefine
 			make
 		end
+	DEMO_WINDOW
 
 creation
 	make
@@ -23,7 +24,7 @@ feature {NONE} -- Initialization
 			-- First, we put a Void parent because it is faster
 		do
 			{EV_TABLE} Precursor (Void)
-
+			
 			!! button.make_with_text (Current, "OK")
 			set_child_position (button, 0, 0, 1, 1)
 			!! button.make_with_text (Current, "KO")
@@ -37,12 +38,51 @@ feature {NONE} -- Initialization
 			!! text.make (Current)
 			set_child_position (text, 0, 1, 1, 5)
 
-	--		set_homogeneous (false)
+			set_homogeneous (false)
 			set_row_spacing (5)
 			set_column_spacing (5)
+	
+			
 
 			set_parent (par)
+			!!button_list.make
+
+				-- Sets the tabs for the action window
+			set_container_tabs
+			tab_list.extend(table_tab)
+			create action_window.make(Current,tab_list)
 		end
+
+feature -- Execution
+
+	remove_row is
+			-- Removes three of the buttons
+		local
+			counter:INTEGER
+		do
+			from
+				counter:=button_list.count
+			until
+				counter=button_list.count-3
+			loop
+				button_list.go_i_th(counter)
+				button_list.item.destroy
+				counter:=counter-1
+			end 
+		end
+
+	remove_button is
+			-- Removes all of the added buttons
+		do
+			button_list.wipe_out
+		end
+
+	add_to_list(current_button:EV_BUTTON) is
+			-- Adds the created button to the list of created buttons
+		do
+			button_list.extend(current_button)
+		end
+
 
 feature -- Access
 
@@ -54,6 +94,9 @@ feature -- Access
 
 	button: EV_BUTTON
 		-- A button for the demo
+
+	button_list:LINKED_LIST[EV_BUTTON]
+		-- A list to hold all the buttons that are added to the table
 
 end -- class TABLE_WINDOW
 

@@ -12,6 +12,8 @@ inherit
 		redefine
 			make
 		end
+	DEMO_WINDOW
+		
 
 creation
 	make
@@ -29,12 +31,15 @@ feature {NONE} -- Initialization
 			!! button.make_with_text (Current, "Button with a very long label")
 			!! button.make_with_text (Current, "Button 3")
 			set_parent (par)
+
+			set_container_tabs
+			tab_list.extend (box_tab)		
+			create action_window.make (Current, tab_list)
 		end
 
 feature -- Access
 
 	button: EV_BUTTON
-		-- A button for the demo
 
 end -- class BOX_WINDOW
 

@@ -12,6 +12,7 @@ inherit
 		redefine
 			make
 		end
+	DEMO_WINDOW
 
 	PIXMAP_PATH
 
@@ -48,6 +49,12 @@ feature {NONE} -- Initialization
 			!! radio2_b.make_with_text (box, "Radio 2")
 			radio2_b.set_pixmap (pixmap)
 			!! radio3_b.make_with_text (box, "Radio 3")
+
+
+				--Sets the tabs for the action window
+			
+			set_primitive_tabs
+			create action_window.make(Current,tab_list)
 		end
 
 feature -- Access
@@ -60,7 +67,6 @@ feature -- Access
 	radio3_b: EV_RADIO_BUTTON
 	frame: EV_FRAME
 	box: EV_VERTICAL_BOX	
-
 end -- class BUTTON_WINDOW
 
 --|----------------------------------------------------------------

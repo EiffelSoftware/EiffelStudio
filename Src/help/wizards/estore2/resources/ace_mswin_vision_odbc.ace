@@ -68,7 +68,7 @@ cluster
 
 	all estore_generation:		"$ISE_EIFFEL\library\store\generation"
 
-	all dataview:		"D:\Eiffel_Projects\new_ISEsap\it\dbvision"
+	all dataview:		"$ISE_EIFFEL\library\store\dataview"
 
 external
 

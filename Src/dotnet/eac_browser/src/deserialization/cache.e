@@ -43,4 +43,26 @@ feature -- Access
 			non_void_result: Result /= Void
 		end
 
+	deserialize_information_assembly (an_assembly: CONSUMED_ASSEMBLY) is
+			-- Deserialize informations of `an_assembly' and store it in `assemblies_informations'.
+			-- It would be interesting to launch this process in a Thread.
+--		local
+--			my_thread: ASSEMBLY_INFORMATION_THREAD
+--		do
+--			create my_thread.make (an_assembly)
+--			my_thread.launch
+--		end
+		local
+			l_assembly_info: ASSEMBLY_INFORMATION
+		do
+			if not Assemblies_informations.has (an_assembly.out) then
+				create l_assembly_info.make
+				l_assembly_info.initialize ((create {EAC_COMMON_PATH}).dotnet_framework_path + an_assembly.name + ".xml")
+				if l_assembly_info /= Void then
+					(create {CACHE}).assemblies_informations.put (l_assembly_info, an_assembly.out)
+				end
+			end
+		end
+		
+
 end -- class CACHE

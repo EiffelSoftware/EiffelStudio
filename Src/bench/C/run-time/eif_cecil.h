@@ -26,6 +26,17 @@ extern "C" {
  * interface defined in ETL uses the remaped names. Only this interface
  * is guaranteed.
  */
+
+#define EIF_REFERENCE_TYPE  1
+#define EIF_CHARACTER_TYPE  2
+#define EIF_BOOLEAN_TYPE    3
+#define EIF_INTEGER_TYPE    4
+#define EIF_REAL_TYPE       5
+#define EIF_DOUBLE_TYPE     6
+#define EIF_EXPANDED_TYPE   7
+#define EIF_BIT_TYPE        8
+#define EIF_POINTER_TYPE    0
+
 #define eif_create			eifcreate		/* Object creation */
 #define eif_type_id			eifcid			/* Get class ID */
 #define eif_expand			eifexp			/* Force expanded class ID */
@@ -42,6 +53,9 @@ extern "C" {
 #define eif_type			eiftype			/* Dynamic type ID */
 #define eif_name			eifname			/* Reverts class ID to name */
 #define eif_bit_clone		eifbcln			/* Clones a bit structure */
+#define eif_set_visible_exception   eifvisex /* When a class is not visible, raise an exception */
+#define eif_unset_visible_exception eifuvisex /* Disable the visible exception */
+# define eif_return_type    eifreturntype           /* Get the return type of feature, 0 if procedure */
 
 /* Types defined for easier reference when dealing with function pointers.
  * Their use is not compulsory it's only a matter of "convenience"--RAM.
@@ -68,6 +82,7 @@ typedef int32			EIF_TYPE_ID;		/* Type handled by Cecil */
  * because of the lack of bit type in C.
  */
 #define eif_field(object,name,type)	*(type *)(eifaddr(object,name))
+#define eif_locate  eiflocate   /* Return index of a given attribute in a given object */
 
 /* Accessing bits is done via special macros, because they have no counterpart
  * in C. We provide macros for reading and writing bit fields in an Eiffel
@@ -155,6 +170,11 @@ RT_LNK char eifibit(EIF_BIT bit, int i);					/* Access ith bit in bit field */
 RT_LNK int eifsibit(EIF_BIT bit, int i);					/* Set ith bit to 1 */
 RT_LNK int eifribit(EIF_BIT bit, int i);					/* Reset ith bit to 0 */
 RT_LNK EIF_BIT eifbcln(EIF_BIT bit);				/* Eiffel bit cloning */
+RT_LINK  void eifvisex (void);          /* Enable the visible exception (in current thread) */
+RT_LNK void eifuvisex (void);          /* Disable visible exception (in current thread) */
+
+RT_LNK int eifreturntype (char *class_name, EIF_TYPE_ID cid);
+										/* Return type of `cid' from `class_name' */
 
 RT_LNK void  failure(void);					/* The Eiffel exectution failed */
 RT_LNK void eif_rtinit(int argc, char **argv, char **envp);				/* Eiffel run-time initialization */

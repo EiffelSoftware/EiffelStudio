@@ -16,6 +16,10 @@ inherit
 				array_empty, array_full, array_has
 		redefine
 			wipe_out
+		end;
+	COMPILER_EXPORTER
+		undefine
+			copy, setup, is_equal, consistent
 		end
 
 creation

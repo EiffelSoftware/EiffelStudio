@@ -5,7 +5,7 @@ indexing
 	class_metadata:
 		create {COM_VISIBLE_ATTRIBUTE}.make (True) end,
 		create {CLASS_INTERFACE_ATTRIBUTE}.make (feature {CLASS_INTERFACE_TYPE}.none) end,
-		create {GUID_ATTRIBUTE}.make ("E1FFE1DE-1816-4209-AF21-FC599DAE7CAA") end
+		create {GUID_ATTRIBUTE}.make ("E1FFE1D0-4F6F-4E5C-B1E8-04B8383C0AB1") end
 
 class
 	COM_CACHE_MANAGER

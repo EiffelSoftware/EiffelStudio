@@ -81,14 +81,12 @@ all:: .FORCE_DEPEND
 LIB = app_listen.c app_proto.c app_server.c
 
 # Derived object file names
-OBJ = \
-	app_listen.o \
+OBJ = app_listen.o \
 	app_proto.o \
 	app_server.o 
 
 # Derived object file names for MT lib generation
-MT_OBJ = \
-    MTapp_listen.o \
+MT_OBJ = MTapp_listen.o \
     MTapp_proto.o \
     MTapp_server.o
 

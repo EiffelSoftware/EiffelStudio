@@ -17,7 +17,7 @@ feature -- Access
 		
 	Dispid_sentence_count: INTEGER is 4
 	
-	Dispid_occurences: INTEGER is 5
+	Dispid_occurrences: INTEGER is 5
 		
 	Dispid_terminate: INTEGER is 6
 	

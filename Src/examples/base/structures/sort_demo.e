@@ -62,7 +62,7 @@ feature
 			forth := driver.last_entry
 			driver.add_entry ("BA (BAck): Move cursor one position back", "Move cursor one position backward")
 			back := driver.last_entry
-			driver.add_entry ("SE (Search): Move cursor to nearest occurrence of a value", "Move cursor to nearest occurence of a value")
+			driver.add_entry ("SE (Search): Move cursor to nearest occurrence of a value", "Move cursor to nearest occurrence of a value")
 			search := driver.last_entry
 			driver.add_entry ("SB (Search Before): Go to rightmost position with item <= given value", "Go to first position with item less than or equal to given value")
 			search_before := driver.last_entry

@@ -50,7 +50,7 @@ ID_MAIN_MENU MENU
 		MENUITEM "&Line count", CMD_LINE_COUNT
 		MENUITEM "&Sentence count", CMD_SENTENCE_COUNT
 		MENUITEM SEPARATOR
-		MENUITEM "&Number of occurences", CMD_OCCURENCES
+		MENUITEM "&Number of occurrences", CMD_OCCURENCES
 	}
 }
 

@@ -75,10 +75,10 @@ feature {EOLE_CALL_DISPATCHER} -- Callback
 				when Dispid_sentence_count then
 					server.main_window.add_line ("Sentence count:", sentence_count)
 					res.set_integer2 (sentence_count)
-				when Dispid_occurences then
-					occ := occurences (params.argument (0).bstr.to_string)
+				when Dispid_occurrences then
+					occ := occurrences (params.argument (0).bstr.to_string)
 					!! txt.make (200)
-					txt.append ("Number of occurence(s) of ")
+					txt.append ("Number of occurrences(s) of ")
 					txt.append (params.argument (0).bstr.to_string)
 					txt.append (":")
 					server.main_window.add_line (txt, occ)
@@ -111,7 +111,7 @@ feature {EOLE_CALL_DISPATCHER} -- Callback
 	
 feature {NONE} -- Implementation
 				
-	occurences (txt: STRING): INTEGER is
+	occurrences (txt: STRING): INTEGER is
 			-- Number of ocuurences of `txt' in `text'.
 		local
 			pos: INTEGER

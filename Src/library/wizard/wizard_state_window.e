@@ -45,6 +45,14 @@ feature -- Basic Operations
 			at_least_one_entry_asked_to_the_user: main_box.count>0
 		end
 
+	display_state_text is
+		require
+			texts_exists: title /= Void and message /= Void
+		deferred
+		ensure
+			texts_written: title.text /= Void and message.text /= Void
+	end
+
 	display_pixmap is
 			-- Draw pixmap
 		local
@@ -53,8 +61,8 @@ feature -- Basic Operations
 			Create fi.make_from_string(wizard_bmp_path)
 			fi.extend(pixmap_location)
 			pixmap.set_with_named_file(fi)
-			pixmap.set_minimum_width(pixmap.width)
-			pixmap.redraw
+--			pixmap.set_minimum_width(pixmap.width)
+--			pixmap.redraw
 		end
 
 	proceed_with_current_info is
@@ -135,27 +143,19 @@ feature -- Access
 			exists: Result /= Void
 		end
 
-	message: STRING is 
-			-- Message which explains what the page is about.
-		deferred 
-		ensure
-			Result /= Void
-		end
+	message: EV_LABEL
+			-- Page message
 
-	title: STRING is
+	title: EV_LABEL
 			-- Page title.
-		deferred
-		ensure
-			Result /= Void
-		end
 
 	is_final_state: BOOLEAN is
 		do
 		end
 
 invariant
-	message_exists: message /= Void and then not message.empty
-	title_exists: title /= Void and then not title.empty
+--	message_exists: message /= Void and then not message.text.is_equal ("")
+--	title_exists: title /= Void -- and then not title.text.is_equal ("")
 	pixmap_location: pixmap_location /= Void
 	
 end -- class WIZARD_STATE_WINDOW

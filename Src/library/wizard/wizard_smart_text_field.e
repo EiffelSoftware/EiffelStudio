@@ -15,11 +15,16 @@ creation
 
 feature -- Initialization
 
-	make(lab,some_text: STRING;lab_size,text_size: INTEGER; caller: WIZARD_STATE_WINDOW) is
+	make(lab,some_text: STRING;lab_size,text_size: INTEGER; caller: WIZARD_STATE_WINDOW; psswd: BOOLEAN) is
 		do
-			default_Create
+
+			default_create
 			Create label.make_with_text(lab)
-			Create tf.make_with_text(some_text)
+			if not psswd then
+				create tf.make_with_text(some_text)
+			else
+				create {EV_PASSWORD_FIELD} tf.make_with_text (some_text)
+			end
 			label.set_minimum_width(lab_size)
 			label.align_text_left
 			tf.set_capacity(text_size)
@@ -54,6 +59,8 @@ feature -- Settings
 feature {NONE} -- Implementation
 
 	tf: EV_TEXT_FIELD
+
+	ps: EV_PASSWORD_FIELD
 
 	label: EV_LABEL
 

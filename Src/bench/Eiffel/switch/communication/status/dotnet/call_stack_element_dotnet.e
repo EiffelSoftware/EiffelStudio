@@ -239,23 +239,25 @@ feature {NONE} -- Implementation
 			l_module: ICOR_DEBUG_MODULE
 			l_icd_th: ICOR_DEBUG_THREAD
 			retried: BOOLEAN
+			l_frame: ICOR_DEBUG_FRAME
+			l_il_frame: ICOR_DEBUG_IL_FRAME
 		do
 			if not retried then
-				icd_il_frame := icd_frame.query_interface_icor_debug_il_frame
-				if icd_il_frame /= Void then
-					icd_il_frame.add_ref
-					l_function := icd_il_frame.get_function
-					icd_il_frame.clean_on_dispose
+				l_il_frame := icd_frame.query_interface_icor_debug_il_frame
+				if l_il_frame /= Void then
+					l_il_frame.add_ref
+					l_function := l_il_frame.get_function
+					l_il_frame.clean_on_dispose
 				end
 
 				if l_function = Void then
 						--| FIXME jfiat: Nasty fix, since we use the top level stack frame
 					l_icd_th := application.imp_dotnet.eifnet_debugger.icor_debug_thread
-					icd_frame := l_icd_th.get_active_frame
-					icd_il_frame := icd_frame.query_interface_icor_debug_il_frame
-					l_function := icd_il_frame.get_function
-					icd_il_frame.clean_on_dispose
-					icd_frame.clean_on_dispose
+					l_frame := l_icd_th.get_active_frame
+					l_il_frame := l_frame.query_interface_icor_debug_il_frame
+					l_function := l_il_frame.get_function
+					l_il_frame.clean_on_dispose
+					l_frame.clean_on_dispose
 				end
 
 				if l_function /= Void then
@@ -530,8 +532,6 @@ feature {NONE} -- Implementation
 				end
 				l_il_frame.clean_on_dispose
 			end
-		ensure
-			current_object_not_void: Result /= Void
 		end
 
 	internal_arg_list: LIST [EIFNET_ABSTRACT_DEBUG_VALUE]  is

@@ -39,9 +39,15 @@ feature
 		end;
 
 	create_new_child: CONTEXT is
+		local
+			tg: TOGGLE_B_C
 		do
 			Result := context_catalog.toggle_b_type.create_context (Current);
 			Result.remove_resize_policy;
+			tg ?= Result;
+			if tg /= Void then
+				tg.disable_resize_policy (False);
+			end;
 			Result.widget.manage
 		end;
 
@@ -71,41 +77,45 @@ feature
 			size_modified := True;
 			widget.unmanage;
 			widget.set_height (new_h);
-			children_number := arity;
-			if children_number = 0 then
-					-- Create first child
-				children_number := 1;
-				new_context := create_new_child;
-				modification := True;
-			end;
-			child_start;
-			new_number := new_h // (child.height + 3);
-			if (new_number > children_number) then
-				from
-				until
-					children_number = new_number
-				loop
-					new_context :=  create_new_child;
-					children_number := children_number + 1 ;
+			if retrieved_node = Void then
+					-- Figure out new children creation
+					-- during session (not for retrieving).
+				children_number := arity;
+				if children_number = 0 then
+						-- Create first child
+					children_number := 1;
+					new_context := create_new_child;
+					modification := True;
 				end;
-				modification := True;
-			elseif (new_number >= 1 and then new_number < children_number) then
-				from
-					child_finish;
-					a_child := child
-				until
-					children_number = new_number
-				loop
-					previous_child := a_child.left_sibling;
-					!!command;
-					command.execute (a_child);
-					a_child := previous_child;
-					children_number := children_number - 1 ;
+				child_start;
+				new_number := new_h // (child.height + 3);
+				if (new_number > children_number) then
+					from
+					until
+						children_number = new_number
+					loop
+						new_context :=  create_new_child;
+						children_number := children_number + 1 ;
+					end;
+					modification := True;
+				elseif (new_number >= 1 and then new_number < children_number) then
+					from
+						child_finish;
+						a_child := child
+					until
+						children_number = new_number
+					loop
+						previous_child := a_child.left_sibling;
+						!!command;
+						command.execute (a_child);
+						a_child := previous_child;
+						children_number := children_number - 1 ;
+					end;
+					modification := True;
 				end;
-				modification := True;
-			end;
-			if modification then
-				tree.display (Current);
+				if modification then
+					tree.display (Current);
+				end;
 			end;
 			widget.manage
 		end;
@@ -114,7 +124,8 @@ feature
 			-- Update form `form_nr' for all children of Current.
 		local
 			toggle_b_c: TOGGLE_B_C
-			other_editor: CONTEXT_EDITOR
+			other_editor: CONTEXT_EDITOR;
+			old_pos: INTEGER
 		do
 			from
 				child_start
@@ -133,7 +144,7 @@ feature
 			other_editor := context_catalog.editor (Current, form_nr)
 			if other_editor /= Void then
 				other_editor.reset_current_form
-			end
+			end;
 		end;
 
 	retrieve_oui_widget is

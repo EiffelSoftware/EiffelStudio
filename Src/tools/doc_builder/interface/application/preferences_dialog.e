@@ -319,7 +319,7 @@ feature {NONE} -- Query
 		do
 			l_description := filter_description_text.text
 			if not l_description.is_empty then
-				create l_filter.make ("", l_description)
+				create l_filter.make (l_description)
 				shared_project.filter_manager.add_filter (l_filter)
 				filters_list.extend (create {EV_LIST_ITEM}.make_with_text (l_description))
 				application_window.update_output_combo

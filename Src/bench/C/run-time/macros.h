@@ -127,29 +127,31 @@ extern int fcount;
 
 #define RTAI(cast,x,y) \
 	{ \
-		if (!(HEADER(y)->ov_size & B_C)) { \
-			CAT2(x,_freeze) = 1; \
-			HEADER(y)->ov_size |= B_C; \
-			} \
 		RTAITYPE(x,y); \
 		CAT2(x,_area) = *(char**) ((y)+ (eif_area_table) [CAT2(x,_dtype)]); \
+		if (!(HEADER(CAT2(x,_area))->ov_size & B_C)) { \
+			CAT2(x,_freeze) = 1; \
+			HEADER(CAT2(x,_area))->ov_size |= B_C; \
+			} \
 		CAT2(x,_area) -= (*(long*) ((y)+ (eif_lower_table) [CAT2(x,_dtype)]))*sizeof(cast); \
 	}
 
 #define RTAIOFF(cast,x,y) \
 	{ \
-		if (!(HEADER(y)->ov_size & B_C)) { \
-			CAT2(x,_freeze) = 1; \
-			HEADER(y)->ov_size |= B_C; \
-			} \
 		RTAITYPE(x,y); \
 		CAT2(x,_area) = *(char**) ((y)+CAT2(x,_area_offset)); \
+		if (!(HEADER(CAT2(x,_area))->ov_size & B_C)) { \
+			CAT2(x,_freeze) = 1; \
+			HEADER(CAT2(x,_area))->ov_size |= B_C; \
+			} \
 		CAT2(x,_area) -= (*(long*) ((y)+CAT2(x,_lower_offset)))*sizeof(cast); \
 	}
 
 #define RTAF(x, y) \
-	if (CAT2(x,_freeze)!=0) \
-		HEADER(y)->ov_size &= ~B_C
+	if (CAT2(x,_freeze)!=0) { \
+		CAT2(x,_area) = *(char**) ((y)+ (eif_area_table) [CAT2(x,_dtype)]); \
+		HEADER(CAT2(x,_area))->ov_size &= ~B_C; \
+		}
 
 #define RTAA(cast,x,i) \
 	*(cast*)(CAT2(x,_area)+i*sizeof(cast))

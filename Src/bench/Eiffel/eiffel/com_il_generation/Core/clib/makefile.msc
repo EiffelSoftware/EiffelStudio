@@ -27,7 +27,7 @@ ecom.lib: $(OBJ)
 	lib -OUT:$@ $(OBJ)
 	del *.obj
 
-.cpp.obj:
+.cpp.obj::
 	$(CC) $(CFLAGS) -nologo $<
 
 wecom_eiffelcompiler_compiler_proxy.obj: ecom_eiffelcompiler_compiler_proxy.cpp

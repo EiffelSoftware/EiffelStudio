@@ -9,10 +9,10 @@ class
 
 feature -- Access
 
-	com_api: ECOM_COM is
-		once
-			create Result
-		end
+--	com_api: ECOM_COM is
+--		once
+--			create Result
+--		end
 
 	guid_routines: ECOM_GUID_ROUTINES is
 		once

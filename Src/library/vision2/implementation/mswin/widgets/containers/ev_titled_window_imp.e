@@ -22,7 +22,8 @@ inherit
 			on_size,
 			title,
 			set_title,
-			update_minimum_size
+			compute_minimum_height,
+			compute_minimum_size
 		end
 
 creation
@@ -163,9 +164,30 @@ feature {NONE} -- Implementation
 	internal_icon_name: STRING
 			-- Name given by the user.
 
-	update_minimum_size is
-			-- Update the minimum_size of the window according
-			-- to the component inside the window.
+	compute_minimum_height is
+			-- Recompute the minimum height of the object.
+		local
+			mh: INTEGER
+		do
+			-- We calculate the values first
+			mh := title_bar_height + window_border_height + 2 * window_frame_height
+
+			if child /= Void then
+				mh := mh + child.minimum_height
+			end
+			if has_menu then
+				mh := mh + menu_bar_height
+			end
+			if status_bar /= Void then
+				mh := mh + status_bar.height
+			end
+
+			-- Finaly, we set the value
+			internal_set_minimum_height (mh)
+		end
+
+	compute_minimum_size is
+			-- Recompute the minimum size of the object.
 		local
 			mw, mh: INTEGER
 		do

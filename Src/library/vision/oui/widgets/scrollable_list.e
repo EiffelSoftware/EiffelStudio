@@ -7,7 +7,6 @@ indexing
 class
 	SCROLLABLE_LIST 
 
-
 inherit
 	FONTABLE
 		rename
@@ -105,10 +104,17 @@ feature {NONE} -- Initialization
 
 feature -- Access
 
-	list: LINKED_LIST [SCROLLABLE_LIST_ELEMENT] is
-			-- List of all the items
+	list: LIST [SCROLLABLE_LIST_ELEMENT] is
+			-- Duplicate list of all the items
+		local
+			pos: INTEGER;
+			a_list: ARRAYED_LIST [SCROLLABLE_LIST_ELEMENT]
 		do
-			Result := implementation
+			a_list := implementation;
+			pos := a_list.index;
+			a_list.start;
+			Result := a_list.duplicate (a_list.count);
+			a_list.go_i_th (pos)
 		end
 
 	cursor: CURSOR is
@@ -168,7 +174,7 @@ feature -- Access
 			not_off: not off
 			readable: readable
 		do
-			Result := implementation.item
+			Result ?= implementation.item
 		end
 
 	last: like item is
@@ -327,30 +333,30 @@ feature -- Element change
 			item_inserted: has (v)
 		end
 
-	merge_left (other: like Current) is
+	merge_left (other: ARRAYED_LIST [SCROLLABLE_LIST_ELEMENT]) is
 			-- Merge other into current structure before cursor
 			-- position. Do not move cursor. Empty other.
 		require 
 			extendible: extendible
-			not_off: not before
+			not_before: not before
 			other_exists: other /= void
 		do
-			implementation.merge_left (other.implementation)
+			implementation.merge_left (other)
 		ensure 
 			new_count: count = old count + old other.count
 			new_index: index = old index + old other.count
 			other_is_empty: other.empty
 		end
 
-	merge_right (other: like Current) is
+	merge_right (other: ARRAYED_LIST [SCROLLABLE_LIST_ELEMENT]) is
 			-- Merge other into current structure after cursor
 			-- position. Do not move cursor. Empty other.
 		require 
 			extendible: extendible
-			not_off: not after
+			not_after: not after
 			other_exists: other /= void
 		do
-			implementation.merge_right (other.implementation)
+			implementation.merge_right (other)
 		ensure
 			new_count: count = old count + old other.count
 			same_index: index = old index
@@ -509,6 +515,16 @@ feature -- Removal
 			wiped_out: empty
 		end
 
+	remove_click_action (a_command: COMMAND; argument: ANY) is
+			-- Remove `a_command' to the list of action to execute when items are
+			-- selected with click selection mode in current scroll list.
+		require
+			exists: not destroyed;
+			not_a_command_void: a_command /= Void
+		do
+			implementation.remove_click_action (a_command, argument)
+		end;
+
 feature -- Status report
 
 	after: BOOLEAN is
@@ -599,6 +615,8 @@ feature -- Status report
 
 	selected_count: INTEGER is
 			-- Number of selected items in current list
+		require
+			exists: not destroyed;
 		do
 			Result := implementation.selected_count
 		end;
@@ -606,12 +624,16 @@ feature -- Status report
 	selected_item: SCROLLABLE_LIST_ELEMENT is
 			-- Selected item if single or browse selection mode is selected
 			-- Void if nothing is selected
+		require
+			exists: not destroyed;
 		do
 			Result := implementation.selected_item
 		end;
 
 	selected_items: LINKED_LIST [SCROLLABLE_LIST_ELEMENT] is
 			-- Selected items
+		require
+			exists: not destroyed;
 		do
 			Result := implementation.selected_items
 		end;
@@ -619,13 +641,17 @@ feature -- Status report
 	selected_position: INTEGER is
 			-- Position of selected item if single or browse selection mode is
 			-- selected
-			-- Null if nothing is selected
+			-- 0 if nothing is selected
+		require
+			exists: not destroyed;
 		do
 			Result := implementation.selected_position
 		end;
 
 	selected_positions: LINKED_LIST [INTEGER] is
 			-- Positions of the selected items
+		require
+			exists: not destroyed;
 		do
 			Result := implementation.selected_positions
 		end;
@@ -666,15 +692,6 @@ feature -- Status report
 
 feature -- Status setting
 
-	add_click_action (a_command: COMMAND; argument: ANY) is
-			-- Add `a_command' to the list of actions to execute when items are
-			-- selected with click selection mode in current scroll list.
-		require
-			not_a_command_void: a_command /= Void
-		do
-			implementation.add_click_action (a_command, argument)
-		end;
-
 	compare_objects is
 			-- Ensure that future search operations will use equal
 			-- rather than = for comparing references.
@@ -699,24 +716,18 @@ feature -- Status setting
 
 	deselect_all is
 			-- Deselect all selected items.
+		require
+			exists: not destroyed;
 		do
 			implementation.deselect_all
 		ensure
 			selected_list_is_empty: selected_count = 0
 		end;
 
-	remove_click_action (a_command: COMMAND; argument: ANY) is
-			-- Remove `a_command' to the list of action to execute when items are
-			-- selected with click selection mode in current scroll list.
-		require
-			not_a_command_void: a_command /= Void
-		do
-			implementation.remove_click_action (a_command, argument)
-		end;
-
 	select_item is
 			-- Select item at current position.
 		require
+			exists: not destroyed;
 			not_off: not off
 		do
 			implementation.select_item
@@ -725,6 +736,7 @@ feature -- Status setting
 	deselect_item is
 			-- Deselect item at current position.
 		require
+			exists: not destroyed;
 			not_off: not off
 		do
 			implementation.deselect_item
@@ -733,6 +745,7 @@ feature -- Status setting
 	select_i_th (i: INTEGER) is
 			-- Select item at `i'-th position.
 		require
+			exists: not destroyed;
 			index_large_enough: i >= 1;
 			index_small_enough: i <= count
 		do
@@ -742,6 +755,7 @@ feature -- Status setting
 	deselect_i_th (i: INTEGER) is
 			-- Deselect item at `i'-th position.
 		require
+			exists: not destroyed;
 			index_large_enough: i >= 1;
 			index_small_enough: i <= count
 		do
@@ -751,6 +765,7 @@ feature -- Status setting
 	set_multiple_selection is
 			-- Set the selection to be multiple items
 		require
+			exists: not destroyed;
 			not_realized: not realized
 		do
 			implementation.set_multiple_selection
@@ -759,6 +774,7 @@ feature -- Status setting
 	set_single_selection is
 			-- Set the selection to be single items
 		require
+			exists: not destroyed;
 			not_realized: not realized
 		do
 			implementation.set_single_selection
@@ -767,10 +783,23 @@ feature -- Status setting
 	set_visible_item_count (a_count: INTEGER) is
 			-- Set the number of visible items to `a_count'.
 		require
+			exists: not destroyed;
 			a_count_large_enough: a_count > 0
 		do
 			implementation.set_visible_item_count (a_count)
 		end; 
+
+feature -- Element change
+
+	add_click_action (a_command: COMMAND; argument: ANY) is
+			-- Add `a_command' to the list of actions to execute when items are
+			-- selected with click selection mode in current scroll list.
+		require
+			exists: not destroyed;
+			not_a_command_void: a_command /= Void
+		do
+			implementation.add_click_action (a_command, argument)
+		end;
 
 feature -- Transformation
 
@@ -786,6 +815,20 @@ feature -- Transformation
 			swapped_to_item: item = old i_th (i)
 			swapped_from_item: i_th (i) = old item
 		end
+
+feature -- Update
+
+	update is
+			-- Update the content of the scrollable list from
+			-- `list'.
+			--| `list' can be modified without updating the
+			--| scroll_list. This routine will make sure that both
+			--| are up to date.
+		require
+			exists: not destroyed
+		do
+			implementation.update
+		end;
 
 feature {G_ANY, G_ANY_I, WIDGET_I, TOOLKIT} -- Implementation
 

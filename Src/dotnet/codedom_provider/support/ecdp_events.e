@@ -8,11 +8,6 @@ class
 	ECDP_EVENTS
 
 inherit
-	ECDP_EVENT_SEVERITY
-		export
-			{NONE} all
-		end
-
 	ECDP_EVENTS_IDS
 		export
 			{NONE} all
@@ -52,7 +47,6 @@ feature -- Access
 	
 	event_severity (an_id: INTEGER): INTEGER is
 			-- Severity of event with id `an_id'
-			-- See ECDP_EVENT_SEVERITY for possible values.
 		require
 			valid_id: is_event_id (an_id)
 		do
@@ -71,6 +65,9 @@ feature -- Access
 			Result.append (an_index.out)
 			Result.append ("}")
 		end
+
+	Error, Warning, Information: INTEGER is unique
+			-- Events severity values
 
 feature -- Status Report
 
@@ -124,6 +121,10 @@ feature {NONE} -- Implementation
 						Not_implemented)
 			Result.extend (["Not Supported", "general", "Construct is not supported: {1}", Error],
 						Not_supported)
+			Result.extend (["Missing setup key", "general", "Setup keys are missing, installation corrupted", Error],
+						Missing_setup_key)
+			Result.extend (["Missing installation directory", "general", "Installation directory missing from setup keys, installation corrupted", Error],
+						Missing_installation_directory)
 
 			-- General Warning
 			Result.extend (["Incorrect Result", "general", "The operation returned an incorrect value: {1}", Warning],
@@ -148,6 +149,14 @@ feature {NONE} -- Implementation
 						Missing_current_type)
 			Result.extend (["Missing Feature Name", "consumer", "Feature name is missing in: {1}", Error],
 						Missing_feature_name)
+			Result.extend (["Non external type", "consumer", "Type is not external and hasn't been registered as generated: {1}", Error],
+						Non_external_type)
+			Result.extend (["Missing consumed type", "consumer", "Type '{1}' missing from Eiffel Assembly Cache", Error],
+						Missing_consumed_type)
+			Result.extend (["No assembly", "consumer", "Type's assembly cannot be retrieved because it is generated: {1}", Error],
+						No_assembly)
+			Result.extend (["Missing implementing type", "consumer", "Could not find implementing type for feature `{1}'", Error],
+						Missing_implementing_type)
 			
 			-- Consumer Warnings
 			Result.extend (["Missing Array Size", "consumer", "Array creation expression is missing size information", Warning],
@@ -172,6 +181,22 @@ feature {NONE} -- Implementation
 						Missing_return_type)
 			Result.extend (["Missing Members", "consumer", "Members information is missing in {1}", Warning],
 						Missing_members)
+			Result.extend (["Missing type", "consumer", "Type definition for '{1}' is missing", Warning],
+						Missing_type)
+			Result.extend (["Missing consumed assembly", "consumer", "Assembly '{1}' is missing from Eiffel Assembly Cache", Warning],
+						Missing_consumed_assembly)
+			Result.extend (["Non generated type", "consumer", "Type '{1}' used in `{2}' of {3} is external but should be generated", Warning],
+						Non_generated_type)
+			Result.extend (["Missing feature", "consumer", "Feature `{1}' could not be found in type {2}", Warning],
+						Missing_feature)
+			Result.extend (["Variable not found", "consumer", "Lookup of variable `{1}' failed", Warning],
+						Variable_name_not_found)
+			Result.extend (["Feature not found", "consumer", "Lookup of feature `{1}' failed", Warning],
+						Feature_name_not_found)
+			Result.extend (["Missing types", "consumer", "Namespace {1} does not define types", Warning],
+						Missing_types)
+			Result.extend (["Missing namespaces", "consumer", "Compile unit does not define namespaces", Warning],
+						Missing_namespaces)
 
 			-- Consumer Information
 			

@@ -34,7 +34,7 @@ feature {NONE} -- Initialization
 				-- End the application when the first window is closed.
 				--| TODO: Remove this line if you don't want the application
 				--|       to end when the first window is closed..
-			first_window.close_actions.extend (~end_application)
+			first_window.close_request_actions.extend (agent end_application)
 
 				-- Show the first window.
 				--| TODO: Remove this line if you don't want the first 

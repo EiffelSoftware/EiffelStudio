@@ -56,7 +56,7 @@ feature -- Element change
 	set_line_width (width: INTEGER) is
 			-- Set line-width to `width'.
 		do
-			Precursor (width)
+			Precursor {EV_ATOMIC_FIGURE} (width)
 			update_arrows
 		end
 
@@ -77,7 +77,7 @@ feature {NONE} -- Implementation
 		local
 			p: EV_RELATIVE_POINT
 		do
-			Result := Precursor
+			Result := Precursor {EV_ATOMIC_FIGURE}
 			if is_end_arrow then
 				p := end_arrow.i_th_point (1)
 				Result.include (p.x_abs, p.y_abs)

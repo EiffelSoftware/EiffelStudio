@@ -6,10 +6,13 @@ feature
 	alignment_label: STRING is "alignment";
 	argument_label: STRING is "argument";
 	attribute_label: STRING is "attribute";
-	behaviour_label: STRING is "behaviour";
+	behaviour_label: STRING is "behavior";
+	bg_color_att_label: STRING is "background color attribute";
+	bg_pixmap_att_label: STRING is "background pixmap attribute";
 	button_label: STRING is "button";
 	cancel_label: STRING is "cancel";
 	close_label: STRING is "close";
+	colors_att_label: STRING is "colors attribute";
 	command_label: STRING is "command";
 	command_instance_label: STRING is "command instance";
 	command_type_label: STRING is "command type";
@@ -19,11 +22,13 @@ feature
 	create_edit_label: STRING is "create/edit";
 	create_project_label: STRING is "create project";
 	drawing_label: STRING is "drawing";
+	fg_color_att_label: STRING is "foreground color attribute";
 	load_project_label: STRING is "retrieve project";
-	exit_label: STRING is "exit";
-	expand_parent_label: STRING is "expand/abstrace parent";
+	exit_label: STRING is "exit label";
+	expand_parent_label: STRING is "expand/abstract parent";
 	file_label: STRING is "file";
 	font_label: STRING is "font";
+	font_att_label: STRING is "font attribute";
 	general_label: STRING is "general"
 	generate_code_label: STRING is "generate code";
 	geometry_label: STRING is "geometry";
@@ -40,6 +45,9 @@ feature
 	mouse_label: STRING is "mouse";
 	namer_label: STRING is "namer";
 	parent_label: STRING is "parent";
+	popup_filename_label: STRING is "search class name";
+	popup_instance_label: STRING is "popup instances";
+	popup_context_label: STRING is "popup contexts";
 	primitives_label: STRING is "primitives";
 	quit_label: STRING is "exit application";
 	raise_widget_label: STRING is "raise widget";

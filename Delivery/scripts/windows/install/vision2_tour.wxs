@@ -59,6 +59,7 @@
 			  <File Id="ev_vertical_box_flatshort.rtf" Name="EV_VER~1.RTF" LongName="ev_vertical_box_flatshort.rtf" />
 			  <File Id="ev_multi_column_list_flatshort.rtf" Name="EV_MUL~1.RTF" LongName="ev_multi_column_list_flatshort.rtf" />
 			  <File Id="ev_fixed_flatshort.rtf" Name="EV_FIX~1.RTF" LongName="ev_fixed_flatshort.rtf" />
+			  <File Id="ev_rich_text_flatshort.rtf" Name="EV_RIC~1.RTF" LongName="ev_rich_text_flatshort.rtf" />
             </Component>
 		</Directory>
           <Directory Id="templates" Name="TEMPLA~1" LongName="templates">

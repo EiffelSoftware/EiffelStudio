@@ -4,7 +4,10 @@ class WORKBENCH_I
 
 inherit
 
-	SHARED_ERROR_HANDLER;
+	SHARED_ERROR_HANDLER
+		export
+			{ANY} Error_handler
+		end;
 	SHARED_RESCUE_STATUS;
 	SHARED_PASS;
 	SHARED_CONFIGURE_RESOURCES;
@@ -133,14 +136,14 @@ feature -- Commands
 
 	recompile is
 			-- Incremental recompilation
+		require
+			Error_handler_has_no_errors: Error_handler.error_list.empty
 		do
 			if not retried then
 
 				if automatic_backup then
 					create_backup_directory
 				end
-					-- Clear error handler
-				Error_handler.wipe_out;
 
 				if Compilation_modes.is_quick_melt then
 					record_changed_classes

@@ -1176,10 +1176,6 @@ rt_public EIF_REFERENCE eif_gen_typecode_str (EIF_REFERENCE obj)
 	char *strp;
 	SPECIAL_CODE    *spc;
 
-#ifdef EIF_THREADS
-	EIFMTX_LOCK;
-#endif
-
 	REQUIRE ("obj not null", obj != (EIF_REFERENCE )0);
 
 	dftype = Dftype(obj);
@@ -1207,6 +1203,11 @@ rt_public EIF_REFERENCE eif_gen_typecode_str (EIF_REFERENCE obj)
 
 	/* NOTE: Since dftype is a TUPLE we have RTUD(dftype) = dftype.  */
 
+	/* Critical section as we might compute a new `eif_anc_id_map' entry */
+#ifdef EIF_THREADS
+	EIFMTX_LOCK;
+#endif
+
 	amap = eif_anc_id_map [dftype];
 
 	if (amap == (EIF_ANC_ID_MAP *) 0)
@@ -1214,6 +1215,11 @@ rt_public EIF_REFERENCE eif_gen_typecode_str (EIF_REFERENCE obj)
 		eif_compute_anc_id_map (dftype);
 		amap = eif_anc_id_map [dftype];
 	}
+
+#ifdef EIF_THREADS
+	EIFMTX_UNLOCK;
+#endif
+
 	gdp = eif_derivations [(amap->map)[tuple_static_type - (amap->min_id)]];
 
 	CHECK ("gdp not null", gdp != (EIF_GEN_DER *)0);
@@ -1234,8 +1240,6 @@ rt_public EIF_REFERENCE eif_gen_typecode_str (EIF_REFERENCE obj)
 	/* We know the `area' is the very first reference
 	 * of the STRING object, hence the simple de-referencing.
 	 */
-
-	RT_GC_WEAN(ret);			/* Remove protection */
 
 	strp = *(EIF_REFERENCE*)ret;
 
@@ -1276,9 +1280,7 @@ rt_public EIF_REFERENCE eif_gen_typecode_str (EIF_REFERENCE obj)
 		}
 	}
 
-#ifdef EIF_THREADS
-	EIFMTX_UNLOCK;
-#endif
+	RT_GC_WEAN(ret);			/* Remove protection */
 
 	return ret;	
 }
@@ -1301,10 +1303,6 @@ rt_public EIF_REFERENCE eif_gen_tuple_typecode_str (EIF_REFERENCE obj)
 	char *strp;
 	SPECIAL_CODE    *spc;
 
-#ifdef EIF_THREADS
-	EIFMTX_LOCK;
-#endif
-
 	REQUIRE ("obj not null", obj != (EIF_REFERENCE )0);
 
 	dftype = Dftype(obj);
@@ -1323,6 +1321,11 @@ rt_public EIF_REFERENCE eif_gen_tuple_typecode_str (EIF_REFERENCE obj)
 
 	/* NOTE: Since dftype is a TUPLE we have RTUD(dftype) = dftype.  */
 
+	/* Critical section as we might compute a new `eif_anc_id_map' entry */
+#ifdef EIF_THREADS
+	EIFMTX_LOCK;
+#endif
+
 	amap = eif_anc_id_map [dftype];
 
 	if (amap == (EIF_ANC_ID_MAP *) 0)
@@ -1330,6 +1333,11 @@ rt_public EIF_REFERENCE eif_gen_tuple_typecode_str (EIF_REFERENCE obj)
 		eif_compute_anc_id_map (dftype);
 		amap = eif_anc_id_map [dftype];
 	}
+
+#ifdef EIF_THREADS
+	EIFMTX_UNLOCK;
+#endif
+
 	gdp = eif_derivations [(amap->map)[tuple_static_type - (amap->min_id)]];
 
 	CHECK ("gdp not null", gdp != (EIF_GEN_DER *)0);
@@ -1373,10 +1381,6 @@ rt_public EIF_REFERENCE eif_gen_tuple_typecode_str (EIF_REFERENCE obj)
 			*strp = EIF_REFERENCE_CODE;
 		}
 	}
-
-#ifdef EIF_THREADS
-	EIFMTX_UNLOCK;
-#endif
 
 	return ret;	
 }

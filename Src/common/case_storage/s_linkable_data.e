@@ -130,18 +130,19 @@ feature -- Setting
 			heir_links_set: heir_links = l
 		end;
 
-    set_x ( a : INTEGER ) is
-        do
-            x := a
-        end
-    set_y ( a : INTEGER ) is
-        do
-            y := a
-        end
+	set_x ( a : INTEGER ) is
+		do
+			x := a
+		end
+
+	set_y ( a : INTEGER ) is
+		do
+			y := a
+		end
 
 	set_color ( s : STRING ) is
 		do
-			if	s /= void
+			if	s /= Void
 			then
 				color_name	:= clone (s )
 			else

@@ -386,44 +386,7 @@ STDMETHODIMP ecom_eiffel_compiler::IEiffelAssemblyProperties_impl_stub::Invoke( 
 	switch (dispID)
 	{
 		
-		case 200:
-			if (wFlags & (DISPATCH_PROPERTYGET | DISPATCH_METHOD))
-			{
-				if (pDispParams->cArgs != 0)
-					return DISP_E_BADPARAMCOUNT;
-
-				BSTR result = 0;
-				
-				hr = assembly_name (&result);
-				
-				if (FAILED (hr))
-				{
-					if (pExcepInfo != NULL)
-					{
-						WCHAR * wide_string = 0;
-						wide_string = ccom_create_from_string (eename(HRESULT_CODE (hr) - 1024));
-						BSTR b_string = SysAllocString (wide_string);
-						free (wide_string);
-						pExcepInfo->bstrDescription = b_string;
-						wide_string = ccom_create_from_string ("ISE");
-						b_string = SysAllocString (wide_string);
-						free (wide_string);
-						pExcepInfo->bstrSource = b_string;
-						pExcepInfo->wCode = HRESULT_CODE (hr);
-					}
-					return DISP_E_EXCEPTION;
-				}
-				if (pVarResult != NULL)
-				{
-					VariantClear (pVarResult);
-					pVarResult->vt = 8;
-					pVarResult->bstrVal = result;
-				}
-					
-			}
-			break;
-
-		case 201:
+		case 11:
 			if (wFlags & (DISPATCH_PROPERTYGET | DISPATCH_METHOD))
 			{
 				if (pDispParams->cArgs != 0)
@@ -460,7 +423,7 @@ STDMETHODIMP ecom_eiffel_compiler::IEiffelAssemblyProperties_impl_stub::Invoke( 
 			}
 			break;
 
-		case 202:
+		case 12:
 			if (wFlags & (DISPATCH_PROPERTYGET | DISPATCH_METHOD))
 			{
 				if (pDispParams->cArgs != 0)
@@ -497,7 +460,7 @@ STDMETHODIMP ecom_eiffel_compiler::IEiffelAssemblyProperties_impl_stub::Invoke( 
 			}
 			break;
 
-		case 203:
+		case 13:
 			if (wFlags & (DISPATCH_PROPERTYGET | DISPATCH_METHOD))
 			{
 				if (pDispParams->cArgs != 0)
@@ -534,7 +497,7 @@ STDMETHODIMP ecom_eiffel_compiler::IEiffelAssemblyProperties_impl_stub::Invoke( 
 			}
 			break;
 
-		case 205:
+		case 14:
 			if (wFlags & (DISPATCH_PROPERTYGET | DISPATCH_METHOD))
 			{
 				if (pDispParams->cArgs != 0)
@@ -571,7 +534,44 @@ STDMETHODIMP ecom_eiffel_compiler::IEiffelAssemblyProperties_impl_stub::Invoke( 
 			}
 			break;
 
-		case 206:
+		case 15:
+			if (wFlags & (DISPATCH_PROPERTYGET | DISPATCH_METHOD))
+			{
+				if (pDispParams->cArgs != 0)
+					return DISP_E_BADPARAMCOUNT;
+
+				VARIANT_BOOL result = 0;
+				
+				hr = is_signed (&result);
+				
+				if (FAILED (hr))
+				{
+					if (pExcepInfo != NULL)
+					{
+						WCHAR * wide_string = 0;
+						wide_string = ccom_create_from_string (eename(HRESULT_CODE (hr) - 1024));
+						BSTR b_string = SysAllocString (wide_string);
+						free (wide_string);
+						pExcepInfo->bstrDescription = b_string;
+						wide_string = ccom_create_from_string ("ISE");
+						b_string = SysAllocString (wide_string);
+						free (wide_string);
+						pExcepInfo->bstrSource = b_string;
+						pExcepInfo->wCode = HRESULT_CODE (hr);
+					}
+					return DISP_E_EXCEPTION;
+				}
+				if (pVarResult != NULL)
+				{
+					VariantClear (pVarResult);
+					pVarResult->vt = 11;
+					pVarResult->boolVal = result;
+				}
+					
+			}
+			break;
+
+		case 16:
 			if (wFlags & (DISPATCH_PROPERTYGET | DISPATCH_METHOD))
 			{
 				if (pDispParams->cArgs != 0)
@@ -608,7 +608,7 @@ STDMETHODIMP ecom_eiffel_compiler::IEiffelAssemblyProperties_impl_stub::Invoke( 
 			}
 			break;
 
-		case 207:
+		case 17:
 			if (wFlags & (DISPATCH_PROPERTYGET | DISPATCH_METHOD))
 			{
 				if (pDispParams->cArgs != 0)
@@ -701,15 +701,15 @@ STDMETHODIMP ecom_eiffel_compiler::IEiffelAssemblyProperties_impl_stub::Invoke( 
 			}
 			break;
 
-		case 208:
+		case 10:
 			if (wFlags & (DISPATCH_PROPERTYGET | DISPATCH_METHOD))
 			{
 				if (pDispParams->cArgs != 0)
 					return DISP_E_BADPARAMCOUNT;
 
-				VARIANT_BOOL result = 0;
+				BSTR result = 0;
 				
-				hr = is_signed (&result);
+				hr = assembly_name (&result);
 				
 				if (FAILED (hr))
 				{
@@ -731,8 +731,8 @@ STDMETHODIMP ecom_eiffel_compiler::IEiffelAssemblyProperties_impl_stub::Invoke( 
 				if (pVarResult != NULL)
 				{
 					VariantClear (pVarResult);
-					pVarResult->vt = 11;
-					pVarResult->boolVal = result;
+					pVarResult->vt = 8;
+					pVarResult->bstrVal = result;
 				}
 					
 			}

@@ -234,7 +234,7 @@ rt_public void sc_stop(void);					/* Stop the scavenging process */
 #endif
 
 /* Eiffel object setting */
-rt_private EIF_REFERENCE eif_set(EIF_REFERENCE object, uint32 type);					/* Set Eiffel object prior use */
+rt_private EIF_REFERENCE eif_set(EIF_REFERENCE object, uint32 dftype, uint32 dtype);					/* Set Eiffel object prior use */
 rt_private EIF_REFERENCE eif_spset(EIF_REFERENCE object, EIF_BOOLEAN in_scavenge);				/* Set special Eiffel object */
 
 #ifdef ISE_GC
@@ -471,7 +471,7 @@ rt_public EIF_REFERENCE emalloc_size(uint32 ftype, uint32 type, uint32 nbytes)
 	object = external_allocation (References(type) == 0, (int) Disp_rout(type), nbytes);
 	if (object != NULL) {
 		UNDISCARD_BREAKPOINTS
-		return eif_set(object, ftype | EO_NEW);
+		return eif_set(object, ftype | EO_NEW, type);
 	} else {
 		eraise("object allocation", EN_MEM);	/* Signals no more memory */
 		return NULL;
@@ -497,20 +497,14 @@ rt_public EIF_REFERENCE emalloc_size(uint32 ftype, uint32 type, uint32 nbytes)
 
 			CHECK ("Allocated size big enough", nbytes <= (HEADER(object)->ov_size & B_SIZE));
 
-			object = eif_set(object, ftype);	/* Set for Eiffel use */
+			object = eif_set(object, ftype, type);	/* Set for Eiffel use */
 
 #ifdef EMCHK
 			printf("--- End of emalloc (malloc_from_zone) ---\n");
 			memck(0);
 			printf("--- --------------------------------- ---\n\n");
 #endif
-
-				/* Special marking of MEMORY object */
-			if (0 != Disp_rout (type)) {		/* It is a memory object.	*/
-				set_memory_object (object);
-			}
 			return object;
-
 		}
 	}
 
@@ -529,13 +523,13 @@ rt_public EIF_REFERENCE emalloc_size(uint32 ftype, uint32 type, uint32 nbytes)
 #ifdef EMCHK
 		rt_public EIF_REFERENCE ret_val;
 
-		ret_val = eif_set(object, ftype | EO_NEW);	/* Set for Eiffel use */
+		ret_val = eif_set(object, ftype | EO_NEW, type);	/* Set for Eiffel use */
 		printf("--- End of emalloc (xmalloc) ---\n");
 		memck(0);
 		printf("--- ------------------------ ---\n\n");
 		return ret_val;
 #else
-		return eif_set(object, ftype | EO_NEW);		/* Set for Eiffel use */
+		return eif_set(object, ftype | EO_NEW, type);		/* Set for Eiffel use */
 #endif
 	}
 
@@ -552,13 +546,13 @@ rt_public EIF_REFERENCE emalloc_size(uint32 ftype, uint32 type, uint32 nbytes)
 #ifdef EMCHK
 		rt_public EIF_REFERENCE ret_val;
 
-		ret_val = eif_set(object, ftype | EO_NEW);	/* Set for Eiffel use */
+		ret_val = eif_set(object, ftype | EO_NEW, type);	/* Set for Eiffel use */
 		printf("--- End of emalloc (xmalloc after gen_scav) ---\n");
 		memck(0);
 		printf("--- --------------------------------------- ---\n\n");
 		return ret_val;
 #else
-		return eif_set(object, ftype | EO_NEW);		/* Set for Eiffel use */
+		return eif_set(object, ftype | EO_NEW, type);		/* Set for Eiffel use */
 #endif
 	}
 
@@ -941,7 +935,7 @@ rt_public EIF_REFERENCE bmalloc(long int size)
 	if (object != (EIF_REFERENCE ) 0) {
 		EIF_REFERENCE result;
 		CHECK ("Allocated size big enough", nbytes <= (HEADER(object)->ov_size & B_SIZE));
-		result = eif_set(object, egc_bit_dtype | EO_NEW);
+		result = eif_set(object, egc_bit_dtype | EO_NEW, egc_bit_dtype);
 		LENGTH(result) = (uint32) size;				/* Record size */
 
 		UNDISCARD_BREAKPOINTS
@@ -3218,7 +3212,7 @@ rt_public void sc_stop(void)
  * Set an Eiffel object for public use.
  */
 
-rt_private EIF_REFERENCE eif_set(EIF_REFERENCE object, uint32 type)
+rt_private EIF_REFERENCE eif_set(EIF_REFERENCE object, uint32 dftype, uint32 dtype)
 {
 	/* Set an Eiffel object for use: reset the zone with zeros, and try to
 	 * record the object inside the moved set, if necessary. The function
@@ -3240,15 +3234,23 @@ rt_private EIF_REFERENCE eif_set(EIF_REFERENCE object, uint32 type)
 #endif  /* EIF_TID */
 
 	zone->ov_size &= ~B_C;		/* Object is an Eiffel one */
-	zone->ov_flags = type;		/* Set dynamic type */
+	zone->ov_flags = dftype;		/* Set dynamic type */
 
 #ifdef ISE_GC
-	if (type & EO_NEW)					/* New object outside scavenge zone */
+	if (dftype & EO_NEW) {					/* New object outside scavenge zone */
 		if (-1 == epush(&moved_set, object)) {		/* Cannot record object */
 			urgent_plsc(&object);					/* Full collection */
 			if (-1 == epush(&moved_set, object))	/* Still failed */
 				enomem(MTC_NOARG);							/* Critical exception */
 		}
+	}
+	if (Disp_rout(dtype)) {
+			/* Special marking of MEMORY object allocated in scavenge zone */
+		if (!(dftype & EO_NEW)) {
+			set_memory_object (object);
+		}
+		zone->ov_flags |= EO_DISP;
+	}
 #endif
 
 	/* If the object has an initialization routine, call it now. This routine
@@ -3257,7 +3259,7 @@ rt_private EIF_REFERENCE eif_set(EIF_REFERENCE object, uint32 type)
 	 */
 
 
-	init = (void *(*) (EIF_REFERENCE, EIF_REFERENCE)) XCreate(Deif_bid(type));
+	init = (void *(*) (EIF_REFERENCE, EIF_REFERENCE)) XCreate(dtype);
 	if (init) {
 		RT_GC_PROTECT(object);
 		(init)(object, object);
@@ -3268,7 +3270,7 @@ rt_private EIF_REFERENCE eif_set(EIF_REFERENCE object, uint32 type)
 
 #ifdef DEBUG
 	dprintf(256)("eif_set: %d bytes for DT %d at 0x%lx%s\n",
-		zone->ov_size & B_SIZE, type & EO_TYPE, object, type & EO_NEW ? " (new)" : "");
+		zone->ov_size & B_SIZE, dftype & EO_TYPE, object, dftype & EO_NEW ? " (new)" : "");
 	flush;
 #endif
 

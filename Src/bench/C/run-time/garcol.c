@@ -2445,8 +2445,8 @@ rt_private int sweep_from_space(void)
 			 */
 
 			if (!(flags & B_FWD)) {	/* Non-forwarded block is dead */
-				dtype = Deif_bid(zone->ov_flags);		/* Dispose ptr */
-				if (Disp_rout(dtype)) {					/* Exists ? */
+				if (zone->ov_flags & EO_DISP) {			/* Exists ? */
+					dtype = Deif_bid(zone->ov_flags);		/* Dispose ptr */
 					gc_status = g_data.status;			/* Save GC current status */
 					g_data.status |= GC_STOP;			/* Stop GC */
 					DISP(dtype, (EIF_REFERENCE) (zone + 1));	/* Call it */
@@ -2522,8 +2522,8 @@ rt_private int sweep_from_space(void)
 				 */
 
 				if (!(flags & B_FWD)) {	/* Non-forwarded block is dead */
-					dtype = Deif_bid(next->ov_flags);	/* Dispose ptr */
-					if (Disp_rout(dtype)) {				/* Exists ? */
+					if (next->ov_flags & EO_DISP) {				/* Exists ? */
+						dtype = Deif_bid(next->ov_flags);	/* Dispose ptr */
 						gc_status = g_data.status;		/* Save GC current status */
 						g_data.status |= GC_STOP;		/* Stop GC */
 						DISP(dtype,(EIF_REFERENCE) (next + 1));/* Call it */
@@ -4085,8 +4085,8 @@ rt_shared void gfree(register union overhead *zone)
 							
 	if (!(zone->ov_size & B_FWD)) {	/* If object has not been forwarded
 									then call the dispose routine */
-		dtype = Deif_bid(zone->ov_flags);
-		if (Disp_rout(dtype)) { 
+		if (zone->ov_flags & EO_DISP) { 
+			dtype = Deif_bid(zone->ov_flags);
 			gc_status = g_data.status;			/* Save GC status */
 			g_data.status |= GC_STOP;			/* Stop GC */
 			saved_in_assertion = in_assertion;	/* Save in_assertion */

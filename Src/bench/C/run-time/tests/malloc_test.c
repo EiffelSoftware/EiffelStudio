@@ -235,12 +235,10 @@ rt_private void check_flags(EIF_REFERENCE object, EIF_REFERENCE from)
 		printf("memck: object 0x%lx is EO_EXP and EO_SPEC.\n", object);
 	}
 
-#ifdef WORKBENCH
-	if (flags & EO_STOP) {
+	if (flags & EO_DISP) {
 		num++;
-		printf("memck: object 0x%lx is marked with EO_STOP.\n", object);
+		printf("memck: object 0x%lx is marked with EO_DISP.\n", object);
 	}
-#endif
 
 	if (num && from != (char *) 0) {
 		printf("memck: last %d messages while exploring %s0x%lx (DT %d)\n",

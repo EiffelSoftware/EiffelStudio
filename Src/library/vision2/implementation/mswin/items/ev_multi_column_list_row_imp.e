@@ -23,7 +23,8 @@ inherit
 		undefine
 			parent,
 			set_pixmap,
-			remove_pixmap
+			remove_pixmap,
+			pixmap_equal_to
 		redefine
 			parent_imp,
 			interface,

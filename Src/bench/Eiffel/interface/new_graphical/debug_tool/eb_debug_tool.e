@@ -10,13 +10,11 @@ inherit
 	EB_EDITOR
 		redefine
 			build_edit_menu,
+			build_special_menu,
 			init_commands
 		end
 
 	EB_DEBUG_TOOL_DATA
-		rename
-			Debug_resources as resources
-		end
 
 	SHARED_APPLICATION_EXECUTION
 
@@ -168,6 +166,28 @@ feature -- Access
 	empty_tool_name: STRING is "Debug Tool"
 
 feature -- Resource Update
+
+	register is
+		do
+			register_to ("debug_tool_bar")
+		end
+
+	update is
+		do
+			if debug_tool_bar then
+				edit_bar.show
+			else
+				edit_bar.hide
+			end
+			if edit_bar_menu_item /= Void then
+				edit_bar_menu_item.set_selected (debug_tool_bar)
+			end
+		end
+
+	unregister is
+		do
+			unregister_to ("debug_tool_bar")
+		end
 
 	update_boolean_resource (old_res, new_res: EB_BOOLEAN_RESOURCE) is
 --		local

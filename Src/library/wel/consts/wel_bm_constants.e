@@ -11,35 +11,35 @@ feature -- Access
 
 	Bm_getcheck: INTEGER is
 		external
-			"C [macro <wel.h>]"
+			"C [macro %"wel.h%"]"
 		alias
 			"BM_GETCHECK"
 		end
 
 	Bm_setcheck: INTEGER is
 		external
-			"C [macro <wel.h>]"
+			"C [macro %"wel.h%"]"
 		alias
 			"BM_SETCHECK"
 		end
 
 	Bm_getstate: INTEGER is
 		external
-			"C [macro <wel.h>]"
+			"C [macro %"wel.h%"]"
 		alias
 			"BM_GETSTATE"
 		end
 
 	Bm_setstate: INTEGER is
 		external
-			"C [macro <wel.h>]"
+			"C [macro %"wel.h%"]"
 		alias
 			"BM_SETSTATE"
 		end
 
 	Bm_setstyle: INTEGER is
 		external
-			"C [macro <wel.h>]"
+			"C [macro %"wel.h%"]"
 		alias
 			"BM_SETSTYLE"
 		end

@@ -11,91 +11,91 @@ feature -- Access
 
 	Bs_pushbutton: INTEGER is
 		external
-			"C [macro <wel.h>]"
+			"C [macro %"wel.h%"]"
 		alias
 			"BS_PUSHBUTTON"
 		end
 
 	Bs_defpushbutton: INTEGER is
 		external
-			"C [macro <wel.h>]"
+			"C [macro %"wel.h%"]"
 		alias
 			"BS_DEFPUSHBUTTON"
 		end
 
 	Bs_checkbox: INTEGER is
 		external
-			"C [macro <wel.h>]"
+			"C [macro %"wel.h%"]"
 		alias
 			"BS_CHECKBOX"
 		end
 
 	Bs_autocheckbox: INTEGER is
 		external
-			"C [macro <wel.h>]"
+			"C [macro %"wel.h%"]"
 		alias
 			"BS_AUTOCHECKBOX"
 		end
 
 	Bs_radiobutton: INTEGER is
 		external
-			"C [macro <wel.h>]"
+			"C [macro %"wel.h%"]"
 		alias
 			"BS_RADIOBUTTON"
 		end
 
 	Bs_3state: INTEGER is
 		external
-			"C [macro <wel.h>]"
+			"C [macro %"wel.h%"]"
 		alias
 			"BS_3STATE"
 		end
 
 	Bs_auto3state: INTEGER is
 		external
-			"C [macro <wel.h>]"
+			"C [macro %"wel.h%"]"
 		alias
 			"BS_AUTO3STATE"
 		end
 
 	Bs_groupbox: INTEGER is
 		external
-			"C [macro <wel.h>]"
+			"C [macro %"wel.h%"]"
 		alias
 			"BS_GROUPBOX"
 		end
 
 	Bs_userbutton: INTEGER is
 		external
-			"C [macro <wel.h>]"
+			"C [macro %"wel.h%"]"
 		alias
 			"BS_USERBUTTON"
 		end
 
 	Bs_autoradiobutton: INTEGER is
 		external
-			"C [macro <wel.h>]"
+			"C [macro %"wel.h%"]"
 		alias
 			"BS_AUTORADIOBUTTON"
 		end
 
 	Bs_ownerdraw: INTEGER is
 		external
-			"C [macro <wel.h>]"
+			"C [macro %"wel.h%"]"
 		alias
 			"BS_OWNERDRAW"
 		end
 
 	Bs_lefttext: INTEGER is
 		external
-			"C [macro <wel.h>]"
+			"C [macro %"wel.h%"]"
 		alias
 			"BS_LEFTTEXT"
 		end
 
 	Bs_pushlike: INTEGER is
 		external
-			"C [macro <wel.h>]"
+			"C [macro %"wel.h%"]"
 		alias
 			"BS_PUSHLIKE"
 		end

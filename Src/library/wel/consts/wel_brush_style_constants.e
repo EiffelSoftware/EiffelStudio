@@ -11,49 +11,49 @@ feature -- Access
 
 	Bs_solid: INTEGER is
 		external
-			"C [macro <wel.h>]"
+			"C [macro %"wel.h%"]"
 		alias
 			"BS_SOLID"
 		end
 
 	Bs_null: INTEGER is
 		external
-			"C [macro <wel.h>]"
+			"C [macro %"wel.h%"]"
 		alias
 			"BS_NULL"
 		end
 
 	Bs_hollow: INTEGER is
 		external
-			"C [macro <wel.h>]"
+			"C [macro %"wel.h%"]"
 		alias
 			"BS_HOLLOW"
 		end
 
 	Bs_hatched: INTEGER is
 		external
-			"C [macro <wel.h>]"
+			"C [macro %"wel.h%"]"
 		alias
 			"BS_HATCHED"
 		end
 
 	Bs_pattern: INTEGER is
 		external
-			"C [macro <wel.h>]"
+			"C [macro %"wel.h%"]"
 		alias
 			"BS_PATTERN"
 		end
 
 	Bs_indexed: INTEGER is
 		external
-			"C [macro <wel.h>]"
+			"C [macro %"wel.h%"]"
 		alias
 			"BS_INDEXED"
 		end
 
 	Bs_dibpattern: INTEGER is
 		external
-			"C [macro <wel.h>]"
+			"C [macro %"wel.h%"]"
 		alias
 			"BS_DIBPATTERN"
 		end

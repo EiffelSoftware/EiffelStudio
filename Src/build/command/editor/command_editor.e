@@ -412,22 +412,6 @@ feature {NONE}
 			end
 		end;
 
--- 	save_previous_command is
--- 			-- Save values of currently
--- 			-- edited command and reset the editor.
--- 		local
--- 			nb_tool: LINKED_LIST [COMMAND_TOOL]
--- 		do
--- 			save_command
--- 			if current_command /= Void then
--- 				nb_tool := current_command.associated_command_tools
--- 				if nb_tool.count = 1 then
--- 					current_command.reset
--- 				end
--- 			end
--- 		end
-
-
 feature {COMMAND_TOOL}
 
 	save_command is
@@ -437,59 +421,6 @@ feature {COMMAND_TOOL}
 			if edited_command /= Void and then edited_command.edited then
 				edited_command.save
 				edited_command.save_to_disk
-			end
-		end
-
-feature -- Argument
-
-	add_argument (ts: TYPE_STONE) is
-			-- Add a formal argument to Currently edited
-			-- command. If several instances exist, the user
-			-- has to choose between creating a new command, editing
-			-- the current command (and update every instance) or
-			-- cancelling the operation.
-		local
-			new_argument: ARG
-			add_argument_cmd: CMD_ADD_ARGUMENT
-		do
-			if edited_command /= Void then
- 				if edited_command.has_descendents then
- 					popup_error_box (Messages.instance_add_arg_er)
- 				else
-					!! add_argument_cmd
-					!! new_argument.session_init (ts)
-					add_argument_cmd.set_element (new_argument)
-					add_argument_cmd.execute (current_command)	
-				end
-			end
-		end
- 
-	remove_argument (a: ARG) is
-			-- Remove `a' from the list of arguments
-			-- of currently edited command. If several instances 
-			-- exist, the user has to choose between creating a 
-			-- new command, editing the current command (and 
-			-- update every instance) or cancelling the operation.
-
-		local
-			remove_argument_cmd: CMD_CUT_ARGUMENT
-			argument_index: INTEGER	
-		do
-			if edited_command /= Void then
-				if edited_command.has_descendents then
-					popup_error_box (Messages.instance_rem_arg_er)
-				else
-					argument_index := edited_command.index_of_argument (a)
-					if edited_command.instances.count > 1 then
---						popup_question_box (Void, a)
-					else
---						edited_command.remove_argument (a)
-					end
---					if not canceled then
---						command_tool.remove_argument (argument_index)
---					else
---					end
-				end
 			end
 		end
 

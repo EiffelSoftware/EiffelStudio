@@ -65,13 +65,6 @@ feature -- Properties
 	accelerator: STRING is
 			-- Accelerator action for menu entry
 		do
-			inspect 
-				tool_action
-			when Close_all_tools_action then
-				Result := Interface_names.a_Close_all_tools
-			when Raise_all_tools_action then
-				Result := Interface_names.a_Raise_all_tools
-			end
 		end;
 
 feature {NONE} -- Execution

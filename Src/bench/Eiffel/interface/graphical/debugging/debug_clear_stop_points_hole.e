@@ -38,7 +38,6 @@ feature -- Properties
 	accelerator: STRING is
 			-- Accelerator action for menu entry
 		do
-			Result := Interface_names.a_Clear_breakpoints
 		end;
 
 	symbol: PIXMAP is 

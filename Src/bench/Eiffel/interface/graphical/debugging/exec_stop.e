@@ -56,7 +56,6 @@ feature {NONE} -- Attributes
 	accelerator: STRING is
 			-- Accelerator action for menu entry
 		do
-			Result := Interface_names.a_Exec_stop
 		end;
 
 end -- class EXEC_STOP

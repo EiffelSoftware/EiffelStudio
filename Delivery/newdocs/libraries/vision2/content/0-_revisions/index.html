@@ -99,6 +99,7 @@
 						sensitive would alter the selected item. The features will no longer alter the 
 						selection if called twice.</LI>
 					<LI><B>EV_CELL</B> - If you removed the item, the minimum size was not updated to reflect this, thereby retaining the minimum size as constrained by the minimum size of the now removed item.</li>
+					<LI><B>EV_TREE_ITEM</B>/<B>EV_TREE</B> - A call to `disable_select' on an EV_TREE_ITEM will now actually remove the selection from the tree. Previously, the style of the item was changed, but a call to `selected_item' on the tree would still return the item.</LI>
 				</ul>
 			<li>
 				<b>Gtk</b></li>

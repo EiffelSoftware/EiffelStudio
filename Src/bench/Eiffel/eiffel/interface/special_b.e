@@ -35,7 +35,7 @@ feature
 			item_feature := feat_table.item ("item");
 			if	item_feature = Void
 				or else
-				item_feature.written_in /= id
+				not equal (item_feature.written_in, id)
 				or else
 				not item_feature.same_signature (Item_signature)
 			then
@@ -47,7 +47,7 @@ feature
 			put_feature := feat_table.item ("put");
 			if put_feature = Void
 				or else
-				put_feature.written_in /= id
+				not equal (put_feature.written_in, id)
 				or else
 				not put_feature.same_signature (Put_signature)
 			then
@@ -67,7 +67,7 @@ feature
 			!!Result;
 			Result.set_arguments (args);
 			!!f;
-			f.set_base_type (1);
+			f.set_position (1);
 			Result.set_type (f);
 			Result.set_feature_name ("item");
 		end;
@@ -79,7 +79,7 @@ feature
 			f: FORMAL_A;
 		once
 			!!f;
-			f.set_base_type (1);
+			f.set_position (1);
 			!!args.make (2);
 			args.put_i_th (f, 1);
 			args.put_i_th (Integer_type, 2);

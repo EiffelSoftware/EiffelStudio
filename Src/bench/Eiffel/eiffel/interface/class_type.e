@@ -35,7 +35,7 @@ creation
 	
 feature 
 
-	id: INTEGER;
+	id: TYPE_ID;
 			-- Unique id for current class type
 			--| Useful to set the name of the associated generated file
 			--| which has to be dynamic type (`type_id') independant.
@@ -94,7 +94,7 @@ feature
 			!!skeleton.make;
 			is_changed := True;
 			type_id := System.type_id_counter.next;
-			id := System.static_type_id_counter.next;
+			id := System.static_type_id_counter.next_id;
 			System.reset_melted_conformance_table;
 		end;
 
@@ -215,7 +215,7 @@ feature -- Generation
 		local
 			feature_table: FEATURE_TABLE;
 			current_class: CLASS_C;
-			current_class_id, body_id: INTEGER;
+			body_id: INTEGER;
 			feature_i: FEATURE_I;
 			file: INDENT_FILE;
 			inv_byte_code: INVARIANT_B;
@@ -225,7 +225,6 @@ feature -- Generation
 			final_mode := byte_context.final_mode;
 
 			current_class := associated_class;
-			current_class_id := current_class.id;
 			feature_table := current_class.feature_table;
 
 			if final_mode then
@@ -302,7 +301,7 @@ feature -- Generation
 					associated_class.assertion_level.check_invariant)
 			then
 				inv_byte_code := Inv_byte_server.disk_item
-													(associated_class.id);
+													(associated_class.id.id);
 				inv_byte_code.generate_invariant_routine;
 				byte_context.clear_all;
 			end;
@@ -398,21 +397,13 @@ feature -- Generation
 			-- Generated base file name prefix
 		do
 			Result := associated_class.base_file_name;
-			Result.append_integer (id);
+			Result.append_integer (id.id);
 		end;
 
 	packet_number: INTEGER is
 			-- Packet in which the file will be generated
 		do
-			if System.is_dynamic and then is_dynamic then
-				Result := ((id - System.dle_max_dr_static_type_id)
-						// System.makefile_generator.Packet_number) + 1
-			elseif System.in_final_mode then
-				Result := id // System.makefile_generator.Packet_number + 1
-			else
-				Result := ((id - System.max_precompiled_type_id)
-						// System.makefile_generator.Packet_number) + 1
-			end
+			Result := id.packet_number
 		end;
 
 	relative_file_name: STRING is
@@ -563,7 +554,7 @@ feature -- Generation
 						class_type.associated_class.creation_feature;
 				if creation_feature /= Void then
 					creat_name := 
-						clone (Encoder.feature_name (class_type.id, creation_feature.body_id))
+						clone (Encoder.feature_name (class_type.id.id, creation_feature.body_id))
 					file.putstring (creat_name);
 					file.putchar ('(');
 					file.putstring ("l[0] + ");
@@ -616,7 +607,7 @@ feature -- Generation
 	init_procedure_name: STRING is
 			-- C name of the procedure used to initialize the object
 		do
-			Result := Encoder.feature_name (id, Initialization_id);
+			Result := Encoder.feature_name (id.id, Initialization_id);
 		end;
 
 feature -- Byte code generation
@@ -760,7 +751,7 @@ feature -- Skeleton generation
 					-- routine of the current class type
 				Skeleton_file.putstring ("extern void ");
 				Skeleton_file.putstring (
-					Encoder.feature_name (id, Invariant_id));
+					Encoder.feature_name (id.id, Invariant_id));
 				Skeleton_file.putstring ("();%N%N");
 			end;
 		end;
@@ -810,7 +801,7 @@ feature -- Skeleton generation
 					a_class.assertion_level.check_invariant
 				then
 					Skeleton_file.putstring (
-						Encoder.feature_name (id, Invariant_id));
+						Encoder.feature_name (id.id, Invariant_id));
 				else
 					Skeleton_file.putstring ("(void (*)()) 0");
 				end;
@@ -872,7 +863,7 @@ feature -- Skeleton generation
 
 						-- Static type id 
 					Skeleton_file.putstring (",(int32) ");
-					Skeleton_file.putint (id - 1);
+					Skeleton_file.putint (id.id - 1);
 				else
 					Skeleton_file.putstring ("(int32) ");
 					creation_feature := a_class.creation_feature;
@@ -901,7 +892,7 @@ feature -- Skeleton generation
 				then
 						-- Generate reference on routine id array
 					Skeleton_file.putstring ("ra");
-					Skeleton_file.putint (associated_class.id)
+					Skeleton_file.putint (associated_class.id.id)
 				else
 					Skeleton_file.putstring ("(int32 *) 0")
 				end;
@@ -931,12 +922,12 @@ feature -- Cecil generation
 				else
 					file.putstring (", sizeof(int32), cl");
 				end;
-				file.putint (associated_class.id);
+				file.putint (associated_class.id.id);
 				file.putstring (", (char *) cr");
 				if final_mode then
 					file.putint (type_id);
 				else
-					file.putint (associated_class.id);
+					file.putint (associated_class.id.id);
 				end;
 				file.putchar ('}');
 			else
@@ -1049,8 +1040,8 @@ feature -- Byte code generation
 				ba.append_int32_integer (0);
 			end;
 
-				-- Class id
-			ba.append_int32_integer (id - 1);
+				-- Static type id
+			ba.append_int32_integer (id.id - 1);
 
 				-- Dispose routine id of dispose
 			if System.memory_descendants.has (associated_class) then
@@ -1066,7 +1057,8 @@ feature -- Precompilation
 
 	is_precompiled: BOOLEAN is
 		do
-			Result := id <= System.max_precompiled_type_id
+			Result := id.is_precompiled and
+				not Compilation_modes.is_precompiling
 		end;
 
 feature -- DLE
@@ -1077,7 +1069,7 @@ feature -- DLE
 		require
 			dynamic_system: System.is_dynamic
 		do
-			Result := id <= System.dle_max_dr_static_type_id
+			Result := not id.is_dynamic
 		end;
 
 	is_dynamic: BOOLEAN is
@@ -1085,7 +1077,7 @@ feature -- DLE
 		require
 			dynamic_system: System.is_dynamic
 		do
-			Result := id > System.dle_max_dr_static_type_id
+			Result := id.is_dynamic
 		end;
 
 	generate_dle_skeleton is
@@ -1154,7 +1146,7 @@ feature -- DLE
 					a_class.assertion_level.check_invariant
 				then
 					Skeleton_file.putstring (
-						Encoder.feature_name (id, Invariant_id))
+						Encoder.feature_name (id.id, Invariant_id))
 				else
 					Skeleton_file.putstring ("(void (*)()) 0")
 				end;
@@ -1249,10 +1241,10 @@ feature -- DLE
 					Skeleton_file.putchar (';');
 					Skeleton_file.new_line;
 	
-						-- Class id 
+						-- Static type id 
 					Skeleton_file.putstring ("node->static_id = ");
 					Skeleton_file.putstring ("(int32) ");
-					Skeleton_file.putint (id - 1);
+					Skeleton_file.putint (id.id - 1);
 					Skeleton_file.putchar (';');
 					Skeleton_file.new_line;
 				end
@@ -1273,7 +1265,7 @@ feature -- DLE
 					Skeleton_file.putstring ("(int32 *) 0");
 				else
 					Skeleton_file.putstring ("ra");
-					Skeleton_file.putint (associated_class.id);
+					Skeleton_file.putint (associated_class.id.id);
 				end;
 				Skeleton_file.putchar (';');
 				Skeleton_file.new_line;
@@ -1294,13 +1286,13 @@ feature -- DLE
 					Skeleton_file.new_line;
 
 					Skeleton_file.putstring ("cecil_tab->h_keys = cl");
-					Skeleton_file.putint (associated_class.id);
+					Skeleton_file.putint (associated_class.id.id);
 					Skeleton_file.putchar (';');
 					Skeleton_file.new_line;
 
 					Skeleton_file.putstring 
 							("cecil_tab->h_values = (char *) cr");
-					Skeleton_file.putint (associated_class.id);
+					Skeleton_file.putint (associated_class.id.id);
 					Skeleton_file.putchar (';');
 					Skeleton_file.new_line;
 				else
@@ -1329,7 +1321,7 @@ feature -- DLE
 		local
 			feature_table: FEATURE_TABLE;
 			current_class: CLASS_C;
-			current_class_id, body_id: INTEGER;
+			body_id: INTEGER;
 			feature_i: FEATURE_I;
 			file: INDENT_FILE;
 			inv_byte_code: INVARIANT_B;
@@ -1337,7 +1329,6 @@ feature -- DLE
 			generate_c_code: BOOLEAN
 		do
 			current_class := associated_class;
-			current_class_id := current_class.id;
 			feature_table := current_class.feature_table;
 
 			if is_dynamic then
@@ -1376,7 +1367,7 @@ feature -- DLE
 
 				if associated_class.has_invariant then
 					inv_byte_code := 
-							Inv_byte_server.disk_item (associated_class.id);
+							Inv_byte_server.disk_item (associated_class.id.id);
 					inv_byte_code.generate_invariant_routine;
 					byte_context.clear_all
 				end;
@@ -1396,7 +1387,7 @@ feature -- DLE
 		local
 			feature_table: FEATURE_TABLE;
 			current_class: CLASS_C;
-			current_class_id, body_id: INTEGER;
+			body_id: INTEGER;
 			feature_i: FEATURE_I;
 			file: INDENT_FILE;
 			inv_byte_code: INVARIANT_B;
@@ -1404,7 +1395,6 @@ feature -- DLE
 			generate_c_code: BOOLEAN
 		do
 			current_class := associated_class;
-			current_class_id := current_class.id;
 			feature_table := current_class.feature_table;
 
 				-- Check to see if there is really something to generate
@@ -1511,7 +1501,7 @@ feature -- DLE
 						associated_class.assertion_level.check_invariant
 					then
 						inv_byte_code := 
-								Inv_byte_server.disk_item (associated_class.id);
+								Inv_byte_server.disk_item (associated_class.id.id);
 						inv_byte_code.generate_invariant_routine;
 						byte_context.clear_all
 					end
@@ -1578,7 +1568,7 @@ feature -- DLE
 				file.new_line;
 
 				file.putstring ("cecil_tab->h_keys = cl");
-				file.putint (associated_class.id);
+				file.putint (associated_class.id.id);
 				file.putchar (';');
 				file.new_line;
 

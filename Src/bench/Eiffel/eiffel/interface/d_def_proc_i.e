@@ -19,10 +19,10 @@ inherit
 
 feature
 
-	access_in: INTEGER;
+	access_in: CLASS_ID;
 			-- Access class id
 
-	set_access_in (i: INTEGER) is
+	set_access_in (i: CLASS_ID) is
 			-- Assign `i' to `access_in'
 		do
 			access_in := i
@@ -39,7 +39,7 @@ feature
 			Result := rep;
 		end; -- replicated
 
-	unselected (i: INTEGER): FEATURE_I is
+	unselected (i: CLASS_ID): FEATURE_I is
 			-- Unselected feature
 		local
 			rep: RD1_DEF_PROC_I

@@ -48,10 +48,18 @@ feature -- Counters
 	routine_id_counter: ROUTINE_COUNTER;
 			-- Counter for routine ids
 
+	class_counter: CLASS_COUNTER;
+			-- Counter of classes
+
+	static_type_id_counter: TYPE_COUNTER;
+			-- Counter of instances of CLASS_TYPE
+
 	init_counters is
 			-- Initialize various counters.
 		do
 			routine_id_counter.init_counter
+			class_counter.init_counter
+			static_type_id_counter.init_counter
 		end;
 
 	compilation_id: INTEGER is 
@@ -80,9 +88,6 @@ feature -- Properties
 	sorter: CLASS_SORTER;
 			-- Topological sorter on classes
 
-	class_counter: COUNTER;
-			-- Counter of classes
-
 	body_id_counter: BODY_ID_COUNTER;
 			-- Counter for body ids
 
@@ -91,9 +96,6 @@ feature -- Properties
 
 	type_id_counter: COUNTER;
 			-- Counter of valid instances of CLASS_TYPE
-
-	static_type_id_counter: COUNTER;
-			-- Counter of instances of CLASS_TYPE
 
 	feature_counter: COUNTER;
 			-- Counter of instances of FEATURE_AS
@@ -146,8 +148,8 @@ feature -- Properties
 	class_comments_server: CLASS_COMMENTS_SERVER;
 			-- Server for class comments 
 
-	id_array: ARRAY [CLASS_C];
-			-- Array of classes indexed by their class `id's
+	classes: CLASS_C_SERVER;
+			-- Server for compiled classes
 
 	class_types: ARRAY [CLASS_TYPE];
 			-- Array of class types indexed by their `type_id'
@@ -250,17 +252,11 @@ feature -- Properties
 	max_class_id: INTEGER;
 			-- Greater class id: computed by class CLASS_SORTER
 
-	max_precompiled_id: INTEGER;
-			-- Greatest precompiled class id
-
-	max_precompiled_type_id: INTEGER;
-			-- Greatest precompiled class type id
-
-	freeze_set1: LINKED_SET [INTEGER];
+	freeze_set1: LINKED_SET [CLASS_ID];
 			-- List of class ids for which a source C compilation is
 			-- needed when freezing.
 
-	freeze_set2: LINKED_SET [INTEGER];
+	freeze_set2: LINKED_SET [CLASS_ID];
 			-- List of class ids for which a hash table recompilation
 			-- is needed when freezing
 
@@ -273,7 +269,7 @@ feature -- Properties
 			--| Once melted, it is kept in memory so it won't be re-processed
 			--| each time
 
-	melted_set: LINKED_SET [INTEGER];
+	melted_set: LINKED_SET [CLASS_ID];
 			-- Set of class ids for which feature table needs to be updated
 			-- when melting
 
@@ -354,7 +350,7 @@ feature -- Properties
 			-- There is a problem when ARRAY[ANY] is precompiled
 			-- and a new generic derivation is introduced later on
 			-- (the name will change, and not be compatible with the
-			-- contenrt of the precompiled object file). The patch 
+			-- content of the precompiled object file). The patch 
 			-- consists of saving the name the very first time it
 			-- is computed.
 
@@ -368,7 +364,6 @@ feature -- Properties
 			!!server_controler;
 			server_controler.make;
 				-- Creation of the system hash table
-			!!id_array.make (1, System_chunk);
 			!!class_types.make (1, System_chunk);
 			!!new_classes.make;
 				-- Creation of a topological sorter
@@ -390,12 +385,13 @@ feature -- Properties
 			!!m_feature_server.make;
 			!!m_rout_id_server.make;
 			!!m_desc_server.make;
+			!! classes.make (System_chunk);
 				-- Counter creation
 			!! routine_id_counter.make;
-			!!class_counter;
+			!! class_counter.make;
+			!!static_type_id_counter.make;
 			!!body_id_counter.make;
 			!!type_id_counter;
-			!!static_type_id_counter;
 			!!body_index_counter;
 			!!feature_counter;
 				-- Routine table controler creation
@@ -410,7 +406,9 @@ feature -- Properties
 			!!pattern_table.make;
 				-- Freeze control sets creation
 			!!freeze_set1.make;
+			freeze_set1.compare_objects;
 			!!freeze_set2.make;
+			freeze_set2.compare_objects;
 				-- Body index table creation
 			!!body_index_table.make (System_chunk);
 			!!original_body_index_table.make (1);
@@ -418,6 +416,7 @@ feature -- Properties
 			!!dispatch_table.init;
 			!!execution_table.init;
 			!!melted_set.make;
+			melted_set.compare_objects;
 			!!rout_info_table.make (500);
 			!!onbidt.make (50);
 			!!optimization_tables.make;
@@ -453,8 +452,8 @@ feature -- Properties
 				-- At the very beginning of a session, even class ANY is
 				-- not compiled. So we must say to the workbench to compile
 				-- classes ANY, DOUBLE... ARRAY
-				-- It is very important that the number of calls below
-				-- is equal to the value of `protected_classes'
+				-- It is very important that these classes were protected.
+			protected_classes := True;
 			local_workbench.change_class (general_class);
 			local_workbench.change_class (any_class);
 			local_workbench.change_class (double_class);
@@ -466,41 +465,43 @@ feature -- Properties
 			local_workbench.change_class (bit_class);
 			local_workbench.change_class (pointer_class);
 			local_workbench.change_class (string_class);
+			protected_classes := False;
 				-- The root class is not protected 
 				-- Godammit.
 			local_workbench.change_class (root_class)
 		end;
 
-	protected_classes: INTEGER is 11;
-		-- Usefull for remove_useless_classes
-		-- The 11 first classes are protected (see `init')
+	protected_classes: BOOLEAN
+			-- Useful for remove_useless_classes
+			-- Protected classes are GENERAL, ANY, DOUBLE, REAL,
+			-- INTEGER, BOOLEAN, CHARACTER, ARRAY, BIT, POINTER, STRING
 
 	insert_new_class (c: CLASS_C) is
 			-- Add new class `c' to the system.
 		require
 			good_argument: c /= Void;
 		local
-			new_id, id_array_count: INTEGER;
+			new_id: CLASS_ID
 		do
-			new_id := class_counter.next;
+			if protected_classes then
+				new_id := class_counter.next_protected_id;
+			else
+				new_id := class_counter.next_id;
+			end
 				-- Give a compiled class a frozen id
 			c.set_id (new_id);
 debug ("ACTIVITY")
 io.error.putstring ("%TInserting class ");
 io.error.putstring (c.class_name);
-io.error.putint (new_id);
+io.error.putint (new_id.id);
 io.error.new_line;
 end;
 
 				-- Give a class id to class `c' which maybe changed 
 				-- during the topological sort of a recompilation.
-			c.set_topological_id (new_id);
+			c.set_topological_id (new_id.id);
 				-- Insert the class
-			id_array_count := id_array.count;
-			if new_id > id_array_count then
-				id_array.resize (1, System_chunk + id_array_count);
-			end;
-			id_array.put (c, new_id);
+			classes.put (c, new_id);
 
 				-- Update control flags of the topological sort
 			moved := True;
@@ -516,7 +517,7 @@ end;
 			melted_set.put (new_id);
 
 		ensure
-			c.id > 0;
+			class_id_set: c.id /= Void
 		end;
 
 	record_new_class_i (a_class: CLASS_I) is
@@ -538,15 +539,15 @@ end;
 			descendants, suppliers, clients: LINKED_LIST [CLASS_C];
 			supplier: CLASS_C;
 			supplier_clients: LINKED_LIST [CLASS_C];
-			id: INTEGER;
+			id: CLASS_ID;
 			types: TYPE_LIST;
 			ftable: FEATURE_TABLE;
 			f: FEATURE_I;
 			ext: EXTERNAL_I
 		do
-			id := a_class.id;
+			if not a_class.is_precompiled then
+				id := a_class.id;
 
-			if (id > max_precompiled_id) then
 debug ("ACTIVITY", "REMOVE_CLASS");
 	io.error.putstring ("%TRemoving class ");
 	io.error.putstring (a_class.class_name);
@@ -562,8 +563,8 @@ end;
 
 					-- Remove one occurrence for each external written
 					-- in the class
-				if Feat_tbl_server.has (id) then
-					ftable := Feat_tbl_server.item (id)
+				if Feat_tbl_server.has (id.id) then
+					ftable := Feat_tbl_server.item (id.id)
 					from
 						ftable.start
 					until
@@ -572,7 +573,7 @@ end;
 						f := ftable.item_for_iteration;
 						if
 							f.is_external and then
-							f.written_in = id
+							equal (f.written_in, id)
 						then
 							ext ?= f;
 								-- If the external is encapsulated then it was not added to
@@ -609,40 +610,40 @@ end;
 					-- Remove if from the servers
 debug ("ACTIVITY");
 	io.error.putstring ("%TRemoving id from servers: ");
-	io.error.putint (id);
+	io.error.putint (id.id);
 	io.error.new_line;
 end;
-				Inv_byte_server.remove (id);
-				Ast_server.remove (id);
-				Feat_tbl_server.remove (id);
-				Class_info_server.remove (id);
-				Inv_ast_server.remove (id);
-				Depend_server.remove (id);
-				Rep_depend_server.remove (id);
-				M_rout_id_server.remove (id);
-				M_desc_server.remove (id);
+				Inv_byte_server.remove (id.id);
+				Ast_server.remove (id.id);
+				Feat_tbl_server.remove (id.id);
+				Class_info_server.remove (id.id);
+				Inv_ast_server.remove (id.id);
+				Depend_server.remove (id.id);
+				Rep_depend_server.remove (id.id);
+				M_rout_id_server.remove (id.id);
+				M_desc_server.remove (id.id);
 				if Compilation_modes.is_precompiling then
 						-- Do not need to remove id from
 						-- Class_comments_server since
 						-- we are not able to remove a
 						-- precompiled class
-					Tmp_class_comments_server.remove (id);
+					Tmp_class_comments_server.remove (id.id);
 				end;
-				Tmp_inv_byte_server.remove (id);
-				Tmp_ast_server.remove (id);
-				Tmp_feat_tbl_server.remove (id);
-				Tmp_class_info_server.remove (id);
-				Tmp_rep_info_server.remove (id);
-				Tmp_inv_ast_server.remove (id);
-				Tmp_depend_server.remove (id);
-				Tmp_rep_depend_server.remove (id);
-				Tmp_m_rout_id_server.remove (id);
-				Tmp_m_desc_server.remove (id);
+				Tmp_inv_byte_server.remove (id.id);
+				Tmp_ast_server.remove (id.id);
+				Tmp_feat_tbl_server.remove (id.id);
+				Tmp_class_info_server.remove (id.id);
+				Tmp_rep_info_server.remove (id.id);
+				Tmp_inv_ast_server.remove (id.id);
+				Tmp_depend_server.remove (id.id);
+				Tmp_rep_depend_server.remove (id.id);
+				Tmp_m_rout_id_server.remove (id.id);
+				Tmp_m_desc_server.remove (id.id);
 
 				freeze_set1.prune (id);
 				freeze_set2.prune (id);
 				melted_set.prune (id);
-				id_array.put (Void, id);
+				classes.remove (id);
 
 					-- Remove client/supplier syntactical relations
 					-- and remove classes recursively
@@ -670,9 +671,9 @@ end;
 							-- was a client for a removed class
 						supplier /= compiled_root_class and then
 							-- Cannot propagate for a protected class
-						supplier.id > protected_classes and then
+						not supplier.id.protected and then
 							-- A recursion may occur when removing a cluster
-						id_array.item (supplier.id) /= Void
+						classes.has (supplier.id)
 					then
 						remove_class (supplier);
 					end;
@@ -683,34 +684,23 @@ end;
 
 	nb_of_classes: INTEGER is
 			-- Number of classes in the system
-		require
-			id_array_not_void: id_array /= Void
-		local
-			i: INTEGER
 		do
-			from
-				i := id_array.lower
-			until
-				i > id_array.upper
-			loop
-				if id_array.item (i) /= Void then
-					Result := Result + 1
-				end;
-				i := i + 1
-			end
+			Result := classes.count
 		end;
 		
-	class_of_id (id: INTEGER): CLASS_C is
-			-- Class of id `id'.
+	class_of_id (id: CLASS_ID): CLASS_C is
+			-- Class of id `id'
 		require
-			index_small_enough: id <= id_array.count;
+			id_not_void: id /= Void
 		do
-			Result := id_array.item (id);
+			Result := classes.item (id)
 debug ("CLASS_OF_ID")
 io.error.putstring ("Class of id ");
-io.error.putint (id);
+io.error.putint (id.id);
 io.error.putstring (": ");
-io.error.putstring (Result.class_name);
+if Result /= Void then
+	io.error.putstring (Result.class_name);
+end
 io.error.new_line;
 end;
 		end;
@@ -943,22 +933,18 @@ end;
 			-- Check generic validity on old classes
 			-- generic parameters cannot be new classes
 		local
-			i, nb: INTEGER;
 			a_class: CLASS_C
 		do
 debug ("ACTIVITY")
 	io.error.putstring ("Check generics%N");
 end;
 			from
-				i := 1;
-				nb := id_array.count
+				classes.start
 			until
-				i > nb
+				classes.after
 			loop
-				a_class := id_array.item (i);
+				a_class := classes.item_for_iteration;
 				if
-					a_class /= Void
-				and then
 					a_class.generics /= Void
 				and then
 						-- If the class is changed then `pass1' has been
@@ -967,7 +953,7 @@ end;
 				then
 					a_class.check_generic_parameters
 				end;
-				i := i + 1
+				classes.forth
 			end;
 			Error_handler.checksum
 		end;
@@ -975,16 +961,15 @@ end;
 	remove_useless_classes is
 			-- Remove useless classes
 		local
-			i, nb: INTEGER;
 			a_class: CLASS_C;
 			root_class_c: CLASS_C;
-			marked_classes: ARRAY [BOOLEAN];
+			marked_classes: SEARCH_TABLE [CLASS_ID];
 			vd31: VD31;
 		do
 
-				-- First mark all the classes that can be reached from the root class
-			nb := id_array.count;
-			!!marked_classes.make (1, nb);
+				-- First mark all the classes that can be reached
+				-- from the root class
+			!! marked_classes.make (System_chunk);
 
 			root_class_c := root_class.compiled_class;
 			root_class_c.mark_class (marked_classes);
@@ -1002,17 +987,12 @@ end;
 				-- Remove all the classes that cannot be reached if they are
 				-- not protected
 			from
-					-- Class of id less than protected_classes is protected
-					-- See feature `init'
-				i := protected_classes+1;
+				classes.start
 			until
-				i > nb
+				classes.after
 			loop
-				a_class := id_array.item (i);
-				if	a_class /= Void -- Classes could be removed
-					and then
-					marked_classes.item (i) = False
-				then
+				a_class := classes.item_for_iteration;
+				if not marked_classes.has (a_class.id) then
 					if a_class.has_visible then
 						!!vd31;
 						vd31.set_class_name (a_class.class_name);
@@ -1026,8 +1006,8 @@ debug ("REMOVE_CLASS")
 end;
 						remove_class (a_class)
 					end;
-				end;
-				i := i + 1
+				end
+				classes.forth
 			end;
 			Error_handler.checksum
 		end;
@@ -1035,24 +1015,17 @@ end;
 	build_conformance_table is
 			-- Build the conformance table
 		local
-			i, nb: INTEGER;
 			a_class: CLASS_C;
 		do
 			from
 					-- Iteration on the class of the system
-				i := 1;
-				nb := id_array.count;
+				classes.start
 			until
-				i > nb
+				classes.after
 			loop
-				a_class := id_array.item (i);
-					-- Since classes can be removed from the system,
-					-- there can be "holes' in `id_array'.
-				if a_class /= Void then
-					a_class.fill_conformance_table;
-				end;
-
-				i := i + 1;
+				a_class := classes.item_for_iteration;
+				a_class.fill_conformance_table;
+				classes.forth
 			end;
 		end;
 
@@ -1113,8 +1086,9 @@ io.error.putstring ("%N");
 end;
 					-- Process skeleton(s) for `a_class'.
 				if
-					(not (Compilation_modes.is_precompiling or else Lace.compile_all_classes))
-					or else a_class.has_types
+					(not (Compilation_modes.is_precompiling or else
+					Lace.compile_all_classes)) or else
+					a_class.has_types
 				then
 					a_class.process_skeleton;
 
@@ -1138,26 +1112,22 @@ end;
 
 	check_vtec is
 		local
-			i, nb: INTEGER;
 			a_class: CLASS_C
 		do
 			from
-				i := 1;
-				nb := id_array.count;
+				classes.start
 			until
-				i > nb
+				classes.after
 			loop
-				a_class := id_array.item (i);
+				a_class := classes.item_for_iteration;
 				if
-					a_class /= Void
-				and then
-					(	a_class.has_expanded or else
-						a_class.is_used_as_expanded)
+					a_class.has_expanded or else
+					a_class.is_used_as_expanded
 				then
 					set_current_class (a_class);
 					a_class.check_expanded
 				end;
-				i := i + 1;
+				classes.forth
 			end;
 		end;
 
@@ -1214,7 +1184,7 @@ end;
 			no_error: not Error_handler.has_error
 		local
 			a_class: CLASS_C;
-			id_list: LINKED_LIST [INTEGER];
+			id_list: LINKED_LIST [CLASS_ID];
 			i: INTEGER;
 			temp: STRING
 		do
@@ -1263,11 +1233,12 @@ end;
 			-- Produce the update file resulting of the consecutive
 			-- melting process after the system has been frozen.
 		local
-			id_list: LINKED_LIST [INTEGER];
+			id_list: LINKED_LIST [CLASS_ID];
 			a_class: CLASS_C;
 			types: TYPE_LIST;
 			feat_tbl: MELTED_FEATURE_TABLE;
-			class_id, nb_tables: INTEGER;
+			class_id: CLASS_ID;
+			nb_tables: INTEGER;
 			file_pointer: POINTER;
 			cl_type: CLASS_TYPE;
 
@@ -1276,7 +1247,8 @@ end;
 			has_argument: INTEGER;
 			rout_info: ROUT_INFO;
 			rcorigin, rcoffset: INTEGER;
-			rout_id: ROUTINE_ID
+			rout_id: ROUTINE_ID;
+			server_id: INTEGER
 		do
 debug ("ACTIVITY")
 	io.error.putstring ("Updating melted.eif%N");
@@ -1310,7 +1282,7 @@ end;
 				-- Write first the number of class types now available
 			write_int (file_pointer, type_id_counter.value);
 				-- Write the number of classes now available
-			write_int (file_pointer, class_counter.value);
+			write_int (file_pointer, class_counter.total_count);
 				-- Write the profiler status
 			if Lace.ace_options.has_profile then
 				write_int (file_pointer, 1)
@@ -1368,8 +1340,7 @@ end;
 					types.after
 				loop
 					if not types.item.is_precompiled then
-						feat_tbl := m_feat_tbl_server.item
-												(types.item.type_id);
+						feat_tbl := m_feat_tbl_server.item (types.item.type_id);
 debug ("ACTIVITY")
 	io.error.putstring ("melting class desc of ");
 	types.item.type.trace;
@@ -1390,17 +1361,18 @@ end;
 				m_rout_id_server.start
 			until
 				m_rout_id_server.after
-			loop
-				class_id := m_rout_id_server.key_for_iteration;
+	 		loop
+				server_id := m_rout_id_server.key_for_iteration;
+				class_id := m_rout_id_server.disk_item (server_id).class_id;
 				a_class := class_of_id (class_id);
 debug ("ACTIVITY")
 io.error.putstring ("melting routine id array of ");
-io.error.putint (class_id);
+io.error.putint (class_id.id);
 io.error.putstring (a_class.class_name);
 io.error.new_line;
 end;
-				write_int (file_pointer, class_id);
-				m_rout_id_server.item (class_id).store (Update_file);
+				write_int (file_pointer, class_id.id);
+				m_rout_id_server.item (class_id.id).store (Update_file);
 				from
 					types := a_class.types;
 					types.start
@@ -1411,7 +1383,7 @@ end;
 						-- Write dynamic type
 					write_int (file_pointer, cl_type.type_id - 1);
 						-- Write original dynamic type (first freezing)
-					write_int (file_pointer, cl_type.id - 1);
+					write_int (file_pointer, cl_type.id.id - 1);
 					types.forth
 				end;
 				write_int (file_pointer, -1);
@@ -1440,8 +1412,8 @@ end;
 			until
 				M_desc_server.after
 			loop
-				class_id := M_desc_server.key_for_iteration;
-				M_desc_server.item (class_id).store (Update_file);
+				server_id := M_desc_server.key_for_iteration;
+				M_desc_server.item (server_id).store (Update_file);
 				M_desc_server.forth
 			end;
 				-- End mark
@@ -1569,8 +1541,7 @@ end;
 			-- Finalize a successfull recompilation and update the
 			-- compilation files.
 		local
-			a_class: CLASS_C;
-			i, nb: INTEGER;
+			a_class: CLASS_C
 		do
 				-- Reinitialization of control flags of the topological
 				-- sort.
@@ -1579,20 +1550,17 @@ end;
 
 				-- Reset the classes as unchanged
 			from
-				i := 1;
-				nb := id_array.count
+				classes.start
 			until
-				i > nb
+				classes.after
 			loop
-				a_class := id_array.item (i);
-				if a_class /= Void then
-					a_class.set_changed (False);
-					a_class.set_changed2 (False);
-					-- FIXME: changed4, changed5, changed6
-					a_class.changed_features.clear_all;
-					a_class.propagators.wipe_out;
-				end;
-				i := i + 1
+				a_class := classes.item_for_iteration;
+				a_class.set_changed (False);
+				a_class.set_changed2 (False);
+				-- FIXME: changed4, changed5, changed6
+				a_class.changed_features.clear_all;
+				a_class.propagators.wipe_out;
+				classes.forth
 			end;
 
 				-- Update servers
@@ -1632,10 +1600,11 @@ feature -- Freeezing
 			root_class.compiled;
 		local
 			a_class: CLASS_C;
-			id_list: LINKED_LIST [INTEGER];
-			descriptors: ARRAY [INTEGER];
+			id_list: LINKED_LIST [CLASS_ID];
 			i, nb: INTEGER;
-			temp: STRING
+			temp: STRING;
+			server_id: INTEGER;
+			descriptors: ARRAY [INTEGER]
 		do
 			dle_frozen_nobid_table.clear_all;
 			dle_frozen_nobid_table.set_threshold (body_id_counter.value);
@@ -1679,7 +1648,7 @@ end;
 				until
 					id_list.off
 				loop
-					a_class := id_array.item (id_list.item);
+					a_class := class_of_id (id_list.item);
 debug ("COUNT")
 	io.error.putstring ("[");
 	io.error.putint (i);
@@ -1705,9 +1674,10 @@ end;
 				until
 					i > nb
 				loop
-					a_class := id_array.item (descriptors.item (i));
+					server_id := descriptors.item (i);
+					a_class := class_of_id (m_desc_server.disk_item (server_id).class_id);
 					if a_class /= Void then
-						melted_set.put (a_class.id);
+						melted_set.put (a_class.id)
 					end;
 					i := i + 1
 				end;
@@ -1754,7 +1724,7 @@ end;
 			until
 				id_list.off
 			loop
-				a_class := id_array.item (id_list.item);
+				a_class := class_of_id (id_list.item);
 debug ("COUNT")
 	io.error.putstring ("[");
 	io.error.putint (i);
@@ -1784,7 +1754,7 @@ end;
 				until
 					id_list.off
 				loop
-					a_class := id_array.item (id_list.item);
+					a_class := class_of_id (id_list.item);
 debug ("COUNT")
 	io.error.putstring ("[");
 	io.error.putint (i);
@@ -1859,7 +1829,7 @@ end;
 
 	update_valid_body_ids is
 		local
-			id_list: LINKED_LIST [INTEGER];
+			id_list: LINKED_LIST [CLASS_ID];
 			a_class: CLASS_C;
 		do
 			from
@@ -1868,7 +1838,7 @@ end;
 			until
 				id_list.after
 			loop
-				a_class := id_array.item (id_list.item);
+				a_class := class_of_id (id_list.item);
 				a_class.update_valid_body_ids;
 				id_list.forth
 			end;
@@ -1936,7 +1906,6 @@ feature -- Final mode generation
 		require
 			root_class.compiled;
 		local
-			i, nb: INTEGER;
 			a_class: CLASS_C;
 			temp: STRING;
 			old_remover_off: BOOLEAN;
@@ -1973,32 +1942,27 @@ feature -- Final mode generation
 			byte_context.set_final_mode;
 
 			from
-				i := 1;
-				nb := class_counter.value;
+				classes.start
 			until
-				i > nb
+				classes.after
 			loop
-				a_class := id_array.item (i);
-					-- Since a clas can be removed, test if `a_class' is
-					-- not Void.
-				if a_class /= Void then
+				a_class := classes.item_for_iteration;
 debug ("COUNT");
 	io.error.putstring ("[");
-	io.error.putint (nb-i+1);
+--	io.error.putint (nb-i+1);
 	io.error.putstring ("] ");
 end;
 						-- Verbose
-					io.error.putstring ("Degree -4: class ");
-						temp := clone (a_class.class_name)
-						temp.to_upper;
-					io.error.putstring (temp);
-					io.error.new_line;
+				io.error.putstring ("Degree -4: class ");
+					temp := clone (a_class.class_name)
+					temp.to_upper;
+				io.error.putstring (temp);
+				io.error.new_line;
 
-					a_class.process_polymorphism;
-					History_control.check_overload;
-				end;
+				a_class.process_polymorphism;
+				History_control.check_overload;
 
-				i := i + 1;
+				classes.forth
 			end;
 			History_control.transfer;
 			tmp_poly_server.flush;
@@ -2018,34 +1982,29 @@ end;
 				-- Generation of C files associated to the classes of
 				-- the system.
 			from
-				i := 1;
-				nb := class_counter.value;
+				classes.start;
 				open_log_files
 			until
-				i > nb
+				classes.after
 			loop
-				a_class := id_array.item (i);
-					-- Since a clas can be removed, test if `a_class' is
-					-- not Void.
-				if a_class /= Void then
+				a_class := classes.item_for_iteration;
 						-- Verbose
 debug ("COUNT")
 	io.error.putstring ("[");
-	io.error.putint (nb-i+1);
+--	io.error.putint (nb-i+1);
 	io.error.putstring ("] ");
 end;
-					io.error.putstring ("Degree -5: class ");
-						temp := clone (a_class.class_name)
-						temp.to_upper;
-					io.error.putstring (temp);
-					io.error.new_line;
+				io.error.putstring ("Degree -5: class ");
+					temp := clone (a_class.class_name)
+					temp.to_upper;
+				io.error.putstring (temp);
+				io.error.new_line;
 
-					current_class := a_class;
+				current_class := a_class;
 
-					a_class.pass4;
-				end;
+				a_class.pass4;
 
-				i := i + 1;
+				classes.forth
 			end;
 			close_log_files;
 
@@ -2106,9 +2065,9 @@ feature -- Dead code removal
 	remove_dead_code is
 			-- Dead code removal
 		local
+			i, nb: INTEGER;
 			a_class: CLASS_C;
 			root_feat: FEATURE_I;
-			i, nb: INTEGER;
 			ct: CLASS_TYPE;
 		do
 			!!remover.make;
@@ -2126,20 +2085,16 @@ feature -- Dead code removal
 			end;
 
 			from
-				i := 1;
-				nb := id_array.count;
+				classes.start
 			until
-				i > nb
+				classes.after
 			loop
-				a_class := id_array.item (i);
-				if a_class /= Void then
-						-- Classes could be removed	then
-					a_class.mark_dispose (remover);
-					if a_class.visible_level.has_visible then
-						a_class.mark_visible (remover)
-					end;
+				a_class := classes.item_for_iteration;
+				a_class.mark_dispose (remover);
+				if a_class.visible_level.has_visible then
+					a_class.mark_visible (remover)
 				end;
-				i := i + 1
+				classes.forth
 			end;
 
 			if has_expanded then
@@ -2271,21 +2226,16 @@ debug ("ACTIVITY")
 end;
 				-- Sort the class_list by type id in `class_list'.
 			from
-				i := 1;
-				nb := id_array.count;
-				!!class_list.make (1, max_class_id);
+				classes.start;
+				nb := max_class_id;
+				!!class_list.make (1, nb);
 			until
-				i > nb
+				classes.after
 			loop
-				a_class := id_array.item (i);
-					-- Since classes can be removed from the system, test if
-					-- `a_class' is not Void
-				if a_class /= Void then
-					class_list.put (a_class, a_class.topological_id);
-				end;
-				i := i + 1;
+				a_class := classes.item_for_iteration;
+				class_list.put (a_class, a_class.topological_id);
+				classes.forth
 			end;
-			nb := max_class_id;
 
 				-- Iteration on `class_list' in order to compute new type
 				-- id's
@@ -2311,7 +2261,7 @@ debug ("ACTIVITY")
 	io.error.putstring (": ");
 	class_type.type.trace;
 	io.error.putstring (" [");
-	io.error.putint (class_type.id);
+	io.error.putint (class_type.id.id);
 	io.error.putstring ("]%N");
 end;
 						-- Update `class_types'
@@ -2466,50 +2416,47 @@ end;
 				Skeleton_file.putstring ("#include %"macros.h%"%N");
 				Skeleton_file.new_line;
 				from
-					i := 1;
-					nb_class := id_array.count;
+					classes.start
 				until
-					i > nb_class
+					classes.after
 				loop
-					a_class := class_of_id (i);
-					if a_class /= Void then
-							-- Classes could be removed
-						if
-							not Compilation_modes.is_precompiling and
-							not a_class.is_precompiled
-						then
-							Skeleton_file.putstring ("extern int32 ra");
-							Skeleton_file.putint (i);
+					a_class := classes.item_for_iteration;
+					i := a_class.id.id;
+					if
+						not Compilation_modes.is_precompiling and
+						not a_class.is_precompiled
+					then
+						Skeleton_file.putstring ("extern int32 ra");
+						Skeleton_file.putint (i);
+						Skeleton_file.putstring ("[];%N");
+					end;
+					if a_class.has_visible then
+						Skeleton_file.putstring ("extern char *cl");
+						Skeleton_file.putint (i);
+						Skeleton_file.putstring ("[];%N");
+						Skeleton_file.putstring ("extern uint32 cr");
+						Skeleton_file.putint (i);
+						Skeleton_file.putstring ("[];%N");
+					end;
+					if not a_class.skeleton.empty then
+						from
+							types := a_class.types;
+							types.start
+						until
+							types.off
+						loop
+							Skeleton_file.putstring ("extern uint32 types");
+							Skeleton_file.putint (types.item.type_id);
 							Skeleton_file.putstring ("[];%N");
-						end;
-						if a_class.has_visible then
-							Skeleton_file.putstring ("extern char *cl");
-							Skeleton_file.putint (i);
-							Skeleton_file.putstring ("[];%N");
-							Skeleton_file.putstring ("extern uint32 cr");
-							Skeleton_file.putint (i);
-							Skeleton_file.putstring ("[];%N");
-						end;
-						if not a_class.skeleton.empty then
-							from
-								types := a_class.types;
-								types.start
-							until
-								types.off
-							loop
-								Skeleton_file.putstring ("extern uint32 types");
-								Skeleton_file.putint (types.item.type_id);
-								Skeleton_file.putstring ("[];%N");
-								types.forth
-							end;
+							types.forth
 						end;
 					end;
 
-					i := i + 1;
+					classes.forth
 				end;
 				Skeleton_file.new_line;
 
-				!!cltype_array.make (1, static_type_id_counter.value);
+				!!cltype_array.make (1, static_type_id_counter.total_count);
 			end;
 
 			from
@@ -2522,7 +2469,7 @@ end;
 if cl_type /= Void then
 				cl_type.generate_skeleton1;
 				if not final_mode then
-					cltype_array.put (cl_type, cl_type.id);
+					cltype_array.put (cl_type, cl_type.id.id);
 				end;
 else
 		-- FIXME
@@ -2562,7 +2509,7 @@ end;
 				Skeleton_file.putstring ("int32 *fcall[] = {%N");
 				from
 					i := 1;
-					nb := static_type_id_counter.value
+					nb := cltype_array.upper
 				until
 					i > nb
 				loop
@@ -2573,7 +2520,7 @@ end;
 						not cl_type.associated_class.is_precompiled
 					then
 						Skeleton_file.putstring ("ra");
-						Skeleton_file.putint (cl_type.associated_class.id);
+						Skeleton_file.putint (cl_type.associated_class.id.id);
 					else
 						Skeleton_file.putstring ("(int32 *) 0");
 					end;
@@ -2631,16 +2578,15 @@ end;
 			Cecil_file.putstring ("#include %"struct.h%"%N%N");
 
 			from
-				i := 1;
-				nb := class_counter.value;
+				classes.start
 			until
-				i > nb
+				classes.after
 			loop
-				a_class := class_of_id (i);
-				if a_class /= Void and then a_class.has_visible then
+				a_class := classes.item_for_iteration;
+				if a_class.has_visible then
 					a_class.generate_cecil;
 				end;
-				i := i + 1;
+				classes.forth
 			end;
 
 			if final_mode then
@@ -2690,44 +2636,39 @@ end;
 	make_cecil_tables is
 			-- Prepare cecil tables
 		local
-			i, nb, generic, no_generic: INTEGER;
+			generic, no_generic: INTEGER;
 			a_class: CLASS_C;
 			upper_class_name: STRING;
 		do
 			from
-				i := 1;
-				nb := id_array.count;
+				classes.start
 			until
-				i > nb
+				classes.after
 			loop
-				a_class := id_array.item (i);
-				if a_class /= Void then
-					if a_class.generics = Void then
-						no_generic := no_generic + 1;
-					else
-						generic := generic + 1;
-					end;
+				a_class := classes.item_for_iteration;
+				if a_class.generics = Void then
+					no_generic := no_generic + 1;
+				else
+					generic := generic + 1;
 				end;
-				i := i + 1;
+				classes.forth
 			end;
 			from
-				i := 1;
+				classes.start;
 				Cecil2.init (no_generic);
 				Cecil3.init (generic);
 			until
-				i > nb
+				classes.after
 			loop
-				a_class := id_array.item (i);
-				if a_class /= Void then
-					upper_class_name := clone (a_class.external_name);
-					upper_class_name.to_upper;
-					if a_class.generics = Void then
-						Cecil2.put (a_class, upper_class_name);
-					else
-						Cecil3.put (a_class, upper_class_name);
-					end;
+				a_class := classes.item_for_iteration;
+				upper_class_name := clone (a_class.external_name);
+				upper_class_name.to_upper;
+				if a_class.generics = Void then
+					Cecil2.put (a_class, upper_class_name);
+				else
+					Cecil3.put (a_class, upper_class_name);
 				end;
-				i := i + 1;
+				classes.forth
 			end;
 		end;
 
@@ -2838,8 +2779,7 @@ feature -- Dispose routine
 			feature_i: FEATURE_I;
 		once
 			if memory_class /= Void then
-				feature_i :=
-				memory_class.feature_table.item ("dispose");
+				feature_i := memory_class.feature_table.item ("dispose");
 				if feature_i /= Void then
 					Result := feature_i.rout_id_set.first;
 				end;
@@ -2850,26 +2790,23 @@ feature -- Dispose routine
 			-- MEMORY class of system. Void if it has
 			-- not been compiled.
 		local
-			nbr, i: INTEGER;
 			class_c: CLASS_C
+			class_cursor: CURSOR
 		once
 			from
-				nbr := id_array.count;
-				i := 1
+				class_cursor := classes.cursor;
+				classes.start
 			until
-				i > nbr or else (Result /= Void)
+				classes.after or else (Result /= Void)
 			loop
-				class_c := id_array.item (i);
-				if
-					(class_c /= Void)
-				and then
-					class_c.class_name.is_equal ("memory")
-				then
+				class_c := classes.item_for_iteration;
+				if class_c.class_name.is_equal ("memory") then
 					Result := class_c
 				else
-					i := i + 1;
+					classes.forth
 				end;
 			end;
+			classes.go_to (class_cursor)
 		end;
 
 	memory_descendants: LINKED_LIST [CLASS_C] is
@@ -2953,7 +2890,8 @@ feature -- Plug and Makefile file
 			-- Generate plug with run-time
 		local
 			string_cl, bit_cl, array_cl: CLASS_C;
-			arr_type_id, str_type_id, type_id, id: INTEGER;
+			arr_type_id, str_type_id, type_id: INTEGER;
+			id: TYPE_ID;
 			set_count_feat, creation_feature: FEATURE_I;
 			creators: EXTEND_TABLE [EXPORT_I, STRING];
 			dispose_name, str_make_name, init_name, set_count_name: STRING;
@@ -2981,9 +2919,9 @@ feature -- Plug and Makefile file
 											(creators.key_for_iteration);
 			set_count_feat := string_cl.feature_table.item ("set_count");
 			str_make_name := clone (Encoder.feature_name
-							(id, creation_feature.body_id))
+							(id.id, creation_feature.body_id))
 			set_count_name := clone (Encoder.feature_name
-							(id, set_count_feat.body_id))
+							(id.id, set_count_feat.body_id))
 			Plug_file.putstring ("extern void ");
 			Plug_file.putstring (str_make_name);
 			Plug_file.putstring ("();%N");
@@ -3010,7 +2948,7 @@ feature -- Plug and Makefile file
 				creation_feature := array_cl.feature_table.item
 											(creators.key_for_iteration);
 				arr_make_name := clone (Encoder.feature_name
-								(id, creation_feature.body_id))
+								(id.id, creation_feature.body_id))
 				array_make_name := clone (arr_make_name)
 			else
 				cl_type := Instantiator.Array_type.associated_class_type; 
@@ -3272,7 +3210,7 @@ feature -- Main file generation
 			if 	creation_name /= Void then
 				if final_mode then
 					rout_table ?= Eiffel_table.poly_table (rout_id);
-					c_name := rout_table.feature_name (cl_type.id);
+					c_name := rout_table.feature_name (cl_type.id.id);
 					Initialization_file.putstring ("%Textern void ");
 					Initialization_file.putstring (c_name);
 					Initialization_file.putstring ("();%N%N");
@@ -3333,7 +3271,7 @@ feature -- Main file generation
 -- freeze_system.
 					if cl_type /= Void then
 						Initialization_file.putstring ("%TInit");
-						Initialization_file.putint (cl_type.id);
+						Initialization_file.putint (cl_type.id.id);
 						Initialization_file.putstring ("();%N")
 					end;
 					i := i + 1
@@ -3347,7 +3285,7 @@ feature -- Main file generation
 				Initialization_file.putint (type_id_counter.value);
 					-- Set C variable `ccount'.
 				Initialization_file.putstring (";%N%Tccount = ");
-				Initialization_file.putint (class_counter.value);
+				Initialization_file.putint (class_counter.total_count);
 					-- Set C variable `dcount'.
 				Initialization_file.putstring (";%N%Tdcount = ");
 				Initialization_file.putint (dispatch_table.counter);
@@ -3396,19 +3334,16 @@ feature --Workbench option file generation
 
 				-- First debug keys
 			from
-				i := 1;
-				nb := id_array.count;
+				classes.start
 			until
-				i > nb
+				classes.after
 			loop
-				a_class := id_array.item (i);
-				if a_class /= Void then
-					partial_debug ?= a_class.debug_level;
-					if partial_debug /= Void then
-						partial_debug.generate_keys (Option_file, a_class.id);
-					end;
+				a_class := classes.item_for_iteration;
+				partial_debug ?= a_class.debug_level;
+				if partial_debug /= Void then
+					partial_debug.generate_keys (Option_file, a_class.id);
 				end;
-				i := i + 1;
+				classes.forth
 			end;
 
 				-- Then option C array
@@ -3561,7 +3496,11 @@ feature -- Conveniences
 
 	set_c_file_names (l: like c_file_names) is
 			-- Assign `l' to `c_file_names'.
+			--| Set `freeze' flag if needed
 		do
+			if not deep_equal (l, c_file_names) then
+				private_freeze := True
+			end
 			c_file_names := l;
 		end;
 
@@ -3631,12 +3570,6 @@ feature -- Conveniences
 			server_controler.set_chunk_size (10000)
 		end;
 
-	set_id_array (a: like id_array) is
-			-- Assign `a' to `id_array'.
-		do
-			id_array := a;
-		end;
-
 	set_freeze (b: BOOLEAN) is
 			-- Assign `b' to `freeze'.
 		do
@@ -3687,8 +3620,6 @@ feature -- Precompilation
 		do
 			is_precompiled := True;
 			server_controler.save_precompiled_id;
-			max_precompiled_id := class_counter.value;
-			max_precompiled_type_id := static_type_id_counter.value;
 			Universe.mark_precompiled;
 		end;
 
@@ -3752,16 +3683,14 @@ feature -- Debug purpose
 			i: INTEGER
 		do
 			from
-				i := 1;
+				classes.start
 			until
-				i > id_array.count
+				classes.after
 			loop
-				a_class := id_array.item (i);
-				if a_class /= Void then
+				a_class := classes.item_for_iteration;
 					-- Do nothing. Specific debug
 					-- code can be inserted here.
-				end;
-				i := i + 1;
+				classes.forth
 			end;
 		end;
 
@@ -3804,14 +3733,6 @@ feature -- DLE
 			end
 		end;
 
-	dle_max_dr_class_id: INTEGER is
-			-- Greatest class id of the static system
-			--| Only used in the DC-Set system
-		require
-			dymanic_system: is_dynamic
-		do
-		end;
-
 	dle_max_topo_id: INTEGER is
 			-- Greatest topological class id of the static system
 			--| Only used in the DC-Set system
@@ -3822,14 +3743,6 @@ feature -- DLE
 
 	dle_max_dr_type_id: INTEGER is
 			-- Greatest class_type type_id of the static system
-			--| Only used in the DC-Set system
-		require
-			dymanic_system: is_dynamic
-		do
-		end;
-
-	dle_max_dr_static_type_id: INTEGER is
-			-- Greatest class_type (static) id of the static system
 			--| Only used in the DC-Set system
 		require
 			dymanic_system: is_dynamic

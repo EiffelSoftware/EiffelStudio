@@ -34,7 +34,7 @@ feature
 		deferred
 		end;
 
-	generate (file: INDENT_FILE; id: INTEGER) is
+	generate (file: INDENT_FILE; id: CLASS_ID) is
 			-- Generate assertion value in `file'.
 		require
 			good_argument: file /= Void;
@@ -49,7 +49,7 @@ feature
 
 feature -- DLE
 
-	generate_dle (file: INDENT_FILE; id: INTEGER) is
+	generate_dle (file: INDENT_FILE; id: CLASS_ID) is
 			-- Generate assertion value in `file'.
 		require
 			good_argument: file /= Void;

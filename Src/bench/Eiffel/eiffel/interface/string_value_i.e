@@ -43,7 +43,7 @@ feature
 			class_type ?= t;
 			Result := 	class_type /= Void
 						and then
-						class_type.base_type = System.string_id;
+						equal (class_type.base_class_id, System.string_id);
 		end;
 
 	make_byte_code (ba: BYTE_ARRAY) is

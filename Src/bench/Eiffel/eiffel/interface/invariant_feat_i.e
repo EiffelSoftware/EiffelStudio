@@ -34,7 +34,7 @@ feature
 			byte_code: INVARIANT_B;
 			melted_feature: MELT_FEATURE;
 		do
-			byte_code := Inv_byte_server.item (written_in);
+			byte_code := Inv_byte_server.item (written_in.id);
 
 			Byte_array.clear;
 			byte_code.make_byte_code (Byte_array);

@@ -33,7 +33,7 @@ feature
 			code_id := i
 		end;
 
-	unselected (i: INTEGER): FEATURE_I is
+	unselected (i: CLASS_ID): FEATURE_I is
 			-- Unselected feature
 		local
 			unselect: RD2_CONSTANT_I

@@ -32,7 +32,7 @@ feature
 			-- (Deferred routines with pre or post conditions are
 			-- melted)
 		do
-			Result := (a_class.id = written_in) and then 
+			Result := equal (a_class.id, written_in) and then 
 					(has_precondition or else has_postcondition);
 		end;
 
@@ -55,7 +55,7 @@ feature
 			Result := rep;
 		end;
 
-	unselected (in: INTEGER): FEATURE_I is
+	unselected (in: CLASS_ID): FEATURE_I is
 			-- Unselected feature
 		local
 			unselect: D_DEF_PROC_I

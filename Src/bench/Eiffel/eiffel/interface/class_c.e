@@ -9,7 +9,7 @@ class CLASS_C
 
 inherit
 
-	IDABLE;
+	COMPILER_IDABLE;
 	SHARED_WORKBENCH;
 	SHARED_SERVER
 		export
@@ -165,17 +165,6 @@ feature
 	unique_counter: COUNTER;
 			-- Counter for unique features
 
-	offset_counter: COUNTER;
-			-- Offset counter for feature introduced in current class
-
-	descriptor_size: INTEGER is
-			-- Number of routines introduced
-			-- in current class
-		do
-				-- Offsets start from 0.
-			Result := offset_counter.value + 1
-		end;
-
 	changed_features: SEARCH_TABLE [STRING];
 			-- Names of the changed features
 
@@ -183,7 +172,7 @@ feature
 			-- Set of class ids of the classes responsible for
 			-- a type check of the current class
 	
-	id: INTEGER is
+	id: CLASS_ID is
 			-- Class id
 		do
 			Result := e_class.id
@@ -240,10 +229,6 @@ feature
 			!!propagators.make;
 				-- Unique counter creation
 			!!unique_counter;
-				-- Offset counter.
-				-- Routine offsets start from 0.
-			!!offset_counter;
-			offset_counter.set_value (-1);
 			e_class.set_compiled_info (Current);
 			e_class.set_is_debuggable (not (is_special or else is_basic))
 		end;
@@ -252,7 +237,7 @@ feature
 			-- Has the class already been compiled before the current
 			-- compilation ?
 		do
-			Result := Ast_server.has (id);
+			Result := Ast_server.has (id.id);
 		end;
 
 	build_ast: CLASS_AS_B is
@@ -381,7 +366,7 @@ feature
 			invariant_info := Tmp_ast_server.invariant_info;
 			if invariant_info /= Void then
 				class_info.set_invariant_info (Tmp_ast_server.invariant_info);
-				Tmp_inv_ast_server.force (invariant_info, id);
+				Tmp_inv_ast_server.force (invariant_info, id.id);
 			end;
 
 				-- Put class information in class information table for
@@ -545,23 +530,23 @@ feature -- Third pass: byte code production and type check
 				
 					-- For a changed class, the supplier list has
 					-- to be updated
-				if Tmp_depend_server.has (id) then
-					dependances := Tmp_depend_server.item (id);
-				elseif Depend_server.has (id) then
-					dependances := Depend_server.item (id);
+				if Tmp_depend_server.has (id.id) then
+					dependances := Tmp_depend_server.item (id.id);
+				elseif Depend_server.has (id.id) then
+					dependances := Depend_server.item (id.id);
 				else
 					!!dependances.make (changed_features.count);
 					dependances.set_id (id);
 				end;
-				if Rep_depend_server.has (id) then
-					rep_dep := Rep_depend_server.item (id);
+				if Rep_depend_server.has (id.id) then
+					rep_dep := Rep_depend_server.item (id.id);
 				else
 				end;
 				if changed then
 					new_suppliers := suppliers.same_suppliers;
 				end;
 
-				feat_table := Feat_tbl_server.item (id);
+				feat_table := Feat_tbl_server.item (id.id);
 
 				ast_context.set_a_class (Current);
 
@@ -748,7 +733,7 @@ end;
 
 				elseif ((not feature_i.in_pass3) or else
 							-- The feature is deferred and written in the current class
-						(feature_i.is_deferred and then id = feature_i.written_in)) then
+						(feature_i.is_deferred and then equal (id, feature_i.written_in))) then
 					if feature_i.is_deferred then
 							-- Just type check it. See if VRRR or
 							-- VMRX error has occurred.
@@ -759,7 +744,7 @@ end;
 					record_suppliers (feature_i, dependances);
 				--elseif (feature_i.is_deferred or else
 						--feature_i.is_external) and then
-					--(id = feature_i.written_in) then
+					--(equal (id, feature_i.written_in)) then
 						-- Just type check it. See if VRRR or
 						-- VMRX error has occurred.
 					--ast_context.set_a_feature (feature_i);
@@ -813,7 +798,7 @@ end;
 							)
 					)
 				then
-					invar_clause := Inv_ast_server.item (id);
+					invar_clause := Inv_ast_server.item (id.id);
 					Error_handler.mark;
 
 debug ("ACTIVITY")
@@ -1084,7 +1069,7 @@ end;
 --							)
 --					)
 --				then
---					invar_clause := Tmp_inv_ast_server.item (id);
+--					invar_clause := Tmp_inv_ast_server.item (id.id);
 --					Error_handler.mark;
 --
 --debug ("ACTIVITY")
@@ -1312,7 +1297,7 @@ feature -- Melting
 				end;
 			end;
 
-			if not Tmp_m_rout_id_server.has (id) then
+			if not Tmp_m_rout_id_server.has (id.id) then
 					-- If not already done, Melt routine id array
 				tbl.melt;
 			end;
@@ -1363,7 +1348,7 @@ feature -- Workbench feature and descriptor table generation
 			file: INDENT_FILE;
 		do
 			table_file_name := full_file_name;
-			table_file_name.append_integer (id);
+			table_file_name.append_integer (id.id);
 			table_file_name.append_character (feature_table_file_suffix);
 			table_file_name.append (Dot_c);
 			!!file.make (table_file_name);
@@ -1433,15 +1418,7 @@ feature
 	packet_number: INTEGER is
 			-- Packet in which the file will be generated
 		do
-			if System.is_dynamic then
-				Result := ((id - System.dle_max_dr_class_id)
-						// System.makefile_generator.Packet_number) + 1
-			elseif System.in_final_mode then
-				Result := id // System.makefile_generator.Packet_number + 1
-			else
-				Result := ((id - System.max_precompiled_id)
-						// System.makefile_generator.Packet_number) + 1
-			end
+			Result := id.packet_number
 		end;
 
 feature -- Skeleton processing
@@ -1695,7 +1672,7 @@ feature -- Class initialization
 					pars.put_i_th (parent_type, lower);
 					lower := lower + 1;
 				end;
-			elseif id /= System.general_id then
+			elseif not equal (id, System.general_id) then
 					-- No parents are syntactiaclly specified: ANY is
 					-- the default parent, except for class GENERAL which has
 					-- no parent at all (we don't want a cycle in the
@@ -1888,7 +1865,7 @@ feature -- Class initialization
 			-- Default parent type
 		once
 			!!Result;
-			Result.set_base_type (System.any_id);
+			Result.set_base_class_id (System.any_id);
 		end;
 
 	Any_parent: PARENT_C is
@@ -1997,13 +1974,13 @@ feature
 			end;
 		end;
 
-	mark_class (marked_classes: ARRAY [BOOLEAN]) is
+	mark_class (marked_classes: SEARCH_TABLE [CLASS_ID]) is
 			-- Mark the class as used in the system
 			-- and propagate to the suppliers
 			-- Used by remove_useless_classes in SYSTEM_I
 		do
-			if marked_classes.item (id) = False then
-				marked_classes.put (True, id);
+			if not marked_classes.has (id) then
+				marked_classes.put (id);
 				from
 					syntactical_suppliers.start
 				until
@@ -2388,9 +2365,9 @@ feature -- Supplier checking
 			string_type: CL_TYPE_A;
 		once
 			!!Result;
-			Result.set_base_type (System.array_id);
+			Result.set_base_class_id (System.array_id);
 			!!string_type;
-			string_type.set_base_type (System.string_id);
+			string_type.set_base_class_id (System.string_id);
 			!!array_generics.make (1, 1);
 			array_generics.put (string_type, 1);
 			Result.set_generics (array_generics);
@@ -2501,7 +2478,7 @@ feature -- Convenience features
 			is_used_as_expanded := True
 		end;
 
-	set_id (i: INTEGER) is
+	set_id (i: like id) is
 			-- Assign `i' to `id'.
 		do
 			e_class.set_id (i)
@@ -2645,12 +2622,12 @@ feature -- Actual class type
 					i > count
 				loop
 					!!formal;
-					formal.set_base_type (i);
+					formal.set_position (i);
 					actual_generic.put (formal, i);
 					i := i + 1;
 				end;
 			end;
-			Result.set_base_type (id);
+			Result.set_base_class_id (id);
 		end;
 		
 	insert_changed_feature (feature_name: STRING) is
@@ -2681,7 +2658,7 @@ end;
 	feature_table: FEATURE_TABLE is
 			-- Feature table of the clas
 		do
-			Result := Feat_tbl_server.item (id);
+			Result := Feat_tbl_server.item (id.id);
 		end;
 
 	update_instantiator1 is
@@ -3090,11 +3067,11 @@ feature -- PS
 			-- Feature whose internal name is `n'
 		do
 			if
-				Tmp_feat_tbl_server.has (id)
+				Tmp_feat_tbl_server.has (id.id)
 			then
-				Result := Tmp_feat_tbl_server.item (id).item (n)
+				Result := Tmp_feat_tbl_server.item (id.id).item (n)
 			else
-				Result := Feat_tbl_server.item (id).item (n)
+				Result := Feat_tbl_server.item (id.id).item (n)
 			end
 		end;
 
@@ -3132,15 +3109,15 @@ feature -- Replication
 						-- Then Propagate
 						class_c.set_changed2 (True);
 						pass2_controler.insert_new_class (class_c);
-						if Rep_depend_server.has (unit.id) then
-							rep_depend := Rep_depend_server.item (unit.id);
+						if Rep_depend_server.has (unit.id.id) then
+							rep_depend := Rep_depend_server.item (unit.id.id);
 							feat_depend := rep_depend.item (unit.feature_name);
 							if feat_depend /= Void then
 								propagate_replication (feat_depend);
 								if feat_depend.count > 0 then
 									Tmp_rep_depend_server.put (rep_depend)
 								else
-									Tmp_rep_depend_server.remove (unit.id)
+									Tmp_rep_depend_server.remove (unit.id.id)
 								end;
 							end
 						end;
@@ -3181,7 +3158,7 @@ end;
 	process_replicated_features is
 			-- Process replicated features for Current
 		require
-			have_replicated_features: Tmp_rep_info_server.has (id)
+			have_replicated_features: Tmp_rep_info_server.has (id.id)
 		local
 			rep_class_info: REP_CLASS_INFO;	
 			stored_rep_name_list: S_REP_NAME_LIST;
@@ -3193,7 +3170,7 @@ end;
 			new_feat_as, old_feat_as: FEATURE_AS_B;
 			rep_features: LINKED_LIST [S_REP_NAME];
 		do
-			rep_class_info := Tmp_rep_info_server.item (id);
+			rep_class_info := Tmp_rep_info_server.item (id.id);
 debug ("ACTUAL_REPLICATION", "REPLICATION")
 	io.error.putstring ("Replication for class ");
 	io.error.putstring (class_name);
@@ -3334,7 +3311,8 @@ feature -- Precompilation
 
 	is_precompiled: BOOLEAN is
 		do	
-			Result := id <= System.max_precompiled_id
+			Result := id.is_precompiled and
+				not Compilation_modes.is_precompiling
 		end;
 
 	nb_precompiled_class_types: INTEGER is
@@ -3359,7 +3337,7 @@ feature -- DLE
 		require
 			dynamic_system: System.is_dynamic
 		do
-			Result := id <= System.dle_max_dr_class_id
+			Result := not id.is_dynamic
 		end;
 
 	is_dynamic: BOOLEAN is
@@ -3368,7 +3346,7 @@ feature -- DLE
 		require
 			dynamic_system: System.is_dynamic
 		do
-			Result := id > System.dle_max_dr_class_id
+			Result := id.is_dynamic
 		end;
 
 	nb_static_class_types: INTEGER is

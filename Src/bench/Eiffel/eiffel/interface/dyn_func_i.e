@@ -52,7 +52,7 @@ feature
 			Result := rep;
 		end;
 
-	unselected (in: INTEGER): FEATURE_I is
+	unselected (in: CLASS_ID): FEATURE_I is
 			-- Unselected feature
 		local
 			unselect: D_DYN_FUNC_I;

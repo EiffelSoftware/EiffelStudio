@@ -385,20 +385,11 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	insert_item (item_imp: EV_ITEM_IMP; an_index: INTEGER) is
-			-- Insert `item_imp' at position `an_index'.
-			--|FIXME graphical_insert_item now appears to be redundent.
-		local
-			citem: WEL_COMBO_BOX_EX_ITEM
-			list_item_imp: EV_LIST_ITEM_IMP
-		do
-			list_item_imp ?= item_imp
+	top_index: INTEGER is
+		do 
 			check
-				list_item_not_void: list_item_imp /= Void
+				to_be_implemented: False
 			end
-			!! citem.make_with_index (an_index)
-			citem.set_text (list_item_imp.interface.text)
-			wel_insert_item (citem)
 		end
 
 	set_read_only is
@@ -705,6 +696,10 @@ end -- class EV_COMBO_BOX_IMP
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.66  2000/03/30 18:11:12  brendel
+--| Removed `insert_item'.
+--| Added `top_index'.
+--|
 --| Revision 1.65  2000/03/30 17:44:44  brendel
 --| Now inherits EV_LIST_ITEM_LIST_IMP.
 --| Formatted for 80 columns.

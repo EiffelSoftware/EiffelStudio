@@ -437,14 +437,14 @@ feature {EV_GRID_ROW_I} -- Implementation
 		local
 			counter: INTEGER
 			current_row_list: SPECIAL [EV_GRID_ITEM_I]
-			row_count: INTEGER
+			current_row_count: INTEGER
 		do
 			current_row_list := parent_i.row_list @ (index - 1)
-			row_count := parent_i.row_count
+			current_row_count := current_row_list.count
 			from
 				counter := 0
 			until
-				counter = row_count or Result > 0
+				counter = current_row_count or Result > 0
 			loop
 				if current_row_list.item (counter) /= Void then
 					Result := counter

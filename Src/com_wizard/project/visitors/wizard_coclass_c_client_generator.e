@@ -9,6 +9,9 @@ class
 
 inherit
 	WIZARD_COCLASS_C_GENERATOR
+		redefine
+			process_interfaces
+		end
 
 	WIZARD_SHARED_DATA
 		export
@@ -98,6 +101,61 @@ feature -- Implementation
 		end
 
 feature {NONE} -- Implementation
+
+	process_interfaces is
+			-- Process inherited interfaces
+		local
+			a_name, tmp_string: STRING
+			data_member: WIZARD_WRITER_C_MEMBER
+			interface_descriptors: LIST[WIZARD_INTERFACE_DESCRIPTOR]
+		do
+			interface_descriptors := coclass_descriptor.interface_descriptors
+
+			-- Find all the features and properties in inherited interfaces
+			if not interface_descriptors.empty then
+				from
+					interface_descriptors.start
+				until
+					interface_descriptors.off
+				loop
+					if not is_typeflag_fhidden (interface_descriptors.item.flags) then
+						-- Add parent and import header files
+						cpp_class_writer.add_parent (interface_descriptors.item.c_type_name, Public)
+						cpp_class_writer.add_import (interface_descriptors.item.c_header_file_name)
+						cpp_class_writer.add_other_source (iid_definition (interface_descriptors.item.name, interface_descriptors.item.guid))
+
+						-- Add data member
+						create data_member.make
+						data_member.set_comment (Interface_pointer_comment)
+
+						-- Variable name
+						tmp_string := clone (Interface_variable_prepend)
+						tmp_string.append (interface_descriptors.item.c_type_name)
+						data_member.set_name (tmp_string)
+
+						-- Variable type
+						tmp_string := clone (interface_descriptors.item.c_type_name)
+						tmp_string.append (Space)
+						tmp_string.append (Asterisk)
+						data_member.set_result_type (tmp_string)
+
+						cpp_class_writer.add_member (data_member, Private)
+
+						-- Find all features and properties
+						a_name := interface_descriptors.item.c_type_name
+						interface_names.extend (a_name)
+
+						if interface_descriptors.item.dispinterface or interface_descriptors.item.dual then
+							dispatch_interface := True
+						end
+
+						generate_functions_and_properties (interface_descriptors.item)
+	
+					end
+					interface_descriptors.forth
+				end
+			end
+		end
 
 	destructor: STRING is
 			-- Desctructor

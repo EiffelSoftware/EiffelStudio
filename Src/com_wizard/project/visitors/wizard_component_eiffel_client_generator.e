@@ -14,6 +14,11 @@ inherit
 
 	WIZARD_COMPONENT_CLIENT_GENERATOR
 	
+	ECOM_TYPE_FLAGS
+		export
+			{NONE} all
+		end
+	
 feature -- Basic operations
 
 	generate_functions_and_properties (a_interface_desc: WIZARD_INTERFACE_DESCRIPTOR;
@@ -26,75 +31,75 @@ feature -- Basic operations
 			property_generator: WIZARD_EIFFEL_CLIENT_PROPERTY_GENERATOR
 			tmp_original_name, tmp_changed_name: STRING
 		do
+			if not is_typeflag_fhidden (a_interface_desc.flags) then
+				if not a_interface_desc.properties.empty then
+					from
+						a_interface_desc.properties.start
+					until
+						a_interface_desc.properties.off
+					loop
+						create property_generator
 
-			if not a_interface_desc.properties.empty then
-				from
-					a_interface_desc.properties.start
-				until
-					a_interface_desc.properties.off
-				loop
-					create property_generator
+						property_generator.generate (a_component, a_interface_desc.properties.item)
+						an_eiffel_writer.add_feature (property_generator.access_feature, Access)
+						an_eiffel_writer.add_feature (property_generator.external_access_feature, Externals)
+						an_eiffel_writer.add_feature (property_generator.external_setting_feature, Externals)
+						an_eiffel_writer.add_feature (property_generator.setting_feature, Element_change)
 
-					property_generator.generate (a_component, a_interface_desc.properties.item)
-					an_eiffel_writer.add_feature (property_generator.access_feature, Access)
-					an_eiffel_writer.add_feature (property_generator.external_access_feature, Externals)
-					an_eiffel_writer.add_feature (property_generator.external_setting_feature, Externals)
-					an_eiffel_writer.add_feature (property_generator.setting_feature, Element_change)
-
-					if property_generator.property_renamed then
-						from
-							property_generator.changed_names.start
-						until
-							property_generator.changed_names.off
-						loop
-							inherit_clause.add_rename (property_generator.changed_names.key_for_iteration, 
-													property_generator.changed_names.item_for_iteration)
-							property_generator.changed_names.forth
+						if property_generator.property_renamed then
+							from
+								property_generator.changed_names.start
+							until
+								property_generator.changed_names.off
+							loop
+								inherit_clause.add_rename (property_generator.changed_names.key_for_iteration, 
+														property_generator.changed_names.item_for_iteration)
+								property_generator.changed_names.forth
+							end
 						end
-					end
 
-					a_interface_desc.properties.forth
+						a_interface_desc.properties.forth
+					end
+				end
+
+				if not a_interface_desc.functions.empty then
+					from
+						a_interface_desc.functions.start
+					until
+						a_interface_desc.functions.off
+					loop
+						create function_generator
+						function_generator.generate (a_component, a_interface_desc.functions.item)
+
+						if function_generator.function_renamed then
+							inherit_clause.add_rename (function_generator.original_name, function_generator.changed_name)
+							tmp_original_name := vartype_namer.user_precondition_name (function_generator.original_name)
+							tmp_changed_name := vartype_namer.user_precondition_name (function_generator.changed_name)
+							inherit_clause.add_rename (tmp_original_name, tmp_changed_name)
+						end
+
+						if (function_generator.feature_writer.result_type /= Void and then 
+							not function_generator.feature_writer.result_type.empty) and
+							(function_generator.feature_writer.arguments = Void or else function_generator.feature_writer.arguments.empty)
+						then
+							an_eiffel_writer.add_feature (function_generator.feature_writer, Access)
+							an_eiffel_writer.add_feature (function_generator.external_feature_writer, Externals)
+						else
+							an_eiffel_writer.add_feature (function_generator.feature_writer, Basic_operations)
+							an_eiffel_writer.add_feature (function_generator.external_feature_writer, Externals)
+						end
+
+						a_interface_desc.functions.forth
+					end
+				end
+				if 
+					a_interface_desc.inherited_interface /= Void and then not
+					a_interface_desc.inherited_interface.guid.is_equal (Iunknown_guid) and then
+					not a_interface_desc.inherited_interface.guid.is_equal (Idispatch_guid) 
+				then
+					generate_functions_and_properties (a_interface_desc.inherited_interface, a_component, an_eiffel_writer, inherit_clause)
 				end
 			end
-
-			if not a_interface_desc.functions.empty then
-				from
-					a_interface_desc.functions.start
-				until
-					a_interface_desc.functions.off
-				loop
-					create function_generator
-					function_generator.generate (a_component, a_interface_desc.functions.item)
-
-					if function_generator.function_renamed then
-						inherit_clause.add_rename (function_generator.original_name, function_generator.changed_name)
-						tmp_original_name := vartype_namer.user_precondition_name (function_generator.original_name)
-						tmp_changed_name := vartype_namer.user_precondition_name (function_generator.changed_name)
-						inherit_clause.add_rename (tmp_original_name, tmp_changed_name)
-					end
-
-					if (function_generator.feature_writer.result_type /= Void and then 
-						not function_generator.feature_writer.result_type.empty) and
-						(function_generator.feature_writer.arguments = Void or else function_generator.feature_writer.arguments.empty)
-					then
-						an_eiffel_writer.add_feature (function_generator.feature_writer, Access)
-						an_eiffel_writer.add_feature (function_generator.external_feature_writer, Externals)
-					else
-						an_eiffel_writer.add_feature (function_generator.feature_writer, Basic_operations)
-						an_eiffel_writer.add_feature (function_generator.external_feature_writer, Externals)
-					end
-
-					a_interface_desc.functions.forth
-				end
-			end
-			if 
-				a_interface_desc.inherited_interface /= Void and then not
-				a_interface_desc.inherited_interface.guid.is_equal (Iunknown_guid) and then
-				not a_interface_desc.inherited_interface.guid.is_equal (Idispatch_guid) 
-			then
-				generate_functions_and_properties (a_interface_desc.inherited_interface, a_component, an_eiffel_writer, inherit_clause)
-			end
-
 		end
 
 feature {NONE} -- Implementation

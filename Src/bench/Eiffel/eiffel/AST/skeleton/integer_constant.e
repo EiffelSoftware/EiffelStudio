@@ -313,11 +313,13 @@ feature -- Generation
 			end
 
 			if compatibility_size = 64 then
+				buf.put_string ("RTI64C(")
 				buf.put_string (to_integer_64.out)
+				buf.put_character (')')
 			else
 				buf.put_integer (lower)
+				buf.put_character ('L')
 			end
-			buf.put_character ('L')
 			buf.put_character (')')
 		end
 

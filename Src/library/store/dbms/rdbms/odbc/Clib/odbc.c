@@ -936,11 +936,10 @@ TIMESTAMP_STRUCT *dp;
 			rc = SQLBindParameter(hstmt[no_desc], seriNumber, direction, SQL_C_CHAR, SQL_CHAR, len, 0, value, len, &(pcbValue[no_desc][seriNumber-1]));
 			break;
 		case INTEGER_TYPE:
-			
-			rc = SQLBindParameter(hstmt[no_desc], seriNumber, direction, SQL_C_CHAR, SQL_INTEGER, sizeof(long), 0, value, len, &(pcbValue[no_desc][seriNumber-1]));
+			rc = SQLBindParameter(hstmt[no_desc], seriNumber, direction, SQL_C_SLONG, SQL_INTEGER, sizeof(long), 0, value, len, &(pcbValue[no_desc][seriNumber-1]));
 			break;
 		case FLOAT_TYPE:
-			rc = SQLBindParameter(hstmt[no_desc], seriNumber, direction, SQL_C_CHAR, SQL_DOUBLE, 8, 0, value, len, &(pcbValue[no_desc][seriNumber-1]));
+			rc = SQLBindParameter(hstmt[no_desc], seriNumber, direction, SQL_C_DOUBLE, SQL_DOUBLE, 8, 0, value, len, &(pcbValue[no_desc][seriNumber-1]));
 			break;
 		case REAL_TYPE:
 			rc = SQLBindParameter(hstmt[no_desc], seriNumber, direction, SQL_C_CHAR, SQL_REAL, sizeof(float), 0, value, len, &(pcbValue[no_desc][seriNumber-1]));

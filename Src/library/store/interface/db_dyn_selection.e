@@ -64,12 +64,12 @@ feature -- Element change
 			implementation.set_value (v)
 		end
 
-	retrieve (table: ARRAY [ANY]) is
-			-- Execute the sql statement with `table' as 
-			-- the array of values for the parameters
-		do
-			implementation.retrieve (table)
-		end
+--	retrieve (table: ARRAY [ANY]) is
+--			-- Execute the sql statement with `table' as 
+--			-- the array of values for the parameters
+--		do
+--			implementation.retrieve (table)
+--		end
 
 feature {NONE} -- Implementation
 

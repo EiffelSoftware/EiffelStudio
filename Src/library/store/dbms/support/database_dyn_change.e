@@ -10,6 +10,8 @@ inherit
 	DATABASE_CHANGE [G]
 		rename
 			put as normal_put
+		redefine
+			replacement_string
 		end
 
 creation
@@ -19,37 +21,31 @@ feature
 
 	prepare (s: STRING) is
 			-- Parse of the sql statement `s'
+		require
+			not_void: s /= Void
+			meaning_full_statement: s.count > 0
 		local
 			parsed_s: STRING
 			parsed: BOOLEAN
 			ArgNum, i, j, k: INTEGER
 		do
+			last := 1
 			sql_string.wipe_out
 			sql_string.append (s)
+
+			s.wipe_out
+
+			s.append (parse (sql_string))
+
 			ArgNum := s.occurrences('?')
-			if s.has(':') then
-				from
-					i := 1
-					k := 1
-				until
-					i=s.count
-				loop
-					i := s.index_of (':', i)					
-					j := s.index_of (',', i)
-					if j=0 then
-						j := s.count
-					end
-					parameters.force(s.substring (i+1, j-1), k)
-					i := j
-					k := k + 1
-				end
-			end
+
 			descriptor := db_spec.new_descriptor
 			if not db_spec.normal_parse then
 				parsed := db_spec.parse (descriptor, ht, handle, s)	
 			end
 			if not parsed then
-				parsed_s := parse (s)
+--				parsed_s := parse (s)
+				parsed_s := s
 				if is_ok then
 					handle.status.set (db_spec.init_order (descriptor, parsed_s))
 				end
@@ -63,15 +59,15 @@ feature
 	bind_parameter is
 			-- Bind of the prarameters of the sql statement 
 		do
-			db_spec.bind_parameter (parameters_value, parameters, descriptor, handle, sql_string)	
+			db_spec.bind_parameter (parameters_value, parameters_value, descriptor, handle, "")	
 		end
 
 	execute is
 			-- Execute the sql statement
 		do
---			if is_ok then
---				handle.status.set (db_spec.unset_catalog_flag(descriptor))
---			end
+			if is_ok then
+				handle.status.set (db_spec.unset_catalog_flag(descriptor))
+			end
 			if is_ok then
 				handle.status.set (db_spec.start_order (descriptor))
 			end
@@ -80,6 +76,8 @@ feature
 
 	set_value (v: ANY) is
 			-- Set the values of the parameters
+		require
+			value_exists: v /= Void
 		do
 			last := last + 1
 			parameters_value.force (v, last)
@@ -93,6 +91,7 @@ feature
 			bind_parameter
 			execute
 		end
+
 
 feature {NONE} -- Implementation
 
@@ -108,12 +107,22 @@ feature {NONE} -- Implementation
 			!! Result.make (1, 0)
 		end
 	
-	parameters: ARRAY [ANY] is
-			-- Parameters of the sql statement
-		once
-			!! Result.make (1, 0)
-		end
-	
+	replacement_string (key, destination: STRING) is
+			-- Replace object associated with `key' by a '?' in `destination'.
+			-- and, fill chronologically, the parameters_value array.
+		local
+			object: ANY
+		do
+			object := ht.item (key);
+			if object /= void then
+				destination.append ("?")
+				parameters_value.force (object, last)
+				last := last + 1
+			else
+				destination.append (null_string)
+			end
+		end;
+
 	location_of_question_marks: LINKED_LIST [INTEGER]
 			-- Location of the question marks
 

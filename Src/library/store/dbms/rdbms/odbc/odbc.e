@@ -14,7 +14,6 @@ inherit
 			identifier_quoter,
 			qualifier_seperator,
 			parse,
-			parse_dyn,
 			put_column_name,
 			update_map_table_error,
 			user_name_ok,
@@ -117,24 +116,6 @@ feature -- For DATABASE_SELECTION, DATABASE_CHANGE
 			end
 		end
 
-	parse_dyn (descriptor: INTEGER; parameters: ARRAY[ANY]; uht: HASH_TABLE [ANY, STRING]; uhandle: HANDLE; sql: STRING): BOOLEAN is
-		local
-			c_temp: ANY
-		do
-			c_temp := sql.to_c
-			uhandle.status.set (odbc_init_order (descriptor, $c_temp, parameters.count))
-
-			if para /= Void then
-				para.resize(parameters.count)
-			else
-				!! para.make(parameters.count)
-			end
-			if para /= Void then
-				para.release
-			end
-			Result := TRUE
-		end
-
 	bind_parameter (table: ARRAY [ANY]; parameters: ARRAY [ANY]; descriptor: INTEGER; uhandle: HANDLE; sql: STRING) is
 		local
 			i: INTEGER
@@ -158,7 +139,7 @@ feature -- For DATABASE_SELECTION, DATABASE_CHANGE
 
 			bind_args_value (descriptor, uht, uhandle)
 		end
-					  
+			  
 feature -- For DATABASE_STORE
 
 	put_column_name (repository: DATABASE_REPOSITORY [like Current]; map_table: ARRAY [INTEGER]): STRING is

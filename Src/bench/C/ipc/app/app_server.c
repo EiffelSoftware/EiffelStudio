@@ -8,6 +8,8 @@
    ####   ######  #    #    ##    ######  #    #   ###     ####
                
  	Network handling of debugging requests, when application is stopped.
+
+	$Id$
 */
 
 #include "eif_config.h"
@@ -215,6 +217,9 @@ rt_shared void winit(void)
 	/* install the new handler for SIGTRAP */
 	sigemptyset(&mask_set);
 	new_action.sa_mask = mask_set;
+#ifndef SA_RESTART
+#define SA_RESTART 0
+#endif
 	new_action.sa_flags = SA_RESTART;
 	new_action.sa_handler = &sigtrap_handler;
 	

@@ -62,7 +62,7 @@ feature -- Access
 			-- File name specified for the cluster text generation
 			-- Void result implies no document generation
 		do	
-			Result := System.document_file_name
+			Result := System.document_file_name (System.system_name)
 		end;
 
 	sub_clusters: ARRAYED_LIST [CLUSTER_I]
@@ -158,7 +158,7 @@ feature -- Access
 	number_of_classes: INTEGER is
 			-- Number of compiled classes in the system
 		do
-			Result := System.nb_of_classes;
+			Result := System.classes.count
 		end;
 
 	class_of_id (i: CLASS_ID): E_CLASS is

@@ -1,0 +1,47 @@
+<html>
+
+<head>
+<meta http-equiv="Content-Language" content="en-us">
+<meta http-equiv="Content-Type" content="text/html; charset=windows-1252">
+<meta name="GENERATOR" content="Microsoft FrontPage 4.0">
+<meta name="ProgId" content="FrontPage.Editor.Document">
+<title>New Page 1</title>
+<LINK REL=Stylesheet HREF="../../../../../../default.css" TYPE="text/css">
+</head>
+
+<body>
+
+<h1>Assertions checking configuration changes</h1>
+<p>&nbsp;</p>
+<p>One of the major difference between 4.5 and 5.0 is how to specify the
+assertions checking in the ace file or in the project settings window. In 4.5
+assertions of a certain type where checked if there level was below the
+requested level. Here is what the level hierarchy looked like:</p>
+<p>&nbsp;</p>
+<ol>
+  <li>require</li>
+  <li>ensure</li>
+  <li>loop</li>
+  <li>check</li>
+  <li>invariant</li>
+  <li>all</li>
+</ol>
+<p>Meaning that you could not just check on type of assertions. With 5.0 this is
+now possible and we changed the presentation to follow the cost of evaluating
+certain type of assertions, the first one being usually the less expansive:</p>
+<p>&nbsp;</p>
+<ol>
+  <li>check</li>
+  <li>require</li>
+  <li>ensure</li>
+  <li>loop</li>
+  <li>invariant</li>
+  <li>all</li>
+</ol>
+<p>Also the default assertion level has changed. Before not specifying any
+assertion level was equivalent to select the require level. This is not the case
+anymore in 5.0.</p>
+
+</body>
+
+</html>

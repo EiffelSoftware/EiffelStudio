@@ -15,7 +15,14 @@ deferred class
 inherit
 	EV_ITEM
 		redefine
-			implementation
+			implementation,
+			create_action_sequences
+		end
+
+	EV_PICK_AND_DROPABLE
+		redefine
+			implementation,
+			create_action_sequences
 		end
 
 	EV_PIXMAPABLE
@@ -28,7 +35,15 @@ inherit
 			implementation
 		end
 
-feature -- Implementation
+feature {NONE} -- Implementation
+
+	create_action_sequences is
+		do
+			{EV_ITEM} Precursor
+			{EV_PICK_AND_DROPABLE} Precursor
+		end
+
+feature {EV_ANY_I} -- Implementation
 
 	implementation: EV_SIMPLE_ITEM_I
 			-- Platform dependent access.
@@ -56,6 +71,9 @@ end -- class EV_ITEM
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.22  2000/03/09 21:39:14  king
+--| Added inheritance from PND
+--|
 --| Revision 1.21  2000/02/22 18:39:47  oconnor
 --| updated copyright date and formatting
 --|

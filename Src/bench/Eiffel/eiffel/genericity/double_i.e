@@ -8,7 +8,7 @@ inherit
 			is_numeric,
 			same_as, element_type, il_convert_from,
 			description, sk_value, hash_code,
-			generate_byte_code_cast, default_create, tuple_code
+			default_create, tuple_code
 		end
 
 	BYTE_CONST
@@ -62,12 +62,6 @@ feature
 			-- Internal code for generation
 		do
 			Result := C_real64
-		end
-
-	generate_byte_code_cast (ba: BYTE_ARRAY) is
-			-- Code for interpreter cast
-		do
-			ba.append (Bc_cast_real64)
 		end
 
 	is_real_64: BOOLEAN is True

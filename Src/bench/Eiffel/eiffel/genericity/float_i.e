@@ -12,8 +12,7 @@ inherit
 			is_numeric,
 			same_as, element_type, il_convert_from,
 			description, sk_value, hash_code,
-			generate_byte_code_cast, heaviest,
-			default_create, tuple_code
+			heaviest, default_create, tuple_code
 		end
 
 	BYTE_CONST
@@ -115,14 +114,6 @@ feature -- Comparison
 			-- Is `other' equal to Current ?
 		do
 			Result := other.is_real_32
-		end
-
-feature -- Byte code generation
-
-	generate_byte_code_cast (ba: BYTE_ARRAY) is
-			-- Code for interpreter cast
-		do
-			ba.append (Bc_cast_real32)
 		end
 
 feature -- C code generation

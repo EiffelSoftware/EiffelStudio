@@ -69,9 +69,16 @@ feature -- Initialization
 				unc_mapper := Void
 			end
 
-			if index_of_word_option ("silent") = 0 and translator.has_makefile_sh then
-				make_util := translator.options.get_string ("make", "make utility")
-				create status_box.make (make_util, retried, c_error, False, False)
+			if translator.has_makefile_sh then
+				if index_of_word_option ("silent") = 0 then
+					make_util := translator.options.get_string ("make", "make utility")
+					create status_box.make (make_util, retried, c_error, False, False)
+				else
+					if not c_error then
+						io.put_string ("C compilation completed%N")
+						io.default_output.flush
+					end
+				end
 			end
 			
 			if index_of_word_option ("vs") /= 0 then

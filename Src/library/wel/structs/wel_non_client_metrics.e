@@ -3,7 +3,6 @@ indexing
 				  %associated with the nonclient area of a nonminimized window.%
 				  %This structure is used by the SPI_GETNONCLIENTMETRICS and %
 				  %SPI_SETNONCLIENTMETRICS actions of SystemParametersInfo"
-	author		: "Arnaud PICHERY [aranud@mail.dotcom.fr]"
 	date		: "$Date$"
 	revision	: "$Revision$"
 

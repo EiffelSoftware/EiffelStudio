@@ -1,7 +1,6 @@
 indexing
 	description	: "Facility to track references of an object."
 	status		: "See notice at end of class."
-	author		: "Arnaud PICHERY [aranud@mail.dotcom.fr]"
 	date		: "$Date$"
 	revision	: "$Revision$"
 

@@ -1,6 +1,5 @@
 indexing
 	description	: "Graphical resource common features (Icons & Cursors)"
-	author		: "Arnaud PICHERY [ aranud@mail.dotcom.fr ]"
 	date		: "$Date$"
 	revision	: "$Revision$"
 

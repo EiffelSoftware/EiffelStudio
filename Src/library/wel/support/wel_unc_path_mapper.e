@@ -1,6 +1,6 @@
 indexing
 	description	: "Objects that map a networking path to a local drive"
-	author		: "Arnaud PICHERY [ aranud@mail.dotcom.fr ]"
+	status		: "See notice at end of class."
 	date		: "$Date$"
 	revision	: "$Revision$"
 

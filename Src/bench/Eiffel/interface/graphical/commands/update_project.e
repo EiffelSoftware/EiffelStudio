@@ -30,7 +30,6 @@ feature {NONE}
 		do
 			debug_info.wipe_out;
 			if Run_info.is_running then
-				debug_info.restore;
 				debug_window.clear_window;   
 				debug_window.put_string ("System terminated%N");
 				debug_window.display;
@@ -150,13 +149,10 @@ feature {NONE}
 						Lace.set_file_name (fn);
 						work (Current)
 					else
-						!!temp.make (0);
-						temp.append ("File: ");
-						temp.append (fn);
-						temp.append ("%Ncannot be read. Try again?");
 						warner.set_window (text_window);
 						warner.custom_call 
-							(Current, temp, " Ok ", Void, "Cancel");
+							(Current, w_Cannot_read_file_retry (fn), 
+							" Ok ", Void, "Cancel");
 					end
 				elseif argument = text_window then
 					warner.set_window (text_window);

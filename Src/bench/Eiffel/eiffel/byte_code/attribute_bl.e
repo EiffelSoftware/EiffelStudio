@@ -31,10 +31,10 @@ inherit
 
 feature 
 
-	parent: NESTED_BL;
+	parent: NESTED_B;
 			-- Parent of the current call
 
-	set_parent (p: NESTED_BL) is
+	set_parent (p: NESTED_B) is
 			-- Assign `p' to `parent'
 		do
 			parent := p;
@@ -216,7 +216,7 @@ end;
 			generated_file.putchar ('(');
 			reg.print_register;
 --			if reg.is_predefined or reg.register /= No_register then
-				generated_file.putstring (" + ");
+				generated_file.putstring (gc_plus);
 --			else
 --				generated_file.putstring (" +");
 --				generated_file.new_line;
@@ -231,19 +231,21 @@ end;
 				generated_file.putchar ('-');
 				generated_file.putint (entry.min_type_id - 1);
 				generated_file.putchar (')');
+				generated_file.putchar ('[');
 				if reg.is_current then
 					if context.dt_current > 1 then
-						generated_file.putstring ("[dtype]");
+						generated_file.putstring (gc_dtype);
 					else
-						generated_file.putstring ("[Dtype(");
+						generated_file.putstring (gc_upper_dtype_lparan);
 						context.Current_register.print_register_by_name;
-						generated_file.putstring (")]");
+						generated_file.putchar (')');
 					end;
 				else
-					generated_file.putstring ("[Dtype(");
+					generated_file.putstring (gc_upper_dtype_lparan);
 					reg.print_register;
-					generated_file.putstring (")]");
+					generated_file.putchar (')');
 				end;
+				generated_file.putchar (']');
 					-- Mark attribute offset table used.
 				Eiffel_table.mark_used (rout_id);
 					-- Remember external attribute offset declaration

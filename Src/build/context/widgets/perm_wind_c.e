@@ -70,8 +70,7 @@ feature
 					-- a configure event before realization.
 				end
 			end;
-			add_undo_redo_accelerator (widget)
-			--widget.top_shell.set_action ("<Map>,<Prop>", Current, Current)
+			widget.top_shell.set_action ("<Prop>,<Map>", Current, Current)
 			add_to_window_list;
 		end;
 

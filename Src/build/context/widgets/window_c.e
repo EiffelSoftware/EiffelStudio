@@ -30,8 +30,6 @@ inherit
 			add_common_callbacks
 		end
 
-	UNDO_REDO_ACCELERATOR
-	
 feature -- Specification
 
 	is_movable: BOOLEAN is False

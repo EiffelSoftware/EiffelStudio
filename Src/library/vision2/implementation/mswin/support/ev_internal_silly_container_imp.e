@@ -13,6 +13,7 @@ inherit
 	WEL_CONTROL_WINDOW
 		redefine
 			default_style,
+			default_ex_style,
 			on_wm_erase_background,
 			on_wm_vscroll
 		end
@@ -31,6 +32,11 @@ feature {NONE} -- Implementation
 			-- We redefine the default style.
 		do
 			Result := Ws_child + Ws_visible
+		end
+
+	default_ex_style: INTEGER is
+		do
+			Result := Ws_ex_controlparent
 		end
 
 	on_wm_erase_background (wparam: INTEGER) is

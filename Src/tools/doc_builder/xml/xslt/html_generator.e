@@ -73,7 +73,9 @@ feature -- Generation
 			filtered_document := Shared_project.filter_manager.filtered_document (a_doc)
 				
 					-- Now convert the filtered document to HTML
-			l_html := Shared_project.filter_manager.convert_to_html (filtered_document)
+			--l_html := Shared_project.filter_manager.convert_to_html (filtered_document)
+			
+			l_html := "<html><head><title>Dummy Test</title></head>><body>Dummy Test</body></html>"
 
 			create l_filename.make_from_string (target.name)
 			l_filename.extend (file_no_extension (short_name (a_doc.name)))

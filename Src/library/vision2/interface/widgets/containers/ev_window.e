@@ -28,7 +28,7 @@ creation
 	
 feature {NONE} -- Initialization
 
-    make_top_level is
+	make_top_level is
 			-- Create a top level window (a Window 
 			-- without a parent).
 		do
@@ -36,7 +36,7 @@ feature {NONE} -- Initialization
 			widget_make (Void)
 		end
 
-    make (par: EV_WINDOW) is
+	make (par: EV_WINDOW) is
 			-- Create a window with a parent. Current
 			-- window will be closed when the parent is
 			-- closed. The parent of window is a window 

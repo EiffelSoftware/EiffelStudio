@@ -322,20 +322,16 @@ feature -- Access
 		do
 			bid := body_id;
 			if bid /= Void then
-				if
-					Tmp_body_server.has (bid) or Body_server.has (bid)
-				then
-					Result := Body_server.item (bid);
-				end
-			end;
-			if Result = Void then
+					-- Server in the temporary server first to get the latest version of the AST.
 				if Tmp_ast_server.has (written_in) then
-					-- Means a degree 4 error has occurred so the
-					-- best we can do is to search through the
-					-- class ast and find the feature as
 					class_ast := Tmp_ast_server.item (written_in)
 					Result := class_ast.feature_with_name (name)
+				elseif Body_server.has (bid) then
+					Result := Body_server.item (bid)
 				end
+			elseif Tmp_ast_server.has (written_in) then
+				class_ast := Tmp_ast_server.item (written_in)
+				Result := class_ast.feature_with_name (name)
 			end;
 		end;
 

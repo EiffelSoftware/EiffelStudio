@@ -25,18 +25,15 @@ feature -- Attributes
 	alias_name: STRING_AS_B;
 			-- Optional external name
 
+
 feature -- Conveniences
 
 	type_check is
 			-- Type checking
-		local
-			extension: EXTERNAL_EXTENSION_AS_B
 		do
-			extension := language_name.extension
-
-			if extension /= Void then
+			if language_name.extension /= Void then
 				Error_handler.set_error_position (language_name.start_position)
-				extension.type_check (Current)
+				language_name.extension.type_check (Current)
 			end
 		end;
 

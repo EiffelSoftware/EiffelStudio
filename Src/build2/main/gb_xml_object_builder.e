@@ -50,10 +50,12 @@ feature {NONE} -- Implementation
 						build_new_object (current_element, a_new_object, is_component)
 						
 					else
-						if current_name.is_equal (Internal_properties_string) then
-							-- I do not think we have to do anythign when we find the internal properties
+						if current_name.is_equal (Internal_properties_string) or
+							current_name.is_equal (Events_string) then
+							-- I do not think we have to do anything when we find the internal properties
 							-- currently just a name, and as this is used for components, no name should be 
 							-- applied.
+							-- | FIXME, we do need to connect the events though.
 						else	
 							gb_ev_any ?= new_instance_of (dynamic_type_from_string ("GB_" + current_name))
 						

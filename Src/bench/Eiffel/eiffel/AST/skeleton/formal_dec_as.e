@@ -9,7 +9,7 @@ class FORMAL_DEC_AS
 inherit
 	FORMAL_AS
 		redefine
-			set, is_equivalent, simple_format
+			set, is_equivalent, format, simple_format
 		end
 
 	SHARED_SERVER
@@ -295,6 +295,55 @@ feature -- Output
 			end
 		end
 
+	format (ctxt: FORMAT_CONTEXT) is
+			-- Reconstitute text.
+		local
+			s: STRING
+			feature_name: FEAT_NAME_ID_AS
+			l_a: LOCAL_FEAT_ADAPTATION
+			new_type: TYPE_A
+		do
+			l_a := ctxt.local_adapt
+			if l_a /= Void then
+				new_type := l_a.adapted_type (Current)
+			end
+
+			if new_type /= Void then
+				s := clone (formal_name)
+				s.to_upper
+				ctxt.put_string (s)
+				if has_constraint then
+					ctxt.put_space
+					ctxt.put_text_item_without_tabs (ti_Constraint)
+					ctxt.put_space
+					constraint.format (ctxt)
+					if has_creation_constraint then
+						from
+							creation_feature_list.start
+							ctxt.put_space
+							ctxt.put_text_item (ti_Creation_keyword)
+							ctxt.put_space
+							feature_name ?= creation_feature_list.item
+							ctxt.put_string (feature_name.feature_name)
+							creation_feature_list.forth
+						until
+							creation_feature_list.after
+						loop
+							ctxt.put_text_item (ti_Comma)
+							ctxt.put_space
+							feature_name ?= creation_feature_list.item
+							ctxt.put_string (feature_name.feature_name)
+							creation_feature_list.forth
+						end
+						ctxt.put_space
+						ctxt.put_text_item (ti_End_keyword)
+					end
+				end
+			else
+				new_type.format (ctxt)
+			end
+		end
+
 feature {AST_EIFFEL} -- Output
 
 	simple_format (ctxt: FORMAT_CONTEXT) is
@@ -310,7 +359,7 @@ feature {AST_EIFFEL} -- Output
 				ctxt.put_space
 				ctxt.put_text_item_without_tabs (ti_Constraint)
 				ctxt.put_space
-				ctxt.format_ast (constraint)
+				constraint.simple_format (ctxt)
 				if has_creation_constraint then
 					from
 						creation_feature_list.start

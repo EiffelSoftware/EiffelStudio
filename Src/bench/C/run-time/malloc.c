@@ -730,6 +730,82 @@ rt_public EIF_REFERENCE emalloc_size(uint32 ftype, uint32 type, uint32 nbytes)
 }
 
 /*
+doc:	<routine name="emalloc_as_old" return_type="EIF_REFERENCE" export="public">
+doc:		<summary>Memory allocation for a normal Eiffel object (i.e. not BIT, SPECIAL or TUPLE) as an old object. Useful for once manifest strings for example which we know are going to stay alive for a while.</summary>
+doc:		<param name="ftype" type="uint32">Full dynamic type used to initialize full dynamic type overhead part of Eiffel object.</param>
+doc:		<return>A newly allocated object if successful, otherwise throw an exception.</return>
+doc:		<exception>"No more memory" when it fails</exception>
+doc:		<thread_safety>Safe</thread_safety>
+doc:		<synchronization>Done by different allocators to whom we request memory</synchronization>
+doc:	</routine>
+*/
+
+rt_public EIF_REFERENCE emalloc_as_old(uint32 ftype)
+{
+	EIF_REFERENCE object;				/* Pointer to the freshly created object */
+	uint32 type = (uint32) Deif_bid(ftype);
+	uint32 nbytes = EIF_Size(type);
+
+#ifdef ISE_GC
+	uint32 mod;							/* Remainder for padding */
+#endif
+	
+#ifdef WORKBENCH
+	if (EIF_IS_DEFERRED_TYPE(System(type))) {	/* Cannot create deferred */
+		eraise(System(type).cn_generator, EN_CDEF);
+		return (EIF_REFERENCE) 0;			/* In case they chose to ignore EN_CDEF */
+	}
+#endif
+
+#if defined(BOEHM_GC) || defined(NO_GC)
+	object = external_allocation (References(type) == 0, (int) Disp_rout(type), nbytes);
+	if (object != NULL) {
+		return eif_set(object, ftype | EO_OLD, type);
+	} else {
+		eraise("object allocation", EN_MEM);	/* Signals no more memory */
+		return NULL;
+	}
+#endif
+
+#ifdef ISE_GC
+		/* We really use at least ALIGNMAX, to avoid alignement problems.
+		 * So even if nbytes is 0, some memory will be used (the header), he he !!
+		 */
+	mod = nbytes % ALIGNMAX;
+	if (mod != 0)
+		nbytes += ALIGNMAX - mod;
+
+	/* Direct allocation in the free list, with garbage collection turned on. */
+	CHECK("Not too big", !(nbytes & ~B_SIZE));
+	object = malloc_from_eiffel_list (nbytes);
+	if (object) {
+		return eif_set(object, ftype | EO_OLD, type);		/* Set for Eiffel use */
+	} else {
+			/*
+			 * Allocation failed even if GC was requested. We can only make some space
+			 * by turning off generation scavenging and getting the two scavenge zones
+			 * back for next allocation. A last attempt is then made before raising
+			 * an exception if it also failed.
+			 */
+		if (gen_scavenge & GS_ON)		/* If generation scaveging was on */
+			sc_stop();					/* Free 'to' and explode 'from' space */
+
+		object = malloc_from_eiffel_list_no_gc (nbytes);		/* Retry with GC off this time */
+
+		if (object) {
+			return eif_set(object, ftype | EO_OLD, type);		/* Set for Eiffel use */
+		}
+	}
+
+#endif /* ISE_GC */
+
+	eraise("object allocation", EN_MEM);	/* Signals no more memory */
+
+	/* NOTREACHED, to avoid C compilation warning. */
+	return NULL;
+}
+
+/*
 doc:	<routine name="sp_init" return_type="EIF_REFERENCE" export="public">
 doc:		<summary>Initialize special object of expanded `obj' from `lower' position to `upper' position. I.e. creating new instances of expanded objects and assigning them from `obj [lower]' to `obj [upper]'.</summary>
 doc:		<param name="obj" type="EIF_REFERENCE">Special object of expanded which will be initialized.</param>

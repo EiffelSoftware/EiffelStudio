@@ -32,6 +32,8 @@ int net_local_is_empty = 0;
 #endif
 #include <sys/un.h>
 
+#include <string.h>
+
 #include "eif_bitmask.h"
 
 EIF_INTEGER unix_address_size()

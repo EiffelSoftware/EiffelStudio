@@ -219,10 +219,10 @@ feature {NONE} -- Implementation
 	open_header_file_dialog: WEL_OPEN_FILE_DIALOG is
 		once
 			!! Result.make
-			Result.set_title ("Select the header file")
-			Result.set_filter (<<"Header file (*.h)",
-				"Resource file (*.rc)", "All file (*.*)">>,
-				<<"*.h", "*.rc", "*.*">>)
+			Result.set_title ("Select the header/resource file")
+			Result.set_filter (<<"Resource file (*.rc)",
+				"Header file (*.h)", "All file (*.*)">>,
+				<<"*.rc", "*.h", "*.*">>)
 		ensure
 			result_not_void: Result /= Void
 		end

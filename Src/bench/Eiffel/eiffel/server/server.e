@@ -128,19 +128,19 @@ feature -- Implementation
 
 feature {NONE} -- External features
 
-	store_append (f_desc: INTEGER; o, r, need_index_ptr, s: POINTER): INTEGER is
+	store_append (f_desc: INTEGER; object, make_index_proc, need_index_proc, s: POINTER): INTEGER is
 		external
-			"C"
+			"C | %"pstore.h%""
 		end
 
 	retrieve_all (f_desc: INTEGER; size: INTEGER pos: INTEGER): T is
 		external
-			"C"
+			"C | %"pretrieve.h%""
 		end
 
 	partial_retrieve (file_desc: INTEGER; size: INTEGER; pos, nb_obj: INTEGER): T is
 		external
-			"C"
+			"C | %"pretrieve.h%""
 		end
 
 end -- class SERVER

@@ -24,6 +24,10 @@ inherit
 
 feature -- Attribute
 
+	id: CLASS_ID;
+			-- Class id of the class to which current is the invariant
+			-- description
+
 	assertion_list: EIFFEL_LIST_B [TAGGED_AS_B];
 			-- Assertion list
 
@@ -129,6 +133,14 @@ feature -- Case Storage
 				Result.forth;
 				assertion_list.forth
 			end
+		end;
+
+feature -- Status setting
+
+	set_id (i: CLASS_ID) is
+			-- Assign `i' to `id'.
+		do
+			id := i;
 		end;
 
 end -- class INVARIANT_AS_B

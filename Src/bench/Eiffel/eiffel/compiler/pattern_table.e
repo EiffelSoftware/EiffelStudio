@@ -192,7 +192,7 @@ feature -- Generation
 		local
 			i, nb: INTEGER;
 		do
-			Pattern_file.open_write;
+			Pattern_file.open_write_c;
 
 			Pattern_file.putstring ("%
 				%#include %"macros.h%"%N%
@@ -243,7 +243,7 @@ feature -- Generation
 				Pattern_file.putstring ("};%N%N");
 			end
 
-			Pattern_file.close;
+			Pattern_file.close_c;
 		end;
 
 	generate_pattern is
@@ -297,7 +297,7 @@ feature -- Concurrent Eiffel
 			final_pattern_file: INDENT_FILE;
 		do
 			!!final_pattern_file.make (gen_file_name (True, Epattern));
-			final_pattern_file.open_write;
+			final_pattern_file.open_write_c;
 
 			final_pattern_file.putstring ("%
 				%#include %"macros.h%"%N%
@@ -324,7 +324,7 @@ feature -- Concurrent Eiffel
 			end;
 			final_pattern_file.putstring ("};%N%N");
 
-			final_pattern_file.close;
+			final_pattern_file.close_c;
 		end;
 
 	sep_insert (written_in: CLASS_ID; pattern: PATTERN): BOOLEAN is
@@ -379,7 +379,7 @@ feature -- DLE
 		local
 			i, nb: INTEGER
 		do
-			Pattern_file.open_write;
+			Pattern_file.open_write_c;
 
 			Pattern_file.putstring ("%
 				%#include %"macros.h%"%N%
@@ -464,7 +464,7 @@ feature -- DLE
 			Pattern_file.putstring ("}");
 			Pattern_file.new_line;
 
-			Pattern_file.close
+			Pattern_file.close_c
 		end;
 
 	generate_dle_pattern is

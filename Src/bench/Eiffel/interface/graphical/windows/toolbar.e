@@ -81,11 +81,14 @@ feature {NONE} -- Implementation
 			end;
 			if not sibs.after then
 				sibs.forth
-				s ?= sibs.item; -- Cannot fail
-				if b then
-					s.manage
-				else
-					s.unmanage
+				s ?= sibs.item
+					--| Can fail since a toolbar doesn't always have a SEPARATOR
+				if s /= Void then
+					if b then
+						s.manage
+					else
+						s.unmanage
+					end
 				end
 			end
 		end

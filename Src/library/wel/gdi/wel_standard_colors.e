@@ -9,7 +9,7 @@ class
 
 feature -- Access
 
-	white: WEL_COLOR_REF is
+	White: WEL_COLOR_REF is
 			-- White color
 		once
 			create Result.make_rgb (255, 255, 255)
@@ -17,7 +17,7 @@ feature -- Access
 			result_not_void: Result /= Void
 		end
 
-	black: WEL_COLOR_REF is
+	Black: WEL_COLOR_REF is
 			-- Black color
 		once
 			create Result.make_rgb (0, 0, 0)
@@ -25,7 +25,7 @@ feature -- Access
 			result_not_void: Result /= Void
 		end
 
-	grey: WEL_COLOR_REF is
+	Grey, Gray: WEL_COLOR_REF is
 			-- Grey color
 		once
 			create Result.make_rgb (192, 192, 192)
@@ -33,7 +33,7 @@ feature -- Access
 			result_not_void: Result /= Void
 		end
 
-	dark_grey: WEL_COLOR_REF is
+	Dark_grey, Dark_gray: WEL_COLOR_REF is
 			-- Dark grey color
 		once
 			create Result.make_rgb (128, 128, 128)
@@ -41,7 +41,7 @@ feature -- Access
 			result_not_void: Result /= Void
 		end
 
-	blue: WEL_COLOR_REF is
+	Blue: WEL_COLOR_REF is
 			-- Blue color
 		once
 			create Result.make_rgb (0, 0, 255)
@@ -49,7 +49,7 @@ feature -- Access
 			result_not_void: Result /= Void
 		end
 
-	dark_blue: WEL_COLOR_REF is
+	Dark_blue: WEL_COLOR_REF is
 			-- Dark blue color
 		once
 			create Result.make_rgb (0, 0, 128)
@@ -57,7 +57,7 @@ feature -- Access
 			result_not_void: Result /= Void
 		end
 
-	cyan: WEL_COLOR_REF is
+	Cyan: WEL_COLOR_REF is
 			-- Cyan color
 		once
 			create Result.make_rgb (0, 255, 255)
@@ -65,7 +65,7 @@ feature -- Access
 			result_not_void: Result /= Void
 		end
 
-	dark_cyan: WEL_COLOR_REF is
+	Dark_cyan: WEL_COLOR_REF is
 			-- Dark cyan color
 		once
 			create Result.make_rgb (0, 128, 128)
@@ -73,7 +73,7 @@ feature -- Access
 			result_not_void: Result /= Void
 		end
 
-	green: WEL_COLOR_REF is
+	Green: WEL_COLOR_REF is
 			-- Green color
 		once
 			create Result.make_rgb (0, 255, 0)
@@ -81,7 +81,7 @@ feature -- Access
 			result_not_void: Result /= Void
 		end
 
-	dark_green: WEL_COLOR_REF is
+	Dark_green: WEL_COLOR_REF is
 			-- Dark green color
 		once
 			create Result.make_rgb (0, 128, 0)
@@ -89,7 +89,7 @@ feature -- Access
 			result_not_void: Result /= Void
 		end
 
-	yellow: WEL_COLOR_REF is
+	Yellow: WEL_COLOR_REF is
 			-- Yellow color
 		once
 			create Result.make_rgb (255, 255, 0)
@@ -97,7 +97,7 @@ feature -- Access
 			result_not_void: Result /= Void
 		end
 
-	dark_yellow: WEL_COLOR_REF is
+	Dark_yellow: WEL_COLOR_REF is
 			-- Dark yellow color
 		once
 			create Result.make_rgb (128, 128, 0)
@@ -105,7 +105,7 @@ feature -- Access
 			result_not_void: Result /= Void
 		end
 
-	red: WEL_COLOR_REF is
+	Red: WEL_COLOR_REF is
 			-- Red color
 		once
 			create Result.make_rgb (255, 0, 0)
@@ -113,7 +113,7 @@ feature -- Access
 			result_not_void: Result /= Void
 		end
 
-	dark_red: WEL_COLOR_REF is
+	Dark_red: WEL_COLOR_REF is
 			-- Dark red color
 		once
 			create Result.make_rgb (128, 0, 0)
@@ -121,7 +121,7 @@ feature -- Access
 			result_not_void: Result /= Void
 		end
 
-	magenta: WEL_COLOR_REF is
+	Magenta: WEL_COLOR_REF is
 			-- Magenta color
 		once
 			create Result.make_rgb (255, 0, 255)
@@ -129,7 +129,7 @@ feature -- Access
 			result_not_void: Result /= Void
 		end
 
-	dark_magenta: WEL_COLOR_REF is
+	Dark_magenta: WEL_COLOR_REF is
 			-- Dark magenta color
 		once
 			create Result.make_rgb (128, 0, 128)
@@ -138,7 +138,6 @@ feature -- Access
 		end
 
 end -- class WEL_STANDARD_COLORS
-
 
 --|----------------------------------------------------------------
 --| Windows Eiffel Library: library of reusable components for ISE Eiffel.

@@ -19,6 +19,14 @@ create
 
 feature -- Access
 
+	has_text: BOOLEAN is
+			-- Does the clipboard currently contain text?
+		require
+			not_destroyed: not is_destroyed
+		do
+			Result := implementation.has_text
+		end
+
 	text: STRING is
 			-- `Result' is text of clipboard.
 		require

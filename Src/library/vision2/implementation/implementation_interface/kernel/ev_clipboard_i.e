@@ -16,6 +16,11 @@ inherit
 
 feature -- Access
 
+	has_text: BOOLEAN is
+			-- Does the clipboard currently contain text?
+		deferred
+		end
+
 	text: STRING is
 		deferred
 		end

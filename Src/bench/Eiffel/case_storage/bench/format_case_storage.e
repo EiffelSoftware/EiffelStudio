@@ -126,7 +126,7 @@ feature {NONE}
 			if not rescued then
 				!!path.make_from_string (Case_storage_path);
 				path.set_file_name (System_name);
-				!! old_system_file.make (path.path);
+				!! old_system_file.make (path);
 				if old_system_file.exists then
 					if old_system_file.is_readable then
 						old_system_file.open_read;

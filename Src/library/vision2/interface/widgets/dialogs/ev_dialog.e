@@ -181,53 +181,6 @@ feature {NONE} -- Implementation
 		do
 			create {EV_DIALOG_IMP} implementation.make (Current)
 		end
-		
-feature -- Obsolete
-
-	block is
-			-- Wait until window is closed by the user.
-		obsolete
-			"Use `show_modal_to_window' instead"
-		do
-			implementation.block
-		end
-
-	show_modal is
-		obsolete
-			"Use `show_modal_to_window' instead"
-		do
-			implementation.show_modal_to_window (create {EV_WINDOW})
-		end
-
-	has_default_push_button: BOOLEAN is
-			-- Does `Current' have a default push button.
-		obsolete
-			"Use default_push_button /= Void"
-		do	
-			Result := default_push_button /= Void
-		end
-
-	has_default_cancel_button: BOOLEAN is
-			-- Does `Current' have a default cancel button.
-		obsolete
-			"Use default_cancel_button /= Void"
-		do	
-			Result := default_cancel_button /= Void
-		end
-
-	internal_default_push_button: EV_BUTTON is
-		obsolete
-			"Use default_push_button instead"
-		do
-			Result := implementation.internal_default_push_button
-		end
-
-	internal_default_cancel_button: EV_BUTTON is
-		obsolete
-			"Use default_cancel_button instead"
-		do
-			Result := implementation.internal_default_cancel_button
-		end
 
 end -- class EV_DIALOG
 

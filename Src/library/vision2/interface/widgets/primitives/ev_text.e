@@ -157,48 +157,6 @@ feature {NONE} -- Implementation
 		do
 			create {EV_TEXT_IMP} implementation.make (Current)
 		end
-
-feature -- Obsolete
-
-	has_system_frozen_widget: BOOLEAN is
-			-- Is there any widget frozen?
-			-- If a widget is frozen any updates made to it
-			-- will not be shown until the widget is
-			-- thawn again.
-		obsolete
-			"Not supported any more."
-		do
-			Result := implementation.has_system_frozen_widget
-		end
-		
-	freeze is
-			-- Freeze the widget.
-			-- If the widget is frozen any updates made to the
-			-- window will not be shown until the widget is
-			-- thawn again.
-			-- Note: Only one window can be frozen at a time.
-			-- This is because of a limitation on Windows.
-		obsolete
-			"Not supported any more."
-		require
-			no_frozen_widget: not has_system_frozen_widget
-		do
-			implementation.freeze
-		ensure
-			is_frozen: has_system_frozen_widget
-		end
-
-	thaw is
-			-- Thaw a frozen widget.
-		obsolete
-			"Not supported any more."
-		require
-			is_frozen: has_system_frozen_widget
-		do
-			implementation.thaw
-		ensure
-			no_frozen_widget: not has_system_frozen_widget
-		end
 			
 end -- class EV_TEXT
 

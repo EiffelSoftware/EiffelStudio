@@ -175,6 +175,14 @@ feature {EB_SHARED_PREFERENCES} -- Value
 			Result := editor_left_side_preference.value
 		end	
 
+	default_displayed_string_size: INTEGER is
+			-- Default size of string to be retrieved from the application
+			-- when debugging (for instance size of `string_value' in ABSTRACT_REFERENCE_VALUE)
+			-- (Default value is 50)
+		do
+			Result := default_displayed_string_size_preference.value
+		end
+
 feature {EB_SHARED_PREFERENCES} -- Preference
 
 	external_command_0_preference: STRING_PREFERENCE
@@ -215,6 +223,7 @@ feature {EB_SHARED_PREFERENCES} -- Preference
 	dyn_lib_window_width_preference: INTEGER_PREFERENCE	
 	dyn_lib_window_height_preference: INTEGER_PREFERENCE	
 	editor_left_side_preference: BOOLEAN_PREFERENCE
+	default_displayed_string_size_preference: INTEGER_PREFERENCE
 
 feature {NONE} -- Preference Strings
 
@@ -242,7 +251,8 @@ feature {NONE} -- Preference Strings
 	editor_left_side_string: STRING is "misc.editor_left_side"
 	dyn_lib_window_width_string: STRING is "misc.dyn_lib_window_width"
 	dyn_lib_window_height_string: STRING is "misc.dyn_lib_window_height"
-	ctrl_right_click_receiver_string: STRING is "ctrl_right_click_receiver"
+	ctrl_right_click_receiver_string: STRING is "misc.ctrl_right_click_receiver"
+	default_displayed_string_size_string: STRING is "misc.debug_tool.default_displayed_string_size"	
 
 feature {NONE} -- Implementation
 
@@ -250,7 +260,6 @@ feature {NONE} -- Implementation
 			-- Initialize preference values.
 		local
 			l_manager: EC_PREFERENCE_MANAGER
-			l_ext_pref: STRING_PREFERENCE
 		do								
 			create l_manager.make (preferences, "misc")	
 			
@@ -290,6 +299,7 @@ feature {NONE} -- Implementation
 			dyn_lib_window_height_preference := l_manager.new_integer_resource_value (l_manager, dyn_lib_window_height_string, 200)
 			dyn_lib_window_width_preference := l_manager.new_integer_resource_value (l_manager, dyn_lib_window_width_string, 400)	
 			ctrl_right_click_receiver_preference := l_manager.new_array_resource_value (l_manager, ctrl_right_click_receiver_string, <<"new_window">>)	
+			default_displayed_string_size_preference := l_manager.new_integer_resource_value (l_manager, default_displayed_string_size_string, 50)
 		end
 	
 	preferences: PREFERENCES
@@ -321,5 +331,6 @@ invariant
 	dyn_lib_window_width_preference_not_void: dyn_lib_window_width_preference /= Void
 	dyn_lib_window_height_preference_not_void: dyn_lib_window_height_preference /= Void
 	editor_left_side_preference_not_void: editor_left_side_preference /= Void
+	default_displayed_string_size_preference_not_void: default_displayed_string_size_preference /= Void
 
 end -- class EB_MISC_DATA

@@ -118,6 +118,10 @@ inherit
 			update_pen
 		end
 
+	WEL_MM_CONSTANTS
+
+	WEL_CAPABILITIES_CONSTANTS
+
 creation
 	make
 
@@ -144,7 +148,7 @@ feature -- Initialization
 				wc ?= parent
 				make_with_coordinates (wc, "", x, y, width, height)
 				!WEL_CLIENT_DC! drawing_dc.make (Current)
-				clear
+--				clear
 			end
 		end
 
@@ -171,8 +175,6 @@ feature -- Status setting
 			-- Resize the window with `a_width', `a_height'.
 		require else
 			exists: exists
-			a_width_small_enough: a_width <= maximal_width
-			a_width_large_enough: a_width >= minimal_width
 			not_minimized: not minimized
 		do
 			cwin_set_window_pos (wel_item, default_pointer,
@@ -301,6 +303,43 @@ feature -- Output
 			dd_fill_rectangle (center, rwidth, rheight, an_orientation)
 			unset_drawing_dc
 		end 
+
+	output_to_printer (a_name: STRING) is
+		require
+			a_name_valid: a_name /= Void and not a_name.empty
+		local
+			old_dc: WEL_DC
+			print_dc: WEL_DEFAULT_PRINTER_DC
+			t: INTEGER
+			expose_data: EXPOSE_DATA
+			coord: COORD_XY
+			clip: CLIP
+		do
+			!! print_dc.make
+			if print_dc.exists then
+				print_dc.start_document (a_name)
+				print_dc.set_map_mode (mm_anisotropic)
+				print_dc.set_window_extent (width, height)
+				print_dc.set_viewport_extent (print_dc.device_caps (horizontal_resolution), print_dc.device_caps (vertical_resolution))
+				painting := true
+				old_dc := drawing_dc
+				set_drawing_dc (print_dc)
+				!! coord
+				coord.set (0, 0)
+				!! clip
+				clip.set (coord, width, height)
+				!! expose_data.make (owner, clip, 0)
+				expose_actions.execute (Current, expose_data)
+				unset_drawing_dc
+				print_dc.new_frame
+				print_dc.end_document
+				drawing_dc := old_dc
+				painting := false
+			else
+				t := message_box ("No default printer set.  Printing unavailable.", 
+					"Printer Not Set", mb_iconstop + mb_ok)
+			end
+		end
 
 feature -- Element change
 

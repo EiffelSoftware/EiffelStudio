@@ -35,7 +35,8 @@ feature {RESOURCES} -- Initialization
 			!! debugger_object_height.make ("debugger_object_height", rt.get_integer ("debugger_object_height", 214));
 			!! bottom_offset.make ("bottom_offset", rt.get_integer ("bottom_offset", 25));
 			!! command_bar.make ("project_tool_command_bar", rt.get_boolean ("project_tool_command_bar", true));
-			!! format_bar.make ("project_tool_format_bar", rt.get_boolean ("project_tool_format_bar", true))
+			!! format_bar.make ("project_tool_format_bar", rt.get_boolean ("project_tool_format_bar", True));
+			!! raise_on_error.make ("raise_on_error", rt.get_boolean ("raise_on_error", True))
 		end
 
 feature -- Validation
@@ -60,7 +61,8 @@ feature -- Access
 			Result.extend (debugger_object_height);
 			Result.extend (bottom_offset);
 			Result.extend (command_bar);
-			Result.extend (format_bar)
+			Result.extend (format_bar);
+			Result.extend (raise_on_error)
 		end
 
 feature -- Resources
@@ -73,6 +75,7 @@ feature -- Resources
 	debugger_object_height: INTEGER_RESOURCE;
 	bottom_offset: INTEGER_RESOURCE;
 	command_bar: BOOLEAN_RESOURCE;
-	format_bar: BOOLEAN_RESOURCE
+	format_bar: BOOLEAN_RESOURCE;
+	raise_on_error: BOOLEAN_RESOURCE
 
 end -- class PROJECT_CATEGORY

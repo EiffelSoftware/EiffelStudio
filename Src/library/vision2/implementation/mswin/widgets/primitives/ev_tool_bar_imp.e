@@ -917,8 +917,14 @@ feature {EV_DOCKABLE_SOURCE_I} -- Implementation
 			
 			if button /= Void then
 				Result := internal_get_index (button)	
-			end
-			
+			end	
+		end
+		
+	block_selection_for_docking is
+			-- Ensure that a tool bar button is not selected as a
+			-- result of the transport ending.
+		do
+			disable_default_processing
 		end
 
 feature {EV_PND_TRANSPORTER_IMP}

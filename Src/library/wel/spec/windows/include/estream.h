@@ -32,7 +32,7 @@ typedef EIF_INTEGER (* EIF_EDITSTREAM_PROCEDURE)
 #define cwel_editstream_get_dwcookie(_ptr_) (((EDITSTREAM *) _ptr_)->dwCookie)
 #define cwel_editstream_get_dwerror(_ptr_) (((EDITSTREAM *) _ptr_)->dwError)
 
-/* Eiffel routine signature for `internal_callback' */
+	/* Eiffel routine signature for `internal_callback' */
 DWORD CALLBACK cwel_editstream_callback (DWORD, LPBYTE, LONG, LONG FAR *);
 
 extern EIF_EDITSTREAM_PROCEDURE wel_editstream_procedure;
@@ -69,7 +69,8 @@ extern EIF_EDITSTREAM_PROCEDURE wel_editstream_procedure;
 #	define cwel_set_editstream_procedure_address(_value_) (wel_editstream_procedure = (EIF_EDITSTREAM_PROCEDURE) _value_)
 		/* Set `wel_editstream_procedure' with `value' */
 
-#	define cwel_set_editstream_object(_value_) (wel_editstream_object = (EIF_OBJ) eif_adopt (_value_))
+	extern void wel_set_editstream_object(EIF_POINTER _value_);
+#	define cwel_set_editstream_object(_value_) (wel_set_editstream_object(_value_))
 		/* Set `wel_editstream_object' with `value' */
 
 #	define cwel_release_editstream_object (eif_wean (wel_editstream_object))

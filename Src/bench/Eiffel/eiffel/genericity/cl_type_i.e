@@ -22,10 +22,10 @@ feature
 			-- Base class id of the type class
 
 	is_expanded: BOOLEAN;
-			-- Is the type expanded ?
+			-- Is the type expanded?
 
 	is_separate: BOOLEAN;
-			-- Is the type separate ?
+			-- Is the type separate?
 
 	set_base_id (c: CLASS_ID) is
 			-- Assign `c' to `base_id'.
@@ -75,16 +75,11 @@ feature
 			other_cl_type: CL_TYPE_I;
 		do
 			other_cl_type ?= other;
-			Result := 	other_cl_type /= Void 
-						and then
-							-- FIXME
-						equal (other_cl_type.base_id, base_id)
-						and then
-						other_cl_type.is_expanded = is_expanded
-						and then
-						other_cl_type.is_separate = is_separate
-						and then
-						other_cl_type.meta_generic = Void
+			Result := other_cl_type /= Void -- FIXME
+					and then equal (other_cl_type.base_id, base_id)
+					and then other_cl_type.is_expanded = is_expanded
+					and then other_cl_type.is_separate = is_separate
+					and then other_cl_type.meta_generic = Void
 		end;
 
 	instantiation_in (other: GEN_TYPE_I): CL_TYPE_I is

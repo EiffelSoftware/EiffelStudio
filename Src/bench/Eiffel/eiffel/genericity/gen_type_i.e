@@ -3,11 +3,10 @@
 class GEN_TYPE_I
 
 inherit
-
 	CL_TYPE_I
 		redefine
 			meta_generic,
-			same_as,
+			same_as, is_equal,
 			is_valid,
 			has_formal,
 			instantiation_in,
@@ -32,15 +31,24 @@ feature
 		local
 			gen_type_i: GEN_TYPE_I;
 		do
-			gen_type_i ?= other;
+			gen_type_i ?= other
 			if gen_type_i /= Void then
-				Result :=	equal (base_id, gen_type_i.base_id)
-							and then
-							is_expanded = gen_type_i.is_expanded
-							and then
-							meta_generic.same_as (gen_type_i.meta_generic);
-			end;
-		end;
+				Result := equal (base_id, gen_type_i.base_id)
+						and then is_expanded = gen_type_i.is_expanded
+						and then is_separate = gen_type_i.is_separate
+						and then meta_generic.same_as (gen_type_i.meta_generic)
+			end
+		end
+
+	is_equal (other: like Current): BOOLEAN is
+			-- Is `other' attached to an object considered
+			-- equal to current object?
+		do
+			Result := equal (base_id, other.base_id)
+					and then is_expanded = other.is_expanded
+					and then is_separate = other.is_separate
+					and then meta_generic.same_as (other.meta_generic)
+		end
 
 	is_valid: BOOLEAN is
 			-- Are all the base classes still in the system ?

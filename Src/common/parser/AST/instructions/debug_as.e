@@ -97,9 +97,11 @@ feature -- Formatter
 			ctxt.put_breakable;
 			ctxt.put_keyword ("debug ");
 			if keys /= void and then not keys.empty then
+				ctxt.put_string ("(");
 				ctxt.set_separator(",");
 				ctxt.no_new_line_between_tokens;
-				keys.format (ctxt)
+				keys.format (ctxt);
+				ctxt.put_string (")")
 			end;
 			if compound /= void then
 				ctxt.indent_one_more;

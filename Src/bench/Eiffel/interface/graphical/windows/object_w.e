@@ -16,11 +16,11 @@ inherit
 			make as normal_create
 		redefine
 			text_window, build_format_bar, hole,
-			tool_name, set_default_position
+			tool_name, set_default_position, default_format
 		end
 	BAR_AND_TEXT
 		redefine
-			text_window, build_format_bar, hole,
+			text_window, build_format_bar, hole, default_format,
 			tool_name, set_default_position, make
 		select
 			make
@@ -52,10 +52,19 @@ feature {NONE}
 	build_format_bar is
 			-- Build formatting buttons in `format_bar'.
 		do
-			!!showtext_command.make (format_bar, text_window);
-				format_bar.attach_top (showtext_command, 0);
-				format_bar.attach_left (showtext_command, 0);
+--			!!showtext_command.make (format_bar, text_window);
+			!!showonce_command.make (format_bar, text_window);
+			!!showattr_command.make (format_bar, text_window);
+--			format_bar.attach_top (showtext_command, 0);
+--			format_bar.attach_left (showtext_command, 0);
+			format_bar.attach_top (showattr_command, 0);
+			format_bar.attach_left (showattr_command, 0);
+			format_bar.attach_top (showonce_command, 0);
+			format_bar.attach_left_widget (showattr_command, showonce_command,0)
 		end;
+
+	showattr_command: SHOW_ATTR_VALUES;
+	showonce_command: SHOW_ONCE_RESULTS;
 
 	set_default_position is
         local
@@ -65,4 +74,10 @@ feature {NONE}
 			set_x_y (500 + i, 40 + i)
 		end;
 	
+	default_format: FORMATTER is
+			-- Default format shows attributes' values
+		do
+			Result := showattr_command
+		end;
+
 end

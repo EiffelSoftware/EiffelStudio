@@ -48,6 +48,16 @@ feature
 				generated_file.putstring("RTOC;");
 				generated_file.new_line;
 			end;
+			if context.workbench_mode then
+					-- Real body id to be stored in the id list of already
+					-- called once routines to prevent supermelting them
+					-- (losing in that case their memory (already called and
+					-- result)) and to allow result inspection.
+				generated_file.putstring ("RTWO(");
+				generated_file.putint (real_body_id - 1);
+				generated_file.putstring (");");
+				generated_file.new_line
+			end;
 			generated_file.putstring ("done = 1;");
 			generated_file.new_line;
 			init_dtype;

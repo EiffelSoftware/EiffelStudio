@@ -16,6 +16,13 @@ feature
 			!! stepped_routines.make
 		end;
 
+	Once_request: ONCE_REQUEST is
+			-- Facilities to inspect whether a once routine
+			-- has already been called
+		once
+			!! Result.make
+		end;
+
 	wipe_out is
 			-- Empty Current.
 		do
@@ -56,10 +63,18 @@ feature -- Debuggables (Byte code,...)
 			-- Debuggable structures already 
 			-- sent to the application
 
+	once_debuggables: EXTEND_TABLE [LINKED_LIST [DEBUGGABLE], INTEGER];
+			-- Debuggable structures of once routines which have already
+			-- been called. In That case, the supermelted byte code
+			-- won't be sent to the application until next execution
+			-- to prevent any overriding of once's memory (i.e. already
+			-- called and result value if any)
+
 	make_debuggables is
 		do
 			!! new_debuggables.make (10);
-			!! sent_debuggables.make (10)
+			!! sent_debuggables.make (10);
+			!! once_debuggables.make (10)
 		end;
 
 	tenure_debuggables is
@@ -76,14 +91,17 @@ feature -- Debuggables (Byte code,...)
 		do
 			sent_debuggables.merge (new_debuggables);
 			new_debuggables := sent_debuggables;
-			!! sent_debuggables.make (10)
+			new_debuggables.merge (once_debuggables);
+			!! sent_debuggables.make (10);
+			once_debuggables.clear_all
 		end; -- restore_debuggables
 
 	clear_debuggables is
 			-- Clear debuggable structures.
 		do
 			sent_debuggables.clear_all;
-			new_debuggables.clear_all
+			new_debuggables.clear_all;
+			once_debuggables.clear_all
 		end; -- clear_debuggables
 
 	add_feature (f: FEATURE_I) is
@@ -92,7 +110,11 @@ feature -- Debuggables (Byte code,...)
 			-- Do nothing if `f' has previously been added.
 		do
 			if not has_feature (f) then
-				new_debuggables.put (f.debuggables, f.body_id);
+				if f.is_once and then Once_request.already_called (f) then
+					once_debuggables.put (f.debuggables, f.body_id)
+				else
+					new_debuggables.put (f.debuggables, f.body_id)
+				end;
 				debugged_routines.add (f)
 			end
 		end; -- add_feature
@@ -149,6 +171,7 @@ feature -- Debuggables (Byte code,...)
 		do
 			Result := 
 				new_debuggables.has (feature_i.body_id) or else 
+				once_debuggables.has (feature_i.body_id) or else 
 				sent_debuggables.has (feature_i.body_id)
 		end; -- has_feature
 
@@ -159,6 +182,8 @@ feature -- Debuggables (Byte code,...)
 		do
 			if new_debuggables.has (f.body_id) then
 				Result := new_debuggables.item (f.body_id);
+			elseif once_debuggables.has (f.body_id) then
+				Result := once_debuggables.item (f.body_id)
 			else
 				Result := sent_debuggables.item (f.body_id);
 			end;
@@ -188,6 +213,21 @@ feature -- Debuggables (Byte code,...)
 				end
 			end;
 		end; -- breakable_index
+
+	real_body_id (f: FEATURE_I): INTEGER is
+			-- Real body id of `f' at execution time.
+			-- This id may have been modified during supermelting.
+		require
+			f_exists: f /= Void;
+			is_debuggable: f.is_debuggable
+		do
+			if sent_debuggables.has (f.body_id) then
+					-- `f' has been supermelted.
+				Result := sent_debuggables.item (f.body_id).first.real_body_id
+			else
+				Result := f.real_body_id
+			end
+		end;
 
 feature -- Breakpoints
 
@@ -286,9 +326,20 @@ feature -- Breakpoints
 			bp: BREAKPOINT;
 			ap: AST_POSITION;
 			pos: INTEGER;
-			debug_item: DEBUGGABLE
+			debug_item: DEBUGGABLE;
+			breakpoints: BREAK_LIST
 		do
 			debug_bodies := debuggables (f);
+			if once_debuggables.has (f.body_id) then
+					-- If the supermelted byte code of a once routine has 
+					-- not been sent to the application (because it had 
+					-- already been called at that time) we don't sent its
+					-- breakpoints neither but we keep track of them for
+					-- future execution.
+				breakpoints := sent_breakpoints
+			else
+				breakpoints := new_breakpoints
+			end;
 			from
 				debug_bodies.start;
 				ap := debug_bodies.item.breakable_points.i_th (i);
@@ -307,7 +358,7 @@ feature -- Breakpoints
 				else
 					bp.set_continue
 				end;
-				new_breakpoints.extend (bp);
+				breakpoints.extend (bp);
 				debug_bodies.forth;
 			end;	
 			is_last_breakpoint_set := is_stop
@@ -339,38 +390,42 @@ feature -- Step by step debugging
 	add_stepped_routine (f: FEATURE_I; i: INTEGER) is
 			-- Make `f', whose execution is stopped on the `i'-th
 			-- breakpoint, the next routine to be debugged step-by-step.
+			-- If debuggable byte code has not been  generated for `f',
+			-- we probably are stopped due to an exeception and can't go
+			-- further step by step.
 		require
 			f_exists: f /= Void
 		local
 			retry_as: RETRY_AS
 		do
-			add_feature (f);
-			if stepped_routines.empty then 
-					-- No other routines currently in step-by-step 
-					-- debugging process.
-				stepped_routines.add (f)
-			elseif stepped_routines.item.body_id /= f.body_id then				
-					-- We just stop in a routine which was not
-					-- step-by-step debugged the step before.
-				stepped_routines.add (f)
-			elseif is_first_breakpoint (i, f) then   
-					-- We just renter in the routine we were debugging
-					-- step-by-step (Recursive call).
-				stepped_routines.add (f)
-			-- else
-					-- We are already debugging `f' step-by-step.
-			end;
-			if is_last_breakpoint (i, f) then 
-					-- We reached the end of `f' compound so that
-					-- there are no steps for `f' any more.
-				stepped_routines.remove
-			end;
-			if 
-				i >= 1 and i <= debuggables (f).first.breakable_points.count
-			then
-				retry_as ?= debuggables (f).first.breakable_points.i_th (i).ast_node
-			end;
-			last_step_retry := retry_as /= Void
+			if has_feature (f) then
+				if stepped_routines.empty then 
+						-- No other routines currently in step-by-step 
+						-- debugging process.
+					stepped_routines.add (f)
+				elseif stepped_routines.item.body_id /= f.body_id then				
+						-- We just stop in a routine which was not
+						-- step-by-step debugged the step before.
+					stepped_routines.add (f)
+				elseif is_first_breakpoint (i, f) then   
+						-- We just renter in the routine we were debugging
+						-- step-by-step (Recursive call).
+					stepped_routines.add (f)
+				-- else
+						-- We are already debugging `f' step-by-step.
+				end;
+				if is_last_breakpoint (i, f) then 
+						-- We reached the end of `f' compound so that
+						-- there are no steps for `f' any more.
+					stepped_routines.remove
+				end;
+				if 
+					i >= 1 and i <= debuggables (f).first.breakable_points.count
+				then
+					retry_as ?= debuggables (f).first.breakable_points.i_th (i).ast_node
+				end;
+				last_step_retry := retry_as /= Void
+			end
 		end;
 
 	remove_stepped_routine is
@@ -389,7 +444,7 @@ feature -- Step by step debugging
 		local
 			d_list: LINKED_LIST [DEBUGGABLE];
 			breakable_points: SORTED_TWO_WAY_LIST [AST_POSITION];
-			real_body_id: INTEGER;
+			r_body_id: INTEGER;
 			bp: BREAKPOINT
 		do
 			if not stepped_routines.empty then
@@ -401,7 +456,7 @@ feature -- Step by step debugging
 				loop
 					from
 						breakable_points := d_list.item.breakable_points;
-						real_body_id := d_list.item.real_body_id;
+						r_body_id := d_list.item.real_body_id;
 						breakable_points.start
 					until
 						breakable_points.after
@@ -409,7 +464,7 @@ feature -- Step by step debugging
 						!! bp;
 						bp.set_stop;
 						bp.set_offset (breakable_points.item.position);
-						bp.set_real_body_id	(real_body_id);
+						bp.set_real_body_id	(r_body_id);
 						new_breakpoints.extend (bp);
 						breakable_points.forth
 					end;
@@ -425,7 +480,7 @@ feature -- Step by step debugging
 		local
 			breakable_points: SORTED_TWO_WAY_LIST [AST_POSITION];
 			d_list: LINKED_LIST [DEBUGGABLE];
-			real_body_id: INTEGER;
+			r_body_id: INTEGER;
 			bp: BREAKPOINT
 		do
 			if not stepped_routines.empty then
@@ -437,7 +492,7 @@ feature -- Step by step debugging
 				loop
 					from
 						breakable_points := d_list.item.breakable_points;
-						real_body_id := d_list.item.real_body_id;
+						r_body_id := d_list.item.real_body_id;
 						breakable_points.start
 					until
 						breakable_points.after
@@ -449,7 +504,7 @@ feature -- Step by step debugging
 							bp.set_continue
 						end;
 						bp.set_offset (breakable_points.item.position);
-						bp.set_real_body_id	(real_body_id);
+						bp.set_real_body_id	(r_body_id);
 						new_breakpoints.extend (bp);
 						breakable_points.forth
 					end;

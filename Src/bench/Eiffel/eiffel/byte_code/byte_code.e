@@ -31,6 +31,9 @@ feature
 			byte_id := i;
 		end;
 
+	real_body_id: INTEGER;
+			-- Real body id of the feature to which current byte code belongs
+
 	feature_name: STRING;
 			-- Name of the feature to which the current byte code tree
 			-- belongs to
@@ -118,6 +121,12 @@ feature
 			-- Assign `i' to `body_index'.
 		do
 			body_index := i;
+		end;
+
+	set_real_body_id (i: INTEGER) is
+			-- Assign `i' to `real_body_id'.
+		do
+			real_body_id := i
 		end;
 
 	set_rout_id (i: INTEGER) is
@@ -451,6 +460,12 @@ feature -- Byte code generation
 				Temp_byte_code_array.append ('%/001/');
 					-- Once not done
 				Temp_byte_code_array.append ('%U');
+					-- Real body id to be stored in the id list of already 
+					-- called once routines to prevent supermelting them
+					-- (losing in that case their memory (already called and
+					-- result)) and to allow result inspection.
+				Temp_byte_code_array.append_integer (real_body_id - 1);
+					-- once routines real_body_ids
 					-- Allocate space for storeing a result instance in
 					-- the byte code itself
 				Temp_byte_code_array.allocate_space (r_type);

@@ -230,7 +230,7 @@ feature {NONE} -- C code generation
 					buf.new_line
 						-- Generation of the RTAS_OPT protection
 						-- if the array contains references
-					if target_type.is_reference then
+					if target_type.is_reference or target_type.is_bit then
 						buf.putstring ("RTAS_OPT(");
 						if metamorphosed then
 							metamorphose_reg.print_register

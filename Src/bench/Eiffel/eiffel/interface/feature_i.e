@@ -735,7 +735,7 @@ feature -- Check
 			if is_code_replicated then
 				Result := Rep_feat_server.item (body_id);
 			elseif
-				 Tmp_body_server.has (body_id) or Body_server.has (body_id)
+				Tmp_body_server.has (body_id) or Body_server.has (body_id)
 			then
 				Result := Body_server.item (body_id);
 			end;
@@ -1658,8 +1658,11 @@ feature -- C code generation
 			not_deferred: not is_deferred;
 		local
 			byte_code: BYTE_CODE;
+			log_file: PLAIN_TEXT_FILE;
 		do
 			if used then
+					-- `generate' from BYTE_CODE will log the feature name
+					-- and encoded name in `used_features_log_file' from SYSTEM_I
 				generate_header (file);
 
 				if Tmp_opt_byte_server.has (body_id) then
@@ -1682,6 +1685,14 @@ feature -- C code generation
 				byte_code.generate;
 				byte_context.clear_all;
 
+			else
+				log_file := System.removed_log_file
+				log_file.putstring (class_type.associated_class.cluster.cluster_name);
+				log_file.putchar ('%T');
+				class_type.type.dump (log_file);
+				log_file.putchar ('%T');
+				log_file.putstring (feature_name);
+				log_file.new_line;
 			end;
 		end;
 
@@ -1948,7 +1959,10 @@ feature -- Debugging
 			-- Compute the list of breakable AST nodes
 			-- (will be used when generating the byte
 			-- code array). Specific to debug mode.
-			fa := Body_server.item (body_id);
+			fa := Body_server.disk_item (body_id);
+				-- `disk_item' does not keep the object in the cache
+				-- => if `find_breakable' has some side effect, it won't
+				-- have any effect on the next compilation
 			Context.start_lines; -- Ast_context
 			fa.find_breakable;
 
@@ -1961,7 +1975,8 @@ feature -- Debugging
 			-- Specific to debug mode.
 			Byte_context.set_instruction_line (context.instruction_line);
 
-			bc := Byte_server.item (body_id);
+			bc := Byte_server.disk_item (body_id);
+				-- See above for the reason why we use `disk_item' and not `item'
 
 			Byte_context.set_debug_mode (True);
 
@@ -2089,6 +2104,7 @@ feature -- Inlining
 			type_i: TYPE_I
 			i: INTEGER
 			args: FEAT_ARG
+			wc: CLASS_C
 		do
 			byte_code := Byte_server.item (body_id);
 
@@ -2124,6 +2140,10 @@ feature -- Inlining
 					end
 				end
 			end;
+			if Result then
+				wc := written_class;
+				Result := not (wc.is_special or else wc.is_basic)
+			end
 		end
 
 end

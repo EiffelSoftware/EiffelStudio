@@ -42,6 +42,8 @@ feature -- Element change
 
 	unset_pixmap is
 			-- Remove the pixmap from the container
+		require
+			has_pixmap: pixmap /= Void
 		do
 			implementation.unset_pixmap
 		ensure then

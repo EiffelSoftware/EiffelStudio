@@ -23,9 +23,10 @@ feature -- Status report
 		require
 			exists: not is_destroyed
 		do
-			Result := get_xt_pixel (screen_object, XmNbottomShadowColor)
+			Result := get_xt_pixel (Current, XmNbottomShadowColor)
 		ensure
-			bottom_shadow_color_created: Result /= Void and then Result.is_valid
+			valid_result: Result /= Void and then Result.is_valid;
+			result_has_same_display: Result.same_display (display)	
 		end;
 
 	top_shadow_color: MEL_PIXEL is
@@ -34,9 +35,10 @@ feature -- Status report
 		require
 			exists: not is_destroyed
 		do
-			Result := get_xt_pixel (screen_object, XmNtopShadowColor)
+			Result := get_xt_pixel (Current, XmNtopShadowColor)
 		ensure
-			top_shadow_color_created: Result /= Void and then Result.is_valid
+			valid_result: Result /= Void and then Result.is_valid;
+			result_has_same_display: Result.same_display (display)	
 		end;
 
 	bottom_shadow_pixmap: MEL_PIXMAP is
@@ -45,9 +47,10 @@ feature -- Status report
 		require
 			exists: not is_destroyed
 		do
-			Result := get_xt_pixmap (screen_object, XmNbottomShadowPixmap)
+			Result := get_xt_pixmap (Current, XmNbottomShadowPixmap)
 		ensure
-			bottom_shadow_pixmap_is_valid: Result /= Void and then Result.is_valid
+			valid_result: Result /= Void and then Result.is_valid;
+			result_has_same_display: Result.same_display (display)	
 		end;
 
 	top_shadow_pixmap: MEL_PIXMAP is
@@ -56,9 +59,10 @@ feature -- Status report
 		require
 			exists: not is_destroyed
 		do
-			Result := get_xt_pixmap (screen_object, XmNtopShadowPixmap)
+			Result := get_xt_pixmap (Current, XmNtopShadowPixmap)
 		ensure
-			top_shadow_pixmap_is_valid: Result /= Void and then Result.is_valid
+			valid_result: Result /= Void and then Result.is_valid;
+			result_has_same_display: Result.same_display (display)	
 		end;
 
 	foreground, foreground_color: MEL_PIXEL is
@@ -66,9 +70,9 @@ feature -- Status report
 		require
 			exists: not is_destroyed
 		do
-			Result := get_xt_pixel (screen_object, XmNforeground)
+			Result := get_xt_pixel (Current, XmNforeground)
 		ensure
-			foreground_created: Result /= Void and then Result.is_valid
+			valid_result: Result /= Void and then Result.is_valid
 		end;
 
 	highlight_color: MEL_PIXEL is
@@ -76,9 +80,9 @@ feature -- Status report
 		require
 			exists: not is_destroyed
 		do
-			Result := get_xt_pixel (screen_object, XmNhighlightColor)
+			Result := get_xt_pixel (Current, XmNhighlightColor)
 		ensure
-			highlight_color_created: Result /= Void and then Result.is_valid
+			valid_result: Result /= Void and then Result.is_valid
 		end;
 
 	highlight_pixmap: MEL_PIXMAP is
@@ -86,9 +90,10 @@ feature -- Status report
 		require
 			exists: not is_destroyed
 		do
-			Result := get_xt_pixmap (screen_object, XmNhighlightPixmap)
+			Result := get_xt_pixmap (Current, XmNhighlightPixmap)
 		ensure
-			highlight_pixmap_is_valid: Result /= Void and then Result.is_valid
+			valid_result: Result /= Void and then Result.is_valid;
+			result_has_same_display: Result.same_display (display)	
 		end;
 
 	initial_focus: MEL_OBJECT is
@@ -205,18 +210,20 @@ feature -- Status setting
 			-- Set `bottom_shadow_color' to `a_color'.
 		require
 			exists: not is_destroyed;
-			a_color_is_valid: a_color /= Void and then a_color.is_valid
+			valid_color: a_color /= Void and then a_color.is_valid;
+			same_display: a_color.same_display (display)
 		do
 			set_xt_pixel (screen_object, XmNbottomShadowColor, a_color)
 		ensure
-			bottom_shadow_color_set: bottom_shadow_color.is_equal (a_color)
+			bottom_shadow_color_set: bottom_shadow_color.is_equal (a_color);	
 		end;
 
 	set_top_shadow_color (a_color: MEL_PIXEL) is
 			-- Set `top_shadow_color' to `a_color'.
 		require
 			exists: not is_destroyed;
-			a_color_is_valid: a_color /= Void and then a_color.is_valid
+			valid_color: a_color /= Void and then a_color.is_valid;
+			same_display: a_color.same_display (display)
 		do
 			set_xt_pixel (screen_object, XmNtopShadowColor, a_color)
 		ensure
@@ -227,7 +234,9 @@ feature -- Status setting
 			-- Set `bottom_shadow_pixmap' to `a_pixmap'.
 		require
 			exists: not is_destroyed;
-			a_pixmap_is_valid: a_pixmap /= Void and then a_pixmap.is_valid
+			valid_pixmap: a_pixmap /= Void and then a_pixmap.is_valid;
+			is_pixmap: a_pixmap.is_pixmap;
+			same_display: a_pixmap.same_display (display)
 		do
 			set_xt_pixmap (screen_object, XmNbottomShadowPixmap, a_pixmap)
 		ensure
@@ -235,10 +244,12 @@ feature -- Status setting
 		end;
 
 	set_top_shadow_pixmap (a_pixmap: MEL_PIXMAP) is
-		-- Set `top_shadow_pixmap' to `a_pixmap'.
+			-- Set `top_shadow_pixmap' to `a_pixmap'.
 		require
 			exists: not is_destroyed;
-			a_pixmap_is_valid: a_pixmap /= Void and then a_pixmap.is_valid
+			valid_pixmap: a_pixmap /= Void and then a_pixmap.is_valid;
+			is_pixmap: a_pixmap.is_pixmap;
+			same_display: a_pixmap.same_display (display)
 		do
 			set_xt_pixmap (screen_object, XmNtopShadowPixmap, a_pixmap)
 		ensure
@@ -249,7 +260,8 @@ feature -- Status setting
 			-- Set `foreground' and `foreground_color' to `a_color'.
 		require
 			exists: not is_destroyed;
-			a_color_is_valid: a_color /= Void and then a_color.is_valid
+			valid_color: a_color /= Void and then a_color.is_valid;
+			same_display: a_color.same_display (display)
 		do
 			set_xt_pixel (screen_object, XmNforeground, a_color)
 		ensure
@@ -260,7 +272,8 @@ feature -- Status setting
 			-- Set `highlight_color' to `a_color'.
 		require
 			exists: not is_destroyed;
-			a_color_is_valid: a_color /= Void and then a_color.is_valid
+			valid_color: a_color /= Void and then a_color.is_valid;
+			same_display: a_color.same_display (display)
 		do
 			set_xt_pixel (screen_object, XmNhighlightColor, a_color)
 		ensure
@@ -271,7 +284,9 @@ feature -- Status setting
 			-- Set `highlight_pixmap' to `a_pixmap'.
 		require
 			exists: not is_destroyed;
-			a_pixmap_is_valid: a_pixmap /= Void and then a_pixmap.is_valid
+			valid_pixmap: a_pixmap /= Void and then a_pixmap.is_valid;
+			is_pixmap: a_pixmap.is_pixmap;
+			same_display: a_pixmap.same_display (display)
 		do
 			set_xt_pixmap (screen_object, XmNhighlightPixmap, a_pixmap)
 		ensure

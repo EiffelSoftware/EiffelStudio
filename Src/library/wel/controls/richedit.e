@@ -23,7 +23,9 @@ inherit
 			set_text_limit,
 			set_tab_stops_array,
 			set_tab_stops,
-			set_default_tab_stops
+			set_default_tab_stops,
+			text,
+			set_text
 		end
 
 	WEL_RICH_EDIT_MESSAGE_CONSTANTS
@@ -42,6 +44,11 @@ inherit
 		end
 
 	WEL_ECO_CONSTANTS
+		export
+			{NONE} all
+		end
+
+	WEL_SF_CONSTANTS
 		export
 			{NONE} all
 		end
@@ -139,6 +146,57 @@ feature -- Status report
 				selection_end - selection_start
 		end
 
+	position_from_character_index (character_index: INTEGER): WEL_POINT is
+			-- Coordinates of a character at `character_index' in
+			-- the client area.
+			-- A returned coordinate can be negative if the
+			-- character has been scrolled outside the edit
+			-- control's client area.
+			-- The coordinates are truncated to integer values and
+			-- are in screen units relative to the upper-left
+			-- corner of the client area of the control.
+		require
+			exists: exists
+			index_large_enough: character_index >= 0
+			index_small_enough: character_index <= text_length + 2
+		do
+			--| The Win32 SDK documentation for EM_POSFROMCHAR
+			--| is incorrect.
+			--| The right parameters has been found in the
+			--| Microsoft Developer Network CD (April 1996).
+			--| See article PSS ID Number: Q137805
+			!! Result.make (0, 0)
+			cwin_send_message (item, Em_posfromchar,
+				Result.to_integer, character_index)
+		ensure
+			result_not_void: Result /= Void
+		end
+
+	character_index_from_position (a_x, a_y: INTEGER): INTEGER is
+			-- Zero-based character index of the character which is
+			-- the nearest to `a_x' and `a_y' position in the client
+			-- area.
+			-- A returned coordinate can be negative if the
+			-- character has been scrolled outside the edit
+			-- control's client area. The coordinates are truncated to integer values and are in screen units relative to the
+			-- upper-left corner of the client area of the control.
+		require
+			exists: exists
+			a_x_large_enough: a_x >= 0
+			a_y_large_enough: a_y >= 0
+		local
+			p: WEL_POINT
+		do
+			--| The Win32 SDK documentation for EM_CHARFROMPOS
+			--| is incorrect.
+			--| The right parameters has been found in the
+			--| Microsoft Developer Network CD (April 1996).
+			--| See article PSS ID Number: Q137805
+			!! p.make (a_x, a_y)
+			Result := cwin_send_message_result (item,
+				Em_charfrompos, 0, p.to_integer)
+		end
+
 	event_mask: INTEGER is
 			-- Event mask which specifies notification message the
 			-- control sends to its parent window.
@@ -148,6 +206,16 @@ feature -- Status report
 		do
 			Result := cwin_send_message_result (item,
 				Em_geteventmask, 0, 0)
+		end
+
+	text: STRING is
+			-- Contents of the rich edit control
+		local
+			stream: WEL_RICH_EDIT_BUFFER_SAVER
+		do
+			!! stream.make
+			text_stream_out (stream)
+			Result := stream.text
 		end
 
 feature -- Status setting
@@ -225,6 +293,32 @@ feature -- Status setting
 				an_options)
 		end
 
+	set_text (a_text: STRING) is
+			-- Set `text' with `a_text'.
+		local
+			stream: WEL_RICH_EDIT_BUFFER_LOADER
+		do
+			!! stream.make (a_text)
+			text_stream_in (stream)
+		end
+
+	set_background_color (color: WEL_COLOR_REF) is
+			-- Set the background color with `color'.
+		require
+			exists: exists
+			color_not_void: color /= Void
+		do
+			cwin_send_message (item, Em_setbkgndcolor, 0, color.to_integer)
+		end
+
+	set_background_system_color is
+			-- Set the background color with the window background system color. 
+		require
+			exists: exists
+		do
+			cwin_send_message (item, Em_setbkgndcolor, 1, 0)
+		end
+
 	enable_standard_notifications is
 			-- Enable the standard notifications.
 			-- (Enm_change, Enm_update and Enm_scroll).
@@ -245,6 +339,123 @@ feature -- Status setting
 		end
 
 feature -- Basic operations
+
+	load_text_file (file: RAW_FILE) is
+			-- Load a text `file' in the rich edit control.
+		require
+			exists: exists
+			file_not_void: file /= Void
+			file_exists: file.exists
+			file_is_open_read: file.is_open_read
+		local
+			stream: WEL_RICH_EDIT_FILE_LOADER
+		do
+			!! stream.make (file)
+			text_stream_in (stream)
+		ensure
+			file_closed: file.is_closed
+		end
+
+	load_rtf_file (file: RAW_FILE) is
+			-- Load a RTF `file' in the rich edit control.
+		require
+			exists: exists
+			file_not_void: file /= Void
+			file_exists: file.exists
+			file_is_open_read: file.is_open_read
+		local
+			stream: WEL_RICH_EDIT_FILE_LOADER
+		do
+			!! stream.make (file)
+			rtf_stream_in (stream)
+		ensure
+			file_closed: file.is_closed
+		end
+
+	save_text_file (file: RAW_FILE) is
+			-- Save the contents of the rich edit control in text
+			-- format in `file'.
+		require
+			exists: exists
+			file_not_void: file /= Void
+			file_exists: file.exists
+			file_is_open_read: file.is_open_write
+		local
+			stream: WEL_RICH_EDIT_FILE_SAVER
+		do
+			!! stream.make (file)
+			text_stream_out (stream)
+		ensure
+			file_closed: file.is_closed
+		end
+
+	save_rtf_file (file: RAW_FILE) is
+			-- Save the contents of the rich edit control in RTF
+			-- format in `file'.
+		require
+			exists: exists
+			file_not_void: file /= Void
+			file_exists: file.exists
+			file_is_open_read: file.is_open_write
+		local
+			stream: WEL_RICH_EDIT_FILE_SAVER
+		do
+			!! stream.make (file)
+			rtf_stream_out (stream)
+		ensure
+			file_closed: file.is_closed
+		end
+
+	text_stream_in (stream: WEL_RICH_EDIT_STREAM_IN) is
+			-- Start a text stream in operation with `stream'.
+		require
+			exists: exists
+			stream_not_void: stream /= Void
+		do
+			send_stream_message (Em_streamin, Sf_text, stream)
+		end
+
+	text_stream_out (stream: WEL_RICH_EDIT_STREAM_OUT) is
+			-- Start a text stream out operation with `stream'.
+		require
+			exists: exists
+			stream_not_void: stream /= Void
+		do
+			send_stream_message (Em_streamout, Sf_text, stream)
+		end
+
+	rtf_stream_in (stream: WEL_RICH_EDIT_STREAM_IN) is
+			-- Start a rtf stream in operation with `stream'.
+		require
+			exists: exists
+			stream_not_void: stream /= Void
+		do
+			send_stream_message (Em_streamin, Sf_rtf, stream)
+		end
+
+	rtf_stream_out (stream: WEL_RICH_EDIT_STREAM_OUT) is
+			-- Start a rtf stream out operation with `stream'.
+		require
+			exists: exists
+			stream_not_void: stream /= Void
+		do
+			send_stream_message (Em_streamout, Sf_rtf, stream)
+		end
+
+	send_stream_message (message, format: INTEGER;
+				stream: WEL_RICH_EDIT_STREAM) is
+			-- Start stream operation with `stream'.
+			-- See class WEL_SF_CONSTANTS for `format' values.
+			-- Lowest level stream procedures.
+		require
+			exists: exists
+			stream_not_void: stream /= Void
+		do
+			stream.init_action
+			cwin_send_message (item, message, format,
+				stream.to_integer)
+			stream.finish_action
+		end
 
 	hide_selection is
 			-- Hide the selection.

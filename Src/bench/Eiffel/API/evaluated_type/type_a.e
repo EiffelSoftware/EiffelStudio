@@ -467,7 +467,7 @@ feature {COMPILER_EXPORTER} -- Access
 			if like_feat /= Void then
 					-- we must had a dependance to the anchor feature
 				a_class := System.class_of_id (like_feat.class_id)
-				feature_i := a_class.feature_table.item (like_feat.feature_name)
+				feature_i := a_class.feature_table.item_id (like_feat.feature_name_id)
 				!! depend_unit.make (like_feat.class_id, feature_i)
 				feat_depend.extend (depend_unit)
 			end

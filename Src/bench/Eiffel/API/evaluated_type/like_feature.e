@@ -9,13 +9,29 @@ class
 inherit
 	LIKE_TYPE_A
 
+	SHARED_NAMES_HEAP
+		export
+			{NONE} all
+		end
+
 creation
 	make
 
 feature -- Properties
 
-	feature_name: STRING
-			-- Feature name of the anchor
+	feature_name_id: INTEGER
+			-- Feature name ID of anchor
+
+	feature_name: STRING is
+			-- Final name of anchor.
+		require
+			feature_name_id_set: feature_name_id >= 1
+		do
+			Result := Names_heap.item (feature_name_id)
+		ensure
+			Result_not_void: Result /= Void
+			Result_not_empty: not Result.is_empty
+		end
 
 feature {COMPILER_EXPORTER}
 
@@ -28,7 +44,7 @@ feature {COMPILER_EXPORTER}
 			valid_argument: f /= Void
 		do
 			feature_id := f.feature_id
-			feature_name := f.feature_name
+			feature_name_id := f.feature_name_id
 			class_id := System.current_class.class_id
 		end
 
@@ -103,8 +119,7 @@ debug
 	io.error.putstring ("LIKE_FEATURE solved_type origin_table%N")
 end
 				origin_table := feat_table.origin_table
-				orig_feat := System.class_of_id (class_id).feature_table
-								.item (feature_name)
+				orig_feat := System.class_of_id (class_id).feature_table.item_id (feature_name_id)
 				if orig_feat = Void then
 					raise_veen (f)
 				end
@@ -122,7 +137,7 @@ end
 debug
 	io.error.putstring ("LIKE_FEATURE solved_type origin_table%N")
 end
-				anchor_feature := feat_table.item (feature_name)
+				anchor_feature := feat_table.item_id (feature_name_id)
 				if anchor_feature = Void then
 					raise_veen (f)
 				end
@@ -208,7 +223,7 @@ feature -- Comparison
 				class_id = other.class_id and then
 				feature_id = other.feature_id and then
 				equivalent (actual_type, other.actual_type) and then
-				feature_name.is_equal (other.feature_name)
+				feature_name_id = other.feature_name_id
 		end
 
 end -- class LIKE_FEATURE

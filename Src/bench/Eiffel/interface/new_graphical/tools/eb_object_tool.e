@@ -594,7 +594,6 @@ feature {NONE} -- Implementation
 						l_exception_to_string := Application.imp_dotnet.exception_to_string
 						if l_exception_to_string /= Void then
 							create item
-							item.set_data (l_exception_to_string)
 							item.set_text ("Double click to see Exception")-- + l_exception_to_string)
 							item.set_tooltip (l_exception_to_string)
 							item.set_pixmap (Pixmaps.Icon_exception)

@@ -9,7 +9,7 @@ inherit
 			create_context as button_create_context
 		redefine
 			add_widget_callbacks, initialize_transport,
-			stored_node, is_selectionable, widget, add_to_option_list,
+			stored_node, is_selectionable, widget, 
 			is_valid_parent, is_able_to_be_grouped, is_movable
 		end;
 
@@ -17,7 +17,7 @@ inherit
 		redefine
 			add_widget_callbacks, initialize_transport,
 			stored_node, is_selectionable, create_context, widget,
-			add_to_option_list, is_valid_parent, is_able_to_be_grouped,
+			is_valid_parent, is_able_to_be_grouped,
 			is_movable
 		select
 			create_context
@@ -100,6 +100,7 @@ feature
 					was_managed := True;
 				end;
 				Result := button_create_context (a_parent);
+				Result.widget.manage;
 				opt_pull_c ?= menu;
 				if opt_pull_c /= Void then	
 					opt_pull_c.set_default_selected_button (Result)
@@ -114,14 +115,6 @@ feature
 			-- Is current context selectionnable
 		do
 			Result := False
-		end;
-
-	add_to_option_list (opt_list: ARRAY [INTEGER]) is
-		do
-			opt_list.put (Context_const.geometry_form_nbr,
-					Context_const.Geometry_format_nbr);
-			opt_list.put (Context_const.label_text_att_form_nbr,
-					Context_const.Attribute_format_nbr);
 		end;
 
 -- ****************

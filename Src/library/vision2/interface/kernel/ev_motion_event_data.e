@@ -10,15 +10,12 @@ class
 	EV_MOTION_EVENT_DATA
 	
 inherit
-	
 	EV_EVENT_DATA	
 		redefine
 			make,
-			implementation,
-			print_contents
+			implementation
 		end
-	
-	
+
 creation
 	make
 	
@@ -26,53 +23,47 @@ feature -- Initialization
 	
 	make is
 		do
-			!EV_MOTION_EVENT_DATA_IMP!implementation.make (Current)
+			!EV_MOTION_EVENT_DATA_IMP! implementation
 		end
 
 feature -- Access	
 	
-	x: DOUBLE
-			-- x coordinate of mouse pointer 
-	y: DOUBLE 
+	x: INTEGER is
+			-- x coordinate of mouse pointer
+		do
+			Result := implementation.x
+		end
+
+	y: INTEGER is
 			-- y coordinate of mouse pointer 
-	state: INTEGER
-	
-
-feature {EV_WIDGET_IMP, EV_MOTION_EVENT_DATA_I} -- Element change
-
-	set_x (new_x: DOUBLE) is
 		do
-			x := new_x
+			Result := implementation.y
 		end
 
-	set_y (new_y: DOUBLE) is
+	state: INTEGER is
+			-- State of the mouse buttons
 		do
-			y := new_y
+			Result := implementation.state
 		end
 
-	set_state (new_state: INTEGER) is
-		do
-			state := new_state
-		end
-
-feature -- Debug
-	
-	print_contents is
-			-- print the contents of the object
-		do
-			io.put_string ("(X: ")
-			io.put_double (x)
-			io.put_string (", Y: ")			
-			io.put_double (y)
-			io.put_string (") State: ")			
-			io.put_double (State)
-			io.put_string ("%N")		
-		end
-	
-	
-	
-feature {NONE} -- Implementation
+feature {EV_WIDGET_IMP} -- Implementation
 	
 	implementation: EV_MOTION_EVENT_DATA_I
-	
-end
+
+end -- EV_MOTION_EVENT_DATA
+
+--|----------------------------------------------------------------
+--| EiffelVision: library of reusable components for ISE Eiffel.
+--| Copyright (C) 1986-1998 Interactive Software Engineering Inc.
+--| All rights reserved. Duplication and distribution prohibited.
+--| May be used only with ISE Eiffel, under terms of user license. 
+--| Contact ISE for any other use.
+--|
+--| Interactive Software Engineering Inc.
+--| ISE Building, 2nd floor
+--| 270 Storke Road, Goleta, CA 93117 USA
+--| Telephone 805-685-1006, Fax 805-685-6869
+--| Electronic mail <info@eiffel.com>
+--| Customer support e-mail <support@eiffel.com>
+--| For latest info see award-winning pages: http://www.eiffel.com
+--|----------------------------------------------------------------

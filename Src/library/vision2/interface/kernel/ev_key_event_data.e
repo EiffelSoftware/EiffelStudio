@@ -10,14 +10,11 @@ class
 	EV_KEY_EVENT_DATA
 	
 inherit
-	
 	EV_EVENT_DATA	
 		redefine
 			make,
-			implementation,
-			print_contents
+			implementation
 		end
-	
 	
 creation
 	make
@@ -26,59 +23,53 @@ feature {NONE} -- Initialization
 	
 	make is
 		do
-			!EV_KEY_EVENT_DATA_IMP!implementation.make (Current)
+			!EV_KEY_EVENT_DATA_IMP! implementation
 		end
 
 feature -- Access	
 	
-	state: INTEGER
-	keyval: INTEGER
-	length: INTEGER
-	string: STRING
+	state: INTEGER is
+			-- ??
+		do
+			Result := implementation.state
+		end
 
-feature -- Debug
-	
-	print_contents is
-			-- print the contents of the object
+	keyval: INTEGER is
+			-- ??
 		do
-			io.put_string ("State: ")			
-			io.put_integer (state)
-			io.put_string (" Keyval: ")			
-			io.put_integer (keyval)
-			io.put_string (" Length: ")			
-			io.put_integer (length)
-			io.put_string (" String: ")			
-			io.put_string (string)
-			io.put_string ("%N")		
+			Result := implementation.keyval
 		end
-	
-feature {EV_KEY_EVENT_DATA_I, EV_WIDGET_IMP} -- Element change
-	
-	set_state (new_state: INTEGER) is
+
+	length: INTEGER is
+			-- ??
 		do
-			state := new_state
+			Result := implementation.length
 		end
-	
-	set_keyval (new_keyval: INTEGER) is
+
+	string: STRING is
+		-- String given the char equivalent of the key
 		do
-			keyval := new_keyval
+			Result := implementation.string
 		end
-	
-	set_length (new_length: INTEGER) is
-		do
-			length := new_length
-		end
-	
-	set_string (new_string: STRING) is
-		do
-			string := new_string
-		end
-	
-	
-feature {NONE} -- Implementation
-	
+
+feature {EV_WIDGET_IMP} -- Implementation
+
 	implementation: EV_KEY_EVENT_DATA_I
-	
-end
-			
-	
+
+end -- class EV_KEY_EVENT_DATA
+
+--|----------------------------------------------------------------
+--| EiffelVision: library of reusable components for ISE Eiffel.
+--| Copyright (C) 1986-1998 Interactive Software Engineering Inc.
+--| All rights reserved. Duplication and distribution prohibited.
+--| May be used only with ISE Eiffel, under terms of user license. 
+--| Contact ISE for any other use.
+--|
+--| Interactive Software Engineering Inc.
+--| ISE Building, 2nd floor
+--| 270 Storke Road, Goleta, CA 93117 USA
+--| Telephone 805-685-1006, Fax 805-685-6869
+--| Electronic mail <info@eiffel.com>
+--| Customer support e-mail <support@eiffel.com>
+--| For latest info see award-winning pages: http://www.eiffel.com
+--|----------------------------------------------------------------

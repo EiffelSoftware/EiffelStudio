@@ -13,8 +13,7 @@ inherit
 	EV_EVENT_DATA	
 		redefine
 			make,
-			implementation,
-			print_contents
+			implementation
 		end	
 	
 creation
@@ -24,36 +23,24 @@ feature {NONE} -- Initialization
 
 	make is
 		do
-			!EV_EXPOSE_EVENT_DATA_IMP!implementation.make (Current)
-		end	
-
+			!EV_EXPOSE_EVENT_DATA_IMP! implementation
+		end
 
 feature -- Access
 
-	clip_region: EV_RECTANGLE
+	clip_region: EV_RECTANGLE is
 			-- Exposed region
-
-	exposes_to_come: INTEGER
-			-- Number of expose events to come
-	
-feature -- Debug
-	
-	print_contents is
 		do
-			io.put_string ("EV_EXPOSE_EVENT_DATA: ")
-			print (widget)
-			clip_region.print_contents
-			io.put_string ("%N")
+			Result := implementation.clip_region
 		end
 
-feature {EV_EXPOSE_EVENT_DATA_I} -- Element change	
-	
-	set_clip_region (clip: EV_RECTANGLE) is
+	exposes_to_come: INTEGER is
+			-- Number of expose events to come
 		do
-			clip_region := clip
-		end 
-		
-feature {NONE} -- Implementation
+			Result := implementation.exposes_to_come
+		end
+
+feature {EV_WIDGET_IMP} -- Implementation
 	
 	implementation: EV_EXPOSE_EVENT_DATA_I
 	

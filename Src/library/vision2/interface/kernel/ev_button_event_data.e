@@ -10,14 +10,11 @@ class
 	EV_BUTTON_EVENT_DATA
 	
 inherit
-	
 	EV_EVENT_DATA	
 		redefine
 			make,
-			implementation,
-			print_contents
+			implementation
 		end
-	
 	
 creation
 	make
@@ -26,64 +23,71 @@ feature {NONE} -- Initialization
 	
 	make is
 		do
-			!EV_BUTTON_EVENT_DATA_IMP!implementation.make (Current)
+			!EV_BUTTON_EVENT_DATA_IMP! implementation
 		end
 
 feature -- Access	
 	
-	x: DOUBLE
+	x: INTEGER is
 			-- x coordinate of mouse pointer 
-	y: DOUBLE 
-			-- y coordinate of mouse pointer 
-	state: INTEGER
-	button: INTEGER
-	keyval: INTEGER
+		do
+			Result := implementation.x
+		end
 
-feature {EV_PND_TARGET_I, EV_BUTTON_EVENT_DATA_I}-- Element change
-	
-	set_x (new_x: DOUBLE) is
+	y: INTEGER is
+			-- y coordinate of mouse pointer
 		do
-			x := new_x
+			Result := implementation.y
 		end
-	
-	set_y (new_y: DOUBLE) is
+
+	absolute_x: INTEGER is
+			-- absolute x of the mouse pointer
 		do
-			y := new_y
+			Result := implementation.absolute_x
 		end
-	
-	set_state (new_state: INTEGER) is
+
+	absolute_y: INTEGER is
+			-- absolute y of the mouse pointer
 		do
-			state := new_state
+			Result := implementation.absolute_y
 		end
-	
-	set_button (new_button: INTEGER) is
+
+	state: INTEGER is
+			-- ??
 		do
-			button := new_button
+			Result := implementation.state
 		end
-	
-	
-feature -- Debug
-	
-	print_contents is
-			-- print the contents of the object
+
+	button: INTEGER is
+			-- Current button pressed number
 		do
-			io.put_string ("(X: ")
-			io.put_double (x)
-			io.put_string (", Y: ")			
-			io.put_double (y)
-			io.put_string (") Button: ")			
-			io.put_integer (button)
-			io.put_string (" State: ")			
-			io.put_integer (state)
-			io.put_string ("%N")		
+			Result := implementation.button
 		end
-	
-	
-	
-feature {NONE} -- Implementation
+
+	keyval: INTEGER is
+			-- ??
+		do
+			Result := implementation.keyval
+		end
+
+feature {EV_WIDGET_IMP} -- Implementation
 	
 	implementation: EV_BUTTON_EVENT_DATA_I
 	
-end
-			
-	
+end -- class EV_BUTTON_EVENT_DATA
+
+--|----------------------------------------------------------------
+--| EiffelVision: library of reusable components for ISE Eiffel.
+--| Copyright (C) 1986-1998 Interactive Software Engineering Inc.
+--| All rights reserved. Duplication and distribution prohibited.
+--| May be used only with ISE Eiffel, under terms of user license. 
+--| Contact ISE for any other use.
+--|
+--| Interactive Software Engineering Inc.
+--| ISE Building, 2nd floor
+--| 270 Storke Road, Goleta, CA 93117 USA
+--| Telephone 805-685-1006, Fax 805-685-6869
+--| Electronic mail <info@eiffel.com>
+--| Customer support e-mail <support@eiffel.com>
+--| For latest info see award-winning pages: http://www.eiffel.com
+--|----------------------------------------------------------------

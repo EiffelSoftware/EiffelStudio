@@ -30,7 +30,7 @@ feature -- Access
 	Common_standard_c_compiler_options: STRING is 
 			-- C compiler options
 		once
-			Result := "/W0 /Ox /c /I..\include /I..\..\common\include /I"
+			Result := "/W0 /Ox /D %"_WIN32_DCOM%" /c /I..\include /I..\..\common\include /I"
 			Result.append (get (Eiffel4))
 			Result.append ("\bench\spec\windows\include /I")
 			Result.append (get (Eiffel4))

@@ -22,9 +22,9 @@ feature
 	make (node: TEMP_WIND_C) is
 		do
 			save_attributes (node);
-			if node.title_modified then
-				title := node.title
-			end;
+			--if node.title_modified then
+				--title := node.title
+			--end;
 			parent_name := clone (node.parent.entity_name);
 			resize_policy_disabled := node.resize_policy_disabled;
 			resize_policy_modified := node.resize_policy_modified;
@@ -40,9 +40,9 @@ feature
 
 	set_context_attributes (a_context: TEMP_WIND_C) is
 		do
-			if not (title = Void) then
-				a_context.set_title (title)
-			end;
+			--if not (title = Void) then
+				--a_context.set_title (title)
+			--end;
 			if resize_policy_modified then
 				a_context.disable_resize_policy (resize_policy_disabled)
 			end;
@@ -83,6 +83,7 @@ feature
 feature {NONE}
 
 	title: STRING;
+			-- To be removed (same as visual name)
 
 	resize_policy_disabled: BOOLEAN;
 

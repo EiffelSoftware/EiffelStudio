@@ -16,7 +16,7 @@ inherit
 
 creation
 
-	make, make_with_cmd
+	make_with_cmd
 
 feature -- Creation
 
@@ -40,7 +40,6 @@ feature
 			ed: EDITABLE
 		do
 			!! string_list.make
-			string_list.extend ("New instance")
 			data_list := l
 			from
 				l.start
@@ -52,41 +51,36 @@ feature
 				l.forth
 			end
 			if not l.empty then
-				string_list.extend (" Edit all ")
+				string_list.extend (" Edit all")
 			end
+--			string_list.extend (" New instance")
 			popup (string_list)
 		end
 
 	continue_after_popdown is
 		local
 			cmd_instance: CMD_INSTANCE 
-			pos: INTEGER
 			cmd_tool: COMMAND_TOOL
 		do
-			pos := position
-			if pos /= 1 then
-				if pos > 2 then
-					if pos = data_list.count + 3 then
-						-- Selected edit all
-						from
-							data_list.start
-						until
-							data_list.after
-						loop
-							cmd_instance ?= data_list.item
-							cmd_instance.create_editor
-							data_list.forth
-						end
-					else	
-						cmd_instance ?= data_list.i_th (pos - 2)
-						cmd_instance.create_editor
-					end
-				else
-					--| create a new instance
-					cmd_tool := window_mgr.command_tool
-					cmd_tool.set_command (popuper_cmd)	
-					cmd_tool.display
+			if position <= data_list.count then
+				cmd_instance ?= data_list.i_th (position)
+ 				cmd_instance.create_editor
+			else--if not data_list.empty and then position = data_list.count + 1 then
+					-- Selected edit all
+				from
+					data_list.start
+				until
+					data_list.after
+				loop
+					cmd_instance ?= data_list.item
+					cmd_instance.create_editor
+					data_list.forth
 				end
+--			else
+--					--| create a new instance
+--				cmd_tool := window_mgr.command_tool
+--				cmd_tool.set_command (popuper_cmd)	
+--				cmd_tool.display
 			end
 			data_list := Void
 		end

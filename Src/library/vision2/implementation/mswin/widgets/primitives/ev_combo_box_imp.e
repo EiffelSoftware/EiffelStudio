@@ -699,14 +699,8 @@ feature {EV_INTERNAL_COMBO_FIELD_IMP, EV_INTERNAL_COMBO_BOX_IMP}
 				loop
 					s1 := list.item.text
 					s2 := text
-						-- Check `s1' not Void before calling to_upper.
-					if s1 /= Void then
-						s1.to_upper
-					end
-						-- Check `s2' not Void before calling to_upper.
-					if s2 /= Void then
-						s2.to_upper
-					end
+					s1.to_upper
+					s2.to_upper
 					if equal (s1, s2) then
 						if not is_selected (counter) then
 							select_item (counter)

@@ -59,6 +59,9 @@ doc:<file name="malloc.c" header="eif_malloc.h" version="$Id$" summary="Memory a
 
 #ifdef BOEHM_GC
 #include "rt_boehm.h"
+#ifdef WORKBENCH
+#include "rt_interp.h"	/* For definition of `call_disp' */
+#endif
 #endif
 
 /* For debugging */

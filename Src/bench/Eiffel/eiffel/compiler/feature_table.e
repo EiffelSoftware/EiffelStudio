@@ -68,13 +68,6 @@ inherit
 			copy, is_equal
 		end
 
-	SHARED_EXTERNALS
-		export
-			{NONE} all
-		undefine
-			copy, is_equal
-		end
-
 create
 	make
 	
@@ -308,9 +301,10 @@ end
 					same_interface := old_feature_i.same_interface (new_feature_i)
 					if not same_interface then
 						-- Check whether it was in the address table
-						if System.address_table.has (old_feature_i.written_in,
-													 old_feature_i.feature_id
-													) then
+						if
+							System.address_table.has (old_feature_i.written_in,
+								old_feature_i.feature_id)
+						then
 							-- Force a re-freeze in order
 							-- to get a correct 'ececil.c'
 							System.set_freeze
@@ -320,9 +314,10 @@ end
 				else
 					-- Does not exist any more.
 					-- Check whether it was in the address table
-					if System.address_table.has (old_feature_i.written_in,
-												 old_feature_i.feature_id
-												) then
+					if
+						System.address_table.has (old_feature_i.written_in,
+							old_feature_i.feature_id)
+					then
 						-- Force a re-freeze in order
 						-- to get a correct 'ececil.c'
 						-- (no unresolved externals in this case)!
@@ -364,18 +359,13 @@ end
 							io.error.putstring (old_feature_i.feature_name)
 							io.error.new_line
 						end
-							-- Delete one occurrence of an external feature
+							-- Delete one occurrence of an external feature. Freeze is taken
+							-- care by EXTERNALS.is_equivalent queried by SYSTEM_I.
 						external_i ?= old_feature_i
-						if not external_i.encapsulated or System.il_generation then
-								-- If the external is encapsulated then it was not added to
-								-- the list of new externals in inherit_table. Same thing
-								-- if it has to be removed
-							pass_control.remove_external (external_i)
-						end						
+						pass_control.remove_external (external_i)
 					end
-					if 	new_feature_i = Void
-						or else
-						not (new_feature_i.written_in = feat_tbl_id)
+					if
+						new_feature_i = Void or else not (new_feature_i.written_in = feat_tbl_id)
 					then
 							-- A feature written in the associated class
 							-- disapear

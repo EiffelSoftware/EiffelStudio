@@ -345,9 +345,9 @@ feature {EV_LIST_ITEM_IMP} -- Implementation
 			it := find_item_at_position (x_pos, y_pos)
 			pt := client_to_screen (x_pos, y_pos)
 				if it /= Void and it.is_transport_enabled and not parent_is_pnd_source then
-					it.pnd_press (x_pos, y_pos, 3, pt.x, pt.y)
+					it.pnd_press (x_pos, y_pos, button, pt.x, pt.y)
 				elseif pnd_item_source /= Void then 
-					pnd_item_source.pnd_press (x_pos, y_pos, 3, pt.x, pt.y)
+					pnd_item_source.pnd_press (x_pos, y_pos, button, pt.x, pt.y)
 				end
 			if it /= Void then
 				it.interface.pointer_button_press_actions.call ([x_pos,y_pos - it.relative_y, button, 0.0, 0.0, 0.0, pt.x, pt.y])
@@ -472,9 +472,6 @@ feature {EV_ANY_I} -- Implementation
 			it := find_item_at_position (x_pos, y_pos)
 			pt := client_to_screen (x_pos, y_pos)
 			if it /= Void then
-				--|FIXME May need to call the pnd cursor changing code in here.
-				--|SEE on_mouse_move from EV_WIDGET_IMP.
-				--|Julian Rogers
 				it.interface.pointer_motion_actions.call ([x_pos,y_pos - it.relative_y, 0.0, 0.0, 0.0, pt.x, pt.y])
 			end
 			if pnd_item_source /= Void then
@@ -567,6 +564,10 @@ end -- class EV_LIST_IMP
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.59  2000/03/31 19:07:44  rogers
+--| Remove FIXME as it has been fixed.
+--| Internal_propagate_pointer_press now propagates correct button.
+--|
 --| Revision 1.58  2000/03/31 00:26:11  rogers
 --| Removed on_left_button_down, on_middle_button_down and
 --| on_right_button_down as they are now inherited from

@@ -218,8 +218,10 @@ feature -- Status report
 	popdown is
 			-- Popdown popup shell.
 		do
-			unmanage;
-			is_popped_up := False
+			if is_popped_up then
+				unmanage;
+				is_popped_up := False
+			end
 		end;
 
 	popup is

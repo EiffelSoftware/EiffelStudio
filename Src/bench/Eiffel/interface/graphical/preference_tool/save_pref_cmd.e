@@ -80,7 +80,10 @@ feature {PREFERENCE_COMMAND} -- Execution
 			end
 			if fn /= Void then
 				!! file.make (fn)
-				if  file.is_writable then
+				if
+					(file.exists and then file.is_writable)
+					or else (not file.exists and then file.is_creatable)
+				then
 					tool.validate_all
 					if tool.is_valid then
 						file.open_write;

@@ -28,7 +28,6 @@ feature {NONE} -- Initialization
 		require
 			a_cluster_exists: a_cluster /= Void
 		do
-			create_item
 			compiler_cluster := a_cluster
 		end
 		
@@ -73,7 +72,7 @@ feature -- Access
 				i := i + 1
 				l.forth
 			end
-			create ecom_res.make_from_array (res, 1, <<0>>, <<res.count>>)
+			create ecom_res.make_from_array (res, 1, <<1>>, <<res.count>>)
 			create Result.make
 			Result.set_unknown_array (ecom_res)
 		ensure then
@@ -108,7 +107,7 @@ feature -- Access
 				i := i + 1
 				l.forth
 			end
-			create ecom_res.make_from_array (res, 1, <<0>>, <<res.count>>)
+			create ecom_res.make_from_array (res, 1, <<1>>, <<res.count>>)
 			create Result.make
 			Result.set_unknown_array (ecom_res)
 		ensure then

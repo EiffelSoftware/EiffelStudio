@@ -43,7 +43,6 @@ feature {NONE} -- Initialization
 			a_class_not_void: a_class /= Void
 			a_class_compiled: a_class.compiled
 		do
-			create_item
 			compiler_class := a_class
 		end
 
@@ -59,27 +58,29 @@ feature -- Access
 
 	description: STRING is
 			-- Class description.
-			--| FIXME For the moment, only returns the external name.
 		local
 			indexing_clause: INDEXING_CLAUSE_AS
 		do
 			indexing_clause := compiler_class.compiled_class.ast.top_indexes
 			if indexing_clause /= Void then
-				Result := indexing_clause.external_name
+				Result := indexing_clause.description
+				Result.prune_all ('%R')
+				Result.replace_substring_all ("%N", " ")
+				Result.prune_all ('%T')
 			else
 				create Result.make_from_string ("No description available")
 			end
-		ensure then
-			result_exists: Result /= Void
 		end
 
 	feature_names: ECOM_ARRAY [STRING] is
-			-- List of names of class features.
+			-- List of names of class flat features.
 		local
-			names: ARRAY [STRING]
+			names, res: ARRAY [STRING]
 		do
 			names := compiler_class.compiled_class.api_feature_table.current_keys
-			create Result.make_from_array (names, 1, <<1>>, <<names.count>>)
+			create res.make (1, names.count)
+			res.copy (names)
+			create Result.make_from_array (res, 1, <<1>>, <<res.count>>)
 		ensure then
 			result_exists: Result /= Void
 		end

@@ -51,7 +51,7 @@ feature -- Access
 					res.put (classes.item (i).name, i)
 					i := i + 1
 				end
-				create Result.make_from_array (res, 1, <<0>>, <<res.count>>)
+				create Result.make_from_array (res, 1, <<1>>, <<res.count>>)
 			end
 		end
 
@@ -85,7 +85,7 @@ feature -- Access
 					end
 					list.forth
 				end
-				create Result.make_from_array (res, 1, <<0>>, <<res.count>>)
+				create Result.make_from_array (res, 1, <<1>>, <<res.count>>)
 			end
 		end
 		

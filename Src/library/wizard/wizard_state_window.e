@@ -1,8 +1,8 @@
 indexing
-	description: "Sub-Window which displays user entries needed in order to proceed"
-	author: "pascalf"
-	date: "$Date$"
-	revision: "$Revision$"
+	description	: "Sub-Window which displays user entries needed in order to proceed"
+	author		: "pascalf"
+	date		: "$Date$"
+	revision	: "$Revision$"
 
 deferred class
 	WIZARD_STATE_WINDOW
@@ -12,7 +12,7 @@ inherit
 
 feature {NONE} -- Initialization
 
-	make(an_info: like wizard_information) is
+	make (an_info: like wizard_information) is
 			-- Create current object with information
 			-- relative to current state 'an_info'.
 			-- Should be redefined when needed.
@@ -61,13 +61,6 @@ feature -- Basic Operations
 			create fi.make_from_string (wizard_pixmaps_path)
 			fi.extend (pixmap_location)
 			pixmap.set_with_named_file (fi)
-
---			create fi.make_from_string (wizard_pixmaps_path)
---			fi.extend (pixmap_icon_location)
---			pixmap.set_with_names_file (fi)
-
---			pixmap.set_minimum_width(pixmap.width)
---			pixmap.redraw
 		end
 
 	proceed_with_current_info is
@@ -105,7 +98,7 @@ feature -- Basic Operations
 
 feature -- Settings
 
-	set_updatable_entries(tab: ARRAY[ACTION_SEQUENCE[TUPLE[]]]) is
+	set_updatable_entries (tab: ARRAY[ACTION_SEQUENCE[TUPLE[]]]) is
 			-- Set the actions which imply a change
 			-- in the user entries, so that we know that going forward
 			-- will be done by re-computed the data.
@@ -115,10 +108,10 @@ feature -- Settings
 			from
 				i:= 1
 			until
-				i>tab.count
+				i > tab.count
 			loop
 				tab.item(i).extend(~change_entries)
-				i := i+1
+				i := i + 1
 			end
 		end
 
@@ -134,11 +127,11 @@ feature -- Settings
 feature -- Access
 
 	entries_checked: BOOLEAN
-		-- Are the entries checked ?
+			-- Are the entries checked ?
 
 	entries_changed: BOOLEAN
-		-- Did the user entries changed since last time ?
-		-- This boolean is used in order to do a smart "next".
+			-- Did the user entries changed since last time ?
+			-- This boolean is used in order to do a smart "next".
 
 	pixmap_location: STRING is
 			-- Path in which can be found the pixmap associated with
@@ -151,8 +144,11 @@ feature -- Access
 	message: EV_LABEL
 			-- Page message
 
-	title: EV_RICH_LABEL
+	title: EV_LABEL
 			-- Page title.
+
+	subtitle: EV_LABEL
+			-- Page subtitle
 
 	is_final_state: BOOLEAN is
 		do
@@ -165,9 +161,4 @@ feature -- Tools
 			create Result.make
 		end
 
-invariant
---	message_exists: message /= Void and then not message.text.is_equal ("")
---	title_exists: title /= Void -- and then not title.text.is_equal ("")
-	pixmap_location: pixmap_location /= Void
-	
 end -- class WIZARD_STATE_WINDOW

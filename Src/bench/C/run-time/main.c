@@ -396,6 +396,8 @@ rt_public void eif_alloc_init(void)
 	static int p_per = 0;				/* full collection period.*/
 	static int thd	= 0;				/* Threshold of allocation.*/
 	static uint32 stk_limit = 0;			/* Stack size limit for GC */
+	int mod;							/* Value to ensure that some runtime values are properly
+										   rounded to ALIGNMAX */
 
 	/* Special options. */
 	env_var = getenv ("EIF_NO_RECLAIM");
@@ -405,10 +407,14 @@ rt_public void eif_alloc_init(void)
 	/* Set chunk size. */
 	if (!chunk_size) {
 		env_var = getenv ("EIF_MEMORY_CHUNK");
-		if (env_var != (char *) 0)
+		if (env_var != (char *) 0) {
 			chunk_size = atoi (env_var);
-		else
+			mod = chunk_size % ALIGNMAX;
+			if (mod != 0)
+				chunk_size += ALIGNMAX - mod;
+		} else {
 			chunk_size = CHUNK_DEFAULT;
+		}
 	}
 	eif_chunk_size = chunk_size >= CHUNK_SZ_MIN ? chunk_size : CHUNK_SZ_MIN;
 								/* Reasonable chunk size. */
@@ -417,10 +423,14 @@ rt_public void eif_alloc_init(void)
 	/* Set scavenge size. */
 	if (!scavenge_size) {
 		env_var = getenv ("EIF_MEMORY_SCAVENGE");
-		if (env_var != (char *) 0)
+		if (env_var != (char *) 0) {
 			scavenge_size = atoi (env_var);
-		else
+			mod = scavenge_size % ALIGNMAX;
+			if (mod != 0)
+				scavenge_size += ALIGNMAX - mod;
+		} else {
 			scavenge_size = GS_ZONE_SZ_DEFAULT;
+		}
 	}
 	eif_scavenge_size = scavenge_size >= GS_SZ_MIN ? scavenge_size : GS_SZ_MIN;
 								/* Reasonable GSZ size. */	
@@ -469,10 +479,14 @@ rt_public void eif_alloc_init(void)
 	if (!stack_chunk)	/* Is maximum size of objects in GSZ not set yet? */
 	{
 		env_var = getenv ("EIF_STACK_CHUNK");
-		if (env_var != (char *) 0)	/* Has user specified it? */
+		if (env_var != (char *) 0) {	/* Has user specified it? */
 			stack_chunk = atoi (env_var);
-		else
+			mod = stack_chunk % ALIGNMAX;
+			if (mod != 0)
+				stack_chunk += ALIGNMAX - mod;
+		} else {
 			stack_chunk = STACK_CHUNK;	/* RT default setting. */
+		}
 	}
 	eif_stack_chunk = stack_chunk;	
 

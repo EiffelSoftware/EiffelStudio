@@ -42,16 +42,6 @@ feature -- Measurement
 
 feature -- Status report
 
-	is_in_final_collect: BOOLEAN is
-			-- Is GC currently performing final collection
-			-- after execution of current program?
-			-- Safe to use in `dispose'.
-		do
-			check
-				False
-			end
-		end
-
 	memory_threshold: INTEGER is
 			-- Minimum amount of bytes to be allocated before
 			-- starting an automatic garbage collection.

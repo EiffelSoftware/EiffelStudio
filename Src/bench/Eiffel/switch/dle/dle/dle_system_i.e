@@ -622,6 +622,7 @@ end;
 					end;
 					i := i + 1
 				end;
+				Extern_declarations.generate_header (final_file_name (Eskelet, Dot_h));
 				Extern_declarations.generate (final_file_name (Eskelet, Dot_h));
 				Extern_declarations.wipe_out
 			else
@@ -839,6 +840,7 @@ end;
 				end;
 				!!f_name.make_from_string (dir_name);
 				f_name.set_file_name ("ececil.h");
+				Extern_declarations.generate_header (f_name)
 				Extern_declarations.generate (f_name);
 				Extern_declarations.wipe_out;
 				Cecil_file.putstring ("struct ctable *cecil_tab;");

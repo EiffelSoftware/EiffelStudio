@@ -144,7 +144,9 @@ end;
 				!! include_set.make;
 				include_set.compare_objects;
 				i := 1;
-				file.putstring ("#include %"struct.h%"%N%N");
+				file.putstring ("#include %"macros.h%"%N%
+								%#include %"struct.h%"%N%N");
+				file.generate_cpp_wrapper_start;
 			until
 				i > nb
 			loop
@@ -170,6 +172,8 @@ end;
 				include_set.forth
 			end
 			include_set := Void;
+
+			file.generate_cpp_wrapper_end;
 
 			from
 				file.new_line;
@@ -324,6 +328,7 @@ end;
 				include_set.compare_objects;
 				i := nb - counter.current_count + 1;
 				file.putstring ("#include %"struct.h%"%N%N");
+				file.generate_cpp_wrapper_start;
 			until
 				i > nb
 			loop
@@ -349,6 +354,8 @@ end;
 				include_set.forth
 			end
 			include_set := Void;
+
+			file.generate_cpp_wrapper_end;
 
 			from
 				file.new_line;

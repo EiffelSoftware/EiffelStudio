@@ -2596,6 +2596,7 @@ if class_types.item (i) /= Void then
 end;
 					i := i + 1;
 				end;
+				Extern_declarations.generate_header (final_file_name (Eskelet, Dot_h));
 				Extern_declarations.generate (final_file_name (Eskelet, Dot_h));
 				Extern_declarations.wipe_out;
 			else
@@ -2803,6 +2804,7 @@ end;
 				end;
 				!!f_name.make_from_string (dir_name);
 				f_name.set_file_name ("ececil.h");
+				Extern_declarations.generate_header (f_name);
 				Extern_declarations.generate (f_name);
 				Extern_declarations.wipe_out;
 				Cecil_file.putstring ("%Nstruct ctable fce_rname[] = {%N");
@@ -3099,7 +3101,9 @@ feature -- Plug and Makefile file
 			Plug_file := plug_f (final_mode);
 			Plug_file.open_write;
 
-			Plug_file.putstring ("#include %"portable.h%"%N%N");
+			Plug_file.putstring ("#include %"macros.h%"%N%N");
+
+			Plug_file.generate_cpp_wrapper_start;
 
 				-- Extern declarations
 			string_cl := class_of_id (string_id);
@@ -3157,6 +3161,8 @@ feature -- Plug and Makefile file
 			Plug_file.putstring (arr_make_name);
 			Plug_file.putstring ("();%N");
 
+			Plug_file.generate_cpp_wrapper_end;
+
 				-- Do we need to collect GC data for the profiler?
 			Plug_file.putstring ("EIF_INTEGER eif_profiler_level = (EIF_INTEGER) ");
 			if Lace.ace_options.has_profile then
@@ -3199,16 +3205,28 @@ feature -- Plug and Makefile file
 			end;
 
 				-- Pointer on creation feature of class STRING
-			Plug_file.putstring ("void (*eif_strmake)() = ");
+			Plug_file.putstring ("void (*eif_strmake)(%N%
+					%#ifdef __STDC__%N%
+					%EIF_REFERENCE, EIF_INTEGER%N%
+					%#endif%N%
+					%) = ");
 			Plug_file.putstring (str_make_name);
 			Plug_file.putstring (";%N");
 				-- Pointer on creation feature of class ARRAY[ANY]
-			Plug_file.putstring ("void (*eif_arrmake)() = ");
+			Plug_file.putstring ("void (*eif_arrmake)(%N%
+					%#ifdef __STDC__%N%
+					%EIF_REFERENCE, EIF_INTEGER, EIF_INTEGER%N%
+					%#endif%N%
+					%) = ");
 			Plug_file.putstring (arr_make_name);
 			Plug_file.putstring (";%N");
 
 				--Pointer on `set_count' of class STRING
-			Plug_file.putstring ("void (*eif_strset)() = ");
+			Plug_file.putstring ("void (*eif_strset)(%N%
+					%#ifdef __STDC__%N%
+					%EIF_REFERENCE, EIF_INTEGER%N%
+					%#endif%N%
+					%) = ");
 			Plug_file.putstring (set_count_name);
 			Plug_file.putstring (";%N");
 
@@ -3327,24 +3345,19 @@ feature -- Main file generation
 			Main_file.open_write;
 
 			Main_file.putstring ("%N%
-				%#include %"except.h%"%N%
-				%#include %"option.h%"%N%
-				%extern void emain();%N%
-				%extern void reclaim();%N");
+				%#include %"macros.h%"%N%
+				%#include %"sig.h%"%N");
+
+			Main_file.generate_protected_extern_declaration ("void", "emain", <<"int", "char **">>);
+
 			if has_separate then
 				Main_file.putstring ("#include %"curserver.h%"%N")
-			else
-				Main_file.putstring ("extern void failure();%N")
 			end
 
+			Main_file.generate_function_signature ("void", "main", "", Main_file,
+						<<"argc", "argv", "envp">>, <<"int", "char **", "char **" >>);
+
 			Main_file.putstring ("%
-				%extern void initsig();%N%
-				%extern void initstk();%N%
-				%extern void eif_rtinit();%N%N%
-				%void main(argc, argv, envp)%N%
-				%int argc;%N%
-				%char **argv;%N%
-				%char **envp;%N%
 				%{%N%
 				%%Tstruct ex_vect *exvect;%N%
 				%%Tjmp_buf exenv;%N%N%
@@ -3468,10 +3481,10 @@ feature -- Main file generation
 				Initialization_file.putstring ("%N");
 			end
 
+			Initialization_file.generate_function_signature ("void", "emain", "", Initialization_file,
+						<<"argc", "argv">>, <<"int", "char **">>);
+
 			Initialization_file.putstring ("%
-				%void emain(argc, argv)%N%
-				%int argc;%N%
-				%char **argv;%N%
 				%{%N%
 				%%Textern char *root_obj;%N");
 
@@ -3515,7 +3528,7 @@ feature -- Main file generation
 					-- The last line Only for Workbench Mode
 			end
 
-			Initialization_file.putstring ("%T%Troot_obj = RTLN(");
+			Initialization_file.putstring ("%Troot_obj = RTLN(");
 			if final_mode then
 				Initialization_file.putint (dtype);
 			else
@@ -3545,15 +3558,15 @@ feature -- Main file generation
 				if has_separate then
 					Initialization_file.putstring ("%T%Tif (rcorigin != -1)%N%
 						%%T%T%Tif (rcarg)%N%
-						%%T%T%T%T((void (*)()) RTWPF(rcorigin, rcoffset, rcdt))(root_obj, argarr(argc-1, root_argv));%N%
+						%%T%T%T%T((void (*)(char *, char *)) RTWPF(rcorigin, rcoffset, rcdt))(root_obj, argarr(argc-1, root_argv));%N%
 						%%T%T%Telse%N%
-						%%T%T%T%T((void (*)()) RTWPF(rcorigin, rcoffset, rcdt))(root_obj);%N");
+						%%T%T%T%T((void (*)(char *)) RTWPF(rcorigin, rcoffset, rcdt))(root_obj);%N");
 				else
 					Initialization_file.putstring ("%Tif (rcorigin != -1)%N%
 						%%T%Tif (rcarg)%N%
-						%%T%T%T((void (*)()) RTWPF(rcorigin, rcoffset, rcdt))(root_obj, argarr(argc, argv));%N%
+						%%T%T%T((void (*)(char *, char *)) RTWPF(rcorigin, rcoffset, rcdt))(root_obj, argarr(argc, argv));%N%
 						%%T%Telse%N%
-						%%T%T%T((void (*)()) RTWPF(rcorigin, rcoffset, rcdt))(root_obj);%N");
+						%%T%T%T((void (*)(char *)) RTWPF(rcorigin, rcoffset, rcdt))(root_obj);%N");
 				end
 			end;
 
@@ -3587,6 +3600,22 @@ feature -- Main file generation
 			-- mode.
 
 			if not final_mode then
+					-- Prototypes
+				Initialization_file.generate_cpp_wrapper_start;
+				Initialization_file.generate_extern_declaration ("void", "tabinit", "");
+				from
+					i := 1;
+					nb := type_id_counter.value
+				until
+					i > nb
+				loop
+					cl_type := class_types.item (i);
+					if cl_type /= Void then
+						Initialization_file.generate_extern_declaration ("void", cl_type.id.init_name, "")
+					end
+					i := i + 1
+				end
+				Initialization_file.generate_cpp_wrapper_end;
 
 				Initialization_file.putstring ("%Nvoid tabinit()%N{%N");
 				from
@@ -3607,9 +3636,11 @@ feature -- Main file generation
 					end;
 					i := i + 1
 				end;
-				Initialization_file.putstring ("}%N");
+				Initialization_file.putstring ("}%N%N");
 
-				Initialization_file.putstring ("%Nvoid einit()%N{%N");
+				Initialization_file.generate_function_signature ("void", "einit", "", Initialization_file, <<>>, <<>>);
+
+				Initialization_file.putstring ("{%N");
 
 					-- Set C variable `scount'.
 				Initialization_file.putstring ("%Tscount = ");

@@ -60,7 +60,6 @@ feature {NONE} -- Implementation
 
 			C.gtk_object_ref (p)
 			C.gtk_container_remove (list_widget, p)
-			C.gtk_object_unref (p)
 			imp ?= eif_object_from_c (p)
 			imp.set_item_parent_imp (Void)
 			child_array.go_i_th (i)

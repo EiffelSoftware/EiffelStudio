@@ -56,13 +56,15 @@ feature -- Access
 			-- Including generics.
 		local
 			gts: like generic_type_selectors
+			generic_type_name: STRING
 			type_as_class_c: CLASS_C
 			l: LINKED_LIST [CLASS_I]
 		do
-			Result := selector.text
+			Result := clone (selector.text)
 			if Result = Void then
 				create Result.make (0)
 			else
+				Result.to_upper
 				if expanded_needed then
 					l := Universe.compiled_classes_with_name (Result)
 					if not l.is_empty then
@@ -77,8 +79,16 @@ feature -- Access
 				gts := generic_type_selectors
 				if not gts.is_empty then
 					Result.append (" [")
-					from gts.start until gts.after loop
-						Result.append (gts.item.code)
+					from 
+						gts.start
+					until
+						gts.after
+					loop
+						generic_type_name := clone(gts.item.code)
+						if generic_type_name /= Void then
+							generic_type_name.to_upper
+							Result.append (generic_type_name)
+						end
 						gts.forth
 						if not gts.after then
 							Result.append (", ")

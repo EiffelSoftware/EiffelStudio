@@ -27,6 +27,9 @@ inherit
 
 feature -- Attributes
 
+	id: CLASS_ID;
+			-- Class id
+
 	class_name: ID_AS_B;
 			-- Class name
 
@@ -88,6 +91,14 @@ feature -- Initialization
 		ensure then
 			class_name_exists: class_name /= Void;
 			suppliers_exists: suppliers /= Void;
+		end;
+
+feature {COMPILER_EXPORTER} -- Setting
+
+	set_id (i: CLASS_ID) is
+			-- Assign `i' to `id'.
+		do
+			id := i;
 		end;
 
 feature {CLASS_C, COMPILED_CLASS_INFO} -- Class information

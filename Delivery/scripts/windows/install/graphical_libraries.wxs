@@ -376,6 +376,7 @@
               <Component Id="app_ids.e192" Guid="EAD54432-B2F7-4CE0-9915-7B347C4927EB">
                 <File Id="app_ids.e192" Name="app_ids.e" KeyPath="yes" />
                 <File Id="ace.ace193" Name="ace.ace" />
+				<File Id="Ace.dotnet.ace" Name="ACEDOT~1.ACE" LongName="Ace.dotnet.ace" />
                 <File Id="stddlg_demo.rc" Name="STDDLG~1.RC" LongName="stddlg_demo.rc" />
                 <File Id="stddlg_demo.e" Name="STDDLG~1.E" LongName="stddlg_demo.e" />
                 <File Id="main_win.e258" Name="main_win.e" />
@@ -569,6 +570,7 @@
                 <File Id="deselectable_control.e" Name="DESELE~1.E" LongName="deselectable_control.e" />
                 <File Id="Ace.unix.ace148" Name="ACEUNI~4.ACE" LongName="Ace.unix.ace" />
                 <File Id="Ace.win.ace149" Name="ACEWIN~6.ACE" LongName="Ace.win.ace" />
+				<File Id="Ace.dotnet.ace101" Name="ACEDOT~1.ACE" LongName="Ace.dotnet.ace" />
                 <File Id="bm_About.png151" Name="bm_About.png" />
               </Component>
             </Directory>
@@ -585,7 +587,7 @@
                 <File Id="accelerator.e" Name="ACCELE~4.E" LongName="accelerator.e" KeyPath="yes" />
                 <File Id="Ace.unix.ace" Name="ACEUNI~1.ACE" LongName="Ace.unix.ace" />
                 <File Id="Ace.win.ace147" Name="ACEWIN~5.ACE" LongName="Ace.win.ace" />
-                <File Id="Ace.dotnet.ace" Name="ACEDOT~1.ACE" LongName="Ace.dotnet.ace" />
+                <File Id="Ace.dotnet.ace100" Name="ACEDOT~1.ACE" LongName="Ace.dotnet.ace" />
               </Component>
             </Directory>
             <Directory Id="viewport" Name="viewport">

@@ -3065,9 +3065,9 @@ feature -- Plug and Makefile file
 			string_cl, bit_cl, array_cl: CLASS_C;
 			arr_type_id, str_type_id, type_id: INTEGER;
 			id: TYPE_ID;
-			set_count_feat, creation_feature: FEATURE_I;
+			to_c_feat, set_count_feat, creation_feature: FEATURE_I;
 			creators: EXTEND_TABLE [EXPORT_I, STRING];
-			dispose_name, str_make_name, init_name, set_count_name: STRING;
+			dispose_name, str_make_name, init_name, set_count_name, to_c_name: STRING;
 			arr_make_name: STRING;
 			special_cl: SPECIAL_B;
 			cl_type: CLASS_TYPE;
@@ -3091,13 +3091,20 @@ feature -- Plug and Makefile file
 			creation_feature := string_cl.feature_table.item
 											(creators.key_for_iteration);
 			set_count_feat := string_cl.feature_table.item ("set_count");
+			if Concurrent_eiffel then
+				to_c_feat := string_cl.feature_table.item ("to_c");
+			end
 			str_make_name := creation_feature.body_id.feature_name (id)
 			set_count_name := set_count_feat.body_id.feature_name (id)
+			to_c_name := to_c_feat.body_id.feature_name (id)
 			Plug_file.putstring ("extern void ");
 			Plug_file.putstring (str_make_name);
 			Plug_file.putstring ("();%N");
 			Plug_file.putstring ("extern void ");
 			Plug_file.putstring (set_count_name);
+			Plug_file.putstring ("();%N");
+			Plug_file.putstring ("extern void ");
+			Plug_file.putstring (to_c_name);
 			Plug_file.putstring ("();%N");
 
 			--| make array declaration
@@ -3184,6 +3191,13 @@ feature -- Plug and Makefile file
 			Plug_file.putstring (set_count_name);
 			Plug_file.putstring (";%N");
 
+			if Concurrent_eiffel then
+					--Pointer on `to_c' of class STRING
+				Plug_file.putstring ("void (*eif_strtoc)() = ");
+				Plug_file.putstring (to_c_name);
+				Plug_file.putstring (";%N");
+			end
+
 				-- Dynamic type of class STRING
 			Plug_file.putstring ("int str_dtype = ");
 			Plug_file.putint (str_type_id - 1);
@@ -3229,6 +3243,15 @@ feature -- Plug and Makefile file
 			special_cl ?= special_class.compiled_class;
 			special_cl.generate_dynamic_types;
 			generate_dynamic_ref_type;
+
+				-- Specific info for Concurrent Eiffel
+			if Concurrent_eiffel then
+					-- Location of the config file
+				Plug_file.putstring ("char eif_concurrent_config_file[] = %"");
+				Plug_file.putstring ("put file name here");
+				Plug_file.putstring ("%";%N");
+			end;
+
 			Plug_file.close;
 			Plug_file := Void;
 		end;
@@ -4104,6 +4127,23 @@ feature -- DLE
 			-- in the extendible system, but need to be dynamically bound
 			-- because of the DC-set.
 		do
+		end
+
+feature -- Concurrent Eiffel
+
+	Concurrent_eiffel: BOOLEAN is
+			-- Can this compiler generate Concurrent Eiffel code?
+		do
+			Result := True
+		end
+
+	has_separate: BOOLEAN
+			-- Is there a separate declaration in the system?
+
+	set_has_separate is
+			-- Set `has_separate' to True.
+		do
+			has_separate := True
 		end
 
 invariant

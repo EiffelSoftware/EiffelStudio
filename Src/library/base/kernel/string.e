@@ -281,7 +281,7 @@ feature -- Comparison
 		do
 			if count = other.count then
 				o_area := other.area;
-				i := str_cmp ($area, $o_area, count, other.count);
+				i := str_cmp ($area, $o_area, count);
 				Result := (i = 0);
 			end;
 		end;
@@ -291,8 +291,8 @@ feature -- Comparison
 		local
 			other_area: like area
 		do
-			other_area := other.area;
-			Result := str_cmp ($other_area, $area, other.count, count) > 0
+			other_area := other.area
+			Result := str_cmp ($other_area, $area, count.min (other.count)) > 0
 		end;
 
 feature -- Status report
@@ -1140,12 +1140,14 @@ feature {STRING} -- Implementation
 			"C | %"eif_str.h%""
 		end;
 
-	str_cmp (this, other: POINTER; this_len, other_len: INTEGER ): INTEGER is
+	str_cmp (this, other: POINTER; len: INTEGER ): INTEGER is
 			-- Compare `this' and `other' C strings.
 			-- 0 if equal, < 0 if `this' < `other',
 			-- > 0 if `this' > `other'
 		external
-			"C | %"eif_str.h%""
+			"C | <string.h>"
+		alias
+			"strncmp"
 		end;
 
 	str_lower (c_string: POINTER; length: INTEGER) is

@@ -9,9 +9,9 @@ class
 
 inherit
 	EV_APPLICATION
-		redefine
-			make_and_launch
-		end
+--		redefine
+--			make_and_launch
+--		end
 
 	WIZARD_SHARED
 		undefine
@@ -23,13 +23,18 @@ Creation
 
 feature -- Initialization
 
+
 	make_and_launch is
 			-- Initialize and launch application
 		do
 			if argument_count<1 then
 				io.put_string("wizard.exe -arg1 [resource_path]%N")
 			else
-				precursor
+				default_create
+				set_application (Current)
+				prepare
+				launch
+--				precursor
 			end
 		end
 
@@ -41,5 +46,6 @@ feature -- Initialization
 			first_window.set_title("Wizard Version 1.1")
 			first_window.show
 		end 
- 	
+
+	
 end -- class WIZARD_PROJECT_MANAGER

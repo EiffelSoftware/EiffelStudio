@@ -58,9 +58,14 @@ feature -- Basic Operations
 		local
 			fi: FILE_NAME
 		do
-			Create fi.make_from_string(wizard_bmp_path)
-			fi.extend(pixmap_location)
-			pixmap.set_with_named_file(fi)
+			create fi.make_from_string (wizard_pixmaps_path)
+			fi.extend (pixmap_location)
+			pixmap.set_with_named_file (fi)
+
+--			create fi.make_from_string (wizard_pixmaps_path)
+--			fi.extend (pixmap_icon_location)
+--			pixmap.set_with_names_file (fi)
+
 --			pixmap.set_minimum_width(pixmap.width)
 --			pixmap.redraw
 		end
@@ -146,11 +151,18 @@ feature -- Access
 	message: EV_LABEL
 			-- Page message
 
-	title: EV_LABEL
+	title: SMART_LABEL
 			-- Page title.
 
 	is_final_state: BOOLEAN is
 		do
+		end
+
+feature -- Tools
+
+	string_cleaner: STRING_CLEANER is
+		once
+			create Result.make
 		end
 
 invariant

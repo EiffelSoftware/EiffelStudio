@@ -29,7 +29,7 @@ feature {NONE} -- Initialization
 			default_create
 			set_text (a_text)
 		ensure
-			text_assigned: text.is_equal (a_text) amd text /= a_text
+			text_assigned: text.is_equal (a_text) and text /= a_text
 		end
 	
 feature -- Access
@@ -143,6 +143,9 @@ end -- class EV_TEXTABLE
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.18  2000/03/01 22:44:02  brendel
+--| amd -> and
+--|
 --| Revision 1.17  2000/03/01 22:30:26  oconnor
 --| corrected postconditions
 --|

@@ -578,7 +578,7 @@ feature {NONE} -- Initialization
 					l_names_heap.put (l_member.dotnet_name)
 					l_ext.set_alias_name_id (l_names_heap.found_item)
 				end
-
+				l_feat.set_private_external_name_id (l_names_heap.found_item)
 				if l_member.has_return_value then
 					l_external_type := internal_type_from_consumed_type (True, l_member.return_type)
 

@@ -34,6 +34,10 @@ feature -- Access
 		ensure
 			valid_result: Result /= Void
 		end
+		
+	drop_agent: PROCEDURE [ANY, TUPLE [ANY]]
+	
+	veto_drop_agent: FUNCTION [ANY, TUPLE [ANY], BOOLEAN]
 
 feature -- Status Report
 
@@ -128,7 +132,13 @@ feature -- Basic operations
 				tt.append (Closing_parenthesis)
 			end
 			Result.set_tooltip (tt)
-			Result.select_actions.extend (~execute)
+			Result.select_actions.extend (agent execute)
+			if drop_agent /= Void then
+				Result.drop_actions.extend (drop_agent)
+			end
+			if veto_drop_agent /= Void then
+				Result.drop_actions.set_veto_pebble_function (veto_drop_agent)
+			end
 		end
 
 	new_mini_toolbar_item: EB_COMMAND_TOOL_BAR_BUTTON is
@@ -147,7 +157,7 @@ feature -- Basic operations
 				Result.disable_sensitive
 			end
 			Result.set_tooltip (tooltip)
-			Result.select_actions.extend (~execute)
+			Result.select_actions.extend (agent execute)
 		end
 
 feature {EB_COMMAND_TOOL_BAR_BUTTON} -- Implementation
@@ -157,4 +167,5 @@ feature {EB_COMMAND_TOOL_BAR_BUTTON} -- Implementation
 	
 	Opening_parenthesis: STRING is " ("
 	Closing_parenthesis: STRING is ")"
+
 end -- class EB_TOOLBARABLE_COMMAND

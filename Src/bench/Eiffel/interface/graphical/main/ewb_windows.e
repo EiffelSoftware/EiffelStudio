@@ -23,7 +23,7 @@ feature {NONE}
 
 	init_toolkit: MS_WINDOWS is
 		once
-			!!Result.make ("ewb")
+			!!Result.make ("ebench")
 		end;
 
 feature 

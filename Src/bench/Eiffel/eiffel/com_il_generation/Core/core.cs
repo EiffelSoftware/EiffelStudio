@@ -9,7 +9,9 @@ public class Core : ICore {
 
 	public void StartAssemblyGeneration (string Name, string FName,  string Location) {
 		AssemblyName name = new AssemblyName();
+#if ISE_APPDOMAIN
 		Assembly assembly;
+#endif
 
 			// Define assembly we want to load..
 		name.Name = "EiffelCompiler";
@@ -17,8 +19,9 @@ public class Core : ICore {
 		name.SetPublicKeyToken (new byte[8] {0x5b, 0x82, 0xf0, 0xd7, 0x09, 0x55, 0x93, 0x9a});
 		name.CultureInfo = new System.Globalization.CultureInfo ("");
 
+#if ISE_APPDOMAIN
 			// Create AppDomain
-		CoreApp = AppDomain.CreateDomain ("EiffelCompiler_manu");
+		CoreApp = AppDomain.CreateDomain ("EiffelCompiler_domain");
 
 			// Load our assembly into `CoreApp'.
 		assembly = CoreApp.Load (name);
@@ -27,9 +30,14 @@ public class Core : ICore {
 			// get a reference to it.
 		core = (EiffelReflectionEmit) CoreApp.CreateInstanceAndUnwrap
 			(assembly.FullName, "EiffelReflectionEmit");
+#else
+		core = new EiffelReflectionEmit();
+#endif
 
+#if ISE_APPDOMAIN
 			// Make sure `CoreApp' stays alive until we unload it.
 		CoreApp.InitializeLifetimeService();
+#endif
 
 			// Start IL generation through `core'.
 		core.StartAssemblyGeneration (Name, FName, Location);
@@ -47,13 +55,17 @@ public class Core : ICore {
 	}
 
 	private void cleanup () {
+#if ISE_APPDOMAIN
 		AppDomain.Unload(CoreApp);
 		CoreApp = null;
+#endif
 		core = null;
 		GC.Collect();
 	}
 
+#if ISE_APPDOMAIN
 	private AppDomain CoreApp;
+#endif
 	private EiffelReflectionEmit core;
 
 /* Delegation to EiffelReflectionEmit object */
@@ -93,8 +105,7 @@ public class Core : ICore {
 		bool IsDeferred, bool IsFrozen, bool IsExpanded,
 		bool IsExternal, int TypeID)
 	{
-		core.GenerateClassHeader (IsInterface, IsDeferred, IsFrozen, IsExpanded,
-			IsExternal, TypeID);
+		core.GenerateClassHeader (IsInterface, IsDeferred, IsFrozen, IsExpanded, IsExternal, TypeID);
 	}
 	
 	public void EndClass() {

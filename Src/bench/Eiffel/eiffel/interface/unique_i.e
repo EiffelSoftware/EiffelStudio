@@ -11,7 +11,7 @@ inherit
 	
 feature 
 
-	value: INT_VALUE_I
+	value: INTEGER_CONSTANT
 			-- Value of the constant in the class
 			-- [Note that this value is processed during second pass by
 			-- feature `feature_unit' of class INHERIT_TABLE.]
@@ -27,7 +27,7 @@ feature
 			other_unique ?= other;
 			if other_unique /= Void then
 				Result := basic_equiv (other_unique)
-					and then value.int_val = other_unique.value.int_val
+					and then value.is_equivalent (other_unique.value)
 			end;
 			if Not Result then
 				System.current_class.insert_changed_feature (feature_name_id)
@@ -42,7 +42,7 @@ feature
 			other_unique: UNIQUE_I
 		do
 			other_unique ?= other
-			Result := value.int_val = other_unique.value.int_val
+			Result := value.is_equal (other_unique.value)
 		end
 
 	check_types (feat_tbl: FEATURE_TABLE) is

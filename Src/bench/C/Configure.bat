@@ -180,6 +180,7 @@ echo del *.zip >> cleanup.bat
 echo del *.pdb >> cleanup.bat
 echo del *.pch >> cleanup.bat
 echo del *.dll >> cleanup.bat
+echo del *.o >> cleanup.bat
 echo del config.sh >> cleanup.bat
 echo del makefile >> cleanup.bat
 echo del make.bat >> cleanup.bat

@@ -8,16 +8,16 @@ class
 	EIFFEL_EXCEPTION
 
 inherit
-	APPLICATION_EXCEPTION
-		rename
-			make as exc_make
-		undefine
-			finalize,
-			equals,
-			to_string,
-			get_hash_code,
-			memberwise_clone
-		end
+--	APPLICATION_EXCEPTION
+--		rename
+--			make as exc_make
+--		undefine
+--			finalize,
+--			equals,
+--			to_string,
+--			get_hash_code,
+--			memberwise_clone
+--		end
 
 	EXCEP_CONST
 
@@ -31,7 +31,7 @@ feature {NONE} -- Initialization
 		require
 			valid_code: valid_code (code)
 		do
-			exc_make
+--			exc_make
 			code := l_code
 			tag := l_tag
 		end

@@ -12,11 +12,11 @@ inherit
 	ISERIALIZABLE
 
 create
-	make_event_handler
+	make
 
 feature {NONE} -- Initialization
 
-	frozen make_event_handler (object: SYSTEM_OBJECT; method: POINTER) is
+	frozen make (object: SYSTEM_OBJECT; method: POINTER) is
 		external
 			"IL creator signature (System.Object, System.IntPtr) use System.EventHandler"
 		end

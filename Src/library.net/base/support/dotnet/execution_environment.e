@@ -108,14 +108,14 @@ feature -- Status setting
 		local
 			np: PROCESS
 			nm: SYSTEM_STRING
-			si: PROCESSSTARTINFO
+			si: PROCESS_START_INFO
 		do
 			if s.is_empty then
 				nm := ("cmd.exe").to_cil
 			else
 				nm := s.to_cil
 			end
-			create si.make_1 (nm)
+			create si.make_from_file_name (nm)
 			np := feature {PROCESS}.start_process_start_info (si)
 		end
 
@@ -128,14 +128,14 @@ feature -- Status setting
 		local
 			np: PROCESS
 			nm: SYSTEM_STRING
-			si: PROCESSSTARTINFO
+			si: PROCESS_START_INFO
 		do
 			if s.is_empty then
 				nm := ("cmd.exe").to_cil
 			else
 				nm := s.to_cil
 			end
-			create si.make_1 (nm)
+			create si.make_from_file_name (nm)
 			np := feature {PROCESS}.start_process_start_info (si)
 			np.wait_for_exit
 			np.close

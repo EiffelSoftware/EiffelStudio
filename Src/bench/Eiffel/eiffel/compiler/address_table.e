@@ -430,7 +430,7 @@ feature {NONE} -- Generation
 				buffer.putstring ("%N%T")
 
 				if final_mode then
-					entry :=  Eiffel_table.poly_table (rout_id)
+					entry := Eiffel_table.poly_table (rout_id)
 					if entry = Void then
 						-- Function pointer associated to a deferred feature
 						-- without any implementation

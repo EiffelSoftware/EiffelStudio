@@ -116,7 +116,7 @@ feature -- Status report
 	has_selection: BOOLEAN is
 			-- Has a current selection?
 		do
-			Result := selection_start /= selection_end
+			Result := selection.minimum /= selection.maximum
 		end
 
 	default_character_format: WEL_CHARACTER_FORMAT is

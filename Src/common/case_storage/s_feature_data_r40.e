@@ -57,7 +57,7 @@ feature -- Properties
 
 feature -- Setting
 
-	set_body (b: LINKED_LIST [ STRING ] ) is
+	set_body (b: S_FEATURE_BODY ) is
 			-- Set body to `b'.
 		do
 			if b/= Void then

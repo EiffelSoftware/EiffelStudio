@@ -95,7 +95,7 @@ feature -- Setting
 			is_attribute: is_attribute
 		end;
 
-	set_body (l: LINKED_LIST [STRING]) is
+	set_body (l: S_FEATURE_BODY ) is
 			-- Set `body' to `l'.
 		do
 		end;

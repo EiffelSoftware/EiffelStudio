@@ -33,7 +33,7 @@ feature -- Status report
 	is_selected: BOOLEAN is
 			-- Is the current button selected?
 		do
-			Result := parent_imp.toolbar.button_checked (id)
+			Result := parent_imp.button_checked (id)
 		end
 
 feature -- Status setting
@@ -43,9 +43,9 @@ feature -- Status setting
 			-- otherwise.
 		do
 			if flag then
-				parent_imp.toolbar.check_button (id)
+				parent_imp.check_button (id)
 			else
-				parent_imp.toolbar.uncheck_button (id)
+				parent_imp.uncheck_button (id)
 			end
 		end
 

@@ -32,7 +32,7 @@ feature -- Access
 	icons_directory: STRING is
 			-- `Result' is DIRECTORY constant named `icons_directory'.
 		once
-			Result := "E:\com_wizard\project\new_gui\resources"
+			Result := "E:\com_wizard\root\resources"
 		end
 
 	help_png: EV_PIXMAP is
@@ -42,6 +42,16 @@ feature -- Access
 			create Result
 			create a_file_name.make_from_string (icons_directory)
 			a_file_name.set_file_name ("help.png")
+			set_with_named_file (Result, a_file_name)
+		end
+
+	eiffel_software_png: EV_PIXMAP is
+		local
+			a_file_name: FILE_NAME
+		once
+			create Result
+			create a_file_name.make_from_string (icons_directory)
+			a_file_name.set_file_name ("eiffel_software.png")
 			set_with_named_file (Result, a_file_name)
 		end
 
@@ -237,3 +247,15 @@ invariant
 	all_constants_not_void: all_constants /= Void
 
 end -- class WIZARD_CONSTANTS_IMP
+
+--+----------------------------------------------------------------
+--| EiffelCOM Wizard
+--| Copyright (C) 1999-2005 Eiffel Software. All rights reserved.
+--| Eiffel Software Confidential
+--| Duplication and distribution prohibited.
+--|
+--| Eiffel Software
+--| 356 Storke Road, Goleta, CA 93117 USA
+--| http://www.eiffel.com
+--+----------------------------------------------------------------
+

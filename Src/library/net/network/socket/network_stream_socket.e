@@ -145,7 +145,7 @@ feature -- Status setting
 		require
 			socket_exists: exists
 		do
-			c_set_sock_opt_int (descriptor, level_iproto_tcp, tcpno_delay, 1)
+			c_set_sock_opt_int (descriptor, level_iproto_tcp, tcpno_delay, 0)
 		end;
 
 	set_nodelay is
@@ -153,7 +153,7 @@ feature -- Status setting
 		require
 			socket_exists: exists
 		do
-			c_set_sock_opt_int (descriptor, level_iproto_tcp, tcpno_delay, 0)
+			c_set_sock_opt_int (descriptor, level_iproto_tcp, tcpno_delay, 1)
 		end;
 
 	set_linger (flag: BOOLEAN; time: INTEGER) is

@@ -111,14 +111,14 @@ feature {NONE}-- Initialization
 			l_horizontal_box_4.disable_item_expand (add_button)
 			l_horizontal_box_4.disable_item_expand (remove_button)
 			add_button.set_text ("Add")
-			add_button.set_minimum_width (80)
+			add_button.set_minimum_width (default_button_width)
 			remove_button.disable_sensitive
 			remove_button.set_text ("Remove")
-			remove_button.set_minimum_width (80)
+			remove_button.set_minimum_width (default_button_width)
 			l_vertical_box_3.set_border_width (10)
 			l_vertical_box_3.disable_item_expand (ok_button)
 			ok_button.set_text (ok_button_text)
-			ok_button.set_minimum_width (80)
+			ok_button.set_minimum_width (default_button_width)
 			
 			constants_list.select_actions.extend (agent item_selected_in_list (?))
 			constants_list.deselect_actions.extend (agent item_deselected_in_list (?))

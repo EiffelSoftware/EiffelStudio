@@ -27,8 +27,6 @@ feature {NONE}-- Initialization
 
 	initialize is
 			-- Initialize `Current'.
-		local
-			internal_pixmap: EV_PIXMAP
 		do
 			Precursor {EV_DIALOG}
 			initialize_constants
@@ -43,11 +41,11 @@ feature {NONE}-- Initialization
 			create l_horizontal_box_20
 			create l_label_7
 			create directory_name_field
-			create l_horizontal_box_21
 			create l_cell_8
+			create l_horizontal_box_21
+			create l_cell_9
 			create ok_button
 			create cancel_button
-			create internal_pixmap
 			
 			extend (l_vertical_box_18)
 			l_vertical_box_18.extend (l_horizontal_box_19)
@@ -59,15 +57,20 @@ feature {NONE}-- Initialization
 			l_vertical_box_18.extend (l_horizontal_box_20)
 			l_horizontal_box_20.extend (l_label_7)
 			l_horizontal_box_20.extend (directory_name_field)
+			l_vertical_box_18.extend (l_cell_8)
 			l_vertical_box_18.extend (l_horizontal_box_21)
-			l_horizontal_box_21.extend (l_cell_8)
+			l_horizontal_box_21.extend (l_cell_9)
 			l_horizontal_box_21.extend (ok_button)
 			l_horizontal_box_21.extend (cancel_button)
 			
 			set_title ("No matching DIRECTORY constant")
 			l_vertical_box_18.set_padding_width (10)
+			l_vertical_box_18.disable_item_expand (l_horizontal_box_19)
+			l_vertical_box_18.disable_item_expand (l_horizontal_box_20)
+			l_vertical_box_18.disable_item_expand (l_horizontal_box_21)
 			l_horizontal_box_19.set_padding_width (10)
 			l_horizontal_box_19.set_border_width (10)
+			l_horizontal_box_19.disable_item_expand (l_vertical_box_19)
 			l_label_6.set_text ("You have not specified a DIRECTORY constant for one or more relative PIXMAP%Nconstants, and no matching directory constant is available. %NPlease enter the name of a DIRECTORYconstant which will be used.")
 			l_label_6.align_text_left
 			l_horizontal_box_20.set_padding_width (10)
@@ -79,11 +82,9 @@ feature {NONE}-- Initialization
 			l_horizontal_box_21.disable_item_expand (ok_button)
 			l_horizontal_box_21.disable_item_expand (cancel_button)
 			ok_button.set_text (ok_button_text)
-			ok_button.set_minimum_width (80)
+			ok_button.set_minimum_width (default_button_width)
 			cancel_button.set_text (cancel_button_text)
-			cancel_button.set_minimum_width (80)
-			internal_pixmap.set_with_named_file (constant_by_name ("pixmap_location") + "\ev_horizontal_progress_bar.ico")
-			cancel_button.set_pixmap (internal_pixmap)
+			cancel_button.set_minimum_width (default_button_width)
 			
 			directory_name_field.change_actions.extend (agent text_changed)
 			ok_button.select_actions.extend (agent ok_button_pressed)
@@ -111,7 +112,7 @@ feature {NONE} -- Implementation
 	
 	l_vertical_box_18, l_vertical_box_19: EV_VERTICAL_BOX
 	l_horizontal_box_19, l_horizontal_box_20, l_horizontal_box_21: EV_HORIZONTAL_BOX
-	l_cell_6, pixmap_cell, l_cell_7, l_cell_8: EV_CELL
+	l_cell_6, pixmap_cell, l_cell_7, l_cell_8, l_cell_9: EV_CELL
 	l_label_6, l_label_7: EV_LABEL
 	directory_name_field: EV_TEXT_FIELD
 	ok_button, cancel_button: EV_BUTTON

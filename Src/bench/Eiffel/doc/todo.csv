@@ -16,7 +16,7 @@ interface,,,,,,,
 ,3,Optimize useless computations for tools that are not displayed,Xavier,INT0012,,,
 ,4,Give a warning when no match is found in the address manager,Xavier,INT0013,Xavier,1,Done
 ,4,Add a status bar,Xavier,INT0014,Xavier,3,Done
-,4,Improve the default handling of tool sizes,Xavier,INT0015,Xavier,3,
+,2,Improve the default handling of tool sizes,Xavier,INT0015,Xavier,3,
 ,4,Make it easier to import libraries (XML description file for each) + make it possible to generate such XML files,Xavier,INT0016,Xavier,5,
 ,3,Unify the event handling in trees (feature/cluster/favorites),Xavier,INT0017,,,
 ,3,Support CVS from within EiffelStudio,Xavier,INT0018,,,
@@ -39,26 +39,26 @@ interface,,,,,,,
 ,2,"Add a close menu in the file menu, to close the current file",Julian,INT0034,,,
 ,3,Add a central dictionary of ordered classes somewhere to optimize some things,Xavier,INT0035,,,
 ,3,"Add a class with queries relative to the validity of names (for classes, features, system,…)",Xavier,INT0036,Xavier,2,Done
-,4,"Save all backed up files in a file, and propose to reopen these back-ups at next start-up",Julian,INT0037,,,
+,3,"Save all backed up files in a file, and propose to reopen these back-ups at next start-up",Julian,INT0037,,,
 ,3,Add a way to pick the current stone from the address,Xavier,INT0038,,,
-,3,Give a different icon in the cluster tree to deferred/effective classes,Xavier,INT0039,Xavier,1,
+,3,Give a different icon in the cluster tree to deferred/effective classes,Xavier,INT0039,Xavier,1,Done
 ,2,Give a way to choose among the last 'star-list' in the address (such as not closing the choice dialog when ctrl is pressed at selection time),Julian,INT0040,,,
 ,3,"Support Ctrl-right click everywhere + add a preference telling what to do (open a new window, a new editor window, a new context window, send to current editor, send to current context, send to external editor...)",Xavier,INT0041,,,
 ,2,"Gray out raise all, minimize all, raise all unsaved, run finalized, recent projects when they do not make sense",Julian,INT0042,,,
 ,2,What about `send file to external editor' when there is no file?,Julian,INT0043,,,
-,3,Precompilations done should be Precompilations completed,Julian,INT0044
-,3,"In the new class dialog, warn the user against invalid file names?",Julian,INT0045
-,3,Make it possible to drop a feature into a feature clause in the feature tree to change the location of the feature,Julian,INT0046
-,1,Automatically open last open project,Xavier,INT0047
-,3,Do not collapse the cluster tree after recompilations,Xavier,INT0048
-,1,Gather more commands under EB_STANDARD_CMD to decrease the number of classes in the system,Xavier,INT0049
-,1,Sort _DATA files to decrease their number,Xavier,INT0050
-,2,"Display a real splash screen at start-up, both on Windows and Unix",Xavier,INT0051
-,1,Let the user create a class outside existing clusters?,Julian,INT0052
-,3,Use `append' on Vision2 lists and trees instead of `extend' to help GTK optimize things,Ian,INT0053
-,4,Enable user to define their own command. Where the command should contain the name of the command to launch and where with some place holders filled by EiffelStudio (such as $target and others…),Paul Crismer,INT0054
-,3,It would be nice to sort clusters alphabetically in the projects settings,Xavier,INT0055
-,2,Gray out minimize buttons on tools when only one tool is displayed,Julian,INT0056
+,3,Precompilations done should be Precompilations completed,Julian,INT0044,,,
+,3,"In the new class dialog, warn the user against invalid file names?",Julian,INT0045,,,
+,3,Make it possible to drop a feature into a feature clause in the feature tree to change the location of the feature,Julian,INT0046,,,
+,1,Automatically open last open project,Xavier,INT0047,,,
+,3,Do not collapse the cluster tree after recompilations,Xavier,INT0048,,,
+,1,Gather more commands under EB_STANDARD_CMD to decrease the number of classes in the system,Xavier,INT0049,,,
+,1,Sort _DATA files to decrease their number,Xavier,INT0050,,,
+,2,"Display a real splash screen at start-up, both on Windows and Unix",Xavier,INT0051,,,
+,1,Let the user create a class outside existing clusters?,Julian,INT0052,,,
+,3,Use `append' on Vision2 lists and trees instead of `extend' to help GTK optimize things,Ian,INT0053,,,
+,4,Enable user to define their own command. Where the command should contain the name of the command to launch and where with some place holders filled by EiffelStudio (such as $target and others…),Paul Crismer,INT0054,Xavier,2,Done
+,3,It would be nice to sort clusters alphabetically in the projects settings,Xavier,INT0055,,,
+,2,Gray out minimize buttons on tools when only one tool is displayed,Julian,INT0056,,,
 
 
 

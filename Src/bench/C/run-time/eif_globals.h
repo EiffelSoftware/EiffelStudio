@@ -229,6 +229,8 @@ typedef struct tag_eif_globals		/* Structure containing all global variables to 
 	int s_fides_cx;					/* File descriptor used for storing */
 #endif
 
+		/* string.c */
+	char eif_string_buffer_cx [MAX_NUM_LEN + 1]; /* Where string is built. */
 	/* Thread management variables */
 	int n_children_cx;					/* Number or child threads */
 	EIF_THR_TYPE *last_child_cx;		/* Task id of the last created thread */
@@ -373,6 +375,8 @@ typedef struct tag_eif_globals		/* Structure containing all global variables to 
 #define r_fides			(eif_globals->r_fides_cx)		/* rt_private */
 #define s_fides			(eif_globals->s_fides_cx)		/* rt_private */
 #endif
+	/* string.c */
+#define eif_string_buffer	(eif_globals->eif_string_buffer_cx)	/* N/A */
 
 	/* special */
 #define n_children		(eif_globals->n_children_cx)

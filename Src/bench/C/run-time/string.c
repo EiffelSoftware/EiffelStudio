@@ -23,8 +23,6 @@
 
 #include <stdio.h>					/* For sscanf() */
 
-#define MAX_NUM_LEN		256			/* Maximum length for an ASCII number */
-
 rt_private char *make_string(char *s, int length)
 {
 	/* Build a C string from the Eiffel string starting at 's', whose length
@@ -34,11 +32,18 @@ rt_private char *make_string(char *s, int length)
 	 * The function returns a pointer to a static buffer where string is held.
 	 */
 
-	static char buffer[MAX_NUM_LEN + 1];	/* Where string is built */
+	
 	register1 int i;			/* To loop over the string */
 	register2 int l;			/* Length of string */
 	register3 int c;			/* Character read from string */
 	
+#ifndef EIF_THREADS
+	static char buffer [MAX_NUM_LEN + 1];
+#else	/* !EIF_THREADS */
+	char *buffer;
+	EIF_GET_CONTEXT			
+	buffer = eif_string_buffer;		/* Per thread buffer. */
+#endif	/* !EIF_THREADS */
 	l = length > MAX_NUM_LEN ? MAX_NUM_LEN : length;
 
 	for (i = 0; l > 0; l--)
@@ -47,6 +52,7 @@ rt_private char *make_string(char *s, int length)
 
 	buffer[i] = '\0';			/* Ensure null terminated string */
 
+	EIF_END_GET_CONTEXT
 	return buffer;
 }
 

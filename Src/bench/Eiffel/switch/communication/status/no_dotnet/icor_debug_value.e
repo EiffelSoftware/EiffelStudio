@@ -7,6 +7,12 @@ indexing
 class
 	ICOR_DEBUG_VALUE
 
+feature
+
+	is_valid_object: BOOLEAN is
+		do
+		end
+
 --inherit
 --	ICOR_OBJECT
 --		redefine

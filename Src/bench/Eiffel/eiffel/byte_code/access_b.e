@@ -659,9 +659,7 @@ feature -- Byte code generation
 					if target_type.is_numeric and then source_type.is_numeric then
 						basic_target ?= target_type
 						basic_source ?= source_type
-						if basic_target.level /= basic_source.level then
-							basic_target.generate_byte_code_cast (ba)
-						end
+						basic_target.generate_byte_code_cast (ba)
 					end
 					ba.append (assign_code)
 					assignment := True

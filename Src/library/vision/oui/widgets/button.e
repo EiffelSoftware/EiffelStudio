@@ -75,7 +75,12 @@ feature -- Status setting
 		do
 			implementation.set_text (a_text)
 		ensure
-			text.is_equal (a_text)
+			text_set: equal (without_ampersands (text), without_ampersands (a_text)) 
+			-- The comparison has to be done without
+			-- ampersands, because X version will change
+			-- the position of ampersand to the first 
+			-- occurence of the letter. (For ex. "Save 
+			-- &as" becomes "S&ave as"
 		end 
 
 feature -- Element change
@@ -157,7 +162,16 @@ feature {G_ANY, G_ANY_I, WIDGET_I, TOOLKIT} -- Implementation
 
 	implementation: BUTTON_I;
 			-- Implementation of button
-
+	
+feature {NONE} -- Implementation
+	
+	without_ampersands (a_text: STRING): STRING is
+			-- Returns a string which is a_text without ampersands
+		do
+			Result := clone(a_text)
+			Result.prune_all('&')
+		end
+	
 end -- class BUTTON
 
 --|----------------------------------------------------------------

@@ -8,22 +8,18 @@ class
 inherit
 	IENUM_VARIANT_INTERFACE
 
-	ECOM_OLE_TRISTATE_ENUM
-
-	ECOM_LOAD_PICTURE_CONSTANTS_ENUM
-
 	ECOM_QUERIABLE
 
 creation
 	make_from_other,
 	make_from_pointer
 
-feature {None}  -- Initialization
+feature {NONE}  -- Initialization
 
 	make_from_pointer (cpp_obj: POINTER) is
 			-- Make from pointer
 		do
-			initializer := ccom_create_ienum_variant_impl_proxy_from_pointer(cpp_obj)
+			initializer := ccom_create_ienum_variant1_impl_proxy_from_pointer(cpp_obj)
 			item := ccom_item (initializer)
 		end
 
@@ -31,12 +27,16 @@ feature -- Basic Operations
 
 	next (celt: INTEGER; rgvar: ECOM_VARIANT; pcelt_fetched: INTEGER_REF) is
 			-- No description available.
+			-- `celt' [in].  
+			-- `rgvar' [in].  
+			-- `pcelt_fetched' [out].  
 		do
 			ccom_next (initializer, celt, rgvar.item, pcelt_fetched)
 		end
 
 	skip (celt: INTEGER) is
 			-- No description available.
+			-- `celt' [in].  
 		do
 			ccom_skip (initializer, celt)
 		end
@@ -47,65 +47,63 @@ feature -- Basic Operations
 			ccom_reset (initializer)
 		end
 
-	clone1: IENUM_VARIANT_IMPL_PROXY is
+	clone1 (ppenum: CELL [IENUM_VARIANT_INTERFACE]) is
 			-- No description available.
-		local
-			ptr: POINTER
+			-- `ppenum' [out].  
 		do
-			ptr := ccom_clone1 (initializer)
-			create Result.make_from_pointer (ptr)
+			ccom_clone1 (initializer, ppenum)
 		end
 
-feature {None}  -- Implementation
+feature {NONE}  -- Implementation
 
 	delete_wrapper is
 			-- Delete wrapper
 		do
-			ccom_delete_ienum_variant_impl_proxy(initializer)
+			ccom_delete_ienum_variant1_impl_proxy(initializer)
 		end
 
-feature {None}  -- Externals
+feature {NONE}  -- Externals
 
 	ccom_next (cpp_obj: POINTER; celt: INTEGER; rgvar: POINTER; pcelt_fetched: INTEGER_REF) is
 			-- No description available.
 		external
-			"C++ [IEnumVARIANT_impl %"ecom_IEnumVARIANT_impl.h%"](EIF_INTEGER,VARIANT *,EIF_OBJECT)"
+			"C++ [IEnumVARIANT1_impl_proxy %"ecom_IEnumVARIANT1_impl_proxy.h%"](EIF_INTEGER,VARIANT *,EIF_OBJECT)"
 		end
 
 	ccom_skip (cpp_obj: POINTER; celt: INTEGER) is
 			-- No description available.
 		external
-			"C++ [IEnumVARIANT_impl %"ecom_IEnumVARIANT_impl.h%"](EIF_INTEGER)"
+			"C++ [IEnumVARIANT1_impl_proxy %"ecom_IEnumVARIANT1_impl_proxy.h%"](EIF_INTEGER)"
 		end
 
 	ccom_reset (cpp_obj: POINTER) is
 			-- No description available.
 		external
-			"C++ [IEnumVARIANT_impl %"ecom_IEnumVARIANT_impl.h%"]()"
+			"C++ [IEnumVARIANT1_impl_proxy %"ecom_IEnumVARIANT1_impl_proxy.h%"]()"
 		end
 
-	ccom_clone1 (cpp_obj: POINTER): POINTER is
+	ccom_clone1 (cpp_obj: POINTER; ppenum: CELL [IENUM_VARIANT_INTERFACE]) is
 			-- No description available.
 		external
-			"C++ [IEnumVARIANT_impl %"ecom_IEnumVARIANT_impl.h%"]():EIF_POINTER"
+			"C++ [IEnumVARIANT1_impl_proxy %"ecom_IEnumVARIANT1_impl_proxy.h%"](EIF_OBJECT)"
 		end
 
-	ccom_delete_ienum_variant_impl_proxy (a_pointer: POINTER) is
+	ccom_delete_ienum_variant1_impl_proxy (a_pointer: POINTER) is
 			-- Release resource
 		external
-			"C++ [delete IEnumVARIANT_impl %"ecom_IEnumVARIANT_impl.h%"]()"
+			"C++ [delete IEnumVARIANT1_impl_proxy %"ecom_IEnumVARIANT1_impl_proxy.h%"]()"
 		end
 
-	ccom_create_ienum_variant_impl_proxy_from_pointer (a_pointer: POINTER): POINTER is
+	ccom_create_ienum_variant1_impl_proxy_from_pointer (a_pointer: POINTER): POINTER is
 			-- Create from pointer
 		external
-			"C++ [new IEnumVARIANT_impl %"ecom_IEnumVARIANT_impl.h%"](IUnknown *)"
+			"C++ [new IEnumVARIANT1_impl_proxy %"ecom_IEnumVARIANT1_impl_proxy.h%"](IUnknown *)"
 		end
 
 	ccom_item (cpp_obj: POINTER): POINTER is
 			-- Item
 		external
-			"C++ [IEnumVARIANT_impl %"ecom_IEnumVARIANT_impl.h%"]():EIF_POINTER"
+			"C++ [IEnumVARIANT1_impl_proxy %"ecom_IEnumVARIANT1_impl_proxy.h%"]():EIF_POINTER"
 		end
 
 end -- IENUM_VARIANT_IMPL_PROXY

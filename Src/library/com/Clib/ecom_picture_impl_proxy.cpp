@@ -1,51 +1,50 @@
 /*-----------------------------------------------------------
-Implemented `Picture' Interface.
+Implemented `Picture23' Interface.
 -----------------------------------------------------------*/
 
-#include "ecom_Picture_impl.h"
-
-static const IID IID_Picture = {0x7bf80981,0xbf32,0x101a,{0x8b,0xbb,0x00,0xaa,0x00,0x30,0x0c,0xab}};
+#include "ecom_Picture23_impl_proxy.h"
+static const IID IID_Picture23_ = {0x7bf80981,0xbf32,0x101a,{0x8b,0xbb,0x00,0xaa,0x00,0x30,0x0c,0xab}};
 
 #ifdef __cplusplus
 extern "C" {
 #endif
 
-Picture_impl::Picture_impl( IUnknown * a_pointer )
+Picture23_impl_proxy::Picture23_impl_proxy( IUnknown * a_pointer )
 {
 	HRESULT hr, hr2;
 
 	hr = a_pointer->QueryInterface(IID_IUnknown, (void **)&p_unknown);
 	if (FAILED (hr))
 	{
-		if ((HRESULT_FACILITY (hr)  ==  FACILITY_ITF) && (HRESULT_CODE (hr) > 1024))
+		if ((HRESULT_FACILITY (hr)  ==  FACILITY_ITF) && (HRESULT_CODE (hr) > 1024) && (HRESULT_CODE (hr) < 1053))
 			com_eraise (rt_ec.ccom_ec_lpstr (eename(HRESULT_CODE (hr) - 1024), NULL),HRESULT_CODE (hr) - 1024);
-		com_eraise (f.c_format_message (hr), HRESULT_CODE (hr));
+		com_eraise (f.c_format_message (hr), EN_PROG);
 	};
 
-	hr = a_pointer->QueryInterface(IID_Picture, (void **)&p_Picture);
+	hr = a_pointer->QueryInterface(IID_Picture23_, (void **)&p_Picture23);
 	if (FAILED (hr))
 	{
-		if ((HRESULT_FACILITY (hr)  ==  FACILITY_ITF) && (HRESULT_CODE (hr) > 1024))
+		if ((HRESULT_FACILITY (hr)  ==  FACILITY_ITF) && (HRESULT_CODE (hr) > 1024) && (HRESULT_CODE (hr) < 1053))
 			com_eraise (rt_ec.ccom_ec_lpstr (eename(HRESULT_CODE (hr) - 1024), NULL),HRESULT_CODE (hr) - 1024);
-		com_eraise (f.c_format_message (hr), HRESULT_CODE (hr));
+		com_eraise (f.c_format_message (hr), EN_PROG);
 	};
 
 	excepinfo = (EXCEPINFO*)CoTaskMemAlloc (sizeof (EXCEPINFO));
 };
 /*----------------------------------------------------------------------------------------------------------------------*/
 
-Picture_impl::~Picture_impl()
+Picture23_impl_proxy::~Picture23_impl_proxy()
 {
 	p_unknown->Release ();
 	
 	CoTaskMemFree ((void *)excepinfo);
-	if (p_Picture!=NULL)
-		p_Picture->Release ();
+	if (p_Picture23!=NULL)
+		p_Picture23->Release ();
 	
 };
 /*----------------------------------------------------------------------------------------------------------------------*/
 
-EIF_INTEGER Picture_impl::ccom_last_error_code()
+EIF_INTEGER Picture23_impl_proxy::ccom_last_error_code()
 
 /*-----------------------------------------------------------
 	Last error code
@@ -55,7 +54,7 @@ EIF_INTEGER Picture_impl::ccom_last_error_code()
 };
 /*----------------------------------------------------------------------------------------------------------------------*/
 
-EIF_REFERENCE Picture_impl::ccom_last_source_of_exception()
+EIF_REFERENCE Picture23_impl_proxy::ccom_last_source_of_exception()
 
 /*-----------------------------------------------------------
 	Last source of exception
@@ -65,7 +64,7 @@ EIF_REFERENCE Picture_impl::ccom_last_source_of_exception()
 };
 /*----------------------------------------------------------------------------------------------------------------------*/
 
-EIF_REFERENCE Picture_impl::ccom_last_error_description()
+EIF_REFERENCE Picture23_impl_proxy::ccom_last_error_description()
 
 /*-----------------------------------------------------------
 	Last error description
@@ -75,7 +74,7 @@ EIF_REFERENCE Picture_impl::ccom_last_error_description()
 };
 /*----------------------------------------------------------------------------------------------------------------------*/
 
-EIF_REFERENCE Picture_impl::ccom_last_error_help_file()
+EIF_REFERENCE Picture23_impl_proxy::ccom_last_error_help_file()
 
 /*-----------------------------------------------------------
 	Last error help file
@@ -85,20 +84,22 @@ EIF_REFERENCE Picture_impl::ccom_last_error_help_file()
 };
 /*----------------------------------------------------------------------------------------------------------------------*/
 
-EIF_INTEGER Picture_impl::ccom_handle()
+EIF_INTEGER Picture23_impl_proxy::ccom_handle()
 
 /*-----------------------------------------------------------
 	No description available.
 -----------------------------------------------------------*/
 {
 	HRESULT hr;
-	if (p_Picture == NULL)
+	if (p_Picture23 == NULL)
 	{
-		hr = p_unknown->QueryInterface (IID_Picture, (void **)&p_Picture);
-		if (FAILED (hr))
-		{
-			com_eraise (f.c_format_message (hr), HRESULT_CODE (hr));
-		};
+		hr = p_unknown->QueryInterface (IID_Picture23_, (void **)&p_Picture23);
+	if (FAILED (hr))
+	{
+		if ((HRESULT_FACILITY (hr)  ==  FACILITY_ITF) && (HRESULT_CODE (hr) > 1024) && (HRESULT_CODE (hr) < 1053))
+			com_eraise (rt_ec.ccom_ec_lpstr (eename(HRESULT_CODE (hr) - 1024), NULL),HRESULT_CODE (hr) - 1024);
+		com_eraise (f.c_format_message (hr), EN_PROG);
+	};
 	};
 	DISPID disp = (DISPID) 0;
 	LCID lcid = (LCID) 0;
@@ -118,7 +119,7 @@ EIF_INTEGER Picture_impl::ccom_handle()
 	
 	unsigned int nArgErr;
 
-	hr = p_Picture->Invoke (disp, IID_NULL, lcid, DISPATCH_PROPERTYGET, &args, &pResult, excepinfo, &nArgErr);
+	hr = p_Picture23->Invoke (disp, IID_NULL, lcid, DISPATCH_PROPERTYGET, &args, &pResult, excepinfo, &nArgErr);
 	
 	if (hr == DISP_E_TYPEMISMATCH || hr == DISP_E_PARAMNOTFOUND)
 	{
@@ -139,24 +140,27 @@ EIF_INTEGER Picture_impl::ccom_handle()
 			com_eraise (f.c_format_message (hr), HRESULT_CODE (hr));
 		};
 
-	return (EIF_INTEGER)pResult.intVal;
+	EIF_INTEGER result = (EIF_INTEGER)pResult.intVal;
+	return result;
 };
 /*----------------------------------------------------------------------------------------------------------------------*/
 
-EIF_INTEGER Picture_impl::ccom_h_pal()
+EIF_INTEGER Picture23_impl_proxy::ccom_h_pal()
 
 /*-----------------------------------------------------------
 	No description available.
 -----------------------------------------------------------*/
 {
 	HRESULT hr;
-	if (p_Picture == NULL)
+	if (p_Picture23 == NULL)
 	{
-		hr = p_unknown->QueryInterface (IID_Picture, (void **)&p_Picture);
-		if (FAILED (hr))
-		{
-			com_eraise (f.c_format_message (hr), HRESULT_CODE (hr));
-		};
+		hr = p_unknown->QueryInterface (IID_Picture23_, (void **)&p_Picture23);
+	if (FAILED (hr))
+	{
+		if ((HRESULT_FACILITY (hr)  ==  FACILITY_ITF) && (HRESULT_CODE (hr) > 1024) && (HRESULT_CODE (hr) < 1053))
+			com_eraise (rt_ec.ccom_ec_lpstr (eename(HRESULT_CODE (hr) - 1024), NULL),HRESULT_CODE (hr) - 1024);
+		com_eraise (f.c_format_message (hr), EN_PROG);
+	};
 	};
 	DISPID disp = (DISPID) 2;
 	LCID lcid = (LCID) 0;
@@ -176,7 +180,7 @@ EIF_INTEGER Picture_impl::ccom_h_pal()
 	
 	unsigned int nArgErr;
 
-	hr = p_Picture->Invoke (disp, IID_NULL, lcid, DISPATCH_PROPERTYGET, &args, &pResult, excepinfo, &nArgErr);
+	hr = p_Picture23->Invoke (disp, IID_NULL, lcid, DISPATCH_PROPERTYGET, &args, &pResult, excepinfo, &nArgErr);
 	
 	if (hr == DISP_E_TYPEMISMATCH || hr == DISP_E_PARAMNOTFOUND)
 	{
@@ -197,24 +201,27 @@ EIF_INTEGER Picture_impl::ccom_h_pal()
 			com_eraise (f.c_format_message (hr), HRESULT_CODE (hr));
 		};
 
-	return (EIF_INTEGER)pResult.intVal;
+	EIF_INTEGER result = (EIF_INTEGER)pResult.intVal;
+	return result;
 };
 /*----------------------------------------------------------------------------------------------------------------------*/
 
-void Picture_impl::ccom_set_h_pal( EIF_INTEGER a_value )
+void Picture23_impl_proxy::ccom_set_h_pal( EIF_INTEGER a_value )
 
 /*-----------------------------------------------------------
 	Set No description available.
 -----------------------------------------------------------*/
 {
 	HRESULT hr;
-	if (p_Picture == NULL)
+	if (p_Picture23 == NULL)
 	{
-		hr = p_unknown->QueryInterface (IID_Picture, (void **)&p_Picture);
-		if (FAILED (hr))
-		{
-			com_eraise (f.c_format_message (hr), HRESULT_CODE (hr));
-		};
+		hr = p_unknown->QueryInterface (IID_Picture23_, (void **)&p_Picture23);
+	if (FAILED (hr))
+	{
+		if ((HRESULT_FACILITY (hr)  ==  FACILITY_ITF) && (HRESULT_CODE (hr) > 1024) && (HRESULT_CODE (hr) < 1053))
+			com_eraise (rt_ec.ccom_ec_lpstr (eename(HRESULT_CODE (hr) - 1024), NULL),HRESULT_CODE (hr) - 1024);
+		com_eraise (f.c_format_message (hr), EN_PROG);
+	};
 	};
 	DISPID disp = (DISPID) 2;
 	LCID lcid = (LCID) 0;
@@ -243,7 +250,7 @@ void Picture_impl::ccom_set_h_pal( EIF_INTEGER a_value )
 	
 	unsigned int nArgErr;
 
-	hr = p_Picture->Invoke (disp, IID_NULL, lcid, DISPATCH_PROPERTYPUT, &args, &pResult, excepinfo, &nArgErr);
+	hr = p_Picture23->Invoke (disp, IID_NULL, lcid, DISPATCH_PROPERTYPUT, &args, &pResult, excepinfo, &nArgErr);
 	
 	if (hr == DISP_E_TYPEMISMATCH || hr == DISP_E_PARAMNOTFOUND)
 	{
@@ -266,20 +273,22 @@ void Picture_impl::ccom_set_h_pal( EIF_INTEGER a_value )
 };
 /*----------------------------------------------------------------------------------------------------------------------*/
 
-EIF_INTEGER Picture_impl::ccom_type()
+EIF_INTEGER Picture23_impl_proxy::ccom_type()
 
 /*-----------------------------------------------------------
 	No description available.
 -----------------------------------------------------------*/
 {
 	HRESULT hr;
-	if (p_Picture == NULL)
+	if (p_Picture23 == NULL)
 	{
-		hr = p_unknown->QueryInterface (IID_Picture, (void **)&p_Picture);
-		if (FAILED (hr))
-		{
-			com_eraise (f.c_format_message (hr), HRESULT_CODE (hr));
-		};
+		hr = p_unknown->QueryInterface (IID_Picture23_, (void **)&p_Picture23);
+	if (FAILED (hr))
+	{
+		if ((HRESULT_FACILITY (hr)  ==  FACILITY_ITF) && (HRESULT_CODE (hr) > 1024) && (HRESULT_CODE (hr) < 1053))
+			com_eraise (rt_ec.ccom_ec_lpstr (eename(HRESULT_CODE (hr) - 1024), NULL),HRESULT_CODE (hr) - 1024);
+		com_eraise (f.c_format_message (hr), EN_PROG);
+	};
 	};
 	DISPID disp = (DISPID) 3;
 	LCID lcid = (LCID) 0;
@@ -299,7 +308,7 @@ EIF_INTEGER Picture_impl::ccom_type()
 	
 	unsigned int nArgErr;
 
-	hr = p_Picture->Invoke (disp, IID_NULL, lcid, DISPATCH_PROPERTYGET, &args, &pResult, excepinfo, &nArgErr);
+	hr = p_Picture23->Invoke (disp, IID_NULL, lcid, DISPATCH_PROPERTYGET, &args, &pResult, excepinfo, &nArgErr);
 	
 	if (hr == DISP_E_TYPEMISMATCH || hr == DISP_E_PARAMNOTFOUND)
 	{
@@ -320,24 +329,27 @@ EIF_INTEGER Picture_impl::ccom_type()
 			com_eraise (f.c_format_message (hr), HRESULT_CODE (hr));
 		};
 
-	return (EIF_INTEGER)pResult.iVal;
+	EIF_INTEGER result = (EIF_INTEGER)pResult.iVal;
+	return result;
 };
 /*----------------------------------------------------------------------------------------------------------------------*/
 
-EIF_INTEGER Picture_impl::ccom_width()
+EIF_INTEGER Picture23_impl_proxy::ccom_width()
 
 /*-----------------------------------------------------------
 	No description available.
 -----------------------------------------------------------*/
 {
 	HRESULT hr;
-	if (p_Picture == NULL)
+	if (p_Picture23 == NULL)
 	{
-		hr = p_unknown->QueryInterface (IID_Picture, (void **)&p_Picture);
-		if (FAILED (hr))
-		{
-			com_eraise (f.c_format_message (hr), HRESULT_CODE (hr));
-		};
+		hr = p_unknown->QueryInterface (IID_Picture23_, (void **)&p_Picture23);
+	if (FAILED (hr))
+	{
+		if ((HRESULT_FACILITY (hr)  ==  FACILITY_ITF) && (HRESULT_CODE (hr) > 1024) && (HRESULT_CODE (hr) < 1053))
+			com_eraise (rt_ec.ccom_ec_lpstr (eename(HRESULT_CODE (hr) - 1024), NULL),HRESULT_CODE (hr) - 1024);
+		com_eraise (f.c_format_message (hr), EN_PROG);
+	};
 	};
 	DISPID disp = (DISPID) 4;
 	LCID lcid = (LCID) 0;
@@ -357,7 +369,7 @@ EIF_INTEGER Picture_impl::ccom_width()
 	
 	unsigned int nArgErr;
 
-	hr = p_Picture->Invoke (disp, IID_NULL, lcid, DISPATCH_PROPERTYGET, &args, &pResult, excepinfo, &nArgErr);
+	hr = p_Picture23->Invoke (disp, IID_NULL, lcid, DISPATCH_PROPERTYGET, &args, &pResult, excepinfo, &nArgErr);
 	
 	if (hr == DISP_E_TYPEMISMATCH || hr == DISP_E_PARAMNOTFOUND)
 	{
@@ -378,24 +390,27 @@ EIF_INTEGER Picture_impl::ccom_width()
 			com_eraise (f.c_format_message (hr), HRESULT_CODE (hr));
 		};
 
-	return (EIF_INTEGER)pResult.lVal;
+	EIF_INTEGER result = (EIF_INTEGER)pResult.lVal;
+	return result;
 };
 /*----------------------------------------------------------------------------------------------------------------------*/
 
-EIF_INTEGER Picture_impl::ccom_height()
+EIF_INTEGER Picture23_impl_proxy::ccom_height()
 
 /*-----------------------------------------------------------
 	No description available.
 -----------------------------------------------------------*/
 {
 	HRESULT hr;
-	if (p_Picture == NULL)
+	if (p_Picture23 == NULL)
 	{
-		hr = p_unknown->QueryInterface (IID_Picture, (void **)&p_Picture);
-		if (FAILED (hr))
-		{
-			com_eraise (f.c_format_message (hr), HRESULT_CODE (hr));
-		};
+		hr = p_unknown->QueryInterface (IID_Picture23_, (void **)&p_Picture23);
+	if (FAILED (hr))
+	{
+		if ((HRESULT_FACILITY (hr)  ==  FACILITY_ITF) && (HRESULT_CODE (hr) > 1024) && (HRESULT_CODE (hr) < 1053))
+			com_eraise (rt_ec.ccom_ec_lpstr (eename(HRESULT_CODE (hr) - 1024), NULL),HRESULT_CODE (hr) - 1024);
+		com_eraise (f.c_format_message (hr), EN_PROG);
+	};
 	};
 	DISPID disp = (DISPID) 5;
 	LCID lcid = (LCID) 0;
@@ -415,7 +430,7 @@ EIF_INTEGER Picture_impl::ccom_height()
 	
 	unsigned int nArgErr;
 
-	hr = p_Picture->Invoke (disp, IID_NULL, lcid, DISPATCH_PROPERTYGET, &args, &pResult, excepinfo, &nArgErr);
+	hr = p_Picture23->Invoke (disp, IID_NULL, lcid, DISPATCH_PROPERTYGET, &args, &pResult, excepinfo, &nArgErr);
 	
 	if (hr == DISP_E_TYPEMISMATCH || hr == DISP_E_PARAMNOTFOUND)
 	{
@@ -436,24 +451,27 @@ EIF_INTEGER Picture_impl::ccom_height()
 			com_eraise (f.c_format_message (hr), HRESULT_CODE (hr));
 		};
 
-	return (EIF_INTEGER)pResult.lVal;
+	EIF_INTEGER result = (EIF_INTEGER)pResult.lVal;
+	return result;
 };
 /*----------------------------------------------------------------------------------------------------------------------*/
 
-void Picture_impl::ccom_render(  /* [in] */ EIF_INTEGER hdc,  /* [in] */ EIF_INTEGER x,  /* [in] */ EIF_INTEGER y,  /* [in] */ EIF_INTEGER cx,  /* [in] */ EIF_INTEGER cy,  /* [in] */ EIF_INTEGER x_src,  /* [in] */ EIF_INTEGER y_src,  /* [in] */ EIF_INTEGER cx_src,  /* [in] */ EIF_INTEGER cy_src,  /* [in] */ EIF_POINTER prc_wbounds )
+void Picture23_impl_proxy::ccom_render(  /* [in] */ EIF_INTEGER hdc,  /* [in] */ EIF_INTEGER x,  /* [in] */ EIF_INTEGER y,  /* [in] */ EIF_INTEGER cx,  /* [in] */ EIF_INTEGER cy,  /* [in] */ EIF_INTEGER x_src,  /* [in] */ EIF_INTEGER y_src,  /* [in] */ EIF_INTEGER cx_src,  /* [in] */ EIF_INTEGER cy_src,  /* [in] */ EIF_POINTER prc_wbounds )
 
 /*-----------------------------------------------------------
 	No description available.
 -----------------------------------------------------------*/
 {
 	HRESULT hr;
-	if (p_Picture == NULL)
+	if (p_Picture23 == NULL)
 	{
-		hr = p_unknown->QueryInterface (IID_Picture, (void **)&p_Picture);
-		if (FAILED (hr))
-		{
-			com_eraise (f.c_format_message (hr), HRESULT_CODE (hr));
-		};
+		hr = p_unknown->QueryInterface (IID_Picture23_, (void **)&p_Picture23);
+	if (FAILED (hr))
+	{
+		if ((HRESULT_FACILITY (hr)  ==  FACILITY_ITF) && (HRESULT_CODE (hr) > 1024) && (HRESULT_CODE (hr) < 1053))
+			com_eraise (rt_ec.ccom_ec_lpstr (eename(HRESULT_CODE (hr) - 1024), NULL),HRESULT_CODE (hr) - 1024);
+		com_eraise (f.c_format_message (hr), EN_PROG);
+	};
 	};
 	DISPID disp = (DISPID) 6;
 	LCID lcid = (LCID) 0;
@@ -503,12 +521,11 @@ void Picture_impl::ccom_render(  /* [in] */ EIF_INTEGER hdc,  /* [in] */ EIF_INT
 	arguments[1].vt = 3;
 	arguments[1].lVal = (OLE_YSIZE_HIMETRIC)cy_src;
 	
-	arguments[0].vt = 16408;
 	arguments[0].byref = (void *)prc_wbounds;
 	
 	args.rgvarg = arguments;
 
-	hr = p_Picture->Invoke (disp, IID_NULL, lcid, DISPATCH_METHOD, &args, &pResult, excepinfo, &nArgErr);
+	hr = p_Picture23->Invoke (disp, IID_NULL, lcid, DISPATCH_METHOD, &args, &pResult, excepinfo, &nArgErr);
 	
 	if (hr == DISP_E_TYPEMISMATCH || hr == DISP_E_PARAMNOTFOUND)
 	{
@@ -529,12 +546,14 @@ void Picture_impl::ccom_render(  /* [in] */ EIF_INTEGER hdc,  /* [in] */ EIF_INT
 			CoTaskMemFree ((void *)arguments);
 			com_eraise (f.c_format_message (hr), HRESULT_CODE (hr));
 		};
+	
+	 ((void *)arguments[0].byref, prc_wbounds);
 	CoTaskMemFree ((void *)arguments);
 	 
 };
 /*----------------------------------------------------------------------------------------------------------------------*/
 
-EIF_POINTER Picture_impl::ccom_item()
+EIF_POINTER Picture23_impl_proxy::ccom_item()
 
 /*-----------------------------------------------------------
 	IUnknown interface

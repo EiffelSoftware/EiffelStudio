@@ -8,22 +8,18 @@ class
 inherit
 	FONT_AUTO_INTERFACE
 
-	ECOM_OLE_TRISTATE_ENUM
-
-	ECOM_LOAD_PICTURE_CONSTANTS_ENUM
-
 	ECOM_QUERIABLE
 
 creation
 	make_from_other,
 	make_from_pointer
 
-feature {None}  -- Initialization
+feature {NONE}  -- Initialization
 
 	make_from_pointer (cpp_obj: POINTER) is
 			-- Make from pointer
 		do
-			initializer := ccom_create_font_impl_proxy_from_pointer(cpp_obj)
+			initializer := ccom_create_font21_impl_proxy_from_pointer(cpp_obj)
 			item := ccom_item (initializer)
 		end
 
@@ -153,152 +149,152 @@ feature -- Element Change
 			ccom_set_charset (initializer, a_value)
 		end
 
-feature {None}  -- Implementation
+feature {NONE}  -- Implementation
 
 	delete_wrapper is
 			-- Delete wrapper
 		do
-			ccom_delete_font_impl_proxy(initializer)
+			ccom_delete_font21_impl_proxy(initializer)
 		end
 
-feature {None}  -- Externals
+feature {NONE}  -- Externals
 
 	ccom_name (cpp_obj: POINTER): STRING is
 			-- No description available.
 		external
-			"C++ [Font_impl %"ecom_Font_impl.h%"]():EIF_REFERENCE"
+			"C++ [Font21_impl_proxy %"ecom_Font21_impl_proxy.h%"]():EIF_REFERENCE"
 		end
 
 	ccom_set_name (cpp_obj: POINTER; a_value: STRING) is
 			-- Set `name' with `a_value'.
 		external
-			"C++ [Font_impl %"ecom_Font_impl.h%"](EIF_OBJECT)"
+			"C++ [Font21_impl_proxy %"ecom_Font21_impl_proxy.h%"](EIF_OBJECT)"
 		end
 
 	ccom_size (cpp_obj: POINTER): ECOM_CURRENCY is
 			-- No description available.
 		external
-			"C++ [Font_impl %"ecom_Font_impl.h%"]():EIF_REFERENCE"
+			"C++ [Font21_impl_proxy %"ecom_Font21_impl_proxy.h%"]():EIF_REFERENCE"
 		end
 
 	ccom_set_size (cpp_obj: POINTER; a_value: POINTER) is
 			-- Set `size' with `a_value'.
 		external
-			"C++ [Font_impl %"ecom_Font_impl.h%"](CURRENCY *)"
+			"C++ [Font21_impl_proxy %"ecom_Font21_impl_proxy.h%"](CURRENCY *)"
 		end
 
 	ccom_bold (cpp_obj: POINTER): BOOLEAN is
 			-- No description available.
 		external
-			"C++ [Font_impl %"ecom_Font_impl.h%"]():EIF_BOOLEAN"
+			"C++ [Font21_impl_proxy %"ecom_Font21_impl_proxy.h%"]():EIF_BOOLEAN"
 		end
 
 	ccom_set_bold (cpp_obj: POINTER; a_value: BOOLEAN) is
 			-- Set `bold' with `a_value'.
 		external
-			"C++ [Font_impl %"ecom_Font_impl.h%"](EIF_BOOLEAN)"
+			"C++ [Font21_impl_proxy %"ecom_Font21_impl_proxy.h%"](EIF_BOOLEAN)"
 		end
 
 	ccom_italic (cpp_obj: POINTER): BOOLEAN is
 			-- No description available.
 		external
-			"C++ [Font_impl %"ecom_Font_impl.h%"]():EIF_BOOLEAN"
+			"C++ [Font21_impl_proxy %"ecom_Font21_impl_proxy.h%"]():EIF_BOOLEAN"
 		end
 
 	ccom_set_italic (cpp_obj: POINTER; a_value: BOOLEAN) is
 			-- Set `italic' with `a_value'.
 		external
-			"C++ [Font_impl %"ecom_Font_impl.h%"](EIF_BOOLEAN)"
+			"C++ [Font21_impl_proxy %"ecom_Font21_impl_proxy.h%"](EIF_BOOLEAN)"
 		end
 
 	ccom_underline (cpp_obj: POINTER): BOOLEAN is
 			-- No description available.
 		external
-			"C++ [Font_impl %"ecom_Font_impl.h%"]():EIF_BOOLEAN"
+			"C++ [Font21_impl_proxy %"ecom_Font21_impl_proxy.h%"]():EIF_BOOLEAN"
 		end
 
 	ccom_set_underline (cpp_obj: POINTER; a_value: BOOLEAN) is
 			-- Set `underline' with `a_value'.
 		external
-			"C++ [Font_impl %"ecom_Font_impl.h%"](EIF_BOOLEAN)"
+			"C++ [Font21_impl_proxy %"ecom_Font21_impl_proxy.h%"](EIF_BOOLEAN)"
 		end
 
 	ccom_strikethrough (cpp_obj: POINTER): BOOLEAN is
 			-- No description available.
 		external
-			"C++ [Font_impl %"ecom_Font_impl.h%"]():EIF_BOOLEAN"
+			"C++ [Font21_impl_proxy %"ecom_Font21_impl_proxy.h%"]():EIF_BOOLEAN"
 		end
 
 	ccom_set_strikethrough (cpp_obj: POINTER; a_value: BOOLEAN) is
 			-- Set `strikethrough' with `a_value'.
 		external
-			"C++ [Font_impl %"ecom_Font_impl.h%"](EIF_BOOLEAN)"
+			"C++ [Font21_impl_proxy %"ecom_Font21_impl_proxy.h%"](EIF_BOOLEAN)"
 		end
 
 	ccom_weight (cpp_obj: POINTER): INTEGER is
 			-- No description available.
 		external
-			"C++ [Font_impl %"ecom_Font_impl.h%"]():EIF_INTEGER"
+			"C++ [Font21_impl_proxy %"ecom_Font21_impl_proxy.h%"]():EIF_INTEGER"
 		end
 
 	ccom_set_weight (cpp_obj: POINTER; a_value: INTEGER) is
 			-- Set `weight' with `a_value'.
 		external
-			"C++ [Font_impl %"ecom_Font_impl.h%"](EIF_INTEGER)"
+			"C++ [Font21_impl_proxy %"ecom_Font21_impl_proxy.h%"](EIF_INTEGER)"
 		end
 
 	ccom_charset (cpp_obj: POINTER): INTEGER is
 			-- No description available.
 		external
-			"C++ [Font_impl %"ecom_Font_impl.h%"]():EIF_INTEGER"
+			"C++ [Font21_impl_proxy %"ecom_Font21_impl_proxy.h%"]():EIF_INTEGER"
 		end
 
 	ccom_set_charset (cpp_obj: POINTER; a_value: INTEGER) is
 			-- Set `charset' with `a_value'.
 		external
-			"C++ [Font_impl %"ecom_Font_impl.h%"](EIF_INTEGER)"
+			"C++ [Font21_impl_proxy %"ecom_Font21_impl_proxy.h%"](EIF_INTEGER)"
 		end
 
-	ccom_delete_font_impl_proxy (a_pointer: POINTER) is
+	ccom_delete_font21_impl_proxy (a_pointer: POINTER) is
 			-- Release resource
 		external
-			"C++ [delete Font_impl %"ecom_Font_impl.h%"]()"
+			"C++ [delete Font21_impl_proxy %"ecom_Font21_impl_proxy.h%"]()"
 		end
 
-	ccom_create_font_impl_proxy_from_pointer (a_pointer: POINTER): POINTER is
+	ccom_create_font21_impl_proxy_from_pointer (a_pointer: POINTER): POINTER is
 			-- Create from pointer
 		external
-			"C++ [new Font_impl %"ecom_Font_impl.h%"](IUnknown *)"
+			"C++ [new Font21_impl_proxy %"ecom_Font21_impl_proxy.h%"](IUnknown *)"
 		end
 
 	ccom_item (cpp_obj: POINTER): POINTER is
 			-- Item
 		external
-			"C++ [Font_impl %"ecom_Font_impl.h%"]():EIF_POINTER"
+			"C++ [Font21_impl_proxy %"ecom_Font21_impl_proxy.h%"]():EIF_POINTER"
 		end
 
 	ccom_last_error_code (cpp_obj: POINTER): INTEGER is
 			-- Last error code
 		external
-			"C++ [Font_impl %"ecom_Font_impl.h%"]():EIF_INTEGER"
+			"C++ [Font21_impl_proxy %"ecom_Font21_impl_proxy.h%"]():EIF_INTEGER"
 		end
 
 	ccom_last_error_description (cpp_obj: POINTER): STRING is
 			-- Last error description
 		external
-			"C++ [Font_impl %"ecom_Font_impl.h%"]():EIF_REFERENCE"
+			"C++ [Font21_impl_proxy %"ecom_Font21_impl_proxy.h%"]():EIF_REFERENCE"
 		end
 
 	ccom_last_error_help_file (cpp_obj: POINTER): STRING is
 			-- Last error help file
 		external
-			"C++ [Font_impl %"ecom_Font_impl.h%"]():EIF_REFERENCE"
+			"C++ [Font21_impl_proxy %"ecom_Font21_impl_proxy.h%"]():EIF_REFERENCE"
 		end
 
 	ccom_last_source_of_exception (cpp_obj: POINTER): STRING is
 			-- Last source of exception
 		external
-			"C++ [Font_impl %"ecom_Font_impl.h%"]():EIF_REFERENCE"
+			"C++ [Font21_impl_proxy %"ecom_Font21_impl_proxy.h%"]():EIF_REFERENCE"
 		end
 
 end -- FONT_IMPL_PROXY

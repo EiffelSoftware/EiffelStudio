@@ -8,22 +8,18 @@ class
 inherit
 	PICTURE_AUTO_INTERFACE
 
-	ECOM_OLE_TRISTATE_ENUM
-
-	ECOM_LOAD_PICTURE_CONSTANTS_ENUM
-
 	ECOM_QUERIABLE
 
 creation
 	make_from_other,
 	make_from_pointer
 
-feature {None}  -- Initialization
+feature {NONE}  -- Initialization
 
 	make_from_pointer (cpp_obj: POINTER) is
 			-- Make from pointer
 		do
-			initializer := ccom_create_picture_impl_proxy_from_pointer(cpp_obj)
+			initializer := ccom_create_picture23_impl_proxy_from_pointer(cpp_obj)
 			item := ccom_item (initializer)
 		end
 
@@ -97,102 +93,112 @@ feature -- Basic Operations
 
 	render (hdc: INTEGER; x: INTEGER; y: INTEGER; cx: INTEGER; cy: INTEGER; x_src: INTEGER; y_src: INTEGER; cx_src: INTEGER; cy_src: INTEGER; prc_wbounds: POINTER) is
 			-- No description available.
+			-- `hdc' [out].  
+			-- `x' [out].  
+			-- `y' [out].  
+			-- `cx' [out].  
+			-- `cy' [out].  
+			-- `x_src' [out].  
+			-- `y_src' [out].  
+			-- `cx_src' [out].  
+			-- `cy_src' [out].  
+			-- `prc_wbounds' [out].  
 		do
 			ccom_render (initializer, hdc, x, y, cx, cy, x_src, y_src, cx_src, cy_src, prc_wbounds)
 		end
 
-feature {None}  -- Implementation
+feature {NONE}  -- Implementation
 
 	delete_wrapper is
 			-- Delete wrapper
 		do
-			ccom_delete_picture_impl_proxy(initializer)
+			ccom_delete_picture23_impl_proxy(initializer)
 		end
 
-feature {None}  -- Externals
+feature {NONE}  -- Externals
 
 	ccom_handle (cpp_obj: POINTER): INTEGER is
 			-- No description available.
 		external
-			"C++ [Picture_impl %"ecom_Picture_impl.h%"]():EIF_INTEGER"
+			"C++ [Picture23_impl_proxy %"ecom_Picture23_impl_proxy.h%"]():EIF_INTEGER"
 		end
 
 	ccom_h_pal (cpp_obj: POINTER): INTEGER is
 			-- No description available.
 		external
-			"C++ [Picture_impl %"ecom_Picture_impl.h%"]():EIF_INTEGER"
+			"C++ [Picture23_impl_proxy %"ecom_Picture23_impl_proxy.h%"]():EIF_INTEGER"
 		end
 
 	ccom_set_h_pal (cpp_obj: POINTER; a_value: INTEGER) is
 			-- Set `h_pal' with `a_value'.
 		external
-			"C++ [Picture_impl %"ecom_Picture_impl.h%"](EIF_INTEGER)"
+			"C++ [Picture23_impl_proxy %"ecom_Picture23_impl_proxy.h%"](EIF_INTEGER)"
 		end
 
 	ccom_type (cpp_obj: POINTER): INTEGER is
 			-- No description available.
 		external
-			"C++ [Picture_impl %"ecom_Picture_impl.h%"]():EIF_INTEGER"
+			"C++ [Picture23_impl_proxy %"ecom_Picture23_impl_proxy.h%"]():EIF_INTEGER"
 		end
 
 	ccom_width (cpp_obj: POINTER): INTEGER is
 			-- No description available.
 		external
-			"C++ [Picture_impl %"ecom_Picture_impl.h%"]():EIF_INTEGER"
+			"C++ [Picture23_impl_proxy %"ecom_Picture23_impl_proxy.h%"]():EIF_INTEGER"
 		end
 
 	ccom_height (cpp_obj: POINTER): INTEGER is
 			-- No description available.
 		external
-			"C++ [Picture_impl %"ecom_Picture_impl.h%"]():EIF_INTEGER"
+			"C++ [Picture23_impl_proxy %"ecom_Picture23_impl_proxy.h%"]():EIF_INTEGER"
 		end
 
 	ccom_render (cpp_obj: POINTER; hdc: INTEGER; x: INTEGER; y: INTEGER; cx: INTEGER; cy: INTEGER; x_src: INTEGER; y_src: INTEGER; cx_src: INTEGER; cy_src: INTEGER; prc_wbounds: POINTER) is
 			-- No description available.
 		external
-			"C++ [Picture_impl %"ecom_Picture_impl.h%"](EIF_INTEGER,EIF_INTEGER,EIF_INTEGER,EIF_INTEGER,EIF_INTEGER,EIF_INTEGER,EIF_INTEGER,EIF_INTEGER,EIF_INTEGER,EIF_POINTER)"
+			"C++ [Picture23_impl_proxy %"ecom_Picture23_impl_proxy.h%"](EIF_INTEGER,EIF_INTEGER,EIF_INTEGER,EIF_INTEGER,EIF_INTEGER,EIF_INTEGER,EIF_INTEGER,EIF_INTEGER,EIF_INTEGER,EIF_POINTER)"
 		end
 
-	ccom_delete_picture_impl_proxy (a_pointer: POINTER) is
+	ccom_delete_picture23_impl_proxy (a_pointer: POINTER) is
 			-- Release resource
 		external
-			"C++ [delete Picture_impl %"ecom_Picture_impl.h%"]()"
+			"C++ [delete Picture23_impl_proxy %"ecom_Picture23_impl_proxy.h%"]()"
 		end
 
-	ccom_create_picture_impl_proxy_from_pointer (a_pointer: POINTER): POINTER is
+	ccom_create_picture23_impl_proxy_from_pointer (a_pointer: POINTER): POINTER is
 			-- Create from pointer
 		external
-			"C++ [new Picture_impl %"ecom_Picture_impl.h%"](IUnknown *)"
+			"C++ [new Picture23_impl_proxy %"ecom_Picture23_impl_proxy.h%"](IUnknown *)"
 		end
 
 	ccom_item (cpp_obj: POINTER): POINTER is
 			-- Item
 		external
-			"C++ [Picture_impl %"ecom_Picture_impl.h%"]():EIF_POINTER"
+			"C++ [Picture23_impl_proxy %"ecom_Picture23_impl_proxy.h%"]():EIF_POINTER"
 		end
 
 	ccom_last_error_code (cpp_obj: POINTER): INTEGER is
 			-- Last error code
 		external
-			"C++ [Picture_impl %"ecom_Picture_impl.h%"]():EIF_INTEGER"
+			"C++ [Picture23_impl_proxy %"ecom_Picture23_impl_proxy.h%"]():EIF_INTEGER"
 		end
 
 	ccom_last_error_description (cpp_obj: POINTER): STRING is
 			-- Last error description
 		external
-			"C++ [Picture_impl %"ecom_Picture_impl.h%"]():EIF_REFERENCE"
+			"C++ [Picture23_impl_proxy %"ecom_Picture23_impl_proxy.h%"]():EIF_REFERENCE"
 		end
 
 	ccom_last_error_help_file (cpp_obj: POINTER): STRING is
 			-- Last error help file
 		external
-			"C++ [Picture_impl %"ecom_Picture_impl.h%"]():EIF_REFERENCE"
+			"C++ [Picture23_impl_proxy %"ecom_Picture23_impl_proxy.h%"]():EIF_REFERENCE"
 		end
 
 	ccom_last_source_of_exception (cpp_obj: POINTER): STRING is
 			-- Last source of exception
 		external
-			"C++ [Picture_impl %"ecom_Picture_impl.h%"]():EIF_REFERENCE"
+			"C++ [Picture23_impl_proxy %"ecom_Picture23_impl_proxy.h%"]():EIF_REFERENCE"
 		end
 
 end -- PICTURE_IMPL_PROXY

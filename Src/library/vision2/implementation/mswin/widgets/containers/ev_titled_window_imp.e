@@ -379,7 +379,7 @@ feature -- Implementation : WEL redefinition
 			-- Called when the window is destroy.
 			-- Set the parent sensitive if it exists.
 		do
-			if parent_imp /= Void and then not parent_imp.destroyed then
+			if parent_imp /= Void and then parent_imp.insensitive then
 				parent_imp.set_insensitive (False)
 			end
 		end

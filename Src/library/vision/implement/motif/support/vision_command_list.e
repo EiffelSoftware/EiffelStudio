@@ -10,7 +10,10 @@ class
 	VISION_COMMAND_LIST
 
 inherit
-	MEL_COMMAND;
+	MEL_COMMAND
+		undefine
+			copy, is_equal
+		end
 
 	LINKED_LIST [COMMAND_EXEC]
 		rename
@@ -18,23 +21,23 @@ inherit
 		end;
 
 	EVENT_HDL
-		redefine
-			is_equal
-		end;
+		undefine
+			copy, is_equal
+		end
 
 	READ_EVENT_X
-		redefine
-			is_equal
-		end;
+		undefine
+			copy, is_equal
+		end
 
 	SHARED_CALLBACK_STRUCT
-		redefine
-			is_equal
-		end;
+		undefine
+			copy, is_equal
+		end
 
 	MEL_CALLBACK_STRUCT_CONSTANTS
-		redefine
-			is_equal
+		undefine
+			copy, is_equal
 		end
 
 creation

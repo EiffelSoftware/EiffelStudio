@@ -11,15 +11,13 @@ inherit
 	TERMINAL_M
 		rename
 			clean_up as terminal_clean_up
-		undefine
+		redefine
 			make
 		end
 
 	TERMINAL_M
-		undefine
-			make
 		redefine
-			clean_up
+			make, clean_up
 		select
 			clean_up
 		end;
@@ -27,9 +25,6 @@ inherit
 	FONT_BOX_I;
 
 	FONT_BOX_R_M
-		export
-			{NONE} all
-		end
 
 creation
 
@@ -48,6 +43,36 @@ feature {NONE} -- Creation
 					parent_screen_object (a_font_box, widget_index),
 					False, man);
 			screen_object := font_box_form (data)
+		end;
+
+feature {NONE} -- Color
+
+	update_other_fg_color (pixel: POINTER) is
+		do
+			xm_set_children_fg_color (pixel, font_box_form (data));
+			fb_set_button_fg_color (data, pixel);
+		end;
+
+	update_other_bg_color (pixel: POINTER) is
+		do
+			xm_set_children_bg_color (pixel, font_box_form (data));
+			fb_set_button_bg_color (data, pixel);
+		end;
+
+feature {NONE} -- Font
+
+	update_text_font (f_ptr: POINTER) is
+		do
+			fb_set_text_font (data, f_ptr)
+		end;
+
+	update_label_font (f_ptr: POINTER) is
+		do
+		end;
+
+	update_button_font (f_ptr: POINTER) is
+		do
+			fb_set_button_font (data, f_ptr)
 		end;
 
 feature 
@@ -120,7 +145,7 @@ feature {NONE}
 			end;
 			free_data (data);
 		ensure then
-			data_freed: data = null_pointer
+			data_freed: data = default_pointer
 		end;
 
 feature 
@@ -189,8 +214,11 @@ feature
 			-- Edit `a_font'.
 		require else
 			a_font_exists: not (a_font = Void)
+		local
+			ext_name: ANY
 		do
-			font_box_set_font (a_font.name.to_c, data)
+			ext_name := a_font.name.to_c;
+			font_box_set_font ($ext_name, data)
 		end;
 
 	show_apply_button is
@@ -213,7 +241,27 @@ feature
 
 feature {NONE} -- External features
 
-	font_box_set_font (a_name: ANY; value: POINTER) is
+	fb_set_button_fg_color (value: POINTER; pix: POINTER) is
+		external
+			"C"
+		end;
+
+	fb_set_button_bg_color (value: POINTER; pix: POINTER) is
+		external
+			"C"
+		end;
+
+	fb_set_button_font (value: POINTER; pix: POINTER) is
+		external
+			"C"
+		end;
+
+	fb_set_text_font (value: POINTER; pix: POINTER) is
+		external
+			"C"
+		end;
+
+	font_box_set_font (resource: POINTER; value: POINTER) is
 		external
 			"C"
 		end;
@@ -292,7 +340,7 @@ end
 --|----------------------------------------------------------------
 --| EiffelVision: library of reusable components for ISE Eiffel 3.
 --| Copyright (C) 1989, 1991, 1993, 1994, Interactive Software
---|   Engineering Inc.
+--|	Engineering Inc.
 --| All rights reserved. Duplication and distribution prohibited.
 --|
 --| 270 Storke Road, Suite 7, Goleta, CA 93117 USA

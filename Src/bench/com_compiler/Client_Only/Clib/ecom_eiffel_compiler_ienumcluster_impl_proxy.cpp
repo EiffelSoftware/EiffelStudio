@@ -80,7 +80,7 @@ void ecom_eiffel_compiler::IEnumCluster_impl_proxy::ccom_next(  /* [out] */ EIF_
 	rt_ce.ccom_ce_pointed_unsigned_long ((ULONG *)tmp_pcelt_fetched, pcelt_fetched);
 	
 	grt_ce_ISE_c.ccom_free_memory_pointed_40 (tmp_rgelt);
-grt_ce_ISE_c.ccom_free_memory_pointed_102 (tmp_pcelt_fetched);
+grt_ce_ISE_c.ccom_free_memory_pointed_113 (tmp_pcelt_fetched);
 
 };
 /*----------------------------------------------------------------------------------------------------------------------*/

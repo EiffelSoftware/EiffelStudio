@@ -24,6 +24,13 @@ feature -- Status Report
 			Result := True
 		end
 
+	load_ace_file_only_user_precondition (a_ace_file_name: STRING): BOOLEAN is
+			-- User-defined preconditions for `load_ace_file_only'.
+			-- Redefine in descendants if needed.
+		do
+			Result := True
+		end
+
 	project_file_name_user_precondition: BOOLEAN is
 			-- User-defined preconditions for `project_file_name'.
 			-- Redefine in descendants if needed.
@@ -125,6 +132,15 @@ feature -- Basic Operations
 			-- `project_directory_path' [in].  
 		require
 			create_project_user_precondition: create_project_user_precondition (an_ace_file_name, project_directory_path)
+		deferred
+
+		end
+
+	load_ace_file_only (a_ace_file_name: STRING) is
+			-- Load only the ace file for a project.
+			-- `a_ace_file_name' [in].  
+		require
+			load_ace_file_only_user_precondition: load_ace_file_only_user_precondition (a_ace_file_name)
 		deferred
 
 		end

@@ -22,6 +22,8 @@ class IEiffelFeatureDescriptor_impl_proxy;
 
 #include "ecom_eiffel_compiler_IEiffelFeatureDescriptor.h"
 
+#include "ecom_eiffel_compiler_IEnumParameter.h"
+
 #include "ecom_eiffel_compiler_IEnumFeature.h"
 
 #ifdef __cplusplus
@@ -78,6 +80,18 @@ public:
 	Feature description.
 	-----------------------------------------------------------*/
 	EIF_REFERENCE ccom_description(  );
+
+
+	/*-----------------------------------------------------------
+	Feature parameters.
+	-----------------------------------------------------------*/
+	EIF_REFERENCE ccom_parameters(  );
+
+
+	/*-----------------------------------------------------------
+	Feature return type.
+	-----------------------------------------------------------*/
+	EIF_REFERENCE ccom_return_type(  );
 
 
 	/*-----------------------------------------------------------

@@ -88,7 +88,7 @@ feature -- Byte code generation
 	print_register is
 			-- Print expression value
 		do
-			if expr.type.is_basic then
+			if expr.type.is_basic and not expr.type.is_bit then
 				generated_file.putstring ("(char *)&(");
 				if expr.is_attribute then
 					expr.generate_access
@@ -104,7 +104,13 @@ feature -- Byte code generation
 	generate is
 			-- Generate expression
 		do
-			if expr.type.is_basic and then expr.is_attribute then
+			if
+				expr.type.is_basic
+			and
+				not expr.type.is_bit
+			and then
+				expr.is_attribute
+			then
 					-- We don't need to do anything now,
 					-- `generate_parameters_list' from EXTERNAL_B(L/W)
 					-- will generate the access on the attribute

@@ -635,7 +635,9 @@ feature -- Status setting
 			-- are equal, insert the contents of the buffer at caret position `start_position'.
 		local
 			text_buffer_start_iter, text_buffer_end_iter, append_buffer_start_iter, append_buffer_end_iter: EV_GTK_TEXT_ITER_STRUCT
+			a_caret_pos: INTEGER
 		do
+			a_caret_pos := caret_position
 			create text_buffer_start_iter.make
 			create text_buffer_end_iter.make
 			create append_buffer_start_iter.make
@@ -647,6 +649,7 @@ feature -- Status setting
 			feature {EV_GTK_DEPENDENT_EXTERNALS}.gtk_text_buffer_delete (text_buffer, text_buffer_start_iter.item, text_buffer_end_iter.item)
 			feature {EV_GTK_DEPENDENT_EXTERNALS}.gtk_text_buffer_insert_range (text_buffer, text_buffer_start_iter.item, append_buffer_start_iter.item, append_buffer_end_iter.item)
 			
+			set_caret_position (a_caret_pos)
 			dispose_append_buffer
 			buffer_locked_in_append_mode := False
 		end

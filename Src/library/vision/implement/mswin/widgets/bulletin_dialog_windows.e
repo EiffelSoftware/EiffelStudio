@@ -46,6 +46,8 @@ inherit
 			move_and_resize,
 			on_menu_command,
 			on_paint,
+			real_x,
+			real_y,
 			realized,
 			realize_current,
 			set_height,

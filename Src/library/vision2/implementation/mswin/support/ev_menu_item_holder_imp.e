@@ -6,11 +6,9 @@ indexing
 	revision: "$Revision$"
 
 deferred class
-
 	EV_MENU_ITEM_CONTAINER_IMP
 
 inherit
-
 	EV_MENU_ITEM_CONTAINER_I
 
 	EV_ITEM_CONTAINER_IMP
@@ -22,94 +20,55 @@ inherit
 
 	EV_ITEM_EVENTS_CONSTANTS_IMP
 
-	WEL_MENU
-		rename
-			make as wel_make
-		end
-
-feature {EV_MENU_IMP} -- Status report
+feature -- Access
 
 	ev_children: LINKED_LIST [EV_MENU_ITEM_IMP]
 
-feature -- Event -- command association
+	position: INTEGER
+		-- Position of the item in the menu.
 
-	on_menu_command (menu_id: INTEGER) is
-			-- The `menu_id' has been choosen from the menu.
+feature -- Element change
+
+	set_position (pos: INTEGER) is
+			-- Make `pos' the new position of the item.
 		do
-			ev_children.i_th(menu_id).on_activate
+			position := pos
 		end
 
-feature -- Implementation
+feature {EV_MENU_ITEM_CONTAINER_IMP} -- Implementation
 
-	add_menu (an_item: EV_MENU) is
-			-- Add a sub-menu `an_item' into container.
-		local
-			menu_imp: EV_MENU_IMP
-		do
-			menu_imp ?= an_item.implementation
-			check
-				menu_imp /= Void
-			end
-			append_popup (menu_imp, menu_imp.text)
-		end
-
-	add_menu_item (an_item: EV_MENU_ITEM) is
+	add_item (an_item: EV_MENU_ITEM) is
 			-- Add `an_item' into container.
-		local
-			item_imp: EV_MENU_ITEM_IMP
-		do
-			item_imp ?= an_item.implementation
-			check
-				valid_item: item_imp /= Void
-			end
-			ev_children.extend (item_imp)
-			append_string (name_item, ev_children.count)
-			item_imp.set_id (ev_children.count)
+		deferred
 		end
 
-	remove_item (id: INTEGER) is
+	insert_item (wel_menu: WEL_MENU; pos: INTEGER; label: STRING) is
+			-- Insert a new menu-item whixh is a menu into
+			-- container.
+		deferred
+		end
+
+	remove_item (an_id: INTEGER) is
 			-- Remove the item with `id' as identification
-		do
-			delete_item (id)
-			ev_children.go_i_th (id)
-			ev_children.remove
-			from
-			until
-				ev_children.after
-			loop
-				ev_children.item.set_id (ev_children.index)
-				ev_children.forth
-			end
+		deferred
 		end
 
-	remove_menu (menu: EV_MENU_IMP) is
+--	remove_menu (menu: EV_MENU_IMP) is
 			-- Remove `menu' from the container.
 			-- In fact, the destroy fonction destroy the wel_item
 			-- then here, we must only remove the menu and its
 			-- item from `ev_children'.
 --require
 --	menu_exists: not menu.destroyed
-		do
+--		do
 			-- Pas forcement vrai tout ca, a faire.
-		end
+--		end
 
 	uncheck_radio_items is
 			-- Uncheck all the radio-items of the container.
-		local
-			item_test: EV_RADIO_MENU_ITEM_IMP
-		do
-			from
-				ev_children.start
-			until
-				ev_children.after
-			loop
-				item_test ?= ev_children.item
-				if item_test /= Void then
-					item_test.set_state (false)
-				end
-				ev_children.forth
-			end
+		deferred
 		end
+
 end -- class EV_MENU_ITEM_CONTAINER_IMP
 
 --|----------------------------------------------------------------

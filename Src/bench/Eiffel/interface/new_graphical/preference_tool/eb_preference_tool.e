@@ -10,8 +10,10 @@ class
 
 inherit
 	EB_TOOL
+		rename
+			empty_tool_name as tool_name
 		redefine
-			init_commands
+			init_commands, tool_name
 		end
 creation
 
@@ -29,7 +31,7 @@ feature {NONE} -- Initialization
 
 			b: EV_BUTTON
 		do
-			set_title (Interface_names.t_Preference_tool)
+			set_title (tool_name)
 
 				-- container creation
 			create container.make (parent)
@@ -119,6 +121,13 @@ feature {NONE} -- Initialization
 			create apply_cmd.make (Current)
 			create save_cmd.make (Current)
 			create validate_cmd.make (Current)
+		end
+
+feature -- Access
+
+	tool_name: STRING is
+		do
+			Result := Interface_names.t_Preference_tool
 		end
 
 feature {EB_RAISE_ENTRY_PANEL_COMMAND}

@@ -152,8 +152,11 @@ feature -- Parsing
 			end;
 				-- check if valid language name
 				-- for now, only C is supported
-			if ext_language_name /= Void and then ext_language_name.is_equal ("C") then
-				valid_language_name := True;
+			if ext_language_name /= Void then
+				ext_language_name.to_upper;
+				if ext_language_name.is_equal ("C") then
+					valid_language_name := True;
+				end;
 			end;
 				-- no need to go on if invalid language name
 			if valid_language_name then

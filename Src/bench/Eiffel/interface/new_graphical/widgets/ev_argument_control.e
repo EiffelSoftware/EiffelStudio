@@ -108,8 +108,8 @@ feature {NONE} -- Retrieval
 								then
 										-- Add argument to list.
 									create l_row
+									l_row.extend (clone (argument_value))
 									ace_arguments_list.extend (l_row)
-									l_row.put_front (clone (argument_value))
 										-- Add argument to combo.
 									ace_combo.extend (create {EV_LIST_ITEM}.make_with_text (clone (argument_value)))
 								end					
@@ -172,8 +172,8 @@ feature {NONE} -- Retrieval
 						else
 							-- Add argument to list.
 						create l_row
+						l_row.extend (clone (l_last_string))
 						user_arguments_list.extend (l_row)
-						l_row.put_front (clone (l_last_string))
 							-- Add argument to combo.
 						user_combo.extend (create {EV_LIST_ITEM}.make_with_text (clone (l_last_string)))
 						end
@@ -739,7 +739,7 @@ feature {NONE} -- Actions
 		local
 			l_text: STRING
 			l_caret_pos: INTEGER
-			l_dialog, l_dialog2: EB_ARGUMENT_DIALOG
+			l_argument_dialog: EB_ARGUMENT_DIALOG
 			l_list: SPECIAL [ANY]
 			l_counter: INTEGER
 			mem: MEMORY
@@ -760,21 +760,9 @@ feature {NONE} -- Actions
 				
 					-- Set focus to Run button if Current is in a dialog and not
 					-- in the project settings.
-				create mem
-				create l_dialog
-				l_list := mem.objects_instance_of (l_dialog)
-				from
-					l_counter := 0
-				until
-					l_counter = l_list.count
-				loop
-					if not (l_list.item (l_counter) = l_dialog) then
-						l_dialog2 ?= l_list.item (l_counter)
-						if l_dialog2.has_focus then
-							l_dialog2.run_and_close_button.set_focus
-						end					
-					end
-					l_counter := l_counter + 1
+				l_argument_dialog := Argument_dialog_cell.item
+				if l_argument_dialog /= Void and then l_argument_dialog.has_focus then
+					l_argument_dialog.run_and_close_button.set_focus
 				end
 			end			
 		end		

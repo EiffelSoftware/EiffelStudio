@@ -292,7 +292,7 @@ feature -- Element change
 		end
 
 	set_cursor (cur: like cursor) is
-			-- Make `value' the new cursor of the widget
+			-- Make `cur' the new cursor of the widget
 		require
 			exists: not destroyed
 		do

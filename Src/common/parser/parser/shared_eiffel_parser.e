@@ -30,6 +30,12 @@ feature -- Access
 		once
 			create Result.make_type_parser
 		end
+
+	Expression_parser: EIFFEL_PARSER is
+			-- Type parser.
+		once
+			create Result.make_expression_parser
+		end
 		
 feature -- Setting
 

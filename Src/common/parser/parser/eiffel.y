@@ -15,7 +15,7 @@ inherit
 	SHARED_NAMES_HEAP
 
 create
-	make, make_il_parser, make_type_parser
+	make, make_il_parser, make_type_parser, make_expression_parser
 %}
 
 %start		Eiffel_parser
@@ -185,6 +185,13 @@ Eiffel_parser:
 					raise_error
 				end
 				type_node := $2
+			}
+	|	TE_FEATURE Expression
+			{
+				if not expression_parser then
+					raise_error
+				end
+				expression_node := $2
 			}
 	;
 

@@ -61,6 +61,15 @@ feature {NONE} -- Initialization
 		ensure
 			type_parser: type_parser
 		end
+		
+	make_expression_parser is
+			-- Create a new Eiffel expression parser.
+		do
+			expression_parser := True
+			make
+		ensure
+			expression_parser: expression_parser
+		end		
 
 feature -- Initialization
 
@@ -86,6 +95,9 @@ feature -- Status report
 	type_parser: BOOLEAN
 			-- Is current Eiffel parser a type parser?
 
+	expression_parser: BOOLEAN
+			-- Is current Eiffel parser an expression parser ?
+			
 	has_externals: BOOLEAN
 			-- Did last parse find external declarations?
 
@@ -139,6 +151,9 @@ feature -- Access
 
 	type_node: TYPE
 			-- Type node of AST
+			
+	expression_node: EXPR_AS
+			-- Expression node of AST
 
 	suppliers: SUPPLIERS_AS
 			-- Suppliers of class being parsed

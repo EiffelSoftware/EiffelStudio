@@ -45,7 +45,9 @@ inherit
 			has_precondition,
 			has_postcondition,
 			feature_location,
-			is_feature
+			is_feature,
+			parameters,
+			return_type
 		select
 			create_item
 		end
@@ -127,6 +129,35 @@ feature -- Access
 			result_exists: Result /= void
 		end
 
+	parameters: PARAMETER_ENUMERATOR is
+			-- Feature parameters.
+		local
+			l_parameters: ARRAYED_LIST [PARAMETER_DESCRIPTOR]
+			args: FEAT_ARG
+		do
+			if compiler_feature.has_arguments then
+				args := compiler_feature.arguments
+				create l_parameters.make (args.count)
+				from
+					args.start
+				until
+					args.after	
+				loop
+					l_parameters.extend (create {PARAMETER_DESCRIPTOR}.make (args.item_name (args.index), args.item.dump))
+					args.forth
+				end
+			else
+				create l_parameters.make (0)
+			end
+			create Result.make (l_parameters)
+		end
+	
+	return_type: STRING is
+			-- Feature return type
+		do
+			Result := compiler_feature.type.dump
+		end
+		
 	external_name: STRING is
 			-- Feature external name.
 		do

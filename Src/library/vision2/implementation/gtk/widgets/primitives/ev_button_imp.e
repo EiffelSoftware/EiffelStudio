@@ -21,8 +21,11 @@ inherit
 		redefine
 			make
 		end
-	
+
+	EV_PIXMAP_CONTAINER_IMP
         
+	EV_GTK_BUTTONS_EXTERNALS
+
 creation
 
         make, make_with_text
@@ -59,15 +62,31 @@ feature {NONE} -- Implementation
 	gtk_command_id: INTEGER
                         -- Id of the command handler
         
-	set_label_widget (new_label_widget: POINTER) is
-		do
-			label_widget := new_label_widget
-		end        
+--	set_label_widget (new_label_widget: POINTER) is
+--		do
+--			label_widget := new_label_widget
+--		end        
 	
-        label_widget: POINTER 
+  --      label_widget: POINTER 
                         -- gtk widget of the label inside the button
            --     do
             --            Result := c_gtk_get_label_widget (widget)
              --   end
 	
-end
+end -- class EV_BUTTON_IMP
+
+--|----------------------------------------------------------------
+--| EiffelVision: library of reusable components for ISE Eiffel.
+--| Copyright (C) 1986-1998 Interactive Software Engineering Inc.
+--| All rights reserved. Duplication and distribution prohibited.
+--| May be used only with ISE Eiffel, under terms of user license. 
+--| Contact ISE for any other use.
+--|
+--| Interactive Software Engineering Inc.
+--| ISE Building, 2nd floor
+--| 270 Storke Road, Goleta, CA 93117 USA
+--| Telephone 805-685-1006, Fax 805-685-6869
+--| Electronic mail <info@eiffel.com>
+--| Customer support e-mail <support@eiffel.com>
+--| For latest info see award-winning pages: http://www.eiffel.com
+--|----------------------------------------------------------------

@@ -78,10 +78,11 @@ feature -- basic Operations
 			precursor
 			if not b then
 				if odbc_b.is_selected then
-					set_database(odbc)
+--					set_database(odbc)
+					set_database(oracle)
 				else
---					set_database(oracle)
-					set_database(odbc)
+					set_database(oracle)
+--					set_database(odbc)
 				end
 				if db_manager.connected then
 					db_manager.disconnect

@@ -565,7 +565,7 @@ feature {NONE} -- Implementation
 	is_graphics_disabled: BOOLEAN is
 			-- Is Graphics disabled for the text window?
 		once 
-			Result := resources.get_boolean (r_Graphics, False) 
+			Result := resources.get_boolean (r_Graphics_disabled, False) 
 		end;
 
 feature {PROJECT_W} -- Implementation

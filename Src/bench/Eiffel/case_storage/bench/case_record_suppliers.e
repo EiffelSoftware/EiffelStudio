@@ -100,17 +100,18 @@ feature {NONE} -- Recording information for eiffelcase
 		require
 			valid_cl: c_l /= Void
 		local
-			sup_class_id: INTEGER;
+			sup_class_id: CLASS_ID;
 			feature_data: S_FEATURE_DATA;
 			result_type: S_CLASS_TYPE_INFO;
 			feat_arg: FIXED_LIST [S_ARGUMENT_DATA];
-			real_class_ids: LINKED_LIST [INTEGER]
+			real_class_ids: LINKED_LIST [CLASS_ID]
 			cli_sup_data: S_CLI_SUP_DATA;
 			label: STRING;
 			label_done: BOOLEAN
 			gen_type: S_GEN_TYPE_INFO;
 			type_a: TYPE_A
 			dummy_id: CLASS_ID
+			class_test: CLASS_C
 		do
 			from
 				features.start
@@ -135,23 +136,27 @@ feature {NONE} -- Recording information for eiffelcase
 								c_l.start
 							until
 								c_l.after or else 
-								c_l.item.supplier = sup_class_id
+								c_l.item.supplier = sup_class_id.id -- FIXME
 							loop
 								c_l.forth
 							end;
 							if c_l.after then
 									-- Supplier hasn't been record 
 								!! cli_sup_data;
-								!! dummy_id.make (sup_class_id)
-								cli_sup_data.set_class_links (classc.id.id, sup_class_id);
-								cli_sup_data.set_class_names (clone (classc.name),
-										clone (System.class_of_id (dummy_id).name))
+								cli_sup_data.set_class_links (classc.id.id, sup_class_id.id);
+								class_test := System.class_of_id (sup_class_id)
+								if class_test /= Void then
+									cli_sup_data.set_class_names (clone (classc.name),
+											clone (System.class_of_id (sup_class_id).name))
+								else
+									io.putstring ("class_test is Void %N")
+								end
 								c_l.extend (cli_sup_data);
 							else
 								cli_sup_data := c_l.item;
 								cli_sup_data.set_implementation (False);
 							end
-							if sup_class_id = classc.id.id then
+							if sup_class_id = classc.id then
 								cli_sup_data.set_reflexive (True)
 							end;
 							if not is_hidden then
@@ -169,7 +174,7 @@ feature {NONE} -- Recording information for eiffelcase
 								if not label_done and then result_type.has_generics then
 									gen_type ?= result_type;
 									label.append (": ");	
-									label.append (gen_type.string_value_minus_id (sup_class_id))
+									label.append (gen_type.string_value_minus_id (sup_class_id.id))
 								end
 							end;
 							cli_sup_data.set_implementation (is_hidden);
@@ -200,23 +205,27 @@ feature {NONE} -- Recording information for eiffelcase
 									c_l.start
 								until
 									c_l.after or else 
-									c_l.item.supplier = sup_class_id
+									c_l.item.supplier = sup_class_id.id --FIXME
 								loop
 									c_l.forth
 								end;
 								if c_l.after then
 										-- Supplier hasn't been recorded.
 									!! cli_sup_data;
-									!! dummy_id.make (sup_class_id)
-									cli_sup_data.set_class_links (classc.id.id, sup_class_id);
-									cli_sup_data.set_class_names (clone (classc.name),
-										clone (System.class_of_id (dummy_id).name))
+									cli_sup_data.set_class_links (classc.id.id, sup_class_id.id);
+									class_test := System.class_of_id (sup_class_id)
+									if class_test /= Void then
+										cli_sup_data.set_class_names (clone (classc.name),
+											clone (System.class_of_id (sup_class_id).name))
+									else
+										io.putstring ("class_test is Void%N")
+									end
 									c_l.extend (cli_sup_data);
 								else
 									cli_sup_data :=  c_l.item;
 									cli_sup_data.set_implementation (False)
 								end;
-								if sup_class_id = classc.id.id then
+								if sup_class_id = classc.id then
 									cli_sup_data.set_reflexive (True)
 								end;
 								real_class_ids.forth

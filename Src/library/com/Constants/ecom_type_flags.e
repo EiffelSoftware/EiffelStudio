@@ -230,7 +230,8 @@ feature -- Status report
 					is_typeflag_faggregatable (flag) or
 					is_typeflag_freplaceable (flag) or
 					is_typeflag_fdispatchable (flag) or
-					is_typeflag_freversebind (flag)
+					is_typeflag_freversebind (flag) or
+					flag = 0
 		end
 
 end -- class ECOM_TYPE_FLAGS

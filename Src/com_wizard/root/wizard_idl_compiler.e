@@ -17,6 +17,11 @@ inherit
 			{NONE} all
 		end
 
+	WIZARD_WRITER_DICTIONARY
+		export
+			{NONE} all
+		end
+
 	WEL_PROCESS_CREATION_CONSTANTS
 		export
 			{NONE} all
@@ -64,8 +69,7 @@ feature -- Basic Operations
 		local
 			a_string: STRING
 		do
-			a_string := "%""
-			a_string.append (clone (shared_wizard_environment.destination_folder))
+			a_string := clone (shared_wizard_environment.destination_folder)
 			if a_string.last_index_of (Directory_separator, 1) /= a_string.count then
 				a_string.append_character (Directory_separator)
 			end
@@ -73,29 +77,30 @@ feature -- Basic Operations
 			a_string.append (".tlb")
 			shared_wizard_environment.set_type_library_file_name (a_string)
 			a_string.append ("%"")
+			a_string.prepend ("%"")
 			launch (Idl_compiler_command_line, shared_wizard_environment.destination_folder)
-			check_return_code
+			check_return_code (1)
 		end
 
 	compile_iid is
 			-- Compile iid C file.
 		do
 			launch (C_compiler_command_line (Generated_iid_file_name), shared_wizard_environment.destination_folder)
-			check_return_code
+			check_return_code (1)
 		end
 	
 	compile_ps is
 			-- Compile proxy/stub C file.
 		do
 			launch (C_compiler_command_line (Generated_ps_file_name), shared_wizard_environment.destination_folder)
-			check_return_code
+			check_return_code (1)
 		end
 
 	compile_data is
 			-- Compile dlldata C file.
 		do
 			launch (C_compiler_command_line (Generated_dlldata_file_name), shared_wizard_environment.destination_folder)
-			check_return_code
+			check_return_code (1)
 		end
 
 	link is
@@ -105,7 +110,7 @@ feature -- Basic Operations
 		do
 			generate_def_file
 			launch (Linker_command_line, shared_wizard_environment.destination_folder)
-			check_return_code
+			check_return_code (1)
 			a_string := ("%"")
 			a_string := clone (shared_wizard_environment.destination_folder)
 			a_string.append (clone (shared_wizard_environment.project_name))
@@ -115,10 +120,11 @@ feature -- Basic Operations
 
 feature {NONE} -- Implementation
 
-	check_return_code is
-			-- Display error message and stops execution if last system call failed
+	check_return_code (a_status: INTEGER) is
+			-- Display error message and stops execution if last system call returned
+			-- other value than `a_status'.
 		do
-			if last_process_result /= 0 or not last_launch_successful then
+			if last_process_result /= a_status or not last_launch_successful then
 				shared_wizard_environment.set_abort (last_process_result)
 			end
 		end
@@ -157,9 +163,9 @@ feature {NONE} -- Implementation
 	Idl_compiler_command_line: STRING is
 			-- MIDL command line
 		do
-			Result := "%""
+			Result := clone ("%"")
 			Result.append (Idl_compiler)
-			Result.append (" ")
+			Result.append (clone (Space))
 			Result.append (Common_idl_compiler_options)
 			Result.append ("  /out \%"")
 			Result.append (clone (shared_wizard_environment.destination_folder))

@@ -94,6 +94,7 @@ feature {NONE} -- Initialization
 			create ps_dialog.make (Current)
 			create final_dialog.make (Current)
 			resize (400, 400)
+			show
 		end
 
 feature -- GUI Elements
@@ -110,7 +111,7 @@ feature -- GUI Elements
 			open_button, new_button, save_button, launch_button,
 			clear_button, separator_button: WEL_TOOL_BAR_BUTTON
 			rebar_info: WEL_REBARBANDINFO
-			tool_bar: WEL_TOOL_BAR
+			tool_bar, otto: WEL_TOOL_BAR
 		once
 			create Result.make (Current, -1)
 			create tool_bar.make (Current, -1)
@@ -208,6 +209,24 @@ feature -- GUI Elements
 			create Result.make_rgb (0, 0, 0)
 		end
 
+	Title_color: WEL_COLOR_REF is
+			-- Text output color
+		once
+			create Result.make_rgb (0, 0, 100)
+		end
+
+	Warning_color: WEL_COLOR_REF is
+			-- Text output color
+		once
+			create Result.make_rgb (50, 50, 50)
+		end
+
+	Error_color: WEL_COLOR_REF is
+			-- Text output color
+		once
+			create Result.make_rgb (150, 0, 0)
+		end
+
 feature -- Element Change
 
 	new_line is
@@ -217,18 +236,47 @@ feature -- Element Change
 		end
 
 	add_text (a_text: STRING) is
-			-- Add text `a_text' into window's text
+			-- Add text `a_text' into window's text.
 		do
 			output_edit.set_caret_position (output_edit.count)
 			output_edit.insert_text (a_text)
+			output_edit.set_caret_position (output_edit.count)
 		end
 	
 	add_title (a_title: STRING) is
-			-- Add title `a_title' to window's text
+			-- Add title `a_title' to window's text.
 		do
 			output_edit.set_caret_position (output_edit.count)
+			new_line
 			output_edit.set_character_format_word (Title_format)
 			output_edit.insert_text (a_title)
+			output_edit.set_character_format_word (Text_format)
+			output_edit.set_caret_position (output_edit.count)
+			new_line
+		end
+
+	add_warning (a_warning: STRING) is
+			-- Add warning `a_warning' to window's text.
+		do
+			output_edit.set_caret_position (output_edit.count)
+			new_line
+			output_edit.set_character_format_word (Warning_format)
+			output_edit.insert_text (a_warning)
+			output_edit.set_character_format_word (Text_format)
+			output_edit.set_caret_position (output_edit.count)
+			new_line
+		end
+
+	add_error (a_error: STRING) is
+			-- Add error `a_error' to window's text.
+		do
+			output_edit.set_caret_position (output_edit.count)
+			new_line
+			output_edit.set_character_format_word (Error_format)
+			output_edit.insert_text (a_error)
+			output_edit.set_character_format_word (Text_format)
+			output_edit.set_caret_position (output_edit.count)
+			new_line
 		end
 
 	clear is
@@ -340,7 +388,7 @@ feature {NONE} -- Implementation
 		do
 			create output_edit.make (Current, Output_edit_name, 0, client_rect.y + rebar.height, width, height - rebar.height, -1)
 			output_edit.set_text (Initial_text)
-			output_edit.set_character_format_all (Window_character_format)
+			output_edit.set_character_format_all (Text_format)
 			output_edit.set_style (Ws_visible + Ws_child + Ws_group + Ws_tabstop + Ws_vscroll + Ws_hscroll + Es_left + Es_autohscroll + Es_autovscroll + Es_multiline)
 			output_edit.set_read_only
 			output_edit.enable_scroll_caret_at_selection
@@ -356,7 +404,7 @@ feature {NONE} -- Implementation
 	wizard_manager: WIZARD_MANAGER
 			-- Code generation manager
 
-	Window_character_format: WEL_CHARACTER_FORMAT is
+	Text_format: WEL_CHARACTER_FORMAT is
 			-- Window character format
 		once
 			create Result.make
@@ -371,9 +419,29 @@ feature {NONE} -- Implementation
 		once
 			create Result.make
 			Result.set_face_name ("Tahoma")
+			Result.set_height (200)
+			Result.set_bold
+			Result.set_text_color (Title_color)
+		end
+
+	Warning_format: WEL_CHARACTER_FORMAT is
+			-- Window character format
+		once
+			create Result.make
+			Result.set_face_name ("Tahoma")
 			Result.set_height (160)
 			Result.set_bold
-			Result.set_text_color (Text_color)
+			Result.set_text_color (Warning_color)
+		end
+
+	Error_format: WEL_CHARACTER_FORMAT is
+			-- Window character format
+		once
+			create Result.make
+			Result.set_face_name ("Tahoma")
+			Result.set_height (160)
+			Result.set_bold
+			Result.set_text_color (Error_color)
 		end
 
 	clean is
@@ -424,18 +492,16 @@ feature {NONE} -- Implementation
 				an_environment ?= retrieve_by_name (a_project)
 				if an_environment /= Void then
 					set_shared_wizard_environment (an_environment)
-					new_line
 					add_text (Open_message)
-				else
 					new_line
+				else
 					add_text (Open_error_message)
+					new_line
 				end
 			else
-				new_line
 				add_text (Open_error_message)
+				new_line
 			end
-			new_line
-			new_line
 		rescue
 			retried := True
 			retry
@@ -448,14 +514,12 @@ feature {NONE} -- Implementation
 		do
 			if not retried then
 				shared_wizard_environment.store_by_name (a_project)
-				new_line
 				add_text (Save_message)
-			else
 				new_line
+			else
 				add_text (Save_error_message)
+				new_line
 			end
-			new_line
-			new_line
 		rescue
 			retried := True
 			retry

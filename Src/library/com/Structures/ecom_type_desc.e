@@ -31,7 +31,7 @@ feature -- Access
 			-- Nested TYPEDESC structure
 			-- that specifies safearray element type
 		require 
-			is_ptr (var_type) or is_safearray (var_type)
+			valid_type: is_ptr (var_type) or is_safearray (var_type) or is_carray (var_type)
 		do
 			!! Result.make_by_pointer (ccom_typedesc_typedesc (item))
 		end
@@ -39,7 +39,7 @@ feature -- Access
 	array_desc: ECOM_ARRAY_DESC is
 			-- Nested ARRAYDESC structure
 		require
-			is_carray (var_type)
+			valid_type: is_carray (var_type)
 		do
 			!! Result.make_by_pointer (ccom_typedesc_arraydesc (item))
 		end
@@ -47,7 +47,7 @@ feature -- Access
 	href_type: INTEGER is
 			-- Handle to type description
 		require
-			is_user_defined (var_type) 
+			valid_type: is_user_defined (var_type) 
 		do
 			Result := ccom_typedesc_href_type (item)
 		end

@@ -86,7 +86,7 @@ rt_public char *b_out(EIF_REFERENCE bit)
 	return result;
 }
 
-rt_public long b_count(EIF_REFERENCE bit)
+rt_public EIF_INTEGER b_count(EIF_REFERENCE bit)
 {
 	return ((struct bit *) bit)->b_length;		/* Size of a BIT object */
 }
@@ -289,7 +289,7 @@ rt_public void b_put(EIF_REFERENCE bit, char value, int at)
 		addr[idx] &= ~(1 << mask);
 }
 
-rt_public EIF_BOOLEAN b_item(EIF_REFERENCE bit, long int at)
+rt_public EIF_BOOLEAN b_item(EIF_REFERENCE bit, EIF_INTEGER at)
 {
 	/* Return the value (EIF_FALSE or EIF_TRUE) of the bit 'at' in the bit field. Index
 	 * starts at 1 for the leftmost bit and ends at the length of the bit
@@ -316,7 +316,7 @@ rt_public EIF_BOOLEAN b_item(EIF_REFERENCE bit, long int at)
 	return ((addr[idx] & (1 << mask)) >> mask ? EIF_TRUE : EIF_FALSE);
 }
 
-rt_public EIF_REFERENCE b_shift(EIF_REFERENCE bit, long int s)
+rt_public EIF_REFERENCE b_shift(EIF_REFERENCE bit, EIF_INTEGER s)
 {
 	/* Shifts `bit' by `s' positions. If s is positive, shifiting is done to
 	 * the right, otherwise to the left. A null value does nothing.
@@ -456,7 +456,7 @@ rt_private EIF_REFERENCE b_left_shift(EIF_REFERENCE bit, long int s)
 	return new;
 }
 
-rt_public EIF_REFERENCE b_rotate(EIF_REFERENCE bit, long int s)
+rt_public EIF_REFERENCE b_rotate(EIF_REFERENCE bit, EIF_INTEGER s)
 {
 	/* Rotates `bit' by `s' positions. If s is positive, rotation is done to
 	 * the right, otherwise to the left. A null value does nothing.

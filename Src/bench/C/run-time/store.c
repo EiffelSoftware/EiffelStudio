@@ -462,7 +462,7 @@ rt_public void rt_reset_store(void) {
 
 /* Basic store */
 /* Store object hierarchy of root `object' without header. */
-rt_public void estore(EIF_INTEGER file_desc, char *object)
+rt_public void estore(EIF_INTEGER file_desc, EIF_REFERENCE object)
 {
 	EIF_GET_CONTEXT
 	s_fides = (int) file_desc;
@@ -507,7 +507,7 @@ rt_public EIF_INTEGER stream_estore(EIF_POINTER *buffer, EIF_INTEGER size, EIF_R
 /* General store */
 /* Store object hierarchy of root `object' and produce a header
  * so it can be retrieved by other systems. */
-rt_public void eestore(EIF_INTEGER file_desc, char *object)
+rt_public void eestore(EIF_INTEGER file_desc, EIF_REFERENCE object)
 {
 	EIF_GET_CONTEXT
 	s_fides = (int) file_desc;
@@ -576,7 +576,7 @@ rt_public void eif_set_new_recoverable_format (EIF_BOOLEAN state)
 /* Use file decscriptor so sockets and files can be used for storage
  * Store object hierarchy of root `object' and produce a header
  * so it can be retrieved by other systems. */
-rt_public void sstore (EIF_INTEGER file_desc, char *object)
+rt_public void sstore (EIF_INTEGER file_desc, EIF_REFERENCE object)
 {
 	EIF_GET_CONTEXT
 	s_fides = (int) file_desc;

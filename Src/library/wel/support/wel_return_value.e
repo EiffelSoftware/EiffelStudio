@@ -133,7 +133,7 @@ feature -- Element Change
 			value_set: default_processing = value
 		end
 
-feature {WEL_DISPATCHER, WEL_WINDOW}
+feature {WEL_ABSTRACT_DISPATCHER, WEL_WINDOW}
 
 	increment_level is
 			-- Called from WEL_DISPATCHER when the window-procedure

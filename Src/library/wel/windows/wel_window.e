@@ -1718,7 +1718,7 @@ feature {WEL_WINDOW} -- Implementation
 		do
 		end
 
-feature {WEL_DISPATCHER, WEL_WINDOW} -- Implementation
+feature {WEL_ABSTRACT_DISPATCHER, WEL_WINDOW} -- Implementation
 
 	window_process_message, process_message (hwnd: POINTER; msg: INTEGER;
 		wparam, lparam: POINTER): POINTER is

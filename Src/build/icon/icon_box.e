@@ -81,7 +81,6 @@ feature
 		do
 			make_box (a_name, a_parent);
 			make_box_visible
-			set_same_size
 			set_spacing (3)
 		end; -- Create
 
@@ -89,7 +88,6 @@ feature
 		do
 			make_box_unmanaged (a_name, a_parent);
 			make_box_visible
-			set_same_size
 			set_spacing (3)
 		end;
 

@@ -314,6 +314,8 @@ feature -- IL Code generation
 			type_i: TYPE_I
 			il_label_compute: IL_LABEL
 		do
+			Byte_context.set_byte_code (create {STD_BYTE_CODE})
+			Byte_context.set_current_feature (Current)
 			type_i := type.actual_type.type_i
 			if is_once then
 				il_generator.set_once_generation (True)
@@ -336,6 +338,7 @@ feature -- IL Code generation
 				value.generate_il
 				il_generator.generate_return
 			end
+			Byte_context.clear_all
 		end
 
 feature -- Byte code generation

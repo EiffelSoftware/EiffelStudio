@@ -21,7 +21,7 @@ creation
 
 feature {NONE} -- Initialization
 
-	make (par: EV_CONTAINER) is
+	make (par: EV_TOOL_BAR) is
 		local
 			cmd: EV_ROUTINE_COMMAND
 		do

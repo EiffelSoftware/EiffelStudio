@@ -29,32 +29,30 @@ feature {NONE} -- Basic operation
 			lchild: ARRAYED_LIST [EV_WIDGET_IMP]
 		do
 			lchild := ev_children
-			resize (minimum_width.max (new_width), height)
-			temp_width := minimum_width.max (new_width) - 2 * border_width
+			resize (new_width, height)
+			temp_width := new_width - 2 * border_width
 			if not lchild.empty then
 				from
 					lchild.start
 				until
 					lchild.after
 				loop
-					lchild.item.parent_ask_resize(temp_width, lchild.item.child_cell.height)		
+					lchild.item.parent_ask_resize(temp_width, lchild.item.child_cell.height)
 					lchild.forth
 				end
 			end
 		end
 
-	set_local_height (new_height: INTEGER) is
+	set_local_height (temp_height: INTEGER) is
 			-- Make 'new_height' the `height' of the box and adapt 
 			-- the children height.
 		local
-			temp_height: INTEGER
 			total_rest: INTEGER
 			mark:INTEGER
 			rate: INTEGER
 			lchild: ARRAYED_LIST [EV_WIDGET_IMP]
 		do
 			if already_displayed then
-				temp_height := minimum_height.max (new_height)
 				if not ev_children.empty then
 					lchild := ev_children
 						-- Homogeneous state : only the visible children are

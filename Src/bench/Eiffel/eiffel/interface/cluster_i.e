@@ -36,9 +36,6 @@ inherit
 	COMPILER_EXPORTER
 		export {NONE} all end
 
-	SHARED_TEXT_ITEMS
-		export {NONE} all end
-
 	SHARED_CONFIGURE_RESOURCES
 		export {NONE} all end
 
@@ -1782,7 +1779,8 @@ feature {NONE} -- Implementation
 	Cluster_indexing_parser: EIFFEL_PARSER is
 			-- Parser adapted from the Eiffel parser.
 		once
-			create Result.make_indexing_parser
+			create Result.make
+			Result.set_indexing_parser
 		end
 
 feature -- Formatting

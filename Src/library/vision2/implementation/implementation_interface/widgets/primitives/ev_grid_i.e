@@ -638,11 +638,19 @@ feature -- Status setting
 			is_row_height_fixed: is_row_height_fixed
 			a_row_height_positive: a_row_height >= 1
 		do
-			row_height := a_row_height
-			is_item_height_changing := True
-			recompute_vertical_scroll_bar
-			is_item_height_changing := False
-			redraw_client_area
+			if is_row_height_fixed or is_tree_enabled then
+				-- Note that if we are not using fixed row heights then
+				-- there is no need to perform anything here. This is because the
+				-- size is dependent on the rows and `row_height' is currently ignored.
+				
+				row_height := a_row_height
+				is_item_height_changing := True
+				recompute_vertical_scroll_bar
+				is_item_height_changing := False
+				set_vertical_computation_required
+				redraw_client_area
+			end
+			
 		ensure
 			row_height_set: row_height = a_row_height
 		end
@@ -1239,7 +1247,7 @@ feature {EV_GRID_COLUMN_I, EV_GRID_I, EV_GRID_DRAWER_I, EV_GRID_ROW_I, EV_GRID_I
 						i := i + current_item.height
 					else
 							-- Use the default height here.
-						i := i + 16
+						i := i + row_height
 					end
 					if current_item.subrow_count > 0 and not current_item.is_expanded then
 						from

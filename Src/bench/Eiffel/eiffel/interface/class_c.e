@@ -868,10 +868,12 @@ end
 debug ("SEP_DEBUG", "VERBOSE", "ACTIVITY")
 	io.error.putstring ("%TProcessing invariant%N")
 end
+
 			if invariant_feature /= Void then
 				old_invariant_body_id := invariant_feature.body_id
 				f_suppliers := dependances.item (old_invariant_body_id)
-		
+			else
+				f_suppliers := Void
 			end
 
 			if propagators.invariant_removed then

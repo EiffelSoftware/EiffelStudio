@@ -9,7 +9,7 @@ call gacutil -silent -nologo -u ISE.AssemblyManager
 call gacutil -silent -nologo -i ISE.AssemblyManager.exe
 cd ..\..
 
-cd bench\wizards\new_projects\dotnet
+cd studio\wizards\new_projects\dotnet
 call install.bat
 cd ..\..\..\..
 

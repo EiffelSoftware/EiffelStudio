@@ -130,7 +130,7 @@ feature -- Status report
 			!! range.make_empty
 			cwin_send_message (item, Em_exgetsel, 0,
 				range.to_integer)
-			Result := range.minimum
+			Result := range.maximum
 		end
 		
 	has_selection: BOOLEAN is

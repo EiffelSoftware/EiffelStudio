@@ -11,7 +11,6 @@ deferred class
 inherit
 	EV_ITEM_CONTAINER_IMP
 		redefine
-			ev_children,
 			on_draw
 		end
 

@@ -17,4 +17,12 @@ feature -- Byte code
 			-- Do nothing
 		end;
 
+feature -- test for empty body
+
+	empty : BOOLEAN is
+			-- Is body empty?
+		do
+			Result := True  -- redefined in INTERNAL_AS_B
+		end
+
 end -- class ROUT_BODY_AS_B

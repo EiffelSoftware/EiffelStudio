@@ -97,6 +97,26 @@ feature -- Update
 			end
 		end;
 
+feature -- empty body
+
+	empty : BOOLEAN is
+				-- Is body empty?
+		do
+			Result := (body = Void) or else (body.empty)
+		end
+
+feature -- default rescue
+
+	create_default_rescue (def_resc_name : STRING) is
+				-- Create default rescue if necessary
+		require
+			valid_feature_name : def_resc_name /= Void
+		do
+			if body /= Void then
+				body.create_default_rescue (def_resc_name)
+			end
+		end
+
 feature -- Type check, byte code and dead code removal
 
 	type_check is

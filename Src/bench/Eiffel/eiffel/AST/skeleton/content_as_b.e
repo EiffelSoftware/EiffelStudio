@@ -17,6 +17,24 @@ inherit
 			byte_node
 		end
 
+feature -- test for empty body
+
+	empty : BOOLEAN is
+			-- Is content empty?
+		do
+			Result := True  -- redefined in ROUTINE_AS_B
+		end
+
+feature -- default rescue
+
+	create_default_rescue (def_resc_name : STRING) is
+			-- Create default rescue clause if necessary
+		require
+			valid_feature_name : def_resc_name /= Void
+		do
+			-- redefined in ROUTINE_AS_B
+		end
+
 feature -- Type check and byte code
 
 	byte_node: BYTE_CODE is

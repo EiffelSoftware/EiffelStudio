@@ -14,13 +14,20 @@ inherit
 		redefine
 			type_check, byte_node,
 			find_breakable, 
-			fill_calls_list, replicate
+			fill_calls_list, replicate, empty
 		end
 
 feature -- Attributes
 
 	compound: EIFFEL_LIST_B [INSTRUCTION_AS_B];
 			-- Compound
+
+feature -- test for empty body
+
+	empty : BOOLEAN is
+		do
+			Result := (compound = Void) or else (compound.empty)
+		end
 
 feature -- Type check, byte code and dead code removal
 

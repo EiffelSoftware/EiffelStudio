@@ -312,7 +312,7 @@ call make.bat
 gacutil -i ISE.AssemblyManager.WindowsDirectoryExtractor.dll
 copy ISE.AssemblyManager.WindowsDirectoryExtractor.dll ..\..\bin
 copy windowsdirectoryextractor.netmodule ..\..\bin
-:goto directory_extractor_generated
+:directory_extractor_generated
 
 echo *************************************************************
 echo * Generating `FolderBrowser.dll' and `FolderDialog.dll'     *
@@ -347,13 +347,15 @@ echo *************************************
 if not exist folder_browser.epr goto generate_folder_browser
 if not exist EIFGEN goto generate_folder_browser
 cd EIFGEN
-cd W_code
+cd F_code
 if not exist folder_browser.dll goto generate_folder_browser
 cd ..
 cd ..
 goto folder_browser_generated
 
 :generate_folder_browser
+cd ..
+cd ..
 del *.epr
 rd /q /s EIFGEN
 ec -ace Ace.ace -finalize
@@ -399,6 +401,8 @@ goto assembly_manager_generated
 
 :generate_assembly_manager
 gacutil -u ISE.AssemblyManager
+cd ..
+cd ..
 del *.epr
 rd /q /s EIFGEN
 ec -ace ace.ace

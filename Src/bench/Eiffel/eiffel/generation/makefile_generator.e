@@ -125,14 +125,14 @@ feature -- Object basket managment
 	add_in_system_basket (base_name: STRING) is
 		local	
 			object_name: STRING
-			string_list: LINKED_LIST [STRING]
+ 			string_list: LINKED_LIST [STRING]
 		do
 			!!object_name.make (0)
 			object_name.append (base_name)
 			object_name.append (".o")
-			string_list := system_basket
+ 			string_list := system_basket
 			string_list.extend (object_name)
-			string_list.forth 
+ 			string_list.forth 
 		end
 
 	add_common_objects is
@@ -218,7 +218,7 @@ feature -- Cecil
 			make_file.new_line
 		end
 
-feature -- Generate Dynalic Library
+feature -- Generate Dynamic Library
 
 	generate_dynamic_lib is
 		local

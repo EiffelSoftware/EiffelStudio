@@ -241,7 +241,6 @@ rt_public void discard_breakpoints()
 	 * are discarded
 	 */
 	
-	EIF_GET_CONTEXT
 	/* We remove 1 from current value. So if we have the following scheme,
 	 * the breakpoints remain discarded after the first call to
 	 * undiscard_breakpoints.
@@ -265,7 +264,6 @@ rt_public void undiscard_breakpoints()
 	 * when we want to re-take breakable line into account
 	 */
 	
-	EIF_GET_CONTEXT
 	/* We remove 1 from current value. So if we have the following scheme,
 	 * the breakpoints remain discarded after the first call to
 	 * undiscard_breakpoints.
@@ -612,7 +610,6 @@ rt_public void dsetbreak(int body_id, uint32 offset, int what)
 /**************************************************************************/
 rt_private int is_dbreak_set(int body_id, uint32 offset)
 	{
-	EIF_GET_CONTEXT
 	struct offset_list 	*curr_offset;
 	struct db_bpinfo 	*curr_bpinfo;
 	struct offset_list	*search_start_offset;
@@ -665,7 +662,6 @@ rt_private int is_dbreak_set(int body_id, uint32 offset)
 /**************************************************************************/
 rt_private void set_breakpoint_in_table(int body_id, uint32 offset)
 	{
-	EIF_GET_CONTEXT
 	struct offset_list 	*curr_offset;
 	struct db_bpinfo 	*curr_bpinfo;
 	struct offset_list 	*new_offset;
@@ -744,7 +740,6 @@ rt_private void set_breakpoint_in_table(int body_id, uint32 offset)
 /**************************************************************************/
 rt_private void remove_breakpoint_in_table(int body_id, uint32 offset)
 	{
-	EIF_GET_CONTEXT
 	struct offset_list 	*curr_offset;
 	struct offset_list 	*old_offset;
 	struct db_bpinfo 	*curr_bpinfo;
@@ -821,7 +816,6 @@ rt_private void remove_breakpoint_in_table(int body_id, uint32 offset)
 /**************************************************************************/
 rt_public void dbreak_create_table(void)
 	{
-	EIF_GET_CONTEXT
 
 		/* create the mutex used to access the table safely between threads */
 	DBGMTX_CREATE;

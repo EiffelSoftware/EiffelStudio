@@ -210,8 +210,8 @@ feature -- Preconditions
 				Result := substrg.is_equal ("ff") and substrg2.is_integer
 			end
 		ensure
-			definition: Result = (s.count > 2) and then (s.substring (1, 2).is_equal ("ff") and
-									s.substring (3, s.count).is_integer)
+			definition: Result = ((s.count > 2) and then (s.substring (1, 2).is_equal ("ff") and
+									s.substring (3, s.count).is_integer))
 		end
 
 	is_colon (s: STRING): BOOLEAN is

@@ -31,7 +31,11 @@ feature -- Status report
 		require
 			window_not_void: window /= Void
 		do
-			Result := eif_id_object (window.internal_data) /= Void
+			if window.exists then
+				Result := eif_id_object (window.internal_data) /= Void
+			else
+				Result := False
+			end
 		end
 
 feature {WEL_DISPATCHER} -- Dialog creation

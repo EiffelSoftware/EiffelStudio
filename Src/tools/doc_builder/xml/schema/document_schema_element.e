@@ -338,7 +338,7 @@ feature -- Elements
 				until
 					children.after
 				loop
-					if children.item.min_occurs.to_int_32 (children.item.min_occurs) > 0 then
+					if feature {DECIMAL}.to_int_32 (children.item.min_occurs) > 0 then
 						from
 							cnt := 0
 						until

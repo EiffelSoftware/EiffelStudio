@@ -1,18 +1,19 @@
+indexing
+	description: "Page representing the behavior properties."
+	Id: "$Id$"
+	Date: "$Date$"
+	Revision: "$Revision$"
 
 class BEHAVIOR_FORM 
 
 inherit
 
-	EDITOR_FORM
-		rename
-			show as form_show
-		end;
+
 	EDITOR_FORM
 		redefine
 			show
-		select
-			show
 		end;
+
 	WINDOWS
 		select
 			init_toolkit
@@ -30,6 +31,7 @@ feature -- Interface
 			!!event_catalog.make (Widget_names.event_catalog_name, Current);
 			!!behavior_editor.make (Widget_names.behaviour_editor_name, Current);
 
+			set_size (200, 250)
 			set_fraction_base(5);
 			attach_top (event_catalog, 0);
 			attach_left (event_catalog, 0);
@@ -120,7 +122,7 @@ feature {NONE}
 
 	show is
 		do
-			form_show;
+			Precursor
 			behavior_editor.hide_stones
 		end;
 

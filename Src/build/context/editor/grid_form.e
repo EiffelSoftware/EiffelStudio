@@ -1,10 +1,16 @@
+indexing
+	description: "Page representing the grid properties."
+	Id: "$Id$"
+	Date: "$Date$"
+	Revision: "$Revision$"
+
 class GRID_FORM 
 
 inherit
 
-	EDITOR_FORM;
-	COMMAND;
-	COMMAND_ARGS;
+	EDITOR_FORM
+	COMMAND
+	COMMAND_ARGS
 
 creation
 	make
@@ -14,12 +20,12 @@ feature {NONE}
 	form_number: INTEGER is
 		do
 			Result := Context_const.grid_form_nbr
-		end;
+		end
 
 	format_number: INTEGER is
 		do
 			Result := Context_const.grid_format_nbr
-		end;
+		end
 
 	no_grid: TOGGLE_B
 	grid5: TOGGLE_B
@@ -35,17 +41,19 @@ feature -- Interface
 			grids: RADIO_BOX
 		do	
 			initialize (Widget_names.grid_form_name, a_parent)
-			!!grid_title.make (Widget_names.grid_options_name, Current)
-			!!grids.make (Widget_names.radio_box, Current)
-			!!no_grid.make (Widget_names.no_grid_name, grids)
-			!!grid5.make (Widget_names.grid5_name, grids)
-			!!grid10.make (Widget_names.grid10_name, grids)
-			!!grid15.make (Widget_names.grid15_name, grids)
-			!!grid20.make (Widget_names.grid20_name, grids)
+			!! grid_title.make (Widget_names.grid_options_name, Current)
+			!! grids.make (Widget_names.radio_box, Current)
+			!! no_grid.make (Widget_names.no_grid_name, grids)
+			!! grid5.make (Widget_names.grid5_name, grids)
+			!! grid10.make (Widget_names.grid10_name, grids)
+			!! grid15.make (Widget_names.grid15_name, grids)
+			!! grid20.make (Widget_names.grid20_name, grids)
 
 			attach_top (grid_title, 10)
 			attach_left (grid_title, 10)
-			attach_left (grids, 50)
+			attach_left (grids, 15)
+			attach_right (grid_title, 0)
+			attach_right (grids, 0)
 			attach_top_widget (grid_title, grids, 10)
 			detach_bottom (grids)
 			no_grid.arm
@@ -68,12 +76,12 @@ feature {NONE}
 		local
 			bg_pixmap: PIXMAP
 		do
-			bg_pixmap := context.widget.background_pixmap;
-			no_grid.set_toggle_off;
-			grid5.set_toggle_off;
-			grid10.set_toggle_off;
-			grid15.set_toggle_off;
-			grid20.set_toggle_off;
+			bg_pixmap := context.widget.background_pixmap
+			no_grid.set_toggle_off
+			grid5.set_toggle_off
+			grid10.set_toggle_off
+			grid15.set_toggle_off
+			grid20.set_toggle_off
 			if (bg_pixmap = Pixmaps.grid5_pixmap) then
 				grid5.set_toggle_on
 			elseif (bg_pixmap = Pixmaps.grid10_pixmap) then

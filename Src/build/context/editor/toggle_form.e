@@ -1,3 +1,9 @@
+indexing
+	description: "Page representing the properties of a TOGGLE_B."
+	Id: "$Id$"
+	Date: "$Date$"
+	Revision: "$Revision$"
+
 class TOGGLE_FORM
 
 inherit
@@ -24,44 +30,44 @@ creation
 
 feature {NONE} -- Interface
 
-	toggle_armed: EB_TOGGLE_B;
+	toggle_armed: EB_TOGGLE_B
 
 	context: TOGGLE_B_C is
 		do
 			Result ?= editor.edited_context
-		end;
+		end
 
 	form_number: INTEGER is
 		do
 			Result := Context_const.toggle_att_form_nbr
-		end;
+		end
 
 	Toggle_arm_cmd: TOGGLE_ARM_CMD is
 		once
 			!! Result
-		end;
+		end
 
 feature -- Interface
 
 	create_widgets is
 		do
 			label_text_form_create_widgets
-			!! toggle_armed.make (Widget_names.toggle_armed_name, Current, Toggle_arm_cmd, editor);
-		end;
+			!! toggle_armed.make (Widget_names.toggle_armed_name, Current, Toggle_arm_cmd, editor)
+		end
 
 	attach_widgets is
 		do
 			label_text_form_attach_widgets
-			attach_left (toggle_armed, 10);
-			attach_top_widget (radio_box, toggle_armed, 10);
-			detach_bottom (toggle_armed)
+			attach_left (toggle_armed, 10)
+			attach_top_widget (radio_box, toggle_armed, 10)
+--			detach_bottom (toggle_armed)
 		end
 
     reset is
         do
 			label_text_form_reset
-			toggle_armed.set_state (context.is_armed);
-		end;	
+			toggle_armed.set_state (context.is_armed)
+		end	
 
     apply is
         do
@@ -69,6 +75,6 @@ feature -- Interface
 			if context.is_armed /= toggle_armed.state then
 				context.set_is_armed (toggle_armed.state)
 			end
-        end;
+        end
 
 end

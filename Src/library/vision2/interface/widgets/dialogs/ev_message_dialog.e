@@ -7,7 +7,7 @@ indexing
 	date: "$Date$"
 	revision: "$Revision$"
 
-deferred class
+class
 	EV_MESSAGE_DIALOG
 
 inherit
@@ -26,6 +26,10 @@ inherit
 		undefine
 			default_create, copy
 		end
+		
+create
+	default_create,
+	make_with_text
 
 feature {NONE} -- Initialization
 

@@ -6,16 +6,17 @@ indexing
 class
 	XSL_TRANSFORM
 	
-inherit
-	DOCUMENT_XML
-		select			
-		end
-	
+inherit	
 	SHARED_OBJECTS
 		
 	EXECUTION_ENVIRONMENT
 
 	UTILITY_FUNCTIONS
+	
+	XML_ROUTINES
+		rename
+			is_valid_xml as is_valid_xml_text
+		end
 
 create
 	make_from_xsl_file
@@ -33,10 +34,11 @@ feature	--Creation
 			xslt_compile_exception: XML_XSLT_COMPILE_EXCEPTION
 			xslt_exception: XML_XSLT_EXCEPTION
 		do
-			make_from_filename (a_filename)
+			name := a_filename
+			document := deserialize_document (name)
 			create internal_xsl.make
 			if not retried then
-				internal_xsl.load (name.to_cil)
+				internal_xsl.load (a_filename)
 				Shared_document_manager.set_xsl (Current)
 				create arguments.make
 				is_valid_xsl := True
@@ -62,30 +64,28 @@ feature	--Creation
 	
 feature -- Commands
 
-	transform_xml_text (xml_text: STRING; type: INTEGER) is
-			-- Transform `xml_text' for output of `type'
+	transform_xml_text (xml_text: STRING) is
+			-- Transform `xml_text' according to selected filter
 		require
 			xml_not_void: xml_text /= Void
 			xml_not_empty: not xml_text.is_empty
 		do
-			Shared_constants.Application_constants.set_output_filter (type)
 			transform (xml_text)
-		end
-		
-	transform_file_text (a_file: PLAIN_TEXT_FILE; type: INTEGER) is
-			-- Transform text in `a_file' into output according to `type'.
-			-- Put result in `transformed_text'.
-		require
-			file_not_void: a_file /= Void
-			file_exists: a_file.exists
-		local
-			l_document: DOCUMENT
-		do
-			create l_document.make_from_file (a_file, Shared_document_editor)
-			transform_xml_text (l_document.xml_text, type)
 		end
 
 feature -- Access
+	
+	name: STRING
+			-- Name
+			
+	document: XM_DOCUMENT
+			-- XML structure
+			
+	text: STRING is
+			-- Text of `document'
+		do
+			Result := document_text (document)	
+		end		
 	
 	stylesheet: STRING
 			-- File where stylesheet resides for formatting output
@@ -119,6 +119,12 @@ feature -- Status setting
 		end		
 		
 feature -- Query
+
+	is_valid_xml: BOOLEAN is
+			-- Is Current valid xml?
+		do
+			Result := document /= Void
+		end		
 
 	is_valid_xsl: BOOLEAN
 			-- Is Current a valid Xslt file
@@ -170,7 +176,7 @@ feature {NONE} -- Implementation
 			xml.replace_substring_all ("%N", "")
 			if Shared_constants.Transformation_constants.add_custom_text then
 				create l_custom_xml.make_from_xml (l_xml)
-				l_xml := l_custom_xml.text
+--				l_xml := l_custom_xml.text
 			end
 
 			temp_in_xml.put_string (l_xml)
@@ -196,12 +202,14 @@ feature {NONE} -- Implementation
 			retried: BOOLEAN
 			l_xml_exception: XML_XML_EXCEPTION
 			error_report: ERROR_REPORT
+			l_filter_name: STRING
 		do
 			if not retried then
 				arguments.clear
-				if Shared_constants.Application_constants.is_studio then
+				l_filter_name := Shared_project.filter_manager.filter.description
+				if l_filter_name.is_equal ("EiffelStudio") then
 					arguments.add_param ("generation_output", "", "studio")
-				elseif Shared_constants.Application_constants.is_envision then
+				elseif l_filter_name.is_equal ("ENViSioN!") then
 					arguments.add_param ("generation_output", "", "envision")
 				end
 				if stylesheet /= Void then

@@ -15,7 +15,8 @@ inherit
 creation
 	make,
 	make_rgb,
-	make_system
+	make_system,
+	make_by_color
 
 feature -- Status report
 

@@ -62,6 +62,7 @@ feature -- Basic operations
 			do
 				create dialog
 				dialog.set_filter (project_file_filter)
+				create file_handler
 					-- We do not allow the dialog to close until a valid
 					-- file name has been entered or the user clicks the
 					-- cancel button.
@@ -71,7 +72,7 @@ feature -- Basic operations
 				from
 				until
 					opened and then
-					(valid_file_name (dialog.file_name) or dialog.file_name.is_empty)
+					((valid_file_name (dialog.file_name) and file_handler.last_load_successful) or dialog.file_name.is_empty)
 				loop
 						-- Display the dialog.
 					dialog.show_modal_to_window (system_status.main_window)
@@ -80,7 +81,6 @@ feature -- Basic operations
 						-- If the ok button was clicked and the file name exists,
 						-- then we attempt to open it.
 					if not dialog.file_name.is_empty and valid_file_name (dialog.file_name) then
-						create file_handler
 						create project_settings
 						project_settings.load (dialog.file_name, file_handler)
 						if file_handler.last_load_successful then

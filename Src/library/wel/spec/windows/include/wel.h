@@ -36,13 +36,15 @@
 #ifdef WIN32
 #	define cwel_is_win32 TRUE
 #	define cwel_menu_item_not_found 0xFFFFFFFF
-#	define cwel_set_selection_edit(_hwnd_, _start_, _end_) SendMessage ((HWND) _hwnd_, EM_SETSEL, _start_, _end_)
+#	define cwel_set_selection_edit(_hwnd_, _start_, _end_, _scrollcaret_) SendMessage ((HWND) _hwnd_, EM_SETSEL, _start_, _end_)
+#	define cwel_scroll_caret(_hwnd_) SendMessage ((HWND) _hwnd_, EM_SCROLLCARET, 0, 0)
 #else
 #	define cwel_is_win32 FALSE
 #	define cwel_menu_item_not_found 0xFFFF
 #	define OFN_NONETWORKBUTTON 0x0200
 #	define OFN_NOLONGNAMES 0x0400
-#	define cwel_set_selection_edit(_hwnd_, _start_, _end_) SendMessage ((HWND) _hwnd_, EM_SETSEL, 1, MAKELPARAM(_start_, _end_))
+#	define cwel_set_selection_edit(_hwnd_, _start_, _end_, _scrollcaret_) SendMessage ((HWND) _hwnd_, EM_SETSEL, !_scrollcaret_, MAKELPARAM(_start_, _end_))
+#	define cwel_scroll_caret(_hwnd_) ((void) 0)
 #endif
 
 #endif /* __WEL__ */

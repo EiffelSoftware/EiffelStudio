@@ -125,15 +125,15 @@ feature -- Status setting
 
 feature -- Access
 
-	alignment: EV_TEXT_ALIGNMENT is
+	text_alignment: INTEGER is
 			-- Alignment of the text in the label.
 		do
 			if internal_alignment_code = C.Gtk_justify_center_enum then
-				create Result.make_with_center_alignment
+				Result := feature {EV_TEXT_ALIGNMENT_CONSTANTS}.Ev_text_alignment_center
 			elseif internal_alignment_code = C.Gtk_justify_left_enum then
-				create Result.make_with_left_alignment
+				Result := feature {EV_TEXT_ALIGNMENT_CONSTANTS}.Ev_text_alignment_left
 			elseif internal_alignment_code = C.Gtk_justify_right_enum then
-				create Result.make_with_right_alignment
+				Result := feature {EV_TEXT_ALIGNMENT_CONSTANTS}.Ev_text_alignment_right
 			else
 				check alignment_code_not_set: False end
 			end

@@ -31,6 +31,10 @@ feature {NONE} -- For workbench requests.
 		-- #define WEAN 24
 		-- /* Wean adopted object */
 
+	Rqst_once: INTEGER is 25;
+		-- #define ONCE 25
+		-- /* Once routines inspection */
+
 	Rqst_resume: INTEGER is 11;
 		-- #define RESUME 11
 		-- /* Resume execution */
@@ -83,6 +87,14 @@ feature {NONE} -- For workbench requests.
 	In_bit_addr: INTEGER is 6;
 		-- #define IN_BIT_ADDR      6
 		-- /* Bit object at given addr */
+
+	Out_called: INTEGER is 0;
+		-- #define OUT_CALLED		0
+		-- /* Check whether once routine has been called */
+
+	Out_result: INTEGER is 1;
+		-- #define OUT_RESULT		1
+		-- /* Ask for result of already called once function */
 
 	Pg_raise: INTEGER is 1;
 		-- Explicitely raised exception

@@ -200,7 +200,7 @@ feature -- Display
 
 				-- Print object address.
 			debug_window.put_string ("Stopped in object [");
-			!! os.make (Run_info.object_address);
+			!! os.make (Run_info.object_address, Run_info.class_type.associated_class);
 			debug_window.put_clickable_string (os, Run_info.object_address);
 			debug_window.put_string ("]%N");
 
@@ -283,9 +283,9 @@ feature -- Display
 					Run_info.where.first.display_locals;				
 					debug_window.put_string ("%NCall stack:%N%N");
 					debug_window.put_string 
-						("Object        Class             Routine%N");
+						("Object          Class             Routine%N");
 					debug_window.put_string 
-						("------        -----             -------%N");
+						("------          -----             -------%N");
 					from
 						Run_info.where.start
 					until

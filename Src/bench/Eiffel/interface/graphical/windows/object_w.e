@@ -52,11 +52,8 @@ feature {NONE}
 	build_format_bar is
 			-- Build formatting buttons in `format_bar'.
 		do
---			!!showtext_command.make (format_bar, text_window);
 			!!showonce_command.make (format_bar, text_window);
 			!!showattr_command.make (format_bar, text_window);
---			format_bar.attach_top (showtext_command, 0);
---			format_bar.attach_left (showtext_command, 0);
 			format_bar.attach_top (showattr_command, 0);
 			format_bar.attach_left (showattr_command, 0);
 			format_bar.attach_top (showonce_command, 0);

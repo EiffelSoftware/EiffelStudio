@@ -17,9 +17,10 @@ feature
 	objects_kept: LINKED_SET [STRING] is
 			-- Hector references to objects clickable from object tools
 		local
+			text_window: TEXT_STRUCT;
 			click_list: ARRAY [CLICK_STONE];
-			root_stone, obj_stone: OBJECT_STONE;
-			i: INTEGER
+			obj_stone: OBJECT_STONE;
+			i, clickable_count: INTEGER
 		do
 			from
 				!! Result.make;
@@ -27,22 +28,19 @@ feature
 			until
 				active_editors.after
 			loop
-				root_stone ?= active_editors.item.text_window.root_stone;
-				if root_stone /= Void then
-					click_list := root_stone.click_list;
-					if click_list /= Void then
-						from
-							i := click_list.lower
-						until
-							i > click_list.upper
-						loop
-							obj_stone ?= click_list.item (i).node;
-							if obj_stone /= Void then
-								Result.add (obj_stone.object_address)
-							end;
-							i := i + 1
-						end
+				text_window := active_editors.item.text_window;
+				clickable_count := text_window.clickable_count;
+				click_list := text_window;
+				from
+					i := 1
+				until
+					i > clickable_count
+				loop
+					obj_stone ?= click_list.item (i).node;
+					if obj_stone /= Void then
+						Result.add (obj_stone.object_address)
 					end;
+					i := i + 1
 				end;
 				active_editors.forth
 			end

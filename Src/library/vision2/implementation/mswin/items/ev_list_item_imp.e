@@ -54,18 +54,18 @@ feature -- Access
 		end
 
 	parent_imp: EV_LIST_ITEM_HOLDER_IMP
+		-- Parent of `Current'
 	
 	set_parent (par: like parent) is
                       -- Make `par' the new parent of the widget.
                       -- `par' can be Void then the parent is the screen.
-              do
-				if par /= Void then
-					parent_imp ?= par.implementation
-				else
-					parent_imp := Void
-				end
-              end
-
+		do
+			if par /= Void then
+				parent_imp ?= par.implementation
+			else
+				parent_imp := Void
+			end
+		end
 
 --|FIXME implement as now pick and dropable
 
@@ -86,6 +86,7 @@ feature -- Access
 feature -- Status report
 
 	text: STRING
+		-- Text of `Current'		
 
 	is_selected: BOOLEAN is
 			-- Is the item selected
@@ -151,52 +152,6 @@ feature {EV_LIST_IMP} -- Implementation.
 			Result := (index - list_imp.top_index - 1) * list_imp.item_height
 		end
 
-feature -- Event : command association
-
---|FIXME	add_select_command (cmd: EV_COMMAND; arg: EV_ARGUMENT) is
---|FIXME			-- Add `cmd' to the list of commands to be executed
---|FIXME			-- when the item is selected.
---|FIXME		do
---|FIXME			add_command (Cmd_item_activate, cmd, arg)			
---|FIXME		end	
-
---|FIXME	add_unselect_command (cmd: EV_COMMAND; arg: EV_ARGUMENT) is
---|FIXME			-- Add `cmd' to the list of commands to be executed
---|FIXME			-- when the item is unselected.
---|FIXME		do
---|FIXME			add_command (Cmd_item_deactivate, cmd, arg)		
---|FIXME		end
-
---|FIXME	add_double_click_command (cmd: EV_COMMAND; arg: EV_ARGUMENT) is
---|FIXME			-- Add 'cmd' to the list of commands to be executed
---|FIXME			-- when the item is double clicked.
---|FIXME		do
---|FIXME			add_command (Cmd_item_dblclk, cmd, arg)
---|FIXME		end	
-
-feature -- Event -- removing command association
-
---|FIXME	remove_select_commands is
---|FIXME			-- Empty the list of commands to be executed when
---|FIXME			-- the item is selected.
---|FIXME		do
---|FIXME			remove_command (Cmd_item_activate)			
---|FIXME		end	
-
---|FIXME	remove_unselect_commands is
---|FIXME			-- Empty the list of commands to be executed when
---|FIXME			-- the item is unselected.
---|FIXME		do
---|FIXME			remove_command (Cmd_item_deactivate)		
---|FIXME		end
-
---|FIXME	remove_double_click_commands is
---|FIXME			-- Empty the list of commands to be executed when
---|FIXME			-- the item is double-clicked.
---|FIXME		do
---|FIXME			remove_command (Cmd_item_dblclk)
---|FIXME		end
-
 feature {EV_ANY_I} -- Implementation
 
 	interface: EV_LIST_ITEM
@@ -224,6 +179,9 @@ end -- class EV_LIST_ITEM_IMP
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.33  2000/03/15 17:17:02  rogers
+--| Improved comments and removed old command association.
+--|
 --| Revision 1.32  2000/03/15 16:51:53  rogers
 --| Removed commented out destroyed;. Added relative_y which returns the relative coordinate of the item to its parent.
 --|

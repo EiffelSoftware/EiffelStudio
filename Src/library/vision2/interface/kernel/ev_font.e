@@ -5,14 +5,17 @@ indexing
 	revision: "$Revision$"
 
 class 
-
 	EV_FONT 
 
-creation
+inherit
+	EV_ANY
+		redefine
+			implementation
+		end
 
+creation
 	make,
 	make_by_name
-
 
 feature {NONE} -- Initialization
 
@@ -250,44 +253,32 @@ feature -- Element change
 			name_set: is_specified implies a_name.is_equal (a_name)
 		end
 
-feature -- Obsolete features
+--feature -- Obsolete features
 
-	is_valid (a_screen: EV_WIDGET): BOOLEAN is
-			-- Is the font valid in `a_screen''s display ?
-		obsolete
-			"Use `is_font_valid' instead."
-		require
-			font_specified: is_specified
-		do
-			Result := is_font_valid
-		end
-
-	string_width (a_screen: EV_WIDGET; a_text: STRING): INTEGER is
-			-- Width in pixel of `a_text' in the current font loaded for `a_screen'.
-		obsolete
-			"Use `width_of_string' instead."
-		require
-			a_screen_exists: a_screen /= Void
-			a_text_exists: a_text /= Void
-			font_specified: is_specified
-			font_valid_for_a_screen: is_valid (a_screen)
-		do
-			Result := width_of_string (a_text)
-		ensure
-			valid_result: Result >= 0
-		end
+--	string_width (a_screen: EV_WIDGET; a_text: STRING): INTEGER is
+--			-- Width in pixel of `a_text' in the current font loaded for `a_screen'.
+--		obsolete
+--			"Use `width_of_string' instead."
+--		require
+--			a_screen_exists: a_screen /= Void
+--			a_text_exists: a_text /= Void
+--			font_specified: is_specified
+--			font_valid_for_a_screen: is_valid (a_screen)
+--		do
+--			Result := width_of_string (a_text)
+--		ensure
+--			valid_result: Result >= 0
+--		end
 
 feature -- Implementation
 
 		implementation: EV_FONT_I
 			-- Implementation of font
 
-invariant
-
-	valid_implementation: implementation /= Void
+--invariant
+--	valid_implementation: implementation /= Void
 
 end -- class EV_FONT
-
 
 --|----------------------------------------------------------------
 --| EiffelVision: library of reusable components for ISE Eiffel.

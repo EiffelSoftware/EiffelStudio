@@ -154,6 +154,3 @@ indexing
 			]"
 
 end -- class ITERATOR
-
-
-

@@ -86,40 +86,40 @@
 			</code> is shown below:
 		</paragraph>
 		<code_block>
-deferred class
-    COMPARABLE
+<keyword>deferred</keyword> <keyword>class</keyword>
+	<class_name>COMPARABLE</class_name>
 
-feature -- Comparison
+<keyword>feature</keyword><comment> -- Comparison</comment>
 
-    infix "&lt;" (other: like Current): BOOLEAN is
-            -- Is current object less than `other'?
-        deferred
-    end
+	<keyword>infix</keyword> "&lt;" <symbol>(</symbol>other<symbol>:</symbol> <keyword>like</keyword> Current<symbol>)</symbol><symbol>:</symbol> <class_name>BOOLEAN</class_name> <keyword>is</keyword>
+			<comment>-- Is current object less than `other'?</comment>
+		<keyword>deferred</keyword>
+		<keyword>end</keyword>
 
-    infix "&lt;=" (other: like Current): BOOLEAN is
-            -- Is current object less than or equal to `other'?
-        do
-            Result := not (other &lt; Current)
-        end
+	<keyword>infix</keyword> "&lt;<symbol>=</symbol>" <symbol>(</symbol>other<symbol>:</symbol> <keyword>like</keyword> Current<symbol>)</symbol><symbol>:</symbol> <class_name>BOOLEAN</class_name> <keyword>is</keyword>
+			<comment>-- Is current object less than or equal to `other'?</comment>
+		<keyword>do</keyword>
+			Result <symbol>:</symbol><symbol>=</symbol> <keyword>not</keyword> <symbol>(</symbol>other &lt; Current<symbol>)</symbol>
+		<keyword>end</keyword>
 
-    infix "&gt;" (other: like Current): BOOLEAN is
-            -- Is current object greater than `other'?
-        do
-            Result := other &lt; Current
-        end
+	<keyword>infix</keyword> "&gt;" <symbol>(</symbol>other<symbol>:</symbol> <keyword>like</keyword> Current<symbol>)</symbol><symbol>:</symbol> <class_name>BOOLEAN</class_name> <keyword>is</keyword>
+			<comment>-- Is current object greater than `other'?</comment>
+		<keyword>do</keyword>
+			Result <symbol>:</symbol><symbol>=</symbol> other &lt; Current
+        		<keyword>end</keyword>
 
-    infix "&gt;=" (other: like Current): BOOLEAN is
-            -- Is current object greater than or equal to `other'?
-        do
-            Result := not (Current &lt; other)
-        end
+	<keyword>infix</keyword> "&gt;<symbol>=</symbol>" <symbol>(</symbol>other<symbol>:</symbol> <keyword>like</keyword> Current<symbol>)</symbol><symbol>:</symbol> <class_name>BOOLEAN</class_name> <keyword>is</keyword>
+			<comment>-- Is current object greater than or equal to `other'?</comment>
+		<keyword>do</keyword>
+			Result <symbol>:</symbol><symbol>=</symbol> <keyword>not</keyword> <symbol>(</symbol>Current &lt; other<symbol>)</symbol>
+		<keyword>end</keyword>
 
-    is_equal (other: like Current): BOOLEAN is
-            -- Is `other' attached to an object of the same type
-            -- as current object and identical to it?
-        do
-            Result := (not (Current &lt; other) and not (other &lt; Current))
-        end
+	is_equal <symbol>(</symbol>other<symbol>:</symbol> <keyword>like</keyword> Current<symbol>)</symbol><symbol>:</symbol> <class_name>BOOLEAN</class_name> <keyword>is</keyword>
+			<comment>-- Is `other' attached to an object of the same type</comment>
+			<comment>-- as current object and identical to it?</comment>
+		<keyword>do</keyword>
+			Result <symbol>:</symbol><symbol>=</symbol> <symbol>(</symbol><keyword>not</keyword> <symbol>(</symbol>Current &lt; other<symbol>)</symbol> <keyword>and</keyword> <keyword>not</keyword> <symbol>(</symbol>other &lt; Current<symbol>)</symbol><symbol>)</symbol>
+		<keyword>end</keyword>
 </code_block>
 		<paragraph>If you are producing a class that you wish to support basic comparison operators, like "&lt;" and "&gt;", you can have that class inherit from 
 			<code>
@@ -186,53 +186,53 @@ feature -- Comparison
 			</code> (an effective class).
 		</paragraph>
 		<code_block>
-class
-    LINKED_QUEUE [G]
-inherit
-     QUEUE [G]
-        undefine
-            is_empty,
-            copy,
-            is_equal
-        redefine
-            linear_representation,
-            prune_all,
-            extend
-        select
-            item,
-            put
-        end
-    LINKED_LIST [G]
-        rename
-           item as ll_item,
-            remove as ll_remove,
-            make as ll_make,
-            remove_left as remove,
-            put as ll_put
-        export
-            {NONE}
-                all
-            {ANY}
-                writable,
-                extendible,
-                wipe_out,
-                readable
-        undefine
-            fill,
-            append,
-            prune,
-            readable,
-            writable,
-            prune_all,
-            extend,
-            force,
-            is_inserted
-        redefine
-            duplicate,
-            linear_representation
-        select
-            remove
-        end
+<keyword>class</keyword>
+	<class_name>LINKED_QUEUE</class_name> <symbol>[</symbol><class_name>G</class_name><symbol>]</symbol>
+<keyword>inherit</keyword>
+	<class_name>QUEUE</class_name> <symbol>[</symbol><class_name>G</class_name><symbol>]</symbol>
+		<keyword>undefine</keyword>
+			<feature_name>is_empty</feature_name>,
+			<feature_name>copy</feature_name>,
+			<feature_name>is_equal</feature_name>
+		<keyword>redefine</keyword>
+			<feature_name>linear_representation</feature_name>,
+			<feature_name>prune_all</feature_name>,
+			<feature_name>extend</feature_name>
+		<keyword>select</keyword>
+			<feature_name>item</feature_name>,
+			<feature_name>put</feature_name>
+		<keyword>end</keyword>
+	<class_name>LINKED_LIST</class_name> <symbol>[</symbol><class_name>G</class_name><symbol>]</symbol>
+		<keyword>rename</keyword>
+			<feature_name>item</feature_name> <keyword>as</keyword> <feature_name>ll_item</feature_name>,
+			<feature_name>remove</feature_name> <keyword>as</keyword> <feature_name>ll_remove</feature_name>,
+			<feature_name>make</feature_name> <keyword>as</keyword> <feature_name>ll_make</feature_name>,
+			<feature_name>remove_left</feature_name> <keyword>as</keyword> <feature_name>remove</feature_name>,
+			<feature_name>put</feature_name> <keyword>as</keyword><feature_name> ll_put</feature_name>
+		<keyword>export</keyword>
+			<symbol>{</symbol><class_name>NONE</class_name><symbol>}</symbol>
+				<keyword>all</keyword>
+			<symbol>{</symbol><class_name>ANY</class_name><symbol>}</symbol>
+				<feature_name>writable</feature_name>,
+				<feature_name>extendible</feature_name>,
+				<feature_name>wipe_out</feature_name>,
+				<feature_name>readable</feature_name>
+		<keyword>undefine</keyword>
+			<feature_name>fill</feature_name>,
+			<feature_name>append</feature_name>,
+			<feature_name>prune</feature_name>,
+			<feature_name>readable</feature_name>,
+			<feature_name>writable</feature_name>,
+			<feature_name>prune_all</feature_name>,
+			<feature_name>extend</feature_name>,
+			<feature_name>force</feature_name>,
+			<feature_name>is_inserted</feature_name>
+		<keyword>redefine</keyword>
+			<feature_name>duplicate</feature_name>,
+			<feature_name>linear_representation</feature_name>
+		<keyword>select</keyword>
+			<feature_name>remove</feature_name>
+		<keyword>end</keyword>
 </code_block>
 		<paragraph>Okay ... now calm down ... please. This is an example from a very highly-evolved and sophisticated library which is replete with software reuse. 
 			<code>
@@ -256,18 +256,12 @@ inherit
 			<size>3</size>Rename
 		</heading>
 		<code_block>
-class
-    LINKED_QUEUE [G]
-inherit
-    LINKED_LIST [G]
-
-
-        rename
-            item as ll_item,
-            remove as ll_remove,
-            make as ll_make,
-            remove_left as remove,
-            put as ll_put
+		<keyword>rename</keyword>
+			<feature_name>item</feature_name> <keyword>as</keyword> <feature_name>ll_item</feature_name>,
+			<feature_name>remove</feature_name> <keyword>as</keyword> <feature_name>ll_remove</feature_name>,
+			<feature_name>make</feature_name> <keyword>as</keyword> <feature_name>ll_make</feature_name>,
+			<feature_name>remove_left</feature_name> <keyword>as</keyword> <feature_name>remove</feature_name>,
+			<feature_name>put</feature_name> <keyword>as</keyword><feature_name> ll_put</feature_name>
 </code_block>
 		<paragraph>As you might have already guessed, the rename part, introduced oddly enough by the keyword " 
 			<code>
@@ -293,20 +287,14 @@ inherit
 			<size>3</size>New Exports
 		</heading>
 		<code_block>
-class
-    LINKED_QUEUE [G]
-inherit
-    LINKED_LIST [G]
-
-
-        export
-            {NONE}
-                all
-            {ANY}
-                writable,
-                extendible,
-                wipe_out,
-                readable
+		<keyword>export</keyword>
+			<symbol>{</symbol><class_name>NONE</class_name><symbol>}</symbol>
+				<keyword>all</keyword>
+			<symbol>{</symbol><class_name>ANY</class_name><symbol>}</symbol>
+				<feature_name>writable</feature_name>,
+				<feature_name>extendible</feature_name>,
+				<feature_name>wipe_out</feature_name>,
+				<feature_name>readable</feature_name>
 </code_block>
 		<paragraph>The new exports part is introduced by the keyword " 
 			<code>
@@ -359,17 +347,10 @@ inherit
 			<size>3</size>Undefine
 		</heading>
 		<code_block>
-class
-    LINKED_QUEUE [G]
-inherit
-    LINKED_LIST [G]
-
-
-        undefine
-            is_empty,
-            copy,
-            is_equal
-
+		<keyword>undefine</keyword>
+			<feature_name>is_empty</feature_name>,
+			<feature_name>copy</feature_name>,
+			<feature_name>is_equal</feature_name>
 </code_block>
 		<paragraph>Next, undefine ... it's probably not what you think. You might assume that undefine is a way to banish forever any inherited features that you just do not want to deal with. But what happens to features whose names are listed in an undefine clause is that they become deferred features in the heir. </paragraph>
 		<paragraph>Undefine is useful if you inherit two different features of the same name from different parents, a situation you cannot live with. If you like one and you don't like the other, then you can undefine the one you don't like. The the only version you get is the one you like.</paragraph>
@@ -378,17 +359,10 @@ inherit
 			<size>3</size>Redefine
 		</heading>
 		<code_block>
-class
-    LINKED_QUEUE [G]
-inherit
-    LINKED_LIST [G]
-
-
-        redefine
-            linear_representation,
-            prune_all,
-            extend
-
+		<keyword>redefine</keyword>
+			<feature_name>linear_representation</feature_name>,
+			<feature_name>prune_all</feature_name>,
+			<feature_name>extend</feature_name>
 </code_block>
 		<paragraph>The redefine part lists the names of effective features for which the producer of the heir class would like to provide implementations that replace the inherited implementations.</paragraph>
 		<paragraph>So, in this example the implementation for 
@@ -415,14 +389,8 @@ inherit
 			<size>3</size>Select
 		</heading>
 		<code_block>
-class
-    LINKED_QUEUE [G]
-inherit
-    LINKED_LIST [G]
-
-
-           select
-            remove
+		<keyword>select</keyword>
+			<feature_name>remove</feature_name>
 </code_block>
 		<paragraph>The select part is used only under special circumstances. The case in which select is required involves a situation called "repeated" inheritance. Repeated inheritance occurs when an heir inherits more than once from the same ancestor. Usually this means it has two or more parents who have a common proper ancestor (but it can occur directly). The features from the common ancestor are inherited by each of the parents and passed on to the heir. The rules and effects of repeated inheritance occupy an entire chapter in the official Eiffel language reference and will not be reproduced here. Justunderstand at this point that it is sometimes necessary to use 
 			<code>
@@ -447,11 +415,11 @@ inherit
 		</paragraph>
 		<paragraph>So we can make declarations like:</paragraph>
 		<code_block>
-        my_polygon: POLYGON
-        your_polygon: POLYGON
-        my_triangle: TRIANGLE
-        my_rectangle: RECTANGLE
-        another_rectangle: RECTANGLE
+	<feature_name>my_polygon</feature_name><symbol>:</symbol> <class_name>POLYGON</class_name>
+	<feature_name>your_polygon</feature_name><symbol>:</symbol> <class_name>POLYGON</class_name>
+	<feature_name>my_triangle</feature_name><symbol>:</symbol> <class_name>TRIANGLE</class_name>
+	<feature_name>my_rectangle</feature_name><symbol>:</symbol> <class_name>RECTANGLE</class_name>
+	<feature_name>another_rectangle</feature_name><symbol>:</symbol> <class_name>RECTANGLE</class_name>
 </code_block>
 		<paragraph>Assume these declarations are in force for all the examples this section on polymorphism.</paragraph>
 		<paragraph>We saw in 
@@ -486,24 +454,23 @@ inherit
 		</heading>
 		<paragraph>These facts affect how assignments can work. Using the declarations above:</paragraph>
 		<code_block>
-        my_polygon := your_polygon              -- Is valid
-        your_polygon := my_polygon              -- Is valid
-        my_polygon := my_rectangle              -- Is valid
-        my_polygon := my_triangle               -- Is valid
+	<feature_name>my_polygon</feature_name> <symbol>:</symbol><symbol>=</symbol> <feature_name>your_polygon	</feature_name>	<comment>-- Is valid</comment>
+	<feature_name>your_polygon</feature_name> <symbol>:</symbol><symbol>=</symbol><feature_name>my_polygon	</feature_name>	<comment>-- Is valid</comment>
+	<feature_name>my_polygon</feature_name> <symbol>:</symbol><symbol>=</symbol><feature_name>my_rectangle	</feature_name>	<comment>-- Is valid</comment>
+	<feature_name>my_polygon</feature_name> <symbol>:</symbol><symbol>=</symbol> <feature_name>my_triangle</feature_name>		<comment>-- Is valid</comment>
 </code_block>
 		<paragraph>but</paragraph>
 		<code_block>
-        my_rectangle := my_polygon              -- Is not valid
-        my_triangle := my_polygon               -- Is not valid
+	<feature_name>my_rectangle</feature_name> <symbol>:</symbol><symbol>=</symbol> <feature_name>my_polygon	</feature_name>	<comment>-- Is not valid</comment>
+	<feature_name>my_triangle</feature_name> <symbol>:</symbol><symbol>=</symbol> <feature_name>my_polygon</feature_name>		<comment>-- Is not valid</comment>
 </code_block>
 		<paragraph>and of course</paragraph>
 		<code_block>
-        my_rectangle := my_triangle             -- Is not valid
-
+	<feature_name>my_rectangle</feature_name> <symbol>:</symbol><symbol>=</symbol> <feature_name>my_triangle</feature_name>		<comment>-- Is not valid</comment>
 </code_block>
 		<paragraph>Consider now the assignment below which is valid.</paragraph>
 		<code_block>
-        my_polygon := my_rectangle
+	<feature_name>my_polygon</feature_name> <symbol>:=</symbol> <feature_name>my_rectangle</feature_name>
 </code_block>
 		<paragraph>After an assignment like this executes the entity 
 			<code>
@@ -513,7 +480,7 @@ inherit
 				<class_name>POLYGON</class_name>
 			</code>. But conformance ensures us that, although it may not be a direct instance, it will indeed by an instance. (all rectangles are polygons).
 		</paragraph>
-		<paragraph>Depending upon how many different types of polygons get modeled in classes, the entity " 
+		<paragraph>Depending upon how many different types of polygons get modeled in classes, the entity "
 			<code>
 				<feature_name>my_polygon</feature_name>
 			</code>" could be attached objects of may different types ... it could take on many forms. This in fact is the basis for the term "polymorphism"; having many forms. So we speak of "polymorphic attachment" as the process by which at runtime entities can hold references to objects which are not of the entity's declared type ... but they are of conforming types.
@@ -540,9 +507,9 @@ inherit
 			</code> feature to any polygon. Let's print some perimeters:
 		</paragraph>
 		<code_block>
-        print (my_polygon.perimeter)
-        print (my_triangle.perimeter)
-        print (my_rectangle.perimeter)
+	<feature_name>print</feature_name> <symbol>(</symbol><feature_name>my_polygon</feature_name>.<feature_name>perimeter</feature_name><symbol>)</symbol>
+	<feature_name>print</feature_name> <symbol>(</symbol><feature_name>my_triangle</feature_name>.<feature_name>perimeter</feature_name><symbol>)</symbol>
+	<feature_name>print</feature_name> <symbol>(</symbol><feature_name>my_rectangle</feature_name>.<feature_name>perimeter</feature_name><symbol>)</symbol>
 </code_block>
 		<paragraph>
 			<code>
@@ -596,30 +563,29 @@ inherit
 			</code>'s inheritance clause.
 		</paragraph>
 		<code_block>
-class RECTANGLE
-inherit
-        POLYGON
-            redefine
-                perimeter
-            end
-     .
-     .
-feature
-    perimeter: REAL is
-            -- Sum of lengths of all sides
-        do
-            Result := 2 * (width + height)
-        end
-
+<keyword>class</keyword> <class_name>RECTANGLE</class_name>
+<keyword>inherit</keyword>
+	<class_name>POLYGON</class_name>
+		<keyword>redefine</keyword>
+			<feature_name>perimeter</feature_name>
+		<keyword>end</keyword>
+	.
+	.
+<keyword>feature</keyword>
+	<feature_name>perimeter</feature_name><symbol>:</symbol> <class_name>REAL</class_name> <keyword>is</keyword>
+		<comment>-- Sum of lengths of all sides</comment>
+		<keyword>do</keyword>
+			Result <symbol>:</symbol><symbol>=</symbol> 2 * <symbol>(</symbol><feature_name>width</feature_name> <symbol>+</symbol> <feature_name>height</feature_name><symbol>)</symbol>
+		<keyword>end</keyword>
 </code_block>
 		<paragraph>You would expect then, that this version of perimeter would be executed in the following context:</paragraph>
 		<code_block>
-        print (my_rectangle.perimeter)
+	<feature_name>print</feature_name> <symbol>(</symbol><feature_name>my_rectangle</feature_name>.<feature_name>perimeter</feature_name><symbol>)</symbol>
 </code_block>
 		<paragraph>But what makes this interesting is that even in the context below</paragraph>
 		<code_block>
-        my_polygon := my_rectangle
-        print (my_polygon.perimeter)
+	<feature_name>my_polygon</feature_name> <symbol>:</symbol><symbol>=</symbol> <feature_name>my_rectangle</feature_name>
+	<feature_name>print</feature_name> <symbol>(</symbol><feature_name>my_polygon</feature_name>.<feature_name>perimeter</feature_name><symbol>)</symbol>
 </code_block>
 		<paragraph>in which 
 			<code>
@@ -662,9 +628,9 @@ feature
 		</heading>
 		<paragraph>Now let's add another situation. Consider the code below:</paragraph>
 		<code_block>
-        my_polygon := my_rectangle
-        print (my_polygon.perimeter)
-        print (my_polygon.width)                -- Is invalid
+	<feature_name>my_polygon</feature_name> <symbol>:</symbol><symbol>=</symbol> <feature_name>my_rectangle</feature_name>
+	<feature_name>print</feature_name> <symbol>(</symbol><feature_name>my_polygon</feature_name>.<feature_name>perimeter</feature_name><symbol>)</symbol>
+	<feature_name>print</feature_name> <symbol>(</symbol><feature_name>my_polygon</feature_name>.<feature_name>width</feature_name><symbol>)</symbol> 	<comment>-- Is invalid</comment>
 </code_block>
 		<paragraph>We could apply 
 			<code>
@@ -710,7 +676,7 @@ feature
 			</code>. Remember that static typing guarantees us at compile time that at runtime there will be at least one version of the feature available that can be applied.
 		</paragraph>
 		<code_block>
-        print (my_polygon.width)                -- Is invalid
+	<feature_name>print</feature_name> <symbol>(</symbol><feature_name>my_polygon</feature_name>.<feature_name>width</feature_name><symbol>)</symbol>	<comment>-- Is invalid</comment>
 </code_block>
 		<paragraph>But in the case above, the guarantee cannot be made. 
 			<code>
@@ -740,10 +706,10 @@ feature
 			</code> features.
 		</paragraph>
 		<code_block>
-        my_polygon := my_rectangle
-        print (my_polygon.perimeter)
-        another_rectangle ?= my_polygon
-        print (another_rectangle.width)
+	<feature_name>my_polygon</feature_name> <symbol>:</symbol><symbol>=</symbol> <feature_name>my_rectangle</feature_name>
+	<feature_name>print</feature_name> <symbol>(</symbol><feature_name>my_polygon</feature_name>.<feature_name>perimeter</feature_name><symbol>)</symbol>
+	<feature_name>another_rectangle</feature_name> <symbol>?</symbol><symbol>=</symbol> <feature_name>my_polygon</feature_name>
+	<feature_name>print</feature_name> <symbol>(</symbol><feature_name>another_rectangle</feature_name>.<feature_name>width</feature_name><symbol>)</symbol>
 </code_block>
 		<paragraph>The assignment attempt uses the syntax "?=", versus the ":=" of assignment.</paragraph>
 		<paragraph>This is significant ... as is the name assignment attempt. The reason is that it is possible in some context that 
@@ -752,7 +718,7 @@ feature
 			</code> will be attached to something other than a rectangle when we do this:
 		</paragraph>
 		<code_block>
-        another_rectangle ?= my_polygon
+	<feature_name>another_rectangle</feature_name> <symbol>?=</symbol> <feature_name>my_polygon</feature_name>
 </code_block>
 		<paragraph>If it were true that 
 			<code>
@@ -772,12 +738,11 @@ feature
 			</code> reference will cause an exception. Almost always, assignment attempt will be used in the following manner:
 		</paragraph>
 		<code_block>
-        my_polygon := my_rectangle
-        print (my_polygon.perimeter)
-        another_rectangle ?= my_polygon
-        if another_rectangle /= Void then    -- Make sure assignment happened
-            print (another_rectangle.width)
-
-        end
+	<feature_name>my_polygon</feature_name> <symbol>:</symbol><symbol>=</symbol> <feature_name>my_rectangle</feature_name>
+	<feature_name>print</feature_name> <symbol>(</symbol><feature_name>my_polygon</feature_name>.<feature_name>perimeter</feature_name><symbol>)</symbol>
+	<feature_name>another_rectangle</feature_name> <symbol>?</symbol><symbol>=</symbol> <feature_name>my_polygon</feature_name>
+	<keyword>if</keyword> <feature_name>another_rectangle </feature_name><symbol>/</symbol><symbol>=</symbol> Void <keyword>then</keyword>	<comment>-- Make sure assignment happened</comment>
+		<feature_name>print </feature_name><symbol>(</symbol><feature_name>another_rectangle</feature_name>.<feature_name>width</feature_name><symbol>)</symbol>
+	<keyword>end</keyword>
 </code_block>
 	</paragraph></document>

@@ -335,18 +335,18 @@ feature {WIDGET_ACTIONS}
 
 	set_exact_to_execute is
 		do
+			executing_exact.set_item (true)
 			exact_to_execute := true
-			executing_exact.put (true)
 		end
 
-	executing_exact: CELL[BOOLEAN] is
+	executing_exact: BOOLEAN_REF is
 		once
-			!!Result.put (false)
+			!! Result
 		end
 
 	set_no_execute_now is
 		do
-			executing_exact.put (false)
+			executing_exact.set_item (false)
 			exact_to_execute := false
 		end
 

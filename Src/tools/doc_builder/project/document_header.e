@@ -26,7 +26,6 @@ feature -- Create
 			-- Make new header based upon data in a_document
 		require
 			document_not_void: a_document /= Void
-			document_valid: a_document.is_valid_to_schema
 		local
 			l_text,
 			l_product: STRING

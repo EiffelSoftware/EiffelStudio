@@ -27,6 +27,8 @@ hints/dgux.sh
 hints/mips.sh
 hints/news_os.sh
 hints/sco_3.sh
+hints/sgi.sh
+hints/umips.sh
 idrs/
 idrs/Jmakefile
 idrs/Makefile.SH
@@ -269,6 +271,10 @@ parsing/eiffel/offset.c
 parsing/eiffel/parser.y
 parsing/eiffel/pretrieve.c
 parsing/eiffel/pstore.c
+parsing/eiffel/infix.gperf
+parsing/eiffel/infix.c
+parsing/eiffel/prefix.gperf
+parsing/eiffel/prefix.c
 parsing/eiffel/y.output
 parsing/lace
 parsing/lace/Jmakefile

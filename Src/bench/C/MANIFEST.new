@@ -27,6 +27,8 @@ hints/dgux.sh
 hints/mips.sh
 hints/news_os.sh
 hints/sco_3.sh
+hints/sgi.sh
+hints/umips.sh
 idrs/
 idrs/Jmakefile
 idrs/Makefile.SH

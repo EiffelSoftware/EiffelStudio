@@ -24,6 +24,26 @@ extern long plsc_per;			/* Period of plsc() in acollect() */
 extern int gc_monitor;			/* GC monitoring flag */
 
 extern int full_coalesc();		/* Perform free blocks coalescing */
+extern void gfree();			/* Garbage collector's free routine */
+
+public void mem_free(object)
+char *object;
+{
+	/* Unconditionally free object, if not in generational scavenge zone, in
+	 * which case the object will be either collected if it is really dead
+	 * or be tenured later on. If the object is in the main memory, it is
+	 * irreversibly freed, which will have unpredictable consequences if some
+	 * other object still references it--RAM.
+	 */
+
+	union overhead *zone = HEADER(object);
+	uint32 flags = zone->ov_flags;
+
+	if (0 == flags & (EO_OLD | EO_NEW))	/* Neither old nor new */
+		return;							/* Object in scavenge zone */
+
+	gfree(zone);		/* Free object, eventually calling dispose */
+}
 
 /*
  * Compiled for speed or for memory?

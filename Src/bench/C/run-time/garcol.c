@@ -202,7 +202,7 @@ private void swap_gen_zones();		/* Exchange 'from' and 'to' zones */
 shared char *to_chunk();			/* Address of the chunk holding 'to' */
 
 /* Dealing with dispose routine */
-private void gfree();				/* Free object, eventually call dispose */
+shared void gfree();				/* Free object, eventually call dispose */
 
 /* Stack handling routines */
 shared int epush();					/* Push value on stack */
@@ -3192,7 +3192,7 @@ char *obj;
  * 'dispose' routine--RAM.
  */
 
-private void gfree(zone)
+shared void gfree(zone)
 register1 union overhead *zone;		/* Pointer on malloc info zone */
 {
 	/* The entry Dispose(type) holds a pointer to the dispose function to

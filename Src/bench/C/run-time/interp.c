@@ -376,6 +376,7 @@ int where;			/* Are we checking invariant before or after compound? */
 					case SK_FLOAT:	last->it_float = get_float(); break;
 					case SK_DOUBLE:	last->it_double = get_double(); break;
 					case SK_POINTER:last->it_ptr = get_fnptr(); break;
+					case SK_BIT:
 					case SK_EXP:
 					case SK_REF:
 						/* Once access is done via an hector pointer, since
@@ -385,7 +386,6 @@ int where;			/* Are we checking invariant before or after compound? */
 						 */
 						last->it_ref = eif_access(get_address());
 						break;
-					case SK_BIT:	/* FIXME */break;
 					default:		panic("invalid result type");
 					}
 				}
@@ -414,9 +414,9 @@ int where;			/* Are we checking invariant before or after compound? */
 			case SK_FLOAT: 		IC += sizeof(float); break;
 			case SK_DOUBLE: 	IC += sizeof(double); break;
 			case SK_POINTER:	IC += sizeof(fnptr); break;
+			case SK_BIT:
 			case SK_EXP:
 			case SK_REF:		IC += sizeof(char *); break;
-			case SK_BIT:		/* FIXME */break;
 			case SK_VOID:		break;
 			default:			panic(botched);
 			}
@@ -656,17 +656,18 @@ end:
 			case SK_FLOAT:	write_float(rvar, last->it_float); break;
 			case SK_DOUBLE:	write_double(rvar, last->it_double); break;
 			case SK_POINTER:write_fnptr(rvar, last->it_ptr); break;
+			case SK_BIT:
 			case SK_EXP:
-			case SK_REF:	/* See below */; break;
-			case SK_BIT:	/* FIXME */break;
+			case SK_REF:	/* See below */;
+				/* If the Result is a reference, then we have an hector pointer
+				 * in place of the result.
+				 */
+				string = IC;	/* Save IC value */
+				IC = rvar;		/* Where hector pointer is recorded */
+				eif_access(get_address()) = last->it_ref;
+				IC = string;	/* Restore IC value */
+				break;
 			}
-			/* If the Result is a reference, then we have an hector pointer
-			 * in place of the result.
-			 */
-			string = IC;	/* Save IC value */
-			IC = rvar;		/* Where hector pointer is recorded */
-			eif_access(get_address()) = last->it_ref;
-			IC = string;	/* Restore IC value */
 		}
 		break;
 

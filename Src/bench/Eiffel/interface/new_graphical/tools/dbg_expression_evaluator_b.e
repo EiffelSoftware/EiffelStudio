@@ -1039,7 +1039,6 @@ feature -- Concrete evaluation
 						end
 					end -- metamorphosme on dotnet or classic
 				end -- preparing parameters 
-
 					--| Function's Evaluation
 				if Application.is_dotnet then
 					tmp_result_value := dbg_evaluator.dotnet_evaluate_function (a_addr, a_target, realf.associated_feature_i, l_dyntype, l_params)
@@ -1048,10 +1047,11 @@ feature -- Concrete evaluation
 						if on_object then
 							error_message.append_string (" on <" + a_addr + ">")
 						end
-						l_icd_value := dbg_evaluator.icd_value_by_address (a_addr)
-						if not l_icd_value.is_valid_object then
-							error_message.append_string (" : object collected ... ")
-						end
+--| FIXME JFIAT 2004/06/04 : this is not the reason, check how to get more information
+--						l_icd_value := dbg_evaluator.icd_value_by_address (a_addr)
+--						if not l_icd_value.is_valid_object then
+--							error_message.append_string (" : object collected ... ")
+--						end
 					end
 				else -- Classic case
 						-- Send the target object. 

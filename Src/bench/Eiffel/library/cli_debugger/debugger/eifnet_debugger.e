@@ -543,47 +543,7 @@ feature -- Bridge to EIFNET_DEBUGGER_INFO
 			end
 		end
 
-	icd_function_from (a_frame: ICOR_DEBUG_FRAME): ICOR_DEBUG_FUNCTION is
-			-- CorDebugFunction from `a_frame'
-		do
-			if a_frame /= Void then
-				Result := a_frame.get_function
-				if a_frame.last_call_success = 0 then
-					Result.add_ref
-				else
-					Result := Void
-				end
-			end
-		end
-		
-	icd_module_from (a_frame: ICOR_DEBUG_FRAME): ICOR_DEBUG_MODULE is
-			-- CorDebugModule from `a_frame'
-		local
-			l_function: ICOR_DEBUG_FUNCTION			
-		do
-			l_function := icd_function_from (a_frame)
-			if l_function /= Void then
-				Result := l_function.get_module
-				if l_function.last_call_success = 0 then
-					Result.add_ref
-				else
-					Result := Void
-				end
-			end			
-		end
-		
 feature -- Easy access
-
-	icor_debug_module_for (a_class_type: CLASS_TYPE): ICOR_DEBUG_MODULE is
-			-- ICorDebugModule for `a_class_type'
-		require
-			a_class_type_not_void: a_class_type /= Void
-		local
-			l_class_module_name: STRING			
-		do
-			l_class_module_name := Il_debug_info_recorder.module_file_name_for_class (a_class_type)
-			Result := icor_debug_module (l_class_module_name)
-		end
 
 	icor_debug_class (a_class_type: CLASS_TYPE): ICOR_DEBUG_CLASS is
 		require
@@ -601,59 +561,54 @@ feature -- Easy access
 		
 feature -- Function Evaluation
 
-	icd_function_by_feature (ct: CLASS_TYPE; a_feat: FEATURE_I): ICOR_DEBUG_FUNCTION is
-			-- ICorDebugClass for `a_class_c'.`a_feat'
+	icd_function_by_feature (icdv: ICOR_DEBUG_VALUE; ct: CLASS_TYPE; a_feat: FEATURE_I): ICOR_DEBUG_FUNCTION is
+			-- ICorDebugFunction for `ct'.`a_feat' 
+			-- and optionally on object `icdv'
 		local
 			l_feat_tok: INTEGER
+			l_feat_name: STRING
+			l_icd_module: ICOR_DEBUG_MODULE	
+			l_class_module_name: STRING
+			l_icd_obj_val: ICOR_DEBUG_OBJECT_VALUE
 		do
-			l_feat_tok := Il_debug_info_recorder.feature_token_for_feat_and_class_type (a_feat, ct)
-			
-			if l_feat_tok = 0 then
-				l_feat_tok := feature_token (ct, a_feat.external_name)
+			if ct.is_external and icdv /= Void then
+				l_icd_obj_val := icdv.query_interface_icor_debug_object_value
+				if l_icd_obj_val /= Void then
+					l_icd_module := l_icd_obj_val.get_class.get_module
+					l_feat_name := a_feat.external_name
+				end
+			else
+				l_feat_tok := Il_debug_info_recorder.feature_token_for_feat_and_class_type (a_feat, ct)
+				if l_feat_tok = 0 then
+					l_class_module_name := Il_debug_info_recorder.module_file_name_for_class (ct)				
+					l_icd_module := icor_debug_module (l_class_module_name)
+					l_feat_name := a_feat.feature_name
+				end
 			end
-			if l_feat_tok > 0 then
-				Result := icd_function_by_token (ct, l_feat_tok)				
+			if l_icd_module /= Void then
+					--| Now we have the ICOR_DEBUG_MODULE ...
+				l_feat_tok := l_icd_module.md_member_token_by_names (ct.full_il_implementation_type_name, l_feat_name)
+				if l_feat_tok > 0 then
+					Result := l_icd_module.get_function_from_token (l_feat_tok)
+				end
 			end
-		end	
+		end
+
+feature {NONE} -- Implementation of ICorDebugFunction retriever 
 		
 	icd_function_by_name (ct: CLASS_TYPE; a_f_name: STRING): ICOR_DEBUG_FUNCTION is
 			-- ICorDebugClass for `a_class_c'.`a_f_name'
 		local
 			l_feat_i : FEATURE_I
-			l_feat_tok: INTEGER
 			l_class_c: CLASS_C			
 		do
 			l_class_c := ct.associated_class
 			l_feat_i := l_class_c.feature_named (a_f_name)
-			l_feat_tok := Il_debug_info_recorder.feature_token_for_feat_and_class_type (l_feat_i, ct)
-			
-			if l_feat_tok = 0 then
-				l_feat_tok := feature_token (ct, a_f_name)
-			end
-			if l_feat_tok > 0 then
-				Result := icd_function_by_token (ct, l_feat_tok)				
-			end
+			Result := icd_function_by_feature (Void, ct, l_feat_i)
 		end
 		
-	feature_token (ct: CLASS_TYPE; a_f_name: STRING): INTEGER is
-		local
-			l_icd_module: ICOR_DEBUG_MODULE
-		do
-			l_icd_module := icor_debug_module_for (ct)
-			Result := l_icd_module.md_member_token_by_names (ct.full_il_implementation_type_name, a_f_name)
-		end
+feature -- Specific function evaluation
 		
-	icd_function_by_token (ct: CLASS_TYPE; a_f_token: INTEGER): ICOR_DEBUG_FUNCTION is
-			-- ICorDebugClass for `a_class_c'.`a_f_name'
-		require
-			feature_token_valid: a_f_token > 0
-		local
-			l_icd_module: ICOR_DEBUG_MODULE
-		do
-			l_icd_module := icor_debug_module_for (ct)
-			Result := l_icd_module.get_function_from_token (a_f_token)
-		end			
-	
 	eiffel_string_icd_class: ICOR_DEBUG_CLASS is
 			-- ICorDebugClass for STRING
 		local
@@ -827,9 +782,6 @@ feature -- Function Evaluation
 			l_icd_module := l_icd_class.get_module		
 			l_md_import := l_icd_module.interface_md_import
 			l_feature_token := l_md_import.find_method (l_icd_class.get_token, a_feat.feature_name) -- resolved {ANY}.generating_type
-			-- FIXME JFIAT: check if we could be use directly feature_token (..)
---			l_feature_token := feature_token (l_class_type, "generating_type")
-			
 			l_func := l_icd_module.get_function_from_token (l_feature_token)
 
 			if l_func /= Void then
@@ -959,25 +911,15 @@ feature -- Function Evaluation
 			-- System.Exception.ToString value
 		local
 			l_icd: ICOR_DEBUG_VALUE		
---			l_icd_object: ICOR_DEBUG_OBJECT_VALUE
---			l_icd_class: ICOR_DEBUG_CLASS
 			l_icd_module: ICOR_DEBUG_MODULE
---			l_module_name: STRING
 			l_feature_token: INTEGER
 			l_func: ICOR_DEBUG_FUNCTION
 			l_debug_info : EIFNET_DEBUG_VALUE_INFO
 		do	
 			l_icd := a_icd
---			l_icd_object := a_icd_obj
---			l_icd_class := l_icd_object.get_class
---			l_icd_module := l_icd_class.get_module
---			l_module_name := l_icd_module.get_name
-
 			l_icd_module := eifnet_debugger_info.icor_debug_module_for_mscorlib
 			l_feature_token := Edv_external_formatter.token_Exception_get_Message
-
 			l_func := l_icd_module.get_function_from_token (l_feature_token)
-
 			if l_func /= Void then
 				l_icd := eifnet_dbg_evaluator.function_evaluation (a_frame, l_func, <<l_icd>>)
 				if l_icd /= Void then

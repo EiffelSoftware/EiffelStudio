@@ -11,6 +11,10 @@
 
 */
 
+#ifdef EIF_WIN32
+#define WIN32_LEAN_AND_MEAN
+#endif
+
 #include "config.h"
 #include "portable.h"
 #include "except.h"
@@ -141,7 +145,7 @@ int how;
 {
 	/* Open file `name' with the corresponding type 'how'. */
 
-#ifdef __WINDOWS_386__
+#ifdef EIF_WINDOWS
 	if (how < 10)
 		return (EIF_POINTER) file_fopen(name, file_open_mode(how,'t'));
 	else
@@ -157,7 +161,7 @@ int how;
 {
 	/* Open file `fd' with the corresponding type 'how'. */
 
-#ifdef __WINDOWS_386__
+#ifdef EIF_WINDOWS
 	if (how < 10)
 		return (EIF_POINTER) file_fdopen(fd, file_open_mode(how,'t'));
 	else
@@ -177,7 +181,7 @@ FILE *old;
 	 * to another place, for instance.
 	 */
 
-#ifdef __WINDOWS_386__
+#ifdef EIF_WINDOWS
 	if (how < 10)
 		return (EIF_POINTER) file_freopen(name, file_open_mode(how,'t'), old);
 	else
@@ -193,7 +197,7 @@ int how;
 {
 	/* Open file `name' with the corresponding type 'how'. */
 
-#ifdef __WINDOWS_386__
+#ifdef EIF_WINDOWS
 	return (EIF_POINTER) file_fopen(name, file_open_mode(how,'b'));
 #else
 	return (EIF_POINTER) file_fopen(name, file_open_mode(how,'\0'));
@@ -206,7 +210,7 @@ int how;
 {
 	/* Open file `fd' with the corresponding type 'how'. */
 
-#ifdef __WINDOWS_386__
+#ifdef EIF_WINDOWS
 	return (EIF_POINTER) file_fdopen(fd, file_open_mode(how,'b'));
 #else
 	return (EIF_POINTER) file_fdopen(fd, file_open_mode(how,'\0'));
@@ -223,12 +227,16 @@ FILE *old;
 	 * to another place, for instance.
 	 */
 
-#if defined  __WINDOWS_386__  ||  __VMS
+#if defined  EIF_WINDOWS  ||  __VMS
 	return (EIF_POINTER) file_freopen(name, file_open_mode(how,'b'), old);
 #else
 	return (EIF_POINTER) file_freopen(name, file_open_mode(how,'\0'), old);
 #endif
 }
+
+#ifdef EIF_WINDOWS
+#include "windows.h"
+#endif
 
 private char *file_fopen(name, type)
 char *name;
@@ -967,7 +975,9 @@ int op;
 
     switch (op) {
 	case 0: /* Is file readable */
-#ifdef HAS_GETEUID
+#ifdef EIF_WIN32
+	return (EIF_BOOLEAN)((mode && S_IREAD) ? '\01' : '\0');
+#elif defined HAS_GETEUID
 		if (uid == geteuid())
 			return (EIF_BOOLEAN) ((mode & S_IRUSR) ? '\01' : '\0');
 		else if (gid == getegid())
@@ -976,7 +986,9 @@ int op;
 #endif
 			return (EIF_BOOLEAN) ((mode & S_IROTH) ? '\01' : '\0');
 	case 1: /* Is file writable */
-#ifdef HAS_GETEUID
+#ifdef EIF_WIN32
+	return (EIF_BOOLEAN) ((mode & S_IWRITE) ? '\01' : '\0');
+#elif defined HAS_GETEUID
 		if (uid == geteuid())
 			return (EIF_BOOLEAN) ((mode & S_IWUSR) ? '\01' : '\0');
 		else if (gid == getegid())
@@ -985,7 +997,9 @@ int op;
 #endif
 			return (EIF_BOOLEAN) ((mode & S_IWOTH) ? '\01' : '\0');
 	case 2: /* Is file executable */
-#ifdef HAS_GETEUID
+#ifdef EIF_WIN32
+	return (EIF_BOOLEAN) '\01';
+#elif defined HAS_GETEUID
 		if (uid == geteuid())
 			return (EIF_BOOLEAN) ((mode & S_IXUSR) ? '\01' : '\0');
 		else if (gid == getegid())
@@ -994,11 +1008,23 @@ int op;
 #endif
 			return (EIF_BOOLEAN) ((mode & S_IXOTH) ? '\01' : '\0');
 	case 3: /* Is file setuid */
+#ifdef EIF_WIN32
+		return (EIF_BOOLEAN) ('\0');
+#else
 		return (EIF_BOOLEAN) ((mode & S_ISUID) ? '\01' : '\0');
+#endif
 	case 4: /* Is file setgid */
+#ifdef EIF_WIN32
+		return (EIF_BOOLEAN) ('\0');
+#else
 		return (EIF_BOOLEAN) ((mode & S_ISGID) ? '\01' : '\0');
+#endif
 	case 5: /* Is file sticky */
+#ifdef EIF_WIN32
+		return (EIF_BOOLEAN) ('\0');
+#else
 		return (EIF_BOOLEAN) ((mode & S_ISVTX) ? '\01' : '\0');
+#endif
 	case 6: /* Is file owned by effective UID */
 #ifdef HAS_GETEUID
 		return (EIF_BOOLEAN) ((uid == geteuid()) ? '\01' : '\0');
@@ -1070,7 +1096,7 @@ char *to;
 	int status;			/* System call status */
 	
 	for (;;) {
-#ifdef __WINDOWS_386__
+#ifdef EIF_WINDOWS
 		if (file_exists (to))			/* To have the same behavior as Unix */
 			remove (to);
 #endif
@@ -1247,6 +1273,9 @@ int flag;		/* Add (1) or remove (0) permissions */
 	case 'u':
 		while (*what)
 			switch (*what++) {
+#ifdef EIF_WIN32
+			case 's', 'r', 'w', 'x': break;
+#else
 			case 's':
 				if (flag) fmode |= S_ISUID; else fmode &= ~S_ISUID;
 				break;
@@ -1259,6 +1288,7 @@ int flag;		/* Add (1) or remove (0) permissions */
 			case 'x':
 				if (flag) fmode |= S_IXUSR; else fmode &= ~S_IXUSR;
 				break;
+#endif
 			default:
 				eraise("invalid user permission", EN_EXT);
 			}
@@ -1267,7 +1297,10 @@ int flag;		/* Add (1) or remove (0) permissions */
 		while (*what)
 			switch (*what++) {
 			case 's':
+#ifdef EIF_WIN32
+#else
 				if (flag) fmode |= S_ISGID; else fmode &= ~S_ISGID;
+#endif
 				break;
 			case 'r':
 				if (flag) fmode |= S_IRGRP; else fmode &= ~S_IRGRP;
@@ -1286,7 +1319,10 @@ int flag;		/* Add (1) or remove (0) permissions */
 		while (*what)
 			switch (*what++) {
 			case 't':
+#ifdef EIF_WIN32
+#else
 				if (flag) fmode |= S_ISVTX; else fmode &= ~S_ISVTX;
+#endif
 				break;
 			case 'r':
 				if (flag) fmode |= S_IROTH; else fmode &= ~S_IROTH;
@@ -1420,7 +1456,7 @@ char *path;
 		strcpy (temp, "[]");
 #else	/* vms */
 	strcpy (temp, path);
-#ifdef __WINDOWS_386__
+#ifdef EIF_WINDOWS
 	ptr = rindex(temp, '\\');
 #else
 	ptr = rindex(temp, '/');
@@ -1435,6 +1471,15 @@ char *path;
 		return (EIF_BOOLEAN) '\0';
 
 	file_stat(temp, &buf);
+#ifdef EIF_WIN32
+	if (buf.st_mode & S_IFDIR)
+		{
+		if (file_exists(path))
+/* FIXME: check I'm not a directory */
+			return (EIF_BOOLEAN) (access (path, 02) == 0);
+		return (EIF_BOOLEAN) '\01';
+		}
+#else
 	if (buf.st_mode & S_IFDIR)	/* Is parent a directory? */
 		if (file_eaccess(&buf, 1)) {	/* Check for write permissions */
 				/* Check if a non writable file `path' exists */
@@ -1446,6 +1491,7 @@ char *path;
 
 			return (EIF_BOOLEAN) '\01';
 		}
+#endif
 
 	return (EIF_BOOLEAN) '\0';
 #endif	/* vms */

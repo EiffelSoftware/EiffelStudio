@@ -39,21 +39,15 @@ feature -- Miscellaneous
 		-- debug purpose
 
 	display(d_x: INTEGER; d_y: INTEGER; dc: WEL_DC): INTEGER is
-		local
-			tabulation_width: INTEGER
 		do
 			Initialised := True				-- debug purpose
 
-				-- Compute the number of pixel represented by a tabulation based on
-				-- user preferences.
-			tabulation_width := editor_preferences.tabulation_spaces * dc.string_width(" ")
-
 				-- Handle first tabulation.
-			Result := ((d_x // Tabulation_width) + 1 ) * Tabulation_width
+			Result := ((d_x // tabulation_width) + 1 ) * tabulation_width
 			width_first_tab := Result - d_x
 
 				-- Handle next tabulations.
-			Result := Result + Tabulation_width * (number_of_tabs - 1)
+			Result := Result + tabulation_width * (number_of_tabs - 1)
 
 				-- update width
 			width := Result - d_x
@@ -62,25 +56,26 @@ feature -- Miscellaneous
 	get_substring_width(n: INTEGER): INTEGER is
 			-- Conpute the width in pixels of the first
 			-- `n' characters of the current string.
-		require
-			Initialised
+		require else
+			Initialisation_done: Initialised = True
 		do
 			if n = 1 then
 				Result := width_first_tab
 			else
-				Result := width_first_tab + Tabulation_width * (number_of_tabs - 1)
+				Result := width_first_tab + tabulation_width * (number_of_tabs - 1)
+			end
 		end
 
 	retrieve_position_by_width(a_width: INTEGER): INTEGER is
 			-- Return the character situated under the `a_width'-th
 			-- pixel.
-		require
-			Initialised
+		require else
+			Initialisation_done: Initialised = True
 		do
 			if a_width < width_first_tab then
 				Result := 1
 			else
-				Result := 2 + (a_width - width_first_tab) // Tabulation_width
+				Result := 2 + (a_width - width_first_tab) // tabulation_width
 			end
 		end
 
@@ -88,4 +83,15 @@ feature {NONE} -- Implementation
 
 	number_of_tabs: INTEGER
 
+	width_first_tab: INTEGER
+
+	tabulation_width: INTEGER is
+		local
+			dc: WEL_MEMORY_DC
+		once
+				-- Compute the number of pixel represented by a tabulation based on
+				-- user preferences.
+			create dc.make
+			Result := editor_preferences.tabulation_spaces * dc.string_width(" ")
+		end
 end -- class EDITOR_TOKEN_TABULATION

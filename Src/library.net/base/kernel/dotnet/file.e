@@ -1017,7 +1017,7 @@ feature -- Element change
 			target_is_closed: is_closed
 			source_is_closed: f.is_closed
 		local
-			buf: NATIVE_ARRAY [INTEGER_8]
+			buf: NATIVE_ARRAY [NATURAL_8]
 			bs, rd: INTEGER
 			st, ost: like internal_stream
 		do
@@ -1030,7 +1030,7 @@ feature -- Element change
 			from
 				st := internal_stream
 				ost := f.internal_stream
-				buf := (create {ARRAY [INTEGER_8]}.make (1, bs)).area.native_array
+				create buf.make (bs + 1)
 			until
 				f.after
 			loop

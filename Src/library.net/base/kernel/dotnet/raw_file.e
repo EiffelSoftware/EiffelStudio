@@ -93,7 +93,7 @@ feature -- Output
 	put_string, putstring (s: STRING) is
 			-- 
 		local
-			byte_array: NATIVE_ARRAY [INTEGER_8]
+			byte_array: NATIVE_ARRAY [NATURAL_8]
 			str_index: INTEGER
 		do
 			create byte_array.make (s.count)
@@ -102,7 +102,7 @@ feature -- Output
 			until
 				str_index = byte_array.count
 			loop
-				byte_array.put (str_index, s.item (str_index + 1).code.to_integer_8)
+				byte_array.put (str_index, s.item (str_index + 1).code.to_natural_8)
 				str_index := str_index + 1
 			end
 			writer.write_integer_8_array (byte_array)
@@ -111,7 +111,7 @@ feature -- Output
 	put_character, putchar (c: CHARACTER) is
 			-- Write `c' at current position.
 		do
-			writer.write_integer_8 (c.code.to_integer.to_integer_8)
+			writer.write (c.code.to_integer.to_natural_8)
 		end
 
 feature -- Input
@@ -124,7 +124,7 @@ feature -- Input
 			is_readable: file_readable
 		local
 			new_count: INTEGER
-			str_area: NATIVE_ARRAY [INTEGER_8]
+			str_area: NATIVE_ARRAY [NATURAL_8]
 			str_area_index: INTEGER
 		do
 			if last_string = Void then
@@ -195,7 +195,7 @@ feature -- Input
 			-- Make result available in `p'.
 		local
 			i: INTEGER
-			byte: INTEGER_8
+			byte: NATURAL_8
 		do
 			from
 				i := 0
@@ -217,10 +217,10 @@ feature {NONE} -- Implementation
 			-- Return the number of characters actually read.
 		local
 			i, j: INTEGER
-			str_area: NATIVE_ARRAY [INTEGER_8]
+			str_area: NATIVE_ARRAY [NATURAL_8]
 		do
 			create str_area.make (nb)
-			Result := reader.read_integer_8_array_integer_integer (str_area, 0, nb)
+			Result := reader.read (str_area, 0, nb)
 			internal_end_of_file := reader.peek_char = -1
 			from
 				i := 0

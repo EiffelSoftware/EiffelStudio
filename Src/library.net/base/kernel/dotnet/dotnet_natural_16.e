@@ -1,19 +1,19 @@
 indexing
-	description: "Set of static routines belonging to System.SByte"
+	description: "Set of static routines belonging to System.UInt16"
 	date: "$Date$"
 	revision: "$Revision$"
 
 frozen external class
-	DOTNET_INTEGER_8
+	DOTNET_NATURAL_16
 
 create {NONE}
 
 feature -- Statics
 
-	frozen from_string (s: SYSTEM_STRING): INTEGER_8 is
+	frozen from_string (s: SYSTEM_STRING): NATURAL_16 is
 			-- (Static)
 			-- Converts the string representation of a number to its
-			-- System.SByte equivalent.
+			-- System.UInt16 equivalent.
 			--
 			-- Parameters:
 			--   s: A string containing a number to convert. The
@@ -21,25 +21,25 @@ feature -- Statics
 			--     System.Globalization.NumberStyles.Integer style.
 			--
 			-- Returns:
-			--   The System.SByte value equivalent to the number
+			--   The System.UInt16 value equivalent to the number
 			--   contained in s.
 			--
 			-- Exceptions:
 			--   System.ArgumentNullException: s is null.
 			--   System.FormatException: s is not of the correct format.
 			--   System.OverflowException: s represents a number less
-			--     than System.SByte.MinValue or greater than
-			--     System.SByte.MaxValue.
+			--     than System.UInt16.MinValue or greater than
+			--     System.UInt16.MaxValue.
 		external
-			"IL static signature (System.String): System.SByte use System.SByte"
+			"IL static signature (System.String): System.UInt16 use System.UInt16"
 		alias
 			"Parse"
 		end
 
-	frozen from_string_with_style (s: SYSTEM_STRING; style: NUMBER_STYLES): INTEGER_8 is
+	frozen from_string_with_style (s: SYSTEM_STRING; style: NUMBER_STYLES): NATURAL_16 is
 			-- (Static)
 			-- Converts the string representation of a number in a
-			-- specified style to its System.SByte equivalent.
+			-- specified style to its System.UInt16 equivalent.
 			--
 			-- Parameters:
 			--   s: A string containing a number to convert. The string
@@ -51,26 +51,26 @@ feature -- Statics
 			--     System.Globalization.NumberStyles.Integer style.
 			--
 			-- Returns:
-			--   The System.SByte value equivalent to the number contained in s.
+			--   The System.UInt16 value equivalent to the number contained in s.
 			--
 			-- Exceptions:
 			--   System.ArgumentNullException: s is null.
 			--   System.FormatException: s is not of the correct format.
 			--   System.OverflowException: s represents a number less than
-			--     System.SByte.MinValue or greater than System.SByte.MaxValue.
+			--     System.UInt16.MinValue or greater than System.UInt16.MaxValue.
 			--   System.ArgumentException: style is not a valid bitwise
 			--     combination of System.Globalization.NumberStyles values.
 
 		external
-			"IL static signature (System.String, System.Globalization.NumberStyles): System.SByte use System.SByte"
+			"IL static signature (System.String, System.Globalization.NumberStyles): System.UInt16 use System.UInt16"
 		alias
 			"Parse"
 		end
 
-	frozen from_string_with_format (s: SYSTEM_STRING; provider: IFORMAT_PROVIDER): INTEGER_8 is
+	frozen from_string_with_format (s: SYSTEM_STRING; provider: IFORMAT_PROVIDER): NATURAL_16 is
 			-- (Static)
 			-- Converts the string representation of a number in a specified
-			-- culture-specific format to its System.SByte equivalent.
+			-- culture-specific format to its System.UInt16 equivalent.
 			--
 			-- Parameters:
 			--   s: A string containing a number to convert. The string is
@@ -81,23 +81,23 @@ feature -- Statics
 			--     is null, the current system culture is used.
 			--
 			-- Returns:
-			--   The System.SByte value equivalent to the number contained in s.
+			--   The System.UInt16 value equivalent to the number contained in s.
 			--
 			-- Exceptions:
 			--   System.ArgumentNullException: s is null.
 			--   System.FormatException: s is not of the correct format.
 			--   System.OverflowException: s represents a number less than
-			--     System.SByte.MinValue or greater than System.SByte.MaxValue.
+			--     System.UInt16.MinValue or greater than System.UInt16.MaxValue.
 		external
-			"IL static signature (System.String, System.IFormatProvider): System.SByte use System.SByte"
+			"IL static signature (System.String, System.IFormatProvider): System.UInt16 use System.UInt16"
 		alias
 			"Parse"
 		end
 
-	frozen from_string_with_style_and_format (s: SYSTEM_STRING; style: NUMBER_STYLES; provider: IFORMAT_PROVIDER): INTEGER_8 is
+	frozen from_string_with_style_and_format (s: SYSTEM_STRING; style: NUMBER_STYLES; provider: IFORMAT_PROVIDER): NATURAL_16 is
 			-- (Static)
 			-- Converts the string representation of a number in a specified
-			-- style and culture-specific format to its System.SByte equivalent.  
+			-- style and culture-specific format to its System.UInt16 equivalent.  
 			--
 			-- Parameters:
 			--   s: A string containinga number to convert. The string is
@@ -111,19 +111,19 @@ feature -- Statics
 			--     system culture is used.
 			--
 			-- Returns:
-			--   The System.SByte value equivalent to the number contained in s.  
+			--   The System.UInt16 value equivalent to the number contained in s.  
 			--
 			-- Exceptions:
 			--   System.ArgumentNullException: s is null.
 			--   System.FormatException: s is not of the correct format.
 			--   System.OverflowException: s represents a number less than
-			--     System.SByte.MinValue or greater than System.SByte.MaxValue.
+			--     System.UInt16.MinValue or greater than System.UInt16.MaxValue.
 			--   System.ArgumentException: style is not a valid bitwise combination 
 			--     of System.Globalization.NumberStyles values.
 		external
-			"IL static signature (System.String, System.Globalization.NumberStyles, System.IFormatProvider): System.SByte use System.SByte"
+			"IL static signature (System.String, System.Globalization.NumberStyles, System.IFormatProvider): System.UInt16 use System.UInt16"
 		alias
 			"Parse"
 		end
 
-end -- class DOTNET_INTEGER_8
+end -- class DOTNET_NATURAL_16

@@ -6,21 +6,18 @@ inherit
 	CMD_CUT
 		rename
 			undo as old_undo,
-			command_work as old_command_work,
-			update as old_update
+			command_work as old_command_work
 		redefine
 			element, redo
 		end
 
 	CMD_CUT
 		redefine
-			element, command_work, undo, redo, update
+			element, command_work, undo, redo
 		select
-			command_work, undo, update, redo, name, is_template,
+			command_work, undo, redo, name, is_template,
 			work, failed, execute
 		end
-
-	SHARED_INSTANTIATOR
 
 	QUEST_POPUPER
 		redefine
@@ -39,7 +36,7 @@ inherit
 			page as catalog_page,
 			execute as catalog_execute
 		redefine
-			parent_work,
+			catalog_work,
 			c_name
 		end
 	
@@ -57,7 +54,7 @@ feature -- Creation
 
 feature -- Feature from CAT_ADD_COMMAND
 
-	parent_work is
+	catalog_work is
 			-- Do not call update_history.
 		do
 			catalog_element := page.last
@@ -181,12 +178,6 @@ feature -- Implementation
                 cmd_instance_list.forth
             end
         end
-
-	update is
-		do
-			old_update
-			command_instantiator_generator.update_command
-		end
 
 feature {NONE} -- Features of QUEST_POPUPER
 

@@ -12,7 +12,6 @@ inherit
 		redefine
 			is_able_to_be_named
 		end
-	SHARED_INSTANTIATOR
 
 creation
 
@@ -66,7 +65,6 @@ feature {NONE} -- Creation
 			-- Create the list of observed command.
 		do
 			!! observed_commands.make
-			!! instantiated_observers.make
 		end
 
 	init_arguments is
@@ -391,10 +389,6 @@ feature -- Observers
 			-- List of command instance for which `Current' is
 			-- an observer
 
-	instantiated_observers: LINKED_LIST [BUILD_CMD]
-			-- List of instantiated observers 
-			-- Used to add and remove observers on the interface
-
 	add_observed_command (a_command: CMD_INSTANCE) is
 			-- Add a command instance for which `Current' is
 			-- an observer.
@@ -418,13 +412,8 @@ feature -- Observers
 			-- Add an observer.
 		require
 			valid_instance: inst /= Void
-		local
-			observer_inst: BUILD_CMD
 		do
 			observers.extend (inst)
-			observer_inst := inst.instantiated_command
-			instance.add_observer (observer_inst)
-			instantiated_observers.extend (observer_inst)
 			inst.add_observed_command (Current)
 			if command_tool /= Void and then command_tool.realized then
 				command_tool.add_observer (inst)
@@ -436,8 +425,6 @@ feature -- Observers
 
 	remove_observer (inst: like Current) is
 			-- Remove an observer.
-		require
-			same_count: observers.count = instantiated_observers.count
 		local
 			i: INTEGER
 			observer_inst: CMD_INSTANCE
@@ -445,7 +432,6 @@ feature -- Observers
 			from
 				observers.start
 				found := False
-				instantiated_observers.start
 			until
 				observers.after or found
 			loop
@@ -453,20 +439,15 @@ feature -- Observers
 					found := True
 				else
 					observers.forth
-					instantiated_observers.forth
 				end
 			end
 			if found then
-				instance.remove_observer (instantiated_observers.item, observers.index)
-				instantiated_observers.remove
 				inst.remove_observed_command (Current)
 				if command_tool /= Void and then command_tool.realized then
 					command_tool.remove_observer (inst)
 				end
 				observers.remove
 			end
-		ensure
-			observer_count_decreased: found implies (old (instance.observer_count) = instance.observer_count + 1)
 		end
 
 	has_observer: BOOLEAN is
@@ -483,70 +464,4 @@ feature -- Observers
 			observers := obs_list
 		end
 
-feature {OBSERVER_HOLE} -- Observers
-
-	instance: BUILD_CMD	
-			-- Command instance
-
-feature -- Command instantiation
-	
-	instantiated_command: BUILD_CMD is
-			-- Return an instantiated BUILD command.
-		local
-			observer_cmd: BUILD_CMD
-			retried: BOOLEAN
-			warner: WARNING_BOX
-			new_do_nothing_cmd: DO_NOTHING_CMD
-		do
-			if not retried then
-				if instance = Void then
-					Result := command_instantiator.new_instance (eiffel_type, creation_args)
-					from
-						observers.start
-					until
-						observers.after
-					loop
-						observer_cmd := observers.item.instantiated_command
-						instantiated_observers.extend (observer_cmd)
-						Result.add_observer (observer_cmd)
-						observers.forth
-					end
-					instance := Result
-				else
-					Result := instance
-				end
-			else
-				!! new_do_nothing_cmd
-				Result := new_do_nothing_cmd
-				!! warner.make ("Warning", command_tool)
-				warner.set_message ("Some problems ocurred when trying to instantiate this command.%NMay be due to some uninstantiated arguments.%NAttention: this command won't be executed in executing mode.")
-				warner.popup
-			end
-		rescue
-			if not retried then
-				retried := True
-				retry
-			end
-		end
-
-	creation_args: COMMAND_CREATION_ARGUMENT is
-			-- Return argument needed to instantiate the command.
-		local
-			argument_instance: ARG_INSTANCE
-		do
-			!! Result.make
-			from 
-				arguments.start
-			until
-				arguments.after
-			loop
-				argument_instance := arguments.item
-				if argument_instance.instantiated then
-					Result.extend (argument_instance.context.widget)
-				else
-					Result.extend (Void)
-				end
-				arguments.forth
-			end
-		end	
 end

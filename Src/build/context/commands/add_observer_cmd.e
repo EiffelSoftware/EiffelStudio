@@ -8,7 +8,6 @@ class
 
 inherit
 	OBSERVER_COMMAND
-	SHARED_INSTANTIATOR
 
 creation
 	make

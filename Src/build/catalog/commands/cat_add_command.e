@@ -12,22 +12,20 @@ inherit
 	CAT_ADD_ELEMENT
 		rename 
 			undo as parent_undo,
-			redo as parent_redo,
-			catalog_work as parent_work
+			redo as parent_redo
 		redefine
 			element,
 			page
 		end
 	CAT_ADD_ELEMENT
 		redefine
-			undo, redo, catalog_work,
+			undo, redo,
 			element,
 			page
 		select
-			undo, redo, catalog_work
+			undo, redo
 		end
 	WINDOWS
-	SHARED_INSTANTIATOR
 	
 feature {NONE}
 
@@ -48,26 +46,18 @@ feature {NONE}
 			end
 		end
 
-	catalog_work is
-		do
-			parent_work
-			command_instantiator_generator.add_command (element)
-		end
-
 feature
 
 	redo is
 		do
 			parent_redo
 			element.recreate_class
-			command_instantiator_generator.add_command (element)
 		end
 
 	undo is
 		do
 			parent_undo
 			element.remove_class
-			command_instantiator_generator.remove_command (element)
 		end
 			
 end

@@ -164,7 +164,7 @@ feature -- IL code generation
 				if not l_cancel_attribute_generation then
 						-- We push code to access Current attribute.
 					class_c := System.class_of_id (written_in)
-					if class_c.is_frozen then
+					if class_c.is_frozen or class_c.is_single then
 						il_generator.generate_attribute (target_type, attribute_id)
 					else
 						il_generator.generate_feature_access (target_type,

@@ -135,13 +135,10 @@ feature -- Status setting
 					cl := cst.e_class
 					ofst ?= stone
 					if ofst /= Void and cl /= Void then
-						old_id := ofst.e_feature.name
-						if cl.has_feature_table then
-							new_f := cl.feature_with_name (old_id)
-							if new_f /= Void then
-								launch_stone (create {FEATURE_STONE}.make (new_f))
-								found := True
-							end
+						new_f := ofst.e_feature.ancestor_version (cl)
+						if new_f /= Void then
+							launch_stone (create {FEATURE_STONE}.make (new_f))
+							found := True
 						end
 					end
 					if not found then

@@ -17,21 +17,36 @@ inherit
 		end
 		
 	GB_XML_UTILITIES
+		export
+			{NONE} all
 		undefine
 			default_create
 		end
 		
 	INTERNAL
+		export
+			{NONE} all
 		undefine
 			default_create
 		end
 		
 	GB_SHARED_DEFERRED_BUILDER
+		export
+			{NONE} all
 		undefine
 			default_create
 		end
 		
 	GB_SHARED_OBJECT_HANDLER
+		export
+			{NONE} all
+		undefine
+			default_create
+		end
+		
+	GB_GENERAL_UTILITIES
+		export
+			{NONE} all
 		undefine
 			default_create
 		end
@@ -65,7 +80,7 @@ feature -- Access
 		end
 		
 		new_merge (an_object: GB_OBJECT) is
-				--
+				-- Merge radio group of `an_object' with `Current'.
 			local
 				list_item: EV_LIST_ITEM
 				container: EV_CONTAINER
@@ -184,64 +199,34 @@ feature {GB_CODE_GENERATOR} -- Output
 		local
 			full_information: HASH_TABLE [ELEMENT_INFORMATION, STRING]
 			element_info: ELEMENT_INFORMATION
+			linked_groups: ARRAYED_LIST [INTEGER]
+			temp_output: STRING
 		do
---			Result := ""
---			full_information := get_unique_full_info (element)
---			element_info := full_information @ (Is_homogeneous_string)
---			if element_info /= Void then
---				if element_info.data.is_equal (True_string) then
---					Result := a_name + ".enable_homgeneous"
---				else
---					Result := a_name + ".disable_homogeneous"
---				end
---			end
---			
---			
---			element_info := full_information @ (Padding_string)
---			if element_info /= Void then
---				Result := Result + indent + a_name + ".set_padding_width (" + element_info.data + ")"
---			end
---			
---			element_info := full_information @ (Border_string)
---			if element_info /= Void then
---				Result := Result + indent + a_name + ".set_border_width (" + element_info.data + ")"
---			end
---			
---				-- This is always saved, so there is no check.
---			element_info := full_information @ (Is_item_expanded_string)
---			check
---				consistent: children_names.count = element_info.data.count
---			end
---			from
---				children_names.start
---			until
---				children_names.off
---			loop
---					-- We only generate code for all the children that are disabled as they
---					-- are expanded by default.
---				if element_info.data @ children_names.index /= '1' then
---					Result := Result + indent + a_name + ".disable_item_expand (" + children_names.item + ")"
---				end
---				children_names.forth
---			end
---	
---			Result := strip_leading_indent (Result)
+			Result := ""
+			full_information := get_unique_full_info (element)
+			element_info := full_information @ merged_groups_string
+			if element_info /= Void then
+				linked_groups := list_from_single_spaced_values (element_info.data)
+					-- If the information was in the XML, then there
+					-- should be at least one link.
+				check
+					has_links: linked_groups.count >= 1
+				end
+				from
+					linked_groups.start
+				until
+					linked_groups.off
+				loop
+					temp_output := info.Names_by_id.item (linked_groups.item) + ".merge_radio_button_groups (" + info.name + ")"
+					if linked_groups.index = 1 then
+						Result := temp_output
+					else
+						Result := Result + indent + temp_output
+					end
+					linked_groups.forth
+				end
+			end
 		end
---		groups := first.merged_radio_button_groups
---			groups_string := ""
---			if groups /= Void then
---				from
---					counter := 1
---				until
---					counter > groups.count
---				loop
---					groups_string.append (object_handler.object_from_display_widget (groups @ counter).id.out)
---					if counter < groups.count then
---						groups_string.append (" ")
---					end
---					counter := counter + 1
---				end
---			end
 		
 feature {GB_DEFERRED_BUILDER} -- Status setting
 

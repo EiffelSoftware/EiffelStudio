@@ -1,79 +1,22 @@
 indexing
-	description: "Edit control notification (EN) constants."
+	description: "Choose font (CF) constants."
 	status: "See notice at end of class."
 	date: "$Date$"
 	revision: "$Revision$"
 
 class
-	WEL_EN_CONSTANTS
+	WEL_CLIPBOARD_CONSTANTS
 
 feature -- Access
 
-	En_setfocus: INTEGER is
+	Cf_text: INTEGER is
 		external
 			"C [macro %"wel.h%"]"
 		alias
-			"EN_SETFOCUS"
+			"CF_TEXT"
 		end
 
-	En_killfocus: INTEGER is
-		external
-			"C [macro %"wel.h%"]"
-		alias
-			"EN_KILLFOCUS"
-		end
-
-	En_change: INTEGER is
-		external
-			"C [macro %"wel.h%"]"
-		alias
-			"EN_CHANGE"
-		end
-
-	En_update: INTEGER is
-		external
-			"C [macro %"wel.h%"]"
-		alias
-			"EN_UPDATE"
-		end
-
-	En_errspace: INTEGER is
-		external
-			"C [macro %"wel.h%"]"
-		alias
-			"EN_ERRSPACE"
-		end
-
-	En_maxtext: INTEGER is
-		external
-			"C [macro %"wel.h%"]"
-		alias
-			"EN_MAXTEXT"
-		end
-
-	En_hscroll: INTEGER is
-		external
-			"C [macro %"wel.h%"]"
-		alias
-			"EN_HSCROLL"
-		end
-
-	En_vscroll: INTEGER is
-		external
-			"C [macro %"wel.h%"]"
-		alias
-			"EN_VSCROLL"
-		end
-
-
-	En_msgfilter: INTEGER is
-		external
-			"C [macro %"richedit.h%"]"
-		alias
-			"EN_MSGFILTER"
-		end
-	
-end -- class WEL_EN_CONSTANTS
+end -- class WEL_CLIPBOARD_CONSTANTS
 
 --|----------------------------------------------------------------
 --| Windows Eiffel Library: library of reusable components for ISE Eiffel.

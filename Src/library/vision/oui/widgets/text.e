@@ -20,7 +20,7 @@ inherit
 creation
 
 	make, make_word_wrapped, make_unmanaged, make_word_wrapped_unmanaged
-	
+
 feature {NONE} -- Initialization
 
 	make (a_name: STRING; a_parent: COMPOSITE) is
@@ -108,6 +108,16 @@ feature -- Access
 		ensure
 			Result >= 0;
 			Result < count
+		end;
+
+	coordinate (char_pos: INTEGER): COORD_XY is
+			-- Coordinate relative to the upper left corner
+			-- of Current text widget at character position `char_pos'.
+		require
+			exists: not destroyed;
+			valid_position: char_pos >= 0 and then char_pos <= count
+		do
+			Result := implementation.coordinate (char_pos)
 		end;
 
 	x_coordinate (char_pos: INTEGER): INTEGER is

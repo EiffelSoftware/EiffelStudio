@@ -10,7 +10,7 @@ inherit
 
 	BASIC_TYPE
 		undefine
-			is_deep_equal, same_as
+			same_as
 		redefine
 			associated_eiffel_class,
 			append_to

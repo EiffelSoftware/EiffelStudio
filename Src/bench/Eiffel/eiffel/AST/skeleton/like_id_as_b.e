@@ -12,12 +12,12 @@ inherit
 		undefine
 			same_as
 		redefine
-			anchor, is_deep_equal
+			anchor
 		end;
 
 	TYPE_B
 		undefine
-			is_deep_equal, has_like, simple_format
+			has_like, simple_format
 		redefine
 			fill_calls_list, replicate
 		end;
@@ -28,17 +28,6 @@ feature -- Attributes
 
 	anchor: ID_AS_B;
 			-- Anchor name
-
-feature
-
-	is_deep_equal (other: TYPE_B): BOOLEAN is
-		local
-			o: like Current
-		do
-			o ?= other;
-			Result := o /= Void and then
-				anchor.is_equal (o.anchor);
-		end;
 
 feature -- Implementation of inherited deferred features
 

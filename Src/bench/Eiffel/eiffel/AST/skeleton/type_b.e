@@ -10,7 +10,7 @@ inherit
 
 	TYPE
 		redefine
-			is_deep_equal, same_as
+			same_as
 		end;
 
 	AST_EIFFEL_B
@@ -43,15 +43,6 @@ feature
 			--|Note: implemented only for descendants of TYPE_A
 		do
 			-- Do nothing: implemented only for descendants of TYPE_A
-		end;
-
-	is_deep_equal (other: TYPE_B): BOOLEAN is
-			-- Is the current type the same as `other' ?
-			--| `deep_equal' cannot be used as for STRINGS, the area
-			--| can have a different size but the STRING is still
-			--| the same (problem detected for LIKE_FEATURE). Xavier
-		do
-			Result := deep_equal (Current, other)
 		end;
 
 	check_constraint_type (a_class: CLASS_C) is

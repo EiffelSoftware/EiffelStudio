@@ -49,14 +49,14 @@ feature -- Callbacks
 
 	execute_warner_ok (arg: EV_ARGUMENT1 [EV_DIRECTORY_DIALOG]; data: EV_EVENT_DATA) is
 		do
-			if choose_again then
-				choose_again := False
-				if arg /= Void then
-					arg.first.show
-				end
-			else
+--			if choose_again then
+--				choose_again := False
+--				if arg /= Void then
+--					arg.first.show
+--				end
+--			else
 				init_project
-			end
+--			end
 		end
 
 feature -- License managment

@@ -560,171 +560,210 @@ feature -- Code generation
 
 feature -- Metadata description
 
-	generate_class_mappings (class_type: CLASS_TYPE) is
-			-- Define all types, both external and eiffel one.
+	generate_external_class_mapping (class_type: CLASS_TYPE) is
+			-- Define reference to external type `class_type'.
 		require
 			is_generated: is_generated
 			class_type_not_void: class_type /= Void
+			external_class: class_type.associated_class.is_external
 		local
-			name, impl_name: STRING
-			native_array: NATIVE_ARRAY_CLASS_TYPE
-			l_external_class: EXTERNAL_CLASS_C
 			class_c: CLASS_C
+			l_native_array: NATIVE_ARRAY_CLASS_TYPE
+			name: STRING
 			l_type_token: INTEGER
-			l_attributes: INTEGER
 			l_type: CL_TYPE_I
 			l_nested_parent_class: CLASS_C
+			l_external_class: EXTERNAL_CLASS_C
 			l_nested_parent_class_token: INTEGER
+			l_uni_string: UNI_STRING
 		do
 			class_c := class_type.associated_class
+			l_native_array ?= class_type
 
-			native_array ?= class_type
-			if native_array /= Void then
+			if l_native_array /= Void then
 					-- Generate association with a NATIVE_ARRAY []
-				name := native_array.il_type_name
-				uni_string.set_string (name)
-				l_type_token := md_emit.define_type_ref (uni_string, assembly_token (class_type))
+				name := l_native_array.il_type_name
+				create l_uni_string.make (name)
+				l_type_token := md_emit.define_type_ref (l_uni_string, assembly_token (class_type))
 				class_mapping.put (l_type_token, class_type.static_type_id)
 				il_code_generator.external_class_mapping.put (class_type.type, name)
 				internal_external_token_mapping.put (l_type_token, name)
 			else
 				name := class_type.full_il_type_name
-				if not class_c.is_external then
-					impl_name := class_type.full_il_implementation_type_name
+				l_external_class ?= class_c
+				if l_external_class /= Void and then l_external_class.is_nested then
+					l_nested_parent_class := l_external_class.enclosing_class
+					create l_uni_string.make (l_nested_parent_class.types.first.full_il_type_name)
+					l_nested_parent_class_token := md_emit.define_type_ref (l_uni_string,
+						assembly_token (l_nested_parent_class.types.first))
+					l_uni_string.set_string (name.substring (
+						name.index_of ('+', 1) + 1, name.count))
+					l_type_token := md_emit.define_type_ref (l_uni_string,
+						l_nested_parent_class_token)
+				else
+					create l_uni_string.make (name)
+					l_type_token := md_emit.define_type_ref (l_uni_string,
+						assembly_token (class_type))
+				end
+				class_mapping.put (l_type_token, class_type.static_type_id)
+
+					-- Fix `class_type.type' as it only contains a valid
+					-- class id, nothing else.
+				l_type := class_type.type
+				if l_type.base_class.is_basic then
+					l_type := l_type.base_class.actual_type.type_i
+				elseif l_type.base_class.is_expanded then
+					l_type := clone (l_type)
+					l_type.set_is_true_expanded (True)
+				end
+				il_code_generator.external_class_mapping.put (l_type, name)
+				internal_external_token_mapping.put (l_type_token, name)
+			end
+		end
+
+	generate_interface_class_mapping (class_type: CLASS_TYPE) is
+			-- Define reference/definition of Eiffel type `class_type' used for
+			-- interface purpose (i.e. interface class of an implementation class,
+			-- or class itself if `is_frozen' or `is_single' class).
+		require
+			is_generated: is_generated
+			class_type_not_void: class_type /= Void
+		local
+			l_name: STRING
+			class_c: CLASS_C
+			l_type_token: INTEGER
+			l_attributes: INTEGER
+			l_uni_string: UNI_STRING
+		do
+			class_c := class_type.associated_class
+			l_name := class_type.full_il_type_name
+			create l_uni_string.make (l_name)
+
+			if
+				class_type.is_precompiled or
+				il_code_generator.il_modules (class_type) /= Current
+			then
+				l_type_token := md_emit.define_type_ref (l_uni_string, assembly_token (class_type))
+			else
+				update_parents (class_type, class_c)
+				l_attributes := feature {MD_TYPE_ATTRIBUTES}.Public |
+					feature {MD_TYPE_ATTRIBUTES}.Auto_layout |
+					feature {MD_TYPE_ATTRIBUTES}.Ansi_class
+
+				if not (class_c.is_frozen or class_c.is_single) then
+					l_attributes := l_attributes | feature {MD_TYPE_ATTRIBUTES}.Is_interface |
+						feature {MD_TYPE_ATTRIBUTES}.Abstract
+
+					if class_type.static_type_id = any_type_id then
+							-- By default interface of ANY does not implement any other
+							-- interfaces than EIFFEL_TYPE_INFO.
+						l_type_token := md_emit.define_type (l_uni_string, l_attributes, 0,
+							<< ise_eiffel_type_info_type_token >>)
+					else
+						l_type_token := md_emit.define_type (l_uni_string, l_attributes, 0,
+							last_parents)
+					end
+				else
+					l_attributes := l_attributes | feature {MD_TYPE_ATTRIBUTES}.Is_class |
+						feature {MD_TYPE_ATTRIBUTES}.Serializable
+					if class_c.is_frozen then
+						l_attributes := l_attributes | feature {MD_TYPE_ATTRIBUTES}.Sealed
+					end
+
+					if last_parents = Void then
+						last_parents := << ise_eiffel_type_info_type_token >>
+					end
+
+					single_parent_mapping.put (single_inheritance_parent_id,
+						class_type.implementation_id)
+					l_type_token := md_emit.define_type (l_uni_string, l_attributes,
+						single_inheritance_token, last_parents)
 				end
 
-				if class_c.is_external then
-					l_external_class ?= class_c
-					if l_external_class /= Void and then l_external_class.is_nested then
-						l_nested_parent_class := l_external_class.enclosing_class
-						uni_string.set_string (l_nested_parent_class.types.first.full_il_type_name)
-						l_nested_parent_class_token := md_emit.define_type_ref (uni_string,
-							assembly_token (l_nested_parent_class.types.first))
-						uni_string.set_string (name.substring (
-							name.index_of ('+', 1) + 1, name.count))
-						l_type_token := md_emit.define_type_ref (uni_string,
-							l_nested_parent_class_token)
-					else
-						uni_string.set_string (name)
-						l_type_token := md_emit.define_type_ref (uni_string,
-							assembly_token (class_type))
-					end
-					class_mapping.put (l_type_token, class_type.static_type_id)
+				
+				if not il_code_generator.is_single_module then
+					class_type.set_last_type_token (l_type_token)
+				end
 
-						-- Fix `class_type.type' as it only contains a valid
-						-- class id, nothing else.
-					l_type := class_type.type
-					if l_type.base_class.is_basic then
-						l_type := l_type.base_class.actual_type.type_i
-					elseif l_type.base_class.is_expanded then
-						l_type := clone (l_type)
-						l_type.set_is_true_expanded (True)
-					end
-					il_code_generator.external_class_mapping.put (l_type, name)
-					internal_external_token_mapping.put (l_type_token, name)
-				else
-					update_parents (class_type, class_c)
-					if not (class_c.is_frozen or class_c.is_single) then
-							-- Let's define interface class.
-						uni_string.set_string (name)
-						l_attributes := feature {MD_TYPE_ATTRIBUTES}.Public |
-							feature {MD_TYPE_ATTRIBUTES}.Auto_layout |
-							feature {MD_TYPE_ATTRIBUTES}.Ansi_class |
-							feature {MD_TYPE_ATTRIBUTES}.Is_interface |
-							feature {MD_TYPE_ATTRIBUTES}.Abstract
-						if
-							class_type.is_precompiled or
-							il_code_generator.il_modules (class_type) /= Current
-						then
-							l_type_token := md_emit.define_type_ref (uni_string,
-								assembly_token (class_type))
-						else
-							if class_type.static_type_id = any_type_id then
-									-- By default interface of ANY does not implement any other
-									-- interfaces than EIFFEL_TYPE_INFO.
-								l_type_token := md_emit.define_type (uni_string, l_attributes, 0,
-									<< ise_eiffel_type_info_type_token >>)
-							else
-								l_type_token := md_emit.define_type (uni_string, l_attributes, 0,
-									last_parents)
-							end
-							
-							if not il_code_generator.is_single_module then
-								class_type.set_last_type_token (l_type_token)
-							end
-						end
-						class_mapping.put (l_type_token, class_type.static_type_id)
-						il_code_generator.external_class_mapping.put (class_type.type, name)
-						internal_external_token_mapping.put (l_type_token, name)
-						uni_string.set_string (impl_name)
-					else
-						uni_string.set_string (name)
-					end
-
-						-- Let's define implementation class.
-					l_attributes := feature {MD_TYPE_ATTRIBUTES}.Public |
-						feature {MD_TYPE_ATTRIBUTES}.Auto_layout |
-						feature {MD_TYPE_ATTRIBUTES}.Ansi_class |
-						feature {MD_TYPE_ATTRIBUTES}.Is_class |
-						feature {MD_TYPE_ATTRIBUTES}.Serializable
-
-					if class_c.is_deferred then
-						l_attributes := l_attributes | feature {MD_TYPE_ATTRIBUTES}.Abstract
-					end
-
-					if
-						class_type.is_precompiled or
-						il_code_generator.il_modules (class_type) /= Current
-					then
-						l_type_token := md_emit.define_type_ref (uni_string,
-							assembly_token (class_type))
-					else
-						if class_c.is_frozen then
-							l_attributes := l_attributes | feature {MD_TYPE_ATTRIBUTES}.Sealed
-						elseif not class_c.is_single then
-							last_parents := << class_type_token (class_type.static_type_id) >>
-						elseif last_parents = Void then
-							last_parents := << ise_eiffel_type_info_type_token >>
-						end
-						single_parent_mapping.put (single_inheritance_parent_id,
-							class_type.implementation_id)
-						l_type_token := md_emit.define_type (uni_string, l_attributes,
-							single_inheritance_token, last_parents)
-
-						if not il_code_generator.is_single_module then
-							if not (class_c.is_frozen or class_c.is_single) then
-								class_type.set_last_implementation_type_token (l_type_token)
-							else
-								class_type.set_last_type_token (l_type_token)
-							end
-						end
-						
-						if
-							is_debug_info_enabled and then
-							internal_dbg_documents.item (class_c.class_id) = Void
-						then
-							uni_string.set_string (class_c.file_name)
-							internal_dbg_documents.put (dbg_writer.define_document (uni_string,
-								language_guid, vendor_guid, document_type_guid), class_c.class_id)
-						end
-
-					end
-
-					class_mapping.put (l_type_token, class_type.implementation_id)
-					if class_c.is_frozen or class_c.is_single then
-						class_mapping.put (l_type_token, class_type.static_type_id)
-					end
-					il_code_generator.external_class_mapping.put (class_type.type, impl_name)
-					internal_external_token_mapping.put (l_type_token, impl_name)
-
-					if
-						not class_type.is_precompiled and then
-						il_code_generator.il_modules (class_type) = Current
-					then
-						define_default_constructor (class_type)
-					end
+				if
+					is_debug_info_enabled and then
+					internal_dbg_documents.item (class_c.class_id) = Void
+				then
+					l_uni_string.set_string (class_c.file_name)
+					internal_dbg_documents.put (dbg_writer.define_document (l_uni_string,
+						language_guid, vendor_guid, document_type_guid), class_c.class_id)
 				end
 			end
+
+			class_mapping.put (l_type_token, class_type.static_type_id)
+		end
+
+	generate_implementation_class_mapping (class_type: CLASS_TYPE) is
+			-- Define reference/definition of Eiffel type `class_type' used for
+			-- implementation purpose.
+		require
+			is_generated: is_generated
+			class_type_not_void: class_type /= Void
+			not_frozen: not class_type.associated_class.is_frozen
+			not_single: not class_type.associated_class.is_single
+		local
+			l_name: STRING
+			class_c: CLASS_C
+			l_type_token: INTEGER
+			l_attributes: INTEGER
+			l_uni_string: UNI_STRING
+		do
+			class_c := class_type.associated_class
+			l_name := class_type.full_il_implementation_type_name
+			create l_uni_string.make (l_name)
+
+			if
+				class_type.is_precompiled or
+				il_code_generator.il_modules (class_type) /= Current
+			then
+				l_type_token := md_emit.define_type_ref (l_uni_string, assembly_token (class_type))
+			else
+				update_parents (class_type, class_c)
+				l_attributes := feature {MD_TYPE_ATTRIBUTES}.Public |
+					feature {MD_TYPE_ATTRIBUTES}.Auto_layout |
+					feature {MD_TYPE_ATTRIBUTES}.Ansi_class |
+					feature {MD_TYPE_ATTRIBUTES}.Is_class |
+					feature {MD_TYPE_ATTRIBUTES}.Serializable
+				
+				if class_c.is_deferred then
+					l_attributes := l_attributes | feature {MD_TYPE_ATTRIBUTES}.Abstract
+				end
+			
+				if class_c.simple_conform_to (System.any_class.compiled_class) then
+					last_parents := << class_type_token (class_type.static_type_id) >>
+				else
+					last_parents := << ise_eiffel_type_info_type_token >>
+				end
+				
+				single_parent_mapping.put (single_inheritance_parent_id,
+					class_type.implementation_id)
+				l_type_token := md_emit.define_type (l_uni_string, l_attributes,
+					single_inheritance_token, last_parents)
+
+				if not il_code_generator.is_single_module then
+					if not (class_c.is_frozen or class_c.is_single) then
+						class_type.set_last_implementation_type_token (l_type_token)
+					else
+						class_type.set_last_type_token (l_type_token)
+					end
+				end
+				
+				if
+					is_debug_info_enabled and then
+					internal_dbg_documents.item (class_c.class_id) = Void
+				then
+					l_uni_string.set_string (class_c.file_name)
+					internal_dbg_documents.put (dbg_writer.define_document (l_uni_string,
+						language_guid, vendor_guid, document_type_guid), class_c.class_id)
+				end
+			end
+
+			class_mapping.put (l_type_token, class_type.implementation_id)
 		end
 
 	update_parents (class_type: CLASS_TYPE; class_c: CLASS_C) is
@@ -817,7 +856,7 @@ feature -- Metadata description
 			end
 		end
 
-	define_default_constructor (class_type: CLASS_TYPE) is
+	define_default_constructor (class_type: CLASS_TYPE; is_reference: BOOLEAN) is
 			-- Define default constructor for implementation of `class_type'
 		require
 			is_generated: is_generated
@@ -834,6 +873,7 @@ feature -- Metadata description
 			l_sig := default_sig
 
 			if
+				is_reference or
 				class_type.is_precompiled or class_type.associated_class.is_external or
 				il_code_generator.il_modules (class_type) /= Current
 			then
@@ -978,7 +1018,7 @@ feature -- Mapping between Eiffel compiler and generated tokens
 			if Result = 0 then
 				l_class_type := il_code_generator.external_class_mapping.item (a_type_name).
 					associated_class_type
-				generate_class_mappings (l_class_type)
+				generate_external_class_mapping (l_class_type)
 				Result := internal_external_token_mapping.item (a_type_name)
 			end
 		ensure
@@ -1009,7 +1049,7 @@ feature -- Mapping between Eiffel compiler and generated tokens
 			l_tokens := internal_constructor_token
 			Result := l_tokens.item (a_type_id)
 			if Result = 0 then
-				define_default_constructor (class_types.item (a_type_id))
+				define_default_constructor (class_types.item (a_type_id), True)
 				Result := l_tokens.item (a_type_id)
 			end
 		ensure
@@ -1056,7 +1096,7 @@ feature -- Mapping between Eiffel compiler and generated tokens
 			valid_type_id: a_type_id > 0
 		local
 			l_class_mapping: like class_mapping
-			l_class_types: like class_types
+			l_class_type: CLASS_TYPE
 		do
 			l_class_mapping := class_mapping
 			Result := l_class_mapping.item (a_type_id)
@@ -1066,8 +1106,14 @@ feature -- Mapping between Eiffel compiler and generated tokens
 				check
 					is_generated: is_generated
 				end
-				l_class_types := class_types
-				generate_class_mappings (l_class_types.item (a_type_id))
+				l_class_type := class_types.item (a_type_id)
+				if l_class_type.associated_class.is_external then
+					generate_external_class_mapping (l_class_type)
+				elseif a_type_id = l_class_type.static_type_id then
+					generate_interface_class_mapping (l_class_type)
+				else
+					generate_implementation_class_mapping (l_class_type)
+				end
 				Result := l_class_mapping.item (a_type_id)
 			end
 		ensure
@@ -1083,8 +1129,8 @@ feature -- Mapping between Eiffel compiler and generated tokens
 			end
 			Result := internal_class_types
 		ensure
-			class_types_not_void: class_types /= Void
-			class_types_not_empty: class_types.count > 0
+			class_types_not_void: Result /= Void
+			class_types_not_empty: Result.count > 0
 		end
 
 	feature_token (a_type_id, a_feature_id: INTEGER): INTEGER is

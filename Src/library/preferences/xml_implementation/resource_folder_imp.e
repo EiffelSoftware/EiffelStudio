@@ -65,7 +65,6 @@ feature -- Update
 	update_attributes (doc: XML_ELEMENT) is
 			-- Update Current, according to `doc'.
 		local
-			res_xml: XML_RESOURCE
 			resource: RESOURCE
 			child: like Current
 			cursor, des_cursor: DS_BILINKED_LIST_CURSOR[XML_NODE]
@@ -94,10 +93,8 @@ feature -- Update
 							des_cursor.forth
 						end
 					elseif node.name.is_equal ("TEXT") then
-						create res_xml.make (node)
-						resource := res_xml.value
-						resource_list.compare_objects
-						resource_list.search(resource)
+						resource := load_xml_resource (node)
+						resource_list.search (resource)
 						if not resource_list.exhausted then
 							if resource.description = Void and resource_list.item.description /= Void then
 								resource.set_description (resource_list.item.description)
@@ -131,7 +128,7 @@ feature -- Saving
 		local
 			file: RAW_FILE
 			s: STRING
-			l: LINKED_LIST [RESOURCE_FOLDER_IMP]
+			l: LIST [RESOURCE_FOLDER_IMP]
 			retried: BOOLEAN
 		do
 			if retried then

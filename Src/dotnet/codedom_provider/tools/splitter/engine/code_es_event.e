@@ -7,7 +7,10 @@ class
 	CODE_ES_EVENT
 
 inherit
-	CODE_ES_SEVERITY_CONSTANTS
+	EV_THREAD_EVENT
+		rename
+			make as ev_make
+		end
 
 create
 	make
@@ -37,9 +40,6 @@ feature -- Access
 	
 	title: STRING
 			-- Event title
-	
-	severity: INTEGER
-			-- Event severity, see class CODE_ES_SEVERITY_CONSTANTS for possible values.
 
 end -- class CODE_ES_EVENT
 

@@ -464,6 +464,7 @@ feature {ARGUMENTS_PARSER} -- Retrieval
 			create preferences.make (Current)
 			preferences.read
 			initialize
+			preferences.write
 		end
 
 invariant

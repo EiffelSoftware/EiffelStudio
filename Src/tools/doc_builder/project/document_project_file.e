@@ -354,80 +354,99 @@ feature {NONE} -- Implementation
 			e_not_void: e /= Void
 		local
 			l_elements: DS_LIST [XM_ELEMENT]
+			l_value: STRING
 		do
+			l_value := e.text
+			
 				-- Name
 			if e.name.is_equal (project_name_tag) then
-				project.set_name (e.text)
+				project.set_name (l_value)
 			end
 				--Location
 			if e.name.is_equal (root_directory_tag) then
-				project.set_root_directory (e.text)
+				if not (create {DIRECTORY}.make (l_value)).exists then
+					old_root := l_value
+					l_value := prompt_for_new_location (l_value, "project directory", False)
+				end
+				project.set_root_directory (l_value)
 			end
 				--Schema file
 			if e.name.is_equal (schema_file_tag) then
-				if (create {PLAIN_TEXT_FILE}.make (e.text)).exists then
-					project.Shared_document_manager.initialize_schema (e.text)	
-				end				
+				if old_root /= Void and l_value.has_substring (old_root) then
+					l_value.replace_substring_all (old_root, project.root_directory)
+				end
+				if not (create {PLAIN_TEXT_FILE}.make (l_value)).exists then
+					l_value := prompt_for_new_location (l_value, "schema file", True)
+				end		
+				if l_value /= Void and not l_value.is_empty then				
+					project.Shared_document_manager.initialize_schema (l_value)
+				end
 			end			
 				-- Stylesheet file
 			if e.name.is_equal (html_stylesheet_file_tag) then
-				if (create {PLAIN_TEXT_FILE}.make (e.text)).exists then
-					project.Shared_document_manager.initialize_stylesheet (e.text)
-				end			
+				if old_root /= Void and l_value.has_substring (old_root) then
+					l_value.replace_substring_all (old_root, project.root_directory)
+				end
+				if not (create {PLAIN_TEXT_FILE}.make (l_value)).exists then					
+					l_value := prompt_for_new_location (l_value, "stylesheet file", True)
+				end
+				if l_value /= Void and not l_value.is_empty then
+					project.Shared_document_manager.initialize_stylesheet (l_value)
+				end				
 			end
 				-- Header
 			if e.name.is_equal (header_file_tag) then
-				header_name := e.text		
+				header_name := l_value		
 			end
 			
 			if e.name.is_equal (process_header_tag) then
-				process_header := e.text.is_equal ("True")
+				process_header := l_value.is_equal ("True")
 			end
 			
 			if e.name.is_equal (header_file_override_tag) then
-				override_file_header_declarations := e.text.is_equal ("True")
+				override_file_header_declarations := l_value.is_equal ("True")
 			end
 			
 				-- Footer file
 			if e.name.is_equal (footer_file_tag) then
-				footer_name := e.text
+				footer_name := l_value
 			end
 			
 			if e.name.is_equal (process_footer_tag) then
-				process_footer := e.text.is_equal ("True")
+				process_footer := l_value.is_equal ("True")
 			end
 			
 			if e.name.is_equal (footer_file_override_tag) then
-				override_file_footer_declarations := e.text.is_equal ("True")
+				override_file_footer_declarations := l_value.is_equal ("True")
 			end
 			
 				-- Includes
 			if e.name.is_equal (process_includes_tag) then
-				process_includes := e.text.is_equal ("True")
+				process_includes := l_value.is_equal ("True")
 			end
 			
 			if e.name.is_equal (process_html_stylesheet_tag) then
-				process_html_stylesheet := e.text.is_equal ("True")
+				process_html_stylesheet := l_value.is_equal ("True")
 			end
 			
 			if e.name.is_equal (include_navigation_links_tag) then
-				include_navigation_links := e.text.is_equal ("True")
+				include_navigation_links := l_value.is_equal ("True")
 			end
 			
 			if e.name.is_equal (generate_dhtml_filter_tag) then
-				generate_dhtml_filter := e.text.is_equal ("True")
+				generate_dhtml_filter := l_value.is_equal ("True")
 			end
 			
 			if e.name.is_equal (use_header_file_tag) then
-				use_header_file := e.text.is_equal ("True")
+				use_header_file := l_value.is_equal ("True")
 			end
 			
 			if e.name.is_equal (use_footer_file_tag) then
-				use_footer_file := e.text.is_equal ("True")
+				use_footer_file := l_value.is_equal ("True")
 			end
 			
 			if e.name.is_equal (generate_feature_nodes_tag) then
-				generate_feature_nodes := e.text.is_equal ("True")
+				generate_feature_nodes := l_value.is_equal ("True")
 			end
 			
 				-- Process sub_elements
@@ -452,6 +471,36 @@ feature {NONE} -- Implementation
 			-- File extension
 		once
 			Result := "dpr"	
+		end	
+
+	old_root: STRING
+			-- Old root directory
+
+	prompt_for_new_location (a_old_loc, context: STRING; is_file: BOOLEAN): STRING  is
+			-- Prompt for new location
+		local
+			l_file_dialog: EV_FILE_OPEN_DIALOG
+			l_directory_dialog: EV_DIRECTORY_DIALOG
+			l_warning: EV_WARNING_DIALOG
+		do
+			create l_warning.make_with_text ("Could not open " + context + " " + a_old_loc + "Please provide a new location.")
+			l_warning.show_modal_to_window ((create {SHARED_OBJECTS}).Application_window)
+			
+			if is_file then
+				create l_file_dialog
+				l_file_dialog.set_title ("Could not find " + a_old_loc)
+				l_file_dialog.show_modal_to_window ((create {SHARED_OBJECTS}).Application_window)
+				if l_file_dialog.selected_button.is_equal ((create {EV_DIALOG_CONSTANTS}).ev_open) then
+					Result := l_file_dialog.file_name
+				end
+			else
+				create l_directory_dialog
+				l_directory_dialog.set_title ("Could not find " + a_old_loc)
+				l_directory_dialog.show_modal_to_window ((create {SHARED_OBJECTS}).Application_window)
+				if l_directory_dialog.selected_button.is_equal ((create {EV_DIALOG_CONSTANTS}).ev_ok) then
+					Result := l_directory_dialog.directory
+				end
+			end
 		end	
 
 invariant

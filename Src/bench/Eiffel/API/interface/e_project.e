@@ -559,7 +559,8 @@ feature -- Update
 				set_error_status (Ok_status)
 				is_compiling_ref.set_item (True)
 				Comp_system.finalize_system (keep_assertions)
-				Comp_system.prepare_before_saving (True)
+					-- False because we are not precompiling here.
+				Workbench.save_project (False)
 				is_compiling_ref.set_item (False)
 				Compilation_modes.reset_modes
 			end

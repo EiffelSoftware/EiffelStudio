@@ -1,5 +1,11 @@
-<document output="studio" title="Tutorial Step 1">
-	<meta_data/>
+<document title="Tutorial Step 1">
+	<meta_data>
+		<help>
+			<toc>
+				<envision_location>Samples/Eiffel Class Library Samples/WEL Samples/Tutorial</envision_location>
+			</toc>
+		</help>
+	</meta_data>
 	<paragraph>
 		<paragraph> This sample shows you how to set up your first 
 			<link>

@@ -58,9 +58,8 @@ feature {NONE} -- Implementation
 	display_state_text is
 			-- Set the messages for this state.
 		do
-			title.set_text ("Add Your fdsfsdfsdfTitle Here (Step 5).")
-			subtitle.set_text ("Add your subtitle here.")
-			message.set_text ("Add your message for this step here.")
+			title.set_text ("Interface Construction.")
+			subtitle.set_text ("Build desired interface for generated system.")
 		end
 
 	build_frame is

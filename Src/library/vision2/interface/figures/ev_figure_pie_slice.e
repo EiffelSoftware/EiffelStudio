@@ -15,7 +15,8 @@ inherit
 		export
 			{ANY} Pi
 		redefine
-			default_create
+			default_create,
+			bounding_box
 		end
 
 	EV_DOUBLE_POINTED_FIGURE
@@ -71,6 +72,95 @@ feature -- Status setting
 
 feature -- Events
 
+	bounding_box: EV_RECTANGLE is
+			-- Smallest orthogonal rectangular area `Current' fits in.
+		local
+			theta_start, theta_end: DOUBLE
+			leftmost, rightmost, topmost, bottommost: INTEGER
+			a, b, center_x, center_y: INTEGER
+			top, left, bottom, right: INTEGER
+			pax, pay, pbx, pby: INTEGER
+			pi2, twopi: DOUBLE
+			end_angle: DOUBLE
+			cosine_theta_start, cosine_theta_end, sine_theta_start, sine_theta_end: DOUBLE
+		do
+			pax := point_a.x_abs
+			pay := point_a.y_abs
+			pbx := point_b.x_abs
+			pby := point_b.y_abs
+			
+			pi2 := pi / 2
+			end_angle := start_angle + aperture
+			twopi := pi * 2
+			
+			top := pay.min (pby)
+			left := pax.min (pbx)
+			bottom := pby.max (pay)
+			right := pbx.max (pax)
+			
+			center_x := (left + right) // 2
+			center_y := (top + bottom) // 2
+			  
+			a := (right - left) // 2
+			b := (bottom - top) // 2 -- positive downwards
+	  
+			-- The calculations for the bounding box start here
+			-- Map the image angles to the parametric angles, correcting for the tangent
+			theta_start := arc_tangent (a / b * tangent(start_angle))
+			if start_angle > pi2 and start_angle < 3 * pi2 then
+				theta_start := theta_start + Pi
+			end
+			theta_end := arc_tangent(a / b * tangent(end_angle))
+			if modulo(end_angle, twopi) > pi2 and modulo(end_angle, twopi) < 3 * pi2 then
+				theta_end := theta_end + Pi
+			end
+			
+			-- Find the bounding box for the three points on the pie
+			-- Watch the signs because conventions are not completely observed
+			
+			cosine_theta_start := cosine(theta_start)
+			cosine_theta_end := cosine(theta_end)
+			sine_theta_start := sine(theta_start)
+			sine_theta_end := sine(theta_end)
+			
+			leftmost := (center_x + a * (0.0).min(cosine_theta_start.min(cosine_theta_end))).floor
+			rightmost := (center_x + a * (0.0).max(cosine_theta_start.max(cosine_theta_end))).ceiling
+			topmost := (center_y - b * (0.0).max(sine_theta_start.max(sine_theta_end))).floor
+			bottommost := (center_y - b * (0.0).min(sine_theta_start.min(sine_theta_end))).ceiling
+			
+			-- Adjust for extreme excursions of the pie, when the box is tangent to the curve
+			-- Assumes positve values for aperture and start_angle
+			
+			if 
+				(start_angle < Pi2 and start_angle + aperture > Pi2) or
+				(start_angle > Pi2 and start_angle + aperture > 5 * pi2)
+			then
+				topmost := top
+			end
+			
+			if 
+				(start_angle < Pi and start_angle + aperture > Pi) or
+				(start_angle > pi and start_angle + aperture > 3 * pi)
+			then
+				leftmost := left
+			end
+			 
+			if 
+				(start_angle < 3 * Pi2 and start_angle + aperture > 3 * Pi2) or
+				(start_angle > 3 * pi2 and start_angle + aperture > 7 * pi2)
+			then
+				bottommost := bottom
+			end
+			 
+			if 
+				start_angle + aperture > twopi
+			then
+				rightmost := right
+			end
+			
+			create Result.make (leftmost, topmost, rightmost - leftmost, bottommost - topmost)
+		end
+		
 	position_on_figure (x, y: INTEGER): BOOLEAN is
 			-- Is (`x', `y') on this figure?
 		local

@@ -674,7 +674,7 @@ end
 						attr_type := attribute_type.type_i
 						if attr_type.has_formal or attr_type.is_true_expanded then
 							!!generic_desc
-							generic_desc.set_type (attr_type)
+							generic_desc.set_type_i (attr_type)
 							desc := generic_desc
 						else
 							desc := attr_type.description

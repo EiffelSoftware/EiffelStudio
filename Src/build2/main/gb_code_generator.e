@@ -1119,7 +1119,7 @@ feature {NONE} -- Implementation
 				elseif project_settings.attributes_local.is_equal (False_string) or
 					(project_settings.attributes_local.is_equal (Optimal_string) and generated_info.generated_name = False) then
 					indent_string := indent_less_two
-					local_string_start := "" + indent_less_two
+					local_string_start := "feature -- Access%N" + indent_less_two
 					add_local := False
 				else
 					check

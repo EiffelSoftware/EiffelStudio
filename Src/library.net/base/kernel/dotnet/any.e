@@ -340,11 +340,11 @@ feature {NONE} -- Implement .NET feature
 	frozen equals (obj: SYSTEM_OBJECT): BOOLEAN is
 			-- Compare `obj' to Current using Eiffel semantic.
 		local
-			l_other: ANY
+			l_other: like Current
 		do
 			l_other ?= obj
 			if l_other /= Void then
-				Result := is_equal (l_other)
+				Result := get_type.equals_object (obj) and then is_equal (l_other)
 			end
 		end
 

@@ -91,8 +91,8 @@ feature {COMPILER_EXPORTER} -- Primitives
 							-- code. So when it simply conforms, then we raise a warning.
 						create l_pseudo_vjar
 						Context.init_error (l_pseudo_vjar)
-						l_pseudo_vjar.set_source_type (other)
-						l_pseudo_vjar.set_target_type (Current)
+						l_pseudo_vjar.set_source_type (Current)
+						l_pseudo_vjar.set_target_type (other)
 						l_pseudo_vjar.set_target_name ("(none)")
 						Error_handler.insert_warning (l_pseudo_vjar)
 						Result := True

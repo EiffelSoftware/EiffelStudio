@@ -263,7 +263,7 @@ feature -- Removal
 		local
 			l: like Current
 		do
-			l := standard_clone (Current)
+			l := standard_twin
 			Precursor {ARRAYED_LIST}
 			from
 				l.start

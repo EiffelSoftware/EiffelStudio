@@ -381,7 +381,7 @@ feature -- Redefinition
 		local
 			a_list: like fixed_list
 		do
-			Result := standard_clone (n)
+			Result := n.standard_twin
 			create a_list.make_filled (n.capacity)
 			Result.set_fixed_list (a_list)
 			Result.attach_to_parent (Void)

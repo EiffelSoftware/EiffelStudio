@@ -835,7 +835,7 @@ feature {NONE} -- Implementation
 		require
 			not_void: n /= Void
 		do
-			Result := standard_clone (n)
+			Result := n.standard_twin
 			Result.cut_off_node
 			Result.attach_to_parent (Void)
 		ensure

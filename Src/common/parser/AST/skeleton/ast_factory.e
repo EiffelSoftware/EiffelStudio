@@ -625,7 +625,7 @@ feature -- Access
 			value_set: Result.value = v
 		end
 
-	new_convert_feat_as (cr: BOOLEAN; fn: FEATURE_NAME; t: EIFFEL_LIST [TYPE]): CONVERT_FEAT_AS is
+	new_convert_feat_as (cr: BOOLEAN; fn: FEATURE_NAME; t: EIFFEL_LIST [EIFFEL_TYPE]): CONVERT_FEAT_AS is
 			-- New convert feature entry AST node.
 		require
 			fn_not_void: fn /= Void

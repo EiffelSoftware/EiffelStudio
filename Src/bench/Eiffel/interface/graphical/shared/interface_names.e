@@ -387,6 +387,8 @@ feature -- Title part
 	t_Onces_of: STRING is				"`Once/Constant' routines of class ";
 	t_Oncefunc_of: STRING is			"`Once' functions of ";
 	t_Past: STRING is					"Ancestor versions of ";
+	t_Print_to_file: STRING is			"Print to file";
+	t_Postscript: STRING is				"PostScript";
 	t_Project: STRING is				"Project";
 	t_Profile_tool: STRING is			"Profile tool";
 	t_Profile_query_window: STRING is	"Profile query window";
@@ -397,6 +399,7 @@ feature -- Title part
 	t_Select_color: STRING is			"Select color";
 	t_Select_feature: STRING is			"Select feature";
 	t_Select_object: STRING is			"Select object";
+	t_Shell_command: STRING is			"Shell Command: ";
 	t_Suppliers_of: STRING is			"Suppliers of class ";
 	t_Routine_custom_tool: STRING is	"Routine custom tool";
 	t_Search: STRING is					"Search";

@@ -1,8 +1,8 @@
 indexing
-	description: ""
-	author: "pascalf"
-	date: "$Date$"
-	revision: "$Revision$"
+	description	: "Template for the first state of a wizard"
+	author		: "Arnaud PICHERY [aranud@mail.dotcom.fr]"
+	date		: "$Date$"
+	revision	: "$Revision$"
 
 deferred class
 	WIZARD_INITIAL_STATE_WINDOW
@@ -26,45 +26,44 @@ feature -- Basic Operations
 	build is
 			-- Special display box for the first and the last state
 		local
-			h1: EV_HORIZONTAL_BOX
-			v1: EV_VERTICAL_BOX
-			sep_v: EV_VERTICAL_SEPARATOR
-			cont: EV_CONTAINER
+			vertical_separator: EV_VERTICAL_SEPARATOR
+			local_pixmap: EV_PIXMAP
+			interior_box: EV_HORIZONTAL_BOX
+			message_and_title_box: EV_VERTICAL_BOX
 		do
-			create h1
+			create title
+			title.set_background_color (white_color)
+			title.align_text_left
+			title.set_font (welcome_title_font)
+			title.set_minimum_height (40)
+
 			create message
 			message.set_background_color (white_color)
 			message.align_text_left
-			message.set_minimum_height (180)
-			create title
-			title.set_minimum_width (330) -- , 20)
-			title.set_background_color (white_color)
-			title.align_text_center
-			title.align_text_middle
-			title.set_font (title_font)
-
-			create sep_v
-			cont:= pixmap.parent
-			if cont /= Void then
-				cont.prune (pixmap)
-			end
-			pixmap.set_minimum_height (312)
-			pixmap.set_minimum_width (165)
-			pixmap.draw_pixmap (91, 9, pixmap_icon)
-			h1.extend(pixmap)
-			h1.extend(sep_v)
-
-			create v1
-			v1.set_minimum_width (330)
-			v1.extend (title)
-			v1.extend (message)
-			h1.extend (v1)
-
-			h1.disable_item_expand (sep_v)
-			h1.disable_item_expand (v1)
 
 			display_state_text
-			main_box.extend (h1)			
+			create message_and_title_box
+			message_and_title_box.set_background_color (white_color)			
+			message_and_title_box.set_border_width (7)
+			message_and_title_box.set_padding (14)
+			message_and_title_box.extend (title)
+			message_and_title_box.disable_item_expand (title)
+			message_and_title_box.extend (message)
+
+			local_pixmap := pixmap.ev_clone
+			local_pixmap.set_minimum_height (312)
+			local_pixmap.set_minimum_width (165)
+			local_pixmap.draw_pixmap (91, 9, pixmap_icon)
+
+			create vertical_separator
+
+			create interior_box
+			interior_box.extend (local_pixmap)
+			interior_box.disable_item_expand (local_pixmap)
+			interior_box.extend (vertical_separator)
+			interior_box.disable_item_expand (vertical_separator)
+			interior_box.extend (message_and_title_box) -- Expandable item
+			main_box.extend (interior_box)			
 		end
 
 	pixmap_location: STRING is "eiffel_wizard.bmp"
@@ -87,9 +86,6 @@ feature -- Basic Operations
 			create fi.make_from_string (wizard_pixmaps_path)
 			fi.extend (pixmap_icon_location)
 			pixmap_icon.set_with_named_file (fi)
-
---			pixmap.set_minimum_width(pixmap.width)
---			pixmap.redraw
 		end
 
 

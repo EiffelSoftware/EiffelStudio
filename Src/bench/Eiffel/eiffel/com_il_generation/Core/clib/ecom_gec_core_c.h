@@ -34,7 +34,7 @@ public:
 	/*-----------------------------------------------------------
 	Convert CELL [STRING] to BSTR *.
 	-----------------------------------------------------------*/
-	BSTR * ccom_ec_pointed_cell_4( EIF_REFERENCE eif_ref, BSTR * old );
+	BSTR * ccom_ec_pointed_cell_3( EIF_REFERENCE eif_ref, BSTR * old );
 
 
 

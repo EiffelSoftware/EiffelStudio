@@ -15,7 +15,7 @@ ecom_gce_core_c::ecom_gce_core_c(  )
 };
 /*----------------------------------------------------------------------------------------------------------------------*/
 
-EIF_REFERENCE ecom_gce_core_c::ccom_ce_pointed_cell_4( BSTR * a_pointer, EIF_OBJECT an_object )
+EIF_REFERENCE ecom_gce_core_c::ccom_ce_pointed_cell_3( BSTR * a_pointer, EIF_OBJECT an_object )
 
 /*-----------------------------------------------------------
 	Convert BSTR *  to CELL [STRING].
@@ -47,7 +47,7 @@ EIF_REFERENCE ecom_gce_core_c::ccom_ce_pointed_cell_4( BSTR * a_pointer, EIF_OBJ
 };
 /*----------------------------------------------------------------------------------------------------------------------*/
 
-void ecom_gce_core_c::ccom_free_memory_pointed_4( BSTR * a_pointer )
+void ecom_gce_core_c::ccom_free_memory_pointed_3( BSTR * a_pointer )
 
 /*-----------------------------------------------------------
 	Free memory of BSTR *.
@@ -62,7 +62,7 @@ void ecom_gce_core_c::ccom_free_memory_pointed_4( BSTR * a_pointer )
 };
 /*----------------------------------------------------------------------------------------------------------------------*/
 
-void ecom_gce_core_c::ccom_free_memory_pointed_12( LONG * a_pointer )
+void ecom_gce_core_c::ccom_free_memory_pointed_11( LONG * a_pointer )
 
 /*-----------------------------------------------------------
 	Free memory of LONG *.

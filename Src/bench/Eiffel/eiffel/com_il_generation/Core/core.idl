@@ -1,12 +1,12 @@
 // Generated .IDL file (by the OLE/COM Object Viewer)
 // 
-// typelib filename: <could not determine filename>
+// typelib filename: EiffelCompiler.tlb
 
 [
-  uuid(59CEBADB-D9E6-391E-B110-05021F113744),
-  version(5.0)
+  uuid(C947355E-AE58-3607-957C-7565E8CC09A1),
+  version(5.1)
 ]
-library Core
+library EiffelCompiler
 {
     // TLib : OLE Automation : {00020430-0000-0000-C000-000000000046}
     importlib("stdole2.tlb");
@@ -16,7 +16,7 @@ library Core
 
     [
       odl,
-      uuid(07819C00-1269-3F38-B7CF-F3D7F0F556B6),
+      uuid(75FA3A63-B835-3FEB-9A33-3479C19378CF),
       version(1.0),
       oleautomation
     ]
@@ -33,41 +33,41 @@ library Core
                         [in] BSTR Name, 
                         [in] VARIANT_BOOL Debug);
         HRESULT _stdcall EndAssemblyGeneration();
-        HRESULT _stdcall EndModuleGeneration();
         HRESULT _stdcall StartClassMappings([in] long ClassCount);
         HRESULT _stdcall GenerateClassMappings(
                         [in] BSTR ClassName, 
                         [in] long TypeID, 
-                        [in] BSTR SourceFileName);
-        HRESULT _stdcall GenerateArrayClassMappings(
-                        [in] BSTR ClassName, 
-                        [in] BSTR ElementTypeName, 
-                        [in] long TypeID);
+                        [in] long InterfaceID, 
+                        [in] BSTR SourceFileName, 
+                        [in] BSTR ElementTypeName);
         HRESULT _stdcall GenerateClassHeader(
                         [in] VARIANT_BOOL IsInterface, 
                         [in] VARIANT_BOOL Deferred, 
+                        [in] VARIANT_BOOL IsFrozen, 
                         [in] VARIANT_BOOL Expanded, 
                         [in] VARIANT_BOOL IsExternal, 
                         [in] long TypeID);
         HRESULT _stdcall EndClass();
         HRESULT _stdcall AddToParentsList([in] long TypeID);
+        HRESULT _stdcall AddInterface([in] long TypeID);
         HRESULT _stdcall EndParentsList();
         HRESULT _stdcall StartFeaturesList([in] long TypeID);
-        HRESULT _stdcall EndFeaturesList();
         HRESULT _stdcall MarkInvariant([in] long FeatureID);
         HRESULT _stdcall MarkCreationRoutines([in] SAFEARRAY(long) FeatureID);
         HRESULT _stdcall StartFeatureDescription([in] long arg_count);
-        HRESULT _stdcall GenerateFeatureNature(
-                        [in] VARIANT_BOOL Redefined, 
-                        [in] VARIANT_BOOL Deferred, 
-                        [in] VARIANT_BOOL Frozen, 
+        HRESULT _stdcall GenerateInterfaceFeatureIdentification(
+                        [in] BSTR Name, 
+                        [in] long FeatureID, 
                         [in] VARIANT_BOOL IsAttribute);
         HRESULT _stdcall GenerateFeatureIdentification(
                         [in] BSTR Name, 
                         [in] long FeatureID, 
-                        [in] SAFEARRAY(long) RoutineIDs, 
-                        [in] VARIANT_BOOL InCurrentClass, 
-                        [in] long WrittenTypeID);
+                        [in] VARIANT_BOOL IsRedefined, 
+                        [in] VARIANT_BOOL IsDeferred, 
+                        [in] VARIANT_BOOL IsFrozen, 
+                        [in] VARIANT_BOOL IsAttribute, 
+                        [in] VARIANT_BOOL Is_C_External, 
+                        [in] VARIANT_BOOL IsStatic);
         HRESULT _stdcall GenerateExternalIdentification(
                         [in] BSTR Name, 
                         [in] BSTR ComName, 
@@ -83,8 +83,6 @@ library Core
                         [in] BSTR Name, 
                         [in] long TypeID);
         HRESULT _stdcall CreateFeatureDescription();
-        HRESULT _stdcall CheckRenaming();
-        HRESULT _stdcall CheckRenamingAndRedefinition();
         HRESULT _stdcall DefineEntryPoint(
                         [in] long TypeID, 
                         [in] long FeatureID);
@@ -111,7 +109,16 @@ library Core
         HRESULT _stdcall AddCAArrayCharacterArg([in] SAFEARRAY(unsigned short) Value);
         HRESULT _stdcall AddCAArrayBooleanArg([in] SAFEARRAY(VARIANT_BOOL) Value);
         HRESULT _stdcall StartIlGeneration([in] long TypeID);
-        HRESULT _stdcall GenerateFeatureIL([in] long FeatureID);
+        HRESULT _stdcall GenerateFeatureIL(
+                        [in] long FeatureID, 
+                        [in] long TypeID, 
+                        [in] long CodeFeatureID);
+        HRESULT _stdcall GenerateFeatureInternalClone([in] long FeatureID);
+        HRESULT _stdcall GenerateImplementationFeatureIL([in] long FeatureID);
+        HRESULT _stdcall GenerateMethodImpl(
+                        [in] long FeatureID, 
+                        [in] long ParentTypeID, 
+                        [in] long ParentFeatureID);
         HRESULT _stdcall GenerateCreationFeatureIL([in] long FeatureID);
         HRESULT _stdcall GenerateExternalCall(
                         [in] BSTR ExternalTypeName, 
@@ -138,6 +145,15 @@ library Core
         HRESULT _stdcall GenerateCheckCast(
                         [in] long SourceTypeID, 
                         [in] long TargetTypeID);
+        HRESULT _stdcall ConvertToNativeInt();
+        HRESULT _stdcall ConvertToBoolean();
+        HRESULT _stdcall ConvertToCharacter();
+        HRESULT _stdcall ConvertToInteger8();
+        HRESULT _stdcall ConvertToInteger16();
+        HRESULT _stdcall ConvertToInteger32();
+        HRESULT _stdcall ConvertToInteger64();
+        HRESULT _stdcall ConvertToDouble();
+        HRESULT _stdcall ConvertToReal();
         HRESULT _stdcall GenerateCurrent();
         HRESULT _stdcall GenerateResult();
         HRESULT _stdcall GenerateAttribute(
@@ -147,6 +163,9 @@ library Core
                         [in] long TypeID, 
                         [in] long FeatureID, 
                         [in] VARIANT_BOOL IsVirtual);
+        HRESULT _stdcall GeneratePrecursorFeatureAccess(
+                        [in] long TypeID, 
+                        [in] long FeatureID);
         HRESULT _stdcall GenerateArgument([in] long n);
         HRESULT _stdcall GenerateLocal([in] long n);
         HRESULT _stdcall GenerateInAssertionTest([in] long EndOfAssertLabel);
@@ -164,7 +183,9 @@ library Core
         HRESULT _stdcall GenerateStartRescue();
         HRESULT _stdcall GenerateEndExceptionBlock();
         HRESULT _stdcall GenerateIsInstanceOf([in] long TypeID);
-        HRESULT _stdcall GenerateAttributeAssignment([in] long FeatureID);
+        HRESULT _stdcall GenerateAttributeAssignment(
+                        [in] long TypeID, 
+                        [in] long FeatureID);
         HRESULT _stdcall GenerateLocalAssignment([in] long n);
         HRESULT _stdcall GenerateResultAssignment();
         HRESULT _stdcall GenerateLocalAddress([in] long n);
@@ -195,8 +216,12 @@ library Core
         HRESULT _stdcall GenerateArrayCount();
         HRESULT _stdcall PutVoid();
         HRESULT _stdcall PutManifestString([in] BSTR s);
+        HRESULT _stdcall PutInteger8Constant([in] long i);
+        HRESULT _stdcall PutInteger16Constant([in] long i);
         HRESULT _stdcall PutInteger32Constant([in] long i);
+        HRESULT _stdcall PutInteger64Constant([in] long i);
         HRESULT _stdcall PutDoubleConstant([in] double d);
+        HRESULT _stdcall PutRealConstant([in] float d);
         HRESULT _stdcall PutCharacterConstant([in] unsigned short c);
         HRESULT _stdcall PutBooleanConstant([in] VARIANT_BOOL b);
         HRESULT _stdcall BranchOnTrue([in] long label);
@@ -208,8 +233,11 @@ library Core
         HRESULT _stdcall GenerateGt();
         HRESULT _stdcall GenerateGe();
         HRESULT _stdcall GenerateStar();
-        HRESULT _stdcall GenerateSlash();
         HRESULT _stdcall GeneratePower();
+        HRESULT _stdcall GenerateMax([in] long TypeID);
+        HRESULT _stdcall GenerateMin([in] long TypeID);
+        HRESULT _stdcall GenerateAbs([in] long TypeID);
+        HRESULT _stdcall GenerateToString();
         HRESULT _stdcall GeneratePlus();
         HRESULT _stdcall GenerateMod();
         HRESULT _stdcall GenerateMinus();
@@ -222,15 +250,17 @@ library Core
         HRESULT _stdcall GenerateShl();
         HRESULT _stdcall GenerateShr();
         HRESULT _stdcall GenerateNe();
-        HRESULT _stdcall GenerateUPlus();
         HRESULT _stdcall GenerateUMinus();
         HRESULT _stdcall GenerateNot();
+        HRESULT _stdcall GenerateBitwiseNot();
         HRESULT _stdcall PutLineInfo([in] long n);
         HRESULT _stdcall CreateLabel([out, retval] long* pRetVal);
+        HRESULT _stdcall SetForInterfaces();
+        HRESULT _stdcall SetForImplementations();
     };
 
     [
-      uuid(1983257D-4E69-3885-825A-D2E142C4EFA7),
+      uuid(9DAF83A1-15D7-3A80-AB8F-0E034F479C3F),
       version(1.0)
     ]
     coclass Core {

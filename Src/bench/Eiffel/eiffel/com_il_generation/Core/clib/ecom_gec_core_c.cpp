@@ -15,7 +15,7 @@ ecom_gec_core_c::ecom_gec_core_c(  )
 };
 /*----------------------------------------------------------------------------------------------------------------------*/
 
-BSTR * ecom_gec_core_c::ccom_ec_pointed_cell_4( EIF_REFERENCE eif_ref, BSTR * old )
+BSTR * ecom_gec_core_c::ccom_ec_pointed_cell_3( EIF_REFERENCE eif_ref, BSTR * old )
 
 /*-----------------------------------------------------------
 	Convert CELL [STRING] to BSTR *.

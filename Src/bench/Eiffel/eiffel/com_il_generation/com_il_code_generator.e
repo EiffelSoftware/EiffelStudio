@@ -15,7 +15,6 @@ inherit
 	CORE_PROXY
 		rename
 			generate_external_identification as proxy_generate_external_identification,
-			generate_feature_identification as proxy_generate_feature_identification,
 			generate_external_call as proxy_generate_external_call,
 			mark_creation_routines as proxy_mark_creation_routines,
 			put_character_constant as proxy_put_character_constant,
@@ -71,20 +70,6 @@ feature -- Basic Operations
 			end
 			proxy_generate_external_call (base_name, name, external_kind, actual_parameters,
 				actual_return_type, is_virtual, type_id, feature_id)
-		end
-
-	generate_feature_identification (name: STRING; feature_id: INTEGER; routine_ids: ARRAY [INTEGER]; in_current_class: BOOLEAN; written_type_id: INTEGER) is
-		local
-			actual_routine_ids: ECOM_ARRAY [INTEGER]
-			rout_id_set: ROUT_ID_SET
-		do
-			rout_id_set ?= routine_ids
-			check
-				rout_id_set_not_void: rout_id_set /= Void
-			end
-			Parameterized_array.put (rout_id_set.count, 1)
-			create actual_routine_ids.make_from_array (rout_id_set, 1, Zero_array, Parameterized_array)
-			proxy_generate_feature_identification (name, feature_id, actual_routine_ids, in_current_class, written_type_id)
 		end
 
 	generate_external_identification (name, com_name: STRING; external_kind, feature_id: INTEGER; routine_id: INTEGER; in_current_class: BOOLEAN; written_type_id: INTEGER; parameters: ARRAY [STRING]; return_type: STRING) is
@@ -236,6 +221,30 @@ feature -- Character handling
 			-- Put `c' onto stack.
 		do
 			proxy_put_character_constant (c.code)
+		end
+
+feature -- Not implemented since not needed
+
+	end_module_generation is
+		do
+		end
+
+	end_features_list is
+		do
+		end
+
+	generate_uplus is
+		do
+		end
+
+	check_renaming is
+			-- Check renaming for current feature and class.
+		do
+		end
+
+	check_renaming_and_redefinition is
+			-- Check covariance for current feature and class.
+		do
 		end
 
 feature {NONE} -- Implementation

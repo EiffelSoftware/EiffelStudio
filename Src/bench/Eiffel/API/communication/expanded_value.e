@@ -6,12 +6,13 @@ indexing
 	revision: "$Revision $"
 
 class
-
 	EXPANDED_VALUE
 
 inherit
 
-	DEBUG_VALUE
+	REFERENCE_VALUE
+		rename
+			make_attribute as ref_make_attribute
 		redefine
 			set_hector_addr, append_to,
 			append_type_and_value
@@ -41,21 +42,6 @@ feature -- Property
 
 	attributes: SORTED_TWO_WAY_LIST [DEBUG_VALUE];
 			-- Attributes of expanded object
-
-feature -- Access
-
-	dynamic_class: E_CLASS is
-		local
-			class_type: CLASS_TYPE
-		do
-			Result := private_dynamic_class;
-			if Result = Void then
-				if Eiffel_system.valid_dynamic_id (dynamic_type_id) then
-					Result := Eiffel_system.class_of_dynamic_id (dynamic_type_id)
-					private_dynamic_class := Result
-				end
-			end	
-		end;
 
 feature -- Output
 
@@ -111,14 +97,6 @@ feature {NONE} -- Implementation
 				attributes.forth
 			end;
 		end;
-
-feature {NONE} -- Implementation
-
-	dynamic_type_id: INTEGER;
-			-- Dynamic type of expanded object
-
-	private_dynamic_class: E_CLASS
-			-- Saved class
 
 invariant
 

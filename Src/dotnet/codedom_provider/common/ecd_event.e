@@ -84,7 +84,7 @@ feature -- Status Report
 				check
 					valid_context: l_index > 0
 				end
-				l_body.replace_substring (context.item (i).out, l_index, l_index + l_marker.count)
+				l_body.replace_substring (context.item (i).out, l_index, l_index + l_marker.count - 1)
 				i := i + 1
 			end
 			create Result.make (l_header.count + l_body.count + 1)

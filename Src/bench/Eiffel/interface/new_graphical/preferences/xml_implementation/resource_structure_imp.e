@@ -18,20 +18,13 @@ create
 
 feature -- Initialization
 
-	make (in: like interface) is
-		do
-			interface := in
-		end
-
-	initialize (default_file: STRING) is
+	initialize, initialize_from_file (default_file: STRING; normal_file: STRING) is
 		local
 			file_name: FILE_NAME
 			environment: EXECUTION_ENVIRONMENT
 		do
 			make_default (default_file)
-			create environment
-			create file_name.make_from_string (environment.home_directory_name)
-			file_name.set_file_name (".es4rc")
+			create file_name.make_from_string (normal_file)
 			if root_folder_imp /= Void then
 				update_from_file_name (file_name)
 			else

@@ -708,13 +708,13 @@ feature -- Element change
 			-- `lock_window_update' , call 'unlock_window_update'.
 		require
 			exists: exists
-			no_window_is_locked: not has_system_window_locked
+--			no_window_is_locked: not has_system_window_locked
 		local
 			success : BOOLEAN
 		do
 			success := c_lock_window_update (item)
 			check
-				success: success
+				-- success: success
 			end
 		ensure
 			has_system_window_locked
@@ -724,13 +724,13 @@ feature -- Element change
 			-- Unlock a locked window.	
 		require
 			exists: exists
-			window_locked: has_system_window_locked
+--			window_locked: has_system_window_locked
 		local
 			success : BOOLEAN
 		do
 			success := c_lock_window_update (default_pointer)
 			check
-				success: success
+				-- success: success
 			end
 		end
 

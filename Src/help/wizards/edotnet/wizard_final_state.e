@@ -37,12 +37,12 @@ feature -- Basic Operations
 		end
 		
 	proceed_with_current_info is
-		local
-			project_name_lowercase: STRING
-			project_location: STRING
-			ec_command_line: STRING
-			eifgen_directory: DIRECTORY
-			epr_file: RAW_FILE
+		--local
+		--	project_name_lowercase: STRING
+		--	project_location: STRING
+		--	ec_command_line: STRING
+		--	eifgen_directory: DIRECTORY
+		--	epr_file: RAW_FILE
 		do
 			project_generator.generate_code
 			write_bench_notification_ok (wizard_information)

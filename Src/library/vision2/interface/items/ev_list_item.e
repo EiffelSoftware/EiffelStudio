@@ -130,17 +130,6 @@ feature -- Status setting
 
 feature -- Element change
 
---	set_parent (par: EV_LIST) is
---			-- Make `par' the new parent of the widget.
---			-- `par' can be Void then the parent is the screen.
---		require
---			exists: not destroyed
---		do
---			implementation.set_parent (par)
---		ensure
---			parent_set: parent = par
---		end
-
 	set_index (value: INTEGER) is
 			-- Make `value' the new index of the item in the
 			-- list.

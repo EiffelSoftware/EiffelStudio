@@ -116,21 +116,6 @@ feature -- Status report
 			Result := implementation.is_parent
 		end
 
-feature -- Element change
-
---	set_parent (par: EV_TREE_ITEM_HOLDER) is
---			-- Make `par' the new parent of the widget.
---			-- `par' can be Void then the parent is the screen.
---			-- Can be used only if the item has no children
---		require
---			exists: not destroyed
---			not_parent: not is_parent
---		do
---			implementation.set_parent (par)
---		ensure
---			parent_set: parent = par
---		end
-
 feature -- Event : command association
 
 	add_activate_command (cmd: EV_COMMAND; arg: EV_ARGUMENT) is

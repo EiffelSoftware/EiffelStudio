@@ -740,6 +740,7 @@ feature -- Element change
 				progress_dialog.set_title ("Building progress")
 				progress_dialog.set_message ("Diagram for " + a_class.name_in_upper)
 				progress_dialog.enable_cancel
+				progress_dialog.set_value (0)
 				progress_dialog.show
 				progress_dialog.show_relative_to_window (Window_manager.last_focused_window.window)
 				
@@ -882,6 +883,7 @@ feature -- Element change
 				progress_dialog.set_title ("Building progress")
 				progress_dialog.set_message ("Diagram for " + a_cluster.name_in_upper)
 				progress_dialog.enable_cancel
+				progress_dialog.set_value (0)
 				progress_dialog.show
 				progress_dialog.show_relative_to_window (Window_manager.last_focused_window.window)
 				

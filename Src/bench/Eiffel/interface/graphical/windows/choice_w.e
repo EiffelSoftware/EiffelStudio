@@ -112,7 +112,7 @@ feature
 				list.set_visible_item_count (1);
 			end;
 			
-			set_width ((200).max (new_width * 12));
+			set_width ((150).max (new_width * 10));
 			set_title (a_title);
 			display
 		end;

@@ -21,25 +21,33 @@ feature {NONE} -- Initialization
 	make (par: EV_CONTAINER) is
 			-- Create the demo in `par'.
 		local
-			cmd: EV_ROUTINE_COMMAND
 			frame: EV_FRAME
 			color: EV_BASIC_COLORS
 			code: EV_CURSOR_CODE
 			pix: EV_PIXMAP
+			but: EV_BUTTON
+			hbox: EV_HORIZONTAL_BOX
 		do
 			{EV_VERTICAL_BOX} Precursor (par)
 			!! color
+			!! code.make
+
 			!! frame.make_with_text (Current, "Busy...")
 			frame.set_foreground_color (color.red)
+
 			!! pix.make_from_file ("d:\divers_kaci\cfg\lak2.bmp")
---			!! cur.make_by_pixmap (pix)
-	--		frame.set_cursor (cur)
 
 			!! frame.make_with_text (Current, "another cursor")
 			frame.set_foreground_color (color.red)
-			!! code.make
+			create hbox.make (frame)
+			hbox.set_border_width (20)
+			hbox.set_spacing (20)
 			!! cur.make_by_code (code.busy)
 			frame.set_cursor (cur)
+			create but.make_with_text (hbox, "Button 1")
+			!! cur.make_by_code (code.crosshair)
+			but.set_cursor (cur)
+			create but.make_with_text (hbox, "Button 2")
 		end
 
 feature -- Access

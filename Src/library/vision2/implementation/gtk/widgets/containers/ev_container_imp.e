@@ -297,9 +297,10 @@ feature -- Status setting
 			pix_imp: EV_PIXMAP_IMP
 			mem_ptr, pix_ptr: POINTER
 			i: INTEGER
-		do	
+		do
+			real_set_background_color (c_object, (create {EV_STOCK_COLORS}).gray)
 			pix_imp ?= background_pixmap.implementation
-			set_background_color ((create {EV_STOCK_COLORS}).gray)
+
 			a_style := feature {EV_GTK_EXTERNALS}.gtk_style_copy (feature {EV_GTK_EXTERNALS}.gtk_widget_struct_style (c_object))
 			pix_ptr := feature {EV_GTK_EXTERNALS}.gdk_pixmap_ref (pix_imp.drawable)
 			from
@@ -345,6 +346,7 @@ feature -- Status setting
 			a_style, mem_ptr: POINTER
 			i: INTEGER
 		do
+			real_set_background_color (c_object, Void)
 			a_style := feature {EV_GTK_EXTERNALS}.gtk_style_copy (feature {EV_GTK_EXTERNALS}.gtk_widget_struct_style (visual_widget))
 			from
 				i := 0
@@ -383,10 +385,9 @@ feature -- Command
 	destroy is
 			-- Render `Current' unusable.
 		do
-			Precursor {EV_WIDGET_IMP}
 			interface.wipe_out
+			Precursor {EV_WIDGET_IMP}
 		end
-
 
 feature -- Event handling
 

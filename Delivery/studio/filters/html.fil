@@ -31,6 +31,8 @@ feature_declaration		|<A NAME="f_$feature$">*</A>
 features				|<A HREF="$file$#f_$feature$">*</A>
 cluster_name			|<A HREF="$file$">*</A>
 
+string_url	|<a href="$file$">*</a>
+
 -- General specifications
 
 keyword					|<B>*</B>

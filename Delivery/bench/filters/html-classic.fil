@@ -25,6 +25,8 @@ class_declaration, cluster_declaration		|%
 
 class_name, cluster_name	|<a href="$file$">*</a>
 
+string_url	|<a href="$file$">*</a>
+
 -- General specifications
 
 keyword						|</i><b>*</b><i>

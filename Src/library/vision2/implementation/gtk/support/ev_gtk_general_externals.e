@@ -83,6 +83,23 @@ feature {NONE} -- code in the glue library
 			"C | %"gtk_eiffel.h%""
 		end
 
+	c_gtk_object_class_user_signal_new (widget: POINTER; name: POINTER): INTEGER is 
+		external
+			"C (GtkObject *, const gchar*): EIF_INTEGER | %"gtk_eiffel.h%""
+		end
+
+feature {NONE} -- Accelerators features.
+
+	gtk_accel_group_new: POINTER is
+		external
+			"C : EIF_POINTER | %"gtk_eiffel.h%""
+		end
+
+	c_gtk_widget_add_accelerator (widget, signal_name: POINTER; keycode: INTEGER; shift_mask, control_mask, alt_mask: BOOLEAN) is
+		external
+			"C (Gtkwidget *, const gchar *, guint, gboolean, gboolean, gboolean) | %"gtk_eiffel.h%""
+		end
+
 feature {NONE} -- Cast features
 
 	c_gtk_integer_to_pointer (i: INTEGER): POINTER is

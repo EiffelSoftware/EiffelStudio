@@ -113,9 +113,8 @@ feature
 			a_widget_exists: not (a_widget = Void);
 			font_specified: is_specified;
 			font_valid_for_a_widget: is_valid (a_widget)
-		
-			do
-					Result := c_descent (resource (a_widget.screen))
+		do
+			Result := c_descent (resource (a_widget.screen))
 		ensure then
 			Result >= 0
 		end;

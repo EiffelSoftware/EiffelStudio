@@ -103,7 +103,7 @@ feature -- Access
 	key_at (n: INTEGER): H is
 			-- Key corresponding to entry `n'
 		do	
-			if n >=0 and n < keys.count  then	
+			if n >=0 and n < keys.count then	
 				Result := keys.item (n);
 			end;
 		end;
@@ -238,28 +238,28 @@ feature -- Status report
 
 feature -- Cursor movement
 
-    start is
-            -- Bring cursor to first position.
-        do
-            pos_for_iter := keys.lower - 1;
-            forth
-        end;
+	start is
+			-- Bring cursor to first position.
+		do
+			pos_for_iter := keys.lower - 1;
+			forth
+		end;
 
-    forth is
-            -- Advance cursor by one position.
-        require
-            not_off: not off
-        local
-            stop: BOOLEAN
-        do
-            from
-            until
-                stop
-            loop
-                pos_for_iter := pos_for_iter + 1;
-                stop := off or else valid_key (keys.item (pos_for_iter))
-            end
-        end;
+	forth is
+			-- Advance cursor by one position.
+		require
+			not_off: not off
+		local
+			stop: BOOLEAN
+		do
+			from
+			until
+				stop
+			loop
+				pos_for_iter := pos_for_iter + 1;
+				stop := off or else valid_key (keys.item (pos_for_iter))
+			end
+		end;
 
 feature -- Element change
 
@@ -289,7 +289,7 @@ feature -- Element change
 	replace (new: G; key: H) is
 			-- Replace item at `key', if present,
 			-- with `new'; do not change associated key.
-			-- Make `replaced' true if and only if a  replacement has
+			-- Make `replaced' true if and only if a replacement has
 			-- been made (i.e. `key' was present).
 		require
 			valid_key (key)
@@ -330,7 +330,7 @@ feature -- Element change
 	replace_key (new_key: H; old_key: H) is
 			-- If table contains an item at `old_key',
 			-- replace its key by `new_key'.
-			-- Make `replaced' true if and only if a  replacement has
+			-- Make `replaced' true if and only if a replacement has
 			-- been made (i.e. `old_key' was present).
 		require
 			valid_keys: valid_key (new_key) and valid_key (old_key)
@@ -505,8 +505,8 @@ feature {NONE} -- Inapplicable
 
 feature {NONE} -- Implementation
 
-    pos_for_iter: INTEGER;
-            -- Cursor for iteration primitives
+	pos_for_iter: INTEGER;
+			-- Cursor for iteration primitives
 
 	internal_search (search_key: H) is
 			-- Search for item of `search_key'.

@@ -204,7 +204,7 @@ feature -- Element change
 
 	merge_tree_before (other: like first_child) is
 			-- Merge children of `other' into current structure
-			-- after cursor position. Do not move cursor.
+			-- before cursor position. Do not move cursor.
 			-- Make `other' a leaf.
 		do
 			attach (other)
@@ -221,6 +221,7 @@ feature -- Element change
 		end
 
 	prune (n: like first_child) is
+			-- Prune `n' from children.
 		local
 			l_child: like first_child
 		do

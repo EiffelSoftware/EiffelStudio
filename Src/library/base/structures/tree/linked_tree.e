@@ -231,6 +231,7 @@ feature -- Element change
 feature -- Removal
 
 	prune (n: like first_child) is
+			-- Prune `n' from children.
 		local
 			l_child: like first_child
 			left_child: like first_child

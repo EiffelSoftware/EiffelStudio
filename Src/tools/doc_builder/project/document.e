@@ -64,10 +64,7 @@ feature -- Creation
 			-- Initialization
 		do			
 			create observers.make (2)
-			create schema_validator
-			create links.make (3)
-			create images.make (3)
-			create invalid_links.make ("Invalid links")		
+			create schema_validator	
 			attach (Application_window) 
 		end
 
@@ -238,22 +235,6 @@ feature -- Query
 		end
 	
 feature -- Status Setting
-
-	add_link (a_url: DOCUMENT_LINK) is
-			-- Add `a_url' to list of links
-		require
-			url_not_void: a_url /= Void
-		do
-			links.extend (a_url)
-		end		
-	
-	add_image (a_url: DOCUMENT_LINK) is
-			-- Add `a_url' to list of image urls
-		require
-			url_not_void: a_url /= Void
-		do
-			images.extend (a_url)
-		end	
 	
 	change_name (a_new_name: STRING) is
 			-- Change name of current on disk to `a_new_name'
@@ -294,71 +275,6 @@ feature -- Status Setting
 			end
 			Application_window.update
 		end	
-
-feature {DOCUMENT_LINK, LINK_MANAGER, HTML_GENERATOR} -- Links
-	
-	links: ARRAYED_LIST [DOCUMENT_LINK]
-			-- Links in Current	
-
-	images: ARRAYED_LIST [DOCUMENT_LINK]
-			-- Images in Current
-
-	invalid_links: ERROR_REPORT
-			-- Invalid link errors	
-
-	check_links is
-			-- Check links.  Put invalid links into `invalid_links'.
-		require
-			valid_xml: is_valid_xml
-			is_persisted: is_persisted
-		local
-			l_formatter: XM_DOCUMENT_FORMATTER
-		do
-			if invalid_links /= Void then
-				invalid_links.clear	
-			end
-			create l_formatter.make_with_document (Current)
-			l_formatter.process_document (xml)
-			if not links.is_empty then
-				create invalid_links.make ("Invalid Links")
-				from
-					links.start
-				until
-					links.after
-				loop
-					if not links.item.exists then
-						invalid_links.append_error (create {ERROR}.make ("File: " + name + " (Url: " + links.item.url + ")"))
-					end
-					links.forth
-				end
-			end
-		end
-
-	update_link (a_old, a_new: DOCUMENT_LINK) is
-			-- Update all links in Current to `a_old' to link to `a_new'
-		require
-			old_link_not_void: a_old /= Void
-			new_link_not_void: a_new /= void
-		local
-			l_formatter: XM_DOCUMENT_FORMATTER
-		do
-			do_update_link := True
-			create l_formatter.make_with_document (Current)
-			l_formatter.set_links (a_old, a_new)
-			l_formatter.process_document (xml)
-			save_xml_document (xml, name)
-			do_update_link := False
-		end			
-
-	set_links_relative is
-			-- Set all links in Current to relative links
-		do			
-		end
-		
-	set_links_absolute is
-			-- Set all links in Current to absolute links
-		do			
-		end
 
 feature {NONE} -- Implementation
 

@@ -23,6 +23,10 @@ inherit
 
 	EV_ID_IMP
 
+	EV_PND_SOURCE_IMP
+
+	EV_PND_TARGET_IMP
+
 creation
 	make
 
@@ -65,7 +69,7 @@ feature -- Status report
 	is_insensitive: BOOLEAN is
 			-- Is the current button insensitive?
 		do
-			Result := not parent_imp.toolbar.button_enabled (id)
+			Result := not parent_imp.button_enabled (id)
 		end
 
 feature -- Status setting
@@ -85,9 +89,9 @@ feature -- Status setting
 			-- enable if `not flag'
 		do
 			if flag then
-				parent_imp.toolbar.disable_button (id)
+				parent_imp.disable_button (id)
 			else
-				parent_imp.toolbar.enable_button (id)
+				parent_imp.enable_button (id)
 			end
 		end
 
@@ -158,11 +162,11 @@ feature -- Event : command association
 		do
 			inspect mouse_button 
 			when 1 then
-				add_command (Cmd_item_button_one_press, cmd, arg)
+				add_command (Cmd_button_one_press, cmd, arg)
 			when 2 then
-				add_command (Cmd_item_button_two_press, cmd, arg)
+				add_command (Cmd_button_two_press, cmd, arg)
 			when 3 then
-				add_command (Cmd_item_button_three_press, cmd, arg)
+				add_command (Cmd_button_three_press, cmd, arg)
 			end
 		end
 
@@ -173,11 +177,11 @@ feature -- Event : command association
 		do
 			inspect mouse_button
 			when 1 then
-				add_command (Cmd_item_button_one_release, cmd, arg)
+				add_command (Cmd_button_one_release, cmd, arg)
 			when 2 then
-				add_command (Cmd_item_button_two_release, cmd, arg)
+				add_command (Cmd_button_two_release, cmd, arg)
 			when 3 then
-				add_command (Cmd_item_button_three_release, cmd, arg)
+				add_command (Cmd_button_three_release, cmd, arg)
 			end
 		end
 
@@ -196,11 +200,11 @@ feature -- Event -- removing command association
 		do
 			inspect mouse_button 
 			when 1 then
-				remove_command (Cmd_item_button_one_press)
+				remove_command (Cmd_button_one_press)
 			when 2 then
-				remove_command (Cmd_item_button_two_press)
+				remove_command (Cmd_button_two_press)
 			when 3 then
-				remove_command (Cmd_item_button_three_press)
+				remove_command (Cmd_button_three_press)
 			end
 		end
 
@@ -210,20 +214,28 @@ feature -- Event -- removing command association
 		do
 			inspect mouse_button 
 			when 1 then
-				remove_command (Cmd_item_button_one_release)
+				remove_command (Cmd_button_one_release)
 			when 2 then
-				remove_command (Cmd_item_button_two_release)
+				remove_command (Cmd_button_two_release)
 			when 3 then
-				remove_command (Cmd_item_button_three_release)
+				remove_command (Cmd_button_three_release)
 			end
 		end
 
-feature {EV_TOOL_BAR_IMP} -- Implementation
+feature {EV_INTERNAL_TOOL_BAR_IMP} -- Implementation
 
 	on_activate is
 			-- Is called by the menu when the item is activated.
 		do
 			execute_command (Cmd_item_activate, Void)
+		end
+
+feature {NONE} -- Implementation, pick and drop
+
+	widget_source: EV_WIDGET_IMP is
+			-- Widget drag source used for transport
+		do
+			Result := parent_imp--.top_level_window_imp
 		end
 
 end -- class EV_TOOL_BAR_BUTTON_IMP

@@ -333,7 +333,7 @@ feature {NONE} -- Implementation
 		end
 
 	option_word_begins_with (arg, w : STRING): BOOLEAN is
-			-- Does `arg' begins with the word option `w'?
+			-- Does `arg' begin with the word option `w'?
 		do
 			if option_sign = '%U' and then arg.count >= w.count then
 				Result := arg.substring (1, w.count).is_equal(w)

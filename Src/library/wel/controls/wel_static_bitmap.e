@@ -60,10 +60,6 @@ feature {NONE} -- Initialization
 	make_by_bitmap_id (a_parent: WEL_WINDOW; bitmap_id: INTEGER;
 			a_x, a_y, a_width, a_height, an_id: INTEGER) is
 			-- Make a static control
-		local
-			bitmap_dib: WEL_DIB
-			dc: WEL_SCREEN_DC
-			raw_file: RAW_FILE
 		do
 			internal_window_make (a_parent, "", default_style, a_x, a_y, a_width, a_height, an_id, default_pointer)
 			id := an_id

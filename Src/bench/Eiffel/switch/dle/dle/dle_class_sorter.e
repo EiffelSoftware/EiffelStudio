@@ -21,30 +21,25 @@ feature
 			-- Keep the static classes in the same order (they already
 			-- have been sorted).
 		local
-			i, nb, class_id: INTEGER;
 			cl_id: INTEGER;
 			cl: CLASS_C;
 			e_class: E_CLASS;
-			class_array: ARRAY [CLASS_C]
+			classes: CLASS_C_SERVER
 		do
 			check
-				consistency: count = System.id_array.count
+				consistency: count = System.nb_of_classes
 			end;
 			from
-				i := 1;
-				class_array := System.id_array;
-				nb := class_array.count;
+				classes := System.classes;
+				classes.start;
 				count := System.dle_max_topo_id
 			until
-				i > nb
+				classes.after
 			loop
-				cl := class_array.item (i);
+				cl := classes.item_for_iteration;
 
-					-- Since a class can be removed, test here if `cl' is
-					-- not Void.
-				if cl /= Void then
-					e_class := cl.e_class;
-					cl_id := cl.topological_id;
+				e_class := cl.e_class;
+				cl_id := cl.topological_id;
 
 debug ("DLE TOPO")
 	io.error.put_string ("Class ");
@@ -54,23 +49,21 @@ debug ("DLE TOPO")
 	io.error.put_string (" inserted in `original' at position #")
 end;
 
-						-- Keep the static classes in the same order.
-					if cl.is_dynamic then
-						count := count + 1;
-						cl_id := count;
-						cl.set_topological_id (cl_id)
-					end;
-					original.put (e_class, cl_id);
-					successors.put (e_class.descendants, cl_id)
+					-- Keep the static classes in the same order.
+				if cl.is_dynamic then
+					count := count + 1;
+					cl_id := count;
+					cl.set_topological_id (cl_id)
+				end;
+				original.put (e_class, cl_id);
+				successors.put (e_class.descendants, cl_id)
 
 debug ("DLE TOPO")
 	io.error.put_integer (cl_id);
 	io.error.new_line
 end
 
-				end;
-
-				i := i + 1
+				classes.forth
 			end
 		end;
 

@@ -6,8 +6,7 @@ inherit
 
 	SYSTEM_I
 		redefine
-			sorter, dle_max_dr_class_id, dle_max_dr_type_id,
-			dle_max_dr_static_type_id, is_dynamic, make_update,
+			sorter, dle_max_dr_type_id, is_dynamic, make_update,
 			init_recompilation, do_recompilation, process_skeleton,
 			make_option_table, freeze_system, process_dynamic_types,
 			generate_empty_update_file, generate_skeletons,
@@ -83,7 +82,7 @@ feature -- Initialization
 			m_rout_id_server := static.m_rout_id_server;
 			m_desc_server := static.m_desc_server;
 			class_comments_server := static.class_comments_server;
-			id_array := static.id_array;
+			classes := static.classes;
 			class_types := static.class_types;
 			type_set := static.type_set;
 			pattern_table := static.pattern_table;
@@ -110,8 +109,6 @@ feature -- Initialization
 			moved := static.moved;
 			update_sort := static.update_sort;
 			max_class_id := static.max_class_id;
-			max_precompiled_id := static.max_precompiled_id;
-			max_precompiled_type_id := static.max_precompiled_type_id;
 			freeze_set1 := static.freeze_set1;
 			freeze_set2 := static.freeze_set2;
 			is_conformance_table_melted := static.is_conformance_table_melted;
@@ -155,6 +152,7 @@ feature -- Initialization
 			routine_id_counter := static.routine_id_counter;
 
 			!! sorter.make;
+			!! dynamic_class_ids.make (50);
 
 				-- Save information concerning the static base system.
 			dle_array_optimization_on :=
@@ -162,9 +160,7 @@ feature -- Initialization
 			!! dle_finalized_nobid_table.make (50);
 			dle_finalized_nobid_table.set_threshold (body_id_counter.value);
 			dle_type_set := clone (type_set);
-			dle_max_dr_class_id := class_counter.value;
 			dle_max_dr_type_id := type_id_counter.value;
-			dle_max_dr_static_type_id := static_type_id_counter.value;
 			dle_max_topo_id := max_class_id;
 				-- Keep track of the melted descriptors of 
 				-- the static system.
@@ -189,17 +185,14 @@ feature -- Access
 	sorter: DLE_CLASS_SORTER;
 			-- Topological sorter on classes
 
-	dle_max_dr_class_id: INTEGER;
-			-- Greatest class id of the static system
+	dynamic_class_ids: SEARCH_TABLE [CLASS_ID]
+			-- Set of ids of dynamic classes
 
 	dle_max_topo_id: INTEGER;
 			-- Greatest topological class id of the static system
 
 	dle_max_dr_type_id: INTEGER;
 			-- Greatest class_type type_id of the static system
-
-	dle_max_dr_static_type_id: INTEGER;
-			-- Greatest class_type (static) id of the static system
 
 	m_static_desc_server: M_DESC_SERVER;
 			-- Server for melted class type descriptors of the static
@@ -467,21 +460,16 @@ debug ("ACTIVITY")
 end;
 				-- Sort the class_list by type id in `class_list'.
 			from
-				i := 1;
-				nb := id_array.count;
-				!!class_list.make (1, max_class_id)
+				classes.start;
+				nb := max_class_id;
+				!!class_list.make (1, nb)
 			until
-				i > nb
+				classes.after
 			loop
-				a_class := id_array.item (i);
-					-- Since classes can be removed from the system, test if
-					-- `a_class' is not Void
-				if a_class /= Void then
-					class_list.put (a_class, a_class.topological_id)
-				end;
-				i := i + 1
+				a_class := classes.item_for_iteration;
+				class_list.put (a_class, a_class.topological_id);
+				classes.forth
 			end;
-			nb := max_class_id;
 
 				-- Iteration on `class_list' in order to compute new type id's.
 				-- Recompute only the types of the DLE system, keeping the
@@ -510,7 +498,7 @@ debug ("ACTIVITY")
 	io.error.putstring (": ");
 	class_type.type.trace;
 	io.error.putstring (" [");
-	io.error.putint (class_type.id);
+	io.error.putint (class_type.id.id);
 	io.error.putstring ("]%N");
 end;
 							-- Update `class_types'
@@ -525,17 +513,16 @@ end;
 	remove_useless_classes is
 			-- Remove useless classes.
 		local
-			i, nb: INTEGER;
+			class_id: CLASS_ID;
 			a_class: CLASS_C;
 			root_class_c: CLASS_C;
-			marked_classes: ARRAY [BOOLEAN];
+			marked_classes: SEARCH_TABLE [CLASS_ID];
 			vd31: VD31
 		do
 
 				-- First mark all the classes that can be
 				-- reached from the root class
-			nb := id_array.count;
-			!!marked_classes.make (1, nb);
+			!! marked_classes.make (System_chunk);
 
 			root_class_c := root_class.compiled_class;
 			root_class_c.mark_class (marked_classes);
@@ -552,31 +539,29 @@ end;
 
 				-- Mark the descendants of DYNAMIC in the DC-set.
 			from
-				i := dle_max_dr_class_id + 1
+				dynamic_class_ids.start
 			until
-				i > nb
+				dynamic_class_ids.after
 			loop
-				a_class := id_array.item (i);
-				if
-					a_class /= Void and then
-					a_class.syntactical_inherits_from_dynamic
-				then
-					a_class.mark_class (marked_classes)
+				class_id := dynamic_class_ids.item_for_iteration;
+				a_class := class_of_id (class_id);
+				if a_class /= Void then
+					if a_class.syntactical_inherits_from_dynamic then
+						a_class.mark_class (marked_classes)
+					end
 				end;
-				i := i + 1
+				dynamic_class_ids.forth
 			end;
 
 				-- Remove all the classes that cannot be reached if they are
 				-- not protected
 			from
-					-- Class of id less than protected_classes is protected
-					-- See feature `init'
-				i := protected_classes + 1;
+				classes.start
 			until
-				i > nb
+				classes.after
 			loop
-				a_class := id_array.item (i);
-				if a_class /= Void and then marked_classes.item (i) = False then
+				a_class := classes.item_for_iteration;
+				if not marked_classes.has (a_class.id) then
 					if a_class.has_visible then
 						!!vd31;
 						vd31.set_class_name (a_class.class_name);
@@ -590,8 +575,8 @@ debug ("REMOVE_CLASS")
 end;
 						remove_class (a_class)
 					end
-				end
-				i := i + 1
+				end;
+				classes.forth
 			end;
 			Error_handler.checksum
 		end;
@@ -605,15 +590,15 @@ end;
 			descendants, suppliers, clients: LINKED_LIST [CLASS_C];
 			supplier: CLASS_C;
 			supplier_clients: LINKED_LIST [CLASS_C];
-			id: INTEGER;
+			id: CLASS_ID;
 			types: TYPE_LIST;
 			ftable: FEATURE_TABLE;
 			f: FEATURE_I;
 			ext: EXTERNAL_I
 		do
-			id := a_class.id;
+			if a_class.is_dynamic then
+				id := a_class.id;
 
-			if (id > dle_max_dr_class_id) then
 debug ("ACTIVITY", "REMOVE_CLASS");
 	io.error.putstring ("%TRemoving class ");
 	io.error.putstring (a_class.class_name);
@@ -629,11 +614,11 @@ end;
 
 					-- Remove one occurrence for each external written
 					-- in the class
-				if Feat_tbl_server.has (id) then
-					ftable := Feat_tbl_server.item (id);
+				if Feat_tbl_server.has (id.id) then
+					ftable := Feat_tbl_server.item (id.id);
 					from ftable.start until ftable.after loop
 						f := ftable.item_for_iteration;
-						if f.is_external and then f.written_in = id then
+						if f.is_external and then equal (f.written_in, id) then
 							ext ?= f;
 								-- If the external is encapsulated then it was
 								-- not added to the list of new externals in
@@ -654,7 +639,7 @@ end;
 				pass4_controler.remove_class (a_class);
 
 					-- Mark the class to remove uncompiled
-				a_class.lace_class.set_compiled_class (Void);
+				a_class.lace_class.reset_compiled_class
 
 					-- Remove its types
 				from
@@ -670,34 +655,35 @@ end;
 					-- Remove if from the servers
 debug ("ACTIVITY");
 	io.error.putstring ("%TRemoving id from servers: ");
-	io.error.putint (id);
+	io.error.putint (id.id);
 	io.error.new_line;
 end;
-				Inv_byte_server.remove (id);
-				Ast_server.remove (id);
-				Feat_tbl_server.remove (id);
-				Class_info_server.remove (id);
-				Inv_ast_server.remove (id);
-				Depend_server.remove (id);
-				Rep_depend_server.remove (id);
-				M_rout_id_server.remove (id);
-				M_desc_server.remove (id);
+				Inv_byte_server.remove (id.id);
+				Ast_server.remove (id.id);
+				Feat_tbl_server.remove (id.id);
+				Class_info_server.remove (id.id);
+				Inv_ast_server.remove (id.id);
+				Depend_server.remove (id.id);
+				Rep_depend_server.remove (id.id);
+				M_rout_id_server.remove (id.id);
+				M_desc_server.remove (id.id);
 
-				Tmp_inv_byte_server.remove (id);
-				Tmp_ast_server.remove (id);
-				Tmp_feat_tbl_server.remove (id);
-				Tmp_class_info_server.remove (id);
-				Tmp_rep_info_server.remove (id);
-				Tmp_inv_ast_server.remove (id);
-				Tmp_depend_server.remove (id);
-				Tmp_rep_depend_server.remove (id);
-				Tmp_m_rout_id_server.remove (id);
-				Tmp_m_desc_server.remove (id);
+				Tmp_inv_byte_server.remove (id.id);
+				Tmp_ast_server.remove (id.id);
+				Tmp_feat_tbl_server.remove (id.id);
+				Tmp_class_info_server.remove (id.id);
+				Tmp_rep_info_server.remove (id.id);
+				Tmp_inv_ast_server.remove (id.id);
+				Tmp_depend_server.remove (id.id);
+				Tmp_rep_depend_server.remove (id.id);
+				Tmp_m_rout_id_server.remove (id.id);
+				Tmp_m_desc_server.remove (id.id);
 
 				freeze_set1.prune (id);
 				freeze_set2.prune (id);
 				melted_set.prune (id);
-				id_array.put (Void, id);
+				dynamic_class_ids.remove (id);
+				classes.remove (id);
 
 					-- Remove client/supplier syntactical relations
 					-- and remove classes recursively
@@ -725,13 +711,13 @@ end;
 							-- was a client for a removed class
 						supplier /= compiled_root_class and then
 							-- Cannot propagate for a protected class
-						supplier.id > protected_classes and then
+						not supplier.id.protected and then
 							-- Do not remove descendants of DYNAMIC in
 							-- the DC-set.
 						(supplier.is_static or else
 						not supplier.syntactical_inherits_from_dynamic) and then
 							-- A recursion may occur when removing a cluster
-						id_array.item (supplier.id) /= Void
+						classes.has (supplier.id)
 					then
 						remove_class (supplier)
 					end;
@@ -747,7 +733,7 @@ feature -- Melting
 			-- descriptor tables in the system.
 		local
 			a_class: CLASS_C;
-			id_list: LINKED_LIST [INTEGER];
+			id_list: LINKED_LIST [CLASS_ID];
 			i: INTEGER;
 			temp: STRING
 		do
@@ -796,15 +782,16 @@ end;
 			-- Produce the file containing melted information of the
 			-- Dynamic Class Set.
 		local
-			id_list: LINKED_LIST [INTEGER];
+			id_list: LINKED_LIST [CLASS_ID];
 			a_class: CLASS_C;
 			types: TYPE_LIST;
 			feat_tbl: MELTED_FEATURE_TABLE;
-			class_id: INTEGER;
+			class_id: CLASS_ID;
 			file_pointer: POINTER;
 			cl_type: CLASS_TYPE;
 			temp: STRING;
-			nb_tables: INTEGER
+			nb_tables: INTEGER;
+			server_id: INTEGER
 		do
 debug ("DLE ACTIVITY")
 	io.error.putstring ("Creating melted.dle%N");
@@ -824,7 +811,7 @@ end;
 				-- Write first the number of class types now available
 			write_int (file_pointer, type_id_counter.value);
 				-- Write the number of classes now available
-			write_int (file_pointer, class_counter.value);
+			write_int (file_pointer, class_counter.total_count);
 				-- Write DYNAMIC dtype
 			write_int (file_pointer, dynamic_dtype - 1);
 				-- Write first the new size of the dispatch table
@@ -896,18 +883,19 @@ end;
 			until
 				m_rout_id_server.after
 			loop
-				class_id := m_rout_id_server.key_for_iteration;
+				server_id := m_rout_id_server.key_for_iteration;
+				class_id := m_rout_id_server.disk_item (server_id).class_id;
 				a_class := class_of_id (class_id);
 debug ("DLE ACTIVITY")
 io.error.putstring ("melting routine id array of ");
 io.error.putstring (a_class.class_name);
 io.error.putstring (" (class_id #");
-io.error.putint (class_id);
+io.error.putint (class_id.id);
 io.error.putstring (")");
 io.error.new_line;
 end;
-				write_int (file_pointer, class_id);
-				m_rout_id_server.item (class_id).store (Melted_dle_file);
+				write_int (file_pointer, class_id.id);
+				m_rout_id_server.item (class_id.id).store (Melted_dle_file);
 				from
 					types := a_class.types;
 					types.start
@@ -918,7 +906,7 @@ end;
 						-- Write dynamic type
 					write_int (file_pointer, cl_type.type_id - 1);
 						-- Write original dynamic type (first freezing)
-					write_int (file_pointer, cl_type.id - 1);
+					write_int (file_pointer, cl_type.id.id - 1);
 					types.forth
 				end;
 				write_int (file_pointer, -1);
@@ -945,8 +933,8 @@ end;
 			until
 				M_desc_server.after
 			loop
-				class_id := M_desc_server.key_for_iteration;
-				M_desc_server.item (class_id).store (Melted_dle_file);
+				server_id := M_desc_server.key_for_iteration;
+				M_desc_server.item (server_id).store (Melted_dle_file);
 				M_desc_server.forth
 			end;
 			from
@@ -954,8 +942,8 @@ end;
 			until
 				M_static_desc_server.after
 			loop
-				class_id := M_static_desc_server.key_for_iteration;
-				M_static_desc_server.item (class_id).store (Melted_dle_file);
+				server_id := M_static_desc_server.key_for_iteration;
+				M_static_desc_server.item (server_id).store (Melted_dle_file);
 				M_static_desc_server.forth
 			end;
 				-- End mark
@@ -1014,10 +1002,11 @@ feature -- Freeezing
 			-- Workbench C code generation.
 		local
 			a_class: CLASS_C;
-			id_list: LINKED_LIST [INTEGER];
+			id_list: LINKED_LIST [CLASS_ID];
 			descriptors: ARRAY [INTEGER];
 			i, nb: INTEGER;
-			temp: STRING
+			temp: STRING;
+			server_id: INTEGER
 		do
 			freezing_occurred := True;
 			!WBENCH_DLE_MAKER!makefile_generator.make;
@@ -1056,7 +1045,7 @@ end;
 				until
 					id_list.off
 				loop
-					a_class := id_array.item (id_list.item);
+					a_class := class_of_id (id_list.item);
 debug ("COUNT")
 	io.error.putstring ("[");
 	io.error.putint (i);
@@ -1082,9 +1071,10 @@ end;
 				until
 					i > nb
 				loop
-					a_class := id_array.item (descriptors.item (i));
+					server_id := descriptors.item (i);
+					a_class := class_of_id (m_desc_server.disk_item (server_id).class_id);
 					if a_class /= Void then
-						melted_set.put (a_class.id);
+						melted_set.put (a_class.id)
 					end;
 					i := i + 1
 				end;
@@ -1131,7 +1121,7 @@ end;
 			until
 				id_list.off
 			loop
-				a_class := id_array.item (id_list.item);
+				a_class := class_of_id (id_list.item);
 debug ("COUNT")
 	io.error.putstring ("[");
 	io.error.putint (i);
@@ -1160,7 +1150,7 @@ end;
 			until
 				id_list.off
 			loop
-				a_class := id_array.item (id_list.item);
+				a_class := class_of_id (id_list.item);
 debug ("COUNT")
 	io.error.putstring ("[");
 	io.error.putint (i);
@@ -1238,7 +1228,7 @@ feature -- Final mode
 	finalized_generation (keep_assert: BOOLEAN) is
 			-- Finalized generation.
 		local
-			i, nb: INTEGER;
+			class_id: CLASS_ID;
 			a_class: CLASS_C;
 			temp: STRING;
 			old_remover_off: BOOLEAN;
@@ -1274,20 +1264,18 @@ feature -- Final mode
 			Eiffel_table.init_dle (Old_eiffel_table);
 
 			from
-				i := dle_max_dr_class_id + 1;
-				nb := class_counter.value
+				dynamic_class_ids.start
 			until
-				i > nb
+				dynamic_class_ids.after
 			loop
-				a_class := id_array.item (i);
-					-- Since a class can be removed, test if `a_class' is
-					-- not Void.
-				if a_class /= Void then
+				class_id := dynamic_class_ids.item_for_iteration;
+				a_class := class_of_id (class_id);
 debug ("COUNT");
 	io.error.putstring ("[");
-	io.error.putint (nb-i+1);
+--	io.error.putint (nb-i+1);
 	io.error.putstring ("] ");
 end;
+				if a_class /= Void then
 						-- Verbose
 					io.error.putstring ("Degree -4: class ");
 						temp := clone (a_class.class_name)
@@ -1299,7 +1287,7 @@ end;
 					History_control.check_overload
 				end;
 
-				i := i + 1
+				dynamic_class_ids.forth
 			end;
 			History_control.transfer;
 			tmp_poly_server.flush;
@@ -1324,32 +1312,28 @@ end;
 				-- Generation of C files associated to the classes of
 				-- the system.
 			from
-				i := 1;
+				classes.start;
 				open_log_files
 			until
-				i > nb
+				classes.after
 			loop
-				a_class := id_array.item (i);
-					-- Since a clas can be removed, test if `a_class' is
-					-- not Void.
-				if a_class /= Void then
+				a_class := classes.item_for_iteration;
 						-- Verbose
 debug ("COUNT")
 	io.error.putstring ("[");
-	io.error.putint (nb-i+1);
+--	io.error.putint (nb-i+1);
 	io.error.putstring ("] ");
 end;
-					current_class := a_class;
-					if a_class.dle_generate_final_code then
-						io.error.putstring ("Degree -5: class ");
-							temp := clone (a_class.class_name)
-							temp.to_upper;
-						io.error.putstring (temp);
-						io.error.new_line
-					end
-				end;
+				current_class := a_class;
+				if a_class.dle_generate_final_code then
+					io.error.putstring ("Degree -5: class ");
+						temp := clone (a_class.class_name)
+						temp.to_upper;
+					io.error.putstring (temp);
+					io.error.new_line
+				end
 
-				i := i + 1
+				classes.forth
 			end;
 			close_log_files;
 
@@ -1482,7 +1466,8 @@ feature -- Generation
 			-- static system when freezing the Dynamic Class Set.
 		local
 			file_pointer: POINTER;
-			class_id: INTEGER
+			class_id: CLASS_ID;
+			server_id: INTEGER
 		do
 debug ("DLE ACTIVITY")
 	io.error.putstring ("Creating melted.dle%N");
@@ -1498,7 +1483,7 @@ end;
 				-- Write first the number of class types now available
 			write_int (file_pointer, type_id_counter.value);
 				-- Write the number of classes now available
-			write_int (file_pointer, class_counter.value);
+			write_int (file_pointer, class_counter.total_count);
 				-- Write DYNAMIC dtype
 			write_int (file_pointer, dynamic_dtype - 1);
 				-- Write first the new size of the dispatch table
@@ -1510,8 +1495,8 @@ end;
 			until
 				M_static_desc_server.after
 			loop
-				class_id := M_static_desc_server.key_for_iteration;
-				M_static_desc_server.item (class_id).store (Melted_dle_file);
+				server_id := M_static_desc_server.key_for_iteration;
+				M_static_desc_server.item (server_id).store (Melted_dle_file);
 				M_static_desc_server.forth
 			end;
 				-- End mark
@@ -1561,13 +1546,13 @@ end;
 			else
 				Skeleton_file.new_line;
 				from
-					i := 1;
-					nb_class := id_array.count
+					classes.start
 				until
-					i > nb_class
+					classes.after
 				loop
-					a_class := class_of_id (i);
-					if a_class /= Void and then a_class.has_dynamic then
+					a_class := classes.item_for_iteration;
+					i := a_class.id.id;
+					if a_class.has_dynamic then
 						if not a_class.is_precompiled then
 							Skeleton_file.putstring ("extern int32 ra");
 							Skeleton_file.putint (i);
@@ -1599,7 +1584,7 @@ end;
 						end
 					end;
 
-					i := i + 1
+					classes.forth
 				end;
 				Skeleton_file.new_line
 			end;
@@ -1673,14 +1658,14 @@ end;
 				loop
 					cl_type := class_types.item (i);
 					Skeleton_file.putstring ("Routids(");
-					Skeleton_file.putint (cl_type.id - 1);
+					Skeleton_file.putint (cl_type.id.id - 1);
 					Skeleton_file.putstring (") = ");
 					if
 						cl_type /= Void and then
 						not cl_type.associated_class.is_precompiled
 					then
 						Skeleton_file.putstring ("ra");
-						Skeleton_file.putint (cl_type.associated_class.id);
+						Skeleton_file.putint (cl_type.associated_class.id.id);
 					else
 						Skeleton_file.putstring ("(int32 *) 0")
 					end;
@@ -1736,16 +1721,15 @@ end;
 			Cecil_file.putstring ("extern struct ctable ce_type;%N");
 			Cecil_file.putstring ("extern struct ctable ce_gtype;%N%N");
 			from
-				i := 1;
-				nb := class_counter.value
+				classes.start
 			until
-				i > nb
+				classes.after
 			loop
-				a_class := class_of_id (i);
-				if a_class /= Void and then a_class.has_visible then
+				a_class := classes.item_for_iteration;
+				if a_class.has_visible then
 					a_class.dle_generate_cecil
 				end;
-				i := i + 1
+				classes.forth
 			end;
 			make_cecil_tables;
 			Cecil2.generate;
@@ -1956,7 +1940,7 @@ end;
 -- freeze_system.
 				if cl_type /= Void then
 					Initialization_file.putstring ("Init");
-					Initialization_file.putint (cl_type.id);
+					Initialization_file.putint (cl_type.id.id);
 					Initialization_file.putstring ("();");
 					Initialization_file.new_line
 				end;
@@ -1994,19 +1978,18 @@ end;
 
 				-- First debug keys
 			from
-				i := 1;
-				nb := id_array.count
+				classes.start
 			until
-				i > nb
+				classes.after
 			loop
-				a_class := id_array.item (i);
-				if a_class /= Void and then a_class.has_dynamic then
+				a_class := classes.item_for_iteration;
+				if a_class.has_dynamic then
 					partial_debug ?= a_class.debug_level;
 					if partial_debug /= Void then
 						partial_debug.generate_keys (Option_file, a_class.id)
 					end
 				end;
-				i := i + 1
+				classes.forth
 			end;
 
 			Option_file.putstring ("void dle_eoption()");
@@ -2570,7 +2553,6 @@ end;
 			rout_entry: ROUT_ENTRY;
 			class_c: CLASS_C;
 			feat: FEATURE_I;
-			i, nb: INTEGER;
 			cl_type: CLASS_TYPE;
 			void_type: VOID_I
 		do
@@ -2578,13 +2560,15 @@ end;
 				!! void_type;
 				!! rout_table.make;
 				rout_table.set_rout_id (Dle_make_rout_id)
-				i := dle_max_dr_class_id + 1;
-				nb := id_array.upper
+				dynamic_class_ids.start
 			until
-				i > nb
+				dynamic_class_ids.after
 			loop
-				class_c := id_array.item (i);
-				if class_c /= Void and then class_c.inherits_from_dynamic then
+				class_c := class_of_id (dynamic_class_ids.item_for_iteration);
+				if
+					class_c /= Void and then
+					class_c.inherits_from_dynamic
+				then
 					!! rout_entry;
 						-- Classes of the DC-set inheriting from DYNAMIC
 						-- are not generic nor deferred. They hence have
@@ -2593,12 +2577,12 @@ end;
 					feat := class_c.creation_feature;
 					rout_entry.set_type_id (cl_type.type_id);
 					rout_entry.set_written_type_id
-						 (feat.written_type_id (cl_type.type));
+					 	(feat.written_type_id (cl_type.type));
 					rout_entry.set_body_index (feat.body_index);
 					rout_entry.set_type (void_type);
 					rout_table.extend (rout_entry)
 				end;
-				i := i + 1
+				dynamic_class_ids.forth
 			end;
 			rout_table.write;
 			dle_make_min_used := rout_table.min_used
@@ -2629,43 +2613,25 @@ feature -- Dead code removal
 			end;
 
 			from
-					-- Process the static classes first.
-				i := 1;
-				nb := dle_max_dr_class_id
+				classes.start
 			until
-				i > nb
+				classes.after
 			loop
-				a_class := id_array.item (i);
-				if a_class /= Void then
-						-- Classes could be removed	then.
-					a_class.mark_dispose (remover);
-					if a_class.visible_level.has_visible then
-						a_class.mark_visible (remover)
-					end
-				end
-				i := i + 1
-			end;
-			from
-					-- Process the dynamic classes.
-				nb := id_array.count
-			until
-				i > nb
-			loop
-				a_class := id_array.item (i);
-				if a_class /= Void then
-						-- Classes could be removed	then.
-					a_class.mark_dispose (remover);
-					if a_class.visible_level.has_visible then
-						a_class.mark_visible (remover)
-					end;
-					if a_class.inherits_from_dynamic then
-							-- Protection of features of descendants
-							-- of DYNAMIC in the DC-set.
-						a_class.mark_all_used (remover);
-						a_class.dle_mark_make (remover)
-					end
+				a_class := classes.item_for_iteration;
+				a_class.mark_dispose (remover);
+				if a_class.visible_level.has_visible then
+					a_class.mark_visible (remover)
 				end;
-				i := i + 1
+				if
+					a_class.is_dynamic and then
+					a_class.inherits_from_dynamic
+				then
+						-- Protection of features of descendants
+						-- of DYNAMIC in the DC-set.
+					a_class.mark_all_used (remover);
+					a_class.dle_mark_make (remover)
+				end;
+				classes.forth
 			end;
 
 			if has_expanded then

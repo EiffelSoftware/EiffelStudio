@@ -49,12 +49,28 @@ feature {NONE} -- Creation
 		end;
 
 feature -- List
+  
+	back is
+			-- Move cursor back one position.
+		require
+			not_before: not before
+		do
+			index := index - 1
+		ensure
+			moved_back: index = old index - 1
+		end;
 
 	count: INTEGER;
 			-- Number of widgets in Current
 
 	last_inserted_position: INTEGER;
 			-- Index position of last widget inserted into Current
+
+	finish is
+			-- Move cursor to end position
+		do
+			index := count
+		end
 
 	forth is
 			-- Move cursor forward one position.

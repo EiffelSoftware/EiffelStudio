@@ -69,6 +69,15 @@ feature -- Element Change
 
 feature -- Status setting		
 
+	set_field is
+			-- Set field at row index 'widget_row' and column index 'widget_column' with
+			-- value of `saved text' after an edit has been unsuccessful
+		obsolete
+			"use `set_with_previous_text' instead"
+		do
+			set_with_previous_text
+		end		
+
 	set_with_previous_text is
 			-- Set field at row index 'widget_row' and column index 'widget_column' with
 			-- value of `saved text' after an edit has been unsuccessful
@@ -180,12 +189,18 @@ feature -- Status setting
 			-- Set widget type to be displayed at column index 'i'
 		require
 			editable_column: column_editable (i)
+		local
+			combo_box: EV_COMBO_BOX
 		do
 			if change_widgets.has (i) then
 				change_widgets.replace (a_widget, i)
 			else
 				change_widgets.put (a_widget, i)
-			end			
+			end
+			combo_box ?= a_widget
+			if combo_box /= Void then
+				combo_box.select_actions.extend (agent combo_item_selected (combo_box))
+			end
 		end
 
 feature -- Removal
@@ -230,7 +245,7 @@ feature -- Editing
 				widget_column := column_index (x, y)
 				widget_row := index_of (selected_item, 1)				
 				saved_text := selected_item @ (widget_column)
-				calculate_offsets (x, y)				
+				calculate_offsets (x, y)
 				generate_edit_dialog
 			end	
 		end
@@ -279,8 +294,19 @@ feature {NONE} -- Actions
 	on_change_widget_deselected is
 			-- Clear any in-place editing dialogs and set row data to reflect newly entered text.
 		do
+			create hide_timer.make_with_interval (25)
+			hide_timer.actions.extend (agent hide_window_on_timer)
+			--internal_dialog.hide
+		end
+		
+	hide_window_on_timer is
+			--
+		do
+			hide_timer.destroy
 			internal_dialog.hide
 		end
+		
+	hide_timer: EV_TIMEOUT
 	
 	on_key_release (key: EV_KEY; a_dialog: EV_UNTITLED_DIALOG) is
 			-- Actions to check if user has press the return key on 'a_dialog'.
@@ -308,7 +334,9 @@ feature {NONE} -- Actions
 				else
 					selected_item.put_i_th (widget.text, widget_column)
 				end
-			end
+			end			
+			widget.focus_out_actions.wipe_out
+			widget.key_release_actions.wipe_out
 			on_edit_end
 		end
 
@@ -365,8 +393,7 @@ feature {NONE} -- Commands
 					widget ?= textable
 				end
 				
-						-- Create the editable widget
-				widget.set_text (saved_text)
+						-- Setup the editable widget			
 				widget.key_release_actions.extend (agent on_key_release (?, internal_dialog))
 						
 						-- Create the parent dialog
@@ -377,8 +404,25 @@ feature {NONE} -- Commands
 				internal_dialog.show_relative_to_window (relative_window)
 				internal_dialog.set_position (x_offset, y_offset)				
 				initialize_observers			
+				
+				widget.set_text (saved_text)
+				widget.focus_out_actions.extend (agent focus_lost)
 			end
 		end
+		
+	focus_lost is
+			-- Focus lost on editable widget
+		do
+			if screen.widget_at_position (screen.pointer_position.x, screen.pointer_position.y) /= widget then
+				update_actions
+			end
+		end
+		
+	screen: EV_SCREEN is
+			-- Screen
+		once
+			create Result
+		end		
 
 	redraw_dialog is
 			-- Redraw edit dialog in response to interface changes
@@ -395,7 +439,7 @@ feature {NONE} -- Commands
 			-- Hide 
 		do
 			update_actions
-			update_agents (relative_window, False)
+		--	update_agents (relative_window, False)
 		end
 
 feature {NONE} -- Widget
@@ -480,7 +524,7 @@ feature {NONE} -- Implementation
 	initialize_observers is
 			-- 
 		do
-			update_agents (relative_window, True)
+			--update_agents (relative_window, True)
 		end
 
 	is_valid_text (a_string: STRING; c, r: INTEGER): BOOLEAN is
@@ -524,7 +568,6 @@ feature {NONE} -- Implementation
 				resize_actions.block
 				column_resized_actions.block
 				set_column_width (l_total, cnt)
-				print (column_width (2).out)
 				resize_actions.resume
 				column_resized_actions.resume
 		
@@ -540,6 +583,13 @@ feature {NONE} -- Implementation
 	
 	internal_dialog: EV_UNTITLED_DIALOG
 			-- Internal dialog for holding editable widget
+			
+	combo_item_selected (combo_box: EV_COMBO_BOX) is
+			--
+		do
+			i_th (widget_row).put_i_th (combo_box.selected_item.text, widget_column)
+		end
+		
 	
 invariant
 	has_relative_window: relative_window /= Void

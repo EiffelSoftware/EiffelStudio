@@ -12,27 +12,25 @@ creation
 
 feature -- Initialization
 	
-	make (s: STRING; root_resource: WEL_REGISTRY_KEY_VALUE; r: RESOURCE_STRUCTURE) is
+	make (s: STRING; root_resource: WEL_REGISTRY_KEY_VALUE) is
 			-- initialization
 		require
-			not_void: root_resource /= Void and r /= Void
+			not_void: root_resource /= Void
 		local
 		do
 			name := s
-			structure := r
 			key_value := root_resource
 			update_value
 		end
 
-	make_from_resource (r: RESOURCE; rs: RESOURCE_STRUCTURE) is
+	make_from_resource (r: RESOURCE) is
 			-- initialization
 		require
-			not_void: r /= Void and rs /= Void
+			not_void: r /= Void
 		local
 		do
 			value := r
 			name := r.name
-			structure := rs
 			update_key_value
 		end
 
@@ -97,7 +95,6 @@ feature -- Implementation
 			else
 				create {STRING_RESOURCE} value.make (name, s)
 			end
-			structure.table.add_resource (value)
 		end
 
 	update_key_value is
@@ -136,14 +133,11 @@ feature {NONE} -- Constants
 
 feature -- Implementation
 
-	structure: RESOURCE_STRUCTURE
-		-- Structure of the resources.
-
 	external_name: STRING
 		-- Name for the outside world of Current.
 
 invariant
-	XML_RESOURCE_not_void: structure /= Void and name /= Void and value /= Void and key_value /= Void
-	XML_RESOURCE_consistency: not name.empty
+	REGISTRY_RESOURCE_contains_something: value /= Void or key_value /= Void
+	REGISTRY_RESOURCE_consistency: name /= Void and not name.empty
 
 end -- class REGISTRY_RESOURCE

@@ -15,61 +15,60 @@ inherit
 			parent		
 		end
 
-feature -- Access
-
-	parent: EV_ITEM_LIST [EV_LIST_ITEM] is
-			-- List containing `interface'.
-		local
-			p: EV_ITEM_LIST [EV_LIST_ITEM]
-		do
-			p ?= {EV_SIMPLE_ITEM_I} Precursor
-			if p /= Void then
-				Result ?= p
-				check
-					parent_is_list: Result /= Void
-				end
-			end
-		end
-
 feature -- Status report
 
 	is_selected: BOOLEAN is
-			-- Is `Current' selected?
+			-- Is `Current' selected in `parent'?
 		require
-			has_parent: parent_imp /= Void
-		deferred
-		end
-
-	is_first: BOOLEAN is
-			-- Is `Current' first in list?
-		require
-			has_parent: parent_imp /= Void
-		deferred
-		end
-
-	is_last: BOOLEAN is
-			-- Is `Current' last in list?
-		require
-			has_parent: parent_imp /= Void
+			parent_not_void: parent /= Void
 		deferred
 		end
 
 feature -- Status setting
 
-	set_selected (flag: BOOLEAN) is
-			-- Select the item if `flag', unselect it otherwise.
+	enable_select is
+			-- Set `is_selected' `True'.
 		require
-			has_parent: parent_imp /= Void
+			parent_not_void: parent /= Void
 		deferred
 		ensure
-			state_set: is_selected = flag
+			is_selected: is_selected
+		end
+
+	disable_select is
+			-- Set `is_selected' `False'.
+		require
+			parent_not_void: parent /= Void
+		deferred
+		ensure
+			not_selected: not is_selected
 		end
 
 	toggle is
-			-- Change selection state.
+			-- Change `is_selected'.
 		require
-			has_parent: parent_imp /= Void
-		deferred
+			parent_not_void: parent /= Void
+		do
+			if is_selected then
+				disable_select
+			else
+				enable_select
+			end
+		ensure
+			state_changed: old is_selected = not is_selected
+		end
+
+feature -- Access
+
+	parent: EV_LIST is
+			-- List containing `interface'.
+		do
+			if Precursor /= Void then
+				Result ?= Precursor
+				check
+					parent_is_list: Result /= Void
+				end
+			end
 		end
 
 feature {EV_LIST_ITEM_I} -- Implementation
@@ -101,6 +100,9 @@ end -- class EV_LIST_ITEM_I
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.31  2000/03/29 20:22:43  brendel
+--| Modified in compliance with interface.
+--|
 --| Revision 1.30  2000/03/09 20:11:34  king
 --| Removed inheritence from PND
 --|

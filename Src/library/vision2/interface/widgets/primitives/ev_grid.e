@@ -923,7 +923,7 @@ feature -- Measurements
 		do
 			Result := implementation.column_count
 		ensure
-			result_positive: Result >= 1
+			result_not_negative: Result >= 0
 		end
 		
 	visible_column_count: INTEGER is
@@ -943,7 +943,7 @@ feature -- Measurements
 		do
 			Result := implementation.row_count
 		ensure
-			result_positive: Result >= 1
+			result_not_negative: Result >= 0
 		end
 		
 	tree_node_spacing: INTEGER is

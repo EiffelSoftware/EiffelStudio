@@ -152,7 +152,7 @@ feature -- Status report
 			-- True if the user can choose several items
 			-- False otherwise
 		do
-			Result := C.c_gtk_list_selection_mode (list_widget) 
+			Result := C.gtk_list_struct_selection_mode (list_widget) 
 					= C.GTK_SELECTION_MULTIPLE_ENUM
 		end
 
@@ -256,6 +256,9 @@ end -- class EV_LIST_IMP
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.41  2000/04/19 20:58:47  oconnor
+--| no more externals used
+--|
 --| Revision 1.40  2000/04/12 18:48:28  oconnor
 --| fixed interpretation of Gdk event data in deselect_callback
 --|

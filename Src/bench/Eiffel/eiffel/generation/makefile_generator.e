@@ -552,7 +552,7 @@ feature -- Generation, Header
 			end
 
 			generate_specific_defines
-			make_file.putstring ("-I%H$(EIFFEL4)/bench/spec/%H$(PLATFORM)/include %H$(INCLUDE_PATH)%N")
+			make_file.putstring ("-I%H$(EIFFEL4)/bench/spec/%H$(PLATFORM)/include -I. %H$(INCLUDE_PATH)%N")
 
 			if System.in_final_mode then
 				make_file.putstring ("CPPFLAGS = $optimize ")
@@ -571,7 +571,7 @@ feature -- Generation, Header
 			end
 
 			generate_specific_defines
-			make_file.putstring ("-I%H$(EIFFEL4)/bench/spec/%H$(PLATFORM)/include %H$(INCLUDE_PATH)%N")
+			make_file.putstring ("-I%H$(EIFFEL4)/bench/spec/%H$(PLATFORM)/include -I. %H$(INCLUDE_PATH)%N")
 
 			make_file.putstring ("LDFLAGS = ")
 

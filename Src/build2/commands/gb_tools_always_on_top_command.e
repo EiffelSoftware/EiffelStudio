@@ -89,7 +89,6 @@ feature -- Access
 	pixmap: ARRAY [EV_PIXMAP] is
 			-- Pixmap representing the item (for buttons)
 		do
-			Result := (create {GB_SHARED_PIXMAPS}).Icon_builder_window
 		end
 
 feature -- Execution

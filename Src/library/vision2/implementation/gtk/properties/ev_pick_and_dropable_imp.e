@@ -121,6 +121,7 @@ feature -- Implementation
 	pre_pick_steps (a_x, a_y, a_screen_x, a_screen_y: INTEGER) is
 			-- Steps to perform before transport initiated.
 		do
+			update_pointer_style (pointed_target)
 			app_implementation.on_pick (pebble)
 			if pick_actions_internal /= Void then
 				pick_actions_internal.call ([a_x, a_y])
@@ -488,27 +489,59 @@ feature -- Implementation
 			gdkwin: POINTER
 			x, y: INTEGER
 			pnd_wid: EV_PICK_AND_DROPABLE
-			widget_target_imp: EV_PICK_AND_DROPABLE_IMP
+			a_wid_imp: EV_WIDGET_IMP
+			a_pnd_deferred_item_parent: EV_PND_DEFERRED_ITEM_PARENT
 		do
-			gdkwin := feature {EV_GTK_EXTERNALS}.gdk_window_at_pointer ($x, $y)
-			if gdkwin /= NULL then
-				pnd_wid ?= last_pointed_target
-				if pnd_wid /= Void then
-					widget_target_imp ?= pnd_wid.implementation
-				end		
-				if widget_target_imp /= Void and then widget_target_imp.pointer_over_widget (gdkwin, x, y) then
-						Result := widget_target_imp.interface
-				elseif gdkwin = last_gdkwin then
-					if pointer_over_widget (gdkwin, x, y) then
-						Result := interface
-					else
-						Result := app_implementation.pnd_target_from_gdk_window (gdkwin, x, y)
+			a_wid_imp := widget_imp_at_pointer_position
+			if a_wid_imp /= Void and then a_wid_imp.is_sensitive then
+				if App_implementation.pnd_targets.has (a_wid_imp.interface.object_id) then
+					Result := a_wid_imp.interface
+				end
+				
+				a_pnd_deferred_item_parent ?= a_wid_imp
+				if a_pnd_deferred_item_parent /= Void then
+						-- We need to explicitly search for PND deferred items
+					gdkwin := feature {EV_GTK_EXTERNALS}.gdk_window_at_pointer ($x, $y)
+					if gdkwin /= NULL then
+							pnd_wid := pnd_deferred_item_from_parent (a_pnd_deferred_item_parent, x, y)
+							if pnd_wid /= Void then
+								Result := pnd_wid
+							end
 					end
-				else	
-					Result := app_implementation.pnd_target_from_gdk_window (gdkwin, x, y)
-				end			
+				end				
 			end
-			last_gdkwin := gdkwin
+		end
+		
+	pnd_deferred_item_from_parent (
+		a_pnd_deferred_item_parent: EV_PND_DEFERRED_ITEM_PARENT;
+		a_x, a_y: INTEGER
+		): EV_PICK_AND_DROPABLE is
+		require
+			a_pnd_deferred_item_parent_not_void: a_pnd_deferred_item_parent /= Void
+		local
+			cur: CURSOR
+			imp: EV_PICK_AND_DROPABLE_IMP
+			row_imp: EV_PND_DEFERRED_ITEM
+			trg: EV_PICK_AND_DROPABLE
+			pnd_targets: ARRAYED_LIST [INTEGER] 
+		do
+			from
+				pnd_targets := App_implementation.pnd_targets
+				cur := pnd_targets.cursor
+				pnd_targets.start
+			until
+				pnd_targets.after or Result /= Void
+			loop
+				trg ?= id_object (pnd_targets.item)
+				if trg /= Void and then not trg.is_destroyed then
+					row_imp := a_pnd_deferred_item_parent.row_from_y_coord (a_y)
+					if row_imp /= Void and then row_imp.interface = trg then
+						Result := trg
+					end			
+				end
+				pnd_targets.forth
+			end
+			pnd_targets.go_to (cur)
 		end
 		
 	last_gdkwin: POINTER
@@ -521,13 +554,6 @@ feature -- Implementation
 		end
 
 feature {EV_APPLICATION_IMP, EV_PICK_AND_DROPABLE_IMP, EV_DOCKABLE_SOURCE_IMP} -- Implementation
-
-	pointer_over_widget (a_gdkwin: POINTER; a_x, a_y: INTEGER): BOOLEAN is
-			-- Comparison of gdk window and widget position to determine
-			-- if mouse pointer is over widget.
-		do
-			Result := a_gdkwin = feature {EV_GTK_EXTERNALS}.gtk_widget_struct_window (visual_widget)
-		end
 
 	is_displayed: BOOLEAN is
 			-- Is `Current' visible on the screen?

@@ -17,7 +17,6 @@ generated in a system
 extern "C" {
 #endif
 
-	EIF_BOOLEAN exception_stack_managed;	
 
 	EIF_INTEGER egc_prof_enabled;	  
 	void (*egc_strmake)(char *, EIF_INTEGER); 
@@ -30,7 +29,6 @@ extern "C" {
 	int egc_tup_dtype;
 	int32 egc_disp_rout_id;			
 	int egc_bit_dtype;			
-	int egc_any_dtype;
 	int egc_sp_bool;			
 	int egc_sp_char;			
 	int egc_sp_int;			
@@ -76,10 +74,6 @@ extern "C" {
 	long *egc_fsize;
 #endif
 
-	int32 egc_rcdt;
-	int32 egc_rcorigin;
-	int32 egc_rcoffset;
-	int32 egc_rcarg;
 
 	char *egc_system_name;
 	EIF_INTEGER egc_compiler_tag;

@@ -3,7 +3,7 @@ remtrace The wizards...
 cdd %EIFFEL_SRC
 safe_md help
 cd help
-exprt -r %DEFAULT_CVS_TAG -d wizards "Src/wizards"
+exprt -r %DEFAULT_CVS_TAG -d wizards "Src/help/wizards"
 
 remtrace ...and the libraries
 cd %EIFFEL_SRC\library

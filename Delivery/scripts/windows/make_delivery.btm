@@ -1,4 +1,5 @@
 @echo off
+call set_aliases.btm
 remtrace Set up the environment
 on break goto broken
 TIMER ON /1 >> NUL
@@ -37,7 +38,6 @@ else
 	unset /Q NO_WIZARDS
 endiff
 
-call set_aliases.btm
 set EIFFEL_SRC=%TMP_EIFFEL_SRC
 cdd %INIT_DIR
 remtrace Approximative starting time:

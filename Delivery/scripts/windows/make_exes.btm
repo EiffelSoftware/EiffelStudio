@@ -18,10 +18,12 @@ cd %EIFFEL_SRC
 remtrace Compile com_il_generation
 cd %EIFFEL_SRC\Eiffel\eiffel\com_il_generation\Core\clib
 default_make
+cd %EIFFEL_SRC\Eiffel\eiffel\com_il_generation\eac\clib
+default_make
 
 remtrace Then the C libraries
 remtrace expat
-cd C_library\expat
+cd %EIFFEL_SRC\C_library\expat
 safe_md lib
 msdev expat.dsw /make ALL - RELEASE >>& %INSTALL_LOG
 iff not exist bin\xmlparse.dll .or. not exist bin\xmltok.dll then
@@ -126,7 +128,7 @@ cd %EIFFEL_SRC\legacy\PCCTS
 nmake /f makefile.win
 cd ..
 cd legacy
-msdev legacy.dsw /make ALL - RELEASE >>& %INSTALL_LOG
+msdev legaproj.dsw /make ALL - RELEASE >>& %INSTALL_LOG
 iff not exist legacy.exe then
 	remtrace Couldnt generate legacy.exe
 	CANCEL

@@ -254,6 +254,15 @@ feature -- Status setting
 			end
 		end
 
+	set_modal is
+			-- Make the window modal
+		do
+			check
+				not_yet_implemented: False
+			end
+--			set_capture
+		end
+
 feature -- Element change
 
 	set_size (new_width:INTEGER; new_height: INTEGER) is

@@ -21,6 +21,7 @@ wel.lib: $(OBJ)
 	tlib $@ +dynload.obj
 	tlib $@ +drawstate.obj
 	tlib $@ +mousehook.obj
+	if not exist ..\spec mkdir ..\spec
 	if not exist ..\spec\bcb mkdir ..\spec\bcb
 	if not exist ..\spec\bcb\lib mkdir ..\spec\bcb\lib
 	copy $@ ..\spec\bcb\lib

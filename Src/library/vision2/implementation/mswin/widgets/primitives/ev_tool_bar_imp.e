@@ -29,9 +29,7 @@ inherit
 			on_mouse_move,
 			on_key_down,
 			destroy,
-			shown,
-			show,
-			hide
+			shown
 		end
 
 	EV_SIZEABLE_CONTAINER_IMP
@@ -77,8 +75,6 @@ inherit
 			move,
 			resize,
 			move_and_resize,
-			hide,
-			show,
 			default_style,
 			default_process_message
 		end
@@ -191,20 +187,6 @@ feature -- Status setting
 				parent_imp.remove_child (Current)
 			end
 			bar.destroy
-		end
-
-	show is
-			-- Show the window
-		do
-			{EV_PRIMITIVE_IMP} Precursor
-			bar.show
-		end
-
-	hide is
-			-- Hide the window
-		do
-			{EV_PRIMITIVE_IMP} Precursor
-			bar.hide
 		end
 
 feature -- Element change
@@ -573,7 +555,7 @@ feature {NONE} -- Feature that should be directly implemented by externals
 			-- c_mouse_message_x deferred but it does not wotk because
 			-- it would be implemented by an external.
 		do
-			cwin_show_window (hwnd, cmd_show)
+			cwin_show_window (bar.item, cmd_show)
 		end
 
 end -- class EV_TOOL_BAR_IMP

@@ -40,13 +40,13 @@ feature -- Access
 			!! Result.make (Void)
 		end
 
-	text_page: EV_TEXT is
+	text_page: EV_RICH_TEXT is
 			-- The documentation about the widget
 		once
 			!! Result.make (Void)
 		end
 
-	class_page: EV_TEXT is
+	class_page: EV_RICH_TEXT is
 			-- The class text of the widget (short_form)
 		once
 			!! Result.make (Void)

@@ -65,9 +65,10 @@ feature -- Status setting
 			-- Set the format of the text between `first_pos' and `last_pos' to
 			-- `format'. May or may not change the cursor position.
 		do
-			check
-				To_be_implemented: False
-			end
+			freeze
+			select_region (first_pos, last_pos)
+			set_character_format (format)
+			thaw
 		end
 
 feature -- Element change

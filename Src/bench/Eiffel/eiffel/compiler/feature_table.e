@@ -720,6 +720,28 @@ end;
 			end
 		end
 
+feature -- Case stuff
+
+	has_introduced_new_externals: BOOLEAN is
+			-- Has `associated_class' introduced new externals?
+			--| Looks for externals features that are "written in"
+			--| `associated_class'
+		local
+			feat: FEATURE_I
+		do
+			from
+				start
+			until
+				Result or else after 
+			loop
+				feat := item_for_iteration;
+				Result := feat.is_external and then
+					feat.written_in = feat_tbl_id
+				forth
+			end
+		end;
+
+feature -- Debugging
 
 	trace is
 			-- Debug purpose

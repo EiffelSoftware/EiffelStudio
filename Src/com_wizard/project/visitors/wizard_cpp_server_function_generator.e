@@ -20,6 +20,7 @@ feature -- Basic operations
 			valid_coclass_name: not a_coclass_name.empty
 		local
 			visitor: WIZARD_DATA_TYPE_VISITOR
+			tmp_signature: STRING
 		do
 			func_desc := a_descriptor
 			coclass_name := a_coclass_name
@@ -108,7 +109,8 @@ feature {NONE} -- Implementation
 							protect_object.append (Space_equal_space)
 							protect_object.append (Eif_protect)
 							protect_object.append (Space_open_parenthesis)
-							protect_object.append (Tmp_eif_object)
+							protect_object.append (Tmp_variable_name)
+							protect_object.append (Close_parenthesis)
 							protect_object.append (Semicolon)
 							protect_object.append (New_line_tab)
 						end
@@ -157,6 +159,7 @@ feature {NONE} -- Implementation
 						free_object.append (Tmp_clause)
 						free_object.append (func_desc.arguments.item.name)
 						free_object.append (Close_parenthesis)
+						free_object.append (Semicolon)
 						free_object.append (New_line_tab)
 					end
 
@@ -225,8 +228,6 @@ feature {NONE} -- Implementation
 				Result.append (Dot)
 				Result.append (visitor.ce_function_name)
 				Result.append (arg_name)
-				Result.append (Comma_space)
-				Result.append (Null)
 				Result.append (Close_parenthesis)
 			else
 				Result.append (Eif_object)
@@ -253,8 +254,11 @@ feature {NONE} -- Implementation
 				Result.append (visitor.ce_function_name)
 				Result.append (Space_open_parenthesis)
 				Result.append (arg_name)
-				Result.append (Comma_space)
-				Result.append (Null)
+
+				if visitor.writable then
+					Result.append (Comma_space)
+					Result.append (Null)
+				end
 				Result.append (Close_parenthesis)
 				Result.append (Close_parenthesis)
 			end
@@ -291,8 +295,11 @@ feature {NONE} -- Implementation
 			Result.append (visitor.ce_function_name)
 			Result.append (Space_open_parenthesis)
 			Result.append (arg_name)
-			Result.append (Comma_space)
-			Result.append (Null)
+
+			if visitor.writable then
+				Result.append (Comma_space)
+				Result.append (Null)
+			end
 			Result.append (Close_parenthesis)
 			Result.append (Close_parenthesis)
 			Result.append (Semicolon)
@@ -364,7 +371,8 @@ feature {NONE} -- Implementation
 				Result.append (Dot)
 				Result.append (visitor.ec_function_name)
 				Result.append (Space_open_parenthesis)
-				Result.append (Tmp_eif_object)
+				Result.append (Tmp_clause)
+				Result.append (arg_name)
 				Result.append (Close_parenthesis)
 			end
 
@@ -548,8 +556,12 @@ feature {NONE} -- Implementation
 
 					Result.append (visitor.c_type)
 					Result.append (Space)
+
+					if visitor.is_array_basic_type or visitor.is_array_type then
+						Result.append (Asterisk)
+					end
+
 					Result.append (func_desc.arguments.item.name)
-					Result.append (visitor.c_post_type)
 
 					Result.append (Comma)
 					func_desc.arguments.forth

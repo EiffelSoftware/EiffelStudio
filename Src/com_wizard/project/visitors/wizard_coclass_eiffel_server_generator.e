@@ -69,14 +69,14 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	ccom_initialize_feature: WIZARD_WRITER_FEATURE is
+	ccom_embedding_feature: WIZARD_WRITER_FEATURE is
 			-- 'ccom_initialize' feature
 		local
 			tmp_string: STRING
 		do
 			create Result.make
 			Result.set_external
-			Result.set_comment ("Initialize feature")
+			Result.set_comment ("Initialize server with %"EMBEDDING%" option.")
 
 			tmp_string := clone (Type_id_variable_name)
 			tmp_string.append (Colon)
@@ -84,26 +84,88 @@ feature {NONE} -- Implementation
 			tmp_string.append (Integer_type)
 
 			Result.add_argument (tmp_string)
-			Result.add_argument ("option_character: CHARACTER")
 
-			tmp_string := clone (Ccom_clause)
-			tmp_string.append (Initialize_function_name)
-
-			Result.set_name (tmp_string)
+			Result.set_name (Ccom_embedding_feature_name)
 
 			tmp_string := clone (Tab_tab_tab)
 			tmp_string.append (Double_quote)
 			tmp_string.append (C_keyword)
 			tmp_string.append (Space_open_parenthesis)
 			tmp_string.append (Eif_type_id)
-			tmp_string.append (Comma_space)
-			tmp_string.append (Char)
 			tmp_string.append (Close_parenthesis)
 			tmp_string.append (C_binary_or)
 			tmp_string.append (Percent_double_quote)
-			tmp_string.append (coclass_descriptor.c_type_name)
-			tmp_string.append (Factory)
-			tmp_string.append (Header_file_extension)
+			tmp_string.append (Server_registration_header_file_name)
+			tmp_string.append (Percent_double_quote)
+			tmp_string.append (Double_quote)
+
+			Result.set_body (tmp_string)
+		ensure
+			valid_writer: Result.can_generate
+		end
+
+	ccom_regserver_feature: WIZARD_WRITER_FEATURE is
+			-- 'ccom_initialize' feature
+		local
+			tmp_string: STRING
+		do
+			create Result.make
+			Result.set_external
+			Result.set_comment ("Register server.")
+
+			tmp_string := clone (Type_id_variable_name)
+			tmp_string.append (Colon)
+			tmp_string.append (Space)
+			tmp_string.append (Integer_type)
+
+			Result.add_argument (tmp_string)
+
+			Result.set_name (Ccom_regserver_feature_name)
+
+			tmp_string := clone (Tab_tab_tab)
+			tmp_string.append (Double_quote)
+			tmp_string.append (C_keyword)
+			tmp_string.append (Space_open_parenthesis)
+			tmp_string.append (Eif_type_id)
+			tmp_string.append (Close_parenthesis)
+			tmp_string.append (C_binary_or)
+			tmp_string.append (Percent_double_quote)
+			tmp_string.append (Server_registration_header_file_name)
+			tmp_string.append (Percent_double_quote)
+			tmp_string.append (Double_quote)
+
+			Result.set_body (tmp_string)
+		ensure
+			valid_writer: Result.can_generate
+		end
+
+	ccom_unregserver_feature: WIZARD_WRITER_FEATURE is
+			-- 'ccom_initialize' feature
+		local
+			tmp_string: STRING
+		do
+			create Result.make
+			Result.set_external
+			Result.set_comment ("Unregister server.")
+
+			tmp_string := clone (Type_id_variable_name)
+			tmp_string.append (Colon)
+			tmp_string.append (Space)
+			tmp_string.append (Integer_type)
+
+			Result.add_argument (tmp_string)
+
+			Result.set_name (Ccom_unregserver_feature_name)
+
+			tmp_string := clone (Tab_tab_tab)
+			tmp_string.append (Double_quote)
+			tmp_string.append (C_keyword)
+			tmp_string.append (Space_open_parenthesis)
+			tmp_string.append (Eif_type_id)
+			tmp_string.append (Close_parenthesis)
+			tmp_string.append (C_binary_or)
+			tmp_string.append (Percent_double_quote)
+			tmp_string.append (Server_registration_header_file_name)
 			tmp_string.append (Percent_double_quote)
 			tmp_string.append (Double_quote)
 
@@ -123,28 +185,21 @@ feature {NONE} -- Implementation
 			Result.set_comment ("Initialize COM component.")
 
 			tmp_body := clone (Tab_tab_tab)
-			tmp_body.append (argument_test_code (Register_server_option_a, Register_server_option_b, Register_server_option))
+			tmp_body.append (argument_test_code (Register_server_option_a, Register_server_option_b, Ccom_regserver_feature_name))
 			tmp_body.append (New_line_tab_tab_tab)
 			tmp_body.append (Else_keyword)
 			tmp_body.append (Space)
-			tmp_body.append (argument_test_code (Unregister_server_option_a, Unregister_server_option_b, Unregister_server_option))
-			tmp_body.append (New_line_tab_tab_tab)
-			tmp_body.append (Else_keyword)
-			tmp_body.append (Space)
-			tmp_body.append (argument_test_code (Embedding_option_a, Embedding_option_b, Embedding_option))
+			tmp_body.append (argument_test_code (Unregister_server_option_a, Unregister_server_option_b, Ccom_unregserver_feature_name))
 			tmp_body.append (New_line_tab_tab_tab)
 			tmp_body.append (Else_keyword)
 			tmp_body.append (New_line_tab_tab_tab)
 			tmp_body.append (Tab)
-			tmp_body.append (Ccom_clause)
-			tmp_body.append (Initialize_function_name)
+			tmp_body.append (Ccom_embedding_feature_name)
 			tmp_body.append (Space_open_parenthesis)
 			tmp_body.append (Dynamic_type_function_name)
 			tmp_body.append (Space_open_parenthesis)
 			tmp_body.append (Current_keyword)
 			tmp_body.append (Close_parenthesis)
-			tmp_body.append (Comma_space)
-			tmp_body.append (Other_option)
 			tmp_body.append (Close_parenthesis)
 			tmp_body.append (New_line_tab_tab_tab)
 			tmp_body.append (End_keyword)
@@ -282,15 +337,15 @@ feature {NONE} -- Implementation
 			valid_writer: Result.can_generate
 		end
 
-	argument_test_code (input_a, input_b, option: STRING): STRING is
+	argument_test_code (input_a, input_b, feature_name: STRING): STRING is
 			-- Code to test 
 		require
 			non_void_input_a: input_a /= Void
 			non_void_input_b: input_b /= Void
-			non_void_option: option /= Void
+			non_void_name: feature_name /= Void
 			valid_input_a: not input_a.empty
 			valid_input_b: not input_b.empty
-			valid_option: not option.empty
+			valid_name: not feature_name.empty
 		do
 			Result := clone (If_keyword)
 			Result.append (Space)
@@ -322,15 +377,12 @@ feature {NONE} -- Implementation
 			Result.append (Then_keyword)
 			Result.append (New_line_tab_tab_tab)
 			Result.append (Tab)
-			Result.append (Ccom_clause)
-			Result.append (Initialize_function_name)
+			Result.append (feature_name)
 			Result.append (Space_open_parenthesis)
 			Result.append (Dynamic_type_function_name)
 			Result.append (Space_open_parenthesis)
 			Result.append (Current_keyword)
 			Result.append (Close_parenthesis)
-			Result.append (Comma_space)
-			Result.append (option)
 			Result.append (Close_parenthesis)
 		end
 
@@ -424,14 +476,13 @@ feature {NONE} -- Implementation
 			inherit_clause_writer.set_name (Internal_type)
 			eiffel_writer.add_inherit_clause (Inherit_clause_writer)
 
-			check
-				valid_initialize_writer: initialize_feature.can_generate
-				valid_ccom_initialize_feature: ccom_initialize_feature.can_generate
-			end
-
 			eiffel_writer.add_feature (initialize_feature, Initialization)
 
-			eiffel_writer.add_feature (ccom_initialize_feature, Externals)
+			eiffel_writer.add_feature (ccom_embedding_feature, Externals)
+
+			eiffel_writer.add_feature (ccom_regserver_feature, Externals)
+
+			eiffel_writer.add_feature (ccom_unregserver_feature, Externals)
 		end
 
 end -- class WIZARD_COCLASS_EIFFEL_SERVER_GENERATOR

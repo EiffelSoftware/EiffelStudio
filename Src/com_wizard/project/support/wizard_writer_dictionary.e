@@ -505,6 +505,14 @@ feature -- Generator constants -- 8
 
 	Bstr_source_field: STRING is "bstrSource"
 
+	Server_registration_header_file_name: STRING is "server_registration.h"
+
+	Ccom_embedding_feature_name: STRING is "ccom_embedding"
+
+	Ccom_regserver_feature_name: STRING is "ccom_regserver"
+
+	Ccom_unregserver_feature_name: STRING is "ccom_unregserver"
+
 	Bstr_description_field: STRING is "bstrDescription"
 
 	Bstr_help_file_field: STRING is "bstrHelpFile"
@@ -513,15 +521,7 @@ feature -- Generator constants -- 8
 
 	Class_object_variable_name: STRING is "class_object"
 
-	Register_server_option: STRING is "'R'"
-
-	Unregister_server_option: STRING is "'U'"
-
 	Tmp_eif_object: STRING is "tmp_eif_object"
-
-	Embedding_option: STRING is "'E'"
-
-	Other_option: STRING is "'O'"
 
 	Option_variable_name: STRING is "an_option"
 
@@ -557,7 +557,7 @@ feature -- Generator constants -- 8
 
 	Riid: STRING is "riid"
 
-	Factory: STRING is "Factory"
+	Factory: STRING is "factory"
 
 	Tmp_object_pointer: STRING is "pUnknown"
 

@@ -44,7 +44,7 @@ feature {NONE} -- Initialization
 			widget_selector_parent.extend (type_selector)
 			
 				-- Create the test controller.
-			create controller.make_with_text_control (test_class_display)
+			create controller.make_with_text_control (test_class_display, generation_button)
 			controller_parent.extend (controller)
 			
 				-- Create the documentation display

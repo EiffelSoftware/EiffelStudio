@@ -26,6 +26,13 @@ feature {NONE}-- Initialization
 			Precursor {EV_TITLED_WINDOW}
 			
 				-- Create all widgets.
+			create l_menu_bar_1
+			create file_menu
+			create file_generate
+			create l_menu_separator_1
+			create file_exit
+			create help_menu
+			create help_about
 			create l_vertical_box_1
 			create main_split_area
 			create widget_selector_parent
@@ -59,12 +66,20 @@ feature {NONE}-- Initialization
 			create l_horizontal_box_5
 			create controller_parent
 			create l_vertical_box_5
-			create l_button_1
+			create generation_button
+			create l_cell_1
 			create l_horizontal_box_6
 			create test_class_display
 			create flat_short_display
 			
 				-- Build_widget_structure.
+			set_menu_bar (l_menu_bar_1)
+			l_menu_bar_1.extend (file_menu)
+			file_menu.extend (file_generate)
+			file_menu.extend (l_menu_separator_1)
+			file_menu.extend (file_exit)
+			l_menu_bar_1.extend (help_menu)
+			help_menu.extend (help_about)
 			extend (l_vertical_box_1)
 			l_vertical_box_1.extend (main_split_area)
 			main_split_area.extend (widget_selector_parent)
@@ -98,7 +113,8 @@ feature {NONE}-- Initialization
 			l_vertical_split_area_1.extend (l_horizontal_box_5)
 			l_horizontal_box_5.extend (controller_parent)
 			l_horizontal_box_5.extend (l_vertical_box_5)
-			l_vertical_box_5.extend (l_button_1)
+			l_vertical_box_5.extend (generation_button)
+			l_vertical_box_5.extend (l_cell_1)
 			l_vertical_split_area_1.extend (l_horizontal_box_6)
 			l_horizontal_box_6.extend (test_class_display)
 			main_notebook.extend (flat_short_display)
@@ -106,8 +122,13 @@ feature {NONE}-- Initialization
 				-- Initialize properties of all widgets.
 			
 			set_minimum_width (800)
-			set_minimum_height (27)
+			set_minimum_height (600)
 			set_title ("Display window")
+			file_menu.set_text ("File")
+			file_generate.set_text ("Generate")
+			file_exit.set_text ("Exit")
+			help_menu.set_text ("Help")
+			help_about.set_text ("About...")
 			main_box.disable_item_expand (l_label_1)
 			l_label_1.align_text_left
 			main_notebook.set_item_text (l_horizontal_box_1, "Properties")
@@ -151,7 +172,9 @@ feature {NONE}-- Initialization
 			l_vertical_box_4.disable_item_expand (object_editor)
 			l_vertical_box_4.disable_item_expand (padding_cell)
 			padding_cell.set_minimum_width (180)
-			l_button_1.set_text ("Generate Test Application")
+			l_horizontal_box_5.disable_item_expand (controller_parent)
+			l_vertical_box_5.disable_item_expand (generation_button)
+			generation_button.set_text ("Generate Test Application")
 			test_class_display.set_background_color (create {EV_COLOR}.make_with_8_bit_rgb (253, 255, 255))
 			test_class_display.disable_edit
 			
@@ -181,11 +204,15 @@ feature {NONE} -- Implementation
 		deferred
 		end
 	
+	l_menu_bar_1: EV_MENU_BAR
+	file_menu, help_menu: EV_MENU
+	file_generate, file_exit, help_about: EV_MENU_ITEM
+	l_menu_separator_1: EV_MENU_SEPARATOR
 	l_vertical_box_1, main_box, l_vertical_box_2, vertical_spacing_box, l_vertical_box_3, 
 	l_vertical_box_4, l_vertical_box_5: EV_VERTICAL_BOX
 	main_split_area: EV_HORIZONTAL_SPLIT_AREA
 	widget_selector_parent, left_spacing_cell, top_spacing_cell, widget_holder, bottom_spacing_cell, 
-	right_spacing_cell, object_editor, padding_cell, controller_parent: EV_CELL
+	right_spacing_cell, object_editor, padding_cell, controller_parent, l_cell_1: EV_CELL
 	l_label_1: EV_LABEL
 	main_notebook, l_notebook_1: EV_NOTEBOOK
 	l_horizontal_box_1, horizontal_spacing_box, l_horizontal_box_2, l_horizontal_box_3, 
@@ -194,7 +221,7 @@ feature {NONE} -- Implementation
 	scrollable_widget_area: EV_SCROLLABLE_AREA
 	event_output: EV_LIST
 	event_selector_list: EV_CHECKABLE_LIST
-	select_all, clear_all, l_button_1: EV_BUTTON
+	select_all, clear_all, generation_button: EV_BUTTON
 	l_vertical_split_area_1: EV_VERTICAL_SPLIT_AREA
 	test_class_display, flat_short_display: EV_TEXT
 	

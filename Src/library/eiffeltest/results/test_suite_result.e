@@ -3,7 +3,6 @@ indexing
 		"Results of executing a test suite"
 
 	status:	"See note at end of class"
-	author: "Patrick Schoenbach"
 	date: "$Date$"
 	revision: "$Revision$"
 

@@ -3,7 +3,6 @@ indexing
 		"Strategy executing all tests in the suite `n' times in random order"
 
 	status:	"See note at end of class"
-	author: "Patrick Schoenbach"
 	date: "$Date$"
 	revision: "$Revision$"
 

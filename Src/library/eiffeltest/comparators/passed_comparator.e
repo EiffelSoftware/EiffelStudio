@@ -3,7 +3,6 @@ indexing
 		"Comparators for `is_assertion_pass' on RESULT_RECORD"
 
 	status:	"See note at end of class"
-	author: "Patrick Schoenbach"
 	date: "$Date$"
 	revision: "$Revision$"
 

@@ -3,7 +3,6 @@ indexing
 		"Records that store information about thrown exceptions"
 
 	status:	"See note at end of class"
-	author: "Patrick Schoenbach"
 	date: "$Date$"
 	revision: "$Revision$"
 

@@ -3,7 +3,6 @@ indexing
 		"Strategy that executes a single test from a suite"
 
 	status:	"See note at end of class"
-	author: "Patrick Schoenbach"
 	date: "$Date$"
 	revision: "$Revision$"
 

@@ -3,7 +3,6 @@ indexing
 		"Factories that store product prototypes in hash tables"
 
 	status:	"See note at end of class"
-	author: "Patrick Schoenbach"
 	date: "$Date$"
 	revision: "$Revision$"
 

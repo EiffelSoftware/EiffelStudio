@@ -3,7 +3,6 @@ indexing
 		"Records storing the result of a single test run of a test case"
 
 	status:	"See note at end of class"
-	author: "Patrick Schoenbach"
 	date: "$Date$"
 	revision: "$Revision$"
 

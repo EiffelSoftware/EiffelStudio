@@ -3,7 +3,6 @@ indexing
 		"Columns in a table representing test input data"
 
 	status:	"See note at end of class"
-	author: "Patrick Schoenbach"
 	date: "$Date$"
 	revision: "$Revision$"
 

@@ -3,7 +3,6 @@ indexing
 		"Facility for applying boolean comparators to indexable components"
 
 	status:	"See note at end of class"
-	author: "Patrick Schoenbach"
 	date: "$Date$"
 	revision: "$Revision$"
 

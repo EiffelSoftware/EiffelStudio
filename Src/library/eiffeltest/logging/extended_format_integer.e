@@ -3,7 +3,6 @@ indexing
 		"Locally extended version of FORMAT_INTEGER"
 
 	status:	"See note at end of class"
-	author: "Patrick Schoenbach"
 	date: "$Date$"
 	revision: "$Revision$"
 

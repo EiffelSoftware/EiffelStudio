@@ -3,7 +3,6 @@ indexing
 		"Objects that can produce output to the test logging facility"
 
 	status:	"See note at end of class"
-	author: "Patrick Schoenbach"
 	date: "$Date$"
 	revision: "$Revision$"
 

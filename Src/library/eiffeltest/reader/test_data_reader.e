@@ -3,7 +3,6 @@ indexing
 		"Reader for injecting test input data from a file into a test case"
 
 	status:	"See note at end of class"
-	author: "Patrick Schoenbach"
 	date: "$Date$"
 	revision: "$Revision$"
 

@@ -3,7 +3,6 @@ indexing
 		"Single test steps that can be added to a test suite"
 
 	status:	"See note at end of class"
-	author: "Patrick Schoenbach"
 	date: "$Date$"
 	revision: "$Revision$"
 

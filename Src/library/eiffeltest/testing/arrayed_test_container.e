@@ -3,7 +3,6 @@ indexing
 		"Test containers implemented as arrayed lists"
 
 	status:	"See note at end of class"
-	author: "Patrick Schoenbach"
 	date: "$Date$"
 	revision: "$Revision$"
 

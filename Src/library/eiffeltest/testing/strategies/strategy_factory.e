@@ -3,7 +3,6 @@ indexing
 		"Factory for execution strategies"
 
 	status:	"See note at end of class"
-	author: "Patrick Schoenbach"
 	date: "$Date$"
 	revision: "$Revision$"
 

@@ -30,6 +30,13 @@ inherit
 			default_create
 		end
 		
+	EB_CLUSTER_MANAGER_OBSERVER
+		undefine
+			default_create
+		redefine
+			on_class_added
+		end
+		
 feature {NONE} -- Initialization
 
 	default_create is
@@ -39,6 +46,7 @@ feature {NONE} -- Initialization
 			drop_actions.extend (agent on_class_drop)
 			drop_actions.extend (agent on_cluster_drop)
 			drop_actions.extend (agent on_new_class_drop)
+			manager.add_observer (Current)
 		end
 
 feature -- Access
@@ -281,12 +289,36 @@ feature {NONE} -- Implementation
 			error_handler.error_list.wipe_out
 			retry
 		end
-
+		
 	on_class_drop (a_stone: CLASSI_STONE) is
 			-- `a_stone' was dropped on `Current'
-			-- Add to diagram if not already present.
+		do
+			add_to_diagram (a_stone.class_i, context_editor.pointer_position.x, context_editor.pointer_position.y)
+		end
+		
+	on_class_added (a_class: CLASS_I) is
+			-- `a_class' was added to the system.
 		local
-			drop_x, drop_y: INTEGER
+			class_cluster: CLUSTER_I
+			es_cluster: ES_CLUSTER
+			cluster_fig: EG_CLUSTER_FIGURE
+		do
+			class_cluster := a_class.cluster
+			if class_cluster /= Void then
+				es_cluster := model.cluster_from_interface (class_cluster)
+				if es_cluster /= Void then
+					cluster_fig ?= figure_from_model (es_cluster)
+					if cluster_fig /= Void then
+						add_to_diagram (a_class, cluster_fig.port_x, cluster_fig.port_y)
+					end
+				end
+			end
+		end
+
+	add_to_diagram (a_class: CLASS_I; drop_x, drop_y: INTEGER) is
+			-- Add `a_class' to diagram at position (`drop_x', `drop_y') if not already present
+			-- move to (`drop_x', `drop_y') otherwise.
+		local
 			dropped_on_cluster: EIFFEL_CLUSTER_FIGURE
 			parent: ES_CLUSTER
 			new_class: ES_CLASS
@@ -301,9 +333,9 @@ feature {NONE} -- Implementation
 			remove_links: LIST [ES_ITEM]
 			remove_classes: LIST [TUPLE [EIFFEL_CLASS_FIGURE, INTEGER, INTEGER]]
 		do
-			new_class := model.class_from_interface (a_stone.class_i)
+			new_class := model.class_from_interface (a_class)
 			if new_class = Void then
-				create new_class.make (a_stone.class_i)
+				create new_class.make (a_class)
 				model.add_node (new_class)
 				class_was_inserted := True
 			elseif not new_class.is_needed_on_diagram then
@@ -317,10 +349,8 @@ feature {NONE} -- Implementation
 				end
 				class_was_reincluded := True
 			end
-			drop_x := context_editor.pointer_position.x
-			drop_y := context_editor.pointer_position.y
 			dropped_on_cluster := top_cluster_at (Current, drop_x, drop_y)
-			if dropped_on_cluster = Void or else a_stone.cluster = dropped_on_cluster.model.cluster_i then
+			if dropped_on_cluster = Void or else a_class.cluster = dropped_on_cluster.model.cluster_i then
 				-- new_class is new
 				--		parent is new
 				--				-> add parent add new_class
@@ -340,10 +370,10 @@ feature {NONE} -- Implementation
 				--					--> reinclude new_class add new_class
 				--			parent is not needed
 				--				-> reinclude parent reinclude new_class add new_class
-				parent := model.cluster_from_interface (a_stone.class_i.cluster)
+				parent := model.cluster_from_interface (a_class.cluster)
 				if parent = Void then
 					--add parent and put class inside
-					create new_cluster.make (a_stone.class_i.cluster)
+					create new_cluster.make (a_class.cluster)
 					model.insert_cluster (new_cluster)
 					new_cluster.extend (new_class)
 					fig ?= figure_from_model (new_class)

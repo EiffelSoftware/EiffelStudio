@@ -15,6 +15,12 @@ inherit
 			implementation, parent
 		end
 
+	STACKABLE
+		redefine
+			implementation
+		end;
+
+
 feature -- Parent composite
 
 	parent: COMPOSITE is

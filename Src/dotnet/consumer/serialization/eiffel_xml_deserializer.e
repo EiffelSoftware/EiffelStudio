@@ -21,8 +21,6 @@ inherit
 		end
 
 	INTERNAL
-		rename
-			dynamic_type_from_string as internal_dynamic_type_from_string
 		export
 			{NONE} all
 		end
@@ -205,26 +203,17 @@ feature {NONE} -- Implementation
 					end
 					s := xml_reader.get_attribute (Type_xml_attribute)
 					if s/= Void then
-						if s.equals (Integer_node) then
-							Result := integer_array_from_xml (lower, lower + count - 1)								
-						elseif s.equals (Real_node) then
-							Result := real_array_from_xml (lower, lower + count - 1)
-						elseif s.equals (Double_node) then
-							Result := double_array_from_xml (lower, lower + count - 1)
-						elseif s.equals (Character_node) then
-							Result := character_array_from_xml (lower, lower + count - 1)
-						elseif s.equals (Boolean_node) then
+						inspect xml_abstract_types (s)
+						when Boolean_type then
 							Result := boolean_array_from_xml (lower, lower + count - 1)
-						elseif s.equals (Pointer_node) then
-							Result := pointer_array_from_xml (lower, lower + count - 1)
-						elseif s.equals (String_node) then
+						when Character_type then
+							Result := character_array_from_xml (lower, lower + count - 1)
+						when Integer_32_type then
+							Result := integer_array_from_xml (lower, lower + count - 1)
+						when String_type then
 							Result := string_array_from_xml (lower, lower + count - 1)
-						elseif s.equals (None_node) then
-							create ar.make (1, 0)
-							Result := ar
-							read_next
 						else
-							Result := reference_array_from_xml (lower, lower + count - 1)
+							Result := reference_array_from_xml (s, lower, lower + count - 1)
 						end
 						if Result /= Void and then compare_obj then
 							ar ?= Result
@@ -263,7 +252,7 @@ feature {NONE} -- Implementation
 			name_att := xml_reader.get_attribute (Type_xml_attribute)
 			if name_att /= Void then
 				create name.make_from_cil (name_att)
-				dt := dynamic_type_from_string (name.to_integer)
+				dt := dynamic_type_from_id (name.to_integer)
 				if dt = -1 then
 					last_error := Type_not_in_system_error
 					last_error_context := name
@@ -334,30 +323,6 @@ feature {NONE} -- Implementation
 			valid_array: successful implies Result.lower = lower and Result.upper = upper
 		end
 
-	real_array_from_xml (lower, upper: INTEGER): ARRAY [REAL] is
-			-- Real array as described in XML file
-		require
-			valid_bounds: lower <= upper + 1
-		do
-			create Result.make (lower, upper)
-			parse_array (agent put_real (Result, ?, ?))
-		ensure
-			non_void_array: successful implies Result /= Void
-			valid_array: successful implies Result.lower = lower and Result.upper = upper
-		end
-
-	double_array_from_xml (lower, upper: INTEGER): ARRAY [DOUBLE] is
-			-- Real array as described in XML file
-		require
-			valid_bounds: lower <= upper + 1
-		do
-			create Result.make (lower, upper)
-			parse_array (agent put_double (Result, ?, ?))
-		ensure
-			non_void_array: successful implies Result /= Void
-			valid_array: successful implies Result.lower = lower and Result.upper = upper
-		end
-
 	character_array_from_xml (lower, upper: INTEGER): ARRAY [CHARACTER] is
 			-- Character array as described in XML file
 		require
@@ -382,18 +347,6 @@ feature {NONE} -- Implementation
 			valid_array: successful implies Result.lower = lower and Result.upper = upper
 		end
 
-	pointer_array_from_xml (lower, upper: INTEGER): ARRAY [POINTER] is
-			-- Pointer array as described in XML file
-		require
-			valid_bounds: lower <= upper + 1
-		do
-			create Result.make (lower, upper)
-			parse_array (agent put_pointer (Result, ?, ?))
-		ensure
-			non_void_array: successful implies Result /= Void
-			valid_array: successful implies Result.lower = lower and Result.upper = upper
-		end
-
 	string_array_from_xml (lower, upper: INTEGER): ARRAY [STRING] is
 			-- Integer array as described in XML file
 		require
@@ -406,16 +359,33 @@ feature {NONE} -- Implementation
 			valid_array: successful implies Result.lower = lower and Result.upper = upper
 		end
 
-	reference_array_from_xml (lower, upper: INTEGER): ARRAY [ANY] is
+	reference_array_from_xml (a_array_element_type: STRING; lower, upper: INTEGER): ARRAY [ANY] is
 			-- Integer array as described in XML file
 		require
+			a_array_element_type_not_void: a_array_element_type /= Void
+			a_array_element_type_valid: a_array_element_type.is_integer or
+				a_array_element_type.is_equal (none_node)
 			valid_bounds: lower <= upper + 1
+		local
+			l_element_type_id: INTEGER
+			l_array_type: STRING
+			l_bool: BOOLEAN
 		do
-			create Result.make (lower, upper)
-			parse_array (agent Result.put (?, ?))
+			if not a_array_element_type.is_equal (none_node) then
+				l_element_type_id := dynamic_type_from_id (a_array_element_type.to_integer)
+					-- Create ARRAY
+				l_array_type := "ARRAY ["
+				l_array_type.append (type_name_of_type (l_element_type_id))
+				l_array_type.append_character (']')
+				
+				Result ?= new_instance_of (dynamic_type_from_string (l_array_type))
+				Result.make (lower, upper)
+				parse_array (agent Result.put (?, ?))
+			end
 		ensure
-			non_void_array: successful implies Result /= Void
-			valid_array: successful implies Result.lower = lower and Result.upper = upper
+			array_set_if_not_none_type:
+				not a_array_element_type.is_equal (none_node) implies
+					Result /= Void and then (Result.lower = lower and Result.upper = upper)
 		end
 
 	put_integer (array: ARRAY [INTEGER]; value: STRING; index: INTEGER) is
@@ -533,18 +503,40 @@ feature {NONE} -- Implementation - internal speedup
 			create Result.make (10)
 		end
 
-	dynamic_type_from_string (name: INTEGER): INTEGER is
-			-- Given a type name `name' retrieves its corresponding 
-			-- dynamic type.
+	dynamic_type_from_id (an_id: INTEGER): INTEGER is
+			-- Given a type id `an_id' retrieves its corresponding dynamic type.
 		local
 			l_full_name: STRING
 		do
-			Result := internal_dynamic_types.item (name)
+			Result := internal_dynamic_types.item (an_id)
 			if Result = 0 then
-				l_full_name := types.item (name)
-				Result := internal_dynamic_type_from_string (l_full_name)
-				internal_dynamic_types.put (Result, name)
+				l_full_name := types.item (an_id)
+				Result := dynamic_type_from_string (l_full_name)
+				internal_dynamic_types.put (Result, an_id)
 			end
+		end
+
+	xml_abstract_types (name: STRING): INTEGER is
+			-- Predefined abstract types
+		local
+			l_table: like internal_abstract_types
+		do
+			l_table := internal_abstract_types
+			l_table.search (name)
+			if l_table.found then
+				Result := l_table.found_item
+			end
+		end
+
+	internal_abstract_types: HASH_TABLE [INTEGER, STRING] is
+			-- List of correspondance between basic types and ID defined in
+			-- INTERNAL.
+		once
+			create Result.make (15)
+			Result.put (Boolean_type, Boolean_node)
+			Result.put (Character_type, Character_node)
+			Result.put (Integer_32_type, Integer_node)
+			Result.put (String_type, String_node)
 		end
 
 	internal_dynamic_types: ARRAY [INTEGER] is
@@ -554,4 +546,9 @@ feature {NONE} -- Implementation - internal speedup
 			create Result.make (types.lower, types.upper)
 		end
 
-end -- class EIFFEL_XML_DESERIALIZER
+	String_type: INTEGER is -1
+			-- Constant type for STRING.
+			-- Negative so that we are sure to never have a conflict with existing
+			-- type values.
+
+end

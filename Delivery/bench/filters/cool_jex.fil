@@ -21,7 +21,7 @@ Features				|*
 Invariant_clause			|#invariant_start# *
 Class_end				|#class_end#
 Feature_clause				|*
-Feature_declaration			|#feafure_start#%N*
+Feature_declaration			|#feature_start#%N*
 
 -- General specifications
 

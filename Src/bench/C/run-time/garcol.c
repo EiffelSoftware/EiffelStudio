@@ -231,7 +231,7 @@ rt_public struct stack memory_set =
 
 rt_private uint32 age_table[TENURE_MAX];		/* Number of objects/age */ 
 rt_private uint32 size_table[TENURE_MAX];		/* Amount of bytes/age */ 
-rt_shared uint32 tenure;				/* Maximum age for tenuring.
+rt_shared int tenure;				/* Maximum age for tenuring.
 									     * Initialized in main.c	*/ 
 											
 rt_public long plsc_per;				/* Period of plsc in acollect  
@@ -4807,7 +4807,7 @@ rt_private EIF_REFERENCE gscavenge(EIF_REFERENCE root)
 	 */
 	EIF_GET_CONTEXT
 	register1 union overhead *zone;		/* Malloc header zone */
-	register2 uint32 age;				/* Object's age */
+	register2 int age;				/* Object's age */
 	register3 uint32 flags;				/* Eiffel flags */
 	EIF_REFERENCE new;							/* Address of new object (tenured) */ 
 	int size;							/* Size of scavenged object */

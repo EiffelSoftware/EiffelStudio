@@ -29,7 +29,8 @@ inherit
 			title as dialog_title,
 			wel_parent as dialog_parent,
 			wel_item as dialog_item,
-			font as dialog_font
+			font as dialog_font,
+			set_parent as wel_set_parent
 		redefine
 			is_popped_up,
 			popdown,

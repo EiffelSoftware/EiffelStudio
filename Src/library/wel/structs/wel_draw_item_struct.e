@@ -18,7 +18,7 @@ inherit
 			{NONE} all
 		end
 
-creation
+create
 	make_by_pointer
 
 feature {NONE} -- Initialization
@@ -26,7 +26,7 @@ feature {NONE} -- Initialization
 	make_by_pointer (pointer: POINTER) is
 		do
 			structure_make_by_pointer (pointer)
-			!! dc.make_by_pointer (cwel_drawitemstruct_get_hdc (item))
+			create dc.make_by_pointer (cwel_drawitemstruct_get_hdc (item))
 		end
 
 feature -- Access
@@ -81,7 +81,7 @@ feature -- Access
 			-- Rectangle that defines the boundaries
 			-- of the control to be drawn.
 		do
-			!! Result.make_by_pointer (cwel_drawitemstruct_get_rcitem (item))
+			create Result.make_by_pointer (cwel_drawitemstruct_get_rcitem (item))
 		ensure
 			result_not_void: Result /= Void
 		end

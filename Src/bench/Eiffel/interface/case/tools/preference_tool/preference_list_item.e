@@ -8,14 +8,14 @@ class
 	PREFERENCE_LIST_ITEM
 
 inherit
-	EV_LIST_ITEM
+	EV_TREE_ITEM
 
 creation
 	make_with_element
 
 feature -- Initialization
 
-	make_with_element(par: EV_LIST; a_category: RESOURCE_CATEGORY) is
+	make_with_element(par: EV_TREE_ITEM_HOLDER; a_category: RESOURCE_CATEGORY) is
 			-- Initialize
 		require
 			parent_exists: par /= Void

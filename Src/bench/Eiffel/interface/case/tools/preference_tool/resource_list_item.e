@@ -20,8 +20,12 @@ feature -- Initialization
 		require
 			parent_exists: par /= Void
 			resource_exists: res /= Void
+		local
+			s: STRING
 		do
-			make_with_text(par, <<res.value.name, res.value.value>>)	
+			s := clone(res.value.name)
+			s.replace_substring_all("_"," ")
+			make_with_text(par, <<s, res.value.value>>)	
 			resource := res
 		ensure
 			resource_consistent: resource = res

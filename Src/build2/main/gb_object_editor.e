@@ -41,7 +41,6 @@ feature -- Initialization
 			
 			tool_bar: EV_TOOL_BAR
 			tool_bar_button: EV_TOOL_BAR_BUTTON
-			pixmap: EV_PIXMAP
 			separator: EV_HORIZONTAL_SEPARATOR
 			vertical_box1: EV_VERTICAL_BOX
 		do
@@ -52,9 +51,7 @@ feature -- Initialization
 			vertical_box1.extend (tool_bar)
 			vertical_box1.disable_item_expand (tool_bar)
 			create tool_bar_button
-			create pixmap
-			pixmap.set_with_named_file ("D:\EIffel50\bench\bitmaps\png\icon_object_symbol.png")
-			tool_bar_button.set_pixmap (pixmap)
+			tool_bar_button.set_pixmap ((create {GB_SHARED_PIXMAPS}).icon_object_symbol)
 			tool_bar_button.drop_actions.extend (agent set_object (?))
 				-- We must now set up `veto' actions so we can override the drop
 				-- When the object being transported is still a type.

@@ -171,7 +171,7 @@ feature -- Current CallStack
 -- FIXME jfiat 2004-07-07: check if we should not use directly external on pointer here
 -- this would reduce the burden on GC
 -- NOTA jfiat 2004-07-07: maybe we should redesign this part and try to find a better way to handle stack_info ...
-							l_chain := l_frame.get_chain
+							l_chain := l_il_frame.get_chain
 							l_frames := l_chain.enumerate_frames
 							l_code := l_il_frame.get_code
 							l_func 	:= l_il_frame.get_function

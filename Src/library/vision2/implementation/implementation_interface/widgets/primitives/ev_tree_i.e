@@ -14,7 +14,7 @@ inherit
 			interface
 		end
 	
-	EV_TREE_ITEM_HOLDER_I
+	EV_TREE_ITEM_LIST_I
 		redefine
 			interface
 		end
@@ -61,6 +61,9 @@ end -- class EV_TREE_I
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.22  2000/03/17 00:01:26  king
+--| Accounted for name change of tree_item_holder
+--|
 --| Revision 1.21  2000/03/09 19:57:38  king
 --| Removed multiple selection features
 --|

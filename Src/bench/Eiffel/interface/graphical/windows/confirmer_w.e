@@ -25,10 +25,7 @@ inherit
 			popup
 		end;
 
-	WINDOW_ATTRIBUTES
-
 creation
-
 	make
 	
 feature -- Initialization
@@ -42,7 +39,6 @@ feature -- Initialization
 			add_ok_action (Current, Current);
 			add_cancel_action (Current, Void);
 			set_default_position (false);
-		--	set_composite_attributes (Current)
 			realize
 		end;
 

@@ -5,7 +5,7 @@ indexing
 	date: "$Date$";
 	revision: "$Revision$"
 
-class WARNER_W 
+class WARNER_W
 
 inherit
 
@@ -18,17 +18,11 @@ inherit
 			execute
 		end;
 	NAMER;
-	WARNING_D
-		rename
-			make as warning_create,
-			popup as warning_popup
-		end;
+
 	WARNING_D
 		rename
 			make as warning_create
 		redefine
-			popup
-		select
 			popup
 		end;
 	WINDOW_ATTRIBUTES
@@ -49,7 +43,6 @@ feature -- Initialization
 			add_help_action (Current, help_it);
 			allow_resize;
 			set_default_position (false);
-			set_composite_attributes (Current);
 			realize
 		end;
 
@@ -83,7 +76,7 @@ feature -- Graphical Interface
 				new_y := 0
 			end;
 			set_x_y (new_x, new_y);
-			warning_popup
+			{WARNING_D} Precursor
 		end;
 
 feature -- Window Settings

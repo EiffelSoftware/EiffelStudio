@@ -38,7 +38,6 @@ feature {GB_XML_STORE} -- Output
 			gauge: EV_GAUGE
 		do
 			gauge ?= default_object_by_type (class_name (first))
-			gauge.default_create
 			if gauge.value /= first.value then
 				add_element_containing_integer (element, Value_string, objects.first.value)
 			end

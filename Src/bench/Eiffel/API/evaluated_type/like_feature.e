@@ -189,8 +189,6 @@ feature -- Primitives
 
 	create_info: CREATE_FEAT is
 			-- Byte code information for entity type creation
-		require else
-			current_class_set: System.current_class /= Void
 		local
 			updated_feature_id: INTEGER
 			feat_tbl: FEATURE_TABLE

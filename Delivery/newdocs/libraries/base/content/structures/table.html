@@ -22,7 +22,7 @@
 				for some integer <SPAN CLASS="elocal">i</SPAN> whose value lies
 				within the bounds of<SPAN CLASS="elocal">a</SPAN>, the basic operations are
 			<P CLASS="code">
-				<SPAN CLASS="elocal">a</SPAN><SPAN CLASS="esymbol">.</SPAN><A CLASS="efeature" HREF="../../reference/structures/table/hash_table.html">put</A>
+				<SPAN CLASS="elocal">a</SPAN><SPAN CLASS="esymbol">.</SPAN><A CLASS="efeature" HREF="../../reference/structures/table/hash_table_chart.html">put</A>
 				<SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">x</SPAN><SPAN CLASS="esymbol">,</SPAN>
 				<SPAN CLASS="elocal">i</SPAN><SPAN CLASS="esymbol">)</SPAN><BR>
 				<SPAN CLASS="elocal">x</SPAN> <SPAN CLASS="esymbol">:=</SPAN>
@@ -94,10 +94,10 @@
 				is a key (for example a string) as conceptually equivalent	to the array operations mentioned above.<BR>
 				The quality of a hashed implementation will depend both on the data structure that
 				will store the objects, and on the choice of hashing function. Class
-				<A HREF="../../reference/structures/table/hash_table.html">HASH_TABLE</A> attempts to
+				<A HREF="../../reference/structures/table/hash_table_chart.html">HASH_TABLE</A> attempts to
 				address the first concern; for the second, client developers will be responsible for choosing
 				the proper hashing function, although Base provides a few predefined functions, in particular
-				for class <A HREF="../../reference/structures/table/string.html">STRING</A>.
+				for class <A HREF="../../reference/structures/table/string_chart.html">STRING</A>.
 			<H2>When hash tables are appropriate</H2>
 			<P>
 				You may keep objects in a hash table if for each one of these objects you can find a key
@@ -111,12 +111,12 @@
 				above).
 				<LI><B>H2</B>. Frequently, the objects will be composite, that is to say, instances of a developer-defined
 				class, and one of the attributes of that class, of type
-				<A HREF="../../reference/structures/kernel/string.html">STRING</A>, can serve as
+				<A HREF="../../reference/structures/kernel/string_chart.html">STRING</A>, can serve as
 				the key. For example if you were writing an Eiffel compiler you would probably
 				need to keep a data structure that includes information about classes of the
 				system. Each class is represented by an object with several fields describing the
 				properties of the class; one of these fields, the class name, corresponding to an
-				attribute of type <A HREF="../../reference/structures/kernel/string.html">STRING</A>, will serve as key.
+				attribute of type <A HREF="../../reference/structures/kernel/string_chart.html">STRING</A>, will serve as key.
 				<LI><B>H3</B>. Instead of being the full object (as in case <B>H1</B>) or one of the object’s fields (as in
 				case <B>H2</B>), the key may have to be computed through a function of the generating
 				class, which will take into account several attributes of the class (that is to say,
@@ -126,26 +126,26 @@
 				What this practically means is that in all cases you will need, in the generating class
 				of the objects to be stored, a query (attribute or function) that gives the key. The type of
 				the key is highly variable but must in all cases be a descendant of
-				<A HREF="../../reference/structures/kernel/hashable.html">HASHABLE</A>. This is
+				<A HREF="../../reference/structures/kernel/hashable_chart.html">HASHABLE</A>. This is
 				true of both
-				<A HREF="../../reference/structures/kernel/integer.html">INTEGER</A> (case <B>H1</B>)
-				and <A HREF="../../reference/structures/kernel/string.html">STRING</A> (case <B>H2</B>).
+				<A HREF="../../reference/structures/kernel/integer_chart.html">INTEGER</A> (case <B>H1</B>)
+				and <A HREF="../../reference/structures/kernel/string_chart.html">STRING</A> (case <B>H2</B>).
 				The requirements for being a
-				<A HREF="../../reference/structures/kernel/hashable.html">HASHABLE</A> are not harsh:
+				<A HREF="../../reference/structures/kernel/hashable_chart.html">HASHABLE</A> are not harsh:
 				all you need is a function hash_code that returns a non-negative integer.
 			<H2>Using hash tables</H2>
 			<P>
-				Class <A HREF="../../reference/structures/table/hash_table.html">HASH_TABLE</A> takes two
+				Class <A HREF="../../reference/structures/table/hash_table_chart.html">HASH_TABLE</A> takes two
 				generic parameters:
 			<P CLASS="code">
 				<SPAN CLASS="ekeyword">class</SPAN>
-				<A HREF="../../reference/structures/table/hash_table.html">HASH_TABLE</A> [G, H -> HASHABLE] ...
+				<A HREF="../../reference/structures/table/hash_table_chart.html">HASH_TABLE</A> [G, H -> HASHABLE] ...
 			</P>
 			<P>
 				G represents the type of the objects to be stored in the hash table, H the type of
 				their keys.<BR>
 				When viewed as an implementation of containers,
-				<A HREF="../../reference/structures/table/hash_table.html">HASH_TABLE</A>, in a strict sense, represents
+				<A HREF="../../reference/structures/table/hash_table_chart.html">HASH_TABLE</A>, in a strict sense, represents
 				bags rather than sets: unlike the other classes in this chapter, it allows an object to have two or
 				more distinct occurrences in a single container. But this is only true if we consider a hash table
 				as a repository of objects of type G. In reality each item of the table is identified by a pair of

@@ -539,8 +539,10 @@ rt_public int acollect(void)
 			plsc();
 			status =  0;
 			eif_total = e_data.ml_total;
-		}
-	} else							/* Generation-base collector */
+		} else							/* Generation-base collector */
+			status =  collect();
+	} else							/* Generation-base collector called, since
+									 * there is no Full Collection. */
 		status =  collect();
 
 

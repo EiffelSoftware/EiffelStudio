@@ -25,6 +25,7 @@ feature {NONE} -- Initialization
 			Precursor (par)
 
 			create tool.make (Current)
+			tool.build_interface
 
 			initialize_main_menu
 
@@ -40,6 +41,7 @@ feature {NONE} -- Initialization
 		do
 			Precursor
 			create tool.make (Current)
+			tool.build_interface
 
 			initialize_main_menu
 

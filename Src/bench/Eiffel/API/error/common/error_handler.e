@@ -64,6 +64,7 @@ feature {COMPILER_EXPORTER, E_PROJECT} -- Output
 			if not error_list.empty then
 				error_displayer.trace_errors (Current)
 				error_position := 0;
+				wipe_out
 			end;
 		end;
 

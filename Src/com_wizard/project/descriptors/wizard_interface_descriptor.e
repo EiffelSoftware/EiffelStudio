@@ -274,18 +274,7 @@ feature -- Basic operations
 			until
 				functions.after
 			loop
-				tmp_name := clone (functions.item.name)
-				if a_coclass_descriptor.feature_c_names.has (tmp_name) then
-					tmp_name.prepend (Underscore)
-					tmp_name.prepend (name)
-					functions.item.set_name (tmp_name)
-					tmp_name := clone (functions.item.interface_eiffel_name)
-					tmp_name.prepend (Underscore)
-					tmp_name.prepend (name)
-					tmp_name := name_for_feature (tmp_name)
-					functions.item.add_coclass_eiffel_name (tmp_name, a_coclass_descriptor.name)
-				end
-				feature_c_names.force (clone (functions.item.name))
+				functions.item.disambiguate_names (Current, a_coclass_descriptor)
 				functions.forth
 			end
 
@@ -294,24 +283,7 @@ feature -- Basic operations
 			until
 				properties.after
 			loop
-				tmp_name := clone (properties.item.name)
-				if a_coclass_descriptor.feature_c_names.has (tmp_name) then
-					tmp_name.prepend (Underscore)
-					tmp_name.prepend (name)
-					properties.item.set_name (tmp_name)
-					tmp_name := clone (properties.item.interface_eiffel_name)
-					tmp_name.prepend (Underscore)
-					tmp_name.prepend (name)
-					tmp_name := name_for_feature (tmp_name)
-					properties.item.add_coclass_eiffel_name (tmp_name, a_coclass_descriptor.name)
-				end
-				feature_c_names.force (clone (properties.item.name))
-				tmp_name := clone (properties.item.name)
-				tmp_name.prepend ("set_")
-				feature_c_names.force (tmp_name)
-				tmp_name := clone (properties.item.name)
-				tmp_name.prepend ("set_ref_")
-				feature_c_names.force (tmp_name)
+				properties.item.disambiguate_names (Current, a_coclass_descriptor)
 				properties.forth
 			end
 		ensure

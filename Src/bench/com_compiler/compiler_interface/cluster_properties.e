@@ -587,7 +587,6 @@ feature -- Element change
 			else
 				l_cluster_path := a_path.clone (a_path)
 			end
-			l_cluster_path.prune_all_trailing ('\')
 			id_sd := new_id_sd (l_cluster_path, True)
 			cluster_sd.set_directory_name (id_sd)
 		end

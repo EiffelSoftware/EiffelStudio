@@ -36,7 +36,7 @@ feature -- Basic operations
 			-- Update current object using fields of object attached
 			-- to `other', so as to yield equal objects.
 		local
-			pointer, a_default_pointer: POINTER
+			a_default_pointer: POINTER
 		do
 			item := item.memory_calloc (1, structure_size)
 			if item = a_default_pointer then

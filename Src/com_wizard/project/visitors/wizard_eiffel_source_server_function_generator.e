@@ -37,6 +37,7 @@ feature -- Initialization
 			feature_writer.set_effective
 			
 			create name.make (100)
+			name.append ("event_")
 			name.append (a_function.interface_eiffel_name)
 			from
 			until 

@@ -1874,7 +1874,7 @@ feature -- Resource Update
 		do
 				-- Set the interior layout
 			if panel.full then
-				panel.set_split_position (splitter_position.max (panel.minimum_split_position).min (panel.maximum_split_position))
+				panel.set_split_position (splitter_position.max (panel.minimum_split_position))
 			end
 			left_panel.refresh_splitter
 			right_panel.refresh_splitter

@@ -373,7 +373,7 @@ feature -- Status setting
 			
 			split ?= object_tool.widget
 				--| 200 is the default size of the local tree.
-			split.set_split_position (split.minimum_split_position.max (object_split_position).min (split.maximum_split_position))
+			split.set_split_position (object_split_position.max (split.minimum_split_position))
 			if debug_left_layout = Void then
 				debug ("DEBUGGER_INTERFACE")
 					io.putstring("Searching resource%N")
@@ -395,9 +395,8 @@ feature -- Status setting
 				debugging_window.left_panel.load_from_resource (debug_left_layout)
 				debugging_window.right_panel.load_from_resource (debug_right_layout)
 			end
-			debugging_window.panel.set_split_position (debug_splitter_position.max
-					(debugging_window.panel.minimum_split_position).min
-					(debugging_window.panel.maximum_split_position))
+			debugging_window.panel.set_split_position (debug_splitter_position.
+				max (debugging_window.panel.minimum_split_position))
 			debugging_window.show_tools
 			debugging_window.left_panel.refresh_splitter
 			debugging_window.right_panel.refresh_splitter
@@ -472,9 +471,8 @@ feature -- Status setting
 			debugging_window.left_panel.load_from_resource (normal_left_layout)
 			debugging_window.right_panel.load_from_resource (normal_right_layout)
 			if debugging_window.panel.full then
-				debugging_window.panel.set_split_position (normal_splitter_position.max
-						(debugging_window.panel.minimum_split_position).min
-						(debugging_window.panel.maximum_split_position))
+				debugging_window.panel.set_split_position (normal_splitter_position.
+					max (debugging_window.panel.minimum_split_position))
 			end
 			debugging_window.show_tools
 			debugging_window.left_panel.refresh_splitter

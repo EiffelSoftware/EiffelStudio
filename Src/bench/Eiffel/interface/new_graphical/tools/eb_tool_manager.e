@@ -118,7 +118,7 @@ feature {EB_TOOL_MANAGER} -- Initialization
 			min_split_position := panel.minimum_split_position
 			max_split_position := panel.maximum_split_position
 			splitter_position := new_split_position
---			panel.set_split_position (splitter_position.max (min_split_position).min (max_split_position))
+--			panel.set_split_position (splitter_position.max (min_split_position))
 
 				-- Add a cell for spacing (we cannot use padding: there are toolbars coming).
 			create cell
@@ -480,7 +480,7 @@ feature -- Explorer bar handling.
 					panel.set_second (right_panel.widget)
 				end
 				if panel.full then
-					panel.set_split_position (splitter_position.max (panel.minimum_split_position).min (panel.maximum_split_position))
+					panel.set_split_position (splitter_position.max (panel.minimum_split_position))
 				end
 			end
 		end
@@ -511,7 +511,7 @@ feature -- Explorer bar handling.
 					panel.set_second (right_panel.widget)
 				end
 				if panel.full then
-					panel.set_split_position (splitter_position.max (panel.minimum_split_position).min (panel.maximum_split_position))
+					panel.set_split_position (splitter_position.max (panel.minimum_split_position))
 				end
 			end
 		end

@@ -5,7 +5,7 @@ root
 	 ewb_windows (main): "make"
 
 default
-	assertion (no)
+	assertion (require)
 	console_application (yes)
 	dead_code_removal (yes)
 -- RTEA version
@@ -58,39 +58,17 @@ cluster
 	tree(structures):		"$\tree"
 
 		-- Wel:
-	wel:					"$EIFFEL_SRC\library\wel"
-
-	wel_constants(wel):		"$\consts"
-	wel_controls(wel):		"$\controls"
-	wel_gdi(wel):			"$\gdi"
-	wel_gdi_stocks(wel):		"$\gdistock"
-	wel_standard_dialogs(wel):	"$\stddlgs"
-	wel_structures(wel):		"$\structs"
-	wel_support(wel):			"$\support"
-	wel_windows(wel):			"$\windows"
-	wel_messages(wel):		"$\messages"
+	all wel:					"$EIFFEL_SRC\library\wel"
 
 		-- EiffelVision
-	vision:							"$EIFFEL_SRC\library\vision"
-	vision_kernel(vision):			"$\oui\kernel"
-	vision_widgets (vision):		"$\oui\widgets"
-	vision_context_data (vision):	"$\oui\context_data"
-
---	vision_figures (vision):		"$\figures"
-	vision_tools (vision):			"$\tools"
-
-		-- EiffelVision Toolkit
-	vision_toolkit (vision):				"$\implement\toolkit"
-	vision_toolkit_kernel (vision_toolkit):	"$\kernel"
-	vision_toolkit_widgets (vision_toolkit):"$\widgets"
-	vision_toolkit_support (vision_toolkit):"$\support"
-
-		-- EiffelVision implementation clusters for Ms Windows
-	vision_imp (vision):				"$\implement\mswin"
-	vision_imp_kernel (vision_imp):		"$\kernel"
-	vision_imp_widgets (vision_imp):	"$\widgets"
-	vision_imp_support (vision_imp):	"$\support"
-	vision_imp_command (vision_imp):	"$\commands"
+	all vision:							"$EIFFEL_SRC\library\vision"
+		exclude
+			"figures";
+			"obsolete";
+			"motif";
+			"gtk";
+			"x"
+		end	
 
 		-- ES4 SPECIFIC CLUSTERS
 	liman:				"$EIFFEL_SRC\limand"

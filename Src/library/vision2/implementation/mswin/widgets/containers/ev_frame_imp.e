@@ -34,7 +34,7 @@ inherit
 			enable_sensitive,
 			disable_sensitive
 		end
-
+		
 	EV_TEXT_ALIGNABLE_IMP
 		undefine
 			set_default_minimum_size
@@ -321,13 +321,11 @@ feature {NONE} -- WEL Implementation
 				paint_dc.fill_rect (r, bk_brush)
 
 					-- Paint right part of text
-				r.set_rect (text_pos + text_width, 0, cur_width, half)
-				paint_dc.fill_rect (r, bk_brush)
-				r.set_rect (text_pos + text_width, half, cur_width, cur_height)
+				r.set_rect (text_pos + text_width, 0, cur_width, text_height)
 				paint_dc.fill_rect (r, bk_brush)
 				
 					-- Paint under the text
-				r.set_rect (text_pos, text_height, text_pos + text_width, cur_height)
+				r.set_rect (text_pos, text_height, text_pos + text_width, text_height)
 				paint_dc.fill_rect (r, bk_brush)
 
 	

@@ -13,6 +13,7 @@
 	executable.
 */
 
+#include "eif_project.h"
 #include "eif_config.h"
 
 #ifdef I_STRING
@@ -120,7 +121,7 @@ rt_public char *bmalloc(long int size)
 	 */
 
 	if (object != (char *) 0) {
-		char *result = eif_set(object, nbytes, bit_dtype | EO_NEW);
+		char *result = eif_set(object, nbytes, egc_bit_dtype | EO_NEW);
 
 		LENGTH(result) = (uint32) size;				/* Record size */
 		return result;
@@ -988,7 +989,7 @@ rt_public void epop(register struct stack *stk, register int nb_items) {}
 rt_public char *xmalloc(unsigned int nbytes, int type, int gc_flag) {}
 rt_public void eraise(char *tag, int val) {}
 rt_public char *eif_set(char *object, unsigned int nbytes, uint32 type) {}
-rt_public int bit_dtype;
+rt_public int egc_bit_dtype;/*JOCE??*/
 rt_public struct stack loc_stack;
 
 rt_private void dump_bit(char *bit)

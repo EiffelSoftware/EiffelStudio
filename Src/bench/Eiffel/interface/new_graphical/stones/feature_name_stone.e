@@ -12,7 +12,7 @@ inherit
 		rename
 			make as old_make
 		redefine
-			check_validity, feature_name, stone_signature
+			update, feature_name, stone_signature
 		end 
 
 create 		
@@ -45,8 +45,8 @@ feature -- Properties
 
 feature -- Update
 
-	check_validity is
-			-- Check the validity of the stone.
+	update is
+			-- Update current feature stone.
 		local
 			retried: BOOLEAN
 		do
@@ -54,7 +54,7 @@ feature -- Update
 				if internal_start_position = -1 or else e_feature = Void then
 						-- Means check has been done and is invalid
 						-- Find e_feature from feature_name.
-					if e_class.feature_table /= Void then
+					if e_class.has_feature_table then
 							-- System has been completely compiled and has all its
 							-- feature tables.
 						e_feature := e_class.feature_with_name (feature_name)

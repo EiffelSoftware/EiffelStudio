@@ -247,17 +247,12 @@ feature -- dragging
 			-- Is `Current' a valid stone?
 		do
 				-- Don't like side effects but it is useful here.
-			check_validity
-			if start_position = 0 then
-					-- Body as cannot be found
-				Result := False
-			else
-				Result := Precursor {CLASSC_STONE} and then e_class /= Void and then e_feature /= Void
-			end
+			update
+			Result := e_feature /= Void and then Precursor {CLASSC_STONE}
 		end
 
-	check_validity is
-			-- Check the validity of feature stone.
+	update is
+			-- Update current feature stone.
 		local
 			body_as: FEATURE_AS
 			retried: BOOLEAN

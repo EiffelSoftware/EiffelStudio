@@ -143,6 +143,16 @@ feature -- Status report
 		ensure
 			bridge_ok: Result = implementation.is_item_expanded (an_item)
 		end
+		
+	splitter_width: INTEGER is
+			-- Width of splitter in pixels.
+		require
+			not_destroyed: not is_destroyed
+		do
+			Result := implementation.splitter_width
+		ensure
+			bridge_ok: Result = implementation.splitter_width
+		end
 
 feature -- Element change
 

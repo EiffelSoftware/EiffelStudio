@@ -176,6 +176,26 @@ feature -- Drawing operations
 			a_text_not_void: a_text /= Void
 		deferred
 		end
+		
+	draw_ellipsed_text (x, y: INTEGER; a_text: STRING; clipping_width: INTEGER) is
+			-- Draw `a_text' with left of baseline at (`x', `y') using `font'.
+			-- Text is clipped to `clipping_width' in pixels and ellipses are displayed
+			-- to show truncated characters if any.
+		require
+			a_text_not_void: a_text /= Void
+			clipping_width_positive: clipping_width >= 0
+		deferred
+		end
+
+	draw_ellipsed_text_top_left (x, y: INTEGER; a_text: STRING; clipping_width: INTEGER) is
+			-- Draw `a_text' with top left corner at (`x', `y') using `font'.
+			-- Text is clipped to `clipping_width' in pixels and ellipses are displayed
+			-- to show truncated characters if any.
+		require
+			a_text_not_void: a_text /= Void
+			clipping_width_positive: clipping_width >= 0
+		deferred
+		end
 
 	draw_segment (x1, y1, x2, y2: INTEGER) is
 			-- Draw line segment from (`x1', 'y1') to (`x2', 'y2').

@@ -36,8 +36,9 @@ inherit
 
 	COMPILER_EXPORTER
 
-creation
+	SHARED_TYPE_I
 
+creation
 	make
 	
 feature 
@@ -327,7 +328,9 @@ feature -- Generation
 								if once_count = 1 then
 										--| First declaration of EIF_oidx_off in the
 										--| C code
-									buffer.putstring ("static int EIF_oidx_off = 0;%N")
+									buffer.putstring ("static int EIF_oidx_off")
+									buffer.putint (id.id)
+									buffer.putstring (" = 0;%N")
 								end
 							end
 							
@@ -341,7 +344,9 @@ feature -- Generation
 					buffer.generate_function_signature ("void", id.module_init_name, True, header_buffer, <<"">>, <<"void">>)
 	
 					if once_count > 0 then
-						buffer.putstring ("%TEIF_oidx_off = EIF_once_count;%N%
+						buffer.putstring ("%TEIF_oidx_off")
+						buffer.putint (id.id)
+						buffer.putstring (" = EIF_once_count;%N%
 									%%TEIF_once_count += ")
 						buffer.putint (once_count)
 						buffer.putstring (";%N}%N%N")
@@ -644,8 +649,7 @@ feature -- Generation
 
 					-- Call creation of expanded if there is one
 				class_type := exp_desc.class_type
-				creation_feature := 
-						class_type.associated_class.creation_feature
+				creation_feature := class_type.associated_class.creation_feature
 				if creation_feature /= Void then
 					creat_name := creation_feature.body_id.feature_name (class_type.id)
 					buffer.putstring (creat_name)
@@ -654,6 +658,9 @@ feature -- Generation
 					skeleton.go_to (position)
 					buffer.putstring (");");	
 					buffer.new_line
+						-- Generate in the header file, the declaration of the creation
+						-- routine.
+					Extern_declarations.add_routine (Void_c_type, creat_name)
 				end
 					-- If the expanded object also has expandeds, we need
 					-- to call the initialization routine too.
@@ -696,7 +703,7 @@ feature -- Generation
 				buffer.putstring ("int16 typarr [] = {")
 			end
 
-			buffer.putint (byte_context.current_type.generated_id (final_mode))
+			buffer.putint (type.generated_id (final_mode))
 			buffer.putstring (", ")
 			gen_type.generate_cid (buffer, final_mode, False)
 			buffer.putstring ("-1};")

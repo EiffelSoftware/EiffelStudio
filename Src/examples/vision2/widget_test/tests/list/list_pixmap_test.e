@@ -35,7 +35,7 @@ feature {NONE} -- Implementation
 			create reset_button.make_with_text_and_action ("Reset", agent reset)
 			vertical_box.extend (reset_button)
 			vertical_box.disable_item_expand (reset_button)
-			list.set_minimum_size (300, 300)
+			vertical_box.set_minimum_size (300, 300)
 			from
 				counter := 1
 			until

@@ -3059,7 +3059,7 @@ feature -- PS
 						if constraint_type /= Void then
 							a_clickable.put_string (" -> ");
 							if not constraint_type.has_like then
-								constraint_type := formal_dec.constraint.actual_type;
+								constraint_type := constraint_type.actual_type;
 								if constraint_type = Void then
 										-- Problem in building the type
 										-- Should occur only for invalid constraint

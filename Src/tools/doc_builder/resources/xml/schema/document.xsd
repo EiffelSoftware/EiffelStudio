@@ -13,6 +13,11 @@
 			</xs:element>
 			<xs:element name="header_file" type="includeType" minOccurs="0"/>
 			<xs:element name="footer_file" type="includeType" minOccurs="0"/>
+			<xs:element name="script" type="xs:string" minOccurs="0" maxOccurs="unbounded">
+				<xs:annotation>
+					<xs:documentation>Script tag (Javascript, VBScript)</xs:documentation>
+				</xs:annotation>
+			</xs:element>
 		</xs:choice>
 	</xs:complexType>
 	<xs:element name="document">

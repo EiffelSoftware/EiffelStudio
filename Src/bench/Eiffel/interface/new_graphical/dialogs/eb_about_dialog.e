@@ -37,7 +37,7 @@ inherit
 			default_create, copy
 		end
 
-	SHARED_BENCH_LICENSES
+	SHARED_LICENSE
 		export
 			{NONE} all
 		undefine
@@ -166,17 +166,13 @@ feature {NONE} -- Implementation
 
 	registration_info: STRING is
 			-- Clause in the about dialog concerning the license.
-		local
-			un: STRING
 		do
 			create Result.make (50)
-			un := license.username
-			if un /= Void and then not un.is_empty then
-				Result := l_Registered + un + "%R%N%R%N"
+			if license.is_licensed then
+				Result := l_Registered + license.username + "%R%N%R%N"
 			else
 				Result := l_Unregistered_version
 			end
-			
 		end
 
 feature {NONE} -- Constant strings

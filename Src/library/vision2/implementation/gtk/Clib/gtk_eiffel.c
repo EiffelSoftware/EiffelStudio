@@ -11,6 +11,16 @@
 #include "gtk_eiffel.h"
 #include "gdk_eiffel.h"
 
+/*==============================================================================
+ Some functions signatures
+--------------------------------------------------------------------------------
+ This part was created because some functions in this file use other functions
+ in this same file.
+ We declare them so the functions order does not matter.
+==============================================================================*/
+
+rt_public void c_gtk_widget_set_bg_color (GtkWidget * widget, int r, int g, int b);
+
 /*********************************
  *
  * Function `c_free_call_back_block'
@@ -56,6 +66,45 @@ void c_signal_callback (GtkObject *w, gpointer data)
     /*(pcbd->rtn)(eif_access(pcbd->obj), eif_access(pcbd->argument));*/
 	/*printf("c_signal_callback (%d, %d)\n", w, data); */
 	(pcbd->rtn)(eif_access(pcbd->obj), eif_access(pcbd->argument), eif_access(pcbd->ev_data));
+}
+
+/* TEST */
+
+void mclist_click_column_callback(GtkWidget *clist,
+                               gint column,
+                               gpointer data)
+{
+    callback_data_t *pcbd;
+    pcbd = (callback_data_t *)data;
+
+	/* Call Eiffel routine 'rtn' of object 'obj' with argument 'argument' */
+    /*(pcbd->rtn)(eif_access(pcbd->obj), eif_access(pcbd->argument));*/
+    /*printf("c_signal_callback (%d, %d)\n", w, data); */
+    (pcbd->rtn)(eif_access(pcbd->obj), eif_access(pcbd->argument), eif_access(pcbd->ev_data));
+}
+
+void mclist_row_selection_callback(GtkWidget *clist,
+                               gint row,
+                               gint column,
+                               GdkEventButton *event,
+                               gpointer data)
+{
+    callback_data_t *pcbd;
+	int row_index;
+	
+    pcbd = (callback_data_t *)data;
+
+	/* The index of the row */
+	row_index = (int) pcbd->mouse_button;
+
+	if (row == row_index || row_index == -1)
+	{    
+	  /* Call Eiffel routine 'rtn' of object 'obj' with argument 'argument' */
+      /*(pcbd->rtn)(eif_access(pcbd->obj), eif_access(pcbd->argument));*/
+	  /*printf("c_signal_callback (%d, %d)\n", w, data); */
+	  (pcbd->rtn)(eif_access(pcbd->obj), eif_access(pcbd->argument), eif_access(pcbd->ev_data));
+	}
+	
 }
 
 /*********************************
@@ -256,9 +305,31 @@ gint c_gtk_signal_connect_general (GtkObject *widget,
 				GTK_SIGNAL_FUNC(c_event_callback), 
 				(gpointer)pcbd));		
 		} else {
-			return (gtk_signal_connect (widget, name, 
-				GTK_SIGNAL_FUNC(c_signal_callback), 
-				(gpointer)pcbd));
+			
+
+			/* TEST: the callback signature depends on the events */
+			if ((strcmp(name, "select_row") == 0) ||
+					(strcmp(name, "unselect_row") == 0))
+			{
+				/* We need to store the index of the row
+				 * so we put it in the mouse_button */
+				return (gtk_signal_connect (widget, name, 
+					GTK_SIGNAL_FUNC(mclist_row_selection_callback), 
+					(gpointer)pcbd));	
+			}
+			else
+			if (strcmp(name, "click_column") == 0)
+			{
+				return (gtk_signal_connect (widget, name, 
+					GTK_SIGNAL_FUNC(mclist_click_column_callback), 
+					(gpointer)pcbd));
+			}
+			else
+			{
+				return (gtk_signal_connect (widget, name, 
+					GTK_SIGNAL_FUNC(c_signal_callback), 
+					(gpointer)pcbd));
+			}
 		}
 	}
 }
@@ -1500,13 +1571,18 @@ void c_gtk_box_set_child_options (GtkWidget *box, GtkWidget *child,
 /*********************************
  *
  * Function : `c_gtk_statusbar_item_create_pixmap_place'	(1)
- *			  `c_gtk_statusbar_item_unset_pixmap'			(3)
+ *			  `c_gtk_statusbar_item_unset_pixmap'			(2)
+ *			  `c_gtk_statusbar_item_set_bg_color'			(3)
  *			  	
  * Note : (1) The equivalent of `create_pixmap_place' in EV_PIXMAPABLE
  * 				to create the place in the box, where the pixmap will be placed.
  * 				Return the value of the pixmap pointer.
- *		  (3) Unsets the pixmap of the status bar item.	Remove the GtkPixmap
+ *		  (2) Unsets the pixmap of the status bar item.	Remove the GtkPixmap
  *		  		the status bar, which will be destroyed (no more ref).
+ *		  (3) Sets the background of the status bar item to the given color.
+ *		  		Redefine because
+ *		  		EV_STATUS_BAR_ITEM = gtk_statusbar (box) < gtk_frame < (gtk_pixmap + gtk_label)
+ *		  		'<' = containing.
  * 
  * Author : Alex
  *
@@ -1595,6 +1671,25 @@ void c_gtk_statusbar_item_unset_pixmap (GtkWidget *statusbar, GtkWidget *pixmap)
 
 	/* Remove the pixmap from the box */
 	gtk_container_remove (GTK_CONTAINER (hbox), pixmap);
+}
+
+void c_gtk_statusbar_item_set_bg_color (GtkWidget *statusbar, int r, int g, int b)
+{
+  GtkWidget *hbox;
+  GtkWidget *statusbar_frame;
+  GtkWidget *statusbar_label;
+	
+  r *= 257; g *= 257; b *= 257;
+  
+  statusbar_label = GTK_STATUSBAR (statusbar)->label;
+  hbox = GTK_WIDGET (statusbar_label)->parent;
+  statusbar_frame = GTK_STATUSBAR (statusbar)->frame;
+  
+  /* set the background or the three widgets. */
+  c_gtk_widget_set_bg_color (statusbar, r, g, b);
+  c_gtk_widget_set_bg_color (hbox, r, g, b);
+  c_gtk_widget_set_bg_color (statusbar_label, r, g, b);
+  c_gtk_widget_set_bg_color (statusbar_frame, r, g, b);
 }
 
 /*********************************
@@ -1716,57 +1811,123 @@ void c_gtk_style_default_fg_color (EIF_INTEGER* r, EIF_INTEGER* g, EIF_INTEGER* 
  *
  *********************************/
 
-void SetStyleRecursively (GtkWidget *widget, gpointer data)
+void SetForegroundStyleRecursively (GtkWidget *widget, gpointer data)
 {
-    GtkStyle *style;
-
-    /* --- Get the style --- */
-    style = (GtkStyle *) data;
-
-    /* --- Set the style of the widget --- */
-    gtk_widget_set_style (widget, style);
-
-    /* --- If it may have children widgets --- */
-    if (GTK_IS_CONTAINER (widget)) {
-
-        /* --- Set all the children's styles too. --- */
-        gtk_container_foreach (GTK_CONTAINER (widget), 
-                           SetStyleRecursively, style);
-    }
-}
-
-void c_gtk_widget_set_bg_color (GtkWidget* widget, int r, int g, int b)
-{
+  GtkStyle* widgetStyle;
   GtkStyle* style;
-  int or, og, ob;
+  int nr, ng, nb; // new colors
+  int or, og, ob; // old colors
   int i;
 
-  style = gtk_widget_get_style(GTK_WIDGET(widget));
-  r *= 257; g *= 257; b *= 257;
+  style = (GtkStyle *) data;
+//  widgetStyle = gtk_widget_get_style(GTK_WIDGET(widget));
+  widgetStyle = gtk_style_copy(GTK_WIDGET(widget)->style);
 
-  or = style->bg[GTK_STATE_NORMAL].red;
-  og = style->bg[GTK_STATE_NORMAL].green;
-  ob = style->bg[GTK_STATE_NORMAL].blue;
+  /* The colors we want the foreground to be. */
+  nr = style->fg[GTK_STATE_NORMAL].red;
+  ng = style->fg[GTK_STATE_NORMAL].green;
+  nb = style->fg[GTK_STATE_NORMAL].blue;
+
+  /* The colors the foreground was. */
+  or = widgetStyle->fg[GTK_STATE_NORMAL].red;
+  og = widgetStyle->fg[GTK_STATE_NORMAL].green;
+  ob = widgetStyle->fg[GTK_STATE_NORMAL].blue;
 		
-  if(or != r || og != g || ob != b)
+  if(or != nr || og != ng || ob != nb)
   {
-  	style = gtk_style_copy (style);
-	for (i = 0; i < 5; i++)
+	/* If we are here, this means the former foreground
+	 * color is not he same as the requested one, so we set it to the new one.
+	 */
+  	  
+  	for (i = 0; i < 5; i++)
 	{
 	  /* We do not change the color when GTK_STATE_SELECTED
 	   * because of EV_TEXT_AREA */
 	  if (i != 3)
 	  {
-	    style->bg[i].red = r;
-	    style->bg[i].green = g;
-	    style->bg[i].blue = b;	
-	  }
+	    widgetStyle->fg[i].red = nr;
+	    widgetStyle->fg[i].green = ng;
+	    widgetStyle->fg[i].blue = nb;
+//	    widgetStyle->text[i].red = r;
+//	    widgetStyle->text[i].green = g;
+//	    widgetStyle->text[i].blue = b;
+	  }  
 	}
-//	gtk_widget_set_style(GTK_WIDGET(widget), style);	
-	SetStyleRecursively(widget, (gpointer) style);
-	
+
+    /* --- Set the style of the widget --- */
+    gtk_widget_set_style (widget, widgetStyle);
   }
+
+  /* --- If it may have children widgets --- */
+//  if (GTK_IS_CONTAINER (widget))
+//  {
+//	  /* --- Set all the children's styles too. --- */
+//	  gtk_container_foreach (GTK_CONTAINER (widget), 
+//	  SetForegroundStyleRecursively, style);
+// }
+}
+	
+void SetBackgroundStyleRecursively (GtkWidget *widget, gpointer data)
+{
+  GtkStyle *widgetStyle;
+  GtkStyle *style;
+  int nr, ng, nb; // new colors
+  int or, og, ob; // old colors
+  int i;
+
+  style = (GtkStyle *) data;
+//  widgetStyle = gtk_widget_get_style(GTK_WIDGET(widget));
+  widgetStyle = gtk_style_copy(GTK_WIDGET(widget)->style);
+
+  /* The colors we want the background to be. */
+  nr = style->bg[GTK_STATE_NORMAL].red;
+  ng = style->bg[GTK_STATE_NORMAL].green;
+  nb = style->bg[GTK_STATE_NORMAL].blue;
+
+  /* The colors the background was. */
+  or = widgetStyle->bg[GTK_STATE_NORMAL].red;
+  og = widgetStyle->bg[GTK_STATE_NORMAL].green;
+  ob = widgetStyle->bg[GTK_STATE_NORMAL].blue;
 		
+  if(or != nr || og != ng || ob != nb)
+  {
+    for (i = 0; i < 5; i++)
+	{
+	  widgetStyle->bg[i].red = nr;
+	  widgetStyle->bg[i].green = ng;
+	  widgetStyle->bg[i].blue = nb;
+	}
+
+    /* --- Set the style of the widget --- */
+    gtk_widget_set_style (widget, widgetStyle);
+  }
+
+    /* --- If it may have children widgets --- */
+//    if (GTK_IS_CONTAINER (widget))
+//	{
+//      /* --- Set all the children's styles too. --- */
+//      gtk_container_foreach (GTK_CONTAINER (widget), 
+//                     SetBackgroundStyleRecursively, style);
+//    }
+}
+
+void c_gtk_widget_set_bg_color (GtkWidget* widget, int r, int g, int b)
+{
+  GtkStyle* style;
+
+  r *= 257; g *= 257; b *= 257;
+  
+  /* We just need a style structure to store the rgb values. */
+
+  //  style = gtk_widget_get_style(GTK_WIDGET(widget));
+  style = gtk_style_copy(GTK_WIDGET(widget)->style);
+
+  style->bg[GTK_STATE_NORMAL].red = r;
+  style->bg[GTK_STATE_NORMAL].green = g;
+  style->bg[GTK_STATE_NORMAL].blue = b;
+	  
+  //	gtk_widget_set_style(GTK_WIDGET(widget), style);
+  SetBackgroundStyleRecursively(widget, (gpointer) style);
 }
 
 void c_gtk_widget_get_bg_color (GtkWidget *widget, EIF_INTEGER *r, EIF_INTEGER *g, EIF_INTEGER *b)
@@ -1785,33 +1946,33 @@ void c_gtk_widget_get_bg_color (GtkWidget *widget, EIF_INTEGER *r, EIF_INTEGER *
 void c_gtk_widget_set_fg_color (GtkWidget* widget, int r, int g, int b)
 {
   GtkStyle* style;
-  int or, og, ob;
-  int i;
-
-  style = gtk_widget_get_style(GTK_WIDGET(widget));
 
   r *= 257; g *= 257; b *= 257;
-		
-  or = style->fg[GTK_STATE_NORMAL].red;
-  og = style->fg[GTK_STATE_NORMAL].green;
-  ob = style->fg[GTK_STATE_NORMAL].blue;
-		
-  if(or != r || og != g || ob != b) {
-    for (i = 0; i < 5; i++)
-	{
-	  style->fg[i].red = r;
-	  style->fg[i].green = g;
-	  style->fg[i].blue = b;
-	  style->text[i].red = r;
-	  style->text[i].green = g;
-	  style->text[i].blue = b;  
-	}
-	
-	//gtk_widget_set_style(GTK_WIDGET(widget), style);
-	SetStyleRecursively(widget, (gpointer) style);
-  }
+  
+  /* We just need a style structure to store the rgb values. */
+  //style = gtk_widget_get_style(GTK_WIDGET(widget));
+  style = gtk_style_copy(GTK_WIDGET(widget)->style);
+
+  style->fg[GTK_STATE_NORMAL].red = r;
+  style->fg[GTK_STATE_NORMAL].green = g;
+  style->fg[GTK_STATE_NORMAL].blue = b;
+	  
+//  	gtk_widget_set_style(GTK_WIDGET(widget), style);
+  SetForegroundStyleRecursively(widget, (gpointer) style);
 }
 
+
+void c_gtk_widget_get_fg_color (GtkWidget* widget, EIF_INTEGER* r, EIF_INTEGER* g, EIF_INTEGER* b)
+{
+		GtkStyle* style;
+		style = GTK_WIDGET(widget)->style;
+		
+		*r = style->fg[GTK_STATE_NORMAL].red;
+		*g = style->fg[GTK_STATE_NORMAL].green;
+		*b = style->fg[GTK_STATE_NORMAL].blue;
+
+		*r /= 257; *g /= 257; *b /= 257;
+}
 
 void c_gtk_widget_get_color_info (GtkWidget* widget,
 	EIF_INTEGER *fgr,
@@ -1885,22 +2046,4 @@ void c_gtk_widget_get_color_info (GtkWidget* widget,
 
 		*whiter /= 257; *whiteg /= 257; *whiteb /= 257; *whitepix /= 257;
 
-}
-
-void c_gtk_widget_get_fg_color (GtkWidget* widget, EIF_INTEGER* r, EIF_INTEGER* g, EIF_INTEGER* b)
-{
-		GtkStyle* style;
-		style = GTK_WIDGET(widget)->style;
-/*
-		*r = style->text[GTK_STATE_NORMAL].red;
-		*g = style->text[GTK_STATE_NORMAL].green;
-		*b = style->text[GTK_STATE_NORMAL].blue;
-
-		*r /= 257; *g /= 257; *b /= 257;
-*/
-*r = style->fg[GTK_STATE_NORMAL].red;
-*g = style->fg[GTK_STATE_NORMAL].green;
-*b = style->fg[GTK_STATE_NORMAL].blue;
-
-		*r /= 257; *g /= 257; *b /= 257;
 }

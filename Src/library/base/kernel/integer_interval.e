@@ -34,10 +34,7 @@ inherit
 		end
 
 create
-	make,
-	make_infinite,
-	make_infinite_upper,
-	make_infinite_lower
+	make
 
 feature {NONE} -- Initialization
 
@@ -64,35 +61,7 @@ feature {NONE} -- Initialization
 			empty_if_not_in_order:
 				(min_index > max_index) implies is_empty
 		end
-
-	make_infinite is
-			-- Set up to have no bounds.
-		do
-		ensure
-			not_lower_defined: not lower_defined
-			not_upper_defined: not upper_defined
-		end
-
-	make_infinite_upper (min_index: INTEGER) is
-			-- Set up to have lower bound 'min_index'.
-		do
-			lower_defined := True
-			lower_internal := min_index
-		ensure
-			lower_defined: lower_defined
-			not_upper_defined: not upper_defined
-		end
-
-	make_infinite_lower (max_index: INTEGER) is
-			-- Set up to have lower bound 'max_index'.
-		do
-			upper_defined := True
-			upper_internal := max_index
-		ensure
-			not_lower_defined: not lower_defined
-			upper_defined: upper_defined
-		end
-
+		
 feature -- Initialization
 	
 	adapt (other: INTEGER_INTERVAL) is
@@ -184,8 +153,6 @@ feature -- Measurement
 			end
 			if upper_defined and lower_defined then
 				Result := upper - lower + 1
-			else
-				from until False loop end
 			end
 		ensure then
 			definition: Result = upper - lower + 1
@@ -231,7 +198,6 @@ feature -- Status report
 			Result := True
 		end
 
-
 	prunable: BOOLEAN is
 			-- May individual items be removed?
 			-- Answer: no
@@ -256,18 +222,6 @@ feature -- Element change
 		end
 
 feature -- Resizing
-
-	undefine_upper is
-			-- Remove upper bound.
-		do
-			upper_defined := False
-		end
-
-	undefine_lower is
-			-- Remove lower bound.
-		do
-			lower_defined := False
-		end
 
 	resize (min_index, max_index: INTEGER) is
 			-- Rearrange interval to go from at most
@@ -486,6 +440,8 @@ invariant
 	count_definition: upper_defined and lower_defined implies count = upper - lower + 1
 
 	index_set_is_range: equal (index_set, Current)
+	
+	not_infinite: upper_defined and lower_defined
 
 
 indexing

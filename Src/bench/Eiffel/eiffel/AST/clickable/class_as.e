@@ -331,11 +331,13 @@ feature {CLASS_C, COMPILED_CLASS_INFO} -- Class information
 			-- parsing (useful for second pass).
 		local
 			parent_list: PARENT_LIST
+			ancestor_class_name: STRING
 		do
+			ancestor_class_name := System.ancestor_class_to_all_classes.name
 			create Result
 			if parents /= Void and not parents.is_empty then
 				create parent_list.make_filled (parents.count)
-			elseif not ("any").is_equal (class_name) then
+			elseif not ancestor_class_name.is_equal (class_name) then
 				create parent_list.make_filled (1)
 			else
 				create parent_list.make (0)

@@ -137,7 +137,7 @@ feature {NONE} -- Basic operations
 	analyze is
 			-- Analyze address.
 		local
-			pos: INTEGER
+			pos, pos2: INTEGER
 		do
 			if not address.has ('/') then
 				address.extend ('/')
@@ -152,30 +152,38 @@ feature {NONE} -- Basic operations
 				host := address.substring (1, pos - 1)
 				address.remove_head (pos)
 				path := clone (address)
-				if not host.is_empty and has_username and 
-					host.occurrences ('@') = 1 then
-					pos := host.index_of ('@', 1)
-					username := host.substring (1, pos - 1)
+			elseif address.substring_index ("//", 1) > 0 and 
+				address.substring_index (Service + ":", 1) > 0 then
+				pos2 := address.index_of ('/', pos + 2)
+				host := address.substring (pos + 2, pos2 - 1)
+				address.remove_head (pos2)
+				path := clone (address)					
+			end		
+			
+			host.to_lower
+						
+			if not host.is_empty and has_username and 
+				host.occurrences ('@') = 1 then
+				pos := host.index_of ('@', 1)
+				username := host.substring (1, pos - 1)
+				host.remove_head (pos)
+				if not username.is_empty and 
+					username.occurrences (':') = 1 then
+					pos := username.index_of (':', 1)
+					password := username.substring (pos + 1, username.count)
+					username.keep_head (pos - 1)
+				end
+			end
+			if not host.is_empty and host.occurrences (':') <= 1 then
+				pos := host.index_of (':', 1)
+				if pos = host.count then
+					host.remove_tail (1)
+					pos := 0
+				elseif pos > 0 and 
+					host.substring (pos + 1, host.count).is_integer then
+					port := host.substring (pos + 1, host.count).to_integer
 					host.remove_head (pos)
-					if not username.is_empty and 
-						username.occurrences (':') = 1 then
-						pos := username.index_of (':', 1)
-						password := username.substring (pos + 1, username.count)
-						username.keep_head (pos - 1)
-					end
 				end
-				if not host.is_empty and host.occurrences (':') <= 1 then
-					pos := host.index_of (':', 1)
-					if pos = host.count then
-						host.remove_tail (1)
-						pos := 0
-					elseif pos > 0 and 
-						host.substring (pos + 1, host.count).is_integer then
-						port := host.substring (pos + 1, host.count).to_integer
-						host.remove_head (pos)
-					end
-				end
-				host.to_lower
 			end
 		end
 

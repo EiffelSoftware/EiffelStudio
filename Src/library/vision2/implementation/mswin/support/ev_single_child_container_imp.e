@@ -78,19 +78,21 @@ feature -- Element change
 		local
 			v_imp: EV_WIDGET_IMP
 		do
-			check
-				has_no_item: item = Void
+			if v /= Void then
+				check
+					has_no_item: item = Void
+				end
+				v.implementation.on_parented
+				v_imp ?= v.implementation
+				check
+					v_imp_not_void: v_imp /= Void
+				end
+				item := v
+				v_imp.set_parent (interface)
+				notify_change (2 + 1)
+				
+				new_item_actions.call ([item])
 			end
-			v.implementation.on_parented
-			v_imp ?= v.implementation
-			check
-				v_imp_not_void: v_imp /= Void
-			end
-			item := v
-			v_imp.set_parent (interface)
-			notify_change (2 + 1)
-			
-			new_item_actions.call ([item])
 		end
 
 	put, replace (v: like item) is
@@ -200,6 +202,9 @@ end -- class EV_SINGLE_CHILD_CONTAINER_IMP
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.14  2000/05/13 01:08:09  pichery
+--| Protected call by a check.
+--|
 --| Revision 1.13  2000/05/01 19:33:24  pichery
 --| Added feature `is_control_in_window' used
 --| to determine if a certain control is contained

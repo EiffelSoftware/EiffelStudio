@@ -44,7 +44,7 @@ feature {NONE} -- Implementation
 			-- common. Descendents need to redefine this if their
 			-- default alignment is different.
 		do
-			Result := feature {EV_TEXT_ALIGNABLE_CONSTANTS}.Ev_text_alignment_center 
+			Result := feature {EV_TEXT_ALIGNMENT_CONSTANTS}.Ev_text_alignment_center 
 		end
 		
 end -- class EV_TEXT_ALIGNABLE_I

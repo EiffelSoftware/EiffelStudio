@@ -58,29 +58,29 @@ feature {EB_PREFERENCE_COMMAND} -- Execution
 			arg: EV_ARGUMENT
 			file_names: RESOURCE_FILES
 		do
-			!! file_names.make ("bench")
+			create file_names.make ("bench")
 			if install_button.state then
 				if general_button.state then
-					!! fn.make_from_string (file_names.system_general)
+					create fn.make_from_string (file_names.system_general)
 				else
-					!! fn.make_from_string (file_names.system_specific)
+					create fn.make_from_string (file_names.system_specific)
 				end
 			elseif home_dir_button /= Void and then home_dir_button.state then
 				if general_button.state then
-					!! fn.make_from_string (file_names.user_general)
+					create fn.make_from_string (file_names.user_general)
 				else
-					!! fn.make_from_string (file_names.user_specific)
+					create fn.make_from_string (file_names.user_specific)
 				end
 			elseif defaults_button /= Void and then defaults_button.state then
 				if general_button.state then
-					!! fn.make_from_string (file_names.defaults_general)
+					create fn.make_from_string (file_names.defaults_general)
 				else
-					!! fn.make_from_string (file_names.defaults_specific)
+					create fn.make_from_string (file_names.defaults_specific)
 				end
 			end
 			if fn /= Void then
-				!! fn.make_from_string ("/miami3/bonnard/toto")
-				!! file.make (fn)
+				create fn.make_from_string ("/miami3/bonnard/toto")
+				create file.make (fn)
 				if  file.is_writable then
 					tool.validate_all
 					if tool.is_all_valid then

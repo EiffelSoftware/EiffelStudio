@@ -67,7 +67,7 @@ feature -- Settings
 
 feature -- Input
 
-	put_after_class (e_class: CLASS_C str: STRING) is
+	put_after_class (e_class: CLASS_C; str: STRING) is
 			-- Put "-- class" followed by `t' in the text.
 		local
 			class_stone: CLASSC_STONE
@@ -79,7 +79,7 @@ feature -- Input
 			new_line
 		end
 
-	put_operator (str: STRING e_feature: E_FEATURE; is_keyword: BOOLEAN) is
+	put_operator (str: STRING; e_feature: E_FEATURE; is_keyword: BOOLEAN) is
 		   -- Process operator text.
 		local
 			stone: FEATURE_STONE	
@@ -111,7 +111,7 @@ feature -- Input
 			text_position := text_position + 1
 		end
 
-	put_classi (e_class: CLASS_I str: STRING) is
+	put_classi (e_class: CLASS_I; str: STRING) is
 			-- Put `e_class' with string representation
 			-- `str' at current position.
 		local
@@ -122,7 +122,7 @@ feature -- Input
 			append_stone (stone, str)
 		end
 
-	put_cluster (e_cluster: CLUSTER_I str: STRING) is
+	put_cluster (e_cluster: CLUSTER_I; str: STRING) is
 			-- Put `e_cluster' with string representation
 			-- `str' at current position.
 		do
@@ -130,7 +130,7 @@ feature -- Input
 			put_string (str)
 		end
 
-	put_class (e_class: CLASS_C str: STRING) is
+	put_class (e_class: CLASS_C; str: STRING) is
 			-- Put `e_class' with string representation
 			-- `str' at current position.
 		local
@@ -141,7 +141,7 @@ feature -- Input
 			append_stone (stone, str)
 		end
 
-	put_error (error: ERROR str: STRING) is
+	put_error (error: ERROR; str: STRING) is
 			-- Put `error' with string representation
 			-- `str' at current position.
 		local
@@ -152,7 +152,7 @@ feature -- Input
 			append_stone (stone, str)
 		end
 
-	put_feature (feat: E_FEATURE str: STRING) is
+	put_feature (feat: E_FEATURE; str: STRING) is
 			-- Put feature `feat' with string
 			-- representation `str' at current position.
 		local
@@ -163,7 +163,7 @@ feature -- Input
 			append_stone (stone, str)
 		end
 
-	put_feature_error (feat: E_FEATURE str: STRING; a_pos: INTEGER) is
+	put_feature_error (feat: E_FEATURE; str: STRING; a_pos: INTEGER) is
 			-- Put feature `feat' with string
 			-- representation `str' at current position.
 		local
@@ -174,7 +174,7 @@ feature -- Input
 			append_stone (stone, str)
 		end
 
-	put_feature_name (f_name: STRING e_class: CLASS_C) is
+	put_feature_name (f_name: STRING; e_class: CLASS_C) is
 			-- Put feature name `f_name' defined in `e_class'.
 		local
 			stone: FEATURE_NAME_STONE	
@@ -193,7 +193,7 @@ feature -- Input
 			append_stone (stone, f_name)
 		end
 
-	put_address (address: STRING a_name: STRING; e_class: CLASS_C) is
+	put_address (address: STRING; a_name: STRING; e_class: CLASS_C) is
 			-- Put `address' with `a_name' for `e_class'.
 		local
 			stone: OBJECT_STONE	
@@ -203,7 +203,7 @@ feature -- Input
 			append_stone (stone, address)
 		end
 
-	put_class_syntax (syn: SYNTAX_ERROR e_class: CLASS_C; str: STRING) is
+	put_class_syntax (syn: SYNTAX_ERROR; e_class: CLASS_C; str: STRING) is
 			-- Put `address' for `e_class'.
 		local
 			stone: CL_SYNTAX_STONE	
@@ -213,7 +213,7 @@ feature -- Input
 			append_stone (stone, str)
 		end
 
-	put_ace_syntax (syn: SYNTAX_ERROR str: STRING) is
+	put_ace_syntax (syn: SYNTAX_ERROR; str: STRING) is
 			-- Put `address' for `e_class'.
 		local
 			stone: ACE_SYNTAX_STONE	
@@ -313,7 +313,7 @@ feature -- Update
 
 feature -- Breakpoint update
 
-	highlight_breakable (f: E_FEATURE index: INTEGER) is
+	highlight_breakable (f: E_FEATURE; index: INTEGER) is
 			-- Highlight the line containing the `index'-th breakable point.
 		local
 			cb: CLICK_BREAKABLE
@@ -339,7 +339,7 @@ feature {NONE} -- Implementation
 	text_position: INTEGER
 			-- Current position in the structured document text
 
-	breakable_for (f: E_FEATURE index: INTEGER): CLICK_BREAKABLE is
+	breakable_for (f: E_FEATURE; index: INTEGER): CLICK_BREAKABLE is
 			-- Breakable stone for `f' with index `index'
 		local
 			cb: CLICK_BREAKABLE
@@ -368,7 +368,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	append_stone (a_stone: STONE stone_string: STRING) is
+	append_stone (a_stone: STONE; stone_string: STRING) is
 			-- Add `stone_string' to the text and 
 			-- record `a_stone' as clickable.
 		local

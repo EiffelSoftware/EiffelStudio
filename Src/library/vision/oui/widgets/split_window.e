@@ -80,9 +80,9 @@ feature -- Access
 
 feature -- Sizing policy
 
-	update is
+	update_split is
 		do
-			implementation.update
+			implementation.update_split
 		end
 
 feature -- Element change

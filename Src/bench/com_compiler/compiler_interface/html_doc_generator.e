@@ -12,9 +12,6 @@ inherit
 			make,
 			add_excluded_cluster,
 			remove_excluded_cluster,
-			load_project,
-			is_incompatible,
-			is_corrupted,
 			generate
 		end
 		
@@ -111,6 +108,7 @@ feature -- Basic operations
 			--excluded_clusters.object_comparison
 			if not excluded_clusters.has (a_cluster_name) then
 				excluded_clusters.extend (a_cluster_name)
+				io.putstring ("cluster: " + a_cluster_name + " added%N")
 			end
 		ensure then
 		end
@@ -148,6 +146,8 @@ feature -- Basic operations
 				doc_generator.set_directory (create {DIRECTORY}.make (generation_path))
 				doc_generator.set_all_universe
 				add_default_excluded_clusters
+				io.putstring ("number of cluster to be excluded : ")
+				io.putint (excluded_clusters.count)
 				doc_generator.set_excluded_indexing_items (excluded_clusters)
 				doc_generator.set_cluster_formats (true, false)
 				doc_generator.set_system_formats (true, true, true)

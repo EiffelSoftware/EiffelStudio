@@ -105,7 +105,7 @@ cluster
 
 	all vision2:		"$EIFFEL_SRC\library\vision2"
 		exclude
-			"gtk"; "release"; "obsolete"; "CVS"; "components"; "gtk2"; 
+			"gtk"; "release"; "obsolete"; "CVS"; "components"; "gtk2"; "ev_checkable_tree.e";
 		end
 
 	all time:		"$EIFFEL_SRC\library\time"

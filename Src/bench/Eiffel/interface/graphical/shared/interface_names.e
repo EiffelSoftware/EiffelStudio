@@ -80,8 +80,8 @@ feature -- Help text
 feature -- Accelerator, focus label and menu name
 
 	m_Apply: STRING is			"&Apply"
-	f_Case_storage: STRING is		"Case storage";
-	m_Case_storage: STRING is		"Cas&e storage";
+	f_Case_storage: STRING is		"Reverse engineer (case)";
+	m_Case_storage: STRING is		"&Reverse engineer (case)";
 	a_Clear_breakpoints: STRING is		"Ctrl<Key>l";
 	f_Clear_breakpoints: STRING is		"Clear stop points";
 	m_Clear_breakpoints: STRING is		"C&lear stop points%TCtrl+L";

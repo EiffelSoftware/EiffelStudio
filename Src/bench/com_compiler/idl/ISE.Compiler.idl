@@ -983,6 +983,9 @@ interface IEiffelSystemExternals: IDispatch
   [helpstring ("Remove a include path from the project.")]
   HRESULT remove_include_path ([in] BSTR include_path);
 
+  [helpstring ("Replace an include path in the project.")]
+  HRESULT replace_include_path ([in] BSTR new_include_path, [in] BSTR old_include_path);
+
   [helpstring ("Include paths.")]
   HRESULT include_paths ([out, retval] IEnumIncludePaths ** return_value);
 
@@ -991,6 +994,9 @@ interface IEiffelSystemExternals: IDispatch
 
   [helpstring ("Remove a object file from the project.")]
   HRESULT remove_object_file ([in] BSTR object_file);
+
+  [helpstring ("Replace an object file in the project.")]
+  HRESULT replace_object_file ([in] BSTR new_include_path, [in] BSTR old_object_file);
 
   [helpstring ("Object files.")]
   HRESULT object_files ([out, retval] IEnumObjectFiles ** return_value);

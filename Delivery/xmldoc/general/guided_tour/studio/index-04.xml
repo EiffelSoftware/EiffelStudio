@@ -1,5 +1,5 @@
 <document title="3 STARTING EIFFELSTUDIO AND OPENING A PROJECT" output="studio">
-	<meta_data/>
+	<meta_data></meta_data>
 	<paragraph>
 		<paragraph>
 			<link>
@@ -34,7 +34,7 @@
 		</paragraph>
 		<heading>
 			<size>2</size>
-			<content>Launching EiffelStudio under Unix or VM</content>
+			<content>Launching EiffelStudio under Unix or VMS</content>
 		</heading>
 		<paragraph>To launch EiffelStudio on Unix or VMS, change directory to 
 			<code>

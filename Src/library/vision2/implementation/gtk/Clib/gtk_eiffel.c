@@ -1740,6 +1740,24 @@ void c_gtk_pixmap_gdk_unref (GtkWidget *pixmap)
 	gdk_bitmap_unref (mask); 
 }
 
+/*==============================================================================
+ gtk_progressbar functions
+==============================================================================*/
+
+EIF_INTEGER c_gtk_progress_bar_style (GtkWidget *progressbar)
+{
+	GtkProgressBarStyle style;
+	
+	style = (GTK_PROGRESS_BAR (progressbar))->bar_style;
+
+	if (style != GTK_PROGRESS_CONTINUOUS)
+	{
+		return 1;
+	}
+	else
+	return 0;	
+}
+
 /*********************************
  *
  * Function : `'

@@ -226,15 +226,27 @@ feature {NONE} -- Compilation
 		local
 			finished: BOOLEAN;
 			temp: STRING
+			file_name: FILE_NAME
+			project_name: STRING
 		do
 			from
 			until
 				finished
 			loop
 				if Eiffel_project.save_error then
+					!! file_name.make_from_string (Eiffel_project.project_directory.name);
+					if Compilation_modes.is_precompiling then 
+						file_name.extend (eiffelgen);
+						file_name.set_file_name (dot_workbench)
+					else
+						project_name := clone (Eiffel_system.name)
+						project_name.append (Project_extension)
+						file_name.set_file_name (project_name)
+					end
+
 					!! temp.make (0);
 					temp.append ("Error: could not write to ");
-					temp.append (Project_file_name);
+					temp.append (file_name);
 					temp.append ("%NPlease check permissions and disk space");
 					io.error.putstring (temp);
 					io.error.new_line;

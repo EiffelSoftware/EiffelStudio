@@ -6,6 +6,9 @@ indexing
 
 class PROMPT 
 
+obsolete
+	"This is only implemented for Motif.  Use MEL_SELCTION_BOX instead."
+
 inherit
 
 	TERMINAL_OUI
@@ -41,7 +44,7 @@ feature {NONE} -- Creation
 			depth := a_parent.depth+1;
 			widget_manager.new (Current, a_parent);
 			identifier:= clone (a_name);
-			implementation:= toolkit.prompt (Current, man);
+			implementation:= toolkit.prompt (Current, man, a_parent);
 			implementation.set_widget_default;
 			set_default
 		end;
@@ -56,7 +59,7 @@ feature
 			not_a_command_void: a_command /= Void
 		do
 			implementation.add_cancel_action (a_command, argument)
-		end; -- add_cancel_action
+		end;
 
 	add_apply_action (a_command: COMMAND; argument: ANY) is
 			-- Add `a_command' to the list of action to execute when
@@ -66,7 +69,7 @@ feature
 			not_a_command_void: a_command /= Void
 		do
 			implementation.add_apply_action (a_command, argument)
-		end; -- add_apply_action
+		end;
 
 	add_help_action (a_command: COMMAND; argument: ANY) is
 			-- Add `a_command' to the list of action to execute when
@@ -76,7 +79,7 @@ feature
 			not_a_command_void: a_command /= Void
 		do
 			implementation.add_help_action (a_command, argument)
-		end; -- add_help_action
+		end;
 
 	add_ok_action (a_command: COMMAND; argument: ANY) is
 			-- Add `a_command' to the list of action to execute when
@@ -86,31 +89,31 @@ feature
 			not_a_command_void: a_command /= Void
 		do
 			implementation.add_ok_action (a_command, argument)
-		end; -- add_ok_action
+		end;
 
 	hide_apply_button is
 			-- Make apply button invisible.
 		do
 			implementation.hide_apply_button
-		end; -- hide_apply_button
+		end;
 
 	hide_cancel_button is
 			-- Make cancel button invisible.
 		do
 			implementation.hide_cancel_button
-		end; -- hide_cancel_button
+		end;
 
 	hide_help_button is
 			-- Make help button invisible.
 		do
 			implementation.hide_help_button
-		end; -- hide_help_button
+		end;
 
 	hide_ok_button is
 			-- Make ok button invisible.
 		do
 			implementation.hide_ok_button
-		end; -- hide_ok_button
+		end;
 
 	
 feature {G_ANY, G_ANY_I, WIDGET_I, TOOLKIT}
@@ -129,7 +132,7 @@ feature
 			not_a_command_void: a_command /= Void
 		do
 			implementation.remove_cancel_action (a_command, argument)
-		end; -- remove_cancel_action
+		end;
 
 	remove_apply_action (a_command: COMMAND; argument: ANY) is
 			-- Remove `a_command' from the list of action to execute when
@@ -139,7 +142,7 @@ feature
 			not_a_command_void: a_command /= Void
 		do
 			implementation.remove_apply_action (a_command, argument)
-		end; -- remove_apply_action
+		end;
 
 	remove_help_action (a_command: COMMAND; argument: ANY) is
 			-- Remove `a_command' from the list of action to execute when
@@ -149,7 +152,7 @@ feature
 			not_a_command_void: a_command /= Void
 		do
 			implementation.remove_help_action (a_command, argument)
-		end; -- remove_help_action
+		end;
 
 	remove_ok_action (a_command: COMMAND; argument: ANY) is
 			-- Remove `a_command' from the list of action to execute when
@@ -159,13 +162,13 @@ feature
 			not_a_command_void: a_command /= Void
 		do
 			implementation.remove_ok_action (a_command, argument)
-		end; -- remove_ok_action
+		end;
 
 	selection_text: STRING is
 			-- Current text in selection box
 		do
 			Result := implementation.selection_text
-		end; -- selection_text
+		end;
 
 	set_apply_label (a_label: STRING) is
 			-- Set `a_label' as label for apply button,
@@ -175,7 +178,7 @@ feature
 			not_label_void: a_label /= Void
 		do
 			implementation.set_apply_label (a_label)
-		end; -- set_apply_label
+		end;
 
 	set_cancel_label (a_label: STRING) is
 			-- Set `a_label' as label for cancel button,
@@ -185,7 +188,7 @@ feature
 			not_label_void: a_label /=Void
 		do
 			implementation.set_cancel_label (a_label)
-		end; -- set_cancel_label
+		end;
 
 	set_help_label (a_label: STRING) is
 			-- Set `a_label' as label for help button,
@@ -195,7 +198,7 @@ feature
 			not_label_void: a_label /=Void
 		do
 			implementation.set_help_label (a_label)
-		end; -- set_help_label
+		end;
 
 	set_ok_label (a_label: STRING) is
 			-- Set `a_label' as label for ok button,
@@ -205,7 +208,7 @@ feature
 			not_label_void: a_label /=Void
 		do
 			implementation.set_ok_label (a_label)
-		end; -- set_ok_label
+		end;
 
 	set_selection_label (a_label: STRING) is
 			-- Set `a_label' as selection label,
@@ -215,7 +218,7 @@ feature
 			not_label_void: a_label /=Void
 		do
 			implementation.set_selection_label (a_label)
-		end; -- set_selection_label
+		end;
 
 	set_selection_text (a_text: STRING) is
 			-- Set selection text to `a_text'.
@@ -224,7 +227,7 @@ feature
 			a_text_not_void: a_text /= Void
 		do
 			implementation.set_selection_text (a_text)
-		end; -- set_selection_text
+		end;
 
 	show_apply_button is
 			-- Make apply button visible.
@@ -232,7 +235,7 @@ feature
 			exists: not destroyed
 		do
 			implementation.show_apply_button
-		end; -- show_apply_button
+		end;
 
 	show_cancel_button is
 			-- Make cancel button visible.
@@ -240,7 +243,7 @@ feature
 			exists: not destroyed
 		do
 			implementation.show_cancel_button
-		end; -- show_cancel_button
+		end;
 
 	show_help_button is
 			-- Make help button visible.
@@ -248,7 +251,7 @@ feature
 			exists: not destroyed
 		do
 			implementation.show_help_button
-		end; -- show_help_button
+		end;
 
 	show_ok_button is
 			-- Make ok button visible.
@@ -256,7 +259,7 @@ feature
 			exists: not destroyed
 		do
 			implementation.show_ok_button
-		end -- show_ok_button
+		end 
 
 end 
 

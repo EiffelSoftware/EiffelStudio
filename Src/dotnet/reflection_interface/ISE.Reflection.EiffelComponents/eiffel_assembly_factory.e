@@ -157,9 +157,9 @@ feature -- Basic Operations
 		local
 			added: INTEGER
 		do
-			added := types.Add (a_type)
+			added := types.extend (a_type)
 		ensure
-			type_added: types.Contains (a_type)
+			type_added: types.has (a_type)
 		end
 
 invariant

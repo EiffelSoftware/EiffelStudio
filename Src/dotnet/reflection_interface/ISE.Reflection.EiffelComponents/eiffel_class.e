@@ -523,7 +523,7 @@ feature -- Basic Operations
 			inheritance_clauses.put (3, select_clauses)
 			inheritance_clauses.put (4, export_clauses)
 			
-			parents.Add (a_name, inheritance_clauses)
+			parents.put_i_th (a_name, inheritance_clauses)
 		ensure
 			parent_added: parents.Contains_Key (a_name)
 		end
@@ -538,9 +538,9 @@ feature -- Basic Operations
 		local
 			routine_added: INTEGER
 		do
-			routine_added := creation_routines.Add (a_name)
+			routine_added := creation_routines.extend (a_name)
 		ensure
-			routine_added: creation_routines.Contains (a_name)
+			routine_added: creation_routines.has (a_name)
 		end
 
 	add_initialization_feature (a_feature: EIFFEL_FEATURE) is
@@ -552,9 +552,9 @@ feature -- Basic Operations
 		local
 			feature_added: INTEGER
 		do
-			feature_added := initialization_features.Add (a_feature)
+			feature_added := initialization_features.extend (a_feature)
 		ensure
-			feature_added: initialization_features.Contains (a_feature)
+			feature_added: initialization_features.has (a_feature)
 		end
 		
 	add_access_feature (a_feature: EIFFEL_FEATURE) is
@@ -566,9 +566,9 @@ feature -- Basic Operations
 		local
 			feature_added: INTEGER
 		do
-			feature_added := access_features.Add (a_feature)
+			feature_added := access_features.extend (a_feature)
 		ensure
-			feature_added: access_features.Contains (a_feature)
+			feature_added: access_features.has (a_feature)
 		end
 		
 	add_element_change_feature (a_feature: EIFFEL_FEATURE) is
@@ -580,9 +580,9 @@ feature -- Basic Operations
 		local
 			feature_added: INTEGER
 		do
-			feature_added := element_change_features.Add (a_feature)
+			feature_added := element_change_features.extend (a_feature)
 		ensure
-			feature_added: element_change_features.Contains (a_feature)
+			feature_added: element_change_features.has (a_feature)
 		end
 		
 	add_basic_operation (a_feature: EIFFEL_FEATURE) is
@@ -594,9 +594,9 @@ feature -- Basic Operations
 		local
 			feature_added: INTEGER
 		do
-			feature_added := basic_operations.Add (a_feature)
+			feature_added := basic_operations.extend (a_feature)
 		ensure
-			feature_added: basic_operations.Contains (a_feature)
+			feature_added: basic_operations.has (a_feature)
 		end
 		
 	add_unary_operator (a_feature: EIFFEL_FEATURE) is
@@ -608,9 +608,9 @@ feature -- Basic Operations
 		local
 			feature_added: INTEGER
 		do
-			feature_added := unary_operators_features.Add (a_feature)
+			feature_added := unary_operators_features.extend (a_feature)
 		ensure
-			feature_added: unary_operators_features.Contains (a_feature)
+			feature_added: unary_operators_features.has (a_feature)
 		end
 		
 	add_binary_operator (a_feature: EIFFEL_FEATURE) is
@@ -622,9 +622,9 @@ feature -- Basic Operations
 		local
 			feature_added: INTEGER
 		do
-			feature_added := binary_operators_features.Add (a_feature)
+			feature_added := binary_operators_features.extend (a_feature)
 		ensure
-			feature_added: binary_operators_features.Contains (a_feature)
+			feature_added: binary_operators_features.has (a_feature)
 		end
 		
 	add_special_feature (a_feature: EIFFEL_FEATURE) is
@@ -636,9 +636,9 @@ feature -- Basic Operations
 		local
 			feature_added: INTEGER
 		do
-			feature_added := special_features.Add (a_feature)
+			feature_added := special_features.extend (a_feature)
 		ensure
-			feature_added: special_features.Contains (a_feature)
+			feature_added: special_features.has (a_feature)
 		end
 		
 	add_implementation_feature (a_feature: EIFFEL_FEATURE) is
@@ -650,9 +650,9 @@ feature -- Basic Operations
 		local
 			feature_added: INTEGER
 		do
-			feature_added := implementation_features.Add (a_feature)
+			feature_added := implementation_features.extend (a_feature)
 		ensure
-			feature_added: implementation_features.Contains (a_feature)
+			feature_added: implementation_features.has (a_feature)
 		end
 	
 	add_invariant (a_tag, a_text: STRING) is
@@ -670,7 +670,7 @@ feature -- Basic Operations
 			create an_invariant.make (2)
 			an_invariant.put (0, a_tag)
 			an_invariant.put (1, a_text)
-			invariant_added := invariants.Add (an_invariant)	
+			invariant_added := invariants.extend (an_invariant)	
 		end
 
 feature {NONE} -- Implementation

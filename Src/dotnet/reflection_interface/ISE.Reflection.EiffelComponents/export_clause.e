@@ -89,9 +89,9 @@ feature -- Basic Operations
 			if exportation_list = Void then
 				create exportation_list.make
 			end
-			added := exportation_list.add (a_class_name)
+			added := exportation_list.extend (a_class_name)
 		ensure
-			exportation_added: exportation_list.contains (a_class_name)
+			exportation_added: exportation_list.has (a_class_name)
 		end
 		
 	string_representation: STRING is

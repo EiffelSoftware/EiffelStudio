@@ -382,7 +382,7 @@ feature -- Basic Operations
 		local
 			argument_added: INTEGER
 		do
-			argument_added := arguments.Add (an_argument)
+			argument_added := arguments.extend (an_argument)
 		end
 			
 	add_precondition (a_tag, a_text: STRING) is
@@ -400,7 +400,7 @@ feature -- Basic Operations
 			create a_precondition.make (2)
 			a_precondition.put (0, a_tag)
 			a_precondition.put (1, a_text)
-			precondition_added := preconditions.Add (a_precondition)	
+			precondition_added := preconditions.extend (a_precondition)	
 		end
 
 	add_postcondition (a_tag, a_text: STRING) is
@@ -418,7 +418,7 @@ feature -- Basic Operations
 			create a_postcondition.make (2)
 			a_postcondition.put (0, a_tag)
 			a_postcondition.put (1, a_text)
-			postcondition_added := postconditions.Add (a_postcondition)	
+			postcondition_added := postconditions.extend (a_postcondition)	
 		end
 
 	add_comment (a_comment: STRING) is
@@ -431,9 +431,9 @@ feature -- Basic Operations
 		local
 			comment_added: INTEGER
 		do
-			comment_added := comments.Add (a_comment)
+			comment_added := comments.extend (a_comment)
 		ensure
-			comment_added: comments.Contains (a_comment)
+			comment_added: comments.has(a_comment)
 		end
 		
 invariant

@@ -1,0 +1,62 @@
+ISE Eiffel 5 
+============
+
+This file contains a summary of the ISE Eiffel installation
+In case of problems, refer to the web page at
+http://support.eiffel.com
+
+
+Installing the Files
+----------------------
+
+The installation of the files are done by copying the files from the
+delivery medium to the hard disk, for example to directory
+/usr/local/Eiffel5x (where x is the minor version of Eiffel 5, be it 2,3 and so on). If you have an Eiffel 5 on CD-ROM, you can either copy
+the whole directory Eiffel5x to your hard disk or run directly from the
+CD-ROM.
+
+If the delivery medium is a gzipped tar file, you need to untar the file to
+the desired location. For example,
+
+cd /usr/local
+gunzip -c _delivery_file.tar.gz | tar xvf -
+
+This will install ISE Eiffel 5 in to /usr/local/Eiffel5x 
+
+
+Setting the Environment Variables
+---------------------------------
+
+Set environment variable ISE_EIFFEL to the Eiffel5x directory you want to run
+Eiffel from. This directory can be on your hard disk (for example
+/usr/local/Eiffel5x) or on CD-ROM.
+
+Set your ISE_PLATFORM environment variable to specify your platform.
+For example for Linux computers, the value should be `linux-glibc2.1'.
+
+Add the following directory to your path: $ISE_EIFFEL/studio/spec/$ISE_PLATFORM/bin.
+
+If you choose to run Eiffel from the CD-ROM you have to copy the directory
+Eiffel5x/install to you hard disk and set environment variable ISE_LICENSE to
+point there.
+
+Gtk+
+----
+
+ISE Eiffel 5 requires Gtk+ 1.2.6 or above to function correctly.  You can check that you have this installed correctly by typing `gtk-config --version'.  If the reply is not `1.2.*' then gtk+ is not installed correctly. If the reply is 1.2.* you can skip the rest of this section.
+
+Included with the ISE Eiffel delivery is the source code for Gtk+, to install Gtk+ on your system look in the $ISE_EIFFEL/library/gel directory.  There you can conveniently type `Make' and then Gtk+ will be compiled, you will then need to type 'Make install' (you may need to be Root to do this) to copy over the gtk+ configuration files required for C compilation.
+
+You will then need to set/update the LD_LIBRARY_PATH environment variable to allow the linker to find the gtk libraries.  This should be set to include the $ISE_EIFFEL/library/gel/gtk/lib directory.  If you have a version of gtk that is below 1.2.6 you will have to make sure that this directory comes before the directory where the existing gtk+ library files are based.
+
+EiffelStudio
+------------
+
+Now everything should be Ok and you should be able to run the compiler.
+Launch 'estudio' for the interactive graphical user interface of the
+compiler of 'ec' for command line interface.
+
+EiffelStudio Appearance
+-----------------------
+
+EiffelStudio for Unix uses the gtk+ theme engine to allow for custom appearance such as changing the default font size and color of windows, etc..  If you do not have a theme manager (such as that provided with Gnome) you can copy the .gtkrc file from $ISE_EIFFEL/eifinit/studio/spec/gtk directory to your $HOME directory.  You can then edit the XLFD in the .gtkrc file to alter the default size of the fonts that Studio employs. The current font point size is 10, recommended values are 10, 12 or 14. 

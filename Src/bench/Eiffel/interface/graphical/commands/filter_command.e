@@ -14,7 +14,11 @@ inherit
 			text_window
 		end;
 	SHARED_FORMAT_TABLES;
-	SHARED_BENCH_RESOURCES
+	SHARED_BENCH_RESOURCES;
+	WARNER_CALLBACKS
+		rename
+			execute_warner_ok as modified_warner_ok_press
+		end
 
 creation
 
@@ -29,6 +33,20 @@ feature -- Initialization
 			!!filter_window.make (c, Current);
 			init (c, a_text_window);
 			add_button_click_action (3, Current, Void)
+		end;
+
+feature -- Callbacks
+
+	execute_warner_help is
+		do
+		end;
+
+	modified_warner_ok_press (argument: ANY) is
+			-- If it comes here this means ok has
+			-- been pressed in the warner window
+			-- for text modification.
+		do
+			text_window.last_format.filter (filter_name)
 		end;
 
 feature -- Properties
@@ -93,11 +111,6 @@ feature {NONE} -- Implementation
 			if argument = Void then
 					-- 3rd button pressed
 				filter_window.call 
-			elseif argument = last_warner then
-					-- If it comes here this means ok has
-					-- been pressed in the warner window
-					-- for text modification.
-				text_window.last_format.filter (filter_name)
 			elseif argument = filter_window then
 					-- Display the filter output in `text_window'
 				if text_window.changed then

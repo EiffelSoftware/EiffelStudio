@@ -496,6 +496,7 @@ feature {NONE} -- Translation
 			filename: STRING -- the filename of the sub makefile
 			number: INTEGER -- the number of the Eobj file
 			F_done, D_done, C_done: BOOLEAN
+			emain_line: STRING
 		do
 			debug ("progress")
 				io.putstring ("%Tdependencies%N")
@@ -527,8 +528,25 @@ feature {NONE} -- Translation
 				makefile.putchar (operating_environment.directory_separator)
 
 				if filename.is_equal (options.get_string ("emain_text", Void)) then
-					makefile.putstring (options.get_string ("emain_obj_text", Void))
-					makefile.putstring (": Makefile%N")
+					emain_line := lastline.substring( lastline.index_of ('$', 1), lastline.count)
+					if emain_line.count > 0 then
+						subst_eiffel (emain_line)
+						subst_platform (emain_line)
+						subst_dir_sep (emain_line)
+						makefile.putstring (options.get_string ("emain_obj_text", Void))
+						makefile.putstring (": Makefile ")
+						makefile.putstring (emain_line)
+						makefile.putstring ("%N%T$(MV) ")
+						makefile.putstring (emain_line)
+						makefile.putchar (' ')
+						makefile.putstring (dir)
+						makefile.putchar (operating_environment.directory_separator)
+						makefile.putstring ("emain.c%N")
+						read_next
+					else
+						makefile.putstring (options.get_string ("emain_obj_text", Void))
+						makefile.putstring (": Makefile%N")
+					end
 				else
 					dependent_directories.extend (dir)
 

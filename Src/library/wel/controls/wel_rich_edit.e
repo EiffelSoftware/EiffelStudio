@@ -135,8 +135,11 @@ feature -- Status report
 			-- Has a current selection?
 		local
 			temp: WEL_CHARACTER_RANGE
+			a, b: INTEGER
 		do
 			temp := selection_cache
+			a := temp.minimum
+			b := temp.maximum
 			Result := temp.minimum /= temp.maximum
 		end
 
@@ -313,12 +316,8 @@ feature -- Status setting
 	set_selection (start_position, end_position: INTEGER) is
 			-- Set the selection between `start_position'
 			-- and `end_position'.
-		local
-			range: WEL_CHARACTER_RANGE
 		do
-			range := selection_cell
-			range.set_range (start_position, end_position)
-			cwin_send_message (item, Em_exsetsel, 0, range.to_integer)
+			cwin_send_message (item, Em_setsel, start_position, end_position)
 		end
 
 	set_caret_position (position: INTEGER) is

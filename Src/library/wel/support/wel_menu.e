@@ -566,10 +566,10 @@ feature {NONE} -- Implementation
 
 feature {NONE} -- Externals
 
-	cwin_draw_menu_bar (hmenu: POINTER) is
+	cwin_draw_menu_bar (hwnd: POINTER) is
 			-- SDK drawMenuBar
 		external
-			"C [macro <wel.h>] (HMENU)"
+			"C [macro <wel.h>] (HWND)"
 		alias
 			"DrawMenuBar"
 		end
@@ -579,7 +579,7 @@ feature {NONE} -- Externals
 		external
 			"C [macro <wel.h>]: EIF_POINTER"
 		alias
-			"CreateMenu ()"
+			"CreateMenu()"
 		end
 
 	cwin_create_popup_menu: POINTER is
@@ -587,7 +587,7 @@ feature {NONE} -- Externals
 		external
 			"C [macro <wel.h>]: EIF_POINTER"
 		alias
-			"CreatePopupMenu ()"
+			"CreatePopupMenu()"
 		end
 
 	cwin_append_menu (hmenu: POINTER; flags, new_item: INTEGER;

@@ -2153,14 +2153,15 @@ int chunk_type;
 	 * If ALL_T is used, then the whole memory is scanned and coalesced.
 	 */
 
-	if (!gc_running) {
-		double dummy;
+	if (eif_profiler_on)
+		if (!gc_running) {
+			double dummy;
 
-		gc_running = 1;
-		getcputime(&dummy,&last_gc_time);
-		started_here = 1;
-		gc_ran = 1;
-	}
+			gc_running = 1;
+			getcputime(&dummy,&last_gc_time);
+			started_here = 1;
+			gc_ran = 1;
+		}
 
 	switch (chunk_type) {
 	case C_T:						/* Only walk through the C chunks */
@@ -2199,13 +2200,14 @@ int chunk_type;
 	flush;
 #endif
 
-	if (started_here) {			/* Keep track of this run */
-		double dummy, new_time;
+	if (eif_profiler_on)
+		if (started_here) {			/* Keep track of this run */
+			double dummy, new_time;
 
-		getcputime(&dummy, &new_time);
-		last_gc_time = new_time - last_gc_time;
-		gc_running = 0;
-	}
+			getcputime(&dummy, &new_time);
+			last_gc_time = new_time - last_gc_time;
+			gc_running = 0;
+		}
 
 	return max_size;		/* Maximum size of coalesced block or 0 */
 }

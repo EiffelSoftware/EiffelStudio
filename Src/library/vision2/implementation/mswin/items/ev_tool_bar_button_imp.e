@@ -266,6 +266,18 @@ feature {NONE} -- Implementation, pick and drop
 			parent_imp.release_capture
 		end
 
+	set_heavy_capture is
+			-- Grab user input.
+		do
+			parent_imp.set_heavy_capture
+		end
+
+	release_heavy_capture is
+			-- Release user input.
+		do
+			parent_imp.release_heavy_capture
+		end
+
 feature {EV_ANY_I} -- Interface
 
 	interface: EV_TOOL_BAR_BUTTON
@@ -293,6 +305,9 @@ end -- class EV_TOOL_BAR_BUTTON_IMP
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.15  2000/03/27 22:28:33  rogers
+--| Added set_heavy_capture and release_heavy_capture.
+--|
 --| Revision 1.14  2000/03/20 23:34:56  pichery
 --| - Added gray pixmap notion. Added the possibility to attach a gray pixmap
 --|   to a button.
@@ -319,7 +334,8 @@ end -- class EV_TOOL_BAR_BUTTON_IMP
 --| added --| FIXME Not for release
 --|
 --| Revision 1.9.6.7  2000/01/27 01:10:56  rogers
---| renamed is_insensitive to is_sensitive, and replaced set_insensitive with enable_sensitive and disable_sensitive.
+--| renamed is_insensitive to is_sensitive, and replaced set_insensitive with enable_sensitive and 
+--| disable_sensitive.
 --|
 --| Revision 1.9.6.6  2000/01/25 17:37:51  brendel
 --| Removed code associated with old events.
@@ -335,7 +351,8 @@ end -- class EV_TOOL_BAR_BUTTON_IMP
 --| Removed undefinition of pixmap_size_ok, as it is no longer inherited at all.
 --|
 --| Revision 1.9.6.2  1999/12/17 17:30:28  rogers
---| Altered to fit in with the review branch. Make takes an interface. Now inherits from EV_PICK_AND_DROPABLE_IMP.
+--| Altered to fit in with the review branch. Make takes an interface. Now inherits from 
+--| EV_PICK_AND_DROPABLE_IMP.
 --|
 --| Revision 1.9.6.1  1999/11/24 17:30:16  oconnor
 --| merged with DEVEL branch

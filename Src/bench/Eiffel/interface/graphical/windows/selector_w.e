@@ -13,6 +13,15 @@ inherit
 		end
 	COMMAND
 
+	HOLE 
+		redefine
+			compatible
+			, process_class
+			, process_classi
+			, process_feature
+		end
+
+
 	WINDOWS
 	WINDOW_ATTRIBUTES
 	SHARED_EIFFEL_PROJECT
@@ -29,6 +38,7 @@ feature --Initialization
 			set_widget_attributes (Current)
  			add_click_action (Current,"selector_command")
 			selector_parent?= a_parent
+			register
 		end
 
 	init_toggle (toggle: TOGGLE_B) is
@@ -42,6 +52,56 @@ feature --Initialization
 				hide_selector
 			end
 		end;
+
+feature -- Redefine
+
+	stone_type:INTEGER is  
+			-- A selector window does not have a correspondant stone.
+		do
+		end
+
+	target:WIDGET is
+		do
+			Result := Current
+		end
+
+	compatible(dropped: STONE): BOOLEAN is
+		do
+			Result := True
+		end
+
+	
+feature -- Hole processing
+
+	process_classi (a_stone: CLASSI_STONE) is
+			-- Process dropped stone `a_stone'.
+		local
+			new_tool: CLASS_W
+		do
+			new_tool := window_manager.class_window
+			new_tool.display
+			new_tool.process_classi (a_stone)
+		end
+ 
+	process_class (a_stone: CLASSC_STONE) is
+			-- Process dropped stone `a_stone'.
+		local
+			new_tool: CLASS_W
+		do
+			new_tool := window_manager.class_window
+			new_tool.display
+			new_tool.process_class (a_stone)
+		end
+ 
+	process_feature (a_stone: FEATURE_STONE) is
+			-- Process dropped stone `a_stone'.
+		local
+			new_tool: ROUTINE_W
+		do
+			new_tool := window_manager.routine_window
+			new_tool.display
+			new_tool.process_feature (a_stone)
+		end
 
 feature -- Access
 
@@ -87,11 +147,11 @@ feature -- User interface
 			t_name := clone (t_w.eb_shell.icon_name)
 			!! tmp.make (t_w)
 
-   			if t_name /= Void and then is_tool_opened (t_name,t_w)
-  			then
 -- FIXME JOC: still need to decide what to do.
+--    			if t_name /= Void and then is_tool_opened (t_name,t_w)
+--   			then
 --				tmp.set_read_only
-			end
+--  			end
 
 			from
 				start
@@ -120,35 +180,6 @@ feature -- User interface
 				remove
 			end
 		end
-
-
--- 	update is
--- 		local
--- 			tmp: SCROLLABLE_LIST_SELECTOR_ELEMENT
--- 			local_tool:TOOL_W
--- 			active_tool_editors: LINKED_LIST[TOOL_W]
--- 			t:STRING
--- 		do
--- 			io.put_string ("update")
--- 			wipe_out
--- 			active_tool_editors := window_manager.class_win_mgr.active_editors
--- 			from 
--- 				active_tool_editors.start
--- 			until
--- 				active_tool_editors.after
--- 			loop
--- 				local_tool := active_tool_editors.item
--- 				t:= local_tool.eb_shell.icon_name
--- 				if
--- 					local_tool.realized 
--- 					and then not local_tool.eb_shell.icon_name.empty 
--- 				then
--- 					!!tmp.make(local_tool)
--- 					extend(tmp)
--- 				end
--- 				active_tool_editors.forth
--- 			end
--- 		end
 
 feature -- Basic operations
 

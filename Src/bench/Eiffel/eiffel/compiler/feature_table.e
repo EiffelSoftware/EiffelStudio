@@ -790,13 +790,14 @@ feature -- API
 			-- API table of features
 		local
 			cont: like content;
-			i, c: INTEGER;
+			i, c, c_id: INTEGER;
 			feat: FEATURE_I;
 			other_content: ARRAY [E_FEATURE];
 		do
 			!! Result;
+			c_id := feat_tbl_id;
 			Result.basic_copy_from (Current);
-			Result.set_class_id (feat_tbl_id);
+			Result.set_class_id (c_id);
 			from
 				cont := content;
 				c := cont.count;
@@ -807,7 +808,7 @@ feature -- API
 			loop
 				feat := cont.item (i);
 				if feat /= Void then
-					other_content.put (feat.api_feature, i);
+					other_content.put (feat.api_feature (c_id), i);
 				end;
 				i := i + 1
 			end;

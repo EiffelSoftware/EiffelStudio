@@ -2056,13 +2056,16 @@ feature -- DLE
 
 feature -- Api creation
 
-	api_feature: E_FEATURE is
+	api_feature (associated_class_id: INTEGER): E_FEATURE is
 			-- API representation of Current
+		require
+			positive_associated_class_id: associated_class_id > 0
 		local
 			bi: INTEGER
 		do
 			Result := new_api_feature;
 			Result.set_written_in (written_in);
+			Result.set_associated_class_id (associated_class_id);
 			bi := body_index;
 			if bi /= 0 then
 				Result.set_body_id (Body_index_table.item (bi));

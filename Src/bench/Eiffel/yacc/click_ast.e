@@ -10,14 +10,14 @@ inherit
 
 feature -- Properties
 
-    start_position: INTEGER;
+	start_position: INTEGER;
 			-- Start position of clickable
 
-    end_position: INTEGER;
+	end_position: INTEGER;
 			-- End position of clickable
 
-    node: CLICKABLE_AST;
-        	-- Node AST that has a position
+	node: CLICKABLE_AST;
+			-- Node AST that has a position
 
 feature {CLASS_AS_B} 
 
@@ -52,12 +52,12 @@ feature {YACC_LACE, COMPILER_EXPORTER}
 
 feature {NONE} -- Implementation
 
-    node_function: like node is 
+	node_function: like node is 
 		do 
 			Result := node 
 		end;
 
-    start_function: INTEGER is 
+	start_function: INTEGER is 
 		do 
 			Result := start_position 
 		end

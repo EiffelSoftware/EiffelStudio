@@ -119,6 +119,7 @@ feature {NONE} -- Implementation
 	perform_compilation (arg: ANY) is
 			-- The actual compilation process.
 		do
+			license_display
 			Eiffel_project.freeze
 		end;
 

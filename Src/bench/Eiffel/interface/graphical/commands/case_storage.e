@@ -12,6 +12,7 @@ inherit
 	EB_CONSTANTS;
 	ISE_COMMAND;
 	WINDOWS
+	SHARED_LICENSE
 
 feature -- Properties
 
@@ -54,6 +55,9 @@ feature {NONE} -- Implementation
 			mp: MOUSE_PTR
 		do
 			if project_tool.initialized then
+				if license.demo_mode then
+					license.get_license
+				end
 				!! mp.set_watch_cursor;
 				format_storage.execute;
 				mp.restore

@@ -16,7 +16,7 @@ inherit
 		redefine
 			c_code_directory, launch_c_compilation,
 			confirm_and_compile, name, menu_name, accelerator,
-			finalization_error, perform_compilation
+			finalization_error, perform_compilation, license_frequency
 		end;
 	UPDATE_PROJECT
 		rename
@@ -26,7 +26,7 @@ inherit
 			c_code_directory, launch_c_compilation,
 			confirm_and_compile, name, menu_name, accelerator,
 			finalization_error, perform_compilation,
-			discard_assertions, keep_assertions
+			discard_assertions, keep_assertions, license_frequency
 		select
 			discard_assertions, keep_assertions
 		end;
@@ -149,6 +149,7 @@ feature {NONE} -- Implementation
 		local
 			temp: STRING;
 		do
+			license_display
 			-- If the argument is `warner' the user 
 			-- pressed on "Keep assertions"
 			Eiffel_project.finalize (last_warner /= Void and 
@@ -189,5 +190,8 @@ feature {NONE} -- Implementation
 				window.set_changed (False)
 			end
 		end;
- 
+
+	license_frequency: INTEGER is 1
+ 			-- Frequency of license appearance in demo mode.
+
 end -- class FINALIZE_PROJECT

@@ -279,6 +279,7 @@ feature {NONE} -- Implementation
 	perform_compilation (argument: ANY) is
 			-- The real compilation. (This is melting.)
 		do
+			license_display
 			if is_quick_melt then
 				Eiffel_project.quick_melt
 			else
@@ -465,5 +466,27 @@ feature {NONE} -- Implementation Execution
 				end
 			end
 		end
+
+	license_display is
+			-- Display the license reminder.
+		do
+			if license.demo_mode then
+				number_of_compilations := number_of_compilations + 1
+				if number_of_compilations \\ license_frequency = 0 then
+					license.get_license
+				end
+			end
+		end
+
+feature {NONE} -- Implementation
+
+	license_frequency: INTEGER is
+			-- Frequency of license appearance in demo mode.
+		once
+			Result := 5
+		end
+
+	number_of_compilations: INTEGER
+			-- Number of compilations done in a certain mode so far.
 
 end -- class UPDATE_PORJECT

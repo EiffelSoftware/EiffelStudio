@@ -10,7 +10,7 @@ class
 inherit
 	WEL_APPLICATION
 
-creation
+create
 	make
 
 feature

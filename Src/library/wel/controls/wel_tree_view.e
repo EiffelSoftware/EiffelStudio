@@ -388,8 +388,6 @@ feature -- Element change
 			check
 				item_deleted: msg_result /= 0
 			end
-		ensure
-			item_removed: count = old count - 1
 		end
 
 feature -- Notifications

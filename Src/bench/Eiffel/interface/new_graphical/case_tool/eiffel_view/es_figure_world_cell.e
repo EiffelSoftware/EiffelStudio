@@ -62,8 +62,7 @@ feature {NONE} -- Implementation
 			-- Pointer button was pressed in `drawing_area'.
 		do
 			if button = 1 then
-				if projector.is_figure_selected then		
---					drawing_area.enable_capture
+				if projector.is_figure_selected then
 					is_scroll := True	
 				elseif not ev_application.ctrl_pressed then
 					drawing_area.set_pointer_style (cursors.closed_hand_cursor)
@@ -72,6 +71,7 @@ feature {NONE} -- Implementation
 					start_y := ay
 					start_horizontal_value := horizontal_scrollbar.value
 					start_vertical_value := vertical_scrollbar.value
+					drawing_area.enable_capture
 				else
 					is_scroll := True
 				end
@@ -87,8 +87,8 @@ feature {NONE} -- Implementation
 			if is_hand then
 				is_hand := False
 				drawing_area.set_pointer_style (cursors.open_hand_cursor)
+				drawing_area.disable_capture
 			end
---			drawing_area.disable_capture
 		end
 		
 	on_mouse_wheel_on_drawing_area (i: INTEGER) is

@@ -6,6 +6,9 @@ indexing
 class
 	EB_CONFIRM_SAVE_DIALOG
 
+-- Warning: All the clients of this class have a bug.
+-- If they are called twice, the confirmer is not called.
+
 inherit
 	EV_WARNING_DIALOG
 

@@ -40,19 +40,6 @@ inherit
 			interface as textable_interface
 		end
 
-feature -- Access
-
-	text: STRING
-			-- Current label of the item
-
-feature -- Element change
-
-	set_text (txt: STRING) is
-			-- Make `txt' the new label of the item.
-		do
-			text := txt
-		end
-
 feature {NONE}
 
 	interface: EV_SIMPLE_ITEM
@@ -80,6 +67,10 @@ end -- class EV_SIMPLE_ITEM_IMP
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.17  2000/02/23 02:17:39  brendel
+--| Removed features `text' and `set_text', since they were redefined
+--| in all descendants.
+--|
 --| Revision 1.16  2000/02/19 05:44:59  oconnor
 --| released
 --|

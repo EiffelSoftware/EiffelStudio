@@ -37,7 +37,8 @@ feature
 
 	stone_type: INTEGER is
 		do
-			Result := Stone_types.instance_type
+--			Result := Stone_types.instance_type	
+			Result := Stone_types.command_type	
 		end;
 
 feature {NONE}

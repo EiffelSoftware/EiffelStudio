@@ -21,83 +21,31 @@ inherit
 	
 feature -- Convertibility
 
-	convert_byte_node (a_expr: EXPR_B; a_source_type, a_target_type: CL_TYPE_A; n: INTEGER): EXPR_B is
-			-- Convert byte node `a_expr' to an expression that conforms to `a_target_type'.
+	convert_byte_node (a_expr: EXPR_B; a_conversion_info: FEATURE_CONVERSION_INFO): EXPR_B is
+			-- Convert byte node `a_expr' to an expression that conforms to `a_conversion.target_type'.
 			-- Register used types and features for dead code removal and incrementality.
 		require
 			a_expr_not_void: a_expr /= Void
-			a_source_type_not_void: a_source_type /= Void
-			a_target_type_not_void: a_target_type /= Void
-			n_positive: n > 0 or n = -1
+			a_conversion_info_not_void: a_conversion_info /= Void
 		local
-			l_class, l_other: CLASS_C
-			l_feat: FEATURE_I
-			l_creation_expr: CREATION_EXPR_B
-			l_create_type: CREATE_TYPE
-			l_access: CALL_ACCESS_B
-			l_params: BYTE_LIST [PARAMETER_B]
-			l_param: PARAMETER_B
-			l_nested: NESTED_B
-			l_target_type: CL_TYPE_I
-			l_access_expr: ACCESS_EXPR_B
+			l_source_type, l_target_type: TYPE_A
 		do
-			l_target_type := a_target_type.type_i
-			l_class := a_source_type.associated_class
-			l_other := a_target_type.associated_class
+			l_source_type := a_conversion_info.source_type
+			l_target_type := a_conversion_info.target_type
 
-			if (l_other.convert_from /= Void and then l_other.convert_from.has (a_source_type)) then
-				if is_basic_conversion (a_expr, a_source_type, a_target_type) then
-					Result := basic_conversion_byte_node (a_expr, a_source_type, a_target_type)
+			if a_conversion_info.is_from_conversion then
+				if is_basic_conversion (a_expr, l_source_type, l_target_type, True) then
+					Result := basic_conversion_byte_node (a_expr, l_source_type, l_target_type, True)
 				else
-					l_feat := l_other.feature_table.item_id (l_other.convert_from.item (a_source_type))
-					check
-						l_feat_not_void: l_feat /= Void
-					end
-					
-						-- Initialize creation expression `(create {a_target_type}.l_feat (a_expr))'.
-					create l_creation_expr
-					create l_create_type.make (l_target_type)
-					l_creation_expr.set_info (l_create_type)
-					l_creation_expr.set_type (l_target_type)
-					if n > 0 then
-						l_creation_expr.set_line_number (n)
-					end
-		
-						-- Create call.
-					l_access ?= l_feat.access (Void_type.type_i)
-					create l_param
-					l_param.set_expression (a_expr)
-					l_param.set_attachment_type (a_source_type.type_i)
-					create l_params.make (1)
-					l_params.extend (l_param)
-					l_access.set_parameters (l_params)
-					l_creation_expr.set_call (l_access)
-		
-					Result := l_creation_expr
+					Result := creation_byte_code (a_conversion_info.conversion_feature,
+						l_source_type.type_i, l_target_type.type_i, a_expr)
 				end
-			elseif (l_class.convert_to /= Void and then l_class.convert_to.has (a_target_type)) then
-				if is_basic_conversion (a_expr, a_source_type, a_target_type) then
-					Result := basic_conversion_byte_node (a_expr, a_source_type, a_target_type)
+			else
+				if is_basic_conversion (a_expr, l_source_type, l_target_type, False) then
+					Result := basic_conversion_byte_node (a_expr, l_source_type, l_target_type, False)
 				else
-					l_feat := l_class.feature_table.item_id (l_class.convert_to.item (a_target_type))
-					check
-						l_feat_not_void: l_feat /= Void
-					end
-						-- Initialize nested call `a_expr.l_feat'
-					create l_nested
-	
-						-- Create target.
-					create l_access_expr
-					l_access_expr.set_expr (a_expr)
-					l_access_expr.set_parent (l_nested)
-					l_nested.set_target (l_access_expr)
-	
-						-- Create message.
-					l_access ?= l_feat.access (l_target_type)
-					l_access.set_parent (l_nested)
-					l_nested.set_message (l_access)
-	
-					Result := l_nested
+					Result := to_type_byte_code (a_conversion_info.conversion_feature,
+						l_target_type.type_i, a_expr)
 				end
 			end
 		ensure
@@ -106,8 +54,8 @@ feature -- Convertibility
 
 feature {NONE} -- Implementation: status report
 
-	is_basic_conversion (a_expr: EXPR_B; a_source_type, a_target_type: CL_TYPE_A): BOOLEAN is
-			-- Is conversion from `a_source_type' to `a_target_type' basic?
+	is_basic_conversion (a_expr: EXPR_B; a_source_type, a_target_type: TYPE_A; is_from_conversion: BOOLEAN): BOOLEAN is
+			-- Is conversion of `a_source_type' to `a_target_type' basic?
 		require
 			a_expr_not_void: a_expr /= Void
 			a_source_type_not_void: a_source_type /= Void
@@ -119,25 +67,32 @@ feature {NONE} -- Implementation: status report
 				System.il_generation and
 				(a_source_type.same_as (String_type) and a_target_type.same_as (System_string_type))
 			then
+					-- Case of .NET string to Eiffel string conversion.
 				l_string_b ?= a_expr
 				Result := l_string_b /= Void
 			elseif a_source_type.is_typed_pointer and a_target_type.is_pointer then
 				Result := True
+			elseif is_from_conversion then
+				Result := not a_source_type.is_expanded and a_target_type.is_basic and not a_target_type.is_bits 
+			elseif not is_from_conversion then
+				Result := a_source_type.is_basic and not a_source_type.is_bits and not a_target_type.is_expanded
 			end
 		end
 		
 feature {NONE} -- Implementation: Byte node
 
-	basic_conversion_byte_node (a_expr: EXPR_B; a_source_type, a_target_type: CL_TYPE_A): EXPR_B is
+	basic_conversion_byte_node (a_expr: EXPR_B; a_source_type, a_target_type: TYPE_A; is_from_conversion: BOOLEAN): EXPR_B is
 			-- Convert `a_expr' from `a_source_type' to `a_target_type'.
 		require
 			a_expr_not_void: a_expr /= Void
 			a_source_type_not_void: a_source_type /= Void
 			a_target_type_not_void: a_target_type /= Void
-			is_basic_conversion: is_basic_conversion (a_expr, a_source_type, a_target_type)
+			is_basic_conversion: is_basic_conversion (a_expr, a_source_type, a_target_type, is_from_conversion)
 		local
 			l_string_b: STRING_B
 			l_hector_b: HECTOR_B
+			l_feat: FEATURE_I
+			l_basic_i: BASIC_I
 		do
 			if
 				System.il_generation and
@@ -157,7 +112,89 @@ feature {NONE} -- Implementation: Byte node
 				else
 					Result := a_expr
 				end
+			elseif is_from_conversion then
+				if not a_source_type.is_expanded and a_target_type.is_basic and not a_target_type.is_bits then
+						-- Simply call `item' from the reference type instead of
+						-- trying to create an instance of the basic type and then
+						-- calling its creation procedure.
+					l_feat := a_source_type.associated_class.
+						feature_table.item_id (feature {PREDEFINED_NAMES}.item_name_id)
+					check
+						l_feat_not_void: l_feat /= Void
+					end
+					Result := to_type_byte_code (l_feat, a_target_type.type_i, a_expr)
+				end
+			elseif not is_from_conversion then
+				if a_source_type.is_basic and not a_source_type.is_bits and not a_target_type.is_expanded then
+						-- Create a new instance of the associated reference of `a_source_type'
+						-- and then assign new value. We use a hack here to call `set_item' as
+						-- creation procedure to avoid having to generate two calls: one
+						-- for creating the object, the other to assign it.
+					l_feat := a_source_type.associated_class.
+						feature_table.item_id (feature {PREDEFINED_NAMES}.set_item_name_id)
+					l_basic_i ?= a_source_type.type_i
+					check
+						l_feat_not_void: l_feat /= Void
+						l_basic_i_not_void: l_basic_i /= Void
+					end
+					Result := creation_byte_code (l_feat, l_basic_i, l_basic_i.reference_type, a_expr)
+				end
 			end			
+		end
+
+	to_type_byte_code (a_feat: FEATURE_I; a_target_type: TYPE_I; a_expr: EXPR_B): NESTED_B is
+			-- New instance nested call `a_expr.a_feat'
+		require
+			a_feat_not_void: a_feat /= Void
+			a_target_type_not_void: a_target_type /= Void
+			a_expr_not_void: a_expr /= Void
+		local
+			l_access_expr: ACCESS_EXPR_B
+			l_access: CALL_ACCESS_B
+		do
+				-- Initialize nested call `a_expr.a_feat'
+			create Result
+
+				-- Create target.
+			create l_access_expr
+			l_access_expr.set_expr (a_expr)
+			l_access_expr.set_parent (Result)
+			Result.set_target (l_access_expr)
+
+				-- Create message.
+			l_access ?= a_feat.access (a_target_type)
+			l_access.set_parent (Result)
+			Result.set_message (l_access)
+		end
+
+	creation_byte_code (a_feat: FEATURE_I; a_source_type, a_target_type: TYPE_I; a_expr: EXPR_B): CREATION_EXPR_B is
+			-- New instance of `create {a_target_type}.a_feat (a_expr)'
+		require
+			a_feat_not_void: a_feat /= Void
+			a_source_type_not_void: a_source_type /= Void
+			a_target_type_not_void: a_target_type /= Void
+			a_expr_not_void: a_expr /= Void
+		local
+			l_create_type: CREATE_TYPE
+			l_access: CALL_ACCESS_B
+			l_params: BYTE_LIST [PARAMETER_B]
+			l_param: PARAMETER_B
+		do
+				-- Initialize creation expression `(create {a_target_type}.a_feat (a_expr))'.
+			create Result
+			create l_create_type.make (a_target_type)
+			Result.set_info (l_create_type)
+			Result.set_type (a_target_type)
+
+				-- Create call.
+			l_access ?= a_feat.access (Void_type.type_i)
+			create l_param
+			l_param.set_expression (a_expr)
+			l_param.set_attachment_type (a_source_type)
+			create l_params.make (1)
+			l_params.extend (l_param)
+			l_access.set_parameters (l_params)
+			Result.set_call (l_access)
 		end
 
 feature {NONE} -- Implementation: Access

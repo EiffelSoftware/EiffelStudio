@@ -71,17 +71,6 @@ feature -- Properties
 	base_name: STRING;
 			-- Base file name of the class
 	
-	source_base_name: STRING is
-			-- Base file name of the source file (if any) that was preprocessed to
-			-- create the class.
-		do
-			if internal_source_base_name = Void then
-				Result := base_name
-			else
-				Result := internal_source_base_name
-			end
-		end
-
 	old_base_name: like base_name
 			-- `base_name' of previous location of Current class.
 
@@ -127,13 +116,6 @@ feature -- Properties
 		do
 			base_name := s;	
 		end;
-
-	set_source_base_name (s: STRING) is
-			-- Assign `s' to `source_base_name'.
-		do
-			internal_source_base_name := s;	
-		end;
-
 
 	text: STRING is
 			-- Text of the Current lace file.
@@ -597,10 +579,6 @@ feature {NONE} -- Document processing
 	No_word: STRING is "no"
 
 feature {NONE} -- Implementation
-
-	internal_source_base_name: STRING
-			-- Internal source base file name.
-			-- See `source_nase_name'.
 
 	valid_class_file_extension (c: CHARACTER): BOOLEAN is
 			-- Is `c' a valid class file extension?

@@ -566,6 +566,14 @@ feature {NONE} -- Implementation
 
 feature {NONE} -- Externals
 
+	cwin_draw_menu_bar (hmenu: POINTER) is
+			-- SDK drawMenuBar
+		external
+			"C [macro <wel.h>] (HMENU)"
+		alias
+			"DrawMenuBar"
+		end
+
 	cwin_create_menu: POINTER is
 			-- SDK CreateMenu
 		external

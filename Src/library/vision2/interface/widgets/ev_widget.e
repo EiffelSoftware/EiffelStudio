@@ -223,9 +223,8 @@ feature -- Status setting
 			not_destroyed: not is_destroyed
 		do
 			(create {EV_SCREEN}).set_pointer_position (
-				(screen_x + (width/2)).truncated_to_integer,
-				(screen_y + (height/2)).truncated_to_integer
-			)
+				screen_x + (width // 2),
+				screen_y + (height // 2))
 		end
 
 	set_actual_drop_target_agent (an_agent: like actual_drop_target_agent) is

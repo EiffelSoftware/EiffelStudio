@@ -290,5 +290,7 @@ rt_private Signal_t timeout(void)
 {
 	longjmp(env, 1);			/* Alarm signal received */
 	/* NOTREACHED */
+#ifdef EIF_WIN32
 	return 0;
+#endif
 }

@@ -1695,7 +1695,7 @@ feature -- Stone process
 feature -- Resource Update
 
 	update is
-			-- Update Current with the registred resources.
+			-- Update Current with the registered resources.
 		do
 				-- Show/hide general toolbar
 			if window_preferences.show_general_toolbar then

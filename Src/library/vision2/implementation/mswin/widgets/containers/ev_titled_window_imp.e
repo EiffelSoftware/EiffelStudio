@@ -41,11 +41,13 @@ inherit
 			compute_minimum_size,
 			restore,
 			interface,
-			initialize
+			initialize,
+			on_accelerator_command
 		end
 
-creation
+create
 	make
+
 feature {NONE} -- Initialization
 
 	make (an_interface: like interface) is
@@ -69,27 +71,80 @@ feature {NONE} -- Initialization
 			app_imp.add_root_window (interface)
 			interface.close_actions.extend (interface~destroy)
 			is_initialized := True
+			create accel_list.make (10)
 		end
 
 feature {EV_TITLED_WINDOW, EV_APPLICATION_IMP} -- Accelerators
 
-	accel: WEL_ACCELERATORS
-			-- Group of accelerators.
+	on_accelerator_command (an_accel_id: INTEGER) is
+			-- Accelerator width `an_accel_id' has just been pressed.
+		do
+			check
+				accel_list_has_an_accel_id: accel_list.has (an_accel_id)
+			end
+			accel_list.item (an_accel_id).actions.call ([])
+		end
+
+	accel_list: HASH_TABLE [EV_ACCELERATOR, INTEGER]
+			-- List of accelerators connected to this window indexed by
+			-- their `id'.
+
+	accelerators: WEL_ACCELERATORS
+			-- List of accelerators connected to this window.
+
+	create_accelerators is
+			-- Recreate the accelerators.
+		local
+			wel_array: WEL_ARRAY [WEL_ACCELERATOR]
+			acc: WEL_ACCELERATOR
+			n: INTEGER
+		do
+			if accel_list.empty then
+				accelerators := Void
+			else
+	 			from
+	 				accel_list.start
+					acc ?= accel_list.item_for_iteration
+		 			create wel_array.make (
+						accel_list.count,
+						acc.structure_size)
+					n := 0
+				until
+					accel_list.after
+				loop
+					acc ?= accel_list.item_for_iteration.implementation
+					wel_array.put (acc, n)
+					accel_list.forth
+					n := n + 1
+	 			end
+	 			create accelerators.make_with_array (wel_array)
+			end
+		end
 
 	connect_accelerator (an_accel: EV_ACCELERATOR) is
 			-- Connect key combination `an_accel' to this window.
+		local
+			acc_imp: EV_ACCELERATOR_IMP
 		do
+			acc_imp ?= an_accel.implementation
 			check
-				to_be_implemented: False
+				acc_imp_not_void: acc_imp /= Void
 			end
+			accel_list.put (an_accel, acc_imp.id)
+			create_accelerators
 		end
 
 	disconnect_accelerator (an_accel: EV_ACCELERATOR) is
 			-- Disconnect key combination `an_accel' from this window.
+		local
+			acc_imp: EV_ACCELERATOR_IMP
 		do
+			acc_imp ?= an_accel.implementation
 			check
-				to_be_implemented: False
+				acc_imp_not_void: acc_imp /= Void
 			end
+			accel_list.remove (acc_imp.id)
+			create_accelerators
 		end
 
 feature  -- Access
@@ -380,6 +435,9 @@ end -- class EV_TITLED_WINDOW_IMP
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.58  2000/03/21 02:27:49  brendel
+--| First implementation of accelerators.
+--|
 --| Revision 1.57  2000/03/16 17:20:59  brendel
 --| Calling {EV_APPLICATION_IMP}.add_root_window immediately instead of
 --| through interface.

@@ -58,14 +58,28 @@ feature {EV_SPLIT_AREA} -- Implementation
 			end
 		end
 	
-	add_child1 (child_imp: EV_WIDGET_I) is
+	add_child1 (child_i: EV_WIDGET_I) is
 			-- Add the first child of the split.
-		deferred
+		require
+			child_not_void: child_i /= Void
+		do
+			child1 ?= child_i
+-- Maybe necessary for gtk
+--			implementation.add_child1 (child1)
+		ensure then
+			child1 /= Void
 		end
 	
-	add_child2 (child_imp: EV_WIDGET_I) is
+	add_child2 (child_i: EV_WIDGET_I) is
 			-- Add the second child.
-		deferred
+		require
+			child_not_void: child_i /= Void
+		do
+			child2 ?= child_i
+-- Maybe necessary for gtk
+--			implementation.add_child2 (child2)
+		ensure then
+			child2 /= Void
 		end
 
 end -- class EV_SPLIT_AREA_I

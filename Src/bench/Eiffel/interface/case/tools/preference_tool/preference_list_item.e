@@ -9,6 +9,11 @@ class
 
 inherit
 	EV_TREE_ITEM
+		rename
+			data as category
+		redefine
+			category
+		end
 
 creation
 	make_with_element

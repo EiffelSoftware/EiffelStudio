@@ -22,7 +22,7 @@ inherit
 	SIZE_SAVABLE
 
 creation
-	make
+	make,make_then_direct_to
 
 feature -- Initialization
 
@@ -41,7 +41,7 @@ feature -- Initialization
 			!! menu.make (Current)
 			!! v0.make(Current)
 			v0.set_homogeneous(FALSE)
-			!! h1.make( v0 )
+ 			!! h1.make( v0 )
 			!! v1.make(h1)
 			!! fix.make(h1)
 			fix.set_minimum_width(20)
@@ -73,10 +73,45 @@ feature -- Initialization
 			show
 		end
 
+	make_then_direct_to(par: EV_WINDOW; category_name: STRING) is
+			-- Popup the Preference Window with category corresponding to 'category_name'.
+		require
+			parent_exists: par /= Void
+			name_possible: category_name /= Void and then resources.resource_structure.has_category(category_name)
+		local
+			category: RESOURCE_CATEGORY
+			it : EV_TREE_ITEM
+		do
+			make(par)
+			category := resources.resource_structure.find_category_with_name(category_name,
+							resources.resource_structure.categories)
+			if category /= Void then
+				it := left_list.find_item_by_data(category)
+				check
+					not_void: it /= Void 
+				end
+				if it /= Void then
+					if it.is_parent then
+						it.set_expand(TRUE)
+					else
+						it.set_selected(TRUE)
+					end
+				else
+					-- Popup warning => Category not reachable.
+				end
+			else
+				-- Popup warning => Category not found !
+			end
+		end
+
 	set_file(s: STRING) is
 			-- Set file name where the preferences come from.
+		require
+			consistent: s /= Void and then not s.empty
 		do
 			file_name := s
+		ensure
+			set: file_name = s
 		end
 
 feature -- Update
@@ -119,7 +154,7 @@ feature -- Graphical Components.
 
 	save_preferences: SAVE_PREFERENCES is
 		once
-			!! Result
+			create Result
 		end	
 
 feature -- Widgets.

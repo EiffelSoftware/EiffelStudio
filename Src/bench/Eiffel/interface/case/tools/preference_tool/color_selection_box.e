@@ -8,9 +8,11 @@ class
 	COLOR_SELECTION_BOX
 
 inherit
-	SELECTION_BOX
+	DIALOG_SELECTION_BOX
+		rename
+			dialog_tool as color_tool
 		redefine
-			make,resource,display
+			make,resource,display,color_tool
 		end
 
 creation
@@ -21,14 +23,18 @@ feature -- Creation
 	make(h: EV_HORIZONTAL_BOX; new_caller: PREFERENCE_WINDOW) is
 			-- Creation
 		local
-			h0,h1,h2: EV_HORIZONTAL_BOX
+			h2: EV_HORIZONTAL_BOX
 			com: EV_ROUTINE_COMMAND
 		do
 			precursor(h,new_caller)
 			!! h2.make(frame)
 			!! color_b.make(h2)
+			color_b.set_vertical_resize(FALSE)
+			color_b.set_horizontal_resize(FALSE)
 			color_b.set_minimum_size(30,30)
 			!! change_b.make_with_text(h2,"Change ...")
+			change_b.set_vertical_resize(FALSE)
+			change_b.set_horizontal_resize(FALSE)
 			h2.set_child_expandable(change_b,FALSE)
 			h2.set_child_expandable(color_b,FALSE)
 			!! com.make(~change)
@@ -37,21 +43,9 @@ feature -- Creation
 
 feature -- Commands
 
-	change (args: EV_ARGUMENT; data: EV_EVENT_DATA) is
-		require
-			resource_exists: resource /= Void
-		local
-			com: EV_ROUTINE_COMMAND
-		do
-			!! color_tool.make(caller)
-			!! com.make(~color_selected)
-			color_tool.add_ok_command(com, Void)
-			color_tool.show
-		end
-
-	color_selected (args: EV_ARGUMENT; data: EV_EVENT_DATA) is
-		require
-			color_tool_exists: color_tool /= Void
+	dialog_ok (args: EV_ARGUMENT; data: EV_EVENT_DATA) is
+			-- Popup Color Dialog
+		require else
 			color_selected : color_tool.color /= Void
 		local
 			color: EV_COLOR
@@ -66,6 +60,12 @@ feature -- Commands
 			s.append(color.blue.out)
 			resource.set_value_with_color(s,color)
 			caller.update
+		end
+
+	create_tool is
+			-- Create Color Tool.
+		do
+			create color_tool.make(caller)
 		end
 
 feature -- Display
@@ -86,7 +86,7 @@ feature -- Implementation
 	resource: COLOR_RESOURCE
 		-- Resource.
 
-	color_b,change_b: EV_BUTTON
+	color_b: EV_BUTTON
 		-- Buttons.
 
 invariant

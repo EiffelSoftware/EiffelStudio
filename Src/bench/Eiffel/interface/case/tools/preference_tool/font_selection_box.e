@@ -1,6 +1,6 @@
 indexing
-	description: "Objects that ..."
-	author: ""
+	description: "Font Selection Box."
+	author: "pascalf"
 	date: "$Date$"
 	revision: "$Revision$"
 
@@ -9,9 +9,11 @@ class
 
 
 inherit
-	SELECTION_BOX
+	DIALOG_SELECTION_BOX
+		rename
+			dialog_tool as font_tool
 		redefine
-			make,resource,display
+			make,resource,display,font_tool
 		end
 
 creation
@@ -38,25 +40,18 @@ feature -- Creation
 
 feature -- Commands
 
-	change (args: EV_ARGUMENT; data: EV_EVENT_DATA) is
-		require
-			resource_exists: resource /= Void
-		local
-			com: EV_ROUTINE_COMMAND
-		do
-			!! font_tool.make(caller)
-			!! com.make(~font_selected)
-			font_tool.add_ok_command(com, Void)
-			font_tool.show
-		end
-
-	font_selected (args: EV_ARGUMENT; data: EV_EVENT_DATA) is
-		require
-			font_tool_exists: font_tool /= Void
+	dialog_ok (args: EV_ARGUMENT; data: EV_EVENT_DATA) is
+			-- Commit the Result of Font Tool.
 		local
 			s: STRING
 		do
 			caller.update
+		end
+
+	create_tool is
+			-- Create Font Tool.
+		do
+			create font_tool.make(caller)
 		end
 
 feature -- Display
@@ -74,9 +69,6 @@ feature -- Implementation
 
 	resource: FONT_RESOURCE
 		-- Resource.
-
-	change_b: EV_BUTTON
-		-- Button.
 
 	example: EV_LABEL
 		-- Example written with the font.

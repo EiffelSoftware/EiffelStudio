@@ -13,6 +13,11 @@ obsolete
 
 inherit
 	WEL_DC
+		redefine
+			get,
+			release,
+			destroy_item
+		end
 
 creation
 	make

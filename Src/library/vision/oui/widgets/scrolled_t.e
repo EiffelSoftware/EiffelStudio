@@ -71,7 +71,7 @@ feature {NONE} -- Initialization
 			depth := a_parent.depth+1
 			widget_manager.new (Current, a_parent)
 			identifier := clone (a_name)
-			!SCROLLED_T_IMP!implementation.make_word_wrapped (Current, man, a_parent)
+			!SCROLLED_T_IMP! implementation.make_word_wrapped (Current, man, a_parent)
 			set_default
 		end
 

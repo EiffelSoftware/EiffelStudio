@@ -365,9 +365,9 @@ feature {NONE} -- Implementation
 		-- Propagate `keys', `x_pos' and `y_pos' to the appropriate item event.
 		do
 			--|FIXME Implement
-			check
-				False
-			end
+		--	check
+		--		False
+		--	end
 		end
 
 	is_item_imp_selected (li_imp: EV_LIST_ITEM_IMP): BOOLEAN is
@@ -711,6 +711,9 @@ end -- class EV_COMBO_BOX_IMP
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.73  2000/04/17 20:58:10  brendel
+--| Commented out check False since the user can't even click on it.
+--|
 --| Revision 1.72  2000/04/17 18:40:58  brendel
 --| Instead of undefining count from the WEL object, we rename it
 --| because it is used in a WEL postcondition.

@@ -7,7 +7,10 @@ deferred class
 	WIZARD_TYPE_VISITOR
 
 inherit
-	WIZARD_MESSAGE_OUTPUT
+	WIZARD_SHARED_GENERATION_ENVIRONMENT
+		export
+			{NONE} all
+		end
 
 	WIZARD_SHARED_DATA
 		export
@@ -109,7 +112,7 @@ feature -- Processing
 		require
 			non_void_descrioptor: union_descriptor /= Void
 		do
-			add_warning (Current, unions_not_supported)
+			message_output.add_warning (Current, message_output.Unions_not_supported)
 		end
 
 end -- class WIZARD_TYPE_VISITOR

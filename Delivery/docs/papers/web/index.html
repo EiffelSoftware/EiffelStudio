@@ -6,193 +6,60 @@
 <meta http-equiv="Content-Type" content="text/html; charset=windows-1252">
 <meta name="GENERATOR" content="Microsoft FrontPage 4.0">
 <meta name="ProgId" content="FrontPage.Editor.Document">
-<title>New Page 1</title>
+<title>EiffelWeb</title>
 <link rel="stylesheet" href="../../styles/tech.css" type="text/css">
 <meta name="Microsoft Border" content="t, default">
 </HEAD>
 
-<BODY ><!--msnavigation--><table border="0" cellpadding="0" cellspacing="0" width="100%"><tr><td><table border="0" cellspacing="0" cellpadding="0" width="100%">
-  <tr>
-    <td valign="top" bgcolor="#000063" width="291"><b><font face="Arial" size="4" color="#FFFFFF">Interactive<br>
-      Software Engineering</font></b></td>
-    <td valign="top" bgcolor="#000063" width="720"><b><font face="Arial" size="6" color="#FFFFCC"></font></b></td>
-  </tr>
-  <tr>
-    <td colspan="2" valign="top" width="100%">
-<p align="center">
-<hr>
-
-    </td>
-  </tr>
-</table></td></tr><!--msnavigation--></table><!--msnavigation--><table border="0" cellpadding="0" cellspacing="0" width="100%"><tr><!--msnavigation--><td valign="top">
-
-<p>
-
-
-<h1>1.THE ROLE OF EIFFELWEB</h1>
-
-<P>The World-Wide Web provides a remarkably versatile way to make information
-available to the world. But the flow should not just be one way: a Web
-site will want to obtain input from its visitors. This can provide feedback,
-new ideas, and sales leads.</P>
-
-<P>The simplest way for a Web site visitor to send such input is to fill
-in a <B>form </B>on one of the site's pages. This requires, on the other
-end, some software to process the form and extract its information. Such
-software is known as a <B>CGI script</B>, where the initials stand for
-Common Gateway Interface.</P>
-
-<P>Before EiffelWeb, CGI scripts were usually written in scripting languages
-such as Perl, or in C. For very simple processing of small forms this suffices;
-but scripts, like any other software,must grow and evolve. Object technology
-can offer a better solution - easier to produce, easier to maintain, easier
-to extend - than low-level approaches.</P>
-
-<P>The EiffelWeb library provides script developers with a simple set of
-tools to develop CGI scripts using the full benefits of Eiffel.</P>
-
-<A NAME="1.1"><h2>Why use EiffelWeb?</h2></A>
-
-<P>Although the concepts should be simple, form processing can be unpleasantly
-tedious. EiffelWeb provides a general framework, taking care of all the
-repetitive details, and frees you of many low-level tasks. In particular:</P>
-
-<ul>
-  <li>You do not need to worry about which of the two available methods (<B>GET
-</B>and <B>POST</B>) has been used to return data. One uses an environment
-variable, the other writes to the standard input, but EiffelWeb will get
-the data, wherever it is, to your application.<BR>
-
-  </li>
-  <li>The basic format of the data returned from a form is very low-level:
-a set of fields separated by <B>&amp;</B> characters, with special encoding
-for blanks and non-alphabetic characters. With ordinary CGI scripts, you
-must parse this information. EiffelWeb does the parsing for you and makes
-the resulting fields directly available. <BR>
-  </li>
-  <li>After processing a form you will often display further information
-to the person who has submitted it. This information must be in HTML format
-(HTML, HyperText Markup Language, is the language used to format documents
-to be displayed by Web browsers). With ordinary scripting languages, you
-must take care of the HTML codes yourself. With EiffelWeb, you can use
-a set of high-level procedures taking care of the basic forms of output;
-the procedures will generate the proper HTML codes for you. You do not
-need to know HTML to use EiffelWeb.<BR>
-
-  </li>
-  <li>Debugging a form-processing system can be extremely tricky. EiffelWeb
-provides you with a rich set of mechanisms to try out your application,
-set environment variables, specify what should happen in the case of an
-exception.<BR>
-
-  </li>
-  <li>Best of all, the actual processing can benefit from the whole power
-of the Eiffel language, the ISE Eiffel environment, and the ISE Eiffel
-libraries. You have a full development environment at your disposal, rather
-than the limited expressive power of a simple scripting language.</li>
-</ul>
-
-<h2><A NAME="1.2">Organization of this document</A></h2>
-
-<P>This manual shows how to use EiffelWeb. It is organized as follows:</P>
-
-<ul>
-  <li>Below is a short description of the EiffelWeb classes.<BR>
-
-
-  </li>
-  <li>
-<A HREF="writing.html">Chapter 2</A> shows how to write a small form-processing application. The
-example will be sufficient for many simple uses.<BR>
-
-
-  </li>
-  <li>
-<A HREF="how.html">Chapter 3</A> gives some background about HTML form processing.<BR>
-
-
-  </li>
-  <li>
-<A HREF="variables.html">Chapter 4</A> explains how your application can access user information
-and environment variables.<BR>
-
-
-  </li>
-  <li>
-<A HREF="debug.html">Chapter 5</A> describes debugging facilities.<BR>
-
-
-  </li>
-  <li>
-<A HREF="generator.html">Chapter 6</A> presents the class <I>HTML_GENERATOR</I> for generating HTML
-code.<BR>
-
-
-  </li>
-  <li>
-<A HREF="appendix_a.html">Appendix A</A> presents the principal class, <I>CGI_INTERFACE</I>.<BR>
-
-
-  </li>
-  <li>
-<A HREF="appendix_b.html">Appendix B</A> presents class <I>CGI_ENVIRONMENT</I>.<BR>
-
-
-  </li>
-  <li>
-<A HREF="appendix_c.html">Appendix C</A> presents class <I>HTML_GENERATOR</I>.<BR>
-
-
-  </li>
-  <li>
-<A HREF="appendix_d.html">Appendix D</A> presents class <I>HTML_CONSTANTS</I>, used by <I>HTML_GENERATOR</I>.</li>
-</ul>
-
-<h2><A NAME="1.3">Classes</A></h2>
-
-<P>Here is a short description of each class:</P>
-
-<ul>
-  <li>
-<I>CGI_ENVIRONMENT</I>: provides access to environment variables, including
-all the standard variables.<BR>
-
-
-  </li>
-  <li>
-<I>CGI_INTERFACE</I>: a deferred class that encapsulates the behavior
-of all CGI scripts. It includes the data processing operations common to
-all scripts, namely the parsing of the string sent by the server and the
-debugging facilities.<BR>
-
-
-  </li>
-  <li>
-<I>HTML_CONSTANTS</I>: defines a subset of the HTML language tags as
-Eiffel constants. Its obvious purpose is to be used for HTML generation
-(more will be added in future versions).<BR>
-
-
-  </li>
-  <li>
-<I>HTML_GENERATOR</I>: implements a series of routines facilitating
-the generation of basic HTML documents. The output medium can be changed
-by simply redefining the routine <I>put_basic</I>.</li>
-</ul>
-<p>&nbsp;</p>
-
+<H1>EiffelWeb: Web form processing</H1>
 <P>
-<FONT SIZE="-1">
-<A HREF="page.html">Table of contents</A>
-| <a HREF="writing.html">Next chapter</a>
+Welcome to the on-line EiffelWeb manual.
+<H2>Contents</H2>
+<DL COMPACT><DD>
+	<DL COMPACT><DT><A HREF="intro.html">1. THE ROLE OF EIFFELWEB</A>
+		<DD><A HREF="intro.html#1.1">Why use EiffelWeb?</A>
+		<DD><A HREF="intro.html#1.2">Organization of this document</A>
+		<DD><A HREF="intro.html#1.3">Classes</A>
+	</DL>
 
-<CENTER>
-</CENTER>
-</FONT>
+	<DL COMPACT><DT><A HREF="writing.html">2. WRITING A FORM-PROCESSING SYSTEM</A>
+		<DD><A HREF="writing.html#2.1">Writing a basic script</A>
+		<DD><A HREF="writing.html#2.2">A complete example</A>
+	</DL>
+
+	<DL COMPACT><DT><A HREF="how.html">3. HOW DO FORMS GET PROCESSED?</A>
+	</DL>
+
+	<DL COMPACT><DT><A HREF="variables.html">4. ACCESSING VISITOR INFORMATION AND ENVIRONMENT VARIABLES</A>
+		<DD><A HREF="variables.html#4.1">Visitor information</A>
+		<DD><A HREF="variables.html#4.2">Accessing environment variables</A>
+	</DL>
+
+	<DL COMPACT><DT><A HREF="debug.html">5. USING THE DEBUGGING FACILITIES</A>
+		<DD><A HREF="debug.html#5.1">Using make_debug as a creation procedure</A>
+		<DD><A HREF="debug.html#5.2">Environment variables</A>
+		<DD><A HREF="debug.html#5.3">Error handling</A>
+		<DD><A HREF="debug.html#5.4">An example using make_debug</A>
+	</DL>
+
+	<DL COMPACT><DT><A HREF="generator.html">6. GENERATING HTML OUTPUT</A>
+	</DL>
+
+	<DL COMPACT><DT><A HREF="appendix_a.html">APPENDIX A: Class CGI_INTERFACE</A>
+	</DL>
+
+	<DL COMPACT><DT><A HREF="appendix_b.html">APPENDIX B: Class CGI_ENVIRONMENT</A>
+	</DL>
+
+	<DL COMPACT><DT><A HREF="appendix_c.html">APPENDIX C: Class HTML_GENERATOR</A>
+	</DL>
+
+	<DL COMPACT><DT><A HREF="appendix_d.html">APPENDIX D: Class HTML_CONSTANTS</A>
+	</DL>
+
+</DL>
 
 
 &nbsp;
-
-
-<!--msnavigation--></td></tr><!--msnavigation--></table></BODY>
 </HTML>
+

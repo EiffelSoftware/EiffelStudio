@@ -1,5 +1,5 @@
 3.0.0.507
-1079
+1091
 1033,release_notes.html,0,Release Notes,0,942281138,1
 vti_globalpage:BW|true
 1018,papers/index.html,0,Technology Papers,0,942202015,1
@@ -17,6 +17,7 @@ vti_globalpage:BW|true
 1025,papers/eiffel2java.html,0,Eiffel to Java Interface,1018,942203218,0
 1076,papers/eiffelstore.html,0,EiffelStore,1018,942435569,0
 1077,papers/eiffeltime.html,0,EiffelTime,1018,942435569,0
+1080,papers/web/intro.html,0,EiffelWeb,1018,942451386,0
 1078,papers/eiffelmath.html,0,EiffelMath,1018,942450249,0
 1049,papers/eiffel.html,0,Eiffel in ISE EiffelBench,1018,942293007,0
 1061,papers/net/index.html,0,EiffelNet Manual,1018,942302125,0
@@ -27,6 +28,7 @@ vti_globalpage:BW|true
 1021,papers/cecil.html,0,CECIL: Using Eiffel from C\, C++ and other languages,1018,942202015,0
 1020,papers/c++.html,0,Legacy++ and the C++ interface,1018,942202015,0
 1019,papers/c_compilers.html,0,C Compilers,1018,942202973,0
+1079,Eiffel/styles.html,0,Style Rules,1000,942450872,0
 1032,platforms.html,0,Platform Requirements,1005,942280409,0
 1050,Eiffel/language/precursor_construct.html,0,Precursor,1031,942296391,0
 1034,Eiffel/language/assertions.maker.html,0,Assertions,1031,942285323,0
@@ -46,6 +48,16 @@ vti_globalpage:BW|true
 1039,Eiffel/language/exceptions.maker.html,0,Exceptions,1031,942285323,0
 1047,Eiffel/books.html,0,Object-Oriented Books,1031,942288331,0
 1038,Eiffel/language/design.maker.html,0,Object-Oriented Design,1031,942285323,0
+1082,papers/web/appendix_b.html,0,EiffelWeb,1080,942452188,0
+1085,papers/web/debug.html,0,EiffelWeb,1080,942452188,0
+1084,papers/web/appendix_d.html,0,EiffelWeb,1080,942452188,0
+1088,papers/web/index.html,0,EiffelWeb,1080,942451458,0
+1090,papers/web/writing.html,0,EiffelWeb,1080,942452189,0
+1089,papers/web/variables.html,0,EiffelWeb,1080,942452189,0
+1087,papers/web/how.html,0,EiffelWeb,1080,942452189,0
+1081,papers/web/appendix_a.html,0,EiffelWeb,1080,942452188,0
+1086,papers/web/generator.html,0,EiffelWeb,1080,942452189,0
+1083,papers/web/appendix_c.html,0,EiffelWeb,1080,942452188,0
 1062,papers/net/bibliography.html,0,Bibliography,1061,942302125,0
 1063,papers/net/clients_and_servers.html,0,Clients and Servers,1061,942302125,0
 1064,papers/net/complex_example.html,0,A More Complex Example,1061,942302125,0

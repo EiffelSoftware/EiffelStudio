@@ -487,4 +487,7 @@ feature -- Debugger
 	instruction_line: LINE [AST_EIFFEL];
 			 -- List of instructions encountered sequentially in the compound.
 
+invariant
+	locals_not_void: locals /= Void
+
 end

@@ -16,7 +16,7 @@ feature
 	make is
 			-- Initialization
 		do
-			!!used_table.make (1, System.body_id_counter.value);
+			!!used_table.make (1, System.body_id_counter.total_count);
 		end;
 
 feature {NONE}
@@ -27,7 +27,7 @@ feature {NONE}
 			not_is_attribute: not f.is_attribute;
 			rout_id_not_void: rout_id_val /= Void
 		local
-			other_body_id: INTEGER;
+			other_body_id: BODY_ID;
 			descendant_class: CLASS_C;
 			descendant_feature: FEATURE_I;
 			des_feat_table: FEATURE_TABLE;
@@ -190,10 +190,10 @@ debug ("MARKING")
 			io.error.putstring (class_name);
 			io.error.new_line;
 end;
-			temp := used_table.item (feat.body_id);
+			temp := used_table.item (feat.body_id.id);
 			if (temp = Void) then
 				!! temp.make (1);
-				used_table.put (temp, feat.body_id);
+				used_table.put (temp, feat.body_id.id);
 			end;
 			temp.force (rout_id_val);
 		end;
@@ -206,18 +206,18 @@ feature
 		local
 			temp: ROUT_ID_SET
 		do
-			temp := used_table.item (feat.body_id);
+			temp := used_table.item (feat.body_id.id);
 			Result := (temp /= Void) and then
 				temp.has (feat.rout_id_set.first)
 		end;
 
-	bid_rid_is_marked (bid: INTEGER; rid: ROUTINE_ID): BOOLEAN is
+	bid_rid_is_marked (bid: BODY_ID; rid: ROUTINE_ID): BOOLEAN is
 		require
 			rid_not_void: rid /= Void
 		local
 			temp: ROUT_ID_SET
 		do
-			temp := used_table.item (bid);
+			temp := used_table.item (bid.id);
 			Result := (temp /= Void) and then
 				temp.has (rid)
 		end;
@@ -230,10 +230,10 @@ feature
 			Result := is_body_alive (feat.body_id)
 		end;
 
-	is_body_alive (body_id: INTEGER): BOOLEAN is
+	is_body_alive (body_id: BODY_ID): BOOLEAN is
 			-- Is the body id recorded in the `used_table' ?
 		do
-			Result := (used_table.item (body_id) /= Void)
+			Result := (used_table.item (body_id.id) /= Void)
 		end;
 
 feature -- DLE
@@ -249,18 +249,18 @@ feature -- DLE
 			Result := was_body_alive (feat.body_id)
 		end;
 
-	was_body_alive (body_id: INTEGER): BOOLEAN is
+	was_body_alive (body_id: BODY_ID): BOOLEAN is
 			-- Was the body id recorded in the `used_table' of
 			-- the static system?
 		require
 			dynamic_system: System.is_dynamic;
 			final_mode: System.in_final_mode
 		local
-			old_body_id: INTEGER
+			old_body_id: BODY_ID
 		do
 			old_body_id := System.dle_finalized_nobid_table.item (body_id);
-			Result := used_table.valid_index (old_body_id) and then
-				used_table.item (old_body_id) /= Void
+			Result := used_table.valid_index (old_body_id.id) and then
+				used_table.item (old_body_id.id) /= Void
 		end;
 
 end

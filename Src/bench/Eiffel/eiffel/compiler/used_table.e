@@ -20,7 +20,7 @@ feature
 	make is
 			-- Creation of the array
 		do
-			search_table_make (System.body_id_counter.value);
+			search_table_make (System.body_id_counter.total_count);
 		end;
 
 end

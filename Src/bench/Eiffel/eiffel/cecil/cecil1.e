@@ -50,8 +50,7 @@ feature
 						written_type := written_class.meta_type 
 											(class_type.type).associated_class_type;
 					end;
-					routine_name := Encoder.feature_name
-										(written_type.id.id, feat.body_id);
+					routine_name := feat.body_id.feature_name (written_type.id);
 debug ("CECIL")
     io.putstring ("Generating entry for feature: ");
     io.putstring (feat.feature_name);

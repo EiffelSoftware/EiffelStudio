@@ -15,11 +15,11 @@ feature
 
 	class_id: CLASS_ID;
 
-	body_index: INTEGER;
+	body_index: BODY_INDEX;
 
 feature
 
-	make (c_id: CLASS_ID; b_index: INTEGER) is
+	make (c_id: CLASS_ID; b_index: BODY_INDEX) is
 		do
 			class_id := c_id;
 			body_index := b_index;
@@ -45,7 +45,7 @@ feature -- Comparable
 	is_equal (other: like Current): BOOLEAN is
 			-- Are `other' and `Current' equal?
 		do
-			Result := body_index = other.body_index and
+			Result := equal (body_index, other.body_index) and
 					equal (class_id, other.class_id)
 		end
 

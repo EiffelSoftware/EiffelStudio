@@ -133,7 +133,7 @@ feature -- C code generation
 			then
 				generate_header (file);
 				type_i := type.actual_type.type_i;
-				internal_name := Encoder.feature_name (class_type.id.id, body_id); 
+				internal_name := body_id.feature_name (class_type.id);
 				add_in_log (class_type, internal_name);
 					-- Generation of function's header
 				type_i.c_type.generate (file);
@@ -169,7 +169,7 @@ feature -- C code generation
 							-- Real body id to be stored in the id list of 
 							-- already called once routines.
 						file.putstring ("RTWO(");
-						file.putint (real_body_id - 1);
+						file.putint (real_body_id.id - 1);
 						file.putstring (");");
 						file.new_line
 					end;
@@ -237,7 +237,7 @@ feature -- Byte code generation
 				ba.append ('%U');
 					-- Real body id to be stored in the id list of 
 					-- already called once routines.
-				ba.append_integer (real_body_id - 1);
+				ba.append_integer (real_body_id.id - 1);
 				ba.allocate_space (Reference_c_type);
 			else
 				ba.append ('%U');
@@ -262,7 +262,7 @@ feature -- Byte code generation
 			ba.append (Bc_null);
 				
 			melted_feature := ba.melted_feature;
-			melted_feature.set_body_id (dispatch.real_body_id);
+			melted_feature.set_real_body_id (dispatch.real_body_id);
 			if not System.freeze then
 				Tmp_m_feature_server.put (melted_feature);
 			end;

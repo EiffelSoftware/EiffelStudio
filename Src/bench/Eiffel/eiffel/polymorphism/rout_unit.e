@@ -9,7 +9,7 @@ inherit
 
 feature
 
-	body_index: INTEGER;
+	body_index: BODY_INDEX;
 			-- Body index of the unit
 
 	written_in: CLASS_ID;
@@ -19,7 +19,7 @@ feature
 	pattern_id: INTEGER;
 			-- Pattern id of the unit
 
-	set_body_index (i: INTEGER) is
+	set_body_index (i: BODY_INDEX) is
 			-- Assign `i' to `body_index'.
 		do
 			body_index := i

@@ -22,7 +22,7 @@ feature -- Properties
 	ast: FEATURE_AS_B;
 			-- Feature ast
 
-	body_index: INTEGER;
+	body_index: BODY_INDEX;
 			-- Body index of source_feature
 
 	source_feature: FEATURE_I;
@@ -63,7 +63,7 @@ feature -- Element change
 			i, l_count: INTEGER
 			list: ARRAYED_LIST [FEATURE_I];
 			t_feat: FEATURE_I;
-			rep_table: EXTEND_TABLE [ARRAYED_LIST [FEATURE_I], INTEGER];
+			rep_table: EXTEND_TABLE [ARRAYED_LIST [FEATURE_I], BODY_INDEX];
 			f_name: FEATURE_NAME_B;
 		do
 			names := feature_as.feature_names;
@@ -180,7 +180,7 @@ feature {NONE} -- Implementation
 				source_feature := s_feat;
 				target_feature := t_feat;
 				if equal (t_feat.written_in, s_feat.written_in) and then
-					(t_feat.body_index = s_feat.body_index)
+					equal (t_feat.body_index, s_feat.body_index)
 				then
 						-- Only register if the target and source
 						-- feature are written in the same class

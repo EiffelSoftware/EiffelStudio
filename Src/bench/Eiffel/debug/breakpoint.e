@@ -19,7 +19,7 @@ feature -- Properties
 			-- to a breakpoint where the
 			-- application should stop?
 
-	real_body_id: INTEGER;
+	real_body_id: REAL_BODY_ID;
 			-- Body id associated with byte
 			-- code array containing Current
 			-- breakpoint.
@@ -29,7 +29,7 @@ feature -- Access
 	hash_code: INTEGER is
 			-- Hash code for breakpoint
 		do
-			Result := real_body_id * 100 + offset
+			Result := real_body_id.hash_code * 100 + offset
 		end;
 
 feature -- Setting
@@ -58,7 +58,7 @@ feature -- Setting
 			set: offset = i
 		end;
 
-	set_real_body_id (i: INTEGER) is
+	set_real_body_id (i: REAL_BODY_ID) is
 			-- Set `real_body_id' to `i'.
 		do
 			real_body_id := i
@@ -76,7 +76,7 @@ feature -- Comparison
 			-- the breakpoint).
 		do
 			Result := (other.offset = offset) and 
-							(other.real_body_id = real_body_id)
+							equal (other.real_body_id, real_body_id)
 		end;
 
 end -- class BREAKPOINT

@@ -28,7 +28,8 @@ feature
 			-- Is the table polymorphic from entry indexed by `type_id' to
 			-- the maximum entry id ?
 		local
-			pos, first_body_id: INTEGER;
+			pos: INTEGER;
+			first_body_id: BODY_ID;
 			second_type_id: INTEGER;
 			entry: ROUT_ENTRY;
 			cl_type: CLASS_TYPE;
@@ -62,7 +63,7 @@ feature
 				if cl_type.associated_class.conform_to (first_class) then
 					if entry.used then
 						if found then
-							Result := entry.body_id /= first_body_id;
+							Result := not equal (entry.body_id, first_body_id)
 						else
 							found := True;
 							first_body_id := entry.body_id;
@@ -152,7 +153,8 @@ feature -- DLE
 			-- Was the table in the extendible system polymorphic from
 			-- entry indexed by `type_id' to the maximum entry id?
 		local
-			pos, first_body_id: INTEGER;
+			pos: INTEGER;
+			first_body_id: BODY_ID;
 			second_type_id: INTEGER;
 			entry: ROUT_ENTRY;
 			cl_type: CLASS_TYPE;
@@ -187,7 +189,7 @@ feature -- DLE
 				if cl_type.associated_class.conform_to (first_class) then
 					if entry.was_used then
 						if found then
-							Result := entry.body_id /= first_body_id;
+							Result := not equal (entry.body_id, first_body_id)
 						else
 							found := True;
 							first_body_id := entry.body_id;

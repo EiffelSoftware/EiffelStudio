@@ -40,4 +40,17 @@ feature -- Setting
 			assigned: offset = o
 		end;
 
+	reset is
+			-- Reset the counter.
+		do
+			count := 0
+		end
+
+	set_value (value: INTEGER) is
+			-- Reset the counter so that next generated id
+			-- will be `value' + 1.
+		do
+			count := (value - offset).max (0)
+		end
+
 end -- class COMPILER_SUBCOUNTER

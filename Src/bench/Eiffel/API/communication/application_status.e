@@ -129,12 +129,12 @@ feature -- Access
 		do
 			Result := 
 				is_stopped and then 
-				f.body_id = e_feature.body_id and then
+				equal (f.body_id, e_feature.body_id) and then
 				break_index = index
 		ensure
 			yes_if: Result implies 
 					is_stopped and then 
-					f.body_id = e_feature.body_id and then
+					equal (f.body_id, e_feature.body_id) and then
 					break_index = index
 		end;
 

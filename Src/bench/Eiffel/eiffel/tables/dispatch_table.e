@@ -13,12 +13,24 @@ inherit
 
 creation
 
-	init
+	make
 	
+feature -- Initialization
+
+	make is
+			-- Create a new dispatch table.
+		do
+			init;
+			!! counter.make
+		end
+
+	counter: REAL_BODY_INDEX_COUNTER;
+			-- Counter for real body index
+			
 feature 
 
-	real_body_index (body_index: INTEGER; class_type: CLASS_TYPE): INTEGER is
-			-- Body id associated to an instance of FEATURE_I of
+	real_body_index (body_index: BODY_INDEX; class_type: CLASS_TYPE): REAL_BODY_INDEX is
+			-- Real body index associated to an instance of FEATURE_I of
 			-- body index `body_index' in a class type `class_type'.
 		local
 			unit: DISPATCH_UNIT;
@@ -31,7 +43,7 @@ feature
 
 feature {NONE} -- Search
 
-	unit_of_body_index (body_index: INTEGER; class_type: CLASS_TYPE): DISPATCH_UNIT is
+	unit_of_body_index (body_index: BODY_INDEX; class_type: CLASS_TYPE): DISPATCH_UNIT is
 			-- Unit associated to an instance of FEATURE_I of
 			-- body index `body_index' in a class type `class_type'.
 		do
@@ -44,11 +56,33 @@ feature {NONE} -- Search
 			-- Marker for search
 		local
 			f: DYN_PROC_I;
+			bi: BODY_INDEX
 		once
 			!!f;
-			f.set_body_index (1);
+			!! bi.make (1);
+			f.set_body_index (bi);
 			!!Result.make (System.class_type_of_id (1), f);
 		end;
+
+feature -- Refreezing
+
+	frozen_level: INTEGER
+			-- Melted/Frozen limit
+
+	set_frozen_level (level: INTEGER) is
+			-- Set `frozen_level' to `level'.
+		do
+			frozen_level := level
+		end
+
+	dle_frozen_level: INTEGER
+			-- Melted/Frozen limit in the DC-set
+
+	set_dle_frozen_level (level: INTEGER) is
+			-- Set `dle_frozen_level' to `level'.
+		do
+			dle_frozen_level := level
+		end
 
 feature	-- Melting and C Generation
 
@@ -61,12 +95,12 @@ feature	-- Melting and C Generation
 		do
 debug
 	io.error.putstring ("Updating dispatch_table%NCount: ");
-	io.error.putint (counter);
+	io.error.putint (counter.total_count);
 	io.error.new_line;
 end;
 debug ("DLE SPY")
 	io.error.putstring ("Updating dispatch_table%NCount: ");
-	io.error.putint (counter);
+	io.error.putint (counter.total_count);
 	io.error.new_line;
 end;
 
@@ -84,13 +118,13 @@ io.error.put_string (", dtype #");
 io.error.put_integer (u.class_type.type_id);
 io.error.new_line;
 io.error.put_string ("%Tbody_index #");
-io.error.put_integer (u.real_body_index - 1);
+io.error.put_integer (u.real_body_index.id - 1);
 io.error.put_string (", body_id #");
-io.error.put_integer (u.real_body_id - 1);
+io.error.put_integer (u.real_body_id.id - 1);
 io.error.new_line
 end
-					write_int (file.file_pointer, u.real_body_index - 1);
-					write_int (file.file_pointer, u.real_body_id - 1);
+					write_int (file.file_pointer, u.real_body_index.id - 1);
+					write_int (file.file_pointer, u.real_body_id.id - 1);
 debug
 	io.error.putstring ("Item written%N");
 end;
@@ -106,7 +140,7 @@ end;
 	write_dispatch_count (file: RAW_FILE) is
 			-- Write the size of dispatch table on `file'.
 		do
-			write_int (file.file_pointer, counter)
+			write_int (file.file_pointer, counter.total_count)
 		end;
 
 	generate (file: INDENT_FILE) is
@@ -120,7 +154,7 @@ end;
 			i, nb: INTEGER;
 		do
 			from
-				nb := counter;
+				nb := counter.total_count;
 				!!values.make (1, nb);
 				start
 			until
@@ -128,7 +162,7 @@ end;
 			loop
 				unit := item_for_iteration;
 				if unit.is_valid then
-					values.put (unit.real_body_id - 1, unit.real_body_index);
+					values.put (unit.real_body_id.id - 1, unit.real_body_index.id);
 				end;
 				forth;
 			end;
@@ -154,8 +188,7 @@ feature -- DLE
 			-- Keep track of the different levels after each compilation
 		do
 			if not System.is_dynamic then
-				dle_level := counter;
-                dle_frozen_level := dle_level
+                dle_frozen_level := counter.total_count
             end
         end;
 
@@ -171,7 +204,7 @@ feature -- DLE
 			i, nb: INTEGER
 		do
 			from
-				nb := counter;
+				nb := counter.total_count;
 				!!values.make (1, nb);
 				start
 			until
@@ -179,12 +212,12 @@ feature -- DLE
 			loop
 				unit := item_for_iteration;
 				if unit.is_valid then
-					values.put (unit.real_body_id - 1, unit.real_body_index);
+					values.put (unit.real_body_id.id - 1, unit.real_body_index.id);
 				end;
 				forth;
 			end;
 			from
-				i := dle_level + 1;
+				i := nb - counter.current_count + 1;
 				file.putstring ("#include %"struct.h%"");
 				file.new_line;
 				file.putstring ("#include %"portable.h%"");

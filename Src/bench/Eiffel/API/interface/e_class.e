@@ -162,10 +162,10 @@ feature -- Access
 			end
 		end;
 
-	feature_with_body_id (bid: INTEGER): E_FEATURE is
+	feature_with_body_id (bid: BODY_ID): E_FEATURE is
 			-- Feature whose body id `bid'.
 		require
-			valid_body_id: bid > 0;
+			valid_body_id: bid /= Void;
 			has_feature_table: has_feature_table
 		local
 			feat: FEATURE_I
@@ -230,8 +230,9 @@ feature -- Access
 feature -- Precompilation Access
 
 	is_precompiled: BOOLEAN is
+			-- Is class precompiled?
 		do	
-			Result := id.is_precompiled and not Compilation_modes.is_precompiling
+			Result := id.is_precompiled
 		end;
 
 feature -- Server Access

@@ -1,15 +1,31 @@
 -- Constants for body ids of invariant and initialization routine
 
 class SHARED_BODY_ID
+
+inherit
+
+	SHARED_WORKBENCH
 	
 feature {NONE}
 
-	Invariant_id: INTEGER is 1;
+	Invariant_body_id: BODY_ID is
+		once
+			Result := System.body_id_counter.invariant_body_id
+		end
 
-	Initialization_id: INTEGER is 2;
+	Initialization_body_id: BODY_ID is
+		once
+			Result := System.body_id_counter.initialization_body_id
+		end
 
-	Dle_make_id: INTEGER is 3;
+	Dle_make_body_id: BODY_ID is
+		once
+			Result := System.body_id_counter.dle_make_body_id
+		end
 
-	Dispose_id: INTEGER is 4;
+	Dispose_body_id: BODY_ID is
+		once
+			Result := System.body_id_counter.dispose_body_id
+		end
 
-end
+end -- class SHARED_BODY_ID

@@ -77,7 +77,7 @@ feature -- Generation
 				Result.append ("%T{(int16) -1, (int16) -1},%N")
 			else
 				Result.append ("%T{(int16) ");
-				Result.append_integer (invariant_entry.real_body_index);
+				Result.append_integer (invariant_entry.real_body_index.id - 1);
 				Result.append (", (int16) -1},%N");
 			end;
 
@@ -162,7 +162,7 @@ feature -- Melting
 			if (invariant_entry = Void) then
 				ba.append_short_integer (-1)
 			else
-				ba.append_short_integer	(invariant_entry.real_body_index)
+				ba.append_short_integer	(invariant_entry.real_body_index.id - 1)
 			end;
 			ba.append_short_integer (-1);
 

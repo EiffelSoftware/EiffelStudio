@@ -275,7 +275,7 @@ feature -- Inlining
 				inliner.set_current_feature_inlined;
 				!!inlined_feat_b;
 				inlined_feat_b.fill_from (Current)
-				bc ?= Byte_server.disk_item (f.body_id);
+				bc ?= Byte_server.disk_item (f.body_id.id);
 
 				old_c_t := Context.current_type;
 				Context.set_current_type (current_type);

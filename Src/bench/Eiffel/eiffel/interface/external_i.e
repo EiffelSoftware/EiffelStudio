@@ -279,7 +279,7 @@ feature
 				-- then encapsulated is True; otherwise do nothing
 			if encapsulated then
 				generate_header (file);
-				byte_code := Byte_server.disk_item (body_id);
+				byte_code := Byte_server.disk_item (body_id.id);
 					-- Generation of C code for an Eiffel feature written in
 					-- the associated class of the current type.
 				byte_context.set_byte_code (byte_code);

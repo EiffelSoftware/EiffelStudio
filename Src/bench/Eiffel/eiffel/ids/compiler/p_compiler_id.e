@@ -23,8 +23,12 @@ feature {NONE} -- Initialization
 
 feature -- Status report
 
-	is_precompiled: BOOLEAN is True;
+	is_precompiled: BOOLEAN is
 			-- Is the entity identified by `Current' precompiled?
+		do
+			Result := not Compilation_modes.is_precompiling or
+				compilation_id /= System.compilation_id
+		end
 
 feature {NONE} -- Implemetation
 

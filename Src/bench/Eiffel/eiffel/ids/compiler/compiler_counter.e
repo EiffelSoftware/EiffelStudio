@@ -41,12 +41,13 @@ feature -- Initialization
 			-- Renumber ids already generated so far and continue
 			-- generation from there.
 		local
-			nb, compilation_id: INTEGER
+			compilation_id: INTEGER
+			new_offset: INTEGER
 		do
-			nb := current_subcounter.offset + current_subcounter.count
 			compilation_id := System.compilation_id;
+			new_offset := total_count;
 			current_subcounter := new_subcounter (compilation_id);
-			current_subcounter.set_offset (nb);
+			current_subcounter.set_offset (new_offset);
 			put (current_subcounter, compilation_id)
 		end
 
@@ -108,6 +109,15 @@ feature -- Access
 			-- Total number of ids generated
 		do
 			Result := current_subcounter.offset + current_subcounter.count
+		end
+
+feature -- Setting
+
+	set_value (value: INTEGER) is
+			-- Reset the counter so that next geneareted id
+			-- will be `value' + 1
+		do
+			current_subcounter.set_value (value)
 		end
 
 feature {NONE} -- Implementation

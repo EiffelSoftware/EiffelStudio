@@ -23,7 +23,6 @@ inherit
 	SHARED_CECIL;
 	SHARED_ROUT_ID;
 	SHARED_BODY_ID;
-	SHARED_ENCODER;
 	SHARED_USED_TABLE;
 	SHARED_BYTE_CONTEXT
 		rename
@@ -54,12 +53,22 @@ feature -- Counters
 	static_type_id_counter: TYPE_COUNTER;
 			-- Counter of instances of CLASS_TYPE
 
+	body_id_counter: BODY_ID_COUNTER;
+			-- Counter for body ids
+
+	body_index_counter: BODY_INDEX_COUNTER;
+			-- Body index counter
+
 	init_counters is
 			-- Initialize various counters.
 		do
-			routine_id_counter.init_counter
-			class_counter.init_counter
-			static_type_id_counter.init_counter
+			routine_id_counter.init_counter;
+			class_counter.init_counter;
+			static_type_id_counter.init_counter;
+			body_id_counter.init_counter;
+			body_index_counter.init_counter;
+			dispatch_table.counter.init_counter;
+			execution_table.counter.init_counter
 		end;
 
 	compilation_id: INTEGER is 
@@ -76,7 +85,7 @@ feature -- Counters
 
 feature -- Properties
 
-	changed_body_ids: EXTEND_TABLE [CHANGED_BODY_ID_INFO, INTEGER] is
+	changed_body_ids: EXTEND_TABLE [CHANGED_BODY_ID_INFO, BODY_ID] is
 		once
 			!!Result.make (2)
 		end;
@@ -87,12 +96,6 @@ feature -- Properties
 
 	sorter: CLASS_SORTER;
 			-- Topological sorter on classes
-
-	body_id_counter: BODY_ID_COUNTER;
-			-- Counter for body ids
-
-	body_index_counter: COUNTER;
-			-- Body index counter
 
 	type_id_counter: COUNTER;
 			-- Counter of valid instances of CLASS_TYPE
@@ -290,7 +293,7 @@ feature -- Properties
 
 	onbidt: O_N_TABLE;
 			-- Correspondance table between old body ids
-			-- (changed trough `vhange_body_id' of FEATURE_I)
+			-- (changed trough `change_body_id' of FEATURE_I)
 			-- and new body id.
 
 	dispatch_table: DISPATCH_TABLE;
@@ -391,8 +394,8 @@ feature -- Properties
 			!! class_counter.make;
 			!!static_type_id_counter.make;
 			!!body_id_counter.make;
+			!!body_index_counter.make;
 			!!type_id_counter;
-			!!body_index_counter;
 			!!feature_counter;
 				-- Routine table controler creation
 			!!history_control.make;
@@ -413,8 +416,8 @@ feature -- Properties
 			!!body_index_table.make (System_chunk);
 			!!original_body_index_table.make (1);
 				-- Run-time table creation
-			!!dispatch_table.init;
-			!!execution_table.init;
+			!!dispatch_table.make;
+			!!execution_table.make;
 			!!melted_set.make;
 			melted_set.compare_objects;
 			!!rout_info_table.make (500);
@@ -764,7 +767,7 @@ end;
 					-- to ensure that the object remains the same troughout 
 					-- a session. If you want to change it, think thoroughly
 					-- before! (Dino, that's an allusion to you, -- FRED)
-				original_body_index_table.copy (clone (body_index_table));
+				original_body_index_table.copy (body_index_table);
 				melted_set.wipe_out;
 			end;
 		end;
@@ -1607,7 +1610,7 @@ feature -- Freeezing
 			descriptors: ARRAY [INTEGER]
 		do
 			dle_frozen_nobid_table.clear_all;
-			dle_frozen_nobid_table.set_threshold (body_id_counter.value);
+			dle_frozen_nobid_table.set_threshold (body_id_counter.total_count);
 			freezing_occurred := True;
 			if Compilation_modes.is_precompiling then
 				!PRECOMP_MAKER!makefile_generator.make
@@ -1858,11 +1861,6 @@ end;
 
 			execution_table.shake;
 			dispatch_table.shake;
-
-			if Compilation_modes.is_precompiling then
-				execution_table.set_precomp_level;
-				dispatch_table.set_precomp_level
-			end;
 
 			from
 				execution_table.start
@@ -2743,7 +2741,7 @@ if class_type /= Void then
 					!!rout_entry;
 					rout_entry.set_type_id (i);
 					rout_entry.set_written_type_id (i);
-					rout_entry.set_kind (Initialization_id);
+					rout_entry.set_body_id (Initialization_body_id);
 					rout_table.extend (rout_entry);
 				end;
 end;
@@ -2875,7 +2873,7 @@ if class_type /= Void then
 					written_class := class_of_id (feature_i.written_in);
 					written_type := written_class.meta_type (class_type.type);
 					rout_entry.set_written_type_id (written_type.type_id);
-					rout_entry.set_kind (feature_i.body_id);
+ 					rout_entry.set_body_id (feature_i.body_id);
 					rout_table.extend (rout_entry);
 				end;
 end;
@@ -2918,10 +2916,8 @@ feature -- Plug and Makefile file
 			creation_feature := string_cl.feature_table.item
 											(creators.key_for_iteration);
 			set_count_feat := string_cl.feature_table.item ("set_count");
-			str_make_name := clone (Encoder.feature_name
-							(id.id, creation_feature.body_id))
-			set_count_name := clone (Encoder.feature_name
-							(id.id, set_count_feat.body_id))
+			str_make_name := creation_feature.body_id.feature_name (id)
+			set_count_name := set_count_feat.body_id.feature_name (id)
 			Plug_file.putstring ("extern void ");
 			Plug_file.putstring (str_make_name);
 			Plug_file.putstring ("();%N");
@@ -2947,8 +2943,7 @@ feature -- Plug and Makefile file
 				creators.start;
 				creation_feature := array_cl.feature_table.item
 											(creators.key_for_iteration);
-				arr_make_name := clone (Encoder.feature_name
-								(id.id, creation_feature.body_id))
+				arr_make_name := creation_feature.body_id.feature_name (id)
 				array_make_name := clone (arr_make_name)
 			else
 				cl_type := Instantiator.Array_type.associated_class_type; 
@@ -3288,7 +3283,7 @@ feature -- Main file generation
 				Initialization_file.putint (class_counter.total_count);
 					-- Set C variable `dcount'.
 				Initialization_file.putstring (";%N%Tdcount = ");
-				Initialization_file.putint (dispatch_table.counter);
+				Initialization_file.putint (dispatch_table.counter.total_count);
 					-- Set the frozen level
 				Initialization_file.putstring (";%N%Tzeroc = ");
 				Initialization_file.putint (frozen_level);

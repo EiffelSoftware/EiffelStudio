@@ -4,7 +4,10 @@ class TYPE_ID
 
 inherit
 
-	COMPILER_ID;
+	COMPILER_ID
+		export
+			{BODY_ID} internal_id
+		end;
 	ENCODER
 		export
 			{NONE} all
@@ -40,18 +43,20 @@ feature -- Access
 			Result.append (buff)
 		end
 
+feature {BODY_ID} -- Access
+
+	prefix_name: STRING is
+			-- Prefix for generated C function names
+		do
+			Result := counter.prefix_name
+		end
+
 feature {NONE} -- Implementation
 
 	counter: TYPE_SUBCOUNTER is
 			-- Counter associated with the id
 		do
 			Result := System.static_type_id_counter.item (compilation_id)
-		end
-
-	prefix_name: STRING is
-			-- Prefix for generated C function names
-		do
-			Result := counter.prefix_name
 		end
 
 end -- class TYPE_ID

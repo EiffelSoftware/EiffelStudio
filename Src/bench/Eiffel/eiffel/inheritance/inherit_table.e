@@ -104,7 +104,7 @@ feature
 	origins: LINKED_LIST [STRING];
 			-- Origin features name list for pattern processing
 
-	new_body_id: INTEGER;
+	new_body_id: BODY_ID;
 			-- Last new computed body id
 
 	supplier_status_modified: BOOLEAN;
@@ -158,7 +158,7 @@ feature
 			creation_name: STRING;
 			equiv_tables: BOOLEAN;
 		do
-			new_body_id := 0;
+			new_body_id := Void;
 
 			a_class := pass_c.associated_class;
 			supplier_status_modified := is_supplier_status_modified;
@@ -817,29 +817,29 @@ end;
 						-- `feature_name', new feature id for the feature
 					give_new_feature_id (feature_i);
 						-- Compute a body index information
-					feature_i.set_body_index (Body_index_counter.next);
+					feature_i.set_body_index (Body_index_counter.next_id);
 				else
 						-- Take the previous feature id
 					feature_i.set_feature_id (old_feature.feature_id);
 					if not equal (old_feature.written_in, a_class.id) then
-						feature_i.set_body_index (Body_index_counter.next);
+						feature_i.set_body_index (Body_index_counter.next_id);
 					else
 						feature_i.set_body_index (old_feature.body_index);
 					end;
 				end;
 					-- Update body index/body id correpondances
-				if new_body_id > 0 then
+				if new_body_id /= Void then
 						-- A new body id has been computed for `feature_i'.
 					Body_index_table.force
 									(new_body_id, feature_i.body_index);
 debug ("ACTIVITY")
 	io.error.putstring ("Insert new body id: ");
-	io.error.putint (new_body_id);
+	io.error.putint (new_body_id.id);
 	io.error.putstring ("%NBody index: ");
-	io.error.putint (feature_i.body_index);
+	io.error.putint (feature_i.body_index.id);
 	io.error.new_line;
 end
-					new_body_id := 0;
+					new_body_id := Void;
 				end;
 					-- Put new feature in `inherited_features'.
 				insert_feature (feature_i);
@@ -867,7 +867,7 @@ end
 			feature_i: FEATURE_I;
 			unique_feature: UNIQUE_I;
 				-- Feature coming from a previous recompilation
-			old_body_id, feature_body_id: INTEGER;
+			old_body_id, feature_body_id: BODY_ID;
 				-- Body id of a previous compiled feature
 			old_description: FEATURE_AS_B;
 				-- Abstract representation of a previous compiled feature
@@ -930,10 +930,10 @@ end;
 						-- same class.
 debug ("ACTIVITY")
 	io.error.putstring ("Getting old_body ");
-	io.error.putint (old_body_id);
+	io.error.putint (old_body_id.id);
 	io.error.new_line;
 end;
-					old_description := Body_server.server_item (old_body_id);
+					old_description := Body_server.server_item (old_body_id.id);
 						-- Incrementality of the workbench is here: we
 						-- compare the content of a new feature and the
 						-- one of an old feature.
@@ -999,25 +999,25 @@ end;
 					-- server after compilation if successfull.
 					if old_feature_in_class then
 						if not feature_i.is_code_replicated then
-							Tmp_body_server.desactive (old_body_id);
+							Tmp_body_server.desactive (old_body_id.id);
 						else
-							Tmp_rep_feat_server.desactive (old_body_id);
+							Tmp_rep_feat_server.desactive (old_body_id.id);
 						end;
 					end;
 						-- Computes a new body id for the changed
 						-- feature.
-					new_body_id := Body_id_counter.next;
+					new_body_id := Body_id_counter.next_id;
 						-- Take reading information left by the server
 						-- `Tmp_ast_server' during first pass and put
 						-- it in the server `Tmp_body_server'.
-					body_table.put (read_info, new_body_id);	
+					body_table.put (read_info, new_body_id.id);	
 						-- Insert the changed feature in the table of
 						-- changed features of class `a_class'.
 debug ("ACTIVITY")
 	io.error.putstring (feature_name);
 	io.error.putstring (" inserted in changed_features%N%
 			%New body id: ");
-	io.error.putint (new_body_id);
+	io.error.putint (new_body_id.id);
 	io.error.new_line;
 end;
 					changed_features.put_front (feature_name);
@@ -1026,25 +1026,25 @@ end;
 					Result.set_type (feature_i.type);
 						-- Relative offset of the unchanged feature
 						-- description could change.
-					body_table.put (read_info, old_body_id);
+					body_table.put (read_info, old_body_id.id);
 						-- Restore good body id in `Body_index_table'.
-					if feature_i.body_id /= old_body_id then
+					if not equal (feature_i.body_id, old_body_id) then
 							-- An error happended and modification was undone
 						new_body_id := old_body_id;
 					end;
 					if not feature_i.is_code_replicated then
-						Tmp_body_server.reactivate (old_body_id);
+						Tmp_body_server.reactivate (old_body_id.id);
 					else
-						Tmp_rep_feat_server.reactivate (old_body_id);
+						Tmp_rep_feat_server.reactivate (old_body_id.id);
 					end;
 				end;
 			else
 					-- New body id
-				new_body_id := Body_id_counter.next;
+				new_body_id := Body_id_counter.next_id;
 					-- Take reading information for the body server left
 					-- by `Tmp_ast_server' during first pass and put it
 					-- the temporary body server.
-				body_table.put (read_info, new_body_id);
+				body_table.put (read_info, new_body_id.id);
 					-- Insert the changed feature in the table of changed
 					-- features of `a_class'.
 debug ("ACTIVITY")
@@ -1162,7 +1162,7 @@ end;
 			end;
 		end;
 
-	Body_id_counter: COUNTER is
+	Body_id_counter: BODY_ID_COUNTER is
 			-- Counter for body ids
 		once
 			Result := System.body_id_counter;
@@ -1174,7 +1174,7 @@ end;
 			Result := System.routine_id_counter;
 		end;
 
-	Body_index_counter: COUNTER is
+	Body_index_counter: BODY_INDEX_COUNTER is
 			-- Counter for bodies index
 		once
 			Result := System.body_index_counter;
@@ -1430,7 +1430,7 @@ feature -- Replications
 			tmp_rep_class_info: EXTEND_TABLE [S_REP_NAME_LIST, INTEGER];
 			stop, needs_replication: BOOLEAN;
 			written_in_cont: CLASS_ID;
-			body_id: INTEGER;
+			body_id: BODY_ID;
 			same_features: BOOLEAN;
 			cur: CURSOR;
 			s_rep_name: S_REP_NAME;
@@ -1490,10 +1490,10 @@ end;
 							old_feat /= Void
 						then
 							body_id := old_feat.body_id;
-							if Rep_feat_server.has (body_id) then
-								feature_as := Rep_feat_server.item (body_id)
+							if Rep_feat_server.has (body_id.id) then
+								feature_as := Rep_feat_server.item (body_id.id)
 							else
-								feature_as := Body_server.item (body_id)
+								feature_as := Body_server.item (body_id.id)
 							end;
 							calls_list.wipe_out;
 							feature_as.fill_calls_list (calls_list);
@@ -1566,19 +1566,19 @@ end;
 					-- `feature_name', new feature id for the feature
 				give_new_feature_id (feature_i);
 					-- Compute a body index information
-				feature_i.set_body_index (Body_index_counter.next);
+				feature_i.set_body_index (Body_index_counter.next_id);
 			else
 					-- Take the previous feature id
 				feature_i.set_feature_id (old_feature.feature_id);
 				if not equal (old_feature.written_in, a_class.id) then
-					feature_i.set_body_index (Body_index_counter.next);
+					feature_i.set_body_index (Body_index_counter.next_id);
 				else
 					feature_i.set_body_index (old_feature.body_index);
 				end;
 			end;
 				-- A new body id has been computed for `feature_i'.
 			Body_index_table.force (new_body_id, feature_i.body_index);
-			new_body_id := 0;
+			new_body_id := Void;
 			Origins.put_front (feature_i.feature_name);
 		end;
 
@@ -1591,7 +1591,7 @@ end;
 			feature_i: FEATURE_I;
 			unique_feature: UNIQUE_I;
 				-- Feature coming from a previous recompilation
-			old_body_id, feature_body_id: INTEGER;
+			old_body_id, feature_body_id: BODY_ID;
 				-- Body id of a previous compiled feature
 			old_description: FEATURE_AS_B;
 				-- Abstract representation of a previous compiled feature
@@ -1648,10 +1648,10 @@ end;
 						--| at the end of the whole pass2 phase so that the
 						--| feature_tables of all classes are available 
 						--| when replicating `feature_i'.
-					old_body_id := 0;
+					old_body_id := Void;
 				else
 						-- New body id
-					new_body_id := Body_id_counter.next;
+					new_body_id := Body_id_counter.next_id;
 debug ("REPLICATION")
 	io.error.putstring (feature_name);
 	io.error.putstring (" inserted in changed_features%N");
@@ -1660,7 +1660,7 @@ end;
 				end
 			else
 					-- New body id
-				new_body_id := Body_id_counter.next;
+				new_body_id := Body_id_counter.next_id;
 debug ("REPLICATION")
 	io.error.putstring (feature_name);
 	io.error.putstring (" inserted in changed_features%N");

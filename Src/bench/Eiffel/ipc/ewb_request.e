@@ -44,7 +44,7 @@ feature
 			-- Send the byte code of routines which have
 			-- been dynamicaly melted.
 		local
-			deb: EXTEND_TABLE [LINKED_LIST [DEBUGGABLE], INTEGER];
+			deb: EXTEND_TABLE [LINKED_LIST [DEBUGGABLE], BODY_ID];
 			deb_l: LINKED_LIST [DEBUGGABLE];
 			byte_array: TO_SPECIAL [CHARACTER];
 			c_ptr: ANY
@@ -71,8 +71,8 @@ feature
 						not Result
 					loop
 						send_rqst_2 (Rqst_bc,
-							deb_l.item.real_body_index - 1,
-							deb_l.item.real_body_id - 1);
+							deb_l.item.real_body_index.id - 1,
+							deb_l.item.real_body_id.id - 1);
 						byte_array := deb_l.item.byte_code;
 						c_ptr := byte_array.area;
 						c_twrite ($c_ptr, deb_l.item.byte_code.size);
@@ -187,12 +187,12 @@ feature
 				bp := bpts.item_for_iteration;
 				if bp.is_continue then
 					send_rqst_3 (Rqst_break, 
-							bp.real_body_id - 1,
+							bp.real_body_id.id - 1,
 							Break_remove,
 							bp.offset - 1);
 				else
 					send_rqst_3 (Rqst_break, 
-							bp.real_body_id - 1,
+							bp.real_body_id.id - 1,
 							Break_set,
 							bp.offset - 1);
 				end;

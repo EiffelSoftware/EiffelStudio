@@ -8,24 +8,30 @@ inherit
 		rename
 			id as body_id,
 			set_id as set_body_id
+		redefine
+			body_id, index
 		end
 
 creation
 
 	make
 
-	
 feature
+
+	body_id: BODY_ID;
+			-- Body id	
 
 	type: TYPE_C;
 			-- C type of the unit
 
-	real_body_id: INTEGER is
+	real_body_id: REAL_BODY_ID is
 			-- Real body id
 			--| To be redefined in EXT_EXECUTION_UNIT
 		do
 			Result := index;
 		end;
+
+	index: REAL_BODY_ID;
 
 	pattern_id: INTEGER;
 		-- Pattern id of feature corresponding to Current
@@ -52,7 +58,7 @@ feature
 		local
 			written_type: CL_TYPE_I;
 			written_class: CLASS_C;
-			s: TWO_WAY_SORTED_SET [INTEGER];
+			s: TWO_WAY_SORTED_SET [BODY_ID];
 		do
 			written_class := System.class_of_id (written_in);
 			if written_class /= Void and then
@@ -89,7 +95,7 @@ feature
 			-- Initialization
 		require
 			good_argument: not (f = Void or else cl_type = Void);
-			consistency1: f.body_id > 0;
+			consistency1: f.body_id /= Void;
 			consistency2: f.to_generate_in (cl_type.associated_class)
 		local
 			result_type: TYPE_I;
@@ -118,7 +124,7 @@ feature
 	compound_name: STRING is
 			-- Compound C routine name
 		do
-			Result := Encoder.feature_name (class_type.id.id, body_id);
+			Result := body_id.feature_name (class_type.id)
 		end;
 
 	generate_declaration (file: INDENT_FILE) is
@@ -150,9 +156,9 @@ feature -- Debug
 		do
 			io.error.putstring (generator);
 			io.error.putstring ("%NBody_id: ");
-			io.error.putint (body_id);
+			io.error.putint (body_id.id);
 			io.error.putstring ("%NIndex: ");
-			io.error.putint (index);
+			io.error.putint (index.id);
 			io.error.putstring ("%NPattern id: ");
 			io.error.putint (pattern_id);
 			io.error.putstring ("%Nwritten_in: ");

@@ -118,7 +118,7 @@ feature {NONE} -- Implementation
 				until
 					interface_descriptors.off
 				loop
-					if not is_typeflag_fhidden (interface_descriptors.item.flags) then
+--					if not is_typeflag_fhidden (interface_descriptors.item.flags) then
 						-- Add parent and import header files
 						cpp_class_writer.add_parent (interface_descriptors.item.c_type_name, Public)
 						cpp_class_writer.add_import (interface_descriptors.item.c_header_file_name)
@@ -151,7 +151,7 @@ feature {NONE} -- Implementation
 
 						generate_functions_and_properties (interface_descriptors.item)
 	
-					end
+--					end
 					interface_descriptors.forth
 				end
 			end

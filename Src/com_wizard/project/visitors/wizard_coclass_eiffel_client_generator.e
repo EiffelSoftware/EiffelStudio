@@ -101,7 +101,7 @@ feature {NONE} -- Implementation
 			until
 				coclass_descriptor.interface_descriptors.off
 			loop
-				if not is_typeflag_fhidden (coclass_descriptor.interface_descriptors.item.flags) then
+--				if not is_typeflag_fhidden (coclass_descriptor.interface_descriptors.item.flags) then
 					if coclass_descriptor.interface_descriptors.item.dispinterface or else
 						coclass_descriptor.interface_descriptors.item.dual
 					then
@@ -113,7 +113,7 @@ feature {NONE} -- Implementation
 					generate_functions_and_properties (coclass_descriptor.interface_descriptors.item, 
 						coclass_descriptor, eiffel_writer, inherit_clause)
 					eiffel_writer.add_inherit_clause (inherit_clause)
-				end
+--				end
 				coclass_descriptor.interface_descriptors.forth
 			end
 		end

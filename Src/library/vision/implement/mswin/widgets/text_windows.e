@@ -557,13 +557,10 @@ feature -- Status setting
 
 	set_maximum_size (a_max: INTEGER) is
 			-- Set maximum_size to `a_max'.
-		local
-			nb_cr: INTEGER
 		do
 			maximum_size := a_max
 			if exists then
---				nb_cr := private_text.occurrences ('%N')
-				set_text_limit (a_max + nb_cr)
+				set_text_limit (a_max)
 			end
 		end
 

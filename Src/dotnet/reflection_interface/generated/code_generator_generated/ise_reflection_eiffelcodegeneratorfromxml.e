@@ -1,7 +1,7 @@
 indexing
 	generator: "Eiffel Emitter 2.8b2"
 	external_name: "ISE.Reflection.EiffelCodeGeneratorFromXml"
-	assembly: "ISE.Reflection.CodeGenerator", "0.0.0.0", "neutral", "8742b5c9f9654554"
+	assembly: "ISE.Reflection.CodeGenerator", "0.0.0.0", "neutral", "7626a3824bcc2b68"
 
 external class
 	ISE_REFLECTION_EIFFELCODEGENERATORFROMXML

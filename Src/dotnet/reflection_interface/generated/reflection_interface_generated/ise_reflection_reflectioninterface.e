@@ -1,7 +1,7 @@
 indexing
 	generator: "Eiffel Emitter 2.8b2"
 	external_name: "ISE.Reflection.ReflectionInterface"
-	assembly: "ISE.Reflection.ReflectionInterface", "0.0.0.0", "neutral", "967870da39c29b7a"
+	assembly: "ISE.Reflection.ReflectionInterface", "0.0.0.0", "neutral", "b73c25e915e8726a"
 
 external class
 	ISE_REFLECTION_REFLECTIONINTERFACE

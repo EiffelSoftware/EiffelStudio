@@ -1,7 +1,7 @@
 indexing
 	generator: "Eiffel Emitter 2.8b2"
 	external_name: "ISE.Reflection.CodeGenerationSupport"
-	assembly: "ISE.Reflection.Support", "0.0.0.0", "neutral", "2ef5239aeb372f26"
+	assembly: "ISE.Reflection.Support", "0.0.0.0", "neutral", "a3b366af8d5e38c"
 
 external class
 	ISE_REFLECTION_CODEGENERATIONSUPPORT
@@ -114,18 +114,18 @@ feature -- Basic Operations
 			"GenerateFeatureAssertions"
 		end
 
+	is_valid_directory_path (a_path: STRING): BOOLEAN is
+		external
+			"IL signature (System.String): System.Boolean use ISE.Reflection.CodeGenerationSupport"
+		alias
+			"IsValidDirectoryPath"
+		end
+
 	create_folder (a_path: STRING) is
 		external
 			"IL signature (System.String): System.Void use ISE.Reflection.CodeGenerationSupport"
 		alias
 			"CreateFolder"
-		end
-
-	generate_parents is
-		external
-			"IL signature (): System.Void use ISE.Reflection.CodeGenerationSupport"
-		alias
-			"GenerateParents"
 		end
 
 	has_write_lock (a_folder_name: STRING): BOOLEAN is
@@ -184,11 +184,11 @@ feature -- Basic Operations
 			"GenerateClassFooter"
 		end
 
-	valid_path (a_path: STRING): BOOLEAN is
+	is_valid_filename (a_filename: STRING): BOOLEAN is
 		external
 			"IL signature (System.String): System.Boolean use ISE.Reflection.CodeGenerationSupport"
 		alias
-			"ValidPath"
+			"IsValidFilename"
 		end
 
 	generic_name_base: STRING is
@@ -219,6 +219,13 @@ feature -- Basic Operations
 			"GenericNamesTable"
 		end
 
+	eiffel_class_from_xml (a_filename: STRING): ISE_REFLECTION_EIFFELCLASS is
+		external
+			"IL signature (System.String): ISE.Reflection.EiffelClass use ISE.Reflection.CodeGenerationSupport"
+		alias
+			"EiffelClassFromXml"
+		end
+
 	generate_generic_derivations is
 		external
 			"IL signature (): System.Void use ISE.Reflection.CodeGenerationSupport"
@@ -226,11 +233,11 @@ feature -- Basic Operations
 			"GenerateGenericDerivations"
 		end
 
-	eiffel_class_from_xml (a_filename: STRING): ISE_REFLECTION_EIFFELCLASS is
+	generate_parents is
 		external
-			"IL signature (System.String): ISE.Reflection.EiffelClass use ISE.Reflection.CodeGenerationSupport"
+			"IL signature (): System.Void use ISE.Reflection.CodeGenerationSupport"
 		alias
-			"EiffelClassFromXml"
+			"GenerateParents"
 		end
 
 	generate_class_header is

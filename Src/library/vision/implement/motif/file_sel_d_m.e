@@ -62,10 +62,8 @@ creation
 
 feature {NONE} -- Initialization
 
-	make (a_file_select_dialog: FILE_SEL_D) is
+	make (a_file_select_dialog: FILE_SEL_D; oui_parent: COMPOSITE) is
 			-- Create a motif file selection dialog.
-		local
-			ext_name: ANY
 		do
 			widget_index := widget_manager.last_inserted_position;
 			mel_file_selection_d_make (a_file_select_dialog.identifier,
@@ -79,6 +77,19 @@ feature -- Access
 
 	screen_object: POINTER
 			-- Associated C widget pointer
+
+feature -- Status setting
+
+	set_open_file is
+			-- Set dialog to open file dialog 
+		do
+		end
+
+
+	set_save_file is
+            -- Set dialog to save file dialog 
+        do
+        end
 
 end -- class FILE_SEL_D_M
 

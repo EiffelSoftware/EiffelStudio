@@ -19,7 +19,6 @@ inherit
 			create_text_label
 		redefine
 			destroy,
---			set_expand,
 			make_with_text,
 			set_text,
 			text,
@@ -92,10 +91,8 @@ feature -- Status setting
 			c_gtk_widget_set_size (widget, value, height)
 				-- XX update `width'
 			if (value = -1) then
---				c_gtk_box_set_child_expandable (parent_imp.widget, widget, True)
 				c_gtk_box_set_child_options (parent_imp.widget, widget, True, True)
 			else
---				c_gtk_box_set_child_expandable (parent_imp.widget, widget, False)
 				c_gtk_box_set_child_options (parent_imp.widget, widget, False, True)
 			end
 		end

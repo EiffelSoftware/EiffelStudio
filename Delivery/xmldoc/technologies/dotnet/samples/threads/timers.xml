@@ -22,7 +22,27 @@
 		<heading>
 			<size>2</size>Compiling
 		</heading>
-		<paragraph>To see compiling instructions, you have to enable javascript.</paragraph>
+		<paragraph>To compile the example:
+			<list ordered="false">
+				<item>Launch EiffelStudio.</item>
+				<item>Select 
+					<bold>Use existing Ace (control file)</bold> and click 
+					<bold>OK</bold>
+				</item>
+				<item>Browse to 
+					<output output="envision">ENViSioN! root directory</output>
+					<output output="studio">Eiffel54</output>\examples\dotnet\threading\timers\.
+					<italic/>
+				</item>
+				<item>Choose
+					<italic/>.ace
+				</item>
+				<item>Choose the directory where the project will be compiled, by default the same directory containing the Ace file.</item>
+				<item>Click 
+					<bold>OK</bold>.
+				</item>
+			</list>
+		</paragraph>
 		<heading>
 			<size>2</size>Running
 		</heading>
@@ -44,19 +64,19 @@ Checking Status.
 		<paragraph>This application shows how to use the thread 
 			<code>
 				<class_name>TIMER</class_name>
-			</code>. The timer is launched ( 
+			</code>. The timer is launched (
 			<code>
-				<keyword>create</keyword>
+				<keyword>create</keyword> 
 			</code>
 			<code>
 				<local_variable>my_timer</local_variable>
 			</code>. 
 			<code>
 				<feature_name>make_with_callback</feature_name>
-			</code> ( 
+			</code> (
 			<code>
 				<keyword>create</keyword>
-			</code> { 
+			</code> {
 			<code>
 				<class_name>TIMER_CALLBACK</class_name>
 			</code>}. 

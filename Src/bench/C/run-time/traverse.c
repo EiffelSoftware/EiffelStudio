@@ -86,7 +86,7 @@ rt_shared void traversal(char *object, int p_accounting)
 
 	EIF_GET_CONTEXT
 	char *object_ref, *reference;
-	long count, elem_size;
+	EIF_INTEGER count, elem_size;
 	union overhead *zone;		/* Object header */
 	uint32 flags;				/* Object flags */
 	char *new;					/* Mapped object */
@@ -151,7 +151,7 @@ rt_shared void traversal(char *object, int p_accounting)
 			dtype = *(cidarr++);
 
 			if (dtype <= EXPANDED_LEVEL)
-				dtype = EXPANDED_LEVEL-dtype; /* expanded parameter */
+				dtype = (int16) (EXPANDED_LEVEL - dtype); /* expanded parameter */
 
 			if (dtype >= 0)
 			{
@@ -176,8 +176,8 @@ rt_shared void traversal(char *object, int p_accounting)
 		}
 
 		/* Evaluation of the number of items in the special object */
-		object_ref = (char *) (object + (zone->ov_size & B_SIZE) - LNGPAD_2);
-		count = *(long *) object_ref;
+		object_ref = RT_SPECIAL_INFO_WITH_ZONE(object, zone);
+		count = RT_SPECIAL_COUNT_WITH_INFO(object_ref);
 
 		if (!(flags & EO_COMP))
 			/* Special object filled with references */
@@ -191,7 +191,7 @@ rt_shared void traversal(char *object, int p_accounting)
 			 * necessary not special objects.
 			 */
 			int offset = OVERHEAD;
-			elem_size = *(long *) (object_ref + sizeof(long));
+			elem_size = RT_SPECIAL_ELEM_SIZE_WITH_INFO(object_ref);
 			for (i = 0; i < count; i++, offset += elem_size)
 				traversal(object + offset, p_accounting);
 		}
@@ -558,7 +558,7 @@ rt_private long chknomark(char *object, struct htable *tbl, long object_count)
 	/* First pass of the store mechanism consisting in marking objects. */
 
 	char *object_ref, *reference;
-	long count, elem_size;
+	EIF_INTEGER count, elem_size;
 	union overhead *zone = HEADER(object);		/* Object header */
 	uint32 flags;								/* Object flags */
 	unsigned long key = ((unsigned long) object) - 1;
@@ -595,8 +595,8 @@ rt_private long chknomark(char *object, struct htable *tbl, long object_count)
 			return object_count;
 
 		/* Evaluation of the number of items in the special object */
-		object_ref = (char *) (object + (zone->ov_size & B_SIZE) - LNGPAD_2);
-		count = *(long *) object_ref;
+		object_ref = RT_SPECIAL_INFO_WITH_ZONE(object, zone);
+		count = RT_SPECIAL_COUNT_WITH_INFO(object_ref);
 
 		if (!(flags & EO_COMP))
 			/* Special object filled with references */
@@ -611,7 +611,7 @@ rt_private long chknomark(char *object, struct htable *tbl, long object_count)
 			/* Special object filled with expanded objects which are
 			 * necessary not special objects.
 			 */
-			elem_size = *(long *) (object_ref + sizeof(long));
+			elem_size = RT_SPECIAL_ELEM_SIZE_WITH_INFO(object_ref);
 			for (object += OVERHEAD; count > 0;
 					count --, object += elem_size)
 				object_count = chknomark(object,tbl,object_count);

@@ -1,0 +1,478 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0//EN"><HTML>
+<HEAD>
+<META HTTP-EQUIV="Content-Type" CONTENT="text/html; charset=ISO-8859-1">
+<META HTTP-EQUIV="Content-Style-Type" CONTENT="text/css">
+<META NAME="GENERATOR" CONTENT="Adobe FrameMaker 5.5/HTML Export Filter">
+<LINK REL="STYLESHEET" HREF="tour.css" CHARSET="ISO-8859-1" TYPE="text/css">
+<TITLE> 4  CLASSES </TITLE>
+</HEAD>
+<!--------------------------------------------------->
+<SCRIPT LANGUAGE="Javascript">
+	// Default values
+	var oNewWindow = 0;
+
+	function ImageClick( oImage )
+	{
+		if( oNewWindow == 0 || oNewWindow.closed )
+		{
+			oNewWindow = window.open (oImage.src,"", "status=no, toolbar=no, menubar=no, location=no, resizable=yes");
+		}
+		else
+		{
+			oNewWindow.location = oImage.src;
+		}
+	}
+</SCRIPT>
+<!--------------------------------------------------->
+<body bgcolor="#faf0e6">
+<DIV>
+<p class="top" align="center"><a href="http://www.eiffel.com">Eiffel Home Page (Web)</a> -- <a href="../index.html">Getting started with Eiffel (local)</a>
+
+<img src="power.gif" ALT="Eiffel Home Page" align="right" border="0"  usemap="#eiffel"><map name="eiffel"><area shape="RECT" alt="Eiffel Home Page" coords="0,0,109,226" HREF="http://www.eiffel.com"><area shape="default" nohref></map>
+
+<p class="top" ALIGN="left"><IMG SRC="normaldoc.gif" ALT="Previous, Up, Next" BORDER="0" WIDTH="300" HEIGHT="40" USEMAP="#navigation"><map name="navigation"><AREA SHAPE="RECT" alt="Previous section" COORDS="0,0,95,40" HREF="invitation-04.html"><AREA SHAPE="RECT" alt="Up" COORDS="96,0,199,40" HREF="invitation.html"><AREA SHAPE="RECT" alt="Next section" COORDS="200,0,300,40" HREF="invitation-06.html"><area shape="default" nohref></MAP>
+</DIV>
+<H1 CLASS="aa-sec2">
+<A NAME="pgfId-445005"></A>4  <A NAME="marker-445004"></A>CLASSES </H1>
+<P CLASS="nn-first">
+<A NAME="pgfId-445006"></A>A class, it was said above, is an implementation of an abstract data type. This means that it describes a set of run-time objects, characterized by the <SPAN CLASS="ff-bold">
+features</SPAN>
+ (operations) applicable to them, and by the formal properties of these features. 
+<P CLASS="nn-normal">
+<A NAME="pgfId-445011"></A>Such objects are called the <SPAN CLASS="ff-bold">
+direct instances</SPAN>
+<A NAME="marker-445007"></A><A NAME="marker-445008"></A><A NAME="marker-445009"></A><A NAME="marker-445010"></A> of the class. Classes and objects should not be confused: &quot;class&quot; is a compile-time notion, whereas objects only exist at run time. This is similar to the difference that exists in classical programming between a program and one execution of that program, or between a type and a run-time value of that type. 
+<P CLASS="jj-small">
+<A NAME="pgfId-445012"></A>&quot;Object-Oriented&quot; is a misnomer; &quot;Class-Oriented Analysis, Design and Programming&quot; would be a more accurate description of the method. 
+<P CLASS="nn-first">
+<A NAME="pgfId-445013"></A>To see what a class looks like, let us look at a simple example, <SPAN CLASS="ee-text">
+ACCOUNT</SPAN>
+, which describes bank accounts. But before exploring the class itself it is useful to study how it may be used by other classes, called i<A NAME="marker-445014"></A>ts <SPAN CLASS="ff-bold">
+clients</SPAN>
+<A NAME="marker-445015"></A>. 
+<P CLASS="nn-normal">
+<A NAME="pgfId-445017"></A>A class <SPAN CLASS="ee-text">
+X</SPAN>
+ may become a client of <SPAN CLASS="ee-text">
+ACCOUNT</SPAN>
+ by declaring one or more <SPAN CLASS="ff-bold">
+entities</SPAN>
+<A NAME="marker-445016"></A> of type <SPAN CLASS="ee-text">
+ACCOUNT</SPAN>
+. Such a declaration is of the form:
+<p><ul><table width="79%">
+<TR>
+<TD ROWSPAN="1" COLSPAN="1">
+<P CLASS="ee-text">
+<A NAME="pgfId-491135"></A>acc: ACCOUNT 
+</TD>
+</TR>
+</table></ul><p>
+<P CLASS="nn-first">
+<A NAME="pgfId-445019"></A>The term &quot;entity&quot; generalizes the more common notion of &quot;variable&quot;. An entity declared of a reference type, such as <SPAN CLASS="ee-text">
+acc</SPAN>
+, may at any time during execution become &quot;<A NAME="marker-445020"></A><SPAN CLASS="ff-bold">
+attached to</SPAN>
+&quot; an object; the type rules imply that this object must be a direct instance of <SPAN CLASS="ee-text">
+ACCOUNT</SPAN>
+ -- or, as seen below, of a &quot;descendant&quot; of that class.
+<DIV>
+<MAP NAME="invitation-2">
+</MAP>
+<p>
+<ul>
+<IMG SRC="invitation-2.png" USEMAP="#invitation-2">
+</ul>
+<p>
+</DIV>
+<P CLASS="nn-first">
+<A NAME="pgfId-445054"></A>An entity is said to be void if it is not attached to any object. By default, entities are void at initialization. To obtain objects at run-time, a routine <SPAN CLASS="ee-text">
+r</SPAN>
+ appearing in the client class <SPAN CLASS="ee-text">
+X</SPAN>
+ may use a <SPAN CLASS="ff-bold">
+creation instruction</SPAN>
+<A NAME="marker-445055"></A> of the form 
+<p><ul><table width="79%">
+<TR>
+<TD ROWSPAN="1" COLSPAN="1">
+<P CLASS="ee-text">
+<A NAME="pgfId-445058"></A><SPAN CLASS="ee-keyword">
+create</SPAN>
+ acc
+</TD>
+</TR>
+</table></ul><p>
+<P CLASS="nn-first">
+<A NAME="pgfId-445059"></A>which creates a new direct instance of <SPAN CLASS="ee-text">
+ACCOUNT</SPAN>
+, attaches <SPAN CLASS="ee-text">
+acc</SPAN>
+ to that instance, and initializes all its fields to default values. A variant of this notation, studied below, makes it possible to override the default initializations. 
+<P CLASS="nn-normal">
+<A NAME="pgfId-445060"></A>Once the client has attached <SPAN CLASS="ee-text">
+acc</SPAN>
+ to an object, it may call on this object the features defined in class <SPAN CLASS="ee-text">
+ACCOUNT</SPAN>
+. Here is an extract with some <A NAME="marker-445061"></A>feature calls using <SPAN CLASS="ee-text">
+acc</SPAN>
+ as their target:
+<p><ul><table width="79%">
+<TR>
+<TD ROWSPAN="1" COLSPAN="1">
+<P CLASS="ee-text">
+<A NAME="pgfId-445064"></A>acc<SPAN CLASS="ee-dot">
+.</SPAN>
+open (&quot;Jill&quot;)
+<P CLASS="ee-text">
+<A NAME="pgfId-445065"></A>acc<SPAN CLASS="ee-dot">
+.</SPAN>
+deposit (5000)
+<P CLASS="ee-text">
+<A NAME="pgfId-445068"></A><SPAN CLASS="ee-keyword">
+if</SPAN>
+<A NAME="marker-445066"></A> acc<SPAN CLASS="ee-dot">
+.</SPAN>
+may_withdraw (3000) <SPAN CLASS="ee-keyword">
+then</SPAN>
+<A NAME="marker-445067"></A>
+<P CLASS="ee-text">
+<A NAME="pgfId-445069"></A>&nbsp;&nbsp;&nbsp;&nbsp;acc<SPAN CLASS="ee-dot">
+.</SPAN>
+withdraw (3000); print (acc<SPAN CLASS="ee-dot">
+.</SPAN>
+balance)
+<P CLASS="ee-text">
+<A NAME="pgfId-445071"></A><SPAN CLASS="ee-keyword">
+end</SPAN>
+<A NAME="marker-445070"></A>
+</TD>
+</TR>
+</table></ul><p>
+<P CLASS="nn-first">
+<A NAME="pgfId-445072"></A>These feature calls use dot notation, of the form <SPAN CLASS="ee-text">
+target</SPAN>
+<SPAN CLASS="ee-dot">
+.</SPAN>
+<SPAN CLASS="ee-text">
+feature_name</SPAN>
+, possibly followed by a list of arguments in parentheses. Features are of two kinds: 
+<UL>
+<p class="nn-first"><img src="greenball.gif" alt="+">
+<A NAME="pgfId-445074"></A><SPAN CLASS="ff-bold">
+Routines</SPAN>
+<A NAME="marker-445073"></A>, such as <SPAN CLASS="ee-text">
+open</SPAN>
+, <SPAN CLASS="ee-text">
+deposit</SPAN>
+, <SPAN CLASS="ee-text">
+may_withdraw</SPAN>
+, <SPAN CLASS="ee-text">
+withdraw</SPAN>
+, represent computations applicable to instances of the class. 
+<p class="nn-first"><img src="greenball.gif" alt="+">
+<A NAME="pgfId-445077"></A><SPAN CLASS="ff-bold">
+Attributes</SPAN>
+<A NAME="marker-445075"></A> represent data items associated with these <A NAME="marker-445076"></A>instances. 
+</UL>
+<P CLASS="nn-first">
+<A NAME="pgfId-445079"></A>Routines are further divided into <SPAN CLASS="ff-bold">
+procedures</SPAN>
+<A NAME="marker-445078"></A> (commands, which do not return a value) and <SPAN CLASS="ff-bold">
+functions</SPAN>
+<A NAME="marker-445080"></A> (queries, returning a value). Here <SPAN CLASS="ee-text">
+may_withdraw</SPAN>
+ is a function returning a boolean; the other three-routines called are procedures.
+<P CLASS="jj-small">
+<A NAME="pgfId-452744"></A>A note on syntax: you may separate instructions by semicolons, and indeed you should when, as on the next-to-last line of the example, two or more instructions appear on a line. But the language's syntax has been designed so that the semicolon is almost always <SPAN CLASS="ff-italics">
+optional</SPAN>
+, regardless of the layout. Indeed the practice is to omit it between instructions or declarations on separate lines, as this results in lighter, clearer software texts.
+<P CLASS="nn-first">
+<A NAME="pgfId-445081"></A>In class <SPAN CLASS="ee-text">
+ACCOUNT</SPAN>
+, is feature <SPAN CLASS="ee-text">
+balance</SPAN>
+ an attribute, or is it a function with no argument? The above extract of the client class <SPAN CLASS="ee-text">
+X</SPAN>
+ doesn't say, and this ambiguity is intentional. A client of <SPAN CLASS="ee-text">
+ACCOUNT</SPAN>
+ must not need to know how class <SPAN CLASS="ee-text">
+ACCOUNT</SPAN>
+ delivers an account's balance when requested: by looking up a field present in each account object, or by calling a function that computes the balance from other fields. Choosing between these techniques is the business of class <SPAN CLASS="ee-text">
+ACCOUNT</SPAN>
+, not anybody else's. Because such implementation choices are often changed over the lifetime of a project, it is essential to protect clients against their effects. This is known as the <SPAN CLASS="ff-bold">
+Uniform Access Principle</SPAN>
+<A NAME="Uniform Access Principle"></A>, stating that the choice between representing a property through memory (an attribute) or through an algorithm (function) shall not affect how clients use it.
+<P CLASS="nn-normal">
+<A NAME="pgfId-588221"></A>So much for how client classes will typically use <SPAN CLASS="ee-text">
+ACCOUNT. </SPAN>
+Below is a first sketch of how class <SPAN CLASS="ee-text">
+ACCOUNT</SPAN>
+ itself might look. Line segments beginning with <SPAN CLASS="ee-comment">
+--</SPAN>
+ are comments. The class includes two <SPAN CLASS="ee-keyword">
+feature</SPAN>
+<A NAME="marker-588222"></A> clauses, introducing its features. The first begins with just the keyword <SPAN CLASS="ee-keyword">
+feature</SPAN>
+, without further qualification; this means that the features declared in this clause are available (or &quot;exported&quot;) to all clients of the class. The second clause is introduced by <SPAN CLASS="ee-keyword">
+feature</SPAN>
+<SPAN CLASS="ee-text">
+ </SPAN>
+{<SPAN CLASS="ee-text">
+NONE</SPAN>
+<A NAME="marker-588223"></A>}<SPAN CLASS="ee-text">
+ </SPAN>
+to indicate that the feature that follows, called <SPAN CLASS="ee-text">
+add</SPAN>
+, is available to no client. What appears between the braces is a list of client classes to which the corresponding features are available; <SPAN CLASS="ee-text">
+NONE</SPAN>
+<A NAME="marker-588224"></A> is a special class of the Kernel Library, which has no <A NAME="marker-588225"></A>instances, so that <SPAN CLASS="ee-text">
+add</SPAN>
+ is in effect a secret feature, available only locally to the other routines of class <SPAN CLASS="ee-text">
+ACCOUNT</SPAN>
+. So in a client class such as <SPAN CLASS="ee-text">
+X</SPAN>
+, the call <SPAN CLASS="ee-text">
+acc</SPAN>
+<SPAN CLASS="ee-dot">
+.</SPAN>
+<SPAN CLASS="ee-text">
+add </SPAN>
+(<SPAN CLASS="ee-text">
+-3000</SPAN>
+) would be invalid.
+<p><ul><table width="79%">
+<TR>
+<TD ROWSPAN="1" COLSPAN="1">
+<P CLASS="ee-text">
+<A NAME="pgfId-588229"></A><SPAN CLASS="ee-keyword">
+class</SPAN>
+<A NAME="marker-588228"></A> ACCOUNT <SPAN CLASS="ee-keyword">
+feature</SPAN>
+
+<P CLASS="ee-text">
+<A NAME="pgfId-588230"></A>&nbsp;&nbsp;&nbsp;&nbsp;balance: INTEGER
+<P CLASS="ee-text">
+<A NAME="pgfId-588231"></A>&nbsp;&nbsp;&nbsp;&nbsp;owner: PERSON
+<P CLASS="ee-text">
+<A NAME="pgfId-588233"></A>&nbsp;&nbsp;&nbsp;&nbsp;minimum_balance: INTEGER <SPAN CLASS="ee-keyword">
+is</SPAN>
+<A NAME="marker-588232"></A> 1000
+<P CLASS="ee-text">
+<A NAME="pgfId-588234"></A>&nbsp;&nbsp;&nbsp;&nbsp;open (who: PERSON) <SPAN CLASS="ee-keyword">
+is</SPAN>
+ 
+<P CLASS="ee-comment">
+<A NAME="pgfId-588235"></A>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;-- Assign the account to owner who.
+<P CLASS="ee-text">
+<A NAME="pgfId-588237"></A><SPAN CLASS="ee-keyword">
+&nbsp;&nbsp;&nbsp;&nbsp;</SPAN>
+&nbsp;&nbsp;&nbsp;&nbsp;<SPAN CLASS="ee-keyword">
+do</SPAN>
+<A NAME="marker-588236"></A>
+<P CLASS="ee-text">
+<A NAME="pgfId-588238"></A>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;owner := who
+<P CLASS="ee-text">
+<A NAME="pgfId-588239"></A><SPAN CLASS="ee-keyword">
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;end</SPAN>
+
+<P CLASS="ee-text">
+<A NAME="pgfId-588240"></A>&nbsp;&nbsp;&nbsp;&nbsp;deposit (sum: INTEGER) <SPAN CLASS="ee-keyword">
+is</SPAN>
+
+<P CLASS="ee-comment">
+<A NAME="pgfId-588241"></A>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;-- Deposit sum into the account.
+<P CLASS="ee-text">
+<A NAME="pgfId-588242"></A><SPAN CLASS="ee-keyword">
+&nbsp;&nbsp;&nbsp;&nbsp;</SPAN>
+&nbsp;&nbsp;&nbsp;&nbsp;<SPAN CLASS="ee-keyword">
+do</SPAN>
+
+<P CLASS="ee-text">
+<A NAME="pgfId-588243"></A>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;add (sum)
+<P CLASS="ee-text">
+<A NAME="pgfId-588244"></A><SPAN CLASS="ee-keyword">
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;end</SPAN>
+
+<P CLASS="ee-text">
+<A NAME="pgfId-588245"></A>&nbsp;&nbsp;&nbsp;&nbsp;withdraw (sum: INTEGER) <SPAN CLASS="ee-keyword">
+is</SPAN>
+
+<P CLASS="ee-comment">
+<A NAME="pgfId-588246"></A>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;-- Withdraw sum from the account.
+<P CLASS="ee-text">
+<A NAME="pgfId-588247"></A><SPAN CLASS="ee-keyword">
+&nbsp;&nbsp;&nbsp;&nbsp;</SPAN>
+&nbsp;&nbsp;&nbsp;&nbsp;<SPAN CLASS="ee-keyword">
+do</SPAN>
+
+<P CLASS="ee-text">
+<A NAME="pgfId-588248"></A>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;add (-sum)
+<P CLASS="ee-text">
+<A NAME="pgfId-588249"></A><SPAN CLASS="ee-keyword">
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;end</SPAN>
+
+<P CLASS="ee-text">
+<A NAME="pgfId-588250"></A>&nbsp;&nbsp;&nbsp;&nbsp;may_withdraw (sum: INTEGER): BOOLEAN <SPAN CLASS="ee-keyword">
+is</SPAN>
+
+<P CLASS="ee-comment">
+<A NAME="pgfId-588251"></A>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;-- Is there enough money to withdraw sum?
+<P CLASS="ee-text">
+<A NAME="pgfId-588252"></A>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<SPAN CLASS="ee-keyword">
+do</SPAN>
+
+<P CLASS="ee-text">
+<A NAME="pgfId-588253"></A>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Result := (balance &gt;= sum + minimum_balance)
+<P CLASS="ee-text">
+<A NAME="pgfId-588254"></A>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<SPAN CLASS="ee-keyword">
+end</SPAN>
+
+<P CLASS="ee-text">
+<A NAME="pgfId-588255"></A><SPAN CLASS="ee-keyword">
+feature</SPAN>
+ {NONE}
+<P CLASS="ee-text">
+<A NAME="pgfId-588256"></A>&nbsp;&nbsp;&nbsp;&nbsp;add (sum: INTEGER) <SPAN CLASS="ee-keyword">
+is</SPAN>
+
+<P CLASS="ee-comment">
+<A NAME="pgfId-588257"></A>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;-- Add sum to the balance.
+<P CLASS="ee-text">
+<A NAME="pgfId-588258"></A>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<SPAN CLASS="ee-keyword">
+do</SPAN>
+
+<P CLASS="ee-text">
+<A NAME="pgfId-588259"></A>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;balance := balance + sum
+<P CLASS="ee-text">
+<A NAME="pgfId-588260"></A><SPAN CLASS="ee-keyword">
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;end</SPAN>
+ 
+<P CLASS="ee-text">
+<A NAME="pgfId-588261"></A><SPAN CLASS="ee-keyword">
+end</SPAN>
+ -- class ACCOUNT 
+</TD>
+</TR>
+</table></ul><p>
+<P CLASS="nn-first">
+<A NAME="pgfId-588262"></A>Let us examine the features in sequence. The<SPAN CLASS="ee-text">
+ </SPAN>
+<SPAN CLASS="ee-keyword">
+is</SPAN>
+<SPAN CLASS="ee-text">
+ ... </SPAN>
+<SPAN CLASS="ee-keyword">
+do</SPAN>
+<SPAN CLASS="ee-text">
+ ...</SPAN>
+<SPAN CLASS="ee-keyword">
+end</SPAN>
+ distinguishes routines from attributes. So here the class has implemented <SPAN CLASS="ee-text">
+balance</SPAN>
+ as an attribute, although, as noted, a function would also have been acceptable. Feature <SPAN CLASS="ee-text">
+owner</SPAN>
+ is also an attribute. 
+<P CLASS="nn-normal">
+<A NAME="pgfId-445125"></A>The language definition guarantees automatic <A NAME="marker-445124"></A>initialization, so that the initial balance of an account object will be zero after a creation instruction. Each type has a <A NAME="marker-445126"></A>default initial value: zero for <SPAN CLASS="ee-text">
+INTEGER</SPAN>
+ and <SPAN CLASS="ee-text">
+REAL</SPAN>
+, false for <SPAN CLASS="ee-text">
+BOOLEAN</SPAN>
+, null character for <SPAN CLASS="ee-text">
+CHARACTER</SPAN>
+, and a void reference for reference types. The class designer<A NAME="marker-445127"></A> may also provide clients with different initialization options, as will be seen below in a revised version of this example. 
+<P CLASS="nn-normal">
+<A NAME="pgfId-445128"></A>The other public features, <SPAN CLASS="ee-text">
+open, deposit, withdraw</SPAN>
+ and <SPAN CLASS="ee-text">
+may_withdraw</SPAN>
+ are straightforward routines. The special entity <SPAN CLASS="ee-text">
+Result</SPAN>
+<A NAME="marker-445129"></A>, used in <SPAN CLASS="ee-text">
+may_withdraw</SPAN>
+, denotes the function result; it is initialized on function entry to the default value of the function's result type. You may only use <SPAN CLASS="ee-text">
+Result</SPAN>
+ in functions.
+<P CLASS="nn-normal">
+<A NAME="pgfId-445130"></A>The secret procedure <SPAN CLASS="ee-text">
+add</SPAN>
+ serves for the implementation of the public procedures <SPAN CLASS="ee-text">
+deposit</SPAN>
+ and <SPAN CLASS="ee-text">
+withdraw</SPAN>
+; the designer of <SPAN CLASS="ee-text">
+ACCOUNT</SPAN>
+ judged it too general to be exported by itself. The clause <SPAN CLASS="ee-keyword">
+is</SPAN>
+<SPAN CLASS="ee-text">
+ 1000</SPAN>
+ introduces <SPAN CLASS="ee-text">
+minimum_balance</SPAN>
+ as a constant attribute, which will not occupy any space in instances of the class; in contrast, every <A NAME="marker-445131"></A>instance has a field for every non-constant attribute such as <SPAN CLASS="ee-text">
+balance</SPAN>
+. 
+<P CLASS="nn-normal">
+<A NAME="pgfId-445132"></A>In Eiffel's object-oriented programming style any operation is relative to a certain object. A client invoking the operation specifies this object by writing the corresponding entity on the left of the dot, as <SPAN CLASS="ee-text">
+acc</SPAN>
+ in <SPAN CLASS="ee-text">
+acc</SPAN>
+<SPAN CLASS="ee-dot">
+.</SPAN>
+<SPAN CLASS="ee-text">
+open</SPAN>
+ (<SPAN CLASS="ee-text">
+&quot;Jill&quot;</SPAN>
+). Within the class, however, the &quot;current&quot; <A NAME="marker-445133"></A>instance to which operations apply usually remains implicit, so that unqualified feature names, such as <SPAN CLASS="ee-text">
+owner</SPAN>
+ in procedure <SPAN CLASS="ee-text">
+open</SPAN>
+ or <SPAN CLASS="ee-text">
+add</SPAN>
+ in <SPAN CLASS="ee-text">
+deposit</SPAN>
+, mean &quot;the <SPAN CLASS="ee-text">
+owner</SPAN>
+ attribute or <SPAN CLASS="ee-text">
+add</SPAN>
+ routine relative to the current instance&quot;. 
+<P CLASS="nn-normal">
+<A NAME="pgfId-491227"></A>If you need to denote the <A NAME="marker-491226"></A>current object explicitly, you may use the special entity <SPAN CLASS="ee-text">
+Current</SPAN>
+<A NAME="marker-491228"></A>. For example the unqualified occurrences of <SPAN CLASS="ee-text">
+add</SPAN>
+ appearing in the class text above are equivalent to <SPAN CLASS="ee-text">
+Current</SPAN>
+<SPAN CLASS="ee-dot">
+.</SPAN>
+<SPAN CLASS="ee-text">
+add</SPAN>
+. 
+<P CLASS="nn-normal">
+<A NAME="pgfId-445140"></A>I<A NAME="marker-445137"></A>n some cases, <A NAME="marker-445138"></A>infix or <A NAME="marker-445139"></A>prefix notation will be more convenient than dot notation. For example, if a class <SPAN CLASS="ee-text">
+VECTOR</SPAN>
+ offers an addition routine, most people will feel more comfortable with calls of the form <SPAN CLASS="ee-text">
+v + w</SPAN>
+ than with the dot-notation call <SPAN CLASS="ee-text">
+v</SPAN>
+<SPAN CLASS="ee-dot">
+.</SPAN>
+<SPAN CLASS="ee-text">
+plus </SPAN>
+(<SPAN CLASS="ee-text">
+w</SPAN>
+). To make this possible it suffices to give the routine a name of the form <SPAN CLASS="ee-keyword">
+infix</SPAN>
+<A NAME="marker-445141"></A> &quot;+&quot; rather than <SPAN CLASS="ee-text">
+plus</SPAN>
+; internally, however, the operation is still a normal routine call. Prefix operators are similarly available.
+<P CLASS="nn-normal">
+<A NAME="pgfId-445142"></A>The above simple example has shown the basic structuring mechanism of the language: the class. A class describes objects accessible to clients through an official interface comprising some of the class features. Features are implemented as attributes or routines; the implementation of exported features may rely on other, secret ones. <A NAME="marker-445143"></A>
+<p class="bottom" ALIGN="left"><IMG SRC="normaldoc.gif" ALT="Previous, Up, Next" BORDER="0" WIDTH="300" HEIGHT="40" USEMAP="#navigation"><map name="navigation"><AREA SHAPE="RECT" alt="Previous section" COORDS="0,0,95,40" HREF="invitation-04.html"><AREA SHAPE="RECT" alt="Up" COORDS="96,0,199,40" HREF="invitation.html"><AREA SHAPE="RECT" alt="Next section" COORDS="200,0,300,40" HREF="invitation-06.html"><area shape="default" nohref></MAP>
+
+<p class="bottom" align="center"><a href="http://www.eiffel.com">Eiffel Home Page (Web)</a> -- <a href="../index.html">Getting started with Eiffel (local)</a>
+
+<p class="copyright" align="center">Copyright Interactive Software Engineering, 2001
+</BODY>
+</HTML>

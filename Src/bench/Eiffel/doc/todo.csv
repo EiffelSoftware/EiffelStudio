@@ -46,14 +46,14 @@ interface,,,,,,,
 
 Formats,,,,,,
 ,2,Do not display obsolete features in the exported features,Xavier,FMT0001,Xavier,2
-,2,Let the user customize the formats,Xavier,FMT0002
-,2,Add a formatter that yields the path/cluster/indexing clause of a class,Xavier,FMT0003
-,3,Give features without a named feature clause,Xavier,FMT0004
-,4,Unify names (interface vs flat contracts...),Xavier,FMT0005
-,2,Add a formatter for the invariant,Arnaud,FMT0006
-,3,List of class names and class paths in the system,Arnaud,FMT0007
-,3,Let the user print the format,Raphael,FMT0008
-
+,2,Let the user customize the formats,Xavier,FMT0002,,
+,2,Add a formatter that yields the path/cluster/indexing clause of a class,Xavier,FMT0003,,
+,3,Give features without a named feature clause,Xavier,FMT0004,,
+,4,Unify names (interface vs flat contracts...),Xavier,FMT0005,,
+,2,Add a formatter for the invariant,Arnaud,FMT0006,,
+,3,List of class names and class paths in the system,Arnaud,FMT0007,,
+,3,Let the user print the format,Raphael,FMT0008,,
+,3,"For all feature formats, give the choice between the name-only display, the basic text display and the flat form",Xavier,FMT0009,Xavier,10
 
 
 

@@ -437,6 +437,37 @@ feature {NONE} -- Settings
 			current_type_id_set: current_type_id = an_id
 		end
 
+feature -- Cleanup
+
+	cleanup is
+			-- Clean up all data structures that were used for this code generation.
+		local
+			i, nb: INTEGER
+			l_mem: MEMORY
+			l_module: IL_MODULE
+		do
+			from
+				i := internal_il_modules.lower
+				nb := internal_il_modules.upper
+			until
+				i > nb
+			loop
+				l_module := internal_il_modules.item (i)
+				if l_module /= Void then
+					l_module.cleanup
+				end
+				i := i + 1
+			end
+			
+				-- Now all underlying COM objects should have been unreferenced, so we
+				-- can safely collect them. We really have to collect them now because
+				-- some cannot wait. For example if you still have an instance of
+				-- DBG_DOCUMENT_WRITER of an Eiffel source file, it will refuse to create
+				-- a new instance if you haven't freed the first one.
+			create l_mem
+			l_mem.full_collect
+		end
+
 feature -- Generation Structure
 
 	start_assembly_generation (

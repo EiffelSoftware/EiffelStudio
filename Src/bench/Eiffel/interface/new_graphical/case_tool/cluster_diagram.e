@@ -690,7 +690,7 @@ feature {NONE} -- Synchronizing
 							synchronize_classes_of_cluster (fig)
 							if fig.classes.is_empty then
 									-- Give a decent size to new cluster.
-								fig.set_size (0, 0)
+								fig.set_size (0, 20)
 							end
 							cluster_figures.prune_all (fig)
 							cluster_figure_by_cluster (a_cluster).add_subcluster (fig)
@@ -1521,7 +1521,7 @@ feature {NONE} -- Implementation
 						include_classes_of_cluster (fig, False)
 						if fig.classes.is_empty then
 								-- Give a decent size to new cluster.
-							fig.set_size (0, 0)
+							fig.set_size (0, 20)
 						end						
 						if not cancelled then
 							cluster_figures.prune_all (fig)
@@ -1679,19 +1679,23 @@ feature {NONE} -- Events
 				clf := cluster_figure_by_cluster (a_stone.cluster_i)
 				include_classes_of_cluster (clf, True)
 				layout.arrange_all (clf)
+				clf.point.set_position (
+					((drop_x - clf.point.origin.x_abs) / point.scale_x).rounded,
+					((drop_y - clf.point.origin.y_abs) / point.scale_y).rounded)
 				clf.update_minimum_size
 				if clf.classes.is_empty then
 						-- Give a decent minimal size to new cluster.
-					clf.set_size (0, 0)
+					clf.set_size (0, 20)
 				end
+			else
+				clf.point.set_position (
+					((drop_x - clf.point.origin.x_abs) / point.scale_x).rounded,
+					((drop_y - clf.point.origin.y_abs) / point.scale_y).rounded)
+					--| FIXME not undoable
 			end
 			check
 				clf_not_void: clf /= Void
 			end
-			clf.point.set_position (
-				((drop_x - clf.point.origin.x_abs) / point.scale_x).rounded,
-				((drop_y - clf.point.origin.y_abs) / point.scale_y).rounded)
-				--| FIXME not undoable
 			context_editor.reset_history
 			context_editor.update_bounds (Current)
 			refresh

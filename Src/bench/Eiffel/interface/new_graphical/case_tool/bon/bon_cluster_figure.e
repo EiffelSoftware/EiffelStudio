@@ -369,19 +369,19 @@ feature -- Status setting
 			new_x, new_y: REAL
 		do
 			p.change_origin (center_point)
-			new_x := width.max (height) * cosine (angle)
-			new_y := width.max (height) * sine (angle)
-			if new_x <= width // 2 and new_x >= - width // 2 then
+			new_x := body_width.max (body_height) * cosine (angle)
+			new_y := body_width.max (body_height) * sine (angle)
+			if new_x <= body_width // 2 and new_x >= - body_width // 2 then
 				if new_y >= 0 then
-					p.set_position (new_x.truncated_to_integer, height // 2)
+					p.set_position (new_x.truncated_to_integer, body_height // 2)
 				else
-					p.set_position (new_x.truncated_to_integer, - height // 2)	
+					p.set_position (new_x.truncated_to_integer, - body_height // 2)	
 				end
-			elseif new_y <= height // 2 and new_y >= - height // 2 then
+			elseif new_y <= body_height // 2 and new_y >= - body_height // 2 then
 				if new_x >= 0 then
-					p.set_position (width // 2, new_y.truncated_to_integer)
+					p.set_position (body_width // 2, new_y.truncated_to_integer)
 				else
-					p.set_position (- width // 2, new_y.truncated_to_integer)	
+					p.set_position (- body_width // 2, new_y.truncated_to_integer)	
 				end
 			end
 		end
@@ -535,8 +535,8 @@ feature -- Status setting
 			-- Iconify `Current'.
 		do
 			if not iconified then
-				old_width := width
-				old_height := height
+				old_width := body_width
+				old_height := body_height
 				body.set_background_color (bon_cluster_iconified_fill_color)
 				resizer_bottom_right.disable_sensitive
 				resizer_top_left.disable_sensitive
@@ -739,6 +739,18 @@ feature {NONE} -- Implementation
 
 	old_height: INTEGER
  			-- Backup of `height' for iconifying.
+
+	body_width: INTEGER is
+			-- width of `body'.
+		do
+			Result := body.point_b.x
+		end
+		
+	body_height: INTEGER is
+			-- height of `body'.
+		do
+			Result := body.point_b.y
+		end
 
 	Max_backup: INTEGER is 7
 			-- Break at underscores, but do not search further than this index.
@@ -1057,12 +1069,9 @@ feature {NONE} -- Events
 		local
 			adjust_x, adjust_y: REAL
 			name_area_width, name_area_height: INTEGER
-			body_width, body_height: INTEGER
 		do
 			name_area_width := name_area.point_b.x
 			name_area_height := name_area.point_b.y
-			body_width := body.point_b.x
-			body_height := body.point_b.y
 			adjust_x := x / body_width
 			adjust_y := y / body_height
 			if adjust_y.abs > adjust_x.abs then

@@ -19,6 +19,13 @@ feature -- Event handling
 		do
 			create Result
 		end
+		
+	create_pick_ended_actions: EV_PND_FINISHED_ACTION_SEQUENCE is
+			-- Create a pick ended action sequence.
+		do
+			create Result
+		end
+		
 
 	create_conforming_pick_actions: EV_NOTIFY_ACTION_SEQUENCE is
 			-- Create a conforming_pick action sequence.

@@ -9,16 +9,17 @@ class
 	EV_RADIO_MENU_ITEM
 
 inherit
-	EV_CHECK_MENU_ITEM
-		export
-			{NONE}
-			disable_select,
-			toggle
+	EV_SELECT_MENU_ITEM
 		redefine
 			implementation,
 			create_implementation,
-			disable_select,
-			toggle
+			is_in_default_state
+		end
+
+	EV_RADIO_PEER
+		redefine
+			implementation,
+			is_in_default_state
 		end
 	
 create
@@ -32,36 +33,14 @@ feature {NONE} -- Initialization
 			create {EV_RADIO_MENU_ITEM_IMP} implementation.make (Current)
 		end
 
-feature -- Status report
+feature -- Contract support
 
-	peers: LINKED_LIST [like Current] is
-			-- List of all radio items in the group `Current' is in.
+	is_in_default_state: BOOLEAN is
+			-- Is `Current' in its default state?
+			-- Radio buttons are selected by default.
 		do
-			Result := implementation.peers
-		ensure
-			not_void: Result /= Void
-			bridge_ok: Result.is_equal (implementation.peers)
-			different_list_every_time: Result /= peers
-			not_empty_implies_has_current:
-				not Result.empty implies Result.has (Current)
-		end
-
-feature -- Inapplicable
-
-	disable_select is
-			-- Inapplicable for radio items.
-		do
-			check
-				inapplicable: False
-			end
-		end
-
-	toggle is
-			-- Inapplicable for radio items.
-		do
-			check
-				inapplicable: False
-			end
+			Result := {EV_SELECT_MENU_ITEM} Precursor
+				and then {EV_RADIO_PEER} Precursor
 		end
 
 feature {NONE} -- Implementation
@@ -92,6 +71,10 @@ end -- class EV_RADIO_MENU_ITEM
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.15  2000/02/24 20:31:34  brendel
+--| Now does not inherit EV_CHECK_MENU_ITEM anymore, but EV_SELECT_MENU_ITEM
+--| and EV_RADIO_PEER.
+--|
 --| Revision 1.14  2000/02/24 16:49:55  brendel
 --| Made `toggle' inapplicable to radio items.
 --|

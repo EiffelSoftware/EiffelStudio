@@ -127,10 +127,12 @@ feature {NONE} -- Initialization
 		do
 			if not avoid_callback then
 			--	Precursor (n, an_item)
-			 	triggering_item ?= eif_object_from_c (
-					gtk_value_pointer (an_item)
-				)
-				timer.set_interval (1)
+			 	if select_actions_internal /= Void and then select_actions_internal.count > 0 then
+				 	triggering_item ?= eif_object_from_c (
+						gtk_value_pointer (an_item)
+					)
+					timer.set_interval (1)
+			 	end
 				avoid_callback := True
 			else
 				avoid_callback := False
@@ -366,6 +368,10 @@ end -- class EV_COMBO_BOX_IMP
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.41  2001/06/19 22:40:12  etienne
+--| Added test to check if select_actions are void before the 1 ms timer is triggered in `select_callback'.
+--| This was needed to solve a problem in EiffelStudio: an item was added to a combo box and then an action to its `select_actions'. This triggered the action because it was in the action sequence when the 1 ms delay was out.
+--|
 --| Revision 1.40  2001/06/19 00:02:30  etienne
 --| Removed useless call to `reset_count' on a timer.
 --|

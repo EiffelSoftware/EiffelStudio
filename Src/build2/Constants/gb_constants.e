@@ -41,7 +41,9 @@ feature -- String representations of class names.
 
 	gb_primitive_object_class_name: STRING is "GB_PRIMITIVE_OBJECT"
 	
-	ev_window_string: STRING is "EV_WINDOW"
+	Ev_window_string: STRING is "EV_WINDOW"
+	
+	Ev_titled_window_string: STRING is "EV_TITLED_WINDOW"
 
 feature -- Miscellaneous
 

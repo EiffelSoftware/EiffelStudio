@@ -114,23 +114,6 @@ cluster
 			"CVS"; "french"; "german"; 
 		end
 
-	liman:		"$EIFFEL_SRC/Eiffel/limand"
-
-	liman_bench (liman):		"$/bench"
-
-	liman_client (liman):		"$/client"
-
-	liman_shared (liman):		"$/shared"
-
-	liman_bench_graphical (liman):		"$/bench_graphical"
-
-	liman_abstract (liman):		"$/abstract"
-		exclude
-			"shared_license.e"; 
-		end
-
-	liman_graphical (liman):		"$/graphical"
-
 	beurk:		"$EIFFEL_SRC/Eiffel/beurk"
 
 	compiler_support:		"$EIFFEL_SRC/Eiffel/support"
@@ -244,7 +227,7 @@ cluster
 
 	all activation_checker:		"$EIFFEL_SRC/Eiffel/library/activation"
 		exclude
-			"free"; "command_line"; "windows"; "CVS"; 
+			"free"; "command_line"; "CVS"; 
 		end
 
 	all keygen:		"$EIFFEL_SRC/library/keygen"
@@ -257,7 +240,6 @@ external
 	include_path:
 		"\$(EIFFEL_SRC)/C/bench",
 		"\$(EIFFEL_SRC)/C/platform",
-		"\$(EIFFEL_SRC)/C/liman/shared",
 		"\$(EIFFEL_SRC)/library/event/Clib",
 		"\$(EIFFEL_SRC)/library/gobo/library/kernel/include",
 		"\$(EIFFEL_SRC)/C_library/expat/xmlparse",
@@ -272,8 +254,6 @@ external
 		"$(EIFFEL_SRC)/C/ipc/ewb/libewb.a",
 		"$(EIFFEL_SRC)/C/ipc/shared/libipc.a",
 		"$(EIFFEL_SRC)/C/platform/libplatform.a",
-		"$(EIFFEL_SRC)/C/liman/lm/liblm.a",
-		"$(EIFFEL_SRC)/C/liman/shared/libshared.a",
 		"$(EIFFEL_SRC)/C/minilzo/minilzo.o",
 		"$(EIFFEL_SRC)/C/idrs/libidr.a",
 		"$(EIFFEL_SRC)/C_library/expat/xmlparse/libexpat.a",

@@ -1,3 +1,10 @@
+indexing
+
+	description: 
+		"Displays Ace text in output_window.";
+	date: "$Date$";
+	revision: "$Revision $"
+
 
 class EWB_ACE 
 
@@ -10,33 +17,28 @@ inherit
 			abbreviation as ace_abb
 		end
 
-feature
+feature {NONE} -- Execution
 
 	execute is
+			-- Execute Current batch command.
 		local
 			stone: SYSTEM_STONE;
 			text: STRING;
 		do
-			init_project;
-			if not (error_occurred or project_is_new) then
-				retrieve_project;
-				if not error_occurred then
-					!!stone.make;
-					if stone.is_valid then
-						text := stone.origin_text
-					end;
-					if text /= Void then
-						output_window.put_string (text);
-						output_window.new_line;
-					elseif Lace.file_name = Void then
-						output_window.put_string ("You must compile a project first%N");
-					else
-						output_window.put_string ("Cannot open ");
-						output_window.put_string (Lace.file_name);
-						output_window.new_line;
-					end;
-				end;
+			!!stone.make;
+			if stone.is_valid then
+				text := stone.origin_text
+			end;
+			if text /= Void then
+				output_window.put_string (text);
+				output_window.new_line;
+			elseif Lace.file_name = Void then
+				output_window.put_string ("You must compile a project first%N");
+			else
+				output_window.put_string ("Cannot open ");
+				output_window.put_string (Lace.file_name);
+				output_window.new_line;
 			end;
 		end;
 
-end
+end -- class EWB_ACE

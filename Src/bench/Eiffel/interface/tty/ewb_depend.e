@@ -1,3 +1,9 @@
+indexing
+
+	description: 
+		"Display features's dependants in output_window.";
+	date: "$Date$";
+	revision: "$Revision $"
 
 class EWB_DEPEND 
 
@@ -8,7 +14,7 @@ inherit
 
 creation
 
-	make, null
+	make, do_nothing
 
 feature
 
@@ -44,4 +50,4 @@ feature
 			end;
 		end;
 
-end
+end -- class EWB_DEPEND

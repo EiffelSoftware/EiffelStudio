@@ -58,7 +58,7 @@ rt_public int is_in_spt (struct special_table *spt, EIF_REFERENCE object)
 	int 	i;					/* index. */
 	char 	**hvalues;
 	long 	*hkeys;
-	int32 	count;
+	int 	count;
 
 	assert (object != (EIF_REFERENCE)  0);			/* Cannot be Void. */
 	assert (!(HEADER (object)->ov_size & B_FWD));	/* Cannot be forwarded. */
@@ -77,7 +77,7 @@ rt_public int is_in_spt (struct special_table *spt, EIF_REFERENCE object)
 	return 0;
 }	/* is_in_spt () */
 		
-rt_public int spt_realloc (struct special_table *spt, EIF_INTEGER size)
+rt_public int spt_realloc (struct special_table *spt, int size)
 {
 	/* 
 	 * Reallocate the special table up to size `n'. 
@@ -86,12 +86,12 @@ rt_public int spt_realloc (struct special_table *spt, EIF_INTEGER size)
 	EIF_INTEGER 	*hkeys;			/* For key array creation. */
 	EIF_REFERENCE 	*hvalues;		/* For values array creation. */
 	EIF_REFERENCE 	*oldvalues;		/* For old values. */
-	EIF_INTEGER		gain;			/* Number of new free entries. */
+	int				gain;			/* Number of new free entries. */
 	EIF_INTEGER		index;			/* Index of first free entry. */
 	void			*temp;			/* Return value of realloc(). */
 #ifndef NDEBUG
-	EIF_INTEGER		old_count = spt->count;
-	EIF_INTEGER		old_size  = spt->h_size;
+	int				old_count = spt->count;
+	int				old_size  = spt->h_size;
 #endif	/* !NDEBUG */
 	
 	
@@ -139,14 +139,16 @@ rt_public int spt_realloc (struct special_table *spt, EIF_INTEGER size)
 	/************************
 	 *	Postconditions.		*
 	 ************************/
+#ifndef NDEBUG
 	assert (spt->h_size > old_size);		/* Bigger. */	
 	assert (spt->count == old_count);	/* Count did not change. */
+#endif	/* !NDEBUG */
 	/**** End of postconditions. */
 
 	return 0;						/* Creation was ok */
 }	/* spt_realloc () */
 		
-rt_public int spt_create(struct special_table *spt, EIF_INTEGER size)
+rt_public int spt_create(struct special_table *spt, int  size)
 {
 	/* 
 	 * Create the special table with size `n'. 
@@ -164,7 +166,7 @@ rt_public int spt_create(struct special_table *spt, EIF_INTEGER size)
 	assert (size > 0);				/* Size strictly positive, for resizing. */
 	/* End of preconditions. */
 
-	hkeys = (long  *) calloc(size, sizeof(long));	/* Mallocs array of keys */
+	hkeys = (EIF_INTEGER  *) calloc(size, sizeof(long));	/* Mallocs array of keys */
 	if (hkeys == (long *) 0)
 		return -1;					/* Malloc failed */
 	spt->h_keys = hkeys;			/* Where array of keys is stored */
@@ -200,7 +202,7 @@ rt_public void spt_zero(struct special_table *spt)
 	 * Initialize the special table with zeros.
 	 */
 
-	int32 hsize = spt->h_size;
+	int hsize = spt->h_size;
 
 	bzero(spt->h_keys, hsize * LNGSIZ);
 	bzero(spt->h_values, hsize * REFSIZ);
@@ -232,7 +234,7 @@ rt_public int spt_put_old(struct special_table *spt, EIF_REFERENCE val)
 	 */
 
 	register2 char 		**hvalues;	/* Array of values. */
-	register3 int32 	hsize;		/* Size of special table */
+	register3 int 		hsize;		/* Size of special table */
 	int32 count;
 
 	if (val == (EIF_REFERENCE) 0)	/* No need to put a Void object. */
@@ -300,7 +302,7 @@ rt_public int spt_put 	(struct special_table *spt, register long key,
 	 */
 
 	register2 char 		**hvalues;	/* Array of values. */
-	register3 int32 	hsize;		/* Size of special table */
+	register3 int  		hsize;		/* Size of special table */
 	register4 long 		*hkeys;		/* Array of keys */
 	int32 count;
 
@@ -489,13 +491,15 @@ rt_public int spt_xtend(struct special_table *spt)
 #ifndef NDEBUG
 	EIF_INTEGER 			count = spt->count;			/* For postcondition. */
 	EIF_INTEGER				old_count = spt->old_count;	/* For postcondition. */
-	EIF_INTEGER 			old_size = spt->h_size;		/* For postcondition. */
+	int  					old_size = spt->h_size;		/* For postcondition. */
 #endif	/* !NDEBUG */
 
 	/************************
 	 * Preconditions.		*
 	 ************************/
+#ifndef NDEBUG
 	 assert (count == spt->h_size);		/* Special table full. */
+#endif	/* !NDEBUG */
 	/* End of preconditions. */
 
 	size = spt->h_size;
@@ -505,9 +509,11 @@ rt_public int spt_xtend(struct special_table *spt)
 	/************************
 	 * Postconditions.	*
 	 ************************/
+#ifndef NDEBUG
 	 assert (count == spt->count);	/* Special table count remains the same. */
 	 assert ((old_size * 2) == spt->h_size);	/* Special table bigger. */
 	 assert (count < spt->h_size);		/* Special table not full. */
+#endif	/* !NDEBUG */
 	/* End of postconditions. */
 
 	return 0;		/* Extension was ok. */

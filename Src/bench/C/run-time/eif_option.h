@@ -86,11 +86,11 @@ extern int is_debug(int st_type, char *key);		/* Debug level query */
 extern EIF_INTEGER prof_enabled;	  /* Is the Eiffel profiler on */
 
 #ifdef HAS_GETRUSAGE	/* Variable to get the total execution time */
-extern struct prof_rusage init_date;
+extern struct prof_rusage *init_date;
 #elif defined(HAS_TIMES)
 extern double init_date;
 #elif defined(EIF_WIN32)
-extern SYSTEMTIME init_date;
+extern SYSTEMTIME *init_date;
 #endif /* HAS_GERUSAGE */
 
 /* #define prof_enabled    EIF_TEST(prof_enabled & IN_ACE_FILE) */      /* Has the profiler been enabled in the ACE file? */

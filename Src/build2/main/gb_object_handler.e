@@ -484,18 +484,23 @@ feature -- Basic operation
 			-- Semantics not guaranteed if `action' changes the structure
 		local
 			t: TUPLE [GB_OBJECT]
-			layout: GB_LAYOUT_CONSTRUCTOR_ITEM
+			layout_item, current_layout_item: GB_LAYOUT_CONSTRUCTOR_ITEM
 		do
-			layout := an_object.layout_item
+			create t.make
+			t.put (an_object, 1)
+			action.call (t)
+			layout_item := an_object.layout_item
 			from
-				layout.start
+				layout_item.start
 			until
-				layout.off
+				layout_item.off
 			loop
-				recursive_do_all (layout.object, action)
-				t.put (layout.object, 1)
-				action.call (t)
-				layout.forth
+				current_layout_item ?= layout_item.item
+				check
+					current_layout_item_not_void: current_layout_item /= Void
+				end
+				recursive_do_all (current_layout_item.object, action)
+				layout_item.forth
 			end
 		end
 

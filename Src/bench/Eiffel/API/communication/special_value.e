@@ -47,11 +47,14 @@ feature -- Properties
 	capacity: INTEGER;
 			-- Number of items that SPECIAL object may hold
 
+	sp_lower, sp_upper: INTEGER;
+			-- Bounds for special object inspection
+
 	address: STRING;
 			-- Address of object
-			-- (Because the socket is already busy we can not ask the 
-			-- application for the hector address during the object
-			-- inspection. This should be done latter with `set_hector_addr'.)
+			--| Because the socket is already busy we can not ask the 
+			--| application for the hector address during the object
+			--| inspection. This should be done latter with `set_hector_addr'.)
 
 feature -- Access
 
@@ -62,80 +65,70 @@ feature -- Access
 
 feature -- Output
 
-	append_to (cw: CLICK_WINDOW; indent: INTEGER) is
-			-- Append `Current' to `cw' with `indent' tabs the left margin.
+	append_to (ow: OUTPUT_WINDOW; indent: INTEGER) is
+			-- Append `Current' to `ow' with `indent' tabs the left margin.
 		local
-			o_stone: OBJECT_STONE;
-			sp_lower, sp_upper: INTEGER;
-			object_text: OBJECT_TEXT
+			status: APPLICATION_STATUS
 		do
-			object_text ?= cw;
-			if object_text /= Void then
-				sp_lower := object_text.sp_lower;
-				sp_upper := object_text.sp_upper;
-				object_text.set_sp_capacity (capacity)
-			end;
-			append_tabs (cw, indent);
-			cw.put_clickable_string (feature_stone, name)
-			cw.put_string (": ");
-			dynamic_class.append_clickable_name (cw);
-			cw.put_string (" [");
-			if Run_info.is_running and Run_info.is_stopped then
-				!! o_stone.make (address, dynamic_class);
-				cw.put_clickable_string (o_stone, address)
+			append_tabs (ow, indent);
+			ow.put_feature_name (name, e_class);
+			ow.put_string (": ");
+			dynamic_class.append_name (ow);
+			ow.put_string (" [");
+			status := Application.status;
+			if status /= Void and status.is_stopped then
+				ow.put_address (address, dynamic_class)
 			else
-				cw.put_string (address)
+				ow.put_string (address)
 			end
-			cw.put_string ("]");
-			cw.new_line;
-			append_tabs (cw, indent + 1);
-			cw.put_string ("-- begin special object --");
-			cw.new_line;
+			ow.put_string ("]");
+			ow.new_line;
+			append_tabs (ow, indent + 1);
+			ow.put_string ("-- begin special object --");
+			ow.new_line;
 			if sp_lower > 0 then
-				append_tabs (cw, indent + 2);
-				cw.put_string ("... Items skipped ...");
-				cw.new_line
+				append_tabs (ow, indent + 2);
+				ow.put_string ("... Items skipped ...");
+				ow.new_line
 			end;
 			from
 				items.start
 			until
 				items.after
 			loop
-				items.item.append_to (cw, indent + 2);
+				items.item.append_to (ow, indent + 2);
 				items.forth
 			end;
 			if 0 <= sp_upper and sp_upper < capacity - 1 then
-				append_tabs (cw, indent + 2);
-				cw.put_string ("... More items ...");
-				cw.new_line
+				append_tabs (ow, indent + 2);
+				ow.put_string ("... More items ...");
+				ow.new_line
 			end;
-			append_tabs (cw, indent + 1);
-			cw.put_string ("-- end special object --");
-			cw.new_line
+			append_tabs (ow, indent + 1);
+			ow.put_string ("-- end special object --");
+			ow.new_line
 		end;
 
-	append_type_and_value (cw: CLICK_WINDOW) is
+	append_type_and_value (ow: OUTPUT_WINDOW) is
 		local
-			os: OBJECT_STONE;
 			ec: E_CLASS
 		do
 			if address = Void then
-				cw.put_string ("NONE = Void")
+				ow.put_string ("NONE = Void")
 			else
 				ec := dynamic_class;
 				if ec /= Void then
-					ec.append_clickable_name (cw);
-					cw.put_string (" [");
-					if Run_info.is_running and Run_info.is_stopped then
-						!! os.make (address, ec);
-						cw.put_clickable_string (os, address)
+					ec.append_name (ow);
+					ow.put_string (" [");
+					if Application.is_running and Application.is_stopped then
+						ow.put_address (address, ec)
 					else
-						cw.put_string (address)
+						ow.put_string (address)
 					end;
-					cw.put_string ("]");
+					ow.put_string ("]");
 				else
-					Any_class.append_clickable_name (cw);
-					cw.put_string (" = Unknown")
+					Any_class.append_name (ow);
+					ow.put_string (" = Unknown")
 				end
 			end
 		end;
@@ -156,6 +149,15 @@ feature {NONE} -- Implementation
 				items.item.set_hector_addr;
 				items.forth
 			end
+		end;
+
+feature {ATTR_REQUEST} -- Implentation
+
+	set_sp_bounds (l, u: INTEGER) is
+			-- Set the bounds for special object inspection.
+		do
+			sp_lower := l;
+			sp_upper := u
 		end;
 
 invariant

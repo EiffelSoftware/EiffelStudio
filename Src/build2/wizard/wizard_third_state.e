@@ -30,6 +30,13 @@ feature -- Basic Operation
 	build is 
 			-- Build entries.
 		do
+				-- Force the window back to the smallest size it can be.
+				-- As we do not know the minimum_size, just make it as small
+				-- as possible, and its size will be constrained to
+				-- the widgets inside.
+				-- This is needed if we are coming here, from the fourth state.
+			first_window.set_minimum_size (100, 100)
+			first_window.set_size (100, 100)
 			main_window.hide_all_floating_tools
 			first_window.set_size (dialog_unit_to_pixels(503), dialog_unit_to_pixels(385))
 			create locals_grouped.make_with_text ("Group attribute declarations? e.g. button1, button2: EV_BUTTON")

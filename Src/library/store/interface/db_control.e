@@ -92,7 +92,7 @@ feature -- Basic operations
 		require
 			connection_exists: is_connected
 		do
-			handle.status.set (implementation.begin)
+			implementation.begin
 		end
 
 feature -- Status report

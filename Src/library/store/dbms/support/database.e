@@ -101,7 +101,7 @@ feature -- For DATABASE_SELECTION, DATABASE_CHANGE
 		do
 		end
 
-	result_order (descriptor: INTEGER): INTEGER is
+	result_order (descriptor: INTEGER) is
 			-- Fetch one row resulting from the sql query
 			-- Default value zero
 			-- For Sybase
@@ -377,7 +377,7 @@ feature -- For DATABASE_REPOSITORY
 
 feature -- For DATABASE_DYN_STORE
 
-	unset_catalog_flag(desc: INTEGER): INTEGER is
+	unset_catalog_flag (desc: INTEGER) is
 			-- Default value zero
 			-- Only for ODBC.
 		do
@@ -461,7 +461,7 @@ feature -- External features
 		deferred
 		end
 
-	close_cursor (no_descriptor: INTEGER): INTEGER is
+	close_cursor (no_descriptor: INTEGER) is
 			-- A SQL has been performed in DYNAMIC EXECUTION mode,
 			-- Then if the DYNAMICALLY EXECUTED SQL statement is a SELECT 
 			-- statement, then the cursor is closed.
@@ -662,7 +662,7 @@ feature -- External features
 		deferred
 		end
 
-	begin: INTEGER is
+	begin is
 			-- Begin a data base transaction
 		deferred
 		end

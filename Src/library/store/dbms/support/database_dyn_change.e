@@ -81,12 +81,12 @@ feature
 			prepared_statement: is_prepared
 		do
 			if is_ok then
-				handle.status.set (db_spec.unset_catalog_flag(descriptor))
+				db_spec.unset_catalog_flag(descriptor)
 			end
 			if is_ok then
 				db_spec.start_order (descriptor)
 			end
-			set_executed (TRUE)
+			set_executed (True)
 		ensure
 			executed_statement: is_executed
 		end

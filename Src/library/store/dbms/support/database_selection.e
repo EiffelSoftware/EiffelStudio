@@ -64,7 +64,7 @@ feature -- Basic operations
 				db_spec.start_order (descriptor)
 			end
 			if is_ok then
-				handle.status.set (db_spec.result_order (descriptor))
+				db_spec.result_order (descriptor)
 			end
 			next
 		end

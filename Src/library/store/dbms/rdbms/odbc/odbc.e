@@ -459,9 +459,9 @@ feature -- For DATABASE_REPOSITORY
 
 feature -- For DATABASE_DYN_STORE
 
-	unset_catalog_flag (desc:INTEGER): INTEGER is
+	unset_catalog_flag (desc:INTEGER) is
 		do	
-			Result := odbc_unset_catalog_flag (desc)
+			odbc_unset_catalog_flag (desc)
 		end
 
 feature -- External
@@ -508,9 +508,9 @@ feature -- External
 			is_error_updated := False
 		end
 
-	close_cursor (no_descriptor: INTEGER): INTEGER is
+	close_cursor (no_descriptor: INTEGER) is
 		do
-			Result := odbc_close_cursor (no_descriptor)
+			odbc_close_cursor (no_descriptor)
 		end
 
 	terminate_order (no_descriptor: INTEGER) is
@@ -721,16 +721,11 @@ feature -- External
 			Result := odbc_trancount
 		end
 
-	begin: INTEGER is
+	begin is
 		do
-			Result := odbc_begin
+			odbc_begin
 		end
 
---	database_handle: DATABASE_HANDLE [ODBC] is
---		once
---			create Result
---		end
---
 	support_proc: INTEGER is
 		do
 			Result := odbc_support_proc
@@ -740,29 +735,17 @@ feature {NONE} -- External features
 
 	odbc_get_error_message: POINTER is
 			-- C buffer which contains the error_message.
---		external
---			"C [macro %"odbc.h%"]"
---		alias
---			"error_message"
 		external
 			"C"
 		end
 
 	odbc_get_error_code: INTEGER is
 			-- C buffer which contains the error code.
---		external
---			"C [macro %"odbc.h%"]"
---		alias
---			"error_number"
 		external
 			"C"
 		end
 
 	odbc_get_warn_message: POINTER is
---		external
---			"C [macro %"odbc.h%"]"
---		alias
---			"warn_message"
 		external
 			"C"
 		end
@@ -793,7 +776,7 @@ feature {NONE} -- External features
 		end
 
 
-	odbc_close_cursor (no_descriptor: INTEGER): INTEGER is
+	odbc_close_cursor (no_descriptor: INTEGER) is
 		external
 			"C"
 		end
@@ -992,7 +975,7 @@ feature {NONE} -- External features
 			"odbc_trancount"
 		end
 
-	odbc_begin: INTEGER is
+	odbc_begin is
 		external
 			"C"
 		alias
@@ -1025,7 +1008,7 @@ feature {NONE} -- External features
 			"C"
 		end
 
-	odbc_unset_catalog_flag (desc: INTEGER): INTEGER is
+	odbc_unset_catalog_flag (desc: INTEGER) is
 		external
 			"C"
 		end

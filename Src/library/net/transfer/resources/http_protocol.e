@@ -132,7 +132,6 @@ feature -- Status setting
 			str.extend (' ')
 			str.append (Http_version)
 			str.append (Http_end_of_command)
-			check_socket (main_socket, Write_only)
 			if not error then
 				main_socket.put_string (str)
 					debug

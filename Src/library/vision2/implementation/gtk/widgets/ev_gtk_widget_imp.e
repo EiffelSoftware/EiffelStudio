@@ -98,11 +98,6 @@ feature {EV_ANY_I} -- Implementation
 			end
 		end
 
---	parent_imp: EV_ANY_IMP is
---			-- Parent of `Current'
---		deferred
---		end
-
 	event_widget: POINTER is
 			-- Pointer to the widget handling the widget events
 		local

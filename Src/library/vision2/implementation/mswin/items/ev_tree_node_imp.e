@@ -606,7 +606,7 @@ feature {EV_ANY_I} -- Implementation
 	interface: EV_TREE_NODE
 	
 invariant
-	internal_children_not_void_when_not_parented: is_initialized and top_level_window_imp = Void implies internal_children /= Void
+	internal_children_not_void_when_not_parented: is_initialized and top_parent_imp = Void implies internal_children /= Void
 
 end -- class EV_TREE_NODE_IMP
 

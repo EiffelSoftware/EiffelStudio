@@ -172,8 +172,10 @@ feature {EB_FEATURES_TOOL} -- Implementation
 			retry
 		end
 
-	build_tree_for_external is
-			-- Build the feature tree corresponding to current .NET class.
+	build_tree_for_external (a_class: CLASS_C) is
+			-- Build the feature tree corresponding to current .NET class 'a_class'.
+		require
+			a_class_not_void: a_class /= Void
 		local
 			tree_item: EV_TREE_ITEM
 			name: STRING
@@ -188,7 +190,7 @@ feature {EB_FEATURES_TOOL} -- Implementation
 				class_text := features_tool.current_compiled_class.text
 				l_dev_win := Window_manager.last_focused_development_window
 				if l_dev_win /= Void then
-					l_clauses := l_dev_win.feature_clauses
+					l_clauses := l_dev_win.get_feature_clauses (a_class.name)
 				end
 				if l_clauses.is_empty then
 					raise ("No feature table.")

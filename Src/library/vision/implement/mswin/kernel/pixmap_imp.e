@@ -147,7 +147,7 @@ feature -- Output
 			-- Set `last_operation_correct'.
 		require else
 			a_file_name_not_void: a_file_name /= Void
-			a_file_name_not_empty: not a_file_name.empty
+			a_file_name_not_empty: not a_file_name.is_empty
 			dib_not_void: dib /= Void
 			dib_exists: dib.exists
 		local

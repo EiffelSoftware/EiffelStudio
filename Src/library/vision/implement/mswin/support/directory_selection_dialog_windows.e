@@ -53,7 +53,7 @@ feature {NONE} -- Initialization
 			pos: INTEGER
 		do
 			set_title (private_title)
-			if search_directory /= Void and then not search_directory.empty then
+			if search_directory /= Void and then not search_directory.is_empty then
 				add_to_recently_used (search_directory)
 				if directories_list = Void then
 					directories_list := get ("DirectoryList")
@@ -282,7 +282,7 @@ feature {NONE} -- Implementation
 					remembered_list.extend (Void)
 					remembered_list.compare_objects
 				end
-				if not remembered_list.empty then
+				if not remembered_list.is_empty then
 					from
 						remembered_list.finish
 					until
@@ -416,7 +416,7 @@ feature {NONE} -- Implementation
 			-- Fill `directory_list' with current found item in `dir' directory.
 		require
 			dir_not_void: dir /= Void
-			dir_not_empty: not dir.empty
+			dir_not_empty: not dir.is_empty
 		local
 			d: DIRECTORY
 			found_item: STRING

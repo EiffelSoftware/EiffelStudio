@@ -72,7 +72,7 @@ feature -- Status setting
 	set_not_raster is
 			-- Set this to be a Truetype font
 		do
-			not_raster := true
+			not_raster := True
 		end
 
 	action (elf: WEL_ENUM_LOG_FONT; tm: WEL_TEXT_METRIC; font_type: INTEGER) is
@@ -88,7 +88,7 @@ feature -- Status setting
 			from
 				details.start
 				display_style := elf.style
-				if display_style.empty then
+				if display_style.is_empty then
 					if tm.weight = 400 then
 						display_style := "Regular"
 					else

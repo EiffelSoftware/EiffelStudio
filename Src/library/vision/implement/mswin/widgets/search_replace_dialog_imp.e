@@ -463,13 +463,13 @@ feature {NONE} -- Implementation
 			end
 			if
 				private_search_text /= Void and then not
-				private_search_text.empty
+				private_search_text.is_empty
 			then
 				find_edit.set_text (private_search_text)
 			end
 			if
 				private_replace_text /= Void and then not
-				private_replace_text.empty
+				private_replace_text.is_empty
 			then
 				replace_edit.set_text (private_replace_text)
 			end			

@@ -237,7 +237,7 @@ feature -- Status setting
 			nw: INTEGER;
 		do
 			nw := new_width;
-			if option_button.title.empty then
+			if option_button.title.is_empty then
 				menu_set_size (nw, new_height);
 			else
 				menu_set_size (nw - option_button.title_width, new_height);
@@ -251,7 +251,7 @@ feature -- Status setting
 			nw: INTEGER;
 		do
 			nw := new_width;
-			if option_button.title.empty then
+			if option_button.title.is_empty then
 				menu_set_width (nw - option_button.title_width);
 			else
 				menu_set_width (nw);

@@ -23,10 +23,10 @@ feature {NONE} -- Initialization
 
 feature -- Status report
 
-	empty: BOOLEAN is
+	is_empty: BOOLEAN is
 			-- Is the `accelerator_list' empty?
 		do
-			Result := accelerator_list.empty
+			Result := accelerator_list.is_empty
 		end
 
 feature -- Status setting
@@ -72,7 +72,7 @@ feature {NONE} -- Implementation
 			-- Recreate the accelerators
 		require
 			accelerator_list_not_void: accelerator_list /= Void
-			accelerator_list_not_empty: not accelerator_list.empty
+			accelerator_list_not_empty: not accelerator_list.is_empty
 		local
 			index: INTEGER
 		do

@@ -154,7 +154,7 @@ feature -- Status setting
 			-- Not implemented in Windows
 		require
 			a_dash_exists: a_dash /= Void
-			a_dash_valid: not a_dash.empty
+			a_dash_valid: not a_dash.is_empty
 		do
 		end
 
@@ -486,7 +486,7 @@ feature -- Output
 			-- Draw a polyline, close it automatically if `is_closed'.
 		require
 			points_exists: points /= Void
-			list_not_empty: not points.empty;
+			list_not_empty: not points.is_empty;
 			drawing_dc_not_void: drawing_dc /= Void
 		local
 			p_array: ARRAY [INTEGER]

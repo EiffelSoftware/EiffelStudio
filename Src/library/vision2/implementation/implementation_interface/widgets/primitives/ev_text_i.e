@@ -36,10 +36,11 @@ feature -- Status report
 
 	line_count: INTEGER is
 			-- Number of lines of text in `Current'.
-		require
-		deferred
+		do
+			Result := text.occurrences ('%N') + 1
 		ensure
 			result_greater_zero: Result > 0
+			result_consistent: Result = text.occurrences ('%N') + 1
 		end 
 
 	first_position_from_line_number (i: INTEGER): INTEGER is

@@ -38,7 +38,6 @@ feature
 			function_make (a_name, a_parent, ed);
 		end;
 
-	
 feature {NONE}
 
 	associated_editor: STATE_EDITOR;

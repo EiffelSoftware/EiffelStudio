@@ -75,7 +75,23 @@ inherit
 create
 	make
 
+feature {NONE} -- Initialization
+
+	make (n: INTEGER) is
+			-- Hash table creation
+		do
+			default_size := n
+			extend_tbl_make (n)
+			create inherited_features.make (n)
+			create body_table.make (50)
+			create changed_features.make (100)
+			create origins.make (100)
+		end
+
 feature
+
+	default_size: INTEGER
+			-- Default size for `inherited_features'.
 
 	inherited_features: FEATURE_TABLE;
 			-- Table of inherited features.
@@ -138,16 +154,6 @@ feature
 	pass2_control: PASS2_CONTROL
 			-- Second pass controler, needs to be an attribute since
 			-- used by `pass2' and `feature_unit'.
-
-	make (n: INTEGER) is
-			-- Hash table creation
-		do
-			extend_tbl_make (n)
-			create inherited_features.make (n)
-			create body_table.make (50)
-			create changed_features.make (100)
-			create origins.make (100)
-		end
 
 	pass2 (pass_c: CLASS_C; is_supplier_status_modified: BOOLEAN) is
 			-- Second pass of the compiler on class `cl'. The ultimate
@@ -1087,7 +1093,6 @@ end;
 			feature_table := Void;
 			parents := Void;
 			body_table.clear_all;
-			inherited_features.clear_all;
 			Origin_table.clear_all;
 			adaptations.wipe_out;
 			changed_features.wipe_out;
@@ -1095,7 +1100,10 @@ end;
 			invariant_changed := False;
 			invariant_removed := False;
 			assert_prop_list := Void; 
-			clear_all;
+
+			clear_all
+			extend_tbl_make (default_size)
+			create inherited_features.make (default_size)
 		end;
 
 	process_pattern (resulting_table: FEATURE_TABLE) is

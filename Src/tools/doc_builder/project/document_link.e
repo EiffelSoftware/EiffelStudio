@@ -295,6 +295,11 @@ feature {DOCUMENT_LINK} -- Query
 					-- Does url begin with '.'?
 			l_first_char := url.item (1)
 			Result := l_first_char = '.'
+			if not Result then
+					-- Since it does not start with a '.', if it does not contain
+					-- any path sepaartors it must be relative to document
+				Result := url.occurrences ('/') = 0 and url.occurrences ('\') = 0
+			end
 			
 					-- Can file be created from location of filename appended with
 					-- url?  If so must be relative to document

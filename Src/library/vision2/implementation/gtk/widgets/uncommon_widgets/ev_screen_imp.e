@@ -55,13 +55,32 @@ feature -- Status report
 			a_x, a_y: INTEGER
 			temp_pointer: POINTER
 		do
-			temp_pointer := feature {EV_GTK_EXTERNALS}.gdk_window_get_pointer (NULL, $a_x, $a_y, NULL)
+			temp_pointer := feature {EV_GTK_EXTERNALS}.gdk_window_get_pointer (default_pointer, $a_x, $a_y, default_pointer)
 			create Result.set (a_x, a_y)
 		end
 
 	widget_at_position (x, y: INTEGER): EV_WIDGET is
 			-- Widget at position ('x', 'y') if any.
 		do
+		end
+		
+	widget_imp_at_pointer_position: EV_WIDGET_IMP is
+			-- Widget implementation at current mouse pointer position (if any)
+		local
+			a_x, a_y: INTEGER
+			gdkwin, gtkwid: POINTER
+		do
+			gdkwin := feature {EV_GTK_EXTERNALS}.gdk_window_at_pointer ($a_x, $a_y)
+			if gdkwin /= default_pointer then				
+				from
+					feature {EV_GTK_EXTERNALS}.gdk_window_get_user_data (gdkwin, $gtkwid)
+				until
+					Result /= Void or else gtkwid = default_pointer
+				loop
+					Result ?= feature {EV_GTK_CALLBACK_MARSHAL}.c_get_eif_reference_from_object_id (gtkwid)
+					gtkwid := feature {EV_GTK_EXTERNALS}.gtk_widget_struct_parent (gtkwid)
+				end
+			end
 		end
 
 feature -- Status setting
@@ -208,11 +227,11 @@ feature {NONE} -- Implementation
 		end
 		
 	dispose is
-			-- 
+			-- Cleanup
 		do
-			if gc /= NULL then
+			if gc /= default_pointer then
 				gdk_gc_unref (gc)
-				gc := NULL
+				gc := default_pointer
 			end
 			Precursor {EV_DRAWABLE_IMP}
 		end

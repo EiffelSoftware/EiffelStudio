@@ -74,7 +74,7 @@ feature -- Initialization
 			end
 			
 			if index_of_word_option ("vs") /= 0 then
-				if retried then
+				if retried or c_error then
 						-- Make the application return a non-zero value to OS to flag an error
 						-- to calling process.
 					feature {EXCEPTIONS}.die (1)

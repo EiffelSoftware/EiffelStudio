@@ -9,6 +9,7 @@ indexing
 class
 	EV_GTK_CALLBACK_MARSHAL
 
+
 inherit
 	ANY
 		undefine
@@ -21,6 +22,13 @@ inherit
 		end
 
 	GTK_ENUMS
+		undefine
+			default_create
+		end
+
+	EV_GTK_KEY_CONVERSION
+		rename
+			gdk_delete_enum as gdk_key_delete_enum
 		undefine
 			default_create
 		end
@@ -110,6 +118,8 @@ feature {NONE} -- Conversion
 			-- A TUPLE containing data from a GdkEvent.
 		local
 			p: POINTER
+			keyval: INTEGER
+			key: EV_KEY
 		do
 			inspect
 				C.gdk_event_any_struct_type (gdk_event)
@@ -193,9 +203,11 @@ feature {NONE} -- Conversion
 				Gdk_key_release_enum
 			then
 					-- gdk_event type GdkEventKey
-				Result := [
-					C.gdk_event_key_struct_keyval (gdk_event)
-				]
+				keyval := C.gdk_event_key_struct_keyval (gdk_event)
+				if valid_gtk_code (keyval) then
+					create key.make_with_code (key_code_from_gtk (keyval))
+					Result := [ key	]
+				end
 			when
 				Gdk_enter_notify_enum,
 				Gdk_leave_notify_enum
@@ -310,6 +322,9 @@ end -- class EV_GTK_CALLBACK_MARSHAL
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.12  2000/03/18 00:11:48  brendel
+--| Before calling key action sequence, checks if key code is valid.
+--|
 --| Revision 1.11  2000/03/07 01:26:58  king
 --| Changed tree agent to item list agent
 --|

@@ -162,7 +162,7 @@ feature {NONE} -- Inapplicable
 		do
 		end
 
-	set_z_order (flags: INTEGER) is
+	set_z_order (flags: POINTER) is
 		do
 		end
 

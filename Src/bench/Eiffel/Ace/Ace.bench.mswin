@@ -121,6 +121,14 @@ cluster
 	yacc:				"$EIFFEL_SRC\Eiffel\yacc"
 	const:			"$EIFFEL_SRC\Eiffel\const"
 
+		-- Gobo Eiffel Parse Library
+	pr_skeleton:		"$EIFFEL_SRC\library\gobo\library\parse\skeleton";
+		-- Gobo Eiffel Lexical Library
+	lx_skeleton:		"$EIFFEL_SRC\library\gobo\library\lexical\skeleton";
+		-- Gobo Eiffel Kernel Library
+	kl_kernel:			"$EIFFEL_SRC\library\gobo\library\kernel";
+	kl_kernel_spec:		"$EIFFEL_SRC\library\gobo\library\kernel\spec\ise";
+
 		-- Lace compilation:
 	env:				"$EIFFEL_SRC\Eiffel\lace\env"
 	lace_compile:		"$EIFFEL_SRC\Eiffel\lace\lace_compile"
@@ -277,7 +285,8 @@ external
 		"$(EIFFEL_SRC)\C\parsing\shared",
 		"$(EIFFEL_SRC)\C\parsing\eiffel",
 		"$(EIFFEL_SRC)\C\bench",
-		"$(EIFFEL_SRC)\library\encryption\Clib"
+		"$(EIFFEL_SRC)\library\encryption\Clib",
+		"$(EIFFEL_SRC)\library\gobo\library\kernel\include"
 
 	object:
 		"$(EIFFEL_SRC)\library\wel\spec\$(COMPILER)\lib\wel.lib",

@@ -324,12 +324,22 @@ feature {NONE} -- Handle keystokes
 				end
 
 			when Key_page_up then
-				set_first_line_displayed ((first_line_displayed - number_of_lines_displayed).max (1), True)
-				basic_cursor_move (cursor~set_y_in_lines ((cursor.y_in_lines - number_of_lines_displayed).max (1)))
+				if cursor.y_in_lines >= first_line_displayed and cursor.y_in_lines <= first_line_displayed + number_of_lines_displayed then
+					set_first_line_displayed ((first_line_displayed - number_of_lines_displayed).max (1), True)
+					basic_cursor_move (cursor~set_y_in_lines ((cursor.y_in_lines - number_of_lines_displayed).max (1)))
+				else
+					set_first_line_displayed ((first_line_displayed - number_of_lines_displayed).max (1), True)
+					basic_cursor_move (cursor~set_y_in_lines ((first_line_displayed + number_of_lines_displayed - 1).min (number_of_lines)))
+				end
 
 			when Key_page_down then
-				set_first_line_displayed ((first_line_displayed + number_of_lines_displayed).min (maximum_top_line_index), True)
-				basic_cursor_move (cursor~set_y_in_lines ((cursor.y_in_lines + number_of_lines_displayed).min (number_of_lines)))
+				if cursor.y_in_lines >= first_line_displayed and cursor.y_in_lines <= first_line_displayed + number_of_lines_displayed then
+					set_first_line_displayed ((first_line_displayed + number_of_lines_displayed).min (maximum_top_line_index), True)
+					basic_cursor_move (cursor~set_y_in_lines ((cursor.y_in_lines + number_of_lines_displayed).min (number_of_lines)))
+				else
+					set_first_line_displayed ((first_line_displayed + number_of_lines_displayed - 1).min (maximum_top_line_index), True)
+					basic_cursor_move (cursor~set_y_in_lines (first_line_displayed))
+				end
 			else
 					-- Key not handled
 				other_keys := True

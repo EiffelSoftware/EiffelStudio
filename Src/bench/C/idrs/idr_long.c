@@ -19,7 +19,7 @@
 */
 
 #include "idr.h"
-#include "../run-time/size.h"
+#include "size.h"
 
 public bool_t idr_long(idrs, lp)
 IDR *idrs;

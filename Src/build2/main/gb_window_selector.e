@@ -252,8 +252,7 @@ feature -- Access
 		end
 		
 	directory_of_window (selector_item: GB_WINDOW_SELECTOR_ITEM): GB_WINDOW_SELECTOR_DIRECTORY_ITEM is
-			-- `Result' is all objects represented in `Current'.
-			-- No paticular order is guaranteed.
+			-- `Result' is directory containing `selector_item', or Void if none.
 		local
 			layout_item: GB_WINDOW_SELECTOR_ITEM
 			directory_item: GB_WINDOW_SELECTOR_DIRECTORY_ITEM
@@ -295,8 +294,7 @@ feature -- Access
 				found: found
 			end
 		end
-		
-		
+
 feature -- Status setting
 
 	add_directory_item (directory_item: GB_WINDOW_SELECTOR_DIRECTORY_ITEM) is
@@ -505,6 +503,54 @@ feature {GB_XML_LOAD} -- Implementation
 		do
 			recursive_do_all (agent update_name_of_item)
 		end
+		
+	select_main_window is
+			--
+		local
+			object: GB_TITLED_WINDOW_OBJECT
+			found: BOOLEAN
+			directory: GB_WINDOW_SELECTOR_DIRECTORY_ITEM
+			window: GB_WINDOW_SELECTOR_ITEM
+		do
+			object := Object_handler.root_window_object
+			from
+				start
+			until
+				off or found
+			loop
+				directory ?= item
+				if directory = Void then
+					window ?= item
+					if window.object = object then
+						window.enable_select
+							-- This ensures that the root icon is displayed.
+						window.object.set_as_root_window
+						found := True
+					end
+				else
+					from
+						directory.start
+					until
+						directory.off
+					loop
+						window ?= directory.item
+						if window.object = object then
+							window.enable_select
+								-- This ensures that the root icon is displayed.
+							window.object.set_as_root_window
+							found := True
+						end	
+						directory.forth
+					end
+				end
+				forth
+			end
+			Layout_constructor.set_root_window (object)
+			check
+				found: found
+			end
+		end
+		
 		
 feature {NONE} -- Implementation
 

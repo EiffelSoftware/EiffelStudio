@@ -15,7 +15,8 @@ inherit
 
 create
 	make,
-	make_com_error
+	make_com_error,
+	make_output_in_use
 
 feature {NONE} -- Initialization
 
@@ -36,6 +37,15 @@ feature {NONE} -- Initialization
 				%Unable to load .NET components. Make sure .NET and Eiffel for .NET%N%
 				%are properly installed%N%N%
 				%See http://docs.eiffel.com/technologies/dotnet for more details.%N"
+		end
+		
+	make_output_in_use (t: STRING) is
+			-- Error when trying to delete file `t'.
+		require
+			t_not_void: t /= Void
+			t_not_empty: not t.is_empty
+		do
+			internal_error_string := "File: " + t + " is in use.%NSystem compilation aborted.%N"
 		end
 		
 feature -- Properties

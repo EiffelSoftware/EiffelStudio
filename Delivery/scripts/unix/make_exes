@@ -44,6 +44,9 @@ if [ ! "$NO_NEW_EC" ]; then
    move new_eiffel_env.e eiffel_env.e
    sed -e "s/has_dll_generation:\ BOOLEAN\ is\ True/has_dll_generation:\ BOOLEAN\ is\ False/g" eiffel_env.e >> new_eiffel_env.e
    move new_eiffel_env.e eiffel_env.e                                               
+	cdd $EIFFEL_SRC/Eiffel/switch/license/license
+	sed -e "s/Studio_unix_enterprise_key_51/studio_unix_student_key_51/g" bench_licence.e >> new_bench_license.e
+	move new_bench_license.e bench_licence.e
    cd $FINALIZATION_DIR
    clean_project
    finalize $NEW_EIFFEL_SRC/Eiffel/Ace/newbench.linux.ace
@@ -59,6 +62,9 @@ if [ ! "$NO_NEW_EC" ]; then
 	cd $EIFFEL_SRC/Eiffel/API/constants
    sed -e "s/has_case:\ BOOLEAN\ is\ True/has_case:\ BOOLEAN\ is\ False/g" eiffel_env.e >> new_eiffel_env.e
    move new_eiffel_env.e eiffel_env.e
+	cdd $EIFFEL_SRC/Eiffel/switch/license/license
+	sed -e "s/studio_unix_student_key_51/studio_unix_home_key_51/g" bench_licence.e >> new_bench_license.e
+	move new_bench_license.e bench_licence.e
 	cd $FINALIZATION_DIR
    clean_project
    finalize $NEW_EIFFEL_SRC/Eiffel/Ace/newbench.linux.ace
@@ -76,6 +82,9 @@ if [ ! "$NO_NEW_EC" ]; then
    move new_eiffel_env.e eiffel_env.e
    sed -e "s/has_dll_generation:\ BOOLEAN\ is\ False/has_dll_generation:\ BOOLEAN\ is\ True/g" eiffel_env.e >> new_eiffel_env.e
    move new_eiffel_env.e eiffel_env.e
+	cdd $EIFFEL_SRC/Eiffel/switch/license/license
+	sed -e "s/studio_unix_home_key_51/studio_unix_professional_key_51/g" bench_licence.e >> new_bench_license.e
+	move new_bench_license.e bench_licence.e
    cd $FINALIZATION_DIR
    clean_project
    finalize $NEW_EIFFEL_SRC/Eiffel/Ace/newbench.linux.ace

@@ -26,7 +26,12 @@ inherit
 			internal_set_caret_position,
 			text,
 			wel_text,
-			process_notification_info
+			process_notification_info,
+			set_tab_stops_array,
+			set_default_tab_stops,
+			set_tab_stops,
+			set_text,
+			wel_set_text
 		redefine
 			interface,
 			initialize,
@@ -48,7 +53,6 @@ inherit
 			wel_destroy,
 			wel_resize,
 			wel_move,
-			wel_set_text,
 			wel_make,
 			is_sensitive,
 			is_displayed,
@@ -74,10 +78,10 @@ inherit
 			caret_position as internal_caret_position,
 			set_caret_position as internal_set_caret_position,
 			text as wel_text,
-			text_length as wel_text_length
+			text_length as wel_text_length,
+			set_text as wel_set_text
 		undefine
 			hide,
-			set_text,
 			line_count,
 			on_left_button_down,
 			on_right_button_down,
@@ -97,10 +101,7 @@ inherit
 			set_width,
 			insert_text,
 			selected_text,
-			set_tab_stops_array,
-			set_default_tab_stops,
 			current_line_number,
-			set_tab_stops,
 			on_en_change,
 			selection_end,
 			selection_start,
@@ -131,7 +132,10 @@ inherit
 		redefine
 			default_style,
 			default_ex_style,
-			class_name
+			class_name,
+			text_stream_in,
+			insert_rtf_stream_in,
+			rtf_stream_in
 		end
 		
 	WEL_CFM_CONSTANTS
@@ -156,12 +160,29 @@ feature {NONE} -- Initialization
 
 	make (an_interface: like interface) is
 			-- Create `Current' with interface `an_interface'.
+		local
+			screen_dc: WEL_SCREEN_DC
+			logical_pixels: INTEGER
 		do
 			base_make (an_interface)
 			multiple_line_edit_make (default_parent, "", 0, 0, 0, 0, -1)
 			set_options (Ecoop_set, Eco_autovscroll + Eco_autohscroll)
 			show_vertical_scroll_bar
 			set_text_limit (2560000)
+			
+				-- Connect events to `tab_positions' to update `Current' as values
+				-- change.
+			create tab_positions
+			tab_positions.add_actions.extend (agent update_tab_positions)
+			tab_positions.remove_actions.extend (agent update_tab_positions)
+			
+				-- Calculate the default tab space. In a rich edit control, it is
+				-- Half an Inch, so query the horizontal resolution and divide by 2. 
+			create screen_dc
+			screen_dc.get
+			logical_pixels := get_device_caps (screen_dc.item, logical_pixels_x)
+			screen_dc.release
+			tab_width := logical_pixels // 2
 		end
 		
 
@@ -272,8 +293,27 @@ feature -- Status report
 			Result := pos.x >= 0 and pos.x <= width and
 				pos.y >= 0 and pos.y <= height
 		end
-
+		
+	tab_width: INTEGER 
+			-- Default width in pixels of each tab in `Current'.
+			
 feature -- Status setting
+
+	set_text (a_text: STRING) is
+			-- Set `text' with `a_text'.
+		local
+			stream: WEL_RICH_EDIT_BUFFER_LOADER
+			l_text: STRING
+		do
+			if a_text /= Void then
+				l_text := a_text.twin
+					-- Replace "%N" with "%R%N" for Windows.
+				convert_string (l_text)
+			end
+			create stream.make (l_text)
+			text_stream_in (stream)
+			stream.release_stream
+		end
 
 	format_region (first_pos, last_pos: INTEGER; format: EV_CHARACTER_FORMAT) is
 			-- Set the format of the text between `first_pos' and `last_pos' to
@@ -640,6 +680,84 @@ feature -- Status setting
 			create stream_in.make (old_text_as_rtf)
 			insert_rtf_stream_in (stream_in)
 			stream_in.release_stream
+		end
+		
+	set_tab_width (a_width: INTEGER) is
+			-- Assign `a_width' to `tab_width'.
+		do
+			tab_width := a_width
+			update_tab_positions (1)
+		end
+		
+	update_tab_positions (value: INTEGER) is
+			-- Update tab widths based on contents of `tab_positions'.
+			-- `value' is the index of the changed value when called directly by `tab_positions', as
+			-- the result of a list modidifcation, and is not used.
+			-- Therefore, when calling `update_tab_positions' explicitly, any value may be passed.
+		local
+			array: ARRAY [INTEGER]
+			counter: INTEGER
+			value_in_twips: INTEGER
+			screen_dc: WEL_SCREEN_DC
+			logical_pixels: INTEGER
+			current_default: INTEGER
+		do
+			if tab_positions.count > 0 then
+				create screen_dc
+				screen_dc.get
+				logical_pixels := get_device_caps (screen_dc.item, logical_pixels_x)
+				screen_dc.release
+				
+					-- Calculate the default tab width
+				current_default := mul_div (1440, tab_width, logical_pixels)
+				
+					-- The Windows rich edit only supports 32 positions to be set for tab stops. After that,
+					-- the default is reverted to.
+				create array.make (1, 32)
+				from
+					counter := 1
+				until
+					counter > 32
+				loop
+					if tab_positions.count >= counter then
+							-- Set tab to the value in `tab_positions'.
+						value_in_twips := value_in_twips + mul_div (1440, tab_positions.i_th (counter), logical_pixels)
+					else
+							-- Use the current default value, as a user has not set the position within `tab_positions'.
+						value_in_twips := value_in_twips + current_default
+					end
+					array.put (value_in_twips, counter)
+					tab_positions.forth
+					counter := counter + 1
+				end
+					-- The formatting is applied to the current selection.
+				set_selection (0, text_length)
+				set_tab_stops_array (array)
+				
+					-- Ensure change is reflected immediately.
+				invalidate
+			end
+		end
+		
+	text_stream_in (stream: WEL_RICH_EDIT_STREAM_IN) is
+			-- Start a text stream in operation with `stream'.
+		do
+			Precursor {WEL_RICH_EDIT} (stream)
+			update_tab_positions (1)
+		end
+		
+	rtf_stream_in (stream: WEL_RICH_EDIT_STREAM_IN) is
+			-- Start a rtf stream in operation with `stream'.
+		do
+			Precursor {WEL_RICH_EDIT} (stream)
+			update_tab_positions (1)
+		end
+		
+	insert_rtf_stream_in (stream: WEL_RICH_EDIT_STREAM_IN) is
+			-- Start a rtf stream in operation with `stream'.
+		do
+			Precursor {WEL_RICH_EDIT} (stream)
+			update_tab_positions (1)
 		end
 		
 feature {NONE} -- Implementation

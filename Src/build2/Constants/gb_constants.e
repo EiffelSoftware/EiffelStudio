@@ -73,7 +73,7 @@ feature -- Directories
 	
 feature -- Default values
 
-	Minimum_width_of_object_editor: INTEGER is 155
+	Minimum_width_of_object_editor: INTEGER is 165
 		-- The minimum width allowed for a GB_OBJECT_EDITOR
 		
 	Default_floating_object_editor_height: INTEGER is 500

@@ -19,16 +19,6 @@ inherit
 			out
 		end
 
-	DOUBLE_MATH
-		export
-			{NONE} all
-		undefine
-			default_create,
-			is_equal,
-			copy,
-			out
-		end
-
 create
 	default_create,
 	make_with_8_bit_rgb,

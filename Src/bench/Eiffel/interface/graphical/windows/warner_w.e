@@ -38,6 +38,7 @@ feature
 			add_ok_action (Current, Current);
 			add_cancel_action (Current, Void);
 			add_help_action (Current, 1);
+			add_button_click_action (1, Current, popdown_action);
 			allow_resize;
 			set_default_position (false);
 			realize
@@ -49,12 +50,15 @@ feature
 			new_x, new_y: INTEGER
 		do
 			if is_popped_up then popdown end;
-			if window /= Void then
-				new_x := window.real_x + (window.width - width) // 2;
-				new_y := window.real_y + (window.height - height) // 2;
-			else
+			if window = Void then
 				new_x := (screen.width - width) // 2;
 				new_y := (screen.height - height) // 2
+			elseif is_exclusive_grab then
+				new_x := window.real_x + (window.width - width) // 2;
+				new_y := window.real_y + (window.height - height) // 2
+			else
+				new_x := window.real_x + (window.width - width) // 2;
+				new_y := window.real_y - height
 			end;
 			set_x_y (new_x, new_y);
 			warning_popup;
@@ -135,23 +139,29 @@ feature
 
 feature {NONE}
 
+	popdown_action: ANY is once !!Result end;
+
 	work (argument: ANY) is
 		local
 			i : INTEGER_REF; 
 		do
-			popdown;
-			hide_help_button;
-			show_cancel_button;
-			show_ok_button;
-			set_ok_label (" Ok ");
-			set_cancel_label ("Cancel");
-			set_help_label ("Help");
-			i ?= argument;
-			if last_caller /= void then
-				if i = 1 then
-					last_caller.execute (void)
-				elseif argument = Current then
-					last_caller.execute (Current)
+			if argument = popdown_action and not is_exclusive_grab then
+				popdown
+			else
+				popdown;
+				hide_help_button;
+				show_cancel_button;
+				show_ok_button;
+				set_ok_label (" Ok ");
+				set_cancel_label ("Cancel");
+				set_help_label ("Help");
+				i ?= argument;
+				if last_caller /= void then
+					if i = 1 then
+						last_caller.execute (void)
+					elseif argument = Current then
+						last_caller.execute (Current)
+					end
 				end
 			end
 		end;

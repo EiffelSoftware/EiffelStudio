@@ -41,22 +41,6 @@ feature {NONE} -- Initialization
 
 feature -- Access
 
-	count: INTEGER is
-			-- Number of items in the menu.
-		do
-			Result := implementation.count
-		end
-
-	get_item (index: INTEGER): EV_MENU_ITEM is
-			-- Give the item of the list at the zero-base
-			-- `index'.
-		require
-			exists: not destroyed
-			item_exists: (index <= count) and (index >= 0)	
-		do
-			Result := implementation.get_item (index)
-		end
-
 	text: STRING is
 			-- Label of the current menu
 		require
@@ -78,6 +62,7 @@ feature -- Element change
 feature -- Implementation
 	
 	implementation: EV_MENU_I	
+			-- Platform dependent access.
 
 end -- class EV_MENU
 

@@ -53,7 +53,7 @@ feature -- Initialization
 
 	make_fine (h, m: INTEGER; s: DOUBLE) is
 			-- Set `hour, `minute' and `second' to `h', `m' and truncated to integer part of `s' respectively.
-			-- Set `fractionnal_second' to the fractionnal part of `s'.
+			-- Set `fractional_second' to the fractional part of `s'.
 		require
 			h_large_enough: h >= 0;
 			h_small_enough: h < Hours_in_day;
@@ -65,7 +65,7 @@ feature -- Initialization
 			s_tmp: INTEGER
 		do
 			s_tmp :=  s.truncated_to_integer
-			fractionnal_second := s - s_tmp
+			fractional_second := s - s_tmp
 			make (h, m, s_tmp)
 		ensure
 			hour_set: hour = h;
@@ -83,7 +83,7 @@ feature -- Initialization
 			m := c_minute_now;
 			s := c_second_now;
 			make (h, m, s)
-			fractionnal_second := c_millisecond_now / 1000;
+			fractional_second := c_millisecond_now / 1000;
 			--fine_second := (c_second + c_millisecond / 1000);
 		end;
 
@@ -101,7 +101,7 @@ feature -- Initialization
 			m := s // Seconds_in_minute;
 			s := s - (m * Seconds_in_minute);
 			make (h, m, s)
-			fractionnal_second := 0;
+			fractional_second := 0;
 		ensure
 			seconds_set: seconds = sec
 		end;
@@ -115,7 +115,7 @@ feature -- Initialization
 			s: INTEGER
 		do
 			s := sec.truncated_to_integer;
-			fractionnal_second := sec - s;
+			fractional_second := sec - s;
 			make_by_seconds (s)
 		end;
 
@@ -239,68 +239,7 @@ feature -- Measurement
 			-- Number of seconds and fractions of seconds elapsed from midnight
 		do
 			Result := (hour * Seconds_in_hour) + (minute * Seconds_in_minute) + fine_second
-		end;
-
-feature -- Element change 
- 
-	set_second (s: INTEGER) is 
-			-- Set `second' to `s'.
-		require 
-			s_large_enough: s >= 0; 
-			s_small_enough: s < Seconds_in_minute 
-		do 
-			c_set_second (s, $compact_time)
-		ensure 
-			second_set: second = s 
-		end;
-
-	set_fine_second (s: DOUBLE) is 
-			-- Set `fine_second' to `s'
-		require 
-			s_large_enough: s >= 0; 
-			s_small_enough: s < Seconds_in_minute
-		local
-			s_tmp: INTEGER 
-		do 
-			s_tmp := s.truncated_to_integer
-			fractionnal_second := s - s_tmp
-			set_second (s_tmp)
-		ensure
-			fine_second_set: fine_second = s
-		end;
-
-	set_fractionnals (f: DOUBLE) is
-			-- Set `fractionnal_second' to `f'.
-		require
-			f_large_enough: f >= 0;
-			f_small_enough: f < 1 
-		do
-			fractionnal_second := f
-		ensure
-			second_same: second = old second
-		end;	
-
-	set_minute (m: INTEGER) is 
-			-- Set `minute' to `m'.
-		require 
-			m_large_enough: m >= 0; 
-			m_small_enough: m < Minutes_in_hour 
-		do 
-			c_set_minute (m, $compact_time) 
-		ensure 
-			minute_set: minute = m 
-		end;
-
-	set_hour (h: INTEGER) is 
-			-- Set `hour' to `h'.
-		require 
-			h_large_enough: h >= 0; 
-			h_small_enough: h < Hours_in_day 
-		do 
-			c_set_hour (h, $compact_time)
-		ensure 
-			hour_set: hour = h 
-		end;
+		end
 
 feature -- Basic operations
 
@@ -331,16 +270,16 @@ feature -- Basic operations
 		do
 			total_second := second + s;
 			if (total_second < 0 or else total_second >= Seconds_in_minute) then
-				set_fine_second (mod (total_second, Seconds_in_minute) + fractionnal_second)
+				set_fine_second (mod (total_second, Seconds_in_minute) + fractional_second)
 				minute_add (div (total_second, Seconds_in_minute))	
 			else
-				set_fine_second (total_second + fractionnal_second)
+				set_fine_second (total_second + fractional_second)
 			end
 		end;
 
 	fine_second_add (f: DOUBLE) is
 			-- Add `f' seconds to the current time.
-			-- if `f' has decimals, `fractionnal_second' is modified.
+			-- if `f' has decimals, `fractional_second' is modified.
 		local
 			total_second: DOUBLE
 		do
@@ -488,28 +427,13 @@ feature {NONE} -- Externals
 	c_make_time (h, m, s: INTEGER): INTEGER is
 		external
 			"C"
-		end;
-
-	c_set_hour (h:INTEGER; c_t: POINTER) is
-		external
-			"C"
-		end;
-
-	c_set_minute (h:INTEGER; c_t: POINTER) is
-		external
-			"C"
-		end;
-
-	c_set_second (h:INTEGER;c_t: POINTER) is
-		external
-			"C"
-		end;
+		end
 
 invariant
 	second_large_enough: second >= 0;
 	second_small_enough: second < seconds_in_minute;
-	fractionnals_large_enough: fractionnal_second >= 0;
-	fractionnals_small_enough: fractionnal_second < 1;
+	fractionals_large_enough: fractional_second >= 0;
+	fractionals_small_enough: fractional_second < 1;
 	minute_large_enough: minute >= 0;	 
 	minute_small_enough: minute < minutes_in_hour;
 	hour_large_enough: hour >= 0;

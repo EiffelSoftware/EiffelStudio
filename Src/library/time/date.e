@@ -245,15 +245,7 @@ feature -- Status report
 			-- Is the current year a leap year?
 		do
 			Result := i_th_leap_year (year)
-		end;
-
-	days_in_month: INTEGER is
-			-- Number of days in the current month
-		do
-			Result := days_in_i_th_month (month, year)
-		ensure
-			positive_result: Result > 0
-		end;
+		end
 
 	days_at_month: INTEGER is
 			-- Number of days from the beginning of the year
@@ -337,50 +329,13 @@ feature -- Status report
 				(div(year - 1,400) - div(y - 1,400))
 		end
 
-feature -- Element change
-
-	set_day (d: INTEGER) is
-			-- Set `day' to `d'.
-		require
-			d_large_enough: d >= 1;
-			d_small_enough: d <= days_in_month
-		do
-			c_set_day (d, $compact_date)
-		ensure
-			day_set: day = d
-		end;
-
-	
-	set_month (m: INTEGER) is
-			-- Set `month' to `m'.
-			-- `day' must be small enough.
-		require
-			m_large_enough: m >= 1;
-			m_small_enough: m <= Months_in_year;
-			d_small_enough: day <= days_in_i_th_month (m, year)
-		do
-			c_set_month (m, $compact_date)
-		ensure
-			month_set: month = m
-		end;
-	
-	set_year (y: INTEGER) is
-			-- Set `year' to `y'.
-		require
-			can_not_cut_29th_feb: day <= days_in_i_th_month (month, y)
-		do
-			c_set_year (y, $compact_date)
-		ensure
-			year_set: year = y
-		end;
-
 feature -- Conversion
 
 	to_date_time: DATE_TIME is
 			-- Date-time version, with a zero time component
 		do
 			!! Result.make_by_date (Current)
-		end;
+		end
 
 feature -- Basic operations
 
@@ -609,25 +564,7 @@ feature {NONE} -- Implementation
 			-- Initialize the integer `compact_date'.
 		external
 			"C"
-		end;
-
-	c_set_day (d:INTEGER; c_d: POINTER) is
-			-- Initialize the day in `compact_date'.
-		external
-			"C"
-		end;
-
-	c_set_month (m: INTEGER; c_d: POINTER) is
-			-- Initialize the month in `compact_date'.
-		external
-			"C"
-		end;
-
-	c_set_year (y:INTEGER; c_d: POINTER) is
-			-- Initialize the year in `compact_date'.
-		external
-			"C"
-		end;
+		end
 
 invariant
 

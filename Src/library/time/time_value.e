@@ -9,10 +9,9 @@ class
 	TIME_VALUE
 
 inherit
-	TIME_CONSTANTS
 
-creation
-
+	TIME_MEASUREMENT
+		
 feature -- Access 
 
 	hour: INTEGER is
@@ -63,8 +62,44 @@ feature -- Access
 		do 
 			Result := (fractional_second * 1_000_000_000).truncated_to_integer;
 			Result := Result \\ 1000
-		end; 
+		end 
  
+feature -- Element change 
+ 
+	set_second (s: INTEGER) is 
+			-- Set `second' to `s'.
+		do 
+			c_set_second (s, $compact_time)
+		end
+
+	set_fine_second (s: DOUBLE) is 
+			-- Set `fine_second' to `s'
+		local
+			s_tmp: INTEGER 
+		do 
+			s_tmp := s.truncated_to_integer
+			fractional_second := s - s_tmp
+			set_second (s_tmp)
+		end
+
+	set_fractionals (f: DOUBLE) is
+			-- Set `fractional_second' to `f'.
+		do
+			fractional_second := f
+		end
+
+	set_minute (m: INTEGER) is 
+			-- Set `minute' to `m'.
+		do 
+			c_set_minute (m, $compact_time) 
+		end
+
+	set_hour (h: INTEGER) is 
+			-- Set `hour' to `h'.
+		do 
+			c_set_hour (h, $compact_time)
+		end
+
 feature {NONE} -- Externals
 
 	c_hour (c_t: INTEGER): INTEGER is
@@ -81,6 +116,21 @@ feature {NONE} -- Externals
 		external
 			"C"
 		end
+
+	c_set_hour (h:INTEGER; c_t: POINTER) is
+		external
+			"C"
+		end;
+
+	c_set_minute (h:INTEGER; c_t: POINTER) is
+		external
+			"C"
+		end;
+
+	c_set_second (h:INTEGER;c_t: POINTER) is
+		external
+			"C"
+		end;
 
 end -- class TIME_VALUE
 

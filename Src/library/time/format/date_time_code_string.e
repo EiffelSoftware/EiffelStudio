@@ -243,7 +243,7 @@ feature -- Interface
 					end
 					Result.append (int.out)
 				when 16 then
-					double := time.fractionnal_second * 10^(value.item(i).count_max)
+					double := time.fractional_second * 10^(value.item(i).count_max)
 					int := double.truncated_to_integer
 					Result.append (int.out)
 				else

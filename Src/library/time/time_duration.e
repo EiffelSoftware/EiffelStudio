@@ -15,7 +15,7 @@ inherit
 			is_equal
 		end
 
-	TIME_CONSTANTS
+	TIME_MEASUREMENT
 		undefine
 			is_equal
 		end
@@ -166,45 +166,32 @@ feature -- Element Change
 			-- `fractionnal_second' is cut down to 0.
 		do
 			fine_second := s
-		ensure
-			second_set: second = s
-		end;
+		end
 
 	set_fine_second (s: DOUBLE) is
 			-- Set `fine_second' to `s'.
 		do
 			fine_second := s
-		ensure
-			second_set: fine_second = s
-		end;
+		end
 
-	set_fractionnals (f: DOUBLE) is
+	set_fractionals (f: DOUBLE) is
 			-- Set `fractionnal_second' to `f'.
 			-- `f' must have the same sign as `second'.
-		require
-			same_sign: (f.sign = second.sign) or else
-				f.sign = 0 or else second.sign = 0;
-			f_large_enough: f > -1;
-			f_small_enough: f < 1
 		do
 			fine_second := second + f
-		end;
+		end
 
 	set_minute (m: INTEGER) is 
 			-- Set `minute' to `m'.
 		do
 			minute:= m 
-		ensure
-			minute_set: minute = m 
-		end;
+		end
 
 	set_hour (h: INTEGER) is 
 			-- Set `hour' to `h'. 
 		do
 			hour := h 
-		ensure
-			hour_set: hour = h 
-		end;
+		end
 
 feature -- Basic operations
 

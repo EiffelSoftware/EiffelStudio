@@ -20,6 +20,11 @@ inherit
 			is_equal	
 		end
 
+	DATE_MEASUREMENT
+		undefine
+			is_equal
+		end
+
 creation
  
 	make, make_by_days
@@ -143,25 +148,19 @@ feature -- Element Change
 			-- Set `day' to `d'.
 		do
 			day := d
-		ensure
-			day_set: day = d
-		end;
+		end
 
 	set_month (m: INTEGER) is
 			-- Set `month' to `m'.
 		do
 			month := m
-		ensure
-			month_set: month = m
-		end;
+		end
 
 	set_year (y: INTEGER) is
 			-- Set `year' to `y'.
 		do
 			year := y
-		ensure
-			year_set: year = y
-		end;
+		end
 
 	day_add (d: INTEGER) is
 			-- Add `d' days to `Current'.

@@ -9,17 +9,15 @@ class
 	DATE_TIME_DURATION
  
 inherit
-	DATE_TIME_VALUE
-		undefine
-			is_equal
-		redefine
-			date,
-			time
-		end;
+
 	DURATION
 		undefine
-			is_equal,
-			out
+			is_equal
+		end
+
+	DATE_TIME_MEASUREMENT
+		undefine
+			is_equal	
 		end
 
 creation
@@ -102,30 +100,24 @@ feature -- Initialization
 
 feature -- Access 
 
-	date: DATE_DURATION;
+	date: DATE_DURATION
 			-- date part of the current duration
 
-	time: TIME_DURATION;
+	time: TIME_DURATION
 			-- time part of current duration
 
 	zero: DATE_TIME_DURATION is
 			-- Neutral element
 		once
-			!! Result.make_by_date_time (date.zero, time.zero)
-		end;
-
-	fine_seconds_count: DOUBLE is
-			-- Number of seconds and fractionnals of seconds of the current duration
-		do
-			Result := time.fine_seconds_count
-		end;
+			Create Result.make_by_date_time (date.zero, time.zero)
+		end
 
 	seconds_count: INTEGER is
 			-- Total number of seconds of the current duration
 		do
 			Result := time.seconds_count
 		end;
-
+ 			  
 feature -- Comparison
 
 	infix "<" (other: like Current): BOOLEAN is
@@ -287,7 +279,7 @@ feature -- Conversion
 			time_canonical: Result.time.canonical;
 			same_sign: ((Result.date > date.zero) implies (Result.time >= time.zero)) and then
 				((Result.date < date.zero) implies (Result.time <= time.zero))
-		end;
+		end
  
 end -- class DATE_TIME_DURATION
 

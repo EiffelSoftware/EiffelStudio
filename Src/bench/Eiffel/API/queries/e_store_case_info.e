@@ -39,6 +39,14 @@ feature -- Properties
 			
 feature -- Execution
 
+	execute_back is
+		local
+			format_storage: FORMAT_CASE_STORAGE
+		do
+			--!! format_storage.make (output_window, reverse_engineering_window);
+			--format_storage.execute
+		end;
+
 	execute is
 		local
 			case_w: CASE_W

@@ -28,7 +28,7 @@ long code;
 	Request_Clean (rqst);
 	rqst.rq_type = (int) code;
 	send_packet(writefd(sp), &rqst);
-};
+}
 
 public void send_rqst_1 (code, info1) 
 long code;
@@ -45,7 +45,7 @@ long info1;
 	rqst.rq_type = (int) code;
 	rqst.rq_opaque.op_first = (int) info1;
 	send_packet(writefd(sp), &rqst);
-};
+}
 
 public void send_rqst_2 (code, info1, info2) 
 long code;
@@ -64,7 +64,7 @@ long info2;
 	rqst.rq_opaque.op_first = (int) info1;
 	rqst.rq_opaque.op_second = (int) info2;
 	send_packet(writefd(sp), &rqst);
-};
+}
 
 public void send_rqst_3 (code, info1, info2, info3) 
 long code;
@@ -85,7 +85,7 @@ long info3;
 	rqst.rq_opaque.op_second = (int) info2;
 	rqst.rq_opaque.op_third = (long) info3;
 	send_packet(writefd(sp), &rqst);
-};
+}
 
 public EIF_BOOLEAN recv_ack ()
 {

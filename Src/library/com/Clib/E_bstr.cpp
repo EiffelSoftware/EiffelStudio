@@ -37,6 +37,7 @@ EIF_OBJ bstr_to_eif_obj (BSTR BstrName)
 	{
 		eif_string_id = eif_type_id ("STRING");
 		string_make = eif_proc ("make", eif_string_id);
+		nstcall = 0;
 		name = eif_create (eif_string_id);
 		string_make (eif_access (name), 0);
 	}

@@ -360,6 +360,9 @@ feature {NONE} -- Implementation
 				-- modified. We do not want this, as it should only
 				-- be marked as so when the user does something.
 			system_status.disable_project_modified
+				-- Update all names in `window_selector' to ensure that
+				-- they are current after the load.
+			Window_selector.update_displayed_names
 		end
 
 	load_and_parse_xml_file (a_filename:STRING) is

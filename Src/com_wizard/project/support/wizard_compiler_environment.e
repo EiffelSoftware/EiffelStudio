@@ -27,6 +27,16 @@ feature -- Access
 	Common_linker_options:STRING is " /DLL  /WARN:0 /RELEASE %"/INCREMENTAL:NO%""
 			-- Linker options
 
+	Common_standard_c_compiler_options: STRING is 
+			-- C compiler options
+		once
+			Result := "/W0 /Ox /c /I..\include /I..\..\common\include /I"
+			Result.append (get (Eiffel4))
+			Result.append ("\bench\spec\windows\include /I")
+			Result.append (get (Eiffel4))
+			Result.append ("\library\com\include ")
+		end
+
 	Common_c_compiler_options: STRING is 
 			-- C compiler options
 		once

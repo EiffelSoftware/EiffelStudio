@@ -48,16 +48,22 @@ feature -- Status setting
 	set_left_alignment is
 		do
 			alignment_code := 1
+		ensure
+			is_left_aligned: is_left_aligned
 		end
 
 	set_center_alignment is
 		do
 			alignment_code := 2
+		ensure
+			is_center_aligned: is_center_aligned
 		end
 
 	set_right_alignment is
 		do
 			alignment_code := 3
+		ensure
+			is_right_aligned: is_right_aligned
 		end
 
 feature -- Status report
@@ -80,6 +86,7 @@ feature -- Status report
 feature {NONE} -- Implementation
 
 	alignment_code: INTEGER
+		-- Used to represent one of the three alignment states.
 
 invariant
 	alignment_code_within_range:  alignment_code >= 1 and alignment_code <= 3

@@ -55,10 +55,8 @@ feature {NONE} -- Behaviors
 				!! cursor.make_by_predefined_id (Idc_cross)
 			when Cmd_cursor_ibeam then
 				!! cursor.make_by_predefined_id (Idc_ibeam)
-			when Cmd_cursor_icon then
-				!! cursor.make_by_predefined_id (Idc_icon)
 			when Cmd_cursor_size then
-				!! cursor.make_by_predefined_id (Idc_size)
+				!! cursor.make_by_predefined_id (Idc_sizeall)
 			when Cmd_cursor_sieznesw then
 				!! cursor.make_by_predefined_id (Idc_sizenesw)
 			when Cmd_cursor_sizens then

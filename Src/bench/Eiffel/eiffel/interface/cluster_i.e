@@ -776,7 +776,7 @@ end;
 					ov_class := ovcc.item_for_iteration;
 					if classes.has (ov_class.name) then
 						-- the class is overridden; remove it
-						a_class := classes.item (ov_class.name)
+						a_class := classes.found_item
 						remove_class (a_class);
 					end
 					ovcc.forth;
@@ -924,15 +924,14 @@ end;
 				table := rename_clause.renamings;
 				if table.has (class_name) then
 					if not found then
-						Universe.set_last_class
-						(a_cluster.classes.item (table.item (class_name)));
+						Universe.set_last_class (a_cluster.classes.item (table.found_item));
 						found := True;
 					else
 							-- Name clash
 						!!vscn;
 						vscn.set_first (Universe.last_class);
 						vscn.set_second  
-						(a_cluster.classes.item (table.item (class_name)));
+						(a_cluster.classes.item (table.found_item));
 						vscn.set_cluster (Current);
 						Error_handler.insert_error (vscn);
 					end
@@ -946,12 +945,12 @@ end;
 		require
 			good_argument: class_name /= Void;
 		local
-			pos: INTEGER;
+			old_cursor: CURSOR;
 			a_cluster: CLUSTER_I;
 			rename_clause: RENAME_I;
 			table: EXTEND_TABLE [STRING, STRING];
 		do
-			pos := renamings.index;
+			old_cursor := renamings.cursor;
 			from
 				renamings.start
 			until
@@ -961,11 +960,11 @@ end;
 				a_cluster := rename_clause.cluster;
 				table := rename_clause.renamings;
 				if table.has (class_name) then
-					Result := a_cluster.classes.item (table.item (class_name))
+					Result := a_cluster.classes.item (table.found_item)
 				end;
 				renamings.forth;
 			end;
-			renamings.go_i_th (pos);
+			renamings.go_to (old_cursor);
 		end;
 
 	new_date: INTEGER is

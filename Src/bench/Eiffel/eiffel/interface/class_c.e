@@ -1182,6 +1182,7 @@ end
 debug ("SEP_DEBUG", "ACTIVITY")
 	io.error.putstring ("%TType check for invariant%N")
 end
+					ast_context.set_current_feature (invariant_feature)
 					invar_clause.type_check
 
 					if

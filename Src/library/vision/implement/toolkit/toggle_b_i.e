@@ -55,6 +55,17 @@ feature
 		deferred
 		end -- state
 
+	set_toggle_on is
+			-- Set Current toggle on and set
+			-- state to True.
+		deferred
+		end;
+
+	set_toggle_off is
+			-- Set Current toggle off and set
+			-- state to False.
+		deferred
+		end;
 
 feature
 

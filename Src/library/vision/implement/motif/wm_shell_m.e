@@ -166,7 +166,7 @@ feature
 			c_bitmap := pixmap_implementation.resource_pixmap (screen);
 			pixmap_implementation.put_object (Current);
 			ext_name := MiconPixmap.to_c;
-			c_set_pixmap (screen_object, c_bitmap, $ext_name)
+			m_wm_set_pixmap (screen_object, c_bitmap, $ext_name)
 		ensure then
 			icon_pixmap = a_pixmap
 
@@ -193,7 +193,7 @@ feature {NONE}
 		do
 			ext_name := MiconPixmap.to_c;
 			pixmap_implementation ?= icon_pixmap.implementation;
-			c_set_pixmap (screen_object, pixmap_implementation.resource_pixmap (screen), $ext_name)
+			m_wm_set_pixmap (screen_object, pixmap_implementation.resource_pixmap (screen), $ext_name)
 		end
 
 
@@ -457,28 +457,37 @@ feature {NONE} -- External features
 	m_wm_shell_set_int (scr_obj: POINTER; value: INTEGER; name: ANY) is
 		external
 			"C"
+		alias
+			"set_int"
 		end;
 
 	m_wm_shell_get_string (scr_obj: POINTER; name: ANY): STRING is
 		external
 			"C"
+		alias
+			"get_string"
 		end;
 
 	m_wm_shell_set_string (scr_obj: POINTER; name1, name2: ANY) is
 		external
 			"C"
+		alias
+			"set_string"
 		end;
 
 	m_wm_shell_get_int (scr_obj: POINTER; name: ANY): INTEGER is
 		external
 			"C"
+		alias
+			"get_int"
 		end;
 
-	c_set_pixmap (scr_obj, pix: POINTER; resource: ANY) is
+	m_wm_set_pixmap (scr_obj, pix: POINTER; resource: ANY) is
 		external
 			"C"
+		alias
+			"c_set_pixmap"
 		end; 
-
 
 end
 

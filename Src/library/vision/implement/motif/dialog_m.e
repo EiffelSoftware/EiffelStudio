@@ -147,13 +147,13 @@ feature
 			-- Is the popup widget popped up on screen ?
 		obsolete "Use is_popped_up instead, corrected feature spelling."
 		do
-			Result :=  c_is_poped_up (xt_parent (screen_object))
+			Result :=  d_c_is_poped_up (d_xt_parent (screen_object))
 		end;
 
 	is_popped_up: BOOLEAN is
 			-- Is the popup widget popped up on screen ?
 		do
-			Result :=  c_is_poped_up (xt_parent (screen_object))
+			Result :=  d_c_is_poped_up (d_xt_parent (screen_object))
 		end;
 
 	lower is
@@ -172,7 +172,7 @@ feature
 			-- Popdown popup shell.
 		do
 			if is_popped_up then
-				xt_unmanage_child (screen_object)
+				d_xt_unmanage_child (screen_object)
 			end
 		ensure then
 			not is_popped_up
@@ -182,8 +182,8 @@ feature
 			-- Popup a popup shell.
 		do
 			if not is_popped_up then
-				xt_manage_child (screen_object);
-				c_add_grab (xt_parent (screen_object), grab_type)
+				d_xt_manage_child (screen_object);
+				d_c_add_grab (d_xt_parent (screen_object), grab_type)
 			end
 		ensure then
 			is_popped_up

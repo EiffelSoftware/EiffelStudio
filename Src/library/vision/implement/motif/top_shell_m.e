@@ -17,10 +17,7 @@ inherit
 			{NONE} all
 		end;
 
-	WM_SHELL_M
-		rename
-			c_set_pixmap as cc_set_pixmap
-		end;
+	WM_SHELL_M;
 
 	TOP_M
 

@@ -80,9 +80,24 @@ feature -- Calllbacks (adding and removing)
 		end;
 
 feature -- State of Toggle Button
-	
+
+	set_toggle_on is
+			-- Set Current toggle on and set
+			-- state to True.
+		do
+			implementation.set_toggle_on
+		end;
+
+	set_toggle_off is 
+			-- Set Current toggle off and set
+			-- state to False.
+		do
+			implementation.set_toggle_off
+		end;
+
 	arm is
-			-- Assign True to `state'.
+			-- Set `state' to True and call 
+			-- callback (if set).
 		do
 			implementation.arm
 		ensure
@@ -90,11 +105,12 @@ feature -- State of Toggle Button
 		end;
 
 	disarm is
-			-- Assign False to `state'.
+			-- Set `state' to False and call 
+			-- callback (if set).
 		do
 			implementation.disarm
 		ensure
-			--state_is_false: not state
+			state_is_false: not state
 		end; 
 
 	

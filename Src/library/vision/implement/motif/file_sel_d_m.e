@@ -14,28 +14,9 @@ inherit
 			{NONE} all
 		end;
 
-	DIALOG_M
-        rename
-		c_set_pixmap as cc_set_pixmap,
-            xt_window as d_xt_window,
-            x_define_cursor as d_x_define_cursor,
-            set_boolean as d_set_boolean,
-            xt_unmanage_child as d_xt_unmanage_child,
-            xt_manage_child as d_xt_manage_child,
-            x_flush as d_x_flush,
-            xt_display as d_xt_display
-        export
-            {NONE}
-                d_xt_window, d_x_define_cursor,
-                d_set_boolean, d_xt_unmanage_child, d_x_flush,
-                d_xt_manage_child, d_xt_display
-        end;
+	DIALOG_M;
 
 	FILE_SELEC_M
-		rename 
-			xt_parent as f_xt_parent,
-			x_lower_window as wx_lower_window,
-			x_raise_window as wx_raise_window
 		undefine
 			make, lower, raise, action_target
 		redefine

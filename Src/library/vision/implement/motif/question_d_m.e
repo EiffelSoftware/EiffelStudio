@@ -20,27 +20,10 @@ inherit
 		undefine
 			make
 		redefine
-            define_cursor_if_shell, undefine_cursor_if_shell
-		select
-			cc_set_pixmap
+			define_cursor_if_shell, undefine_cursor_if_shell
 		end;
 
 	DIALOG_M
-        rename
-		c_set_pixmap as c_c_set_pixmap,
-            xt_window as d_xt_window,
-            x_define_cursor as d_x_define_cursor,
-            set_boolean as d_set_boolean,
-            xt_unmanage_child as d_xt_unmanage_child,
-            xt_manage_child as d_xt_manage_child,
-            x_flush as d_x_flush,
-            xt_display as d_xt_display
-        export
-            {NONE}
-                d_xt_window, d_x_define_cursor,
-                d_set_boolean, d_xt_unmanage_child, d_x_flush,
-                d_xt_manage_child, d_xt_display
-        end
 
 creation
 
@@ -48,34 +31,34 @@ creation
 
 feature -- Creation
 
-    make (a_question_dialog: QUESTION_D) is
-            -- Create a motif question dialog.
-        local
-            ext_name: ANY
-        do
-            ext_name := a_question_dialog.identifier.to_c;
-            screen_object := create_question_d ($ext_name,
+	make (a_question_dialog: QUESTION_D) is
+			-- Create a motif question dialog.
+		local
+			ext_name: ANY
+		do
+			ext_name := a_question_dialog.identifier.to_c;
+			screen_object := create_question_d ($ext_name,
 			a_question_dialog.parent.implementation.screen_object);
-            a_question_dialog.set_dialog_imp (Current);
-            forbid_resize
+			a_question_dialog.set_dialog_imp (Current);
+			forbid_resize
 			action_target := screen_object;
-        end;
+		end;
 
 feature {ALL_CURS_X}
 
 	define_cursor_if_shell (a_cursor: SCREEN_CURSOR) is
-            -- Define `cursor' if the current widget is a shell.
-        require else
-            a_cursor_exists: not (a_cursor = Void)
-        do
-            dialog_define_cursor_if_shell (a_cursor)
-        end;
+			-- Define `cursor' if the current widget is a shell.
+		require else
+			a_cursor_exists: not (a_cursor = Void)
+		do
+			dialog_define_cursor_if_shell (a_cursor)
+		end;
 
-    undefine_cursor_if_shell is
-            -- Undefine the cursor if the current widget is a shell.
-        do
-            dialog_undefine_cursor_if_shell
-        end;
+	undefine_cursor_if_shell is
+			-- Undefine the cursor if the current widget is a shell.
+		do
+			dialog_undefine_cursor_if_shell
+		end;
 
 feature {NONE} -- External features
 

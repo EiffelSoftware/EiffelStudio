@@ -46,7 +46,7 @@ feature -- Initialization
 			!! file_entry.make ("", file_form);
 			!! form.make ("", Current);
 			!! create_b.make ("Create", form);
-			!! cancel_b.make ("Cancel", form);
+			!! cancel_b.make (l_Cancel, form);
 			cluster_form.attach_left (cluster_name, 0);
 			cluster_form.attach_right (cluster_list, 0);
 			cluster_form.attach_left_widget (cluster_name, cluster_list, 5);

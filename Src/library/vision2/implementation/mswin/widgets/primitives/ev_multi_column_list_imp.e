@@ -61,7 +61,8 @@ inherit
 			x as x_position,
 			y as y_position,
 			resize as wel_resize,
-			move_and_resize as wel_move_and_resize
+			move_and_resize as wel_move_and_resize,
+			column_count as wel_column_count
 		undefine
 			remove_command,
 			set_width,
@@ -118,6 +119,12 @@ feature {NONE} -- Initialization
 		end
 
 feature -- Access
+
+	column_count: INTEGER is
+			-- Number of columns.
+		do
+			Result := wel_column_count
+		end
 
 	selected_item: EV_MULTI_COLUMN_LIST_ROW is
 			-- Currently selected item.
@@ -325,7 +332,7 @@ feature {NONE} -- Implementation
 		local
 			txt: STRING
 		do
-			if a_column > column_count then
+			if a_column <= column_count then
 				txt := a_title
 				if txt = Void then
 					txt := ""
@@ -337,7 +344,7 @@ feature {NONE} -- Implementation
 	column_width_changed (a_width, a_column: INTEGER) is
 			-- Replace width of `a_column' with `a_width' if column present.
 		do
-			if a_column > column_count then
+			if a_column <= column_count then
 				wel_set_column_width (a_width, a_column - 1)
 			end
 		end
@@ -852,6 +859,10 @@ end -- class EV_MULTI_COLUMN_LIST_IMP
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.71  2000/03/29 01:17:39  brendel
+--| Fixed bug in column_(width|title)_changed. Redefined column count
+--| for no apparent reason.
+--|
 --| Revision 1.70  2000/03/27 20:43:49  brendel
 --| Removed obsolete `item_type'.
 --|

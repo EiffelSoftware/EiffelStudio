@@ -21,11 +21,11 @@
 #ifndef _eif_threads_h_
 #define _eif_threads_h_
 
+#include "eif_cecil.h"		/* Needed for EIF_OBJECT,... definitions */
 #ifdef __cplusplus
 extern "C" {
 #endif
 
-#include "eif_cecil.h"		/* Needed for EIF_OBJECT,... definitions */
 
 RT_LNK void eif_thr_panic(char *);
 RT_LNK EIF_POINTER eif_thr_freeze(EIF_OBJECT object);
@@ -76,7 +76,14 @@ RT_LNK void eif_thr_proxy_dispose(EIF_POINTER);
 
 /* Tuning for CRAY */
 #ifdef _CRAY
+#ifdef __cplusplus
+}
+#endif
 #include <unistd.h>	/* Avoid warnings on C90, when also including <sched.h> */
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 #define EIF_NO_SEM
 #define EIF_NO_POSIX_SEM
 #define HASNT_SCHED_H
@@ -117,7 +124,13 @@ RT_LNK void eif_thr_proxy_dispose(EIF_POINTER);
 #ifndef EIF_NO_POSIX_SEM
 
 #ifndef HASNT_SEMAPHORE_H 
+#ifdef __cplusplus
+}
+#endif
 #include <semaphore.h>
+#ifdef __cplusplus
+extern "C" {
+#endif
 #endif /* semaphore.h */
 
 #define EIF_SEM_TYPE    sem_t
@@ -219,6 +232,9 @@ RT_LNK EIF_POINTER eif_thr_last_thread(void);
 /*-----------------------*/
 
 /* Includes */
+#ifdef __cplusplus
+}
+#endif
 #include <pthread.h>
 #ifndef HASNT_SCHED_H
 #include <sched.h>
@@ -226,6 +242,9 @@ RT_LNK EIF_POINTER eif_thr_last_thread(void);
 
 #ifdef NEED_SYNCH_H
 #include <synch.h>
+#endif
+#ifdef __cplusplus
+extern "C" {
 #endif
 
 /* Types */
@@ -389,10 +408,17 @@ RT_LNK EIF_POINTER eif_thr_last_thread(void);
 /*-------------------------------*/
 /*---  WINDOWS 95/NT Threads  ---*/
 /*-------------------------------*/
+#ifdef __cplusplus
+}
+#endif
 
 #include <windows.h>
 #include <process.h>
 #include "eif_cond_var.h"
+
+#ifdef __cplusplus
+extern "C" {
+#endif
 
 #define EIF_MIN_PRIORITY 0			/*  - not used */
 #define EIF_MAX_PRIORITY 1000		/* - not used  */
@@ -485,6 +511,9 @@ RT_LNK EIF_POINTER eif_thr_last_thread(void);
 /*-------------------------*/
 /*---  SOLARIS Threads  ---*/
 /*-------------------------*/
+#ifdef __cplusplus
+}
+#endif
 
 #include <thread.h>
 #ifndef HASNT_SCHED_H
@@ -492,6 +521,10 @@ RT_LNK EIF_POINTER eif_thr_last_thread(void);
 #endif
 #ifdef NEED_SYNCH_H
 #include <synch.h>
+#endif
+
+#ifdef __cplusplus
+extern "C" {
 #endif
 
  /* Types */
@@ -603,12 +636,18 @@ rt_public typedef struct {
 /*---  VXWORKS Threads  ---*/
 /*-------------------------*/
 
+#ifdef __cplusplus
+}
+#endif
 
 #include <taskLib.h>        /* 'thread' operations */
 #include <taskVarLib.h>     /* 'thread' 'specific data' */
 #include <semLib.h>         /* 'mutexes' and semaphores */
 #include <sched.h>          /* 'sched_yield' */
 
+#ifdef __cplusplus
+extern "C" {
+#endif
 
 /* Current Thread Id */
 #define EIF_THR_SELF	taskIdSelf ()

@@ -15,12 +15,9 @@
 #include "eif_config.h"
 #include "eif_portable.h"
 
-#ifdef __cplusplus
-extern "C" {
-#endif
 
 #ifdef LMALLOC_DEBUG
-#include "stdio.h"
+#include <stdio.h>
 #define eif_malloc(x) (fprintf (stderr, "%s:%d\t|", __FILE__, __LINE__), eiffel_malloc (x))
 #define eif_calloc(x,y) (fprintf (stderr, "%s:%d\t|", __FILE__, __LINE__), eiffel_realloc (x, y))
 #define eif_realloc(x,y) (fprintf (stderr, "%s:%d\t|", __FILE__, __LINE__), eiffel_realloc (x, y))
@@ -31,6 +28,10 @@ extern "C" {
 #define eif_realloc(x,y) eiffel_realloc (x,y)
 #define eif_free(x) eiffel_free (x)
 #endif	/* LMALLOC_DEBUG */
+
+#ifdef __cplusplus
+extern "C" {
+#endif
 
 RT_LNK int is_in_lm (void *ptr);
 RT_LNK void eif_lm_display ();

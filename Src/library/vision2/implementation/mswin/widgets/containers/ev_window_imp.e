@@ -508,8 +508,6 @@ feature {NONE} -- Implementation
 		local
 			menu_bar_imp: EV_MENU_BAR_IMP
 		do
-				--| FIXME used to use menu /= Void
-				--| but we cannot query it in WEL. Is this correct?
 			if has_menu then
 				menu_bar_imp ?= menu_bar.implementation
 				menu_bar_imp.menu_opened (a_menu)
@@ -811,7 +809,6 @@ feature {EV_ANY_I} -- Implementation
 			app_imp: EV_APPLICATION_IMP
 			source: EV_PICK_AND_DROPABLE_IMP
 		do
-			--| FIXME Reformat this code.
 			create env
 			app_imp ?= env.application.implementation
 			check

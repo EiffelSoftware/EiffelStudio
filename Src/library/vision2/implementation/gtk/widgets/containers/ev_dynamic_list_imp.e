@@ -119,8 +119,10 @@ feature {NONE} -- Implementation
 	interface: EV_DYNAMIC_LIST [G]
 
 invariant
-	list_widget_not_void:
-		is_useable implies list_widget /= Default_pointer
+--| FIXME EV_TREE_ITEM_IMP has no list_widget when it has no
+--| children. Remove invariant from here?
+--	list_widget_not_void:
+--		is_useable implies list_widget /= Default_pointer
 
 end -- class EV_DYNAMIC_LIST_IMP
 
@@ -145,6 +147,10 @@ end -- class EV_DYNAMIC_LIST_IMP
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.5  2000/04/12 18:51:34  brendel
+--| Removed invariant. Should be put in individual classes where is does
+--| apply?
+--|
 --| Revision 1.4  2000/04/06 20:24:51  brendel
 --| Changed list_widget from attribute to function.
 --|

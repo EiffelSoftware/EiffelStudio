@@ -45,6 +45,7 @@ feature -- Initialization
 			c7: MENU_DEMO_WINDOW
 			c8: SPLIT_DEMO_WINDOW
 			c9: SCROLLABLE_AREA_DEMO_WINDOW
+			c10: ALL_BUTTON_DEMO_WINDOW
 		do
 			Precursor
 			!!container.make (Current)
@@ -58,8 +59,10 @@ feature -- Initialization
 			!!c7.make (Current)
 			!!c8.make (Current)
 			!!c9.make (Current)
+			!!c10.make (Current)
 			
 			!!b.make_button (Current, "Label", c1)
+			!!b.make_button (Current, "Buttons", c10)
 			!!b.make_button (Current, "Fixed", c2)
 			!!b.make_button (Current, "Box", c3)
 --			!!b.make_button (Current, "Notebook", c4)

@@ -570,9 +570,6 @@ feature -- Status report
 			if flag_set (mask, cfm_offset) then
 				flags := flags | feature {EV_CHARACTER_FORMAT_CONSTANTS}.effects_vertical_offset
 			end
-			if flag_set (mask, cfm_underline) then
-				flags := flags | feature {EV_CHARACTER_FORMAT_CONSTANTS}.effects_double_underlined
-			end
 
 			create Result.make_with_flags (flags)
 			if not range_already_selected then

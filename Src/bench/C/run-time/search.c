@@ -69,7 +69,7 @@ rt_public size_t s_search(struct s_table *tbl, char *object)
 	 * position where to insert it.
 	 */
 
-	size_t key = ((size_t) object) - 1;	/* Key for `object' */
+	size_t key = ((size_t) (rt_uint_ptr) object) - 1;	/* Key for `object' */
 	size_t position;
 	size_t increment;
 	size_t size = tbl->s_size;			/* Table size */

@@ -82,7 +82,7 @@ feature -- Access
 	text: STRING is
 			-- Text of the item
 		do
-			!! Result.make (0)
+			create Result.make (0)
 			Result.from_c (cwel_lv_item_get_psztext (item))
 		ensure
 			result_not_void: Result /= Void
@@ -145,7 +145,7 @@ feature -- Element change
 		require
 			a_text_not_void: a_text /= Void
 		do
-			!! str_text.make (a_text)
+			create str_text.make (a_text)
 			cwel_lv_item_set_psztext (item, str_text.item)
 			cwel_lv_item_set_cchtextmax (item, a_text.count)
 		ensure

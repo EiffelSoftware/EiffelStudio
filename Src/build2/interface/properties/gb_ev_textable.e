@@ -79,7 +79,7 @@ feature {GB_XML_STORE} -- Output
 				-- while resetting an object. When we are using the XML document, this is stripped
 				-- automatically so we do not encounter it.
 			if element_info /= Void and then element_info.data.count /= 0 then
-				for_all_objects (agent {EV_TEXTABLE}.set_text (retrieve_and_set_string_value (text_string)))
+				for_all_objects (agent {EV_TEXTABLE}.set_text (strip_cdata (retrieve_and_set_string_value (text_string))))
 			end
 		end
 		

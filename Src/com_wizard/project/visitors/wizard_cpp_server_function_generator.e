@@ -112,7 +112,7 @@ feature {NONE} -- Implementation
 
 						cecil_call.append (cecil_function_set_up (visitor))
 
-						if not visitor.is_basic_type then
+						if not visitor.is_basic_type and not (not visitor.is_pointed and is_boolean (visitor.vt_type)) then
 							protect_object := clone (Eif_object)
 							protect_object.append (Space)
 							protect_object.append (Tmp_clause)
@@ -120,7 +120,7 @@ feature {NONE} -- Implementation
 							protect_object.append (Space_equal_space)
 							protect_object.append (Eif_protect)
 							protect_object.append (Space_open_parenthesis)
-							protect_object.append (Tmp_variable_name)
+							protect_object.append (Return_value_name)
 							protect_object.append (Close_parenthesis)
 							protect_object.append (Semicolon)
 							protect_object.append (New_line_tab)
@@ -129,8 +129,8 @@ feature {NONE} -- Implementation
 						visitor.visit (func_desc.arguments.item.type)
 
 						if is_paramflag_fout (func_desc.arguments.item.flags) then
-							pointed_data_type_descriptor ?= func_desc.arguments.item.type
-							if pointed_data_type_descriptor = Void then
+							
+							if not visitor.is_pointed then
 								tmp_string := clone (visitor.c_type)
 								tmp_string.append (visitor.c_post_type)
 								tmp_string.append (Struct_selection_operator)
@@ -151,10 +151,17 @@ feature {NONE} -- Implementation
 						else
 							variables.append (in_variable_set_up (func_desc.arguments.item.name, visitor))
 							variables.append (New_line_tab)
-							if visitor.is_basic_type then
+							if visitor.is_basic_type  then
 								arguments.append (Comma_space)
 								arguments.append (Open_parenthesis)
 								arguments.append (visitor.cecil_type)
+								arguments.append (Close_parenthesis)
+								arguments.append (Tmp_clause)
+								arguments.append (func_desc.arguments.item.name)
+							elseif not visitor.is_pointed and then is_boolean (visitor.vt_type) then
+								arguments.append (Comma_space)
+								arguments.append (Open_parenthesis)
+								arguments.append (Eif_boolean)
 								arguments.append (Close_parenthesis)
 								arguments.append (Tmp_clause)
 								arguments.append (func_desc.arguments.item.name)
@@ -166,7 +173,7 @@ feature {NONE} -- Implementation
 								arguments.append (func_desc.arguments.item.name)
 								arguments.append (Close_parenthesis)
 							end
-							if not visitor.is_basic_type then
+							if not visitor.is_basic_type and not (not visitor.is_pointed and is_boolean (visitor.vt_type)) then
 								free_object.append (Eif_wean)
 								free_object.append (Space_open_parenthesis)
 								free_object.append (Tmp_clause)
@@ -223,7 +230,7 @@ feature {NONE} -- Implementation
 			valid_arg_name: not arg_name.empty
 		do
 			create Result.make (0)
-			if visitor.is_basic_type and not visitor.is_basic_type_ref then
+			if visitor.is_basic_type then
 				Result.append (visitor.cecil_type)
 				Result.append (Space)
 				Result.append (Tmp_clause)
@@ -312,7 +319,7 @@ feature {NONE} -- Implementation
 			Result.append (visitor.ce_function_name)
 			Result.append (Space_open_parenthesis)
 
-			if is_unsigned_int (visitor.vt_type) or is_unsigned_long (visitor.vt_type) or is_int (visitor.vt_type) then
+			if is_unsigned_long (visitor.vt_type) then
 				Result.append (Open_parenthesis)
 				Result.append ("long *")
 				Result.append (Close_parenthesis)
@@ -363,7 +370,7 @@ feature {NONE} -- Implementation
 				Result.append (Close_parenthesis)
 				Result.append (Comma_space)
 
-				if is_unsigned_int (visitor.vt_type) or is_unsigned_long (visitor.vt_type) or is_int (visitor.vt_type) then
+				if is_unsigned_long (visitor.vt_type) then
 					Result.append (Open_parenthesis)
 					Result.append ("long *")
 					Result.append (Close_parenthesis)
@@ -411,7 +418,7 @@ feature {NONE} -- Implementation
 				Result.append (Open_parenthesis)
 				Result.append (visitor.c_type)
 				Result.append (Close_parenthesis)
-				Result.append (Tmp_variable_name)
+				Result.append (Return_value_name)
 			else
 				if visitor.need_generate_ec then
 					Result.append (Generated_ec_mapper)
@@ -423,13 +430,11 @@ feature {NONE} -- Implementation
 				Result.append (Space_open_parenthesis)
 
 				if is_boolean (visitor.vt_type) and not visitor.is_pointed then
-					Result.append (Tmp_clause)
-					Result.append (arg_name)
+					Result.append (Return_value_name)
 				else
 					Result.append (Eif_wean)
 					Result.append (Space_open_parenthesis)
-					Result.append (Tmp_clause)
-					Result.append (arg_name)
+					Result.append (Return_value_name)
 					Result.append (Close_parenthesis)
 				end
 				if visitor.writable then
@@ -511,7 +516,7 @@ feature {NONE} -- Implementation
 				Result.append (Eif_reference)
 			end
 			Result.append (Space)
-			Result.append (Tmp_variable_name)
+			Result.append (Return_value_name)
 			Result.append (Space_equal_space)
 			Result.append (Eiffel_function_variable_name)
 		end

@@ -185,7 +185,7 @@ feature {NONE} -- Implementation
 						return_value.append (Semicolon)
 						return_value.append (New_line_tab)
 	
-					elseif is_paramflag_fout (arguments.item.flags) and not is_paramflag_fretval(arguments.item.flags)  then  -- if out or inout
+					elseif is_paramflag_fout (arguments.item.flags) then  -- if out or inout
 						if 
 							visitor.is_interface or 
 							visitor.is_structure or 
@@ -221,7 +221,7 @@ feature {NONE} -- Implementation
 						end
 						signature.append (Comma)
 	
-					else  --if is_paramflag_fin (arguments.item.flags) and not is_paramflag_fout (arguments.item.flags) then -- in parameter
+					else  -- in parameter
 						signature.append (in_parameter_set_up (arguments.item.name, arguments.item.type, visitor))
 						signature.append (Comma)
 					end
@@ -364,18 +364,21 @@ feature {NONE} -- Implementation
 			if visitor.is_basic_type or visitor.is_enumeration then
 				Result.append (name)
 
-			elseif visitor.is_basic_type_ref then
-				Result.append (Ampersand)
-				Result.append (name)
-
 			elseif is_boolean (visitor.vt_type) then
-				if is_byref (visitor.vt_type) then
-					Result.append (Ampersand)
-					Result.append (Ec_mapper)
+				if visitor.is_pointed or is_byref (visitor.vt_type) then
+					if visitor.need_generate_ec then
+						Result.append (Generated_ec_mapper)
+					else
+						Result.append (Ec_mapper)
+					end
 					Result.append (Dot)
 					Result.append (visitor.ec_function_name)
 					Result.append (Space_open_parenthesis)
 					Result.append (name)
+					if visitor.writable then
+						Result.append (Comma_space)
+						Result.append (Null)
+					end
 					Result.append (Close_parenthesis)
 				else
 					Result.append (Ec_mapper)

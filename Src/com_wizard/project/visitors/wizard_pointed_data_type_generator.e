@@ -164,11 +164,15 @@ feature -- Basic operations
 					ec_function_name.append ("ccom_ec_pointed_character")
 					ce_function_name.append ("ccom_ce_pointed_character")
 					
-				elseif is_integer4 (a_type) or is_unsigned_long (a_type) 
-							or is_int (a_type) or is_unsigned_int (a_type) then
+				elseif is_integer4 (a_type) or is_unsigned_long (a_type) then
 					eiffel_type.append (Integer_ref_type)
 					ec_function_name.append ("ccom_ec_pointed_long")
 					ce_function_name.append ("ccom_ce_pointed_long")
+
+				elseif is_int (a_type) or is_unsigned_int (a_type) then
+					eiffel_type.append (Integer_ref_type)
+					ec_function_name.append ("ccom_ec_pointed_integer")
+					ce_function_name.append ("ccom_ce_pointed_integer")
 
 				elseif is_integer2 (a_type) or is_unsigned_short (a_type) then
 					eiffel_type.append (Integer_ref_type)

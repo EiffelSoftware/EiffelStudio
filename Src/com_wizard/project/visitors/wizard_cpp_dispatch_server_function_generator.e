@@ -181,7 +181,7 @@ feature {NONE} -- Implementation
 							arguments.append (Close_parenthesis)
 						end
 	
-						if not visitor.is_basic_type and not is_boolean (visitor.vt_type) then
+						if not visitor.is_basic_type and not (is_boolean (visitor.vt_type) and visitor.is_pointed) then
 							free_object.append (Eif_wean)
 							free_object.append (Space_open_parenthesis)
 							free_object.append (Tmp_clause)

@@ -241,6 +241,7 @@ feature -- Implementation
 			feature {EV_GTK_DEPENDENT_EXTERNALS}.g_object_get_string (default_gtk_settings, gtk_font_name_setting.item, $font_name_ptr)
 			create a_cs.make_from_pointer (font_name_ptr)
 			Result := a_cs.string
+			feature {EV_GTK_EXTERNALS}.g_free (font_name_ptr)
 		end
 
 	gtk_font_name_setting: EV_GTK_C_STRING is
@@ -274,6 +275,7 @@ feature -- Implementation
 				i := i + 1
 			end
 			Result.compare_objects
+			a_name_array.memory_free
 		end
 
 	font_names_on_system_as_lower: ARRAYED_LIST [STRING] is
@@ -298,6 +300,7 @@ feature -- Implementation
 				i := i + 1
 			end
 			Result.compare_objects
+			a_name_array.memory_free
 		end
 		
 	default_gtk_window: POINTER is deferred end

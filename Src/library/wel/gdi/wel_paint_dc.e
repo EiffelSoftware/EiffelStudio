@@ -9,9 +9,13 @@ class
 
 inherit
 	WEL_DISPLAY_DC
+		rename
+			make_by_pointer as simple_make_by_pointer
+		end
 
 creation
-	make
+	make,
+	make_by_pointer
 
 feature {NONE} -- Initialization
 
@@ -21,8 +25,19 @@ feature {NONE} -- Initialization
 			a_window_not_void: a_window /= Void
 			a_window_exists: a_window.exists
 		do
-			hwindow := a_window.item
 			window := a_window
+			hwindow := a_window.item
+			!! paint_struct.make
+		ensure
+			window_set: window = a_window
+		end
+
+	make_by_pointer (a_window: WEL_WINDOW; a_pointer: POINTER) is
+			-- Makes a DC associated with `a_pointer' and `a_window'
+		do
+			window := a_window
+			hwindow := a_window.item
+			simple_make_by_pointer (a_pointer)
 			!! paint_struct.make
 		ensure
 			window_set: window = a_window

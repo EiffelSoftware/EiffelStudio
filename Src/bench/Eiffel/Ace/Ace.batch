@@ -96,6 +96,10 @@ cluster
 		case_common:		"$BENCH/Eiffel/case_storage/common";
 		case_bench:			"$BENCH/Eiffel/case_storage/bench";
 
+	-- Resources
+		resources_common:	"$BENCH/Eiffel/resources/common";
+		resources_bench:	"$BENCH/Eiffel/resources/bench";
+
 external
 
 	object:

@@ -42,6 +42,8 @@ extern char desc_fill;					/* Is it an actual insertion or do we
  *	CFeatType(x,y,z)
  *  MPatId(x)
  *  FPatId(x)
+ *  DLEMPatId(x)
+ *  DLEFPatId(x)
  */
 
 #define CAttrOffs(x,y,z) \
@@ -73,5 +75,7 @@ extern char desc_fill;					/* Is it an actual insertion or do we
 
 #define MPatId(x) mpatidtab[x]
 #define FPatId(x) fpatidtab[x]
+#define DLEMPatId(x) dle_mpatidtab[x]
+#define DLEFPatId(x) dle_fpatidtab[x]
 
 #endif

@@ -29,10 +29,21 @@
 #define BCDB_TAG		't'
 
 
-public void update();		/* Update of internal structures */
-public short wshort();
-public long wlong();
-public int32 wint32();
-public uint32 wuint32();
+extern void update();					/* Update of internal structures */
+extern void cnode_updt();				/* Update a cnode structure */
+extern void routid_updt();				/* Update routine id arrays */
+extern void conform_updt();				/* Update conformance table */
+extern void option_updt();				/* Update of the option table */
+extern void routinfo_updt();			/* Update routine information table */
+extern void desc_updt();				/* Update the descriptors */
+
+
+/* Read information from file `fil'.
+ */
+extern short wshort();
+extern long wlong();
+extern int32 wint32();
+extern uint32 wuint32();
+extern void wread();
 
 #endif

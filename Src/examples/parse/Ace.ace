@@ -1,0 +1,29 @@
+system
+	process
+
+root
+
+	process (ROOT_CLUSTER): "make"
+
+default
+
+	precompiled ("$EIFFEL4/precomp/spec/$PLATFORM/base")
+
+cluster
+
+	ROOT_CLUSTER: 		"$EIFFEL4/examples/parse";
+				-- If you intend to modify any of the examples,
+				-- copy all the files of $EIFFEL4/examples/parse
+				-- into one of your directories, and replace
+				-- $EIFFEL4/examples/parse by the name of that directory
+				-- on the above line.
+
+-- EiffelLex 
+
+	lex:				"$EIFFEL4/library/lex";
+
+-- EiffelParse
+
+	parse:				"$EIFFEL4/library/parse";
+
+end

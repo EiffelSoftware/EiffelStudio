@@ -61,6 +61,12 @@ feature -- Basic Operations
 			a_directory_name.append_character (Directory_separator)
 			a_directory_name.append (Clib)
 			delete_object_files (a_directory_name)
+
+			a_directory_name := clone (Shared_wizard_environment.destination_folder)
+			a_directory_name.append ("idl")
+			a_directory_name.append_character (Directory_separator)
+			a_directory_name.append ("e2idl.output")
+			delete_file (a_directory_name)
 		end
 
 	delete_object_files (a_directory_name: STRING) is

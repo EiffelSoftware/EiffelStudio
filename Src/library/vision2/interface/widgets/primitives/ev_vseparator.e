@@ -4,7 +4,8 @@ indexing
 	date: "$Date$";
 	revision: "$Revision$"
 
-class EV_VERTICAL_SEPARATOR
+class
+	EV_VERTICAL_SEPARATOR
 
 inherit
 	EV_SEPARATOR
@@ -17,7 +18,7 @@ feature {NONE} -- Initialization
  	make (par: EV_CONTAINER) is
  			-- Make seperator
 		do
- 			!EV_VSEPARATOR_IMP!implementation.make (par)
+ 			!EV_VERTICAL_SEPARATOR_IMP!implementation.make (par)
  			widget_make (par)
  		end
 

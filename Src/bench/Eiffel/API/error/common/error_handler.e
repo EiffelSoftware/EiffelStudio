@@ -40,6 +40,9 @@ feature -- Properties
 	new_error: BOOLEAN;
 			-- Boolean for testing if new error since last `mark'
 
+	error_position: INTEGER;
+			-- Position in file where error occurred (during degree 3)?
+
 feature {E_PROJECT} -- Element change
 
 	insert_interrupt_error is
@@ -50,7 +53,6 @@ feature {E_PROJECT} -- Element change
 		do
 			!! interrupt_error;
 			insert_error (interrupt_error);
-			raise_error
 		end;
 
 feature {COMPILER_EXPORTER, E_PROJECT} -- Output
@@ -62,17 +64,34 @@ feature {COMPILER_EXPORTER, E_PROJECT} -- Output
 		do
 			if not error_list.empty then
 				error_displayer.trace_errors (Current)
+				error_position := 0;
 			end;
 		end;
 
 feature {COMPILER_EXPORTER} -- Error handling primitives
 
+	set_error_position (i: like error_position) is
+			-- Set `error_position' to `i'.
+		require
+			non_negative_value: i >= 0
+		do
+			error_position := i
+		ensure
+			set: error_position = i
+		end;
+
 	insert_error (e: ERROR) is
 			-- Insert `e' in `error_list'.
 		require
 			good_argument: e /= Void
+		local
+			f_error: FEATURE_ERROR
 		do
 			new_error := True;
+			f_error ?= e;
+			if f_error /= Void then
+				f_error.set_error_position (error_position)
+			end;
 			error_list.extend (e);
 		end;
 

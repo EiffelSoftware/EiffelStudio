@@ -13,8 +13,9 @@ inherit
 
 	COMPILER_EXPORTER
 
-creation
+	SHARED_GENERIC_CONSTRAINT
 
+creation
 	make
 
 feature
@@ -66,6 +67,8 @@ feature
 			deg_output.put_start_degree (Degree_number, local_changed_classes.count)
 			!! generic_classes.make
 
+				-- Check that the constraint class is a valid class.
+				-- I.e. we cannot have [G -> like t] or others
 			from
 				local_changed_classes.start
 			until
@@ -78,6 +81,7 @@ feature
 				end;
 				local_changed_classes.forth
 			end;
+
 				-- Cannot continue if there is an error in the
 				-- constraint genericity clause of a class
 			Error_handler.checksum;
@@ -106,8 +110,10 @@ feature
 			end
 			deg_output.put_end_degree;
 
-				-- Check now the validity on creation constraint, this need to be done
-				-- at the end of Degree 4 because we need some feature tables.
+				-- Check now the validity on creation constraint, i.e. that the
+				-- specified creation procedures are indeed part of the constraint
+				-- class. This need to be done at the end of Degree 4 because
+				-- we need some feature tables.
 			from
 				generic_classes.start
 			until
@@ -121,6 +127,15 @@ feature
 				generic_classes.forth
 			end
 			generic_classes := Void
+
+				-- Cannot continue if there is an error in the declaration of
+				-- creation constraint genericity clause of a class
+			Error_handler.checksum;
+
+				-- Check now that all the instances of a generic class are valid for 
+				-- the creation constraint if there is one.
+				-- The checks have been stored in `remaining_validity_checking_list'
+			check_creation_constraint_instances
 
 			if System.has_expanded and then not local_extra_check_list.empty then
 				System.check_vtec;
@@ -169,6 +184,8 @@ feature
 				end;
 			end;
 		end;
+
+feature -- Setup
 
 	set_expanded_modified (a_class: CLASS_C) is
 			-- The expanded status of `a_class' has been modified
@@ -233,5 +250,57 @@ feature -- Dino stuff
 			pass2_c ?= controler_of (a_class);
 			pass2_c.set_assertion_prop_list (l);
 		end;
+
+feature -- Generic checking
+
+	check_creation_constraint_instances is
+			-- Check that all the generic declaration where the generic class defines
+			-- a creation constraint clause are system valid.
+		local
+			generic_creation_list: LINKED_LIST [CONSTRAINT_CHECKING_INFO]
+			constraint_info: CONSTRAINT_CHECKING_INFO
+			vtcg7: VTCG7
+			pass2_c: PASS2_C;
+		do
+			from
+				generic_creation_list := remaining_validity_checking_list
+				generic_creation_list.start
+			until
+				generic_creation_list.after
+			loop
+				reset_constraint_error_list
+				constraint_info := generic_creation_list.item
+				constraint_info.gen_type_a.creation_constraint_check(
+					constraint_info.formal_dec_as,
+					constraint_info.constraint_type,
+					constraint_info.context_class,
+					constraint_info.to_check,
+					constraint_info.i,
+					constraint_info.formal_type)
+				if not constraint_error_list.empty then
+						-- The feature listed in the creation constraint have not been
+						-- declared in the constraint class.
+					!! vtcg7
+					vtcg7.set_class (constraint_info.context_class)
+					vtcg7.set_error_list (constraint_error_list)
+					vtcg7.set_parent_type (constraint_info.gen_type_a)
+					Error_handler.insert_error (vtcg7)
+
+						-- Fill `local_changed_classes' to memorize the classes that need
+						-- a recompilation.
+					pass2_c ?= controler_of (constraint_info.context_class)
+				end
+				generic_creation_list.forth				
+			end
+
+				-- We clear the list of classes that need to be checked at the end
+				-- of degree 4 since we checked everything. If there was some errors, they
+				-- are stored and they will be re-checked at the next compilation
+			reset_remaining_validity_checking_list
+
+				-- Cannot continue if there is an error in the
+				-- creation constraint genericity clause of a class
+			Error_handler.checksum;
+		end
 
 end

@@ -27,6 +27,8 @@ inherit
 
 	SHARED_TYPE_I
 
+	SHARED_GENERIC_CONSTRAINT
+
 feature -- Properties
 
 	generics: ARRAY [TYPE_A] is
@@ -340,9 +342,9 @@ feature {COMPILER_EXPORTER} -- Access
 		do
 		end
 
-	check_constraints (context_class: CLASS_C): LINKED_LIST [CONSTRAINT_INFO] is
+	check_constraints (context_class: CLASS_C) is
 			-- Check the constained genericity validity rule and leave
-			-- error info in `Constraint_error_list'
+			-- error info in `constraint_error_list'
 		require
 			good_argument: context_class /= Void
 			good_generic_count: good_generics

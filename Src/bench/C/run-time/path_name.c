@@ -14,6 +14,8 @@
 #include <windows.h>
 #endif
 
+#include <stdlib.h>			/* For getenv */
+
 #include <sys/types.h>
 #include <sys/stat.h>
 

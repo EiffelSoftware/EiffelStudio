@@ -61,10 +61,13 @@ extern char *cr_exp();				/* Creation of expanded objects */
  */
 
 #ifndef WORKBENCH
-extern long esize[];				/* Size of object given Dynamic Type */
-extern long nbref[];				/* Gives # of references given DT */
+extern long fsize[];	/* Size of object given Dynamic Type (static system) */
+extern long *esize;		/* Size of object given DType (updated by DLE) */
+extern long fnbref[];	/* Gives # of references given DT (static system) */
+extern long *nbref;		/* Gives # of references given DT (updated by DLE) */
 extern void (**edispose)();			/* Records pointers to dispose routines */
 extern char *(**ecreate)();			/* Initialization routines */
+extern char *(**dle_make)();		/* Make routines of DYNAMIC descendants */
 #endif
 
 #define System(type)		esystem[type]	/* Object description */
@@ -104,6 +107,8 @@ extern int real_ref_dtype;	/* Dynamic type of REAL_REF */
 extern int doub_ref_dtype;	/* Dynamic type of DOUBLE_REF */
 extern int char_ref_dtype;	/* Dynamic type of CHARACTER_REF */
 extern int point_ref_dtype;	/* Dynamic type of POINTER_REF */
+
+extern int dynamic_dtype;	/* Dynamic type of DYNAMIC */
 
 /*
  * Miscellaneous routines.

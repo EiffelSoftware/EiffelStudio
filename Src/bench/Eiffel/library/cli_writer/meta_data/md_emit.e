@@ -376,26 +376,52 @@ feature -- Definition: creation
 			l_i2: INTEGER_16
 			l_i4: INTEGER
 			l_i8: INTEGER_64
+			l_u1: INTEGER_8
+			l_u2: INTEGER_16
+			l_u4: INTEGER
+			l_u8: INTEGER_64
 			l_ptr: POINTER
 		do
-			inspect
-				a_value.size
-			when 8 then
-				l_constant_type := feature {MD_SIGNATURE_CONSTANTS}.element_type_i1
-				l_i1 := a_value.value.to_integer_8
-				l_ptr := $l_i1
-			when 16 then
-				l_constant_type := feature {MD_SIGNATURE_CONSTANTS}.element_type_i2
-				l_i2 := a_value.value.to_integer_16
-				l_ptr := $l_i2
-			when 32 then
-				l_constant_type := feature {MD_SIGNATURE_CONSTANTS}.element_type_i4
-				l_i4 := a_value.value
-				l_ptr := $l_i4
-			when 64 then
-				l_constant_type := feature {MD_SIGNATURE_CONSTANTS}.element_type_i8
-				l_i8 := a_value.to_integer_64
-				l_ptr := $l_i8
+			if a_value.is_integer then
+				inspect
+					a_value.size
+				when 8 then
+					l_constant_type := feature {MD_SIGNATURE_CONSTANTS}.element_type_i1
+					l_i1 := a_value.integer_8_value
+					l_ptr := $l_i1
+				when 16 then
+					l_constant_type := feature {MD_SIGNATURE_CONSTANTS}.element_type_i2
+					l_i2 := a_value.integer_16_value
+					l_ptr := $l_i2
+				when 32 then
+					l_constant_type := feature {MD_SIGNATURE_CONSTANTS}.element_type_i4
+					l_i4 := a_value.integer_32_value
+					l_ptr := $l_i4
+				when 64 then
+					l_constant_type := feature {MD_SIGNATURE_CONSTANTS}.element_type_i8
+					l_i8 := a_value.integer_64_value
+					l_ptr := $l_i8
+				end
+			else
+				inspect
+					a_value.size
+				when 8 then
+					l_constant_type := feature {MD_SIGNATURE_CONSTANTS}.element_type_u1
+					l_u1 := a_value.natural_8_value
+					l_ptr := $l_u1
+				when 16 then
+					l_constant_type := feature {MD_SIGNATURE_CONSTANTS}.element_type_u2
+					l_u2 := a_value.natural_16_value
+					l_ptr := $l_u2
+				when 32 then
+					l_constant_type := feature {MD_SIGNATURE_CONSTANTS}.element_type_u4
+					l_u4 := a_value.natural_32_value
+					l_ptr := $l_u4
+				when 64 then
+					l_constant_type := feature {MD_SIGNATURE_CONSTANTS}.element_type_u8
+					l_u8 := a_value.natural_64_value
+					l_ptr := $l_u8
+				end
 			end
 			create l_field_signature.make
 			l_field_signature.set_type (l_constant_type, 0)

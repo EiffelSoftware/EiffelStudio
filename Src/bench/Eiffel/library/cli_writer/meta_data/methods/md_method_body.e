@@ -9,6 +9,11 @@ class
 inherit
 	MD_SHARED_OPCODES
 
+	REFACTORING_HELPER
+		export
+			{NONE} fixme
+		end
+
 create {MD_METHOD_WRITER}
 	make
 
@@ -246,6 +251,51 @@ feature -- Opcode insertion
 			add_integer (token)
 		end
 
+	put_opcode_natural_8 (opcode: INTEGER_16; i: INTEGER_8) is
+			-- Insert `opcode' manipulating an integer.
+		require
+			not_yet_written: not is_written
+			has_opcodes: opcodes.has (opcode)
+		do
+			fixme ("Use NATURAL_XX types")
+			put_opcode (opcode)
+			internal_put (i, current_position)
+			current_position := current_position + 1
+		end
+
+	put_opcode_natural_16 (opcode: INTEGER_16; i: INTEGER_16) is
+			-- Insert `opcode' manipulating an integer.
+		require
+			not_yet_written: not is_written
+			has_opcodes: opcodes.has (opcode)
+		do
+			fixme ("Use NATURAL_XX types")
+			put_opcode (opcode)
+			add_natural_16 (i)
+		end
+
+	put_opcode_natural_32 (opcode: INTEGER_16; i: INTEGER) is
+			-- Insert `opcode' manipulating a natural.
+		require
+			not_yet_written: not is_written
+			has_opcodes: opcodes.has (opcode)
+		do
+			fixme ("Use NATURAL_XX types")
+			put_opcode (opcode)
+			add_natural_32 (i)
+		end
+
+	put_opcode_natural_64 (opcode: INTEGER_16; i: INTEGER_64) is
+			-- Insert `opcode' manipulating an natural 64.
+		require
+			not_yet_written: not is_written
+			has_opcodes: opcodes.has (opcode)
+		do
+			fixme ("Use NATURAL_XX types")
+			put_opcode (opcode)
+			add_natural_64 (i)
+		end
+
 	put_opcode_integer_8 (opcode: INTEGER_16; i: INTEGER_8) is
 			-- Insert `opcode' manipulating an integer.
 		require
@@ -277,6 +327,16 @@ feature -- Opcode insertion
 			add_integer (i)
 		end
 
+	put_opcode_integer_64 (opcode: INTEGER_16; i: INTEGER_64) is
+			-- Insert `opcode' manipulating an integer 64.
+		require
+			not_yet_written: not is_written
+			has_opcodes: opcodes.has (opcode)
+		do
+			put_opcode (opcode)
+			add_integer_64 (i)
+		end
+
 	put_opcode_real (opcode: INTEGER_16; r: REAL) is
 			-- Insert `opcode' manipulating a real.
 		require
@@ -295,16 +355,6 @@ feature -- Opcode insertion
 		do
 			put_opcode (opcode)
 			add_double (d)
-		end
-
-	put_opcode_integer_64 (opcode: INTEGER_16; i: INTEGER_64) is
-			-- Insert `opcode' manipulating an integer 64.
-		require
-			not_yet_written: not is_written
-			has_opcodes: opcodes.has (opcode)
-		do
-			put_opcode (opcode)
-			add_integer_64 (i)
 		end
 
 feature -- Labels manipulation
@@ -455,6 +505,72 @@ feature {NONE} -- Implementation
 
 feature {NONE} -- Opcode insertion helpers
 
+	add_natural_16 (val: INTEGER_16) is
+			-- Add `val' to current.
+		require
+			not_yet_written: not is_written
+		local
+			l_val: INTEGER_16
+			l_pos: INTEGER
+		do
+			fixme ("Use NATURAL_XX types")
+			l_val := val
+			l_pos := current_position
+			internal_put ((l_val & 0x00FF).to_integer_8, l_pos)
+			l_val := l_val |>> 8
+			internal_put ((l_val & 0x00FF).to_integer_8, l_pos + 1)
+			current_position := l_pos + 2
+		end
+
+	add_natural_32 (val: INTEGER) is
+			-- Add `val' to current.
+		require
+			not_yet_written: not is_written
+		local
+			l_val, l_pos: INTEGER
+			i: INTEGER
+		do
+			fixme ("Use NATURAL_XX types")
+			from
+				l_val := val
+				l_pos := current_position
+				i := 1
+			until
+				i > 4
+			loop
+				internal_put ((l_val & 0x000000FF).to_integer_8, l_pos)
+				l_pos := l_pos + 1
+				l_val := l_val |>> 8
+				i := i + 1
+			end
+			current_position := l_pos
+		end
+		
+	add_natural_64 (val: INTEGER_64) is
+			-- Add `val' to current.
+		require
+			not_yet_written: not is_written
+		local
+			l_val: INTEGER_64
+			l_pos: INTEGER
+			i: INTEGER
+		do
+			fixme ("Use NATURAL_XX types")
+			from
+				l_val := val
+				l_pos := current_position
+				i := 1
+			until
+				i > 8
+			loop
+				internal_put ((l_val & 0x00000000000000FF).to_integer_8, l_pos)
+				l_pos := l_pos + 1
+				l_val := l_val |>> 8
+				i := i + 1
+			end
+			current_position := l_pos
+		end
+	
 	add_integer_16 (val: INTEGER_16) is
 			-- Add `val' to current.
 		require

@@ -159,6 +159,9 @@ safe_md %INSTALL_DIR\rb\bin
 cdd %INIT_DIR
 give_time_to organize the delivery and to start filling it
 
+call make_libraries.btm
+cdd %INIT_DIR
+
 REM Fill directories
 iff not defined NO_COMPILE then
 	remtrace Update all libraries
@@ -199,7 +202,7 @@ iff not defined NO_COMPILE then
 	fullrf gobo\gobo30.tar.gz
 
 	cdd %INSTALL_DIR\free_add_ons\zad_miner\ace
-	sed -e s/\$ISE_EIFFEL\\free_add_ons/\$INSTALL_DIR\\free_add_ons/g zad_miner.ace >> new_ace.ace
+	sed -e s/ISE_EIFFEL/INSTALL_DIR/g zad_miner.ace >> new_ace.ace
 	clean_project
 	finalize new_ace.ace
 	fff
@@ -218,12 +221,6 @@ iff not defined NO_COMPILE then
 	call make_rb.btm
 	cdd %INIT_DIR
 	give_time_to compile Resource Bench
-
-rem FIXME: 2/21/2002 Manu
-rem	remtrace Generate the Assembly Manager
-rem	call make_assembly_manager.btm
-rem	cdd %INIT_DIR
-rem	give_time_to compile the Assembly Manager
 else
 	remtrace Copy executable files from the old delivery
 	quick_move /s studio\spec
@@ -247,9 +244,6 @@ else
 	quick_move rb\bin\resource_bench.chm
 	give_time_to copy the main documentation from the old delivery
 endiff
-cdd %INIT_DIR
-
-call make_libraries.btm
 cdd %INIT_DIR
 
 iff not defined NO_INSTALL then

@@ -138,10 +138,8 @@ feature {NONE} -- Implementation
 		local
 			basic_type: BASIC_I
 			target_type: TYPE_I
-			cl_type: CL_TYPE_I
-			gen_type: GEN_TYPE_I
 		do
-			target_type := Context.creation_type (target.type)
+			target_type := context.creation_type (target.type)
 
 			check
 				not_expanded: not target_type.is_true_expanded
@@ -164,23 +162,8 @@ feature {NONE} -- Implementation
 				ba.append (target.reverse_code)
 				target.make_end_reverse_assignment (ba)
 
-					-- Append the target static type
-				cl_type ?= target_type
-				ba.append_short_integer (cl_type.type_id - 1)
-
-				ba.append_short_integer (context.current_type.generated_id (False))
-
-					-- Find out if real type of `target' is a generic type. If `target''s type
-					-- was either anchored or if `target' was an attribute, `type_to_create'
-					-- will return Void to show that we need to use `info' to generate the
-					-- proper type information.
-				gen_type ?= info.type_to_create
-				if gen_type /= Void then
-					gen_type.make_gen_type_byte_code (ba, True)
-				else
-					info.make_reverse_byte_code (ba)
-				end
-				ba.append_short_integer (-1)
+					-- Generate type of target
+				info.make_byte_code (ba)
 			end
 		end
 

@@ -28,7 +28,7 @@ feature {NONE} -- Externals
 	cwin_get_open_file_name (ptr: POINTER): BOOLEAN is
 			-- SDK GetOpenFileName
 		external
-			"C [macro <wel.h>] (LPOPENFILENAME): EIF_BOOLEAN"
+			"C [macro <cdlg.h>] (LPOPENFILENAME): EIF_BOOLEAN"
 		alias
 			"GetOpenFileName"
 		end

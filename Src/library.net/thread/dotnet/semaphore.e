@@ -9,7 +9,7 @@ indexing
 class
 	SEMAPHORE
 
-creation
+create
 	make
 
 feature -- Initialization

@@ -7,7 +7,7 @@ indexing
 class
 	CONDITION_VARIABLE
 
-creation
+create
 	make
 
 feature -- Initialization

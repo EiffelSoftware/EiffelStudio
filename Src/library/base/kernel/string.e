@@ -338,6 +338,7 @@ feature -- Element change
 			original_exists: original /= Void
 			new_exists: new /= Void
 			original_not_empty: not original.empty
+			not_empty: not empty
 		local
 			change_pos :INTEGER
 		do
@@ -362,6 +363,15 @@ feature -- Element change
 			count := capacity
 		ensure
 			-- all_blank: For every `i' in 1..`count', `item' (`i') = `Blank'
+		end;
+
+	fill_character (c: CHARACTER) is
+			-- Fill with `c'.
+		do
+			str_fill ($area, capacity, c);
+			count := capacity
+		ensure
+			-- all_char: For every `i' in 1..`count', `item' (`i') = `c'
 		end;
 
 	head (n: INTEGER) is
@@ -590,6 +600,28 @@ feature -- Removal
 			-- removed: For every `i' in 1..`count', `item' (`i') /= `c'
 		end;
 
+	prune_all_leading (c: CHARACTER) is
+			-- Remove all leading occurrences of `c'.
+		do
+			from
+			until
+				item (1) /= c
+			loop
+				remove (1)
+			end
+		end;
+
+	prune_all_trailing (c: CHARACTER) is
+			-- Remove all trailing occurrences of `c'.
+		do
+			from
+			until
+				item (count) /= c
+			loop
+				remove (count)
+			end
+		end;
+
 	wipe_out is
 			-- Remove all characters.
 		do
@@ -633,6 +665,64 @@ feature -- Resizing
 		end;
 
 feature -- Conversion
+
+	left_justify is
+			-- Left justify the string using 
+			-- the capacity as the width
+		do
+			str_ljustify ($area, count, capacity)
+		end
+
+	center_justify is
+			-- Center justify the string using 
+			-- the capacity as the width
+		do
+			str_cjustify ($area, count, capacity)
+		end
+
+	right_justify is
+			-- Right justify the string using 
+			-- the capacity as the width
+		do
+			str_rjustify ($area, count, capacity)
+		end
+
+	character_justify (pivot: CHARACTER; position: INTEGER) is
+			-- Justify a string based on a `pivot'
+			-- and the `position' it needs to be in
+			-- the final string.
+			-- This will grow the string if necessary
+			-- to get the pivot in the correct place.
+		require
+			valid_position: position <= capacity 
+			positive_position: position >= 1
+			pivot_not_space: pivot /= ' '
+			not_empty: not empty
+		do
+			if index_of (pivot,1) < position then
+				from
+					precede (' ')
+				until
+					index_of (pivot,1) = position
+				loop
+					precede (' ')
+				end
+			elseif index_of (pivot,1 ) > position then
+				from
+					remove (1)
+				until
+					index_of (pivot,1) = position
+				loop
+					remove (1)
+				end
+			end
+			from
+			until
+				count = capacity
+			loop
+				extend (' ')
+			end
+		end
 
 	to_lower is
 			-- Convert to lower case.
@@ -765,6 +855,27 @@ feature -- Duplication
 			-- original_characters: For every `i' in 1..`n2'-`n1', `Result'.`item' (`i') = `item' (`n1'+`i'-1)
 		end;
 
+	multiply (n: INTEGER) is
+			-- Duplicate a string within itself
+			-- ("hello").multiply(3) => "hellohellohello"
+		require
+			meaningful_multiplier: n >= 1
+		local
+			s : STRING
+			i : INTEGER
+		do
+			s := clone (Current)
+			grow (n * count)
+		    from
+				i := n
+			until
+				i = 1
+			loop 
+				append (s)
+				i := i - 1	
+			end
+		end
+
 feature -- Output	
 
 	out: like Current is
@@ -836,7 +947,6 @@ feature {STRING} -- Implementation
 		external
 			"C"
 		end;
-
 	
 	str_str (c_str, o_str: like area; clen, olen, i, fuzzy: INTEGER): INTEGER is
 			-- Forward search of `o_str' within `c_str' starting at `i'.
@@ -856,6 +966,27 @@ feature {STRING} -- Implementation
 
 	str_len (c_string: POINTER): INTEGER is
 			-- Length of the C string: `c_string'
+		external
+			"C"
+		end;
+
+	str_ljustify (c_string: like area; length,cap: INTEGER) is
+			-- Left justify in a field of `capacity' 
+			-- the `c_string' of length `length'
+		external
+			"C"
+		end;
+
+	str_cjustify (c_string: like area; length,cap: INTEGER) is
+			-- Center justify in a field of `capacity' 
+			-- the `c_string' of length `length'
+		external
+			"C"
+		end;
+
+	str_rjustify (c_string: like area; length,cap: INTEGER) is
+			-- Right justify in a field of `capacity' 
+			-- the `c_string' of length `length'
 		external
 			"C"
 		end;
@@ -921,6 +1052,12 @@ feature {STRING} -- Implementation
 
 	str_blank (c_string: like area; n: INTEGER) is
 			-- Fill `c_string' with `n' blanks.
+		external
+			"C"
+		end;
+
+	str_fill (c_string: like area; n: INTEGER; c: CHARACTER) is
+			-- Fill `c_string' with `n' `c's.
 		external
 			"C"
 		end;

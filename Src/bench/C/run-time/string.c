@@ -144,17 +144,17 @@ int length, capacity;
 	register5 int offset;
 
 	/* Set the right hand end to spaces */
-	str_ljustify (str_length, capacity);
+	str_ljustify (length, capacity);
 	/* Find first non space on right */
 	for (r = str + capacity -1, i = capacity; i > 0; i --, r--)
-		if (!isspace (r*))
+		if (!isspace (*r))
 			break;
 	/* Offset calculation */
-	offset = (capacity - i) // 2
+	offset = (capacity - i) / 2;
 	for (s = str + offset; i > offset; i --)
-		s*-- = r*--;
-    for (i > 0; i --)
-		s*-- = ' ';	
+		*s-- = *r--;
+    for (;i > 0; i --)
+		*s-- = ' ';	
 
 }
 

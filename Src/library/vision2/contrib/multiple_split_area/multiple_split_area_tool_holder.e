@@ -25,7 +25,6 @@ feature {NONE} -- Initialization
 			parent_not_void: a_parent /= Void
 		local
 			vertical_box: EV_VERTICAL_BOX
-			horizontal_box: EV_HORIZONTAL_BOX
 			frame: EV_FRAME
 			temp_cell: EV_CELL
 		do
@@ -41,7 +40,7 @@ feature {NONE} -- Initialization
 			create upper_box
 			main_box.extend (upper_box)
 			main_box.disable_item_expand (upper_box)
-			create horizontal_box
+			create label_box
 			create frame
 			frame.set_style (feature {EV_FRAME_CONSTANTS}.Ev_frame_lowered)
 			main_box.extend (frame)
@@ -50,19 +49,19 @@ feature {NONE} -- Initialization
 			create frame
 			frame.set_style (feature {EV_FRAME_CONSTANTS}.Ev_frame_raised)
 			vertical_box.extend (frame)
-			frame.extend (horizontal_box)
+			frame.extend (label_box)
 			create label.make_with_text (a_display_name)
 			display_name := a_display_name
 			label.align_text_left	
-			horizontal_box.extend (label)
-			horizontal_box.disable_item_expand (label)
+			label_box.extend (label)
+			label_box.disable_item_expand (label)
 			create temp_cell
 			temp_cell.set_minimum_width (8)--spacing_to_holder_tool_bar)
-			horizontal_box.extend (temp_cell)
-			horizontal_box.disable_item_expand (temp_cell)
+			label_box.extend (temp_cell)
+			label_box.disable_item_expand (temp_cell)
 			create customizeable_area
-			horizontal_box.extend (customizeable_area)
-			horizontal_box.set_data (display_name)
+			label_box.extend (customizeable_area)
+			label_box.set_data (display_name)
 			create tool_bar
 			create minimize_button
 			minimize_button.set_pixmap (clone (parent_area.minimize_pixmap))
@@ -78,8 +77,8 @@ feature {NONE} -- Initialization
 			close_button.set_pixmap (clone (parent_area.close_pixmap))
 			close_button.select_actions.extend (agent close)
 			close_button.set_tooltip (close_tooltip)
-			horizontal_box.extend (tool_bar)
-			horizontal_box.disable_item_expand (tool_bar)
+			label_box.extend (tool_bar)
+			label_box.disable_item_expand (tool_bar)
 			vertical_box.disable_item_expand (frame)
 			vertical_box.extend (a_tool)
 			create lower_box
@@ -551,9 +550,11 @@ feature {MULTIPLE_SPLIT_AREA} -- Implementation
 		ensure
 			not_maximized: is_maximized = False
 		end
-		
 
 feature {MULTIPLE_SPLIT_AREA_TOOL_HOLDER, MULTIPLE_SPLIT_AREA} -- Implementation
+
+	label_box: EV_HORIZONTAL_BOX
+		-- Box containing label and customizeable tool bar area.
 
 	maximize_button, minimize_button, close_button: EV_TOOL_BAR_BUTTON
 		-- Buttons representing minimize and maximize commands.

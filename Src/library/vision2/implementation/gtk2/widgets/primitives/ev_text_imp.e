@@ -259,13 +259,13 @@ feature -- Access
 feature -- Status report
 
 	line_count: INTEGER is
-			-- Number of lines present in widget.
+			-- Number of display lines present in widget.
 		local
 		do
 		end
 
 	current_line_number: INTEGER is
-			-- Returns the number of the line the cursor currently
+			-- Returns the number of the display line the cursor currently
 			-- is on.
 		do
 		end
@@ -374,7 +374,12 @@ feature -- Basic operation
 		end
 
 	scroll_to_line (i: INTEGER) is
+		local
+			a_iter: EV_GTK_TEXT_ITER_STRUCT
 		do
+			create a_iter.make
+			feature {EV_GTK_DEPENDENT_EXTERNALS}.gtk_text_buffer_get_iter_at_line (text_buffer, a_iter.item, i - 1)
+			feature {EV_GTK_DEPENDENT_EXTERNALS}.gtk_text_view_scroll_to_iter (text_view, a_iter.item,  0.0, False, 0.0, 0.0)
 		end
 		
 	enable_word_wrapping is

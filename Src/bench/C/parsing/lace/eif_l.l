@@ -19,10 +19,6 @@
 #include "eif_rtlimits.h"
 #include <ctype.h>
 
-#ifdef EIF_WIN32
-#include <io.h>
-#endif
-
 /* private functions for lex */
 static int get_string();
 static int eif_char(char);

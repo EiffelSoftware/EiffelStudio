@@ -15,7 +15,7 @@ feature
 	make (b: BEHAVIOR) is
 		local
 			stored_input: S_EVENT_ELMT;
-			stored_output: S_COMMAND_ELMT
+			stored_output: S_COMMAND_ELMT_R332
 		do
 			identifier := b.identifier;
 			internal_name := b.label;
@@ -52,21 +52,26 @@ feature
 
 	behavior: BEHAVIOR is
 		do
-			!!Result.make;
-			if for_import.item then
-				Result.set_internal_name ("")
-			else
-				Result.set_internal_name (internal_name);
-			end;
-			from
-				input_list.start;
-				output_list.start
-			until
-				input_list.after
-			loop
-				Result.add (input_list.item.event, output_list.item.command);
-				input_list.forth;
-				output_list.forth
+			Result := behavior_table.item (identifier);
+			if Result = Void then
+					-- Behavior has not been retrieved yet
+				!!Result.make;
+				if for_import.item then
+					Result.set_internal_name ("")
+				else
+					Result.set_internal_name (internal_name);
+				end;
+				from
+					input_list.start;
+					output_list.start
+				until
+					input_list.after
+				loop
+					Result.add (input_list.item.event, output_list.item.command);
+					input_list.forth;
+					output_list.forth
+				end;
+				behavior_table.put (Result, identifier);
 			end;
 		end;
 end

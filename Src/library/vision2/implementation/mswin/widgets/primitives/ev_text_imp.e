@@ -163,7 +163,7 @@ feature -- Basic operation
 			end
 		end
 
-	search (str: STRING): INTEGER is
+	search (str: STRING; start: INTEGER): INTEGER is
 			-- Search the string `str' in the text.
 			-- If `str' is find, it returns its start
 			-- index in the text, otherwise, it returns
@@ -193,7 +193,7 @@ feature -- Basic operation
 			searched_for_text_count := searched_for_text.count
 			positions_to_search := search_text.count - searched_for_text_count + 1
 			from
-				index_of_search := 0
+				index_of_search := start
 				found := False
 			until
 				index_of_search = positions_to_search or
@@ -231,6 +231,19 @@ feature -- Basic operation
 			else
 				Result := -1
 			end
+		end
+
+feature -- Assertion
+
+	last_line_not_empty: BOOLEAN is
+			-- Has the last line at least one character?
+		local
+			str: STRING
+			int: INTEGER
+		do
+			str := text
+			int := str.count
+			Result := not (str @ (int - 1 ) = '%R' and str @ int = '%N')
 		end
 
 feature {NONE} -- WEL Implementation

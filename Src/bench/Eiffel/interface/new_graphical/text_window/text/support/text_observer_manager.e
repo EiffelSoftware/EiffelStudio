@@ -19,6 +19,7 @@ feature -- Initialization
 		-- Initialize `Current'.
 		do
 			create edition_observer_list.make (10)
+			create cursor_observer_list.make (10)
 			create selection_observer_list.make (10)
 			create lines_observer_list.make (10)
 		end
@@ -54,6 +55,17 @@ feature -- Operations
 		do
 			if a_text_observer /= Void then
 				edition_observer_list.extend (a_text_observer)
+				a_text_observer.set_manager (Current)
+			end
+		end
+
+	add_cursor_observer (a_text_observer: TEXT_OBSERVER) is
+			-- Add an observer `an_text_observer' to the "cursor observers" list.
+		require
+			not_in_loop: not is_notifying
+		do
+			if a_text_observer /= Void then
+				cursor_observer_list.extend (a_text_observer)
 				a_text_observer.set_manager (Current)
 			end
 		end
@@ -180,6 +192,24 @@ feature {NONE} -- Updates
 			loop
 				edition_observer_list.item.on_text_reset
 				edition_observer_list.forth
+			end
+			is_notifying := False
+		end
+
+	on_cursor_moved is
+			-- Notify observers that the current cursor has moved.
+		require
+			not_in_loop: not is_notifying
+		do
+			is_notifying := True
+			changed := False
+			from 
+				cursor_observer_list.start
+			until
+				cursor_observer_list.after
+			loop
+				cursor_observer_list.item.on_cursor_moved
+				cursor_observer_list.forth
 			end
 			is_notifying := False
 		end
@@ -367,6 +397,9 @@ feature {NONE} -- Implementation
 
 	edition_observer_list: ARRAYED_LIST [TEXT_OBSERVER]
 		-- List of editor observers.
+
+	cursor_observer_list: ARRAYED_LIST [TEXT_OBSERVER]
+		-- List of cursor observers.
 
 	selection_observer_list: ARRAYED_LIST [TEXT_OBSERVER]
 		-- List of editor observers.

@@ -130,5 +130,5 @@ gtk_eiffel.o: /usr/include/stdlib.h
 
 # ISE EiffelBench Include
 
-gtk_eiffel.o: $(EIFFEL4)/bench/spec/linux-glibc/include/eif_eiffel.h
-gtk_eiffel.o: $(EIFFEL4)/bench/spec/linux-glibc/include/eif_argv.h
+gtk_eiffel.o: $(EIFFEL4)/bench/spec/$(PLATFORM)/include/eif_eiffel.h
+gtk_eiffel.o: $(EIFFEL4)/bench/spec/$(PLATFORM)/include/eif_argv.h

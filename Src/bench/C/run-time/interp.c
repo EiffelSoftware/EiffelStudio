@@ -3837,6 +3837,8 @@ rt_private void diadic_op(int code)
 			default: eif_panic(MTC botched);
 			}
 			break;
+		case SK_BIT:
+		case SK_EXP:
 		case SK_REF:
 			first->it_char = first->it_ref == second->it_ref;
 			break;
@@ -3960,6 +3962,8 @@ rt_private void diadic_op(int code)
 			default: eif_panic(MTC botched);
 			}
 			break;
+		case SK_BIT:
+		case SK_EXP:
 		case SK_REF:
 			first->it_char = first->it_ref != second->it_ref;
 			break;

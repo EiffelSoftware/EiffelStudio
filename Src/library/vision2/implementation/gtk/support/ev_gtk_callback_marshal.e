@@ -62,9 +62,14 @@ feature {NONE} -- Basic operation
 				-- FIXME improve this comment. sam
 		local
 			tuple: TUPLE
-			mcl_int_agent: PROCEDURE [EV_MULTI_COLUMN_LIST_IMP, TUPLE [INTEGER]]
+			mcl_int_agent: PROCEDURE [EV_MULTI_COLUMN_LIST_IMP, TUPLE [TUPLE [INTEGER]]]
 		do
-			if n_args = 1 then
+
+			mcl_int_agent ?= agent
+			if mcl_int_agent /= Void then
+				agent.call ([[gtk_value_int (args)]])
+			
+			elseif n_args = 1 then
 				tuple := gdk_event_to_tuple (gtk_value_pointer (args))
 					-- The GtkEvent* is the first argument
 					-- so args[0] == args.
@@ -77,13 +82,6 @@ feature {NONE} -- Basic operation
 					else
 						agent.call (tuple)
 					end
-				end
-			elseif n_args = 3 then
-					-- If we have a single INTEGER operand agent on EV_MULTI_COLUMN_LIST
-					-- we assume we have a row number in the first arg and we pass it.
-				mcl_int_agent ?= agent
-				if mcl_int_agent /= Void then
-					agent.call ([[gtk_value_int (args)]])
 				end
 			else
 				agent.call ([[]])
@@ -308,6 +306,9 @@ end -- class EV_GTK_CALLBACK_MARSHAL
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.8  2000/02/19 01:19:11  king
+--| Implemented marshal to deal with mclist signal connection
+--|
 --| Revision 1.7  2000/02/18 22:24:17  king
 --| Correct marshal feature to deal with mclist
 --|

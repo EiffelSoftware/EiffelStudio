@@ -134,6 +134,19 @@ RT_LNK void rout_obj_call_function_dynamic (EIF_INTEGER_32 body_id, EIF_ARG_UNIO
 #define eif_real_item(tuple,pos)			((EIF_TYPED_ELEMENT *) (tuple) + pos)->element.farg
 #define eif_reference_item(tuple,pos)		((EIF_TYPED_ELEMENT *) (tuple) + pos)->element.rarg
 
+/* Conveniences */
+#define EIF_BOOLEAN_ITEM eif_boolean_item
+#define EIF_CHARACTER_ITEM eif_character_item
+#define EIF_WIDE_CHARACTER_ITEM eif_wide_character_item
+#define EIF_DOUBLE_ITEM eif_double_item
+#define EIF_INTEGER_8_ITEM eif_integer_8_item
+#define EIF_INTEGER_16_ITEM eif_integer_16_item
+#define EIF_INTEGER_32_ITEM eif_integer_32_item
+#define EIF_INTEGER_64_ITEM eif_integer_64_item
+#define EIF_POINTER_ITEM eif_pointer_item
+#define EIF_REAL_ITEM eif_real_item
+#define EIF_REFERENCE_ITEM eif_reference_item
+
 /* Macro for setting tuple element value from a reference object
  * `val' should not be Void */
 #define eif_put_boolean_item_with_object(tuple,pos,val)			((EIF_TYPED_ELEMENT *) (tuple) + pos)->element.barg = *(EIF_BOOLEAN *)(val)

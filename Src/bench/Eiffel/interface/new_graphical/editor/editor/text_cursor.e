@@ -1,6 +1,5 @@
 indexing
-	description	: " Objects that represent the cursor of an %
-				  % editor window "
+	description	: "Objects that represent the cursor of an editor window "
 	author		: "Christophe Bonnard  / Arnaud PICHERY [ aranud@mail.dotcom.fr ]"
 	date		: "$Date$"
 	revision	: "$Revision$"
@@ -372,7 +371,7 @@ feature {NONE} -- Implementation
 				current_token := line.first_token
 				current_x := 0
 			until
-				current_x >= x_in_pixels
+				current_token = Void or else current_x >= x_in_pixels
 			loop
 					-- Compute where we are in pixels.
 				current_x := current_x + current_token.width
@@ -381,21 +380,29 @@ feature {NONE} -- Implementation
 				current_token := current_token.next
 			end
 
-			if current_x = x_in_pixels then
-					-- We are lucky. The cursor is situated at the
-					-- beggining of a token
-				pos_in_token := 1
-				token := current_token
-			else
-					-- we are too far, so the good token is the
-					-- previous one, we have to look into it.
-				token := current_token.previous
-					-- rewind our pixel position
-				current_x := current_x - token.width
-				x_in_token := x_in_pixels - current_x
+			if current_token /= Void then
+				-- The cursor is situated before the end of the line.
+				if current_x = x_in_pixels then
+						-- We are lucky. The cursor is situated at the
+						-- beggining of a token
+					pos_in_token := 1
+					token := current_token
+				else
+						-- we are too far, so the good token is the
+						-- previous one, we have to look into it.
+					token := current_token.previous
+						-- rewind our pixel position
+					current_x := current_x - token.width
+					x_in_token := x_in_pixels - current_x
 
-					-- Now retrieve the position inside the token.
-				pos_in_token := token.retrieve_position_by_width(x_in_token)
+						-- Now retrieve the position inside the token.
+					pos_in_token := token.retrieve_position_by_width(x_in_token)
+				end
+			else
+				-- The cursor is further than the end of the line, so
+				-- we set the current token to the last of the line.
+				token := line.end_token
+				pos_in_token := 1
 			end
 		end
 

@@ -459,7 +459,7 @@ void set_sock_data(EIF_POINTER add, EIF_POINTER dat)
 	/*x copy 14-bytes protocol-specific address data into socket address
 	    structure add from dat */
 {
-	strncpy(((struct sockaddr *) add)->sa_data, dat, 14);
+	memcpy(((struct sockaddr *) add)->sa_data, dat, 14);
 }
 
 EIF_POINTER get_sock_data(EIF_POINTER add)
@@ -479,7 +479,7 @@ void set_sock_zero(EIF_POINTER add, EIF_POINTER zero)
 		for (i = 0; i < 8; i++)
 			((struct sockaddr_in *) add)->sin_zero[i] = '\0';
 	} else
-		strncpy(((struct sockaddr_in *) add)->sin_zero, (char *) zero, 8);
+		memcpy(((struct sockaddr_in *) add)->sin_zero, (char *) zero, 8);
 }
 
 EIF_POINTER get_sock_zero(EIF_POINTER add)

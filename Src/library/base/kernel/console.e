@@ -275,6 +275,11 @@ feature {NONE} -- Implementation
 			"C"
 		end;
 
+	console_eof (file: POINTER): BOOLEAN is
+		external
+			"C"
+		end;
+
 	console_separator (file: POINTER): CHARACTER is
 			-- ASCII code of character following last word read
 		external

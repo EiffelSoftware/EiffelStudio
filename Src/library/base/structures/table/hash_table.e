@@ -95,7 +95,6 @@ class HASH_TABLE [G, H -> HASHABLE] inherit
 		end
 
 creation
-
 	make
 
 feature -- Initialization
@@ -132,42 +131,36 @@ feature -- Initialization
 			n >= 0
 		local
 			i: INTEGER
-			other: HASH_TABLE [G, H]
+			new_table: HASH_TABLE [G, H]
 			default_key: H
 		do
 				-- (Could also use iteration facilities.)
 			from
-				!! other.make (count.max (n))
+				!! new_table.make (count.max (n))
 			until
 				i = capacity
 			loop
 				if occupied (i) then
 					check
-						not other.soon_full
+						not new_table.soon_full
 							-- See invariant clause `sized_generously_enough'
 					end
-					other.put (content.item (i), keys.item (i))
+					new_table.put (content.item (i), keys.item (i))
 				end
 				i := i + 1
 			end
 
 			if has_default then
-				other.put (content.item (capacity), default_key)
+				new_table.put (content.item (capacity), default_key)
 			end
 
-			set_content (other.content)
-			set_keys (other.keys)
-			set_deleted_marks (other.deleted_marks)
+			set_content (new_table.content)
+			set_keys (new_table.keys)
+			set_deleted_marks (new_table.deleted_marks)
 
-			capacity := other.capacity
+			capacity := new_table.capacity
 			used_slot_count := count
-			iteration_position := other.iteration_position
-			if other.has_default then
-				set_default
-			else
-				set_no_default
-			end
-
+			iteration_position := new_table.iteration_position
 		ensure
 			count_not_changed: count = old count
 			slot_count_same_as_count: used_slot_count = count
@@ -187,10 +180,8 @@ feature -- Access
 			old_control, old_position: INTEGER
 		do
 			old_control := control; old_position := position
-			internal_search (key)
-			if found then
-				Result := content.item (position)
-			end
+			search (key)
+			Result := found_item
 			control := old_control; position := old_position
 		ensure then
 			default_value_if_not_present:
@@ -203,7 +194,7 @@ feature -- Access
 			old_control, old_position: INTEGER
 		do
 			old_control := control; old_position := position
-			internal_search (key)
+			search (key)
 			Result := found
 			control := old_control; position := old_position
 		ensure then
@@ -227,7 +218,7 @@ feature -- Access
 					until
 						i = capacity or else Result
 					loop
-						Result := occupied (i) and equal (v, content.item (i))
+						Result := occupied (i) and then equal (v, content.item (i))
 						i := i + 1
 					end
 				else
@@ -235,7 +226,7 @@ feature -- Access
 					until
 						i = capacity or else Result
 					loop
-						Result := occupied (i) and (v = content.item (i))
+						Result := occupied (i) and then (v = content.item (i))
 						i := i + 1
 					end
 				end
@@ -288,16 +279,6 @@ feature -- Access
 			!HASH_TABLE_CURSOR! Result.make (iteration_position)
 		ensure
 			cursor_not_void: Result /= Void
-		end
-
-	hash_code (key: H): INTEGER is
-			-- Hash code for `key';
-			-- by default, the hash code defined for H,
-			-- but may be redefined in a descendant.
-		do
-			Result := key.hash_code
-		ensure
-			good_hash_value: Result >= 0
 		end
 
 feature -- Measurement
@@ -483,13 +464,15 @@ feature -- Cursor movement
 			-- Search for item of key `key'.
 			-- If found, set `found' to true, and set
 			-- `found_item' to item associated with `key'.
-			--| Also set `search_item' (for compatibility).
+		local
+			default_value: G
 		do
 			internal_search (key)
-			found_item := content.item (position)
-				--| The following instruction for compatibility;
-				--| see comments in Obsolete section.
-			internal_search_item := found_item
+			if found then
+				found_item := content.item (position)
+			else
+				found_item := default_value 
+			end
 		ensure
 			found_or_not_found: found or not_found
 			item_if_found: found implies (found_item = content.item (position)) 
@@ -511,9 +494,10 @@ feature -- Element change
 			-- To choose between various insert/replace procedures,
 			-- see `instructions' in the Indexing clause.
 		do
-			compatibility_search (key)
+			internal_search (key)
 			if found then
 				set_conflict
+				found_item := content.item (position)
 			else
 				if soon_full then
 					add_space
@@ -568,8 +552,10 @@ feature -- Element change
 			-- see `instructions' in the Indexing clause.
 		require else
 			True
+		local
+			default_key: H
 		do
-			compatibility_search (key)
+			search (key)
 			if not_found then
 				if soon_full then
 					add_space
@@ -579,10 +565,14 @@ feature -- Element change
 					position := deleted_position
 					set_not_deleted (position)
 				end
+				keys.put (key, position)
+				if key = default_key then
+					set_default
+				end
 				count := count + 1
 				used_slot_count := used_slot_count + 1
 			end
-			put_at_position (new, key)
+			content.put (new, position)
 		ensure then
 			insertion_done: item (key) = new
 			now_present: has (key)
@@ -653,7 +643,7 @@ feature -- Element change
 			-- To choose between various insert/replace procedures,
 			-- see `instructions' in the Indexing clause.
 		do
-			compatibility_search (key)
+			search (key)
 			if found then
 				content.put (new, position)
 				set_replaced
@@ -687,9 +677,9 @@ feature -- Element change
 				count := count - 1
 				used_slot_count := used_slot_count - 1
 				insert_position := position
-				compatibility_search (old_key)
+				search (old_key)
 				if found then
-					content.put (content.item (position), insert_position)
+					content.put (found_item, insert_position)
 					if old_key = default_key then
 						set_no_default
 					else
@@ -699,12 +689,14 @@ feature -- Element change
 						set_default
 					end
 					set_replaced
-						-- The call to `compatibility_search' has set `found_item'
+						-- The call to `search' has set `found_item'
 						-- to the item previously associated with `old_key'.
 				else
 					position := insert_position
 					remove_at_position
-						check not_found: not_found end
+					check
+						not_found: not_found
+					end
 				end
 			-- else the call to `put' has set `found_item'
 			-- to the item previously associated with `new_key'.
@@ -815,58 +807,6 @@ feature -- Duplication
 			set_deleted_marks (clone (other.deleted_marks))
 		end
 
-feature -- Obsolete
-
-	search_item: G is obsolete
-			"Use `found_item' instead; in the next release %
-			%the two will be merged. %
-			%CAVEAT: procedures `force', `extend' %
-			%and `replace' will set `found_item' %
-			%but not `search_item'. Only `put' sets %
-			%`search_item' as well as `found_item'. %
-			%If your client software relied on the property %
-			%that procedures other than `put' do not affect %
-			%`search_item', it may malfunction when you %
-			%replace calls to the obsolete `search_item' %
-			%by calls to `found_item'.%
-			%Adapt your software to the new conventions %
-			%before switching to `found_item'. %
-			%<made_obsolete: ISE Eiffel 4.2>%
-			%<intended_removal: ISE Eiffel 4.3>%
-			%<OK_until: March 1998>"
-		do
-			Result := internal_search_item
-		end
-
-	--| (ISE Internal)
-	--|
-	--| What to do when removing `search_item' in 4.3:
-	--|
-	--|		- Remove `internal_search_item'.   
-	--| 
-	--| 	- Replace comment and body of `search'
-	--|				by those of `compatibility_search'
-	--|
-	--|		- Remove `compatibility_search' .
-	--| 
-	--|		- Replace every call to `compatibility_search'
-	--|		  by a call to `search'. 
-	
-
-feature {NONE} -- Obsolete
-
-	compatibility_search (key: H) is
-			-- Search for item of key `key'.
-			-- If found, set `found' to true, and set
-			-- `found_item' to item associated with `key'.
-		do
-			internal_search (key)
-			found_item := content.item (position)
-		ensure
-			found_or_not_found: found or not_found
-			item_if_found: found implies (found_item = content.item (position)) 
-		end
-
 feature {HASH_TABLE} -- Implementation: content attributes and preservation
 
 	content: ARRAY [G]
@@ -921,17 +861,12 @@ feature {HASH_TABLE} -- Implementation: search attributes
 	deleted_position: INTEGER
 			-- Place where a deleted element was found during a search
 
-	internal_search_item: G
-			-- Item, if any, yielded by last search operation
-			-- Will be removed in 4.3: see `search_item'.
-
-
 feature {NONE} -- Implementation
 
 	Max_occupation: INTEGER is 80
 			-- Filling percentage over which table will be resized
 
-	Initial_occupation: INTEGER is 66
+	Initial_occupation: INTEGER is 50
 			-- Filling percentage for initial requested occupation
 
 	Extra_space: INTEGER is 50
@@ -1066,7 +1001,7 @@ feature {NONE} -- Implementation
 				end
 			else
 				from
-					hash_value := hash_code (key)
+					hash_value := key.hash_code
 					increment := position_increment (hash_value)
 					position := initial_position (hash_value)
 				until
@@ -1117,7 +1052,7 @@ feature {NONE} -- Implementation
 				position := capacity
 			else
 				from
-					hash_value := hash_code (key)
+					hash_value := key.hash_code
 					increment := position_increment (hash_value)
 					position := initial_position (hash_value)
 				until
@@ -1139,7 +1074,6 @@ feature {NONE} -- Implementation
 			in_bounds: position >= 0 and position <= capacity
 			default_if_at_capacity:
 				(position = capacity) implies (key = computed_default_key)
-			
 		local
 			default_key: H
 		do
@@ -1211,7 +1145,6 @@ feature {NONE} -- Implementation
 			-- Set status to conflict.
 		do
 			control := Conflict_constant
-
 		ensure
 			conflict: conflict
 		end

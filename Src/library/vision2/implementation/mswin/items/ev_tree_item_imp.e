@@ -92,7 +92,7 @@ feature -- {EV_TREE_IMP}
 		local
 			tree_imp: EV_TREE_IMP
 		do
-			tree_imp ?= parent_imp
+			tree_imp ?= top_parent_imp
 			check
 				parent_not_void: tree_imp /= Void
 			end
@@ -579,6 +579,10 @@ end -- class EV_TREE_ITEM_IMP
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.50  2000/03/28 18:39:43  rogers
+--| Pnd_press now uses top_parent_imp when retrieveing the parent.
+--| Previously used parent_imp which was wrong.
+--|
 --| Revision 1.49  2000/03/28 17:32:23  rogers
 --| on_orphaned now only reduces high indices if an image was removed
 --| from the image list.

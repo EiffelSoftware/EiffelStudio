@@ -403,8 +403,8 @@ feature {EV_ANY_I} -- Implementation
 invariant
 	row_count_non_negative: row_count >= 0
 	column_count_non_negative: column_count >= 0
-	drawer_not_void: drawer /= Void
-	drawable_not_void: drawable /= Void
+	drawer_not_void: is_initialized implies drawer /= Void
+	drawable_not_void: is_initialized implies drawable /= Void
 	
 end
 

@@ -1617,7 +1617,7 @@ static int get_string()
 	start_position = end_position;
 	end_position++;
 
-	while ((c = input()) != 0 && c != '"' && n < STRINGLENGTH) {
+	while ((c = input()) != 0 && c != (char) EOF && c != '"' && n < STRINGLENGTH) {
 		end_position++;
 		if (c == '%') {
 			extension = 0;

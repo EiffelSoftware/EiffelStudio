@@ -11,5 +11,8 @@ all:: EiffelSoftware.Runtime.dll
 EiffelSoftware.Runtime.dll: $(RUNTIME_SRC) Makefile
 	$(CP) $(EIFFEL_SRC)\dotnet\helpers\isekey.snk ise_runtime.key
 	csc $(CSFLAGS) -target:library -out:$@ -recurse:"*.cs"
-	gacutil $(GACFLAGS) -if EiffelSoftware.Runtime.dll
 	del ise_runtime.key
+
+
+install: all
+	gacutil $(GACFLAGS) -if EiffelSoftware.Runtime.dll

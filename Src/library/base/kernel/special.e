@@ -54,6 +54,14 @@ feature -- Element change
 			-- Built-in
 		end;
 
+feature -- Removal
+
+	clear_all is
+			-- Reset all items to default values.
+		do
+			spclearall ($Current)
+		end
+
 feature {NONE} -- Implementation
 
 	sp_count (sp_obj: POINTER): INTEGER is
@@ -61,6 +69,12 @@ feature {NONE} -- Implementation
 		external
 			"C | %"eif_plug.h%""
 		end;
+
+	spclearall (p: POINTER) is
+			-- Reset all items to default value.
+		external
+			"C | %"eif_copy.h%""
+		end
 
 	c_standard_is_equal (source, target: POINTER): BOOLEAN is
 			-- Is `source' equal to `target' ?

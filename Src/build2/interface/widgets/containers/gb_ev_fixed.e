@@ -218,14 +218,14 @@ feature {GB_DEFERRED_BUILDER} -- Status setting
 					check
 						value_is_integer: extracted_string.is_integer
 					end
-					set_x_position (first.item, extracted_string.to_integer)
+					set_item_x_position (first.item, extracted_string.to_integer)
 						
 						-- Read current y position data from `temp_y_position_string'.
 					extracted_string := temp_y_position_string.substring (lower, upper)
 					check
 						value_is_integer: extracted_string.is_integer
 					end
-					set_y_position (first.item, extracted_string.to_integer)
+					set_item_y_position (first.item, extracted_string.to_integer)
 					
 						-- Read current width data from `temp_width_string'.
 					extracted_string := temp_width_string.substring (lower, upper)

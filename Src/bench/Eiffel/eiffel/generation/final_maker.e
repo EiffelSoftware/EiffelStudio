@@ -74,7 +74,7 @@ feature
 				-- Routine tables.
 			from
 				i := 1;
-				nb := Rout_generator.file_counter;
+				nb := Rout_generator.file_counter - 1;
 			until
 				i > nb
 			loop
@@ -88,7 +88,7 @@ feature
 				-- Attribute tables.
 			from
 				i := 1;
-				nb := Attr_generator.file_counter;
+				nb := Attr_generator.file_counter - 1;
 			until
 				i > nb
 			loop

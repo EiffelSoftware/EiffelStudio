@@ -45,7 +45,7 @@ feature -- Attributes
 			-- Number of partial object files needed
 			-- for system object files
 
-	Packet_number: INTEGER is 100
+	Packet_number: INTEGER is 200
 			-- Maximum number of files in a single linking phase
 
 feature -- Initialization

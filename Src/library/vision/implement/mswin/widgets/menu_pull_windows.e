@@ -29,6 +29,8 @@ feature -- Initialization
 			check
 				valid_parent: parent /= Void
 			end
+			set_x (parent.x)
+			set_y (parent.y)
 			managed := man
 			text := a_pulldown.identifier
 			!! menu_button.make (text, oui_parent)
@@ -69,49 +71,13 @@ feature -- Element change
 		do
 			text := t
 			menu_button.set_text (t)
+		if realized and then managed then
+			set_managed (False)
+			set_managed (True)
 		end
-
-	manage_separator (s: SEPARATOR_WINDOWS) is
-			-- manage separator 's'.
-		do
-			-- To be implemented XXX
 		end
 
 feature {NONE} -- Implementation
-
-	unmanaged_count (w: WIDGET_WINDOWS): INTEGER is
-			-- Number of unmanaged widgets in the list before `w'.
-		require
-			widget_not_void: w /= Void
-		local
-			c: ARRAYED_LIST [WIDGET_WINDOWS]
-		do
-			c := children_list
-			from
-				c.start
-				c.search (w)
-			until
-				c.after
-			loop
-				if not c.item.managed then
-					Result := Result + 1
-				end
-				c.forth
-			end
-		end
-
-	index_of (w: WIDGET_WINDOWS): INTEGER is
-			-- The index of the button `b' in the `button_list'.
-		require
-			widget_not_void: w /= Void
-		local
-			c: ARRAYED_LIST [WIDGET_WINDOWS]
-		do
-			c := children_list
-			c.start
-			c.search (w)
-			Result := c.count - c.index + 1
-		end
 
 	set_default_size is
 			-- Useless here

@@ -606,13 +606,9 @@ feature {NONE} -- Initialization
 
 				l_written_type := internal_type_from_consumed_type (True, l_member.declared_type)
 				l_feat.set_written_in (l_written_type.class_id)
-				l_feat.set_origin_class_id (l_written_type.class_id)
-				l_feat.set_written_feature_id (l_feat.feature_id)
-
-					-- Let's find the right routine id, i.e. reuse one
-					-- because current feature is a redefinition or create
-					-- a new one.
-				compute_rout_id_set (a_feat_tbl, l_feat, l_member)
+				
+					-- Let's update `l_feat' with info from parent classes.
+				update_feature_with_parents (a_feat_tbl, l_feat, l_member)
 
 				check
 					not_already_inserted: not a_feat_tbl.has_id (l_feat.feature_name_id)
@@ -643,10 +639,13 @@ feature {NONE} -- Initialization
 
 feature {NONE} -- Implementation
 
-	compute_rout_id_set (a_feat_tbl: FEATURE_TABLE; a_feat: FEATURE_I; a_member: CONSUMED_ENTITY) is
-			-- Compute a new `rout_id_set' for `a_feat' based on
-			-- info of current class and parent classes. If we do not found a matching routine
-			-- in a parent class, then we set `is_origin' on `a_feat'.
+	update_feature_with_parents (a_feat_tbl: FEATURE_TABLE; a_feat: FEATURE_I;
+			a_member: CONSUMED_ENTITY)
+		is
+			-- Compute a new `rout_id_set' for `a_feat' based on info of current class and
+			-- parent classes. If we do not found a matching routine in a parent class, then
+			-- we set `is_origin' on `a_feat'.
+			-- Set `written_feature_id'.
 		require
 			a_feat_tbl_not_void: a_feat_tbl /= Void
 			a_feat_tbl_has_origin_table: a_feat_tbl.origin_table /= Void
@@ -697,6 +696,12 @@ feature {NONE} -- Implementation
 							parents.item.associated_class, a_member)
 						if l_feat /= Void then
 							l_rout_id_set.merge (l_feat.rout_id_set)
+							if l_feat.written_in = a_feat.written_in then
+									-- Inherited feature is written in same class as `a_feat'
+									-- therefore we can safely store inherited `written_feature_id'
+									-- into `a_feat'.
+								a_feat.set_written_feature_id (l_feat.written_feature_id)
+							end
 						end
 					else
 						check
@@ -713,6 +718,12 @@ feature {NONE} -- Implementation
 				l_feat := matching_external_feature_in (a_feat, l_parent_class, a_member)
 				if l_feat /= Void then
 					l_rout_id_set.merge (l_feat.rout_id_set)
+					if l_feat.written_in = a_feat.written_in then
+							-- Inherited feature is written in same class as `a_feat'
+							-- therefore we can safely store inherited `written_feature_id'
+							-- into `a_feat'.
+						a_feat.set_written_feature_id (l_feat.written_feature_id)
+					end
 				end
 			end
 
@@ -729,6 +740,15 @@ feature {NONE} -- Implementation
 
 				-- Insert the computed routine IDs.
 			a_feat.set_rout_id_set (l_rout_id_set)
+
+			if a_feat.written_in = class_id then
+					-- Feature is written in current class, we need to assign its
+					-- `written_feature_id'.
+				check
+					not_assigned_yet: a_feat.written_feature_id = 0
+				end
+				a_feat.set_written_feature_id (a_feat.feature_id)
+			end
 		ensure
 			a_feat_updated: a_feat.rout_id_set /= Void and then not a_feat.rout_id_set.is_empty
 			not_already_inserted:

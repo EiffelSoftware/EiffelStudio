@@ -346,7 +346,10 @@ feature -- Basic operations
 			end
 			
 			
-			if dockable_dialog_source = Void or dockable_target /= Void then
+			if (dockable_dialog_source = Void or dockable_target /= Void) and dockable_dialog_target = Void then
+					-- This section is executed if we are docking a widget not into a dockable dialog, hence
+					-- we check `dockable_dialog_target' is Void, to avoid the `dock_ended_actions' being fired twice,
+					-- and the rest of this section of code being executed.
 				tool_bar ?= dockable_target
 				if not (tool_bar /= Void and widget_source_being_docked /= Void) then
 
@@ -358,7 +361,7 @@ feature -- Basic operations
 						dockable_dialog_source.destroy
 					end
 					if dock_ended_actions_internal /= Void then
-						dock_ended_actions_internal.call ([])
+						dock_ended_actions_internal.call ([]) -- dfgdfgdfg
 					end
 				else
 					move_dialog_to_pointer (dockable_dialog_source)

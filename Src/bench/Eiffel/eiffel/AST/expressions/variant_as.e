@@ -8,7 +8,16 @@ class VARIANT_AS
 inherit
 	TAGGED_AS
 		redefine
+			process,
 			byte_node, type_check
+		end
+
+feature -- Visitor
+
+	process (v: AST_VISITOR) is
+			-- process current element.
+		do
+			v.process_variant_as (Current)
 		end
 
 feature -- Type check and byte node

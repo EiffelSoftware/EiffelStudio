@@ -29,6 +29,14 @@ feature {AST_FACTORY} -- Initialization
 			id_list_set: id_list = i
 		end
 
+feature -- Visitor
+
+	process (v: AST_VISITOR) is
+			-- process current element.
+		do
+			v.process_un_strip_as (Current)
+		end
+
 feature -- Attributes
 
 	id_list: ARRAYED_LIST [INTEGER]

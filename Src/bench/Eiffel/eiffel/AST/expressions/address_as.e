@@ -28,6 +28,14 @@ feature {AST_FACTORY} -- Initialization
 			feature_name_set: feature_name = f
 		end
 
+feature -- Visitor
+
+	process (v: AST_VISITOR) is
+			-- process current element.
+		do
+			v.process_address_as (Current)
+		end
+
 feature -- Attribute
 
 	feature_name: FEATURE_NAME

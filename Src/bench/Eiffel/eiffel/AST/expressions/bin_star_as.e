@@ -10,6 +10,14 @@ inherit
 
 	PREFIX_INFIX_NAMES
 
+feature -- Visitor
+
+	process (v: AST_VISITOR) is
+			-- process current element.
+		do
+			v.process_bin_star_as (Current)
+		end
+
 feature -- Properties
 
 	byte_anchor: BIN_STAR_B is

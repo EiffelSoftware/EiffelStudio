@@ -34,6 +34,14 @@ feature {AST_FACTORY} -- Initialization
 			generics_set: generics = g
 		end
 
+feature -- Visitor
+
+	process (v: AST_VISITOR) is
+			-- process current element.
+		do
+			v.process_class_type_as (Current)
+		end
+
 feature -- Attributes
 
 	class_name: ID_AS

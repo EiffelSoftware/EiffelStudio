@@ -30,6 +30,14 @@ feature {AST_FACTORY} -- Initialization
 			position_set: position = p
 		end
 
+feature -- Visitor
+
+	process (v: AST_VISITOR) is
+			-- process current element.
+		do
+			v.process_formal_as (Current)
+		end
+
 feature -- Properties
 
 	position: INTEGER

@@ -15,6 +15,14 @@ inherit
 
 	SHARED_TYPES
 
+feature -- Visitor
+
+	process (v: AST_VISITOR) is
+			-- process current element.
+		do
+			--v.process_un_old_as (Current)
+		end
+
 feature -- Properties
 
 	prefix_feature_name: STRING is

@@ -371,8 +371,8 @@ feature -- External features
 		
 
 	new_descriptor: INTEGER is
---		require else
---			descriptor_available: is_descriptor_available
+		require else
+			descriptor_available: is_descriptor_available
 		local
 			stmt: OCI_STATEMENT
 			i: INTEGER

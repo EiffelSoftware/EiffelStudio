@@ -755,7 +755,9 @@ feature {NONE} -- Implementation
 				type = Oci_stmt_drop or
 				type = Oci_stmt_alter or
 				type = Oci_stmt_begin or
-				type = Oci_stmt_declare
+				type = Oci_stmt_declare or
+					-- Sometimes the statement type is 0.
+				type = 0
 		end
 		
 	is_query_type (type: INTEGER): BOOLEAN is

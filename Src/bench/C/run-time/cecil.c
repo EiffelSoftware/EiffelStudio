@@ -401,6 +401,7 @@ rt_public void *eifaddr(EIF_REFERENCE object, char *name, int * const ret)
 	 * (was necessary was getting value of basic types failed).
 	 */
 	
+	EIF_GET_CONTEXT
 	int i;							/* Index in skeleton */
 #ifdef WORKBENCH
 	int32 rout_id;					/* Attribute routine id */

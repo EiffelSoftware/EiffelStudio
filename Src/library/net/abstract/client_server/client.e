@@ -31,7 +31,7 @@ feature -- Access
 
 	send (msg : STORABLE) is
 		do
-			msg.general_store (in_out)
+			msg.independent_store (in_out)
 		end;
 
 	receive is

@@ -15,6 +15,8 @@ inherit
 	SHARED_EIFFEL_PARSER
 	
 	SHARED_ERROR_HANDLER
+	
+	EV_DIALOG_CONSTANTS
 
 create
 	make
@@ -78,6 +80,7 @@ feature {NONE} -- Implementation
 			cfs: CLASSI_FIGURE_STONE
 			invalid_name: BOOLEAN
 			class_file: PLAIN_TEXT_FILE
+			confirmation: EV_CONFIRMATION_DIALOG
 		do
 			cfs ?= a_stone
 			if cfs /= Void then
@@ -112,63 +115,62 @@ feature {NONE} -- Implementation
 							else
 								s := ""
 							end
-							g := change_name_dialog.generics
-							if g = Void or g.occurrences (' ') = g.count then
-								g := ""
-							end
-							stone_text := src.class_i.text
-							parse_string (stone_text)
-							if stone_as = Void then
-								create invalid_name_dialog.make_with_text (
-									Warning_messages.w_Class_header_syntax_error (src.class_i.name))
+							if not cnr.valid_new_class_name (s) then
+								create invalid_name_dialog.make_with_text (Warning_messages.w_Wrong_class_name)
 								invalid_name_dialog.show_modal_to_window (tool.development_window.window)
 							else
-								try_change_name (stone_text, s, g)
-								parse_string (stone_text)
-								if stone_as = Void then
-									create invalid_name_dialog.make_with_text (Warning_messages.w_Wrong_class_name)
-									invalid_name_dialog.show_modal_to_window (tool.development_window.window)
-								else			
-									if not change_name_dialog.global_replace then
-										if not cnr.valid_new_class_name (s) then
-											create invalid_name_dialog.make_with_text (Warning_messages.w_Wrong_class_name)
-											invalid_name_dialog.show_modal_to_window (tool.development_window.window)
-										else
-											history.do_named_undoable (
-												Interface_names.t_Diagram_rename_class_locally_cmd (old_name, s),
-												agent change_name_locally (src, s, g),
-												agent change_name_locally (src, old_name, old_generics))
-											invalid_name := False
-										end
+								if cnr.class_name_in_use (s) then
+									create confirmation.make_with_text (Warning_messages.w_Class_already_exists_info (s))
+									confirmation.button (ev_ok).set_text (ev_yes)
+									confirmation.button (ev_cancel).set_text (ev_no)
+									confirmation.show_modal_to_window (tool.development_window.window)
+								end
+								if confirmation = Void or else confirmation.selected_button.is_equal (ev_ok) then
+									g := change_name_dialog.generics
+									if g = Void or g.occurrences (' ') = g.count then
+										g := ""
+									end
+									stone_text := src.class_i.text
+									parse_string (stone_text)
+									if stone_as = Void then
+										create invalid_name_dialog.make_with_text (
+											Warning_messages.w_Class_header_syntax_error (src.class_i.name))
+										invalid_name_dialog.show_modal_to_window (tool.development_window.window)
 									else
-										if not cnr.valid_new_class_name (s) then
+										try_change_name (stone_text, s, g)
+										parse_string (stone_text)
+										if stone_as = Void then
 											create invalid_name_dialog.make_with_text (Warning_messages.w_Wrong_class_name)
 											invalid_name_dialog.show_modal_to_window (tool.development_window.window)
-										elseif cnr.class_name_in_use (s) then
-											create invalid_name_dialog.make_with_text (
-												Warning_messages.w_Class_already_exists (s))
-											invalid_name_dialog.show_modal_to_window (tool.development_window.window)
-										else
-											if change_name_dialog.global_replace_universe then
+										else			
+											if not change_name_dialog.global_replace then
 												history.do_named_undoable (
-													Interface_names.t_Diagram_rename_class_globally_cmd (old_name, s),
-													[<<agent tool_disable_sensitive, 
-														agent change_name_universe_classes (src, cnr, old_name, s, g),
-														agent tool_enable_sensitive>>],
-													[<<agent tool_disable_sensitive,
-														agent change_name_universe_classes (src, cnr, s, old_name, old_generics),
-														agent tool_enable_sensitive>>])
+													Interface_names.t_Diagram_rename_class_locally_cmd (old_name, s),
+													agent change_name_locally (src, s, g),
+													agent change_name_locally (src, old_name, old_generics))
 												invalid_name := False
 											else
-												history.do_named_undoable (
-													Interface_names.t_Diagram_rename_class_globally_cmd (old_name, s),
-													[<<agent tool_disable_sensitive,
-														agent change_name_compiled_classes (src, cnr, old_name, s, g),
-														agent tool_enable_sensitive>>],
-													[<<agent tool_disable_sensitive,
-														agent change_name_compiled_classes (src, cnr, s, old_name, old_generics),
-														agent tool_enable_sensitive>>])
-												invalid_name := False
+												if change_name_dialog.global_replace_universe then
+													history.do_named_undoable (
+														Interface_names.t_Diagram_rename_class_globally_cmd (old_name, s),
+														[<<agent tool_disable_sensitive, 
+															agent change_name_universe_classes (src, cnr, old_name, s, g),
+															agent tool_enable_sensitive>>],
+														[<<agent tool_disable_sensitive,
+															agent change_name_universe_classes (src, cnr, s, old_name, old_generics),
+															agent tool_enable_sensitive>>])
+													invalid_name := False
+												else
+													history.do_named_undoable (
+														Interface_names.t_Diagram_rename_class_globally_cmd (old_name, s),
+														[<<agent tool_disable_sensitive,
+															agent change_name_compiled_classes (src, cnr, old_name, s, g),
+															agent tool_enable_sensitive>>],
+														[<<agent tool_disable_sensitive,
+															agent change_name_compiled_classes (src, cnr, s, old_name, old_generics),
+															agent tool_enable_sensitive>>])
+													invalid_name := False
+												end
 											end
 										end
 									end

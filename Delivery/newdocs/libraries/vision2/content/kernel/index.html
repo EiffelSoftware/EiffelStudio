@@ -8,25 +8,108 @@
 
 	<BODY>
 		<H1>Vision2 Kernel</H1>
+        <p>The kernel cluster contains classes that provide functionality that
+        are common to most Windowed application.&nbsp; These classes are
+        considered the core, or kernel of any Vision2 application.&nbsp; The
+        most important of these classes is EV_APPLICATION.&nbsp; This is used to
+        initialize the graphical toolkit and event loop of your Vision2
+        application.&nbsp; Kernel also includes classes such as EV_TIMEOUT that
+        calls procedures at a set interval, and EV_COLOR that is used for
+        coloring widgets and items.&nbsp; For a complete list of the classes
+        contained in the Kernel cluster, click <A HREF="/libraries/vision2/reference/interface/kernel/index.html">here</A>.&nbsp;
+        To start programming with Vision2, you first have to correctly
+        initialize EV_APPLICATION.</p>
+        <p>&nbsp;</p>
+        <h2>Launching your application with EV_APPLICATION - The heart of all
+        Vision2 systems</h2>
+			
+        <P>
+			<A CLASS="eclass" HREF="/libraries/vision2/reference/interface/kernel/ev_application_chart.html">EV_APPLICATION</A> is the basis for every
+        Vision2 application and is considered the most important class in the
+        library.&nbsp; It is responsible for initializing the underlying toolkit
+        that is driving the windowing system on the platform that you decide to
+        compile your system on.&nbsp; It also also where the main event loop
+        that drives your application is executed.
+			</P>
+
+			<P CLASS="note"><B>Note:</B> It is <b> not</b> possible to create a vision2 component unless an application exists (query
+            <a HREF="/libraries/vision2/reference/interface/kernel/ev_environment_chart.html">EV_ENVIRONMENT</a>).</P>
+			You may inherit <A CLASS="eclass" HREF="/libraries/vision2/reference/interface/kernel/ev_application_chart.html">EV_APPLICATION</A> or use it as a client in order to create your vision2
+			application. A simple method of using <A CLASS="eclass" HREF="/libraries/vision2/reference/interface/kernel/ev_application_chart.html">EV_APPLICATION</A> is as follows:
+				<OL>
+					<LI>Create an instance of <A CLASS="eclass" HREF="/libraries/vision2/reference/interface/kernel/ev_application_chart.html">EV_APPLICATION</A>.
+					<LI>Create one or more windows for your application.
+					<LI>Launch the application.
+				</OL>
+        <p>An example of a Vision2 application inheriting from <A CLASS="eclass" HREF="/libraries/vision2/reference/interface/kernel/ev_application_chart.html">EV_APPLICATION</A> is
+        as follows.</p>
+        <p>&nbsp;</p>
+<P CLASS="code">
+        <SPAN CLASS="ekeyword">class</SPAN><BR>
+        &nbsp;&nbsp;&nbsp; <SPAN CLASS="eclass">HELLOWORLD_APP</SPAN><BR><BR>
+        <SPAN CLASS="ekeyword">inherit</SPAN><BR>
+        &nbsp;&nbsp;&nbsp; <SPAN CLASS="eclass" HREF="/libraries/vision2/reference/interface/kernel/ev_application_chart.html">EV_APPLICATION</SPAN><BR><BR>
+        <SPAN CLASS="ekeyword">create</SPAN><BR>
+        &nbsp;&nbsp;&nbsp; <SPAN CLASS="efeature">make</SPAN><BR><BR>
+        <SPAN CLASS="ekeyword">feature</SPAN><BR>
+        <BR>
+        &nbsp;&nbsp;&nbsp; <SPAN CLASS="efeature">make</SPAN><SPAN CLASS="ekeyword"> is</SPAN><br>
+        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<SPAN CLASS="ecomment"> -- Create the application.</SPAN><BR>
+        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <SPAN CLASS="ekeyword">local</SPAN><BR>
+        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+        <SPAN CLASS="efeature">helloworld_window</SPAN>: <SPAN CLASS="eclass" HREF="/libraries/vision2/reference/interface/widgets/containers/ev_titled_window_chart.html">EV_TITLED_WINDOW</a></SPAN><BR>
+        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <SPAN CLASS="ekeyword">do</SPAN><BR>
+        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <SPAN CLASS="efeature">default_create</SPAN><BR>
+        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <SPAN CLASS="ekeyword">create</SPAN> <SPAN CLASS="efeature">helloworld_window</SPAN><BR>
+        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <SPAN CLASS="efeature">helloworld_window.set_title</SPAN> (<SPAN CLASS="estring">&quot;Helloworld!&quot;</SPAN>)<BR>
+        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <SPAN CLASS="efeature">helloworld_window.close_request_actions.extend (~destroy)</SPAN><BR>
+        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <SPAN CLASS="efeature">launch</SPAN><BR>
+        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <SPAN CLASS="ekeyword">end</SPAN><BR>
+        <BR>
+        <SPAN CLASS="ekeyword">end</SPAN><br>
+</p>
+        <p>&nbsp;</p>
+        <p>An example of a Vision2 application using <SPAN CLASS="eclass" HREF="/libraries/vision2/reference/interface/kernel/ev_application_chart.html"><a href="/libraries/vision2/reference/interface/kernel/ev_application_chart.html">EV_APPLICATION</a></SPAN> 
+        as a client
+        is as follows.</p>
+        <p>&nbsp;</p>
+        <P Class="code">
+        <SPAN CLASS="ekeyword">class</SPAN><BR>
+        &nbsp;&nbsp;&nbsp; <SPAN CLASS="eclass">HELLOWORLD_APP</SPAN><BR><BR>
+        <SPAN CLASS="ekeyword">create</SPAN><BR>
+        &nbsp;&nbsp;&nbsp; <SPAN CLASS="efeature">make</SPAN><BR><BR>
+        <SPAN CLASS="ekeyword">feature</SPAN><BR><BR>
+        &nbsp;&nbsp;&nbsp; <SPAN CLASS="efeature">make</SPAN><SPAN CLASS="ekeyword"> is</SPAN><BR>
+        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <SPAN CLASS="ecomment">-- Create
+        the Vision2 application with a helloworld window.</SPAN><BR>
+        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <SPAN CLASS="ekeyword">local</SPAN><BR>
+        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <SPAN CLASS="efeature">app</SPAN>: <SPAN CLASS="eclass" HREF="/libraries/vision2/reference/interface/kernel/ev_application_chart.html">EV_APPLICATION</SPAN><BR>
+        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+        <SPAN CLASS="efeature">helloworld_window</SPAN>: <SPAN CLASS="eclass" HREF="/libraries/vision2/reference/interface/widgets/containers/ev_titled_window_chart.html"> EV_TITLED_WINDOW</SPAN><BR>
+        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <SPAN CLASS="ekeyword">do</SPAN><BR>
+        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <SPAN CLASS="ekeyword">create</SPAN> 
+        <SPAN CLASS="efeature">app</SPAN><BR>
+        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <SPAN CLASS="ekeyword">create</SPAN> <SPAN CLASS="efeature">helloworld_window</SPAN><BR>
+        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <SPAN CLASS="efeature">helloworld_window.set_title</SPAN> (<SPAN CLASS="estring">&quot;Helloworld!&quot;</SPAN>)<BR>
+        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <SPAN CLASS="efeature">helloworld_window.close_request_actions.extend (~destroy)</SPAN><BR>
+        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <SPAN CLASS="efeature">app</SPAN>.<SPAN CLASS="efeature">launch</SPAN><BR>
+        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <SPAN CLASS="ekeyword">end</SPAN><BR><BR>
+        <SPAN CLASS="ekeyword">end</SPAN><BR>
+</P>
 			<P>
-			The Kernel cluster contains many of the fundamental building blocks used in a Vision2 application. The following classes are contained in this cluster:
-			<UL>
-				<LI><A HREF="/libraries/vision2/content/kernel/ev_accelerator.html">EV_ACCELERATOR</A> - Providing support for keyboard shortcuts in vision2 applications.
-				<LI><A HREF="/libraries/vision2/content/kernel/ev_any.html">EV_ANY</A> - A common ancestor for all vision2 classes.
-				<LI><A HREF="/libraries/vision2/content/kernel/ev_application.html">EV_APPLICATION</A> - 
-				<LI><A HREF="/libraries/vision2/content/kernel/ev_clipboard.html">EV_CLIPBOARD</A> - Providing access to the clipboard of the native operating system.
-				<LI><A HREF="/libraries/vision2/content/kernel/ev_color.html">EV_COLOR</A> - A vision2 representation of a color.
-				<LI><A HREF="/libraries/vision2/content/kernel/ev_coordinate.html">EV_COORDINATE</A> - A vision2 representation of a coordinate.
-				<LI><A HREF="/libraries/vision2/content/kernel/ev_cursor.html">EV_CURSOR</A>
-				<LI><A HREF="/libraries/vision2/content/kernel/ev_environment.html">EV_ENVIRONMENT</A> - Provides information about the current operating system environment.
-				<LI><A HREF="/libraries/vision2/content/kernel/ev_font.html">EV_FONT</A> - A vision2 representation of a font.
-				<LI><A HREF="/libraries/vision2/content/kernel/ev_key.html">EV_KEY</A> - A vision2 representation of a key.
-				<LI><A HREF="/libraries/vision2/content/kernel/ev_rectangle.html">EV_RECTANGLE</A> - A vision2 representation of a rectangle.
-				<LI><A HREF="/libraries/vision2/content/kernel/ev_screen.html">EV_SCREEN</A> - Provides access to the screen.
-				<LI><A HREF="/libraries/vision2/content/kernel/ev_simple_application.html">EV_SIMPLE_APPLICATION</A>
-				<LI><A HREF="/libraries/vision2/content/kernel/ev_timeout.html">EV_TIMEOUT</A> - Provides simple timing facilities.
-			</UL>
-			<P>
-			<P>Click <A HREF="/libraries/vision2/reference/interface/kernel/index.html">here</A> to browse the kernel cluster.</P>
+            &nbsp;<P>Both these examples are creating an EV_TITLED_WINDOW that
+        has the title `Helloworld!'.
+			<H2>Launching the application</H2>
+			In vision2, to launch an application means to pass control to the underlying
+        graphical toolkit. Simply creating an application does not launch it. An explicit call to <A CLASS="eclass" HREF="/libraries/vision2/reference/interface/kernel/ev_application.html#f_launch">launch</A> is required
+			for the event processing to begin.
+			<P CLASS="note"><B>Note: </B>A vision2 system is an event based system. This means that you do not have control of the execution within a vision2 system, but must respond appropriately to <A HREF="/libraries/vision2/content/events/index.html">events</A> as they occur. Therefore, if you call launch on
+			an <A CLASS="eclass" HREF="/libraries/vision2/reference/interface/kernel/ev_application_chart.html">EV_APPLICATION</A>, the processing for the application will continue indefinitely unless you have provided a
+            way to exit the application. It is essential to initialize your components
+			correctly, so your application can be exited (call <A CLASS="eclass" HREF="/libraries/vision2/reference/interface/kernel/ev_application.html#f_destroy">destroy</A> on the application).
+			</P>
+
+			<P CLASS="seealso"><B>See Also</B><BR><A HREF="/libraries/vision2/content/kernel/ev_environment.html">EV_ENVIRONMENT</A><BR></P>			 
+
 	</BODY>
 </HTML>

@@ -234,6 +234,7 @@ feature {NONE} -- Implementation
 			check
 				valid_external_call_2: a_boolean
 			end
+			cwin_close_handle (process_info.thread_handle)
 			cwin_close_handle (process_info.process_handle)
 			if last_process_result = cwin_still_active then
 				terminated := cwin_terminate_process (process_info.process_handle, 0)

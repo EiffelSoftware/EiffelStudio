@@ -647,13 +647,13 @@ feature -- Delegated features
 			)
 		end
 		
-	internal_enable_drag is
+	internal_enable_dockable is
 			-- Platform specific implementation of `enable_drag'.
 			-- Does nothing in this implementation.
 		do
 		end
 		
-	internal_disable_drag is
+	internal_disable_dockable is
 			-- Platform specific implementation of `disable_drag'.
 			-- Does nothing in this implementation.
 		do

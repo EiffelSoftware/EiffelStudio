@@ -24,7 +24,7 @@ inherit
 			hide, set_pebble, create_drop_actions, real_pointed_target,
 			set_actual_drop_target_agent, has_parent, parent_is_sensitive,
 			internal_set_pointer_style, widget_imp_at_pointer_position,
-			pnd_screen, internal_enable_drag, internal_disable_drag
+			pnd_screen, internal_enable_dockable, internal_disable_dockable
 		redefine
 			interface, initialize,
 			read_from_named_file, 

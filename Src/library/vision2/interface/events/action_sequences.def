@@ -10,7 +10,7 @@ ev_notify: for general notify events with no parameters;
 
 ev_pointer_button: for mouse button up/down events; x: INTEGER; y: INTEGER; button: INTEGER; x_tilt: DOUBLE; y_tilt: DOUBLE; pressure: DOUBLE; screen_x: INTEGER; screen_y: INTEGER
 
-ev_pointer_button_left_press = ev_pointer_button (-,-,=1,-,-,>=0.5,-,-): for left mouse button down events
+#ev_pointer_button_left_press = ev_pointer_button (-,-,=1,-,-,>=0.5,-,-): for left mouse button down events
 
 ev_pointer_motion: for mouse movement events; x: INTEGER; y: INTEGER; x_tilt: DOUBLE; y_tilt: DOUBLE; pressure: DOUBLE; screen_x: INTEGER; screen_y: INTEGER
 

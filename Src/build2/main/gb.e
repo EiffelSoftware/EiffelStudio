@@ -50,6 +50,11 @@ inherit
 		undefine
 			default_create, copy
 		end
+		
+	GB_SHARED_STATUS_BAR
+		undefine
+			default_create, copy
+		end
 
 create
 	execute
@@ -115,6 +120,22 @@ feature {NONE} -- Initialization
 			Precursor {EV_APPLICATION}
 			-- Any General initialization can be added here.
 			-- This will be executed before the program is launched.
+			pnd_motion_actions.extend (agent display_object)
+			cancel_actions.extend (agent clear_status)
 		end
 		
+	display_object (an_x, a_y: INTEGER; a_target: EV_ABSTRACT_PICK_AND_DROPABLE) is
+			-- Clear status bar if `a_target' is Void.
+		do
+			if a_target = Void then
+				clear_status_bar
+			end
+		end
+		
+	clear_status (a: ANY) is
+			-- Clear `status_bar'.
+		do
+			clear_status_bar
+		end
+
 end

@@ -1,3 +1,14 @@
+/**********************************************************************************
+ *  You can execute the daemon in the following ways:
+ *    1. executable  
+ *    2. executable  port_number_for_the_daemon 
+ *    3. executable  port_number_for_the_daemon  time_of_daemon_waiting_for_a_child
+ *  The Unit of waiting time is SECOND, if the corresponding values are not
+ *  specified, system will use the default values for them. The waiting time is not 
+ *  used in the Windows environment.
+ *  The default value for port number is: SCOOP_DOG_PORT
+ *  The default value for waiting time is: constant_time_of_daemon_waiting_child
+ **********************************************************************************/
 
 #include "dog.h"
 
@@ -43,6 +54,8 @@ main(int argc, char ** argv, char ** envp)
 	WSADATA wsaData;
 	int err;
 	HANDLE hCurrentProc;
+#else
+	int time_of_daemon_waiting_child; /* Not used for Windows */
 #endif
 
 	EIF_INTEGER para_num;
@@ -87,10 +100,25 @@ main(int argc, char ** argv, char ** envp)
 	setbuf(stdout,0);
 	setbuf(stderr,0);
 */
-	if (argc > 1)
-		myportnum = atoi(argv[1]);
-	else
-		myportnum = SCOOP_DOG_PORT;
+#ifdef EIF_WIN32
+#else
+	time_of_daemon_waiting_child = constant_time_of_daemon_waiting_child;
+#endif
+	switch (argc) {
+		case 1:
+			myportnum = SCOOP_DOG_PORT;
+			break;
+		case 2:
+			myportnum = atoi(argv[1]);
+			break;
+		default:
+			myportnum = atoi(argv[1]);
+#ifdef EIF_WIN32
+#else
+			time_of_daemon_waiting_child = atoi(argv[2]);
+#endif
+			break;
+	}
 
 	/* Create socket from which to receive requests */
 	sock=socket(AF_INET,SOCK_STREAM,0);
@@ -574,7 +602,7 @@ errno = 0;
 #else
 			wait_sig_from_child = 1;
 			for(; !child_set_up;) {
-				sleep(constant_time_of_daemon_waiting_child);
+				sleep(time_of_daemon_waiting_child);
 				if (!has_got_a_chd_signal)
 				/* means: time out for the sleep but no signal arrived */
 					break;
@@ -594,7 +622,7 @@ errno = 0;
 					j = kill(child, SIGKILL);					
 					j = dog_send_command(csock, REPORT_ERROR, 1);
 					int_val = c_get_host_name(hostname, HOSTNAME_LEN); 
-					sprintf(message, "DAEMON Detected Crash Happened: separate object `%s' on host <%s> \nError Message:\n    Child separate object did not response to the daemon for at leat %d seconds\n-- sometime the short of system resources(memory, file descriptore etc)\nwould cause the error.", descriptor[index][4], hostname, constant_time_of_daemon_waiting_child);
+					sprintf(message, "DAEMON Detected Crash Happened: separate object `%s' on host <%s> \nError Message:\n    Child separate object did not response to the daemon for at leat %d seconds\n-- sometime the short of system resources(memory, file descriptore etc)\nwould cause the error.", descriptor[index][4], hostname, time_of_daemon_waiting_child);
 					p_len  = strlen(message);
 					p_type = STRING_TYPE;
 					j = dog_send_data(csock, &p_type, message, &p_len);

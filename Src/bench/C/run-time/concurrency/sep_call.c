@@ -20,9 +20,9 @@
  * late part(in "default" clause of "switch").
 */
 
-#define is_sep_obj(ref) eif_type_id("SEP_OBJ")==Dtype(ref)
+#define is_sep_obj(ref) scount == Dtype(ref)
 
-/*#define DEBUG 3/**/
+#define DEBUG 0/**/
 #define dprintf(n)	if (DEBUG & n) printf
 
 rt_private int locate_from_cecil(object, name)

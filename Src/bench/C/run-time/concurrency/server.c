@@ -199,22 +199,10 @@ EIF_OBJ  create_child() {
  * in "wait_sep_child_obj".
 */
 	EIF_REFERENCE ret;
-	EIF_INTEGER sep_obj_id;
-	EIF_PROC c_make_without_connection;
 
-	sep_obj_id = eif_type_id("SEP_OBJ");
-	c_make_without_connection = eif_proc("make_without_connection", sep_obj_id);
-#ifdef SEP_OBJ
-	if (sep_obj_id < 0 || !c_make_without_connection) {
-		add_nl;
-		sprintf(crash_info, "    %d How can type_id(SEP_OBJ) = %d and make_without_connection = %x!", _concur_pid, sep_obj_id, c_make_without_connection);
-		c_raise_concur_exception(exception_sep_obj_not_visible);
-	}
-#endif
-	ret = eif_create(sep_obj_id);
-	(c_make_without_connection)(eif_access(ret), -1);
-
-	return eif_wean(ret);
+	ret = sep_obj_create();
+	sep_obj_make_without_connection(ret, -1);
+	return ret;
 		
 }
 
@@ -235,9 +223,6 @@ EIF_INTEGER o_id;
  * located on the local processor or not.
 */
 	EIF_REFERENCE ret;
-	EIF_INTEGER sep_obj_id;
-	EIF_PROC c_make_without_connection, c_make, c_set_host_port, c_set_sock, c_set_proxy_id;
-
 
 	EIF_INTEGER command_bak;
 	EIF_INTEGER para_num_bak;
@@ -269,37 +254,24 @@ printf("******** The object(%s, %d, %d) has been imported before.!\n", c_get_nam
 		 * depend on if the imported object is a local object or an 
 		 * object on another processor.
 		*/
-		sep_obj_id = eif_type_id("SEP_OBJ");
-#ifdef SEP_OBJ
-	if (sep_obj_id <= 0) {
-		add_nl;
-		sprintf(crash_info, "    %d How can type_id(SEP_OBJ) = %d !", _concur_pid, sep_obj_id);
-		c_raise_concur_exception(exception_sep_obj_not_visible);
-	}
-#endif
-		ret = eif_create(sep_obj_id);
-		proxy_id = eif_general_object_id(ret); /* register an OID first */
+		ret = henter(sep_obj_create());
+		proxy_id = eif_general_object_id((ret)); /* register an OID first */
 		insert_into_imported_object_table(hostn, port, o_id, proxy_id);		
 		/* record the separate object's information in IMPORTED OBJECT TABLE */
 
-		c_make_without_connection = eif_proc("make_without_connection", sep_obj_id);
-		c_make = eif_proc("make", sep_obj_id);	
-		c_set_host_port = eif_proc("set_host_port", sep_obj_id);
-		c_set_sock = eif_proc("set_sock", sep_obj_id);
-		c_set_proxy_id = eif_proc("set_proxy_id", sep_obj_id);
-		(c_set_proxy_id)(eif_access(ret), proxy_id);
+		set_proxy_id(eif_access(ret), proxy_id);
 		if (hostn == _concur_hostaddr && port == _concur_pid ) {
 		/* the object is actually a local object */
-			(c_make_without_connection)(eif_access(ret), o_id);
-			(c_set_host_port)(eif_access(ret), hostn, port);
+			sep_obj_make_without_connection(eif_access(ret), o_id);
+			set_host_port(eif_access(ret), hostn, port);
 			/* initialize the SEP_OBJ proxy. At this time, its sock is negative. */
 			if (exist_in_server_list(hostn, port))  {
 				sock = get_sock_from_server_list(hostn, port);
-				(c_set_sock)(eif_access(ret), sock);
+				set_sock(eif_access(ret), sock);
 			}
 			else {
 			/* insert a node into SERVER LIST */
-				sock = eif_field(eif_access(ret), "sock", EIF_INTEGER);
+				sock = sep_obj_sock(eif_access(ret));
 				add_to_server_list(hostn, port, sock);
 			}
 			change_ref_table_and_exported_obj_list(_concur_hostaddr, _concur_pid, o_id, 1); 
@@ -313,14 +285,14 @@ printf("******** The object(%s, %d, %d) has been imported before.!\n", c_get_nam
 		else {
 		/* the object resides on another processor */
 			if (exist_in_server_list(hostn, port)) {
-				(c_make_without_connection)(eif_access(ret), o_id);
-				(c_set_host_port)(eif_access(ret), hostn, port);
+				sep_obj_make_without_connection(eif_access(ret), o_id);
+				set_host_port(eif_access(ret), hostn, port);
 				sock = get_sock_from_server_list(hostn, port);
-				(c_set_sock)(eif_access(ret), sock);
+				set_sock(eif_access(ret), sock);
 			}
 			else {
-				(c_make)(eif_access(ret), hostn, port, o_id);	
-				sock = eif_field(eif_access(ret), "sock", EIF_INTEGER);
+				sep_obj_make(eif_access(ret), hostn, port, o_id);	
+				sock = sep_obj_sock(eif_access(ret));
 				add_to_server_list(hostn, port, sock);
 			}
 			
@@ -416,7 +388,7 @@ EIF_OBJ sep_obj;
 	}
 	_concur_command = constant_reserve;
 	_concur_para_num = 0;
-	sock = eif_field((sep_obj), "sock", EIF_INTEGER);
+	sock = sep_obj_sock(sep_obj);
 	send_command(sock);
 	get_cmd_data(sock);
 	if (_concur_command == constant_reserve_ack) 	
@@ -445,7 +417,7 @@ EIF_OBJ sep_obj;
 		return;
 	_concur_command = constant_end_of_request;
 	_concur_para_num = 0;
-	sock = eif_field((sep_obj), "sock", EIF_INTEGER);
+	sock = sep_obj_sock(sep_obj);
 	send_command(sock);
 
 	return;
@@ -693,8 +665,8 @@ EIF_INTEGER s;
 			memcpy(&tmp_read_mask, &_concur_mask, sizeof(fd_set));
 			memcpy(&tmp_except_mask, &_concur_mask, sizeof(fd_set));
 			c_concur_select(ready_nb, _concur_mask_limit.up+1, &tmp_read_mask, NULL, &tmp_except_mask, -1, 0);
-			if (!_concur_is_creating_sep_child) 
 #ifndef STOP_GC
+			if (!_concur_is_creating_sep_child) 
 #ifdef GC_ON_CPU_TIME
 				if (c_wait_time() >= constant_cpu_period) {
 #else
@@ -1090,15 +1062,15 @@ EIF_INTEGER s;
 					has_sep_obj = 1;
 					/* to send the separate object's HOST ADDRESS: length and value */
 					fill_buf_with_int(s, send_buf, send_data_len, constant_sizeofint);
-					tmp_len = eif_field(eif_access(_concur_paras[tmp].uval.s_obj), "hostaddr", EIF_INTEGER);
+					tmp_len = sep_obj_host(eif_access(_concur_paras[tmp].uval.s_obj));
 					fill_buf_with_int(s, send_buf, send_data_len, tmp_len);
 					/* to send the separate object's PID: length and value */
 					fill_buf_with_int(s, send_buf, send_data_len, constant_sizeofint);
-					tmp_len = eif_field(eif_access(_concur_paras[tmp].uval.s_obj), "pid", EIF_INTEGER);
+					tmp_len = sep_obj_port(eif_access(_concur_paras[tmp].uval.s_obj));
 					fill_buf_with_int(s, send_buf, send_data_len, tmp_len);
 					/* to send the separate object's OID: length and value */
 					fill_buf_with_int(s, send_buf, send_data_len, constant_sizeofint);
-					tmp_len = eif_field(eif_access(_concur_paras[tmp].uval.s_obj), "oid", EIF_INTEGER);
+					tmp_len = sep_obj_oid(eif_access(_concur_paras[tmp].uval.s_obj));
 					fill_buf_with_int(s, send_buf, send_data_len, tmp_len);
 
 					tmp_str = eif_wean(_concur_paras[tmp].uval.s_obj);
@@ -1395,8 +1367,6 @@ EIF_INTEGER port;
 */
 
     EIF_REFERENCE ret;
-    EIF_INTEGER sep_obj_id;
-    EIF_PROC c_make_without_connection, c_make, c_set_host_port, c_set_sock, c_set_proxy_id, c_set_oid;
 	EIF_INTEGER hostaddr;
 
 
@@ -1424,30 +1394,22 @@ print_ref_table_and_exported_object();
             /* return unprotected address of the proxy */
         }
 
-        sep_obj_id = eif_type_id("SEP_OBJ");
-        ret = eif_create(sep_obj_id); /* create a proxy */
-        proxy_id = eif_general_object_id(ret);/* get OID for the proxy */
+        ret = henter(sep_obj_create()); /* create a proxy */
+        proxy_id = eif_general_object_id((ret));/* get OID for the proxy */
 
-        c_make_without_connection = eif_proc("make_without_connection", sep_obj_id);
-        c_make = eif_proc("make", sep_obj_id);
-        c_set_host_port = eif_proc("set_host_port", sep_obj_id);
-        c_set_sock = eif_proc("set_sock", sep_obj_id);
-        c_set_proxy_id = eif_proc("set_proxy_id", sep_obj_id);
-        c_set_oid = eif_proc("set_oid", sep_obj_id);
-
-        (c_set_proxy_id)(eif_access(ret), proxy_id);
+        set_proxy_id(eif_access(ret), proxy_id);
 
 		/* set up the network connection to the remote server */
         if (exist_in_server_list(hostaddr, port)) {
 		/* if there is a connection to the remote server, use it */
-            (c_make_without_connection)(eif_access(ret), constant_root_oid);
-            (c_set_host_port)(eif_access(ret), hostaddr, port);
+            sep_obj_make_without_connection(eif_access(ret), constant_root_oid);
+            set_host_port(eif_access(ret), hostaddr, port);
             sock = get_sock_from_server_list(hostaddr, port);
-            (c_set_sock)(eif_access(ret), sock);
+            set_sock(eif_access(ret), sock);
         }
         else {
-            (c_make)(eif_access(ret), hostaddr, port, constant_root_oid);
-            sock = eif_field(eif_access(ret), "sock", EIF_INTEGER);
+            sep_obj_make(eif_access(ret), hostaddr, port, constant_root_oid);
+            sock = sep_obj_sock(eif_access(ret));
             add_to_server_list(hostaddr, port, sock);
         }
 
@@ -1485,7 +1447,7 @@ print_ref_table_and_exported_object();
 		 * that function get_proxy_oid_of_imported_object() can
 		 * distinguish it.
 		*/ 
-        (c_set_oid)(eif_access(ret), -real_root_oid);
+        set_oid(eif_access(ret), -real_root_oid);
 		insert_into_imported_object_table(hostaddr, port, -real_root_oid, proxy_id);		
 
         free_parameter_array(_concur_paras, _concur_paras_size);
@@ -1503,7 +1465,6 @@ EIF_OBJ remote_server_by_index(idx)
 EIF_INTEGER idx;
 {
 /* create a SEP_OBJ proxy for a remote server, and return DIRECT address. */
-	EIF_TYPE_ID sep_obj_id;
 	char *tmp_str;
 	EIF_REFERENCE my_str;
 	EIF_REFERENCE my_sep_obj;
@@ -1523,7 +1484,6 @@ char *name;
 {
 /* create a SEP_OBJ proxy for a remote server, and return DIRECT address. */
 	int idx;
-	EIF_TYPE_ID sep_obj_id;
 	char *tmp_str;
 	EIF_REFERENCE my_str;
 	EIF_REFERENCE my_sep_obj;
@@ -1653,8 +1613,6 @@ EIF_OBJ direct_sep;
  * (don't keep them waitting too long) if any.
 */
 	CLIENT *recv=NULL, *child=NULL;
-	EIF_INTEGER sep_obj_id;
-	EIF_PROC c_set_oid, c_set_host_port, c_set_sock, c_set_proxy_id;
 	EIF_REFERENCE sep;
 	EIF_INTEGER proxy_id;
 
@@ -1665,11 +1623,6 @@ EIF_OBJ direct_sep;
 	EIF_INTEGER new_sock;
 
 	sep = henter(direct_sep);
-	sep_obj_id = eif_type_id("SEP_OBJ");
-	c_set_host_port = eif_proc("set_host_port", sep_obj_id);	
-	c_set_sock = eif_proc("set_sock", sep_obj_id);	
-	c_set_oid = eif_proc("set_oid", sep_obj_id);	
-	c_set_proxy_id = eif_proc("set_proxy_id", sep_obj_id);
 
 	for(_concur_command=constant_not_defined; _concur_command!=constant_sep_child_info; ) {
 		_concur_command = constant_not_defined;
@@ -1850,10 +1803,10 @@ EIF_OBJ direct_sep;
 				child->hostaddr = CURGI(0);
 				child->pid = CURGI(1);
 				
-				(c_set_host_port)(eif_access(sep), CURGI(0), CURGI(1));
-				(c_set_oid)(eif_access(sep), CURGI(2));
+				set_host_port(eif_access(sep), CURGI(0), CURGI(1));
+				set_oid(eif_access(sep), CURGI(2));
 				proxy_id = eif_general_object_id(sep);
-				(c_set_proxy_id)(eif_access(sep), proxy_id);
+				set_proxy_id(eif_access(sep), proxy_id);
 				insert_into_imported_object_table(CURGI(0), CURGI(1), CURGI(2), proxy_id);
 				break;
 			default:
@@ -1864,7 +1817,7 @@ EIF_OBJ direct_sep;
 		
 	}
 	new_sock = c_concur_make_client(CURGI(1), CURGI(0));
-	(c_set_sock)(eif_access(sep), new_sock);
+	set_sock(eif_access(sep), new_sock);
 	add_to_server_list(CURGI(0), CURGI(1), new_sock);	
 	to_register(constant_register_first_from_parent, new_sock, _concur_hostaddr, _concur_pid, CURGI(2));
 

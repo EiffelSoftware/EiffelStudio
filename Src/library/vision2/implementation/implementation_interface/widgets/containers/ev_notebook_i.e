@@ -12,25 +12,31 @@ deferred class
 inherit
 	EV_CONTAINER_I	
 	
-feature -- Constants
-	
-	Pos_left, Pos_right, Pos_top, Pos_bottom: INTEGER is unique
-
 feature -- Status report
 
 	count: INTEGER is
 			-- Number of pages in the notebook
+		require
+			exists: not destroyed
 		deferred
 		end
 
 	current_page: INTEGER is
 			-- Index of the page currently opened
+		require
+			exists: not destroyed
 		deferred
 		end
 
-	tab_position: STRING is
+--	tab_position: STRING is
+	tab_position: INTEGER is
 			-- Position of the tabs
+		require
+			exists: not destroyed
 		deferred
+		ensure
+			correct_pos: Result = Tab_left or Result = Tab_right 
+						or Result = Tab_bottom or Result = Tab_top
 		end
 
 feature -- Status setting
@@ -39,8 +45,8 @@ feature -- Status setting
 			-- set position of tabs (left, right, top or bottom)
 		require
 			exists: not destroyed		
-			correct_pos: pos = Pos_left or pos = Pos_right 
-						or pos = Pos_bottom or pos = Pos_top
+			correct_pos: pos = Tab_left or pos = Tab_right 
+						or pos = Tab_bottom or pos = Tab_top
 		deferred
 		end
 
@@ -64,12 +70,26 @@ feature -- Element change
 		end
 	
 	append_page (c: EV_WIDGET_I; label: STRING) is
-		-- New page for notebook containing child 'c' with tab 
-		-- label 'label
+			-- New page for notebook containing child 'c' with tab 
+			-- label 'label
 		require
 			exists: not destroyed		
 		deferred
 		end
+
+feature -- Miscellaneous - Constants
+	
+	Tab_left: INTEGER is 1
+			-- Constant used to position tab on the left.
+
+	Tab_right: INTEGER is 2
+			-- Constant used to position tab on the right.
+
+	Tab_top: INTEGER is 3
+			-- Constant used to position tab at the top.
+
+	Tab_bottom: INTEGER is 4
+			-- Constant used to position tab at the bottom.
 
 feature -- Event - command association
 	

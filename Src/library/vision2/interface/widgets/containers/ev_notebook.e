@@ -45,14 +45,13 @@ feature -- Status report
 			Result := implementation.current_page
 		end
 
-	tab_position: STRING is
+	tab_position: INTEGER is
 			-- Position of the tabs.
-			-- "left" for left position.
-			-- "right" for right position.
-			-- "top" for top position.
-			-- "bottom" for bottom position.
 		do
 			Result := implementation.tab_position
+		ensure
+			correct_pos: Result = Tab_left or Result = Tab_right 
+				or Result = Tab_bottom or Result = Tab_top
 		end
 
 feature -- Status setting
@@ -63,7 +62,9 @@ feature -- Status setting
 		require
 			exists: not destroyed		
 		do
-			implementation.set_tab_position (implementation.Pos_top)
+			implementation.set_tab_position (Tab_top)
+		ensure
+			position_set: tab_position = Tab_top
 		end
 
 	set_tab_bottom is
@@ -71,7 +72,9 @@ feature -- Status setting
 		require
 			exists: not destroyed		
 		do
-			implementation.set_tab_position (implementation.Pos_bottom)
+			implementation.set_tab_position (Tab_bottom)
+		ensure
+			position_set: tab_position = Tab_bottom
 		end
 
 	set_tab_left is
@@ -79,7 +82,9 @@ feature -- Status setting
 		require
 			exists: not destroyed		
 		do
-			implementation.set_tab_position (implementation.Pos_left)
+			implementation.set_tab_position (Tab_left)
+		ensure
+			position_set: tab_position = Tab_left
 		end
 
 	set_tab_right is
@@ -87,7 +92,9 @@ feature -- Status setting
 		require
 			exists: not destroyed		
 		do
-			implementation.set_tab_position (implementation.Pos_right)
+			implementation.set_tab_position (Tab_right)
+		ensure
+			position_set: tab_position = Tab_right
 		end
 
 	set_current_page (index: INTEGER) is
@@ -119,6 +126,32 @@ feature -- Element change
 			child_of_notebook: c.parent = Current
 		do
 			implementation.append_page (c.implementation, label)
+		end
+
+feature -- Miscellaneous - Constants
+	
+	Tab_left: INTEGER is
+			-- Value used to position tab on the left.
+		do
+			Result := implementation.Tab_left
+		end
+
+	Tab_right: INTEGER is
+			-- Value used to position tab on the right.
+		do
+			Result := implementation.Tab_right
+		end
+
+	Tab_top: INTEGER is
+			-- Value used to position tab at the top.
+		do
+			Result := implementation.Tab_top
+		end
+
+	Tab_bottom: INTEGER is
+			-- Value used to position tab at the bottom.
+		do
+			Result := implementation.Tab_bottom
 		end
 
 feature -- Event - command association

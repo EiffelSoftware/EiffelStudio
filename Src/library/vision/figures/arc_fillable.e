@@ -1,8 +1,6 @@
-
--- ARC_FILLABLE: Fillable arc (slice,...).
-
 indexing
 
+	description: "Fillable arc (slice,...)";
 	status: "See notice at end of class";
 	date: "$Date$";
 	revision: "$Revision$"

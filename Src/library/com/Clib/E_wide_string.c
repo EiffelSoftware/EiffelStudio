@@ -47,7 +47,7 @@ EIF_REFERENCE ccom_wide_str_to_string (WCHAR * wide_string)
   string = (char *)malloc(size + 1);
 
   wcstombs (string, wide_string, size_wide + 1);
-  local_obj = henter(RTMS(string));
+  local_obj = henter(eif_string(string));
   free (string);
   return eif_wean (local_obj);
 }

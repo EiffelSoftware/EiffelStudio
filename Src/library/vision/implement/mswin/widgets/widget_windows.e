@@ -549,7 +549,9 @@ feature -- Status setting
 				wel_release_capture
 			end;
 			if grabbed_cursor_implementation.item /= Void then
-				grabbed_cursor_implementation.item.restore_previous
+				if grabbed_cursor_implementation.item.previous_cursor /= Void then
+					grabbed_cursor_implementation.item.restore_previous
+				end
 				grabbed_cursor_implementation.replace (Void)
 			end
 		end;
@@ -617,6 +619,13 @@ feature -- Element change
 				right_button_click_actions.add (Current, a_command, argument)
 			end
 		end;
+
+	add_resize_action (a_command: COMMAND; argument: ANY) is
+			-- Add `a_command' to the list of actions to execute when the
+			-- window resizes or moves.
+		do
+			resize_actions.add (Current, a_command, argument)
+		end			
 
 	add_enter_action (a_command: COMMAND; argument: ANY) is
 			-- Add `a_command' to the list of actions to execute when the
@@ -732,6 +741,13 @@ feature -- Removal
 				right_button_motion_actions.remove (Current, a_command, argument)
 			end
 		end;
+
+	remove_resize_action (command: COMMAND; arg: ANY) is
+			-- Remove `a_command' with `argument' from the list of action
+			-- to be executed when current area is resized.
+		do
+			resize_actions.remove (Current, command, arg)
+		end
 
 	remove_button_press_action (number: INTEGER; a_command: COMMAND; argument: ANY) is
 			-- Remove a_command to the list of actions to execute when the
@@ -863,11 +879,13 @@ feature -- Removal
 				end
 			end;
 			if translation.other_action then
-				if translation.special_translation_number <= 3 then
-					tw ?= Current;
-					if tw /= Void then
-						tw.add_resize_action (translation, argument)
-					end
+				if translation.configure_action then
+						add_resize_action (translation, argument)
+--elseif translation.special_translation_number <= 3 then
+--	tw ?= Current;
+--	if tw /= Void then
+--		tw.add_resize_action (translation, argument)
+--	end
 				end
 			end
 		end;
@@ -1066,6 +1084,28 @@ feature -- Implementation
 
 feature {NONE} -- Implementation
 
+	on_size (size_type, a_width, a_height: INTEGER) is
+			-- Wm_size message
+			-- See class WEL_SIZE_CONSTANTS for `size_type' value
+		require
+			exists: exists
+		do
+			resize_actions.execute (Current, Void)
+		end
+
+	on_move (x_pos, y_pos: INTEGER) is
+			-- Wm_move message.
+			-- This message is sent after a window has been moved.
+			-- `x_pos' specifies the x-coordinate of the upper-left
+			-- corner of the client area of the window.
+			-- `y_pos' specifies the y-coordinate of the upper-left
+			-- corner of the client area of the window.
+		require
+			exists: exists
+		do
+			resize_actions.execute (Current, Void)
+		end
+
 	on_vision_mouse_move (keys, x_pos, y_pos: INTEGER) is
 			-- EiffelVision mouse move event
 		local
@@ -1136,23 +1176,13 @@ feature {NONE} -- Implementation
 	on_mouse_move (keys, x_pos, y_pos: INTEGER) is
 			-- Wm_mousemove message
 		do
-			if flag_set (keys, Mk_lbutton) or 
-			flag_set (keys, Mk_mbutton) or 
-			flag_set (Keys, Mk_rbutton) then
-				--if left_button_down_widget /= Void then
-				if flag_set (keys, Mk_lbutton) then
+			on_vision_mouse_enter
+			if flag_set (keys, Mk_lbutton) then
 					on_lbutton_move (keys, x_pos, y_pos)
-				end;
-				if flag_set (keys, Mk_mbutton) then
-				--if middle_button_down_widget /= Void then
+			elseif flag_set (keys, Mk_mbutton) then
 					on_mbutton_move (keys, x_pos, y_pos)
-				end;
-				if flag_set (keys, Mk_rbutton) then
-				--if right_button_down_widget /= Void then
+			elseif flag_set (keys, Mk_rbutton) then
 					on_rbutton_move (keys, x_pos, y_pos)
-				end;
-			else
-				on_vision_mouse_enter
 			end
 			on_vision_mouse_move (keys, x_pos, y_pos)
 		end;
@@ -1171,8 +1201,8 @@ feature {NONE} -- Implementation
 			e_x := wp.x
 			e_y := wp.y
 			!! cd.make (widget_oui, x_pos, y_pos, e_x, e_y, buttons_state)
---			left_button_motion_actions.execute (Current, cd)
-			left_button_motion_actions.execute (left_button_down_widget, cd)
+			left_button_motion_actions.execute (Current, cd)
+			--left_button_motion_actions.execute (left_button_down_widget, cd)
 		end;
 
 	on_mbutton_move (keys, x_pos, y_pos: INTEGER) is
@@ -1189,7 +1219,7 @@ feature {NONE} -- Implementation
 			e_x := wp.x
 			e_y := wp.y
 			!! cd.make (widget_oui, x_pos, y_pos, e_x, e_y, buttons_state)
-			middle_button_motion_actions.execute (middle_button_down_widget, cd)
+			middle_button_motion_actions.execute (Current, cd)
 		end;
 
 	on_rbutton_move (keys, x_pos, y_pos: INTEGER) is
@@ -1206,8 +1236,8 @@ feature {NONE} -- Implementation
 			e_x := wp.x
 			e_y := wp.y
 			!! cd.make (widget_oui, x_pos, y_pos, e_x, e_y, buttons_state)
---			right_button_motion_actions.execute (Current, cd)
-			right_button_motion_actions.execute (right_button_down_widget, cd)
+			right_button_motion_actions.execute (Current, cd)
+			--right_button_motion_actions.execute (right_button_down_widget, cd)
 		end;
 
 	on_left_button_down (keys, a_x, a_y: INTEGER) is
@@ -1253,8 +1283,8 @@ feature {NONE} -- Implementation
 			left_button_down_widget_implementation.replace (void);
 			!! k.make_from_mouse_state (keys)
 			!! cd.make (owner, a_x, a_y, e_x, e_y, 1, buttons_state, k);
-			left_button_release_actions.execute (w, cd)
---			left_button_release_actions.execute (Current, cd)
+			--left_button_release_actions.execute (w, cd)
+			left_button_release_actions.execute (Current, cd)
 		end;
 
 	on_right_button_down (keys, a_x, a_y: INTEGER) is
@@ -1303,8 +1333,8 @@ feature {NONE} -- Implementation
 				right_button_click_actions.execute (Current, cd)
 			end
 			right_button_down_widget_implementation.replace (void);
---			right_button_release_actions.execute (Current, cd)
-			right_button_release_actions.execute (w, cd)
+			right_button_release_actions.execute (Current, cd)
+			--right_button_release_actions.execute (w, cd)
 		end;
 
 	on_key_down (code, flags: INTEGER) is
@@ -1355,7 +1385,7 @@ feature {NONE} -- Implementation
 			if scw /= Void then
 				scw.set
 				Result := true
-				disable_default_processing
+				--disable_default_processing
 			else
 				scw := screen_cursor
 				if scw /= Void then
@@ -1367,7 +1397,7 @@ feature {NONE} -- Implementation
 					if scw /= Void then
 						scw.set
 						Result := true
-						disable_default_processing
+						--disable_default_processing
 					end
 				end
 			end

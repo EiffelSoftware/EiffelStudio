@@ -40,6 +40,7 @@ inherit
 			insert_item as wel_insert_item,
 			set_limit_text as set_text_limit
 		undefine
+			window_process_message,
 			remove_command,
 			set_width,
 			set_height,
@@ -164,8 +165,11 @@ feature -- Status setting
 			-- Called after creation. Set the current size and
 			-- notify the parent.
 		do
-			set_minimum_height (22)
-			set_minimum_width (30)
+			internal_set_minimum_height (22)
+			internal_set_minimum_width (30)
+			if parent_imp /= Void then
+				notify_change (1 + 2)
+			end
 		end
 
 	select_item (index: INTEGER) is
@@ -326,7 +330,7 @@ feature {NONE} -- Implementation
 			if is_editable then
 				par_imp ?= parent_imp
 				wel_destroy
-  				internal_window_make (par_imp, void, default_style + Cbs_dropdownlist,
+  				internal_window_make (par_imp, Void, default_style + Cbs_dropdownlist,
 					0, 0, 0, 90, 0, default_pointer)
  	 			id := 0
 				internal_copy_list --(temp_list)
@@ -341,7 +345,7 @@ feature {NONE} -- Implementation
 			if not is_editable then
 				par_imp ?= parent_imp
 				wel_destroy
-  				internal_window_make (par_imp, void, default_style + Cbs_dropdown,
+  				internal_window_make (par_imp, Void, default_style + Cbs_dropdown,
 					0, 0, 0, 90, 0, default_pointer)
  	 			id := 0
 				internal_copy_list --(temp_list)

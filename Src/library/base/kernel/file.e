@@ -355,7 +355,7 @@ feature -- Status report
 			external_name: ANY
 		do
 			external_name := name.to_c
-			Result := file_creatable ($external_name)
+			Result := file_creatable ($external_name, name.count)
 		end
 
 	is_plain: BOOLEAN is
@@ -1618,8 +1618,8 @@ feature {NONE} -- Implementation
 			"C | %"eif_file.h%""
 		end
 
-	file_creatable (f_name: POINTER): BOOLEAN is
-			-- Is `f_name' creatable.
+	file_creatable (f_name: POINTER; n: INTEGER): BOOLEAN is
+			-- Is `f_name' of count `n' creatable.
 		external
 			"C | %"eif_file.h%""
 		end

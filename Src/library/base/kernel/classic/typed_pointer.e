@@ -15,7 +15,7 @@ inherit
 		rename
 			item as pointer_item
 		export
-			{NONE} pointer_item
+			{TYPED_POINTER} pointer_item
 		end
 
 create

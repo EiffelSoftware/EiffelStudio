@@ -4,8 +4,27 @@ Eiffel Vision prerelease notes. 14-Feb-2000
 This document describes the current prerelease of Eiffel Vision and changes
 since the last version of 16-Nov-1999. 
 
-General Changes
-===============
+ Status
+ ------
+  A number of design changes are described below, implementation of these
+ changes is nearing completion with the GTK+ implementation slightly more
+ complete than the Win32. This prerelease is intended to give selected users a
+ preview of the library, it should be considered Alpha quality. Some widgets
+ from previous releases have been omitted pending their review but will be back
+ in coming releases.
+  Bug reports should be sent through the normal channels. If you have comments
+ or requests regarding the interface please send mail to Sam O'Connor
+ oconnor@eiffel.com
+
+ You will find the distribution archives at:
+ ftp://ftp.eiffel.com/deliv/vision_prerelease-180271
+
+ Please note the following:
+  - This directory name should not be publicized.
+  - The directory will be removed in a few days.
+  - Make sure to go directly to the given directory as you will
+    not be able to do an 'ls' on ftp/deliv.
+  - Remember use binary mode if transferring binary files.
 
  Creation
  --------
@@ -162,3 +181,6 @@ General Changes
    Contracts have been added and revised throughout the library. Where
   previously there were few invariants and postconditions now there are many.
   Preconditions have been added wherever possible.
+
+ End of file
+ -----------

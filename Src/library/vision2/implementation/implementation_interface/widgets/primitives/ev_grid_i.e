@@ -188,6 +188,8 @@ feature -- Status setting
 			-- Enable tree functionality for `Current'.
 		do
 			is_tree_enabled := True
+				-- The row offsets must always be computed when
+				-- in tree mode so when enabling it, recompute.
 			recompute_row_offsets (1)
 			redraw_client_area
 		ensure
@@ -798,6 +800,14 @@ feature -- Measurements
 				Result := internal_row_data.count
 			end
 		end
+		
+	visible_row_count: INTEGER is
+			-- Number of visible rows in `Current'. When `is_tree_enabled',
+			-- a number of rows may be within a collapsed parent row, so these
+			-- are ignored
+		do
+			Result := row_count - hidden_node_count
+		end
 
 feature {NONE} -- Implementation
 
@@ -996,6 +1006,19 @@ feature {EV_GRID_DRAWER_I, EV_GRID_COLUMN_I, EV_GRID_ROW_I, EV_DRAWABLE_GRID_ITE
 	header: EV_HEADER
 		-- Header displayed at top of `Current'.
 		
+	hidden_node_count: INTEGER
+		-- Total number of tree rows within `Current' that are not visible,
+		-- due to their parent row being collapsed. This is required for correctly
+		-- computing the vertical scroll bar.
+		
+	adjust_hidden_node_count (adjustment: INTEGER) is
+			-- Adjust `hidden_node_count' by `adjustment'.
+		do
+			hidden_node_count := hidden_node_count + adjustment
+		ensure
+			hidden_node_count_set: hidden_node_count = old hidden_node_count + adjustment
+		end
+
 feature {EV_GRID_ITEM_I} -- Implementation
 
 	selection_color: EV_COLOR is
@@ -1041,8 +1064,8 @@ feature {EV_GRID_ROW_I, EV_GRID_COLUMN_I} -- Implementation
 						previous_scroll_bar_value := vertical_scroll_bar.value
 					end
 					if is_vertical_scrolling_per_item then					
-						vertical_scroll_bar.value_range.adapt (create {INTEGER_INTERVAL}.make (0, row_count - 1))
-						average_row_height := (l_total_row_height // row_count)
+						vertical_scroll_bar.value_range.adapt (create {INTEGER_INTERVAL}.make (0, visible_row_count - 1))
+						average_row_height := (l_total_row_height // visible_row_count)
 						vertical_scroll_bar.set_leap ((l_client_height // average_row_height).max (1))
 						if has_vertical_scrolling_per_item_just_changed then
 								-- If we are just switching from per pixel to per item vertical
@@ -1490,16 +1513,18 @@ feature {NONE} -- Event handling
 			pointed_item_row: EV_GRID_ROW
 		do
 			pointed_item := drawer.item_at_position (a_x, a_y)
-			if a_button = 1 then
-				pointed_item_row := pointed_item.row
-				if pointed_item_row.subrow_count > 0 then
-					if pointed_item_row.is_expanded then
-						pointed_item_row.collapse
+			if pointed_item /= Void then
+				if a_button = 1 then
+					pointed_item_row := pointed_item.row
+					if pointed_item_row.subrow_count > 0 then
+						if pointed_item_row.is_expanded then
+							pointed_item_row.collapse
+						else
+							pointed_item_row.expand
+						end
 					else
-						pointed_item_row.expand
+						pointed_item.enable_select
 					end
-				else
-					pointed_item.enable_select
 				end
 			end
 		end
@@ -1792,6 +1817,9 @@ invariant
 	single_item_selected_enabled_implies_no_rows_selected: single_item_selection_enabled implies selected_rows.count = 0
 	single_row_selection_enabled_implies_only_single_row_selected: single_row_selection_enabled implies selected_rows.count <= 1
 	visible_column_count_not_greater_than_column_count: visible_column_count <= column_count
+	hidden_node_count_zero_when_tree_disabled: not is_tree_enabled implies hidden_node_count = 0
+	hidden_node_count_positive_when_tree_enabled: is_tree_enabled implies hidden_node_count >= 0
+	tree_disabled_implies_visible_rows_equal_hidden_rows: not is_tree_enabled implies row_count = visible_row_count
 	
 end
 

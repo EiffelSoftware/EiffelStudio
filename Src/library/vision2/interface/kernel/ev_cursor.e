@@ -41,7 +41,7 @@ feature {NONE} -- Initialization
 			-- Create a cursor from the given file path
 		require
 			valid_filename: filename /= Void
-			filename_exists: file_exists (filename)
+			file_exists: file_exists (filename)
 		do
 			create {EV_CURSOR_IMP} implementation.make_by_filename (filename)
 			implementation.set_interface (current)

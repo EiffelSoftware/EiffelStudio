@@ -45,7 +45,7 @@ feature {NONE} -- Implementation
 			create filename.make_from_string (installation_location)
 			filename.extend ("templates")
 			if (create {EV_ENVIRONMENT}).supported_image_formats.has ("ICO") then
-				filename.extend ("Windows")
+				filename.extend ("windows")
 			else
 				filename.extend ("unix")
 			end

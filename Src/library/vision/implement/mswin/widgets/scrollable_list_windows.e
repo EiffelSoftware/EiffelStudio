@@ -767,7 +767,6 @@ feature {NONE} -- Implementation
 						end
 					end
 				else
-					a_font_windows ?= font.implementation
 					if a_font_windows.string_width (Current, s) >= wel_width then
 						a_width := longest_string_width
 						set_width (a_width)

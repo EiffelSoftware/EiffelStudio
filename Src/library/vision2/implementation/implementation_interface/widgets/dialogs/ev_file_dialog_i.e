@@ -44,6 +44,15 @@ feature -- Status report
 			-- Path of `file_name'.
 		deferred
 		end
+		
+	selected_filter_index: INTEGER is
+			-- One based index of selected filter within `filters', or
+			-- zero if no filters set.
+		deferred
+		ensure
+			result_zero_when_no_filters: filters.is_empty implies result = 0
+			valid_result_when_filters_set: not filters.is_empty implies Result >= 1 and Result <= filters.count
+		end
 
 feature -- Element change
 

@@ -40,6 +40,14 @@ feature {NONE} -- Implementation
 			list_widget := c_object
 		end
 
+feature -- Status setting
+
+	connect_radio_grouping (a_tool_bar: EV_TOOL_BAR) is
+		-- Join radio grouping of `a_container' to Current.
+	do
+		--| FIXME To be implemented
+	end
+
 feature -- Implementation
 
 	add_to_container (v: like item) is
@@ -104,6 +112,9 @@ end -- class EV_TOOL_BAR_IMP
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.14  2000/04/05 17:08:35  king
+--| Added connect_radio_grouping to imp
+--|
 --| Revision 1.13  2000/03/13 22:58:34  king
 --| Implemented reorder_child
 --|

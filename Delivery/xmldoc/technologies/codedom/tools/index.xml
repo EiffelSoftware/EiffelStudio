@@ -1,0 +1,30 @@
+<document title="ASP.NET Enabler Tools">
+	<meta_data/>
+	<paragraph>
+		The ASP.NET Enabler delivery comes together with several tools:
+		<list ordered="false">
+			<item>
+				<link>
+					<url>manager.xml</url>
+					<label>Eiffel CodeDom Provider Manager</label>
+				</link> 
+				 allows administering the Eiffel CodeDom Provider.
+			</item>
+			<item>
+				<link>
+					<url>esplitter.xml</url>
+					<label>ESplitter</label> 
+				</link> 
+				allows generating standard Eiffel source files (<bold>.e</bold> files) from 
+				Eiffel CodeDom Provider generated files (<bold>.es</bold>) files.
+			</item>
+			<item>
+				<link>
+					<url>name_mapper.xml</url>
+					<label>Name Mapper</label>
+				</link> 
+				allows retrieving the Eiffel identifier corresponding to a .NET type or member.
+			</item>
+		</list>
+	</paragraph>
+</document>

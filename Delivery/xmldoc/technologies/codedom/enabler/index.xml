@@ -1,0 +1,37 @@
+<document title="The ASP.NET Enabler">
+	<meta_data/>
+	<paragraph>
+		The ASP.NET Enabler allows running ASP.NET pages written in Eiffel. It should be installed both the web server 
+		and on the ASP.NET page developer's machine. This documentation includes the following sections:
+		<list ordered="false">
+			<item>
+				<link>
+					<url>installation.xml</url>
+					<label>Installation</label> 
+				</link>
+				describes the steps involved in installing the ASP.NET Enabler.
+			</item>
+			<item>
+				<link>
+					<url>getting_started.xml</url>
+					<label>Getting started</label>
+				</link> 
+				lists resources that will help getting started with the ASP.NET Enabler.
+			</item>
+			<item>
+				<link>
+					<url>using_eiffel.xml</url>
+					<label>Using Eiffel</label> 
+				</link>
+				lists a few points that are specific to using Eiffel for writting ASP.NET pages.
+			</item>
+			<item>
+				<link>
+					<url>names_mapping.xml</url>
+					<label>Names mapping</label> 
+				</link>
+				explains how to retrieve Eiffel identifiers from .NET ones.
+			</item>
+		</list>
+	</paragraph>
+</document>

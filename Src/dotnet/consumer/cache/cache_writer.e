@@ -57,7 +57,6 @@ feature -- Basic Operations
 					dir.create_
 					consumer.set_status_printer (status_printer)
 					consumer.set_error_printer (error_printer)
-					consumer.set_status_querier (status_querier)
 					consumer.set_destination_path (l_directory_name)
 					consumer.consume (assembly)
 

@@ -14,10 +14,6 @@
 extern "C" {
 #endif
 
-#ifdef EIF_THREADS
-	extern void wel_init_context(wel_global_context_t *wel_globals);
-	extern void wel_thr_register(void);
-#endif
 
 #ifdef __cplusplus
 }

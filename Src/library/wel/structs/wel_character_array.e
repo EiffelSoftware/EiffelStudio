@@ -26,12 +26,22 @@ feature {NONE} -- Initialization
 		require
 			an_array_not_void: an_array /= Void
 		local
-			a: ANY
+			i, j, nb: INTEGER
+			l_val: INTEGER_8
 		do
 			count := an_array.count
 			structure_make
-			a := an_array.to_c
-			c_memcpy (item, $a, structure_size)
+			from
+				i := an_array.lower
+				nb := an_array.upper
+			until
+				i > nb
+			loop
+				l_val := an_array.item (i).code.to_integer_8;
+				(item + j).memory_copy ($l_val, 1)
+				i := i + 1
+				j := j + 1
+			end
 		ensure
 			set: to_array (an_array.lower).is_equal (an_array)
 		end
@@ -41,11 +51,21 @@ feature -- Conversion
 	to_array (a_lower: INTEGER): ARRAY [CHARACTER] is
 			-- Eiffel array
 		local
-			a: ANY
+			i, j, nb: INTEGER
+			l_val: INTEGER_8
 		do
-			create Result.make (a_lower, a_lower + count - 1)
-			a := Result.to_c
-			c_memcpy ($a, item, structure_size)
+			from
+				i := a_lower
+				nb := a_lower + count - 1
+				create Result.make (a_lower, nb)
+			until
+				i > nb
+			loop
+				($l_val).memory_copy (item + j, 1)
+				Result.put (l_val.to_character, i)
+				i := i + 1
+				j := j + 1
+			end
 		ensure
 			array_not_void: Result /= Void
 			lower_set: Result.lower = a_lower

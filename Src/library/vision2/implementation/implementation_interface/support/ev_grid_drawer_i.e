@@ -484,41 +484,39 @@ feature -- Basic operations
 										grid.drawable.fill_rectangle (current_item_x_position, current_item_y_position, current_subrow_indent.max (current_column_width), current_row_height)
 											-- The background area for the tree node must always be refreshed, even if the node is not visible.
 											-- We draw no wider than `current_column_width' to ensure this.
-										
-										if current_subrow_indent < current_column_width then
-												-- If the indent of the tree is less than `current_column_width', it must be visible so draw it.
-											if current_row.subrow_count > 0 then
-													-- Note we add 1 to account for rounding errors when odd values.
-												if current_row.is_expanded then
-													l_pixmap := collapse_pixmap
-													grid.drawable.set_foreground_color (black)
-													grid.drawable.draw_segment (node_pixmap_vertical_center, vertical_node_pixmap_bottom_offset, node_pixmap_vertical_center, row_vertical_bottom)
-														-- This draws the vertical segment beneath the expand icon which reaches down to the bottom of the row.
-												else
-													l_pixmap := expand_pixmap
-												end
-													-- Now check if we must clip the pixmap vertically
-												if node_pixmap_height > current_row_height then
-														-- In this situation, the height of the expand image is greater than the current row height,
-														-- so we only draw the part that fits within the node.
-													grid.drawable.draw_sub_pixmap (horizontal_node_pixmap_left_offset, current_item_y_position, l_pixmap, create {EV_RECTANGLE}.make (0, (node_pixmap_height - current_row_height) // 2, node_pixmap_height, current_row_height))
-												else
-													grid.drawable.draw_pixmap (horizontal_node_pixmap_left_offset, vertical_node_pixmap_top_offset, l_pixmap)
-												end
-											end
-												-- We must now draw the lines for the tree structure.
-											
-											if current_subrow_indent > 0 then
+
+											-- If the indent of the tree is less than `current_column_width', it must be visible so draw it.
+										if current_row.subrow_count > 0 then
+												-- Note we add 1 to account for rounding errors when odd values.
+											if current_row.is_expanded then
+												l_pixmap := collapse_pixmap
 												grid.drawable.set_foreground_color (black)
-												 grid.drawable.draw_segment (current_item_x_position.max (parent_x_indent_position), row_vertical_center, horizontal_node_pixmap_left_offset, row_vertical_center)
-												 	-- Draw a line from the edge of the item to the either the node or the edge of the actual item position.
-												 
-												if drawing_subrow and then parent_node_index = current_column_index then
-													grid.drawable.draw_segment (current_item_x_position.max (parent_x_indent_position), row_vertical_center, current_item_x_position.max (parent_x_indent_position), current_item_y_position)
-												end
+												grid.drawable.draw_segment (node_pixmap_vertical_center, vertical_node_pixmap_bottom_offset, node_pixmap_vertical_center, row_vertical_bottom)
+													-- This draws the vertical segment beneath the expand icon which reaches down to the bottom of the row.
+											else
+												l_pixmap := expand_pixmap
+											end
+												-- Now check if we must clip the pixmap vertically
+											if node_pixmap_height > current_row_height then
+													-- In this situation, the height of the expand image is greater than the current row height,
+													-- so we only draw the part that fits within the node.
+												grid.drawable.draw_sub_pixmap (horizontal_node_pixmap_left_offset, current_item_y_position, l_pixmap, create {EV_RECTANGLE}.make (0, (node_pixmap_height - current_row_height) // 2, node_pixmap_height, current_row_height))
+											else
+												grid.drawable.draw_pixmap (horizontal_node_pixmap_left_offset, vertical_node_pixmap_top_offset, l_pixmap)
 											end
 										end
-										fixme ("Must handle tree nodes that are not only in the first column")
+											-- We must now draw the lines for the tree structure.
+										
+										if current_subrow_indent > 0 then
+											grid.drawable.set_foreground_color (black)
+											 grid.drawable.draw_segment (current_item_x_position.max (parent_x_indent_position), row_vertical_center, horizontal_node_pixmap_left_offset, row_vertical_center)
+											 	-- Draw a horizontal line from the left edge of the item to the either the node horizontal offset or the edge of the actual item position
+											 	-- if the node to which we are connected is within a different column.
+											 
+											if drawing_subrow and then parent_node_index = current_column_index then
+												grid.drawable.draw_segment (current_item_x_position.max (parent_x_indent_position), row_vertical_center, current_item_x_position.max (parent_x_indent_position), current_item_y_position)
+											end
+										end
 									end
 								end
 								if current_tree_adjusted_item_x_position - current_item_x_position < current_column_width then

@@ -204,8 +204,10 @@ feature -- End output
 				Project_tool.set_icon_name (icon_name)
 			end;
 
-			hide;
-			destroy;
+			if exists then
+				hide;
+				destroy
+			end;
 
 			process_messages
 		end;

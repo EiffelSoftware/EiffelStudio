@@ -287,7 +287,7 @@ feature {NONE} -- Implementation
 				check
 					world.is_show_requested
 				end
-				projector.full_project
+				projector.project
 			end
 		end
 
@@ -368,7 +368,6 @@ feature {NONE} -- Implementation
 		do
 			bbox := world.bounding_box
 			if bbox.width /= 0 or else bbox.height /= 0 then
-				world.hide
 				border := world_border + autoscroll_border
 				if bbox.left - border < horizontal_scrollbar.value_range.lower then
 					left := bbox.left - border
@@ -392,7 +391,6 @@ feature {NONE} -- Implementation
 							top.min (vertical_scrollbar.value_range.lower), 
 							bottom.max (vertical_scrollbar.value_range.upper))
 				end
-				world.show
 			end
 		end
 
@@ -429,7 +427,6 @@ feature {NONE} -- Implementation
 				end
 				if scrolled then
 					projector.simulate_mouse_move (cursor_x, cursor_y)
-					world.full_redraw
 					autoscroll.set_interval (50)
 				else
 					autoscroll.set_interval (500)

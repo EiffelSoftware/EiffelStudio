@@ -70,6 +70,9 @@ feature -- System name access
 	precompiled_combo: EV_COMBO_BOX
 			-- Name of precompiled library if any
 
+	use_optimized_precompile_check: EV_CHECK_BUTTON
+			-- Option to specify use of optimized .net precompiled library
+
 feature -- Generation type
 
 	generation_combo: EV_COMBO_BOX
@@ -182,6 +185,7 @@ feature {NONE} -- Filling
 				-- directory.
 			precompiled_combo.enable_sensitive
 			initialize_precompiled
+			use_optimized_precompile_check.disable_sensitive
 
 				-- Retrieve default options.
 			defaults := root_ast.defaults
@@ -222,7 +226,6 @@ feature {NONE} -- Filling
 			if not precomp_text_set then
 				precompiled_combo.set_text ("None")
 			end
-
 		end
 
 	initialize_with_default_option (a_opt: D_OPTION_SD) is
@@ -274,6 +277,17 @@ feature {NONE} -- Filling
 						end
 					end
 					is_item_removable := True
+				elseif free_option.code = feature {FREE_OPTION_SD}.msil_use_optimized_precompile then
+					if val.is_yes and platform_constants.is_windows then
+						if use_optimized_precompile_check.is_sensitive then
+							enable_select (use_optimized_precompile_check)
+						else
+							use_optimized_precompile_check.enable_sensitive
+							enable_select (use_optimized_precompile_check)
+							use_optimized_precompile_check.disable_sensitive
+						end
+					end
+					is_item_removable := True
 				end
 			end
 		end
@@ -288,6 +302,7 @@ feature {NONE} -- Filling AST
 		local
 			d_option: D_OPTION_SD
 			pre: PRECOMPILED_SD
+			fopt: FREE_OPTION_SD
 			v: OPT_VAL_SD
 			title: STRING
 		do
@@ -299,6 +314,17 @@ feature {NONE} -- Filling AST
 				create v.make (new_id_sd (title, True))
 				create d_option.initialize (pre, v)
 				root_ast.defaults.extend (d_option)
+				
+				if msil_widgets_enabled then
+					create fopt.make (feature {FREE_OPTION_SD}.msil_use_optimized_precompile)
+					if use_optimized_precompile_check.is_selected then
+						create v.make_yes
+					else
+						create v.make_no
+					end
+					create d_option.initialize (fopt, v)
+					root_ast.defaults.extend (d_option)
+				end
 			end
 		end
 
@@ -380,6 +406,7 @@ feature -- Initialization
 			disable_select (ensure_check)
 			disable_select (loop_check)
 			disable_select (invariant_check)
+			disable_select (use_optimized_precompile_check)
 			root_class_field.remove_text
 			root_creation_field.remove_text
 
@@ -397,6 +424,7 @@ feature -- Initialization
 			ensure_check_not_selected: not ensure_check.is_selected
 			loop_check_not_selected: not loop_check.is_selected
 			invariant_check_not_selected: not invariant_check.is_selected
+			use_optimized_precompile_check_not_selected: not use_optimized_precompile_check.is_selected
 		end
 
 feature {NONE} -- Initialization
@@ -404,7 +432,6 @@ feature {NONE} -- Initialization
 	make (top: EB_SYSTEM_WINDOW) is
 			-- Create widget corresponding to `General' tab in notebook.
 		local
-			hbox: EV_HORIZONTAL_BOX
 			vbox: EV_VERTICAL_BOX
 			label: EV_LABEL
 			frame: EV_FRAME
@@ -470,20 +497,10 @@ feature {NONE} -- Initialization
 			create item_box
 			item_box.extend (generation_type_frame ("Generation output"))
 			item_box.extend (assertion_frame ("Default assertions"))
+			item_box.extend (precompiled_library_frame ("Precompiled library"))
+			item_box.disable_item_expand (item_box.last)
 			item_box.set_padding (Layout_constants.Small_padding_size)
 			extend (item_box)
-
-			create frame.make_with_text ("Precompiled library")
-			create hbox
-			hbox.set_border_width (Layout_constants.Small_border_size)
-			create label.make_with_text ("Location: ")
-			hbox.extend (label)
-			hbox.disable_item_expand (label)
-			create precompiled_combo
-			hbox.extend (precompiled_combo)
-			frame.extend (hbox)
-			extend (frame)
-			disable_item_expand (frame)
 
 			compilation_combo.extend (create {EV_LIST_ITEM}.make_with_text ("Application"))
 			compilation_combo.extend (create {EV_LIST_ITEM}.make_with_text ("Library"))
@@ -539,6 +556,7 @@ feature {NONE} -- Initialization
 			create dotnet_file.make (dotnet_name)
 			if not dotnet_file.exists then
 				generation_combo.disable_sensitive
+				use_optimized_precompile_check.disable_sensitive
 			end
 
 			hbox.extend (generation_combo)
@@ -576,6 +594,39 @@ feature {NONE} -- Initialization
 			
 			Result.extend (hbox)
 		end
+		
+	precompiled_library_frame (st: STRING): EV_FRAME is
+			-- Create a frame containing all options
+		require
+			non_void_st: st /= Void
+		local
+			vbox: EV_VERTICAL_BOX
+			hbox: EV_HORIZONTAL_BOX
+			label: EV_LABEL
+		do
+			create Result.make_with_text (st)
+			create vbox
+			vbox.set_border_width (Layout_constants.Small_border_size)
+			vbox.set_padding (Layout_constants.Small_border_size)			
+			create hbox
+			create label.make_with_text ("Location: ")
+			hbox.extend (label)
+			hbox.disable_item_expand (label)
+			create precompiled_combo
+			hbox.extend (precompiled_combo)
+			vbox.extend (hbox)
+			vbox.disable_item_expand (hbox)
+			if platform_constants.is_windows then
+				use_optimized_precompile_check := new_check_button (vbox, "Use optimized precompiled library", False)			
+				vbox.disable_item_expand (use_optimized_precompile_check)
+				msil_specific_widgets.extend (use_optimized_precompile_check)
+			end
+
+			Result.extend (vbox)
+		ensure
+			non_void_result: Result /= Void
+		end
+		
 
 feature {NONE} -- Standard precompiled libraries
 

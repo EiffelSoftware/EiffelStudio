@@ -513,7 +513,7 @@ feature {NONE} -- Implementation
 						file_suffix := file_name.substring (name_count - 3, name_count)
 						file_suffix.to_lower
 						if file_suffix.is_equal (".fil") then
-							file_name.head (name_count - 4)
+							file_name.keep_head (name_count - 4)
 							filter_names.extend (file_name)
 						end
 					end

@@ -256,7 +256,7 @@ feature {NONE} -- Project Initialization
 				title := clone (Interface_names.l_Loaded_project)
 				project_name := project_dir.name
 				if project_name.item (project_name.count) = Operating_environment.Directory_separator then
-					project_name.head (project_name.count -1)
+					project_name.keep_head (project_name.count -1)
 				end
 				title.append (project_name)
 				if Eiffel_system.is_precompiled then

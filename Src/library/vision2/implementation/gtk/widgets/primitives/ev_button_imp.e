@@ -57,7 +57,8 @@ feature {NONE} -- Initialization
 		do
 			base_make (an_interface)
 			set_c_object (C.gtk_button_new)
-			GTK_WIDGET_SET_FLAGS (visual_widget, C.GTK_CAN_DEFAULT_ENUM)
+		--	GTK_WIDGET_SET_FLAGS (visual_widget, C.GTK_CAN_DEFAULT_ENUM)
+		--	GTK_WIDGET_UNSET_FLAGS (visual_widget, C.GTK_CAN_DEFAULT_ENUM)
 		end
 
 	initialize is
@@ -65,6 +66,7 @@ feature {NONE} -- Initialization
 			-- create button box to hold label and pixmap.
 		do
 			{EV_PRIMITIVE_IMP} Precursor
+			C.gtk_container_set_border_width (visual_widget, 0)
 			C.gtk_button_set_relief (visual_widget, C.gtk_relief_half_enum)
 			pixmapable_imp_initialize
 			textable_imp_initialize
@@ -85,9 +87,6 @@ feature {NONE} -- Initialization
 			C.gtk_widget_hide (text_label)
 			C.gtk_box_pack_end (box, pixmap_box, True, False, padding)
 			C.gtk_widget_hide (pixmap_box)
-			--| FIXME IEK Remove magic numbers, have some standard for
-			--| default minimum sizes of buttons.
-			C.gtk_widget_set_usize (box, 0, 20)
 		ensure
 			button_box /= NULL
 		end
@@ -107,8 +106,8 @@ feature -- Status Setting
 			-- Set the style of the button corresponding
 			-- to the default push button.
 		do
-			enable_can_default
-			C.gtk_widget_grab_default (visual_widget)
+		--	enable_can_default
+			--C.gtk_widget_grab_default (visual_widget)
 		end
 
 	disable_default_push_button is
@@ -117,8 +116,8 @@ feature -- Status Setting
 		local
 			par_ptr: POINTER
 		do
-			GTK_WIDGET_UNSET_FLAGS (visual_widget, C.GTK_HAS_DEFAULT_ENUM)
-			C.gtk_widget_draw_default (visual_widget)
+			--GTK_WIDGET_UNSET_FLAGS (visual_widget, C.GTK_HAS_DEFAULT_ENUM)
+			--C.gtk_widget_draw_default (visual_widget)
 			from
 				par_ptr := C.gtk_widget_struct_parent (visual_widget)
 			until
@@ -135,7 +134,7 @@ feature -- Status Setting
 	enable_can_default is
 			-- Allow the style of the button to be the default push button.
 		do
---|			GTK_WIDGET_SET_FLAGS (visual_widget, C.GTK_CAN_DEFAULT_ENUM)
+			GTK_WIDGET_SET_FLAGS (visual_widget, C.GTK_CAN_DEFAULT_ENUM)
 		end
 
 	set_foreground_color (a_color: EV_COLOR) is
@@ -222,8 +221,8 @@ feature {NONE} -- implementation
 			)
 		end
 
-	padding: INTEGER is 3
-			-- Number of pixels of extra space arround text and pixmap.
+	padding: INTEGER is 1
+			-- Number of pixels of extra space around text and pixmap.
 
 	button_box: POINTER is
 			-- GtkHBox in button.

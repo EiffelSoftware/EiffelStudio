@@ -104,8 +104,11 @@ feature -- Status Setting
 			format_index := format_offsets.item (hashed_character_format)
 				
 			temp_string := ""
-			add_rtf_keyword (temp_string, rtf_highlight_string)
-			temp_string.append (back_color_offset.i_th (format_index).out)
+			if a_format.bcolor_set then
+					-- Only apply highlighting if a highlight color was explicitly set.
+				add_rtf_keyword (temp_string, rtf_highlight_string)
+				temp_string.append (back_color_offset.i_th (format_index).out)
+			end
 			add_rtf_keyword (temp_string, rtf_color_string)
 			temp_string.append (color_offset.i_th (format_index).out)
 			
@@ -451,7 +454,7 @@ feature {NONE} -- Implementation
 				
 				if first_color_is_auto and current_format.highlight_color = 0 then
 					character_format.set_background_color (rich_text.background_color)
-				else
+				elseif current_format.highlight_set then
 					character_format.set_background_color (all_colors.item (current_format.highlight_color))
 				end
 				a_font := all_fonts.item (current_format.character_format).twin
@@ -584,12 +587,6 @@ feature {NONE} -- Implementation
 				current_format.set_text_color (tag_value.to_integer)
 			elseif tag.is_equal (line_string) then
 				buffer_formatting (new_line_string)
-			elseif tag.is_equal (rtf_fonttable) then
-				process_fonttable (rtf_text)
-				processing_moved_iterator := True
-			elseif tag.is_equal (rtf_colortbl) then
-				process_colortable (rtf_text)
-				processing_moved_iterator := True
 			elseif tag.is_equal (rtf_bold_string) then
 				if tag_value.is_empty then
 					current_format.set_bold (True)
@@ -696,6 +693,12 @@ feature {NONE} -- Implementation
 				current_format.set_top_spacing (half_points_to_pixels (tag_value.to_integer) // 10)
 			elseif tag.is_equal (rtf_paragraph_space_after) then
 				current_format.set_bottom_spacing (half_points_to_pixels (tag_value.to_integer) // 10)
+			elseif tag.is_equal (rtf_fonttable) then
+				process_fonttable (rtf_text)
+				processing_moved_iterator := True
+			elseif tag.is_equal (rtf_colortbl) then
+				process_colortable (rtf_text)
+				processing_moved_iterator := True
 			else
 				--print ("Unhandled tag : " + tag.out + "%N")
 			end	
@@ -755,7 +758,6 @@ feature {NONE} -- Implementation
 		local
 			depth: INTEGER
 			current_character: CHARACTER
-			a_font: EV_FONT
 		do
 			depth := 1
 			from
@@ -768,42 +770,50 @@ feature {NONE} -- Implementation
 				if current_character = '{' then
 						-- Store state on stack
 					depth := depth + 1
-				elseif current_character = '}' then
+				elseif current_character = '}'  then
 					depth := depth - 1
-					if depth = 1 then
-							-- We have found a fount, so add it to the fonts.
-						create a_font
-						inspect last_fontfamily
-						when rtf_family_roman_int then
-							a_font.set_family (family_roman)
-						when rtf_family_swiss_int then
-							a_font.set_family (family_sans)
-						when rtf_family_modern_int then
-							a_font.set_family (family_modern)
-						when rtf_family_script_int then
-							a_font.set_family (family_typewriter)
-						when rtf_family_tech_int then
-							a_font.set_family (family_screen)
-						else
-							-- Perform nothing if family is Nill.
-						end
-							-- It is possible that no font name was specificed in the RTF.
-						if last_fontname /= Void and then not last_fontname.is_empty then
-							a_font.preferred_families.extend (last_fontname)
-						end
-						all_fonts.force (a_font, last_fontindex)
-					end
+					add_font_to_all_fonts
 				elseif current_character = '\' then
 					process_keyword (rtf_text, main_iterator)
 				elseif current_character = ' '  then
 					move_main_iterator (1)
 					update_main_iterator
 					process_fontname (rtf_text)
+					add_font_to_all_fonts
 				elseif current_character /= '%R' and (rtf_text.item (main_iterator - 1) = '%N' or rtf_text.item (main_iterator - 1) = '}') then
 					process_fontname (rtf_text)
+					add_font_to_all_fonts
 				end
 				move_main_iterator (1)
 			end
+		end
+		
+	add_font_to_all_fonts is
+			-- Create and add a new font to `all_fonts' at index `last_font_index'
+			-- based on `last_fontfamily' and `last_fontname'.
+		local
+			a_font: EV_FONT
+		do
+			create a_font
+			inspect last_fontfamily
+			when rtf_family_roman_int then
+				a_font.set_family (family_roman)
+			when rtf_family_swiss_int then
+				a_font.set_family (family_sans)
+			when rtf_family_modern_int then
+				a_font.set_family (family_modern)
+			when rtf_family_script_int then
+				a_font.set_family (family_typewriter)
+			when rtf_family_tech_int then
+				a_font.set_family (family_screen)
+			else
+				-- Perform nothing if family is Nill.
+			end
+				-- It is possible that no font name was specificed in the RTF.
+			if last_fontname /= Void and then not last_fontname.is_empty then
+				a_font.preferred_families.extend (last_fontname)
+			end
+			all_fonts.force (a_font, last_fontindex)
 		end
 		
 	process_colortable (rtf_text: STRING) is

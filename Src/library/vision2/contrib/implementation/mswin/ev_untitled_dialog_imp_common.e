@@ -10,7 +10,7 @@ deferred class
 inherit
 	EV_DIALOG_IMP_COMMON
 		redefine
-			update_style_and_pixmap,
+			update_style,
 			extra_minimum_height,
 			interface,
 			other_imp,
@@ -19,7 +19,7 @@ inherit
 
 feature {NONE} -- Implementation
 
-	update_style_and_pixmap is
+	update_style is
 			-- Update the style of the window accordingly to the
 			-- options set (`user_can_resize', `is_closeable', ...)
 			-- and set the pixmap.

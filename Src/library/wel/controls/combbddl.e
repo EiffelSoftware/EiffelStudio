@@ -33,6 +33,7 @@ feature -- Access
 feature -- Status setting
 
 	show_list is
+			-- Show the drop down list
 		require
 			exists: exists
 		do
@@ -42,6 +43,7 @@ feature -- Status setting
 		end
 
 	hide_list is
+			-- Hide the drop down list
 		require
 			exists: exists
 		do

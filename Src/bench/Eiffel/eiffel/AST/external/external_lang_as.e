@@ -369,7 +369,9 @@ feature {NONE} -- Implementation
 		local
 			l_warning: SYNTAX_WARNING
 		do
-			if System.has_syntax_warning then
+				-- FIXME: Manu 10/09/2003. We do not yet raise a warning for 5.4
+				-- as new external syntax is not clearly specified.
+			if False and then System.has_syntax_warning then
 				create l_warning.make (
 					eiffel_parser.current_position.start_position,
 					eiffel_parser.current_position.end_position,

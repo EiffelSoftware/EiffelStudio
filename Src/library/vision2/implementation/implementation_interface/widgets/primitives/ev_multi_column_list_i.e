@@ -30,7 +30,7 @@ feature {NONE} -- Initialization
 
 feature -- Access
 
-	columns: INTEGER is
+	column_count: INTEGER is
 			-- Column count.
 		deferred
 		end
@@ -143,7 +143,7 @@ feature -- Status setting
 			-- Display text of `a_column' left aligned.
 			-- First column is always left aligned.
 		require
-			a_column_withing_range: a_column > 1 and a_column <= columns
+			a_column_withing_range: a_column > 1 and a_column <= column_count
 		deferred
 		end
 
@@ -151,7 +151,7 @@ feature -- Status setting
 			-- Display text of `a_column' centered.
 			-- First column is always left aligned.
 		require
-			a_column_within_range: a_column > 1 and a_column <= columns
+			a_column_within_range: a_column > 1 and a_column <= column_count
 		deferred
 		end
 	
@@ -159,7 +159,7 @@ feature -- Status setting
 			-- Display text of `a_column' right aligned.
 			-- First column is always left aligned.
 		require
-			a_column_within_range: a_column > 1 and a_column <= columns
+			a_column_within_range: a_column > 1 and a_column <= column_count
 		deferred
 		end
 
@@ -192,7 +192,7 @@ feature -- Element change
 			-- Assign `titles' to titles of columns in order.
 		require
 			titles_not_void: titles /= Void
-			titles_count_is_columns: titles.count = columns
+			titles_count_is_column_count: titles.count = column_count
 		local
 			i: INTEGER
 			old_count: INTEGER
@@ -222,7 +222,7 @@ feature -- Element change
 	set_column_width (a_width: INTEGER; a_column: INTEGER) is
 			-- Assign `a_width' `column_width'(`a_column').
 		require
-			a_column_within_range: a_column > 0 and a_column <= columns
+			a_column_within_range: a_column > 0 and a_column <= column_count
 			a_width_positive: a_width > 0
 		do
 			if a_column <= column_widths.count then
@@ -246,7 +246,7 @@ feature -- Element change
 			-- Assign `widths' to column widths in order.
 		require
 			widths_not_void: widths /= Void
-			widths_count_is_columns: widths.count = columns
+			widths_count_is_column_count: widths.count = column_count
 		local
 			i: INTEGER
 			old_count: INTEGER
@@ -284,24 +284,11 @@ feature -- Element change
 
 feature {EV_ANY_I} -- Implementation
 
-	expand_columns_to (a_columns: INTEGER) is
+	expand_column_count_to (a_columns: INTEGER) is
 			-- Expand the number of columns in the list to `a_columns'.
 		require
-			expandable: a_columns > a_columns
+			expandable: a_columns > column_count
 		deferred
-		--local
-		--	a_iterations, a_counter: INTEGER
-		--do
-		--	a_iterations := a_columns - columns
-		--		-- Number of iterations to perform.
-		--	from
-		--		a_counter := 1
-		--	until
-		--		a_counter > a_iterations
-		--	loop
-		--		add_column
-		--		a_counter := a_counter + 1
-		--	end
 		end
 			
 	update_children is
@@ -317,8 +304,8 @@ feature {EV_ANY_I} -- Implementation
 			until
 				ev_children.after
 			loop
-				if ev_children.item.interface.count > columns then
-					expand_columns_to (ev_children.item.interface.count)
+				if ev_children.item.interface.count > column_count then
+					expand_column_count_to (ev_children.item.interface.count)
 				end
 				ev_children.forth
 			end
@@ -341,7 +328,7 @@ feature {EV_ANY_I} -- Implementation
 		require
 			child_exists: child /= Void
 			child_dirty: child.update_needed
-			room_for_child: child.interface.count <= columns
+			room_for_child: child.interface.count <= column_count
 		local
 			cur: CURSOR
 			txt: STRING
@@ -368,13 +355,13 @@ feature {EV_ANY_I} -- Implementation
 		end
 
 	set_text_on_position (a_column, a_row: INTEGER; a_text: STRING) is
-			-- Set the label of the cell with coordinates `a_x', `a_y'
-			-- with `txt'.
+			-- Set the label of the cell with coordinates `a_column',
+			-- `a_row' with `a_text'.
 		require
-			a_column_large_enough: a_column > 0
-			a_row_large_enough: a_row > 0
-			a_column_small_enough: a_column <= columns
-			a_row_small_enough: a_row <= count
+			a_column_positive: a_column > 0
+			a_row_positive: a_row > 0
+			a_column_not_greater_than_column_count: a_column <= column_count
+			a_row_not_greater_than_count: a_row <= count
 			a_text_not_void: a_text /= Void
 		deferred
 		end
@@ -394,7 +381,6 @@ feature {EV_ANY_I} -- Implementation
 			a_width_positive: a_width > 0
 		deferred
 		end
-
 
 	update_children_agent: PROCEDURE [EV_MULTI_COLUMN_LIST_I, TUPLE []]
 			-- Agent object for `update_children'.
@@ -447,6 +433,12 @@ end -- class EV_MULTI_COLUMN_LIST_I
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.39  2000/03/27 17:18:15  brendel
+--| Removed commented implementation of deferred feature
+--| expand_column_count_to.
+--| Cosmetics for feature set_text_on_position.
+--| columns -> column_count.
+--|
 --| Revision 1.38  2000/03/25 01:49:07  king
 --| Added expand_columns_to
 --|

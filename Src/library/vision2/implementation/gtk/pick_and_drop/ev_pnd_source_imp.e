@@ -393,8 +393,9 @@ feature -- Implementation
 
 feature {EV_APPLICATION_IMP} -- Implementation
 
-	pebble_over_widget (a_gdkwin: POINTER; a_x, a_y: INTEGER): BOOLEAN is
-			-- Correct gdk window for pnd target.
+	pointer_over_widget (a_gdkwin: POINTER; a_x, a_y: INTEGER): BOOLEAN is
+			-- Comparison of gdk window and widget position to determine
+			-- if mouse pointer is over widget.
 		do
 			Result := a_gdkwin = C.gtk_widget_struct_window (c_object)
 		end
@@ -466,6 +467,9 @@ end -- class EV_PICK_AND_DROPABLE_IMP
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.20  2000/03/31 19:10:25  king
+--| pebble_over_widget -> pointer_over_widget
+--|
 --| Revision 1.19  2000/03/29 22:14:14  king
 --| Removed debugging line
 --|

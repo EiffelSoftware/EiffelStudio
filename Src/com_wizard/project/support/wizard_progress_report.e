@@ -147,7 +147,6 @@ feature -- Basic Operations
 	finish is
 			-- Terminate report (i.e. terminate dialog)
 		require
-			running: running
 			non_void_parent: parent /= Void
 			valid_parent: parent.exists
 		do

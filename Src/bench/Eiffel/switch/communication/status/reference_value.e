@@ -9,29 +9,32 @@ class REFERENCE_VALUE
 
 inherit
 
-	ABSTRACT_DEBUG_VALUE
+	ABSTRACT_REFERENCE_VALUE
 		redefine
-			set_hector_addr, address
-		end;
+			set_hector_addr
+		end
+
 	OBJECT_ADDR
-		undefine
-			is_equal
-		end;
-	SHARED_APPLICATION_EXECUTION
+		export
+			{NONE} all
 		undefine
 			is_equal
 		end;
 	CHARACTER_ROUTINES
+		export
+			{NONE} all
 		undefine
 			is_equal
 		end;
 
 	SHARED_DEBUG
+		export
+			{NONE} all
 		undefine
 			is_equal
 		end;
 
-creation {RECV_VALUE, ATTR_REQUEST}
+creation {DEBUG_VALUE_EXPORTER}
 
 	make, make_attribute
 
@@ -46,6 +49,7 @@ feature {NONE} -- Initialization
 			set_default_name;
 			if reference /= Void_pointer then
 				address := reference.out
+				is_null := (address = Void)
 				dynamic_type_id := id;
 			end;
 		end;
@@ -62,21 +66,22 @@ feature {NONE} -- Initialization
 			end;
 			dynamic_type_id := type;
 			address := addr
+			is_null := (address = Void)
 		end;
 
-feature -- Properties
-
-	address: STRING;
-			-- Address of referenced object (Void if no object)
-
-	string_value: STRING;
-			-- Value if the reference object is a STRING
+--feature -- Properties
+--
+--	address: STRING;
+--			-- Address of referenced object (Void if no object)
+--
+--	string_value: STRING;
+--			-- Value if the reference object is a STRING
 
 feature -- Access
 
 	dynamic_class: CLASS_C is
 		do
-			Result := private_dynamic_class;
+			Result := private_dynamic_class
 			if Result = Void then
 				if Eiffel_system.valid_dynamic_id (dynamic_type_id) then
 					--| Extra safe test. The dynamic type should be known
@@ -85,8 +90,8 @@ feature -- Access
 					Result := Eiffel_system.class_of_dynamic_id (dynamic_type_id)
 					private_dynamic_class := Result
 				end
-			end;
-		end;
+			end
+		end
 
 	dump_value: DUMP_VALUE is
 			-- Dump_value corresponding to `Current'.
@@ -104,66 +109,7 @@ feature -- Access
 			create Result.make_object (address, dynamic_class)
 		end
 
-feature -- Output
-
-	append_type_and_value (st: STRUCTURED_TEXT) is 
-		local
-			ec: CLASS_C;
-			status: APPLICATION_STATUS
-		do 
-			if address = Void then
-				st.add_string ("NONE = Void")
-			else
-				ec := dynamic_class;
-				if ec /= Void then
-					ec.append_name (st);
-					st.add_string (" [");
-					status := Application.status;
-					if status /= Void and status.is_stopped then
-						st.add_address (address, name, ec)
-					else
-						st.add_string (address)
-					end;
-					st.add_string ("]");
-					if string_value /= Void then
-						st.add_string (" = ");
-						st.add_string (string_value)
-					end
-				else
-					Any_class.append_name (st);
-					st.add_string (" = Unknown")
-				end
-			end
-		end;
-
-	append_value (st: STRUCTURED_TEXT) is 
-		local
-			ec: CLASS_C;
-			status: APPLICATION_STATUS
-		do 
-			if address = Void then
-				st.add_string ("Void")
-			else
-				ec := dynamic_class;
-				if ec /= Void then
-					st.add_string ("[");
-					status := Application.status;
-					if status /= Void and status.is_stopped then
-						st.add_address (address, name, ec)
-					else
-						st.add_string (address)
-					end;
-					st.add_string ("]");
-					if string_value /= Void then
-						st.add_new_line
-						st.add_string (string_value)
-					end
-				else
-					Any_class.append_name (st);
-					st.add_string ("Unknown")
-				end
-			end
-		end;
+feature {NONE} -- Output
 
 	type_and_value: STRING is
 			-- Return a string representing `Current'.
@@ -188,34 +134,11 @@ feature -- Output
 			end
 		end
 
-	NONE_representation: STRING is "NONE = Void"
-
-	Left_square_bracket: STRING is " ["
-
-	Right_square_bracket: STRING is "]"
-
-	Equal_sign_str: STRING is " = "
-
-	Is_unknown: STRING is " = Unknown"
-
-	output_value: STRING is
-			-- Return a string representing `Current'.
-		do
-			if address = Void then
-				Result := "Void"
-			else
-				Result := "[" + address + "]"
-			end
-		end
-
-	expandable: BOOLEAN is
-			-- Does `Current' have sub-items? (Is it a non void reference, a special object, ...)
-		do
-			Result := address /= Void
-		end
+feature -- Output
 
 	children: LIST [ABSTRACT_DEBUG_VALUE] is
-			-- List of all sub-items of `Current'. May be void if there are no children.
+			-- List of all sub-items of `Current'. 
+			-- May be void if there are no children.
 			-- Generated on demand.
 		local
 			obj: DEBUGGED_OBJECT
@@ -227,16 +150,7 @@ feature -- Output
 			Result := obj.attributes
 		end
 
-	kind: INTEGER is
-			-- Actual type of `Current'. cf possible codes underneath.
-			-- Used to display the corresponding icon.
-		do
-			if address /= Void then
-				Result := Reference_value
-			else
-				Result := Void_value
-			end
-		end
+feature {NONE} -- Implementation
 
 	set_hector_addr is
 			-- Convert the physical addresses received from the application
@@ -247,6 +161,7 @@ feature -- Output
 			if address /= Void then
 				address := hector_addr (address);
 			end
+			is_null := (address = Void)
 		end;
 
 feature {NONE} -- Property
@@ -268,5 +183,6 @@ feature {NONE} -- Property
 
 	private_dynamic_class: CLASS_C
 			-- Saved class 
+			
 
 end -- class REFERENCE_VALUE

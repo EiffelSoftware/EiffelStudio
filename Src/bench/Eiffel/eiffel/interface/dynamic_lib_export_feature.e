@@ -38,6 +38,9 @@ feature -- Attributes
 	alias_name: STRING
 			-- Exported name of exported feature.
 
+	call_type: STRING
+			-- How exported function will be called from Windows DLL.
+
 feature -- Access.
 
 	routine_id: INTEGER is
@@ -54,6 +57,12 @@ feature -- Status
 			-- Does Current specify an `alias_name'?
 		do
 			Result := alias_name /= Void and then not alias_name.empty
+		end
+
+	has_call_type: BOOLEAN is
+			-- Does Current specify a `call_type'?
+		do
+			Result := call_type /= Void and then not call_type.empty
 		end
 
 feature -- Settings
@@ -101,6 +110,17 @@ feature -- Settings
 			alias_name := clone (name)
 		ensure
 			alias_name_set: alias_name /= Void and then alias_name.is_equal (name)
+		end
+
+	set_call_type (name: STRING) is
+			-- Set `name' to `call_type'.
+		require
+			name_not_void: name /= Void
+			name_exists: name.count > 0
+		do
+			call_type := clone (name)
+		ensure
+			call_type_set: call_type /= Void and then call_type.is_equal (name)
 		end
 
 end -- class DLL_EXPORT_FEATURE

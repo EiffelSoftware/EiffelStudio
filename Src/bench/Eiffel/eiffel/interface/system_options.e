@@ -134,6 +134,14 @@ end
 			has_dynamic_runtime: has_dynamic_runtime = b
 		end
 
+	set_dynamic_def_file (f: STRING) is
+			-- Set `dynamic_def_file' to `f'.
+		do
+			dynamic_def_file := f
+		ensure
+			dynamic_def_file_set: dynamic_def_file = f
+		end
+
 	set_freeze is
 			-- Assign `b' to `freeze'.
 		do
@@ -159,6 +167,9 @@ feature -- Access
 
 	inlining_size: INTEGER
 			-- Size of the feature which will be inlined.
+
+	dynamic_def_file: STRING
+			-- File where the `.def' file of the system is declared.
 
 	do_not_check_vape: BOOLEAN;
 

@@ -1,0 +1,56 @@
+system
+	boxes
+
+root
+
+	boxes (main): "make"
+
+default
+
+	precompiled ("$EIFFEL4\precomp\spec\$PLATFORM\vision2")
+	assertion (all)
+
+cluster
+
+--------------- Example clusters
+
+	ROOT_CLUSTER: "$EIFFEL4\examples\vision2\boxes"
+
+
+------------------------ EiffelBase and WindowEiffelLibrary:
+
+	all base: "$EIFFEL4\library\base"
+		exclude
+			"table_eiffel3"
+		default
+			assertion (all)
+		end
+
+	all wel: "$EIFFEL4\library\wel"
+		default
+			assertion (all)
+		end
+                        
+------------------------ EiffelVision
+
+	all vision: "$EIFFEL4\library\vision2\interface"
+		default
+			assertion (all)
+		end
+
+	all vision_implementation_interface: "$EIFFEL4\library\vision2\implementation\implementation_interface"
+		default
+			assertion (all)
+		end
+
+	all vision_implementation: "$EIFFEL4\library\vision2\implementation\mswin"
+		default
+			assertion (all)
+		end
+
+external
+        include_path:
+			"$EIFFEL4\library\wel\spec\windows\include"
+        object:
+			"$EIFFEL4\library\wel\spec\$(COMPILER)\lib\wel.lib"
+end

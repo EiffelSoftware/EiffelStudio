@@ -19,44 +19,32 @@ feature {NONE}
 			Result := Execution_environment.get ("EIFFEL3")
 		end;
 
-	Freeze_command_name: STRING is
-		local
-			file_name: FILE_NAME
+	Freeze_command_name: FILE_NAME is
 		once
-			!!file_name.make_from_string (Eiffel3_dir_name);
-			file_name.extend_from_array (<<"bench", "spec", Execution_environment.get ("PLATFORM") , "bin">>);
-			file_name.set_file_name (Finish_freezing_script);
-			Result := file_name
+			!! Result.make_from_string (Eiffel3_dir_name);
+			Result.extend_from_array (<<"bench", "spec", Execution_environment.get ("PLATFORM") , "bin">>);
+			Result.set_file_name (Finish_freezing_script);
 		end
 
-	Prelink_command_name: STRING is
-		local
-			file_name: FILE_NAME
+	Prelink_command_name: FILE_NAME is
 		once
-			!!file_name.make_from_string (Eiffel3_dir_name);
-			file_name.extend_from_array (<<"bench", "spec", Execution_environment.get ("PLATFORM") , "bin">>);
-			file_name.set_file_name (Prelink_script);
-			Result := file_name
+			!! Result.make_from_string (Eiffel3_dir_name);
+			Result.extend_from_array (<<"bench", "spec", Execution_environment.get ("PLATFORM") , "bin">>);
+			Result.set_file_name (Prelink_script);
 		end;
 
-	Default_class_file: STRING is
-		local
-			file_name: FILE_NAME
+	Default_class_file: FILE_NAME is
 		once
-			!! file_name.make_from_string (Eiffel3_dir_name);
-			file_name.extend_from_array (<<"bench", "help", "defaults">>);
-			file_name.set_file_name (Default_Class_filename);
-			Result := file_name
+			!! Result.make_from_string (Eiffel3_dir_name);
+			Result.extend_from_array (<<"bench", "help", "defaults">>);
+			Result.set_file_name (Default_Class_filename)
 		end;
 
-	Default_ace_name: STRING is
-		local
-			file_name: FILE_NAME
+	Default_ace_name: FILE_NAME is
 		once
-			!!file_name.make_from_string (Eiffel3_dir_name);
-			file_name.extend_from_array (<<"bench", "help", "defaults">>);
-			file_name.set_file_name (Default_Ace_file);
-			Result := file_name
+			!! Result.make_from_string (Eiffel3_dir_name);
+			Result.extend_from_array (<<"bench", "help", "defaults">>);
+			Result.set_file_name (Default_Ace_file)
 		end;
 
 	Cursor_path: DIRECTORY_NAME is
@@ -78,55 +66,40 @@ feature {NONE}
 			Result.extend_from_array (<<"bench", "help", "errors">>);
 		end;
 
-	Default_precompiled_location: STRING is
+	Default_precompiled_location: DIRECTORY_NAME is
 			-- Default location for the precompiled base
 			-- $EIFFEL3/precomp/spec/$PLATFORM
-		local
-			dir_name: DIRECTORY_NAME
 		once
-			!!dir_name.make_from_string (Eiffel3_dir_name);
-			dir_name.extend_from_array (<<"precomp", "spec", Execution_environment.get ("PLATFORM")>>);
-			Result := dir_name
+			!! Result.make_from_string (Eiffel3_dir_name);
+			Result.extend_from_array (<<"precomp", "spec", Execution_environment.get ("PLATFORM")>>);
 		end;
 
-	Default_precompiled_base_location: STRING is
+	Default_precompiled_base_location: DIRECTORY_NAME is
 			-- Default location for the precompiled base
 			-- $EIFFEL3/precomp/spec/$PLATFORM/base
-		local
-			dir_name: DIRECTORY_NAME
 		once
-			!!dir_name.make_from_string (Eiffel3_dir_name);
-			dir_name.extend_from_array (<<"precomp", "spec", Execution_environment.get ("PLATFORM"), "base">>);
-			Result := dir_name
+			!! Result.make_from_string (Eiffel3_dir_name);
+			Result.extend_from_array (<<"precomp", "spec", Execution_environment.get ("PLATFORM"), "base">>);
 		end;
 
-	filter_path: STRING is
-		local
-			dir_name: DIRECTORY_NAME
+	filter_path: DIRECTORY_NAME is
 		once
-			!!dir_name.make_from_string (Eiffel3_dir_name);
-			dir_name.extend_from_array (<<"bench", "filters">>);
-			Result := dir_name
+			!! Result.make_from_string (Eiffel3_dir_name);
+			Result.extend_from_array (<<"bench", "filters">>)
 		end;
 
-	profile_path: STRING is
+	profile_path: DIRECTORY_NAME is
 			-- Location of the profiler configuration files
-		local
-			dir_name: DIRECTORY_NAME
 		once
-			!! dir_name.make_from_string (Eiffel3_dir_name);
-			dir_name.extend_from_array(<<"bench", "profiler">>);
-			Result := dir_name
+			!! Result.make_from_string (Eiffel3_dir_name);
+			Result.extend_from_array(<<"bench", "profiler">>);
 		end;
 
-	tmp_directory: STRING is
+	tmp_directory: DIRECTORY_NAME is
 			-- Locate of the temporary directory
-		local
-			dir_name: DIRECTORY_NAME
 		once
-			!!dir_name.make;
-			dir_name.set_directory ("tmp");
-			Result := dir_name
+			!! Result.make;
+			Result.set_directory ("tmp");
 		end;
 
 	date_string (a_date: INTEGER): STRING is

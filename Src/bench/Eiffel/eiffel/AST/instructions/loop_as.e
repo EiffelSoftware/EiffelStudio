@@ -18,26 +18,25 @@ feature {AST_FACTORY} -- Initialization
 
 	initialize (f: like from_part; i: like invariant_part;
 		v: like variant_part; s: like stop;
-		c: like compound; p, l: INTEGER) is
+		c: like compound; l: like location) is
 			-- Create a new LOOP AST node.
 		require
 			s_not_void: s /= Void
+			l_not_void: l /= Void
 		do
 			from_part := f
 			invariant_part := i
 			variant_part := v
 			stop := s
 			compound := c
-			start_position := p
-			line_number := l
+			location := clone (l)
 		ensure
 			from_part_set: from_part = f
 			invariant_part_set: invariant_part = i
 			variant_part_set: variant_part = v
 			stop_set: stop = s
 			compound_set: compound = c
-			start_position_set: start_position = p
-			line_number_set: line_number = l
+			location_set: location.is_equal (l)
 		end
 
 feature -- Attributes
@@ -172,7 +171,12 @@ end
 			if compound /= Void then
 				Result.set_compound (compound.byte_node)
 			end
-			Result.set_line_number (line_number)
+
+				-- FIXME: Manu 02/14/2002
+				-- We generate the stop point the line after the `until' as it is
+				-- most of the time the case, but we need to record some position
+				-- info in the AST to do a correct job.
+			Result.set_line_number (line_number + 1)
 		end
 
 feature {AST_EIFFEL} -- Output

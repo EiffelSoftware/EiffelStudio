@@ -8,6 +8,9 @@ class
 
 inherit
 	AST_EIFFEL
+		rename
+			start_position as ast_start_position,
+			end_position as ast_end_position
 		redefine
 			format
 		end

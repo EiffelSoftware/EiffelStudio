@@ -33,7 +33,7 @@ feature {AST_FACTORY} -- Initialization
 
 	initialize (o: like obsolete_message; pr: like precondition;
 		l: like locals; b: like routine_body; po: like postcondition;
-		r: like rescue_clause; p: INTEGER) is
+		r: like rescue_clause; p: INTEGER; end_pos: like location) is
 			-- Create a new ROUTINE AST node.
 		require
 			b_not_void: b /= Void
@@ -45,6 +45,7 @@ feature {AST_FACTORY} -- Initialization
 			postcondition := po
 			rescue_clause := r
 			body_start_position := p
+			end_location := clone (end_pos)
 		ensure
 			obsolete_message_set: obsolete_message = o
 			precondition_set: precondition = pr
@@ -53,12 +54,16 @@ feature {AST_FACTORY} -- Initialization
 			postcondition_set: postcondition = po
 			rescue_clause_set: rescue_clause = r
 			body_start_position_set: body_start_position = p
+			body_end_location_set: end_location.is_equal (end_pos)
 		end
 
 feature -- Attributes
 
 	body_start_position: INTEGER
 			-- Position at the start of the main body (after the comments)
+			
+	end_location: like location
+			-- Line number where `end' keyword is located
 
 	obsolete_message: STRING_AS
 			-- Obsolete clause message
@@ -324,6 +329,7 @@ feature -- Type check, byte code and dead code removal
 			if rescue_clause /= Void then
 				Result.set_rescue_clause (rescue_clause.byte_node)
 			end
+			Result.set_end_location (end_location)
 		end
 
 	check_local_names is

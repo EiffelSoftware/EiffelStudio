@@ -13,8 +13,10 @@ inherit
 
 feature {AST_FACTORY} -- Initialization
 
-	initialize (k: like keys; c: like compound; s, l: INTEGER) is
+	initialize (k: like keys; c: like compound; l: like location) is
 			-- Create a new DEBUG AST node.
+		require
+			l_not_void: l /= Void
 		local
 			str: STRING
 		do
@@ -34,13 +36,11 @@ feature {AST_FACTORY} -- Initialization
 			end
 
 			compound := c
-			start_position := s
-			line_number := l
+			location := clone (l)
 		ensure
 			keys_set: keys = k
 			compound_set: compound = c
-			start_position_set: start_position = s
-			line_number_set: line_number = l
+			location_set: location.is_equal (l)
 		end
 
 feature -- Attributes

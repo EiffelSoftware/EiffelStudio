@@ -9,7 +9,7 @@ class PARENT_AS
 inherit
 	AST_EIFFEL
 		redefine
-			is_equivalent
+			is_equivalent, location
 		end
 
 feature {AST_FACTORY} -- Initialization
@@ -55,26 +55,19 @@ feature -- Attributes
 	selecting: EIFFEL_LIST [FEATURE_NAME]
 			-- Select clause
 
-	start_position: INTEGER
-			-- Index in class text.
-
---	end_position: INTEGER
+	location: TOKEN_LOCATION
 			-- Index in class text.
 
 feature {EIFFEL_PARSER} -- Element change
 
-	set_text_positions (sp: INTEGER) is
-			-- Set `start_position' to `sp'.
-			-- Set `end_position' to `ep'.
+	set_location (l: like location) is
+			-- Set `location' to `l'.
 		require
-			sp_positive: sp > 0
---			ep_greater_than_sp: ep > sp
+			l_not_void: l /= Void
 		do
-			start_position := sp
---			end_position := ep
+			location := clone (l)
 		ensure
-			start_position_set: start_position = sp
---			end_position_set: end_position = ep
+			location_set: location.is_equal (l)
 		end
 
 feature -- Comparison

@@ -79,20 +79,56 @@ feature -- Comparison
 			end
 		end
 	
-feature {SERVER} -- Identity
+feature -- Location of Node
 
-	position: INTEGER is
-			-- position of the item in text
+	frozen start_position: INTEGER is
+			-- Start position of the item in text
+		local
+			l: like location
 		do
-			Result := -1
-				-- treated as unknown
+			l := location
+			if l /= Void then
+				Result := l.start_position
+			else
+					-- Return -1 which refers to an unknown value.
+				Result := -1
+			end
 		end
 
-	line_number : INTEGER is
+	frozen end_position: INTEGER is
+			-- End position of the item in text
+		local
+			l: like location
+		do
+			l := location
+			if l /= Void then
+				Result := l.end_position
+			else
+					-- Return -1 which refers to an unknown value.
+				Result := -1
+			end
+		end
+
+	frozen line_number : INTEGER is
 			-- line of the item in the source text
+		local
+			l: like location
 		do
-			Result := -1
-				-- treated as unknown
+			l := location
+			if l /= Void then
+				Result := l.line_number
+			else
+					-- Return -1 which refers to an unknown value.
+				Result := -1
+			end
 		end
 
+feature {NONE} -- Location
+
+	location: TOKEN_LOCATION is
+			-- Location of Current node.
+		do
+			-- Not used by default.
+		end
+		
 end -- class AST_EIFFEL

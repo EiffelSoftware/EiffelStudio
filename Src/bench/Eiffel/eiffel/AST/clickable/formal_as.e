@@ -10,7 +10,7 @@ class FORMAL_AS
 inherit
 	TYPE
 		rename
-			position as text_position
+			start_position as text_position
 		redefine
 			format, simple_format
 		end

@@ -9,24 +9,25 @@ class CASE_AS
 inherit
 	AST_EIFFEL
 		redefine
-			number_of_breakpoint_slots, is_equivalent, line_number,
-			type_check, byte_node
+			number_of_breakpoint_slots, is_equivalent,
+			type_check, byte_node, location
 		end
 
 feature {AST_FACTORY} -- Initialization
 
-	initialize (i: like interval; c: like compound; l: INTEGER) is
+	initialize (i: like interval; c: like compound; l: like location) is
 			-- Create a new WHEN AST node.
 		require
 			i_not_void: i /= Void
+			l_not_void: l /= Void
 		do
 			interval := i
 			compound := c
-			line_number := l
+			location := clone (l)
 		ensure
 			interval_set: interval = i
 			compound_set: compound = c
-			line_number_set: line_number = l
+			location_set: location.is_equal (l)
 		end
 
 feature -- Attributes
@@ -48,7 +49,8 @@ feature -- Comparison
 
 feature -- Access
 
-	line_number: INTEGER
+	location: TOKEN_LOCATION
+			-- Location of Current.
 
 	number_of_breakpoint_slots: INTEGER is
 			-- Number of stop points

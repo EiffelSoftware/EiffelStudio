@@ -112,20 +112,20 @@ feature -- Access
 			expressions_set: Result.expressions = exp
 		end
 
-	new_assign_as (t: ACCESS_AS; s: EXPR_AS; p, l: INTEGER): ASSIGN_AS is
+	new_assign_as (t: ACCESS_AS; s: EXPR_AS; l: TOKEN_LOCATION): ASSIGN_AS is
 			-- New ASSIGN AST node
 		require
 			t_not_void: t /= Void
 			s_not_void: s /= Void
+			l_not_void: l /= Void
 		do
 			create Result
-			Result.initialize (t, s, p, l)
+			Result.initialize (t, s, l)
 		ensure
 			assign_as_not_void: Result /= Void
 			target_set: Result.target = t
 			source_set: Result.source = s
-			start_position_set: Result.start_position = p
-			line_number_set: Result.line_number = l
+			location_set: Result.location.is_equal (l)
 		end
 
 	new_bin_and_as (l, r: EXPR_AS): BIN_AND_AS is
@@ -479,10 +479,11 @@ feature -- Access
 		end
 
 	new_case_as (i: EIFFEL_LIST [INTERVAL_AS];
-		c: EIFFEL_LIST [INSTRUCTION_AS]; l: INTEGER): CASE_AS is
+		c: EIFFEL_LIST [INSTRUCTION_AS]; l: TOKEN_LOCATION): CASE_AS is
 			-- New WHEN AST node
 		require
 			i_not_void: i /= Void
+			l_not_void: l /= Void
 		do
 			create Result
 			Result.initialize (i, c, l)
@@ -490,7 +491,7 @@ feature -- Access
 			case_as_not_void: Result /= Void
 			interval_set: Result.interval = i
 			compound_set: Result.compound = c
-			line_number_set: Result.line_number = l
+			location_set: Result.location.is_equal (l)
 		end
 
 	new_character_as (c: CHARACTER): CHAR_AS is
@@ -512,16 +513,17 @@ feature -- Access
 			type_as_not_void: Result /= Void
 		end
 
-	new_check_as (c: EIFFEL_LIST [TAGGED_AS]; s, l: INTEGER): CHECK_AS is
+	new_check_as (c: EIFFEL_LIST [TAGGED_AS]; l: TOKEN_LOCATION): CHECK_AS is
 			-- New CHECK AST node
+		require
+			l_not_void: l /= Void
 		do
 			create Result
-			Result.initialize (c, s, l)
+			Result.initialize (c, l)
 		ensure
 			check_as_not_void: Result /= Void
 			check_list_set: Result.check_list = c
-			start_postion_set: Result.start_position = s
-			line_number_set: Result.line_number = l
+			location_set: Result.location.is_equal (l)
 		end
 
 	new_class_as (n: ID_AS; ext_name: STRING;
@@ -629,33 +631,35 @@ feature -- Access
 			feature_list_set: Result.feature_list = f
 		end
 
-	new_creation_as (tp: TYPE; tg: ACCESS_AS; c: ACCESS_INV_AS; s, l: INTEGER): CREATION_AS is
+	new_creation_as (tp: TYPE; tg: ACCESS_AS; c: ACCESS_INV_AS; l: TOKEN_LOCATION): CREATION_AS is
 			-- New creation instruction AST node
 		require
 			tg_not_void: tg /= Void
+			l_not_void: l /= Void
 		do
 			create Result
-			Result.initialize (tp, tg, c, s, l)
+			Result.initialize (tp, tg, c, l)
 		ensure
 			creation_as_not_void: Result /= Void
 			type_set: Result.type = tp
 			target_set: Result.target = tg
 			call_set: Result.call = c
-			start_position_set: Result.start_position = s
-			line_number_set: Result.line_number = l
+			location_set: Result.location.is_equal (l)
 		end
 
-	new_creation_expr_as (t: TYPE; c: ACCESS_INV_AS; s,l: INTEGER): CREATION_EXPR_AS is
+	new_creation_expr_as (t: TYPE; c: ACCESS_INV_AS; l: TOKEN_LOCATION): CREATION_EXPR_AS is
 			-- New creation expression AST node
 		require
 			t_not_void: t /= Void
+			l_not_void: l /= Void
 		do
 			create Result
-			Result.initialize (t, c, s, l)
+			Result.initialize (t, c, l)
 		ensure
 			creation_expr_as_not_void: Result /= Void
 			type_set: Result.type = t
 			call_set: Result.call = c
+			location_set: Result.location.is_equal (l)
 		end
 
 	new_current_as: CURRENT_AS is
@@ -667,17 +671,18 @@ feature -- Access
 			current_as_not_void: Result /= Void
 		end
 
-	new_debug_as (k: EIFFEL_LIST [STRING_AS]; c: EIFFEL_LIST [INSTRUCTION_AS]; s, l: INTEGER): DEBUG_AS is
+	new_debug_as (k: EIFFEL_LIST [STRING_AS]; c: EIFFEL_LIST [INSTRUCTION_AS]; l: TOKEN_LOCATION): DEBUG_AS is
 			-- New DEBUG AST node
+		require
+			l_not_void: l /= Void
 		do
 			create Result
-			Result.initialize (k, c, s, l)
+			Result.initialize (k, c, l)
 		ensure
 			debug_as_not_void: Result /= Void
 			keys_set: Result.keys = k
 			compound_set: Result.compound = c
-			start_position_set: Result.start_position = s
-			line_number_set: Result.line_number = l
+			location_set: Result.location.is_equal (l)
 		end
 
 	new_deferred_as: DEFERRED_AS is
@@ -939,10 +944,11 @@ feature -- Access
 			list_empty: Result.is_empty
 		end
 
-	new_elseif_as (e: EXPR_AS; c: EIFFEL_LIST [INSTRUCTION_AS]; l: INTEGER): ELSIF_AS is
+	new_elseif_as (e: EXPR_AS; c: EIFFEL_LIST [INSTRUCTION_AS]; l: TOKEN_LOCATION): ELSIF_AS is
 			-- New ELSIF AST node
 		require
 			e_not_void: e /= Void
+			l_not_void: l /= Void
 		do
 			create Result
 			Result.initialize (e, c, l)
@@ -950,7 +956,7 @@ feature -- Access
 			elseif_as_not_void: Result /= Void
 			expr_set: Result.expr = e
 			compound_set: Result.compound = c
-			line_number_set: Result.line_number = l
+			location_set: Result.location.is_equal (l)
 		end
 
 	new_ensure_as (a: EIFFEL_LIST [TAGGED_AS]): ENSURE_AS is
@@ -1037,17 +1043,18 @@ feature -- Access
 			alias_name_set: a /= Void implies Result.alias_name_id > 0
 		end
 
-	new_external_lang_as (l: STRING_AS; s: INTEGER): EXTERNAL_LANG_AS is
+	new_external_lang_as (l: STRING_AS; s: TOKEN_LOCATION): EXTERNAL_LANG_AS is
 			-- New EXTERNAL_LANGUAGE AST node
 		require
 			l_not_void: l /= Void
+			s_not_void: s /= Void
 		do
 			create Result
 			Result.initialize (l, s)
 		ensure
 			external_lang_as_not_void: Result /= Void
 			language_name_set: Result.language_name = l
-			start_position_set: Result.start_position = s
+			location_set: Result.location.is_equal (s)
 		end
 
 	new_feature_as (f: EIFFEL_LIST [FEATURE_NAME]; b: BODY_AS; i: INDEXING_CLAUSE_AS; s, e: INTEGER): FEATURE_AS is
@@ -1067,19 +1074,19 @@ feature -- Access
 			indexes_set: Result.indexes = i
 		end
 
-	new_feature_clause_as (c: CLIENT_AS; f: EIFFEL_LIST [FEATURE_AS]; p: INTEGER): FEATURE_CLAUSE_AS is
+	new_feature_clause_as (c: CLIENT_AS; f: EIFFEL_LIST [FEATURE_AS]; l: TOKEN_LOCATION): FEATURE_CLAUSE_AS is
 			-- New FEATURE_CLAUSE AST node
 		require
 			f_not_void: f /= Void
-			p_non_negative: p > 0
+			l_not_void: l /= Void
 		do
 			create Result
-			Result.initialize (c, f, p)
+			Result.initialize (c, f, l)
 		ensure
 			feature_clause_as_not_void: Result /= Void
 			clients_set: Result.clients = c
 			features_set: Result.features = f
-			position_set: Result.position = p
+			location_set: Result.location.is_equal (l)
 		end
 
 	new_feature_list_as (f: EIFFEL_LIST [FEATURE_NAME]): FEATURE_LIST_AS is
@@ -1146,21 +1153,21 @@ feature -- Access
 
 	new_if_as (cnd: EXPR_AS; cmp: EIFFEL_LIST [INSTRUCTION_AS];
 		ei: EIFFEL_LIST [ELSIF_AS]; e: EIFFEL_LIST [INSTRUCTION_AS];
-		s, l: INTEGER): IF_AS is
+		l: TOKEN_LOCATION): IF_AS is
 			-- New IF AST node
 		require
 			cnd_not_void: cnd /= Void
+			l_not_void: l /= Void
 		do
 			create Result
-			Result.initialize (cnd, cmp, ei, e, s, l)
+			Result.initialize (cnd, cmp, ei, e, l)
 		ensure
 			if_as_not_void: Result /= Void
 			condition_set: Result.condition = cnd
 			compound_set: Result.compound = cmp
 			elsif_list_set: Result.elsif_list = ei
 			else_part_set: Result.else_part = e
-			start_position_set: Result.start_position = s
-			line_number_set: Result.line_number = l
+			location_set: Result.location.is_equal (l)
 		end
 
 	new_index_as (t: ID_AS; i: EIFFEL_LIST [ATOMIC_AS]): INDEX_AS is
@@ -1191,34 +1198,34 @@ feature -- Access
 		end
 
 	new_inspect_as (s: EXPR_AS; c: EIFFEL_LIST [CASE_AS];
-		e: EIFFEL_LIST [INSTRUCTION_AS]; p, l: INTEGER): INSPECT_AS is
+		e: EIFFEL_LIST [INSTRUCTION_AS]; l: TOKEN_LOCATION): INSPECT_AS is
 			-- New INSPECT AST node
 		require
 			s_not_void: s /= Void
+			l_not_void: l /= Void
 		do
 			create Result
-			Result.initialize (s, c, e, p, l)
+			Result.initialize (s, c, e, l)
 		ensure
 			inspect_as_not_void: Result /= Void
 			switch_set: Result.switch = s
 			case_list_set: Result.case_list = c
 			else_part_set: Result.else_part = e
-			start_position_set: Result.start_position = p
-			line_number_set: Result.line_number = l
+			location_set: Result.location.is_equal (l)
 		end
 
-	new_instr_call_as (c: CALL_AS; s, l: INTEGER): INSTR_CALL_AS is
+	new_instr_call_as (c: CALL_AS; l: TOKEN_LOCATION): INSTR_CALL_AS is
 			-- New INSTR_CALL AST node
 		require
 			c_not_void: c /= Void
+			l_not_void: l /= Void
 		do
 			create Result
-			Result.initialize (c, s, l)
+			Result.initialize (c, l)
 		ensure
 			instr_call_as_not_void: Result /= Void
 			call_set: Result.call = c
-			start_position_set: Result.start_position = s
-			line_number_set: Result.line_number = l
+			location_set: Result.location.is_equal (l)
 		end
 
 	new_integer_as (is_negative: BOOLEAN; buffer: STRING): INTEGER_CONSTANT is
@@ -1300,13 +1307,14 @@ feature -- Access
 
 	new_loop_as (f: EIFFEL_LIST [INSTRUCTION_AS]; i: EIFFEL_LIST [TAGGED_AS];
 		v: VARIANT_AS; s: EXPR_AS; c: EIFFEL_LIST [INSTRUCTION_AS];
-		p, l: INTEGER): LOOP_AS is
+		l: TOKEN_LOCATION): LOOP_AS is
 			-- New LOOP AST node
 		require
 			s_not_void: s /= Void
+			l_not_void: l /= Void
 		do
 			create Result
-			Result.initialize (f, i, v, s, c, p, l)
+			Result.initialize (f, i, v, s, c, l)
 		ensure
 			loop_as_not_void: Result /= Void
 			from_part_set: Result.from_part = f
@@ -1314,8 +1322,7 @@ feature -- Access
 			variant_part_set: Result.variant_part = v
 			stop_set: Result.stop = s
 			compound_set: Result.compound = c
-			start_position_set: Result.start_position = p
-			line_number_set: Result.line_number = l
+			location_set: Result.location.is_equal (l)
 		end
 
 	new_nested_as (t: ACCESS_AS; m: CALL_AS): NESTED_AS is
@@ -1532,40 +1539,44 @@ feature -- Access
 			result_as_not_void: Result /= Void
 		end
 
-	new_retry_as (l: INTEGER): RETRY_AS is
+	new_retry_as (l: TOKEN_LOCATION): RETRY_AS is
 			-- New RETRY AST node
+		require
+			l_not_void: l /= Void
 		do
 			create Result
 			Result.initialize (l)
 		ensure
 			retry_as_not_void: Result /= Void
+			location_set: Result.location.is_equal (l)
 		end
 
-	new_reverse_as (t: ACCESS_AS; s: EXPR_AS; p, l: INTEGER): REVERSE_AS is
+	new_reverse_as (t: ACCESS_AS; s: EXPR_AS; l: TOKEN_LOCATION): REVERSE_AS is
 			-- New assignment attempt AST node
 		require
 			t_not_void: t /= Void
 			s_not_void: s /= Void
+			l_not_void: l /= Void
 		do
 			create Result
-			Result.initialize (t, s, p, l)
+			Result.initialize (t, s, l)
 		ensure
 			reverse_as_not_void: Result /= Void
 			target_set: Result.target = t
 			source_set: Result.source = s
-			start_position_set: Result.start_position = p
-			line_number_set: Result.line_number = l
+			location_set: Result.location.is_equal (l)
 		end
 
 	new_routine_as (o: STRING_AS; pr: REQUIRE_AS;
 		l: EIFFEL_LIST [TYPE_DEC_AS]; b: ROUT_BODY_AS; po: ENSURE_AS;
-		r: EIFFEL_LIST [INSTRUCTION_AS]; p: INTEGER): ROUTINE_AS is
+		r: EIFFEL_LIST [INSTRUCTION_AS]; p: INTEGER; end_loc: TOKEN_LOCATION): ROUTINE_AS is
 			-- New ROUTINE AST node
 		require
 			b_not_void: b /= Void
+			end_loc_not_void: end_loc /= Void
 		do
 			create Result
-			Result.initialize (o, pr, l, b, po, r, p)
+			Result.initialize (o, pr, l, b, po, r, p, end_loc)
 		ensure
 			routine_as_not_void: Result /= Void
 			obsolete_message_set: Result.obsolete_message = o
@@ -1575,6 +1586,7 @@ feature -- Access
 			postcondition_set: Result.postcondition = po
 			rescue_clause_set: Result.rescue_clause = r
 			body_start_position_set: Result.body_start_position = p
+			body_end_line_number_set: Result.end_location.is_equal (end_loc)
 		end
 
 	new_routine_creation_as (t: OPERAND_AS; f: ID_AS; o: EIFFEL_LIST [OPERAND_AS]): ROUTINE_CREATION_AS is
@@ -1630,19 +1642,19 @@ feature -- Access
 			marker_set: Result.verbatim_marker = marker
 		end
 
-	new_tagged_as (t: ID_AS; e: EXPR_AS; s, l: INTEGER): TAGGED_AS is
+	new_tagged_as (t: ID_AS; e: EXPR_AS; l: TOKEN_LOCATION): TAGGED_AS is
 			-- New TAGGED AST node
 		require
 			e_not_void: e /= Void
+			l_not_void: l /= Void
 		do
 			create Result
-			Result.initialize (t, e, s, l)
+			Result.initialize (t, e, l)
 		ensure
 			tagged_as_not_void: Result /= Void
 			tag_set: Result.tag = t
 			expr_set: Result.expr = e
-			start_position_set: Result.start_position = s
-			line_number_set: Result.line_number = l
+			location_set: Result.location.is_equal (l)
 		end
 
 	new_tuple_as (exp: EIFFEL_LIST [EXPR_AS]): TUPLE_AS is
@@ -1754,31 +1766,19 @@ feature -- Access
 			unique_as_not_void: Result /= Void
 		end
 
-	new_value_as (t: ATOMIC_AS): VALUE_AS is
-			-- New VALUE AST node
-		require
-			t_not_void: t /= Void
-		do
-			create Result
-			Result.initialize (t)
-		ensure
-			value_as_not_void: Result /= Void
-			terminal_set: Result.terminal = t
-		end
-
-	new_variant_as (t: ID_AS; e: EXPR_AS; s, l: INTEGER): VARIANT_AS is
+	new_variant_as (t: ID_AS; e: EXPR_AS; l: TOKEN_LOCATION): VARIANT_AS is
 			-- New VARIANT AST node
 		require
 			e_not_void: e /= Void
+			l_not_void: l /= Void
 		do
 			create Result
-			Result.initialize (t, e, s, l)
+			Result.initialize (t, e, l)
 		ensure
 			variant_as_not_void: Result /= Void
 			tag_set: Result.tag = t
 			expr_set: Result.expr = e
-			start_position_set: Result.start_position = s
-			line_number_set: Result.line_number = l
+			location_set: Result.location.is_equal (l)
 		end
 
 end -- class AST_FACTORY

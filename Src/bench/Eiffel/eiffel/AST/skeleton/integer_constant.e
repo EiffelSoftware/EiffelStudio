@@ -10,7 +10,7 @@ inherit
 		rename
 			context as ast_context
 		undefine
-			is_character, line_number
+			is_character
 		redefine
 			is_integer, good_integer, is_equivalent,
 			type_check, byte_node, value_i, make_integer
@@ -31,6 +31,8 @@ inherit
 			size as byte_size
 		export
 			{NONE} byte_real_type, byte_generate, byte_size
+		undefine
+			line_number
 		redefine
 			print_register, make_byte_code,
 			is_simple_expr, is_predefined, generate_il

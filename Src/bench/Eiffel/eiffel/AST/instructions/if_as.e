@@ -15,24 +15,23 @@ inherit
 feature {AST_FACTORY} -- Initialization
 
 	initialize (cnd: like condition; cmp: like compound;
-		ei: like elsif_list; e: like else_part; s, l: INTEGER) is
+		ei: like elsif_list; e: like else_part; l: like location) is
 			-- Create a new IF AST node.
 		require
 			cnd_not_void: cnd /= Void
+			l_not_void: l /= Void
 		do
 			condition := cnd
 			compound := cmp
 			elsif_list := ei
 			else_part := e
-			start_position := s
-			line_number := l
+			location := clone (l)
 		ensure
 			condition_set: condition = cnd
 			compound_set: compound = cmp
 			elsif_list_set: elsif_list = ei
 			else_part_set: else_part = e
-			start_position_set: start_position = s
-			line_number_set: line_number = l
+			location_set: location.is_equal (l)
 		end
 
 feature -- Attributes
@@ -112,7 +111,6 @@ feature -- Type check, byte code and dead code removal
 			if else_part /= Void then
 				else_part.type_check
 			end
-
 		end
 
 	byte_node: IF_B is

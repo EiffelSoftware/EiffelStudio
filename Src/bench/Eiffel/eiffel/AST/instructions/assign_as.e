@@ -13,21 +13,20 @@ inherit
 
 feature {AST_FACTORY} -- Initialization
 
-	initialize (t: like target; s: like source; p, l: INTEGER) is
+	initialize (t: like target; s: like source; l: TOKEN_LOCATION) is
 			-- Create a new ASSIGN AST node.
 		require
 			t_not_void: t /= Void
 			s_not_void: s /= Void
+			l_not_void: l /= Void
 		do
 			target := t
 			source := s
-			start_position := p
-			line_number := l
+			location := clone (l)
 		ensure
 			target_set: target = t
 			source_set: source = s
-			start_position_set: start_position = p
-			line_number_set: line_number = l
+			location_set: location.is_equal (l)
 		end
 
 feature -- Attributes

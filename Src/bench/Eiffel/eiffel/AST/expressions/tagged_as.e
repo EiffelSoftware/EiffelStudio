@@ -11,24 +11,24 @@ inherit
 	EXPR_AS
 		redefine
 			type_check, byte_node, format,
-			number_of_breakpoint_slots, line_number
+			number_of_breakpoint_slots, location
 		end
 
 feature {AST_FACTORY} -- Initialization
 
-	initialize (t: like tag; e: like expr; s, l: INTEGER; ) is
+	initialize (t: like tag; e: like expr; l: like location) is
 			-- Create a new TAGGED AST node.
 		require
 			e_not_void: e /= Void
+			l_not_void: l /= Void
 		do
 			tag := t
 			expr := e
-			start_position := s
-			line_number := l
+			location := clone (l)
 		ensure
 			tag_set: tag = t
 			expr_set: expr = e
-			start_position_set: start_position = s
+			location_set: location.is_equal (l)
 		end
 
 feature -- Access
@@ -36,8 +36,8 @@ feature -- Access
 	number_of_breakpoint_slots: INTEGER is 1
 			-- Number of stop points for AST
 
-	line_number: INTEGER
-		-- Line position of assertions
+	location: TOKEN_LOCATION
+		-- Position of assertions
 
 feature -- Attributes
 
@@ -46,9 +46,6 @@ feature -- Attributes
 
 	expr: EXPR_AS
 			-- Expression
-
-	start_position: INTEGER;
-			-- Start position of AST
 
 feature -- Comparison
 

@@ -17,18 +17,17 @@ inherit
 
 feature {AST_FACTORY} -- Initialization
 
-	initialize (c: like call; s, l: INTEGER) is
+	initialize (c: like call; l: like location) is
 			-- Create a new INSTR_CALL AST node.
 		require
 			c_not_void: c /= Void
+			l_not_void: l /= Void
 		do
 			call := c
-			start_position := s
-			line_number := l
+			location := clone (l)
 		ensure
 			call_set: call = c
-			start_position_set: start_position = s
-			line_number_set: line_number = l
+			location_set: location.is_equal (l)
 		end
 
 feature -- Attributes

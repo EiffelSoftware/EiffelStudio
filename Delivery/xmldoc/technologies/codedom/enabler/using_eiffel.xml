@@ -65,5 +65,12 @@
 		<italic>batchTimeout</italic> property defined in the machine wide configuration file (<italic>machine.config</italic>) then ASP.NET will 
 		start another compilation just for the requested file. This can be quite resource intensive for the Web server and thus it might be 
 		beneficial to increase the default value of 15 seconds for <italic>batchTimeout</italic>.
+		<seealso>
+			<bold>See also:</bold> 
+			<link>
+				<url>names_mapping.xml</url>
+				<label>Names Mapping</label>
+			</link>
+		</seealso>
 	</paragraph>
 </document>

@@ -17,6 +17,8 @@
 		</heading>
 
 		Only managed code can be generated or compiled by the Eiffel CodeDom Provider. This means that the 
-		CodeDom tree being compiled cannot include snippet members which use or define Eiffel external clauses.
+		CodeDom tree being compiled cannot include snippet members which use or define Eiffel external clauses. 
+		If the system requires access to external methods, they should be defined in a precompiled library (see 
+		<link><label>Configuration</label><url>configuration.xml</url></link>).
 	</paragraph>
 </document>

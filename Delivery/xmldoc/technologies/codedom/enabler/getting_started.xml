@@ -45,5 +45,12 @@
 			<bold>Note</bold>: The samples will only be available if IIS was installed prior to installing ASP.NET Enabler.
 		</note>
 
+		<seealso>
+			<bold>See also:</bold> 
+			<link>
+				<url>using_eiffel.xml</url>
+				<label>Using Eiffel</label>
+			</link>
+		</seealso>
 	</paragraph>
 </document>

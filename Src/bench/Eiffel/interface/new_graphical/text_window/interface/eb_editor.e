@@ -639,8 +639,6 @@ feature {EB_TOOL, EB_COMMAND, EB_SEARCH_PERFORMER, EB_DEVELOPMENT_WINDOW} -- Tex
 			-- Current selection string
 		require
 			has_selection: has_selection
-		local
-			copied_text: STRING
 		do
 			if has_selection then
 				if not text_displayed.cursor.is_equal (text_displayed.selection_cursor) then

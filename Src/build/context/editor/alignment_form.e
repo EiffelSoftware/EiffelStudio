@@ -31,6 +31,9 @@ feature -- Interface
 		do	
 			initialize (Widget_names.alignment_form_name, a_parent)
 			create_ok_button
+
+--			set_size (200, 350)
+
 			detach_top (separator)
 			!! context_list.make (Widget_names.widget_list_name, Current)
 			!! reference.make (Widget_names.reference_name, Current)
@@ -55,7 +58,7 @@ feature -- Interface
 			offset_value.set_horizontal (True)
 			offset_value.set_maximum_right_bottom (true)
 			offset_value.show_value (True)
-			offset_value.set_size (110, 15)
+			offset_value.set_size (110, 50)
 			offset_value.add_value_changed_action (Current, offset_value)
 			offset_value.set_minimum (0)
 			offset_value.set_maximum (100)
@@ -84,8 +87,10 @@ feature -- Interface
 			attach_top_widget (radio_box_direction, radio_box_point, 10)
 			attach_top_widget (radio_box_point, offset, 10)
 			attach_top_widget (offset, offset_value, 10)
-			attach_bottom_widget (separator, context_list, 5)
-			attach_bottom_widget (separator, offset_value, 5)
+			attach_top_widget (context_list, separator, 5)
+			attach_top_widget (offset_value, separator, 5)
+--			attach_bottom_widget (separator, context_list, 5)
+--			attach_bottom_widget (separator, offset_value, 5)
 			radio_box_direction.set_always_one (True)
 			radio_box_point.set_always_one (True)
 			show_current

@@ -215,7 +215,6 @@ feature {NONE} -- Implementation
 			-- Respond to a draw_item message.
 		local
 			dc: WEL_DC
-			brush: WEL_BRUSH
 		do
 			dc := a_draw_item_struct.dc
 			if is_pressed or is_being_pressed then

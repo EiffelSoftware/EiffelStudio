@@ -112,9 +112,6 @@ feature -- Initialization
 
 	realize is
 			-- Realize the list box.
-		local
-			i: INTEGER
-			pos: INTEGER
 		do
 			if not realized then
 				if not has_width then

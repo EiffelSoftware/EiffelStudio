@@ -102,8 +102,6 @@ feature -- Status setting
 
 	set_text (t: STRING) is
 			-- Set window text to t.
-		local
-			ext_text: ANY
 		do
 			private_text := clone (t)
 			if exists then

@@ -52,8 +52,6 @@ feature -- Status setting
 
 	set_title (a_title: STRING) is
 			-- Set `title' to `a_title'.
-		local
-			ext_text: ANY
 		do
 			if exists then
 				wel_set_text (a_title)

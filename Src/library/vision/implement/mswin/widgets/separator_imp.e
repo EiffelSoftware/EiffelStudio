@@ -322,8 +322,6 @@ feature -- Status setting
 
 	set_horizontal (flag: BOOLEAN) is
 			-- Set separator to be double horizontal.
-		local
-			w: INTEGER
 		do
 			if is_horizontal /= flag then
 				if exists then

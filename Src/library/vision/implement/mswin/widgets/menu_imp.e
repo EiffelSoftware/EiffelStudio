@@ -260,7 +260,6 @@ feature -- Element change
 	manage_item (w: WIDGET_IMP) is
 			-- Manage a item in the menu.
 		local
-			ba: BAR_IMP
 			mp: MENU_PULL_IMP
 			m: MENU_IMP
 			b: BUTTON_IMP

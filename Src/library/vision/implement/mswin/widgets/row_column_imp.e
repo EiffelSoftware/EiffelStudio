@@ -270,7 +270,7 @@ feature -- Element change
 			end
 			map_widgets (width, height)
 				-- set initial focus
-			if initial_focus/= void then
+			if initial_focus/= Void then
 				initial_focus.wel_set_focus
 			end
 		end
@@ -293,7 +293,6 @@ feature -- Element change
 		local
 			c: ARRAYED_LIST [WIDGET_IMP]
 			largest_h, largest_w: INTEGER
-			i: INTEGER
 			ci: WIDGET_IMP
 			sizeable_window: SIZEABLE_WINDOWS
 		do
@@ -385,8 +384,8 @@ feature {NONE} -- Implementation
 		require
 			not_same_size: not same_size
 		local
-			max_width, max_height, temp_height: INTEGER
-			i, j: INTEGER
+			max_width, max_height: INTEGER
+			i: INTEGER
 			total: INTEGER
 			loop_count, rest_count: INTEGER
 		do

@@ -6,7 +6,6 @@ indexing
 	revision: "$Revision$"
 
 class
-
 	W_MANAGER 
 
 inherit
@@ -560,7 +559,6 @@ feature {NONE} -- Implementation
 			widget_exists: widget /= Void;
 		local
 			widget_area: like area;
-			widget_index: INTEGER;
 			widget_i: WIDGET_I
 		do
 			widget_i := widget.implementation;

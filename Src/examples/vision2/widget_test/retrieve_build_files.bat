@@ -29,6 +29,8 @@ REM Copy icons for standard buttons.
 XCOPY /Y Delivery\vision2_tour\bitmaps\ico\documentation.ico .\bitmaps\ico\
 XCOPY /Y Delivery\vision2_tour\bitmaps\ico\testing.ico .\bitmaps\ico\
 XCOPY /Y Delivery\vision2_tour\bitmaps\ico\properties.ico .\bitmaps\ico\
+XCOPY /Y Delivery\vision2_tour\bitmaps\ico\size_down.ico .\bitmaps\ico\
+XCOPY /Y Delivery\vision2_tour\bitmaps\ico\size_up.ico .\bitmaps\ico\
 
 REM Copy modified vision2 interface files needed.
 XCOPY /Y Src\Build2\modified_libraries\vision2\ev_pixmap.e .\interface

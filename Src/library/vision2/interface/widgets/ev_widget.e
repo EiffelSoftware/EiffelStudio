@@ -453,7 +453,7 @@ feature {EV_WIDGET, EV_ANY_I}--EV_WIDGET, EV_PICK_AND_DROPABLE_I} -- Implementat
 			-- native graphics toolkit.
 			-- (See bridge pattern notes in EV_ANY)
 
-feature {EV_ANY} -- Contract_support
+feature {EV_ANY} -- Contract support
 
 	make_for_test is
 			-- Instance of `Current' for testing purposes.
@@ -759,6 +759,9 @@ end -- class EV_WIDGET
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.69  2000/03/02 17:47:11  king
+--| Changed Contract_support to Contract Support
+--|
 --| Revision 1.68  2000/03/01 03:11:20  oconnor
 --| added make_for_test to produce an interesting example widget for testing
 --|

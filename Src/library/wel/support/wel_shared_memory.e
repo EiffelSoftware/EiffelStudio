@@ -80,7 +80,6 @@ feature {NONE} -- Externals
 
 	global_lock (a_handle: POINTER): POINTER is
 		external
---			"C | %"wel.h%" (HGLOBAL): EIF_POINTER"
 			"C | %"wel.h%""
 		alias
 			"GlobalLock"
@@ -88,7 +87,6 @@ feature {NONE} -- Externals
 
 	global_unlock (a_handle: POINTER): BOOLEAN is
 		external
---			"C | %"wel.h%" (HGLOBAL): EIF_BOOLEAN"
 			"C | %"wel.h%""
 		alias
 			"GlobalUnlock"
@@ -96,7 +94,6 @@ feature {NONE} -- Externals
 
 	global_size (a_handle: POINTER): INTEGER is
 		external
---			"C | %"wel.h%" (HGLOBAL): EIF_INTEGER"
 			"C | %"wel.h%""
 		alias
 			"GlobalSize"
@@ -104,14 +101,10 @@ feature {NONE} -- Externals
 
 	global_free (a_handle: POINTER): POINTER is
 		external
---			"C | %"wel.h%" (HGLOBAL): EIF_POINTER"
 			"C | %"wel.h%""
 		alias
 			"GlobalFree"
 		end
-
- 
-
 
 end -- class WEL_SHARED_MEMORY
 

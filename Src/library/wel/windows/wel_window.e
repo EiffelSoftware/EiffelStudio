@@ -687,6 +687,52 @@ feature -- Element change
 			cwin_set_timer (item, timer_id, time_out,
 				default_pointer)
 		end
+		
+	has_system_window_locked: BOOLEAN is
+			-- Is there any window locked ?
+		local
+			b: BOOLEAN
+		do
+			Result := not c_lock_window_update (item)
+			if not Result then
+					b := c_lock_window_update (default_pointer)
+					check
+						success:b
+					end
+			end
+		end
+		
+	lock_window_update is
+			-- Disables drawing in the current window. A locked window cannot be moved.
+			-- Only one window can be locked at a time. To unlock a window locked with 
+			-- `lock_window_update' , call 'unlock_window_update'.
+		require
+			exists: exists
+			no_window_is_locked: not has_system_window_locked
+		local
+			success : BOOLEAN
+		do
+			success := c_lock_window_update (item)
+			check
+				success: success
+			end
+		ensure
+			has_system_window_locked
+		end
+
+	unlock_window_update is
+			-- Unlock a locked window.	
+		require
+			exists: exists
+			window_locked: has_system_window_locked
+		local
+			success : BOOLEAN
+		do
+			success := c_lock_window_update (default_pointer)
+			check
+				success: success
+			end
+		end
 
 feature -- Basic operations
 
@@ -1806,6 +1852,14 @@ feature {NONE} -- Externals
 		external
 			"C [macro <disptchr.h>]"
 		end
+
+	c_lock_window_update (hwnd_lock: POINTER): BOOLEAN is
+		external
+			"C [macro %"wel.h%"] (HWND): EIF_BOOLEAN"
+		alias
+			"LockWindowUpdate"
+		end
+
 
 end -- class WEL_WINDOW
 

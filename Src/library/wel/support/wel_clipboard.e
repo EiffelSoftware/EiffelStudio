@@ -66,7 +66,6 @@ feature {NONE} -- Externals
 			-- Opens the clipboard
 			-- hwnd_owner is the handle to the window opening the clipboard
 		external
---			"C | %"wel.h%" (HWND): EIF_BOOLEAN"
 			"C | %"wel.h%""
 		alias
 			"OpenClipboard"
@@ -76,7 +75,6 @@ feature {NONE} -- Externals
 			-- Closes the clipboard
 		external
 			"C | %"wel.h%""
---			"C | %"wel.h%" : EIF_BOOLEAN"
 		alias
 			"CloseClipboard"
 		end
@@ -86,7 +84,6 @@ feature {NONE} -- Externals
 			-- the data currently stored in the clipboard.
 			-- Format is one of the constants in WEL_CLIPBOARD_CONSTANTS
 		external
---			"C | %"wel.h%" (UINT): EIF_POINTER"
 			"C | %"wel.h%""
 		alias
 			"GetClipboardData"
@@ -96,7 +93,6 @@ feature {NONE} -- Externals
 			-- Determines whether the clipboard contains data in the specified format. 
 		external
 			"C | %"wel.h%""
---			"C | %"wel.h%" (UINT): EIF_BOOLEAN"
 		alias
 			"IsClipboardFormatAvailable"
 		end

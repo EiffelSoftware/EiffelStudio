@@ -302,7 +302,7 @@ typedef enum EIF_FEATURE_TYPES
     uuid (UUID_IEiffelException),
     helpstring ("A single exception object")
 ]
-interface IEiffelException: IUnknown
+interface IEiffelException: IDispatch
 {
     [helpstring ("Get inner exception"), propget]
     HRESULT inner_exception ([out, retval] IEiffelException** a_result);
@@ -320,7 +320,7 @@ interface IEiffelException: IUnknown
     uuid (UUID_IEiffelProject),
     helpstring ("Eiffel Project.")
 ]
-interface IEiffelProject: IUnknown
+interface IEiffelProject: IDispatch
 {
     [helpstring ("Retrieve Eiffel Project")]
     HRESULT retrieve_eiffel_project ([in] BSTR a_project_file_name);
@@ -371,7 +371,7 @@ interface IEiffelProject: IUnknown
     uuid (UUID_IEiffelCompletionInfo),
     helpstring ("Eiffel Completion info.")
 ]
-interface IEiffelCompletionInfo: IUnknown
+interface IEiffelCompletionInfo: IDispatch
 {
     [helpstring ("Add a local variable used for solving member completion list")]
     HRESULT add_local ([in] BSTR name, [in] BSTR type);
@@ -398,7 +398,7 @@ interface IEiffelCompletionInfo: IUnknown
     uuid (UUID_IEiffelCompiler),
     helpstring ("Eiffel Compiler.")
 ]
-interface IEiffelCompiler: IUnknown
+interface IEiffelCompiler: IDispatch
 {
     [helpstring ("Compile.")]
     HRESULT compile ();
@@ -481,7 +481,7 @@ interface IEiffelCompilerEvents: IUnknown
     uuid (UUID_IEiffelHTMLDocGenerator),
     helpstring ("Eiffel Project HTML Documentation Generator.")
 ]
-interface IEiffelHTMLDocGenerator: IUnknown
+interface IEiffelHTMLDocGenerator: IDispatch
 {
     [propget, helpstring ("Is the project loaded?")]
     HRESULT is_loaded ([out, retval] VARIANT_BOOL* return_value);
@@ -514,7 +514,7 @@ interface IEiffelHTMLDocGenerator: IUnknown
     uuid (UUID_IEiffelHTMLDocEvents),
     helpstring ("Callback interface for HTML Documentation Generator.")
 ]
-interface IEiffelHTMLDocEvents: IUnknown
+interface IEiffelHTMLDocEvents: IDispatch
 {
 
     [helpstring ("Put a header message to the output")]
@@ -539,7 +539,7 @@ interface IEiffelHTMLDocEvents: IUnknown
     uuid(UUID_IEnumEiffelClass),
     helpstring ("Eiffel Class Enumeration.")
 ]
-interface IEnumEiffelClass: IUnknown
+interface IEnumEiffelClass: IDispatch
 {
     HRESULT Next([out] IEiffelClassDescriptor **rgelt, [out] ULONG *pceltFetched);
 
@@ -560,7 +560,7 @@ interface IEnumEiffelClass: IUnknown
         uuid(UUID_IEnumCluster),
         helpstring ("Eiffel Cluster Enumeration.")
 ]
-interface IEnumCluster: IUnknown
+interface IEnumCluster: IDispatch
 {
     HRESULT Next([out] IEiffelClusterDescriptor **rgelt, [out] ULONG *pceltFetched);
 
@@ -581,7 +581,7 @@ interface IEnumCluster: IUnknown
     uuid(UUID_IEnumFeature),
     helpstring ("Eiffel Feature Enumeration.")
 ]
-interface IEnumFeature: IUnknown
+interface IEnumFeature: IDispatch
 {
     HRESULT Next(
             [out] IEiffelFeatureDescriptor **rgelt,
@@ -606,7 +606,7 @@ interface IEnumFeature: IUnknown
     uuid (UUID_IEnumParameter),
     helpstring ("Feature paramaters enumeration.")
 ]
-interface IEnumParameter: IUnknown
+interface IEnumParameter: IDispatch
 {
     HRESULT Next(
             [out] IEiffelParameterDescriptor ** rgelt,
@@ -632,7 +632,7 @@ interface IEnumParameter: IUnknown
     uuid(UUID_IEnumClusterProp),
     helpstring ("Eiffel Cluster Properties Enumeration.")
 ]
-interface IEnumClusterProp: IUnknown
+interface IEnumClusterProp: IDispatch
 {
     HRESULT Next([out] IEiffelClusterProperties **rgelt,[out] ULONG *pceltFetched);
 
@@ -654,7 +654,7 @@ interface IEnumClusterProp: IUnknown
     helpstring ("Eiffel Cluster Exluded Directories Enumeration.")
 ]
 
-interface IEnumClusterExcludes: IUnknown
+interface IEnumClusterExcludes: IDispatch
 {
     HRESULT Next([out] BSTR *rgelt, [out] ULONG *pceltFetched);
 
@@ -675,7 +675,7 @@ interface IEnumClusterExcludes: IUnknown
     uuid(UUID_IEnumAssembly),
     helpstring ("Eiffel Assembly Enumeration.")
 ]
-interface IEnumAssembly: IUnknown
+interface IEnumAssembly: IDispatch
 {
     HRESULT Next([out] IEiffelAssemblyProperties ** rgelt, [out] ULONG *pceltFetched);
 
@@ -696,7 +696,7 @@ interface IEnumAssembly: IUnknown
     uuid(UUID_IEnumIncludePaths),
     helpstring ("Include Path Enumeration.")
 ]
-interface IEnumIncludePaths: IUnknown
+interface IEnumIncludePaths: IDispatch
 {
     HRESULT Next([out] BSTR *rgelt, [out] ULONG *pceltFetched);
 
@@ -717,7 +717,7 @@ interface IEnumIncludePaths: IUnknown
     uuid(UUID_IEnumObjectFiles),
     helpstring ("Object File Enumeration.")
 ]
-interface IEnumObjectFiles: IUnknown
+interface IEnumObjectFiles: IDispatch
 {
     HRESULT Next([out] BSTR *rgelt, [out] ULONG *pceltFetched);
 
@@ -738,7 +738,7 @@ interface IEnumObjectFiles: IUnknown
     uuid (UUID_IEiffelSystemBrowser),
     helpstring ("System Browser.")
 ]
-interface IEiffelSystemBrowser: IUnknown
+interface IEiffelSystemBrowser: IDispatch
 {
     [helpstring ("List of classes in system.")]
     HRESULT system_classes ([out, retval] IEnumEiffelClass ** some_classes);
@@ -791,7 +791,7 @@ interface IEiffelSystemBrowser: IUnknown
     uuid (UUID_IEiffelClusterDescriptor),
     helpstring ("Eiffel Cluster Descriptor.")
 ]
-interface IEiffelClusterDescriptor: IUnknown
+interface IEiffelClusterDescriptor: IDispatch
 {
     [helpstring ("Cluster name.")]
     HRESULT name ([out, retval] BSTR * return_value);
@@ -833,7 +833,7 @@ interface IEiffelClusterDescriptor: IUnknown
     uuid (UUID_IEiffelClassDescriptor),
     helpstring ("Eiffel Class Descriptor.")
 ]
-interface IEiffelClassDescriptor: IUnknown
+interface IEiffelClassDescriptor: IDispatch
 {
     [helpstring ("Class name.")]
     HRESULT name ([out, retval] BSTR * return_value);
@@ -923,7 +923,7 @@ interface IEiffelClassDescriptor: IUnknown
     uuid (UUID_IEiffelFeatureDescriptor),
     helpstring ("Eiffel Feature Descriptor.")
 ]
-interface IEiffelFeatureDescriptor: IUnknown
+interface IEiffelFeatureDescriptor: IDispatch
 {
     [helpstring ("Feature name.")]
     HRESULT name ([out, retval] BSTR * return_value);
@@ -1041,7 +1041,7 @@ interface IEiffelFeatureDescriptor: IUnknown
     uuid (UUID_IEiffelParameterDescriptor),
     helpstring ("Feature parameter info.")
 ]
-interface IEiffelParameterDescriptor: IUnknown
+interface IEiffelParameterDescriptor: IDispatch
 {
     [helpstring ("Parameter name")]
     HRESULT name ([out, retval] BSTR* return_value);
@@ -1383,11 +1383,12 @@ interface IEiffelClusterProperties: IDispatch
 //---------------------------------------------------------------------
 
 [
+    dual,
     object,
     uuid (UUID_IEiffelAssemblyProperties),
     helpstring ("Eiffel Assembly Properties (for Ace file).")
 ]
-interface IEiffelAssemblyProperties: IUnknown
+interface IEiffelAssemblyProperties: IDispatch
 {
     [id (DISPID_assembly_name), helpstring ("Assembly name."), propget]
     HRESULT assembly_name ([out, retval] BSTR * return_value);
@@ -1419,11 +1420,12 @@ interface IEiffelAssemblyProperties: IUnknown
 //---------------------------------------------------------------------
 
 [
+    dual,
     object,
     uuid (UUID_IEiffelSystemExternals),
     helpstring ("Eiffel System Externals.")
 ]
-interface IEiffelSystemExternals: IUnknown
+interface IEiffelSystemExternals: IDispatch
 {
     [id (DISPID_store), helpstring ("Save changes.")]
     HRESULT store ();

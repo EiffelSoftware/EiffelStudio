@@ -260,6 +260,8 @@ RT_LNK EIF_POINTER eif_thr_last_thread(void);
 /*-------------------------------*/
 
 #include <windows.h>
+#include <process.h>
+#include "eif_cond_var.h"
 
 #define EIF_MIN_PRIORITY 0			/*  - not used */
 #define EIF_MAX_PRIORITY 1000		/* - not used  */
@@ -271,6 +273,24 @@ RT_LNK EIF_POINTER eif_thr_last_thread(void);
 #define EIF_THR_TYPE            HANDLE
 #define EIF_MUTEX_TYPE          HANDLE
 #define EIF_TSD_TYPE            DWORD
+
+
+/* Mutex management */
+#define EIF_MUTEX_CREATE(m,msg) \
+        m = CreateMutex(NULL,FALSE,NULL); \
+        if (!m) eif_thr_panic(msg);
+#define EIF_MUTEX_LOCK(m,msg) \
+        if (WaitForSingleObject(m, INFINITE) == WAIT_FAILED) \
+        eif_thr_panic(msg)
+#define EIF_MUTEX_TRYLOCK(m,r,msg)  \
+        r = (WaitForSingleObject(m,0)); \
+        if (r==WAIT_FAILED) eif_thr_panic(msg); \
+        r = (r==WAIT_TIMEOUT)
+#define EIF_MUTEX_UNLOCK(m,msg) \
+        if (!ReleaseMutex(m)) eif_thr_panic(msg)
+#define EIF_MUTEX_DESTROY(m,msg) \
+        if (!CloseHandle(m)) eif_thr_panic(msg)
+
 
 #elif defined SOLARIS_THREADS
 

@@ -70,6 +70,8 @@ feature -- Element Change
 		ensure
 			tl_linked: tl /= last_data implies
 				(tl.next /= Void and then tl.next.previous = tl)
+			tl_has_key: tl.key /= Void
+			tl_has_tree: tl.tree /= Void
 		end
 
 	append_data (tl: like first_data) is
@@ -94,6 +96,8 @@ feature -- Element Change
 		ensure
 			tl_linked: tl /= first_data implies
 				(tl.previous /= Void and then tl.previous.next = tl)
+			tl_has_key: tl.key /= Void
+			tl_has_tree: tl.tree /= Void
 		end
 
 feature -- Removal

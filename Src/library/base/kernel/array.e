@@ -243,6 +243,32 @@ feature -- Element change
 			higher_count: count >= old count
 		end;
 
+	subcopy (other: like Current; start_pos, end_pos, index_pos: INTEGER) is
+			-- Copy items of `other' within bounds `start_pos' and `end_pos'
+			-- to current array starting at index `index_pos'.
+		require
+			other_not_void: other /= Void;
+			valid_start_pos: other.valid_index (start_pos)
+			valid_end_pos: other.valid_index (end_pos)
+			valid_bounds: (start_pos <= end_pos) or (start_pos = end_pos + 1)
+			valid_index_pos: valid_index (index_pos)
+			enough_space: (upper - index_pos) >= (end_pos - start_pos)
+		local
+			other_area: like area;
+			other_lower: INTEGER;
+			start0, end0, index0: INTEGER
+		do
+			other_area := other.area;
+			other_lower := other.lower;
+			start0 := start_pos - other_lower;
+			end0 := end_pos - other_lower;
+			index0 := index_pos - lower;
+			spsubcopy ($other_area, $area, start0, end0, index0)
+		ensure
+			-- copied: forall `i' in 0 .. (`end_pos'-`start_pos'),
+			--     item (index_pos + i) = other.item (start_pos + i)
+		end
+
 feature -- Removal
 
 	wipe_out is
@@ -253,20 +279,8 @@ feature -- Removal
 
 	clear_all is
 			-- Reset all items to default values.
-		local
-			i: INTEGER;
-			dead_element: G
 		do
-			from
-				i := lower
-			variant
-				upper + 1 - i
-			until
-				i > upper
-			loop
-				put (dead_element, i);
-				i := i + 1
-			end
+			spclearall ($area)
 		ensure
 			all_cleared: all_cleared
 		end;
@@ -363,6 +377,23 @@ feature -- Duplication
 			equal_areas: area.is_equal (other.area)
 		end;
 
+	subarray (start_pos, end_pos: INTEGER): like Current is
+			-- Array made of items of current array within
+			-- bounds `start_pos' and `end_pos'.
+		require
+			valid_start_pos: valid_index (start_pos)
+			valid_end_pos: valid_index (end_pos)
+			valid_bounds: (start_pos <= end_pos) or (start_pos = end_pos + 1)
+		do
+			!! Result.make (start_pos, end_pos);
+			Result.subcopy (Current, start_pos, end_pos, start_pos)
+		ensure
+			lower: Result.lower = start_pos;
+			upper: Result.upper = end_pos;
+			-- copied: forall `i' in `start_pos' .. `end_pos',
+			--     Result.item (i) = item (i)
+		end
+
 feature -- Obsolete
 
 	duplicate: like Current is obsolete "Use ``clone''"
@@ -446,6 +477,19 @@ feature {NONE} -- Implementation
 		do
 			Result := area = Void or else area.count = 0
 		end;
+
+	spsubcopy (source, target: POINTER; s, e, i: INTEGER) is
+			-- Copy elements of `source' within bounds `s'
+			-- and `e' to `target' starting at index `i'.
+		external
+			"C"
+		end
+
+	spclearall (p: POINTER) is
+			-- Reset all items to default value.
+		external
+			"C"
+		end
 
 invariant
 

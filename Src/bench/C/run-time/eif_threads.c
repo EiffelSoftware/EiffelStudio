@@ -340,12 +340,19 @@ rt_public void eif_thr_exit(void)
 
 	EIF_GET_CONTEXT
 
+		/* We need to keep a reference to the children mutex and 
+		 * the children condition variable after freeing ressources */
+#ifndef EIF_NO_CONDVAR
+	EIF_COND_TYPE *chld_cond = eif_thr_context->children_cond; 
+#endif /* EIF_NO_CONDVAR */
+	EIF_MUTEX_TYPE *chld_mutex = eif_thr_context->children_mutex;
+
 	thr_list_t *ptr, **thr_list = eif_thr_context->addr_thr_list;
 	char *terminated = 
 		eifaddr (eif_access (eif_thr_context->current), "terminated");
 	
 
-	EIF_MUTEX_LOCK(eif_thr_context->children_mutex, "Lock parent mutex");
+	EIF_MUTEX_LOCK(chld_mutex, "Lock parent mutex");
 
 	/* Set the `terminated' field of the twin thread object to True so that
 	 * it knows the thread is terminated
@@ -373,10 +380,6 @@ rt_public void eif_thr_exit(void)
 
 	/* Decrement the number of child threads of the parent */
 	*(eif_thr_context->addr_n_children) -= 1;
-#ifndef EIF_NO_CONDVAR
-	EIF_COND_BROADCAST(eif_thr_context->children_cond, "Pbl cond_broadcast");
-#endif
-	EIF_MUTEX_UNLOCK(eif_thr_context->children_mutex, "Unlock parent mutex");
 
 	reclaim ();							/* Free all allocated memory chunks */
 	eif_free (eif_thr_context->tid);	/* Thread id of the current thread */
@@ -384,6 +387,10 @@ rt_public void eif_thr_exit(void)
 	eif_free (eif_globals);				/* Global variables specific to the current
 										 * thread of the run-time */
 
+#ifndef EIF_NO_CONDVAR
+	EIF_COND_BROADCAST(chld_cond, "Pbl cond_broadcast");
+#endif
+	EIF_MUTEX_UNLOCK(chld_mutex, "Unlock parent mutex");
 	EIF_THR_EXIT(0);
 	EIF_END_GET_CONTEXT
 }

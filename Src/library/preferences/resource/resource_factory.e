@@ -12,15 +12,16 @@ class
 
 feature -- Commands
 
-	new_resource (preferences: PREFERENCES; a_manager: PREFERENCE_MANAGER; a_name: STRING; a_value: G): H is
-			-- Create a new resource with name `a_name' and `a_value'.
+	new_resource (preferences: PREFERENCES; a_manager: PREFERENCE_MANAGER; a_name: STRING; a_fallback_value: G): H is
+			-- Create a new resource with name `a_name'.  If preference cannot be found in 
+			-- underlying datastore or in a default values then `a_fallback_value' is used for the value.
 		require
 			preferences_not_void: preferences /= Void
 			manager_not_void: a_manager /= Void
 			not_has_resource: not a_manager.known_resource (a_name)
 			name_valid: a_name /= Void 
 			name_not_empty: not a_name.is_empty
-			value_not_void: a_value /= Void
+			value_not_void: a_fallback_value /= Void
 		local
 			l_fullname,
 			l_value,
@@ -37,10 +38,10 @@ feature -- Commands
 				if l_value = Void then
 					l_value := ""
 				end
-				create Result.make_from_string_value (a_manager, a_name, l_value)				
+				create Result.make_from_string_value (a_manager, a_name, l_value)		
 			else				
 					-- Create with `a_value'.
-				create Result.make (a_manager, a_name, a_value)
+				create Result.make (a_manager, a_name, a_fallback_value)
 			end
 			
 					-- Set the default value for future resetting by user.

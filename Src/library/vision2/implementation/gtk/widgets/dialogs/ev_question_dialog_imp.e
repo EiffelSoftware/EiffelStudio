@@ -13,14 +13,38 @@ inherit
 
 	EV_QUESTION_DIALOG_I
 
-creation
+	EV_MESSAGE_DIALOG_IMP
+		redefine
+			set_default
+		end
 
-	make
+creation
+	make,
+	make_default,
+	make_with_text
+
+feature {NONE} -- Implementation
+
+	set_default (msg, dtitle: STRING) is
+			-- Set default settings
+		do
+			set_message (msg)
+			set_title (dtitle)
+			show_yes_no_buttons
+		end
+
+	icon_build (par: EV_CONTAINER) is
+			-- Load the icon
+		local
+			icon: EV_PIXMAP
+		do
+			--!!icon.make (par)
+		end
 
 end -- class EV_QUESTION_DIALOG_IMP
 
 --|----------------------------------------------------------------
---| Windows Eiffel Library: library of reusable components for ISE Eiffel.
+--| EiffelVision: library of reusable components for ISE Eiffel.
 --| Copyright (C) 1986-1998 Interactive Software Engineering Inc.
 --| All rights reserved. Duplication and distribution prohibited.
 --| May be used only with ISE Eiffel, under terms of user license. 

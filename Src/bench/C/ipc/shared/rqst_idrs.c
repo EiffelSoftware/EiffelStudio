@@ -186,6 +186,22 @@ rt_private bool_t idr_Item (IDR *idrs, struct item *ext)
 			memcpy (idrs->i_ptr, &ext->it_wchar, sizeof(EIF_WIDE_CHAR));
 			idrs->i_ptr += sizeof(EIF_WIDE_CHAR);
 			return TRUE;
+		case SK_UINT8:
+			memcpy (idrs->i_ptr, &ext->it_uint8, sizeof(EIF_NATURAL_8));
+			idrs->i_ptr += sizeof(EIF_NATURAL_8);
+			return TRUE;
+		case SK_UINT16:
+			memcpy (idrs->i_ptr, &ext->it_uint16, sizeof(EIF_NATURAL_16));
+			idrs->i_ptr += sizeof(EIF_NATURAL_16);
+			return TRUE;
+		case SK_UINT32:
+			memcpy (idrs->i_ptr, &ext->it_uint32, sizeof(EIF_NATURAL_32));
+			idrs->i_ptr += sizeof(EIF_NATURAL_32);
+			return TRUE;
+		case SK_UINT64:
+			memcpy (idrs->i_ptr, &ext->it_uint64, sizeof(EIF_NATURAL_64));
+			idrs->i_ptr += sizeof(EIF_NATURAL_64);
+			return TRUE;
 		case SK_INT8:
 			memcpy (idrs->i_ptr, &ext->it_int8, sizeof(EIF_INTEGER_8));
 			idrs->i_ptr += sizeof(EIF_INTEGER_8);

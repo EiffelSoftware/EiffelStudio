@@ -25,6 +25,10 @@
 #include "rt_garcol.h"
 
 EIF_PROC set_rout;
+EIF_PROC set_natural_8;
+EIF_PROC set_natural_16;
+EIF_PROC set_natural_32;
+EIF_PROC set_natural_64;
 EIF_PROC set_integer_8;
 EIF_PROC set_integer_16;
 EIF_PROC set_integer_32;
@@ -161,48 +165,29 @@ rt_public void c_recv_value (EIF_OBJ target)
 				item = *pack.rq_dump.dmp_item;
 				type_flag = item.type;
 				switch (type_flag & SK_HEAD) {
-					case SK_BOOL:
-						(FUNCTION_CAST(void, (EIF_REFERENCE, EIF_BOOLEAN)) set_bool) (eif_access (target), item.it_char);
-						return;
-					case SK_CHAR:
-						(FUNCTION_CAST(void, (EIF_REFERENCE, EIF_CHARACTER)) set_char) (eif_access (target), item.it_char);
-						return;
-					case SK_WCHAR:
-						(FUNCTION_CAST(void, (EIF_REFERENCE, EIF_WIDE_CHAR)) set_wchar) (eif_access (target), item.it_wchar);
-						return;
-					case SK_INT8:
-						(FUNCTION_CAST(void, (EIF_REFERENCE, EIF_INTEGER_8)) set_integer_8) (eif_access (target), item.it_int8);
-						return;
-					case SK_INT16:
-						(FUNCTION_CAST(void, (EIF_REFERENCE, EIF_INTEGER_16)) set_integer_16) (eif_access (target), item.it_int16);
-						return;
-					case SK_INT32:
-						(FUNCTION_CAST(void, (EIF_REFERENCE, EIF_INTEGER_32)) set_integer_32) (eif_access (target), item.it_int32);
-						return;
-					case SK_INT64:
-						(FUNCTION_CAST(void, (EIF_REFERENCE, EIF_INTEGER_64)) set_integer_64) (eif_access (target), item.it_int64);
-						return;
-					case SK_REAL32:
-						(FUNCTION_CAST(void, (EIF_REFERENCE, EIF_REAL_32)) set_real) (eif_access (target), item.it_real32);
-						return;
-					case SK_REAL64:
-						(FUNCTION_CAST(void, (EIF_REFERENCE, EIF_REAL_64)) set_double) (eif_access (target), item.it_real64);
-						return;
-					case SK_POINTER:
-						(FUNCTION_CAST(void, (EIF_REFERENCE, EIF_POINTER)) set_pointer) (eif_access (target), item.it_ptr);
-						return;
+					case SK_BOOL: (FUNCTION_CAST(void, (EIF_REFERENCE, EIF_BOOLEAN)) set_bool) (eif_access (target), item.it_char); return;
+					case SK_CHAR: (FUNCTION_CAST(void, (EIF_REFERENCE, EIF_CHARACTER)) set_char) (eif_access (target), item.it_char); return;
+					case SK_WCHAR: (FUNCTION_CAST(void, (EIF_REFERENCE, EIF_WIDE_CHAR)) set_wchar) (eif_access (target), item.it_wchar); return;
+					case SK_UINT8: (FUNCTION_CAST(void, (EIF_REFERENCE, EIF_NATURAL_8)) set_natural_8) (eif_access (target), item.it_uint8); return;
+					case SK_UINT16: (FUNCTION_CAST(void, (EIF_REFERENCE, EIF_NATURAL_16)) set_natural_16) (eif_access (target), item.it_uint16); return;
+					case SK_UINT32: (FUNCTION_CAST(void, (EIF_REFERENCE, EIF_NATURAL_32)) set_natural_32) (eif_access (target), item.it_uint32); return;
+					case SK_UINT64: (FUNCTION_CAST(void, (EIF_REFERENCE, EIF_NATURAL_64)) set_natural_64) (eif_access (target), item.it_uint64); return;
+					case SK_INT8: (FUNCTION_CAST(void, (EIF_REFERENCE, EIF_INTEGER_8)) set_integer_8) (eif_access (target), item.it_int8); return;
+					case SK_INT16: (FUNCTION_CAST(void, (EIF_REFERENCE, EIF_INTEGER_16)) set_integer_16) (eif_access (target), item.it_int16); return;
+					case SK_INT32: (FUNCTION_CAST(void, (EIF_REFERENCE, EIF_INTEGER_32)) set_integer_32) (eif_access (target), item.it_int32); return;
+					case SK_INT64: (FUNCTION_CAST(void, (EIF_REFERENCE, EIF_INTEGER_64)) set_integer_64) (eif_access (target), item.it_int64); return;
+					case SK_REAL32: (FUNCTION_CAST(void, (EIF_REFERENCE, EIF_REAL_32)) set_real) (eif_access (target), item.it_real32); return;
+					case SK_REAL64: (FUNCTION_CAST(void, (EIF_REFERENCE, EIF_REAL_64)) set_double) (eif_access (target), item.it_real64); return;
+					case SK_POINTER: (FUNCTION_CAST(void, (EIF_REFERENCE, EIF_POINTER)) set_pointer) (eif_access (target), item.it_ptr); return;
 					case SK_REF:
 					case SK_EXP:
 						(FUNCTION_CAST(void, (EIF_REFERENCE, EIF_POINTER, EIF_INTEGER)) set_ref)
-								(eif_access (target),
-								item.it_ref,
-								type_flag & SK_DTYPE);
+								(eif_access (target), item.it_ref, type_flag & SK_DTYPE);
 							/* reference and dynamic type */
 						return;
 					case SK_BIT:
 						(FUNCTION_CAST(void, (EIF_REFERENCE, EIF_POINTER, EIF_INTEGER)) set_bits) (eif_access (target),
-							item.it_ref,
-							type_flag & SK_BMASK);
+							item.it_ref, type_flag & SK_BMASK);
 							/* reference and number of bits */
 						return;
 					default:
@@ -221,11 +206,33 @@ rt_public void c_recv_value (EIF_OBJ target)
 }
 
 
-rt_public void c_pass_recv_routines (EIF_PROC d_int_8, EIF_PROC d_int_16, EIF_PROC d_int_32, EIF_PROC d_int_64, EIF_PROC d_bool, EIF_PROC d_char, EIF_PROC d_wchar, EIF_PROC d_real, EIF_PROC d_double, EIF_PROC d_ref, EIF_PROC d_point, EIF_PROC d_bits, EIF_PROC d_error, EIF_PROC d_void)
+rt_public void c_pass_recv_routines (
+	EIF_PROC d_nat_8,
+	EIF_PROC d_nat_16,
+	EIF_PROC d_nat_32,
+	EIF_PROC d_nat_64,
+	EIF_PROC d_int_8,
+	EIF_PROC d_int_16,
+	EIF_PROC d_int_32,
+	EIF_PROC d_int_64,
+	EIF_PROC d_bool,
+	EIF_PROC d_char,
+	EIF_PROC d_wchar,
+	EIF_PROC d_real,
+	EIF_PROC d_double,
+	EIF_PROC d_ref,
+	EIF_PROC d_point,
+	EIF_PROC d_bits,
+	EIF_PROC d_error,
+	EIF_PROC d_void)
 /*
  *	Register the routines to communicate with a RECV_VALUE
  */
 {
+	set_natural_8 = d_nat_8;
+	set_natural_16 = d_nat_16;
+	set_natural_32 = d_nat_32;
+	set_natural_64 = d_nat_64;
 	set_integer_8 = d_int_8;
 	set_integer_16 = d_int_16;
 	set_integer_32 = d_int_32;

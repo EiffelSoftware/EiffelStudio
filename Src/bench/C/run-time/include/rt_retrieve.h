@@ -253,13 +253,13 @@ typedef union {
 #define rt_obj		rtu_data.rtu_obj
 
 
-extern EIF_REFERENCE ise_compiler_retrieve (EIF_INTEGER f_desc, EIF_INTEGER a_pos, size_t (*ret_func) (void));
+RT_LNK EIF_REFERENCE ise_compiler_retrieve (EIF_INTEGER f_desc, EIF_INTEGER a_pos, size_t (*ret_func) (void));
 
-extern struct htable *rt_table;	/* Table used for solving references */
-extern int32 nb_recorded;		/* Number of items recorded in Hector */
-extern char rt_kind;
+RT_LNK struct htable *rt_table;	/* Table used for solving references */
+RT_LNK int32 nb_recorded;		/* Number of items recorded in Hector */
+RT_LNK char rt_kind;
 extern char rt_kind_version;
-extern size_t end_of_buffer;
+RT_LNK size_t end_of_buffer;
 
 extern size_t (*retrieve_read_func)(void);
 
@@ -267,8 +267,8 @@ extern size_t (*retrieve_read_func)(void);
  * Utilities
  */
 
-extern char *rt_make(void);			/* Retrieve object graph */
-extern char *rt_nmake(EIF_CONTEXT long int objectCount);		/* Retrieve `n' objects */
+RT_LNK char *rt_make(void);			/* Retrieve object graph */
+RT_LNK char *rt_nmake(EIF_CONTEXT long int objectCount);		/* Retrieve `n' objects */
 
 extern size_t old_retrieve_read(void);
 extern size_t retrieve_read(void);
@@ -276,10 +276,10 @@ extern size_t retrieve_read(void);
 extern size_t old_retrieve_read_with_compression(void);
 extern size_t retrieve_read_with_compression(void);
 
-extern void rt_init_retrieve(size_t (*retrieve_function) (void), int (*char_read_function)(char *, int), int buf_size);
+RT_LNK void rt_init_retrieve(size_t (*retrieve_function) (void), int (*char_read_function)(char *, int), int buf_size);
 extern void rt_reset_retrieve(void);
 
-extern int (*char_read_func)(char *, int);
+RT_LNK int (*char_read_func)(char *, int);
 
 #ifdef EIF_THREADS
 extern void eif_retrieve_thread_init (void);

@@ -37,8 +37,8 @@ extern "C" {
 extern char *account;			/* Array of traversed dyn types */
 #endif
 extern long get_alpha_offset(uint32 o_type, uint32 attrib_num);
-extern void allocate_gen_buffer(void);
-extern void buffer_write(char *data, size_t size);
+RT_LNK void allocate_gen_buffer(void);
+RT_LNK void buffer_write(char *data, size_t size);
 
 
 extern int char_write(char *pointer, int size);
@@ -53,18 +53,18 @@ extern void sort_attributes(int dtype);
 extern void free_sorted_attributes(void);
 
 
-extern void internal_store(char *object);
+RT_LNK void internal_store(char *object);
 
 #ifndef EIF_THREADS
-extern char * general_buffer;
-extern size_t current_position;
+RT_LNK char * general_buffer;
+RT_LNK size_t current_position;
 extern size_t buffer_size;
-extern size_t cmp_buffer_size;
+RT_LNK size_t cmp_buffer_size;
 #endif
 
 /* compression */
 #ifndef EIF_THREADS
-extern char * cmps_general_buffer;
+RT_LNK char * cmps_general_buffer;
 #endif
 
 /* Actions */

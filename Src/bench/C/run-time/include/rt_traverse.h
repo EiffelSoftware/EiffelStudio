@@ -49,8 +49,8 @@ extern EIF_LW_MUTEX_TYPE *eif_eo_store_mutex;
 #define EIF_EO_STORE_UNLOCK
 #endif
 
-extern uint32 obj_nb;					/* Count of marked objects */
-extern void traversal(EIF_REFERENCE object, int p_accounting); /* Traversal of objects */
+RT_LNK uint32 obj_nb;					/* Count of marked objects */
+RT_LNK void traversal(EIF_REFERENCE object, int p_accounting); /* Traversal of objects */
 
 /* Maping table handling */
 extern void map_start(void);			/* Reset LIFO stack into a FIFO one */

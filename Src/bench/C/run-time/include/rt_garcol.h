@@ -151,7 +151,7 @@ extern int refers_new_object(register EIF_REFERENCE object);		/* Does an object 
 extern char *to_chunk(void);			/* Base address of partial 'to' chunk */
 #endif /* ISE_GC */
 
-extern int epush(register struct stack *stk, register void *value);	/* Push an addess on a run-time stack */
+RT_LNK int epush(register struct stack *stk, register void *value);	/* Push an addess on a run-time stack */
 
 extern EIF_REFERENCE *st_alloc(register struct stack *stk, register int size);	/* Creates an empty stack */
 extern  int st_extend(register struct stack *stk, register int size);	/* Extends a stack */

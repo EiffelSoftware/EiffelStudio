@@ -39,7 +39,7 @@ extern struct xstack eif_trace;       /* Unsolved exception trace */
 extern void set_windows_exception_filter(void);
 #endif
 
-extern void xraise(EIF_CONTEXT int code);			/* Raise an exception with no tag */
+RT_LNK void xraise(EIF_CONTEXT int code);			/* Raise an exception with no tag */
 extern struct ex_vect *exget(struct xstack *stk);	/* Get a new vector on stack */
 extern struct ex_vect *extop(struct xstack *stk);	/* Top of Eiffel stack */
 extern struct ex_vect *exnext(EIF_CONTEXT_NOARG);	/* Read next eif_trace item from bottom */

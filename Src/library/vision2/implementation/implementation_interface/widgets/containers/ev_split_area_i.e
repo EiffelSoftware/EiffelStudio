@@ -18,7 +18,9 @@ inherit
 		end
 
 feature -- Access
-	
+
+feature -- Access
+
 	child1: EV_WIDGET_IMP
 				-- The first child of the split area
 
@@ -64,8 +66,6 @@ feature {EV_SPLIT_AREA} -- Implementation
 			child_not_void: child_i /= Void
 		do
 			child1 ?= child_i
--- Maybe necessary for gtk
---			implementation.add_child1 (child1)
 		ensure then
 			child1 /= Void
 		end
@@ -76,8 +76,6 @@ feature {EV_SPLIT_AREA} -- Implementation
 			child_not_void: child_i /= Void
 		do
 			child2 ?= child_i
--- Maybe necessary for gtk
---			implementation.add_child2 (child2)
 		ensure then
 			child2 /= Void
 		end

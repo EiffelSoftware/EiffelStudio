@@ -1,6 +1,6 @@
 indexing
 	description: "[
-		EiffelVision2 rich text. Windows implemnetation.
+		EiffelVision2 rich text. Windows implementation.
 		]"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -843,7 +843,7 @@ feature -- Status setting
 				temp_string.append ("\ul")
 				is_current_format_underlined := True
 			elseif is_current_format_underlined and not format_underlined then
-				temp_string.append ("\ulnone")
+				temp_string.append ("\ul0")
 				is_current_format_underlined := False
 			end
 			format_striked := formats.i_th (format_index).effects.is_striked_out
@@ -851,7 +851,7 @@ feature -- Status setting
 				temp_string.append ("\strike")
 				is_current_format_striked_through := True
 			elseif is_current_format_striked_through and not format_striked then
-				temp_string.append ("\strikenone")
+				temp_string.append ("\strike0")
 				is_current_format_striked_through := False
 			end
 			format_bold := formats.i_th (format_index).font.weight = feature {EV_FONT_CONSTANTS}.weight_bold
@@ -1041,7 +1041,7 @@ feature -- Status setting
 							temp_string.append ("\ul")
 							is_current_format_underlined := True
 						elseif is_current_format_underlined and not format_underlined then
-							temp_string.append ("\ulnone")
+							temp_string.append ("\ul0")
 							is_current_format_underlined := False
 						end
 						format_striked := formats.i_th (format_index).effects.is_striked_out
@@ -1049,7 +1049,7 @@ feature -- Status setting
 							temp_string.append ("\strike")
 							is_current_format_striked_through := True
 						elseif is_current_format_striked_through and not format_striked then
-							temp_string.append ("\strikenone")
+							temp_string.append ("\strike0")
 							is_current_format_striked_through := False
 						end
 						format_bold := formats.i_th (format_index).font.weight = feature {EV_FONT_CONSTANTS}.weight_bold

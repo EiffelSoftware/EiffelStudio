@@ -12,7 +12,8 @@ inherit
 		redefine
 			hide,
 			setup_dialog,
-			is_modal
+			is_modal,
+			common_dialog_imp
 		end
 
 create
@@ -232,6 +233,11 @@ feature {NONE} -- Implementation
 				-- Add this dialog as root window.
 			app_imp ?= (create {EV_ENVIRONMENT}).application.implementation
 			app_imp.add_root_window (Current)
+		end
+
+	common_dialog_imp: EV_DIALOG_IMP_MODAL is
+			-- Dialog implementation type common to all descendents.
+		do
 		end
 
 feature {NONE} -- Externals

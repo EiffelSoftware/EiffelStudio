@@ -618,6 +618,11 @@ feature {NONE} -- Implementation
 			destroy_item
 		end
 
+	common_dialog_imp: EV_DIALOG_IMP_COMMON is
+			-- Dialog implementation type common to all descendents.
+		do
+		end
+
 feature {EV_WIDGET_I} -- Implementation
 
 	set_current_push_button (a_button: EV_BUTTON) is

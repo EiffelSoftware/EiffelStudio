@@ -24,7 +24,8 @@ feature -- Menus on main panel
 	Exit_tool: STRING is "Exit &tool"
 	Generate: STRING is "&Generate Eiffel code"
 	Import: STRING is "&Import EiffelBuild code"
-	Save: STRING is "&Save project"
+	Save: STRING is "&Save	Ctrl+S"
+	Save_as: STRING is "Save as..."
 	Toolkit: STRING is "Select &Toolkit"
 
 		-- Submenus of `View'

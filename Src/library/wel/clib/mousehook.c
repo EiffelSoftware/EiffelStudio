@@ -24,8 +24,7 @@ static void free_library ();
 /* Returns the handle of the window that has started the hook, NULL if no    */
 /* hook is currently under process                                           */
 /*---------------------------------------------------------------------------*/
-HWND cwel_get_hook_window()
-	{
+HWND cwel_get_hook_window() {
 	FARPROC get_hook_window_func;
 	
 	load_library();
@@ -35,16 +34,15 @@ HWND cwel_get_hook_window()
 		return NULL;
 	
 	get_hook_window_func = GetProcAddress(hLibrary, "get_hook_window");
-	if (get_hook_window_func == NULL)
-		{
+	if (get_hook_window_func == NULL) {
 		MessageBox(NULL, "An error occurred while trying to access the function `get_hook_window'\nfrom the DLL `wel_hook.dll'.\nCheck that you have the latest copy of the DLL.", "Unable to access a DLL..", MB_OK | MB_ICONERROR | MB_TOPMOST);
 		return NULL; // Unable to locate the function inside the DLL
-		}
+	}
 
 	// Everything went ok, execute the function and return the value returned
 	// by the function.
 	return ((FUNCTION_CAST_TYPE(HWND, __stdcall, ()) get_hook_window_func)());
-	}
+}
 
 /*---------------------------------------------------------------------------*/
 /* FUNC: cwel_hook_mouse                                                     */
@@ -54,8 +52,7 @@ HWND cwel_get_hook_window()
 /* Return TRUE if everything went fine, FALSE otherwise. If `wel_hook.dll'   */
 /* cannot be loaded an error box is displayed                                */
 /*---------------------------------------------------------------------------*/
-EIF_BOOLEAN cwel_hook_mouse(HWND hWnd)
-	{
+EIF_BOOLEAN cwel_hook_mouse(HWND hWnd) {
 	FARPROC hook_mouse_func;
 	
 		/* Disable debugger otherwise everything is blocked */
@@ -64,12 +61,11 @@ EIF_BOOLEAN cwel_hook_mouse(HWND hWnd)
 	
 	load_library();
 
-	if (hLibrary == NULL)
-		{
+	if (hLibrary == NULL) {
 		// Display an error box
 		MessageBox(hWnd, "An error occurred while loading the file 'wel_hook.dll'\nCheck that it can be found in your path or your working directory", "Unable to load a DLL..", MB_OK | MB_ICONERROR | MB_TOPMOST);
 		return FALSE;
-		}
+	}
 
 	hook_mouse_func = GetProcAddress(hLibrary, "hook_mouse");
 	if (hook_mouse_func == NULL)
@@ -78,7 +74,7 @@ EIF_BOOLEAN cwel_hook_mouse(HWND hWnd)
 	// Everything went ok, execute the function and return the value returned
 	// by the function.
 	return (EIF_BOOLEAN) ((FUNCTION_CAST_TYPE(int, __stdcall, (HWND)) hook_mouse_func)(hWnd));
-	}
+}
 
 /*---------------------------------------------------------------------------*/
 /* FUNC: cwel_unhook_mouse                                                   */
@@ -87,8 +83,7 @@ EIF_BOOLEAN cwel_hook_mouse(HWND hWnd)
 /* Stop capturing all mouse messages                                         */
 /* Return TRUE if everything went fine, FALSE otherwise.                     */
 /*---------------------------------------------------------------------------*/
-EIF_BOOLEAN cwel_unhook_mouse()
-	{
+EIF_BOOLEAN cwel_unhook_mouse() {
 	FARPROC unhook_mouse_func;
 	EIF_BOOLEAN bRes;
 	
@@ -112,7 +107,7 @@ EIF_BOOLEAN cwel_unhook_mouse()
 
 	free_library();
 	return bRes;
-	}
+}
 
 /*---------------------------------------------------------------------------*/
 /* FUNC: load_library                                                        */
@@ -133,12 +128,22 @@ static void load_library () {
 /* FUNC: free_library                                                        */
 /* ARGS:                                                                     */
 /*---------------------------------------------------------------------------*/
-/* UnLoad "wel_hook.dll"                                                     */
+/* UnLoad "wel_hook.dll" on Windows NT/2000/XP OS. Do not unload when        */
+/* Win9x/Me because this does not work since once it is loaded it cannot     */
+/* be freed.                                                                 */
 /*---------------------------------------------------------------------------*/
 
 static void free_library () {
-	FreeLibrary (hLibrary);
-	hLibrary = NULL;
-	is_library_loaded = 0;
+	OSVERSIONINFO os_version;
+	BOOL res;
+	  
+	os_version.dwOSVersionInfoSize = sizeof(OSVERSIONINFO);
+	res = GetVersionEx (&os_version);
+
+	if (os_version.dwPlatformId == VER_PLATFORM_WIN32_NT) {
+		FreeLibrary (hLibrary);
+		hLibrary = NULL;
+		is_library_loaded = 0;
+	}
 }
 

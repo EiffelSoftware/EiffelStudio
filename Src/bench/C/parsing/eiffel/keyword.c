@@ -22,8 +22,7 @@ struct token {
   143 is the maximum key range
 */
 
-static int
-hash (register char *str, register unsigned int len)
+static int hash (register char *str, register unsigned int len)
 {
   static unsigned char hash_table[] =
     {
@@ -56,8 +55,7 @@ hash (register char *str, register unsigned int len)
   return hval + hash_table[str[len - 1]] ;
 }
 
-struct token *
-in_word_set (register char *str, register unsigned int len)
+struct token * in_word_set (register char *str, register unsigned int len)
 {
 
   static unsigned char lengthtable[] =

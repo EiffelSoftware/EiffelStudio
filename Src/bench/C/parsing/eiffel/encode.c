@@ -23,9 +23,9 @@
  * Function declarations.
  */
 
-void 	eif000(char *eiffel_string, long int i, long int j),
-		eif011(char *eiffel_string, long int i),
-		eif101(char *eiffel_string, long int i);
+void eif000(char *eiffel_string, long int i, long int j);
+void eif011(char *eiffel_string, long int i);
+void eif101(char *eiffel_string, long int i);
 /*
  * Static declarations.
  */

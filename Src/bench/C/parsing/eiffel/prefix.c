@@ -12,8 +12,7 @@
     5 is the maximum key range
 */
 
-static int
-hash (register char *str, register unsigned int len)
+static int hash (register char *str, register unsigned int len)
 {
   static unsigned char hash_table[] =
     {
@@ -44,8 +43,7 @@ hash (register char *str, register unsigned int len)
   return hval + hash_table[str[len - 1]] ;
 }
 
-char *
-std_prefix (register char *str, register unsigned int len)
+char * std_prefix (register char *str, register unsigned int len)
 {
 
   static unsigned char lengthtable[] =

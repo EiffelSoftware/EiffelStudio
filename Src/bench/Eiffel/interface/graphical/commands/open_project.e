@@ -26,20 +26,24 @@ inherit
 feature -- Callbacks
 
 	exit_bench is
+			-- Exit from EiffelBench
 		do
-			discard_licenses;
+			discard_licenses
 			exit
-		end;
+		end
 
 	open_project (argument: ANY) is
-		local
-			mp: MOUSE_PTR
+			-- Open the project.
+		require else
+			project_directory_exists: project_dir /= Void
 		do
 			if not project_tool.initialized then
-				last_name_chooser.set_window (Project_tool);
-				!! mp.do_nothing;
-				mp.restore;
-				last_name_chooser.call (Current)
+				if choose_again then
+					last_name_chooser.set_window (Project_tool)
+					last_name_chooser.call (Current)
+				else
+					retrieve_project
+				end
 			end
 		end;
 
@@ -48,7 +52,6 @@ feature {NONE} -- Implementation
 	work (argument: ANY) is
 			-- Popup and let the user choose what he wants.
 		local
-			project_dir: PROJECT_DIRECTORY;
 			last_char: CHARACTER;
 			dir_name: STRING;
 			expiration: INTEGER;
@@ -63,7 +66,8 @@ feature {NONE} -- Implementation
 					new_name_chooser.set_title (Interface_names.t_Select_a_directory)
 
 					if not has_limited_license then
-						open_project (argument)
+						last_name_chooser.set_window (Project_tool);
+						last_name_chooser.call (Current)
 					else
 						warner (Project_tool).custom_call (Current,
 							expiration_message, Interface_names.b_Ok, Void, Void);
@@ -81,12 +85,15 @@ feature {NONE} -- Implementation
 								dir_name.remove (dir_name.count)
 							end
 						end;
-						!!project_dir.make (dir_name);
-						make_project (project_dir);
+						!! project_dir.make (dir_name);
+						Project_directory.set_directory (dir_name)
+						make_project
 						last_name_chooser.set_file_selection;
 						last_name_chooser.set_title (Interface_names.t_Select_a_file);
-						last_name_chooser.show_file_selection_list;
-						last_name_chooser.show_file_selection_label;
+						if project_tool.initialized then
+							last_name_chooser.show_file_selection_list;
+							last_name_chooser.show_file_selection_label;
+						end
 					end
 				end
 			end
@@ -94,83 +101,90 @@ feature {NONE} -- Implementation
 
 feature -- Project Initialization
 
-	make_project (project_dir: PROJECT_DIRECTORY) is
+	make_project is
 			-- Initialize project as a new one or retrieving
 			-- existing data in the valid directory `project_dir'.
+		require
+			project_directory_exist: project_dir /= Void
 		local
 			workb: WORKBENCH_I;
 			init_work: INIT_WORKBENCH;
 			project_eif_file: RAW_FILE;
 			ok: BOOLEAN;
-			temp: STRING;
+			msg: STRING;
 			fn: FILE_NAME;
-			title: STRING;
-			mp: MOUSE_PTR
+			read_only: BOOLEAN
 		do
 			ok := True;
-			if not project_dir.exists then
-				temp := Warning_messages.w_Directory_not_exist (project_dir.name);
+			if not project_dir.base_exists then
+				msg := Warning_messages.w_Directory_not_exist (project_dir.name);
+				choose_again := True
 				ok := False;
 			elseif project_dir.is_new then
-					-- Create new project
-				if 
-					not project_dir.is_readable or else
-					not project_dir.is_writable or else
-					not project_dir.is_executable
-				then
-					temp := Warning_messages.w_Directory_wrong_permissions (project_dir.name);
-					ok := False;
+					-- Create a new project.
+				if not project_dir.has_base_full_access then
+					msg := Warning_messages.w_Cannot_create_project_directory (project_dir.name)
+					choose_again := True
+					ok := False
 				else
-						-- Create a new project.
-					Eiffel_project.make (project_dir);
-					init_project;
-					title := clone (Interface_names.t_New_project);
-					title.append (": ");
-					title.append (project_dir.name);
-					project_tool.set_title (title);
+					Eiffel_project.make (project_dir)
+					init_project
+					msg := clone (Interface_names.t_New_project)
+					msg.append (": ")
+					msg.append (project_dir.name)
+					project_tool.set_title (msg)
+					project_tool.set_initialized
 				end
+
+			elseif not project_dir.exists then
+				msg := Warning_messages.w_Project_directory_not_exist (project_dir.name)
+				ok := False
+				choose_again := True
 			else
 					-- Retrieve existing project
 				project_eif_file := project_dir.project_eif_file;
 				if not project_eif_file.is_readable then
-					temp := Warning_messages.w_Not_readable (project_eif_file.name);
+					msg := Warning_messages.w_Not_readable (project_eif_file.name);
 					ok := False
+					choose_again := True
 				elseif not project_eif_file.is_plain then
-					temp := Warning_messages.w_Not_a_file (project_eif_file.name);
+					msg := Warning_messages.w_Not_a_file (project_eif_file.name);
 					ok := False
+					choose_again := True
 				else
-					!! mp.do_nothing;
-					mp.restore
-					project_tool.set_title ("Retrieving project...");
-					mp.set_watch_cursor;
-					retrieve_project (project_dir);
-					if not Eiffel_project.error_occurred then
-						init_project;
-						title := clone (Interface_names.t_Project);
-						title.append (": ");
-						title.append (project_dir.name);
-						if Eiffel_system.is_precompiled then
-							title.append ("  (precompiled)");
-						end
-						project_tool.set_title (title);
-						project_tool.set_icon_name (Eiffel_system.name);
-					end;
+					if project_dir.is_readable and then not project_dir.is_writable then
+						msg := Warning_messages.w_Read_only_project
+						read_only := True
+						warner (Project_tool).custom_call (Current, msg, Interface_names.b_Ok, Interface_names.b_Exit, Void)
+					else
+						retrieve_project
+					end
 				end;
 			end;
-	
-			if ok then
-				project_tool.set_initialized
-			else	
-				warner (Project_tool).custom_call (Current, temp, 
-					" OK ", Void, Void);
+
+			if not read_only and then not ok then
+				warner (Project_tool).custom_call (Current, msg, " OK ", Void, Void);
 			end
 		end;
 
-	retrieve_project (project_dir: PROJECT_DIRECTORY) is
+	retrieve_project is
 			-- Retrieve a project from the disk.
+		require
+			project_directory_exists: project_dir /= Void
 		local
 			msg: STRING
+			title: STRING;
+			mp: MOUSE_PTR
 		do	
+			project_tool.set_title ("Retrieving project...");
+
+				-- These 2 lines will updatae effectively the project tool.
+			!! mp.do_nothing;
+			mp.restore
+
+				-- Put the cursor in the wait state.
+			mp.set_watch_cursor
+
 			Eiffel_project.retrieve (project_dir);
 			if Eiffel_project.retrieval_error then
 				if Eiffel_project.is_corrupted then
@@ -186,15 +200,24 @@ feature -- Project Initialization
 				warner (Project_tool).custom_call (Current, 
 						msg, Void, Interface_names.b_Exit_now, Void)
 			elseif Eiffel_project.read_write_error then
-				warner (Project_tool).custom_call (Current,
-						Warning_messages.w_Cannot_open_project, Void, Interface_names.b_Exit, Void)
-			elseif Eiffel_project.is_read_only and then
-				not Eiffel_system.is_precompiled
-			then
-				project_tool.set_initialized;
-				warner (Project_tool).custom_call (Current,
-						Warning_messages.w_Read_only_project, Interface_names.b_Ok, Interface_names.b_Exit, Void)
+				msg := Warning_messages.w_Cannot_open_project
+				warner (Project_tool).custom_call (Current, msg, Void, Interface_names.b_Exit, Void)
 			end;
+
+			if not Eiffel_project.error_occurred then
+				init_project;
+				title := clone (Interface_names.t_Project);
+				title.append (": ");
+				title.append (project_dir.name);
+				if Eiffel_system.is_precompiled then
+					title.append ("  (precompiled)");
+				end
+				project_tool.set_title (title);
+				project_tool.set_initialized
+				project_tool.set_icon_name (Eiffel_system.name);
+			end;
+
+			mp.restore
 		end;
 
 	init_project is
@@ -211,5 +234,13 @@ feature -- Project Initialization
 				Eiffel_project.set_degree_output (g_degree_output)
 			end
 		end;
+
+feature -- Project directory access
+
+	project_dir: PROJECT_DIRECTORY
+			-- Location of the project directory.
+
+	choose_again: BOOLEAN
+			-- Do we have to display the project directory dialog box again?
 
 end -- class OPEN_PROJECT

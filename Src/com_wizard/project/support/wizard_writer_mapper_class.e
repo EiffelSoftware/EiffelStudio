@@ -92,6 +92,7 @@ feature {NONE} -- Initialization
 			l_constructor.set_body ("")
 			add_constructor (l_constructor)
 			add_import ("ecom_rt_globals.h")
+			add_import (alias_c_writer.header_file_name)
 			add_import_after (ecom_generated_rt_globals_header_file_name)
 			create l_source.make (100)
 			l_source.append (name)

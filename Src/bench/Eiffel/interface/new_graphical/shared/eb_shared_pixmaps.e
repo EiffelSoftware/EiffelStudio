@@ -1165,6 +1165,16 @@ feature -- Icons
 		once
 			Result := pixmap_file_content ("icon_exec_quit_color")
 		end
+		
+	Icon_word_wrap_color: ARRAY [EV_PIXMAP] is
+		once
+			Result := build_classic_pixmap ("word_wrap")
+		end
+		
+	Icon_auto_slice_limits_color: ARRAY [EV_PIXMAP] is
+		once
+			Result := build_classic_pixmap ("auto_slice_limits")
+		end
 
 feature -- Reading
 

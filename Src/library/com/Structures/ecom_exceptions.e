@@ -85,11 +85,8 @@ feature -- Element Change
 	trigger (code: INTEGER) is
 			-- Raise exception with code `code'.
 			-- See class ECOM_EXCEPTION_CODES for possible values.
-		local
-			exception_text: WEL_STRING
 		do
-			!! exception_text.make (ccom_format_message (formatter, code))
-			ccom_raise (exception_text.item, code)
+			raise (ccom_hresult_to_string (formatter, code))
 		end
 
 feature {NONE} -- Implementation
@@ -119,6 +116,11 @@ feature {NONE} -- Implementation
 feature {NONE} -- External
 
 	ccom_format_message (a_pointer: POINTER; code: INTEGER): STRING is
+		external
+			"C++ [Formatter %"ecom_exception.h%"] (EIF_INTEGER): EIF_REFERENCE"
+		end
+
+	ccom_hresult_to_string (a_pointer: POINTER; code: INTEGER): STRING is
 		external
 			"C++ [Formatter %"ecom_exception.h%"] (EIF_INTEGER): EIF_REFERENCE"
 		end

@@ -20,8 +20,11 @@ mtlibs='-lbsd -lm -lpthread'
 
 libs='-lbsd -lm'
 ccflags=''
+sharedccflags='-fPIC'
 
 suffix='.a'
+sharedsuffix='.so'
+sharedlibversion='.1.0'
 wkeiflib='wkbench'
 
 
@@ -66,7 +69,6 @@ lpr=''
 ls=''
 mail=''
 mailx=''
-make=''
 mkdir='/bin/mkdir'
 more=''
 mv='/bin/mv'
@@ -124,6 +126,7 @@ cc='gcc'
 gccversion='2.7.2.1'
 cppflags=$ccflags
 mtcppflags=$mtccflags
+ldsharedflags='-shared'
 ldflags=''
 lkflags=''
 optimize='-O'

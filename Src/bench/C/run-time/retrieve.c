@@ -149,9 +149,11 @@ rt_public void rt_reset_retrieve(void) {
 
 rt_public char *eretrieve(EIF_INTEGER file_desc)
 {
+	EIF_GET_CONTEXT
 	r_fides = file_desc;
 
 	return portable_retrieve(char_read);
+	EIF_END_GET_CONTEXT
 }
 
 rt_public char *stream_eretrieve(char **buffer)

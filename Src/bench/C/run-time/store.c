@@ -175,6 +175,7 @@ rt_public void rt_reset_store(void) {
 /* Store object hierarchy of root `object' without header. */
 rt_public void estore(EIF_INTEGER file_desc, char *object)
 {
+	EIF_GET_CONTEXT
 	s_fides = (int) file_desc;
 
 	rt_init_store (
@@ -190,6 +191,7 @@ rt_public void estore(EIF_INTEGER file_desc, char *object)
 	internal_store(object);
 
 	rt_reset_store ();
+	EIF_END_GET_CONTEXT
 }
 
 rt_public void stream_estore(char **buffer, char *object)
@@ -219,6 +221,7 @@ rt_public void stream_estore(char **buffer, char *object)
  * so it can be retrieved by other systems. */
 rt_public void eestore(EIF_INTEGER file_desc, char *object)
 {
+	EIF_GET_CONTEXT
 	s_fides = (int) file_desc;
 
 	rt_init_store (
@@ -234,6 +237,7 @@ rt_public void eestore(EIF_INTEGER file_desc, char *object)
 	internal_store(object);
 
 	rt_reset_store ();
+	EIF_END_GET_CONTEXT
 }
 
 rt_public void stream_eestore(char **buffer, char *object)
@@ -264,6 +268,7 @@ rt_public void stream_eestore(char **buffer, char *object)
  * so it can be retrieved by other systems. */
 rt_public void sstore (EIF_INTEGER file_desc, char *object)
 {
+	EIF_GET_CONTEXT
 	s_fides = (int) file_desc;
 
 	rt_init_store (
@@ -285,6 +290,7 @@ rt_public void sstore (EIF_INTEGER file_desc, char *object)
 	idr_temp_buf = (char *)0;
 
 	rt_reset_store ();
+	EIF_END_GET_CONTEXT
 }
 
 rt_public void stream_sstore (char **buffer, char *object)
@@ -1399,7 +1405,9 @@ rt_public void flush_st_buffer (void)
 
 rt_private int char_write(char *pointer, int size)
 {
+	EIF_GET_CONTEXT
     return write(s_fides, pointer, size);
+	EIF_END_GET_CONTEXT
 }
 
 rt_private int stream_write (char *pointer, int size)

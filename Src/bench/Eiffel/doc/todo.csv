@@ -181,6 +181,8 @@ compiler,,,,
 ,3,Reorder features to put together the ones that are called at the same time in order to optimize page faults at run-time. This can be applied to feature tables and maybe to the actual order of the pieces of code in the executable,Arnaud,CMP0034
 ,3,Classes that do not define the code of a polymorphic feature should not appear in polymorphic tables,Xavier,CMP0033
 ,5,Make it possible to only compile classes that have been modified in EiffelStudio (no degree 6),Xavier,CMP0034
+,3,Auto-initialize as many onces as possible when the execution starts and remove the tests of initialization from them (start with constant strings),Xavier,CMP0035
+,3,Allow the feature {CLASS} syntax for string constants (maybe not in inspect clauses though?),Xavier,CMP0036
 
 
 

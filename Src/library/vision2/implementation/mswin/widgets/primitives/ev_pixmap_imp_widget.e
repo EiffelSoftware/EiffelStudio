@@ -13,7 +13,7 @@ inherit
 		undefine
 			has_focus, is_sensitive, is_displayed, set_focus, x_position, 
 			y_position, on_parented, on_orphaned, disable_sensitive,
-			enable_sensitive, show, pointed_target, remove_tooltip, 
+			enable_sensitive, show, pointed_target, 
 			set_minimum_width, set_tooltip, screen_x, screen_y, set_size,
 			parent, is_show_requested, minimum_width, draw_rubber_band, 
 			set_pointer_style, erase_rubber_band, disable_transport, 

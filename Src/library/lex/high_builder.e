@@ -17,7 +17,7 @@ class HIGH_BUILDER inherit
 
 creation
 
-	make
+	make, make_extended
 
 feature -- Element change
 

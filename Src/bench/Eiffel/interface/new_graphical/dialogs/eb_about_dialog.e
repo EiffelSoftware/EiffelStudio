@@ -71,11 +71,10 @@ feature -- Initialization
 			default_create
 			set_icon_pixmap (Pixmaps.Icon_dialog_window)
 			set_title (Interface_names.t_About)
-			disable_user_resize
 
 				-- Create controls.
 			eiffel_image := clone (Pixmaps.bm_About)
-			eiffel_image.set_minimum_size (eiffel_image.width, Layout_constants.dialog_unit_to_pixels(200))
+			eiffel_image.set_minimum_size (eiffel_image.width, eiffel_image.height)
 			eiffel_image.set_background_color (White)
 			create info_label.make_with_text (t_info)
 			info_label.align_text_left
@@ -160,6 +159,8 @@ feature -- Initialization
 			extend (vbox)
 			set_default_push_button (ok_button)
 			set_default_cancel_button (ok_button)
+
+			disable_user_resize
 		end
 
 feature {NONE} -- Implementation

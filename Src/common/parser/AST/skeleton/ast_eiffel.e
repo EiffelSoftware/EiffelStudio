@@ -1,6 +1,7 @@
 indexing
 
-	description: "Abstract node produce by yacc.";
+	description: 
+		"Abstract syntax tree node.";
 	date: "$Date$";
 	revision: "$Revision$"
 
@@ -12,7 +13,7 @@ inherit
 	SHARED_ERROR_HANDLER;
 	SHARED_TEXT_ITEMS
 
-feature -- Simple formatting
+feature {AST_EIFFEL, COMPILER_EXPORTER} -- Output
 
 	simple_format (ctxt: FORMAT_CONTEXT) is
 			-- Reconsitute text according to context.

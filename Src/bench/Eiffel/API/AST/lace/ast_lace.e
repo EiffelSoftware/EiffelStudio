@@ -1,3 +1,10 @@
+indexing
+
+	description: 
+		"";
+	date: "$Date$";
+	revision: "$Revision $"
+
 deferred class AST_LACE
 
 inherit
@@ -8,10 +15,10 @@ inherit
 	SHARED_L_CONTEXT;
 	COMPILER_EXPORTER
 
-feature
+feature {COMPILER_EXPORTER}
 
 	adapt is
 		do
 		end
 
-end
+end -- class AST_LACE

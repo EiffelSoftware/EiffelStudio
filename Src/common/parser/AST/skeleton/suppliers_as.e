@@ -1,6 +1,7 @@
 indexing
 
-	description: "Abstract description for the supplier type set of a class.";
+	description: 
+		"AST representation for the supplier type set of a class.";
 	date: "$Date$";
 	revision: "$Revision$"
 
@@ -17,21 +18,30 @@ creation
 
 	make
 
-feature
+feature {NONE} -- Initialization
+
+	set is 
+			-- Yacc/Eiffel interface
+		do
+		end; 
+
+feature -- Properties
 
 	supplier_ids: TWO_WAY_SORTED_SET [ID_AS];
 			-- Set of supplier class names
 
+feature {AST_EIFFEL} -- Output
+
+	simple_format (ctxt: FORMAT_CONTEXT) is
+			-- Do nothing.
+		do
+		end;
+
+feature {NONE}
+
 	make is
 		do
 			!!supplier_ids.make;
-		end;
-
-	pass_address (n: INTEGER) is
-			-- Yacc/Eiffel interface
-		do
-			c_get_address (n, $Current, $make);
-			c_get_set_put ($insert_supplier_id);
 		end;
 
 	insert_supplier_id (id: ID_AS) is
@@ -43,17 +53,11 @@ feature
 			supplier_ids.extend (id);
 		end; 
 
-	set is 
+	pass_address (n: INTEGER) is
 			-- Yacc/Eiffel interface
 		do
-			-- Do nothing
-		end; -- set
-
-feature -- Output
-
-	simple_format (ctxt: FORMAT_CONTEXT) is
-			-- Do nothing.
-		do
+			c_get_address (n, $Current, $make);
+			c_get_set_put ($insert_supplier_id);
 		end;
 
 feature {NONE} -- Externals

@@ -16,9 +16,34 @@ inherit
 
 creation
 
-	make
+	make, make_expanded_unit, make_creation_unit
 
-feature 
+feature  -- Initialization
+
+	make (c_id: CLASS_ID; f_id: INTEGER) is
+			-- Initialization
+		require
+			valid_feature_id: f_id > 0
+		do
+			id := c_id;
+			feature_id := f_id;
+		end
+
+	make_expanded_unit (c_id: CLASS_ID) is
+			-- Creation for special depend unit for expanded in local clause.
+		do
+			id := c_id;
+			feature_id := -2
+		end
+
+	make_creation_unit (c_id: CLASS_ID) is
+			-- Creation for special depend unit for creation instruction without creation routine.
+		do
+			id := c_id;
+			feature_id := -1
+		end
+
+feature
 
 	id: CLASS_ID;
 			-- Class id
@@ -27,13 +52,6 @@ feature
 			-- Feature id
 			--| Note:	-1 is used for creation without creation routine
 			--|			-2 for expanded in local clause
-
-	make (i: CLASS_ID; j: INTEGER) is
-			-- Initialization
-		do
-			id := i;
-			feature_id := j;
-		end;
 
 	is_special: BOOLEAN is
 			-- Is `Current' a special depend_unit, i.e. used
@@ -46,14 +64,14 @@ feature
 			-- Is `other' greater than Current ?
 		do
 			Result := id < other.id or else
-				(equal (id, other.id) and then feature_id < other.feature_id);
+				(id.is_equal (other.id) and then feature_id < other.feature_id);
 		end; -- infix "<"
 
 	is_equal (other: like Current): BOOLEAN is
 			-- Are `other' and `Current' equal?
 		do
 			Result := feature_id = other.feature_id and
-					equal (id, other.id)
+					id.is_equal (other.id)
 		end
 
 feature -- Debug

@@ -37,8 +37,6 @@ feature
 
 	enlarged: ASSIGN_BL is
 			-- Enlarge current node.
-		local
-			attr: ATTRIBUTE_B;
 		do
 			!!Result;
 			Result.set_target (target.enlarged);

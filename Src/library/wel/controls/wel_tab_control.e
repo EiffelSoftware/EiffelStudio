@@ -433,8 +433,8 @@ feature {WEL_COMPOSITE_WINDOW} -- Implementation
 				end
 				create tmp_region.make_rect_indirect (r)
 				new_region := main_region.combine (tmp_region, Rgn_diff)
-				tmp_region.delete
-				main_region.delete
+				tmp_region.dispose
+				main_region.dispose
 				main_region := new_region
 				i := i + 1
 			end
@@ -444,8 +444,8 @@ feature {WEL_COMPOSITE_WINDOW} -- Implementation
 			paint_dc.fill_region (main_region, bk_brush)
 
 				-- Clean up GDI objects
-			bk_brush.delete
-			main_region.delete
+			bk_brush.dispose
+			main_region.dispose
 		end
 
 feature {NONE} -- Implementation
@@ -453,7 +453,7 @@ feature {NONE} -- Implementation
 	class_name: STRING is
 			-- Window class name to create
 		once
-			!! Result.make (0)
+			create Result.make (0)
 			Result.from_c (cwin_tabcontrol_class)
 		end
 

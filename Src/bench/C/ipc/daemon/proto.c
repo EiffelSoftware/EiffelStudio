@@ -253,7 +253,7 @@ rt_private void write_application_interruption_flag(unsigned char value)
 	/* we can't use the handle we get from CreateProcess because it's not open for writing -- ARNAUD */
 	HANDLE 			hProcess;
 	unsigned char	interrupt_flag = value;
-	DWORD 			written = 0;
+	SIZE_T 			written = 0;
 	LPVOID 			addr_flag = daemon_data.d_interrupt_flag;
 	BOOL 			bResult;
 
@@ -517,7 +517,7 @@ rt_private void run_command(int s)
 	sp = stream_by_fd[s];				/* Fetch associated stream */
 #endif
 
-	cmd = recv_str(sp, (int *) 0);		/* Get command */
+	cmd = recv_str(sp, NULL);		/* Get command */
 	meltpath = (char *) (strdup (cmd));
 	if (meltpath == (char *)0){
 #ifdef USE_ADD_LOG
@@ -549,7 +549,7 @@ rt_private void run_command(int s)
 	 }
 	sprintf (envstring, "MELT_PATH=%s", meltpath);
 	putenv (envstring);
-#if defined (BSD) || defined (EIF_VMS)
+#ifdef SIGCHLD
 	signal (SIGCHLD, SIG_DFL);
 #elif defined (SIGCLD)
 	signal (SIGCLD, SIG_DFL);
@@ -595,7 +595,7 @@ rt_private void run_command(int s)
 	status = system(cmd);				/* Run command via /bin/sh */
 #endif
 
-#if defined (BSD) || defined (EIF_VMS)
+#ifdef SIGCHLD
 	signal (SIGCHLD, SIG_IGN);
 #elif defined (SIGCLD)
 	signal (SIGCLD, SIG_IGN);
@@ -646,7 +646,7 @@ rt_private void run_asynchronous(int s, Request *rqst)
 	sp = stream_by_fd[s];				/* Fetch associated stream */
 #endif
 
-	cmd = recv_str(sp, (int *) 0);		/* Get command */
+	cmd = recv_str(sp, NULL);		/* Get command */
 
 	dans.rq_type = ASYNACK;				/* Initialize the answer type */
 	jobnum = rqst->rq_opaque.op_first;	/* Job number assigned by client */
@@ -752,9 +752,9 @@ rt_private void run_asynchronous(int s, Request *rqst)
 	}
 	sprintf (envstring, "MELT_PATH=%s", meltpath);
 	putenv (envstring);
-#if defined (BSD) || defined (EIF_VMS)
+#ifdef SIGCHLD
 	signal (SIGCHLD, SIG_DFL);
-#else
+#elif defined (SIGCLD)
 	signal (SIGCLD, SIG_DFL);
 #endif
 
@@ -806,7 +806,7 @@ rt_private void get_application_cwd (int s)
 	sp = stream_by_fd[s];				/* Fetch associated stream */
 #endif
 
-	current_directory = recv_str(sp, (int *) 0);		/* Get command */
+	current_directory = recv_str(sp, NULL);		/* Get command */
 
 	CHECK ("valid_count", strlen (current_directory) > 0);
 
@@ -838,7 +838,7 @@ rt_private void start_app(int s)
 	sp = stream_by_fd[s];				/* Fetch associated stream */
 #endif
 
-	cmd = recv_str(sp, (int *) 0);		/* Get command */
+	cmd = recv_str(sp, NULL);		/* Get command */
 #ifdef USE_ADD_LOG
 	add_log(12, "starting app \n");
 #endif

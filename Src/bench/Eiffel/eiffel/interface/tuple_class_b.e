@@ -150,7 +150,7 @@ feature {NONE}
 		once
 			!! Result
 			Result.set_arguments (Void)
-			Result.set_feature_name ("make")
+			Result.set_feature_name_id (Names_heap.make_name_id)
 		end
 
 end -- class TUPLE_CLASS_B

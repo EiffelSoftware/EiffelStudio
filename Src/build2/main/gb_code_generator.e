@@ -349,7 +349,7 @@ feature {NONE} -- Implementation
 				a_class_name, temp_string: STRING
 			do
 				window_counter := window_counter + 1
-				set_progress (progress_switch + (progress_switch * (window_counter / total_windows)))
+				set_progress ((progress_switch + ((1 - progress_switch) * (window_counter / total_windows))).min (1))
 					-- Build the file name for generation
 				check
 					document_info_not_void: document_info /= Void

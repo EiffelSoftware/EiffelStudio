@@ -82,6 +82,13 @@ feature -- Access
 		do
 			Result := implementation.find_item_recursively_by_data (v)
 		end
+		
+	has_recursively (an_item: like item): BOOLEAN is
+			-- Does `Current' contain `an_item' at any level?
+		do
+			Result := implementation.has_recursively (an_item)
+		end
+		
 
 feature -- Status report
 

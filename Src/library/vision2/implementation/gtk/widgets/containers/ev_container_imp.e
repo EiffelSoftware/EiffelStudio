@@ -221,7 +221,7 @@ feature -- Status setting
 		do
 			background_pixmap := clone (a_pixmap)
 			pix_imp ?= background_pixmap.implementation
-			a_style := C.gtk_style_copy (C.gtk_widget_struct_style (container_widget))
+			a_style := C.gtk_style_copy (C.gtk_widget_struct_style (visual_widget))
 			pix_ptr := C.gtk_pixmap_struct_pixmap (pix_imp.gtk_pixmap)
 			from
 				i := 0
@@ -233,7 +233,7 @@ feature -- Status setting
 				mem_ptr.memory_copy ($pix_ptr, 4)
 				i := i + 1
 			end
-			C.gtk_widget_set_style (container_widget, a_style)
+			C.gtk_widget_set_style (visual_widget, a_style)
 		end
 		
 	bg_pixmap (p: POINTER): POINTER is

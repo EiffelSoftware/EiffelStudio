@@ -20,7 +20,7 @@ feature -- Status
 	is_global_once: BOOLEAN is
 			-- Is current once compiled in multithreaded mode with global status?
 		do
-			Result := System.has_multithreaded and then internal_is_global_once
+			Result := (System.has_multithreaded or else System.il_generation) and then internal_is_global_once
 		end
 
 feature -- Setting

@@ -772,6 +772,7 @@ feature {NONE} -- Implementation
 			end
 			dc.select_pen (empty_pen)
 			internal_initialized_pen := False
+			internal_pen := Void
 		end
 
 	remove_brush is
@@ -785,6 +786,7 @@ feature {NONE} -- Implementation
 			end
 			dc.select_brush (empty_brush)
 			internal_initialized_brush := False
+			internal_brush := Void
 		end
 
 
@@ -877,6 +879,11 @@ end -- class EV_DRAWABLE_IMP
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.27  2000/04/13 23:39:21  pichery
+--| Fixed a small bug. The brush and the pen were not correctly
+--| initialized after a `get_dc' or a `release_dc' in
+--| EV_DRAWING_AREA_IMP.
+--|
 --| Revision 1.26  2000/04/13 18:35:36  pichery
 --| Implemented feature `draw_pixmap' (works with
 --| pixmap with or without mask).

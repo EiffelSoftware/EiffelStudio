@@ -270,7 +270,6 @@ feature {NONE} -- WEL Implementation
 		do
 			disable_default_processing
 			set_message_return_value (1)
-			paint_dc.fill_rect (invalid_rect, background_brush)
 		end
 
 	on_paint (paint_dc: WEL_PAINT_DC; invalid_rect: WEL_RECT) is
@@ -328,6 +327,10 @@ feature {NONE} -- WEL Implementation
 				r.set_rect (text_pos + text_width, 0, cur_width, half)
 				paint_dc.fill_rect (r, bk_brush)
 				r.set_rect (text_pos + text_width, half, cur_width, cur_height)
+				paint_dc.fill_rect (r, bk_brush)
+				
+					-- Paint under the text
+				r.set_rect (text_pos, text_height, text_pos + text_width, cur_height)
 				paint_dc.fill_rect (r, bk_brush)
 
 	
@@ -418,6 +421,11 @@ end -- class EV_FRAME_IMP
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.41  2001/06/29 22:23:19  rogers
+--| Undid previous change, as it was not the best solution. Fixed bug in
+--| `Current' with a text set, but containing an item which did not fill all of
+--| `Current'. We now draw the background area beneath (vertically), the text.
+--|
 --| Revision 1.40  2001/06/29 19:00:35  rogers
 --| `on_erase_background' now fills in the `invalid_rect' with the background
 --| color. Previously, we just disabled the default processing. This fixes a

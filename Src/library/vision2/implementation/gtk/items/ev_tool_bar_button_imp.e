@@ -1,6 +1,8 @@
 --| FIXME NOT_REVIEWED this file has not been reviewed
 indexing
-	description: "EiffelVision2 Toolbar button, a specific button that goes in a tool-bar."
+	description:
+		"EiffelVision2 Toolbar button,%
+		%a specific button that goes in a tool-bar."
 	status: "See notice at end of class"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -61,7 +63,11 @@ feature {NONE} -- Initialization
 	connect_signals is
 			-- Redefined in radio as press_actions is not connected directly
 		do
-			connect_signal_to_actions ("clicked", interface.press_actions)
+			connect_signal_to_actions (
+				"clicked",
+				interface.press_actions,
+				default_translate
+			)
 		end
 
 	initialize is
@@ -120,7 +126,10 @@ feature -- Status report
 	index: INTEGER is
 		do
 			if parent_imp /= Void then
-				Result := C.gtk_list_child_position (parent_imp.list_widget, Current.c_object) + 1
+				Result := C.gtk_list_child_position (
+					parent_imp.list_widget,
+					Current.c_object
+				) + 1
 			end 
 		end
 
@@ -147,6 +156,9 @@ end -- class EV_TOOL_BAR_BUTTON_IMP
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.20  2000/04/04 20:50:18  oconnor
+--| updated signal connection for new marshaling scheme
+--|
 --| Revision 1.19  2000/03/20 23:42:06  pichery
 --| Fixed bug (contract in deferred class, not in implementation)
 --|
@@ -175,14 +187,14 @@ end -- class EV_TOOL_BAR_BUTTON_IMP
 --| added --| FIXME Not for release
 --|
 --| Revision 1.15.4.2  2000/01/26 23:20:44  king
---| Implemented to fit in with new structure, index and ordering need implementing, removed redundant features
+--| Implemented to fit in with new structure, index and ordering need
+--| implementing, removed redundant features
 --|
 --| Revision 1.15.4.1  1999/11/24 17:29:43  oconnor
 --| merged with DEVEL branch
 --|
 --| Revision 1.13.2.2  1999/11/02 17:20:02  oconnor
 --| Added CVS log, redoing creation sequence
---|
 --|
 --|-----------------------------------------------------------------------------
 --| End of CVS log

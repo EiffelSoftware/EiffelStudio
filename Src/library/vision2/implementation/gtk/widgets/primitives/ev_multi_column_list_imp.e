@@ -90,9 +90,24 @@ feature {NONE} -- Initialization
 			
 			list_widget := C.gtk_clist_new (a_columns)
 		
-			real_signal_connect (list_widget, "select_row", ~select_callback)
-			real_signal_connect (list_widget, "unselect_row", ~deselect_callback)
-			real_signal_connect (list_widget, "click_column", ~column_click_callback)
+			real_signal_connect (
+				list_widget,
+				"select_row",
+				~select_callback,
+				~gtk_value_int_to_tuple
+			)
+			real_signal_connect (
+				list_widget,
+				"unselect_row",
+				~deselect_callback,
+				~gtk_value_int_to_tuple
+			)
+			real_signal_connect (
+				list_widget,
+				"click_column",
+				~column_click_callback,
+				~gtk_value_int_to_tuple
+			)
 			
 			if row_height > 0 then
 				set_row_height (row_height)		
@@ -114,7 +129,8 @@ feature {NONE} -- Initialization
 				else
 					temp_title := ""
 				end
-				if column_widths /= Void and then column_widths.valid_index (i) then
+				if column_widths /= Void and then column_widths.valid_index (i)
+				then
 					temp_width := column_widths.i_th (i)
 				else
 					temp_width := Default_column_width
@@ -164,13 +180,13 @@ feature {NONE} -- Initialization
 		do
 			temp_int ?= int.item (1)
 			a_position := temp_int.item + 1
-			
+
 			an_item := (ev_children @ a_position).interface
 			an_item.deselect_actions.call ([])
 			interface.deselect_actions.call ([an_item])
 		end
 
-	column_click_callback (int: TUPLE [INTEGER]) is
+	column_click_callback (int: INTEGER) is
 		do
 			-- FIXME IEK Should include column number somewhere.
 			interface.column_click_actions.call ([])
@@ -496,6 +512,12 @@ feature {EV_MULTI_COLUMN_LIST_ROW_IMP} -- Implementation
 
 feature {NONE} -- Implementation
 
+	gtk_value_int_to_tuple (n_args: INTEGER; args: POINTER): TUPLE [INTEGER] is
+			-- Tuple containing integer value from first of `args'.
+		do
+			Result := [gtk_value_int (args)]
+		end
+
 	set_text_on_position (a_column, a_row: INTEGER; a_text: STRING) is
 			-- Set cell text at (a_column, a_row) to `a_text'.
 		local
@@ -659,11 +681,15 @@ end -- class EV_MULTI_COLUMN_LIST_IMP
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.58  2000/04/04 20:54:08  oconnor
+--| updated signal connection for new marshaling scheme
+--|
 --| Revision 1.57  2000/03/31 19:12:29  king
 --| Accounted for name change of pebble_over_widget
 --|
 --| Revision 1.56  2000/03/30 19:30:26  king
---| Changed to one column on creation, added column_* /= Void checks in create_list
+--| Changed to one column on creation, added column_* /= Void checks in
+--| create_list
 --|
 --| Revision 1.55  2000/03/29 22:14:51  king
 --| Added initial row pnd support
@@ -717,10 +743,12 @@ end -- class EV_MULTI_COLUMN_LIST_IMP
 --| Made compatible with new action sequence
 --|
 --| Revision 1.37  2000/03/04 00:25:54  king
---| Commented out redundant code that deals with setting individual colors of rows
+--| Commented out redundant code that deals with setting individual colors of
+--| rows
 --|
 --| Revision 1.35  2000/03/03 20:10:27  king
---| Corrected create_list to deal with resetting col wid and titles to prev values
+--| Corrected create_list to deal with resetting col wid and titles to prev
+--| values
 --|
 --| Revision 1.34  2000/03/03 18:18:49  king
 --| Implemented set_columns
@@ -779,7 +807,6 @@ end -- class EV_MULTI_COLUMN_LIST_IMP
 --|
 --| Revision 1.20.2.2  1999/11/02 17:20:04  oconnor
 --| Added CVS log, redoing creation sequence
---|
 --|
 --|-----------------------------------------------------------------------------
 --| End of CVS log

@@ -71,21 +71,35 @@ feature {NONE} -- Initialization
 			disable_multiple_selection
 			C.gtk_widget_show (list_widget)
 			C.gtk_scrolled_window_add_with_viewport (scroll_window, list_widget)
-			real_signal_connect (list_widget, "unselect_child", ~deselect_callback)
+			real_signal_connect (
+				list_widget,
+				"unselect_child",
+				~deselect_callback,
+				Void
+			)
 		end
 
 	initialize is
 		do
 			{EV_PRIMITIVE_IMP} Precursor
-			real_signal_connect (list_widget, "select_child", ~select_callback)
+			real_signal_connect (
+				list_widget,
+				"select_child",
+				~select_callback,
+				Void
+			)
 		end
 
-	select_callback (a_list_item: POINTER) is
+	select_callback (n_args: INTEGER; args: POINTER) is
 			-- Called when a list item is selected
+		require
+			one_arg: n_args = 1
 		local
 			l_item: EV_LIST_ITEM_IMP
 		do
-		 	l_item ?= eif_object_from_c (a_list_item)
+		 	l_item ?= eif_object_from_c (
+				gtk_value_pointer (args)
+			)
 
 			if previous_selected_item /= Void and then
 			previous_selected_item.parent = interface and then
@@ -104,7 +118,7 @@ feature {NONE} -- Initialization
 			end		
 		end
 
-	deselect_callback (a_list_item: POINTER) is
+	deselect_callback (n: INTEGER; a_list_item: POINTER) is
 			-- Called when a list item is deselected.
 		local
 			l_item: EV_LIST_ITEM_IMP
@@ -236,13 +250,16 @@ end -- class EV_LIST_IMP
 --! Electronic mail <info@eiffel.com>
 --! Customer support e-mail <support@eiffel.com>
 --! For latest info see award-winning pages: http://www.eiffel.com
---!---------------------------------------------------------------
+--!-----------------------------------------------------------------------------
 
 --|-----------------------------------------------------------------------------
 --| CVS log
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.37  2000/04/04 20:54:08  oconnor
+--| updated signal connection for new marshaling scheme
+--|
 --| Revision 1.36  2000/03/31 19:11:25  king
 --| Accounted for rename of pebble_over_widget
 --|
@@ -340,7 +357,6 @@ end -- class EV_LIST_IMP
 --|
 --| Revision 1.21.2.2  1999/11/02 17:20:04  oconnor
 --| Added CVS log, redoing creation sequence
---|
 --|
 --|-----------------------------------------------------------------------------
 --| End of CVS log

@@ -27,11 +27,15 @@ feature {NONE} -- Initialization
 			-- Create a window with a parent.
 		do
 			base_make (an_interface)
-			set_c_object (C.gtk_file_selection_new (eiffel_to_c ("Select directory")))
+			set_c_object (C.gtk_file_selection_new
+				(eiffel_to_c ("Select directory")))
 			C.gtk_window_set_modal (c_object, True)
-			C.gtk_widget_hide (C.gtk_widget_struct_parent (C.gtk_file_selection_struct_file_list (c_object)))
-			C.gtk_widget_hide (C.gtk_file_selection_struct_fileop_del_file (c_object))
-			C.gtk_widget_hide (C.gtk_file_selection_struct_fileop_ren_file (c_object))
+			C.gtk_widget_hide (C.gtk_widget_struct_parent
+				(C.gtk_file_selection_struct_file_list (c_object)))
+			C.gtk_widget_hide (C.gtk_file_selection_struct_fileop_del_file
+				(c_object))
+			C.gtk_widget_hide (C.gtk_file_selection_struct_fileop_ren_file
+				(c_object))
 		end
 
 	initialize is
@@ -40,11 +44,15 @@ feature {NONE} -- Initialization
 			real_signal_connect (
 				C.gtk_file_selection_struct_ok_button (c_object),
 				"pressed",
-				~on_ok)
+				~on_ok,
+				default_translate
+			)
 			real_signal_connect (
 				C.gtk_file_selection_struct_cancel_button (c_object),
 				"pressed",
-				~on_cancel)
+				~on_cancel,
+				default_translate
+			)
 			is_initialized := True
 		end
 
@@ -53,7 +61,9 @@ feature -- Access
 	directory: STRING is
 			-- Path of the current selected file
 		do
-			if selected_button /= Void and then selected_button.is_equal ("OK") then
+			if
+				selected_button /= Void and then selected_button.is_equal ("OK")
+			then
 				create Result.make (0)
 				Result.from_c (C.gtk_file_selection_get_filename (c_object))
 			end
@@ -104,6 +114,9 @@ end -- class EV_DIRECTORY_DIALOG_IMP
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.8  2000/04/04 20:51:57  oconnor
+--| updated signal connection for new marshaling scheme
+--|
 --| Revision 1.7  2000/02/22 18:39:37  oconnor
 --| updated copyright date and formatting
 --|
@@ -129,7 +142,6 @@ end -- class EV_DIRECTORY_DIALOG_IMP
 --|
 --| Revision 1.5.2.2  1999/11/02 17:20:03  oconnor
 --| Added CVS log, redoing creation sequence
---|
 --|
 --|-----------------------------------------------------------------------------
 --| End of CVS log

@@ -60,7 +60,11 @@ feature {NONE} -- Initialization
 			pixmapable_imp_initialize
 			textable_imp_initialize
 			initialize_button_box
-			connect_signal_to_actions ("clicked", interface.select_actions)
+			connect_signal_to_actions (
+				"clicked",
+				interface.select_actions,
+				default_translate
+			)
 			is_initialized := True
 			align_text_center
 		end
@@ -176,6 +180,9 @@ end -- class EV_BUTTON_IMP
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.30  2000/04/04 20:51:57  oconnor
+--| updated signal connection for new marshaling scheme
+--|
 --| Revision 1.29  2000/03/22 23:53:18  brendel
 --| Replaced obsolete call.
 --|
@@ -186,7 +193,8 @@ end -- class EV_BUTTON_IMP
 --| merged changes from prerelease_20000214
 --|
 --| Revision 1.26.6.27  2000/02/04 21:26:03  king
---| Removed hiding and showing of pix/text boxes as this is done in pix/textable_imp
+--| Removed hiding and showing of pix/text boxes as this is done in
+--| pix/textable_imp
 --|
 --| Revision 1.26.6.26  2000/02/04 04:25:38  oconnor
 --| released
@@ -252,7 +260,8 @@ end -- class EV_BUTTON_IMP
 --| Was wrongly passing 8 bit values.
 --|
 --| Revision 1.26.6.6  1999/12/01 01:02:33  brendel
---| Rearranged externals to GEL or EV_C_GTK. Modified some features that relied on specific things like return value BOOLEAN instead of INTEGER.
+--| Rearranged externals to GEL or EV_C_GTK. Modified some features that
+--| relied on specific things like return value BOOLEAN instead of INTEGER.
 --|
 --| Revision 1.26.6.5  1999/11/30 23:14:20  oconnor
 --| rename widget to c_object
@@ -284,7 +293,6 @@ end -- class EV_BUTTON_IMP
 --|
 --| Revision 1.26.2.2  1999/11/02 17:20:04  oconnor
 --| Added CVS log, redoing creation sequence
---|
 --|
 --|-----------------------------------------------------------------------------
 --| End of CVS log

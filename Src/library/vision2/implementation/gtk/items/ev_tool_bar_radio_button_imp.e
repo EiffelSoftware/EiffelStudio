@@ -42,7 +42,7 @@ feature {NONE} -- Implementation
 	connect_signals is
 			-- Connect on_activate to toggled signal
 		do
-			signal_connect ("toggled", ~on_activate)
+			signal_connect ("toggled", ~on_activate, default_translate)
 		end
 		
 	on_activate is
@@ -102,6 +102,9 @@ end -- class EV_TOOL_BAR_RADIO_BUTTON_IMP
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.11  2000/04/04 20:50:19  oconnor
+--| updated signal connection for new marshaling scheme
+--|
 --| Revision 1.10  2000/02/22 18:39:34  oconnor
 --| updated copyright date and formatting
 --|
@@ -125,7 +128,6 @@ end -- class EV_TOOL_BAR_RADIO_BUTTON_IMP
 --|
 --| Revision 1.5.2.2  1999/11/02 17:20:02  oconnor
 --| Added CVS log, redoing creation sequence
---|
 --|
 --|-----------------------------------------------------------------------------
 --| End of CVS log

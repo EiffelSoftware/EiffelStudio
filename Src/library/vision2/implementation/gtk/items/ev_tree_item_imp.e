@@ -57,8 +57,16 @@ feature {NONE} -- Initialization
 			pixmapable_imp_initialize
 			textable_imp_initialize
 			initialize_item_box
-			connect_signal_to_actions ("collapse", interface.collapse_actions)
-			connect_signal_to_actions ("expand", interface.expand_actions)
+			connect_signal_to_actions (
+				"collapse",
+				interface.collapse_actions,
+				default_translate
+			)
+			connect_signal_to_actions (
+				"expand",
+				interface.expand_actions,
+				default_translate
+			)
 			is_initialized := True
 			align_text_left
 		end
@@ -169,7 +177,11 @@ feature {NONE} -- Implementation
 		do
 			Result := C.gtk_tree_new
 				-- Connect events to items own tree.
-			real_signal_connect (Result, "select_child", ~select_callback)
+			real_signal_connect (
+				Result,
+				"select_child",
+				~select_callback, default_translate
+			)
 				--| Gtk bug means that select_child signal gets
 				--| fired on button click regardless.
 		end
@@ -331,6 +343,9 @@ end -- class EV_TREE_ITEM_IMP
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.49  2000/04/04 20:50:19  oconnor
+--| updated signal connection for new marshaling scheme
+--|
 --| Revision 1.48  2000/03/13 22:05:16  king
 --| Added referencing handling for reorder child
 --|
@@ -371,7 +386,8 @@ end -- class EV_TREE_ITEM_IMP
 --| Added subtree handling on addition and removal of items
 --|
 --| Revision 1.34  2000/02/24 18:47:55  king
---| Redefined min_wid/hgt to avoid invariant violation that doesnt apply to feature needed by the tree item
+--| Redefined min_wid/hgt to avoid invariant violation that doesnt apply to
+--| feature needed by the tree item
 --|
 --| Revision 1.33  2000/02/24 01:42:14  king
 --| Implemented event handling
@@ -399,7 +415,6 @@ end -- class EV_TREE_ITEM_IMP
 --|
 --| Revision 1.28.2.2  1999/11/02 17:20:02  oconnor
 --| Added CVS log, redoing creation sequence
---|
 --|
 --|-----------------------------------------------------------------------------
 --| End of CVS log

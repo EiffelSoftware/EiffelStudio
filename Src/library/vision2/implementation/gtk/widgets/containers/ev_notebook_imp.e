@@ -38,7 +38,11 @@ feature {NONE} -- Initialization
 			-- Set up the action sequence connection.
 		do
 			Precursor
-			connect_signal_to_actions ("switch-page", interface.selection_actions)
+			connect_signal_to_actions (
+				"switch-page",
+				interface.selection_actions,
+				default_translate
+			)
 			new_item_actions.extend (~set_item_text (?, ""))
 		end
 
@@ -183,7 +187,7 @@ feature -- Element change
 --			until
 --				list.after
 --			loop
---				--C.c_gtk_widget_set_bg_color (list.item, color.red, color.green, color.blue)
+----C.c_gtk_widget_set_bg_color (list.item, color.red, color.green, color.blue)
 --				list.forth
 --			end
 --		end
@@ -204,7 +208,7 @@ feature -- Element change
 --			until
 --				list.after
 --			loop
---				--C.c_gtk_widget_set_fg_color (list.item, color.red, color.green, color.blue)
+----C.c_gtk_widget_set_fg_color (list.item, color.red, color.green, color.blue)
 --				list.forth
 --			end
 --		end
@@ -244,6 +248,9 @@ end -- class EV_NOTEBOOK_IMP
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.20  2000/04/04 20:51:57  oconnor
+--| updated signal connection for new marshaling scheme
+--|
 --| Revision 1.19  2000/02/22 18:39:38  oconnor
 --| updated copyright date and formatting
 --|

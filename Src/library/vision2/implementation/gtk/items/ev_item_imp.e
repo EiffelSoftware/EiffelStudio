@@ -42,7 +42,11 @@ feature -- Initialization
 
 			-- FIXME this probably should call precursor {EV_WIDGET_IMP}
 			set_default_colors
-			connect_signal_to_actions ("button-press-event", interface.pointer_button_press_actions)
+			connect_signal_to_actions (
+				"button-press-event",
+				interface.pointer_button_press_actions,
+				default_translate
+			)
 			is_initialized := True
 		end
 
@@ -127,6 +131,9 @@ end -- class EV_ITEM_IMP
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.25  2000/04/04 20:50:18  oconnor
+--| updated signal connection for new marshaling scheme
+--|
 --| Revision 1.24  2000/03/24 02:20:29  oconnor
 --| removed c-ed out code
 --|
@@ -185,7 +192,8 @@ end -- class EV_ITEM_IMP
 --| use new  connect_signal_to_actions
 --|
 --| Revision 1.17.6.3  1999/12/01 01:02:32  brendel
---| Rearranged externals to GEL or EV_C_GTK. Modified some features that relied on specific things like return value BOOLEAN instead of INTEGER.
+--| Rearranged externals to GEL or EV_C_GTK. Modified some features that
+--| relied on specific things like return value BOOLEAN instead of INTEGER.
 --|
 --| Revision 1.17.6.2  1999/11/30 22:52:43  oconnor
 --| added action sequence
@@ -198,7 +206,6 @@ end -- class EV_ITEM_IMP
 --|
 --| Revision 1.17.2.2  1999/11/02 17:20:02  oconnor
 --| Added CVS log, redoing creation sequence
---|
 --|
 --|-----------------------------------------------------------------------------
 --| End of CVS log

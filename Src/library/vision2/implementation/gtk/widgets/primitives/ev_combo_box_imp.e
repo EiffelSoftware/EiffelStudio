@@ -80,23 +80,25 @@ feature {NONE} -- Initialization
 			real_connect_signal_to_actions (
 				entry_widget,
 				"activate",
-				interface.return_actions
+				interface.return_actions,
+				default_translate
 			)
 			real_connect_signal_to_actions (
 				entry_widget,
 				"changed",
-				interface.change_actions
+				interface.change_actions,
+				default_translate
 			)
 		end
 
 	avoid_callback: BOOLEAN
 		-- Flag used to avoid repeated emission of select signal from combo box.
 
-	select_callback (an_item: POINTER) is
+	select_callback (n: INTEGER; an_item: POINTER) is
 			-- Redefined to counter repeated select signal of combo box. 
 		do
 			if not avoid_callback then
-				Precursor (an_item)
+				Precursor (n, an_item)
 				avoid_callback := True
 			else
 				avoid_callback := False
@@ -218,6 +220,9 @@ end -- class EV_COMBO_BOX_IMP
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.30  2000/04/04 20:54:08  oconnor
+--| updated signal connection for new marshaling scheme
+--|
 --| Revision 1.29  2000/03/31 19:10:57  king
 --| Accounted for rename of pebble_over_widget
 --|
@@ -280,7 +285,9 @@ end -- class EV_COMBO_BOX_IMP
 --| Added initialize, removed redefinition of now defunct features
 --|
 --| Revision 1.16.6.7  2000/01/15 00:53:19  oconnor
---| renamed is_multiple_selection -> multiple_selection_enabled, set_multiple_selection -> enable_multiple_selection & set_single_selection -> disable_multiple_selection
+--| renamed is_multiple_selection -> multiple_selection_enabled,
+--| set_multiple_selection -> enable_multiple_selection &
+--| set_single_selection -> disable_multiple_selection
 --|
 --| Revision 1.16.6.6  1999/12/13 20:02:38  oconnor
 --| commented out old command stuff

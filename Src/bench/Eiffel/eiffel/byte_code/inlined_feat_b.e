@@ -2,25 +2,12 @@ class INLINED_FEAT_B
 
 inherit
 	FEATURE_BL
-		rename
-			analyze_on as feat_bl_analyze_on,
-			generate_parameters as feat_bl_generate_parameters,
-			unanalyze as feat_bl_unanalyze,
-			free_register as feat_bl_free_register
-		redefine
-			enlarged, perused, generate_metamorphose_end, 
-			generate_end, fill_from
-		end
-
-	FEATURE_BL
 		redefine
 			enlarged, analyze_on, generate_metamorphose_end, 
 			generate_end, fill_from,
 			generate_parameters,
 			unanalyze, perused,
 			free_register
-		select
-			analyze_on, generate_parameters, unanalyze, free_register
 		end
 
 feature
@@ -72,7 +59,7 @@ feature
 	free_register is
             -- Free registers
 		do
-			feat_bl_free_register;
+			{FEATURE_BL} Precursor;
 			if result_reg /= Void then
 				result_reg.free_register
 			end
@@ -80,7 +67,7 @@ feature
 
 	unanalyze is
 		do
-			feat_bl_unanalyze;
+			{FEATURE_BL} Precursor;
 			compound := deep_clone (saved_compound)
 		end
 
@@ -95,7 +82,7 @@ feature
 			local_inliner: INLINER
 		do
 				-- First, standard analysis of the call
-			feat_bl_analyze_on (reg);
+			{FEATURE_BL} Precursor (reg);
 
 			reg_type := reg.c_type;
 
@@ -194,7 +181,7 @@ feature -- Generation
 			buf: GENERATION_BUFFER
 			local_inliner: INLINER
 		do
-			feat_bl_generate_parameters (gen_reg)
+			{FEATURE_BL} Precursor (gen_reg)
 
 			local_inliner := inliner
 			local_inliner.set_inlined_feature (Current);

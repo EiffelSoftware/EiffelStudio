@@ -86,7 +86,7 @@ feature -- Setting
 
 feature -- Properties
 
-	associated_command: PIXMAP_COMMAND;
+	associated_command: TOOL_COMMAND;
 			-- Command held by Current
 
 	associated_button: EB_BUTTON

@@ -41,8 +41,12 @@ feature -- Basic operations
 			-- Call each procedure in order unless `is_blocked'.
 			-- If `is_paused' delay execution until `resume'.
 			-- Stop at current point in list on `abort'.
+                local
+                        snapshot: LINKED_LIST [PROCEDURE [ANY, TUPLE [ANY]]]
 		do
 			debug ("EVENT_TRACE") print (call_log (a_pebble_tuple)) end
+                        create snapshot.make
+                        snapshot.fill (Current)
 			inspect
 				state
 			when
@@ -50,21 +54,20 @@ feature -- Basic operations
 			then
 				debug ("EVENT_TRACE") print (" calling "+count.out+" actions...%N") end
 				from
-					cursor_stack.extend (cursor)
 					is_aborted_stack.extend (False)
-					start
+					snapshot.start
+				variant
+					snapshot.count - snapshot.index
 				until
-					after
+					snapshot.after
 					or is_aborted_stack.item
 				loop
 					if item.valid_operands (a_pebble_tuple) then
-						item.call (a_pebble_tuple)
+						snapshot.item.call (a_pebble_tuple)
 					end
-					forth
+					snapshot.forth
 				end
 				is_aborted_stack.remove
-				go_to (cursor_stack.item)
-				cursor_stack.remove
 			when
 				Paused_state
 			then
@@ -136,6 +139,9 @@ end
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.6  2000/02/25 20:31:06  oconnor
+--| changed to match new action sequence implementation. See ACTION_SEQUENCE 1.14
+--|
 --| Revision 1.5  2000/02/22 18:39:46  oconnor
 --| updated copyright date and formatting
 --|

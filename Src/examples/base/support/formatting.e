@@ -190,14 +190,15 @@ feature -- Input
 			io.putstring ("Enter a number between 1 and 100: ")
 			
 			from
-				io.read_integer
+				io.read_line
 			until
-				1 <= io.lastint and io.lastint <= 100
+				io.last_string.is_integer and then
+				(1 <= io.last_string.to_integer and io.last_string.to_integer <= 100)
 			loop
 				io.putstring ("That number is not between 1 and 100%N")
-				io.read_integer
+				io.read_line
 			end
-			item := io.lastint
+			item := io.last_string.to_integer
 		end
 
 feature -- Implementation

@@ -1235,7 +1235,7 @@ feature {NONE} -- Added features for ENUM types.
 	Real_type: TYPE is
 			-- typeof (float)
 		once
-			Result := feature {TYPE}.get_type_string (("System.Float").to_cil)
+			Result := feature {TYPE}.get_type_string (("System.Single").to_cil)
 		end
 
 end -- class TYPE_CONSUMER

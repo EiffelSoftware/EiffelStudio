@@ -64,7 +64,6 @@ external
 	include_path:
 		"$(ISE_EIFFEL)\library\vision2\spec\include",
 		"$(ISE_EIFFEL)\library\wel\spec\windows\include"
-		"F:\apps\MSVS.NET\Vc7\PlatformSDK\Include"
 
 	object:
 		"$(ISE_EIFFEL)\library\vision2\spec\$(ISE_C_COMPILER)\lib\ilvision2.lib",

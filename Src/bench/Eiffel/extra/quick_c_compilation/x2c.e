@@ -1,3 +1,9 @@
+indexing
+	description: "Objects that ..."
+	author: "Mark Howard, Axa-Rosenberg"
+	date: "$Date$"
+	revision: "$Revision$"
+
 class
 	FAST_COMPILE
 

@@ -50,6 +50,32 @@ inherit
 create
 	default_create,
 	make_with_text
+	
+feature -- Obsolete
+
+	align_text_left is
+			-- Display text left aligned
+		obsolete "Was not implemented on all platforms."
+		require
+			not_destroyed: not is_destroyed
+		do
+		end
+	
+	align_text_center is
+			-- Display text center aligned
+		obsolete "Was not implemented on all platforms."
+		require
+			not_destroyed: not is_destroyed
+		do
+		end
+		
+	align_text_right is
+			-- Display text right aligned
+		obsolete "Was not implemented on all platforms."
+		require
+			not_destroyed: not is_destroyed
+		do
+		end
 
 feature {NONE} -- Contract support
 

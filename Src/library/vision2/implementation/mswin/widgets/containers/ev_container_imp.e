@@ -216,6 +216,7 @@ feature {NONE} -- WEL Implementation
 		local
 			label_imp: EV_LABEL_IMP
 			item_type: INTEGER
+			button_imp: EV_BUTTON_IMP
 		do
 			item_type := draw_item.ctl_type
 			if item_type = (feature {WEL_ODT_CONSTANTS}.Odt_menu) then
@@ -224,6 +225,11 @@ feature {NONE} -- WEL Implementation
 				label_imp ?= draw_item.window_item
 				if label_imp /= Void then
 					label_imp.on_draw_item (draw_item)
+				end
+			elseif item_type = (feature {WEL_ODT_CONSTANTS}.odt_button) then
+				button_imp ?= draw_item.window_item
+				if button_imp /= Void then
+					button_imp.on_draw_item (draw_item)
 				end
 			end
 		end

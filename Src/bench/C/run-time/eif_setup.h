@@ -116,7 +116,8 @@ extern void egc_init_plug ();		/* Defined in E1/eplug.c, and
 #endif	/* !_CRAY */
 
 #define EIF_RT_BASIC_CLEANUP \
-	reclaim();
+	reclaim(); \
+}
 
 
 #ifdef EIF_THREADS
@@ -127,12 +128,14 @@ extern void egc_init_plug ();		/* Defined in E1/eplug.c, and
 
 #ifdef VXWORKS
 #define EIF_INITIALIZE(fail_func) \
+	eif_alloc_init (); \
 	eif_thr_init_root(); \
 { \
 	EIF_RT_BASIC_SETUP(fail_func) \
 	eif_rtinit(0, NULL, NULL);
 #else
 #define EIF_INITIALIZE(fail_func) \
+	eif_alloc_init(); \
 	eif_thr_init_root(); \
 { \
 	EIF_RT_BASIC_SETUP(fail_func) \
@@ -173,6 +176,8 @@ extern void egc_init_plug ();		/* Defined in E1/eplug.c, and
  * ------------------------------------------------------------- */
 
 #define EIF_INITIALIZE(fail_func) \
+	eif_alloc_init(); \
+{ \
 	EIF_RT_BASIC_SETUP(fail_func) \
 	eif_rtinit(argc, argv, envp);
 

@@ -9,7 +9,8 @@ inherit
 		redefine
 			launch_c_compilation, freezing_actions,
 			confirm_and_compile,
-			command_name, symbol
+			command_name, symbol,
+			compilation_allowed
 		end
  
 creation
@@ -66,6 +67,11 @@ feature
 
 	
 feature {NONE}
+
+	compilation_allowed: BOOLEAN is
+		do
+			Result := not melt_only
+		end
 
 	command_name: STRING is do Result := l_Freeze end;
 

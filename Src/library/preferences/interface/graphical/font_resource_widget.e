@@ -33,7 +33,10 @@ feature -- Access
 			Result := "FONT"
 		end	
 
-feature {NONE} -- Commands
+	resource: FONT_PREFERENCE
+			-- Actual resource.
+
+feature {PREFERENCE_VIEW} -- Commands
 
 	change is
 			-- Change the value.
@@ -48,6 +51,8 @@ feature {NONE} -- Commands
 			font_tool.ok_actions.extend (agent update_changes)
 			font_tool.show_modal_to_window (caller.parent_window)
 		end 
+
+feature {NONE} -- Commands
 
 	update_changes is
 			-- Commit the result of Font Tool.
@@ -109,9 +114,6 @@ feature {NONE} -- Implementation
 			a_frame.extend (h2)
 			change_item_widget := a_frame
 		end
-
-	resource: FONT_PREFERENCE
-			-- Actual resource.
 
 	change_b: EV_BUTTON
 			-- Button to popup EV_FONT_DIALOG.

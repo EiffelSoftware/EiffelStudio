@@ -43,10 +43,10 @@ feature {NONE} -- Initialization
 			create changed_resources.make (2)
 			changed_resources.compare_objects
 			set_size (640, 460)
---			set_icon_pixmap (pixmap_file_contents (Interface_names.preference_window_icon))
 			fill_list
 			right_list.set_column_titles (<<l_name, l_literal_value, l_status, l_type>>)
 			right_list.resize_actions.force_extend (agent autosize_list_columns)
+			right_list.pointer_double_press_actions.force_extend (agent on_list_double_clicked)
 			
 			close_request_actions.extend (agent on_cancel)
 			set_button.select_actions.extend (agent on_set_resource)
@@ -63,7 +63,7 @@ feature {NONE} -- Initialization
 			-- could not be performed in `initialize',
 			-- (due to regeneration of implementation class)
 			-- can be added here.
-		do
+		do			
 		end
 
 feature -- Status Setting
@@ -74,6 +74,22 @@ feature -- Status Setting
 			show_full_resource_name := a_flag	
 		end		
 
+	set_root_icon (a_icon: EV_PIXMAP) is
+			-- Set the root node icon
+		require
+			icon_not_void: a_icon /= Void
+		do
+			root_icon := a_icon
+		end		
+		
+	set_folder_icon (a_icon: EV_PIXMAP) is
+			-- Set the folder node icon
+		require
+			icon_not_void: a_icon /= Void
+		do
+			folder_icon := a_icon
+		end
+		
 feature {NONE} -- Events
 
 	on_close is
@@ -104,7 +120,11 @@ feature {NONE} -- Events
 				right_list.selected_item.go_i_th (2)
 				right_list.selected_item.replace (l_resource_widget.resource.string_value)
 				right_list.selected_item.go_i_th (3)
-				right_list.selected_item.replace ("user set")
+				if l_resource_widget.resource.is_default_value then
+					right_list.selected_item.replace ("default")
+				else
+					right_list.selected_item.replace ("user set")	
+				end				
 			end		
 		end	
 
@@ -139,6 +159,71 @@ feature {NONE} -- Events
 				end				
 			end
 		end		
+
+	on_list_double_clicked is
+			-- 
+		local
+			sel_item: EV_MULTI_COLUMN_LIST_ROW
+			int_pref: INTEGER_PREFERENCE
+			bool_pref: BOOLEAN_PREFERENCE
+			string_pref: STRING_PREFERENCE
+			list_pref: ARRAY_PREFERENCE
+			color_pref: COLOR_PREFERENCE
+			font_pref: FONT_PREFERENCE
+			l_timeout: EV_TIMEOUT
+			l_resource_widget: PREFERENCE_WIDGET
+			l_color_widget: COLOR_PREFERENCE_WIDGET
+			l_font_widget: FONT_PREFERENCE_WIDGET
+		do
+			sel_item := right_list.selected_item
+			if sel_item /= Void then
+				int_pref ?= sel_item.data
+				if int_pref /= Void then
+					create l_timeout.make_with_interval (250)
+					l_timeout.actions.extend (agent focus_edit_widget (l_timeout))
+				else
+					bool_pref ?= sel_item.data
+					if bool_pref /= Void then
+						bool_pref.set_value (not bool_pref.value)
+						l_resource_widget := resource_widget (bool_pref)						
+						resource_cell.set_data (l_resource_widget)						
+						on_set_resource
+					else
+						string_pref ?= sel_item.data
+						if string_pref /= Void then
+							create l_timeout.make_with_interval (250)
+							l_timeout.actions.extend (agent focus_edit_widget (l_timeout))
+						else
+							list_pref ?=sel_item.data
+							if list_pref /= Void then
+								create l_timeout.make_with_interval (250)
+								l_timeout.actions.extend (agent focus_edit_widget (l_timeout))
+							else
+								color_pref ?= sel_item.data
+								if color_pref /= Void then
+									l_color_widget ?= resource_widget (color_pref)
+									l_color_widget.set_caller (Current)
+									l_color_widget.change
+								else
+									font_pref ?=sel_item.data
+									if font_pref /= Void then
+										l_font_widget ?= resource_widget (font_pref)
+										l_font_widget.set_caller (Current)
+										l_font_widget.change
+									end
+								end
+							end
+						end
+					end
+				end
+			end
+		end		
+
+	on_item_selected (a_pref: PREFERENCE) is
+			-- 
+		do
+			show_resource_in_edit_widget (a_pref)		
+		end	
 
 	autosize_list_columns is
 			-- Auto-size the last column in the list to fit to the size of the list
@@ -185,6 +270,9 @@ feature {NONE} -- Implementation
 				
 					-- Generate a root node
 				create it.make_with_text (root_node_text)
+				if root_icon /= Void then
+					it.set_pixmap (root_icon)
+				end
 				it.select_actions.extend (agent fill_right_list (root_node_text))
 				l_pref_hash.put (it, root_node_text)
 				left_list.extend (it)
@@ -216,6 +304,9 @@ feature {NONE} -- Implementation
 								l_pref_parent_name.append (l_pref_parent_short_name)	
 								l_index := l_index + 1										
 								create l_parent.make_with_text (l_pref_parent_short_name)
+								if folder_icon /= Void then
+									l_parent.set_pixmap (folder_icon)
+								end
 								l_parent.select_actions.extend (agent fill_right_list (l_pref_parent_name))
 								if not l_pref_hash.has (l_pref_parent_name) then
 									l_pref_hash.put (l_parent, l_pref_parent_name.twin)	
@@ -231,6 +322,9 @@ feature {NONE} -- Implementation
 						else
 							if not l_pref_hash.has (l_pref_parent_full_name) then
 								create l_parent.make_with_text (l_pref_parent_full_name)
+									if folder_icon /= Void then
+										l_parent.set_pixmap (folder_icon)
+									end
 								l_parent.select_actions.extend (agent fill_right_list (l_pref_parent_full_name))
 								l_pref_hash.put (l_parent, l_pref_parent_full_name.twin)						
 								l_pref_hash.item (root_node_text).put_front (l_parent)
@@ -239,6 +333,9 @@ feature {NONE} -- Implementation
 					elseif not l_pref_hash.has (l_pref_name) then						
 							-- Add as child to root node
 						create it.make_with_text (l_pref_name)
+						if folder_icon /= Void then
+							it.set_pixmap (folder_icon)
+						end
 						it.select_actions.extend (agent fill_right_list (l_pref_name))
 						l_pref_hash.item (root_node_text).put_front (it)
 					end
@@ -255,7 +352,6 @@ feature {NONE} -- Implementation
 		local		
 			l_names: SORTED_TWO_WAY_LIST [STRING]
 			l_pref_name: STRING
-			l_index: INTEGER
 			it: EV_MULTI_COLUMN_LIST_ROW
 			l_resource: PREFERENCE
 		do
@@ -267,7 +363,7 @@ feature {NONE} -- Implementation
 			l_names.sort
 			from
 				l_names.start
-				right_list.wipe_out
+				right_list.wipe_out								
 			until
 				l_names.after
 			loop
@@ -290,13 +386,14 @@ feature {NONE} -- Implementation
 						it.extend ("")	
 					end
 					it.extend (l_resource.string_value)
+					it.set_data (l_resource)
 					if l_resource.is_default_value then						
 						it.extend (default_value)
 					else
 						it.extend (user_value)
 					end
 					it.extend (l_resource.string_type)
-					it.select_actions.extend (agent show_resource_in_edit_widget (l_resource))					
+					it.select_actions.extend (agent on_item_selected (l_resource))
 					right_list.extend (it)
 				end
 				l_names.forth
@@ -348,7 +445,6 @@ feature {NONE} -- Implementation
 			resource_not_void: a_resource /= Void
 		local
 			l_resource_widget: PREFERENCE_WIDGET
-			l_timeout: EV_TIMEOUT
 		do
 			l_resource_widget := resource_widget (a_resource)
 			resource_cell.wipe_out
@@ -366,9 +462,6 @@ feature {NONE} -- Implementation
 			else
 				set_default_button.disable_sensitive
 			end
-			
-			create l_timeout.make_with_interval (250)
-			l_timeout.actions.extend (agent focus_edit_widget(l_timeout))
 		end		
 	
 	focus_edit_widget (a_timeout: EV_TIMEOUT) is
@@ -429,6 +522,10 @@ feature {NONE} -- Private attributes
 
 	selected_resource_name: STRING
 			-- Name of resource selected in tree.  Used to programatically to update the right-side list.
+
+	root_icon: EV_PIXMAP
+	
+	folder_icon: EV_PIXMAP
 
 invariant
 	has_preferences: preferences /= Void

@@ -46,8 +46,11 @@ feature -- Access
 		do
 			Result := "COLOR"
 		end	
+		
+	resource: COLOR_PREFERENCE
+			-- Actual resource.
 
-feature {NONE} -- Commands
+feature {PREFERENCE_VIEW} -- Commands
 
 	change is
 			-- Change the value.
@@ -60,6 +63,8 @@ feature {NONE} -- Commands
 			color_tool.ok_actions.extend (agent update_changes)
 			color_tool.show_modal_to_window (caller.parent_window)
 		end 
+		
+feature {NONE} -- Commands
 
 	update_changes is
 			-- Update the changes made in `change_item_widget' to `resource'.
@@ -120,9 +125,6 @@ feature {NONE} -- Implementation
 
 	color_tool: EV_COLOR_DIALOG
 			-- Color Palette from which we can select a color.
-
-	resource: COLOR_PREFERENCE
-			-- Actual resource.
 
 	color_label: EV_LABEL
 			-- Label to display the selected color.

@@ -27,11 +27,25 @@ feature -- Access
 			"LastReadSuccessful"
 		end
 
+	frozen SearchResult: ISE_REFLECTION_EIFFELASSEMBLY is
+		external
+			"IL field signature :ISE.Reflection.EiffelAssembly use ISE.Reflection.ReflectionInterface"
+		alias
+			"SearchResult"
+		end
+
 	frozen LastError: ISE_REFLECTION_ERRORINFO is
 		external
 			"IL field signature :ISE.Reflection.ErrorInfo use ISE.Reflection.ReflectionInterface"
 		alias
 			"LastError"
+		end
+
+	frozen Found: BOOLEAN is
+		external
+			"IL field signature :System.Boolean use ISE.Reflection.ReflectionInterface"
+		alias
+			"Found"
 		end
 
 	frozen ErrorMessages: ISE_REFLECTION_REFLECTIONINTERFACEERRORMESSAGES is
@@ -78,6 +92,13 @@ feature -- Basic Operations
 			"EiffelAssembly"
 		end
 
+	Search (a_descriptor: ISE_REFLECTION_ASSEMBLYDESCRIPTOR) is
+		external
+			"IL signature (ISE.Reflection.AssemblyDescriptor): System.Void use ISE.Reflection.ReflectionInterface"
+		alias
+			"Search"
+		end
+
 	Support: ISE_REFLECTION_CODEGENERATIONSUPPORT is
 		external
 			"IL signature (): ISE.Reflection.CodeGenerationSupport use ISE.Reflection.ReflectionInterface"
@@ -92,13 +113,6 @@ feature -- Basic Operations
 			"HasWriteLockCode"
 		end
 
-	Exists (a_descriptor: ISE_REFLECTION_ASSEMBLYDESCRIPTOR): BOOLEAN is
-		external
-			"IL signature (ISE.Reflection.AssemblyDescriptor): System.Boolean use ISE.Reflection.ReflectionInterface"
-		alias
-			"Exists"
-		end
-
 	EiffelType (xml_filename: STRING): ISE_REFLECTION_EIFFELCLASS is
 		external
 			"IL signature (System.String): ISE.Reflection.EiffelClass use ISE.Reflection.ReflectionInterface"
@@ -111,6 +125,13 @@ feature -- Basic Operations
 			"IL signature (ISE.Reflection.AssemblyDescriptor): System.Void use ISE.Reflection.ReflectionInterface"
 		alias
 			"RemoveAssembly"
+		end
+
+	a_invariant is
+		external
+			"IL signature (): System.Void use ISE.Reflection.ReflectionInterface"
+		alias
+			"_invariant"
 		end
 
 	Assemblies: SYSTEM_COLLECTIONS_ARRAYLIST is

@@ -33,7 +33,6 @@ void get_argcargv (int *argc, char ***argv)
 
 	temp = strdup (GetCommandLine());
 
-
 		/* Only for Application that are launched from EiffelBench:
 		 * Add a `\0' just before the string which contains the "pipes" that
 		 * have been uuencoded, so that we are only giving the command line arguments

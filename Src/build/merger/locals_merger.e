@@ -70,7 +70,7 @@ feature
 
 						-- Keeping locals from `user', not appearing in `comp_locals'.
 
-						!! temp_id_list.make (current_id_list.count)
+						!! temp_id_list.make_filled (current_id_list.count)
 						from
 							temp_id_list.start
 							current_id_list.start
@@ -88,12 +88,12 @@ feature
 
 						if new_locals = Void then
 							if not new_type_dec.id_list.empty then
-								!! temp_locals.make (1)
+								!! temp_locals.make_filled (1)
 								temp_locals.put_i_th (new_type_dec, 1)
 							end
 						else
 							if not new_type_dec.id_list.empty then
-								!! temp_locals.make (new_locals.count + 1)
+								!! temp_locals.make_filled (new_locals.count + 1)
 								temp_locals.put_i_th (new_type_dec, temp_locals.count)
 							end
 							temp_locals.merge_after_position (0, new_locals)
@@ -112,7 +112,7 @@ feature
 						merge_result := new_locals;
 					else
 							-- Adding locals to new_template
-						!! merge_result.make (new_locals.count + 
+						!! merge_result.make_filled (new_locals.count + 
 										new_tmp.count)
                        	merge_result.merge_after_position (0, new_tmp)
                        	merge_result.merge_after_position (new_tmp.count, new_locals)

@@ -22,7 +22,7 @@ feature {NONE} -- Initialization
 			expressions ?= yacc_arg (0);
 			if expressions = Void then
 					-- Create empty list
-				!! expressions.make (0)
+				!! expressions.make_filled (0)
 			end
 		ensure then
 			expressions_exists: expressions /= Void;

@@ -13,7 +13,7 @@ feature
 		do
 			if new_tmp /= Void then
 				-- Copying arguments of `new_tmp'.
-				!! merge_result.make (new_tmp.count)
+				!! merge_result.make_filled (new_tmp.count)
 				merge_result.merge_after_position (0, new_tmp)
 			else
 				-- Resetting merge result, otherwise it will

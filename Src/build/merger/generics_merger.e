@@ -11,7 +11,7 @@ feature
 			-- `user' will become `new_tmp'.
 		do
 			if new_tmp /= Void then
-				!! merge_result.make (new_tmp.count)
+				!! merge_result.make_filled (new_tmp.count)
 				merge_result.merge_after_position (0, new_tmp)
 			else
 				merge_result := Void

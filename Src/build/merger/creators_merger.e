@@ -55,7 +55,7 @@ feature
 
 					-- Keeping creators from `user', not appearing in `new_tmp'.
 
-					!! temp_feature_list.make (current_feature_list.count)
+					!! temp_feature_list.make_filled (current_feature_list.count)
 					from
 						temp_feature_list.start
 						current_feature_list.start
@@ -73,15 +73,15 @@ feature
 
 					if new_creators = Void then
 						if not new_create_as.feature_list.empty then
-							!! temp_creators.make (1)
+							!! temp_creators.make_filled (1)
 							temp_creators.put_i_th (new_create_as, 1)
 						end
 					else
 						if not new_create_as.feature_list.empty then
-							!! temp_creators.make (new_creators.count + 1)
+							!! temp_creators.make_filled (new_creators.count + 1)
 							temp_creators.put_i_th (new_create_as, temp_creators.count)
 						else
-							!! temp_creators.make (new_creators.count)
+							!! temp_creators.make_filled (new_creators.count)
 						end
 						temp_creators.merge_after_position (0, new_creators)
 					end
@@ -93,17 +93,17 @@ feature
 				-- Now adding creators from `new_tmp'.
 	
 				if new_creators = Void then
-					!! temp_creators.make (new_tmp.count)
+					!! temp_creators.make_filled (new_tmp.count)
 					temp_creators.merge_after_position (0, new_tmp)
 				else
-					!! temp_creators.make (new_creators.count + new_tmp.count)
+					!! temp_creators.make_filled (new_creators.count + new_tmp.count)
 					temp_creators.merge_after_position (0, new_tmp)
 					temp_creators.merge_after_position (new_tmp.count, new_creators)
 				end
 				merge_result := temp_creators
 			else
 				if new_tmp /= Void then
-					!! merge_result.make (new_tmp.count)
+					!! merge_result.make_filled (new_tmp.count)
 					merge_result.merge_after_position (0, new_tmp)
 				else
 					merge_result := Void

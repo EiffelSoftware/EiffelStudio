@@ -45,7 +45,7 @@ feature
 				user.forth
 			end;
 			
-			!! merge_result.make (new_names.count)
+			!! merge_result.make_filled (new_names.count)
 
 			from
 				merge_result.start

@@ -17,7 +17,7 @@ feature {NONE} -- Initialization
 			id_list ?= yacc_arg (0);
 			if id_list = Void then
 				-- Empty list
-				!!id_list.make (0)
+				!!id_list.make_filled (0)
 			end;
 			id_list.compare_objects;
 		ensure then

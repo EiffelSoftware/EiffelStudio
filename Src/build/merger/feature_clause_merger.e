@@ -29,7 +29,7 @@ feature {NONE} -- Internal
 		local
 			features: EIFFEL_LIST [FEATURE_AS]
 		do
-			!! Result.make (0)
+			!! Result.make_filled (0)
 
 			if l /= Void then
 				from
@@ -77,21 +77,21 @@ feature {NONE} -- Internal
 					new_cl_list.start
 					clause_ebuild ?= new_cl_list.item
 					if clause_ebuild /= Void then
-						!EIFFEL_LIST [FEATURE_CLAUSE_AS_EBUILD]! ordered_result.make (new_cl_list.count)
+						!EIFFEL_LIST [FEATURE_CLAUSE_AS_EBUILD]! ordered_result.make_filled (new_cl_list.count)
 					else
-						!! ordered_result.make (new_cl_list.count)
+						!! ordered_result.make_filled (new_cl_list.count)
 					end
 				else
 					user_cl_list.start
 					clause_ebuild ?= user_cl_list.item
 					if clause_ebuild /= Void then
-						!EIFFEL_LIST [FEATURE_CLAUSE_AS_EBUILD]! ordered_result.make (new_cl_list.count)
+						!EIFFEL_LIST [FEATURE_CLAUSE_AS_EBUILD]! ordered_result.make_filled (new_cl_list.count)
 					else
-						!! ordered_result.make (new_cl_list.count)
+						!! ordered_result.make_filled (new_cl_list.count)
 					end
 				end
 			else
-				!! ordered_result.make (new_cl_list.count)
+				!! ordered_result.make_filled (new_cl_list.count)
 			end
 					
 			from
@@ -103,7 +103,7 @@ feature {NONE} -- Internal
 				
 				!! feature_as_merger;
 				features := new_cl_list.item.features
-				!! result_features.make (features.count);
+				!! result_features.make_filled (features.count);
 			
 				from
 					result_features.start
@@ -292,7 +292,7 @@ feature {NONE} -- Internal
 								!! new_clause
 							end
 							new_clause.set_clients (user_clause.clients)
-							!! nw_features.make (1)
+							!! nw_features.make_filled (1)
 							nw_features.start
 							nw_features.replace (user_features.item)
 							new_clause.set_features (nw_features)
@@ -315,7 +315,7 @@ feature {NONE} -- Internal
 									end
 									new_clause.set_clients (user_clause.clients)
 					--samik				new_clause.set_comment (user_clause.comment)
-									!! nw_features.make (1)
+									!! nw_features.make_filled (1)
 									nw_features.start
 									nw_features.replace (user_features.item)
 									new_clause.set_features (nw_features)
@@ -328,7 +328,7 @@ feature {NONE} -- Internal
 									else
 										nr_items := new_clause.features.count + 1
 									end
-									!! nw_features.make (nr_items)
+									!! nw_features.make_filled (nr_items)
 									if nr_items > 1 then
 										nw_features.merge_after_position (0, new_clause.features)
 									end
@@ -381,7 +381,7 @@ feature {NONE} -- Internal
 					end
 				end
 
-				!! new_features.make (temp_features.count)
+				!! new_features.make_filled (temp_features.count)
 				from
 					temp_features.start
 					new_features.start
@@ -409,21 +409,21 @@ feature {NONE} -- Internal
 					temp_result.start
 					ebuild_clause ?= temp_result.item
 					if ebuild_clause /= Void then
-						!EIFFEL_LIST [FEATURE_CLAUSE_AS_EBUILD]! merge_result.make (temp_result.count + temp_clauses.count)
+						!EIFFEL_LIST [FEATURE_CLAUSE_AS_EBUILD]! merge_result.make_filled (temp_result.count + temp_clauses.count)
 					else
-						!! merge_result.make (temp_result.count + temp_clauses.count)
+						!! merge_result.make_filled (temp_result.count + temp_clauses.count)
 					end
 				else
 					if not temp_clauses.empty then
 						temp_clauses.start
 						ebuild_clause ?= temp_clauses.item
 						if ebuild_clause /= Void then
-							!EIFFEL_LIST [FEATURE_CLAUSE_AS_EBUILD]! merge_result.make (temp_result.count + temp_clauses.count)
+							!EIFFEL_LIST [FEATURE_CLAUSE_AS_EBUILD]! merge_result.make_filled (temp_result.count + temp_clauses.count)
 						else
-							!! merge_result.make (temp_result.count + temp_clauses.count)
+							!! merge_result.make_filled (temp_result.count + temp_clauses.count)
 						end
 					else
-						!! merge_result.make (temp_result.count + temp_clauses.count)
+						!! merge_result.make_filled (temp_result.count + temp_clauses.count)
 					end
 				end
 				merge_result.merge_after_position (0, temp_result)

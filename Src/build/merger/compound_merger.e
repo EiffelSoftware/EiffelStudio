@@ -173,7 +173,7 @@ feature
 				if size > 0 then
 					-- Compute total size of new compound
 					size := size + new_c_count;
-					!! merge_result.make (size)
+					!! merge_result.make_filled (size)
 
 					-- Now fill with `before_template'.
 					merge_result.merge_after_position 
@@ -189,7 +189,7 @@ feature
 									 after_template)
 				elseif new_c /= Void then
 					-- Nothing added by user
-					!! merge_result.make (new_c.count)
+					!! merge_result.make_filled (new_c.count)
 					merge_result.merge_after_position (0, new_c)
 				else
 					-- Nothing to merge
@@ -198,7 +198,7 @@ feature
 			else
 				if new_c /= Void then
 					-- Keeping new template compound
-					!! merge_result.make (new_c.count)
+					!! merge_result.make_filled (new_c.count)
 					merge_result.merge_after_position (0, new_c)
 				else
 					-- Nothing to merge

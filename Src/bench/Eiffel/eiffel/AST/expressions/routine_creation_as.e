@@ -238,7 +238,7 @@ feature -- Type check, byte code and dead code removal
 			p : PARAMETER_B
 			int: INTEGER_CONSTANT
 			open_b: ARRAY_CONST_B
-			l_void: ATTRIBUTE_B
+			l_void: VOID_B
 		do
 			a_class := target_type.associated_class
 			a_table := a_class.feature_table
@@ -265,7 +265,6 @@ feature -- Type check, byte code and dead code removal
 				-- Generate fake `ATTRIBUTE_B' instance that corresponds to
 				-- a non-initialized value of `operands_tuple'.
 			create l_void
-			l_void.set_type (create {NONE_I})
 			
 			if target_b /= Void then
 					-- First closed argument is target.

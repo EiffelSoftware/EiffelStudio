@@ -44,11 +44,11 @@ feature -- Initialization
 
 	make (par: EV_WINDOW) is
 		local
-			menu_bar: EB_MENU_BAR
+			menu_bar: EV_STATIC_MENU_BAR
  			file_category: EV_MENU
  			exit_tool_entry: EV_MENU_ITEM
  			exit_entry: EV_MENU_ITEM
-			toolbar: EB_HORIZONTAL_TOOLBAR
+			toolbar: EV_TOOL_BAR
 			vbox: EV_VERTICAL_BOX
 			cmd: EV_ROUTINE_COMMAND
 		do
@@ -61,8 +61,6 @@ feature -- Initialization
 			create vbox.make (Current)
 			create toolbar.make (vbox)
 			create help_hole.make (Current, toolbar)
-			help_hole.set_minimum_width (20)
-			help_hole.set_expand (False)
 			create text.make (vbox)
 
 			--| set_values
@@ -73,9 +71,9 @@ feature -- Initialization
 			--| set_callback
 			set_close_callback (Void)
 			create cmd.make (~close)
-			exit_tool_entry.add_activate_command (cmd, Void)
+			exit_tool_entry.add_select_command (cmd, Void)
 			create cmd.make (~exit_build)
-			exit_entry.add_activate_command (cmd, Void)
+			exit_entry.add_select_command (cmd, Void)
 
 			create cmd.make (~update_text)
 			help_hole.add_default_pnd_command (cmd, Void)

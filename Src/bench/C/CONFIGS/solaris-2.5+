@@ -7,7 +7,7 @@
 d_bsdsig='undef'
 sh='sh'
 cc='gcc'
-cpp='/usr/ccs/lib/cpp'
+cpp='g++'
 ar='ar'
 ld='ld'
 lngpad_2='8'

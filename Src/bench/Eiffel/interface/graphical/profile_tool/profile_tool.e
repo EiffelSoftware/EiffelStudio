@@ -13,8 +13,7 @@ inherit
 			make as top_shell_make,
 			realize as display
 		end;
-	COMMAND;
-	WINDOWS
+	COMMAND_W;
 
 creation
 	make
@@ -26,27 +25,43 @@ feature {NONE} -- Initialization
 			a_command_not_void: a_command /= Void
 		do
 			command := a_command;
-			top_shell_make ("Profile Tool", Project_tool.screen);
+			top_shell_make (l_X_resourse_name, Project_tool.screen);
+			set_title ("Profile Tool");
+			!! quit_cmd.make (Current);
+			set_delete_command (quit_cmd);
 			build_widgets
 		end
 
 feature {NONE} -- Graphical User Interface
 
 	build_widgets is
+		local
+			horizontal_sep,
+			text_sep: SEPARATOR;
+			switch_label,
+			language_label: LABEL;
 		do
 				-- User Interface Components
 			!! global_form.make ("", Current);
 
+			!! switch_label.make ("Output switches", global_form);
 			!! switch_form.make ("", global_form);
+			!! language_label.make ("Language type", global_form);
 			!! language_form.make ("", global_form);
+			!! horizontal_sep.make ("", global_form);
 			!! text_form.make ("", global_form);
+			!! text_sep.make ("", global_form);
 			!! button_form.make ("", global_form);
 			button_form.set_fraction_base (2);
 
 			!! menu_bar.make ("", global_form);
 			!! file_menu.make ("File", menu_bar);
 			!! command_menu.make ("Commands", menu_bar);
-			!! switch_menu.make ("Switches", menu_bar);
+			!! help_menu.make ("Help", menu_bar);
+			menu_bar.set_help_button (help_menu.menu_button);
+
+				-- Put entries in the menus.
+			fill_menus;
 
 			!! exit_button.make ("Exit", button_form);
 			!! run_button.make ("Run Query", button_form);
@@ -67,23 +82,47 @@ feature {NONE} -- Graphical User Interface
 
 			!! input_label.make ("Input file", text_form);
 			!! input_text.make ("", text_form);
+			input_text.set_text ("profinfo.profile_information");
 			!! query_label.make ("Query", text_form);
 			!! query_text.make ("", text_form);
+			!! browse_button.make ("Browse", text_form);
+			browse_button.add_activate_action (Current, browse_it);
 
 				-- Commands
-			exit_button.add_activate_action (Current, exit_it);
+			exit_button.add_activate_action (quit_cmd, Void);
+
+			global_form.set_fraction_base (2);
 
 				-- Attachments
-			global_form.attach_top (switch_form, 0);
-			global_form.attach_left (switch_form, 0);
-			global_form.attach_bottom_widget (language_form, switch_form, 1);
-			global_form.attach_right (switch_form, 0);
-			global_form.attach_left (language_form, 0);
-			global_form.attach_bottom_widget (text_form, language_form, 1);
-			global_form.attach_right (language_form, 0);
-			global_form.attach_left (text_form, 0);
-			global_form.attach_bottom_widget (button_form, text_form, 1);
-			global_form.attach_right (text_form, 0);			
+			global_form.attach_top (menu_bar, 0);
+			global_form.attach_left_position (menu_bar, 0);
+			global_form.attach_right_position (menu_bar, 2);
+
+			global_form.attach_top_widget (menu_bar, switch_label, 1);
+			global_form.attach_left_position (switch_label, 0);
+			global_form.attach_top_widget (switch_label, switch_form, 1);
+			global_form.attach_left_position (switch_form, 0);
+			global_form.attach_right_position (switch_form, 1);
+
+			global_form.attach_top_widget (menu_bar, language_label, 1);
+			global_form.attach_left_position (language_label, 1);
+			global_form.attach_top_widget (language_label, language_form, 1);
+			global_form.attach_left_position (language_form, 1);
+			global_form.attach_right_position (language_form, 2);
+
+			global_form.attach_top_widget (switch_form, horizontal_sep, 0);
+			global_form.attach_left (horizontal_sep, 0);
+			global_form.attach_right (horizontal_sep, 0);
+
+			global_form.attach_top_widget (horizontal_sep, text_form, 1);
+			global_form.attach_left_position (text_form, 0);
+			global_form.attach_bottom_widget (text_sep, text_form, 1);
+
+			global_form.attach_bottom_widget (button_form, text_sep, 1);
+			global_form.attach_right_position (text_form, 2);			
+			global_form.attach_left_position (text_sep, 0);
+			global_form.attach_right_position (text_sep, 2);
+
 			global_form.attach_left (button_form, 0);
 			global_form.attach_bottom (button_form, 0);
 			global_form.attach_right (button_form, 0);
@@ -99,21 +138,42 @@ feature {NONE} -- Graphical User Interface
 
 			text_form.attach_top (input_label, 5);
 			text_form.attach_left (input_label, 0);
-			text_form.attach_bottom_widget (input_text, input_label, 2);
+			text_form.attach_top_widget (input_label, input_text, 1);
 			text_form.attach_left (input_text, 5);
-			text_form.attach_bottom_widget (query_label, input_text, 5);
-			text_form.attach_right (input_text, 5);
+			text_form.attach_top_widget (input_text, query_label, 5);
+			text_form.attach_right_widget (browse_button, input_text, 5);
+			text_form.attach_top_widget (input_label, browse_button, 1);
+			text_form.attach_right (browse_button, 5);
 			text_form.attach_left (query_label, 0);
-			text_form.attach_bottom_widget (query_text, query_label, 5);
+			text_form.attach_top_widget (query_label, query_text, 5);
 			text_form.attach_left (query_text, 5);
 			text_form.attach_bottom (query_text, 5);
 			text_form.attach_right (query_text, 5);
 
 				-- Sizing policy
-			set_size (400, 400)
+			set_width (400)
+		end;
+
+	fill_menus is
+			-- Fill the menus with commands.
+		local
+			generate_menu_entry: EB_MENU_ENTRY;
+			generate_cmd: GENERATE_PROFILE_INFO_CMD
+			quit_menu_entry: EB_MENU_ENTRY;
+			help_cmd: PROFILE_HELP_CMD;
+			help_menu_entry: EB_MENU_ENTRY
+		do
+			!! quit_menu_entry.make (quit_cmd, file_menu);
+			!! generate_cmd.make (Current);
+			!! generate_menu_entry.make (generate_cmd, command_menu);
+			!! help_cmd;
+			!! help_menu_entry.make (help_cmd, help_menu);
 		end
 
 feature {NONE} -- Attributes
+
+	quit_cmd: QUIT_PROFILE_TOOL
+			-- Command to quit Current
 
 	global_form,
 			-- Form for Current
@@ -123,6 +183,9 @@ feature {NONE} -- Attributes
 
 	text_form: FORM;
 			-- Form to display text fields on
+
+	browse_button,
+			-- Button to browse for input filename
 
 	run_button,
 			-- Button to run the query
@@ -167,7 +230,7 @@ feature {NONE} -- Attributes
 	recursive_switch: TOGGLE_B;
 			-- Switch for display of recursive funtions.
 
-	query_text,
+	query_text: TEXT
 			-- Text field for query input
 
 	input_text: TEXT_FIELD;
@@ -182,11 +245,11 @@ feature {NONE} -- Attributes
 	menu_bar: BAR;
 			-- Menu bar
 
+	help_menu,
+			-- Help menu
+
 	command_menu,
 			-- Menu for commands
-
-	switch_menu,
-			-- Menu for certain switches
 
 	file_menu: MENU_PULL;
 			-- File menu
@@ -196,19 +259,50 @@ feature {NONE} -- Attributes
 
 feature {NONE} -- Execution Arguments
 
-	exit_it: ANY is
+	browse_it: ANY is
 		once
 			!! Result
 		end
 
+feature {QUIT_PROFILE_TOOL} -- Implementation
+
+	close is
+			-- Close Current
+		do
+				--| FIXME:
+				--| Needs `close_windows'.
+			command.done_profiling
+		end
+
 feature {NONE} -- Execution
 
-	execute (arg: ANY) is
+	work (arg: ANY) is
 			-- Execute Current
 		do
-			if arg = exit_it then
-				command.done_profiling
+			if arg = browse_it then
+					--| User wants to browse
+				browse_for_inputfile
+			elseif arg = last_name_chooser then
+					--| User came up with OK in file selection
+				last_name_chooser.popdown;
 			end
+		end
+
+feature {NONE} -- Implementation
+
+	browse_for_inputfile is
+			-- Bring up a dialog with which the user can browse for an
+			-- input file.
+		local
+			new_name_chooser: NAME_CHOOSER_W
+		do
+			new_name_chooser := name_chooser (Current)
+			new_name_chooser.set_title ("Browse...");
+			new_name_chooser.hide_help_button;
+			new_name_chooser.hide_filter_button;
+			new_name_chooser.set_open_file;
+			new_name_chooser.add_ok_action (Current, Void);
+			new_name_chooser.call (Current)
 		end
 
 end -- class PROFILE_TOOL

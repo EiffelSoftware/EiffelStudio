@@ -1,0 +1,55 @@
+system
+	Web_wizard
+
+root
+	WIZARD_PROJECT_MANAGER(wizard_tool): "make_and_launch"
+
+default
+	assertion (ensure)
+	multithreaded (no)
+	console_application (no)
+	dynamic_runtime (no)
+	dead_code_removal (yes)
+	profile (no)
+	line_generation (no)
+	debug  (no)
+	array_optimization (no)
+	inlining (no)
+	inlining_size ("4")
+
+
+cluster
+	
+	root_cluster: "D:\src\help\Wizards\ewizard";
+	src(root_cluster): "$\src"
+
+		-- EiffelBase
+	all base:						"$EIFFEL4\library\base"
+		exclude
+			"desc";"table_eiffel3"
+		end
+
+	all vision2: 			"$EIFFEL4\library\vision2_devel"
+		exclude
+			"gtk"
+			"test"
+		end
+
+	all Events:				"$EIFFEL4\library\event"
+
+	all wel: 				"$EIFFEL4\library\wel_devel"
+
+	all wizard_tool:				"$EIFFEL4\tools\wizard"
+
+
+external
+	include_path:	
+			"$EIFFEL4\library\wel_devel\spec\windows\include",
+			"$EIFFEL4\library\vision2_devel\spec\include"
+
+	object:
+			"$EIFFEL4\library\wel_devel\spec\msc\lib\wel.lib",
+			"$EIFFEL4\library\vision2_devel\spec\$(COMPILER)\lib\vision2.lib",
+			"$EIFFEL4\library\vision2_devel\spec\$(COMPILER)\lib\libpng.lib",
+			"$EIFFEL4\library\vision2_devel\spec\$(COMPILER)\lib\zlib.lib"
+end

@@ -247,6 +247,16 @@ feature {EB_TOOL} -- Updating
 
 feature -- Updating
 
+	freeze is
+			-- Disables text update display until next thaw
+		deferred
+		end
+
+	thaw is
+			-- Thaw a frozen widget.
+		deferred
+		end
+
 	hide is
 			-- Hide the text window
 		deferred

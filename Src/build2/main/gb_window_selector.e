@@ -148,6 +148,8 @@ feature -- Access
 			-- Item currently selected.
 		do
 			Result ?= tree_selected_item
+		ensure
+			has_selection_implies_result_not_void: not (tree_selected_item = Void) implies Result /= Void
 		end
 		
 	new_directory_button: EV_TOOL_BAR_BUTTON is
@@ -189,6 +191,7 @@ feature -- Access
 			create Result
 			create pixmaps
 			Result.set_pixmap (pixmaps.pixmap_by_name ("icon_titled_window_main_small_color"))
+			Result.select_actions.extend (agent change_main_window)
 		ensure
 			result_not_void: Result /= Void
 		end
@@ -425,6 +428,22 @@ feature {GB_OBJECT_HANDLER} -- Implementation
 		end
 
 feature {NONE} -- Implementation
+
+	change_main_window is
+			-- Ensure that window currently displayed in the layout constructor is the main
+			-- window.
+		local
+			layout_constructor_item: GB_LAYOUT_CONSTRUCTOR_ITEM
+			titled_window_object: GB_TITLED_WINDOW_OBJECT
+		do
+			layout_constructor_item := Layout_constructor.root_item
+			titled_window_object ?= layout_constructor_item.object
+			check
+				root_object_was_window: titled_window_object /= Void
+			end
+			titled_window_object.set_as_root_window
+		end
+		
 		
 	add_new_directory is
 			-- Display a dialog for inputting a new name, that is only valid if

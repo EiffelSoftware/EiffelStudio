@@ -39,7 +39,7 @@ feature -- Access
 						l_args_file.open_read
 						l_args_file.start
 						l_args_file.read_line
-						l_last_string := clone (l_args_file.last_string)
+						l_last_string := l_args_file.last_string.twin
 						l_args_file.close
 						if 
 							l_last_string /= Void and 

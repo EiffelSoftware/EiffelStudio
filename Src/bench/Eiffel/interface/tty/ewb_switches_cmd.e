@@ -35,7 +35,7 @@ feature -- Properties
 			ewb_profile_switch: EWB_PROFILE_SWITCH
 			i: INTEGER
 		do
-			Result := clone(switches_help);
+			Result := switches_help.twin
 			Result.append ("%N%T%T%T%T");
 			from
 				i := 1

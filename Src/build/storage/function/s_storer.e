@@ -18,7 +18,7 @@ feature {S_STORER}
 	
 feature 
 
-	retrieved_data: LINKED_LIST [STATE]
+	retrieved_data: LINKED_LIST [BUILD_STATE]
 
 	file_name: STRING is
 		do
@@ -41,7 +41,7 @@ feature {NONE}
 	build_stored_data is
 		local
 			s: S_STATE
-			state_list: LINKED_LIST [STATE]
+			state_list: LINKED_LIST [BUILD_STATE]
 		do
 			!!stored_data.make
 			from
@@ -62,7 +62,7 @@ feature
 	retrieve (dir_name: STRING) is
 		local
 			sb: S_STATE
-			b: STATE
+			b: BUILD_STATE
 		do
 			retrieve_by_name (dir_name)
 			stored_data := retrieved.stored_data

@@ -47,7 +47,7 @@ feature
 	
 feature {NONE}
 
-	states: LINKED_LIST [STATE]
+	states: LINKED_LIST [BUILD_STATE]
 
 -- *******
 -- Storers

@@ -10,9 +10,9 @@ class CLASS_HOLE
 
 inherit
 
-	HOLE
+	EB_BUTTON_HOLE
 		redefine
-			compatible, symbol, stone_type, name, icon_symbol,
+			compatible, symbol, stone_type, command_name, icon_symbol,
 			full_symbol
 		end
 
@@ -51,7 +51,8 @@ feature {NONE} -- Properties
 			-- Can current accept `dropped'?
 		do
 			Result := dropped /= Void and then
-				((dropped.stone_type = Class_type) or else (dropped.stone_type = Routine_type))
+				((dropped.stone_type = Class_type) or 
+				else (dropped.stone_type = Routine_type))
 		end;
 
 	name: STRING is

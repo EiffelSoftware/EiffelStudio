@@ -225,8 +225,7 @@ feature -- Status setting
 				children.back
 			end
 			children.put_right (new_item)
-			widget.go_i_th (children.index)
-			widget.put_right (new_item.tree_item)
+			add_to_tree_node_alphabetically (widget, new_item.tree_item)
 			new_item.set_parent (Current)
 		end
 		

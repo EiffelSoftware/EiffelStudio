@@ -30,13 +30,13 @@ extern "C" {
 #define eif_free(x) eiffel_free (x)
 #endif	/* LMALLOC_DEBUG */
 
-extern int is_in_lm (void *ptr);
-extern void eif_lm_display ();
-extern int eif_lm_free ();
-extern Malloc_t eiffel_malloc (register unsigned int nbytes);
-extern Malloc_t eiffel_calloc (unsigned int nelem, unsigned int elsize) ;
-extern Malloc_t eiffel_realloc (void *ptr, unsigned int nbytes);
-extern void eiffel_free (void *ptr) ;
+RT_LNK int is_in_lm (void *ptr);
+RT_LNK void eif_lm_display ();
+RT_LNK int eif_lm_free ();
+RT_LNK Malloc_t eiffel_malloc (register unsigned int nbytes);
+RT_LNK Malloc_t eiffel_calloc (unsigned int nelem, unsigned int elsize) ;
+RT_LNK Malloc_t eiffel_realloc (void *ptr, unsigned int nbytes);
+RT_LNK void eiffel_free (void *ptr) ;
 
 #ifdef __cplusplus
 }

@@ -41,6 +41,8 @@ feature -- Color
 			exists: not destroyed
 		do
 			Result:= implementation.foreground_color
+		ensure
+			valid_result: Result /= Void
 		end;
 
 	set_foreground_color (new_color: COLOR) is

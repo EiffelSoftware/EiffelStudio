@@ -1,15 +1,9 @@
---|---------------------------------------------------------------
---|   Copyright (C) Interactive Software Engineering, Inc.      --
---|    270 Storke Road, Suite 7 Goleta, California 93117        --
---|                   (805) 685-1006                            --
---| All rights reserved. Duplication or distribution prohibited --
---|---------------------------------------------------------------
-
--- Queues with no physical size limit,
--- implemented as linked lists
-
 indexing
 
+	description:
+		"Unbounded queues implemented as linked lists";
+
+	copyright: "See notice at end of class";
 	names: linked_queue, dispenser, linked_list;
 	representation: linked;
 	access: fixed, fifo, membership;
@@ -21,140 +15,149 @@ class LINKED_QUEUE [G] inherit
 
 	QUEUE [G]
 		undefine
-			search, has, empty, index_of, search_equal
+			empty
 		redefine
-			sequential_representation
+			sequential_representation, prune_all, extend
+		select
+			item
 		end;
 
 	LINKED_LIST [G]
 		rename
-			add as ll_add,
-			item as ll_item
+			item as ll_item,
+			remove as ll_remove,
+			make as ll_make,
+			remove_left as remove
 		export
-			{NONE} all;
-			writable, extensible, make, wipe_out,
-			contractable, readable
+			{NONE} 
+				all;
+			{ANY}
+				writable, extendible, wipe_out,
+				readable
 		undefine
-			put, fill, remove, append, remove_item,
-			readable, writable, contractable
+			put, fill, append, prune,
+			readable, writable, prune_all, extend,
+			force
 		redefine
-			duplicate, sequential_representation
-		end;
-
-	LINKED_LIST [G]
-		export
-			{NONE} all;
-			 writable, extensible, make, wipe_out,
-			contractable, readable
-		undefine
-			put, fill, remove, append, remove_item,
-			readable, writable, contractable
-		redefine
-			item, add,
 			duplicate, sequential_representation
 		select
-			item, add
-		end
-			
+			remove
+		end;
+
 creation
 
 	make
 
+feature -- Initialization
+
+	make is
+		do
+			after := true
+		end;
+			
 feature -- Access
-	
 
 	item: G is
-			-- Oldest item
+			-- Oldest item	
+		require else
+			not empty
 		do
-			Result := first;
+			Result := active.item	
+			--| after and not empty implies (active = last_element)
+		end;
+
+feature -- Element change
+
+	put, extend, force (v: G) is
+			-- Add `v' as newest element.
+		do
+			add_front (v)
+		ensure then
+			--(old empty) implies (item = v);
 		end;
 
 feature -- Conversion
 
-	sequential_representation: ARRAY_SEQUENCE [G] is
-			-- Sequential representation of `Current'.
-			-- This feature enables you to manipulate each
-			-- item of `Current' regardless of its
-			-- actual structure.
+	sequential_representation: ARRAYED_LIST [G] is
+			-- Representation as a sequential structure
+			-- (order is same as original order of insertion)
 		local
-			temp: like Current;
+			i: INTEGER;
+			default_value: G;
 		do
-			temp := duplicate (count);
 			from
-				!! Result.make (count)
+				!!Result.make (count);
+				i := 1
 			until
-				temp.count = 0
+				i > count
 			loop
-				Result.put (temp.item);
-				temp.remove
+				Result.extend (default_value);
+				i := i + 1	
 			end;
-
-				-- The reason for redefining
-				-- `sequential_representation' here is that the
-				-- cursor of `Current' must not be manipulated
-				-- by clients in order not to invalidate the
-				-- `islast' invariant clause and a new `item' has
-				-- been redefined and selected.
+			from
+				start;
+				Result.finish;
+			until
+				after
+			loop
+				Result.replace (item);
+				forth;
+				Result.back
+			end;
 		end;
 
 feature -- Duplication
 
-
 	duplicate (n: INTEGER): like Current is
-			-- Return a queue with the `n' latest items inserted
-			-- in `Current'. If `n' is greater than `count', it
-			-- duplicate `Current'
+			-- New queue containing the `n' oldest items in current queue.
+			-- If `n' is greater than `count', identical to current queue.
 		require else
 			positive_argument: n > 0
 		do
 			start;
 			from
 				!! Result.make;
-				if n < count then
-					move (count - n)
-				end
+				start
 			until
-				off
+				after or Result.count = n
 			loop
-				Result.add (ll_item);
+				Result.extend (ll_item);
 				forth;
 			end;
-			back
+			finish
 		end;
-
-
-feature -- Modification & Insertion
-
-	add (v: G) is
-			-- Add item `v' to `Current'.
+feature {NONE} -- Not avialable
+	
+	prune (v: like item) is
+			-- Remove one occurence of `v'.
+			-- Not avialable.
 		do
-			if empty then
-				ll_add (v);
-				finish
-			else
-				add_right (v);
-				forth;
-			end;
-		ensure then
-			(old empty) implies (item = v);
+			-- Do nothing
 		end;
-
-feature -- Removal
-
-	remove is
-			-- Remove oldest item.
+	
+	prune_all (v: like item) is
+			-- Remove all occurences of `v'.
+			-- Not avialable
 		do
-			first_element := first_element.right;
-			if count = 1 then
-				active := Void;
-				before := true
-			end;
-			count := count - 1
+			-- Do nothing
 		end;
-
 
 invariant
 
-	is_always_empty_orlast: empty or else islast
+	is_always_after: after
 
 end -- class LINKED_QUEUE
+
+
+--|----------------------------------------------------------------
+--| EiffelBase: library of reusable components for ISE Eiffel 3.
+--| Copyright (C) 1986, 1990, 1993, Interactive Software
+--|   Engineering Inc.
+--| All rights reserved. Duplication and distribution prohibited.
+--|
+--| 270 Storke Road, Suite 7, Goleta, CA 93117 USA
+--| Telephone 805-685-1006
+--| Fax 805-685-6869
+--| Electronic mail <info@eiffel.com>
+--| Customer support e-mail <eiffel@eiffel.com>
+--|----------------------------------------------------------------

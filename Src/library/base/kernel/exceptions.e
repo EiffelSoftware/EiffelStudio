@@ -1,22 +1,44 @@
---|---------------------------------------------------------------
---|   Copyright (C) Interactive Software Engineering, Inc.      --
---|    270 Storke Road, Suite 7 Goleta, California 93117        --
---|                   (805) 685-1006                            --
---| All rights reserved. Duplication or distribution prohibited --
---|---------------------------------------------------------------
-
--- facilities for controlling exception handling
-
 indexing
 
+	description:
+		"Facilities for adapting the exception handling mechanism. %
+		%This class may be used as ancestor by classes needing its facilities.";
+
+	copyright: "See notice at end of class";
 	date: "$Date$";
 	revision: "$Revision$"
 
-class EXCEPTIONS
+class
+	EXCEPTIONS
+
+feature -- Status report
+
+	is_programmer_exception (tag: STRING): BOOLEAN is
+			-- Is the last exception a programmer exception of tag `tag' ?
+		do
+			Result := 	exception = Programmer_exception
+						and then
+						equal (tag, programmer_exception_name)
+		end;
 
 
+	exception: INTEGER is
+			-- Last exception code
+		external
+			"C"
+		alias
+			"eecode"
+		end;
 
-feature -- Ouput
+	programmer_exception_name: STRING is
+			-- Last programmer exception tag
+		external
+			"C"
+		alias
+			"eetag"
+		end;
+
+feature -- Output
 
 	raise (tag: STRING) is
 			-- Raise a user exception of tag `tag'.
@@ -29,24 +51,7 @@ feature -- Ouput
 			eraise ($str, Programmer_exception);
 		end;
 
-feature -- Status report
-
-	is_programmer_exception (tag: STRING): BOOLEAN is
-			-- Is the last exception a programmer exception of tag `tag' ?
-		do
-			Result := 	exception = Programmer_exception
-						and then
-						equal (tag, programmer_exception_name)
-		end;
-
-feature  {NONE} -- Access
-				--| Those values cannot be changed and match with run-time
-				--| C constants
-
-	Programmer_exception: INTEGER is 24;
-
-
-feature  {NONE} -- External, Ouput
+feature {NONE} -- Implementation
 
 	eraise (str: ANY; code: INTEGER) is
 			-- Raise an exception
@@ -54,24 +59,21 @@ feature  {NONE} -- External, Ouput
 			"C"
 		end;
 
-
-feature -- External, Status report
-
-	exception: INTEGER is
-			-- Last exception code
-		external
-			"C"
-		alias
-			"eecode"
-		end;
-
-
-	programmer_exception_name: STRING is
-			-- Last programmer exception tag
-		external
-			"C"
-		alias
-			"eetag"
-		end;
+	Programmer_exception: INTEGER is 24;
+				--| This value cannot be changed.
 
 end -- class EXCEPTIONS
+
+
+--|----------------------------------------------------------------
+--| EiffelBase: library of reusable components for ISE Eiffel 3.
+--| Copyright (C) 1986, 1990, 1993, Interactive Software
+--|   Engineering Inc.
+--| All rights reserved. Duplication and distribution prohibited.
+--|
+--| 270 Storke Road, Suite 7, Goleta, CA 93117 USA
+--| Telephone 805-685-1006
+--| Fax 805-685-6869
+--| Electronic mail <info@eiffel.com>
+--| Customer support e-mail <eiffel@eiffel.com>
+--|----------------------------------------------------------------

@@ -1,22 +1,14 @@
---|---------------------------------------------------------------
---|   Copyright (C) Interactive Software Engineering, Inc.      --
---|    270 Storke Road, Suite 7 Goleta, California 93117        --
---|                   (805) 685-1006                            --
---| All rights reserved. Duplication or distribution prohibited --
---|---------------------------------------------------------------
-
--- Basic type with no exported feature.
--- Useful as arguments to be passed to external routines.
-
-
 indexing
 
+	description:
+		"References to objects containing a reference to objects %
+		%meant to be exchanged with non-Eiffel software.";
+
+	copyright: "See notice at end of class";
 	date: "$Date$";
 	revision: "$Revision$"
 
-class POINTER_REF
-
-inherit
+class POINTER_REF inherit
 
 	ANY
 		redefine
@@ -28,20 +20,34 @@ feature -- Access
 	item: POINTER;
 			-- Pointer value
 
-feature -- Ouput
+feature -- Output
 
 	out: STRING is
-			-- Return a printable representation of `Current'.
+			-- Printable representation
 		do
 			Result := c_outp ($item)
 		end;
 
-feature  {NONE} -- External, Ouput
+feature {NONE} -- Implementation
 
 	c_outp (p: POINTER): STRING is
-			-- Return a printable representation of `Current'.
+			-- Printable representation
 		external
 			"C"
 		end;
 
 end -- class POINTER_REF
+
+
+--|----------------------------------------------------------------
+--| EiffelBase: library of reusable components for ISE Eiffel 3.
+--| Copyright (C) 1986, 1990, 1993, Interactive Software
+--|   Engineering Inc.
+--| All rights reserved. Duplication and distribution prohibited.
+--|
+--| 270 Storke Road, Suite 7, Goleta, CA 93117 USA
+--| Telephone 805-685-1006
+--| Fax 805-685-6869
+--| Electronic mail <info@eiffel.com>
+--| Customer support e-mail <eiffel@eiffel.com>
+--|----------------------------------------------------------------

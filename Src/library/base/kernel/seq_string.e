@@ -1,11 +1,5 @@
---|---------------------------------------------------------------
---|   Copyright (C) Interactive Software Engineering, Inc.      --
---|    270 Storke Road, Suite 7 Goleta, California 93117        --
---|                   (805) 685-1006                            --
---| All rights reserved. Duplication or distribution prohibited --
---|---------------------------------------------------------------
-
--- Characters of the STRING are accessed in SEQUENCE only
+indexing
+	copyright: "See notice at end of class"
 
 class SEQ_STRING inherit
 
@@ -18,11 +12,12 @@ class SEQ_STRING inherit
 			share as string_share,
 			wipe_out as string_wipe_out
 		export
-			sequential_representation
+			{ANY}
+				sequential_representation
 		undefine
 			sequential_representation
 		redefine
-			has, contractable, remove_item
+			has, prune
 		end;
 
 	LINEAR [CHARACTER]
@@ -30,28 +25,31 @@ class SEQ_STRING inherit
 			item as current_item,
 			index_of as index_of_occurrence
 		undefine
-			out, twin, copy, is_equal
+			occurrences, out, copy, is_equal,
+			consistent, setup,
+			changeable_comparison_criterion
 		redefine
 			has, index_of_occurrence
 		end;
 	
 	SEQUENCE [CHARACTER]
 		rename
+			append as seq_append,
 			item as current_item,
 			index_of as index_of_occurrence,
-			add as append_character,
 			put as sequence_put,
-			remove as remove_current_item,
-			append as seq_append
+			remove as remove_current_item
 		export
-			{NONE} sequence_put, seq_append
+			{NONE} 
+				sequence_put, seq_append
 		undefine
-			search, search_equal, out, twin, copy, is_equal
+			occurrences, search,  out, copy, is_equal, prune_all,
+			consistent, setup,
+			changeable_comparison_criterion
 		redefine
-			has, index_of_occurrence,
-			append_character
+			has, index_of_occurrence, prune
 		select
-			wipe_out
+			wipe_out, sequence_put
 		end
 
 creation
@@ -148,37 +146,37 @@ feature -- Access
 			-- Valid values are between 1 and `count' (if `count' > 0).
 	
 	
-	index_of (c: CHARACTER; i: INTEGER): INTEGER is
-			-- Index of the first occurrence of `c' equal or
-			-- following the position `i'; 0 if not found.
-		require
-			index_small_enough: i <= count;
-			index_large_enough: i > 0
-		do
-			Result := str_search ($area, $c, i, count)
-		ensure
-			Index_value: Result = 0 or item (Result) = c
-		end;
+--	index_of (c: CHARACTER; i: INTEGER): INTEGER is
+--			-- Index of the first occurrence of `c' equal or
+--			-- following the position `i'; 0 if not found.
+--		require
+--			index_small_enough: i <= count;
+--			index_large_enough: i > 0
+--		do
+--			Result := str_search ($area, $c, i, count)
+--		ensure
+--			Index_value: Result = 0 or item (Result) = c
+--		end;
 
 	index_of_occurrence (c: CHARACTER; i: INTEGER): INTEGER is
 			-- Index of `i'-th occurrence of `c'.
 			-- 0 if none.
 		local
-			occurrences: INTEGER
+			occur: INTEGER
 		do
 			if not empty then
 				from
 					Result := index_of (c, 1);
 					if Result /= 0 then
-						occurrences := 1
+						occur := 1
 					end;
 				until
-					(Result = 0) or else (occurrences = i)
+					(Result = 0) or else (occur = i)
 				loop
 					if Result /= count then
 						Result := index_of (c, Result + 1);
 						if Result /= 0 then
-							occurrences := occurrences + 1
+							occur := occur + 1
 						end
 					else
 						Result := 0
@@ -192,123 +190,25 @@ feature -- Access
 
 
 	has (c: CHARACTER): BOOLEAN is
-			-- Does `Current' include `c'?
+			-- Does string include `c'?
 		do
 			if not empty then
 				Result := (index_of (c, 1) /= 0)
 			end
 		end;
 
+feature -- Status report
 
-feature -- Duplication
-
-	mirrored: like Current is
-			-- Current string read from right to left.
-			-- The returned string has the same `capacity' and the
-			-- same current position (i.e. the cursor is pointing
-			-- at the same item)
+	before: BOOLEAN is
+			-- Is there no valid position to the left of the cursor?
 		do
-			Result := string_mirrored;
-			if not after then
-				from
-					Result.start
-				until
-					Result.index = count - index + 1
-				loop
-					Result.forth
-				end;
-			end;
-		ensure
-			mirrored_index: Result.index = count - index + 1;
-			same_count: Result.count = count;
-		--  reverse_entries:
-		--	for all `i: 1..count, Result.item (i) = item (count + 1 - i)'
+			Result := index < 1
 		end;
 
-	mirror is
-			-- Reverse the characters order.
-			-- "Hello world" -> "dlrow olleH".
-			-- The current position will be on the same item
-			-- as before.
+	after: BOOLEAN is
+			-- Is there no valid position to the right of the cursor?
 		do
-			string_mirror;
-			index := count + 1 - index;
-		ensure
-		   same_count: count = old count;
-		   mirrored_index: index = count - old index + 1;
-		--   reverse_entries:
-		--	for all `i: 1..count, item (i) = old item (count + 1 - i)'
-		end;
-
-
-
-
-
-feature -- Modification & Insertion
-
-	replace (c: CHARACTER) is
-			-- Replace current item by `c'.
-		do 
-			put (c, index)
-		end;
-
-	share (other: like Current) is
-			-- Make `Current' share the text of `other'.
-		require
-			argument_not_void: other /= Void
-		do
-			string_share (other);
-			index := other.index;
-		ensure
-			shared_index: other.index = index;
-		end;
-
-	precede (c: CHARACTER) is
-			-- Add `c' at front.
-		do
-			string_precede (c);
-			index := index + 1;
- 		ensure
- 			new_index: index = old index + 1;
-		end;
-
-	prepend (s: STRING) is
-			-- Prepend a copy of `s' at front of `Current'.
-		require
-			argument_not_void: s /= Void
-		do
-			string_prepend (s);
-			index := index + s.count;
-  		ensure
- 			new_index: index = old index + s.count;
-		end;
-
-feature -- Removal
-
-	remove_item (c: CHARACTER) is
-			-- Remove `c' from `Current'.
-		local
-			i: INTEGER
-		do
-			if count /= 0 then
-				i := index_of (c, 1);
-				if i /= 0 then
-					remove (i)
-				end
-			end
-		end;
-
-	remove_current_item is
-			-- Remove current item.
-		do
-			remove (index)
-		end;
-
-	wipe_out is
-			-- Clear out `Current'.
-		do
-			string_wipe_out;
-			index := 0;
+			Result := index > count
 		end;
 
 feature -- Cursor movement
@@ -339,30 +239,143 @@ feature -- Cursor movement
 
 
 
-feature -- Status report
+feature -- Element change
 
-	contractable: BOOLEAN is
-			-- May items by removed from `Current'?
-		do
-			Result := not off
+	replace (c: CHARACTER) is
+			-- Replace current item by `c'.
+		do 
+			put (c, index)
 		end;
 
-	before: BOOLEAN is
-			-- Is there no position to the left of the cursor?
+	share (other: like Current) is
+			-- Make string share the text of `other'.
+		require
+			argument_not_void: other /= Void
 		do
-			Result := index < 1
+			string_share (other);
+			index := other.index;
+		ensure
+			shared_index: other.index = index;
 		end;
 
-	after: BOOLEAN is
-			-- Is there no position to the right of the cursor?
+	precede (c: CHARACTER) is
+			-- Add `c' at front.
 		do
-			Result := index > count
+			string_precede (c);
+			index := index + 1;
+ 		ensure
+ 			--new_index: index = old index + 1;
 		end;
 
+	prepend (s: STRING) is
+			-- Prepend a copy of `s' at front.
+		require
+			argument_not_void: s /= Void
+		do
+			string_prepend (s);
+			index := index + s.count;
+  		ensure
+ 			--new_index: index = old index + s.count;
+		end;
+
+feature -- Removal
+
+	prune (c: CHARACTER) is
+			-- Remove `c'.
+		require else
+			not off
+		local
+			i: INTEGER
+		do
+			if count /= 0 then
+				i := index_of (c, 1);
+				if i /= 0 then
+					remove (i)
+				end
+			end
+		end;
+
+	remove_current_item is
+			-- Remove current item.
+		do
+			remove (index)
+		end;
+
+	wipe_out is
+			-- Clear out all characters.
+		do
+			string_wipe_out;
+			index := 0;
+		end;
+
+feature -- Duplication
+
+	mirrored: like Current is
+			-- Current string read from right to left.
+			-- The result string has the same `capacity' and the
+			-- same current position (i.e. the cursor is pointing
+			-- at the same item)
+		do
+			Result := string_mirrored;
+			if not after then
+				from
+					Result.start
+				until
+					Result.index = count - index + 1
+				loop
+					Result.forth
+				end;
+			end;
+		ensure
+			mirrored_index: Result.index = count - index + 1;
+			same_count: Result.count = count;
+		--  reverse_entries:
+		--	for all `i: 1..count, Result.item (i) = item (count + 1 - i)'
+		end;
+
+	mirror is
+			-- Reverse the characters order.
+			-- "Hello world" -> "dlrow olleH".
+			-- The current position will be on the same item
+			-- as before.
+		do
+			string_mirror;
+			index := count + 1 - index;
+		ensure
+		   --same_count: count = old count;
+		   --mirrored_index: index = count - old index + 1;
+		--   reverse_entries:
+		--	for all `i: 1..count, item (i) = old item (count + 1 - i)'
+		end;
+
+feature {NONE} -- Inapplicable
+
+	marked: CURSOR is
+			-- Retained position, for possible later return.
+		do
+		end;
+
+	go_to (r: CURSOR) is
+			-- Go to position marked `r'.
+		do
+		end;
 
 invariant
 
-	contractable = not off;
-	extensible = true
+	extendible_constraint: extendible
 
 end -- class SEQ_STRING
+
+
+--|----------------------------------------------------------------
+--| EiffelBase: library of reusable components for ISE Eiffel 3.
+--| Copyright (C) 1986, 1990, 1993, Interactive Software
+--|   Engineering Inc.
+--| All rights reserved. Duplication and distribution prohibited.
+--|
+--| 270 Storke Road, Suite 7, Goleta, CA 93117 USA
+--| Telephone 805-685-1006
+--| Fax 805-685-6869
+--| Electronic mail <info@eiffel.com>
+--| Customer support e-mail <eiffel@eiffel.com>
+--|----------------------------------------------------------------

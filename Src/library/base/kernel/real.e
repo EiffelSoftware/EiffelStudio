@@ -1,20 +1,13 @@
---|---------------------------------------------------------------
---|   Copyright (C) Interactive Software Engineering, Inc.      --
---|    270 Storke Road, Suite 7 Goleta, California 93117        --
---|                   (805) 685-1006                            --
---| All rights reserved. Duplication or distribution prohibited --
---|---------------------------------------------------------------
-
--- Built-in representation of real number
-
 indexing
 
+	description:
+		"Real values";
+
+	copyright: "See notice at end of class";
 	date: "$Date$";
 	revision: "$Revision$"
 
-expanded class REAL
-
-inherit
+expanded class REAL inherit
 
 	REAL_REF
 		redefine
@@ -36,48 +29,62 @@ feature -- Comparison
 			-- Built-in
 		end; -- infix "<"
 
-feature -- Basic operation
+feature -- Basic operations
 
 	infix "+" (other: REAL): REAL is
-			-- Sum of `Current' and `other'
+			-- Sum with `other'
 		do
 			-- Built-in
 		end; -- infix "+"
 
 	infix "-" (other: REAL): REAL is
-			-- Difference between `Current' and `other'
+			-- Result of subtracting `other'
 		do
 			-- Built-in
 		end; -- infix "-"
 
 	infix "*" (other: REAL): REAL is
-			-- Product of `Current' by `other'
+			-- Product by `other'
 		do
 			-- Built-in
 		end; -- infix "*"
 
 	infix "/" (other: REAL): REAL is
-			-- Division of `Current' by `other'
+			-- Division by `other'
 		do
 			-- Built-in
 		end; -- infix "/"
 
 	infix "^" (other: REAL): REAL is
-			-- Power of `Current' by `other'
+			-- Current real to the power `other'
 		do
 			-- Built-in
 		end; -- infix "^"
 
 	prefix "+": REAL is
-			-- Unary addition applied to `Current'
+			-- Unary plus
 		do
 			-- Built-in
 		end; -- prefix "+"
 
 	prefix "-": REAL is
-			-- Unary subtraction applied to `Current'
+			-- Unary minus
 		do
 			-- Built-in
 		end; -- prefix 
 
 end -- class REAL
+
+
+--|----------------------------------------------------------------
+--| EiffelBase: library of reusable components for ISE Eiffel 3.
+--| Copyright (C) 1986, 1990, 1993, Interactive Software
+--|   Engineering Inc.
+--| All rights reserved. Duplication and distribution prohibited.
+--|
+--| 270 Storke Road, Suite 7, Goleta, CA 93117 USA
+--| Telephone 805-685-1006
+--| Fax 805-685-6869
+--| Electronic mail <info@eiffel.com>
+--| Customer support e-mail <eiffel@eiffel.com>
+--|----------------------------------------------------------------

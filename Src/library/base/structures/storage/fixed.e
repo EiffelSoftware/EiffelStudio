@@ -1,34 +1,39 @@
---|---------------------------------------------------------------
---|   Copyright (C) Interactive Software Engineering, Inc.      --
---|    270 Storke Road, Suite 7 Goleta, California 93117        --
---|                   (805) 685-1006                            --
---| All rights reserved. Duplication or distribution prohibited --
---|---------------------------------------------------------------
-
--- Data structures with a constant number of items
-
 indexing
 
+	description:
+		"Finite structures whose item count cannot be changed";
+
+	copyright: "See notice at end of class";
 	names: fixed, storage;
 	size: fixed;
 	date: "$Date$";
 	revision: "$Revision$"
 
-deferred class FIXED inherit
+deferred class FIXED [G] inherit
 
-	BOUNDED
-		redefine
-			full
-		end
+	BOUNDED [G]
 
 feature -- Status report
 
-	full: BOOLEAN is true;
-			-- Is `Current' full?
+	resizable: BOOLEAN is false;
+			-- May `capacity' be changed? (Answer: no.)
 
 invariant
 
-	always_full: full;
-	whole_capacity_used: count = capacity;
+	not_resizable: not resizable
 
 end -- class FIXED
+
+
+--|----------------------------------------------------------------
+--| EiffelBase: library of reusable components for ISE Eiffel 3.
+--| Copyright (C) 1986, 1990, 1993, Interactive Software
+--|   Engineering Inc.
+--| All rights reserved. Duplication and distribution prohibited.
+--|
+--| 270 Storke Road, Suite 7, Goleta, CA 93117 USA
+--| Telephone 805-685-1006
+--| Fax 805-685-6869
+--| Electronic mail <info@eiffel.com>
+--| Customer support e-mail <eiffel@eiffel.com>
+--|----------------------------------------------------------------

@@ -1,14 +1,9 @@
---|---------------------------------------------------------------
---|   Copyright (C) Interactive Software Engineering, Inc.      --
---|    270 Storke Road, Suite 7 Goleta, California 93117        --
---|                   (805) 685-1006                            --
---| All rights reserved. Duplication or distribution prohibited --
---|---------------------------------------------------------------
-
--- Cursors for recursive cursor trees
-
 indexing
 
+	description:
+		"Cursors for recursive trees";
+
+	copyright: "See notice at end of class";
 	names: recursive_tree_cursor, cursor;
 	contents: generic;
 	date: "$Date$";
@@ -22,7 +17,7 @@ creation {RECURSIVE_CURSOR_TREE}
 
 	make
 
-feature  {RECURSIVE_CURSOR_TREE} -- Initialization
+feature {RECURSIVE_CURSOR_TREE} -- Initialization
 
 	make (active_node, parent_of_active: like active;
 			aft, bef, bel: BOOLEAN) is
@@ -35,23 +30,37 @@ feature  {RECURSIVE_CURSOR_TREE} -- Initialization
 			below := bel
 		end;
 
-feature  {RECURSIVE_CURSOR_TREE} -- Access
+feature {RECURSIVE_CURSOR_TREE} -- Access
 
-	active: TREE [G];
+	active: DYNAMIC_TREE [G];
 			-- Current node
 
 	active_parent: like active;
 			-- Parent of current node
 
-feature  {RECURSIVE_CURSOR_TREE} -- Status report
+feature {RECURSIVE_CURSOR_TREE} -- Status report
 
 	after: BOOLEAN;
-			-- Is `Current' after the end of the tree?
+			-- Is cursor after the end of the tree?
 
 	before: BOOLEAN;
-			-- Is `Current' before the start of the tree?
+			-- Is cursor before the start of the tree?
 
 	below: BOOLEAN;
-			-- Is `Current' below the tree?
+			-- Is cursor below the tree?
 
 end -- class RECURSIVE_TREE_CURSOR
+
+
+--|----------------------------------------------------------------
+--| EiffelBase: library of reusable components for ISE Eiffel 3.
+--| Copyright (C) 1986, 1990, 1993, Interactive Software
+--|   Engineering Inc.
+--| All rights reserved. Duplication and distribution prohibited.
+--|
+--| 270 Storke Road, Suite 7, Goleta, CA 93117 USA
+--| Telephone 805-685-1006
+--| Fax 805-685-6869
+--| Electronic mail <info@eiffel.com>
+--| Customer support e-mail <eiffel@eiffel.com>
+--|----------------------------------------------------------------

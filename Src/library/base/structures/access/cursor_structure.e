@@ -1,14 +1,11 @@
---|---------------------------------------------------------------
---|   Copyright (C) Interactive Software Engineering, Inc.      --
---|    270 Storke Road, Suite 7 Goleta, California 93117        --
---|                   (805) 685-1006                            --
---| All rights reserved. Duplication or distribution prohibited --
---|---------------------------------------------------------------
-
--- Cursor structures, i.e. active data structures with a cursor
 
 indexing
 
+	description:
+		"Active structures, which always have a current position %
+		%accessible through a cursor.";
+
+	copyright: "See notice at end of class";
 	names: cursor_structure, access;
 	access: cursor, membership;
 	contents: generic;
@@ -26,6 +23,12 @@ feature -- Access
 		deferred
 		end;
 
+feature -- Status report
+
+	valid_cursor (p: CURSOR): BOOLEAN is
+			-- Can the cursor be moved to position `p'?
+		deferred
+		end;
 
 feature -- Cursor movement
 
@@ -36,12 +39,18 @@ feature -- Cursor movement
 		deferred
 		end;
 		
-
-feature -- Status report
-
-	valid_cursor (p: CURSOR): BOOLEAN is
-			-- Can the cursor be moved to position `p'?
-		deferred
-		end;
-
 end -- class CURSOR_STRUCTURE
+
+
+--|----------------------------------------------------------------
+--| EiffelBase: library of reusable components for ISE Eiffel 3.
+--| Copyright (C) 1986, 1990, 1993, Interactive Software
+--|   Engineering Inc.
+--| All rights reserved. Duplication and distribution prohibited.
+--|
+--| 270 Storke Road, Suite 7, Goleta, CA 93117 USA
+--| Telephone 805-685-1006
+--| Fax 805-685-6869
+--| Electronic mail <info@eiffel.com>
+--| Customer support e-mail <eiffel@eiffel.com>
+--|----------------------------------------------------------------

@@ -1,15 +1,10 @@
---|---------------------------------------------------------------
---|   Copyright (C) Interactive Software Engineering, Inc.      --
---|    270 Storke Road, Suite 7 Goleta, California 93117        --
---|                   (805) 685-1006                            --
---| All rights reserved. Duplication or distribution prohibited --
---|---------------------------------------------------------------
-
--- Collections, i.e. containers whose 
--- items are there solely by themselves
-
 indexing
 
+	description:
+		"General container data structures, %
+		%characterized by the membership properties of their items.";
+
+	copyright: "See notice at end of class";
 	names: collection, access;
 	access: membership;
 	contents: generic;
@@ -20,26 +15,36 @@ deferred class COLLECTION [G] inherit
 
 	CONTAINER [G]
 
-feature -- Modification & Insertion
+feature -- Status report
 
-	add (v: G) is
-			-- Include `v' in `Current'.
+	extendible: BOOLEAN is
+			-- May new items be added?
+		deferred
+		end;
+
+	prunable: BOOLEAN is
+			-- May items be removed?
+		deferred
+		end;
+
+feature -- Element change
+
+	put, extend (v: G) is
+			-- Ensure that structure includes `v'.
 		require
-			extensible: extensible
+			extendible: extendible
 		deferred
 		ensure
-			new_count: count >= old count;
 			item_inserted: has (v)
 		end;
 
 	fill (other: CONTAINER [G]) is
-			-- Fill `Current' with as many elements of `other'
-			-- as possible.
-			-- The representations of `other' and `Current'
-			-- need not be the same. (This feature enables you
-			-- to map one implementation to another.)
+			-- Fill with as many elements of `other' as possible.
+			-- The representations of `other' and `Current' need not
+			-- be the same.
 		require
-                      other_not_void: other /= Void
+				  other_not_void: other /= Void;
+				  extendible: extendible
 		local
 			lin_rep: SEQUENTIAL [G]
 		do
@@ -47,42 +52,59 @@ feature -- Modification & Insertion
 			from
 				lin_rep.start
 			until
-				not extensible or else lin_rep.off
+				not extendible or else lin_rep.off
 			loop
-				add (lin_rep.item);
+				extend (lin_rep.item);
 				lin_rep.forth
 			end
 		end;
 
-
 feature -- Removal
 
-	remove_item (v: G) is
-			-- Remove `v' from `Current'.
+	prune (v: G) is
+			-- Remove one occurrence of `v' if any.
+			-- (Reference or object equality, based on `object_comparison'.)
 		require
-			contractable: contractable
+			prunable: prunable
+		deferred
+		end;
+
+	prune_all (v: G) is
+			-- Remove all occurrences of `v'.
+			-- (Reference or object equality, based on `object_comparison'.)
+			--|Default implementation, usually inefficient.
+		require
+			prunable: prunable
+		do
+			from
+			until not has (v) loop
+				prune (v)
+			end
+		ensure
+			no_more_occurences: not has (v)	
+		end;
+
+	wipe_out is
+			-- Remove all elements.
+		require
+			prunable: prunable
 		deferred
 		ensure
-			new_count: count <= old count
+			wiped_out: empty
 		end;
-
-	
-feature -- Status report
-
-	extensible: BOOLEAN is
-			-- May new items be added to `Current'?
-		deferred
-		end;
-
-	contractable: BOOLEAN is
-			-- May items be removed from `Current'?
-		deferred
-		end;
-
-
-
-invariant
-
-	empty_constraint: empty implies not contractable
 
 end -- class COLLECTION
+
+
+--|----------------------------------------------------------------
+--| EiffelBase: library of reusable components for ISE Eiffel 3.
+--| Copyright (C) 1986, 1990, 1993, Interactive Software
+--|   Engineering Inc.
+--| All rights reserved. Duplication and distribution prohibited.
+--|
+--| 270 Storke Road, Suite 7, Goleta, CA 93117 USA
+--| Telephone 805-685-1006
+--| Fax 805-685-6869
+--| Electronic mail <info@eiffel.com>
+--| Customer support e-mail <eiffel@eiffel.com>
+--|----------------------------------------------------------------

@@ -1,39 +1,27 @@
---|---------------------------------------------------------------
---|   Copyright (C) Interactive Software Engineering, Inc.		--
---|	270 Storke Road, Suite 7 Goleta, California 93117			--
---|				(805) 685-1006									--
---| All rights reserved. Duplication or distribution prohibited --
---|---------------------------------------------------------------
-
--- Hash tables to store items associated with ``hashable'' keys
-
--- The current discrimination rule on items may be changed by
--- redefining the `has_item' feature with the appropriate rule.
-
 indexing
 
+	description:
+		"Hash tables, used to store items identified by hashable keys";
+
+	copyright: "See notice at end of class";
 	date: "$Date$";
 	revision: "$Revision$"
 
-class HASH_TABLE [G, H -> HASHABLE]
+class HASH_TABLE [G, H -> HASHABLE] inherit
 
-inherit
-
-	UNBOUNDED
+	UNBOUNDED [G]
 		rename
-			twin as basic_twin
+			has as has_item
+		redefine
+			has_item, copy, is_equal
 		end;
 
 	TABLE [G, H]
 		rename
 			has as has_item,
 			wipe_out as clear_all
-		undefine
-			empty
 		redefine
-			twin, clear_all, has_item
-		select
-			twin
+			copy, is_equal, clear_all, has_item
 		end
 
 creation
@@ -90,7 +78,7 @@ feature -- Access
 		end;
 
 	has_item (v: G): BOOLEAN is
-				-- Does `Current' include `v'?
+				-- Does structure include `v'?
 				-- (According to the currently adopted
 				-- discrimination rule)
 		local
@@ -140,58 +128,124 @@ feature -- Access
  		end;
 
 	position: INTEGER;
-			-- Hash table cursor, updated after each query:
+			-- Hash table cursor, updated after each operation:
 			-- put, remove, has, replace, force, change_key...
 
+    item_for_iteration: G is
+            -- Element at current iteration position
+        require
+            not_over: not over
+        do
+            Result := content.item (pos_for_iter)
+        end;
+
+    key_for_iteration: H is
+            -- Key at current iteration position
+        require
+            not_over: not over
+        do
+            Result := keys.item (pos_for_iter)
+        end;
 
 feature -- Measurement
 
 	count: INTEGER;
-			-- Number of items actually in `Current'
+			-- Number of elements in table
 
-	
-
-feature -- Conversion
-
-	sequential_representation: ARRAY_SEQUENCE [G] is
-				-- Sequential representation of `Current'.
-				-- This feature enables you to manipulate each
-				-- item of `Current' regardless of its
-				-- actual structure.
-		local
-			i, table_size: INTEGER;
-		do
-			from
-				!! Result.make (count);
-				table_size := content.upper;
-			until
-				i > table_size
-			loop
-				if valid_key (keys.item (i)) then
-					Result.add (content.item (i));
-				end;
-				i := i + 1
-			end;
-		ensure then
-			Result_exists: Result /= Void;
-			good_count: Result.count = count
-		end;
-
-
-
-feature -- Duplication
+feature -- Comparison
  
-	twin: like Current is
-			-- Clone object
+	is_equal (other: like Current): BOOLEAN is
+			-- Does table contain the same information as `other'?
 		do
-			Result := basic_twin;
-			Result.set_keys (keys.twin);
-			Result.set_content (content.twin);
-			Result.set_deleted_marks (deleted_marks.twin);
+			Result := 
+				equal (keys, other.keys) and
+				equal (content, other.content) and
+				equal (deleted_marks, other.deleted_marks)
 		end;
 
+feature -- Status report
+ 
+	full: BOOLEAN is false;
+			-- Is structured filled to capacity? (Answer: no.)
 
-feature -- Modification & Insertion
+	extendible: BOOLEAN is true;
+			-- May new items be added? (Answer: yes.)
+
+	prunable: BOOLEAN is
+			-- May items be removed? (Answer: yes.)
+		do
+			Result := true
+		end;
+
+	valid_key (k: H): BOOLEAN is
+			-- Is `k' a valid key?
+		do
+			Result := k /= Void and then k.hash_code > 0
+		end;
+
+ 
+	conflict: BOOLEAN is
+			-- Did the last operation lead to a conflict status?
+		do
+			Result := control = Conflict_constant
+		end;
+
+	inserted: BOOLEAN is
+			-- Did the last operation lead to an insertion?
+		do
+			Result := control = Inserted_constant
+		end;
+
+	changed: BOOLEAN is
+			-- Did the last operation lead to a replacement?
+		do
+			Result := control = Changed_constant
+		end;
+
+	found: BOOLEAN is
+			-- Did the last operation lead to a found status?
+		do
+			Result := control = Found_constant
+		end;
+
+	not_found: BOOLEAN is
+			-- Did the last operation lead to a not-found status?
+		do
+			Result := control = Not_found_constant
+		end;
+
+    over: BOOLEAN is
+            -- Is the cursor at the end?
+        do
+            Result := pos_for_iter > keys.upper
+        end;
+
+feature -- Cursor movement
+
+    start is
+            -- Bring cursor to first position.
+        do
+            pos_for_iter := keys.lower - 1;
+            forth
+        end;
+
+    forth is
+            -- Advance cursor by one position.
+        require
+            not_over: not over
+        local
+            stop: BOOLEAN
+        do
+            from
+            until
+                stop
+            loop
+                pos_for_iter := pos_for_iter + 1;
+                stop := over or else valid_key (keys.item (pos_for_iter))
+            end
+        end;
+
+feature -- Element change
 
 	put (new: G; key: H) is
 			-- Attempt to insert `new' with `key'.
@@ -318,46 +372,41 @@ feature -- Removal
 			position := 0
 		end;
 
-feature -- Status report
+feature -- Conversion
+
+	sequential_representation: ARRAYED_LIST [G] is
+			-- Representation as a sequential structure
+			-- (order is same as original order of insertion)
+		local
+			i, table_size: INTEGER;
+		do
+			from
+				!! Result.make (count);
+				table_size := content.upper;
+			until
+				i > table_size
+			loop
+				if valid_key (keys.item (i)) then
+					Result.extend (content.item (i));
+				end;
+				i := i + 1
+			end;
+		ensure then
+			Result_exists: Result /= Void;
+			good_count: Result.count = count
+		end;
+
+feature -- Duplication
  
-	valid_key (k: H): BOOLEAN is
-			-- Is `k' a valid key?
+	copy (other: like Current) is
+			-- Re-initialize from `other'.
 		do
-			Result := k /= Void and then k.hash_code > 0
+			set_keys (clone (keys));
+			set_content (clone (content));
+			set_deleted_marks (clone (deleted_marks))
 		end;
 
- 
-	conflict: BOOLEAN is
-			-- Did the last operation lead to a conflict status?
-		do
-			Result := control = Conflict_constant
-		end;
-
-	inserted: BOOLEAN is
-			-- Did the last operation lead to an insertion?
-		do
-			Result := control = Inserted_constant
-		end;
-
-	changed: BOOLEAN is
-			-- Did the last operation lead to a replacement?
-		do
-			Result := control = Changed_constant
-		end;
-
-	found: BOOLEAN is
-			-- Did the last operation lead to a found status?
-		do
-			Result := control = Found_constant
-		end;
-
-	not_found: BOOLEAN is
-			-- Did the last operation lead to a not-found status?
-		do
-			Result := control = Not_found_constant
-		end;
-
-feature -- Obsolete, Measurement
+feature -- Obsolete
 
 	max_size: INTEGER is obsolete "Use ``capacity''"
 		do
@@ -365,18 +414,66 @@ feature -- Obsolete, Measurement
 		end;
 
 
-feature -- Obsolete, Modification & Insertion
-
 	change_item (new: G; access_key: H) is obsolete "Use ``replace''"
 		do
 			replace (new, access_key)
 		end;
 
-	
+feature {HASH_TABLE} -- Implementation
 
+	content: ARRAY [G];
+			-- Array of contents
 
+	keys: ARRAY [H];
+			-- Array of keys
 
-feature  {NONE} -- Access
+	deleted_marks: ARRAY [BOOLEAN];
+			-- Array of deleted marks
+
+	Size_threshold: INTEGER is 80;
+			-- Filling percentage over which some resizing is done
+
+ 
+	set_content (c: like content) is
+			-- Assign `c' to `content'.
+		do
+			content := c
+		end;
+
+	set_keys (c: like keys) is
+			-- Assign `c' to `keys'.
+		do
+			keys := c
+		end;
+
+	set_deleted_marks (c: like deleted_marks) is
+			-- Assign `c' to `deleted_marks'.
+		do
+			deleted_marks := c
+		end;
+
+feature {NONE} -- Inapplicable
+
+	prune (v: G) is
+			-- Remove one occurrence of `v' if any.
+		do
+		end;
+
+	extend (v: G) is
+			-- Insert a new occurrence of `v' 
+		do
+		end;
+
+	occurrences (v: G): INTEGER is
+			-- Here temporarily; must be brought back as
+			-- exported feature!
+		do
+		end;
+
+feature {NONE} -- Implementation
+
+    pos_for_iter: INTEGER;
+            -- Cursor for iteration primitives
 
 	internal_search (search_key: H) is
 			-- Search for item of `search_key'.
@@ -457,47 +554,8 @@ feature  {NONE} -- Access
 			-- Key not found
 
 
-feature  {HASH_TABLE} -- Access
-
-	content: ARRAY [G];
-			-- Array of contents
-
-	keys: ARRAY [H];
-			-- Array of keys
-
-	deleted_marks: ARRAY [BOOLEAN];
-			-- Array of deleted marks
-
-	Size_threshold: INTEGER is 80;
-			-- Filling percentage over which some resizing is done
-
- 
-feature  {HASH_TABLE} -- Modification & Insertion
-
-	set_content (c: like content) is
-			-- Assign `c' to `content'.
-		do
-			content := c
-		end;
-
-	set_keys (c: like keys) is
-			-- Assign `c' to `keys'.
-		do
-			keys := c
-		end;
-
-	set_deleted_marks (c: like deleted_marks) is
-			-- Assign `c' to `deleted_marks'.
-		do
-			deleted_marks := c
-		end;
-
-
-feature  {NONE} -- Resizing
-
-
 	add_space is
-			-- Increase capacity of `Current'.
+			-- Increase capacity.
 		local
 			i, table_size: INTEGER;
 			current_key: H;
@@ -521,11 +579,8 @@ feature  {NONE} -- Resizing
 		end;
 
 
-feature  {NONE} -- Status report
-
-
 	soon_full: BOOLEAN is
-			-- Is `Current' close to being filled?
+			-- Is table close to being filled to current capacity?
 			-- (If so, resizing is needed to avoid performance degradation.)
 		do
 			Result := (keys.count * Size_threshold <= 100 * count)
@@ -533,14 +588,25 @@ feature  {NONE} -- Status report
 
 
 	control: INTEGER;
-			-- Control code set by operations that may return
+			-- Control code set by operations that may produce
 			-- several possible conditions.
-			-- Possible control codes are the following:
-
-
 
 invariant
 
-	count_big_enough: 0 <= count;
+	count_big_enough: 0 <= count
 
 end -- class HASH_TABLE
+
+
+--|----------------------------------------------------------------
+--| EiffelBase: library of reusable components for ISE Eiffel 3.
+--| Copyright (C) 1986, 1990, 1993, Interactive Software
+--|   Engineering Inc.
+--| All rights reserved. Duplication and distribution prohibited.
+--|
+--| 270 Storke Road, Suite 7, Goleta, CA 93117 USA
+--| Telephone 805-685-1006
+--| Fax 805-685-6869
+--| Electronic mail <info@eiffel.com>
+--| Customer support e-mail <eiffel@eiffel.com>
+--|----------------------------------------------------------------

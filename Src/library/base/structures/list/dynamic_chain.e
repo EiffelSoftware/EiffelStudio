@@ -1,14 +1,9 @@
---|---------------------------------------------------------------
---|   Copyright (C) Interactive Software Engineering, Inc.      --
---|    270 Storke Road, Suite 7 Goleta, California 93117        --
---|                   (805) 685-1006                            --
---| All rights reserved. Duplication or distribution prohibited --
---|---------------------------------------------------------------
-
--- Dynamically modifiable chains
-
 indexing
 
+	description:
+		"Dynamically modifiable chains";
+
+	copyright: "See notice at end of class";
 	names: dynamic_chain, sequence;
 	access: index, cursor, membership;
 	contents: generic;
@@ -19,48 +14,31 @@ deferred class DYNAMIC_CHAIN [G] inherit
 
 	CHAIN [G]
 		export
-			remove, remove_item
+			{ANY} remove, prune_all, prune
 		undefine
-			remove, remove_item
-		redefine
-			contractable
+			remove, prune_all, prune
 		end;
 
-	UNBOUNDED
+	UNBOUNDED [G]
 
+feature -- Status report
 
-feature -- Duplication
+	extendible: BOOLEAN is true;
+			-- May new items be added? (Answer: yes.)
 
-	duplicate (n: INTEGER): like Current is
-			-- Copy of sub-chain beginning at cursor position
-			-- and having min (`n', `count' - `index' + 1) items
-		local
-			pos: CURSOR;
-			counter: INTEGER
+	prunable: BOOLEAN is
+			-- May items be removed ? (Answer: yes.)
 		do
-			pos := cursor;
-			Result := new_chain;
-			from
-			until
-				(counter = n) or else off
-			loop
-				Result.add (item);
-				forth;
-				counter := counter + 1
-			end;
-			go_to (pos)
+			Result :=  true
 		end;
 
-feature -- Modification & Insertion
-
+feature -- Element change
 
 	add_front (v: like item) is
-			-- Add `v' to the beginning of `Current'.
-		require
-			extensible: extensible
+			-- Add `v' to beginning.
 		deferred
 		ensure
-	 		new_count: count = old count + 1;
+	 		--new_count: count = old count + 1;
 			item_inserted: first = v
 		end;
 
@@ -68,61 +46,60 @@ feature -- Modification & Insertion
 			-- Add `v' to the left of cursor position.
 			-- Do not move cursor.
 		require
-			extensible: extensible;
 			not_off: not off
 		deferred
 		ensure
-	 		new_count: count = old count + 1;
-	 		new_index: index = old index + 1
+	 		--new_count: count = old count + 1;
+	 		--new_index: index = old index + 1
 		end;
 
 	add_right (v: like item) is
 			-- Add `v' to the right of cursor position.
 			-- Do not move cursor.
 		require
-			extensible: extensible;
+			extendible: extendible;
 			not_off: not off
 		deferred
 		ensure
-	 		new_count: count = old count + 1;
-	 		same_index: index = old index
+	 		--new_count: count = old count + 1;
+	 		--same_index: index = old index
 		end;
 
 	merge_left (other: like Current) is
-			-- Merge `other' into `Current' before cursor
+			-- Merge `other' into current structure before cursor
 			-- position. Do not move cursor. Empty `other'.
 		require
-			extensible: extensible;
+			extendible: extendible;
 			not_off: not off;
 			other_exists: other /= Void
 		deferred
 		ensure
-	 		new_count: count = old count + old other.count;
-	 		new_index: index = old index + old other.count;
+	 		--new_count: count = old count + old other.count;
+	 		--new_index: index = old index + old other.count;
 			is_empty: other.empty
 		end;
 
 	merge_right (other: like Current) is
-			-- Merge `other' into `Current' after cursor
+			-- Merge `other' into current structure after cursor
 			-- position. Do not move cursor. Empty `other'.
 		require
-			extensible: extensible;
+			extendible: extendible;
 			not_off: not off;
 			other_exists: other /= Void
 		deferred
 		ensure
-	 		new_count: count = old count + old other.count;
-	 		same_index: index = old index;
+	 		--new_count: count = old count + old other.count;
+	 		--same_index: index = old index;
 			is_empty: other.empty
 		end;
 
 feature -- Removal
 
-	remove_item (v: like item) is
-			-- Remove `v' from `Current'.
+	prune (v: like item) is
+			-- Remove first occurrence of `v', if any,
+			-- after cursor position.
 			-- Move cursor to right neighbor
-			-- (or `off' if no right neighbor or `v'
-			-- not in `Current').
+			-- (or `off' if no right neighbor or `v' does not occur).
 		do
 			start;
 			search (v);
@@ -135,28 +112,26 @@ feature -- Removal
 			-- Remove item to the left of cursor position.
 			-- Do not move cursor.
 		require
-			is_not_first: not isfirst;
-			contractable: contractable
+			left_exist: index > 1
 		deferred
 		ensure
-	 		new_count: count = old count - 1;
-	 		new_index: index = old index - 1
+	 		--new_count: count = old count - 1;
+	 		--new_index: index = old index - 1
 		end;
 
 	remove_right is
 			-- Remove item to the right of cursor position.
 			-- Do not move cursor.
 		require
-			is_not_last: not islast;
-			contractable: contractable
+			right_exist: index < count
 		deferred
 		ensure
-	 		new_count: count = old count - 1;
-	 		same_index: index = old index
+	 		--new_count: count = old count - 1;
+	 		--same_index: index = old index
 		end;
 
-	remove_all_occurrences (v: like item) is
-			-- Remove all items identical to `v'.
+	prune_all (v: like item) is
+			-- Remove all occurrences of `v'.
 			-- (According to the currently adopted
 			-- discrimination rule in `search')
 			-- Leave cursor `off'.
@@ -170,12 +145,12 @@ feature -- Removal
 				remove;
 				search (v)
 			end
-		ensure
+		ensure then
 			is_off: off
 		end;
 
 	wipe_out is
-			-- Empty `Current'.
+			-- Remove all elements.
 		do
 			from
 				start
@@ -186,23 +161,30 @@ feature -- Removal
 			end
 		end;
 
+feature -- Duplication
 
-
-feature -- Status report
-
-	extensible: BOOLEAN is true;
-			-- May new items be added to `Current'?
-
-
-
-	contractable: BOOLEAN is
-			-- May items be removed from `Current'?
+	duplicate (n: INTEGER): like Current is
+			-- Copy of sub-chain beginning at cursor position
+			-- and having min (`n', `count' - `index' + 1) items
+		local
+			pos: CURSOR;
+			counter: INTEGER
 		do
-			Result := not off
+			from
+				Result := new_chain;
+				pos := cursor
+			until
+				(counter = n) or else off
+			loop
+				Result.finish;
+				Result.add_left (item);
+				forth;
+				counter := counter + 1
+			end;
+			go_to (pos)
 		end;
 
-
-feature -- Obsolete, Removal
+feature -- Obsolete
 
 	remove_n_left (n: INTEGER) is
 			obsolete "Use ``remove_left'' repeatedly"
@@ -234,23 +216,33 @@ feature -- Obsolete, Removal
 			end
 		end;
 
-feature  {DYNAMIC_CHAIN} -- Initialization
+feature {DYNAMIC_CHAIN} -- Implementation
 
 	new_chain: like Current is
-			-- Instance of class `like Current'.
-			-- This feature should be implemented in
-			-- every effective descendant of DYNAMIC_CHAIN,
-			-- so as to return an adequatly allocated and
-			-- initialized object.
+			-- A newly created instance of the same type.
+			-- This feature may be redefined in descendants so as to
+			-- produce an adequately allocated and initialized object.
 		deferred
 		ensure
 			result_exists: Result /= Void
 		end;
 
-
 invariant
 
-	extensible: extensible = true;
-	access_assertion: contractable = not off
+	extendible: extendible;
 
 end -- class DYNAMIC_CHAIN
+
+
+--|----------------------------------------------------------------
+--| EiffelBase: library of reusable components for ISE Eiffel 3.
+--| Copyright (C) 1986, 1990, 1993, Interactive Software
+--|   Engineering Inc.
+--| All rights reserved. Duplication and distribution prohibited.
+--|
+--| 270 Storke Road, Suite 7, Goleta, CA 93117 USA
+--| Telephone 805-685-1006
+--| Fax 805-685-6869
+--| Electronic mail <info@eiffel.com>
+--| Customer support e-mail <eiffel@eiffel.com>
+--|----------------------------------------------------------------

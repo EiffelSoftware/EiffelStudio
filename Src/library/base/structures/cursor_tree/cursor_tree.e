@@ -1,20 +1,9 @@
---|---------------------------------------------------------------
---|   Copyright (C) Interactive Software Engineering, Inc.      --
---|    270 Storke Road, Suite 7 Goleta, California 93117        --
---|                   (805) 685-1006                            --
---| All rights reserved. Duplication or distribution prohibited --
---|---------------------------------------------------------------
-
--- Cursor trees are based on the notion of active data structures
--- with cursors.
--- If `t' is a tree, the cursor position is given by `t.cursor'
--- and the value of the corresponding element by `t.item'.
--- The cursor may be moved by operations `start', `up', `back',
--- `forth', `down',`go_to', `preorder_forth', `postorder_forth',
--- and `breadth_forth'.
-
 indexing
 
+	description:
+		"Trees as active structures that may be traversed using a cursor";
+
+	copyright: "See notice at end of class";
 	names: cursor_tree, tree;
 	access: cursor, membership;
 	contents: generic;
@@ -25,11 +14,7 @@ deferred class CURSOR_TREE [G] inherit
 
 	HIERARCHICAL [G]
 		rename
-			nb_of_successors as arity,
-			back as up,
-			forth as down
-		redefine
-			arity, back, forth
+			successor_count as arity
 		end;
 
 	CURSOR_STRUCTURE [G]
@@ -37,10 +22,12 @@ deferred class CURSOR_TREE [G] inherit
 			fill as container_fill
 		end;
 
-	SEQUENTIAL [G]
+	LINEAR [G]
 		rename
 			forth as preorder_forth,
 			finish as go_last_child
+		redefine
+			off
 		end;
 
 	BASIC_ROUTINES
@@ -51,7 +38,7 @@ deferred class CURSOR_TREE [G] inherit
 feature -- Access
 
 	parent_item: G is
-			-- Item in parent of `Current'
+			-- Item in parent.
 		require
 			not_on_root: not is_root
 		local
@@ -64,7 +51,7 @@ feature -- Access
 		end;
 
 	child_item (i: INTEGER): G is
-			-- Item in `i'-th child of `Current'
+			-- Item in `i'-th child
 		require
 			argument_within_bounds: i >= 1 and then i <= arity;
 			not_off: not off
@@ -77,26 +64,7 @@ feature -- Access
 			go_to (pos)
 		end;
 
-	arity: INTEGER is
-			-- Number of children of `Current'.
-			-- This function may be called when
-			-- the cursor is above the tree in
-			-- which case it returns 0 for an
-			-- empty tree and 1 for a non empty
-			-- one
-		require else
-			not_after: not after;
-			not_before: not before;
-			not_below: not below
-		deferred
-		ensure then
-			(above and empty) implies (Result = 0);
-			(above and not empty) implies (Result = 1)
-		end;
-
-
 feature -- Measurement
-
 
 	depth: INTEGER is
 			-- Depth of the tree
@@ -110,7 +78,7 @@ feature -- Measurement
 		end;
 
 	level: INTEGER is
-			-- Level of `Current' in the tree
+			-- Level of current node in tree
 			-- (Root is on level 1)
 		local
 			pos: CURSOR;
@@ -141,214 +109,78 @@ feature -- Measurement
 			end
 		end;
 
+feature -- Status report
 
-
-
-feature -- Duplication
-
-
-	subtree: like Current is
-			-- Subtree rooted at `Current'
-		require
-			not_off: not off
+	readable: BOOLEAN is
+			-- Is there a current item that may be read?
 		do
-			Result := new_tree;
-			Result.go_above;
-			Result.down (0);
-			Result.add_right (item);
-			Result.forth;
-			Result.fill_from_active (Current)
+			Result := not off
 		end;
 
-	parent_tree: like Current is
-			-- Subtree rooted at parent of `Current'
-		require
-			not_on_root: not is_root;
-			not_off: not off
-		local
-			pos: CURSOR;
+	writable: BOOLEAN is
+			-- Is there a current item that may be modified?
 		do
-			pos := cursor;
-			up;
-			Result := subtree;
-			go_to (pos)
+			Result := not off
 		end;
 
-	child_tree (i: INTEGER): like Current is
-			-- Subtree rooted at `i'-th child of `Current'
-		require
-			argument_within_bounds: i >= 1 and then i <= arity;
-			not_off: not off
-		local
-			pos: CURSOR;
+	extendible: BOOLEAN is true;
+			-- May new items be added?
+
+	is_leaf: BOOLEAN is
+			-- Is cursor on a leaf?
 		do
-			pos := cursor;
-			down (i);
-			Result := subtree;
-			go_to (pos)
+			if not off then
+				Result := (arity = 0)
+			end
 		end;
 
-
-feature -- Modification & Insertion
-
-	put (v: G) is
-			-- Put `v' at cursor position.
-			-- (Synonym for `replace')
-		require
-			writable: writable
+	off: BOOLEAN is
+			-- Is there no current item?
+			-- (True if `empty')
 		do
-			replace (v)
-		ensure
-			item_inserted: item = v;
-			same_count: count = old count
+			Result := (after or before or below or above)
 		end;
 
-	add (v: G) is
-			-- Put `v' after last child.
-			-- Put `v' as `first_child' if `below' and place
-			-- cursor `before'.
-		require else
-			not_above: not above;
-			only_one_root: (level = 1) implies empty;
-		local
-			pos: CURSOR;
-		do
-			pos := cursor;
-			go_last_child;
-			add_right (v);
-			go_to (pos);
-			if below then
-				below := false;
-				down (0);
-			end;
-		ensure then
-		  new_count: count = old count + 1;
-		end;
-
-	add_left (v: G) is
-			-- Put `v' to the left of cursor position.
-		require
-			not_before: not before;
-			not_above: not above;
-			only_one_root: (level = 1) implies empty;
-			not_full: not full
-		do
-			back;
-			add_right (v);
-			forth;
-			forth
-		ensure
-			new_count: count = old count + 1;
-		end;
-
-	add_right (v: G) is
-			-- Put `v' to the right of cursor position.
-		require
-			not_after: not after;
-			not_above: not above;
-			only_one_root: (level = 1) implies empty;
-			not_full: not full
+	after: BOOLEAN is
+			-- Is there no valid position to the right of the cursor?
 		deferred
-		ensure
-			new_count: count = old count + 1
 		end;
 
-	fill (other: CURSOR_TREE [G]) is
-			-- Fill `Current' with as many elements of `other'
-			-- as possible.
-			-- The representations of `other' and `Current'
-			-- need not be the same. (This feature enables you
-			-- to map one implementation to another.)
-		require
-			is_empty: empty
+	before: BOOLEAN is
+			-- Is there no valid position to the left of the cursor?
+		deferred
+		end;
+
+	above: BOOLEAN is
+			-- Is there no valid position above the cursor?
+		deferred
+		end;
+
+	below: BOOLEAN;
+			-- Is there no valid position below the cursor?
+
+	isfirst: BOOLEAN is
+			-- Is cursor on first sibling?
+		deferred
+		end;
+
+	islast: BOOLEAN is
+			-- Is cursor on last sibling?
+		deferred
+		end;
+
+	is_root: BOOLEAN is
+			-- Is cursor on root?
+		deferred
+		end;
+
+	valid_cursor_index (i: INTEGER): BOOLEAN is
+			-- Can cursor be moved to i-th child?
+			-- 0 is before and `arity' + 1 is after.
 		do
-			go_above;
-			if not other.empty then
-				other.start;
-				down (0);
-				put_right (other.item);
-				forth;
-				fill_from_active (other)
-			end
-		ensure
-			new_count: count = other.count
+			Result := i >= 0 and i <= (arity + 1)
 		end;
 
-	fill_from_active (other: CURSOR_TREE [G]) is
-			-- Copy subtree of `other''s active node
-			-- onto active node of current tree.
-		require
-			cursor_on_leaf: is_leaf
-		do
-			if not other.is_leaf then
-				from
-					other.down (1);
-					down (0)
-				until
-					other.after
-				loop
-					add_right (other.item);
-					forth;
-					fill_from_active (other);
-					other.forth
-				end;
-				other.up;
-				up
-			end
-		end;
-
-	merge_right (other: CURSOR_TREE [G]) is
-			-- Merge the elements of `other' into `Current' to
-			-- the right of cursor position.
-		require
-			not_after: not after;
-			not_above: not above;
-			only_one_root: (level = 1) implies empty;
-			not_full: not full
-		local
-			pos: CURSOR;
-		do
-			if not other.empty then
-				pos := other.cursor;
-				other.start;
-				add_right (other.item);
-				forth;
-				if not other.is_leaf then
-					down (0);
-					other.down (0);
-					from
-					until
-						other.islast
-					loop
-						other.forth;
-						merge_right (other.subtree);
-					end;
-					up;
-				end;
-				other.go_to (pos);
-			end;
-		ensure
-			new_count: count = old count + other.count
-		end;
-
-	merge_left (other: CURSOR_TREE [G]) is
-			-- Merge the elements of `other' into Current to
-			-- the left of cursor position.
-		require
-			not_before: not before;
-			not_above: not above;
-			only_one_root: (level = 1) implies empty;
-			not_full: not full
-		do
-			back;
-			merge_right (other);
-		ensure
-			new_count: count = old count + other.count
-		end;
-
-
-
- 
 feature -- Cursor movement
 
 	start is
@@ -375,30 +207,17 @@ feature -- Cursor movement
 
 	back is
 			-- Move cursor one position backward.
-		require
-			not_before: not before;
-			not_above: not above
 		deferred
-		ensure
-			not_after: not after;
-			(old below or old isfirst) implies before
 		end;
 
 	forth is
 			-- Move cursor one position forward.
-		require else
-			not_after: not after;
-			not_above: not above
 		deferred
-		ensure
-			not_before: not before;
-			(old below or old islast) implies after
 		end;
 
 	up is
-			-- Move cursor one level upward:
-			-- to parent of `Current',
-			-- or `above' if `Current.is_root'
+			-- Move cursor one level upward to parent,
+			-- or `above' if `is_root' holds.
 		require else
 			not_above: not above
 		deferred
@@ -406,7 +225,7 @@ feature -- Cursor movement
 			not_before: not before;
 			not_after: not after;
 			not_below: not below;
-			above = (old is_root)
+			--above = (old is_root)
 		end;
 
 	down (i: INTEGER) is
@@ -422,9 +241,9 @@ feature -- Cursor movement
 		deferred
 		ensure then
 			(i = 0) implies before;
-			(i = old arity + 1) implies after;
-			((i > 0) and (i <= old arity)) implies not off;
-			((old arity) = 0) implies below
+			--(i = old arity + 1) implies after;
+			--((i > 0) and (i <= old arity)) implies not off;
+			--((old arity) = 0) implies below
 		end;
 
 
@@ -544,80 +363,185 @@ feature -- Cursor movement
 			end
 		end;
 
+feature -- Element change
 
-feature -- Status report
-
-	readable: BOOLEAN is
-			-- Is there a current item that may be read?
+	put (v: G) is
+			-- Put `v' at cursor position.
+			-- (Synonym for `replace')
 		do
-			Result := not off
+			replace (v)
 		end;
 
-	writable: BOOLEAN is
-			-- Is there a current item that may be modified?
+	extend (v: G) is
+			-- Put `v' after last child.
+			-- Put `v' as `first_child' if `below' and place
+			-- cursor `before'.
+		require else
+			not_above: not above;
+			only_one_root: (level = 1) implies empty;
+		local
+			pos: CURSOR;
 		do
-			Result := not off
+			pos := cursor;
+			go_last_child;
+			add_right (v);
+			go_to (pos);
+			if below then
+				below := false;
+				down (0);
+			end;
 		end;
 
-	extensible: BOOLEAN is true;
-			-- May new items be added to current?
-
-	contractable: BOOLEAN is
-			-- May items be removed from `Current'?
+	add_left (v: G) is
+			-- Put `v' to the left of cursor position.
+		require
+			not_before: not before;
+			not_above: not above;
+			only_one_root: (level = 1) implies empty;
 		do
-			Result := not off
+			back;
+			add_right (v);
+			forth;
+			forth
 		end;
 
-	is_leaf: BOOLEAN is
-			-- Is cursor on a leaf?
+	add_right (v: G) is
+			-- Put `v' to the right of cursor position.
+		require
+			not_after: not after;
+			not_above: not above;
+			only_one_root: (level = 1) implies empty;
+		deferred
+		end;
+
+	fill (other: CURSOR_TREE [G]) is
+			-- Fill with as many elements of `other'
+			-- as possible.
+			-- The representations of `other' and current structure
+			-- need not be the same.
+		require
+			is_empty: empty
 		do
-			if not off then
-				Result := (arity = 0)
+			go_above;
+			if not other.empty then
+				other.start;
+				down (0);
+				add_right (other.item);
+				forth;
+				fill_from_active (other)
 			end
 		end;
 
-	off: BOOLEAN is
-			-- Is there no current item?
-			-- (True if `empty')
+	fill_from_active (other: CURSOR_TREE [G]) is
+			-- Copy subtree of `other''s active node
+			-- onto active node of current tree.
+		require
+			cursor_on_leaf: is_leaf
 		do
-			Result := (after or before or below or above)
+			if not other.is_leaf then
+				from
+					other.down (1);
+					down (0)
+				until
+					other.after
+				loop
+					add_right (other.item);
+					forth;
+					fill_from_active (other);
+					other.forth
+				end;
+				other.up;
+				up
+			end
 		end;
 
-	after: BOOLEAN is
-			-- Is there no position to the right of the cursor?
-		deferred
+	merge_right (other: CURSOR_TREE [G]) is
+			-- Merge the elements of `other' into current structure to
+			-- the right of cursor position.
+		require
+			not_after: not after;
+			not_above: not above;
+			only_one_root: (level = 1) implies empty;
+		local
+			pos: CURSOR;
+		do
+			if not other.empty then
+				pos := other.cursor;
+				other.start;
+				add_right (other.item);
+				forth;
+				if not other.is_leaf then
+					down (0);
+					other.down (0);
+					from
+					until
+						other.islast
+					loop
+						other.forth;
+						merge_right (other.subtree);
+					end;
+					up;
+				end;
+				other.go_to (pos);
+			end;
 		end;
 
-	before: BOOLEAN is
-			-- Is there no position to the left of the cursor?
-		deferred
+	merge_left (other: CURSOR_TREE [G]) is
+			-- Merge the elements of `other' into current structure to
+			-- the left of cursor position.
+		require
+			not_before: not before;
+			not_above: not above;
+			only_one_root: (level = 1) implies empty;
+		do
+			back;
+			merge_right (other);
 		end;
 
-	above: BOOLEAN is
-			-- Is there no position above the cursor?
-		deferred
+feature -- Duplication
+
+	subtree: like Current is
+			-- Subtree rooted at current node
+		require
+			not_off: not off
+		do
+			Result := new_tree;
+			Result.go_above;
+			Result.down (0);
+			Result.add_right (item);
+			Result.forth;
+			Result.fill_from_active (Current)
 		end;
 
-	below: BOOLEAN;
-			-- Is there no position below the cursor?
-
-	isfirst: BOOLEAN is
-			-- Is cursor on first sibling?
-		deferred
+	parent_tree: like Current is
+			-- Subtree rooted at parent
+		require
+			not_on_root: not is_root;
+			not_off: not off
+		local
+			pos: CURSOR;
+		do
+			pos := cursor;
+			up;
+			Result := subtree;
+			go_to (pos)
 		end;
 
-	islast: BOOLEAN is
-			-- Is cursor on last sibling?
-		deferred
+	child_tree (i: INTEGER): like Current is
+			-- Subtree rooted at `i'-th child
+		require
+			argument_within_bounds: i >= 1 and then i <= arity;
+			not_off: not off
+		local
+			pos: CURSOR;
+		do
+			pos := cursor;
+			down (i);
+			Result := subtree;
+			go_to (pos)
 		end;
 
-	is_root: BOOLEAN is
-			-- Is cursor on root?
-		deferred
-		end;
-
-
-feature -- Obsolete, Modification & Insertion
+feature -- Obsolete
 
 	put_left (v: G) is
 		obsolete "Use ``add_left''"
@@ -626,11 +550,8 @@ feature -- Obsolete, Modification & Insertion
 			not_before: not before;
 			not_above: not above;
 			only_one_root: (level = 1) implies empty;
-			not_full: not full
 		do
 			add_left (v)
-		ensure
-			one_more_item: count = old count + 1;
 		end;
 
 	put_right (v: G) is
@@ -640,15 +561,11 @@ feature -- Obsolete, Modification & Insertion
 			not_after: not after;
 			not_above: not above;
 			only_one_root: (level = 1) implies empty;
-			not_full: not full
 		do
 			add_right (v)
-		ensure
-			one_more_item: count = old count + 1
 		end;
 
-
-feature -- Obsolete, Status report
+feature -- Obsolete
 
 	offleft: BOOLEAN is
 		obsolete "Use ``before'' and ``empty''"
@@ -664,24 +581,37 @@ feature -- Obsolete, Status report
 			Result := after or empty
 		end;
 
-feature  {CURSOR_TREE} -- Initialization
+feature {NONE} -- Inapplicable
+
+	prune (v: G) is
+			-- Remove item `v'.
+		do
+		end;
+
+feature {CURSOR_TREE} -- Implementation
 
 	new_tree: like Current is
-			-- Instance of class `like Current'.
-			-- This feature should be implemented in
-			-- every effective descendant of CURSOR_TREE,
-			-- so as to return an adequately allocated and
-			-- initialized object.
+			-- A newly created instance of the same type.
+			-- This feature may be redefined in descendants so as to
+			-- produce an adequately allocated and initialized object.
 		deferred
 		ensure
 			result_exists: Result /= Void;
 			result_is_empty: result.empty
 		end;
 
+	go_above is
+			-- Move the cursor above the tree
+		do
+			from
+			until
+				above
+			loop
+				up
+			end
+		end;
 
-
-feature  {NONE} -- Measurement
-
+feature {NONE} -- Implementation
 
 	depth_from_active: INTEGER is
 			-- Depth of subtree starting at active
@@ -702,8 +632,7 @@ feature  {NONE} -- Measurement
 		end;
 
 	breadth_of_level_from_active (l: INTEGER): INTEGER is
-			-- Breadth of level `l' of subtree
-			-- starting at `Current'
+			-- Breadth of level `l' of subtree starting at current node
 		do
 			if (l = 2) or else is_leaf then
 				Result := arity
@@ -720,28 +649,6 @@ feature  {NONE} -- Measurement
 				up
 			end
 		end;
-
-feature  {NONE} -- Removal
-
-	remove_item (v: G) is
-			-- Remove item `v' in `Current'
-		do
-		end;
-
-feature  {CURSOR_TREE} -- Cursor movement
-
-	go_above is
-			-- Move the cursor above the tree
-		do
-			from
-			until
-				above
-			loop
-				up
-			end
-		end;
-
-feature  {NONE} -- Cursor movement
 
 	start_on_level_from_active (l: INTEGER) is
 			-- Move the cursor to the first position
@@ -761,21 +668,16 @@ feature  {NONE} -- Cursor movement
 			end
 		end;
 
+feature {NONE} -- Not applicable
 
-feature  {NONE} -- Status report
-
-	valid_cursor_index (i: INTEGER): BOOLEAN is
-			-- Can cursor be moved to i-th child?
-			-- 0 is before and `arity' + 1 is after.
+	index: INTEGER is
 		do
-			Result := i >= 0 and i <= (arity + 1)
 		end;
-
 
 invariant
 
-	positive_depth: depth >= 0;
-	positive_breadth: breadth >= 0;
+	non_negative_depth: depth >= 0;
+	non_negative_breadth: breadth >= 0;
 	is_leaf_definition: not off implies is_leaf = (arity = 0);
 	above_property: above implies (arity <= 1);
 	(isfirst or islast or is_leaf or is_root) implies not off;
@@ -790,7 +692,18 @@ invariant
 	before_constaint: before implies not (after or above);
 	(empty and (after or before)) implies below;
 
-	offright_definition: offright = empty or after;
-	offleft_definition: offleft = empty or before
-
 end -- class CURSOR_TREE
+
+
+--|----------------------------------------------------------------
+--| EiffelBase: library of reusable components for ISE Eiffel 3.
+--| Copyright (C) 1986, 1990, 1993, Interactive Software
+--|   Engineering Inc.
+--| All rights reserved. Duplication and distribution prohibited.
+--|
+--| 270 Storke Road, Suite 7, Goleta, CA 93117 USA
+--| Telephone 805-685-1006
+--| Fax 805-685-6869
+--| Electronic mail <info@eiffel.com>
+--| Customer support e-mail <eiffel@eiffel.com>
+--|----------------------------------------------------------------

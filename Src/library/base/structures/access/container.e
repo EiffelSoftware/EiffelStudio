@@ -1,75 +1,90 @@
---|---------------------------------------------------------------
---|   Copyright (C) Interactive Software Engineering, Inc.      --
---|    270 Storke Road, Suite 7 Goleta, California 93117        --
---|                   (805) 685-1006                            --
---| All rights reserved. Duplication or distribution prohibited --
---|---------------------------------------------------------------
-
--- Containers: the most general data structures
--- in the Eiffel universe
-
 indexing
 
-	names: container, access;
+	description:
+		"Data structures of the most general kind, %
+		%used to contain zero or more items.";
+
+	copyright: "See notice at end of class";
+	names: access;
 	access: membership;
 	contents: generic;
 	date: "$Date$";
 	revision: "$Revision$"
 
-deferred class CONTAINER [G]
+deferred class
+	CONTAINER [G]
 
 feature -- Access
 
 	has (v: G): BOOLEAN is
-			-- Does `Current' include `v'?
-			-- (According to the currently adopted 
-			-- discrimination rule used in `search')
-		deferred
-		end;
-
-feature -- Measurement
-
-	count: INTEGER is
-			-- Number of elements in `Current'
-		deferred
-		end;
-
-feature -- Conversion
-
-	sequential_representation: SEQUENTIAL [G] is
-			-- Sequential representation of `Current'.
-			-- This feature enables you to manipulate each
-			-- item of `Current' regardless of its
-			-- actual structure.
-		deferred
-		end;
-
-
-feature -- Removal
-
-	wipe_out is
-			-- Empty `Current'.
+			-- Does structure include `v'?
+			-- (Reference or object equality, based on `object_comparison'.) 
 		deferred
 		ensure
-			wiped_out: empty
+			Result implies not empty
 		end;
 
 feature -- Status report
 
 	empty: BOOLEAN is
-			-- Is `Current' empty?
-		do
-			Result := count = 0
-		end;
-
-	full: BOOLEAN is
-			-- Is `Current' full?
+			-- Is there no element?
 		deferred
 		end;
 
-invariant
+	object_comparison: BOOLEAN;
+			-- Must search operations use `equal' rather than `='
+			-- for comparing references? (Default: no, use `='.)
 
-	empty_definition: empty = (count = 0);
-	positive_count: count >= 0
+	changeable_comparison_criterion: BOOLEAN is
+			-- May `object_comparison' be changed?
+			-- (Always true for most structures, redefined in set)
+		do
+			Result := true
+		end;
+		
+feature -- Status setting
+
+	compare_objects is
+			-- Ensure that future search operations will use 
+			-- `equal' rather than `=' for comparing references.
+		require
+			changeable_comparison_criterion
+		do
+			object_comparison := True
+		ensure
+			object_comparison
+		end;
+
+	compare_references is
+			-- Ensure that future search operations will use 
+			-- `=' rather than `equal' for comparing references.
+		require
+			changeable_comparison_criterion
+		do
+			object_comparison := False
+		ensure
+			not object_comparison
+		end;
+
+feature -- Conversion
+
+	sequential_representation: SEQUENTIAL [G] is
+			-- Representation as a sequential structure
+		deferred
+		end;
 
 end -- class CONTAINER
+
+
+--|----------------------------------------------------------------
+--| EiffelBase: library of reusable components for ISE Eiffel 3.
+--| Copyright (C) 1986, 1990, 1993, Interactive Software
+--|   Engineering Inc.
+--| All rights reserved. Duplication and distribution prohibited.
+--|
+--| 270 Storke Road, Suite 7, Goleta, CA 93117 USA
+--| Telephone 805-685-1006
+--| Fax 805-685-6869
+--| Electronic mail <info@eiffel.com>
+--| Customer support e-mail <eiffel@eiffel.com>
+--|----------------------------------------------------------------

@@ -1,15 +1,9 @@
---|---------------------------------------------------------------
---|   Copyright (C) Interactive Software Engineering, Inc.      --
---|    270 Storke Road, Suite 7 Goleta, California 93117        --
---|                   (805) 685-1006                            --
---| All rights reserved. Duplication or distribution prohibited --
---|---------------------------------------------------------------
-
--- Circular chains,
--- without commitment to a particular representation
-
 indexing
 
+	description:
+		"Circular chains, without commitment to a particular representation";
+
+	copyright: "See notice at end of class";
 	names: circular, ring, sequence;
 	access: index, cursor, membership;
 	contents: generic;
@@ -22,20 +16,12 @@ deferred class CIRCULAR [G] inherit
 		undefine
 			off, exhausted, isfirst, islast
 		redefine
-			search, search_equal,
+			search, 
 			remove,
 			start, finish,
 			forth, back,
 			move, go_i_th,
 			valid_cursor_index
-		end;
-
-	LINEAR [G]
-		undefine
-			has, index_of, off
-		redefine
-			search, search_equal ,
-			exhausted
 		end
 
 feature -- Access
@@ -51,31 +37,18 @@ feature -- Access
 			not_off_or_else_empty: not off or else empty
 		end;
 
-	search_equal(v: like item) is
+feature -- Status report
+
+	exhausted: BOOLEAN; 
+			-- Are there no more items to be read?
+
+	valid_cursor_index (i: INTEGER): BOOLEAN is
+			-- Is `i' correctly bounded for cursor movement?
 		do
-			standard_search_equal(v);
-			if after  or exhausted then
-				finish;
-				exhausted := true;
-			end;
+			Result := (i >= 0) and (i <= count)
 		ensure then
-			not_off_or_else_empty: not off or else empty
+			valid_cursor_index_definition: Result = (i >= 0) and (i <= count)
 		end;
-
-feature -- Removal
-
-	remove is
-		do
-			standard_remove;
-			if after then
-				finish;
-			elseif before then
-				start;
-			end;
-		ensure then
-			not_off_or_else_empty: not off or else empty
-		end;
-
 
 feature -- Cursor movement
 
@@ -97,7 +70,7 @@ feature -- Cursor movement
 	
 
 	forth is
-			-- Move to next item in `Current'.
+			-- Move to next item.
 		do		
 			standard_move(1);
 			if after then
@@ -109,7 +82,7 @@ feature -- Cursor movement
 		end;
 
 	back is
-			-- Move to previous item in `Current'.
+			-- Move to previous item.
 		do
 			standard_move(-1);
 			if before then
@@ -141,36 +114,29 @@ feature -- Cursor movement
 			not_off_or_else_empty: not off or else empty
 		end;
 
-feature -- Status report
+feature -- Removal
 
-	exhausted: BOOLEAN; 
-			-- Are there no more items to be read?
-
-	valid_cursor_index (i: INTEGER): BOOLEAN is
-			-- Is `i' correctly bounded for cursor movement?
+	remove is
 		do
-			Result := (i >= 0) and (i <= count)
+			standard_remove;
+			if after then
+				finish;
+			elseif before then
+				start;
+			end;
 		ensure then
-			valid_cursor_index_definition: Result = (i >= 0) and (i <= count)
+			not_off_or_else_empty: not off or else empty
 		end;
 
-feature {CIRCULAR} -- Access
+feature {CIRCULAR} -- Implementation
 
 	standard_search(v: like item) is
 			deferred
 		end;
 
-	standard_search_equal(v: like item) is
-			deferred
-		end;
-
-feature {CIRCULAR} -- Removal
-
 	standard_remove is
 			deferred
 		end;
-
-feature {CIRCULAR} -- Cursor movement
 
 	standard_start is
 			deferred
@@ -196,12 +162,10 @@ feature {CIRCULAR} -- Cursor movement
 			deferred
 		end;
 
-feature  {CIRCULAR} -- Miscellaneous
-
 	modulo (n1, n2: INTEGER): INTEGER is
 			-- Modulus, plus one; 0 if `n2' = 0
 		require
-			 positive_number: n2 >= 0
+			 non_negative_number: n2 >= 0
 		do
 			if n2 /= 0 then
 				 Result := n1 \\ n2;
@@ -212,5 +176,27 @@ feature  {CIRCULAR} -- Miscellaneous
 		ensure
 			 Result >= 0 and Result <= n2
 		end;
+		
+	after: BOOLEAN is
+		deferred
+		end;
+	
+	before: BOOLEAN is
+		deferred
+		end;
 
 end -- class CIRCULAR
+
+
+--|----------------------------------------------------------------
+--| EiffelBase: library of reusable components for ISE Eiffel 3.
+--| Copyright (C) 1986, 1990, 1993, Interactive Software
+--|   Engineering Inc.
+--| All rights reserved. Duplication and distribution prohibited.
+--|
+--| 270 Storke Road, Suite 7, Goleta, CA 93117 USA
+--| Telephone 805-685-1006
+--| Fax 805-685-6869
+--| Electronic mail <info@eiffel.com>
+--| Customer support e-mail <eiffel@eiffel.com>
+--|----------------------------------------------------------------

@@ -1,22 +1,13 @@
---|---------------------------------------------------------------
---|   Copyright (C) Interactive Software Engineering, Inc.      --
---|    270 Storke Road, Suite 7 Goleta, California 93117        --
---|                   (805) 685-1006                            --
---| All rights reserved. Duplication or distribution prohibited --
---|---------------------------------------------------------------
-
--- Double representation of real number
--- uses at most 'Double_bits'  from constant 
--- attribute in class 'PLATFORM' 
-
 indexing
 
+	description:
+		"References to objects containing a double-precision real number";
+
+	copyright: "See notice at end of class";
 	date: "$Date$";
 	revision: "$Revision$"
 
-class DOUBLE_REF
-
-inherit
+class DOUBLE_REF inherit
 
 	NUMERIC
 		redefine
@@ -25,8 +16,8 @@ inherit
 
 	COMPARABLE
 		redefine
-            out
-        end
+			out
+		end
 
 feature -- Access
 
@@ -37,67 +28,14 @@ feature -- Access
 feature -- Comparison
 
 	infix "<" (other: DOUBLE_REF): BOOLEAN is
-			-- Is `Current' less than `other'?
+			-- Is current double less than `other'?
 		require else
 			other_exists: other /= Void
 		do
 			Result := item < other.item
 		end;
 
-feature -- Basic operation 
-
-	infix "+" (other: DOUBLE_REF): DOUBLE_REF is
-			-- Sum of `Current' and `other'
-		do
-			!!Result;
-			Result.set_item (item + other.item)
-		end;
-
-	infix "-" (other: DOUBLE_REF): DOUBLE_REF is
-			-- Difference between `Current' and `other'
-		do
-			!!Result;
-			Result.set_item (item - other.item)
-		end;
-
-	infix "*" (other: DOUBLE_REF): DOUBLE_REF is
-			-- Product of `Current' by `other'
-		do
-			!!Result;
-			Result.set_item (item * other.item)
-		end;
-
-	infix "/" (other: DOUBLE_REF): DOUBLE_REF is
-			-- Division of `Current' by `other'
-		require else
-			good_divisor: other.item /= 0.0
-		do
-			!!Result;
-			Result.set_item (item / other.item)
-		end;
-
-	infix "^" (other: DOUBLE_REF): DOUBLE_REF is
-			-- Power of `Current' by `other'
-		do
-			!!Result;
-			Result.set_item (item ^ other.item)
-		end;
-
-	prefix "+": DOUBLE_REF is
-			-- Unary addition applied to `Current'
-		do
-			!!Result;
-			Result.set_item (+ item)
-		end;
-
-	prefix "-": DOUBLE_REF is
-			-- Unary subtraction applied to `Current'
-		do
-			!!Result;
-			Result.set_item (- item)
-		end;
-
-feature -- Modification & Insertion
+feature -- Element change
 
 	set_item (d: DOUBLE) is
 			-- Assign `d' to `item'.
@@ -105,23 +43,87 @@ feature -- Modification & Insertion
 			item := d
 		end;
 
-feature -- Ouput
+feature -- Basic operations 
 
+	infix "+" (other: DOUBLE_REF): DOUBLE_REF is
+			-- Sum with `other'
+		do
+			!! Result;
+			Result.set_item (item + other.item)
+		end;
+
+	infix "-" (other: DOUBLE_REF): DOUBLE_REF is
+			-- Result of subtracting `other'
+		do
+			!! Result;
+			Result.set_item (item - other.item)
+		end;
+
+	infix "*" (other: DOUBLE_REF): DOUBLE_REF is
+			-- Product with `other'
+		do
+			!! Result;
+			Result.set_item (item * other.item)
+		end;
+
+	infix "/" (other: DOUBLE_REF): DOUBLE_REF is
+			-- Division by `other'
+		require else
+			good_divisor: other.item /= 0.0
+		do
+			!! Result;
+			Result.set_item (item / other.item)
+		end;
+
+	infix "^" (other: DOUBLE_REF): DOUBLE_REF is
+			-- Current double to the power `other'
+		do
+			!! Result;
+			Result.set_item (item ^ other.item)
+		end;
+
+	prefix "+": DOUBLE_REF is
+			-- Unary plus
+		do
+			!! Result;
+			Result.set_item (+ item)
+		end;
+
+	prefix "-": DOUBLE_REF is
+			-- Unary minus
+		do
+			!! Result;
+			Result.set_item (- item)
+		end;
+
+feature -- Output
 
 	out: STRING is
-			-- Return a printable representation of ~Current'.
+			-- Printable representation.
 		do
 			Result := c_outd ($item)
 		end;
 
-
-feature  {NONE} -- External, Ouput
-
+feature {NONE} -- Implementation
 
 	c_outd (d: DOUBLE): STRING is
-			-- Return a printable representation of `Current'.
+			-- Printable representation
 		external
 			"C"
 		end;
 
 end -- class DOUBLE_REF
+
+
+--|----------------------------------------------------------------
+--| EiffelBase: library of reusable components for ISE Eiffel 3.
+--| Copyright (C) 1986, 1990, 1993, Interactive Software
+--|   Engineering Inc.
+--| All rights reserved. Duplication and distribution prohibited.
+--|
+--| 270 Storke Road, Suite 7, Goleta, CA 93117 USA
+--| Telephone 805-685-1006
+--| Fax 805-685-6869
+--| Electronic mail <info@eiffel.com>
+--| Customer support e-mail <eiffel@eiffel.com>
+--|----------------------------------------------------------------

@@ -1,15 +1,10 @@
---|---------------------------------------------------------------
---|   Copyright (C) Interactive Software Engineering, Inc.      --
---|    270 Storke Road, Suite 7 Goleta, California 93117        --
---|                   (805) 685-1006                            --
---| All rights reserved. Duplication or distribution prohibited --
---|---------------------------------------------------------------
-
--- Hierarchical structures in which each item has (at most)
--- one predecessor and may have several successors
-
 indexing
 
+	description:
+		"Hierarchical structures in which each item has zero or %
+		%one immediate predecessor, and zero or more successor.";
+
+	copyright: "See notice at end of class";
 	names: hierarchical, traversing;
 	access: cursor;
 	contents: generic;
@@ -22,8 +17,8 @@ deferred class HIERARCHICAL [G] inherit
 
 feature -- Access
 
-	nb_of_successors: INTEGER is
-			-- Number of successors of `item'
+	successor_count: INTEGER is
+			-- Number of successors of current element
 		require
 			not_off: not off
 		deferred
@@ -31,25 +26,37 @@ feature -- Access
 
 feature -- Cursor movement
 
-	back is
+	up is
 			-- Move to predecessor.
 		require
 			not_off: not off
 		deferred
 		end;
 
-	forth (i: INTEGER) is
+	down (i: INTEGER) is
 			-- Move to `i'-th successor.
 		require
 			not_off: not off;
- 			argument_within_bounds: i >= 1 and i <= nb_of_successors
+ 			argument_within_bounds: i >= 1 and i <= successor_count
 		deferred
 		end;
 
-
-
 invariant
 
-	positive_number: nb_of_successors >= 0
+	non_negative_successor_count: successor_count >= 0
 
 end -- class HIERARCHICAL
+
+
+--|----------------------------------------------------------------
+--| EiffelBase: library of reusable components for ISE Eiffel 3.
+--| Copyright (C) 1986, 1990, 1993, Interactive Software
+--|   Engineering Inc.
+--| All rights reserved. Duplication and distribution prohibited.
+--|
+--| 270 Storke Road, Suite 7, Goleta, CA 93117 USA
+--| Telephone 805-685-1006
+--| Fax 805-685-6869
+--| Electronic mail <info@eiffel.com>
+--| Customer support e-mail <eiffel@eiffel.com>
+--|----------------------------------------------------------------

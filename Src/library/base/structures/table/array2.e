@@ -1,14 +1,9 @@
---|---------------------------------------------------------------
---|   Copyright (C) Interactive Software Engineering, Inc.      --
---|    270 Storke Road, Suite 7 Goleta, California 93117        --
---|                   (805) 685-1006                            --
---| All rights reserved. Duplication or distribution prohibited --
---|---------------------------------------------------------------
-
--- Two-dimensional arrays
-
 indexing
 
+	description:
+		"Two-dimensional arrays";
+
+	copyright: "See notice at end of class";
 	names: array2, matrix, table;
 	representation: array;
 	access: index, row_and_column, cursor, membership;
@@ -21,7 +16,7 @@ class ARRAY2 [G] inherit
 
 	ANY
 		undefine
-			twin
+			consistent, setup, is_equal, copy
 		end;
 
 	ARRAY [G]
@@ -32,12 +27,13 @@ class ARRAY2 [G] inherit
 			force as array_force,
 			wipe_out as array_wipe_out,
 			resize as array_resize
-        export
-            {NONE}
+		export
+			{NONE}
 				all;
-            {ARRAY2}
+			{ARRAY2}
 				array_put;
-			area
+			{ANY}
+				area
 		end;
 
 	ARRAY [G]
@@ -52,7 +48,8 @@ class ARRAY2 [G] inherit
 				all;
 			{ARRAY2}
 				array_put;
-			area
+			{ANY} 
+				area
 		redefine
 			wipe_out
 		select
@@ -103,7 +100,6 @@ feature -- Initialization
 			end
 		end;
 
-
 feature -- Access
 
 	item (row, column: INTEGER): G is
@@ -123,10 +119,7 @@ feature -- Measurement
 	width: INTEGER;
 			-- Number of columns
 
- 
-
-
-feature -- Modification & Insertion
+feature -- Element change
 
 	put (v: like item; row, column: INTEGER) is
 			-- Replace entry at coordinates (`row', `column') by `v'.
@@ -151,7 +144,7 @@ feature -- Modification & Insertion
 feature -- Removal
 
 	wipe_out is
-			-- Empty `Current': discard all items.
+			-- Remove all elements.
 		do
 			height := 0;
 			width := 0;
@@ -161,9 +154,9 @@ feature -- Removal
 feature -- Resizing
 
 	resize (nb_rows, nb_columns: INTEGER) is
-			-- Rearrange `Current' so that it can accommodate
-                      	-- `nb_rows' rows and `nb_columns' columns without
-  			-- losing any previously
+			-- Rearrange array so that it can accommodate
+		   	-- `nb_rows' rows and `nb_columns' columns,
+			-- without losing any previously
 			-- entered items, nor changing their coordinates;
 			-- do nothing if not possible.
 		require
@@ -205,13 +198,12 @@ feature -- Resizing
 			end
 		end;
 
-
-feature  {NONE} -- Duplication
+feature {NONE} -- Implementation
 
 	transfer (new: like Current; in_old, in_new, nb: INTEGER) is
-			-- Copy `nb' items from `Current',
-			-- starting from `in_old', to `new', starting from
-			-- `in_new'. Do not copy out_of_bounds items.
+			-- Copy `nb' items, starting from `in_old',
+			-- to `new', starting from `in_new'.
+			-- Do not copy out_of_bounds items.
 		local
 			i, j: INTEGER
 		do
@@ -227,9 +219,22 @@ feature  {NONE} -- Duplication
 			end
 		end;
 
-
 invariant
 
 	items_number: count = width * height
 
 end -- class ARRAY2
+
+
+--|----------------------------------------------------------------
+--| EiffelBase: library of reusable components for ISE Eiffel 3.
+--| Copyright (C) 1986, 1990, 1993, Interactive Software
+--|   Engineering Inc.
+--| All rights reserved. Duplication and distribution prohibited.
+--|
+--| 270 Storke Road, Suite 7, Goleta, CA 93117 USA
+--| Telephone 805-685-1006
+--| Fax 805-685-6869
+--| Electronic mail <info@eiffel.com>
+--| Customer support e-mail <eiffel@eiffel.com>
+--|----------------------------------------------------------------

@@ -1,25 +1,17 @@
---|---------------------------------------------------------------
---|   Copyright (C) Interactive Software Engineering, Inc.      --
---|    270 Storke Road, Suite 7 Goleta, California 93117        --
---|                   (805) 685-1006                            --
---| All rights reserved. Duplication or distribution prohibited --
---|---------------------------------------------------------------
-
--- Bit sequence of length 'count'
--- Enable binary operations 
-
 indexing
 
+	description:
+		"Bit sequences of length `count', with binary operations"; 
+
+	copyright: "See notice at end of class";
 	date: "$Date$";
 	revision: "$Revision$"
 
---| Beware:
+--| Caution:
 --|  For implementation reasons, additional operations on BIT types can
---|  only be introduced by I.S.E.
+--|  only be introduced by ISE
 
-class BIT_REF
-
-inherit
+class BIT_REF inherit
 
 	ANY
 		redefine
@@ -34,7 +26,7 @@ inherit
 feature -- Access
 
 	item, infix "@" (i: INTEGER): BOOLEAN is
-			-- I_th bit
+			-- `i'-th bit
 		require
 			index_large_enough: i >= 1;
 			index_small_enough: i <= count
@@ -45,7 +37,7 @@ feature -- Access
 	generator: STRING is
 			-- Name of the current object's generating class.
 		do
-			!!Result.make (10);
+			!! Result.make (10);
 			Result.append ("BIT ");
 			Result.append (count.out)
 		end;
@@ -67,7 +59,20 @@ feature -- Measurement
 			Result := b_count ($Current)
 		end;
 
-feature -- Basic operation
+feature -- Element change
+
+	put (value: BOOLEAN; i: INTEGER) is
+			-- Set the `i'-th bit to 1 if `value' is True, 0 if False
+		require
+			index_large_enough: i >= 1;
+			index_small_enough: i <= count;
+		do
+			b_put ($Current, value, i)
+		ensure
+			value_inserted: item (i) = value
+		end;
+
+feature -- Basic operations
 
 
 	infix "^" (s: INTEGER): like Current is
@@ -86,7 +91,7 @@ feature -- Basic operation
 		end;
 
 	infix "and" (other: BIT_REF): BIT_REF is
-			-- Conjunction with `other'
+			-- Bit-by-bit boolean conjunction with `other'
 		require
 			other_exists: other /= Void;
 			conformance: other.count <= count
@@ -95,7 +100,7 @@ feature -- Basic operation
 		end;
 
 	infix "implies" (other: BIT_REF): BIT_REF is
-			-- Implication of `other'
+			-- Bit-by-bit boolean implication of `other'
 		require
 			other_exists: other /= Void;
 			conformance: other.count <= count
@@ -104,7 +109,7 @@ feature -- Basic operation
 		end;
 
 	infix "or" (other: BIT_REF): BIT_REF is
-			-- Disjunction with `other'
+			-- Bit-by-bi boolean disjunction with `other'
 		require
 			other_exists: other /= Void;
 			conformance: other.count <= count
@@ -113,7 +118,7 @@ feature -- Basic operation
 		end;
 
 	infix "xor" (other: BIT_REF): BIT_REF is
-			-- Exclusive or with `other'
+			-- Bit-by-bit exclusive or with `other'
 		require
 			other_exists: other /= Void;
 			conformance: other.count <= count
@@ -122,34 +127,21 @@ feature -- Basic operation
 		end;
 
 	prefix "not": like Current is
-			-- Negation
+			-- Bit-by-bit negation
 		do
 			Result := b_not ($Current)
 		end;
 
 
-feature -- Modification & Insertion
-
-	put (value: BOOLEAN; i: INTEGER) is
-			-- Set the i_th bit to 1 if `value' is True, 0 if False
-		require
-			index_large_enough: i >= 1;
-			index_small_enough: i <= count;
-		do
-			b_put ($Current, value, i)
-		ensure
-			value_inserted: item (i) = value
-		end;
-
-feature -- Ouput
+feature -- Output
 
 	out: STRING is
-			-- Tagged printable representation of 'Current'.
+			-- Tagged printable representation.
 		do
 			Result := c_out($Current);
 		end;
 
-feature  {NONE} -- External, Access
+feature {NONE} -- Implementation
 
 	b_item (a_bit: BIT_REF; index: INTEGER): BOOLEAN is
 			-- Boolean item at position `i' in `a_bit'
@@ -157,16 +149,12 @@ feature  {NONE} -- External, Access
 			"C"
 		end;
 
-feature  {NONE} -- External, Measurement
-
 	b_count (a_bit: BIT_REF): INTEGER is
 			-- Size of `a_bit'
 		external
 			"C"
 		end;
 
-feature  {NONE} -- External, Comparison
-		
 	c_standard_is_equal (target, source: BIT_REF): BOOLEAN is
 			-- C external performing standard equality
 		external
@@ -174,8 +162,6 @@ feature  {NONE} -- External, Comparison
 		alias
 			"b_equal"
 		end;
-
-feature  {NONE} -- External, Basic operation
 
 	b_shift (a_bit: BIT_REF; s: INTEGER): BIT_REF is
 			-- Result of shifting `a_bit' by `s' positions
@@ -219,11 +205,8 @@ feature  {NONE} -- External, Basic operation
 			"C"
 		end;
 
-
-feature  {NONE} -- External, Duplication
-
 	c_standard_copy (source, target: ANY) is
-			-- C external performing standard copy
+			-- Copy of bit sequence
 		external
 			"C"
 		alias
@@ -238,17 +221,11 @@ feature  {NONE} -- External, Duplication
 			"b_clone"
 		end;
 
-
-feature  {NONE} -- External, Modification & Insertion
-
 	b_put (a_bit: BIT_REF; val: BOOLEAN; index: INTEGER) is
-			-- Put `val' in `a_bit' at positino `index'.
+			-- Put `val' in `a_bit' at position `index'.
 		external
 			"C"
 		end;
-
-
-feature  {NONE} -- External, Ouput
 
 	c_out (b: BIT_REF): STRING is
 			-- Out representation of Current
@@ -259,3 +236,17 @@ feature  {NONE} -- External, Ouput
 		end;
 
 end -- class BIT_REF
+
+
+--|----------------------------------------------------------------
+--| EiffelBase: library of reusable components for ISE Eiffel 3.
+--| Copyright (C) 1986, 1990, 1993, Interactive Software
+--|   Engineering Inc.
+--| All rights reserved. Duplication and distribution prohibited.
+--|
+--| 270 Storke Road, Suite 7, Goleta, CA 93117 USA
+--| Telephone 805-685-1006
+--| Fax 805-685-6869
+--| Electronic mail <info@eiffel.com>
+--| Customer support e-mail <eiffel@eiffel.com>
+--|----------------------------------------------------------------

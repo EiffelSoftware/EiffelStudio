@@ -1,14 +1,10 @@
---|---------------------------------------------------------------
---|   Copyright (C) Interactive Software Engineering, Inc.      --
---|    270 Storke Road, Suite 7 Goleta, California 93117        --
---|                   (805) 685-1006                            --
---| All rights reserved. Duplication or distribution prohibited --
---|---------------------------------------------------------------
-
--- Sets without commitment to a particular representation
 
 indexing
 
+	description:
+		"Sets, without commitment to a particular representation";
+
+	copyright: "See notice at end of class";
 	names: set;
 	access: membership;
 	contents: generic;
@@ -17,159 +13,56 @@ indexing
 
 deferred class SET [G] inherit
 
-	COLLECTION [G];
+	COLLECTION [G]
+		redefine
+			changeable_comparison_criterion
+		end;
 
-feature -- Access
+feature -- Measurement
 
-	cursor: CURSOR is
-            -- Current cursor position
-		deferred
-        end;
-
-feature -- Comparison
-
-	is_subset (other: like Current): BOOLEAN is
-			-- Is `Current' a subset of `other'?
-		require
-			set_exists: other /= Void
+	count: INTEGER is
+			-- Number of elements
 		deferred
 		end;
 
-	is_superset (other: like Current): BOOLEAN is
-			-- Is `Current' a superset of `other'?
-		require
-			set_exists: other /= Void
-		do
-			Result := other.is_subset (Current)
-		end;
+feature -- Element change
 
-	disjoint (other: like Current): BOOLEAN is
-			-- Do `Current' and `other' have no
-			-- elements in common?
-		require
-			set_exists: other /= Void
-		local
-			temp: like Current;
-			pos: CURSOR
-		do
-			if not empty then
-				pos := cursor;
-				start;
-				temp := duplicate (count);
-				temp.intersect (other);
-				Result := temp.empty;
-				go_to (cursor)
-			else
-				Result := true
-			end
-		end;
-
-feature -- Basic operation
-
-	intersect (other: like Current) is
-			-- Remove all items not in `other'.
-		require
-			set_exists: other /= Void
-		deferred
-		ensure
-			is_subset_other: is_subset (other);
-			is_subset (old Current)
-		end;
-
-	subtract (other: like Current) is
-			-- Remove all items also in `other'.
-		require
-			set_exists: other /= Void
-		deferred
-		ensure
-			is_subset (old Current);
-			is_disjoint: disjoint (other)
-		end;
-
-	symdif (other: like Current) is
-			-- Remove all items also in `other',
-			-- and add all items of `other' not
-			-- present in `Current'.
-		require
-			set_exists: other /= Void
-		local
-			temp: like Current
-		do
-			start;
-			temp := duplicate (count);
-			temp.intersect (other);
-			merge (other);
-			subtract (temp)
-		end;
-
-
-feature -- Duplication
-
-	duplicate (n: INTEGER): like Current is
-			-- Copy of sub-set beginning at cursor position
-            		-- and having min (`n', `count' - `index' + 1) items
-		deferred
-		end;
-
-
-
-
-feature -- Modification & Insertion
-
-	add (v: G) is
-			-- Include `v' in `Current'.
+	extend, put (v: G) is
+			-- Ensure that set includes `v'.
 		deferred
 		ensure then
-			old has (v) implies (count = old count);
-	 		not old has (v) implies (count = old count + 1)
-		end;
-
-	put (v: G) is
-			-- Include `v' in `Current'.
-			-- Synonym for `add'.
-		require
-			extensible
-		do
-			add (v)
-		ensure
-	 		old has (v) implies (count = old count);
-	 		not old has (v) implies (count = old count + 1);
-	 		count >= old count;
-			has (v)
-		end;
-
-	merge (other: like Current) is
-			-- Add all items of `other'.
-		require
-			set_exists: other /= Void
-		deferred
-		ensure
-			is_superset (other);
-	 		is_superset (old Current)
+			--old has (v) implies (count = old count);
+	 		--not old has (v) implies (count = old count + 1)
 		end;
 
 feature -- Removal
 
-	remove_item (v: G) is
-			-- Remove `v' from `Current' if it is already present.
+	prune (v: G) is
+			-- Remove `v' if present.
 		deferred
 		ensure then
-	 		old has (v) implies (count = old count - 1);
-	 		not old has (v) implies (count = old count);
-			item_deleted: not has (v)
+	 		--old has (v) implies (count = old count - 1);
+	 		--not old has (v) implies (count = old count);
+			--item_deleted: not has (v)
 		end;
-
-feature -- Cursor movement
-
-	start is
-			-- Move cursor to first position.
-		deferred
+		
+	changeable_comparison_criterion: BOOLEAN is
+		do
+			Result := empty
 		end;
-
-	go_to (p: CURSOR) is
-            -- Move cursor to position `p'.
-		deferred
-        end;
-
 
 end -- class SET
+
+
+--|----------------------------------------------------------------
+--| EiffelBase: library of reusable components for ISE Eiffel 3.
+--| Copyright (C) 1986, 1990, 1993, Interactive Software
+--|   Engineering Inc.
+--| All rights reserved. Duplication and distribution prohibited.
+--|
+--| 270 Storke Road, Suite 7, Goleta, CA 93117 USA
+--| Telephone 805-685-1006
+--| Fax 805-685-6869
+--| Electronic mail <info@eiffel.com>
+--| Customer support e-mail <eiffel@eiffel.com>
+--|----------------------------------------------------------------

@@ -1,25 +1,13 @@
---|---------------------------------------------------------------
---|   Copyright (C) Interactive Software Engineering, Inc.      --
---|    270 Storke Road, Suite 7 Goleta, California 93117        --
---|                   (805) 685-1006                            --
---| All rights reserved. Duplication or distribution prohibited --
---|---------------------------------------------------------------
-
--- Comparable character.
--- has an associated integer code
--- 2^ 'Character_bits'  < 'Character_code' < 0
--- Where Character_bits is a platform dependent attributes in
--- class 'PLATFORM' .
-
-
 indexing
 
+	description:
+		"References to objects containing a character value";
+
+	copyright: "See notice at end of class";
 	date: "$Date$";
 	revision: "$Revision$"
 
-class CHARACTER_REF
-
-inherit
+class CHARACTER_REF inherit
 
 	COMPARABLE
 		redefine
@@ -41,38 +29,48 @@ feature -- Access
 feature -- Comparison
 
 	infix "<" (other: CHARACTER_REF): BOOLEAN is
-			-- Is `Current' less than `other'?
+			-- Is current character less than `other'?
 		require else
 			other_exists: other /= Void
 		do
 			Result := item < other.item;
 		end;
 
-feature -- Ouput
+feature -- Output
 
 	out: STRING is
-			-- Return a printable representation of `Current'.
+			-- Printable representation of character.
 		do
 			Result := c_outc ($item)
 		end;
 
-
-
-feature  {NONE} -- External, Access
+feature {NONE} -- Implementation
 
 	chcode (c: like item): INTEGER is
-			-- Return associated integer value.
+			-- Associated integer value.
 		external
 			"C"
 		end;
 
 
-feature  {NONE} -- External, Ouput
-
 	c_outc (c: CHARACTER): STRING is
-			-- Return a printable representation of `Current'.
+			-- Printable representation of character.
 		external
 			"C"
 		end;
 
 end -- class CHARACTER_REF
+
+
+--|----------------------------------------------------------------
+--| EiffelBase: library of reusable components for ISE Eiffel 3.
+--| Copyright (C) 1986, 1990, 1993, Interactive Software
+--|   Engineering Inc.
+--| All rights reserved. Duplication and distribution prohibited.
+--|
+--| 270 Storke Road, Suite 7, Goleta, CA 93117 USA
+--| Telephone 805-685-1006
+--| Fax 805-685-6869
+--| Electronic mail <info@eiffel.com>
+--| Customer support e-mail <eiffel@eiffel.com>
+--|----------------------------------------------------------------

@@ -1,21 +1,18 @@
---|---------------------------------------------------------------
---|   Copyright (C) Interactive Software Engineering, Inc.      --
---|    270 Storke Road, Suite 7 Goleta, California 93117        --
---|                   (805) 685-1006                            --
---| All rights reserved. Duplication or distribution prohibited --
---|---------------------------------------------------------------
-
---- Standard input and output
-
 indexing
 
+	description:
+		"Commonly used input and output mechanisms. %
+		%This class may be used as either ancestor or supplier %
+		%by classes needing its facilities.";
+
+	copyright: "See notice at end of class";
 	date: "$Date$";
 	revision: "$Revision$"
 
-class STD_FILES
+class
+	STD_FILES
 
-feature  {GENERAL} -- Access
-
+feature -- Access
 
 	input: UNIX_FILE is
 			-- Standard input file
@@ -41,7 +38,7 @@ feature  {GENERAL} -- Access
 	standard_default: UNIX_FILE is
 			-- Return the `default_output' or `output'
 			-- if `default_output' is Void.
-			--| Usefull if a class inherits from STD_FILES and
+			--| Useful if a class inherits from STD_FILES and
 			--| and a `putint' is applied without standard setting.
 		do
 			if default_output = Void then
@@ -101,11 +98,39 @@ feature  {GENERAL} -- Access
 			input.next_line
 		end;
 
+feature -- Status report
 
+	lastchar: CHARACTER is
+			-- Last character read by readchar
+		do
+			Result := input.lastchar
+		end;
 
+	lastint: INTEGER is
+			-- Last integer read by readint
+		do
+			Result := input.lastint
+		end;
 
+	lastreal: REAL is
+			-- Last real read by readreal
+		do
+			Result := input.lastreal
+		end;
 
-feature  {GENERAL} -- Modification & Insertion
+	laststring: STRING is
+			-- Last string read by readline,
+			-- readstream, or readword
+		do
+			Result := input.laststring
+		end;
+
+	lastdouble: DOUBLE is
+		do
+			Result := input.lastdouble
+		end;
+
+feature -- Element change
 
 	set_output_default is
 			-- Use standard output as default output.
@@ -118,8 +143,6 @@ feature  {GENERAL} -- Modification & Insertion
 		do
 			default_output := error;
 		end;
-
-
 
 	putchar (c: CHARACTER) is
 			-- Write `c' at end of default output.
@@ -170,39 +193,7 @@ feature  {GENERAL} -- Modification & Insertion
 			file_tnwl (standard_default.file_pointer)
 		end;
 
-feature  {GENERAL} -- Status report
-	
-
-	lastchar: CHARACTER is
-			-- Last character read by readchar
-		do
-			Result := input.lastchar
-		end;
-
-	lastint: INTEGER is
-			-- Last integer read by readint
-		do
-			Result := input.lastint
-		end;
-
-	lastreal: REAL is
-			-- Last real read by readreal
-		do
-			Result := input.lastreal
-		end;
-
-	laststring: STRING is
-			-- Last string read by readstring
-		do
-			Result := input.laststring
-		end;
-
-	lastdouble: DOUBLE is
-		do
-			Result := input.lastdouble
-		end;
-
-feature  {NONE} -- External, Modification & Insertion
+feature {NONE} -- Implementation
 
 	file_pc (file: POINTER; c: CHARACTER) is
 		-- Write character `c' at end of `file'
@@ -241,3 +232,17 @@ feature  {NONE} -- External, Modification & Insertion
 		end;
 	
 end -- class STD_FILES
+
+
+--|----------------------------------------------------------------
+--| EiffelBase: library of reusable components for ISE Eiffel 3.
+--| Copyright (C) 1986, 1990, 1993, Interactive Software
+--|   Engineering Inc.
+--| All rights reserved. Duplication and distribution prohibited.
+--|
+--| 270 Storke Road, Suite 7, Goleta, CA 93117 USA
+--| Telephone 805-685-1006
+--| Fax 805-685-6869
+--| Electronic mail <info@eiffel.com>
+--| Customer support e-mail <eiffel@eiffel.com>
+--|----------------------------------------------------------------

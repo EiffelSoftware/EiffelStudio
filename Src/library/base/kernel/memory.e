@@ -1,23 +1,16 @@
---|---------------------------------------------------------------
---|   Copyright (C) Interactive Software Engineering, Inc.	--
---|	270 Storke Road, Suite 7 Goleta, California 93117	--
---|				   (805) 685-1006		--
---| All rights reserved. Duplication or distribution prohibited --
---|---------------------------------------------------------------
-
--- Memory management control
-
 indexing
 
+	description:
+		"Facilities for tuning up the garbage collection mechanism. %
+		%This class may be used as ancestor by classes needing its facilities.";
+
+	copyright: "See notice at end of class";
 	date: "$Date$";
 	revision: "$Revision$"
 
-class MEMORY
-
-inherit
+class MEMORY inherit
 
 	MEM_CONST
-
 
 feature -- Measurement
 
@@ -42,28 +35,43 @@ feature -- Measurement
 			!! Result.make (collector_type);
 		end;
 
+feature -- Status report
 
-feature -- Removal
-
-	dispose is
-			-- Called when the garbage collector reclaims the object.
-			-- This is only intended to enable cleaning of external resources.
-			-- The object should not do remote calls on other objects since
-			-- those may also be dead and have already been reclaimed. Once the
-			-- final instruction of dispose has been reached, the object is
-			-- freed.
-		do
+	memory_threshold: INTEGER is
+			-- Minimum amount of bytes to be allocated before an
+			-- automatic garbage collection is raised.
+		external
+			"C"
+		alias
+			"mem_tget"
 		end;
 
-	free (object: ANY) is
-			-- Free `object', by-passing the garbage collector.
-			-- Behavior is undefined if the object is still referenced.
-		do
-			mem_free ($object)
-		end
- 
+	collection_period: INTEGER is
+			-- Period of full collection.
+		external
+			"C"
+		alias
+			"mem_pget"
+		end;	
 
-feature -- External, Access
+	collecting: BOOLEAN is
+			-- Is the garbage collector running?
+		external
+			"C"
+		alias
+			"gc_ison"
+		end;
+
+	largest_coalesced_block: INTEGER is
+			-- Size of largest coalesced block since last call to
+			-- `largest_coalesced'; 0 if none
+		external
+			"C"
+		alias
+			"mem_largest"
+		end;
+
+feature -- Status setting
 
 	collection_off is
 			-- Disable the garbage collector.
@@ -120,55 +128,6 @@ feature -- External, Access
 			gc_monitoring (false);
 		end;
 
-feature  {NONE} -- External, Access
-
-
-	gc_monitoring (flag: BOOLEAN) is
-			-- Set up GC monitoring according to `flag'
-		external
-			"C"
-		alias
-			"gc_mon"
-		end;
-
-
-
-feature -- External, Measurement
-
-	memory_threshold: INTEGER is
-			-- Minimum amount of bytes to be allocated before an
-			-- automatic garbage collection is raised.
-		external
-			"C"
-		alias
-			"mem_tget"
-		end;
-
-	collection_period: INTEGER is
-			-- Period of full collection.
-		external
-			"C"
-		alias
-			"mem_pget"
-		end;	
-
-
-	
-
-
-feature -- External, Modification & Insertion
-
-	full_coalesce is
-			-- Coalesce the whole memory, merge adjacent free blocks
-			-- together so as to reduce fragmentation.
-		external
-			"C"
-		alias
-			"mem_coalesc"
-		end;
-
-	
-
 
 	set_memory_threshold (value: INTEGER) is
 			-- Set a new `memory_threshold'.
@@ -179,7 +138,6 @@ feature -- External, Modification & Insertion
 		alias
 			"mem_tset"
 		end;
-
 	
 
 	set_collection_period (value: INTEGER) is
@@ -193,7 +151,42 @@ feature -- External, Modification & Insertion
 		end;
 
 
-feature -- External, Removal
+feature -- Removal
+
+	dispose is
+			-- Action to be executed just before the garbage collector
+			-- reclaims an object.
+			-- Default version does nothing; redefine in descendants
+			-- to perform specific dispose actions. 
+			-- Those actions should only take care of cleaning external resources.
+			-- They should not perform remote calls on other objects since
+			-- these may also be dead and have already been reclaimed.
+		do
+		end;
+
+	free (object: ANY) is
+			-- Free `object', by-passing the garbage collector.
+			-- Erratic behavior will result if the object is still
+			-- referenced.
+		do
+			mem_free ($object)
+		end;
+
+	mem_free (addr: ANY) is
+			-- Free memory of object at `addr'.
+			-- (Preferred interface is `free'.)
+		external
+			"C"
+		end;
+
+	full_coalesce is
+			-- Coalesce the whole memory, merge adjacent free blocks
+			-- together so as to reduce fragmentation.
+		external
+			"C"
+		alias
+			"mem_coalesc"
+		end;
 
 	collect is
 			-- Force a partial collection cycle if the garbage collector is
@@ -211,32 +204,29 @@ feature -- External, Removal
 			"plsc"
 		end;
 
-	mem_free (obj: ANY) is
-			-- Free object held at `obj'.
-		external
-			"C"
-		end;
 	
-feature -- External, Status report
-	
+feature {NONE} -- Implementation
 
-	collecting: BOOLEAN is
-			-- Is the garbage collector running?
+	gc_monitoring (flag: BOOLEAN) is
+			-- Set up GC monitoring according to `flag'
 		external
 			"C"
 		alias
-			"gc_ison"
+			"gc_mon"
 		end;
-
-	largest_coalesced_block: INTEGER is
-			-- Size of largest coalesced block since last call to
-			-- `largest_coalesced'; 0 if none
-		external
-			"C"
-		alias
-			"mem_largest"
-		end;
-
-
 
 end -- class MEMORY
+
+
+--|----------------------------------------------------------------
+--| EiffelBase: library of reusable components for ISE Eiffel 3.
+--| Copyright (C) 1986, 1990, 1993, Interactive Software
+--|   Engineering Inc.
+--| All rights reserved. Duplication and distribution prohibited.
+--|
+--| 270 Storke Road, Suite 7, Goleta, CA 93117 USA
+--| Telephone 805-685-1006
+--| Fax 805-685-6869
+--| Electronic mail <info@eiffel.com>
+--| Customer support e-mail <eiffel@eiffel.com>
+--|----------------------------------------------------------------

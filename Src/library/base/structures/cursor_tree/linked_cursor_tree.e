@@ -1,14 +1,9 @@
---|---------------------------------------------------------------
---|   Copyright (C) Interactive Software Engineering, Inc.	--
---|    270 Storke Road, Suite 7 Goleta, California 93117	--
---|                   (805) 685-1006				--
---| All rights reserved. Duplication or distribution prohibited --
---|---------------------------------------------------------------
-
--- Cursor tree implementation using class LINKED_TREE
-
 indexing
 
+	description:
+		"Cursor trees in linked representation";
+
+	copyright: "See notice at end of class";
 	names: linked_cursor_tree, cursor_tree;
 	access: cursor, membership;
 	representation: recursive, linked;
@@ -21,7 +16,6 @@ class LINKED_CURSOR_TREE [G] inherit
 	RECURSIVE_CURSOR_TREE [G]
 		redefine
 			add_right,
-			full,
 			active, cursor_anchor
 		end
 
@@ -43,7 +37,14 @@ feature -- Initialization
 			is_empty: empty
 		end;
 
-feature -- Modification & Insertion
+feature -- Status report
+
+	full: BOOLEAN is false;
+			-- Is tree filled to capacity? (Answer: no.)
+
+	prunable: BOOLEAN is false;
+
+feature -- Element change
 
 	add_right (v: G) is
 			-- Put `v' to the right of cursor position.
@@ -63,20 +64,17 @@ feature -- Modification & Insertion
 			end
 		end;
 
-feature -- Status report
-
-	full: BOOLEAN is false;
-			-- Is `Current' full?
-
-feature  {LINKED_CURSOR_TREE} -- Initialization
+feature {LINKED_CURSOR_TREE} -- Implementation
 
 	new_tree: like Current is
-			-- Instance of class `like Current'.
+			-- A newly created instance of the same type.
+			-- This feature may be redefined in descendants so as to
+			-- produce an adequately allocated and initialized object.
 		do
 			!! Result.make
 		end;
 
-feature  {NONE} -- Access
+feature {NONE} -- Implementation
 
 	cursor_anchor: LINKED_TREE_CURSOR [G];
 			-- Anchor for definitions concerning cursors
@@ -85,3 +83,17 @@ feature  {NONE} -- Access
 			-- Current node
 
 end -- class LINKED_CURSOR_TREE
+
+
+--|----------------------------------------------------------------
+--| EiffelBase: library of reusable components for ISE Eiffel 3.
+--| Copyright (C) 1986, 1990, 1993, Interactive Software
+--|   Engineering Inc.
+--| All rights reserved. Duplication and distribution prohibited.
+--|
+--| 270 Storke Road, Suite 7, Goleta, CA 93117 USA
+--| Telephone 805-685-1006
+--| Fax 805-685-6869
+--| Electronic mail <info@eiffel.com>
+--| Customer support e-mail <eiffel@eiffel.com>
+--|----------------------------------------------------------------

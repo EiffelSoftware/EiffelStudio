@@ -1,14 +1,9 @@
---|---------------------------------------------------------------
---|   Copyright (C) Interactive Software Engineering, Inc.      --
---|    270 Storke Road, Suite 7 Goleta, California 93117        --
---|                   (805) 685-1006                            --
---| All rights reserved. Duplication or distribution prohibited --
---|---------------------------------------------------------------
-
--- Linkable cells with a reference to the left and right neighbors
-
 indexing
 
+	description:
+		"Linkable cells with a reference to the left and right neighbors";
+
+	copyright: "See notice at end of class";
 	names: bi_linkable, cell;
 	representation: linked;
 	contents: generic;
@@ -18,20 +13,8 @@ indexing
 class BI_LINKABLE [G] inherit
 
 	LINKABLE [G]
-		rename
-			forget_right as simple_forget_right
-		export
-			{BI_LINKABLE, TWO_WAY_LIST}
-				simple_forget_right
-		redefine
-			put_right
-		end;
-
-	LINKABLE [G]
 		redefine
 			put_right, forget_right
-		select
-			forget_right
 		end
 
 feature -- Access
@@ -39,31 +22,33 @@ feature -- Access
 	left: like Current;
 			-- Left neighbor
 
-feature  {CELL, CHAIN} -- Modification & Insertion
+feature {CELL, CHAIN} -- Implementation
 
 	put_right (other: like Current) is
-			-- Put `other' to the right of `Current'.
+			-- Put `other' to the right of current cell.
 		do
+			if right /= Void then
+				right.simple_forget_left
+			end;
 			right := other;
-			if (other /= Void) and then (other.left /= Current) then
-					-- Avoid infinite recursion with put_left !
-				other.put_left (Current)
+			if (other /= Void) then
+				other.simple_put_left (Current)
 			end
 		end;
 
 	put_left (other: like Current) is
-			-- Put `other' to the left of `Current'.
+			-- Put `other' to the left of current cell.
 		do
+			if left /= Void then
+				left.simple_forget_right
+			end;
 			left := other;
-			if (other /= Void) and then (other.right /= Current) then
-					-- Avoid infinite recursion with put_right !
-				other.put_right (Current)
+			if (other /= Void) then
+				other.simple_put_right (Current)
 			end
 		ensure
 			chained: left = other
 		end;
-
-feature  {CELL, CHAIN} -- Removal
 
 	forget_right is
 			-- Remove links with right neighbor.
@@ -73,8 +58,8 @@ feature  {CELL, CHAIN} -- Removal
 				right := Void
 			end
 		ensure then
-	 		right_not_chained:
-	 			(old right /= Void) implies ((old right).left = Void)
+	 		--right_not_chained:
+	 			--(old right /= Void) implies ((old right).left = Void)
 		end;
 
 	forget_left is
@@ -87,10 +72,34 @@ feature  {CELL, CHAIN} -- Removal
 		ensure
 			left_not_chained:
 				left = Void;
-	 			(old left /= Void) implies ((old left).right = Void)
+	 			--(old left /= Void) implies ((old left).right = Void)
 		end;
 
-feature  {BI_LINKABLE, TWO_WAY_LIST} -- Removal
+feature {BI_LINKABLE, TWO_WAY_LIST} -- Implementation
+
+	simple_put_right (other: like Current) is
+			-- set `right' to `other'
+		do
+			if right /= Void then
+				right.simple_forget_left;
+			end;
+			right := other
+		end;
+
+	simple_put_left (other: like Current) is
+			-- set `left' to `other' is
+		do
+			if left /= Void then
+				left.simple_forget_right
+			end;
+			left := other
+		end;
+
+	simple_forget_right is
+			-- Remove right link (do nothing to right neighbor).
+		do
+			right := Void
+		end;	
 
 	simple_forget_left is
 			-- Remove left link (do nothing to left neighbor).
@@ -108,3 +117,17 @@ invariant
 		(left /= Void) implies (left.right = Current)
 
 end -- class BI_LINKABLE
+
+
+--|----------------------------------------------------------------
+--| EiffelBase: library of reusable components for ISE Eiffel 3.
+--| Copyright (C) 1986, 1990, 1993, Interactive Software
+--|   Engineering Inc.
+--| All rights reserved. Duplication and distribution prohibited.
+--|
+--| 270 Storke Road, Suite 7, Goleta, CA 93117 USA
+--| Telephone 805-685-1006
+--| Fax 805-685-6869
+--| Electronic mail <info@eiffel.com>
+--| Customer support e-mail <eiffel@eiffel.com>
+--|----------------------------------------------------------------

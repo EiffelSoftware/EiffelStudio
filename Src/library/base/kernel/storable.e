@@ -1,24 +1,23 @@
---|---------------------------------------------------------------
---|   Copyright (C) Interactive Software Engineering, Inc.      --
---|    270 Storke Road, Suite 7 Goleta, California 93117        --
---|                   (805) 685-1006                            --
---| All rights reserved. Duplication or distribution prohibited --
---|---------------------------------------------------------------
+indexing
 
+	description:
+		"Objects that may be stored and retrieved along with all their dependents. %
+		%This class may be used as ancestor by classes needing its facilities.";
 
--- Facilities for storing and retrieving objects in binary format.
--- Classes needing these facilities should inherit from this class.
+	copyright: "See notice at end of class";
+	date: "$Date$";
+	revision: "$Revision$"
 
-
-class STORABLE
+class
+	STORABLE
 
 feature -- Access
 
 	retrieved (file: UNIX_FILE): STORABLE is
 			-- Retrieved object structure from external representation
-			-- previously stored in file `file'
-			--| Use reverse assignment attempt to access to correct
-			--| type of root object.
+			-- previously stored in `file'.
+			-- To access resulting object under correct type,
+			-- use assignment attempt.
 		require
 			file_not_void: file /= Void;
 			file_exists: file.exists;
@@ -30,13 +29,12 @@ feature -- Access
 		end
 
 
-feature -- Modification & Insertion
+feature -- Element change
 
 	basic_store (file: UNIX_FILE) is
-			-- Produce an external representation of the entire
-			-- object structure reachable for current object.
-			-- Write this representation onto file `file'
-			-- retrievable within current type system only.
+			-- Produce on `file' an external representation of the
+			-- entire object structure reachable from current object.
+			-- Retrievable within current system only.
 		require
 			file_not_void: file /= Void;
 			file_exists: file.exists;
@@ -46,13 +44,11 @@ feature -- Modification & Insertion
 		end;
 
 	general_store (file: UNIX_FILE) is
-			-- Produce an external representation of the entire
-			-- object structure reachable for current object.
-			-- Write this representation onto file of name `file'
-			-- retrievable from other type systems for a same machine
-			-- architecture.
+			-- Produce on `file' an external representation of the
+			-- entire object structure reachable from current object.
+			-- Retrievable from other systems for same machine architecture.
 			--| This primitive may use a visible name of a class written
-			--| in the visible clause of the ace file. This provides the
+			--| in the visible clause of the Ace file. This provides the
 			--| user with the possibility to remove class clash names.
 		require
 			file_not_void: file /= Void;
@@ -62,8 +58,7 @@ feature -- Modification & Insertion
 			c_general_store (file.file_pointer, $Current)
 		end
 
-
-feature  {NONE} -- External, Access
+feature {NONE} -- Implementation
 
 	c_retrieved (file_ptr: POINTER): STORABLE is
 			-- Object structured retrieved from file of pointer
@@ -72,10 +67,7 @@ feature  {NONE} -- External, Access
 			"C"
 		alias
 			"eretrieve"
-		end
-
-
-feature  {NONE} -- External, Modification & Insertion
+		end;
 
 	c_basic_store (file_ptr: POINTER; object: STORABLE) is
 			-- Store object structure reachable form current object
@@ -95,6 +87,18 @@ feature  {NONE} -- External, Modification & Insertion
 			"eestore"
 		end;
 
-
-
 end -- class STORABLE
+
+
+--|----------------------------------------------------------------
+--| EiffelBase: library of reusable components for ISE Eiffel 3.
+--| Copyright (C) 1986, 1990, 1993, Interactive Software
+--|   Engineering Inc.
+--| All rights reserved. Duplication and distribution prohibited.
+--|
+--| 270 Storke Road, Suite 7, Goleta, CA 93117 USA
+--| Telephone 805-685-1006
+--| Fax 805-685-6869
+--| Electronic mail <info@eiffel.com>
+--| Customer support e-mail <eiffel@eiffel.com>
+--|----------------------------------------------------------------

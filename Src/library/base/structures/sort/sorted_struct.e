@@ -1,25 +1,20 @@
---|---------------------------------------------------------------
---|   Copyright (C) Interactive Software Engineering, Inc.      --
---|    270 Storke Road, Suite 7 Goleta, California 93117        --
---|                   (805) 685-1006                            --
---| All rights reserved. Duplication or distribution prohibited --
---|---------------------------------------------------------------
-
--- Sorted data-structures
-
 indexing
 
+	description:
+		"Structures whose items are sorted according to a total order relation";
+
+	copyright: "See notice at end of class";
 	names: sorted_struct, comparable_struct;
 	access: index, membership, min, max;
 	contents: generic;
 	date: "$Date$";
 	revision: "$Revision$"
 
-deferred class SORTED_STRUCT [G -> PART_COMPARABLE] inherit
+deferred class SORTED_STRUCT [G -> COMPARABLE] inherit
 
 	COMPARABLE_STRUCT [G]
 		undefine
-			search, search_equal
+			search
 		redefine
 			min, max
 		end;
@@ -27,7 +22,10 @@ deferred class SORTED_STRUCT [G -> PART_COMPARABLE] inherit
 	INDEXABLE [G, INTEGER]
 		rename
 			item as i_th,
-			put as put_i_th
+			put as put_i_th,
+			bag_put as putt
+		redefine
+			putt
 		end;
 	
 	LINEAR [G]
@@ -35,7 +33,7 @@ deferred class SORTED_STRUCT [G -> PART_COMPARABLE] inherit
 feature -- Measurement
 
 	min: like item is
-			-- Minimum in `Current'
+			-- Minimum element
 		require else
 			is_sorted: sorted
 		do
@@ -49,7 +47,7 @@ feature -- Measurement
 		end;
 
 	max: like item is
-			-- Maximum in `Current'
+			-- Maximum element
 		require else
 			is_sorted: sorted
 		do
@@ -63,7 +61,7 @@ feature -- Measurement
 		end;
 
 	median: like item is
-			-- Median in `Current'
+			-- Median element
 		deferred
 		ensure
 		--	is_median:
@@ -71,19 +69,10 @@ feature -- Measurement
 		--			(last_position - first_position) // 2)
 		end;
 
-feature -- Transformation
-
-	sort is
-			-- Sort `Current'.
-		deferred
-		ensure
-			is_sorted: sorted
-		end;
-
 feature -- Status report
 
 	sorted: BOOLEAN is
-			-- Is `Current' sorted?
+			-- Is structure sorted?
 		local
 			m: like item
 		do
@@ -104,4 +93,34 @@ feature -- Status report
 			end
 		end;
 
+feature -- Transformation
+
+	sort is
+			-- Sort structure.
+		deferred
+		ensure
+			is_sorted: sorted
+		end;
+
+feature {} -- compiler stuff .
+			-- FIX ME
+
+	putt (v: like item) is
+		do
+		end;	
+
 end -- class SORTED_STRUCT
+
+
+--|----------------------------------------------------------------
+--| EiffelBase: library of reusable components for ISE Eiffel 3.
+--| Copyright (C) 1986, 1990, 1993, Interactive Software
+--|   Engineering Inc.
+--| All rights reserved. Duplication and distribution prohibited.
+--|
+--| 270 Storke Road, Suite 7, Goleta, CA 93117 USA
+--| Telephone 805-685-1006
+--| Fax 805-685-6869
+--| Electronic mail <info@eiffel.com>
+--| Customer support e-mail <eiffel@eiffel.com>
+--|----------------------------------------------------------------

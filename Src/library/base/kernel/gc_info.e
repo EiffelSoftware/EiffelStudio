@@ -1,22 +1,16 @@
---|---------------------------------------------------------------
---|   Copyright (C) Interactive Software Engineering, Inc.      --
---|    270 Storke Road, Suite 7 Goleta, California 93117        --
---|                   (805) 685-1006                            --
---| All rights reserved. Duplication or distribution prohibited --
---|---------------------------------------------------------------
-
--- Garbage collector statistics
--- Time accouting is relevant only if `enable_time_accounting'
--- has been called in MEMORY
-
 indexing
 
+	description:
+			"Garbage collector statistics.%
+			%This class may be used as ancestor by classes needing its facilities.%
+			%Time accounting is relevant only if `enable_time_accounting' %
+			%(from MEMORY) has been called."
+
+	copyright: "See notice at end of class";
 	date: "$Date$";
 	revision: "$Revision$"
 
-class GC_INFO
-
-inherit
+class GC_INFO inherit
 
 	MEM_CONST
 
@@ -128,7 +122,7 @@ type: INTEGER;
 			-- for `type' and before last call to `update
 
 	
-feature  {NONE} -- External, Access
+feature {NONE} -- Implementation
 
 	gc_stat (mem: INTEGER) is
 			-- Initialize run-time buffer used by gc_info to retrieve the
@@ -150,3 +144,17 @@ feature  {NONE} -- External, Access
 		end
 
 end -- class GC_INFO
+
+
+--|----------------------------------------------------------------
+--| EiffelBase: library of reusable components for ISE Eiffel 3.
+--| Copyright (C) 1986, 1990, 1993, Interactive Software
+--|   Engineering Inc.
+--| All rights reserved. Duplication and distribution prohibited.
+--|
+--| 270 Storke Road, Suite 7, Goleta, CA 93117 USA
+--| Telephone 805-685-1006
+--| Fax 805-685-6869
+--| Electronic mail <info@eiffel.com>
+--| Customer support e-mail <eiffel@eiffel.com>
+--|----------------------------------------------------------------

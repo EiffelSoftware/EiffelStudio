@@ -1,15 +1,12 @@
---|---------------------------------------------------------------
---|   Copyright (C) 1989 Interactive Software Engineering, Inc. --
---|	270 Storke Road, Suite 7 Goleta, California 93117	--
---|				   (805) 685-1006		--
---| All rights reserved. Duplication or distribution prohibited --
---|---------------------------------------------------------------
+indexing
 
--- Double precision basic mathematical features.
+	description:
+		"Basic mathematical operations, double-precision. %
+		%This class may be used as ancestor by classes needing its facilities.";
 
-class DOUBLE_MATH 
+	copyright: "See notice at end of class"
 
-inherit
+class DOUBLE_MATH inherit
 
 	MATH_CONST
 		export
@@ -26,9 +23,6 @@ feature -- Access
 			a := 2.0;
 			Result := log (v) / log (a)
 		end;
-
-	
-feature -- External, Access 
 
 	cosine (v: DOUBLE): DOUBLE is
 			-- Trigonometric cosine of radian `v' approximated
@@ -113,9 +107,7 @@ feature -- External, Access
 			"ceil"
 		end;
 
-
-feature  {NONE} -- External, Access
-
+feature {NONE} -- Implementation
 
 	dabs (v: DOUBLE): DOUBLE is
 			-- Absolute of `v'
@@ -126,3 +118,17 @@ feature  {NONE} -- External, Access
 		end;
 
 end -- class DOUBLE_MATH
+
+
+--|----------------------------------------------------------------
+--| EiffelBase: library of reusable components for ISE Eiffel 3.
+--| Copyright (C) 1986, 1990, 1993, Interactive Software
+--|   Engineering Inc.
+--| All rights reserved. Duplication and distribution prohibited.
+--|
+--| 270 Storke Road, Suite 7, Goleta, CA 93117 USA
+--| Telephone 805-685-1006
+--| Fax 805-685-6869
+--| Electronic mail <info@eiffel.com>
+--| Customer support e-mail <eiffel@eiffel.com>
+--|----------------------------------------------------------------

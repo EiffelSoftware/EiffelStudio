@@ -695,7 +695,7 @@ rt_private void obj_inspect(EIF_OBJ object)
 		rec_sinspect(eif_access(object));
 	} else {
 		/* Send instance class name and object id */
-		sprintf(buffer, "%s", System(eif_cid_map[flags & EO_TYPE]).cn_generator);
+		sprintf(buffer, "%s", System(Deif_bid(flags)).cn_generator);
 		twrite (buffer, strlen(buffer));
 		sprintf(buffer, "%ld", (flags & EO_TYPE));
 		twrite (buffer, strlen(buffer));
@@ -871,7 +871,7 @@ rt_private void rec_sinspect(register1 char *object)
 	count = *(long *) o_ref;
 	elem_size = *(long *) (o_ref + sizeof(long));
 	flags = zone->ov_flags;
-	dt_type = (int) (flags & EO_TYPE);
+	dt_type = (int) Deif_bid(flags);
 
 	/* Send the capacity of the special object */
 	sprintf(buffer, "%ld", count);

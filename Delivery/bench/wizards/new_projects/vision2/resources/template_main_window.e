@@ -65,7 +65,7 @@ feature {NONE} -- Implementation, Close event
 			create question_dialog.make_with_text (Label_confirm_close_window)
 			question_dialog.show_modal_to_window (Current)
 
-			if question_dialog.selected_button.is_equal (question_dialog.ev_ok) then
+			if question_dialog.selected_button.is_equal ((create {EV_DIALOG_CONSTANTS}).ev_ok) then
 					-- Destroy the window
 				destroy;
 				

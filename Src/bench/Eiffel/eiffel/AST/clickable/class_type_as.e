@@ -438,6 +438,18 @@ feature {AST_EIFFEL} -- Output
 	simple_format (ctxt: FORMAT_CONTEXT) is
 			-- Reconstitute text.
 		do
+			if is_separate then
+				ctxt.put_text_item_without_tabs (ti_separate_keyword)
+				ctxt.put_space
+			end
+			if is_reference then
+				ctxt.put_text_item_without_tabs (ti_reference_keyword)
+				ctxt.put_space
+			end
+			if is_expanded then
+				ctxt.put_text_item_without_tabs (ti_expanded_keyword)
+				ctxt.put_space
+			end
 			ctxt.put_class_name (class_name)
 			if generics /= Void then
 				ctxt.put_space

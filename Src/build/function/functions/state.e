@@ -66,6 +66,29 @@ feature -- Anchors
 
 feature -- Command Labels
 
+	copy_contents (func: like Current) is
+		local
+			il: like input_list;
+			ol: like output_list;
+			b: BEHAVIOR
+		do
+			il := func.input_list;
+			ol := func.output_list;
+			from
+				il.start;
+				ol.start;
+			until
+				ol.after
+			loop
+				!! b.make;
+				b.copy_contents (ol.item);
+				b.set_internal_name ("");
+				add (il.item, b);
+				il.forth;
+				ol.forth;
+			end
+		end;
+
 	labels: LINKED_LIST [CMD_LABEL] is
 			-- All command labels in Current state
 		local
@@ -229,11 +252,6 @@ feature -- Editing
 			visual_name := clone (s);
 		end;
 
-	copy_lists (func: like Current) is
-		do
-			copy_contents (func)
-		end;	
-	
 feature 
 
 	data: STATE is

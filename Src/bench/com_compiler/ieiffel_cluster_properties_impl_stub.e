@@ -114,6 +114,42 @@ feature -- Access
 			-- Put Implementation here.
 		end
 
+	is_eiffel_library: BOOLEAN is
+			-- Is the cluster in the Eiffel library
+		do
+			-- Put Implementation here.
+		end
+
+	expanded_cluster_path: STRING is
+			-- Full path to cluster with ISE_EIFFEL env var expanded.
+		do
+			-- Put Implementation here.
+		end
+
+	cluster_path_exists: BOOLEAN is
+			-- Does the path to the cluster exsit
+		do
+			-- Put Implementation here.
+		end
+
+	create_cluster_path: BOOLEAN is
+			-- Create the cluster path if it doesnt exist
+		do
+			-- Put Implementation here.
+		end
+
+	all_cluster_path_not_excluded: BOOLEAN is
+			-- Does parent cluster have all set and does the cluster path extend upon the parents
+		do
+			-- Put Implementation here.
+		end
+
+	cluster_namespace: STRING is
+			-- Cluster namespace.
+		do
+			-- Put Implementation here.
+		end
+
 feature -- Basic Operations
 
 	set_cluster_path (path: STRING) is
@@ -179,6 +215,13 @@ feature -- Basic Operations
 	set_parent_name (return_value: STRING) is
 			-- Name of the parent cluster.
 			-- `return_value' [in].  
+		do
+			-- Put Implementation here.
+		end
+
+	set_cluster_namespace (a_namespace: STRING) is
+			-- Cluster namespace.
+			-- `a_namespace' [in].  
 		do
 			-- Put Implementation here.
 		end

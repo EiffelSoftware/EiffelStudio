@@ -64,6 +64,13 @@ feature -- Basic Operations
 			-- Put Implementation here.
 		end
 
+	is_valid_name (cluster_name: STRING): BOOLEAN is
+			-- Checks to see if a cluster name is valid
+			-- `cluster_name' [in].  
+		do
+			-- Put Implementation here.
+		end
+
 	create_item is
 			-- Initialize `item'
 		do

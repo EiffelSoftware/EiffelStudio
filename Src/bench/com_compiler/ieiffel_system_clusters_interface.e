@@ -59,6 +59,13 @@ feature -- Status Report
 			Result := True
 		end
 
+	is_valid_name_user_precondition (cluster_name: STRING): BOOLEAN is
+			-- User-defined preconditions for `is_valid_name'.
+			-- Redefine in descendants if needed.
+		do
+			Result := True
+		end
+
 feature -- Basic Operations
 
 	cluster_tree: IENUM_CLUSTER_PROP_INTERFACE is
@@ -121,6 +128,15 @@ feature -- Basic Operations
 			-- `a_new_name' [in].  
 		require
 			change_cluster_name_user_precondition: change_cluster_name_user_precondition (a_name, a_new_name)
+		deferred
+
+		end
+
+	is_valid_name (cluster_name: STRING): BOOLEAN is
+			-- Checks to see if a cluster name is valid
+			-- `cluster_name' [in].  
+		require
+			is_valid_name_user_precondition: is_valid_name_user_precondition (cluster_name)
 		deferred
 
 		end

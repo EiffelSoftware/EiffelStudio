@@ -30,6 +30,12 @@ feature -- Access
 			-- Put Implementation here.
 		end
 
+	ise_eiffel: STRING is
+			-- Return ISE_EIFFEL environment var.
+		do
+			-- Put Implementation here.
+		end
+
 	freeze_command_name: STRING is
 			-- Eiffel Freeze command name
 		do

@@ -45,6 +45,13 @@ feature -- Status Report
 			Result := True
 		end
 
+	ise_eiffel_user_precondition: BOOLEAN is
+			-- User-defined preconditions for `ise_eiffel'.
+			-- Redefine in descendants if needed.
+		do
+			Result := True
+		end
+
 	freeze_command_name_user_precondition: BOOLEAN is
 			-- User-defined preconditions for `freeze_command_name'.
 			-- Redefine in descendants if needed.
@@ -104,6 +111,14 @@ feature -- Basic Operations
 			-- Compiler version.
 		require
 			compiler_version_user_precondition: compiler_version_user_precondition
+		deferred
+
+		end
+
+	ise_eiffel: STRING is
+			-- Return ISE_EIFFEL environment var.
+		require
+			ise_eiffel_user_precondition: ise_eiffel_user_precondition
 		deferred
 
 		end

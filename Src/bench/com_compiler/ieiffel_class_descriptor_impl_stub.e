@@ -27,7 +27,7 @@ feature -- Access
 	external_name: STRING is
 			-- Class external name.
 		do
-			-- Put Implementation here.	
+			-- Put Implementation here.
 		end
 
 	tool_tip: STRING is

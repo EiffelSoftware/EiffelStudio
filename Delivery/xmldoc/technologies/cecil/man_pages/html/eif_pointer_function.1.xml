@@ -29,7 +29,7 @@
 		<italic>name</italic> from the class, which type identifier is 
 		<italic>tid</italic>.
 		<line_break/>Use 
-		<bold>eif_reference_function</bold> for an Eiffel function returningan Eiffel reference.
+		<bold>eif_reference_function</bold> for an Eiffel function returning an Eiffel reference.
 		<line_break/>Use 
 		<bold>eif_integer_function</bold> for an Eiffel function returning an Eiffel integer.
 		<line_break/>Use 

@@ -186,7 +186,7 @@ feature {NONE} -- Implementation
 			end
 
 			if Result /= Void then
-				Result.append (") *")
+				Result.append (") ")
 			end
 		end
 

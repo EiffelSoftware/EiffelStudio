@@ -3,7 +3,7 @@
 	<paragraph>
 		<paragraph>
 			<image>
-				<url>../../../../../images/eiffelstudio/debugger/locals_tree.png</url>
+				<url>/images/eiffelstudio/debugger/locals_tree.png</url>
 			</image>
 		</paragraph>
 		<paragraph>The first tree in the 
@@ -24,6 +24,6 @@
 			<link>
 				<url>20_slice_size_command.xml</url>
 				<label>set slice size command</label>
-			</link> with SPECIAL objects.
+			</link> with <link><url>/libraries/base/reference/kernel/SPECIAL_chart.xml</url><label><code><class_name>SPECIAL</class_name></code></label></link> objects.
 		</paragraph>
 	</paragraph></document>

@@ -1,0 +1,213 @@
+/*-----------------------------------------------------------
+System Browser. Eiffel language compiler library. Help file: 
+-----------------------------------------------------------*/
+
+#ifndef __ECOM_EIFFELCOMCOMPILER_IEIFFELSYSTEMBROWSER_S_H__
+#define __ECOM_EIFFELCOMCOMPILER_IEIFFELSYSTEMBROWSER_S_H__
+#ifdef __cplusplus
+extern "C" {
+
+
+#ifndef __ecom_EiffelComCompiler_IEiffelSystemBrowser_FWD_DEFINED__
+#define __ecom_EiffelComCompiler_IEiffelSystemBrowser_FWD_DEFINED__
+namespace ecom_EiffelComCompiler
+{
+class IEiffelSystemBrowser;
+}
+#endif
+
+}
+#endif
+
+#include "eif_com.h"
+
+#include "eif_eiffel.h"
+
+#ifdef __cplusplus
+extern "C" {
+#endif
+
+#ifndef __ecom_EiffelComCompiler_IEnumEiffelClass_FWD_DEFINED__
+#define __ecom_EiffelComCompiler_IEnumEiffelClass_FWD_DEFINED__
+namespace ecom_EiffelComCompiler
+{
+class IEnumEiffelClass;
+}
+#endif
+
+
+
+#ifndef __ecom_EiffelComCompiler_IEnumCluster_FWD_DEFINED__
+#define __ecom_EiffelComCompiler_IEnumCluster_FWD_DEFINED__
+namespace ecom_EiffelComCompiler
+{
+class IEnumCluster;
+}
+#endif
+
+
+
+#ifndef __ecom_EiffelComCompiler_IEnumAssembly_FWD_DEFINED__
+#define __ecom_EiffelComCompiler_IEnumAssembly_FWD_DEFINED__
+namespace ecom_EiffelComCompiler
+{
+class IEnumAssembly;
+}
+#endif
+
+
+
+#ifndef __ecom_EiffelComCompiler_IEiffelClusterDescriptor_FWD_DEFINED__
+#define __ecom_EiffelComCompiler_IEiffelClusterDescriptor_FWD_DEFINED__
+namespace ecom_EiffelComCompiler
+{
+class IEiffelClusterDescriptor;
+}
+#endif
+
+
+
+#ifndef __ecom_EiffelComCompiler_IEiffelClassDescriptor_FWD_DEFINED__
+#define __ecom_EiffelComCompiler_IEiffelClassDescriptor_FWD_DEFINED__
+namespace ecom_EiffelComCompiler
+{
+class IEiffelClassDescriptor;
+}
+#endif
+
+
+
+#ifndef __ecom_EiffelComCompiler_IEiffelFeatureDescriptor_FWD_DEFINED__
+#define __ecom_EiffelComCompiler_IEiffelFeatureDescriptor_FWD_DEFINED__
+namespace ecom_EiffelComCompiler
+{
+class IEiffelFeatureDescriptor;
+}
+#endif
+
+
+
+#ifndef __ecom_EiffelComCompiler_IEnumFeature_FWD_DEFINED__
+#define __ecom_EiffelComCompiler_IEnumFeature_FWD_DEFINED__
+namespace ecom_EiffelComCompiler
+{
+class IEnumFeature;
+}
+#endif
+
+
+
+#ifdef __cplusplus
+extern "C" {
+#ifndef __ecom_EiffelComCompiler_IEiffelSystemBrowser_INTERFACE_DEFINED__
+#define __ecom_EiffelComCompiler_IEiffelSystemBrowser_INTERFACE_DEFINED__
+namespace ecom_EiffelComCompiler
+{
+class IEiffelSystemBrowser : public IDispatch
+{
+public:
+	IEiffelSystemBrowser () {};
+	~IEiffelSystemBrowser () {};
+
+	/*-----------------------------------------------------------
+	List of classes in system.
+	-----------------------------------------------------------*/
+	virtual STDMETHODIMP system_classes(  /* [out, retval] */ ecom_EiffelComCompiler::IEnumEiffelClass * * some_classes ) = 0;
+
+
+	/*-----------------------------------------------------------
+	Number of classes in system.
+	-----------------------------------------------------------*/
+	virtual STDMETHODIMP class_count(  /* [out, retval] */ ULONG * return_value ) = 0;
+
+
+	/*-----------------------------------------------------------
+	List of system's clusters.
+	-----------------------------------------------------------*/
+	virtual STDMETHODIMP system_clusters(  /* [out, retval] */ ecom_EiffelComCompiler::IEnumCluster * * some_clusters ) = 0;
+
+
+	/*-----------------------------------------------------------
+	List of system's external clusters.
+	-----------------------------------------------------------*/
+	virtual STDMETHODIMP external_clusters(  /* [out, retval] */ ecom_EiffelComCompiler::IEnumCluster * * some_clusters ) = 0;
+
+
+	/*-----------------------------------------------------------
+	Returns all of the assemblies in an enumerator
+	-----------------------------------------------------------*/
+	virtual STDMETHODIMP assemblies(  /* [out, retval] */ ecom_EiffelComCompiler::IEnumAssembly * * return_value ) = 0;
+
+
+	/*-----------------------------------------------------------
+	Number of top-level clusters in system.
+	-----------------------------------------------------------*/
+	virtual STDMETHODIMP cluster_count(  /* [out, retval] */ ULONG * return_value ) = 0;
+
+
+	/*-----------------------------------------------------------
+	Number of top-level clusters in system.
+	-----------------------------------------------------------*/
+	virtual STDMETHODIMP root_cluster(  /* [out, retval] */ ecom_EiffelComCompiler::IEiffelClusterDescriptor * * return_value ) = 0;
+
+
+	/*-----------------------------------------------------------
+	Cluster descriptor.
+	-----------------------------------------------------------*/
+	virtual STDMETHODIMP cluster_descriptor(  /* [in] */ BSTR cluster_name, /* [out, retval] */ ecom_EiffelComCompiler::IEiffelClusterDescriptor * * return_value ) = 0;
+
+
+	/*-----------------------------------------------------------
+	Class descriptor.
+	-----------------------------------------------------------*/
+	virtual STDMETHODIMP class_descriptor(  /* [in] */ BSTR class_name1, /* [out, retval] */ ecom_EiffelComCompiler::IEiffelClassDescriptor * * return_value ) = 0;
+
+
+	/*-----------------------------------------------------------
+	Feature descriptor.
+	-----------------------------------------------------------*/
+	virtual STDMETHODIMP feature_descriptor(  /* [in] */ BSTR class_name1, /* [in] */ BSTR feature_name, /* [out, retval] */ ecom_EiffelComCompiler::IEiffelFeatureDescriptor * * return_value ) = 0;
+
+
+	/*-----------------------------------------------------------
+	Search classes with names matching `a_string'.
+	-----------------------------------------------------------*/
+	virtual STDMETHODIMP search_classes(  /* [in] */ BSTR a_string, /* [in] */ VARIANT_BOOL is_substring, /* [out, retval] */ ecom_EiffelComCompiler::IEnumEiffelClass * * some_classes ) = 0;
+
+
+	/*-----------------------------------------------------------
+	Search feature with names matching `a_string'.
+	-----------------------------------------------------------*/
+	virtual STDMETHODIMP search_features(  /* [in] */ BSTR a_string, /* [in] */ VARIANT_BOOL is_substring, /* [out, retval] */ ecom_EiffelComCompiler::IEnumFeature * * some_features ) = 0;
+
+
+	/*-----------------------------------------------------------
+	Retrieve description from dotnet type
+	-----------------------------------------------------------*/
+	virtual STDMETHODIMP description_from_dotnet_type(  /* [in] */ BSTR a_assembly_name, /* [in] */ BSTR a_full_dotnet_type, /* [out, retval] */ BSTR * return_value ) = 0;
+
+
+	/*-----------------------------------------------------------
+	Retrieve description from dotnet feature
+	-----------------------------------------------------------*/
+	virtual STDMETHODIMP description_from_dotnet_feature(  /* [in] */ BSTR a_assembly_name, /* [in] */ BSTR a_full_dotnet_type, /* [in] */ BSTR a_feature_signature, /* [out, retval] */ BSTR * return_value ) = 0;
+
+
+
+protected:
+
+
+private:
+
+
+};
+}
+#endif
+}
+#endif
+
+#ifdef __cplusplus
+}
+#endif
+
+#endif

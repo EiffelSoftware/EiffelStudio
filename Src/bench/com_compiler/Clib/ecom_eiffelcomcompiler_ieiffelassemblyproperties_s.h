@@ -1,0 +1,113 @@
+/*-----------------------------------------------------------
+Eiffel Assembly Properties (for Ace file). Eiffel language compiler library. Help file: 
+-----------------------------------------------------------*/
+
+#ifndef __ECOM_EIFFELCOMCOMPILER_IEIFFELASSEMBLYPROPERTIES_S_H__
+#define __ECOM_EIFFELCOMCOMPILER_IEIFFELASSEMBLYPROPERTIES_S_H__
+#ifdef __cplusplus
+extern "C" {
+
+
+#ifndef __ecom_EiffelComCompiler_IEiffelAssemblyProperties_FWD_DEFINED__
+#define __ecom_EiffelComCompiler_IEiffelAssemblyProperties_FWD_DEFINED__
+namespace ecom_EiffelComCompiler
+{
+class IEiffelAssemblyProperties;
+}
+#endif
+
+}
+#endif
+
+#include "eif_com.h"
+
+#include "eif_eiffel.h"
+
+#ifdef __cplusplus
+extern "C" {
+#endif
+
+#ifdef __cplusplus
+extern "C" {
+#ifndef __ecom_EiffelComCompiler_IEiffelAssemblyProperties_INTERFACE_DEFINED__
+#define __ecom_EiffelComCompiler_IEiffelAssemblyProperties_INTERFACE_DEFINED__
+namespace ecom_EiffelComCompiler
+{
+class IEiffelAssemblyProperties : public IDispatch
+{
+public:
+	IEiffelAssemblyProperties () {};
+	~IEiffelAssemblyProperties () {};
+
+	/*-----------------------------------------------------------
+	Assembly name.
+	-----------------------------------------------------------*/
+	virtual STDMETHODIMP assembly_name(  /* [out, retval] */ BSTR * return_value ) = 0;
+
+
+	/*-----------------------------------------------------------
+	Assembly version.
+	-----------------------------------------------------------*/
+	virtual STDMETHODIMP assembly_version(  /* [out, retval] */ BSTR * path ) = 0;
+
+
+	/*-----------------------------------------------------------
+	Assembly culture.
+	-----------------------------------------------------------*/
+	virtual STDMETHODIMP assembly_culture(  /* [out, retval] */ BSTR * path ) = 0;
+
+
+	/*-----------------------------------------------------------
+	Assembly public key token
+	-----------------------------------------------------------*/
+	virtual STDMETHODIMP assembly_public_key_token(  /* [out, retval] */ BSTR * return_value ) = 0;
+
+
+	/*-----------------------------------------------------------
+	Is the assembly local
+	-----------------------------------------------------------*/
+	virtual STDMETHODIMP is_local(  /* [out, retval] */ VARIANT_BOOL * a_bool ) = 0;
+
+
+	/*-----------------------------------------------------------
+	Assembly cluster name.
+	-----------------------------------------------------------*/
+	virtual STDMETHODIMP assembly_cluster_name(  /* [out, retval] */ BSTR * return_value ) = 0;
+
+
+	/*-----------------------------------------------------------
+	Prefix.
+	-----------------------------------------------------------*/
+	virtual STDMETHODIMP assembly_prefix(  /* [out, retval] */ BSTR * return_value ) = 0;
+
+
+	/*-----------------------------------------------------------
+	Prefix.
+	-----------------------------------------------------------*/
+	virtual STDMETHODIMP set_assembly_prefix(  /* [in] */ BSTR return_value ) = 0;
+
+
+	/*-----------------------------------------------------------
+	Is assembly prefix read only.
+	-----------------------------------------------------------*/
+	virtual STDMETHODIMP is_prefix_read_only(  /* [out, retval] */ VARIANT_BOOL * a_is_prefix_read_only ) = 0;
+
+
+
+protected:
+
+
+private:
+
+
+};
+}
+#endif
+}
+#endif
+
+#ifdef __cplusplus
+}
+#endif
+
+#endif

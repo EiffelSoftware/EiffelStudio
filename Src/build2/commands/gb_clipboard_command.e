@@ -72,12 +72,10 @@ feature -- Access
 	executable: BOOLEAN is
 			-- May `execute' be called on `Current'?
 		local
-			object: GB_OBJECT
-			component: GB_COMPONENT
+			object_stone: GB_OBJECT_STONE
 		do
-			object ?= system_status.pick_and_drop_pebble
-			component ?= system_status.pick_and_drop_pebble
-			Result := (not clipboard.is_empty) or (object /= Void) or (component /= Void)
+			object_stone ?= system_status.pick_and_drop_pebble
+			Result := (not clipboard.is_empty) or (object_stone /= Void)
 		end
 
 feature -- Basic operations
@@ -154,23 +152,23 @@ feature -- Basic operations
 			end
 		end
 
-	drop_object (an_object: GB_OBJECT) is
+	drop_object (object_stone: GB_OBJECT_STONE) is
 			-- Place representation of `an_object' within clipboard.
 		require
-			an_object_not_void: an_object /= Void
+			object_stone_not_void: object_stone /= Void
 		local
 			global_status: GB_GLOBAL_STATUS
 		do
 			create global_status
 			global_status.block
-			clipboard.set_object (an_object)
+			clipboard.set_object (object_stone.object)
 			global_status.resume
 		end
 		
-	pick_object: GB_OBJECT is
+	pick_object: GB_CLIPBOARD_OBJECT_STONE is
 				-- Execute `Current'.
 			do
-				Result := clipboard.object
+				create Result
 			end
 			
 	new_clipboard_object: GB_OBJECT

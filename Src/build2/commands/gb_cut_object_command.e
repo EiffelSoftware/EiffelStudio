@@ -91,20 +91,19 @@ feature -- Basic operations
 				command_handler.update
 			end
 			
-		execute_with_object (an_object: GB_OBJECT) is
-				-- Execute `Current' directly with object `an_object'.
+		execute_with_object (object_stone: GB_STANDARD_OBJECT_STONE) is
+				-- Execute `Current' directly with object `object_stone'.
 			require
-				an_object_not_void: an_object /= Void
+				object_stone_not_void: object_stone /= Void
 			local
 				command_delete: GB_DELETE_OBJECT_COMMAND
 			do
-				clipboard.set_object (an_object)
+				clipboard.set_object (object_stone.object)
 				
 				create command_delete.make
-				command_delete.delete_object (an_object)
+				command_delete.delete_object (object_stone.object)
 				
 				command_handler.update
 			end
-			
 
 end -- class GB_CUT_OBJECT_COMMAND

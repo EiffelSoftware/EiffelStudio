@@ -72,14 +72,14 @@ feature -- Removal
 			if previous /= Void then
 				previous.set_next (next)
 			end
-			if Current = last_data then
-				if Current = first_data then
+			if Current = tree.last_data then
+				if Current = tree.first_data then
 					tree.wipe_out
 				else
 					tree.set_last_data (previous)
 				end
 			else
-				if Current = first_data then
+				if Current = tree.first_data then
 					tree.set_first_data (next)
 				end
 			end

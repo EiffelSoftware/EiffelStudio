@@ -843,9 +843,7 @@ void closedir(DIR *dd)
 /*
 **  Collect all the version numbers for the current file.
 */
-static void
-collectversions(dd)
-    DIR				*dd;
+static void collectversions(DIR *dd)
 {
     struct dsc$descriptor_s	pat;
     struct dsc$descriptor_s	res;

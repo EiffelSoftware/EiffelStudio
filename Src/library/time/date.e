@@ -184,7 +184,7 @@ feature -- Initialization
 	make_by_compact_date (c_d: INTEGER) is
 			-- Initialize from a `compact_date'.
 		obsolete
-			"Use `make_by_ordered_compact_date' instead. But be carreful in your update %
+			"Use `make_by_ordered_compact_date' instead. But be careful in your update %
 			%since `compact_date' and `ordered_compact_date' do not have the same %
 			%encoding."
 		require

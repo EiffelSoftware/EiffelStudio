@@ -38,7 +38,7 @@ feature -- Access
 	compact_date: INTEGER is
 			-- Day, month and year coded.
 		obsolete
-			"Use `ordered_compact_date' instead. But be carreful in your update %
+			"Use `ordered_compact_date' instead. But be careful in your update %
 			%since `compact_date' and `ordered_compact_date' do not have the same %
 			%encoding."
 		do
@@ -104,7 +104,7 @@ feature -- Element change
 	set_internal_compact_date (a_compact_date: like compact_date) is
 			-- Set `a_compact_date' to `compact_date'.
 		obsolete
-			"Use `ordered_compact_date' instead. But be carreful in your update %
+			"Use `ordered_compact_date' instead. But be careful in your update %
 			%since `compact_date' and `ordered_compact_date' do not have the same %
 			%encoding."
 		do

@@ -45,7 +45,7 @@ feature -- Basic operations
 			-- Do test action.
 		do
 			stack.remove
-		end
+		end;
 
 indexing
 

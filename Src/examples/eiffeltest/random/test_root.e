@@ -60,7 +60,7 @@ feature {NONE} -- Initialization
 			drv.extend (s2)
 			drv.execute
 			drv.evaluate
-		end
+		end;
 
 indexing
 

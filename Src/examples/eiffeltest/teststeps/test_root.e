@@ -49,7 +49,7 @@ feature {NONE} -- Initialization
 			drv.extend (s)
 			drv.execute
 			drv.evaluate
-		end
+		end;
 
 indexing
 

@@ -38,7 +38,7 @@ feature -- Basic operations
 
 feature {NONE} -- Constants
 
-	Repetitions: INTEGER is 100
+	Repetitions: INTEGER is 100;
 			-- Number of repetitions
 
 indexing

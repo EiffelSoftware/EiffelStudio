@@ -25,7 +25,7 @@ feature -- Status report
 
 feature {NONE} -- Implementation
 
-	test_step: POP_STEP
+	test_step: POP_STEP;
 			-- Callback to test step
 
 indexing

@@ -22,7 +22,7 @@ feature {NONE} -- Implementation
 			-- Inject `s' into `test_case'
 		do
 			test_case.set_date_string (s)
-		end
+		end;
 
 indexing
 

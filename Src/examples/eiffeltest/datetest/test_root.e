@@ -51,7 +51,7 @@ feature {NONE} -- Initialization
 					end
 				end
 			end
-		end
+		end;
 
 indexing
 

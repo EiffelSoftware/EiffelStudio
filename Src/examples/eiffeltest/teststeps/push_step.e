@@ -45,7 +45,7 @@ feature -- Basic operations
 			-- Do test action.
 		do
 			stack.put (1)
-		end
+		end;
 
 indexing
 

@@ -144,7 +144,7 @@ feature -- Test functions
 					treeItem2.unset_pixmap
 					treeItem2.set_text ("I want my pixmap back")
 
-					mcrow1.set_cell_pixmap (3, pix)
+--					mcrow1.set_cell_pixmap (3, pix)
 					check_button.set_pixmap (checkPix)
 --					menuitem.set_pixmap (pix)
 --					menuitem.set_text ("Thank you!")
@@ -159,7 +159,10 @@ feature -- Test functions
 --					statitem1.unset_pixmap
 --					statitem1.set_text ("Give me back my pixmap!")
 					check_button.set_pixmap (pix)
+
+
 				--	mcrow1.unset_cell_pixmap (3)
+
 					treeItem3.unset_pixmap
 					treeItem3.set_text ("Can I borrow your pixmap?")
 

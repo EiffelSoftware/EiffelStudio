@@ -26,20 +26,17 @@ feature {NONE} -- Initialization
 			-- is faster.
 		do
 			{EV_SPIN_BUTTON} Precursor (par)
-			set_gauge_tabs
-			tab_list.extend(spin_button_tab)
-			create action_window.make(Current,tab_list)
 			set_parent(par)
 		
 		end
 
 
-
-
-
 	set_tabs is
 			-- Set the tabs for the action window.
 		do
+			set_gauge_tabs
+			tab_list.extend(spin_button_tab)
+			create action_window.make(Current,tab_list)
 		end
 
 

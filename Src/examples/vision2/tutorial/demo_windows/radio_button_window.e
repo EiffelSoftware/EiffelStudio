@@ -8,7 +8,7 @@ class
 	RADIO_BUTTON_WINDOW
 
 inherit
-	EV_VERTICAL_BOX
+	EV_HORIZONTAL_BOX
 		redefine
 			make
 		end
@@ -23,13 +23,14 @@ feature {NONE} -- Initialization
 			-- Create the demo in `par'.
 			-- We create the box first without parent because it
 			-- is faster.
+		local
+			radio: EV_RADIO_BUTTON
 		do
-			{EV_VERTICAL_BOX} Precursor (par)
+			{EV_HORIZONTAL_BOX} Precursor (par)
 
 			set_homogeneous (False)
-		
-
-			!! radio_b.make_with_text (Current, "Radio Button")
+			create radio.make_with_text (Current, "Dummy Radio")
+			!! radio_b.make_with_text (Current, "Action Button")
 		end
 
 	set_tabs is
@@ -39,8 +40,10 @@ feature {NONE} -- Initialization
 			tab_list.extend(textable_tab)
 			tab_list.extend(fontable_tab)
 			tab_list.extend(pixmapable_tab)
+			tab_list.extend(toggle_button_tab)
+			tab_list.extend(check_button_tab)
 			tab_list.extend(radio_button_tab)
-			create action_window.make(Current,tab_list)
+			create action_window.make(radio_b, tab_list)
 		end
 
 feature -- Access

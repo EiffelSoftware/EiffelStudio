@@ -25,7 +25,7 @@ feature {DEMO_ITEM} -- Initialise tabs when the window is shown.
 feature -- Status report
 
 	action_window_shown: BOOLEAN is
-			-- Is the action windo shown ?
+			-- Is the action window shown ?
 		do
 			if action_window /= Void then
 				Result := action_window.shown
@@ -82,7 +82,7 @@ feature -- Basic operation
 			-- Sets the gauge tabs
 		do
 			set_primitive_tabs
-			--tab_list.extend(gauge_tab)
+			tab_list.extend(gauge_tab)
 		end
 
 	tab_list:LINKED_LIST[ANY_TAB]
@@ -181,6 +181,18 @@ feature -- Basic operation
 			create Result.make (Void)
 		end
 
+	progress_tab: PROGRESS_TAB is
+			-- Creation of the progress tab.
+		once
+			create Result.make (Void)
+		end
+
+	combo_tab: COMBO_TAB is
+			-- Creation of the combo box tab
+		once
+			create Result.make (Void)
+		end
+
 	textable_tab: TEXTABLE_TAB is
 			-- Creation of the textable tab.
 		once
@@ -241,6 +253,15 @@ feature -- Basic operation
 			create Result.make (Void)
 		end
 
+--	list_tab: LIST_TAB is
+			-- Creation of thwe list tab
+--		once
+--			create Result.make (Void)
+--		end
+
+
+
+
 	text_tab: TEXT_TAB is
 			-- Creation of the text_tab.
 		once
@@ -258,6 +279,7 @@ feature -- Basic operation
 		once
 			create Result.make (Void)
 		end
+
 
 
 

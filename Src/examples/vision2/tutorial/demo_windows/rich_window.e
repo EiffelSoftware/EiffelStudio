@@ -65,7 +65,8 @@ feature -- Basic operation
 			Result.add_character_format_with_regions (format, <<1, 8, 86, 89, 93, 108>>)		
 
 			!! format.make
-			!! font.make_by_name ("tahoma")
+		--	!! font.make_by_system_name ("tahoma,8,400,,default,dontcare,ansi,0,0,0,draft,stroke,default")
+			!! font.make_by_name ("times new roman")
 			font.set_height (8)
 			format.set_font (font)
 			!! color.make_rgb (255, 0, 0)
@@ -85,7 +86,8 @@ feature -- Command execution
 		do
 			format.set_bold (False)
 			format.set_italic (False)
-			!! ft.make_by_name ("Symbol")
+		--	!! ft.make_by_name ("Symbol")
+			create ft.make_by_name ("Times New Roman")
 			!! colors
 			format.set_color (colors.black)
 			format.set_font (ft)

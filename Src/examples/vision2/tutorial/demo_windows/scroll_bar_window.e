@@ -27,9 +27,6 @@ feature {NONE} -- Initialization
 		do
 
 			{EV_HORIZONTAL_SCROLL_BAR} Precursor (Void)	
-			set_gauge_tabs
-			tab_list.extend(scroll_bar_tab)
-			create action_window.make(Current,tab_list)
 			make_with_range (par, 0, 100)
 			set_parent(par)
 		end

@@ -68,7 +68,7 @@ feature {NONE} -- Initialization
 					a_gs.item,
 					agent lose_focus
 			)
-			gc := C.gdk_gc_new (C.gdk_root_parent)
+			gc := C.gdk_gc_new (default_gdk_window)
 			init_default_values
 		end	
 

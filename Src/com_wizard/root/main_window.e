@@ -78,13 +78,15 @@ feature {NONE} -- Initialization
 			create msg_box.make
 			create output_edit.make (Current, rebar.height)
 			set_menu (main_menu)
-			create introduction_dialog.make (Current)
-			create initial_dialog.make (Current)
+			create generated_code_type_dialog.make (Current)
+			create definition_file_dialog.make (Current)
 			create idl_dialog.make (Current)
 			create ps_dialog.make (Current)
 			create final_dialog.make (Current)
+			create first_choice_dialog.make (Current)
 			resize (600, 400)
 			show
+			first_choice_dialog.activate
 		end
 
 feature -- GUI Elements
@@ -122,10 +124,10 @@ feature -- GUI Elements
 			Result.reposition
 		end
 	
-	introduction_dialog: WIZARD_INTRODUCTION_DIALOG
+	generated_code_type_dialog: WIZARD_GENERATED_CODE_TYPE_DIALOG
 			-- Wizard introduction dialog
 
-	initial_dialog: WIZARD_INITIAL_DIALOG
+	definition_file_dialog: WIZARD_DEFINITION_FILE_DIALOG
 			-- Wizard initial dialog
 
 	idl_dialog: WIZARD_IDL_DIALOG
@@ -136,6 +138,9 @@ feature -- GUI Elements
 	
 	final_dialog: WIZARD_FINAL_DIALOG
 			-- Wizard final dialog
+
+	first_choice_dialog: WIZARD_FIRST_CHOICE_DIALOG
+			-- Wizard first choice dialog
 
 	Title: STRING is "EiffelCOM Wizard"
 			-- Window title
@@ -243,9 +248,9 @@ feature {NONE} -- State management
 			inspect
 				state
 			when Introduction_state then
-				Result := Introduction_dialog
+				Result := Generated_code_type_dialog
 			when Initial_state then
-				Result := Initial_dialog
+				Result := Definition_file_dialog
 			when Idl_state then
 				Result := Idl_dialog
 			when Ps_state then
@@ -408,7 +413,7 @@ feature {NONE} -- Implementation
 	project_retrieved: BOOLEAN	
 			-- Was project correctly retrieved?
 
-feature {NONE} -- Behavior
+feature {WIZARD_FIRST_CHOICE_DIALOG} -- Behavior
 
 	on_menu_command (menu_id: INTEGER) is
 			-- `menu_id' has been selected

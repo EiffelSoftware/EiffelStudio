@@ -35,11 +35,8 @@ feature -- Access
 	in_process_server: BOOLEAN
 			-- Should in process server code be generated?
 			
-	local_server: BOOLEAN
-			-- Should local server code be generated?
-	
-	remote_server: BOOLEAN
-			-- Should remote server code be generated?
+	out_of_process_server: BOOLEAN
+			-- Should out of process server code be generated?
 
 	idl_file_name: STRING
 			-- Path to definition file
@@ -117,20 +114,12 @@ feature -- Element Change
 			output_level_set: output_level = Output_none
 		end
 
-	set_local_server (a_boolean: BOOLEAN) is
-			-- Set `local_server' with `a_boolean'.
+	set_out_of_process_server (a_boolean: BOOLEAN) is
+			-- Set `out_of_process_server' with `a_boolean'.
 		do
-			local_server := a_boolean
+			out_of_process_server := a_boolean
 		ensure
-			local_server_set: local_server = a_boolean
-		end
-
-	set_remote_server (a_boolean: BOOLEAN) is
-			-- Set `remote_server' with `a_boolean'.
-		do
-			remote_server := a_boolean
-		ensure
-			remote_server_set: remote_server = a_boolean
+			out_of_process_server_set: out_of_process_server = a_boolean
 		end
 
 	set_destination_folder (a_folder: like destination_folder) is

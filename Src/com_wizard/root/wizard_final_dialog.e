@@ -11,6 +11,11 @@ inherit
 			on_ok
 		end
 
+	APPLICATION_IDS
+		export
+			{NONE} all
+		end
+
 creation
 	make
 
@@ -23,14 +28,12 @@ feature {NONE} -- Initialization
 			a_parent_exists: a_parent.exists
 		do
 			make_by_id (a_parent, Wizard_final_dialog_constant)
-			create maximum_radio.make_by_id (Current, Maximum_radio_constant)
-			create standard_radio.make_by_id (Current, Standard_radio_constant)
-			create minimum_radio.make_by_id (Current, Minimum_radio_constant)
+			create warnings_check.make_by_id (Current, Warnings_check_constant)
+			create information_check.make_by_id (Current, Information_check_constant)
 			create id_ok.make_by_id (Current, Idok)
-			create id_back.make_by_id (Current, Idback_constant)
+			create id_back.make_by_id (Current, id_back_constant)
 			create help_button.make_by_id (Current, Help_button_constant)
 			create id_cancel.make_by_id (Current, Idcancel)
-			create compile_check.make_by_id (Current, Compile_check_constant)
 		end
 
 feature -- Behavior
@@ -38,49 +41,36 @@ feature -- Behavior
 	setup_dialog is
 			-- Initialize dialog.
 		do
-			minimum_radio.set_unchecked
-			maximum_radio.set_unchecked
-			standard_radio.set_unchecked
-			compile_check.set_checked
-			if Shared_wizard_environment.output_level = Shared_wizard_environment.Output_none then
-				minimum_radio.set_checked
-			elseif Shared_wizard_environment.output_level = Shared_wizard_environment.Output_all then
-				maximum_radio.set_checked
-			else
-				standard_radio.set_checked
-			end
-			if not Shared_wizard_environment.compile_eiffel then
-				compile_check.set_unchecked
+			information_check.set_unchecked
+			warnings_check.set_unchecked
+			if Shared_wizard_environment.output_level = Shared_wizard_environment.Output_all then
+				information_check.set_checked
+				warnings_check.set_checked
+			elseif Shared_wizard_environment.output_level = Shared_wizard_environment.Output_warnings then
+				warnings_check.set_checked
 			end
 		end
 
 	on_ok is
 			-- Finish button was clicked.
 		do
-			if minimum_radio.checked then
-				Shared_wizard_environment.set_no_output
-			elseif maximum_radio.checked then
+			if information_check.checked then
 				Shared_wizard_environment.set_all_output
-			else
+			elseif warnings_check.checked then
 				Shared_wizard_environment.set_warning_output
+			else
+				Shared_wizard_environment.set_no_output
 			end
-			Shared_wizard_environment.set_compile_eiffel (Compile_check.checked)
 			Precursor {WIZARD_DIALOG}
 		end
-	
+
 feature -- Access
 
-	minimum_radio: WEL_RADIO_BUTTON
-			-- Minimum output radio button
-
-	standard_radio: WEL_RADIO_BUTTON
-			-- Standard output radio button
-
-	maximum_radio: WEL_RADIO_BUTTON
-			-- Maximum output radio button
-
-	Compile_check: WEL_CHECK_BOX
-			-- Comile Eiffel check box
+	warnings_check: WEL_CHECK_BOX
+			-- Warning messages check box
+			
+	information_check: WEL_CHECK_BOX
+			-- Information messages check box
 
 end -- class WIZARD_FINAL_DIALOG
 

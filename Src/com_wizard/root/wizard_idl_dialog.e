@@ -5,16 +5,15 @@ class
 	WIZARD_IDL_DIALOG
 
 inherit
+	APPLICATION_IDS
+		export
+			{NONE} all
+		end
+
 	WIZARD_DIALOG
 		redefine
 			setup_dialog,
-			on_ok,
-			notify
-		end
-
-	WIZARD_SHARED_DATA
-		export
-			{NONE} all
+			on_ok
 		end
 
 creation
@@ -29,59 +28,40 @@ feature {NONE} -- Initialization
 			a_parent_exists: a_parent.exists
 		do
 			make_by_id (a_parent, Wizard_idl_dialog_constant)
-			create universal_radio.make_by_id (Current, Universal_radio_constant)
-			create standard_radio.make_by_id (Current, Standard_radio_constant)
+			create virtual_table_standard_radio.make_by_id (Current, Virtual_table_standard_radio_constant)
 			create automation_radio.make_by_id (Current, Automation_radio_constant)
-			create virtual_table_radio.make_by_id (Current, Virtual_table_radio_constant)
+			create virtual_table_universal_radio.make_by_id (Current, Virtual_table_universal_radio_constant)
 			create id_ok.make_by_id (Current, Idok)
-			create id_back.make_by_id (Current, Idback_constant)
+			create id_back.make_by_id (Current, id_back_constant)
 			create help_button.make_by_id (Current, Help_button_constant)
 			create id_cancel.make_by_id (Current, Idcancel)
 		end
 
 feature -- Behavior
 
-	notify (control: WEL_CONTROL; notify_code: INTEGER) is
-			-- Process `control' control notification.
-		do
-			if control = automation_radio then
-				universal_radio.disable
-				standard_radio.disable
-				universal_radio.set_checked
-				standard_radio.set_unchecked
-			elseif control = virtual_table_radio then
-				universal_radio.enable
-				standard_radio.enable
-			end
-		end
-	
 	setup_dialog is
-			-- Initialize dialog's controls.
+			-- Initialize radio buttons.
 		do
 			uncheck_all
 			if Shared_wizard_environment.automation then
 				automation_radio.set_checked
-				universal_radio.set_checked
-				universal_radio.disable
-				standard_radio.disable
 			else
-				universal_radio.enable
-				standard_radio.enable
-				virtual_table_radio.set_checked
 				if Shared_wizard_environment.use_universal_marshaller then
-					universal_radio.set_checked
+					virtual_table_universal_radio.set_checked
 				else
-					standard_radio.set_checked
+					virtual_table_standard_radio.set_checked
 				end
 			end
 		end
 
 	on_ok is
-			-- Next button was clicked.
+			-- Process next button activation
+		local
+			a_file: RAW_FILE
 		do
-			Shared_wizard_environment.set_use_universal_marshaller (universal_radio.checked)
 			Shared_wizard_environment.set_automation (automation_radio.checked)
-			Precursor
+			shared_wizard_environment.set_use_universal_marshaller (virtual_table_universal_radio.checked or automation_radio.checked)
+			Precursor {WIZARD_DIALOG}
 		end
 
 feature -- Access
@@ -89,14 +69,11 @@ feature -- Access
 	automation_radio: WEL_RADIO_BUTTON
 			-- Automation server type radio button
 
-	virtual_table_radio: WEL_RADIO_BUTTON
-			-- Virtual table server type radio button
+	virtual_table_standard_radio: WEL_RADIO_BUTTON
+			-- Virtual Table and standard marshalling server type radio button
 
-	universal_radio: WEL_RADIO_BUTTON
-			-- Universal marshaling radio button
-	
-	standard_radio: WEL_RADIO_BUTTON
-			-- Standard marshaling radio button
+	virtual_table_universal_radio: WEL_RADIO_BUTTON
+			-- Virtual Table and universal marshalling server type radio button
 
 feature {NONE} -- Implementation
 
@@ -104,9 +81,8 @@ feature {NONE} -- Implementation
 			-- Uncheck all buttons.
 		do
 			automation_radio.set_unchecked
-			virtual_table_radio.set_unchecked
-			universal_radio.set_unchecked
-			standard_radio.set_unchecked
+			virtual_table_standard_radio.set_unchecked
+			virtual_table_universal_radio.set_unchecked
 		end
 
 end -- class WIZARD_IDL_DIALOG

@@ -6,10 +6,6 @@ class
 
 inherit
 	WEL_MODAL_DIALOG
-		redefine
-			setup_dialog,
-			on_cancel
-		end
 
 	APPLICATION_IDS
 		export
@@ -28,26 +24,17 @@ feature {NONE} -- Initialization
 			a_parent_exists: a_parent.exists
 		do
 			make_by_id (a_parent, Progress_dialog_constant)
-			!! progress_bar.make_by_id (Current, Progress_bar_constant)
-			!! id_cancel.make_by_id (Current, Idcancel)
-			!! progress_static.make_by_id (Current, Progress_static_constant)
-		end
-
-feature -- Behavior
-
-	setup_dialog is
-		do
-		end
-
-	on_cancel is
-		do
+			create progress_bar.make_by_id (Current, Progress_bar_constant)
+			create id_cancel.make_by_id (Current, Idcancel)
 		end
 
 feature -- Access
 
 	progress_bar: WEL_PROGRESS_BAR
+			-- Processing progress bar
+
 	id_cancel: WEL_PUSH_BUTTON
-	progress_static: WEL_STATIC
+			-- Cancel button
 
 end -- class PROGRESS_DIALOG
 

@@ -67,6 +67,7 @@ feature
 				-- For x_offset and y_offset initialization
 			if retrieved_node = Void then
 					-- Not retrieving widget from project
+				add_window_geometry_action;
 				widget_set_title (entity_name);
 				set_size (400, 500);
 				old_x := eb_screen.x + 10;
@@ -74,8 +75,7 @@ feature
 				set_x_y (old_x, old_y);
 			end;
 			--widget.top_shell.set_action ("<Map>,<Prop>", Current, Current)
-			add_window_geometry_action;
-			add_to_window_list
+			add_to_window_list;
 		end;
 
 feature -- Adding/removing callbacks

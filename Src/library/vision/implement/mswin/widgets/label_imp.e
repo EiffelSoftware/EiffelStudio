@@ -195,9 +195,9 @@ feature {NONE} -- Implementation
 			if not fixed_size_flag then
 				fw ?= font.implementation
 				set_size (font.width_of_string (text), fw.string_height (Current, text))
-				if exists then
-					invalidate
-				end
+			end
+			if exists then
+				invalidate
 			end
 		end
 

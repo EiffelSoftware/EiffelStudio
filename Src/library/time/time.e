@@ -124,7 +124,7 @@ feature -- Initialization
 			-- `default_format_string'
 		require
 			s_exists: s /= Void;
-			time_valid: time_valid (s, default_format_string)
+			time_valid: time_valid_default (s)
 		do
 			make_from_string (s, default_format_string)
 		end
@@ -171,7 +171,17 @@ feature -- Preconditions
 			!! code.make (code_string)
 			Result := code.precise_time and code.correspond (s)
 		end
-		
+
+	time_valid_default (s: STRING): BOOLEAN is
+			-- Is the code_string enough precise
+			-- To create an instance of type TIME
+			-- And does the string `s' correspond to `default_format_string'?
+		require
+			s_exists: s /= Void
+		do
+			Result := time_valid (s, default_format_string)
+		end
+			
 	compact_time_valid (c_t: INTEGER): BOOLEAN is
 		require
 			c_t_not_void: c_t /= Void

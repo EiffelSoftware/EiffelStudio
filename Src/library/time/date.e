@@ -118,7 +118,7 @@ feature -- Initialization
 			-- `date_default_format_string'
 		require
 			s_exists: s /= Void;
-			date_valid: date_valid (s, date_default_format_string)
+			date_valid: date_valid_default (s)
 		do
 			make_from_string (s, date_default_format_string)
 		end
@@ -165,6 +165,16 @@ feature -- Preconditions
 			!! code.make (code_string)
 			Result := code.precise_date and code.correspond (s)
 		end
+
+	date_valid_default (s: STRING): BOOLEAN is
+			-- Is the code_string enough precise
+			-- To create an instance of type DATE
+			-- And does the string `s' correspond to `date_default_format_string'?
+		require
+			s_exists: s /= Void
+		do
+			Result := date_valid (s, date_default_format_string)
+		end	
 
 	compact_date_valid (c_d: INTEGER): BOOLEAN is
 		require

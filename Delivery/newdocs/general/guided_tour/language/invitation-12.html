@@ -8,7 +8,7 @@
 </HEAD>
 <body bgcolor="#faf0e6">
 <DIV>
-<p class="top" align="center"><a href="http://www.eiffel.com">Eiffel Home Page (Web)</a> -- <a href="../index.html">Getting started with Eiffel (local)</a>
+<p class="top" align="center"><a href="http://www.eiffel.com">Eiffel Home Page (Web)</a><!--START EiffelStudio--> -- <a href="../index.html">Getting started with Eiffel (local)</a><!--END EiffelStudio-->
 
 <img src="power.gif" ALT="Eiffel Home Page" align="right" border="0"  usemap="#eiffel" width="109" height="226"><map name="eiffel"><area shape="RECT" alt="Eiffel Home Page" coords="0,0,109,226" HREF="http://www.eiffel.com"><area shape="default" nohref></map>
 
@@ -17,7 +17,7 @@
 <H1 CLASS="aa-sec2">
 <A NAME="pgfId-445445"></A>11  POLYMORPHISM AND DYNAMIC BINDING </H1>
 <P CLASS="nn-first">
-<A NAME="pgfId-445448"></A><A NAME="marker-445446"></A>Inheritance<A NAME="marker-445447"></A> is not just a module combination and enrichment mechanism. It also enables the definition of flexible entities that may become attached to objects of various forms at run time, a property known as polymorphism. 
+<A NAME="pgfId-445448"></A><A NAME="marker-445446"></A>Inheritance<A NAME="marker-445447"></A> is not just a module combination and enrichment mechanism. It also enables the definition of flexible entities that may become attached to objects of various forms at run time, a property known as polymorphism.
 <P CLASS="nn-normal">
 <A NAME="pgfId-445450"></A>This remarkable facility must be reconciled with static <A NAME="marker-445449"></A>typing. The language convention is simple: an assignment of the form <SPAN CLASS="ee-text">
 a</SPAN>
@@ -45,13 +45,13 @@ B</SPAN>
 B</SPAN>
  is a descendant of <SPAN CLASS="ee-text">
 A</SPAN>
-. 
+.
 <P CLASS="nn-normal">
-<A NAME="pgfId-445451"></A>This corresponds to the intuitive idea that a value of a more specialized type may be assigned to an entity of a less specialized type -- but not the reverse. (As an analogy, consider that if you request vegetables, getting green vegetables is fine, but if you ask for green vegetables, receiving a dish labeled just &quot;vegetables&quot; is not acceptable, as it could include, say, carrots.) 
+<A NAME="pgfId-445451"></A>This corresponds to the intuitive idea that a value of a more specialized type may be assigned to an entity of a less specialized type -- but not the reverse. (As an analogy, consider that if you request vegetables, getting green vegetables is fine, but if you ask for green vegetables, receiving a dish labeled just &quot;vegetables&quot; is not acceptable, as it could include, say, carrots.)
 <P CLASS="nn-normal">
 <A NAME="pgfId-445452"></A>What makes this possibility particularly powerful is the complementary facility: <SPAN CLASS="ff-bold">
 feature redefinition</SPAN>
-<A NAME="marker-445453"></A>. A class may redefine some or all of the features which it inherits from its parents. For an attribute or function, the redefinition may affect the type, replacing the original by a descendant; for a routine it may also affect the implementation, replacing the original's routine body by a new one. 
+<A NAME="marker-445453"></A>. A class may redefine some or all of the features which it inherits from its parents. For an attribute or function, the redefinition may affect the type, replacing the original by a descendant; for a routine it may also affect the implementation, replacing the original's routine body by a new one.
 <P CLASS="nn-normal">
 <A NAME="pgfId-445454"></A>Assume for example a class <SPAN CLASS="ee-text">
 POLYGON</SPAN>
@@ -94,7 +94,7 @@ is</SPAN>
 end</SPAN>
 
 <P CLASS="ee-text">
-<A NAME="pgfId-445464"></A>&nbsp;&nbsp;&nbsp;&nbsp;... Other RECTANGLE features ... 
+<A NAME="pgfId-445464"></A>&nbsp;&nbsp;&nbsp;&nbsp;... Other RECTANGLE features ...
 </TD>
 </TR>
 </table></ul><p>
@@ -105,7 +105,7 @@ perimeter</SPAN>
 redefine</SPAN>
  subclause (which would come after the <SPAN CLASS="ee-keyword">
 rename</SPAN>
- if present). 
+ if present).
 <P CLASS="nn-normal">
 <A NAME="pgfId-445467"></A>Other descendants of <SPAN CLASS="ee-text">
 POLYGON</SPAN>
@@ -138,7 +138,7 @@ then</SPAN>
 <P CLASS="ee-text">
 <A NAME="pgfId-445475"></A>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;print (p<SPAN CLASS="ee-dot">
 .</SPAN>
-perimeter) 
+perimeter)
 </TD>
 </TR>
 </table></ul><p>
@@ -165,15 +165,15 @@ p</SPAN>
 RECTANGLE</SPAN>
 . This is known as <SPAN CLASS="ff-bold">
 dynamic binding</SPAN>
-<A NAME="marker-445477"></A>. 
+<A NAME="marker-445477"></A>.
 <P CLASS="nn-normal">
-<A NAME="pgfId-445478"></A>Dynamic binding provides a high degree of flexibility. The advantage for clients is the ability to request an operation (such as perimeter computation) without explicitly selecting one of its variants; the choice only occurs at run-time. This is essential in large systems, where many variants may be available; dynamic binding protects each component against changes in other components. 
+<A NAME="pgfId-445478"></A>Dynamic binding provides a high degree of flexibility. The advantage for clients is the ability to request an operation (such as perimeter computation) without explicitly selecting one of its variants; the choice only occurs at run-time. This is essential in large systems, where many variants may be available; dynamic binding protects each component against changes in other components.
 <P CLASS="nn-normal">
 <A NAME="pgfId-445479"></A>This technique is particularly attractive when compared to its closest equivalent in traditional approaches, where you would need records with variant components, or union types (C), together with <SPAN CLASS="ee-keyword">
 case</SPAN>
  (switch) instructions to discriminate between variants. This means that every client must know about every possible case, and that any extension may invalidate a large body of existing software.
 <P CLASS="nn-normal">
-<A NAME="pgfId-445480"></A>The combination of inheritance, feature redefinition, polymorphism and dynamic binding supports a development mode in which every module is open and incremental. When you want to reuse an existing class but need to adapt it to a new context, you can define a new descendant of that class (with new features, redefined ones, or both) without any change to the original. This facility is of great importance in software development, an activity that -- by design or circumstance -- is invariably incremental. 
+<A NAME="pgfId-445480"></A>The combination of inheritance, feature redefinition, polymorphism and dynamic binding supports a development mode in which every module is open and incremental. When you want to reuse an existing class but need to adapt it to a new context, you can define a new descendant of that class (with new features, redefined ones, or both) without any change to the original. This facility is of great importance in software development, an activity that -- by design or circumstance -- is invariably incremental.
 <P CLASS="nn-normal">
 <A NAME="pgfId-445481"></A>The power of these techniques demands adequate controls. First, feature redefinition, as seen above, is explicit. Second, because the language is typed, a compiler can check statically whether a feature application <SPAN CLASS="ee-text">
 a</SPAN>
@@ -181,7 +181,7 @@ a</SPAN>
 .</SPAN>
 <SPAN CLASS="ee-text">
 f </SPAN>
-is correct. In contrast, dynamically typed object-oriented languages defer checks until run-time and hope for the best: if an object &quot;sends a message&quot; to another (that is to say, calls one of its routines) one just expects that the corresponding class, or one of its ancestors, will happen to include an appropriate routine; if not, a run-time error will occur. Such errors will not happen during the execution of a type-checked Eiffel system. 
+is correct. In contrast, dynamically typed object-oriented languages defer checks until run-time and hope for the best: if an object &quot;sends a message&quot; to another (that is to say, calls one of its routines) one just expects that the corresponding class, or one of its ancestors, will happen to include an appropriate routine; if not, a run-time error will occur. Such errors will not happen during the execution of a type-checked Eiffel system.
 <P CLASS="nn-normal">
 <A NAME="pgfId-445483"></A>In other words, the language reconciles dynamic <SPAN CLASS="ff-italics">
 binding</SPAN>
@@ -191,9 +191,9 @@ typing</SPAN>
 right</SPAN>
  version (the one most directly adapted to the target object) will be selected. Static typing means that the compiler makes sure there is <SPAN CLASS="ff-italics">
 at least one</SPAN>
- such version. 
+ such version.
 <P CLASS="nn-normal">
-<A NAME="pgfId-445484"></A>This policy also yields an important performance benefit: in contrast with the costly run-time searches that may be needed with dynamic typing (since a requested routine may not be defined in the class of the target object but inherited from a possibly remote ancestor), the EiffelStudio implementation always finds the appropriate routine in constant-bounded time. 
+<A NAME="pgfId-445484"></A>This policy also yields an important performance benefit: in contrast with the costly run-time searches that may be needed with dynamic typing (since a requested routine may not be defined in the class of the target object but inherited from a possibly remote ancestor), the EiffelStudio implementation always finds the appropriate routine in constant-bounded time.
 <P CLASS="nn-normal">
 <A NAME="pgfId-445485"></A>Assertions provide a further mechanism for controlling the power of redefinition. In the absence of specific precautions, redefinition may be dangerous: how can a client be sure that evaluation of<SPAN CLASS="ee-text">
  p</SPAN>
@@ -212,7 +212,7 @@ RECTANGLE</SPAN>
  when applied to any entity that is attached at run-time to a rectangle object. An honest subcontractor is bound to honor the contract accepted by the prime contractor. <A NAME="marker-445490"></A>This means that it may not impose stronger requirements on the clients, but may accept more general requests: weaker precondition; and that it must achieve at least as much as promised by the prime contractor, but may achieve more: stronger postcondition. <A NAME="marker-445491"></A><A NAME="marker-445492"></A>
 <p class="bottom" ALIGN="left"><IMG SRC="normaldoc.gif" ALT="Previous, Up, Next" BORDER="0" WIDTH="300" HEIGHT="40" USEMAP="#navigation"><map name="navigation"><AREA SHAPE="RECT" alt="Previous section" COORDS="0,0,95,40" HREF="invitation-11.html"><AREA SHAPE="RECT" alt="Up" COORDS="96,0,199,40" HREF="invitation-00.html"><AREA SHAPE="RECT" alt="Next section" COORDS="200,0,300,40" HREF="invitation-13.html"><area shape="default" nohref></MAP>
 
-<p class="bottom" align="center"><a href="http://www.eiffel.com">Eiffel Home Page (Web)</a> -- <a href="../index.html">Getting started with Eiffel (local)</a>
+<p class="bottom" align="center"><a href="http://www.eiffel.com">Eiffel Home Page (Web)</a><!--START EiffelStudio--> -- <a href="../index.html">Getting started with Eiffel (local)</a><!--END EiffelStudio-->
 
 <p class="copyright" align="center">Copyright Interactive Software Engineering, 2001
 </BODY>

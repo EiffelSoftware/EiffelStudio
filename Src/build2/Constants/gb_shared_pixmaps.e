@@ -55,6 +55,14 @@ feature -- Pngs
 		once
 			Result := build_classic_pixmap ("cmd_history")
 		end
+		
+	Icon_cmd_history_title: ARRAY [EV_PIXMAP] is
+			-- Array containing both the color & the gray pixmap
+			-- Color is at index 1, gray at index 2
+		once
+			Result := build_classic_pixmap ("cmd_history_title")
+		end
+		
 
 	Icon_redo: ARRAY [EV_PIXMAP] is
 			-- Array containing both the color & the gray pixmap

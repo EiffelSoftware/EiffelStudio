@@ -261,7 +261,7 @@ feature -- Inlining
 					f := base_class.feature_table.item (feature_name);
 
 						-- Is it a polymorphic call ?
-					entry := Eiffel_table.item_id (rout_id);
+					entry := Eiffel_table.poly_table (rout_id);
 					if entry /= Void and then not entry.is_polymorphic (cl_type.type_id) then
 						inliner := System.remover.inliner;
 						inline := inliner.inline (f)

@@ -75,7 +75,7 @@ end;
 			selected_rout_id_set := Void;
 		end;
 
-	Routine_id_counter: COUNTER is
+	Routine_id_counter: ROUTINE_COUNTER is
 			-- Routine id counter
 		once
 			Result := System.routine_id_counter;
@@ -191,13 +191,14 @@ end;
 			info_parent: PARENT_C;
 			rout_id_set: ROUT_ID_SET;
 			cond, in_generic_class: BOOLEAN;
-			first_body_id, new_rout_id, written_id, id: INTEGER;
+			first_body_id, written_id, id: INTEGER;
 			instantiator, to_compair, written_type, written_actual_type: TYPE_A;
 			written_class: CLASS_C;
 			feature_name: STRING;
 			old_pos: INTEGER;
 			r_id_set: ROUT_ID_SET;
-			i, nb, rid: INTEGER
+			i, nb: INTEGER;
+			new_rout_id, rid: ROUTINE_ID
 		do		
 			id := new_t.feat_tbl_id;
 			info := first;
@@ -248,10 +249,6 @@ end;
 				i := i + 1;
 			end
 				
-			if new_rout_id < 0 then
-					-- Attribute routine id
-				new_rout_id := - new_rout_id;
-			end;
 				-- Insertion into thwe routine info table
 			System.rout_info_table.put (new_rout_id, System.current_class);	
 			a_feature.set_rout_id_set (rout_id_set);

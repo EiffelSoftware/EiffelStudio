@@ -41,7 +41,7 @@ feature
 	body_index: INTEGER;
 			-- Feature body index
 
-	rout_id: INTEGER;
+	rout_id: ROUTINE_ID;
 			-- Routine id of the feature
 
 	pattern_id: INTEGER;
@@ -129,7 +129,7 @@ feature
 			real_body_id := i
 		end;
 
-	set_rout_id (i: INTEGER) is
+	set_rout_id (i: ROUTINE_ID) is
 			-- Assign `i' to `rout_id'.
 		do
 			rout_id := i;
@@ -446,7 +446,7 @@ feature -- Byte code generation
 			end;
 
 				-- Routine id
-			Temp_byte_code_array.append_integer (rout_id);
+			Temp_byte_code_array.append_integer (rout_id.id);
 
 				-- Result SK value
 			r_type := context.real_type(result_type);

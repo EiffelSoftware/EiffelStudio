@@ -26,7 +26,7 @@ feature
 	supplier_status_modified: BOOLEAN;
 		-- The status of a supplier has changed
 
-	assert_prop_list: LINKED_LIST [INTEGER];
+	assert_prop_list: LINKED_LIST [ROUTINE_ID];
 		-- List of routine id to be propagated
 
 	set_expanded_modified is
@@ -107,7 +107,7 @@ end;
 		end;
 
 	propagate (resulting_table: FEATURE_TABLE; equivalent_table: BOOLEAN;
-				pass2_control: PASS2_CONTROL; l: LINKED_LIST [INTEGER]) is
+				pass2_control: PASS2_CONTROL; l: LINKED_LIST [ROUTINE_ID]) is
 			-- Propagate the pass2 and pass3 according to `resulting_table'
 			-- and `pass2_control'
 		local

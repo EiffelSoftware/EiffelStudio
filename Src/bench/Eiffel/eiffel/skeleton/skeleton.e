@@ -565,7 +565,7 @@ feature
 			until
 				after
 			loop
-				ba.append_int32_integer (item.rout_id);
+				ba.append_int32_integer (item.rout_id.id);
 				forth;
 			end;
 		end;
@@ -665,7 +665,7 @@ feature
 			Skeleton_file.is_open_write;
 			not empty;
 		local
-			rout_id: INTEGER;
+			rout_id: ROUTINE_ID;
 			tbl: POLY_TABLE [ENTRY];
 		do
 			Skeleton_file.putchar ('{');
@@ -676,10 +676,10 @@ feature
 				after
 			loop
 				rout_id := item.rout_id;
-				tbl := Eiffel_table.item_id (rout_id);
+				tbl := Eiffel_table.poly_table (rout_id);
 					-- Generate a special prefix when dealing with DLE.
 				Skeleton_file.putstring (Table_prefix);
-				Skeleton_file.putstring (Encoder.table_name (rout_id));
+				Skeleton_file.putstring (rout_id.table_name);
 				Skeleton_file.putstring (" - ");
 				Skeleton_file.putint (tbl.min_type_id - 1);
 				Skeleton_file.putstring (",%N");
@@ -692,7 +692,7 @@ feature
             -- Prepare extern declarations for final mode
             -- generation
         local
-            rout_id: INTEGER;
+            rout_id: ROUTINE_ID;
         do
             from
                 start
@@ -701,7 +701,7 @@ feature
             loop
                 rout_id := item.rout_id;
                 Extern_declarations.add_skeleton_attribute_table
-                                (clone (Encoder.table_name (rout_id)));
+								(rout_id.table_name);
 				Eiffel_table.mark_used (rout_id);
                 forth
             end;
@@ -720,7 +720,7 @@ feature
 			until
 				after
 			loop
-				Skeleton_file.putint (item.rout_id);
+				Skeleton_file.putint (item.rout_id.id);
 				Skeleton_file.putstring (",%N");
 				forth;
 			end;

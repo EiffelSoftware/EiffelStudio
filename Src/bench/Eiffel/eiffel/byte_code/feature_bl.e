@@ -165,7 +165,7 @@ end;
 		do
 			type_i := context_type;
 			class_type ?= type_i;
-			entry := Eiffel_table.item_id (rout_id);
+			entry := Eiffel_table.poly_table (rout_id);
 			is_polymorphic_access := not type_i.is_basic and then
 					class_type /= Void and then
 					entry /= Void and then
@@ -193,7 +193,7 @@ end;
 			class_type: CL_TYPE_I;
 			type_i: TYPE_I;
 		do
-			entry := Eiffel_table.item_id (rout_id);
+			entry := Eiffel_table.poly_table (rout_id);
 			type_i := context_type;
 			if not (type_i.is_basic or entry = Void) then
 				class_type ?= type_i;	-- Cannot fail
@@ -214,7 +214,7 @@ end;
 			entry: POLY_TABLE [ENTRY];
 			rout_table: ROUT_TABLE;
 		do
-			entry := Eiffel_table.item_id (rout_id);
+			entry := Eiffel_table.poly_table (rout_id);
 			if entry = Void then
 					-- Call to a deferred feature without implementation
 				generated_file.putchar ('(');
@@ -224,7 +224,7 @@ end;
 					-- The call is polymorphic, so generate access to the
 					-- routine table. The dereferenced function pointer has
 					-- to be enclosed in parenthesis.
-				table_name := clone (Encoder.table_name (rout_id));
+				table_name := rout_id.table_name;
 				generated_file.putchar ('(');
 				real_type (type).c_type.generate_function_cast (generated_file);
 				generated_file.putchar ('(');

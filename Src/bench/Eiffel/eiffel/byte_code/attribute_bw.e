@@ -38,7 +38,7 @@ feature
 			is_nested: BOOLEAN;
 			type_i: TYPE_i;
 			type_c: TYPE_C;
-			r_id: INTEGER;
+			r_id: ROUTINE_ID;
 			rout_info: ROUT_INFO;
 			base_class: CLASS_C
 		do
@@ -70,10 +70,10 @@ feature
 				else
 					generated_file.putstring ("RTWPA(");
 				end;
-				r_id := -base_class.feature_table.item
+				r_id := base_class.feature_table.item
 					(attribute_name).rout_id_set.first;
 				rout_info := System.rout_info_table.item (r_id);
-				generated_file.putint (rout_info.origin);
+				generated_file.putint (rout_info.origin.id);
 				generated_file.putstring (gc_comma);
 				generated_file.putint (rout_info.offset)
 			else

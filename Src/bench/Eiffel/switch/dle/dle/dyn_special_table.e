@@ -32,7 +32,7 @@ feature -- Generation
 			i, nb, max_id: INTEGER;
 			r_name, c_name: STRING
 		do
-			c_name := clone (Encoder.table_name (rout_id));
+			c_name := rout_id.table_name;
 			max_id := final_table_size;
 			from
 				Rout_declarations.add_dle_table (c_name);

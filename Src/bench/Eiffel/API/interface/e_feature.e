@@ -516,7 +516,7 @@ feature {NONE} -- Implementation
 			s_table: SELECT_TABLE
 		do
 			s_table := written_class.compiled_info.feature_table.origin_table;
-			Result := s_table.item (rout_id_set.first.abs)
+			Result := s_table.item (rout_id_set.first)
 		end;
 
 	is_dynamic: BOOLEAN;

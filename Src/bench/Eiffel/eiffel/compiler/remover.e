@@ -139,7 +139,7 @@ end;
 
 	features_per_dot: INTEGER is 100;
 
-	mark_alive (feat: FEATURE_I; rout_id_val: INTEGER) is
+	mark_alive (feat: FEATURE_I; rout_id_val: ROUTINE_ID) is
 			-- Record feature `feat'
 		local
 			class_name: STRING;

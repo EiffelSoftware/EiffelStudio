@@ -9,7 +9,7 @@ inherit
 			melt, execution_unit,
 			can_be_inlined
 		end;
-	SHARED_BODY_ID
+	SHARED_ROUT_ID
 		rename
 			same_type as general_same_type
 		end
@@ -24,7 +24,7 @@ feature
 		do
 			feature_name := "_invariant";
 			!!rout_id_set.make (1);
-			rout_id_set.put (Invariant_id);
+			rout_id_set.put (Invariant_rout_id);
 			written_in := a_class.id;
 		end;
 

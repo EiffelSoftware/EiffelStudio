@@ -353,7 +353,7 @@ feature {NONE} -- Generation
 		local
 			types: TYPE_LIST
 			feature_id: INTEGER
-			rout_id: INTEGER
+			rout_id: ROUTINE_ID
 			args: FEAT_ARG
 			has_arguments: BOOLEAN
 			return_type: TYPE_A
@@ -422,13 +422,13 @@ feature {NONE} -- Generation
 
 				if final_mode then
 
-					entry :=  Eiffel_table.item_id (rout_id)
+					entry :=  Eiffel_table.poly_table (rout_id)
 					if entry = Void then
 						-- Function pointer associated to a deferred feature
 						-- without any implementation
 						gen_file.putstring ("(char *(*)()) 0")
 					else
-						table_name := clone (Encoder.table_name (rout_id))
+						table_name := rout_id.table_name
 						gen_file.putchar ('(')
 						gen_file.putstring (table_name)
 						gen_file.putchar ('-')
@@ -453,7 +453,7 @@ feature {NONE} -- Generation
 					then
 						rout_info := System.rout_info_table.item (rout_id);
 						gen_file.putstring ("RTPWP(")
-						gen_file.putint (rout_info.origin);
+						gen_file.putint (rout_info.origin.id);
 						gen_file.putstring (", ")
 						gen_file.putint (rout_info.offset);
 					else

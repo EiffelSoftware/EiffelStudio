@@ -900,12 +900,12 @@ feature -- Polymorphism
  			Result := True
  		end;
  
- 	new_poly_unit (rout_id: INTEGER): POLY_UNIT is
- 			-- New polymorhphic unit
+ 	new_poly_unit (rout_id: ROUTINE_ID): POLY_UNIT is
+ 			-- New polymorphic unit
  		require
- 			positive_rout_id: rout_id > 0
+			rout_id_not_void: rout_id /= Void
  		do
- 			if (not is_attribute) or else rout_id_set.has (rout_id) then
+ 			if not is_attribute or not rout_id.is_attribute then
  				Result := new_rout_unit
  			else
  				Result := new_attr_unit
@@ -1500,13 +1500,13 @@ feature -- Undefinition
 			Result_is_deferred: Result.is_deferred;
 		end;
 
-	new_rout_id: INTEGER is
+	new_rout_id: ROUTINE_ID is
 			-- New routine id
 		do
-			Result := Routine_id_counter.next;
+			Result := Routine_id_counter.next_rout_id;
 		end;
 
-	Routine_id_counter: COUNTER is
+	Routine_id_counter: ROUTINE_COUNTER is
 			-- Routine id counter
 		once
 			Result := System.routine_id_counter;

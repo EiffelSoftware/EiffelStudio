@@ -14,7 +14,7 @@ creation
 
 feature
 
-	new_units: EXTEND_TABLE [POLY_UNIT_TABLE [POLY_UNIT], INTEGER];
+	new_units: EXTEND_TABLE [POLY_UNIT_TABLE [POLY_UNIT], ROUTINE_ID];
 			-- New units 
 
 	count: INTEGER;
@@ -25,7 +25,7 @@ feature
 			!!new_units.make (500);
 		end;
 
-	add_new (u: POLY_UNIT; rout_id: INTEGER; pattern_id: INTEGER) is
+	add_new (u: POLY_UNIT; rout_id: ROUTINE_ID; pattern_id: INTEGER) is
 			-- Add a new unit for routine id `rout_id' to the controler
 		require
 			good_argument: u /= Void
@@ -51,7 +51,7 @@ feature
 			-- temporary server of polymorphic unit tables.
 		local
 			new_set, server_set: POLY_UNIT_TABLE [POLY_UNIT];
-			rout_id: INTEGER;
+			id: INTEGER;
 		do
 			from
 				new_units.start
@@ -59,9 +59,9 @@ feature
 				new_units.after
 			loop
 				new_set := new_units.item_for_iteration;
-				rout_id := new_set.rout_id;
-				if Tmp_poly_server.has (rout_id) then
-					server_set := Tmp_poly_server.item (rout_id);
+				id := new_set.id;
+				if Tmp_poly_server.has (id) then
+					server_set := Tmp_poly_server.item (id);
 					server_set.merge (new_set);
 				else
 					server_set := new_set;

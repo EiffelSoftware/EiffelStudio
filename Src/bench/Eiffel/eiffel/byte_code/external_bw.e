@@ -64,7 +64,7 @@ feature
 			-- Generate external call in a `typ' context
 		local
 			is_nested: BOOLEAN;
-			r_id: INTEGER;
+			r_id: ROUTINE_ID;
 			rout_info: ROUT_INFO	
 		do
 			is_nested := not is_first;
@@ -83,7 +83,7 @@ feature
 				r_id := typ.base_class.feature_table.item
 					(feature_name).rout_id_set.first;
 				rout_info := System.rout_info_table.item (r_id);
-				generated_file.putint (rout_info.origin);
+				generated_file.putint (rout_info.origin.id);
 				generated_file.putstring (gc_comma);
 				generated_file.putint (rout_info.offset);
 			else

@@ -274,7 +274,7 @@ feature -- Type check, byte code and dead code removal
 			nested: NESTED_B;
 			create_info: CREATE_INFO;
 			create_feat: CREATE_FEAT;
-			rout_id: INTEGER;
+			rout_id: ROUTINE_ID;
 			type_set: ROUT_ID_SET;
 		do
 			!!Result;
@@ -291,9 +291,6 @@ feature -- Type check, byte code and dead code removal
 			if create_feat /= Void then
 				rout_id := context.a_class.feature_table.item
 					(create_feat.feature_name).rout_id_set.first;
-				if rout_id < 0 then
-					rout_id := -rout_id;
-				end;
 				type_set := System.type_set;
 				if not type_set.has (rout_id) then
 						-- Found a new routine id having a type table

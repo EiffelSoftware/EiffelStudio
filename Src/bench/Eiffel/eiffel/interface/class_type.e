@@ -774,7 +774,7 @@ feature -- Skeleton generation
 			skeleton_empty: BOOLEAN;
 			a_class: CLASS_C;
 			creation_feature: FEATURE_I;
-			r_id: INTEGER;
+			r_id: ROUTINE_ID;
 			rout_info: ROUT_INFO
 		do
 			a_class := associated_class;
@@ -880,7 +880,7 @@ feature -- Skeleton generation
 					if creation_feature /= Void then
 						r_id := creation_feature.rout_id_set.first;
 						rout_info := System.rout_info_table.item (r_id);
-						Skeleton_file.putint (rout_info.origin);
+						Skeleton_file.putint (rout_info.origin.id);
 						Skeleton_file.putstring (",(int32) ");
 						Skeleton_file.putint (rout_info.offset);
 					else
@@ -1099,7 +1099,7 @@ feature -- DLE
 			skeleton_empty: BOOLEAN;
 			a_class: CLASS_C;
 			creation_feature: FEATURE_I;
-			r_id: INTEGER;
+			r_id: ROUTINE_ID;
 			rout_info: ROUT_INFO
 		do
 			a_class := associated_class;
@@ -1225,7 +1225,7 @@ feature -- DLE
 					if creation_feature /= Void then
 						r_id := creation_feature.rout_id_set.first;
 						rout_info := System.rout_info_table.item (r_id);
-						Skeleton_file.putint (rout_info.origin);
+						Skeleton_file.putint (rout_info.origin.id);
 						Skeleton_file.putstring
 							("node->exp_info.precomp.offset = ")
 						Skeleton_file.putint (rout_info.offset)

@@ -152,7 +152,7 @@ end;
 				-- Do nothing if `reg' is not the current entity
 			if reg.is_current then
 				class_type ?= context_type;
-				entry := Eiffel_table.item_id (rout_id);
+				entry := Eiffel_table.poly_table (rout_id);
 				if 	class_type /= Void
 					and then
 					entry.is_polymorphic (class_type.type_id)
@@ -172,7 +172,7 @@ end;
 			type_i := context_type;
 			if not type_i.is_basic then
 				class_type ?= type_i;	-- Cannot fail
-				entry := Eiffel_table.item_id (rout_id);
+				entry := Eiffel_table.poly_table (rout_id);
 				Result := entry.is_polymorphic (class_type.type_id);
 			end;
 		end;
@@ -206,7 +206,7 @@ end;
 		do
 			type_i := real_type (type);
 			type_c := type_i.c_type;
-			entry := Eiffel_table.item_id (rout_id);
+			entry := Eiffel_table.poly_table (rout_id);
 				-- No need to use dereferencing if object is an expanded
 				-- or if it is a bit.
 			if not type_i.is_expanded and then not type_c.is_bit then
@@ -227,7 +227,7 @@ end;
 			if entry.is_polymorphic (typ.type_id) then
 					-- The access is polymorphic, which means the offset
 					-- is not a constant and has to be computed.
-				table_name := clone (Encoder.table_name (rout_id));
+				table_name := rout_id.table_name;
 				generated_file.putchar ('(');
 				generated_file.putstring (table_name);
 				generated_file.putchar ('-');

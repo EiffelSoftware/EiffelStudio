@@ -222,7 +222,7 @@ feature -- Byte code generation
 				-- Start	
 			ba.append (Bc_start);
 				-- Routine id
-			ba.append_integer (rout_id_set.first);
+			ba.append_integer (rout_id_set.first.id);
 				-- Meta-type of Result
 			result_type := byte_context.real_type (type.actual_type.type_i);
 			ba.append_integer (result_type.sk_value);

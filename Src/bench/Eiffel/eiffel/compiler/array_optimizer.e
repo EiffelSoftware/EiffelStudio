@@ -51,8 +51,8 @@ feature
 			infix_at_rout_id := ftable.item ("_infix_@").rout_id_set.first
 			make_area_rout_id := ftable.item ("make_area").rout_id_set.first
 			set_area_rout_id := ftable.item ("set_area").rout_id_set.first
-			lower_rout_id := - ftable.item ("lower").rout_id_set.first
-			area_rout_id := - ftable.item ("area").rout_id_set.first
+			lower_rout_id := ftable.item ("lower").rout_id_set.first
+			area_rout_id := ftable.item ("area").rout_id_set.first
 			
 			!!array_descendants.make;
 
@@ -83,8 +83,8 @@ feature {NONE} -- Array optimization
 
 	array_optimization_on: BOOLEAN
 
-	put_rout_id, item_rout_id, infix_at_rout_id: INTEGER
-	make_area_rout_id, set_area_rout_id, lower_rout_id, area_rout_id: INTEGER;
+	put_rout_id, item_rout_id, infix_at_rout_id: ROUTINE_ID
+	make_area_rout_id, set_area_rout_id, lower_rout_id, area_rout_id: ROUTINE_ID
 			-- rout_ids of the special/unsafe features
 
 	array_descendants: LINKED_LIST [CLASS_C];
@@ -395,13 +395,13 @@ feature -- Contexts
 		end;
 
 	generate_feature_table (plug_file: INDENT_FILE; table_name: STRING;
-			rout_id: INTEGER; table_prefix: STRING) is
+			rout_id: ROUTINE_ID; table_prefix: STRING) is
 		local
 			entry: POLY_TABLE [ENTRY]
 			temp: STRING
 		do
-			entry := Eiffel_table.item_id (rout_id);
-			temp := Encoder.table_name (rout_id);
+			entry := Eiffel_table.poly_table (rout_id);
+			temp := rout_id.table_name;
 			Plug_file.putstring ("extern long ");
 			Plug_file.putstring (table_prefix);
 			Plug_file.putstring (temp);
@@ -443,7 +443,7 @@ feature -- Detection of safe/unsafe features
 			-- Can the feature be safely called within an optimized loop?
 		local
 			table: ROUT_UNIT_TABLE;
-			rout_id_val: INTEGER;
+			rout_id_val: ROUTINE_ID;
 			unit: ROUT_UNIT;
 			written_class, descendant_class: CLASS_C;
 			body_table: BODY_INDEX_TABLE;
@@ -454,9 +454,12 @@ feature -- Detection of safe/unsafe features
 			else
 				rout_id_val := f.rout_id_set.first;
 
-				if Tmp_poly_server.has (rout_id_val) then
+				if
+					not rout_id_val.is_attribute and then
+					Tmp_poly_server.has (rout_id_val.id)
+				then	
 					written_class := f.written_class;
-					table ?= Tmp_poly_server.item (rout_id_val);
+					table ?= Tmp_poly_server.item (rout_id_val.id);
 					from
 						Result := True;
 						body_table := System.body_index_table;
@@ -547,14 +550,14 @@ feature -- DLE
 			entry: POLY_TABLE [ENTRY];
 			temp: STRING
 		do
-			entry := Eiffel_table.item_id (lower_rout_id);
-			temp := Encoder.table_name (lower_rout_id);
+			entry := Eiffel_table.poly_table (lower_rout_id);
+			temp := lower_rout_id.table_name;
 			plug_file.putstring ("extern long *");
 			plug_file.putstring (temp);
 			plug_file.putchar (';');
 			plug_file.new_line;
-			entry := Eiffel_table.item_id (area_rout_id);
-			temp := Encoder.table_name (area_rout_id);
+			entry := Eiffel_table.poly_table (area_rout_id);
+			temp := area_rout_id.table_name;
 			plug_file.putstring ("extern long *");
 			plug_file.putstring (temp);
 			plug_file.putchar (';');
@@ -571,16 +574,16 @@ feature -- DLE
 			entry: POLY_TABLE [ENTRY];
 			temp: STRING
 		do
-			entry := Eiffel_table.item_id (lower_rout_id);
-			temp := Encoder.table_name (lower_rout_id);
+			entry := Eiffel_table.poly_table (lower_rout_id);
+			temp := lower_rout_id.table_name;
 			plug_file.putstring ("eif_lower_table = ");
 			plug_file.putstring (temp);
 			plug_file.putstring (" - ");
 			plug_file.putint (entry.min_type_id - 1);
 			plug_file.putchar (';');
 			plug_file.new_line;
-			entry := Eiffel_table.item_id (area_rout_id);
-			temp := Encoder.table_name (area_rout_id);
+			entry := Eiffel_table.poly_table (area_rout_id);
+			temp := area_rout_id.table_name;
 			plug_file.putstring ("eif_area_table = ");
 			plug_file.putstring (temp);
 			plug_file.putstring (" - ");

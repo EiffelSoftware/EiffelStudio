@@ -23,7 +23,7 @@ inherit
 		undefine
 			copy, setup, consistent, is_equal
 		end;
-	SHARED_BODY_ID
+	SHARED_ROUT_ID
 		undefine
 			copy, setup, consistent, is_equal
 		end;
@@ -74,7 +74,7 @@ feature -- Insertion
 			u: POLY_UNIT
 		do
 			if f.has_poly_unit then
-				u := f.new_poly_unit (Invariant_id);
+				u := f.new_poly_unit (Invariant_rout_id);
 			end;
 			from
 				class_types.start;
@@ -90,7 +90,7 @@ feature -- Insertion
 			end
 		end;
 
-	put (r_id: INTEGER; f: FEATURE_I) is
+	put (r_id: ROUTINE_ID; f: FEATURE_I) is
 			-- Insert the routine id `r_id' into the descriptors 
 			-- of `base_class', and associate it with the feature `f'.
 			--|The (routine_id, FEATURE_I) pair is inserted into
@@ -119,9 +119,9 @@ feature -- Insertion
 				-- origin class.
 
 			ri := System.rout_info_table.item (r_id);
-			origin := ri.origin;
+			origin := ri.origin.id;
 			offset := ri.offset;
-			nb_routines := System.rout_info_table.offset_counters.item (origin) ;
+			nb_routines := ri.origin.descriptor_size;
 
 				-- For each class type, create the appropriate
 				-- entry, and insert it into the appropriate

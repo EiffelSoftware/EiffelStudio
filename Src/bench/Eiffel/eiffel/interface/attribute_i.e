@@ -107,10 +107,10 @@ feature
 			-- Do nothing
 		end;
 
-	new_rout_id: INTEGER is
+	new_rout_id: ATTRIBUTE_ID is
 			-- New routine id for attribute
 		do
-			Result := - Routine_id_counter.next;
+			Result := Routine_id_counter.next_attr_id;
 		end;
 
 	to_melt_in (a_class: CLASS_C): BOOLEAN is
@@ -179,7 +179,7 @@ feature
 			table_name, internal_name: STRING;
 			skeleton: SKELETON;
 			table: POLY_TABLE [ENTRY];
-			rout_id: INTEGER;
+			rout_id: ROUTINE_ID;
 			rout_info: ROUT_INFO
 		do
 			generate_header (file);
@@ -187,8 +187,7 @@ feature
 			result_type := type.actual_type.type_i;
 			if result_type.has_formal then
 				gen_type ?= class_type.type;
-				result_type := result_type.instantiation_in
-														(gen_type);
+				result_type := result_type.instantiation_in (gen_type);
 			end;
 			result_type.c_type.generate (file);
 			internal_name := Encoder.feature_name
@@ -205,11 +204,11 @@ feature
 			file.putstring ("return *");
 			result_type.c_type.generate_access_cast (file);
 			file.putstring ("(Current + ");
-			rout_id := - rout_id_set.first;
+			rout_id := rout_id_set.first;
 			if byte_context.final_mode then
-				table := Eiffel_table.item_id (rout_id);
+				table := Eiffel_table.poly_table (rout_id);
 				if table.is_polymorphic (class_type.type_id) then
-					table_name := clone (Encoder.table_name (rout_id));
+					table_name := rout_id.table_name;
 					file.putchar ('(');
 					file.putstring (table_name);
 					file.putchar ('-');
@@ -228,7 +227,7 @@ feature
 			then
 				rout_info := System.rout_info_table.item (rout_id);
 				file.putstring ("RTWPA(");
-				file.putint (rout_info.origin);
+				file.putint (rout_info.origin.id);
 				file.putchar (',');
 				file.putint (rout_info.offset);
 				file.putstring (", Dtype(Current))");
@@ -306,7 +305,7 @@ feature
 			static_type: INTEGER;
 			current_type: CL_TYPE_I;
 			base_class: CLASS_C;
-			r_id: INTEGER;
+			r_id: ROUTINE_ID;
 			rout_info: ROUT_INFO
 		do
 			ba := Byte_array;
@@ -315,7 +314,7 @@ feature
 				-- Start	
 			ba.append (Bc_start);
 				-- Routine id
-			ba.append_integer (- rout_id_set.first);
+			ba.append_integer (rout_id_set.first.id);
 				-- Meta-type of Result
 			result_type := byte_context.real_type (type.actual_type.type_i);
 			ba.append_integer (result_type.sk_value);
@@ -339,10 +338,10 @@ feature
 			ba.append (Bc_current);
 			base_class := current_type.base_class;
 			if base_class.is_precompiled then
-				r_id := - rout_id_set.first;
+				r_id := rout_id_set.first;
 				rout_info := System.rout_info_table.item (r_id);
 				ba.append (Bc_pattribute);
-				ba.append_integer (rout_info.origin);
+				ba.append_integer (rout_info.origin.id);
 				ba.append_integer (rout_info.offset)
 			else
 				ba.append (Bc_attribute);

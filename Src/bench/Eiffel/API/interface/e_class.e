@@ -176,15 +176,15 @@ feature -- Access
 			end
 		end;
 
-	feature_with_rout_id (rout_id: INTEGER): E_FEATURE is
+	feature_with_rout_id (rout_id: ROUTINE_ID): E_FEATURE is
 			-- Feature whose routine id `rout_id'.
 		require
-			valid_rout_id: rout_id /= 0;
+			valid_rout_id: rout_id /= Void;
 			has_feature_table: has_feature_table
 		local
 			feat: FEATURE_I
 		do
-			feat := comp_feature_table.origin_table.item (rout_id.abs);
+			feat := comp_feature_table.origin_table.item (rout_id);
 			if feat /= Void then
 				Result := feat.api_feature
 			end

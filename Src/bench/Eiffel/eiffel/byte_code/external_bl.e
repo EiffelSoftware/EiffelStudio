@@ -112,7 +112,7 @@ feature
 			void_register: REGISTER;
 			is_polymorphic_access: BOOLEAN;
 		do
-			entry := Eiffel_table.item_id (rout_id);
+			entry := Eiffel_table.poly_table (rout_id);
 			type_i := context_type;
 			class_type ?= type_i;
 			is_polymorphic_access := not type_i.is_basic and then
@@ -157,12 +157,12 @@ feature
 			check
 				final_mode: context.final_mode
 			end;
-			entry := Eiffel_table.item_id (rout_id);
+			entry := Eiffel_table.poly_table (rout_id);
 			if entry.is_polymorphic (typ.type_id) then
 					-- The call is polymorphic, so generate access to the
 					-- routine table. The dereferenced function pointer has
 					-- to be enclosed in parenthesis.
-				table_name := clone (Encoder.table_name (rout_id));
+				table_name := rout_id.table_name;
 				generated_file.putchar ('(');
 				real_type (type).c_type.generate_function_cast (generated_file);
 				generated_file.putchar ('(');
@@ -289,7 +289,7 @@ feature
 			end;
 			if
 				context.final_mode and then
-				not Eiffel_table.item_id (rout_id).is_polymorphic (class_type.type_id) and then
+				not Eiffel_table.poly_table (rout_id).is_polymorphic (class_type.type_id) and then
 				special_id = macro_id and encapsulated
 			then
 					--| See comments in `generate_access_on_type'

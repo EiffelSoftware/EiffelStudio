@@ -31,7 +31,7 @@ feature
 			i, nb, min_id, max_id: INTEGER;
 			r_name, c_name: STRING;
 		do
-			c_name := Encoder.table_name (rout_id);
+			c_name := rout_id.table_name;
 			min_id := 1;
 			max_id := final_table_size;
 			from

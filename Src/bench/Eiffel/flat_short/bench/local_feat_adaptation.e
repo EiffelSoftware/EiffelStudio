@@ -273,7 +273,7 @@ feature {LOCAL_FEAT_ADAPTATION, GLOBAL_FEAT_ADAPTATION} -- Implementation
 
 	adapt is
 		local
-			rout_id : INTEGER;
+			rout_id : ROUTINE_ID;
 			select_table : SELECT_TABLE;
 			new_feat: FEATURE_I;
 			old_cluster, source_cluster, target_cluster: CLUSTER_I;
@@ -301,9 +301,6 @@ end;
 			else
 					--| If in bench mode make everything clickable
 				rout_id := source_feature.rout_id_set.first;
-				if rout_id < 0 then
-					rout_id := - rout_id
-				end;
 				select_table := target_select_table;
 				new_feat := select_table.item (rout_id);
 				target_feature := new_feat;

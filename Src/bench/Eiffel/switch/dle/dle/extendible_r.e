@@ -65,6 +65,7 @@ io.error.put_string ("The DLE `System' has just been initialized.");
 io.error.new_line
 end;
 						dle_system.extending (workb.system);
+						dle_system.init_counters;
 						if dle_system.uses_precompiled then
 							!! precomp_r;
 							precomp_r.set_precomp_dir

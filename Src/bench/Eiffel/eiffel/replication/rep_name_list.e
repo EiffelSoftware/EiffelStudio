@@ -228,7 +228,7 @@ end;
 			s_table: SELECT_TABLE;
 			rout_id_set: ROUT_ID_SET;
 			i: INTEGER;
-			rout_id: INTEGER;
+			rout_id: ROUTINE_ID;
 		do
 			s_table := Feat_tbl_server.item
 							(written_in).origin_table;
@@ -240,10 +240,6 @@ end;
 				i > count or else Result /= Void	
 			loop
 				rout_id := rout_id_set.item (i);
-				if rout_id < 0 then
-						-- Attribute routine id
-					rout_id := - rout_id
-				end;
 				Result := s_table.item (rout_id);
 				i := i + 1;
 			end;

@@ -110,7 +110,7 @@ feature
 	supplier_status_modified: BOOLEAN;
 			-- The status (expanded, deferred) of a supplier has changed
 
-	assert_prop_list: LINKED_LIST [INTEGER];
+	assert_prop_list: LINKED_LIST [ROUTINE_ID];
 			-- List of routine ids for assertion modifications
 
 	adaptations: LINKED_LIST [FEATURE_ADAPTATION] is
@@ -728,7 +728,7 @@ end;
 			inherit_feat: INHERIT_FEAT;
 				-- Possible inherited features
 			inherited_feature, old_feature: FEATURE_I;
-			new_rout_id: INTEGER;
+			new_rout_id: ROUTINE_ID;
 			rout_id_set, new_rout_id_set: ROUT_ID_SET;
 			redef: REDEFINITION;
 			info, inherited_info: INHERIT_INFO;
@@ -752,11 +752,11 @@ end;
 						rout_id_set_exists: new_rout_id_set /= Void;
 						has_only_one: new_rout_id_set.count = 1;
 					end;
-					new_rout_id := new_rout_id_set.item (1);
+					new_rout_id := new_rout_id_set.first;
 					if feature_i.is_attribute then
-						compute_new_rout_id := new_rout_id > 0;
+						compute_new_rout_id := not new_rout_id.is_attribute;
 					else
-						compute_new_rout_id := new_rout_id < 0
+						compute_new_rout_id := new_rout_id.is_attribute
 					end;
 				else
 					feature_i.set_is_origin (True);
@@ -1166,7 +1166,7 @@ end;
 			Result := System.body_id_counter;
 		end;
 
-	Routine_id_counter: COUNTER is
+	Routine_id_counter: ROUTINE_COUNTER is
 			-- Counter for routine ids
 		once
 			Result := System.routine_id_counter;
@@ -1551,7 +1551,6 @@ end;
 		local
 			old_feature: FEATURE_I;
 			new_rout_id_set: ROUT_ID_SET;
-			new_rout_id: INTEGER;
 			info: INHERIT_INFO
 		do
 			--! The routine id set of feature_i was already done

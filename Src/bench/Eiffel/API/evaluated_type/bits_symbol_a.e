@@ -34,7 +34,7 @@ feature -- Properties
 
 	class_id: INTEGER;
 
-	rout_id: INTEGER;
+	rout_id: ROUTINE_ID;
 
 feature -- Output
 
@@ -58,7 +58,7 @@ feature {COMPILER_EXPORTER}
 			-- Calculated type in function of the feauure `f' which has
 			-- the type Current and the feautre table `feat_table
 		local
-			origin_table: HASH_TABLE [FEATURE_I, INTEGER];
+			origin_table: HASH_TABLE [FEATURE_I, ROUTINE_ID];
 			anchor_feature: FEATURE_I;
 			vtbt: VTBT;
 			veen: VEEN;
@@ -106,9 +106,6 @@ feature {COMPILER_EXPORTER}
 				base_type := bits_value;
 			end;
 			rout_id := anchor_feature.rout_id_set.first;
-			if rout_id < 0 then
-				rout_id := - rout_id
-			end;
 			Result := clone (Current);
 		end;
 
@@ -121,7 +118,7 @@ feature {COMPILER_EXPORTER}
 				bits_s.base_type = base_type and then
 				bits_s.is_expanded = is_expanded and then
 				bits_s.class_id = class_id and then
-				bits_s.rout_id = rout_id and then
+				bits_s.rout_id.is_equal (rout_id) and then
 				feature_name.is_equal (bits_s.feature_name)
 		end;
 

@@ -20,7 +20,7 @@ creation
 
 feature
 
-	rout_id: INTEGER;
+	rout_id: ROUTINE_ID;
 			-- Routine id of the constant
 
 	feature_id: INTEGER;
@@ -65,7 +65,7 @@ feature -- Byte code generation
 			if base_class.is_precompiled then
 				rout_info := System.rout_info_table.item (rout_id);
 				ba.append (Bc_pfeature);
-				ba.append_integer (rout_info.origin);
+				ba.append_integer (rout_info.origin.id);
 				ba.append_integer (rout_info.offset)
 			else
 				ba.append (Bc_feature);

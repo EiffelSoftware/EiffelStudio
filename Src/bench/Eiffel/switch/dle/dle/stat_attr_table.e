@@ -106,7 +106,7 @@ feature -- Generation
 			c_name: STRING;
 			p_name: STRING
 		do
-			c_name := clone (Encoder.table_name (rout_id));
+			c_name := rout_id.table_name;
 			min_val := min_type_id;
 			max_val := max_type_id;
 			from
@@ -141,22 +141,17 @@ feature -- Generation
 			file.putstring (";%N%N")
 		end;
 
-	generate_type_table (file: INDENT_FILE; final_mode: BOOLEAN) is
-			-- Generate the associated type table.
+	generate_type_table (file: INDENT_FILE) is
+			-- Generate the associated type table in final mode.
 		local
 			i, nb: INTEGER;
 			entry: ENTRY;
 			c_name: STRING
 		do
 			file.putstring ("int16 ");
-			if final_mode then
-				c_name := clone (Encoder.type_table_name (rout_id));
-				file.putstring (static_prefix);
-				file.putstring (c_name)
-			else
-				file.putchar ('t');
-				file.putint (rout_id)
-			end;
+			c_name := rout_id.type_table_name;
+			file.putstring (static_prefix);
+			file.putstring (c_name)
 			from
 				file.putstring ("[] = {%N");
 				i := min_type_id;
@@ -178,16 +173,12 @@ feature -- Generation
 				i := i + 1
 			end;
 			file.putstring ("};%N");
-			if final_mode then
-				file.putstring ("int16 *");
-				file.putstring (c_name);
-				file.putstring (" = ");
-				file.putstring (static_prefix);
-				file.putstring (c_name);
-				file.putstring (";%N%N")
-			else
-				file.new_line
-			end
+			file.putstring ("int16 *");
+			file.putstring (c_name);
+			file.putstring (" = ");
+			file.putstring (static_prefix);
+			file.putstring (c_name);
+			file.putstring (";%N%N")
 		end;
 
 invariant

@@ -136,7 +136,6 @@ feature -- Type check
 			vtec2: VTEC2
 			vtug: VTUG
 			vape: VAPE
-			not_supported: NOT_SUPPORTED
 			formal_type: FORMAL_A
 			formal_dec: FORMAL_DEC_AS
 			is_formal_creation, is_default_creation: BOOLEAN

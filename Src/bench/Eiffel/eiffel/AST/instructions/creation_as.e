@@ -1,3 +1,8 @@
+indexing
+	description: "Node for a creation instruction."
+	date: "$Date$"
+	revision: "$Revision$"
+
 class CREATION_AS
 
 inherit
@@ -100,7 +105,6 @@ feature -- Type check, byte code and dead code removal
 			vtug: VTUG
 			vtec1: VTEC1
 			vtec2: VTEC2
-			not_supported: NOT_SUPPORTED
 			gen_type: GEN_TYPE_A
 			formal_type: FORMAL_A
 			formal_dec: FORMAL_DEC_AS

@@ -14,7 +14,7 @@ feature -- Access
 			-- odd-numbered and even-numbered polygon sides on
 			-- each scan line).
 		external
-			"C [macro <wel.h>]"
+			"C [macro %"wel.h%"]"
 		alias
 			"ALTERNATE"
 		end
@@ -23,7 +23,7 @@ feature -- Access
 			-- Selects winding mode (fills any region with a
 			-- nonzero winding value).
 		external
-			"C [macro <wel.h>]"
+			"C [macro %"wel.h%"]"
 		alias
 			"WINDING"
 		end

@@ -11,21 +11,21 @@ feature -- Access
 
 	Ttn_needtext: INTEGER is
 		external
-			"C [macro <cctrl.h>]"
+			"C [macro %"cctrl.h%"]"
 		alias
 			"TTN_NEEDTEXT"
 		end
 
 	Ttn_pop: INTEGER is
 		external
-			"C [macro <cctrl.h>]"
+			"C [macro %"cctrl.h%"]"
 		alias
 			"TTN_POP"
 		end
 
 	Ttn_show: INTEGER is
 		external
-			"C [macro <cctrl.h>]"
+			"C [macro %"cctrl.h%"]"
 		alias
 			"TTN_SHOW"
 		end

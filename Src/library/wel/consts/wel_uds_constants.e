@@ -15,7 +15,7 @@ feature -- Access
 			-- right and its width decreased to accommodate the
 			-- width of the up-down control.
 		external
-			"C [macro <cctrl.h>]"
+			"C [macro %"cctrl.h%"]"
 		alias
 			"UDS_ALIGNLEFT"
 		end
@@ -26,7 +26,7 @@ feature -- Access
 			-- decreased to accommodate the width of the up-down
 			-- control.
 		external
-			"C [macro <cctrl.h>]"
+			"C [macro %"cctrl.h%"]"
 		alias
 			"UDS_ALIGNRIGHT"
 		end
@@ -36,7 +36,7 @@ feature -- Access
 			-- decrement the position when the UP ARROW and DOWN
 			-- ARROW keys are pressed.
 		external
-			"C [macro <cctrl.h>]"
+			"C [macro %"cctrl.h%"]"
 		alias
 			"UDS_ARROWKEYS"
 		end
@@ -45,7 +45,7 @@ feature -- Access
 			-- Automatically selects the previous window in the
 			-- Z order as the up-down control's buddy window.
 		external
-			"C [macro <cctrl.h>]"
+			"C [macro %"cctrl.h%"]"
 		alias
 			"UDS_AUTOBUDDY"
 		end
@@ -54,14 +54,14 @@ feature -- Access
 			-- Causes the up-down control's arrows to point left
 			-- and right instead of up and down.
 		external
-			"C [macro <cctrl.h>]"
+			"C [macro %"cctrl.h%"]"
 		alias
 			"UDS_HORZ"
 		end
 
 	Uds_hottrack: INTEGER is
 		external
-			"C [macro <cctrl.h>]"
+			"C [macro %"cctrl.h%"]"
 		alias
 			"UDS_HOTTRACK"
 		end
@@ -70,7 +70,7 @@ feature -- Access
 			-- Does not insert a thousands separator between every
 			-- three decimal digits.
 		external
-			"C [macro <cctrl.h>]"
+			"C [macro %"cctrl.h%"]"
 		alias
 			"UDS_NOTHOUSANDS"
 		end
@@ -81,7 +81,7 @@ feature -- Access
 			-- position changes. The text consists of the position
 			-- formatted as a decimal or hexadecimal string.
 		external
-			"C [macro <cctrl.h>]"
+			"C [macro %"cctrl.h%"]"
 		alias
 			"UDS_SETBUDDYINT"
 		end
@@ -91,7 +91,7 @@ feature -- Access
 			-- or decremented beyond the ending or beginning of the
 			-- range.
 		external
-			"C [macro <cctrl.h>]"
+			"C [macro %"cctrl.h%"]"
 		alias
 			"UDS_WRAP"
 		end

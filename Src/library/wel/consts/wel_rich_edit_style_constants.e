@@ -13,7 +13,7 @@ feature -- Access
 			-- Disables scrollbars instead of hiding them when they
 			-- are not needed.
 		external
-			"C [macro <redit.h>]"
+			"C [macro %"redit.h%"]"
 		alias
 			"ES_DISABLENOSCROLL"
 		end
@@ -24,7 +24,7 @@ feature -- Access
 			-- templates because CreateWindowEx does not accept
 			-- this style.
 		external
-			"C [macro <redit.h>]"
+			"C [macro %"redit.h%"]"
 		alias
 			"ES_EX_NOCALLOLEINIT"
 		end
@@ -33,7 +33,7 @@ feature -- Access
 			-- Disables the input method editor (IME) operation.
 			-- Available for Asian-languages only.
 		external
-			"C [macro <redit.h>]"
+			"C [macro %"redit.h%"]"
 		alias
 			"ES_NOIME"
 		end
@@ -43,7 +43,7 @@ feature -- Access
 			-- focus. By default, the entire contents of the
 			-- control are selected when it regains the focus.
 		external
-			"C [macro <redit.h>]"
+			"C [macro %"redit.h%"]"
 		alias
 			"ES_SAVESEL"
 		end
@@ -53,7 +53,7 @@ feature -- Access
 			-- application to handle all IME operations.
 			-- Available for Asian-languages only.
 		external
-			"C [macro <redit.h>]"
+			"C [macro %"redit.h%"]"
 		alias
 			"ES_SELFIME"
 		end
@@ -65,7 +65,7 @@ feature -- Access
 			-- Windows 95 should use WS_EX_CLIENTEDGE instead of
 			-- ES_SUNKEN.
 		external
-			"C [macro <redit.h>]"
+			"C [macro %"redit.h%"]"
 		alias
 			"ES_SUNKEN"
 		end
@@ -74,7 +74,7 @@ feature -- Access
 			-- Draws text and objects in a vertical direction.
 			-- Available for Asian-languages only.
 		external
-			"C [macro <redit.h>]"
+			"C [macro %"redit.h%"]"
 		alias
 			"ES_VERTICAL"
 		end

@@ -11,28 +11,28 @@ feature -- Access
 
 	Ttf_idishwnd: INTEGER is
 		external
-			"C [macro <cctrl.h>]"
+			"C [macro %"cctrl.h%"]"
 		alias
 			"TTF_IDISHWND"
 		end
 
 	Ttf_centertip: INTEGER is
 		external
-			"C [macro <cctrl.h>]"
+			"C [macro %"cctrl.h%"]"
 		alias
 			"TTF_CENTERTIP"
 		end
 
 	Ttf_rtlreading: INTEGER is
 		external
-			"C [macro <cctrl.h>]"
+			"C [macro %"cctrl.h%"]"
 		alias
 			"TTF_RTLREADING"
 		end
 
 	Ttf_subclass: INTEGER is
 		external
-			"C [macro <cctrl.h>]"
+			"C [macro %"cctrl.h%"]"
 		alias
 			"TTF_SUBCLASS"
 		end

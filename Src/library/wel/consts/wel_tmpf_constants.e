@@ -11,28 +11,28 @@ feature -- Access
 
 	Tmpf_fixed_pitch: INTEGER is
 		external
-			"C [macro <wel.h>]"
+			"C [macro %"wel.h%"]"
 		alias
 			"TMPF_FIXED_PITCH"
 		end
 
 	Tmpf_vector: INTEGER is
 		external
-			"C [macro <wel.h>]"
+			"C [macro %"wel.h%"]"
 		alias
 			"TMPF_VECTOR"
 		end
 
 	Tmpf_device: INTEGER is
 		external
-			"C [macro <wel.h>]"
+			"C [macro %"wel.h%"]"
 		alias
 			"TMPF_DEVICE"
 		end
 
 	Tmpf_truetype: INTEGER is
 		external
-			"C [macro <wel.h>]"
+			"C [macro %"wel.h%"]"
 		alias
 			"TMPF_TRUETYPE"
 		end

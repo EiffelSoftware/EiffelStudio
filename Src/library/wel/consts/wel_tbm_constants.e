@@ -11,133 +11,133 @@ feature -- Access
 
 	Tbm_getpos: INTEGER is
 		external
-			"C [macro <cctrl.h>]"
+			"C [macro %"cctrl.h%"]"
 		alias
 			"TBM_GETPOS"
 		end
 
 	Tbm_getrangemin: INTEGER is
 		external
-			"C [macro <cctrl.h>]"
+			"C [macro %"cctrl.h%"]"
 		alias
 			"TBM_GETRANGEMIN"
 		END
 
 	Tbm_getrangemax: INTEGER is
 		external
-			"C [macro <cctrl.h>]"
+			"C [macro %"cctrl.h%"]"
 		alias
 			"TBM_GETRANGEMAX"
 		end
 
 	Tbm_gettic: INTEGER is
 		external
-			"C [macro <cctrl.h>]"
+			"C [macro %"cctrl.h%"]"
 		alias
 			"TBM_GETTIC"
 		end
 
 	Tbm_settic: INTEGER is
 		external
-			"C [macro <cctrl.h>]"
+			"C [macro %"cctrl.h%"]"
 		alias
 			"TBM_SETTIC"
 		end
 
 	Tbm_setpos: INTEGER is
 		external
-			"C [macro <cctrl.h>]"
+			"C [macro %"cctrl.h%"]"
 		alias
 			"TBM_SETPOS"
 		end
 
 	Tbm_setrange: INTEGER is
 		external
-			"C [macro <cctrl.h>]"
+			"C [macro %"cctrl.h%"]"
 		alias
 			"TBM_SETRANGE"
 		end
 
 	Tbm_setrangemin: INTEGER is
 		external
-			"C [macro <cctrl.h>]"
+			"C [macro %"cctrl.h%"]"
 		alias
 			"TBM_SETRANGEMIN"
 		end
 
 	Tbm_setrangemax: INTEGER is
 		external
-			"C [macro <cctrl.h>]"
+			"C [macro %"cctrl.h%"]"
 		alias
 			"TBM_SETRANGEMAX"
 		end
 
 	Tbm_cleartics: INTEGER is
 		external
-			"C [macro <cctrl.h>]"
+			"C [macro %"cctrl.h%"]"
 		alias
 			"TBM_CLEARTICS"
 		end
 
 	Tbm_setsel: INTEGER is
 		external
-			"C [macro <cctrl.h>]"
+			"C [macro %"cctrl.h%"]"
 		alias
 			"TBM_SETSEL"
 		end
 
 	Tbm_setselstart: INTEGER is
 		external
-			"C [macro <cctrl.h>]"
+			"C [macro %"cctrl.h%"]"
 		alias
 			"TBM_SETSELSTART"
 		end
 
 	Tbm_setselend: INTEGER is
 		external
-			"C [macro <cctrl.h>]"
+			"C [macro %"cctrl.h%"]"
 		alias
 			"TBM_SETSELEND"
 		end
 
 	Tbm_getptics: INTEGER is
 		external
-			"C [macro <cctrl.h>]"
+			"C [macro %"cctrl.h%"]"
 		alias
 			"TBM_GETPTICS"
 		end
 
 	Tbm_getticpos: INTEGER is
 		external
-			"C [macro <cctrl.h>]"
+			"C [macro %"cctrl.h%"]"
 		alias
 			"TBM_GETTICPOS"
 		end
 
 	Tbm_getnumtics: INTEGER is
 		external
-			"C [macro <cctrl.h>]"
+			"C [macro %"cctrl.h%"]"
 		alias
 			"TBM_GETNUMTICS"
 		end
 
 	Tbm_getselstart: INTEGER is
 		external
-			"C [macro <cctrl.h>]"
+			"C [macro %"cctrl.h%"]"
 		alias
 			"TBM_GETSELSTART"
 		end
 
 	Tbm_getselend: INTEGER is
 		external
-			"C [macro <cctrl.h>]"
+			"C [macro %"cctrl.h%"]"
 		alias
 			"TBM_GETSELEND"
 		end
 
 	Tbm_clearsel: INTEGER is
 		external
-			"C [macro <cctrl.h>]"
+			"C [macro %"cctrl.h%"]"
 		alias
 			"TBM_CLEARSEL"
 		end

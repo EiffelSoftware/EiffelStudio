@@ -13,7 +13,7 @@ feature -- Access
 	Pfm_startindent: INTEGER is
 			-- The dxStartIndent member is valid.
 		external
-			"C [macro <redit.h>]"
+			"C [macro %"redit.h%"]"
 		alias
 			"PFM_STARTINDENT"
 		end
@@ -21,7 +21,7 @@ feature -- Access
 	Pfm_rightindent: INTEGER is
 			-- The dxRightIndent member is valid.
 		external
-			"C [macro <redit.h>]"
+			"C [macro %"redit.h%"]"
 		alias
 			"PFM_RIGHTINDENT"
 		end
@@ -30,7 +30,7 @@ feature -- Access
 			-- The dxStartIndent member is valid and specifies
 			-- a relative value.
 		external
-			"C [macro <redit.h>]"
+			"C [macro %"redit.h%"]"
 		alias
 			"PFM_OFFSET"
 		end
@@ -38,7 +38,7 @@ feature -- Access
 	Pfm_alignment: INTEGER is
 			-- The wAlignment member is valid.
 		external
-			"C [macro <redit.h>]"
+			"C [macro %"redit.h%"]"
 		alias
 			"PFM_ALIGNMENT"
 		end
@@ -46,7 +46,7 @@ feature -- Access
 	Pfm_tabstops: INTEGER is
 			-- The cTabStobs and rgxTabStops members are valid.
 		external
-			"C [macro <redit.h>]"
+			"C [macro %"redit.h%"]"
 		alias
 			"PFM_TABSTOPS"
 		end
@@ -54,7 +54,7 @@ feature -- Access
 	Pfm_numbering: INTEGER is
 			-- The wNumbering member is valid.
 		external
-			"C [macro <redit.h>]"
+			"C [macro %"redit.h%"]"
 		alias
 			"PFM_NUMBERING"
 		end
@@ -62,7 +62,7 @@ feature -- Access
 	Pfm_offsetindent: INTEGER is
 			-- The dxOffset member is valid.
 		external
-			"C [macro <redit.h>]"
+			"C [macro %"redit.h%"]"
 		alias
 			"PFM_OFFSETINDENT"
 		end

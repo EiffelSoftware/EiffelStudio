@@ -13,7 +13,7 @@ feature -- Access
 	Pfa_left: INTEGER is
 			-- Paragraphs are aligned with the left margin.
 		external
-			"C [macro <redit.h>]"
+			"C [macro %"redit.h%"]"
 		alias
 			"PFA_LEFT"
 		end
@@ -21,7 +21,7 @@ feature -- Access
 	Pfa_right: INTEGER is
 			-- Paragraphs are aligned with the right margin.
 		external
-			"C [macro <redit.h>]"
+			"C [macro %"redit.h%"]"
 		alias
 			"PFA_RIGHT"
 		end
@@ -29,7 +29,7 @@ feature -- Access
 	Pfa_center: INTEGER is
 			-- Paragraphs are centered.
 		external
-			"C [macro <redit.h>]"
+			"C [macro %"redit.h%"]"
 		alias
 			"PFA_CENTER"
 		end

@@ -12,7 +12,7 @@ feature -- Access
 	Idok: INTEGER is
 			-- OK button was selected.
 		external
-			"C [macro <wel.h>]"
+			"C [macro %"wel.h%"]"
 		alias
 			"IDOK"
 		end
@@ -20,7 +20,7 @@ feature -- Access
 	Idcancel: INTEGER is
 			-- Cancel button was selected.
 		external
-			"C [macro <wel.h>]"
+			"C [macro %"wel.h%"]"
 		alias
 			"IDCANCEL"
 		end
@@ -28,7 +28,7 @@ feature -- Access
 	Idabort: INTEGER is
 			-- Abort button was selected.
 		external
-			"C [macro <wel.h>]"
+			"C [macro %"wel.h%"]"
 		alias
 			"IDABORT"
 		end
@@ -36,7 +36,7 @@ feature -- Access
 	Idretry: INTEGER is
 			-- Retry button was selected.
 		external
-			"C [macro <wel.h>]"
+			"C [macro %"wel.h%"]"
 		alias
 			"IDRETRY"
 		end
@@ -44,7 +44,7 @@ feature -- Access
 	Idignore: INTEGER is
 			-- Ignore button was selected.
 		external
-			"C [macro <wel.h>]"
+			"C [macro %"wel.h%"]"
 		alias
 			"IDIGNORE"
 		end
@@ -52,7 +52,7 @@ feature -- Access
 	Idyes: INTEGER is
 			-- Yes button was selected.
 		external
-			"C [macro <wel.h>]"
+			"C [macro %"wel.h%"]"
 		alias
 			"IDYES"
 		end
@@ -60,7 +60,7 @@ feature -- Access
 	Idno: INTEGER is
 			-- No button was selected.
 		external
-			"C [macro <wel.h>]"
+			"C [macro %"wel.h%"]"
 		alias
 			"IDNO"
 		end

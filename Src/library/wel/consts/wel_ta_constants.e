@@ -11,56 +11,56 @@ feature -- Access
 
 	Ta_noupdatecp: INTEGER is
 		external
-			"C [macro <wel.h>]"
+			"C [macro %"wel.h%"]"
 		alias
 			"TA_NOUPDATECP"
 		end
 
 	Ta_updatecp: INTEGER is
 		external
-			"C [macro <wel.h>]"
+			"C [macro %"wel.h%"]"
 		alias
 			"TA_UPDATECP"
 		end
 
 	Ta_left: INTEGER is
 		external
-			"C [macro <wel.h>]"
+			"C [macro %"wel.h%"]"
 		alias
 			"TA_LEFT"
 		end
 
 	Ta_right: INTEGER is
 		external
-			"C [macro <wel.h>]"
+			"C [macro %"wel.h%"]"
 		alias
 			"TA_RIGHT"
 		end
 
 	Ta_center: INTEGER is
 		external
-			"C [macro <wel.h>]"
+			"C [macro %"wel.h%"]"
 		alias
 			"TA_CENTER"
 		end
 
 	Ta_top: INTEGER is
 		external
-			"C [macro <wel.h>]"
+			"C [macro %"wel.h%"]"
 		alias
 			"TA_TOP"
 		end
 
 	Ta_bottom: INTEGER is
 		external
-			"C [macro <wel.h>]"
+			"C [macro %"wel.h%"]"
 		alias
 			"TA_BOTTOM"
 		end
 
 	Ta_baseline: INTEGER is
 		external
-			"C [macro <wel.h>]"
+			"C [macro %"wel.h%"]"
 		alias
 			"TA_BASELINE"
 		end

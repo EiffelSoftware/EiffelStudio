@@ -11,21 +11,21 @@ feature -- Access
 
 	Stretch_andscans: INTEGER is
 		external
-			"C [macro <wel.h>]"
+			"C [macro %"wel.h%"]"
 		alias
 			"STRETCH_ANDSCANS"
 		end
 
 	Stretch_deletescans: INTEGER is
 		external
-			"C [macro <wel.h>]"
+			"C [macro %"wel.h%"]"
 		alias
 			"STRETCH_DELETESCANS"
 		end
 
 	Stretch_orscans: INTEGER is
 		external
-			"C [macro <wel.h>]"
+			"C [macro %"wel.h%"]"
 		alias
 			"STRETCH_ORSCANS"
 		end

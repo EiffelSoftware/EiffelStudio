@@ -12,7 +12,7 @@ feature -- Access
 	Tcif_text: INTEGER is
 			-- The pszText member is valid.
 		external
-			"C [macro <cctrl.h>]"
+			"C [macro %"cctrl.h%"]"
 		alias
 			"TCIF_TEXT"
 		end
@@ -20,7 +20,7 @@ feature -- Access
 	Tcif_image: INTEGER is
 			-- The iImage member is valid.
 		external
-			"C [macro <cctrl.h>]"
+			"C [macro %"cctrl.h%"]"
 		alias
 			"TCIF_IMAGE"
 		end
@@ -30,7 +30,7 @@ feature -- Access
 			-- using right-to-left reading order on Hebrew or
 			-- Arabic systems.
 		external
-			"C [macro <cctrl.h>]"
+			"C [macro %"cctrl.h%"]"
 		alias
 			"TCIF_RTLREADING"
 		end
@@ -38,14 +38,14 @@ feature -- Access
 	Tcif_param: INTEGER is
 			-- The lParam member is valid.
 		external
-			"C [macro <cctrl.h>]"
+			"C [macro %"cctrl.h%"]"
 		alias
 			"TCIF_PARAM"
 		end
 
 	Tcif_state: INTEGER is
 		external
-			"C [macro <cctrl.h>]"
+			"C [macro %"cctrl.h%"]"
 		alias
 			"TCIF_STATE"
 		end

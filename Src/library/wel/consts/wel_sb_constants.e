@@ -11,133 +11,133 @@ feature -- Access
 
 	Sb_lineup: INTEGER is
 		external
-			"C [macro <wel.h>]"
+			"C [macro %"wel.h%"]"
 		alias
 			"SB_LINEUP"
 		end
 
 	Sb_lineleft: INTEGER is
 		external
-			"C [macro <wel.h>]"
+			"C [macro %"wel.h%"]"
 		alias
 			"SB_LINELEFT"
 		end
 
 	Sb_linedown: INTEGER is
 		external
-			"C [macro <wel.h>]"
+			"C [macro %"wel.h%"]"
 		alias
 			"SB_LINEDOWN"
 		end
 
 	Sb_lineright: INTEGER is
 		external
-			"C [macro <wel.h>]"
+			"C [macro %"wel.h%"]"
 		alias
 			"SB_LINERIGHT"
 		end
 
 	Sb_pageup: INTEGER is
 		external
-			"C [macro <wel.h>]"
+			"C [macro %"wel.h%"]"
 		alias
 			"SB_PAGEUP"
 		end
 
 	Sb_pageleft: INTEGER is
 		external
-			"C [macro <wel.h>]"
+			"C [macro %"wel.h%"]"
 		alias
 			"SB_PAGELEFT"
 		end
 
 	Sb_pagedown: INTEGER is
 		external
-			"C [macro <wel.h>]"
+			"C [macro %"wel.h%"]"
 		alias
 			"SB_PAGEDOWN"
 		end
 
 	Sb_pageright: INTEGER is
 		external
-			"C [macro <wel.h>]"
+			"C [macro %"wel.h%"]"
 		alias
 			"SB_PAGERIGHT"
 		end
 
 	Sb_thumbposition: INTEGER is
 		external
-			"C [macro <wel.h>]"
+			"C [macro %"wel.h%"]"
 		alias
 			"SB_THUMBPOSITION"
 		end
 
 	Sb_thumbtrack: INTEGER is
 		external
-			"C [macro <wel.h>]"
+			"C [macro %"wel.h%"]"
 		alias
 			"SB_THUMBTRACK"
 		end
 
 	Sb_top: INTEGER is
 		external
-			"C [macro <wel.h>]"
+			"C [macro %"wel.h%"]"
 		alias
 			"SB_TOP"
 		end
 
 	Sb_left: INTEGER is
 		external
-			"C [macro <wel.h>]"
+			"C [macro %"wel.h%"]"
 		alias
 			"SB_LEFT"
 		end
 
 	Sb_bottom: INTEGER is
 		external
-			"C [macro <wel.h>]"
+			"C [macro %"wel.h%"]"
 		alias
 			"SB_BOTTOM"
 		end
 
 	Sb_right: INTEGER is
 		external
-			"C [macro <wel.h>]"
+			"C [macro %"wel.h%"]"
 		alias
 			"SB_RIGHT"
 		end
 
 	Sb_endscroll: INTEGER is
 		external
-			"C [macro <wel.h>]"
+			"C [macro %"wel.h%"]"
 		alias
 			"SB_ENDSCROLL"
 		end
 
 	Sb_horz: INTEGER is
 		external
-			"C [macro <wel.h>]"
+			"C [macro %"wel.h%"]"
 		alias
 			"SB_HORZ"
 		end
 
 	Sb_vert: INTEGER is
 		external
-			"C [macro <wel.h>]"
+			"C [macro %"wel.h%"]"
 		alias
 			"SB_VERT"
 		end
 
 	Sb_ctl: INTEGER is
 		external
-			"C [macro <wel.h>]"
+			"C [macro %"wel.h%"]"
 		alias
 			"SB_CTL"
 		end
 
 	Sb_both: INTEGER is
 		external
-			"C [macro <wel.h>]"
+			"C [macro %"wel.h%"]"
 		alias
 			"SB_BOTH"
 		end

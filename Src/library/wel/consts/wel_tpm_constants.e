@@ -11,35 +11,35 @@ feature -- Access
 
 	Tpm_leftbutton: INTEGER is
 		external
-			"C [macro <wel.h>]"
+			"C [macro %"wel.h%"]"
 		alias
 			"TPM_LEFTBUTTON"
 		end
 
 	Tpm_rightbutton: INTEGER is
 		external
-			"C [macro <wel.h>]"
+			"C [macro %"wel.h%"]"
 		alias
 			"TPM_RIGHTBUTTON"
 		end
 
 	Tpm_leftalign: INTEGER is
 		external
-			"C [macro <wel.h>]"
+			"C [macro %"wel.h%"]"
 		alias
 			"TPM_LEFTALIGN"
 		end
 
 	Tpm_centeralign: INTEGER is
 		external
-			"C [macro <wel.h>]"
+			"C [macro %"wel.h%"]"
 		alias
 			"TPM_CENTERALIGN"
 		end
 
 	Tpm_rightalign: INTEGER is
 		external
-			"C [macro <wel.h>]"
+			"C [macro %"wel.h%"]"
 		alias
 			"TPM_RIGHTALIGN"
 		end

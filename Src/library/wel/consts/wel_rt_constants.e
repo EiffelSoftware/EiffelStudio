@@ -11,84 +11,84 @@ feature -- Access
 
 	Rt_cursor: INTEGER is
 		external
-			"C [macro <wel.h>]"
+			"C [macro %"wel.h%"]"
 		alias
 			"RT_CURSOR"
 		end
 
 	Rt_bitmap: INTEGER is
 		external
-			"C [macro <wel.h>]"
+			"C [macro %"wel.h%"]"
 		alias
 			"RT_BITMAP"
 		end
 
 	Rt_icon: INTEGER is
 		external
-			"C [macro <wel.h>]"
+			"C [macro %"wel.h%"]"
 		alias
 			"RT_ICON"
 		end
 
 	Rt_menu: INTEGER is
 		external
-			"C [macro <wel.h>]"
+			"C [macro %"wel.h%"]"
 		alias
 			"RT_MENU"
 		end
 
 	Rt_dialog: INTEGER is
 		external
-			"C [macro <wel.h>]"
+			"C [macro %"wel.h%"]"
 		alias
 			"RT_DIALOG"
 		end
 
 	Rt_string: INTEGER is
 		external
-			"C [macro <wel.h>]"
+			"C [macro %"wel.h%"]"
 		alias
 			"RT_STRING"
 		end
 
 	Rt_fontdir: INTEGER is
 		external
-			"C [macro <wel.h>]"
+			"C [macro %"wel.h%"]"
 		alias
 			"RT_FONTDIR"
 		end
 
 	Rt_font: INTEGER is
 		external
-			"C [macro <wel.h>]"
+			"C [macro %"wel.h%"]"
 		alias
 			"RT_FONT"
 		end
 
 	Rt_accelerator: INTEGER is
 		external
-			"C [macro <wel.h>]"
+			"C [macro %"wel.h%"]"
 		alias
 			"RT_ACCELERATOR"
 		end
 
 	Rt_rcdata: INTEGER is
 		external
-			"C [macro <wel.h>]"
+			"C [macro %"wel.h%"]"
 		alias
 			"RT_RCDATA"
 		end
 
 	Rt_group_cursor: INTEGER is
 		external
-			"C [macro <wel.h>]"
+			"C [macro %"wel.h%"]"
 		alias
 			"RT_GROUP_CURSOR"
 		end
 
 	Rt_group_icon: INTEGER is
 		external
-			"C [macro <wel.h>]"
+			"C [macro %"wel.h%"]"
 		alias
 			"RT_GROUP_ICON"
 		end

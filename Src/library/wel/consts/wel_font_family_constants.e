@@ -12,7 +12,7 @@ feature -- Access
 	Ff_dontcare: INTEGER is
 			-- Don't care or don't know
 		external
-			"C [macro <wel.h>]"
+			"C [macro %"wel.h%"]"
 		alias
 			"FF_DONTCARE"
 		end
@@ -21,7 +21,7 @@ feature -- Access
 			-- Fonts with variable stroke width (proportional)
 			-- and with serifs. MS Serif is an example.
 		external
-			"C [macro <wel.h>]"
+			"C [macro %"wel.h%"]"
 		alias
 			"FF_ROMAN"
 		end
@@ -30,7 +30,7 @@ feature -- Access
 			-- Fonts with variable stroke width (proportional)
 			-- and without serifs. MS Sans Serif is an example.
 		external
-			"C [macro <wel.h>]"
+			"C [macro %"wel.h%"]"
 		alias
 			"FF_SWISS"
 		end
@@ -40,7 +40,7 @@ feature -- Access
 			-- with or without serifs. Monospace fonts are usually
 			-- modern. Pica, Elite, and CourierNew are examples.
 		external
-			"C [macro <wel.h>]"
+			"C [macro %"wel.h%"]"
 		alias
 			"FF_MODERN"
 		end
@@ -49,7 +49,7 @@ feature -- Access
 			-- Fonts designed to look like handwriting.
 			-- Script and Cursive are examples.
 		external
-			"C [macro <wel.h>]"
+			"C [macro %"wel.h%"]"
 		alias
 			"FF_SCRIPT"
 		end
@@ -57,7 +57,7 @@ feature -- Access
 	Ff_decorative: INTEGER is
 			-- Novelty fonts. Old English is an example.
 		external
-			"C [macro <wel.h>]"
+			"C [macro %"wel.h%"]"
 		alias
 			"FF_DECORATIVE"
 		end

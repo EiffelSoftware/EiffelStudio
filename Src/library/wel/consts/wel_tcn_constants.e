@@ -13,7 +13,7 @@ feature -- Access
 			-- Notifies a tab control's parent window that a key
 			-- has been pressed.
 		external
-			"C [macro <cctrl.h>]"
+			"C [macro %"cctrl.h%"]"
 		alias
 			"TCN_KEYDOWN"
 		end
@@ -22,7 +22,7 @@ feature -- Access
 			-- Notifies a tab control's parent window that the
 			-- currently selected tab has changed.
 		external
-			"C [macro <cctrl.h>]"
+			"C [macro %"cctrl.h%"]"
 		alias
 			"TCN_SELCHANGE"
 		end
@@ -31,7 +31,7 @@ feature -- Access
 			-- Notifies a tab control's parent window that the
 			-- currently selected tab is about to change.
 		external
-			"C [macro <cctrl.h>]"
+			"C [macro %"cctrl.h%"]"
 		alias
 			"TCN_SELCHANGING"
 		end

@@ -12,112 +12,112 @@ feature -- Access
 
 	Sc_size: INTEGER is
 		external
-			"C [macro <wel.h>]"
+			"C [macro %"wel.h%"]"
 		alias
 			"SC_SIZE"
 		end
 
 	Sc_move: INTEGER is
 		external
-			"C [macro <wel.h>]"
+			"C [macro %"wel.h%"]"
 		alias
 			"SC_MOVE"
 		end
 
 	Sc_minimize: INTEGER is
 		external
-			"C [macro <wel.h>]"
+			"C [macro %"wel.h%"]"
 		alias
 			"SC_MINIMIZE"
 		end
 
 	Sc_maximize: INTEGER is
 		external
-			"C [macro <wel.h>]"
+			"C [macro %"wel.h%"]"
 		alias
 			"SC_MAXIMIZE"
 		end
 
 	Sc_nextwindow: INTEGER is
 		external
-			"C [macro <wel.h>]"
+			"C [macro %"wel.h%"]"
 		alias
 			"SC_NEXTWINDOW"
 		end
 
 	Sc_prevwindow: INTEGER is
 		external
-			"C [macro <wel.h>]"
+			"C [macro %"wel.h%"]"
 		alias
 			"SC_PREVWINDOW"
 		end
 
 	Sc_close: INTEGER is
 		external
-			"C [macro <wel.h>]"
+			"C [macro %"wel.h%"]"
 		alias
 			"SC_CLOSE"
 		end
 
 	Sc_vscroll: INTEGER is
 		external
-			"C [macro <wel.h>]"
+			"C [macro %"wel.h%"]"
 		alias
 			"SC_VSCROLL"
 		end
 
 	Sc_hscroll: INTEGER is
 		external
-			"C [macro <wel.h>]"
+			"C [macro %"wel.h%"]"
 		alias
 			"SC_HSCROLL"
 		end
 
 	Sc_mousemenu: INTEGER is
 		external
-			"C [macro <wel.h>]"
+			"C [macro %"wel.h%"]"
 		alias
 			"SC_MOUSEMENU"
 		end
 
 	Sc_keymenu: INTEGER is
 		external
-			"C [macro <wel.h>]"
+			"C [macro %"wel.h%"]"
 		alias
 			"SC_KEYMENU"
 		end
 
 	Sc_arrange: INTEGER is
 		external
-			"C [macro <wel.h>]"
+			"C [macro %"wel.h%"]"
 		alias
 			"SC_ARRANGE"
 		end
 
 	Sc_restore: INTEGER is
 		external
-			"C [macro <wel.h>]"
+			"C [macro %"wel.h%"]"
 		alias
 			"SC_RESTORE"
 		end
 
 	Sc_tasklist: INTEGER is
 		external
-			"C [macro <wel.h>]"
+			"C [macro %"wel.h%"]"
 		alias
 			"SC_TASKLIST"
 		end
 
 	Sc_screensave: INTEGER is
 		external
-			"C [macro <wel.h>]"
+			"C [macro %"wel.h%"]"
 		alias
 			"SC_SCREENSAVE"
 		end
 
 	Sc_hotkey: INTEGER is
 		external
-			"C [macro <wel.h>]"
+			"C [macro %"wel.h%"]"
 		alias
 			"SC_HOTKEY"
 		end

@@ -11,21 +11,21 @@ feature -- Access
 
 	Mditile_vertical: INTEGER is
 		external
-			"C [macro <wel.h>]"
+			"C [macro %"wel.h%"]"
 		alias
 			"MDITILE_VERTICAL"
 		end
 
 	Mditile_horizontal: INTEGER is
 		external
-			"C [macro <wel.h>]"
+			"C [macro %"wel.h%"]"
 		alias
 			"MDITILE_HORIZONTAL"
 		end
 
 	Mditile_skipdisabled: INTEGER is
 		external
-			"C [macro <wel.h>]"
+			"C [macro %"wel.h%"]"
 		alias
 			"MDITILE_SKIPDISABLED"
 		end

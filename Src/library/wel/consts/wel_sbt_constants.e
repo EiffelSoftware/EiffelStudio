@@ -16,7 +16,7 @@ feature -- Access
 	Sbt_noborders: INTEGER is
 			-- The text is drawn without borders.
 		external
-			"C [macro <cctrl.h>]"
+			"C [macro %"cctrl.h%"]"
 		alias
 			"SBT_NOBORDERS"
 		end
@@ -24,7 +24,7 @@ feature -- Access
 	Sbt_ownerdraw: INTEGER is
 			-- The text is drawn by the parent window.
 		external
-			"C [macro <cctrl.h>]"
+			"C [macro %"cctrl.h%"]"
 		alias
 			"SBT_OWNERDRAW"
 		end
@@ -33,7 +33,7 @@ feature -- Access
 			-- The text is drawn with a border to appear
 			-- higher than the plane of the window.
 		external
-			"C [macro <cctrl.h>]"
+			"C [macro %"cctrl.h%"]"
 		alias
 			"SBT_POPOUT"
 		end

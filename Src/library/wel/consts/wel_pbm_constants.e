@@ -11,35 +11,35 @@ feature -- Access
 
 	Pbm_setrange: INTEGER is
 		external
-			"C [macro <cctrl.h>]"
+			"C [macro %"cctrl.h%"]"
 		alias
 			"PBM_SETRANGE"
 		end
 
 	Pbm_setpos: INTEGER is
 		external
-			"C [macro <cctrl.h>]"
+			"C [macro %"cctrl.h%"]"
 		alias
 			"PBM_SETPOS"
 		end
 
 	Pbm_deltapos: INTEGER is
 		external
-			"C [macro <cctrl.h>]"
+			"C [macro %"cctrl.h%"]"
 		alias
 			"PBM_DELTAPOS"
 		end
 
 	Pbm_setstep: INTEGER is
 		external
-			"C [macro <cctrl.h>]"
+			"C [macro %"cctrl.h%"]"
 		alias
 			"PBM_SETSTEP"
 		end
 
 	Pbm_stepit: INTEGER is
 		external
-			"C [macro <cctrl.h>]"
+			"C [macro %"cctrl.h%"]"
 		alias
 			"PBM_STEPIT"
 		end

@@ -11,21 +11,21 @@ feature -- Access
 
 	Pc_reserved: INTEGER is
 		external
-			"C [macro <wel.h>]"
+			"C [macro %"wel.h%"]"
 		alias
 			"PC_RESERVED"
 		end
 
 	Pc_explicit: INTEGER is
 		external
-			"C [macro <wel.h>]"
+			"C [macro %"wel.h%"]"
 		alias
 			"PC_EXPLICIT"
 		end
 
 	Pc_nocollapse: INTEGER is
 		external
-			"C [macro <wel.h>]"
+			"C [macro %"wel.h%"]"
 		alias
 			"PC_NOCOLLAPSE"
 		end

@@ -11,28 +11,28 @@ feature -- Access
 
 	Ttdt_automatic: INTEGER is
 		external
-			"C [macro <cctrl.h>]"
+			"C [macro %"cctrl.h%"]"
 		alias
 			"TTDT_AUTOMATIC"
 		end
 
 	Ttdt_autopop: INTEGER is
 		external
-			"C [macro <cctrl.h>]"
+			"C [macro %"cctrl.h%"]"
 		alias
 			"TTDT_AUTOPOP"
 		end
 
 	Ttdt_initial: INTEGER is
 		external
-			"C [macro <cctrl.h>]"
+			"C [macro %"cctrl.h%"]"
 		alias
 			"TTDT_INITIAL"
 		end
 
 	Ttdt_reshow: INTEGER is
 		external
-			"C [macro <cctrl.h>]"
+			"C [macro %"cctrl.h%"]"
 		alias
 			"TTDT_RESHOW"
 		end

@@ -11,21 +11,21 @@ feature -- Access
 
 	Pm_noremove: INTEGER is
 		external
-			"C [macro <wel.h>]"
+			"C [macro %"wel.h%"]"
 		alias
 			"PM_NOREMOVE"
 		end
 
 	Pm_remove: INTEGER is
 		external
-			"C [macro <wel.h>]"
+			"C [macro %"wel.h%"]"
 		alias
 			"PM_REMOVE"
 		end
 
 	Pm_noyield: INTEGER is
 		external
-			"C [macro <wel.h>]"
+			"C [macro %"wel.h%"]"
 		alias
 			"PM_NOYIELD"
 		end

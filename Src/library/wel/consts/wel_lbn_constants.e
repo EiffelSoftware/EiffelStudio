@@ -11,42 +11,42 @@ feature -- Access
 
 	Lbn_errspace: INTEGER is
 		external
-			"C [macro <wel.h>]"
+			"C [macro %"wel.h%"]"
 		alias
 			"LBN_ERRSPACE"
 		end
 
 	Lbn_selchange: INTEGER is
 		external
-			"C [macro <wel.h>]"
+			"C [macro %"wel.h%"]"
 		alias
 			"LBN_SELCHANGE"
 		end
 
 	Lbn_dblclk: INTEGER is
 		external
-			"C [macro <wel.h>]"
+			"C [macro %"wel.h%"]"
 		alias
 			"LBN_DBLCLK"
 		end
 
 	Lbn_selcancel: INTEGER is
 		external
-			"C [macro <wel.h>]"
+			"C [macro %"wel.h%"]"
 		alias
 			"LBN_SELCANCEL"
 		end
 
 	Lbn_setfocus: INTEGER is
 		external
-			"C [macro <wel.h>]"
+			"C [macro %"wel.h%"]"
 		alias
 			"LBN_SETFOCUS"
 		end
 
 	Lbn_killfocus: INTEGER is
 		external
-			"C [macro <wel.h>]"
+			"C [macro %"wel.h%"]"
 		alias
 			"LBN_KILLFOCUS"
 		end

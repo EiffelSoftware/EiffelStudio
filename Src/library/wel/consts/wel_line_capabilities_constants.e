@@ -12,7 +12,7 @@ feature -- Access
 	Lc_none: INTEGER is
 			-- Supports no lines
 		external
-			"C [macro <wel.h>]"
+			"C [macro %"wel.h%"]"
 		alias
 			"LC_NONE"
 		end
@@ -20,7 +20,7 @@ feature -- Access
 	Lc_polyline: INTEGER is
 			-- Supports polylines
 		external
-			"C [macro <wel.h>]"
+			"C [macro %"wel.h%"]"
 		alias
 			"LC_POLYLINE"
 		end
@@ -28,7 +28,7 @@ feature -- Access
 	Lc_marker: INTEGER is
 			-- Supports markers
 		external
-			"C [macro <wel.h>]"
+			"C [macro %"wel.h%"]"
 		alias
 			"LC_MARKER"
 		end
@@ -36,7 +36,7 @@ feature -- Access
 	Lc_polymarker: INTEGER is
 			-- Supports polymarkers
 		external
-			"C [macro <wel.h>]"
+			"C [macro %"wel.h%"]"
 		alias
 			"LC_POLYMARKER"
 		end
@@ -44,7 +44,7 @@ feature -- Access
 	Lc_wide: INTEGER is
 			-- Supports wide lines
 		external
-			"C [macro <wel.h>]"
+			"C [macro %"wel.h%"]"
 		alias
 			"LC_WIDE"
 		end
@@ -52,7 +52,7 @@ feature -- Access
 	Lc_styled: INTEGER is
 			-- Supports styled lines
 		external
-			"C [macro <wel.h>]"
+			"C [macro %"wel.h%"]"
 		alias
 			"LC_STYLED"
 		end
@@ -60,7 +60,7 @@ feature -- Access
 	Lc_wide_styled: INTEGER is
 			-- Supports wide, styled lines
 		external
-			"C [macro <wel.h>]"
+			"C [macro %"wel.h%"]"
 		alias
 			"LC_WIDESTYLED"
 		end
@@ -68,7 +68,7 @@ feature -- Access
 	Lc_interiors: INTEGER is
 			-- Supports interiors
 		external
-			"C [macro <wel.h>]"
+			"C [macro %"wel.h%"]"
 		alias
 			"LC_INTERIORS"
 		end

@@ -13,7 +13,7 @@ feature -- Access
 			-- Specifies that tabs appear as buttons and no border
 			-- is drawn around the display area.
 		external
-			"C [macro <cctrl.h>]"
+			"C [macro %"cctrl.h%"]"
 		alias
 			"TCS_BUTTONS"
 		end
@@ -23,7 +23,7 @@ feature -- Access
 			-- style cannot be combined with the TCS_RIGHTJUSTIFY
 			-- style.
 		external
-			"C [macro <cctrl.h>]"
+			"C [macro %"cctrl.h%"]"
 		alias
 			"TCS_FIXEDWIDTH"
 		end
@@ -32,7 +32,7 @@ feature -- Access
 			-- Specifies that the tab control never receives the
 			-- input focus.
 		external
-			"C [macro <cctrl.h>]"
+			"C [macro %"cctrl.h%"]"
 		alias
 			"TCS_FOCUSNEVER"
 		end
@@ -41,7 +41,7 @@ feature -- Access
 			-- Specifies that tabs receive the input focus when
 			-- clicked.
 		external
-			"C [macro <cctrl.h>]"
+			"C [macro %"cctrl.h%"]"
 		alias
 			"TCS_FOCUSONBUTTONDOWN"
 		end
@@ -51,7 +51,7 @@ feature -- Access
 			-- tab. This style can only be used with the
 			-- TCS_FIXEDWIDTH style.
 		external
-			"C [macro <cctrl.h>]"
+			"C [macro %"cctrl.h%"]"
 		alias
 			"TCS_FORCEICONLEFT"
 		end
@@ -63,7 +63,7 @@ feature -- Access
 			-- style can only be used with the TCS_FIXEDWIDTH style,
 			-- and it implies the TCS_FORCEICONLEFT style.
 		external
-			"C [macro <cctrl.h>]"
+			"C [macro %"cctrl.h%"]"
 		alias
 			"TCS_FORCELABELLEFT"
 		end
@@ -72,7 +72,7 @@ feature -- Access
 			-- Displays multiple rows of tabs, if necessary, so all
 			-- tabs are visible at once.
 		external
-			"C [macro <cctrl.h>]"
+			"C [macro %"cctrl.h%"]"
 		alias
 			"TCS_MULTILINE"
 		end
@@ -81,7 +81,7 @@ feature -- Access
 			-- Specifies that the parent window is responsible for
 			-- drawing tabs.
 		external
-			"C [macro <cctrl.h>]"
+			"C [macro %"cctrl.h%"]"
 		alias
 			"TCS_OWNERDRAWFIXED"
 		end
@@ -90,7 +90,7 @@ feature -- Access
 			-- Does not stretch each row of tabs to fill the entire
 			-- width of the control. This style is the default.
 		external
-			"C [macro <cctrl.h>]"
+			"C [macro %"cctrl.h%"]"
 		alias
 			"TCS_RAGGEDRIGHT"
 		end
@@ -101,7 +101,7 @@ feature -- Access
 			-- tab control. This window style is ignored unless the
 			-- TCS_MULTILINE style is also specified.
 		external
-			"C [macro <cctrl.h>]"
+			"C [macro %"cctrl.h%"]"
 		alias
 			"TCS_RIGHTJUSTIFY"
 		end
@@ -111,7 +111,7 @@ feature -- Access
 			-- to see more tabs, if necessary. This style is the
 			-- default.
 		external
-			"C [macro <cctrl.h>]"
+			"C [macro %"cctrl.h%"]"
 		alias
 			"TCS_SINGLELINE"
 		end
@@ -121,7 +121,7 @@ feature -- Access
 			-- is drawn around the display area. This style is the
 			-- default.
 		external
-			"C [macro <cctrl.h>]"
+			"C [macro %"cctrl.h%"]"
 		alias
 			"TCS_TABS"
 		end
@@ -131,7 +131,7 @@ feature -- Access
 			-- associated with it. For more information about
 			-- tooltip controls.
 		external
-			"C [macro <cctrl.h>]"
+			"C [macro %"cctrl.h%"]"
 		alias
 			"TCS_TOOLTIPS"
 		end
@@ -139,7 +139,7 @@ feature -- Access
 	Tcs_scrollopposite: INTEGER is
 			-- Undocmented style.
 		external
-			"C [macro <cctrl.h>]"
+			"C [macro %"cctrl.h%"]"
 		alias
 			"TCS_SCROLLOPPOSITE"
 		end
@@ -148,7 +148,7 @@ feature -- Access
 			-- Undocmented style.
 			-- Set the tabs at the bottom of the notebook.
 		external
-			"C [macro <cctrl.h>]"
+			"C [macro %"cctrl.h%"]"
 		alias
 			"TCS_BOTTOM"
 		end
@@ -158,7 +158,7 @@ feature -- Access
 			-- Set the tabs at the right of the notebook.
 			-- Need `Tcs_vertical' style.
 		external
-			"C [macro <cctrl.h>]"
+			"C [macro %"cctrl.h%"]"
 		alias
 			"TCS_RIGHT"
 		end
@@ -166,7 +166,7 @@ feature -- Access
 	Tcs_hottrack: INTEGER is
 			-- Undocmented style.
 		external
-			"C [macro <cctrl.h>]"
+			"C [macro %"cctrl.h%"]"
 		alias
 			"TCS_HOTTRACK"
 		end
@@ -176,7 +176,7 @@ feature -- Access
 			-- Set the tabs verticaly at the left of the 
 			-- notebook.
 		external
-			"C [macro <cctrl.h>]"
+			"C [macro %"cctrl.h%"]"
 		alias
 			"TCS_VERTICAL"
 		end

@@ -11,182 +11,182 @@ feature -- Access
 
 	Mf_insert: INTEGER is
 		external
-			"C [macro <wel.h>]"
+			"C [macro %"wel.h%"]"
 		alias
 			"MF_INSERT"
 		end
 
 	Mf_change: INTEGER is
 		external
-			"C [macro <wel.h>]"
+			"C [macro %"wel.h%"]"
 		alias
 			"MF_CHANGE"
 		end
 
 	Mf_append: INTEGER is
 		external
-			"C [macro <wel.h>]"
+			"C [macro %"wel.h%"]"
 		alias
 			"MF_APPEND"
 		end
 
 	Mf_delete: INTEGER is
 		external
-			"C [macro <wel.h>]"
+			"C [macro %"wel.h%"]"
 		alias
 			"MF_DELETE"
 		end
 
 	Mf_remove: INTEGER is
 		external
-			"C [macro <wel.h>]"
+			"C [macro %"wel.h%"]"
 		alias
 			"MF_REMOVE"
 		end
 
 	Mf_bycommand: INTEGER is
 		external
-			"C [macro <wel.h>]"
+			"C [macro %"wel.h%"]"
 		alias
 			"MF_BYCOMMAND"
 		end
 
 	Mf_byposition: INTEGER is
 		external
-			"C [macro <wel.h>]"
+			"C [macro %"wel.h%"]"
 		alias
 			"MF_BYPOSITION"
 		end
 
 	Mf_separator: INTEGER is
 		external
-			"C [macro <wel.h>]"
+			"C [macro %"wel.h%"]"
 		alias
 			"MF_SEPARATOR"
 		end
 
 	Mf_enabled: INTEGER is
 		external
-			"C [macro <wel.h>]"
+			"C [macro %"wel.h%"]"
 		alias
 			"MF_ENABLED"
 		end
 
 	Mf_grayed: INTEGER is
 		external
-			"C [macro <wel.h>]"
+			"C [macro %"wel.h%"]"
 		alias
 			"MF_GRAYED"
 		end
 
 	Mf_disabled: INTEGER is
 		external
-			"C [macro <wel.h>]"
+			"C [macro %"wel.h%"]"
 		alias
 			"MF_DISABLED"
 		end
 
 	Mf_unchecked: INTEGER is
 		external
-			"C [macro <wel.h>]"
+			"C [macro %"wel.h%"]"
 		alias
 			"MF_UNCHECKED"
 		end
 
 	Mf_checked: INTEGER is
 		external
-			"C [macro <wel.h>]"
+			"C [macro %"wel.h%"]"
 		alias
 			"MF_CHECKED"
 		end
 
 	Mf_usecheckbitmaps: INTEGER is
 		external
-			"C [macro <wel.h>]"
+			"C [macro %"wel.h%"]"
 		alias
 			"MF_USECHECKBITMAPS"
 		end
 
 	Mf_string: INTEGER is
 		external
-			"C [macro <wel.h>]"
+			"C [macro %"wel.h%"]"
 		alias
 			"MF_STRING"
 		end
 
 	Mf_bitmap: INTEGER is
 		external
-			"C [macro <wel.h>]"
+			"C [macro %"wel.h%"]"
 		alias
 			"MF_BITMAP"
 		end
 
 	Mf_ownerdraw: INTEGER is
 		external
-			"C [macro <wel.h>]"
+			"C [macro %"wel.h%"]"
 		alias
 			"MF_OWNERDRAW"
 		end
 
 	Mf_popup: INTEGER is
 		external
-			"C [macro <wel.h>]"
+			"C [macro %"wel.h%"]"
 		alias
 			"MF_POPUP"
 		end
 
 	Mf_menubarbreak: INTEGER is
 		external
-			"C [macro <wel.h>]"
+			"C [macro %"wel.h%"]"
 		alias
 			"MF_MENUBARBREAK"
 		end
 
 	Mf_menubreak: INTEGER is
 		external
-			"C [macro <wel.h>]"
+			"C [macro %"wel.h%"]"
 		alias
 			"MF_MENUBREAK"
 		end
 
 	Mf_unhilite: INTEGER is
 		external
-			"C [macro <wel.h>]"
+			"C [macro %"wel.h%"]"
 		alias
 			"MF_UNHILITE"
 		end
 
 	Mf_hilite: INTEGER is
 		external
-			"C [macro <wel.h>]"
+			"C [macro %"wel.h%"]"
 		alias
 			"MF_HILITE"
 		end
 
 	Mf_sysmenu: INTEGER is
 		external
-			"C [macro <wel.h>]"
+			"C [macro %"wel.h%"]"
 		alias
 			"MF_SYSMENU"
 		end
 
 	Mf_help: INTEGER is
 		external
-			"C [macro <wel.h>]"
+			"C [macro %"wel.h%"]"
 		alias
 			"MF_HELP"
 		end
 
 	Mf_mouseselect: INTEGER is
 		external
-			"C [macro <wel.h>]"
+			"C [macro %"wel.h%"]"
 		alias
 			"MF_MOUSESELECT"
 		end
 
 	Mf_end: INTEGER is
 		external
-			"C [macro <wel.h>]"
+			"C [macro %"wel.h%"]"
 		alias
 			"MF_END"
 		end

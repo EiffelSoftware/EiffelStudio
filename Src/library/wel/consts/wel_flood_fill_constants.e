@@ -11,14 +11,14 @@ feature -- Access
 
 	Floodfillborder: iNTEGER is
 		external
-			"C [macro <wel.h>]"
+			"C [macro %"wel.h%"]"
 		alias
 			"FLOODFILLBORDER"
 		end
 
 	Floodfillsurface: INTEGER is
 		external
-			"C [macro <wel.h>]"
+			"C [macro %"wel.h%"]"
 		alias
 			"FLOODFILLSURFACE"
 		end

@@ -12,7 +12,7 @@ feature -- Access
 	Idb_std_large_color: INTEGER is
 			-- Large, color standard bitmaps.
 		external
-			"C [macro <cctrl.h>]"
+			"C [macro %"cctrl.h%"]"
 		alias
 			"IDB_STD_LARGE_COLOR"
 		end
@@ -20,7 +20,7 @@ feature -- Access
 	Idb_std_small_color: INTEGER is
 			-- Small, color standard bitmaps.
 		external
-			"C [macro <cctrl.h>]"
+			"C [macro %"cctrl.h%"]"
 		alias
 			"IDB_STD_SMALL_COLOR"
 		end
@@ -28,7 +28,7 @@ feature -- Access
 	Idb_view_large_color: INTEGER is
 			-- Large, color view bitmaps.
 		external
-			"C [macro <cctrl.h>]"
+			"C [macro %"cctrl.h%"]"
 		alias
 			"IDB_VIEW_LARGE_COLOR"
 		end
@@ -36,7 +36,7 @@ feature -- Access
 	Idb_view_small_color: INTEGER is
 			-- Small, color view bitmaps.
 		external
-			"C [macro <cctrl.h>]"
+			"C [macro %"cctrl.h%"]"
 		alias
 			"IDB_VIEW_SMALL_COLOR"
 		end

@@ -11,49 +11,49 @@ feature -- Access
 
 	Ps_solid: INTEGER is
 		external
-			"C [macro <wel.h>]"
+			"C [macro %"wel.h%"]"
 		alias
 			"PS_SOLID"
 		end
 
 	Ps_dash: INTEGER is
 		external
-			"C [macro <wel.h>]"
+			"C [macro %"wel.h%"]"
 		alias
 			"PS_DASH"
 		end
 
 	Ps_dot: INTEGER is
 		external
-			"C [macro <wel.h>]"
+			"C [macro %"wel.h%"]"
 		alias
 			"PS_DOT"
 		end
 
 	Ps_dashdot: INTEGER is
 		external
-			"C [macro <wel.h>]"
+			"C [macro %"wel.h%"]"
 		alias
 			"PS_DASHDOT"
 		end
 
 	Ps_dashdotdot: INTEGER is
 		external
-			"C [macro <wel.h>]"
+			"C [macro %"wel.h%"]"
 		alias
 			"PS_DASHDOTDOT"
 		end
 
 	Ps_null: INTEGER is
 		external
-			"C [macro <wel.h>]"
+			"C [macro %"wel.h%"]"
 		alias
 			"PS_NULL"
 		end
 
 	Ps_insideframe: INTEGER is
 		external
-			"C [macro <wel.h>]"
+			"C [macro %"wel.h%"]"
 		alias
 			"PS_INSIDEFRAME"
 		end

@@ -11,98 +11,98 @@ feature -- Access
 
 	Lbs_notify: INTEGER is
 		external
-			"C [macro <wel.h>]"
+			"C [macro %"wel.h%"]"
 		alias
 			"LBS_NOTIFY"
 		end
 
 	Lbs_sort: INTEGER is
 		external
-			"C [macro <wel.h>]"
+			"C [macro %"wel.h%"]"
 		alias
 			"LBS_SORT"
 		end
 
 	Lbs_noredraw: INTEGER is
 		external
-			"C [macro <wel.h>]"
+			"C [macro %"wel.h%"]"
 		alias
 			"LBS_NOREDRAW"
 		end
 
 	Lbs_multiplesel: INTEGER is
 		external
-			"C [macro <wel.h>]"
+			"C [macro %"wel.h%"]"
 		alias
 			"LBS_MULTIPLESEL"
 		end
 
 	Lbs_ownerdrawfixed: INTEGER is
 		external
-			"C [macro <wel.h>]"
+			"C [macro %"wel.h%"]"
 		alias
 			"LBS_OWNERDRAWFIXED"
 		end
 
 	Lbs_ownerdrawvariable: INTEGER is
 		external
-			"C [macro <wel.h>]"
+			"C [macro %"wel.h%"]"
 		alias
 			"LBS_OWNERDRAWVARIABLE"
 		end
 
 	Lbs_hasstrings: INTEGER is
 		external
-			"C [macro <wel.h>]"
+			"C [macro %"wel.h%"]"
 		alias
 			"LBS_HASSTRINGS"
 		end
 
 	Lbs_usetabstops: INTEGER is
 		external
-			"C [macro <wel.h>]"
+			"C [macro %"wel.h%"]"
 		alias
 			"LBS_USETABSTOPS"
 		end
 
 	Lbs_nointegralheight: INTEGER is
 		external
-			"C [macro <wel.h>]"
+			"C [macro %"wel.h%"]"
 		alias
 			"LBS_NOINTEGRALHEIGHT"
 		end
 
 	Lbs_multicolumn: INTEGER is
 		external
-			"C [macro <wel.h>]"
+			"C [macro %"wel.h%"]"
 		alias
 			"LBS_MULTICOLUMN"
 		end
 
 	Lbs_wantkeyboardinput: INTEGER is
 		external
-			"C [macro <wel.h>]"
+			"C [macro %"wel.h%"]"
 		alias
 			"LBS_WANTKEYBOARDINPUT"
 		end
 
 	Lbs_extendedsel: INTEGER is
 		external
-			"C [macro <wel.h>]"
+			"C [macro %"wel.h%"]"
 		alias
 			"LBS_EXTENDEDSEL"
 		end
 
 	Lbs_disablenoscroll: INTEGER is
 		external
-			"C [macro <wel.h>]"
+			"C [macro %"wel.h%"]"
 		alias
 			"LBS_DISABLENOSCROLL"
 		end
 
 	Lbs_standard: INTEGER is
 		external
-			"C [macro <wel.h>]"
+			"C [macro %"wel.h%"]"
 		alias
 			"LBS_STANDARD"
 		end

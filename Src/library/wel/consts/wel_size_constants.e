@@ -11,35 +11,35 @@ feature -- Access
 
 	Size_maximized: INTEGER is
 		external
-			"C [macro <wel.h>]"
+			"C [macro %"wel.h%"]"
 		alias
 			"SIZE_MAXIMIZED"
 		end
 
 	Size_minimized: INTEGER is
 		external
-			"C [macro <wel.h>]"
+			"C [macro %"wel.h%"]"
 		alias
 			"SIZE_MINIMIZED"
 		end
 
 	Size_restored: INTEGER is
 		external
-			"C [macro <wel.h>]"
+			"C [macro %"wel.h%"]"
 		alias
 			"SIZE_RESTORED"
 		end
 
 	Size_maxhide: INTEGER is
 		external
-			"C [macro <wel.h>]"
+			"C [macro %"wel.h%"]"
 		alias
 			"SIZE_MAXHIDE"
 		end
 
 	Size_maxshow: INTEGER is
 		external
-			"C [macro <wel.h>]"
+			"C [macro %"wel.h%"]"
 		alias
 			"SIZE_MAXSHOW"
 		end

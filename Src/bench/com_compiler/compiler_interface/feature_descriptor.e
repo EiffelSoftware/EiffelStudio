@@ -71,6 +71,44 @@ feature -- Access
 			-- Feature name.
 		do
 			Result := clone (compiler_feature.feature_name)
+			if Result.substring_index ("_infix_", 1) > 0 then
+				Result.replace_substring_all ("_infix_", "")
+				if Result.is_equal ("ge") then
+					Result := ">="
+				elseif Result.is_equal ("gt") then
+					Result := ">"
+				elseif Result.is_equal ("le") then
+					Result := "<="
+				elseif Result.is_equal ("lt") then
+					Result := "<"
+				elseif Result.is_equal ("and_then") then
+					Result := "and then"
+				elseif Result.is_equal ("or_else") then
+					Result := "or else"
+				elseif Result.is_equal ("minus") then
+					Result := "-"
+				elseif Result.is_equal ("plus") then
+					Result := "+"
+				elseif Result.is_equal ("power") then
+					Result := "^"
+				elseif Result.is_equal ("slash") then
+					Result := "/"
+				elseif Result.is_equal ("star") then
+					Result := "*"
+				elseif Result.is_equal ("mod") then
+					Result := "\\"
+				elseif Result.is_equal ("div") then
+					Result := "//"
+				end
+			end
+			if Result.substring_index ("_prefix_", 1) > 0 then
+				Result.replace_substring_all ("_prefix_", "")
+				if Result.is_equal ("minus") then
+					Result := "-"
+				elseif Result.is_equal ("plus") then
+					Result := "+"
+				end
+			end
 		ensure then
 			result_exists: Result /= void
 		end
@@ -128,12 +166,10 @@ feature -- Access
 				Result.append ("deferred ")
 			end
 			if is_infix then
-				Result.append ("infix ")
-			end
-			if is_prefix then
-				Result.append ("prefix ")
-			end
-			if is_attribute then
+				Result.append ("infix operator ")
+			elseif is_prefix then
+				Result.append ("prefix operator ")
+			elseif is_attribute then
 				Result.append ("attribute: ")
 			elseif is_function then
 				Result.append ("function: ")

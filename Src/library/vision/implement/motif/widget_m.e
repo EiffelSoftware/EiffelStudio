@@ -105,7 +105,7 @@ feature
 	set_background_color (a_color: COLOR) is
 			-- Set background_color to `a_color'.
 		require
-			a_color_exists: not (a_color = Void)
+			a_color_exists: a_color /= Void
 		local
 			pixmap_implementation: PIXMAP_X;
 			color_implementation: COLOR_X;
@@ -133,7 +133,7 @@ feature
 	set_background_pixmap (a_pixmap: PIXMAP) is
 			-- Set background_pixmap to `a_pixmap'.
 		require
-			a_pixmap_exists: not (a_pixmap = Void)
+			a_pixmap_exists: a_pixmap /= Void
 		local
 			pixmap_implementation: PIXMAP_X;
 			color_implementation: COLOR_X;

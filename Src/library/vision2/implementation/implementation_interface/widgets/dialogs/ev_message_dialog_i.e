@@ -8,134 +8,208 @@ deferred class
 	EV_MESSAGE_DIALOG_I
 
 inherit
-	EV_DIALOG_I
-		redefine
-			build
-		end
+	EV_ANY_I
 
-feature {EV_MESSAGE_DIALOG} -- Initialization
+feature {NONE} -- Initialization
 
-	build is
-			-- Normal build and load icon
-		do
-			Precursor
-			icon_build (display_area)		
-		end
-
-feature -- Status settings
-
-	set_default (msg, dtitle: STRING) is
-			-- Set default settings
-		do
-			set_message (msg)
-			set_title (dtitle)
-			add_ok_button
-		end
-
-	set_message (msg: STRING) is
-			-- Set the message to be displayed
-		do
-			if message = Void then
-				!!message.make_with_text (display_area, msg)
-			else
-				message.set_text(msg)
-			end
-		end
-
-	add_ok_button is
-			-- Add an OK button in the dialog.
-		local
-			cmd: EV_MESSAGE_DIALOG_CLOSE_COMMAND
-			arg: EV_ARGUMENT1 [EV_MESSAGE_DIALOG_I]
-		do
-			if ok_button = Void then
-				!!ok_button.make_with_text (action_area, "OK")
-				ok_button.set_expand(True)
-				!!cmd
-				!!arg.make (Current)
-				ok_button.add_click_command(cmd, arg)
-			end
-		end
-
-	add_help_button is
-			-- Add a Help button in the dialog.
-		do
-			if help_button = Void then
-				!!help_button.make_with_text (action_area, "Help")
-				help_button.set_expand(True)
-			end
-		end
-	
-	add_cancel_button is
-			-- Add a cancel button in the dialog
-		local
-			cmd: EV_MESSAGE_DIALOG_CLOSE_COMMAND
-			arg: EV_ARGUMENT1 [EV_MESSAGE_DIALOG_I]
-		do
-			if cancel_button = Void then
-				!!cancel_button.make_with_text (action_area, "Cancel")
-				cancel_button.set_expand(True)
-				!!cmd
-				!!arg.make (Current)
-				cancel_button.add_click_command(cmd, arg)
-			end
-		end
-
-	add_okcancel_buttons is
-			-- Add two buttons : OK and Cancel.
-		do
-			add_ok_button
-			add_cancel_button
-		end
-
-feature -- Miscellaneous
-
---	display (txt, title: STRING) is
---			-- Must be called to display a dialog that wasn't
---			-- created with default options.
---		do
---		end
-
-feature -- Event - command association
-
-	add_ok_command (cmd: EV_COMMAND; args: EV_ARGUMENTS) is
-			-- Add `cmd' to the list of commands to be executed when
-			-- the OK button is pressed.
-			-- If there is no OK button, the event never occurs.
-		do
-			ok_button.add_click_command(cmd, args)
-		end
-
-	add_cancel_command (cmd: EV_COMMAND; args: EV_ARGUMENTS) is
-			-- Add `cmd' to the list of commands to be executed when
-			-- the Cancel button is pressed.
-			-- If there is no Cancel button, the event never occurs.
-		do
-			cancel_button.add_click_command(cmd, args)
-		end
-
-	add_help_command (cmd: EV_COMMAND; args: EV_ARGUMENTS) is
-			-- Add `cmd' to the list of commands to be executed when
-			-- the Help button is pressed.
-			-- If there is no Help button, the event never occurs.
-		do
-			help_button.add_click_command(cmd, args)
-		end
-
-feature {NONE} -- Implementation
-
-	icon_build (par: EV_CONTAINER) is
-			-- Load the icon
+	make (par: EV_CONTAINER) is
+			-- Create a message dialog with `par' as parent.
+		require
+			valid_parent: is_valid (par)
 		deferred
 		end
 
-	message: EV_LABEL
+	make_with_text (par: EV_CONTAINER; a_title, a_msg: STRING) is
+			-- Create a message box with `par' as parent, `a_title' as
+			-- title and `a_msg' as message.
+		require
+			valid_parent: is_valid (par)
+			valid_title: a_title /= Void
+			valid_message: a_msg /= Void
+		deferred
+		end
 
-	ok_button: EV_BUTTON
+	make_default (par: EV_CONTAINER; a_title, a_msg: STRING) is
+			-- Create the default message dialog with `par' as
+			-- parent, `a_title' as title and `a_msg' as message
+			-- and displays it.
+		require
+			valid_parent: is_valid (par)
+			valid_title: a_title /= Void
+			valid_message: a_msg /= Void
+		deferred
+		end
 
-	help_button: EV_BUTTON
+feature -- Status report
 
-	cancel_button: EV_BUTTON
+	selected_button: STRING is
+			-- Return the label of the selected button.
+			-- Can be any string in :
+			-- "OK", "Cancel", "Yes", "No", "Abort",
+			-- "Retry", "Ignore", "Help".
+		deferred
+		end
+
+feature -- Status setting
+
+	show_ok_button is
+			-- Show an "OK" button in the dialog.
+		require
+			exist: not destroyed
+		deferred
+		end
+
+	show_ok_cancel_buttons is
+			-- Show two buttons : "OK" and "Cancel".
+		require
+			exist: not destroyed
+		deferred
+		end
+
+	show_yes_no_buttons is
+			-- Show two buttons in the dialog: "Yes" and "No".
+		require
+			exist: not destroyed
+		deferred
+		end
+
+	show_yes_no_cancel_buttons is
+			-- Show three buttons in the dialog: "Yes", "No" and "Cancel".
+		require
+			exist: not destroyed
+		deferred
+		end
+
+	show_abort_retry_ignore_buttons is
+			-- Show three buttons in the dialog: "Abort", "Retry" and "Ignore".
+		require
+			exist: not destroyed
+		deferred
+		end
+
+	show_retry_cancel_buttons is
+			-- Show two buttons in the dialog: "Retry" and "Cancel".
+		require
+			exist: not destroyed
+		deferred
+		end
+
+	add_help_button is
+			-- Add an "Help" button to the other choosen buttons
+			-- in the dialog box.
+		require
+			exist: not destroyed
+		deferred
+		end
+
+	show is
+			-- Show the window.
+			-- As the window is modal, nothing can be done
+			-- until the user closed the window.
+		require
+			exists: not destroyed
+		deferred
+		end
+
+feature -- Element change
+
+	set_title (str: STRING) is
+			-- Make `str' the new title of the dialog.
+		require
+			exists: not destroyed
+			valid_title: str /= Void
+		deferred
+		end
+
+	set_message (str: STRING) is
+			-- Make `str' the new title of the dialog.
+		require
+			exists: not destroyed
+			valid_message: str /= Void
+		deferred
+		end
+
+feature -- Event - command association
+
+	add_ok_command (cmd: EV_COMMAND; arg: EV_ARGUMENT) is
+			-- Add `cmd' to the list of commands to be executed when
+			-- the OK button is pressed.
+			-- If there is no OK button, the event never occurs.
+		require
+			exists: not destroyed
+			valid_command: cmd /= Void
+		deferred
+		end
+
+	add_cancel_command (cmd: EV_COMMAND; arg: EV_ARGUMENT) is
+			-- Add `cmd' to the list of commands to be executed when
+			-- the Cancel button is pressed.
+			-- If there is no Cancel button, the event never occurs.
+		require
+			exists: not destroyed
+			valid_command: cmd /= Void
+		deferred
+		end
+
+	add_yes_command (cmd: EV_COMMAND; arg: EV_ARGUMENT) is
+			-- Add `cmd' to the list of commands to be executed when
+			-- the Yes button is pressed.
+			-- If there is no Yes button, the event never occurs.
+		require
+			exists: not destroyed
+			valid_command: cmd /= Void
+		deferred
+		end
+
+	add_no_command (cmd: EV_COMMAND; arg: EV_ARGUMENT) is
+			-- Add `cmd' to the list of commands to be executed when
+			-- the No button is pressed.
+			-- If there is no No button, the event never occurs.
+		require
+			exists: not destroyed
+			valid_command: cmd /= Void
+		deferred
+		end
+
+	add_abort_command (cmd: EV_COMMAND; arg: EV_ARGUMENT) is
+			-- Add `cmd' to the list of commands to be executed when
+			-- the Abort button is pressed.
+			-- If there is no Abort button, the event never occurs.
+		require
+			exists: not destroyed
+			valid_command: cmd /= Void
+		deferred
+		end
+
+	add_retry_command (cmd: EV_COMMAND; arg: EV_ARGUMENT) is
+			-- Add `cmd' to the list of commands to be executed when
+			-- the Retry button is pressed.
+			-- If there is no Retry button, the event never occurs.
+		require
+			exists: not destroyed
+			valid_command: cmd /= Void
+		deferred
+		end
+
+	add_ignore_command (cmd: EV_COMMAND; arg: EV_ARGUMENT) is
+			-- Add `cmd' to the list of commands to be executed when
+			-- the Ignore button is pressed.
+			-- If there is no Ignore button, the event never occurs.
+		require
+			exists: not destroyed
+			valid_command: cmd /= Void
+		deferred
+		end
+
+	add_help_command (cmd: EV_COMMAND; arg: EV_ARGUMENT) is
+			-- Add `cmd' to the list of commands to be executed when
+			-- the Help button is pressed.
+			-- If there is no Help button, the event never occurs.
+		require
+			exists: not destroyed
+			valid_command: cmd /= Void
+		deferred
+		end
 
 end -- class EV_MESSAGE_DIALOG_I
 

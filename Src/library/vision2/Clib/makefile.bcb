@@ -1,19 +1,23 @@
 # vision2.lib - Makefile for Microsoft C
 
-CC = bcc32.exe
+CC = $(ISE_EIFFEL)\BCC55\bin\bcc32.exe
+AR = $(ISE_EIFFEL)\BCC55\bin\tlib.exe
 # Debug version
 #CFLAGS = -c -Zi -W4 \
 #	-I..\spec\include \
 #	-I$(VISION_PRERELEASE)\libpng \
 #	-I$(VISION_PRERELEASE)\zlib \
-#	-I$(ISE_EIFFEL)\bench\spec\windows\include
+#	-I$(ISE_EIFFEL)\bench\spec\windows\include \
+#	-I$(ISE_EIFFEL)\BCC55\include  -L$(ISE_EIFFEL)\BCC55\lib 
+
 
 # Release version
 CFLAGS = -c -O1 \
 	-I..\spec\include \
 	-I$(ISE_EIFFEL)\C_library\libpng \
 	-I$(ISE_EIFFEL)\C_library\zlib \
-	-I$(ISE_EIFFEL)\bench\spec\windows\include
+	-I$(ISE_EIFFEL)\bench\spec\windows\include \
+	-I$(ISE_EIFFEL)\BCC55\include  -L$(ISE_EIFFEL)\BCC55\lib 
 
 .c.obj:
 	$(CC) $(CFLAGS) $<
@@ -21,10 +25,10 @@ CFLAGS = -c -O1 \
 OBJ = load_pixmap.obj
 
 vision2.lib: $(OBJ)
-	if exist $@ del $@
-	lib /OUT:$@ $(OBJ)
+	if exist $@ -del $@
+	$(AR) $@ +$(OBJ)
 	if not exist ..\spec\bcb mkdir ..\spec\bcb
 	if not exist ..\spec\bcb\lib mkdir ..\spec\bcb\lib
 	copy $@ ..\spec\bcb\lib
-	del $@
-	del *.obj
+	-del $@
+	-del *.obj

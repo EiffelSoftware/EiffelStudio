@@ -230,7 +230,7 @@ feature {NONE} -- Implementation
 			debug_ace_file, release_ace_file: FILE_NAME
 		do
 			if system_status.is_wizard_system then
-				create debug_ace_file.make_from_string (visual_studio_information.wizard_installation_path + "\wizards\build")
+				create debug_ace_file.make_from_string (visual_studio_information.wizard_installation_path)
 				debug_ace_file.extend ("templates")
 				debug_ace_file.extend ("windows")
 				release_ace_file := clone (debug_ace_file)
@@ -307,7 +307,7 @@ feature {NONE} -- Implementation
 				change_pos: INTEGER
 			do
 				if system_status.is_wizard_system then
-					create application_template.make_from_string (visual_studio_information.wizard_installation_path + "\wizards\build")
+					create application_template.make_from_string (visual_studio_information.wizard_installation_path)
 					application_template.extend ("templates")
 					application_template.extend ("build_application_template.e")
 				else
@@ -322,7 +322,7 @@ feature {NONE} -- Implementation
 				application_template_file.close
 			
 					-- Now add the main window class type
-				add_generated_string (application_text, project_settings.main_window_class_name.as_upper, main_window_tag)
+				add_generated_string (application_text, Object_handler.root_window_object.name.as_upper, main_window_tag)
 				
 					-- Now add the application class name. 0ne at start
 					-- and one at end of file, so do this twice.
@@ -361,7 +361,7 @@ feature {NONE} -- Implementation
 				
 					-- Retrieve the template for a class file to generate.
 				if system_status.is_wizard_system then
-					create window_template.make_from_string (visual_studio_information.wizard_installation_path + "\wizards\build")
+					create window_template.make_from_string (visual_studio_information.wizard_installation_path)
 					window_template.extend ("templates")
 					window_template.extend ("build_class_template_imp.e")
 				else
@@ -512,7 +512,7 @@ feature {NONE} -- Implementation
 			
 				-- Retrieve the template for a class file to generate.
 			if system_status.is_wizard_system then
-				create window_template.make_from_string (visual_studio_information.wizard_installation_path + "\wizards\build")
+				create window_template.make_from_string (visual_studio_information.wizard_installation_path)
 				window_template.extend ("templates")
 				window_template.extend ("build_class_template.e")
 			else

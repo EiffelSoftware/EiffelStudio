@@ -8,12 +8,12 @@ default
 	assertion (no)
 	dead_code_removal (yes)
 -- RTEA version
-	exception_trace (no)
+	exception_trace (yes)
 -- Full optimized version
 --	exception_trace (no)
 --	array_optimization (yes)
 --	inlining_size ("8")
-	inlining (yes)
+--	inlining (yes)
 
 	--trace(yes)
 	--trace ("SERVER")
@@ -270,7 +270,6 @@ cluster
 
 external
 	include_path:
---		"$(EIFFEL_SRC)\tl31api\include",
 		"$(EIFFEL_SRC)\library\wel\spec\windows\include",
 		"$(EIFFEL_SRC)\C\parsing\shared",
 		"$(EIFFEL_SRC)\C\parsing\eiffel",
@@ -278,7 +277,6 @@ external
 		"$(EIFFEL_SRC)\library\encryption\Clib"
 
 	object:
---		"$(EIFFEL_SRC)\tl31api\lib\tl313api.lib",
 		"$(EIFFEL_SRC)\library\wel\spec\$(COMPILER)\lib\wel.lib",
 		"$(EIFFEL_SRC)\C\ipc\ewb\ewb.lib",
 		"$(EIFFEL_SRC)\C\ipc\shared\ipc.lib",

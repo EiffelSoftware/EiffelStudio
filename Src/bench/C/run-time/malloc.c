@@ -3370,7 +3370,7 @@ rt_private char *e_what3 =
 rt_private char *e_what4 =
 	"@(#)      Philippe Stephan, Dino Valente";
 rt_private char *e_what5 =
-	"@(#) Language design: Betrand Meyer";
+	"@(#) Language design: Bertrand Meyer";
 #endif
 
 #ifdef TEST

@@ -29,7 +29,6 @@ feature {NONE}
 			add_enter_action (Current, get_in);
 			add_leave_action (Current, get_out);
 			add_activate_action (Current, a_text_window);
-			set_accelerators;
 			text_window := a_text_window
 		ensure
 			parent = a_composite
@@ -54,7 +53,9 @@ feature
 			elseif argument = get_out then
 				text_window.tool.clean_type
 			else
-				warner.popdown;
+				if last_warner /= Void then
+					last_warner.popdown
+				end;
 				execute_licenced (argument)
 			end
 		end;
@@ -68,8 +69,8 @@ feature -- Licence managment
 
 	lost_licence_warning is
 		do
-			warner.set_window (text_window);
-			warner.custom_call (Current, w_License_lost, "Close", "Info...", Void);
+			warner (text_window).custom_call (Current, w_License_lost, 
+				"Close", "Info...", Void);
 		end;
 
 

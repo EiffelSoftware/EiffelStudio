@@ -404,6 +404,8 @@ rt_shared void initsig(void)
 	  if (sig != SIGVTALRM)				/* Used by PCThread implementation */
 /* #elif defined VXWORKS */
 /* 	  if (sig == 34528) */
+#elif defined UNIXWARE_THREADS
+	if (sig !=SIGWAITING)	/* used by Unixware threads */
 #endif
 		old = signal(sig, ehandlr);		/* Ignore EINVAL errors */
 		if (old == SIG_IGN)

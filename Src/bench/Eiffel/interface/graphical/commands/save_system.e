@@ -23,17 +23,16 @@ feature {NONE}
 			to_write: STRING;
 			file_name: STRING;
 			aok: BOOLEAN;
-			show_text: SHOW_TEXT
+			show_text: SHOW_TEXT;
+			default_name: FILE_NAME
 		do
 			if text_window.file_name /= Void then
 				file_name := text_window.file_name;
 			else
-				!!file_name.make (50);
-				file_name.append (Project_directory.name);
-				if file_name.item (file_name.count) /= Directory_separator then
-					file_name.extend (Directory_separator);
-				end;
-				file_name.append ("Ace");
+				!! default_name.make_from_string (Project_directory.name);
+				default_name.set_file_name ("Ace");
+				default_name.add_extension ("ace");
+				file_name := default_name
 			end;
 			!!new_file.make (file_name);
 

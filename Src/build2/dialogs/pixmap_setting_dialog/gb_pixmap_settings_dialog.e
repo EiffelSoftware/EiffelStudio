@@ -152,14 +152,12 @@ feature {NONE} -- Implementation
 	select_pixmap_pressed is
 			-- Called by `select_actions' of `select_pixmap_button'.
 		do
-			pixmap_list.wipe_out
 			modify_pixmap
 		end
 		
 	select_directory_pressed is
 			-- Called by `select_actions' of `select_directory_button'.
 		do
-			pixmap_list.wipe_out
 			modify_directory
 		end
 
@@ -533,7 +531,6 @@ feature {NONE} -- Implementation
 			new_pixmap: EV_PIXMAP
 			rescued: BOOLEAN
 		do
-			reset_labels
 			from
 				if not rescued then
 					create dialog
@@ -543,6 +540,10 @@ feature {NONE} -- Implementation
 			loop
 				shown_once := True
 				dialog.show_modal_to_window (Current)
+				if not dialog.selected_button.is_equal ((create {EV_DIALOG_CONSTANTS}).ev_cancel) then
+					pixmap_list.wipe_out
+					reset_labels
+				end
 				if not dialog.file_name.is_empty and then valid_file_extension (dialog.file_name.substring (dialog.file_name.count -2, dialog.file_name.count)) then
 					create new_pixmap
 					new_pixmap.set_with_named_file (dialog.file_name)
@@ -623,10 +624,13 @@ feature {NONE} -- Implementation
 			rescued: BOOLEAN
 			rescued_index: INTEGER
 		do
-			reset_labels
 			if not rescued then
 				create dialog
 				dialog.show_modal_to_window (Current)
+				if not dialog.selected_button.is_equal ((create {EV_DIALOG_CONSTANTS}).ev_cancel) then
+					pixmap_list.wipe_out
+					reset_labels
+				end
 			end
 			if not dialog.directory.is_empty or not dialog.selected_button.is_equal ((create {EV_DIALOG_CONSTANTS}).ev_cancel) then
 				if not rescued then

@@ -19,10 +19,7 @@ inherit
 
 	FORMAL_AS_B
 		undefine
-			set, is_deep_equal, text_position,
-			simple_format
-		redefine
-			format
+			set, is_deep_equal, text_position, simple_format
 		end
 
 feature -- Attributes
@@ -94,21 +91,4 @@ feature -- Initialization
 			end;
 		end;
 
-	format (ctxt: FORMAT_CONTEXT_B) is
-			-- Reconstitute text.
-		local
-			s: STRING;
-		do
-			s := clone (formal_name)
-			s.to_upper;
-			ctxt.put_string (s);
-			if constraint /= void then
-				ctxt.put_space;
-				ctxt.put_text_item (ti_Constraint);
-				ctxt.put_space;
-				constraint.format (ctxt);
-			end;
-			ctxt.always_succeed;
-		end;
-		
 end -- class FORMAL_DEC_AS_B

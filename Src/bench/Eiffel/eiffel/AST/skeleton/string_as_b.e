@@ -9,17 +9,13 @@ class STRING_AS_B
 inherit
 
 	STRING_AS
-		undefine
-			string_value
 		redefine
 			infix "<"
 		end;
 
 	ATOMIC_AS_B
-		undefine
-			simple_format
 		redefine
-			type_check, byte_node, value_i, format
+			type_check, byte_node, value_i
 		end;
 
 feature -- Type check and byte code
@@ -52,15 +48,6 @@ feature -- Type check and byte code
 		end;
 
 feature -- formatter
-
-	format (ctxt: FORMAT_CONTEXT_B) is
-			-- Reconstitute text.
-		do
-			ctxt.put_text_item (ti_Double_quote);
-			ctxt.put_string (eiffel_string (value));
-			ctxt.put_text_item (ti_Double_quote);
-			ctxt.always_succeed;
-		end;
 
 	infix "<" (other: like Current): BOOLEAN is
 		do

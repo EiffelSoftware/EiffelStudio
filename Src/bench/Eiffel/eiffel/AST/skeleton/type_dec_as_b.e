@@ -16,10 +16,8 @@ inherit
 		end;
 
 	AST_EIFFEL_B
-		undefine
-			simple_format
 		redefine 
-			format, fill_calls_list, replicate
+			fill_calls_list, replicate
 		end
 
 feature -- Attributes
@@ -29,21 +27,6 @@ feature -- Attributes
 
 	type: TYPE_B;
 			-- Type
-
-feature -- Initialization
-
-	format (ctxt: FORMAT_CONTEXT_B) is
-			-- Reconstitute text.
-		do
-			ctxt.begin;
-			ctxt.set_separator (ti_Comma);
-			ctxt.space_between_tokens;
-			id_list.format (ctxt);
-			ctxt.put_text_item (ti_Colon);
-			ctxt.put_space;
-			type.format(ctxt);
-			ctxt.commit;
-		end;
 
 feature  -- Replication
 

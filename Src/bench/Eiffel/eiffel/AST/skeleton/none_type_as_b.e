@@ -14,11 +14,6 @@ inherit
 		end;
 
 	BASIC_TYPE_B
-		undefine
-			simple_format
-		redefine 
-			format
-		end
 
 feature
 
@@ -33,13 +28,6 @@ feature
 			-- Actual integer type
 		once
 			!!Result;
-		end;
-
-	format (ctxt: FORMAT_CONTEXT_B) is
-			-- Reconstitute text
-		do
-			ctxt.put_string ("NONE");
-			ctxt.always_succeed;
 		end;
 
 end -- class NONE_TYPE_AS_B

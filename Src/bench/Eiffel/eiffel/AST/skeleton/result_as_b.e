@@ -13,10 +13,8 @@ inherit
 	RESULT_AS;
 
 	ACCESS_AS_B
-		undefine
-			simple_format
 		redefine
-			type_check, byte_node, format,
+			type_check, byte_node, 
 			replicate
 		end
 
@@ -67,14 +65,6 @@ feature -- Type check, byte code and dead code removal
 			access_line := context.access_line;
 			Result ?= access_line.access;
 			access_line.forth;
-		end;
-
-	format (ctxt: FORMAT_CONTEXT_B) is
-		do
-			ctxt.begin;
-			ctxt.prepare_for_result;
-			ctxt.put_string (ctxt.new_types.final_name);
-			ctxt.commit;
 		end;
 
 feature -- Replication

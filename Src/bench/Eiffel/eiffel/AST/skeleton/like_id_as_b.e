@@ -19,7 +19,7 @@ inherit
 		undefine
 			is_deep_equal, has_like, simple_format
 		redefine
-			format, fill_calls_list, replicate
+			fill_calls_list, replicate
 		end;
 
 	SHARED_LIKE_CONTROLER;
@@ -135,17 +135,6 @@ feature -- Implementation of inherited deferred features
 					Result_actual_type_exists: Result.actual_type /= Void
 				end;
 			end;
-		end;
-
-	format (ctxt: FORMAT_CONTEXT_B) is
-			-- Reconstitute text.
-		do
-			ctxt.begin;
-			ctxt.put_text_item (ti_Like_keyword);
-			ctxt.put_space;
-			ctxt.prepare_for_feature (anchor, Void);
-			ctxt.put_current_feature;
-			ctxt.commit;
 		end;
 
 feature -- Replication

@@ -14,11 +14,6 @@ inherit
 		end;
 
 	AST_EIFFEL_B
-		undefine
-			simple_format
-		redefine
-			format
-		end
 
 feature -- Attributes
 
@@ -28,18 +23,4 @@ feature -- Attributes
 	new_name: FEATURE_NAME_B;
 			-- New name
 
-feature -- Formatter
-
-	format (ctxt : FORMAT_CONTEXT_B) is
-			-- Reconstitute text.
-		do
-			ctxt.begin;
-			old_name.format (ctxt);
-			ctxt.put_space;
-			ctxt.put_text_item (ti_As_keyword);
-			ctxt.put_space;
-			new_name.format (ctxt);
-			ctxt.commit
-		end;
-	
 end -- class RENAME_AS_B

@@ -16,11 +16,6 @@ inherit
 		end;
 
 	AST_EIFFEL_B
-		undefine
-			simple_format
-		redefine
-			format
-		end
 
 feature -- Attributes
 
@@ -29,23 +24,6 @@ feature -- Attributes
 
 	index_list: EIFFEL_LIST_B [ATOMIC_AS_B];
 			-- Indexes
-
-feature -- Initialization
-
-	format (ctxt: FORMAT_CONTEXT_B) is
-			-- Reconstitute text.
-		do
-			ctxt.begin;
-			if tag /= Void then
-				tag.format (ctxt);
-				ctxt.put_text_item (ti_Colon);
-				ctxt.put_space
-			end;
-			ctxt.space_between_tokens;
-			ctxt.set_separator (ti_Comma);
-			index_list.format (ctxt);
-			ctxt.commit;
-		end;
 
 feature -- Case storage
 

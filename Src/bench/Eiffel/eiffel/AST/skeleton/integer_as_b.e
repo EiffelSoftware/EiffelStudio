@@ -12,11 +12,10 @@ inherit
 
 	ATOMIC_AS_B
 		undefine
-			is_integer, good_integer,
-			simple_format, string_value
+			is_integer, good_integer
 		redefine
 			type_check, byte_node, value_i,
-			make_integer, format
+			make_integer
 		end
 
 feature -- Conveniences
@@ -46,15 +45,6 @@ feature -- Conveniences
 			-- Integer value
 		do
 			!!Result.make (value);
-		end;
-
-feature -- Formatter 
-
-	format (ctxt: FORMAT_CONTEXT_B) is
-			-- Reconstitute text.
-		do
-			ctxt.always_succeed;
-			ctxt.put_string(value.out);
 		end;
 
 end -- class INTEGER_AS_B

@@ -11,10 +11,8 @@ inherit
 	REAL_AS;
 
 	ATOMIC_AS_B
-		undefine
-			simple_format, string_value
 		redefine
-			type_check, byte_node, value_i, format
+			type_check, byte_node, value_i
 		end
 
 feature -- Type check and byte code
@@ -39,11 +37,4 @@ feature -- Type check and byte code
 			Result.set_value (value);
 		end;
 
-	format (ctxt: FORMAT_CONTEXT_B) is
-			-- Reconstitute text.
-		do	
-			ctxt.always_succeed;
-			ctxt.put_string(value);
-		end;
-		
 end -- class REAL_AS_B

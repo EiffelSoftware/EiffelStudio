@@ -41,7 +41,7 @@ creation
 
 	make
 
-feature -- Creation
+feature {NONE} -- Creation
 
 	make is
 			-- Create a widget manager.
@@ -301,7 +301,7 @@ feature -- Widget
 			from
 				i := 0
 			until
-				Result /= Void or else count >= i
+				Result /= Void or else i >= count
 			loop
 				widget := widget_area.item (i);
 				if 	

@@ -39,9 +39,11 @@ feature -- Basic Operation
 	execute is
 			-- Execute `Current'.
 		do
-				-- We now need to mark the deleted object and all children as
-				-- deleted.
-			object_handler.mark_as_deleted (layout_item.object)
+				-- We do not call `mark_as_deleted' here, as this would
+				-- mark all the children as deleted also. Only the
+				-- actual object should be marked as deleted.
+			object_handler.objects.prune_all (layout_item.object)
+			object_handler.deleted_objects.extend (layout_item.object)
 			object_handler.replace_object_type (layout_item.object, new_type)
 			if not history.command_list.has (Current) then
 				history.add_command (Current)

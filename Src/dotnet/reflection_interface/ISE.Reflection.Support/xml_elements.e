@@ -89,7 +89,13 @@ feature -- Access
 			description: "Header element in XML file for a type"
 			external_name: "HeaderElement"
 		end
-		
+
+	Modified_element: STRING is "modified"
+		indexing
+			description: "Modified element in XML file for a type"
+			external_name: "ModifiedElement"
+		end	
+	
 	Frozen_element: STRING is "frozen"
 		indexing
 			description: "Frozen element in XML file for a type"
@@ -250,6 +256,12 @@ feature -- Access
 		indexing
 			description: "Feature element in XML file for a type"
 			external_name: "FeatureElement"
+		end
+
+	Modified_feature_element: STRING is "feature_modified"
+		indexing
+			description: "Modified feature element in XML file for a type"
+			external_name: "ModifiedFeatureElement"
 		end
 		
 	Frozen_feature_element: STRING is "frozen_feature"

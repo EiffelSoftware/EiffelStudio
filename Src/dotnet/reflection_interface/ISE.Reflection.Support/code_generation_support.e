@@ -298,7 +298,7 @@ feature {NONE} -- Implementation
 			non_void_eiffel_class: eiffel_class /= Void
 			non_void_type_description: type_description /= Void
 		local
-			is_frozen, is_expanded, is_deferred, create_none: STRING
+			is_modified, is_frozen, is_expanded, is_deferred, create_none: STRING
 			class_name: STRING
 			simple_name: STRING
 			namespace: STRING
@@ -314,6 +314,14 @@ feature {NONE} -- Implementation
 			if not retried then
 				type_description.ReadStartElement_String (xml_elements.Header_element)
 
+					-- Set `modified'.		
+				if type_description.name.equals_string (xml_elements.Modified_element) then
+					is_modified := type_description.ReadElementString_String (xml_elements.Modified_element)
+					if is_modified.Equals_String (xml_elements.True_string) then
+						eiffel_class.SetModified
+					end
+				end
+				
 					-- Set `is_frozen'.		
 				is_frozen := type_description.ReadElementString_String (xml_elements.Frozen_element)
 				if is_frozen.Equals_String (xml_elements.True_string) then
@@ -787,12 +795,20 @@ feature {NONE} -- Implementation
 			non_void_feature: eiffel_feature /= Void
 			non_void_type_description: type_description /= Void
 		local
-			frozen_feature, static, abstract: STRING
+			modified_feature, frozen_feature, static, abstract: STRING
 			is_method, is_field, is_creation_routine: STRING
 			is_prefix, is_infix: STRING
 			retried: BOOLEAN
 		do
 			if not retried then
+					-- Set `modified'.
+				if type_description.name.equals_string (xml_elements.Modified_feature_element) then
+					modified_feature := type_description.ReadElementString_String (xml_elements.Modified_feature_element)
+					if modified_feature.Equals_String (xml_elements.True_string) then
+						eiffel_feature.SetModified
+					end
+				end
+				
 					-- Set `is_frozen'.
 				frozen_feature := type_description.ReadElementString_String (xml_elements.Frozen_feature_element)
 				if frozen_feature.Equals_String (xml_elements.True_string) then

@@ -2966,7 +2966,7 @@ Please enter the name of a DIRECTORYconstant which will be used.]]></Text>
 		<EV_WIDGET ><Minimum_width >300</Minimum_width>
 			<Minimum_height >400</Minimum_height>
 			</EV_WIDGET>
-		<EV_WINDOW ><Title ><![CDATA[Display window]]></Title>
+		<EV_WINDOW ><Title ><![CDATA[Component viewer]]></Title>
 			</EV_WINDOW>
 		<EV_PIXMAPABLE />
 		<EV_CONTAINER />

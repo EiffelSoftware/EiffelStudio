@@ -12,7 +12,7 @@ class TEST_I inherit
 
 	TEST_ODBC
 
-creation
+create
 
 	make
 

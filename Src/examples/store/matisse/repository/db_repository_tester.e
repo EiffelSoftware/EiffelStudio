@@ -1,6 +1,6 @@
 class DB_REPOSITORY_TESTER 
 
-creation
+create
 
 	make
 

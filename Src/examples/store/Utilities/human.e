@@ -6,7 +6,7 @@ indexing
 
 class HUMAN
 
-creation
+create
 
 	make
 

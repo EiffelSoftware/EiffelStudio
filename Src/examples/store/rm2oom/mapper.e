@@ -4,7 +4,7 @@ inherit
 
 	RDB_HANDLE
 
-creation
+create
 
 	make
 
@@ -35,7 +35,7 @@ feature
 				-- Create an usefull class
 				-- 'session_control' provides informations control access and
 				--  the status of the database.
-			!!session_control.make;
+			create session_control.make;
 
 				-- Start session: establishes connection to database
 			session_control.connect;
@@ -49,7 +49,7 @@ feature
 				from 
 					io.putstring("%NEnter repository name (`exit' to terminate): ");
 					io.readline;
-					!!repository.make (clone (io.laststring));
+					create repository.make (clone (io.laststring));
 				until
 					io.laststring.is_equal("exit")
 				loop

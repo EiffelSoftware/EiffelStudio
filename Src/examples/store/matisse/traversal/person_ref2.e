@@ -16,7 +16,7 @@ inherit
 		redefine default_actions
     end
     
-creation
+create
     make
 
 feature {ANY} 
@@ -30,7 +30,7 @@ feature {ANY}
 
     default_actions : SAMPLE_TRAVERSAL_ACTION2 is
     once
-        !!Result
+        create Result
     end
 
 feature {ANY}

@@ -7,7 +7,7 @@ inherit
 			out
 		end
 
-creation
+create
 
 	make
 
@@ -15,8 +15,8 @@ feature
 
 	make is
 		do
-			!! title.make (10)
-			!! author.make (10)
+			create title.make (10)
+			create author.make (10)
 		end
 
 	author, title: STRING
@@ -66,7 +66,7 @@ feature
 	out: STRING is 
 			-- Print book.
 		do
-			!!Result.make (0)
+			create Result.make (0)
 			Result.append (author)
 			Result.append ("/")
 			Result.append (title)

@@ -15,7 +15,7 @@ feature {NONE}
 		-- Prints various information
 	do
 		-- 1/ Choose host name and database name. Adjust wait and priority so that it suits your needs.
-		!!appl.login("TOKYO","testdb",0,0)
+		create appl.login("TOKYO","testdb",0,0)
 
 		-- 2/ Choose working mode. See documentation for that.
 		appl.set_mode(OPENED_TRANSACTION,Void)
@@ -24,7 +24,7 @@ feature {NONE}
 		appl.set_base
 
 		-- 4/ Create a Matisse session.
-		!!session.make
+		create session.make
 		
 		-- 5/ Connect to database with the appropriate mode (given above).
 		session.connect

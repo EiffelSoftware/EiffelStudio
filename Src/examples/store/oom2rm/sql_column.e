@@ -8,7 +8,7 @@ indexing
 
 class SQL_COLUMN
 
-creation
+create
 
 	make
 

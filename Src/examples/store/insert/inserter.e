@@ -4,7 +4,7 @@ inherit
 
 	RDB_HANDLE
 
-creation
+create
 
 	make
 
@@ -35,7 +35,7 @@ feature
 			else
 				--  The Eiffel program is now connected to the database
 
-				!! book.make
+				create book.make
 
 				-- Does the table `db_book' exit?
 				if not table_exists (Table_name) then
@@ -111,8 +111,8 @@ feature {NONE}
 			-- 'session_control' provides informations control access and 
 			--  the status of the database.
 			-- 'base_store' provides updating facilities.
-			!! session_control.make
-			!! base_store.make
+			create session_control.make
+			create base_store.make
 
 			-- Start session
 			session_control.connect
@@ -128,7 +128,7 @@ feature {NONE}
 			connected: session_control.is_connected
 		do
 			-- Create and load the DB_REPOSITORY named 'table'
-			!! repository.make (table)
+			create repository.make (table)
 			repository.load
 			Result := repository.exists
 		ensure

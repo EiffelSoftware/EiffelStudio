@@ -19,7 +19,7 @@ class MODEL_TRAVERSAL inherit
 			traversal
 		end;
 
-creation
+create
 
 	make
 
@@ -56,7 +56,7 @@ feature
 			fld_name: STRING;
 			table: SQL_TABLE
 		do
-			!! table.make (object.generator);
+			create table.make (object.generator);
 			tables.extend (table);
 			from
 				nb_fields := field_count (object);
@@ -93,12 +93,12 @@ feature
 		do
 			if is_marked (object) or else 
 				table_exists (object.generator) then
-				!! sql_column.make (name, 
+				create sql_column.make (name, 
 					to_sql (keys.reference_key (object)));
 				table.extend (sql_column);
 
 			else
-				!! sql_column.make (keys.item (object.generator), 
+				create sql_column.make (keys.item (object.generator), 
 					to_sql (keys.reference_key (object)));
 				table.extend (sql_column);
 				traversal (object)
@@ -117,7 +117,7 @@ feature
 		local
 			sql_column: SQL_COLUMN
 		do
-			!! sql_column.make (name, to_sql (object));
+			create sql_column.make (name, to_sql (object));
 			table.extend (sql_column)
 		ensure
 			table_extended: table.count = old table.count + 1
@@ -134,20 +134,20 @@ feature
 			sql_column: SQL_COLUMN;
 			any: ANY
 		do
-			!! tmp_table.make_prefix (field_name (no_field, object), table.name);
+			create tmp_table.make_prefix (field_name (no_field, object), table.name);
 			tables.extend (tmp_table);
 			any := contents (field (no_field, object));
 			-- Key part 1
-			!! sql_column.make (keys.item (object.generator),
+			create sql_column.make (keys.item (object.generator),
 			   to_sql (keys.reference_key (object)));
 			tmp_table.extend (sql_column);
 			if is_simple_type (any) then
 				-- Key part 2
-				!! sql_column.make (any.generator, to_sql (any));
+				create sql_column.make (any.generator, to_sql (any));
 				tmp_table.extend (sql_column)	
 			else
 				-- Key part 2
-				!! sql_column.make (keys.item (any.generator),
+				create sql_column.make (keys.item (any.generator),
 				   to_sql (keys.reference_key (any)));
 				tmp_table.extend (sql_column);
 				traversal (any)

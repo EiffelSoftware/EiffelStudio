@@ -19,7 +19,7 @@ feature {NONE}
 		-- Prints various information
 	do
 		-- 1/ Choose host name and database name. Adjust wait and priority so that it suits your needs.
-		!!appl.login("venus","COMPANY",0,0)
+		create appl.login("venus","COMPANY",0,0)
 
 		-- 2/ Choose working mode. See documentation for that.
 		appl.set_mode(OPENED_TRANSACTION,Void)
@@ -28,7 +28,7 @@ feature {NONE}
 		appl.set_base
 
 		-- 4/ Create a Matisse session.
-		!!session.make
+		create session.make
 		
 		-- 5/ Connect to database with the appropriate mode (given above).
 		session.connect
@@ -49,13 +49,13 @@ feature -- Status Setting
 	local 
 		i: INTEGER
 	do
-		!!one_selection.make
-		!!query.make(Ocs)
-		!!one_class.make("Employee")
+		create one_selection.make
+		create query.make(Ocs)
+		create one_class.make("Employee")
 
         one_selection.set_map_name(one_class,Class_map)
 		query.execute(one_selection)
-		!!one_action  one_selection.set_action(one_action) one_selection.reset_cursor(one_cursor) 
+		create one_action  one_selection.set_action(one_action) one_selection.reset_cursor(one_cursor) 
 		if one_selection.is_ok then
 			        one_selection.load_result
 		end

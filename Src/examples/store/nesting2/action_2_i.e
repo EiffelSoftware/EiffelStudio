@@ -15,7 +15,7 @@ class ACTION_2_I inherit
 			execute
 		end
 
-creation
+create
         
 	make
 
@@ -27,7 +27,7 @@ feature
 			column_name: STRING
 			i: INTEGER
 		do
-			!! tuple.copy (selection.cursor)
+			create tuple.copy (selection.cursor)
 			from 
  				i := 1
 			until i > tuple.count

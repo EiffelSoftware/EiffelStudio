@@ -6,7 +6,7 @@ indexing
 
 class COUNTRY
 
-creation
+create
 
 	make
 

@@ -9,7 +9,7 @@ inherit
 
 	RDB_HANDLE
 
-creation
+create
 
 	make
 
@@ -52,19 +52,19 @@ feature
 			-- them as Eiffel objects, or DB tuples.
 			-- The table used to store Eiffel book objects will be called
 			-- "DB_BOOK".
-			!! repository.make (Table_name)
+			create repository.make (Table_name)
 
 			-- Create usefull classes
 			-- 'session_control' provides informations control access and 
 			--  the status of the database.
 			-- 'base_selection' provides a SELECT query mechanism.
-			!! session_control.make
-			!! base_selection.make
-			!! base_update.make
+			create session_control.make
+			create base_selection.make
+			create base_update.make
 
 			-- An Eiffel object ic created. It will be stored in the DB, 
 			-- through the repository
-			!! book.make
+			create book.make
 
 			-- Start session: establishes connection to database
 			session_control.connect
@@ -110,7 +110,7 @@ feature {NONE}
 			session_control.begin
 
 			from 
-				!! data_file.make_open_read (Data_file_name)
+				create data_file.make_open_read (Data_file_name)
 			until
 				data_file.end_of_file
 			loop

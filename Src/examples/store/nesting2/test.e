@@ -30,14 +30,14 @@ feature
 			io.readline
 			login (tmp_string, io.laststring)
 			set_base
-			!! session.make
+			create session.make
 			session.connect
 			if session.is_connected then
 				io.putstring ("Database used: ")
 				io.putstring (session_database.name)
 				io.new_line
-				!! selection.make
-				!! my_action.make (selection)
+				create selection.make
+				create my_action.make (selection)
 				selection.set_action (my_action)
 				selection.query (select_string)
 				if session.is_ok then

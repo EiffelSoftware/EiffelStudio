@@ -17,10 +17,10 @@ feature -- Initialization
 			tables: LINKED_LIST [SQL_TABLE];
 			pr: PRINT_REQUEST
 		do
-			!! tables.make;
+			create tables.make;
 			register_keys;
-			!! model_traversal.make (model, tables, keys);
-			!! pr.make (tables, output)
+			create model_traversal.make (model, tables, keys);
+			create pr.make (tables, output)
 		end;
 
 feature -- *To define*
@@ -42,7 +42,7 @@ feature
 	keys: KEYS is
 			-- Keys of the model.
 		once
-			!! Result.make (30);
+			create Result.make (30);
 		ensure
 			result_not_void: Result /= Void;
 			keys_not_empty: not result.empty

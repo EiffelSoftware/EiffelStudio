@@ -7,7 +7,7 @@ class SAMPLE inherit
 
 	MODEL
 
-creation
+create
 
 	make
 
@@ -18,9 +18,9 @@ feature
 			date: DATE_TIME;
 			country: COUNTRY
 		once
-			!! date.make_now;
-			!! country.make (1, "France");
-			!! Result.make (1, "Gustave", date, <<country>>);
+			create date.make_now;
+			create country.make (1, "France");
+			create Result.make (1, "Gustave", date, <<country>>);
 		end;
 
 	register_keys is

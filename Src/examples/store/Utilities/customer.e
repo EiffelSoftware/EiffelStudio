@@ -1,6 +1,6 @@
 class CUSTOMER 
 	
-creation
+create
 
 	make
 

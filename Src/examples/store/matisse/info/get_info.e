@@ -19,17 +19,17 @@ feature {NONE} -- Initialization
 		session : DB_CONTROL
 		info : MT_INFO
 	do
-		!!appl.login("TOKYO","testdb",0,0)
+		create appl.login("TOKYO","testdb",0,0)
 		appl.set_mode(OPENED_TRANSACTION,0)
 		appl.set_base
 
-		!!session.make
+		create session.make
 		session.connect
 
-		!!one_class.make("Employee")
+		create one_class.make("Employee")
 		one_object := one_class.new_instance
 
-		!!info
+		create info
 		io.putstring("Max buffered objects = ") io.putint(info.max_buffered_objects) io.new_line
 		
 		io.putstring("Max Index Criteria Number = ") io.putint(info.max_index_criteria_number) io.new_line        

@@ -4,7 +4,7 @@ feature
 
 	one_cursor  : DB_RESULT is
 	once
-		!!Result.make
+		create Result.make
 	end -- one_cursor
 
 end -- class SHARED_CURSOR

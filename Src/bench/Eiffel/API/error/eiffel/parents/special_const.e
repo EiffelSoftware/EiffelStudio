@@ -72,4 +72,8 @@ feature -- Access: NATIVE_ARRAY
 
 	native_array_case_6: STRING is "Class NATIVE_ARRAY must have a feature `count: INTEGER'"
 
-end -- class SPECIAL_CONST
+feature -- Access: TYPE
+
+	type_case_1: STRING is "Class TYPE must have one formal generic parameter"
+
+end

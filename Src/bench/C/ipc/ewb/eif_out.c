@@ -147,7 +147,7 @@ rt_private void send_dmpitem_request(struct item *ip)
 }
 
 /* send an integer value to the application */
-rt_public void send_integer_value(long value)
+rt_public void send_integer_value(EIF_INTEGER value)
 {	
 	struct item item;
 	
@@ -160,8 +160,22 @@ rt_public void send_integer_value(long value)
 	send_dmpitem_request(&item);
 }
 
+/* send an integer_64 value to the application */
+rt_public void send_integer_64_value(EIF_INTEGER_64 value)
+{	
+	struct item item;
+	
+	/* fill in the item to send */
+	item.type = SK_INT64;
+	item.it_int64 = value;
+	item.it_addr = NULL;
+	
+	/* send the request */
+	send_dmpitem_request(&item);
+}
+
 /* send a real value to the application */
-rt_public void send_real_value(float value)
+rt_public void send_real_value(EIF_REAL value)
 {
 	struct item item;
 	
@@ -175,7 +189,7 @@ rt_public void send_real_value(float value)
 }
 
 /* send a double value to the application */
-rt_public void send_double_value(double value)
+rt_public void send_double_value(EIF_DOUBLE value)
 {
 	struct item item;
 	
@@ -189,7 +203,7 @@ rt_public void send_double_value(double value)
 }
 
 /* send a char value to the application */
-rt_public void send_char_value(char value)
+rt_public void send_char_value(EIF_CHARACTER value)
 {
 	struct item item;
 	
@@ -203,7 +217,7 @@ rt_public void send_char_value(char value)
 }
 
 /* send a boolean value to the application */
-rt_public void send_bool_value(char value)
+rt_public void send_bool_value(EIF_BOOLEAN value)
 {
 	struct item item;
 	
@@ -231,13 +245,13 @@ rt_public void send_ref_value(long value)
 }
 
 /* send a pointer value to the application */
-rt_public void send_ptr_value(long value)
+rt_public void send_ptr_value(EIF_POINTER value)
 {
 	struct item item;
 	
 	/* fill in the item to send */
 	item.type = SK_POINTER;
-	item.it_ptr = (char *)value;
+	item.it_ptr = value;
 	item.it_addr = NULL;
 	
 	/* send the request */

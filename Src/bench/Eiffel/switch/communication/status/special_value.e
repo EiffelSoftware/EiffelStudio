@@ -82,24 +82,40 @@ feature -- Access
 			if items.count /= 0 then
 				char_value ?= items.first
 				if char_value /= Void then
-					create Result.make (items.count + 4)
+					create Result.make (items.count + 8)
 					if sp_lower > 0 then
 						Result.append ("...")
 					end
-					Result.append ("%"")
+					Result.append_character ('%"')
+					Result.append (eiffel_string (raw_string_value))
+					Result.append_character ('%"')
+					if sp_upper <= capacity - 1 then
+						Result.append ("...")
+					end
+				end
+			end
+		end
+
+	raw_string_value: STRING is
+			-- If `Current' represents a string then return its value.
+			-- Else return Void.
+			-- Do not convert special characters to an Eiffel representation.
+		local
+			char_value: CHARACTER_VALUE
+		do
+			if items.count /= 0 then
+				char_value ?= items.first
+				if char_value /= Void then
+					create Result.make (items.count + 4)
 					from
 						items.start
 					until
 						items.after
 					loop
 						char_value ?= items.item
-						Result.append (char_text (char_value.value))
+						Result.append_character (char_value.value)
 						items.forth
 					end;
-					Result.append ("%"")
-					if sp_upper <= capacity - 1 then
-						Result.append ("...")
-					end
 				end
 			end
 		end

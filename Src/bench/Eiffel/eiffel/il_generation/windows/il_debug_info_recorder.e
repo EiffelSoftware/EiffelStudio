@@ -1042,10 +1042,11 @@ feature {SHARED_IL_DEBUG_INFO_RECORDER} -- Persistence
 		require
 			data_valid: d /= Void
 		local
-			l_il_info_file: RAW_FILE			
+			l_il_info_file: RAW_FILE	
 		do
 				--| Save into file
 			create l_il_info_file.make (Il_info_file_name)
+			
 			l_il_info_file.open_write
 			l_il_info_file.independent_store (d)
 			l_il_info_file.close
@@ -1284,8 +1285,26 @@ feature {SHARED_IL_DEBUG_INFO_RECORDER} -- Persistence
 
 	Il_info_file_name: FILE_NAME is
 			-- Filename for IL info storage
-		once
+		do
+			if system.is_precompile_finalized then
+				Result := Final_il_info_file_name
+			else
+				Result := Workbench_il_info_file_name
+			end
+		end
+		
+	Workbench_il_info_file_name: FILE_NAME is
+			-- Filename for Workbench IL info storage
+		do		
 			create Result.make_from_string (Workbench_generation_path)
+			Result.set_file_name (Il_info_name)
+			Result.add_extension (Il_info_extension)
+		end
+
+	Final_il_info_file_name: FILE_NAME is
+			-- Filename for Final IL info storage
+		once
+			create Result.make_from_string (Final_generation_path)
 			Result.set_file_name (Il_info_name)
 			Result.add_extension (Il_info_extension)
 		end

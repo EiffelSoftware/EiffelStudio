@@ -5,8 +5,8 @@
 --text_mode: "DOS"
 tab_step: 6
 editor: "notepad.exe"
---filter_directory: "e:\eiffel46\bench\filters"
---profile_directory: "e:\eiffel46\bench\profiler"
+--filter_directory: "$ISE_EIFFEL\bench\filters"
+--profile_directory: "$ISE_EIFFEL\bench\profiler"
 temporary_directory: "c:\tmp"
 shell_command: "%"vi%" +$line $target"
 filter_name: "RTF"

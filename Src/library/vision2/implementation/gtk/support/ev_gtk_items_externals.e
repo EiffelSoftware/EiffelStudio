@@ -89,20 +89,32 @@ feature {NONE} -- GTK C functions for list items
 
 feature {NONE} -- GTK C functions for multi-columns rows
 
-	gtk_clist_set_text (list: POINTER; row, column: INTEGER; text: POINTER) is
-		external "C | <gtk/gtk.h>"
+	c_gtk_clist_set_pixtext (list: POINTER; row, column: INTEGER; pixmap: POINTER; text: POINTER) is
+		external "C | %"gtk_eiffel.h%""
+		end
+
+	c_gtk_clist_unset_pixmap (list: POINTER; row, column: INTEGER) is
+		external "C | %"gtk_eiffel.h%""
 		end
 
 	gtk_clist_get_text (list: POINTER; row, column: INTEGER; text: POINTER): INTEGER is
 		external "C | <gtk/gtk.h>"
 		end
 
-	gtk_clist_set_foreground (list: POINTER; row: INTEGER; color: POINTER) is
-		external "C | <gtk/gtk.h>"
+	c_gtk_clist_set_fg_color (list: POINTER; row: INTEGER; r, g, b: INTEGER) is
+		external "C | %"gtk_eiffel.h%""
 		end
 
-	gtk_clist_set_background (list: POINTER; row: INTEGER; color: POINTER) is
-		external "C | <gtk/gtk.h>"
+	c_gtk_clist_get_fg_color (list: POINTER; row: INTEGER; r, g, b: POINTER) is
+		external "C | %"gtk_eiffel.h%""
+		end
+
+	c_gtk_clist_set_bg_color (list: POINTER; row: INTEGER; r, g, b: INTEGER) is
+		external "C | %"gtk_eiffel.h%""
+		end
+
+	c_gtk_clist_get_bg_color (list: POINTER; row: INTEGER; r, g, b: POINTER) is
+		external "C | %"gtk_eiffel.h%""
 		end
 
 	gtk_clist_select_row (list: POINTER; row, column: INTEGER) is
@@ -110,6 +122,10 @@ feature {NONE} -- GTK C functions for multi-columns rows
 		end
 
 	gtk_clist_unselect_row (list: POINTER; row, column: INTEGER) is
+		external "C | <gtk/gtk.h>"
+		end
+
+	gtk_clist_row_move (list: POINTER; source_row, dest_row: INTEGER) is
 		external "C | <gtk/gtk.h>"
 		end
 
@@ -155,6 +171,16 @@ feature {NONE} -- GTK C function for tree items
 		end
 
 	c_gtk_tree_item_is_selected (tree: POINTER; treeItem: POINTER): BOOLEAN is
+		external "C | %"gtk_eiffel.h%""
+		end
+
+feature {NONE} -- GTK C function for status bar items
+
+	c_gtk_statusbar_item_set_pixmap (statusbar: POINTER; pixmap: POINTER) is
+		external "C | %"gtk_eiffel.h%""
+		end
+
+	c_gtk_statusbar_item_unset_pixmap (statusbar: POINTER; pixmap: POINTER) is
 		external "C | %"gtk_eiffel.h%""
 		end
 

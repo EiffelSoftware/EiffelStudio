@@ -89,6 +89,7 @@ feature -- Status setting
 			-- Attempt to load pixmap data from a file specified by `file_name'.
 			-- May raise `Ev_unknown_image_format' or `Ev_corrupt_image_data'
 			-- exceptions.
+			-- See `supported_image_formats' in EV_ENVIRONMENT for valid file formats.
 		require
 			not_destroyed: not is_destroyed
 			file_name_not_void: file_name /= Void

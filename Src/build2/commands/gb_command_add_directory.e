@@ -43,6 +43,11 @@ inherit
 		export
 			{NONE} all
 		end
+		
+	GB_WIDGET_UTILITIES
+		export
+			{NONE} all
+		end
 	
 create
 	make
@@ -96,10 +101,14 @@ feature -- Basic Operation
 				create_directory (directory)
 				directory_added_succesfully := True
 			else
-				create directory_exists_dialog.make_initialized (2, show_adding_existing_directory_warning,
-								"The directory already exists on the disk. Do you wish to include it in the project?", "Always include, and do not show this warning again.")
-				directory_exists_dialog.set_ok_action (agent set_directory_added_succesfully)
-				directory_exists_dialog.show_modal_to_window (main_window)
+				if not warnings_supressed then
+					create directory_exists_dialog.make_initialized (2, show_adding_existing_directory_warning,
+									"The directory already exists on the disk. Do you wish to include it in the project?", "Always include, and do not show this warning again.")
+					directory_exists_dialog.set_ok_action (agent set_directory_added_succesfully)
+					directory_exists_dialog.show_modal_to_window (main_window)
+				else
+					directory_added_succesfully := True
+				end
 			end
 		end
 		
@@ -130,24 +139,9 @@ feature -- Basic Operation
 			if parent_directory_path.is_empty then
 				window_selector.extend (directory_item)	
 			else
-				window_node ?= window_selector
-				from
-					parent_directory_path.start
-				until
-					parent_directory_path.off
-				loop
-					from
-						window_node.start
-					until
-						window_node.off
-					loop
-						if window_node.item.text.is_equal (parent_directory_path.item) then
-							parent_directory_path.forth
-							window_node ?= window_node.item
-						elseif not parent_directory_path.off then
-							window_node.forth
-						end
-					end
+				window_node ?= tree_item_matching_path (window_selector, parent_directory_path)
+				check
+					window_node_not_void: window_node /= Void
 				end
 				window_node.extend (directory_item)
 					-- Ensure `directory_item' is now visible.
@@ -216,6 +210,13 @@ feature -- Basic Operation
 		do
 			Result := "directory %"" + directory_name + "%" added to project."
 		end
+		
+	supress_warnings is
+			-- Ensure no warning is displayed when adding a directory
+			-- that already exists.
+		do
+			warnings_supressed := True
+		end
 
 feature {NONE} -- Implementation
 
@@ -238,6 +239,9 @@ feature {NONE} -- Implementation
 		
 	parent_directory_path: ARRAYED_LIST [STRING]
 		-- Full path to parent_directory.
+		
+	warnings_supressed: BOOLEAN
+		-- Are warnings being supressed?
 		
 invariant
 	parent_directory_path_not_void: parent_directory_path /= Void

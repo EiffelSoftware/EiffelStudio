@@ -95,7 +95,7 @@ default
 -- CO
 
 cluster
-	all client:		"C:\Projects\vsdotnet\Client"
+	all com_generated:	"$EIFFEL_SRC\Src\bench\dll_compiler"
 		exclude
 			"EIFGEN"; 
 		visible
@@ -117,12 +117,6 @@ cluster
 				end
 			ieiffel_cluster_properties_impl_proxy
 				end
-		end
-
-	all server:		"C:\Projects\vsdotnet\Server"
-		exclude
-			"EIFGEN"; 
-		visible
 			ecom_eif_compiler_registration
 				end
 			ceiffel_project_coclass_imp
@@ -158,10 +152,8 @@ cluster
 			ieiffel_project_properties_impl_stub
 				end
 			ieiffel_cluster_properties_impl_stub
-				end
+				end				
 		end
-
-	all com_common:		"C:\Projects\vsdotnet\Common"
 
 	all base:		"$EIFFEL_SRC\library\base"
 		exclude
@@ -322,9 +314,7 @@ external
 		"$(EIFFEL_SRC)\Eiffel\eiffel\com_il_generation\Clib",
 		"$(EIFFEL_SRC)\library\encryption\Clib",
 		"$(EIFFEL_SRC)\C\bench",
-		"C:\Projects\vsdotnet\Client\Include",
-		"C:\Projects\vsdotnet\Server\Include",
-		"C:\Projects\vsdotnet\Common\Include"
+		"$(EIFFEL_SRC)\Src\bench\dll_compiler\Clib"
 
 	object:
 		"$(EIFFEL_SRC)\library\wel\spec\$(ISE_C_COMPILER)\lib\wel.lib",
@@ -334,12 +324,12 @@ external
 		"$(EIFFEL_SRC)\Eiffel\eiffel\com_il_generation\Clib\ecom.lib",
 		"$(EIFFEL_SRC)\C\bench\compiler.lib",
 		"$(EIFFEL_SRC)\library\encryption\spec\$(ISE_C_COMPILER)\lib\des.lib",
-		"C:\Projects\vsdotnet\Client\Clib\ecom.lib",
+		"$(EIFFEL_SRC)\Src\bench\dll_compiler\Clib\ecom_client.lib",
 		"$(EIFFEL_SRC)\C\ipc\ewb\ewb.lib",
 		"$(EIFFEL_SRC)\C\ipc\shared\ipc.lib",
 		"$(EIFFEL_SRC)\C\idrs\idr.lib",
 		"$(EIFFEL_SRC)\C\minilzo\minilzo.obj",
 		"$(EIFFEL_SRC)\C\platform\platform.lib",
-		"C:\Projects\vsdotnet\Server\Clib\ecom.lib"
+		"$(EIFFEL_SRC)\Src\bench\dll_compiler\Clib\ecom_server.lib"
 
 end

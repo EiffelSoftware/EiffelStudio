@@ -1,4 +1,4 @@
-indexinf
+indexing
 
 	description:
 		"Facilities for tuning up the garbage collection mechanism. %

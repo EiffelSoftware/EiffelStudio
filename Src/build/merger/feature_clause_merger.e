@@ -25,49 +25,78 @@ feature {NONE} -- Internal
 		local
 			features: EIFFEL_LIST [FEATURE_AS]
 		do
-			from
-				!! Result.make (0)
-				Result.start
-				l.start
-			until
-				l.after
-			loop
-				features := l.item.features
-	
-				from
-					features.start
-				until
-					features.after
-				loop
-					Result.put_left (features.item)
-					if not Result.after then
-						Result.forth
-					end
-					features.forth
-				end
+			!! Result.make (0)
 
-				l.forth
+			if l /= Void then
+				from
+					Result.start
+					l.start
+				until
+					l.after
+				loop
+					features := l.item.features
+
+					if features /= Void then
+	
+						from
+							features.start
+						until
+							features.after
+						loop
+							Result.put_left (features.item)
+							if not Result.after then
+								Result.forth
+							end
+							features.forth
+						end
+					end
+
+					l.forth
+				end
 			end
 		end;
 
 	merge_keeping_order (user_cl_list, new_cl_list: EIFFEL_LIST [FEATURE_CLAUSE_AS]) is
 			-- Merge two lists of feature clauses. Order of features and
-			-- clauses will be the order of `new_cl_list'.
+				-- clauses will be the order of `new_cl_list'.
 		local
 			ordered_result: EIFFEL_LIST [FEATURE_CLAUSE_AS]
 			result_features, features: EIFFEL_LIST [FEATURE_AS]
 			result_clause: FEATURE_CLAUSE_AS
 			u_feature, old_feature: FEATURE_AS	
 			feature_as_merger: FEATURE_AS_MERGER
+			clause_ebuild: FEATURE_CLAUSE_AS_EBUILD
+			user_clause: FEATURE_CLAUSE_AS_EBUILD
 		do
-			!! ordered_result.make (new_cl_list.count)
-
+			if not new_cl_list.empty or not user_cl_list.empty then
+				if not new_cl_list.empty then
+					new_cl_list.start
+					clause_ebuild ?= new_cl_list.item
+					if clause_ebuild /= Void then
+						!EIFFEL_LIST [FEATURE_CLAUSE_AS_EBUILD]! ordered_result.make (new_cl_list.count)
+					else
+						!! ordered_result.make (new_cl_list.count)
+					end
+				else
+					user_cl_list.start
+					clause_ebuild ?= user_cl_list.item
+					if clause_ebuild /= Void then
+						!EIFFEL_LIST [FEATURE_CLAUSE_AS_EBUILD]! ordered_result.make (new_cl_list.count)
+					else
+						!! ordered_result.make (new_cl_list.count)
+					end
+				end
+			else
+				!! ordered_result.make (new_cl_list.count)
+			end
+					
 			from
 				new_cl_list.start;
 				ordered_result.start
 			until
 				ordered_result.after
 			loop
+				
 				!! feature_as_merger;
 				features := new_cl_list.item.features
 				!! result_features.make (features.count);
@@ -83,18 +112,35 @@ feature {NONE} -- Internal
 						old_feature := matching_feature (features.item, old_template_features)
 						feature_as_merger.merge3 (old_feature, u_feature, features.item)
 						result_features.replace (feature_as_merger.merge_result)
+
+						if not has_feature (features.item, new_cl_list) then
+							-- User added feature, get feature clause
+							user_clause ?= feature_clause_of (u_feature, user_cl_list)
+						end
 					else
 						result_features.replace (features.item)
 					end;
 					result_features.forth
 					features.forth
 				end;
-				!! result_clause
+				clause_ebuild ?= new_cl_list.item
+				if clause_ebuild /= Void then
+					!FEATURE_CLAUSE_AS_EBUILD! result_clause
+				else
+					!! result_clause
+				end
 				result_clause.set_features (result_features)
 				result_clause.set_clients (new_cl_list.item.clients)
+				
+				-- COMMENTS SHOULD BE MERGED!!!
+				if user_clause /= Void then
+					result_clause.set_comment (user_clause.comment)
+				end
+	
 				ordered_result.replace (result_clause);
 				new_cl_list.forth;
 				ordered_result.forth
+				user_clause ?= void
 			end
 
 			merge_result := ordered_result
@@ -184,6 +230,7 @@ feature {NONE} -- Internal
 			feature_found: BOOLEAN
 			user_clause, last_user_clause, templ_clause: FEATURE_CLAUSE_AS
 			temp_result: EIFFEL_LIST [FEATURE_CLAUSE_AS]
+			ebuild_clause: FEATURE_CLAUSE_AS_EBUILD
 		do
 			merged_features := features_in_list (merge_result)
 			from
@@ -229,51 +276,67 @@ feature {NONE} -- Internal
                             !! temp_clauses.make
                             temp_clauses.start
 						end
-
 						last_user_clause := user_clause
 						user_clause := feature_clause_of (user_features.item, user_cl)
-						if templ_clause /= Void and then not user_clause.has_same_clients (templ_clause) then
-							if last_user_clause /= Void and then not last_user_clause.has_same_clients (user_clause) then
-								-- Make new clause
-                                !! new_clause
-                                new_clause.set_clients (user_clause.clients)
-                                !! nw_features.make (1)
-                                nw_features.start
-                                nw_features.replace (user_features.item)
-                                new_clause.set_features (nw_features)
-                                temp_clauses.put_left (new_clause)
+
+						if not user_clause.has_equiv_declaration (templ_clause) and then not user_clause.has_equiv_declaration (last_user_clause) then
+							-- Make new clause
+							ebuild_clause ?= user_clause
+							if ebuild_clause /= Void then
+								!FEATURE_CLAUSE_AS_EBUILD! new_clause
 							else
-								-- add to current clause
-                                if temp_clauses.empty then
-                                	!! new_clause
-                                	new_clause.set_clients (user_clause.clients)
-                                	!! nw_features.make (1)
-                                	nw_features.start
+								!! new_clause
+							end
+							new_clause.set_clients (user_clause.clients)
+							!! nw_features.make (1)
+							nw_features.start
+							nw_features.replace (user_features.item)
+							new_clause.set_features (nw_features)
+
+							-- COMMENTS SHOULD BE MERGED!!!
+							new_clause.set_comment (user_clause.comment)
+
+							temp_clauses.put_left (new_clause)
+						else
+							-- Add to current
+							if user_clause.has_equiv_declaration (templ_clause) then
+								merged_features.put_left (user_features.item)
+							else
+								if temp_clauses.empty then
+									ebuild_clause ?= user_clause
+									if ebuild_clause /= Void then
+										!FEATURE_CLAUSE_AS_EBUILD! new_clause
+									else
+										!! new_clause
+									end
+									new_clause.set_clients (user_clause.clients)
+									new_clause.set_comment (user_clause.comment)
+									!! nw_features.make (1)
+									nw_features.start
 									nw_features.replace (user_features.item)
 									new_clause.set_features (nw_features)
 									temp_clauses.put_left (new_clause)
-                                else
-                                    temp_clauses.back
-                                    new_clause := temp_clauses.item
-                                    if new_clause.features = Void then
-                                    	nr_items := 1
-                                    else
-                                        nr_items := new_clause.features.count + 1
-                                    end
-                                    !! nw_features.make (nr_items)
-                                    if nr_items > 1 then
-                                        nw_features.merge_after_position (0, new_clause.features)
-                                    end
-                                    nw_features.go_i_th (nr_items)
+								else
+									temp_clauses.back
+									new_clause := temp_clauses.item
+									if new_clause.features = Void then
+										nr_items := 1
+									else
+										nr_items := new_clause.features.count + 1
+									end
+									!! nw_features.make (nr_items)
+									if nr_items > 1 then
+										nw_features.merge_after_position (0, new_clause.features)
+									end
+									nw_features.go_i_th (nr_items)
 									nw_features.replace (user_features.item)
 									new_clause.set_features (nw_features)
 									temp_clauses.replace (new_clause)
-                                    temp_clauses.forth
-                                end
+									temp_clauses.forth
+								end
 							end
-						else
-							merged_features.put_left (user_features.item)
 						end
+
 					end
 				end
 				user_features.forth
@@ -325,8 +388,12 @@ feature {NONE} -- Internal
 					temp_features.forth
 					new_features.forth
 				end
-				!! new_clause
+				!FEATURE_CLAUSE_AS_EBUILD! new_clause
 				new_clause.set_clients (merge_result.item.clients)
+
+				-- COMMENTS SHOULD BE MERGED!!!
+				new_clause.set_comment (merge_result.item.comment)
+
 				new_clause.set_features (new_features)
 				merge_result.replace (new_clause)
 				merge_result.forth
@@ -334,7 +401,27 @@ feature {NONE} -- Internal
 
 			if temp_clauses /= Void then
 				temp_result := merge_result
-				!! merge_result.make (temp_result.count + temp_clauses.count)
+				if not temp_result.empty then
+					temp_result.start
+					ebuild_clause ?= temp_result.item
+					if ebuild_clause /= Void then
+						!EIFFEL_LIST [FEATURE_CLAUSE_AS_EBUILD]! merge_result.make (temp_result.count + temp_clauses.count)
+					else
+						!! merge_result.make (temp_result.count + temp_clauses.count)
+					end
+				else
+					if not temp_clauses.empty then
+						temp_clauses.start
+						ebuild_clause ?= temp_clauses.item
+						if ebuild_clause /= Void then
+							!EIFFEL_LIST [FEATURE_CLAUSE_AS_EBUILD]! merge_result.make (temp_result.count + temp_clauses.count)
+						else
+							!! merge_result.make (temp_result.count + temp_clauses.count)
+						end
+					else
+						!! merge_result.make (temp_result.count + temp_clauses.count)
+					end
+				end
 				merge_result.merge_after_position (0, temp_result)
 				merge_result.go_i_th (temp_result.count + 1)
 				from
@@ -353,22 +440,27 @@ feature {NONE} -- Internal
 			-- Does feature clause list `fl' contain feature `f'?
 		local
 			names: EIFFEL_LIST [FEATURE_NAME]
+			cursor: CURSOR
 		do
-			from
-				names := f.feature_names
-				names.start
-			until
-				names.after or else Result
-			loop
+			if fl /= Void then 
 				from
-					fl.start
+					names := f.feature_names
+					names.start
+					cursor := fl.cursor
 				until
-					fl.after or else Result
+					names.after or else Result
 				loop
-					Result := fl.item.has_feature_name (names.item)
-					fl.forth
+					from
+						fl.start
+					until
+						fl.after or else Result
+					loop
+						Result := fl.item.has_feature_name (names.item)
+						fl.forth
+					end
+					names.forth
 				end
-				names.forth
+				fl.go_to (cursor)
 			end
 		end;
 	 		   

@@ -117,11 +117,15 @@ feature {EV_ANY_I, EV_STOCK_PIXMAPS_IMP} -- Loading/Saving
 	save_to_named_file (a_format: EV_GRAPHICAL_FORMAT; a_filename: FILE_NAME) is
 			-- Save `Current' to `a_filename' in `a_format' format.
 		local
+			png_format: EV_PNG_FORMAT
 			bmp_format: EV_BMP_FORMAT
 			mem_dc: WEL_MEMORY_DC
 			a_wel_bitmap: WEL_BITMAP
+			a_fn, char_array: ANY
+			a_width, a_height: INTEGER
 		do
 			bmp_format ?= a_format
+			png_format ?= a_format
 			if bmp_format /= Void then
 				create mem_dc.make
 					--| FIXME. Add code for dealing with cursors & icons.
@@ -130,7 +134,23 @@ feature {EV_ANY_I, EV_STOCK_PIXMAPS_IMP} -- Loading/Saving
 				mem_dc.save_bitmap (a_wel_bitmap, a_filename)
 				mem_dc.delete
 				a_wel_bitmap.decrement_reference
-			end				
+			elseif png_format /= Void then
+				a_fn := a_filename.to_c
+				char_array := raw_image_data.to_c
+				if png_format.scale_height /= 0 then
+					a_height := png_format.scale_height
+				else
+					a_height := raw_image_data.height
+				end
+	
+				if png_format.scale_width /= 0 then
+					a_width := png_format.scale_width
+				else
+					a_width := raw_image_data.width
+				end
+				c_ev_save_png ($char_array, $a_fn, raw_image_data.width, raw_image_data.height, a_width, a_height, png_format.color_mode)
+			end
+							
 			a_format.save (raw_image_data, a_filename)
 		end
 
@@ -1650,6 +1670,16 @@ feature {NONE} -- Externals
 		) is
 		external
 			"C signature (void *, char *, void *) use %"load_pixmap.h%""
+		end
+
+	c_ev_save_png (char_array, path: POINTER;
+			array_width,
+			array_height,
+			a_scale_width,
+			a_scale_height,
+			a_colormode: INTEGER) is
+		external
+			"C signature (char *, char *, int, int, int, int, int) use %"load_pixmap.h%""
 		end
 
 invariant

@@ -65,7 +65,6 @@ feature {NONE}
 			!!open_command.make (edit_bar, text_window);
 			!!save_command.make (edit_bar, text_window);
 			!!save_as_command.make (edit_bar, text_window);
-			!!quit_command.make (edit_bar, text_window);
 		end;
 
 	build_widgets is

@@ -267,7 +267,7 @@ RT_LNK EIF_POINTER eif_thr_cond_create (void);
 RT_LNK void eif_thr_cond_broadcast (EIF_POINTER cond);
 RT_LNK void eif_thr_cond_signal (EIF_POINTER cond);
 RT_LNK void eif_thr_cond_wait (EIF_POINTER cond, EIF_POINTER mutex);
-RT_LNK void eif_thr_cond_wait_with_timeout (EIF_POINTER cond, EIF_POINTER mutex, EIF_INTEGER a_timeout);
+RT_LNK EIF_INTEGER eif_thr_cond_wait_with_timeout (EIF_POINTER cond, EIF_POINTER mutex, EIF_INTEGER a_timeout);
 RT_LNK void eif_thr_cond_destroy (EIF_POINTER cond);
 
 /*------------------------------------*/

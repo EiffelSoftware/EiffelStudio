@@ -11,8 +11,8 @@
 
 #define cwel_open_file_name_set_lstructsize(_ptr_, _value_) (((OPENFILENAME *) _ptr_)->lStructSize = (DWORD) (_value_))
 #define cwel_open_file_name_set_hwndowner(_ptr_, _value_) (((OPENFILENAME *) _ptr_)->hwndOwner = (HWND) (_value_))
-#define cwel_open_file_name_set_hinstance(_ptr_, _value_) (((OPENFILENAME *) _ptr_)->hInstance = (HINSTANCE)  (_value_))
-#define cwel_open_file_name_set_lpstrfilter(_ptr_, _value_) (((OPENFILENAME *) _ptr_)->lpstrFilter = (LPCSTR)  (_value_))
+#define cwel_open_file_name_set_hinstance(_ptr_, _value_) (((OPENFILENAME *) _ptr_)->hInstance = (HINSTANCE) (_value_))
+#define cwel_open_file_name_set_lpstrfilter(_ptr_, _value_) (((OPENFILENAME *) _ptr_)->lpstrFilter = (LPCSTR) (_value_))
 #define cwel_open_file_name_set_lpstrcustomfilter(_ptr_, _value_) (((OPENFILENAME *) _ptr_)->lpstrCustomFilter = (LPSTR) (_value_))
 #define cwel_open_file_name_set_nmaxcustfilter(_ptr_, _value_) (((OPENFILENAME *) _ptr_)->nMaxCustFilter = (DWORD) (_value_))
 #define cwel_open_file_name_set_nfilterindex(_ptr_, _value_) (((OPENFILENAME *) _ptr_)->nFilterIndex = (DWORD) (_value_))

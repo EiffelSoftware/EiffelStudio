@@ -18,9 +18,8 @@ creation
 feature {NONE} -- Initialization
 
 	make (a_style, a_width: INTEGER; a_color: WEL_COLOR_REF) is
-			-- Make a pen using the `pen_style',
-			-- `width' and `color'.
-			-- See class WEL_PS_CONSTANTS for `pen_style' values.
+			-- Make a pen using `a_style', `a_width' and `a_color'.
+			-- See class WEL_PS_CONSTANTS for `a_style' values.
 		require
 			positive_width: a_width >= 0
 			color_not_void: a_color /= Void

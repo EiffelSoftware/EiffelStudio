@@ -64,7 +64,7 @@ feature -- Measurement
 		end
 
 invariant
-	positive_count: count >= 0
+	positive_count: count > 0
 
 end -- class WEL_INTEGER_ARRAY
 

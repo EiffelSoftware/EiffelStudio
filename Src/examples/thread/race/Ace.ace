@@ -1,0 +1,43 @@
+system
+	race
+
+root
+	RACE(root_cluster): "make"
+
+default
+
+	assertion(require);
+	multithreaded (yes);
+	-- If you have the MT precompiled EiffelBase library, you may 
+	-- the following default assertion: (check the name
+	-- of your MT precompiled library in the specified path first.
+	precompiled ("$EIFFEL4/precomp/spec/$PLATFORM/mt-base");
+	exception_trace (no)
+
+cluster
+
+	root_cluster: 		".";
+
+-- EiffelBase
+
+	access:             "$EIFFEL4/library/base/structures/access";
+	cursors:            "$EIFFEL4/library/base/structures/cursors";
+	cursor_tree:        "$EIFFEL4/library/base/structures/cursor_tree";
+	dispenser:          "$EIFFEL4/library/base/structures/dispenser";
+	iteration:          "$EIFFEL4/library/base/structures/iteration";
+	kernel:             "$EIFFEL4/library/base/kernel";
+	list:               "$EIFFEL4/library/base/structures/list";
+	set:                "$EIFFEL4/library/base/structures/set";
+	sort:               "$EIFFEL4/library/base/structures/sort";
+	storage:            "$EIFFEL4/library/base/structures/storage";
+	support:            "$EIFFEL4/library/base/support";
+	table:              "$EIFFEL4/library/base/structures/table";
+	traversing:         "$EIFFEL4/library/base/structures/traversing";
+	tree:               "$EIFFEL4/library/base/structures/tree";
+
+-- EiffelThread
+
+	thread:				"$EIFFEL4/library/thread";
+
+end
+

@@ -1,0 +1,37 @@
+race: simple example using EiffelThreads (ISE Eiffel 4.2)
+
+DESCRIPTION:
+This example consists of launching several racers, performing n interations 
+(number of racers and iterations are defined by the user). For instance,
+you can try to launch 10 racers, running during 10 iterations.
+
+Each racer is an EiffelThread: the number of racers and iterations can be 
+as big as you want provided your system ressource can manage it. EiffelThreads
+mechanism combined with the ISE Eiffel Garbage Collector allow to launch a lot
+of threads without any problem of memory.
+
+
+race use threads and mutex but the Eiffelthreads library also provides
+condition variables, semaphore, policy scheduling, thread control mechanisms.
+
+Compatibility with Eiffel 4.1:
+To compile this example with ISE Eiffel 4.1, you need to modify the Eiffel
+code: the PROXY class was expanded in Eiffel 4.1, then you have to remove
+the '!!' before any call to feature 'put' on a PROXY object. 
+
+The use of proxy object: this example put into a proxy the mutex of
+synchronisation, but in general you do not have to put any MUTEX, SEMAPHORE
+or CONDITION_VARIABLE into it. All other shared object needs to be put into
+a proxy. In the future releases, the proxies are bound to be obsolete and
+Eiffel will manage internally every shared object.
+
+--|---------------------------------------------------------------
+--| Interactive Software Engineering Inc.
+--| ISE Building, 2nd floor
+--| 270 Storke Road, Goleta, CA 93117 USA
+--| Telephone 805-685-1006, Fax 805-685-6869
+--| Electronic mail <info@eiffel.com>
+--| Customer support e-mail <support@eiffel.com>
+--| For latest info see award-winning pages: http://www.eiffel.com
+--|----------------------------------------------------------------
+

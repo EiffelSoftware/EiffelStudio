@@ -67,7 +67,7 @@ inherit
 	WEL_BITMAP_BUTTON
 		rename
 			make as wel_make,
-			parent as wel_window_parent,
+			parent as wel_parent,
 			set_parent as wel_set_parent,
 			font as wel_font,
 			shown as is_displayed,
@@ -131,19 +131,6 @@ feature {NONE} -- Initialization
 		end
 
 feature -- Access
-
-	wel_parent: WEL_WINDOW is
-			--|---------------------------------------------------------------
-			--| FIXME ARNAUD
-			--|---------------------------------------------------------------
-			--| Small hack in order to avoid a SEGMENTATION VIOLATION
-			--| with Compiler 4.6.008. To remove the hack, simply remove
-			--| this feature and replace "parent as wel_window_parent" with
-			--| "parent as wel_parent" in the inheritance clause of this class
-			--|---------------------------------------------------------------
-		do
-			Result := wel_window_parent
-		end
 
 	extra_width: INTEGER
 			-- Extra width on the size.
@@ -317,6 +304,9 @@ end -- class EV_BUTTON_IMP
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.46  2000/04/25 00:32:53  rogers
+--| Removed wel_window_parent hack.
+--|
 --| Revision 1.45  2000/03/28 16:35:47  rogers
 --| Now use wel_text in set_default_minimum_size.
 --|

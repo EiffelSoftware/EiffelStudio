@@ -8,37 +8,12 @@ class
 	ECOM_TYPE_COMP
 
 inherit
-	ECOM_INTERFACE
+	ECOM_WRAPPER
 
 	ECOM_INVOKE_KIND
 
 creation
 	make_from_pointer
-
-
-feature -- Access
-
-feature -- Measurement
-
-feature -- Status report
-
-feature -- Status setting
-
-feature -- Cursor movement
-
-feature -- Element change
-
-feature -- Removal
-
-feature -- Resizing
-
-feature -- Transformation
-
-feature -- Conversion
-
-feature -- Duplication
-
-feature -- Miscellaneous
 
 feature -- Basic operations
 
@@ -61,7 +36,7 @@ feature {NONE} -- Implementation
 			Result := ccom_create_c_type_comp_from_pointer (a_pointer)
 		end
 
-	release_interface is
+	delete_wrapper is
 			-- Delete structure
 		do
 			ccom_delete_c_type_comp (initializer);

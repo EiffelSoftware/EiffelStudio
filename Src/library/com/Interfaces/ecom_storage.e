@@ -9,7 +9,7 @@ class
 
 inherit
 
-	ECOM_INTERFACE
+	ECOM_WRAPPER
 
 	ECOM_STORAGE_ROUTINES
 
@@ -42,9 +42,9 @@ feature {NONE} -- Initialization
 			initializer := ccom_create_c_storage;
 			!! wide_string.make_from_string (filename);
 			ccom_create_doc_file(initializer, wide_string.item, a_mode);
-			interface := ccom_storage(initializer)
+			item := ccom_storage(initializer)
 		ensure
-			compound_file_created: interface /= Default_pointer
+			compound_file_created: item /= Default_pointer
 		end
 
 	make_temporary_doc_file (a_mode: INTEGER) is
@@ -55,9 +55,9 @@ feature {NONE} -- Initialization
 		do
 			initializer := ccom_create_c_storage;
 			ccom_create_doc_file(initializer, Default_pointer, a_mode);
-			interface := ccom_storage(initializer)
+			item := ccom_storage(initializer)
 		ensure
-			compound_file_created: interface /= Default_pointer
+			compound_file_created: item /= Default_pointer
 		end
 
 	make_open_file (filename: FILE_NAME; a_mode: INTEGER) is
@@ -74,9 +74,9 @@ feature {NONE} -- Initialization
 			initializer := ccom_create_c_storage;				
 			!! wide_string.make_from_string (filename);
 			ccom_open_root_storage(initializer, wide_string.item, a_mode);	
-			interface := ccom_storage(initializer)
+			item := ccom_storage(initializer)
 		ensure
-			compound_file_open: interface /= Default_pointer			
+			compound_file_open: item /= Default_pointer			
 		end
 
 feature -- Access
@@ -99,7 +99,7 @@ feature -- Access
 					wide_string.item, a_mode));
 		ensure
 			stream_created: Result /= Void and then
-					Result.interface /= Default_pointer;			
+					Result.item /= Default_pointer;			
 		end
 
 	retrieved_stream (a_name: STRING; a_mode: INTEGER): ECOM_STREAM is
@@ -118,7 +118,7 @@ feature -- Access
 					wide_string.item, a_mode));
 		ensure
 			stream_created: Result /= Void and then
-					Result.interface /= Default_pointer;
+					Result.item /= Default_pointer;
 		end
 
 	new_substorage (a_name: STRING; a_mode: INTEGER): ECOM_STORAGE is
@@ -136,7 +136,7 @@ feature -- Access
 					wide_string.item, a_mode));
 		ensure
 			storage_created: Result /= Void and then
-					Result.interface /= Default_pointer;
+					Result.item /= Default_pointer;
 		end
 
 	retrieved_substorage (a_name: STRING; a_mode: INTEGER): ECOM_STORAGE is
@@ -157,7 +157,7 @@ feature -- Access
 					wide_string.item, a_mode));
 		ensure
 			storage_created: Result /= Void and then
-					Result.interface /= Default_pointer;
+					Result.item /= Default_pointer;
 		end
 
 	root_storage: ECOM_ROOT_STORAGE is
@@ -267,10 +267,10 @@ feature -- Basic Operations
 			-- Copy entire contents to `dest_storage'
 		require
 			dest_exist: dest_storage /= Void and then
-						dest_storage.interface /= Default_pointer;
+						dest_storage.item /= Default_pointer;
 		do
 			ccom_copy_to (initializer, 0, Default_pointer, 
-					dest_storage.interface);
+					dest_storage.item);
 		end
 
 	commit (a_flags: INTEGER) is
@@ -335,7 +335,7 @@ feature -- Element Change
 		require
 			valid_element_name: a_element_name /= Void and then is_valid_name (a_element_name);
 			valid_dest_storage: dest_storage /= Void and then
-					dest_storage.interface /= Default_pointer;
+					dest_storage.item /= Default_pointer;
 			valid_new_name: new_name /= Void;
 			valid_mode: is_valid_stgmove (a_mode)
 		local
@@ -343,7 +343,7 @@ feature -- Element Change
 		do
 			!! wide_string1.make_from_string (a_element_name);
 			!! wide_string2.make_from_string (new_name);
-			ccom_move_element_to (initializer, wide_string1.item, dest_storage.interface, 
+			ccom_move_element_to (initializer, wide_string1.item, dest_storage.item, 
 							wide_string2.item, a_mode);
 		ensure
 			element_moved: dest_storage.is_valid_name(new_name)
@@ -448,7 +448,7 @@ feature {NONE} -- Implementation
 			Result := ccom_create_c_storage_from_pointer (a_pointer)
 		end
 
-	release_interface is
+	delete_wrapper is
 			-- Delete structure
 		do
 			ccom_delete_c_storage (initializer);

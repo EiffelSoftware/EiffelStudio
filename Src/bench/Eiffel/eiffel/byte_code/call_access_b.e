@@ -1,7 +1,7 @@
 indexing
 	description: "Eiffel Call and Access"
 	date: "$Date$"
-	version: "$Version: $"
+	version: "$Revision$"
 
 deferred class
 	CALL_ACCESS_B 
@@ -18,6 +18,11 @@ inherit
 		end
 
 	STRING_CONVERTER
+		export
+			{NONE} all
+		end
+
+	DEBUG_OUTPUT
 		export
 			{NONE} all
 		end
@@ -494,4 +499,12 @@ end
 			end
 		end
 
-end
+feature {NONE} -- Debug
+
+	debug_output: STRING is
+			-- String that should be displayed in debugger to represent `Current'.
+		do
+			Result := Names_heap.item (feature_name_id)
+		end
+
+end -- class CALL_ACCESS_B

@@ -30,12 +30,13 @@ feature {NONE}
 			ts.set_title (Result.tool_name)
 		end;
 
-	name_chooser (window: WIDGET): NAME_CHOOSER_W is
+	name_chooser (popup_parent: COMPOSITE): NAME_CHOOSER_W is
 			-- File selection window
 		require
-			window_not_void: window /= Void
+			popup_parent_not_void: popup_parent /= Void
 		do
-			!! Result.make (window.top);
+			!! Result.make (popup_parent);
+			Result.set_window (popup_parent);
 			if last_name_chooser /= Void then
 				last_name_chooser.popdown;
 				last_name_chooser.destroy
@@ -51,17 +52,15 @@ feature {NONE}
 			Result := last_name_chooser_cell.item
 		end;
 
-	warner (window: WIDGET): WARNER_W is
+	warner (popup_parent: COMPOSITE): WARNER_W is
 			-- Warning window associated with `window'
 		require
-			window_not_void: window /= Void
+			popup_parent_not_void: popup_parent /= Void
 		local
-			new_parent: COMPOSITE;
 			old_warner: WARNER_W
 		do
-			new_parent := window.top;
-			!! Result.make (new_parent);
-			Result.set_window (new_parent);
+			!! Result.make (popup_parent);
+			Result.set_window (popup_parent);
 			old_warner := last_warner;
 			if old_warner /= Void and then not old_warner.destroyed then
 				old_warner.popdown;
@@ -76,23 +75,15 @@ feature {NONE}
 			Result := last_warner_cell.item
 		end;
 
-	confirmer (window: TEXT_WINDOW): CONFIRMER_W is
+	confirmer (popup_parent: COMPOSITE): CONFIRMER_W is
 			-- Confirmation widget associated with `window'
 		require
-			window_not_void: window /= Void
+			popup_parent_not_void: popup_parent /= Void
 		local
-			new_parent: COMPOSITE;
 			old_confirmer: CONFIRMER_W
 		do
-			new_parent ?= window.tool.eb_shell;
-			if new_parent = Void then
-					--| Apparently `window' is created as part
-					--| of `project_tool', and thus `project_tool'
-					--| should be the parent.
-				new_parent ?= project_tool
-			end;
-			!! Result.make (new_parent);
-			Result.set_window (window);
+			!! Result.make (popup_parent);
+			Result.set_window (popup_parent);
 			old_confirmer := last_confirmer;
 			if old_confirmer /= Void then
 				old_confirmer.popdown;
@@ -109,7 +100,7 @@ feature {NONE}
 
 	error_window: OUTPUT_WINDOW is
 			-- Error window that displays error message
-		do
+		once
 			if batch_mode then
 				Result := term_window
 			else
@@ -117,7 +108,7 @@ feature {NONE}
 			end;
 		end;
 
-	debug_window: CLICK_WINDOW is
+	debug_window: TEXT_WINDOW is
 			-- Debug window
 		once
 			Result := bench_error_window
@@ -129,7 +120,7 @@ feature {NONE}
 			ts: EB_TOP_SHELL
 		once
 			ts.make ("", project_tool.screen);
-			!! Result.make (ts);
+			!! Result.make_shell (ts);
 			ts.set_title (Result.tool_name);
 			ts.raise
 		end;
@@ -148,17 +139,17 @@ feature {NONE}
 
 feature -- Compilation Mode
 
-    batch_mode: BOOLEAN is
-            -- Is the compiler in batch mode?
-        do
-            Result := mode.item
-        end;
+	batch_mode: BOOLEAN is
+			-- Is the compiler in batch mode?
+		do
+			Result := mode.item
+		end;
 
-    set_batch_mode (compiler_mode: BOOLEAN) is
-            -- Set `batch_mode' to `compiler_mode'
-        do
-            mode.put (compiler_mode)
-        end;
+	set_batch_mode (compiler_mode: BOOLEAN) is
+			-- Set `batch_mode' to `compiler_mode'
+		do
+			mode.put (compiler_mode)
+		end;
 
 feature {NONE} -- Implementation
 
@@ -180,10 +171,10 @@ feature {NONE} -- Implementation
 			!! Result.put (Void)
 		end;
 
-    mode: CELL [BOOLEAN] is
-        once
-            !! Result.put (False)
-        end;
+	mode: CELL [BOOLEAN] is
+		once
+			!! Result.put (False)
+		end;
 
 	bench_error_window: TEXT_WINDOW is
 		do

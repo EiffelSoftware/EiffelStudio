@@ -94,10 +94,7 @@ feature -- Type check
 			-- Reconstitute text.
 		do
 			ctxt.begin;
-			ctxt.new_expression;
-			ctxt.prepare_for_feature (feature_name, void);
-			ctxt.put_text_item (ti_Dollar);
-			ctxt.put_current_feature;
+			simple_format (ctxt);
 			if ctxt.last_was_printed then
 				ctxt.commit;
 			else

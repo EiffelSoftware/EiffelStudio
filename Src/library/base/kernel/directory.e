@@ -79,15 +79,13 @@ feature -- Access
 		require
 			string_exists: entry_name /= Void;
 		local
-			dir_entry: ANY;
 			ext_entry_name: ANY;
 			dir_temp: DIRECTORY
 		do
 			!! dir_temp.make_open_read (name);
 			ext_entry_name := entry_name.to_c;
-			dir_entry := dir_temp.dir_search (dir_temp.directory_pointer,
-							$ext_entry_name);
-			Result := dir_entry /= Void;
+			Result := dir_temp.dir_search (dir_temp.directory_pointer,
+							$ext_entry_name) /= default_pointer;
 			dir_temp.close
 		end;
 

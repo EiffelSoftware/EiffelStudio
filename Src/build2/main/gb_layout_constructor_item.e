@@ -67,6 +67,7 @@ feature {NONE} -- Initialization
 			set_text ("TITLED_WINDOW")
 			object_handler.add_root_object (an_object)
 			an_object.set_layout_item (Current)
+			builder_window.set_object (an_object)
 		end
 		
 	initialize is

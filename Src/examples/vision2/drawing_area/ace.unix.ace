@@ -23,7 +23,7 @@ default
 
 cluster 
 		-- Root cluster
-	root_cluster:		"$EIFFEL4/examples/vision2/pixmap"
+	root_cluster:		"$EIFFEL4/examples/vision2/drawing_area"
 
 		-- EiffelBase
 	all base: 			"$EIFFEL4/library/base"

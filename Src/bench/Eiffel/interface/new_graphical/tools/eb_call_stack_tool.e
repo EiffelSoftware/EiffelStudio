@@ -249,12 +249,12 @@ feature {NONE} -- Implementation
 			if Application.status /= Void then
 				display_stop_cause
 				stack_list.wipe_out
-				create tmp_list.make (Application.status.where.count)
 				stack := Application.status.where
 				if
 					Application.is_stopped and then
 					stack /= Void
 				then
+					create tmp_list.make (stack.count)
 					save_call_stack_cmd.enable_sensitive
 					from
 						stack.start

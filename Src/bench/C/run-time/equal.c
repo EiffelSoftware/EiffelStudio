@@ -45,8 +45,6 @@ rt_private EIF_BOOLEAN rdeepiter(register EIF_REFERENCE target, register EIF_REF
 rt_public EIF_BOOLEAN xequal(EIF_REFERENCE ref1, EIF_REFERENCE ref2)
 {
 	/* Expanded equality. */
-	EIF_REFERENCE tmp;
-
 	if (ref1 == (EIF_REFERENCE) 0 && ref2 == (EIF_REFERENCE) 0)
 		return EIF_TRUE;
 

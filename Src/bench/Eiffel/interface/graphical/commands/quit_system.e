@@ -36,7 +36,7 @@ feature {NONE} -- Implementation
 			else
 				-- First click on open
 				if text_window.changed then
-					warner (popup_parent).call (Current, l_File_changed)
+					warner (popup_parent).call (Current, Interface_names.w_File_changed)
 				else
 					text_window.clear_window;
 					tool.hide;

@@ -108,7 +108,7 @@ feature -- C Code generation
 					buf := buffer
 						-- Generation of the debug compound in workbench
 						-- mode
-					static_type := Encoder.generate_type_id_name (context.current_type.associated_class_type.static_type_id)
+					static_type := Encoder.generate_type_id_name (context.class_type.static_type_id)
 					buf.put_string (gc_if_l_paran)
 					buf.put_new_line
 					buf.indent

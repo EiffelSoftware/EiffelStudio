@@ -105,20 +105,20 @@ feature -- C code generation
 			rout_table: ROUT_TABLE
 			buf: GENERATION_BUFFER
 			array_index: INTEGER
-			class_type: CL_TYPE_I
+			class_type: CLASS_TYPE
 			class_type_id: INTEGER
 			l_rout_id: INTEGER
 		do
 			buf := buffer
 			if context.workbench_mode then
 				buf.put_string ("(EIF_POINTER) RTWPP(")
-				buf.put_static_type_id (context.current_type.associated_class_type.static_type_id)
+				buf.put_static_type_id (context.class_type.static_type_id)
 				buf.put_string (gc_comma)
 				buf.put_integer (feature_id)
 				buf.put_character (')')
 			else
 				l_rout_id := routine_id
-				class_type := context.current_type
+				class_type := context.class_type
 				class_type_id := class_type.type_id
 				array_index := Eiffel_table.is_polymorphic (l_rout_id, class_type_id, True)
 				if array_index = -2 then
@@ -128,7 +128,7 @@ feature -- C code generation
 				elseif array_index >= 0 then
 					table_name := "f"
 					table_name.append (Encoder.address_table_name (feature_id,
-								class_type.associated_class_type.static_type_id))
+								class_type.static_type_id))
 
 					buf.put_string ("(EIF_POINTER) ")
 					buf.put_string (table_name)
@@ -175,7 +175,7 @@ feature -- Byte code generation
 		do
 			ba.append (Bc_addr)
 			ba.append_integer (feature_id)
-			ba.append_short_integer (context.current_type.associated_class_type.static_type_id - 1)
+			ba.append_short_integer (context.class_type.static_type_id - 1)
 				-- Use RTWPP
 			ba.append_short_integer (0)
 		end

@@ -156,7 +156,7 @@ feature -- C code generation
 					buffer.put_integer (rout_info.offset)
 				else
 					buffer.put_string ("RTWCT(")
-					buffer.put_static_type_id (context.current_type.associated_class_type.static_type_id)
+					buffer.put_static_type_id (context.class_type.static_type_id)
 					buffer.put_string (gc_comma)
 					buffer.put_integer (feature_id)
 				end
@@ -220,8 +220,7 @@ feature -- Byte code generation
 				ba.append_integer (rout_info.offset)
 			else
 				ba.append (Bc_clike)
-				ba.append_short_integer
-					(context.current_type.associated_class_type.static_type_id - 1)
+				ba.append_short_integer (context.class_type.static_type_id - 1)
 				ba.append_integer (feature_id)
 			end
 		end
@@ -335,7 +334,7 @@ feature -- Genericity
 					buffer.put_integer (rout_info.offset)
 				else
 					buffer.put_string ("RTWCT(")
-					buffer.put_static_type_id (context.current_type.associated_class_type.static_type_id)
+					buffer.put_static_type_id (context.class_type.static_type_id)
 					buffer.put_string (gc_comma)
 					buffer.put_integer (feature_id)
 				end
@@ -468,7 +467,7 @@ feature -- Genericity
 					buffer.put_string ("typarr[")
 					buffer.put_integer (idx_cnt.value)
 					buffer.put_string ("] = RTID(RTWCT(")
-					buffer.put_static_type_id (context.current_type.associated_class_type.static_type_id)
+					buffer.put_static_type_id (context.class_type.static_type_id)
 					buffer.put_string (gc_comma)
 					buffer.put_integer (feature_id)
 				end
@@ -494,8 +493,7 @@ feature -- Genericity
 				ba.append_integer (rout_info.offset)
 			else
 				ba.append_short_integer (Like_feature_type)
-				ba.append_short_integer
-					(context.current_type.associated_class_type.static_type_id - 1)
+				ba.append_short_integer (context.class_type.static_type_id - 1)
 				ba.append_integer (feature_id)
 			end
 		end

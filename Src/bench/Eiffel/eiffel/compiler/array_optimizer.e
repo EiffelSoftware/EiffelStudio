@@ -27,7 +27,7 @@ feature
 			!! optimized_features.make
 			optimized_features.compare_objects
 
-			{FEAT_ITERATOR} precursor
+			{FEAT_ITERATOR} Precursor
 
 			!! context_stack.make
 		end

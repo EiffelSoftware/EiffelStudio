@@ -133,20 +133,12 @@ feature {NONE} -- Basic operations
 			response: STRING
 		do
 			socket.put_string (s + "%R%N")
-			if not socket.interface_error then
-				socket.read_line
-				if not socket.interface_error then
-					response:= socket.last_string
-					smtp_code_number := decode (response)
-					if (smtp_code_number /= expected_code) then
-						enable_transfer_error
-						set_transfer_error_message (smtp_reply)
-					end
-				end
-			end
-			if socket.interface_error then
+			socket.read_line
+			response:= socket.last_string
+			smtp_code_number := decode (response)
+			if (smtp_code_number /= expected_code) then
 				enable_transfer_error
-				set_transfer_error_message ("Interface error")
+				set_transfer_error_message (smtp_reply)
 			end
 		end
 

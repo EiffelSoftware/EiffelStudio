@@ -47,7 +47,7 @@ feature -- Access
 			if
 				selected and
 				pressed and
-				reelased
+				released
 			then
 				destroy
 			else

@@ -45,6 +45,7 @@ feature -- Commands
 		local
 			s: STRING
 		do
+			update_resource
 			caller.update
 		--	!! s.make(20)
 		--	resource.set_value(s)

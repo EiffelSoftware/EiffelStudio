@@ -14,6 +14,7 @@ using EiffelSoftware.Runtime.Types;
 
 namespace EiffelSoftware.Runtime {
 
+[CLSCompliantAttribute (false)]
 public class ANY {
 
 /*
@@ -313,10 +314,10 @@ feature -- Duplication
 		if (Current == null) {
 			generate_call_on_void_target_exception ();
 		} else {
-			l_check_assert = RUN_TIME.check_assert (false);
+			l_check_assert = ISE_RUNTIME.check_assert (false);
 			Result = GENERIC_CONFORMANCE.create_like_object (Current);
 			copy (Result, Current);
-			l_check_assert = RUN_TIME.check_assert (l_check_assert);
+			l_check_assert = ISE_RUNTIME.check_assert (l_check_assert);
 		}
 		return Result;
 	}
@@ -424,10 +425,10 @@ feature -- Duplication
 			} else {
 					// For .NET object, we have to do it the slow way, allocate
 					// a new object, and then copy field by field.
-				l_check_assert = RUN_TIME.check_assert (false);
+				l_check_assert = ISE_RUNTIME.check_assert (false);
 				Result = GENERIC_CONFORMANCE.create_like_object (Current);
 				internal_standard_copy (Result, Current);
-				l_check_assert = RUN_TIME.check_assert (l_check_assert);
+				l_check_assert = ISE_RUNTIME.check_assert (l_check_assert);
 			}
 		}
 

@@ -10,6 +10,7 @@ using System;
 
 namespace EiffelSoftware.Runtime.Types {
 
+[CLSCompliantAttribute (false)]
 [Serializable]
 public class GENERIC_TYPE: CLASS_TYPE {
 

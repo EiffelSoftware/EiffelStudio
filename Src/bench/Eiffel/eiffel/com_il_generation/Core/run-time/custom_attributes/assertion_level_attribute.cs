@@ -12,7 +12,7 @@ using EiffelSoftware.Runtime.Enums;
 namespace EiffelSoftware.Runtime.CA
 {
 
-[CLSCompliant(false)]
+[CLSCompliantAttribute (false)]
 [AttributeUsage (AttributeTargets.Assembly, AllowMultiple = true, Inherited = false)]
 [Serializable]
 public class ASSERTION_LEVEL_ATTRIBUTE : Attribute

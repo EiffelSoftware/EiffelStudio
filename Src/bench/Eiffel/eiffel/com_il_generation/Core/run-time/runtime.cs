@@ -26,7 +26,7 @@ public delegate int WEL_RICH_EDIT_STREAM_OUT_DELEGATE (IntPtr a_buffer, int leng
 public delegate void WEL_DISK_SPACE_DELEGATE (int free_space, int total_space, int free_space_in_bytes, int total_space_in_bytes);
 
 [Serializable]
-public class RUN_TIME
+public sealed class ISE_RUNTIME
 {
 /*
 feature -- Assertions

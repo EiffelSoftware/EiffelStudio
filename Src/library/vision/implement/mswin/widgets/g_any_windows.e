@@ -10,6 +10,16 @@ class
 inherit
 	G_ANY_I
 
+feature {NONE} -- Status Setting
+
+	init_common_controls_dll is
+			-- Load common controls dll (once)
+		local
+			common_controls_dll: WEL_COMMON_CONTROLS_DLL
+		once
+			!! common_controls_dll.make
+			common_controls_dll.set_shared
+		end
 
 feature {NONE} -- Implementation
 
@@ -427,14 +437,6 @@ feature {NONE} -- Implementation
 	replace_all_actions: ACTIONS_MANAGER is
 			-- Event handler for a replace all event on
 			-- a search replace dialog
-		once
-			!! Result.make
-		ensure
-			result_exists: Result /= Void
-		end
-
-	accelerators: ACCELERATORS_WINDOWS is
-			-- Accelerators for the application
 		once
 			!! Result.make
 		ensure

@@ -467,7 +467,7 @@ feature -- Basic operations
 			Result.append (New_line)
 			Result.append (End_ace_file)
 
-			if cluster_info /= Void and not cluster_info.include_path.empty then
+			if cluster_info /= Void and not cluster_info.objects.empty then
 				from
 					cluster_info.objects.start
 				until

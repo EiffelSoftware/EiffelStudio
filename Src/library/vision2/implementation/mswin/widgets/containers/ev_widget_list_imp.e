@@ -40,13 +40,13 @@ feature {NONE} -- Implementation
 			v_imp ?= v.implementation
 
 			check
-				v_imp_not_void: v /= Void
+				v_imp_not_void: v_imp /= Void
 			end
 			ev_children.go_i_th (i)
 			ev_children.put_left (v_imp)
 			wel_win ?= Current
 			check
-				wel_win_not_void: v /= Void
+				wel_win_not_void: wel_win /= Void
 			end
 			v_imp.wel_set_parent (wel_win)
 			v_imp.set_top_level_window_imp (top_level_window_imp)
@@ -71,7 +71,8 @@ feature {NONE} -- Implementation
 			check
 				v_parent_imp_not_void: v_parent_imp /= Void
 			end
-			v_parent_imp.remove_child (v_imp)
+			v_parent_imp.notify_change (2 + 1)
+			v_imp.on_orphaned
 		end
 
 feature {NONE} -- Implementation
@@ -101,6 +102,9 @@ end -- class EV_WIDGET_LIST_IMP
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.21  2000/04/28 23:40:44  brendel
+--| Improved remove_i_th and insert_i_th.
+--|
 --| Revision 1.20  2000/04/14 20:46:55  brendel
 --| Fixed parenting of widget. on_parented is now called for every widget
 --| before trying to conform the implementation to EV_WIDGET_IMP.

@@ -7,6 +7,8 @@ feature -- String constants
 
 	macro_string: STRING is "macro"
 
+	struct_string: STRING is "struct"
+
 	dll16_string: STRING is "dll16"
 
 	dll32_string: STRING is "dll32"

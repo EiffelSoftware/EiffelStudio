@@ -231,7 +231,6 @@ feature -- Access
 			Result := (body_id /= Void) and then
 				(not is_external) and then
 				(not is_attribute) and then
-				(not is_dynamic) and then
 				(not is_constant) and then
 				(not is_deferred) and then
 				(not is_unique) and then
@@ -239,7 +238,6 @@ feature -- Access
 		ensure
 			debuggable_if: Result implies
 				(body_id /= Void) and then 
-				(not is_dynamic) and then 
 				(not is_external) and then
 				(not is_attribute) and then
 				(not is_constant) and then
@@ -537,14 +535,6 @@ feature {NONE} -- Implementation
 
 	associated_class_id: CLASS_ID
             -- Class id where the feature was evaluated in
-
-	is_dynamic: BOOLEAN is
-			-- Is the feature dynamic?
-		do
-			if Compilation_modes.is_extending then
-				Result := associated_feature_i.is_dynamic
-			end
-		end;
 
 feature {COMPILER_EXPORTER} -- Implementation
 

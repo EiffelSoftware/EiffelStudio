@@ -30,11 +30,7 @@ feature -- Access
 	directory_path: STRING is
 			-- Server file directory path
 		once
-			if Compilation_modes.is_extending then
-				Result := Extendible_path
-			else
-				Result := Compilation_path
-			end
+			Result := Compilation_path
 		end
 
 feature {NONE} -- Implementation

@@ -112,7 +112,6 @@ end
 			if
 				server_file.count > Size_limit * Server_controler.block_size
 				or else server_file.precompiled
-				or else server_file.is_static
 			then 
 				set_current_id
 				server_file := Server_controler.file_of_id (current_id)

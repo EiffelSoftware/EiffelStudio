@@ -73,8 +73,6 @@ feature -- Update for the precompilation
 			if Compilation_modes.is_precompiling then
 				str := Project_directory_name.to_c;
 				compilation_id := eif_date ($str)
-			elseif Compilation_modes.is_extending then
-				compilation_id := Dle_compilation
 			else
 				compilation_id := Normal_compilation
 			end

@@ -32,7 +32,6 @@ feature {COMPILER_EXPORTER} -- Initialization
 			!! renamings.make;
 			!! ignore.make;
 			!! sub_clusters.make (3);
-			is_dynamic := System.is_dynamic
 		end;
 
 	make_from_old_cluster (old_cluster_i: CLUSTER_I) is
@@ -268,7 +267,6 @@ end;
 			is_precompiled := old_cluster_i.is_precompiled;
 			precomp_id := old_cluster_i.precomp_id;
 			precomp_ids := old_cluster_i.precomp_ids;
-			is_dynamic := old_cluster_i.is_dynamic;
 			hide_implementation := old_cluster_i.hide_implementation;
 			set_date (old_cluster_i.date);
 			exclude_list := old_cluster_i.exclude_list;
@@ -1133,49 +1131,6 @@ feature {COMPILER_EXPORTER} -- Automatic backup
 			file.close
 		end
 
-feature {COMPILER_EXPORTER} -- DLE
-
-	is_static: BOOLEAN is
-			-- Is the current cluster part of a Dynamic Class Set's base system?
-			-- It won't be removed even if it is  no more in the local Ace file
-		require
-			dynamic_system: System.is_dynamic
-		do
-			Result := not is_dynamic
-		end;
-
-	is_dynamic: BOOLEAN;
-			-- Does the current cluster contain dynamic classes?
-
-	check_descendants_of_dynamic is
-			-- Check each descendant of DYNAMIC in the DC-set is not
-			-- generic and include a `make' procedure with one argument
-			-- of type ANY in its creation clause.
-		require
-			dynamic_system: System.is_dynamic;
-			dynamic_class_compiled: System.dynamic_class.compiled
-		local
-			class_i: CLASS_I;
-			class_c, dynamic_class: CLASS_C
-		do
-			dynamic_class := System.dynamic_class.compiled_class;
-			from
-				classes.start
-			until
-				classes.after
-			loop
-				class_i := classes.item_for_iteration;
-				if class_i.compiled then
-					class_c := class_i.compiled_class;
-					if class_c.is_dynamic and then class_c.conform_to (dynamic_class) then
-						class_c.check_dynamic_not_generic;
-						class_c.check_dynamic_creators
-					end
-				end;
-				classes.forth
-			end
-		end;
-
 feature -- Output
 
 	generate_class_list (st: STRUCTURED_TEXT) is
@@ -1317,7 +1272,6 @@ invariant
 
 	path_exists: path /= Void;
 	classes_exists: classes /= Void;
-	dynamic_constraint: is_dynamic implies System.is_dynamic;
 	sub_clusters_exists: sub_clusters /= Void
 
 end

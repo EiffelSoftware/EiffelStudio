@@ -92,7 +92,7 @@ feature
 						-- Mark table used
 					Eiffel_table.mark_used (rout_id);
 
-					table_name := clone (dle_prefix);
+					table_name := "f";
 					table_name.append (context.current_type.
 						associated_class_type.id.address_table_name (feature_id))
 
@@ -115,19 +115,5 @@ feature -- Byte code generation
 			ba.append_short_integer
 					(context.current_type.associated_class_type.id.id - 1);
 		end;
-
-feature {NONE} -- DLE
-
-	dle_prefix: STRING is
-			-- Prefix for generated variable names
-		once
-			if System.is_dynamic then
-				Result := "D"
-			elseif System.extendible then
-				Result := "S"
-			else
-				Result := "f"
-			end
-		end
 
 end

@@ -336,7 +336,7 @@ feature
 			end;
 				-- Minimum dynamic type
 			ba.append_short_integer (min_type_id - 1);
-				-- Maximum dynmaic type
+				-- Maximum dynamic type
 			ba.append_short_integer (max_type_id - 1);
 				-- Count
 			ba.append_short_integer (count);
@@ -352,26 +352,6 @@ feature
 			-- Is the current table an attribute table ?
 		do
 			-- Do nothing
-		end;
-
-feature -- DLE
-
-	was_polymorphic (type_id: INTEGER): BOOLEAN is
-			-- Was the table in the extendible system polymorphic from
-			-- entry indexed by `type_id' to the maximum entry id?
-		require
-			dynamic_system: System.is_dynamic;
-			positive: type_id > 0
-		deferred
-		end;
-
-	had_type_table: BOOLEAN is
-			-- Was a type table need for the current table in 
-			-- the extendible system?
-		require
-			dynamic_system: System.is_dynamic
-		do
-			Result := System.dle_type_set.has (rout_id)
 		end;
 
 end

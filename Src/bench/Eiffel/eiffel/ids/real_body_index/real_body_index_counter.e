@@ -20,8 +20,6 @@ feature -- Initialization
 		do
 			if Compilation_modes.is_precompiling then
 				!P_REAL_BODY_INDEX_SUBCOUNTER! Result.make (compilation_id)
-			elseif Compilation_modes.is_extending then
-				!DLE_REAL_BODY_INDEX_SUBCOUNTER! Result.make
 			else
 				!REAL_BODY_INDEX_SUBCOUNTER! Result.make
 			end

@@ -24,13 +24,7 @@ feature {NONE}
 	Poly_table_template: ROUT_TABLE is
 			-- Polymorphic table template
 		once
-			if System.is_dynamic then
-				!DYN_ROUT_TABLE! Result.make
-			elseif System.extendible then
-				!STAT_ROUT_TABLE! Result.make
-			else
-				!! Result.make
-			end
+			!! Result.make
 		end;
 
 end

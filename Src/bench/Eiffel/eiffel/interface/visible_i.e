@@ -110,15 +110,4 @@ feature
 			io.error.putstring (generator);
 		end;
 
-feature -- DLE
-
-	dle_generate_cecil_table (a_class: CLASS_C) is
-			-- Generate cecil table
-		require
-			has_visible: has_visible;
-			dynamic_system: System.is_dynamic;
-			a_class_not_void: a_class /= Void
-		do
-		end;
-
 end

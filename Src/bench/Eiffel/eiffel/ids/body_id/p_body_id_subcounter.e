@@ -47,9 +47,6 @@ feature {BODY_ID} -- Implementation
 			if p_type_id /= Void then
 				Result := P_buffer;
 				eif000 ($Result, type_id.compilation_id, compilation_id)
-			elseif type_id.is_dynamic then
-				Result := B_buffer;
-				eif011 ($Result, compilation_id)
 			else
 				Result := C_buffer;
 				eif011 ($Result, compilation_id)

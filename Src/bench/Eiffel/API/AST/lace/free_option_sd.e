@@ -9,12 +9,10 @@ inherit
 	OPTION_SD
 		redefine
 			set, process_system_level_options, is_system_level,
-			is_valid, is_free_option, is_extending, is_extendible
+			is_valid, is_free_option
 		end;
 
 	SHARED_RESCUE_STATUS;
-
-	SHARED_DYNAMIC_CALLS;
 
 	EIFFEL_ENV;
 
@@ -41,15 +39,7 @@ feature {COMPILER_EXPORTER}
 
 	is_valid: BOOLEAN is
 		do
-			if valid_options.has (option_name) then
-				inspect
-					valid_options.item (option_name)
-				when extending, extendible then
-					Result := dle_licensed
-				else
-					Result := True
-				end
-			end
+			Result := valid_options.has (option_name)
 		end;
 
 	is_system_level: BOOLEAN is
@@ -58,38 +48,25 @@ feature {COMPILER_EXPORTER}
 		do
 			if is_valid then
 				opt := valid_options.item (option_name)
-				Result := opt /= dynamic and then 
-					opt /= hide and then
+				Result := opt /= hide and then
 					opt /= document and then
 					opt /= profile
 			end;
-		end;
-
-	is_extending: BOOLEAN is
-		do
-			Result := is_valid and then
-				valid_options.item (option_name) = extending
-		end;
-
-	is_extendible: BOOLEAN is
-		do
-			Result := is_valid and then
-				valid_options.item (option_name) = extendible
 		end;
 
 feature {NONE}
 
 	dead_code, exception_stack_managed, collect,
 	code_replication, check_vape, array_optimization, inlining, 
-	inlining_size, server_file_size, extendible, extending,
-	dynamic, hide, override_cluster, address_expression, profile,
+	inlining_size, server_file_size,
+	hide, override_cluster, address_expression, profile,
 	document, hide_implementation, java_generation, line_generation,
 	multithreaded, dynamic_runtime, console_application: INTEGER is UNIQUE;
 
 	valid_options: HASH_TABLE [INTEGER, STRING] is
 			-- Possible values for free operators
 		once
-			!!Result.make (15);
+			!!Result.make (20);
 			Result.force (dead_code, "dead_code_removal");
 			Result.force (array_optimization, "array_optimization");
 			Result.force (inlining, "inlining");
@@ -99,9 +76,6 @@ feature {NONE}
 			Result.force (exception_stack_managed, "exception_trace");
 			Result.force (code_replication, "code_replication");
 			Result.force (server_file_size, "server_file_size");
-			Result.force (extendible, "extendible");
-			Result.force (extending, "extending");
-			Result.force (dynamic, "dynamic");
 			Result.force (hide, "hide");
 			Result.force (profile, "profile");
 			Result.force (override_cluster, "override_cluster");
@@ -124,7 +98,6 @@ feature {COMPILER_EXPORTER}
 		require else
 			is_valid
 		local
-			dynamic_sd: DYNAMIC_SD;
 			hide_sd: HIDE_SD;
 			document_sd: DOCUMENT_SD;
 			profile_sd: PROFILE_SD;
@@ -132,10 +105,7 @@ feature {COMPILER_EXPORTER}
 			opt: INTEGER
 		do
 			opt := valid_options.item (option_name);
-			if opt = dynamic then
-				!! dynamic_sd;
-				dynamic_sd.adapt (value, classes, list)	
-			elseif opt = hide then
+			if opt = hide then
 				!! hide_sd;
 				hide_sd.adapt (value, classes, list)	
 			elseif opt = hide_implementation then
@@ -271,20 +241,6 @@ feature {COMPILER_EXPORTER}
 					error_found := True;
 				end;
 
-			when extendible then
-				if value = Void or else not (value.is_no or value.is_yes) then
-					error_found := True
-				else
-					-- Do nothing: the normal case has already been solved
-				end
-
-			when extending then
-				if value = Void or else not value.is_name then
-					error_found := True
-				else
-					-- Do nothing: the normal case has already been solved
-				end
-
 			when override_cluster then
 				if value = void or else not value.is_name then
 					error_found := true
@@ -371,7 +327,7 @@ feature {COMPILER_EXPORTER}
 					error_found := True
 				end
 
-			when dynamic, hide then
+			when hide then
 					-- This has been taken care of in `adapt'.
 
 			when document then

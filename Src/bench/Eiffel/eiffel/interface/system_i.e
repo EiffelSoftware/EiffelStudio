@@ -43,7 +43,6 @@ inherit
 	SHARED_DECLARATIONS
 	SHARED_PASS
 	SHARED_RESCUE_STATUS
-	SHARED_DLE
 	COMPILER_EXPORTER
 	SHARED_EIFFEL_PROJECT
 	SHARED_CONFIGURE_RESOURCES
@@ -185,13 +184,9 @@ feature -- Properties
 	max_class_id: INTEGER
 			-- Greater class id: computed by class CLASS_SORTER
 
-	min_type_id: INTEGER is
+	min_type_id: INTEGER is 1
 			-- Value from which to start the dynamic type_id numbering
 			-- for newly created class types
-			-- (In the DC-set, will start from the max DR-system type_id)
-		do
-			Result := 1
-		end
 
 	melted_set: LINKED_SET [CLASS_C]
 			-- Set of class ids for which feature table needs to be updated
@@ -329,7 +324,6 @@ feature -- Properties
 			!! rout_info_table.make (500)
 			!! onbidt.make (50)
 			!! optimization_tables.make
-			!! dle_frozen_nobid_table.make (50)
 
 				-- Address table
 			!! address_table.make (100)
@@ -589,10 +583,6 @@ end
 				freeze_set2.prune (a_class)
 				melted_set.prune (a_class)
 				classes.remove (id)
-					-- Remove `id' from the set of dynamic class ids
-					-- when associated class is part of DC-set.
-					-- Do nothing otherwise.
-				remove_dynamic_class_id (id)
 
 					-- Remove client/supplier syntactical relations
 					-- and remove classes recursively
@@ -886,9 +876,7 @@ end
 			end
 			new_class := False
 
-			if Compilation_modes.is_extending then
-				remove_useless_classes
-			elseif
+			if
 				not Compilation_modes.is_precompiling and
 				not Lace.compile_all_classes
 			then
@@ -936,12 +924,7 @@ end
 				-- heirs after
 			process_pass (pass2_controler)
 
-			if Compilation_modes.is_extending then
-					-- Check each descendant of DYNAMIC in the DC-set is not
-					-- generic and include a `make' procedure with one argument
-					-- of type ANY in its creation clause.
-				Universe.check_descendants_of_dynamic
-			elseif
+			if
 				not Compilation_modes.is_precompiling and
 				not Lace.compile_all_classes
 			then
@@ -984,7 +967,6 @@ end
 				deg_output.put_melting_changes_message
 
 				execution_table.set_levels
-				dispatch_table.set_levels
 					-- Create a non-empty update file ("melted.eif")
 				make_update (False)
 debug ("VERBOSE")
@@ -1090,10 +1072,6 @@ end
 				end
 				local_classes.forth
 			end
-
-				-- Mark the descendants of DYNAMIC when compiling
-				-- DLE's DC-set. Do nothing otherwise.
-			mark_dynamic_classes (marked_classes)
 
 				-- Remove all the classes that cannot be reached if they are
 				-- not protected
@@ -1206,7 +1184,6 @@ end
 			pass4_changed_classes := pass4_controler.changed_classes
 			if
 				not Compilation_modes.is_precompiling and
-				not Compilation_modes.is_extending and
 				not Lace.compile_all_classes
 			then
 				from
@@ -1470,9 +1447,6 @@ end
 				else
 					write_int (file_pointer, 0)
 				end
-					-- Write the new `dle_level' 
-					-- (`dle_frozen_level' has the same value).
-				write_int (file_pointer, dle_level)
 				make_update_feature_tables (melted_file)
 				make_update_rout_id_arrays (melted_file)
 					-- Write first the new size of the dispatch table
@@ -1813,7 +1787,6 @@ end
 				-- DLE: get rid of the data stored during the last
 				-- final mode compilation normally used when finalizing
 				-- the Dynamic Class Set.
-			clear_dle_finalization_data
 		end
 
 feature -- Freeezing
@@ -1831,17 +1804,10 @@ feature -- Freeezing
 			deg_output: DEGREE_OUTPUT
 		do
 			freezing_occurred := True
-			if Compilation_modes.is_extending then
-				!WBENCH_DLE_MAKER!makefile_generator.make
+			if Compilation_modes.is_precompiling then
+				!PRECOMP_MAKER!makefile_generator.make
 			else
-				dle_frozen_nobid_table.clear_all
-				dle_frozen_nobid_table.set_threshold
-						(body_id_counter.total_count)
-				if Compilation_modes.is_precompiling then
-					!PRECOMP_MAKER!makefile_generator.make
-				else
-					!WBENCH_MAKER!makefile_generator.make
-				end
+				!WBENCH_MAKER!makefile_generator.make
 			end
 				-- Re-process dynamic types
 			-- FIXME
@@ -2003,44 +1969,41 @@ end
 			degree_message := "Generation of auxiliary files"
 			deg_output := Degree_output
 
-			deg_output.display_degree_output (degree_message, 11, 12)
+			deg_output.display_degree_output (degree_message, 11, 11)
 			generate_skeletons
 
-			deg_output.display_degree_output (degree_message, 10, 12)
+			deg_output.display_degree_output (degree_message, 10, 11)
 			generate_cecil
 
-			deg_output.display_degree_output (degree_message, 9, 12)
+			deg_output.display_degree_output (degree_message, 9, 11)
 			t.generate_conformance_table
 			is_conformance_table_melted := False
 			melted_conformance_table := Void
 
-			deg_output.display_degree_output (degree_message, 8, 12)
+			deg_output.display_degree_output (degree_message, 8, 11)
 			t.generate_plug
 			--generate_plug
 
-			deg_output.display_degree_output (degree_message, 7, 12)
+			deg_output.display_degree_output (degree_message, 7, 11)
 			generate_init_file
 
-			deg_output.display_degree_output (degree_message, 6, 12)
+			deg_output.display_degree_output (degree_message, 6, 11)
 			generate_option_file
 			address_table.generate (False)
 
-			deg_output.display_degree_output (degree_message, 5, 12)
+			deg_output.display_degree_output (degree_message, 5, 11)
 			generate_rout_info_table
 
-			deg_output.display_degree_output (degree_message, 4, 12)
+			deg_output.display_degree_output (degree_message, 4, 11)
 			generate_pattern_table
 
-			deg_output.display_degree_output (degree_message, 3, 12)
+			deg_output.display_degree_output (degree_message, 3, 11)
 			generate_dispatch_table
 
-			deg_output.display_degree_output (degree_message, 2, 12)
+			deg_output.display_degree_output (degree_message, 2, 11)
 			generate_exec_table
 
-			deg_output.display_degree_output (degree_message, 1, 12)
-			generate_dle_file
-
-			deg_output.display_degree_output (degree_message, 0, 12)
+			deg_output.display_degree_output (degree_message, 0, 11)
 			t.generate_make_file
 
 				-- Create an empty update file ("melted.eif")
@@ -2103,7 +2066,6 @@ end
 				-- is re-built now.
 			frozen_level := execution_table.frozen_level
 			execution_table.set_levels
-			dispatch_table.set_levels
 
 				-- Freeze the external table: reset the real body ids,
 				-- remove all unused externals and make the duplication
@@ -2134,11 +2096,6 @@ feature -- Final mode generation
 		do
 
 			keep_assertions := keep_assert and then Lace.has_assertions
-
-			if extendible then
-					-- Table of statically bound feature calls.
-				!! dle_static_calls.make
-			end
 
 				-- Save the value of `remover_off'
 				-- and `exception_stack_managed'
@@ -2173,12 +2130,6 @@ feature -- Final mode generation
 			end
 			tmp_opt_byte_server.flush
 
-				-- DLE stuff. Do nothing if system is not dynamic. Otherwise
-				-- check whether some feature calls have been statically bound
-				-- in the extendible system, but need to be dynamically bound
-				-- because of the DC-set.
-			check_static_calls
-				
 			-- FIXME
 			--process_dynamic_types
 
@@ -2188,27 +2139,10 @@ feature -- Final mode generation
 
 			generate_main_finalized_eiffel_files
 	
-			if extendible then
-					-- Keep track of the generated data for the
-					-- DC-Set finalization.
-				generate_static_log_file
-				dle_poly_server := Tmp_poly_server
-				dle_poly_server.flush
-				dle_static_calls.flush
-				!! dle_eiffel_table.make (Eiffel_table)
-				dle_remover := remover
-				if dle_remover /= Void then
-					dle_remover.dle_clean
-				end
-			else
-				Tmp_poly_server.clear
-			end
+			Tmp_poly_server.clear
 
 				-- Clean Eiffel table
 			Eiffel_table.wipe_out
-			if is_dynamic then
-				Old_eiffel_table.wipe_out
-			end
 			Tmp_opt_byte_server.clear
 
 			remover := Void
@@ -2223,7 +2157,6 @@ feature -- Final mode generation
 			Tmp_poly_server.clear
 			Tmp_opt_byte_server.flush
 			Tmp_opt_byte_server.clear
-			clear_dle_finalization_data
 		end
 
 	degree_minus_4 is
@@ -2352,9 +2285,6 @@ feature -- Dead code removal
 						if a_class.visible_level.has_visible then
 							a_class.mark_visible (remover)
 						end
-							-- Protection of features of descendants
-							-- of DYNAMIC in the DC-set.
-						mark_dynamic_descendant_used (a_class)
 					end
 					i := i + 1
 				end
@@ -2417,50 +2347,43 @@ feature -- Generation
 			deg_output := Degree_output
 
 				-- Address table
-			deg_output.display_degree_output (degree_message, 10, 11)
+			deg_output.display_degree_output (degree_message, 10, 10)
 			address_table.generate (True)
 
 				-- Generation of type size table
-			deg_output.display_degree_output (degree_message, 9, 11)
+			deg_output.display_degree_output (degree_message, 9, 10)
 			generate_size_table
 
 				-- Generation of the reference number table
-			deg_output.display_degree_output (degree_message, 8, 11)
+			deg_output.display_degree_output (degree_message, 8, 10)
 			generate_reference_table
 
 				-- Generation of the skeletons
-			deg_output.display_degree_output (degree_message, 7, 11)
+			deg_output.display_degree_output (degree_message, 7, 10)
 			generate_skeletons
 
 				-- Cecil structures generation
-			deg_output.display_degree_output (degree_message, 6, 11)
+			deg_output.display_degree_output (degree_message, 6, 10)
 			generate_cecil
 
 				-- Generation of the conformance table
-			deg_output.display_degree_output (degree_message, 5, 11)
+			deg_output.display_degree_output (degree_message, 5, 10)
 			t.generate_conformance_table
 
 				-- Routine table generation
-			deg_output.display_degree_output (degree_message, 4, 11)
+			deg_output.display_degree_output (degree_message, 4, 10)
 			generate_routine_table
 
 				-- Generate plug with run-time.
-				-- The plug file has to be generated after the routine
-				-- table for `dle_max_min_used' to be initialized when
-				-- using DLE stuff.
-			deg_output.display_degree_output (degree_message, 3, 11)
+			deg_output.display_degree_output (degree_message, 3, 10)
 			t.generate_plug
 			--generate_plug
 
-				-- Generate DLE file
-			deg_output.display_degree_output (degree_message, 2, 11)
-			generate_dle_file
-
-			deg_output.display_degree_output (degree_message, 1, 11)
+			deg_output.display_degree_output (degree_message, 1, 10)
 			generate_init_file
 
 				-- Generate makefile
-			deg_output.display_degree_output (degree_message, 0, 11)
+			deg_output.display_degree_output (degree_message, 0, 10)
 			t.generate_make_file
 
 			if System.has_separate then
@@ -2509,7 +2432,7 @@ end
 				-- Iteration on `class_list' in order to compute new type
 				-- id's
 			from
-				type_id_counter.set_value (min_type_id - 1)
+				type_id_counter.set_value (0)	-- 0 = min_type_id - 1
 				i := 1
 			until
 				i > nb
@@ -2576,7 +2499,6 @@ end
 
 			generate_initialization_table
 			generate_dispose_table
-			generate_dle_make_table
 
 			Attr_generator.finish
 			Rout_generator.finish
@@ -3040,7 +2962,7 @@ end
 			class_type: CLASS_TYPE
 		do
 			from
-				rout_table := new_special_table
+				!! rout_table.make
 				rout_table.set_rout_id (routine_id_counter.initialization_rout_id)
 				i := 1
 				nb := Type_id_counter.value
@@ -3061,20 +2983,6 @@ end
 				i := i + 1
 			end
 			rout_table.write
-		end
-
-	new_special_table: SPECIAL_TABLE is
-			-- New special routine table used during the generation
-			-- of the dispose routine table and the initialization
-			-- routine table
-		do
-			if extendible then
-				!STAT_SPECIAL_TABLE! Result.make
-			elseif is_dynamic then
-				!DYN_SPECIAL_TABLE! Result.make
-			else
-				!! Result.make
-			end
 		end
 
 feature -- Dispose routine
@@ -3144,7 +3052,7 @@ feature -- Dispose routine
 			written_class: CLASS_C
 		do
 			from
-				rout_table := new_special_table
+				!! rout_table.make
 				rout_table.set_rout_id (routine_id_counter.dispose_rout_id)
 				i := 1
 				nb := Type_id_counter.value
@@ -3469,13 +3377,7 @@ feature -- Pattern table generation
 					-- Set the frozen level
 				Initialization_file.putstring (";%N%Tzeroc = ")
 				Initialization_file.putint (frozen_level)
-					-- Set the dle level
-				Initialization_file.putstring (";%N%Tdle_level = ")
-				Initialization_file.putint (dle_level)
-					-- Set the dle zeroc
-				Initialization_file.putstring (";%N%Tdle_zeroc = ")
-				Initialization_file.putint (dle_frozen_level)
-				Initialization_file.putstring (";%N}%N"); -- MT
+				Initialization_file.putstring (";%N}%N")
 			end
 
 			-- Module initialization routine 'egc_system_mod_init_init'
@@ -3811,228 +3713,6 @@ feature {NONE} -- External features
 			"C"
 		end
 
-feature -- DLE
-
-	is_dynamic: BOOLEAN is do end
-			-- Is the current system a Dynamic Class Set?
-
-	extendible: BOOLEAN
-			-- Is the current system dynamically extendible?
-
-	set_extendible (b: BOOLEAN) is
-			-- Assign `b' to `extendible'.
-		do
-			extendible := b
-		end
-
-	Table_prefix: STRING is
-			-- Prefix of table names in DLE mode
-		once
-			if System.extendible then
-				Result := static_prefix
-			elseif System.is_dynamic then
-				Result := dynamic_prefix
-			else
-				Result := ""
-			end
-		end
-
-	dle_max_topo_id: INTEGER is
-			-- Greatest topological class id of the static system
-			--| Only used in the DC-Set system
-		require
-			dymanic_system: is_dynamic
-		do
-		end
-
-	dle_type_set: ROUT_ID_SET is
-			-- Set of the routine ids for which a type table should
-			-- have been generated in the extendible system
-			--| Only used in the DC-Set system
-		require
-			dymanic_system: is_dynamic
-		do
-		end
-
-	dle_level: INTEGER is
-			-- If the body_id of a routine is greater than this value,
-			-- then this routine is part of the Dynamic Class Set
-		do
-			Result := execution_table.dle_level
-		end
-
-	dle_frozen_level: INTEGER is
-			-- Limit between frozen and melted body_ids in the
-			-- Dynamic Class Set
-		do
-			Result := execution_table.dle_frozen_level
-		end
-
-	dle_poly_server: TMP_POLY_SERVER
-			-- Server of polymorphic unit tables generated when
-			-- finalizing a dynamically extendible system
-
-	dle_eiffel_table: DLE_EIFFEL_HISTORY
-			-- Array of data tables for the final Eiffel executable
-			-- (Generated when finalizing an extendible system)
-
-	dle_frozen_nobid_table: NEW_OLD_TABLE [BODY_ID]
-			-- Frozen New/Old body id table; Keep track of body_id
-			-- modifications since last time the static system has
-			-- been frozen
-
-	dle_finalized_nobid_table: NEW_OLD_TABLE [BODY_ID] is
-			-- Finalized New/Old body id table; Keep track of body_id
-			-- modifications between finalization of the static system
-			-- and finalization of the dynamic system
-		require
-			dynamic_system: System.is_dynamic
-		do
-		end
-
-	dle_static_calls: STAT_CALL_SERVER
-			-- Feature calls which have been statically bound during
-			-- the last finalization of the extendible system
-
-	dle_remover: REMOVER
-			-- Dead code removal control of the static system
-
-	dle_system_name: STRING is
-			-- Name of the static system
-		require
-			dynamic_system: is_dynamic
-		do
-		end
-
-	dynamic_class_ids: SEARCH_TABLE [CLASS_ID] is
-			-- Set of ids of dynamic classes
-		require
-			dynamic_system: is_dynamic
-		do
-		ensure
-			not_void: Result /= Void
-		end
-
-	remove_dynamic_class_id (id: CLASS_ID) is
-			-- Remove `id' from the set of dynamic class id.
-			-- when associated class is part of DC-set.
-			-- Do nothing otherwise.
-		require
-			id_not_void: id /= Void
-		do
-		end
-
-	mark_dynamic_classes (marked_classes: SEARCH_TABLE [CLASS_ID]) is
-			-- Mark the descendants of DYNAMIC in the DC-set.
-		require
-			marked_classes_not_void: marked_classes /= Void
-		do
-		end
-
-	mark_dynamic_descendant_used (a_class: CLASS_C) is
-			-- Mark features of descendants of DYNAMIC in the DC-set as used.
-		require
-			a_class_not_void: a_class /= Void
-			remover_not_void: remover /= Void
-		do
-		end
-
-	was_used (f: FEATURE_I): BOOLEAN is
-			-- Was feature `f' used in the static system?
-		require
-			dynamic_system: is_dynamic
-			good_argument: f /= Void
-		do
-			Result := dle_remover = Void or else dle_remover.was_alive (f)
-		end
-
-	check_dle_finalize is
-		do
-		end
-
-	clear_dle_finalization_data is
-			-- Get rid of the data stored during the last
-			-- final mode compilation normally used when finalizing
-			-- the Dynamic Class Set.
-		do
-			if dle_poly_server /= Void then
-				dle_poly_server.clear
-			end
-			dle_poly_server := Void
-			dle_eiffel_table := Void
-			dle_remover := Void
-			if dle_static_calls /= Void then
-				dle_static_calls.clear
-				dle_static_calls := Void
-			end
-		end
-
-	generate_static_log_file is
-			-- Generate the names of the statically bound feature calls
-		require
-			final_mode: in_final_mode
-			dle_static_calls_not_void: dle_static_calls /= Void
-		local
-			log_file: REMOVED_FEAT_LOG_FILE
-			f_name: FILE_NAME
-			type_id: INTEGER
-			rout_id: ROUTINE_ID
-			server_id: INTEGER_ID
-			rout_ids: DLE_STATIC_CALLS
-			feature_table: FEATURE_TABLE
-			feat: FEATURE_I
-			c_type: CLASS_TYPE
-		do
-			!!f_name.make_from_string (Final_generation_path)
-			f_name.set_file_name (Static_log_file_name)
-			!! log_file.make (f_name)
-			log_file.open_write
-			from
-				dle_static_calls.start
-			until
-				dle_static_calls.after
-			loop
-				server_id := dle_static_calls.key_for_iteration
-				rout_ids := dle_static_calls.item (server_id)
-				type_id := server_id.id
-				c_type := class_types.item (type_id)
-				feature_table := c_type.associated_class.feature_table
-				from
-					rout_ids.start
-				until
-					rout_ids.after
-				loop
-					rout_id := rout_ids.item
-					feat := feature_table.feature_of_rout_id (rout_id)
-					if feat /= Void then
-						log_file.add (c_type, feat.feature_name)
-					end
-					rout_ids.forth
-				end
-				dle_static_calls.forth
-			end
-			log_file.close
-		end
-
-	generate_dle_file is
-			-- Generate DLE related data to be loaded at run-time.
-		do
-		end
-
-	generate_dle_make_table is
-			-- Generate the table of `make' creation procedures of
-			-- the descendants of DYNAMIC in the DC-set.
-		do
-		end
-
-	check_static_calls is
-			-- Do nothing if system is not dynamic. Otherwise
-			-- check whether some feature calls have been statically bound
-			-- in the extendible system, but need to be dynamically bound
-			-- because of the DC-set.
-		do
-		end
-
 feature -- Concurrent Eiffel
 
 	Concurrent_eiffel: BOOLEAN is
@@ -4059,9 +3739,5 @@ feature -- Concurrent Eiffel
 				set_freeze
 			end
 		end
-
-invariant
-
-	dle_constraint: not (is_dynamic and extendible)
 
 end -- class SYSTEM_I

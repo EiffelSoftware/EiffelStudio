@@ -67,15 +67,10 @@ feature {COMPILER_EXPORTER} -- Lace compilation
 			Use_properties.clear_all;
 			Eiffel_system.wipe_out_sub_clusters;
 
-			if System.is_dynamic then
-					-- First re-insert the static clusters into the
-					-- universe (when compiling a dynamic class set).
-				build_static
-			else
-					-- First re-insert the precompiled clusters into the
-					-- universe.
-				build_precompiled
-			end;
+				-- First re-insert the precompiled clusters into the
+				-- universe.
+			build_precompiled
+
 				-- Then build the clusters with the files *.e found
 				-- in the clusters
 			build_clusters;
@@ -85,15 +80,9 @@ feature {COMPILER_EXPORTER} -- Lace compilation
 				-- Second adaptation of Use files
 			adapt_use;
 
-			if System.is_dynamic then
-				update_dle_clusters;
-					-- Remove inexistant clusters from the system
-				process_removed_dle_clusters
-			else
-				update_clusters;
-					-- Remove inexistant clusters from the system
-				process_removed_clusters
-			end;
+			update_clusters;
+				-- Remove inexistant clusters from the system
+			process_removed_clusters
 
 			Degree_output.put_end_degree_6;
 
@@ -482,180 +471,6 @@ feature {NONE} -- Incrementality
 					parent_cluster.add_sub_cluster (new_cluster)
 				end
 			end
-		end;
-
-feature {COMPILER_EXPORTER} -- DLE
-
-	build_static is
-			-- Re-insert the static clusters into the unverse.
-			-- Do not insert precompiled clusters since they 
-			-- already have been re-inserted.
-		require
-			dynamic_system: System.is_dynamic
-		local
-			old_clusters: LINKED_LIST [CLUSTER_I];
-			old_cluster, cluster: CLUSTER_I
-		do
-			from
-				old_clusters := Lace.old_universe.clusters;
-				old_clusters.start
-			until
-				old_clusters.after
-			loop
-				old_cluster := old_clusters.item;
-				if old_cluster.is_static then
-					!! cluster.make_from_old_cluster (old_cluster);
-					Universe.insert_cluster (cluster)
-				end;
-				old_clusters.forth
-			end
-		end;
-
-	update_dle_clusters is
-			-- Update the dynamic clusters: remove the classes removed
-			-- from the system, examine the differences in the
-			-- ignore and rename clauses. 
-		require
-			dynamic_system: System.is_dynamic
-		local
-			cluster_list: LINKED_LIST [CLUSTER_I];
-			cluster: CLUSTER_I
-		do
-			from
-				cluster_list := Universe.clusters;
-				cluster_list.start
-			until
-				cluster_list.after
-			loop
-				cluster := cluster_list.item;
-				if cluster.is_dynamic then
-					cluster.update_cluster
-				end;
-				cluster_list.forth
-			end
-		end;
-
-	process_removed_dle_clusters is
-			-- Remove the classes from the clusters removed from the system
-			-- Ignore static clusters.
-		require
-			dynamic_system: System.is_dynamic
-		local
-			old_clusters: LINKED_LIST [CLUSTER_I];
-			old_cluster: CLUSTER_I
-		do
-			old_clusters := Lace.old_universe.clusters;
-			from
-				old_clusters.start
-			until
-				old_clusters.after
-			loop
-				old_cluster := old_clusters.item;
-				if not Universe.has_cluster_of_path (old_cluster.path) then
-						-- Defensive programming test. The old cluster
-						-- should never be static at this stage. 
-					if old_cluster.is_dynamic then
-						old_cluster.remove_cluster
-					end
-				end;
-				old_clusters.forth
-			end
-		end;
-
-	extendible_project_name: STRING is
-			-- Directory name of the dynamically extendible system;
-			-- Check also whether the combination of options is valid
-		local
-			precomp_found, found: BOOLEAN;
-			extendible: BOOLEAN;
-			d_option: D_OPTION_SD;
-			value: OPT_VAL_SD;
-			string_value: STRING;
-			v9xc: V9XC;
-			v9xq: V9XQ;
-			v9xd: V9XD;
-			v9xp: V9XP;
-			v9dp: V9DP;
-			v9cd: V9CD;
-			v9cx: V9CX
-		do
-			if defaults /= Void then
-				from
-					defaults.start
-				until
-					defaults.after
-				loop
-					d_option := defaults.item;
-					if d_option.option.is_extending then
-						if found then
-								-- Two `extending' options in the same Ace.
-							!!v9xc;
-							Error_handler.insert_error (v9xc);
-							Error_handler.raise_error
-						elseif Compilation_modes.is_precompiling then
-								-- `exdending' option when precompiling.
-							!!v9xq;
-							Error_handler.insert_error (v9xq);
-							Error_handler.raise_error
-						else
-							found := True;
-							value := d_option.value;
-							if value.is_name then
-									-- If it is not a NAME_SD, the normal
-									-- adapt will trigger the error
-								Result := value.value
-							end
-						end
-					elseif d_option.option.is_extendible then
-						value := d_option.value;
-						if value.is_no then
-							extendible := false
-						elseif value.is_yes then
-							extendible := true
-						end
-					elseif d_option.option.is_precompiled then
-						precomp_found := true
-					end;
-					defaults.forth
-				end
-			end;
-			if Result /= Void then
-				if extendible then
-						-- `extendible' and `extending' options in the same Ace.
-					!!v9xd;
-					Error_handler.insert_error (v9xd);
-					Error_handler.raise_error
-				elseif precomp_found then
-						-- `extending' and `precompiled' options in the same Ace
-					!!v9xp;
-					Error_handler.insert_error (v9xp);
-					Error_handler.raise_error
-				end
-			end;
-			if extendible and Compilation_modes.is_precompiling then
-					-- `extendible' option when precompiling.
-				!!v9dp;
-				Error_handler.insert_error (v9dp);
-				Error_handler.raise_error
-			end;
-			if Lace.not_first_parsing then
-				if extendible /= System.extendible then
-						-- Cannot change the `extendible' status between
-						-- two compilations.
-					!!v9cd;
-					Error_handler.insert_error (v9cd);
-					Error_handler.raise_error
-				end;
-				if Result /= Void xor System.is_dynamic then
-						-- Cannot change the `extending' status between
-						-- two compilations.
-					!!v9cx;
-					Error_handler.insert_error (v9cx);
-					Error_handler.raise_error
-				end
-			end;
-			Compilation_modes.set_is_extending (Result /= Void)
-			Compilation_modes.set_is_extendible (extendible)
 		end;
 
 end -- class ACE_SD

@@ -427,11 +427,6 @@ feature {COMPILER_EXPORTER} -- Implementation
 			system.set_double_ref_class (unique_class("double_ref"))
 			system.set_pointer_ref_class (unique_class("pointer_ref"))
 			system.set_memory_class_i (unique_class ("memory"))
-			if System.is_dynamic then
-				System.set_dynamic_class (unique_class ("dynamic"))
-			elseif System.extendible then
-				System.set_dynamic_class (dle_unique_class ("dynamic"))
-			end
 				-- Check sum error
 			Error_handler.checksum
 		end
@@ -721,80 +716,6 @@ feature {COMPILER_EXPORTER} -- Precompilation
 				clusters.after
 			loop
 				clusters.item.set_is_precompiled (precomp_ids)
-				clusters.forth
-			end
-		end
-
-feature {COMPILER_EXPORTER} -- DLE Implementation
-
-	reset_dle_clusters is
-			-- Reset all the DC-set clusters.
-		require
-			dynamic_system: System.is_dynamic
-		local
-			a_cluster: CLUSTER_I
-		do
-			from
-				clusters.start
-			until
-				clusters.after
-			loop
-				a_cluster := clusters.item
-				if a_cluster.is_dynamic then
-					a_cluster.reset_cluster
-				end
-				clusters.forth
-			end
-		end
-
-	check_descendants_of_dynamic is
-			-- Check each descendant of DYNAMIC in the DC-set is not
-			-- generic and include a `make' procedure with one argument
-			-- of type ANY in its creation clause.
-		require
-			dynamic_system: System.is_dynamic
-		do
-			from
-				clusters.start
-			until
-				clusters.after
-			loop
-				clusters.item.check_descendants_of_dynamic
-				clusters.forth
-			end
-		end
-
-	dle_unique_class (class_name: STRING): CLASS_I is
-			-- Search for unique class `class_name' in the universe.
-			-- Does not complain if this class does not exist.
-		require
-			good_argument: class_name /= Void
-		local
-			cluster: CLUSTER_I
-			vd24: VD24
-			old_cursor: CURSOR
-		do
-			from
-				clusters.start
-			until
-				clusters.after
-			loop
-				cluster := clusters.item
-				old_cursor := clusters.cursor
-				compute_last_class (class_name, cluster)
-				if
-					Result /= Void and
-					last_class /= Void and
-					last_class /= Result
-				then
-					!!vd24
-					vd24.set_cluster (cluster)
-					vd24.set_other_cluster (Result.cluster)
-					vd24.set_class_name (class_name)
-					Error_handler.insert_error (vd24)
-				end
-				Result := last_class
-				clusters.go_to (old_cursor)
 				clusters.forth
 			end
 		end

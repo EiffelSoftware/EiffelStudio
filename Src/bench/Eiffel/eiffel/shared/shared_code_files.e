@@ -80,13 +80,6 @@ feature {NONE}
 			!!Result.make (gen_file_name (final_mode, Eplug));
 		end;
 
-	DLE_f (final_mode: BOOLEAN): INDENT_FILE is
-			-- File where miscellenaeous DLE related data
-			-- are genrated
-		do
-			!!Result.make (gen_file_name (final_mode, Edle));
-		end;
-
 	Pattern_file: INDENT_FILE is
 			-- File where all the pattern for the workbench mode
 			-- are generated

@@ -232,7 +232,7 @@ feature {NONE} -- Generation
 					type_id_array.put (a_type.type_id, a_type.id.id)
 
 					gen_file.putstring ("char *(*")
-					gen_file.putstring (dle_prefix)
+					gen_file.putstring ("f")
 					gen_file.putstring ("eif_address_t")
 					gen_file.putint (a_type.id.id)
 					gen_file.putstring ("[])() = {%N")
@@ -245,7 +245,7 @@ feature {NONE} -- Generation
 					loop
 						if sorted_set.has (i) then
 							gen_file.putstring ("(char *(*)())")
-							gen_file.putstring (dle_prefix)
+							gen_file.putstring ("f")
 							gen_file.putstring (a_type.id.address_table_name (i))
 							gen_file.putstring (",%N")
 						else
@@ -263,7 +263,7 @@ feature {NONE} -- Generation
 			end
 
 			gen_file.putstring ("%N%Nstatic fnptr *")
-			gen_file.putstring (dle_prefix)
+			gen_file.putstring ("f")
 			gen_file.putstring ("eif_address_table[] = {%N")
 
 			from
@@ -279,7 +279,7 @@ feature {NONE} -- Generation
 						a_class := a_type.associated_class
 						if class_has_dollar_operator (a_class.id) then
 							gen_file.putstring ("(fnptr *) ")
-							gen_file.putstring (dle_prefix)
+							gen_file.putstring ("f")
 							gen_file.putstring ("eif_address_t")
 							gen_file.putint (a_type.id.id)
 							gen_file.putstring (" - ")
@@ -297,13 +297,7 @@ feature {NONE} -- Generation
 				i := i + 1
 			end
 
-			gen_file.putstring ("};%N%N")
-
-			if System.extendible then
-				gen_file.putstring ("fnptr **egc_address_table_init = Seif_address_table;%N%N")
-			elseif not System.is_dynamic then
-				gen_file.putstring ("fnptr **egc_address_table_init = feif_address_table;%N%N")
-			end
+			gen_file.putstring ("};%N%Nfnptr **egc_address_table_init = feif_address_table;%N%N")
 		end
 
 	solved_type (type_a: TYPE_A): TYPE_C is
@@ -422,7 +416,7 @@ feature {NONE} -- Generation
 				c_return_type := solved_type (return_type)
 				return_type_string := c_return_type.c_string
 
-				f_name := clone (dle_prefix)
+				f_name := "f"
 				f_name.append (function_name)
 
 				if has_arguments then
@@ -506,20 +500,6 @@ feature {NONE} -- Generation
 
 				types.go_to (cursor)
 				types.forth
-			end
-		end
-
-feature {NONE} -- DLE
-
-	dle_prefix: STRING is
-			-- Prefix for generated variable names
-		once
-			if System.is_dynamic then
-				Result := "D"
-			elseif System.extendible then
-				Result := "S"
-			else
-				Result := "f"
 			end
 		end
 

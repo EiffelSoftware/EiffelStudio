@@ -3,11 +3,11 @@
 class SPECIAL_ENTRY 
 
 inherit
-
 	SHARED_BODY_ID;
+
 	ROUT_ENTRY
 		redefine
-			body_id, routine_name, used, was_used
+			body_id, routine_name, used
 		end
 
 feature -- Kind
@@ -26,8 +26,7 @@ feature
 	routine_name: STRING is
 			-- Internal name
 		do
-			Result := body_id.feature_name
-				(System.class_type_of_id (written_type_id).id)
+			Result := body_id.feature_name (System.class_type_of_id (written_type_id).id)
 		end;
 
 	used: BOOLEAN is
@@ -37,27 +36,9 @@ feature
 		do
 			remover := System.remover;
 			Result :=	remover = Void			-- Workbench mode
-						or else
-						System.remover_off		-- Dead code removal disconnected
-						or else
-						equal (body_id, Initialization_body_id)
-						or else
-						remover.is_body_alive (body_id)	-- Final mode
-		end;
-
-feature -- DLE
-
-	was_used: BOOLEAN is
-			-- Was the entry used in the extendible system?
-		local
-			remover: REMOVER
-		do
-			if type_id < System.min_type_id then
-				remover := System.dle_remover;
-				Result :=	remover = Void or else
-							equal (body_id, Initialization_body_id) or else
-							remover.was_body_alive (body_id)
-			end
+						or else System.remover_off		-- Dead code removal disconnected
+						or else equal (body_id, Initialization_body_id)
+						or else remover.is_body_alive (body_id)	-- Final mode
 		end;
 
 end

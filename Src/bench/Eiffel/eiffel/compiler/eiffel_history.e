@@ -74,17 +74,6 @@ feature
 			!!used.make (1);
 		end;
 
-feature -- DLE
-
-	init_dle (other: EIFFEL_HISTORY) is
-			-- Initialization of `used' with information of `other'.
-		require
-			dynamic_system: System.is_dynamic;
-			other_exists: other /= Void
-		do
-			used := clone (other.used)
-		end;
-
 feature {EIFFEL_HISTORY} -- Implementation
 
 	used: SEARCH_TABLE [ROUTINE_ID];

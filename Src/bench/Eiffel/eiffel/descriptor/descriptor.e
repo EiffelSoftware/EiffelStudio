@@ -250,14 +250,7 @@ feature -- Melting
 
 feature -- DLE
 
-	Init_macro: STRING is
+	Init_macro: STRING is "IDSC"
 			-- Macro for descriptor initialization
-		once
-			if System.is_dynamic then
-				Result := "IMDSC"
-			else
-				Result := "IDSC"
-			end
-		end;
 
 end

@@ -15,7 +15,7 @@ feature -- Initialization
 
 	make is
 		do
-			{CACHE} precursor
+			{CACHE} Precursor
 			!! files.make (Chunk)
 			!! file_counter.make
 		end
@@ -105,9 +105,9 @@ end;
 			loop
 				file := local_files.item_for_iteration;
 				if
-					file /= Void and then
-					not (file.precompiled or file.is_static) and then
-					file.occurence = 0
+					file /= Void
+					and then not file.precompiled
+					and then file.occurence = 0
 				then
 					remove_file (file);
 				end;
@@ -221,7 +221,7 @@ feature -- Status report
 			loop
 				file:= local_files.item_for_iteration;
 				if file /= Void and then file.exists then
-					if file.precompiled or file.is_static then
+					if file.precompiled then
 						Result := file.is_readable
 					else
 						Result := (file.is_readable and file.is_writable)

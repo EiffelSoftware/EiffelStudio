@@ -195,14 +195,6 @@ feature -- Check
 --			end;
 		end
 
-	check_extendible is
-			-- Check that `Current' is a valid dynamically extendible
-			-- project.
-		do
-			is_precompile := False;
-			check_project_directory
-		end;
-
 feature {COMPILER_EXPORTER, E_PROJECT} -- Update
 
 	update_path is
@@ -251,7 +243,6 @@ feature {NONE} -- Implementation
 			d: DIRECTORY;
 			dn: DIRECTORY_NAME;
 			vd42: VD42;
-			v9rd: V9RD;
 			i: INTEGER
 		do
 			if is_valid then
@@ -269,18 +260,11 @@ feature {NONE} -- Implementation
 					d.exists and then
 					d.is_readable and then
 					d.is_executable
-				if not is_valid then
-					if is_precompile then
-						!! vd42;
-						vd42.set_path (dn);
-						vd42.set_is_directory;
-						Error_handler.insert_error (vd42);
-					else
-						!! v9rd;
-						v9rd.set_path (dn);
-						v9rd.set_is_directory;
-						Error_handler.insert_error (v9rd);
-					end;
+				if not is_valid and then is_precompile then
+					!! vd42;
+					vd42.set_path (dn);
+					vd42.set_is_directory;
+					Error_handler.insert_error (vd42);
 				end
 			end
 		end;
@@ -292,7 +276,6 @@ feature {NONE} -- Implementation
 			f: RAW_FILE;
 			fn: FILE_NAME;
 			vd42: VD42;
-			v9rd: V9RD;
 			i: INTEGER
 		do
 			if is_valid then
@@ -311,16 +294,10 @@ feature {NONE} -- Implementation
 					f.exists and then
 					f.is_plain and then
 					f.is_readable
-				if not is_valid then
-					if is_precompile then
-						!! vd42;
-						vd42.set_path (fn);
-						Error_handler.insert_error (vd42);
-					else
-						!! v9rd;
-						v9rd.set_path (fn);
-						Error_handler.insert_error (v9rd);
-					end	
+				if not is_valid and then is_precompile then
+					!! vd42;
+					vd42.set_path (fn);
+					Error_handler.insert_error (vd42);
 				end
 			end
 		end;

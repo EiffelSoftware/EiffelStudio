@@ -14,11 +14,9 @@ inherit
 	SHARED_CODE_FILES;
 	SHARED_TABLE;
 	SHARED_DECLARATIONS;
-	SHARED_DLE;
 	COMPILER_EXPORTER
 
 creation
-
 	make
 	
 feature 
@@ -673,7 +671,6 @@ feature
 				rout_id := item.rout_id;
 				tbl := Eiffel_table.poly_table (rout_id);
 					-- Generate a special prefix when dealing with DLE.
-				Skeleton_file.putstring (Table_prefix);
 				Skeleton_file.putstring (rout_id.table_name);
 				Skeleton_file.putstring (" - ");
 				Skeleton_file.putint (tbl.min_type_id - 1);
@@ -722,20 +719,6 @@ feature
 			Skeleton_file.putstring ("};%N%N");
 		end;
 
-feature -- DLE
-
-	Table_prefix: STRING is
-			-- Prefix of table names in DLE mode
-		once
-			if System.extendible then
-				Result := static_prefix
-			elseif System.is_dynamic then
-				Result := dynamic_prefix
-			else
-				Result := ""
-			end
-		end;
-
 feature {NONE} -- Externals
 
 	chroff(nb_ref: INTEGER): INTEGER is
@@ -773,9 +756,7 @@ feature {NONE} -- Externals
 			"C"
 		end;
 
-	objsiz
-		(nb_ref, nb_char, nb_int, nb_flt, nb_ptr, nb_dbl: INTEGER): INTEGER
-	is
+	objsiz (nb_ref, nb_char, nb_int, nb_flt, nb_ptr, nb_dbl: INTEGER): INTEGER is
 			-- Size of an object having `nb_ref' references,
 			-- `nb_char' characters, `nb_int' integers, `nb_flt' floats,
 			-- `nb_ptr' pointers and `nb_dbl' doubles

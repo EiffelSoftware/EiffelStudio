@@ -30,18 +30,6 @@ feature {NONE}
 			licenses.put (Result, Result.application_name)
 		end
 
-	dle_licensed: BOOLEAN is
-			-- Is the "DLE" licensed?
-		do
-			Result := dle_license.licensed
-		end
-
-	dle_license: LICENSE is
-		once
-			!DLE_LICENSE! Result.make
-			licenses.put (Result, Result.application_name)
-		end
-
 	init_license: BOOLEAN is
 			-- Initialization of the EiffelBench license
 		do

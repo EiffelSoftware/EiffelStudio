@@ -22,7 +22,6 @@ feature -- Initialization
 			old_make;
 			invariant_rout_id := current_subcounter.next_rout_id;
 			initialization_rout_id := current_subcounter.next_rout_id;
-			dle_make_rout_id := current_subcounter.next_rout_id;
 			dispose_rout_id := current_subcounter.next_rout_id
 		end
 
@@ -31,8 +30,6 @@ feature -- Initialization
 		do
 			if Compilation_modes.is_precompiling then
 				!P_ROUTINE_SUBCOUNTER! Result.make (compilation_id)
-			elseif Compilation_modes.is_extending then
-				!DLE_ROUTINE_SUBCOUNTER! Result.make
 			else
 				!ROUTINE_SUBCOUNTER! Result.make
 			end
@@ -56,7 +53,6 @@ feature -- Access
 
 	invariant_rout_id: ROUTINE_ID;
 	initialization_rout_id: ROUTINE_ID;
-	dle_make_rout_id: ROUTINE_ID;
 	dispose_rout_id: ROUTINE_ID;
             -- Predefined routine ids
 

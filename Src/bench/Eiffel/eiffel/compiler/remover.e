@@ -139,15 +139,4 @@ end
 			end
 		end
 
-feature -- DLE
-
-	dle_clean is
-			-- Get rid of data structures not needed when keeping track
-			-- of removed features from the extendible system.
-		do
-			control := Void
-			array_optimizer := Void
-			inliner := Void
-		end
-
 end

@@ -45,11 +45,6 @@ feature -- Status report
 		do
 		end
 
-	is_dynamic: BOOLEAN is
-			-- Is the entity identified by `Current' part of a DC-set?
-		do
-		end
-
 	infix "<" (other: COMPILER_ID): BOOLEAN is
 			-- Is current object less than `other'?
 		do

@@ -1200,16 +1200,4 @@ feature -- Removal of empty classes
 			empty_class_types.put (a_class_type)
 		end
 
-feature -- DLE
-
-	record_dle_class_type (a_class_type: TYPE_ID) is
-			-- Add `a_class_type' to the set of static class types that
-			-- needs to be regenerated (they are containing removed
-			-- features which are used by the dynamic system)
-		require
-			dynamic_system: System.is_dynamic
-			final_mode: System.in_final_mode
-		do
-		end
-
 end

@@ -157,9 +157,7 @@ feature -- Byte code generation
 			-- Add dynamic type of parent.
 		do
 			if precursor_type /= Void then
-				ba.append_short_integer (
-						precursor_type.associated_class_type.id.id - 1
-										)
+				ba.append_short_integer (precursor_type.associated_class_type.id.id - 1)
 			else
 				ba.append_short_integer (-1)
 			end

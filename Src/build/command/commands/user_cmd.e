@@ -204,14 +204,28 @@ feature -- Inheritance
 			-- Set parent of Current
 			-- user command to `cmd'.
 		local
-			set_parent_command: CMD_SET_PARENT
+			set_parent_command: CMD_SET_PARENT;
+			label_clash: STRING;
+			msg: STRING
 		do 
-			!!set_parent_command;
-			if not (parent_type = Void) then
-				set_parent_command.set_previous_parent (parent_type);
-			end;
-			set_parent_command.set_parent_type (cmd);
-			set_parent_command.execute (Current);
+			label_clash := label_name_clash (cmd);
+			if label_clash /= Void then
+				!! msg.make (0);
+				msg.append ("Label name: ");
+				msg.append (label_clash);
+				msg.append (" from class ");
+				msg.append (cmd.eiffel_type_to_upper);
+				error_box.popup (Current,
+					Messages.label_name_clash_er,
+					msg)
+			else
+				!!set_parent_command;
+				if not (parent_type = Void) then
+					set_parent_command.set_previous_parent (parent_type);
+				end;
+				set_parent_command.set_parent_type (cmd);
+				set_parent_command.execute (Current);
+			end
 		end;
 
 	remove_parent is
@@ -290,6 +304,25 @@ feature -- Inheritance
 		ensure
 			valid_descendents: descendents /= Void
 			has_c: descendents.has (c);
+		end;
+
+	label_name_clash (other: CMD): STRING is
+			-- Do Current label names clash with `other'
+			-- label names?
+		local
+			other_labels: like labels
+		do
+			other_labels := other.labels;
+			from
+				other_labels.start
+			until
+				other_labels.after or else Result /= Void
+			loop
+				if label_exist (other_labels.item.label) then
+					Result := other_labels.item.label
+				end;
+				other_labels.forth
+			end
 		end;
 
 feature -- Naming
@@ -484,7 +517,7 @@ feature  -- Generation
 					Result.append ("NON_UNDOABLE_CMD");
 				end
 			else
-				Result.append (parent_type.eiffel_inherit_text (renamed_labels));
+				Result.append (parent_type.eiffel_inherit_text);
 			end;
 			Result.append ("%N%Ncreation%N%N%Tmake");
 			Result.append ("%N%Nfeature%N%N");
@@ -653,23 +686,6 @@ feature -- labels {CMD_EDITOR}
 				Result := temp_label.is_equal (exist_label);
 				if Result then
 					labels.finish;
-				end;
-				labels.forth;
-			end;
-		end;
-
- 
-
-	renamed_labels: LINKED_LIST [STRING] is
-		do
-			!!Result.make;
-			from 
-				labels.start
-			until
-				labels.after
-			loop
-				if labels.item.inh_renamed then
-					Result.extend (clone (labels.item.label));
 				end;
 				labels.forth;
 			end;

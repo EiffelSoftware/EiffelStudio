@@ -37,13 +37,13 @@ feature -- Initialization
 				can_move_figure := class_data.parent_cluster = cluster or else
 					not cluster.has_class (class_data.name)
 				if can_move_figure then
-					tmp := clone (class_data.file_name);
-					tmp.to_lower;
-					can_move_figure := not (cluster.has_child_with_file_name 
-								(class_data, tmp));
+					tmp := clone (class_data.name)
+					tmp.to_upper
+					can_move_figure := not (cluster.has_child_with_name 
+								(class_data, tmp))
 					if not can_move_figure then
 						--Windows.error (Windows.main_graph_window, 
-						--	Message_keys.reparent_figure_filename_er, Void);
+						--	Message_keys.reparent_figure_filename_er, Void)
 					end;
 				else
 					--Windows.error (Windows.main_graph_window, Message_keys.reparent_figure_er, Void);
@@ -55,8 +55,8 @@ feature -- Initialization
 										not cluster.has_cluster (cluster_data.name)
 					if can_move_figure then
 						can_move_figure := not 
-							(cluster.has_child_with_file_name 
-									(cluster_data, cluster_data.file_name))
+							(cluster.has_child_with_name 
+									(cluster_data, cluster_data.name))
 						if not can_move_figure then
 							--Windows.error (Windows.main_graph_window, 
 							--		Message_keys.reparent_figure_filename_er, Void);

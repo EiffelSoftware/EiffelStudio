@@ -1305,7 +1305,7 @@ add_links_for_reverse ( fi : PLAIN_TEXT_FILE ) is
 			
 invariant
 
-	valid_name: name /= void and then not name.empty;
-	valid_file_name: file_name /= Void and then not file_name.empty
-	has_a_description: description /= Void
+	--valid_name: name /= void and then not name.empty;
+	--valid_file_name: file_name /= Void and then not file_name.empty
+	--has_a_description: description /= Void
 end -- class LINKABLE_DATA

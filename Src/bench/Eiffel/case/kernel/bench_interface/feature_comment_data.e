@@ -23,10 +23,10 @@ creation
 
 feature -- Properties
 
-	destroy_command (a_data: FEATURE_DATA): FEATURE_SET_COMMENT_U is
+	destroy_command (a_data: FEATURE_DATA): DESTROY is --FEATURE_SET_COMMENT_U is
 		do
-			!! Result.make_with_container (a_data)
-			Result.update_saved_is_on
+		--! Result.make_with_container (a_data)
+		-- sult.update_saved_is_on
 		end
 	
 	stone_type: INTEGER is

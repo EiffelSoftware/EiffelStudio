@@ -29,7 +29,7 @@ feature -- Initialization
 			comp_data: COMP_LINK_DATA [RELATION_DATA_KEY];
 			cluster_data: CLUSTER_DATA
 		do
-			Windows.set_watch_cursor;
+		--	Windows.set_watch_cursor;
 			cluster := a_cluster;
 			!! remove_commands.make;
 			!! links.make;
@@ -57,7 +57,7 @@ feature -- Initialization
 			cluster.set_icon (True);
 			record;
 			redo;
-			Windows.restore_cursor;
+		--	Windows.restore_cursor;
 		ensure
 			cluster_correctly_set : cluster = a_cluster
 		end -- make

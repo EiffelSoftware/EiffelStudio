@@ -18,17 +18,7 @@ feature -- Update
 		do
 			workareas.refresh;
 			System.set_is_modified
-		end;
-
-	redo is
-		-- Re-execute command (after it was undone)
-		deferred
-		end; -- redo
-
-	undo is
-		-- Cancel effect of executing the command
-		deferred
-		end -- undo
+		end
 
 feature {NONE} -- Implementation property
 
@@ -40,17 +30,16 @@ feature {NONE} -- Implementation
 	iconize is
 			-- iconize 'cluster'
 		do
-			cluster.set_icon (true);
-			workareas.iconify_cluster (cluster);
-		end; -- iconize
+			cluster.set_icon (true)
+			workareas.iconify_cluster (cluster)
+		end
 
 	deiconize is
 			-- deiconize 'cluster'
 		do
-			cluster.set_icon (false);
-			workareas.uniconify_cluster (cluster);
-		end -- deiconize
-
+			cluster.set_icon (false)
+			workareas.uniconify_cluster (cluster)
+		end
 invariant
 
 	has_cluster : cluster /= Void

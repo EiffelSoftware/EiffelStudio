@@ -150,11 +150,11 @@ feature -- Properties
 					i_th (do_line).is_equal (Once_keyword)
 		end
 
-	destroy_command (a_data: FEATURE_DATA): FEATURE_SET_ATTRIBUTE_U is
+	destroy_command (a_data: FEATURE_DATA): DESTROY is --FEATURE_SET_ATTRIBUTE_U is
 			-- Destroy command for Current data
 			--| because attribute <=> not routine
 		do
-			!! Result.make_with_container (a_data)
+		--	!! Result.make_with_container (a_data)
 		end
 	
 	stone_type: INTEGER is

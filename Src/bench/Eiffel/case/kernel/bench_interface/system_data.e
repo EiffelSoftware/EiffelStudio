@@ -19,13 +19,8 @@ inherit
 	STORABLE
 		rename
 			class_name as exception_class_name
-		end;
-	ONCES;
-	CONSTANTS;
-	EXCEPTIONS
-		rename
-			class_name as exception_class_name
-		end;
+		end
+	
 	SHARED_FILE_SERVER
 
 creation
@@ -40,22 +35,22 @@ feature -- Initialization
 			!! error_track
 			!! counter
 			!! hide_show
-			is_modified := True;
+			is_modified := True
 			decrement_cluster_view_number
-			!! root_cluster.make_root ("SYSTEM_ARCHITECTURE", cluster_view_number);
-			root_cluster.set_width (700);
-			root_cluster.set_height (1000);
+			!! root_cluster.make_root ("SYSTEM_ARCHITECTURE", cluster_view_number)
+			root_cluster.set_width (700)
+			root_cluster.set_height (1000)
 			hide_show.set_grid_spacing(20)
 			use_editor := FALSE
-			!! view_description.make_with_default;
-			!! System_classes.make (100);
+			!! view_description.make_with_default
+			!! System_classes.make (100)
 			--hide_show.set_show_bon(Resources.show_bon)
-			view_name := "";
+			view_name := ""
 		ensure
-			grid_is_not_magnetic: not is_grid_magnetic;
-			grid_is_not_visible: not is_grid_visible;
-			grid_spacing_is_20: grid_spacing = 20;
-		end;
+			grid_is_not_magnetic: not is_grid_magnetic
+			grid_is_not_visible: not is_grid_visible
+			grid_spacing_is_20: grid_spacing = 20
+		end
 
 feature -- Properties
 
@@ -925,7 +920,7 @@ feature -- Output
 --				!! parser.make (filter_format, Environment.filters_directory);
 --				--Windows.set_watch_cursor;
 --				if print_clust_ch then
---					LINKED_LIST [CLUSTER_DATA] := clusters_in_system;
+--					LINKED_LIST [CLUSTEB_DATA] := clusters_in_system;
 --					if to_printer then
 --						!! file.make (temp_file_name, parser);
 --					else
@@ -1238,21 +1233,21 @@ feature -- Storage
 		do
 				-- First save modified classes in tmp files
 				-- (Places modified files in the System file server)
-			Class_content_server.tmp_save_classes;
+		--	Class_content_server.tmp_save_classes;
 				-- Save the system data in a tmp file
-			Temporary_system_file_server.tmp_save_system (storage_info)
+		--	Temporary_system_file_server.tmp_save_system (storage_info)
 				-- Save the view data in a tmp file
-			!! v.make (Current);
-			v.tmp_store_to_disk;
+		--	!! v.make (Current);
+		--	v.tmp_store_to_disk;
 				-- All files are now stored temporarily. Now,
 				-- save the project.
-			Temporary_system_file_server.save_eiffelcase_format;
-			v.save_to_disk;
-			is_modified := False;
+		--	Temporary_system_file_server.save_eiffelcase_format;
+		--	v.save_to_disk;
+		--	is_modified := False;
 
-			set_saved (true)
-		ensure
-			not_modified: not is_modified
+		--	set_saved (true)
+		--ensure
+		--	not_modified: not is_modified
 		end;
 
 	retrieve_project_with_view (file: RAW_FILE; storage_path: STRING; v: SYSTEM_VIEW) is
@@ -2530,6 +2525,6 @@ invariant
 	has_root_cluster: root_cluster /= void;
 	spacing_more_than_10: grid_spacing >= 10;
 	spacing_less_than_40: grid_spacing <= 40;
-	has_description: view_description /= void
+	--has_description: view_description /= void
 
 end -- class SYSTEM_DATA

@@ -557,6 +557,11 @@ feature {NONE} -- GtkStyle functions
 			"C | %"gtk_eiffel.h%""
 		end
 
+	c_gtk_style_default_fg_color (r, g, b: POINTER) is
+		external
+			"C | %"gtk_eiffel.h%""
+		end
+
 feature {NONE} -- GtkWindow function
 
 	c_gtk_window_set_modal(window: POINTER; state: BOOLEAN) is

@@ -38,15 +38,8 @@ creation
 
 feature
 
-	popup: ANY is
-		once
-			!! Result;
-		end
-
-	popdown: ANY is
-		once
-			!! Result;
-		end
+	popdown: ANY is once !!Result end;
+	remapped: ANY is once !!Result end;
 
 	display: SCREEN is
 		local
@@ -69,11 +62,8 @@ feature
 	make is
 			-- Create a project application.
 		local
-			void_reference: ANY;
 			a_screen: SCREEN;
 		do
-			if popup /= Void then end;
-			if popdown /= Void then end;
 			a_screen := display;
 			base_make (tool_name, a_screen);
 			forbid_resize;
@@ -86,7 +76,8 @@ feature
 				set_icon_pixmap (bm_Project_icon);
 			end;
 			set_action ("<Unmap>,<Prop>", Current, popdown);
-			set_action ("<Map>,<Prop>", Current, popup);
+			set_action ("<Configure>", Current, remapped);
+			set_action ("<Visible>", Current, remapped);
 			set_delete_command (quit_command)
 		end;
 
@@ -139,28 +130,37 @@ feature -- xterminal
 	execute (arg: ANY) is
 			-- Resize xterm window when drawing area is resized
 		do
-			if arg = popup then
-				window_manager.show_all_editors
-				if hidden_system_window then
-					system_tool.show
-					hidden_system_window := False;
-				end;
-				if initialized then
-					raise
-					if hidden_warner then
-						hidden_warner := false;
-						warner.popup
+			if arg = remapped then
+				if hidden_project_tool then
+						-- The project tool is being deiconified.
+					hidden_project_tool := False;
+					window_manager.show_all_editors
+					if hidden_system_window then
+						system_tool.show
+						hidden_system_window := False;
 					end;
-					if hidden_name_chooser then
-						hidden_name_chooser := false;
-						name_chooser.popup
-					end;	
-					if hidden_confirmer then
-						hidden_confirmer := false;
-						confirmer.popup
-					end	
+					if initialized then
+						raise
+						if hidden_warner then
+							hidden_warner := false;
+							warner.popup
+						end;
+						if hidden_name_chooser then
+							hidden_name_chooser := false;
+							name_chooser.popup
+						end;	
+						if hidden_confirmer then
+							hidden_confirmer := false;
+							confirmer.popup
+						end	
+					end
+				else
+						-- The project tool is being raised, moved or resized.
+						-- Raise popups with an exclusive grab.
+					raise_grabbed_popup
 				end
 			elseif arg = popdown then
+				hidden_project_tool := True;
 				if System.system_name /= Void then
 					set_icon_name (System.system_name)
 				else
@@ -194,6 +194,7 @@ feature -- xterminal
 	hidden_warner: BOOLEAN;
 	hidden_confirmer: BOOLEAN;
 	hidden_name_chooser: BOOLEAN;
+	hidden_project_tool: BOOLEAN;
 
 feature -- rest
 

@@ -50,6 +50,8 @@ feature
 			end;
 			set_icon_name (tool_name);
 			set_action ("<Unmap>,<Prop>", Current, popdown);
+			set_action ("<Configure>", Current, remapped);
+			set_action ("<Visible>", Current, remapped);
 			set_delete_command (quit_command);
 			transporter_init
 		end;
@@ -134,6 +136,13 @@ feature
 		do
 			search_command.close;
 			change_font_command.close
+		end;
+
+	resize_action is
+			-- If the window is raised, moved or resized, then raise
+			-- popups with an exclusive grab.
+		do
+			raise_grabbed_popup
 		end;
 
 	build_bar is
@@ -230,11 +239,15 @@ feature -- quit actions
 		do
 			if argument = popdown then
 				close_windows
+			elseif argument = remapped then
+					-- The tool is being raised, moved or resized.
+				resize_action
 			else
 				tool_w_execute (argument)
 			end;
 		end;
 
 	popdown: ANY is once !!Result end;
+	remapped: ANY is once !!Result end;
 
 end -- class BAR_AND_TEXT

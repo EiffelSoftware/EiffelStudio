@@ -31,21 +31,29 @@ feature -- Updates
 
 	on_cluster_added (a_cluster: EB_SORTED_CLUSTER) is
 			-- `a_cluster' has been added.
+		require
+			valid_cluster: a_cluster /= Void
 		do
 		end
 
 	on_cluster_changed (a_cluster: CLUSTER_I) is
 			-- `a_cluster' was renamed. 
+		require
+			valid_cluster: a_cluster /= Void
 		do
 		end
 
 	on_cluster_removed (a_cluster: EB_SORTED_CLUSTER) is
 			-- `a_cluster' has been removed. 
+		require
+			valid_cluster: a_cluster /= Void
 		do
 		end
 
 	on_cluster_moved (moved_cluster: EB_SORTED_CLUSTER; old_parent: CLUSTER_I) is
 			-- `a_cluster' has been removed. 
+		require
+			valid_cluster: moved_cluster /= Void
 		do
 		end
 

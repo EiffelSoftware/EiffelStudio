@@ -423,7 +423,7 @@ feature -- Access
 			value_set: Result.value = b
 		end
 
-	new_bits_as (v: INTEGER_AS): BITS_AS is
+	new_bits_as (v: INTEGER_CONSTANT): BITS_AS is
 			-- New BITS AST node
 		require
 			v_not_void: v /= Void
@@ -1220,20 +1220,21 @@ feature -- Access
 			line_number_set: Result.line_number = l
 		end
 
-	new_integer_as (i: INTEGER): INTEGER_AS is
+	new_integer_as (is_negative: BOOLEAN; buffer: STRING): INTEGER_CONSTANT is
 			-- New INTEGER AST node
 		do
-			create Result
-			Result.initialize (i)
+			create Result.make_default
+			Result.initialize (is_negative, buffer)
 		ensure
 			integer_as_not_void: Result /= Void
-			value_set: Result.value = i
+			-- value_set: Make sure we translated `s'
+			-- correctly into correct integer value.
 		end
 
-	new_integer_as_from_hexa (s: STRING): INTEGER_AS is
+	new_integer_as_from_hexa (s: STRING): INTEGER_CONSTANT is
 			-- New INTEGER AST node
 		do
-			create Result
+			create Result.make_default
 			Result.initialize_from_hexa (s)
 		ensure
 			integer_as_not_void: Result /= Void

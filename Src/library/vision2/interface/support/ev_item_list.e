@@ -26,15 +26,15 @@ inherit
 
 feature -- Access
 
-	item_by_data (data: ANY): like item is
-			-- First item with `data'.
+	item_by_data (some_data: ANY): like item is
+			-- First item with `some_data'.
 		require
 			not_destroyed: not is_destroyed
-			data_not_void: data /= Void
+			data_not_void: some_data /= Void
 		do
-			Result := implementation.item_by_data (data)
+			Result := implementation.item_by_data (some_data)
 		ensure
-			bridge_ok: Result = implementation.item_by_data (data)
+			bridge_ok: Result = implementation.item_by_data (some_data)
 		end
 
 feature {NONE} -- Contract support

@@ -83,6 +83,7 @@ feature {NONE} -- Initialization
 			-- Do post creation initialization.
 		do
 			create internal_children.make (1)
+			create ev_children.make (1)
 			is_initialized := True
 		end
 
@@ -115,24 +116,25 @@ feature -- Access
 
 feature -- Status report
 
-	ev_children: ARRAYED_LIST [EV_TREE_ITEM_IMP] is
+	ev_children: ARRAYED_LIST [EV_TREE_ITEM_IMP]-- is
 			-- List of the direct children of the tree-item.
-		do
-			if top_parent_imp = Void then
-				Result := internal_children
-			else
-				Result := top_parent_imp.get_children (Current)
-			end
-		end
+--		do
+--			if top_parent_imp = Void then
+--				Result := internal_children
+--			else
+--				Result := top_parent_imp.get_children (Current)
+--			end
+--		end
 
 	count: INTEGER is
 			-- Number of direct children of the holder.
 		do
-			if top_parent_imp = Void then
-				Result := internal_children.count
-			else
-				Result := top_parent_imp.get_children_count (Current)
-			end
+			--if top_parent_imp = Void then
+			--	Result := internal_children.count
+			--else
+			--	Result := top_parent_imp.get_children_count (Current)
+			--end
+			Result := ev_children.count
 		end
 
 	is_selected: BOOLEAN is
@@ -386,15 +388,19 @@ feature {NONE} -- Implementation
 			-- Insert `item_imp' at the `index' position.
 		do
 			if top_parent_imp /= Void then
-				if index = 1 then
+				if pos = 1 then
 					top_parent_imp.general_insert_item (item_imp, h_item, Tvi_first, pos)
 				else
-					top_parent_imp.general_insert_item (item_imp, h_item, (ev_children @ (index - 1)).h_item, pos)
+					top_parent_imp.general_insert_item (item_imp, h_item, (ev_children @ (index)).h_item, pos)
 				end
 			else
 				internal_children.go_i_th (pos)
 				internal_children.put_left (item_imp)
 			end
+				-- We now add the child directly into ev_children.
+			ev_children.go_i_th (pos - 1)
+			ev_children.put_right (item_imp)
+
 		end
 
 	remove_item (item_imp: EV_TREE_ITEM_IMP) is
@@ -402,6 +408,7 @@ feature {NONE} -- Implementation
 		do
 			if top_parent_imp /= Void then
 				top_parent_imp.general_remove_item (item_imp)
+				ev_children.remove
 			else
 				internal_children.prune_all (item_imp)
 			end
@@ -435,6 +442,9 @@ end -- class EV_TREE_ITEM_IMP
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.32  2000/03/09 16:48:41  rogers
+--| Removed redundent commented code. Now directly add the children into ev_children. Corrected use of a wrong index in insert_item (index -> pos).
+--|
 --| Revision 1.31  2000/03/08 17:33:44  rogers
 --| Set_text from WEL_TREE_VIEW is now redefined. Redundent make_with_text has been removed. Set text now sets the text to a clone of the passed text. All calls to general_insert_item now take an index.
 --|

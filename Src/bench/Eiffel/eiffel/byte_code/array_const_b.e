@@ -206,18 +206,18 @@ feature -- Byte code generation
 				expr ?= expressions.item;
 				actual_type ?= context.real_type (expr.type);
 				expr.make_byte_code (ba);
-				if actual_type = Void then
-					ba.append (Bc_void);
-				elseif need_metamorphosis (actual_type) then
-						-- Simple type objects are metamorphosed
-					ba.append (Bc_metamorphose);
-				elseif target_type.is_basic and not actual_type.same_as (target_type) then
-						-- A conversion integer_xx => integer_yy,
-						-- integer => real, integer => double
-						-- or real => double is needed
-					basic_i ?= target_type
-					basic_i.generate_byte_code_cast (ba)
-				end;
+				if actual_type /= Void then
+					if need_metamorphosis (actual_type) then
+							-- Simple type objects are metamorphosed
+						ba.append (Bc_metamorphose)
+					elseif target_type.is_basic and not actual_type.same_as (target_type) then
+							-- A conversion integer_xx => integer_yy,
+							-- integer => real, integer => double
+							-- or real => double is needed
+						basic_i ?= target_type
+						basic_i.generate_byte_code_cast (ba)
+					end
+				end
 				expressions.back;
 			end;
 			if base_class.is_precompiled then

@@ -13,12 +13,12 @@ cluster
 
 -- ISE Source
 
-	ise_src:					"$ISE_SRC";
+	ws:						"$WS";
 
 
 -- EiffelBase
 
-	base (ise_src):					"$/base";
+	base (ws):					"$/base";
 	kernel(base):					"$/kernel";
 	support(base):					"$/support";
 	structures(base):				"$/structures";
@@ -41,7 +41,7 @@ cluster
 
 -- EiffelVision
 
-  	vision2 (ise_src):				"$/vision2";
+  	vision2 (ws):					"$/vision2";
 	vision (vision2):				"$/interface"
 	vision_support (vision):			"$/support";
 	vision_kernel (vision): 	       		"$/kernel";
@@ -84,7 +84,7 @@ cluster
 
 -- EiffelBuild clusters
 
-	build (ise_src):				"$/build";
+	build (ws):					"$/build";
 	
 
 	root_cluster (build):	 			"$/Main";
@@ -238,7 +238,7 @@ cluster
 			assertion (no)
 		end;
 
-	liman (ise_src):				"$/limand";
+	liman (ws):				"$/limand";
 
 	liman_abstract(liman):				"$/abstract";
 --	win time_lock(liman):				"$/time_lock";--win
@@ -266,15 +266,15 @@ cluster
 
 external
 	include_path:		
-		"$ISE_SRC/C/parsing/shared",
-		"$ISE_SRC/vision2/implementation/gtk/Clib", "`gtk-config --cflags`";
+		"$WS/C/parsing/shared",
+		"$WS/vision2/implementation/gtk/Clib", "`gtk-config --cflags`";
 
 	object:
-		"$(ISE_SRC)/C/parsing/eiffel/libeiffel.a",
-		"$(ISE_SRC)/C/parsing/lace/liblace.a",
-		"$(ISE_SRC)/C/parsing/shared/libparsing.a",
-		"$(ISE_SRC)/C/platform/libplatform.a",
-		"$(ISE_SRC)/vision2/implementation/gtk/Clib/gtk_eiffel.o",
+		"$(WS)/C/parsing/eiffel/libeiffel.a",
+		"$(WS)/C/parsing/lace/liblace.a",
+		"$(WS)/C/parsing/shared/libparsing.a",
+		"$(WS)/C/platform/libplatform.a",
+		"$(WS)/vision2/implementation/gtk/Clib/gtk_eiffel.o",
 		"`gtk-config --libs`"
 
 

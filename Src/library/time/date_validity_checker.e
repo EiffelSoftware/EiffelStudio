@@ -4,8 +4,10 @@ indexing
 	date: "$Date$"
 	revision: "$Revision$"
 
-class DATE_VALIDITY_CHECKER inherit
-
+class
+	DATE_VALIDITY_CHECKER
+	
+inherit
 	DATE_CONSTANTS
 		export
 			{NONE} all
@@ -15,6 +17,8 @@ class DATE_VALIDITY_CHECKER inherit
 		export
 			{NONE} all
 		end
+		
+	ANY
 
 feature -- Preconditions
 

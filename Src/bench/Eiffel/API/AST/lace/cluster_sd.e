@@ -366,18 +366,18 @@ feature {COMPILER_EXPORTER} -- Lace recompilation
 				cluster.set_is_recursive (is_recursive)
 				cluster.set_is_library (is_library)
 				cluster.set_belongs_to_all (belongs_to_all)
+				cluster.set_is_override_cluster (
+					universe.has_override_cluster and then
+					universe.override_cluster_name.is_equal (cluster_name))
+
 				Universe.insert_cluster (cluster)
-debug ("REMOVE_CLASS")
-	io.error.putstring ("CLUSTER_SD calling fill%N");
-end;
+				debug ("REMOVE_CLASS")
+					io.error.putstring ("CLUSTER_SD calling fill%N");
+				end;
 				cluster.fill (exclude_list, include_list);
 			else
 				cluster := old_cluster.new_cluster (cluster_name, 
-													exclude_list, 
-													include_list,
-													is_recursive,
-													is_library,
-													parent_cluster);
+					exclude_list, include_list, is_recursive, is_library, parent_cluster);
 			end;
 			check
 				cluster_exists: cluster /= Void

@@ -23275,12 +23275,12 @@ feature -- External C structs
 			"sibling"
 		end
 
-	set_gtk_ctree_struct_clist (a_c_struct: POINTER; a_clist: POINTER) is
-			-- `a_clist' is pointer to GtkCList.
-			-- (from C_GTK_CTREE_STRUCT)
-		do
-			(gtk_ctree_struct_clist (a_c_struct)).memory_copy (a_clist, c_gtk_clist_struct_size)
-		end
+	--set_gtk_ctree_struct_clist (a_c_struct: POINTER; a_clist: POINTER) is
+	--		-- `a_clist' is pointer to GtkCList.
+	--		-- (from C_GTK_CTREE_STRUCT)
+	--	do
+	--		(gtk_ctree_struct_clist (a_c_struct)).memory_copy (a_clist, c_gtk_clist_struct_size)
+	--	end
 
 	set_gtk_ctree_struct_drag_compare (a_c_struct: POINTER; a_drag_compare: POINTER) is
 			-- (from C_GTK_CTREE_STRUCT)

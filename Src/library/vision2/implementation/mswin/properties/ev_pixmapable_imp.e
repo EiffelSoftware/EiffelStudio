@@ -12,6 +12,33 @@ deferred class
 inherit
 	EV_PIXMAP_CONTAINER_I
 
+	WEL_RASTER_OPERATIONS_CONSTANTS
+		export
+			{NONE} all
+		end
+
+	WEL_DT_CONSTANTS
+		export
+			{NONE} all
+		end
+
+	WEL_ODS_CONSTANTS
+		export
+			{NONE} all
+		end
+
+	WEL_ODA_CONSTANTS
+		export
+			{NONE} all
+		end
+
+	WEL_DRAWING_ROUTINES
+		rename
+			draw_edge as routine_draw_edge
+		export
+			{NONE} all
+		end
+
 feature -- Access
 
 	pixmap_imp: EV_PIXMAP_IMP
@@ -30,30 +57,23 @@ feature -- Status setting
 			pixmap_set: pixmap_imp /= Void
 		end
 
---creation
+feature {EV_PIXMAP_IMP} -- Implementation
 
---	make_from_primitive
+	wel_window: WEL_WINDOW is
+			-- Window used to create the pixmap.
+		deferred
+		end
 
---feature {NONE} -- Initialization
-	
---	make_from_primitive (primitive: EV_BUTTON) is
---			-- Create pixmap container inside of 'primitive'
---		local
---			primitive_imp: EV_BUTTON_IMP
---		do
---			primitive_imp ?= primitive.implementation
---			check	
---				good_primitive: primitive_imp /= Void
---			end
---			wel_make (primitive_imp)
---		end
+	pixmap_size_changed is
+			-- Pixmap sized has changed.
+		do
+		end
 
-feature -- Status setting
+feature {EV_CONTAINER_IMP} -- Implementation
 
---	add_pixmap (pixmap: EV_PIXMAP) is
-			-- Add a pixmap in the container.
---		do
---		end
+	on_draw (struct: WEL_DRAW_ITEM_STRUCT) is
+		deferred
+		end
 
 end -- class EV_PIXMAP_CONTAINER_IMP
 

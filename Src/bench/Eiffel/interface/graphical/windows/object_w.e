@@ -226,6 +226,7 @@ feature -- Update
 		do
 			old_reset;
 			set_default_sp_bounds
+			init_text_window;
 		end;
  
 	process_object (a_stone: like stone) is

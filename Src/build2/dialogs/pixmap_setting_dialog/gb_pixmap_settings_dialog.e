@@ -499,7 +499,7 @@ feature {NONE} -- Implementation
 			text: STRING
 		do
 			text := relative_directory_combo.text.as_lower
-			if basic_valid_name (text) then	
+			if basic_valid_name (text) and not existing_names.has (text) then	
 				--| FIXME check current names also.
 				relative_directory_combo.set_foreground_color (black)
 				ok_button.enable_sensitive

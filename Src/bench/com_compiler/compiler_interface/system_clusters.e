@@ -236,12 +236,12 @@ feature -- Element change
 		local
 			cluster: CLUSTER_PROPERTIES
 		do
---			cluster ?= clusters_table.item (a_name)
---			if cluster /= Void then
---				clusters_table.remove (a_name)
---				clusters_table.put (cluster, a_new_name)
---				cluster.set_name (a_new_name);
---			end
+			cluster ?= clusters_table.item (a_name)
+			if cluster /= Void then
+				clusters_table.remove (a_name)
+				clusters_table.put (cluster, a_new_name)
+				cluster.set_name (a_new_name);
+			end
 		end
 		
 

@@ -18,6 +18,7 @@ deferred class DISPENSER [G] inherit
 	ACTIVE [G];
 
 	FINITE [G]
+
 feature -- Status report
 
 	readable: BOOLEAN is

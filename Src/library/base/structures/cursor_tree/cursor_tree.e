@@ -33,7 +33,7 @@ deferred class CURSOR_TREE [G] inherit
 	BASIC_ROUTINES
 		export
 			{NONE} all
-		end;
+		end
 
 feature -- Access
 
@@ -142,22 +142,22 @@ feature -- Status report
 		end;
 
 	after: BOOLEAN is
-			-- Is there no valid position to the right of the cursor?
+			-- Is there no valid cursor position to the right of cursor?
 		deferred
 		end;
 
 	before: BOOLEAN is
-			-- Is there no valid position to the left of the cursor?
+			-- Is there no valid cursor position to the left of cursor?
 		deferred
 		end;
 
 	above: BOOLEAN is
-			-- Is there no valid position above the cursor?
+			-- Is there no valid cursor position above cursor?
 		deferred
 		end;
 
 	below: BOOLEAN;
-			-- Is there no valid position below the cursor?
+			-- Is there no valid cursor position below cursor?
 
 	isfirst: BOOLEAN is
 			-- Is cursor on first sibling?
@@ -225,7 +225,7 @@ feature -- Cursor movement
 			not_before: not before;
 			not_after: not after;
 			not_below: not below;
-			--above = (old is_root)
+			above = (old is_root)
 		end;
 
 	down (i: INTEGER) is
@@ -241,9 +241,9 @@ feature -- Cursor movement
 		deferred
 		ensure then
 			(i = 0) implies before;
-			--(i = old arity + 1) implies after;
-			--((i > 0) and (i <= old arity)) implies not off;
-			--((old arity) = 0) implies below
+			(i = old arity + 1) implies after;
+			((i > 0) and (i <= old arity)) implies not off;
+			((old arity) = 0) implies below
 		end;
 
 
@@ -384,7 +384,7 @@ feature -- Element change
 		do
 			pos := cursor;
 			go_last_child;
-			add_right (v);
+			put_right (v);
 			go_to (pos);
 			if below then
 				below := false;
@@ -392,7 +392,7 @@ feature -- Element change
 			end;
 		end;
 
-	add_left (v: G) is
+	put_left (v: G) is
 			-- Put `v' to the left of cursor position.
 		require
 			not_before: not before;
@@ -400,12 +400,12 @@ feature -- Element change
 			only_one_root: (level = 1) implies empty;
 		do
 			back;
-			add_right (v);
+			put_right (v);
 			forth;
 			forth
 		end;
 
-	add_right (v: G) is
+	put_right (v: G) is
 			-- Put `v' to the right of cursor position.
 		require
 			not_after: not after;
@@ -426,7 +426,7 @@ feature -- Element change
 			if not other.empty then
 				other.start;
 				down (0);
-				add_right (other.item);
+				put_right (other.item);
 				forth;
 				fill_from_active (other)
 			end
@@ -445,7 +445,7 @@ feature -- Element change
 				until
 					other.after
 				loop
-					add_right (other.item);
+					put_right (other.item);
 					forth;
 					fill_from_active (other);
 					other.forth
@@ -459,6 +459,7 @@ feature -- Element change
 			-- Merge the elements of `other' into current structure to
 			-- the right of cursor position.
 		require
+			other_exists: other /= Void;
 			not_after: not after;
 			not_above: not above;
 			only_one_root: (level = 1) implies empty;
@@ -468,7 +469,7 @@ feature -- Element change
 			if not other.empty then
 				pos := other.cursor;
 				other.start;
-				add_right (other.item);
+				put_right (other.item);
 				forth;
 				if not other.is_leaf then
 					down (0);
@@ -490,6 +491,7 @@ feature -- Element change
 			-- Merge the elements of `other' into current structure to
 			-- the left of cursor position.
 		require
+			other_exists: other /= Void;
 			not_before: not before;
 			not_above: not above;
 			only_one_root: (level = 1) implies empty;
@@ -508,7 +510,7 @@ feature -- Duplication
 			Result := new_tree;
 			Result.go_above;
 			Result.down (0);
-			Result.add_right (item);
+			Result.put_right (item);
 			Result.forth;
 			Result.fill_from_active (Current)
 		end;
@@ -539,30 +541,6 @@ feature -- Duplication
 			down (i);
 			Result := subtree;
 			go_to (pos)
-		end;
-
-feature -- Obsolete
-
-	put_left (v: G) is
-		obsolete "Use ``add_left''"
-			-- Put `v' to the left of cursor position.
-		require
-			not_before: not before;
-			not_above: not above;
-			only_one_root: (level = 1) implies empty;
-		do
-			add_left (v)
-		end;
-
-	put_right (v: G) is
-		obsolete "Use ``add_right''"
-			-- Put `v' to the right of cursor position.
-		require
-			not_after: not after;
-			not_above: not above;
-			only_one_root: (level = 1) implies empty;
-		do
-			add_right (v)
 		end;
 
 feature -- Obsolete

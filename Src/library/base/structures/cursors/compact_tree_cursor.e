@@ -38,12 +38,16 @@ feature {COMPACT_CURSOR_TREE} -- Access
 feature {COMPACT_CURSOR_TREE} -- Status report
 
 	after: BOOLEAN;
+		-- Is there no valid cursor position to the right of cursor?
 
 	before: BOOLEAN;
+		-- Is there no valid cursor position to the left of cursor?
 
 	below: BOOLEAN;
+		-- Is there no valid cursor position below cursor?
 
 	above: BOOLEAN;
+		-- Is there no valid cursor position above cursor?
 
 end -- class COMPACT_TREE_CURSOR
 

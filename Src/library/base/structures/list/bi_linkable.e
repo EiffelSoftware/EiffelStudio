@@ -58,8 +58,8 @@ feature {CELL, CHAIN} -- Implementation
 				right := Void
 			end
 		ensure then
-	 		--right_not_chained:
-	 			--(old right /= Void) implies ((old right).left = Void)
+	 		right_not_chained:
+	 			(old right /= Void) implies ((old right).left = Void)
 		end;
 
 	forget_left is
@@ -72,7 +72,7 @@ feature {CELL, CHAIN} -- Implementation
 		ensure
 			left_not_chained:
 				left = Void;
-	 			--(old left /= Void) implies ((old left).right = Void)
+	 			(old left /= Void) implies ((old left).right = Void)
 		end;
 
 feature {BI_LINKABLE, TWO_WAY_LIST} -- Implementation

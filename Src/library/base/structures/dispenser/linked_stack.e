@@ -1,5 +1,5 @@
 indexing
-		"Unbounded stacks implemented as linked lists";
+		--"Unbounded stacks implemented as linked lists";
 
 	copyright: "See notice at end of class";
 	names: linked_stack, dispenser, linked_list;
@@ -30,7 +30,7 @@ class LINKED_STACK [G] inherit
 				make, wipe_out
 		undefine
 			readable, writable, fill,
-			append, sequential_representation, put,
+			append, linear_representation, put,
 			prune_all
 		redefine
 			extend, force, duplicate
@@ -47,23 +47,36 @@ feature -- Access
 	item: G is
 			-- Item at the first position
 		require else
-			Not_empty: not empty
+			not empty
 		do
+				check
+					before and not empty implies (active = first_element)
+				end;
 			Result := first_element.item
 		end;
 
 feature -- Element change
 
-	put, extend, force (v: like item) is
+	force (v: like item) is
 			-- Push `v' onto top.
 		do
-			add_front (v)
+			put_front (v)
 		end;
+
+	extend (v: like item) is
+		do
+			put_front (v)
+		end
+
+	put (v: like item) is
+		do
+			put_front (v)
+		end
 
 feature -- Conversion
 
-	sequential_representation: ARRAYED_LIST [G] is
-			-- Representation as a sequential structure
+	linear_representation: ARRAYED_LIST [G] is
+			-- Representation as a linear structure
 			-- (order is reverse of original order of insertion)
 		do
 			from

@@ -33,26 +33,25 @@ deferred class CHAIN [G] inherit
 			put as sequence_put
 		export
 			{NONE} sequence_put
-		undefine
-			has, index_of
-		end;
-
-	BIDIRECTIONAL [G]
 		redefine
-			index_of, has
+			index_of, has, off, occurrences
 		select
-			index_of, has
+			index_of, has, occurrences
 		end;
 
-
-	BIDIRECTIONAL [G]
+	SEQUENCE [G]
 		rename
+			put as sequence_put,
 			index_of as sequential_index_of,
-			has as sequential_has
+			has as sequential_has,
+			occurrences as sequential_occurrences
 		export
 			{NONE}
 				sequential_index_of, sequential_has
+		redefine
+			off
 		end;
+
 feature -- Access
 
 	first: like item is
@@ -83,7 +82,8 @@ feature -- Access
 
 	has (v: like item): BOOLEAN is
 			-- Does chain include `v'?
-			-- (Reference or object equality, based on `object_comparison'.) 
+			-- (Reference or object equality,
+			-- based on `object_comparison'.) 
 
 		local
 			pos: CURSOR
@@ -95,7 +95,8 @@ feature -- Access
 
 	index_of (v: like item; i: INTEGER): INTEGER is
 			-- Index of `i'-th occurrence of item identical to `v'.
-			-- (Reference or object equality, based on `object_comparison'.) 
+			-- (Reference or object equality,
+			-- based on `object_comparison'.) 
 			-- 0 if none.
 		local
 			pos: CURSOR
@@ -121,6 +122,19 @@ feature -- Access
 		deferred
 		end;
 
+	occurrences (v: like item): INTEGER is
+			-- Number of times `v' appears.
+			-- (Reference or object equality,
+			-- based on `object_comparison'.) 
+		local
+			pos: CURSOR
+		do
+			pos := cursor;
+			Result := sequential_occurrences (v);
+			go_to (pos)
+		end;
+
+	
 feature -- Cursor movement
 
 	start is
@@ -150,7 +164,7 @@ feature -- Cursor movement
 			-- may end up `off' if the absolute value of `i'
 			-- is too big.
 		local
-			counter: INTEGER
+			counter, pos,  final: INTEGER
 		do
 			if i > 0 then
 				from
@@ -161,18 +175,26 @@ feature -- Cursor movement
 					counter := counter + 1
 				end
 			elseif i < 0 then
-				from
-				until
-					(counter = i) or else off
-				loop
-					back;
-					counter := counter - 1
+				final := index + i;
+				if final <= 0 then
+					start;
+					back
+				else
+					from
+						start;
+						pos := 1
+					until
+						pos = final
+					loop
+						forth;
+						pos := pos + 1
+					end
 				end
 			end
 		ensure
-			--too_far_right: (old index + i > count) implies off;
-			--too_far_left: (old index + i < 1) implies off;
-			--expected_index: (not off) implies (index = old index + i)
+			too_far_right: (old index + i > count) implies off;
+			too_far_left: (old index + i < 1) implies off;
+			expected_index: (not off) implies (index = old index + i)
 		end;
 
 	go_i_th (i: INTEGER) is
@@ -237,7 +259,7 @@ feature -- Element change
 		do
 			replace (v)
 		ensure then
-	 		--same_count: count = old count;
+	 		same_count: count = old count;
 			item_inserted: has (v)
 		end;
 
@@ -272,18 +294,20 @@ feature -- Transformation
 			go_to (pos);
 			replace (new_item)
 		ensure
-	 		--item = old i_th (i);
-	 		--i_th (i) = old item
+	 		item = old i_th (i);
+	 		i_th (i) = old item
 		end;
 
 feature -- Duplication
 
 	duplicate (n: INTEGER): like Current is
-			-- Copy of sub-chain beginning at cursor position
-			-- and having min (`n', `count' - `index' + 1) items
+			-- Copy of sub-chain beginning at current position
+			-- and having min (`n', `from_here') items, 
+			-- where `from_here' is the number of items
+			-- at or to the right of current position.
 		require
-			not_off: not off;
-			valid_subchain: n >= 1
+			not_off_unless_after: off implies after;
+			valid_subchain: n >= 0
 		deferred
 		end;
 

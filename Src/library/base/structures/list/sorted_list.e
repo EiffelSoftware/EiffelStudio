@@ -1,4 +1,3 @@
-
 indexing
 
 	description:
@@ -15,18 +14,6 @@ indexing
 deferred class SORTED_LIST [G -> COMPARABLE] inherit
 
 	PART_SORTED_LIST [G]
---		select
---			put
---		end;
-
---	SORTED_STRUCT [G]
---		undefine
---			index_of, exhausted,
---			sequential_representation, off,
---			prune_all, has
---		redefine
---			min, max
---		end
 
 feature -- Measurement
 
@@ -47,6 +34,7 @@ feature -- Measurement
 		do
 			Result := i_th ((count + 1) // 2)
 		end;
+
 
 end -- class SORTED_LIST
 

@@ -18,7 +18,7 @@ class COMPACT_CURSOR_TREE [G] inherit
 		rename
 			index as linear_index
 		redefine
-			add_left, add_right, extend
+			put_left, put_right, extend
 		end
 
 creation
@@ -83,13 +83,13 @@ feature -- Measurement
 feature -- Status report
 
 	after: BOOLEAN;
-			-- Is there no valid position to the right of the cursor?
+			-- Is there no valid cursor position to the right of cursor?
 
 	before: BOOLEAN;
-			-- Is there no valid position to the left of the cursor?
+			-- Is there no valid cursor position to the left of cursor?
 
 	above: BOOLEAN;
-			-- Is there no valid position above the cursor?
+			-- Is there no valid cursor position above the cursor?
 	
 	isfirst: BOOLEAN is
 			-- Is cursor on first sibling?
@@ -303,7 +303,7 @@ feature -- Element change
 			item_table.put (v, active)
 		end;
 
-	add_right (v: G) is
+	put_right (v: G) is
 			-- Put a leaf `v' to the right of cursor position.
 		local
 			index, new: INTEGER;
@@ -330,8 +330,8 @@ feature -- Element change
 			end;
 		end;
 		
-	add_left (v: G) is
-			-- put `v' at the left of cursor position.
+	put_left (v: G) is
+			-- Put `v' at the left of current position.
 		local
 			new: INTEGER;
 		do
@@ -351,9 +351,9 @@ feature -- Element change
 			active := new
 		end;
 		
-	add_front (v: G) is
-			-- put a leaf `v' as first child
-			-- if above and empty, put v as root value
+	put_front (v: G) is
+			-- Insert a leaf `v' as first child.
+			-- If `above' and `empty', make `v' the root value
 		local
 			old_active: like active;
 			new: INTEGER;
@@ -382,7 +382,7 @@ feature -- Element change
 			end;
 		end;
 
-	add_parent (v: G) is
+	put_parent (v: G) is
 			-- insert a new node, with value v, as parent of
 			-- current node and 
 			-- with the same position

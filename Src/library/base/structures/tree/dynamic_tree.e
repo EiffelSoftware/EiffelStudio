@@ -43,7 +43,7 @@ feature -- Element change
 		deferred
 		end;
 
-	child_add_left (v: like item) is
+	child_put_left (v: like item) is
 			-- Add `v' to the left of cursor position.
 			-- Do not move child cursor.
 		require
@@ -52,7 +52,7 @@ feature -- Element change
 		deferred
 		end;
 
-	child_add_right (v: like item) is
+	child_put_right (v: like item) is
 			-- Add `v' to the right of cursor position.
 			-- Do not move child cursor.
 		require
@@ -61,7 +61,7 @@ feature -- Element change
 		deferred
 		end;
 
-	add_child (n: like parent) is
+	put_child (n: like parent) is
 			-- Add `n' to the list of children.
 			-- Do not move child cursor.
 		require else
@@ -69,7 +69,7 @@ feature -- Element change
 		deferred
 		end;
 
-	add_child_left (n: like parent) is
+	put_child_left (n: like parent) is
 			-- Add `n' to the left of cursor position.
 			-- Do not move cursor.
 		require
@@ -79,7 +79,7 @@ feature -- Element change
 		deferred
 		end;
 
-	add_child_right (n: like parent) is
+	put_child_right (n: like parent) is
 			-- Add `n' to the right of cursor position.
 			-- Do not move cursor.
 		require
@@ -122,8 +122,8 @@ feature -- Removal
 			is_not_first: not child_isfirst;
 		deferred
 		ensure
-	 		--new_arity: arity = old arity - 1;
-	 		--new_child_index: child_index = old child_index - 1
+	 		new_arity: arity = old arity - 1;
+	 		new_child_index: child_index = old child_index - 1
 		end;
 
 	remove_right_child is
@@ -133,8 +133,8 @@ feature -- Removal
 			is_not_last: not child_islast;
 		deferred
 		ensure
-	 	  --new_arity: arity = old arity - 1;
-	 	  --new_child_index: child_index = old child_index
+	 	  new_arity: arity = old arity - 1;
+	 	  new_child_index: child_index = old child_index
 		end;
 
 	remove_child is
@@ -144,8 +144,8 @@ feature -- Removal
 			child_not_off: not child_off
 		deferred
 		ensure
-			--new_arity: arity = old arity - 1;
-			--new_child_index: child_index = old child_index
+			new_arity: arity = old arity - 1;
+			new_child_index: child_index = old child_index
 		end;
 
 	wipe_out is
@@ -171,7 +171,7 @@ feature -- Conversion
 				until
 					current_node = Void
 				loop
-					child_add_right (current_node.item);
+					child_put_right (current_node.item);
 					child_forth;
 					child.fill_from_binary (current_node);
 					current_node := current_node.right_child
@@ -195,7 +195,7 @@ feature -- Duplication
 			until
 				child_after or else (counter = n)
 			loop
-				Result.add_child (child.duplicate_all);
+				Result.put_child (child.duplicate_all);
 				child_forth;
 				counter := counter + 1
 			end;
@@ -262,7 +262,7 @@ feature {DYNAMIC_TREE} -- Implementation
 			until
 				child_off
 			loop
-				Result.add_child (child.duplicate_all);
+				Result.put_child (child.duplicate_all);
 				Result.child_forth;
 				child_forth
 			end;

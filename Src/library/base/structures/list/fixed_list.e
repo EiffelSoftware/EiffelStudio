@@ -57,7 +57,7 @@ class FIXED_LIST [G] inherit
 			{FIXED_LIST}
 				array_make
 		undefine
-			sequential_representation, put
+			linear_representation, put
 		redefine
 			extendible
 		end;
@@ -165,31 +165,37 @@ feature -- Cursor movement
 		end;
 		
 	start is
+			-- Move cursor to first position.
 		do
 			index := 1
 		end;
 		
 	finish is
+			-- Move cursor to last position.
 		do
 			index := count
 		end;
 		
 	forth is
+			-- Move cursor to next position, if any.
 		do
 			index := index + 1
 		end;
 		
 	back is
+			-- Move cursor to previous position, if any.
 		do
 			index := index - 1
 		end;
 		
 	go_i_th (i: INTEGER) is
+			-- Move cursor to `i'-th position.
 		do
 			index := i
 		end;
 		
 	go_to (p: CURSOR) is
+			-- Move cursor to element remembered in `p'.
 		local
 			fl_c: ARRAYED_LIST_CURSOR
 		do
@@ -205,6 +211,7 @@ feature -- Status report
 	extendible: BOOLEAN is false;
 	
 	valid_cursor (p: CURSOR): BOOLEAN is
+			-- Is `p' a valid cursor?
 		local
 			fl_c: ARRAYED_LIST_CURSOR
 		do
@@ -213,12 +220,14 @@ feature -- Status report
 				Result := valid_index (fl_c.index)
 			end
 		end;
+
 feature {NONE} 	-- Inapplicable
 
 	force (v: like item) is
 		do
-			-- Inapplicable: require extendible
+			-- Inapplicable: requires extendible
 		end;
+
 
 end -- class FIXED_LIST	
 

@@ -13,177 +13,258 @@ indexing
 deferred class CIRCULAR [G] inherit
 
 	CHAIN [G]
-		undefine
-			off, exhausted, isfirst, islast
 		redefine
-			search, 
 			remove,
-			start, finish,
-			forth, back,
+			forth, back, before, after, off,
 			move, go_i_th,
-			valid_cursor_index
-		end
+			valid_cursor_index, exhausted,
+			first, last, index
+		end;
 
 feature -- Access
-	
-	search(v: like item) is
+
+	first: G is
+			-- Item at position currently defined as first
+		local
+			pos: INTEGER
 		do
-			standard_search(v);
-			if after or exhausted then
-				finish;
-				exhausted := true;
+			pos := standard_index;
+			start;
+			Result := item;
+			move (pos)
+		end;
+
+	index: INTEGER is
+			-- Current cursor index, with respect to position
+			-- currently defined as first
+		local
+			first_ind, std_ind: INTEGER
+		do
+			std_ind := standard_index;
+			start;
+			first_ind := standard_index;
+			Result := std_ind - first_ind + 1;
+			if Result < 0 then
+				Result := count + Result
 			end;
-		ensure then
-			not_off_or_else_empty: not off or else empty
+			move (Result)
+		end
+		
+
+	last: like first is
+			-- Item at position currently defined as last
+		local
+			pos: INTEGER
+		do
+			pos := standard_index;
+			finish;
+			Result := item;
+			start; move (pos)
 		end;
 
 feature -- Status report
 
-	exhausted: BOOLEAN; 
-			-- Are there no more items to be read?
-
 	valid_cursor_index (i: INTEGER): BOOLEAN is
-			-- Is `i' correctly bounded for cursor movement?
+			-- Is `i' a possible cursor position?
 		do
 			Result := (i >= 0) and (i <= count)
 		ensure then
 			valid_cursor_index_definition: Result = (i >= 0) and (i <= count)
 		end;
 
-feature -- Cursor movement
-
-	start is
+	after: BOOLEAN is
+			-- Is there no valid cursor position to the right of cursor?
 		do
-			standard_start;
-			exhausted := off;
+			Result := empty and standard_after
 		ensure then
-			not_off_or_else_empty: not off or else empty
-		end;
-
-	finish is
-		do
-			standard_finish;
-			exhausted := off;
-		ensure then
-			not_off_or_else_empty: not off or else empty
+			Result = empty and standard_after
 		end;
 	
+	before: BOOLEAN is
+			-- Is there no valid cursor position to the right of cursor?
+		do
+			Result := empty and standard_before
+		ensure then
+			Result = empty and standard_before
+		end;
+
+	off: BOOLEAN is
+			-- Is there no current item?
+		do
+			Result := empty
+		ensure then
+			Result = empty
+		end;
+
+	exhausted: BOOLEAN is
+			-- Has structure been completely explored?
+		do
+			Result := empty or internal_exhausted
+		end
+
+feature -- Cursor movement
 
 	forth is
-			-- Move to next item.
+			-- Move cursor to next item, cyclically.
 		do		
-			standard_move(1);
-			if after then
-				start;
-				exhausted := true;
+			if islast then
+				internal_exhausted := true
+			end
+			standard_forth;
+			if standard_after then
+				standard_start
 			end;
-		ensure then
-			not_off_or_else_empty: not off or else empty
 		end;
 
 	back is
-			-- Move to previous item.
+			-- Move cursor to previous item, cyclically.
 		do
-			standard_move(-1);
-			if before then
-				finish;
-				exhausted := true;
+			if isfirst then
+				internal_exhausted := true
+			end
+			standard_back;
+			if standard_before then
+				standard_finish
 			end;
-		ensure then
-			not_off_or_else_empty: not off or else empty
 		end;
 
-	move(i: INTEGER) is
+	move (i: INTEGER) is
+			-- Move cursor to `i'-th item from current position,
+			-- cyclically.
 		local
-			ind: INTEGER;
+			real_move, counter: INTEGER
 		do
-			ind := index;
-			standard_move(modulo(ind+i, count) - ind);
-		ensure then
-			not_off_or_else_empty: not off or else empty
+			if i /= 0 then
+				real_move := i \\ count;
+				if real_move < 0 then
+					real_move := count - real_move
+				end
+				from
+				until
+					counter = real_move
+				loop
+					forth;
+					counter := counter + 1
+				end
+			end
 		end;
 
-	go_i_th(i: INTEGER) is
+	go_i_th (i: INTEGER) is
+			-- Move cursor to `i'-th position from current start, cyclically.
 		require else
-			index_small_enough: i<=count;
 			index_big_enough: i>=1;
 			not_empty: not empty
 		do
-			standard_go_i_th(i);
-		ensure then
-			not_off_or_else_empty: not off or else empty
+			start; move (i - 1)
+		end;
+
+	set_start is
+			-- Define current position as the first.
+		require
+			not empty
+		deferred
 		end;
 
 feature -- Removal
 
 	remove is
+			-- Remove item at cursor position.
+			-- Move cursor to right neighbor (cyclically).
+			-- If removed item was at current starting position,
+			-- move starting position to right neighbor.
 		do
+			fix_start_for_remove;
 			standard_remove;
-			if after then
-				finish;
-			elseif before then
-				start;
+			if standard_after then
+				finish
+			elseif standard_before then
+				start
 			end;
-		ensure then
-			not_off_or_else_empty: not off or else empty
 		end;
 
 feature {CIRCULAR} -- Implementation
 
-	standard_search(v: like item) is
-			deferred
+	fix_start_for_remove is
+			-- Before deletion, update starting position if necessary.
+		deferred
 		end;
 
-	standard_remove is
-			deferred
-		end;
+	internal_exhausted: BOOLEAN;
+			-- Has last `forth' or `back' operation exhausted the structure?
 
-	standard_start is
-			deferred
-		end;	
-
-	standard_finish is
-			deferred
-		end;
-
-	standard_forth is
-			deferred
+	standard_after: BOOLEAN is
+			-- Is there no valid cursor position to the right of cursor?
+			-- (Non-cyclically)
+		deferred
 		end;
 
 	standard_back is
-			deferred
+			-- Move cursor to previous element, non-cyclically.
+		deferred
 		end;
 
-	standard_move(i: INTEGER) is
-			deferred
+	standard_before: BOOLEAN is
+			-- Is there no valid cursor position to the left of cursor?
+			-- (Non-cyclically)
+		deferred
 		end;
 
-	standard_go_i_th(i: INTEGER) is
-			deferred
+	standard_finish is
+			-- Move cursor to last element.
+		deferred
 		end;
 
-	modulo (n1, n2: INTEGER): INTEGER is
-			-- Modulus, plus one; 0 if `n2' = 0
-		require
-			 non_negative_number: n2 >= 0
-		do
-			if n2 /= 0 then
-				 Result := n1 \\ n2;
-				if Result <= 0 then
-					 Result := Result + n2
-				end
-			end
-		ensure
-			 Result >= 0 and Result <= n2
+	standard_forth is
+			-- Move cursor to next element, non-cyclically.
+		deferred
 		end;
+
+	standard_isfirst: BOOLEAN is
+			-- Is cursor at first position, non-cyclically?
+		deferred
+		end;
+
+	standard_islast: BOOLEAN is
+			-- Is cursor at last position, non-cyclically?
+		deferred
+		end;
+
+	standard_move (i: INTEGER) is
+			-- Move cursor to `i'-th element, non-cyclically.
+		deferred
+		end;
+
+	standard_go_i_th (i: INTEGER) is
+			-- Move cursor to `i'-th element, non-cyclically.
+		deferred
+		end;
+
+	standard_index: INTEGER is
+			-- Current cursor index, non-cyclically
+		deferred
+		end;
+
+	standard_remove is
+			-- Remove, non-cyclically.
+		deferred
+		end;
+
+	standard_search (v: like first) is
+			-- Search non-cyclically.
+		deferred
+		end;
+
+	standard_start is
+			-- Move cursor to first element.
+		deferred
+		end;	
+
 		
-	after: BOOLEAN is
-		deferred
-		end;
-	
-	before: BOOLEAN is
-		deferred
-		end;
+invariant
+
+	not_before_unless_empty: before implies empty;
+	not_after_unless_empty: after implies empty;
+	not_off_unless_empty: off implies empty
 
 end -- class CIRCULAR
 

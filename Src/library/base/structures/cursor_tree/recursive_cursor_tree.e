@@ -74,13 +74,13 @@ feature -- Status report
 		end;
 
 	after: BOOLEAN;
-			-- Is there no valid position to the right of the cursor?
+			-- Is there no valid cursor position to the right of cursor?
 
 	before: BOOLEAN;
-			-- Is there no valid position to the left of the cursor?
+			-- Is there no valid cursor position to the left of cursor?
 
 	above: BOOLEAN is
-			-- Is there no valid position above the cursor?
+			-- Is there no valid cursor position above cursor?
 		do
 			if not below then
 				Result := (active_parent = Void)

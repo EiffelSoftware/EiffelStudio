@@ -18,6 +18,7 @@ deferred class RESIZABLE [G] inherit
 			{NONE} all
 		end
 
+
 feature -- Measurement
 
 
@@ -31,7 +32,7 @@ feature -- Measurement
 			-- Proposed number of additional elements
 			--| Result is a reasonable value, resulting from a space-time tradeoff.
 		do
-			Result := max (capacity * Growth_percentage // 100, Minimal_increase)
+			Result := max (Minimal_increase, (capacity * Growth_percentage // 100))
 		ensure
 			At_least_one: Result >= 1	
 		end;
@@ -51,7 +52,7 @@ feature -- Resizing
 		do
 			grow (additional_space)
 		ensure
-			--capacity >= old capacity + old capacity * Growth_percentage // 100 + 1
+			capacity >= old capacity + old capacity * Growth_percentage // 100 + 1
 		end;
 
 	grow (i: INTEGER) is

@@ -1,4 +1,3 @@
-
 indexing
 
 	description:
@@ -23,6 +22,8 @@ feature -- Access
 	
 	has (v: G): BOOLEAN is
 			-- Does structure include `v'?
+ 			-- (Reference or object equality,
+			-- based on `object_comparison'.)
 		local
 			pos: CURSOR
 		do
@@ -73,12 +74,12 @@ feature -- Element change
 			-- item.
 		deferred
 		ensure then
-	 		--remains_sorted: old sorted implies sorted;
+	 		remains_sorted: (old sorted) implies sorted;
 			item_inserted: item = v
 		end;
 
-	merge (other: SEQUENTIAL [G]) is
-			-- Add all elements from `other', preserving order.
+	merge (other: LINEAR [G]) is
+			-- Add all elements from `other' at their proper positions.
 		do
 			from
 				other.start
@@ -89,7 +90,7 @@ feature -- Element change
 				other.forth
 			end
 		ensure then
-	 		--remains_sorted: old sorted implies sorted
+	 		remains_sorted: (old sorted) implies sorted
 		end;
 
 feature -- Status report

@@ -16,31 +16,31 @@ class TWO_WAY_LIST [G] inherit
 	LINKED_LIST [G]
 		redefine
 			first_element, last_element,
-			extend, add_front, add_left, add_right,
+			extend, put_front, put_left, put_right,
 			merge_right, merge_left, new_cell,
 			remove, remove_left, remove_right, wipe_out,
 			previous, finish, move, islast, new_chain,
 			forth, back
 		select
-			add_front,
+			put_front,
 			merge_right,
-			move, add_right,
+			move, put_right,
 			wipe_out
 		end;
 
 	LINKED_LIST [G]
 		rename
-			add_front as ll_add_front,
-			add_right as ll_add_right,
+			put_front as ll_put_front,
+			put_right as ll_put_right,
 			merge_right as ll_merge_right,
 			move as ll_move,
 			wipe_out as ll_wipe_out
 		export
 			{NONE}
-				ll_add_front, ll_add_right,
+				ll_put_front, ll_put_right,
 				ll_move, ll_merge_right, ll_wipe_out
 		redefine
-			add_left, merge_left, remove, new_chain,
+			put_left, merge_left, remove, new_chain,
 			remove_left, finish, islast, first_element, extend,
 			last_element, previous, new_cell, remove_right,
 			forth, back
@@ -75,7 +75,7 @@ feature -- Status report
 feature -- Cursor movement
 
 	forth is
-			-- Move to next item.
+			-- Move cursor to next position, if any.
 		do
 			if before then
 				before := false;
@@ -92,7 +92,7 @@ feature -- Cursor movement
 		end;
 		
 	back is
-			-- Move to previous item.
+			-- Move cursor to previous position, if any.
 		do
 			if after then
 				after := false;
@@ -158,10 +158,11 @@ feature -- Cursor movement
 
 feature -- Element change
 
-	add_front (v: like item) is
+	put_front (v: like item) is
 			-- Add `v' to beginning.
+			-- Do not move cursor.
 		do
-			ll_add_front (v);
+			ll_put_front (v);
 			if count = 1 then
 				last_element := first_element
 			end
@@ -169,6 +170,7 @@ feature -- Element change
 
 	extend (v: like item) is
 			-- Add `v' to end.
+			-- Do not move cursor.
 		local
 			p : like first_element
 		do
@@ -183,10 +185,10 @@ feature -- Element change
 			if after then
 				active := p
 			end;
-			count := count + 1;
+			count := count + 1
 	end;
 	
-	add_left (v: like item) is
+	put_left (v: like item) is
 			-- Put `v' to the left of cursor position.
 			-- Do not move cursor.
 		local
@@ -212,14 +214,14 @@ feature -- Element change
 			count := count + 1
 		end;
 
-	add_right (v: like item) is
+	put_right (v: like item) is
 			-- Put `v' to the right of cursor position.
 			-- Do not move cursor.
 		local
 			was_last: BOOLEAN;
 		do
 			was_last := islast;
-			ll_add_right (v);
+			ll_put_right (v);
 			if count = 1 then
 					-- `p' is only element in list
 				last_element := active
@@ -283,8 +285,9 @@ feature -- Removal
 			-- Move cursor to right neighbor
 			-- (or after if no right neighbor).
 		local
-			n,p: like first_element;
+			succ, pred, removed: like first_element;
 		do
+			removed := active;
 			if isfirst then
 				active := first_element.right;
 				first_element.forget_right;
@@ -302,66 +305,29 @@ feature -- Removal
 				last_element := active;
 				after := true;
 			else
-				p := active.left;
-				n := active.right;
-				p.forget_right;
-				n.forget_left;
-				p.put_right (n);
-				active := n
+				pred := active.left;
+				succ := active.right;
+				pred.forget_right;
+				succ.forget_left;
+				pred.put_right (succ);
+				active := succ
 			end;
-			count := count - 1
+			count := count - 1;
+			cleanup_after_remove (removed)
 		end;
 
 	remove_left is
 			-- Remove item to the left of cursor position.
 			-- Do not move cursor.
-		local
-			p: like first_element;
 		do
-			if after then
-				active := last_element.left;
-				last_element.forget_left;
-				last_element := active;
-				if count = 1 then
-					first_element := Void
-				end	
-			else
-				p := active.left.left;
-				active.forget_left;
-				if p /= Void then
-					p.forget_right;
-					active.put_left (p)
-				else
-					first_element := active
-				end
-			end;
-			count := count - 1
+			back; remove
 		end;
 
 	remove_right is
 			-- Remove item to the right of cursor position.
 			-- Do not move cursor.
-		local
-			p: like first_element;
 		do
-			if before then
-				active := first_element.right;
-				first_element.forget_right;
-				first_element := active;
-				if count = 1 then
-					last_element := Void
-				end
-			else
-				p := active.right.right;
-				active.forget_right;
-				if p /= Void then
-					p.forget_left;
-					active.put_right (p)
-				else
-					last_element := active
-				end
-			end;
-			count := count - 1
+			forth; remove; back
 		end;
 
 	wipe_out is
@@ -460,7 +426,7 @@ feature {TWO_WAY_LIST} -- Implementation
 				Result := active.left
 			end
 		end;
-		
+
 end -- class TWO_WAY_LIST
 
 

@@ -40,7 +40,7 @@ feature -- Element change
 			-- item.
 		do
 			search_after (v);
-			add_left (v);
+			put_left (v);
 			
 			back
 		end;
@@ -49,8 +49,8 @@ feature -- Removal
 
 	prune_all (v: like item) is
 			-- Remove all items identical to `v'.
-			-- (According to the currently adopted
-			-- discrimination rule in `search')
+			-- (Reference or object equality,
+			-- based on `object_comparison'.)
 			-- Leave cursor `off'.
 		do
 			from
@@ -81,9 +81,9 @@ feature -- Transformation
 			-- sort the list
 			-- | Dumb implementation: copy in other structure and insert again
 		local
-			seq: SEQUENTIAL [G]		
+			seq: LINEAR [G]		
 		do
-			seq := sequential_representation;
+			seq := linear_representation;
 			wipe_out;
 			from
 				seq.start
@@ -93,7 +93,6 @@ feature -- Transformation
 				extend (seq.item)
 			end;
 		end;
-
 
 feature {PART_SORTED_TWO_WAY_LIST} -- Implementation
 

@@ -22,7 +22,8 @@ feature -- Measurement
 
 	occurrences (v: G): INTEGER is
 			-- Number of times `v' appears in structure
-			-- (Reference or object equality, based on `object_comparison'.) 
+			-- (Reference or object equality,
+			-- based on `object_comparison'.) 
 		deferred
 		ensure
 			non_negative_occurrences: Result >= 0
@@ -34,7 +35,7 @@ feature -- Element change
 			-- Insert a new occurrence of `v'.
 		deferred
 		ensure then
-			--one_more_occurrence: occurrences (v) = old (occurrences (v)) + 1
+			one_more_occurrence: occurrences (v) = old (occurrences (v)) + 1
 		end;
 
 end -- class BAG

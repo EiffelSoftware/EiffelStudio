@@ -18,7 +18,8 @@ feature -- Access
 
 	has (v: G): BOOLEAN is
 			-- Does structure include `v'?
-			-- (Reference or object equality, based on `object_comparison'.) 
+			-- (Reference or object equality,
+			-- based on `object_comparison'.) 
 		deferred
 		ensure
 			Result implies not empty
@@ -37,9 +38,9 @@ feature -- Status report
 
 	changeable_comparison_criterion: BOOLEAN is
 			-- May `object_comparison' be changed?
-			-- (Always true for most structures, redefined in set)
+			-- (Answer: yes by default.)
 		do
-			Result := true
+			Result := True
 		end;
 		
 feature -- Status setting
@@ -68,9 +69,18 @@ feature -- Status setting
 
 feature -- Conversion
 
-	sequential_representation: SEQUENTIAL [G] is
-			-- Representation as a sequential structure
+	linear_representation: LINEAR [G] is
+			-- Representation as a linear structure
 		deferred
+		end;
+
+
+feature -- Obsolete
+
+	sequential_representation: LINEAR [G] is
+				obsolete "Use ``linear_representation'' instead"
+		do
+			Result := linear_representation
 		end;
 
 end -- class CONTAINER

@@ -34,35 +34,37 @@ feature -- Status report
 
 feature -- Element change
 
-	add_front (v: like item) is
+	put_front (v: like item) is
 			-- Add `v' to beginning.
+			-- Do not move cursor.
 		deferred
 		ensure
-	 		--new_count: count = old count + 1;
+	 		new_count: count = old count + 1;
 			item_inserted: first = v
 		end;
 
-	add_left (v: like item) is
+	put_left (v: like item) is
 			-- Add `v' to the left of cursor position.
 			-- Do not move cursor.
 		require
-			not_off: not off
+			extendible: extendible;
+			not_before: not before
 		deferred
 		ensure
-	 		--new_count: count = old count + 1;
-	 		--new_index: index = old index + 1
+	 		new_count: count = old count + 1;
+	 		new_index: index = old index + 1
 		end;
 
-	add_right (v: like item) is
+	put_right (v: like item) is
 			-- Add `v' to the right of cursor position.
 			-- Do not move cursor.
 		require
 			extendible: extendible;
-			not_off: not off
+			not_after: not after
 		deferred
 		ensure
-	 		--new_count: count = old count + 1;
-	 		--same_index: index = old index
+	 		new_count: count = old count + 1;
+	 		same_index: index = old index
 		end;
 
 	merge_left (other: like Current) is
@@ -70,12 +72,12 @@ feature -- Element change
 			-- position. Do not move cursor. Empty `other'.
 		require
 			extendible: extendible;
-			not_off: not off;
+			not_off: not before;
 			other_exists: other /= Void
 		deferred
 		ensure
-	 		--new_count: count = old count + old other.count;
-	 		--new_index: index = old index + old other.count;
+	 		new_count: count = old count + old other.count;
+	 		new_index: index = old index + old other.count;
 			is_empty: other.empty
 		end;
 
@@ -84,12 +86,12 @@ feature -- Element change
 			-- position. Do not move cursor. Empty `other'.
 		require
 			extendible: extendible;
-			not_off: not off;
+			not_off: not after;
 			other_exists: other /= Void
 		deferred
 		ensure
-	 		--new_count: count = old count + old other.count;
-	 		--same_index: index = old index;
+	 		new_count: count = old count + old other.count;
+	 		same_index: index = old index;
 			is_empty: other.empty
 		end;
 
@@ -98,12 +100,11 @@ feature -- Removal
 	prune (v: like item) is
 			-- Remove first occurrence of `v', if any,
 			-- after cursor position.
-			-- Move cursor to right neighbor
-			-- (or `off' if no right neighbor or `v' does not occur).
+			-- If found, move cursor to right neighbor;
+			-- if not, make structure `exhausted'.
 		do
-			start;
 			search (v);
-			if not off then
+			if not exhausted then
 				remove
 			end
 		end;
@@ -115,8 +116,8 @@ feature -- Removal
 			left_exist: index > 1
 		deferred
 		ensure
-	 		--new_count: count = old count - 1;
-	 		--new_index: index = old index - 1
+	 		new_count: count = old count - 1;
+	 		new_index: index = old index - 1
 		end;
 
 	remove_right is
@@ -126,27 +127,27 @@ feature -- Removal
 			right_exist: index < count
 		deferred
 		ensure
-	 		--new_count: count = old count - 1;
-	 		--same_index: index = old index
+	 		new_count: count = old count - 1;
+	 		same_index: index = old index
 		end;
 
 	prune_all (v: like item) is
 			-- Remove all occurrences of `v'.
-			-- (According to the currently adopted
-			-- discrimination rule in `search')
-			-- Leave cursor `off'.
+			-- (Reference or object equality,
+			-- based on `object_comparison'.)
+			-- Leave structure `exhausted'.
 		do
 			from
 				start;
 				search (v)
 			until
-				off
+				exhausted
 			loop
 				remove;
 				search (v)
 			end
 		ensure then
-			is_off: off
+			is_exhausted: exhausted
 		end;
 
 	wipe_out is
@@ -155,7 +156,7 @@ feature -- Removal
 			from
 				start
 			until
-				off
+				empty
 			loop
 				remove
 			end
@@ -164,8 +165,10 @@ feature -- Removal
 feature -- Duplication
 
 	duplicate (n: INTEGER): like Current is
-			-- Copy of sub-chain beginning at cursor position
-			-- and having min (`n', `count' - `index' + 1) items
+			-- Copy of sub-chain beginning at current position
+			-- and having min (`n', `from_here') items, 
+			-- where `from_here' is the number of items
+			-- at or to the right of current position.
 		local
 			pos: CURSOR;
 			counter: INTEGER
@@ -174,10 +177,9 @@ feature -- Duplication
 				Result := new_chain;
 				pos := cursor
 			until
-				(counter = n) or else off
+				(counter = n) or else exhausted
 			loop
-				Result.finish;
-				Result.add_left (item);
+				Result.extend (item);
 				forth;
 				counter := counter + 1
 			end;
@@ -194,7 +196,7 @@ feature -- Obsolete
 			from
 				counter := 1
 			until
-				off or else (counter > n)
+				isfirst or else (counter > n)
 			loop
 				remove_left;
 				counter := counter + 1
@@ -209,12 +211,31 @@ feature -- Obsolete
 			from
 				counter := 1
 			until
-				off or else (counter > n)
+				islast or else (counter > n)
 			loop
 				remove_right;
 				counter := counter + 1
 			end
 		end;
+
+	add_front (v: like item) is
+			obsolete "Use ``put_front'' instead"
+		do
+			put_front (v)
+		end;
+
+	add_left (v: like item) is
+			obsolete "Use ``put_left'' instead"
+		do
+			put_left (v)
+		end;
+
+	add_right (v: like item) is
+			obsolete "Use ``put_right'' instead"
+		do
+			put_right (v)
+		end;
+
 
 feature {DYNAMIC_CHAIN} -- Implementation
 

@@ -18,7 +18,7 @@ class ARRAYED_STACK [G] inherit
 		undefine
 			copy, is_equal, consistent, setup, prune_all, replace
 		redefine
-			sequential_representation
+			linear_representation
 		select
 			remove, extend
 		end;
@@ -40,9 +40,9 @@ class ARRAYED_STACK [G] inherit
 			{ARRAYED_STACK} count
 		undefine
 			readable, writable,
-			append, fill, put
+			append, fill, put, force
 		redefine
-			sequential_representation
+			linear_representation
 		end;
 
 creation
@@ -51,7 +51,7 @@ creation
 
 feature -- Element change
 
-	extend, put (v: like item) is
+	extend, put, force (v: like item) is
 			-- Push `v' on top.
 		do							
 			al_extend (v);
@@ -71,8 +71,8 @@ feature -- Removal
 
 feature -- Conversion
 
-	sequential_representation: ARRAYED_LIST [G] is
-			-- Representation as a sequential structure
+	linear_representation: ARRAYED_LIST [G] is
+			-- Representation as a linear structure
 			-- (in the reverse order of original insertion)
 		local
 			i: INTEGER

@@ -1,4 +1,3 @@
-
 indexing
 
 	description:
@@ -13,26 +12,18 @@ indexing
 
 deferred class LIST [G] inherit
 
-	CHAIN [G]
-		 undefine
-			search, off
-		end;
-
-	LINEAR [G]
-		undefine
-			has, index_of
-		end
+	CHAIN [G];
 
 feature -- Status report
 
 	after: BOOLEAN is
-			-- Is there no valid position to the right of the cursor?
+			-- Is there no valid cursor position to the right of cursor?
 		do
 			Result := (index = count + 1)
 		end;
 
 	before: BOOLEAN is
-			-- Is there no valid position to the left of the cursor?
+			-- Is there no valid cursor position to the left of cursor?
 		do
 			Result := (index = 0)
 		end;
@@ -51,7 +42,6 @@ feature -- Obsolete
 
 invariant
 
-	not_both: not (after and before);
 	before_definition: before = (index = 0);
 	after_definition: after = (index = count + 1);
 

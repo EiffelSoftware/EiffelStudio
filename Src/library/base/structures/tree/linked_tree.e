@@ -1,4 +1,3 @@
-
 indexing
 
 	description:
@@ -34,8 +33,8 @@ class LINKED_TREE [G] inherit
 	LINKED_LIST [G]
 		rename
 			active as child,
-			add_left as child_add_left,
-			add_right as child_add_right,
+			put_left as child_put_left,
+			put_right as child_put_right,
 			after as child_after,
 			back as child_back,
 			before as child_before,
@@ -82,7 +81,7 @@ class LINKED_TREE [G] inherit
 		undefine
 			child_readable, is_leaf,
 			child_writable,
-			sequential_representation,
+			linear_representation,
 			child_isfirst, child_islast, valid_cursor_index
 		redefine
 			first_child, new_cell
@@ -128,7 +127,7 @@ feature -- Access
 
 feature -- Element change
 
-	add_child (n: like parent) is
+	put_child (n: like parent) is
 			-- Add `n' to the list of children.
 			-- Do not move child cursor.
 		do
@@ -145,25 +144,25 @@ feature -- Element change
 			arity := arity + 1
 		end;
 
-	put_child, replace_child (n: like parent) is
+	replace_child (n: like parent) is
 			-- Replace current child by `n'.
 		do
-			add_child_right (n);
+			put_child_right (n);
 			remove_child
 		end;
 
-	add_child_left (n: like parent) is
+	put_child_left (n: like parent) is
 			-- Add `n' to the left of cursor position.
 			-- Do not move cursor.
 		local
 			temp: like first_child
 		do
 			child_back;
-			add_child_right (n);
+			put_child_right (n);
 			child_forth; child_forth
 		end;
 
-	add_child_right (n: like parent) is
+	put_child_right (n: like parent) is
 			-- Add `n' to the right of cursor position.
 			-- Do not move cursor.
 		do
@@ -222,6 +221,7 @@ feature -- Element change
 				n.attach_to_parent (Void)
 			end;
 		end;
+
 
 feature {LINKED_TREE} -- Implementation
 

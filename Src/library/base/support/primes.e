@@ -8,8 +8,12 @@ indexing
 	date: "$Date$";
 	revision: "$Revision$"
 
-class
-	PRIMES
+class PRIMES inherit
+
+	COUNTABLE [INTEGER]
+		rename
+			has as is_prime
+		end
 
 feature -- Access
 
@@ -18,7 +22,7 @@ feature -- Access
 	Smallest_odd_prime: INTEGER is 3;
 
 
-	next_prime (n: INTEGER): INTEGER is
+	higher_prime (n: INTEGER): INTEGER is
 			-- Lowest prime greater than or equal to `n'
 		do
 			if n <= Smallest_prime then
@@ -33,14 +37,14 @@ feature -- Access
 						Result := n
 					end
 				until
-					test_prime (Result)
+					is_prime (Result)
 				loop
 					Result := Result + Smallest_prime
 				end
 			end
 		end;
 
-	former_prime (n: INTEGER): INTEGER is
+	lower_prime (n: INTEGER): INTEGER is
 			-- Greatest prime lower than or equal to `n'
 		require
 			argument_big_enough: n >= Smallest_prime
@@ -57,7 +61,7 @@ feature -- Access
 						Result := n
 					end
 				until
-					test_prime (Result)
+					is_prime (Result)
 				loop
 					Result := Result - Smallest_prime
 				end
@@ -65,8 +69,9 @@ feature -- Access
 		end;
 
 	all_lower_primes (n: INTEGER): ARRAY [BOOLEAN] is
-			-- All prime numbers less or equal to `n'
-			-- using Eratosthenes' algorithm
+			-- Array of `n' boolean values, where the
+			-- value at index `i' is true if and only if
+			-- `i' is prime.
 		local
 			i, j: INTEGER
 		do
@@ -80,7 +85,7 @@ feature -- Access
 				Result.put (true, i);
 				i := i + Smallest_prime
 			end;
-				-- Smallest_prime is the lowest prime number
+				-- `Smallest_prime' is the lowest prime number
 			if n >= Smallest_prime then
 				Result.put (true, Smallest_prime);
 			end;
@@ -104,10 +109,8 @@ feature -- Access
 			end
 		end;
 
-	test_prime (n: INTEGER): BOOLEAN is
+	is_prime (n: INTEGER): BOOLEAN is
 			-- Is `n' a prime number?
-		require
-			non_negative_argument: n >= 0
 		local
 			to_test, divisor: INTEGER
 		do
@@ -127,6 +130,55 @@ feature -- Access
 					Result := true
 				end
 			end
+		end;
+
+	item (i: INTEGER): INTEGER is
+			-- The `i'-th prime number
+		local
+			candidates: ARRAY [BOOLEAN];
+			found: INTEGER
+		do
+			candidates := all_lower_primes (i * i);
+			from
+				Result := 2; found := 1
+			invariant
+				-- Between 1 and `Result' there are `found' primes.
+			variant
+				i * i - Result
+			until
+				found = i
+			loop
+				Result := Result + 1;
+				if candidates.item (Result) then
+					found := found + 1
+				end
+			end
+		end;
+
+feature -- Inapplicable
+
+	linear_representation: LINEAR [INTEGER] is
+		do
+		end;
+
+feature -- Obsolete
+		
+	next_prime (n: INTEGER): INTEGER is
+			obsolete "Use `higher_prime' instead"
+		do
+			Result := higher_prime (n)
+		end;
+
+	former_prime (n: INTEGER): INTEGER is
+			obsolete "Use `lower_prime' instead"
+		do
+			Result := lower_prime (n)
+		end;
+
+	test_prime (n: INTEGER): BOOLEAN is
+			obsolete "Use `is_prime' instead"
+		do
+			Result := is_prime (n)
 		end;
 
 end -- class PRIMES

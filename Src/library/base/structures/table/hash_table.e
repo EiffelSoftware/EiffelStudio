@@ -39,7 +39,7 @@ feature -- Initialization
 			table_size: INTEGER
 		do
 			!! clever;
-			table_size := clever.next_prime (n);
+			table_size := clever.higher_prime (n);
 			if table_size < 5 then
 				table_size := 5
 			end;
@@ -79,8 +79,8 @@ feature -- Access
 
 	has_item (v: G): BOOLEAN is
 				-- Does structure include `v'?
-				-- (According to the currently adopted
-				-- discrimination rule)
+			-- (Reference or object equality,
+			-- based on `object_comparison'.)
 		local
 			i, bound: INTEGER
 		do
@@ -134,7 +134,7 @@ feature -- Access
     item_for_iteration: G is
             -- Element at current iteration position
         require
-            not_over: not over
+            not_off: not off
         do
             Result := content.item (pos_for_iter)
         end;
@@ -142,7 +142,7 @@ feature -- Access
     key_for_iteration: H is
             -- Key at current iteration position
         require
-            not_over: not over
+            not_off: not off
         do
             Result := keys.item (pos_for_iter)
         end;
@@ -214,8 +214,8 @@ feature -- Status report
 			Result := control = Not_found_constant
 		end;
 
-    over: BOOLEAN is
-            -- Is the cursor at the end?
+    off: BOOLEAN is
+            -- Is the cursor after the last item?
         do
             Result := pos_for_iter > keys.upper
         end;
@@ -232,7 +232,7 @@ feature -- Cursor movement
     forth is
             -- Advance cursor by one position.
         require
-            not_over: not over
+            not_off: not off
         local
             stop: BOOLEAN
         do
@@ -241,7 +241,7 @@ feature -- Cursor movement
                 stop
             loop
                 pos_for_iter := pos_for_iter + 1;
-                stop := over or else valid_key (keys.item (pos_for_iter))
+                stop := off or else valid_key (keys.item (pos_for_iter))
             end
         end;
 
@@ -374,8 +374,8 @@ feature -- Removal
 
 feature -- Conversion
 
-	sequential_representation: ARRAYED_LIST [G] is
-			-- Representation as a sequential structure
+	linear_representation: ARRAYED_LIST [G] is
+			-- Representation as a linear structure
 			-- (order is same as original order of insertion)
 		local
 			i, table_size: INTEGER;
@@ -408,15 +408,20 @@ feature -- Duplication
 
 feature -- Obsolete
 
-	max_size: INTEGER is obsolete "Use ``capacity''"
+	max_size: INTEGER is obsolete "Use ``capacity'' instead"
 		do
 			Result := keys.count
 		end;
 
 
-	change_item (new: G; access_key: H) is obsolete "Use ``replace''"
+	change_item (new: G; access_key: H) is obsolete "Use ``replace'' instead"
 		do
 			replace (new, access_key)
+		end;
+
+	over: BOOLEAN is obsolete "Use ``off'' instead"
+		do
+			Result := off
 		end;
 
 feature {HASH_TABLE} -- Implementation
@@ -451,6 +456,7 @@ feature {HASH_TABLE} -- Implementation
 		do
 			deleted_marks := c
 		end;
+
 
 feature {NONE} -- Inapplicable
 

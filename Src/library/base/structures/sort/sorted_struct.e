@@ -14,7 +14,7 @@ deferred class SORTED_STRUCT [G -> COMPARABLE] inherit
 
 	COMPARABLE_STRUCT [G]
 		undefine
-			search
+			search, off
 		redefine
 			min, max
 		end;

@@ -16,48 +16,53 @@ class ARRAYED_CIRCULAR [G] inherit
 
 	CIRCULAR [G]
 		undefine
-			infix "@", first, readable,
-			put_i_th, valid_index, last,
+			infix "@", readable,
+			put_i_th, valid_index,
 			i_th, swap, prune_all
+		redefine
+			start
 		select
 			search,
 			remove, 
-			start, finish, back, forth, move, go_i_th	
+			isfirst, islast, index,
+			start, finish, back, forth, move, go_i_th,
+			after, before, off
 		end;
 
 	ARRAYED_LIST [G]
 		rename
-			make as al_make,
-			search as standard_search,
-			remove as standard_remove,
-			forth as standard_forth,
+			after as standard_after,
 			back as standard_back,
-			move as standard_move,
-			start as standard_start,
+			before as standard_before,
 			finish as standard_finish,
-			go_i_th as standard_go_i_th
-		export
-			{NONE}
-				al_make
+			forth as standard_forth,
+			go_i_th as standard_go_i_th,
+			index as standard_index,
+			isfirst as standard_isfirst,
+			islast as standard_islast,
+			make as al_make,
+			move as standard_move,
+			off as standard_off,
+			remove as standard_remove,
+			remove_left as standard_remove_left,
+			remove_right as standard_remove_right,
+			search as standard_search,
+			start as standard_start
+		export {NONE}
+			al_make,
+			standard_after, standard_back, standard_before,
+			standard_finish, standard_forth, standard_go_i_th,
+			standard_index, standard_isfirst, standard_islast,
+			standard_move, standard_off, standard_remove,
+			standard_remove_left, standard_remove_right, standard_search,
+			standard_start
 		undefine
-			has, valid_cursor_index, exhausted, bag_put, prune, is_equal,
-			setup, occurrences, copy, consistent, force
+			has, valid_cursor_index, bag_put, prune, is_equal,
+			setup, occurrences, copy, consistent, force,
+			first, last,
+			exhausted
 		end;
 
-	ARRAYED_LIST [G]
-		rename
-			make as al_make
-		export 
-			{NONE}
-				al_make
-		undefine
-			has, valid_cursor_index, exhausted,
-			search, 
-			remove, bag_put, prune, is_equal,
-			setup, occurrences, copy, consistent,
-			forth, back, move, start, finish, go_i_th, force
-		end
-			
 creation
 
 	make
@@ -65,14 +70,51 @@ creation
 feature -- Initialization
 
 	make (n: INTEGER) is
-			-- Create a circular with `n' items.
+			-- Create a circular chain with `n' items.
 		require
 			at_least_one: n >= 1
 		do
-			al_make (n)
+			al_make (n);
+			starter := 1
 		ensure
 			new_count: count = n
 		end;
+
+feature -- Access
+
+	starter: INTEGER;
+			-- Index of item currently selected as first
+
+feature -- Status setting
+
+	set_start is
+			-- Designate current position as the starting position
+		do
+			starter := standard_index
+		end;
+
+feature -- Cursor movement
+
+	start is
+			-- Move to position currently selected as first.
+		do
+			standard_move (starter)
+		end;
+
+feature {NONE} -- Implementation
+
+	fix_start_for_remove is
+			-- Before deletion, update starting position if necessary.
+		do
+			if (starter = standard_index) and standard_islast then
+				starter := 1
+			end
+		end;
+
+invariant
+
+	count >= 0;
+	starter >= 1; starter <= count
 
 end -- class ARRAYED_CIRCULAR
 

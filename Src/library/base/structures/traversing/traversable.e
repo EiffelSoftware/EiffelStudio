@@ -21,7 +21,7 @@ inherit
 feature -- Access
 
 	item: G is
-			-- Item at cursor position
+			-- Item at current position
 		require
 			not_off: not off	
 		deferred
@@ -29,12 +29,6 @@ feature -- Access
 	
 
 feature -- Status report
-
-	exhausted: BOOLEAN is
-			-- Are there no more items to be read?
-		do
-			Result := off
-		end;
 
 	off: BOOLEAN is
 			-- Is there no current item?
@@ -53,7 +47,6 @@ feature -- Cursor movement
 invariant
 
 	empty_constraint: empty implies off;
-	off_constraint: off implies exhausted
 
 end -- class TRAVERSABLE
 

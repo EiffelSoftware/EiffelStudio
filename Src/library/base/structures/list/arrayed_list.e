@@ -32,7 +32,7 @@ class ARRAYED_LIST [G] inherit
 			{ANY}
 				capacity
 		undefine
-			sequential_representation, prunable, put,
+			linear_representation, prunable, put,
 			prune, consistent, is_equal, occurrences, extendible
 		redefine
 			extend, setup, copy, prune_all, full
@@ -55,7 +55,7 @@ class ARRAYED_LIST [G] inherit
 			{ANY}
 				capacity
 		undefine
-			sequential_representation, prunable, full, put,
+			linear_representation, prunable, full, put,
 			prune, consistent, is_equal, occurrences, extendible
 		redefine 
 			wipe_out, extend,
@@ -72,7 +72,7 @@ class ARRAYED_LIST [G] inherit
 			first, last, swap, wipe_out,
 			go_i_th, move, prunable, start, finish,
 			count, prune, remove, 
-			setup, copy, add_left, merge_left,
+			setup, copy, put_left, merge_left,
 			merge_right, duplicate, prune_all
 		select
 			count
@@ -80,11 +80,10 @@ class ARRAYED_LIST [G] inherit
 
 	BASIC_ROUTINES
 		export
-			{NONE}
-				all
-		undefine
+			{NONE} all
+		redefine
 			copy, setup, is_equal
-		end
+		end;
 
 creation
 
@@ -176,23 +175,21 @@ feature -- Cursor movement
 		end;
 
 	start is
+			-- Move cursor to first position if any.
 		do
 			index := 1		
-		--| Temporary patch. Start moves the cursor
-		--| to the first element. If the list is empty
-		--| the cursor id after. The parents (CHAIN, LIST...)
-		--| and decendants (ARRAYED_TREE...) need to be revized.
 		ensure then
 			empty implies after
 		end;
 
 	finish is
+			-- Move cursor to last position if any.
 		do
 			index := count
 		--| Temporary patch. Start moves the cursor
 		--| to the first element. If the list is empty
 		--| the cursor is before. The parents (CHAIN, LIST...)
-		--| and decendants (ARRAYED_TREE...) need to be revized.
+		--| and decendants (ARRAYED_TREE...) need to be revised.
 		ensure then
 			empty implies before
 		end;
@@ -242,8 +239,9 @@ feature -- Transformation
 
 feature -- Element change
 
-	add_front (v: like item) is
+	put_front (v: like item) is
 			-- Add `v' to the beginning.
+			-- Do not move cursor.
 		do
 			if empty then
 				extend (v)
@@ -252,23 +250,28 @@ feature -- Element change
 			end;
 		end;
 
-	add, force, extend (v: like item) is
-			-- add `v' to end.
+	force, extend (v: like item) is
+			-- Add `v' to end.
+			-- Do not move cursor.
 		do
 			count := count + 1;
 			force_i_th (v, count)
 		end;
 
-	add_left (v: like item) is
+	put_left (v: like item) is
+			-- Add `v' to the left of current position.
+			-- Do not move cursor.
 		do
-			if after then
+			if after or empty then
 				extend (v)
 			else
 				insert (v, index)
 			end
 		end;
 
-	add_right (v: like item) is
+	put_right (v: like item) is
+			-- Add `v' to the right of current position.
+			-- Do not move cursor.
 		do
 			if index = count then
 				extend (v)
@@ -381,9 +384,9 @@ feature -- Removal
 		end;
 
 	prune_all (v: like item) is
-			-- Remove all occurence of `v'.
-			-- (according to the currently adopted
-			-- discimination rule in `search')
+			-- Remove all occurences of `v'.
+			-- (Reference or object equality,
+			-- based on `object_comparison'.)
 			-- Leave cursor `after'.
 		local
 			i: INTEGER;
@@ -457,9 +460,6 @@ feature -- Removal
 		do
 			index := index - 1;
 			remove;
-		ensure then
-			--new_count: count = old count - 1;
-			--new_index: index = old index - 1;
 		end;
 
 	remove_right is
@@ -469,9 +469,6 @@ feature -- Removal
 			index := index + 1;
 			remove;
 			index := index - 1;
-		ensure then
-			--new_count: count = old count - 1;
-			--same_index: index = old index;
 		end;			
 
 	wipe_out is
@@ -487,9 +484,11 @@ feature -- Removal
 feature -- Duplication
 
 	setup (other: like Current) is
-			-- Prepare `Current' so that `other' can be easily copied into it.
-			-- It is not necessary to call setup (consistent is always true)
-			-- but it will make copy quicker.
+			-- Prepare current object so that `other'
+			-- can be easily copied into it.
+			-- It is not necessary to call `setup'
+			-- (since `consistent' is always true)
+			-- but it will make copying quicker.
 		do
 			if other.empty then
 				wipe_out
@@ -515,29 +514,30 @@ feature -- Duplication
 		end;
 
 	duplicate (n: INTEGER): like Current is
-			-- Copy of sub-list beginning at cursor position
-			-- and having min (`n', `count' - `index' + 1) items
+			-- Copy of sub-list beginning at current position
+			-- and having min (`n', `count' - `index' + 1) items.
 		local
 			pos: INTEGER
 		do
-			!! Result.make (min (count - index + 1, n));
+			!! Result.make (min (n, count - index + 1));
 			from
 				Result.start;
 				pos := index
 			until
-				Result.exhausted
+				Result.count = Result.capacity
 			loop
-				Result.replace (item);
+				Result.extend (item);
 				forth;
-				Result.forth
+				--Result.forth
 			end;
 			Result.start;
 			go_i_th (pos);
 		end;
 
+
 feature {NONE} --Internal
 
-	insert(v: like item; pos: INTEGER) is
+	insert (v: like item; pos: INTEGER) is
 			-- Insert `v' at `pos`, moving subsequent elements
 			-- to the right.
 		require
@@ -562,7 +562,7 @@ feature {NONE} --Internal
 			count := count + 1;
 			put_i_th (v, pos);
 		ensure
-			-- new_count: count = old count + 1;
+			new_count: count = old count + 1;
 			insertion_done: i_th (pos) = v
 		end;
 

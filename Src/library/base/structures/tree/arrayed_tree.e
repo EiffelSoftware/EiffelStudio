@@ -47,7 +47,7 @@ class ARRAYED_TREE [G] inherit
 			remove_left as al_remove_left,
 			remove_right as al_remove_right,
 			prunable as al_prunable,
-			sequential_representation as al_seq_rep,
+			linear_representation as al_lin_rep,
 			count as arity,
 			empty as is_leaf,
 			full as al_full,
@@ -65,8 +65,8 @@ class ARRAYED_TREE [G] inherit
 			cursor as child_cursor,
 			go_to as child_go_to,
 			duplicate as al_duplicate,
-			add_left as al_add_left,
-			add_right as al_add_right,
+			put_left as al_put_left,
+			put_right as al_put_right,
 			merge_left as al_merge_left,
 			merge_right as al_merge_right			
 		export
@@ -74,7 +74,7 @@ class ARRAYED_TREE [G] inherit
 				al_extend, al_extendible,
 				al_remove, al_prunable,
 				al_put, al_replace,
-				al_fill, al_seq_rep, al_full;
+				al_fill, al_lin_rep, al_full;
 		undefine
 			copy, is_equal, is_leaf, child_isfirst, child_islast,
 			valid_cursor_index, consistent, setup
@@ -128,7 +128,7 @@ feature -- Element change
 			child.replace (v)
 		end;
 		
-	put_child, replace_child (n: like parent) is
+	replace_child (n: like parent) is
 			-- Assign `n' to child.
 		do
 			al_replace (n);
@@ -142,29 +142,29 @@ feature -- Element change
 			al_extend (new_cell (v))
 		end;
 		
-	child_add_left (v: like item) is
+	child_put_left (v: like item) is
 		do
-			al_add_left (new_cell (v))
+			al_put_left (new_cell (v))
 		end;
 		
-	child_add_right (v: like item) is
+	child_put_right (v: like item) is
 		do
-			al_add_right (new_cell (v))
+			al_put_right (new_cell (v))
 		end;
 		
-	add_child_left (n: like parent) is
+	put_child_left (n: like parent) is
 		do
-			al_add_left (n);
+			al_put_left (n);
 			n.attach_to_parent (Current)
 		end;
 		
-	add_child_right (n: like parent) is
+	put_child_right (n: like parent) is
 		do
-			al_add_right (n);
+			al_put_right (n);
 			n.attach_to_parent (Current)
 		end;
 	
-	add_child (n: like parent) is
+	put_child (n: like parent) is
 		do
 			al_extend (n);
 			n.attach_to_parent (Current)

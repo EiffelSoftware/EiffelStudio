@@ -46,19 +46,20 @@ feature -- Access
 			-- Parent of `Current'
 
  	has (v: like item): BOOLEAN is
-			-- Is there a node with item `v' in `Current'?
+			-- Does tree contain a node whose item
+			-- is equal to `v' (object comparison)?
 		require else
-			item_exists: v /= Void
+			argument_not_void: v /= Void
 		do
 			if v.is_equal (item) then
-                Result := true
-            elseif v < item then
-                Result := (left_child /= Void) and then
-                    left_child.has (v)
-            else
-                Result := (right_child /= Void) and then
-                    right_child.has (v)
-            end
+				Result := true
+			elseif v < item then
+				Result := (left_child /= Void) and then
+					left_child.has (v)
+			else
+				Result := (right_child /= Void) and then
+					right_child.has (v)
+			end
    		end;
 
 feature -- Measurement
@@ -92,12 +93,12 @@ feature -- Transformation
 			--| the insertion order in the tree will ensure
 			--| it is balanced
 		local
-			seq: SEQUENTIAL [G];
+			seq: LINEAR [G];
 			temp: ARRAY [G];	
 			heap: HEAP [G];
 			i: INTEGER
 		do
-			seq := sequential_representation;
+			seq := linear_representation;
 			remove_left_child;
 			remove_right_child;
 			from
@@ -127,28 +128,28 @@ feature -- Modification & Insertion
 	put, extend (v: like item) is
 			-- Put `v' at proper position in tree
 			-- (unless `v' exists already).
-			-- (Comparisons are made according to the
-			-- currently adopted discrimination rule)
+			-- (Reference or object equality,
+			-- based on `object_comparison'.)
 		require
 			new_item_exists: v /= Void
 		do
 			if v /= item then
-                if v < item then
-                    if left_child = Void then
-                        put_left_child (new_tree);
+				if v < item then
+					if left_child = Void then
+						put_left_child (new_tree);
 						left_child.replace (v)
 					else
-                        left_child.put (v)
-                    end
-                else
-                    if right_child = Void then
-                        put_right_child (new_tree);
+						left_child.put (v)
+					end
+				else
+					if right_child = Void then
+						put_right_child (new_tree);
 						right_child.replace (v)
-                    else
-                        right_child.put (v)
-                    end
-                end;
-            end
+					else
+						right_child.put (v)
+					end
+				end;
+			end
 		ensure
 			item_inserted: has (v)
 		end;
@@ -262,7 +263,7 @@ feature {BINARY_SEARCH_TREE, BINARY_SEARCH_TREE_SET} -- Set operations
 		end;
 
 	remove_node is
-			--remove current node from the tree
+			-- Remove current node from the tree.
 		require
 			is_not_root: not is_root
 		local

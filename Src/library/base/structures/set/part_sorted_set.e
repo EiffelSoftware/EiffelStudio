@@ -20,16 +20,24 @@ class PART_SORTED_SET [G -> PART_COMPARABLE] inherit
 			changeable_comparison_criterion
 		redefine
 			disjoint, symdif
+		select
+			extend
 		end;
 
 	PART_SORTED_TWO_WAY_LIST [G]
+		rename
+			extend as pstwl_extend
 		export
 			{ANY}
-				put, merge
+				put, merge, duplicate
+			{PART_SORTED_SET} 
+				forth, item, after, start,
+				put_left, finish 
+			{NONE} all
 		undefine
 			put
 		redefine
-			merge, duplicate, extend
+			merge, duplicate
 		end;
 
 creation
@@ -60,15 +68,11 @@ feature -- Element change
 
 	extend, put (v: G) is
 			-- Ensure that structure includes `v'.
-		local
-			not_empty: BOOLEAN
 		do
-			if not empty then
-				search_after (v)
-			end;
+			search_after (v)
 			if after or else not item.is_equal (v) then
-				add_left (v);
-			end;
+				put_left (v);
+			end
 		end;
 
 	merge (other: like Current) is
@@ -86,7 +90,7 @@ feature -- Element change
 					forth;
 					other.forth
 				else -- item > other.item
-					add_left (other.item);
+					put_left (other.item);
 					other.forth
 				end
 			end;
@@ -95,7 +99,7 @@ feature -- Element change
 				until
 					other.after
 				loop
-					add_left (other.item);
+					put_left (other.item);
 					other.forth
 				end
 			end
@@ -117,7 +121,7 @@ feature -- Duplication
 			until
 				(counter = n) or else after
 			loop
-				Result.add_left (item);
+				Result.put_left (item);
 				forth;
 				counter := counter + 1
 			end;

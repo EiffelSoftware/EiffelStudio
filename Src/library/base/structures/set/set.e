@@ -31,8 +31,8 @@ feature -- Element change
 			-- Ensure that set includes `v'.
 		deferred
 		ensure then
-			--old has (v) implies (count = old count);
-	 		--not old has (v) implies (count = old count + 1)
+			in_set_already: old has (v) implies (count = old count);
+	 		added_to_set: not old has (v) implies (count = old count + 1)
 		end;
 
 feature -- Removal
@@ -41,14 +41,19 @@ feature -- Removal
 			-- Remove `v' if present.
 		deferred
 		ensure then
-	 		--old has (v) implies (count = old count - 1);
-	 		--not old has (v) implies (count = old count);
-			--item_deleted: not has (v)
+	 		removed_count_change: old has (v) implies (count = old count - 1);
+	 		not_element_no_count_change: not old has (v) implies (count = old count);
+			item_deleted: not has (v)
 		end;
 		
 	changeable_comparison_criterion: BOOLEAN is
+			-- May `object_comparison' be changed?
+			-- (Answer: only if set empty; otherwise insertions
+			-- might introduce duplicates, negating the set property.)
 		do
 			Result := empty
+		ensure then
+			only_on_empty: Result = empty
 		end;
 
 end -- class SET

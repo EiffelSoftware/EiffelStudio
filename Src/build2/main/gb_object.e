@@ -1233,7 +1233,11 @@ feature {GB_COMMAND, GB_OBJECT_HANDLER, GB_OBJECT, GB_WINDOW_SELECTOR} -- Basic 
 			name_and_type: STRING
 		do
 			name_and_type := name_and_type_from_object (Current)
-			layout_item.set_text (name_and_type)			
+			if is_top_level_object then
+				layout_item.set_text (name.as_upper)
+			else
+				layout_item.set_text (name_and_type)
+			end
 			if is_top_level_object then
 					-- Update the window selector item name.
 				window_selector_item.update_to_reflect_name_change
@@ -1243,7 +1247,16 @@ feature {GB_COMMAND, GB_OBJECT_HANDLER, GB_OBJECT, GB_WINDOW_SELECTOR} -- Basic 
 			until
 				all_client_representations.off
 			loop
-				all_client_representations.item.set_text (name_and_type)
+					-- FIXME This "if" statement is a bit of a hack.
+					-- The client representation does not have a reference back to its `object'
+					-- so we are unable to know if we are a top level object or not. We simply rely
+					-- on the structure of the client heirarchy to determine this, as a top level client
+					-- item must always have at least one child, while the children may have none.
+				if all_client_representations.item.count > 0  then
+					all_client_representations.item.set_text (name.as_upper)	
+				else
+					all_client_representations.item.set_text (name_and_type)
+				end
 				all_client_representations.forth
 			end
 		end
@@ -1621,7 +1634,7 @@ feature {GB_OBJECT_HANDLER, GB_OBJECT, GB_COMMAND} -- Implementation
 			top_object := client_object.top_level_parent_object
 			parent_item ?= client_item.retrieve_item_by_data (top_object.id, True)
 			if parent_item = Void then
-				create parent_item.make_with_text (name_and_type_from_object (top_object))
+				create parent_item.make_with_text (top_object.name.as_upper)
 				top_object.all_client_representations.extend (parent_item)
 				parent_item.set_pixmap ((create {GB_SHARED_PIXMAPS}).pixmap_by_name (top_object.type.as_lower).twin)
 				parent_item.set_data (top_object.id)

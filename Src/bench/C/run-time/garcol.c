@@ -3212,18 +3212,15 @@ register1 union overhead *zone;		/* Pointer on malloc info zone */
  * following to properly record itself.
  */
 
-public void onceset(ptr, done)
+public void onceset(ptr)
 register4 char **ptr;
-char *done;
 {
 	/* Given the address of Result in a once function 'ptr', record it in the
 	 * once stack. If the result was allocated in the scavenge zone, it is
 	 * artificially aged to the maximum possible age. Otherwise, it enters
 	 * directly the old generation.
 	 * In case of error, an exception "No more memory" is raised, so we
-	 * will never return to the once. Hence, its "done" flag must be reset
-	 * on entrance and correctly restored upon successful execution, otherwise
-	 * resumption won't be meaningful--RAM.
+	 * will never return to the once.
 	 */
 	
 	register1 char *object = *ptr;		/* Location of Result object */
@@ -3235,8 +3232,6 @@ char *done;
 		return;
 
 	zone = HEADER(object);				/* Points to Eiffel header */
-
-	*done = 0;			/* Reset the once's "done" flag */
 
 	if (
 		gen_scavenge & GS_ON &&
@@ -3281,8 +3276,6 @@ char *done;
 	
 	if (-1 == epush(&once_set, ptr))
 		eraise("once function recording", EN_MEM);
-
-	*done = 1;			/* Once has been successfully recorded */
 }
 
 /*

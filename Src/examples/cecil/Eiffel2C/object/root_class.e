@@ -1,7 +1,5 @@
 class
 	ROOT_CLASS
-inherit
-	MEMORY
 create
 	make
 
@@ -11,8 +9,10 @@ feature -- Initialization
 			-- Dummy objects for testing
 	make is 
 			-- Give o1 to C and try to forget it from Eiffel side.
+		local
+			l_mem: MEMORY
 		do
-			allocate_tiny
+			l_mem.allocate_tiny
 			create o1.make ("o1")
 			create o2.make ("o2")
 
@@ -43,7 +43,6 @@ feature -- Initialization
 		end
 
 feature	-- Externals
-
 
 	give_to_c_by_pointer (p: POINTER) is
 			-- Reference Eiffel object pointed by `p' from C.

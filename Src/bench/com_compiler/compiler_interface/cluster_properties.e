@@ -285,7 +285,6 @@ feature -- Access
 			res: ARRAYED_LIST [STRING]
 			cl_prop: CLUST_PROP_SD
 			l_ex: LACE_LIST [EXCLUDE_SD]
-			i: INTEGER
 		do
 			cl_prop := cluster_sd.cluster_properties
 			create res.make (0)

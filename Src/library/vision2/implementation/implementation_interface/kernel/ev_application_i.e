@@ -248,7 +248,6 @@ feature -- Event handling
 			-- Actions to be performed when `an_accelerator' key sequence is
 			-- pressed.
 		do
-			-- FIXME implement this!!
 			create Result
 		ensure
 			not_void: Result /= Void
@@ -265,17 +264,20 @@ feature -- Status report
 			-- Widget with keyboard focus
 		local
 			current_windows: like windows
+			current_window: EV_WINDOW
 		do
 			current_windows := windows
 			from
 				current_windows.start
 			until
-				current_windows.off
+				current_windows.off or Result /= Void
 			loop
-				if current_windows.item.has_focus then
-					Result := focused_widget_from_container (current_windows.item.item)
-					if Result = Void then
-						Result := current_windows.item
+				current_window := current_windows.item
+				if current_window.has_focus then
+					if current_window.full then
+						Result := focused_widget_from_container (current_window.item)
+					else
+						Result := current_window
 					end
 				end
 				current_windows.forth

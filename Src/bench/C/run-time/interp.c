@@ -3135,34 +3135,11 @@ int stype;				/* Static type (entity where feature is applied) */
 	 * stack. The value of Current is removed and replaced with the address.
 	 */
 
-	uint32 body;					/* Body ID of routine */
 	struct item *last;				/* Built melted routine address */
-	int16 body_index;				/* Body index of routine */
-	int32 rout_id;					/* Routine id of routine */
 
-	rout_id = Routids(stype)[fid];
-	CBodyIdx(body_index,rout_id,icur_dtype);
-	body = dispatch[body_index];
-
-	if (body < zeroc) {
-			/* Static frozen routine */
-		last = iget();
-		last->type = SK_POINTER;
-		last->it_ptr = (char *) frozen[body];
-	} else
-#ifndef DLE
-		xraise(EN_DOL);				/* $ applied to melted feature */
-#else
-	if (body < dle_level)
-		xraise(EN_DOL);				/* $ applied to melted feature */
-	else if (body < dle_zeroc) {
-			/* Dynamic frozen routine */
-		last = iget();
-		last->type = SK_POINTER;
-		last->it_ptr = (char *) dle_frozen[body];
-	}
-#endif
-
+	last = iget();
+	last->type = SK_POINTER;
+	last->it_ptr = (char *) RTWPP(stype, fid);
 }
 
 

@@ -1,4 +1,3 @@
---| FIXME Not for release
 --| FIXME NOT_REVIEWED this file has not been reviewed
 indexing
 	description:
@@ -70,6 +69,9 @@ end -- class EV_TOOL_BAR_RADIO_BUTTON
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.6  2000/02/14 13:38:56  oconnor
+--| released
+--|
 --| Revision 1.5  2000/02/14 11:40:47  oconnor
 --| merged changes from prerelease_20000214
 --|

@@ -82,8 +82,8 @@ feature -- Tool management
  
 	destroy_tool (t: like tool) is
 		do
-			precursor (t)
 			Project_tool.remove_explain_entry (t)			
+			precursor (t)
 		end
 
 end -- class EB_EXPLAIN_WINDOW

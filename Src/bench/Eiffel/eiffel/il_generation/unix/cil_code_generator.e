@@ -1086,6 +1086,26 @@ feature -- Conversion
 			-- Convert top of stack into appropriate type.
 		do
 		end
+
+	convert_to_natural_8 is
+			-- Convert top of stack into appropriate type.
+		do
+		end
+		
+	convert_to_natural_16 is
+			-- Convert top of stack into appropriate type.
+		do
+		end
+		
+	convert_to_natural_32 is
+			-- Convert top of stack into appropriate type.
+		do
+		end
+
+	convert_to_natural_64 is
+			-- Convert top of stack into appropriate type.
+		do
+		end
 		
 	convert_to_double is
 			-- Convert top of stack into appropriate type.
@@ -1365,7 +1385,7 @@ feature -- Constants generation
 			-- Put `i' as integer constant of type `type'.
 		require
 			type_not_void: type /= Void 
-			type_is_long: type.is_long
+			type_is_integer: type.is_integer
 		do
 		end
 
@@ -1379,6 +1399,29 @@ feature -- Constants generation
 	put_integer_64_constant (i: INTEGER_64) is
 			-- Put `i' as INTEGER_64 on IL stack
 		do
+		end
+
+	put_natural_constant (type: TYPE_I; i: INTEGER) is
+			-- Put `i' as natural constant of type `type'.
+		require
+			type_not_void: type /= Void 
+			type_is_natural: type.is_natural
+		do
+			fixme ("Use NATURAL instead of INTEGER")
+		end
+
+	put_natural_8_constant,
+	put_natural_16_constant,
+	put_natural_32_constant (i: INTEGER) is
+			-- Put `i' as NATURAL_8, NATURAL_16, NATURAL on IL stack
+		do
+			fixme ("Use NATURAL_XX types")
+		end
+
+	put_natural_64_constant (i: INTEGER_64) is
+			-- Put `i' as NATURAL_64 on IL stack
+		do
+			fixme ("Use NATURAL_XX types")
 		end
 
 	put_double_constant (d: DOUBLE) is

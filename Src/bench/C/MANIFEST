@@ -136,8 +136,6 @@ run-time/eif_rout_obj.h
 run-time/eif_rw_lock.c
 run-time/gen_conf.c
 run-time/eif_gen_conf.h
-run-time/eif_special_table.c
-run-time/eif_special_table.h
 run-time/argv.c
 run-time/eif_argv.h
 run-time/bits.c
@@ -163,9 +161,7 @@ run-time/eif_file.h
 run-time/garcol.c
 run-time/eif_garcol.h
 run-time/hash.c
-run-time/eif_hash.h
 run-time/hashin.c
-run-time/eif_hashin.h
 run-time/hector.c
 run-time/eif_hector.h
 run-time/internal.c
@@ -192,9 +188,7 @@ run-time/eif_plug.h
 run-time/retrieve.c
 run-time/eif_retrieve.h
 run-time/run_idr.c
-run-time/eif_run_idr.h
 run-time/search.c
-run-time/eif_search.h
 run-time/sig.c
 run-time/eif_sig.h
 run-time/eif_size_h.SH
@@ -203,16 +197,13 @@ run-time/eif_store.h
 run-time/string.c
 run-time/eif_struct.h
 run-time/timer.c
-run-time/eif_timer.h
 run-time/tools.c
 run-time/eif_tools.h
 run-time/traverse.c
 run-time/eif_traverse.h
 run-time/umain.c
 run-time/update.c
-run-time/eif_update.h
 run-time/urgent.c
-run-time/eif_urgent.h
 run-time/wbench.c
 run-time/eif_wbench.h
 run-time/x2c.c

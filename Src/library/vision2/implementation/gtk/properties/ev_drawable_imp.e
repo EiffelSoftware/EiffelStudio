@@ -371,9 +371,17 @@ feature -- Drawing operations
 		do
 			if drawable /= Default_pointer then
 				pixmap_imp ?= a_pixmap.implementation
+				if pixmap_imp.mask /= NULL then
+					C.gdk_gc_set_clip_mask (gc, pixmap_imp.mask)
+					C.gdk_gc_set_clip_origin (gc, x, y)
+				end
 				C.gdk_draw_pixmap (drawable, gc,
 					pixmap_imp.drawable,
-					0, 0, x, y, a_pixmap.width, a_pixmap.height)
+					0, 0, x, y, -1, -1)
+				if pixmap_imp.mask /= NULL then
+					C.gdk_gc_set_clip_mask (gc, NULL)
+					C.gdk_gc_set_clip_origin (gc, 0, 0)
+				end
 			end
 		end
 
@@ -572,6 +580,9 @@ end -- class EV_DRAWABLE_IMP
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.13  2000/04/14 16:36:50  oconnor
+--| added clip mask to draw_pixmap
+--|
 --| Revision 1.12  2000/03/09 23:25:14  oconnor
 --| inherit platform
 --|

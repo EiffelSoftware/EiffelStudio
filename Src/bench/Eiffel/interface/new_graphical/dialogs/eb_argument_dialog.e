@@ -66,19 +66,16 @@ feature -- Initialization
 			hb: EV_HORIZONTAL_BOX
 			b: EV_BUTTON
 			f: EV_FRAME
-		do
-			
+		do		
 			default_create
 			create saved_arguments.make (0)
 			saved_arguments.compare_objects
 			set_minimum_size (400, 210)
-			run := cmd
-	
+			run := cmd	
 			create vb
 			vb.extend (execution_frame)
 			set_title ("Program Arguments")
-			extend (vb)
-			
+			extend (vb)		
 			retrieve_arguments
 		end
 
@@ -136,10 +133,10 @@ feature -- Initialization
 			vbox.disable_item_expand (item_box)
 
 			create hbox
-			hbox.set_padding (Layout_constants.Small_padding_size)
-			
+			hbox.set_padding (Layout_constants.Small_padding_size)		
 			create cell
 			hbox.extend (cell)
+			
 			if run /= Void then
 				create b.make_with_text ("Add")
 				hbox.extend (b)
@@ -147,6 +144,7 @@ feature -- Initialization
 				hbox.disable_item_expand (b)
 				b.select_actions.extend (agent add_arguments)
 			end
+			
 			create b.make_with_text ("Apply")
 			hbox.extend (b)
 			b.set_minimum_size (74, 23)
@@ -248,17 +246,9 @@ feature -- Actions
 			end
 		end
 
---	synch_arguments (key: EV_KEY) is
---			-- Synchronize the edit value with the list value
---		do
---			if key.code = feature {EV_KEY_CONSTANTS}.key_enter then
---				update_arguments
---			end
---		end
-
 feature {NONE} -- Properties
 
-	apply_it, apply_and_run_it: ANY is
+	apply_and_run_it: ANY is
 			-- Arguments for the command
 		once
 			create Result
@@ -269,17 +259,13 @@ feature {NONE} -- Properties
 feature {NONE} -- Implementation
 
 	execute (arg: ANY) is
-		local
-			arg_list: STRING
 		do
 			hide
 			if arg /= Void then
-					--| User selected "Run" or "Apply".
-				--arg_list := Argument_list
-				--arg_list.wipe_out
-				arg_list := clone (arguments_list.selected_item.text)
-					--| Trick for changing `Argument_list'
 				if arg = Apply_and_run_it then
+					store_arguments
+					io.putstring (current_cmd_line_argument)
+					io.read_line
 					run.call ([])
 				end
 			end
@@ -334,7 +320,6 @@ feature {NONE} -- Implementation
 						end
 						defaults.forth
 					end
-					--arguments_list.first.enable_select
 				end
 			end
 		end
@@ -381,6 +366,7 @@ feature {NONE} -- Implementation
 			end
 
 			if arguments_list.count > 0 then
+				defaults.extend (new_d_option (clone (arguments_list.selected_item.text)))
 				from
 					arguments_list.start
 				until
@@ -388,21 +374,31 @@ feature {NONE} -- Implementation
 				loop
 					if arguments_list.item.text = Void or else arguments_list.item.text.is_empty or else 
 						arguments_list.item.text.is_equal ("(No Argument)") then
-							arguments_list.remove
+							arguments_list.prune (arguments_list.item)
+					elseif arguments_list.item = arguments_list.selected_item then
 					else
-					argument_text := clone (arguments_list.item.text)
-					argument_text.replace_substring_all ("%%", "%%%%")
-					argument_text.replace_substring_all ("%"", "%%%"")
-					create free_option.make (feature {FREE_OPTION_SD}.arguments)
-					create val.make (new_id_sd (argument_text, True))
-					create d_option.initialize (free_option, val)
-					defaults.extend (d_option)
+						defaults.extend (new_d_option (clone (arguments_list.item.text)))
 					end
 					arguments_list.forth
 				end
 				save_ace
 			end
 		end	
+		
+	new_d_option (a_string: STRING): D_OPTION_SD is
+			-- Create a new D_OPTION_SD to add to Ace
+		local
+			free_option: FREE_OPTION_SD
+			val: OPT_VAL_SD
+			opt: OPTION_SD
+		do
+			a_string.replace_substring_all ("%%", "%%%%")
+			a_string.replace_substring_all ("%"", "%%%"")
+			create free_option.make (feature {FREE_OPTION_SD}.arguments)
+			create val.make (new_id_sd (a_string, True))
+			create Result.initialize (free_option, val)
+		end
+		
 		
 	retrieve_ace: ACE_SD is
 			-- Retrieve the current lace file

@@ -231,8 +231,6 @@ feature {NONE} -- Implementation
 	tool_bar: EV_TOOL_BAR is
 			-- Tool bar of `Current'
 		local
-			undo_button: GB_UNDO_TOOL_BAR_BUTTON
-			redo_button: GB_REDO_TOOL_BAR_BUTTON
 			separator: EV_TOOL_BAR_SEPARATOR
 			generation_button: GB_CODE_GENERATION_TOOL_BAR_BUTTON
 		once

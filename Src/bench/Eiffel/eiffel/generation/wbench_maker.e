@@ -97,6 +97,11 @@ feature
 			cecil_basket.extend ("wobject_id.o"); cecil_basket.forth
 			cecil_basket.extend ("wdle.o"); cecil_basket.forth
 			cecil_basket.extend ("weif_threads.o"); cecil_basket.forth
+			cecil_basket.extend ("eif_rw_lock.o"); cecil_basket.forth
+			cecil_basket.extend ("wgen_conf.o"); cecil_basket.forth
+			cecil_basket.extend ("wrout_obj.o"); cecil_basket.forth
+			cecil_basket.extend ("eif_once.o"); cecil_basket.forth
+			cecil_basket.extend ("weif_project.o"); cecil_basket.forth
 		end;
 
 	add_eiffel_objects is

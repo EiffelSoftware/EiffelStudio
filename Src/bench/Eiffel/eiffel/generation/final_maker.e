@@ -148,6 +148,11 @@ feature
 			cecil_basket.extend ("dle.o"); cecil_basket.forth
 			cecil_basket.extend ("option.o"); cecil_basket.forth
 			cecil_basket.extend ("eif_threads.o"); cecil_basket.forth
+			cecil_basket.extend ("eif_rw_lock.o"); cecil_basket.forth
+			cecil_basket.extend ("gen_conf.o"); cecil_basket.forth
+			cecil_basket.extend ("rout_obj.o"); cecil_basket.forth
+			cecil_basket.extend ("eif_once.o"); cecil_basket.forth
+			cecil_basket.extend ("eif_project.o"); cecil_basket.forth
 		end;
 
 	add_eiffel_objects is

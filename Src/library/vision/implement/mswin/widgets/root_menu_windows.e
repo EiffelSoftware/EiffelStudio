@@ -43,11 +43,19 @@ feature -- Status report
 feature -- Status setting
 
 	add (widget: WIDGET_WINDOWS) is
-			-- Add a widget to the menu
+			-- Add a widget to the menu.
 		do
 			if not menu_buttons.has_item (widget) then
 				menu_id.next
 				menu_buttons.put (widget, menu_id.value)
+			end
+		end
+
+	remove (a_id: INTEGER) is
+			-- Remove a widget from the menu.
+		do
+			if menu_buttons.has (a_id) then
+				menu_buttons.remove (a_id)
 			end
 		end
 

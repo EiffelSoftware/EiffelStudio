@@ -13,7 +13,7 @@
 #include "eif_portable.h"
 #include "eif_lmalloc.h"
 #include "eif_project.h" /* for egc_ce_gtype, egc_bit_dtype */
-#include "eif_macros.h"
+#include "rt_macros.h"
 #include "rt_malloc.h"
 #include "rt_garcol.h"
 #include "eif_except.h"
@@ -629,9 +629,9 @@ rt_public EIF_REFERENCE grt_nmake(long int objectCount)
 			{
 				EIF_REFERENCE o_ref;
 
-				o_ref = newadd + (HEADER(newadd)->ov_size & B_SIZE) - LNGPAD_2;
-				*(EIF_INTEGER *) o_ref = count;
-				*(EIF_INTEGER *) (o_ref + sizeof(EIF_INTEGER)) = spec_size;
+				o_ref = RT_SPECIAL_INFO(newadd);
+				RT_SPECIAL_COUNT_WITH_INFO(o_ref) = count;
+				RT_SPECIAL_ELEM_SIZE_WITH_INFO(o_ref) = spec_size;
 				/* FIXME spec_elm_size[dtypes[flags & EO_TYPE]] = elm_size;*/
 			} 
 			HEADER(newadd)->ov_flags |= crflags & (EO_REF|EO_COMP|EO_TYPE);
@@ -839,9 +839,9 @@ rt_public EIF_REFERENCE irt_nmake(long int objectCount)
 			{
 				EIF_REFERENCE o_ref;
 
-				o_ref = newadd + (HEADER(newadd)->ov_size & B_SIZE) - LNGPAD_2;
-				*(EIF_INTEGER *) o_ref = count;
-				*(EIF_INTEGER *) (o_ref + sizeof(EIF_INTEGER)) = spec_size;
+				o_ref = RT_SPECIAL_INFO(newadd);
+				RT_SPECIAL_COUNT_WITH_INFO(o_ref) = count;
+				RT_SPECIAL_ELEM_SIZE_WITH_INFO(o_ref) = spec_size;
 				spec_elm_size[dtypes[flags & EO_TYPE]] = elm_size;
 			} 
 			HEADER(newadd)->ov_flags |= crflags & (EO_REF|EO_COMP|EO_TYPE);
@@ -1036,15 +1036,15 @@ rt_private void rt_update2(EIF_REFERENCE old, EIF_REFERENCE new_obj, EIF_REFEREN
 			return;
 
 		size = zone->ov_size & B_SIZE;	
-		o_ref = (EIF_REFERENCE) (new_obj + size - LNGPAD_2);
-		count = *(EIF_INTEGER *) o_ref; 		
+		o_ref = RT_SPECIAL_INFO_WITH_ZONE(new_obj, zone);
+		count = RT_SPECIAL_COUNT_WITH_INFO(o_ref);
 		if (!(flags & EO_COMP)) {		/* Special of references */
 			nb_references = count;
 			goto update;
 		} else {						/* Special of expanded objects */
 			EIF_REFERENCE  old_addr;
 
-			elem_size = *(EIF_INTEGER *) (o_ref + sizeof(EIF_INTEGER));
+			elem_size = RT_SPECIAL_ELEM_SIZE_WITH_INFO(o_ref);
 			if (rt_kind != INDEPENDENT_STORE) {
 				old_overhead = OVERHEAD;
 				old_elem_size = elem_size;
@@ -1137,9 +1137,9 @@ rt_private char *next_item (char *ptr)
 	int first_char = 0;
 
 	for (;;) {
-		if (!(isspace(*ptr)) && !first_char ) 
+		if (!(isspace(*(unsigned char *) ptr)) && !first_char ) 
 			first_char = 1;
-		else if (isspace(*ptr) && first_char)
+		else if (isspace(*(unsigned char *)ptr) && first_char)
 			break;
 		ptr++;
 	}
@@ -1702,7 +1702,7 @@ rt_private void gen_object_read (EIF_REFERENCE object, EIF_REFERENCE parent)
 					uint32  old_flags, hflags;
 					EIF_REFERENCE l_buffer [1];
 
-					buffer_read(l_buffer, sizeof(EIF_REFERENCE));
+					buffer_read((char *) l_buffer, sizeof(EIF_REFERENCE));
 					buffer_read((char *) &old_flags, sizeof(uint32));
 					rt_read_cid ((uint32 *) 0, &hflags, old_flags);
 
@@ -1736,10 +1736,9 @@ rt_private void gen_object_read (EIF_REFERENCE object, EIF_REFERENCE parent)
 			int nb_gen;
 			struct gt_info *info;
 
-			o_ptr = (EIF_REFERENCE) (object + (HEADER(object)->ov_size & B_SIZE) - LNGPAD_2);
-			count = *(EIF_INTEGER *) o_ptr;
+			o_ptr = RT_SPECIAL_INFO(object);
+			count = RT_SPECIAL_COUNT_WITH_INFO(o_ptr);
 			vis_name = System(o_type).cn_generator;
-
 
 			info = (struct gt_info *) ct_value(&egc_ce_gtype, vis_name);
 			CHECK ("Must be generic", info != (struct gt_info *) 0);
@@ -1788,7 +1787,7 @@ rt_private void gen_object_read (EIF_REFERENCE object, EIF_REFERENCE parent)
 					case SK_EXP: {
 						uint32 old_flags, hflags;
 
-						elem_size = *(EIF_INTEGER *) (o_ptr + sizeof(EIF_INTEGER));
+						elem_size = RT_SPECIAL_ELEM_SIZE_WITH_INFO(o_ptr);
 						buffer_read((char *) &old_flags, sizeof(uint32));
 						rt_read_cid ((uint32 *) 0, &hflags, old_flags);
 						for (ref = object + OVERHEAD; count > 0;
@@ -1803,7 +1802,7 @@ rt_private void gen_object_read (EIF_REFERENCE object, EIF_REFERENCE parent)
 					case SK_BIT: {
 						/* uint32 l;*/ /* %%ss removed */
 
-						elem_size = *(EIF_INTEGER *) (o_ptr + sizeof(EIF_INTEGER));
+						elem_size = RT_SPECIAL_ELEM_SIZE_WITH_INFO(o_ptr);
 						buffer_read(object, count*elem_size); /* %%ss cast was struct bit* */
 						}
 						break;
@@ -1825,7 +1824,7 @@ rt_private void gen_object_read (EIF_REFERENCE object, EIF_REFERENCE parent)
 
 					buffer_read((char *) &old_flags, sizeof(uint32));
 					rt_read_cid ((uint32 *) 0, &hflags, old_flags);
-					elem_size = *(EIF_INTEGER *) (o_ptr + sizeof(EIF_INTEGER));
+					elem_size = RT_SPECIAL_ELEM_SIZE_WITH_INFO(o_ptr);
 					for (ref = object + OVERHEAD; count > 0;
 							count --, ref += elem_size) {
 						HEADER(ref)->ov_flags = (hflags & (EO_REF|EO_COMP|EO_TYPE));
@@ -1923,7 +1922,7 @@ rt_private void object_read (EIF_REFERENCE object, EIF_REFERENCE parent)
 					uint32  old_flags, hflags;
 					EIF_REFERENCE l_buffer [1];
 
-					ridr_multi_any (l_buffer, 1);
+					ridr_multi_any ((char *) l_buffer, 1);
 					ridr_norm_int (&old_flags);
 					rt_id_read_cid ((uint32 *) 0, &hflags, old_flags);
 
@@ -1966,8 +1965,8 @@ rt_private void object_read (EIF_REFERENCE object, EIF_REFERENCE parent)
 			int nb_gen;
 			struct gt_info *info;
 
-			o_ptr = (EIF_REFERENCE) (object + (HEADER(object)->ov_size & B_SIZE) - LNGPAD_2);
-			count = *(EIF_INTEGER *) o_ptr;
+			o_ptr = RT_SPECIAL_INFO(object);
+			count = RT_SPECIAL_COUNT_WITH_INFO(o_ptr);
 			vis_name = System(o_type).cn_generator;
 
 
@@ -2082,7 +2081,7 @@ rt_private void object_read (EIF_REFERENCE object, EIF_REFERENCE parent)
 					case SK_EXP: {
 						uint32  old_flags, hflags;
 
-						elem_size = *(EIF_INTEGER *) (o_ptr + sizeof(EIF_INTEGER));
+						elem_size = RT_SPECIAL_ELEM_SIZE_WITH_INFO(o_ptr);
 						ridr_norm_int (&old_flags);
 						rt_id_read_cid ((uint32 *) 0, &hflags, old_flags);
 						for (ref = object + OVERHEAD; count > 0;
@@ -2103,7 +2102,7 @@ rt_private void object_read (EIF_REFERENCE object, EIF_REFERENCE parent)
 #if DEBUG & 1
 						uint32 l; /* %%ss read but never initialized */
 #endif
-						elem_size = *(EIF_INTEGER *) (o_ptr + sizeof(EIF_INTEGER));
+						elem_size = RT_SPECIAL_ELEM_SIZE_WITH_INFO(o_ptr);
 						ridr_multi_bit ((struct bit *)object, count, elem_size);
 #if DEBUG & 1
 						printf (" %x", l);
@@ -2151,7 +2150,7 @@ rt_private void object_read (EIF_REFERENCE object, EIF_REFERENCE parent)
 #if DEBUG & 1
 					printf (" %x", old_flags);
 #endif
-					elem_size = *(EIF_INTEGER *) (o_ptr + sizeof(EIF_INTEGER));
+					elem_size = RT_SPECIAL_ELEM_SIZE_WITH_INFO(o_ptr);
 					for (ref = object + OVERHEAD; count > 0;
 							count --, ref += elem_size) {
 						HEADER(ref)->ov_flags = (hflags & (EO_REF|EO_COMP|EO_TYPE));

@@ -8,15 +8,9 @@ deferred class
 	CODE_FACTORY
 
 inherit
-	CODE_SHARED_GENERATION_CONTEXT
-		export
-			{NONE} all
-		end
+	CODE_SHARED_ANALYSIS_CONTEXT
 
 	CODE_SHARED_GENERATION_HELPERS
-		export
-			{NONE} all
-		end
 
 	CODE_SHARED_EVENT_MANAGER
 		export
@@ -24,9 +18,6 @@ inherit
 		end
 
 	CODE_SHARED_TYPE_REFERENCE_FACTORY
-		export
-			{NONE} all
-		end
 	
 	CODE_SHARED_EMPTY_ENTITIES
 		export
@@ -48,7 +39,11 @@ inherit
 			{NONE} all
 		end
 
-feature
+feature -- Empty
+
+invariant
+	is_in_code_analysis: current_state = Code_analysis
+
 end
 
 --+--------------------------------------------------------------------

@@ -58,12 +58,12 @@ extern int in_assertion;
  *  RTLX(x) allocates an expanded object (with possible in invocation
  *		of the creation routine) of type `x'
  *  RTXB(x,y) copies bit `x' to `y'
- *  RTMB(x) creates bit from string value 
+ *  RTMB(x,y) creates bit of length y bits from string value x
  *  RTEB(x,y) are bits `x' and `y' equal?
  */
 #define RTLN(x) emalloc(x)
 #define RTLB(x)	bmalloc(x)
-#define RTMB(x) makebit(x)
+#define RTMB(x,y) makebit(x,y)
 #define RTCB(x) b_clone(x)
 #define RTXB(x,y) b_copy(x,y)
 #define RTEB(x,y) b_equal(x,y)

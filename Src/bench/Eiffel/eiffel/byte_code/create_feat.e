@@ -88,6 +88,8 @@ feature
 					gen_file.putchar ('[');
 					context.generate_current_dtype;
 					gen_file.putchar (']');
+						-- Mark routine id used
+					Eiffel_table.mark_used (rout_id);
 						-- Remember extern declaration
                     Extern_declarations.add_type_table (clone (create_table_name));
 				end;

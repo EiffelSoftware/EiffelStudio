@@ -209,10 +209,10 @@ feature {EV_MULTI_COLUMN_LIST_ROW_IMP, EV_ITEM_LIST_IMP} -- Implementation
 			-- We have to store the children because
 			-- neither gtk nor windows does it.
 
-	remove_item (item_imp: EV_MULTI_COLUMN_LIST_ROW_IMP) is
+	--remove_item (item_imp: EV_MULTI_COLUMN_LIST_ROW_IMP) is
 			-- Remove `item' from the list
-		deferred
-		end
+	--	deferred
+	--	end
 
 invariant
 	ev_children_not_void: ev_children /= Void
@@ -240,6 +240,9 @@ end -- class EV_MULTI_COLUMN_LIST_I
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.25  2000/02/16 20:29:45  king
+--| Removed redundant remove_item
+--|
 --| Revision 1.24  2000/02/14 11:40:38  oconnor
 --| merged changes from prerelease_20000214
 --|

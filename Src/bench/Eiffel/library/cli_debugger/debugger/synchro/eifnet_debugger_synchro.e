@@ -154,13 +154,13 @@ feature -- bridge to ICorDebugController->Continue ()
 
 feature -- Evaluation 
 
-	lock_and_wait_for_callback (icdc: ICOR_DEBUG_CONTROLLER) is
-			-- Lock and wait for callback
-			-- used in evaluation processing.
+	process_debugger_evaluation (icdc: ICOR_DEBUG_CONTROLLER) is
+			-- Start evaluation processing, this implies a 
+			-- Lock and wait for callback, and callback handlings
 		require
 			icdc /= Void and then icdc.item_not_null
 		do
-			c_lock_and_wait_callback (icdc.item)
+			c_dbg_process_evaluation (icdc.item)
 		end
 		
 feature -- Access to dbg data
@@ -245,11 +245,11 @@ feature {NONE} -- External Dbg Sync routine
 			"dbg_continue"
 		end
 		
-	c_lock_and_wait_callback (icdc_p: POINTER) is
+	c_dbg_process_evaluation (icdc_p: POINTER) is
 		external
 			"C signature (void*) use %"cli_debugger.h%" "
 		alias
-			"dbg_lock_and_wait_callback"
+			"dbg_process_evaluation"
 		end
 		
 	c_restore_cb_notification_state is

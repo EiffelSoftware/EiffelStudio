@@ -13,6 +13,9 @@
 
 #include "E_wide_string.h"
 
+#ifdef __cplusplus
+extern "C" {
+#endif
 
 //-------------------------------------------------------------------------
 
@@ -50,3 +53,6 @@ EIF_REFERENCE ccom_wide_str_to_string (WCHAR * wide_string)
 }
 //--------------------------------------------------------------------------
 
+#ifdef __cplusplus
+}
+#endif

@@ -41,7 +41,7 @@
 <code>
 <SPAN CLASS="efeature">modify_button_text</SPAN><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="eclass">STRING</SPAN> <SPAN CLASS="ekeyword">is</SPAN><br> 
 			&nbsp;&nbsp;<SPAN CLASS="ecomment">-- `Result' is STRING constant named modify_button_text.</SPAN><br>
-		&nbsp;<SPAN CLASS="ekeyword">Once</SPAN><br>
+		&nbsp;<SPAN CLASS="ekeyword">once</SPAN><br>
 			&nbsp;&nbsp;<SPAN CLASS="efeature">Result</SPAN> <SPAN CLASS="esymbol">:=</SPAN> "Modify"<br>
 		&nbsp;<SPAN CLASS="ekeyword">end</SPAN><br>
 </code></P>
@@ -50,7 +50,7 @@
 <code>
 <SPAN CLASS="efeature">medium_padding</SPAN><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="eclass">INTEGER</SPAN> <SPAN CLASS="ekeyword">is</SPAN><br> 
 			&nbsp;&nbsp;<SPAN CLASS="ecomment">-- `Result' is INTEGER constant named medium_padding.</SPAN><br>
-		&nbsp;<SPAN CLASS="ekeyword">Once</SPAN><br>
+		&nbsp;<SPAN CLASS="ekeyword">once</SPAN><br>
 			&nbsp;&nbsp;<SPAN CLASS="efeature">Result</SPAN> <SPAN CLASS="esymbol">:=</SPAN> 8<br>
 		&nbsp;<SPAN CLASS="ekeyword">end</SPAN><br>
 </code>
@@ -60,7 +60,7 @@
 <code>
 <SPAN CLASS="efeature">pixmap_location</SPAN><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="eclass">STRING</SPAN> <SPAN CLASS="ekeyword">is</SPAN><br> 
 			&nbsp;&nbsp;<SPAN CLASS="ecomment">-- `Result' is DIRECTORY constant named pixmap_location.</SPAN><br>
-		&nbsp;<SPAN CLASS="ekeyword">Once</SPAN><br>
+		&nbsp;<SPAN CLASS="ekeyword">once</SPAN><br>
 			&nbsp;&nbsp;<SPAN CLASS="efeature">Result</SPAN> <SPAN CLASS="esymbol">:=</SPAN> "C:\pixmaps"<br>
 		&nbsp;<SPAN CLASS="ekeyword">end</SPAN><br>
 </code></P>
@@ -72,9 +72,11 @@
 			&nbsp;&nbsp;<SPAN CLASS="ecomment">-- `Result' is PIXMAP constant named main_pixmap.</SPAN><br>
 &nbsp;<SPAN CLASS="ekeyword">local</SPAN><br>
 		&nbsp;&nbsp;<SPAN CLASS="elocal">a_file_name</SPAN><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="eclass">FILE_NAME</SPAN><BR>
-		&nbsp;<SPAN CLASS="ekeyword">Once</SPAN><br>
+		&nbsp;<SPAN CLASS="ekeyword">once</SPAN><br>
 		&nbsp;&nbsp;<SPAN CLASS="ekeyword">create </SPAN> <SPAN CLASS="efeature">Result</SPAN><br>
 		&nbsp;&nbsp;<SPAN CLASS="ekeyword">create </SPAN> <SPAN CLASS="elocal">a_file_name</SPAN>.<SPAN CLASS="efeature">make_from_string</SPAN> ("C:\pixmaps\main_pixmap.png")<br>
+&nbsp;&nbsp;&nbsp;&nbsp;<SPAN CLASS="ecomment">-- Now set `Result' based on `a_file_name'.</SPAN>
+
 &nbsp;&nbsp;<SPAN CLASS="efeature">set_with_named_file</SPAN>(<SPAN CLASS="efeature">Result</SPAN>, <SPAN CLASS="elocal">a_file_name</SPAN>)<br>
 		&nbsp;<SPAN CLASS="ekeyword">end</SPAN><br>
 </code></li>
@@ -84,10 +86,11 @@
 			&nbsp;&nbsp;<SPAN CLASS="ecomment">-- `Result' is PIXMAP constant named main_pixmap.</SPAN><br>
 &nbsp;<SPAN CLASS="ekeyword">local</SPAN><br>
 		&nbsp;&nbsp;<SPAN CLASS="elocal">a_file_name</SPAN><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="eclass">FILE_NAME</SPAN><BR>
-		&nbsp;<SPAN CLASS="ekeyword">Once</SPAN><br>
+		&nbsp;<SPAN CLASS="ekeyword">once</SPAN><br>
 		&nbsp;&nbsp;<SPAN CLASS="ekeyword">create </SPAN> <SPAN CLASS="efeature">Result</SPAN><br>
 		&nbsp;&nbsp;<SPAN CLASS="ekeyword">create </SPAN> <SPAN CLASS="elocal">a_file_name</SPAN>.<SPAN CLASS="efeature">make_from_string</SPAN> (<SPAN CLASS="efeature">pixmap_location</SPAN>)<br>
-&nbsp;&nbsp;<SPAN CLASS="efeature">Result</SPAN>.<SPAN CLASS="efeature">extend</SPAN>("main_pixmap.png")<br>
+&nbsp;&nbsp;<SPAN CLASS="elocal">a_file_name</SPAN>.<SPAN CLASS="efeature">set_file_name</SPAN>("main_pixmap.png")<br>
+&nbsp;&nbsp;&nbsp;&nbsp;<SPAN CLASS="ecomment">-- Now set `Result' based on `a_file_name'.</SPAN>
 &nbsp;&nbsp;<SPAN CLASS="efeature">set_with_named_file</SPAN>(<SPAN CLASS="efeature">Result</SPAN>, <SPAN CLASS="elocal">a_file_name</SPAN>)<br>
 		&nbsp;<SPAN CLASS="ekeyword">end</SPAN><br>
 </code>

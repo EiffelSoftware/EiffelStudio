@@ -25,7 +25,8 @@ inherit
 			on_right_button_up,
 			on_middle_button_up,
 			on_middle_button_down,
-			on_mouse_move
+			on_mouse_move,
+			destroy
 		end
 
 	EV_SIZEABLE_CONTAINER_IMP
@@ -173,6 +174,16 @@ feature -- Status report
 		end
 
 feature -- Status setting
+
+	destroy is
+			-- Destroy the widget, but set the parent sensitive
+			-- in case it was set insensitive by the child.
+		do
+			if parent_imp /= Void then
+				parent_imp.remove_child (Current)
+			end
+			bar.destroy
+		end
 
 	show is
 			-- Show the window
@@ -331,28 +342,6 @@ feature -- Basic operation
 				if ev_children.has (button.command_id) then
 					(ev_children @ button.command_id).execute_command (event_id, ev_data)
 				end
-			end
-		end
-
-feature {NONE} -- Inapplicable
-
-	next_dlgtabitem (hdlg, hctl: POINTER; previous: BOOLEAN): POINTER is
-			-- Encapsulation of the SDK GetNextDlgTabItem,
-			-- because we cannot do a deferred feature become an
-			-- external feature.
-		do
-			check
-				Inapplicable: False
-			end
-		end
-
-	next_dlggroupitem (hdlg, hctl: POINTER; previous: BOOLEAN): POINTER is
-			-- Encapsulation of the SDK GetNextDlgGroupItem,
-			-- because we cannot do a deferred feature become an
-			-- external feature.
-		do
-			check
-				Inapplicable: False
 			end
 		end
 
@@ -518,6 +507,46 @@ feature {NONE} -- WEL Implementation
 			if has_capture then
 				disable_default_processing
 			end
+		end
+
+feature {NONE} -- Feature that should be directly implemented by externals
+
+	next_dlgtabitem (hdlg, hctl: POINTER; previous: BOOLEAN): POINTER is
+			-- Encapsulation of the SDK GetNextDlgTabItem,
+			-- because we cannot do a deferred feature become an
+			-- external feature.
+		do
+			check
+				Inapplicable: False
+			end
+		end
+
+	next_dlggroupitem (hdlg, hctl: POINTER; previous: BOOLEAN): POINTER is
+			-- Encapsulation of the SDK GetNextDlgGroupItem,
+			-- because we cannot do a deferred feature become an
+			-- external feature.
+		do
+			check
+				Inapplicable: False
+			end
+		end
+
+	mouse_message_x (lparam: INTEGER): INTEGER is
+			-- Encapsulation of the c_mouse_message_x function of
+			-- WEL_WINDOW. Normaly, we should be able to have directly
+			-- c_mouse_message_x deferred but it does not wotk because
+			-- it would be implemented by an external.
+		do
+			Result := c_mouse_message_x (lparam)
+		end
+
+	mouse_message_y (lparam: INTEGER): INTEGER is
+			-- Encapsulation of the c_mouse_message_x function of
+			-- WEL_WINDOW. Normaly, we should be able to have directly
+			-- c_mouse_message_x deferred but it does not wotk because
+			-- it would be implemented by an external.
+		do
+			Result := c_mouse_message_y (lparam)
 		end
 
 end -- class EV_TOOL_BAR_IMP

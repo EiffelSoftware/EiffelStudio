@@ -5,7 +5,7 @@ indexing
 	id: "$Id$"
 	date: "$Date$"
 	revision: "$Revision$"
-	
+
 class
 	EV_NOTEBOOK_IMP
 
@@ -55,6 +55,8 @@ inherit
 			on_menu_command,
 			on_accelerator_command,
 			on_color_control
+--			on_wm_vscroll,
+--			on_wm_hscroll
 		redefine
 			default_ex_style,
 			default_style,
@@ -561,6 +563,54 @@ feature {NONE} -- WEL Implementation
 			end
 		end
 
+-- 	on_wm_vscroll (wparam, lparam: INTEGER) is
+-- 			-- Wm_vscroll message.
+-- 		local
+-- 			gauge: EV_GAUGE_IMP
+-- 			p: POINTER
+-- 		do
+-- 			p := cwin_get_wm_vscroll_hwnd (wparam, lparam)
+-- 			if p /= default_pointer then
+-- 				-- The message comes from a gauge
+-- 				gauge ?= windows.item (p)
+-- 				if gauge /= Void then
+-- 					check
+-- 						gauge_exists: gauge.exists
+-- 					end
+-- 					gauge.execute_command (Cmd_gauge, Void)
+-- 				end
+-- 			else
+-- 				-- The message comes from a window scroll bar
+-- 				on_vertical_scroll (cwin_get_wm_vscroll_code (wparam, lparam),
+-- 					cwin_get_wm_vscroll_pos (wparam, lparam))
+-- 			end
+-- 		end
+-- 
+-- 	on_wm_hscroll (wparam, lparam: INTEGER) is
+-- 			-- Wm_hscroll message.
+-- 		local
+-- 			gauge: EV_GAUGE_IMP
+-- 			p: POINTER
+-- 		do
+-- 			p := cwin_get_wm_hscroll_hwnd (wparam, lparam)
+-- 			if p /= default_pointer then
+-- 				-- The message comes from a gauge
+-- 				gauge ?= windows.item (p)
+-- 				if gauge /= Void then
+-- 					check
+-- 						gauge_exists: gauge.exists
+-- 					end
+-- 					gauge.execute_command (Cmd_gauge, Void)
+-- 				end
+-- 			else
+-- 				-- The message comes from a window scroll bar
+-- 				on_horizontal_scroll (cwin_get_wm_hscroll_code (wparam, lparam),
+-- 					cwin_get_wm_hscroll_pos (wparam, lparam))
+-- 			end
+-- 		end
+-- 
+feature {NONE} -- Feature that should be directly implemented by externals
+
 	next_dlgtabitem (hdlg, hctl: POINTER; previous: BOOLEAN): POINTER is
 			-- Encapsulation of the SDK GetNextDlgTabItem,
 			-- because we cannot do a deferred feature become an
@@ -577,23 +627,23 @@ feature {NONE} -- WEL Implementation
 			Result := cwin_get_next_dlggroupitem (hdlg, hctl, previous)
 		end
 
---	mouse_message_x (lparam: INTEGER): INTEGER is
+	mouse_message_x (lparam: INTEGER): INTEGER is
 			-- Encapsulation of the c_mouse_message_x function of
 			-- WEL_WINDOW. Normaly, we should be able to have directly
 			-- c_mouse_message_x deferred but it does not wotk because
 			-- it would be implemented by an external.
---		do
---			Result := c_mouse_message_x (lparam)
---		end
+		do
+			Result := c_mouse_message_x (lparam)
+		end
 
---	mouse_message_y (lparam: INTEGER): INTEGER is
+	mouse_message_y (lparam: INTEGER): INTEGER is
 			-- Encapsulation of the c_mouse_message_x function of
 			-- WEL_WINDOW. Normaly, we should be able to have directly
 			-- c_mouse_message_x deferred but it does not wotk because
 			-- it would be implemented by an external.
---		do
---			Result := c_mouse_message_y (lparam)
---		end
+		do
+			Result := c_mouse_message_y (lparam)
+		end
 
 end -- EV_NOTEBOOK_IMP
 

@@ -555,17 +555,20 @@ feature -- Access
 			has_externals_set: Result.has_externals = he
 		end
 
-	new_class_type_as (n: ID_AS; g: EIFFEL_LIST [EIFFEL_TYPE]): CLASS_TYPE_AS is
+	new_class_type_as (n: ID_AS; g: EIFFEL_LIST [EIFFEL_TYPE]; is_ref, is_exp, is_sep: BOOLEAN): CLASS_TYPE_AS is
 			-- New CLASS_TYPE AST node
 		require
 			n_not_void: n /= Void
 		do
 			create Result
-			Result.initialize (n, g)
+			Result.initialize (n, g, is_ref, is_exp, is_sep)
 		ensure
 			class_type_as_not_void: Result /= Void
 			class_name_set: Result.class_name = n
 			generics_set: Result.generics = g
+			is_reference_set: Result.is_reference = is_ref
+			is_expanded_set: Result.is_expanded = is_exp
+			is_separate_set: Result.is_separate = is_sep
 		end
 
 	new_click_ast (n: CLICKABLE_AST; l, s, e: INTEGER): CLICK_AST is
@@ -982,19 +985,6 @@ feature -- Access
 		ensure
 			ensure_then_as_not_void: Result /= Void
 			assertions_set: Result.assertions = a
-		end
-
-	new_expanded_type_as (n: ID_AS; g: EIFFEL_LIST [EIFFEL_TYPE]): EXP_TYPE_AS is
-			-- New EXPANDED_CLASS_TYPE AST node
-		require
-			n_not_void: n /= Void
-		do
-			create Result
-			Result.initialize (n, g)
-		ensure
-			expanded_type_as_not_void: Result /= Void
-			class_name_set: Result.class_name = n
-			generics_set: Result.generics = g
 		end
 
 	new_export_item_as (c: CLIENT_AS; f: FEATURE_SET_AS): EXPORT_ITEM_AS is
@@ -1557,13 +1547,13 @@ feature -- Access
 			body_end_line_number_set: Result.end_location.is_equal (end_loc)
 		end
 
-	new_routine_creation_as (t: OPERAND_AS; f: ID_AS; o: EIFFEL_LIST [OPERAND_AS]): ROUTINE_CREATION_AS is
+	new_routine_creation_as (t: OPERAND_AS; f: ID_AS; o: EIFFEL_LIST [OPERAND_AS]; is_qualified: BOOLEAN): ROUTINE_CREATION_AS is
 			-- New ROUTINE_CREATION AST node
 		require
 			f_not_void: f /= Void
 		do
 			create Result
-			Result.initialize (t, f, o, True)
+			Result.initialize (t, f, o, is_qualified)
 		ensure
 			routine_creation_as_not_void: Result /= Void
 			target_set: Result.target = t
@@ -1571,31 +1561,26 @@ feature -- Access
 			operands_set: Result.operands = o
 		end
 
-	new_unqualified_routine_creation_as (t: OPERAND_AS; f: ID_AS; o: EIFFEL_LIST [OPERAND_AS]): ROUTINE_CREATION_AS is
-			-- New ROUTINE_CREATION AST node where target is not specified.
+	new_old_routine_creation_as (
+			l: TOKEN_LOCATION; t: OPERAND_AS; f: ID_AS; o: EIFFEL_LIST [OPERAND_AS];
+			is_qualified: BOOLEAN): PAIR [ROUTINE_CREATION_AS, TOKEN_LOCATION]
+		is
+			-- New ROUTINE_CREATION AST node for obsolete use of `~'.
 		require
+			l_not_void: l /= Void
 			f_not_void: f /= Void
+		local
+			l_routine: ROUTINE_CREATION_AS
 		do
-			create Result
-			Result.initialize (t, f, o, False)
+			create l_routine
+			l_routine.initialize (t, f, o, is_qualified)
+			create Result.make (l_routine, l)
 		ensure
 			routine_creation_as_not_void: Result /= Void
-			target_set: Result.target = t
-			feature_name_set: Result.feature_name = f
-			operands_set: Result.operands = o
-		end
-
-	new_separate_type_as (n: ID_AS; g: EIFFEL_LIST [EIFFEL_TYPE]): SEPARATE_TYPE_AS is
-			-- New SEPARATE_CLASS_TYPE AST node
-		require
-			n_not_void: n /= Void
-		do
-			create Result
-			Result.initialize (n, g)
-		ensure
-			separate_type_as_not_void: Result /= Void
-			class_name_set: Result.class_name = n
-			generics_set: Result.generics = g
+			target_set: Result.first.target = t
+			feature_name_set: Result.first.feature_name = f
+			operands_set: Result.first.operands = o
+			location_set: Result.second = l
 		end
 
 	new_string_as (s: STRING): STRING_AS is

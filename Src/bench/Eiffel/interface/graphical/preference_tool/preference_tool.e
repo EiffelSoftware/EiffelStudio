@@ -35,11 +35,6 @@ feature {NONE} -- Initialization
 			-- Create and initialize `menu_form'.
 		local
 			menu_entry: PREFERENCE_MENU_ENTRY;
-			ok_cmd: OK_PREF_CMD;
-			apply_cmd: APPLY_PREF_CMD;
-			cancel_cmd: CANCEL_PREF_CMD;
-			save_cmd: SAVE_PREF_CMD;
-			validate_cmd: VALIDATE_PREF_CMD
 		do
 			!! menu_form.make ("Menu Form", global_form);
 
@@ -56,28 +51,18 @@ feature {NONE} -- Initialization
 
 			!! ok_cmd.make (Current);
 			!! menu_entry.make (ok_cmd, file_menu);
-			!! ok_holder.make_plain (ok_cmd);
-			ok_holder.set_menu_entry (menu_entry);
 
 			!! apply_cmd.make (Current);
 			!! menu_entry.make (apply_cmd, file_menu);
-			!! apply_holder.make_plain (apply_cmd);
-			apply_holder.set_menu_entry (menu_entry);
 
 			!! cancel_cmd.make (Current);
 			!! menu_entry.make (cancel_cmd, file_menu);
-			!! cancel_holder.make_plain (cancel_cmd);
-			cancel_holder.set_menu_entry (menu_entry);
 
 			!! save_cmd.make (Current);
 			!! menu_entry.make (save_cmd, file_menu);
-			!! save_holder.make_plain (save_cmd);
-			save_holder.set_menu_entry (menu_entry);
 
 			!! validate_cmd.make (Current);
 			!! menu_entry.make (validate_cmd, file_menu);
-			!! validate_holder.make_plain (validate_cmd);
-			validate_holder.set_menu_entry (menu_entry)
 		end;
 
 	initialize_category_button_rc is
@@ -112,11 +97,11 @@ feature {NONE} -- Initialization
 			button_form.set_fraction_base (3);
 
 			!! ok_button.make ("OK", button_form);
-			ok_button.add_activate_action (ok_holder.associated_command, Void);
+			ok_button.add_activate_action (ok_cmd, Void);
 			!! apply_button.make ("Apply", button_form);
-			apply_button.add_activate_action (apply_holder.associated_command, Void);
+			apply_button.add_activate_action (apply_cmd, Void);
 			!! cancel_button.make ("Cancel", button_form);
-			cancel_button.add_activate_action (cancel_holder.associated_command, Current);
+			cancel_button.add_activate_action (cancel_cmd, Current);
 
 			button_form.attach_top (ok_button, 0);
 			button_form.attach_bottom (ok_button, 0);
@@ -352,21 +337,21 @@ feature {NONE} -- Properties
 	selected_label: LABEL
 			-- Label with `name' of current selected category
 
-feature {PREFERENCE_COMMAND} -- Command holders
+feature {PREFERENCE_COMMAND} -- Commands
 
-	ok_holder: PREFERENCE_HOLDER
+	ok_cmd: OK_PREF_CMD
 			-- Holder for the Ok command
 
-	apply_holder: PREFERENCE_HOLDER
+	apply_cmd: APPLY_PREF_CMD
 			-- Holder for the Apply command
 
-	cancel_holder: PREFERENCE_HOLDER
+	cancel_cmd: CANCEL_PREF_CMD
 			-- Holder for the Cancel command
 
-	save_holder: PREFERENCE_HOLDER
+	save_cmd: SAVE_PREF_CMD
 			-- Holder for the Save command
 
-	validate_holder: PREFERENCE_HOLDER
+	validate_cmd: VALIDATE_PREF_CMD
 			-- Holder for the Validate command
 
 feature {PREFERENCE_CATEGORY} -- Execution

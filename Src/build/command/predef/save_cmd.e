@@ -13,7 +13,9 @@ creation
 	
 feature 
 
-	eiffel_type: STRING is "Save";
+	eiffel_type: STRING is "SAVE";
+
+	label: STRING is "Save";
 
 	identifier: INTEGER is
 		do

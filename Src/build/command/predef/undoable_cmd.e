@@ -17,7 +17,9 @@ creation
 
 feature 
 
-        eiffel_type: STRING is "Undoable_cmd";
+	eiffel_type: STRING is "UNDOABLE_CMD";
+
+	label: STRING is "Undoable Command";
 
 	identifier: INTEGER is
 		do

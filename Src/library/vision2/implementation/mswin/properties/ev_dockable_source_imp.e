@@ -89,9 +89,6 @@ feature {EV_ANY_I} -- Implementation
 		a_pressure: DOUBLE; a_screen_x, a_screen_y: INTEGER) is
 			-- Terminate the pick and drop mechanism.
 		local
-			env: EV_ENVIRONMENT
-			target: EV_ABSTRACT_PICK_AND_DROPABLE
-			pick_and_dropable: EV_PICK_AND_DROPABLE
 			text_component: EV_TEXT_COMPONENT_IMP
 		do
 			awaiting_movement := False
@@ -169,9 +166,6 @@ feature {NONE} -- Implementation
 	--			not is_dnd_in_transport and
 	--			application_imp.pick_and_drop_source = Void
 	--		original_window_void: original_top_level_window_imp = Void
-		local
-			pt, win_pt: WEL_POINT
-			env: EV_ENVIRONMENT
 		do
 			if not is_dock_executing then
 					-- We now create the screen at the start of every pick.

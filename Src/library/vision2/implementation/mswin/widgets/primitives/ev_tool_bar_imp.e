@@ -895,13 +895,11 @@ feature {EV_DOCKABLE_SOURCE_I} -- Implementation
 			--
 		local
 			offset: INTEGER
-			temp1, temp2: INTEGER
 			button: EV_TOOL_BAR_BUTTON_IMP
 			item_index: INTEGER
 		do
 			Result := -1
 			offset := internal_screen.pointer_position.x - screen_x
-		--	button := find_item_at_position (offset, height // 2)
 			
 			item_index := find_button(offset, height // 2)
 			io.putstring ("Item index : " + item_index.out + "%N")

@@ -23,9 +23,6 @@ feature {EV_DOCKABLE_SOURCE_I} -- Implementation
 		local
 			curs: CURSOR
 			offset: INTEGER
-			current_pos: INTEGER
-			current_widget_height: INTEGER
-			next_position: INTEGER
 			current_position: INTEGER
 			last_position: INTEGER
 			temp1, temp2: INTEGER

@@ -8,10 +8,7 @@ class
 	WIZARD_COMPILER_ENVIRONMENT
 
 inherit
-	EXECUTION_ENVIRONMENT
-		export
-			{NONE} all
-		end
+	WIZARD_EXECUTION_ENVIRONMENT
 
 feature -- Access
 
@@ -31,9 +28,9 @@ feature -- Access
 			-- C compiler options to compile generated code (Client and Server folders)
 		once
 			Result := "/W0 /Ox /D %"_WIN32_DCOM%" /c /I..\include /I..\..\common\include /I"
-			Result.append (get (Eiffel4))
+			Result.append (Eiffel4_location)
 			Result.append ("\bench\spec\windows\include /I")
-			Result.append (get (Eiffel4))
+			Result.append (Eiffel4_location)
 			Result.append ("\library\com\spec\windows\include ")
 		end
 
@@ -41,9 +38,9 @@ feature -- Access
 			-- C compiler options to compile generated code (Common folders for client)
 		once
 			Result := "/W0 /Ox /D %"_WIN32_DCOM%" /c /I..\include /I..\..\client\include /I"
-			Result.append (get (Eiffel4))
+			Result.append (Eiffel4_location)
 			Result.append ("\bench\spec\windows\include /I")
-			Result.append (get (Eiffel4))
+			Result.append (Eiffel4_location)
 			Result.append ("\library\com\spec\windows\include ")
 		end
 
@@ -51,9 +48,9 @@ feature -- Access
 			-- C compiler options to compile generated code (Common folders for server)
 		once
 			Result := "/W0 /Ox /D %"_WIN32_DCOM%" /c /I..\include /I..\..\server\include /I"
-			Result.append (get (Eiffel4))
+			Result.append (Eiffel4_location)
 			Result.append ("\bench\spec\windows\include /I")
-			Result.append (get (Eiffel4))
+			Result.append (Eiffel4_location)
 			Result.append ("\library\com\spec\windows\include ")
 		end
 
@@ -61,10 +58,16 @@ feature -- Access
 			-- C compiler options to compile Proxy/Stub
 		once
 			Result := "/ML /W0 /GD /Ox /D %"REGISTER_PROXY_DLL%" /D %"WIN32%" /D %"_WIN32_DCOM%" /YX /c /I..\include /I..\..\common\include /I"
-			Result.append (get (Eiffel4))
+			Result.append (Eiffel4_location)
 			Result.append ("\bench\spec\windows\include /I")
-			Result.append (get (Eiffel4))
+			Result.append (Eiffel4_location)
 			Result.append ("\library\com\spec\windows\include ")
+		end
+
+	Eiffel4_location: STRING is
+			-- Location of Eiffel compiler.
+		once
+			Result := execution_environment.get (Eiffel4)
 		end
 
 	Eiffel4: STRING is "EIFFEL4"

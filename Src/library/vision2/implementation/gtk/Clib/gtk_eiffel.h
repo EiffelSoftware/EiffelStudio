@@ -22,8 +22,6 @@
 
 EIF_REFERENCE c_match_font_name (char * pattern);
 
-EIF_REFERENCE generize (EIF_OBJECT g_item);
-
 /*==============================================================================
  gtk_window functions
 ==============================================================================*/

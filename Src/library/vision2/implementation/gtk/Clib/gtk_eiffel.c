@@ -70,19 +70,6 @@ EIF_REFERENCE c_match_font_name (char * pattern)
 	return res;
 }
 
-/*********************************
- * Function `generize'
- *
- * Compiler hack to return a generic type G
- * from type ANY, used in the Eiffel function
- * item in EV_ITEM_LIST_IMP.
- ********************************/
-
-EIF_REFERENCE generize (EIF_OBJECT g_item)
-{
-	return eif_access (g_item);
-}
-
 void c_gtk_window_set_modal (GtkWindow* window, gboolean modal)
 {
 	gtk_signal_connect_object(GTK_OBJECT(window),"show",GTK_SIGNAL_FUNC(gtk_grab_add),GTK_OBJECT(window));

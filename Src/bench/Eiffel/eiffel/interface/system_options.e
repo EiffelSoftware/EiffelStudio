@@ -8,14 +8,6 @@ class
 
 feature -- Update
 
-	set_has_multithreaded (b: BOOLEAN) is
-			-- Set `has_multithreaded' to `b'
-		do
-			has_multithreaded := b
-		ensure
-			has_multithreaded_set: has_multithreaded = b
-		end
-
 	set_java_generation (b: BOOLEAN) is
 			-- Set `java_generation' to `b'
 		do
@@ -101,10 +93,58 @@ end
 	set_line_generation (b: BOOLEAN) is
 			-- Set `line_generation' to `b'
 		do
+			if line_generation /= b then
+				set_freeze
+			end
 			line_generation := b
 		ensure
 			line_generation_set : line_generation = b
 		end
+
+	set_has_multithreaded (b: BOOLEAN) is
+			-- Set `has_multithreaded' to `b'
+		do
+			if has_multithreaded /= b then
+				set_freeze
+			end
+			has_multithreaded := b
+		ensure
+			has_multithreaded_set: has_multithreaded = b
+		end
+
+	set_console_application (b: BOOLEAN) is
+			-- Set `is_console_application' to `b'
+		do
+			if is_console_application /= b then
+				set_freeze
+			end
+			is_console_application := b	
+		ensure
+			is_console_application_set: is_console_application = b
+		end
+
+	set_dynamic_runtime (b: BOOLEAN) is
+			-- Set `is_console_application' to `b'
+		do
+			if has_dynamic_runtime /= b then
+				set_freeze
+			end
+			has_dynamic_runtime := b	
+		ensure
+			has_dynamic_runtime: has_dynamic_runtime = b
+		end
+
+	set_freeze is
+			-- Assign `b' to `freeze'.
+		do
+			private_freeze := True
+		end
+
+feature {SYSTEM_I} -- Implementation
+
+	private_freeze: BOOLEAN
+			-- Freeze set if externals or new derivation
+			-- of special is generated
 
 feature -- Access
 
@@ -141,6 +181,15 @@ feature -- Access
 
 	has_expanded: BOOLEAN;
 			-- Is there an expanded declaration in the system,
-			-- i.e. some extra check must be done after pass2 ?
+			--| i.e. some extra check must be done after pass2 ?
+
+	is_console_application: BOOLEAN
+			-- Is the application going to be a console application?
+			--| ie on Windows only we need to link with the correct flags.
+
+	has_dynamic_runtime: BOOLEAN
+			-- Does the application need to be linked with a dynamic runtime?
+			--| ie on Windows the application will run with a DLL and on UNIX it
+			-- |will be a .so file.
 
 end -- class SYSTEM_OPTIONS

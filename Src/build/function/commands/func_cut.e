@@ -16,9 +16,6 @@ feature {NONE}
 	input_data, output_data: DATA;
 			-- Input and output datum removed from box
 
-	removed_command: INTERNAL_META_COMMAND
-			-- Command removed from the interface
-
 	c_name: STRING is
 		do
 			Result := Command_names.func_cut_elements_cmd_name
@@ -30,11 +27,6 @@ feature {NONE}
 			an_event: EVENT
 		do
 			edited_function.remove_element_line (input_data, False)
-			edited_behavior ?= edited_function
-			if edited_behavior /= Void then
-				an_event ?= input_data
-				an_event.remove_interface_command (edited_behavior.context, removed_command)
-			end
 		end; -- redo
 
 	undo_work is
@@ -44,10 +36,6 @@ feature {NONE}
 		do
 			edited_function.add_element_line (position, input_data,
 							output_data);
-			if edited_behavior /= Void then
-				an_event ?= input_data
-				an_event.add_interface_command (edited_behavior.context, removed_command)
-			end
 		end; -- undo
 
 	function_work is
@@ -63,14 +51,6 @@ feature {NONE}
 			output_data := output_list.item;
 			edited_function.set_input_data (input_data)
 			edited_function.set_output_data (output_data)
-				--| Remove the command from the interface
-				--| if `edited_function' is a behavior.
-			edited_behavior ?= edited_function
-			if edited_behavior /= Void then
-				removed_command := edited_behavior.interface_command
-				an_event ?= input_data
-				an_event.remove_interface_command (edited_behavior.context, removed_command)
-			end
 			edited_function.reset_input_data
 			edited_function.reset_output_data
 			if not do_not_record then

@@ -4,7 +4,6 @@ class FUNC_DROP
 inherit
 
 	FUNC_COMMAND
-	MODE_CONSTANTS
 	
 feature {NONE}
 
@@ -22,13 +21,6 @@ feature {NONE}
 		do
 			if not edited_function.has_input (input_data) then
 				edited_function.add (input_data, output_data)
-					--| Add the command to the interface if `edited_function'
-					--| is a BEHAVIOR.
-				edited_behavior ?= edited_function
-				if edited_behavior /= Void then
-					an_event ?= input_data
-					an_event.add_interface_command (edited_behavior.context, added_command)
-				end
 			end;
 		end; -- redo
 
@@ -38,13 +30,6 @@ feature {NONE}
 			an_event: EVENT
 		do
 			edited_function.remove_element_line (input_data, False)
-				--| Remove the command from the interface if `edited_function'
-				--| is a BEHAVIOR.
-			edited_behavior ?= edited_function
-			if edited_behavior /= Void then
-				an_event ?= input_data
-				an_event.remove_interface_command (edited_behavior.context, added_command)
-			end
 		end; -- undo
 
 	function_work is
@@ -55,13 +40,6 @@ feature {NONE}
 			edited_function.finish;
 			output_data := edited_function.output;
 			input_data := edited_function.input;
-				--| Add the command to the interface if `edited_function'
-				--| is a BEHAVIOR.
-			edited_behavior ?= edited_function
-			if edited_behavior /= Void then
-				added_command := edited_behavior.interface_command
-				edited_behavior.add_interface_command (added_command)
-			end
 			update_history;
 			update_interface;
 		end; -- function_work
@@ -78,8 +56,4 @@ feature {NONE}
 			end
 		end; -- worked_on
 
-feature -- Added command
-
-	added_command: INTERNAL_META_COMMAND
-			-- Command added to the interface
 end

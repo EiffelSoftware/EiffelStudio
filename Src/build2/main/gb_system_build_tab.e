@@ -35,6 +35,7 @@ feature {NONE} -- Initialization
 		local
 			label: EV_LABEL
 			vertical_box: EV_VERTICAL_BOX
+			horizontal_box: EV_HORIZONTAL_BOX
 			frame: EV_FRAME
 		do
 			create frame.make_with_text ("Build type")
@@ -43,13 +44,20 @@ feature {NONE} -- Initialization
 			frame.extend (vertical_box)
 			create application_class_name_field
 			create project_name_field
+			create horizontal_box
+			vertical_box.extend (horizontal_box)
 			create project_radio_button.make_with_text ("Project")
-			project_radio_button.select_actions.extend (agent project_type_modified)
-			vertical_box.extend (project_radio_button)
+			horizontal_box.extend (project_radio_button)
+				-- We now force the appearance of a gap between the project button and
+				-- rebuild ace file button, by modifying the minimum width.
+			project_radio_button.set_minimum_width (project_radio_button.minimum_width + 20)
+			create rebuild_ace_file.make_with_text ("Always rebuild ace?")
+			horizontal_box.extend (rebuild_ace_file)
+			horizontal_box.disable_item_expand (project_radio_button)
+			horizontal_box.merge_radio_button_groups (vertical_box)
 			create class_radio_button.make_with_text ("Class")
-			class_radio_button.select_actions.extend (agent project_type_modified)
 			vertical_box.extend (class_radio_button)
-			
+		
 			create label.make_with_text (project_name_prompt)
 			extend (label)
 			extend (project_name_field)
@@ -69,6 +77,10 @@ feature {NONE} -- Initialization
 			is_initialized := True
 			disable_all_items (Current)
 			align_labels_left (Current)
+			
+				-- Connect events to project and class buttons.
+			class_radio_button.select_actions.extend (agent project_type_modified)
+			project_radio_button.select_actions.extend (agent project_type_modified)
 		end
 		
 feature -- Access
@@ -90,6 +102,11 @@ feature -- Status setting
 			else
 				class_radio_button.enable_select
 			end
+			if project_settings.rebuild_ace_file then
+				rebuild_ace_file.enable_select
+			else
+				rebuild_ace_file.disable_select
+			end
 		end
 		
 	save_attributes (project_settings: GB_PROJECT_SETTINGS) is
@@ -102,6 +119,11 @@ feature -- Status setting
 				project_settings.enable_complete_project
 			else
 				project_settings.disable_complete_project
+			end
+			if rebuild_ace_file.is_selected then
+				project_settings.enable_rebuild_ace_file
+			else
+				project_settings.disable_rebuild_ace_file
 			end
 		end	
 
@@ -163,9 +185,11 @@ feature {GB_SYSTEM_WINDOW} -- Implementation
 			if project_radio_button.is_selected then
 				application_class_name_field.enable_sensitive
 				project_name_field.enable_sensitive
+				rebuild_ace_file.enable_sensitive
 			else
 				application_class_name_field.disable_sensitive
 				project_name_field.disable_sensitive
+				rebuild_ace_file.disable_sensitive
 			end
 		end
 		
@@ -186,5 +210,8 @@ feature {NONE} -- Implementation
 		
 	project_name_field: EV_TEXT_FIELD
 		-- Holds the name used for generated project name.
+		
+	rebuild_ace_file: EV_CHECK_BUTTON
+		-- Holds whether we should re-generate the ace file every time.
 		
 end -- class GB_SYSTEM_BUILD_TAB

@@ -25,7 +25,7 @@ feature -- Status setting
 
 feature -- Search
 
-	search_for_pattern is
+	search_for_pattern: BOOLEAN is
 			-- Search in the text to find the very next
 			-- occurrence of `pattern'.
 		local
@@ -33,46 +33,38 @@ feature -- Search
 			difference, pattern_index: INTEGER;
 			text_area, pattern_area: SPECIAL [CHARACTER];
 			table_area: SPECIAL [INTEGER]
+			j: INTEGER
+
 		do
 			from
-				text_count := text.count;
-				pattern_count := pattern.count;
-				i := index;
-				table_area := table.area;
-				text_area := text.area;
-				pattern_area := pattern.area;
-				difference := text_count - pattern_count;
-				pattern_index := 0
-			until
-				pattern_index >= pattern_count or else
-				i > difference and then pattern_index = 0
-			loop
-				if text_area.item (i) /= pattern_area.item (pattern_index) then
-debug("KMP")
-	print ("Before index update statement%NInfo:%N-----%N");
-	print ("i: ")
-	print (i);
-	print ("%Ndifference: ");
-	print (difference);
-	print ("%Npattern_count: ");
-	print (pattern_count);
-	print ("%Ntext_count: ");
-	print (text_count);
-	print ("%Ntext_area.item (i + pattern_count).code: ");
-	print (text_area.item (i + pattern_count).code);
-	print ("%Ntable_area.count: ");
-	print (table_area.count);
-	print ("%N")
-end;
-					i := i + table_area.item (text_area.item (i + pattern_count).code);
-					pattern_index := 0
+				pattern_area := pattern.area
+				pattern_count := pattern.count - 1
+				table_area := table.area
+				text_area := text.area
+				text_count := text.count
+				i := index
+				j := 0
+				if text_count = 0 then
+					index := 0
+					found := true
 				else
-					pattern_index := pattern_index + 1;
-					i := i + 1
+					found := false
 				end
-			end;
-			index := i;
-			found := pattern_index >= pattern_count
+			until
+				found or else i > text_count
+			loop
+				if (j = -1) or else (pattern_area.item (j) = text_area.item (i)) then
+					i := i + 1
+					j := j + 1
+					if j > pattern_count then
+						index := i
+						found := true
+					end
+				else
+					j := table_area.item (j)
+				end
+			end
+			Result := found
 		end
 
 feature {NONE} -- Initialization
@@ -83,28 +75,34 @@ feature {NONE} -- Initialization
 			table_area: SPECIAL [INTEGER];
 			pattern_area: SPECIAL [CHARACTER];
 			i, pattern_count: INTEGER
-		do
-			from
-				!! table.make (0, 128);
-				table_area := table.area;
-				pattern_area := pattern.area;
-				i := 0;
-				pattern_count := pattern.count
-			until
-				i = 128
-			loop
-				table_area.put (pattern_count, i);
-				i := i + 1
-			end;
+			l,k: INTEGER
 
-			from
-				i := 1
+		do
+			from 
+				pattern_area := pattern.area
+				pattern_count := pattern.count
+				!! table.make (0, pattern_count)
+				table_area := table.area
+				l := 0
+				k := -1
+				table_area.put (-1, 0)
 			until
-				i = pattern_count
+				l > pattern_count
+
 			loop
-				table_area.put (pattern_count - i, pattern_area.item (i).code);
-				i := i + 1
+				if (k = -1) or (pattern_area.item (l) = pattern_area.item (k)) then
+					l := l + 1
+					k := k + 1
+					if (pattern_area.item (k) = pattern_area.item (l)) then
+						table_area.put (table_area.item (k), l)
+					else
+						table_area.put (k, l)
+					end
+				else
+					k := table_area.item (k)
+				end
 			end
+
 		end;
 
 feature {NONE} -- Attributes

@@ -14,8 +14,8 @@ inherit
 		rename
 			init_toolkit as g_any_init_toolkit
 		redefine
-			make,
-			make_unmanaged,
+--			make,
+--			make_unmanaged,
 			realize,
 			destroy
 		end
@@ -38,20 +38,21 @@ creation
 
 feature -- Creation
 
-	make (a_name: STRING; a_parent: COMPOSITE) is
-			-- Create the command editor managed.
-		do
-			Precursor (a_name, a_parent)
-			create_interface
-		end
-
-	make_unmanaged (a_name: STRING; a_parent: COMPOSITE) is
-			-- Create the command editor managed.
-		do
-			Precursor (a_name, a_parent)
-			command_tool ?= a_parent
-			create_interface
-		end
+-- 	make (a_name: STRING; a_parent: COMPOSITE) is
+-- 			-- Create the command editor managed.
+-- 		do
+-- 			Precursor (a_name, a_parent)
+-- 			command_tool ?= a_parent.parent
+-- 			create_interface
+-- 		end
+-- 
+-- 	make_unmanaged (a_name: STRING; a_parent: COMPOSITE) is
+-- 			-- Create the command editor managed.
+-- 		do
+-- 			Precursor (a_name, a_parent)
+-- 			command_tool ?= a_parent
+-- 			create_interface
+-- 		end
 
 	set_command_tool (a_command_tool: COMMAND_TOOL) is
 			-- Set `command_tool' to `a_command_tool'.

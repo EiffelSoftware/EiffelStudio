@@ -127,8 +127,10 @@ feature -- Tree features
 	fill_tree is
 		local
 			-- Sub tree item.
-			kernel, properties, items, figures, widgets: EV_TREE_ITEM
-			primitive, container, dialog, uncommon: EV_TREE_ITEM
+			kernel, properties: EV_TREE_ITEM
+			items, figures, widgets: DEMO_ITEM [NO_DEMO_WINDOW]
+			uncommon: EV_TREE_ITEM
+			primitive, container, dialog: DEMO_ITEM [NO_DEMO_WINDOW]
 
 			-- Kernel items
 			acceleratord: DEMO_ITEM [ACCELERATOR_WINDOW]
@@ -174,6 +176,7 @@ feature -- Tree features
 			dyntable:	DEMO_ITEM [DYNTABLE_WINDOW] 
 
 			-- Dialogs
+			selection, message: DEMO_ITEM [NO_DEMO_WINDOW]
 			error:		DEMO_ITEM [ERROR_WINDOW]
 			question:	DEMO_ITEM [QUESTION_WINDOW] 
 			information:DEMO_ITEM [INFORMATION_WINDOW] 
@@ -191,16 +194,16 @@ feature -- Tree features
 			pixmap:		DEMO_ITEM [PIXMAP_WINDOW]
 		do
 			-- The main topics
-			create figures.make_with_text		(tree, "figures")
+			create figures.make_with_title 		(tree, "ev_figure", "no_demo_window")
 			create kernel.make_with_text		(tree, "kernel")
-			create properties.make_with_text	(tree, "properties")
-			create items.make_with_text			(tree, "items")
-			create widgets.make_with_text		(tree, "widgets")
+			create properties.make_with_text		(tree, "properties")
+			create items.make_with_title		(tree, "ev_item", "no_demo_window")
+			create widgets.make_with_title		(tree, "ev_widget", "no_demo_window")
 
 			-- The sub topics for widget root node
-			create container.make_with_text		(widgets, "containers")
-			create primitive.make_with_text		(widgets, "primitives")
-			create dialog.make_with_text		(widgets, "common dialogs")
+			create container.make_with_title		(widgets, "ev_container", "no_demo_window")
+			create primitive.make_with_title		(widgets, "ev_primitive", "no_demo_window")
+			create dialog.make_with_title		(widgets, "ev_standard_dialog", "no_demo_window")
 			create uncommon.make_with_text		(widgets, "uncommon widgets")
 
 			-- The sub topics for item root node
@@ -214,7 +217,7 @@ feature -- Tree features
 			create timeout.make_with_title		(kernel, "ev_timeout", "timeout_window")
 			create tooltip.make_with_title		(kernel, "ev_tooltip", "tooltip_window")
 
-			-- The figures
+				-- Figures demos
 			create {PIXEL_ITEM} figure.make_with_title (figures, "ev_pixel", "figure_window")
 			create {SEGMENT_ITEM} figure.make_with_title (figures, "ev_segment", "figure_window")
 			create {STRAIGHT_LINE_ITEM} figure.make_with_title (figures, "ev_straight_line", "figure_window")
@@ -232,7 +235,7 @@ feature -- Tree features
 -- Do not work
 --			--create {PICTURE_ITEM} figure.make_with_title (figures)
 
-			-- Primitives
+				-- Primitive demos
 			create gauge.make_with_title (primitive, "ev_gauge", "gauge_window")
 			create range.make_with_title (gauge, "ev_range", "range_window")
 			create spin.make_with_title (gauge, "ev_spin_button", "spin_button_window")
@@ -249,41 +252,41 @@ feature -- Tree features
 			create list.make_with_title (primitive, "ev_list", "list_window")
 			create treed.make_with_title (primitive, "ev_tree", "tree_window")
 			create combo.make_with_title (primitive, "ev_combo_box", "combo_window")
---	This example does not work on gtk yet
 			create drawing.make_with_title (primitive, "ev_drawing_area", "drawing_window")
 			create rich.make_with_title (primitive, "ev_rich_text", "rich_window")
 			create toolbar.make_with_title (primitive, "ev_tool_bar", "toolbar_window")
 			create progress.make_with_title (primitive, "ev_progress_bar", "progress_window")
 
+				-- Containers demos
 			create window.make_with_title (container, "ev_window", "window_window")
 			create dialogd.make_with_title (container, "ev_dialog" , "dialog_window")
 			create fixed.make_with_title (container, "ev_fixed", "fixed_window")
 			create box.make_with_title (container, "ev_box", "box_window")
 			create notebook.make_with_title (container, "ev_notebook", "notebook_window")
 			create split.make_with_title (container, "ev_split_area", "split_area_window")
-			create scrollable.make_with_title (container, "ev_scrollable", "scrollable_window")
+			create scrollable.make_with_title (container, "ev_scrollable_area", "scrollable_window")
 			create frame.make_with_title (container, "ev_frame", "frame_window")
 			create table.make_with_title (container, "ev_table", "table_window")
 			create dyntable.make_with_title (table, "ev_dynamic_table", "dyntable_window")
-
---	This example does not work on gtk yet
 			create popup.make_with_title (uncommon, "ev_popup_menu", "popup_window")
 			create pixmap.make_with_title (uncommon, "ev_pixmap", "pixmap_window")
 
-			create error.make_with_title (dialog, "ev_error_dialog", "error_window")
-			create question.make_with_title (dialog, "ev_question_dialog", "question_window")
-			create information.make_with_title (dialog, "ev_information_dialog", "information_window")
-			create warning.make_with_title (dialog, "ev_warning_dialog", "warning_window")
-			create open_file.make_with_title (dialog, "ev_file_open_dialog", "open_file_window")
-			create save_file.make_with_title (dialog, "ev_file_save_dialog", "save_file_window")
-			create directory.make_with_title (dialog, "ev_directory_dialog", "directory_window")
-			create accelerator.make_with_title (dialog, "ev_accelerator_dialog", "accelerator_selection_window")
---	These examples do not work on gtk yet
-			create color.make_with_title (dialog, "ev_color_dialog", "color_window")
-			create font.make_with_title (dialog, "ev_font_dialog", "font_window")
+				-- Standard dialogs demos
+			create message.make_with_title (dialog, "ev_message_dialog", "no_demo_window")
+			create error.make_with_title (message, "ev_error_dialog", "error_window")
+			create question.make_with_title (message, "ev_question_dialog", "question_window")
+			create information.make_with_title (message, "ev_information_dialog", "information_window")
+			create warning.make_with_title (message, "ev_warning_dialog", "warning_window")
+			create selection.make_with_title (dialog, "ev_selection_dialog", "no_demo_window")
+			create open_file.make_with_title (selection, "ev_file_open_dialog", "open_file_window")
+			create save_file.make_with_title (selection, "ev_file_save_dialog", "save_file_window")
+			create directory.make_with_title (selection, "ev_directory_dialog", "directory_window")
+			create accelerator.make_with_title (selection, "ev_accelerator_dialog", "accelerator_selection_window")
+			create color.make_with_title (selection, "ev_color_dialog", "color_window")
+			create font.make_with_title (selection, "ev_font_dialog", "font_window")
 			create printd.make_with_title (dialog, "ev_print_dialog", "print_window")
 
---	Demos for item node
+				-- Item demos
 			--create items.make_with_title (composed,"MULTI_COLUMN_LIST_ROW_ITEM",test_wind)
 			--create items.make_with_title (composed)
 			--create items.make_with_title (composed)

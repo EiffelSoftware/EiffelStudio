@@ -19,6 +19,8 @@ inherit
 		export
 			{NONE} all
 		end
+		
+	COMPILER_EXPORTER
 	
 feature -- C code generation
 
@@ -128,7 +130,7 @@ feature -- Generic conformance
 			gen_type ?= type_to_create
 			Result := (gen_type /= Void)
 		end
-
+	
 feature -- Assignment attempt
 
 	generate_reverse (buffer: GENERATION_BUFFER; final_mode: BOOLEAN) is

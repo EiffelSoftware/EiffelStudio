@@ -1,4 +1,7 @@
--- Creation of a like feature.
+indexing
+	description: "Creation of an object bounded to type of a feature during execution."
+	date: "$Date$"
+	revision: "$Revsion: $"
 
 class CREATE_FEAT 
 
@@ -170,6 +173,7 @@ feature -- IL code generation
 			feat_tbl: FEATURE_TABLE
 			feat: FEATURE_I
 			l_decl_type: CL_TYPE_I
+			l_gen_type_i: GEN_TYPE_I
 		do
 				-- FIXME: Manu 10/24/2001. Code is not efficient at all and could be
 				-- improved if more data were stored in Current. But this is not possible
@@ -179,6 +183,16 @@ feature -- IL code generation
 			l_decl_type := il_generator.implemented_type (feat.origin_class_id,
 				context.current_type)
 			il_generator.create_attribute_object (l_decl_type, feat.origin_feature_id)
+			
+				-- Fixme: Manu 1/7/2002. Should create an instance of ANCHORED_TYPE. But
+				-- for the moment we do like before we create only the instance known
+				-- at compile time.
+			l_gen_type_i ?= feat.type.actual_type.type_i
+			if l_gen_type_i /= Void then
+				il_generator.duplicate_top
+				l_gen_type_i.generate_gen_type_il (il_generator, True)
+				il_generator.assign_computed_type
+			end
 		end
 
 feature -- Byte code generation

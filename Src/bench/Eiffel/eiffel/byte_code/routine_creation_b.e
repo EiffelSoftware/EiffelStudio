@@ -181,7 +181,7 @@ feature -- IL code generation
 			cl_type: like class_type
 		do
 			real_ty ?= context.real_type (type)
-			il_generator.create_object (real_ty)
+			(create {CREATE_TYPE}.make (real_ty)).generate_il
 			il_generator.duplicate_top
 
 			set_rout_disp_feat := real_ty.base_class.feature_table.

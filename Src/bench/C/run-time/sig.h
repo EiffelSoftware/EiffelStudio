@@ -21,6 +21,8 @@
 extern "C" {
 #endif
 
+#include "eif_globals.h"
+
 #define SIGSTACK	200		/* Size of FIFO stack for signal buffering */
 
 /* Structure used as FIFO stack for signal buffering. I really do not expect
@@ -42,7 +44,7 @@ struct s_stack {
 
 extern int esigblk;				/* Are signals blocked for later delivery? */
 extern struct s_stack sig_stk;	/* The signal stack */
-extern void esdpch(void);			/* Dispatch queued signals */
+extern void esdpch(EIF_CONTEXT_NOARG);			/* Dispatch queued signals */
 extern char *signame(int sig);			/* Give English description of a signal */
 extern void initsig(void);			/* Initialize the Eiffel handling of signals */
 extern void trapsig(void (*handler) (int));			/* Set a trap for most of the signals */
@@ -59,12 +61,12 @@ extern Signal_t exfpe(int sig);		/* Routine trapped for floating point exception
  */
 
 #define SIGBLOCK	esigblk++
-#define SIGRESUME	if (--esigblk == 0 && signal_pending) esdpch()
+#define SIGRESUME	if (--esigblk == 0 && signal_pending) esdpch(MTC_NOARG)
 
 /* Eiffel interface with class UNIX_SIGNALS */
 extern long esigmap(long int idx);		/* Mapping between constants and signal numbers */
 extern char *esigname(long int sig);	/* Signal description */
-extern long esignum(void);		/* Signal number */
+extern long esignum(EIF_CONTEXT_NOARG);		/* Signal number */
 extern void esigcatch(long int sig);	/* Catch signal */
 extern void esigignore(long int sig);	/* Ignore signal */
 extern char esigiscaught(long int sig);	/* Is signal caught? */

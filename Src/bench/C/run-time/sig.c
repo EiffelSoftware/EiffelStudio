@@ -75,10 +75,10 @@ rt_shared struct s_stack sig_stk;		/* Initialized by initsig() */
 
 /* Routine declarations */
 rt_public char *signame(int sig);				/* Give English description of a signal */
-rt_private Signal_t ehandlr(register int sig);			/* Eiffel main signal handler */
+rt_private Signal_t ehandlr(EIF_CONTEXT register int sig);			/* Eiffel main signal handler */
 rt_public Signal_t exfpe(int sig);			/* Floating point exception handler */
 rt_private int dangerous(int sig);			/* Is a given signal dangerous for us? */
-rt_shared void esdpch(void);				/* Dispatch queued signals */
+rt_shared void esdpch(EIF_CONTEXT_NOARG);				/* Dispatch queued signals */
 rt_shared void initsig(void);				/* Run-time initialization for trapping */
 rt_private void spush(int sig);				/* Queue signal in a FIFO stack */
 rt_private int spop(void);					/* Extract signals from queued stack */
@@ -99,7 +99,7 @@ rt_private char *rcsid =
  * Signal handler routines.
  */
 
-rt_private Signal_t ehandlr(register int sig)
+rt_private Signal_t ehandlr(EIF_CONTEXT register int sig)
 {
 	/* Eiffel signal handler -- all the signals that can be caught let the
 	 * process jump to this routine, which is in charge of dispatching the
@@ -117,7 +117,7 @@ rt_private Signal_t ehandlr(register int sig)
 
 	if (esigblk) {					/* Signals are blocked */
 		if (dangerous(sig))			/* Harmful signal in critical section */
-			panic("unexpected harmful signal");
+			panic(MTC "unexpected harmful signal");
 		spush(sig);					/* Record sig on FIFO stack */
 		return;						/* That's all for now */
 	}
@@ -131,7 +131,7 @@ rt_private Signal_t ehandlr(register int sig)
 	handler = esig[sig];			/* Fetch signal handler's address */
 	if (handler) {					/* There is a signal handler */
 		esigblk++;					/* Queue further signals */
-		exhdlr(handler, sig);		/* Call handler */
+		exhdlr(MTC handler, sig);		/* Call handler */
 		esigblk--;					/* Restore signal handling */
 	} else {						/* Signal not caught -- raise exception */
 
@@ -228,7 +228,7 @@ rt_private int dangerous(int sig)
  * Dispatching queued signals.
  */
 
-rt_shared void esdpch(void)
+rt_shared void esdpch(EIF_CONTEXT_NOARG)
 {
 	/* Dispatches any pending signal in a FIFO manner as if the signal was
 	 * being received now. We knwo the signal was not meant to be ignored,
@@ -247,7 +247,7 @@ rt_shared void esdpch(void)
 		handler = esig[sig];		/* Fetch signal handler's address */
 		if (handler) {				/* There is a signal handler */
 			esigblk++;				/* Queue further signals */
-			exhdlr(handler, sig);	/* Call handler */
+			exhdlr(MTC handler, sig);	/* Call handler */
 			esigblk--;				/* Restore signal handling */
 		} else {					/* Signal not caught -- raise exception */
 			echsig = sig;			/* Signal's number */
@@ -511,7 +511,7 @@ rt_private void spush(int sig)
 #endif
 
 	if (sig_stk.s_max == sig_stk.s_min)
-		panic("signal stack overflow");
+		panic(MTC "signal stack overflow");
 	
 	/* We do not stack multiple consecutive occurences of the same signal (the
 	 * kernel doesn't do that anyway), and "dangerous" signals raise a panic
@@ -519,7 +519,7 @@ rt_private void spush(int sig)
 	 */
 	if (dangerous(sig) && esig[sig] == (Signal_t (*)(int)) 0) { /* %%ss added cast int */
 		sprintf(desc, "%s", signame(sig));	/* Translate into English name */
-		panic(desc);						/* And raise a run-time panic */
+		panic(MTC desc);						/* And raise a run-time panic */
 	} else {
 		int last = (sig_stk.s_max ? sig_stk.s_max : SIGSTACK) - 1;
 		if (sig == sig_stk.s_buf[last])
@@ -774,7 +774,7 @@ rt_public char *esigname(long int sig)
 	return (signame((int) sig));
 } 
 
-rt_public long esignum(void)
+rt_public long esignum(EIF_CONTEXT_NOARG)	/* %%zmt never called in C dir. */
 {
 	/* Number of last signal */
 

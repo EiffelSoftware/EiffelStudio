@@ -90,15 +90,15 @@ rt_public char r_fstoretype;	/* File storage type used for retrieve */
  */
 rt_public char *irt_make(void);			/* Do the independant retrieve */
 rt_public char *grt_make(void);			/* Do the general retrieve (3.3 and later) */
-rt_public char *irt_nmake(long int objectCount);			/* Retrieve n objects independent form*/
-rt_public char *grt_nmake(long int objectCount);			/* Retrieve n objects general form*/
-rt_private void iread_header(void);		/* Read independent header */
+rt_public char *irt_nmake(EIF_CONTEXT long int objectCount);			/* Retrieve n objects independent form*/
+rt_public char *grt_nmake(EIF_CONTEXT long int objectCount);			/* Retrieve n objects general form*/
+rt_private void iread_header(EIF_CONTEXT_NOARG);		/* Read independent header */
 rt_private void rt_clean(void);			/* Clean data structure */
 rt_private void rt_update1(register char *old, register EIF_OBJ new);			/* Reference correspondance update */
 rt_private void rt_update2(char *old, char *new, char *parent);			/* Fields updating */
 rt_public char *rt_make(void);				/* Do the retrieve */
-rt_public char *rt_nmake(long int objectCount);			/* Retrieve n objects */
-rt_private void read_header(char rt_type);			/* Read general header */
+rt_public char *rt_nmake(EIF_CONTEXT long int objectCount);			/* Retrieve n objects */
+rt_private void read_header(EIF_CONTEXT char rt_type);			/* Read general header */
 rt_private void object_read (char *object, char *parent);		/* read the individual attributes of the object*/
 rt_private void gen_object_read (char *object, char *parent);	/* read the individual attributes of the object*/
 rt_private long get_expanded_pos (uint32 o_type, uint32 num_attrib);
@@ -220,14 +220,14 @@ rt_public char *eretrieve(EIF_INTEGER file_desc, EIF_CHARACTER file_storage_type
 #endif
 
 	if (rt_kind == INDEPENDENT_STORE) {
-		iread_header();					/* Make correspondance table */
+		iread_header(MTC_NOARG);			/* Make correspondance table */
 		retrieved = irt_make();
 	} else if ((rt_type == GENERAL_STORE_4_0) || (rt_type == GENERAL_STORE_3_3)) {
-		read_header(rt_type);					/* Make correspondance table */
+		read_header(MTC rt_type);					/* Make correspondance table */
 		retrieved = grt_make();
 	} else {
 		if (rt_kind)
-			read_header(rt_type);			/* Make correspondance table */
+			read_header(MTC rt_type);			/* Make correspondance table */
 
 		/* Retrieve */
 		retrieved = rt_make();
@@ -281,11 +281,11 @@ rt_public char *rt_make(void)
 #endif
 
 
-	return rt_nmake(objectCount);
+	return rt_nmake(MTC objectCount);
 }
 
 
-rt_public char *rt_nmake(long int objectCount)
+rt_public char *rt_nmake(EIF_CONTEXT long int objectCount)
 {
 	/* Make the retrieve of `objectCount' objects.
 	 * Return pointer on retrived object.
@@ -307,11 +307,11 @@ rt_public char *rt_nmake(long int objectCount)
 	if (objectCount == 0)
 		panic("no object to retrieve");*/
 #endif
-	excatch((char *) exenv);	/* Record pseudo execution vector */
+	excatch(MTC (char *) exenv);	/* Record pseudo execution vector */
 	if (setjmp(exenv)) {
 		RTXSC;					/* Restore stack contexts */
 		rt_clean();				/* Clean data structure */
-		ereturn();				/* Propagate exception */
+		ereturn(MTC_NOARG);				/* Propagate exception */
 	}
 
 	/* Initialization of the hash table */
@@ -432,10 +432,10 @@ rt_public char *grt_make(void)
 		printf ("\n %ld", objectCount);
 #endif
 
-	return grt_nmake(objectCount);
+	return grt_nmake(MTC objectCount);
 }
 
-rt_public char *grt_nmake(long int objectCount)
+rt_public char *grt_nmake(EIF_CONTEXT long int objectCount)
 {
 	/* Make the retrieve of `objectCount' objects.
 	 * Return pointer on retrived object.
@@ -451,11 +451,11 @@ rt_public char *grt_nmake(long int objectCount)
 	jmp_buf exenv;
 	RTXD;
 
-	excatch((char *) exenv);	/* Record pseudo execution vector */
+	excatch(MTC (char *) exenv);	/* Record pseudo execution vector */
 	if (setjmp(exenv)) {
 		RTXSC;					/* Restore stack contexts */
 		rt_clean();				/* Clean data structure */
-		ereturn();				/* Propagate exception */
+		ereturn(MTC_NOARG);				/* Propagate exception */
 	}
 
 	/* Initialization of the hash table */
@@ -612,10 +612,10 @@ rt_public char *irt_make(void)
 		printf ("\n %ld", objectCount);
 #endif
 
-	return irt_nmake(objectCount);
+	return irt_nmake(MTC objectCount);
 }
 
-rt_public char *irt_nmake(long int objectCount)
+rt_public char *irt_nmake(EIF_CONTEXT long int objectCount)
 {
 	/* Make the retrieve of `objectCount' objects.
 	 * Return pointer on retrived object.
@@ -637,11 +637,11 @@ rt_public char *irt_nmake(long int objectCount)
 	if (objectCount == 0)
 		panic("no object to retrieve");*/
 #endif
-	excatch((char *) exenv);	/* Record pseudo execution vector */
+	excatch(MTC (char *) exenv);	/* Record pseudo execution vector */
 	if (setjmp(exenv)) {
 		RTXSC;					/* Restore stack contexts */
 		rt_clean();				/* Clean data structure */
-		ereturn();				/* Propagate exception */
+		ereturn(MTC_NOARG);				/* Propagate exception */
 	}
 
 	/* Initialization of the hash table */
@@ -1060,7 +1060,7 @@ rt_private char *next_item (char *ptr)
 	return (ptr);
 }
 
-rt_private void read_header(char rt_type)
+rt_private void read_header(EIF_CONTEXT char rt_type)
 {
 	/* Read header and make the dynamic type correspondance table */
 	int nb_lines, i, k, old_count;
@@ -1074,11 +1074,11 @@ rt_private void read_header(char rt_type)
 
 	errno = 0;
 
-	excatch((char *) exenv);	/* Record pseudo execution vector */
+	excatch(MTC (char *) exenv);	/* Record pseudo execution vector */
 	if (setjmp(exenv)) {
 		RTXSC;					/* Restore stack contexts */
 		rt_clean();				/* Clean data structure */
-		ereturn();				/* Propagate exception */
+		ereturn(MTC_NOARG);				/* Propagate exception */
 	}
 	r_buffer = (char*) xmalloc (bsize * sizeof (char), C_T, GC_OFF);
 	if (r_buffer == (char *)0)
@@ -1194,7 +1194,7 @@ printf ("Allocating sorted_attributes (scount: %d) %lx\n", scount, sorted_attrib
 }
 
 
-rt_private void iread_header(void)
+rt_private void iread_header(EIF_CONTEXT_NOARG)
 {
 	/* Read header and make the dynamic type correspondance table */
 	int nb_lines, i, k, old_count;
@@ -1211,11 +1211,11 @@ rt_private void iread_header(void)
 
 	errno = 0;
 
-	excatch((char *) exenv);	/* Record pseudo execution vector */
+	excatch(MTC (char *) exenv);	/* Record pseudo execution vector */
 	if (setjmp(exenv)) {
 		RTXSC;					/* Restore stack contexts */
 		rt_clean();				/* Clean data structure */
-		ereturn();				/* Propagate exception */
+		ereturn(MTC_NOARG);				/* Propagate exception */
 	}
 
 	r_buffer = (char*) xmalloc (bsize * sizeof (char), C_T, GC_OFF);

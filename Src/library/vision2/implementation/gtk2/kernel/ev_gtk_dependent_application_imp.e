@@ -23,6 +23,8 @@ inherit
 			launch as ee_launch
 		end
 
+	PLATFORM
+
 feature -- Initialize
 
 	gtk_dependent_initialize is
@@ -45,6 +47,21 @@ feature -- Initialize
 		end
 
 feature -- Implementation
+
+	pango_layout: POINTER is
+			-- 
+		local
+			a_cs: EV_GTK_C_STRING
+		once
+			create a_cs.make ("A")
+			Result := feature {EV_GTK_DEPENDENT_EXTERNALS}.gtk_widget_create_pango_layout (default_gtk_window, a_cs.item)
+		end
+
+	pango_iter: POINTER is
+			-- 
+		once
+			Result := feature {EV_GTK_DEPENDENT_EXTERNALS}.pango_layout_get_iter (pango_layout)
+		end
 
 	writeable_pixbuf_formats: ARRAYED_LIST [STRING] is
 			-- 

@@ -33,7 +33,7 @@ inherit
 	
 	EV_ANY_HANDLER
 
-feature {NONE} -- Initialization
+feature {GB_OBJECT_HANDLER} -- Initialization
 	
 	make_with_type (a_type: STRING) is
 			-- Create `Current' with type `a_type'.

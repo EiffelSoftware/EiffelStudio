@@ -708,5 +708,7 @@ feature -- Preferences
 --	show_create_new_directory_constant_warning: STRING is "show_create_new_directory_constant_warning"
 	
 	show_invalid_constant_selection_warning: STRING is "show_invalid_constant_selection_warning"
+	
+	show_constant_manifest_conversion_warning: STRING is "show_constant_manifest_conversion_warning"
 
 end -- class GB_CONSTANTS

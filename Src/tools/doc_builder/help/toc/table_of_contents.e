@@ -873,19 +873,35 @@ feature {NONE} -- Sorting
 			-- Is url a required library file according to current filter?
 		local
 			l_filter: DOCUMENT_FILTER
+			l_string: FILE_NAME
+			l_library_names: ARRAYED_LIST [STRING]
 		do
 			if l_filter /= Void then
 				l_filter := filter
 			else
 				l_filter := manager.shared_project.filter_manager.filter
+			end			
+			
+			if l_filter.description.has_substring ("ENViSioN!") then
+				l_library_names := manager.shared_constants.application_constants.envision_libraries
+			elseif l_filter.description.has_substring ("EiffelStudio") then
+				l_library_names := manager.shared_constants.application_constants.studio_libraries
 			end
-			Result := (l_filter.description.has_substring ("ENViSioN!") and 
-						manager.shared_constants.application_constants.envision_libraries.has (a_url)) or
-						(l_filter.description.has_substring ("EiffelStudio") and 
-						manager.shared_constants.application_constants.studio_libraries.has (a_url))
+			
+			if l_library_names /= Void then
+				from
+					l_library_names.start
+				until
+					l_library_names.after or Result
+				loop
+					create l_string.make_from_string (manager.shared_project.root_directory)
+					l_string.extend ("libraries")
+					l_string.extend (l_library_names.item)
+					Result := a_url.has_substring (l_string.string)
+					l_library_names.forth
+				end
+			end
 		end
-		
-	
 
 invariant
 	has_name: name /= Void and then not	name.is_empty

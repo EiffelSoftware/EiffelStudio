@@ -51,7 +51,7 @@ feature {NONE} -- Initialization
 		do
 			fixed_widget := feature {EV_GTK_EXTERNALS}.gtk_fixed_new
 			feature {EV_GTK_EXTERNALS}.gtk_widget_show (fixed_widget)
-			container_widget := feature {EV_GTK_EXTERNALS}.gtk_vbox_new (False, 0)
+			container_widget := feature {EV_GTK_EXTERNALS}.gtk_hbox_new (True, 0)
 			feature {EV_GTK_EXTERNALS}.gtk_container_add (viewport, fixed_widget)
 			feature {EV_GTK_EXTERNALS}.gtk_widget_show (container_widget)
 			feature {EV_GTK_EXTERNALS}.gtk_container_add (fixed_widget, container_widget)
@@ -149,10 +149,12 @@ feature -- Element change
 		do
 			block_resize_actions
 			if a_x < 0 then
-				feature {EV_GTK_EXTERNALS}.gtk_widget_set_uposition (container_widget, -a_x, -1)
+				feature {EV_GTK_EXTERNALS}.gtk_fixed_move (fixed_widget, container_widget, -a_x, -1)
+				--feature {EV_GTK_EXTERNALS}.gtk_widget_set_uposition (container_widget, -a_x, -1)
 				internal_set_value_from_adjustment (horizontal_adjustment, 0)
 			else
-				feature {EV_GTK_EXTERNALS}.gtk_widget_set_uposition (container_widget, 0, -1)
+				feature {EV_GTK_EXTERNALS}.gtk_fixed_move (fixed_widget, container_widget, 0, -1)
+				--feature {EV_GTK_EXTERNALS}.gtk_widget_set_uposition (container_widget, 0, -1)
 				internal_set_value_from_adjustment (horizontal_adjustment, a_x)
 			end
 			internal_x_offset := a_x
@@ -164,10 +166,12 @@ feature -- Element change
 		do
 			block_resize_actions
 			if a_y < 0 then
-				feature {EV_GTK_EXTERNALS}.gtk_widget_set_uposition (container_widget, -1, -a_y)
+				feature {EV_GTK_EXTERNALS}.gtk_fixed_move (fixed_widget, container_widget, -1, -a_y)
+				--feature {EV_GTK_EXTERNALS}.gtk_widget_set_uposition (container_widget, -1, -a_y)
 				internal_set_value_from_adjustment (vertical_adjustment, 0)
-			else	
-				feature {EV_GTK_EXTERNALS}.gtk_widget_set_uposition (container_widget, -1, 0)
+			else
+				feature {EV_GTK_EXTERNALS}.gtk_fixed_move (fixed_widget, container_widget, -1, 0)
+				--feature {EV_GTK_EXTERNALS}.gtk_widget_set_uposition (container_widget, -1, 0)
 				internal_set_value_from_adjustment (vertical_adjustment, a_y)
 			end
 			internal_y_offset := a_y
@@ -212,8 +216,10 @@ feature {NONE} -- Implementation
 			else
 				temp_height := -1
 			end
-			feature {EV_GTK_EXTERNALS}.gtk_widget_set_usize (container_widget, -1, -1)
-			feature {EV_GTK_EXTERNALS}.gtk_widget_set_usize (container_widget, temp_width, temp_height)
+		--	feature {EV_GTK_EXTERNALS}.gtk_widget_set_usize (container_widget, -1, -1)
+		--	feature {EV_GTK_EXTERNALS}.gtk_widget_set_usize (container_widget, temp_width, temp_height)
+			feature {EV_GTK_EXTERNALS}.gtk_widget_set_minimum_size (container_widget, temp_width, temp_height)
+		--	feature {EV_GTK_EXTERNALS}.gtk_widget_queue_resize (container_widget)
 		end
 
 	on_removed_item (a_widget_imp: EV_WIDGET_IMP) is

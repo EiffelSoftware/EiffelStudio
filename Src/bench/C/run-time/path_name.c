@@ -79,7 +79,7 @@ EIF_POINTER v;
 		/* If the path is not empty, include a separator */
 		/* Otherwise, it will just be a relative path name */
 	if (*((char *)p) != '\0')
-#ifdef __WATCOMC__
+#ifdef __WINDOWS_386__
 		strcat ((char *)p, "\\");
 #else
 		strcat ((char *)p, "/");
@@ -95,7 +95,7 @@ EIF_POINTER p;
 EIF_POINTER v;
 {
 		/* Set the absolute part of the path name */
-#ifdef __WATCOMC__
+#ifdef __WINDOWS_386__
 	strcat ((char *)p, "\\");
 #else
 	strcat ((char *)p, "/");
@@ -113,7 +113,7 @@ EIF_POINTER v;
 	if (*((char *)p) == '\0'){
 		strcat ((char *)p, (char *)v);
 	} else {
-#ifdef __WATCOMC__
+#ifdef __WINDOWS_386__
 		strcat ((char *)p, "\\");
 #else
 		strcat ((char *)p, "/");
@@ -139,7 +139,7 @@ EIF_REFERENCE eif_current_dir_representation()
 EIF_BOOLEAN eif_home_dir_supported()
 {
 		/* Is the notion of $HOME supported */
-#ifdef __WATCOMC__
+#ifdef __WINDOWS_386__
 	return FALSE
 #else
 	return TRUE;
@@ -155,7 +155,7 @@ EIF_BOOLEAN eif_root_dir_supported()
 EIF_REFERENCE eif_home_directory_name()
 {
 		/* String representation of $HOME */
-#ifdef __WATCOMC__
+#ifdef __WINDOWS_386__
 	return NULL;
 #else
 	return RTMS(getenv("HOME"));
@@ -165,7 +165,7 @@ EIF_REFERENCE eif_home_directory_name()
 EIF_REFERENCE eif_root_directory_name()
 {
 		/* String representation of the root directory */
-#ifdef __WATCOMC__
+#ifdef __WINDOWS_386__
 	return RTMS("\\");
 #else
 	return RTMS("/");

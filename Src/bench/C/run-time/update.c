@@ -23,7 +23,7 @@
 #include "file.h"
 #include "err_msg.h"
 
-#ifdef __WATCOMC__
+#ifdef __WINDOWS_386__
 #include <windows.h>
 #endif
 
@@ -67,7 +67,7 @@ char ignore_updt;
 	char *meltpath;							/* directory of .UPDT */
 	char *filename;							/* .UPDT complet path */
 	long pattern_id;
-#ifdef __WATCOMC__
+#ifdef __WINDOWS_386__
 	char *inipath;
 	char buf[128];
 #endif
@@ -75,14 +75,14 @@ char ignore_updt;
 
 	if (ignore_updt != (char) 0) {
 		init_desc();
-#ifdef __WATCOMC__
+#ifdef __WINDOWS_386__
 		chdir ("..\\..");
 #endif
 		return;
 	}
 
 /* TEMPORARY */
-#ifdef __WATCOMC__
+#ifdef __WINDOWS_386__
 #define UPDTLEN 10
 #define UPDT_NAME "\\melted.eif"
 
@@ -125,7 +125,7 @@ if ((fil = fopen(filename, "r")) == (FILE *) 0) {
 	wread(&c, 1);				/* Is there something to update ? */
 	if (c == '\0') {
 		init_desc();
-#ifdef __WATCOMC__
+#ifdef __WINDOWS_386__
 		chdir ("..\\..");
 #endif
 		return;
@@ -250,7 +250,7 @@ if (body_id >= 0)
 
 /* TEMPORARY */
 fclose(fil);
-#ifdef __WATCOMC__
+#ifdef __WINDOWS_386__
 chdir ("..\\..");
 #endif
 }

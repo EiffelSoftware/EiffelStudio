@@ -47,9 +47,9 @@ feature -- Status setting
 			-- Set the pixmap for the button
 		do
 			pixmap := a_pixmap
-			if (fixed_size_flag and (pixmap.height + 6 > height or pixmap.width + 6 > width)) or not fixed_size_flag then 
-				set_form_width (pixmap.width + 6)
-				set_form_height (pixmap.height + 6)
+			if (fixed_size_flag and (pixmap.height + off_set > height or pixmap.width + off_set > width)) or not fixed_size_flag then 
+				set_form_width (pixmap.width + off_set)
+				set_form_height (pixmap.height + off_set)
 			end
 			if exists then
 				invalidate
@@ -60,8 +60,8 @@ feature -- Status setting
 			-- Set default of button
 		do
 			if pixmap /= Void then
-				set_form_width (pixmap.width + 6)
-				set_form_height (pixmap.height + 6)
+				set_form_width (pixmap.width + off_set)
+				set_form_height (pixmap.height + off_set)
 			end
 		end
 
@@ -97,12 +97,12 @@ feature {NONE} -- Implementation
 					dib_exists: dib /= Void
 				end
 				!! bitmap.make_by_dib (a_dc, dib, dib_rgb_colors)
-				if alignment_type = center_alignment_type then
+				if alignment_type = center_alignment_type and then False then
 					pixmap_x := (4 + ((internal_width - bitmap.width) // 2)).max (4)
 					pixmap_y := (4 + ((internal_height - bitmap.height) // 2)).max (4)
 					a_dc.draw_bitmap (bitmap, pixmap_x, pixmap_y, internal_width, internal_height)
 				else
-					a_dc.draw_bitmap (bitmap, 4, 4, internal_width, internal_height)
+					a_dc.draw_bitmap (bitmap, 2, 2, internal_width, internal_height)
 				end
 			end
 		end
@@ -121,12 +121,12 @@ feature {NONE} -- Implementation
 					dib_exists: dib /= Void
 				end
 				!! bitmap.make_by_dib (a_dc, dib, dib_rgb_colors)
-				if alignment_type = center_alignment_type then
+				if alignment_type = center_alignment_type and False then
 					pixmap_x := (2 + ((internal_width - bitmap.width) // 2)).max (2)
 					pixmap_y := (2 + ((internal_height - bitmap.height) // 2)).max (2)
 					a_dc.draw_bitmap (bitmap, pixmap_x, pixmap_y, internal_width, internal_height)
 				else
-					a_dc.draw_bitmap (bitmap, 2, 2, internal_width, internal_height)
+					a_dc.draw_bitmap (bitmap, 1, 1, internal_width, internal_height)
 				end
 			end
 		end
@@ -135,7 +135,7 @@ feature {NONE} -- Implementation
 		require
 			exists: exists
 		do
-			Result := (width - 6).max (0)
+			Result := (width - off_set).max (0)
 		ensure
 			positive_result: Result >= 0
 		end
@@ -144,11 +144,12 @@ feature {NONE} -- Implementation
 		require
 			exists: exists
 		do
-			Result := (height - 6).max (0)
+			Result := (height - off_set).max (0)
 		ensure
 			positive_result: Result >= 0
 		end
 
+	off_set: INTEGER is 3
 
 end -- class PICT_COLOR_BUTTON_WINDOWS
 

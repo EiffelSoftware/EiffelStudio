@@ -61,6 +61,7 @@ feature
 		do
 			Result := basic_solved_type (feat_table, f);
 			Result.set_is_separate (True);
+			record_separate_dependance (Result.associated_class);		
 		end;
 
 	actual_type: CL_TYPE_A is

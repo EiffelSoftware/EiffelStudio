@@ -52,18 +52,6 @@ feature {NONE} -- Implementation
 			create {EV_COLOR_DIALOG_IMP} implementation.make (Current)
 		end
 
-feature -- Obsolete
-
-	select_color (a_color: EV_COLOR) is
-			-- Select `a_color' in `Current'.
-		obsolete
-			"Use set_color instead"
-		require
-			a_color_not_void: a_color /= Void
-		do
-			implementation.set_color (a_color)
-		end
-
 end -- class EV_COLOR_DIALOG
 
 --!-----------------------------------------------------------------------------

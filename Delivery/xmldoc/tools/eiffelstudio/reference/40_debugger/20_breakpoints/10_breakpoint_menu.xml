@@ -27,7 +27,7 @@
 				<url>../../../../../images/eiffelstudio/icons/icon_bpenabled_condition.gif</url>
 			</image>, 
 			<image>
-				<url>./../../../../images/eiffelstudio/icons/icon_bpdisabled_condition.gif</url>
+				<url>../../../../../images/eiffelstudio/icons/icon_bpdisabled_condition.gif</url>
 			</image> )indicates 
 			<link>
 				<url>40_conditional_breakpoints.xml</url>

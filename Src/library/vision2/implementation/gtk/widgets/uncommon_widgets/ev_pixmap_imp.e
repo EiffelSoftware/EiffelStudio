@@ -15,14 +15,29 @@ inherit
 			interface
 		end
 
-	EV_DRAWING_AREA_IMP
+	EV_DRAWABLE_IMP
+		undefine
+			C
 		redefine
-			make,
 			interface,
+			make,
 			width,
 			height,
 			destroy,
 			drawable
+		end
+
+	EV_PRIMITIVE_IMP
+		undefine
+			foreground_color,
+			background_color,
+			set_foreground_color,
+			set_background_color
+		redefine
+			interface,
+			width,
+			height,
+			destroy
 		end
 
 create
@@ -163,55 +178,31 @@ feature -- Element change
 				--            "Unable to load the file"
 		require
 			valid_data_type: 
-			data_type = Loadpixmap_hicon or 
-			data_type = Loadpixmap_hbitmap or 
-			data_type = Loadpixmap_rgb_data or 
-			data_type = Loadpixmap_alpha_data
+			data_type = Loadpixmap_rgb_data
 		local
 			gdkpix, gdkmask: POINTER
 		do
 			if error_code /= Loadpixmap_error_noerror then
 				(create {EXCEPTIONS}).raise ("Could not load image file.")
 			end
-
-			inspect data_type
-			when
-				Loadpixmap_hicon
-			then
-				(create {EXCEPTIONS}).raise ("Could not load image file, " +
-					"HICON format support not implemented.")
-			when
-				Loadpixmap_hbitmap
-			then
-				(create {EXCEPTIONS}).raise ("Could not load image file, " +
-					"HBITMAP format support not implemented.")
-			when
-				Loadpixmap_alpha_data
-			then
-				(create {EXCEPTIONS}).raise ("Could not load image file, " +
-					"RGBA format support not implemented.")
-			when
-				Loadpixmap_rgb_data
-			then
-				gdkpix := C.gdk_pixmap_new (
-					C.gdk_root_parent,
-					pixmap_width,
-					pixmap_height,
-					-1	
-						-- No color depth, take from gdk_root_parent.
-				)
-				C.gdk_draw_rgb_image (
-					gdkpix,
-					gc,
-					0,0,
-					pixmap_width,
-					pixmap_height,
-					C.Gdk_rgb_dither_normal_enum,
-					rgb_data,
-					pixmap_width * 3
-				)
-				set_pixmap (gdkpix, gdkmask)
-			end
+			gdkpix := C.gdk_pixmap_new (
+				C.gdk_root_parent,
+				pixmap_width,
+				pixmap_height,
+				-1	
+					-- No color depth, take from gdk_root_parent.
+			)
+			C.gdk_draw_rgb_image (
+				gdkpix,
+				gc,
+				0,0,
+				pixmap_width,
+				pixmap_height,
+				C.Gdk_rgb_dither_normal_enum,
+				rgb_data,
+				pixmap_width * 3
+			)
+			set_pixmap (gdkpix, gdkmask)
 		end
 
 	set_with_buffer (a_buffer: STRING) is
@@ -388,6 +379,11 @@ end -- EV_PIXMAP_IMP
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.27  2000/04/11 22:47:39  oconnor
+--| Inherit EV_DRAWABLE_IMP in place of EV_DRAWING_AREA_IMP in line with new
+--| interface inheritance.
+--| Simplified loading of pixmap from file.
+--|
 --| Revision 1.26  2000/04/04 20:56:14  oconnor
 --| formatting
 --|

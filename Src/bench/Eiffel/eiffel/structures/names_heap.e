@@ -275,6 +275,8 @@ feature {NONE} -- Implementation: access
 			put ("internal_correct_mismatch") check found_item = internal_correct_mismatch_name_id end
 			put ("memory_calloc") check found_item = memory_calloc_name_id end
 			put ("internal_hash_code") check found_item = internal_hash_code_name_id end
+			put ("base_address") check found_item = base_address_name_id end
+			put ("element_address") check found_item = element_address_name_id end
 		end
 		
 invariant

@@ -53,7 +53,7 @@ rt_public char *eclone(register char *source)
 	return emalloc(HEADER(source)->ov_flags & EO_TYPE);
 }
 
-rt_public char *spclone(register char *source)
+rt_public char *spclone(char *source)
 {
 	/* Clone an of Eiffel object `source'. Assumes that source
 	 * is a special object.
@@ -68,7 +68,7 @@ rt_public char *spclone(register char *source)
 	if ((char *) 0 == source)
 		return (char *) 0;				/* Void source */
 
-	epush(&loc_stack, &source);			/* Protection against GC */
+	epush(&loc_stack, (char *)(&source));			/* Protection against GC */
 
 	zone = HEADER(source);				/* Allocation of a new object */
 	flags = zone->ov_flags;
@@ -88,8 +88,7 @@ rt_public char *spclone(register char *source)
 	return result;
 }
 
-rt_public char *edclone(char *source)
-
+rt_public char *edclone(EIF_CONTEXT char *source)
 {
 	/* Recursive Eiffel clone. This function recursively clones the source
 	 * object and returns a pointer to the top of the new tree.
@@ -130,11 +129,11 @@ rt_public char *edclone(char *source)
 
 	{
 	RTXD;							/* Save stack contexts */
-	excatch((char *) exenv);		/* Record pseudo-execution vector */
+	excatch(MTC (char *) exenv);		/* Record pseudo-execution vector */
 	if (setjmp(exenv)) {
 		RTXSC;						/* Restore stack contexts */
 		map_reset(1);				/* Reset in emergency situation */
-		ereturn();					/* And propagate the exception */
+		ereturn(MTC_NOARG);					/* And propagate the exception */
 	}
 
 	/* Now start the traversal of the source, allocating all the objects as
@@ -340,7 +339,7 @@ rt_public void xcopy(char *source, char *target)
 	 */
 	
 	if (source == (char *) 0)
-		xraise(EN_VEXP);			/* Void assigned to expanded */
+		xraise(MTC EN_VEXP);			/* Void assigned to expanded */
 	
 	ecopy(source, target);
 }

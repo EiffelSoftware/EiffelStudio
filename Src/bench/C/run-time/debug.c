@@ -10,6 +10,7 @@
 	Debugging control.
 */
 
+#include "confmagic.h"
 #include "config.h"
 #include "portable.h"
 #include "macros.h"
@@ -107,9 +108,9 @@ rt_private uint32 *list_allocate(register int size);		/* Allocate first chunk */
 rt_private int list_extend(register int size);				/* Extend list size */
 
 /* Program context */
-rt_shared void escontext(int why);				/* Save program context */
-rt_shared void esresume(void);					/* Restore saved program context */
-rt_private struct ex_vect *last_call(void);	/* Last call recorded on Eiffel stack */
+rt_shared void escontext(EIF_CONTEXT int why);				/* Save program context */
+rt_shared void esresume(EIF_CONTEXT_NOARG);					/* Restore saved program context */
+rt_private struct ex_vect *last_call(EIF_CONTEXT_NOARG);	/* Last call recorded on Eiffel stack */
 
 /* Changing active routine */
 rt_public void dmove(int offset);					/* Move inside calling context stack */
@@ -159,7 +160,7 @@ rt_public void dstart(void)
 	 */
 	context = dget();					/* Get new calling context */
 	if (context == (struct dcall *) 0)	/* No more memory */
-		enomem();						/* Critical exception */
+		enomem(MTC_NOARG);						/* Critical exception */
 
 	/* Initialize the calling context with the current IC value (which is the
 	 * start of the byte code for the current feature), and save the context
@@ -274,7 +275,7 @@ rt_public void dnext(void)
  * Breakpoints handling.
  */
 
-rt_shared void dbreak(int why)
+rt_shared void dbreak(EIF_CONTEXT int why)
 {
 	/* Program execution stopped. The run-time context is saved and the
 	 * application is put in a server mode, where it listens for workbench
@@ -286,9 +287,9 @@ rt_shared void dbreak(int why)
 #ifdef NEVER
 	dserver();
 #else
-	escontext(why);				/* Save run-time context */
+	escontext(MTC why);				/* Save run-time context */
 	dserver();					/* Put application in server mode */
-	esresume();					/* Restore run-time context */
+	esresume(MTC_NOARG);					/* Restore run-time context */
 #endif
 
 	/* Returning from this routine will resume execution where it stopped */
@@ -314,12 +315,12 @@ rt_public void dsetbreak(int body_id, uint32 offset, int what)
 	switch (what) {
 	case DT_SET:				/* Set a breakpoint */
 		if ((*where != BC_NEXT) && (*where != BC_BREAK))
-			panic("byte code botched");
+			panic(MTC "byte code botched");
 		*where = BC_BREAK;
 		break;
 	case DT_REMOVE:				/* Remove a breakpoint */
 		if ((*where != BC_NEXT) && (*where != BC_BREAK))
-			panic("byte code botched");
+			panic(MTC "byte code botched");
 		*where = BC_NEXT;
 		break;
 #ifdef MAY_PANIC
@@ -333,7 +334,7 @@ rt_public void dsetbreak(int body_id, uint32 offset, int what)
  * Computing position within program.
  */
 
-rt_shared void ewhere(struct where *where)
+rt_shared void ewhere(EIF_CONTEXT struct where *where)
                     		/* Structure filled in with current position */
 {
 	/* Compute position within the program, using the Eiffel execution stack to
@@ -346,7 +347,7 @@ rt_shared void ewhere(struct where *where)
 	struct ex_vect *ex;				/* Call structure from Eiffel stack */
 	struct dcall *dc;				/* Calling context structure */
 
-	ex = last_call();				/* Last call recorded on execution stack */
+	ex = last_call(MTC_NOARG);		/* Last call recorded on execution stack */
 	where->wh_name = ex->ex_rout;	/* Feature name */
 	where->wh_obj = ex->ex_id;		/* Current value of Current */
 	where->wh_origin = ex->ex_orig;	/* Where feature was written */
@@ -376,7 +377,7 @@ rt_shared void ewhere(struct where *where)
 		where->wh_offset = IC - dc->dc_start;
 }
 
-rt_private struct ex_vect *last_call(void)
+rt_private struct ex_vect *last_call(EIF_CONTEXT_NOARG)
 {
 	/* Get the first execution call from the top of the Eiffel execution trace.
 	 * This is used by the debugging routines to find information on a feature.
@@ -417,7 +418,7 @@ rt_private struct ex_vect *last_call(void)
  * Saving and restoring program context.
  */
 
-rt_shared void escontext(int why)
+rt_shared void escontext(EIF_CONTEXT int why)
         			/* Reason why program stopped */
 {
 	/* Whenever the program stops, the main run-time stacks are preserved.
@@ -454,7 +455,7 @@ rt_shared void escontext(int why)
 	}
 }
 
-rt_shared void esresume(void)
+rt_shared void esresume(EIF_CONTEXT_NOARG)
 {
 	/* Resume execution context by restoring all the run-time stacks in the
 	 * status they had when the program stopped. We also update the run-time
@@ -564,7 +565,7 @@ rt_public struct dcall *dpush(register struct dcall *val)
 		SIGBLOCK;
 		if (db_stack.st_cur == db_stack.st_tl) {	/* Reached last chunk */
 			if (-1 == stack_extend(STACK_CHUNK))
-				enomem();
+				enomem(MTC_NOARG);
 			top = db_stack.st_top;					/* New top */
 		} else {
 			register2 struct stdchunk *current;		/* New current chunk */
@@ -752,11 +753,11 @@ rt_public void initdb(void)
 
 	top = stack_allocate(STACK_CHUNK);		/* Create one */
 	if (top == (struct dcall *) 0)	 		/* Could not create stack */
-		fatal_error("can't create debugger stack");
+		fatal_error(MTC "can't create debugger stack");
 
 	list_arena = list_allocate(LIST_CHUNK);		/* Create one */
 	if (list_arena == (uint32 *) 0)		 		/* Could not create list */
-		fatal_error("can't create once list");
+		fatal_error(MTC "can't create once list");
 }
 
 rt_private int nb_calls(void)
@@ -1091,7 +1092,7 @@ rt_public uint32 *onceadd(uint32 id)
 		 */
 		SIGBLOCK;
 		if (-1 == list_extend(LIST_CHUNK))
-			enomem();
+			enomem(MTC_NOARG);
 		last = once_list.idl_last;		/* New last */
 		SIGRESUME;
 	}
@@ -1192,7 +1193,7 @@ rt_public struct item *docall(register uint32 body_id, register int arg_num)
 		(pattern[pid].toc)(frozen[body_id], 0);		/* Call pattern */
 	} else
 #ifndef DLE
-		xinterp(melt[body_id]);
+		xinterp(MTC melt[body_id]);
 #else
 	if (body_id < dle_level)
 			/* Static melted level */

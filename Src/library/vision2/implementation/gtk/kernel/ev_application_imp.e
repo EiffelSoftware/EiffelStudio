@@ -39,7 +39,7 @@ feature {NONE} -- Initialization
 		do
 			base_make (an_interface)
 
-			--put ("display_ip_address:0", "DISPLAY")
+			--put ("display_ip:0", "DISPLAY")
 			-- This line may be uncommented to allow for display redirection to another machine.
 			
 			create locale_str.make_from_c (C.gtk_set_locale)
@@ -312,6 +312,21 @@ feature {EV_ANY_IMP} -- Implementation
 		end
 
 feature -- Implementation
+
+	is_in_docking: BOOLEAN
+	
+	enable_is_in_docking is
+			-- 
+		do
+			is_in_docking := True
+		end
+		
+	disable_is_in_docking is
+			-- 
+		do
+			is_in_docking := False
+		end
+		
 
 	is_in_gtk_main: BOOLEAN
 			-- Is execution currently in gtk_main?

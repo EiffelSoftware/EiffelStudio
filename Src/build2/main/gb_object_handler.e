@@ -27,6 +27,7 @@ feature {NONE} -- Initialization
 			-- Create `Current'.
 		do
 			create objects.make (20)
+			create deleted_objects.make (20)
 		ensure
 			objects_not_void: objects /= Void
 		end
@@ -375,6 +376,101 @@ feature -- Basic operation
 			end
 		end
 		
+	named_object_exists (object_name: STRING; an_object: GB_OBJECT): BOOLEAN is
+			-- Is a GB_OBJECT with name matching `object_name' contained
+			-- in `objects'. Case insensitive search. Ignore `an_object'
+			-- if not `Void'. Returns `False' if `object_name' is empty.
+			-- This is because you are allowed to have as many "unnamed" objects
+			-- as you wish.
+		local
+			current_name_lower, name_lower: STRING
+		do
+			if not object_name.is_empty then
+				name_lower := object_name
+				name_lower.to_lower
+				from
+					objects.start
+				until
+					objects.off or Result
+				loop
+					if an_object /= Void and then objects.item /= an_object then
+						current_name_lower := objects.item.name
+						current_name_lower.to_lower
+						if current_name_lower.is_equal (name_lower) then
+							Result := True
+						end
+					elseif an_object = Void then
+						current_name_lower := objects.item.name
+						current_name_lower.to_lower
+						if current_name_lower.is_equal (name_lower) then
+							Result := True
+						end
+					end
+					objects.forth
+				end
+			end
+		end
+		
+		
+	mark_as_deleted (an_object: GB_OBJECT) is
+			-- Move `an_object' and all children at all levels in
+			-- to `deleted_objects'.
+		require
+			an_object_not_void: an_object /= Void
+			an_object_not_deleted: objects.has (an_object)
+			-- All children objects contained in `objects'.
+		local
+			temp_object: GB_OBJECT
+		do
+			objects.prune_all (an_object)
+			deleted_objects.extend (an_object)
+			from
+				objects.start
+			until
+				objects.off
+			loop
+				temp_object := objects.item
+				if object_contained_in_object (an_object, temp_object) then
+					objects.remove
+					deleted_objects.extend (temp_object)
+				else
+					objects.forth
+				end
+			end
+		ensure
+			object_deleted: deleted_objects.has (an_object)
+		end
+		
+		
+	mark_existing (an_object: GB_OBJECT) is
+			-- Move `an_object' and all children at all leves in to
+			-- `objects'.
+		require
+			an_object_not_void: an_object /= Void
+			an_object_deleted: deleted_objects.has (an_object)
+			-- All children objects contained in `deleted_objects'.
+		local
+			temp_object: GB_OBJECT
+		do
+			deleted_objects.prune_all (an_object)
+			objects.extend (an_object)
+			from
+				deleted_objects.start
+			until
+				deleted_objects.off
+			loop
+				temp_object := deleted_objects.item
+				if object_contained_in_object (an_object, temp_object) then
+					deleted_objects.remove
+					objects.extend (temp_object)
+				else
+					deleted_objects.forth
+				end
+			end
+		ensure
+			object_removed_from_deleted: objects.has (an_object)
+		end
+		
 		
 feature {GB_XML_OBJECT_BUILDER} -- Basic operations
 
@@ -403,5 +499,9 @@ feature -- Access
 
 	objects: ARRAYED_LIST [GB_OBJECT]
 		-- All objects currently in system.
+		
+	deleted_objects: ARRAYED_LIST [GB_OBJECT]
+		-- All objects that have been deleted in
+		-- this session of the application.
 
 end -- class GB_OBJECT_HANDLER

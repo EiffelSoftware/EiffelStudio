@@ -316,7 +316,7 @@ feature -- Basic operations
 	add_new_component_in_parent (a_component: GB_COMPONENT) is
 			-- Add `a_component' to parent of `Current', before `Current'.
 		do
-			add_new_object_in_parent (new_object (xml_handler.xml_element_representing_named_component (a_component.name)))
+			add_new_object_in_parent (new_object (xml_handler.xml_element_representing_named_component (a_component.name), True))
 		end
 		
 		
@@ -343,7 +343,7 @@ feature -- Basic operations
 	add_new_component (a_component: GB_COMPONENT) is
 			-- Add object representation of `a_component' to `Current'.
 		do
-			add_new_object (new_object (xml_handler.xml_element_representing_named_component (a_component.name)))
+			add_new_object (new_object (xml_handler.xml_element_representing_named_component (a_component.name), True))
 		end
 		
 		

@@ -130,14 +130,14 @@ feature {NONE} -- GTK C functions for fixed containers
 
 	gtk_fixed_new: POINTER is
 		external
-			"C | <gtk/gtk.h>"
+			"C (): EIF_POINTER | <gtk/gtk.h>"
 		end
 	
 feature {NONE} -- GTK C functions for dialogs
 
 	gtk_dialog_new: POINTER is
 		external
-			"C | <gtk/gtk.h>"
+			"C (): EIF_POINTER | <gtk/gtk.h>"
 		end
 
 feature {NONE} -- GTK C functions for tables
@@ -261,7 +261,7 @@ feature {NONE} -- GTK C functions for notebooks
 
 	gtk_notebook_new: POINTER is
 		external
-			"C | <gtk/gtk.h>"
+			"C (): EIF_POINTER | <gtk/gtk.h>"
 		end
 	
 	gtk_notebook_set_tab_pos (notebook: POINTER; pos: INTEGER) is
@@ -298,12 +298,12 @@ feature {NONE} -- GTK C functions for split area
 
 	gtk_hpaned_new: POINTER is
 		external
-			"C | <gtk/gtk.h>"
+			"C (): EIF_POINTER | <gtk/gtk.h>"
 		end
 	
 	gtk_vpaned_new: POINTER is
 		external
-			"C | <gtk/gtk.h>"
+			"C (): EIF_POINTER | <gtk/gtk.h>"
 		end
 
 	gtk_paned_add1 (paned: POINTER; child: POINTER) is

@@ -23,19 +23,19 @@ feature {NONE} -- GTK C functions for separators
 
 	gtk_hseparator_new: POINTER is
 		external
-			"C | <gtk/gtk.h>"
+			"C (): EIF_POINTER | <gtk/gtk.h>"
 		end
 
 	gtk_vseparator_new: POINTER is
 		external
-			"C | <gtk/gtk.h>"
+			"C (): EIF_POINTER | <gtk/gtk.h>"
 		end
 
 feature {NONE} -- GTK C functions for tooltips
 		
 	gtk_tooltips_new: POINTER is
 		external
-			"C : EIF_POINTER | <gtk/gtk.h>"
+			"C () : EIF_POINTER | <gtk/gtk.h>"
 		end
 
 	gtk_tooltips_set_tip (tooltips, widget, txt, tip_private: POINTER) is
@@ -114,7 +114,7 @@ feature {NONE} -- GTK C functions for toolbars
 	
 	c_gtk_toolbar_new_horizontal: POINTER is
 		external
-			"C | %"gtk_eiffel.h%""
+			"C (): EIF_POINTER | %"gtk_eiffel.h%""
 		end
 	
 	gtk_toolbar_append_space (t: POINTER) is
@@ -222,7 +222,7 @@ feature {NONE} -- GTK C functions for text_component
 
 	gtk_entry_new: POINTER is
 		external
-			"C | <gtk/gtk.h>"
+			"C (): EIF_POINTER | <gtk/gtk.h>"
 		end
 
 	gtk_entry_new_with_max_length (len: INTEGER): POINTER is
@@ -284,7 +284,7 @@ feature {NONE} -- GTK C functions for gtk_combo
 
 	gtk_combo_new: POINTER is
 		external
-			"C | <gtk/gtk.h>"
+			"C (): EIF_POINTER | <gtk/gtk.h>"
 		end
 
 	gtk_combo_set_value_in_list (combo: POINTER; val: BOOLEAN; ok_if_empty: BOOLEAN) is
@@ -336,7 +336,7 @@ feature {NONE} -- GTK C functions for gtktext
 
 	gtk_text_new (hadj, vajd: POINTER): POINTER is
 		external
-			"C | <gtk/gtk.h>"
+			"C (GtkAdjustment *, GtkAdjustment *): EIF_POINTER | <gtk/gtk.h>"
 		end
 		
 	gtk_text_set_word_wrap (text: POINTER; word_wrap: BOOLEAN) is
@@ -355,108 +355,132 @@ feature {NONE} -- GTK C functions for gtktext
 		end
 	
 	gtk_text_get_point (text: POINTER): INTEGER is
-		external "C | <gtk/gtk.h>"
+		external
+			"C | <gtk/gtk.h>"
 		end
 	
 	gtk_text_get_length (text: POINTER): INTEGER is
-		external "C | <gtk/gtk.h>"
+		external
+			"C | <gtk/gtk.h>"
 		end
 
 	gtk_text_backward_delete (text: POINTER; nchar: INTEGER) is
-		external "C | <gtk/gtk.h>"
+		external
+			"C | <gtk/gtk.h>"
 		end
 
 	gtk_text_forward_delete (text: POINTER; nchar: INTEGER) is
-		external "C | <gtk/gtk.h>"
+		external
+			"C | <gtk/gtk.h>"
 		end
 
 	gtk_text_insert (text, font, fore, back, str: POINTER; length: INTEGER) is
-		external "C | <gtk/gtk.h>"
+		external
+			"C | <gtk/gtk.h>"
 		end
 
 	c_gtk_text_insert (widget: POINTER; txt: POINTER) is
-		external "C | %"gtk_eiffel.h%""
+		external
+			"C | %"gtk_eiffel.h%""
 		end
 
 	c_gtk_text_full_insert (widget, font: POINTER; r, g, b: INTEGER;
 			txt: POINTER; length: INTEGER) is
-		external "C | %"gtk_eiffel.h%""
+		external
+			"C | %"gtk_eiffel.h%""
 		end
 
 feature {NONE} -- GTK C functions for menu
  
 	gtk_menu_new: POINTER is
-		external "C | <gtk/gtk.h>"
+		external
+			"C (): EIF_POINTER | <gtk/gtk.h>"
 		end	
 	
 	gtk_menu_append (menu: POINTER; menu_item: POINTER) is
-		external "C | <gtk/gtk.h>"
+		external
+			"C | <gtk/gtk.h>"
 		end		
 
 	gtk_menu_prepend (menu: POINTER; menu_item: POINTER) is
-		external "C | <gtk/gtk.h>"
+		external
+			"C | <gtk/gtk.h>"
 		end		
 
 	c_gtk_menu_remove_all_items (menu: POINTER) is
-		external "C (GtkMenu *) | %"gtk_eiffel.h%""
+		external
+			"C (GtkMenu *) | %"gtk_eiffel.h%""
 		end		
 
 feature {NONE} -- GTK C functions for menu item
 
 	gtk_menu_bar_new: POINTER is
-		external "C | <gtk/gtk.h>"
+		external
+			"C (): EIF_POINTER | <gtk/gtk.h>"
 		end
 	
 	gtk_menu_bar_append (menu: POINTER; menu_item: POINTER) is
-		external "C | <gtk/gtk.h>"
+		external
+			"C | <gtk/gtk.h>"
 		end	
 
 feature {NONE} -- GTK C functions for status bar
 
 	gtk_statusbar_new: POINTER is
-		external "C | <gtk/gtk.h>"
+		external
+			"C (): EIF_POINTER | <gtk/gtk.h>"
 		end
 
 	gtk_statusbar_get_context_id (statusbar: POINTER; context_string: POINTER): INTEGER is
-		external "C | <gtk/gtk.h>"
+		external
+			"C | <gtk/gtk.h>"
 		end
 
 	gtk_statusbar_push (statusbar: POINTER; context_id: INTEGER; message: POINTER): INTEGER is
-		external "C | <gtk/gtk.h>"
+		external
+			"C | <gtk/gtk.h>"
 		end
 
 	gtk_statusbar_pop (statusbar: POINTER; context_id: INTEGER) is
-		external "C | <gtk/gtk.h>"
+		external
+			"C | <gtk/gtk.h>"
 		end
 
 	gtk_statusbar_remove (statusbar: POINTER; context_id: INTEGER; mess_id: INTEGER) is
-		external "C | <gtk/gtk.h>"
+		external
+			"C | <gtk/gtk.h>"
 		end
 
 feature {NONE} -- GTK C functions for option buttons
 
 	gtk_option_menu_new: POINTER is
-		external "C | <gtk/gtk.h>"
+		external
+			"C (): EIF_POINTER | <gtk/gtk.h>"
 		end
 
 	gtk_option_menu_set_menu (widget: POINTER; menu: POINTER) is
-		external "C | <gtk/gtk.h>"
+		external
+			"C | <gtk/gtk.h>"
 		end
 
 	gtk_option_menu_set_history (widget: POINTER; index: INTEGER) is
-		external "C | <gtk/gtk.h>"
+		external
+			"C | <gtk/gtk.h>"
 		end
 
 	gtk_option_menu_remove_menu (widget: POINTER) is
-		external "C | <gtk/gtk.h>"
+		external
+			"C | <gtk/gtk.h>"
 		end
 
 	c_gtk_option_button_selected_menu_item (widget: POINTER): POINTER is
-		external "C | %"gtk_eiffel.h%""
+		external
+			"C | %"gtk_eiffel.h%""
 		end
 
 	c_gtk_option_button_index_of_menu_item (option_menu: POINTER; menu_item: POINTER): INTEGER is
-		external "C | %"gtk_eiffel.h%""
+		external
+			"C | %"gtk_eiffel.h%""
 		end
 
 	c_gtk_option_button_set_fg_color (option: POINTER; r, g, b: INTEGER) is
@@ -472,35 +496,43 @@ feature {NONE} -- GTK C functions for option buttons
 feature {NONE} -- GTK C functions for list
 
 	gtk_list_new: POINTER is
-		external "C | <gtk/gtk.h>"
+		external
+			"C (): EIF_POINTER | <gtk/gtk.h>"
 		end
 
 	gtk_list_append_items (list: POINTER; items_glist: POINTER) is
-		external "C | <gtk/gtk.h>"
+		external
+			"C | <gtk/gtk.h>"
 		end
 
 	gtk_list_clear_items (list: POINTER; starti: INTEGER; endi: INTEGER) is
-		external "C | <gtk/gtk.h>"
+		external
+			"C | <gtk/gtk.h>"
 		end
 
 	gtk_list_select_item (list: POINTER; item: INTEGER) is
-		external "C | <gtk/gtk.h>"
+		external
+			"C | <gtk/gtk.h>"
 		end
 
 	gtk_list_unselect_item (list: POINTER; item: INTEGER) is
-		external "C | <gtk/gtk.h>"
+		external
+			"C | <gtk/gtk.h>"
 		end
 
 	gtk_list_select_all (list: POINTER) is
-		external "C | <gtk/gtk.h>"
+		external
+			"C | <gtk/gtk.h>"
 		end
 
 	gtk_list_unselect_all (list: POINTER) is
-		external "C | <gtk/gtk.h>"
+		external
+			"C | <gtk/gtk.h>"
 		end
 
 	gtk_list_set_selection_mode (list: POINTER; mode: INTEGER) is
-		external "C | <gtk/gtk.h>"
+		external
+			"C | <gtk/gtk.h>"
 		end
 
 	c_gtk_list_rows (list: POINTER): INTEGER is
@@ -543,7 +575,7 @@ feature {NONE} -- GTK C functions for multi-column list
 
 	gtk_clist_new (column: INTEGER): POINTER is
 		external
-			"C | <gtk/gtk.h>"
+			"C (gint): EIF_POINTER | <gtk/gtk.h>"
 		end
 
 	gtk_clist_set_selection_mode (list: POINTER; mode: INTEGER) is
@@ -740,7 +772,7 @@ feature {NONE} -- GTK C functions for progress bar
 
 	gtk_progress_bar_new: POINTER is
 		external
-			"C : EIF_POINTER | <gtk/gtk.h>"
+			"C (): EIF_POINTER | <gtk/gtk.h>"
 		end
 
 	c_gtk_progress_bar_new_with_adjustment (val: INTEGER; min: INTEGER; max: INTEGER; step_increment: INTEGER; page_increment: INTEGER): POINTER is
@@ -825,7 +857,7 @@ feature {NONE} -- GTK C functions for file and directory selection
 
 	gtk_file_selection_new (name: POINTER): POINTER is
 		external
-			"C | <gtk/gtk.h>"
+			"C (const gchar *): EIF_POINTER | <gtk/gtk.h>"
 		end
 
 	gtk_file_selection_hide_fileop_buttons (dialog: POINTER) is

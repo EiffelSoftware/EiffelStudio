@@ -99,12 +99,12 @@ feature {NONE} -- Accelerators features.
 
 	gtk_accel_group_new: POINTER is
 		external
-			"C : EIF_POINTER | %"gtk_eiffel.h%""
+			"C (): EIF_POINTER | %"gtk_eiffel.h%""
 		end
 
 	c_gtk_widget_add_accelerator (widget, signal_name: POINTER; keycode: INTEGER; shift_mask, control_mask, alt_mask: BOOLEAN) is
 		external
-			"C (Gtkwidget *, const gchar *, guint, gboolean, gboolean, gboolean) | %"gtk_eiffel.h%""
+			"C (GtkWidget *, const gchar *, guint, gboolean, gboolean, gboolean) | %"gtk_eiffel.h%""
 		end
 
 feature {NONE} -- Cast features

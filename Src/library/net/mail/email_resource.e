@@ -11,7 +11,7 @@ deferred class
 feature -- Access
 
 	can_receive: BOOLEAN is
-			-- Can resource can receive?
+			-- Can resource receive?
 		deferred
 		end
 
@@ -48,6 +48,6 @@ feature -- Basic operations
 		end
 
 	resource_to_transfer: EMAIL_RESOURCE
-			-- Ressource to be transfered.
+			-- Ressource to be transferred.
 
 end -- class EMAIL_RESOURCE

@@ -33,6 +33,7 @@ feature -- Initialization
 			!!actions.make
 			actions.compare_objects
 			application := appl
+			application.enable_idle_action
 		end 
 
 feature -- Status report
@@ -51,6 +52,9 @@ feature -- Element change
 		local
 			action: ACTION_WINDOWS
 		do
+			if actions.empty then
+				application.enable_idle_action
+			end
 			check
 				a_command_not_void: a_command /= Void
 			end
@@ -69,6 +73,9 @@ feature -- Element change
 			end
 			!! action.make (a_command, an_argument)
 			actions.prune_all (action)
+			if actions.empty then
+				application.disable_idle_action
+			end
 		end
 
 feature -- Basic operations

@@ -26,12 +26,47 @@ feature {NONE} -- Initialization
 			
 			Create {EB_TEXT_FORMATTER} f.make (tool)
 			add_formatter (f)
+			Create {EB_CLICKABLE_TEXT_FORMATTER} f.make (tool)
+			add_formatter (f)
+			Create {EB_FLAT_FORMATTER} f.make (tool)
+			add_formatter (f)
+			Create {EB_SHORT_FORMATTER} f.make (tool)
+			add_formatter (f)
+			Create {EB_FLAT_SHORT_FORMATTER} f.make (tool)
+			add_formatter (f)
+
+			Create {EB_ANCESTORS_FORMATTER} f.make (tool)
+			add_formatter (f)
+			Create {EB_DESCENDANTS_FORMATTER} f.make (tool)
+			add_formatter (f)
+			Create {EB_CLIENTS_FORMATTER} f.make (tool)
+			add_formatter (f)
+			Create {EB_SUPPLIERS_FORMATTER} f.make (tool)
+			add_formatter (f)
+
+			Create {EB_ATTRIBUTES_FORMATTER} f.make (tool)
+			add_formatter (f)
+			Create {EB_ROUTINES_FORMATTER} f.make (tool)
+			add_formatter (f)
+			Create {EB_DEFERREDS_FORMATTER} f.make (tool)
+			add_formatter (f)
+			Create {EB_ONCES_FORMATTER} f.make (tool)
+			add_formatter (f)
+			Create {EB_EXTERNALS_FORMATTER} f.make (tool)
+			add_formatter (f)
+			Create {EB_EXPORTED_FORMATTER} f.make (tool)
+			add_formatter (f)
 
 		end
 
 feature -- Constants
 
 	default_format: EB_FORMATTER is
+		do
+			Result := first
+		end
+
+	text_format: EB_FORMATTER is
 		do
 			Result := first
 		end

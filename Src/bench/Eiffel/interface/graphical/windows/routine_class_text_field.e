@@ -118,7 +118,7 @@ feature {ROUTINE_TEXT_FIELD} -- Implementation
 					execute (class_i)
 				end
 				class_list := Void;
-			else
+			elseif Eiffel_project.initialized then
 				class_i ?= arg;
 				if class_i = Void then
 					cname := clone (text);

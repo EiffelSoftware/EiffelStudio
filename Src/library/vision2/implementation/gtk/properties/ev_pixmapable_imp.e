@@ -33,8 +33,16 @@ feature -- Initialization
 
 feature -- Access
 
-	pixmap: EV_PIXMAP
-		-- Pixmap that has been set.
+	pixmap: EV_PIXMAP is
+			-- Pixmap that has been set.
+		local
+			p: POINTER
+		do
+			p := gtk_pixmap
+			if p /= Void
+				Result := eif_object_from_c (p)
+			end
+		end
 
 feature -- Element change
 
@@ -42,33 +50,26 @@ feature -- Element change
 			-- Assign `a_pixmap' to `pixmap'.
 		local
 			imp: EV_PIXMAP_IMP
-			pixdata: POINTER
-			mask: POINTER
-			pixmap_pointer: POINTER
+			new_pixmap: EV_PIXMAP
 		do
 			remove_pixmap
+			create new_pixmap
+			new_pixmap.copy (a_pixmap)
 
-			imp ?= a_pixmap.implementation
-			C.gtk_pixmap_get (imp.c_object, $pixdata, $mask)
-
-			pixmap_pointer := C.gtk_pixmap_new (pixdata, mask)
-			C.gtk_widget_show (pixmap_pointer)
-
-			pixmap := a_pixmap
-
-			C.gtk_container_add (pixmap_box, pixmap_pointer)
+			imp ?= new_pixmap.implementation
+			C.gtk_container_add (pixmap_box, imp.c_object)
 			C.gtk_widget_show (pixmap_box)		
 		end
 
 	remove_pixmap is
 			-- Assign Void to `pixmap'.
 		local
-			pixmap_pointer: POINTER
+			p: POINTER
 		do
-			pixmap_pointer := gtk_pixmap
+			p:= gtk_pixmap
 
-			if pixmap_pointer /= Default_pointer then
-				C.gtk_container_remove (pixmap_box, gtk_pixmap)
+			if p/= Default_pointer then
+				C.gtk_container_remove (pixmap_box, p)
 			end
 
 			C.gtk_widget_hide (pixmap_box)
@@ -121,6 +122,9 @@ end -- EV_PIXMAPABLE_IMP
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.16  2000/03/03 00:59:46  oconnor
+--| erimplemented for new postconditions
+--|
 --| Revision 1.15  2000/02/22 18:39:36  oconnor
 --| updated copyright date and formatting
 --|

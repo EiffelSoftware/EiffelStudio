@@ -190,7 +190,7 @@ feature -- Type check, byte code and dead code removal
 	access_type (p_type: CL_TYPE_A; a_feature: FEATURE_I): TYPE_A is
 			-- Type check the access to `a_feature' in `p_type'.
 		local
-			arg_type: TYPE_A
+			arg_type, l_like_arg_type: TYPE_A
 			i, count: INTEGER
 				-- Id of the class type on the stack
 			current_item: TYPE_A
@@ -203,9 +203,7 @@ feature -- Type check, byte code and dead code removal
 			depend_unit: DEPEND_UNIT
 			access_b: CALL_ACCESS_B
 			vuar1: VUAR1
-			vuar2: VUAR2
 			obs_warn: OBS_FEAT_WARN
-			like_argument_detected: BOOLEAN
 			gen_type: GEN_TYPE_A
 		do
 			last_type := context.item
@@ -255,43 +253,38 @@ feature -- Type check, byte code and dead code removal
 				until
 					i < 1
 				loop
-					arg_type ?= a_feature.arguments.i_th (i)
-						-- Evaluation of the actual type of the
-						-- argument declaration
-					if arg_type.is_like_argument then
-						arg_type := arg_type.conformance_type
-						arg_type := arg_type.instantiation_in (last_type, last_id).actual_type
-						if metamorphosis_disabled then
-							like_argument_detected := arg_type.is_basic
-						else
-							like_argument_detected := True
-						end
-					else
-							-- Instantiation of it in the context of
-							-- the context of the target
-						arg_type := arg_type.instantiation_in (last_type, last_id).actual_type
-					end
-						-- Conformance: take care of constrained
-						-- genericity
+						-- Extract expression type
 					current_item := context.i_th (context_count + i) 
+
+						-- Extract feature argument type
+					arg_type ?= a_feature.arguments.i_th (i)
+
+						-- Take care of anchoring to argument
+					if arg_type.is_like_argument then
+						l_like_arg_type := arg_type.conformance_type
+						l_like_arg_type :=
+							l_like_arg_type.instantiation_in (last_type, last_id).actual_type
+							-- Check that `current_item' does conform to its `like argument'.
+							-- Once this is done, then type checking is done on the real
+							-- type of the routine, not the anchor.
+						if not current_item.conform_to (l_like_arg_type) then
+							insert_vuar2_error (a_feature, last_id, i, current_item, l_like_arg_type)
+						end
+					end
+
+						-- Instantiation of it in the context of
+						-- the context of the target
+					arg_type := arg_type.instantiation_in (last_type, last_id).actual_type
+
+						-- Conformance: take care of constrained genericity
 					if not current_item.conform_to (arg_type) then
-						create vuar2
-						context.init_error (vuar2)
-						vuar2.set_called_feature (a_feature, last_class.class_id)
-						vuar2.set_argument_position (i)
-						vuar2.set_argument_name (a_feature.arguments.item_name (i))
-						vuar2.set_formal_type (arg_type)
-						vuar2.set_actual_type (current_item)
-						Error_handler.insert_error (vuar2)
+						insert_vuar2_error (a_feature, last_class.class_id, i, current_item, arg_type)
 					end
 
 						-- Insert the attachment type in the
 						-- parameters line for byte code
 					Attachments.insert (arg_type)
 					i := i - 1
-				end
-				if like_argument_detected then
-					update_argument_type (a_feature)
 				end
 			end
 
@@ -380,53 +373,6 @@ feature -- Type check, byte code and dead code removal
 			access_line.forth
 		end
 
-	update_argument_type (feat: FEATURE_I) is
-			-- Update the argument types for like_argument.
-			-- Retrieve the corresponding argument type for the like
-			-- argument and update the like_argument type
-		local
-			args: FEAT_ARG
-			arg_pos, i, nbr: INTEGER
-			type_a: TYPE_A
-			like_arg: LIKE_ARGUMENT
-			pos: INTEGER
-			local_attachments: like Attachments
-		do
-			args := feat.arguments
-				-- Attachment types are inserted in the reversal
-				-- order in `Attachments' during type check
-			local_attachments := Attachments
-			pos := local_attachments.cursor
-			from
-				i := 1
-				nbr := args.count 
-			until
-				i > nbr
-			loop
-				like_arg ?= args.i_th (i)
-				if like_arg /= Void then
-					arg_pos := pos - like_arg.position + 1
-						--| Retrieve type in which like_argument is
-						--| referring to.
-					local_attachments.go_i_th (arg_pos)
-					type_a := local_attachments.item
-						--| Replace item in like argument
-					local_attachments.go_i_th (pos - i + 1)
-					if metamorphosis_disabled then
-						if local_attachments.item.is_basic then
-								--| Replace item in like argument
-							local_attachments.change_item (type_a)
-						end
-					else
-							--| Replace item in like argument
-						local_attachments.change_item (type_a)
-					end
-				end
-				i := i + 1
-			end
-			local_attachments.go_i_th (pos)
-		end
-		
 	Attachments: LINE [TYPE_A] is
 			-- Attachement types line
 		once
@@ -539,7 +485,6 @@ feature {AST_EIFFEL} -- Output
 	simple_format (ctxt: FORMAT_CONTEXT) is
 			-- Reconstitute text.
 		local
-			p_name: STRING
 			real_feature: E_FEATURE
 			parent_class: CLASS_C
 			current_feature: E_FEATURE
@@ -571,9 +516,8 @@ feature {AST_EIFFEL} -- Output
 
 			if parent_name /= Void then
 				ctxt.put_text_item (ti_space)
-				p_name := parent_name.string_value.as_upper
 				ctxt.put_text_item (ti_L_curly)
-				ctxt.put_class_name (p_name)
+				ctxt.put_class_name (parent_name)
 				ctxt.put_text_item (ti_R_curly)
 			end
 

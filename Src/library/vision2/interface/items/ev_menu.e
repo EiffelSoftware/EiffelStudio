@@ -68,6 +68,14 @@ feature {NONE} -- Contract support
 		do
 			Result := Precursor {EV_MENU_ITEM} and Precursor {EV_MENU_ITEM_LIST}
 		end
+		
+	one_selected_radio_item_per_separator: BOOLEAN is
+			-- Is there at most one selected radio item between
+			-- consecutive separators?
+		do
+			Result := implementation.one_radio_item_selected_per_separator
+		end
+
 
 feature {EV_ANY_I} -- Implementation
 
@@ -81,6 +89,9 @@ feature {NONE} -- Implementation
 		do
 			create {EV_MENU_IMP} implementation.make (Current)
 		end
+		
+invariant
+	one_selected_radio_item_per_separator: one_selected_radio_item_per_separator
 
 end -- class EV_MENU
 

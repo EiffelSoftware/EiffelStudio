@@ -6,17 +6,17 @@ REM *********************************************
 CD checkout
 REM in "checkout"
 
-CD com_compiler\ace_file
-REM in "checkout\com_compiler\ace_file"
+ECHO Compiling Compiler
+CD Eiffel\ace
+REM in "checkout\Eiffel\ace"
 DEL *.epr
 RD /q /s EIFGEN
-ec -finalize -batch -c_compile -ace ace.dll.free.ace
-IF NOT EXIST EIFGEN\F_Code\EiffelSoftware.Compiler.dll GOTO END
-CD ..\..
-REM in "checkout"
+sed -e "s/\"ec\"/\"ecdpc\"/" batch.mswin.ace > ecdpc.ace
+ec -finalize -batch -c_compile -ace ecdpc.ace
+IF NOT EXIST EIFGEN\F_Code\ecdpc.exe GOTO END
 
 ECHO Compiling Metadata consumer
-CD dotnet\consumer\ace
+CD ..\..\dotnet\consumer\ace
 REM in "checkout\dotnet\consumer\ace"
 DEL *.epr
 RD /q /s EIFGEN
@@ -51,7 +51,7 @@ MKDIR config\windows\templates
 
 ECHO Copying delivery files
 XCOPY /S ..\..\..\checkout\compiler_delivery\help\errors "help\errors"
-COPY ..\..\..\checkout\com_compiler\ace_file\EIFGEN\F_Code\EiffelSoftware.Compiler.dll spec\windows\bin\
+COPY ..\..\..\checkout\Eiffel\ace\EIFGEN\F_Code\ecdpc.exe spec\windows\bin\
 COPY ..\..\..\checkout\dotnet\consumer\ace\EIFGEN\F_Code\EiffelSoftware.MetadataConsumer.dll spec\windows\bin\
 COPY ..\..\..\checkout\Eiffel\eiffel\com_il_generation\Core\run-time\EiffelSoftware.Runtime.dll spec\windows\bin\
 XCOPY /S ..\..\..\checkout\compiler_delivery\config\windows\msc config\windows\msc

@@ -368,7 +368,6 @@ void eif_show_console()
 		BOOL bSuccess;
 
 		bSuccess = AllocConsole();
-		printf ("%d\n", bSuccess);
 
 		if (bSuccess) {
 			SECURITY_ATTRIBUTES sa;

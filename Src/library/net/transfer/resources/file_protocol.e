@@ -204,16 +204,11 @@ feature -- Output
 
 	put (other: RESOURCE) is
 			-- Write out resource `other'.
-		local
-			packet: ANY
-			fp: POINTER
 		do
 			from until not other.is_packet_pending loop
 				other.read
-				packet := other.last_packet
-				fp := file.file_pointer
-				last_packet_size := c_fwrite ($packet, 1, 
-					other.last_packet_size, fp)
+				file.put_string (other.last_packet)
+				last_packet_size := other.last_packet.count
 				bytes_transferred := bytes_transferred + last_packet_size
 				if last_packet_size /= other.last_packet_size then
 					error_code := Write_error
@@ -225,14 +220,10 @@ feature -- Input
 
 	read is
 			-- Read packet.
-		local
-			fp: POINTER
-			buf: ANY
 		do
-			fp := file.file_pointer
-			buf := buffer.area
-			last_packet_size := c_fread ($buf, 1, read_buffer_size, fp)
-			last_packet := buf
+			file.read_stream (read_buffer_size)
+			last_packet := file.last_string
+			last_packet_size := last_packet.count
 			bytes_transferred := bytes_transferred + last_packet_size
 		end
 
@@ -243,26 +234,6 @@ feature {NONE} -- Implementation
 	buffer: TO_SPECIAL[CHARACTER]
 
 	overwrite_mode: BOOLEAN
-
-feature {NONE} -- Externals
-
-	c_fread (buf: POINTER; block_size, blocks: INTEGER; f: POINTER): INTEGER is
-			-- Read `blocks' blocks of size `block_size' from `f' into
-			-- `buf'.
-		external
-			"C | <stdio.h>"
-		alias
-			"fread"
-		end
-
-	c_fwrite (buf: POINTER; block_size, blocks: INTEGER; f: POINTER): INTEGER is
-			-- Write `blocks' blocks of size `block_size' from `buf' into
-			-- `f'.
-		external
-			"C | <stdio.h>"
-		alias
-			"fwrite"
-		end
 
 end -- class FILE_PROTOCOL
 

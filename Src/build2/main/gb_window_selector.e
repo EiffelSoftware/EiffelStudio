@@ -388,28 +388,30 @@ feature {GB_DELETE_OBJECT_COMMAND} -- Basic operation
 			command_delete_directory: GB_COMMAND_DELETE_DIRECTORY
 		do
 			all_objects := objects
-			if all_objects.count = a_directory.count then
-					-- Move the root window out of the directory, as it may not be deleted.
-				add_new_object (object_handler.root_window_object)
-			else
-				directory_of_root_window ?= object_handler.root_window_object.window_selector_item.parent
-				if directory_of_root_window /= Void and then directory_of_root_window = a_directory then
-					-- We must now select the next root window in the tree, as the root window is contained in
-					-- `a_directory'.
-					mark_next_window_as_root (a_directory.count)
+			if all_objects.count >= 1 then
+				if all_objects.count = a_directory.count then
+						-- Move the root window out of the directory, as it may not be deleted.
+					add_new_object (object_handler.root_window_object)
+				else
+					directory_of_root_window ?= object_handler.root_window_object.window_selector_item.parent
+					if directory_of_root_window /= Void and then directory_of_root_window = a_directory then
+						-- We must now select the next root window in the tree, as the root window is contained in
+						-- `a_directory'.
+						mark_next_window_as_root (a_directory.count)
+					end
 				end
-			end
-			from
-				a_directory.start
-			until
-				a_directory.is_empty
-			loop
-				window_item ?= a_directory.item
-				check
-					item_was_window: window_item /= Void
+				from
+					a_directory.start
+				until
+					a_directory.is_empty
+				loop
+					window_item ?= a_directory.item
+					check
+						item_was_window: window_item /= Void
+					end
+						-- Now remove the window from the directory.
+					Command_handler.Delete_object_command.delete_object (window_item.object)
 				end
-					-- Now remove the window from the directory.
-				Command_handler.Delete_object_command.delete_object (window_item.object)
 			end
 
 			create command_delete_directory.make (a_directory.text)
@@ -448,6 +450,7 @@ feature {GB_WINDOW_SELECTOR_DIRECTORY_ITEM} -- Implementation
 
 	add_new_object (an_object: GB_TITLED_WINDOW_OBJECT) is
 			-- Add an associated window item for `window_object'.
+			-- Added at root level of `Current', not in a directory.
 		require
 			an_object_not_void: an_object /= Void
 		local

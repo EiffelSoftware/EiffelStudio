@@ -311,7 +311,7 @@ void eif_free(register void *ptr)
 	if (lm_remove (ptr))	
 		fprintf (stderr, "Warning: cannot lm free 0x%x\n", (size_t) ptr);
 #ifdef LMALLOC_DEBUG
-	fprintf (stderr, "tEIF_FREE: 0x%x\n", ptr);	
+	fprintf (stderr, "EIF_FREE: 0x%x\n", ptr);	
 #endif
 #else	/* LMALLOC_CHECK */
 	free (ptr);

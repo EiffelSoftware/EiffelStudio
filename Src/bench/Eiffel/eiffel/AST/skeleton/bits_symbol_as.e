@@ -103,7 +103,20 @@ feature
 	actual_type: BITS_A is
 			-- Actual bits type
 		do
-			-- Do nothing
+				-- FIXME: Most probably, we need to fix it in the Eiffel grammar in
+				-- order to avoid the following declaration:
+				--   class TEST [g->ARRAY [BIT toto]]
+				-- In that case only, we can't allow `BIT toto' however we can allow
+				-- `BIT x' where x is a number.
+				--
+				-- For now, since we cannot prevent the user to use
+				-- a BIT type within the declaration of a GENERIC CONSTRAINT we have to
+				-- create something, even if it is wrong, to emphasize, we set `bit_count'
+				-- to `-1'.
+				-- But that's ok, since the result will never been used except for 
+				-- displaying an error.
+			create Result
+			Result.set_bit_count (-1)
 		ensure then
 			False
 		end; -- actual_type

@@ -71,6 +71,36 @@ feature -- Status report
 				end
 			end
 		end
+		
+	is_cluster_above: BOOLEAN is
+			-- Is a cluster above `Current'?
+		local
+			p, q, c: EG_CLUSTER_FIGURE
+			l_bbox: like size
+			i, nb: INTEGER
+		do
+			from	
+				l_bbox := size
+				p := cluster
+			until
+				Result or p = Void
+			loop
+				from
+					i := p.number_of_figures
+					nb := p.count
+				until
+					i > nb or Result
+				loop
+					c ?= p.i_th (i)
+					if c /= Void and then q /= c and then c.size.intersects (l_bbox) then
+						Result := True
+					end
+					i := i + 1
+				end
+				q := p
+				p := p.cluster
+			end
+		end
 
 feature -- Access
 

@@ -278,47 +278,47 @@ feature {NONE} -- Externals
 
 	cwel_comboboxex_item_get_mask (ptr: POINTER): INTEGER is
 		external
-			"C [macro %"tvitem.h%"]"
+			"C [macro %"comboboxexitem.h%"]"
 		end
 
 	cwel_comboboxex_item_get_iitem (ptr: POINTER): INTEGER is
 		external
-			"C [macro %"tvitem.h%"]"
+			"C [macro %"comboboxexitem.h%"]"
 		end
 
 	cwel_comboboxex_item_get_psztext (ptr: POINTER): POINTER is
 		external
-			"C [macro %"tvitem.h%"]"
+			"C [macro %"comboboxexitem.h%"]"
 		end
 
 	cwel_comboboxex_item_get_cchtextmax (ptr: POINTER): INTEGER is
 		external
-			"C [macro %"tvitem.h%"]"
+			"C [macro %"comboboxexitem.h%"]"
 		end
 
 	cwel_comboboxex_item_get_iimage (ptr: POINTER): INTEGER is
 		external
-			"C [macro %"tvitem.h%"]"
+			"C [macro %"comboboxexitem.h%"]"
 		end
 
 	cwel_comboboxex_item_get_iselectedimage (ptr: POINTER): INTEGER is
 		external
-			"C [macro %"tvitem.h%"]"
+			"C [macro %"comboboxexitem.h%"]"
 		end
 
 	cwel_comboboxex_item_get_ioverlay (ptr: POINTER): INTEGER is
 		external
-			"C [macro %"tvitem.h%"]"
+			"C [macro %"comboboxexitem.h%"]"
 		end
 
 	cwel_comboboxex_item_get_iindent (ptr: POINTER): INTEGER is
 		external
-			"C [macro %"tvitem.h%"]"
+			"C [macro %"comboboxexitem.h%"]"
 		end
 
 	cwel_comboboxex_item_get_lparam (ptr: POINTER): INTEGER is
 		external
-			"C [macro %"tvitem.h%"]"
+			"C [macro %"comboboxexitem.h%"]"
 		end
 
 end -- class WEL_COMBO_BOX_EX_ITEM

@@ -74,8 +74,6 @@ feature -- Access
 			-- Initialize each card in the game, by 
 			-- setting its coordinates.
 		local
-			a_card_number: INTEGER
-			a_card: CARD
 			a_column: LINKED_LIST [INTEGER]
 			a_column_number: INTEGER
 			a_cell_number: INTEGER
@@ -292,7 +290,6 @@ feature -- Access
 		local
 			i: INTEGER
 			a_column: LINKED_LIST [INTEGER]
-			a_cardnumber: INTEGER
 		do
 			create Result.make
 			from

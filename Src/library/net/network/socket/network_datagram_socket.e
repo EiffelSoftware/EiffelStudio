@@ -46,6 +46,9 @@ feature -- Initialization
 			make_socket;
 			is_open_write := True;
 			is_open_read := True
+			timeout := default_timeout
+		ensure
+			timeout_set_to_default: timeout = default_timeout
 		end;
 
 	make_bound (a_port: INTEGER) is
@@ -57,6 +60,9 @@ feature -- Initialization
 			c_reset_error
 			create an_address.make_local_from_port (a_port);
 			make_bound_to_address (an_address)
+			timeout := default_timeout
+		ensure
+			timeout_set_to_default: timeout = default_timeout
 		end;
 
 	make_targeted_to_hostname (a_hostname: STRING; a_peer_port: INTEGER) is
@@ -68,6 +74,9 @@ feature -- Initialization
 			c_reset_error
 			create an_address.make_from_name_and_port (a_hostname, a_peer_port);
 			make_connected_to_peer (an_address)
+			timeout := default_timeout
+		ensure
+			timeout_set_to_default: timeout = default_timeout
 		end;
 
 	make_targeted_to_ip (an_ip_number: STRING; a_peer_port: INTEGER) is
@@ -79,6 +88,9 @@ feature -- Initialization
 			c_reset_error
 			create an_address.make_from_ip_and_port (an_ip_number, a_peer_port);
 			make_connected_to_peer (an_address)
+			timeout := default_timeout
+		ensure
+			timeout_set_to_default: timeout = default_timeout
 		end;
 
 	make_client_by_port (a_peer_port: INTEGER; a_peer_host: STRING) is

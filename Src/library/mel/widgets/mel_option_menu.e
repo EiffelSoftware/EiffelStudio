@@ -1,7 +1,7 @@
 indexing
 
 	description:
-			"A MEL_RUN_COLUMN used as an option menu.";
+			"A MEL_ROW_COLUMN used as an option menu.";
 	status: "See notice at end of class.";
 	date: "$Date$";
 	revision: "$Revision$"
@@ -12,19 +12,19 @@ class
 inherit
 
 	MEL_ROW_COLUMN
-		rename
-			make as row_column_make
 		export
 			{NONE} menu_help_widget, is_popup_enabled, radio_behavior,
 			is_working_area, is_menu_bar, is_menu_popup, is_menu_option,
 			is_menu_pulldown, is_tear_off_enabled,
 			set_menu_help_widget, set_popup_enabled, 
-			set_radio_behavior, set_tear_off_enabled,
-			row_column_make
+			set_radio_behavior, set_tear_off_enabled
+		redefine
+			make
 		end
 
 creation 
-	make, make_with_label
+	make, 
+	make_with_label
 
 feature -- Initialization
 
@@ -36,9 +36,11 @@ feature -- Initialization
 			parent := a_parent;
 			widget_name := a_name.to_c;
 			screen_object := xm_create_option_menu (a_parent.screen_object, $widget_name, default_pointer, 0);
-			Mel_widgets.put (Current, screen_object);
-			!! label_gadget.make_from_existing (xm_option_label_gadget (screen_object));
-			!! button_gadget.make_from_existing (xm_option_button_gadget (screen_object));
+			Mel_widgets.add (Current);
+			!! label_gadget.make_from_existing (
+				xm_option_label_gadget (screen_object), Current);
+			!! button_gadget.make_from_existing (
+				xm_option_button_gadget (screen_object), Current);
 			set_default;
 			if do_manage then
 				manage
@@ -48,24 +50,26 @@ feature -- Initialization
 	make_with_label (a_name: STRING; a_parent: MEL_COMPOSITE; do_manage: BOOLEAN; a_ms: MEL_STRING) is
 			-- Create a motif option menu with a label.
 		require
-			a_name_exists: a_name /= Void
-			a_parent_exists: a_parent /= Void and then not a_parent.is_destroyed;
-			a_ms_exists: a_ms /= Void and then not a_ms.is_destroyed
+			name_exists: a_name /= Void;
+			parent_exists: a_parent /= Void and then not a_parent.is_destroyed;
+			ms_exists: a_ms /= Void and then not a_ms.is_destroyed
 		local
 			widget_name: ANY
 		do
 			parent := a_parent;
 			widget_name := a_name.to_c;
 			screen_object := xm_create_option_menu_with_label (a_parent.screen_object, $widget_name, a_ms.handle);
-			Mel_widgets.put (Current, screen_object);
-			!! label_gadget.make_from_existing (xm_option_label_gadget (screen_object));
-			!! button_gadget.make_from_existing (xm_option_button_gadget (screen_object));
+			Mel_widgets.add (Current);
+			!! label_gadget.make_from_existing (xm_option_label_gadget (screen_object), Current);
+			!! button_gadget.make_from_existing (xm_option_button_gadget (screen_object), Current);
 			set_default;
 			if do_manage then
 				manage
 			end
 		ensure
-			exists: not is_destroyed
+			exists: not is_destroyed;
+			parent_set: parent = a_parent;
+			name_set: name.is_equal (a_name)
 		end
 
 feature -- Access
@@ -78,6 +82,14 @@ feature -- Access
 
 feature -- Status report
 
+    sub_menu: MEL_PULLDOWN_MENU is
+            -- Pulldown menu to be associated with an option menu.
+        require
+            exists: not is_destroyed
+        do
+            Result ?= get_xt_widget (screen_object, XmNsubMenuId)
+        end;
+
 	is_recomputing_size_allowed: BOOLEAN is
 			-- Is Current allowed to recompute its size?
 		require
@@ -87,6 +99,17 @@ feature -- Status report
 		end
 
 feature -- Status setting
+
+    set_sub_menu (a_widget: MEL_PULLDOWN_MENU) is
+            -- Set `sub_menu' to `a_widget'.
+        require
+            exists: not is_destroyed
+            a_widget_exists: not a_widget.is_destroyed
+        do
+            set_xt_widget (screen_object, XmNsubMenuId, a_widget.screen_object)
+        ensure
+            sub_menu_set: sub_menu.is_equal (a_widget)
+        end;
 
 	set_recomputing_size_allowed (b: BOOLEAN) is
 			-- Set `is_recomputing_size_allowed' to `b'.

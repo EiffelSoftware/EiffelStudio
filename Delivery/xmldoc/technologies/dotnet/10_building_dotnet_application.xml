@@ -1,7 +1,5 @@
 <document title="Building a .NET application" output="studio">
-	<meta_data>
-		<help></help>
-	</meta_data>
+	<meta_data/>
 	<paragraph>
 		<heading>
 			<size>1</size>Building a .NET application

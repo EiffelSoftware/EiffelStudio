@@ -11,7 +11,7 @@ inherit
 
 	SHARED_EIFFEL_PROJECT;
 	PROJECT_CONTEXT;
-	HOLE
+	EB_BUTTON_HOLE
 		redefine
 			work, symbol, stone_type, name,
 			full_symbol
@@ -20,7 +20,7 @@ inherit
 		rename
 			execute_warner_help as load_default,
 			execute_warner_ok as load_chosen
-		end
+		end;
 
 creation
 
@@ -112,9 +112,9 @@ feature {NONE} -- Execution
 							"Template", "Cancel");
 					end;	
 				else
-					!!system_stone.make;
-					system_tool.display;
-					system_tool.receive (system_stone);
+					!! system_stone;
+					tool.display;
+					tool.process_system (system_stone);
 				end;
 			end
 		end;
@@ -125,10 +125,11 @@ feature {NONE} -- Implementation
 		local
 			file_name: STRING;
 		do
-				!!file_name.make (50);	
-				file_name.append (Default_ace_name);
-				system_tool.text_window.show_file_content (file_name);
-				system_tool.text_window.set_changed (True)
+			!! file_name.make (50);	
+			file_name.append (Default_ace_name);
+			System_tool.text_window.show_file_content (file_name);
+			System_tool.text_window.set_changed (True)
+			tool.update_save_symbol
 		end;
 
 end -- class SYSTEM_HOLE

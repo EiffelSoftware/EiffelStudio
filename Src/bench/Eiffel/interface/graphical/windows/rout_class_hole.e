@@ -9,10 +9,11 @@ class ROUT_CLASS_HOLE
 
 inherit
 
-	HOLE
+	EB_BUTTON_HOLE
 		redefine
-			compatible, symbol, stone_type, name,
-			full_symbol, transport_stone
+			symbol, stone_type, name,
+			full_symbol, transported_stone,
+			text_window
 		end
 
 creation
@@ -21,17 +22,15 @@ creation
 
 feature -- Properties
 
-	transport_stone: STONE is
+	text_window: ROUTINE_TEXT;
+
+	transported_stone: STONE is
 		local
-			rt: ROUTINE_TEXT;
 			fs: FEATURE_STONE;
 		do
-			rt ?= tool.text_window
-			if (rt /= Void) then
-				fs := rt.root_stone
-				if (fs /= Void) then
-					!CLASSC_STONE! Result.make (fs.e_class)
-				end
+			fs ?= tool.stone;
+			if (fs /= Void) then
+				!CLASSC_STONE! Result.make (fs.e_class)
 			end
 		end;
 
@@ -52,15 +51,6 @@ feature -- Properties
 			Result := Class_type
 		end;
 	
-feature {NONE} -- Properties
-
-	compatible (dropped: STONE): BOOLEAN is
-			-- Can current accept `dropped'?
-		do
-			Result := dropped /= Void and then
-				(dropped.stone_type = Class_type)
-		end;
-
 	name: STRING is
 		do
 			Result := l_Class

@@ -32,16 +32,6 @@ feature -- Status setting
 			correct_state: state = flag
 		end
 
-	toggle is
-			-- Change the state of the menu-item to
-			-- opposite
-		require
-			exists: not destroyed
-		deferred
-		ensure
-			state_is_true: state = not old state
-		end
-
 end -- class EV_CHECK_MENU_ITEM_I
 
 --|----------------------------------------------------------------

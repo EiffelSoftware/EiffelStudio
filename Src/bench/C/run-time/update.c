@@ -38,7 +38,6 @@
 #include "eif_file.h"
 #include "eif_err_msg.h"
 #include "eif_main.h"
-#include "eif_dle.h"
 
 #ifdef DEBUG
 #include "eif_interp.h"					/* For idump() */

@@ -64,8 +64,6 @@ EXPORTS
 	check_options_stop
 	chkcinv
 	desc_fill
-	dle_level
-	dle_zeroc
 	eoption
 	fcount
 	is_debug

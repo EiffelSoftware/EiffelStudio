@@ -54,35 +54,35 @@ feature {NONE}-- Initialization
 			create l_ev_vertical_box_5
 			create override_12_check
 			create l_ev_vertical_box_6
-			create l_ev_horizontal_box_7
+			create toc_12_title_box
 			create l_ev_label_5
 			create toc_12_title_text
-			create l_ev_horizontal_box_8
+			create toc_12_location_box
 			create l_ev_label_6
 			create toc_12_location_text
-			create l_ev_horizontal_box_9
+			create toc_12_pseudo_box
 			create l_ev_label_7
 			create toc_12_pseudo_text
 			create override_20_check
 			create l_ev_vertical_box_7
-			create l_ev_horizontal_box_10
+			create toc_20_title_box
 			create l_ev_label_8
 			create toc_20_title_text
-			create l_ev_horizontal_box_11
+			create toc_20_location_box
 			create l_ev_label_9
 			create toc_20_location_text
-			create l_ev_horizontal_box_12
+			create toc_20_pseudo_box
 			create l_ev_label_10
 			create toc_20_pseudo_text
 			create l_ev_vertical_box_8
-			create l_ev_horizontal_box_13
+			create l_ev_horizontal_box_7
 			create l_ev_label_11
 			create l_ev_horizontal_separator_2
-			create l_ev_horizontal_box_14
+			create l_ev_horizontal_box_8
 			create l_ev_label_12
 			create output_combo
 			create l_ev_cell_1
-			create l_ev_horizontal_box_15
+			create l_ev_horizontal_box_9
 			create l_ev_cell_2
 			create apply_button
 			create okay_button
@@ -112,39 +112,39 @@ feature {NONE}-- Initialization
 			l_ev_horizontal_box_6.extend (l_ev_vertical_box_5)
 			l_ev_vertical_box_5.extend (override_12_check)
 			l_ev_vertical_box_5.extend (l_ev_vertical_box_6)
-			l_ev_vertical_box_6.extend (l_ev_horizontal_box_7)
-			l_ev_horizontal_box_7.extend (l_ev_label_5)
-			l_ev_horizontal_box_7.extend (toc_12_title_text)
-			l_ev_vertical_box_6.extend (l_ev_horizontal_box_8)
-			l_ev_horizontal_box_8.extend (l_ev_label_6)
-			l_ev_horizontal_box_8.extend (toc_12_location_text)
-			l_ev_vertical_box_6.extend (l_ev_horizontal_box_9)
-			l_ev_horizontal_box_9.extend (l_ev_label_7)
-			l_ev_horizontal_box_9.extend (toc_12_pseudo_text)
+			l_ev_vertical_box_6.extend (toc_12_title_box)
+			toc_12_title_box.extend (l_ev_label_5)
+			toc_12_title_box.extend (toc_12_title_text)
+			l_ev_vertical_box_6.extend (toc_12_location_box)
+			toc_12_location_box.extend (l_ev_label_6)
+			toc_12_location_box.extend (toc_12_location_text)
+			l_ev_vertical_box_6.extend (toc_12_pseudo_box)
+			toc_12_pseudo_box.extend (l_ev_label_7)
+			toc_12_pseudo_box.extend (toc_12_pseudo_text)
 			l_ev_vertical_box_5.extend (override_20_check)
 			l_ev_vertical_box_5.extend (l_ev_vertical_box_7)
-			l_ev_vertical_box_7.extend (l_ev_horizontal_box_10)
-			l_ev_horizontal_box_10.extend (l_ev_label_8)
-			l_ev_horizontal_box_10.extend (toc_20_title_text)
-			l_ev_vertical_box_7.extend (l_ev_horizontal_box_11)
-			l_ev_horizontal_box_11.extend (l_ev_label_9)
-			l_ev_horizontal_box_11.extend (toc_20_location_text)
-			l_ev_vertical_box_7.extend (l_ev_horizontal_box_12)
-			l_ev_horizontal_box_12.extend (l_ev_label_10)
-			l_ev_horizontal_box_12.extend (toc_20_pseudo_text)
+			l_ev_vertical_box_7.extend (toc_20_title_box)
+			toc_20_title_box.extend (l_ev_label_8)
+			toc_20_title_box.extend (toc_20_title_text)
+			l_ev_vertical_box_7.extend (toc_20_location_box)
+			toc_20_location_box.extend (l_ev_label_9)
+			toc_20_location_box.extend (toc_20_location_text)
+			l_ev_vertical_box_7.extend (toc_20_pseudo_box)
+			toc_20_pseudo_box.extend (l_ev_label_10)
+			toc_20_pseudo_box.extend (toc_20_pseudo_text)
 			l_ev_notebook_1.extend (l_ev_vertical_box_8)
-			l_ev_vertical_box_8.extend (l_ev_horizontal_box_13)
-			l_ev_horizontal_box_13.extend (l_ev_label_11)
-			l_ev_horizontal_box_13.extend (l_ev_horizontal_separator_2)
-			l_ev_vertical_box_8.extend (l_ev_horizontal_box_14)
-			l_ev_horizontal_box_14.extend (l_ev_label_12)
-			l_ev_horizontal_box_14.extend (output_combo)
+			l_ev_vertical_box_8.extend (l_ev_horizontal_box_7)
+			l_ev_horizontal_box_7.extend (l_ev_label_11)
+			l_ev_horizontal_box_7.extend (l_ev_horizontal_separator_2)
+			l_ev_vertical_box_8.extend (l_ev_horizontal_box_8)
+			l_ev_horizontal_box_8.extend (l_ev_label_12)
+			l_ev_horizontal_box_8.extend (output_combo)
 			l_ev_vertical_box_1.extend (l_ev_cell_1)
-			l_ev_vertical_box_1.extend (l_ev_horizontal_box_15)
-			l_ev_horizontal_box_15.extend (l_ev_cell_2)
-			l_ev_horizontal_box_15.extend (apply_button)
-			l_ev_horizontal_box_15.extend (okay_button)
-			l_ev_horizontal_box_15.extend (cancel_button)
+			l_ev_vertical_box_1.extend (l_ev_horizontal_box_9)
+			l_ev_horizontal_box_9.extend (l_ev_cell_2)
+			l_ev_horizontal_box_9.extend (apply_button)
+			l_ev_horizontal_box_9.extend (okay_button)
+			l_ev_horizontal_box_9.extend (cancel_button)
 			
 			set_minimum_width (dialog_width)
 			set_minimum_height (dialog_tall_height)
@@ -152,7 +152,7 @@ feature {NONE}-- Initialization
 			l_ev_vertical_box_1.set_padding_width (padding_width)
 			l_ev_vertical_box_1.set_border_width (border_width)
 			l_ev_vertical_box_1.disable_item_expand (l_ev_cell_1)
-			l_ev_vertical_box_1.disable_item_expand (l_ev_horizontal_box_15)
+			l_ev_vertical_box_1.disable_item_expand (l_ev_horizontal_box_9)
 			l_ev_notebook_1.set_item_text (l_ev_vertical_box_2, "General")
 			l_ev_notebook_1.set_item_text (l_ev_vertical_box_3, "Help Systems")
 			l_ev_notebook_1.set_item_text (l_ev_vertical_box_8, "Filtering")
@@ -194,73 +194,55 @@ feature {NONE}-- Initialization
 			override_12_check.set_text ("Override settings for Microsoft Windows Help")
 			l_ev_vertical_box_6.set_padding_width (5)
 			l_ev_vertical_box_6.set_border_width (2)
-			l_ev_vertical_box_6.disable_item_expand (l_ev_horizontal_box_7)
-			l_ev_vertical_box_6.disable_item_expand (l_ev_horizontal_box_8)
-			l_ev_vertical_box_6.disable_item_expand (l_ev_horizontal_box_9)
-			l_ev_horizontal_box_7.set_padding_width (5)
-			l_ev_horizontal_box_7.set_border_width (2)
-			l_ev_horizontal_box_7.disable_item_expand (l_ev_label_5)
-			l_ev_label_5.disable_sensitive
+			l_ev_vertical_box_6.disable_item_expand (toc_12_title_box)
+			l_ev_vertical_box_6.disable_item_expand (toc_12_location_box)
+			l_ev_vertical_box_6.disable_item_expand (toc_12_pseudo_box)
+			toc_12_title_box.set_padding_width (5)
+			toc_12_title_box.set_border_width (2)
+			toc_12_title_box.disable_item_expand (l_ev_label_5)
 			l_ev_label_5.set_text ("Title")
-			toc_12_title_text.set_background_color (create {EV_COLOR}.make_with_8_bit_rgb (212, 208, 200))
-			toc_12_title_text.disable_sensitive
-			l_ev_horizontal_box_8.set_padding_width (5)
-			l_ev_horizontal_box_8.set_border_width (2)
-			l_ev_horizontal_box_8.disable_item_expand (l_ev_label_6)
-			l_ev_label_6.disable_sensitive
+			toc_12_location_box.set_padding_width (5)
+			toc_12_location_box.set_border_width (2)
+			toc_12_location_box.disable_item_expand (l_ev_label_6)
 			l_ev_label_6.set_text ("Location")
-			toc_12_location_text.set_background_color (create {EV_COLOR}.make_with_8_bit_rgb (212, 208, 200))
-			toc_12_location_text.disable_sensitive
-			l_ev_horizontal_box_9.set_padding_width (5)
-			l_ev_horizontal_box_9.set_border_width (2)
-			l_ev_horizontal_box_9.disable_item_expand (l_ev_label_7)
-			l_ev_label_7.disable_sensitive
+			toc_12_pseudo_box.set_padding_width (5)
+			toc_12_pseudo_box.set_border_width (2)
+			toc_12_pseudo_box.disable_item_expand (l_ev_label_7)
 			l_ev_label_7.set_text ("Pseudo Name")
-			toc_12_pseudo_text.set_background_color (create {EV_COLOR}.make_with_8_bit_rgb (212, 208, 200))
-			toc_12_pseudo_text.disable_sensitive
 			override_20_check.set_text ("Override settings for Microsoft Help 2.0 (Visual Studio Integration)")
 			l_ev_vertical_box_7.set_padding_width (5)
 			l_ev_vertical_box_7.set_border_width (2)
-			l_ev_vertical_box_7.disable_item_expand (l_ev_horizontal_box_10)
-			l_ev_vertical_box_7.disable_item_expand (l_ev_horizontal_box_11)
-			l_ev_vertical_box_7.disable_item_expand (l_ev_horizontal_box_12)
-			l_ev_horizontal_box_10.set_padding_width (5)
-			l_ev_horizontal_box_10.set_border_width (2)
-			l_ev_horizontal_box_10.disable_item_expand (l_ev_label_8)
-			l_ev_label_8.disable_sensitive
+			l_ev_vertical_box_7.disable_item_expand (toc_20_title_box)
+			l_ev_vertical_box_7.disable_item_expand (toc_20_location_box)
+			l_ev_vertical_box_7.disable_item_expand (toc_20_pseudo_box)
+			toc_20_title_box.set_padding_width (5)
+			toc_20_title_box.set_border_width (2)
+			toc_20_title_box.disable_item_expand (l_ev_label_8)
 			l_ev_label_8.set_text ("Title")
-			toc_20_title_text.set_background_color (create {EV_COLOR}.make_with_8_bit_rgb (212, 208, 200))
-			toc_20_title_text.disable_sensitive
-			l_ev_horizontal_box_11.set_padding_width (5)
-			l_ev_horizontal_box_11.set_border_width (2)
-			l_ev_horizontal_box_11.disable_item_expand (l_ev_label_9)
-			l_ev_label_9.disable_sensitive
+			toc_20_location_box.set_padding_width (5)
+			toc_20_location_box.set_border_width (2)
+			toc_20_location_box.disable_item_expand (l_ev_label_9)
 			l_ev_label_9.set_text ("Location")
-			toc_20_location_text.set_background_color (create {EV_COLOR}.make_with_8_bit_rgb (212, 208, 200))
-			toc_20_location_text.disable_sensitive
-			l_ev_horizontal_box_12.set_padding_width (5)
-			l_ev_horizontal_box_12.set_border_width (2)
-			l_ev_horizontal_box_12.disable_item_expand (l_ev_label_10)
-			l_ev_label_10.disable_sensitive
+			toc_20_pseudo_box.set_padding_width (5)
+			toc_20_pseudo_box.set_border_width (2)
+			toc_20_pseudo_box.disable_item_expand (l_ev_label_10)
 			l_ev_label_10.set_text ("Pseudo Name")
-			toc_20_pseudo_text.set_background_color (create {EV_COLOR}.make_with_8_bit_rgb (212, 208, 200))
-			toc_20_pseudo_text.disable_sensitive
-			l_ev_vertical_box_8.disable_item_expand (l_ev_horizontal_box_13)
-			l_ev_vertical_box_8.disable_item_expand (l_ev_horizontal_box_14)
-			l_ev_horizontal_box_13.set_padding_width (5)
-			l_ev_horizontal_box_13.set_border_width (2)
-			l_ev_horizontal_box_13.disable_item_expand (l_ev_label_11)
+			l_ev_vertical_box_8.disable_item_expand (l_ev_horizontal_box_7)
+			l_ev_vertical_box_8.disable_item_expand (l_ev_horizontal_box_8)
+			l_ev_horizontal_box_7.set_padding_width (5)
+			l_ev_horizontal_box_7.set_border_width (2)
+			l_ev_horizontal_box_7.disable_item_expand (l_ev_label_11)
 			l_ev_label_11.set_text ("Transformation")
 			l_ev_label_11.align_text_left
-			l_ev_horizontal_box_14.set_padding_width (5)
-			l_ev_horizontal_box_14.set_border_width (5)
-			l_ev_horizontal_box_14.disable_item_expand (l_ev_label_12)
+			l_ev_horizontal_box_8.set_padding_width (5)
+			l_ev_horizontal_box_8.set_border_width (5)
+			l_ev_horizontal_box_8.disable_item_expand (l_ev_label_12)
 			l_ev_label_12.set_text ("Output Type ")
-			l_ev_horizontal_box_15.set_padding_width (padding_width)
-			l_ev_horizontal_box_15.set_border_width (border_width)
-			l_ev_horizontal_box_15.disable_item_expand (apply_button)
-			l_ev_horizontal_box_15.disable_item_expand (okay_button)
-			l_ev_horizontal_box_15.disable_item_expand (cancel_button)
+			l_ev_horizontal_box_9.set_padding_width (padding_width)
+			l_ev_horizontal_box_9.set_border_width (border_width)
+			l_ev_horizontal_box_9.disable_item_expand (apply_button)
+			l_ev_horizontal_box_9.disable_item_expand (okay_button)
+			l_ev_horizontal_box_9.disable_item_expand (cancel_button)
 			apply_button.set_text ("Apply")
 			apply_button.set_minimum_width (80)
 			okay_button.set_text ("OK")
@@ -282,9 +264,9 @@ feature -- Access
 	l_ev_vertical_box_5, l_ev_vertical_box_6, l_ev_vertical_box_7, l_ev_vertical_box_8: EV_VERTICAL_BOX
 	l_ev_notebook_1: EV_NOTEBOOK
 	l_ev_horizontal_box_1, l_ev_horizontal_box_2, l_ev_horizontal_box_3, l_ev_horizontal_box_4, 
-	l_ev_horizontal_box_5, l_ev_horizontal_box_6, l_ev_horizontal_box_7, l_ev_horizontal_box_8, 
-	l_ev_horizontal_box_9, l_ev_horizontal_box_10, l_ev_horizontal_box_11, l_ev_horizontal_box_12, 
-	l_ev_horizontal_box_13, l_ev_horizontal_box_14, l_ev_horizontal_box_15: EV_HORIZONTAL_BOX
+	l_ev_horizontal_box_5, l_ev_horizontal_box_6, toc_12_title_box, toc_12_location_box, 
+	toc_12_pseudo_box, toc_20_title_box, toc_20_location_box, toc_20_pseudo_box, l_ev_horizontal_box_7, 
+	l_ev_horizontal_box_8, l_ev_horizontal_box_9: EV_HORIZONTAL_BOX
 	l_ev_label_1, l_ev_label_2, location_label, l_ev_label_3, l_ev_label_4, l_ev_label_5, 
 	l_ev_label_6, l_ev_label_7, l_ev_label_8, l_ev_label_9, l_ev_label_10, l_ev_label_11, 
 	l_ev_label_12: EV_LABEL

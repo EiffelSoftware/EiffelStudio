@@ -43,7 +43,7 @@ inherit
  	WEL_SINGLE_SELECTION_LIST_BOX
 		rename
 			make as wel_make,
-			parent as wel_parent,
+			parent as wel_window_parent,
 			destroy as wel_destroy,
 			shown as is_displayed,
 			set_parent as wel_set_parent,
@@ -101,7 +101,7 @@ inherit
  	WEL_MULTIPLE_SELECTION_LIST_BOX
 		rename
 			make as wel_make,
-			parent as wel_parent,
+			parent as wel_window_parent,
 			destroy as wel_destroy,
 			shown as is_displayed,
 			set_parent as wel_set_parent,
@@ -184,6 +184,21 @@ feature {NONE} -- Initialization
 		do
 			{EV_PRIMITIVE_IMP} Precursor
 			{EV_LIST_ITEM_LIST_IMP} Precursor
+		end
+
+feature -- Access
+
+	wel_parent: WEL_WINDOW is
+			--|---------------------------------------------------------------
+			--| FIXME ARNAUD
+			--|---------------------------------------------------------------
+			--| Small hack in order to avoid a SEGMENTATION VIOLATION
+			--| with Compiler 4.6.008. To remove the hack, simply remove
+			--| this feature and replace "parent as wel_window_parent" with
+			--| "parent as wel_parent" in the inheritance clause of this class
+			--|---------------------------------------------------------------
+		do
+			Result := wel_window_parent
 		end
 
 feature -- Status report
@@ -573,6 +588,9 @@ end -- class EV_LIST_IMP
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.61  2000/04/05 20:06:57  rogers
+--| Added temporary compiler bug fix.
+--|
 --| Revision 1.60  2000/04/05 18:35:07  rogers
 --| Recreate_list now correctly stores the existing attributes
 --| of the windows object before destroying it, and then creating

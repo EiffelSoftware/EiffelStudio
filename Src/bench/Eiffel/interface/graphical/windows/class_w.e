@@ -404,19 +404,8 @@ feature -- Update
 						error_message := syn_error.error_message
 						error_code := syn_error.error_code
 
-						txt := "Class has syntax error number `"
-						txt.append_integer (error_code)
-						txt.append ("'")
-						if not msg.empty then
-							txt.append (": (")
-							txt.append (msg)
-							txt.extend (')')
-						end
-						if error_message /= Void then
-							txt.append ("%N")
-							txt.append (error_message)
-						end
-						txt.append (".%NSee highlighted area.")
+						txt := "Class has syntax error."
+						txt.append ("%NSee highlighted area.")
 
 							-- syntax error occurred
 						!! syn_stone.make (syn_error, e_class)

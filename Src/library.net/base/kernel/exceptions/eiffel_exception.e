@@ -8,16 +8,15 @@ class
 	EIFFEL_EXCEPTION
 
 inherit
---	APPLICATION_EXCEPTION
---		rename
---			make as exc_make
---		undefine
---			finalize,
---			equals,
---			to_string,
---			get_hash_code,
---			memberwise_clone
---		end
+	APPLICATION_EXCEPTION
+		rename
+			make as exc_make
+		undefine
+			finalize,
+			equals,
+			to_string,
+			get_hash_code
+		end
 
 	EXCEP_CONST
 
@@ -26,14 +25,16 @@ create
 
 feature {NONE} -- Initialization
 
-	make (l_code: INTEGER; l_tag: STRING) is
+	make (a_code: INTEGER; a_tag: STRING) is
 			-- Create an exception with the given Eiffel code.
 		require
-			valid_code: valid_code (code)
+			valid_code: valid_code (a_code)
 		do
---			exc_make
-			code := l_code
-			tag := l_tag
+			code := a_code
+			tag := clone (a_tag)
+		ensure
+			code_set: code = a_code
+			tag_set: equal (tag, a_tag)
 		end
 
 feature -- Access
@@ -44,5 +45,8 @@ feature -- Access
 
 	tag: STRING
 			-- Additional information concerning current exception.
+
+invariant
+	valid_code: valid_code (code)
 
 end -- class EIFFEL_EXCEPTION

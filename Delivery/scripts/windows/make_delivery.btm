@@ -164,7 +164,7 @@ iff not defined NO_COMPILE then
 	endiff
 
 	cdd %INSTALL_DIR\free_add_ons\zad_miner\ace
-	sed -e "s/\$ISE_EIFFEL\\free_add_ons/\$INSTALL_DIR\\free_add_ons/g" zad_miner.ace >> new_ace
+	sed -e "s/\$ISE_EIFFEL\\free_add_ons/\$INSTALL_DIR\\free_add_ons/g" zad_miner.ace >> new_ace.ace
 	clean_project
 	finalize new_ace.ace
 	fff
@@ -177,6 +177,7 @@ iff not defined NO_COMPILE then
 	cd ..
 	safe_md binaries
 	move ace\zad_miner.exe binaries
+	cdd %INIT_DIR
 
 	remtrace Generate Resource Bench
 	call make_rb.btm

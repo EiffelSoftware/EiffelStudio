@@ -630,26 +630,6 @@ feature {EV_WIDGET_PROJECTOR, EV_FIGURE} -- Implementation
 
 	internal_drop_actions: EV_PND_ACTION_SEQUENCE
 			-- Implementation of once per object `drop_actions'.
-			
-feature -- Obsolete
-
-	trace is
-			-- Output a string with a representation of this figure.
-		obsolete
-			"Please do not use this feature as it will shortly be removed."
-		local
-			n: INTEGER
-		do
-			from
-				io.error.put_string ("Figure: ")
-				n := 1
-			until
-				n > point_count
-			loop
-				io.error.put_string (points.i_th (n).out + "; ")
-				n := n + 1
-			end
-		end
 
 invariant
 	points_not_void: points /= Void

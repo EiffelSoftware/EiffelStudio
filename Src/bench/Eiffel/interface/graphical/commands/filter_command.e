@@ -15,8 +15,27 @@ creation
 feature 
 
 	filter_window: FILTER_W;
+			-- Associated popup window
 
-	filter_name: STRING;
+	filter_name: STRING is
+			-- Name of the filter to be applied
+		once
+			Result := Execution_environment.get ("EIF_FILTER_NAME");
+			if Result = Void or else Result.empty then
+					-- EIF_FILTER_NAME was not set.
+				Result := "troff"
+			end
+		end;
+
+	shell_command_name: STRING is
+			-- Command name to be executed
+		once
+			Result := Execution_environment.get ("EIF_FILTER_COMMAND");
+			if Result = Void or else Result.empty then
+					-- EIF_FILTER_COMMAND was not set.
+				Result := "lpr $target"
+			end
+		end;
 
 	text_window: CLASS_TEXT;
 
@@ -24,8 +43,7 @@ feature
 		do
 			!!filter_window.make (c, Current);
 			init (c, a_text_window);
-			add_button_click_action (3, Current, Void);
-			filter_name := "troff"
+			add_button_click_action (3, Current, Void)
 		end;
 
 feature {NONE}
@@ -34,98 +52,111 @@ feature {NONE}
 			-- If left mouse button was pressed -> execute filter.
 			-- If right mouse button was pressed -> bring up filter window. 
 		local
-			text_filter: TEXT_FILTER;
-			full_pathname: STRING;
-			filter_file: PLAIN_TEXT_FILE;
-			last_format: FORMATTER;
-			format_context: FORMAT_CONTEXT;
-			stone: CLASSC_STONE;
-			tool: CLASS_W;
-			new_title, message: STRING
+			cmd_string: STRING;
+			filterable_format: FILTERABLE;
+			shell_request: ASYNC_SHELL;
+			filename, new_text: STRING
 		do
+			set_global_cursor (watch_cursor);
 			if argument = Void then
 					-- 3rd button pressed
 				filter_window.call 
-			elseif text_window.root_stone /= Void then
-				last_format := text_window.last_format;
-				tool :=  text_window.tool;
-				if 
-					last_format = tool.showclick_command or
-					last_format = tool.showflat_command or
-					last_format = tool.showshort_command or
-					last_format = tool.showflatshort_command
-				then	
-					stone ?= text_window.root_stone;
-					if stone /= Void then
-						full_pathname := clone (Eiffel3_dir_name);
-						full_pathname.extend (Directory_separator);
-						full_pathname.append ("bench");
-						full_pathname.extend (Directory_separator);
-						full_pathname.append ("help");
-						full_pathname.extend (Directory_separator);
-						full_pathname.append ("filters");
-						full_pathname.extend (Directory_separator);
-						full_pathname.append (filter_name);
-						full_pathname.append (".fil");
-						!!filter_file.make (full_pathname);
-						if 
-							filter_file.exists and then 
-							filter_file.is_readable 
-						then
-							!!text_filter.make_from_filename (full_pathname);
-							if last_format = tool.showclick_command then
-								format_context := clickable_context (stone)
-							elseif last_format = tool.showflat_command then
-								format_context := flat_context (stone)
-							elseif last_format = tool.showshort_command then
-								format_context := short_context (stone)
-							elseif last_format = tool.showflatshort_command then
-								format_context := flatshort_context (stone)
-							end;
-							text_filter.process_text (format_context.text);
-							!!new_title.make (50);
-							new_title.append (last_format.title_part);
-							new_title.append (stone.signature);
-							new_title.append (" (");
-							new_title.append (filter_name);
-							new_title.append (" format)");
-							text_window.display_header (new_title);
-							text_window.clear_clickable;
-							text_window.set_text (text_filter.image);
-							text_window.set_changed (false);
-							text_window.set_editable
-						else
-							!!message.make (50);
-							message.append ("Cannot read filter ");
-							message.append (full_pathname);
-							warner.set_window (text_window);
-							warner.gotcha_call (message)
-						end
-					else
-						!!message.make (50);
-						message.append ("Class is not compiled");
-						warner.set_window (text_window);
-						warner.gotcha_call (message)
-					end
-				else
-					!!message.make (50);
-					message.append ("Only clickable, flat, short and flat-short forms may be filtered");
+			elseif argument = warner then
+					-- If it comes here this means ok has
+					-- been pressed in the warner window
+					-- for text modification.
+				text_window.last_format.filter (filter_name)
+			elseif argument = filter_window then
+					-- Display the filter output in `text_window'
+				if text_window.changed then
 					warner.set_window (text_window);
-					warner.gotcha_call (message)
+					warner.call (Current, l_File_changed)
+				else
+					text_window.last_format.filter (filter_name)
+				end
+			elseif text_window.root_stone /= Void then
+					-- Execute the shell command
+				filterable_format ?= text_window.last_format;
+				if filterable_format = Void then
+					warner.set_window (text_window);
+					warner.gotcha_call (w_Not_a_filterable_format)
+				else
+					filename := filterable_format.filtered_file_name
+										(text_window.root_stone, filter_name);
+					if 
+						filterable_format.filtered and
+						equal (filterable_format.filter_name, filter_name) 
+					then
+							-- The filtered text is in `text_window'
+						save_to_file (text_window.text, filename);
+						text_window.set_changed (false)
+					else
+						new_text := filterable_format.filtered_text 
+										(text_window.root_stone, filter_name); 
+						if new_text /= Void then
+							save_to_file (new_text, filename)
+						end
+					end;
+					!!cmd_string.make (0);
+					cmd_string.append ("target=");
+					cmd_string.append (filterable_format.filtered_file_name
+										(text_window.root_stone, filter_name));
+					cmd_string.append ("; export target; ");
+					cmd_string.append (shell_command_name);
+					!!shell_request;
+					shell_request.set_command_name (cmd_string);
+					shell_request.send
+				end
+			end;
+			restore_cursors
+		end;
+	
+	save_to_file (a_text: STRING; a_filename: STRING) is
+			-- Save `a_text' in `a_filename'.
+		require
+			a_text_not_void: a_text /= Void;
+			a_filename_not_void: a_filename /= Void
+		local
+			new_file: PLAIN_TEXT_FILE
+		do
+			if not a_filename.empty then
+				!!new_file.make (a_filename);
+				if new_file.exists and then not new_file.is_plain then
+					warner.set_window (text_window);
+					warner.gotcha_call (w_Not_a_plain_file (new_file.name))
+				elseif new_file.exists and then not new_file.is_writable then
+					warner.set_window (text_window);
+					warner.gotcha_call (w_Not_writable (new_file.name))
+				elseif not new_file.exists and then not new_file.is_creatable then
+					warner.set_window (text_window);
+					warner.gotcha_call (w_Not_creatable (new_file.name))
+				else
+					new_file.open_write;
+					if not a_text.empty then
+						new_file.putstring (a_text);
+						if a_text.item (a_text.count) /= '%N' then
+								-- Add a carriage return like vi 
+								-- if there's none at the end
+							new_file.putchar ('%N')
+						end
+					end;
+					new_file.close
 				end
 			end
 		end;
-	
-feature 
+
+feature {NONE}
 
 	symbol: PIXMAP is 
 		once 
 			Result := bm_Filter 
 		end;
  
-	
-feature {NONE}
-
 	command_name: STRING is do Result := l_Filter end;
+
+invariant
+
+	filter_name_not_void: filter_name /= Void;
+	shell_command_name_not_void: shell_command_name /= Void
 
 end -- class FILTER_COMMAND

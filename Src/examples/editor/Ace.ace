@@ -1,0 +1,96 @@
+system
+	"editor_example"
+
+root
+	ROOT_CLASS: make_and_launch
+
+default
+	assertion (check)
+	assertion (require)
+	assertion (ensure)
+	disabled_debug (yes)
+	disabled_debug ("dlg_dispatcher")
+	disabled_debug ("editor")
+	disabled_debug ("gelex")
+	disabled_debug ("geyacc")
+	disabled_debug ("lex_output")
+	disabled_debug ("refactor_fixme")
+	disabled_debug ("vision2_windows")
+	disabled_debug ("vision2_windows_gdi")
+	disabled_debug ("wel")
+	disabled_debug ("wel_gdi_count")
+	disabled_debug ("wel_gdi_references")
+	disabled_debug ("win_dispatcher")
+	disabled_debug ("xml_input_stream")
+	disabled_debug ("xml_parser")
+	debug (no)
+	line_generation (no)
+	profile (no)
+	trace (no)
+	check_vape (yes)
+	console_application (no)
+	syntax_warning (no)
+	address_expression (no)
+	array_optimization (no)
+	dead_code_removal (yes)
+	dynamic_runtime (no)
+	exception_trace (no)
+	inlining (no)
+	multithreaded (no)
+
+
+cluster
+	all root_cluster:		"."
+
+
+	all editor:		"$EIFFEL_SRC\library\editor"
+
+	all gobo:		"$EIFFEL_SRC\library\gobo\library"
+		exclude
+			"hact"; "se"; "ve"; "base"; "CVS"; "other"; 
+		end
+
+	all preferences:		"$EIFFEL_SRC\library\preferences"
+		exclude
+			"CVS"; "xml_implementation"; 
+		default
+			assertion (no)
+			assertion (check)
+			assertion (require)
+		end
+
+	observer:		"$EIFFEL_SRC\library\patterns\observer"
+
+	custom_structures:		"$EIFFEL_SRC\Eiffel\eiffel\structures"
+
+	all base:		"$ISE_EIFFEL\library\base"
+		exclude
+			"table_eiffel3"; "desc"; 
+		end
+
+	all wel:		"$ISE_EIFFEL\library\wel"
+
+	all vision2:		"$ISE_EIFFEL\library\vision2"
+		exclude
+			"gtk"; 
+		default
+			assertion (no)
+			assertion (check)
+			assertion (require)
+		end
+
+	all lex:		"$ISE_EIFFEL\library\lex"
+
+external
+
+	include_path:
+		"$(ISE_EIFFEL)\library\wel\spec\windows\include",
+		"$(ISE_EIFFEL)\library\vision2\spec\include"
+
+	object:
+		"$(ISE_EIFFEL)\library\wel\spec\$(ISE_C_COMPILER)\lib\wel.lib",
+		"$(ISE_EIFFEL)\library\vision2\spec\$(ISE_C_COMPILER)\lib\vision2.lib",
+		"$(ISE_EIFFEL)\library\vision2\spec\$(ISE_C_COMPILER)\lib\zlib.lib",
+		"$(ISE_EIFFEL)\library\vision2\spec\$(ISE_C_COMPILER)\lib\libpng.lib"
+
+end

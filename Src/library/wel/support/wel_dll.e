@@ -101,7 +101,7 @@ feature {NONE} -- Externals
 			-- Wrapper around LoadLibrary which will automatically
 			-- free the dll at the end of system execution.
 		external
-			"C [macro %"eif_misc.h%"] (LPCSTR): EIF_POINTER"
+			"C [macro %"eif_misc.h%"] (char *): EIF_POINTER"
 		alias
 			"eif_load_dll"
 		end

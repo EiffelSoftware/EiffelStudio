@@ -38,9 +38,9 @@ feature {NONE} -- Implementation
 		do
 			status := Application.status;
 			if status = Void then
-				warner (popup_parent).gotcha_call (w_System_not_running)
+				warner (popup_parent).gotcha_call (Warning_messages.w_System_not_running)
 			elseif not status.is_stopped then
-				warner (popup_parent).gotcha_call (w_System_not_stopped)
+				warner (popup_parent).gotcha_call (Warning_messages.w_System_not_stopped)
 			else
 				pt_work (argument)
 			end

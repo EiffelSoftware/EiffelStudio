@@ -29,7 +29,7 @@ feature -- Properties
 	symbol: PIXMAP is 
 			-- Pixmap for the button.
 		once 
-			Result := bm_Default 
+			Result := Pixmaps.bm_Default 
 		end;
  
 	name: STRING is

@@ -3,7 +3,7 @@ deferred class STONE
 inherit
 
 	STONE_TYPES;
-	SHARED_CURSORS;
+	EB_CONSTANTS;
 	INTERFACE_W
 	
 feature -- Properties
@@ -61,7 +61,7 @@ feature  -- Access
 			-- "No help available" by default
 		once
 			!! Result.make;
-			Result.put_front (l_No_help_available)
+			Result.put_front (Interface_names.h_No_help_available)
 		end;
 
 	click_list: ARRAY [CLICK_STONE] is 

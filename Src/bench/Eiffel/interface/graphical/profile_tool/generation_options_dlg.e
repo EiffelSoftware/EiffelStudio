@@ -14,6 +14,7 @@ inherit
 			make as top_shell_make
 		end;
 	INTERFACE_W;
+	EB_CONSTANTS;
 	EIFFEL_ENV;
 	COMMAND
 
@@ -25,8 +26,8 @@ feature {NONE} -- Initialization
 	make (a_parent: PROFILE_TOOL) is
 			-- Create dialog with `a_parent' as `parent'.
 		do
-			top_shell_make (l_X_resourse_name, a_parent);
-			set_title ("Generation options...");
+			top_shell_make (Interface_names.n_X_resource_name, a_parent);
+			set_title (Interface_names.t_Generation_options);
 			build_widgets
 		end
 
@@ -72,34 +73,34 @@ feature {NONE} -- User Interface
 	build_widgets is
 			-- Setup the interface.
 		do
-			!! text_form.make (l_X_resourse_name, Current);
-			!! text_sep.make ("", Current);
-			!! compile_form.make (l_X_resourse_name, Current);
-			!! compile_sep.make ("", Current);
-			!! profiler_form.make (l_X_resourse_name, Current);
-			!! profiler_sep.make ("", Current);
-			!! button_form.make (l_X_resourse_name, Current);
+			!! text_form.make (Interface_names.n_X_resource_name, Current);
+			!! text_sep.make (Interface_names.t_Empty, Current);
+			!! compile_form.make (Interface_names.n_X_resource_name, Current);
+			!! compile_sep.make (Interface_names.t_Empty, Current);
+			!! profiler_form.make (Interface_names.n_X_resource_name, Current);
+			!! profiler_sep.make (Interface_names.t_Empty, Current);
+			!! button_form.make (Interface_names.n_X_resource_name, Current);
 			button_form.set_fraction_base (3);
 
-			!! text_label.make ("Input file", text_form);
-			!! text_field.make ("", text_form);
+			!! text_label.make (Interface_names.l_Input_file, text_form);
+			!! text_field.make (Interface_names.t_Empty, text_form);
 			text_field.set_text ("profinfo");
 
-			!! compile_label.make ("Compile type", compile_form);
-			!! compile_box.make ("", compile_form);
+			!! compile_label.make (Interface_names.l_Compile_type, compile_form);
+			!! compile_box.make (Interface_names.t_Empty, compile_form);
 			compile_box.set_always_one (True);
-			!! workbench_button.make ("Workbench mode", compile_box);
+			!! workbench_button.make (Interface_names.b_Workbench, compile_box);
 			workbench_button.set_toggle_on;
-			!! final_button.make ("Final mode", compile_box);
+			!! final_button.make (Interface_names.b_Final, compile_box);
 
-			!! profiler_label.make ("Select used profiler", profiler_form);
-			!! profiler_list.make ("", profiler_form);
+			!! profiler_label.make (Interface_names.l_Select_profiler, profiler_form);
+			!! profiler_list.make (Interface_names.t_Empty, profiler_form);
 			profiler_list.add_click_action (Current, click_it);
 			fill_profiler_list;
 
-			!! ok_button.make ("Ok", button_form);
+			!! ok_button.make (Interface_names.b_Ok, button_form);
 			ok_button.add_activate_action (Current, ok_it);
-			!! cancel_button.make ("Cancel", button_form);
+			!! cancel_button.make (Interface_names.b_Cancel, button_form);
 			cancel_button.add_activate_action (Current, cancel_it);
 
 			attach_all;

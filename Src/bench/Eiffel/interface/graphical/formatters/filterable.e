@@ -9,6 +9,7 @@ deferred class FILTERABLE
 
 inherit
 
+	EIFFEL_ENV;
 	FORMATTER
 		rename
 			init as make
@@ -60,7 +61,7 @@ feature -- Filtering; Properties
 			text_filter: TEXT_FILTER
 		do
 			if filtername.empty then
-				warner (popup_parent).gotcha_call (w_No_filter_selected)
+				warner (popup_parent).gotcha_call (Warning_messages.w_No_filter_selected)
 			else
 				!!full_pathname.make_from_string (filter_path);
 				full_pathname.set_file_name (filtername);
@@ -74,7 +75,7 @@ feature -- Filtering; Properties
 					Result := text_filter.image
 				else
 					warner (popup_parent).gotcha_call 
-						(w_Cannot_read_filter (full_pathname))
+						(Warning_messages.w_Cannot_read_filter (full_pathname))
 				end
 			end
 		end;

@@ -36,17 +36,17 @@ feature {NONE} -- Initialization
 		local
 			menu_entry: PREFERENCE_MENU_ENTRY;
 		do
-			!! menu_form.make ("Menu Form", global_form);
+			!! menu_form.make (t_Empty, global_form);
 
-			!! menu_bar.make ("Menu Bar", menu_form);
+			!! menu_bar.make (t_Empty, menu_form);
 
 			menu_form.attach_top (menu_bar, 0);
 			menu_form.attach_left (menu_bar, 0);
 			menu_form.attach_right (menu_bar, 0);
 
-			!! file_menu.make ("&File", menu_bar);
-			!! category_menu.make ("&Category", menu_bar);
-			!! help_menu.make ("&Help", menu_bar);
+			!! file_menu.make (m_File, menu_bar);
+			!! category_menu.make (m_Category, menu_bar);
+			!! help_menu.make (m_Help, menu_bar);
 			menu_bar.set_help_button (help_menu.menu_button);
 
 			!! validate_cmd.make (Current);
@@ -63,24 +63,24 @@ feature {NONE} -- Initialization
 
 			!! cancel_cmd.make (Current);
 			!! menu_entry.make (cancel_cmd, file_menu);
-			menu_entry.set_text ("Exit")
+			menu_entry.set_text (m_Exit)
 
 		end;
 
 	initialize_category_button_rc is
 			-- Create and initialize `category_button_rc'.
 		do
-			!! category_button_rc.make ("Category Button RowColumn", global_form);
+			!! category_button_rc.make (t_Empty, global_form);
 			category_button_rc.set_row_layout;
 		end;
 
 	initialize_category_form is
 			-- Create and initialize `category_form'.
 		do
-			!! category_form.make ("Category Form", global_form);
+			!! category_form.make (t_Empty, global_form);
 
-			!! scrolled_window.make ("Scrolled Window", category_form);
-			!! selected_label.make ("", category_form);
+			!! scrolled_window.make (t_Empty, category_form);
+			!! selected_label.make (t_Empty, category_form);
 			selected_label.set_left_alignment;
 
 			category_form.attach_top (selected_label, 0);
@@ -95,14 +95,14 @@ feature {NONE} -- Initialization
 	initialize_button_form is
 			-- Create and initialize `button_form'.
 		do
-			!! button_form.make ("Button Form", global_form);
+			!! button_form.make (t_Empty, global_form);
 			button_form.set_fraction_base (3);
 
-			!! ok_button.make ("Ok", button_form);
+			!! ok_button.make (b_Ok, button_form);
 			ok_button.add_activate_action (ok_cmd, Void);
-			!! apply_button.make ("Apply", button_form);
+			!! apply_button.make (b_Apply, button_form);
 			apply_button.add_activate_action (apply_cmd, Void);
-			!! cancel_button.make ("Cancel", button_form);
+			!! cancel_button.make (b_Cancel, button_form);
 			cancel_button.add_activate_action (cancel_cmd, Current);
 
 			button_form.attach_top (ok_button, 0);
@@ -150,7 +150,7 @@ feature -- Display
 		do
 			top_shell_make (identifier, screen);
 
-			!! global_form.make ("Global Form", Current);
+			!! global_form.make (t_Empty, Current);
 
 			initialize_menu_form;
 			initialize_category_form;
@@ -381,4 +381,15 @@ feature {PREFERENCE_CATEGORY} -- Execution
 			end
 		end
 
+feature {NONE} -- Implementation (UI Constants)
+
+	b_Apply: STRING is		"Apply";
+	b_Cancel: STRING is		"Cancel";
+	b_Ok: STRING is			" Ok ";
+	m_Category: STRING is	"&Category";
+	m_Exit: STRING is		"&Exit";
+	m_File: STRING is		"&File";
+	m_Help: STRING is		"&Help";
+	t_Empty: STRING is		"";
+	
 end -- class PREFERENCE_TOOL

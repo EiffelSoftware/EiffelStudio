@@ -57,8 +57,26 @@ feature {NONE} -- Resources
 			!! Result.make
 		end;
 
+	Warning_messages: WARNING_MESSAGES is
+			-- All warning used in the interface
+		once
+			!! Result
+		end;
+
 	Interface_names: INTERFACE_NAMES is
 			-- All names used in the interface
+		once
+			!! Result
+		end;
+
+	Pixmaps: SHARED_PIXMAPS is
+			-- All pixmaps used in the interface
+		once
+			!! Result
+		end;
+
+	Cursors: SHARED_CURSORS is
+			-- All pixmaps used in the interface
 		once
 			!! Result
 		end

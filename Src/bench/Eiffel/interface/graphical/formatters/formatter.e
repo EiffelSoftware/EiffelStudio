@@ -29,7 +29,6 @@ feature -- Properties
 
 	formatted: STONE;
 
-
 	do_format: BOOLEAN;
 			-- Will we call `format' without checking if this is 
 			-- really necessary (i.e. the format and the stone
@@ -85,7 +84,7 @@ feature -- Execution
 				if not text_window.changed then
 					execute_licenced (formatted)
 				else
-					warner (popup_parent).call (Current, w_File_changed)
+					warner (popup_parent).call (Current, Warning_messages.w_File_changed)
 				end
 			end
 		end;
@@ -140,7 +139,7 @@ feature -- Formatting
 					end
 				end
 			else
-				warner (popup_parent).gotcha_call (w_Cannot_retrieve_info);
+				warner (popup_parent).gotcha_call (Warning_messages.w_Cannot_retrieve_info);
 				mp.restore;
 			end
 		rescue
@@ -169,7 +168,7 @@ feature -- Filters; Implementation
 			current_format: tool.last_format.associated_command = Current
 		do
 			if tool.stone /= Void then
-				warner (popup_parent).gotcha_call (w_Not_a_filterable_format)
+				warner (popup_parent).gotcha_call (Warning_messages.w_Not_a_filterable_format)
 			end
 		end;
 

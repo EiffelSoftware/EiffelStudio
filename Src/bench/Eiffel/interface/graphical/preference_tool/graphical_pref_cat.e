@@ -14,10 +14,6 @@ inherit
 		export
 			{NONE} all
 		end;
-	SHARED_PIXMAPS
-		rename
-			resources as parsed_resources
-		end;
 	PREFERENCE_CATEGORY
 		rename
 			make as rc_make,
@@ -141,13 +137,13 @@ feature -- Properties
 	symbol: PIXMAP is
 			-- Current's symobl for being unselected
 		once
-			Result := bm_System
+			Result := Pixmaps.bm_System
 		end;
 
 	dark_symbol: PIXMAP is
 			-- Dark version of `symbol'
 		once
-			Result := bm_System_dot
+			Result := Pixmaps.bm_System_dot
 		end;
 
 feature {NONE} -- Resources

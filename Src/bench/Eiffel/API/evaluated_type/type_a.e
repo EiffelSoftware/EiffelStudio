@@ -24,6 +24,9 @@ inherit
 		end
 
 	SHARED_TYPE_I
+		export
+			{NONE} all
+		end
 
 	SHARED_GENERIC_CONSTRAINT
 

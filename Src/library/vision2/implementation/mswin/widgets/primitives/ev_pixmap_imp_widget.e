@@ -15,11 +15,11 @@ inherit
 		undefine
 			has_focus, is_sensitive, is_displayed, set_focus, x_position, 
 			y_position, on_parented, disable_sensitive, enable_sensitive,
-			show, pointed_target, remove_tooltip, minimum_dimensions_set, 
+			show, pointed_target, remove_tooltip, 
 			set_minimum_width, set_tooltip, screen_x, screen_y, set_size,
 			parent, is_show_requested, minimum_width, draw_rubber_band, 
 			set_pointer_style, erase_rubber_band, disable_transport, 
-			destroy, set_minimum_height, dimensions_set, set_minimum_size,
+			destroy, set_minimum_height, set_minimum_size,
 			disable_capture, pointer_position, start_transport, 
 			enable_transport, pointer_style, tooltip,
 			end_transport, enable_capture, minimum_height, position_set, 
@@ -784,6 +784,9 @@ end -- class EV_PIXMAP_IMP_WIDGET
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.9  2000/06/08 18:46:51  oconnor
+--| merged from DEVEL tag MERGED_TO_TRUNK_20000607
+--|
 --| Revision 1.8  2000/06/07 17:28:02  oconnor
 --| merged from DEVEL tag MERGED_TO_TRUNK_20000607
 --|

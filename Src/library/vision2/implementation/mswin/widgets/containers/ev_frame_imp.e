@@ -269,6 +269,8 @@ feature {NONE} -- WEL Implementation
 			wel_style: INTEGER
 			text_pos: INTEGER
 			font_imp: EV_FONT_IMP
+			cur_width: INTEGER
+			cur_height: INTEGER
 		do
 				-- Cache value of `wel_width' and `wel_height' for
 				-- faster access
@@ -349,6 +351,9 @@ end -- class EV_FRAME_IMP
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.37  2000/06/08 18:46:48  oconnor
+--| merged from DEVEL tag MERGED_TO_TRUNK_20000607
+--|
 --| Revision 1.36  2000/06/07 17:27:59  oconnor
 --| merged from DEVEL tag MERGED_TO_TRUNK_20000607
 --|

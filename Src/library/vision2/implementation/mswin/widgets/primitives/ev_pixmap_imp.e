@@ -785,19 +785,6 @@ feature -- Delegated features
 			create Result.make_with_rgb (1, 1, 1)
 		end
 
-	dimensions_set (new_width: INTEGER; new_height: INTEGER): BOOLEAN is
-			-- Check if the dimensions of the widget are set to 
-			-- the values given or the minimum values possible 
-			-- for that widget.
-		obsolete "don't use it"
-		do
-			promote_to_widget
-			Result := interface.implementation.dimensions_set (
-				new_width,
-				new_height
-				)
-		end
-
 	disable_sensitive is
 			-- Disable sensitivity to user input events.
 		do
@@ -852,23 +839,6 @@ feature -- Delegated features
 		do
 				-- Simple pixmap => not in a container.
 			Result := False
-		end
-
-	minimum_dimensions_set (
-			new_width: INTEGER; 
-			new_height: INTEGER
-		): BOOLEAN is
-			-- Check if the dimensions of the widget are set to 
-			-- the values given or the minimum values possible 
-			-- for that widget.
-			-- When the widget is not shown, the result is 0
-		obsolete "don't use it"
-		do
-			promote_to_widget
-			Result := interface.implementation.minimum_dimensions_set (
-				new_width,
-				new_height
-				)
 		end
 
 	minimum_height: INTEGER is
@@ -1331,6 +1301,9 @@ end -- class EV_PIXMAP_IMP
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.38  2000/06/08 18:46:51  oconnor
+--| merged from DEVEL tag MERGED_TO_TRUNK_20000607
+--|
 --| Revision 1.37  2000/06/07 17:28:02  oconnor
 --| merged from DEVEL tag MERGED_TO_TRUNK_20000607
 --|

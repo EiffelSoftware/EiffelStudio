@@ -114,7 +114,7 @@ feature -- Status setting
 			gc_bg_color ?= background_color.implementation
 			if drawing_dc /= Void then
 				update_dc
-				drawing_dc.set_bk_color (gc_bg_color)
+				drawing_dc.set_background_color (gc_bg_color)
 			end
 		end 
 
@@ -422,7 +422,7 @@ feature -- Output
 			drawing_dc_not_void: drawing_dc /= Void
 		do
 			drawing_dc.set_text_color (gc_fg_color)
-			drawing_dc.set_bk_color (gc_bg_color)
+			drawing_dc.set_background_color (gc_bg_color)
 			drawing_dc.set_background_transparent
 			set_text_alignment
 			drawing_dc.text_out (base.x, base.y, text)
@@ -510,7 +510,7 @@ feature -- Output
 				p_array.put (points.item.y, i)
 			end
 			points.go_to (c)
-			drawing_dc.poly_line (p_array)
+			drawing_dc.polyline (p_array)
 		end
 
 	draw_rectangle (center: COORD_XY; rwidth, rheight: INTEGER; an_orientation: REAL) is
@@ -672,7 +672,7 @@ feature -- Implementation
 					local_arc_points.force (local_arc_points @ 1, local_arc_points.upper + 1)
 					local_arc_points.force (local_arc_points @ 2, local_arc_points.upper + 1)
 				end;
-				drawing_dc.poly_line (local_arc_points)
+				drawing_dc.polyline (local_arc_points)
 			end
 		end
 
@@ -722,7 +722,7 @@ feature -- Implementation
 				points.put (y3, 6)
 				points.put (x4, 7)
 				points.put (y4, 8)
-				drawing_dc.poly_line (points)
+				drawing_dc.polyline (points)
 			end
 			if not filled and draw_brush /= Void then
 				drawing_dc.select_brush (draw_brush)
@@ -757,7 +757,7 @@ feature -- Implementation
 				when 1 then
 				when 2 then
 					drawing_dc.set_text_color (gc_fg_color)
-					drawing_dc.set_bk_color (gc_bg_color)
+					drawing_dc.set_background_color (gc_bg_color)
 				when 3 then
 					drawing_dc.set_text_color (gc_fg_color)
 				end

@@ -125,7 +125,7 @@ feature -- Basic operations
 			arg_name: STRING
 		do
 			if some_names.count < count + 1 then
-				some_names.resize (1, count + 1)
+				some_names.conservative_resize (1, count + 1)
 			end
 			create Result.make
 			from

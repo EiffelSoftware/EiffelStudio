@@ -9,18 +9,6 @@ class
 
 inherit
 	EV_EVENT_DATA_I
-	
-
-creation
-	make
-
-feature -- Status setting
-
-	fill (mi: WEL_MESSAGE_INFORMATION) is
-			-- Set the attributes of this data depending of `mi'.
-		do
-		end
-
 
 end -- class EV_EVENT_DATA_IMP
 

@@ -168,6 +168,11 @@ feature
 		deferred
 		end;
 
+	logical_mode: INTEGER is
+			-- Selected logical_mode
+		deferred
+		end
+
 	max_count_for_draw_polyline: INTEGER is
 			-- Maximum value for `points.count' for `draw_polyline'
 		deferred
@@ -261,6 +266,8 @@ feature
 			a_mode >= 0;
 			a_mode <= 15
 		deferred
+		ensure
+			logical_mode_set: logical_mode = a_mode
 		end;
 
 	set_no_clip is

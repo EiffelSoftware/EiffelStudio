@@ -246,7 +246,7 @@ feature {NONE} -- Implementation
 			conversion_support: ISE_REFLECTION_CONVERSIONSUPPORT
 			assembly_name: SYSTEM_REFLECTION_ASSEMBLYNAME
 			assembly: SYSTEM_REFLECTION_ASSEMBLY
-			emitter: NEWEIFFELCLASSGENERATOR
+			emitter: EIFFELCLASSGENERATOR
 			returned_value: SYSTEM_WINDOWS_FORMS_DIALOGRESULT
 			message_box_buttons: SYSTEM_WINDOWS_FORMS_MESSAGEBOXBUTTONS
 			message_box_icon: SYSTEM_WINDOWS_FORMS_MESSAGEBOXICON
@@ -262,7 +262,7 @@ feature {NONE} -- Implementation
 					assembly_name := conversion_support.assembly_name_from_descriptor (assembly_descriptor)
 					assembly := assembly.load (assembly_name)
 					close
-					create emitter.make_neweiffelclassgenerator
+					create emitter.make_eiffelclassgenerator
 					if destination_path_text_box.get_text /= Void and then destination_path_text_box.get_text.get_length > 0 then
 						emitter.import_assembly_with_dependancies (assembly, destination_path_text_box.get_text, eiffel_names_check_box.get_checked)
 						message_box.close

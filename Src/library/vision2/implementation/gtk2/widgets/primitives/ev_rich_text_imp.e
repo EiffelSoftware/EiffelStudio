@@ -609,8 +609,6 @@ feature -- Status setting
 			-- Flush contents of buffer.
 			-- If `buffer_locked_for_append' then replace contents of `Current' with buffer contents.
 			-- If `buffer_locked_for_format' then apply buffered formatting to contents of `Current'.
-		local
-			a_text_buffer: POINTER
 		do
 			if buffer_locked_in_format_mode then
 				feature {EV_GTK_DEPENDENT_EXTERNALS}.gtk_text_view_set_buffer (text_view, append_buffer)

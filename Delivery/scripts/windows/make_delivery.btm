@@ -11,7 +11,7 @@ TIMER ON /1 >> NUL
 TIMER ON /2 >> NUL
 iff %@INDEX[%@LOWER[%$],h] ge 0 then
 	echo Installation for ISE Eiffel 5 generation.
-	echo Parameters are no_compile, no_doc, no_new_ec, no_wizards and no_install (or nothing to fully regenerate the installation).
+	echo Parameters are no_compile, no_doc, no_new_ec, enterprise no_wizards and no_install (or nothing to fully regenerate the installation).
 	CANCEL
 endiff
 iff %@INDEX[%@LOWER[%$],no_compil] ge 0 then

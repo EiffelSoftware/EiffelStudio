@@ -23,9 +23,6 @@
         <H2>What's new</H2>
         
         <ul>
-          <li>Limited support for new <span class="ekeyword">convert</span> keyword 
-          (only on argument passing and assignments. Not supported when used 
-          with infix routines).</li>
           <li>Support for assertion checking on external routines.</li>
           <li>Removed limitation about implementing or redefining a non-external 
           routine by an external one and vice versa.</li>
@@ -39,6 +36,9 @@
           <li>Added ability to define custom attributes on assembly. One as to 
           define custom attributes under the new `assembly_metadata' index 
           clause of the root class.</li>
+          <li>Limited support for new <span class="ekeyword">convert</span> keyword 
+          (only on argument passing and assignments. Not supported when used 
+          with infix routines).</li>
 </ul>
         
         <H2>Improvements</H2>
@@ -165,11 +165,13 @@ td := ti</pre>
         
         <ul>
           <li>Fixed bug in code generation  with following statement:<br>
-<pre>	l_time: <span class="eclass">TIME_SPAN</span>
-	
-	<span class="efeature">print</span> (l_time.<span class="efeature">total_milliseconds</span>.<span class="efeature">out</span>)
+<pre>l_time: <span class="eclass">TIME_SPAN</span>
+<span class="efeature">print</span> (l_time.<span class="efeature">total_milliseconds</span>.<span class="efeature">out</span>)
 </pre>
 </li>
+<li>Fixed incorrect code generation with code accessing attributes of .NET expanded types.</li>
+<li>Fixed incorrect computation of <span class="efeature">equal</span> when used with basic types, e.g.
+ <span class="efeature">equal (1, 1)</span> would return <span class="ekeyword">False</span> instead of <span class="ekeyword">True</span>.</li>
 </ul>
         
         
@@ -181,6 +183,8 @@ td := ti</pre>
           mismatch was detected</li>
           <li>Fixed issue where mismatch was not detected if attributes were 
           dropped</li>
+          <li>Fixed issue with independent store when storing <span class="eclass">TUPLE</span> objects 
+          where it would crash if storable did not include a reference to <span class="eclass">ANY</span>.</li>
 </ul>
         
         

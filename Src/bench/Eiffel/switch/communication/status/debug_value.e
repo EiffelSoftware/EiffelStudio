@@ -132,7 +132,7 @@ feature -- Access
 									else
 										int64val ?= val
 										if int64val /= Void then
-											create Result.make_integer (int64val.to_integer, Dynamic_class)
+											create Result.make_integer_64 (int64val.item, Dynamic_class)
 										else
 											wcval ?= val
 											if wcval /= Void then

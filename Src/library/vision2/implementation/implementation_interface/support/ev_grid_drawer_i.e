@@ -68,6 +68,7 @@ feature -- Basic operations
 			printing_values: BOOLEAN
 			column_offsets: ARRAYED_LIST [INTEGER]
 			invalid_x_start, invalid_x_end: INTEGER
+			current_column_width: INTEGER
 		do
 			printing_values := False
 			if printing_values then
@@ -132,7 +133,7 @@ feature -- Basic operations
 					y := vertical_buffer_offset - (vertical_buffer_offset \\ height)
 				until
 					(row_counter - grid.vertical_item_offset) * 16 > grid.height or 
-					row_counter = grid.row_count or first_column_index = 0
+					row_counter = grid.row_count
 				loop
 					if not bool and printing_values then
 						print ("%N%NStarting to draw row%N")
@@ -144,7 +145,7 @@ feature -- Basic operations
 						temp := 0
 					until
 						column_counter > last_column_index or
-						column_counter > column_offsets.count
+						column_counter > column_offsets.count or first_column_index = 0
 					loop
 						if not bool and printing_values then
 							print ("%N%NColumn Counter : " + column_counter.out + "%N")
@@ -155,19 +156,29 @@ feature -- Basic operations
 						grid_label_item ?= current_row @ (current_index_in_row - 1)
 
 						temp := (column_offsets @ (current_index_in_row)) - (virtual_x_position - horizontal_buffer_offset)
+						current_column_width := column_offsets @ (column_counter + 1) - column_offsets @ (column_counter)
 						
 						grid.drawable.set_foreground_color (red)
-						grid.drawable.fill_rectangle (temp, y, column_offsets @ (column_counter + 1) - column_offsets @ (column_counter), height)
+						grid.drawable.fill_rectangle (temp, y, current_column_width, height)
 						grid.drawable.set_foreground_color (black)
 						grid.drawable.draw_text_top_left (temp, y, grid_label_item.text)
 							
 						column_counter := column_counter + 1
 						current_index_in_row := current_index_in_row + 1
 					end
+					if temp + current_column_width < grid.width then
+							-- The columns that were drawn did not span to the very edge of
+							-- the grid, so we must fill the remainder in the current grid background color.
+						grid.drawable.set_foreground_color (grid.background_color)
+						grid.drawable.fill_rectangle (temp + current_column_width, y, grid.width - temp + current_column_width, height)
+					end
 					bool := True
 					row_counter := row_counter + 1
 					y := y + height
 				end
+			else
+				grid.drawable.set_foreground_color (grid.background_color)
+				grid.drawable.fill_rectangle (an_x, a_y, a_width, a_height)
 			end
 		end
 		

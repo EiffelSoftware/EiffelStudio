@@ -453,7 +453,8 @@ feature {NONE} -- Externals
 
 	eif_gen_create (obj: POINTER; pos: INTEGER): POINTER is
 			-- Adapt `args' for `idx' and `val'.
-		external "C use %"eif_gen_conf.h%""
+		external
+			"C signature (EIF_REFERENCE, int): EIF_REFERENCE use %"eif_gen_conf.h%""
 		end
 
 	eif_gen_param_id (stype: INTEGER; obj: POINTER; pos: INTEGER): INTEGER is
@@ -464,13 +465,14 @@ feature {NONE} -- Externals
 
 	eif_gen_typecode_str (obj: POINTER): STRING is
 			-- Code name for generic parameter `pos' in `obj'.
-		external "C use %"eif_gen_conf.h%""
+		external
+			"C signature (EIF_REFERENCE): EIF_REFERENCE use %"eif_gen_conf.h%""
 		end
 
 	eif_gen_count (obj: POINTER): INTEGER is
 			-- Number of generic parameters of `obj'.
 		external
-			"C use %"eif_gen_conf.h%""
+			"C signature (EIF_REFERENCE): int use %"eif_gen_conf.h%""
 		end
 
 feature -- Obsolete

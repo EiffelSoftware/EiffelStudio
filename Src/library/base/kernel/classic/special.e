@@ -226,7 +226,7 @@ feature {NONE} -- Implementation
 	frozen sp_elem_size (p: POINTER): INTEGER is
 			-- Size of elements.
 		external
-			"C signature use %"eif_eiffel.h%""
+			"C signature (EIF_REFERENCE): EIF_INTEGER use %"eif_eiffel.h%""
 		end
 
 indexing

@@ -570,29 +570,17 @@ feature -- Debugging events
 				launch_stone (st)
 			end
 			object_tool.enable_refresh
-			debug ("debugger_interface")
-				io.putstring ("refreshing display (dixit EB_DEBUGGER_MANAGER)%N")
-			end
 			window_manager.quick_refresh_all
 				-- Fill in the stack tool.
-			debug ("debugger_interface")
-				io.putstring ("Displaying the call stack (dixit EB_DEBUGGER_MANAGER)%N")
-			end
 			call_stack_tool.update
 				-- Fill in the object tool.
-			debug ("debugger_interface")
-				io.putstring ("Displaying the objects (dixit EB_DEBUGGER_MANAGER)%N")
-			end
 			object_tool.update
 			evaluator_tool.update
 			create stt.make
 			stt.add_string ("Application stopped")
 			stt.add_new_line
 			output_manager.process_text (stt)
-			debug ("debugger_interface")
-				io.putstring ("Application Stopped End (dixit EB_DEBUGGER_MANAGER)%N")
-			end
-			
+			debugging_window.window.raise
 			from
 				observers.start
 			until
@@ -600,6 +588,10 @@ feature -- Debugging events
 			loop
 				observers.item.on_application_stopped
 				observers.forth
+			end
+			
+			debug ("debugger_interface")
+				io.putstring ("Application Stopped End (dixit EB_DEBUGGER_MANAGER)%N")
 			end
 		end
 

@@ -5,13 +5,15 @@ root
 	emitter: make
 
 default
+	msil_assembly_compatibility ("None")
+	msil_assembly_compatibility ("None")
 	assertion (no)
 	msil_generation (yes)
 	arguments ("/init")
 	arguments (" ")
 	disabled_debug (yes)
 	debug (no)
-	line_generation (no)
+	line_generation (yes)
 	il_verifiable (yes)
 	cls_compliant (yes)
 	dotnet_naming_convention (no)
@@ -52,11 +54,16 @@ cluster
 		end
 
 assembly
-	mscorlib:	"mscorlib","1.0.3300.0","neutral","b77a5c561934e089"
+	mscorlib: "mscorlib", "1.0.3300.0", "neutral", "b77a5c561934e089"
 
-	system_:	"System","1.0.3300.0","neutral","b77a5c561934e089"
+	system_: "System", "1.0.3300.0", "neutral", "b77a5c561934e089"
+		prefix
+			"SYSTEM_DLL_"
+		end
 
-	system_xml:	"System.Xml","1.0.3300.0","neutral","b77a5c561934e089"
-
+	system_xml: "System.Xml", "1.0.3300.0", "neutral", "b77a5c561934e089"
+		prefix
+			"XML_"
+		end
 
 end

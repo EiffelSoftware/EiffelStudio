@@ -47,9 +47,9 @@ feature -- Basic Operations
 				last_error := No_error
 				last_error_context := Void
 				create xml_reader.make_from_url (path.to_cil)
-				xml_reader.set_whitespace_handling (feature {WHITESPACE_HANDLING}.none)
+				xml_reader.set_whitespace_handling (feature {XML_WHITESPACE_HANDLING}.none)
 				read_next
-				if successful and xml_reader.get_node_type = feature {XML_NODE_TYPE}.xml_declaration then
+				if successful and xml_reader.get_node_type = feature {XML_XML_NODE_TYPE}.xml_declaration then
 					read_next
 					deserialized_object := reference_from_xml
 				else
@@ -81,7 +81,7 @@ feature {NONE} -- Implementation
 		require
 			non_void_object: obj /= Void
 			non_void_reader: xml_reader /= Void
-			valid_reader: xml_reader.get_node_type = feature {XML_NODE_TYPE}.element and xml_reader.get_name.equals (Reference_node)
+			valid_reader: xml_reader.get_node_type = feature {XML_XML_NODE_TYPE}.element and xml_reader.get_name.equals (Reference_node)
 		local
 			done: BOOLEAN
 			i, ft: INTEGER
@@ -91,9 +91,9 @@ feature {NONE} -- Implementation
 			from
 				read_next
 			until
-				xml_reader.get_node_type = feature {XML_NODE_TYPE}.end_element or not successful
+				xml_reader.get_node_type = feature {XML_XML_NODE_TYPE}.end_element or not successful
 			loop
-				if xml_reader.get_node_type = feature {XML_NODE_TYPE}.element then
+				if xml_reader.get_node_type = feature {XML_XML_NODE_TYPE}.element then
 					f_table.search (create {STRING}.make_from_cil (xml_reader.get_attribute (Field_name_xml_attribute)))
 					if f_table.found then
 						i := f_table.found_item
@@ -174,7 +174,7 @@ feature {NONE} -- Implementation
 			-- Instance of array as described in XML
 		require
 			non_void_xml_reader: xml_reader /= Void
-			valid_xml_reader: xml_reader.get_node_type = feature {XML_NODE_TYPE}.element and xml_reader.get_name.equals (Array_node)
+			valid_xml_reader: xml_reader.get_node_type = feature {XML_XML_NODE_TYPE}.element and xml_reader.get_name.equals (Array_node)
 		local
 			lower, count: INTEGER
 			s: SYSTEM_STRING
@@ -222,7 +222,7 @@ feature {NONE} -- Implementation
 		ensure
 			array_initialized: successful implies Result /= Void
 			non_void_xml_reader: xml_reader /= Void
-			valid_xml_reader: xml_reader.get_node_type = feature {XML_NODE_TYPE}.end_element and xml_reader.get_name.equals (Array_node)
+			valid_xml_reader: xml_reader.get_node_type = feature {XML_XML_NODE_TYPE}.end_element and xml_reader.get_name.equals (Array_node)
 		end
 
 	reference_from_xml: ANY is
@@ -254,7 +254,7 @@ feature {NONE} -- Implementation
 		ensure
 			object_initialized: successful implies Result /= Void
 			non_void_xml_reader: xml_reader /= Void
-			valid_xml_reader: xml_reader.get_node_type = feature {XML_NODE_TYPE}.end_element and xml_reader.get_name.equals (Reference_node)
+			valid_xml_reader: xml_reader.get_node_type = feature {XML_XML_NODE_TYPE}.end_element and xml_reader.get_name.equals (Reference_node)
 		end
 
 	read_next is
@@ -275,14 +275,14 @@ feature {NONE} -- Implementation
 		require
 			non_void_item_processor: item_processor /= Void
 			non_void_xml_reader: xml_reader /= Void
-			valid_xml_reader: xml_reader.get_node_type = feature {XML_NODE_TYPE}.element and xml_reader.get_name.equals (Array_node)
+			valid_xml_reader: xml_reader.get_node_type = feature {XML_XML_NODE_TYPE}.element and xml_reader.get_name.equals (Array_node)
 		local
 			index: INTEGER
 		do
 			from
 				read_next
 			until
-				xml_reader.get_node_type = feature {XML_NODE_TYPE}.end_element or not successful
+				xml_reader.get_node_type = feature {XML_XML_NODE_TYPE}.end_element or not successful
 			loop
 				index := feature {CONVERT}.to_int_32_string (xml_reader.get_attribute (Field_name_xml_attribute))
 				if xml_reader.get_name.equals (Reference_node) then
@@ -472,7 +472,7 @@ feature {NONE} -- Implementation
 			put: array.item (index) = default_pointer + value.to_integer
 		end
 
-	xml_reader: XML_TEXT_READER
+	xml_reader: XML_XML_TEXT_READER
 			-- XML reader
 
 end -- class EIFFEL_XML_DESERIALIZER

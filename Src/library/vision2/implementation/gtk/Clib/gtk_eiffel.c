@@ -575,11 +575,15 @@ EIF_BOOLEAN c_gtk_widget_minimum_size_set (GtkWidget *w, guint width, guint heig
 
 /*********************************
  *
- * Function `c_gtk_widget_set_size'
+ * Function `c_gtk_widget_set_size' (1)
+ * 			`c_gtk_widget_minimum_width' (2)
+ * 			`c_gtk_widget_minimum_height' (3)
  *
- * Note : Allocates the widget size
+ * Note : (1) Allocates the widget size
+ * 		  (2) Gets the minimum width
+ * 		  (3) Gets the minimum height
  *
- * Author : Leila
+ * Author : Leila (1), Alex (2), (3)
  *
  *********************************/
 
@@ -593,6 +597,22 @@ void c_gtk_widget_set_size (GtkWidget *widget, int width, int height)
   allocation.height = height;
   
   gtk_widget_size_allocate (widget, &allocation);
+}
+
+EIF_INTEGER c_gtk_widget_minimum_width (GtkWidget *widget) 
+{
+	  GtkRequisition requisition;
+	    
+	  gtk_widget_size_request (widget, &requisition);
+	  return requisition.width;
+}
+
+EIF_INTEGER c_gtk_widget_minimum_height (GtkWidget *widget) 
+{
+	  GtkRequisition requisition;
+
+	  gtk_widget_size_request (widget, &requisition);
+	  return requisition.height;
 }
 
 /*********************************
@@ -1163,20 +1183,24 @@ void c_gtk_widget_set_bg_color (GtkWidget* widget, int r, int g, int b)
 {
 		GtkStyle* style;
 		int or, og, ob;
-
+int i;
 		style = gtk_widget_get_style(GTK_WIDGET(widget));
-
 		r *= 257; g *= 257; b *= 257;
-		
-		or = style->base[GTK_STATE_NORMAL].red;
-		og = style->base[GTK_STATE_NORMAL].green;
-		ob = style->base[GTK_STATE_NORMAL].blue;
+
+		or = style->bg[GTK_STATE_NORMAL].red;
+		og = style->bg[GTK_STATE_NORMAL].green;
+		ob = style->bg[GTK_STATE_NORMAL].blue;
 		
 		if(or != r || og != g || ob != b) {
 			style = gtk_style_copy (style);
-			style->base[GTK_STATE_NORMAL].red = r;
-			style->base[GTK_STATE_NORMAL].green = g;
-			style->base[GTK_STATE_NORMAL].blue = b;
+			for (i = 0; i < 5; i++) {
+				style->bg[i].red = r;
+				style->bg[i].green = g;
+				style->bg[i].blue = b;
+				style->base[i].red = r;
+				style->base[i].green = g;
+				style->base[i].blue = b;
+			}
 			gtk_widget_set_style(GTK_WIDGET(widget), style);
 		}
 }
@@ -1185,10 +1209,10 @@ void c_gtk_widget_get_bg_color (GtkWidget *widget, EIF_INTEGER *r, EIF_INTEGER *
 {
 		GtkStyle* style;
 		style = GTK_WIDGET(widget)->style;
-
-		*r = style->base[GTK_STATE_NORMAL].red;
-		*g = style->base[GTK_STATE_NORMAL].green;
-		*b = style->base[GTK_STATE_NORMAL].blue;
+		
+		*r = style->bg[GTK_STATE_NORMAL].red;
+		*g = style->bg[GTK_STATE_NORMAL].green;
+		*b = style->bg[GTK_STATE_NORMAL].blue;
 
 		*r /= 257; *g /= 257; *b /= 257;
 }
@@ -1197,20 +1221,28 @@ void c_gtk_widget_set_fg_color (GtkWidget* widget, int r, int g, int b)
 {
 		GtkStyle* style;
 		int or, og, ob;
+		int i;
 
 		style = gtk_widget_get_style(GTK_WIDGET(widget));
 
 		r *= 257; g *= 257; b *= 257;
 		
-		or = style->text[GTK_STATE_NORMAL].red;
+  		or = style->text[GTK_STATE_NORMAL].red;
 		og = style->text[GTK_STATE_NORMAL].green;
 		ob = style->text[GTK_STATE_NORMAL].blue;
 		
 		if(or != r || og != g || ob != b) {
+			gtk_widget_set_style(GTK_WIDGET(widget), style);
+  			
 			style = gtk_style_copy (style);
-			style->text[GTK_STATE_NORMAL].red = r;
-			style->text[GTK_STATE_NORMAL].green = g;
-			style->text[GTK_STATE_NORMAL].blue = b;
+			for (i = 0; i < 5; i++) {
+				style->fg[i].red = r;
+				style->fg[i].green = g;
+				style->fg[i].blue = b;
+				style->text[i].red = r;
+				style->text[i].green = g;
+				style->text[i].blue = b;
+			}	
 			gtk_widget_set_style(GTK_WIDGET(widget), style);
 		}
 }
@@ -1220,10 +1252,9 @@ void c_gtk_widget_get_fg_color (GtkWidget* widget, EIF_INTEGER* r, EIF_INTEGER* 
 		GtkStyle* style;
 		style = GTK_WIDGET(widget)->style;
 
-		*r = style->text[GTK_STATE_NORMAL].red;
-		*g = style->text[GTK_STATE_NORMAL].green;
-		*b = style->text[GTK_STATE_NORMAL].blue;
+		*r = style->fg[GTK_STATE_NORMAL].red;
+		*g = style->fg[GTK_STATE_NORMAL].green;
+		*b = style->fg[GTK_STATE_NORMAL].blue;
 
 		*r /= 257; *g /= 257; *b /= 257;
 }
-

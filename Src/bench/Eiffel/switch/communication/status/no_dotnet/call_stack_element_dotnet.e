@@ -17,9 +17,7 @@ feature {NONE} -- Initialization
 
 feature -- Properties
 
-	is_eiffel_call_stack_element: BOOLEAN is
-		do
-		end
+	is_eiffel_call_stack_element: BOOLEAN is False
 
 	current_object: ABSTRACT_DEBUG_VALUE is
 			-- Current object value

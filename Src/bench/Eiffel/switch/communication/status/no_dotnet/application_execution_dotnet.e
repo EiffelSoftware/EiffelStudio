@@ -46,7 +46,7 @@ feature {APPLICATION_EXECUTION} -- Properties
 
 feature -- Trigger eStudio done
 
-	callback_notification_processing: BOOLEAN		
+	callback_notification_processing: BOOLEAN is False
 	
 feature -- Bridge to Debugger
 
@@ -55,12 +55,7 @@ feature -- Bridge to Debugger
 		do
 		end
 
-	exception_handled: BOOLEAN is
-			-- Last Exception is handled ?
-			-- if True => first chance
-			-- if False => The execution will terminate after.
-		do
-		end
+	exception_handled: BOOLEAN is False
 
 	exception_message: STRING is
 		do
@@ -135,6 +130,6 @@ feature -- Object Keeper
 
 	know_about_kept_object (a_address: STRING): BOOLEAN is
 		do
-		end		
+		end
 
 end -- class APPLICATION_EXECUTION_DOTNET

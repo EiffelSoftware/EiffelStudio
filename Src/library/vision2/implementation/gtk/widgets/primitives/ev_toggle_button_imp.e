@@ -36,7 +36,10 @@ feature {NONE} -- Initialization
 
 			-- Create the label with a text set to "".
 			create_text_label ("")
-               end
+
+ 			-- We center-align and vertical_center-position the text.
+			gtk_misc_set_alignment (gtk_misc (label_widget), 0.5, 0.5)
+              end
 	
 feature -- Status report
 	

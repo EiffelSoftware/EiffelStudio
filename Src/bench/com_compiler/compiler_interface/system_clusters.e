@@ -119,8 +119,8 @@ feature -- Basic Operations
 			-- `cluster_path' [in].
 		require else
 			non_void_cluster_name: cluster_name /= Void
+			valid_cluster_name: not cluster_name.is_empty
 			non_void_cluster_path: cluster_path /= Void
-			valid_cluster_name: is_valid_name (cluster_name);
 			cluster_already_exists: not has_cluster (cluster_name)
 		local
 			cluster_sd: CLUSTER_SD
@@ -401,60 +401,8 @@ feature -- Validation
 			-- Checks to see if 'a_name' is a valid cluster name.
 		require else
 			non_void_name: a_name /= Void
-		local
-			i: INTEGER
-			lower_name: STRING
 		do
-			if not a_name.is_empty then
-				Result := true
-				
-				if a_name.is_empty or a_name = Void then
-					Result := false
-				end
-				
-				-- check for illegal characters
-				from 
-					i := 1
-				until
-					i > a_name.count or Result = false
-				loop
-					inspect a_name.item (i)
-					when 'A'..'Z', 'a'..'z' then
-						Result := true
-					when '0'..'9', '_' then
-						if i > 1 then
-							Result := true
-						else
-							Result := false
-						end
-					else
-						Result := false
-					end
-					i := i + 1
-				end
-				
-				lower_name := a_name.clone (a_name)
-				lower_name.to_lower
-				
-				-- check the reserved words
-				if Result = true then
-					if ace_accesser /= Void then
-						from
-							ace_accesser.reserved_keywords.start
-						until
-							ace_accesser.reserved_keywords.after or Result = false
-						loop
-							if ace_accesser.reserved_keywords.item.is_equal (lower_name) then
-								Result := false
-							end	
-							ace_accesser.reserved_keywords.forth
-						end
-						
-					end
-				end	
-			else
-				Result := False
-			end
+			Result := not a_name.is_empty
 		end	
 
 feature {NONE} -- Implementation		

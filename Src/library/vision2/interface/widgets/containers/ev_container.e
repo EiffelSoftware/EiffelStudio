@@ -215,7 +215,7 @@ feature -- Contract support
 			c: CURSOR
 			l: LINEAR [EV_WIDGET]
 			ll: LINKED_LIST [EV_WIDGET]
-			cs: CURSOR_STRUCTURE
+			cs: CURSOR_STRUCTURE [EV_WIDGET]
 		do
 			create ll.make
 			Result := True
@@ -361,6 +361,9 @@ end -- class EV_CONTAINER
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.27  2000/03/18 00:05:03  brendel
+--| Added generic parameter.
+--|
 --| Revision 1.26  2000/03/17 23:58:28  oconnor
 --| fixed attempt to get curesor from LINEAR
 --|

@@ -15,6 +15,10 @@ inherit
 			add_include_path,
 			remove_include_path,
 			replace_object_file,
+			dotnet_resources,
+			add_dotnet_resource,
+			remove_dotnet_resource,
+			replace_dotnet_resource,
 			store
 		end
 	LACE_AST_FACTORY
@@ -32,27 +36,46 @@ feature {NONE} -- Implementation
 			ace_accesser := ace
 			object_files_list := externals (object_keyword)
 			include_paths_list := externals (include_path_keyword)
+			dotnet_resources_list := externals (dotnet_resource_keyword)
 		end
 		
-
 feature -- Access
 
 	object_files: EIFFEL_STRING_ENUMERATOR is
-			-- retieve tje list of assemblies
+			-- retrieves enumerator of project object files
 		do
 			create Result.make (object_files_list);
 		end
 		
 	include_paths: EIFFEL_STRING_ENUMERATOR is
-			-- retieve tje list of assemblies
+			-- retrieves enumerator of project include paths
 		do
 			create Result.make (include_paths_list);
 		end
 		
-feature {NONE} -- Access
+	dotnet_resources: EIFFEL_STRING_ENUMERATOR is
+			-- retrieves enumerator of project .NET resources
+		do
+			create Result.make (dotnet_resources_list);
+		end
+		
+feature -- Access
+
+	object_files_list: ARRAYED_LIST [STRING]
+			-- Object files
+			
+	include_paths_list: ARRAYED_LIST [STRING]
+			-- Include paths
+			
+	dotnet_resources_list: ARRAYED_LIST [STRING]
+			-- .NET resources
+	
+	ace_accesser: ACE_FILE_ACCESSER
+		
+feature {NONE} -- Internal Access
 
 	externals (external_name: STRING): ARRAYED_LIST [STRING] is
-			-- retieve a list of externals by name
+			-- retieve a list of externals by name `external_name'
 		require
 			ace_exists: ace_accesser /= Void
 		local
@@ -71,15 +94,15 @@ feature {NONE} -- Access
 					el.after
 				loop
 					condition := false
-					-- check to see what type of external needs extracting
-					-- TODO: Remove the following line and implement as search and add
-					-- in the corresponding features
 					if external_name.is_equal (include_path_keyword) then
 						condition := el.item.language_name.is_include_path	
 					end
 					if external_name.is_equal (object_keyword) then
 						condition := el.item.language_name.is_object	
 					end
+					if external_name.is_equal (dotnet_resource_keyword) then
+						condition := el.item.language_name.is_dotnet_resource	
+					end					
 					if condition then
 						-- ertrieve the files names 		
 						file_names := el.item.file_names
@@ -104,9 +127,9 @@ feature {NONE} -- Access
 		
 feature -- Status report
 
-	is_external_equal(first, other: STRING): BOOLEAN is
-			-- are the two externals the same
-			-- case and quote insesitive
+	is_external_equal (first, other: STRING): BOOLEAN is
+			-- are externals `first' and `other' equal with disregard
+			-- to case and leading and trailing quotes
 		require
 			first_exists: first /= Void
 			valid_first: not first.is_empty
@@ -129,13 +152,13 @@ feature -- Status report
 			
 		end
 		
-	format_external(extern: STRING): STRING is
-			-- format the external 'extern' to a ace compatible format
+	format_external (external_item: STRING): STRING is
+			-- format the external `extern' to a ace compatible format
 		require
-			external_exists: extern /= Void
-			valid_external: not extern.is_empty
+			non_void_external_item: external_item /= Void
+			valid_external_item: not external_item.is_empty
 		do
-			Result := extern.clone(extern)
+			Result := clone (external_item)
 			if not (Result.item (1) = '"') then
 				Result.prepend_character('"')
 			end
@@ -144,242 +167,246 @@ feature -- Status report
 			end
 			Result.replace_substring_all ("/", "\")
 		end
-		
-		
-feature -- Status setting
 
 feature -- Element change
 
 	add_object_file (object_file: STRING) is
-			-- adds and object file to the list of object files
+			-- adds `object_file' to `object_files_list'
 		require else
-			valid_name: object_file /= Void
-			non_empty_name: object_file.count > 0
-		local
-			path: STRING
-			object_file_copy: STRING
-			eiffel_dir: STRING
-			addable: BOOLEAN
+			non_void_object_file: object_file /= Void
+			valid_object_file: not object_file.is_empty
 		do
-			path := format_external (object_file)
-			
-			object_file_copy := object_file.clone (object_file)
-			eiffel_dir := ace_accesser.ise_eiffel.clone (ace_accesser.ise_eiffel)
-			
-			object_file_copy.to_lower
-			eiffel_dir.to_lower
-			
-			if object_file_copy.substring_index (eiffel_dir, 1) = 1 then
-				path := path.substring (eiffel_dir.count + 1,  path.count)
-				path.prepend (ace_accesser.Ise_eiffel_envvar)
-			end
-			
-			from
-				addable := true
-				object_files_list.start
-			until
-				object_files_list.after or not addable
-			loop
-				if is_external_equal(path, object_files_list.item) then
-					addable := false
-				end
-				object_files_list.forth
-			end
-			
-			if addable then
-				object_files_list.extend (path)
-			end
+			add_external (object_file, object_files_list)
 		end
 		
 	remove_object_file (object_file: STRING) is
-			-- removes and object file from the list of object files
+			-- removes `object_file' from `object_files_list'
 		require else
-			valid_name: object_file /= Void
-			non_empty_name: object_file.count > 0
+			non_void_object_file: object_file /= Void
+			valid_object_file: not object_file.is_empty
 		do
-			from
-				object_files_list.start
-			until
-				object_files_list.after
-			loop
-				if is_external_equal (object_files_list.item, object_file) then
-					object_files_list.remove
-				end
-				if not object_files_list.after then
-					object_files_list.forth
-				end
-			end
+			remove_external (object_file, object_files_list)
 		end
 		
-	replace_object_file (new_oject_file, old_object_file: STRING) is
-			-- replace an object file with a new one
+	replace_object_file (new_object_file, object_file: STRING) is
+			-- replaces `object_file' with `new_oject_file' in `object_files_list'
 		require else
-			valid_old_file: old_object_file /= Void
-			non_empty_old_file: old_object_file.count > 0
-			valid_new_file: new_oject_file /= Void
-			non_empty_new_file: new_oject_file.count > 0
+			non_void_new_object_file: new_object_file /= Void
+			valid_new_object_file: not new_object_file.is_empty
+			non_void_object_file: object_file /= Void
+			valid_object_file: not object_file.is_empty
 		do
-			from
-				object_files_list.start
-			until
-				object_files_list.after
-			loop
-				if is_external_equal(object_files_list.item, old_object_file) then
-					object_files_list.replace (format_external(new_oject_file))
-				end
-				object_files_list.forth
-			end
+			replace_external (new_object_file, object_file, object_files_list)
 		end
-		
 		
 	add_include_path (include_path: STRING) is
-			-- adds and include path to the list of include paths 
+			-- adds `include_path' to `include_paths_list' 
 		require else
-			valid_name: include_path /= Void
-			non_empty_name: include_path.count > 0
-		local
-			addable: BOOLEAN
-			path: STRING
-			include_path_copy: STRING
-			eiffel_dir: STRING
+			non_void_include_path: include_path /= Void
+			valid_include_path: not include_path.is_empty
 		do
-			path := format_external (include_path)
-			
-			include_path_copy := include_path.clone (include_path)
-			eiffel_dir := ace_accesser.ise_eiffel.clone (ace_accesser.ise_eiffel)
-
-			include_path_copy.to_lower
-			eiffel_dir.to_lower
-	
-			if include_path_copy.substring_index (eiffel_dir, 1) = 1 then
-				path := path.substring (eiffel_dir.count + 1,  path.count)
-				path.prepend (ace_accesser.Ise_eiffel_envvar)
-			end
-			
-			from
-				addable := true
-				include_paths_list.start
-			until
-				include_paths_list.after or not addable
-			loop
-				if is_external_equal(path, include_paths_list.item) then
-					addable := false
-				end
-				include_paths_list.forth
-			end
-			
-			if addable then
-				include_paths_list.extend (path)
-			end
+			add_external (include_path, include_paths_list)			
 		end
 		
 	remove_include_path (include_path: STRING) is
-			-- removes and include path from the list of include paths
+			-- removes `include_path' from `include_paths_list'
 		require else
-			valid_name: include_path /= Void
-			non_empty_name: include_path.count > 0
+			non_void_include_path: include_path /= Void
+			valid_include_path: not include_path.is_empty
 		do
-			from
-				include_paths_list.start
-			until
-				include_paths_list.after
-			loop
-				if is_external_equal(include_paths_list.item, include_path) then
-					include_paths_list.remove
-				end
-				if not include_paths_list.after then
-					include_paths_list.forth
-				end
-			end
-		ensure then
-			removed: not include_paths_list.has (include_path)
+			remove_external (include_path, include_paths_list)	
 		end
 		
-	replace_include_path (new_include_path, old_include_path: STRING) is
-			-- replace an include path with a new one
+	replace_include_path (new_include_path, include_path: STRING) is
+			-- replaces `include_path' with `new_include_path' in `include_paths_list'
 		require else
-			valid_old_path: old_include_path /= Void
-			non_empty_old_path: old_include_path.count > 0
-			valid_new_path: new_include_path /= Void
-			non_empty_new_path: new_include_path.count > 0
+			non_void_new_include_path: new_include_path /= Void
+			valid_new_include_path: not new_include_path.is_empty
+			non_void_include_path: include_path /= Void
+			valid_include_path: not include_path.is_empty
 		do
-			from
-				include_paths_list.start
-			until
-				include_paths_list.after
-			loop
-				if is_external_equal(include_paths_list.item, old_include_path) then
-					include_paths_list.replace (format_external(new_include_path))
-				end
-				include_paths_list.forth
-			end
+			replace_external (new_include_path, include_path, include_paths_list)
+		end
+		
+	add_dotnet_resource (dotnet_resource: STRING) is
+			-- adds `dotnet_resource' to `dotnet_resources_list' 
+		require else
+			non_void_dotnet_resource: dotnet_resource /= Void
+			valid_dotnet_resource: not dotnet_resource.is_empty
+		do
+			add_external (dotnet_resource, dotnet_resources_list)			
+		end
+		
+	remove_dotnet_resource (dotnet_resource: STRING) is
+			-- removes `dotnet_resource' from `include_paths_list'
+		require else
+			non_void_dotnet_resource: dotnet_resource /= Void
+			valid_dotnet_resource: not dotnet_resource.is_empty
+		do
+			remove_external (dotnet_resource, dotnet_resources_list)	
+		end
+		
+	replace_dotnet_resource (new_dotnet_resource, dotnet_resource: STRING) is
+			-- replaces `dotnet_resource' with `new_dotnet_resource' in `dotnet_resources_list'
+		require else
+			non_void_new_dotnet_resource: new_dotnet_resource /= Void
+			valid_new_dotnet_resource: not new_dotnet_resource.is_empty
+			non_void_dotnet_resource: dotnet_resource /= Void
+			valid_dotnet_resource: not dotnet_resource.is_empty
+		do
+			replace_external (new_dotnet_resource, dotnet_resource, dotnet_resources_list)
 		end
 
 feature -- Basic operations
 
 	store is
 			-- save the current externals to the ace file
+		require else
+			non_void_root_ast: ace_accesser.root_ast /= Void
 		local
 			externals_list: LACE_LIST [LANG_TRIB_SD]
-			external_item: LANG_TRIB_SD
-			file_names: LACE_LIST [ID_SD]
-			file_name: ID_SD
 		do
-			create externals_list.make (0)
+			-- create new external ast list
+			create externals_list.make (include_paths_list.count + object_files_list.count + dotnet_resources_list.count)
 			ace_accesser.root_ast.set_externals (externals_list)
 			
-			-- Add the include paths to the ace
-			if include_paths_list.count > 0 then
-				create file_names.make (include_paths_list.count)
-				file_name := new_id_sd(include_path_keyword, True)
-				
-				from 
-					include_paths_list.start
-				until
-					include_paths_list.after
-				loop
-					-- replace all " in string with %"
-					file_names.extend (new_id_sd (include_paths_list.item, True))
-					include_paths_list.forth
-				end
-				
-				create external_item.initialize (create {LANGUAGE_NAME_SD}.initialize (file_name), file_names)
-				externals_list.extend (external_item)
-			end
-			
-			-- Add the object files to the ace
-			if object_files_list.count > 0 then
-				create file_names.make (object_files_list.count)
-				file_name := new_id_sd (object_keyword, True)
-				
-				from 
-					object_files_list.start
-				until
-					object_files_list.after
-				loop
-					-- replace all " in string with %"
-					file_names.extend (new_id_sd (object_files_list.item, True))
-					object_files_list.forth
-				end
-				
-				create external_item.initialize (create {LANGUAGE_NAME_SD}.initialize (file_name), file_names)
-				externals_list.extend (external_item)
-			end
+			store_externals (include_paths_list, include_path_keyword)
+			store_externals (object_files_list, object_keyword)
+			store_externals (dotnet_resources_list, dotnet_resource_keyword)
 			ace_accesser.apply
 		end
-		
 
 feature {NONE} -- Implementation
 
-	object_files_list: ARRAYED_LIST [STRING]
-	include_paths_list: ARRAYED_LIST [STRING]
-	
-	ace_accesser: ACE_FILE_ACCESSER
-	
-	include_path_keyword: STRING is "include_path"
-	object_keyword: STRING is "object"
+	add_external (external_item: STRING; external_list: ARRAYED_LIST [STRING] ) is
+			-- adds `external_item' to `external_list'
+		require
+			non_void_external: external_item /= Void
+			valid_external: not external_item.is_empty
+			non_void_external_list: external_list /= Void
+		local
+			formatted_path: STRING
+			external_copy: STRING
+			eiffel_dir: STRING
+			can_add: BOOLEAN
+		do
+			formatted_path := format_external (external_item)
 
+			-- replace path to Eiffel installation with $ISE_EIFFEL			
+			external_copy := clone (external_item)
+			eiffel_dir := ace_accesser.ise_eiffel.clone (ace_accesser.ise_eiffel)
+			external_copy.to_lower
+			eiffel_dir.to_lower
+			if external_copy.substring_index (eiffel_dir, 1) = 1 then
+				formatted_path := formatted_path.substring (eiffel_dir.count + 1,  formatted_path.count)
+				formatted_path.prepend (ace_accesser.Ise_eiffel_envvar)
+			end
+			
+			from
+				can_add := true
+				external_list.start
+			until
+				external_list.after or not can_add
+			loop
+				if is_external_equal (formatted_path, external_list.item) then
+					can_add := false
+				end
+				external_list.forth
+			end
+			
+			if can_add then
+				external_list.extend (formatted_path)
+			end
+		end
+		
+	remove_external (external_item: STRING; external_list: ARRAYED_LIST [STRING]) is
+			-- removes `external_item' from `external_list'
+		require
+			non_void_external: external_item /= Void
+			valid_external: not external_item.is_empty
+			non_void_external_list: external_list /= Void
+		do
+			from
+				external_list.start
+			until
+				external_list.after
+			loop
+				if is_external_equal (external_list.item, external_item) then
+					external_list.remove
+				end
+				if not external_list.after then
+					external_list.forth
+				end
+			end
+		end
+		
+	replace_external (new_external_item, external_item: STRING; external_list: ARRAYED_LIST [STRING]) is
+			-- replace `external_item' with `new_external_item' in `external_list'
+		require
+			non_void_new_external: new_external_item /= Void
+			valid_new_external: not new_external_item.is_empty
+			non_void_external: external_item /= Void
+			valid_external: not external_item.is_empty
+			non_void_external_list: external_list /= Void
+		do
+			from
+				external_list.start
+			until
+				external_list.after
+			loop
+				if is_external_equal(external_list.item, external_item) then
+					external_list.replace (format_external (new_external_item))
+				end
+				external_list.forth
+			end
+		end
+
+	store_externals (external_list: ARRAYED_LIST [STRING]; external_keyword: STRING) is
+			-- store contents of `external_list' in external `external_keyword' section
+		require
+			non_void_external_list: external_list /= Void
+			non_void_external_keyword: external_keyword /= Void
+			valid_external_keyword: external_keyword.is_equal (include_path_keyword) or 
+									external_keyword.is_equal (object_keyword) or 
+									external_keyword.is_equal (dotnet_resource_keyword)
+			non_void_ast_externals: ace_accesser.root_ast.externals /= Void
+		local
+			external_item: LANG_TRIB_SD
+			file_names: LACE_LIST [ID_SD]
+			file_name: ID_SD
+		do		
+			if not external_list.is_empty then
+				create file_names.make (external_list.count)
+				file_name := new_id_sd (external_keyword, True)
+				from 
+					external_list.start
+				until
+					external_list.after
+				loop
+					-- replace all " in string with %"
+					file_names.extend (new_id_sd (external_list.item, True))
+					external_list.forth
+				end
+				create external_item.initialize (create {LANGUAGE_NAME_SD}.initialize (file_name), file_names)
+				ace_accesser.root_ast.externals.extend (external_item)
+			end
+		end
+
+feature {NONE} -- Keyword Constants
+
+	include_path_keyword: STRING is "include_path"
+			-- keyword for ace include paths
+			
+	object_keyword: STRING is "object"
+			-- keyword for ace object files
+			
+	dotnet_resource_keyword: STRING is "dotnet_resource"
+			-- keyword for ace .NET resources
+	
 invariant
-	invariant_clause: True -- Your invariant here
+	non_void_ace_accesser: ace_accesser /= Void
+	non_void_include_paths_list: include_paths_list /= Void
+	non_void_object_files_list: object_files_list /= Void
+	non_void_dotnet_resources_list: dotnet_resources_list /= Void
 
 end -- class SYSTEM_EXTERNALS

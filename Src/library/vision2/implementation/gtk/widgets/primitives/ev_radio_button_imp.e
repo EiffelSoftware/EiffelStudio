@@ -50,6 +50,7 @@ feature {NONE} -- Initialization
 		end
 
 	initialize is
+			-- Initialize `Current'
 		do
 			Precursor
 			align_text_left

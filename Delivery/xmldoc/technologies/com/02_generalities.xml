@@ -1,7 +1,7 @@
 <document title="Generalities" output="studio">
 	<meta_data/>
 	<paragraph>
-		<link/>COM is a binary standard that describes how the component can communicate with the outer-world. The component communicates through well defined interfaces. Each interface is a specification of a group of properties and methods, and it does not contain the implementation of these routines but only their specification (signatures). The actual implementation lies in the coclass. There can be different implementations of a same interface in different coclasses. Finally, each coclass can be instantiated using a class object or class factory. These three notions will be discussed further in the forthcoming paragraphs. 
+		COM is a binary standard that describes how the component can communicate with the outer-world. The component communicates through well defined interfaces. Each interface is a specification of a group of properties and methods, and it does not contain the implementation of these routines but only their specification (signatures). The actual implementation lies in the coclass. There can be different implementations of a same interface in different coclasses. Finally, each coclass can be instantiated using a class object or class factory. These three notions will be discussed further in the forthcoming paragraphs. 
 		<seealso>
 			<bold>See Also</bold>
 			<line_break/>

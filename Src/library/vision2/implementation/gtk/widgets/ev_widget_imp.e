@@ -74,9 +74,9 @@ feature {NONE} -- Initialization
 			if needs_event_box then
 				feature {EV_GTK_EXTERNALS}.gtk_widget_set_events (c_object, Gdk_events_mask)
 			end
-		--	if not feature {EV_GTK_EXTERNALS}.gtk_widget_no_window (visual_widget) then
+			if not feature {EV_GTK_EXTERNALS}.gtk_widget_no_window (visual_widget) then
 				feature {EV_GTK_EXTERNALS}.gtk_widget_add_events (visual_widget, Gdk_events_mask)
-		--	end			
+			end			
 		end
 		
 

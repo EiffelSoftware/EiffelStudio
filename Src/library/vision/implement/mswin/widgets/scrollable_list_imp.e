@@ -486,6 +486,9 @@ feature -- Element change
 			i: INTEGER
 		do
 			ll_prune (an_item)
+			if exhausted then
+				index := 1
+			end
 			if realized then
 				i := find_string_exact (index - 1, an_item.value)
 				if i /= -1 then
@@ -849,7 +852,7 @@ feature {NONE} -- Implementation
 					i := 0
 					private_selected_positions.wipe_out
 				until
-					i >= count
+					i >= wel_count
 				loop
 					if is_selected (i) then
 						private_selected_positions.extend (i + 1)
@@ -861,7 +864,7 @@ feature {NONE} -- Implementation
 					i := 0
 					private_selected_position := 0
 				until
-					i >= count or private_selected_position /= 0
+					i >= wel_count or private_selected_position /= 0
 				loop
 					if is_selected (i) then
 						private_selected_position := i + 1
@@ -975,6 +978,8 @@ feature {NONE} -- Implementation
 				forth
 			end
 			go_i_th (pos)
+		ensure
+			consistent_count: count = wel_count
 		end
 
 	select_the_items is

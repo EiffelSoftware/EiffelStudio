@@ -68,7 +68,7 @@ feature {NONE} -- Initialization
 			C.gtk_widget_set_default_colormap (C.gdk_rgb_get_cmap)
 			C.gtk_widget_set_default_visual (C.gdk_rgb_get_visual)
 			tooltips := C.gtk_tooltips_new
-			set_tooltip_delay (250)
+			set_tooltip_delay (500)
 			create window_oids.make
 
 			create temp_font
@@ -80,11 +80,7 @@ feature {NONE} -- Initialization
 			if temp_int >= 8 and then temp_int <= 16 then
 				temp_font.set_height (temp_int)
 			else
-				if C.gdk_screen_width > 1024 then
-					temp_font.set_height (12)
-				else
-					temp_font.set_height (10)
-				end
+				temp_font.set_height (10)
 			end
 			temp_font_imp ?= temp_font.implementation
 	
@@ -490,6 +486,9 @@ end -- class EV_APPLICATION_IMP
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.33  2001/06/07 23:38:33  king
+--| Updated font size init
+--|
 --| Revision 1.32  2001/06/07 23:08:03  rogers
 --| Merged DEVEL branch into Main trunc.
 --|

@@ -206,7 +206,7 @@ feature
 	build_ast: CLASS_AS is
 			-- Parse the file and generate the AST
 		local
-			file: PLAIN_TEXT_FILE;
+			file: RAW_FILE;
 			class_file_name: STRING;
 			vd21: VD21;
 		do

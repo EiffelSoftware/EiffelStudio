@@ -124,7 +124,7 @@ feature -- Removal
 				if not delete_result then
 					debug ("WEL")
 						create l_wel_error
-						io.putstring ("Unable to Destroy Icon/Cursor, Error=" +
+						io.put_string ("Unable to Destroy Icon/Cursor, Error=" +
 							l_wel_error.last_error_code.out)
 						print (Current)
 					end

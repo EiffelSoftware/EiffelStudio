@@ -260,7 +260,7 @@ feature {NONE} -- WEL Implementation
 				paint_dc.set_background_color (control.background_color)
 				brush := allocated_brushes.get (Void, control.background_color)
 				debug ("WEL")
-					io.putstring ("Warning, there is no `decrement_reference'%Nfor the previous brush%N")
+					io.put_string ("Warning, there is no `decrement_reference'%Nfor the previous brush%N")
 				end
 				set_message_return_value (brush.to_integer)
 				disable_default_processing

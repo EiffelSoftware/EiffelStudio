@@ -47,7 +47,7 @@ feature {NONE} -- Initialization
 			-- Load the resource by an `id'
 		do
 			debug ("WEL_GDI_COUNT")
-				io.putstring ("Creating WEL_BITMAP")
+				io.put_string ("Creating WEL_BITMAP")
 			end
 			Precursor {WEL_RESOURCE} (id)
 			gdi_make

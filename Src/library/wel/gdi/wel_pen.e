@@ -39,7 +39,7 @@ feature {NONE} -- Initialization
 			if item = a_default_pointer then
 				debug("WEL")
 					create l_wel_error
-					io.putstring("Error while creating a pen in class WEL_PEN.error_code = " +
+					io.put_string ("Error while creating a pen in class WEL_PEN.error_code = " +
 						l_wel_error.last_error_code.out+"%N")
 				end
 			end

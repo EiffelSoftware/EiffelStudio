@@ -74,7 +74,7 @@ feature {NONE} -- Removal
 				delete_result := cwin_delete_object (item)
 				debug ("WEL")
 					if not delete_result then
-						io.putstring ("DeleteObject failed for the following object%N")
+						io.put_string ("DeleteObject failed for the following object%N")
 						print (Current)
 					end
 				end
@@ -91,7 +91,7 @@ feature {NONE} -- Implementation
 		do
 			gdi_objects_count_cell.replace (gdi_objects_count_cell.item + 1)
 			debug ("WEL_GDI_COUNT")
-				io.putstring ("GDI Objects = "+gdi_objects_count.out+"%N")
+				io.put_string ("GDI Objects = "+gdi_objects_count.out+"%N")
 			end
 		end
 
@@ -100,7 +100,7 @@ feature {NONE} -- Implementation
 		do
 			gdi_objects_count_cell.replace (gdi_objects_count_cell.item - 1)
 			debug ("WEL_GDI_COUNT")
-				io.putstring ("GDI Objects = "+gdi_objects_count.out+"%N")
+				io.put_string ("GDI Objects = "+gdi_objects_count.out+"%N")
 			end
 		end
 

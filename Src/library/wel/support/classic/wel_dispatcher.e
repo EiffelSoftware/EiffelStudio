@@ -52,7 +52,7 @@ feature {NONE} -- Implementation
 					debug ("win_dispatcher")
 						print ("After look at windows table ")
 						print (window.generating_type)
-						io.new_line
+						io.put_new_line
 					end
 					window.increment_level
 	

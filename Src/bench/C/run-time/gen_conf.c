@@ -346,8 +346,8 @@ rt_private EIF_LW_MUTEX_TYPE   *eif_gen_mutex = (EIF_LW_MUTEX_TYPE *) 0;
 
 rt_public int16 eifthd_compound_id (int16 *, int16, int16, int16 *);
 rt_public int16 eifthd_final_id (int16, int16 *, int16 **, int16, int );
-rt_public int eifthd_gen_count (EIF_REFERENCE );
-rt_public char eifthd_gen_typecode (EIF_REFERENCE , int);
+rt_shared int eifthd_gen_count_with_dftype (int16 );
+rt_shared char eifthd_gen_typecode_with_dftype (int16 , int);
 rt_public char eifthd_gen_is_uniform (EIF_REFERENCE , char);
 rt_public EIF_REFERENCE eifthd_gen_typecode_str (EIF_REFERENCE );
 rt_public int16 eifthd_gen_param_id (int16, EIF_REFERENCE , int);
@@ -435,13 +435,13 @@ rt_public int16 eif_final_id (int16 stype, int16 *ttable, int16 **gttable, int16
 }
 /*------------------------------------------------------------------*/
 
-rt_public int eif_gen_count (EIF_REFERENCE obj)
+rt_shared int eif_gen_count_with_dftype (int16 dftype)
 {
 	int result;
 
 	EIFMTX_LOCK;
 
-	result = eifthd_gen_count (obj);
+	result = eifthd_gen_count_with_dftype (dftype);
 
 	EIFMTX_UNLOCK;
 
@@ -449,13 +449,13 @@ rt_public int eif_gen_count (EIF_REFERENCE obj)
 }
 /*------------------------------------------------------------------*/
 
-rt_public char eif_gen_typecode (EIF_REFERENCE obj, int pos)
+rt_shared char eif_gen_typecode_with_dftype (int16 dftype, int pos)
 {
 	char    result;
 
 	EIFMTX_LOCK;
 
-	result = eifthd_gen_typecode (obj, pos);
+	result = eifthd_gen_typecode_with_dftype (dftype, pos);
 
 	EIFMTX_UNLOCK;
 
@@ -579,8 +579,8 @@ rt_public int eif_gen_conf (int16 source_type, int16 target_type)
 
 #define eif_compound_id           eifthd_compound_id
 #define eif_final_id              eifthd_final_id
-#define eif_gen_count             eifthd_gen_count
-#define eif_gen_typecode          eifthd_gen_typecode
+#define eif_gen_count_with_dftype eifthd_gen_count_with_dftype
+#define eif_gen_typecode_with_dftype  eifthd_gen_typecode_with_dftype
 #define eif_gen_is_uniform        eifthd_gen_is_uniform
 #define eif_gen_param_id          eifthd_gen_param_id
 #define eif_gen_create            eifthd_gen_create
@@ -1040,7 +1040,16 @@ rt_public int eif_gen_count (EIF_REFERENCE obj) {
 	if (obj == NULL) {
 		return 0;
 	} else {
+#ifdef EIF_THREADS
+		int16 result;
+			/* Critical section as we might compute a new `eif_anc_id_map' entry */
+		EIFMTX_LOCK;
+		result = eif_gen_count_with_dftype ((int16) Dftype(obj));
+		EIFMTX_UNLOCK;
+		return result;
+#else
 		return eif_gen_count_with_dftype ((int16) Dftype(obj));
+#endif
 	}
 }
 
@@ -1134,7 +1143,16 @@ rt_public char eif_gen_typecode (EIF_REFERENCE obj, int pos)
 	if (obj == NULL) {
 		return (char) 0;
 	} else {
+#ifdef EIF_THREADS
+		char result;
+			/* Critical section as we might compute a new `eif_anc_id_map' entry */
+		EIFMTX_LOCK;
+		result = eif_gen_typecode_with_dftype ((int16) Dftype(obj), pos);
+		EIFMTX_UNLOCK;
+		return result;
+#else
 		return eif_gen_typecode_with_dftype ((int16) Dftype(obj), pos);
+#endif
 	}
 }
 

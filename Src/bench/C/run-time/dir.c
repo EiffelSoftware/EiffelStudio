@@ -87,7 +87,7 @@ rt_public EIF_POINTER dir_open(char *name)
 
 	c = malloc (sizeof(EIF_WIN_DIRENT));
 	if (c == (EIF_WIN_DIRENT *) 0)
-		enomem();
+		enomem(MTC_NOARG);
 
 	strcpy (c->name, name);
 	c->handle = NULL;
@@ -183,7 +183,7 @@ rt_public char *dir_search(EIF_WIN_DIRENT *dirp, char *name)
 
 	filename = malloc (strlen(name) + strlen (dirp->name) + 2);
 	if (filename == (char *) 0)
-		enomem();
+		enomem(MTC_NOARG);
 
 	strcpy (filename, dirp->name);
 	if (filename[strlen(filename)-1] != '\\')
@@ -286,7 +286,7 @@ rt_public char *dir_next(EIF_WIN_DIRENT *dirp)
 		{
 		name = malloc (strlen(dirp->name) + 5);
 		if (name == (char *) 0)
-			enomem();
+			enomem(MTC_NOARG);
 
 		strcpy (name,dirp->name);
 		if (name[strlen(name)-1] == '\\')

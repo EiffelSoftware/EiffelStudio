@@ -318,7 +318,7 @@ rt_public EIF_FN_REF eifref(char *routine, EIF_TYPE_ID cid)
 		return frozen[body_id];
 	else
 #ifndef DLE
-		xraise(EN_DOL);
+		xraise(MTC EN_DOL);
 #else
 	if (body_id < dle_level)
 			/* Static melted routine */

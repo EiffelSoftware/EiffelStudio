@@ -49,7 +49,7 @@ extern EIF_LW_MUTEX_TYPE *eif_eo_store_mutex;
 #define EIF_EO_STORE_UNLOCK
 #endif
 
-extern EIF_INTEGER_32 obj_nb;					/* Count of marked objects */
+extern uint32 obj_nb;					/* Count of marked objects */
 extern void traversal(EIF_REFERENCE object, int p_accounting); /* Traversal of objects */
 
 /* Maping table handling */

@@ -46,7 +46,7 @@ rt_private long parsing_position = 0;
 rt_private long parsing_buffer_size = 0;
 rt_private int file_descriptor;
 
-rt_private long pst_store(char *object, long int a_object_count);	/* Recursive store */
+rt_private uint32 pst_store(char *object, uint32 a_object_count);	/* Recursive store */
 rt_private void parsing_store_write(void);
 rt_private void parsing_store_append(char *object, fnptr mid, fnptr nid);
 rt_private int compiler_char_write(char *pointer, int size);
@@ -141,16 +141,16 @@ rt_private void parsing_store_append(EIF_REFERENCE object, fnptr mid, fnptr nid)
 	end_of_buffer = 0;
 
 	/* Write in file `file_descriptor' the count of stored objects */
-	buffer_write((char *) (&obj_nb), sizeof(long));
+	buffer_write((char *) (&obj_nb), sizeof(uint32));
 
 #ifndef DEBUG
 	(void) pst_store(object,0L);		/* Recursive store process */
 #else
 	{
-		long nb_stored = pst_store(object,0L);
+		uint32 nb_stored = pst_store(object,0L);
 
 		if (obj_nb != nb_stored) {
-			printf("obj_nb = %ld nb_stored = %ld\n", obj_nb, nb_stored);
+			printf("obj_nb = %d nb_stored = %d\n", obj_nb, nb_stored);
 			eraise ("Eiffel partial store", EN_IO);
 		}
 	}
@@ -166,7 +166,7 @@ rt_private void parsing_store_append(EIF_REFERENCE object, fnptr mid, fnptr nid)
 
 }
 
-rt_private long pst_store(EIF_REFERENCE object, long int a_object_count)
+rt_private uint32 pst_store(EIF_REFERENCE object, uint32 a_object_count)
 {
 	/* Second pass of the store mechanism: writing on the disk.
 	 */
@@ -203,7 +203,7 @@ rt_private long pst_store(EIF_REFERENCE object, long int a_object_count)
 	zone->ov_flags &= ~EO_STORE;	/* Unmark it */
 
 #ifdef DEBUG
-		printf("object 0x%lx [%s %lx]\n", object, System(Deif_bid(flags)).cn_generator, zone->ov_flags);
+		printf("object 0x%" EIF_POINTER_DISPLAY " [%s %" EIF_POINTER_DISPLAY "]\n", (rt_uint_ptr) object, System(Deif_bid(flags)).cn_generator, (rt_uint_ptr) zone->ov_flags);
 #endif
 	/* Evaluation of the number of references of the object */
 	if (flags & EO_SPEC) {					/* Special object */

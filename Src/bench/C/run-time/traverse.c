@@ -58,14 +58,14 @@ doc:	</attribute>
 rt_private struct mstack map_stack;
 
 /*
-doc:	<attribute name="obj_nb" return_type="EIF_INTEGER_32" export="shared">
+doc:	<attribute name="obj_nb" return_type="uint32" export="shared">
 doc:		<summary>Counter of marked objects. Only used with ISE_GC.</summary>
 doc:		<access>Read/Write</access>
 doc:		<thread_safety>Safe with synchronization</thread_safety>
 doc:		<synchronization>Safe if caller holds the `eif_eo_store_mutex' lock.</synchronization>
 doc:	</attribute>
 */
-rt_shared EIF_INTEGER_32 obj_nb;
+rt_shared uint32 obj_nb;
 
 #ifdef EIF_THREADS
 /*
@@ -79,8 +79,8 @@ rt_shared EIF_LW_MUTEX_TYPE *eif_eo_store_mutex = NULL;
 #endif
 
 #ifdef DEBUG
-rt_shared long nomark(char *);
-rt_private long chknomark(char *, struct htable *, long);
+rt_shared uint32 nomark(char *);
+rt_private uint32 chknomark(char *, struct htable *, long);
 #endif
 
 rt_private EIF_REFERENCE matching (void (*action_fnptr) (EIF_REFERENCE, EIF_REFERENCE), int result_type);
@@ -844,11 +844,11 @@ rt_private void match_object (EIF_REFERENCE object, void (*action_fnptr) (EIF_RE
 
 #ifdef DEBUG
 
-rt_shared long nomark(char *obj)
+rt_shared uint32 nomark(char *obj)
 {
 	/* Check if there is no object marked EO_STORE under `obj'. */
 	struct htable *tbl;
-	long result;
+	uint32 result;
 	char gc_stopped;
 
 	gc_stopped = !gc_ison();
@@ -865,7 +865,7 @@ rt_shared long nomark(char *obj)
 	return result;
 }
 
-rt_private long chknomark(char *object, struct htable *tbl, long object_count)
+rt_private uint32 chknomark(char *object, struct htable *tbl, uint32 object_count)
 {
 	/* First pass of the store mechanism consisting in marking objects. */
 

@@ -740,6 +740,18 @@ feature -- Object editor properties
 	
 	object_editor_padding_width: INTEGER is 3
 	
+	object_editor_vertical_padding_width: INTEGER is 2
+	
+	reset_font_tooltip: STRING is "Restore default font"
+	
+	reset_background_color_tooltip: STRING is "Restore default background color"
+	
+	reset_foreground_color_tooltip: STRING is "Restore default foreground color"
+	
+	reset_minimum_width_tooltip: STRING is "Restore default minimum width"
+	
+	reset_minimum_height_tooltip: STRING is "Restore default minimum height"
+	
 feature -- Tooltips
 
 	include_directory_button_tooltip: STRING is "Include all sub-directories"

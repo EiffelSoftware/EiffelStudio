@@ -238,7 +238,6 @@ feature {EV_LIST_ITEM_LIST_IMP, EV_LIST_ITEM_IMP} -- Implementation
 			item_pointer := C.g_list_nth_data (new_item_list, 0)
 			C.gtk_object_ref (item_pointer)
 			C.gtk_container_remove (a_container, item_pointer)
-			C.set_gtk_widget_struct_parent (item_pointer, NULL)
 			C.gtk_list_insert_items (a_container, new_item_list, a_position)
 		end
 

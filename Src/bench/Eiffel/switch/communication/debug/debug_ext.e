@@ -71,7 +71,7 @@ feature
 	send_ref_value (value: INTEGER) is
 			-- value is the address of the object
 		external
-			"C"
+			"C signature (EIF_REFERENCE)"
 		end
 
 	recv_ack: BOOLEAN is

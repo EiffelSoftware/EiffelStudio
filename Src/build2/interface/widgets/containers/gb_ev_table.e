@@ -600,15 +600,13 @@ feature {NONE} -- Implementation
 			end
 			
 			if resizing_widget then
-				x := x - column_position
-				y := y - row_position
-				new_x := x + half_grid_size - ((x + half_grid_size) \\ grid_size)
-				new_y := y + half_grid_size - ((y + half_grid_size) \\ grid_size)	
+				io.putstring ("New_x " + new_x.out + "%N")
 				
 				if x_scale /= 0 then
 					if x_offset = 0 then
 						end_position := (original_column + original_column_span)
-						current_x_position := (((x + half_grid_size) // grid_size + 1).max (1)).min (end_position - 1)
+						new_x := x + half_grid_size - ((x + half_grid_size) \\ grid_size)
+						current_x_position := (((new_x // grid_size) + 1).max (1)).min (end_position - 1)
 						if first.area_clear_excluding_widget (selected_item, current_x_position, first.item_row_position (selected_item), end_position - current_x_position, first.item_row_span (selected_item)) then
 							set_item_position_and_span (selected_item, current_x_position, first.item_row_position (selected_item), end_position - current_x_position, first.item_row_span (selected_item))
 						else
@@ -618,6 +616,8 @@ feature {NONE} -- Implementation
 						 	set_item_position_and_span (selected_item, current_x_position, first.item_row_position (selected_item) , end_position - current_x_position, first.item_row_span (selected_item))
 						end
 					else
+						x := x - column_position
+						new_x := x + half_grid_size - ((x + half_grid_size) \\ grid_size)
 						new_column := (new_x // grid_size).min (first.columns - first.item_column_position (selected_item) + 1).max (1)
 						if first.item_column_span (selected_item)/= new_column and first.area_clear_excluding_widget (selected_item, first.item_column_position (selected_item), first.item_row_position (selected_item), new_column, first.item_row_span (selected_item)) then --new_column.max (1).min (first.columns - first.item_column_position (selected_item) + 1), first.item_row_span (selected_item)) then
 							set_item_span (selected_item, new_column, first.item_row_span (selected_item))
@@ -628,7 +628,8 @@ feature {NONE} -- Implementation
 				if y_scale /= 0 then
 					if y_offset = 0 then
 						end_position := (original_row + original_row_span)
-						current_y_position := ((y + half_grid_size) // grid_size + 1).max (1).min (end_position - 1)
+						new_y := y + half_grid_size - ((y + half_grid_size) \\ grid_size)
+						current_y_position := (((new_y // grid_size) + 1).max (1)).min (end_position - 1)
 						if first.area_clear_excluding_widget (selected_item, first.item_column_position (selected_item), current_y_position, first.item_column_span (selected_item), end_position - current_y_position) then
 							set_item_position_and_span (selected_item, first.item_column_position (selected_item), current_y_position, first.item_column_span (selected_item), end_position - current_y_position)
 						else
@@ -636,6 +637,8 @@ feature {NONE} -- Implementation
 							set_item_position_and_span (selected_item, first.item_column_position (selected_item), current_y_position, first.item_column_span (selected_item), end_position - current_y_position)
 						end
 					else
+						y := y - row_position
+						new_y := y + half_grid_size - ((y + half_grid_size) \\ grid_size)
 						new_row := (new_y // grid_size).min (first.rows - first.item_row_position (selected_item) + 1).max (1)
 						if first.item_row_span (selected_item) /= new_row and first.area_clear_excluding_widget (selected_item, first.item_column_position (selected_item), first.item_row_position (selected_item), first.item_column_span (selected_item), new_row) then --.max (1).min (first.rows - first.item_row_position (selected_item) + 1)) then
 							set_item_span (selected_item, first.item_column_span (selected_item), new_row)	
@@ -751,7 +754,7 @@ original_column, original_row, original_column_span, original_row_span: INTEGER
 					-- the current cursor position against the position of `selected_item'
 					-- when the resizing began.
 				original_column := first.item_column_position (selected_item)
-				original_row := first.item_column_position (selected_item)	
+				original_row := first.item_row_position (selected_item)	
 				original_column_span := first.item_column_span (selected_item)
 				original_row_span := first.item_row_span (selected_item)
 				

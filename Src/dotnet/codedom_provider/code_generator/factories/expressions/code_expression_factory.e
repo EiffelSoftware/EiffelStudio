@@ -63,26 +63,15 @@ feature {CODE_CONSUMER_FACTORY} -- Visitor features.
 			-- Generate Eiffel code from `a_source'.
 		require
 			non_void_source: a_source /= Void
-		local
-			l_assignment_attempt_statement: CODE_ASSIGNMENT_ATTEMPT_STATEMENT
-			l_variable_reference: CODE_VARIABLE_REFERENCE
-			l_local_variable: CODE_VARIABLE
-			l_snippet_expression: CODE_SNIPPET_EXPRESSION
 		do
-			code_dom_generator.generate_expression_from_dom (a_source.expression)
-			
-				-- Add a assignent attent if current statement is not an affectation statement.
-			create l_variable_reference.make (cast_local_variable_name, last_expression.type, Type_reference_factory.type_reference_from_code (current_type))
-			create l_local_variable.make (l_variable_reference)
 			if current_routine /= Void then
-				current_routine.add_local (create {CODE_VARIABLE_DECLARATION_STATEMENT}.make (l_variable_reference, Void))
-				create l_assignment_attempt_statement.make (l_local_variable, last_expression)
-				current_routine.add_statement (l_assignment_attempt_statement)
+				code_dom_generator.generate_expression_from_dom (a_source.expression)
+				current_routine.add_cast_local (last_expression, Type_reference_factory.type_reference_from_reference (a_source.target_type))
+				set_last_expression (create {CODE_CAST_EXPRESSION}.make (Type_reference_factory.type_reference_from_reference (a_source.target_type), current_routine.last_cast_variable))
 			else
 				Event_manager.raise_event (feature {CODE_EVENTS_IDS}.Missing_current_routine, ["cast expression"])
+				set_last_expression (Empty_expression)
 			end
-			create l_snippet_expression.make (l_local_variable.variable.eiffel_name)
-			set_last_expression (create {CODE_CAST_EXPRESSION}.make (Type_reference_factory.type_reference_from_reference (a_source.target_type), l_snippet_expression))
 		ensure
 			non_void_last_expression: last_expression /= Void
 		end
@@ -122,7 +111,7 @@ feature {CODE_CONSUMER_FACTORY} -- Visitor features.
 			l_target := a_source.target_object
 			if l_target /= Void then
 				code_dom_generator.generate_expression_from_dom (l_target)
-				set_last_expression (create {CODE_ATTRIBUTE_REFERENCE_EXPRESSION}.make (last_expression.type.member (a_source.field_name, Void, False), last_expression))
+				set_last_expression (create {CODE_ATTRIBUTE_REFERENCE_EXPRESSION}.make (a_source.field_name, last_expression))
 			else
 				set_last_expression (Empty_expression)
 				Event_manager.raise_event (feature {CODE_EVENTS_IDS}.Missing_target_object, ["attribute reference expression in" + current_context])
@@ -156,33 +145,10 @@ feature {CODE_CONSUMER_FACTORY} -- Visitor features.
 			non_void_source: a_source /= Void
 		local
 			l_type: SYSTEM_DLL_CODE_TYPE_REFERENCE
-			l_type_reference: CODE_TYPE_REFERENCE
-			i, l_count: INTEGER
-			l_parameters: SYSTEM_DLL_CODE_EXPRESSION_COLLECTION
-			l_arguments: LIST [CODE_PARAMETER_DECLARATION_EXPRESSION]
-			l_argument_expressions: LIST [CODE_EXPRESSION]
 		do
 			l_type := a_source.create_type
 			if l_type /= Void then
-				l_parameters := a_source.parameters
-				if l_parameters /= Void then
-					from
-						l_count := l_parameters.count
-						create {ARRAYED_LIST [CODE_PARAMETER_DECLARATION_EXPRESSION]} l_arguments.make (l_count)
-						create {ARRAYED_LIST [CODE_EXPRESSION]} l_argument_expressions.make (l_count)
-					until
-						i = l_count
-					loop
-						code_dom_generator.generate_expression_from_dom (l_parameters.item (i))
-						l_arguments.extend (create {CODE_PARAMETER_DECLARATION_EXPRESSION}.make (create {CODE_VARIABLE_REFERENCE}.make ("local" + i.out, last_expression.type, Type_reference_factory.type_reference_from_code (current_type)), in_argument))
-						l_argument_expressions.extend (last_expression)
-						i := i + 1
-					end
-					l_type_reference := Type_reference_factory.type_reference_from_reference (l_type)
-					set_last_expression (create {CODE_OBJECT_CREATE_EXPRESSION}.make (l_type_reference, l_type_reference.member ("make", l_arguments, False), l_argument_expressions))
-				else
-					Event_manager.raise_event (feature {CODE_EVENTS_IDS}.Missing_parameters, ["object create expression"])
-				end
+				set_last_expression (create {CODE_OBJECT_CREATE_EXPRESSION}.make (Type_reference_factory.type_reference_from_reference (l_type), expressions_from_collection (a_source.parameters)))
 			else
 				Event_manager.raise_event (feature {CODE_EVENTS_IDS}.Missing_creation_type, ["object create expression"])
 			end
@@ -215,8 +181,12 @@ feature {CODE_CONSUMER_FACTORY} -- Visitor features.
 		local
 			a_this_reference_expression: CODE_THIS_REFERENCE_EXPRESSION
 		do
-			create a_this_reference_expression.make
-			set_last_expression (a_this_reference_expression)
+			if current_type /= Void then
+				create a_this_reference_expression.make (current_type)
+				set_last_expression (a_this_reference_expression)
+			else
+				Event_manager.raise_event (feature {CODE_EVENTS_IDS}.Missing_current_type, ["This reference expression generation in " + current_context])
+			end
 		ensure
 			non_void_last_expression: last_expression /= Void
 		end	
@@ -321,22 +291,6 @@ feature {NONE} -- Implementation
 					i := i + 1
 				end
 			end
-		end
-
-	cast_local_variable_name: STRING is
-			-- Cast local variable
-		local
-			i: INTEGER
-		do
-			Result := "cast_variable"
-			i := cast_local_variable_count.item
-			Result.append (i.out)
-			cast_local_variable_count.set_item (i + 1)
-		end
-	
-	cast_local_variable_count: INTEGER_REF is
-			-- Unique ID for `cast_local_variable_name'
-		once
 		end
 
 end -- class CODE_EXPRESSION_FACTORY

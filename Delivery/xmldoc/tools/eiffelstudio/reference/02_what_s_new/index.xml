@@ -13,26 +13,38 @@
 		<list ordered="false">
 			<item>
 				<link>
+					<url>Eiffel55.xml</url>
+					<label>EiffelStudio 5.5</label>
+				</link>
+			</item>
+			<item>
+				<link>
+					<url>Eiffel54.xml</url>
+					<label>EiffelStudio 5.4</label>
+				</link>
+			</item>
+			<item>
+				<link>
 					<url>Eiffel53.xml</url>
-					<label>ISE Eiffel 5.3</label>
+					<label>EiffelStudio 5.3</label>
 				</link>
 			</item>
 			<item>
 				<link>
 					<url>Eiffel52.xml</url>
-					<label>ISE Eiffel 5.2</label>
+					<label>EiffelStudio 5.2</label>
 				</link>
 			</item>
 			<item>
 				<link>
 					<url>Eiffel51.xml</url>
-					<label>ISE Eiffel 5.1</label>
+					<label>EiffelStudio 5.1</label>
 				</link>
 			</item>
 			<item>
 				<link>
 					<url>Eiffel50.xml</url>
-					<label>ISE Eiffel 5.0</label>
+					<label>EiffelStudio 5.0</label>
 				</link>
 			</item>
 		</list>

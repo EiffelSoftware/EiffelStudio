@@ -9,7 +9,7 @@
 		<list ordered="false">
 			<item>Numerous improvements in usability and bug fixes.</item>
 			<item>Richer class and cluster creation dialogs.</item>
-			<item>Class name completion in the editor (by pressing Shift+Ctrl+Space half-way through the class name).</item>
+			<item>Class name completion in the editor (by pressing Ctrl+Shift+Space half-way through the class name).</item>
 			<item>Editor now supports drag-and-drop of the selection.</item>
 			<item>When debugging a project from EiffelStudio, the current directory will be your project directory. It is a change from previous version where:
 				<list ordered="false">
@@ -42,7 +42,7 @@
 					<class_name>BIT_REF</class_name>
 				</code> or a 
 				<code>
-					<class_name>XBIT</class_name>
+					<class_name>BIT X</class_name>
 				</code> object using its creation procedure (before it was accepted but did not work)
 			</item>
 			<item>Added 

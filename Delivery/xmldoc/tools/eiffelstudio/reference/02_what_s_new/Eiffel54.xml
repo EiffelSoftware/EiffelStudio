@@ -59,7 +59,7 @@
 		<heading><size>3</size>Eiffel2Java</heading>
 		<list ordered="false">
 			<item>Fixed incorrect memory freeing in <code><feature_name>get_string</feature_name></code> in <code><class_name>JNI_ENVIRONMENT</class_name></code> that could cause some memory corruption.</item>
-			<item>Fixed VDRD error in method_id from <code><class_name>JAVA_OBJECT</class_name></code>.</item>
+			<item>Fixed <code><compiler_error>VDRD</compiler_error></code> error in method_id from <code><class_name>JAVA_OBJECT</class_name></code>.</item>
 		</list>
 		<heading><size>3</size>EiffelBase</heading>
 		<list ordered="false">
@@ -90,17 +90,20 @@
 				<item>In <code><class_name>DATE_VALIDITY_CHECKER</class_name></code> added <code><feature_name>ordered_compact_date_valid</feature_name></code>.</item>
 				<item>Fixed <code><class_name>C_DATE</class_name></code> to bufferize the current time rather than querying it for each of the time components. Not doing that was causing a bug in <code><class_name>DATE</class_name></code>, <code><class_name>DATE_TIME</class_name></code> and <code><class_name>TIME</class_name></code> where if the computation was done on December 31st at 23:59:59 2003, we could end up with a date of January 1st 2003, therefore being one year off. This is a breaking change from before and if you are using <code><class_name>C_DATE</class_name></code>, use <code><feature_name>update</feature_name></code> before each call to the *_now queries if you expected to reflect the time at the time of the query.</item>
 			</list>
-		<heading><size>3</size>EiffelVision2</heading>
-			<list ordered="false">
-				<item><link><url>../../../../libraries/vision2/content/0-_revisions/index.xml</url><label>Click here to see list of update and modification to EiffelVision2</label></link>.</item>
-			</list>
 		<heading><size>3</size>EiffelThread</heading>
 			<list ordered="false">
 				<item>Added support for .NET</item>
 				<item>Made <code><class_name>OBJECT_OWNER</class_name></code> obsolete</item>
 				<item>Added <code><feature_name>wait_with_timeout</feature_name></code> in <code><class_name>CONDITION_VARIABLE</class_name></code></item>
 				<item>Added <code><class_name>READ_WRITE_LOCK</class_name></code> class to be used in a system where few writes are done compare to reads. A typical example of its use would be to have a thread safe lookup table where few insertions are done.</item>
-				<item>Now a C externals that might block the execution of a system, should be marked `blocking'. See compiler changes for more details.</item>
+				<item>Now a C externals that might block the execution of a system, should be marked `blocking'. <link>
+					<url>../30_compiler/60_version_history/04_54_release/00_53_to_54_changes.xml</url>
+					<label>See compiler changes for more details</label>
+				</link>.</item>
+			</list>
+		<heading><size>3</size>EiffelVision2</heading>
+			<list ordered="false">
+				<item><link><url>../../../../libraries/vision2/content/0-_revisions/index.xml</url><label>Click here to see list of update and modification to EiffelVision2</label></link>.</item>
 			</list>
 		<heading><size>3</size>EiffelWeb</heading>
 			<list ordered="false">

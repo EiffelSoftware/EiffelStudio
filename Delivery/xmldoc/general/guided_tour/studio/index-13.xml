@@ -79,11 +79,11 @@
 				<item>Writing 
 					<code>
 						<string>your_integer</string>
-					</code>
+					</code> 
 					<code>
 						<keyword>:=</keyword>
 					</code>
-					<code>
+					<code> 
 						<string>your_real</string>
 					</code>, with the types suggested by the names, is a validity error.
 				</item>
@@ -158,8 +158,8 @@
 			</paragraph>
 			<list ordered="false">
 				<item>Whenever possible, they give you 
-					<bold>two</bold> or more possibilities.  A dialog with just one possibility is not much of a dialog.  (We'll resist the temptation to be pompous here by recalling the original Greek meaning of " 
-					<span>dia</span> " in "dialog".  )
+					<bold>two</bold> or more possibilities.  A dialog with just one possibility is not much of a dialog.  (We'll resist the temptation to be pompous here by recalling the original Greek meaning of "
+					<span>dia</span>" in "dialog".  )
 				</item>
 				<item>If EiffelStudio cannot give two possibilities -- as in the case of an error message, for which it must let the user proceed after making sure the message has been seen -- EiffelStudio doesn't force you, like many of today's user interfaces, to acknowledge your sins by clicking an 
 					<code>
@@ -203,14 +203,13 @@
 			<paragraph>To see this mechanism at work, let us introduce a validity error.  There is in fact one ready for you in class 
 				<code>
 					<keyword>TESTROOT</keyword>
-				</code> .  Target a Development Window to this class; at the end of its text, just before the final 
+				</code>.  Target a Development Window to this class; at the end of its text, just before the final 
 				<code>
 					<keyword>end</keyword>
 				</code>, you will find the following comment line:
 			</paragraph>
 			<code_block>
-	<keyword>-- inv: INVALID</keyword>
-			</code_block>
+<keyword>-- inv: INVALID</keyword></code_block>
 			<paragraph>If uncommented, this is a declaration of a feature of type 
 				<code>
 					<keyword>INVALID</keyword>
@@ -346,4 +345,14 @@
 				</code> (two consecutive dashes) on the erroneous line.  Save and compile to continue with a valid system.
 			</paragraph>
 		</div>
+		<paragraph>
+			<link>
+				<url>index-12.xml</url>
+				<label>&lt;&lt; Previous</label>
+			</link> 
+			<link>
+				<url>index-14.xml</url>
+				<label>Next &gt;&gt;</label>
+			</link>
+</paragraph>
 	</paragraph></document>

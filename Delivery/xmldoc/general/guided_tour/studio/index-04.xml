@@ -51,4 +51,14 @@
 				<string>YOURDIR</string>
 			</code> .  (This will allow us to use relative rather than absolute names for some of the files involved.  )
 		</paragraph>
+		<paragraph>
+			<link>
+				<url>index-03.xml</url>
+				<label>&lt;&lt; Previous</label>
+			</link> 
+			<link>
+				<url>index-05.xml</url>
+				<label>Next &gt;&gt;</label>
+			</link>
+		</paragraph>
 	</paragraph></document>

@@ -66,7 +66,7 @@
 	<feature_name>io</feature_name>.<feature_name>put_string</feature_name> <symbol>(</symbol>"This is some added text"<symbol>)</symbol> 
 	<feature_name>io</feature_name>.<feature_name>new_line</feature_name>
 </code_block>
-			<paragraph>They are very similar to the current first two lines of the routine, so you can just use copy-paste: selectthe first two lines with the mouse, copy them using CTRL- 
+			<paragraph>They are very similar to the current first two lines of the routine, so you can just use copy-paste: select the first two lines with the mouse, copy them using CTRL- 
 				<code>
 					<keyword>C</keyword>
 				</code> (or 
@@ -198,10 +198,10 @@
 			<paragraph>To 
 				<bold>copy</bold>, 
 				<bold>cut</bold> and 
-				<bold>paste</bold>use the corresponding entries in the 
+				<bold>paste</bold> use the corresponding entries in the 
 				<code>
 					<keyword>Edit</keyword>
-				</code> menu or the familiar keyboardshortcuts CTRL- 
+				</code> menu or the familiar keyboard shortcuts CTRL- 
 				<code>
 					<keyword>C</keyword>
 				</code>, CTRL- 
@@ -643,8 +643,7 @@
 					</code> by the line number at which the Editing Tool is currently scrolled.  If you include one or both of these markers at the appropriate argument positions for the command, this will enable you -- assuming the editor supports the appropriate options -- to make sure it starts at exactly the right place.  For example the default editor command under Unix is
 				</paragraph>
 				<code_block>
-	<keyword>vi +$line $target</keyword>
-				</code_block>
+<keyword>vi +$line $target</keyword></code_block>
 				<paragraph>meaning: start the Vi editor on the 
 					<code>
 						<keyword>$target</keyword>
@@ -679,4 +678,14 @@
 				</list>
 			</div>
 		</div>
+		<paragraph>
+			<link>
+				<url>index-11.xml</url>
+				<label>&lt;&lt; Previous</label>
+			</link> 
+			<link>
+				<url>index-13.xml</url>
+				<label>Next &gt;&gt;</label>
+			</link>
+</paragraph>
 	</paragraph></document>

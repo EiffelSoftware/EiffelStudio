@@ -1,5 +1,5 @@
 <document title="13 DEBUGGING AND RUN-TIME MONITORING" output="studio">
-	<meta_data/>
+	<meta_data/>	
 	<paragraph>
 		<paragraph>
 			<link>
@@ -29,8 +29,7 @@
 				<content>Setting breakpoints</content>
 			</heading>
 			<paragraph>To control the execution you will set breakpoints, indicating places where you want to interrupt the execution.  You may set a breakpoint on an individual instruction of a routine, on the routine's precondition or postcondition, or on the routine as a whole, meaning its first operation (precondition or instruction).  </paragraph>
-			<paragraph>A group of icons on the Project Toolbar help control breakpoints.  They are known in EiffelStudio terminology as " 
-				<span>buttonholes</span> ", meaning that they can serve both as buttons (you can click them to get some functions) and holes (you can pick-and-drop into them to get some other functions).
+			<paragraph>A group of icons on the Project Toolbar help control breakpoints.  They are known in EiffelStudio terminology as "<italic>buttonholes</italic>", meaning that they can serve both as buttons (you can click them to get some functions) and holes (you can pick-and-drop into them to get some other functions).
 			</paragraph>
 			<div>
 				<image_link>
@@ -194,12 +193,12 @@
 				</code>, Shift-F5 for 
 				<code>
 					<keyword>Terminate</keyword>
-				</code> .
+				</code>.
 			</paragraph>
 			<paragraph>Start execution of the compiled system by clicking 
 				<code>
 					<keyword>Run with breakpoints</keyword>
-				</code> .  The display automatically switches to accommodate supplementary tools providing debugging information.  Execution stops on the breakpoint that you have enabled on the first instruction of procedure 
+				</code>.  The display automatically switches to accommodate supplementary tools providing debugging information.  Execution stops on the breakpoint that you have enabled on the first instruction of procedure 
 				<code>
 					<string>make</string>
 				</code> :
@@ -217,14 +216,14 @@
 			<paragraph>The pane at the bottom left indicates that execution has stopped in 
 				<code>
 					<string>make</string>
-				</code> .  The Context shows the flat form of that routine, with a new icon to indicate the stop point which execution has reached.  At the bottom right is a new tool, the 
+				</code>.  The Context shows the flat form of that routine, with a new icon to indicate the stop point which execution has reached.  At the bottom right is a new tool, the 
 				<bold>Object Editor</bold>, which shows the content of current object and (later) related objects.  At the moment you can see that:
 			</paragraph>
 			<list ordered="false">
 				<item>The current object is an instance of class 
 					<code>
 						<string>TESTROOT</string>
-					</code> .
+					</code>.
 				</item>
 				<item>The class (as you could also see from its text in a Development Window) has two attributes 
 					<code>
@@ -306,7 +305,7 @@
 			</div>
 			<paragraph>The last instruction that you executed is 
 				<code>
-					<keyword>create</keyword>
+					<keyword>create </keyword>
 				</code>
 				<code>
 					<comment>{</comment>
@@ -318,7 +317,7 @@
 					<comment>}</comment>
 				</code>
 				<code>
-					<string>o1</string>
+					<string> o1</string>
 				</code>, meaning create an object and attach it to 
 				<code>
 					<string>o1</string>
@@ -331,7 +330,7 @@
 				</code> use its proper descendant 
 				<code>
 					<string>HEIR</string>
-				</code> .  As a result, the entry for 
+				</code>.  As a result, the entry for 
 				<code>
 					<string>o1</string>
 				</code> in the Object Tool no longer shows 
@@ -340,7 +339,7 @@
 				</code> but an object of type 
 				<code>
 					<string>HEIR</string>
-				</code> .  Note that all objects are identified by their addresses in hexadecimal; such an address is by itself meaningless, but enables you to see quickly whether two object references are attached to the same object.  The addresses you see as you run the Guided Tour will -- except for some unlikely coincidence -- be different from the ones appearing here.
+				</code>.  Note that all objects are identified by their addresses in hexadecimal; such an address is by itself meaningless, but enables you to see quickly whether two object references are attached to the same object.  The addresses you see as you run the Guided Tour will -- except for some unlikely coincidence -- be different from the ones appearing here.
 			</paragraph>
 			<paragraph>Note that since the ISE Eiffel garbage collector compacts memory and hence may move objects around, the address of a given object is not guaranteed to remain the same throughout a session.  </paragraph>
 			<paragraph>To see the details of the object, pick-and-drop its identifier in place (that is to say, drop it in the Object Tool itself).  A new object entry appears, showing the object:</paragraph>
@@ -392,7 +391,7 @@
 				</code>, and is showing the ancestors of 
 				<code>
 					<string>HEIR</string>
-				</code> .  Click the 
+				</code>.  Click the 
 				<code>
 					<keyword>Feature</keyword>
 				</code> Tab of the Context Tool to set it back to feature information for the continuation of our debugging session.  No feature is currently displayed.
@@ -460,7 +459,7 @@
 				</code> at this point, and through dynamic binding, that the execution ends up calling a routine from 
 				<code>
 					<string>HEIR</string>
-				</code> .  Of course here it's obvious because of the wording of the 
+				</code>.  Of course here it's obvious because of the wording of the 
 				<code>
 					<keyword>create</keyword>
 				</code> a few lines up, but in many cases, especially all those for which polymorphism and dynamic binding are 
@@ -498,13 +497,13 @@
 				</code> (Shift-F11) to finish the execution of 
 				<code>
 					<string>display</string>
-				</code> .  This brings you back to the next instruction of the calling routine, 
+				</code>.  This brings you back to the next instruction of the calling routine, 
 				<code>
 					<string>make</string>
 				</code> of 
 				<code>
 					<string>TESTROOT</string>
-				</code> .
+				</code>.
 			</paragraph>
 		</div>
 		<div>
@@ -535,4 +534,14 @@
 				<span>static</span> information that the browsing mechanisms studied in preceding sections provide about the system's structure.
 			</paragraph>
 		</div>
+		<paragraph>
+			<link>
+				<url>index-13.xml</url>
+				<label>&lt;&lt; Previous</label>
+			</link> 
+			<link>
+				<url>index-15.xml</url>
+				<label>Next &gt;&gt;</label>
+			</link>
+</paragraph>
 	</paragraph></document>

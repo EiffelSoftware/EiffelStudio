@@ -18,21 +18,21 @@
 		</image_link>
 		<paragraph>As this is our first project we want to 
 			<code>
-				<keyword>Create a new project</keyword>
+				<keyword>Create a new project</keyword>.
 			</code> The three possibilities are:
 		</paragraph>
 		<list ordered="false">
-			<item>" 
+			<item>"
 				<code>
 					<keyword>Create a new project</keyword>
 				</code>", which would let you select one among the common schemes -- basic application, graphical Windows application, graphical multi-platform application, Microsoft .  NET application -- and set up everything for you.
 			</item>
-			<item>" 
+			<item>"
 				<code>
 					<keyword>Open existing Ace (control file)</keyword>
 				</code>", which finds the setup in a control file, called an Assembly of Classes in Eiffel or Ace.
 			</item>
-			<item>" 
+			<item>"
 				<code>
 					<keyword>Open compiled project</keyword>
 				</code>", which will work once you have compiled a project.
@@ -45,7 +45,7 @@
 				<keyword>Next</keyword>
 			</code> .  This brings up a File Explorer inviting you to select an Ace file.  The file you want is, depending on your platform, one of
 		</paragraph>
-		<code_block>	
+		<code_block>
 	<keyword>$ISE_EIFFEL\examples\studio\tour\Ace.mswin.ace</keyword>
 	<keyword>$ISE_EIFFEL/examples/studio/tour/Ace.unix.ace</keyword>
 </code_block>
@@ -130,14 +130,24 @@
 				<width>100</width>
 			</image>
 		</image_link>
-		<paragraph>The message " 
+		<paragraph>The message "
 			<code>
 				<keyword>Press Return to finish the execution</keyword>
 			</code>" would not appear if you executed the system from outside of EiffelStudio, for example from a command line.  Its purpose within EiffelStudio is clear: to let you see the console output; without it, the console would go away at the end of execution.  (None of this applies to Unix/Linux/VMS since there is no new console window to get rid of.  )
 		</paragraph>
-		<paragraph>If before closing the console window you look at the main EiffelStudio window (by moving away the console window) you will notice that it looks different from before, since it now shows the fields useful in monitoring execution and debugging.  But we'll look at this later.  For the moment just dismiss the console by following the advice to " 
+		<paragraph>If before closing the console window you look at the main EiffelStudio window (by moving away the console window) you will notice that it looks different from before, since it now shows the fields useful in monitoring execution and debugging.  But we'll look at this later.  For the moment just dismiss the console by following the advice to "
 			<code>
 				<keyword>Press Return</keyword>
 			</code>": hit the Return or Enter key.
+		</paragraph>
+		<paragraph>
+			<link>
+				<url>index-03.xml</url>
+				<label>&lt;&lt; Previous</label>
+			</link> 
+			<link>
+				<url>index-06.xml</url>
+				<label>Next &gt;&gt;</label>
+			</link>
 		</paragraph>
 	</paragraph></document>

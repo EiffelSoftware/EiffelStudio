@@ -7,8 +7,9 @@
 				<label>Help reading this manual</label>
 			</link>
 		</paragraph>
-		<paragraph>So far the project modifications that we have made used the text editor in the Editing Tool.  We used graphics, but as a way to reflect system structures, not to build them ( 
+		<paragraph>So far the project modifications that we have made used the text editor in the Editing Tool.  We used graphics, but as a way to reflect system structures, not to build them (
 			<link>
+				<label>See "A Peek at Diagrams" in STARTING TO BROWSE</label>
 				<url>index-07.xml#46460</url>
 			</link>, and subsequent discussions).
 		</paragraph>
@@ -25,7 +26,7 @@
 				</link> ); you can see this by going to the 
 				<code>
 					<keyword>Edit menu</keyword>
-				</code> : if there is an entry 
+				</code>: if there is an entry 
 				<code>
 					<keyword>Unlink context tool</keyword>
 				</code>, select it; otherwise (the corresponding entry reads "Link context tool") don't do anything, you're fine.  (You can also use the Link/Isolate button added earlier to the Browsing toolbar for this very purpose.  )
@@ -55,7 +56,7 @@
 			<paragraph>First we decide that we don't want to be bothered with class 
 				<code>
 					<string>INVALID</string>
-				</code> .  We could delete it altogether from the system by pick-and-drop its bubble to the Delete hole.  This is not what we want, but try this now to see the confirmation request:
+				</code>.  We could delete it altogether from the system by pick-and-drop its bubble to the Delete hole.  This is not what we want, but try this now to see the confirmation request:
 			</paragraph>
 			<div>
 				<image_link>
@@ -119,7 +120,7 @@
 			<paragraph>The useful button here is 
 				<code>
 					<keyword>New class</keyword>
-				</code> :
+				</code>:
 			</paragraph>
 			<div>
 				<image_link>
@@ -134,7 +135,7 @@
 			<paragraph>This button is a pebble, meant to be dropped into the diagram.  Drop it somewhere above the bubble for 
 				<code>
 					<string>TESTROOT</string>
-				</code> ; the exact place doesn't matter, but it has to be within the area of the cluster 
+				</code>; the exact place doesn't matter, but it has to be within the area of the cluster 
 				<code>
 					<string>root_cluster</string>
 				</code> because we'll want our class to part of it.  You're asked to name the class:
@@ -158,19 +159,15 @@
 				</code>, as we are going to create a new heir of 
 				<code>
 					<string>PARENT</string>
-				</code> .  Don't touch the file name in the second field; as you type the class name EiffelStudio automatically sets the file name to 
+				</code>.  Don't touch the file name in the second field; as you type the class name EiffelStudio automatically sets the file name to 
 				<code>
-					<string>heir2</string>
-				</code>
-				<span>.  </span>
-				<code>
-					<string>e</string>
+					<string>heir2.e</string>
 				</code>, so you would only set it if you wanted to override the default convention for names of class files.
 			</paragraph>
 			<paragraph>The new class is now in the diagram, part of 
 				<code>
 					<string>root_cluster</string>
-				</code> :
+				</code>:
 			</paragraph>
 			<div>
 				<image_link>
@@ -218,7 +215,7 @@
 				</code> an heir of 
 				<code>
 					<string>PARENT</string>
-				</code> .  To create inter-class relations, you will select a relation by clicking one of the "Create link" buttons, then use pick-and-drop from the source class to the target class.  There are three possibilities:
+				</code>.  To create inter-class relations, you will select a relation by clicking one of the "Create link" buttons, then use pick-and-drop from the source class to the target class.  There are three possibilities:
 			</paragraph>
 			<div>
 				<image_link>
@@ -264,7 +261,7 @@
 			</code> inherit from 
 			<code>
 				<string>PARENT</string>
-			</code> .
+			</code>.
 		</paragraph>
 		<div>
 			<image_link>
@@ -283,7 +280,7 @@
 			</code> appears grayed out; so does the name of 
 			<code>
 				<string>INVALID</string>
-			</code> :
+			</code>:
 		</paragraph>
 		<div>
 			<image_link>
@@ -334,13 +331,13 @@
 			<paragraph>This technique gives you many option and in fact is a convenient way to build your classes, whether at the analysis, design or implementation level.  Here, fill the fields as follows.  For the top choice, keep the default, 
 				<code>
 					<keyword>Attribute</keyword>
-				</code> ; we'll give class 
+				</code>; we'll give class 
 				<code>
 					<string>TESTROOT</string>
 				</code> an attribute of type 
 				<code>
 					<string>HEIR2</string>
-				</code> .  In the 
+				</code>.  In the 
 				<code>
 					<keyword>feature</keyword>
 				</code> clause, which will indicate its export status, replace the default choice 
@@ -352,13 +349,13 @@
 				</code>, so that the attribute will be public.  For its feature category, keep the choice currently displayed, 
 				<code>
 					<string>Access</string>
-				</code> .  For its name, replace the default, 
+				</code>.  For its name, replace the default, 
 				<code>
 					<string>new_feature</string>
 				</code>, by the name 
 				<code>
 					<string>my_heir</string>
-				</code> .  In the 
+				</code>.  In the 
 				<code>
 					<keyword>invariant</keyword>
 				</code> clause, enter
@@ -369,10 +366,10 @@
 			<paragraph>to specify the invariant property that this attribute should never be void.  Finally, to see how EiffelStudio can generate the full accompaniment to an attribute, check the box 
 				<code>
 					<keyword>Generate set procedure</keyword>
-				</code> .  Click 
+				</code>.  Click 
 				<code>
 					<keyword>OK</keyword>
-				</code> .
+				</code>.
 			</paragraph>
 			<paragraph>The diagram -- shown below after a slight move of the bubble for 
 				<code>
@@ -383,7 +380,7 @@
 				</code> is now a client of 
 				<code>
 					<string>HEIR2</string>
-				</code> .  By default it only displays inheritance links; now it has switched automatically to a mode that shows client links as well, so that we also see that 
+				</code>.  By default it only displays inheritance links; now it has switched automatically to a mode that shows client links as well, so that we also see that 
 				<code>
 					<string>TESTROOT</string>
 				</code> is (and always was) a client of 
@@ -392,7 +389,7 @@
 				</code> through attributes including 
 				<code>
 					<string>o2</string>
-				</code> .
+				</code>.
 			</paragraph>
 			<div>
 				<image_link>
@@ -460,7 +457,7 @@
 				</code> a client of 
 				<code>
 					<string>HEIR</string>
-				</code> .  In the top Editing Tool, use the editor to add an attribute declaration
+				</code>.  In the top Editing Tool, use the editor to add an attribute declaration
 			</paragraph>
 			<code_block>
 	<feature_name>other</feature_name><symbol>:</symbol> <class_name>HEIR</class_name>
@@ -475,7 +472,7 @@
 				</code>
 				<code>
 					<string> my_heir</string>
-				</code> .  Without it the just added invariant would be violated upon creation.
+				</code>.  Without it the just added invariant would be violated upon creation.
 			</note>
 			<paragraph>Nothing happens yet to the diagram.  This is normal: EiffelStudio doesn't update the diagram every time you type some text (which, for one thing, might be syntactically incorrect, or invalid).  You need to recompile first.  Click the 
 				<code>
@@ -483,7 +480,7 @@
 				</code> button.  Then on the Context Tool click 
 				<code>
 					<keyword>Diagram</keyword>
-				</code> ; the new relation appears:
+				</code>; the new relation appears:
 			</paragraph>
 			<div>
 				<image_link>
@@ -545,7 +542,7 @@
 				</code> default name, type 
 				<code>
 					<string>my_cluster</string>
-				</code> ; select the only possible supercluster, 
+				</code>; select the only possible supercluster, 
 				<code>
 					<string>root_cluster</string>
 				</code>, and click 
@@ -588,7 +585,7 @@
 				</code> class bubble to the rounded rectangle for 
 				<code>
 					<string>MY_CLUSTER</string>
-				</code> .  Make sure the bubble fits entirely (that's why we wanted the cluster rectangle to be big enough).
+				</code>.  Make sure the bubble fits entirely (that's why we wanted the cluster rectangle to be big enough).
 			</paragraph>
 			<paragraph>This graphical manipulation has caused a structural change: class 
 				<code>
@@ -596,7 +593,7 @@
 				</code> is now part of 
 				<code>
 					<string>MY_CLUSTER</string>
-				</code> .  Check this by expanding the Cluster Tree on the left:
+				</code>.  Check this by expanding the Cluster Tree on the left:
 			</paragraph>
 			<div>
 				<image_link>
@@ -745,7 +742,7 @@
 				</code> field has always shown 
 				<code>
 					<keyword>DEFAULT</keyword>
-				</code> .  You can define any number of views in your project, and apply them to various class and cluster diagrams.
+				</code>.  You can define any number of views in your project, and apply them to various class and cluster diagrams.
 			</paragraph>
 			<paragraph>For example, using the buttons to show and hide links of various kinds</paragraph>
 			<div>
@@ -795,7 +792,7 @@
 				</code> Tab.  By default, this shows the parents of the class.  Do this now for 
 				<code>
 					<string>TESTROOT</string>
-				</code> :
+				</code>:
 			</paragraph>
 			<div>
 				<image_link>
@@ -824,4 +821,14 @@
 			</div>
 			<paragraph>This will conclude our review of the Diagram facilities of EiffelStudio, although you'll surely discover some further riches by yourself and through the rest of the documentation.  We hope the complete seamlessness between text and pictures will enable you to increase the effectiveness of your analysis work, or your design work, or your programming -- whatever level of system development you need to tackle.  </paragraph>
 		</div>
+		<paragraph>
+			<link>
+				<url>index-15.xml</url>
+				<label>&lt;&lt; Previous</label>
+			</link> 
+			<link>
+				<url>index-17.xml</url>
+				<label>Next &gt;&gt;</label>
+			</link>
+</paragraph>
 	</paragraph></document>

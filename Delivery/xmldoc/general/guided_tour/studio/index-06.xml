@@ -55,7 +55,7 @@
 		</paragraph>
 		<list ordered="false">
 			<item>First you see a number of files with the extension 
-				<span>.  </span> 
+				<span>.</span>
 				<code>
 					<keyword>e</keyword>
 				</code>, for "Eiffel": 
@@ -70,7 +70,7 @@
 				</code> into a file of name 
 				<code>
 					<string>class_name</string>
-				</code> 
+				</code>
 				<code>
 					<keyword>.e</keyword>
 				</code>, where 
@@ -88,7 +88,7 @@
 				</code> and so on.  As you may remember, Eiffel is case-insensitive, but the standard convention for class names is to write them in all upper case.  Calling the file 
 				<code>
 					<string>class_name</string>
-				</code> 
+				</code>
 				<code>
 					<keyword>.e</keyword>
 				</code> is only a recommendation, not an obligation; but you 
@@ -97,10 +97,10 @@
 			<item>You also notice two files with an 
 				<code>
 					<keyword>ace</keyword>
-				</code> extension.  These are the compilation control files.  The reason there are two is that this example has a Windows version and a Unix/Linux version.  As you remember, the Ace files for this example were available as part of the delivery; we used them to compile the project.  In most practical cases, however, you won't need to build an Ace; if you use the " 
+				</code> extension.  These are the compilation control files.  The reason there are two is that this example has a Windows version and a Unix/Linux version.  As you remember, the Ace files for this example were available as part of the delivery; we used them to compile the project.  In most practical cases, however, you won't need to build an Ace; if you use the "
 				<code>
 					<keyword>Create a new project</keyword>
-				</code> " option of EiffelStudio (remember the first screen on page 
+				</code>" option of EiffelStudio (remember the first screen on page 
 				<link>
 					<url>index.xml#PROJECT START SCREEN</url>
 				</link> ), EiffelStudio will build the Ace for you; if you change the Preferences during a session, EiffelStudio will update the Ace.  When you become an experienced Eiffel developer you can also edit the Ace file directly; Aces are written in a simple Eiffel-like notation called 
@@ -112,10 +112,10 @@
 			<item>Next you see a file called 
 				<code>
 					<keyword>simple.epr</keyword>
-				</code> .  This is the Eiffel Project Repository, hence the extension.  Any successful compilation of a project will produce a project of this kind, 
+				</code>.  This is the Eiffel Project Repository, hence the extension.  Any successful compilation of a project will produce a project of this kind, 
 				<code>
 					<string>system_name</string>
-				</code> 
+				</code>
 				<code>
 					<keyword>.epr</keyword>
 				</code> .  To open an existing project when you start EiffelStudio (this was the option " 
@@ -171,7 +171,7 @@
 			</code>, and 
 			<code>
 				<string>system_name</string>
-			</code> 
+			</code>
 			<code>
 				<keyword>.epr</keyword>
 			</code>, EiffelStudio will not touch anything in the project directory, so you may safely add and change whatever files and subdirectories you like.  
@@ -191,10 +191,20 @@
 			</code> has been created, itself with some subdirectories, including 
 			<code>
 				<keyword>W_Code</keyword>
-			</code> which contains the generated code ( 
+			</code> which contains the generated code (
 			<code>
 				<keyword>W</keyword>
 			</code> for "Workbench" -- we'll see the reason later).  Feel free to browse through it if you like, but don't change anything.  
 		</paragraph>
 		<paragraph>By the way, we are now done with any platform-specific instructions.  Everything in the rest of this Tour, other than the graphical look-and-feel, will work the same across all EiffelStudio platforms.  </paragraph>
+<paragraph>
+			<link>
+				<url>index-05.xml</url>
+				<label>&lt;&lt; Previous</label>
+			</link> 
+			<link>
+				<url>index-07.xml</url>
+				<label>Next &gt;&gt;</label>
+			</link>
+		</paragraph>
 	</paragraph></document>

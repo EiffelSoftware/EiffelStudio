@@ -269,8 +269,6 @@ feature
 					generated_file.putchar (';');
 					if arg.is_expanded then
 						context.inc_exp_args;
-							-- Force inclusion in GC hooks.
-						context.force_gc_hooks;
 						context.Arg_var.set_position (i);
 						context.set_local_index (context.Arg_var.register_name,
 							context.Arg_var.enlarged);

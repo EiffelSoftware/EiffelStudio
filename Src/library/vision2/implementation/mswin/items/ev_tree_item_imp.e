@@ -28,11 +28,7 @@ inherit
 		end
 
 	EV_ARRAYED_LIST_ITEM_HOLDER_IMP [EV_TREE_ITEM]
-		--|FIXME Where has this gone?
-		--rename
-		--	item_command_count as command_count
 		redefine
-			--add_item,
 			interface
 		end
 
@@ -106,25 +102,10 @@ feature -- Access
 			end
 		end
 
-
-	--|FIXME I think this can be inherited now
-	--index: INTEGER is
-	--		-- Index of the current item.
-	--	do
-	--		Result := top_parent_imp.internal_get_index (Current) + 1
-	--	end
-
 feature -- Status report
 
-	ev_children: ARRAYED_LIST [EV_TREE_ITEM_IMP]-- is
+	ev_children: ARRAYED_LIST [EV_TREE_ITEM_IMP]
 			-- List of the direct children of the tree-item.
---		do
---			if top_parent_imp = Void then
---				Result := internal_children
---			else
---				Result := top_parent_imp.get_children (Current)
---			end
---		end
 
 	count: INTEGER is
 			-- Number of direct children of the holder.
@@ -166,18 +147,11 @@ feature -- Status setting
 			-- Make `par' the new parent of the widget.
 			-- `par' can be Void then the parent is the screen.
 		do
-		--|FIXME what to do?
-		--	if parent_imp /= Void then
-		--		parent_imp.remove_item (Current)
-		--		parent_imp := Void
-		--	end
 			if par /= Void then
 				parent_imp ?= par.implementation
 			else
 				parent_imp := Void
 			end
-		--		parent_imp.add_item (Current)
-		--	end
 		end
 
 	destroy is
@@ -391,7 +365,7 @@ feature {NONE} -- Implementation
 				if pos = 1 then
 					top_parent_imp.general_insert_item (item_imp, h_item, Tvi_first, pos)
 				else
-					top_parent_imp.general_insert_item (item_imp, h_item, (ev_children @ (index)).h_item, pos)
+					top_parent_imp.general_insert_item (item_imp, h_item, (ev_children @ (pos - 1)).h_item, pos)
 				end
 			else
 				internal_children.go_i_th (pos)
@@ -442,8 +416,8 @@ end -- class EV_TREE_ITEM_IMP
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
---| Revision 1.32  2000/03/09 16:48:41  rogers
---| Removed redundent commented code. Now directly add the children into ev_children. Corrected use of a wrong index in insert_item (index -> pos).
+--| Revision 1.33  2000/03/09 17:28:33  rogers
+--| Removed redundent commented code. Insert item now uses pos - 1 correctly, instead of index when the insertion position is not one.
 --|
 --| Revision 1.31  2000/03/08 17:33:44  rogers
 --| Set_text from WEL_TREE_VIEW is now redefined. Redundent make_with_text has been removed. Set text now sets the text to a clone of the passed text. All calls to general_insert_item now take an index.

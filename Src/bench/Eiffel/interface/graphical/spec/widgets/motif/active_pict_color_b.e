@@ -15,7 +15,7 @@ creation
 
 feature -- Status
 
-	active: BOOLEAN
+	active: BOOLEAN is
 			-- Is button active?
 		do
 		end

@@ -22,7 +22,7 @@ creation
 
 feature -- Initialization
 
-	make(given_width: INTEGER; given_height: INTEGER; color_depth: INTEGER; masked_bitmap: BOOLEAN) is
+	make (given_width: INTEGER; given_height: INTEGER; color_depth: INTEGER; masked_bitmap: BOOLEAN) is
 			-- Initialization with an empty image list. Images located
 			-- in this imageList must have the a width equal to `given_width'
 			-- and a height equal to `given_height'. 
@@ -105,7 +105,7 @@ feature -- Access
 
 feature -- Basic operations
 
-	add_bitmap(bitmap_to_add: WEL_BITMAP) is
+	add_bitmap (bitmap_to_add: WEL_BITMAP) is
 			-- Add the bitmap `bitmap_to_add' into the image list.
 		require
 			bitmap_not_void: bitmap_to_add /= Void
@@ -116,7 +116,7 @@ feature -- Basic operations
 			last_position := cwel_imagelist_add(item, bitmap_to_add.item, Default_pointer)
 		end
 
-	replace_bitmap(bitmap_to_add: WEL_BITMAP; index: INTEGER) is
+	replace_bitmap (bitmap_to_add: WEL_BITMAP; index: INTEGER) is
 			-- Replace the bitmap at position `index' in the imageList by
 			-- `bitmap_to_add'.
 		require
@@ -129,7 +129,7 @@ feature -- Basic operations
 			cwel_imagelist_replace(item, index, bitmap_to_add.item, Default_pointer)
 		end
 
-	add_masked_bitmap(bitmap_to_add: WEL_BITMAP; bitmap_mask: WEL_BITMAP) is
+	add_masked_bitmap (bitmap_to_add: WEL_BITMAP; bitmap_mask: WEL_BITMAP) is
 			-- Add the bitmap `bitmap_to_add' into the image list.
 			-- `bitmap_mask' represents the mask for the bitmap.
 		require

@@ -9,7 +9,7 @@ inherit
 	COMPILER_ID
 		export
 			{COMPILER_EXPORTER} all;
-			{ANY} is_equal
+			{ANY} is_equal, id
 		end
 
 	ENCODER

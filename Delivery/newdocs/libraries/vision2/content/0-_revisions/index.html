@@ -40,12 +40,14 @@ modifications are relative to the previously released version.</p>
 	<LI><b>EV_TREE</b> - `ensure_item_visible' and `has_recursively' now take an EV_TREE_NODE as arguments, instead of an EV_TREE_ITEM.</li>
 	<li><b>EV_TEXT</b> - `put_new_line' is now obsolete. Use `set_text ("%N") instead.</li>"
 	<li><b>EV_APPLICATION_ACTION_SEQUENCES</b> - Added `cancel_actions', fired when a pick and drop is cancelled, and `pnd_motion_actions' fired while the pointer moves during a pick and drop.</li>
+	<li><b>EV_TREE_NODE_LIST</b> - `find_item_recursively_by_data', `has_recursively' and `recursive_do_all' are now implemented in this class, instead of both EV_TREE and EV_TREE_NODE which are descendents.</li>
 </ul>
 <p><b>Bug fixes</b>
 <ul>
   <li><b>Platform independent</b>
     <ul>
 	<li><b>EV_FIGURE_POLYLINE</b> - Fixed `start_angle' and `end_angle' so that they are computed relative to the first and last polyline segments. This also fixes the start and end arrows, so that when displayed, they now actually point in the direction of their respective line segments.</li>
+	<li><b>EV_TREE and EV_TREE_NODE</b> - Fixed `find_item_recursively_by_data' which failed on the `index_not_changed' postcondition. Note that these features are now defined in EV_TREE_NODE_LIST.</li>
     </ul>
   <li><b>Windows</b>
     <ul>

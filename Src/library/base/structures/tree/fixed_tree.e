@@ -28,7 +28,6 @@ class FIXED_TREE [G] inherit
 			parent, attach_to_parent
 		select
 			linear_representation,
-			sequential_representation,
 			changeable_comparison_criterion,
 			object_comparison,
 			is_leaf, has
@@ -50,7 +49,6 @@ class FIXED_TREE [G] inherit
 			writable as fl_writable,
 			extendible as fl_extendible,
 			remove as fl_remove,
-			sequential_representation as fl_seq_rep,
 			linear_representation as fl_lin_rep,
 			count as arity,
 			empty as is_leaf,
@@ -75,7 +73,7 @@ class FIXED_TREE [G] inherit
 				fl_put, fl_replace,
 				fl_writable, fl_extendible,
 				fl_remove, fl_make, fl_has, fl_readable,
-				fl_seq_rep, fl_lin_rep,
+				fl_lin_rep,
 				fl_fill, fl_full;
 			{FIXED_TREE}
 				array_item
@@ -251,13 +249,6 @@ feature -- Duplication
 				counter := counter + 1
 			end;
 			child_go_to (pos)
-		end;
-
-feature -- Obsolete
-
-	add (v: G) is
-		obsolete "Use ``put'' instead."
-		do
 		end;
 
 feature {FIXED_TREE} -- Implementation

@@ -27,7 +27,7 @@ class ARRAYED_TREE [G] inherit
 			duplicate_all, fill_subtree
 		select
 			object_comparison, linear_representation,
-			has, sequential_representation
+			has
 		end;
 
 	ARRAYED_LIST [ARRAYED_TREE [G]]
@@ -50,7 +50,6 @@ class ARRAYED_TREE [G] inherit
 			remove_left as al_remove_left,
 			remove_right as al_remove_right,
 			linear_representation as al_lin_rep,
-			sequential_representation as al_seq_rep,
 			count as arity,
 			empty as is_leaf,
 			full as al_full,
@@ -80,7 +79,7 @@ class ARRAYED_TREE [G] inherit
 				al_put, al_replace, al_has,
 				al_fill, al_full,
 				al_remove_left, al_remove_right, al_lin_rep,
-				al_seq_rep, al_put_left, al_put_right,
+				al_put_left, al_put_right,
 				al_merge_left, al_merge_right, al_object_comparison;
 		undefine
 			copy, is_equal, is_leaf, child_isfirst,

@@ -198,42 +198,6 @@ feature -- Duplication
 			child_go_to (pos)
 		end;
 
-feature -- Obsolete
-
-	remove_child_left (n: INTEGER) is
-			obsolete "Use ``remove_left_child'' repeatedly"
-			-- Remove min (`n', `child_index' - 1) children to
-			-- the left of child cursor.
-		local
-			counter: INTEGER
-		do
-			from
-				counter := 1
-			until
-				child_off or else (counter > n)
-			loop
-				remove_left_child;
-				counter := counter + 1
-			end
-		end;
-
-	remove_child_right (n: INTEGER) is
-			obsolete "Use ``remove_right_child'' repeatedly"
-			-- Remove min (`n', `arity' - `child_index') children to
-			-- the right of child cursor.
-		local
-			counter: INTEGER
-		do
-			from
-				counter := 1
-			until
-				child_off or else (counter > n)
-			loop
-				remove_right_child;
-				counter := counter + 1
-			end
-		end;
-
 feature {DYNAMIC_TREE} -- Implementation
 
 	new_tree: like Current is

@@ -26,7 +26,7 @@ feature {NONE} -- Initialization
 			-- Create a menu widget with `par' as
 			-- parent
 		do
-			!EV_MENU_IMP!implementation.make (par, label)
+			!EV_MENU_IMP!implementation.make_with_text (par, label)
 			par.add_menu (Current)
 		end	
 	

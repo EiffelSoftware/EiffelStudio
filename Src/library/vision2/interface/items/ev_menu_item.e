@@ -43,6 +43,7 @@ feature -- Event - command association
 							      arguments )
 		end	
 
+
 feature -- Implementation
 
 	widget_make_with_text (par: EV_CONTAINER; txt: STRING) is

@@ -15,9 +15,15 @@ inherit
 	
 	EV_MENU_ITEM_I
 
-	EV_PRIMITIVE_IMP
-		
+	
 	EV_TEXT_CONTAINER_IMP
+		rename
+			-- We want to maintain the name make_with_text
+			-- although the signature is different
+			make_with_text as old_make_with_text 
+		end
+	
+	EV_WIDGET_IMP -- Inheriting from widget, because menu item is a widget in gtk, although it is not a widget in EiffelVision. This is just for implementation reasons.
 
 creation
 	
@@ -25,6 +31,12 @@ creation
 
 feature {NONE} -- Initialization
 	
+	old_make_with_text (par: EV_CONTAINER; txt: STRING) is
+		do
+			check
+				do_not_call: False
+			end
+		end
 	
 	make_with_text (par: EV_MENU_ITEM_CONTAINER; txt: STRING) is
 			-- Create menu item
@@ -32,7 +44,7 @@ feature {NONE} -- Initialization
                         a: ANY
 		do
 			a ?= txt.to_c
-			widget := gtk_menu_item_new_with_label ($A)
+			widget := gtk_menu_item_new_with_label ($a)
 			show -- Have to show the menu item, otherwise it is not visible
 		end		
 	
@@ -46,12 +58,7 @@ feature {NONE} -- Implementation
 	
 feature -- Element change
 	
-	set_menu (menu_imp: EV_MENU_IMP) is
-			-- Set menu for menu item
-		do
-			gtk_menu_item_set_submenu ( gtk_menu_item (widget), 
-						    menu_imp.widget )
-		end
+
 
 feature -- Event - command association
 	
@@ -61,6 +68,7 @@ feature -- Event - command association
 		do
 			add_command ( "activate", command,  arguments )
 		end
+
 end
 
 --|----------------------------------------------------------------

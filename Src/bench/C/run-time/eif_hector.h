@@ -25,7 +25,7 @@ extern "C" {
  * interface defined in ETL uses the remaped names. Only this interface
  * is guaranteed.
  */
-#ifdef ISE_GC
+#if defined(ISE_GC) && !defined(EIF_IL_DLL)
 #define eif_access(_x)	(*(EIF_REFERENCE *) (_x))	/* Access object through hector */
 #define eif_freeze		efreeze				/* Freeze memory address */
 #define eif_adopt		eadopt				/* The C adopts an object */

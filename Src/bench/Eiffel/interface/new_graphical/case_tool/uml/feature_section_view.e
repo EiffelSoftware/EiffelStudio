@@ -64,6 +64,7 @@ feature {NONE} -- Initialize
 			create section_text.make_with_text ("+" + a_fs.features.count.out + " <<" + a_fs.name + ">>")
 			section_text.set_pointer_style (default_pixmaps.standard_cursor)
 			section_text.pointer_button_press_actions.extend (agent on_section_press)
+			section_text.pointer_double_press_actions.force_extend (agent on_double_press)
 			section_text.disable_events_sended_to_group
 
 			section_text.set_point_position (point_x, point_y)
@@ -251,6 +252,11 @@ feature {NONE} -- Implementation
 				feature_group.forth
 			end
 			container.request_update
+		end
+		
+	on_double_press is
+			-- Do nothing, but block the delegation to `container'.
+		do
 		end
 
 end -- class FEATURE_SECTION_VIEW

@@ -118,8 +118,10 @@ feature -- Commands
 						file_generation_type := op.html_to_help_flag
 					elseif equal (flag, "xml2help") then
 						file_generation_type := op.xml_to_help_flag
-					elseif equal (flag, "web") then
-						help_generation_type := op.web_help_flag
+					elseif equal (flag, "web_tree") then
+						help_generation_type := op.web_help_tree_flag
+					elseif equal (flag, "web_simple") then
+						help_generation_type := op.web_help_simple_flag
 					elseif equal (flag, "mshtml") then
 						help_generation_type := op.mshtml_help_flag
 					elseif equal (flag, "vsip") then
@@ -156,8 +158,9 @@ feature -- Commands
 			io.putstring ("			/all 		Unfiltered content (default)%N")
 			io.putstring ("	-t [/web /mshtml /vsip]%N")
 			io.putstring ("		Types of Help generation:%N")
-			io.putstring ("			/web 		HTML based help%N")
-			io.putstring ("			/mshtml 	Microsoft HTML 1.x Help (.chm)%N")
+			io.putstring ("			/web_tree 		HTML based help (tree toc)%N")
+			io.putstring ("			/web_simple 		HTML based help (simple toc)%N")
+			io.putstring ("			/mshtml 	Microsoft HTML 1.x Help (.chm)%N")			
 			io.putstring ("			/vsip 		Microsoft Visual Studio .NET Integration Help (MSHelp 2.0)%N")
 			io.putstring ("	-nohtml	Do not compile HTML Help project after generation")
 			io.putstring (" project_file	Project file to open.%N")
@@ -282,8 +285,11 @@ feature -- Commands
 				elseif help_generation_type.is_equal ("vsip") then
 					l_help_project := create {MSHELP_PROJECT}.make (l_html_directory, l_project.name, l_toc)
 					report ("success%N")
-				elseif help_generation_type.is_equal ("web") then
-					l_help_project := create {WEB_HELP_PROJECT}.make (l_html_directory, l_project.name, l_toc)
+				elseif help_generation_type.is_equal ("web_tree") then					
+					l_help_project := create {WEB_HELP_PROJECT_TREE}.make (l_html_directory, l_project.name, l_toc)
+					report ("success%N")
+				elseif help_generation_type.is_equal ("web_simple") then					
+					l_help_project := create {WEB_HELP_PROJECT_SIMPLE}.make (l_html_directory, l_project.name, l_toc)
 					report ("success%N")
 				end
 				report ("Generating help from help project information...")

@@ -199,3 +199,8 @@ GtkWidget *c_gtk_pixmap_create_from_xpm (GtkWidget *widget, char *fname);
 void c_gtk_pixmap_read_from_xpm ( GtkPixmap *pixmap,
 				  GtkWidget *pixmap_parent,
 				  char *file_name );
+
+/* List : add a listItem to a list
+ * 
+ * Author : Leila. */
+void c_gtk_add_list_item (GtkWidget *list, GtkWidget *item);

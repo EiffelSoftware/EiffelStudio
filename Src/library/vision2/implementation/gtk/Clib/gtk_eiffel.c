@@ -473,8 +473,21 @@ void c_gtk_pixmap_read_from_xpm ( GtkPixmap *pixmap,
     
     gtk_pixmap_set (pixmap, gdk_pixmap, mask);
 }
-					     
-					     
+
+				/* List */
+
+/* Add a listItem in a list. The item is first added in a Glist and then,
+ * the Glist is added to the list. */
+
+void c_gtk_add_list_item (GtkWidget *list, GtkWidget *item)
+{
+	GList *glist;
+	
+	glist=NULL;
+	glist=g_list_append(glist, item);
+	gtk_list_append_items (GTK_LIST(list), glist);
+	gtk_widget_show(item);
+}
 
 				/* static functions */
 static void
@@ -484,6 +497,4 @@ c_gtk_widget_show_children_recurse (GtkWidget *widget,
     gtk_widget_show (widget);
     c_gtk_widget_show_children (widget);
 }
-
-
 

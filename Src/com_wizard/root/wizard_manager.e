@@ -154,6 +154,7 @@ feature -- Basic Operations
 								end
 							end
 						else
+
 							generate
 						end
 					end
@@ -177,12 +178,19 @@ feature {NONE} -- Implementation
 		local
 			i, a_range: INTEGER
 		do
+			-- Initialization
 			parent.add_title (Analysis_title)
 			set_system_descriptor (create {WIZARD_SYSTEM_DESCRIPTOR}.make)
 			set_range (0)
 			set_progress (0)
-			system_descriptor.generate (shared_wizard_environment.type_library_file_name)
 			intialize_file_directories
+
+			-- Descriptors generation
+			if directories_initialized then
+				system_descriptor.generate (shared_wizard_environment.type_library_file_name)
+			end
+			
+			-- Code generation
 			if directories_initialized and not Shared_wizard_environment.abort then
 				parent.add_title (Generation_title)
 				from
@@ -225,18 +233,20 @@ feature {NONE} -- Implementation
 					end
 					system_descriptor.forth
 				end
-				report_finish
 				if Shared_wizard_environment.abort then
 					parent.add_message (Generation_Aborted)
 				else
+
+					-- Generation of runtime functions
+					Shared_file_name_factory.create_generated_mapper_file_name (Generated_ce_mapper_writer)
+					Generated_ce_mapper_writer.save_file (Shared_file_name_factory.last_created_file_name)
+					Generated_ce_mapper_writer.save_header_file (Shared_file_name_factory.last_created_header_file_name)
+					Shared_file_name_factory.create_generated_mapper_file_name (Generated_ec_mapper_writer)
+					Generated_ec_mapper_writer.save_file (Shared_file_name_factory.last_created_file_name)
+					Generated_ec_mapper_writer.save_header_file (Shared_file_name_factory.last_created_header_file_name)
 					parent.add_message (Generation_Successful)
 				end
-				Shared_file_name_factory.create_generated_mapper_file_name (Generated_ce_mapper_writer)
-				Generated_ce_mapper_writer.save_file (Shared_file_name_factory.last_created_file_name)
-				Generated_ce_mapper_writer.save_header_file (Shared_file_name_factory.last_created_header_file_name)
-				Shared_file_name_factory.create_generated_mapper_file_name (Generated_ec_mapper_writer)
-				Generated_ec_mapper_writer.save_file (Shared_file_name_factory.last_created_file_name)
-				Generated_ec_mapper_writer.save_header_file (Shared_file_name_factory.last_created_header_file_name)
+				report_finish
 			end
 		end
 		

@@ -17,7 +17,6 @@ feature {NONE} -- Initialization
 			external_name: "Make"
 		do
 			create parents.make
-			--create creation_routines.make 
 			create initialization_features.make
 			create access_features.make
 			create element_change_features.make
@@ -29,7 +28,6 @@ feature {NONE} -- Initialization
 			create invariants.make
 		ensure
 			non_void_parents: parents /= Void
-		--	non_void_creation_routines: creation_routines /= Void
 			non_void_initialization_features: initialization_features /= Void
 			non_void_access_features: access_features /= Void
 			non_void_element_change_features: element_change_features /= Void
@@ -87,13 +85,6 @@ feature -- Access
 			description: "Parents"
 			external_name: "Parents"
 		end
-		
---	creation_routines: SYSTEM_COLLECTIONS_ARRAYLIST
---			-- | SYSTEM_COLLECTIONS_ARRAYLIST [STRING]
---		indexing
---			description: "Creation routines Eiffel names "
---			external_name: "CreationRoutines"
---		end
 		
 	initialization_features: SYSTEM_COLLECTIONS_ARRAYLIST 
 			-- | SYSTEM_COLLECTIONS_ARRAYLIST [EIFFEL_FEATURE]
@@ -158,7 +149,14 @@ feature -- Access
 			description: "Class invariants"
 			external_name: "Invariants"
 		end
-
+	
+	generic_derivations: SYSTEM_COLLECTIONS_ARRAYLIST
+			-- | SYSTEM_COLLECTIONS_ARRAYLIST [GENERIC_DERIVATION]
+		indexing
+			description: "List of derivations of the class if it is generic"
+			external_name: "GenericDerivations"
+		end
+		
 feature -- Eiffel names from .NET reflection info
 
 	creation_routine_from_info (info: SYSTEM_REFLECTION_CONSTRUCTORINFO): EIFFEL_FEATURE is
@@ -168,7 +166,6 @@ feature -- Eiffel names from .NET reflection info
 		require
 			non_void_info: info /= Void
 		do
---			if creation_routines.get_count = 0 then
 			if initialization_features.get_count = 0 then
 				Result := Void
 			else
@@ -180,7 +177,6 @@ feature -- Eiffel names from .NET reflection info
 			end
 		ensure
 			non_void_feature_if_creation_routine_found: has_creation_routine (info) implies Result /= Void	
---			void_feature_if_no_creation_routine_or_not_found: (creation_routines.get_count = 0 or else not has_creation_routine (info)) implies Result = Void
 			void_feature_if_no_creation_routine_or_not_found: (initialization_features.get_count = 0 or else not has_creation_routine (info)) implies Result = Void
 		end
 		
@@ -315,7 +311,13 @@ feature -- Status Report
 			description: "Has a `bit_or' feature to be generated in current type?"
 			external_name: "BitOrInfix"
 		end
-		
+	
+	is_generic: BOOLEAN
+		indexing
+			description: "Is class generic?"
+			external_name: "IsGeneric"
+		end
+	
 feature -- Status Setting
 
 	set_frozen (a_value: like is_frozen) is
@@ -358,24 +360,34 @@ feature -- Status Setting
 			create_none_set: create_none = a_value
 		end
 	
-	set_modified is
+	set_modified (a_value: like modified) is
 		indexing
-			description: "Set `modified' with `True'."
+			description: "Set `modified' with `a_value'."
 			external_name: "SetModified"
 		do
-			modified := True
+			modified := a_value
 		ensure
-			modified: modified
+			modified_set: modified = a_value
 		end
 
-	set_bit_or_infix is
+	set_bit_or_infix (a_value: like bit_or_infix) is
 		indexing
-			description: "Set `bit_or_infix' with `True'."
+			description: "Set `bit_or_infix' with `a_value'."
 			external_name: "SetBitOrInfix"
 		do
-			bit_or_infix := True
+			bit_or_infix := a_value
 		ensure
-			bit_or_infix: bit_or_infix
+			bit_or_infix_set: bit_or_infix = a_value
+		end
+
+	set_generic (a_value: like is_generic) is
+		indexing
+			description: "Set `is_generic' with `a_value'."
+			external_name: "SetGeneric"
+		do
+			is_generic := a_value
+		ensure
+			is_generic_set: is_generic = a_value
 		end
 		
 	set_eiffel_name (a_name: like eiffel_name) is
@@ -525,26 +537,11 @@ feature -- Basic Operations
 			inheritance_clauses.put (3, a_parent.select_clauses)
 			inheritance_clauses.put (4, a_parent.export_clauses)
 			
-			parents.Add (a_parent.name, inheritance_clauses)
+			parents.extend (a_parent.name, inheritance_clauses)
 		ensure
-			parent_added: parents.Contains_Key (a_parent.name)
+			parent_added: parents.contains_key (a_parent.name)
 		end
 	
---	add_creation_routine (a_name: STRING) is
---		indexing
---			description: "Add `a_name' to `creation_routines'."
---			external_name: "AddCreationRoutine"
---		require
---			non_void_routine_name: a_name /= Void
---			not_empty_routine_name: a_name.get_length > 0
---		local
---			routine_added: INTEGER
---		do
---			routine_added := creation_routines.Add (a_name)
---		ensure
---			routine_added: creation_routines.Contains (a_name)
---		end
-
 	add_initialization_feature (a_feature: EIFFEL_FEATURE) is
 		indexing
 			description: "Add `a_feature' to `initialization_features'."
@@ -554,9 +551,9 @@ feature -- Basic Operations
 		local
 			feature_added: INTEGER
 		do
-			feature_added := initialization_features.Add (a_feature)
+			feature_added := initialization_features.extend (a_feature)
 		ensure
-			feature_added: initialization_features.Contains (a_feature)
+			feature_added: initialization_features.has (a_feature)
 		end
 		
 	add_access_feature (a_feature: EIFFEL_FEATURE) is
@@ -568,9 +565,9 @@ feature -- Basic Operations
 		local
 			feature_added: INTEGER
 		do
-			feature_added := access_features.Add (a_feature)
+			feature_added := access_features.extend (a_feature)
 		ensure
-			feature_added: access_features.Contains (a_feature)
+			feature_added: access_features.has (a_feature)
 		end
 		
 	add_element_change_feature (a_feature: EIFFEL_FEATURE) is
@@ -582,9 +579,9 @@ feature -- Basic Operations
 		local
 			feature_added: INTEGER
 		do
-			feature_added := element_change_features.Add (a_feature)
+			feature_added := element_change_features.extend (a_feature)
 		ensure
-			feature_added: element_change_features.Contains (a_feature)
+			feature_added: element_change_features.has (a_feature)
 		end
 		
 	add_basic_operation (a_feature: EIFFEL_FEATURE) is
@@ -596,9 +593,9 @@ feature -- Basic Operations
 		local
 			feature_added: INTEGER
 		do
-			feature_added := basic_operations.Add (a_feature)
+			feature_added := basic_operations.extend (a_feature)
 		ensure
-			feature_added: basic_operations.Contains (a_feature)
+			feature_added: basic_operations.has (a_feature)
 		end
 		
 	add_unary_operator (a_feature: EIFFEL_FEATURE) is
@@ -610,9 +607,9 @@ feature -- Basic Operations
 		local
 			feature_added: INTEGER
 		do
-			feature_added := unary_operators_features.Add (a_feature)
+			feature_added := unary_operators_features.extend (a_feature)
 		ensure
-			feature_added: unary_operators_features.Contains (a_feature)
+			feature_added: unary_operators_features.has (a_feature)
 		end
 		
 	add_binary_operator (a_feature: EIFFEL_FEATURE) is
@@ -624,9 +621,9 @@ feature -- Basic Operations
 		local
 			feature_added: INTEGER
 		do
-			feature_added := binary_operators_features.Add (a_feature)
+			feature_added := binary_operators_features.extend (a_feature)
 		ensure
-			feature_added: binary_operators_features.Contains (a_feature)
+			feature_added: binary_operators_features.has (a_feature)
 		end
 		
 	add_special_feature (a_feature: EIFFEL_FEATURE) is
@@ -638,9 +635,9 @@ feature -- Basic Operations
 		local
 			feature_added: INTEGER
 		do
-			feature_added := special_features.add (a_feature)
+			feature_added := special_features.extend (a_feature)
 		ensure
-			feature_added: special_features.Contains (a_feature)
+			feature_added: special_features.has (a_feature)
 		end
 		
 	add_implementation_feature (a_feature: EIFFEL_FEATURE) is
@@ -652,9 +649,9 @@ feature -- Basic Operations
 		local
 			feature_added: INTEGER
 		do
-			feature_added := implementation_features.add (a_feature)
+			feature_added := implementation_features.extend (a_feature)
 		ensure
-			feature_added: implementation_features.Contains (a_feature)
+			feature_added: implementation_features.has (a_feature)
 		end
 	
 	add_invariant (a_tag, a_text: STRING) is
@@ -672,9 +669,28 @@ feature -- Basic Operations
 			create an_invariant.make (2)
 			an_invariant.put (0, a_tag)
 			an_invariant.put (1, a_text)
-			invariant_added := invariants.Add (an_invariant)	
+			invariant_added := invariants.extend (an_invariant)	
 		end
 
+	add_generic_derivation (a_derivation: GENERIC_DERIVATION) is
+		indexing
+			description: "Add `a_derivation' to `generic_derivations'."
+			external_name: "AddGenericDerivation"
+		require
+			is_generic: is_generic
+			non_void_derivation: a_derivation /= Void
+		local
+			added: INTEGER
+		do
+			if generic_derivations = Void then
+				create generic_derivations.make
+			end
+			added := generic_derivations.extend (a_derivation)
+		ensure
+			non_void_generic_derivations: generic_derivations /= Void
+			derivation_set: generic_derivations.has (a_derivation)
+		end
+			
 feature {NONE} -- Implementation
 		
 	has_creation_routine (info: SYSTEM_REFLECTION_CONSTRUCTORINFO): BOOLEAN is
@@ -867,7 +883,6 @@ feature {NONE} -- Implementation
 		
 invariant
 	non_void_parents: parents /= Void
---	non_void_creation_routines: creation_routines /= Void
 	non_void_initialization_features: initialization_features /= Void
 	non_void_access_features: access_features /= Void
 	non_void_element_change_features: element_change_features /= Void
@@ -878,7 +893,8 @@ invariant
 	non_void_implementation_features: implementation_features /= Void
 	non_void_invariants: invariants /= Void
 	frozen_xor_deferred: is_frozen xor is_deferred
---	is_expanded_implies_no_creation_routine: is_expanded implies creation_routines.get_count = 0
 	is_expanded_implies_no_creation_routine: is_expanded implies initialization_features.get_count = 0
+	not_generic_implies_no_generic_derivations: not is_generic implies generic_derivations = Void
+	generic_derivations_implies_generic: generic_derivations /= Void implies is_generic
 
 end -- class EIFFEL_CLASS

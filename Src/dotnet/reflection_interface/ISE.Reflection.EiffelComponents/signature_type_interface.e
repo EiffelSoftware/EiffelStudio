@@ -1,25 +1,10 @@
 indexing
-	description: "Signature type"
-	external_name: "ISE.Reflection.SignatureType"
+	description: "Signature type interface"
+	external_name: "ISE.Reflection.ISignatureType"
 	attribute: create {SYSTEM_RUNTIME_INTEROPSERVICES_CLASSINTERFACEATTRIBUTE}.make_classinterfaceattribute ((create {SYSTEM_RUNTIME_INTEROPSERVICES_CLASSINTERFACETYPE}).auto_dual) end
 
-class
-	SIGNATURE_TYPE
-
-inherit
+deferred class
 	SIGNATURE_TYPE_INTERFACE
-	
-create
-	make
-
-feature {NONE} -- Initialization
-
-	make is
-		indexing
-			description: "Creation routine"
-			external_name: "Make"
-		do
-		end
 
 feature -- Access
 
@@ -27,16 +12,14 @@ feature -- Access
 		indexing
 			description: "Type Eiffel name"
 			external_name: "TypeEiffelName"
-		do
-			Result := internal_type_eiffel_name
+		deferred
 		end
 	
 	type_full_external_name: STRING is
 		indexing
 			description: "Type external name (full name)"
 			external_name: "TypeFullExternalName"
-		do
-			Result := internal_type_full_external_name
+		deferred
 		end
 		
 feature -- Status Setting
@@ -45,30 +28,22 @@ feature -- Status Setting
 		indexing
 			description: "Set `type_eiffel_name' with `a_name'."
 			external_name: "SetTypeEiffelName"
-		do
-			internal_type_eiffel_name := a_name
+		require
+			non_void_name: a_name /= Void
+		deferred
+		ensure
+			type_eiffel_name_set: type_eiffel_name.equals_string (a_name)
 		end
 
 	set_type_full_external_name (a_name: STRING) is
 		indexing
 			description: "Set `type_full_external_name' with `a_name'."
 			external_name: "SetTypeFullExternalName"
-		do
-			internal_type_full_external_name := a_name
-		end
-
-feature {NONE} -- Implementation
-
-	internal_type_eiffel_name: STRING 
-		indexing
-			description: "Value returned by `type_eiffel_name'"
-			external_name: "InternalTypeEiffelName"
-		end
-
-	internal_type_full_external_name: STRING 
-		indexing
-			description: "Value returned by `type_full_external_name'"
-			external_name: "InternalTypeFullExternalName"
+		require
+			non_void_name: a_name /= Void
+		deferred
+		ensure
+			type_full_external_name_set: type_full_external_name.equals_string (a_name)
 		end
 		
-end -- class SIGNATURE_TYPE
+end -- class SIGNATURE_TYPE_INTERFACE

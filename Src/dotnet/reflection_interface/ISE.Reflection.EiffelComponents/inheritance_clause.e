@@ -9,7 +9,7 @@ deferred class
 inherit
 	ANY
 		redefine
-			equals
+			is_equal
 		end
  
 feature {NONE} -- Initialization
@@ -47,10 +47,10 @@ feature {NONE} -- Initialization
 
 feature -- Status Report
 
-	equals (obj: INHERITANCE_CLAUSE): BOOLEAN is
+	is_equal (obj: INHERITANCE_CLAUSE): BOOLEAN is
 		indexing
 			description: "Is Current equals to `obj'?"
-			external_name: "Equals"
+			external_name: "IsEqual"
 		do
 			Result := source_name.to_lower.equals_string (obj.source_name.to_lower)
 		end

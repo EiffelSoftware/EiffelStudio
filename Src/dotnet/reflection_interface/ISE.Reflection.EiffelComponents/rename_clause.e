@@ -9,7 +9,7 @@ class
 inherit
  	INHERITANCE_CLAUSE
  		redefine
- 			equals
+ 			is_equal
  		end
  
 create
@@ -74,10 +74,10 @@ feature -- Access
 
 feature -- Status Report
 
-	equals (obj: RENAME_CLAUSE): BOOLEAN is
+	is_equal (obj: RENAME_CLAUSE): BOOLEAN is
 		indexing
 			description: "Is Current equal to `obj'?"
-			external_name: "Equals"
+			external_name: "IsEqual"
 		do
 			Result := source_name.to_lower.equals_string (obj.source_name.to_lower) and target_name.to_lower.equals_string (obj.target_name.to_lower)
 		end

@@ -12,7 +12,8 @@ inherit
 			has_gcable_variable, has_call,
 			make_byte_code, is_unsafe,
 			calls_special_features,
-			optimized_byte_node, size
+			optimized_byte_node, size,
+			pre_inlined_code
 		end;
 	
 feature 
@@ -147,6 +148,12 @@ feature -- Inlining
 	size: INTEGER is
 		do
 			Result := 1 + expr.size
+		end
+
+	pre_inlined_code: like Current is
+		do
+			Result := Current;
+			expr := expr.pre_inlined_code
 		end
 
 end

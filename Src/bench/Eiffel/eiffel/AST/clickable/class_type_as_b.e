@@ -154,6 +154,11 @@ feature -- Conveniences
 			if a_class.is_expanded then
 				record_exp_dependance (a_class);
 			end;
+				-- Base type class is expanded
+			Result.set_is_separate (a_class.is_separate);
+			if a_class.is_separate then
+				record_separate_dependance (a_class);
+			end;
 		end;
 
 	record_exp_dependance (a_class: CLASS_C) is
@@ -185,6 +190,12 @@ feature -- Conveniences
 				end
 			end;
 		end;
+
+	record_separate_dependance (a_class: CLASS_C) is
+			-- Mark the class `a_class' used as separate
+		do
+			a_class.set_is_used_as_separate
+		end
 
 	actual_type: CL_TYPE_A is
 			-- Actual class type without processing like types

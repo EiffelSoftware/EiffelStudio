@@ -13,13 +13,15 @@ inherit
 		redefine
 			interface
 		end
+		
+	EV_RICH_TEXT_ACTION_SEQUENCES_I
 
 feature -- Status report
 
-	character_format (character_index: INTEGER): EV_CHARACTER_FORMAT is
-			-- `Result' is character format of character `character_index'.
+	character_format (caret_index: INTEGER): EV_CHARACTER_FORMAT is
+			-- `Result' is character format at caret position `caret_index'
 		require
-			valid_character_index: character_index >= 1 and character_index <= text_length
+			valid_character_index: caret_index >= 1 and caret_index <= text_length + 1
 		deferred
 		ensure
 			result_not_void: Result /= Void
@@ -71,6 +73,14 @@ feature -- Status report
 		end
 
 feature -- Status setting
+
+	set_current_format (format: EV_CHARACTER_FORMAT) is
+			-- apply `format' to current caret position, applicable
+			-- to next typed characters.
+		require
+			format_not_void: format /= Void
+		deferred
+		end
 
 	format_region (start_position, end_position: INTEGER; format: EV_CHARACTER_FORMAT) is
 			-- Apply `format' to all characters between the caret positions `start_position' and `end_position'.
@@ -136,7 +146,7 @@ feature -- Status setting
 		ensure
 			tab_width_set: tab_width = a_width
 		end
-		
+	
 feature {NONE} -- Implementation
 
 	update_tab_positions (value: INTEGER) is

@@ -922,10 +922,16 @@ feature {NONE} -- Implementation, focus event
 					application_imp.set_window_with_focus (top_level_titled_window)
 				end
 			end
-			update_current_push_button
 			Focus_on_widget.put (Current)
 			if focus_in_actions_internal /= Void then
 				focus_in_actions_internal.call (Void)
+			end
+				-- If we still have the focus after calling the focus_in
+				-- actions then we need to updated the current push button
+				-- otherwise, there is no need to since the widget which
+				-- has now the focus has already done it.
+			if has_focus then
+				update_current_push_button
 			end
 		end
 		

@@ -319,7 +319,6 @@ feature -- Basic operations
 			else
 				cwin_destroy_window (item)
 			end
-			destroy_item
 		end
 
 	draw_menu is

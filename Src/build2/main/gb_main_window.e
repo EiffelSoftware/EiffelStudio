@@ -1109,6 +1109,9 @@ feature {NONE} -- Debugging Implementation
 			create accelerator.make_with_key_combination (create {EV_KEY}.make_with_code ((create {EV_KEY_CONSTANTS}).key_2), True, False, False)
 			accelerator.actions.extend (agent mem_info)
 			accelerators.extend (accelerator)
+			create accelerator.make_with_key_combination (create {EV_KEY}.make_with_code ((create {EV_KEY_CONSTANTS}).key_3), True, False, False)
+			accelerator.actions.extend (agent write_all_objects)
+			accelerators.extend (accelerator)
 		end
 		
 	full_garbage_collect is
@@ -1117,6 +1120,57 @@ feature {NONE} -- Debugging Implementation
 			if system_status.is_in_debug_mode then
 				collect
 				full_collect
+			end
+		end
+		
+	write_all_objects is
+			-- Display memory info to files on disk, named sequentially.
+		local
+			output: STRING
+			file: PLAIN_TEXT_FILE
+			directory: DIRECTORY
+			all_objects: HASH_TABLE [GB_OBJECT, INTEGER]
+			current_object: GB_OBJECT
+			object_counter: INTEGER
+		do
+			if system_status.is_in_debug_mode then
+				objects_file_count.set_item (objects_file_count.item + 1)
+				all_objects := (create {GB_SHARED_OBJECT_HANDLER}).object_handler.objects
+				output := ""
+				
+				from
+					object_counter := 1
+				until
+					object_counter > 10000
+				loop
+					all_objects.search (object_counter)
+					if all_objects.found then
+						current_object := all_objects.found_item
+						output.append ("object : " + current_object.id.out + " " + current_object.name)
+						output.append (" instance_referers : ")
+						if not current_object.instance_referers.is_empty then
+							from
+								current_object.instance_referers.start
+							until
+								current_object.instance_referers.off
+							loop
+								output.append (current_object.instance_referers.item_for_iteration.out + " ")
+								current_object.instance_referers.forth
+							end
+						end
+						output.append ("%N")
+					end
+					object_counter := object_counter + 1				
+				end
+								
+				create directory.make ("C:\Documents and Settings\rogers\Desktop\")
+				if directory.exists then
+					create file.make_create_read_write ("C:\Documents and Settings\rogers\Desktop\Build_referers" + objects_file_count.item.out + ".txt")
+				else
+					create file.make_create_read_write ("C:\Build_referers" + objects_file_count.item.out + ".txt")
+				end
+				file.put_string (output)
+				file.close
 			end
 		end
 		
@@ -1157,6 +1211,12 @@ feature {NONE} -- Debugging Implementation
 		
 	file_count: INTEGER_REF is
 			-- Count used to append to end of file name for `mem_info' output.
+		once
+			create Result
+		end
+		
+	objects_file_count: INTEGER_REF is
+			-- Count used to append to end of file name for `write_all_objects' output.
 		once
 			create Result
 		end

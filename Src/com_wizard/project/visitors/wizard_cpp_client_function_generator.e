@@ -185,12 +185,18 @@ feature {NONE} -- Implementation
 					else 
 						if 
 							visitor.is_interface_pointer or
-							visitor.is_structure_pointer or 
-							visitor.is_array_basic_type or
 							visitor.is_coclass_pointer
 						then
 							signature.append (arguments.item.name)
+							variables.append (add_ref_in_interface_pointer (arguments.item.name))
+							variables.append (New_line_tab)
 
+						elseif
+							visitor.is_structure_pointer or 
+							visitor.is_array_basic_type
+						then
+							signature.append (arguments.item.name)
+		
 						elseif 
 							visitor.is_interface or 
 							visitor.is_coclass or 

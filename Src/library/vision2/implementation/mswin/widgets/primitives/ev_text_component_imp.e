@@ -107,6 +107,15 @@ feature -- Status setting
 			set_selection (start_pos, end_pos)
 		end
 
+feature -- Resizing
+
+	set_minimum_width_in_characters (nb: INTEGER) is
+			-- Make `nb' characters visible on one line.
+			-- We add nine for the borders.
+		do
+			set_minimum_width (nb * wel_font.log_font.width + 9)
+		end
+
 feature -- Basic operation
 
 	search (str: STRING): INTEGER is

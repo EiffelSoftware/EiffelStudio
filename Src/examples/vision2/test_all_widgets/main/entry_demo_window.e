@@ -23,18 +23,29 @@ creation
 
 feature -- Access
 
-	main_widget: EV_TEXT_FIELD is
+	main_widget: EV_VERTICAL_BOX is
 			-- The main widget of the demo
 		once
 			!!Result.make (Current)
 		end
 
+	TextField: EV_TEXT_FIELD
+			-- A text field in the demo
+
+	PasswordField: EV_PASSWORD_FIELD
+			-- A password field
+
 feature -- Status setting
 	
 	set_widgets is
 			-- Set the widgets in the demo windows.
+		local
+			frame: EV_FRAME
 		do
-			main_widget.set_text ("edit me")
+			!! frame.make_with_text (main_widget, "A Text Field")
+			!! textfield.make_with_text (frame, "Edit me")
+			!! frame.make_with_text (main_widget, "A Password Field")
+			!! passwordfield.make_with_text (frame, "Me too")
 		end
 	
 	set_values is

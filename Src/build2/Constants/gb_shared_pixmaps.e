@@ -285,13 +285,7 @@ feature -- Pngs
 	png_location: STRING is
 			-- `Result' is directory containing png files.
 		once
-			if visual_studio_information.is_visual_studio_wizard then
-				create Result.make_from_string (visual_studio_information.wizard_installation_path)
-				Result.append ("bitmaps")
-				Result.append ("png")
-			else
-				Result := Bitmap_path
-			end		
+			Result := Bitmap_path
 		ensure
 			Result_not_void: Result /= Void
 		end
@@ -370,21 +364,9 @@ feature {NONE} -- Update
 		require
 			file_name_exists: file /= Void and not file.is_empty
 		do
-				-- Note that if we have launched from
-				-- VisualStudio, then we look for the pixmaps
-				-- relative to the current directory, which is the location
-				-- of build.exe
-			if visual_studio_information.is_visual_studio_wizard then
-				create Result.make_from_string (visual_studio_information.wizard_installation_path)
-				Result.extend ("bitmaps")
-				Result.extend (Pixmap_suffix)
-				Result.set_file_name (file)
-				Result.add_extension (pixmap_suffix)
-			else
-				create Result.make_from_string (Bitmap_path)
-				Result.set_file_name (file)
-				Result.add_extension (Pixmap_suffix)
-			end
+			create Result.make_from_string (Bitmap_path)
+			Result.set_file_name (file)
+			Result.add_extension (Pixmap_suffix)
 		ensure
 			Result_not_void: Result /= Void
 		end

@@ -91,15 +91,19 @@ feature -- Transformation
 				tmp_name := name_for_feature (tmp_name)
 				from
 				until
-					not a_coclass_descriptor.feature_eiffel_names.has (tmp_name)
+					not a_coclass_descriptor.feature_eiffel_names.has (tmp_name) and
+					not a_coclass_descriptor.feature_eiffel_names.has (tmp_precondition_name)
 				loop
 					tmp_name.append (One)
+					tmp_precondition_name := clone (tmp_name)
+					tmp_precondition_name.append ("_user_precondition")
 				end
 				add_coclass_eiffel_name (tmp_name, a_coclass_descriptor.name)
 			end
 			a_coclass_descriptor.feature_eiffel_names.force (clone (tmp_name))
-			tmp_name.append ("_user_precondition")
-			a_coclass_descriptor.feature_eiffel_names.force (clone (tmp_name))
+			tmp_precondition_name := clone (tmp_name)
+			tmp_precondition_name.append ("_user_precondition")
+			a_coclass_descriptor.feature_eiffel_names.force (tmp_precondition_name)
 			
 			a_coclass_descriptor.feature_c_names.force (clone (name))
 			an_interface_descriptor.feature_c_names.force (clone (name))

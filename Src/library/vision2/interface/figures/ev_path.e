@@ -16,6 +16,10 @@ inherit
 --	EV_DASHABLE
 
 	EV_DRAWING_ATTRIBUTES
+		redefine
+			get_drawing_attributes,
+			set_drawing_attributes
+		end
 
 creation
 
@@ -33,16 +37,38 @@ feature {NONE} -- Initialization
 			!! foreground_color.make
 		end
 
+feature -- Status report 
+
+	line_width: INTEGER
+			-- width of line of current figure
+
+feature -- Status setting
+
+	set_line_width (a_line_width: INTEGER) is
+			-- Set `line_width' of current figure to `a_line_width'.
+		require
+			a_line_width_positive: a_line_width >= 0
+		do
+			line_width := a_line_width
+		ensure
+			line_width = a_line_width
+		end
+
 feature {EV_FIGURE} -- Element change
+
+	get_drawing_attributes (drawing: EV_DRAWABLE) is
+			-- Get the `drawing' attributes.
+		do
+			{EV_DRAWING_ATTRIBUTES} Precursor (drawing)
+			line_width := drawing.line_width
+		end
 
 	set_drawing_attributes (drawing: EV_DRAWABLE) is
 			-- Set the attributes to `a_drawing'.
-		require
-			drawing_exists: drawing /= Void
 		do
-			drawing.set_logical_mode (logical_function_mode)
---			drawing.set_subwindow_mode (subwindow_mode)
+			{EV_DRAWING_ATTRIBUTES} Precursor (drawing)
 			drawing.set_line_width (line_width)
+--			drawing.set_subwindow_mode (subwindow_mode)
 --			drawing.set_line_style (line_style)
 --			drawing.set_fill_style (fill_style)
 --			if fill_style = FillTiled then

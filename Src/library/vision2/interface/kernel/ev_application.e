@@ -138,6 +138,8 @@ feature -- Event handling
 			implementation.do_once_on_idle (an_action)
 		end
 
+	--| FIXME is `destroy_actions' needed?
+
 feature {EV_WINDOW, EV_PICK_AND_DROPABLE, EV_PICK_AND_DROPABLE_I}
 		-- Implementation
 	
@@ -198,6 +200,9 @@ end -- class EV_APPLICATION
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.19  2000/03/27 19:00:31  oconnor
+--| added comment
+--|
 --| Revision 1.18  2000/03/23 19:03:05  brendel
 --| Removed once_idle_actions.
 --|

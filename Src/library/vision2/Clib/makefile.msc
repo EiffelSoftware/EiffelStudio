@@ -18,7 +18,7 @@ CFLAGS = -c -Zi -W4 \
 .c.obj:
 	$(CC) $(CFLAGS) $<
 
-OBJ = load_pixmap.obj
+OBJ = load_pixmap.obj mouse_hook.obj
 
 vision2.lib: $(OBJ)
 	if exist $@ del $@

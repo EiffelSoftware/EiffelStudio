@@ -172,6 +172,7 @@ feature {COMPILER_EXPORTER}
 			current_cluster: CLUSTER_I
 			l_class: CLASS_I
 			l_index: INTEGER
+			l_cursor: like cursor
 		do
 			if other.is_none then
 				Result := False
@@ -188,6 +189,7 @@ feature {COMPILER_EXPORTER}
 				until
 					after or else not Result
 				loop
+					l_cursor := cursor
 					from
 						l_client := item
 						l_clients := l_client.clients
@@ -204,6 +206,7 @@ feature {COMPILER_EXPORTER}
 						l_clients.go_i_th (l_index)
 						l_clients.forth
 					end
+					go_to (l_cursor)
 					forth
 				end
 			end

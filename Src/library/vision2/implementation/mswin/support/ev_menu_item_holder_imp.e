@@ -1,6 +1,8 @@
 indexing
-	description: "EiffelVision menu item container. %
-				% Ms windows implementation"
+	description:
+		" EiffelVision menu item container, mswindows implementation"
+	note: " Menu-items have even ids and tool-bar buttons have%
+		% odd ids because both use the on_wm_command."
 	status: "See notice at end of class"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -44,17 +46,9 @@ feature {EV_MENU_ITEM_I} -- Implementation
 
 	add_item (item_imp: EV_MENU_ITEM_IMP) is
 			-- Add `item_imp' into container.
-		local
-			iid: INTEGER
 		do
-			if not ev_children.empty then
-				iid := ev_children.current_keys @ ev_children.count + 1
-			else
-				iid := 1
-			end
-			ev_children.force (item_imp, iid)
-			submenu.append_string (item_imp.text, ev_children.count)
-			item_imp.set_id (iid)
+			ev_children.force (item_imp, item_imp.id)
+			submenu.append_string (item_imp.text, item_imp.id)
 			item_imp.set_position (submenu.count - 1)
 		end
 
@@ -63,17 +57,8 @@ feature {EV_MENU_ITEM_I} -- Implementation
 		local
 			iid: INTEGER
 		do
-			-- First, we set the id of the item to the next available
-			-- value.
-			if not ev_children.empty then
-				iid := ev_children.current_keys @ ev_children.count + 1
-			else
-				iid := 1
-			end
-
-			ev_children.force (item_imp, iid)
-			submenu.append_string (item_imp.text, ev_children.count)
-			item_imp.set_id (iid)
+			ev_children.force (item_imp, item_imp.id)
+			submenu.insert_string (item_imp.text, value - 1, item_imp.id)
 			item_imp.set_position (submenu.count - 1)
 		end
 

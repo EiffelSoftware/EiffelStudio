@@ -1,4 +1,4 @@
-<document title="19 APPENDIX: WRITING DOCUMENTATION FILTERS WITH EFF, THEEIFFEL FILTER FORMAT" output="studio">
+<document title="19 APPENDIX: WRITING DOCUMENTATION FILTERS WITH EFF, THE EIFFEL FILTER FORMAT" output="studio">
 	<meta_data/>
 	<paragraph>
 		<paragraph>
@@ -32,9 +32,7 @@
 					<keyword>fil</keyword>
 				</code> in the directory
 			</paragraph>
-			<code_block>	
-	<keyword>$ISE_EIFFEL/examples/studio/filters</keyword>
-			</code_block>
+			<code_block><keyword>$ISE_EIFFEL/examples/studio/filters</keyword></code_block>
 			<paragraph>To make a new filter available to yourself and other users of this installation, just add the corresponding file 
 				<code>
 					<string>name</string>
@@ -62,9 +60,7 @@
 				</code> is used to denote an Eiffel comment in the class text.  Blank lines are also permitted.  Comments and blank lines carry no semantic value.
 			</paragraph>
 			<paragraph>Except for comments and blank lines, a filter is a sequence of entries, all of the form</paragraph>
-			<code_block>	
-	Construct | Replacement
-			</code_block>
+			<code_block>Construct | Replacement</code_block>
 			<paragraph>where: 
 				<code>
 					<string>Construct</string>
@@ -107,9 +103,7 @@
 					<symbol>*</symbol>
 				</code> (asterisk) to denote the construct specimen itself.  So for example the entry
 			</paragraph>
-			<code_block>	
-	<keyword>Feature_clause | %N%N*%N%N</keyword>
-			</code_block>
+			<code_block><keyword>Feature_clause | %N%N*%N%N</keyword></code_block>
 			<paragraph>specifies the following formatting for any 
 				<code>
 					<keyword>Feature_clause</keyword>
@@ -119,9 +113,7 @@
 				</code>, New Line, a convention taken from Eiffel); the feature clause itself; two blank lines.
 			</paragraph>
 			<paragraph>Similarly, in an HTML format, the entry</paragraph>
-			<code_block>
-	<keyword>External |&lt;B&gt; * &lt;/B&gt;</keyword>
-			</code_block>
+			<code_block><keyword>External |&lt;B&gt; * &lt;/B&gt;</keyword></code_block>
 			<paragraph>means that the Eiffel keyword 
 				<code>
 					<keyword>external</keyword>
@@ -136,9 +128,7 @@
 					<keyword>&lt;B&gt;external&lt;/B&gt;</keyword>
 				</code> .  If, however, all keywords are to use boldface, it is preferable to write a single entry
 			</paragraph>
-			<code_block>
-	<keyword>Keyword |&lt;B&gt; * &lt;/B&gt;</keyword>
-			</code_block>
+			<code_block><keyword>Keyword |&lt;B&gt; * &lt;/B&gt;</keyword></code_block>
 			<paragraph>which, thanks to the asterisk, will govern all construct specimens of the 
 				<code>
 					<keyword>Keyword</keyword>
@@ -156,27 +146,26 @@
 				</code>, of an entry:
 			</paragraph>
 			<code_block>
-	Class_declaration
-	Class_end
-	Class_header
-	Class_name
-	Comment
-	Creators
-	Escape
-	Feature_clause
-	Feature_declaration
-	Features
-	Formal_generics
-	Indexing_clause
-	Inheritance
-	Invariant_clause
-	Keyword
-	New_line
-	Obsolete_clause
-	Suffix
-	Symbol
-	Tab
-			</code_block>
+<bold>Class_declaration
+Class_end
+Class_header
+Class_name
+Comment
+Creators
+Escape
+Feature_clause
+Feature_declaration
+Features
+Formal_generics
+Indexing_clause
+Inheritance
+Invariant_clause
+Keyword
+New_line
+Obsolete_clause
+Suffix
+Symbol
+Tab</bold></code_block>
 			<paragraph>Most of these denote Eiffel constructs as they appear in the official language reference, the book 
 				<span>
 					<link>
@@ -437,5 +426,11 @@
 			<code>
 				<keyword>%</keyword>
 			</code> are the continuation of the string.
+		</paragraph>
+		<paragraph>
+			<link>
+				<url>index-19.xml</url>
+				<label>&lt;&lt; Previous</label>
+			</link> 
 		</paragraph>
 	</paragraph></document>

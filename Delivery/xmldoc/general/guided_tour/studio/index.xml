@@ -13,6 +13,11 @@
 				</link>
 			</content>
 		</heading>
+		<note>This document is available both locally, as part of the ISE Eiffel delivery, and on the <link><url>http://docs.eiffel.com</url><label>http://docs.eiffel.com </label></link>Web site. See the<link><url>../index.xml</url><label> list of introductory documents </label></link>. <line_break/>
+
+This is not an introduction to the Eiffel method and language. Follow the preceding link for Invitation to Eiffel and a longer tutorial. 
+
+		</note>
 		<div>
 			<heading>
 				<size>2</size>

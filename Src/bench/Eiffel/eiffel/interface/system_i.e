@@ -3337,14 +3337,6 @@ feature -- Plug and Makefile file
 			special_cl.generate_dynamic_types;
 			generate_dynamic_ref_type;
 
-				-- Specific info for Concurrent Eiffel
-			if has_separate then
-					-- Location of the config file
-				Plug_file.putstring ("char eif_concurrent_config_file[] = %"");
-				Plug_file.putstring ("put file name here");
-				Plug_file.putstring ("%";%N");
-			end;
-
 			Plug_file.close;
 			Plug_file := Void;
 		end;
@@ -3578,7 +3570,7 @@ feature -- Main file generation
 			Initialization_file.putstring (");%N");
 
 			if has_separate then
-				Initialization_file.putstring ("%T%TCURIS(%"conf%", root_obj);%N");
+				Initialization_file.putstring ("%T%TCURIS;%N");
 			end
 
 			if final_mode then
@@ -3617,7 +3609,7 @@ feature -- Main file generation
 				Initialization_file.putstring ("%Telse {%N%
 					%%T%T_concur_root_of_the_application = 0;%N%
 					%%T%Troot_obj = RTLN(eif_type_id(argv[4]));%N");
-				Initialization_file.putstring ("%T%TCURIS(%"conf%", root_obj);%N");
+				Initialization_file.putstring ("%T%TCURIS;%N");
 
 					-- Only for Workbench Mode
 				Initialization_file.putstring ("%T%Tif (!strcmp(argv[5], %"_no_cf%")) {%N%

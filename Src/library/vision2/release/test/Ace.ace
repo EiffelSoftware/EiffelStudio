@@ -2,7 +2,7 @@ system
 	test
 
 root
-	TEST: make_and_launch
+	EV_TEST: make_and_launch
 
 default
 

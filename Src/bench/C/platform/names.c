@@ -32,15 +32,6 @@ public EIF_REFERENCE eif_driver ()
 #endif
 }
 
-public EIF_CHARACTER eif_eiffel_suffix ()
-{
-#if defined EIF_WINDOWS || __VMS || defined EIF_OS2
-	return 'E';
-#else
-	return 'e';
-#endif
-}
-
 public EIF_REFERENCE eif_exec_suffix ()
 {
 #if defined EIF_WINDOWS || __VMS || defined EIF_OS2
@@ -80,6 +71,18 @@ public EIF_REFERENCE eif_copy_cmd ()
 	return RTMS ("copy");
 #else
 	return RTMS ("cp");
+#endif
+}
+
+public EIF_BOOLEAN eif_valid_class_file_extension (c)
+EIF_CHARACTER c;
+{
+#if defined EIF_WINDOWS || defined EIF_OS2
+	return (EIF_TEST(tolower(c)=='e');
+#elif defined __VMS
+	return (EIF_TEST(c=='E'));
+#else
+	return (EIF_TEST(c=='e'));
 #endif
 }
 

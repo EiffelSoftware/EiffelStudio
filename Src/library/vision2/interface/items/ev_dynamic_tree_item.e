@@ -85,7 +85,7 @@ feature -- Access
 				remove_subtree_function
 			end
 			if a_subtree_function /= Void then
-				expand_actions.extend (~fill_from_subtree_function)
+				expand_actions.extend (agent fill_from_subtree_function)
 				implementation.extend (create {EV_TREE_ITEM})
 				set_subtree_function_timeout (default_subtree_function_timeout)
 			end

@@ -8,13 +8,13 @@ indexing
 		%selected by `set_pick_and_drop' and `set_drag_and_drop'."
 	example:
 		"Create two buttons one with the string %"Hello world!%" as pebble%
-		%and the other with io~put_string as a drop action.%N%
+		%and the other with agent io.put_string as a drop action.%N%
 		%Picking the first button and dropping on the second will print:%N%
 		%%"Hello world!%".%N%
 		%b1, b2: BUTTON%N%
 		%create b1; create b2%N%
 		%b1.set_pebble (%"Hello world!%")%N%
-		%b2.drop_actions.extend (io~put_string)"
+		%b2.drop_actions.extend (agent io.put_string)"
 	status: "See notice at end of class"
 	keywords: "pick and drop, drag and drop, source, PND, DND"
 	date: "$Date$"

@@ -88,23 +88,23 @@ feature {NONE} -- Implementation
 	register_basic_figures is
 			-- Register EiffelVision figures.
 		do
-			register_figure (create {EV_FIGURE_ARC}, ~draw_figure_arc)
-			register_figure (create {EV_FIGURE_DOT}, ~draw_figure_dot)
-			register_figure (create {EV_FIGURE_ELLIPSE}, ~draw_figure_ellipse)
+			register_figure (create {EV_FIGURE_ARC}, agent draw_figure_arc)
+			register_figure (create {EV_FIGURE_DOT}, agent draw_figure_dot)
+			register_figure (create {EV_FIGURE_ELLIPSE}, agent draw_figure_ellipse)
 			register_figure (create {EV_FIGURE_EQUILATERAL},
-				~draw_figure_equilateral)
-			register_figure (create {EV_FIGURE_LINE}, ~draw_figure_line)
-			register_figure (create {EV_FIGURE_PICTURE}, ~draw_figure_picture)
+				agent draw_figure_equilateral)
+			register_figure (create {EV_FIGURE_LINE}, agent draw_figure_line)
+			register_figure (create {EV_FIGURE_PICTURE}, agent draw_figure_picture)
 			register_figure (create {EV_FIGURE_PIE_SLICE},
-				~draw_figure_pie_slice)
-			register_figure (create {EV_FIGURE_POLYGON}, ~draw_figure_polygon)
-			register_figure (create {EV_FIGURE_POLYLINE}, ~draw_figure_polyline)
+				agent draw_figure_pie_slice)
+			register_figure (create {EV_FIGURE_POLYGON}, agent draw_figure_polygon)
+			register_figure (create {EV_FIGURE_POLYLINE}, agent draw_figure_polyline)
 			register_figure (create {EV_FIGURE_RECTANGLE},
-				~draw_figure_rectangle)
+				agent draw_figure_rectangle)
 			register_figure (create {EV_FIGURE_ROUNDED_RECTANGLE},
-				~draw_figure_rounded_rectangle)
-			register_figure (create {EV_FIGURE_STAR}, ~draw_figure_star)
-			register_figure (create {EV_FIGURE_TEXT}, ~draw_figure_text)
+				agent draw_figure_rounded_rectangle)
+			register_figure (create {EV_FIGURE_STAR}, agent draw_figure_star)
+			register_figure (create {EV_FIGURE_TEXT}, agent draw_figure_text)
 		end
 
 	Default_colors: EV_STOCK_COLORS is

@@ -20,8 +20,8 @@ feature -- Initialization
 			-- Standard creation procedure.
 		do
 			Precursor
-			add_actions.extend (~enable_item_parented (?))
-			remove_actions.extend (~disable_item_parented (?))
+			add_actions.extend (agent enable_item_parented (?))
+			remove_actions.extend (agent disable_item_parented (?))
 		end
 
 feature {NONE} -- Status Setting

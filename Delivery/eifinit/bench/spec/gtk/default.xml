@@ -85,6 +85,30 @@
 					<TEXT DESCRIPTION="+ Alt">show_search_and_replace_panel_shortcut_alt<BOOLEAN>False</BOOLEAN></TEXT>
 					<TEXT DESCRIPTION="+ Shift">show_search_and_replace_panel_shortcut_shift<BOOLEAN>False</BOOLEAN></TEXT>
 				</TOPIC>
+				<TOPIC TOPIC_ID="Insert user defined string (1)" ICON="icon_preferences_folder">
+					<HEAD>Insert user defined string (1)</HEAD>
+					<TEXT DESCRIPTION="String to be inserted">customized_string_1<STRING> </STRING></TEXT>
+					<TEXT DESCRIPTION="Key">customized_insertion_1_shortcut_key<STRING>F2</STRING></TEXT>
+					<TEXT DESCRIPTION="+ Ctrl">customized_insertion_1_shortcut_ctrl<BOOLEAN>False</BOOLEAN></TEXT>
+					<TEXT DESCRIPTION="+ Alt">customized_insertion_1_shortcut_alt<BOOLEAN>False</BOOLEAN></TEXT>
+					<TEXT DESCRIPTION="+ Shift">customized_insertion_1_shortcut_shift<BOOLEAN>False</BOOLEAN></TEXT>
+				</TOPIC>
+				<TOPIC TOPIC_ID="Insert user defined string (2)" ICON="icon_preferences_folder">
+					<HEAD>Insert user defined string (2)</HEAD>
+					<TEXT DESCRIPTION="String to be inserted">customized_string_2<STRING> </STRING></TEXT>
+					<TEXT DESCRIPTION="Key">customized_insertion_2_shortcut_key<STRING>F2</STRING></TEXT>
+					<TEXT DESCRIPTION="+ Ctrl">customized_insertion_2_shortcut_ctrl<BOOLEAN>True</BOOLEAN></TEXT>
+					<TEXT DESCRIPTION="+ Alt">customized_insertion_2_shortcut_alt<BOOLEAN>False</BOOLEAN></TEXT>
+					<TEXT DESCRIPTION="+ Shift">customized_insertion_2_shortcut_shift<BOOLEAN>False</BOOLEAN></TEXT>
+				</TOPIC>
+				<TOPIC TOPIC_ID="Insert user defined string (3)" ICON="icon_preferences_folder">
+					<HEAD>Insert user defined string (3)</HEAD>
+					<TEXT DESCRIPTION="String to be inserted">customized_string_3<STRING> </STRING></TEXT>
+					<TEXT DESCRIPTION="Key">customized_insertion_3_shortcut_key<STRING>F2</STRING></TEXT>
+					<TEXT DESCRIPTION="+ Ctrl">customized_insertion_3_shortcut_ctrl<BOOLEAN>False</BOOLEAN></TEXT>
+					<TEXT DESCRIPTION="+ Alt">customized_insertion_3_shortcut_alt<BOOLEAN>False</BOOLEAN></TEXT>
+					<TEXT DESCRIPTION="+ Shift">customized_insertion_3_shortcut_shift<BOOLEAN>True</BOOLEAN></TEXT>
+				</TOPIC>
 			</TOPIC>
 			<TOPIC TOPIC_ID="Automatic completion" ICON="icon_preferences_folder">
 				<HEAD>Autocomplete</HEAD>
@@ -541,6 +565,7 @@
 			<TEXT>development_window__right_panel_layout<LIST_STRING>visible;visible;190;0</LIST_STRING></TEXT>
 			<TEXT>right_debug_layout<LIST_STRING>minimized;visible;visible;171;449</LIST_STRING></TEXT>
 			<TEXT>left_debug_layout<LIST_STRING>closed;closed;closed;closed;closed;visible;38;286</LIST_STRING></TEXT>
+			<TEXT>search_tool__show_options<BOOLEAN>True</BOOLEAN></TEXT>
 
 			<TEXT>development_window__general_toolbar_layout<LIST_STRING>New_window__visible;New_editor__hidden;New_context_window__hidden;Open_file__visible;New_class__visible;New_feature__visible;Save_file__visible;Open_shell__visible;System_info__visible;Separator;Undo__visible;Redo__visible;Separator;Editor_cut__visible;Editor_copy__visible;Editor_paste__visible;Separator;Clusters__visible;Features__visible;Search__visible;Context__visible;Separator;Send_to_context__visible;New_cluster__hidden;Remove_class_cluster__hidden;Favorites__hidden;Windows__hidden;Toggle_stone__hidden;Raise_all__hidden;Minimize_all__hidden;Print__hidden</LIST_STRING></TEXT>
 			<TEXT>debugger__project_toolbar_layout<LIST_STRING>System_tool__visible;Melt_project__visible;Open_help_tool__visible;System_info__visible;Separator;Enable_bkpt__visible;Disable_bkpt__visible;Clear_bkpt__visible;Bkpt_info__visible;Separator;Exec_step__visible;Exec_into__visible;Exec_out__visible;Exec_no_stop__visible;Exec_debug__visible;Separator;Exec_stop__visible;Exec_quit__visible;Run_final__hidden;Freeze_project__hidden;Finalize_project__hidden</LIST_STRING></TEXT>

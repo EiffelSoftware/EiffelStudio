@@ -21,6 +21,11 @@ creation
 feature {NONE} -- Initialization
 
 	make (a_style: INTEGER; a_color: WEL_COLOR_REF; a_hatch: INTEGER) is
+			-- Make a log brush using `a_style', `a_color' and
+			-- `a_hatch' type.
+			-- See class WEL_BRUSH_STYLE_CONSTANTS for `a_style'
+			-- values.
+			-- See class WEL_HS_CONSTANTS for `a_hatch' values.
 		require
 			color_not_void: a_color /= Void
 			color_exists: a_color.exists
@@ -31,17 +36,22 @@ feature {NONE} -- Initialization
 			set_hatch (a_hatch)
 		ensure
 			style_set: style = a_style
-			color_set: color.item = a_color.item
+			color_set: color.is_equal (a_color)
 			hatch_set: hatch = a_hatch
 		end
 
 	make_by_brush (brush: WEL_BRUSH) is
+			-- Make a log brush using the information of `brush'.
 		require
 			brush_not_void: brush /= Void
 			brush_exists: brush.exists
 		do
 			structure_make
 			cwin_get_object (brush.item, structure_size, item)
+		ensure
+			style_set: style = brush.style
+			color_set: color.is_equal (brush.color)
+			hatch_set: hatch = brush.hatch
 		end
 
 feature -- Access
@@ -73,7 +83,7 @@ feature -- Access
 			Result := cwel_logbrush_get_hatch (item)
 		end
 
-feature -- Element changes
+feature -- Element change
 
 	set_style (a_style: INTEGER) is
 			-- Set `style' with `a_style'

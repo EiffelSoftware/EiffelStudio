@@ -9,7 +9,8 @@ class
 inherit
 	EB_CONTEXT_DIAGRAM_COMMAND
 		redefine
-			new_toolbar_item
+			new_toolbar_item,
+			description
 		end
 
 create
@@ -98,16 +99,16 @@ feature {NONE} -- Implementation
 			-- Tooltip for the toolbar button.
 		do
 			if current_button.is_selected then
-				Result := "Hide supplier links"
+				Result := Interface_names.f_diagram_hide_supplier
 			else
-				Result := "Show supplier links"
+				Result := Interface_names.f_diagram_show_supplier
 			end
 		end
 
 	description: STRING is
 			-- Description for this command.
 		do
-			Result := "Toggle visibility of supplier links"
+			Result := Interface_names.l_diagram_supplier_visibility
 		end
 
 	name: STRING is "Supplier_visibility"

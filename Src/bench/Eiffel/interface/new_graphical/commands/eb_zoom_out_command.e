@@ -73,13 +73,7 @@ feature {NONE} -- Implementation
 	tooltip: STRING is
 			-- Tooltip for the toolbar button.
 		do
-			Result := "Zoom out"
-		end
-
-	description: STRING is
-			-- Description for this command.
-		do
-			Result := "Reduce diagram"
+			Result := Interface_names.f_diagram_zoom_out
 		end
 
 	name: STRING is "Zoom_out"

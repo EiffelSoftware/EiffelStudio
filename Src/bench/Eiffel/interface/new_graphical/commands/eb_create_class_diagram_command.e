@@ -49,13 +49,7 @@ feature {NONE} -- Implementation
 	tooltip: STRING is
 			-- Tooltip for the toolbar button.
 		do
-			Result := "Create a new class"
-		end
-
-	description: STRING is
-			-- Description for this command.
-		do
-			Result := "New class"
+			Result := Interface_names.f_diagram_new_class
 		end
 
 	name: STRING is "Create_class"

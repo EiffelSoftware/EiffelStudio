@@ -9,7 +9,8 @@ class
 inherit
 	EB_CONTEXT_DIAGRAM_COMMAND
 		redefine
-			new_toolbar_item
+			new_toolbar_item,
+			description
 		end
 
 create
@@ -167,13 +168,13 @@ feature {NONE} -- Implementation
 	tooltip: STRING is
 			-- Tooltip for the toolbar button.
 		do
-			Result := "Remove figure"
+			Result := Interface_names.f_diagram_remove
 		end
 
 	description: STRING is
 			-- Description for this command.
 		do
-			Result := "Delete graphical items"
+			Result := Interface_names.l_diagram_remove
 		end
 
 	name: STRING is "Delete_hole"

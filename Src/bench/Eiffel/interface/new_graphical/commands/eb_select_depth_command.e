@@ -8,6 +8,9 @@ class
 
 inherit
 	EB_CONTEXT_DIAGRAM_COMMAND
+		redefine
+			menu_name
+		end
 	
 	SHARED_ERROR_HANDLER
 
@@ -166,15 +169,15 @@ feature {NONE} -- Implementation
 	tooltip: STRING is
 			-- Tooltip for the toolbar button.
 		do
-			Result := "Select depth of relations"
+			Result := Interface_names.f_diagram_context_depth
 		end
 
-	description: STRING is
-			-- Description for this command.
+	menu_name: STRING is
+			-- Name for the menu entry.
 		do
-			Result := "Context dialog"
+			Result := Interface_names.m_diagram_context_depth
 		end
-
+		
 	name: STRING is "Context_depth"
 			-- Name of the command. Used to store the command in the
 			-- preferences.

@@ -11,7 +11,8 @@ inherit
 	EB_CONTEXT_DIAGRAM_COMMAND
 		redefine
 			new_toolbar_item,
-			make
+			make,
+			description
 		end
 
 create
@@ -138,24 +139,18 @@ feature {NONE} -- Implementation
 			-- Tooltip for the toolbar button.
 		do
 			if selected_type = inheritance then
-				Result := Interface_names.E_create_inheritance_links
+				Result := Interface_names.f_diagram_create_inheritance_links
 			elseif selected_type = Supplier then
-				Result := Interface_names.E_create_supplier_links
+				Result := Interface_names.f_diagram_create_supplier_links
 			else
-				Result := Interface_names.E_create_aggregate_supplier_links
+				Result := Interface_names.f_diagram_create_aggregate_supplier_links
 			end
 		end
 
 	description: STRING is
 			-- Description for this command.
 		do
-			if selected_type = inheritance then
-				Result := Interface_names.E_create_inheritance_links
-			elseif selected_type = Supplier then
-				Result := Interface_names.E_create_supplier_links
-			else
-				Result := Interface_names.E_create_aggregate_supplier_links
-			end
+			Result := Interface_names.l_diagram_create_links
 		end
 
 	name: STRING is "New_links"
@@ -170,21 +165,21 @@ feature {NONE} -- Implementation
 		do
 			create menu
 			create menu_item
-			menu_item.set_text (Interface_names.E_create_inheritance_links)
+			menu_item.set_text (Interface_names.f_diagram_create_inheritance_links)
 			if selected_type = Inheritance then
 				menu_item.enable_select
 			end
 			menu_item.select_actions.extend (agent select_type (Inheritance))
 			menu.extend (menu_item)
 			create menu_item
-			menu_item.set_text (Interface_names.E_create_supplier_links)
+			menu_item.set_text (Interface_names.f_diagram_create_supplier_links)
 			menu.extend (menu_item)
 			if selected_type = Supplier then
 				menu_item.enable_select
 			end
 			menu_item.select_actions.extend (agent select_type (Supplier))
 			create menu_item
-			menu_item.set_text (Interface_names.E_create_aggregate_supplier_links)
+			menu_item.set_text (Interface_names.f_diagram_create_aggregate_supplier_links)
 			if selected_type = Aggregate then
 				menu_item.enable_select
 			end

@@ -42,13 +42,7 @@ feature {NONE} -- Implementation
 	tooltip: STRING is
 			-- Tooltip for the toolbar button.
 		do
-			Result := "History tool"
-		end
-
-	description: STRING is
-			-- Description for this command.
-		do
-			Result := "History tool"
+			Result := Interface_names.f_diagram_history
 		end
 
 	name: STRING is "History_tool"

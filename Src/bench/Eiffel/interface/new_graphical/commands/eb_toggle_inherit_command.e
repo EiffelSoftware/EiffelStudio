@@ -9,7 +9,8 @@ class
 inherit
 	EB_CONTEXT_DIAGRAM_COMMAND
 		redefine
-			new_toolbar_item
+			new_toolbar_item,
+			description
 		end
 
 create
@@ -94,16 +95,16 @@ feature {NONE} -- Implementation
 			-- Tooltip for the toolbar button.
 		do
 			if current_button.is_selected then
-				Result := "Hide inheritance links"
+				Result := Interface_names.f_diagram_hide_inheritance
 			else
-				Result := "Show inheritance links"
+				Result := Interface_names.f_diagram_hide_inheritance
 			end
 		end
 
 	description: STRING is
 			-- Description for this command.
 		do
-			Result := "Toggle visibility of inheritance links"
+			Result := Interface_names.l_diagram_inheritance_visibility
 		end
 
 	name: STRING is "Inherit_visibility"

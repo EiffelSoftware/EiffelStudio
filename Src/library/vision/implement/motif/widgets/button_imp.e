@@ -78,7 +78,7 @@ feature -- Status setting
 			menu_m: MENU_IMP;
 			button_text: STRING
 		do
-			if a_text.empty then
+			if a_text.is_empty then
 				set_label_as_string (a_text)
 			else
 				set_mnemonic_from_text (a_text, True)
@@ -138,7 +138,7 @@ feature {NONE} -- Implementation
 			acc_text: MEL_STRING;
 			acc_set: BOOLEAN
 		do
-			if not a_text.empty then
+			if not a_text.is_empty then
 				if is_able_have_accerlators then
 					count := a_text.count;
 					pull ?= parent;

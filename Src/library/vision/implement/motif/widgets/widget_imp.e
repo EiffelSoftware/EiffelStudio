@@ -350,7 +350,7 @@ feature -- Removal
 			-- screen widget implementations of its children
 			-- contained in `wid_list;.
 		do
-			if not click_actions_table.empty then
+			if not click_actions_table.is_empty then
 				from	
 					wid_list.start
 				until

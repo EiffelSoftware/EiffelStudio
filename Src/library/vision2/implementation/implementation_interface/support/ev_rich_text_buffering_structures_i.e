@@ -413,10 +413,10 @@ feature {NONE} -- Implementation
 					end
 				end
 				l_index := l_index + 1
-			end	
-				--| FIXME should this ever be empty?
+			end
+			
 			if current_text.count > 0 then
-				move_main_iterator (current_text.count)			
+				move_main_iterator (l_index - 1)			
 				buffer_formatting (current_text)
 			end			
 		end
@@ -577,6 +577,7 @@ feature {NONE} -- Implementation
 					l_index := l_index + 1
 				end
 			end
+			
 				-- Now process the found keyword.
 			if tag.is_equal (rtf_fonttable) then
 				process_fonttable (rtf_text)

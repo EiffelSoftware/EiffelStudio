@@ -37,4 +37,6 @@ feature -- Simple formatting
 			ctxt.put_text_item_without_tabs (ti_Unique_keyword);
 		end;
 
+	string_value: STRING is "";
+
 end -- class UNIQUE_AS

@@ -31,4 +31,9 @@ feature -- Simple formatting
 			ctxt.put_string (value);
 		end;
 
+	string_value: STRING is
+		do
+			Result := clone (value)
+		end
+
 end -- class REAL_AS

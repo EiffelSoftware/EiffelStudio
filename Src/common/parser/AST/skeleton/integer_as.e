@@ -47,5 +47,10 @@ feature -- Simple formatting
 		do
 			ctxt.put_string (value.out);
 		end;
+	
+    string_value: STRING is
+        do
+            Result := value.out
+        end	
 
 end -- class INTEGER_AS

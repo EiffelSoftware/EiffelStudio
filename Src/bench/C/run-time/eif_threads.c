@@ -612,6 +612,7 @@ rt_private void eif_destroy_gc_stacks(void)
 #ifdef WORKBENCH
 	remove_stack_from_gc (&opstack_list, &op_stack);
 #endif
+	eif_stack_free (&free_stack);
 	EIF_GC_MUTEX_UNLOCK;
 }
 
@@ -687,6 +688,12 @@ rt_private void eif_stack_free (void *stack){
 		cn = c->sk_next;
 		xfree ((EIF_REFERENCE) c);
 	}
+
+	st->st_hd = NULL;
+	st->st_tl = NULL;
+	st->st_cur = NULL;
+	st->st_top = NULL;
+	st->st_end = NULL;
 }
 
 

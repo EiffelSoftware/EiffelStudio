@@ -1,14 +1,24 @@
 /*
+--|----------------------------------------------------------------
+--| Eiffel runtime header file
+--| Copyright (C) 1985-2004 Eiffel Software. All rights reserved.
+--| Duplication and distribution prohibited.  May be used only with
+--| ISE Eiffel, under terms of user license.
+--| Contact Eiffel Software for any other use.
+--|
+--| Interactive Software Engineering Inc.
+--| dba Eiffel Software
+--| 356 Storke Road, Goleta, CA 93117 USA
+--| Telephone 805-685-1006, Fax 805-685-6869
+--| Contact us at: http://www.eiffel.com/general/email.html
+--| Customer support: http://support.eiffel.com
+--| For latest info on our award winning products, visit:
+--|     http://www.eiffel.com
+--|----------------------------------------------------------------
+*/
 
-  ####    #####   ####   #####   ######          #    #
- #          #    #    #  #    #  #               #    #
-  ####      #    #    #  #    #  #####           ######
-      #     #    #    #  #####   #        ###    #    #
- #    #     #    #    #  #   #   #        ###    #    #
-  ####      #     ####   #    #  ######   ###    #    #
-
+/*
 	Declarations for store mechanism.
-
 */
 
 #ifndef _rt_store_h_
@@ -28,7 +38,7 @@ extern char *account;			/* Array of traversed dyn types */
 #endif
 extern long get_alpha_offset(uint32 o_type, uint32 attrib_num);
 extern void allocate_gen_buffer(void);
-extern void buffer_write(register char *data, int size);
+extern void buffer_write(char *data, size_t size);
 
 
 extern int char_write(char *pointer, int size);
@@ -47,9 +57,9 @@ extern void internal_store(char *object);
 
 #ifndef EIF_THREADS
 extern char * general_buffer;
-extern int current_position;
-extern long buffer_size;
-extern long cmp_buffer_size;
+extern size_t current_position;
+extern size_t buffer_size;
+extern size_t cmp_buffer_size;
 #endif
 
 /* compression */

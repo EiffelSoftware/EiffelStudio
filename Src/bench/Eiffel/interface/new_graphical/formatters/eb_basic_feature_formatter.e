@@ -73,6 +73,7 @@ feature -- Formatting
 					editor.load_eiffel_text (formatted_text.image)
 				else
 					editor.clear_window
+					editor.display_message (Warning_messages.W_formatter_failed)
 				end
 				if editable then
 					editor.enable_editable
@@ -111,8 +112,19 @@ feature {NONE} -- Implementation
 
 	generate_text is
 			-- Create `formatted_text'.
+		local
+			retried: BOOLEAN
 		do
-			formatted_text := associated_feature.text
+			if not retried then
+				formatted_text := associated_feature.text
+				last_was_error := False
+			else
+				last_was_error := True
+				formatted_text := Void
+			end
+		rescue
+			retried := True
+			retry
 		end
 
 	create_feature_cmd is

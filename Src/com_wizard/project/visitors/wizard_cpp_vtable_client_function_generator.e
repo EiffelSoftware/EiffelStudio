@@ -253,11 +253,9 @@ feature {NONE} -- Implementation
 				Result.append (".")
 			end
 			Result.append (a_visitor.free_memory_function_name)
-			Result.append (Space_open_parenthesis)
+			Result.append (" (")
 			Result.append (a_name)
-			Result.append (Close_parenthesis)
-			Result.append (Semicolon)
-			Result.append (New_line)
+			Result.append (");%N")
 		ensure
 			non_void_free: Result /= Void
 			valid_free: not Result.is_empty

@@ -538,11 +538,11 @@ rt_public void init_desc(void)
 	bounds_tab = (struct bounds *) 
 			cmalloc (sizeof(struct bounds) * (ccount + 1));	
 	if ((struct bounds *) 0 == bounds_tab)
-		enomem();
+		enomem(MTC_NOARG);
 	mdesc_tab = (struct mdesc *) 
 			cmalloc (sizeof(struct mdesc) * MDESC_INC);
 	if ((struct mdesc *) 0 == mdesc_tab)
-		enomem();
+		enomem(MTC_NOARG);
 	mdesc_tab_size = MDESC_INC;
 	mdesc_count = 0;
 	
@@ -599,7 +599,7 @@ rt_public void put_mdesc(struct desc_info *desc_ptr, int org, int dtype)
 		mdesc_tab = (struct mdesc *) 
 				crealloc ((char *) mdesc_tab, sizeof(struct mdesc) * mdesc_tab_size);	
 		if ((struct mdesc *) 0 == mdesc_tab)
-			enomem();
+			enomem(MTC_NOARG);
 	}
 
 	md.desc_ptr = desc_ptr;
@@ -628,7 +628,7 @@ rt_public void create_desc(void)
 	desc_tab = (struct desc_info ***) 
 			cmalloc (sizeof(struct desc_info **) * (upper + 1));
 	if ((struct desc_info ***) 0 == desc_tab)
-		enomem();
+		enomem(MTC_NOARG);
 
 	/* Allocation of the subtables
 	 * and insertion
@@ -641,7 +641,7 @@ rt_public void create_desc(void)
 			tab = (struct desc_info **) 
 				cmalloc (sizeof(struct desc_info *) * size);
 			if ((struct desc_info **) 0 == tab)
-				enomem();
+				enomem(MTC_NOARG);
 			/* The hack of the century */
 			desc_tab[i] = tab - b->min; 
 		}

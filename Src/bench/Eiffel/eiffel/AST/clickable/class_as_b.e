@@ -238,7 +238,7 @@ feature {CASE_CLASS_INFO} -- Case storage
 			valid_classc: classc /= Void
 		local
 			g_l: FIXED_LIST [S_GENERIC_DATA];
-			i_l: FIXED_LIST [S_TEXT_DATA];
+			i_l: FIXED_LIST [S_TAG_DATA];
 			s_chart: S_CLASS_CHART;
 			gen: FORMAL_DEC_AS;
 			gen_name: STRING;

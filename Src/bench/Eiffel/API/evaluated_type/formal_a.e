@@ -129,10 +129,14 @@ feature -- Storage information for EiffelCase
 			-- Storage info for Current type in class `classc'
 		local
 			gens: EIFFEL_LIST [FORMAL_DEC_AS];
-		do
+            gen_name: STRING
+        do
 			gens := classc.generics;
 			if gens /= Void and then base_type <= gens.count then
-				!! Result.make (gens.i_th (base_type).formal_name)
+				!! gen_name.make (0);
+				gen_name.append (gens.i_th (base_type).formal_name);
+				gen_name.to_upper;
+				!! Result.make (gen_name)
 			else
 				!! Result.make ("G")
 			end

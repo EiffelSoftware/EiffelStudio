@@ -645,8 +645,13 @@ feature -- Storage information for EiffelCase
 		local
 			gens: FIXED_LIST [S_TYPE_INFO];
 			count, i: INTEGER
+            ass_classc: CLASS_C
+            class_name: STRING
         do
-			!! Result.make (associated_class.class_name, associated_class.id);
+            ass_classc := associated_class;
+            !! class_name.make (ass_classc.class_name.count);
+			class_name.append (ass_classc.class_name);
+			!! Result.make (class_name, ass_classc.id);
 			count := generics.count;
 			!! gens.make (count);
 			from

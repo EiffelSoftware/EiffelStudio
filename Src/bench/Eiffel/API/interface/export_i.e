@@ -82,6 +82,13 @@ feature -- formatter
 	infix "<" (other: EXPORT_I): BOOLEAN is
 		deferred
 		end;
-			
+
+feature -- Case storage
+
+	storage_info: S_EXPORT_I is
+		deferred
+		ensure
+			valid_result: Result /= Void
+		end
 
 end

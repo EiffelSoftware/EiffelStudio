@@ -185,8 +185,14 @@ feature -- Storage information for EiffelCase
     storage_info_with_name (classc: CLASS_C): S_CLASS_TYPE_INFO is
             -- Storage info for Current type in class `classc'
             -- and store the name of the class for Current
+        local
+            ass_classc: CLASS_C
+            class_name: STRING
         do
-			!! Result.make (associated_class.class_name, associated_class.id)
+            ass_classc := associated_class;
+            !! class_name.make (ass_classc.class_name.count);
+			class_name.append (ass_classc.class_name);
+			!! Result.make (class_name, ass_classc.id)
         end;
 
 end

@@ -116,7 +116,7 @@ feature
 			end;
 		end;	
 			
-feature {FEATURE_CLAUSE_EXPORT}
+feature {FEATURE_CLAUSE_EXPORT, CATEGORY}
 
 	reference: EXPORT_I;
 

@@ -43,6 +43,7 @@ feature
 						process_clusters;
 						convert_to_case_format;
 						remove_old_classes;
+						clear_shared_case_information;
 						error_window.put_string ("Finished storing EiffelCase project.%N");
 					end
 				else
@@ -56,7 +57,7 @@ feature
 		rescue
 			flat_ctxt.clear;
 			Case_file_server.remove_tmp_files;
-			Case_file_server.clear;
+			clear_shared_case_information;
 			if Rescue_status.is_error_exception then
 				Rescue_status.set_is_error_exception (False);
 				rescued := True;
@@ -95,7 +96,6 @@ feature {NONE}
 			Case_file_server.tmp_save_system (s_system_data);
 			io.error.putstring ("Saving EiffelCase project to disk.%N");
 			Case_file_server.save_eiffelcase_format;
-			Case_file_server.clear;
 		rescue
 			if Case_file_server.had_io_problems then
 				Rescue_status.set_is_error_exception (True);

@@ -107,7 +107,7 @@ feature {TAGGED_AS}	-- Replication
 
 feature -- Case Storage
 
-	storage_info (ctxt: FORMAT_CONTEXT): S_ASSERTION_DATA is
+	storage_info (ctxt: FORMAT_CONTEXT): S_TAG_DATA is
 		require
 			valid_context: ctxt /= Void;
 			empty_text: ctxt.text.empty

@@ -71,4 +71,11 @@ feature
 		do
 		end;
 
+feature -- Case storage
+
+    storage_info: S_EXPORT_ALL_I is
+        do
+			!! Result
+        end
+
 end

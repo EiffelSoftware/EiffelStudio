@@ -81,17 +81,6 @@ rt_public EIF_REFERENCE eif_copy_cmd (void)
 #endif
 }
 
-rt_public EIF_BOOLEAN eif_valid_class_file_extension (EIF_CHARACTER c)
-{
-#if defined EIF_WIN32 || defined EIF_OS2
-	return (EIF_TEST(tolower(c)=='e'));
-#elif defined EIF_VMS
-	return (EIF_TEST(c=='E'));
-#else
-	return (EIF_TEST(c=='e'));
-#endif
-}
-
 rt_public EIF_REFERENCE eif_timeout_msg (void)
 {
 	/* Message displayed when ebench is unable to launch

@@ -110,14 +110,39 @@ retry:
 	return i;
 }
 
-int net_char_write(char *pointer, int size)
+/* Return a buffer large enough to hold the specified minimum size.
+ */
+rt_private char* net_buffer (int min_size)
+{
+	static char* buffer = NULL;
+	static int buffer_size = 0;
+
+	if (buffer_size < min_size)
+	{
+		if (buffer == NULL)
+			buffer = (char*) eif_malloc (min_size);
+		else
+			buffer = (char*) eif_realloc (buffer, min_size);
+
+		if (buffer == NULL)
+			eraise ("Out of memory in buffered_write", EN_RETR);
+		else
+			buffer_size = min_size;
+	}
+	return buffer;
+}
+
+/* Write the specified buffer to the file desciptor, retrying until all
+ * bytes are written or until an unrecoverable error occurs.
+ */
+rt_private int write2(int fd, char* pointer, int size)
 {
 	int i;
 retry:
 #ifdef EIF_WIN32
-	i = send(socket_fides, pointer, size, 0);
+	i = send(fd, pointer, size, 0);
 #else
-	i = write(socket_fides, pointer, size);
+	i = write(fd, pointer, size);
 #endif
 	if (i == SOCKET_ERROR  &&  GET_SOCKET_ERROR == EWOULDBLOCK)
 	{
@@ -140,12 +165,46 @@ retry:
 
 		/* A recursive call here is bounded because the remaining
 		   number of bytes is guaranteed to decrease each call. */
-		i = net_char_write(pointer + i, size - i);
+		i = write2(fd, pointer + i, size - i);
 		if (i > 0)
 			i += prev;
 	}
 	return i;
 }
+
+/* This write routine is based upon the assumption that storing an object
+ * issues two writes: first one byte containing the storable type, then the
+ * actual object contents. This routine buffers the first single-byte write
+ * and sends it when the second write occurs.
+ */
+int net_char_write(char *pointer, int size)
+{
+	static char buffered_type;
+	static int buffered = 0;
+	int count;
+
+	if (buffered)
+	{
+		char* const buffer = net_buffer(1 + size);
+		*buffer = buffered_type;
+		buffered = 0;
+		memcpy(buffer + 1, pointer, size);
+		count = write2(socket_fides, buffer, 1 + size);
+		if (count > 0)
+			count -= 1;	/* do not report buffered byte */
+	}
+	else if (size == 1)
+	{
+		buffered_type = *pointer;
+		buffered = 1;
+		count = 1;		/* pretend buffered bytes was written */
+	}
+	else
+		count = write2(socket_fides, pointer, size);
+
+	return count;
+}
+
 
 rt_public char *eif_net_retrieved(EIF_INTEGER file_desc)
 {

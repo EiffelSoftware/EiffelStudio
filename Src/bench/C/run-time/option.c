@@ -7,7 +7,7 @@
  #    #  #          #       #    #    #  #   ##   ###    #    #
   ####   #          #       #     ####   #    #   ###     ####
 
-		Option queries in workbench mode
+		Option queries, profiler core, tracer core
 */
 
 #include "config.h"
@@ -30,9 +30,6 @@
 #include <sys/param.h>      /* For value of HZ */
 #endif
 #endif
- 
- 
-
 
 rt_public int trace_call_level = 0;	/* call level for E-TRACE
 					 * recursive calls (whether direct or indirect).
@@ -49,21 +46,126 @@ char *last_name;		/* when we deal with a so called terminal feature (a feature w
 /* INTERNAL PROFILE STRUCTURES */
 
 /* Struct to keep the information gathered */
+#ifdef HAS_GETRUSAGE
+typedef struct
+{
+	long	seconds;
+	double	micro_seconds;
+} time_struct;
+
+struct prof_rusage
+{
+	time_struct user_time;
+	time_struct system_time;
+};
+#endif /* HAS_GETRUSAGE */
+
 struct prof_info {
 				char	*featurename;		/* Name of feature */
 				int		dtype;				/* DTYPE of feature */
 				int		origin;				/* ORIGIN of feature */
 	unsigned	long	feature_hcode;		/* Hash code */
 				long	number_of_calls;	/* # calls to feature */
+#ifdef HAS_GETRUSAGE
+	struct	prof_rusage	*this_total_time;
+	struct	prof_rusage	*all_total_time;
+	struct	prof_rusage *descendent_time;
+#else
 				double	this_total_time;	/* Time spent in the feature */
 											/* (during this execution) */
 				double	all_total_time;		/* Time spent in the feature */
 											/* (summarized) */
 				double	descendent_time;	/* Time spent in the */
 											/* descendents */
+#endif /* HAS_GERUSAGE */
 				int		is_running;			/* Is the feature running? */
 											/* Needed for recursives */
 };
+
+/* Internal Macros */
+#ifdef HAS_GETRUSAGE
+
+#define u_seconds	user_time.seconds
+#define u_micro		user_time.micro_seconds
+#define s_seconds	system_time.seconds
+#define s_micro		system_time.micro_seconds
+
+#define real_time(x)	(x->u_seconds*1000000) + x->u_micro + \
+					 	(x->s_seconds*1000000) + x->s_micro
+#define new_prof_info(x)	{\
+								x = (struct prof_info *) cmalloc(sizeof(struct prof_info));\
+								x->this_total_time =\
+				(struct prof_rusage *) cmalloc(sizeof(struct prof_rusage));\
+								x->all_total_time =\
+				(struct prof_rusage *) cmalloc(sizeof(struct prof_rusage));\
+								x->descendent_time =\
+				(struct prof_rusage *) cmalloc(sizeof(struct prof_rusage));\
+							}
+#define free_prof_info(x)	{\
+								xfree(x->this_total_time);\
+								xfree(x->all_total_time);\
+								xfree(x->descendent_time);\
+								xfree(x);\
+							}
+#define check_existance(x)	{\
+								if(!x || !(x->all_total_time) || !(x->this_total_time) || !(x->descendent_time)) {\
+										/* Bad Luck ! */\
+									enomem();\
+								}\
+							}
+#define record_time(x)	prof_time(x)
+#define zero_time(x)	{\
+							x->u_seconds = 0;\
+							x->u_micro = 0.;\
+							x->s_seconds = 0;\
+							x->s_micro = 0.;\
+						}
+#define subtract_gc_time(x,y)	{\
+									x->u_micro -= y;\
+								}
+#define subtract_time(x,y,z)	{\
+									x->u_seconds = y->u_seconds - z->u_seconds;\
+									x->u_micro = y->u_micro - z->u_micro;\
+									x->s_seconds = y->s_seconds - z->s_seconds;\
+									x->s_micro = y->s_micro - z->s_micro;\
+								}
+#define add_time(x,y,z)	{\
+							x->u_seconds = y->u_seconds + z->u_seconds;\
+							x->u_micro = y->u_micro + z->u_micro;\
+							x->s_seconds = y->s_seconds + z->s_seconds;\
+							x->s_micro = y->s_micro + z->s_micro;\
+						}
+
+#else
+
+#define record_time(x)	{\
+							double utime, stime;\
+							prof_time(&utime, &stime);\
+							x = utime + stime;\
+						}
+#define zero_time(x)	x = 0.
+#define subtract_gc_time(x,y)	{\
+									x -= y;
+								}
+#define subtract_time(x,y,z)	{\
+									x = y - z;\
+								}
+#define add_time(x,y,z)	{\
+							x = y + z;\
+						}
+#define new_prof_info(x)	{\
+								x = (struct prof_info *) cmalloc(sizeof(struct prof_info));\
+							}
+#define free_prof_info(x)	{\
+								xfree(x);\
+							}
+#define check_existance(x)	{\
+								if(!x) {\
+										/* Bad Luck! */\
+									enomem();\
+								}\
+							}
+#endif /* HAS_GETRUSAGE */
 
 rt_public struct stack *profile_stack;
 
@@ -204,12 +306,12 @@ void check_options_stop()
 void initprf()
 {
 	/* Creates the table needed for E-PROFILE. This function only
-	 * allocates that table if `eif_profiler_on'.
+	 * allocates that table if `prof_enabled'.
 	 */
 
-	if(eif_profiler_on) {
+	if(prof_endabled) {
 			/* Allocate table */
-		class_table = (struct htable *) xcalloc(1, sizeof(struct htable));
+		class_table = (struct htable *) cmalloc(sizeof(struct htable));
 		if (class_table == (struct htable *) 0)
 			enomem();
 
@@ -229,7 +331,7 @@ void exitprf()
 	 * Store information to disk and deallocate structures.
 	 */
 
-	if(eif_profiler_on) {
+	if(prof_enabled) {
 		unsigned long *keys;		/* Keys from H table */
 		struct feat_table *f_values;	/* Values from class H table */
 		struct prof_info *features;	/* Features from H tables */
@@ -255,8 +357,8 @@ void exitprf()
 						features = (struct prof_info *) f_values[i].htab->h_values;
 						fprintf(prof_output, "[%d]\t%.2f\t%.2f\t%ld\t%s from %d\t[%d]\n", index,
 #ifdef HAS_GETRUSAGE
-		    					features[j].all_total_time / 1000000.,
-								features[j].descendent_time / 1000000.,
+		    					(real_time(features[j].all_total_time)) / 1000000.,
+								(real_time(features[j].descendent_time)) / 1000000.,
 #else
 #ifdef HAS_TIMES
 								features[j].all_total_time / (double)HZ,
@@ -291,16 +393,12 @@ int dtype;  /* Dynamic type of `name'*/
 {
 	/* Initialize timer and push `name' on `prof_stack'. */
 
-	if(eif_profiler_on) {
+	if(prof_recording) {
 		struct prof_info *new_item;	/* New item for `name' */
-		double dummy;			/* User time */
 
 			/* Allocate `new_item' */
-		new_item = (struct prof_info *) cmalloc (sizeof(struct prof_info));
-		if (!new_item) {
-				/* Bad Luck! */
-			enomem();
-		}
+		new_prof_info(new_item);
+		check_existance(new_item);
 
 			/* Basic initialization */
 		new_item->number_of_calls = 1;
@@ -309,10 +407,10 @@ int dtype;  /* Dynamic type of `name'*/
 		new_item->origin = origin;
 		new_item->feature_hcode = hashcode(name, strlen(name));
 			/* Record time value */
-		prof_time(&dummy, &(new_item->this_total_time));
+		record_time(new_item->this_total_time);
 			/* Zero values */
-		new_item->all_total_time = 0.;
-		new_item->descendent_time = 0.;
+		zero_time(new_item->all_total_time);
+		zero_time(new_item->descendent_time);
 			/* Mark running */
 		new_item->is_running = 1;
 
@@ -326,7 +424,7 @@ void stop_profile()
 	 * information in `class_table'.
 	 */
 
-	if(eif_profiler_on) {
+	if(prof_recording) {
 		struct prof_info *item;	/* The information to change */
 
 		if((item = prof_stack_pop())) {	/* Testing against NULL */
@@ -334,15 +432,14 @@ void stop_profile()
 				 * feature anymore. This makes live easier.
 				 */
 			struct prof_info *stk_item;
-			double dummy, new_value;	/* Timinig */
 
-			prof_time(&dummy, &new_value);	/* Get CPU Time */
-			item->all_total_time = new_value - item->this_total_time;
+			record_time(item->all_total_time);
+			subtract_time(item->all_total_time, item->all_total_time, item->this_total_time);
 			item->is_running = 0; /* Mark feature is not running */
 
 			if (gc_ran && !gc_running) {
 					/* Get time wasted by GC */
-				item->all_total_time -= last_gc_time;
+				subtract_gc_time(item->all_total_time, last_gc_time);
 				gc_ran = 0;
 			}
 
@@ -351,14 +448,14 @@ void stop_profile()
 					 * update it.
 					 */
 
-				stk_item->all_total_time -= item->all_total_time;
-				stk_item->descendent_time += item->all_total_time;
+				subtract_time(stk_item->all_total_time, stk_item->all_total_time, item->all_total_time);
+				add_time(stk_item->descendent_time, stk_item->descendent_time, item->all_total_time);
 			}
 
 			update_class_table(item);		/* Record times */
 		} else {
 				/* Bad Luck! (Profile stack corrupted) */
-			panic("Profile stack coprrupted");
+			panic("Profile stack corrupted");
 		}
 	}
 }
@@ -429,7 +526,7 @@ struct prof_info* prof_stack_pop()
 	 * Return NULL if there is no top item to pop.
 	 */
 
-	if(eif_profiler_on) {
+	if(prof_recording) {
 		register1 struct prof_info *stk_item;	/* Top item of stack */
 
 		if((stk_item = prof_stack_top())) {
@@ -438,8 +535,8 @@ struct prof_info* prof_stack_pop()
 			if(prof_stack->st_top < prof_stack->st_cur->sk_arena) {
 					/* Oops, current chunk is empty */
 				prof_stack->st_cur = prof_stack->st_cur->sk_prev;
-				prof_stack->st_top = prof_stack->st_cur->sk_end - 1;
-				st_truncate(prof_stack);	/* Reuse memory */
+				prof_stack->st_end = prof_stack->st_cur->sk_end;
+				prof_stack->st_top = prof_stack->st_end - 1;
 			}
 			return stk_item;
 		} else {
@@ -457,14 +554,26 @@ struct prof_info* prof_stack_top()
 	 * NULL if no item is available on `prof_stack'
 	 */
 
-	if(eif_profiler_on) {
+	if(prof_recording) {
 		char **top;
 
 		top = prof_stack->st_top;	/* Next free location */
 		top -= 1;
 		if(top < prof_stack->st_cur->sk_arena) {
-				/* Bad Luck! */
-			return 0;
+				/* Oops, stack chunk ends here. Let's see if there is
+				 * more in this stack or not...
+				 */
+			if(prof_stack->st_cur->sk_prev) {
+					/* There seems to be more: We're Lucky (for now).
+					 * Get the last valid value in previous chunk:
+					 * stk->st_cur->st_prev->sk_end is a boundary, thus
+					 * (pointer decrement) - 1 should yield valid pointer.
+					 */
+				top = prof_stack->st_cur->sk_prev->sk_end - 1;
+			} else {
+					/* Bad Luck! */
+				return 0;
+			}
 		}
 
 		return (struct prof_info *) (*top);
@@ -485,7 +594,7 @@ void prof_stack_init()
 	 *    again?
 	 */
 
-	if(eif_profiler_on) {
+	if(prof_enabled) {
 			/* Allocate profile stack */
 		prof_stack = (struct stack *) cmalloc(sizeof(struct stack));
 		if(!prof_stack)
@@ -501,7 +610,7 @@ void prof_stack_free()
 {
 	/* Free the memory allocated for `prof_stack'. */
 
-	if(eif_profiler_on) {
+	if(prof_enabled) {
 		xfree(prof_stack->st_cur);	/* Free memory used by chunk */
 		xfree(prof_stack);			/* Free memory used by stack */
 	}
@@ -514,7 +623,7 @@ struct prof_info *new_item;
 	 * Painc if not possible.
 	 */
 
-	if(eif_profiler_on) {
+	if(prof_recording) {
 		if(epush(prof_stack, (char *) new_item) == -1) {
 				/* Bad Luck! */
 			panic("Push profile info failed.");
@@ -543,7 +652,7 @@ struct prof_info *item;
  	* or insert the in formation (if it was unknown).
  	*/
 
-	if(eif_profiler_on) {
+	if(prof_recording) {
 		struct feat_table *f_t;		/* Feature table */
 		struct prof_info *p_i;		/* New item */
 		unsigned long f_hcode;		/* Feature H code */
@@ -552,13 +661,13 @@ struct prof_info *item;
 		f_t = (struct feat_table *) ht_value(class_table, item->dtype);
 		if(!f_t) {
 				/* Create a new Hash table */
-			f_t = (struct feat_table *) xcalloc(1, sizeof(struct feat_table));
+			f_t = (struct feat_table *) cmalloc(sizeof(struct feat_table));
 			if(!f_t)
 				enomem();	/* Bad Luck */
 
 				/* Initialize new feature table for dtype */
 			f_t->dtype = item->dtype;
-			f_t->htab = (struct htable *) xcalloc(1, sizeof(struct htable));
+			f_t->htab = (struct htable *) cmalloc(sizeof(struct htable));
 			if(!f_t->htab)
 				enomem();	/* Bad Luck */
 
@@ -589,8 +698,9 @@ struct prof_info *item;
 			int found = 0;
 
 			p_i->number_of_calls += item->number_of_calls;
-			p_i->all_total_time += item->all_total_time;
-			p_i->descendent_time += item->descendent_time;
+			add_time(p_i->all_total_time, p_i->all_total_time, item->all_total_time);
+			add_time(p_i->descendent_time, p_i->descendent_time,
+item->descendent_time);
 
 				/* Traversal in search of recursive `item' */
 			for(current_chunk = prof_stack->st_cur;
@@ -622,10 +732,10 @@ struct prof_info *item;
 				/* Did we find one? */
 			if(found) {
 					/* Update it */
-				((struct prof_info *)*address)->this_total_time += p_i->all_total_time;
+				add_time(((struct prof_info *)*address)->all_total_time, ((struct prof_info *)*address)->all_total_time, p_i->all_total_time);
 			}
 
-			xfree(item);
+			free_prof_info(item);
 		}
 	}
 }
@@ -651,35 +761,62 @@ char **old_top;		/* Old top. Just to know where to stop rewinding. */
  	* do a 'exitprf' in 'reclaim'. -- GLJ
  	*/
 
-	if(eif_profiler_on) {
+	if(prof_recording) {
 			/* Traverse the stack to a certain point */
-		while(prof_stack->st_top >= old_top) {
+		while(prof_stack->st_top > old_top) {
 				/* Stop profiling top item */
 			stop_profile();
+
+				/* Check where we are right now in the stack. If st_top is
+				 * bottom line of the current chunk right here, reset it
+				 * to the end of the previous chunk.
+				 * Will there always be a previous chunk here? In other
+				 * words: Can we rewind up to the point where we just
+				 * stopped profiling the creation routine of the system?
+				 * Well, no... (hopefully). If it is possible OTOH, please
+				 * update the next code block to have a guard for a
+				 * prof_stack->st_cur->sk_prev != NULL.
+				 */
+
+			if(prof_stack->st_top <= prof_stack->st_cur->sk_arena) {
+					/* Oops, current chunk is empty */
+				prof_stack->st_cur = prof_stack->st_cur->sk_prev;
+				prof_stack->st_end = prof_stack->st_cur->sk_end;
+				prof_stack->st_top = prof_stack->st_end;
+			}
 		}
 	}
 }
 
-void prof_time(usertime, systime)
-double *usertime;	/* User time */
-double *systime;	/* System time */
-	/* Get the user and system time.
-	 * This function is optimized for the profiler. `getcputime()' in `timer.c'
-	 * always divides the result.
-	 * Quantify told us that that is a bad idea.
-	 */
+/* Get the user and system time.
+ * This function is optimized for the profiler. `getcputime()' in `timer.c'
+ * always divides the result.
+ * Quantify told us that that is a bad idea.
+ */
 
 #ifdef HAS_GETRUSAGE
+
+void prof_time(a_time)
+struct prof_rusage *a_time;	/* Time structure */
 {
 	struct rusage usage;
 
 	getrusage(RUSAGE_SELF, &usage);
 
-	*usertime = (double)usage.ru_utime.tv_sec + (double)usage.ru_utime.tv_usec;
-	*systime = (double)usage.ru_stime.tv_sec + (double)usage.ru_stime.tv_usec;
+	a_time->u_seconds = usage.ru_utime.tv_sec;
+	a_time->u_micro = usage.ru_utime.tv_usec;
+	a_time->s_seconds = usage.ru_stime.tv_sec;
+	a_time->s_micro = usage.ru_stime.tv_usec;
 }
+
 #else
+
+void prof_time(usertime, systime)
+double *usertime;		/* Time in user mode */
+double *systime;		/* Time in kernel mode */
+
 #ifdef HAS_TIMES
+
 {
 	struct tms time;
 
@@ -687,10 +824,14 @@ double *systime;	/* System time */
 	*usertime = (double)time.tms_utime;
 	*systime = (double)time.tms_stime;
 }
+
 #else
+
 {
 	*usertime = 0;
 	*systime = 0;
 }
+
 #endif /* HAS_TIMES */
+
 #endif /* HAS_GETRUSAGE */

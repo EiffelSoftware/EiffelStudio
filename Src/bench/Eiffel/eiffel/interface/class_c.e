@@ -2394,7 +2394,7 @@ feature
 				error or else i = nb
 			loop
 				generic_dec := l_area.item (i)
-				generic_name := generic_dec.formal_name
+				generic_name := generic_dec.name
 
 					-- First, check if the formal generic name is not the
 					-- anme of a class in the surrounding universe.
@@ -2415,7 +2415,7 @@ feature
 				loop
 					next_dec := l_area.item (j)
 					if next_dec /= generic_dec then
-						if next_dec.formal_name.is_equal (generic_name) then
+						if next_dec.name.is_equal (generic_name) then
 							create vcfg2
 							vcfg2.set_class (Current)
 							vcfg2.set_formal_name (generic_name)
@@ -2475,7 +2475,7 @@ feature
 				i = nb
 			loop
 				generic_dec := l_area.item (i)
-				generic_name := generic_dec.formal_name
+				generic_name := generic_dec.name
 
 				if Universe.class_named (generic_name, cluster) /= Void then
 					create vcfg1
@@ -3262,6 +3262,7 @@ feature -- Actual class type
 			i, nb: INTEGER
 			actual_generic: ARRAY [FORMAL_A]
 			formal: FORMAL_A
+			l_formal_dec: FORMAL_DEC_AS
 		do
 			if generics = Void then
 				create Result.make (class_id)
@@ -3274,8 +3275,8 @@ feature -- Actual class type
 				until
 					i > nb
 				loop
-					create formal
-					formal.set_position (i)
+					l_formal_dec := generics.i_th (i)
+					create formal.make (l_formal_dec.is_reference, l_formal_dec.is_expanded, i)
 					actual_generic.put (formal, i)
 					i := i + 1
 				end
@@ -4596,6 +4597,7 @@ feature -- Genericity
 			l_inherited_formals: SEARCH_TABLE [INTEGER]
 			l_rout_id_set: ROUT_ID_SET
 			i, nb: INTEGER
+			l_formal_dec: FORMAL_DEC_AS
 		do
 				-- Clean previously stored information.
 			l_old := generic_features
@@ -4673,8 +4675,9 @@ feature -- Genericity
 					i > nb
 				loop
 					if not l_inherited_formals.has (i) then
-						create l_formal_type
-						l_formal_type.set_position (i)
+						l_formal_dec := generics.i_th (i)
+						create l_formal_type.make (l_formal_dec.is_reference,
+							l_formal_dec.is_expanded, i)
 						
 						create l_formal
 						l_formal.set_feature_name ("_" + name + "_Formal#" + i.out)

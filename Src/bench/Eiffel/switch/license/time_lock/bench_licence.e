@@ -1,11 +1,7 @@
 indexing
 
 	description: "License manager for EiffelBench under Windows."
-<<<<<<< bench_licence.e
 	date: "$Date$"
-=======
-	date: "$Date$";
->>>>>>> 1.7
 	revision: "$Revision $"
 
 class BENCH_LICENSE

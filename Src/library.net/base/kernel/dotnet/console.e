@@ -30,9 +30,7 @@ class CONSOLE inherit
 			dispose
 		redefine
 			make_open_stdin, make_open_stdout, count, is_empty, exists,
-			close, dispose, end_of_file, back, next_line,
-			read_integer, read_double, readint, readdouble, read_character,
-			readchar, flush
+			close, dispose, end_of_file, back, writer, next_line
 		end
 
 create {STD_FILES}
@@ -44,7 +42,7 @@ feature -- Initialization
 			-- Create an unix standard input file.
 		do
 			make (fn)
-			internal_sread := feature {SYSTEM_CONSOLE}.in
+			internal_stream := feature {SYSTEM_CONSOLE}.open_standard_input
 			set_read_mode
 		end
 
@@ -52,7 +50,7 @@ feature -- Initialization
 			-- Create an unix standard output file.
 		do
 			make (fn)
-			internal_swrite := feature {SYSTEM_CONSOLE}.out
+			internal_stream := feature {SYSTEM_CONSOLE}.open_standard_output
 			set_write_mode
 		end
 
@@ -60,21 +58,17 @@ feature -- Initialization
 			-- Create an unix standard error file.
 		do
 			make (fn)
-			internal_swrite := feature {SYSTEM_CONSOLE}.error
+			internal_stream := feature {SYSTEM_CONSOLE}.open_standard_error
 			set_write_mode
 		end
 
-feature -- Element change
+feature -- Cursor movement
 
-	flush is
-			-- Flush buffered data to disk.
-			-- Note that there is no guarantee that the operating
-			-- system will physically write the data to the disk.
-			-- At least it will end up in the buffer cache,
-			-- making the data visible to other processes.
+	next_line is
+			-- Move to next input line.
 		do
-			if internal_swrite /= Void then
-				internal_swrite.flush
+			if reader.peek /= -1 then
+				Precursor {PLAIN_TEXT_FILE}
 			end
 		end
 
@@ -89,67 +83,6 @@ feature -- Status report
 	end_of_file: BOOLEAN is False
 			-- Has an EOF been detected?
 			-- Always false for a console.
-
-feature -- Input
-
-	next_line is
-			-- Move to next input line.
-		local
-			s: SYSTEM_STRING
-		do
-			s := feature {SYSTEM_CONSOLE}.read_line
-		end
-
-	read_integer is
-			-- Read the ASCII representation of a new integer
-			-- from file. Make result available in `last_integer'.
-		do
-			Precursor {PLAIN_TEXT_FILE}
-			next_line
-		end
-		
-	readint is
-			-- Read the ASCII representation of a new integer
-			-- from file. Make result available in `last_integer'.
-		do
-			read_integer
-		end
-		
-	read_double is
-			-- Read the ASCII representation of a new double
-			-- from file. Make result available in `last_double'.
-		do
-			Precursor {PLAIN_TEXT_FILE}
-			next_line
-		end
-
-	readdouble is
-			-- Read the ASCII representation of a new double
-			-- from file. Make result available in `last_double'.
-		do
-			read_double
-		end
-
-	read_character is
-			-- Read a new character.
-			-- Make result available in `last_character'.
-		local
-		  	a_code: INTEGER
-		do
-		  	a_code := reader.read
-		  	if a_code = - 1 then
-				internal_end_of_file := True
-		  	else
-				last_character := a_code.to_character
-		  	end
-		end
-
-	readchar is
-			-- Read a new character.
-			-- Make result available in `last_character'.
-		do
-			read_character
-		end
 
 feature -- Cursor movement
 
@@ -179,6 +112,20 @@ feature {NONE} -- Inapplicable
 	is_empty: BOOLEAN is False;
 			-- Useless for CONSOLE class.
 			--| `empty' is false not to invalidate invariant clauses.
+
+	writer: TEXT_WRITER is
+			-- Stream writer used to write in `Current' (if possible).
+		local
+			l_stream: STREAM_WRITER
+		do
+			if internal_swrite = Void and internal_stream.can_write then
+				create l_stream.make_from_stream_and_encoding (
+					internal_stream, feature {ENCODING}.default)
+				l_stream.set_auto_flush (True)
+				internal_swrite := l_stream
+			end
+			Result := internal_swrite
+		end
 
 indexing
 

@@ -68,6 +68,7 @@ Status:
 o   incomplete
 *   complete
 X   complete but found to have bugs
+!	generated
 -   NA
 (Note the TEST column will be used later)
 
@@ -92,32 +93,32 @@ X   complete but found to have bugs
   Support:
     support/ev_default_colors.e							*	.	.	.
     kernel/ev_accelerator.e								*	.	.	.
-    kernel/ev_key_constants.e							o	.	.	.
+    kernel/ev_key_constants.e							!	-	-	-
     kernel/ev_color.e									*	.	.	.
     kernel/ev_coordinates.e								*	.	.	.
     kernel/ev_cursor.e									o	.	.	.
     kernel/ev_cursor_code.e								o	.	.	.
     kernel/ev_font.e									o	.	.	.
     kernel/ev_font_constants.e							o	.	.	.
-    kernel/ev_key.e										*	.	.	.
+    kernel/ev_key.e										*	-	-	.
     kernel/ev_rectangle.e								o	.	.	.
     kernel/ev_timeout.e									*	.	.	.
     support/ev_default_font.e							.	.	.	.
-    support/ev_radio_peer.e								*	.	.	.
+    support/ev_radio_peer.e								*	*	*	.
 
   System:
     kernel/ev_application.e								o	.	.	.
     kernel/ev_environment.e								*	.	.	.
-    kernel/ev_internal.e								o	.	.	.
+    kernel/ev_internal.e								!	-	-	-
     widgets/uncommon_widgets/ev_screen.e				*	.	.	.
 
   Buttons:
     widgets/primitives/ev_button.e						*	.	*	.
-    widgets/primitives/ev_select_button.e				*	.	*	.
-    widgets/primitives/ev_check_button.e				*	.	*	.
-    widgets/primitives/ev_option_button.e				*	.	*	.
-    widgets/primitives/ev_radio_button.e				*	.	o	.
-    widgets/primitives/ev_toggle_button.e				*	.	*	.
+    widgets/primitives/ev_select_button.e				*	*	*	.
+    widgets/primitives/ev_check_button.e				*	*	*	.
+    widgets/primitives/ev_option_button.e				*	*	*	.
+    widgets/primitives/ev_radio_button.e				*	o	o	.
+    widgets/primitives/ev_toggle_button.e				*	*	*	.
 
   Misc widgets:
     widgets/primitives/ev_combo_box.e					*	o	o	.

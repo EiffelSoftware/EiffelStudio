@@ -536,7 +536,7 @@ feature {NONE} -- Implementation
 			-- The text within the widget has changed.
 		do
 			if change_actions_internal /= Void then
-				change_actions_internal.call (App_implementation.gtk_marshal.Empty_tuple)
+				change_actions_internal.call (Void)
 			end
 		end
 

@@ -92,8 +92,8 @@ all:: .FORCE_DEPEND
 ########################################################################
 # Start of Jmakefile
 
-CFLAGS = -I$(TOP) -I. -I../ipc/app -I./include
-DPFLAGS = -I$(TOP) -I. -I../ipc/app -I./include
+CFLAGS = -I$(TOP) -I. -I../ipc/app -I./include -I../idrs
+DPFLAGS = -I$(TOP) -I. -I../ipc/app -I./include -I../idrs
 
 NETWORK_OBJ = ../ipc/app/network.o
 MTNETWORK_OBJ = ../ipc/app/MTnetwork.o

@@ -43,7 +43,7 @@ extern int stck_nb_items_free_stack ();
 #endif
 extern char *efreeze(EIF_OBJ object);				/* Freeze object's address (no more move) */
 extern EIF_OBJ eadopt(EIF_OBJ object);			/* The C wants to keep the reference */
-extern EIF_OBJ ewean(EIF_OBJ object);				/* Weans a previously adopted reference */
+extern EIF_REFERENCE ewean(EIF_OBJ object);				/* Weans a previously adopted reference */
 extern void eufreeze(char *object);				/* Forget a frozen memory address */
 extern EIF_OBJ hrecord(char *object);			/* Record entry in hector table */
 extern EIF_OBJ henter(char *object);			/* Low-level entry in hector table */

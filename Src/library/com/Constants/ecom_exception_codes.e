@@ -2605,6 +2605,9 @@ feature -- Access
 			"RPC_E_UNEXPECTED"
 		end
 		
+	E_end_of_stream: INTEGER is 114
+			-- End of stream has been reached while reading
+
 end -- class ECOM_EXCEPTION_CODES
 
 --|----------------------------------------------------------------

@@ -29,7 +29,8 @@ feature {NONE} -- Initialization
 feature -- Access
 
 	registered_font (a_font: EV_FONT): EV_IDENTIFIED_FONT is
-			-- Return new identified font for `a_font'.
+			-- Return new identified font for `a_font'
+			-- or identified font for `a_font' if same object is registred.
 		require
 			a_font_not_Void: a_font /= Void
 		local
@@ -81,6 +82,20 @@ feature -- Element change
 			i := an_id_font.id
 			if i <= max_table_size and then orginal_fonts.item (i) /= an_id_font.font then
 				orginal_fonts.put (an_id_font.font, i)
+			end
+		end
+		
+	unregister_font (an_id_font: EV_IDENTIFIED_FONT) is
+			-- Unregister `an_id_font' if in factory.
+		require
+			an_id_font_not_Void: an_id_font /= Void
+		local
+			i: INTEGER
+		do
+			i := an_id_font.id
+			if i <= max_table_size and then orginal_fonts.item (i) = an_id_font.font then
+				orginal_fonts.put (Void, i)
+				scaled_fonts.put (Void, i)
 			end
 		end
 

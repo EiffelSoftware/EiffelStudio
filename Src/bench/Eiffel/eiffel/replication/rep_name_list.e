@@ -143,7 +143,7 @@ end;
 			until
 				after
 			loop
-				new_feat := f_table.item (item.rep_feature.feature_name);
+				new_feat := f_table.item_id (item.rep_feature.feature_name_id);
 debug ("REPLICATION")
 	--io.error.putstring ("retrieving new feature: ");
 	--io.error.putstring (new_feat.feature_name);

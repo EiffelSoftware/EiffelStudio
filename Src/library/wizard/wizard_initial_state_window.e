@@ -71,13 +71,14 @@ feature -- Basic Operations
 			main_box.extend (interior_box)			
 		end
 
-	pixmap_location: STRING is
+	pixmap_location: FILE_NAME is
 			-- Pixmap location
 		once
-			Result := "eiffel_wizard" + pixmap_extension
+			create Result.make_from_string ("eiffel_wizard")
+			Result.add_extension (pixmap_extension)
 		end
 
-	pixmap_icon_location: STRING is
+	pixmap_icon_location: FILE_NAME is
 			-- Path in which can be found the pixmap icon associated with
 			-- the current state.
 		deferred

@@ -59,10 +59,11 @@ feature -- Access
 
 feature {NONE} -- Implementation
 
-	pixmap_icon_location: STRING is
+	pixmap_icon_location: FILE_NAME is
 			-- Icon for the Eiffel Wel Wizard
 		once
-			Result := "eiffel_wizard_icon" + pixmap_extension
+			create Result.make_from_string ("eiffel_wizard_icon")
+			Result.add_extension (pixmap_extension)
 		end
 
 end -- class WIZARD_FINAL_STATE

@@ -30,11 +30,12 @@ feature -- basic Operations
 
 feature {WIZARD_STATE_WINDOW}
 
-	pixmap_icon_location: STRING is
-			-- Icon for the Eiffel Wel Wizard
+	pixmap_icon_location: FILE_NAME is
+			-- Icon for the Eiffel Vision2 Wizard
 		once
-			Result := "eiffel_wizard_icon" + pixmap_extension
+			create Result.make_from_string ("eiffel_wizard_icon")
+			Result.add_extension (pixmap_extension)
 		end
-
+	
 end -- class WIZARD_ERROR_LOCATION
 

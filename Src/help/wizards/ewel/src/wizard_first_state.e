@@ -109,7 +109,7 @@ feature {NONE} -- Constants
 		once
 			create Result.make_from_string (wizard_pixmaps_path)
 			Result.set_file_name ("dialog_application")
-			Result.add_extension ("bmp")
+			Result.add_extension (pixmap_extension)
 		end
 
 	Preview_frame_pixmap: FILE_NAME is
@@ -117,7 +117,7 @@ feature {NONE} -- Constants
 		once
 			create Result.make_from_string (wizard_pixmaps_path)
 			Result.set_file_name ("frame_application")
-			Result.add_extension ("bmp")
+			Result.add_extension (pixmap_extension)
 		end
 
 feature {NONE} -- Vision2 layout

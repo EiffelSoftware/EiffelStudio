@@ -110,7 +110,8 @@ feature -- Basic Operation
 			if add_about_dialog.is_selected then
 				bn.put ('1', index + 4)
 			end
-			fn.set_file_name (bn + pixmap_extension)
+			fn.set_file_name (bn)
+			fn.add_extension (pixmap_extension)
 			preview_pixmap.set_with_named_file (fn)
 		end
 

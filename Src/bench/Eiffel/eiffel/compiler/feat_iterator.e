@@ -20,12 +20,12 @@ feature
 
 feature {NONE}
 
-	mark (f: FEATURE_I; static_class: CLASS_C) is
+	mark (f: FEATURE_I; static_class: CLASS_C; rout_id_val: INTEGER) is
 			-- Mark feature and its redefinitions
 		require
 			not_is_attribute: not f.is_attribute;
 		local
-			rout_id_val, other_body_id: INTEGER;
+			other_body_id: INTEGER;
 			descendant_class: CLASS_C;
 			descendant_feature: FEATURE_I;
 			des_feat_table: FEATURE_TABLE;
@@ -41,9 +41,7 @@ feature {NONE}
 			ancestor_feature: FEATURE_I;
 			written_class, ancestor_class: CLASS_C;
 		do
-			mark_and_record (f, static_class);
-
-			rout_id_val := f.rout_id_set.first;
+			mark_and_record (f, static_class, rout_id_val);
 
 			check
 				(not Tmp_poly_server.has (rout_id_val)) implies f.is_deferred;
@@ -106,10 +104,10 @@ feature {NONE}
 									descendant_class.is_basic)
 							then
 								if descendant_feature.is_attribute then
-									mark_alive (descendant_feature);
+									mark_alive (descendant_feature, rout_id_val);
 								else
 									mark
-										(descendant_feature, descendant_class);
+										(descendant_feature, descendant_class, rout_id_val);
 								end;
 							end;
 						end;
@@ -120,7 +118,7 @@ feature {NONE}
 			end;
 		end;
 
-	mark_and_record (feat: FEATURE_I; actual_class: CLASS_C) is
+	mark_and_record (feat: FEATURE_I; actual_class: CLASS_C; rout_id_val: INTEGER) is
 			-- Mark feature `feat' alive.
 		require
 			feat_exists: feat /= Void;
@@ -134,7 +132,7 @@ feature {NONE}
 		do
 			just_born := not is_alive (feat);
 				-- Mark feature alive
-			mark_alive (feat);
+			mark_alive (feat, rout_id_val);
 
 			if just_born then
 
@@ -153,6 +151,8 @@ feature {NONE}
 debug ("MARKING")
     io.error.putstring (original_feature.feature_name);
     io.error.putstring (" from ");
+    io.error.putstring (actual_class.class_name);
+    io.error.putstring (" written in ");
     io.error.putstring (written_class.class_name);
     io.error.new_line;
 end;
@@ -168,7 +168,7 @@ end;
 		deferred
 		end
 
-	mark_alive (feat: FEATURE_I) is
+	mark_alive (feat: FEATURE_I; rout_id_val: INTEGER) is
 			-- Record feature `feat'
 		require
 			good_argument: feat /= Void
@@ -191,7 +191,7 @@ end;
 				!! temp.make (1);
 				used_table.put (temp, feat.body_id);
 			end;
-			temp.force (feat.rout_id_set.first);
+			temp.force (rout_id_val);
 		end;
 
 feature

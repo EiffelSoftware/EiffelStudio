@@ -12,7 +12,7 @@ creation
 
 feature 
 
-	eiffel_type: STRING is "OPEN";
+	eiffel_type: STRING is "Build_open";
 
 	label: STRING is
 		do
@@ -26,11 +26,11 @@ feature
 
 	arguments: EB_LINKED_LIST [ARG] is
 		local
-			arg: ARG;
+			arg: ARG
 		once
-			!! Result.make;
-			!! arg.session_init (context_catalog.text_type);
-			Result.extend (arg);
+			!! Result.make
+			!! arg.session_init (context_catalog.text_type)
+			Result.extend (arg)
 		end;
 
 	labels: EB_LINKED_LIST [CMD_LABEL] is

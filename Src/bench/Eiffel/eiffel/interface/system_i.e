@@ -3677,10 +3677,10 @@ feature -- Pattern table generation
 
 			if license.demo_mode then
 					-- Set egc_type_of_gc = 25 * egc_platform_level + egc_compiler_tag - 1
-				buffer.putstring ("%N%Tegc_type_of_gc = 123152;%N")
+				buffer.putstring ("%N%Tegc_type_of_gc = 123153;%N")
 			else
 					-- Set egc_type_of_gc = 25 * egc_platform_level + egc_compiler_tag
-				buffer.putstring ("%N%Tegc_type_of_gc = 123153;%N")
+				buffer.putstring ("%N%Tegc_type_of_gc = 123154;%N")
 			end
 
 			from

@@ -215,7 +215,8 @@ feature -- Status
 	element_type: INTEGER_8 is
 			-- Void element type
 		do
-			if is_expanded then
+			if is_expanded and base_class.is_external then
+					-- We only support expanded for external class at the moment.
 				Result := feature {MD_SIGNATURE_CONSTANTS}.Element_type_valuetype				
 			else
 				if base_class = System.system_string_class.compiled_class then

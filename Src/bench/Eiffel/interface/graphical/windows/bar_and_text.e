@@ -62,6 +62,17 @@ feature {NONE} -- Initialization
 
 feature -- Standard Interface
 
+	build_filter_menu_entry is
+			-- Build the filter menu entry
+		require
+			special_menu_not_void: special_menu /= Void
+		local
+			filter_menu_entry: EB_MENU_ENTRY
+		do
+			!! filter_command.make (Current);
+			!! filter_menu_entry.make (filter_command, special_menu)
+		end;
+
 	build_widgets is
 			-- Build system widget.
 		local
@@ -107,17 +118,7 @@ feature -- Standard Interface
 		end;
 
 	build_bar is
-			-- Build the top most bar.
-		do
-			if editable then
-				build_edit_bar
-			else
-				build_basic_bar
-			end;
-		end;
-
-	build_basic_bar is
-			-- Build top bar (only the basics).
+			-- Build the top most bar (basic bar).
 		local
 			quit_cmd: QUIT_FILE;
 			quit_button: EB_BUTTON;
@@ -130,6 +131,7 @@ feature -- Standard Interface
 			!! hole_holder.make_plain (hole);
 			hole_holder.set_button (hole_button);
 			build_edit_menu (edit_bar);
+			build_save_as_menu_entry;
 			build_print_menu_entry;
 			!! quit_cmd.make (Current);
 			!! quit_button.make (quit_cmd, edit_bar);
@@ -147,33 +149,6 @@ feature -- Standard Interface
 			edit_bar.attach_top (quit_button, 0);
 			edit_bar.attach_right_widget (quit_button, search_cmd_holder.associated_button, 5);
 			edit_bar.attach_right (quit_button, 0);
-		end;
-
-	build_edit_bar is
-			-- Build top bar (with editing commands).
-		do
-			!! hole.make (Current);
-			!! hole_button.make (hole, edit_bar);
-			!! hole_holder.make_plain (hole);
-			hole_holder.set_button (hole_button);
-
-				-- Here we have to go for a different approach because
-				-- `create_edit_buttons' gets redefined in the descendants.
-			create_edit_buttons;
-
-			edit_bar.attach_left (hole_button, 0);
-			edit_bar.attach_top (hole_button, 0);
-			edit_bar.attach_top (open_cmd_holder.associated_button, 0);
-			edit_bar.attach_top (save_cmd_holder.associated_button, 0);
-			edit_bar.attach_top (save_as_cmd_holder.associated_button, 0);
-			edit_bar.attach_top (search_cmd_holder.associated_button, 0);
-			edit_bar.attach_top (quit.associated_button, 0);
-			edit_bar.attach_left (hole_button, 0);
-			edit_bar.attach_right_widget (save_cmd_holder.associated_button, open_cmd_holder.associated_button, 0);
-			edit_bar.attach_right_widget (save_as_cmd_holder.associated_button, save_cmd_holder.associated_button, 0);
-			edit_bar.attach_right_widget (search_cmd_holder.associated_button, save_as_cmd_holder.associated_button, 0);
-			edit_bar.attach_right_widget (quit.associated_button, search_cmd_holder.associated_button, 5);
-			edit_bar.attach_right (quit.associated_button, 0);
 		end;
 
 	build_format_bar is
@@ -306,29 +281,19 @@ feature -- Window Implementation
 			eb_shell.raise
 		end;
 
-	create_edit_buttons is
-			-- Create the edit buttons needed for the edit bar.
-		local
-			quit_cmd: QUIT_FILE;
-			quit_button: EB_BUTTON;
-			quit_menu_entry: EB_MENU_ENTRY
-			exit_menu_entry: EB_MENU_ENTRY;
+	close_filter_window is
+			-- Close the filter window.
 		do
-			build_print_menu_entry;
-			!! quit_cmd.make (Current);
-			!! quit_button.make (quit_cmd, edit_bar);
-			!! quit_menu_entry.make (quit_cmd, file_menu);
-			!! quit.make (quit_cmd, quit_button, quit_menu_entry);
-			!! exit_menu_entry.make (Project_tool.quit_cmd_holder.associated_command, file_menu);
-			!! exit_cmd_holder.make_plain (Project_tool.quit_cmd_holder.associated_command);
-			exit_cmd_holder.set_menu_entry (exit_menu_entry);
-			build_edit_menu (edit_bar);
+			if filter_command /= Void then
+				filter_command.close_filter_window
+			end
 		end;
 
 	close_windows is
 			-- Close sub-windows.
 		do
 			close_search_window;
+			close_filter_window;
 			close_print_window
 		end;
 
@@ -432,6 +397,9 @@ feature -- Window Properties
 
 	hole_holder: HOLE_HOLDER;
 			-- Holder for both the button and the hole.
+
+	filter_command: FILTER_COMMAND;
+			-- Filter command to display filter window
 
 	edit_bar, format_bar: TOOLBAR;
 			-- Main and format button bars.

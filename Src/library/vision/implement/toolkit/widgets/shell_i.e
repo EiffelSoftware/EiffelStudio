@@ -16,8 +16,6 @@ inherit
 feature -- Status setting
 
 	set_override (flag: BOOLEAN) is
-		require 
-			valid_flag: flag /= Void;
 		deferred
 		end;
 

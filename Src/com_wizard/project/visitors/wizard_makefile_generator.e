@@ -13,6 +13,11 @@ inherit
 			{NONE} all
 		end
 
+	WIZARD_SHARED_MAPPER_HELPERS
+		export
+			{NONE} all
+		end
+
 	WIZARD_ROUTINES
 
 	WIZARD_RESCUABLE
@@ -97,6 +102,9 @@ feature -- Miscellaneous
 			Result.append (	"CFLAGS = ")
 			if c_compiler.is_equal ("msc") then
 				Result.append ("-W0 -Ox ")
+				Result.append ("-YX")
+				Result.append (Ecom_generated_rt_globals_header_file_name)
+				Result.append_character (' ')
 			else
 				Result.append (bcb_compiler_flags)
 			end

@@ -63,7 +63,7 @@ feature -- IL code generation
 			if has_result then
 				il_generator.generate_once_result
 			end
-			il_generator.generate_return
+			il_generator.generate_return (has_result)
 
 			il_generator.mark_label (il_label_compute)
 
@@ -76,7 +76,7 @@ feature -- IL code generation
 			if has_result then
 				il_generator.generate_result
 			end
-			il_generator.generate_return
+			il_generator.generate_return (has_result)
 			
 			il_generator.set_once_generation (False)
 		end

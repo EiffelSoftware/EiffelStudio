@@ -720,11 +720,10 @@ feature -- IL code generation
 	generate_il_return (has_return_value: BOOLEAN) is
 			-- Generate IL final return statement
 		do
-			if not has_return_value then
-				il_generator.generate_return
-			else
-				il_generator.generate_return_value
+			if has_return_value then
+				il_generator.generate_result
 			end
+			il_generator.generate_return (has_return_value)
 		end
 
 	generate_il_precondition  is

@@ -152,17 +152,25 @@ feature -- Basic operations
 					end
 				end;
 				add_interface_descriptor (tmp_interface_descriptor);
-				if 
-					(tmp_type_info.type_attr.type_kind = Tkind_dispatch) and 
-					is_fdefault (tmp_impl_flag) 
-				then
-					default_dispinterface_name := clone (tmp_interface_descriptor.c_type_name)
+				if is_fdefault (tmp_impl_flag) then
+					if  (default_interface_descriptor /= Void) then
+						default_interface_descriptor := tmp_interface_descriptor
+					end
+					if 
+						(tmp_type_info.type_attr.type_kind = Tkind_dispatch) 
+					then
+						default_dispinterface_name := clone (tmp_interface_descriptor.c_type_name)
+					end
 				end
 				i := i + 1
 				debugg := a_type_info.type_attr.count_implemented_types
 			end
+			if default_interface_descriptor = Void then
+				default_interface_descriptor := interface_descriptors.first
+			end
 		ensure 
 			valid_interface_count: interface_descriptors.count = a_type_info.type_attr.count_implemented_types
+			non_void_default_interface: default_interface_descriptor /= Void
 		end
 
 	initialize_descriptor (a_descriptor: WIZARD_COCLASS_DESCRIPTOR) is
@@ -177,6 +185,7 @@ feature -- Basic operations
 				if default_dispinterface_name /= Void and then not default_dispinterface_name.empty then
 					a_descriptor.set_default_dispinterface (default_dispinterface_name)
 				end
+				a_descriptor.set_default_interface (default_interface_descriptor)
 			end
 
 feature {NONE} -- Implementation
@@ -192,6 +201,9 @@ feature {NONE} -- Implementation
 
 	default_dispinterface_name: STRING
 			-- Name of default interface.
+
+	default_interface_descriptor: WIZARD_INTERFACE_DESCRIPTOR
+			-- Descriptor of default interface.
 
 end -- class WIZARD_COCLASS_DESCRIPTOR_CREATOR
 

@@ -49,6 +49,9 @@ feature -- Access
 	default_dispinterface_name: STRING
 			-- Name of default interface.
 
+	default_interface_descriptor: WIZARD_INTERFACE_DESCRIPTOR
+			-- Descriptor of default interface.
+
 	creation_message: STRING is
 			-- Creation message for wizard output
 		do
@@ -106,6 +109,16 @@ feature -- Element Change
 		ensure
 			non_void_default_dispinterface: default_dispinterface_name /= Void
 			valid_default_dispinterface: not default_dispinterface_name.empty and default_dispinterface_name.is_equal (a_name)
+		end
+
+	set_default_interface (a_interface: WIZARD_INTERFACE_DESCRIPTOR) is
+			-- Set `default_interface_descriptor' with `a_interface'.
+		require
+			non_void_interface: a_interface /= Void
+		do
+			default_interface_descriptor := a_interface
+		ensure
+			non_void_default_interface: default_interface_descriptor /= Void
 		end
 
 feature -- Basic operations

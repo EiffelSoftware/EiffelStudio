@@ -71,8 +71,7 @@ feature -- types
 			class_type: CLASS_TYPE
 			type_i: TUPLE_TYPE_I
 		do
-			!!type_i
-			type_i.set_base_id (class_id)
+			create type_i.make (class_id)
 			type_i.set_true_generics (Void)
 			type_i.set_meta_generic (Void)
 			class_type := new_type (type_i)

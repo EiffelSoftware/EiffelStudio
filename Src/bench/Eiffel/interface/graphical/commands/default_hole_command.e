@@ -85,9 +85,9 @@ feature -- Execution
 					new_tool.display
 				end
 			else
-				ts ?= tool.stone;
+				ts := tool.stone;
 				if ts /= Void then
-					tool.receive (ts)
+					tool.synchronize
 				end
 			end
 		end;

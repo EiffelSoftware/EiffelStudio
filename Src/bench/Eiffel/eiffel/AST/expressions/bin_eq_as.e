@@ -65,7 +65,9 @@ feature -- Type check, byte code and dead code removal
 					right_type.reference_actual_type.conform_to (left_type.actual_type))
 				then
 					last_argument_conversion_info := context.last_conversion_info
-					context.supplier_ids.extend (last_argument_conversion_info.depend_unit)
+					if last_argument_conversion_info.has_depend_unit then
+						context.supplier_ids.extend (last_argument_conversion_info.depend_unit)
+					end
 				else
 					if
 						((left_type.convert_to (context.current_class, right_type.actual_type)) or
@@ -74,7 +76,9 @@ feature -- Type check, byte code and dead code removal
 						left_type.reference_actual_type.conform_to (right_type.actual_type))
 					then
 						last_target_conversion_info := context.last_conversion_info
-						context.supplier_ids.extend (last_target_conversion_info.depend_unit)
+						if last_target_conversion_info.has_depend_unit then
+							context.supplier_ids.extend (last_target_conversion_info.depend_unit)
+						end
 					else
 						create vweq
 						context.init_error (vweq)

@@ -270,7 +270,9 @@ feature -- Type check, byte code and dead code removal
 									create parameters_convert_info.make (1, count)
 								end
 								parameters_convert_info.put (context.last_conversion_info, i)
-								context.supplier_ids.extend (context.last_conversion_info.depend_unit)
+								if context.last_conversion_info.has_depend_unit then
+									context.supplier_ids.extend (context.last_conversion_info.depend_unit)
+								end
 							elseif
 								current_item.is_expanded and then arg_type.is_external and then
 								current_item.reference_actual_type.conform_to (arg_type)
@@ -294,7 +296,9 @@ feature -- Type check, byte code and dead code removal
 									create parameters_convert_info.make (1, count)
 								end
 								parameters_convert_info.put (context.last_conversion_info, i)
-								context.supplier_ids.extend (context.last_conversion_info.depend_unit)
+								if context.last_conversion_info.has_depend_unit then
+									context.supplier_ids.extend (context.last_conversion_info.depend_unit)
+								end
 							else
 								insert_vuar2_error (a_feature, last_id, i, current_item, arg_type)
 							end

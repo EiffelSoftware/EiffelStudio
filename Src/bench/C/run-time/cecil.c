@@ -493,7 +493,7 @@ rt_public char *eifaddr(char *object, char *name)
 		return (char *) 0;			/* Will certainly raise a bus error */
 
 #ifndef WORKBENCH
-	return (char *) (object + ((System(Dtype(object)).cn_offsets[i])[Dtype(object)]));
+	return (char *) (object + (System(Dtype(object)).cn_offsets[i]));
 #else
 	dtype = Dtype(object);
 	rout_id = System(dtype).cn_attr[i]; 
@@ -572,7 +572,7 @@ rt_public EIF_BIT eifgbit(char *object, char *name)
 	if (!(sk->cn_types[i] & SK_BIT))
 		return EIF_NO_BFIELD;		/* Wrong type (not a bit field) */
 
-	return (EIF_BIT) (object + (*sk->cn_offsets[i]));
+	return (EIF_BIT) (object + (sk->cn_offsets[i]));
 #else
 	dtype = Dtype(object);
 	rout_id = System(dtype).cn_attr[i];

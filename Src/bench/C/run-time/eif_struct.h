@@ -64,7 +64,7 @@ struct cnode {
 	struct ctable cn_cecil;		/* Cecil hash table */
 #else
 	void (*cn_inv)();			/* Pointer on invariant routine if any */
-	long **cn_offsets;			/* Attribute offsets */
+	long *cn_offsets;			/* Attribute offsets */
 #endif
 };
 

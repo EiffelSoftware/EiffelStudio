@@ -91,6 +91,16 @@ feature -- Input
 			last_double := file_gdb (file_pointer)
 		end
 
+	read_data (p: POINTER; nb_char: INTEGER) is
+			-- Read a string of at most `nb_char' bound characters
+			-- or until end of file.
+			-- Make result available in `p'.
+		local
+			new_count: INTEGER
+		do
+			new_count := file_gss (file_pointer, p, nb_char)
+		end
+
 feature {NONE} -- Implementation
 
 	file_gib (file: POINTER): INTEGER is

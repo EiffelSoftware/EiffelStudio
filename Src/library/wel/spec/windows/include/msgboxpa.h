@@ -9,7 +9,7 @@
 #	include <wel.h>
 #endif
 
-cwel_msgboxparams_set (LPMSGBOXPARAMS, HWND, HINSTANCE, LPCSTR, LPCSTR, DWORD, LPCSTR, DWORD);
+void cwel_msgboxparams_set (LPMSGBOXPARAMS, HWND, HINSTANCE, LPCSTR, LPCSTR, DWORD, LPCSTR, DWORD);
 
 #endif /* __WEL_MSGBOXPARAMS__ */
 

@@ -52,7 +52,6 @@ EIF_INTEGER cwin_reg_create_key(
     return (EIF_INTEGER)phkResult;
 }
 
-
 //---------------------------------------------------------------------------
 
 EIF_INTEGER cwin_reg_open_key(
@@ -146,15 +145,21 @@ void cwin_reg_query_value(
 	g_length = charCount;
 }
 
+//---------------------------------------------------------------------------
+
 EIF_INTEGER cwin_reg_value_type()
 {
 	return (EIF_INTEGER)g_type;
 }
 
+//---------------------------------------------------------------------------
+
 EIF_POINTER cwin_reg_value_data()
 {
 	return (EIF_POINTER)g_buffer;
 }
+
+//---------------------------------------------------------------------------
 
 EIF_INTEGER cwin_reg_value_length()
 {

@@ -60,6 +60,11 @@ inherit
 			{NONE} all
 		end
 
+	WEL_TVI_CONSTANTS
+		export
+			{NONE} all
+		end
+
 	WEL_COLOR_CONSTANTS
 		export
 			{NONE} all
@@ -447,6 +452,20 @@ feature -- Element change
 			msg_result := cwin_send_message_result (item, Tvm_deleteitem, 0, cwel_pointer_to_integer (an_item.h_item))
 			check
 				item_deleted: msg_result /= 0
+			end
+		end
+		
+	reset_content is
+			-- Remove all `items' from `Current'.
+		require
+			exists: exists
+			has_items: count > 0
+		local
+			msg_result: INTEGER
+		do
+			msg_result := cwin_send_message_result (item, Tvm_deleteitem, 0, cwel_pointer_to_integer (Tvi_root))
+			check
+				items_deleted: msg_result /= 0
 			end
 		end
 

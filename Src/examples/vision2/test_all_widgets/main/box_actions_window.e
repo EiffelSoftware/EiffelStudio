@@ -11,7 +11,6 @@ class
 	BOX_ACTIONS_WINDOW
 	
 inherit
-	
 	ACTIONS_WINDOW
 		redefine
 			set_widgets
@@ -21,11 +20,6 @@ inherit
 creation
 	
 	make_with_main_widget
-
-feature -- Access
-	
-	box_controls: EV_HORIZONTAL_BOX
-
 
 feature -- Status setting
         
@@ -39,16 +33,22 @@ feature -- Status setting
 			box_widget: EV_BOX
 			spacing_entry: EV_TEXT_FIELD_WITH_LABEL
 			set_spacing_c: SET_SPACING_COMMAND
+			hsep: EV_HORIZONTAL_SEPARATOR
                 do
-			Precursor
-			!!box_controls.make (main_box)
-			!!homogeneous_tb.make_with_text (box_controls, "Homogeneous")
+			{ACTIONS_WINDOW} Precursor
+			!!hsep.make (table)
+			table.set_child_position (hsep, 8, 0, 9, 4)
+			hsep.set_minimum_height (10)
+
+			!!homogeneous_tb.make_with_text (table, "Homogeneous")
+			table.set_child_position (homogeneous_tb, 9, 0, 10, 2)
 			!!set_h_c
 			box_widget ?= active_widget
 			!!a.make_2 (box_widget, homogeneous_tb)
 			homogeneous_tb.add_click_command (set_h_c, a)
 			
-			!!spacing_entry.make_with_label (box_controls, "Spacing:")
+			!!spacing_entry.make_with_label (table, "Spacing:")
+			table.set_child_position (spacing_entry.box, 9, 2, 10, 4)
 			!!a2.make_2 (box_widget, spacing_entry)
 			!!set_spacing_c
 			spacing_entry.add_activate_command (set_spacing_c, a2)

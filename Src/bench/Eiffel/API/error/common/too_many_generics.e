@@ -23,7 +23,7 @@ feature -- Property
 	syntax_message: STRING is
 			-- Specific syntax message.
         do
-			Result := "the number of generic parameters is limited to four"
+			Result := "the number of generic parameters is limited to eight"
         end;
 
 end -- class TOO_MANY_GENERICS

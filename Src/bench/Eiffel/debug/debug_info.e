@@ -60,8 +60,14 @@ feature -- Removal
 					!! bp;
 					bp.set_offset (breakable_points.item.position);
 					bp.set_real_body_id (r_body_id);
-					sent_bp.remove (bp);
-					new_bp.remove (bp);
+						-- Update the new_bp to make sure that
+						-- the breakpoint will not stop here
+						-- at next execution
+					bp := sent_bp.item (bp);
+					if bp /= Void and then not bp.is_continue then
+						bp.set_continue;
+						new_bp.extend (bp)
+					end;
 					breakable_points.forth
 				end
 				d_list.forth
@@ -94,6 +100,7 @@ feature -- Removal
 		do
 			clear_debuggables;
 			clear_breakpoints;
+			new_breakpoints.wipe_out;
 			debugged_routines.wipe_out;
 			removed_routines.wipe_out;
 				-- Reset the supermelted body_ids counters.
@@ -784,14 +791,14 @@ feature {EWB_REQUEST}
 
 	remove_all_breakpoints is
 			-- Remove all breakpoints which have been set and 
-			-- sent to the application.
+			-- send to the application.
 		local
 			bp: BREAKPOINT
 		do
 			from
 				sent_breakpoints.start
 			until
-				sent_breakpoints.off
+				sent_breakpoints.after
 			loop
 				bp := sent_breakpoints.item_for_iteration;
 				if not bp.is_continue then

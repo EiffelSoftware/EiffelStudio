@@ -345,7 +345,7 @@ feature {NONE}
 			-- Prepare data for evaluation.
 		local
 --			l_frame: ICOR_DEBUG_FRAME
-			l_chain: ICOR_DEBUG_CHAIN
+--			l_chain: ICOR_DEBUG_CHAIN
 			l_icd_thread: ICOR_DEBUG_THREAD
 			l_icd_eval: ICOR_DEBUG_EVAL
 			l_status: APPLICATION_STATUS_DOTNET

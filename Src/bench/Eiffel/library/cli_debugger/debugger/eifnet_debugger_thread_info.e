@@ -56,7 +56,7 @@ feature -- Cleaning
 				pending_steppers.after
 			loop
 				s := pending_steppers.item_for_iteration
-				s.deactivate
+				s.deactivate	-- could fail, when process exited
 				s.clean_on_dispose
 				pending_steppers.forth
 			end
@@ -84,7 +84,7 @@ feature -- Access
 			l_stepper: ICOR_DEBUG_STEPPER
 			l_error: INTEGER
 		do
-			clean_pending_steppers			
+			clean_pending_steppers
 			-- FIXME jfiat: for now we do this way, find the way to reuse steppers
 			l_thread := icd_thread
 			if l_thread /= Void then
@@ -103,6 +103,8 @@ feature -- Access
 					add_icd_stepper (Result.item)
 				end
 			end
+		ensure
+			Result /= Void
 		end		
 		
 feature -- Change

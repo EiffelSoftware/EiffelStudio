@@ -1,29 +1,43 @@
-indexing
-
-	description:	
-		"Hole for explain element.";
-	date: "$Date$";
-	revision: "$Revision$"
-
-class EXPLAIN_HOLE 
+class EXPLAIN_HOLE
 
 inherit
-
-	EB_BUTTON_HOLE
+	DEFAULT_HOLE_COMMAND
 		redefine
-			stone_type
+			full_symbol, icon_symbol, symbol, name, stone_type
 		end
 
 creation
-
 	make
-	
-feature  -- Properties
 
-	stone_type: INTEGER is
-			-- Type of compatible stone.
+feature -- Properties
+
+	symbol: PIXMAP is
+			-- Standard symbol representing Current.
+		once
+			Result := bm_Explain
+		end;
+
+	full_symbol: PIXMAP is
+			-- Icon for the class tool
+		once
+			Result := bm_Explain_dot
+		end;
+
+	icon_symbol: PIXMAP is
+			-- Icon for the explain tool
+		once
+			Result := bm_Explain_icon
+		end;
+
+	name: STRING is
 		do
-			Result := Explain_type
-		end
+			Result := l_Explain
+		end;
+
+    stone_type: INTEGER is
+            -- Type of compatible stone.
+        do
+            Result := Explain_type
+        end
 
 end -- class EXPLAIN_HOLE

@@ -280,7 +280,6 @@ feature {NONE} -- Implementation
 			a_file.put_string (Tab)
 			a_file.put_string (Tab)
 			a_file.put_string (Tab)
-			a_file.put_string (Tab)
 			a_file.put_string (Double_quote)
 			a_file.put_string (Shared_wizard_environment.destination_folder)
 			a_file.put_character (Directory_separator)
@@ -370,6 +369,7 @@ feature {NONE} -- Implementation
 			Result := client_generated_ace_file
 			Result.replace_substring_all (Any_type, Shared_wizard_environment.project_name)
 			Result.replace_substring_all (Default_keyword, Shared_library_option)
+			Result.replace_substring_all (Client, Server)
 		end
 
 	client_generated_ace_file: STRING is
@@ -380,7 +380,9 @@ feature {NONE} -- Implementation
 			Result.append (Shared_wizard_environment.project_name)
 			Result.append (New_line)
 			Result.append (Partial_ace_file)
-			Result.append (Tab)
+			Result.append (Shared_wizard_environment.destination_folder)
+			Result.append (Client)
+			Result.append (Partial_ace_file_part_two)
 			Result.append (Tab)
 			Result.append (Tab)
 			Result.append (Tab)
@@ -396,15 +398,6 @@ feature {NONE} -- Implementation
 			Result.append (Double_quote)
 			Result.append (clone (Shared_wizard_environment.destination_folder))
 			Result.append (Common)
-			Result.append_character (Directory_separator)
-			Result.append (Include)
-			Result.append (Double_quote)
-			Result.append (Comma)
-			Result.append (New_line_tab_tab)
-			Result.append (Tab)
-			Result.append (Double_quote)
-			Result.append (clone (Shared_wizard_environment.destination_folder))
-			Result.append (Server)
 			Result.append_character (Directory_separator)
 			Result.append (Include)
 			Result.append (Double_quote)
@@ -565,9 +558,13 @@ feature {NONE} -- Implementation
 		%	inlining (no)%N%
 		%	inlining_size (%"4%")%N%N%
 		%cluster%N%
-		%	root_cluster: %".%";%N%
-		%	server (root_cluster):				%"$\component%"%N%
-		%		-- EiffelBase%N%
+		%	all component: %""
+
+	Partial_ace_file_part_two: STRING is
+			-- Ace file used to precompile generated Eiffel system
+		"%";%N%N%
+		%	all common: %"..\common%"%N%N%
+		%	-- BASE%N%
 		%	all base:						%"$EIFFEL4\library\base%"%N%
 		%		exclude%N%
 		%			%"table_eiffel3%";%N%
@@ -581,20 +578,22 @@ feature {NONE} -- Implementation
 		%			CELL;%N%
 		%			STRING;%N%
 		%		end;%N%N%
-		%	-- WEL%N%T%
+		%	-- WEL%N%
 		%	all wel:						%"$EIFFEL4\library\wel%"%N%N%
+		%	-- TIME%N%
 		%	all time: 						%"$EIFFEL4\library\time%"%N%
 		%		exclude%N%
 		%			%"french%";%N%
 		%			%"german%"%N%
+		%		visible%N%
+		%			DATE_TIME;%N%
 		%		end;%N%N%
-		%	-- EiffelCOM%N%
+		%	-- COM%N%
 		%	all ecom:						%"$EIFFEL4\library\com%"%N%
 		%		visible%N%
 		%			ECOM_CURRENCY;%N%
 		%			ECOM_DECIMAL;%N%
-		%		end;%N%
-		%	all common:						%"..\common%"%N%N%
+		%		end;%N%N%
 		%external%N%
 		%	include_path:	%"$EIFFEL4\library\wel\spec\windows\include%",%N%
 		%			%"$EIFFEL4\library\com\include%",%N"

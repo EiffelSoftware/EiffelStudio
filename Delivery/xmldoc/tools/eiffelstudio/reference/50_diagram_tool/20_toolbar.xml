@@ -18,7 +18,7 @@
 			<item>
 				<image>
 					<url>/images/eiffelstudio/icons/icon_new_class_color.gif</url>
-				</image> 
+				</image>
 				<link>
 					<url>../../how_to_s/60_designing_a_project/20_altering_the_system/10_new_class.xml</url>
 					<label>Create a new class</label>
@@ -28,7 +28,7 @@
 			<item>
 				<image>
 					<url>/images/eiffelstudio/icons/icon_new_inherit_color.gif</url>
-				</image> 
+				</image>
 				<link>
 					<url>../../how_to_s/60_designing_a_project/30_managing_links/10_new_inheritance_link.xml</url>
 					<label>Create new inheritance links</label>
@@ -38,7 +38,7 @@
 			<item>
 				<image>
 					<url>/images/eiffelstudio/icons/icon_new_supplier_color.gif</url>
-				</image> 
+				</image>
 				<link>
 					<url>../../how_to_s/60_designing_a_project/30_managing_links/20_new_client_link.xml</url>
 					<label>Create new client-supplier links</label>
@@ -58,7 +58,7 @@
 			<item>
 				<image>
 					<url>/images/eiffelstudio/icons/icon_delete_small_color.gif</url>
-				</image> 
+				</image>
 				<link>
 					<url>../../how_to_s/60_designing_a_project/20_altering_the_system/40_remove_from_system.xml</url>
 					<label>Delete</label>
@@ -68,7 +68,7 @@
 			<item>
 				<image>
 					<url>/images/eiffelstudio/icons/icon_undo_color.gif</url>
-				</image> 
+				</image>
 				<link>
 					<url>../../how_to_s/60_designing_a_project/15_history.xml</url>
 					<label>Undo last action</label>
@@ -78,18 +78,18 @@
 			<item>
 				<image>
 					<url>/images/eiffelstudio/icons/icon_cmd_history_color.gif</url>
-				</image> 
+				</image>
 				<link>
 					<url>../../how_to_s/60_designing_a_project/15_history.xml</url>
 					<label>History tool</label>
 				</link>
-				<line_break/> Click to open the 
+				<line_break/> Click to open the
 				<bold>History tool</bold>.
 			</item>
 			<item>
 				<image>
 					<url>/images/eiffelstudio/icons/icon_redo_color.gif</url>
-				</image> 
+				</image>
 				<link>
 					<url>../../how_to_s/60_designing_a_project/15_history.xml</url>
 					<label>Redo last action</label>
@@ -99,7 +99,7 @@
 			<item>
 				<image>
 					<url>/images/eiffelstudio/icons/icon_recycle_bin_color.gif</url>
-				</image> 
+				</image>
 				<link>
 					<url>../../how_to_s/60_designing_a_project/40_modifying_the_display/30_remove_from_view.xml</url>
 					<label>Remove figure</label>
@@ -119,7 +119,7 @@
 			<item>
 				<image>
 					<url>/images/eiffelstudio/icons/icon_class_header_color.gif</url>
-				</image> 
+				</image>
 				<link>
 					<url>../../how_to_s/60_designing_a_project/20_altering_the_system/30_class_header.xml</url>
 					<label>Change class name and generics</label>
@@ -139,18 +139,18 @@
 			<item>
 				<image>
 					<url>/images/eiffelstudio/icons/icon_select_depth_color.gif</url>
-				</image> 
+				</image>
 				<link>
 					<url>../../how_to_s/60_designing_a_project/40_modifying_the_display/20_select_depth.xml</url>
 					<label>Select depth of relations</label>
 				</link>
-				<line_break/> Click to bring up the 
+				<line_break/> Click to bring up the
 				<bold>Select depth</bold> dialog.
 			</item>
 			<item>
 				<image>
 					<url>/images/eiffelstudio/icons/icon_fill_cluster_color.gif</url>
-				</image> 
+				</image>
 				<link>
 					<url>../../how_to_s/60_designing_a_project/40_modifying_the_display/60_retrieve_all.xml</url>
 					<label>Include all classes of cluster</label>
@@ -170,7 +170,7 @@
 			<item>
 				<image>
 					<url>/images/eiffelstudio/icons/icon_zoom_out_color.gif</url>
-				</image> 
+				</image>
 				<link>
 					<url>../../how_to_s/60_designing_a_project/40_modifying_the_display/50_zooming.xml</url>
 					<label>Zoom out</label>
@@ -180,7 +180,7 @@
 			<item>
 				<image>
 					<url>/images/eiffelstudio/icons/icon_supplier_color.gif</url>
-				</image> 
+				</image>
 				<link>
 					<url>../../how_to_s/60_designing_a_project/40_modifying_the_display/10_show_hide.xml</url>
 					<label>Show/hide client-supplier links</label>
@@ -210,7 +210,7 @@
 			<item>
 				<image>
 					<url>/images/eiffelstudio/icons/icon_delete_view_color.gif</url>
-				</image> 
+				</image>
 				<link>
 					<url>../../how_to_s/60_designing_a_project/50_managing_views/20_delete_view.xml</url>
 					<label>Delete current view</label>
@@ -219,13 +219,13 @@
 			</item>
 			<item>
 				<image>
-					<url>/images/eiffelstudio/icons/icon_export_to_png_color.gif</url>
-				</image> 
+					<url>/images/eiffelstudio/icons/icon_export_to.png_color.gif</url>
+				</image>
 				<link>
 					<url>../../how_to_s/60_designing_a_project/60_to_image.xml</url>
-					<label>Export diagram to PNG</label>
+					<label>Export diagram to.png</label>
 				</link>
-				<line_break/> Click to generate a .PNG file from current view.
+				<line_break/> Click to generate a .png file from current view.
 			</item>
 		</list>
 	</paragraph></document>

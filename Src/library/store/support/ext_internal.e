@@ -110,6 +110,8 @@ feature -- Basic operations
 					else
 						Result := False
 					end
+				elseif ftype = Reference_type then
+					set_reference_field (i, object, value)
 				end
 			elseif ftype = Reference_type then
 				set_reference_field (i, object, value)

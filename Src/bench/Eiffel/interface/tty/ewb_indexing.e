@@ -92,7 +92,6 @@ feature
 			if Ast_server.has (classc.id) then
 				indexes := Ast_server.item (classc.id).indexes;
 				if indexes /= Void then
-					output_window.put_string ("%N%T%Tindexing");
 					from indexes.start until indexes.after loop
 						index := indexes.item;
 						index_tag := index.tag;
@@ -102,7 +101,7 @@ feature
 							not index_tag.is_equal ("date") and
 							not index_tag.is_equal ("revision"))
 						then
-							output_window.put_string ("%N%T%T%T");
+							output_window.put_string ("%N%T%T");
 							output_window.put_string (index_tag);
 							output_window.put_string (": ")
 							index_list := index.index_list;

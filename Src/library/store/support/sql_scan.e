@@ -179,7 +179,7 @@ feature -- Basic operations
 		end
 
 	replace is
-			-- Replace all occurences of :key by `ht.item (":key")'
+			-- Replace all occurrences of :key by `ht.item (":key")'
 		local
 			new_string: like Current
 			c: CHARACTER
@@ -289,7 +289,7 @@ feature {NONE} -- Status setting
 		end
 
 	search_special is
-			-- Move cursor to next occurence of ':', '%'', or '"'
+			-- Move cursor to next occurrence of ':', '%'', or '"'
 		local
 			c: CHARACTER
 			i: INTEGER

@@ -52,12 +52,12 @@ feature -- Access
 feature -- Status report
 
 	has_error: BOOLEAN is
-			-- Has an error occured during last database operation?
+			-- Has an error occurred during last database operation?
 		deferred
 		end
 
 	error_message: STRING is
-			-- Error message if an error occured during last
+			-- Error message if an error occurred during last
 			-- database operation.
 		deferred
 		end

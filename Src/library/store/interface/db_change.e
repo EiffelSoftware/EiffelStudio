@@ -20,6 +20,7 @@ inherit
 	DB_EXEC_USE
 		export
 			{NONE} all
+			{ANY} set_trace
 		end
 
 	DB_EXPRESSION

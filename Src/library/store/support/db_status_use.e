@@ -20,20 +20,6 @@ feature -- error status
 
 	code_error: INTEGER
 
-feature -- Error handling
-
-	error_code: INTEGER is
-			-- Error code of last transaction
-		do
-			Result := handle.status.error_code
-		end
-
-	error_message: STRING is
-			-- SQL error message prompted by database server
-		do
-			Result := handle.status.error_message
-		end
-
 feature {NONE} -- Status report
 
 	is_connected: BOOLEAN is
@@ -42,12 +28,18 @@ feature {NONE} -- Status report
 			Result := handle.status.is_connected
 		end
 
+	error_code: INTEGER is
+			-- Error code of last transaction
+		do
+			Result := handle.status.error_code
+			code_error := Result
+		end
 
 	is_ok: BOOLEAN is
 			-- Is last SQL statement ok ?
 		do
 			if handle.status.is_ok_mat /= Void then
-				Result := handle.status.error_code = 0 or handle.status.is_ok_mat
+				Result := handle.status.is_ok_mat or handle.status.error_code = 0
 			else 
 				Result := handle.status.error_code = 0
 			end
@@ -60,6 +52,12 @@ feature {NONE} -- Status report
 			Result := handle.status.is_ok_mat
 		end
 
+	error_message: STRING is
+			-- SQL error message prompted by database server
+		do
+			Result := handle.status.error_message
+			message_error:= Result
+		end
 	
 	warning_message: STRING is
 			-- SQL warning message prompted by database server

@@ -90,11 +90,8 @@ feature -- Status report
 	
 	name: STRING is
 			-- Database name
-		local
-			l: G
 		once
-			create l
-			Result := l.generator
+			Result := clone (generator)
 		ensure
 			Result.is_equal (generator)
 		end

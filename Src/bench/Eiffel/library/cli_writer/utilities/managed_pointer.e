@@ -42,13 +42,10 @@ feature {NONE} -- Initialization
 			-- content of `data' into `item'.
 		require
 			data_not_void: data /= Void
-		local
-			l_sp: SPECIAL [INTEGER_8]
 		do
 			size := data.count
 			item := item.memory_alloc (size)
-			l_sp := data.area
-			item.memory_copy ($l_sp, size)
+			put_array (data, 0)
 		ensure
 			item_set: item /= default_pointer
 			size_set: size = data.count
@@ -78,6 +75,17 @@ feature -- Format independant
 			valid_pos: (pos + 1) < size
 		do
 			(item + pos).memory_copy ($i, 1)
+		end
+
+	put_array (data: ARRAY [INTEGER_8]; pos: INTEGER) is
+			-- Copy content of `data' into `item' at position `pos'.
+		require
+			valid_pos: (pos + data.count) < size
+		local
+			l_sp: SPECIAL [INTEGER_8]
+		do
+			l_sp := data.area
+			item.memory_copy ($l_sp, size)
 		end
 
 feature -- Platform specific, here x86

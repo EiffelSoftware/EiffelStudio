@@ -131,21 +131,6 @@ feature -- GB_EV_FIXED
 	
 	widget_size_prompt: STRING is "Widget is 0x0 pixels, click HERE to enlarge."
 
-feature -- Miscellaneous
-
-	Internal_properties_string: STRING is "Internal_properties"
-		-- XML tag used to store properties stored by GB_OBJECT
-		-- but not in the interface of Vision2.
-		
-	Directory_string: STRING is "Directory"
-		-- XML tag used to represent a directory.
-		
-	Directory_seperator: CHARACTER is
-			-- Seperator used for directories on current platform.
-		once
-			Result := (create {OPERATING_ENVIRONMENT}).directory_separator
-		end
-
 feature -- Default values
 
 	Minimum_width_of_object_editor: INTEGER is 165
@@ -508,6 +493,24 @@ feature -- Miscellaneous
 		once
 			create Result
 		end
+
+	Internal_properties_string: STRING is "Internal_properties"
+		-- XML tag used to store properties stored by GB_OBJECT
+		-- but not in the interface of Vision2.
+		
+	Directory_string: STRING is "Directory"
+		-- XML tag used to represent a directory.
+		
+	Directory_seperator: CHARACTER is
+			-- Seperator used for directories on current platform.
+		once
+			Result := (create {OPERATING_ENVIRONMENT}).directory_separator
+		end
+		
+	maximum_supported_ascii_value: INTEGER is 127
+		-- Maximum ascii character permitted in EiffelBuild save files.
+		-- Currently it is limited to 127 by the GOBO implementation.
+		--| FIXME Julian
 		
 feature -- GB_TOOL_HOLDER constants
 
@@ -568,6 +571,13 @@ feature -- Warning Dialogs
 	Not_all_windows_named_string: STRING is "Some of the windows you are attempting to generate are not named.%NThe name is required for the generation and is used for both the class and file names.%NDo you wish to assign default names to those windows that are unnamed?"
 	
 	constant_rejected_warning: STRING is "The value of the selected constant does not lie within the range permitted for this%Nproperty, and thefore the constant has been rejected.%NThe range of permitted values is restricted by the properties and settings of each object."
+	
+	invalid_characters1: STRING is "EiffelBuild only supports standard ascii characters in the range 0 to 127.%NThe project contains the following unsupported ascii characters : %N%N"
+	
+	invalid_characters2: STRING is "%N%NIf you continue, these characters will be replaced by the character '*' in the save file (not the open project).%N%NDo you wish to continue saving?"
+	
+	vs_invalid_characters1: STRING is "The Advanced Gui Project Wizard only supports standard ascii characters in the range 0 to 127.%NThe project contains the following unsupported ascii characters : %N%N"
+	vs_invalid_characters2: STRING is "%N%NIn the saved project files, each of these will be replaced with '*'."
 
 feature -- Object editor properties
 

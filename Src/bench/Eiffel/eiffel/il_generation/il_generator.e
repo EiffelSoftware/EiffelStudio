@@ -200,7 +200,12 @@ feature -- Generation
 				end
 					-- Finish code generation.
 				il_generator.end_assembly_generation
+				
+					-- Perform cleanup of underlying external objects
+				il_generator.cleanup
 			else
+					-- Perform cleanup of underlying external objects
+				il_generator.cleanup
 					-- An error occurred, let's raise an Eiffel compilation
 					-- error that will be caught by WORBENCH_I.recompile.
 				Error_handler.raise_error

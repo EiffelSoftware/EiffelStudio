@@ -10,7 +10,7 @@ inherit
 		end;
 	COMMAND_ARGS;
 	COMMAND;
-	CONSTANTS
+	CONSTANTS;
 
 creation
 
@@ -30,7 +30,7 @@ feature
 			valid_extra_message: extra_message /= Void implies
 				not extra_message.empty
 		local
-			tmp: STRING
+			tmp: STRING;
 		do
 			caller := c;
 			if extra_message = Void then
@@ -40,10 +40,12 @@ feature
 				tmp.replace_substring_all ("%%X", extra_message)
 			end;
 			set_message (tmp);
-			old_popup
+			old_popup;
 		end;
 
 	make (a_parent: COMPOSITE) is
+		local
+			set_dialog_att: SET_DIALOG_ATTRIBUTES_COM
 		do
 			question_d_create (Widget_names.question_window, a_parent);
 			set_title (Widget_names.question_window);
@@ -53,8 +55,10 @@ feature
 			add_cancel_action (Current, Second);
 			set_ok_label ("Yes");
 			set_cancel_label ("No");
+			!! set_dialog_att; 
+			set_dialog_att.execute (Current);
 		end;
-	
+
 feature {NONE}
 
 	execute (argument: ANY) is

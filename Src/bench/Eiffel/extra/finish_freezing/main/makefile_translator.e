@@ -583,21 +583,19 @@ feature {NONE} -- Translation
 				makefile.putstring (options.get_string ("cd", Void))
 				makefile.putstring (" ")
 				makefile.putstring (dir)
-				makefile.putstring ("%N%T ")
+				makefile.putstring (options.get_string ("subcommand_separator", " && "))
 				makefile.putstring (options.get_string ("make", Void))
 				makefile.putstring (" ")
 
 				if filename.is_equal (options.get_string ("emain_text", Void)) then
 					makefile.putstring (options.get_string ("emain_obj_text", Void))
-					makefile.new_line
 				else
 					makefile.putstring (filename)
 					makefile.putstring (".")
 					makefile.putstring (options.get_string ("intermediate_file_ext", Void))
-					makefile.new_line
 				end
 
-				makefile.putstring ("%T ")
+				makefile.putstring (options.get_string ("subcommand_separator", " && "))
 				makefile.putstring (options.get_string ("cd", Void))
 				makefile.putstring (" ")
 				makefile.putstring (options.get_string ("updir", Void))

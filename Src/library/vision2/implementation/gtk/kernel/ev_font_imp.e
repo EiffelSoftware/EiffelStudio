@@ -10,124 +10,69 @@ class EV_FONT_IMP
 inherit
 
  	EV_FONT_I
--- 		undefine
--- 			is_equal
--- 		end;
-
--- 	RESOURCE_X
--- 		undefine
--- 			is_equal
--- 		end;
-
--- 	MEL_FONT_STRUCT
--- 		rename
--- 			make as mel_make,
--- 			ascent as mel_ascent,
--- 			descent as mel_descent,
--- 			is_valid as mel_is_valid
--- 		undefine
--- 			has_valid_display
--- 		redefine
--- 			display, dispose
--- 		end;
 
 creation
-
-	make
--- 	make_for_screen
+	make,
+	make_by_name
 
 feature {NONE} -- Initialization
 
  	make (a_font: EV_FONT) is
--- 			-- Create a font.
--- 		require
--- 			last_open_display_not_null: last_open_display /= Void
+ 			-- Create a font.
  		do
 			check
                                 not_yet_implemented: False
                         end
-			-- 			display := last_open_display
  		end
 
--- 	make_for_screen (a_font: EV_FONT; a_screen: SCREEN) is
--- 			-- Create a font.
--- 		require
--- 			valid_screen: a_screen /= Void and then a_screen.is_valid
--- 		local
--- 			mel_display: MEL_DISPLAY
--- 		do
--- 			display ?= a_screen.implementation;
--- 			check
--- 				valid_display: display /= Void
--- 			end
--- 		end;
+	make_by_name (a_font: EV_FONT; a_name: STRING) is
+			-- Create the font corresponding to the given name.
+			-- The font is directly readed on a file.
+		do
+			check
+                                not_yet_implemented: False
+                        end
+		end
 
 feature -- Access
 
--- 	is_default_font: BOOLEAN;
--- 			-- Is Current a default font?
-
-	name: STRING
--- 			-- Name of the font
-
- 	is_specified: BOOLEAN;
--- 			-- Is the font specified ?
-
---     display: MEL_DISPLAY;
---             -- Display where resource is allocated
-
- 	is_standard: BOOLEAN is
--- 			-- Is the font standard and informations available ?
- 		do
-                        check
-                                not_yet_implemented: False
-                        end
-			-- 			parse_if_not_yet;
--- 			Result := private_is_standard
- 		end
-
  	ascent: INTEGER is
--- 			-- Ascent value in pixel of the font loaded for `a_widget'
+ 			-- Ascent value in pixel of the font loaded for `a_widget'
  		do
                         check
                                 not_yet_implemented: False
                         end
-			-- 			allocate_font;
--- 			Result := mel_ascent
  		end
 
  	descent: INTEGER is
--- 			-- Descent value in pixel of the font loaded for `a_widget'
+ 			-- Descent value in pixel of the font loaded for `a_widget'
  		do
                         check
                                 not_yet_implemented: False
                         end
-			-- 			allocate_font;
--- 			Result := mel_descent
  		end
 
- 	average_width: INTEGER is
- 			-- Width of all characters in the font in tenth of pixel
- 		do
-			check
-                                not_yet_implemented: False
-                        end	
-			-- 			parse_if_not_yet;
--- 			Result := private_average_width
- 		end
-	
+ 	width_of_string (a_text: STRING): INTEGER is
+			-- Width in pixel of `a_text' in the current font loaded for `a_widget'.
+		do
+		end
+
+	average_character_width: INTEGER is
+			-- Width of all characters in the font in tenth of pixel
+		do
+		end
+
+	maximum_character_width: INTEGER is
+			-- Width of the widest character in the font
+		do
+		end
+
  	character_set: STRING is
--- 			-- (iso8859-1...)
+			-- (iso8859-1...)
  		do
                         check
                                 not_yet_implemented: False
                         end
-			-- 			parse_if_not_yet;
--- 			if is_default_font then
--- 				Result := ""
--- 			else
--- 				Result := private_character_set
--- 			end
  		end
 
  	family: STRING is
@@ -136,12 +81,7 @@ feature -- Access
                         check
                                 not_yet_implemented: False
                         end
-			-- 			parse_if_not_yet;
--- 			if is_default_font then
--- 				Result := ""
--- 			else
--- 				Result := private_family
--- 			end
+
  		end
 	
  	foundry: STRING is
@@ -150,93 +90,62 @@ feature -- Access
 			check
                                 not_yet_implemented: False
                         end	
-			-- 			parse_if_not_yet;
--- 			if is_default_font then
--- 				Result := ""
--- 			else
--- 				Result := private_foundry
--- 			end
  		end
 
  	horizontal_resolution: INTEGER is
--- 			-- Horizontal resolution of screen for which the font is designed
+ 			-- Horizontal resolution of screen for which the font is designed
  		do
                         check
                                 not_yet_implemented: False
                         end
-			-- 			parse_if_not_yet;
--- 			Result := private_horizontal_resolution
  		end
 
- 	is_proportional: BOOLEAN is
--- 			-- Is the font proportional ?
- 		do
-                        check
-                                not_yet_implemented: False
-                        end
-			-- 			parse_if_not_yet;
--- 			Result := private_is_proportional
- 		end
-
- 	is_valid: BOOLEAN is
--- 			-- Is the font valid in `a_widget''s display ?
- 		do
-                        check
-                                not_yet_implemented: False
-                        end
-			-- 			allocate_font;
--- 			Result := is_allocated
- 		end
+	name: STRING is
+			-- Name of the font
+		do
+		end
 
  	pixel_size: INTEGER is
--- 			-- Size of font in pixel
+ 			-- Size of font in pixel
  		do
                         check
                                 not_yet_implemented: False
                         end
-			-- 			parse_if_not_yet;
--- 			Result := private_pixel_size
+
  		end
 
  	point: INTEGER is
--- 			-- Size of font in tenth of points (1 point = 1/72 of an inch)
+ 			-- Size of font in tenth of points (1 point = 1/72 of an inch)
  		do
                         check
                                 not_yet_implemented: False
                         end
-			-- 			parse_if_not_yet;
--- 			Result := private_point
+
  		end;
 
  	slant: CHARACTER is
--- 			-- Slant of font (o, r, i...)
+ 			-- Slant of font (o, r, i...)
  		do
                         check
                                 not_yet_implemented: False
                         end
-			-- 			parse_if_not_yet;
--- 			Result := private_slant
  		end
 
  	vertical_resolution: INTEGER is
--- 			-- Vertical resolution of screen for which the font is designed
+ 			-- Vertical resolution of screen for which the font is designed
  		do
                         check
                                 not_yet_implemented: False
                         end
-			-- 			parse_if_not_yet;
--- 			Result := private_vertical_resolution
  		end
 
  	weight: STRING is
--- 			-- Weight of font (Bold, Medium...)
+ 			-- Weight of font (Bold, Medium...)
  		do
                         check
                                 not_yet_implemented: False
                         end
-			-- 			parse_if_not_yet;
--- 			Result := private_weight
- 		end;
+		end
 
  	width: STRING is
  			-- Width of font (Normal, Condensed...)
@@ -244,23 +153,36 @@ feature -- Access
 			check
                                 not_yet_implemented: False
                         end	
-			-- 			parse_if_not_yet;
--- 			if is_default_font then
--- 				Result := ""
--- 			else
--- 				Result := private_width
--- 			end
  		end
 
- 	width_of_string (a_text: STRING): INTEGER is
--- 			-- Width in pixel of `a_text' for current font loaded 
+feature -- Status report
+
+	is_valid: BOOLEAN is
+ 			-- Is the font valid in `a_widget''s display ?
  		do
                         check
                                 not_yet_implemented: False
                         end
-			-- 			allocate_font;
--- 			Result := text_width (a_text)
  		end
+
+	is_proportional: BOOLEAN is
+ 			-- Is the font proportional ?
+ 		do
+                        check
+                                not_yet_implemented: False
+                        end
+ 		end
+
+	is_specified: BOOLEAN is
+			-- Is the font specified?
+		do
+		end
+
+	is_standard: BOOLEAN is
+			-- Is the font standard and informations available (except for name)?
+		do
+		end
+
 
 -- feature -- Element change
 	
@@ -283,11 +205,6 @@ feature -- Access
                         check
                                 not_yet_implemented: False
                         end
-			-- 			dispose;
--- 			name := clone (a_name);
--- 			is_specified := true;
--- 			is_parsed := false;
--- 			update_widgets
  		end
 
 -- feature -- Removal

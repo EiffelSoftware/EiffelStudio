@@ -1,0 +1,539 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0//EN"><HTML>
+<HEAD>
+<META HTTP-EQUIV="Content-Type" CONTENT="text/html; charset=ISO-8859-1">
+<META HTTP-EQUIV="Content-Style-Type" CONTENT="text/css">
+<META NAME="GENERATOR" CONTENT="Adobe FrameMaker 5.5/HTML Export Filter">
+<LINK REL="STYLESHEET" HREF="tour.css" CHARSET="ISO-8859-1" TYPE="text/css">
+<TITLE> 21  USING FORMATS</TITLE>
+</HEAD>
+<!--------------------------------------------------->
+<SCRIPT LANGUAGE="Javascript">
+	// Default values
+	var oNewWindow = 0;
+
+	function ImageClick( oImage )
+	{
+		if( oNewWindow == 0 || oNewWindow.closed )
+		{
+			oNewWindow = window.open (oImage.src,"", "status=no, toolbar=no, menubar=no, location=no, resizable=yes");
+		}
+		else
+		{
+			oNewWindow.location = oImage.src;
+		}
+	}
+</SCRIPT>
+<!--------------------------------------------------->
+<body bgcolor="#faf0e6">
+<DIV>
+<p class="top" align="center"><a href="http://www.eiffel.com">Eiffel Home Page (Web)</a> -- <a href="index.html">Getting started with Eiffel (local)</a>
+
+<img src="power.gif" ALT="Eiffel Home Page" align="right" border="0"  usemap="#eiffel"><map name="eiffel"><area shape="RECT" alt="Eiffel Home Page" coords="0,0,109,226" HREF="http://www.eiffel.com"><area shape="default" nohref></map>
+
+<p class="top" ALIGN="left"><IMG SRC="normaldoc.gif" ALT="Previous, Up, Next" BORDER="0" WIDTH="300" HEIGHT="40" USEMAP="#navigation"><map name="navigation"><AREA SHAPE="RECT" alt="Previous section" COORDS="0,0,95,40" HREF="tour-21.html"><AREA SHAPE="RECT" alt="Up" COORDS="96,0,199,40" HREF="tour.html"><AREA SHAPE="RECT" alt="Next section" COORDS="200,0,300,40" HREF="tour-23.html"><area shape="default" nohref></MAP>
+</DIV>
+<H1 CLASS="aa-sec2">
+<A NAME="pgfId-438429"></A>21  USING FORMATS</H1>
+<P CLASS="nn-first">
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a href="tour-help.html">Help reading this manual</a>
+<P CLASS="nn-first">
+<A NAME="pgfId-438430"></A>The System, Class and Feature tools that we have seen until now all showed the corresponding text: Ace text., class text, feature text. It is also possible to display all kinds of other information about the corresponding development objects (systems, classes, features), such as the classes of the system or the ancestors of a class. This <SPAN CLASS="ff-italics">
+format</SPAN>
+ mechanism makes the drag-and-drop browsing mechanism even more exciting.
+<DIV>
+<H2 CLASS="aa-sec3">
+<A NAME="pgfId-438431"></A>System Tool formats</H2>
+<P CLASS="nn-first">
+<A NAME="pgfId-438432"></A>Let's start with the formats of the System Tool. If you don't see the System Tool on your screen, go to the Project Tool and click the system hole (second from the left in the top row of icons). This brings the System Tool back up:
+<P CLASS="nn-normal">
+<A NAME="pgfId-438445"></A>The second row of icons in the System Tool lists all the available formats. As usual, you can go over them with the mouse, without clicking, to see the tooltips that give you a preview of what they mean.
+<P CLASS="nn-normal">
+<A NAME="pgfId-438452"></A>The format selected by default is the Text format , the first one from the left in the System Tool and other tools. Here it displays the Ace text, which you used a while ago to drag-and-drop the root class, <SPAN CLASS="ee-keyword">
+TESTROOT</SPAN>
+. For the moment nothing else is clickable.
+<P CLASS="nn-normal">
+<A NAME="pgfId-438459"></A>The second format from the left, , is the Clusters format. Click it now. It gives you another view of the system, showing all its classes, cluster by cluster: 
+<p><ul><table bgcolor="#cfffcf" width="79%" BORDER="1">
+<TR>
+<TD ROWSPAN="1" COLSPAN="1">
+<P CLASS="mm-celltitle">
+<A NAME="pgfId-438465"></A>Reminder: clusters in the Eiffel method
+<P CLASS="mm-celltext">
+<A NAME="pgfId-438466"></A>An Eiffel system is divided into clusters. Each cluster is a group of classes, each collected in a directory.
+<P CLASS="mm-celltext">
+<A NAME="pgfId-438467"></A>The list of clusters and their associated directories is given by the Ace file (which does not need, however, to list the clusters of precompiled libraries).
+</TD>
+</TR>
+</table></ul><p>
+<P CLASS="nn-normal">
+<A NAME="pgfId-438468"></A>Here we see 17 clusters, all of which but the root cluster are part of precompiled EiffelBase (that's why the Ace file only listed the root cluster). Altogether there are 157 classes. Note that the actual figures that you get may be somewhat different, depending on your version of EiffelBase. Within each cluster, classes are listed alphabetically. The root cluster always appears first, the precompiled clusters last.
+<P CLASS="nn-normal">
+<A NAME="pgfId-438469"></A>As usual, all the class names are clickable. So if you are curious about some class, say <SPAN CLASS="ee-keyword">
+ARRAY</SPAN>
+, just control-right-click it to get a Class Tool that will show its text. (You can also drag-and-drop it to a Class Hole.)
+<P CLASS="nn-normal">
+<A NAME="pgfId-438473"></A>Coming back to the Class Tool, let us discover the other formats. The third one from the left, , is Classes. Click it and then click <SPAN CLASS="ee-keyword">
+Continue</SPAN>
+ in the panel that comes up (&quot;<SPAN CLASS="ee-keyword">
+This format requires exploring the entire system and may take a long time</SPAN>
+&#8230; <SPAN CLASS="ee-keyword">
+Continue/Cancel</SPAN>
+&quot;). You get -- after a short delay -- an alphabetical list of classes, each with its cluster:
+<P CLASS="nn-normal">
+<A NAME="pgfId-438489"></A>Next comes the Hierarchy format . In Lace you can specify that a cluster is a subcluster of another, through the following syntax:
+<P CLASS="nn-normal">
+<A NAME="pgfId-438490"></A><SPAN CLASS="ee-keyword">
+my_subcluster (some_parent_cluster): &quot;my_subcluster_directory&quot;</SPAN>
+
+<P CLASS="nn-first">
+<A NAME="pgfId-438491"></A>where <SPAN CLASS="ee-keyword">
+my_subcluster_directory</SPAN>
+ can include the symbol <SPAN CLASS="ee-keyword">
+$</SPAN>
+ to refere to the directory of the parent cluster <SPAN CLASS="ee-keyword">
+some_parent_cluster</SPAN>
+ -- greatly simplifying Ace files. click Hierarchy to see the resulting cluster hierarchy for our example -- consisting mostly of the cluster hierarchy for EiffelBase. This hierarchy is shown here under Unix (the exact hierarchy may vary with the version of the environment):
+<P CLASS="nn-normal">
+<A NAME="pgfId-438504"></A>The next format, Statistics, produces some information about the system. Try it now:
+<P CLASS="nn-normal">
+<A NAME="pgfId-438508"></A>Again the exact numbers may vary when you run the Tour.
+<P CLASS="nn-normal">
+<A NAME="pgfId-438512"></A>The next format, Modified Classes , tells you what classes have been modified since the last compilation. You can try it if you like, although it won't show anything interesting since we have not modified any class yet.
+<P CLASS="nn-normal">
+<A NAME="pgfId-438519"></A>Try now the last format, Indexing . It warns you again that it may take a longer time than the others (confirm anyway by clicking <SPAN CLASS="ee-keyword">
+Continue</SPAN>
+); when it comes back after a few seconds, it shows the key information from the indexing clauses of all classes in the system:
+<P CLASS="nn-normal">
+<A NAME="pgfId-438526"></A>The optional <SPAN CLASS="ee-keyword">
+Indexing</SPAN>
+ clause comes at the beginning of an Eiffel class and enables the class author to associate indexing information with the class. The Indexing format retains only some entries of the Indexing clause, notably <SPAN CLASS="ee-keyword">
+description</SPAN>
+. This is a great way to look for classes possessing certain properties. (To search for a certain string in the text of a tool, be it the System Tool or another, you can use the Search button, , which appears on the right of the top row of buttons.)
+<P CLASS="nn-normal">
+<A NAME="pgfId-438530"></A>A common property of all the formats of the System Tool is that all the class names are clickable; so you can immediately see the properties of any class that catches your attention.
+</DIV>
+<DIV>
+<H2 CLASS="aa-sec3">
+<A NAME="pgfId-438531"></A>Class Tool formats</H2>
+<P CLASS="nn-first">
+<A NAME="pgfId-438532"></A>Let us now look at the formats of the Class Tool. Since we have had enough of the little classes of our example -- <SPAN CLASS="ee-keyword">
+TESTROOT</SPAN>
+, <SPAN CLASS="ee-keyword">
+PARENT</SPAN>
+ and <SPAN CLASS="ee-keyword">
+HEIR</SPAN>
+ -- let us use an EiffelBase class, <SPAN CLASS="ee-keyword">
+TABLE</SPAN>
+. By now you know several ways of targeting a Class Tool to that class; for example, if you still have a Class Tool up, just click into its class name field, and type <SPAN CLASS="ee-keyword">
+table</SPAN>
+ followed by Enter. (If you don't have a Class Tool up any more, you can get an empty one by just left-clicking on the class hole of the Project Tool, used here as a &quot;buttonhole&quot;. Then retarget the Class Tool to <SPAN CLASS="ee-keyword">
+TABLE</SPAN>
+ by typing its name as just explained.)
+<P CLASS="nn-normal">
+<A NAME="pgfId-438547"></A>The second row of icons lists all the Class Tool <A NAME="marker-438546"></A>formats. As with the System Tool, the default format -- the only one used so far -- is Text , which displays the text of a class as it has been entered by the class author. 
+<P CLASS="nn-normal">
+<A NAME="pgfId-438560"></A>The second format from the left is Clickable. Try it now:
+<P CLASS="nn-normal">
+<A NAME="pgfId-438561"></A>The Clickable format shows a class in a reformated (&quot;pretty-printed&quot;) form: keywords in boldface and in blue, identifiers in italics, comments in roman and in red, and so on. (You can change the color and font conventions by bringing up the Preference Tool through the <SPAN CLASS="ee-keyword">
+Windows -&gt; Preferences </SPAN>
+menu entries in the Project Tool, although there is no need to do this right now.) Scroll through the tool to see some of the text of class <SPAN CLASS="ee-keyword">
+TABLE</SPAN>
+ pretty-printed.
+<P CLASS="nn-normal">
+<A NAME="pgfId-438562"></A>The Clickable format is called that way because it makes many more elements clickable than the default Text format.. Bring <SPAN CLASS="ee-keyword">
+TABLE </SPAN>
+back to the Text format temporarily and see where you can right-click (in each case please left-click immediately afterwards to cancel the incipient drag-and-drop: you can right-click the class name <SPAN CLASS="ee-keyword">
+TABLE </SPAN>
+after <SPAN CLASS="ee-keyword">
+deferred class</SPAN>
+, its parent <SPAN CLASS="ee-keyword">
+BAG</SPAN>
+, feature names such as <SPAN CLASS="ee-keyword">
+item</SPAN>
+ at the place of their declaration, or such as <SPAN CLASS="ee-keyword">
+put </SPAN>
+in the <SPAN CLASS="ee-keyword">
+rename</SPAN>
+ clause. But you cannot click the components of a routine body, such as <SPAN CLASS="ee-keyword">
+valid_key</SPAN>
+ in the body of <SPAN CLASS="ee-keyword">
+item</SPAN>
+. But in the Clickable format every semantically meaningful component is clickable. For example, after clicking to switch back to Clickable format, you can control-right-click <SPAN CLASS="ee-keyword">
+valid_key</SPAN>
+ (the actual call, in italics, not the label). This brings up a Feature Tool targeted to that feature. Since we don't need that tool for the moment, just click its Quit button to dismiss it.
+<P CLASS="nn-normal">
+<A NAME="pgfId-438605"></A>Ignore the Flat button and click Short (fourth format button from the left) to get the short form of class <SPAN CLASS="ee-keyword">
+TABLE</SPAN>
+:
+<P CLASS="nn-normal">
+<A NAME="pgfId-438609"></A>The short form, an important concept in the Eiffel method, provides the official interface that a class offers to its client. It is obtained from the class text by removing all implementation information -- routine bodies, all secret features -- but keeping the routine headers, the header comments and the assertions. This is the standard interface through which you will use a class: informative enough to tell you what the class &quot;does&quot;, but freed from all details that matter only to the class's authors, not to its users.
+<P CLASS="nn-normal">
+<A NAME="pgfId-438613"></A>The Flat form provides the reconstructed form of a class, with all inherited features; and the Flat-short form provides the short of the flat, that is to say the complete interface. We ignore them for the moment. (Do look at them if you like; note that they require exploring the entire ancestry of a class, and so take longer to produce for a class such as <SPAN CLASS="ee-keyword">
+TABLE</SPAN>
+ which, as we are going to see, is has a rich ancestry.)
+<P CLASS="nn-normal">
+<A NAME="pgfId-438623"></A>Click now the Ancestors format ; this gives the ancestor structure that leads to the class:
+<P CLASS="nn-normal">
+<A NAME="pgfId-438627"></A>This shows that <SPAN CLASS="ee-keyword">
+TABLE </SPAN>
+inherits from <SPAN CLASS="ee-keyword">
+BAG</SPAN>
+ and so on. The inheritance structure stops at <SPAN CLASS="ee-keyword">
+ANY</SPAN>
+, ancestor of all developer-written classes. But look at the ancestors of <SPAN CLASS="ee-keyword">
+ANY</SPAN>
+ itself by retargeting the tool: right-clik on <SPAN CLASS="ee-keyword">
+ANY</SPAN>
+ to pick that class, and right-click again (with or without moving the mouse in-between) to drop and hence retarget. Note that when you retarget a tool it stays in the format that it had before; so here the Class Tool stays in Ancestors format and hence shows the ancestors of <SPAN CLASS="ee-keyword">
+ANY</SPAN>
+:
+<P CLASS="nn-normal">
+<A NAME="pgfId-438637"></A>In the case of <SPAN CLASS="ee-keyword">
+ANY</SPAN>
+ (only for that class and for <SPAN CLASS="ee-keyword">
+PLATFORM</SPAN>
+) the displayed inheritance structure includes the two top-level classes: <SPAN CLASS="ee-keyword">
+PLATFORM</SPAN>
+ and <SPAN CLASS="ee-keyword">
+GENERAL</SPAN>
+. <SPAN CLASS="ee-keyword">
+GENERAL</SPAN>
+ is where all the general-purpose features, useful to all classes, are defined: <SPAN CLASS="ee-keyword">
+clone</SPAN>
+, <SPAN CLASS="ee-keyword">
+copy</SPAN>
+, <SPAN CLASS="ee-keyword">
+equal</SPAN>
+ and the like. For classes other than <SPAN CLASS="ee-keyword">
+ANY</SPAN>
+, the Ancestor format stops at <SPAN CLASS="ee-keyword">
+ANY</SPAN>
+, not showing <SPAN CLASS="ee-keyword">
+PLATFORM</SPAN>
+ and <SPAN CLASS="ee-keyword">
+GENERAL</SPAN>
+ which are always there and would clutter the display.
+<P CLASS="nn-normal">
+<A NAME="pgfId-438638"></A>Now assume you want to take a peek at <SPAN CLASS="ee-keyword">
+GENERAL</SPAN>
+. You now know how to do this: drag-and-drop <SPAN CLASS="ee-keyword">
+GENERAL</SPAN>
+ to retarget the current tool to that class; by definition the result is not fascinating because the tool is in Ancestors format and <SPAN CLASS="ee-keyword">
+GENERAL </SPAN>
+has no ancestors:
+<P CLASS="nn-normal">
+<A NAME="pgfId-438648"></A><BR>
+Now click Short to see the short form of <SPAN CLASS="ee-keyword">
+GENERAL</SPAN>
+. (If you prefer you can use Text, or better Clickable for a nicer output, but what is really interesting for <SPAN CLASS="ee-keyword">
+GENERAL </SPAN>
+is the specification of its features, not their implementation!) Here is the short form of the class:
+<P CLASS="nn-normal">
+<A NAME="pgfId-438661"></A>Take a look at <SPAN CLASS="ee-keyword">
+GENERAL</SPAN>
+ now if you wish, or leave this for some future session. Now come back to Text format by clicking the corresponding button , and retarget the tool to <SPAN CLASS="ee-keyword">
+TABLE</SPAN>
+; the easiest way to do this (although by now you know several others) is to click twice the Previous history button , which takes us back to the previous targets: <SPAN CLASS="ee-keyword">
+ANY</SPAN>
+, then <SPAN CLASS="ee-keyword">
+TABLE</SPAN>
+.
+<P CLASS="nn-normal">
+<A NAME="pgfId-438686"></A>The next format you should try is Descendants :
+<P CLASS="nn-normal">
+<A NAME="pgfId-438694"></A>Class <A NAME="marker-438693"></A><SPAN CLASS="ee-keyword">
+TABLE </SPAN>
+indeed has a large and prosperous progeny, as explained in detail in the book about the libraries. As always, all the names shown are clickable, so that if a class or other development catches your attention in a tool under any format you can in a snap find information about it by targeting a tool to it (the current one, or a new one). This is a good opportunity to mention the following practical advice:
+<p><ul><table bgcolor="#cfffcf" width="79%" BORDER="1">
+<TR>
+<TD ROWSPAN="1" COLSPAN="1">
+<P CLASS="mm-celltitle">
+<A NAME="pgfId-438697"></A>Tip: Two can be better than one
+<P CLASS="mm-celltext">
+<A NAME="pgfId-438698"></A>You may find it convenient, when doing extensive browsing, to keep two class tools open and drag-and-drop freely from one to the other.
+<P CLASS="mm-celltext">
+<A NAME="pgfId-438699"></A>This enables you to keep focused on a class while exporing properties of others to which it is related.
+</TD>
+</TR>
+</table></ul><p>
+<P CLASS="nn-normal">
+<A NAME="pgfId-438709"></A>The remaining Class Tool formats are Attributes , Routines , Deferred , Once , Externals , Exported . They enable you to explore various subsets of the features of a class. We won't try them all right now, but please click now on Routines , the second one from the left on the right row of format buttons. The tool shows information about the routines of class <SPAN CLASS="ee-keyword">
+TABLE</SPAN>
+:
+<P CLASS="nn-normal">
+<A NAME="pgfId-438728"></A>The routines of the class are all listed, sorted according to their originating class: some are defined in <SPAN CLASS="ee-keyword">
+TABLE</SPAN>
+ itself -- they appear in part at the bottom of the above figure -- but others come from proper ancestors <SPAN CLASS="ee-keyword">
+CONTAINER</SPAN>
+, <SPAN CLASS="ee-keyword">
+COLLECTION</SPAN>
+, <SPAN CLASS="ee-keyword">
+BAG</SPAN>
+.
+<P CLASS="nn-normal">
+<A NAME="pgfId-438729"></A>Note the first of the features defined in <SPAN CLASS="ee-keyword">
+TABLE </SPAN>
+itself (the last category on the figure): it shows up as <SPAN CLASS="ee-keyword">
+_infix_@</SPAN>
+. (If your display doesn't show it, scroll down to it.) In the class text, the feature appears under the name <SPAN CLASS="ee-keyword">
+infix &quot;@&quot;</SPAN>
+; this is the Eiffel mechanism for features used in infix form, such as <SPAN CLASS="ee-keyword">
+infix &quot;+&quot;</SPAN>
+ on integers. (We will look at the feature declaration in a few moments.) Here it means that a client can access the entry of key <SPAN CLASS="ee-keyword">
+k</SPAN>
+ in a table <SPAN CLASS="ee-keyword">
+t</SPAN>
+ through the notation <SPAN CLASS="ee-keyword">
+t @ k</SPAN>
+ as an alternative to <SPAN CLASS="ee-keyword">
+t.item (k)</SPAN>
+. In list of features such as above, the conventional representation is <SPAN CLASS="ee-keyword">
+infix_x</SPAN>
+ where <SPAN CLASS="ee-keyword">
+x</SPAN>
+ is the symbol for the infix operator.
+<P CLASS="nn-normal">
+<A NAME="pgfId-438730"></A>Once again everything -- class names, feature names -- is clickable in the above format, helping you explore the properties of all your development objects.
+</DIV>
+<DIV>
+<H2 CLASS="aa-sec3">
+<A NAME="pgfId-438731"></A>Feature tool formats</H2>
+<P CLASS="nn-first">
+<A NAME="pgfId-438732"></A>To look up <SPAN CLASS="ee-keyword">
+infix &quot;@&quot;</SPAN>
+ you could set the <SPAN CLASS="ee-keyword">
+TABLE </SPAN>
+Class Tool to Text or Clickable format, but instead let us get it in a Feature Tool, both because this is directly relevant and because we will use the opportunity to discover the formats of Feature Tools. To bring up the tool, control-right-click <SPAN CLASS="ee-keyword">
+_infix_@</SPAN>
+ at the place where this feature name appears. You see the feature declaration:
+<P CLASS="nn-normal">
+<A NAME="pgfId-438739"></A>The comment, added by EiffelStudio, indicates where the feature's version comes from. Here <SPAN CLASS="ee-keyword">
+infix &quot;@&quot;</SPAN>
+ is declared in the class <SPAN CLASS="ee-keyword">
+TABLE</SPAN>
+ itself, but in the general case the applicable version of any feature in any class can come from any ancestor.
+<P CLASS="nn-normal">
+<A NAME="pgfId-438740"></A>Note the use of Eiffel's synonym mechanism: two names are given to the same features, an identifier name <SPAN CLASS="ee-keyword">
+item</SPAN>
+ and an infix name <SPAN CLASS="ee-keyword">
+infix &quot;@&quot;</SPAN>
+. The effect is the same as if we had two declarations, identical except for the feature name.
+<P CLASS="nn-normal">
+<A NAME="pgfId-438741"></A>A Feature Tool has two text fields at the top: one for the feature name and one for the class name. It also has two holes at the top left: the first one represents the feature, the second one its class, here <SPAN CLASS="ee-keyword">
+TABLE</SPAN>
+. Both holes are full, so you can drag-and-drop from them if you need to.
+<P CLASS="nn-normal">
+<A NAME="pgfId-438748"></A>Let us retarget the tool to another feature, <SPAN CLASS="ee-keyword">
+extend</SPAN>
+; you can do this by typing the name in the first field, but instead please go to the Class Tool that is targeted to<SPAN CLASS="ee-keyword">
+ TABLE</SPAN>
+ in Routines format (you should still have it up, otherwise bring it back, you know how to do this!), find <SPAN CLASS="ee-keyword">
+extend</SPAN>
+, which appears at the beginning of the routines coming from class <SPAN CLASS="ee-keyword">
+BAG</SPAN>
+, and start drag-and-drop it to the Feature Tool. In principle you should drop it into the feature hole at the top left , but in fact any place in the window's main area -- the white-background space where the text of <SPAN CLASS="ee-keyword">
+infix &quot;@&quot;</SPAN>
+ now appears -- is fine, so please drop there. The tool retargets itself to <SPAN CLASS="ee-keyword">
+extend </SPAN>
+from <SPAN CLASS="ee-keyword">
+TABLE</SPAN>
+:
+<P CLASS="nn-normal">
+<A NAME="pgfId-438767"></A>The notation <SPAN CLASS="ee-keyword">
+ensure then</SPAN>
+, as you may remember, is used to change a postcondition -- by strengthening it -- in a redeclaration of an inherited feature. The counterpart for a precondition -- weakening, not used here -- is <SPAN CLASS="ee-keyword">
+require else</SPAN>
+.
+<P CLASS="nn-normal">
+<A NAME="pgfId-438768"></A>You can also retarget a Feature Tool using a class rather than a feature, for example to see the version of a feature for a descendant of the current class. To see this, go again to the Class Tool targeted to <SPAN CLASS="ee-keyword">
+TABLE</SPAN>
+ and put it in Descendants format:as was done before, with the display starting like this:
+<P CLASS="nn-normal">
+<A NAME="pgfId-438775"></A><BR>
+&nbsp;&nbsp;&nbsp;&nbsp;The last line shown is for <SPAN CLASS="ee-keyword">
+LIST</SPAN>
+, one of the grand-grandchildren of <SPAN CLASS="ee-keyword">
+TABLE</SPAN>
+. Now pick the name of <SPAN CLASS="ee-keyword">
+LIST </SPAN>
+and bring it to the Feature Tool. In principle you should drop it into the class hole , second from left, but as before you can actually drop it anywhere in the window's main area. Do this now. The result is to retarget the Feature Tool to the version of <SPAN CLASS="ee-keyword">
+extend </SPAN>
+as defined in <SPAN CLASS="ee-keyword">
+LIST</SPAN>
+.
+<P CLASS="nn-normal">
+<A NAME="pgfId-438788"></A>As you may have noted, the feature is in fact the same as <SPAN CLASS="ee-keyword">
+extend </SPAN>
+from <SPAN CLASS="ee-keyword">
+TABLE</SPAN>
+ that we saw before: both versions come, deferred, from the ancestor <SPAN CLASS="ee-keyword">
+BAG</SPAN>
+. Descendants of <SPAN CLASS="ee-keyword">
+LIST</SPAN>
+other than <SPAN CLASS="ee-keyword">
+TABLE</SPAN>
+, and descendants of <SPAN CLASS="ee-keyword">
+TABLE</SPAN>
+, provide various effectings (implementations) of that feature.
+<P CLASS="nn-normal">
+<A NAME="pgfId-438789"></A>This mechanism is what you will use when you know about a feature <SPAN CLASS="ee-text">
+f</SPAN>
+ from a class <SPAN CLASS="ee-text">
+A</SPAN>
+, available in a Feature Tool, and want to know what the version of <SPAN CLASS="ee-text">
+f</SPAN>
+ is for a class <SPAN CLASS="ee-text">
+B</SPAN>
+: just drag-and-drop <SPAN CLASS="ee-text">
+A</SPAN>
+ to the tool. You can drop either a feature or a class into a Feature Tool.
+<P CLASS="nn-normal">
+<A NAME="pgfId-438790"></A>The other formats of the Feature Tool will help us discover further what happens to a feature throughout its various incarnations in the inheritance structure. 
+<P CLASS="nn-normal">
+<A NAME="pgfId-438797"></A>First try Flat , which gives the reconstructed version of the feature with all inherited assertions combined:
+<P CLASS="nn-normal">
+<A NAME="pgfId-438804"></A>The next format yields the Callers of a feature: all the places in the system where the feature is called. It takes a while to produce, you may want to skip it for the moment. If you do click it, you get this:
+<P CLASS="nn-normal">
+<A NAME="pgfId-438811"></A>See how this gives the callers not just from clients of the current class, <SPAN CLASS="ee-keyword">
+LIST </SPAN>
+but also of its descendants. In fact there is no call to <SPAN CLASS="ee-keyword">
+extend</SPAN>
+ from a direct client of <SPAN CLASS="ee-keyword">
+LIST</SPAN>
+, that is to say no call of the form <SPAN CLASS="ee-keyword">
+my_list</SPAN>
+<SPAN CLASS="ee-dot">
+.</SPAN>
+<SPAN CLASS="ee-keyword">
+extend (some_value)</SPAN>
+ for <SPAN CLASS="ee-keyword">
+my_list</SPAN>
+ of type <SPAN CLASS="ee-keyword">
+LIST [SOME_TYPE]</SPAN>
+; but the display shows such calls for <SPAN CLASS="ee-keyword">
+my_list</SPAN>
+ having a type based on a descendant of <SPAN CLASS="ee-keyword">
+LIST</SPAN>
+. As you can see, for example:
+<UL>
+<LI CLASS="ll-bull">
+<A NAME="pgfId-438812"></A>Procedure <SPAN CLASS="ee-keyword">
+merge</SPAN>
+ from class <SPAN CLASS="ee-keyword">
+PART_SORTED_LIST</SPAN>
+ calls <SPAN CLASS="ee-keyword">
+extend</SPAN>
+ from that same class (here acting as its own client.</LI>
+<LI CLASS="ll-bull">
+<A NAME="pgfId-438813"></A>Procedures <SPAN CLASS="ee-keyword">
+linear_representation</SPAN>
+ from <SPAN CLASS="ee-keyword">
+ARRAY</SPAN>
+, <SPAN CLASS="ee-keyword">
+extend</SPAN>
+ from <SPAN CLASS="ee-keyword">
+ARRAYED_CIRCULAR</SPAN>
+, <SPAN CLASS="ee-keyword">
+copy</SPAN>
+ as redefined for <SPAN CLASS="ee-keyword">
+ARRAYED_LIST</SPAN>
+, and so on, call <SPAN CLASS="ee-keyword">
+extend</SPAN>
+ from <SPAN CLASS="ee-keyword">
+ARRAYED_LIST</SPAN>
+.</LI>
+</UL>
+<P CLASS="nn-normal">
+<A NAME="pgfId-438814"></A>As usual everything is clickable. The Callers format is particularly precious for debugging. It enables you to see all the places in an entire system from where a routine -- perhaps one that's causing you some trouble -- gets called. 
+<P CLASS="nn-normal">
+<A NAME="pgfId-438815"></A>You may have noted that the title bar of the windows shows the signature of the routine as <SPAN CLASS="ee-keyword">
+extend (v: GENERIC #1)</SPAN>
+. This is indicates that <SPAN CLASS="ee-keyword">
+extend</SPAN>
+ takes one argument, whose type is the first (and only) generic parameter of the class, called <SPAN CLASS="ee-keyword">
+G</SPAN>
+ within that class.
+<P CLASS="nn-normal">
+<A NAME="pgfId-438819"></A>The next format is Implementers , which gives all the redeclared versions of a feature. Try it:
+<P CLASS="nn-normal">
+<A NAME="pgfId-438826"></A>This shows all the classes where <SPAN CLASS="ee-keyword">
+extend</SPAN>
+ from <SPAN CLASS="ee-keyword">
+LIST</SPAN>
+ -- which, as you can see, originally comes from <SPAN CLASS="ee-keyword">
+COLLECTION</SPAN>
+ -- has a different, redeclared version. This feature indeed undergoes many adventures in its journey through inheritance. Now see the same information for another feature by replacing the feature name, in the left field at the top, by <SPAN CLASS="ee-keyword">
+valid_key</SPAN>
+, and the class name, in the right field, by the name of our old friend <SPAN CLASS="ee-keyword">
+TABLE</SPAN>
+, then hitting Enter:
+<P CLASS="nn-normal">
+<A NAME="pgfId-438839"></A>Note how in this case the feature is not just redefined by also renamed; its name in <SPAN CLASS="ee-keyword">
+HASH_TABLE</SPAN>
+, a descendant of <SPAN CLASS="ee-keyword">
+TABLE</SPAN>
+, is <SPAN CLASS="ee-keyword">
+valid_key</SPAN>
+. Renaming changes the name of a feature; redeclaration keeps the name but changes other properties, typically the implementation.
+<P CLASS="nn-normal">
+<A NAME="pgfId-438843"></A>Retarget the feature tool to its previous target, <SPAN CLASS="ee-keyword">
+extend</SPAN>
+ from <SPAN CLASS="ee-keyword">
+LIST</SPAN>
+, by clicking the&quot;history back&quot; button, and try the next format, Ancestors version :
+<P CLASS="nn-normal">
+<A NAME="pgfId-438853"></A>This gives the entire history of the feature: its versions in every ancestor (not just, as with the Implementers format, those in which the feature is redeclared). Typically this format will be used with drag-and-drop: you pick an ancestor version to see what it looks like. Here there is only one &quot;<SPAN CLASS="ee-keyword">
+History branch</SPAN>
+&quot;, but in multiple inheritance cases that involve joining features from several ancestors there would be several.
+<P CLASS="nn-normal">
+<A NAME="pgfId-438860"></A>You can similarly try the next format, Descendants version.
+<P CLASS="nn-normal">
+<A NAME="pgfId-438864"></A>The next-to-last format, Homonyms , takes longer to produce and warns you accordingly. If you decide to go ahead anyway, you will get the list of all features called <SPAN CLASS="ee-keyword">
+extend</SPAN>
+ in the entire system:
+<P CLASS="nn-normal">
+<A NAME="pgfId-438871"></A>These features, unlike those shown in the last three formats, are not necessarily related to <SPAN CLASS="ee-keyword">
+extend</SPAN>
+ from <SPAN CLASS="ee-keyword">
+LIST</SPAN>
+: they simply have the same name. (This explains why the format takes long to produce: EiffelStudio cannot rely on structural information, but must explore the entire system representation.) The large number of features called <SPAN CLASS="ee-keyword">
+extend</SPAN>
+ in many different classes are a result of the Eiffel method's rules on systematic feature naming rules for libraries, described in <SPAN CLASS="ff-italics">
+<A HREF="http://www.eiffel.com/doc/index.html#ru" CLASS="URL">Reusable Software: The Base Object-Oriented Component Libraries</A></SPAN>
+; <SPAN CLASS="ee-keyword">
+extend</SPAN>
+ is one of the standard names, used in container classes for the basic feature to add an element to a container.
+<P CLASS="nn-normal">
+<A NAME="pgfId-438878"></A>If you have had some experience with object-oriented software construction, you will by now have realized the importance of the facilities seen so far. In particular, given the power and versatility of <A NAME="marker-438879"></A>polymorphism and feature redeclaration (<A NAME="marker-438880"></A>redefinition and <A NAME="marker-438881"></A>effecting), it is essential to be able to find out quickly the answer to such questions as:
+<UL>
+<LI CLASS="ll-bull">
+<A NAME="pgfId-438882"></A>What does feature <SPAN CLASS="ee-text">
+f  </SPAN>
+become in class <SPAN CLASS="ee-text">
+C</SPAN>
+ ?</LI>
+<LI CLASS="ll-bull">
+<A NAME="pgfId-438883"></A>What are the descendants of <SPAN CLASS="ee-text">
+C</SPAN>
+ ?</LI>
+<LI CLASS="ll-bull">
+<A NAME="pgfId-438884"></A>From what class does the version of <SPAN CLASS="ee-text">
+f </SPAN>
+ in <SPAN CLASS="ee-text">
+C </SPAN>
+come?</LI>
+<LI CLASS="ll-bull">
+<A NAME="pgfId-438885"></A>What was the original version of <SPAN CLASS="ee-text">
+f </SPAN>
+?</LI>
+</UL>
+<P CLASS="nn-normal">
+<A NAME="pgfId-438886"></A>The techniques that we have seen already make it possible to answer such questions in the most common cases. The following chapters show many other possibilities.<A NAME="marker-438887"></A>
+</DIV>
+<p class="bottom" ALIGN="left"><IMG SRC="normaldoc.gif" ALT="Previous, Up, Next" BORDER="0" WIDTH="300" HEIGHT="40" USEMAP="#navigation"><map name="navigation"><AREA SHAPE="RECT" alt="Previous section" COORDS="0,0,95,40" HREF="tour-21.html"><AREA SHAPE="RECT" alt="Up" COORDS="96,0,199,40" HREF="tour.html"><AREA SHAPE="RECT" alt="Next section" COORDS="200,0,300,40" HREF="tour-23.html"><area shape="default" nohref></MAP>
+
+<p class="bottom" align="center"><a href="http://www.eiffel.com">Eiffel Home Page (Web)</a> -- <a href="index.html">Getting started with Eiffel (local)</a>
+
+<p class="copyright" align="center">Copyright Interactive Software Engineering, 2001
+</BODY>
+</HTML>

@@ -76,8 +76,8 @@ feature
 		do
 			if context.workbench_mode then
 				generated_file.putstring ("RTWPP(");
-				generated_file.putint
-					(context.current_type.associated_class_type.id.id - 1);
+				generated_file.putstring
+					(context.current_type.associated_class_type.id.generated_id);
 				generated_file.putstring (gc_comma);
 				generated_file.putint (feature_id);
 				generated_file.putchar (')');

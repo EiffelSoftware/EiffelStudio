@@ -67,7 +67,8 @@ feature -- Initialization
 		do
 			{EV_RICH_TEXT} Precursor (a_parent)
 --			initialize_transport
-			upper := -1 			-- Init clickable array.
+			array_create (1, 0)
+--			upper := -1 			-- Init clickable array.
 
 --			add_change_command (Current, modify_event_action)
 --			set_action ("Ctrl<Btn3Down>", Current, new_tooler_action)
@@ -209,30 +210,32 @@ feature -- Cursor movement
 	go_to (a_cursor: INTEGER) is
 			-- Go to `a_cursor) position
 		local
-			cur: SCROLLED_WINDOW_CURSOR
+--			cur: SCROLLED_WINDOW_CURSOR
 			c: INTEGER
 			last_cursor_position, last_top_position: INTEGER
 		do
-			cur ?= a_cursor
-			if cur /= Void then
-				last_cursor_position := cur.cursor_position
-				last_top_position := cur.top_character_position
+			last_cursor_position := a_cursor
+--			cur ?= a_cursor
+--			if cur /= Void then
+--				last_cursor_position := cur.cursor_position
+--				last_top_position := cur.top_character_position
 				c := text_length
 				if last_cursor_position > c then
 					last_cursor_position := c
 				end
-				if last_top_position > c then
-					last_top_position := c
-				end
+--				if last_top_position > c then
+--					last_top_position := c
+--				end
 				set_position (last_cursor_position)
 --				set_top_character_position (last_top_position)
-			end
+--			end
 		end
 
 feature -- Text manipulation
 
  	clear_window is
 			-- Erase internal structures of Current.
+			-- this feature is ugly
 		do
 			disable_clicking
 			struct_position := 1
@@ -253,6 +256,7 @@ feature -- Text manipulation
 
 	clear_text is
 			-- Clear the text structures.
+			-- this feature is ugly
 		do
 			set_text("")
 			disable_clicking
@@ -346,34 +350,34 @@ feature -- Update
 
 feature -- Focus Access
 
-	initial_coord: COORD_XY is
-			-- Initial coordinate for drag
-		do
+--	initial_coord: COORD_XY is
+--			-- Initial coordinate for drag
+--		do
 --			Result := coordinate (focus_start)
 --			Result.set (Result.x + real_x, Result.y + real_y)
-		end
+--		end
 
 feature -- Update
 
-	update_after_transport (but_data: BUTTON_DATA) is
-			-- Update Current stone and related information
-			-- before transport using button data `but_data'.
-		do	
-			deselect_all
-		end
+--	update_after_transport (but_data: BUTTON_DATA) is
+--			-- Update Current stone and related information
+--			-- before transport using button data `but_data'.
+--		do	
+--			deselect_all
+--		end
 
-	update_before_transport (but_data: BUTTON_DATA) is
-			-- Update Current stone and related information
-			-- before transport using button data `but_data'.
-		local
+--	update_before_transport (but_data: BUTTON_DATA) is
+--			-- Update Current stone and related information
+--			-- before transport using button data `but_data'.
+--		local
 --			cur_pos: INTEGER
-		do
+--		do
 --			if clickable_count /= 0 then
 --				cur_pos := character_position (but_data.absolute_x - real_x, but_data.absolute_y - real_y)
 --				update_focus (cur_pos)
 --				highlight_focus
 --			end
-		end
+--		end
 
 	redisplay_breakable_mark (f: E_FEATURE; index: INTEGER) is
 			-- Redisplay the sign of the `index'-th breakable point.

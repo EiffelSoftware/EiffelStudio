@@ -378,9 +378,9 @@ feature -- Element change
 			if is_valid then
 				create enum
 				if return_value = enum.is_application then
-					ace.set_il_generation (ace.Il_generation_exe)
+					ace.set_il_generation_type (ace.Il_generation_exe)
 				elseif return_value = enum.is_library then
-					ace.set_il_generation (ace.Il_generation_dll)
+					ace.set_il_generation_type (ace.Il_generation_dll)
 				end
 			end
 		end
@@ -471,7 +471,8 @@ feature {NONE} -- Implementation
 	blank_ace_file (sys_name: STRING): STRING is
 			-- Minimal ace file generated when a syntax error is detected.
 		do
-			Result := "system%N%T" + sys_name + "%Nroot%N%Troot_class%N%Ncluster%N%Nend"
+			Result := "system%N%T" + sys_name 
+				+ "%N%Nroot%N%Troot_class%N%Ndefault%N%Tmsil_generation(yes)%N%Tmsil_generation_type(%"exe%")%N%Ncluster%N%Nend"
 		end
 		
 end -- class PROJECT_PROPERTIES

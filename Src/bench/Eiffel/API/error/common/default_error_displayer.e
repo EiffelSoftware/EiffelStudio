@@ -10,8 +10,7 @@ class DEFAULT_ERROR_DISPLAYER
 inherit
 
 	ERROR_DISPLAYER;
-	SHARED_CONFIGURE_RESOURCES;
-	SHARED_EIFFEL_PROJECT
+	SHARED_CONFIGURE_RESOURCES
 
 creation
 
@@ -94,24 +93,8 @@ feature -- Output
 					st.add_new_line;
 					error_list.forth;
 				end;
-				--if not error_list.empty then
-					--display_separation_line (st)
-				--end;
 				display_separation_line (st);	
-				degree_nbr := Degree_output.current_degree;
-				if degree_nbr > 0 then
-						-- Case has degree_number equal to 0
-					st.add_string ("Degree: ");
-					st.add_string (degree_nbr.out);
-				end;
-				st.add_string (" Processed: ")
-				st.add_string (Degree_output.processed.out);
-				st.add_string (" To go: ")
-				to_go := Degree_output.total_number - Degree_output.processed;
-				st.add_string (to_go.out);
-				st.add_string (" Total: ")
-				st.add_string (Degree_output.total_number.out);
-				st.add_new_line;
+				display_additional_info (st);
 			else
 				retried := False;
 				display_error_error (st)
@@ -142,6 +125,11 @@ feature {NONE} -- Implementation
 ("-------------------------------------------------------------------------------");
 			st.add_new_line
 		end;
+
+	display_additional_info (st: STRUCTURED_TEXT) is
+			-- Add additional information to `st'.
+		do
+		end
 
 invariant
 

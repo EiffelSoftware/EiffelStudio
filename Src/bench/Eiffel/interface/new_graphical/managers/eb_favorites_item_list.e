@@ -300,16 +300,14 @@ feature -- Element change
 			curr_name: STRING
 			item_name: STRING
 		do
-			item_name := clone (a_item_name)
-			item_name.to_lower
+			item_name := a_item_name.as_lower
 
 			from
 				start
 			until
 				after or found
 			loop
-				curr_name := clone (item.name)
-				curr_name.to_lower
+				curr_name := item.name.as_lower
 
 				found := curr_name.is_equal (item_name)
 				removed_item := item
@@ -377,10 +375,9 @@ feature {EB_FAVORITES_ITEM_LIST} -- Implementation
 			if a_path = Void or else a_path.is_empty then
 				add_item (a_item_name, is_folder)
 			else
-				new_path := clone (a_path)
+				new_path := a_path.twin
 				new_path.start
-				dest_folder_name := clone (new_path.item)
-				dest_folder_name.to_lower
+				dest_folder_name := new_path.item.as_lower
 				new_path.remove
 
 					-- Look for the first item of the path and recurse on it.
@@ -390,8 +387,7 @@ feature {EB_FAVORITES_ITEM_LIST} -- Implementation
 					after or found
 				loop
 					curr_folder_item ?= item
-					curr_folder_name := clone (curr_folder_item.name)
-					curr_folder_name.to_lower
+					curr_folder_name := curr_folder_item.name.as_lower
 					found := curr_folder_name.is_equal (dest_folder_name)
 					forth
 				end
@@ -415,8 +411,7 @@ feature {EB_FAVORITES_ITEM_LIST} -- Implementation
 				if is_folder then
 					create {EB_FAVORITES_FOLDER} added_item.make (a_name, Current)
 				else
-					added_name := clone (a_name)
-					added_name.to_upper
+					added_name := a_name.as_upper
 
 					create {EB_FAVORITES_CLASS} added_item.make (added_name, Current)
 				end
@@ -433,16 +428,14 @@ feature {EB_FAVORITES_ITEM_LIST} -- Implementation
 			item_name: STRING
 			curr_name: STRING
 		do
-			curr_name := clone (a_name)
-			curr_name.to_lower
+			curr_name := a_name.as_lower
 
 			from
 				start
 			until
 				after or Result
 			loop
-				item_name := clone (item.name)
-				item_name.to_lower
+				item_name := item.name.as_lower
 
 				Result := item_name.is_equal (curr_name)
 				forth

@@ -61,14 +61,11 @@ feature -- Basic Operations
 	add_class is
 			-- Add current class in `class_window' to the favorites.
 		local
-			class_name: STRING
 			development_window_class_name: STRING
 		do
 			development_window_class_name := development_window.class_name
 			if development_window_class_name /= Void then
-				class_name := clone (development_window_class_name)
-				class_name.to_upper
-				favorites.add_class (class_name)
+				favorites.add_class (development_window_class_name.as_upper)
 			end
 		end
 

@@ -39,7 +39,7 @@ feature {NONE} -- Implementation
 			until
 				i > layout.upper
 			loop
-				command_name := clone (layout @ i)
+				command_name := layout.item (i).twin
 				command_name_count := command_name.count
 				if command_name.is_equal (separator_name) then
 						-- This is a separator.
@@ -120,7 +120,7 @@ feature {NONE} -- Implementation
 				a_toolbar.after
 			loop
 				toolbar_item := a_toolbar.item
-				storage_name := clone (toolbar_item.name)
+				storage_name := toolbar_item.name.twin
 				command ?= toolbar_item
 				if command /= Void then
 					if command.is_displayed then

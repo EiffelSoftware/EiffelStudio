@@ -63,17 +63,17 @@ feature -- Access
 
 	general_filter_path: STRING is
 		do
-			Result := string_resource_value ("filter_directory", clone (filter_path))
+			Result := string_resource_value ("filter_directory", filter_path.twin)
 		end
 
 	general_profile_path: STRING is
 		do
-			Result := string_resource_value ("profile_directory", clone (profile_path))
+			Result := string_resource_value ("profile_directory", profile_path.twin)
 		end
 
 	general_tmp_path: STRING is
 		do
-			Result := string_resource_value ("temporary_directory", clone (tmp_directory))
+			Result := string_resource_value ("temporary_directory", tmp_directory.twin)
 		end
 
 	browsing_facilities: BOOLEAN is

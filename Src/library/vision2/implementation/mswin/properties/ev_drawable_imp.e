@@ -605,7 +605,7 @@ feature {NONE} -- Basic operations
 				points.put (center.y + y, 4)
 				points.put (center.x - x, 7)
 				points.put (center.y - y, 8)
-				dc.polyline (points)
+				dc.polygon (points)
 			end
 			if not filled and brush /= Void then
 				dc.select_brush (brush)
@@ -706,8 +706,8 @@ feature {NONE} -- Basic operations
 			Result := Pi / 180
 		end
 
-feature {NONE} -- To check -- Temp
-
+--feature {NONE} -- To check -- Temp
+feature
 	set_no_clip is
 			-- Remove all clip area.
 		local

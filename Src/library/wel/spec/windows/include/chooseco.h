@@ -24,3 +24,17 @@
 #define cwel_color_palette_set_i_th_color(_ptr_, _index_, _value_) ((((COLORREF *) _ptr_) [_index_] = (COLORREF) _value_))
 
 #endif /* __WEL_CHOOSECOLOR__ */
+
+/*
+--|-------------------------------------------------------------------------
+--| Windows Eiffel Library: library of reusable components for ISE Eiffel 3.
+--| Copyright (C) 1995, Interactive Software Engineering, Inc.
+--| All rights reserved. Duplication and distribution prohibited.
+--|
+--| 270 Storke Road, Suite 7, Goleta, CA 93117 USA
+--| Telephone 805-685-1006
+--| Fax 805-685-6869
+--| Information e-mail <info@eiffel.com>
+--| Customer support e-mail <support@eiffel.com>
+--|-------------------------------------------------------------------------
+*/

@@ -32,7 +32,7 @@ feature {NONE} -- Initialization
 		do
 			class_id := a_class.class_id
 			create features.make (Chunk)
-			feature_insertion_type := Insert_origin_only_type
+			feature_insertion_type := Insert_renaming_type
 		ensure
 			class_id_set: class_id = a_class.class_id
 		end
@@ -47,7 +47,7 @@ feature {NONE} -- Initialization
 			class_id := other.class_id
 			class_type := cl_type
 			features := other.features
-			feature_insertion_type := Insert_origin_only_type
+			feature_insertion_type := Insert_renaming_type
 		ensure
 			class_id: class_id = other.class_id
 			class_type_set: class_type = cl_type

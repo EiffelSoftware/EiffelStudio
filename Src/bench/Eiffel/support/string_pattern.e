@@ -125,12 +125,19 @@ feature -- Comparison
 					if automaton_index + 1 < automaton_count then
 						next_automaton := automaton_area.item(automaton_index + 1)
 					else
-						input_index := input_count;
+						if input_index + 1 < input_count then
+								-- `other' has more characters then Current.
+								-- For example: "*y" (Current) against "array2" (`other').
+								-- These words do not match.
+							Result := False
+						else
+							input_index := input_count
+						end;
 						automaton_index := automaton_count
 					end
 	
 					if automaton_char.is_equal (s_r)  then
-						if next_automaton = Void then
+						if next_automaton = '%U' then
 							input_index := input_index + 1
 						else
 							if next_automaton /= input_char then

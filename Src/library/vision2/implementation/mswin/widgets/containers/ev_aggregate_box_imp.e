@@ -9,18 +9,11 @@ class
 
 inherit
 	EV_AGGREGATE_BOX_I
-		--rename
-		--	interface as ev_a_box_interface
 		redefine
 			interface
-		--select
-			--ev_a_box_interface
-			--interface
 		end
 
 	EV_HORIZONTAL_BOX_IMP
-		--rename
-		--	interface as ev_h_box_interface
 		undefine
 			parent,
 			screen_x,

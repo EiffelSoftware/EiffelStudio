@@ -900,7 +900,10 @@ Routine_body: Internal
 	;
 
 External: TE_EXTERNAL External_language External_name
-			{ $$ := new_external_as ($2, $3) }
+			{
+				$$ := new_external_as ($2, $3)
+				has_externals := True
+			}
 	;
 
 External_language:

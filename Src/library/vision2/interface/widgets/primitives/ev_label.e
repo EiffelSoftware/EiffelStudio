@@ -26,19 +26,19 @@ inherit
 		
 creation
 	
-	make
+	make, make_with_text
 
 feature {NONE} -- Initialization
 
-        make (par: EV_CONTAINER) is
-                        -- Create a label with, `par' as
-                        -- parent
+		
+	make_with_text (par: EV_CONTAINER; txt: STRING) is
+			-- Label with 'par' as parent and 'txt' as 
+			-- text label
 		do
-			!EV_LABEL_IMP!implementation.make (par)
+			!EV_LABEL_IMP!implementation.make_with_text (par, txt)
 			widget_make (par)
 		end
-		
-
+	
 feature {NONE} -- Implementation
 
 	implementation: EV_LABEL_I

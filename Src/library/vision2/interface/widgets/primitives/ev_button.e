@@ -26,22 +26,15 @@ inherit
 
 creation
 	
-	make
+	make, make_with_text
 	
 feature {NONE} -- Initialization
 
-        make (par: EV_CONTAINER) is
-                        -- Create a push button with, `par' as
-                        -- parent
-		do
-			make_with_label (par, "")
-		end
-	
-	make_with_label (par: EV_CONTAINER; txt: STRING) is
+	make_with_text (par: EV_CONTAINER; txt: STRING) is
 			-- Button with 'par' as parent and 'txt' as 
 			-- text label
 		do
-			!EV_BUTTON_IMP!implementation.make_with_label (par, txt)
+			!EV_BUTTON_IMP!implementation.make_with_text (par, txt)
 			widget_make (par)
 		end			
 	

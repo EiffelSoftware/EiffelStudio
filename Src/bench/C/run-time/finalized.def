@@ -431,7 +431,6 @@ EXPORTS
 ;Cecil add-on
 	eifcid
 	eifexp
-	eifgid
 	eifcreate
 	eifproc
 	eiflong

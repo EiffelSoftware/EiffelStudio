@@ -28,6 +28,38 @@ feature {NONE}
 			Result := Project_directory.name
 		end;
 
+	Case_storage_path: STRING is
+		once
+			!!Result.make (0);
+			Result.append (Case_gen_path);
+			Result.extend (Directory_separator);
+			Result.append ("Storage");
+			-- *** FIXME **** (do not hardcode name)
+		end;
+
+	Case_gen_path: STRING is
+		once
+			!!Result.make (Project_directory_name.count + 8);
+			Result.append (Project_directory_name);
+			Result.extend (Directory_separator);
+			Result.append ("CASEGEN");
+			-- *** FIXME **** (do not hardcode name)
+		end;
+
+	Create_case_storage_directory is
+		local
+			d: DIRECTORY
+		do
+			!!d.make (Case_gen_path);
+			if not d.exists then
+				d.create
+			end;
+			!!d.make (Case_storage_path);
+			if not d.exists then
+				d.create
+			end;
+		end;
+
 	Eiffel_gen_path: STRING is
 		once
 			!!Result.make (Project_directory_name.count + 11);

@@ -44,7 +44,7 @@ feature {EV_TITLED_WINDOW_IMP} -- Implementation
 				Result := {EV_GTK_EXTERNALS}.gDK_CONTROL_MASK_ENUM
 			end
 			if alt_required then
-				Result := Result.bit_or ({EV_GTK_EXTERNALS}.gDK_MOD1_MASK_ENUM)
+				Result := Result.bit_or ( {EV_GTK_EXTERNALS}.gDK_MOD1_MASK_ENUM)
 			end
 			if shift_required then
 				Result := Result.bit_or ({EV_GTK_EXTERNALS}.gDK_SHIFT_MASK_ENUM)
@@ -65,18 +65,17 @@ feature {EV_TITLED_WINDOW_IMP} -- Implementation
 		do
 			a_cs := "activate"
 			
-			if shift_required then
+			internal_gdk_key_code := key_code_to_gtk (key.code)
+			if shift_required and then not key.is_function and then not key.is_arrow then
 					-- We need to get the key val for the uppercase symbol
-				a_success := {EV_GTK_DEPENDENT_EXTERNALS}.gdk_keymap_get_entries_for_keyval (default_pointer, key_code_to_gtk (key.code), $a_keymap_array, $n_keys)
+				a_success := {EV_GTK_DEPENDENT_EXTERNALS}.gdk_keymap_get_entries_for_keyval (default_pointer, internal_gdk_key_code, $a_keymap_array, $n_keys)
 				{EV_GTK_DEPENDENT_EXTERNALS}.set_gdk_keymapkey_struct_level (a_keymap_array, 1)
 				internal_gdk_key_code := {EV_GTK_DEPENDENT_EXTERNALS}.gdk_keymap_lookup_key (default_pointer, a_keymap_array)
 				{EV_GTK_EXTERNALS}.g_free (a_keymap_array)
-			else
-				internal_gdk_key_code := key_code_to_gtk (key.code)
 			end
 			
 			if internal_gdk_key_code > 0 then
-					-- If internal_gdk_key_code is 0 then the key mapping doesn't exist
+					-- If internal_gdk_key_code is 0 then the key mapping doesn't exist so we do nothing
 				{EV_GTK_EXTERNALS}.gtk_widget_add_accelerator (
 					a_window_imp.accel_box,
 					a_cs.item,
@@ -86,7 +85,6 @@ feature {EV_TITLED_WINDOW_IMP} -- Implementation
 					0
 				)				
 			end
-
 		end
 
 	remove_accel (a_window_imp: EV_TITLED_WINDOW_IMP) is
@@ -163,7 +161,7 @@ feature -- Element change
 
 feature {NONE} -- Implementation
 
-	internal_gdk_key_code: INTEGER
+	internal_gdk_key_code: NATURAL_32
 		-- Internal gdk key code used to represent key of `Current'
 
 	interface: EV_ACCELERATOR

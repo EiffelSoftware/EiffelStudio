@@ -497,13 +497,14 @@ RT_LNK int fcount;
 /* Other macros used to handle specific needs:
  *  RTMS(s) creates an Eiffel string from a C manifest string s.
  *  RTMS_EX(s,c) creates an Eiffel string from a C manifest string s of length c.
- *  RTMS_EX_H(s,c) creates an Eiffel string from a C manifest string s of length c and hash-code h.
+ *  RTMS_EX_H(s,c,h) creates an Eiffel string from a C manifest string s of length c and hash-code h.
+ *  RTMS_EX_O(s,c,h) creates an Eiffel string in heap for old objects from a C manifest string s of length c and hash-code h.
  *  RTOMS(b,n) a value of a once manifest string object for routine body index `b' and number `n'.
  *  RTDOMS(b,m) declares a field to store once manifest string objects for routine body index `b' and number `n' of such objects.
  *  RTEOMS(b,m) "extern" reference to the field declared by RTDOMS.
  *  RTAOMS(b,m) allocates memory to store at least `m' once manifest strings for routine body index `b'.
- *  RTPOMS(b,n,s,c) stores a new once manifest string object of value `s' and length `c' for body index `b' and number `n' if such object is not already created.
- *  RTCOMS(r,b,n,s,c) does the same as RTPOMS, but also puts the corresponding object into `r'.
+ *  RTPOMS(b,n,s,c,h) stores a new once manifest string object of value `s', length `c' and has-code `h' for body index `b' and number `n' if such object is not already created.
+ *  RTCOMS(r,b,n,s,c,h) does the same as RTPOMS, but also puts the corresponding object into `r'.
  *  RTPOF(p,o) returns the C pointer of the address p + o where p represents a C pointer.
  *  RTST(c,d,i,n) creates an Eiffel ARRAY[ANY] (for strip).
  *  RTXA(x,y) copies 'x' into expanded 'y' with exception if 'x' is void.
@@ -515,7 +516,7 @@ RT_LNK int fcount;
 #define	RTMS(s)			makestr_with_hash(s,strlen(s),0)
 #define	RTMS_EX(s,c)	makestr_with_hash(s,c,0)
 #define	RTMS_EX_H(s,c,h)	makestr_with_hash(s,c,h)
-#define RTMS_EX_O(s,c)	makestr_with_hash_as_old(s,c,0)
+#define RTMS_EX_O(s,c,h)	makestr_with_hash_as_old(s,c,h)
 
 #if defined(WORKBENCH) || defined(EIF_THREADS)
 #define RTOMS(b,n)	(EIF_oms[(b)][(n)])
@@ -532,7 +533,7 @@ RT_LNK int fcount;
 				*p = pm; \
 			} \
 		}
-#define RTCOMS(r,b,n,s,c) \
+#define RTCOMS(r,b,n,s,c,h) \
 		{ \
 			EIF_REFERENCE * rsp; \
 			EIF_REFERENCE rs; \
@@ -540,7 +541,7 @@ RT_LNK int fcount;
 			rs = *rsp; \
 			if (!rs) { \
 				register_oms (rsp); \
-				rs = RTMS_EX_O(s,c); \
+				rs = RTMS_EX_O(s,c,h); \
 				*rsp = rs; \
 			} \
 			r = rs; \
@@ -549,13 +550,13 @@ RT_LNK int fcount;
 #define RTOMS(b,n)	EIF_oms_##b [n]
 #define RTDOMS(b,m)	EIF_REFERENCE * RTOMS(b,m)
 #define RTEOMS(b,m)	extern RTDOMS(b,m)
-#define RTPOMS(b,n,s,c) \
+#define RTPOMS(b,n,s,c,h) \
 		{ \
 			EIF_REFERENCE * rsp; \
 			rsp = &RTOMS(b,n); \
 			if (!(*rsp)) { \
 				register_oms (rsp); \
-				*rsp = RTMS_EX_O(s,c); \
+				*rsp = RTMS_EX_O(s,c,h); \
 			} \
 		}
 #endif

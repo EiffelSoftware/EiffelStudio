@@ -22,7 +22,6 @@ extern "C" {
 extern long EIF_once_count;			/* Nr. of once routines */
 extern long EIF_bonce_count;		/* Nr. of once routines in bytecode */
 extern void once_init (void);		/* Initialization and creation of once keys */
-
 extern void dinterrupt(void);
 extern void dserver(void);
 extern void eif_alloc_init();

@@ -3,7 +3,7 @@ indexing
 	date: "$Date$"
 	revision: "$Revision$"
 
-	note: "Queries `default_root_class' and `precompile' can return `Void'."
+	note: "Queries `default_root_class' and `precompile_ace_file' can return `Void'."
 
 class
 	ECDM_CONFIGURATION
@@ -151,15 +151,20 @@ feature -- Basic Operations
 					l_config_file.put_string (default_root_class)
 					l_config_file.put_string ("</default_root_class>%N")
 				end
-				if precompile /= Void then
-					l_config_file.put_string ("%T%T<precompile>")
-					l_config_file.put_string (precompile)
-					l_config_file.put_string ("</precompile>%N")
-				end
 				if metadata_cache /= Void then
 					l_config_file.put_string ("%T%T<metadata_cache>")
 					l_config_file.put_string (metadata_cache)
 					l_config_file.put_string ("</metadata_cache>%N")
+				end
+				if precompile_ace_file /= Void then
+					l_config_file.put_string ("%T%T<precompile_ace_file>")
+					l_config_file.put_string (precompile_ace_file)
+					l_config_file.put_string ("</precompile_ace_file>%N")
+				end
+				if precompile_cache /= Void then
+					l_config_file.put_string ("%T%T<precompile_cache>")
+					l_config_file.put_string (precompile_cache)
+					l_config_file.put_string ("</precompile_cache>%N")
 				end
 				l_config_file.put_string ("%T</compiler>%N")
 				l_config_file.put_string ("</configuration>")
@@ -231,10 +236,16 @@ feature -- Element Settings
 			config_values.force (a_value, "log_name")
 		end
 
-	set_precompile (a_value: STRING) is
-			-- Set `precompile' with `a_value'.
+	set_precompile_ace_file (a_value: STRING) is
+			-- Set `precompile_ace_file' with `a_value'.
 		do
-			config_values.force (a_value, "precompile")
+			config_values.force (a_value, "precompile_ace_file")
+		end
+
+	set_precompile_cache (a_value: STRING) is
+			-- Set `precompile_cache' with `a_value'.
+		do
+			config_values.force (a_value, "precompile_cache")
 		end
 
 	set_metadata_cache (a_value: STRING) is

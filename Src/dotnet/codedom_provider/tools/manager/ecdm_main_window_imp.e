@@ -87,18 +87,23 @@ feature {NONE}-- Initialization
 			create compiler_box
 			create compiler_titles_box
 			create default_root_clas_label
-			create precompile_label
+			create precompile_ace_file_label
 			create metadata_cache_label
+			create precompile_cache_label
 			create compiler_values_box
 			create root_class_combo_box
-			create precompile_box
-			create precompile_combo_box
+			create precompile_ace_file_box
+			create precompile_ace_file_combo_box
 			create precompile_padding_cell
 			create browse_button
 			create metadata_cache_box
 			create metadata_cache_combo_box
 			create metadata_cache_cell
 			create metadata_cache_browse_button
+			create precompile_cache_box
+			create precompile_cache_combo_box
+			create precompile_cache_cell
+			create precompile_cache_browse_button
 			create prefixes_frame
 			create prefixes_box
 			create prefixes_list
@@ -172,18 +177,23 @@ feature {NONE}-- Initialization
 			compiler_frame.extend (compiler_box)
 			compiler_box.extend (compiler_titles_box)
 			compiler_titles_box.extend (default_root_clas_label)
-			compiler_titles_box.extend (precompile_label)
+			compiler_titles_box.extend (precompile_ace_file_label)
 			compiler_titles_box.extend (metadata_cache_label)
+			compiler_titles_box.extend (precompile_cache_label)
 			compiler_box.extend (compiler_values_box)
 			compiler_values_box.extend (root_class_combo_box)
-			compiler_values_box.extend (precompile_box)
-			precompile_box.extend (precompile_combo_box)
-			precompile_box.extend (precompile_padding_cell)
-			precompile_box.extend (browse_button)
+			compiler_values_box.extend (precompile_ace_file_box)
+			precompile_ace_file_box.extend (precompile_ace_file_combo_box)
+			precompile_ace_file_box.extend (precompile_padding_cell)
+			precompile_ace_file_box.extend (browse_button)
 			compiler_values_box.extend (metadata_cache_box)
 			metadata_cache_box.extend (metadata_cache_combo_box)
 			metadata_cache_box.extend (metadata_cache_cell)
 			metadata_cache_box.extend (metadata_cache_browse_button)
+			compiler_values_box.extend (precompile_cache_box)
+			precompile_cache_box.extend (precompile_cache_combo_box)
+			precompile_cache_box.extend (precompile_cache_cell)
+			precompile_cache_box.extend (precompile_cache_browse_button)
 			edit_box.extend (prefixes_frame)
 			prefixes_frame.extend (prefixes_box)
 			prefixes_box.extend (prefixes_list)
@@ -206,7 +216,7 @@ feature {NONE}-- Initialization
 			buttons_box.extend (right_buttons_padding_cell)
 			
 			set_minimum_width (500)
-			set_minimum_height (500)
+			set_minimum_height (580)
 			set_title (product_title)
 			set_background_pixmap (new_png)
 			file_menu.set_text ("File")
@@ -301,14 +311,16 @@ feature {NONE}-- Initialization
 			compiler_titles_box.set_border_width (5)
 			default_root_clas_label.set_text ("Default root class")
 			default_root_clas_label.align_text_left
-			precompile_label.set_text ("Precompiled library")
-			precompile_label.align_text_left
+			precompile_ace_file_label.set_text ("Precompile ace file")
+			precompile_ace_file_label.align_text_left
 			metadata_cache_label.set_text ("Metadata cache")
 			metadata_cache_label.align_text_left
+			precompile_cache_label.set_text ("Precompile cache")
+			precompile_cache_label.align_text_left
 			compiler_values_box.set_padding_width (5)
 			compiler_values_box.set_border_width (5)
-			precompile_box.disable_item_expand (precompile_padding_cell)
-			precompile_box.disable_item_expand (browse_button)
+			precompile_ace_file_box.disable_item_expand (precompile_padding_cell)
+			precompile_ace_file_box.disable_item_expand (browse_button)
 			precompile_padding_cell.set_minimum_width (5)
 			browse_button.set_text ("...")
 			browse_button.set_minimum_width (40)
@@ -317,6 +329,11 @@ feature {NONE}-- Initialization
 			metadata_cache_cell.set_minimum_width (5)
 			metadata_cache_browse_button.set_text ("...")
 			metadata_cache_browse_button.set_minimum_width (40)
+			precompile_cache_box.disable_item_expand (precompile_cache_cell)
+			precompile_cache_box.disable_item_expand (precompile_cache_browse_button)
+			precompile_cache_cell.set_minimum_width (5)
+			precompile_cache_browse_button.set_text ("...")
+			precompile_cache_browse_button.set_minimum_width (40)
 			prefixes_frame.set_text ("Assembly Prefixes")
 			prefixes_box.set_padding_width (5)
 			prefixes_box.set_border_width (5)
@@ -375,10 +392,12 @@ feature {NONE}-- Initialization
 			log_level_combo.select_actions.extend (agent on_log_level_select)
 			log_level_combo.change_actions.extend (agent on_log_level_select)
 			root_class_combo_box.change_actions.extend (agent on_root_class_change)
-			precompile_combo_box.change_actions.extend (agent on_precompiled_change)
-			browse_button.select_actions.extend (agent on_precompiled_browse)
+			precompile_ace_file_combo_box.change_actions.extend (agent on_precompile_ace_file_change)
+			browse_button.select_actions.extend (agent on_precompile_ace_file_browse)
 			metadata_cache_combo_box.change_actions.extend (agent on_metadata_cache_change)
 			metadata_cache_browse_button.select_actions.extend (agent on_metadata_cache_browse)
+			precompile_cache_combo_box.change_actions.extend (agent on_precompile_cache_change)
+			precompile_cache_browse_button.select_actions.extend (agent on_precompile_cache_browse)
 			prefixes_list.select_actions.extend (agent on_assembly_file_name_select (?))
 			prefixes_list.deselect_actions.extend (agent on_assembly_file_name_deselect (?))
 			prefixes_list.column_resized_actions.extend (agent on_column_resize (?))
@@ -407,20 +426,21 @@ feature -- Access
 	show_text_menu_item, show_tooltips_menu_item: EV_CHECK_MENU_ITEM
 	window_box, configurations_box, edit_box, general_box, general_titles_box, general_values_box, 
 	warning_box, compiler_titles_box, compiler_values_box, prefixes_box, applications_box: EV_VERTICAL_BOX
-	tool_bars_box, main_box, general_entries_box, compiler_box, precompile_box, metadata_cache_box, 
-	prefix_components_box, assembly_file_name_buttons_box, buttons_box: EV_HORIZONTAL_BOX
+	tool_bars_box, main_box, general_entries_box, compiler_box, precompile_ace_file_box, 
+	metadata_cache_box, precompile_cache_box, prefix_components_box, assembly_file_name_buttons_box, 
+	buttons_box: EV_HORIZONTAL_BOX
 	main_tool_bar, help_tool_bar: EV_TOOL_BAR
 	new_button, save_button, revert_button, properties_button, delete_button, help_button: EV_TOOL_BAR_BUTTON
-	tool_bars_padding_cell, precompile_padding_cell, metadata_cache_cell, left_buttons_padding_cell, 
-	right_buttons_padding_cell: EV_CELL
+	tool_bars_padding_cell, precompile_padding_cell, metadata_cache_cell, precompile_cache_cell, 
+	left_buttons_padding_cell, right_buttons_padding_cell: EV_CELL
 	configurations_list, applications_list: EV_LIST
 	general_frame, compiler_frame, prefixes_frame, applications_frame: EV_FRAME
 	fail_on_error_label, log_server_label, log_level_label, warning_title_label, warning_content_label, 
-	default_root_clas_label, precompile_label, metadata_cache_label: EV_LABEL
+	default_root_clas_label, precompile_ace_file_label, metadata_cache_label, precompile_cache_label: EV_LABEL
 	fail_on_error_check_button: EV_CHECK_BUTTON
-	log_server_combo_box, log_level_combo, root_class_combo_box, precompile_combo_box, 
-	metadata_cache_combo_box: EV_COMBO_BOX
-	browse_button, metadata_cache_browse_button, assembly_file_name_browse_button, 
+	log_server_combo_box, log_level_combo, root_class_combo_box, precompile_ace_file_combo_box, 
+	metadata_cache_combo_box, precompile_cache_combo_box: EV_COMBO_BOX
+	browse_button, metadata_cache_browse_button, precompile_cache_browse_button, assembly_file_name_browse_button, 
 	assembly_file_name_add_button, assembly_file_name_remove_button, add_button, remove_button: EV_BUTTON
 	prefixes_list: EV_MULTI_COLUMN_LIST
 	prefix_text_field, assembly_file_name_text_field: EV_TEXT_FIELD
@@ -525,12 +545,12 @@ feature {NONE} -- Implementation
 		deferred
 		end
 	
-	on_precompiled_change is
-			-- Called by `change_actions' of `precompile_combo_box'.
+	on_precompile_ace_file_change is
+			-- Called by `change_actions' of `precompile_ace_file_combo_box'.
 		deferred
 		end
 	
-	on_precompiled_browse is
+	on_precompile_ace_file_browse is
 			-- Called by `select_actions' of `browse_button'.
 		deferred
 		end
@@ -542,6 +562,16 @@ feature {NONE} -- Implementation
 	
 	on_metadata_cache_browse is
 			-- Called by `select_actions' of `metadata_cache_browse_button'.
+		deferred
+		end
+	
+	on_precompile_cache_change is
+			-- Called by `change_actions' of `precompile_cache_combo_box'.
+		deferred
+		end
+	
+	on_precompile_cache_browse is
+			-- Called by `select_actions' of `precompile_cache_browse_button'.
 		deferred
 		end
 	

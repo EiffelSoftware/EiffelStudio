@@ -162,7 +162,7 @@
 <EV_COLORIZABLE></EV_COLORIZABLE>
 <EV_SENSITIVE></EV_SENSITIVE>
 <EV_WIDGET><Minimum_width>500</Minimum_width>
-	<Minimum_height>500</Minimum_height>
+	<Minimum_height>580</Minimum_height>
 	</EV_WIDGET>
 <EV_WINDOW><Title><Constant>product_title</Constant>
 		</Title>
@@ -741,7 +741,7 @@
 	</Events>
 </item>
 <item type="EV_COMBO_BOX"><Internal_properties>
-	<id>173</id>
+	<id>44</id>
 	<name>log_server_combo_box</name>
 	<Expanded>0</Expanded>
 	</Internal_properties>
@@ -869,7 +869,7 @@ the proper security access rights.]]></Text>
 	</EV_WIDGET>
 <EV_BOX><Padding>5</Padding>
 	<Border>5</Border>
-	<Is_item_expanded>111</Is_item_expanded>
+	<Is_item_expanded>1111</Is_item_expanded>
 	</EV_BOX>
 <EV_PIXMAPABLE></EV_PIXMAPABLE>
 <EV_CONTAINER></EV_CONTAINER>
@@ -890,13 +890,13 @@ the proper security access rights.]]></Text>
 </item>
 <item type="EV_LABEL"><Internal_properties>
 	<id>53</id>
-	<name>precompile_label</name>
+	<name>precompile_ace_file_label</name>
 	<Expanded>0</Expanded>
 	</Internal_properties>
 <EV_COLORIZABLE></EV_COLORIZABLE>
 <EV_FONTABLE></EV_FONTABLE>
 <EV_SENSITIVE></EV_SENSITIVE>
-<EV_TEXTABLE><Text><![CDATA[Precompiled library]]></Text>
+<EV_TEXTABLE><Text><![CDATA[Precompile ace file]]></Text>
 	</EV_TEXTABLE>
 <EV_TOOLTIPABLE></EV_TOOLTIPABLE>
 <EV_WIDGET></EV_WIDGET>
@@ -918,6 +918,21 @@ the proper security access rights.]]></Text>
 <EV_TEXT_ALIGNABLE><Text_alignment>Left</Text_alignment>
 	</EV_TEXT_ALIGNABLE>
 </item>
+<item type="EV_LABEL"><Internal_properties>
+	<id>173</id>
+	<name>precompile_cache_label</name>
+	<Expanded>0</Expanded>
+	</Internal_properties>
+<EV_COLORIZABLE></EV_COLORIZABLE>
+<EV_FONTABLE></EV_FONTABLE>
+<EV_SENSITIVE></EV_SENSITIVE>
+<EV_TEXTABLE><Text><![CDATA[Precompile cache]]></Text>
+	</EV_TEXTABLE>
+<EV_TOOLTIPABLE></EV_TOOLTIPABLE>
+<EV_WIDGET></EV_WIDGET>
+<EV_TEXT_ALIGNABLE><Text_alignment>Left</Text_alignment>
+	</EV_TEXT_ALIGNABLE>
+</item>
 </item>
 <item type="EV_VERTICAL_BOX"><Internal_properties>
 	<id>55</id>
@@ -929,12 +944,12 @@ the proper security access rights.]]></Text>
 <EV_WIDGET></EV_WIDGET>
 <EV_BOX><Padding>5</Padding>
 	<Border>5</Border>
-	<Is_item_expanded>111</Is_item_expanded>
+	<Is_item_expanded>1111</Is_item_expanded>
 	</EV_BOX>
 <EV_PIXMAPABLE></EV_PIXMAPABLE>
 <EV_CONTAINER></EV_CONTAINER>
 <item type="EV_COMBO_BOX"><Internal_properties>
-	<id>174</id>
+	<id>56</id>
 	<name>root_class_combo_box</name>
 	<Expanded>0</Expanded>
 	</Internal_properties>
@@ -950,7 +965,7 @@ the proper security access rights.]]></Text>
 </item>
 <item type="EV_HORIZONTAL_BOX"><Internal_properties>
 	<id>57</id>
-	<name>precompile_box</name>
+	<name>precompile_ace_file_box</name>
 	<Expanded>1</Expanded>
 	</Internal_properties>
 <EV_COLORIZABLE></EV_COLORIZABLE>
@@ -962,7 +977,7 @@ the proper security access rights.]]></Text>
 <EV_CONTAINER></EV_CONTAINER>
 <item type="EV_COMBO_BOX"><Internal_properties>
 	<id>58</id>
-	<name>precompile_combo_box</name>
+	<name>precompile_ace_file_combo_box</name>
 	<Expanded>0</Expanded>
 	</Internal_properties>
 <EV_COLORIZABLE></EV_COLORIZABLE>
@@ -972,7 +987,7 @@ the proper security access rights.]]></Text>
 <EV_TOOLTIPABLE></EV_TOOLTIPABLE>
 <EV_WIDGET></EV_WIDGET>
 <EV_TEXT_COMPONENT></EV_TEXT_COMPONENT>
-<Events><Event>change_actions EV_TEXT_COMPONENT_ACTION_SEQUENCES on_precompiled_change</Event>
+<Events><Event>change_actions EV_TEXT_COMPONENT_ACTION_SEQUENCES on_precompile_ace_file_change</Event>
 	</Events>
 </item>
 <item type="EV_CELL"><Internal_properties>
@@ -1002,7 +1017,7 @@ the proper security access rights.]]></Text>
 	</EV_WIDGET>
 <EV_TEXT_ALIGNABLE></EV_TEXT_ALIGNABLE>
 <EV_PIXMAPABLE></EV_PIXMAPABLE>
-<Events><Event>select_actions EV_BUTTON_ACTION_SEQUENCES on_precompiled_browse</Event>
+<Events><Event>select_actions EV_BUTTON_ACTION_SEQUENCES on_precompile_ace_file_browse</Event>
 	</Events>
 </item>
 </item>
@@ -1061,6 +1076,64 @@ the proper security access rights.]]></Text>
 <EV_TEXT_ALIGNABLE></EV_TEXT_ALIGNABLE>
 <EV_PIXMAPABLE></EV_PIXMAPABLE>
 <Events><Event>select_actions EV_BUTTON_ACTION_SEQUENCES on_metadata_cache_browse</Event>
+	</Events>
+</item>
+</item>
+<item type="EV_HORIZONTAL_BOX"><Internal_properties>
+	<id>174</id>
+	<name>precompile_cache_box</name>
+	<Expanded>1</Expanded>
+	</Internal_properties>
+<EV_COLORIZABLE></EV_COLORIZABLE>
+<EV_SENSITIVE></EV_SENSITIVE>
+<EV_WIDGET></EV_WIDGET>
+<EV_BOX><Is_item_expanded>100</Is_item_expanded>
+	</EV_BOX>
+<EV_PIXMAPABLE></EV_PIXMAPABLE>
+<EV_CONTAINER></EV_CONTAINER>
+<item type="EV_COMBO_BOX"><Internal_properties>
+	<id>175</id>
+	<name>precompile_cache_combo_box</name>
+	<Expanded>0</Expanded>
+	</Internal_properties>
+<EV_COLORIZABLE></EV_COLORIZABLE>
+<EV_FONTABLE></EV_FONTABLE>
+<EV_SENSITIVE></EV_SENSITIVE>
+<EV_TEXTABLE></EV_TEXTABLE>
+<EV_TOOLTIPABLE></EV_TOOLTIPABLE>
+<EV_WIDGET></EV_WIDGET>
+<EV_TEXT_COMPONENT></EV_TEXT_COMPONENT>
+<Events><Event>change_actions EV_TEXT_COMPONENT_ACTION_SEQUENCES on_precompile_cache_change</Event>
+	</Events>
+</item>
+<item type="EV_CELL"><Internal_properties>
+	<id>176</id>
+	<name>precompile_cache_cell</name>
+	<Expanded>0</Expanded>
+	</Internal_properties>
+<EV_COLORIZABLE></EV_COLORIZABLE>
+<EV_SENSITIVE></EV_SENSITIVE>
+<EV_WIDGET><Minimum_width>5</Minimum_width>
+	</EV_WIDGET>
+<EV_PIXMAPABLE></EV_PIXMAPABLE>
+<EV_CONTAINER></EV_CONTAINER>
+</item>
+<item type="EV_BUTTON"><Internal_properties>
+	<id>177</id>
+	<name>precompile_cache_browse_button</name>
+	<Expanded>0</Expanded>
+	</Internal_properties>
+<EV_COLORIZABLE></EV_COLORIZABLE>
+<EV_FONTABLE></EV_FONTABLE>
+<EV_SENSITIVE></EV_SENSITIVE>
+<EV_TEXTABLE><Text><![CDATA[...]]></Text>
+	</EV_TEXTABLE>
+<EV_TOOLTIPABLE></EV_TOOLTIPABLE>
+<EV_WIDGET><Minimum_width>40</Minimum_width>
+	</EV_WIDGET>
+<EV_TEXT_ALIGNABLE></EV_TEXT_ALIGNABLE>
+<EV_PIXMAPABLE></EV_PIXMAPABLE>
+<Events><Event>select_actions EV_BUTTON_ACTION_SEQUENCES on_precompile_cache_browse</Event>
 	</Events>
 </item>
 </item>

@@ -250,7 +250,11 @@ feature -- IL code generation
 							end
 						else
 								-- In all other cases we will generate the metamorphose.
-							generate_il_metamorphose (cl_type, Void, real_metamorphose)
+							if written_in = cl_type.base_id then
+								generate_il_metamorphose (cl_type, cl_type, real_metamorphose)
+							else							
+								generate_il_metamorphose (cl_type, void, real_metamorphose)
+							end
 						end
 					end
 				end

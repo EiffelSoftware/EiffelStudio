@@ -72,31 +72,31 @@ feature
 	generate (file: INDENT_FILE) is
 			-- Generate C type in file `file'.
 		do
-			file.putstring ("char *");
+			file.putstring ("EIF_REFERENCE ");
 		end;
 
 	generate_access_cast (file: INDENT_FILE) is
 			-- Generate access C cast in file `file'.
 		do
-			file.putstring ("(char **) ");
+			file.putstring ("(EIF_REFERENCE *) ");
 		end;
 
 	generate_cast (file: INDENT_FILE) is
 			-- Generate C cast in file `file'.
 		do
-			file.putstring ("(char *) ");
+			file.putstring ("(EIF_REFERENCE) ");
 		end;
 
 	generate_function_cast (file: INDENT_FILE) is
 			-- Generate C function cast in file `file'.
 		do
-			file.putstring ("(char *(*)()) ");
+			file.putstring ("(EIF_REFERENCE(*)()) ");
 		end;
 
 	generate_size (file: INDENT_FILE) is
 			-- Generate size of C type
 		do
-			file.putstring ("sizeof(char *)");
+			file.putstring ("sizeof(EIF_REFERENCE)");
 		end;
 
 	hash_code: INTEGER is
@@ -131,6 +131,7 @@ feature
 
 	type_a: TYPE_A is
 		do
+			Result := System.any_class.compiled_class.actual_type
 		end
 
 end

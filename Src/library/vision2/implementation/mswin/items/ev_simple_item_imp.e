@@ -41,6 +41,8 @@ inherit
 		end
 
 	EV_PICK_AND_DROPABLE_IMP
+		undefine
+			set_pointer_style
 		redefine
 			interface
 		end
@@ -72,6 +74,9 @@ end -- class EV_SIMPLE_ITEM_IMP
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.19  2000/03/17 23:26:00  rogers
+--| Undefined set_pointer_style from EV_PICK_AND_AND_DROPABLE_IMP.
+--|
 --| Revision 1.18  2000/03/10 00:30:00  rogers
 --| Now inherits EV_PICK_AND_DROPABLE_IMP.
 --|

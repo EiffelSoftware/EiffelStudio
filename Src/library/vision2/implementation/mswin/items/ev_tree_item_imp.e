@@ -33,6 +33,8 @@ inherit
 		end
 
 	EV_PICK_AND_DROPABLE_IMP
+		undefine
+			set_pointer_style
 		redefine
 			interface
 		end
@@ -322,6 +324,9 @@ end -- class EV_TREE_ITEM_IMP
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.37  2000/03/17 23:25:18  rogers
+--| Undefined set_pointer_style from EV_PICK_AND_AND_DROPABLE_IMP.
+--|
 --| Revision 1.36  2000/03/15 17:56:29  rogers
 --| Removed old command association.
 --|

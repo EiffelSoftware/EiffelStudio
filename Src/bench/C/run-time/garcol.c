@@ -384,7 +384,7 @@ rt_public int acollect(void)
 	 * once every 'plsc_per' (aka the period) calls.
 	 * The function returns 0 if collection was done, -1 otherwise.
 	 */
-
+	EIF_GET_CONTEXT
 	static long nb_calls = 0;		/* Number of calls to function */
 	static long eif_total = 0;		/* Total Eiffel memory allocated */
 	int status;						/* Status returned by scollect() */
@@ -434,7 +434,7 @@ rt_public int acollect(void)
 #ifdef DEBUG
 		dprintf(1)("acollect: skipping call (%d bytes free)\n", freemem);
 #endif
-		return 0;					/* Do not perform collection */
+		return -1;	/* Do not perform collection */ /* %%ss -1 was 0 */
 	}
 
 	if (0 == nb_calls % plsc_per) {	/* Full collection required */
@@ -460,6 +460,8 @@ rt_public int acollect(void)
 		}
 
 	return status;		/* Collection done, forward status */
+
+	EIF_END_GET_CONTEXT
 }
 
 rt_public int scollect(int (*gc_func) (void), int i)
@@ -471,7 +473,7 @@ rt_public int scollect(int (*gc_func) (void), int i)
 	 * if any, as well as time between two collections...
 	 * Return the status given by the collection function.
 	 */
-
+	EIF_GET_CONTEXT
 	static uint32 nb_stats[GST_NBR];	/* For average computation */
 	static Timeval lastreal[GST_NBR];	/* Last real time of invocation */
 	static double lastuser[GST_NBR];	/* Last CPU time for last call */
@@ -644,6 +646,8 @@ rt_public int scollect(int (*gc_func) (void), int i)
 		}
 
 	return status;		/* Forward status report */
+
+	EIF_END_GET_CONTEXT
 }
 
 /*
@@ -725,7 +729,7 @@ rt_private int mark_and_sweep(void)
 	 * all the local reference variables. I suppose no object is already
 	 * marked at the beginning of the processing.
 	 */
-
+	EIF_GET_CONTEXT
 	SIGBLOCK;			/* Block all signals during garbage collection */
 
 	/* The idea of having a global status for the garbage collector arose
@@ -738,6 +742,8 @@ rt_private int mark_and_sweep(void)
 	clean_up();				/* Restore signals, release core, etc... */
 
 	return 0;
+
+	EIF_END_GET_CONTEXT
 }
 
 rt_private void clean_up(void)
@@ -806,6 +812,7 @@ rt_private void run_collector(void)
 	 * Provision is made for generation scavenging, as this zone cannot be
 	 * collected excepted by using a scavenging algorithm (with no aging).
 	 */
+	EIF_GET_CONTEXT
 
 	g_data.nb_full++;	/* One more full collection */
 
@@ -845,6 +852,8 @@ rt_private void run_collector(void)
 #ifdef DEBUG
 	fdone = 0;		/* Do not trace any further */
 #endif
+
+	EIF_END_GET_CONTEXT
 }
 
 rt_private void full_mark(EIF_CONTEXT_NOARG)
@@ -915,6 +924,8 @@ rt_private void full_mark(EIF_CONTEXT_NOARG)
 		mark_ex_stack(&eif_trace, MARK_SWITCH, moving);
 	}
 #endif
+
+	EIF_END_GET_CONTEXT
 }
 
 rt_private void mark_simple_stack(register5 struct stack *stk, register4 char *(*marker) (char *), register6 int move)
@@ -1625,7 +1636,7 @@ rt_private char *hybrid_mark(char *root)
 	 * recursively marked, except the last one. This brings a noticeable
 	 * improvement with structures like LINKED_LIST.
 	 */
-
+	EIF_GET_CONTEXT
 	union overhead *zone;		/* Malloc info zone fields */
 	uint32 flags;				/* Eiffel flags */
 	long offset;				/* Reference's offset */
@@ -1845,6 +1856,8 @@ done:
 	/* Return the [new] address of the root object */
 	zone = HEADER(root);
 	return ((zone->ov_size & B_FWD) ? zone->ov_fwd : root);
+
+	EIF_END_GET_CONTEXT
 }
 #endif /* HYBRID_MARKING */
 
@@ -2273,7 +2286,7 @@ rt_private void full_sweep(void)
 	 * the 'from' and 'to' spaces are left untouched (the objects in the
 	 * 'to' space are unmarked but alive...).
 	 */
-
+	EIF_GET_CONTEXT
 	register1 union overhead *zone;		/* Malloc info zone */
 	register2 uint32 size;				/* Object's size in bytes */
 	register3 char *end;				/* First address beyond chunk */
@@ -2379,6 +2392,7 @@ rt_private void full_sweep(void)
 	/* Standard dispose traversal checks for Eiffel objects, frozen obj are marked as C obj thus ignored. The other stacks are referencing "moving" objects so there's no problem */
 
 	/* Xavier */
+	EIF_END_GET_CONTEXT
 }
 
 rt_private void full_update(void)
@@ -2622,6 +2636,7 @@ rt_private void init_plsc(void)
 	 * mark process knows about what we are doing. If we are unable to get
 	 * a valid 'to' zone for the scavenge, a simple mark and sweep will be done.
 	 */
+	EIF_GET_CONTEXT
 
 	if (0 == find_scavenge_spaces())
 		g_data.status = (gen_scavenge & GS_ON) ? GC_PART | GC_GEN : GC_PART;
@@ -2644,6 +2659,7 @@ rt_private void init_plsc(void)
 			ps_to.sc_arena = (char *) 0;	/* No to zone yet */
 		}
 	}
+	EIF_END_GET_CONTEXT
 }
 
 rt_private void split_to_block(void)
@@ -2660,7 +2676,7 @@ rt_private void split_to_block(void)
 	 * its original state. The block will then be kept for the next scavenging,
 	 * only the 'from' space will change.
 	 */
-	
+	EIF_GET_CONTEXT
 	union overhead *base;	/* Base address */
 	uint32 size;			/* Amount of bytes used (malloc point's of view) */
 	uint32 old_size;		/* To save the old size for the leading object */
@@ -2717,6 +2733,8 @@ rt_private void split_to_block(void)
 	dprintf(1)("split_to_block: no object was scavenged ('to' empty)\n");
 	flush;
 #endif
+
+	EIF_END_GET_CONTEXT
 }
 
 rt_private int sweep_from_space(void)
@@ -2735,7 +2753,7 @@ rt_private int sweep_from_space(void)
 	 * caller because there is no reason this should be true if we did not use
 	 * standard chunks.
 	 */
-
+	EIF_GET_CONTEXT
 	register1 union overhead *zone;		/* Currently inspected block */
 	register2 union overhead *next;		/* Address of next block */
 	register3 uint32 flags;				/* Malloc flags and size infos */
@@ -2991,6 +3009,7 @@ rt_private int sweep_from_space(void)
 		zone = next;					/* Reset coalescing base */
 	}
 	/* NOTREACHED */
+	EIF_END_GET_CONTEXT
 }
 
 rt_private int find_scavenge_spaces(void)
@@ -3005,7 +3024,7 @@ rt_private int find_scavenge_spaces(void)
 	 * disgusting to be revealed here--RAM.
 	 * The function returns 0 if all is ok, -1 otherwise.
 	 */
-
+	EIF_GET_CONTEXT
 	int from_size;					/* Size of selected 'from' space */
 	char *to_space;					/* Location of the 'to' space */
 
@@ -3116,6 +3135,8 @@ rt_private int find_scavenge_spaces(void)
 #endif
 
 	return 0;		/* Ok, we got a 'to' space */
+
+	EIF_END_GET_CONTEXT
 }
 
 rt_private struct chunk *find_std_chunk(register struct chunk *start)
@@ -3164,7 +3185,7 @@ rt_private void find_to_space(struct sc_zone *to)
 	 * in the chunk is free but not equal to the whole chunk, we even attempt
 	 * block coalescing.
 	 */
-
+	EIF_GET_CONTEXT
 	register1 std_size = CHUNK - sizeof(struct chunk);
 	register2 struct chunk *cur;	/* Current chunk we are considering */
 	register3 uint32 flags;			/* Malloc info flags */
@@ -3220,6 +3241,7 @@ rt_private void find_to_space(struct sc_zone *to)
 		ps_to.sc_arena, ps_to.sc_end - 1);
 	flush;
 #endif
+	EIF_END_GET_CONTEXT
 }
 
 rt_shared char *to_chunk(void)
@@ -3243,7 +3265,7 @@ rt_private char *scavenge(register char *root, struct sc_zone *to)
 	 * scavenged as part of the object that holds it). The function returns the
 	 * pointer to the new object's location, in the 'to' space.
 	 */
-
+	EIF_GET_CONTEXT
 	register2 union overhead *zone;	/* Malloc info header */
 	char *new;						/* New object's address */
 	char *exp;						/* Expanded data space */
@@ -3323,6 +3345,8 @@ rt_private char *scavenge(register char *root, struct sc_zone *to)
 #endif
 
 	return root + OVERHEAD;			/* New object's location */
+
+	EIF_END_GET_CONTEXT
 }
 
 /* Generation-based collector. This is a non incremental fast collector, which
@@ -3372,7 +3396,7 @@ rt_private int generational_collect(void)
 	 * The routine returns 0 if collection performed normally, -1 if GC is
 	 * stopped or generation scavenging was stopped for some reason.
 	 */
-
+	EIF_GET_CONTEXT
 	register1 int age;			/* Computed tenure age */
 	register2 int overused;		/* Amount of data over watermark */
 	char *watermark;			/* Watermark in generation zone */
@@ -3472,6 +3496,8 @@ rt_private int generational_collect(void)
 	SIGRESUME;			/* Restore signal handling and dispatch queued ones */
 
 	return (gen_scavenge & GS_STOP) ? -1 : 0;	/* Signals error if stopped */
+
+	EIF_END_GET_CONTEXT
 }
 
 rt_private void mark_new_generation(EIF_CONTEXT_NOARG)
@@ -3557,6 +3583,8 @@ rt_private void mark_new_generation(EIF_CONTEXT_NOARG)
 		mark_ex_stack(&eif_trace, GEN_SWITCH, moving);
 	}
 #endif
+
+	EIF_END_GET_CONTEXT
 }
 
 #ifdef RECURSIVE_MARKING
@@ -3733,7 +3761,7 @@ rt_private char *hybrid_gen_mark(char *root)
 	 * to hybrid_gen_mark() while the last one is treated in the main loop
 	 * (suppression of tail recursion).
 	 */
-
+	EIF_GET_CONTEXT
 	union overhead *zone;		/* Malloc info zone fields */
 	uint32 flags;				/* Eiffel flags */
 	long offset;				/* Reference's offset */
@@ -3919,6 +3947,8 @@ done:
 	/* Return the [new] address of the root object */
 	zone = HEADER(root);
 	return ((zone->ov_size & B_FWD) ? zone->ov_fwd : root);
+
+	EIF_END_GET_CONTEXT
 }
 #endif /* HYBRID_MARKING */
 
@@ -4231,7 +4261,7 @@ rt_private char *gscavenge(char *root)
 	 * Whenever tenuring fails, the flag GS_STOP is set which means that
 	 * scavenging is to be done without tenuring.
 	 */
-
+	EIF_GET_CONTEXT
 	register1 union overhead *zone;		/* Malloc header zone */
 	register2 uint32 age;				/* Object's age */
 	register3 uint32 flags;				/* Eiffel flags */
@@ -4379,6 +4409,7 @@ rt_private char *gscavenge(char *root)
 		return scavenge(root, &sc_to);	/* Move object */
 	}
 	/* NOTREACHED */
+	EIF_END_GET_CONTEXT
 }
 
 rt_private void update_moved_set(void)
@@ -4708,7 +4739,7 @@ rt_private void swap_gen_zones(void)
 	 * no need to loop over the old 'from' and dispose dead objects: no objects
 	 * with a dispose procedure are allowed to be allocated there.
 	 */
-
+	EIF_GET_CONTEXT
 	struct sc_zone temp;				/* For swapping */
 
 	/* Before swapping, we have to compute the amount of bytes we copied and
@@ -4731,6 +4762,8 @@ rt_private void swap_gen_zones(void)
 #endif
 
 	sc_to.sc_top = sc_to.sc_arena;	/* Make sure 'to' is empty */
+
+	EIF_END_GET_CONTEXT
 }
 
 rt_public void eremb(char *obj)

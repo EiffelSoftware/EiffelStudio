@@ -28,20 +28,20 @@
 
 #ifdef EIF_THREADS
 
-
 rt_public void eif_thr_panic(char *);
 rt_public void eif_thr_init_root(void);
 rt_public void eif_thr_register(void);
 rt_public unsigned int eif_thr_is_initialized(void);
-rt_public void eif_thr_create(EIF_OBJ, EIF_PROC);
-rt_public void eif_thr_create_with_args(EIF_OBJ, EIF_PROC,
-										EIF_INTEGER, EIF_INTEGER);
+rt_public void eif_thr_create(EIF_OBJ, EIF_PROC, EIF_BOOLEAN *);
+rt_public void eif_thr_create_with_args(EIF_OBJ, EIF_PROC, EIF_BOOLEAN *,
+										EIF_INTEGER, EIF_INTEGER, EIF_BOOLEAN);
 rt_public void eif_thr_exit(void);
 
 rt_public EIF_MUTEX_TYPE *eif_thr_mutex_create(void);
 rt_public void eif_thr_mutex_lock(EIF_MUTEX_TYPE *);
 rt_public void eif_thr_mutex_unlock(EIF_MUTEX_TYPE *);
 rt_public EIF_BOOLEAN eif_thr_mutex_trylock(EIF_MUTEX_TYPE *);
+rt_public void eif_thr_mutex_destroy(EIF_MUTEX_TYPE *);
 
 rt_public EIF_POINTER eif_thr_proxy_set(EIF_REFERENCE);
 rt_public EIF_REFERENCE eif_thr_proxy_access(EIF_POINTER);
@@ -52,9 +52,6 @@ rt_private EIF_THR_ENTRY_TYPE eif_thr_entry(EIF_THR_ENTRY_ARG_TYPE);
 
 rt_public EIF_TSD_TYPE eif_global_key;
 rt_public EIF_MUTEX_TYPE *eif_rmark_mutex;
-#ifndef EIF_NO_JOIN_ALL
-rt_public EIF_MUTEX_TYPE *eif_children_mutex;
-#endif
 
 rt_public void eif_thr_init_root(void) 
 {
@@ -67,16 +64,11 @@ rt_public void eif_thr_init_root(void)
 	 * to their own context (eif_globals structure).
 	 * A mutex "for inter-GC recursive marking" is created: eif_rmark_mutex.
 	 * The mutex that protects the access to the variable n_children is also
-	 * created except for platforms that don't need our implementation of
-	 * `join_all'.
-	 * NB: I'm not sure of the utility of eif_rmark_mutex(c)ZS --PCV
+	 * created for our implementation of `join_all' and `join'.--PCV
 	 */
 
 	EIF_TSD_CREATE(eif_global_key,"Couldn't create global key for root thread");
-	EIF_MUTEX_CREATE(eif_rmark_mutex,"Couldn't inter-GC mutex");
-#ifndef EIF_NO_JOIN_ALL
-	EIF_MUTEX_CREATE(eif_children_mutex,"Couldn't create n_children mutex");
-#endif
+	EIF_MUTEX_CREATE(eif_rmark_mutex,"Couldn't create inter-GC mutex");
 	eif_thr_register();
 }
 
@@ -85,7 +77,7 @@ rt_public void eif_thr_register(void)
 	/*
 	 * Allocates memory for the eif_globals structure, initializes it
 	 * and makes it part of the Thread Specific Data (TSD).
-	 * Allocates memory for non-root threads
+	 * Allocates memory for onces (for non-root threads)
 	 */
 
 	static once = 0;	/* For initial eif_thread, we don't know how
@@ -97,6 +89,9 @@ rt_public void eif_thr_register(void)
 	if (!eif_globals) eif_thr_panic("No more memory for thread context");
 	eif_init_context(eif_globals);
 	EIF_TSD_SET(eif_global_key,eif_globals,"Couldn't bind context to TSD.");
+
+	/* Set the default chunk and scavenge zone size */
+	eif_alloc_init();
 
 	if (once) {
 	  /*
@@ -168,77 +163,90 @@ rt_private void eif_init_context(eif_global_context_t *eif_globals)
 }
 
 
-rt_public void eif_thr_create (EIF_OBJ thr_root_obj, EIF_PROC init_func)
+rt_public void eif_thr_create (EIF_OBJ thr_root_obj,
+							   EIF_PROC init_func,
+							   EIF_BOOLEAN *terminated)
 {
 	/*
 	 * Creates a new Eiffel thread. This function is only called from
-	 * Eiffel and is given two arguments: the object (whose class 
-	 * inherits from THREAD) a clone of which will become the root object
-	 * of the new thread, and the Eiffel routine it will execute.
-	 * These two arguments are part of the routine context that will be
+	 * Eiffel and is given three arguments: 
+	 * - the object (whose class inherits from THREAD) a clone of which
+	 *   will become the root object of the new thread
+	 * - the Eiffel routine it will execute
+	 * - the address of a boolean which will be set to True by the child
+	 *   thread upon its termination. Normally, the thread is frozen and
+	 *   won't move.
+	 *
+	 * These arguments are part of the routine context that will be
 	 * passed to the new thread via the low-level platform-dependant
 	 * thread-creation function.
+	 *
 	 * This context also contains a pointer to the task-id of the new
-	 * thread (both accessible to the parent and the thread) and a
-	 * pointer to the parent's children-counter `n_children' that is
-	 * used by eif_thr_join_all() and eif_thr_exit()--PCV
+	 * thread, a pointer to the parent's children-counter `n_children', a
+	 * mutex and a condition variable that are used by eif_thr_join_all()
+	 * and eif_thr_exit()  --PCV
 	 */
 
-	EIF_GET_CONTEXT
-
-	start_routine_ctxt_t *routine_ctxt;
-	EIF_THR_TYPE *tid = (EIF_THR_TYPE *) malloc (sizeof (EIF_THR_TYPE));
-
-	routine_ctxt = (start_routine_ctxt_t *)malloc(sizeof(start_routine_ctxt_t));
-	if (!routine_ctxt)
-		eif_thr_panic("No more memory to launch new thread\n");
-	routine_ctxt->current = eif_adopt(thr_root_obj);
-	routine_ctxt->routine = init_func;
-	routine_ctxt->tid = tid;
-#ifndef EIF_NO_JOIN_ALL
-	routine_ctxt->addr_n_children = &n_children;
-	eif_thr_mutex_lock(eif_children_mutex);
-	n_children ++;	
-	eif_thr_mutex_unlock(eif_children_mutex);
-#endif
-	EIF_THR_CREATE(eif_thr_entry, routine_ctxt, *tid, "Cannot create thread\n");
-	last_child = tid;
-
-	EIF_END_GET_CONTEXT
+	eif_thr_create_with_args (thr_root_obj, init_func, terminated,
+							  (EIF_INTEGER) -1, /* Priority: not used */
+							  (EIF_INTEGER) -1, /* Policy: not used */
+							  (EIF_BOOLEAN) 5); /* -> Don't use args */
 }
 
 
 rt_public void eif_thr_create_with_args (EIF_OBJ thr_root_obj, 
 										 EIF_PROC init_func,
+										 EIF_BOOLEAN *terminated,
 										 EIF_INTEGER priority,
-										 EIF_INTEGER policy)
+										 EIF_INTEGER policy,
+										 EIF_BOOLEAN detach)
 {
 	/*
 	 * This function is the same as eif_thr_create() but makes it possible
-	 * to set the thread priority and scheduling policy (when allowed by
-	 * the current architecture) upon creation.--PCV
+	 * to set the thread priority, scheduling policy and detached_state
+	 * (when allowed by the current architecture) upon creation.--PCV
 	 */
 
 	EIF_GET_CONTEXT
 
 	start_routine_ctxt_t *routine_ctxt;
 	EIF_THR_TYPE *tid = (EIF_THR_TYPE *) malloc (sizeof (EIF_THR_TYPE));
-	EIF_THR_ATTR_TYPE attr;
+
 	routine_ctxt = (start_routine_ctxt_t *)malloc(sizeof(start_routine_ctxt_t));
 	if (!routine_ctxt)
 		eif_thr_panic("No more memory to launch new thread\n");
-	routine_ctxt->tid = tid;
 	routine_ctxt->current = eif_adopt(thr_root_obj);
 	routine_ctxt->routine = init_func;
-#ifndef EIF_NO_JOIN_ALL
+	routine_ctxt->tid = tid;
+	routine_ctxt->terminated = terminated;
 	routine_ctxt->addr_n_children = &n_children;
-	eif_thr_mutex_lock(eif_children_mutex);
+
+	if (!eif_children_mutex) {
+	  /* It is the first time this thread creates a subthread (hopefully!), so
+	   * we create a mutex and a condition variable for join and join_all */
+	  EIF_MUTEX_CREATE(eif_children_mutex, "Couldn't create join mutex");
+#ifndef EIF_NO_CONDVAR
+	  eif_children_cond = (EIF_COND_TYPE *) malloc (sizeof (EIF_COND_TYPE));
+	  EIF_COND_INIT(eif_children_cond, "Couldn't initialize cond. variable");
+#endif /* EIF_NO_CONDVAR */
+	}
+	routine_ctxt->children_mutex = eif_children_mutex;
+#ifndef EIF_NO_CONDVAR
+	routine_ctxt->children_cond = eif_children_cond;
+#endif /* EIF_NO_CONDVAR */
+	EIF_MUTEX_LOCK(eif_children_mutex, "Couldn't lock children mutex");
 	n_children ++;	
-	eif_thr_mutex_unlock(eif_children_mutex);
-#endif
-	EIF_THR_ATTR_INIT(attr,priority,policy);
-	EIF_THR_CREATE_WITH_ATTR(eif_thr_entry, routine_ctxt, *tid, attr,
-							 "Cannot create thread\n");
+	EIF_MUTEX_UNLOCK(eif_children_mutex, "Couldn't unlock children mutex");
+	if (detach != (EIF_BOOLEAN) 5) {
+		EIF_THR_ATTR_TYPE attr;
+		EIF_THR_ATTR_INIT(attr,priority,policy,detach);
+		EIF_THR_CREATE_WITH_ATTR(eif_thr_entry, routine_ctxt, *tid, attr,
+								 "Cannot create thread\n");
+		EIF_THR_ATTR_DESTROY(attr);
+	} else { /* We're called from eif_thr_create */
+		EIF_THR_CREATE(eif_thr_entry, routine_ctxt, *tid,
+					   "Cannot create thread\n");
+	}
 	last_child = tid;
 
 	EIF_END_GET_CONTEXT
@@ -261,7 +269,7 @@ rt_private EIF_THR_ENTRY_TYPE eif_thr_entry (EIF_THR_ENTRY_ARG_TYPE arg)
 		jmp_buf exenv;
 
 		eif_thr_context = routine_ctxt;
-		eif_thr_mutex_lock(eif_rmark_mutex);
+		EIF_MUTEX_LOCK(eif_rmark_mutex, "Couldn't lock GC mutex");
 
 		initsig();
 		initstk();
@@ -280,12 +288,10 @@ rt_private EIF_THR_ENTRY_TYPE eif_thr_entry (EIF_THR_ENTRY_ARG_TYPE arg)
 		  root_obj = RTLN(eiftype(&(routine_ctxt->current)));
 		  ecopy(routine_ctxt->current, root_obj);
 		  */
-		eif_thr_mutex_unlock(eif_rmark_mutex);
+		EIF_MUTEX_UNLOCK(eif_rmark_mutex, "Couldn't unlock GC mutex");
 
 		/* (routine_ctxt->routine)(eif_access (routine_ctxt->current));  */
-#ifndef EIF_NO_JOIN_ALL
-		n_brothers = routine_ctxt->addr_n_children;
-#endif
+
  		(routine_ctxt->routine)(root_obj);
 		root_obj = (char *)0;
 		EIF_END_GET_CONTEXT
@@ -298,20 +304,20 @@ rt_public void eif_thr_exit(void)
 {
 	/*
 	 * Function called to terminate a thread launched by Eiffel with
-	 * eif_thr_create() or eif_thr_create_with_attr().
+	 * eif_thr_create() or eif_thr_create_with_args().
 	 * All the memory allocated with malloc() for the thread context is freed
 	 */
 
 	EIF_GET_CONTEXT
 
-#ifndef EIF_NO_JOIN_ALL
-	if (n_brothers) {
-	  eif_thr_mutex_lock(eif_children_mutex);
-	  /* We decrement the number of child threads of the parent, for join_all */
-	  *(n_brothers) -= 1;	
-	  eif_thr_mutex_unlock(eif_children_mutex);
-	}
+	*(eif_thr_context->terminated) = EIF_TRUE; /* for eif_thr_wait() */
+	EIF_MUTEX_LOCK(eif_thr_context->children_mutex, "Lock parent mutex");
+	/* We decrement the number of child threads of the parent */
+	*(eif_thr_context->addr_n_children) -= 1;
+#ifndef EIF_NO_CONDVAR
+	EIF_COND_BROADCAST(eif_thr_context->children_cond, "Pbl cond_broadcast");
 #endif
+	EIF_MUTEX_UNLOCK(eif_thr_context->children_mutex, "Unlock parent mutex");
 
 	free (eif_thr_context->tid);	/* Task id of the current thread */
 	free (eif_thr_context);			/* Thread context passed by parent */
@@ -321,10 +327,12 @@ rt_public void eif_thr_exit(void)
 	EIF_END_GET_CONTEXT
 }
 
+
 rt_public void eif_thr_yield(void)
 {
 	/*
-	 * Yields execution to other threads. Platform dependant.
+	 * Yields execution to other threads. Platform dependant, sometimes
+	 * undefined.
 	 */
 
 	EIF_THR_YIELD;
@@ -358,21 +366,104 @@ rt_public void eif_thr_join_all(void)
 
 	EIF_GET_CONTEXT
 
+	/* If no thread has been launched, the mutex isn't initialized */
+	if (!eif_children_mutex) return;
+
+#ifdef EIF_NO_CONDVAR
 	int end = 0;
 	EIF_THR_YIELD;
 	while (!end) {
-		eif_thr_mutex_lock(eif_children_mutex);
+		EIF_MUTEX_LOCK(eif_children_mutex, "Failed lock mutex join_all");
 		if (n_children) {
-			eif_thr_mutex_unlock(eif_children_mutex);
+			EIF_MUTEX_UNLOCK(eif_children_mutex,"Failed unlock mutex join_all");
 			EIF_THR_YIELD;
 		} else {
 			end = 1;
-			eif_thr_mutex_unlock(eif_children_mutex);
+			EIF_MUTEX_UNLOCK(eif_children_mutex,"Failed unlock mutex join_all");
 		}
 	}
+#else
+	EIF_MUTEX_LOCK(eif_children_mutex, "Failed lock mutex join_all");
+	while (n_children)
+	  EIF_COND_WAIT(eif_children_cond, eif_children_mutex, "pb wait");
+	EIF_MUTEX_UNLOCK(eif_children_mutex,"Failed unlock mutex join_all");
+#endif
+
 	EIF_END_GET_CONTEXT
 }
 #endif
+
+rt_public void eif_thr_wait (EIF_BOOLEAN *terminated)
+{
+	/*
+	 * Waits until a thread sets `terminated' to True, which means it
+	 * is terminated. This function is called by `join'. The calling
+	 * thread must be the direct parent of the thread, or the function
+	 * might loop indefinitely --PCV
+	 */
+
+	EIF_GET_CONTEXT
+
+	/* If no thread has been launched, the mutex isn't initialized */
+	if (!eif_children_mutex) return;
+
+#ifdef EIF_NO_CONDVAR
+
+	/* This version is for platforms that don't support condition
+	 * variables.  If the platform doesn't support yield() either, this
+	 * function can use much of the CPU time.
+	 */
+
+	int end = 0;
+	EIF_THR_YIELD;
+	while (!end) {
+		EIF_MUTEX_LOCK(eif_children_mutex, "Failed lock mutex join()");
+		if (*terminated == EIF_FALSE) {
+			EIF_MUTEX_UNLOCK(eif_children_mutex,"Failed unlock mutex join()");
+			EIF_THR_YIELD;
+		} else {
+			end = 1;
+			EIF_MUTEX_UNLOCK(eif_children_mutex,"Failed unlock mutex join()");
+		}
+	}
+#else
+
+	/* This version is for platforms that support condition variables, like
+	 * the platforms supporting POSIX threads, Solaris and Vxworks (if
+	 * properly configured, ie compiled with POSIX_SCHED).
+	 */
+
+	EIF_MUTEX_LOCK(eif_children_mutex, "Failed lock mutex join()");
+	while (*terminated == EIF_FALSE)
+	  EIF_COND_WAIT(eif_children_cond, eif_children_mutex, "pb wait");
+	EIF_MUTEX_UNLOCK(eif_children_mutex,"Failed unlock mutex join()");
+
+#endif
+
+	EIF_END_GET_CONTEXT
+}
+
+rt_public void eif_thr_join (EIF_POINTER tid)
+{
+	/*
+	 * Invokes thr_join, pthread_join, etc.. depending on the platform.
+	 * No such routine exists on VxWorks or Windows, so the Eiffel version
+	 * should be used (ie. `join' <-> eif_thr_wait)
+	 */
+
+	EIF_GET_CONTEXT
+
+	EIF_THR_TYPE *thread_id = eif_thr_context->tid;
+
+	if (tid != (EIF_POINTER) 0) {
+		EIF_THR_JOIN(*thread_id);
+	} else {
+		eraise ("Trying to join a thread whose ID is NULL", EN_EXT);
+	}
+
+	EIF_END_GET_CONTEXT
+}
+
 
 /*
  * These three functions are used from Eiffel: they return the default,
@@ -441,11 +532,19 @@ rt_public void eif_thr_mutex_unlock(EIF_MUTEX_TYPE *a_mutex_pointer) {
 rt_public EIF_BOOLEAN eif_thr_mutex_trylock(EIF_MUTEX_TYPE *a_mutex_pointer) {
   int status;
 	if (a_mutex_pointer != (EIF_MUTEX_TYPE *) 0) {
-		EIF_MUTEX_TRYLOCK(a_mutex_pointer, status, "cannot lock mutex\n");
+		EIF_MUTEX_TRYLOCK(a_mutex_pointer, status, "cannot trylock mutex\n");
 		/* Don't remove curly braces, macro could be several lines */
 	} else
 		eraise("Trying to lock a NULL mutex", EN_EXT);
 	return ((EIF_BOOLEAN)(!status));
+}
+
+rt_public void eif_thr_mutex_destroy(EIF_MUTEX_TYPE *a_mutex_pointer) {
+	if (a_mutex_pointer != (EIF_MUTEX_TYPE *) 0) {
+		EIF_MUTEX_DESTROY(a_mutex_pointer, "cannot lock mutex\n");
+		/* Don't remove curly braces, macro could be several lines */
+	} else 
+		eraise("Trying to destroy a NULL mutex", EN_EXT);
 }
 
 #endif /* EIF_THREADS */
@@ -481,11 +580,13 @@ rt_public EIF_POINTER eif_thr_proxy_set(EIF_REFERENCE object) {
 	return eif_adopt((EIF_OBJ)object);
 }
 
-rt_public EIF_REFERENCE eif_thr_proxy_access(EIF_POINTER proxy) {
+rt_public EIF_REFERENCE eif_thr_proxy_access(EIF_POINTER proxy)
+{
+/* 	printf ("proxy access(%x)\n", proxy); */
 	return eif_access(proxy);
 }
 
 rt_public void eif_thr_proxy_dispose(EIF_POINTER proxy) {
-	EIF_OBJ dummy;
+	EIF_REFERENCE dummy;
 	dummy = eif_wean((EIF_OBJ)proxy);
 }

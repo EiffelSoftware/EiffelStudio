@@ -1,6 +1,10 @@
 class PLATFORM_CONSTANTS
 
-feature
+inherit
+
+	OPERATING_ENVIRONMENT
+
+feature -- Externals
 
 	Dot_e: STRING is external "C" alias "eif_dot_e" end;
 

@@ -197,7 +197,7 @@ feature {NONE} -- Implementation
 				from
 					read_line
 					read_line
-					line := clone (last_string)
+					line := last_string.twin
 				until
 					line_number > 4 or else line.is_equal (info_flag_end)
 				loop
@@ -211,14 +211,14 @@ feature {NONE} -- Implementation
 					elseif precompilation_id_tag.is_equal (string_tag) then	
 						precompilation_id := value.to_integer
 					elseif ace_file_path_tag.is_equal (string_tag) then
-						ace_file_path := clone (value)
+						ace_file_path := value.twin
 					else
 						error_value := corrupt_value
 					end
 
 					line_number := line_number + 1
 					read_line
-					line := clone (last_string)
+					line := last_string.twin
 				end
 			else
 				error_value := corrupt_value

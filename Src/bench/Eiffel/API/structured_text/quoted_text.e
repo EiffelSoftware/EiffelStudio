@@ -46,7 +46,7 @@ feature -- Initialization
 			valid_text: text /= Void
 		do
 			image_without_quotes := text
-			image := clone (text)
+			image := text.twin
 			image.precede ('`')
 			image.extend ('%'')
 			e_feature := feature_by_name (text)

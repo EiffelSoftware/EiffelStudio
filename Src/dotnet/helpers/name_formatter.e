@@ -109,7 +109,7 @@ feature -- Basic Operations
 			else
 				Result := formatted_variable_name (name)
 			end
-			Result := clone (Result)
+			Result := Result.twin
 		ensure
 			non_void_result: Result /= Void
 		end	

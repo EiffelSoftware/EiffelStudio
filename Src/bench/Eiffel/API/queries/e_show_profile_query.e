@@ -33,7 +33,7 @@ feature -- Initialization
 		do
 			structured_text := new_st;
 			prof_query := profiler_query;
-			prof_options := clone (profiler_options);
+			prof_options := profiler_options.twin
 			create expanded_filenames.make
 		end;
 
@@ -229,7 +229,7 @@ debug("SHOW_PROF_QUERY")
 	io.error.new_line;
 end;
 							if wildcard_matcher.pattern_matches then
-								entries_name := clone (dir_name)
+								entries_name := dir_name.twin
 								-- entries_name.append_character (Operating_environment.Directory_separator)
 								entries_name.append (entries.item)
 								--| Guillaume - 09/16/97
@@ -345,7 +345,7 @@ end;
 		local
 			answer_set: PROFILE_SET
 		do
-			int_last_output := clone (profile_information);
+			int_last_output := profile_information.twin
 			answer_set := first_filter.filter (profile_information.profile_data);
 			int_last_output.set_profile_data (answer_set);
 			from

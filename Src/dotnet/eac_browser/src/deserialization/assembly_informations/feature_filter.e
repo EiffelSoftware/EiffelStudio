@@ -205,7 +205,7 @@ feature -- Basic Operation
 			non_void_a_comment: a_comment /= Void
 			not_empty_a_comment: not a_comment.is_empty
 		do
-			Result := clone (a_comment)
+			Result := a_comment.twin
 			Result.replace_substring_all ("%N", " ")
 			Result.prune_all_leading (' ')
 			Result.prune_all_trailing (' ')

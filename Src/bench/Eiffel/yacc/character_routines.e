@@ -13,7 +13,7 @@ feature -- Access
 			-- special character convention when necessary;
 			-- Syntactically correct when quoted
 		do
-			Result := clone (char_to_string (char, False))
+			Result := char_to_string (char, False).twin
 		ensure
 			char_text_not_void: Result /= Void
 			refactoring_correct: Result.is_equal (old_char_text (char))

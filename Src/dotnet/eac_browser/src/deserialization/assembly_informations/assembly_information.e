@@ -202,12 +202,12 @@ feature -- Status Setting
 			else
 				l_index := a_feature_signature.index_of ('(', 1)
 				if l_index = 0 then
-					l_feature_name := clone (a_feature_signature)
+					l_feature_name := a_feature_signature.twin
 					create l_parameters.make_empty
 				else
-					l_feature_name := clone (a_feature_signature)
+					l_feature_name := a_feature_signature.twin
 					l_feature_name.keep_head (l_index - 1)
-					l_parameters := clone (a_feature_signature)
+					l_parameters := a_feature_signature.twin
 					l_parameters.keep_tail (a_feature_signature.count - l_index + 1)
 				end
 				if is_valid_feature_name (l_feature_name) and then is_valid_parameters (l_parameters) then

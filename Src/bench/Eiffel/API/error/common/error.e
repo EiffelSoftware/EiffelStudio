@@ -103,7 +103,7 @@ feature -- Output
 					file.end_of_file
 				loop
 					file.readline;
-					st.add_string (clone (file.laststring));
+					st.add_string (file.laststring.twin)
 					st.add_new_line;
 				end;
 				file.close;

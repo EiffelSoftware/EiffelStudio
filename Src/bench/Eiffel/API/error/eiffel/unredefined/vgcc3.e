@@ -56,7 +56,7 @@ feature -- Settings
 		require
 			s_not_void: s /= Void
 		do
-			symbol_name := clone (s)
+			symbol_name := s.twin
 		ensure
 			symbol_name_set: symbol_name.is_equal (s)
 		end

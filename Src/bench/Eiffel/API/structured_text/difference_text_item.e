@@ -24,7 +24,7 @@ feature -- Initialization
 			valid_text: text /= Void
 		do
 			normal_image := text;
-			highlighted_image := clone (text)
+			highlighted_image := text.twin
 			check
 				first_is_space: highlighted_image.item (1) = ' '
 			end

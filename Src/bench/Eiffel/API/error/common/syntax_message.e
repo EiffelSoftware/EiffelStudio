@@ -73,11 +73,11 @@ feature {NONE} -- Output
 				start_line_pos := file.position
 				line_number := line_number + 1
 				file.readline
-				current_line := clone (file.laststring)
+				current_line := file.laststring.twin
 			end
 			if not file.end_of_file then
 				file.readline
-				next_line := clone (file.laststring)
+				next_line := file.laststring.twin
 			end
 			file.close
 		end

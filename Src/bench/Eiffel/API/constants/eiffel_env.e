@@ -159,7 +159,7 @@ feature -- Access: file name
 		
 	Default_class_file: FILE_NAME is
 		once
-			Result := clone (Templates_path)
+			Result := Templates_path.twin
 			Result.set_file_name (Default_class_filename)
 		end
 

@@ -1244,14 +1244,11 @@ feature {GB_WINDOW_SELECTOR_TOOL_BAR} -- Implementation
 						-- Set the parent path before we add the current item to `represented_path'.
 					parent_path := represented_path.twin
 					represented_path.extend (items.item)
-					if tree_item_matching_path (window_selector.widget, represented_path) = Void then
+					if window_selector.directory_object_from_name (represented_path) = Void then
 						if parent_path.is_empty then
 								-- We are at the root level.
 							directory_item := Void
 						else
-							if parent_path.count = 1 and parent_path.i_th (1).is_equal ("EIFGEN") then
-								do_nothing
-							end
 								-- Retrieve the directory_item matching `parent_path' within `window_selector'.
 							directory_item := window_selector.directory_object_from_name (parent_path)
 						end

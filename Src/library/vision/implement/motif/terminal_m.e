@@ -1,5 +1,7 @@
 indexing
 
+	description:
+		"Abstract class for a collection of widgets.";
 	status: "See notice at end of class";
 	date: "$Date$";
 	revision: "$Revision$"
@@ -18,14 +20,18 @@ inherit
 			update_other_bg_color, update_other_fg_color
 		end
 
-feature {TERMINAL_OUI}
+feature -- Status report
 
-	build is
-			-- Build the terminal.
-		do
-		end; -- build
+	label_font: FONT;
+			-- Font name specified for labels
 
-feature 
+	button_font: FONT;
+			-- Font specified for buttons
+
+	text_font: FONT;
+			-- Font specified for text
+	
+feature -- Status setting
 
 	set_label_font (a_font: FONT) is
 			-- Set font of every labels to `a_font_name'.
@@ -72,18 +78,14 @@ feature
 			update_text_font (font_implementation.resource (screen))
 		end; 
 	
-feature 
+feature {TERMINAL_OUI}
 
-	label_font: FONT;
-			-- Font name specified for labels
+	build is
+			-- Build the terminal.
+		do
+		end; 
 
-	button_font: FONT;
-			-- Font specified for buttons
-
-	text_font: FONT;
-			-- Font specified for text
-	
-feature {NONE} -- Setting fonts
+feature {NONE} -- Implementation
 
 	update_text_font (f_ptr: POINTER) is
 		require
@@ -103,8 +105,6 @@ feature {NONE} -- Setting fonts
 		deferred
 		end;
 
-feature {NONE}
-
 	set_primitive_font (w: POINTER; f_ptr: POINTER) is
 			-- Set primitive widget `w' to f_ptr (C type
 			-- is FontStruct).
@@ -112,13 +112,9 @@ feature {NONE}
 			valid_pointers: w /= default_pointer and then	
 					f_ptr /= default_pointer
 		do
-			set_motif_font (w, f_ptr, 
-					resource_name.to_c);
+			--set_motif_font (w, f_ptr, 
+					--resource_name.to_c);
 		end;
-
-feature {NONE} -- Fontable_m features
-
-	resource_name: STRING is "fontList";
 
 feature {NONE} -- External features
 
@@ -132,9 +128,7 @@ feature {NONE} -- External features
 			"C"
 		end;
 
-end
-
-
+end -- class TERMINAL_M
 
 --|----------------------------------------------------------------
 --| EiffelVision: library of reusable components for ISE Eiffel 3.

@@ -1,38 +1,38 @@
 indexing
 
+	description:
+		"EiffelVision implementation of a Motif toggle button.";
 	status: "See notice at end of class";
 	date: "$Date$";
 	revision: "$Revision$"
 
-class TOGGLE_B_M
+class 
+	TOGGLE_B_M
 
 inherit
 
-	TOGGLE_R_M
-		export
-			{NONE} all
-		end;
-
-	TOGGLE_B_I
-		export
-			{NONE} all
-		end;
+	TOGGLE_B_I;
 
 	BUTTON_M
+		undefine
+			create_callback_struct
+		end;
+
+	FONTABLE_M;
+
+	MEL_TOGGLE_BUTTON
 		rename
-			clean_up as button_clean_up
-		end;
-
-	BUTTON_M
-		redefine
-			clean_up
+			make as mel_toggle_make,
+			foreground_color as mel_foreground_color,
+			set_foreground_color as mel_set_foreground_color,
+			background_color as mel_background_color,
+			background_pixmap as mel_background_pixmap,
+			set_background_color as mel_set_background_color,
+			set_background_pixmap as mel_set_background_pixmap,
+			destroy as mel_destroy,
+			screen as mel_screen
 		select
-			clean_up
-		end;
-
-	FONTABLE_M
-		rename
-			resource_name as MfontList
+			mel_toggle_make
 		end
 
 creation
@@ -43,183 +43,61 @@ feature {NONE} -- Creation
 
 	make (a_toggle_b: TOGGLE_B; man: BOOLEAN) is
 			-- Create a motif toggle button.
-		local
-			ext_name: ANY
 		do
 			widget_index := widget_manager.last_inserted_position;
-			ext_name := a_toggle_b.identifier.to_c;
-			screen_object := create_toggle_b ($ext_name,
-				parent_screen_object (a_toggle_b, widget_index),
-				man);
+			mel_toggle_make (a_toggle_b.identifier,
+					mel_parent (a_toggle_b, widget_index),
+					man);
 			a_toggle_b.set_font_imp (Current)
 		end;
 
-feature 
+feature -- Element change
 
 	add_arm_action (a_command: COMMAND; argument: ANY) is
 			-- Add `a_command' to the list of action to execute when current
 			-- toggle button is armed.
-		require else
-			not_a_command_void: not (a_command = Void)
 		do
-			if (arm_actions = Void) then
-				!! arm_actions.make (screen_object, Marm, widget_oui)
-			end;
-			arm_actions.add (a_command, argument)
+			add_arm_callback (mel_vision_callback (a_command), argument)
 		end;
 
 	add_release_action (a_command: COMMAND; argument: ANY) is
 			-- Add `a_command' to the list of action to execute when current
 			-- toggle button is released.
-		require else
-			not_a_command_void: not (a_command = Void)
 		do
-			if (release_actions = Void) then
-				!! release_actions.make (screen_object, Mdisarm, widget_oui)
-			end;
-			release_actions.add (a_command, argument)
+			add_disarm_callback (mel_vision_callback (a_command), argument)
 		end;
 
-	add_value_changed_action (a_command: COMMAND; argument: ANY) is
+	add_activate_action, add_value_changed_action (a_command: COMMAND; argument: ANY) is
 			-- Add `a_command' to the list of action to execute when value
 			-- is changed.
-		require else
-			not_a_command_void: not (a_command = Void)
 		do
-			if (value_changed_actions = Void) then
-				!! value_changed_actions.make (screen_object, MvalueChanged, widget_oui)
-			end;
-			value_changed_actions.add (a_command, argument)
+			add_value_changed_callback (mel_vision_callback (a_command), argument)
 		end;
 
-feature
-
-	add_activate_action (a_command: COMMAND; argument: ANY) is
-		do
-		end;
-
-	remove_activate_action (a_command: COMMAND; argument: ANY) is
-		do
-		end;
-
-feature {NONE}
-
-	arm_actions: EVENT_HAND_M;
-		-- An event handler to manage call-backs when current toggle button
-		-- is armed
-
-	release_actions: EVENT_HAND_M;
-		-- An event handler to manage call-backs when current toggle button
-		-- is released
-
-		value_changed_actions: EVENT_HAND_M;
-		   	 -- An event handler to manage call-backs when value is changed
-
-	clean_up is
-		do
-			button_clean_up;
-			if arm_actions /= Void then
-				arm_actions.free_cdfd
-			end;
-			if release_actions /= Void then
-				release_actions.free_cdfd
-			end;
-			if value_changed_actions /= Void then
-				value_changed_actions.free_cdfd
-			end;
-		end
-
-feature
-
-	set_toggle_on is
-			-- Set Current toggle on and set
-			-- state to True.
-		do
-			xm_toggle_button_set_state (screen_object, True, False)
-		end;
-
-	set_toggle_off is
-			-- Set Current toggle off and set
-			-- state to False.
-		do
-			xm_toggle_button_set_state (screen_object, False, False)
-		end;
-
-	arm is
-			-- Set `state' to True and call
-			-- callback (if set).
-		do
-			xm_toggle_button_set_state (screen_object, True, True)
-		ensure then
-			state_is_true: state
-		end;
-
-	disarm is
-			-- Set `state' to False and call
-			-- callback (if set).
-		do
-			xm_toggle_button_set_state (screen_object, False,
-					True)
-		ensure then
-			state_is_false: not state
-		end;
-
-	state: BOOLEAN is
-			-- State of current toggle button.
-		do
-			Result := xm_toggle_button_get_state (screen_object)
-		end;
-
-feature 
+feature -- Removal
 
 	remove_arm_action (a_command: COMMAND; argument: ANY) is
 			-- Remove `a_command' from the list of action to execute when
 			-- current toggle button is armed.
-		require else
-			not_a_command_void: not (a_command = Void)
 		do
-			arm_actions.remove (a_command, argument)
+			remove_arm_callback (mel_vision_callback (a_command), argument)
 		end;
 
 	remove_release_action (a_command: COMMAND; argument: ANY) is
 			-- Remove `a_command' from the list of action to execute when
 			-- current toggle button is released.
-		require else
-			not_a_command_void: not (a_command = Void)
 		do
-			release_actions.remove (a_command, argument)
+			remove_disarm_callback (mel_vision_callback (a_command), argument)
 		end;
 
-	remove_value_changed_action (a_command: COMMAND; argument: ANY) is
+	remove_activate_action, remove_value_changed_action (a_command: COMMAND; argument: ANY) is
 			-- Remove `a_command' from the list of action to execute when
 			-- value is changed.
-		require else
-			not_a_command_void: not (a_command = Void)
 		do
-			value_changed_actions.remove (a_command, argument)
+			remove_value_changed_callback (mel_vision_callback (a_command), argument)
 		end;
 
-feature {NONE} -- External features
-
-	xm_toggle_button_set_state (scr_obj: POINTER; value1, value2: BOOLEAN) is
-	   external
-			"C"
-		end;
-
-	xm_toggle_button_get_state (scr_obj: POINTER): BOOLEAN is
-		external
-			"C"
-		end;
-
-	create_toggle_b (t_name: POINTER; scr_obj: POINTER; 
-			man: BOOLEAN): POINTER is
-		external
-			"C"
-		end;
-
-end
-
-
+end -- class TOGGLE_B_M
 
 --|----------------------------------------------------------------
 --| EiffelVision: library of reusable components for ISE Eiffel 3.

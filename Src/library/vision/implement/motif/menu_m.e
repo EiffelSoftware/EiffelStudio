@@ -1,6 +1,7 @@
 indexing
 
-	description: "Implementation of menu";
+	description: 
+		"EiffelVision implementation of menu.";
 	status: "See notice at end of class";
 	date: "$Date$";
 	revision: "$Revision$"
@@ -9,92 +10,55 @@ class MENU_M
 
 inherit
 
-	MENU_R_M
-		export
-			{NONE} all
-		end;
-
 	MANAGER_M
 
-feature {NONE}
+feature -- Status report
 
-	abstract_menu: MENU;
-			-- Current abstract menu
+	title: STRING is
+			-- Title of current menu
+		do
+			if title_label /= Void then
+				Result := title_label.label_as_string
+			end
+		end;
 
-feature 
+feature -- Status setting
 
 	set_title (a_title: STRING) is
 			-- Set menu title to `a_title'.
 		require
-			not_title_void: not (a_title = Void)
+			not_title_void: a_title /= Void
 		local
 			label_identifier: STRING;
-			ext_name_title, ext_name: ANY;
-			null_label: POINTER;
+			m_p: MEL_COMPOSITE
 		do
-			if title_label /= null_label then
-				ext_name := MlabelString.to_c;
-				ext_name_title := a_title.to_c;
-				to_left_xm_string (title_label, ext_name_title, ext_name)
-			else
+			if title_label = Void then
 				label_identifier := clone (abstract_menu.identifier);
-				label_identifier.append ("Title");
-				ext_name_title := a_title.to_c;
-				ext_name := label_identifier.to_c;
-				title_label := menu_set_title (screen_object,
-								$ext_name_title, ext_name)
-			end
+				label_identifier.append (" Title");
+				m_p ?= abstract_menu.implementation;
+				!! title_label.make (label_identifier, m_p, True);
+			end;
+			title_label.set_label_as_string (a_title)
 		end;
 
 	remove_title is
 			-- Remove current menu title if any.
-		local
-			null_label: POINTER;
 		do
-			if title_label /= null_label then
-				xt_destroy_widget (title_label);
-				title_label := null_label;
+			if title_label /= Void then
+				title_label.destroy
+				title_label := Void;
 			end
 		end;
 
-	title: STRING is
-			-- Title of current menu
-		local
-			ext_name: ANY;
-			null_label: POINTER;
-		do
-			if title_label /= null_label then
-				ext_name := MlabelString.to_c;
-				Result := from_xm_string (title_label, $ext_name);
-			end
-		end;
+feature {NONE} -- Implementation
 
-	
-feature {NONE}
+	abstract_menu: MENU;
+			-- Current abstract menu
 
-	title_label: POINTER;
+	title_label: MEL_LABEL_GADGET;
+			-- Title label
 
-
-feature {NONE} -- External features
-
-	menu_set_title (scr_obj: POINTER; name1:POINTER; name2: ANY): POINTER is
-		external
-			"C"
-		end;
-
-	from_xm_string (value: POINTER; name: POINTER): STRING is
-		external
-			"C"
-		end;
-
-	to_left_xm_string (value: POINTER; name1, name2: ANY) is
-		external
-			"C"
-		end;
-
-end
-
-
+end -- class MENU_M
 
 --|----------------------------------------------------------------
 --| EiffelVision: library of reusable components for ISE Eiffel 3.

@@ -1,90 +1,97 @@
 indexing
 
-	description: "Implementation of push button";
+	description: 
+		"EiffelVision implementation of Motif gadget push button.";
 	status: "See notice at end of class";
 	date: "$Date$";
 	revision: "$Revision$"
 
-class PUSH_BG_M 
+class 
+	PUSH_BG_M 
 
 inherit
 
-	PUSH_BG_I
-		export
-			{NONE} all
+	PUSH_BG_I;
+
+	BUTTON_G_M
+		undefine
+			create_callback_struct
 		end;
 
-	PUSH_B_M
-		undefine
-			make
-		redefine
-			set_action, remove_action,
-			set_background_color,
-			set_foreground_color
+	FONTABLE_M;
+
+	MEL_PUSH_BUTTON_GADGET
+		rename
+			make as mel_pb_make,
+			destroy as mel_destroy,
+			screen as mel_screen
+		select
+			mel_pb_make
 		end
 
 creation
 
 	make
 
-feature {NONE} -- Creation
+feature {NONE} -- Initialization
 
 	make (a_push_bg: PUSH_BG; man: BOOLEAN) is
 			-- Create a motif push button gadget.
-		local
-			ext_name: ANY
 		do
 			widget_index := widget_manager.last_inserted_position;
-			ext_name := a_push_bg.identifier.to_c;
-			screen_object := create_push_b_gadget ($ext_name, 
-				parent_screen_object (a_push_bg, widget_index),
-				man);
+			mel_pb_make (a_push_bg.identifier,
+					mel_parent (a_push_bg, widget_index),
+					man);
 			a_push_bg.set_font_imp (Current)
 		end;
 
-feature
+feature -- Element change
 
-	remove_action (a_translation: STRING) is
-			-- Remove the command executed when `a_translation' occurs.
-			-- Do nothing if no command has been specified.
-		require else
-			no_translation_on_gadgets: false
+	add_activate_action (a_command: COMMAND; argument: ANY) is
+			-- Add `a_command' to the list of action to execute when
+			-- current push button is activated.
 		do
+			add_activate_callback (mel_vision_callback (a_command), argument)
 		end;
 
-	set_action (a_translation: STRING; a_command: COMMAND; argument: ANY) is
-			-- Set `a_command' to be executed when `a_translation' occurs.
-			-- `a_translation' is specified with Xtoolkit convention.
-		require else
-			no_translation_on_gadgets: false
+	add_arm_action (a_command: COMMAND; argument: ANY) is
+			-- Add `a_command' to the list of action to execute when
+			-- current push button is armed.
 		do
-		end; -- set_action
-
-	set_background_color (new_color: COLOR) is
-			-- Set background color to `new_color'.
-		require else
-			argument_not_void: not (new_color = Void)
-		do
-		end; -- set_background_color
-
-	set_foreground_color (new_color: COLOR) is
-			-- Set foreground_color color to `new_color'.
-		require else
-			color_not_void: not (new_color = Void)
-		do
-		end
-
-feature {NONE} -- External features
-
-	create_push_b_gadget (p_name: POINTER; scr_obj: POINTER;
-			man: BOOLEAN): POINTER is
-		external
-			"C"
+			add_arm_callback (mel_vision_callback (a_command), argument)
 		end;
 
-end
+	add_release_action (a_command: COMMAND; argument: ANY) is
+			-- Add `a_command' to the list of action to execute when
+			-- current push button is released.
+		do
+			add_disarm_callback (mel_vision_callback (a_command), argument)
+		end;
 
+feature -- Removal
 
+	remove_activate_action (a_command: COMMAND; argument: ANY) is
+			-- Remove `a_command' from the list of action to execute when
+			-- current push button is activated.
+		do
+			remove_activate_callback (mel_vision_callback (a_command), argument)
+		end;
+
+	remove_arm_action (a_command: COMMAND; argument: ANY) is
+			-- Remove `a_command' from the list of action to execute when
+			-- current push button is armed.
+		do
+			remove_arm_callback (mel_vision_callback (a_command), argument)
+		end;
+
+	remove_release_action (a_command: COMMAND; argument: ANY) is
+			-- Remove `a_command' from the list of action to execute when
+			-- current push button is released.
+		do
+			remove_disarm_callback (mel_vision_callback (a_command), argument)
+		end;
+
+end -- class PUSH_BG_M
 
 --|----------------------------------------------------------------
 --| EiffelVision: library of reusable components for ISE Eiffel 3.

@@ -18,7 +18,7 @@ inherit
 			{NONE} all
 		end
 	
-feature 
+feature -- Access
 
 	global_cursor: SCREEN_CURSOR;
 			-- Global cursor for the whole application.
@@ -28,7 +28,7 @@ feature
 	restore_cursors is
 			-- Restore the cursors as they were before `set_global_cursors'.
 		local
-			widget_x: WIDGET_X;
+			widget_m: WIDGET_M;
 			area: SPECIAL [WIDGET];
 			count, i: INTEGER
 		do
@@ -39,10 +39,10 @@ feature
 			until
 				i >= count
 			loop
-				widget_x ?= area.item (i).implementation;
-				widget_x.undefine_cursor_if_shell;
-				if widget_x.cursor /= Void then
-					widget_x.update_cursor
+				widget_m ?= area.item (i).implementation;
+				widget_m.undefine_cursor_if_shell;
+				if widget_m.cursor /= Void then
+					widget_m.update_cursor
 				end;
 				i := i + 1
 			end;
@@ -59,7 +59,7 @@ feature
 		require
 			a_cursor_exists: cursor /= Void;
 		local
-			widget_x: WIDGET_X;
+			widget_m: WIDGET_M;
 			area: SPECIAL [WIDGET];
 			count, i: INTEGER
 		do
@@ -70,8 +70,8 @@ feature
 			until
 				i >= count
 			loop
-				widget_x ?= area.item (i).implementation;
-				widget_x.define_cursor_if_shell (cursor);
+				widget_m ?= area.item (i).implementation;
+				widget_m.define_cursor_if_shell (cursor);
 				i := i + 1
 			end;
 			global_cursor := cursor

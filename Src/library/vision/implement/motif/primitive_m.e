@@ -1,6 +1,7 @@
 indexing
 
-	description: "Implementation of primitive";
+	description: 
+		"EiffelVision implementation of a motif primitive widget.";
 	status: "See notice at end of class";
 	date: "$Date$";
 	revision: "$Revision$"
@@ -8,8 +9,6 @@ indexing
 class PRIMITIVE_M 
 
 inherit
-
-	PRIMITIVE_R_M;
 
 	WIDGET_M
 		rename
@@ -24,42 +23,58 @@ inherit
 			set_background_color, update_background_color
 		end;
 
-feature 
+	MEL_PRIMITIVE
+		rename
+			foreground_color as mel_foreground_color,
+			set_foreground_color as mel_set_foreground_color,
+			background_color as mel_background_color,
+			background_pixmap as mel_background_pixmap,
+			set_background_color as mel_set_background_color,
+			set_background_pixmap as mel_set_background_pixmap,
+			destroy as mel_destroy,
+			screen as mel_screen
+		end
+
+feature -- Access
+
+	is_stackable: BOOLEAN is 
+			-- Is the Current widget stackable?
+		do
+			Result := True
+		end;
+
+feature -- Status Report
 
 	foreground_color: COLOR is
 			-- Color used for the foreground_color
 		local
 			fg_color_x: COLOR_X
 		do
-			if fg_color = Void then
-				!! fg_color.make;
-				fg_color_x ?= fg_color.implementation;
-				fg_color_x.set_pixel (xt_pixel (screen_object, Mforeground_color));
+			if private_foreground_color = Void then
+				!! private_foreground_color.make;
+				fg_color_x ?= private_foreground_color.implementation;
+				--fg_color_x.set_pixel (xt_pixel (screen_object, Mforeground_color));
 			end;
-			Result := fg_color;
-		ensure
-			color_exists: Result /= Void
+			Result := private_foreground_color;
 		end;
+
+feature -- Status Setting
 
 	set_foreground_color (a_color: COLOR) is
 			-- Set `foreground_color' to `a_color'.
-		require
-			a_color_exists: a_color /= Void
 		local
 			color_implementation: COLOR_X;
 			ext_name: ANY
 		do
-			if fg_color /= Void then
-				color_implementation ?= fg_color.implementation;
+			if private_foreground_color /= Void then
+				color_implementation ?= private_foreground_color.implementation;
 				color_implementation.remove_object (Current)
 			end;
-			fg_color := a_color;
+			private_foreground_color := a_color;
 			color_implementation ?= a_color.implementation;
 			color_implementation.put_object (Current);
-			ext_name := Mforeground_color.to_c;
-			c_set_color (screen_object, color_implementation.pixel (screen), $ext_name)
-		ensure
-			foreground_color_set: foreground_color = a_color
+			--ext_name := Mforeground_color.to_c;
+			--c_set_color (screen_object, color_implementation.pixel (screen), $ext_name)
 		end;
 
 	set_background_color (a_color: COLOR) is
@@ -71,22 +86,24 @@ feature
 			ext_name: ANY
 		do
 			widget_set_background_color (a_color);
-			if fg_color /= Void then
+			if private_foreground_color /= Void then
 				update_foreground_color	
 			end;	
 		end;
 
-feature {NONE} 
+feature {NONE} -- Implementation
 
-	fg_color: COLOR;
-			-- foreground_color colour
+	private_foreground_color: COLOR;
+			-- Foreground_color colour
 
 feature {COLOR_X}
 
 	update_background_color is
+			-- Update the background color after a change
+			-- inside the Eiffel Color.
 		do
 			widget_update_background_color;
-			if fg_color /= Void then
+			if private_foreground_color /= Void then
 				update_foreground_color
 			end
 		end;
@@ -97,22 +114,13 @@ feature {COLOR_X}
 			ext_name: ANY;
 			color_implementation: COLOR_X
 		do
-			ext_name := Mforeground_color.to_c;
+			--ext_name := Mforeground_color.to_c;
 			color_implementation ?= foreground_color.implementation;
-			c_set_color (screen_object, 
-				color_implementation.pixel (screen), $ext_name)
+			--c_set_color (screen_object, 
+				--color_implementation.pixel (screen), $ext_name)
 		end;
 
-feature
-
-	is_stackable: BOOLEAN is 
-		do
-			Result := True;
-		end;
-
-end
-
-
+end -- class PRIMITIVE_M
 
 --|----------------------------------------------------------------
 --| EiffelVision: library of reusable components for ISE Eiffel 3.

@@ -348,7 +348,7 @@ feature {NONE}
 	update_widgets is
 			-- Update widgets.
 		local
-			widgets_to_update: LINKED_LIST [WIDGET_X]
+			widgets_to_update: LINKED_LIST [WIDGET_M]
 		do
 			from
 				widgets_to_update ?= objects;

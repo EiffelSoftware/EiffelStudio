@@ -1,6 +1,7 @@
 indexing
 
-	description: "Motif implementation";
+	description: 
+		"Motif implementation";
 	status: "See notice at end of class";
 	date: "$Date$";
 	revision: "$Revision$"
@@ -12,6 +13,8 @@ inherit
 	FONTABLE_X
 
 feature {NONE}
+
+	resource_name: STRING is do end;
 
 	set_implement_font (font_ptr: POINTER) is
 		local

@@ -1,5 +1,7 @@
 indexing
 
+	description: 
+		"EiffelVision implementation of the X Display.";
 	status: "See notice at end of class";
 	date: "$Date$";
 	revision: "$Revision$"
@@ -20,33 +22,41 @@ inherit
 
 	DRAWING_X
 		redefine
-			height, 
-			width, 
-			screen_object 
+			display_pointer
 		end;
 
 	SCREEN_I
-		export
-			{NONE} all
+
+	MEL_DISPLAY
+		rename
+			make as make_display,
+			handle as display_pointer
 		redefine
-			height, width, screen_object
-		end
+			display_pointer
+		end	
 
 creation
 
 	make
 
-feature {NONE}
+feature {NONE} -- Initialization
 
-	add_expose_action (a_command: COMMAND; argument: ANY) is
-			-- Add `a_command' to the list of action to execute when
-			-- current area is exposed.
-		require else
-			not_a_command_void: not (a_command = Void)
+	make (app_context: MEL_APPLICATION_CONTEXT; 
+			a_screen: SCREEN; 
+			application_class: STRING) is
+			-- Create a screen
 		do
-		end; 
-	
-feature 
+			make_display (app_context, a_screen.screen_name, 
+					application_class, application_class);
+			if is_valid then
+				create_gc
+			end
+		end;
+
+feature -- Access
+
+	display_pointer: POINTER;
+			-- C pointer to X display
 
 	buttons: BUTTONS is
 			-- Current state of the mouse buttons
@@ -59,57 +69,17 @@ feature
 			until
 				i > 5
 			loop
-				Result.put (x_query_button_pointer (display_pointer, i), i);
+				Result.put (default_screen.query_button_pointer (i), i);
 				i := i+1
 			end
 		ensure then
 			not (Result = Void)
 		end; 
 
-	make (a_screen: SCREEN; application_class: STRING) is
-			-- Create a screen
-		local
-			ext_name, ext_name_app: ANY;
-			scr_name: STRING
-			null_pointer: POINTER;
-		do
-			scr_name := a_screen.screen_name;
-			if not scr_name.empty then
-				ext_name := scr_name.to_c;
-			end;
-			if (application_class = Void) then
-				display_pointer := xt_open_display ($ext_name, null_pointer)
-			else
-				ext_name_app := application_class.to_c;
-				display_pointer := xt_open_display ($ext_name, $ext_name_app)
-			end;
-			if is_valid then
-				create_gc
-			end
-		end;
-
-	is_valid: BOOLEAN is
-			-- Is Current screen created?
-		local
-			null_pointer: POINTER
-		do
-			Result := display_pointer /= null_pointer
-		end
-
-feature {NONE}
-
 	height: INTEGER is
 			-- Height of screen
 		do
-			Result := c_screen_height (display_pointer)
-		end;
-
-	remove_expose_action (a_command: COMMAND; argument: ANY) is
-			-- Remove `a_command' from the list of action to execute when
-			-- current area is exposed.
-		require else
-			not_a_command_void: not (a_command = Void)
-		do
+			Result := default_screen.height
 		end;
 
 	screen: SCREEN_I is
@@ -125,10 +95,7 @@ feature {NONE}
 		do
 			Result := display_pointer
 		end;
-
 	
-feature 
-
 	widget_pointed: WIDGET is
 			-- Widget currently pointed by the pointer
 		local
@@ -138,24 +105,15 @@ feature
 			found: BOOLEAN;
 			widget_list: LINKED_LIST [POINTER]
 		do
-			!! widget_list.make;
-			from
-				widget_c := x_query_window_pointer 
-					(display_pointer, root_window_object)
-			until
-				widget_c = void_pointer
-			loop
-				last_widget_c := widget_c;
-				widget_list.put_right (last_widget_c);
-				widget_list.forth;
-				widget_c := x_query_window_pointer (display_pointer, widget_c)
-			end;
+			widget_list := default_screen.widgets_pointed;
 				-- Remove last item;
-			if not widget_list.empty and then
-				last_widget_c /= default_pointer 
-			then
+			if not widget_list.empty then
+				widget_list.finish;
+				last_widget_c := widget_list.item
+			end;
+			if last_widget_c /= default_pointer then
+					-- Remove last one
 				widget_list.remove;
-				last_widget_c := xt_window_to_widget (display_pointer, last_widget_c);
 				from
 					widget_manager.start;
 				until	
@@ -179,8 +137,7 @@ feature
 					until
 						widget_list.after
 					loop
-						widget_c := xt_window_to_widget (display_pointer, 
-							widget_list.item);
+						widget_c := widget_list.item;
 						if widget_c /= void_pointer then
 							from
 								found := false;
@@ -203,84 +160,46 @@ feature
 			end
 		end;
 
-feature {NONE}
-
 	width: INTEGER is
 			-- Width of screen
 		do
-			Result := c_screen_width (display_pointer)
+			Result := default_screen.width
 		end;
 
 	window_object: POINTER is
 			-- X identifier of the drawable.
 		do
+			--Result := default_screen.root
 			Result := root_window_object
 		end;
-
-feature 
 
 	x: INTEGER is
 			-- Current absolute horizontal coordinate of the mouse
 		do
-			Result := x_query_x_pointer (display_pointer)
-		ensure then
-			position_positive: Result >= 0;
-			position_small_enough: Result < width
+			Result := default_screen.x
 		end;
 
 	y: INTEGER is
 			-- Current absolute vertical coordinate of the mouse
 		do
-			Result := x_query_y_pointer (display_pointer)
-		ensure then
-			position_positive: Result >= 0;
-			position_small_enough: Result < height
+			Result := default_screen.y
 		end
 
-feature {NONE} -- External features
+feature {NONE} -- Useless routines
 
-	xt_window_to_widget (dspl_pointer, window: POINTER): POINTER is
-		external
-			"C"
+	add_expose_action (a_command: COMMAND; argument: ANY) is
+			-- Add `a_command' to the list of action to execute when
+			-- current area is exposed.
+		do
+		end; 
+
+	remove_expose_action (a_command: COMMAND; argument: ANY) is
+			-- Remove `a_command' from the list of action to execute when
+			-- current area is exposed.
+		do
 		end;
 
-	x_query_button_pointer (dspl_pointer: POINTER; pos: INTEGER): BOOLEAN is
-		external
-			"C"
-		end;
-
-	x_query_y_pointer (dspl_pointer: POINTER): INTEGER is
-		external
-			"C"
-		end;
-
-	x_query_x_pointer (dspl_pointer: POINTER): INTEGER is
-		external
-			"C"
-		end;
-
-	c_screen_width (dspl_pointer: POINTER): INTEGER is
-		external
-			"C"
-		end;
-
-	x_query_window_pointer (dspl_pointer, wndw: POINTER): POINTER is
-		external
-			"C"
-		end;
-
-	c_screen_height (dspl_pointer: POINTER): INTEGER is
-		external
-			"C"
-		end;
-
-	xt_open_display (name1, name2: POINTER): POINTER is
-		external
-			"C"
-		end;
-
-end
-
+end -- class SCREEN_X
 
 --|----------------------------------------------------------------
 --| EiffelVision: library of reusable components for ISE Eiffel 3.

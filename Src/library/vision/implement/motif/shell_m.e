@@ -1,6 +1,7 @@
 indexing
 
-	description: "Implementation of shell";
+	description: 
+		"EiffelVision implementation of MOTIF shell.";
 	status: "See notice at end of class";
 	date: "$Date$";
 	revision: "$Revision$"
@@ -9,115 +10,83 @@ class SHELL_M
 
 inherit
 
-	SHELL_R_M
-		export
-			{NONE} all
+	COMPOSITE_M
+		undefine
+			real_x, real_y, managed,
+			make_from_existing, unmanage, manage,
+			clean_up_callbacks
+		redefine
+			define_cursor_if_shell, undefine_cursor_if_shell
 		end;
 
-	COMPOSITE_M
-		redefine
-			define_cursor_if_shell, undefine_cursor_if_shell,
-			real_x, real_y, set_managed, managed
-		end
+	MEL_SHELL
+		rename
+			background_color as mel_background_color,
+			background_pixmap as mel_background_pixmap,
+			set_background_color as mel_set_background_color,
+			set_background_pixmap as mel_set_background_pixmap,
+			destroy as mel_destroy,
+			screen as mel_screen
+		end;
 
-feature 
+feature -- Geometry operations
 
 	allow_resize is
 			-- Allow geometry resize to all geometry requests
 			-- from its children.
 		do
-			set_xt_boolean (screen_object, True, MallowShellResize)
-		end;
-
-feature {ALL_CURS_X}
-
-	define_cursor_if_shell (a_cursor: SCREEN_CURSOR) is
-			-- Define `cursor' if the current widget is a shell.
-		require else
-			a_cursor_exists: not (a_cursor = Void)
-		local
-			display_pointer, window, void_pointer: POINTER;
-			a_cursor_implementation: SCREEN_CURSOR_X
-		do
-			window := xt_window (screen_object);
-			if window /= void_pointer then
-				display_pointer := xt_display (screen_object);
-				a_cursor_implementation ?= a_cursor.implementation;
-				x_define_cursor (display_pointer, window, a_cursor_implementation.cursor_id (screen));
-				x_flush (display_pointer)
-			end
-		end;
-
-feature 
-
-	set_override (flag: BOOLEAN) is
-		local
-			ext_name: ANY;
-		do
-			ext_name := MoverrideRedirect.to_c;
-			set_boolean (screen_object, flag, $ext_name);
+			set_allow_shell_resize (True)
 		end;
 
 	forbid_resize is
 			-- Forbid geometry resize to all geometry requests
 			-- from its children.
 		do
-			set_xt_boolean (screen_object, False, MallowShellResize)
+			set_allow_shell_resize (False)
 		end;
 
-	real_x: INTEGER is
-			-- Vertical position relative to root window
+feature  -- Status Setting
+
+	set_override (flag: BOOLEAN) is
+			-- Enable or disable the keyboard focus
+			-- away from the application windows according
+			-- to `flag'.
+		do
+			set_override_redirect (flag);
+		end;
+
+feature {ALL_CURS_X} -- Implementation
+
+	define_cursor_if_shell (a_cursor: SCREEN_CURSOR) is
+			-- Define `cursor' if the current widget is a shell.
+		require else
+			a_cursor_exists: not (a_cursor = Void)
 		local
-			ext_name_Mx: ANY
+			display_pointer, void_pointer: POINTER;
+			a_cursor_implementation: SCREEN_CURSOR_X
 		do
-			ext_name_Mx := Mx.to_c;
-			Result := get_position (screen_object, $ext_name_Mx)
+			--window := xt_window (screen_object);
+			--if window /= void_pointer then
+				--display_pointer := xt_display (screen_object);
+				--a_cursor_implementation ?= a_cursor.implementation;
+				--x_define_cursor (display_pointer, window, a_cursor_implementation.cursor_id (screen));
+				--x_flush (display_pointer)
+			--end
 		end;
-
-	real_y: INTEGER is
-			-- Horizontal position relative to root window
-		local
-            ext_name_My: ANY
-		do
-			ext_name_My := My.to_c;
-			Result := get_position (screen_object, $ext_name_My)
-		end;
-
-	set_managed (flag: BOOLEAN) is
-			-- Enable geometry managment on screen widget implementation,
-			-- by window manager of parent widget if `flag', disable it
-			-- otherwise.
-		do
-		end;
-
-	managed: BOOLEAN is True;
-			-- Is Current Shell managed ? (Always true)
-
-feature {ALL_CURS_X}
 
 	undefine_cursor_if_shell is
 			-- Undefine the cursor if the current widget is a shell.
 		local
-			display_pointer, window, void_pointer: POINTER
+			display_pointer: POINTER
 		do
-			window := xt_window (screen_object);
-			if window /= void_pointer then
-				display_pointer := xt_display (screen_object);
-				x_undefine_cursor (display_pointer, window);
-				x_flush (display_pointer)
-			end
+			--if window /= 0 then
+				--display_pointer := xt_display (screen_object);
+				--x_undefine_cursor (display_pointer, window);
+				--x_flush (display_pointer)
+			--end
 		end;
 
-feature {NONE} -- External features
-
-	x_undefine_cursor (dspl_pointer, wndw: POINTER) is
-		external
-			"C"
-		end;
-
-end
-
-
+end -- class SHELL_M
 
 --|----------------------------------------------------------------
 --| EiffelVision: library of reusable components for ISE Eiffel 3.

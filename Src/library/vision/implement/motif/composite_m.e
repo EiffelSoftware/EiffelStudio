@@ -1,6 +1,7 @@
 indexing
 
-	description: "Motif composite implementation";
+	description: 
+		"EiffelVision implementation of a MOTIF composite.";
 	status: "See notice at end of class";
 	date: "$Date$";
 	revision: "$Revision$"
@@ -9,56 +10,22 @@ class COMPOSITE_M
 
 inherit
 
-	COMPOSITE_R_M
-		export
-			{NONE} all
-		end;
-
 	WIDGET_M
-
-feature
-
-	children_count: INTEGER is
-			-- Count of managed children
-		local
-			ext_name_child: ANY
-		do
-			ext_name_child := MnumChildren.to_c;
-			Result := get_cardinal (screen_object, $ext_name_child)
+		undefine
+			mel_destroy, clean_up
 		end;
 
-	get_ith_child (pos: INTEGER): POINTER is
-		local
-			ext_name: ANY;
-		do
-			ext_name := Mchildren.to_c;
-			Result := get_i_widget_child (
-						get_widget_children (screen_object, $ext_name), 
-						pos);
-		end;
+	MEL_COMPOSITE
+		rename
+            background_color as mel_background_color,
+            background_pixmap as mel_background_pixmap,
+            set_background_color as mel_set_background_color,
+            set_background_pixmap as mel_set_background_pixmap,
+            destroy as mel_destroy,
+			screen as mel_screen
+        end
 
-feature {NONE} -- External features
-
-	get_cardinal (scr_obj: POINTER; c_name: POINTER): INTEGER is
-		external
-			"C"
-		end;
-
-	get_widget_children (scr_obj: POINTER; c_name: POINTER): POINTER is
-		external
-			"C"
-		end;
-
-	get_i_widget_child (widget_list: POINTER; index: INTEGER): POINTER is
-			--gets a single child from value returned by
-			--get_widget_children.
-		external
-			"C"
-		end;
-
-end
-
-
+end -- class COMPOSITE_M
 
 --|----------------------------------------------------------------
 --| EiffelVision: library of reusable components for ISE Eiffel 3.

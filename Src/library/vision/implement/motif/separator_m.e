@@ -1,6 +1,7 @@
 indexing
 
-	description: "Motif implementation of separator";
+	description: 
+		"EiffelVision implementation of a Motif separator.";
 	status: "See notice at end of class";
 	date: "$Date$";
 	revision: "$Revision$"
@@ -9,100 +10,49 @@ class SEPARATOR_M
 
 inherit
 
-	SEPARATOR_R_M
-		export
-			{NONE} all
-		end;
+    SEPARATOR_I;
 
-    SEPARATOR_I
-        export
-            {NONE} all
-        end;
+	PRIMITIVE_M;
 
-	PRIMITIVE_M
+    MEL_SEPARATOR
+        rename
+            make as mel_sep_make,
+            foreground_color as mel_foreground_color,
+            set_foreground_color as mel_set_foreground_color,
+            background_color as mel_background_color,
+            background_pixmap as mel_background_pixmap,
+            set_background_color as mel_set_background_color,
+            set_background_pixmap as mel_set_background_pixmap,
+            destroy as mel_destroy,
+            screen as mel_screen,
+			set_horizontal as mel_set_horizontal
+        end
 
 creation
 
     make
 
-feature {NONE} -- Creation
+feature {NONE} -- Initialization
 
     make (a_separator: SEPARATOR; man: BOOLEAN) is
             -- Create a motif separator.
-        local
-            ext_name: ANY
         do
 			widget_index := widget_manager.last_inserted_position;
-            ext_name := a_separator.identifier.to_c;
-            screen_object := create_separator ($ext_name,
-				parent_screen_object (a_separator, widget_index),
-				man);
-        ensure
-            --default_orientation: is_horizontal
+            mel_sep_make (a_separator.identifier,
+                    mel_parent (a_separator, widget_index),
+                    man);
         end
 
-feature 
-
-	is_horizontal: BOOLEAN is
-			-- Is separator orientation horizontal?
-		do
-			Result := xt_unsigned_char (screen_object, Morientation) = MHORIZONTAL
-		end;
+feature -- Status setting
 
 	set_horizontal (flag: BOOLEAN) is
             -- Set orientation of the scale to horizontal if `flag',
             -- to vertical otherwise.
         do
-            if flag then
-                set_xt_unsigned_char (screen_object, MHORIZONTAL, Morientation)
-            else
-                set_xt_unsigned_char (screen_object, MVERTICAL, Morientation)
-            end
-        ensure then
-            value_correctly_set: is_horizontal = flag
+				mel_set_horizontal (flag)
         end;
 
-	set_single_line is
-			-- Set separator display to be single line.
-		do
-			set_xt_unsigned_char (screen_object, MSINGLE_LINE, MseparatorType)
-		end;
-
-	set_double_line is
-			-- Set separator display to be double line.
-		do
-			set_xt_unsigned_char (screen_object, MDOUBLE_LINE, MseparatorType)
-		end;
-
-	set_single_dashed_line is
-			-- Set separator display to be single dashed line.
-		do
-			set_xt_unsigned_char (screen_object, MSINGLE_DASHED_LINE, MseparatorType)
-		end;
-
-	set_double_dashed_line is
-			-- Set separator display to be double dashed line.
-		do
-			set_xt_unsigned_char (screen_object, MDOUBLE_DASHED_LINE, MseparatorType)
-		end;
-
-	set_no_line is
-			-- Make current separator invisible.
-		do
-			set_xt_unsigned_char (screen_object, MNO_LINE, MseparatorType)
-		end;
-
-feature {NONE} -- External features
-
-    create_separator (s_name: POINTER; scr_obj: POINTER;
-			man: BOOLEAN): POINTER is
-        external
-            "C"
-        end;
-
-end
-
-
+end -- class SEPARATOR_M
 
 --|----------------------------------------------------------------
 --| EiffelVision: library of reusable components for ISE Eiffel 3.

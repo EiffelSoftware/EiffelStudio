@@ -1,70 +1,60 @@
 indexing
 
+    description:
+        "EiffelVision implementaiton of a Motif row_column.";
 	status: "See notice at end of class";
 	date: "$Date$";
 	revision: "$Revision$"
 
-class ROW_COLUMN_M 
+class 
+	ROW_COLUMN_M 
 
 inherit
 
-	ROW_COLUMN_I
-		export
-			{NONE} all
-		end;
-
-	ROW_COLUMN_R_M
-		export
-			{NONE} all
-		end;
+	ROW_COLUMN_I;
 
 	MANAGER_M
+		undefine
+			create_callback_struct
+		end;
+
+    MEL_ROW_COLUMN
+        rename
+            make as mel_rc_make,
+            foreground_color as mel_foreground_color,
+            set_foreground_color as mel_set_foreground_color,
+            background_color as mel_background_color,
+            background_pixmap as mel_background_pixmap,
+            set_background_color as mel_set_background_color,
+            set_background_pixmap as mel_set_background_pixmap,
+            destroy as mel_destroy,
+            screen as mel_screen
+        end
 
 creation
 
 	make
 
-feature {NONE} -- Creation
+feature {NONE} -- Initialization
 
 	make (a_row_column: ROW_COLUMN; man: BOOLEAN) is
 			-- Create a motif row_column.
-		local
-			ext_name: ANY
 		do
 			widget_index := widget_manager.last_inserted_position;
-			ext_name := a_row_column.identifier.to_c;
-			screen_object := create_row_column ($ext_name, 
-				parent_screen_object (a_row_column, widget_index),
-				man);
+            mel_rc_make (a_row_column.identifier,
+                    mel_parent (a_row_column, widget_index),
+                    man);
 		end;
 
-feature
+feature -- Status report
 
 	is_row_layout: BOOLEAN is
 			-- Is current row column layout items preferably in row ?
 		do
-			Result := xt_unsigned_char (screen_object, Morientation) = MHORIZONTAL
-		end; -- is_row_layout
+			Result := is_horizontal
+		end; 
 
-	margin_height: INTEGER is
-			-- Amount of blank space between the top edge
-			-- of row column and the first item in each column, and the
-			-- bottom edge of row column and the last item in each column
-		do
-			Result := xt_dimension (screen_object, MmarginHeight)
-		ensure then
-			Result >= 0
-		end; -- margin_height
-
-	margin_width: INTEGER is
-			-- Amount of blank space between the left edge
-			-- of row column and the first item in each row , and the
-			-- right edge of row column and the last item in each row
-		do
-			Result := xt_dimension (screen_object, MmarginWidth)
-		ensure then
-			Result >= 0
-		end; -- margin_width
+feature -- Status setting
 
 	set_free_size is
 			-- Set size of items to be free, in vertical layout mode
@@ -72,93 +62,32 @@ feature
 			-- horizontal layout mode only height is set to be the same
 			-- as the tallest one.
 		do
-			set_xt_unsigned_char (screen_object, MPACK_TIGHT, Mpacking)
-		end; -- set_free_size
-
-	set_margin_height (new_margin_height: INTEGER) is
-			-- Set the amount of blank space between the top edge
-			-- of row column and the first item in each column, and the
-			-- bottom edge of row column and the last item in each column.
-		require else
-			not_margin_height_negative: new_margin_height >= 0
-		do
-			set_xt_dimension (screen_object, new_margin_height, MmarginHeight)
-		ensure then
-			margin_height = new_margin_height
-		end; -- set_margin_height
-
-	set_margin_width (new_margin_width: INTEGER) is
-			-- Set the amount of blank space between the left edge
-			-- of row column and the first item in each row , and the
-			-- right edge of row column and the last item in each row.
-		require else
-			not_margin_width_negative: new_margin_width >= 0
-		do
-			set_xt_dimension (screen_object, new_margin_width, MmarginWidth)
-		ensure then
-			margin_width = new_margin_width
-		end; -- set_margin_width
+			set_packing_tight
+		end; 
 
 	set_preferred_count (a_number: INTEGER) is
 			-- Set preferably count of row or column, according to
 			-- row layout mode or column layout mode, to `a_number'.
-		require else
-			not_negative_number: not (a_number < 0);
-			not_nul_number: not (a_number = 0)
 		do
-			set_xt_unsigned_char (screen_object, MPACK_COLUMN, Mpacking);
-			set_xt_short (screen_object, a_number, MnumColumns)
-		end; -- set_preferred_count
+			set_packing_column;
+			set_num_columns (a_number)
+		end;
 
 	set_row_layout (flag: BOOLEAN) is
 			-- Set row column to layout items preferably in row if `flag',
 			-- in column otherwise.
 		do
-			if flag then
-				set_xt_unsigned_char (screen_object, MHORIZONTAL, Morientation)
-			else
-				set_xt_unsigned_char (screen_object, MVERTICAL, Morientation)
-			end
-		ensure then
-			flag_correctly_set: is_row_layout = flag
-		end; -- set_row_layout
+				set_horizontal (flag)
+		end; 
 
 	set_same_size is
 			-- Set width of items to be the same as the widest one
 			-- and height as the tallest one.
 		do
-			set_xt_unsigned_char (screen_object, MPACK_COLUMN, Mpacking)
+			set_packing_column
 		end;
 
-	set_spacing (new_spacing: INTEGER) is
-			-- Set spacing between items to `new_spacing'.
-		require else
-			not_spacing_negative: new_spacing >= 0
-		do
-			set_xt_dimension (screen_object, new_spacing, Mspacing)
-		ensure then
-			spacing = new_spacing
-		end;
-
-	spacing: INTEGER is
-			-- Spacing between items
-		do
-			Result := xt_dimension (screen_object, Mspacing)
-		ensure then
-			Result >= 0
-		end
-
-feature {NONE} -- External features
-
-	create_row_column (r_name: POINTER; scr_obj: POINTER;
-			man: BOOLEAN): POINTER is
-		external
-			"C"
-		end;
-
-end
-
-
+end -- class ROW_COLUMN_M
 
 --|----------------------------------------------------------------
 --| EiffelVision: library of reusable components for ISE Eiffel 3.

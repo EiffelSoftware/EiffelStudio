@@ -1,80 +1,79 @@
 indexing
 
-	description: "Motif bulletin dialog implementation";
+	description: 
+		"EiffelVision implementation of a Motif bulletin dialog.";
 	status: "See notice at end of class";
 	date: "$Date$";
 	revision: "$Revision$"
 
-class BULLETIN_D_M 
+class 
+	BULLETIN_D_M 
 
 inherit
 
 	BULLETIN_D_I;
 
-	DIALOG_M;
+	DIALOG_M
+		redefine	
+			screen_object
+		end;
 
 	BULLETIN_M
 		rename
-			make as bulletin_make
-		export
-			{NONE} all
+			make as bulletin_m_make
 		undefine
-			lower, raise, action_target,
-			show, hide, shown, destroy_xt_widget
-		redefine
+			lower, raise, 
+			show, hide, is_shown, destroy,
 			define_cursor_if_shell, undefine_cursor_if_shell,
-			is_stackable
+			is_stackable, clean_up,
+			create_widget, bulletin_make, bulletin_make_no_auto_unmanage
+		redefine
+			screen_object
+		end;
+
+	MEL_BULLETIN_BOARD_DIALOG
+		rename
+			make as mel_bulletin_d_make,
+			make_no_auto_unmanage as mel_make_no_auto_unmanage,
+			foreground_color as mel_foreground_color,
+			background_color as mel_background_color,
+			background_pixmap as mel_background_pixmap,
+			set_background_color as mel_set_background_color,
+			set_foreground_color as mel_set_foreground_color,
+			set_background_pixmap as mel_set_background_pixmap,
+			destroy as mel_destroy,
+			screen as mel_screen
+		undefine
+			raise, lower, show, hide, is_shown
+		redefine	
+			screen_object
 		end
 
 creation
 
 	make
 
-feature {NONE} -- Creation
+feature {NONE} -- Initialization
 
 	make (a_bulletin_d: BULLETIN_D) is
 			-- Create a motif bulletin dialog.
-		local
-			ext_name_bull: ANY
 		do
 			widget_index := widget_manager.last_inserted_position;
-			ext_name_bull := a_bulletin_d.identifier.to_c;
-			screen_object := create_bulletin_d
-					($ext_name_bull, 
-					parent_screen_object (a_bulletin_d, widget_index));
+			mel_make_no_auto_unmanage (a_bulletin_d.identifier,
+				mel_parent (a_bulletin_d, widget_index));
 			a_bulletin_d.set_dialog_imp (Current);
-			forbid_resize
 			action_target := screen_object;
+			set_margin_width (0);
+			set_margin_height (0);
+			initialize (dialog_shell)
 		end;
 
-	is_stackable: BOOLEAN is do end;
+feature -- Access
 
-feature {NONE}
+	screen_object: POINTER
+			-- Associated C widget pointer
 
-	define_cursor_if_shell (a_cursor: SCREEN_CURSOR) is
-			-- Define `cursor' if the current widget is a shell.
-		require else
-			a_cursor_exists: not (a_cursor = Void)
-		do
-			dialog_define_cursor_if_shell (a_cursor)
-		end;
-
-	undefine_cursor_if_shell is
-			-- Undefine the cursor if the current widget is a shell.
-		do
-			dialog_undefine_cursor_if_shell
-		end;
-
-feature {NONE} -- External features
-
-	create_bulletin_d (b_name: POINTER; scr_obj: POINTER): POINTER is
-		external
-			"C"
-		end;
-
-end
-
-
+end -- class BULLETIN_D_M
 
 --|----------------------------------------------------------------
 --| EiffelVision: library of reusable components for ISE Eiffel 3.

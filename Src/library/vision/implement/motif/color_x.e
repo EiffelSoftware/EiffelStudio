@@ -332,10 +332,10 @@ feature {NONE}
 	update_widgets is
 			-- Update widgets.
 		local
-			widgets_to_update: LINKED_LIST [WIDGET_X];
+			widgets_to_update: LINKED_LIST [WIDGET_M];
 			primitive: PRIMITIVE_I;
 			manager: MANAGER_I;
-			w: WIDGET_X;
+			w: WIDGET_M;
 			c: COLOR
 		do
 			from

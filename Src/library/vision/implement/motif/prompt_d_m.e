@@ -1,140 +1,78 @@
 indexing
 
+	description:
+		"EiffelVision implementation of Motif prompt dialog.";
 	status: "See notice at end of class";
 	date: "$Date$";
 	revision: "$Revision$"
 
-class PROMPT_D_M
+class 
+	PROMPT_D_M
 
 inherit
 
 	PROMPT_D_I;
 
+	DIALOG_M
+		redefine
+			screen_object
+		end;
+
 	PROMPT_M
 		rename
 			make as prompt_make
 		undefine
-			lower, raise, action_target, hide,
-			shown, show, destroy_xt_widget
-		redefine
+			lower, raise, hide,
+			is_shown, show, destroy, selection_make,
 			define_cursor_if_shell, undefine_cursor_if_shell,
-			set_x, set_y, set_x_y, is_stackable
+			is_stackable, clean_up, create_widget
+		redefine
+			screen_object
 		end;
 
-	DIALOG_M
+	MEL_PROMPT_DIALOG
+		rename
+			make as mel_prompt_d_make,
+			make_no_auto_unmanage as mel_prompt_d_no_auto,
+			foreground_color as mel_foreground_color,
+			background_color as mel_background_color,
+			background_pixmap as mel_background_pixmap,
+			set_background_color as mel_set_background_color,
+			set_foreground_color as mel_set_foreground_color,
+			set_background_pixmap as mel_set_background_pixmap,
+			destroy as mel_destroy,
+			screen as mel_screen
+		undefine
+			raise, lower, show, hide, is_shown
+		redefine
+			screen_object
+		select
+			selection_make_no_auto_unmanage
+		end
 
 creation
 
 	make
 
-feature {NONE} -- Creation
+feature {NONE} -- Initialization
 
 	make (a_prompt_dialog: PROMPT_D) is
 			-- Create a motif prompt dialog.
-		local
-			ext_name: ANY
 		do
 			widget_index := widget_manager.last_inserted_position;
-			ext_name := a_prompt_dialog.identifier.to_c;
-			screen_object := create_prompt_d ($ext_name,
-				parent_screen_object (a_prompt_dialog, widget_index));
+			mel_prompt_d_no_auto (a_prompt_dialog.identifier,
+				mel_parent (a_prompt_dialog, widget_index));
 			a_prompt_dialog.set_dialog_imp (Current);
-			forbid_resize
 			action_target := screen_object;
+			initialize (dialog_shell)
 		end;
 
-feature
+feature -- Access
 
-	is_stackable: BOOLEAN is do end;
+	screen_object: POINTER
+			-- Associated C widget pointer
 
-	define_cursor_if_shell (a_cursor: SCREEN_CURSOR) is
-			-- Define `cursor' if the current widget is a shell.
-		require else
-			a_cursor_exists: not (a_cursor = Void)
-		do
-			dialog_define_cursor_if_shell (a_cursor)
-		end;
-
-	set_x (new_x: INTEGER) is
-			-- Put at horizontal position `new_x'
-		local
-			ext_name_Mx: ANY
-		do
-			if  not realized then
-				xt_set_geometry (screen_object, new_x, y)
-			else
-				if shown then
-					ext_name_Mx := Mx.to_c;
-					set_posit (screen_object, new_x, $ext_name_Mx)
-				else
-					xt_move_widget (screen_object, new_x, y)
-				end
-			end
-		end;
-
-	set_x_y (new_x, new_y: INTEGER) is
-			-- Put at horizontal position `new_x' and at
-			-- vertical position `new_y'
-		local
-			ext_name_Mx, ext_name_My: ANY
-		do
-			if  not realized then
-				xt_set_geometry (screen_object, new_x, new_y)
-			else
-				if shown then
-					ext_name_Mx := Mx.to_c;
-					ext_name_My := My.to_c;
-					set_posit (screen_object, new_x, $ext_name_Mx);
-					set_posit (screen_object, new_y, $ext_name_My)
-				else
-					xt_move_widget (screen_object, new_x, new_y)
-				end
-			end;
-		end;
-
-	set_y (new_y: INTEGER) is
-			-- Put at vertical position `new_y'
-		local
-			ext_name_My: ANY
-		do
-			if  not realized then
-				xt_set_geometry (screen_object, x, new_y)
-			else
-				if shown then
-					ext_name_My := My.to_c;
-					set_posit (screen_object, new_y, $ext_name_My)
-				else
-					xt_move_widget (screen_object, x, new_y)
-				end
-			end
-		end;
-
-	undefine_cursor_if_shell is
-			-- Undefine the cursor if the current widget is a shell.
-		do
-			dialog_undefine_cursor_if_shell
-		end;
-
-feature {NONE} -- External features
-
-	create_prompt_d (p_name: POINTER; scr_obj: POINTER): POINTER is
-		external
-			"C"
-		end;
-
-	xt_move_widget (scr_obj: POINTER; x_value, y_value: INTEGER) is
-		external
-			"C"
-		end;
-
-	xt_set_geometry (scr_obj: POINTER; x_value, y_value: INTEGER) is
-		external
-			"C"
-		end;
-
-end
-
-
+end -- class PROMPT_D_M
 
 --|----------------------------------------------------------------
 --| EiffelVision: library of reusable components for ISE Eiffel 3.

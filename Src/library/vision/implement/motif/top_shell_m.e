@@ -1,8 +1,8 @@
 indexing
 
 	description:
-		"Shell top level which is used in an application that needs %
-		%more than one shell root";
+		"Top level shell which is used in an application that needs %
+		%more than one shell root.";
 	status: "See notice at end of class";
 	date: "$Date$";
 	revision: "$Revision$"
@@ -11,51 +11,33 @@ class TOP_SHELL_M
 
 inherit
 
-	TOP_SHELL_I
-		export
-			{NONE} all
-		end;
-
-	WM_SHELL_M;
+	TOP_SHELL_I;
 
 	TOP_M
+		rename
+			make as top_shell_make
+		end
 
 creation
 
 	make
 
-feature {NONE}
+feature {NONE} -- Initialization
 
 	make (a_top_shell: TOP_SHELL; application_class: STRING) is
 			-- Create a motif top level shell.
 		local
-			ext_name_t_sh, ext_name_app_cl: ANY;
-			scr_obj: POINTER
+			x_display: MEL_DISPLAY;
 		do
 			widget_index := widget_manager.last_inserted_position;
 			oui_top := a_top_shell;
-			ext_name_t_sh := to_c_if_not_void (a_top_shell.identifier);
-			ext_name_app_cl := to_c_if_not_void (application_class);
-			scr_obj := a_top_shell.screen.implementation.screen_object;
-			screen_object := xt_create_top_level_shell (scr_obj, 
-								$ext_name_t_sh, $ext_name_app_cl);
+			x_display ?= a_top_shell.screen.implementation;
+			top_shell_make (a_top_shell.identifier, application_class, x_display.default_screen);
 			a_top_shell.set_wm_imp (Current);
-			cdfd := xm_delete_window_protocol (scr_obj,
-								screen_object, Current, 
-								$delete_window_action);
+			add_protocol
 		end
 
-feature {NONE} -- External features
-
-	xt_create_top_level_shell (scr_obj: POINTER; 
-			name1, name2: POINTER): POINTER is
-		external
-			"C"
-		end;
-
-end
-
-
+end -- class TOP_SHELL_M
 
 --|----------------------------------------------------------------
 --| EiffelVision: library of reusable components for ISE Eiffel 3.

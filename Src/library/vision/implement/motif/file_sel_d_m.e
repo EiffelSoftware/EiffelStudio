@@ -1,36 +1,65 @@
 indexing
 
+	description:
+		"EiffelVision Implementation of a Motif file selection box.";
 	status: "See notice at end of class";
 	date: "$Date$";
 	revision: "$Revision$"
 
-class FILE_SEL_D_M 
+class 
+	FILE_SEL_D_M 
 
 inherit
 
-	FILE_SEL_D_I
-		export
-			{NONE} all
-		end;
+	FILE_SEL_D_I;
 
-	DIALOG_M;
+	DIALOG_M
+		redefine
+			screen_object
+		end;
 
 	FILE_SELEC_M
 		rename
-			make as file_select_make
+			make as file_select_m_make,
+			make_no_auto_unmanage as file_select_m_make_no_auto_unmanage
 		undefine
-			lower, raise, action_target,
-			show, hide, shown, destroy_xt_widget
-		redefine
+			lower, raise, 
+			show, hide, is_shown, destroy,
 			define_cursor_if_shell, undefine_cursor_if_shell,
-			set_x, set_y, set_x_y, is_stackable
+			clean_up, is_stackable, file_selection_make
+		redefine
+			screen_object
+		select
+			file_select_m_make_no_auto_unmanage
+		end;
+
+	MEL_FILE_SELECTION_DIALOG
+		rename
+			make as mel_file_selection_d_make,
+			foreground_color as mel_foreground_color,
+			background_color as mel_background_color,
+			background_pixmap as mel_background_pixmap,
+			set_background_color as mel_set_background_color,
+			set_foreground_color as mel_set_foreground_color,
+			set_background_pixmap as mel_set_background_pixmap,
+			destroy as mel_destroy,
+			screen as mel_screen,
+			dir_list as mel_dir_list,
+			set_pattern as mel_set_pattern,
+			pattern as mel_pattern,
+			set_directory as mel_set_directory,
+			directory as mel_directory
+		undefine
+			raise, lower, show, hide, is_shown
+		redefine
+			screen_object
 		end
-		
+
 creation
 
 	make
 
-feature {NONE} -- Creation
+feature {NONE} -- Initialization
 
 	make (a_file_select_dialog: FILE_SEL_D) is
 			-- Create a motif file selection dialog.
@@ -38,109 +67,19 @@ feature {NONE} -- Creation
 			ext_name: ANY
 		do
 			widget_index := widget_manager.last_inserted_position;
-			ext_name := a_file_select_dialog.identifier.to_c;
-			screen_object := create_file_select_d ($ext_name,
-					parent_screen_object (a_file_select_dialog, widget_index));
+			mel_file_selection_d_make (a_file_select_dialog.identifier,
+					mel_parent (a_file_select_dialog, widget_index))
 			a_file_select_dialog.set_dialog_imp (Current);
-			forbid_resize;
 			action_target := screen_object;
+			initialize (dialog_shell)
 		end;
 
-feature {ALL_CURS_X}
+feature -- Access
 
-	define_cursor_if_shell (a_cursor: SCREEN_CURSOR) is
-			-- Define `cursor' if the current widget is a shell.
-		require else
-			a_cursor_exists: not (a_cursor = Void)
-		do
-			dialog_define_cursor_if_shell (a_cursor)
-		end;
+	screen_object: POINTER
+			-- Associated C widget pointer
 
-	undefine_cursor_if_shell is
-			-- Undefine the cursor if the current widget is a shell.
-		do
-			dialog_undefine_cursor_if_shell
-		end;
-
-feature 
-
-	is_stackable: BOOLEAN is do end;
-
-	set_x (new_x: INTEGER) is
-			-- Put at horizontal position `new_x'
-		local
-			ext_name_Mx: ANY
-		do
-			if  not realized then
-				xt_set_geometry (screen_object, new_x, y)
-			else
-				if shown then
-					ext_name_Mx := Mx.to_c;
-					set_posit (screen_object, new_x, $ext_name_Mx)
-				else
-					xt_move_widget (screen_object, new_x, y)
-				end
-			end
-		end;
-
-	set_x_y (new_x: INTEGER; new_y: INTEGER) is
-			-- Put at horizontal position `new_x' and at
-			-- vertical position `new_y'
-		local
-			ext_name_Mx, ext_name_My: ANY
-		do
-			if  not realized then
-				xt_set_geometry (screen_object, new_x, new_y)
-			else
-				if shown then
-					ext_name_Mx := Mx.to_c;
-					ext_name_My := My.to_c;
-					set_posit (screen_object, new_x, $ext_name_Mx);
-					set_posit (screen_object, new_y, $ext_name_My);
-				else
-					xt_move_widget (screen_object, new_x, new_y)
-				end
-			end;
-		end;
-
-	set_y (new_y: INTEGER) is
-			-- Put at vertical position `new_y'
-		local
-			ext_name_My: ANY
-		do
-			if  not realized then
-				xt_set_geometry (screen_object, x, new_y)
-			else
-				if shown then
-					ext_name_My := My.to_c;
-					set_posit (screen_object, new_y, $ext_name_My);
-				else
-					xt_move_widget (screen_object, x, new_y)
-				end
-			end
-		end;
-
-
-feature {NONE} -- External features
-
-	create_file_select_d (d_name: POINTER; scr_obj: POINTER): POINTER is
-		external
-			"C"
-		end;
-
-    xt_move_widget (scr_obj: POINTER; x_value, y_value: INTEGER) is
-        external
-            "C"
-        end;
-
-    xt_set_geometry (scr_obj: POINTER; x_value, y_value: INTEGER) is
-        external
-            "C"
-        end;
-
-end
-
-
+end -- class FILE_SEL_D_M
 
 --|----------------------------------------------------------------
 --| EiffelVision: library of reusable components for ISE Eiffel 3.

@@ -1,5 +1,7 @@
 indexing
 
+	description:
+		"Abstract notion of a dialog.";
 	status: "See notice at end of class";
 	date: "$Date$";
 	revision: "$Revision$"
@@ -8,408 +10,456 @@ deferred class DIALOG_M
 
 inherit
 
-	G_ANY_M
-		export
-			{NONE} all
-		end;
-
-	WM_SHELL_M
-		export
-			{NONE} all
-		redefine
-			title, set_title
-		end;
-
-	DIALOG_R_M
-		export
-			{NONE} all
-		end;
-
 	DIALOG_I
-		
-feature 
-
-	allow_resize is
-			-- Allow geometry resize to all geometry requests
-			-- from its children.
-		local
-			ext_name_shell: ANY
-		do
-			ext_name_shell := MallowShellResize.to_c;
-			d_set_boolean (d_xt_parent (screen_object), 
-					True,
-					$ext_name_shell)
+		rename
+			is_cascade_grab as dialog_primary_application_modal,
+			is_exclusive_grab as dialog_full_application_modal,
+			is_no_grab as dialog_modeless,
+			set_cascade_grab as set_dialog_primary_application_modal,
+			set_exclusive_grab as set_dialog_full_application_modal,
+			set_no_grab as set_dialog_modeless
 		end;
 
-feature {NONE}
+	MEL_RECT_OBJ_RESOURCES;
 
-	dialog_define_cursor_if_shell (cursor: SCREEN_CURSOR) is
-			-- Define `cursor' if the current widget is a shell.
-		require
-			a_cursor_exists: not (cursor = Void)
-		local
-			display_pointer: POINTER;
-			window, void_pointer: POINTER;
-			cursor_implementation: SCREEN_CURSOR_X
-		do
-			window := d_xt_window (screen_object);
-			if window /= void_pointer then
-				display_pointer := d_xt_display (screen_object);
-				cursor_implementation ?= cursor.implementation;
-				d_x_define_cursor (display_pointer, 
-							window, 
-							cursor_implementation.cursor_id (screen));
-				d_x_flush (display_pointer)
-			end
+	MEL_XT_FUNCTIONS;
+
+	MEL_CALLBACK
+
+feature -- Access
+
+	screen_object, action_target: POINTER;
+			-- Action target of widget (dialog or widget inside dialog)
+
+	dialog_shell: MEL_DIALOG_SHELL is
+			-- Associated dialog shell
+		deferred
 		end;
 
-	dialog_undefine_cursor_if_shell is
-			-- Undefine the cursor if the current widget is a shell.
-		local
-			display_pointer, void_pointer: POINTER;
-			window: POINTER
+	is_stackable: BOOLEAN is
+			-- Is Current a stackable element?
+			-- (No it is not)
 		do
-			window := d_xt_window (screen_object);
-			if window /= void_pointer then
-				display_pointer := d_xt_display (screen_object);
-				d_x_undefine_cursor (display_pointer, window);
-				d_x_flush (display_pointer)
-			end
 		end;
 
-feature 
+	is_popped_up: BOOLEAN;
+			-- Is the popup widget popped up on screen ?
 
-	forbid_resize is
-			-- Forbid geometry resize to all geometry requests
-			-- from its children.
-		local
-			ext_name_shell: ANY
+	is_shown: BOOLEAN is
+			-- Is current widget visible on the screen?
 		do
-			ext_name_shell := MallowShellResize.to_c;
-			d_set_boolean (d_xt_parent (screen_object), 
-						False,
-						$ext_name_shell)
+			Result := dialog_shell.is_shown
 		end;
+
+	manage is
+			-- Manage dialog
+		deferred
+		end;
+
+	unmanage is
+			-- Unmanage dialog
+		deferred
+		end;
+
+feature -- Status report
 
 	title: STRING is
 			-- Application name to be displayed by
 			-- the window manager
-		local
-			ext_name: ANY
 		do
-			ext_name := MdialogTitle.to_c;
-			Result := d_from_xm_string (screen_object, $ext_name)
+			Result := dialog_shell.title
 		end;
 
-	set_title (a_title: STRING) is
-			-- Set `title' to `a_title'.
-		require else
-			not_a_title_void: not (a_title = Void)
-		local
-			ext_name, ext_name_title: ANY
+	widget_group: WIDGET is
+			-- Widget with wich current widget is associated.
+			-- By convention this widget is the "leader" of a group
+			-- widgets. Window manager will treat all widgets in
+			-- a group in some way; for example, it may move or
+			-- iconify them together
 		do
-			ext_name_title := a_title.to_c;
-			ext_name := MdialogTitle.to_c;
-			d_to_left_xm_string (screen_object, ext_name_title, ext_name)
+		end 
+
+ 	base_height: INTEGER is
+			-- Base for a progression of preferred heights
+			-- for current window manager to use in sizing
+			-- widgets.
+			-- The preferred heights are `base_heights' plus
+			-- integral multiples of `height_inc'
+		do
+			Result := dialog_shell.base_height
 		end;
 
-feature {NONE}
-
-	grab_type: INTEGER;
-			-- Type of grab
-	
-feature 
-
-	is_cascade_grab: BOOLEAN is
-			-- Is the shell popped up with cascade grab (allowing the other
-			-- shells popped up with grab to receive events) ?
+	base_width: INTEGER is
+			-- Base for a progression of preferred widths
+			-- for current window manager to use in sizing
+			-- widgets.
+			-- The preferred widths are `base_heights' plus
+			-- integral multiples of `width_inc'
 		do
-			Result := grab_type = 2
+			Result := dialog_shell.base_width
 		end;
 
-	is_exclusive_grab: BOOLEAN is
-			-- Is the shell popped up with exclusive grab ?
+	height_inc: INTEGER is
+			-- Increment for a progression of preferred
+			-- heights for the window manager tu use in sizing 
+			-- widgets.
 		do
-			Result := grab_type = 1
+			Result := dialog_shell.height_inc
 		end;
 
-	is_no_grab: BOOLEAN is
-			-- Is the shell popped up with no grab ?
+	width_inc: INTEGER is
+			-- Increment for a progression of preferred
+			-- widths for the window manager tu use in sizing
+			-- widgets.
 		do
-			Result := grab_type = 0
+			Result := dialog_shell.width_inc
 		end;
 
-	is_poped_up: BOOLEAN is
-			-- Is the popup widget popped up on screen ?
-		obsolete "Use is_popped_up instead, corrected feature spelling."
+	icon_mask: PIXMAP is
+			-- Bitmap that could be used by window manager
+			-- to clip `icon_pixmap' bitmap to make the
+			-- icon nonrectangular 
 		do
-			Result :=  d_c_is_poped_up (d_xt_parent (screen_object))
 		end;
 
-	is_popped_up: BOOLEAN is
-			-- Is the popup widget popped up on screen ?
+	icon_pixmap: PIXMAP is
+			-- Bitmap that could be used by the window manager
+			-- as the application's icon
 		do
-			Result :=  d_c_is_poped_up (d_xt_parent (screen_object))
 		end;
 
-	lower is
-			-- Lower the shell in the stacking order.
-		local
-			window, display_pointer, void_pointer: POINTER
+	icon_x: INTEGER is
+			-- Place to put application's icon
+			-- Since the window manager controls icon placement
+			-- policy, this may be ignored.
 		do
-			window := d_xt_window (d_xt_parent (screen_object));
-			if window /= void_pointer then
-				display_pointer := d_xt_display (d_xt_parent (screen_object));
-				d_x_lower_window (display_pointer, window)
-			end
+			Result := dialog_shell.icon_x
+		end; 
+
+	icon_y: INTEGER is
+			-- Place to put application's icon
+			-- Since the window manager controls icon placement
+			-- policy, this may be ignored.
+		do
+			Result := dialog_shell.icon_y
+		end;
+
+	max_height: INTEGER is
+			-- Maximum height that application wishes widget
+			-- instance to have
+		do
+			Result := dialog_shell.max_height
+		end;
+
+	max_width: INTEGER is
+			-- Maximum width that application wishes widget
+			-- instance to have
+		do
+			Result := dialog_shell.max_width
+		end;
+
+	min_aspect_x: INTEGER is
+			-- Numerator of minimum aspect ratio (X/Y) that
+			-- application wishes widget instance to have
+		do
+			Result := dialog_shell.min_aspect_x
+		end;
+
+	min_aspect_y: INTEGER is
+			-- Denominator of minimum ration (X/Y) that
+			-- application wishes widget instance to have
+		do
+			Result := dialog_shell.min_aspect_y
+		end;
+
+	min_height: INTEGER is
+			-- minimum height that application wishes widget
+			-- instance to have
+		do
+			Result := dialog_shell.min_height
+		end;
+
+	min_width: INTEGER is
+			-- minimum width that application wishes widget
+			-- instance to have
+		do
+			Result := dialog_shell.min_width
+		end; 
+
+	max_aspect_y: INTEGER is
+			-- Denominator of maximum ration (X/Y) that
+			-- application wishes widget instance to have
+		do
+			Result := dialog_shell.max_aspect_y
+		end;
+
+	max_aspect_x: INTEGER is
+			-- Numerator of maximum aspect ratio (X/Y) that
+			-- application wishes widget instance to have
+		do
+			Result := dialog_shell.max_aspect_x
 		end;
 
 	popdown is
 			-- Popdown popup shell.
 		do
-			if is_popped_up then
-				d_xt_unmanage_child (screen_object)
-			end
-		ensure then
-			not is_popped_up
+			unmanage;
+			is_popped_up := False
 		end;
 
 	popup is
 			-- Popup a popup shell.
 		do
 			if not is_popped_up then
-				d_xt_manage_child (screen_object);
-				d_c_add_grab (d_xt_parent (screen_object), grab_type)
+				manage;
+				is_popped_up := True
 			end
+		end;
+
+feature -- Status setting
+
+	set_title (a_title: STRING) is
+			-- Set `title' to `a_title'.
+		do
+			dialog_shell.set_title (a_title)
+		end;
+
+	dialog_command_target is
+			-- Set the main object to the dialog shell.
+		do
+			screen_object := dialog_shell.screen_object
 		ensure then
-			is_popped_up
+			target_correct: screen_object = dialog_shell.screen_object
+		end;
+
+	widget_command_target is
+			-- Set the main object to the dialog.
+		do
+			screen_object := action_target;
+		ensure then
+			target_correct: action_target = screen_object;
+		end;
+
+	set_base_height (a_height: INTEGER) is
+			-- Set `base_height' to `a_height'. 
+		do
+			dialog_shell.set_base_height (a_height)
+		end;
+
+	set_base_width (a_width: INTEGER) is
+			-- Set `base_width' to `a_width'.
+		do
+			dialog_shell.set_base_height (a_width)
+		end;
+
+	set_height_inc (an_increment: INTEGER) is
+			-- Set `height_inc' to `an_increment'.
+		do
+			dialog_shell.set_height_inc (an_increment)
+		end;
+
+	set_width_inc (an_increment: INTEGER) is
+			-- Set `width_inc' to `an_increment'.
+		do
+			dialog_shell.set_width_inc (an_increment)
+		end;
+
+	set_icon_mask (a_mask: PIXMAP) is
+			-- Set `icon_mask' to `a_mask'.
+		do
+		end;
+
+	set_icon_pixmap (a_pixmap: PIXMAP) is
+			-- Set `icon_pixmap' to `a_pixmap'.
+		do
+		end;
+
+	set_icon_x (x_value: INTEGER) is
+			-- Set `icon_x' to `x_value'.
+		do
+			dialog_shell.set_icon_x (x_value)
+		end;
+
+	set_icon_y (y_value: INTEGER) is
+			-- Set `icon_y' to `y_value'.
+		do
+			dialog_shell.set_icon_y (y_value)
+		end; 
+
+	set_max_aspect_x (a_max: INTEGER) is
+			-- Set `max_aspect_x' to `a_max'.
+		do
+			dialog_shell.set_max_aspect_x (a_max)
+		end;
+
+	set_max_aspect_y (a_max: INTEGER) is
+			-- Set `max_aspect_y' to `a_max'.
+		do
+			dialog_shell.set_max_aspect_y (a_max)
+		end;
+
+	set_max_height (a_height: INTEGER) is
+			-- Set `max_height' to `a_height'.
+		do
+			dialog_shell.set_max_height (a_height)
+		end;
+
+	set_max_width (a_max: INTEGER) is
+			-- Set `max_width' to `a_max'.
+		do
+			dialog_shell.set_max_width (a_max)
+		end;
+
+	set_min_aspect_x (a_min: INTEGER) is
+			-- Set `min_aspect_x' to `a_min'.
+		do
+			dialog_shell.set_min_aspect_x (min_aspect_x)
+		end;
+
+	set_min_aspect_y (a_min: INTEGER) is
+			-- Set `min_aspect_y' to `a_min'.
+		do
+			dialog_shell.set_min_aspect_y (a_min)
+		end;
+
+	set_min_height (a_height: INTEGER) is
+			-- Set `min_height' to `a_height'.
+		do
+			dialog_shell.set_min_height (a_height)
+		end;
+
+	set_min_width (a_min: INTEGER) is
+			-- Set `min_width' to `a_min'.
+		do
+			dialog_shell.set_min_width (min_width)
+		end;
+
+	set_widget_group (a_widget: WIDGET) is
+			-- Set `widget_group' to `a_widget'.
+		do
+		end;
+
+feature -- Element change
+
+	allow_resize is
+			-- Allow geometry resize to all geometry requests
+			-- from its children.
+		do
+			dialog_shell.set_allow_shell_resize (True)
+		end;
+
+	forbid_resize is
+			-- Forbid geometry resize to all geometry requests
+			-- from its children.
+		do
+			dialog_shell.set_allow_shell_resize (False)
+		end;
+
+feature -- Display
+
+	lower is
+			-- Lower the shell in the stacking order.
+		do
+			dialog_shell.raise
 		end;
 
 	raise is
 			-- Raise the shell to the top of the stacking order.
 		local
-			window, display_pointer, void_pointer: POINTER
+			--window, display_pointer, void_pointer: POINTER
 		do
-			window := d_xt_window (d_xt_parent (screen_object));
-			if window /= void_pointer then
-				display_pointer := d_xt_display (d_xt_parent (screen_object));
-				d_x_raise_window (display_pointer, window)
-			end
+			dialog_shell.raise
 		end;
 
 	hide is
 			-- Make widget invisible on the screen.
 		do
-			d_xt_unmap_widget (d_xt_parent (screen_object))
+			dialog_shell.hide
 		end;
 
 	show is
 			-- Make widget visible on the screen.
 		do
-			d_xt_map_widget (d_xt_parent (screen_object))
+			dialog_shell.show
 		end;
 
-	shown: BOOLEAN is
-			-- Is current widget visible on the screen?
-		require
-			widget_realized: realized
-		do
-			Result := d_xt_is_visible (d_xt_parent (screen_object))
-		end;
-
-	destroy_xt_widget is
-			-- Destroy Xt widget.
+	destroy (wid_list: LINKED_LIST [WIDGET]) is
+			-- Destroy screen widget implementation and all
+			-- screen widget implementations of its children
+			-- contained in `wid_list;.
 		do
 			popdown;
-			d_xt_destroy_widget (screen_object);
+			mel_destroy
 		end;
 
-	realized: BOOLEAN is
+feature {NONE} -- Implementation
+
+	define_cursor_if_shell (cursor: SCREEN_CURSOR) is
+			-- Define `cursor' if the current widget is a shell.
+		require
+			a_cursor_exists: cursor /= Void
+		local
+			--display_pointer: POINTER;
+			--window, void_pointer: POINTER;
+			--cursor_implementation: SCREEN_CURSOR_X
+		do
+			--window := d_xt_window (screen_object);
+			--if window /= void_pointer then
+				--display_pointer := d_xt_display (screen_object);
+				--cursor_implementation ?= cursor.implementation;
+				--d_x_define_cursor (display_pointer, 
+							--window, 
+							--cursor_implementation.cursor_id (screen));
+				--d_x_flush (display_pointer)
+			--end
+		end;
+
+	undefine_cursor_if_shell is
+			-- Undefine the cursor if the current widget is a shell.
+		local
+			display_pointer, void_pointer: POINTER;
+		do
+			--window := d_xt_window (screen_object);
+			--if window /= void_pointer then
+				--display_pointer := d_xt_display (screen_object);
+				--d_x_undefine_cursor (display_pointer, window);
+				--d_x_flush (display_pointer)
+			--end
+		end;
+
+	mel_destroy is
+			-- Destroy the associated MEL widget.
 		deferred
 		end;
 
-feature 
+feature -- Execution
 
-	set_cascade_grab is
-			-- Specifies that the shell would be popped up with cascade grab
-			-- (allowing the other shells popped up with grab to receive events).
+	execute (up: ANY) is
+		local
+			bool_ref: BOOLEAN_REF
 		do
-			grab_type := 2
-		ensure then
-			is_cascade_grab
-		end; -- set_cascade_grab
+			bool_ref ?= up;
+			check
+				non_void_bool_ref: bool_ref /= Void
+			end;
+			is_popped_up := bool_ref.item
+		end;
 
-	set_exclusive_grab is
-			-- Specifies that the shell would be popped up with exclusive grab.
+feature {NONE} -- Implementation
+
+	initialize (shell: MEL_SHELL) is
+			-- Initialize the current dialog
 		do
-			grab_type := 1
-		ensure then
-			is_exclusive_grab
-		end; -- set_exclusive_grab
-
-	set_no_grab is
-			-- Specifies that the shell would be popped up with no grab.
-		do
-			grab_type := 0
-		ensure then
-			is_no_grab
-		end
-
-feature
-
-	dialog_command_target is
-		do
-			action_target := d_xt_parent (screen_object);
-		ensure then
-			target_correct: action_target = d_xt_parent (screen_object);
+			shell.set_allow_shell_resize (False);
+			shell.add_popup_callback (Current, True);
+			shell.add_popdown_callback (Current, False);
 		end;
 
-	widget_command_target is
-		do
-			action_target := screen_object;
-		ensure then
-			target_correct: action_target = screen_object;
-		end;
+invariant
 
-	action_target: POINTER;
+	non_void_dialog_shell: dialog_shell /= Void
 
-feature {NONE} -- External features
-
-	d_xt_destroy_widget (scr_obj: POINTER) is
-		external
-			"C"
-		alias
-			"xt_destroy_widget"
-		end;
-
-	d_xt_is_visible (scr_obj: POINTER): BOOLEAN is
-		external
-			"C"
-		alias
-			"xt_is_visible"
-		end;
-
-	d_xt_unmap_widget (scr_obj: POINTER) is
-		external
-			"C"
-		alias
-			"xt_unmap_widget"
-		end;
-
-	d_xt_map_widget (scr_obj: POINTER) is
-		external
-			"C"
-		alias
-			"xt_map_widget"
-		end;
-
-	d_to_left_xm_string (scr_obj: POINTER; name1, name2: ANY) is
-		external
-			"C"
-		alias
-			"to_left_xm_string"
-		end;
-	d_from_xm_string (scr_obj: POINTER; name1: POINTER): STRING is
-		external
-			"C"
-		alias
-			"from_xm_string"
-		end;
-
-	d_set_boolean (value1: POINTER; value2: BOOLEAN; s_name: POINTER) is
-		external
-			"C"
-		alias
-			"set_boolean"
-		end;
-
-	d_x_raise_window (dspl_pointer, wndw: POINTER) is
-		external
-			"C"
-		alias
-			"x_raise_window"
-		end;
-
-	d_c_add_grab (value: POINTER; grab_type_val: INTEGER) is
-		external
-			"C"
-		alias
-			"c_add_grab"
-		end;
-
-	d_xt_manage_child (scr_obj: POINTER) is
-		external
-			"C"
-		alias
-			"xt_manage_child"
-		end;
-
-	d_xt_unmanage_child (scr_obj: POINTER) is
-		external
-			"C"
-		alias
-			"xt_unmanage_child"
-		end;
-
-	d_x_lower_window (dspl_pointer, wndw: POINTER) is
-		external
-			"C"
-		alias
-			"x_lower_window"
-		end;
-
-	d_c_is_poped_up (value: POINTER): BOOLEAN is
-		external
-			"C"
-		alias
-			"c_is_poped_up"
-		end;
-
-	d_x_undefine_cursor (dspl_pointer, wndw: POINTER) is
-		external
-			"C"
-		alias
-			"x_undefine_cursor"
-		end;
-
-	d_xt_window (scr_obj: POINTER): POINTER is
-		external
-			"C"
-		alias
-			"xt_window"
-		end;
-
-	d_xt_display (scr_obj: POINTER): POINTER is
-		external
-			"C"
-		alias
-			"xt_display"
-		end;
-
-	d_x_flush (dspl_pointer: POINTER) is
-		external
-			"C"
-		alias
-			"x_flush"
-		end;
-
-	d_x_define_cursor (dspl_pointer, wndw, curs_id: POINTER) is
-		external
-			"C"
-		alias
-			"x_define_cursor"
-		end;
-
-	d_xt_parent (scr_obj: POINTER): POINTER is
-		external
-			"C"
-		alias
-			"xt_parent"
-		end;
-
-end
-
-
+end -- class DIALOG_M
 
 --|----------------------------------------------------------------
 --| EiffelVision: library of reusable components for ISE Eiffel 3.
@@ -423,3 +473,4 @@ end
 --| Electronic mail <info@eiffel.com>
 --| Customer support e-mail <support@eiffel.com>
 --|----------------------------------------------------------------
+

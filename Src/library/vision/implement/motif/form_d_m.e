@@ -1,146 +1,88 @@
 indexing
 
-	description: "Motif form dialog implementation";
+	description: 
+		"EiffelVision implementation of a Motif form dialog.";
 	status: "See notice at end of class";
 	date: "$Date$";
 	revision: "$Revision$"
 
-class FORM_D_M
+class 
+	FORM_D_M
 
 inherit
 
-	FORM_D_I
-		export
-			{NONE} all
+	FORM_D_I;
+
+	DIALOG_M
+		redefine
+			screen_object
 		end;
 
 	FORM_M
 		rename
-			make as form_make
+			make as form_m_make
 		undefine
-			lower, raise, action_target,		
-			hide, show, shown, destroy_xt_widget
-		redefine
+			lower, raise, 
+			hide, show, is_shown, destroy,
 			define_cursor_if_shell, undefine_cursor_if_shell,
-			set_x, set_y, set_x_y, is_stackable
+			is_stackable, clean_up,
+			form_make, create_widget
+		redefine
+			screen_object
 		end;
 
-	DIALOG_M
+	MEL_FORM_DIALOG
+		rename
+			make as mel_form_d_make,
+			make_no_auto_unmanage as mel_make_no_auto_unmanage,
+			foreground_color as mel_foreground_color,
+			background_color as mel_background_color,
+			background_pixmap as mel_background_pixmap,
+			set_background_color as mel_set_background_color,
+			set_foreground_color as mel_set_foreground_color,
+			set_background_pixmap as mel_set_background_pixmap,
+			destroy as mel_destroy,
+			screen as mel_screen,
+			attach_right as mel_attach_right,
+			attach_left as mel_attach_left,
+			attach_top as mel_attach_top,
+			attach_bottom as mel_attach_bottom,
+			detach_right as mel_detach_right,
+			detach_left as mel_detach_left,
+			detach_top as mel_detach_top,
+			detach_bottom as mel_detach_bottom
+		undefine
+			set_x, set_y, set_x_y, raise, lower, 
+			show, hide, is_shown
+		redefine
+			screen_object
+		select
+			form_make_no_auto_unmanage
+		end
 
 creation
 
 	make
 
-feature {NONE} -- Creation
+feature {NONE} -- Initialization
 
 	make (a_form_dialog: FORM_D) is
 			-- Create a motif form dialog.
-		local
-			ext_name: ANY
 		do
 			widget_index := widget_manager.last_inserted_position;
-			ext_name := a_form_dialog.identifier.to_c;
-			screen_object := create_form_d ($ext_name,
-					parent_screen_object (a_form_dialog, widget_index));
+			mel_make_no_auto_unmanage (a_form_dialog.identifier,
+				mel_parent (a_form_dialog, widget_index));
 			a_form_dialog.set_dialog_imp (Current);
-			forbid_resize;
 			action_target := screen_object;
+			initialize (dialog_shell)
 		end;
 
-	is_stackable: BOOLEAN is do end;
+feature -- Access
 
-feature {ALL_CURS_X}
+	screen_object: POINTER
+			-- Associated C widget pointer
 
-	define_cursor_if_shell (a_cursor: SCREEN_CURSOR) is
-			-- Define `cursor' if the current widget is a shell.
-		require else
-			a_cursor_exists: not (a_cursor = Void)
-		do
-			dialog_define_cursor_if_shell (a_cursor)
-		end; -- define_cursor_if_shell
-
-	undefine_cursor_if_shell is
-			-- Undefine the cursor if the current widget is a shell.
-		do
-			dialog_undefine_cursor_if_shell
-		end; -- undefine_cursor_if_shell
-
-feature 
-
-	set_x (new_x: INTEGER) is
-			-- Put at horizontal position `new_x'
-		local
-			ext_name_Mx: ANY
-		do
-			if  not realized then
-				xt_set_geometry (screen_object, new_x, y)
-			else
-				if shown then
-					ext_name_Mx := Mx.to_c;
-					set_posit (screen_object, new_x, $ext_name_Mx)
-				else
-					xt_move_widget (screen_object, new_x, y)
-				end
-			end
-		end;
-
-	set_x_y (new_x: INTEGER; new_y: INTEGER) is
-			-- Put at horizontal position `new_x' and at
-			-- vertical position `new_y'
-		local
-			ext_name_Mx, ext_name_My: ANY
-		do
-			if  not realized then
-				xt_set_geometry (screen_object, new_x, new_y)
-			else
-				if shown then
-					ext_name_Mx := Mx.to_c;
-					ext_name_My := My.to_c;
-					set_posit (screen_object, new_x, $ext_name_Mx);
-					set_posit (screen_object, new_y, $ext_name_My);
-				else
-					xt_move_widget (screen_object, new_x, new_y)
-				end
-			end;
-		end; -- set_x_y
-
-	set_y (new_y: INTEGER) is
-			-- Put at vertical position `new_y'
-		local
-			ext_name_My: ANY
-		do
-			if  not realized then
-				xt_set_geometry (screen_object, x, new_y)
-			else
-				if shown then
-					ext_name_My := My.to_c;
-					set_posit (screen_object, new_y, $ext_name_My);
-				else
-					xt_move_widget (screen_object, x, new_y)
-				end
-			end
-		end
-
-feature {NONE} -- External features
-
-	create_form_d (fd_name: POINTER; scr_obj: POINTER): POINTEr is
-		external
-			"C"
-		end;
-
-	xt_set_geometry (scr_obj: POINTER; x_value, y_value: INTEGER) is
-		external
-			"C"
-		end;
-
-	xt_move_widget (scr_obj: POINTER; x_value, y_value: INTEGER) is
-		external
-			"C"
-		end;
-
-end
-
-
+end -- class FORM_D
 
 --|----------------------------------------------------------------
 --| EiffelVision: library of reusable components for ISE Eiffel 3.

@@ -1,6 +1,7 @@
 indexing
 
-	description: "Motif menu bar implementation";
+	description: 
+		"EiffelVision implementation of a Motif menu bar.";
 	status: "See notice at end of class";
 	date: "$Date$";
 	revision: "$Revision$"
@@ -9,78 +10,99 @@ class BAR_M
 
 inherit
 
-	BAR_I
-		export
-			{NONE} all
+	BAR_I;
+
+	MANAGER_M
+		undefine
+			create_callback_struct
 		end;
 
-	MENU_M
+	MEL_MENU_BAR
+		rename
+			make as bar_make,
+			foreground_color as mel_foreground_color,
+			set_foreground_color as mel_set_foreground_color,
+			background_color as mel_background_color,
+			background_pixmap as mel_background_pixmap,
+			set_background_color as mel_set_background_color,
+			set_background_pixmap as mel_set_background_pixmap,
+			destroy as mel_destroy,
+			screen as mel_screen
+		end
 
 creation
 
 	make
 
-feature {NONE} -- Creation
+feature {NONE} -- Initialization
 
 	make (a_bar: BAR; man: BOOLEAN) is
 			-- Create a motif bar menu.
-		local
-			ext_name_bar: ANY
 		do
 			widget_index := widget_manager.last_inserted_position;
-			ext_name_bar := a_bar.identifier.to_c;
-			screen_object := create_bar ($ext_name_bar, 
-						parent_screen_object (a_bar, widget_index),
-						man);
-			abstract_menu := a_bar
+			bar_make (a_bar.identifier,
+					mel_parent (a_bar, widget_index),
+					man);
 		end;
 
-feature {NONE}
+feature -- Status report
 
 	help_button: MENU_B is
 			-- Menu Button which appears at the lower right corner of the
 			-- menu bar
+		local
+			widget_m: WIDGET_M
 		do
-			Result ?= widget_manager.screen_object_to_oui 
-						(xt_widget (screen_object, MmenuHelpWidget))
+			widget_m ?= menu_help_widget;
+			if widget_m /= Void then
+				Result ?= widget_m.widget_oui
+			end;
+		end;
+
+	title: STRING is
+			-- Title of current menu
+		do
+			Result := ""
+		end;
+
+	remove_title is
+			-- Remove current menu title if any.
+		do
+			-- Do nothing
+		end;
+
+feature -- Status setting
+
+	set_title (a_title: STRING) is
+			-- Set menu title to `a_title'.
+		do
 		end;
 
 	set_help_button (button: MENU_B) is
 			-- Set the Menu Button which appears at the lower right corner
 			-- of the menu bar.
+		local
+			mel_cb: MEL_CASCADE_BUTTON
 		do
-			set_xt_widget (screen_object, 
-						button.implementation.screen_object, 
-						MmenuHelpWidget)
-		ensure then
-			help_not_void: help_button /= Void;
-			help_button_set: help_button.same (button)
+			mel_cb ?= button.implementation;
+			set_menu_help_widget (mel_cb)
 		end;
 
-
 	allow_recompute_size  is
+			-- Enable the recompute size.
 		do
-			set_xt_boolean (screen_object, True, MresizeWidth);
-			set_xt_boolean (screen_object, True, MresizeHeight);
+			set_resize_height (True);
+			set_resize_width (True)
 		end;
 
 	forbid_recompute_size  is
+			-- Disable the recompute size.
 		do
-			set_xt_boolean (screen_object, False, MresizeHeight);
-			set_xt_boolean (screen_object, False, MresizeWidth);
+			set_resize_height (False);
+			set_resize_width (False)
 		end;
 
-feature {NONE} -- External features
-
-	create_bar (b_name: POINTER; scr_obj: POINTER;
-			man: BOOLEAN): POINTER is
-		external
-			"C"
-		end;
-
-end
-
-
+end -- class BAR_M
 
 --|----------------------------------------------------------------
 --| EiffelVision: library of reusable components for ISE Eiffel 3.

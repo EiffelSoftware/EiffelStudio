@@ -1,30 +1,41 @@
 indexing
 
-	description: "Implementation of radio box";
+	description: 
+		"EiffelVision implementation of a Motif radio box.";
 	status: "See notice at end of class";
 	date: "$Date$";
 	revision: "$Revision$"
 
-class RADIO_BOX_M 
+class 
+	RADIO_BOX_M 
 
 inherit
 
-	RADIO_BOX_I
-		export
-			{NONE} all
-		end;
-	ROW_COLUMN_R_M
-		export
-			{NONE} all
-		end;
+	RADIO_BOX_I;
 
 	MANAGER_M
+		undefine
+			create_callback_struct
+		end;
+
+    MEL_RADIO_BOX
+        rename
+            make as mel_radio_make,
+            foreground_color as mel_foreground_color,
+            set_foreground_color as mel_set_foreground_color,
+            background_color as mel_background_color,
+            background_pixmap as mel_background_pixmap,
+            set_background_color as mel_set_background_color,
+            set_background_pixmap as mel_set_background_pixmap,
+            destroy as mel_destroy,
+            screen as mel_screen
+        end
 
 creation
 
 	make
 
-feature {NONE} -- Creation
+feature {NONE} -- Initialization
 
 	make (a_radio_box: RADIO_BOX; man: BOOLEAN) is
 			-- Create a motif radio_box.
@@ -32,31 +43,20 @@ feature {NONE} -- Creation
 			ext_name: ANY
 		do
 			widget_index := widget_manager.last_inserted_position;
-			ext_name := a_radio_box.identifier.to_c;
-			screen_object := create_radio_box ($ext_name,
-					parent_screen_object (a_radio_box, widget_index),
-					man);
+            mel_radio_make (a_radio_box.identifier,
+                    mel_parent (a_radio_box, widget_index),
+                    man);
 		end;
 
-feature
+feature -- Status setting
 
 	set_always_one (flag: BOOLEAN) is
+			-- Set radio always one to `flag;.
 		do
-			set_xt_boolean (screen_object, flag, MradioAlwaysOne);
+			set_radio_always_one (flag)
 		end;
 
-
-feature {NONE} -- External features
-
-	create_radio_box (b_name: POINTER; scr_obj: POINTER;
-			man: BOOLEAN): POINTER is
-		external
-			"C"
-		end;
-
-end
-
-
+end -- class RADIO_BOX_M
 
 --|----------------------------------------------------------------
 --| EiffelVision: library of reusable components for ISE Eiffel 3.

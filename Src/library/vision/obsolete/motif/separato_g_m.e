@@ -9,19 +9,24 @@ class SEPARATO_G_M
 
 inherit
 
-	SEPARATO_G_I
-		export
-			{NONE} all
-		end;
+	SEPARATO_G_I;
 
-	SEPARATOR_M
-		rename
-			make as separator_m_make
+	WIDGET_M
+		undefine
+			clean_up_callbacks
 		redefine
 			set_action, remove_action,
-			set_background_color,
-			set_foreground_color
+			set_background_color, set_background_pixmap
+		end;
+
+	MEL_SEPARATOR_GADGET
+		rename
+			make as mel_sep_make,
+			destroy as mel_destroy,
+			screen as mel_screen,
+			set_horizontal as mel_set_horizontal
 		end
+
 
 creation
 
@@ -31,61 +36,74 @@ feature {NONE} -- Creation
 
 	make (a_separator_gadget: SEPARATOR_G; man: BOOLEAN) is
 			-- Create a motif separator gadget.
-		local
-			ext_name: ANY
 		do
 			widget_index := widget_manager.last_inserted_position;
-			ext_name := a_separator_gadget.identifier.to_c;
-			screen_object := create_separator_gadget ($ext_name, 
-				parent_screen_object (a_separator_gadget, widget_index),
-				man);
-		ensure
-			--default_orientation: is_horizontal
+			mel_sep_make (a_separator_gadget.identifier,
+					mel_parent (a_separator_gadget, widget_index),
+					man);
 		end;
 
-feature
+feature -- Access
+
+	is_stackable: BOOLEAN is
+			-- Is the Current widget stackable?
+		do
+			Result := True
+		end;
+
+feature -- Status setting
+
+	set_horizontal (flag: BOOLEAN) is
+			-- Set orientation of the scale to horizontal if `flag',
+			-- to vertical otherwise.
+		do
+			if flag then
+				mel_set_horizontal
+			else
+				set_vertical
+			end
+		end;
+
+feature {NONE} -- Implementation
+
+	foreground_color: COLOR is
+			-- Foreground color of gadget (Is Void)
+		do
+		end;
 
 	remove_action (a_translation: STRING) is
 			-- Remove the command executed when `a_translation' occurs.
 			-- Do nothing if no command has been specified.
-		require else
-			no_translation_on_gadgets: false
 		do
-		end; -- remove_action
+		end; 
 
 	set_action (a_translation: STRING; a_command: COMMAND; argument: ANY) is
 			-- Set `a_command' to be executed when `a_translation' occurs.
 			-- `a_translation' is specified with Xtoolkit convention.
-		require else
-			no_translation_on_gadgets: false
 		do
-		end; -- set_action
+		end; 
 
 	set_background_color (new_color: COLOR) is
 			-- Set background color to `new_color'.
-		require else
-			argument_not_void: not (new_color = Void)
 		do
-		end; -- set_background_color
+		end; 
 
-	set_foreground_color (new_color: COLOR) is
-			-- Set foreground_color color to `new_color'.
-		require else
-			color_not_void: not (new_color = Void)
+	set_background_pixmap (new_pixmap: PIXMAP) is
+			-- Set background_pixmap to `new_color'.
 		do
 		end
 
-feature {NONE} -- External features
-
-	create_separator_gadget (sg_name: POINTER; scr_obj: POINTER;
-			man: BOOLEAN): POINTER is
-		external
-			"C"
+	set_foreground_color (new_color: COLOR) is
+			-- Set foreground_color color to `new_color'.
+		do
 		end;
 
-end
+	update_foreground_color is
+			-- Do nothing.
+		do
+		end;
 
-
+end -- class SEPARATO_G_M
 
 --|----------------------------------------------------------------
 --| EiffelVision: library of reusable components for ISE Eiffel 3.

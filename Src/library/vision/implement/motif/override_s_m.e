@@ -1,52 +1,49 @@
 indexing
 
-	description: "Implementation of override shell";
+	description: 
+		"EiffelVision implementation of Motif override shell.";
 	status: "See notice at end of class";
 	date: "$Date$";
 	revision: "$Revision$"
 
-class OVERRIDE_S_M 
+class 
+	OVERRIDE_S_M 
 
 inherit
 
-	OVERRIDE_S_I
-		export
-			{NONE} all
-		end;
+	OVERRIDE_S_I;
 
 	POPUP_S_M;
+
+    MEL_OVERRIDE_SHELL
+        rename
+            make as mel_override_make,
+            background_color as mel_background_color,
+            background_pixmap as mel_background_pixmap,
+            set_background_color as mel_set_background_color,
+            set_background_pixmap as mel_set_background_pixmap,
+            destroy as mel_destroy,
+            screen as mel_screen
+		undefine
+			popdown
+		end
 
 creation
 
 	make
 
-feature {NONE} -- Creation
+feature {NONE} -- Initialization
 
 	make (an_override_shell: OVERRIDE_S) is
 			-- Create an override shell.
-		local
-			ext_name: ANY
 		do
 			widget_index := widget_manager.last_inserted_position;
-			!! is_popped_up_ref;
-			ext_name := an_override_shell.identifier.to_c;
-			screen_object := xt_create_override_shell ($ext_name,
-					parent_screen_object (an_override_shell, widget_index))
-			initialize (an_override_shell);
+            mel_override_make (an_override_shell.identifier,
+                    mel_parent (an_override_shell, widget_index));
+			initialize (Current)
 		end;
 
-	
-
-feature {NONE} -- External features
-
-	xt_create_override_shell (o_name: POINTER; scr_obj: POINTER): POINTER is
-		external
-			"C"
-		end;
-
-end
-
-
+end -- class OVERRIDE_S_M
 
 --|----------------------------------------------------------------
 --| EiffelVision: library of reusable components for ISE Eiffel 3.

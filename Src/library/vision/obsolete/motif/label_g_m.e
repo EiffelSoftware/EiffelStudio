@@ -1,6 +1,7 @@
 indexing
 
-	description: "Motif label gadget implementation";
+	description: 
+		"iffelVision implementation of Motif label gadget.";
 	status: "See notice at end of class";
 	date: "$Date$";
 	revision: "$Revision$"
@@ -9,82 +10,27 @@ class LABEL_G_M
 
 inherit
 
-	LABEL_G_I
-		export
-			{NONE} all
-		end;
+	LABEL_G_I;
 
-	LABEL_M
-		undefine
-			make
-		redefine
-			set_action, remove_action,
-			set_background_color,
-			set_foreground_color
-		end
+	BUTTON_G_M
 
 creation
 
 	make
 
-feature {NONE} -- Creation
+feature {NONE} -- Initialization
 
 	make (a_label_gadget: LABEL_G; man: BOOLEAN) is
 			-- Create a motif label gadget.
-		local
-			ext_name: ANY
 		do
 			widget_index := widget_manager.last_inserted_position;
-			ext_name := a_label_gadget.identifier.to_c;
-			screen_object := create_label_gadget ($ext_name, 
-					parent_screen_object (a_label_gadget, widget_index),
+			mel_label_make (a_label_gadget.identifier,
+					mel_parent (a_label_gadget, widget_index),
 					man);
 			a_label_gadget.set_font_imp (Current)
 		end;
 
-feature
-
-	remove_action (a_translation: STRING) is
-			-- Remove the command executed when `a_translation' occurs.
-			-- Do nothing if no command has been specified.
-		require else
-			no_translation_on_gadgets: false
-		do
-		end;
-
-	set_action (a_translation: STRING; a_command: COMMAND; argument: ANY) is
-			-- Set `a_command' to be executed when `a_translation' occurs.
-			-- `a_translation' is specified with Xtoolkit convention.
-		require else
-			no_translation_on_gadgets: false
-		do
-		end;
-
-	set_background_color (new_color: COLOR) is
-			-- Set background color to `new_color'.
-		require else
-			argument_not_void: not (new_color = Void)
-		do
-		end;
-
-	set_foreground_color (new_color: COLOR) is
-			-- Set foreground color to `new_color'.
-		require else
-			color_not_void: not (new_color = Void)
-		do
-		end
-
-feature {NONE} -- External features
-
-	create_label_gadget (l_name: POINTER; scr_obj: POINTER;
-				man: BOOLEAN): POINTER is
-		external
-			"C"
-		end;
-
-end
-
-
+end -- class LABEL_G_M
 
 --|----------------------------------------------------------------
 --| EiffelVision: library of reusable components for ISE Eiffel 3.

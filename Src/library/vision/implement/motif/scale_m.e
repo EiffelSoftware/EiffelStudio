@@ -1,219 +1,147 @@
 indexing
 
-	description: "Implementation of scale";
+	description: 
+		"EiffelVision implementation of a Motif scale.";
 	status: "See notice at end of class";
 	date: "$Date$";
 	revision: "$Revision$"
 
-class SCALE_M 
+class 
+	SCALE_M 
 
 inherit
 
 	SCALE_I;
 
-	SCALE_R_M
-		export
-			{NONE} all
-		end;
+	FONTABLE_M;
 
-	PRIMITIVE_M
+	MANAGER_M
 		rename 
+			x as p_x,
+			y as p_y,
+			set_x as p_set_x,
+			set_y as p_set_y,
 			set_size as p_set_size,
 			set_width as p_set_width,
-			set_height as p_set_height,
-			clean_up as primitive_clean_up
-		export
-			{NONE} all
+			set_height as p_set_height
+		undefine
+			create_callback_struct
 		redefine
-			action_target, set_background_color,
+			set_background_color,
 			update_background_color, width, height, 
-			x, y, real_x, real_y, set_x, set_y,
-			set_x_y
+			real_x, real_y, set_x_y
 		end;
 
-	PRIMITIVE_M
-		export
-			{NONE} all
+	MANAGER_M
+		undefine
+			create_callback_struct
 		redefine
-			set_size, set_width, set_height, action_target,
+			set_size, set_width, set_height, 
 			set_background_color,
 			update_background_color, 
-			clean_up, width, height, x, y,
+			width, height, x, y,
 			real_x, real_y, set_x, set_y,
 			set_x_y
 		select
-			set_size, set_width, set_height, 
-			clean_up
+			set_size, set_width, set_height, x, y, set_x, set_y
 		end;
 	
-	FONTABLE_M
+	MEL_SCALE
 		rename
-			resource_name as MfontList
+			make as mel_scale_make,
+			foreground_color as mel_foreground_color,
+			set_foreground_color as mel_set_foreground_color,
+			background_color as mel_background_color,
+			background_pixmap as mel_background_pixmap,
+			set_background_color as mel_set_background_color,
+			set_background_pixmap as mel_set_background_pixmap,
+			destroy as mel_destroy,
+			screen as mel_screen,
+			set_horizontal as mel_set_horizontal,
+			scale_multiple as granularity,
+			set_scale_multiple as set_granularity
+		redefine
+			width, height, x, y, real_x, real_y, set_x, set_y,
+			set_x_y, set_height, set_width, set_size
 		end
 
 creation
 
 	make
 
-feature {NONE} -- Creation
+feature {NONE} -- Initialization
 
 	make (a_scale: SCALE; man: BOOLEAN) is
 			-- Create a motif scale.
-		local
-			ext_name: ANY
 		do
 			widget_index := widget_manager.last_inserted_position;
-			ext_name := a_scale.identifier.to_c;
-			screen_object := create_scale ($ext_name,
-					parent_screen_object (a_scale, widget_index),
+			mel_scale_make (a_scale.identifier,
+					mel_parent (a_scale, widget_index),
 					man);
 			a_scale.set_font_imp (Current);
-			granularity := 10
-		ensure
-			--default_mamimum_set: maximum = 100;
-			--default_minimum_set: minimum = 0;
-			--default_gradularity_set: granularity = 10;
-			--default_value_equal_0: value = 0;
-			--default_orientation: not is_horizontal;
-			--default_value_shown: not is_value_shown;
-			--default_not_max_right_bottom: not is_maximum_right_bottom
 		end;
 
-feature 
+feature -- Status report
 
-	action_target: POINTER is
+	real_x: INTEGER is
 		do
-			Result := slide_widget;
+			Result := scroll_bar_widget.real_x
 		end;
 
-	add_move_action (a_command: COMMAND; argument: ANY) is
-			-- Add `a_command' to the list of action to execute when slide
-			-- is moved.
-		require else
-			not_a_command_void: not (a_command = Void)
+	real_y: INTEGER is
 		do
-			if (move_actions = Void) then
-				!! move_actions.make (screen_object, Mdrag, widget_oui)
-			end;
-			move_actions.add (a_command, argument)
+			Result := scroll_bar_widget.real_y
 		end;
 
-	add_value_changed_action (a_command: COMMAND; argument: ANY) is
-			-- Add `a_command' to the list of action to execute when value
-			-- is changed.
-		require else
-			not_a_command_void: not (a_command = Void)
+	x: INTEGER is
 		do
-			if (value_changed_actions = Void) then
-				!! value_changed_actions.make (screen_object, MvalueChanged, widget_oui)
-			end;
-			value_changed_actions.add (a_command, argument)
+			Result := p_x + scroll_bar_widget.x
 		end;
 
-	granularity: INTEGER;
-			-- Value of the amount to move the slider and modifie value
-			-- when a move action occurs
-			--| We don't use a C function for now on, because of a
-			--| motif bug, when it will be fixed, read file MOTIFBUG
-			--| to update this feature.
-
-	is_horizontal: BOOLEAN is
-			-- Is scale orientation horizontal?
+	y: INTEGER is
 		do
-			Result := xt_unsigned_char 
-					(screen_object, Morientation) = MHORIZONTAL
+			Result := p_y + scroll_bar_widget.y
+		end;
+
+	height: INTEGER is
+		do
+			Result := scroll_bar_widget.height
+		end;
+
+	width: INTEGER is
+		do
+			Result := scroll_bar_widget.width
 		end;
 
 	is_maximum_right_bottom: BOOLEAN is
 			-- Is maximum value on the right side when orientation
 			-- is horizontal or on the bottom side when orientation
 			-- is vertical?
-		local
-			side: INTEGER
 		do
-			side := xt_unsigned_char (screen_object, MprocessingDirection);
-			Result := (side = MMAX_ON_BOTTOM) or (side = MMAX_ON_RIGHT)
+			if is_horizontal then
+				Result := is_maximum_on_left
+			else
+				Result := is_maximum_on_top
+			end
 		end;
 
 	is_output_only: BOOLEAN is
 			-- Is scale mode output only mode?
 		do
-			Result :=  xt_is_sensitive (screen_object);
+			Result := is_sensitive
 		end;
 
-	is_value_shown: BOOLEAN is
-			-- Is value shown on the screen?
+	text: STRING is
+			-- Scale text
+		local
+			ms: MEL_STRING
 		do
-			Result := xt_boolean (screen_object, MshowValue)
+			ms := title_string;
+			Result := ms.to_eiffel_string;
+			ms.free
 		end;
 
-	maximum: INTEGER is
-			-- Maximum value of the slider
-		do
-			Result := xt_int (screen_object, Mmaximum)
-		ensure then
-			maximum_greater_than_minimum: Result >= minimum
-		end;
-
-	minimum: INTEGER is
-			-- Minimum value of the slider
-		do
-			Result := xt_int (screen_object, Mminimum)
-		ensure then
-			minimum_smaller_than_maximum: Result <= maximum
-		end;
-
-	
-feature {NONE}
-
-	move_actions: EVENT_HAND_M;
-			-- An event handler to manage call-backs when slide is moved
-
-	value_changed_actions: EVENT_HAND_M;
-
-	clean_up is
-		do
-			primitive_clean_up;
-			if move_actions /= Void then
-				move_actions.free_cdfd
-			end;
-			if value_changed_actions /= Void then
-				value_changed_actions.free_cdfd
-			end;
-		end
-
-feature 
-
-	remove_move_action (a_command: COMMAND; argument: ANY) is
-			-- Remove `a_command' from the list of action to execute when
-			-- slide is moved.
-		require else
-			not_a_command_void: not (a_command = Void)
-		do
-			move_actions.remove (a_command, argument)
-		end;
-
-	remove_value_changed_action (a_command: COMMAND; argument: ANY) is
-			-- Remove `a_command' from the list of action to execute when
-			-- value is changed.
-		require else
-			not_a_command_void: not (a_command = Void)
-		do
-			value_changed_actions.remove (a_command, argument)
-		end;
-
-	set_granularity (new_granularity: INTEGER) is
-			-- Set amount to move the slider and modifie value when
-			-- when a move action occurs to `new_granularity'.
-		require else
-			granularity_large_enough: new_granularity >= 1;
-			granularity_small_enough: new_granularity <= (maximum - minimum)
-		do
-			set_xt_int (screen_object, new_granularity, MscaleMultiple);
-			granularity := new_granularity
-		ensure then
-			granularity = new_granularity
-		end;
+feature -- Status setting
 
 	set_horizontal (flag: BOOLEAN) is
 			-- Set orientation of the scale to horizontal if `flag',
@@ -227,11 +155,7 @@ feature
 				old_length := height;
 			end;
 
-			if flag then
-				set_xt_unsigned_char (screen_object, MHORIZONTAL, Morientation)
-			else
-				set_xt_unsigned_char (screen_object, MVERTICAL, Morientation)
-			end;  
+			mel_set_horizontal (flag);
 
 			if old_length /= 0 then
 				if is_horizontal then
@@ -240,18 +164,6 @@ feature
 					set_height (old_length);
 				end;
 			end;   
-		ensure then
-			value_correctly_set: is_horizontal = flag
-		end;
-
-	set_maximum (new_maximum: INTEGER) is
-			-- Set maximum value of the slider to `new_maximum'.
-		require else
-			maximum_greater_than_minimum: new_maximum > minimum
-		do
-			set_xt_int (screen_object, new_maximum, Mmaximum)
-		ensure then
-			maximum = new_maximum
 		end;
 
 	set_maximum_right_bottom (flag: BOOLEAN) is
@@ -261,103 +173,40 @@ feature
 		do
 			if flag then
 				if is_horizontal then
-					set_xt_unsigned_char (screen_object, MMAX_ON_RIGHT, MprocessingDirection)
+					set_maximum_on_left (False)
 				else
-					set_xt_unsigned_char (screen_object, MMAX_ON_BOTTOM, MprocessingDirection)
+					set_maximum_on_top (False)
 				end
 			else
 				if is_horizontal then
-					set_xt_unsigned_char (screen_object, MMAX_ON_LEFT, MprocessingDirection)
+					set_maximum_on_left (True)
 				else
-					set_xt_unsigned_char (screen_object, MMAX_ON_TOP, MprocessingDirection)
+					set_maximum_on_top (True)
 				end
 			end
-		ensure then
-			maximum_value_on_right_bottom: is_maximum_right_bottom = flag
-		end;
-
-	set_minimum (new_minimum: INTEGER) is
-			-- Set minimum value of the slider to `new_minimum'.
-		require else
-			minimum_smaller_than_maximum: new_minimum < maximum
-		do
-			set_xt_int (screen_object, new_minimum, Mminimum)
-		ensure then
-			minimum = new_minimum
 		end;
 
 	set_output_only (flag: BOOLEAN) is
 			-- Set scale mode to output only if `flag' and to input/output
 			-- otherwise.
 		do
-			if flag then
-				xt_set_sensitive (screen_object, False)
-			else
-				xt_set_sensitive (screen_object, True)
-			end
-		ensure then
-			output_only: is_output_only = flag
+			set_sensitive (not flag)
 		end;
 
 	set_text (a_text: STRING) is
 			-- Set scale text to `a_text'.
-		require else
-			not_text_void: not (a_text = Void)
 		local
-			ext_name, ext_name_text: ANY
+			ms: MEL_STRING
 		do
-			ext_name_text := a_text.to_c;
-			ext_name := MtitleString.to_c;
-			xt_unmanage_child (text_widget);
-			to_left_xm_string (screen_object, ext_name_text, ext_name);
-			xt_manage_child (text_widget);
-		ensure then
-		--	text.equal (a_text)
-		end;
-
-
-	set_value (new_value: INTEGER) is
-			-- Set value to `new_value'.
-		require else
-			value_small_enough: new_value <= maximum;
-			value_large_enough: new_value >= minimum
-		do
-			set_xt_int (screen_object, new_value, Mvalue)
-		ensure then
-			value = new_value
-		end;
-
-	show_value (flag: BOOLEAN) is
-			-- Show scale value on the screen if `flag', hide it otherwise.
-		do
-			if flag then
-				set_xt_boolean (screen_object, True, MshowValue)
-			else
-				set_xt_boolean (screen_object, False, MshowValue)
-			end
-		ensure then
-			value_is_shown: is_value_shown = flag
-		end;
-
-	text: STRING is
-			-- Scale text
-		local
-			ext_name: ANY
-		do
-			ext_name := MtitleString.to_c;
-			Result := from_xm_string (screen_object, $ext_name)
-		end;
-
-	value: INTEGER is
-			-- Value of the current slider position along the scale
-		do
-			Result := xt_int (screen_object, Mvalue)
-		ensure then
-			value_large_enough: Result >= minimum;
-			value_small_enough: Result <= maximum
+			!! ms.make_localized (a_text);
+			text_widget.unmanage;
+			set_title_string (ms);
+			text_widget.manage;
+			ms.free
 		end;
 
 	set_size (new_width, new_height: INTEGER) is
+			-- Set size to `new_width' and `new_height'.
 		local
 			tw, nw, nh: INTEGER;
 			vas: STRING;
@@ -368,11 +217,11 @@ feature
 				p_set_size (nw, nh);
 			elseif is_horizontal then
 				if is_value_shown and (text = Void or else text.empty) then
-					p_set_size (nw, nh + text_height);
+					p_set_size (nw, nh + text_widget.height);
 				elseif not is_value_shown then
-					p_set_size (nw, nh + text_height);
+					p_set_size (nw, nh + text_widget.height);
 				else
-					p_set_size (nw, nh + (2 * text_height));
+					p_set_size (nw, nh + (2 * text_widget.height));
 				end;
 			else
 				!!vas.make(0);
@@ -381,18 +230,18 @@ feature
 					tw := font_string_width(widget_oui, vas);
 					p_set_size (nw + tw, nh);
 				elseif not is_value_shown then
-					p_set_size (nw + text_width, nh);
+					p_set_size (nw + text_widget.width, nh);
 				else
 					vas.append_integer (maximum);
 					tw := font_string_width(widget_oui, vas);
-					p_set_size (nw + text_width + tw, nh);
+					p_set_size (nw + text_widget.width + tw, nh);
 				end;
 			end;
 			set_scale_size (nw, nh);
 		end;
 
-
 	set_width (new_width: INTEGER) is
+			-- Set `width' to `new_width'.
 		local
 			tw, nw: INTEGER;
 			vas: STRING;
@@ -409,17 +258,18 @@ feature
 					tw := font_string_width(widget_oui, vas);
 					p_set_width (nw + tw);
 				elseif not is_value_shown then
-					p_set_width (nw + text_width);
+					p_set_width (nw + text_widget.width);
 				else 
 					vas.append_integer (maximum);
 					tw := font_string_width(widget_oui, vas);
-					p_set_width (nw + text_width + tw);
+					p_set_width (nw + text_widget.width + tw);
 				end;
 			end;
 			set_scale_width (nw);
 		end;
 
 	set_height (new_height: INTEGER) is
+			-- Set `height' to `new_height'.
 		local
 			nh: INTEGER;
 		do
@@ -428,11 +278,11 @@ feature
 				p_set_height (nh);
 			elseif is_horizontal then
 				if is_value_shown and (text = Void or else text.empty) then
-					p_set_height (nh + text_height);
+					p_set_height (nh + text_widget.height);
 				elseif not is_value_shown then
-					p_set_height (nh + text_height);
+					p_set_height (nh + text_widget.height);
 				else
-					p_set_height (nh + (2 * text_height));
+					p_set_height (nh + (2 * text_widget.height));
 				end;
 			else
 				p_set_height (nh);
@@ -440,74 +290,55 @@ feature
 			set_scale_height (nh);
 		end;
 
-	real_x: INTEGER is
-		do
-			Result := xt_real_x (slide_widget);
-		end;
-
-	real_y: INTEGER is
-		do
-			Result := xt_real_y (slide_widget);
-		end;
-
-	x: INTEGER is
-		local
-			ext_name: ANY
-		do
-			ext_name := Mx.to_c;
-			Result := get_position (slide_widget, $ext_name);
-			Result := Result + get_position (screen_object, $ext_name);
-		end;
-
-	y: INTEGER is
-		local
-			ext_name: ANY
-		do
-			ext_name := My.to_c;
-			Result := get_position (slide_widget, $ext_name);
-			Result := Result + get_position (screen_object, $ext_name);
-		end;
-
-	height: INTEGER is
-		local
-			ext_name: ANY
-		do
-			ext_name := Mheight.to_c;
-			Result := get_position (slide_widget, $ext_name)
-		end;
-
-	width: INTEGER is
-		local
-			ext_name: ANY
-		do
-			ext_name := Mwidth.to_c;
-			Result := get_position (slide_widget, $ext_name);
-		end;
-
 	set_x (new_x: INTEGER) is
-		local
-			ext_name: ANY;
-			nx: INTEGER
+			-- Set `x' to `new_x'.
 		do
-			ext_name := Mx.to_c;
-			nx := new_x - get_position (slide_widget, $ext_name);
-			set_posit (screen_object, nx, $ext_name)
+			p_set_y (new_x - scroll_bar_widget.x)
 		end;
 
 	set_y (new_y: INTEGER) is
-		local
-			ext_name: ANY;
-			ny: INTEGER
+			-- Set `y' to `new_y'.
 		do
-			ext_name := My.to_c;
-			ny := new_y - get_position (slide_widget, $ext_name);
-			set_posit (screen_object, ny, $ext_name)
+			p_set_y (new_y - scroll_bar_widget.y)
 		end;
 
 	set_x_y (new_x, new_y: INTEGER) is
+			-- Set `x' and `y' to `new_x' and `new_y'.
 		do
 			set_x (new_x);
 			set_y (new_y)
+		end;
+
+feature -- Element change
+
+	add_move_action (a_command: COMMAND; argument: ANY) is
+			-- Add `a_command' to the list of action to execute when slide
+			-- is moved.
+		do
+			add_drag_callback (mel_vision_callback (a_command), argument)
+		end;
+
+	add_value_changed_action (a_command: COMMAND; argument: ANY) is
+			-- Add `a_command' to the list of action to execute when value
+			-- is changed.
+		do
+			remove_value_changed_callback (mel_vision_callback (a_command), argument)
+		end;
+
+feature -- Removal
+
+	remove_move_action (a_command: COMMAND; argument: ANY) is
+			-- Remove `a_command' from the list of action to execute when
+			-- slide is moved.
+		do
+            remove_drag_callback (mel_vision_callback (a_command), argument)
+		end;
+
+	remove_value_changed_action (a_command: COMMAND; argument: ANY) is
+			-- Remove `a_command' from the list of action to execute when
+			-- value is changed.
+		do
+            remove_drag_callback (mel_vision_callback (a_command), argument)
 		end;
 
 feature -- Color
@@ -521,22 +352,22 @@ feature -- Color
 			color_implementation: COLOR_X;
 			pix: POINTER
 		do
-			if bg_pixmap /= Void then
-				pixmap_implementation ?= bg_pixmap.implementation;
+			if private_background_pixmap /= Void then
+				pixmap_implementation ?= private_background_pixmap.implementation;
 				pixmap_implementation.remove_object (Current);
-				bg_pixmap := Void
+				private_background_pixmap := Void
 			end;
-			if bg_color /= Void then
-				color_implementation ?= bg_color.implementation;
+			if private_background_color /= Void then
+				color_implementation ?= private_background_color.implementation;
 				color_implementation.remove_object (Current)
 			end;
-			bg_color := a_color;
+			private_background_color := a_color;
 			color_implementation ?= a_color.implementation;
 			color_implementation.put_object (Current);
 			pix := color_implementation.pixel (screen);
-			xm_change_bg_color (screen_object, pix);
-			xm_change_bg_color (slide_widget, pix);
-			if fg_color /= Void then
+			--xm_change_bg_color (screen_object, pix);
+			--xm_change_bg_color (slide_widget, pix);
+			if private_foreground_color /= Void then
 				update_foreground_color
 			end
 		end;
@@ -549,120 +380,13 @@ feature {COLOR_X}
 			color_implementation: COLOR_X;
 		do
 			color_implementation ?= background_color.implementation;
-			xm_change_bg_color (screen_object, 
-						color_implementation.pixel (screen));
-			xm_change_bg_color (slide_widget, 
-						color_implementation.pixel (screen));
+			--xm_change_bg_color (screen_object, 
+						--color_implementation.pixel (screen));
+			--xm_change_bg_color (slide_widget, 
+						--color_implementation.pixel (screen));
 		end;
 
-feature {NONE} -- Features for manipulating scale children
-
-	slide_widget: POINTER is
-		do
-			Result := get_ith_child (1);
-		end;
-
-	text_widget: POINTER is
-		do
-			Result := get_ith_child (0);
-		end;
-
-	text_height: INTEGER is
-		local
-			ext_name: ANY;
-		do
-			ext_name := Mheight.to_c;
-			Result := get_dimension (text_widget, $ext_name);
-		end;
-
-	text_width: INTEGER is
-		local
-			ext_name: ANY;
-		do
-			ext_name := Mwidth.to_c;
-			Result := get_dimension (text_widget, $ext_name);
-		end;
-
-	set_scale_size (new_width: INTEGER; new_height: INTEGER) is
-			-- Set both width and height to `new_width'
-			-- and `new_height'.
-		local
-			ext_name_Mw, ext_name_Mh: ANY
-		do
-			ext_name_Mw := MscaleWidth.to_c;
-			ext_name_Mh := MscaleHeight.to_c;
-			set_dimension (screen_object, new_width, $ext_name_Mw);
-			set_dimension (screen_object, new_height, $ext_name_Mh);
-		end;
-
-	set_scale_height (new_height: INTEGER) is
-			-- Set height to `new_height'.
-		local
-			ext_name: ANY
-		do
-			ext_name := MscaleHeight.to_c;
-			set_dimension (screen_object, new_height, $ext_name);
-		end;
-
-
-	set_scale_width (new_width :INTEGER) is
-			-- Set width to `new_width'.
-		local
-			ext_name_Mw: ANY
-		do
-			ext_name_Mw := MscaleWidth.to_c;
-			set_dimension (screen_object, new_width, $ext_name_Mw);
-		end;
-
-feature {NONE}
-
-	get_ith_child (pos: INTEGER): POINTER is
-		local
-			ext_name: ANY;
-		do
-			ext_name := ("children").to_c;
-			Result := get_i_widget_child (
-					get_widget_children (screen_object, $ext_name), 
-					pos);
-		end;
-
-feature {NONE} -- External features
-
-	create_scale (s_name: POINTER; scr_obj: POINTER;
-			man: BOOLEAN): POINTER is
-		external
-			"C"
-		end;
-
-	from_xm_string (scr_obj: POINTER; name: POINTER): STRING is
-		external
-			"C"
-		end;
-
-	to_left_xm_string (scr_obj: POINTER; name1, name2: ANY) is
-		external
-			"C"
-		end;
-
-	get_cardinal (scr_obj: POINTER; c_name: POINTER): INTEGER is
-		external
-			"C"
-		end;
-
-	get_widget_children (scr_obj: POINTER; c_name: POINTER): POINTER is
-		external
-			"C"
-		end;
-
-	get_i_widget_child (widget_list: POINTER; index: INTEGER): POINTER is
-			--gets a single child from value returned by
-			--get_widget_children.
-		external
-			"C"
-		end;
-end
-
-
+end -- class SCALE_M
 
 --|----------------------------------------------------------------
 --| EiffelVision: library of reusable components for ISE Eiffel 3.

@@ -1,6 +1,7 @@
 indexing
 
-	description: "Motif implementation of form";
+	description: 
+		"EiffelVision implementation of a Motif form.";
 	status: "See notice at end of class";
 	date: "$Date$";
 	revision: "$Revision$"
@@ -9,132 +10,145 @@ class FORM_M
 
 inherit
 
-	FORM_R_M
-		export
-			{NONE} all
-		end;
-
 	FORM_I;
 
 	BULLETIN_M
 		undefine
+			create_widget
+		redefine
 			make
 		end
+
+    MEL_FORM
+        rename
+            make as form_make,
+            foreground_color as mel_foreground_color,
+            set_foreground_color as mel_set_foreground_color,
+            background_color as mel_background_color,
+            background_pixmap as mel_background_pixmap,
+            set_background_color as mel_set_background_color,
+            set_background_pixmap as mel_set_background_pixmap,
+            destroy as mel_destroy,
+            screen as mel_screen,
+			attach_right as mel_attach_right,
+			attach_left as mel_attach_left,
+			attach_top as mel_attach_top,
+			attach_bottom as mel_attach_bottom,
+			detach_right as mel_detach_right,
+			detach_left as mel_detach_left,
+			detach_top as mel_detach_top,
+			detach_bottom as mel_detach_bottom
+		select
+			form_make, make_no_auto_unmanage
+        end
 
 creation
 
 	make
 
-feature {NONE} -- Creation
+feature {NONE} -- Initialization
 
 	make (a_form: FORM; man: BOOLEAN) is
 			-- Create a motif form.
-		local
-			ext_name_form: ANY
 		do
 			widget_index := widget_manager.last_inserted_position;
-			ext_name_form := a_form.identifier.to_c;
-			screen_object := create_form ($ext_name_form,
-					parent_screen_object (a_form, widget_index),
-					man);
+            form_make (a_form.identifier,
+                    mel_parent (a_form, widget_index),
+                    man);
 		end
 
-feature 
+feature -- Element change
 
-	attach_right (a_child: WIDGET_I; right_offset: INTEGER) is
+	attach_right (a_child: WIDGET_I; r_offset: INTEGER) is
 			-- Attach right side of `a_child' to the left side of current form
-			-- with `right_offset' spaces between each other.
-		require else
-			not_child_void: not (a_child = Void);
-			not_shell_child: is_valid (a_child);
-			offset_non_negative: right_offset >= 0
+			-- with `r_offset' spaces between each other.
+		local
+			w: MEL_RECT_OBJ
 		do
-			xm_attach_right (a_child.screen_object, right_offset)
+			w ?= a_child;
+			mel_attach_right (w);
+			set_right_offset (w, r_offset)
 		end;
 
-	attach_left (a_child: WIDGET_I; left_offset: INTEGER) is
+	attach_left (a_child: WIDGET_I; l_offset: INTEGER) is
 			-- Attach left side of `a_child' to the left side of current form
-			-- with `left_offset' spaces between each other.
-		require else
-			not_child_void: not (a_child = Void);
-			not_shell_child: is_valid (a_child);
-			offset_non_negative: left_offset >= 0
+			-- with `l_offset' spaces between each other.
+		local
+			w: MEL_RECT_OBJ
 		do
-			xm_attach_left (a_child.screen_object, left_offset)
+			w ?= a_child;
+			mel_attach_left (w);
+			set_left_offset (w, l_offset)
 		end;
 
-	attach_bottom (a_child: WIDGET_I; bottom_offset: INTEGER) is
+	attach_bottom (a_child: WIDGET_I; b_offset: INTEGER) is
 			-- Attach bottom side of `a_child' to the bottom side of current form
-			-- with `bottom_offset' spaces between each other.
-		require else
-			not_child_void: not (a_child = Void);
-			not_shell_child: is_valid (a_child);
-			offset_non_negative: bottom_offset >= 0
+			-- with `b_offset' spaces between each other.
+		local
+			w: MEL_RECT_OBJ
 		do
-			xm_attach_bottom (a_child.screen_object, bottom_offset)
+			w ?= a_child;
+			mel_attach_bottom (w);
+			set_bottom_offset (w, b_offset)
 		end;
 
-	attach_top (a_child: WIDGET_I; top_offset: INTEGER) is
+	attach_top (a_child: WIDGET_I; t_offset: INTEGER) is
 			-- Attach top side of `a_child' to the top side of current form
-			-- with `top_offset' spaces between each other.
-		require else
-			not_child_void: not (a_child = Void);
-			not_shell_child: is_valid (a_child);
-			offset_non_negative: top_offset >= 0
+			-- with `t_offset' spaces between each other.
+		local
+			w: MEL_RECT_OBJ
 		do
-			xm_attach_top (a_child.screen_object, top_offset)
+			w ?= a_child;
+			mel_attach_top (w);
+			set_top_offset (w, t_offset)
 		end;
 
-	attach_right_widget (a_widget: WIDGET_I; a_child: WIDGET_I; right_offset: INTEGER) is
+	attach_right_widget (a_widget: WIDGET_I; a_child: WIDGET_I; r_offset: INTEGER) is
 			-- Attach right side of `a_child' to the left side of
-			-- `a_widget' with `right_offset' spaces between each other.
-		require else
-			not_child_void: not (a_child = Void);
-			not_shell_child: is_valid (a_child);
-			not_widget_void: not (a_widget = Void);
-			offset_non_negative: right_offset >= 0
+			-- `a_widget' with `r_offset' spaces between each other.
+		local
+			w, t: MEL_RECT_OBJ
 		do
-			xm_attach_right_widget (a_widget.screen_object,
-						a_child.screen_object, right_offset)
+			t ?= a_widget;
+			w ?= a_child;
+			attach_right_to_widget (w, t);
+			set_right_offset (w, r_offset);
 		end;
 
-	attach_left_widget (a_widget: WIDGET_I; a_child: WIDGET_I; left_offset: INTEGER) is
+	attach_left_widget (a_widget: WIDGET_I; a_child: WIDGET_I; l_offset: INTEGER) is
 			-- Attach left side of `a_child' to the right side of
-			-- `a_widget' with `left_offset' spaces between each other.
-		require else
-			not_child_void: not (a_child = Void);
-			not_shell_child: is_valid (a_child);
-			not_widget_void: not (a_widget = Void);
-			offset_non_negative: left_offset >= 0
+			-- `a_widget' with `l_offset' spaces between each other.
+		local
+			w, t: MEL_RECT_OBJ
 		do
-			xm_attach_left_widget (a_widget.screen_object,
-						a_child.screen_object, left_offset)
+			t ?= a_widget;
+			w ?= a_child;
+			attach_left_to_widget (w, t);
+			set_left_offset (w, l_offset);
 		end;
 
-	attach_bottom_widget (a_widget: WIDGET_I; a_child: WIDGET_I; bottom_offset: INTEGER) is
+	attach_bottom_widget (a_widget: WIDGET_I; a_child: WIDGET_I; b_offset: INTEGER) is
 			-- Attach bottom side of `a_child' to the top side of
-			-- `a_widget' with `bottom_offset' spaces between each other.
-		require else
-			not_child_void: not (a_child = Void);
-			not_shell_child: is_valid (a_child);
-			not_widget_void: not (a_widget = Void);
-			offset_non_negative: bottom_offset >= 0
+			-- `a_widget' with `b_offset' spaces between each other.
+		local
+			w, t: MEL_RECT_OBJ
 		do
-			xm_attach_bottom_widget (a_widget.screen_object,
-						a_child.screen_object, bottom_offset)
+			t ?= a_widget;
+			w ?= a_child;
+			attach_bottom_to_widget (w, t);
+			set_bottom_offset (w, b_offset);
 		end;
 
-	attach_top_widget (a_widget: WIDGET_I; a_child: WIDGET_I; top_offset: INTEGER) is
+	attach_top_widget (a_widget: WIDGET_I; a_child: WIDGET_I; t_offset: INTEGER) is
 			-- Attach top side of `a_child' to the bottom side of
-			-- `a_widget' with `top_offset' spaces between each other.
-		require else
-			not_child_void: not (a_child = Void);
-			not_shell_child: is_valid (a_child);
-			not_widget_void: not (a_widget = Void);
-			offset_non_negative: top_offset >= 0
+			-- `a_widget' with `t_offset' spaces between each other.
+		local
+			w, t: MEL_RECT_OBJ
 		do
-			xm_attach_top_widget (a_widget.screen_object,
-						a_child.screen_object, top_offset)
+			t ?= a_widget;
+			w ?= a_child;
+			attach_top_to_widget (w, t);
+			set_top_offset (w, t_offset);
 		end;
 
 	attach_left_position (a_child: WIDGET_I; a_position: INTEGER) is
@@ -142,13 +156,11 @@ feature
 			-- relative to left side of current form and is a fraction
 			-- of the width of current form. This fraction is the value
 			-- of `a_position' divided by the value of `fraction_base'.
-		require else
-			not_child_void: not (a_child = Void);
-			not_shell_child: is_valid (a_child);
-			a_position_large_enough: a_position >= 0;
-			a_position_small_enough: a_position <= fraction_base
+		local
+			w: MEL_RECT_OBJ
 		do
-			xm_attach_left_position (a_child.screen_object, a_position)
+			w ?= a_child;
+			attach_left_to_position (w, a_position);
 		end;
 
 	attach_right_position (a_child: WIDGET_I; a_position: INTEGER) is
@@ -156,13 +168,11 @@ feature
 			-- relative to right side of current form and is a fraction
 			-- of the width of current form. This fraction is the value
 			-- of `a_position' divided by the value of `fraction_base'.
-		require else
-			not_child_void: not (a_child = Void);
-			not_shell_child: is_valid (a_child);
-			a_position_large_enough: a_position >= 0;
-			a_position_small_enough: a_position <= fraction_base
+		local
+			w: MEL_RECT_OBJ
 		do
-			xm_attach_right_position (a_child.screen_object, a_position)
+			w ?= a_child;
+			attach_right_to_position (w, a_position);
 		end;
 
 	attach_bottom_position (a_child: WIDGET_I; a_position: INTEGER) is
@@ -170,13 +180,11 @@ feature
 			-- relative to bottom side of current form and is a fraction
 			-- of the height of current form. This fraction is the value
 			-- of `a_position' divided by the value of `fraction_base'.
-		require else
-			not_child_void: not (a_child = Void);
-			not_shell_child: is_valid (a_child);
-			a_position_large_enough: a_position >= 0;
-			a_position_small_enough: a_position <= fraction_base
+		local
+			w: MEL_RECT_OBJ
 		do
-			xm_attach_bottom_position (a_child.screen_object, a_position)
+			w ?= a_child;
+			attach_bottom_to_position (w, a_position);
 		end;
 
 	attach_top_position (a_child: WIDGET_I; a_position: INTEGER) is
@@ -184,159 +192,50 @@ feature
 			-- relative to top side of current form and is a fraction
 			-- of the height of current form. This fraction is the value
 			-- of `a_position' divided by the value of `fraction_base'.
-		require else
-			not_child_void: not (a_child = Void);
-			not_shell_child: is_valid (a_child);
-			a_position_large_enough: a_position >= 0;
-			a_position_small_enough: a_position <= fraction_base
+		local
+			w: MEL_RECT_OBJ
 		do
-			xm_attach_top_position (a_child.screen_object, a_position)
+			w ?= a_child;
+			attach_top_to_position (w, a_position);
 		end;
 
 	detach_right (a_child: WIDGET_I) is
 			-- Detach right side of `a_child'.
-		require else
-			not_child_void: not (a_child = Void)
+		local
+			w: MEL_RECT_OBJ
 		do
-			xm_detach_right (a_child.screen_object)
+			w ?= a_child;
+			mel_detach_right (w);
 		end;
 
 	detach_left (a_child: WIDGET_I) is
 			-- Detach left side of `a_child'.
-		require else
-			not_child_void: not (a_child = Void)
+		local
+			w: MEL_RECT_OBJ
 		do
-			xm_detach_left (a_child.screen_object)
+			w ?= a_child;
+			mel_detach_left (w);
 		end;
 
 	detach_bottom (a_child: WIDGET_I) is
 			-- Detach bottom side of `a_child'.
-		require else
-			not_child_void: not (a_child = Void)
+		local
+			w: MEL_RECT_OBJ
 		do
-			xm_detach_bottom (a_child.screen_object)
+			w ?= a_child;
+			mel_detach_bottom (w);
 		end;
 
 	detach_top (a_child: WIDGET_I) is
 			-- Detach top side of `a_child'.
-		require else
-			not_child_void: not (a_child = Void)
+		local
+			w: MEL_RECT_OBJ
 		do
-			xm_detach_top (a_child.screen_object)
+			w ?= a_child;
+			mel_detach_top (w);
 		end;
 
-	set_fraction_base (a_value: INTEGER) is
-			-- Set fraction_base to `a_value'.
-			-- Unsecure to set it after any position attachment,
-			-- contradictory constraints could occur.
-		require else
-			a_value_strictly_greater_than_zero: a_value > 0
-		do
-			set_xt_int (screen_object, a_value, MfractionBase)
-		ensure then
-			fraction_base = a_value
-		end;
-
-	fraction_base: INTEGER is
-			-- Value used to compute child position with
-			-- position attachment
-		do
-			Result := xt_int (screen_object, MfractionBase)
-		ensure then
-			fraction_base_strictly_greater_than_zero: Result > 0
-		end;
-
-feature {NONE} -- External features
-
-	xm_attach_right (scr_obj: POINTER; offset: INTEGER) is
-		external
-			"C"
-		end;
-
-	xm_detach_top (scr_obj: POINTER) is
-		external
-			"C"
-		end;
-
-	xm_detach_bottom (scr_obj: POINTER) is
-		external
-			"C"
-		end;
-
-	xm_detach_left (scr_obj: POINTER) is
-		external
-			"C"
-		end;
-
-	xm_detach_right (scr_obj: POINTER) is
-		external
-			"C"
-		end;
-
-	xm_attach_top_position (scr_obj: POINTER; position: INTEGER) is
-		external
-			"C"
-		end;
-
-	xm_attach_bottom_position (scr_obj: POINTER; position: INTEGER) is
-		external
-			"C"
-		end;
-
-	xm_attach_right_position (scr_obj: POINTER; position: INTEGER) is
-		external
-			"C"
-		end;
-
-	xm_attach_left_position (scr_obj: POINTER; offset: INTEGER) is
-		external
-			"C"
-		end;
-
-	xm_attach_top_widget (scr_obj1, scr_obj2: POINTER; offset: INTEGER) is
-		external
-			"C"
-		end;
-
-	xm_attach_bottom_widget (scr_obj1, scr_obj2: POINTER; offset: INTEGER) is
-		external
-			"C"
-		end;
-
-	xm_attach_left_widget (scr_obj1, scr_obj2: POINTER; offset: INTEGER) is
-		external
-			"C"
-		end;
-
-	xm_attach_right_widget (scr_obj1, scr_obj2: POINTER; offset: INTEGER) is
-		external
-			"C"
-		end;
-
-	xm_attach_top (scr_obj: POINTER; offset: INTEGER) is
-		external
-			"C"
-		end;
-
-	xm_attach_bottom (scr_obj: POINTER; offset: INTEGER) is
-		external
-			"C"
-		end;
-
-	xm_attach_left (scr_obj: POINTER; offset: INTEGER) is
-		external
-			"C"
-		end;
-
-	create_form (f_name: POINTER; scr_obj: POINTER;
-			man: BOOLEAN): POINTER is
-		external
-			"C"
-		end;
-
-end
-
-
+end -- class FORM_M
 
 --|----------------------------------------------------------------
 --| EiffelVision: library of reusable components for ISE Eiffel 3.

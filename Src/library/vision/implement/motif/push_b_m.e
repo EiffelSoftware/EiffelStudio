@@ -1,169 +1,103 @@
 indexing
 
-	description: "Implementation of push button";
+	description: 
+		"EiffelVision implementation of a Motif push button.";
 	status: "See notice at end of class";
 	date: "$Date$";
 	revision: "$Revision$"
 
-class PUSH_B_M 
+class 
+	PUSH_B_M 
 
 inherit
 
-	PUSH_B_I
-		export
-			{NONE} all
-		end;
-
-	PUSH_B_R_M
-		export
-			{NONE} all
-		end;
+	PUSH_B_I;
 
 	BUTTON_M
-		rename
-			clean_up as button_clean_up
+		undefine
+			create_callback_struct
 		end;
 
-	BUTTON_M
-		redefine
-			clean_up
+	FONTABLE_M;
+
+    MEL_PUSH_BUTTON
+        rename
+            make as mel_pb_make,
+            foreground_color as mel_foreground_color,
+            set_foreground_color as mel_set_foreground_color,
+            background_color as mel_background_color,
+            background_pixmap as mel_background_pixmap,
+            set_background_color as mel_set_background_color,
+            set_background_pixmap as mel_set_background_pixmap,
+            destroy as mel_destroy,
+            screen as mel_screen
 		select
-			clean_up
-		end;
-
-	FONTABLE_M
-		rename
-			resource_name as MfontList
-		end
+			mel_pb_make
+        end
 
 creation
 
 	make
 
-feature {NONE} -- Creation
+feature {NONE} -- Initialization
 
 	make (a_push_b: PUSH_B; man: BOOLEAN) is
 			-- Create a motif push button.
-		local
-			ext_name: ANY
 		do
 			widget_index := widget_manager.last_inserted_position;
-			ext_name := a_push_b.identifier.to_c;
-			screen_object := create_push_b ($ext_name, 
-				parent_screen_object (a_push_b, widget_index),
-				man);
+            mel_pb_make (a_push_b.identifier,
+                    mel_parent (a_push_b, widget_index),
+                    man);
 			a_push_b.set_font_imp (Current)
 		end;
 
-feature -- Insertion
+feature -- Element change
 
 	add_activate_action (a_command: COMMAND; argument: ANY) is
 			-- Add `a_command' to the list of action to execute when
 			-- current push button is activated.
-		require else
-			not_a_command_void: not (a_command = Void)
 		do
-			if (activate_actions = Void) then
-				!! activate_actions.make (screen_object,
-						Mactivate, widget_oui)
-			end;
-			activate_actions.add (a_command, argument);
+            add_activate_callback (mel_vision_callback (a_command), argument)
 		end;
 
 	add_arm_action (a_command: COMMAND; argument: ANY) is
 			-- Add `a_command' to the list of action to execute when
 			-- current push button is armed.
-		require else
-			not_a_command_void: not (a_command = Void)
 		do
-			if (arm_actions = Void) then
-				!! arm_actions.make (screen_object, Marm,
-						widget_oui)
-			end;
-			arm_actions.add (a_command, argument)
+            add_arm_callback (mel_vision_callback (a_command), argument)
 		end;
 
 	add_release_action (a_command: COMMAND; argument: ANY) is
 			-- Add `a_command' to the list of action to execute when
 			-- current push button is released.
-		require else
-			not_a_command_void: not (a_command = Void)
 		do
-			if (release_actions = Void) then
-				!! release_actions.make (screen_object,
-						Mdisarm, widget_oui)
-			end;
-			release_actions.add (a_command, argument)
+            add_disarm_callback (mel_vision_callback (a_command), argument)
 		end;
 
-feature -- Deletion
+feature -- Removal
 
 	remove_activate_action (a_command: COMMAND; argument: ANY) is
 			-- Remove `a_command' from the list of action to execute when
 			-- current push button is activated.
-		require else
-			not_a_command_void: not (a_command = Void)
 		do
-			activate_actions.remove (a_command, argument)
+            remove_activate_callback (mel_vision_callback (a_command), argument)
 		end;
 
 	remove_arm_action (a_command: COMMAND; argument: ANY) is
 			-- Remove `a_command' from the list of action to execute when
 			-- current push button is armed.
-		require else
-			not_a_command_void: not (a_command = Void)
 		do
-			arm_actions.remove (a_command, argument)
+            remove_arm_callback (mel_vision_callback (a_command), argument)
 		end;
 
 	remove_release_action (a_command: COMMAND; argument: ANY) is
 			-- Remove `a_command' from the list of action to execute when
 			-- current push button is released.
-		require else
-			not_a_command_void: not (a_command = Void)
 		do
-			release_actions.remove (a_command, argument)
+            remove_disarm_callback (mel_vision_callback (a_command), argument)
 		end;
 
-feature {NONE}
-
-	activate_actions: EVENT_HAND_M;
-			-- An event handler to manage call-backs when current push
-			-- button is activated
-
-	arm_actions: EVENT_HAND_M;
-			-- An event handler to manage call-backs when current push
-			-- button is armed
-
-	release_actions: EVENT_HAND_M;
-			-- An event handler to manage call-backs when current push
-			-- button is released
-
-	clean_up is
-		do
-			button_clean_up;
-			if arm_actions /= Void then
-				arm_actions.free_cdfd
-			end;
-			if release_actions /= Void then
-				release_actions.free_cdfd
-			end;
-			if activate_actions /= Void then
-				activate_actions.free_cdfd
-			end;
-		end
-
-feature {NONE} -- External features
-
-	create_push_b (p_name: POINTER; scr_obj: POINTER; 
-				man: BOOLEAN): POINTER is
-		external
-			"C"
-		end;
-
-end
-
-
+end -- class PUSH_B_M
 
 --|----------------------------------------------------------------
 --| EiffelVision: library of reusable components for ISE Eiffel 3.

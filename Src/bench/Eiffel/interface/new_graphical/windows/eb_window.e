@@ -256,7 +256,11 @@ feature -- Window management / Status Setting
 			if not destroyed then
 				if debugger_manager.debugging_window = Current then
 					Exit_application_cmd.set_already_save_confirmed (True)
-					create cd.make_with_text (Warning_messages.w_Stop_debugger)
+					if Window_manager.development_windows_count > 1 then
+						create cd.make_with_text (Warning_messages.w_Closing_stops_debugger)
+					else
+						create cd.make_with_text (Warning_messages.w_Exiting_stops_debugger)
+					end
 					cd.button ("OK").select_actions.extend (window_manager~destroy_window (Current))
 					cd.show_modal_to_window (window)
 				else

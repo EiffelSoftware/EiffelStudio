@@ -3,7 +3,7 @@ indexing
 	external_name: "ISE.AssemblyManager.Dictionary"
 
 class
-	DICTIONARY
+	ASSEMBLY_MANAGER_DICTIONARY
 
 feature -- Access
 
@@ -22,12 +22,12 @@ feature -- Access
 			external_name: "AccessViolationError"
 		end
 		
-	Assembly_manager_icon: SYSTEM_DRAWING_ICON is
+	Assembly_manager_icon: DRAWING_ICON is
 		indexing
 			description: "Icon appearing in dialogs header"
 			external_name: "AssemblyManagerIcon"
 		once
-			create Result.make_icon (Assembly_manager_icon_filename)
+			create Result.make_drawing_icon (Assembly_manager_icon_filename.to_cil)
 		ensure
 			icon_created: Result /= Void
 		end
@@ -37,11 +37,11 @@ feature -- Access
 			description: "Filename of icon appearing in dialogs header"
 			external_name: "AssemblyManagerIconFilename"
 		once
-			Result := Base_filename
-			Result := Result.concat_string_string (Result, Assembly_manager_icon_relative_filename)
+			Result := Base_filename.clone (Base_filename)
+			Result.append (Assembly_manager_icon_relative_filename)
 		ensure
 			filename_created: Result /= Void
-			not_empty_filename: Result.get_length > 0
+			not_empty_filename: Result.count > 0
 		end
 
 	Base_filename: STRING is
@@ -49,15 +49,14 @@ feature -- Access
 			description: "Path to folder where icons are stored"
 			external_name: "BaseRelativeFilename"
 		local
-			support: ISE_REFLECTION_REFLECTIONSUPPORT
+			support: REFLECTION_SUPPORT
 		once
-			create support.make_reflectionsupport
-			support.make
+			create support.make
 			Result := support.Eiffel_delivery_path
-			Result := Result.concat_string_string (Result, Base_relative_filename)
+			Result.append (Base_relative_filename)
 		end
 
-	Base_relative_filename: STRING is "\bench\wizards\new_projects\dotnet\pixmaps\"
+	Base_relative_filename: STRING is "\studio\wizards\new_projects\dotnet\pixmaps\"
 		indexing
 			description: "Path to folder where icons are stored"
 			external_name: "BaseRelativeFilename"
@@ -129,11 +128,12 @@ feature -- Access
 			description: "Error message in case the dialog pixmap has not been found"
 			external_name: "PixmapNotFoundError"
 		once
-			Result ?= Pixmap_not_found_error_part_1.clone
-			Result := Result.concat_string_string_string (Result, Assembly_manager_icon_filename, Pixmap_not_found_error_part_2)
+			Result := Pixmap_not_found_error_part_1.clone (Pixmap_not_found_error_part_1)
+			Result.append (Assembly_manager_icon_filename)
+			Result.append (Pixmap_not_found_error_part_2)
 		ensure
 			non_void_message: Result /= Void
-			not_empty_message: Result.get_length > 0
+			not_empty_message: Result.count > 0
 		end
 			
 feature {NONE} -- Implementation

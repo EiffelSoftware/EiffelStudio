@@ -185,7 +185,7 @@ feature -- Event -- removing command association
 		require
 			exists: not destroyed
 		do
-			implementation.remove_unselect_commands			
+			implementation.remove_select_commands			
 		end
 
 	remove_unselect_commands is

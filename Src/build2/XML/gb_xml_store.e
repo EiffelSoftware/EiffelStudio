@@ -20,6 +20,8 @@ inherit
 	
 	GB_CONSTANTS
 	
+	GB_NAMING_UTILITIES
+	
 feature -- Basic operation
 
 	store is
@@ -103,6 +105,7 @@ feature {GB_XML_HANDLER} -- Implementation
 			gb_ev_any: GB_EV_ANY
 			new_type_element: XML_ELEMENT
 			vision2_type: STRING
+			new_name: STRING
 		do
 			create handler
 				-- We must store the name and other attributes
@@ -116,7 +119,9 @@ feature {GB_XML_HANDLER} -- Implementation
 			elseif add_names then
 				new_type_element := new_child_element (element, Internal_properties_string, "")
 				element.force_last (new_type_element)
-				add_element_containing_string (new_type_element, name_string, generate_new_name (an_object.short_type))
+				new_name := unique_name (generated_names, an_object.short_type)
+				generated_names.force (new_name)
+				add_element_containing_string (new_type_element, name_string, new_name)--generate_new_name (an_object.short_type))
 			end
 			
 				-- Now store all attributes from interface of Vision2.
@@ -196,33 +201,6 @@ feature {NONE} -- Implementation
 			-- All names generated automatically.
 		once
 			create Result.make (0)
-		end
-		
-	generate_new_name (type: STRING): STRING is
-			-- `Result' is a newly generated name from `type'
-			-- which must not be already in `generated_names.
-		local
-			occurances: INTEGER
-			new_name, lower_type: STRING
-			local_names: ARRAYED_LIST [STRING]
-		do
-			local_names := generated_names
-			from
-				generated_names.start				
-			until
-				generated_names.off
-			loop
-				lower_type := type
-				lower_type.to_lower
-				if generated_names.item.substring (1, type.count).is_equal (lower_type) then
-					occurances := occurances + 1
-				end
-				generated_names.forth
-			end
-			new_name := type + (occurances + 1).out
-			new_name.to_lower
-			generated_names.force (new_name)
-			Result := new_name
 		end
 
 end -- class GB_XML_STORE

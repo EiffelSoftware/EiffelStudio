@@ -35,7 +35,7 @@ feature {NONE} -- Initialization
 			name := a_name
 			Create name_label.make_with_text (Current, name)
 			name_label.set_minimum_height (50)
-			name_label.set_expand (False)
+			set_child_expandable (name_label, False)
 
 			Create font.make_with_resource (Current, a_font)
 			Create color.make_with_resource (Current, a_color)
@@ -55,7 +55,7 @@ feature {NONE} -- Initialization
 			name := a_format.visual_name
 			Create name_label.make_with_text (Current, name)
 			name_label.set_minimum_height (50)
-			name_label.set_expand (False)
+			set_child_expandable (name_label, False)
 
 			Create font.make_with_resource (Current, a_format.font_resource)
 			Create color.make_with_resource (Current, a_format.color_resource)

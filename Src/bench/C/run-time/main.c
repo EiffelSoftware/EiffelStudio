@@ -56,7 +56,7 @@ extern void einit();					/* System-dependent initializations */
 #define exvec() exset(null, 0, null)	/* How to get an execution vector */
 #endif
 
-private void failure();					/* The Eiffel exectution failed */
+public void failure();					/* The Eiffel exectution failed */
 private Signal_t emergency();			/* Emergency exit */
 
 extern void umain();					/* User's initialization routine */
@@ -66,14 +66,13 @@ extern void arg_init();					/* Command line arguments saving */
 extern void mem_diagnose();				/* Memory usage dump */
 #endif
 
-public void main(argc, argv, envp)
+public void eif_init(argc, argv, envp)
 int argc;
 char **argv;
 char **envp;
 {
 	struct ex_vect *exvect;				/* Execution vector for main */
 	jmp_buf exenv;						/* Jump buffer for rescue */
-	extern void emain();				/* The generated Eiffel main */
 
 	/* Compute the program name, so that all the error messages can be tagged
 	 * with that name (with the notable exception of the stack trace, for
@@ -84,12 +83,6 @@ char **envp;
 	if (ename++ == (char *) 0)			/* There was no '/' in the name */
 		ename = argv[0];				/* Program name is the filename */
 
-	initsig();							/* Initialize signal handling */
-	initstk();							/* Create local and hector stacks */
-	exvect = exvec();					/* Get an execution vector */
-	exvect->ex_jbuf = (char *) exenv;	/* Where to jump back */
-	if (echval = setjmp(exenv))			/* Get back here if exception caught */
-		failure();						/* Fail properly */
 	ufill();							/* Get urgent memory chunks */
 
 #ifdef DEBUG
@@ -144,15 +137,9 @@ char **envp;
 
 	umain(argc, argv, envp);			/* User's initializations */
 	arg_init(argc, argv);				/* Save copy for class ARGUMENTS */
-	emain((char *) 0);					/* Start the Eiffel application */
-	reclaim();							/* Reclaim all the objects */
-
-	exit(0);							/* Normal termination */
-
-	/* NOTREACHED */
 }
 
-private void failure()
+public void failure()
 {
 	/* A fatal Eiffel exception has occurred. The stack of exceptions is dumped
 	 * and the memory is cleaned up, if possible.

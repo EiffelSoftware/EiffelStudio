@@ -146,7 +146,6 @@ if ((fil = fopen(filename, "r")) == (FILE *) 0) {
 #ifdef DEBUG
 	dprintf(1)("Size of melted table: %ld\n", mcount);
 #endif
-
 	/* Allocation of the variable `melt' */
 	melt = (char **) cmalloc(mcount * sizeof(char *));
 	if (melt == (char **) 0)

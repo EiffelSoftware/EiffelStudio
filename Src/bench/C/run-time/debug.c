@@ -892,15 +892,15 @@ int new;		/* Amount of new entries in melting table */
 		new_mpatidtab = (int *) cmalloc(new * sizeof(int));
 	}
 	else {
-		new_melt = (char **) crealloc(melt, (mcount + new) * sizeof(char *));
-		new_mpatidtab = (int *) crealloc(mpatidtab, (mcount + new) * sizeof(int));
+		new_melt = (char **) crealloc(melt + zeroc, (mcount + new) * sizeof(char *));
+		new_mpatidtab = (int *) crealloc(mpatidtab + zeroc, (mcount + new) * sizeof(int));
 	}
 	if ((new_melt == (char **) 0) || (new_mpatidtab == (int *) 0))
 		return -1;				/* Not enough memory for extension */
 
 	mcount += new;				/* New melting table size */
-	melt = new_melt;			/* Melting table address may have changed */
-	mpatidtab = new_mpatidtab;	/* Melted pattern id table may heve changed */
+	melt = new_melt - zeroc;			/* Melting table address may have changed */
+	mpatidtab = new_mpatidtab - zeroc;	/* Melted pattern id table may heve changed */
 	
 #ifdef DEBUG
 	dprintf(4)("dmake_room: extension ok, melt now at 0x%x, %d items\n",
@@ -938,9 +938,17 @@ char *addr;			/* Address where byte code is stored */
 		mpatidtab[body_id] = 			/* Get the pattern id from the */
 			mpatidtab[old_body_id];		/* melted table of pattern ids */
 	}
+#ifdef DEBUG
+	dprintf(4)("mpatidtab[%d] = %d\n", body_id - zeroc, mpatidtab[body_id]);
+#endif
 
 	dispatch[body_idx] = body_id;		/* Set-up indirection table */
 	melt[body_id] = addr;				/* And record new byte code */
+
+#ifdef DEBUG
+	dprintf(4)("melt [%d] = 0x%x\n", body_id - zeroc, addr);
+#endif
+
 }
 
 public void dexit(code)

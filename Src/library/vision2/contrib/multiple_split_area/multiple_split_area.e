@@ -208,7 +208,6 @@ feature -- Status setting
 			linear_representation.put_left (widget)
 			all_holders.go_i_th (position)
 			all_holders.put_left (holder)
-			holder.update_position_in_parent
 				-- If there is a tool maximized in `Current', then
 				-- add `widget' accordingly.
 			if maximized_tool /= Void then

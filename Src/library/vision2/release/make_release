@@ -55,7 +55,8 @@ cvs -d :pserver:$USER@cvs:/home/cvs export -r $1 C_library
 mv C_library/* .
 grep -v -- "--|" event/action_sequence.e > vision2/interface/support/action_sequence.e
 grep -v -- "--|" event/active_list.e > vision2/interface/support/active_list.e
-tar czf $1.tgz vision2 base gel wel
+echo "See vision2/RELEASE_NOTES" > README
+tar czf $1.tgz README vision2 base gel wel libpng zlib
 rm -rf base gel event vision2 wel C_library libpng zlib
 echo "Done!"
 exit 0

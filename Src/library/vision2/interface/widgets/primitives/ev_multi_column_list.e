@@ -269,7 +269,7 @@ feature {NONE} -- Inapplicable
 			{EV_PRIMITIVE} Precursor
 			create select_actions
 			create deselect_actions
-			--| FIXME IEK create column_click_actions
+			create column_click_actions
 		end
 
 end -- class EV_MULTI_COLUMN_LIST
@@ -295,6 +295,9 @@ end -- class EV_MULTI_COLUMN_LIST
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.28  2000/02/19 01:21:00  king
+--| Reinstated column_click_actions
+--|
 --| Revision 1.27  2000/02/18 23:54:11  oconnor
 --| released
 --|

@@ -5,7 +5,7 @@ root
 	FAST_COMPILE (fast_compile): "make"
 
 default
-	assertion (require)
+	assertion (no)
 	console_application (yes)
 
 cluster

@@ -63,14 +63,6 @@ feature -- Initialization
 			status_bar_item_box /= default_pointer
 		end
 
-feature -- Status report
-
-	index: INTEGER is
-			-- Index of the current item.
-		do
-			--Result := parent_imp.ev_children.index_of (Current, 1)
-		end
-
 feature -- Status setting
 
 	set_width (value: INTEGER) is
@@ -88,16 +80,6 @@ feature -- Status setting
 				C.c_gtk_box_set_child_options (parent_imp.c_object, c_object, 0, 1)
 			end
 		end
-	
-feature -- Element change
-
-
-	set_index (pos: INTEGER) is
-			-- Make `pos' the new index of the item in the
-			-- list.
-		do
-		end
-
 
 feature {NONE} -- Implementation
 
@@ -111,6 +93,8 @@ feature {NONE} -- Implementation
 			Result := C.gtk_container_children (c_object)
 			Result := C.g_list_nth_data (Result, 0)
 		end
+
+feature {EV_ANY_I}
 
 	interface: EV_STATUS_BAR_ITEM
 
@@ -137,6 +121,9 @@ end -- class EV_STATUS_BAR_ITEM_IMP
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.23  2000/03/01 18:03:58  king
+--| Removed redundant features index and set_index
+--|
 --| Revision 1.22  2000/02/22 18:39:34  oconnor
 --| updated copyright date and formatting
 --|

@@ -368,6 +368,8 @@ rt_private EIF_OBJ hector_addr(char *root)
 	}
 
 	panic(MTC "hector stack inconsistency");		/* We must have found it */
+	/* NOTREACHED */
+	return 0; /* to avoid a warning */
 	EIF_END_GET_CONTEXT
 }
 

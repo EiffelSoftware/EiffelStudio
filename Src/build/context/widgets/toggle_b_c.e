@@ -5,8 +5,20 @@ class TOGGLE_B_C
 inherit
 
 	BUTTON_C
+		rename
+			context_initialization as old_context_initialization,
+			set_size as old_set_size
 		redefine
-			stored_node, widget, is_able_to_be_grouped
+			stored_node, widget, is_able_to_be_grouped, 
+			add_to_option_list, is_valid_parent
+		end
+	BUTTON_C
+		redefine
+			stored_node, widget, is_able_to_be_grouped, 
+			add_to_option_list, context_initialization,
+			is_valid_parent, set_size
+		select
+			context_initialization, set_size
 		end
 
 feature 
@@ -34,6 +46,79 @@ feature
 		do
 			Result := not parent.is_group_composite and
 						then not is_in_a_group
+		end;
+
+	add_to_option_list (opt_list: ARRAY [INTEGER]) is
+		do
+			opt_list.put (Context_const.geometry_form_nbr,
+						Context_const.Geometry_format_nbr);
+			opt_list.put (Context_const.toggle_att_form_nbr,
+						Context_const.Attribute_format_nbr);
+		end;
+
+	is_valid_parent (parent_context: COMPOSITE_C): BOOLEAN is
+			-- Is `parent_context' a valid parent?
+			--| Valid if parent is not MENU_C
+		local
+			menu_c: MENU_C
+		do
+			menu_c ?= parent_context;
+			Result := menu_c = Void
+		end
+
+feature {CONTEXT}
+
+	context_initialization (context_name: STRING): STRING is
+		do
+			Result := old_context_initialization (context_name);
+			if is_armed_modified then
+				cond_f_to_string (Result, is_armed, context_name,
+					"set_toggle_on",
+					"set_toggle_off");
+			end
+		end;
+
+feature
+
+	is_armed: BOOLEAN;
+
+	is_armed_modified: BOOLEAN;
+
+	set_is_armed (flag: BOOLEAN) is
+		local
+			rb: RADIO_BOX_C
+		do
+			rb ?= parent;
+			if rb /= Void then
+				rb.unarm_all_toggles_except (Current)
+			end;
+			set_toggle_state (flag);
+		end;
+
+	set_size (new_w, new_h: INTEGER) is
+			-- Set new size of Current and update
+			-- all children of parent if necessary.
+		local
+			group_comp: GROUP_COMPOSITE_C
+		do
+			old_set_size (new_w, new_h)
+			group_comp ?= parent
+			if group_comp /= Void then
+				group_comp.update_form_for_all_children (Context_const.geometry_form_nbr)
+			end
+		end;
+
+feature {RADIO_BOX_C, S_TOGGLE_B_R333}
+
+	set_toggle_state (flag: BOOLEAN) is
+		do
+			is_armed_modified := True;
+			is_armed := flag;
+			if flag then
+				widget.set_toggle_on
+			else
+				widget.set_toggle_off
+			end
 		end
 
 feature {NONE}
@@ -51,7 +136,7 @@ feature
 -- Storage features
 -- ****************
 
-	stored_node: S_TOGGLE_B_R1 is
+	stored_node: S_TOGGLE_B_R333 is
 		local
 			foobar: S_TOGGLE_B
 		do

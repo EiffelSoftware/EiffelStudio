@@ -57,23 +57,8 @@ feature -- Execution
 			temp_filename: FILE_NAME
 			temp_file: PLAIN_TEXT_FILE
 			wizard_launched: BOOLEAN
-			temp_dir: STRING
 		do
-			temp_dir := get ("temp")
-			if temp_dir = Void then
-				temp_dir := get ("tmp")
-			end
-			if temp_dir = Void then
-				if (create {DIRECTORY}.make ("/tmp")).exists then
-					temp_dir := "/tmp"
-				else
-					temp_dir := current_working_directory
-				end
-			end
-			create temp_filename.make_from_string (temp_dir)
-			temp_filename.set_file_name ("benchwiz")
-			temp_filename.add_extension ("tmp")
-			
+			create temp_filename.make_temporary_name
 			create temp_file.make (temp_filename)
 			temp_file.open_write
 			temp_file.put_string ("Success=%"<SUCCESS>%"%N")

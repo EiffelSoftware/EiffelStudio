@@ -11,7 +11,8 @@ inherit
 	EDITOR_TOKEN_TEXT
 		redefine
 			text_color, background_color,
-			corresponding_text_item
+			corresponding_text_item,
+			font
 		end
 
 create
@@ -36,6 +37,12 @@ feature {NONE} -- Implementation
 	background_color: EV_COLOR is
 		do
 			Result := editor_preferences.keyword_background_color
+		end
+
+	font: EV_FONT is
+			-- Font used in the editor
+		do
+			Result := Keyword_font_cell.item
 		end
 
 end -- class EDITOR_KEYWORD

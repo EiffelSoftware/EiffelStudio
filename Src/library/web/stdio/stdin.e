@@ -27,7 +27,7 @@ feature -- Initialization
 	make is
 		do
 			make_plain_text_file ("stdin")
-			file_pointer := file_def (0)
+			file_pointer := console_def (0)
 			set_read_mode
 		end
 
@@ -46,17 +46,16 @@ feature -- Measurement
 			-- Useless for STDIN class.
 			-- `count' is non zero not to invalidate invariant clauses.
 
-feature {NONE} -- Implementation
-
-	file_def (number: INTEGER): POINTER is
+feature {NONE} -- Externals			
+			
+	console_def (number: INTEGER): POINTER is
 			-- Convert `number' to the corresponding
 			-- file descriptor.
 		external
-			"C"
+			"C | %"eif_console.h%""
 		end
 
 end -- class STDIN
-
 
 --|----------------------------------------------------------------
 --| EiffelWeb: library of reusable components for ISE Eiffel.

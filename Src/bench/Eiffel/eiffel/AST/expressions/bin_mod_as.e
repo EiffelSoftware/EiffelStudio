@@ -16,7 +16,7 @@ inherit
 feature -- Properties
 
 	balanced: BOOLEAN is False
-			-- Is the bianry operation balanced ?
+			-- Is the binary operation balanced ?
 
 	byte_anchor: BIN_MOD_B is
 			-- Byte code type

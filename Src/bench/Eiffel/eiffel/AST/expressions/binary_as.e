@@ -45,13 +45,6 @@ feature -- Properties
 			-- Do nothing
 		end
 
-	balanced_result: BOOLEAN is
-			-- is the result of the infix operation subject to the
-			-- balancing rule ?
-		do
-			-- Do nothing
-		end
-
 	bit_balanced: BOOLEAN is
 			-- Is the current binary operation subject to the
 			-- balancing rule proper to bit types ?
@@ -63,16 +56,6 @@ feature -- Properties
 			-- Internal name of the infix feature associated to the
 			-- binary expression
 		deferred
-		end
-
-	operator_is_keyword: BOOLEAN is
-		do
-			Result := true
-		end
-
-	operator_is_special: BOOLEAN is 
-		do
-			Result := false
 		end
 
 	operator_name: STRING is
@@ -99,55 +82,76 @@ feature -- Type check, byte code and dead code removal
 	type_check is
 			-- Type check a binary expression
 		local
-			bit_balance_in_effect	: BOOLEAN
-			balance_in_effect		: BOOLEAN
-			infix_function			: FEATURE_I
-			infix_arg_type			: TYPE_A
-			infix_type				: TYPE_A
-			left_type				: TYPE_A
-			current_context			: TYPE_A
-			last_constrained		: TYPE_A
-			left_constrained		: TYPE_A
-			left_id					: INTEGER
-			last_class				: CLASS_C
-			depend_unit				: DEPEND_UNIT
-			vwoe					: VWOE
-			vwoe1					: VWOE1
-			vhne					: VHNE
-			vuex					: VUEX
+			bit_balance_in_effect: BOOLEAN
+			balance_in_effect: BOOLEAN
+			infix_function: FEATURE_I
+			infix_arg_type: TYPE_A
+			infix_type: TYPE_A
+			left_type, right_type: TYPE_A
+			right_constrained, left_constrained: TYPE_A
+			infix_constrained: TYPE_A
+			left_id: INTEGER
+			last_class: CLASS_C
+			depend_unit: DEPEND_UNIT
+			vwoe: VWOE
+			vwoe1: VWOE1
+			vhne: VHNE
+			vuex: VUEX
 			vape: VAPE
-			int_a: INTEGER_A
 		do
 				-- First type check the left operand
 			left.type_check
 
 				-- Check if target is not of type NONE
+			left_type := context.item
 			left_constrained := context.last_constrained_type
 			if left_constrained.is_none then
-				!!vhne
+				create vhne
 				context.init_error (vhne)
 				Error_handler.insert_error (vhne)
-					-- Cannot go on here
 				Error_handler.raise_error
 			end
 
+				-- Then type check the right operand
+			right.type_check
+
+				-- Conformance: take care of constrained genericity and
+				-- of the balancing rule for the simple numeric types
+			right_type := context.item
+			right_constrained := context.last_constrained_type
+
+				-- Process of the balancing rule
+			balance_in_effect := numeric_balance (left_constrained, right_constrained)
+			bit_balance_in_effect := bit_balance (left_constrained, right_constrained)
+
+			if balance_in_effect or bit_balance_in_effect then
+				infix_constrained := left_constrained.heaviest (right_constrained)
+				if infix_constrained = right_constrained then
+						-- Make sure that if right hand side is heavier then default_type
+						-- is the one from expression.
+					left_type := right_type
+				end
+			else
+				infix_constrained := left_constrained
+			end
+
 				-- Check if we have then an infixed function
-			last_class := left_constrained.associated_class
+			last_class := infix_constrained.associated_class
+			left_id := last_class.class_id
 			infix_function := last_class.feature_table.item (infix_function_name)
 			if infix_function = Void then
 					-- Error
-				!!vwoe
+				create vwoe
 				context.init_error (vwoe)
 				vwoe.set_other_class (last_class)
 				vwoe.set_op_name (infix_function_name)
 				Error_handler.insert_error (vwoe)
-					-- Cannot go on here.
 				Error_handler.raise_error
 			end
 
 				-- Export validity
 			if not infix_function.is_exported_for (last_class) then
-				!!vuex
+				create vuex
 				context.init_error (vuex)
 				vuex.set_static_class (last_class)
 				vuex.set_exported_feature (infix_function)
@@ -168,15 +172,9 @@ feature -- Type check, byte code and dead code removal
 				Error_handler.raise_error
 			end
 
-			left_type := context.item
-			left_id := last_class.class_id
-
 				-- Suppliers update
-			!!depend_unit.make (left_id, infix_function)
+			create depend_unit.make (left_id, infix_function)
 			context.supplier_ids.extend (depend_unit)
-
-				-- Then type check the right operand
-			right.type_check
 
 				-- Conformance initialization
 			Argument_types.init2 (infix_function)
@@ -184,34 +182,17 @@ feature -- Type check, byte code and dead code removal
 			infix_arg_type ?= infix_function.arguments.i_th (1)
 			infix_arg_type := infix_arg_type.conformance_type
 				-- Instantiation
-			infix_arg_type := infix_arg_type.instantiation_in
-										(left_type, left_id).actual_type
-				-- Conformance: take care of constrained genericity and
-				-- of the balancing rule for the simple numeric types
-			current_context := context.item
-			last_constrained := context.last_constrained_type
+			infix_arg_type := infix_arg_type.instantiation_in (left_type, left_id).actual_type
 
-				-- Process of the balancing rule
-			balance_in_effect := numeric_balance (left_constrained, last_constrained)
-			bit_balance_in_effect := bit_balance (left_constrained, last_constrained)
-
-			if
-				not balance_in_effect and then not bit_balance_in_effect
-				and then not current_context.conform_to (infix_arg_type)
-			then
-				if infix_arg_type.is_integer and then current_context.is_integer then
-					int_a ?= current_context
-					create {INTEGER_A} infix_arg_type.make (int_a.size)					
-				else
-						-- No conformance on argument of infix 
-					create vwoe1
-					context.init_error (vwoe1)
-					vwoe1.set_other_class (last_class)
-					vwoe1.set_op_name (infix_function_name)
-					vwoe1.set_formal_type (infix_arg_type)
-					vwoe1.set_actual_type (current_context)
-					Error_handler.insert_error (vwoe1)
-				end
+			if not right_type.conform_to (infix_arg_type) then
+					-- No conformance on argument of infix 
+				create vwoe1
+				context.init_error (vwoe1)
+				vwoe1.set_other_class (last_class)
+				vwoe1.set_op_name (infix_function_name)
+				vwoe1.set_formal_type (infix_arg_type)
+				vwoe1.set_actual_type (right_type)
+				Error_handler.insert_error (vwoe1)
 			end
 
 				-- Add type to `parameters' in case we will need it later.
@@ -220,7 +201,7 @@ feature -- Type check, byte code and dead code removal
 				-- Update the type stack: instantiate result type of the
 				-- infixed feature
 			infix_type ?= infix_function.type
-			if last_constrained.is_bits and then infix_type.is_like_current then
+			if right_constrained.is_bits and then infix_type.is_like_current then
 					-- For non-balanced features of symbolic class BIT_REF
 					-- like infix "^" or infix "#"
 				infix_type := left_type
@@ -231,15 +212,7 @@ feature -- Type check, byte code and dead code removal
 			end
 
 			context.pop (2)
-			if (balance_in_effect and then balanced_result) or else bit_balance_in_effect then
-				if left_constrained.heaviest (last_constrained) = left_constrained then
-					infix_type := left_type
-				else
-					infix_type := current_context
-				end
-			end
 			context.put (infix_type)
-
 			context.access_line.insert (infix_function.access (infix_type.type_i))
 		end
 
@@ -267,37 +240,20 @@ feature -- Type check, byte code and dead code removal
 	bit_balance (left_type, current_context: TYPE_A): BOOLEAN is
 			-- Is the bit balance in effect ?
 		require
-			good_argument: not (	left_type = Void
-									or else
-									current_context = Void)
-			consistency: not (	left_type.is_formal
-								or else
-								current_context.is_formal)
+			good_argument: not (left_type = Void or else current_context = Void)
+			consistency: not (left_type.is_formal or else current_context.is_formal)
 		do
-			Result :=	bit_balanced
-						and then
-						left_type.is_bits
-						and then
-						current_context.is_bits
+			Result := bit_balanced and then left_type.is_bits and then current_context.is_bits
 		end
 
 	numeric_balance (left_type, current_context: TYPE_A): BOOLEAN is
 			-- Is the numeric balancing rule in effect ?
 		require
-			good_argument: not (	left_type = Void
-									or else
-									current_context = Void)
-			consistency: not (  left_type.is_formal
-								or else
-								current_context.is_formal)
+			good_argument: not (left_type = Void or else current_context = Void)
+			consistency: not (left_type.is_formal or else current_context.is_formal)
 		do
-			Result :=   balanced
-						and then
-						left_type.is_numeric
-						and then
-						current_context.is_numeric
+			Result := balanced and then left_type.is_numeric and then current_context.is_numeric
 		end
-	
 	
 	format (ctxt: FORMAT_CONTEXT) is
 			-- Reconstitute text.
@@ -332,20 +288,6 @@ feature {BINARY_AS}	-- Replication
 
 	attachment: TYPE_A
 			-- Type of right expression as defined in Eiffel source.
-
-	set_left (l: like left) is
-		require
-			valid_arg: l /= Void
-		do
-			left := l
-		end
-
-	set_right (l: like right) is
-		require
-			valid_arg: l /= Void
-		do
-			right := l
-		end
 
 end -- class BINARY_AS
 

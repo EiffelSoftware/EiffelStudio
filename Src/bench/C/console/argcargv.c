@@ -29,7 +29,7 @@ HINSTANCE eif_hPrevInstance;
 LPSTR     eif_lpCmdLine;
 int       eif_nCmdShow;
 
-static char **argv = NULL, *t = NULL;
+static char **argv = NULL, *temp = NULL;
 
 APIENTRY WinMain(HANDLE hInstance, HANDLE hPrevInstance, LPSTR lpCmdLine, int nCmdShow)
 {
@@ -44,17 +44,17 @@ APIENTRY WinMain(HANDLE hInstance, HANDLE hPrevInstance, LPSTR lpCmdLine, int nC
 	eif_lpCmdLine = lpCmdLine;
 	eif_nCmdShow = nCmdShow;
 
-	t = strdup (GetCommandLine());
+	temp = strdup (GetCommandLine());
 
-	tl = strlen (t);
-	if ((tl > 16) && (t[tl-1] == '"') && (t[tl-2] == '?') &&
-		(t[tl-16] == '"') && (t[tl-15] == '?') && (t[tl-17] == ' '))
+	tl = strlen (temp);
+	if ((tl > 16) && (temp[tl-1] == '"') && (temp[tl-2] == '?') &&
+		(temp[tl-16] == '"') && (temp[tl-15] == '?') && (temp[tl-17] == ' '))
 		{
-		t[tl-17] = '\0';
-		eif_lpCmdLine = t;
+		temp[tl-17] = '\0';
+		eif_lpCmdLine = temp;
 		}
 
-	argv = shword (t);
+	argv = shword (temp);
 	for (argc = 0; argv[argc] != (char *) 0; argc++)
 		;
 	eif_environ = (char **) GetEnvironmentStrings();
@@ -75,11 +75,11 @@ void eif_cleanup()
 
 	if (argv != NULL)
 		shfree ();	/* %%manu removed `argv' as argument, shfree needs no argument */
-	if (t != NULL){
+	if (temp != NULL){
 #ifdef EIF_THREADS
 		if (eif_thr_is_root ())
 #endif
-			free (t);
+			free (temp);
 	}
 
 	for (i = 0; i < eif_fn_count; i ++)

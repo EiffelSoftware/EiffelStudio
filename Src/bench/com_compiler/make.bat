@@ -25,7 +25,7 @@ copy generated\Server\Include Clib
 
 copy generated\Common\Include Clib
 
-copy generated\Eif_compiler.tlb .\
+copy generated\Eif_compiler.tlb ace_file\.
 
 copy to_replace\*.e .\
 

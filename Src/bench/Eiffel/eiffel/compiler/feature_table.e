@@ -105,69 +105,73 @@ feature
 			depend_unit: DEPEND_UNIT;
 			ext_i, other_ext_i: EXTERNAL_I
 		do
-			from
-				start;
-				Result := True;
-			until
-				after
-			loop
-				feature_name := key_for_iteration;
-				f2 := other.item (feature_name);
-				f1 := item_for_iteration;
-				if f2 = Void then
-debug ("ACTIVITY")
-	io.error.putstring ("%Tfeature ");
-	io.error.putstring (feature_name);
-	io.error.putstring (" is not in the table.%N");
-end;
-						-- This is temporary according to the comments in EXTERNAL_I
-						-- If this is removed, add a test at the beginning on Void for `other'
-					if f1.written_in.is_equal (feat_tbl_id) and then f1.is_external then
-						ext_i ?= f1;
-						if ext_i.encapsulated then
-							System.set_freeze
-						end
-					end;
-					Result := False;
-				else
-					check
-						f1.feature_name.is_equal (f2.feature_name);
-					end;
-					if not f1.equiv (f2) then
-debug ("ACTIVITY")
-	io.error.putstring ("%Tfeature ");
-	io.error.putstring (feature_name);
-	io.error.putstring (" is not equiv.%N");
-end;
-						if f1.is_external then
-								-- `f1' and `f2' can be "not equiv" because of the export status
-								-- We need to freeze only if the information specific to EXTERNAL_I
-								-- is not equiv
+			if other.count = 0 then
+				Result := False
+			else
+				from
+					start;
+					Result := True;
+				until
+					after
+				loop
+					feature_name := key_for_iteration;
+					f2 := other.item (feature_name);
+					f1 := item_for_iteration;
+					if f2 = Void then
+	debug ("ACTIVITY")
+		io.error.putstring ("%Tfeature ");
+		io.error.putstring (feature_name);
+		io.error.putstring (" is not in the table.%N");
+	end;
+							-- This is temporary according to the comments in EXTERNAL_I
+							-- If this is removed, add a test at the beginning on Void for `other'
+						if f1.written_in.is_equal (feat_tbl_id) and then f1.is_external then
 							ext_i ?= f1;
-							if
-								not ext_i.freezing_equiv (f2)
-							then
-									-- The external definition has changed
+							if ext_i.encapsulated then
 								System.set_freeze
 							end
-						end
+						end;
 						Result := False;
-						!!depend_unit.make (feat_tbl_id, f2);
-						pass2_ctrl.propagators.extend (depend_unit)
 					else
-						f1.set_code_id (f2.code_id)			
+						check
+							f1.feature_name.is_equal (f2.feature_name);
+						end;
+						if not f1.equiv (f2) then
+	debug ("ACTIVITY")
+		io.error.putstring ("%Tfeature ");
+		io.error.putstring (feature_name);
+		io.error.putstring (" is not equiv.%N");
+	end;
+							if f1.is_external then
+									-- `f1' and `f2' can be "not equiv" because of the export status
+									-- We need to freeze only if the information specific to EXTERNAL_I
+									-- is not equiv
+								ext_i ?= f1;
+								if
+									not ext_i.freezing_equiv (f2)
+								then
+										-- The external definition has changed
+									System.set_freeze
+								end
+							end
+							Result := False;
+							!!depend_unit.make (feat_tbl_id, f2);
+							pass2_ctrl.propagators.extend (depend_unit)
+						else
+							f1.set_code_id (f2.code_id)			
+						end;
 					end;
+					forth
 				end;
-				forth
-			end;
-			if Result then
-				Result := origin_table.equiv (other.origin_table);
+				if Result then
+					Result := origin_table.equiv (other.origin_table);
 debug ("ACTIVITY")
 	if not Result then
 		io.error.putstring ("%TOrigin table is not equivalent%N");
 	end;
 end;
-			end;
+				end;
+			end
 		end;
 
 	pass2_control (other: like Current): PASS2_CONTROL is

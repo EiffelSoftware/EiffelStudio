@@ -183,12 +183,14 @@ post_process() {
 		if (_concur_hosts[idx].executable[0] == '\0') {
 			for(ind=strlen(_concur_hosts[idx].directory); ind>=0 && _concur_hosts[idx].directory[ind] != '\\' && _concur_hosts[idx].directory[ind] != '/'; ind--);
 			if (ind<0) {
+				add_nl;
 				sprintf(crash_info, CURAPPERR35, _concur_hosts[idx].host, _concur_hosts[idx].directory);
 				c_raise_concur_exception(exception_configure_syntax_error);
 			}
 			strcpy(_concur_hosts[idx].executable, _concur_hosts[idx].directory+ind+1);
 			_concur_hosts[idx].directory[ind+1] = '\0';
 			if (_concur_hosts[idx].executable[0] == '\0') {
+				add_nl;
 				sprintf(crash_info, CURAPPERR36, _concur_hosts[idx].host, _concur_hosts[idx].directory);
 				c_raise_concur_exception(exception_configure_syntax_error);
 			}

@@ -53,16 +53,18 @@ feature -- Access
 			exists: Result /= Void
 		end
 
-	wizard_pixmaps_path: STRING is 
+	wizard_pixmaps_path: PATH_NAME is 
 			-- Bitmaps location
 		once
-			Result := wizard_source+ "/pngs" 
+			create Result.make_from_string (wizard_source)
+			Result.extend ("pixmaps")
 		end
 
-	wizard_resources_path: STRING is
+	wizard_resources_path: PATH_NAME is
 			-- Resource location.
 		once
-			Result := wizard_source +"/unix_resources"
+			create Result.make_from_string (wizard_source)
+			Result.extend ("unix_resources")
 		end
 
 	pixmap_extension: STRING is

@@ -61,16 +61,22 @@ feature -- Access
 		end
 
 	iitem: INTEGER is
-			-- Index of the row of the item. 0 if it is an item and not a 
-			-- subitem.
+			-- Index of the row of the item. 
 		do
 			Result := cwel_lv_item_get_iitem (item)
 		end
 
 	isubitem: INTEGER is
-			-- Index of the item in his row
+			-- Index of the item in his row. 0 if it is an item and not a 
+			-- subitem.
 		do
 			Result := cwel_lv_item_get_isubitem (item)
+		end
+
+	state: INTEGER is
+			-- Current state of the item.
+		do
+			Result := cwel_lv_item_get_state (item)
 		end
 
 	text: STRING is
@@ -86,6 +92,12 @@ feature -- Access
 			-- Index of the icon.
 		do
 			Result := cwel_lv_item_get_iimage (item)
+		end
+
+	lparam: INTEGER is
+			-- User parameter.
+		do
+			Result := cwel_lv_item_get_lparam (item)
 		end
 
 feature -- Element change
@@ -112,6 +124,14 @@ feature -- Element change
 			cwel_lv_item_set_isubitem (item, value)
 		ensure
 			isubitem_set: isubitem = value
+		end
+
+	set_state (value: INTEGER) is
+			-- Set `state' with `value'.
+		do
+			cwel_lv_item_set_state (item, value)
+		ensure
+			state_set: state = value
 		end
 
 	set_text (a_text: STRING) is
@@ -146,6 +166,20 @@ feature {NONE} -- Implementation
 
 	str_text: WEL_STRING
 			-- C string to save the text
+
+feature {WEL_LIST_VIEW} -- Implementation
+
+	set_cchtextmax (value: INTEGER) is
+			-- Set the maximum size of the text getting by get item)
+		do
+			cwel_lv_item_set_cchtextmax (item, value)
+		end
+
+	set_statemask (value: INTEGER) is
+			-- Set the statemask with `value'.
+		do
+			cwel_lv_item_set_statemask  (item, value)
+		end
 
 feature {NONE} -- externals
 

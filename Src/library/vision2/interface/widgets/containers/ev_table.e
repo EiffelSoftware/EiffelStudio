@@ -26,8 +26,8 @@ inherit
 	CHAIN [EV_WIDGET]
 		undefine
 			default_create, copy, is_equal, put,
-			changeable_comparison_criterion, remove, prune,
-			linear_representation, has
+			changeable_comparison_criterion, remove,
+			prune, has
 		redefine
 			duplicate
 		end
@@ -67,7 +67,7 @@ feature -- Access
 			-- `Result' is column coordinate of `widget'.
 		require
 			not_destroyed: not is_destroyed
-			widget_contained: item_list.has (widget)
+			widget_contained: has (widget)
 		do
 			Result := implementation.item_column_position (widget)
 		ensure
@@ -78,7 +78,7 @@ feature -- Access
 			-- `Result' is row coordinate of `widget'.
 		require
 			not_destroyed: not is_destroyed
-			widget_contained: item_list.has (widget)
+			widget_contained: has (widget)
 		do
 			Result := implementation.item_row_position (widget)
 		ensure
@@ -89,7 +89,7 @@ feature -- Access
 			-- `Result' is number of columns taken by `widget'.
 		require
 			not_destroyed: not is_destroyed
-			widget_contained: item_list.has (widget)
+			widget_contained: has (widget)
 		do
 			Result := implementation.item_column_span (widget)
 		ensure
@@ -100,7 +100,7 @@ feature -- Access
 			-- `Result' is number of rows taken by `widget'.
 		require
 			not_destroyed: not is_destroyed
-			widget_contained: item_list.has (widget)
+			widget_contained: has (widget)
 		do
 			Result := implementation.item_row_span (widget)
 		ensure
@@ -109,6 +109,7 @@ feature -- Access
 
 	item_list: ARRAYED_LIST [EV_WIDGET] is
 			-- List of items in `Current'.
+		obsolete "Use `linear_representation' instead."
 		require
 			not_destroyed: not is_destroyed
 		do
@@ -116,6 +117,22 @@ feature -- Access
 		ensure
 			Result_not_void: Result /= Void
 			count_matches_widget_count: Result.count = count
+		end
+		
+	to_array: ARRAY [EV_WIDGET] is
+			-- A representation of `Current' as ARRAY. Included to
+			-- ease transition from inheritance of ARRAY to
+			-- inheritance of CHAIN. Contains contents of all cells
+			-- from left to right, and top to bottom. You should only
+			-- use this if you relied on the inheritence of ARRAY, and
+			-- is only temporary to ease this change.
+		obsolete "Available to ease transition to new inheritance structure."
+		require
+			not_destroyed: not is_destroyed
+		do
+			Result := implementation.to_array
+		ensure
+			result_not_void: Result /= Void
 		end
 
 feature -- Status report
@@ -344,8 +361,7 @@ feature -- Status settings
 		ensure
 			columns_set: columns = a_column
 			rows_set: rows = a_row
-			--upper_updated: internal_array.upper = rows * columns
-			items_untouched: item_list.is_equal (old item_list)
+			items_untouched: linear_representation.is_equal (old linear_representation)
 		end
 		
 	set_item_position (v: EV_WIDGET; a_column, a_row: INTEGER) is
@@ -533,16 +549,7 @@ feature -- Iteration.
 			implementation.go_to (p)
 		end
 
-feature -- Conversion
-
-	linear_representation: LINEAR [EV_WIDGET] is
-			-- Representation as a linear structure
-		do
-			check
-				not_destroyed: not is_destroyed
-			end
-			Result := item_list
-		end
+feature -- Contract support
 		
 	is_in_default_state: BOOLEAN is
 			-- Is `Current' in its default state.

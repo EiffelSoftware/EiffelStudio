@@ -99,7 +99,8 @@ feature -- Generation
 				
 					-- Create data of current assembly
 				create assembly_info.make (System.name)
-				
+				il_generator.set_public_key_token (assembly_info)
+
 				create output_file_name.make_from_string (location)
 				output_file_name.set_file_name (file_name)
 				create output_file.make (output_file_name)

@@ -22,7 +22,8 @@ inherit
 		redefine
 			make,
 			default_ex_style,
-			move_and_resize
+			move_and_resize,
+			top_level_window_imp
 		end
 
 creation
@@ -37,9 +38,14 @@ feature {NONE} -- Initialization
 			!! scroller.make_with_options (Current, 0, 10, 0, 10, 1, 20, 1, 20)
 		end
 
+feature -- Status report
+
+	top_level_window_imp: EV_WINDOW_IMP
+			-- Top level window that contains the current widget.
+
 feature -- Element change
 
-	set_top_level_window_imp (a_window: WEL_WINDOW) is
+	set_top_level_window_imp (a_window: EV_WINDOW_IMP) is
 			-- Make `a_window' the new `top_level_window_imp'
 			-- of the widget.
 		do

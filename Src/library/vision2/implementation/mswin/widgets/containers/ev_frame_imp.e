@@ -30,7 +30,8 @@ inherit
 		redefine
 			make,
 			on_paint,
-			move_and_resize
+			move_and_resize,
+			top_level_window_imp
 		end
 
 creation
@@ -66,6 +67,9 @@ feature -- Access
 			Result := (client_rect.height - box_text_height - 2 * box_width).max (0)
 		end
 
+	top_level_window_imp: EV_WINDOW_IMP
+			-- Top level window that contains the current widget.
+
 feature -- Status setting
 
 	set_default_minimum_size is
@@ -82,7 +86,7 @@ feature -- Status setting
 
 feature -- Element change
 
-	set_top_level_window_imp (a_window: WEL_WINDOW) is
+	set_top_level_window_imp (a_window: EV_WINDOW_IMP) is
 			-- Make `a_window' the new `top_level_window_imp'
 			-- of the widget.
 		do

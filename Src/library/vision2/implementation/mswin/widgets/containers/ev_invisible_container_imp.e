@@ -20,11 +20,17 @@ inherit
 		end
 
 	EV_WEL_CONTROL_CONTAINER_IMP
+		redefine
+			top_level_window_imp
+		end
 
 feature -- Access
 	
 	ev_children: ARRAYED_LIST [EV_WIDGET_IMP]
 			-- List of the children of the box
+
+	top_level_window_imp: EV_WINDOW_IMP
+			-- Top level window that contains the current widget.
 
 feature -- Status setting
 
@@ -50,7 +56,7 @@ feature -- Status setting
 
 feature -- Element change
 
-	set_top_level_window_imp (a_window: WEL_WINDOW) is
+	set_top_level_window_imp (a_window: EV_WINDOW_IMP) is
 			-- Make `a_window' the new `top_level_window_imp'
 			-- of the widget.
 		local

@@ -30,7 +30,8 @@ inherit
 			on_paint,
 			on_wm_erase_background,
 			default_style,
-			move_and_resize
+			move_and_resize,
+			top_level_window_imp
 		end
 
 	WEL_WINDOWS_ROUTINES
@@ -111,6 +112,9 @@ feature -- Access
 		deferred
 		end
 
+	top_level_window_imp: EV_WINDOW_IMP
+			-- Top level window that contains the current widget.
+
 feature -- Status settings
 
 	set_insensitive (flag: BOOLEAN) is
@@ -151,7 +155,7 @@ feature -- Element change
 			update_display
 		end
 
-	set_top_level_window_imp (a_window: WEL_WINDOW) is
+	set_top_level_window_imp (a_window: EV_WINDOW_IMP) is
 			-- Make `a_window' the new `top_level_window_imp'
 			-- of the widget.
 		do

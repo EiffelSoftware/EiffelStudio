@@ -29,7 +29,8 @@ inherit
 	EV_WEL_CONTROL_CONTAINER_IMP
 		redefine
 			make,
-			move_and_resize
+			move_and_resize,
+			top_level_window_imp
 		end
 
 creation
@@ -87,6 +88,9 @@ feature -- Status report
 		do
 			Result := columns_value.count - 1
 		end
+
+	top_level_window_imp: EV_WINDOW_IMP
+			-- Top level window that contains the current widget.
 
 feature -- Status settings
 
@@ -195,7 +199,7 @@ feature -- Element change
 			update_display
 		end
 
-	set_top_level_window_imp (a_window: WEL_WINDOW) is
+	set_top_level_window_imp (a_window: EV_WINDOW_IMP) is
 			-- Make `a_window' the new `top_level_window_imp'
 			-- of the widget.
 		local

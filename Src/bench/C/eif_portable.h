@@ -167,7 +167,11 @@ typedef unsigned int uint32;
 #define RT_LNK extern
 #endif
 
-
+#ifdef EIF_IL_DLL
+#define RT_IL	__declspec(dllexport)
+#else
+#define RT_IL	extern
+#endif
 
 #define rt_public				/* default C scope */
 #define rt_private static		/* static outside a block means private */

@@ -7,7 +7,8 @@ indexing
 	date: "$Date$";
 	revision: "$Revision$"
 
-class LIST_MAN_M 
+class 
+	LIST_MAN_M 
 
 inherit
 
@@ -438,6 +439,7 @@ feature -- Cursor movement
 		do
 			!! ms.make_localized (an_item);	
 			index := item_pos_from (ms, index);
+			ms.free;
 			if index = 0 then
 				index := count + 1
 			end

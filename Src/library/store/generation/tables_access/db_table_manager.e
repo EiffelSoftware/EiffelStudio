@@ -1,6 +1,6 @@
 indexing
-	description: "DATABASE Manager"
-	author: "Davids"
+	description: "Database Manager using database structure description."
+	author: "Cedric Reduron"
 	date: "$Date$"
 	revision: "$Revision$"
 
@@ -72,6 +72,12 @@ feature -- Status report
 	is_id_selection: BOOLEAN
 			-- Is prepared select query qualified with ID?
 
+	like_type (type: INTEGER): BOOLEAN is
+			-- Does `type' require a SQL query using 'like'?
+		do
+			Result := type >= Prefix_type and then type <= Max_type
+		end
+			
 feature -- Access
 
 	select_query: STRING is
@@ -85,6 +91,9 @@ feature -- Access
 			end
 			Result.append (order_by)
 		end
+
+	select_qualifiers: STRING
+			-- Qualifying clause of current SQL query.
 
 	database_result_list: ARRAYED_LIST [DB_TABLE] is
 			-- Database result list.
@@ -103,51 +112,6 @@ feature -- Access
 				Result := result_list.first
 			end
 		end
-
---	located_codes (tablecode, attributecode: INTEGER) is
---			-- Select codes available at `tablecode'/`attributecode' in table CODES.
---		require
---			is_valid_code: is_valid_code (tablecode)
---		local
---			codes_description: CODES_DESCRIPTION
---		do
---			codes_description := tables.codes_description
---			prepare_select_with_table (codes_description.Table_code)
---			add_value_qualifier (codes_description.Tablecode,
---						tablecode.out)
---			add_value_qualifier (codes_description.Attributecode,
---						attributecode.out)
---		end
---
---	codestring (tablecode, attributecode, codeinteger: INTEGER): STRING is
---			-- String code corresponding to `codeinteger' at
---			-- `tablecode'/`attributecode' in table CODES.
---		require
---			is_valid_code: is_valid_code (tablecode)
---		local
---			code_list: ARRAYED_LIST [CODES]
---			codes_description: CODES_DESCRIPTION
---		do
---			codes_description := tables.codes_description
---			located_codes (tablecode, attributecode)
---			add_value_qualifier (codes_description.Codeinteger,
---						codeinteger.out)
---			load_result
---			if not has_error then
---				code_list ?= database_result_list
---				if code_list /= Void and then code_list.count = 1 then
---					Result := code_list.first.codestring
---				else
---					has_error := True
---					error_message := "Error in table CODES: no value for code "
---							+ codeinteger.out + " located in "
---							+ codes_description.Table_name + "/"
---							+ codes_description.description_list.i_th (attributecode)
---							+ "."
---					io.putstring (error_message)
---				end
---			end
---		end
 
 feature -- Basic operations
 
@@ -214,6 +178,56 @@ feature -- Basic operations
 			add_qualifier (q)
 		end
 
+	add_specific_qualifier (column: INTEGER; value: STRING; type: INTEGER; case_sens: BOOLEAN) is
+			-- Add qualifier `column' related to `value' with `type' and `case'.
+		local
+			q: STRING
+			attr, val: STRING
+			coltype: INTEGER
+		do
+			attr := select_table_descr.description_list.i_th (column)
+			val := clone (value)
+			if case_sens then
+				q := clone (attr)
+			else
+				coltype := select_table_descr.type_list.i_th (column)
+				if coltype = select_table_descr.string_type or else
+						coltype = select_table_descr.character_type then
+					q := "lower (" + attr + ")"
+					val.to_lower
+				else
+					q := clone (attr)
+				end
+			end
+			if like_type (type) then
+					-- '%' and '_' have a special meaning in SQL (wild cards: '%' -> '*',
+					-- '_' -> '?'): a solution is to replace
+					-- these characters by any character, i.e. '_'.
+				val.replace_substring_all ("%%", "_")
+				q.append (" like '")
+				if type = Contains_type or else type = Suffix_type then
+					q.append ("%%")
+				end
+				q.append (val)
+				if type = Contains_type or else type = Prefix_type then
+					q.append ("%%")
+				end
+			else
+				q.append (" ")
+				if type = Equals_type then
+					q.append ("=")
+				elseif type = Greater_type then
+					q.append (">")
+				elseif type = Lower_type then
+					q.append ("<")
+				end
+				q.append (" '")
+				q.append (val)
+			end
+			q.append ("'")
+			add_qualifier (q)
+		end
+
 	add_special_value_qualifier (column: INTEGER; value: STRING) is
 			-- Add qualifier prefix(`column') = `value' to prepared select query.
 			-- Qualifier is case insensitive.
@@ -232,7 +246,7 @@ feature -- Basic operations
 			-- Prepared select query will select table row with id `id_value'.
 		do
 			remove_qualifiers
-			add_value_qualifier (Id_code, id_value)
+			add_value_qualifier (select_table_descr.Id_code, id_value)
 			is_id_selection := True
 		ensure
 			is_id_selection: is_id_selection
@@ -269,6 +283,31 @@ feature -- Basic operations
 			order_by := " order by " + select_table_descr.description_list.i_th (column)
 		end
 
+	set_multiple_order_by (column_list: ARRAYED_LIST [INTEGER]) is
+			-- Order result by attribute of code `column'.
+		require
+			select_query_prepared: select_query_prepared
+			column_list_not_void: column_list /= Void
+		local
+			descr_list: ARRAYED_LIST [STRING]
+		do
+			descr_list := select_table_descr.description_list
+			if not column_list.is_empty then
+				order_by := " order by " + descr_list.i_th (column_list.first)
+				from
+					column_list.start
+					column_list.forth
+				until
+					column_list.after
+				loop
+					order_by.append (", " + descr_list.i_th (column_list.item))
+					column_list.forth
+				end
+			else
+				remove_order_by
+			end
+		end
+
 	remove_order_by is
 			-- Remove order by from current prepared select query.
 		require
@@ -284,8 +323,6 @@ feature {NONE} -- Implementation
 
 	select_columns: STRING
 
-	select_qualifiers: STRING
-
 	order_by: STRING
 
 	result_list: ARRAYED_LIST [DB_TABLE]
@@ -293,13 +330,13 @@ feature {NONE} -- Implementation
 
 feature -- Queries
 
-	load_integer_with_select (s: STRING): ANY is
+	load_data_with_select (s: STRING): ANY is
 			-- Load directly an integer value from the database.
 		require
 			meaningful_select: s /= Void
 		do
 			has_error := False
-			Result := database_manager.load_integer_with_select (s)
+			Result := database_manager.load_data_with_select (s)
 			if database_manager.has_error then
 				has_error := True
 				error_message := selection_failed (s) + database_manager.error_message
@@ -323,64 +360,7 @@ feature -- Queries
 			end
 		end
 
-feature -- Queries without result to load.
-
---	build_updater is
---			-- Build an updater to execute many update queries
---		local
---			rescued: BOOLEAN
---		do
---			if not rescued then
---				session_control.begin
---				create db_change.make
---				updater_build := True
---			else
---				has_error := True
---				error_message := "Failure preparing an update."
---			end
---		rescue
---			rescued := TRUE
---			retry
---		end
---
---	execute_query_from_updater (a_query: STRING) is
---		require
---			not_void: a_query /= Void
---			updater_build: updater_build
---		local
---			s: STRING
---			rescued: BOOLEAN
---		do
---			if not rescued then
---				has_error := False
---				db_change.set_query (a_query)
---				db_change.execute_query				
---			else
---				has_error := True
---				error_message := "Database query execution failure : " + s
---			end
---		rescue
---			rescued := TRUE
---			retry
---		end
---
---	commit_query is
---			-- Commit updates in the database
---		require
---			updater_build: updater_build
---		local
---			rescued: BOOLEAN
---		do
---			if not rescued then
---				session_control.commit		
---			else
---				has_error := True
---				error_message := "Database commit failure."
---			end
---		rescue
---			rescued := TRUE
---			retry
---		end
+feature -- Commitment
 
 	commit is
 			-- Commit changes in the database.
@@ -488,7 +468,7 @@ feature {NONE} -- Update implementation
 
 feature -- Creation
 
-	new_id_for_tablerow (table_descr: DB_TABLE_DESCRIPTION): NUMERIC is
+	new_id_for_tablerow (table_descr: DB_TABLE_DESCRIPTION): ANY is
 			-- Next available ID for table described by `table_descr'.
 		require
 			not_void: table_descr /= Void
@@ -496,19 +476,32 @@ feature -- Creation
 			res: ANY
 			double_ref: DOUBLE_REF
 			integer_ref: INTEGER_REF
+			type_code: INTEGER
 		do
-			res := load_integer_with_select (max_id_query (table_descr))
-			double_ref ?= res
-			if res /= Void then
-				Result := double_ref.item + 1
+			type_code := table_descr.type_list.i_th (table_descr.id_code)
+			res := load_data_with_select (max_id_query (table_descr))
+			if type_code = table_descr.Date_time_type then
+				Result := create {DATE_TIME}.make_now
 			else
-				integer_ref ?= res
-				if integer_ref /= Void then
-					Result := integer_ref.item + 1
+				if type_code = table_descr.Double_type then
+					double_ref ?= res
+					if double_ref /= Void then
+						Result := double_ref.item + 1
+					else
+						Result := 1.0
+					end
+				elseif type_code = table_descr.Integer_type then
+					integer_ref ?= res
+					if integer_ref /= Void then
+						Result := integer_ref.item + 1
+					else
+						Result := 1
+					end
+				else
+					has_error := True
+					error_message := id_creation_failed (table_descr.Table_name)
 				end
 			end
-	--	ensure
-		--	possible: Result > 0
 		end
 
 	set_id_and_create_tablerow, create_item_with_id (an_obj: DB_TABLE) is
@@ -546,25 +539,27 @@ feature -- Deletions
 			--| Warning: delete all dependent table rows.
 		local
 			table_descr: DB_TABLE_DESCRIPTION
-			ind, fkey: INTEGER
-			deletion_fkey_value: INTEGER_REF
+			ind, fkey, item: INTEGER
+			deletion_fkey_value: ANY
 			to_delete_tables: ARRAY [INTEGER] 
 			del_fkey_from_table: HASH_TABLE [INTEGER, INTEGER]
 		do
 			table_descr := an_obj.table_description
 			del_fkey_from_table := table_descr.to_delete_fkey_from_table
 			to_delete_tables := del_fkey_from_table.current_keys
+			deletion_fkey_value := table_descr.id
 			from
 				ind := 1
 			until
 				ind > del_fkey_from_table.count --?fixme? or else has_error
 			loop
-				fkey := del_fkey_from_table.item (to_delete_tables.item (ind))
-				deletion_fkey_value ?= table_descr.attribute (fkey)
-				check
-					deletion_fkey_value /= Void
-				end
-				load_and_delete_tablerows (to_delete_tables.item (ind), fkey, deletion_fkey_value.item)
+				item := to_delete_tables.item (ind)
+				fkey := del_fkey_from_table.item (item)
+--				deletion_fkey_value := tables.description (item).attribute (fkey)
+--				check
+--					deletion_fkey_value /= Void
+--				end
+				load_and_delete_tablerows (to_delete_tables.item (ind), fkey, deletion_fkey_value)
 				ind := ind + 1
 			end
 			delete_item_with_description (table_descr)
@@ -587,7 +582,7 @@ feature {NONE}-- Deletions
 			end
 		end 
 
-	load_and_delete_tablerows (table_code, fkey_code, fkey_value: INTEGER) is
+	load_and_delete_tablerows (table_code, fkey_code: INTEGER; fkey_value: ANY) is
 			-- Load and delete rows of table with `tablecode' where foreign key with `fkey_code'
 			-- equals `fkey_value'.
 		do
@@ -616,18 +611,14 @@ feature -- Status report
 feature {NONE} -- Implementation
 
 	session_control: DB_CONTROL is
-			-- Session Control
-		do
+			-- Session control.
+		once
 			Result := database_manager.session_control
 		end
 
 	database_manager: DATABASE_MANAGER [DATABASE]
 			-- Database manager: manage every interaction
 			-- with database.
-
-	Id_code: INTEGER is 1
-
---	db_change: DB_CHANGE
 
 	create_item_with_tablecode (an_obj: DB_TABLE; tablecode: INTEGER) is
 			--	Store in the DB object `an_obj'.
@@ -699,6 +690,15 @@ feature {NONE} -- Error messages
 			-- Database deletion failed.
 		do
 			Result := "Table row deletion failed:%N"
+		end
+
+	Id_creation_failed (name: STRING): STRING is
+			-- ID creation failed on table with `name'.
+		require
+			not_void: name /= Void
+		do
+			Result := "Cannot find a valid ID for the table: "
+				+ name + "%N"
 		end
 
 end -- class DATABASE_MANAGER

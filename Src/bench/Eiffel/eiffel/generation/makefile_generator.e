@@ -447,7 +447,8 @@ feature -- Generation, Header
 				%SHELL = /bin/sh%N%
 				%CC = $cc%N%
 				%CPP = $cpp%N%
-				%AR = $ar%N")
+				%AR = $ar%
+				%LD = $ld%N")
 
 			if Lace.ace_options.has_multithreaded then
 				Make_file.putstring ("CFLAGS = $optimize $mtccflags $large ");

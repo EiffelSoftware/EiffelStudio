@@ -12,6 +12,7 @@
 #include "eif_compress.h"
 #include "eif_error.h"    	/* for eio() */
 #include "eif_traverse.h"
+#include "eif_lmalloc.h"
 
 #ifdef EIF_WIN32
 #include "winsock.h"
@@ -24,8 +25,8 @@
 #define GET_SOCKET_ERROR errno
 #endif
 
-#define SOCKET_UNAVAILLABLE_FOR_WRITING "Socket unavaillable for writing"
-#define SOCKET_UNAVAILLABLE_FOR_READING "Socket unavaillable for reading"
+#define SOCKET_UNAVAILABLE_FOR_WRITING "Socket unavailable for writing"
+#define SOCKET_UNAVAILABLE_FOR_READING "Socket unavailable for reading"
 
 #define EIF_BUFFER_SIZE EIF_CMPS_IN_SIZE
 
@@ -78,6 +79,7 @@ int net_char_read(char *pointer, int size)
 	GTCX
 	int i;
 
+retry:
 #ifdef EIF_WIN32
 	i = recv(socket_fides, pointer, size, 0);
 #else
@@ -89,34 +91,62 @@ int net_char_read(char *pointer, int size)
 		{
 			/* The desired socket is not ready. Raise an
 			   exception. */
-			eraise(SOCKET_UNAVAILLABLE_FOR_READING, EN_RETR);
+			eraise(SOCKET_UNAVAILABLE_FOR_READING, EN_RETR);
 		} else {	
-			i = net_char_read(pointer, size);
+			/* Should not issue a recursive call here as this may
+			   potentially lead to an unbounded number of recursive
+			   calls, thus causing stack overflow should the
+			   socket issue this error many times in succession. */
+			goto retry;
 		}
+	}
+	else if (i > 0 && i < size)
+	{
+		int prev = i;
+
+		/* A recursive call here is bounded because the remaining
+		   number of bytes is guaranteed to decrease each call. */
+		i = net_char_read(pointer + i, size - i);
+		if (i > 0)
+			i += prev;
 	}
 	return i;
 	EDCX
 }
- 
+
 int net_char_write(char *pointer, int size)
 {
 	int i;
-
+retry:
 #ifdef EIF_WIN32
-	i = send (socket_fides, pointer, size, 0);
+	i = send(socket_fides, pointer, size, 0);
 #else
 	i = write(socket_fides, pointer, size);
 #endif
-	if (i == SOCKET_ERROR && GET_SOCKET_ERROR == EWOULDBLOCK)
+	if (i == SOCKET_ERROR  &&  GET_SOCKET_ERROR == EWOULDBLOCK)
 	{
-	 	if (!net_socket_ready(0))
+		if (!net_socket_ready(0))
 		{
 			/* The desired socket is not ready. Raise an
 			   exception. */
-			eraise(SOCKET_UNAVAILLABLE_FOR_WRITING, EN_RETR);
-		}else {	
-			i = net_char_write(pointer, size);
+			eraise(SOCKET_UNAVAILABLE_FOR_WRITING, EN_RETR);
+		} else {
+			/* Should not issue a recursive call here as this may
+			   potentially lead to an unbounded number of recursive
+			   calls, thus causing stack overflow should the
+			   socket issue this error many times in succession. */
+			goto retry;
 		}
+	}
+	else if (i > 0 && i < size)
+	{
+		const int prev = i;
+
+		/* A recursive call here is bounded because the remaining
+		   number of bytes is guaranteed to decrease each call. */
+		i = net_char_write(pointer + i, size - i);
+		if (i > 0)
+			i += prev;
 	}
 	return i;
 }

@@ -6,55 +6,57 @@ indexing
 	date: "$Date$";
 	revision: "$Revision$"
 
-class SEPARATOR_M
+class 
+	SEPARATOR_M
 
 inherit
 
-    SEPARATOR_I;
+	SEPARATOR_I;
 
 	PRIMITIVE_M
 		rename
 			is_shown as shown
 		end;
 
-    MEL_SEPARATOR
-        rename
-            make as mel_sep_make,
-            foreground_color as mel_foreground_color,
-            set_foreground_color as mel_set_foreground_color,
-            background_color as mel_background_color,
-            background_pixmap as mel_background_pixmap,
-            set_background_color as mel_set_background_color,
-            set_background_pixmap as mel_set_background_pixmap,
-            destroy as mel_destroy,
-            screen as mel_screen,
+	MEL_SEPARATOR
+		rename
+			make as mel_sep_make,
+			foreground_color as mel_foreground_color,
+			set_foreground_color as mel_set_foreground_color,
+			background_color as mel_background_color,
+			background_pixmap as mel_background_pixmap,
+			set_background_color as mel_set_background_color,
+			set_background_pixmap as mel_set_background_pixmap,
+			destroy as mel_destroy,
+			screen as mel_screen,
 			set_horizontal as mel_set_horizontal,
 			is_shown as shown
-        end
+		end
 
 creation
 
-    make
+	make
 
 feature {NONE} -- Initialization
 
-    make (a_separator: SEPARATOR; man: BOOLEAN; oui_parent: COMPOSITE) is
-            -- Create a motif separator.
-        do
+	make (a_separator: SEPARATOR; man: BOOLEAN; oui_parent: COMPOSITE) is
+			-- Create a motif separator.
+		local
+			mc: MEL_COMPOSITE
+		do
+			mc ?= oui_parent.implementation;
 			widget_index := widget_manager.last_inserted_position;
-            mel_sep_make (a_separator.identifier,
-                    mel_parent (a_separator, widget_index),
-                    man);
-        end
+			mel_sep_make (a_separator.identifier, mc, man)
+		end
 
 feature -- Status setting
 
 	set_horizontal (flag: BOOLEAN) is
-            -- Set orientation of the scale to horizontal if `flag',
-            -- to vertical otherwise.
-        do
+			-- Set orientation of the scale to horizontal if `flag',
+			-- to vertical otherwise.
+		do
 				mel_set_horizontal (flag)
-        end;
+		end;
 
 end -- class SEPARATOR_M
 

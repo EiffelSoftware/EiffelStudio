@@ -1,12 +1,13 @@
 indexing
 
-    description:
-        "EiffelVision implementation of Motif text field widget.";
+	description:
+		"EiffelVision implementation of Motif text field widget.";
 	status: "See notice at end of class";
 	date: "$Date$";
 	revision: "$Revision$"
 
-class TEXT_FIELD_M 
+class 
+	TEXT_FIELD_M 
 
 inherit
 
@@ -18,27 +19,27 @@ inherit
 		rename
 			is_shown as shown
 		undefine
-            create_callback_struct
-        end;
+			create_callback_struct
+		end;
 
-    MEL_TEXT_FIELD
-        rename
-            make as mel_text_make,
-            foreground_color as mel_foreground_color,
-            set_foreground_color as mel_set_foreground_color,
-            background_color as mel_background_color,
-            background_pixmap as mel_background_pixmap,
-            set_background_color as mel_set_background_color,
-            set_background_pixmap as mel_set_background_pixmap,
-            destroy as mel_destroy,
-            screen as mel_screen,
-            string as text,
-            set_string as set_text,
-            max_length as maximum_size,
-            set_max_length as set_maximum_size,
-            insert as mel_insert,
+	MEL_TEXT_FIELD
+		rename
+			make as mel_text_make,
+			foreground_color as mel_foreground_color,
+			set_foreground_color as mel_set_foreground_color,
+			background_color as mel_background_color,
+			background_pixmap as mel_background_pixmap,
+			set_background_color as mel_set_background_color,
+			set_background_pixmap as mel_set_background_pixmap,
+			destroy as mel_destroy,
+			screen as mel_screen,
+			string as text,
+			set_string as set_text,
+			max_length as maximum_size,
+			set_max_length as set_maximum_size,
+			insert as mel_insert,
 			is_shown as shown
-        end
+		end
 
 creation
 
@@ -48,11 +49,12 @@ feature {NONE} -- Creation
 
 	make (a_text_field: TEXT_FIELD; man: BOOLEAN; oui_parent: COMPOSITE) is
 			-- Create a motif text_field.
+		local
+			mc: MEL_COMPOSITE
 		do
+			mc ?= oui_parent.implementation;
 			widget_index := widget_manager.last_inserted_position;
-            mel_text_make (a_text_field.identifier,
-                    mel_parent (a_text_field, widget_index),
-                    man);
+			mel_text_make (a_text_field.identifier, mc, man);
 			a_text_field.set_font_imp (Current)
 		end;
 
@@ -62,14 +64,14 @@ feature -- Element change
 			-- Add `a_command' to the list of action to be executed
 			-- when an acitvate event occurs.
 		do
-            add_activate_callback (mel_vision_callback (a_command), argument)
+			add_activate_callback (mel_vision_callback (a_command), argument)
 		end;
  
 	insert (a_text: STRING; a_position: INTEGER) is
 			-- Insert `a_text' in current text field at `a_position'.
 			-- Same as `replace (a_position, a_position, a_text)'.
 		do
-            mel_insert (a_position, a_text)
+			mel_insert (a_position, a_text)
 		end;
 
 feature -- Removal
@@ -78,7 +80,7 @@ feature -- Removal
 			-- Remove `a_command' to the list of action to be executed
 			-- when an acitvate event occurs.
 		do
-            remove_activate_callback (mel_vision_callback (a_command), argument)
+			remove_activate_callback (mel_vision_callback (a_command), argument)
 		end;
 
 end -- class TEXT_FIELD_M

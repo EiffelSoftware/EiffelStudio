@@ -1,7 +1,7 @@
 # exml.lib - Makefile for Microsoft C
 
 CC = cl
-CFLAGS = -c -Ox -I$(EXML)/lib/implementation/expat/compiler_specific/ise/clib -I$(EXPAT)/xmlparse -I$(ISE_EIFFEL)/studio/spec/windows/include
+CFLAGS = -c -Ox -I$(ISE_EIFFEL)\C_library\expat\xmlparse -I$(ISE_EIFFEL)\studio\spec\windows\include 
 .c.obj:
 	$(CC) $(CFLAGS) $<
 
@@ -10,8 +10,7 @@ OBJ = exml_parser.obj
 exml.lib: $(OBJ)
 	if exist $@ del $@
 	lib /OUT:$@ $(OBJ)
-	if not exist $(EXML)/lib/implementation/expat/compiler_specific/ise/clib/msc 
-	mkdir $(EXML)/lib/implementation/compiler_specific/ise/clib/msc
-	copy $@ $(EXML)/lib/implementation/expat/compiler_specific/ise/clib/msc
+	if not exist msc mkdir msc
+	copy $@ msc
 	del $@
 	del *.obj

@@ -16,6 +16,8 @@ feature {NONE} -- Initialization
 
 	make (ass: CONSUMED_ASSEMBLY) is
 			-- create an instance
+		indexing
+			metadata: create {COM_VISIBLE_ATTRIBUTE}.make (False) end
 		require
 			non_void_assembly: ass /= Void
 		do
@@ -64,6 +66,18 @@ feature -- Access
 		ensure
 			non_void_result: Result /= Void
 		end
+		
+	is_consumed: BOOLEAN is
+			-- has assembly been consumed?
+		do
+			Result := impl.is_consumed
+		end
+		
+	consumed_folder_name: SYSTEM_STRING is
+			-- name of folder where assembly was consumed to
+		do
+			Result := impl.folder_name
+		end	
 		
 feature {NONE} -- Implementation
 

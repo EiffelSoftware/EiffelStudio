@@ -54,12 +54,6 @@ feature {TEXT_ITEM} -- Text processing
 			put_string (text.image)
 		end
 
-	process_exported_feature_name_text (text: EXPORTED_FEATURE_NAME_TEXT) is
-			-- Process feature name text `t'.
-		do
-			put_string (text.image)
-		end
-
 	process_feature_text (text: FEATURE_TEXT) is
 			-- Process feature text `text'.
 		do

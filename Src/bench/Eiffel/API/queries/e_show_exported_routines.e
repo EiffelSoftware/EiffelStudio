@@ -44,7 +44,7 @@ feature -- Access
 	work is
 			-- On top of exported features, append the creation routines.
 		local
-			creats: EXTEND_TABLE [EXPORT_I, STRING]
+			creats: HASH_TABLE [EXPORT_I, STRING]
 			f: E_FEATURE
 		do
 			Precursor {E_CLASS_FORMAT_CMD}

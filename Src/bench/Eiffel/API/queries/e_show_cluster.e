@@ -22,7 +22,7 @@ feature -- Execution
 	work is
 			-- Show cluster in class lists.
 		local
-			classes: EXTEND_TABLE [CLASS_I, STRING]
+			classes: HASH_TABLE [CLASS_I, STRING]
 			sorted_class_names: SORTED_TWO_WAY_LIST [STRING]
 			a_classi: CLASS_I
 			a_classe: CLASS_C

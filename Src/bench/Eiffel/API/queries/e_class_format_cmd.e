@@ -54,7 +54,7 @@ feature -- Execution
 			id: INTEGER;
 				-- Temporary structures
 			list: SORTED_TWO_WAY_LIST [E_FEATURE];
-			table: EXTEND_TABLE [SORTED_TWO_WAY_LIST [E_FEATURE], INTEGER];
+			table: HASH_TABLE [SORTED_TWO_WAY_LIST [E_FEATURE], INTEGER];
 			classes: PART_SORTED_TWO_WAY_LIST [CLASS_C];
 			c: like current_class
 		do

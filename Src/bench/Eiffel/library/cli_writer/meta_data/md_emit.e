@@ -168,6 +168,19 @@ feature -- Definition: creation
 			result_valid: Result > 0
 		end
 
+	define_method_impl (in_class_token, method_token, used_method_declaration_token: INTEGER) is
+			-- Define a method impl from `used_method_declaration_token' from inherited
+			-- class to method `method_token' defined in `in_class_tojen'.
+		require
+			valid_tokens: in_class_token /= 0 and method_token /= 0 and
+				used_method_declaration_token /= 0
+		do
+			last_call_success := c_define_method_impl (item, in_class_token, method_token,
+				used_method_declaration_token)
+		ensure
+			success: last_call_success = 0
+		end
+		
 	define_parameter (in_method_token: INTEGER; param_name: UNI_STRING;
 			param_pos: INTEGER; param_flags: INTEGER): INTEGER
 		is
@@ -333,6 +346,16 @@ feature {NONE} -- Implementation
 			]"
 		alias
 			"DefineMethod"
+		end
+
+	c_define_method_impl (an_item: POINTER; in_type_token: INTEGER; method_token: INTEGER;
+			used_method_declaration_token: INTEGER): INTEGER
+		is
+			-- Call `IMetaDataEmit->DefineMethodImpl'.
+		external
+			"C++ IMetaDataEmit signature (mdTypeDef, mdToken, mdToken): EIF_INTEGER use <cor.h>"
+		alias
+			"DefineMethodImpl"
 		end
 
 	c_define_param (an_item: POINTER; meth_token: INTEGER; param_number: INTEGER;

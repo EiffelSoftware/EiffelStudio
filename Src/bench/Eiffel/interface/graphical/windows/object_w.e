@@ -18,7 +18,7 @@ inherit
 		redefine
 			build_format_bar, hole, build_widgets, attach_all,
 			tool_name, set_default_format, stone, stone_type, synchronize,
-			process_object, hole_button, build_basic_bar,
+			process_object, build_basic_bar,
 			close,
 			update_boolean_resource,
 			update_integer_resource
@@ -29,7 +29,7 @@ inherit
 		redefine
 			build_format_bar, hole, close_windows,
 			tool_name, build_widgets, attach_all, set_default_format,
-			stone, stone_type, synchronize, process_object, hole_button,
+			stone, stone_type, synchronize, process_object,
 			build_basic_bar, close, make_shell, reset,
 			update_boolean_resource,
 			update_integer_resource
@@ -58,7 +58,8 @@ feature {NONE} -- Initialization
 			-- Create Current as a form.
 		do
 			show_menus := False;
-			make_form (a_form)
+			make_form (a_form);
+			set_composite_attributes (a_form)
 		end;
 
 feature -- Resource Update
@@ -389,31 +390,25 @@ feature {NONE} -- Implementation; Graphical Interface
 		end;
 
 	build_widgets is
-		local
-			popup_cmd: TOOLBAR_CMD
 		do
 			if eb_shell /= Void then
 				set_default_size
 			end;
 
-			!! toolbar_parent.make (new_name, global_form, Current);
-			toolbar_parent.set_column_layout;
-			toolbar_parent.set_free_size;
-			!! popup_cmd.make (Current);
-			toolbar_parent.add_button_press_action (3, popup_cmd, Void);
+			create_toolbar_parent (global_form);
 
 			build_text_windows;
 			if show_menus then
 				build_menus
 			end
-			!! edit_bar.make (l_Command_bar_name, toolbar_parent, Current);
+			!! edit_bar.make (l_Command_bar_name, toolbar_parent);
 			build_bar;
-			!! toolbar_separator.make (new_name, toolbar_parent);
-			!! format_bar.make (l_Format_bar_name, toolbar_parent, Current);
+			!! format_bar.make (l_Format_bar_name, toolbar_parent);
 			build_format_bar;
 			build_command_bar;
 			if show_menus then
-				fill_menus
+				fill_menus;
+				build_toolbar_menu
 			end
 			set_last_format (default_format);
 

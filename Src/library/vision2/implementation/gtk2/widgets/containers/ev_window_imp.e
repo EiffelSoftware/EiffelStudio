@@ -525,13 +525,13 @@ feature {NONE} -- Implementation
 					-- Used to disable certain key behavior such as Tab focus.
 				if a_key_press then
 					if focus_widget.default_key_processing_blocked (a_key) then
-						create a_cs.make ("key-press-event")
+						a_cs := "key-press-event"
 						feature {EV_GTK_EXTERNALS}.signal_emit_stop_by_name (c_object, a_cs.item)
 						focus_widget.on_key_event (a_key, a_key_string, a_key_press)
 					end
 				else
 					if focus_widget.default_key_processing_blocked (a_key) then
-						create a_cs.make ("key-release-event")
+						a_cs := "key-release-event"
 						feature {EV_GTK_EXTERNALS}.signal_emit_stop_by_name (c_object, a_cs.item)
 						focus_widget.on_key_event (a_key, a_key_string, a_key_press)
 					end

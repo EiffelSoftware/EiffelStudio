@@ -674,7 +674,9 @@ feature {EV_TREE_NODE_IMP} -- Implementation
 			a_cs: EV_GTK_C_STRING
 			str_value: POINTER
 		do
-			create a_cs.make (a_text)
+			--create a_cs.make (a_text)
+			a_cs := a_text
+				-- Replace when we have UTF16 support
 			str_value := feature {EV_GTK_DEPENDENT_EXTERNALS}.c_g_value_struct_allocate
 			feature {EV_GTK_DEPENDENT_EXTERNALS}.g_value_init_string (str_value)
 			feature {EV_GTK_DEPENDENT_EXTERNALS}.g_value_set_string (str_value, a_cs.item)

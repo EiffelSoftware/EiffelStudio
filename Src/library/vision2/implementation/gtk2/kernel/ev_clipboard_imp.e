@@ -36,11 +36,11 @@ feature {NONE}-- Initialization
 		local
 			cs: EV_GTK_C_STRING
 		do
-			create cs.make ("CLIPBOARD")
+			cs := "CLIPBOARD"
 			clipboard := feature {EV_GTK_DEPENDENT_EXTERNALS}.gtk_clipboard_get (
 							feature {EV_GTK_EXTERNALS}.gdk_atom_intern (cs.item, 1)
 			)
-			create cs.make ("PRIMARY")
+			cs := "PRIMARY"
 			primary := feature {EV_GTK_DEPENDENT_EXTERNALS}.gtk_clipboard_get (
 							feature {EV_GTK_EXTERNALS}.gdk_atom_intern (cs.item, 1)
 			)

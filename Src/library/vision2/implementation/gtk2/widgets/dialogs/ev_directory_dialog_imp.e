@@ -30,7 +30,7 @@ feature {NONE} -- Initialization
 			a_cs: EV_GTK_C_STRING
 		do
 			base_make (an_interface)
-			create a_cs.make ("Select directory")
+			a_cs := "Select directory"
 			set_c_object
 				(feature {EV_GTK_DEPENDENT_EXTERNALS}.gtk_file_chooser_dialog_new (a_cs.item, NULL, feature {EV_GTK_DEPENDENT_EXTERNALS}.gtk_file_chooser_action_select_folder_enum))
 		end

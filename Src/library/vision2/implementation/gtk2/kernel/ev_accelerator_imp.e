@@ -60,7 +60,7 @@ feature {EV_TITLED_WINDOW_IMP} -- Implementation
 		local
 			a_cs: EV_GTK_C_STRING
 		do
-			create a_cs.make ("activate")
+			a_cs := "activate"
 			feature {EV_GTK_EXTERNALS}.gtk_widget_add_accelerator (
 				a_window_imp.accel_box,
 				a_cs.item,

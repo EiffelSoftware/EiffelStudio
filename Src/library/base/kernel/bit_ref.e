@@ -227,7 +227,7 @@ feature {NONE}
 			"b_clone"
 		end;
 
-	c_out (bit: BIT_REF): STRING is
+	c_out (b: BIT_REF): STRING is
 			-- Out representation of Current
 		external
 			"C"

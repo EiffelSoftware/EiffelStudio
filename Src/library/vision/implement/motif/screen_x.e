@@ -134,7 +134,8 @@ feature
 		
 		local
 			window: POINTER;
-			void_pointer: POINTER
+			void_pointer: POINTER;
+			found: BOOLEAN
 		do
 			from
 				window := x_query_window_pointer (display_pointer, root_window_object)
@@ -142,12 +143,14 @@ feature
 				window = void_pointer
 			loop
 				from
+					found := false;
 					widget_manager.start
-				until
-					Result /= Void or else widget_manager.after
+				until	
+					found or widget_manager.after
 				loop
 					if window = xt_window (widget_manager.item.implementation.screen_object) then
 						Result := widget_manager.item;
+						found := true
 					end;
 					widget_manager.forth
 				end;

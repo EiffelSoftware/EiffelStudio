@@ -55,7 +55,7 @@ feature {TEXT_ITEM} -- Implementation
 				-- Process difference text text.
 		require
 			text_not_void: text /= Void
-		deferred
+		do
 		end;
 
 	process_quoted_text (text: QUOTED_TEXT) is

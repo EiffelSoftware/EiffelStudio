@@ -37,13 +37,13 @@ feature {NONE}-- Initialization
 			create wizard_output_upper_box
 			create output_text
 			create progress_bar_box
-			create progress_label_box
-			create progress_bar_label
+			create progress_bar_inner_box
+			create progress_bar
 			create inner_progress_label_box
 			create percentage_label
 			create percent_label
-			create progress_bar_inner_box
-			create progress_bar
+			create progress_label_box
+			create progress_bar_label
 			create stop_button
 			create final_message_box
 			create final_message_label
@@ -63,14 +63,14 @@ feature {NONE}-- Initialization
 			output_outter_box.extend (wizard_output_upper_box)
 			wizard_output_upper_box.extend (output_text)
 			output_outter_box.extend (progress_bar_box)
-			progress_bar_box.extend (progress_label_box)
-			progress_label_box.extend (progress_bar_label)
-			progress_label_box.extend (inner_progress_label_box)
-			inner_progress_label_box.extend (percentage_label)
-			inner_progress_label_box.extend (percent_label)
 			progress_bar_box.extend (progress_bar_inner_box)
 			progress_bar_inner_box.extend (progress_bar)
-			progress_bar_inner_box.extend (stop_button)
+			progress_bar_inner_box.extend (inner_progress_label_box)
+			inner_progress_label_box.extend (percentage_label)
+			inner_progress_label_box.extend (percent_label)
+			progress_bar_box.extend (progress_label_box)
+			progress_label_box.extend (progress_bar_label)
+			progress_label_box.extend (stop_button)
 			output_outter_box.extend (final_message_box)
 			final_message_box.extend (final_message_label)
 			final_message_box.extend (destination_path_label)
@@ -98,19 +98,20 @@ feature {NONE}-- Initialization
 			internal_font.preferred_families.extend ("Lucida Console")
 			output_text.set_font (internal_font)
 			output_text.disable_edit
-			progress_bar_box.hide
-			progress_bar_box.set_padding_width (5)
+			progress_bar_box.set_padding_width (11)
 			progress_bar_box.disable_item_expand (progress_bar_inner_box)
+			progress_bar_inner_box.set_padding_width (7)
+			progress_bar_inner_box.disable_item_expand (inner_progress_label_box)
+			inner_progress_label_box.disable_item_expand (percentage_label)
+			percentage_label.set_text ("100")
+			percentage_label.set_minimum_width (20)
+			percentage_label.align_text_right
+			percent_label.set_text ("%%")
+			percent_label.set_minimum_width (10)
 			progress_label_box.set_padding_width (7)
-			progress_label_box.disable_item_expand (progress_bar_label)
+			progress_label_box.disable_item_expand (stop_button)
 			progress_bar_label.set_text ("Progress:")
 			progress_bar_label.align_text_left
-			inner_progress_label_box.disable_item_expand (percentage_label)
-			percentage_label.align_text_left
-			percent_label.set_text ("%%")
-			percent_label.align_text_left
-			progress_bar_inner_box.set_padding_width (7)
-			progress_bar_inner_box.disable_item_expand (stop_button)
 			stop_button.disable_sensitive
 			stop_button.set_text ("Stop")
 			stop_button.set_minimum_width (100)
@@ -162,9 +163,9 @@ feature -- Access
 	progress_bar: EV_HORIZONTAL_PROGRESS_BAR
 	output_outter_box, wizard_output_upper_box, progress_bar_box,
 	wizard_output_middle_box: EV_VERTICAL_BOX
-	progress_label_box, inner_progress_label_box, progress_bar_inner_box,
+	progress_bar_inner_box, inner_progress_label_box, progress_label_box,
 	final_message_box, output_buttons_box: EV_HORIZONTAL_BOX
-	progress_bar_label, percentage_label, percent_label,
+	percentage_label, percent_label, progress_bar_label,
 	final_message_label, destination_path_label: EV_LABEL
 	stop_button, save_button, open_eiffelstudio_button,
 	exit_button: EV_BUTTON

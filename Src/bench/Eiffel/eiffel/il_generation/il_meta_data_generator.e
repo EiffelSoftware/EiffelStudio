@@ -51,14 +51,7 @@ inherit
 		end
 
 create
-	make
-
-feature {NONE} -- Initialization
-
-	make is
-			-- Initialize metadata generator.
-		do
-		end
+	default_create
 
 feature {IL_CODE_GENERATOR} -- Settings
 
@@ -111,7 +104,6 @@ feature -- Generation
 					full_name := System.system_name + "." + class_c.cluster.cluster_name
 					full_name := namespace_casing (full_name)
 					full_name.append_character ('.')
-					full_name := ""
 				end
 
 				if class_c.is_external then
@@ -642,7 +634,7 @@ feature {NONE} -- Implementation: naming convention
 			i, nb: INTEGER
 		do
 			Result := name
-			if System.cls_compliant_name then
+			if System.dotnet_naming_convention then
 				Result := clone (Result)
 				from
 					i := 2
@@ -681,7 +673,7 @@ feature {NONE} -- Implementation: naming convention
 			i, nb: INTEGER
 		do
 			Result := name
-			if System.cls_compliant_name then
+			if System.dotnet_naming_convention then
 				Result := clone (Result)
 				from
 					i := 2
@@ -723,7 +715,7 @@ feature {NONE} -- Implementation: naming convention
 			i, nb: INTEGER
 		do
 			Result := name
-			if System.cls_compliant_name then
+			if System.dotnet_naming_convention then
 				Result := clone (Result)
 				from
 					i := 2

@@ -20,19 +20,13 @@ feature {NONE} -- Initialization
 	
 	make (s: STRING) is
 		do
-			event_type.copy (s)
+			type := clone (s)
 		end
 	
-feature {NONE} -- Implementation
+feature  -- Access
 	
-	event_type: STRING
+	type: STRING
 			-- Type of the event in gtk
-
-
-
-
-
-
 end
 
 --|----------------------------------------------------------------

@@ -39,11 +39,10 @@ rt_private EIF_MUTEX_TYPE *eif_exception_trace_mutex = (EIF_MUTEX_TYPE *) 0;
 #endif
 
 rt_private void eif_show_console(void);					/* Show the DOS console if needed */
-rt_private void safe_readconsole (char **buffer, DWORD *size);	/* Read console entry and remove all nasty characters such as KEY_CR and KEY_LF */
+rt_private void safe_read_console (char **buffer, DWORD *size);	/* Read console entry and remove all nasty characters such as KEY_CR and KEY_LF */
 
-rt_private void readconsole (HANDLE hFile, LPVOID lpBuffer, DWORD nNumberOfBytesToRead, LPDWORD lpNumberOfBytesRead, LPVOID lpOverlapped); /* Call ReadConsole, if no success call ReadFile */
-
-rt_private void writeconsole(HANDLE hConsoleOutput, CONST VOID *lpBuffer, DWORD nNumberOfCharsToWrite, LPDWORD lpNumberOfCharsWritten, LPVOID lpOverlapped); /* Call WriteConsole and if it does not succeed call WriteFile */
+rt_private void read_console (HANDLE, LPVOID, DWORD, LPDWORD); /* Call ReadConsole, if no success call ReadFile */
+rt_private void write_console(HANDLE, CONST VOID *, DWORD, LPDWORD); /* Call WriteConsole and if it does not succeed call WriteFile */
 
 EIF_INTEGER eif_console_readint()
 {
@@ -52,7 +51,7 @@ EIF_INTEGER eif_console_readint()
 
 	eif_show_console();
 
-	safe_readconsole (&eif_console_buffer, &buffer_length);
+	safe_read_console (&eif_console_buffer, &buffer_length);
 
 	if (0 >= sscanf (eif_console_buffer, "%ld", &lastint))
 		eise_io("Not an INTEGER.");
@@ -67,7 +66,7 @@ EIF_REAL eif_console_readreal()
 
 	eif_show_console();
 
-	safe_readconsole (&eif_console_buffer, &buffer_length);
+	safe_read_console (&eif_console_buffer, &buffer_length);
 
 	if (0 > sscanf (eif_console_buffer, "%f", &lastreal))
 		eise_io("Not a REAL.");
@@ -82,7 +81,7 @@ EIF_DOUBLE eif_console_readdouble()
 
 	eif_show_console();
 
-	safe_readconsole (&eif_console_buffer, &buffer_length);
+	safe_read_console (&eif_console_buffer, &buffer_length);
 
 	if (0 > sscanf (eif_console_buffer, "%lf", &lastdouble))
 		eise_io("Not a DOUBLE.");
@@ -96,7 +95,7 @@ EIF_CHARACTER eif_console_readchar(void)
 
 	eif_show_console();
 
-	readconsole(eif_coninfile, eif_console_buffer, 1, &buffer_length, NULL);
+	read_console(eif_coninfile, eif_console_buffer, 1, &buffer_length);
 
 	eif_is_console_clean_for_input = EIF_FALSE;
 	return eif_console_buffer [0];
@@ -118,7 +117,7 @@ EIF_INTEGER eif_console_readline(EIF_CHARACTER *s, EIF_INTEGER bound, EIF_INTEGE
 		done = TRUE;
 	}
 	if (c == NULL) {
-		readconsole(eif_coninfile, eif_console_buffer, BUFFER_SIZE, &buffer_length, NULL);
+		read_console(eif_coninfile, eif_console_buffer, BUFFER_SIZE, &buffer_length);
 		c = eif_console_buffer;
 	}
 
@@ -159,8 +158,8 @@ EIF_INTEGER eif_console_readstream (EIF_CHARACTER *s, EIF_INTEGER bound)
 	EIF_INTEGER amount = bound;	/* Number of characters to be read */
 	char c;						/* Last char read */
 	long i = 0;					/* Counter */
-	long to_be_read;		/* Number of characters that will be read by `readconsole' */
-	long read;				/* Number of characters remainings for `readconsole' */
+	long to_be_read;		/* Number of characters that will be read by `read_console' */
+	long read;				/* Number of characters remainings for `read_console' */
 	DWORD buffer_length = (DWORD) 0;
 	char done = (char) 0;
 	
@@ -168,11 +167,11 @@ EIF_INTEGER eif_console_readstream (EIF_CHARACTER *s, EIF_INTEGER bound)
 
 	to_be_read = min (bound, BUFFER_SIZE);
 	read = bound - to_be_read;
-	readconsole(eif_coninfile, eif_console_buffer, to_be_read, &buffer_length, NULL);
+	read_console(eif_coninfile, eif_console_buffer, to_be_read, &buffer_length);
 
 	if ((long) buffer_length < to_be_read)
 		read = 0;	/* It seems that the request to read `bound' characters was too big
-					   We need to stop any calls to `readconsole' to avoid a
+					   We need to stop any calls to `read_console' to avoid a
 					   blocking situation where we are waiting for more characters */
 
 	while ((amount-- > 0) && (done == (char) 0)) {
@@ -184,12 +183,12 @@ EIF_INTEGER eif_console_readstream (EIF_CHARACTER *s, EIF_INTEGER bound)
 			else {
 				to_be_read = min (read, BUFFER_SIZE);
 				read = read - to_be_read;
-				readconsole(eif_coninfile, eif_console_buffer,
-							to_be_read, &buffer_length, NULL);
+				read_console(eif_coninfile, eif_console_buffer,
+							to_be_read, &buffer_length);
 	
 				if ((long) buffer_length < to_be_read)
 					read = 0;	/* It seems that the request to read `bound' characters
-								   was too big. We need to stop any calls to `readconsole'
+								   was too big. We need to stop any calls to `read_console'
 								   to avoid a blocking situation where we are waiting
 								   for more characters */
 				i = 0;
@@ -276,7 +275,7 @@ void eif_console_putint (EIF_INTEGER l)
 	eif_show_console();
 
 	t = sprintf (eif_console_buffer, "%ld", l);
-	writeconsole(eif_conoutfile, eif_console_buffer, t, &dummy_length, NULL);
+	write_console(eif_conoutfile, eif_console_buffer, t, &dummy_length);
 }
 
 void eif_console_putchar (EIF_CHARACTER c)
@@ -284,7 +283,7 @@ void eif_console_putchar (EIF_CHARACTER c)
 	DWORD dummy_length = (DWORD) 0;
 
 	eif_show_console();
-	writeconsole(eif_conoutfile, &c,1, &dummy_length, NULL);
+	write_console(eif_conoutfile, &c,1, &dummy_length);
 }
 
 void eif_console_putstring (EIF_CHARACTER *s, EIF_INTEGER length)
@@ -292,7 +291,7 @@ void eif_console_putstring (EIF_CHARACTER *s, EIF_INTEGER length)
 	DWORD dummy_length = (DWORD) 0;
 
 	eif_show_console();
-	writeconsole(eif_conoutfile,s, length, &dummy_length, NULL);
+	write_console(eif_conoutfile,s, length, &dummy_length);
 }
 
 void eif_console_putreal (EIF_REAL r)
@@ -303,7 +302,7 @@ void eif_console_putreal (EIF_REAL r)
 	eif_show_console();
 
 	t = sprintf (eif_console_buffer, "%g", r);
-	writeconsole(eif_conoutfile, eif_console_buffer, t, &dummy_length, NULL);
+	write_console(eif_conoutfile, eif_console_buffer, t, &dummy_length);
 }
 
 void eif_console_putdouble (EIF_DOUBLE d)
@@ -314,7 +313,7 @@ void eif_console_putdouble (EIF_DOUBLE d)
 	eif_show_console();
 
 	t = sprintf (eif_console_buffer, "%.17g", d);
-	writeconsole(eif_conoutfile, eif_console_buffer, t, &dummy_length, NULL);
+	write_console(eif_conoutfile, eif_console_buffer, t, &dummy_length);
 }
 
 EIF_BOOLEAN eif_console_eof ()
@@ -468,13 +467,13 @@ rt_private void eif_show_console(void)
 	}
 }
 
-rt_private void safe_readconsole (char **buffer, DWORD *size)
+rt_private void safe_read_console (char **buffer, DWORD *size)
 	/* Clean the input buffer of KEY_CR and KEY_LF */
 {
 	int done = 0;
 
 	while (!done) {
-		readconsole(eif_coninfile, *buffer, BUFFER_SIZE, size, NULL);
+		read_console(eif_coninfile, *buffer, BUFFER_SIZE, size);
 	
 		switch (*size) {
 			case 1:
@@ -490,20 +489,78 @@ rt_private void safe_readconsole (char **buffer, DWORD *size)
 	}
 }
 
-rt_private void readconsole (HANDLE hFile, LPVOID lpBuffer, DWORD nNumberOfBytesToRead, LPDWORD lpNumberOfBytesRead, LPVOID lpOverlapped)
+rt_private void read_console (HANDLE hFile, LPVOID lpBuffer, DWORD nb_to_read, LPDWORD nb_read)
 	/* Call ReadConsole and if it does not succeed call ReadFile */
 {
-	if (!ReadConsole(hFile, lpBuffer, nNumberOfBytesToRead, lpNumberOfBytesRead, lpOverlapped))
-		if (!ReadFile(hFile, lpBuffer, nNumberOfBytesToRead, lpNumberOfBytesRead, (LPOVERLAPPED) lpOverlapped))
+	if (!ReadConsole(hFile, lpBuffer, nb_to_read, nb_read, NULL))
+		if (!ReadFile(hFile, lpBuffer, nb_to_read, nb_read, NULL))
 			eio();
 }
 
-rt_private void writeconsole(HANDLE hConsoleOutput, CONST VOID *lpBuffer, DWORD nNumberOfCharsToWrite, LPDWORD lpNumberOfCharsWritten, LPVOID lpOverlapped)
-	/* Call WriteConsole and if it does not succeed call WriteFile */
+rt_private DWORD internal_write_console (
+		HANDLE hConsoleOutput,
+		CONST VOID *lpBuffer,
+		DWORD nb_to_write,
+		LPDWORD nb_written)
+	/* Write using WriteConsole if possible, otherwise using WriteFile.
+	 * Looks like WriteConsole or WriteFile are limited to about 60000
+	 * characters length as input, so when we get a ERROR_NOT_ENOUGH_MEMORY
+	 * error there is not need to try the `WriteFile' variant. We let
+	 * `write_console' taking care of recalling `internal_write_console'
+	 * with a smaller buffer.
+	 */
 {
-	if (!WriteConsole(hConsoleOutput, lpBuffer, nNumberOfCharsToWrite, lpNumberOfCharsWritten, lpOverlapped))
-		if (!WriteFile(hConsoleOutput, lpBuffer, nNumberOfCharsToWrite, lpNumberOfCharsWritten, (LPOVERLAPPED) lpOverlapped))
-			eio ();
-}
- 
+	DWORD last_error = 0;
+	DWORD err = WriteConsole(hConsoleOutput, lpBuffer, nb_to_write, nb_written, NULL);
 
+	if (err == 0) {
+		last_error = GetLastError ();
+	}
+
+	if ((err == 0) && (last_error != ERROR_NOT_ENOUGH_MEMORY)) {
+			/* Try `WriteFile' only if we did not get a not enough memory error,
+			 * as it is most likely to happen for `WriteFile' as well. Usually
+			 * it should have the value `ERROR_INVALID_HANDLE'.
+			 */
+		err = WriteFile(hConsoleOutput, lpBuffer, nb_to_write, nb_written, NULL);
+		if (err == 0) {
+			last_error = GetLastError ();
+		} else {
+				/* No error occured, we simply reset value of `last_error'
+				 * which was set after call to `WriteConsole'.
+				 */
+			last_error = 0;
+		}
+	}
+
+	return last_error;
+}
+
+rt_private void write_console (HANDLE hConsoleOutput, CONST VOID *lpBuffer, DWORD nb_to_write, LPDWORD nb_written)
+	/* Write to console. It can be the actual DOS console, or a file if output
+	 * has been redirected to a file.
+	 */
+{
+	DWORD last_error;
+	DWORD nb_written_1, nb_written_2;
+	DWORD new_size;
+
+	last_error = internal_write_console (hConsoleOutput, lpBuffer, nb_to_write, nb_written);
+
+	if ((last_error == ERROR_NOT_ENOUGH_MEMORY) && (nb_to_write > 0)) {
+			/* Passed `lpBuffer' is too large, we simply perform a dichotomy so that
+			 * buffer size is reduced and it should work until buffer size is small
+			 * enough. We found that it was about 60000 bytes.
+			 */
+		new_size = nb_to_write / 2;
+		write_console (hConsoleOutput, lpBuffer, new_size, &nb_written_1);
+		write_console (hConsoleOutput, (char *) lpBuffer + new_size,
+			nb_to_write - new_size, &nb_written_2);
+		*nb_written = nb_written_1 + nb_written_2;
+	} else if (last_error != 0) {
+			/* FIXME: Manu 05/04/2002: we should probably call `FormatMessage'
+			 * to display a meaningful exception using `eraise' instead of `eio'.
+			 */
+		eio();
+	}
+}

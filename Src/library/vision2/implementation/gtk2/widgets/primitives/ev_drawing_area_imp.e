@@ -54,15 +54,14 @@ feature {NONE} -- Initialization
 			feature {EV_GTK_EXTERNALS}.GTK_WIDGET_SET_FLAGS (c_object, feature {EV_GTK_EXTERNALS}.GTK_CAN_FOCUS_ENUM)
 			init_default_values
 			feature {EV_GTK_DEPENDENT_EXTERNALS}.gtk_widget_set_double_buffered (c_object, False)
+			feature {EV_GTK_EXTERNALS}.gtk_widget_set_app_paintable (c_object, True)
 		end
 
 feature {NONE} -- Implementation
 
 	default_key_processing_blocked (a_key: EV_KEY): BOOLEAN is
 		do
-			if a_key.is_arrow or else a_key.code = App_implementation.Key_constants.key_tab then
-				Result := True
-			end
+			Result := a_key.is_arrow or else a_key.code = App_implementation.Key_constants.key_tab
 		end
 
 	interface: EV_DRAWING_AREA

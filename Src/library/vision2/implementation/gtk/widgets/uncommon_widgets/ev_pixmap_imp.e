@@ -361,7 +361,6 @@ temp_alpha_int: INTEGER
 				a_color_map := C.gdk_rgb_get_cmap
 				a_visual := C.gdk_colormap_get_visual (a_color_map)
 				a_visual_type := C.gdk_visual_struct_type (a_visual)
-print ("Visual type = " + a_visual_type.out + "%N")
 				color_struct_size := C.c_gdk_color_struct_size
 				array_size := a_width * height
 				array_area := Result.area
@@ -380,7 +379,7 @@ temp_alpha := temp_alpha_int.ascii_char
 					array_area.put (C.gdk_color_struct_red (a_color).ascii_char, array_offset)
 					array_area.put (C.gdk_color_struct_green (a_color).ascii_char, array_offset + 1)
 					array_area.put (C.gdk_color_struct_blue (a_color).ascii_char, array_offset + 2)
-					--array_area.put (temp_alpha, array_offset + 3)					
+					array_area.put (temp_alpha, array_offset + 3)					
 				end
 
 				--| FIXME IEK Add support for pixmap alpha.
@@ -393,7 +392,6 @@ temp_alpha := temp_alpha_int.ascii_char
 		do
 			Result := C.gtk_pixmap_struct_mask (gtk_pixmap)
 		end
-
 
 feature {EV_STOCK_PIXMAPS_IMP} -- Implementation
 
@@ -528,6 +526,9 @@ end -- EV_PIXMAP_IMP
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.41  2001/06/19 16:59:17  king
+--| Uncommented needed alpha setting
+--|
 --| Revision 1.40  2001/06/15 19:31:51  king
 --| Stopped pixmap retrieval from X server from sigsegv on non pseudo displays
 --|

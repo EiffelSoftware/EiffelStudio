@@ -56,13 +56,13 @@ feature -- Element change
 	set_x_offset (a_x: INTEGER) is
 			-- Set `x_offset' to `a_x'.
 		do
-			C.gtk_adjustment_set_value (horizontal_adjustment, a_x)
+			internal_set_value_from_adjustment (horizontal_adjustment, a_x)
 		end
 
 	set_y_offset (a_y: INTEGER) is
 			-- Set `y_offset' to `a_y'.
 		do
-			C.gtk_adjustment_set_value (vertical_adjustment, a_y)
+			internal_set_value_from_adjustment (vertical_adjustment, a_y)
 		end
 		
 	set_item_size (a_width, a_height: INTEGER) is
@@ -83,6 +83,24 @@ feature {NONE} -- Implementation
 		do
 			Result := C.gtk_viewport_get_vadjustment (viewport)
 		end
+
+	internal_set_value_from_adjustment (l_adj: POINTER; a_value: INTEGER) is
+			-- Set `value' of adjustment `l_adj' to `a_value'.
+		require
+			l_adj_not_null: l_adj /= default_pointer
+		do
+			if C.gtk_adjustment_struct_lower (l_adj) > a_value then
+				C.set_gtk_adjustment_struct_lower (l_adj, a_value)
+				C.gtk_adjustment_changed (l_adj)
+			elseif C.gtk_adjustment_struct_upper (l_adj) < a_value then
+				C.set_gtk_adjustment_struct_upper (l_adj, a_value)
+				C.gtk_adjustment_changed (l_adj)				
+			end
+			C.gtk_adjustment_set_value (l_adj, a_value)
+		ensure
+			value_set: C.gtk_adjustment_struct_value (l_adj) = a_value
+		end
+
 
 	viewport: POINTER
 			-- Pointer to viewport, used for reuse of adjustment functions from descendants.

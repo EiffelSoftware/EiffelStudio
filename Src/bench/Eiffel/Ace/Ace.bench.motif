@@ -121,13 +121,14 @@ cluster
 
 		archi_text:			"$BENCH/Eiffel/interface/graphical/archi_text";
 		bench_common:		"$BENCH/Eiffel/interface/graphical/common";
-		clicking:			"$BENCH/Eiffel/interface/graphical/clicking";
 		commands:			"$BENCH/Eiffel/interface/graphical/commands";
 		debugging:			"$BENCH/Eiffel/interface/graphical/debugging";
+		drag_and_drop:		"$BENCH/Eiffel/interface/graphical/drag_and_drop";
 		formatters:			"$BENCH/Eiffel/interface/graphical/formatters";
 		main:				"$BENCH/Eiffel/interface/graphical/main";
 		graphical_shared:	"$BENCH/Eiffel/interface/graphical/shared";
 		stones:				"$BENCH/Eiffel/interface/graphical/stones";
+		text_window:		"$BENCH/Eiffel/interface/graphical/text_window";
 		windows:			"$BENCH/Eiffel/interface/graphical/windows";
 
 		platform_common:	"$BENCH/Eiffel/interface/graphical/spec/common";
@@ -155,17 +156,17 @@ cluster
 external
 
 	object:
-		"$(BENCH)/C/parsing/eiffel/libeiffel.a";
-		"$(BENCH)/C/parsing/lace/liblace.a";
-		"$(BENCH)/C/parsing/shared/libparsing.a";
-		"$(BENCH)/C/platform/libplatform.a";
-		"$(EIFFEL3)/library/vision/spec/$(PLATFORM)/lib/motif_Clib.a";
-		"$(EIFFEL3)/library/vision/spec/$(PLATFORM)/lib/Xt.a";
-		"$(BENCH)/C/ipc/ewb/libewb.a";
-		"$(BENCH)/C/ipc/shared/libipc.a";
-		"$(BENCH)/C/liman/client/libliman.a";
-		"$(BENCH)/C/liman/shared/libshared.a";
-		"$(BENCH)/C/idrs/libidr.a";
+		"$(BENCH)/C/parsing/eiffel/libweiffel.a",
+		"$(BENCH)/C/parsing/lace/liblace.a",
+		"$(BENCH)/C/parsing/shared/libparsing.a",
+		"$(BENCH)/C/platform/libplatform.a",
+		"$(EIFFEL3)/library/vision/spec/$(PLATFORM)/lib/motif_Clib.a",
+		"$(EIFFEL3)/library/vision/spec/$(PLATFORM)/lib/Xt.a",
+		"$(BENCH)/C/ipc/ewb/libewb.a",
+		"$(BENCH)/C/ipc/shared/libipc.a",
+		"$(BENCH)/C/liman/client/libliman.a",
+		"$(BENCH)/C/liman/shared/libshared.a",
+		"$(BENCH)/C/idrs/libidr.a",
 		"-lXm -lXt -lX11"
 
 end

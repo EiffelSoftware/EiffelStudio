@@ -213,14 +213,14 @@ feature -- Generation
 			Context.set_current_type (current_t);
 			Context.set_inlined_current_register (current_reg);
 
-			if inlined_dt_current > 0 then
+			if inlined_dt_current > 1 then
 				context.set_inlined_dt_current (inlined_dt_current);
 				generated_file.putchar ('{');
 				generated_file.new_line;
 				generated_file.putstring ("int inlined_dtype = ");
 				generated_file.putstring (gc_upper_dtype_lparan);
 				current_reg.print_register_by_name;
-				generated_file.putchar (')');
+				generated_file.putstring (");");
 				generated_file.new_line
 			end;
 
@@ -228,7 +228,7 @@ feature -- Generation
 				compound.generate
 			end
 
-			if inlined_dt_current > 0 then
+			if inlined_dt_current > 1 then
 				generated_file.putchar ('}');
 				generated_file.new_line
 				context.set_inlined_dt_current (0);

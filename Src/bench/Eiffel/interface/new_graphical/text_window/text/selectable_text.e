@@ -178,7 +178,7 @@ feature -- Selection Changes
 		ensure
 			selection: has_selection
 			cursor_positioned: cursor.line = last_line and then cursor.token = last_line.eol_token
-			selection_cursor_positioned: selection_cursor.line = last_line and then selection_cursor.token = last_line.eol_token
+			selection_cursor_positioned: selection_cursor.line = first_line and then selection_cursor.token = first_line.first_token
 		end
 
 	forget_selection is

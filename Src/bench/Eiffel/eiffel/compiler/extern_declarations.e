@@ -177,9 +177,9 @@ feature
 			until
 				local_routine_tables.after
 			loop
-				buffer.putstring ("extern fnptr ");
+				buffer.putstring ("extern char *(*");
 				buffer.putstring (local_routine_tables.item_for_iteration);
-				buffer.putstring ("[];%N");
+				buffer.putstring ("[])();%N");
 				local_routine_tables.forth;
 			end;
 

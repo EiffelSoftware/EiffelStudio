@@ -1,6 +1,6 @@
 indexing
 	description:
-		"Eiffel Vision standard dialog, Mswindows implementation."
+		"Eiffel Vision standard dialog. Mswindows implementation."
 	status: "See notice at end of class"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -82,6 +82,9 @@ end -- class EV_STANDARD_DIALOG_IMP
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.10  2000/04/19 00:38:40  brendel
+--| Cosmetics.
+--|
 --| Revision 1.9  2000/03/07 02:01:32  brendel
 --| Released
 --|

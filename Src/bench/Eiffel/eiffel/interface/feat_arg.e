@@ -52,6 +52,17 @@ feature -- Access
 	argument_names: SPECIAL [INTEGER]
 			-- Argument names. Index in `Names_heap' table.
 
+	item_id (i: INTEGER): INTEGER is
+			-- Name of argument at position `i'.
+		require
+			index_positive: i >= 1
+			index_small_enough: i <= count
+		do
+			Result := argument_names.item (i - 1)
+		ensure
+			valid_result: Result > 0
+		end
+
 	item_name (i: INTEGER): STRING is
 			-- Name of argument at position `i'.
 		require

@@ -51,7 +51,7 @@
 				<width>16</width>
 				<url>/images/eiffelstudio/icons/icon_delete_color.gif</url>
 			</image> button on the right of the 
-			<bold>Program arguments</bold>entry.
+			<bold>Program arguments</bold> entry.
 		</note>
 		<tip>
 			<bold>Tip</bold>: To get the command line arguments in a program, it is possible to either define the root feature as taking an array of STRING objects, or to use the 

@@ -26,7 +26,7 @@
 			<item>Drop on the desired parent class.</item>
 		</list>
 		<note>
-			<bold>Note</bold>: this action will automatically add the parent in the class text, but no inheritance clause is added.
+			<bold>Note</bold>: This action will automatically add the parent in the class text, but no inheritance clause is added.
 		</note>
 		<seealso>
 			<bold>See Also</bold>

@@ -56,12 +56,12 @@
 			</item>
 			<item>In the 
 				<bold>Externals</bold> tab, in the 
-				<bold>Include path</bold> field, type the paths of the header files needed to use the library(pressing the 
+				<bold>Include path</bold> field, type the paths of the header files needed to use the library (pressing the 
 				<bold>Add</bold> button for each).
 			</item>
 			<item>In the 
 				<bold>Object file</bold> field, type the object files needed to use the library (pressing the 
-				<bold>Add</bold> button for each). These files can be either library files (.lib, .a, etc) or object files(.obj, .o, etc)
+				<bold>Add</bold> button for each). These files can be either library files (.lib, .a, etc) or object files (.obj, .o, etc)
 			</item>
 			<item>Click 
 				<bold>Apply</bold> or 

@@ -1,7 +1,5 @@
 <document title="Generating XMI documentation" output="studio">
-	<meta_data>
-		<help></help>
-	</meta_data>
+	<meta_data/>
 	<paragraph>
 		<heading>
 			<size>1</size>Generating XMI documentation

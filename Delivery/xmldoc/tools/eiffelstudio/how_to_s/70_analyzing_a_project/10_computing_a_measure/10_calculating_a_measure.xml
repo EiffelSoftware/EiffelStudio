@@ -90,9 +90,10 @@
 				<url>20_saving_a_measure.xml</url>
 				<label>Saving a measure</label>
 			</link>
+			<line_break></line_break>
 			<link>
 				<url>40_viewing_measure_details.xml</url>
-				<label>detailing a measure</label>
+				<label>Detailing a measure</label>
 			</link>
 			<line_break></line_break>
 		</seealso>  

@@ -23,7 +23,7 @@
 			<link>
 				<url>../../reference/05_general_interface_description/10_general_interface_mechanisms/30_toolbars_customization.xml</url>
 				<label>toolbar customization</label>
-			</link> windows. they appear when you choose
+			</link> windows. they appear when you choose 
 			<bold>Customize standard toolbar...</bold> or 
 			<bold>Customize project toolbar...</bold> in the toolbars sub-menu of the View menu or in the contextual menu of the toolbars (which is displayed when you right-click in the empty space on the right of the toolbars).
 		</paragraph>
@@ -32,12 +32,12 @@
 			<line_break></line_break>
 			<link>
 				<url>../../reference/05_general_interface_description/30_main_toolbars.xml</url>
-				<label>The toolbars and their buttons.</label>
+				<label>The toolbars and their buttons</label>
 			</link>
 			<line_break></line_break>
 			<link>
 				<url>../../reference/05_general_interface_description/10_general_interface_mechanisms/30_toolbars_customization.xml</url>
-				<label>Toolbars customization windows.</label>
+				<label>Toolbars customization windows</label>
 			</link>
 		</seealso>
 	</paragraph>

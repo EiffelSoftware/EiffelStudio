@@ -1,7 +1,5 @@
 <document title="Tuning a program" output="studio">
-	<meta_data>
-		<help></help>
-	</meta_data>
+	<meta_data/>
 	<paragraph>
 		<heading>
 			<size>1</size>Tuning a program
@@ -29,7 +27,7 @@
 			<link>
 				<url>/tools/eiffelstudio/reference/25_project_settings/60_advanced.xml</url>
 				<label>System Settings dialog advanced tab</label>
-			</link>, try experimenting the
+			</link>, try experimenting the 
 			<bold>Inlining</bold> option, and setting the maximum size of features that should be inlined. Only Eiffel features are inlined by this option, to see how to inline the C functions you may be using in your program, please refer to your C compiler documentation.
 		</paragraph>
 		<paragraph>In the 

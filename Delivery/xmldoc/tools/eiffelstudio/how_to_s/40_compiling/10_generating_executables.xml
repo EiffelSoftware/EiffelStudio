@@ -1,7 +1,5 @@
 <document title="Generating executables" output="studio">
-	<meta_data>
-		<help></help>
-	</meta_data>
+	<meta_data/>
 	<paragraph>
 		<heading>
 			<size>1</size>Generating executables
@@ -13,10 +11,10 @@
 				<label>compiler reference</label>
 			</link>.
 		</paragraph>
-		<paragraph>There is a command for all compilation modes in the
+		<paragraph>There is a command for all compilation modes in the 
 			<bold>Project</bold> menu, under the entries 
 			<bold>Melt</bold>, 
-			<bold>Freeze</bold>and 
+			<bold>Freeze</bold> and 
 			<bold>Finalize</bold>. There is also a 
 			<bold>Quick compile</bold> command, that only melts the classes that have been edited in EiffelStudio since the last compilation. You may want to use it as long as no classes are edited outside EiffelStudio.
 		</paragraph>

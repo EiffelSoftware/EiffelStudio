@@ -58,12 +58,12 @@
 			<line_break></line_break>
 			<link>
 				<url>/tools/eiffelstudio/how_to_s/70_analyzing_a_project/10_computing_a_measure/10_calculating_a_measure.xml</url>
-				<label>calculating a measure</label>
+				<label>Calculating a measure</label>
 			</link>
 			<line_break></line_break>
 			<link>
 				<url>/tools/eiffelstudio/how_to_s/70_analyzing_a_project/20_handling_new_metrics/20_managing_new_metrics/00_introduction.xml</url>
-				<label>managing new metrics</label>
+				<label>Managing new metrics</label>
 			</link>
 		</seealso>
 		<paragraph> </paragraph>

@@ -50,15 +50,17 @@
 			<line_break></line_break>
 			<link>
 				<url>10_calculating_a_measure.xml</url>
-				<label>calculating measures</label>
+				<label>Calculating measures</label>
 			</link>
+			<line_break></line_break>
 			<link>
 				<url>20_saving_a_measure.xml</url>
-				<label>saving measures</label>
+				<label>Saving measures</label>
 			</link>
+			<line_break></line_break>
 			<link>
 				<url>30_deleting_measures.xml</url>
-				<label>deleting measures</label>
+				<label>Deleting measures</label>
 			</link>
 			<line_break></line_break>
 		</seealso>

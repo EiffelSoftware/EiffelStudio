@@ -21,7 +21,7 @@
 		</heading>
 		<paragraph>Almost all actions in the diagram tool are undoable. Every action that can be undone, can also be redone. For advanced undoing, open the history tool.</paragraph>
 		<tip>
-			<bold>Tip</bold>: undo actions cannot be undone. Use redo to undo an undo action.
+			<bold>Tip</bold>: Undo actions cannot be undone. Use redo to undo an undo action.
 		</tip>
 		<list ordered="false">
 			<item>To undo the last action, click 
@@ -55,7 +55,7 @@
 			</item>
 		</list>
 		<note>
-			<bold>Note</bold>: when an action is performed that cannot be undone, the history tool is emptied.
+			<bold>Note</bold>: When an action is performed that cannot be undone, the history tool is emptied.
 		</note>
 	</paragraph>
 </document>

@@ -14,7 +14,7 @@
 		<paragraph></paragraph>
 		<list ordered="false">
 			<item>If you want to change the context of the current cluster or class in the diagram, click the 
-				<bold>Select depth of relations</bold>button. 
+				<bold>Select depth of relations</bold> button. 
 				<image>
 					<url>/images/eiffelstudio/icons/icon_select_depth_color.gif</url>
 				</image>

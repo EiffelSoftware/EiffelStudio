@@ -1,7 +1,5 @@
 <document title="Defining linear metrics" output="studio">
-	<meta_data>
-		<help></help>
-	</meta_data>
+	<meta_data/>
 	<paragraph>
 		<heading>
 			<size>1</size>Defining linear metrics
@@ -17,12 +15,12 @@
 			</image>
 		</paragraph> 
 		<list ordered="true">      
-			<item>     &gt;Enter a name in the "New metric name" field.</item>   
+			<item>Enter a name in the "New metric name" field.</item>   
 			<item>Define a single term by entering a coefficient in the "Coefficient" field and choosing a metric from the            "Metric" combo box. The unit field and the formula field will be automatically filled regarding the selected metric.</item> 
 			<item>        Click on 
 				<image>
 					<url>/images/eiffelstudio/metrics_png/plus.png</url>
-				</image>&gt; to validate the defined term. It will be displayed in the "Linear sum" field.
+				</image>to validate the defined term. It will be displayed in the "Linear sum" field.
 			</item>   
 			<item>To add other terms, repeat operation 2. and 3. as many times as needed.</item>   
 			<item>To remove the last entered term, click on 
@@ -37,10 +35,10 @@
 				</image> to reset.
 			</item>  
 		</list>     
-		<paragraph>
+		<note>
 			<bold>Note</bold>: After you have selected the first term of the linear sum, you can only add terms containing metrics of the same        unit.
-		</paragraph>
-		<paragraph>
+		</note>
+		<seealso>
 			<bold>See Also</bold>
 			<line_break></line_break>
 			<link>
@@ -48,6 +46,6 @@
 				<label> Managing new metrics</label>
 			</link> 
 			<line_break></line_break>
-		</paragraph>
+		</seealso>
 	</paragraph>
 </document>

@@ -14,7 +14,7 @@
 		<paragraph></paragraph>
 		<list ordered="true">
 			<item>To add a view of the current class or cluster, select the view you want to duplicate to the new one using the 
-				<bold>View</bold>combo box.
+				<bold>View</bold> combo box.
 				<line_break></line_break> 
 				<image>
 					<url>/images/eiffelstudio/diagram/diagram-defaultview.png</url>

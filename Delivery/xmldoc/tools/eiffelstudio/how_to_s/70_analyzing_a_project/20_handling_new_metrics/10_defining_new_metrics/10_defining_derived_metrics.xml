@@ -1,4 +1,4 @@
-<document title="Defining derived metrics." output="studio">
+<document title="Defining derived metrics" output="studio">
 	<meta_data>
 		<help>
 			<meta>
@@ -9,9 +9,9 @@
 	</meta_data>
 	<paragraph>
 		<heading>
-			<size>1</size>
+			<size>1</size>Defining Derived Metrics
 		</heading>
-		<paragraph>To define a derived metric, you must have already clicked on
+		<paragraph>To define a derived metric, you must have already clicked on 
 			<image>
 				<border>0</border>
 				<url>/images/eiffelstudio/icons/icon_new_metric_color.gif</url>

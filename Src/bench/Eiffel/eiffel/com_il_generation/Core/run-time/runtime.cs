@@ -15,6 +15,7 @@ namespace ISE.Runtime {
 
 public delegate int WEL_DISPATCHER_DELEGATE (IntPtr hwnd, int msg, int wparam, int lparam);
 public delegate void WEL_ENUM_FONT_DELEGATE (IntPtr lpelf, IntPtr lpntm, int font_type, IntPtr lparam);
+public delegate void WEL_ENUM_WINDOW_DELEGATE (IntPtr hwnd);
 public delegate void EV_PIXMAP_IMP_DELEGATE (int error_code, int data_type, int pixmap_width,
 	int pixmap_height, IntPtr rgb_data, IntPtr alpha_data);
 

@@ -107,48 +107,6 @@ feature {NONE} -- Initialization
 			create ev_children.make (1)
 		end
 
-feature -- FIXME To be implemented.
-
-	selected_items: LINKED_LIST [EV_TREE_ITEM] is
-			-- List of all the selected tree items. For a single
-			-- selection list, it gives a list with only one
-			-- element which is `selected_item'. Therefore, one
-			-- should use `selected_item' rather than 
-			-- `selected_items' for a single selection list
-		do
-		check
-			to_be_implemented: FALSE
-		end
-		end
-
-	enable_multiple_selection is
-			-- Allow the user to do a multiple selection simply
-			-- by clicking on several choices.
-		do
-		check
-			to_be_implemented: FALSE
-		end
-		end
-
-	disable_multiple_selection is
-			-- Allow the user to do only one selection. It is the
-			-- default status of the list
-		do
-		check
-			to_be_implemented: FALSE
-		end
-		end
-
-	multiple_selection_enabled: BOOLEAN is
-			-- True if the user can choose several items
-			-- False otherwise
-		do
-		check
-			to_be_implemented: FALSE
-		end
-		end
-
-
 feature -- Access
 
 	count: INTEGER is
@@ -552,8 +510,8 @@ end -- class EV_TREE_IMP
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
---| Revision 1.43  2000/03/09 19:55:24  rogers
---| Removed redundent features, internal_propogate_event, internal_get_index, get_children_count, find item_at_position and clear_items. None of these are referenced anymore.
+--| Revision 1.44  2000/03/09 19:59:02  rogers
+--| Removed multiple selection features.
 --|
 --| Revision 1.42  2000/03/09 16:44:23  rogers
 --| Connected the addition and removal of ev_children directly now.

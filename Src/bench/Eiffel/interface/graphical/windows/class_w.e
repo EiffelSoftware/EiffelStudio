@@ -11,7 +11,6 @@ class CLASS_W
 
 inherit
 
-	SHARED_WORKBENCH;
 	BAR_AND_TEXT
 		rename
 			make as normal_create,

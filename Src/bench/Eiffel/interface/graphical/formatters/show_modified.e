@@ -4,7 +4,6 @@ class SHOW_MODIFIED
 
 inherit
 
-	SHARED_WORKBENCH;
 	FORMATTER
 		redefine
 			dark_symbol, display_temp_header, post_fix

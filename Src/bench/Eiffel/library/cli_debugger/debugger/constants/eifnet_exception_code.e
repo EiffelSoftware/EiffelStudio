@@ -18,7 +18,7 @@ feature {NONE} -- Exception code
 	except_argumentnullexception: INTEGER is 0x02000039                --| 33554489 |--
 	except_argumentoutofrangeexception: INTEGER is 0x0200003A          --| 33554490 |--
 	except_arithmeticexception: INTEGER is 0x0200003C          --| 33554492 |--
-	except_arraytypemismatchexception is 0x0200003D | 33554493          --| INTEGER |--
+	except_arraytypemismatchexception: INTEGER is 0x0200003D 	--| 33554493 |--
 	except_badimageformatexception: INTEGER is 0x02000041              --| 33554497 |--
 	except_cannotunloadappdomainexception: INTEGER is 0x02000046               --| 33554502 |--
 	except_comexception: INTEGER is 0x020002B4                 --| 33555124 |--
@@ -46,20 +46,20 @@ feature {NONE} -- Exception code
 	except_invalidoperationexception: INTEGER is 0x0200007F            --| 33554559 |--
 	except_invalidprogramexception: INTEGER is 0x02000080              --| 33554560 |--
 	except_ioexception: INTEGER is 0x0200031B          --| 33555227 |--
-	except_isolatedstorageexception is 0x020004CC | 33555660            --| INTEGER |--
+	except_isolatedstorageexception: INTEGER is 0x020004CC 			--| 33555660 |--
 	except_marshaldirectiveexception: INTEGER is 0x020002CF            --| 33555151 |--
 	except_memberaccessexception: INTEGER is 0x02000023                --| 33554467 |--
 	except_methodaccessexception: INTEGER is 0x02000087                --| 33554567 |--
-	except_missingfieldexception is 0x02000089 | 33554569               --| INTEGER |--
-	except_missingmanifestresourceexception is 0x020001DE | 33554910            --| INTEGER |--
-	except_missingmemberexception is 0x02000088 | 33554568              --| INTEGER |--
-	except_missingmethodexception is 0x0200008A | 33554570              --| INTEGER |--
+	except_missingfieldexception: INTEGER is 0x02000089              --| 33554569  |--
+	except_missingmanifestresourceexception: INTEGER is 0x020001DE  	--| 33554910  |--
+	except_missingmemberexception: INTEGER is 0x02000088 		--| 33554568 |--
+	except_missingmethodexception: INTEGER is 0x0200008A 		--| 33554570 |--
 	except_multicastnotsupportedexception: INTEGER is 0x0200008B               --| 33554571 |--
 	except_notfinitenumberexception: INTEGER is 0x0200008D             --| 33554573 |--
 	except_notimplementedexception: INTEGER is 0x0200008E              --| 33554574 |--
 	except_notsupportedexception: INTEGER is 0x0200008F                --| 33554575 |--
 	except_nullreferenceexception: INTEGER is 0x02000090               --| 33554576 |--
-	except_objectdisposedexception is 0x02000092 | 33554578             --| INTEGER |--
+	except_objectdisposedexception: INTEGER is 0x02000092 		--| 33554578 |--
 	except_outofmemoryexception: INTEGER is 0x02000017                 --| 33554455 |--
 	except_overflowexception: INTEGER is 0x02000096            --| 33554582 |--
 	except_pathtoolongexception: INTEGER is 0x0200032B                 --| 33555243 |--
@@ -69,8 +69,8 @@ feature {NONE} -- Exception code
 	except_reflectiontypeloadexception: INTEGER is 0x02000163          --| 33554787 |--
 	except_remotingexception: INTEGER is 0x02000480            --| 33555584 |--
 	except_remotingtimeoutexception: INTEGER is 0x02000482             --| 33555586 |--
-	except_safearrayrankmismatchexception is 0x020002D4 | 33555156              --| INTEGER |--
-	except_safearraytypemismatchexception is 0x020002D5 | 33555157              --| INTEGER |--
+	except_safearrayrankmismatchexception: INTEGER is 0x020002D4 		--| 33555156 |--
+	except_safearraytypemismatchexception: INTEGER is 0x020002D5 		--| 33555157 |--
 	except_securityexception: INTEGER is 0x020003AB            --| 33555371 |--
 	except_sehexception: INTEGER is 0x020002D6                 --| 33555158 |--
 	except_serializationexception: INTEGER is 0x02000189               --| 33554825 |--

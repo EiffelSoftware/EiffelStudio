@@ -110,7 +110,28 @@ feature {NONE} -- Implementation
 	similar_list: DYNAMIC_LIST [G]
 			-- A list from the base library that does the same.
 
+	item_text (i: G): STRING is
+		local
+			b: EV_TEXTABLE
+		do
+			b ?= i
+			if b /= Void then
+				Result := b.text
+			end
+			if Result = Void then
+				Result := "Void"
+			end
+		end
+
+	avoid_cond: BOOLEAN is
+		do
+			description.append ("Your list's item: " + item_text (list.item) + "; LINKED_LIST: " + item_text (similar_list.item) + "%N")
+			Result := True
+		end
+
 	append_result is
+		require
+			avoid_cond
 		do
 			if list.count /= similar_list.count then
 				description.append (" `count' incorrect.%N")
@@ -134,8 +155,9 @@ feature {NONE} -- Implementation
 			elseif list.index_of (last_item, 1) /= similar_list.index_of (last_item, 1) then 
 				description.append (" `index_of' incorrect.%N")
 				test_successful := False
-			elseif not similar_list.off implies list.item /= similar_list.item then 
+			elseif (not similar_list.off) implies list.item /= similar_list.item then 
 				description.append (" `item' incorrect.%N")
+				description.append ("Your list's item: " + item_text (list.item) + "; LINKED_LIST: " + item_text (similar_list.item) + "%N")
 				test_successful := False
 			elseif not similar_list.empty implies list.last /= similar_list.last then 
 				description.append (" `last' incorrect.%N")
@@ -372,8 +394,8 @@ end -- class EV_LIST_TEST
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
---| Revision 1.3  2000/03/01 16:44:00  brendel
---| Added test of all relevant attributes.
+--| Revision 1.4  2000/03/01 17:00:13  brendel
+--| Attempt to fix item-test.
 --|
 --| Revision 1.2  2000/03/01 16:18:17  brendel
 --| Added tests for all single-item-add features.

@@ -39,9 +39,10 @@ feature -- Creation
 		local
 			ext_name: ANY
 		do
+			widget_index := widget_manager.last_inserted_position;
 			ext_name := a_menu_b.identifier.to_c;
 			screen_object := create_menu_b ($ext_name,
-					a_menu_b.parent.implementation.screen_object);
+					parent_screen_object (a_menu_b, widget_index));
 			a_menu_b.set_font_imp (Current)
 		end
 

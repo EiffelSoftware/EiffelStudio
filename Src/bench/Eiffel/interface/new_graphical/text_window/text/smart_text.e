@@ -464,7 +464,7 @@ class_completion_possibilities: SORTABLE_ARRAY [EB_NAME_FOR_COMPLETION] is
 			end
 		end
 
-	complete_feature_call (completed: STRING; is_feature_signature: BOOLEAN) is
+	complete_feature_call (completed: STRING; is_feature_signature: BOOLEAN; appended_character: CHARACTER) is
 			-- Finish completion process be inserting the completed expression.
 		require
 			completion_proposals_found: auto_complete_possible
@@ -483,6 +483,9 @@ class_completion_possibilities: SORTABLE_ARRAY [EB_NAME_FOR_COMPLETION] is
 			x := cursor.x_in_characters
 			y := cursor.y_in_lines
 			insert_string (completed)
+			if appended_character /= '%U' then
+				insert_char (appended_character)
+			end
 
 			if is_feature_signature and then completed.last_index_of (')',completed.count) = completed.count then
 				selection_cursor := clone (cursor)

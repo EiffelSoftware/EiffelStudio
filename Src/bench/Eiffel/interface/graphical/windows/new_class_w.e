@@ -157,7 +157,8 @@ feature -- Access
 		local
 			str, str2: STRING;
 			clus: LINKED_LIST [CLUSTER_I];
-			str_el: SCROLLABLE_LIST_STRING_ELEMENT
+			str_el: SCROLLABLE_LIST_STRING_ELEMENT;
+			selected_pos: INTEGER
 		do
 			cluster := cl;
 			class_name := clone (class_n);
@@ -174,16 +175,20 @@ feature -- Access
 			clus := Eiffel_universe.clusters_sorted_by_tag
 			if not clus.empty then
 				from
+					selected_pos := 1;
 					clus.start
 				until
 					clus.after
 				loop
 					!! str_el.make (0);
 					str_el.append (clus.item.cluster_name);
+					if clus.item = cl then	
+						selected_pos := clus.index
+					end;
 					cluster_list.extend (str_el);
 					clus.forth
 				end;
-				cluster_list.select_i_th (1);
+				cluster_list.select_i_th (selected_pos);
 				if cluster_list.count < 10 then
 					cluster_list.set_visible_item_count (cluster_list.count)
 				else
@@ -218,7 +223,8 @@ feature -- Execution
 	execute (argument: ANY) is
 		local
 			f_name: FILE_NAME;
-			file: PLAIN_TEXT_FILE;
+			--file: PLAIN_TEXT_FILE;
+			file: RAW_FILE; -- Windows specific 
 			str: STRING;
 			base_name: STRING;
 		do
@@ -267,10 +273,11 @@ feature -- Execution
 			end;
 		end;
 
-	load_default_class_text (output: PLAIN_TEXT_FILE) is
+	load_default_class_text (output: RAW_FILE) is
 			-- Loads the default class text.
 		local
-			input: PLAIN_TEXT_FILE;
+			--input: PLAIN_TEXT_FILE;
+			input: RAW_FILE;
 			in_buf: STRING
 		do
 			!! input.make (Default_class_file);

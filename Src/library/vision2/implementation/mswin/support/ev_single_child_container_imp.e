@@ -57,6 +57,10 @@ feature -- Element change
 			child_imp: EV_WIDGET_IMP
 		do
 			if new_child = Void then
+
+				--| FIXME VB I presume this is the right place for this:
+				remove_item_actions.call ([item])
+
 				child_imp ?= item.implementation
 				check
 					item_implementation_not_void: child_imp /= Void
@@ -77,6 +81,9 @@ feature -- Element change
 				--|Julian Rogers 02/01/2000.
 				--|No problems have shown up on testing.
 				child_imp.parent_ask_resize (client_width, client_height)
+
+				--| FIXME VB I presume this is the right place for this:
+				new_item_actions.call ([item])
 			end
 		end
 
@@ -167,6 +174,11 @@ end -- class EV_SINGLE_CHILD_CONTAINER_IMP
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.7  2000/02/28 16:30:56  brendel
+--| Added action sequence calls for on-remove and on-add of items.
+--| Since this class has not been reviewed yet, I did not know exactly
+--| where to put the calls and where not. Needs reviewing!
+--|
 --| Revision 1.6  2000/02/19 05:45:00  oconnor
 --| released
 --|

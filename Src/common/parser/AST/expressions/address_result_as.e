@@ -35,8 +35,8 @@ feature -- Type check, byte code and dead code removal
 	format (ctxt: FORMAT_CONTEXT) is
 			-- Reconstitute text.
 		do
-			ctxt.put_special("$");
-			ctxt.put_string("Result");
+			ctxt.put_text_item (ti_Dollar);
+			ctxt.put_string ("Result");
 			ctxt.always_succeed;
 		end;
 end

@@ -45,7 +45,7 @@ feature -- Status setting
 			a_style := C.gtk_style_copy (C.gtk_widget_struct_style (fontable_widget))
 			font_ptr := C.gdk_font_ref (font_imp.c_object)
 			font_imp.set_font_object (font_ptr)
-			C.set_gtk_style_struct_font (a_style, font_ptr)
+			C.gtk_style_set_font (a_style, font_ptr)
 			C.gtk_widget_set_style (fontable_widget, a_style)
 			C.gtk_style_unref (a_style)
 		end

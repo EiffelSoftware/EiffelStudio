@@ -32,10 +32,10 @@ feature {EV_WIDGET} -- Initialization
 			set_expand (True)
 			set_vertical_resize (True)
 			set_horizontal_resize (True)
-			!! color.make_rgb (255, 255, 255)
-			set_background_color (color)
-			!! color.make_rgb (0, 0, 0)
-			set_foreground_color (color)
+--			!! color.make_rgb (255, 255, 255)
+--			set_background_color (color)
+--			!! color.make_rgb (0, 0, 0)
+--			set_foreground_color (color)
 		end
 
 feature -- Access
@@ -51,8 +51,10 @@ feature -- Access
 			-- Length of the text in the widget
 		require
 			exists: not destroyed
-		deferred
+		do
+			Result := text.count
 		end
+
 
 feature -- Status setting
 	
@@ -102,7 +104,7 @@ feature -- Status setting
 		deferred
 		end
 	
-	set_maximum_line_lenght (lenght: INTEGER) is
+	set_maximum_line_length (lenght: INTEGER) is
 			-- Maximum number of charachters on line
 		require
 			exist: not destroyed			

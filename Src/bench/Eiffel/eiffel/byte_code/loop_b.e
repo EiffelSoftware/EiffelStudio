@@ -36,6 +36,11 @@ feature -- Access
 	compound: BYTE_LIST [BYTE_NODE]
 			-- Compound {list of INSTR_B}; can be Void
 
+	end_location: TOKEN_LOCATION
+			-- Line number where `end' keyword is located
+
+feature -- Setting
+
 	set_from_part (f: like from_part) is
 			-- Assign `f' to `from_part'.
 		do
@@ -64,6 +69,16 @@ feature -- Access
 			-- Assign `v' to `variant_part'.
 		do
 			variant_part := v
+		end
+
+	set_end_location (e: like end_location) is
+			-- Set `end_location' with `e'.
+		require
+			e_not_void: e /= Void
+		do
+			end_location := e
+		ensure
+			end_location_set: end_location = e
 		end
 
 	need_enlarging: BOOLEAN is True
@@ -160,6 +175,10 @@ feature -- IL code generation
 			end
 
 			il_generator.mark_label (end_label)
+			check
+				end_location_not_void: end_location /= Void
+			end
+			il_generator.put_debug_info (end_location)
 		end
 
 

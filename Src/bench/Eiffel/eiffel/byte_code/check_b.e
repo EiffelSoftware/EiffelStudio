@@ -19,11 +19,28 @@ feature -- Access
 	check_list: BYTE_LIST [BYTE_NODE];
 			-- Assertion list {list of ASSERT_B}: can be Void
 
+	end_location: TOKEN_LOCATION
+			-- Line number where `end' keyword is located
+
+feature -- Settings
+
 	set_check_list (c: like check_list) is
 			-- Assign `c' to `chcek_list'.
 		do
 			check_list := c
 		end
+
+	set_end_location (e: like end_location) is
+			-- Set `end_location' with `e'.
+		require
+			e_not_void: e /= Void
+		do
+			end_location := e
+		ensure
+			end_location_set: end_location = e
+		end
+
+feature -- Code generation
 
 	enlarge_tree is
 			-- Enlarge the generation tree
@@ -106,6 +123,10 @@ feature -- IL code generation
 				il_generator.put_boolean_constant (False)
 				il_generator.generate_set_assertion_status
 				Il_generator.mark_label (l_label)
+				check
+					end_location_not_void: end_location /= Void
+				end
+				il_generator.put_debug_info (end_location)
 			end
 		end
 

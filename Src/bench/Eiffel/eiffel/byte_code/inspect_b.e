@@ -30,6 +30,9 @@ feature -- Access
 	else_part: BYTE_LIST [BYTE_NODE]
 			-- Default compound {list of INSTR_B}: can be Void
 
+	end_location: TOKEN_LOCATION
+			-- Line number where `end' keyword is located
+
 feature -- Status setting
 
 	set_switch (s: like switch) is
@@ -48,6 +51,16 @@ feature -- Status setting
 			-- Assign `e' to `else_part'.
 		do
 			else_part := e
+		end
+
+	set_end_location (e: like end_location) is
+			-- Set `end_location' with `e'.
+		require
+			e_not_void: e /= Void
+		do
+			end_location := e
+		ensure
+			end_location_set: end_location = e
 		end
 
 feature -- Basic operations
@@ -160,6 +173,11 @@ feature -- IL code generation
 				-- there was some `when' parts we need to remove the duplication made
 				-- for case comparison.
 			il_generator.pop
+			
+			check
+				end_location_not_void: end_location /= Void
+			end
+			il_generator.put_debug_info (end_location)
 		end
 
 feature -- Byte code generation

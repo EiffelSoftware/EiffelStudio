@@ -47,7 +47,7 @@ feature -- Messages
 	Connection_established: STRING is
 			-- Connection to database is established.
 		do
-			Result := "Connection to '" + Username + "' established."
+			Result := "Connection to database established."
 		end
 		
 	Main_window_title: STRING is

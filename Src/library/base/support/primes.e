@@ -140,22 +140,59 @@ feature -- Access
 		local
 			candidates: ARRAY [BOOLEAN]
 			found: INTEGER
+			l_values: like internal_precomputed_primes
 		do
-			candidates := all_lower_primes (i * i)
-			from
-				Result := 2; found := 1
-			invariant
-				-- Between 1 and `Result' there are `found' primes.
-			variant
-				i * i - Result
-			until
-				found = i
-			loop
-				Result := Result + 1
-				if candidates.item (Result) then
-					found := found + 1
+			l_values := internal_precomputed_primes
+			if i <= l_values.upper then
+				Result := l_values.item (i)
+			else
+				candidates := all_lower_primes (i * i)
+				from
+					Result := 2; found := 1
+				invariant
+					-- Between 1 and `Result' there are `found' primes.
+				variant
+					i * i - Result
+				until
+					found = i
+				loop
+					Result := Result + 1
+					if candidates.item (Result) then
+						found := found + 1
+					end
 				end
 			end
+		end
+
+feature {NONE} -- Implementation
+
+	precomputed_primes_count: INTEGER is 200
+			-- Number of precomputed prime numbers.
+
+	internal_precomputed_primes: ARRAY [INTEGER] is
+			-- First `Precomputed_primes_count' prime numbers.
+		local
+			candidates: ARRAY [BOOLEAN]
+			i, pos: INTEGER
+		once
+			from
+				candidates := all_lower_primes (Precomputed_primes_count * Precomputed_primes_count)
+				create Result.make (1, Precomputed_primes_count)
+				pos := 1
+				i := 1
+			until
+				pos > Precomputed_primes_count
+			loop
+				if candidates.item (i) then
+					Result.put (i, pos)
+					pos := pos + 1
+				end
+				i := i + 1
+			end
+		ensure
+			internal_precomputed_primes_not_void: Result /= Void
+			lower_valid: Result.lower = 1
+			upper_valid: Result.upper = Precomputed_primes_count
 		end
 
 indexing

@@ -1,5 +1,8 @@
 indexing
-	description: ""
+	description: "[
+		Date time picker sample.
+		Show how to use and how to configure the DATE_TIME_PICKER control.
+	]"
 	
 class
 	DATE_TIME_PICKER_CTL
@@ -200,12 +203,8 @@ feature -- Implementation
 				-- Init `btn_change_color'.
 			btn_change_color.set_flat_style (feature {WINFORMS_FLAT_STYLE}.Flat)
 			btn_change_color.set_location (create {DRAWING_POINT}.make_from_x_and_y (128, 216))
---			l_point.make_from_x_and_y (128, 216)
---			btn_change_color.set_location (l_point)
 			btn_change_color.set_text (("Change &Color").to_cil)
 			btn_change_color.set_size (create {DRAWING_SIZE}.make_from_width_and_height (104, 32))
---			l_size.make_from_width_and_height (104, 32)
---			btn_change_color.set_size (l_size)
 			btn_change_color.set_tab_index (2)
 			btn_change_color.set_anchor (feature {WINFORMS_ANCHOR_STYLES}.Bottom |
 										feature {WINFORMS_ANCHOR_STYLES}.Right )

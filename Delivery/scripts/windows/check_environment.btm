@@ -66,6 +66,12 @@ iff not defined NO_DOCUMENTATION then
 		CANCEL
 	endiff
 endiff	
+iff not defined NO_INSTALL then
+	iff "%@SEARCH[WfWI.exe]" == "" then
+		echo Cannot find a version of WISE Installer. Cannot continue
+		CANCEL
+	endiff
+endiff	
 
 iff not defined INSTALL_LOG then
 	echo Error: No file specified for the log

@@ -63,6 +63,17 @@ remtrace studio
 exprt -r %DEFAULT_CVS_TAG -d studio Delivery/studio
 remtrace eifinit
 exprt -r %DEFAULT_CVS_TAG -d eifinit Delivery/eifinit
+remtrace examples
+exprt -r %DEFAULT_CVS_TAG -d examples Delivery/examples
+cd examples
+fullrd eiffeltest
+fullrd math
+fullrd matisse
+fullrd old_com
+fullrd old_matisse
+fullrd vision
+fullrd build
+cd ..
 remtrace precomp
 safe_md %INSTALL_DIR\precomp
 safe_md %INSTALL_DIR\precomp\spec
@@ -115,7 +126,7 @@ iff not defined NO_COMPILE then
 		fullrd %EIFFEL_SRC
 	endiff
 	call update_libraries.btm
-	copy %EIFFEL_SRC\library\wel\spec\%ISE_PLATFORM\msc\dll\wel_hook.dll %INSTALL_DIR\studio\spec\%ISE_PLATFORM\bin\
+	copy %EIFFEL_SRC\library\wel\spec\msc\dll\wel_hook.dll %INSTALL_DIR\studio\spec\%ISE_PLATFORM\bin\
 	cdd %INIT_DIR
 	give_time_to update libraries
 

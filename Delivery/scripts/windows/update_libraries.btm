@@ -7,6 +7,8 @@ safe_md %EIFFEL_SRC\library
 cdd %EIFFEL_SRC\library
 remtrace base
 exprt -r %DEFAULT_CVS_TAG -d base "Src/library/base"
+remtrace com 
+exprt -r %DEFAULT_CVS_TAG -d com "Src/library/com"
 remtrace encryption
 exprt -r %DEFAULT_CVS_TAG -d encryption "Src/library/encryption"
 remtrace event

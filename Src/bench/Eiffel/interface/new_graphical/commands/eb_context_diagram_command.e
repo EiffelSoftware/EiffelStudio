@@ -44,7 +44,7 @@ feature -- Access
 	description: STRING is
 			-- Description for this command.
 		do
-			Result := description
+			Result := tooltip
 		end
 
 end -- class EB_CONTEXT_DIAGRAM_COMMAND

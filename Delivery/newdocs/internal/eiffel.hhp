@@ -12,7 +12,7 @@ Language=0x409 English (United States)
 Title=Eiffel Developer Help Center
 
 [WINDOWS]
-EDHC="Eiffel Developer Help Center 1.0","eiffel.hhc",,"root.html",root.html",,,,,0x63520,,0x304e,,0x30000,,,,,,0
+EDHC="Eiffel Developer Help Center 1.0","eiffel.hhc",,"root.html","root.html",,,,,0x63520,,0x304e,,0x30000,,,,,,0
 
 
 [FILES]

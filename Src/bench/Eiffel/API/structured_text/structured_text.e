@@ -416,7 +416,7 @@ feature -- Element change
 			add (create {INDENT_TEXT}.make (nr))
 		end
 
-	add_class_syntax (syn: SYNTAX_ERROR; e_class: CLASS_C; str: STRING) is
+	add_class_syntax (syn: SYNTAX_MESSAGE; e_class: CLASS_C; str: STRING) is
 			-- Put `syn' for `e_class'.
 		require
 			valid_syn: syn /= Void

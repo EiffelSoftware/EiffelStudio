@@ -156,13 +156,13 @@ feature -- Debug
 		do
 			io.error.putstring (generator);
 			io.error.putstring ("%NBody_id: ");
-			io.error.putint (body_id.id);
+			body_id.trace;
 			io.error.putstring ("%NIndex: ");
-			io.error.putint (index.id);
+			index.trace;
 			io.error.putstring ("%NPattern id: ");
 			io.error.putint (pattern_id);
 			io.error.putstring ("%Nwritten_in: ");
-			io.error.putint (written_in.id);
+			written_in.trace;
 			io.error.putstring ("%NType: ");
 			type.trace;
 			io.error.new_line;

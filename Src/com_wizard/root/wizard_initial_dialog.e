@@ -36,7 +36,7 @@ feature {NONE} -- Initialization
 			create browse_button.make_by_id (Current, Browse_button_constant)
 			create browse2_button.make_by_id (Current, Browse2_button_constant)
 			create help_button.make_by_id (Current, Help_button_constant)
-			create id_back.make_by_id (Current, Idok2_constant)
+			create id_back.make_by_id (Current, Idback_constant)
 		end
 
 feature -- Behavior
@@ -73,20 +73,20 @@ feature -- Behavior
 			folder_name := generate_edit.text
 			file_name := definition_file_edit.text
 			if folder_name = Void or folder_name.empty then
-				msg_box.error_message_box (Current, "Destination folder empty!", "Initialization Error")
+				msg_box.error_message_box (Current, Empty_destination_folder, Initialization_error)
 			elseif file_name = Void or file_name.empty then
-				msg_box.error_message_box (Current, "Definition file empty!", "Initialization Error")
+				msg_box.error_message_box (Current, Empty_definition_file, Initialization_error)
 			else
 				if folder_name.item (folder_name.count) = Directory_separator then
 					folder_name.head (folder_name.count -1)
 				end
 				create a_file.make (folder_name)
 				if not a_file.exists then
-					msg_box.error_message_box (Current, "Destination folder not valid!", "Wizard Error")
+					msg_box.warning_message_box (Current, Invalid_destination_folder, Wizard_error)
 				else
 					create a_file.make (file_name)
 					if not a_file.exists then
-						msg_box.error_message_box (Current, "Definition file not valid!", "Wizard Error")
+						msg_box.warning_message_box (Current, Invalid_definition_file, Wizard_error)
 					else
 						shared_wizard_environment.set_destination_folder (folder_name)
 						if file_name.substring_index (idl_file_extension, 1) =
@@ -94,6 +94,7 @@ feature -- Behavior
 							shared_wizard_environment.set_idl (True)
 							shared_wizard_environment.set_idl_file_name (file_name)
 						else
+							shared_wizard_environment.set_idl (False)
 							shared_wizard_environment.set_type_library_file_name (file_name)
 						end
 						Precursor {WIZARD_DIALOG}
@@ -141,14 +142,14 @@ feature -- Access
 			-- File selection dialog
 		once
 			create Result.make
-			Result.set_filter (<<"IDL File (*.idl)", "Type Library (*.tlb)", "Dynamic Link Library (*.dll)", "Executable (*.exe)">>, <<"*.idl", "*.tlb", "*.dll", "*.exe">>)
+			Result.set_filter (File_filters_descriptions, File_filters)
 		end
 	
 	Folder_selection_dialog: WEL_CHOOSE_FOLDER_DIALOG is
 			-- Folder selection dialog
 		once
 			create Result.make
-			Result.set_title ("Choose Destination Folder")
+			Result.set_title (Folder_selection_dialog_title)
 		end
 
 feature {NONE} -- Implementation
@@ -158,6 +159,39 @@ feature {NONE} -- Implementation
 		once
 			create Result.make
 		end
+
+	Initialization_error: STRING is "Initialization Error"
+			-- Initialization error message
+
+	Wizard_error: STRING is "Wizard error"
+			-- Wizard error message
+
+	Invalid_destination_folder: STRING is "Invalid destination folder%NPlease enter a valid destination folder"
+			-- Invalid destination folder message
+
+	Invalid_definition_file: STRING is "Invalid definition file%NPlease enter a valid definition file"
+			-- Invalid destination folder message
+
+	Empty_destination_folder: STRING is "Empty destination folder%NPlease enter a valid destination folder"
+			-- Invalid destination folder message
+
+	Empty_definition_file: STRING is "Empty definition file%NPlease enter a valid definition file"
+			-- Invalid destination folder message
+
+	File_filters_descriptions: ARRAY [STRING] is
+			-- Open file dialog file filters descriptions
+		once
+			Result := <<"IDL File (*.idl)", "Type Library (*.tlb)", "Dynamic Link Library (*.dll)", "Executable (*.exe)">>
+		end
+	
+	File_filters: ARRAy [STRING] is
+			-- Open file dialog file filters
+		once
+			Result := <<"*.idl", "*.tlb", "*.dll", "*.exe">>
+		end
+
+	Folder_selection_dialog_title: STRING is "Choose Destination Folder"
+			-- Folder selection dialog title
 
 	idl_file_extension: STRING is ".idl"
 			-- IDL file extension

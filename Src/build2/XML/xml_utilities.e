@@ -5,7 +5,7 @@ indexing
 	revision: "$Revision$"
 
 class
-	XML_UTILITIES
+	GB_XML_UTILITIES
 
 inherit
 	

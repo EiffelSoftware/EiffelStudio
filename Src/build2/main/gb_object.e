@@ -17,7 +17,7 @@ inherit
 	
 	GB_ACCESSIBLE_OBJECT_EDITOR
 	
-	XML_UTILITIES
+	GB_XML_UTILITIES
 	
 	GB_ACCESSIBLE_HISTORY
 	
@@ -464,9 +464,5 @@ feature {GB_CODE_GENERATOR} -- Implementation
 		do
 			Result := "extend (" + child_name + ")"
 		end
-		
-
-feature {NONE} -- Implementation
-
 
 end -- class GB_OBJECT

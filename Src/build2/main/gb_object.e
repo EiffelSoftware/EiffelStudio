@@ -351,72 +351,80 @@ feature {GB_OBJECT_HANDLER, GB_OBJECT, GB_BUILDER_WINDOW} -- Element change
 			new_type: STRING
 			new_short_type: STRING
 			funct_result: BOOLEAN
+			color_stone: GB_COLOR_STONE
+			colorizeable: EV_COLORIZABLE
 		do
-			an_object ?= object_representation
-				-- We get the new type of the object to be added. With this
-				-- information, we can then see if `Current' will accept
-				-- a child of this type.
-			if an_object /= Void then
-				new_type := an_object.type
-				new_short_type := an_object.short_type
+			color_stone ?= object_representation
+			if color_stone /= Void then
+				colorizeable ?= object
+				Result := colorizeable /= Void
 			else
-				-- If we are not an object, then we must be a component.
-				a_component ?= object_representation
-				check
-					is_component: a_component /= Void
+				an_object ?= object_representation
+					-- We get the new type of the object to be added. With this
+					-- information, we can then see if `Current' will accept
+					-- a child of this type.
+				if an_object /= Void then
+					new_type := an_object.type
+					new_short_type := an_object.short_type
+				else
+					-- If we are not an object, then we must be a component.
+					a_component ?= object_representation
+					check
+						is_component: a_component /= Void
+					end
+					new_type := a_component.root_element_type
+					new_short_type := new_type.substring (4, new_type.count)
 				end
-				new_type := a_component.root_element_type
-				new_short_type := new_type.substring (4, new_type.count)
-			end
-			Result := True
-			create env
-			if env.application.shift_pressed then
-				local_parent_object := parent_object
-					-- If we are at the top level. i.e. a window,
-					-- there will be no parent.
-				if local_parent_object /= Void then
-					Result := not local_parent_object.is_full
+				Result := True
+				create env
+				if env.application.shift_pressed then
+					local_parent_object := parent_object
+						-- If we are at the top level. i.e. a window,
+						-- there will be no parent.
 					if local_parent_object /= Void then
-							-- We only need to check this if we are not a component,
-							-- as this means there is no way we could be contained in `Current'.
-						if an_object /= Void then
-							funct_result := parent_object.override_drop_on_child (an_object)
-							if not funct_result then
-									-- Now display output if we are attempting to insert the object in itself
-									-- or one of its children.
-								display_parent_in_child_message (an_object, parent_object, new_type)			
+						Result := not local_parent_object.is_full
+						if local_parent_object /= Void then
+								-- We only need to check this if we are not a component,
+								-- as this means there is no way we could be contained in `Current'.
+							if an_object /= Void then
+								funct_result := parent_object.override_drop_on_child (an_object)
+								if not funct_result then
+										-- Now display output if we are attempting to insert the object in itself
+										-- or one of its children.
+									display_parent_in_child_message (an_object, parent_object, new_type)			
+								end
+								Result := Result and funct_result
 							end
+							funct_result := local_parent_object.accepts_child (new_type)
+								-- We now display information in status bar regarding full status.
+							display_invalid_drop_message (parent_object, new_type, funct_result)
 							Result := Result and funct_result
 						end
-						funct_result := local_parent_object.accepts_child (new_type)
-							-- We now display information in status bar regarding full status.
-						display_invalid_drop_message (parent_object, new_type, funct_result)
-						Result := Result and funct_result
+					else
+						Result := False
 					end
 				else
-					Result := False
-				end
-			else
-				Result := not is_full
-
-				funct_result := accepts_child (new_type)
-					-- We now display information in status bar regarding full status.
-				display_invalid_drop_message (Current, new_type, funct_result)					
-				Result := Result and funct_result
-					-- We only need to check this if we are not a component,
-					-- as this means there is no way we could be contained in `Current'.
-				if an_object /= Void then
-					funct_result := override_drop_on_child (an_object)
-					if not funct_result then
-							-- Now display output if we are attempting to insert the object in itself
-							-- or one of its children.
-						display_parent_in_child_message (an_object, Current, new_type)
-					end
+					Result := not is_full
+	
+					funct_result := accepts_child (new_type)
+						-- We now display information in status bar regarding full status.
+					display_invalid_drop_message (Current, new_type, funct_result)					
 					Result := Result and funct_result
+						-- We only need to check this if we are not a component,
+						-- as this means there is no way we could be contained in `Current'.
+					if an_object /= Void then
+						funct_result := override_drop_on_child (an_object)
+						if not funct_result then
+								-- Now display output if we are attempting to insert the object in itself
+								-- or one of its children.
+							display_parent_in_child_message (an_object, Current, new_type)
+						end
+						Result := Result and funct_result
+					end
 				end
-			end
-			if Result then
-				status_bar_label.remove_text
+				if Result then
+					status_bar_label.remove_text
+				end
 			end
 		end
 
@@ -586,6 +594,7 @@ feature {GB_OBJECT_HANDLER, GB_TITLED_WINDOW_OBJECT} -- Implementation
 				pick_and_dropable.drop_actions.extend (agent add_new_component_wrapper (?))
 				pick_and_dropable.drop_actions.extend (agent add_new_object_wrapper (?))
 				pick_and_dropable.drop_actions.set_veto_pebble_function (agent can_add_child (?))
+				pick_and_dropable.drop_actions.extend (agent set_color)
 			end
 		ensure
 			display_object_not_void: display_object /= Void
@@ -757,6 +766,38 @@ feature {GB_BUILDER_WINDOW} -- Implementation
 				add_new_component (a_component)
 			else
 				add_new_component_in_parent (a_component)
+			end
+		end
+		
+	set_color (color_stone: GB_COLOR_STONE) is
+			-- Assign color of `color_stone' to `Current'.
+		require
+			color_stone_not_void: color_stone /= Void
+		local
+			colorizeable: EV_COLORIZABLE
+			a_display_object: GB_DISPLAY_OBJECT
+		do
+			colorizeable ?= display_object
+			if colorizeable /= Void then
+				if color_stone.is_foreground then
+					colorizeable.set_foreground_color (color_stone.color)
+					colorizeable ?= object
+					colorizeable.set_foreground_color (color_stone.color)
+					a_display_object ?= display_object
+					if a_display_object /= Void then
+						colorizeable ?= a_display_object.child
+						colorizeable.set_foreground_color (color_stone.color)
+					end
+				else
+					colorizeable.set_background_color (color_stone.color)
+					colorizeable ?= object
+					colorizeable.set_background_color (color_stone.color)
+					a_display_object ?= display_object
+					if a_display_object /= Void then
+						colorizeable ?= a_display_object.child
+						colorizeable.set_background_color (color_stone.color)
+					end
+				end
 			end
 		end
 		

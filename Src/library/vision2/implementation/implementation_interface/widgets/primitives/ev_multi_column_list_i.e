@@ -304,7 +304,7 @@ feature -- Event -- removing command association
 		deferred
 		end
 
-feature {EV_MULTI_COLUMN_LIST_ROW} -- Implementation
+feature {EV_MULTI_COLUMN_LIST_ROW_IMP} -- Implementation
 
 	ev_children: ARRAYED_LIST [EV_MULTI_COLUMN_LIST_ROW_IMP]
 			-- We have to store the children because

@@ -53,11 +53,15 @@
 	
         <p>
  All Vision2 action sequences inherit <A CLASS="eclass" HREF="/libraries/vision2/reference/interface/events/ev_action_sequence_chart.html">EV_ACTION_SEQUENCE</A> and
-		when it is called, all of the agents held within are fired, thus calling all of the procedures represented by the agents. The signature of any agent that you place in an action sequence must conform to those of the action sequences actual generic parameter.&nbsp;
+		when it is called, all of the agents held within are fired, thus calling all of the procedures represented by the agents. The signature of any agent that you place in an action sequence must conform to those of the action sequences actual generic parameter.&nbsp;&nbsp;
+	
+	</p>
+	
+        <p>
         When you want an agent to be called from a certain action sequence and
-        the signatures do not match, you may use force_extend, this will call
-        your agent but has no guarantees on the argument passed to your
-        procedure.
+        the signatures do not match, you may use <a href="../../reference/interface/events/ev_action_sequence.html#f_force_extend">force_extend</a>, this will call
+        your agent but has no guarantees on the arguments passed to your
+ procedure.
 	
 	</p>
 	

@@ -143,10 +143,15 @@ feature -- Access
 			l_values: like internal_precomputed_primes
 		do
 			l_values := internal_precomputed_primes
-			if i <= l_values.upper then
+				-- Might looks strange that we check for Voidness of `l_values'
+				-- but it happens that computation of `internal_precomputed_values'
+				-- calls `approximated_i_th' and its post-condition call us back.
+				-- In this case only, we use the slow implementation to find the `i-th'
+				-- element.
+			if l_values /= Void and then i <= l_values.upper then
 				Result := l_values.item (i)
 			else
-				candidates := all_lower_primes (i * i)
+				candidates := all_lower_primes (approximated_i_th (i))
 				from
 					Result := 2; found := 1
 				invariant
@@ -176,7 +181,7 @@ feature {NONE} -- Implementation
 			i, pos: INTEGER
 		once
 			from
-				candidates := all_lower_primes (Precomputed_primes_count * Precomputed_primes_count)
+				candidates := all_lower_primes (approximated_i_th (Precomputed_primes_count))
 				create Result.make (1, Precomputed_primes_count)
 				pos := 1
 				i := 1
@@ -195,6 +200,30 @@ feature {NONE} -- Implementation
 			upper_valid: Result.upper = Precomputed_primes_count
 		end
 
+	approximated_i_th (n: INTEGER): INTEGER is
+			-- Approximation of `n'-th prime number.
+		require
+			n_positive: n > 0
+		local
+			l_double_math: DOUBLE_MATH
+			ln_n, ln_ln_n: DOUBLE
+		do
+			if n >= 13 then
+					-- Using math formula from J. Massias and G. Robin,
+					-- "Bornes effectives pour certaines fonctions concernant les nombres premiers,"
+					-- J. Théorie Nombres Bordeaux, 8 (1996) 215-242.  MR 97g:11099:
+					-- n (ln n + ln (ln n) - 1 + 1.8 ln (ln n) / ln n) 
+				create l_double_math
+				ln_n := l_double_math.log (n)
+				ln_ln_n := l_double_math.log (ln_n)
+				Result := (n * (ln_n + ln_ln_n - 1 + 1.8 * ln_ln_n / ln_n)).truncated_to_integer
+			else
+				Result := n * n
+			end
+		ensure
+			approximation_valid: i_th (n) <= Result
+		end
+		
 indexing
 
 	library: "[

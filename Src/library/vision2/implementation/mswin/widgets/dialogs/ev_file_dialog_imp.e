@@ -120,15 +120,23 @@ feature {NONE} -- Implementation
 			-- Certain characters are not permissible and this is dependent
 			-- on the current platform. The following characters are not permitted,
 			-- and this list may not be exhaustive:
+			-- Windows - " * : < > ? |
+			-- Linux - & *
+		do
+			if not (a_name.has ('%%') or a_name.has ('*') or a_name.has ('<') or
+				a_name.has ('>') or a_name.has ('?') or a_name.has ('|')) then
+				Result := True
+			end
+		end
+		
+	valid_file_title (a_title: STRING): BOOLEAN is
+			-- Is `a_title' a valid file title on the current platform?
+			-- The following characters are not permitted,
+			-- and this list may not be exhaustive:
 			-- Windows - " * / : < > ? \ |
 			-- Linux - & *
 		do
-			if not (a_name.has ('%%') or a_name.has ('*') or a_name.has ('/') or a_name.has (':')
-				or a_name.has ('<') or a_name.has ('>') or a_name.has ('?') or a_name.has ('\')
-				or a_name.has ('|')) then
-				
-				Result := True
-			end
+			Result := valid_file_name (a_title) and not (a_title.has ('/') or a_title.has ('\') or  a_title.has (':'))
 		end
 
 feature -- Deferred

@@ -501,23 +501,6 @@ feature -- Generic conformance for IL
 			end
 		end
 
-feature {NONE} -- Implementation: generic conformance
-
-	generate_gen_type_il_array_init (il_generator: IL_CODE_GENERATOR; cnt: INTEGER) is
-			-- Generate new array type containing info of `cnt' about Current
-		require
-			il_generator_not_void: il_generator /= Void
-			cnt_not_void: cnt /= Void
-		do
-				-- duplicate newly created object
-			il_generator.duplicate_top
-
-				-- Create array that will hold values to create appropriate
-				-- type in case of an instance of a generic type.
-			il_generator.put_integer_32_constant (cnt)
-			il_generator.generate_array_creation (il_generator.runtime_type_id)
-		end
-		
 feature -- Comparison
 
 	is_equal (other: like Current): BOOLEAN is

@@ -135,12 +135,22 @@ feature {NONE} -- Implementation
 		local
 			folder_name_dialog: EB_TYPE_FOLDER_DIALOG
 			folder_name: STRING
+			wd: EV_WARNING_DIALOG
 		do
 			create folder_name_dialog.make
 			folder_name_dialog.show_modal_to_window (Current)
 			if folder_name_dialog.selected then
 				folder_name := folder_name_dialog.folder_name
-				favorites.add_folder (folder_name)
+				if 
+					folder_name.has ('(') 
+					or folder_name.has (')') 
+					or folder_name.has ('*')
+				then
+					create wd.make_with_text (Warning_messages.w_Invalid_folder_name + "%N A favorite folder name can not contain any ot the following characters: %N ( ) * ")
+					wd.show_modal_to_window (Current)
+				else
+					favorites.add_folder (folder_name)
+				end
 			end		
 		end
 
@@ -159,33 +169,38 @@ feature {NONE} -- Implementation
 		do
 				-- Retrieve item to move
 			item_to_move ?= favorites_tree.selected_item.data
-			source := item_to_move.parent
+			if item_to_move.is_feature then
+				create wd.make_with_text (Warning_messages.w_Cannot_move_feature_alone)
+				wd.show_modal_to_window (Current)
+			else
+				source := item_to_move.parent
 
-				-- Retrieve destination
-			create choose_folder_dialog.make (favorites_manager)
-			choose_folder_dialog.show_modal_to_window (Current)
+					-- Retrieve destination
+				create choose_folder_dialog.make (favorites_manager)
+				choose_folder_dialog.show_modal_to_window (Current)
 
-				-- Move item.
-			if choose_folder_dialog.selected then
-				destination := choose_folder_dialog.chosen_folder
-				conv_folder ?= item_to_move
-				conv_item ?= destination
-				if
-					conv_folder /= Void and then
-					conv_item /= Void and then
-					conv_folder.has_recursive_child (conv_item)
-				then
-					create wd.make_with_text (Warning_messages.w_Cannot_move_favorite_to_a_child)
-					wd.show_modal_to_window (Current)
-				else
-					source.prune_all (item_to_move)
-					destination.extend (item_to_move)
-					item_to_move.set_parent (destination)
+					-- Move item.
+				if choose_folder_dialog.selected then
+					destination := choose_folder_dialog.chosen_folder
+					conv_folder ?= item_to_move
+					conv_item ?= destination
+					if
+						conv_folder /= Void and then
+						conv_item /= Void and then
+						conv_folder.has_recursive_child (conv_item)
+					then
+						create wd.make_with_text (Warning_messages.w_Cannot_move_favorite_to_a_child)
+						wd.show_modal_to_window (Current)
+					else
+						source.prune_all (item_to_move)
+						destination.extend (item_to_move)
+						item_to_move.set_parent (destination)
+					end
 				end
-			end
-			if favorites_tree.selected_item = Void then
-				move_button.disable_sensitive
-				remove_button.disable_sensitive
+				if favorites_tree.selected_item = Void then
+					move_button.disable_sensitive
+					remove_button.disable_sensitive
+				end
 			end
 		end
 

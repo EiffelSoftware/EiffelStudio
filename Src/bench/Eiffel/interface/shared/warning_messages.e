@@ -800,6 +800,9 @@ feature -- Warning messages
 		"Moving a folder to one of its children%N%
 		%is not possible."
 
+	w_Cannot_move_feature_alone: STRING is 
+		"Moving a feature favorite is not supported by the favorite manager."
+
 	w_Class_not_modifiable: STRING is "The text of this class cannot be modified."
 
 	w_Could_not_save_all: STRING is "Some files could not be saved.%N%

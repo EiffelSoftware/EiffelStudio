@@ -564,12 +564,13 @@ feature {NONE} -- Implementation
 			-- Set `name_label'.`text' to `a_text'.
 		local
 			txt: EV_MODEL_TEXT
-			l_features: LIST [E_FEATURE]
-			l_item: E_FEATURE
+			l_features: LIST [FEATURE_AS]
+			l_item: FEATURE_AS
 			l_feature_names: EIFFEL_LIST [FEATURE_NAME]
 			str: STRING
 			sorted_names: SORTED_TWO_WAY_LIST [EV_MODEL_TEXT]
 			signature: STRING
+			e_feature: E_FEATURE
 		do
 			if not is_label_expanded then
 				label_group.wipe_out
@@ -579,16 +580,17 @@ feature {NONE} -- Implementation
 				name_label.set_point_position (label_group.point_x, label_group.point_y)
 				label_group.extend (name_label)
 				
-				l_features := model.e_features
+				l_features := model.features
 				if l_features.is_empty then
 					name_label.remove_pebble
 				else
 					l_item := l_features.first
 					
-					if l_item.name.is_equal (model.features.first.feature_name) then
-						name_label.set_pebble (create {FEATURE_STONE}.make (l_item))
+					e_feature := e_feature_from_abstract (l_item)
+					if e_feature /= Void then
+						name_label.set_pebble (create {FEATURE_STONE}.make (e_feature))
 					else
-						name_label.remove_pebble
+						name_label.set_pebble (create {CLASSI_STONE}.make (model.client.class_i))
 					end
 				end
 			else
@@ -598,18 +600,18 @@ feature {NONE} -- Implementation
 				name_label.disable_sensitive
 				name_label.set_text (a_text)
 				create sorted_names.make
-				l_features := model.e_features
+				l_features := model.features
 				from
 					l_features.start
 				until
 					l_features.after
 				loop
-					signature := model.full_signature_compiled (l_features.item)
+					signature := model.full_signature (l_features.item)
 					signature.replace_substring_all (model.supplier.name, "...")
 					if signature.substring (signature.count - 4, signature.count).is_equal (": ...") then
 						signature.replace_substring_all (": ...", "")
 					end
-					l_feature_names := l_features.item.ast.feature_names
+					l_feature_names := l_features.item.feature_names
 					from
 						l_feature_names.start
 					until
@@ -622,7 +624,12 @@ feature {NONE} -- Implementation
 						if world /= Void then
 							txt.scale (world.scale_factor)
 						end
-						txt.set_pebble (create {FEATURE_STONE}.make (l_features.item))
+						e_feature := e_feature_from_abstract (l_features.item)
+						if e_feature /= Void then
+							txt.set_pebble (create {FEATURE_STONE}.make (e_feature))
+						else
+							txt.set_pebble (create {CLASSI_STONE}.make (model.client.class_i))
+						end
 						txt.set_accept_cursor (cursors.cur_feature)
 						txt.set_deny_cursor (cursors.cur_x_feature)
 						sorted_names.extend (txt)

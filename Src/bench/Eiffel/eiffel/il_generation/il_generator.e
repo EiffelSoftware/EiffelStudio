@@ -395,7 +395,9 @@ feature {NONE} -- Type description
 							il_generator.generate_class_interfaces (cl_type, class_c)
 							if cl_type.is_generated then
 								cl_type.set_il_type_name
-								if not l_class_counted then
+								if not l_class_counted and is_class_generated (class_c) then
+										-- We only count what is needed to be counted, i.e. classes
+										-- that are compiled or recompiled.
 									compiled_classes_count := compiled_classes_count + 1
 									l_class_counted := True
 								end

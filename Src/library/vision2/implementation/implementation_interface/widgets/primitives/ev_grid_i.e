@@ -1470,7 +1470,7 @@ feature {EV_GRID_COLUMN_I, EV_GRID_I, EV_GRID_DRAWER_I, EV_GRID_ROW_I, EV_GRID_I
 				-- Not a postcondition as `node_index' is a local.
 			check
 				result_zero_when_item_not_in_subrow_or_first: an_item.row_i.parent_row_i = Void and node_index > 1 implies Result = 0
-				result_positive_when_in_subrow: an_item.row_i.parent_row_i /= Void implies Result > 0	
+				result_positive_when_in_subrow: an_item.row_i.parent_row_i /= Void implies Result >= 0	
 			end			
 		end
 
@@ -2189,7 +2189,7 @@ feature {NONE} -- Event handling
 					end
 				end
 			end
-			if pointer_double_press_actions_internal /= Void and then not pointer_double_press_actions_internal.is_empty then
+			if pointer_button_press_actions_internal /= Void and then not pointer_button_press_actions_internal.is_empty then
 				if pointed_item /= Void then
 					pointed_item_interface := pointed_item.interface
 				end

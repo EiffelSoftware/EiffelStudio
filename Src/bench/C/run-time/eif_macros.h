@@ -210,7 +210,7 @@ RT_LNK int fcount;
 	register EIF_REFERENCE ptr_current = (*(EIF_REFERENCE *)(y+CAT2(x,_area_offset))); \
 	register long i = i-*(long*)(y+CAT2(x,_lower_offset)); \
 	*((EIF_REFERENCE *)ptr_current + i) = val; \
-	RTAS_OPT (val, i, ptr_current); \
+	RTAS_OPT(val, i, ptr_current); \
 	}
 
 #define RTAUP_BASIC(cast,x,y,val,i) \

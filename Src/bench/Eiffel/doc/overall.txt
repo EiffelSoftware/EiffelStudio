@@ -258,3 +258,100 @@ Degree 3:
 
 We call `execute' of PASS3_C, which calls `pass3' of each CLASS_C which needs to be recompiled.
 
+
+Between Degree 3 and 2:
+-----------------------
+
+We check if we need to do a freeze: either the user choosed it or we have no other choices
+because the externals features have changed (basically we added one)
+
+We do `process_type_system' which basically recomputes the class_types for each non generic
+classes which has changed. With the INSTANTIATOR class, we find all the derivations of a
+generic class.
+When it is the first compilation, we compute the dynamic types for the first time. We create
+for this purpose an array of CLASS_C indexed by their topological_id, and then we go through
+this array and we assign for each class_type of a CLASS_C a unique type_id.
+
+We do `process_skeleton'. If we are in standard compilation mode, we `process_skeleton' on
+each CLASS_C that has been recompiled and we check their validity. In precompiled mode, we
+do it only if CLASS_C has `has_types'.
+The `check_validity' call make sure that all the known classes from the compiler have not
+been changed by the user.
+After we check the validity of the expanded declaration in all the classes.
+
+
+Degree 2:
+---------
+
+If we do a freeze, we call `update_dispatch_table' from PASS4_C, otherwise we call `melt'
+from PASS4_C.
+
+Check the validity of the MELTED_INFO, if not valid we remove it from the `melted_set'
+
+1) melt: if the class is not a precompiled one, we `melt' its CLASS_TYPE
+
+2) update_dispatch_table: if the class is not a precompiled one, we `update_dispatch_table'
+its CLASS_TYPE.
+
+
+Degree 1:
+---------
+
+If we do not freeze, we start degree 1, otherwise we merge the `melted_set' into the
+`freeze_set'.
+
+Notes:
+------
+
+When we melt, we can definitively merge degree 2 and 1.
+
+
+Null State:
+-----------
+
+We reset all the flags of CLASS_C
+We take over the content of all the TMP_SERVERS.
+
+When we `melt' we generate the melted.eif file.
+
+
+Degree -1:
+----------
+
+We create the Makefiles.
+We process the PATTERN_TABLE.
+We clear the melted byte code servers.
+We rebuild the dispatch_table and execution tables.
+
+For each class we generate the workbench files:
+1) We take the feature table of the corresponding class
+2) We generate the descriptor tables for each associated class types.
+3) We generate the feature table
+4) We generate the effective C code.
+
+2) We create the descriptors list DESC_LIST from the CLASS_C:
+A DESC_LIST is a list of DESCRIPTOR. Each item of the DESC_LIST corresponds to a generic
+derivation of the CLASS_C. Each descriptor has a number of element equal to the number of
+features written in CLASS_C.
+
+a) If the class has an invariant, we put it in each DESCRIPTOR of the DESC_LIST since
+each generic derivation shares the same invariant.
+b) For each feature, we put them in each DESCRIPTOR of DESC_LIST.
+
+3) We create an array of FEATURE_I from the FEATURE_TABLE indexed by the feature_id of
+feature_i. Thenwe go through this array to generate in the correct order the feature
+table.
+
+4) We generate the effective C code for each feature, by going through all the BYTE_NODES
+of the feature_I.
+
+Notes and improvements:
+-----------------------
+
+1) In `put_invariant' from DESC_LIST, we can remove the test `f.has_entry' since it
+is always true for an INVARIANT_FEAT_I. We can also remove the test `u /= Void' since
+`new_entry' alsways creates a non-void object.
+2) We can remove the test `u /= Void' in `put' from DESC_LIST, Cf 1)
+3) Check for a possibility of merging the creation of DESC_LIST and the effective generation.
+4) Check for a possibility of merging the creation of ARRAY[FEATURE_I] and the
+effective generation.

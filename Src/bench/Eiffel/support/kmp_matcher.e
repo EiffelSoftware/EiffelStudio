@@ -45,9 +45,25 @@ feature -- Search
 				pattern_index := 0
 			until
 				pattern_index >= pattern_count or else
-				i > difference and then pattern_index = 0
+				i >= difference and then pattern_index = 0
 			loop
 				if text_area.item (i) /= pattern_area.item (pattern_index) then
+debug("Guus-KMP")
+	print ("Before index update statement%NInfo:%N-----%N");
+	print ("i: ")
+	print (i);
+	print ("%Ndifference: ");
+	print (difference);
+	print ("%Npattern_count: ");
+	print (pattern_count);
+	print ("%Ntext_count: ");
+	print (text_count);
+	print ("%Ntext_area.item (i + pattern_count).code: ");
+	print (text_area.item (i + pattern_count).code);
+	print ("%Ntable_area.count: ");
+	print (table_area.count);
+	print ("%N")
+end;
 					i := i + table_area.item (text_area.item (i + pattern_count).code);
 					pattern_index := 0
 				else

@@ -640,11 +640,6 @@ feature -- IL Generation
 		do
 		end
 
-	generate_invariant_feature (feat: INVARIANT_FEAT_I) is
-			-- Generate `_invariant' that checks `current_class_type' invariants.
-		do
-		end
-
 	start_new_body (method_token: INTEGER) is
 			-- Start a new body definition for method `method_token'.
 		require
@@ -1185,6 +1180,23 @@ feature -- Assertions
 	generate_precondition_violation is
 			-- Generate a precondition violation.
 			-- Has to be a specific one because preconditions can be weaken.
+		do
+		end
+
+	generate_invariant_feature (feat: INVARIANT_FEAT_I) is
+			-- Generate `_invariant' that checks `current_class_type' invariants.
+		do
+		end
+
+	generate_inherited_invariants is
+			-- Generate call to all directly inherited invariant features.
+		do
+		end
+
+	generate_invariant_checked_for (a_label: IL_LABEL) is
+			-- Generate check to find out if we should check invariant or not.
+		require
+			a_label_not_void: a_label /= Void
 		do
 		end
 

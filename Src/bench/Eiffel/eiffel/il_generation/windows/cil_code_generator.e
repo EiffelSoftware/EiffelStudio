@@ -2235,88 +2235,6 @@ feature -- IL Generation
 				"System.Boolean", False)
 		end
 
-	generate_invariant_feature (feat: INVARIANT_FEAT_I) is
-			-- Generate `_invariant' that checks `current_class_type' invariants.
-		local
-			l_invariant_token: INTEGER
-			l_dotnet_invariant_token: INTEGER
-			l_sig: like method_sig
-			parents: FIXED_LIST [CL_TYPE_A]
-			parent_type: CL_TYPE_I
-			cl_type: CLASS_TYPE
-			l_list: SEARCH_TABLE [INTEGER]
-			id: INTEGER
-			i: INTEGER
-		do
-			if feat /= Void then
-				generate_feature (feat, False, True, False)
-				generate_feature_code (feat)
-
-				l_invariant_token := implementation_feature_token (current_type_id, feat.feature_id)
-			else
-					-- Generate empty invariant feature that does nothing. Will be
-					-- used in descendant.
-				l_sig := method_sig
-				l_sig.reset
-				l_sig.set_method_type (feature {MD_SIGNATURE_CONSTANTS}.Default_sig)
-				l_sig.set_parameter_count (1)
-				l_sig.set_return_type (feature {MD_SIGNATURE_CONSTANTS}.Element_type_void, 0)
-				set_signature_type (l_sig, current_class_type.type)
-
-				uni_string.set_string ("$$_invariant")
-				l_invariant_token := md_emit.define_method (uni_string, current_class_token,
-					feature {MD_METHOD_ATTRIBUTES}.Public |
-					feature {MD_METHOD_ATTRIBUTES}.Hide_by_signature |
-					feature {MD_METHOD_ATTRIBUTES}.Static, l_sig,
-					feature {MD_METHOD_ATTRIBUTES}.Managed)
-
-				start_new_body (l_invariant_token)
-				method_body.put_opcode (feature {MD_OPCODES}.Ret)
-				method_writer.write_current_body
-			end
-
-			internal_invariant_token.put (l_invariant_token, current_class_type.implementation_id)
-
-				-- Generate invariant feature that calls parent one.
-			uni_string.set_string ("_invariant")
-			l_dotnet_invariant_token := md_emit.define_method (uni_string, current_class_token,
-				feature {MD_METHOD_ATTRIBUTES}.Public |
-				feature {MD_METHOD_ATTRIBUTES}.Hide_by_signature |
-				feature {MD_METHOD_ATTRIBUTES}.Virtual,
-				default_sig, feature {MD_METHOD_ATTRIBUTES}.Managed)
-
-			start_new_body (l_dotnet_invariant_token)
-			generate_current
-			method_body.put_call (feature {MD_OPCODES}.Call, l_invariant_token, 0, False)
-
-			from
-				parents := current_class_type.associated_class.parents
-				create l_list.make (parents.count)
-				parents.start
-			until
-				parents.after
-			loop
-				parent_type ?= byte_context.real_type (parents.item.type_i)
-				cl_type := parent_type.associated_class_type
-				id := cl_type.implementation_id
-				if not l_list.has (id) then
-					l_list.force (id)
-					if not cl_type.associated_class.is_external then
-							-- FIXME: code is incorrect
-						generate_current
-						method_body.put_call (feature {MD_OPCODES}.Call,
-							invariant_token (id), 0, False)
-					end
-					i := i + 1
-				end
-				parents.forth
-			end
-
-			method_body.put_opcode (feature {MD_OPCODES}.Ret)
-
-			method_writer.write_current_body
-		end
-
 	start_new_body (method_token: INTEGER) is
 			-- Start a new body definition for method `method_token'.
 		require
@@ -3485,7 +3403,7 @@ feature -- Once management
 			uni_string.set_string (name + "_done")
 			done_token := md_emit.define_field (uni_string,
 				current_class_token,
-				feature {MD_FIELD_ATTRIBUTES}.Family | feature {MD_FIELD_ATTRIBUTES}.Static,
+				feature {MD_FIELD_ATTRIBUTES}.Public | feature {MD_FIELD_ATTRIBUTES}.Static,
 				done_sig)
 		end
 
@@ -3506,7 +3424,7 @@ feature -- Once management
 			uni_string.set_string (name + "_result")
 			result_token := md_emit.define_field (uni_string,
 				current_class_token,
-				feature {MD_FIELD_ATTRIBUTES}.Family | feature {MD_FIELD_ATTRIBUTES}.Static, l_sig)
+				feature {MD_FIELD_ATTRIBUTES}.Public | feature {MD_FIELD_ATTRIBUTES}.Static, l_sig)
 		end
 
 	generate_once_computed is
@@ -3677,7 +3595,7 @@ feature -- Assertions
 		require
 			end_of_assert_label_not_void: end_of_assert /= Void
 		do
-			method_body.put_opcode_mdtoken (feature {MD_OPCODES}.Ldsfld, ise_in_assertion_token)
+			method_body.put_call (feature {MD_OPCODES}.Call, ise_in_assertion_token, 0, True)
 			method_body.put_opcode_label (feature {MD_OPCODES}.Brtrue, end_of_assert.id)
 		end
 
@@ -3685,14 +3603,14 @@ feature -- Assertions
 			-- Set `in_assertion' flag to True.
 		do
 			put_boolean_constant (True)
-			method_body.put_opcode_mdtoken (feature {MD_OPCODES}.Stsfld, ise_in_assertion_token)
+			method_body.put_call (feature {MD_OPCODES}.Call, ise_set_in_assertion_token, 1, False)
 		end
 
 	generate_restore_assertion_status is
 			-- Set `in_assertion' flag to False.
 		do
 			put_boolean_constant (False)
-			method_body.put_opcode_mdtoken (feature {MD_OPCODES}.Stsfld, ise_in_assertion_token)
+			method_body.put_call (feature {MD_OPCODES}.Call, ise_set_in_assertion_token, 1, False)
 		end
 
 	generate_assertion_check (assert_type: INTEGER; tag: STRING) is
@@ -3755,13 +3673,109 @@ feature -- Assertions
 			method_body.put_opcode (feature {MD_OPCODES}.Throw)
 		end
 
+	generate_invariant_feature (feat: INVARIANT_FEAT_I) is
+			-- Generate `_invariant' that checks `current_class_type' invariants.
+		local
+			l_invariant_token: INTEGER
+			l_dotnet_invariant_token: INTEGER
+			l_sig: like method_sig
+		do
+				-- First we generate the `$$_invariant' feature which only contains invariant for
+				-- Current class.
+			if feat /= Void then
+				generate_feature (feat, False, True, False)
+				generate_feature_code (feat)
+
+				l_invariant_token := implementation_feature_token (current_type_id, feat.feature_id)
+			else
+					-- Generate empty invariant feature that does nothing. Will be
+					-- used in descendant.
+				l_sig := method_sig
+				l_sig.reset
+				l_sig.set_method_type (feature {MD_SIGNATURE_CONSTANTS}.Default_sig)
+				l_sig.set_parameter_count (1)
+				l_sig.set_return_type (feature {MD_SIGNATURE_CONSTANTS}.Element_type_void, 0)
+				set_signature_type (l_sig, current_class_type.type)
+
+				uni_string.set_string ("$$_invariant")
+				l_invariant_token := md_emit.define_method (uni_string, current_class_token,
+					feature {MD_METHOD_ATTRIBUTES}.Public |
+					feature {MD_METHOD_ATTRIBUTES}.Hide_by_signature |
+					feature {MD_METHOD_ATTRIBUTES}.Static, l_sig,
+					feature {MD_METHOD_ATTRIBUTES}.Managed)
+
+				start_new_body (l_invariant_token)
+				method_body.put_opcode (feature {MD_OPCODES}.Ret)
+				method_writer.write_current_body
+			end
+
+			internal_invariant_token.put (l_invariant_token, current_class_type.implementation_id)
+
+				-- Generate invariant feature that calls above static version.
+			uni_string.set_string ("_invariant")
+			l_dotnet_invariant_token := md_emit.define_method (uni_string, current_class_token,
+				feature {MD_METHOD_ATTRIBUTES}.Public |
+				feature {MD_METHOD_ATTRIBUTES}.Hide_by_signature |
+				feature {MD_METHOD_ATTRIBUTES}.Virtual,
+				default_sig, feature {MD_METHOD_ATTRIBUTES}.Managed)
+
+			start_new_body (l_dotnet_invariant_token)
+			generate_current
+			method_body.put_call (feature {MD_OPCODES}.Call, l_invariant_token, 0, False)
+			generate_return
+			method_writer.write_current_body
+		end
+		
+	generate_inherited_invariants is
+			-- Generate call to all directly inherited invariant features.
+		local
+			parents: FIXED_LIST [CL_TYPE_A]
+			parent_type: CL_TYPE_I
+			cl_type: CLASS_TYPE
+			i, id: INTEGER
+			l_list: SEARCH_TABLE [INTEGER]
+		do
+			from
+				parents := current_class_type.associated_class.parents
+				create l_list.make (parents.count)
+				parents.start
+			until
+				parents.after
+			loop
+				parent_type ?= byte_context.real_type (parents.item.type_i)
+				cl_type := parent_type.associated_class_type
+				id := cl_type.implementation_id
+				if not l_list.has (id) then
+					l_list.force (id)
+					if not cl_type.associated_class.is_external then
+						generate_current
+						method_body.put_call (feature {MD_OPCODES}.Call,
+							invariant_token (id), 0, False)
+					end
+					i := i + 1
+				end
+				parents.forth
+			end
+		end
+
+	generate_invariant_checked_for (a_label: IL_LABEL) is
+			-- Generate check to find out if we should check invariant or not.
+		require
+			a_label_not_void: a_label /= Void
+		do
+			put_type_token (current_class_type.type.static_type_id)
+			method_body.put_call (feature {MD_OPCODES}.Call, ise_is_invariant_checked_for_token,
+				1, True)
+			branch_on_true (a_label)
+		end
+
 	generate_invariant_checking (type_i: TYPE_I) is
 			-- Generate an invariant check after routine call, it assumes that
 			-- target has already been pushed onto evaluation stack.
 		require
 			type_i_not_void: type_i /= Void
 		do
-			method_body.put_call (feature {MD_OPCODES}.Callvirt, ise_invariant_token, 0, False)
+			method_body.put_call (feature {MD_OPCODES}.Call, ise_check_invariant_token, 1, False)
 		end
 
 feature -- Constants generation
@@ -4271,8 +4285,8 @@ feature -- Generic conformance
 			create_object (l_type_id)
 			duplicate_top
 			put_type_token (cl_type.implementation_id)
-			internal_generate_external_call (ise_runtime_token, 0, class_type_class_name, "set_type",
-				Normal_type, <<type_handle_class_name>>, Void, True)
+			internal_generate_external_call (ise_runtime_token, 0, class_type_class_name,
+				"set_type", Normal_type, <<type_handle_class_name>>, Void, True)
 		end
 
 	generate_generic_type_instance (n: INTEGER) is
@@ -4291,18 +4305,18 @@ feature -- Generic conformance
 		require
 			gen_type_not_void: gen_type /= Void
 		do
-			internal_generate_external_call (ise_runtime_token, 0, generic_type_class_name, "set_type_array",
-				Normal_type, <<type_array_class_name>>, Void, True);
+			internal_generate_external_call (ise_runtime_token, 0, generic_type_class_name,
+				"set_type_array", Normal_type, <<type_array_class_name>>, Void, True);
 
 			duplicate_top
 			put_type_token (gen_type.implementation_id)
-			internal_generate_external_call (ise_runtime_token, 0, generic_type_class_name, "set_type",
-				Normal_type, <<type_handle_class_name>>, Void, True)
+			internal_generate_external_call (ise_runtime_token, 0, generic_type_class_name,
+				"set_type", Normal_type, <<type_handle_class_name>>, Void, True)
 
 			duplicate_top
 			put_integer_32_constant (gen_type.meta_generic.count)
-			internal_generate_external_call (ise_runtime_token, 0, generic_type_class_name, "set_nb_generics",
-				Normal_type, <<integer_32_class_name>>, Void, True)
+			internal_generate_external_call (ise_runtime_token, 0, generic_type_class_name,
+				"set_nb_generics", Normal_type, <<integer_32_class_name>>, Void, True)
 		end
 
 	generate_none_type_instance is
@@ -4320,8 +4334,8 @@ feature -- Generic conformance
 				-- Second object is the array containing the type array.
 				-- Last, we push current object to the stack.
 			generate_current
-			internal_generate_external_call (ise_runtime_token, 0, generic_conformance_class_name, "compute_type",
-				Static_type, <<type_info_class_name, type_class_name,
+			internal_generate_external_call (ise_runtime_token, 0, generic_conformance_class_name,
+				"compute_type", Static_type, <<type_info_class_name, type_class_name,
 				type_info_class_name>>, Void, False)
 		end
 
@@ -4402,12 +4416,12 @@ feature {NONE} -- Implementation: generation
 			elseif l_type_id = class_type_id then
 					-- Non-generic class.
 				put_type_token (l_cl_type.implementation_id)
-				internal_generate_external_call (ise_runtime_token, 0, class_type_class_name, "set_type",
-					Normal_type, <<type_handle_class_name>>, Void, True)
+				internal_generate_external_call (ise_runtime_token, 0, class_type_class_name,
+					"set_type", Normal_type, <<type_handle_class_name>>, Void, True)
 			elseif l_type_id = basic_type_id then
 				put_type_token (l_cl_type.implementation_id)
-				internal_generate_external_call (ise_runtime_token, 0, basic_type_class_name, "set_type",
-					Normal_type, <<type_handle_class_name>>, Void, True)
+				internal_generate_external_call (ise_runtime_token, 0, basic_type_class_name,
+					"set_type", Normal_type, <<type_handle_class_name>>, Void, True)
 			else
 				duplicate_top
 
@@ -4430,16 +4444,16 @@ feature {NONE} -- Implementation: generation
 					i := i + 1
 				end
 
-				internal_generate_external_call (ise_runtime_token, 0, generic_type_class_name, "set_type_array",
-					normal_type, <<type_array_class_name>>, Void, True)
+				internal_generate_external_call (ise_runtime_token, 0, generic_type_class_name,
+					"set_type_array", normal_type, <<type_array_class_name>>, Void, True)
 				duplicate_top
 				put_type_token (l_gen_type.implementation_id)
-				internal_generate_external_call (ise_runtime_token, 0, generic_type_class_name, "set_type",
-					normal_type, <<type_handle_class_name>>, Void, True)
+				internal_generate_external_call (ise_runtime_token, 0, generic_type_class_name,
+					"set_type", normal_type, <<type_handle_class_name>>, Void, True)
 				duplicate_top
 				put_integer_32_constant (l_gen_type.meta_generic.count)
-				internal_generate_external_call (ise_runtime_token, 0, generic_type_class_name, "set_nb_generics",
-					normal_type, <<integer_32_class_name>>, Void, True)
+				internal_generate_external_call (ise_runtime_token, 0, generic_type_class_name,
+					"set_nb_generics", normal_type, <<integer_32_class_name>>, Void, True)
 
 				pop
 			end
@@ -4607,6 +4621,9 @@ feature {NONE} -- Once per modules being generated.
 	mscorlib_token: INTEGER
 			-- Token for `mscorlib' assembly.
 
+	runtime_type_handle_token: INTEGER
+			-- Token for `System.RuntimeTypeHandle' in `mscorlib'.
+
 	object_type_token: INTEGER
 			-- Token for `System.Object' in `mscorlib'.
 
@@ -4651,9 +4668,9 @@ feature {NONE} -- Once per modules being generated.
 			-- Token for `ISE.RUNTIME.last_exception' static field that holds
 			-- exception object we got from `catch'.
 
-	ise_in_assertion_token: INTEGER
-			-- Token for `ISE.RUNTIME.in_assertion' static field that holds
-			-- status of assertion checking.
+	ise_in_assertion_token, ise_set_in_assertion_token: INTEGER
+			-- Token for `ISE.RUNTIME.in_assertion' and `ISE.RUNTIME.set_in_assertion'
+			-- static members that holds status of assertion checking.
 
 	ise_assertion_tag_token: INTEGER
 			-- Token for `ISE.RUNTIME.assertion_tag' static field that holds
@@ -4663,9 +4680,13 @@ feature {NONE} -- Once per modules being generated.
 			-- Token for `ISE.Runtime.EIFFEL_TYPE_INFO.____set_type' feature that
 			-- assign type information of a class.
 
-	ise_invariant_token: INTEGER
-			-- Token for `ISE.Runtime.EIFFEL_TYPE_INFO._invariant' feature that
+	ise_check_invariant_token: INTEGER
+			-- Token for `ISE.Runtime.ise_check_invariant' feature that
 			-- checks a class invariant.
+
+	ise_is_invariant_checked_for_token: INTEGER
+			-- Token for `ISE.RUNTIME.is_invariant_checked_for' feature that
+			-- tells if a class invariant has been checked or not for a given type.
 
 	ise_eiffel_type_info_type_token,
 	ise_runtime_type_token,
@@ -4720,6 +4741,8 @@ feature {NONE} -- Once per modules being generated.
 		do
 			object_type_token := md_emit.define_type_ref (
 				create {UNI_STRING}.make ("System.Object"), mscorlib_token)
+			runtime_type_handle_token := md_emit.define_type_ref (
+				create {UNI_STRING}.make (type_handle_class_name), mscorlib_token)
 			math_type_token := md_emit.define_type_ref (
 				create {UNI_STRING}.make ("System.Math"), mscorlib_token)
 			char_type_token := md_emit.define_type_ref (
@@ -4870,11 +4893,23 @@ feature {NONE} -- Once per modules being generated.
 			ise_runtime_type_token := md_emit.define_type_ref (
 				create {UNI_STRING}.make (runtime_class_name), ise_runtime_token)
 
-			l_sig.reset
-			l_sig.set_type (feature {MD_SIGNATURE_CONSTANTS}.Element_type_boolean, 0)
+			l_meth_sig := method_sig
+			l_meth_sig.reset
+			l_meth_sig.set_method_type (feature {MD_SIGNATURE_CONSTANTS}.Default_sig)
+			l_meth_sig.set_parameter_count (0)
+			l_meth_sig.set_return_type (feature {MD_SIGNATURE_CONSTANTS}.Element_type_boolean, 0)
 
 			ise_in_assertion_token := md_emit.define_member_ref (
-				create {UNI_STRING}.make ("in_assertion"), ise_runtime_type_token, l_sig)
+				create {UNI_STRING}.make ("in_assertion"), ise_runtime_type_token, l_meth_sig)
+
+			l_meth_sig.reset
+			l_meth_sig.set_method_type (feature {MD_SIGNATURE_CONSTANTS}.Default_sig)
+			l_meth_sig.set_parameter_count (1)
+			l_meth_sig.set_return_type (feature {MD_SIGNATURE_CONSTANTS}.Element_type_void, 0)
+			l_meth_sig.set_type (feature {MD_SIGNATURE_CONSTANTS}.Element_type_boolean, 0) 
+
+			ise_set_in_assertion_token := md_emit.define_member_ref (
+				create {UNI_STRING}.make ("set_in_assertion"), ise_runtime_type_token, l_meth_sig)
 
 				-- Define `ise_assertion_tag_token'.
 			l_sig.reset
@@ -4907,7 +4942,6 @@ feature {NONE} -- Once per modules being generated.
 				create {UNI_STRING}.make (Generic_conformance_class_name), ise_runtime_token)
 
 				-- Define `ise_set_type_token'.
-			l_meth_sig := method_sig
 			l_meth_sig.reset
 			l_meth_sig.set_method_type (feature {MD_SIGNATURE_CONSTANTS}.Has_current)
 			l_meth_sig.set_parameter_count (1)
@@ -4919,10 +4953,25 @@ feature {NONE} -- Once per modules being generated.
 				create {UNI_STRING}.make ("____set_type"),
 				ise_eiffel_type_info_type_token, l_meth_sig)
 
-				-- Define `ise_invariant_token'.
-			ise_invariant_token := md_emit.define_member_ref (
-				create {UNI_STRING}.make ("_invariant"),
-				ise_eiffel_type_info_type_token, default_sig)
+				-- Define `ise_check_invariant_token'.
+			l_meth_sig.reset
+			l_meth_sig.set_method_type (feature {MD_SIGNATURE_CONSTANTS}.Default_sig)
+			l_meth_sig.set_parameter_count (1)
+			l_meth_sig.set_return_type (feature {MD_SIGNATURE_CONSTANTS}.Element_type_void, 0)
+			l_meth_sig.set_type (feature {MD_SIGNATURE_CONSTANTS}.Element_type_object, 0) 
+			ise_check_invariant_token := md_emit.define_member_ref (
+				create {UNI_STRING}.make ("check_invariant"), ise_runtime_type_token, l_meth_sig)
+
+				-- Define `ise_is_invariant_checked_for'.
+			l_meth_sig.reset
+			l_meth_sig.set_method_type (feature {MD_SIGNATURE_CONSTANTS}.Default_sig)
+			l_meth_sig.set_parameter_count (1)
+			l_meth_sig.set_return_type (feature {MD_SIGNATURE_CONSTANTS}.Element_type_boolean, 0)
+			l_meth_sig.set_type (feature {MD_SIGNATURE_CONSTANTS}.Element_type_valuetype,
+				runtime_type_handle_token) 
+			ise_is_invariant_checked_for_token := md_emit.define_member_ref (
+				create {UNI_STRING}.make ("is_invariant_checked_for"),
+				ise_runtime_type_token, l_meth_sig)
 
 				-- Define constructor of custom attribute class that keeps Eiffel
 				-- name classes in their Eiffel formatting.
@@ -4991,8 +5040,7 @@ feature {NONE} -- Mapping between Eiffel compiler and generated tokens
 			if Result = 0 then
 				l_class_type := class_types.item (a_type_id)
 
-					-- Generate empty invariant feature that does nothing. Will be
-					-- used in descendant.
+					-- Generate reference to invariant defined in a different assembly.
 				l_sig := method_sig
 				l_sig.reset
 				l_sig.set_method_type (feature {MD_SIGNATURE_CONSTANTS}.Default_sig)

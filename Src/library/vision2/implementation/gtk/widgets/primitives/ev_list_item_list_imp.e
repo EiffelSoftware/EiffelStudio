@@ -116,7 +116,7 @@ feature {EV_INTERMEDIARY_ROUTINES} -- Initialization
 				end
 	
 				if deselect_actions_internal /= Void then
-					deselect_actions_internal.call ([l_item.interface])
+					deselect_actions_internal.call (Void)
 				end				
 			end
 			previous_selected_item_imp := Void
@@ -245,22 +245,22 @@ feature {NONE} -- Implementation
 				previous_selected_item_imp.parent = interface and then
 				previous_selected_item_imp /= selected_item_imp then
 				if previous_selected_item_imp.deselect_actions_internal /= Void then
-					previous_selected_item_imp.deselect_actions_internal.call ((App_implementation.gtk_marshal).empty_tuple)
+					previous_selected_item_imp.deselect_actions_internal.call (Void)
 				end
 			end
 			
 			if selected_item_imp.parent /= Void and then selected_item_imp.is_selected then
 					-- Parent check due to bug in combo box.
 				if selected_item_imp.select_actions_internal /= Void then
-					selected_item_imp.select_actions_internal.call ((App_implementation.gtk_marshal).empty_tuple)
+					selected_item_imp.select_actions_internal.call (Void)
 				end
 				if select_actions_internal /= Void then
-					select_actions_internal.call ([selected_item_imp.interface])
+					select_actions_internal.call (Void)
 				end
 				previous_selected_item_imp := selected_item_imp
 			elseif selected_item_imp.parent /= Void then
 				if deselect_actions_internal /= Void then
-					deselect_actions_internal.call ([selected_item_imp.interface])
+					deselect_actions_internal.call (Void)
 				end
 				previous_selected_item_imp := Void
 			end

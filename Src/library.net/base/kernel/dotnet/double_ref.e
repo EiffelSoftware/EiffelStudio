@@ -141,9 +141,9 @@ feature -- Conversion
 			-- value no greater than current object's)
 		do
 			if item >= 0.0 then
-				Result := feature {CONVERT}.to_int_32_double (feature {MATH}.floor (item))
+				Result := feature {SYSTEM_CONVERT}.to_int_32_double (feature {MATH}.floor (item))
 			else
-				Result := feature {CONVERT}.to_int_32_double (feature {MATH}.ceiling (item))
+				Result := feature {SYSTEM_CONVERT}.to_int_32_double (feature {MATH}.ceiling (item))
 			end
 		end
 
@@ -152,9 +152,9 @@ feature -- Conversion
 			-- value no greater than current object's)
 		do
 			if item >= 0.0 then
-				Result := feature {CONVERT}.to_int_64_double (feature {MATH}.floor (item))
+				Result := feature {SYSTEM_CONVERT}.to_int_64_double (feature {MATH}.floor (item))
 			else
-				Result := feature {CONVERT}.to_int_64_double (feature {MATH}.ceiling (item))
+				Result := feature {SYSTEM_CONVERT}.to_int_64_double (feature {MATH}.ceiling (item))
 			end
 		end
 
@@ -162,13 +162,13 @@ feature -- Conversion
 			-- Real part (Same sign, largest absolute
 			-- value no greater than current object's)
 		do
-			Result := feature {CONVERT}.to_single_double (item)
+			Result := feature {SYSTEM_CONVERT}.to_single_double (item)
 		end
 
 	ceiling: INTEGER is
 			-- Smallest integral value no smaller than current object
 		do
-			Result := feature {CONVERT}.to_int_32_double (feature {MATH}.ceiling (item))
+			Result := feature {SYSTEM_CONVERT}.to_int_32_double (feature {MATH}.ceiling (item))
 		ensure
 			result_no_smaller: Result >= item
 			close_enough: Result - item < item.one
@@ -177,7 +177,7 @@ feature -- Conversion
 	floor: INTEGER is
 			-- Greatest integral value no greater than current object
 		do
-			Result := feature {CONVERT}.to_int_32_double (feature {MATH}.floor (item))
+			Result := feature {SYSTEM_CONVERT}.to_int_32_double (feature {MATH}.floor (item))
 		ensure
 			result_no_greater: Result <= item
 			close_enough: item - Result < Result.one
@@ -186,7 +186,7 @@ feature -- Conversion
 	rounded: INTEGER is
 			-- Rounded integral value
 		do
-			Result := sign * feature {CONVERT}.to_int_32_double (feature {MATH}.floor (feature {MATH}.abs_double (item) + 0.5))
+			Result := sign * feature {SYSTEM_CONVERT}.to_int_32_double (feature {MATH}.floor (feature {MATH}.abs_double (item) + 0.5))
 		ensure
 			definition: Result = sign * ((abs + 0.5).floor)
 		end
@@ -268,7 +268,7 @@ feature -- Output
 	out: STRING is
 			-- Printable representation of double value
 		do
-			create Result.make_from_cil (feature {CONVERT}.to_string_double (item))
+			create Result.make_from_cil (feature {SYSTEM_CONVERT}.to_string_double (item))
 		end
 
 feature {NONE} -- Implementation

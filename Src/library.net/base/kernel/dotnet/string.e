@@ -549,7 +549,7 @@ feature -- Status report
 			f: REAL
 		do
 			if not retried then
-				f := feature {CONVERT}.to_single_string (to_cil)
+				f := feature {SYSTEM_CONVERT}.to_single_string (to_cil)
 			end
 			Result := not retried
 		ensure
@@ -586,7 +586,7 @@ feature -- Status report
 			f: DOUBLE
 		do
 			if not retried then
-				f := feature {CONVERT}.to_double_string (to_cil)
+				f := feature {SYSTEM_CONVERT}.to_double_string (to_cil)
 			end
 			Result := not retried
 		ensure
@@ -1472,7 +1472,7 @@ feature -- Conversion
 		require
 			is_integer: is_integer
 		do
-			Result := feature {CONVERT}.to_int_32_string (to_cil)
+			Result := feature {SYSTEM_CONVERT}.to_int_32_string (to_cil)
 		end
 
 	to_integer_64: INTEGER_64 is
@@ -1481,7 +1481,7 @@ feature -- Conversion
 		require
 			is_integer: is_integer
 		do
-			Result := feature {CONVERT}.to_int_64_string (to_cil)
+			Result := feature {SYSTEM_CONVERT}.to_int_64_string (to_cil)
 		end
 		
 	to_real: REAL is
@@ -1490,7 +1490,7 @@ feature -- Conversion
 		require
 			represents_a_real: is_real
 		do
-			Result := feature {CONVERT}.to_single_string (to_cil)
+			Result := feature {SYSTEM_CONVERT}.to_single_string (to_cil)
 		end
 
 	to_double: DOUBLE is
@@ -1499,7 +1499,7 @@ feature -- Conversion
 		require
 			represents_a_double: is_double
 		do
-			Result := feature {CONVERT}.to_double_string (to_cil)
+			Result := feature {SYSTEM_CONVERT}.to_double_string (to_cil)
 		end
 
 	to_boolean: BOOLEAN is

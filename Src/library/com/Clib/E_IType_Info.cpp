@@ -458,14 +458,14 @@ void E_IType_Info::ccom_release_func_desc (FUNCDESC * p_func_desc)
 
 // Releases FUNCDESC structure previously returned by `ccom_get_func_desc'
 {
-	if ((p_func_desc->funckind == FUNC_VIRTUAL) ||
-		(p_func_desc->funckind == FUNC_PUREVIRTUAL) ||
-		(p_func_desc->funckind == FUNC_NONVIRTUAL) ||
-		(p_func_desc->funckind == FUNC_STATIC) ||
-		(p_func_desc->funckind == FUNC_DISPATCH))
-	{
-		pTypeInfo->ReleaseFuncDesc ((FUNCDESC *)p_func_desc);
-	}
+//	if ((p_func_desc->funckind == FUNC_VIRTUAL) ||
+//		(p_func_desc->funckind == FUNC_PUREVIRTUAL) ||
+//		(p_func_desc->funckind == FUNC_NONVIRTUAL) ||
+//		(p_func_desc->funckind == FUNC_STATIC) ||
+//		(p_func_desc->funckind == FUNC_DISPATCH))
+//	{
+//		pTypeInfo->ReleaseFuncDesc ((FUNCDESC *)p_func_desc);
+//	}
 };
 //-----------------------------------------------------------------------------
 
@@ -473,7 +473,7 @@ void E_IType_Info::ccom_release_type_attr (TYPEATTR * p_type_attr)
 
 // Releases TYPEATTR structure previously returned by `ccom_get_type_attr'
 {
-	pTypeInfo->ReleaseTypeAttr ((TYPEATTR *) p_type_attr);
+//	pTypeInfo->ReleaseTypeAttr ((TYPEATTR *) p_type_attr);
 };
 //-----------------------------------------------------------------------------
 
@@ -481,7 +481,7 @@ void E_IType_Info::ccom_release_var_desc (VARDESC * p_var_desc)
 
 // Releases VARDESC structure previously returned by `ccom_get_var_desc'
 {
-	pTypeInfo->ReleaseVarDesc ((VARDESC *)p_var_desc);
+//	pTypeInfo->ReleaseVarDesc ((VARDESC *)p_var_desc);
 };
 //-----------------------------------------------------------------------------
 

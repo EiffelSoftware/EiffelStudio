@@ -255,6 +255,12 @@ feature -- XML constants
 	
 	Schema_instance: STRING is "http://www.w3.org/1999/XMLSchema-instance"
 		-- Schema information for inclusion in XML files.
+		
+	Events_string: STRING is "Events"
+		-- String constant representing `Events'.
+	
+	Event_string: STRING is "Event"
+		-- String constant representing `Event'.
 	
 feature -- Dialogs
 

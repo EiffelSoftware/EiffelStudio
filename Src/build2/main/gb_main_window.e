@@ -171,6 +171,7 @@ feature -- Basic operation
 				-- Now restore from preferences
 			set_split_position (horizontal_split_area, preferences.integer_resource_value (Preferences.main_split__position, 100))
 			initialize_tool_positions (preferences.array_resource_value (preferences.tool_order, create {ARRAY [STRING]}.make (1, 1)))
+			initialize_external_tool_positions (preferences.array_resource_value (preferences.external_tool_order, create {ARRAY [STRING]}.make (1, 1)))
 			
 	
 			unlock_update
@@ -372,7 +373,6 @@ feature {NONE} -- Implementation
 			the_tool_holder.extend (horizontal_box)
 			
 				-- Add the multiple split area, located to the left.
-			create multiple_split_area
 			multiple_split_area.enable_top_widget_resizing
 			multiple_split_area.set_close_pixmap ((create {GB_SHARED_PIXMAPS}).Icon_close @ 1)
 			multiple_split_area.set_maximize_pixmap ((create {GB_SHARED_PIXMAPS}).Icon_maximize @ 1)
@@ -469,9 +469,6 @@ feature {NONE} -- Implementation
 
 feature {NONE} -- Implementation
 
-	multiple_split_area: MULTIPLE_SPLIT_AREA
-		-- Multiple slit area to hold tools.
-
 	initialize_tool_positions (info: ARRAY [STRING]) is
 			-- Initialize tools in `multiple_split_area', based on `info'.
 		require
@@ -560,6 +557,65 @@ feature {NONE} -- Implementation
 			end
 		end
 		
+	initialize_external_tool_positions (info: ARRAY [STRING]) is
+			-- Initialize external tools of `multiple_split_area', based on `info'.
+		require
+			info_not_void: info /= Void
+		local
+			tool_name: STRING
+			info_string: STRING
+			state: STRING
+			index: INTEGER
+			a_width, a_height: INTEGER
+			an_x, a_y: INTEGER
+			counter: INTEGER
+			temp_string: STRING
+			stored_heights: ARRAYED_LIST [INTEGER]
+			stored_widths: ARRAYED_LIST [INTEGER]
+			minimized_items: ARRAYED_LIST [BOOLEAN]
+			maximized_index: INTEGER
+			dialog: EV_DOCKABLE_DIALOG
+			tool: EV_WIDGET
+		do
+			from
+				counter := 1
+			until
+				counter > info.count
+			loop
+				info_string := info @ counter
+				
+				index := info_string.index_of ('_', 1)
+				tool_name := info_string.substring (1, index - 1)
+				info_string := info_string.substring (index + 1, info_string.count)
+				
+				index := info_string.index_of ('_', 1)
+				an_x := info_string.substring (1, index - 1).to_integer
+				info_string := info_string.substring (index + 1, info_string.count)
+				
+				index := info_string.index_of ('_', 1)
+				a_y := info_string.substring (1, index - 1).to_integer
+				info_string := info_string.substring (index + 1, info_string.count)
+				
+				index := info_string.index_of ('_', 1)
+				a_width := info_string.substring (1, index - 1).to_integer
+				info_string := info_string.substring (index + 1, info_string.count)
+				
+				index := info_string.index_of ('_', 1)
+				a_height :=  info_string.to_integer
+				info_string := info_string.substring (index + 1, info_string.count)
+
+				tool := tool_by_name (tool_name)
+					-- Remove `tool' from its parent if any.
+				if tool.parent /= Void then
+					tool.parent.prune_all (tool)
+				end
+					-- Add `tool' as an enternal tool, that is one that apepars if it has been docked out of
+					-- `multiple_split_area'.
+				multiple_split_area.add_external (tool, name_by_tool (tool_by_name (tool_name)), 10, an_x, a_y, a_width, a_height)
+				counter := counter + 1
+			end
+		end	
+		
 	store_tool_positions is
 			-- Store positions of all tools in `multiple_split_area'
 			-- into preferences.
@@ -567,6 +623,7 @@ feature {NONE} -- Implementation
 			info: ARRAY [STRING]
 			linear_rep: ARRAYED_LIST [EV_WIDGET]
 			output: STRING
+			a_dialog: EV_DIALOG
 		do
 			output := ""
 			create info.make (1, multiple_split_area.count)
@@ -591,6 +648,27 @@ feature {NONE} -- Implementation
 				linear_rep.forth
 			end
 			preferences.set_array_resource (preferences.tool_order, info)
+			linear_rep := clone (multiple_split_area.external_representation)
+			create info.make (1, linear_rep.count)
+			from	
+				linear_rep.start				
+			until
+				linear_rep.off
+			loop
+				output := storable_name_by_tool (linear_rep.item)
+				a_dialog := parent_dialog (linear_rep.item)
+				check
+					dialog_not_void: a_dialog /= Void
+				end
+				
+				output := output + "_" + a_dialog.x_position.out
+				output := output + "_" + a_dialog.y_position.out
+				output := output + "_" + a_dialog.width.out
+				output := output + "_" + a_dialog.height.out
+				info.put (output, linear_rep.index)
+				linear_rep.forth
+			end
+			preferences.set_array_resource (preferences.external_tool_order, info)
 		end
 		
 	assign_command_accelerators_to_window is

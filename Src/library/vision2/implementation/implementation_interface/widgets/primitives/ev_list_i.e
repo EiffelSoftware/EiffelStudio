@@ -26,20 +26,27 @@ feature {EV_WIDGET} -- Initialization
 			set_expand (True)
 			set_vertical_resize (True)
 			set_horizontal_resize (True)
-			!! color.make_rgb (255, 255, 255)
-			set_background_color (color)
-			!! color.make_rgb (0, 0, 0)
-			set_foreground_color (color)
+--			!! color.make_rgb (255, 255, 255)
+--			set_background_color (color)
+--			!! color.make_rgb (0, 0, 0)
+--			set_foreground_color (color)
 		end
 
 feature -- Access
+
+	rows: INTEGER is
+			-- Number of lines
+		require
+			exists: not destroyed
+		deferred
+		end
 
 	get_item (index: INTEGER): EV_LIST_ITEM is
 			-- Give the item of the list at the zero-base
 			-- `index'.
 		require
 			exists: not destroyed
-			item_exists: index <= count
+			item_exists: index <= rows
 		do
 			Result ?= (ev_children.i_th (index)).interface
 		end
@@ -49,7 +56,6 @@ feature -- Access
 			-- selection, it gives the last selected item.
 		require
 			exists: not destroyed
---			item_selected: selected
 		deferred
 		end
 
@@ -61,18 +67,29 @@ feature -- Access
 			-- `selected_items' for a single selection list
 		require
 			exists: not destroyed
---			item_selected: selected
-		deferred
+		local
+			list_item: EV_LIST_ITEM
+		do
+			if is_multiple_selection then
+				from
+					ev_children.start
+				until
+					ev_children.after
+				loop
+					if ev_children.item.is_selected then
+						list_item ?= (ev_children.item.interface)
+						if list_item /= Void then 
+							Result.extend (list_item)
+						end
+					end
+					ev_children.forth
+				end
+			else
+				Result.extend (selected_item)
+			end
 		end
 
 feature -- Status report
-
-	count: INTEGER is
-			-- Number of lines
-		require
-			exists: not destroyed
-		deferred
-		end
 
 	selected: BOOLEAN is
 			-- Is at least one item selected ?
@@ -96,7 +113,7 @@ feature -- Status setting
 		require
 			exists: not destroyed
 			index_large_enough: index > 0
-			index_small_enough: index <= count
+			index_small_enough: index <= rows
 		deferred
 		end
 
@@ -146,6 +163,23 @@ feature {EV_LIST_ITEM} -- Implementation
 feature {EV_LIST_ITEM_IMP} -- Implementation
 
 	ev_children: LINKED_LIST [EV_LIST_ITEM_IMP]
+
+	clear_ev_children is
+			-- Clear all the items of the list.
+		require
+			exists: not destroyed
+		do
+			from
+				ev_children.start
+			until
+				ev_children.after
+			loop
+				ev_children.item.interface.remove_implementation
+				ev_children.forth
+			end
+			ev_children.wipe_out
+		end
+
 
 end -- class EV_LIST_I
 

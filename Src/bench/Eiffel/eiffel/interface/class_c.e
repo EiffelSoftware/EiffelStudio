@@ -9,7 +9,7 @@ class CLASS_C
 
 inherit
 
-	COMPILER_IDABLE;
+	IDABLE;
 	SHARED_WORKBENCH;
 	SHARED_SERVER
 		export
@@ -129,6 +129,29 @@ feature
 	changed4: BOOLEAN;
 			-- Has the class a new class type ?
 
+	is_removable: BOOLEAN is
+			-- May current class be removed from system?
+		do
+			if Compilation_modes.is_extending then
+					-- Do not remove descendants of DYNAMIC in the DC-set.
+				Result := is_dynamic and then
+					not syntactical_inherits_from_dynamic
+			else
+				Result := not is_precompiled
+			end
+		end
+
+	is_modifiable: BOOLEAN is
+			-- Is current class not part of a precompiled library
+			-- or of the DR-system in case of DLE?
+		do
+			if Compilation_modes.is_extending then
+				Result := is_dynamic
+			else
+				Result := not is_precompiled
+			end
+		end
+
 	is_deferred: BOOLEAN;
 			-- Is the class deferred ?
 
@@ -237,7 +260,7 @@ feature
 			-- Has the class already been compiled before the current
 			-- compilation ?
 		do
-			Result := Ast_server.has (id.id);
+			Result := Ast_server.has (id);
 		end;
 
 	build_ast: CLASS_AS_B is
@@ -366,7 +389,7 @@ feature
 			invariant_info := Tmp_ast_server.invariant_info;
 			if invariant_info /= Void then
 				class_info.set_invariant_info (Tmp_ast_server.invariant_info);
-				Tmp_inv_ast_server.force (invariant_info, id.id);
+				Tmp_inv_ast_server.force (invariant_info, id);
 			end;
 
 				-- Put class information in class information table for
@@ -530,23 +553,23 @@ feature -- Third pass: byte code production and type check
 				
 					-- For a changed class, the supplier list has
 					-- to be updated
-				if Tmp_depend_server.has (id.id) then
-					dependances := Tmp_depend_server.item (id.id);
-				elseif Depend_server.has (id.id) then
-					dependances := Depend_server.item (id.id);
+				if Tmp_depend_server.has (id) then
+					dependances := Tmp_depend_server.item (id);
+				elseif Depend_server.has (id) then
+					dependances := Depend_server.item (id);
 				else
 					!!dependances.make (changed_features.count);
 					dependances.set_id (id);
 				end;
-				if Rep_depend_server.has (id.id) then
-					rep_dep := Rep_depend_server.item (id.id);
+				if Rep_depend_server.has (id) then
+					rep_dep := Rep_depend_server.item (id);
 				else
 				end;
 				if changed then
 					new_suppliers := suppliers.same_suppliers;
 				end;
 
-				feat_table := Feat_tbl_server.item (id.id);
+				feat_table := Feat_tbl_server.item (id);
 
 				ast_context.set_a_class (Current);
 
@@ -798,7 +821,7 @@ end;
 							)
 					)
 				then
-					invar_clause := Inv_ast_server.item (id.id);
+					invar_clause := Inv_ast_server.item (id);
 					Error_handler.mark;
 
 debug ("ACTIVITY")
@@ -885,9 +908,9 @@ end;
 						-- features only. Deactive body ids of removed
 						-- features.
 					if not feature_i.is_code_replicated then
-						Tmp_body_server.desactive (body_id.id)
+						Tmp_body_server.desactive (body_id)
 					else
-						Tmp_rep_feat_server.desactive (body_id.id)
+						Tmp_rep_feat_server.desactive (body_id)
 					end;
 
 					removed_features.forth;
@@ -948,13 +971,13 @@ end;
 					new_body_id := changed_body_id_info.new_body_id;
 						-- Undo
 					if not changed_body_id_info.is_code_replicated then
-						Body_server.change_id (old_body_id.id, new_body_id.id);
+						Body_server.change_id (old_body_id, new_body_id);
 					else
-						Rep_feat_server.change_id (old_body_id.id, new_body_id.id);
+						Rep_feat_server.change_id (old_body_id, new_body_id);
 					end;
-					Byte_server.change_id (old_body_id.id, new_body_id.id);
+					Byte_server.change_id (old_body_id, new_body_id);
 					System.Body_index_table.force (old_body_id, changed_body_id_info.body_index);
-					System.onbidt.undo_put (old_body_id.id, new_body_id.id);
+					System.onbidt.undo_put (old_body_id, new_body_id);
 
 					
 					changed_body_ids.forth;
@@ -1069,7 +1092,7 @@ end;
 --							)
 --					)
 --				then
---					invar_clause := Tmp_inv_ast_server.item (id.id);
+--					invar_clause := Tmp_inv_ast_server.item (id);
 --					Error_handler.mark;
 --
 --debug ("ACTIVITY")
@@ -1297,7 +1320,7 @@ feature -- Melting
 				end;
 			end;
 
-			if not Tmp_m_rout_id_server.has (id.id) then
+			if not Tmp_m_rout_id_server.has (id) then
 					-- If not already done, Melt routine id array
 				tbl.melt;
 			end;
@@ -1310,23 +1333,23 @@ feature -- Melting
 		end;
 
 	melt_feature_table is
-			-- Melt feature table
+			-- Melt feature table.
 		require
-			good_context: System.melted_set.has (id);
+			good_context: System.melted_set.has (id)
 		do
 			if not types.empty then
+				Inst_context.set_cluster (cluster);
 				from
-					Inst_context.set_cluster (cluster);
 					types.start
 				until
 					types.after
 				loop
-					if not types.item.is_precompiled then
-						types.item.melt_feature_table;
+					if types.item.is_modifiable then
+						types.item.melt_feature_table
 					end;
 					types.forth
-				end;
-			end;
+				end
+			end
 		end;
 
 	melt_descriptor_tables is
@@ -2658,7 +2681,7 @@ end;
 	feature_table: FEATURE_TABLE is
 			-- Feature table of the clas
 		do
-			Result := Feat_tbl_server.item (id.id);
+			Result := Feat_tbl_server.item (id);
 		end;
 
 	update_instantiator1 is
@@ -3067,11 +3090,11 @@ feature -- PS
 			-- Feature whose internal name is `n'
 		do
 			if
-				Tmp_feat_tbl_server.has (id.id)
+				Tmp_feat_tbl_server.has (id)
 			then
-				Result := Tmp_feat_tbl_server.item (id.id).item (n)
+				Result := Tmp_feat_tbl_server.item (id).item (n)
 			else
-				Result := Feat_tbl_server.item (id.id).item (n)
+				Result := Feat_tbl_server.item (id).item (n)
 			end
 		end;
 
@@ -3109,15 +3132,15 @@ feature -- Replication
 						-- Then Propagate
 						class_c.set_changed2 (True);
 						pass2_controler.insert_new_class (class_c);
-						if Rep_depend_server.has (unit.id.id) then
-							rep_depend := Rep_depend_server.item (unit.id.id);
+						if Rep_depend_server.has (unit.id) then
+							rep_depend := Rep_depend_server.item (unit.id);
 							feat_depend := rep_depend.item (unit.feature_name);
 							if feat_depend /= Void then
 								propagate_replication (feat_depend);
 								if feat_depend.count > 0 then
 									Tmp_rep_depend_server.put (rep_depend)
 								else
-									Tmp_rep_depend_server.remove (unit.id.id)
+									Tmp_rep_depend_server.remove (unit.id)
 								end;
 							end
 						end;
@@ -3158,7 +3181,7 @@ end;
 	process_replicated_features is
 			-- Process replicated features for Current
 		require
-			have_replicated_features: Tmp_rep_info_server.has (id.id)
+			have_replicated_features: Tmp_rep_info_server.has (id)
 		local
 			rep_class_info: REP_CLASS_INFO;	
 			stored_rep_name_list: S_REP_NAME_LIST;
@@ -3170,7 +3193,7 @@ end;
 			new_feat_as, old_feat_as: FEATURE_AS_B;
 			rep_features: LINKED_LIST [S_REP_NAME];
 		do
-			rep_class_info := Tmp_rep_info_server.item (id.id);
+			rep_class_info := Tmp_rep_info_server.item (id);
 debug ("ACTUAL_REPLICATION", "REPLICATION")
 	io.error.putstring ("Replication for class ");
 	io.error.putstring (class_name);
@@ -3204,7 +3227,7 @@ end;
 					if new_body_id = Void then
 						-- Must check old and new ast for incrementality
 						old_body_id := new_feat.original_body_id;
-						old_feat_as := Rep_feat_server.server_item (old_body_id.id);
+						old_feat_as := Rep_feat_server.server_item (old_body_id);
 						if
 							not old_feat_as.is_assertion_equiv (new_feat_as)
 							or else not old_feat_as.is_body_equiv (new_feat_as)
@@ -3215,8 +3238,8 @@ end;
 								-- We do not have enough information to know
 								-- in which server we should deactivate, so
 								-- we do it in both -- FRED
-							Tmp_body_server.desactive (old_body_id.id);
-							Tmp_rep_feat_server.desactive (old_body_id.id);
+							Tmp_body_server.desactive (old_body_id);
+							Tmp_rep_feat_server.desactive (old_body_id);
 
 debug ("REPLICATION")
 	io.error.putstring ("following feature AST was NOT equiv to previous%N")
@@ -3245,10 +3268,10 @@ end;
 				-- Update the rep_feat_server with body_id
 				-- and its corresponding read_info
 		local
-			index: EXTEND_TABLE [READ_INFO, INTEGER];
+			index: EXTEND_TABLE [READ_INFO, FEATURE_AS_ID];
 			feature_as: FEATURE_AS_B;
 			read_info: READ_INFO;
-			rep_body_table: EXTEND_TABLE [READ_INFO, INTEGER];
+			rep_body_table: EXTEND_TABLE [READ_INFO, BODY_ID];
 		do
 			-- Clear index
 			Tmp_rep_server.clear_index;
@@ -3265,7 +3288,7 @@ end;
 				feature_as := rep_table.item_for_iteration;
 				read_info := index.item (feature_as.id);
 				-- Place the read_info for the feature's body id
-				rep_body_table.force (read_info, rep_table.key_for_iteration.id);
+				rep_body_table.force (read_info, rep_table.key_for_iteration);
 				rep_table.forth;
 			end;
 			-- Update read info in rep_feat servers
@@ -3314,18 +3337,20 @@ feature -- Precompilation
 			Result := id.is_precompiled
 		end;
 
-	nb_precompiled_class_types: INTEGER is
+	nb_modifiable_types: INTEGER is
+			-- Number of modifiable types (i.e. precompiled or static)
+			-- derived from the current class
 		do
 			from
 				types.start
 			until
 				types.after
 			loop
-				if types.item.is_precompiled then
+				if types.item.is_modifiable then
 					Result := Result + 1
 				end;
 				types.forth
-			end;
+			end
 		end;
 
 feature -- DLE
@@ -3348,23 +3373,6 @@ feature -- DLE
 			Result := id.is_dynamic
 		end;
 
-	nb_static_class_types: INTEGER is
-			-- Number of static types derived from the current class
-		require
-			dynamic_system: System.is_dynamic
-		do
-			from
-				types.start
-			until
-				types.after
-			loop
-				if types.item.is_static then
-					Result := Result + 1
-				end;
-				types.forth
-			end;
-		end;
-
 	has_dynamic: BOOLEAN is
 			-- Is there any dynamic types derived from the current class?
 		require
@@ -3378,28 +3386,6 @@ feature -- DLE
 				Result := types.item.is_dynamic;
 				types.forth
 			end;
-		end;
-
-	dle_generate_wkbench_code is
-			-- Generation of C files for each type associated to the current
-			-- class.
-		require
-			dynamic_system: System.is_dynamic;
-			workbench_mode: not System.in_final_mode
-		local
-			temp_index: INTEGER
-		do
-			Inst_context.set_cluster (cluster);
-			from
-				types.start
-			until
-				types.after
-			loop
-				temp_index := types.index;
-				types.item.dle_generate_wkbench_code;
-				types.go_i_th (temp_index);
-				types.forth
-			end
 		end;
 
 	dle_generate_final_code: BOOLEAN is
@@ -3424,52 +3410,6 @@ feature -- DLE
 				types.go_i_th (temp_index);
 				types.forth
 			end
-		end;
-
-	melt_dle_feature_table is
-			-- Melt feature table.
-		require
-			dynamic_system: System.is_dynamic;
-			good_context: System.melted_set.has (id)
-		do
-			if not types.empty then
-				from
-					Inst_context.set_cluster (cluster);
-					types.start
-				until
-					types.after
-				loop
-					if types.item.is_dynamic then
-						types.item.melt_feature_table
-					end;
-					types.forth
-				end
-			end
-		end;
-
-	melt_dle_descriptor_tables is
-			-- Melt descriptor tables of associated class types
-		require
-			dynamic_system: System.is_dynamic
-		local
-			sel_tbl: SELECT_TABLE
-		do
-			sel_tbl := feature_table.origin_table;
-			sel_tbl.melt_dle (Current)
-		end;
-
-	generate_dle_descriptor_tables is
-			-- Generation of workbench mode descriptor tables
-			-- of associated class types.
-			--|Note: when precompiling a system a class might
-			--|have no generic derivations
-		local
-			sel_tbl: SELECT_TABLE
-		do
-			if has_types then
-				sel_tbl := feature_table.origin_table;
-				sel_tbl.generate_dle (Current)
-			end;
 		end;
 
 	inherits_from_dynamic: BOOLEAN is

@@ -5249,7 +5249,7 @@ feature {NONE} -- Mapping between Eiffel compiler and generated tokens
 					l_external_class ?= a_class_type.associated_class
 					if l_external_class /= Void then
 							-- When it is an XML represented external class.
-						l_assembly := l_external_class.lace_class.cluster
+						l_assembly := l_external_class.lace_class.assembly
 						l_name := l_assembly.assembly_name
 						l_version_string := l_assembly.version
 						l_culture := l_assembly.culture

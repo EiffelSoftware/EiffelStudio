@@ -40,6 +40,7 @@ feature {NONE}-- Initialization
 			Precursor {EV_DIALOG}
 			initialize_constants
 			
+				-- Create all widgets.
 			create l_ev_vertical_box_1
 			create l_ev_horizontal_box_1
 			create l_ev_frame_1
@@ -78,6 +79,7 @@ feature {NONE}-- Initialization
 			create ok_button
 			create l_ev_cell_6
 			
+				-- Build_widget_structure.
 			extend (l_ev_vertical_box_1)
 			l_ev_vertical_box_1.extend (l_ev_horizontal_box_1)
 			l_ev_horizontal_box_1.extend (l_ev_frame_1)
@@ -177,6 +179,7 @@ feature {NONE}-- Initialization
 			ok_button.set_text (ok_button_text)
 			ok_button.set_minimum_width (default_button_width)
 			
+				--Connect events.
 			constants_list.select_actions.extend (agent item_selected_in_list (?))
 			constants_list.deselect_actions.extend (agent item_deselected_in_list (?))
 			constants_list.column_title_click_actions.extend (agent column_clicked (?))
@@ -196,6 +199,7 @@ feature {NONE}-- Initialization
 				-- Call `user_initialization'.
 			user_initialization
 		end
+
 feature -- Access
 
 	constants_list: EV_MULTI_COLUMN_LIST

@@ -10,8 +10,8 @@ class
 
 inherit
 	GB_NAMING_DIALOG_IMP
-	
-create
+
+create 
 	make_with_values
 
 feature {NONE} -- Initialization

@@ -35,20 +35,22 @@ feature -- Access
 			Result := "No Matching DIRECTORY Constant"
 		end
 
+	large_padding: INTEGER is 
+			-- `Result' is INTEGER constant named large_padding.
+		once
+			Result := 12
+		end
+
 	modify_pixmap_dialog_title: STRING is
 			-- `Result' is STRING constant named `modify_pixmap_dialog_title'.
 		once
 			Result := "Modify Pixmap"
 		end
 
-	lightbulb_png: EV_PIXMAP is
-		local
-			a_file_name: FILE_NAME
-		Once
-			create Result
-			create a_file_name.make_from_string (png_location)
-			a_file_name.extend ("lightbulb.png")
-			Result.set_with_named_file (a_file_name)
+	close_text: STRING is
+			-- `Result' is STRING constant named `close_text'.
+		once
+			Result := "Close"
 		end
 
 	constants_dialog_title: STRING is
@@ -63,12 +65,6 @@ feature -- Access
 			Result := 80
 		end
 
-	ok_button_text: STRING is
-			-- `Result' is STRING constant named `ok_button_text'.
-		once
-			Result := "OK"
-		end
-
 	next_tip_text: STRING is
 			-- `Result' is STRING constant named `next_tip_text'.
 		once
@@ -79,6 +75,22 @@ feature -- Access
 			-- `Result' is STRING constant named `system_window_title'.
 		once
 			Result := "Project Configuration"
+		end
+
+	modify_button_text: STRING is
+			-- `Result' is STRING constant named `modify_button_text'.
+		once
+			Result := "Modify"
+		end
+
+	lightbulb_png: EV_PIXMAP is
+		local
+			a_file_name: FILE_NAME
+		Once
+			create Result
+			create a_file_name.make_from_string (png_location)
+			a_file_name.extend ("lightbulb.png")
+			Result.set_with_named_file (a_file_name)
 		end
 
 	new_button_add_text: STRING is
@@ -111,16 +123,16 @@ feature -- Access
 			Result := "Pixmap Selection"
 		end
 
-	modify_button_text: STRING is
-			-- `Result' is STRING constant named `modify_button_text'.
-		once
-			Result := "Modify"
-		end
-
 	negative: INTEGER is 
 			-- `Result' is INTEGER constant named negative.
 		once
 			Result := -100
+		end
+
+	ok_button_text: STRING is
+			-- `Result' is STRING constant named `ok_button_text'.
+		once
+			Result := "OK"
 		end
 
 	large_spacing_width: INTEGER is 
@@ -141,10 +153,10 @@ feature -- Access
 			Result := "Cancel"
 		end
 
-	close_text: STRING is
-			-- `Result' is STRING constant named `close_text'.
+	medium_padding: INTEGER is 
+			-- `Result' is INTEGER constant named medium_padding.
 		once
-			Result := "Close"
+			Result := 8
 		end
 
 	png_location: STRING is

@@ -36,6 +36,7 @@ feature {NONE}-- Initialization
 			Precursor {EV_DIALOG}
 			initialize_constants
 			
+				-- Create all widgets.
 			create l_ev_vertical_box_1
 			create l_ev_horizontal_box_1
 			create l_ev_vertical_box_2
@@ -52,6 +53,7 @@ feature {NONE}-- Initialization
 			create ok_button
 			create cancel_button
 			
+				-- Build_widget_structure.
 			extend (l_ev_vertical_box_1)
 			l_ev_vertical_box_1.extend (l_ev_horizontal_box_1)
 			l_ev_horizontal_box_1.extend (l_ev_vertical_box_2)
@@ -92,6 +94,7 @@ feature {NONE}-- Initialization
 			cancel_button.set_text (cancel_button_text)
 			cancel_button.set_minimum_width (default_button_width)
 			
+				--Connect events.
 			directory_name_field.change_actions.extend (agent text_changed)
 			directory_name_field.return_actions.extend (agent return_pressed)
 			ok_button.select_actions.extend (agent ok_button_pressed)
@@ -102,6 +105,7 @@ feature {NONE}-- Initialization
 				-- Call `user_initialization'.
 			user_initialization
 		end
+
 feature -- Access
 
 	pixmap_cell: EV_CELL

@@ -52,6 +52,8 @@ feature -- Basic operations
 			namespace: XM_NAMESPACE
 			a_name_string, a_data_string: STRING
 			file: KL_TEXT_OUTPUT_FILE
+			last_string: KL_STRING_OUTPUT_STREAM
+			processed_string: STRING
 		do
 				-- Create the root element.
 			create namespace.make_default
@@ -70,16 +72,24 @@ feature -- Basic operations
 					data_not_void: a_name_string /= Void and a_data_string /= Void
 				end
 				add_element_containing_string (root_element, a_name_string, enclose_in_cdata (a_data_string))
+				
 				counter := counter + 1
 			end
 			
-				-- Format and save the document.
+				-- Format document.
+			create formater.make
+			create last_string.make ("")
+			formater.set_output (last_string)
+			formater.process_document (document)
+			
+			processed_string := last_string.string
+			processed_string := xml_format + processed_string
+			process_xml_string (processed_string)
+			
+				-- Save document.
 			create file.make (file_name)
 			file.open_write
-			file.put_string (xml_format)
-			create formater.make
-			formater.set_output (file)
-			formater.process_document (document)
+			file.put_string (processed_string)
 			file.close
 		end
 		

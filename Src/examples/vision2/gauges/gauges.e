@@ -63,6 +63,8 @@ feature {NONE} -- Initialization
 			sb.value_range.adapt (min_field.value |..| max_field.value)
 			pb.value_range.adapt (min_field.value |..| max_field.value)
 			hr.value_range.adapt (min_field.value |..| max_field.value)
+
+			first_window.close_request_actions.extend (~destroy)
 			
 			first_window.set_maximum_height (250)
 			first_window.show

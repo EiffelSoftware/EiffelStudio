@@ -21,7 +21,9 @@
 			<item>Other preferences : They will be modified by typing their value directly.</item>
 		</list>If there is no message stating you need to restart EiffelStudio, changes will be taken into account immediately. 
 		<paragraph>
+			<tip>
 			<bold>Tip</bold>: Sub-categories and their contents are not displayed in the right area. To see the preferences that belong to a sub-category, you have to select it in the left part of the window.
+			</tip>
 		</paragraph>
 		<warning>
 			<bold>Caution</bold>: You can restore preferences default values by clicking on the "Restore Default" button. ALL preferences will be reset.

@@ -113,7 +113,7 @@
 		</list>
 		<note>
 			<bold>Note</bold>: EiffelStudio editor can insert spaces instead of tabulation when you use special character 
-			<italic>%T</italic>.This is set in 
+			<italic>%T</italic>. This is set in 
 			<link>
 				<url>../../10_general_editor_preferences.xml</url>
 				<label>another section of the preferences</label>

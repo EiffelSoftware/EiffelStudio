@@ -19,7 +19,7 @@
 		</div>
 		<paragraph>The example above will generate the code:</paragraph>
 		<code_block>
-	invariant
-		count_positive: count &gt; 0
+	<keyword>invariant</keyword>
+		<contract_tag>count_positive</contract_tag>: <feature_name>count</feature_name> <symbol>&gt;</symbol> 0
 </code_block>
 	</paragraph></document>

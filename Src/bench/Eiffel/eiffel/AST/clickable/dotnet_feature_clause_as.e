@@ -23,14 +23,17 @@ create {DOTNET_FEATURE_CLAUSE_AS}
 
 feature -- Initialization
 
-	make (a_name: STRING) is 
+	make (a_name: STRING; a_flag: BOOLEAN) is 
 			-- Create with name as 'a_name' and with features 'a_features'.
 		require
 			a_name_not_void: a_name /= Void
 			a_name_not_empty: not a_name.is_empty
 		do
 			name := a_name
-			set_export_status (True)
+			is_exported := a_flag
+		ensure
+			name_set: name = a_name
+			exported_set: is_exported = a_flag
 		end
 		
 feature -- Properties
@@ -41,14 +44,8 @@ feature -- Properties
 	is_exported: BOOLEAN
 			-- Are items exported?  Yes by default.
 			
-feature -- Status Setting
-
-	set_export_status (a_flag: BOOLEAN) is
-			-- Set 'is_exported' to reflect 'a_flag'.
-		do
-			is_exported := a_flag
-		ensure
-			exported_set: is_exported = a_flag
-		end
+invariant
+	name_not_void: name /= Void
+	name_not_empty: not name.is_empty
 
 end -- class DOTNET_FEATURE_CLAUSE_AS

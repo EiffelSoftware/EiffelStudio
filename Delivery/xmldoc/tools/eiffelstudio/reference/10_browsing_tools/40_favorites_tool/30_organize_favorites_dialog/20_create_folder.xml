@@ -1,10 +1,10 @@
 <document title="Create favorite folder command" output="studio">
 	<meta_data/>
 	<paragraph>
-		<paragraph>This command 
+		<paragraph>This command
 			<image>
 				<url>/images/eiffelstudio/browsing_tools/favorites_dialog_new_folder.png</url>
-			</image> is accessible in the Organize favorites dialog. When clicked, a dialog is popped up that prompts for a name for the new folder:
+			</image>is accessible in the Organize favorites dialog. When clicked, a dialog is popped up that prompts for a name for the new folder:
 		</paragraph>
 		<paragraph>
 			<image>

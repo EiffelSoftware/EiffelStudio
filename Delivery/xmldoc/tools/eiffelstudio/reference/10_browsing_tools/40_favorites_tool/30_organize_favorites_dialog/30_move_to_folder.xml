@@ -1,14 +1,14 @@
 <document title="Move to Folder command" output="studio">
 	<meta_data/>
 	<paragraph>
-		<paragraph>The Move to Folder command 
+		<paragraph>The Move to Folder command
 			<image>
 				<url>/images/eiffelstudio/browsing_tools/favorites_dialog_move_to.png</url>
 			</image>, located in the 
 			<link>
 				<url>00_introduction.xml</url>
 				<label>Organize Favorites dialog</label>
-			</link>, makes it possible to move favorite items (classes and folders) to specific folders. It is enabled only when an item is selected in the left-hand tree in this dialog. The selected item is the item that should be moved, the source. You can select a different source item by clicking it in the tree, or by using the keyboard.
+			</link>, makes it possible to move favorite items (classes and folders) to specific folders. It is enabled only when an item is selected in the left-hand tree in this dialog. The source is the selected item that could be moved. You can select a different source item by clicking it in the tree, or by using the keyboard.
 		</paragraph>
 		<paragraph>When pressed, a dialog is popped up, that prompts for the favorite folder the selected item should be moved to.</paragraph>
 		<paragraph>

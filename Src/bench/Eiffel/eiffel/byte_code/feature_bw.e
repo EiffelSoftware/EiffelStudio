@@ -95,7 +95,14 @@ feature
 				generated_file.putstring (gc_comma);
 				generated_file.putint (rout_info.offset);
 			else
-				if is_nested and need_invariant then
+				if typ.is_separate then
+						-- Feature call on a separate object
+					generated_file.putstring ("Generate code for separate call on ");
+					generated_file.putstring (feature_name)
+					generated_file.putstring (" from ")
+					typ.dump (generated_file)
+					generated_file.new_line
+				elseif is_nested and need_invariant then
 					generated_file.putstring ("RTVF(");
 				else
 					generated_file.putstring ("RTWF(");

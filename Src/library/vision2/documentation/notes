@@ -13,11 +13,6 @@ To look at:
 	pick_and_drop
 	
 To delete: 
-	ev_scale.e
-	ev_vertical_scale.e
-	ev_horizontal_scale.e
-	ev_rich_text.e
-	ev_spin_box.e
 	ev_composed_item.e
 	ev_separator_item.e
 
@@ -51,8 +46,7 @@ To do:
 - Look into destroyed tree item problem.
 - Test all state variables in non-parented widgets.
 - The event `expose_actions' is triggered twice on a container when a window is resized.
-
-
+- Rename titled_window_imp.e <-> window_imp.e
 
 
 Feature/Bug requests:
@@ -215,3 +209,5 @@ X   complete but found to have bugs
   Multi column list:
     widgets/primitives/ev_multi_column_list.e			*	.	.	.
     items/ev_multi_column_list_row.e					.	.	.	.
+
+End of file.

@@ -84,9 +84,6 @@ feature -- Access
 		%			%"$(ISE_EIFFEL)\library\com\spec\$(ISE_C_COMPILER)\lib\com_runtime.lib%",%N"
 
 
-	Visible: STRING is "visible"
-			-- Lace `visible' keyword
-
 	clusters_from_project: STRING is
 			-- Clusters code from project Ace file
 		local

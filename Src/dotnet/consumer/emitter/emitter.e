@@ -57,10 +57,10 @@ feature {NONE} -- Initialization
 				complete_initialization
 				start
 			end
-		--	debug ("press_enter_to_exit")
+			debug ("press_enter_to_exit")
 				io.put_string ("Press Enter to exit the application...")
 				io.read_line
-		--	end
+			end
 		end
 		
 	complete_initialization is

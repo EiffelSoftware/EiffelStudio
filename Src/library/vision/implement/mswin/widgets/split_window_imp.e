@@ -2,7 +2,7 @@ indexing
 
 	description:
 		"Control window with two children separated%
-		%by an horizontal split";
+		%by an horizontal or vertical split";
 	date: "$Date$";
 	revision: "$Revision$"
 
@@ -125,6 +125,9 @@ feature {NONE} -- Initialization
 		do
 			pi ?= parent
 			wel_make (pi, "")
+
+			{FORM_IMP} Precursor
+
 			set_height (pi.height)
 			set_width (pi.width)
 			split_visible := True
@@ -136,8 +139,24 @@ feature {NONE} -- Initialization
 			end
 
 			split_position := split_size // 2
+		end
 
-			{FORM_IMP} Precursor
+	set_default_split_size is
+			-- Set default split size after realization.
+		local
+			pi: WEL_COMPOSITE_WINDOW
+		do
+			pi ?= parent
+			set_height (pi.height)
+			set_width (pi.width)
+			split_visible := True
+			if is_vertical then
+				split_size := pi.width
+			else
+				split_size := pi.height
+			end
+			split_position := split_size // 2
+			resize_children
 		end
 
 feature -- Setting
@@ -194,12 +213,16 @@ feature -- Sizing policy
 	child_has_resized is
 			-- Respond to resizing from children.
 		do
-			if first_child /= Void and then first_child.managed then
+			if first_child /= Void and then 
+				first_child.exists and then
+				first_child.managed 
+			then
 				resize_first_child
 			end
 			
 			if
 				second_child /= Void and then
+				second_child.exists and then
 				second_child.managed and then
 				split_visible
 			then
@@ -236,14 +259,26 @@ feature -- Element change
 			-- Add `a_window' as managed.
 		do
 			if a_window = second_child then
-				split_position := split_size // 2
-				split_visible := True
-				resize_second_child
+				if first_child.managed then
+					split_position := split_size // 2
+					split_visible := True
+				else
+					split_position := 0
+					split_visible := False
+				end
 			else
-				split_position := split_size // 2
-				split_visible := True
-				resize_first_child
+				if second_child.managed then
+					split_position := split_size // 2
+					split_visible := True
+				else
+					split_position := split_size
+					split_visible := False
+				end
 			end
+			resize_children
+		ensure then
+			split_visible: (first_child /= Void and then second_child /= Void and then
+					first_child.managed and second_child.managed) implies split_visible
 		end
 
 	remove_managed_child (a_window: SPLIT_WINDOW_CHILD) is
@@ -257,7 +292,7 @@ feature -- Element change
 		end
 
 	remove_first_child is
-			-- Remove `second_child' from the display.
+			-- Remove `first_child' from the display.
 		do
 			split_position := 0
 			split_visible := False
@@ -299,7 +334,7 @@ feature -- {NONE} -- Implementation
 	resize_second_child is
 			-- Resize the bottom child to the correct dimensions.
 		local
-			add_size:INTEGER
+			add_size, zero: INTEGER
 		do
 			if split_visible then
 				add_size := split_width
@@ -309,15 +344,28 @@ feature -- {NONE} -- Implementation
 
 			if is_vertical then
 				second_child.set_x_y (split_position + add_size, 0)
-				second_child.set_size (width - split_position - add_size, height)
+				second_child.set_size (zero.max (width - split_position - add_size), height)
 			else
 				second_child.set_x_y (0, split_position + add_size)
-				second_child.set_size (width, height - split_position - add_size)
+				second_child.set_size (width, zero.max (height - split_position - add_size))
+			end
+		end
+
+	resize_children is
+			-- Resize the two children if they are managed
+		do
+			if first_child /= Void and then first_child.managed then
+				resize_first_child
+			end
+			if second_child /= Void and then second_child.managed then
+				resize_second_child
 			end
 		end
 
 	draw_split (a_dc: WEL_DC) is
 			-- Draw the top split on `a_dc'.
+
+
 		do
 			if split_visible then
 				if is_vertical then
@@ -444,28 +492,23 @@ feature -- {NONE} -- Implementation
 			-- Respond to a resize message.
 		do
 			if not flag_set (code, Size_minimized) then
-
 				if is_vertical then
 					split_size := a_width
 				else
 					split_size := a_height
 				end
-
-				if split_visible then
-					if split_position > split_size then
-						split_position := split_size - split_width
+ 				if split_visible then
+ 					if split_position > split_size then
+ 						split_position := split_size - split_width
+ 					end
+ 				else
+					if not first_child.managed then
+						split_position := 0
+					elseif not second_child.managed then
+	 					split_position := split_size
 					end
-				else
-					split_position := split_size
-				end
-
-				if first_child /= Void and then first_child.managed then
-					resize_first_child
-				end
-
-				if second_child /= Void and then second_child.managed then
-					resize_second_child
-				end
+ 				end
+				resize_children
 			end
 		end
 

@@ -1,4 +1,11 @@
 system
+	example
+
+root
+
+	example (ROOT_CLUSTER): "make"
+
+system
 	test_all_widgets
 
 root
@@ -9,7 +16,7 @@ default
 	precompiled ("$EIFFEL4\precomp\spec\$PLATFORM\wel")
 
 cluster
-	root_cluster:	"$EIFFEL4/examples/vision/test_all_widgets"
+	root_cluster:	"$EIFFEL4/examples/vision/simple_test"
 
 		-- EiffelVision
     all vision:        	"$EIFFEL4\library\vision"
@@ -24,6 +31,6 @@ external
 		"$(EIFFEL4)\library\wel\spec\windows\include";
 
 	object:
- 		"$(EIFFEL4)\library\wel\spec\$(COMPILER)\lib\wel.lib";
+		"$(EIFFEL4)\library\wel\spec\$(COMPILER)\lib\wel.lib";
 
 end

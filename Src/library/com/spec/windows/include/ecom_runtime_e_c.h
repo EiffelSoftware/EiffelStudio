@@ -67,8 +67,8 @@ class ecom_runtime_ec
 		CURRENCY * ccom_ec_pointed_currency (EIF_REFERENCE a_ref, CURRENCY * old);
 		VARIANT * ccom_ec_pointed_variant (EIF_REFERENCE a_ref, VARIANT * old);
 		DECIMAL * ccom_ec_pointed_decimal (EIF_REFERENCE a_ref, DECIMAL * old);
-		LARGE_INTEGER * ccom_ec_pointed_long_long (EIF_REFERENCE a_ref, LARGE_INTEGER * old);
-		ULARGE_INTEGER * ccom_ec_pointed_ulong_long (EIF_REFERENCE a_ref, ULARGE_INTEGER * old);
+		LONGLONG * ccom_ec_pointed_long_long (EIF_REFERENCE a_ref, LONGLONG * old);
+		ULONGLONG * ccom_ec_pointed_ulong_long (EIF_REFERENCE a_ref, ULONGLONG * old);
 		void ** ccom_ec_pointed_pointer (EIF_REFERENCE a_pointer, void ** old);
 		void ** ccom_ec_pointed_c_pointer (void * a_pointer);
 		IEnumVARIANT * * ccom_ec_pointed_pointed_enum_variant( EIF_REFERENCE eif_ref, IEnumVARIANT * * old );
@@ -88,8 +88,8 @@ class ecom_runtime_ec
 		VARIANT * ccom_ec_array_variant (EIF_REFERENCE a_ref, int dimension, VARIANT * old);
 		DECIMAL * ccom_ec_array_decimal (EIF_REFERENCE a_ref, int dimension, DECIMAL * old);
 		VARIANT_BOOL * ccom_ec_array_boolean (EIF_REFERENCE a_ref, int dimension, VARIANT_BOOL * old);
-		LARGE_INTEGER * ccom_ec_array_long_long (EIF_REFERENCE a_ref, int dimension, LARGE_INTEGER * old);
-		ULARGE_INTEGER * ccom_ec_array_ulong_long (EIF_REFERENCE a_ref, int dimension, ULARGE_INTEGER * old);
+		LONGLONG * ccom_ec_array_long_long (EIF_REFERENCE a_ref, int dimension, LONGLONG * old);
+		ULONGLONG * ccom_ec_array_ulong_long (EIF_REFERENCE a_ref, int dimension, ULONGLONG * old);
 		IDispatch * ccom_ec_array_dispatch (EIF_REFERENCE a_ref, int dimension, IDispatch * old);
 		IUnknown * ccom_ec_array_unknown (EIF_REFERENCE a_ref, int dimension, IUnknown * old);
 		LPWSTR * ccom_ec_array_lpwstr (EIF_REFERENCE a_ref, int dimension, LPWSTR * old);
@@ -105,6 +105,8 @@ class ecom_runtime_ec
 		SAFEARRAY * ccom_ec_safearray_char (EIF_REFERENCE a_ref);
 		SAFEARRAY * ccom_ec_safearray_float (EIF_REFERENCE a_ref);
 		SAFEARRAY * ccom_ec_safearray_long (EIF_REFERENCE a_ref);
+		SAFEARRAY * ccom_ec_safearray_int64 (EIF_REFERENCE a_ref);
+		SAFEARRAY * ccom_ec_safearray_uint64 (EIF_REFERENCE a_ref);
 		SAFEARRAY * ccom_ec_safearray_short (EIF_REFERENCE a_ref);
 		SAFEARRAY * ccom_ec_safearray_double (EIF_REFERENCE a_ref);
 		SAFEARRAY * ccom_ec_safearray_boolean (EIF_REFERENCE a_ref);

@@ -312,26 +312,26 @@ LARGE_INTEGER ecom_runtime_ec::ccom_ec_long_long (EIF_REFERENCE a_ref)
 };
 //--------------------------------------------------------------------------------
 
-LARGE_INTEGER * ecom_runtime_ec::ccom_ec_pointed_long_long (EIF_REFERENCE a_ref, LARGE_INTEGER * old)
+LONGLONG * ecom_runtime_ec::ccom_ec_pointed_long_long (EIF_REFERENCE a_ref, LONGLONG * old)
 
-// Create LARGE_INTEGER from Eiffel ECOM_LARGE_INTEGER
+// Create LONGLONG * from EIF_REFERENCE (INTEGER64_REF)
 {
-	EIF_OBJECT an_int = 0;
+	EIF_OBJECT eif_object = 0;
+	LONGLONG * result = 0;
 
-	LARGE_INTEGER * c_large_integer = 0;
+	eif_object = eif_protect (a_ref);
 
-	an_int = eif_protect (a_ref);
+	result = (LONGLONG *) CoTaskMemAlloc (sizeof (LONGLONG));
+	* result = (LONGLONG) eif_field (eif_access(eif_object), "item", EIF_INTEGER_64);
 
-	c_large_integer = (LARGE_INTEGER *)eif_field(eif_access(an_int), "item", EIF_POINTER);
-	eif_wean (an_int);
-
+	eif_wean (eif_object);
 	if (old != NULL)
 	{
-		memcpy (old, c_large_integer, sizeof (LARGE_INTEGER));
+		*old = *result;
 		return NULL;
 	}
 	else
-		return c_large_integer;
+		return result;
 };
 //--------------------------------------------------------------------------------
 
@@ -350,29 +350,32 @@ ULARGE_INTEGER ecom_runtime_ec::ccom_ec_ulong_long (EIF_REFERENCE a_ref)
 
 	return (*c_ularge_integer);
 };
+
 //----------------------------------------------------------------------------
 
-ULARGE_INTEGER * ecom_runtime_ec::ccom_ec_pointed_ulong_long (EIF_REFERENCE a_ref, ULARGE_INTEGER *old)
+ULONGLONG * ecom_runtime_ec::ccom_ec_pointed_ulong_long (EIF_REFERENCE a_ref, ULONGLONG *old)
 
-// Create ULARGE_INTEGER from Eiffel ECOM_ULARGE_INTEGER
+
+// Create ULONGLONG * from EIF_REFERENCE (INTEGER64_REF)
 {
-	EIF_OBJECT an_int = 0;
+	EIF_OBJECT eif_object = 0;
+	ULONGLONG * result = 0;
 
-	ULARGE_INTEGER * c_ularge_integer = 0;
+	eif_object = eif_protect (a_ref);
 
-	an_int = eif_protect (a_ref);
+	result = (ULONGLONG *) CoTaskMemAlloc (sizeof (ULONGLONG));
+	* result = (ULONGLONG) eif_field (eif_access(eif_object), "item", EIF_INTEGER_64);
 
-	c_ularge_integer = (ULARGE_INTEGER *)eif_field(eif_access(an_int), "item", EIF_POINTER);
-	eif_wean (an_int);
-
+	eif_wean (eif_object);
 	if (old != NULL)
 	{
-		memcpy (old, c_ularge_integer, sizeof (ULARGE_INTEGER));
+		*old = *result;
 		return NULL;
 	}
 	else
-		return c_ularge_integer;
+		return result;
 };
+
 //----------------------------------------------------------------------------
 
 IUnknown * ecom_runtime_ec::ccom_ec_unknown (EIF_REFERENCE a_ref)
@@ -1740,122 +1743,112 @@ VARIANT_BOOL * ecom_runtime_ec::ccom_ec_array_boolean (EIF_REFERENCE a_ref, int 
 };
 //-----------------------------------------------------------------------
 
-LARGE_INTEGER * ecom_runtime_ec::ccom_ec_array_long_long (EIF_REFERENCE a_ref, int dimension, LARGE_INTEGER * old)
+LONGLONG * ecom_runtime_ec::ccom_ec_array_long_long (EIF_REFERENCE a_ref, int dimension, LONGLONG * old)
 
-// Create C array of LARGE_INTEGER from Eiffel array.
+// Create C array of LONGLONG from Eiffel array.
+
 {
-	EIF_OBJECT e_large_integer_array = 0;
+	EIF_OBJECT e_array = 0;
 
 	static EIF_TYPE_ID tid = -1;
-	static EIF_TYPE_ID multi_dim_tid = -1;
+	static EIF_TYPE_ID multi_dim_id = -1;
 	
-	EIF_REFERENCE_FUNCTION f_item = 0;
 	EIF_INTEGER_FUNCTION f_capacity = 0;
+	EIF_POINTER_FUNCTION to_c = 0;
 
-	LARGE_INTEGER * int_array = 0;
-	LARGE_INTEGER * p_int = 0;
+	LONGLONG * result = 0;
+	int capacity = 0;
 
-	int capacity = 0, i = 0;
-
-	e_large_integer_array = eif_protect (a_ref);
+	e_array = eif_protect (a_ref);
 
 	if (dimension > 1)
 	{
-		if (-1 == multi_dim_tid)
-			multi_dim_tid = eif_type_id ("ECOM_ARRAY[ECOM_LARGE_INTEGER]");
+		if (-1 == multi_dim_id)
+			multi_dim_id = eif_type_id ("ECOM_ARRAY[INTEGER_64]");
 			
-		f_item = eif_reference_function ("array_item", multi_dim_tid);
-		f_capacity = eif_integer_function ("count", multi_dim_tid);
+		to_c = eif_pointer_function ("to_c", multi_dim_id);
+		f_capacity = eif_integer_function ("count", multi_dim_id);
 	}
 	else
 	{
 		if (-1 == tid)
-			tid = eif_type_id ("ARRAY[ECOM_LARGE_INTEGER]");
+			tid = eif_type_id ("ARRAY[INTEGER_64]");
 			
-		f_item = eif_reference_function ("item", tid);
+		to_c = eif_pointer_function ("to_c", tid);
 		f_capacity = eif_integer_function ("count", tid);
 	}
+
+	
 	// Allocate memory
 	
 
-	capacity = (int)(FUNCTION_CAST (EIF_INTEGER, (EIF_REFERENCE))f_capacity)(eif_access(e_large_integer_array));
-
-	int_array = (LARGE_INTEGER *) CoTaskMemAlloc (capacity * (sizeof (LARGE_INTEGER)));
-
-	for (i = 0; i < capacity; i++)
-	{
-		p_int = ccom_ec_pointed_long_long ((FUNCTION_CAST (EIF_REFERENCE, (EIF_REFERENCE, EIF_INTEGER))f_item)
-				(eif_access(e_large_integer_array), ((EIF_INTEGER)(i+1))), NULL);
-		memcpy ((LARGE_INTEGER *) int_array, p_int, sizeof (LARGE_INTEGER));
-	}
-
-	eif_wean (e_large_integer_array);
-
+	capacity = (int)(FUNCTION_CAST (EIF_INTEGER, (EIF_REFERENCE))f_capacity)(eif_access(e_array));
 	if (old != NULL)
-	{
-		memcpy (old, int_array, capacity*(sizeof(LARGE_INTEGER)));
-		return NULL;
-	}
+		result = (LONGLONG *)CoTaskMemAlloc (capacity*(sizeof(LONGLONG)));
 	else
-		return int_array;
+		result = old;
+
+
+	memcpy (result, (FUNCTION_CAST (EIF_POINTER, (EIF_REFERENCE))to_c)
+			(eif_access(e_array)), capacity*(sizeof(LONGLONG)) );
+
+	eif_wean (e_array);
+	return result;
 };
+
 //-----------------------------------------------------------------------
 
-ULARGE_INTEGER * ecom_runtime_ec::ccom_ec_array_ulong_long (EIF_REFERENCE a_ref, int dimension, ULARGE_INTEGER * old)
+ULONGLONG * ecom_runtime_ec::ccom_ec_array_ulong_long (EIF_REFERENCE a_ref, int dimension, ULONGLONG * old)
 
-// Create C array of ULARGE_INTEGER from Eiffel array.
+// Create C array of LONGLONG from Eiffel array.
+
 {
-	EIF_OBJECT e_ularge_integer_array = 0;
+	EIF_OBJECT e_array = 0;
 
 	static EIF_TYPE_ID tid = -1;
-	static EIF_TYPE_ID multi_dim_tid = -1;
+	static EIF_TYPE_ID multi_dim_id = -1;
 	
-	EIF_REFERENCE_FUNCTION f_item = 0;
 	EIF_INTEGER_FUNCTION f_capacity = 0;
+	EIF_POINTER_FUNCTION to_c = 0;
 
-	ULARGE_INTEGER * int_array = 0;
-	ULARGE_INTEGER * p_int = 0;
-	int capacity = 0, i = 0;
+	ULONGLONG * result = 0;
+	int capacity = 0;
 
-	e_ularge_integer_array = eif_protect (a_ref);
+	e_array = eif_protect (a_ref);
 
 	if (dimension > 1)
 	{
-		if (-1 == multi_dim_tid)
-			multi_dim_tid = eif_type_id ("ECOM_ARRAY[ECOM_ULARGE_INTEGER]");
+		if (-1 == multi_dim_id)
+			multi_dim_id = eif_type_id ("ECOM_ARRAY[INTEGER_64]");
 			
-		f_item = eif_reference_function ("array_item", multi_dim_tid);
-		f_capacity = eif_integer_function ("count", multi_dim_tid);
+		to_c = eif_pointer_function ("to_c", multi_dim_id);
+		f_capacity = eif_integer_function ("count", multi_dim_id);
 	}
 	else
 	{
 		if (-1 == tid)
-			tid = eif_type_id ("ARRAY[ECOM_ULARGE_INTEGER]");
+			tid = eif_type_id ("ARRAY[INTEGER_64]");
 			
-		f_item = eif_reference_function ("item", tid);
+		to_c = eif_pointer_function ("to_c", tid);
 		f_capacity = eif_integer_function ("count", tid);
 	}
+
+	
 	// Allocate memory
 	
 
-	capacity = (int)(FUNCTION_CAST (EIF_INTEGER, (EIF_REFERENCE))f_capacity)(eif_access(e_ularge_integer_array));
-	int_array = (ULARGE_INTEGER *)CoTaskMemAlloc (capacity * (sizeof (ULARGE_INTEGER)));
-
-	for (i = 0; i < capacity; i++)
-	{
-		p_int = ccom_ec_pointed_ulong_long ((FUNCTION_CAST (EIF_REFERENCE, (EIF_REFERENCE, EIF_INTEGER))f_item)
-				(eif_access(e_ularge_integer_array), ((EIF_INTEGER)(i+1))), NULL);
-		memcpy ((ULARGE_INTEGER *)int_array, p_int, sizeof (ULARGE_INTEGER));
-	}
-	eif_wean (e_ularge_integer_array);
-
+	capacity = (int)(FUNCTION_CAST (EIF_INTEGER, (EIF_REFERENCE))f_capacity)(eif_access(e_array));
 	if (old != NULL)
-	{
-		memcpy (old, int_array, capacity*(sizeof(ULARGE_INTEGER)));
-		return NULL;
-	}
+		result = (ULONGLONG *)CoTaskMemAlloc (capacity*(sizeof(ULONGLONG)));
 	else
-		return int_array;
+		result = old;
+
+
+	memcpy (result, (FUNCTION_CAST (EIF_POINTER, (EIF_REFERENCE))to_c)
+			(eif_access(e_array)), capacity*(sizeof(ULONGLONG)) );
+
+	eif_wean (e_array);
+	return result;
 };
 //------------------------------------------------------------------------------------
 
@@ -2493,6 +2486,246 @@ SAFEARRAY * ecom_runtime_ec::ccom_ec_safearray_long (EIF_REFERENCE a_ref)
 				c_index[i] = (long) tmp_index [dimensions - i - 1];
 			}
 			an_element = (long)(FUNCTION_CAST (EIF_INTEGER, (EIF_REFERENCE, EIF_REFERENCE))f_array_item)
+					(eif_access (eif_safe_array), eif_access (eif_index));
+			hr = SafeArrayPutElement(c_safe_array, c_index, &an_element);
+			if (FAILED (hr))
+			{
+				com_eraise (f.c_format_message (hr), HRESULT_CODE (hr));
+			}
+
+			loop_control = rt_ce.ccom_safearray_next_index (dimensions, lower_indexes, upper_indexes, tmp_index);
+		} while (loop_control != 0);
+	};
+
+	// free memory
+	free (array_bound);
+	free (c_index);
+	free (tmp_index);
+	eif_wean (tmp_object1);
+	eif_wean (tmp_object2);
+	eif_wean (tmp_object3);
+	eif_wean (eif_index);
+	eif_wean (eif_safe_array);
+
+	return c_safe_array;
+};
+//-----------------------------------------------------------------------------------
+
+SAFEARRAY * ecom_runtime_ec::ccom_ec_safearray_int64 (EIF_REFERENCE a_ref)
+
+// Create C SAFEARRAY from Eiffel array
+{
+	EIF_GET_CONTEXT
+	EIF_OBJECT eif_safe_array = 0;
+	static EIF_TYPE_ID ecom_array_tid = -1;
+	
+	EIF_INTEGER * lower_indexes = 0, * element_counts = 0, * upper_indexes = 0;
+	EIF_INTEGER * tmp_index = 0;
+	int dimensions = 0, loop_control = 0, i = 0;
+	EIF_POINTER_FUNCTION f_to_c = 0;
+	EIF_OBJECT tmp_object1 = 0, tmp_object2 = 0, tmp_object3 = 0, eif_index = 0;
+	SAFEARRAYBOUND * array_bound = 0;
+	SAFEARRAY * c_safe_array = 0;
+	EIF_INTEGER_FUNCTION f_array_item = 0;
+	EIF_PROCEDURE p_array_create = 0;
+	long * c_index = 0;
+	LONGLONG an_element = 0;
+	HRESULT hr = 0;
+	long total_elements_count;
+
+	// protect eiffel object
+	eif_safe_array = eif_protect (a_ref);
+
+
+	// get dimensions, lower indexes, upper indexes, and elements counts from Eiffel ECOM_ARRAY object
+
+	if (-1 == ecom_array_tid)
+		ecom_array_tid = eif_type_id ("ECOM_ARRAY [INTEGER_64]");
+		
+	if (-1 == int_array_tid)
+		int_array_tid = eif_type_id ("ARRAY [INTEGER]");
+
+	dimensions = (int)eif_field (eif_access (eif_safe_array), "dimension_count", EIF_INTEGER);
+
+
+	f_to_c = eif_pointer_function ("to_c", int_array_tid);
+
+	tmp_object1 = eif_protect ( eif_field (eif_access (eif_safe_array), "lower_indices", EIF_REFERENCE));
+	lower_indexes = (EIF_INTEGER *) (FUNCTION_CAST (EIF_POINTER, (EIF_REFERENCE))f_to_c)(eif_access (tmp_object1));
+
+	tmp_object2 = eif_protect (eif_field (eif_access (eif_safe_array), "element_counts", EIF_REFERENCE));
+	element_counts = (EIF_INTEGER *) (FUNCTION_CAST (EIF_POINTER, (EIF_REFERENCE))f_to_c)(eif_access (tmp_object2));
+
+	tmp_object3 = eif_protect ( eif_field (eif_access (eif_safe_array), "upper_indices", EIF_REFERENCE));
+	upper_indexes = (EIF_INTEGER *) (FUNCTION_CAST (EIF_POINTER, (EIF_REFERENCE))f_to_c)(eif_access (tmp_object3));
+
+	// create SAFEARRAYBOUND
+	array_bound = (SAFEARRAYBOUND *) malloc (dimensions * sizeof (SAFEARRAYBOUND));
+
+	total_elements_count = 1;
+	for (i = 0; i < dimensions; i++)
+	{
+		array_bound[i].lLbound  = (long) lower_indexes [dimensions - i - 1];
+		array_bound[i].cElements  = (long) element_counts [dimensions - i - 1];
+		total_elements_count *= (long) element_counts [dimensions - i - 1];
+	}
+
+	// Create SAFEARRAY
+	c_safe_array = SafeArrayCreate (VT_I8, dimensions, array_bound);
+	if (c_safe_array == NULL)
+	{
+		enomem ();
+	};
+
+	f_array_item = eif_integer_function ("item", ecom_array_tid);
+	p_array_create = eif_procedure ("make", int_array_tid);
+
+	// Create index to access Eiffel object
+	eif_index = eif_create (int_array_tid);
+
+	nstcall = 0;
+	(FUNCTION_CAST (void, (EIF_REFERENCE, EIF_INTEGER, EIF_INTEGER))p_array_create)
+			(eif_access (eif_index), 1, dimensions);
+
+	// create index to access C object
+	c_index = (long *)malloc (dimensions * sizeof (long));
+
+	tmp_index = (EIF_INTEGER *)malloc (dimensions * sizeof (EIF_INTEGER));
+	memcpy (tmp_index, lower_indexes, (dimensions *sizeof (EIF_INTEGER)));
+
+	//
+	// copy elements from eiffel array to c array
+	if (total_elements_count != 0 )
+	{
+		do
+		{
+			eif_make_from_c (eif_access (eif_index), tmp_index, dimensions, EIF_INTEGER);
+
+			for (i = 0; i < dimensions; i++)
+			{
+				c_index[i] = (long) tmp_index [dimensions - i - 1];
+			}
+			an_element = (LONGLONG)(FUNCTION_CAST (EIF_INTEGER_64, (EIF_REFERENCE, EIF_REFERENCE))f_array_item)
+					(eif_access (eif_safe_array), eif_access (eif_index));
+			hr = SafeArrayPutElement(c_safe_array, c_index, &an_element);
+			if (FAILED (hr))
+			{
+				com_eraise (f.c_format_message (hr), HRESULT_CODE (hr));
+			}
+
+			loop_control = rt_ce.ccom_safearray_next_index (dimensions, lower_indexes, upper_indexes, tmp_index);
+		} while (loop_control != 0);
+	};
+
+	// free memory
+	free (array_bound);
+	free (c_index);
+	free (tmp_index);
+	eif_wean (tmp_object1);
+	eif_wean (tmp_object2);
+	eif_wean (tmp_object3);
+	eif_wean (eif_index);
+	eif_wean (eif_safe_array);
+
+	return c_safe_array;
+};
+//-----------------------------------------------------------------------------------
+
+SAFEARRAY * ecom_runtime_ec::ccom_ec_safearray_uint64 (EIF_REFERENCE a_ref)
+
+// Create C SAFEARRAY from Eiffel array
+{
+	EIF_GET_CONTEXT
+	EIF_OBJECT eif_safe_array = 0;
+	static EIF_TYPE_ID ecom_array_tid = -1;
+	
+	EIF_INTEGER * lower_indexes = 0, * element_counts = 0, * upper_indexes = 0;
+	EIF_INTEGER * tmp_index = 0;
+	int dimensions = 0, loop_control = 0, i = 0;
+	EIF_POINTER_FUNCTION f_to_c = 0;
+	EIF_OBJECT tmp_object1 = 0, tmp_object2 = 0, tmp_object3 = 0, eif_index = 0;
+	SAFEARRAYBOUND * array_bound = 0;
+	SAFEARRAY * c_safe_array = 0;
+	EIF_INTEGER_FUNCTION f_array_item = 0;
+	EIF_PROCEDURE p_array_create = 0;
+	long * c_index = 0;
+	ULONGLONG an_element = 0;
+	HRESULT hr = 0;
+	long total_elements_count;
+
+	// protect eiffel object
+	eif_safe_array = eif_protect (a_ref);
+
+
+	// get dimensions, lower indexes, upper indexes, and elements counts from Eiffel ECOM_ARRAY object
+
+	if (-1 == ecom_array_tid)
+		ecom_array_tid = eif_type_id ("ECOM_ARRAY [INTEGER_64]");
+		
+	if (-1 == int_array_tid)
+		int_array_tid = eif_type_id ("ARRAY [INTEGER]");
+
+	dimensions = (int)eif_field (eif_access (eif_safe_array), "dimension_count", EIF_INTEGER);
+
+
+	f_to_c = eif_pointer_function ("to_c", int_array_tid);
+
+	tmp_object1 = eif_protect ( eif_field (eif_access (eif_safe_array), "lower_indices", EIF_REFERENCE));
+	lower_indexes = (EIF_INTEGER *) (FUNCTION_CAST (EIF_POINTER, (EIF_REFERENCE))f_to_c)(eif_access (tmp_object1));
+
+	tmp_object2 = eif_protect (eif_field (eif_access (eif_safe_array), "element_counts", EIF_REFERENCE));
+	element_counts = (EIF_INTEGER *) (FUNCTION_CAST (EIF_POINTER, (EIF_REFERENCE))f_to_c)(eif_access (tmp_object2));
+
+	tmp_object3 = eif_protect ( eif_field (eif_access (eif_safe_array), "upper_indices", EIF_REFERENCE));
+	upper_indexes = (EIF_INTEGER *) (FUNCTION_CAST (EIF_POINTER, (EIF_REFERENCE))f_to_c)(eif_access (tmp_object3));
+
+	// create SAFEARRAYBOUND
+	array_bound = (SAFEARRAYBOUND *) malloc (dimensions * sizeof (SAFEARRAYBOUND));
+
+	total_elements_count = 1;
+	for (i = 0; i < dimensions; i++)
+	{
+		array_bound[i].lLbound  = (long) lower_indexes [dimensions - i - 1];
+		array_bound[i].cElements  = (long) element_counts [dimensions - i - 1];
+		total_elements_count *= (long) element_counts [dimensions - i - 1];
+	}
+
+	// Create SAFEARRAY
+	c_safe_array = SafeArrayCreate (VT_UI8, dimensions, array_bound);
+	if (c_safe_array == NULL)
+	{
+		enomem ();
+	};
+
+	f_array_item = eif_integer_function ("item", ecom_array_tid);
+	p_array_create = eif_procedure ("make", int_array_tid);
+
+	// Create index to access Eiffel object
+	eif_index = eif_create (int_array_tid);
+
+	nstcall = 0;
+	(FUNCTION_CAST (void, (EIF_REFERENCE, EIF_INTEGER, EIF_INTEGER))p_array_create)
+			(eif_access (eif_index), 1, dimensions);
+
+	// create index to access C object
+	c_index = (long *)malloc (dimensions * sizeof (long));
+
+	tmp_index = (EIF_INTEGER *)malloc (dimensions * sizeof (EIF_INTEGER));
+	memcpy (tmp_index, lower_indexes, (dimensions *sizeof (EIF_INTEGER)));
+
+	//
+	// copy elements from eiffel array to c array
+	if (total_elements_count != 0 )
+	{
+		do
+		{
+			eif_make_from_c (eif_access (eif_index), tmp_index, dimensions, EIF_INTEGER);
+
+			for (i = 0; i < dimensions; i++)
+			{
+				c_index[i] = (long) tmp_index [dimensions - i - 1];
+			}
+			an_element = (ULONGLONG)(FUNCTION_CAST (EIF_INTEGER_64, (EIF_REFERENCE, EIF_REFERENCE))f_array_item)
 					(eif_access (eif_safe_array), eif_access (eif_index));
 			hr = SafeArrayPutElement(c_safe_array, c_index, &an_element);
 			if (FAILED (hr))

@@ -308,7 +308,7 @@ feature -- Removal
 			-- Free memory of object at `addr'.
 			-- (Preferred interface is `free'.)
 		external
-			"C | %"eif_memory.h%""
+			"C signature (EIF_REFERENCE) use %"eif_memory.h%""
 		end
 
 	full_coalesce is
@@ -349,12 +349,12 @@ feature {NONE} -- Implementation
 	
 	find_referers (target: POINTER; result_type: INTEGER): SPECIAL [ANY] is
 		external
-			"C | %"eif_traverse.h%""
+			"C signature (EIF_REFERENCE, EIF_INTEGER): EIF_REFERENCE use %"eif_traverse.h%""
 		end
 
 	find_instance_of (dtype, result_type: INTEGER): SPECIAL [ANY] is
 		external
-			"C | %"eif_traverse.h%""
+			"C signature (EIF_INTEGER, EIF_INTEGER): EIF_REFERENCE use %"eif_traverse.h%""
 		end
 
 indexing

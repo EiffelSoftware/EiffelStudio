@@ -14,7 +14,7 @@ feature -- Feature specific to ISE runtime.
 	frozen c_standard_clone (other: POINTER): ANY is
 			-- New object of same dynamic type as `other'
 		external
-			"C use %"eif_copy.h%""
+			"C signature (EIF_REFERENCE): EIF_REFERENCE use %"eif_copy.h%""
 		alias
 			"eclone"
 		end
@@ -40,7 +40,7 @@ feature -- Feature specific to ISE runtime.
 	frozen c_standard_is_equal (target, source: POINTER): BOOLEAN is
 			-- C external performing standard equality
 		external
-			"C use %"eif_equal.h%""
+			"C signature (EIF_REFERENCE, EIF_REFERENCE): EIF_BOOLEAN use %"eif_equal.h%""
 		alias
 			"eequal"
 		end
@@ -48,7 +48,7 @@ feature -- Feature specific to ISE runtime.
 	frozen c_standard_copy (source, target: POINTER) is
 			-- C external performing standard copy
 		external
-			"C use %"eif_copy.h%""
+			"C signature (EIF_REFERENCE, EIF_REFERENCE) use %"eif_copy.h%""
 		alias
 			"ecopy"
 		end
@@ -57,7 +57,7 @@ feature -- Feature specific to ISE runtime.
 			-- New object structure recursively duplicated from the one
 			-- attached to `other'
 		external
-			"C use %"eif_copy.h%""
+			"C signature (EIF_REFERENCE): EIF_REFERENCE use %"eif_copy.h%""
 		alias
 			"edclone"
 		end
@@ -66,7 +66,7 @@ feature -- Feature specific to ISE runtime.
 			-- Are `some' and `other' attached to recursively isomorphic
 			-- object structures?
 		external
-			"C use %"eif_equal.h%""
+			"C signature (EIF_REFERENCE, EIF_REFERENCE): EIF_BOOLEAN use %"eif_equal.h%""
 		alias
 			"ediso"
 		end
@@ -113,7 +113,7 @@ feature -- Feature specific to ISE runtime.
 	frozen sp_count (sp_obj: POINTER): INTEGER is
 			-- Count of special object
 		external
-			"C use %"eif_plug.h%""
+			"C signature (EIF_REFERENCE): EIF_INTEGER use %"eif_plug.h%""
 		end
 
 feature -- Internal C routines

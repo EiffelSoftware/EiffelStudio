@@ -24,7 +24,7 @@ feature -- Initialization
 			initialize_structure
 			create_structure
 		ensure
-			parser_set: parser = parser
+			parser_set: parser = pars
 		end
 
 	initialize_structure is

@@ -38,7 +38,7 @@ INSTALL = $INSTALL
 ########################################################################
 # Parameters set by Configure -- edit config.sh if changes are needed
 
-AR = ar rc
+AR = $ar rc
 CC = $cc
 CTAGS = ctags
 JCFLAGS = \$(CFLAGS) $optimize $ccflags $large

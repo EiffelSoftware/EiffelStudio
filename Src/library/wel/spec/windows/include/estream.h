@@ -48,7 +48,7 @@ extern EIF_EDITSTREAM_PROCEDURE wel_editstream_procedure;
 		/* Set `wel_editstream_object' with `value' */
 
 	extern void wel_release_editstream_object() ;
-#	define cwel_release_editstream_object  (wel_release_editstream_object )
+#	define cwel_release_editstream_object  (wel_release_editstream_object() )
 		/* Set `wel_editstream_object' with `value' */
 
 	extern void wel_set_editstream_buffer(EIF_POINTER _value_) ;

@@ -23,7 +23,7 @@ feature -- Basic Operations
 			ace_location: FILE_NAME
 		do
 			create ace_location.make_from_string (wizard_information.project_location)
-			ace_location.set_file_name ("ace")
+			ace_location.set_file_name ("Ace")
 			ace_location.add_extension ("ace")
 			wizard_information.set_ace_location (ace_location)
 

@@ -143,6 +143,11 @@ feature -- Access
 		-- The id of the top level object `Current' represents,
 		-- or `0' if NONE.
 		
+	associated_top_level_object_on_loading: INTEGER
+		-- The associated top level object as retrieved from the XML. This reset to 0 by
+		-- `update_object_as_instance_representation' which then sets `associated_top_level_object' to the same value.
+		-- This is only used temporarily while loading/importing projects.
+		
 	window_selector_item: GB_WINDOW_SELECTOR_ITEM
 		-- Representation of `Current' in `window_selector'.
 
@@ -268,6 +273,7 @@ feature -- Access
 				check
 					associated_correctly: all_children_of_associated.item.instance_referers.has (all_children_of_current.item.id)
 				end
+				
 				all_children_of_associated.item.instance_referers.remove (all_children_of_current.item.id)
 				
 					-- Reconnect the events for all objects comprising `Current' recursively as they may be
@@ -376,38 +382,53 @@ feature -- Access
 			laytou_item_has_not_data: layout_item.data = Void
 		end
 
-	connect_instance_referers (original_object, an_object:GB_OBJECT) is
-			-- Recursively
-			-- add a similar referring link from evey child in `Current'
-			-- to every child of `an_object'.
+	connect_instance_referers (original_object, instance_object:GB_OBJECT) is
+			-- Recursively add a similar referring link from evey child in `Current'
+			-- to every child of `instance_object' that is not part of a nested structure.
 		require
-			objects_differ: original_object /= an_object
-			objects_not_void: original_object /= Void and an_object /= Void
-		local
-			original_linear_representation, new_linear_representation: ARRAYED_LIST [GB_OBJECT]
+			objects_differ: original_object /= instance_object
+			objects_not_void: original_object /= Void and instance_object /= Void
 		do
-			create new_linear_representation.make (20)
-			create original_linear_representation.make (20)
-			an_object.all_children_recursive (new_linear_representation)
-			original_object.all_children_recursive (original_linear_representation)
-			check
-				same_object_count: new_linear_representation.count = original_linear_representation.count
-			end
-			from
-				new_linear_representation.start
-				original_linear_representation.start
-			until
-				new_linear_representation.off
-			loop
-				original_linear_representation.item.instance_referers.extend (new_linear_representation.item.id, new_linear_representation.item.id)
-				if is_top_level_object then
-					original_linear_representation.item.layout_item.set_data ("pop")
-				end
-				original_linear_representation.forth
-				new_linear_representation.forth
-			end
+			internal_connect_instance_referers_recursive (original_object, instance_object)
 		end
 		
+	internal_connect_instance_referers_recursive (original_object, instance_object: GB_OBJECT) is
+			-- Recursively connect evey child of `instance_object' to the corresponding child of `original_object'
+			-- by inserting it into the `instance_referers'. For any subtree of `original_object' that is a reference
+			-- to another object, do not connect the items of this subtree as they will already be reachable indirectly
+			-- through the nested structure of `instance_referers'.
+			-- If we do not prevent the conection of the reference subtrees, loading widgets structures that have nested
+			-- widgets two or more levels deep cause `instance_referers_recursively_unique' class invariant to fail as the
+			-- same object is contained in the `instance_referers' chain more than once. This does not crash EiffelBuild,
+			-- but leads to property changes occuring on the object repeated in the nested chain multiple times for each duplicate entry.
+		require
+			instance_object_not_void: instance_object /= Void
+			objects_differ: instance_object /= original_object
+			original_object_not_void: original_object /= Void
+			objects_count_consistent: instance_object.children.count = original_object.children.count
+		local
+			original_object_children, instance_object_children: ARRAYED_LIST [GB_OBJECT]
+			current_original_object, current_instance_object: GB_OBJECT
+		do
+			original_object_children := original_object.children
+			instance_object_children := instance_object.children
+			from
+				instance_object_children.start
+				original_object_children.start
+			until
+				instance_object_children.off
+			loop
+				current_original_object := original_object_children.item
+				current_instance_object := instance_object_children.item
+				if (current_original_object.associated_top_level_object_on_loading = 0 and current_original_object.associated_top_level_object = 0) then
+					current_original_object.instance_referers.extend (current_instance_object.id, current_instance_object.id)
+					internal_connect_instance_referers_recursive (current_instance_object, current_original_object)
+				end
+				instance_object_children.forth
+				original_object_children.forth
+			end
+		end
+
 	unconnect_instance_referers (original_object, an_object:GB_OBJECT) is
 			-- Recursively remove a referring link from evey child in `Current'
 			-- to every child of `an_object'.
@@ -672,9 +693,9 @@ feature {GB_XML_STORE, GB_XML_LOAD, GB_XML_OBJECT_BUILDER, GB_XML_IMPORT}
 			end
 			element_info := full_information @ reference_id_string
 			if element_info /= Void then
-				associated_top_level_object := element_info.data.to_integer
+				associated_top_level_object_on_loading := element_info.data.to_integer
 			else
-				associated_top_level_object := 0
+				associated_top_level_object_on_loading := 0
 			end
 		end
 
@@ -1541,14 +1562,17 @@ feature {GB_OBJECT_HANDLER} -- Implementation
 			l_object: GB_OBJECT
 			all_children: ARRAYED_LIST [GB_OBJECT]
 		do
-			if associated_top_level_object > 0 then
+			if associated_top_level_object_on_loading > 0 then
 					-- Retrieve the object which `Current' represents.
-				l_object := object_handler.object_from_id (associated_top_level_object)
+				l_object := object_handler.object_from_id (associated_top_level_object_on_loading)
+					-- Now reset `associated_top_level_object_on_loading'.
+				associated_top_level_object_on_loading := 0
 				check
 					object_not_void: object /= Void
 				end
 					-- Add `Current' as an instance referer of `l_object'.
 				l_object.instance_referers.extend (Current.id, Current.id)
+
 					-- Set `l_object' as the top object `Current' represents.
 				set_associated_top_level_object (l_object)
 				represent_as_locked_instance
@@ -1570,6 +1594,9 @@ feature {GB_OBJECT_HANDLER} -- Implementation
 					all_children.forth
 				end
 			end
+		ensure
+			associated_object_set: old associated_top_level_object_on_loading > 0 implies associated_top_level_object = old associated_top_level_object_on_loading
+			original_associated_object_reset: associated_top_level_object_on_loading = 0
 		end
 		
 feature {NONE} -- Contract support

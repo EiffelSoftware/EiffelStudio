@@ -11,29 +11,11 @@ inherit
 	EV_STANDARD_DIALOG_I
 		redefine
 			interface
-		select
+		end
+
+	EV_GTK_WINDOW_IMP
+		redefine
 			interface,
-			make
-		end
-
-	EV_ANY_IMP
-		redefine
-			interface
-		end
-
-	EV_WINDOW_IMP
-		rename
-			interface as ev_window_imp_interface,
-			make as ev_window_imp_make
-		undefine
-			destroy,
-			title,
-			set_title,
-			block
-		redefine
-			on_key_event,
-			initialize_client_area,
-			call_close_request_actions,
 			has_wm_decorations
 		end
 
@@ -42,14 +24,6 @@ inherit
 	EV_DIALOG_CONSTANTS
 		export
 			{NONE} all
-		end
-	
-feature -- Initialization
-
-	initialize_client_area is
-			-- Initialize client area of Current
-		do
-			-- Do nothing as this is performed by Gtk
 		end
 
 feature -- Access
@@ -134,7 +108,6 @@ feature {NONE} -- Implementation
 
 	on_key_event (a_key: EV_KEY; a_key_string: STRING; a_key_press: BOOLEAN) is
 		do
-			Precursor {EV_WINDOW_IMP} (a_key, a_key_string, a_key_press)
 			if a_key /= Void and then not a_key_press then
 				if a_key.code = app_implementation.Key_constants.key_escape then
 					on_cancel

@@ -16,6 +16,8 @@ inherit
 		end
 
 	EV_ANY_IMP
+		undefine
+			needs_event_box
 		redefine
 			interface
 		end
@@ -76,6 +78,8 @@ feature {NONE} -- Obsolete
 			feature {EV_GTK_EXTERNALS}.gtk_container_add (list_widget, v_imp.c_object)
 			v_imp.set_item_parent_imp (Current)
 		end
+
+	remove_from_container (v_imp: EV_ITEM_IMP) is do end
 
 	reorder_child (v: EV_ITEM; v_imp: EV_ITEM_IMP; a_position: INTEGER) is
 			-- Move `v' to `a_position'.

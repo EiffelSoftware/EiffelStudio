@@ -16,6 +16,8 @@ inherit
 		end
 
 	EV_ANY_IMP
+		undefine
+			needs_event_box
 		redefine
 			interface
 		end

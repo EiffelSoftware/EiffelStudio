@@ -69,7 +69,7 @@ sed <<!GROK!THIS! >config.h -e 's!^#undef!/\*#define!'
  *	This symbol is maped to memcmp if the bcmp() routine is not
  *	available to compare strings.
  */
-#$d_bcmp	bcmp(s,d,l)	memcmp((s),(d),(l))		/* mapped to memcmp */
+#$d_bcmp bcmp(s,d,l) memcmp((s),(d),(l))	/* mapped to memcmp */
 
 /* bcopy:
  *	This symbol is maped to memcpy if the bcopy() routine is not
@@ -170,17 +170,6 @@ sed <<!GROK!THIS! >config.h -e 's!^#undef!/\*#define!'
  */
 #define PAGESIZE_VALUE $pagesize	/* System page size, in bytes */
 
-/* index:
- *	This preprocessor symbol is defined, along with rindex, if the system
- *	uses the strchr and strrchr routines instead.
- */
-/* rindex:
- *	This preprocessor symbol is defined, along with index, if the system
- *	uses the strchr and strrchr routines instead.
- */
-#$d_index	index strchr	/**/
-#$d_index	rindex strrchr	/**/
-
 /* SIGNALS_KEPT
  *	This symbol is defined if signal handlers must be reinstated after
  *	receipt of a signal.
@@ -272,6 +261,17 @@ sed <<!GROK!THIS! >config.h -e 's!^#undef!/\*#define!'
  *	supported.
  */
 #$d_socket HAS_SOCKET		/**/
+
+/* index:
+ *	This preprocessor symbol is defined, along with rindex, if the system
+ *	uses the strchr and strrchr routines instead.
+ */
+/* rindex:
+ *	This preprocessor symbol is defined, along with index, if the system
+ *	uses the strchr and strrchr routines instead.
+ */
+#$d_strchr	index strchr	/**/
+#$d_strchr	rindex strrchr	/**/
 
 /* USE_STRUCT_COPY
  *	This symbol, if defined, indicates that this C compiler knows how

@@ -1,7 +1,7 @@
 #! /bin/sh
 #
-# If these # comments don't work, trim them. Don't worry about any
-# other shell scripts, Configure will trim # comments from them for you.
+# If these # comments don't work, trim them. Don't worry about any other
+# shell scripts, Configure will trim # comments from them for you.
 #
 # (If you are trying to port this package to a machine without sh,
 # I would suggest you have a look at the prototypical config_h.SH file
@@ -24,7 +24,7 @@
 
 # $Id$
 #
-# Generated on Tue Jan 26 13:51:28 PST 1993 [metaconfig 2.9dev PL0]
+# Generated on Fri Feb 26 11:20:12 PST 1993 [metaconfig 2.9dev PL0]
 
 cat >/tmp/c1$$ <<EOF
 ARGGGHHHH!!!!!
@@ -38,16 +38,16 @@ we'd have to do is go in and swap the && and || tokens, wherever they are.)
 [End of diatribe. We now return you to your regularly scheduled programming...]
 EOF
 cat >/tmp/c2$$ <<EOF
+
 OOPS!  You naughty creature!  You didn't run Configure with sh!
 I will attempt to remedy the situation by running sh for you...
-
 EOF
 
 true || cat /tmp/c1$$ /tmp/c2$$
-true || exec sh $0 $*
+true || exec sh $0 $argv:q
 
-export PATH || cat /tmp/c2$$
-export PATH || exec sh $0 $*
+(exit $?0) || cat /tmp/c2$$
+(exit $?0) || exec sh $0 $argv:q
 rm -f /tmp/c1$$ /tmp/c2$$
 
 : Sanity checks
@@ -55,7 +55,7 @@ PATH=".:$PATH:/bin:/usr/bin:/usr/local/bin:/usr/ucb:/usr/local:/usr/lbin"
 PATH=$PATH:'/usr/5bin:/etc:/usr/gnu/bin:/usr/new:/usr/new/bin:/usr/nbin'
 PATH=$PATH:'/sys5.3/bin:/sys5.3/usr/bin:/bsd4.3/bin:/bsd4.3/usr/ucb'
 PATH=$PATH:'/bsd4.3/usr/bin:/usr/bsd:/bsd43/bin:/usr/ccs/bin'
-PATH=$PATH:'/etc:/usr/lib:/lib:/usr/ccs/lib'
+PATH=$PATH:'/etc:/usr/lib:/usr/ucblib:/lib:/usr/ccs/lib'
 export PATH
 
 if test ! -t 0; then
@@ -82,6 +82,7 @@ d_xenix=''
 eunicefix=''
 Mcc=''
 awk=''
+bash=''
 bison=''
 cat=''
 chgrp=''
@@ -101,6 +102,7 @@ flex=''
 gcc=''
 grep=''
 inews=''
+ksh=''
 less=''
 line=''
 lint=''
@@ -189,7 +191,6 @@ d_uname=''
 d_getopt=''
 d_getpagsz=''
 pagesize=''
-d_index=''
 d_keepsig=''
 d_lstat=''
 d_mkdir=''
@@ -213,6 +214,7 @@ d_socket=''
 d_sockpair=''
 sockethdr=''
 socketlib=''
+d_strchr=''
 d_strctcpy=''
 d_strerrm=''
 d_strerror=''
@@ -416,6 +418,7 @@ eval "set $*"
 shift
 		
 : set up default values
+fastread=''
 reuseval=false
 config_sh=''
 alldone=''
@@ -500,7 +503,7 @@ package=Eiffel-3.0
 : Eunice requires " " instead of "", can you believe it
 echo " "
 : Here we go...
-echo "Beginning of configuration questions for $package kit."
+echo "Beginning of configuration questions for $package."
 
 define='define'
 undef='undef'
@@ -543,42 +546,6 @@ libpth=$libpth' /usr/lib/small /lib/small'
 : libraries wanted for XDR support and socket support
 libswanted="c_s rpc xdr bsd socket inet nsl m"
 
-: Now test for existence of everything in MANIFEST
-echo " "
-if test -f ../MANIFEST; then
-	echo "First let's make sure your kit is complete.  Checking..." >&3
-	awk '$1 !~ /PACK[A-Z]+/ {print $1}' ../MANIFEST | split -50
-	rm -f missing
-	for filelist in x??; do
-		(cd ..; ls `cat UU/$filelist` >/dev/null 2>>UU/missing)
-	done
-	if test -s missing; then
-		cat missing
-		cat >&3 <<'EOM'
-
-THIS PACKAGE SEEMS TO BE INCOMPLETE.
-
-To continue the configuration process AT YOUR OWN RISKS, you may press the
-RETURN key now. If you wish to stop the script, enter 'no' and press RETURN.
-
-PRESS RETURN TO CONTINUE OR ENTER 'n' TO STOP.
-EOM
-		read ans
-		if test "$ans"; then
-			echo "ABORTING..." >&3
-			kill $$
-		else
-			echo "Continuing..." >&3
-			rm -f missing
-		fi
-	else
-		echo "Looks good..." >&3
-	fi
-else
-	echo "There is no MANIFEST file.  I hope your kit is complete !"
-fi
-rm -f missing x??
-
 : Some greps do not return status, grrr.
 echo "grimblepritz" >grimble
 if grep blurfldyick grimble >/dev/null 2>&1 ; then
@@ -618,6 +585,47 @@ fi
 echo $n "The star should be here-->$c"
 echo '*'
 rm -f .echotmp
+
+: Now test for existence of everything in MANIFEST
+echo " "
+if test -f ../MANIFEST; then
+	echo "First let's make sure your kit is complete.  Checking..." >&3
+	awk '$1 !~ /PACK[A-Z]+/ {print $1}' ../MANIFEST | split -50
+	rm -f missing
+	for filelist in x??; do
+		(cd ..; ls `cat UU/$filelist` >/dev/null 2>>UU/missing)
+	done
+	if test -s missing; then
+		cat missing
+		cat >&3 <<'EOM'
+
+THIS PACKAGE SEEMS TO BE INCOMPLETE.
+
+You have the option of continuing the configuration process, despite the
+distinct possibility that your kit is damaged, by typing 'y'es.  If you
+do, don't blame me if something goes wrong.  I advise you to type 'n'o
+and contact the author (ram@york.eiffel.com).
+
+EOM
+		echo $n "Continue? [n] $c" >&3
+		read ans
+		case "$ans" in
+		y*)
+			echo "Continuing..." >&3
+			rm -f missing
+			;;
+		*)
+			echo "ABORTING..." >&3
+			kill $$
+			;;
+		esac
+	else
+		echo "Looks good..." >&3
+	fi
+else
+	echo "There is no MANIFEST file.  I hope your kit is complete !"
+fi
+rm -f missing x??
 
 : compute the number of columns on the terminal for proper question formatting
 case "$COLUMNS" in
@@ -669,14 +677,14 @@ while expr "X\$ans" : "X!" >/dev/null; do
 	"\$ans")
 		case "\$ans" in
 		!)
-			sh
+			sh 1>&3
 			echo " "
 			$myecho
 			;;
 		!*)
 			set x \`expr "X\$ans" : "X!\(.*\)\$"\`
 			shift
-			sh -c "\$*"
+			sh 1>&3 -c "\$*"
 			echo " "
 			$myecho
 			;;
@@ -807,7 +815,10 @@ rm -f try today
 : figure out how to guarantee sh startup
 echo " "
 echo "Checking out how to guarantee sh startup..." >&3
-startsh=$sharpbang'/bin/sh'
+case "$SYSTYPE" in
+*bsd*|sys5*) startsh=$sharpbang"/$SYSTYPE/bin/sh";;
+*) startsh=$sharpbang'/bin/sh';;
+esac
 echo "Let's see if '$startsh' works..."
 cat >try <<EOSS
 $startsh
@@ -977,7 +988,6 @@ esac
 : Try to determine whether config.sh was made on this system
 case "$config_sh" in
 '')
-: indentation wrong on purpose--RAM
 myuname=`( ($uname -a) 2>/dev/null || hostname) 2>&1`
 dflt=n
 if test -f ../config.sh; then
@@ -994,7 +1004,7 @@ hint=default
 cd ..
 if test -f config.sh; then
 	echo " "
-	rp="I see a config.sh file.  Did Configure make it on THIS system?"
+	rp="I see a config.sh file.  Shall I use it to set the defaults?"
 	. UU/myread
 	case "$ans" in
 	n*|N*) echo "OK, I'll ignore it."; mv config.sh config.sh.old;;
@@ -1117,7 +1127,6 @@ EOM
 	cd ..
 fi
 cd UU
-: remember, indentation is wrong--RAM
 ;;
 *)
 	echo " "
@@ -1140,53 +1149,13 @@ for file in $loclist $trylist; do
 	eval $file="\$_$file"
 done
 
-: set up shell script to do ~ expansion
-cat >filexp <<EOSS
-$startsh
-: expand filename
-case "\$1" in
- ~/*|~)
-	echo \$1 | $sed "s|~|\${HOME-\$LOGDIR}|"
-	;;
- ~*)
-	if $test -f /bin/csh; then
-		/bin/csh -f -c "glob \$1"
-		failed=$?
-		echo ""
-		exit \$failed
-	else
-		name=\`$expr x\$1 : '..\([^/]*\)'\`
-		dir=\`$sed -n -e "/^\${name}:/{s/^[^:]*:[^:]*:[^:]*:[^:]*:[^:]*:\([^:]*\).*"'\$'"/\1/" -e p -e q -e '}' </etc/passwd\`
-		if $test ! -d "\$dir"; then
-			me=\`basename \$0\`
-			echo "\$me: can't locate home directory for: \$name" >&2
-			exit 1
-		fi
-		case "\$1" in
-		*/*)
-			echo \$dir/\`$expr x\$1 : '..[^/]*/\(.*\)'\`
-			;;
-		*)
-			echo \$dir
-			;;
-		esac
-	fi
-	;;
-*)
-	echo \$1
-	;;
-esac
-EOSS
-chmod +x filexp
-$eunicefix filexp
-
 : determine where manual pages are on this system
 echo " "
 case "$sysman" in
 '') sysman=`loc . /usr/man/man1 /usr/man/man1 /usr/man/mann /usr/man/manl /usr/man/local/man1 /usr/man/u_man/man1 /usr/share/man/man1 /usr/catman/u_man/man1 /usr/man/l_man/man1 /usr/local/man/u_man/man1 /usr/local/man/l_man/man1 /usr/man/man.L`
 	;;
 esac
-if test -d "$sysman"; then
+if $test -d "$sysman"; then
 	echo "System manual is in $sysman." >&3
 else
 	echo "Could not find manual pages in source form." >&3
@@ -1271,7 +1240,7 @@ none)
 	split="$ans"
 	unsplit='';;
 *large*|*small*|*medium*|*huge*)
-	case "$model" in
+	case "$models" in
 	*large*)
 		case "$large" in
 		'') dflt='-Ml';;
@@ -1285,7 +1254,7 @@ none)
 	large="$ans";;
 	*) large='';;
 	esac
-	case "$model" in
+	case "$models" in
 	*huge*) case "$huge" in
 		'') dflt='-Mh';;
 		*) dflt="$huge";;
@@ -1298,7 +1267,7 @@ none)
 		huge="$ans";;
 	*) huge="$large";;
 	esac
-	case "$model" in
+	case "$models" in
 	*medium*) case "$medium" in
 		'') dflt='-Mm';;
 		*) dflt="$medium";;
@@ -1311,7 +1280,7 @@ none)
 		medium="$ans";;
 	*) medium="$large";;
 	esac
-	case "$model" in
+	case "$models" in
 	*small*) case "$small" in
 		'') dflt='none';;
 		*) dflt="$small";;
@@ -1332,20 +1301,20 @@ esac
 
 : make some quick guesses about what we are up against
 echo " "
-$echo $n "Hmm...  $c" >&3
+$echo $n "Hmm...  $c"
 $cat /usr/include/signal.h /usr/include/sys/signal.h >foo 2>/dev/null
 if test `echo abc | tr a-z A-Z` = Abc ; then
 	xxx=`./loc addbib blurfl $pth`
 	if $test -f $xxx; then
-echo "Looks kind of like a USG system with BSD features, but we'll see..." >&3
+	echo "Looks kind of like a USG system with BSD features, but we'll see..."
 		echo exit 0 >bsd
 		echo exit 0 >usg
 		echo exit 1 >v7
 	else
 		if $contains SIGTSTP foo >/dev/null 2>&1 ; then
-		echo "Looks kind of like an extended USG system, but we'll see..." >&3
+			echo "Looks kind of like an extended USG system, but we'll see..."
 		else
-			echo "Looks kind of like a USG system, but we'll see..." >&3
+			echo "Looks kind of like a USG system, but we'll see..."
 		fi
 		echo exit 1 >bsd
 		echo exit 0 >usg
@@ -1353,13 +1322,13 @@ echo "Looks kind of like a USG system with BSD features, but we'll see..." >&3
 	fi
 	d_bsd="$undef"
 elif $contains SIGTSTP foo >/dev/null 2>&1 ; then
-	echo "Looks kind of like a BSD system, but we'll see..." >&3
+	echo "Looks kind of like a BSD system, but we'll see..."
 	d_bsd="$define"
 	echo exit 0 >bsd
 	echo exit 1 >usg
 	echo exit 1 >v7
 else
-	echo "Looks kind of like a Version 7 system, but we'll see..." >&3
+	echo "Looks kind of like a Version 7 system, but we'll see..."
 	d_bsd="$undef"
 	echo exit 1 >bsd
 	echo exit 1 >usg
@@ -1367,7 +1336,7 @@ else
 fi
 case "$eunicefix" in
 *unixtovms*)
-	cat <<'EOI'
+	$cat <<'EOI'
 There is, however, a strange, musty smell in the air that reminds me of
 something...hmm...yes...I've got it...there's a VMS nearby, or I'm a Blit.
 EOI
@@ -1484,6 +1453,46 @@ case "$ans" in
 	;;
 	*)  d_portable="$undef" ;;
 esac
+
+: set up shell script to do ~ expansion
+cat >filexp <<EOSS
+$startsh
+: expand filename
+case "\$1" in
+ ~/*|~)
+	echo \$1 | $sed "s|~|\${HOME-\$LOGDIR}|"
+	;;
+ ~*)
+	if $test -f /bin/csh; then
+		/bin/csh -f -c "glob \$1"
+		failed=$?
+		echo " "
+		exit \$failed
+	else
+		name=\`$expr x\$1 : '..\([^/]*\)'\`
+		dir=\`$sed -n -e "/^\${name}:/{s/^[^:]*:[^:]*:[^:]*:[^:]*:[^:]*:\([^:]*\).*"'\$'"/\1/" -e p -e q -e '}' </etc/passwd\`
+		if $test ! -d "\$dir"; then
+			me=\`basename \$0\`
+			echo "\$me: can't locate home directory for: \$name" >&2
+			exit 1
+		fi
+		case "\$1" in
+		*/*)
+			echo \$dir/\`$expr x\$1 : '..[^/]*/\(.*\)'\`
+			;;
+		*)
+			echo \$dir
+			;;
+		esac
+	fi
+	;;
+*)
+	echo \$1
+	;;
+esac
+EOSS
+chmod +x filexp
+$eunicefix filexp
 
 : now set up to get a file name with possible "~name" substitutions
 cat <<'EOSC' >getfile
@@ -1948,7 +1957,7 @@ esac
 
 runnm=$usenm
 case "$reuseval" in
-true) runnm=false;
+true) runnm=false;;
 esac
 
 : nm options which may be necessary
@@ -1966,7 +1975,6 @@ esac
 
 case "$runnm" in
 true)
-: indentation is wrong on purpose--RAM
 : get list of predefined functions in a handy place
 echo " "
 case "$libc" in
@@ -2176,7 +2184,6 @@ if $test -f /lib/syscalls.exp; then
 	echo "Also extracting names from /lib/syscalls.exp for good ole AIX..." >&3
 	$sed -n 's/^\([^ 	]*\)[ 	]*syscall$/\1/p' /lib/syscalls.exp >>libc.list
 fi
-: remember, indentation is wrong on purpose--RAM
 ;;
 esac
 $rm -f libnames libpath
@@ -2817,7 +2824,7 @@ EOM
 		esac
 		rp='Is your uname() broken?'
 		. myread
-		case "$and" in
+		case "$ans" in
 		n*) d_uname="$define"; ans=uname;;
 		esac
 	else
@@ -2881,71 +2888,6 @@ esac
 : see if getopt exists
 set getopt d_getopt
 eval $inlibc
-
-: see which of string.h or strings.h is needed
-echo " "
-strings=`./findhdr string.h`
-val="$undef"
-if $test "$strings" && $test -r "$strings"; then
-	echo "Using <string.h> instead of <strings.h>." >&3
-	if bsd; then
-		echo "(Actually, this looks more like it were an USG system)"
-	fi
-	val="$define"
-else
-	strings=`./findhdr strings.h`
-	if $test "$strings" && $test -r "$strings"; then
-		echo "Using <strings.h> instead of <string.h>." >&3
-		if usg; then
-			echo "(Actually, this looks more like it were a BSD system)"
-		fi
-	else
-		echo "No string header found--You'll surely have problems." >&3
-	fi
-fi
-set i_string
-eval $setvar
-
-: index or strchr
-echo " "
-case "$d_index" in
-$define) dflt=n;;
-*) dflt=y;;
-esac
-if set index val -f; eval $csym; $val; then
-	if set strchr val -f d_index; eval $csym; $val; then
-		if $contains strchr "$strings" >/dev/null 2>&1 ; then
-			if $contains index "$strings" >/dev/null 2>&1 ; then
-				echo "Your system has both index() and strchr()." >&3
-				rp="Shall I use index() rather than strchr()?"
-				. myread
-				case "$ans" in
-					n*) val="$define" ;;
-					*)  val="$undef" ;;
-				esac
-			else
-				val="$define"
-				echo "strchr() found." >&3
-			fi
-		else
-			val="$undef"
-			echo "index() found." >&3
-		fi
-	else
-		val="$undef"
-		echo "index() found." >&3
-	fi
-else
-	if set strchr val -f d_index; eval $csym; $val; then
-		val="$define"
-		echo "strchr() found." >&3
-	else
-		echo "No index() or strchr() found!" >&3
-		val="$undef"
-	fi
-fi
-set d_index
-eval $setvar
 
 socketlib=''
 sockethdr=''
@@ -3258,19 +3200,84 @@ eval $setvar
 echo " "
 if set sigvector val -f d_sigvectr; eval $csym; $val; then
 	echo 'sigvector() found--you must be running HP-UX.' >&3
-	d_sigvectr="$define"
-	d_sigvec="$define"
+	val="$define"; set d_sigvectr; eval $setvar
+	val="$define"; set d_sigvec; eval $setvar
 else
 : try the original name
 	d_sigvectr="$undef"
 	if set sigvec val -f d_sigvec; eval $csym; $val; then
 		echo 'sigvec() found.' >&3
-		d_sigvec="$define"
+		val="$define"; set d_sigvec; eval $setvar
 	else
 		echo 'sigvec() not found--race conditions with signals may occur.' >&3
-		d_sigvec="$undef"
+		val="$undef"; set d_sigvec; eval $setvar
 	fi
 fi
+
+: see which of string.h or strings.h is needed
+echo " "
+strings=`./findhdr string.h`
+val="$undef"
+if $test "$strings" && $test -r "$strings"; then
+	echo "Using <string.h> instead of <strings.h>." >&3
+	if bsd; then
+		echo "(Actually, this looks more like it were an USG system)"
+	fi
+	val="$define"
+else
+	strings=`./findhdr strings.h`
+	if $test "$strings" && $test -r "$strings"; then
+		echo "Using <strings.h> instead of <string.h>." >&3
+		if usg; then
+			echo "(Actually, this looks more like it were a BSD system)"
+		fi
+	else
+		echo "No string header found--You'll surely have problems." >&3
+	fi
+fi
+set i_string
+eval $setvar
+
+: index or strchr
+echo " "
+case "$d_strchr" in
+$define) dflt=n;;
+*) dflt=y;;
+esac
+if set index val -f; eval $csym; $val; then
+	if set strchr val -f d_strchr; eval $csym; $val; then
+		if $contains strchr "$strings" >/dev/null 2>&1 ; then
+			if $contains index "$strings" >/dev/null 2>&1 ; then
+				echo "Your system has both index() and strchr()." >&3
+				rp="Shall I use index() rather than strchr()?"
+				. myread
+				case "$ans" in
+					n*) val="$define" ;;
+					*)  val="$undef" ;;
+				esac
+			else
+				val="$define"
+				echo "strchr() found." >&3
+			fi
+		else
+			val="$undef"
+			echo "index() found." >&3
+		fi
+	else
+		val="$undef"
+		echo "index() found." >&3
+	fi
+else
+	if set strchr val -f d_strchr; eval $csym; $val; then
+		val="$define"
+		echo "strchr() found." >&3
+	else
+		echo "No index() or strchr() found!" >&3
+		val="$undef"
+	fi
+fi
+set d_strchr
+eval $setvar
 
 : check for structure copying
 echo " "
@@ -3356,7 +3363,6 @@ if set time val -f d_time; eval $csym; $val; then
 	*)  dflt="$timetype"
 		;;
 	esac
-	cont=true
 	echo " "
 	rp="What type is returned by time() on this sytem?"
 	. myread
@@ -3387,7 +3393,6 @@ if set times val -f d_times; eval $csym; $val; then
 	*)  dflt="$clocktype"
 		;;
 	esac
-	cont=true
 	echo " "
 	rp="What type is returned by times() on this sytem?"
 	. myread
@@ -4479,7 +4484,6 @@ case "$sbrktype" in
 *)  dflt="$sbrktype"
 	;;
 esac
-cont=true
 echo " "
 rp="What is the return type of sbrk() on this system?"
 . myread
@@ -4572,7 +4576,11 @@ case "$yacc" in
 	dflt="$yacc";;
 esac
 echo " "
-rp="Which compiler compiler (yacc or bison -y) shall I use?"
+if $test -f "$bison"; then
+	rp='Which compiler compiler (yacc or bison -y) shall I use?'
+else
+	rp='Which compiler compiler shall I use?'
+fi
 . myread
 yacc="$ans"
 case "$yacc" in
@@ -4905,11 +4913,27 @@ echo " "
 echo "End of configuration questions."
 echo " "
 
-: create config.sh file
-echo " "
+: back to where it started
 if test -d ../UU; then
 	cd ..
 fi
+
+: configuration may be patched via a 'config.over' file
+if $test -f config.over; then
+	echo " "
+	dflt=y
+	rp='I see a config.over file.  Do you wish to load it?'
+	. UU/myread
+	case "$ans" in
+	n*) echo "OK, I'll ignore it.";;
+	*)	. ./config.over
+		echo "Configuration override changes have been loaded."
+		;;
+	esac
+fi
+
+: create config.sh file
+echo " "
 echo "Creating config.sh..." >&3
 cf_time=`$date 2>&1`
 cf_by=`( (logname) 2>/dev/null || whoami) 2>&1`
@@ -4934,6 +4958,7 @@ d_xenix='$d_xenix'
 eunicefix='$eunicefix'
 Mcc='$Mcc'
 awk='$awk'
+bash='$bash'
 bison='$bison'
 cat='$cat'
 chgrp='$chgrp'
@@ -4953,6 +4978,7 @@ flex='$flex'
 gcc='$gcc'
 grep='$grep'
 inews='$inews'
+ksh='$ksh'
 less='$less'
 line='$line'
 lint='$lint'
@@ -5041,7 +5067,6 @@ d_uname='$d_uname'
 d_getopt='$d_getopt'
 d_getpagsz='$d_getpagsz'
 pagesize='$pagesize'
-d_index='$d_index'
 d_keepsig='$d_keepsig'
 d_lstat='$d_lstat'
 d_mkdir='$d_mkdir'
@@ -5065,6 +5090,7 @@ d_socket='$d_socket'
 d_sockpair='$d_sockpair'
 sockethdr='$sockethdr'
 socketlib='$socketlib'
+d_strchr='$d_strchr'
 d_strctcpy='$d_strctcpy'
 d_strerrm='$d_strerrm'
 d_strerror='$d_strerror'

@@ -117,10 +117,10 @@ typedef EIF_BIT	(*EIF_BIT_FUNCTION)(EIF_REFERENCE, ...);	/* Returns an Eiffel Bi
  */
 #define attribute_exists(object,name) \
 	(eif_locate (object, name) == -1)? EIF_FALSE : EIF_TRUE
-#define eif_field(object,name,type) *(type *)(eifaddr(object,name))
-#define eif_attribute(object,name,type,ret) *(type *)(eifaddr(object,name,ret))
+#define eif_field(object,name,type) *(type *)(old_eifaddr(object,name))	/* Obsolete. Use "eif_attribute" instead. */
+#define eif_attribute(object,name,type,ret) *(type *)(eifaddr(object,name,ret)) /* Returns the attribute of an object. Return status in "ret".*/
 
-#define eif_attribute_safe(object,name,type_int,ret) eif_field_safe(object, name, type_int, ret)
+#define eif_attribute_safe(object,name,type_int,ret) eif_field_safe(object, name, type_int, ret)	/* For debugging: check type. Must be preceded by *(EIF_TYPE*) */
 
 
 /* Accessing bits is done via special macros, because they have no counterpart
@@ -245,7 +245,8 @@ RT_LNK EIF_REFERENCE_FUNCTION eifref(char *routine, EIF_TYPE_ID cid);				/* Eiff
 RT_LNK EIF_TYPE_ID eiftype(EIF_OBJECT object);					/* Give dynamic type of EIF_OBJECT. Obsoletem, use "eif_type_by_object". */
 RT_LNK EIF_TYPE_ID eif_type_by_object (EIF_REFERENCE object);					/* Give dynamic type of EIF_OBJECT */
 RT_LNK char *eifname(EIF_TYPE_ID cid);					/* Give class name from class ID */
-RT_LNK void *eif_field_safe (EIF_REFERENCE object, char *name, int type_int, int * const ret);					/* Safely Compute address of attribute, checking type validity */
+RT_LNK void *eif_field_safe (EIF_REFERENCE object, char *name, int type_int, int * const ret);					/* Safely Compute address of attribute, checking type validityi. Must be preceded by *(EIF_TYPE*). */
+RT_LNK void *old_eifaddr(EIF_REFERENCE object, char *name);					/* Compute address of attribute. Old version. */
 RT_LNK void *eifaddr(EIF_REFERENCE object, char *name, int * const ret);					/* Compute address of attribute */
 RT_LNK EIF_BIT eifgbit(char *object, char *name);				/* Get a bit field structure */
 RT_LNK void eifsbit(char *object, char *name, EIF_BIT bit);					/* Set a bit field structure */

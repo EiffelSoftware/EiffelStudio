@@ -10,6 +10,6 @@ feature
 
 	application_delay: INTEGER is 50
 
-	override_key_line: INTEGER is 4;
+	override_key_line: INTEGER is 14;
 
 end

@@ -57,6 +57,7 @@ feature -- Element change
 		local
 			iid: INTEGER
 			c: ARRAYED_LIST [EV_ITEM_IMP]
+			handler: EV_MENU_ITEM_HANDLER_IMP
 		do
 			-- We set the item in the list and set it a position
 			if children = Void then
@@ -65,14 +66,19 @@ feature -- Element change
 			children.extend (item_imp)
 			menu.append_string (item_imp.text, item_imp.new_id)
 
-			-- Then, we add it in the top menu if there is one.
-			if item_handler /= Void then
-				item_handler.register_item (item_imp)
+			-- Then, we add it in the top menu if there is one
+			-- And we adapt the display
+			handler := item_handler
+			if handler /= Void then
+				handler.register_item (item_imp)
+				handler.update_menu
 			end
 		end
 
 	insert_item (item_imp: EV_MENU_ITEM_IMP; pos: INTEGER) is
 			-- Insert `item_imp' at the position `pos'
+		local
+			handler: EV_MENU_ITEM_HANDLER_IMP
 		do
 			-- We set the item in the list and set it a position
 			children.go_i_th (pos)
@@ -80,24 +86,31 @@ feature -- Element change
 			menu.insert_string (item_imp.text, pos - 1, item_imp.new_id)
 
 			-- Then, we add it in the top menu if there is one.
-			if item_handler /= Void then
-				item_handler.register_item (item_imp)
+			handler := item_handler
+			if handler /= Void then
+				handler.register_item (item_imp)
+				handler.update_menu
 			end
 		end
 
 	remove_item (item_imp: EV_MENU_ITEM_IMP) is
 			-- Remove `item_imp' from the menu,
+		local
+			handler: EV_MENU_ITEM_HANDLER_IMP
 		do
-			-- First, we remove it from the children.
+			-- First, we need to unregister the item from them
+			-- general hash-table.
+			handler := item_handler
+			if handler /= Void then
+				handler.unregister_item (item_imp)
+				handler.update_menu
+			end
+
+			-- Then, we remove it from the children and the menu.
 			menu.delete_position (internal_get_index (item_imp) - 1)
 			children.prune_all (item_imp)
 			if children.empty then
 				remove_children
-			end
-
-			-- Then, we remove it from the top menu if there is one.
-			if item_handler /= Void then
-				item_handler.unregister_item (item_imp)
 			end
 		end
 
@@ -115,6 +128,10 @@ feature -- Element change
 			children.go_i_th (pos)
 			children.put_left (sep_imp)
 			menu.insert_separator (pos - 1)
+
+			if item_handler /= Void then
+				item_handler.update_menu
+			end
 		end
 
 	remove_separator (sep_imp: EV_MENU_SEPARATOR_IMP) is
@@ -125,6 +142,10 @@ feature -- Element change
 			children.prune_all (sep_imp)
 			if children.empty then
 				remove_children
+			end
+
+			if item_handler /= Void then
+				item_handler.update_menu
 			end
 		end
 

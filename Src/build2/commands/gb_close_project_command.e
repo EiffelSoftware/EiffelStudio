@@ -22,8 +22,8 @@ inherit
 		export
 			{NONE} all
 		end
-	
-	GB_SHARED_SYSTEM_STATUS
+
+	GB_RECENT_PROJECTS
 		export
 			{NONE} all
 		end
@@ -131,7 +131,9 @@ feature -- Basic operations
 					-- as during this call, we find the parent window
 					-- of the `docked_object_editor'.
 				docked_object_editor.make_empty
+				add_project_to_recent_projects
 				system_status.close_current_project
+				main_window.update_recent_projects
 				main_window.hide_tools
 				destroy_floating_editors
 

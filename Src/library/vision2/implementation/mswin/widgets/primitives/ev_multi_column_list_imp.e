@@ -141,6 +141,33 @@ feature {NONE} -- Initialization
 			end
 		end
 
+feature {NONE} -- Implementation
+
+	update_child (child: EV_MULTI_COLUMN_LIST_ROW_IMP; a_row: INTEGER) is
+			-- Update `child'.
+		local
+			cur: CURSOR
+			txt: STRING
+			list: LINKED_LIST [STRING]
+		do
+			list := child.interface
+			cur := list.cursor
+			from
+				list.start
+			until
+				list.index > columns or else list.after
+			loop
+				txt := list.item
+				if txt = Void then
+					txt := ""
+				end
+				set_cell_text (list.index, a_row, txt)
+				list.forth
+			end
+			list.go_to (cur)
+			child.update_performed
+		end
+
 feature {EV_MULTI_COLUMN_LIST_ROW_IMP} -- Implementation
 
 		list_is_pnd_source : BOOLEAN
@@ -952,6 +979,9 @@ end -- class EV_MULTI_COLUMN_LIST_IMP
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.61  2000/03/24 18:00:42  brendel
+--| Move update_child back.
+--|
 --| Revision 1.60  2000/03/24 17:32:35  brendel
 --| Moved update code into _I.
 --|

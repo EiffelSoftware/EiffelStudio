@@ -110,8 +110,6 @@ feature -- Status report
 			-- Do `Current' and `other' represent the same object, in the equality sense?
 		require
 			valid_other: other /= Void
-		local
-			tiit: INTEGER
 		do
 			Result := type = other.type and then output_value.is_equal (other.output_value)
 		end

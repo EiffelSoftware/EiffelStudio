@@ -62,7 +62,7 @@ end;
 			old_item := cache.item_id (an_id);
 			if old_item = Void then
 					-- No previous item of id `t.id'
-				if cache.full then
+				if cache.is_full then
 					to_remove := cache.item;
 					id_to_remove := id (to_remove);
 					if delayed.has (id_to_remove) then
@@ -101,7 +101,7 @@ end;
 				Result := retrieve_all
 							(server_file.descriptor, info.position);
 					-- Insert it in the queue
-				if cache.full then
+				if cache.is_full then
 						-- If cache is full, oldest is removed
 					to_remove := cache.item;
 					id_to_remove := id (to_remove);

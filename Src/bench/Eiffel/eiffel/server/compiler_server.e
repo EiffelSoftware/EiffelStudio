@@ -151,7 +151,7 @@ end;
 			old_item := cache.item_id (id (t));
 			if old_item = Void then
 					-- No previous item of id `t.id'
-				if cache.full then
+				if cache.is_full then
 					cache.remove;
 				end;
 				cache.put (t);
@@ -260,7 +260,7 @@ end;
 				Result := retrieve_all
 							(server_file.descriptor, info.position);
 					-- Insert it in the queue
-				if cache.full then
+				if cache.is_full then
 						-- If cache is full, oldest is removed
 					cache.remove;
 				end;

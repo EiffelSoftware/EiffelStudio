@@ -31,7 +31,7 @@ feature
 			s.to_lower
 			Result := Configure_resources.get_integer (s, default_value)
 
-debug ("SERVER")
+debug ("CACHE_SERVER")
 	io.error.putstring ("Size of ")
 	io.error.putstring (generator)
 	io.error.putstring (" is ")
@@ -113,17 +113,17 @@ feature -- Cache manipulations
 	item_id (an_id: H): T is
 			-- Item which id is `an_id'
 		local
-			position, size, j, i, last_index: INTEGER;
+			pos, size, j, i, last_index: INTEGER;
 		do
-			position := index_of (an_id);
-			if position /= in_index then
+			pos := index_of (an_id);
+			if pos /= in_index then
 					-- Successful search
-				Result := i_th (position);
+				Result := i_th (pos);
 					-- Side effect: reorganization of queue; the founded
 					-- id in put in front of the queue.
 				from
 					size := capacity + 1;
-					i := position;
+					i := pos;
 					last_index := (in_index - 1 + size) \\ size;
 				until
 					i = last_index

@@ -17,4 +17,19 @@ feature -- Setting
 		do
 		end;
 
+	copy_text_from_widget (a_widget: SCROLLED_T_I) is
+			-- Copy the text from `a_widget'.
+		do
+		end;
+ 
+	cut_text_from_widget (a_widget: SCROLLED_T_I) is
+			-- Cut the text from `a_widget'.
+		do
+		end;
+ 
+	paste_text_to_widget (a_widget: SCROLLED_T_I) is
+			-- Paste the text to `a_widget'.
+		do
+		end;
+ 
 end -- class WIDGET_ROUTINES

@@ -31,21 +31,16 @@ OBJECT = main.o fext.o
 !GROK!THIS!
 $spitshell >>Makefile <<'!NO!SUBS!'
 
+all: bank_account 
 
-all: prepare $(OBJECT) compile_eiffel make_cecil mklink bank_account 
+$(EIFLIB): compile_eiffel
 
-prepare:
+compile_eiffel:
 	sed -e s/"fext.obj"/"fext.o"/ Ace.ace > tmp
 	$(RM) Ace.ace
 	$(MV) tmp Ace.ace
-
-compile_eiffel:
 	$(EC) -freeze -c_compile 
-
-make_cecil:
 	cd EIFGEN/W_code; $(MAKE) cecil
-
-mklink:
 	$(LN) EIFGEN/W_code/bank_account.melted .
 
 bank_account: $(OBJECT) $(EIFLIB)

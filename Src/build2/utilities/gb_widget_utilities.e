@@ -227,7 +227,44 @@ feature -- Basic operations
 			split_area_not_void: split_area /= Void
 		do
 			split_area.set_split_position ((position.max (split_area.minimum_split_position)).min (split_area.maximum_split_position))
-		end	
+		end
+		
+	scaled_pixmap (original_pixmap: EV_PIXMAP; x_dimension, y_dimension: INTEGER): EV_PIXMAP is
+			-- `Result' is representation of ``original_pixmap', scaled to fit in `x_dimension', `y_dimension'
+			-- with same aspect ratio.
+		require
+			original_pixmap_not_void: original_pixmap /= Void
+			x_dimension_positive: x_dimension > 0
+			y_dimension_positive: y_dimension > 0
+		local
+			x_ratio, y_ratio: REAL
+			new_x, new_y: INTEGER
+			biggest_ratio: REAL
+		do
+			x_ratio := original_pixmap.width / x_dimension
+			y_ratio := original_pixmap.height / y_dimension
+			if x_ratio > 1 and y_ratio < 1 then 
+				new_x := x_dimension
+				new_y := (original_pixmap.height / x_ratio).truncated_to_integer
+			end
+			if y_ratio > 1 and x_ratio < 1 then
+				new_y := x_dimension
+				new_x := (original_pixmap.width / y_ratio).truncated_to_integer
+			end
+			if y_ratio > 1 and x_ratio > 1 then
+				biggest_ratio := x_ratio.max (y_ratio)
+				new_x := (original_pixmap.width / biggest_ratio).truncated_to_integer
+				new_y := (original_pixmap.height / biggest_ratio).truncated_to_integer
+			end
+
+			Result := clone (original_pixmap)
+			if new_x /= 0 and new_y /= 0 then
+				Result.stretch (new_x, new_y)
+			end
+		ensure
+			Result_not_void: Result /= Void
+		end
+		
 
 feature {NONE} -- Implementation
 

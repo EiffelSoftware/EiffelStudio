@@ -44,7 +44,11 @@ feature -- Basic operations
 			create interface_generator.make (an_interface, an_interface.interface_descriptor, cpp_class_writer)
 			interface_generator.generate_functions_and_properties (an_interface.interface_descriptor)
 
-			if an_interface.interface_descriptor.dispinterface or an_interface.interface_descriptor.dual then
+			if 
+				an_interface.interface_descriptor.dispinterface or 
+				an_interface.interface_descriptor.dual or
+				an_interface.interface_descriptor.inherit_from_dispatch
+			then
 				dispatch_interface := True
 			end
 

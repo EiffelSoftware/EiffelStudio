@@ -71,7 +71,8 @@ feature -- Initialization
 	initialize is
 			-- Initialize
 		do
-			unique_id := 1			
+			unique_id := 1	
+			set_filter (manager.shared_project.filter_manager.filter_by_description ("Unfiltered"))
 		end
 
 feature -- Access	
@@ -89,6 +90,9 @@ feature -- Access
 		do
 			Result ?= internal_nodes.item (a_id)
 		end
+
+	filter: DOCUMENT_FILTER
+			-- Associatied filter for sorting
 
 feature -- Status Setting	
 	
@@ -134,6 +138,16 @@ feature -- Status Setting
 			make_root_from_index := a_flag
 		end
 
+	set_filter (a_filter: DOCUMENT_FILTER) is
+			-- Associated filter for sorting
+		require
+			filter_not_void: a_filter /= Void
+		do
+			filter := a_filter
+		ensure
+			filter_set: filter = a_filter
+		end
+
 feature -- Query
 
 	is_persisted: BOOLEAN
@@ -151,9 +165,7 @@ feature -- Commands
 		do				
 			reset
 			Manager.Shared_constants.Application_constants.set_index_file_name ("index.xml")
-			if not Manager.Shared_project.filter_manager.filter.description.is_equal ("Web") then					
-				filter_nodes
-			end			
+			filter_nodes	
 			sort_node (Current)
 			move_nodes		
 			if order_alphabetically then
@@ -858,5 +870,6 @@ feature {NONE} -- Sorting
 
 invariant
 	has_name: name /= Void and then not	name.is_empty
+	has_filter: filter /= Void
 
 end -- class TABLE_OF_CONTENTS

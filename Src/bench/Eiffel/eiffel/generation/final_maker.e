@@ -122,6 +122,8 @@ feature
 			cecil_rt_basket.put ("boolstr.o");
 			cecil_rt_basket.put ("search.o");
 			cecil_rt_basket.put ("main.o");
+			cecil_rt_basket.put ("run_idr.o");
+			cecil_rt_basket.put ("console.o");
 		end;
 
 	add_eiffel_objects is

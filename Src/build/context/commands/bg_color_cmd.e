@@ -23,13 +23,6 @@ feature {NONE}
 	context_work is
 		do
 			old_bg_color_name := context.bg_color_name
-			if old_bg_color_name = Void then
-				if context.previous_bg_color = Void then
-					default_color := context.default_background_color
-				else
-					default_color := context.previous_bg_color
-				end;
-			end
 		end
 
 	context_undo is
@@ -38,9 +31,6 @@ feature {NONE}
 		do
 			new_color := context.bg_color_name
 			context.set_bg_color_name (old_bg_color_name)
-			if old_bg_color_name = Void then
-				context.set_default_background_color (default_color)
-			end
 			old_bg_color_name := new_color
 		end
 

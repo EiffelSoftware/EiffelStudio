@@ -1,5 +1,5 @@
 indexing
-	description: "Objects that ..."
+	description: "Action sequences for EV_DOCKABLE_TARGET."
 	author: ""
 	date: "$Date$"
 	revision: "$Revision$"

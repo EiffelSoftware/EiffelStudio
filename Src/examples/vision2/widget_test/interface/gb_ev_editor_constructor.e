@@ -137,10 +137,6 @@ feature {NONE} -- Implementation
 	rebuild_associated_editors (object: EV_ANY) is
 			-- For all editors referencing `vision2_object', rebuild any associated object editors.
 		do
-			io.putstring ("Rebuild associated editors called")
 		end
-
-invariant
-	invariant_clause: True -- Your invariant here
 
 end -- class GB_EV_EDITOR_CONSTRUCTOR

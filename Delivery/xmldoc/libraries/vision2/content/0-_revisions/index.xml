@@ -35,6 +35,9 @@
 			<item>
 				<bold>EV_PIXMAP</bold> - Added `sub_pixmap', this allows a pixmap to be created from a region of another
 			</item>
+			<item>
+				<bold>EV_RICH_TEXT</bold> - corrected postcondition of `buffered_format' which restricted the end position to `text_length' instead of `text_length' + 1.
+			</item>
 		</list>
 		<paragraph>
 			<bold>Bug fixes</bold>
@@ -120,6 +123,7 @@
 					<item>
 						<bold>EV_APPLICATION</bold> - `cancel_actions' were not always called when they should have been. If you cancelled  a pick and drop by right clicking on a target that does not accept the `pebble', the `cancel_actions' were not fired.
 					</item>
+					<item><bold>EV_RICH_TEXT</bold> - Fixed bug in `buffered_format' which corrupted the current text upon calling `flush_buffer' if the text contained any RTF reserved characters such as '/', '{' or '}'.</item>
 				</list>
 			</item>
 			<item>

@@ -6,6 +6,7 @@
 
 all:
 	make -C interface/events
+	make -C interface/kernel
 	make -C implementation/gtk/Clib
 	grep -x -L "\--| FIXME Not for release" `find interface -name "*.e"` > list_released
 	grep -x -l "\--| FIXME Not for release" `find interface -name "*.e"` > list_unreleased

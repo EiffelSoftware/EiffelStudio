@@ -61,9 +61,6 @@ feature -- Analyze
 				call.set_need_invariant (False)
 				call.set_info (info)
 				call.analyze
-				call.free_register
-			else
-				free_register
 			end
 		end
 
@@ -134,7 +131,7 @@ feature
 	type: TYPE_I is
 			-- Current type
 		do
-			Result := context.current_type
+			Result := context.real_type (info.type)
 		end
 
 feature -- Generation

@@ -97,7 +97,7 @@ feature -- Implementation
 
 	root_folder: RESOURCE_FOLDER is
 		do
-			Result := implementation.root_folder
+			Result := implementation.root_folder_i.interface
 		end
 
 feature {NONE} -- Implementation

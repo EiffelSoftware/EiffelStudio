@@ -20,8 +20,6 @@ inherit
 		rename
 			make_with_text as text_make_with_text,
 			make as text_make
-		redefine
-			default_style
 		end
 				
 creation
@@ -34,18 +32,16 @@ feature -- Initialization
 			-- Create an empty text area.
 			-- The area will be scrollable
 		do
-			check
-				to_be_implemented: False
-			end
+			text_make
+			--| FIXME IEK Add scrollable features to widget
 		end
 
 	make_with_text (txt: STRING; hscroll, vscroll: BOOLEAN) is
 			-- Create a text area with `text' as label.
 			-- The area will be scrollable.
 		do
-			check
-				to_be_implemented: False
-			end
+			text_make
+			set_text (txt)
 		end
 		
 feature -- Status Report
@@ -105,25 +101,6 @@ feature {NONE}
 	has_horizontal_scrolling: BOOLEAN
 	
 	has_vertical_scrolling: BOOLEAN
-
-feature {NONE} -- WEL Implementation
- 
-	default_style: INTEGER is
-			-- Default style used to create the control
-		do
-			check
-				to_be_implemented: False
-			end
-		end
-
-	basic_default_style: INTEGER is
-			-- Basic default style used to create the control.
-			-- Style returned is not scrollable at all.
-		do
-			check
-				to_be_implemented: False
-			end
-		end
 
 end -- class EV_SCROLLABLE_TEXT_IMP
 

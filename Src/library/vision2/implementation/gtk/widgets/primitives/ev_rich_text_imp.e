@@ -10,8 +10,13 @@ class
 
 inherit
 	EV_RICH_TEXT_I
-
-	EV_TEXT_IMP
+		rename
+			make as text_make,
+			make_with_text as text_make_with_text
+		end
+		
+	
+	EV_SCROLLABLE_TEXT_IMP
 		redefine
 			insert_text
 		end
@@ -48,7 +53,8 @@ feature -- Status setting
 					color.red, color.green, color.blue,
 					$a, txt.count)
 			else
-				{EV_TEXT_IMP} Precursor (txt)
+				a := txt.to_c
+				c_gtk_text_insert (widget, $a)
 			end
 		end
 

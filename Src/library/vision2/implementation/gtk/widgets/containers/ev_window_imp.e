@@ -36,7 +36,6 @@ feature {NONE} -- Initialization
 			c_gtk_widget_set_all_events (widget)
 
 			initialize
-
 		end
 
         make_with_owner (par: EV_WINDOW) is
@@ -146,18 +145,14 @@ feature -- Status setting
 			-- Raise a window. ie: put the window on the front
 			-- of the screen.
 		do
-			check
-				to_be_implemented: False
-			end
+			gdk_window_raise (widget)
 		end
 
 	lower is
 			-- Lower a window. ie: put the window on the back
 			-- of the screen.
 		do
-			check
-				to_be_implemented: False
-			end
+			gdk_window_lower (widget)
 		end
 
 	minimize is
@@ -189,25 +184,52 @@ feature -- Element change
 
         set_icon_name (new_name: STRING) is
                         -- Set `icon_name' to `new_name'.
+		local
+			temp_name: ANY
 		do
-			gdk_window_set_icon_name(widget, new_name)
+			temp_name := new_name.to_c
+			gdk_window_set_icon_name(widget, $new_name)
                 end
 
         set_icon_mask (mask: EV_PIXMAP) is
                         -- Set `icon_mask' to `mask'.
 		do
-			check
-                                not_yet_implemented: False
-                        end
+			--gtk_pixmap_get
                 end
 
         set_icon_pixmap (pixmap: EV_PIXMAP) is
                         -- Set `icon_pixmap' to `pixmap'.
+		local
+			pixmap_imp: EV_PIXMAP_IMP
 		do
-			check
-                                not_yet_implemented: False
-                        end
+			pixmap_imp ?= pixmap.implementation
+			gtk_pixmap_get (pixmap_imp.widget, $gdkpix, $gdkmask)
+			gdk_window_set_icon (widget, pixmap_imp.create_window, pixmap_imp.gdk_pixmap_widget, gdkmask)
                 end
+
+	gdkpix, gdkmask : POINTER
+
+feature -- External
+
+	gtk_pixmap_get (gtk_pixmap, gdk_pixmap, gdk_bitmap: POINTER) is
+		external
+			"C (GtkPixmap *, GdkPixmap *, GdkBitmap *) | <gtk/gtk.h>"
+		end
+
+	gdk_window_set_icon (window, icon_window, pixmap, mask: POINTER) is
+		external
+			"C (GdkWindow *, GdkWindow *, GdkPixmap *, GdkBitmap *) | <gdk/gdk.h>"
+		end
+
+	gdk_window_raise (window: POINTER) is
+		external
+			"C (GdkWindow *) | <gdk/gdk.h>"
+		end
+
+	gdk_window_lower (window: POINTER) is
+		external
+			"C (GdkWindow *) | <gdk/gdk.h>"
+		end
 
 end -- class EV_WINDOW_IMP
 

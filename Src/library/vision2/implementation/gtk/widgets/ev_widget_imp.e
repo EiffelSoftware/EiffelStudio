@@ -85,6 +85,12 @@ feature {NONE} -- Initialization
 
 feature -- Access
 
+	widget_source: EV_WIDGET_IMP is
+			-- Widget drag source used for transport
+		do
+			Result := Current
+		end
+
 	cursor: EV_CURSOR is
 			-- Cursor used currently on the widget.
 		do
@@ -247,17 +253,23 @@ b: BOOLEAN
 	set_capture is
 			-- Grab all the mouse and keyboard events.
 		do
-			check
-				To_be_implemented: False
-			end
+			gtk_grab_add (widget)
+		end
+
+	gtk_grab_add (wid: POINTER) is
+		external
+			"C (GtkWidget *) | <gtk/gtk.h>"
 		end
 
 	release_capture is
 			-- Ungrab all the mouse and keyboard events.
 		do
-			check
-				To_be_implemented: False
-			end
+			gtk_grab_remove (widget)
+		end
+
+	gtk_grab_remove (wid: POINTER) is
+		external
+			"C (GtkWidget *) | <gtk/gtk.h>"
 		end
 
 	set_insensitive (flag: BOOLEAN) is
@@ -377,7 +389,7 @@ feature -- Element change
 			if cursor_signal_tag /= 0 then
 				gtk_signal_disconnect (widget, cursor_signal_tag)
 			end 
-				-- Call C function that initialises callback
+				-- Call C function that initializes callback
 				-- that sets the cursor on mouse entry to prevent
 				-- Gtk assertion violation when setting a widgets
 				-- cursor when its root window isn't shown

@@ -41,8 +41,6 @@ feature {NONE} -- Initialization
 			base_make (an_interface)
 			set_c_object (C.gtk_hbox_new (False, 0))
 				-- create the horizontal box no spacing
-
-			list_widget := c_object
 		end
 
 	initialize is
@@ -71,6 +69,9 @@ end -- class EV_STATUS_BAR_IMP
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.17  2000/04/06 23:59:12  brendel
+--| Removed assignment to list_widget.
+--|
 --| Revision 1.16  2000/04/05 21:16:10  brendel
 --| Merged changes from LIST_REFACTOR_BRANCH.
 --|

@@ -32,8 +32,8 @@ feature -- basic Operations
 			browse1_b,browse2_b: EV_BUTTON
 			h1,h2: EV_HORIZONTAL_BOX
 		do 
-			Create location.make("Sources Location",state_information.location,10,30,Current)
-			Create project_location.make("Project Location",state_information.project_location,10,30,Current)
+			Create location.make("Sources Location",wizard_information.location,10,30,Current)
+			Create project_location.make("Project Location",wizard_information.project_location,10,30,Current)
 			Create browse1_b.make_with_text("Browse ...")
 			browse1_b.press_actions.extend(~browse(FALSE))
 			Create browse2_b.make_with_text("Browse ...")
@@ -73,14 +73,14 @@ feature -- basic Operations
 				message.show_modal
 			else
 				precursor
-				proceed_with_new_state(Create {DB_FINISH}.make(state_information))
+				proceed_with_new_state(Create {DB_FINISH}.make(wizard_information))
 			end
 		end
 
 	update_state_information is
 			-- Check user entries
 		do
-			state_information.set_locations(location.text,project_location.text)
+			wizard_information.set_locations(location.text,project_location.text)
 			precursor
 		end
 

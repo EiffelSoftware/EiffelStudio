@@ -108,16 +108,48 @@ rt_public STREAM *spawn_child(char *cmd, char *cwd, int handle_meltpath, Pid_t *
 	int new;					/* Duped file descriptor */
 	Pid_t pid;					/* Pid of the child */
 	STREAM *sp;					/* Stream used for communications with ewb */
-#endif
 	char **argv;				/* Argument vector */
+#endif
 
+#ifdef EIF_WIN32
+	cmd2 = strdup(cmd);
+	/* Find the name of the command and place it in cmd2 */
+	/* Find the args and place them in cmdline */
+	/* Set the starting  path to be the path of the executable io start_path */
+	for (dotplace = strchr (cmd2, '.');
+		dotplace && strnicmp (dotplace, ".exe", 4) != 0;
+		dotplace = strchr (dotplace+1 , '.') )
+		;
+	if (!dotplace) {
+		printf ("Error no .exe in executable");
+		dexit(1);
+	}
+	*(dotplace + 4) = '\0';
+	if (strchr (cmd2, ' ') != NULL) {
+		cmdline = malloc (strlen (cmd) + 3 + 18);
+		memset  (cmdline, 0, strlen(cmd) + 3);
+		strcpy (cmdline , "\"");
+		strcat (cmdline, cmd2);
+		strcat (cmdline, "\" ");
+		if (strlen (cmd2) != strlen (cmd))
+			strcat (cmdline, dotplace + 5);
+	} else {
+		cmdline = malloc (strlen (cmd) + 18);
+		strcpy (cmdline, cmd);
+	}
+#else
 	argv = shword(cmd);					/* Split command into words */
+#endif
 
 		/* Set MELT_PATH */
 	if (handle_meltpath) {
 		char *meltpath, *appname, *envstring;	/* set MELT_PATH */
 
+#ifdef EIF_WIN32
+		meltpath = (char *) (strdup (cmd2));
+#else
 		meltpath = (char *) (strdup (argv [0]));
+#endif
 		if (meltpath == (char *)0){
 			dexit (1);
 		}
@@ -235,31 +267,6 @@ rt_public STREAM *spawn_child(char *cmd, char *cwd, int handle_meltpath, Pid_t *
 	}
 	pipe_to_dup = NULL;
 
-	cmd2 = strdup(cmd);
-	/* Find the name of the command and place it in cmd2 */
-	/* Find the args and place them in cmdline */
-	/* Set the starting  path to be the path of the executable io start_path */
-	for (dotplace = strchr (cmd2, '.');
-		dotplace && strnicmp (dotplace, ".exe", 4) != 0;
-		dotplace = strchr (dotplace+1 , '.') )
-		;
-	if (!dotplace) {
-		printf ("Error no .exe in executable");
-		dexit(1);
-	}
-	*(dotplace + 4) = '\0';
-	if (strchr (cmd2, ' ') != NULL) {
-		cmdline = malloc (strlen (cmd) + 3 + 18);
-		memset  (cmdline, 0, strlen(cmd) + 3);
-		strcpy (cmdline , "\"");
-		strcat (cmdline, cmd2);
-		strcat (cmdline, "\" ");
-		if (strlen (cmd2) != strlen (cmd))
-			strcat (cmdline, dotplace + 5);
-	} else {
-		cmdline = malloc (strlen (cmd) + 18);
-		strcpy (cmdline, cmd);
-	}
 
 		/* Working directory */
 	if (cwd) {

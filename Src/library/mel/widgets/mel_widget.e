@@ -62,11 +62,11 @@ feature -- Access
 			translation_not_void: a_translation /= Void
 		local
 			cb: like callbacks;
-			a_key: MEL_CALLBACK_KEY
+			a_key: MEL_TRANSLATION
 		do
 			cb := callbacks;
 			if cb /= Void then
-				!! a_key.make_translation (a_translation.hash_code);
+				!! a_key.make_no_adopted (a_translation);
 				Result := cb.item (a_key)
 			end
 		end;
@@ -131,7 +131,7 @@ feature -- Status setting
 		require
 			exists: not is_destroyed;
 			valid_pixmap: a_pixmap /= Void and then a_pixmap.is_valid;
-			is_pixmap: a_pixmap.is_pixmap;
+			same_depth: depth = a_pixmap.depth;
 			same_display: a_pixmap.same_display (display)
 		do
 			set_xt_pixmap (screen_object, XmNbackgroundPixmap, a_pixmap)
@@ -247,13 +247,24 @@ feature -- Element change
 			non_void_a_translation: a_translation /= Void
 		local
 			a_command_exec: MEL_COMMAND_EXEC;
-			a_key: MEL_CALLBACK_KEY;
+			a_key: MEL_TRANSLATION;
+            cb: like callbacks
 			ext_string: ANY
 		do
-			!! a_key.make_translation (a_translation.hash_code);
+			!! a_key.make (a_translation);
 			!! a_command_exec.make (a_command, an_argument);
-			if add_to_callbacks (a_command_exec, a_key) then
-				ext_string := xt_translation_string (a_translation).to_c;
+            cb := callbacks;
+            if cb = Void then
+                !! cb.make (1);
+                callbacks := cb;
+                cb.put (a_command_exec, a_key);
+				ext_string := a_key.xt_translation_string.to_c;
+				c_set_override_translations (screen_object, $ext_string)
+            elseif cb.has (a_key) then
+                cb.replace (a_command_exec, a_key)
+            else
+                cb.put (a_command_exec, a_key)
+				ext_string := a_key.xt_translation_string.to_c;
 				c_set_override_translations (screen_object, $ext_string)
 			end
 		ensure
@@ -343,12 +354,12 @@ feature -- Removal
 			exists: not is_destroyed;
 			non_void_a_translation: a_translation /= Void;
 		local
-			a_key: MEL_CALLBACK_KEY;
+			a_key: MEL_TRANSLATION;
 			ext_string: ANY
 		do
-			!! a_key.make_translation (a_translation.hash_code);
+			!! a_key.make_no_adopted (a_translation);
 			if remove_from_callbacks (a_key) then
-				ext_string := xt_translation_null_string (a_translation).to_c;
+				ext_string := a_key.xt_translation_null_string.to_c;
 				c_set_override_translations (screen_object, $ext_string)
 			end;
 		ensure

@@ -168,7 +168,7 @@ feature -- Initialization
 			new_ptr: POINTER
 		do
 			new_ptr := c_string + (start_pos - 1)
-			make_from_cil (feature {MARSHAL}.ptr_to_string_ansi_pointer_integer (new_ptr,
+			make_from_cil (feature {MARSHAL}.ptr_to_string_ansi (new_ptr,
 				end_pos - start_pos + 1))
 		ensure
 			valid_count: count = end_pos - start_pos + 1
@@ -324,7 +324,7 @@ feature -- Access
 			valid_start_index: start_index >= 1 and start_index <= count + 1
 		do
 			if start_index <= count then
-				Result := to_cil.index_of_string_integer (other.to_cil, start_index - 1) + 1
+				Result := to_cil.index_of (other.to_cil, start_index - 1) + 1
 			end
 		ensure
 			valid_result: Result = 0 or else
@@ -641,7 +641,7 @@ feature -- Element change
 			argument_not_void: t /= Void
 		do
 			create internal_string_builder.make_from_value (
-				t.internal_string_builder.to_string_integer (n1 - 1, n2 - n1 + 1))
+				t.internal_string_builder.to_string (n1 - 1, n2 - n1 + 1))
 		ensure
 			is_substring: is_equal (t.substring (n1, n2))
 		end
@@ -953,7 +953,7 @@ feature -- Element change
 	precede (c: CHARACTER) is
 			-- Add `c' at front.
 		do
-			internal_string_builder := internal_string_builder.insert_integer_character (0, c)
+			internal_string_builder := internal_string_builder.insert (0, c)
 		ensure
 			new_count: count = old count + 1
 		end
@@ -963,7 +963,7 @@ feature -- Element change
 		require
 			argument_not_void: s /= Void
 		do
-			internal_string_builder := internal_string_builder.insert_integer_string (0, s.to_cil)
+			internal_string_builder := internal_string_builder.insert (0, s.to_cil)
 		ensure
 			new_count: count = old (count + s.count)
 		end
@@ -1097,7 +1097,7 @@ feature -- Element change
 			if i = count + 1 then
 				append (s)
 			else
-				internal_string_builder := internal_string_builder.insert_integer_string (i - 1, s.to_cil)
+				internal_string_builder := internal_string_builder.insert (i - 1, s.to_cil)
 			end
 		ensure
 			inserted: is_equal (old substring (1, i - 1)
@@ -1113,7 +1113,7 @@ feature -- Element change
 			if i = count + 1 then
 				append_character (c)
 			else
-				internal_string_builder := internal_string_builder.insert_integer_character (i - 1, c)
+				internal_string_builder := internal_string_builder.insert (i - 1, c)
 			end
 		ensure
 			new_count: count = old count + 1
@@ -1643,7 +1643,7 @@ feature -- Duplication
 			-- between `start_index' and `end_index'
 		do
 			if (1 <= start_index) and (start_index <= end_index) and (end_index <= count) then
-				create Result.make_from_cil (internal_string_builder.to_string_integer (
+				create Result.make_from_cil (internal_string_builder.to_string (
 					start_index - 1, end_index - start_index + 1))
 			else
 				create Result.make (0)

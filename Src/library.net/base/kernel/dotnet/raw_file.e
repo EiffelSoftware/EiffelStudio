@@ -53,7 +53,7 @@ feature -- Output
 	put_integer, putint (i: INTEGER) is
 			-- Write binary value of `i' at current position.
 		do
-			writer.write_integer (i)
+			writer.write (i)
 		end
 
 	put_boolean, putbool (b: BOOLEAN) is
@@ -85,7 +85,7 @@ feature -- Output
 			until
 				i > (size - 1)
 			loop
-				writer.write_integer_8 (feature {MARSHAL}.read_byte (p + i))
+				writer.write (feature {MARSHAL}.read_byte (p + i))
 				i := i + 1
 			end
 		end
@@ -105,7 +105,7 @@ feature -- Output
 				byte_array.put (str_index, s.item (str_index + 1).code.to_natural_8)
 				str_index := str_index + 1
 			end
-			writer.write_integer_8_array (byte_array)
+			writer.write (byte_array)
 		end
 		
 	put_character, putchar (c: CHARACTER) is
@@ -134,7 +134,7 @@ feature -- Input
 				last_string.grow (nb_char)
 			end
 			create str_area.make (nb_char)
-			new_count := reader.read_integer_8_array_integer_integer (str_area, 0, nb_char)
+			new_count := reader.read (str_area, 0, nb_char)
 			
 			check
 				valid_new_count: new_count <= nb_char

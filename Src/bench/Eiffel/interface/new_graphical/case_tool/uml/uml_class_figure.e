@@ -434,7 +434,7 @@ feature {FEATURE_SECTION_VIEW} -- Expand/Collapse section
 			names.hide
 			min_size := minimum_size
 			names.show
-			names.set_x (min_size.left + min_size.width // 2)
+			names.set_x (min_size.left + names.bounding_box.width.max (min_size.width) // 2)
 			request_update
 			if world.is_right_angles then
 				world.apply_right_angles

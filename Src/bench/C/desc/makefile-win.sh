@@ -5,9 +5,7 @@ RSC= $rc
 ALL : ise_desc.dll 
 
 MTL_PROJ=-nologo -D "NDEBUG" -win32 
-CPP_PROJ=-nologo -ML -W3 -GX -YX -O2 -I.. \
- -D "NDEBUG" -D "WIN32" -D "_WINDOWS" -D "-P" \
- -Fo$(INTDIR)- -c 
+CPP_PROJ=-nologo -ML -W3 -GX -O2 -I.. -D "NDEBUG" -D "WIN32" -D "_WINDOWS" -D "-P" -c 
 
 LINK32=link.exe
 LINK32_FLAGS= kernel32.lib user32.lib gdi32.lib winspool.lib comdlg32.lib	\
@@ -21,7 +19,7 @@ ise_desc.dll : $(DEF_FILE) $(LINK32_OBJS)
   $(LINK32_FLAGS) $(LINK32_OBJS)
 <<
 
-.c$(CPP_OBJS)}.obj:
+.c.obj:
    $(CPP) $(CPP_PROJ) $<  
 
 # Begin Source File

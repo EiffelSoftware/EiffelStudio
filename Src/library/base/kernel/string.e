@@ -1159,59 +1159,44 @@ feature -- Conversion
 			Result := temp
 		end
 	
-	split (a_separator: CHARACTER): LINEAR [STRING] is
+	split (a_separator: CHARACTER): LIST [STRING] is
 			-- Split on `a_separator'.
-			-- Ignore separators in quotes.
 		local
-			al: ARRAYED_LIST [STRING]
+			l_list: ARRAYED_LIST [STRING]
 			part: STRING
 			i, j, c: INTEGER
-			q: BOOLEAN
-			p: CHARACTER
 		do
-			from
-				c := count
-				create al.make (c)
-				i := 1
-				j := 0
-			until
-				i > c
-			loop
-				j := index_of (a_separator, i)
-				if j = 0 then j := c + 1 end
-				part := substring (i, j - 1)
-				if part.has ('"') then
-					from
-						j := i - 1 
-						p := '%U'
-					until
-						j >= c or
-						p = a_separator
-					loop
-						j := j + 1
-						p := item (j)
-						if p = '"' and not (j > 1 and then item (j - 1) = '%%') then
-							q := not q
-						end
-						if q and p = a_separator then
-							p := '%U'
-						end
+			c := count
+				-- Worse case allocation: every character is a separator
+			create l_list.make (c + 1)
+			if c > 0 then
+				from
+					i := 1
+				until
+					i > c
+				loop
+					j := index_of (a_separator, i)
+					if j = 0 then
+							-- No separator was found, we will
+							-- simply create a list with a copy of
+							-- Current in it.
+						j := c + 1
 					end
 					part := substring (i, j - 1)
-					part.replace_substring_all ("%%%%", "_#___PERCENT___#_")
-					part.replace_substring_all ("%%%"", "_#___QUOTE___#_")
-					part.replace_substring_all ("%"", "")
-					part.replace_substring_all ("_#___PERCENT___#_", "%%")
-					part.replace_substring_all ("_#___QUOTE___#_", "%"")
-					part.prepend ("%"")
-					part.append ("%"")
+					l_list.extend (part)
+					i := j + 1
 				end
-				al.extend (part)
-				i := j + 1
+				if j = c and item (j) = a_separator then
+						-- A separator was found at the end of the string
+					l_list.extend ("")
+				end
+			else
+					-- Extend empty string, since Current is empty.
+				l_list.extend ("")	
 			end
-			Result := al
+			Result := l_list
 			check 
-				al.count = occurrences (a_separator)
+				l_list.count = occurrences (a_separator) + 1
 			end
 		ensure
 			Result /= Void

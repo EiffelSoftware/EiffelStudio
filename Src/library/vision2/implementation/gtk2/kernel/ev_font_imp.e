@@ -52,7 +52,7 @@ feature {NONE} -- Initialization
 					family = Family_sans and then
 					weight = app_implementation.default_font_weight_internal and then
 					shape = app_implementation.default_font_style_internal and then
-					name.is_equal (app_implementation.default_font_name_internal) and then
+					name.hash_code = app_implementation.default_font_name_internal.hash_code and then
 					height = app_implementation.default_font_size_internal
 		end
 

@@ -33,10 +33,10 @@ class ARRAYED_LIST [G] inherit
 				capacity
 		undefine
 			linear_representation, prunable, put, is_equal,
-			prune, occurrences, has, extendible 
+			prune, occurrences, extendible 
 		redefine
 			extend, prune_all, full, wipe_out,
-			is_inserted, make_from_array
+			is_inserted, make_from_array, has
 		select
 			array_valid_index
 		end
@@ -50,7 +50,7 @@ class ARRAYED_LIST [G] inherit
 			go_i_th, move, prunable, start, finish,
 			count, prune, remove,
 			put_left, merge_left,
-			merge_right, duplicate, prune_all
+			merge_right, duplicate, prune_all, has, search
 		select
 			count, index_set
 		end
@@ -128,6 +128,37 @@ feature -- Access
 			-- Current cursor position
 		do
 			create {ARRAYED_LIST_CURSOR} Result.make (index)
+		end
+
+	has (v: like item): BOOLEAN is
+			-- Does current include `v'?
+			-- (Reference or object equality,
+			-- based on `object_comparison'.)
+		local
+			l_area: like area
+			l_item: G
+			i, nb: INTEGER
+		do
+			l_area := area
+			nb := count - 1
+			if object_comparison and v /= Void then
+				from
+				until
+					i > nb or Result
+				loop
+					l_item := l_area.item (i)
+					Result := l_item /= Void and then v.is_equal (l_item)
+					i := i + 1
+				end
+			else
+				from
+				until
+					i > nb or Result
+				loop
+					Result := v = l_area.item (i)
+					i := i + 1
+				end
+			end
 		end
 
 feature -- Measurement
@@ -241,6 +272,51 @@ feature -- Cursor movement
 					al_c /= Void
 				end
 			index := al_c.index
+		end
+
+	search (v: like item) is
+			-- Move to first position (at or after current
+			-- position) where `item' and `v' are equal.
+			-- If structure does not include `v' ensure that
+			-- `exhausted' will be true.
+			-- (Reference or object equality,
+			-- based on `object_comparison'.)
+		local
+			l_area: like area
+			l_item: G
+			i, nb: INTEGER
+			l_found: BOOLEAN
+		do
+			l_area := area
+			nb := count - 1
+				-- If we are before we need to be sure
+				-- that i is positive.
+			i := (index - 1).max (0)
+			if object_comparison and v /= Void then
+				from
+				until
+					i > nb or l_found
+				loop
+					l_item := l_area.item (i)
+					l_found := l_item /= Void and then v.is_equal (l_item)
+					i := i + 1
+				end
+			else
+				from
+				until
+					i > nb or l_found
+				loop
+					l_found := v = l_area.item (i)
+					i := i + 1
+				end
+			end
+				-- Set position of `index' to `i', location of item when
+				-- found, otherwise to `i + 1' which corresponds to `after'.
+			if l_found then
+				index := i
+			else
+				index := i + 1
+			end
 		end
 
 feature -- Element change

@@ -487,9 +487,14 @@ feature {GB_COMMAND_NAME_CHANGE} -- Implementation
 			window_object_not_void: window_object /= Void
 		local
 			directory_object: GB_WINDOW_SELECTOR_DIRECTORY_ITEM
-			file_name: FILE_NAME
-			--ast_skeleton: AST_SKELETON
-		--	ast_visitor: AST_VISITOR
+			file_name, interface_file_name, implementation_file_name: FILE_NAME
+			l_eiffel_parser: EIFFEL_PARSER
+			l_class_to_parse: STRING
+			l_class_as: CLASS_AS
+			l_visitor: NAME_CHANGE_VISITOR
+			file: RAW_FILE
+			file_contents: STRING
+			character_difference: INTEGER
 		do
 			directory_object := directory_of_window (window_object.window_selector_item)
 			file_name := generated_path
@@ -500,13 +505,64 @@ feature {GB_COMMAND_NAME_CHANGE} -- Implementation
 				--| FIXME we need a better solution for name changes on windows.
 				--| as undo allows their name to become empty.
 			if not new_name.is_empty or old_name.is_empty then
+				
+					-- Build file names for accessing files.
+				interface_file_name := clone (file_name)
+				interface_file_name.extend (new_name + ".e")
+				implementation_file_name := clone (file_name)
+				implementation_file_name.extend (new_name + Class_implementation_extension + ".e")
+				
+				create l_eiffel_parser.make
+				
 				rename_file_if_exists (create {DIRECTORY}.make (file_name), old_name + ".e", new_name + ".e")
-					--| FIXME must now go into class, and change name.
+				
+					-- Now parse the contents of the file, and change the class name, and inherited
+					-- name.
+				create file.make (interface_file_name.string)
+				if file.exists then
+					file.open_read
+					file.read_stream (file.count)
+					file.close
+					file_contents := file.last_string
+					l_eiffel_parser.parse_from_string (file_contents)
+					l_class_as := l_eiffel_parser.root_node
+					create l_visitor
+					l_class_as.process (l_visitor)
+					file_contents.replace_substring (new_name.as_upper, l_visitor.name_start_position + 1, l_visitor.name_end_position)
+						-- As we are performing two replaces,we must update the character indexes of the second, by the difference
+						-- in characters between what was replaced, and the new string of the first replacement.
+					character_difference := old_name.count - new_name.count
+					file_contents.replace_substring ((new_name + Class_implementation_extension).as_upper,
+						l_visitor.parent_start_position + 1 - character_difference, l_visitor.parent_end_position - character_difference)
+						-- Open the file, and write the contents back.
+					file.open_write
+					file.put_string (file_contents)
+					file.close
+				end
+					
 			
 				rename_file_if_exists (create {DIRECTORY}.make (file_name), old_name + Class_implementation_extension.as_lower + ".e",
 					new_name + Class_implementation_extension.as_lower + ".e")
-					--| FIXME must now go into class, and change name.
 					
+					-- Now parse the contents of the file, and change the class name, and inherited
+					-- name.
+				create file.make (implementation_file_name.string)
+				if file.exists then
+					file.read_stream (file.count)
+					file.close
+					file_contents := file.last_string
+					l_eiffel_parser.parse_from_string (file_contents)
+					l_class_as := l_eiffel_parser.root_node
+					create l_visitor
+					l_class_as.process (l_visitor)
+					file_contents.replace_substring ((new_name + Class_implementation_extension).as_upper, l_visitor.name_start_position + 1, l_visitor.name_end_position)
+						-- As we are performing two replaces,we must update the character indexes of the second, by the difference
+						-- in characters between what was replaced, and the new string of the first replacement.
+						-- Open the file, and write the contents back.
+					file.open_write
+					file.put_string (file_contents)
+					file.close
+				end
 					
 					
 			end

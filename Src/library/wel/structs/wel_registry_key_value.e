@@ -25,13 +25,12 @@ feature -- Initialization
 			-- Create 
 		require
 			v_not_void: v /= Void
-			t_valid: t = Reg_sz
+			t_valid: t = reg_sz
 		do
-			set_type (t)
-			create internal_value.make (v)
+			set_string_value (v)
 		ensure
-			type_set: type = t
-			value_set: value.is_equal (v)
+			type_set: type = reg_sz
+			string_value_set: string_value.is_equal (v)
 		end
 		
 	make_with_value (t: like type; v: like internal_value) is
@@ -62,6 +61,8 @@ feature -- Access
 			valid_type: type = Reg_sz
 		do
 			Result := internal_value.string
+		ensure
+			string_value_not_void: Result /= Void
 		end
 
 	dword_value: INTEGER is
@@ -104,6 +105,19 @@ feature -- Element Change
 		ensure
 			type_set: type = reg_dword
 			dword_value_set: dword_value = v
+		end
+
+	set_string_value (v: like string_value) is
+			-- Set `string_value' with `v'.
+			-- Set `type' with `reg_sz'.
+		require
+			v_not_void: v /= Void
+		do
+			type := reg_sz
+			create internal_value.make (v)
+		ensure
+			type_set: type = reg_sz
+			dword_value_set: string_value.is_equal (v)
 		end
 
 end -- class WEL_REGISTRY_KEY_VALUE

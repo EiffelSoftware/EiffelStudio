@@ -32,7 +32,6 @@ EIF_OBJ bstr_to_eif_obj (BSTR BstrName)
 
 		name = henter (RTMS (str_name));
 		free (str_name);
-		SysFreeString (BstrName);
 	}
 	else
 	{

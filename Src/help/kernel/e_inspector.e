@@ -17,6 +17,7 @@ feature -- Initialization
 		end
 
 	create_from_topic(topic: E_TOPIC) is
+			-- Create the database from (the root-) topic.
 		require
 			not_void: topic /= Void
 		do
@@ -34,6 +35,7 @@ feature -- Initialization
 		end
 
 	process_topic(topic: E_TOPIC) is
+			-- Look through a topic for important tags.
 		require
 			not_void: topic /= Void
 		local
@@ -66,6 +68,7 @@ feature -- Initialization
 		end
 
 	process_text(text, topic_id:STRING) is
+			-- Add every word of a sentence to the database.
 		require
 			possible: text /= Void and then topic_id /= Void and then not topic_id.empty 
 		local
@@ -86,10 +89,14 @@ feature -- Initialization
 				end
 				words.tail(words.count-index)
 			end
-			add_keyword(words, topic_id)
+			if not words.empty then
+				add_keyword(words, topic_id)
+			end
 		end
 
 	add_keyword(word, topic_id:STRING) is
+			-- Add a topic to a certain keyword.
+			-- Adds the word if if was not already there.
 		require
 			possible: topic_id /= Void and then word /= Void and then not word.empty
 		local
@@ -105,7 +112,20 @@ feature -- Initialization
 			end
 		end
 
+	load_from_file is
+			-- Load the data from a file.
+		do
+		end
+
+	save_to_file is
+			-- Save the data to a file.
+		do
+		end
+
+feature -- Status report
+
 	get_topics(word:STRING):SORTED_TWO_WAY_LIST[STRING] is
+			-- Get sorted list of topics for keyword 'word'.
 		require
 			not_void: word /= Void
 		do
@@ -120,13 +140,7 @@ feature -- Initialization
 			not_void: Result /= Void
 		end
 
-	load_from_file is
-		do
-		end
-
-	save_to_file is
-		do
-		end
+feature -- Implementation
 
 	keys: HASH_TABLE[ SORTED_TWO_WAY_LIST[STRING], STRING ]
 		-- Lookup table of topic id's by keyword.

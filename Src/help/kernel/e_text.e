@@ -30,9 +30,8 @@ feature -- Initialization
 			node_cursor: DS_BILINKED_LIST_CURSOR [XML_NODE]
 			c_item: XML_TEXT
 			item: XML_ELEMENT
-			tag: STRING
-			temp:E_TEXT_PART
-			color: EV_COLOR
+			tag, s: STRING
+			temp, cr:E_TEXT_PART
 		do
 			from
 				node_cursor := node.new_cursor
@@ -42,67 +41,85 @@ feature -- Initialization
 			loop
 				c_item ?= node_cursor.item
 				if c_item /= Void then
-					-- We have character data.
-					-- Make copy and set the text.
 					create temp.make_from_other(cur_part)
-					temp.set_text(c_item.string)
-					text_parts.extend(temp)
-					cur_part.set_bullet(false)
-					cur_part.set_line_break(false)
+					s := clone(c_item.string)
+					s.prune_all('%N')
+					if not s.empty then
+						temp.set_text(s)
+						text_parts.extend(temp)
+					end
 				else
 					item ?= node_cursor.item
 					if item /= Void then
-						-- We have a tag.
-						-- Make copy and apply the tag.
-
-						create temp.make_from_other(cur_part)
 						tag := item.name
 						if tag.is_equal("B") then
+							create temp.make_from_other(cur_part)
 							temp.set_bold(true)
+							create_list(item, temp)
 						elseif tag.is_equal("I") then
+							create temp.make_from_other(cur_part)
 							temp.set_italic(true)
+							create_list(item, temp)
 						elseif tag.is_equal("B") then
+							create temp.make_from_other(cur_part)
 							temp.set_bold(true)
+							create_list(item, temp)
 						elseif tag.is_equal("UL") then
+							cr := get_line_break(cur_part.list_depth)
+							text_parts.extend(cr)
+							create temp.make_from_other(cur_part)
 							temp.set_list_depth(temp.list_depth+1)
+							create_list(item, temp)
+							text_parts.extend(cr)
+							text_parts.extend(cr)
 						elseif tag.is_equal("LI") then
-							temp.set_bullet(true)
-							temp.set_line_break(true)
+							cr := get_line_break(cur_part.list_depth)
+							cr.set_bullet(true)
+							text_parts.extend(cr)
+							create_list(item, cur_part)
 						elseif tag.is_equal("BR") then
-							temp.set_line_break(true)
+							cr := get_line_break(cur_part.list_depth)
+							text_parts.extend(cr)
+							create_list(item, cur_part)
 						elseif tag.is_equal("A") then
+							create temp.make_from_other(cur_part)
 							if item.attributes.has("TOPIC_ID") then
-								-- To make clear that it is a link,
-								-- we use a nice color.
-								create color.make_rgb(255,0,0)
-								temp.set_font_color(color)
+								temp.set_font_color_by_string("link")
 								temp.set_hyperlink(item.attributes.item("TOPIC_ID").value)
 							end
+							create_list(item, temp)
 						elseif tag.is_equal("FONT") then
+							create temp.make_from_other(cur_part)
 							if item.attributes.has("NAME") then
 								temp.set_font_name(item.attributes.item("NAME").value)
 							end
 							if item.attributes.has("COLOR") then
-								-- TODO: Convert color-string to RGB values.
-								create color.make_rgb(255,0,255)
-								temp.set_font_color(color)
+								temp.set_font_color_by_string(item.attributes.item("COLOR").value)
 							end
 							if item.attributes.has("SIZE") then
 								temp.set_font_size(item.attributes.item("SIZE").value.to_integer)
 							end
+							create_list(item, temp)
 						elseif tag.is_equal("IMP") then
+							create temp.make_from_other(cur_part)
 							temp.set_important(true)
+							create_list(item, temp)
 						end
-						if item.is_empty then
-							temp.set_text("")
-							text_parts.extend(temp)
-						end
-						create_list(item, temp)
 					end
 				end
 				node_cursor.forth
 			end
 		end
+
+	get_line_break(depth:INTEGER):E_TEXT_PART is
+		do
+			create Result.make_empty
+			Result.set_list_depth(depth)
+			Result.set_line_break(true)
+			Result.set_text("")
+		end
+
+feature -- Display
 
 	display(area: E_TOPIC_DISPLAY) is
 			-- Output un-marked-up text on 'area'.

@@ -1,6 +1,6 @@
 indexing
-	description: "Objects that ..."
-	author: ""
+	description: "A list item with a topic object."
+	author: "Vincent Brendel"
 
 class
 	TOPIC_LIST_ITEM
@@ -19,6 +19,7 @@ creation
 feature -- Initialization
 
 	make_item(li: EV_LIST; top: E_TOPIC) is
+			-- Initialize with parent 'li'.
 		require
 			not_void: li /= Void and then top /= Void and then top.id/=Void
 		do
@@ -26,9 +27,10 @@ feature -- Initialization
 			topic := top
 		end
 
-feature -- Implementation
+feature -- Access
 
 	topic: E_TOPIC
+			-- The topic object.
 
 invariant
 	TOPIC_LIST_ITEM_topic_exists: topic /= Void

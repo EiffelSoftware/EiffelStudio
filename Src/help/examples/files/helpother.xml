@@ -1,0 +1,12 @@
+<EIFFEL_DOCUMENT>
+<TOPIC ID="Misc">
+	<HEAD>Some additional information for the Help-tool</HEAD>
+
+	<TEXT>It reads every 2 seconds the file "topic.dat". If the timestamp changed, the topic in that file is displayed.</TEXT>
+	<TEXT>It assumes there is a file "help.xml".</TEXT>
+	<TEXT>There are a few problems with using EV_RICH_TEXT:
+<UL><LI>No underlined text.</LI><LI>No wrapping of lines.</LI><LI>No possibility of displaying pictures.</LI><LI>No possiblity to change the mouse cursor when going over a link</LI><UL>
+
+Suggestion are welcome.</TEXT>
+</TOPIC>
+</EIFFEL_DOCUMENT>

@@ -1,6 +1,6 @@
 indexing
-	description: "Objects that ..."
-	author: ""
+	description: "A tree item that contains a topic."
+	author: "Vincent Brendel"
 
 class
 	TOPIC_TREE_ITEM
@@ -19,6 +19,7 @@ creation
 feature -- Initialization
 
 	make_item(tr: EV_TREE_ITEM_HOLDER; top: E_TOPIC) is
+			-- Initialize with parent 'tr'.
 		require
 			not_void: tr /= Void and then top /= Void and then top.id /= Void
 		do
@@ -26,9 +27,10 @@ feature -- Initialization
 			topic := top
 		end
 
-feature -- Implementation
+feature -- Access
 
 	topic: E_TOPIC
+			-- The topic object.
 
 invariant
 	TOPIC_TREE_ITEM_topic_exists: topic /= Void

@@ -40,7 +40,7 @@ feature -- Initialization
 		local
 			com: E_TIMER_COMMAND
 		do
-			create com.make(first_window, "c:\help.txt")
+			create com.make(first_window, "topic.dat")
 			create timer.make(2000, com, Void)
 		end
 
@@ -77,17 +77,7 @@ feature -- Initialization
 			retry
 		end
 
-	is_xml_file(s:STRING):BOOLEAN is
-			-- Does file pointed by 's' a XML file name ?
-		require
-			not_void: s /= Void 
-		do
-			if s.count>4 then
-				s.tail(4)
-				s.to_upper
-				Result := s.is_equal(".XML")
-			end
-		end
+feature -- State Setting
 
 	set_help_file(s:STRING) is
 		require
@@ -98,23 +88,21 @@ feature -- Initialization
 			first_window.update
 		end
 
-feature -- Access
-
-	timer: EV_TIMEOUT
-			-- The timer event to read the file 'c:\help.txt' every 2 secs.
-
-	help_file: FILE_NAME
-			-- The XML-help-file to be loaded.
-
-feature {NONE} 
+feature {NONE} -- Implementation
 
 	default_file: FILE_NAME is
 			-- The default root-file.
 		do
-			create Result.make_from_string("d:\viewer\src\help\examples\files\help.xml")
+			create Result.make_from_string("help.xml")
 		end
 
-feature
+feature -- Access
+
+	timer: EV_TIMEOUT
+			-- The timer to read the file 'topic.dat' every 2 secs.
+
+	help_file: FILE_NAME
+			-- The XML-help-file to be loaded.
 
 	topic_id: STRING
 			-- The topic to be diplayed. Root topic if Void.
@@ -127,5 +115,6 @@ feature
 		end
 
 invariant
-	VIEWER_consistent: topic_id/=Void implies not topic_id.empty
+	VIEWER_consistent: topic_id /= Void implies not topic_id.empty
+
 end --VIEWER

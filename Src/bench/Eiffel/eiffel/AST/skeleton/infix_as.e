@@ -11,39 +11,41 @@ class INFIX_AS
 inherit
 	FEATURE_NAME
 		redefine
-			is_infix, is_valid, offset, simple_format, visual_name,
+			is_infix, is_prefix, is_valid, offset, end_offset, simple_format, visual_name,
 			main_feature_format, format, is_equivalent
+		end
+
+	SYNTAX_STRINGS
+		export
+			{NONE} all
+		undefine
+			is_equal
 		end
 
 feature {AST_FACTORY} -- Initialization
 
-	initialize (op: like fix_operator; b: BOOLEAN) is
+	initialize (op: STRING_AS; b: BOOLEAN; inf: BOOLEAN) is
 			-- Create a new INFIX AST node.
+			-- `b' is `is_frozen', `inf' is `is_infix'.
 		require
 			op_not_void: op /= Void
 		do
-			fix_operator := op
-				-- Note: the following line is not
-				-- necessary since this has already
-				-- been done by the scanner.
-			fix_operator.value.to_lower
+			is_infix := inf
 			is_frozen := b
+			set_name (op.value)
 		ensure
-			fix_operator_set: fix_operator = op
 			is_frozen_set: is_frozen = b
 		end
 
-feature -- Attributes
-
-	fix_operator: STRING_AS;
-			-- Infix notation
-
 feature -- Properties
 
-	is_infix: BOOLEAN is
+	is_infix: BOOLEAN
 			-- is the feature name an infixed notation ?
+
+	is_prefix: BOOLEAN is
+			-- Is the feature a prefix notation?
 		do
-			Result := True;
+			Result := not is_infix
 		end
 
 feature -- Comparison
@@ -51,94 +53,46 @@ feature -- Comparison
 	is_equivalent (other: like Current): BOOLEAN is
 			-- Is `other' equivalent to the current object ?
 		do
-			Result := equivalent (fix_operator, other.fix_operator) and
+			Result := equal (internal_name_id, other.internal_name_id) and
+				is_infix = other.is_infix and
 				is_frozen = other.is_frozen
 		end
 
 feature -- Access
 
-	visual_name: STRING is
+	visual_name: STRING
 			-- Visual name of fix operator
-		do
-			Result := fix_operator.value
-		end;
 
-	internal_name: ID_AS is
+	internal_name: ID_AS
 			-- Internal name used by the compiler
-		local
-			value, to_append: STRING;
-		do
-			temp_name.wipe_out;
-			temp_name.append (Fix_notation);
-			value := fix_operator.value;
-			to_append := code_table.item (value);
-			if to_append = Void then
-					-- Free operator
-				to_append := value;
-			end;
-			check
-				good_string_to_append: to_append /= Void;
-			end;
-			temp_name.append (to_append);
-			Result := clone (temp_name);
-			Result.to_lower;
-		end;
-
-	Fix_notation: STRING is
-			-- Infix notation prefix for the compiler
-		once
-			Result := "_infix_"
-		end
 
 	is_valid: BOOLEAN is
 			-- Is the fix notation valid ?
-		local
-			value: STRING;
 		do
-			value := fix_operator.value;
-			Result := code_table.has (value) or else is_free;
+			Result := sc.is_valid_operator (visual_name)
 		end;
 
 	is_free: BOOLEAN is
 			-- Is the fix notation a free notation ?
-		local
-			value: STRING;
-			first_char: CHARACTER;
-			i, count: INTEGER;
 		do
-			value := fix_operator.value;
-			first_char := value.item (1);
-			if
-				first_char = '%A'
-				or else first_char = '%S'
-				or else first_char = '%V'
-				or else first_char = '&'
-			then
-				from
-					Result := True;
-					i := 2;
-					count := value.count;
-				until
-					i > count
-				loop
-					Result := value.item (i) /= '%%';
-					i := i + 1;
-				end;
-			end;
-		ensure then
-			Result implies not code_table.has (fix_operator.value);
+			Result := sc.is_valid_free_operator (visual_name)
 		end;
 
 	offset: INTEGER is
 		do
 			if is_frozen then
-				Result := 7
+				Result := frozen_str.count
 			end;
 			if is_prefix then
-				Result := Result + 7
+				Result := Result + prefix_str.count
 			else
-				Result := Result + 6
+				Result := Result + infix_str.count
 			end
+		end
+
+	end_offset: INTEGER is
+		once
+			Result := Quote_str.count
 		end
 
 feature -- Conveniences
@@ -158,12 +112,8 @@ feature -- Conveniences
 
 			if infix_feature = Void then
 				Result := False
-			elseif fix_operator = Void then
-				Result := False
-			elseif infix_feature.fix_operator = Void then
-				Result := True
 			else
-				Result := fix_operator < infix_feature.fix_operator
+				Result := visual_name < infix_feature.visual_name
 			end
 		end
 
@@ -181,9 +131,9 @@ feature -- Output
 				-- of local_adapt
 			ctxt.local_adapt.set_evaluated_type;
 			if is_infix then
-				ctxt.prepare_for_infix (internal_name, Void);
+				ctxt.prepare_for_infix (internal_name, visual_name, Void);
 			else
-				ctxt.prepare_for_prefix (internal_name);
+				ctxt.prepare_for_prefix (internal_name, visual_name);
 			end;
 			adapt_main_feature (ctxt)
 		end;
@@ -212,13 +162,13 @@ feature {AST_EIFFEL} -- Output
 				ctxt.put_text_item (ti_Infix_keyword);
 				ctxt.put_space;
 				ctxt.put_text_item_without_tabs (ti_Double_quote);
-				ctxt.prepare_for_infix (internal_name, Void);
+				ctxt.prepare_for_infix (internal_name, visual_name, Void);
 				ctxt.put_infix_feature
 			else
 				ctxt.put_text_item (ti_Prefix_keyword);
 				ctxt.put_space;
 				ctxt.put_text_item_without_tabs (ti_Double_quote);
-				ctxt.prepare_for_prefix (internal_name);
+				ctxt.prepare_for_prefix (internal_name, visual_name);
 				ctxt.put_prefix_feature
 			end;
 			ctxt.put_text_item_without_tabs (ti_Double_quote);
@@ -228,8 +178,17 @@ feature {COMPILER_EXPORTER}
 
 	set_name (s: STRING) is
 		do
-			!!fix_operator;
-			fix_operator.set_value (s);
+			visual_name := s
+			if is_infix then
+				create internal_name.initialize (infix_str + s + quote_str)
+			else
+				create internal_name.initialize (prefix_str + s + quote_str)
+			end
 		end;
+
+feature {NONE} -- Implementation
+
+	sc: EIFFEL_SYNTAX_CHECKER
+			-- Tool that checks the validity of feature names.
 
 end -- class INFIX_AS

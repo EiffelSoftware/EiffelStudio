@@ -52,6 +52,7 @@ feature {AST_FACTORY} -- Initialization
 				System.current_class.set_has_unique
 			end
 			set_start_position
+			set_end_position
 		ensure
 			feature_names_set: feature_names = f
 			body_set: body = b
@@ -65,6 +66,13 @@ feature {NONE} -- Initialization
 			--| No need to test whether feature_names is empty, because the class is
 			--| FEATURE_AS and there is allwas at least one feature name
 			start_position := start_position - feature_names.first.offset
+		end
+
+	set_end_position is
+		do
+			--| No need to test whether feature_names is empty, because the class is
+			--| FEATURE_AS and there is allwas at least one feature name
+			end_position := end_position + feature_names.first.end_offset
 		end
 
 feature -- Access

@@ -198,6 +198,11 @@ feature {FEATURE_AS} -- Formatting
 			end
 		end
 
+	end_offset: INTEGER is
+		do
+			Result := 0
+		end
+
 feature {NONE} -- Implementation
 
 	code_table: HASH_TABLE [STRING, STRING] is

@@ -1043,21 +1043,7 @@ feature {NONE} -- Completion implementation
 			found	: BOOLEAN
 		do
 			if feat.is_infix then
-				from
-					infix_table.start
-					found := false
-				until
-					found or infix_table.after
-				loop
-					found := feat.name.is_equal (infix_table.item_for_iteration)
-					if found then
-						create name.make_with_name (infix_table.key_for_iteration + feat.feature_signature.substring(feat.name.count + 1, feat.feature_signature.count))
-					end
-					infix_table.forth
-				end
-				if not found then
-					create name.make_with_name (feat.feature_signature.substring (8, feat.feature_signature.count))
-				end
+				create name.make_with_name (extract_symbol_from_infix (feat.name) + feat.feature_signature.substring(feat.name.count + 1, feat.feature_signature.count))
 				name.set_has_dot (False)
 				insert_in_completion_possibilities (name)
 			elseif not feat.is_prefix then

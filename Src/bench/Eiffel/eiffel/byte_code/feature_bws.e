@@ -108,7 +108,7 @@ feature -- Concurrent Eiffel
 				end
 			elseif need_invariant then
 				buf.putchar ('"');
-				buf.putstring (feature_name);
+				buf.putstring (escaped_feature_name);
 				buf.putstring ("%", ");
 				buf.putstring ("CURPROXY_OBJ(");
 				reg.print_register;
@@ -164,7 +164,7 @@ feature -- Concurrent Eiffel
 			end
 			buf.putstring(typ.base_class.name_in_upper)
 			buf.putstring("%", %"")
-			buf.putstring(feature_name)
+			buf.putstring(escaped_feature_name)
 			buf.putstring ("%", ")
 			if parameters /= Void then
 				buf.putint (parameters.count)

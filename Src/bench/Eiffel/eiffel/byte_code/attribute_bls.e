@@ -69,7 +69,7 @@ feature
             buf.putstring ("), constant_attribute, %"")
             buf.putstring(typ.base_class.name_in_upper)
             buf.putstring("%", %"")
-            buf.putstring(attribute_name)
+            buf.putstring(escaped_attribute_name)
             buf.putstring ("%", 0);")
             buf.new_line
             buf.putstring ("CURSG(")

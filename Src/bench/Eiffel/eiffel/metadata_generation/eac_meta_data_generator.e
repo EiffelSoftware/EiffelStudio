@@ -65,6 +65,7 @@ feature -- Basic Operation
 			named_signature: NAMED_SIGNATURE_TYPE_PROXY
 			eac_registrar: EIFFEL_CLASS_PROXY
 			found: BOOLEAN
+			op_name: STRING
 		do
 			ast := class_c.ast
 			create eac_registrar.make
@@ -209,25 +210,11 @@ feature -- Basic Operation
 				end
 				if an_extension /= Void and current_feature.written_in = class_c.class_id then
 					if current_feature.is_infix then
-						infix_reverse_table.search (current_feature.feature_name)
-						if infix_reverse_table.found then
-							feature_proxy.set_eiffel_name ("%"" + infix_reverse_table.found_item + "%"")
-						else
-							check
-								valid_name: current_feature.feature_name.substring_index (infix_name, 1) = 1
-							end
-							feature_proxy.set_eiffel_name ("%"" + current_feature.feature_name.substring (infix_name.count + 1, current_feature.feature_name.count) + "%"")
-						end
+						op_name := extract_symbol_from_infix (current_feature.feature_name)
+						feature_proxy.set_eiffel_name ("%"" + op_name + "%"")
 					elseif current_feature.is_prefix then
-						prefix_reverse_table.search (current_feature.feature_name)
-						if prefix_reverse_table.found then
-							feature_proxy.set_eiffel_name ("%"" + prefix_reverse_table.found_item + "%"")
-						else
-							check
-								valid_name: current_feature.feature_name.substring_index (prefix_name, 1) = 1
-							end
-							feature_proxy.set_eiffel_name ("%"" + current_feature.feature_name.substring (prefix_name.count + 1, current_feature.feature_name.count) + "%"")
-						end
+						op_name := extract_symbol_from_prefix (current_feature.feature_name)
+						feature_proxy.set_eiffel_name ("%"" + op_name + "%"")
 						create named_signature.make
 						named_signature.make1
 						named_signature.set_type_full_external_name (class_c.external_class_name)
@@ -538,12 +525,6 @@ feature {NONE} -- Implementation
 	Equal_symbol: CHARACTER is '='
 			-- Equal symbol
 	
-	infix_name: STRING is "_infix_"
-			-- Infix feature prefix
-	
-	prefix_name: STRING is "_prefix_"
-			-- Prefix feature prefix
-
 invariant
 	descriptors_not_void: assembly_descriptors /= Void
 	one_name_per_descriptor: assembly_descriptors.count = assembly_names.count -- and each key is identical

@@ -8,11 +8,6 @@ class UN_PLUS_AS
 inherit
 	UNARY_AS
 
-	PREFIX_INFIX_NAMES
-		rename
-			plus_prefix as prefix_feature_name
-		end
-
 feature -- Properties
 
 

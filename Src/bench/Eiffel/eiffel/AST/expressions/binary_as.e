@@ -81,6 +81,11 @@ feature -- Properties
 			Result := infix_function_name;	
 		end
 
+	op_name: STRING is
+			-- Symbol representing the operator (without the infix).
+		deferred
+		end
+
 feature -- Comparison
 
 	is_equivalent (other: like Current): BOOLEAN is
@@ -300,7 +305,7 @@ feature -- Type check, byte code and dead code removal
 				ctxt.rollback
 			else
 				ctxt.need_dot
-				ctxt.prepare_for_infix (operator_name, right)
+				ctxt.prepare_for_infix (operator_name, op_name, right)
 				ctxt.put_current_feature
 				if not ctxt.last_was_printed then
 					ctxt.rollback
@@ -351,7 +356,7 @@ feature {AST_EIFFEL} -- Output
 			-- Reconstitute text.
 		do
 			left.simple_format (ctxt)
-			ctxt.prepare_for_infix (operator_name, right)
+			ctxt.prepare_for_infix (operator_name, op_name, right)
 			ctxt.put_infix_feature
 		end
 

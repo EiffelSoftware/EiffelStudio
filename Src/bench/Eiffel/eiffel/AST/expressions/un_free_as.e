@@ -10,7 +10,7 @@ inherit
 		rename
 			initialize as initialize_unary_as
 		redefine
-			is_equivalent
+			is_equivalent, prefix_feature_name
 		end
 
 	PREFIX_INFIX_NAMES
@@ -40,11 +40,8 @@ feature -- Properties
 	prefix_feature_name: STRING is
 			-- Internal name
 		do
-			Result := prefix_feature_name_with_symbol(op_name)
+			Result := prefix_feature_name_with_symbol (op_name)
 		end
-
-	Internal_prefix: STRING is "_prefix_"
-			-- Prefix string for internal name
 
 	operator_name: STRING is
 		do
@@ -72,10 +69,7 @@ feature {UNARY_AS}	-- Replication
 
 	set_prefix_feature_name (p: like prefix_feature_name) is
 		do
-			!! op_name.make (p.count)
-			op_name.append (clone (p))
-			op_name.tail (op_name.count - 8)
-				-- 8 is "_prefix_".count
+			create op_name.initialize (extract_symbol_from_prefix (p))
 		end
 
 end -- class UN_FREE_AS

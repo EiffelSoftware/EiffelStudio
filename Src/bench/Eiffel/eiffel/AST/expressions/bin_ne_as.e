@@ -9,17 +9,14 @@ class
 inherit
 	BIN_EQ_AS
 		redefine
-			infix_function_name, byte_anchor
+			op_name, byte_anchor
 		end
 
 	PREFIX_INFIX_NAMES
 
 feature -- Properties
 
-	infix_function_name: STRING is 
-		once
-			Result := not_equal_infix
-		end
+	op_name: STRING is "/="
 
 	byte_anchor: BIN_EQUAL_B is
 			-- Byte code type

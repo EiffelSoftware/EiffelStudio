@@ -103,7 +103,7 @@ feature
             buf.putstring (gc_comma)
             if is_nested then
                 buf.putchar ('"')
-                buf.putstring (attribute_name)
+                buf.putstring (escaped_attribute_name)
                 buf.putstring ("%", ")
                 buf.putstring ("CURPROXY_OBJ(")
                 reg.print_register
@@ -133,7 +133,7 @@ feature
 			buf.putstring ("), constant_attribute, %"")
 			buf.putstring(base_class.name_in_upper)
 			buf.putstring("%", %"")
-			buf.putstring(attribute_name)
+			buf.putstring(escaped_attribute_name)
 			buf.putstring ("%", 0);")
 			buf.new_line
 			buf.putstring ("CURSG(")

@@ -17,6 +17,11 @@ inherit
 			{NONE} all
 		end
 
+	STRING_CONVERTER
+		export
+			{NONE} all
+		end
+
 feature -- Access
 
 	feature_id: INTEGER
@@ -31,6 +36,26 @@ feature -- Access
 			feature_name_id_set: feature_name_id > 0
 		do
 			Result := Names_heap.item (feature_name_id)
+		ensure
+			result_not_void: Result /= Void
+			result_not_empty: not Result.is_empty
+		end
+		
+	escaped_feature_name: STRING is
+			-- Feature name as it should be generated during C generation.
+			-- Needed for infix or prefix feature which have embedded double-quote
+			-- in them.
+		require
+			feature_name_id_set: feature_name_id > 0
+		local
+			l_name: STRING
+		do
+			l_name := Names_heap.item (feature_name_id)
+			
+				-- Allocate space for new string. `l_name.count + 2'
+				-- because in most cases you only have to escape the double-quote.
+			create Result.make (l_name.count + 2)
+			escape_string (Result, Names_heap.item (feature_name_id))
 		ensure
 			result_not_void: Result /= Void
 			result_not_empty: not Result.is_empty

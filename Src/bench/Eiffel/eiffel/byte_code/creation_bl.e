@@ -346,7 +346,7 @@ feature -- Concurrent Eiffel
 			buf.putstring ("%", %"");
 			if call /= Void then
 				feat ?= call.message;
-				buf.putstring (feat.feature_name);
+				buf.putstring (feat.escaped_feature_name);
 			else 
 				buf.putstring ("_no_cf");
 			end;

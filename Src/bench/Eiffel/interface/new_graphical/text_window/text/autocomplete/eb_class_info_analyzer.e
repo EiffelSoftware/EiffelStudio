@@ -1056,7 +1056,7 @@ feature {NONE}-- Implementation
 			else
 				cls_c := a_type.associated_class
 				if cls_c /= Void and then cls_c.has_feature_table then
-					feat := cls_c.feature_with_name (infix_function_name_with_symbol (name))
+					feat := cls_c.feature_with_name (infix_feature_name_with_symbol (name))
 					if feat /= Void and then feat.type /= Void then
 						Result := feat.type
 					end

@@ -132,12 +132,12 @@ feature {NONE} -- Implementation
 						tool.set_icon_name (Eiffel_system.name)
 						title := clone (Interface_names.t_Project)
 						title.append (": ")
-						title.append (Project_directory)
+						title.append (Project_directory_name)
 						tool.set_title (title)
 						if Eiffel_project.save_error then
 							!! st.make
 							st.add_string ("Could not write to ")
-							st.add_string (Project_file_name)
+							st.add_string (Project_directory_name)
 							st.add_new_line
 							st.add_string ("Please check permissions and disk space")
 							st.add_new_line

@@ -25,6 +25,8 @@ feature {NONE} -- Initialization
 				Graphical_resources.default_text_font.valid_actual_value
 			class_font :=
 				Graphical_resources.class_font.valid_actual_value
+			cluster_font :=
+				Graphical_resources.cluster_font.valid_actual_value
 			feature_font :=
 				Graphical_resources.feature_font.valid_actual_value
 			object_font :=
@@ -56,6 +58,8 @@ feature {NONE} -- Initialization
 				Graphical_resources.symbol_color.valid_actual_value
 			class_color :=
 				Graphical_resources.class_color.valid_actual_value
+			cluster_color :=
+				Graphical_resources.cluster_color.valid_actual_value
 			feature_color :=
 				Graphical_resources.feature_color.valid_actual_value
 			error_color :=
@@ -94,6 +98,7 @@ feature -- Access
 			int := int.max (comment_font.font_ascent);
 			int := int.max (keyword_font.font_ascent);
 			int := int.max (class_font.font_ascent);
+			int := int.max (cluster_font.font_ascent);
 			int := int.max (feature_font.font_ascent);
 			int := int.max (object_font.font_ascent);
 			int := int.max (error_font.font_ascent);
@@ -111,6 +116,7 @@ feature -- Access
 			int := int.max (comment_font.font_descent);
 			int := int.max (keyword_font.font_descent);
 			int := int.max (class_font.font_descent);
+			int := int.max (cluster_font.font_descent);
 			int := int.max (feature_font.font_descent);
 			int := int.max (object_font.font_descent);
 			int := int.max (error_font.font_descent);
@@ -130,6 +136,9 @@ feature -- Font access
 
 	class_font: FONT
 			-- Font to be used for class text
+
+	cluster_font: FONT
+			-- Font to be used for cluster text
 
 	feature_font: FONT
 			-- Font to be used for feature text
@@ -177,6 +186,9 @@ feature -- Color access
 
 	class_color: COLOR
 			-- Foreground color of class text
+
+	cluster_color: COLOR
+			-- Foreground color of cluster text
 
 	feature_color: COLOR
 			-- Foreground color of feature text

@@ -47,6 +47,8 @@ inherit
 			item as wel_item,
 			selected_item as wel_selected_item
 		undefine
+			on_size,
+			on_move,
 			on_left_button_up,
 			on_right_button_up ,
 			on_left_button_down,

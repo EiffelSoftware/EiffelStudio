@@ -76,6 +76,8 @@ inherit
 			text_length as wel_text_length,
 			select_item as select_item_at
 		undefine
+			on_move,
+			on_size,
 			on_right_button_up,
 			on_left_button_down,
 			on_left_button_up,

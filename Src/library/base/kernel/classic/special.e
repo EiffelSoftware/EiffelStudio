@@ -190,13 +190,13 @@ feature {NONE} -- Implementation
 	frozen sp_count (sp_obj: POINTER): INTEGER is
 			-- Count of the special object
 		external
-			"C | %"eif_plug.h%""
+			"C use %"eif_plug.h%""
 		end
 
 	frozen spclearall (p: POINTER) is
 			-- Reset all items to default value.
 		external
-			"C | %"eif_copy.h%""
+			"C use %"eif_copy.h%""
 		end
 
 	frozen sparycpy (old_area: POINTER; newsize, s, n: INTEGER): SPECIAL [T] is
@@ -204,7 +204,7 @@ feature {NONE} -- Implementation
 			-- from `oldarea'.
 			-- Old items are at position `s' in new area.
 		external
-			"C | %"eif_misc.h%""
+			"C use %"eif_misc.h%""
 		alias
 			"arycpy"
 		end

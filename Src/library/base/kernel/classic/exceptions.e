@@ -20,7 +20,7 @@ feature -- Status report
 	meaning (except: INTEGER): STRING is
 			-- A message in English describing what `except' is
 		external
-			"C | %"eif_except.h%""
+			"C use %"eif_except.h%""
 		alias
 			"eename"
 		end
@@ -80,7 +80,7 @@ feature -- Status report
 	tag_name: STRING is
 			-- Tag of last violated assertion clause
 		external
-			"C | %"eif_except.h%""
+			"C use %"eif_except.h%""
 		alias
 			"eeltag"
 		end
@@ -89,7 +89,7 @@ feature -- Status report
 			-- Name of the routine whose execution was
 			-- interrupted by last exception
 		external
-			"C | %"eif_except.h%""
+			"C use %"eif_except.h%""
 		alias
 			"eelrout"
 		end
@@ -98,7 +98,7 @@ feature -- Status report
 			-- Name of the class that includes the recipient
 			-- of original form of last exception
 		external
-			"C | %"eif_except.h%""
+			"C use %"eif_except.h%""
 		alias
 			"eelclass"
 		end
@@ -106,7 +106,7 @@ feature -- Status report
 	exception: INTEGER is
 			-- Code of last exception that occurred
 		external
-			"C | %"eif_except.h%""
+			"C use %"eif_except.h%""
 		alias
 			"eelcode"
 		end
@@ -114,7 +114,7 @@ feature -- Status report
 	exception_trace: STRING is
 			-- String representation of the exception trace
 		external
-			"C | %"eif_except.h%""
+			"C use %"eif_except.h%""
 		alias
 			"stack_trace_string"
 		end
@@ -123,7 +123,7 @@ feature -- Status report
 			-- Assertion tag for original form of last
 			-- assertion violation.
 		external
-			"C | %"eif_except.h%""
+			"C use %"eif_except.h%""
 		alias
 			"eeotag"
 		end
@@ -132,7 +132,7 @@ feature -- Status report
 			-- Original code of last exception that triggered
 			-- current exception
 		external
-			"C | %"eif_except.h%""
+			"C use %"eif_except.h%""
 		alias
 			"eeocode"
 		end
@@ -141,7 +141,7 @@ feature -- Status report
 			-- Name of the routine whose execution was
 			-- interrupted by original form of last exception
 		external
-			"C | %"eif_except.h%""
+			"C use %"eif_except.h%""
 		alias
 			"eeorout"
 		end
@@ -150,7 +150,7 @@ feature -- Status report
 			-- Name of the class that includes the recipient
 			-- of original form of last exception
 		external
-			"C | %"eif_except.h%""
+			"C use %"eif_except.h%""
 		alias
 			"eeoclass"
 		end
@@ -161,7 +161,7 @@ feature -- Status setting
 			-- Make sure that any exception of code `code' will be
 			-- caught. This is the default.
 		external
-			"C | %"eif_except.h%""
+			"C use %"eif_except.h%""
 		alias
 			"eecatch"
 		end
@@ -170,7 +170,7 @@ feature -- Status setting
 			-- Make sure that any exception of code `code' will be
 			-- ignored. This is not the default.
 		external
-			"C | %"eif_except.h%""
+			"C use %"eif_except.h%""
 		alias
 			"eeignore"
 		end
@@ -203,7 +203,7 @@ feature -- Status setting
 			-- Terminate execution with exit status `code',
 			-- without triggering an exception.
 		external
-			"C | %"eif_except.h%""
+			"C use %"eif_except.h%""
 		alias
 			"esdie"
 		end
@@ -212,7 +212,7 @@ feature -- Status setting
 			-- Terminate execution with exit status `code',
 			-- without triggering an exception.
 		external
-			"C | %"eif_except.h%""
+			"C use %"eif_except.h%""
 		alias
 			"esdie"
 		end
@@ -236,7 +236,7 @@ feature {NONE} -- Implementation
 
 	exclear is
 		external
-			"C | %"eif_except.h%""
+			"C use %"eif_except.h%""
 		end
 
 	eraise (str: POINTER; code: INTEGER) is
@@ -247,7 +247,7 @@ feature {NONE} -- Implementation
 
 	c_trace_exception (b: BOOLEAN) is
 		external
-			"C | %"eif_except.h%""
+			"C use %"eif_except.h%""
 		alias
 			"eetrace"
 		end

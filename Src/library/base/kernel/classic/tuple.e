@@ -640,19 +640,19 @@ feature {NONE} -- Implementation
 	eif_gen_is_uniform (obj: POINTER; code: CHARACTER): BOOLEAN is
 			-- Are all items in `obj' of type `code'?
 		external
-			"C | %"eif_gen_conf.h%""
+			"C use %"eif_gen_conf.h%""
 		end
 
 	eif_gen_typecode (obj: POINTER; pos: INTEGER): CHARACTER is
 			-- Code for generic parameter `pos' in `obj'.
 		external
-			"C | %"eif_gen_conf.h%""
+			"C use %"eif_gen_conf.h%""
 		end
 
 	eif_gen_count (obj: POINTER): INTEGER is
 			-- Number of generic parameters of `obj'.
 		external
-			"C | %"eif_gen_conf.h%""
+			"C use %"eif_gen_conf.h%""
 		end
 
 indexing

@@ -468,8 +468,9 @@ EIF_DOUBLE d;
 rt_public char *c_outc(c)
 EIF_CHARACTER c;
 {
-	sprintf(buffer, "%c", c);
-	return makestr(buffer, strlen(buffer));
+	buffer[0] = c;
+	buffer[1] = '\0';
+	return makestr(buffer, 1);
 }
 
 rt_public char *c_outp(p)

@@ -95,9 +95,6 @@ feature -- Definition: access
 			method_name_not_void: method_name /= Void
 			signature_not_void: signature /= Void
 		do
-			if not signature.is_written then
-				signature.update_item
-			end
 			last_call_success := c_define_member_ref (item, in_class_token,
 				method_name.item, signature.item.item, signature.size, $Result)
 		ensure
@@ -153,9 +150,6 @@ feature -- Definition: creation
 			method_name_not_void: method_name /= Void
 			signature_not_void: signature /= Void
 		do
-			if not signature.is_written then
-				signature.update_item
-			end
 			last_call_success := c_define_method (item, in_class_token,
 				method_name.item, method_flags, signature.item.item, signature.size,
 				0, impl_flags, $Result)
@@ -172,9 +166,6 @@ feature -- Definition: creation
 			field_name_not_void: field_name /= Void
 			signature_not_void: signature /= Void
 		do
-			if not signature.is_written then
-				signature.update_item
-			end
 			last_call_success := c_define_field (item, in_class_token,
 				field_name.item, field_flags, signature.item.item, signature.size,
 				0, default_pointer, 0, $Result)
@@ -189,9 +180,6 @@ feature -- Definition: creation
 		require
 			signature_not_void: signature /= Void
 		do
-			if not signature.is_written then
-				signature.update_item
-			end
 			last_call_success := c_define_signature (item, signature.item.item,
 				signature.size, $Result)
 		ensure
@@ -209,7 +197,20 @@ feature -- Definition: creation
 			success: last_call_success = 0
 			result_valid: Result > 0
 		end
-		
+
+	define_custom_attribute (owner, constructor: INTEGER; ca: MD_CUSTOM_ATTRIBUTE): INTEGER is
+			-- Define a new token for `ca' applied on token `owner' with using `constructor'
+			-- as creation procedure.
+		require
+			ca_not_void: ca /= Void
+		do
+			last_call_success := c_define_custom_attribute (item, owner, constructor,
+				ca.item.item, ca.size, $Result)
+		ensure
+			success: last_call_success = 0
+			result_valid: Result > 0
+		end
+
 feature -- Settings
 
 	set_module_name (a_name: UNI_STRING) is
@@ -390,5 +391,20 @@ feature {NONE} -- Implementation
 		alias
 			"DefineUserString"
 		end
+
+	c_define_custom_attribute (an_item: POINTER; owner, constructor: INTEGER;
+			blob: POINTER; blobl_len: INTEGER; ca_token: POINTER): INTEGER
+		is
+			-- Call `IMetaDataEmit->DefineCustomAttribute'.
+		external
+			"[
+				C++ IMetaDataEmit signature
+					(mdToken, mdToken, void *, ULONG, mdCustomAttribute *): EIF_INTEGER
+				use <cor.h>
+			]"
+		alias
+			"DefineCustomAttribute"
+		end
+
 
 end -- class MD_EMIT

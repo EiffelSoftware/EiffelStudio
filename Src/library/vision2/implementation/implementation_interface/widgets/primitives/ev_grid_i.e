@@ -616,6 +616,11 @@ feature {EV_GRID_COLUMN_I, EV_GRID_I, EV_GRID_DRAWER_I, EV_GRID_ROW_I} -- Implem
 
 feature {EV_GRID_DRAWER_I} -- Implementation
 
+	column_offsets: ARRAYED_LIST [INTEGER]
+		-- Cumulative offset of each column in pixels.
+		-- For example, if there are 5 columns, each with a width of 80 pixels,
+		-- `column_offsets' contains 0, 80, 160, 240, 320
+
 	drawable: EV_DRAWING_AREA
 		-- Drawing area for `Current' on which all drawing operations are performed.
 		
@@ -705,6 +710,25 @@ feature {NONE} -- Drawing implementation
 			update_scroll_bar_spacer
 		end
 		
+	recompute_column_offsets is
+			-- Recompute contents of `column_offsets'.
+		local
+			i: INTEGER
+		do
+			create column_offsets.make (column_count)
+			from
+				grid_columns.start
+			until
+				grid_columns.off
+			loop
+				column_offsets.extend (i)
+				i := i + grid_columns.item.width
+				grid_columns.forth
+			end
+		ensure
+			counts_equal: column_offsets.count = column_count
+		end
+		
 	header_item_resizing (header_item: EV_HEADER_ITEM) is
 			-- Respond to `header_item' being resized.
 		require
@@ -775,6 +799,7 @@ feature {NONE} -- Drawing implementation
 				remove_resizing_line
 			end
 			fixme ("Only invalidate to the right hand side of the resized header item")
+			recompute_column_offsets
 			drawable.redraw
 		end
 		
@@ -889,8 +914,6 @@ feature {NONE} -- Drawing implementation
 		require
 			a_width_non_negative: a_width >= 0
 			a_height_non_negative: a_height >= 0
-		local
-			new_width, new_height: INTEGER
 		do
 			if not header.is_empty then
 					-- Update horizontal scroll bar settings.
@@ -932,7 +955,7 @@ feature {NONE} -- Drawing implementation
 	resizing_line_border: INTEGER is 4
 		-- Distance that resizing line is displayed from top and bottom edges of `drawable'.
 		
-	buffered_drawable_size: INTEGER is 1000
+	buffered_drawable_size: INTEGER is 2000
 		-- Default size of `drawable' used for scrolling purposes.
 		
 feature {NONE} -- Implementation

@@ -77,7 +77,8 @@ feature {NONE} -- Initialization
 			create char_format.make
 			char_format.set_face_name ("Arial")
 			char_format.set_height (12)
-			rich_edit.set_character_format_selection (char_format)
+			char_format.unset_bold
+			rich_edit.set_character_format_all (char_format)
 			rich_edit.set_text ("Rich edit control")
 
 			-- Create a toolbar and buttons

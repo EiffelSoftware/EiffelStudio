@@ -27,13 +27,6 @@ feature -- Basic Operations
 			"AssemblyRetrievalFailedMessage"
 		end
 
-	TypeRetrievalFailedMessage: STRING is
-		external
-			"IL signature (): System.String use ISE.Reflection.ReflectionInterfaceErrorMessages"
-		alias
-			"TypeRetrievalFailedMessage"
-		end
-
 	HasWriteLock: STRING is
 		external
 			"IL signature (): System.String use ISE.Reflection.ReflectionInterfaceErrorMessages"
@@ -41,18 +34,18 @@ feature -- Basic Operations
 			"HasWriteLock"
 		end
 
-	HasReadLockMessage: STRING is
+	TypeRetrievalFailedMessage: STRING is
 		external
 			"IL signature (): System.String use ISE.Reflection.ReflectionInterfaceErrorMessages"
 		alias
-			"HasReadLockMessage"
+			"TypeRetrievalFailedMessage"
 		end
 
-	ReadLockCreationFailedMessage: STRING is
+	HasWriteLockMessage: STRING is
 		external
 			"IL signature (): System.String use ISE.Reflection.ReflectionInterfaceErrorMessages"
 		alias
-			"ReadLockCreationFailedMessage"
+			"HasWriteLockMessage"
 		end
 
 	FileAccessFailed: STRING is
@@ -90,6 +83,13 @@ feature -- Basic Operations
 			"HasReadLock"
 		end
 
+	ReadLockCreationFailedMessage: STRING is
+		external
+			"IL signature (): System.String use ISE.Reflection.ReflectionInterfaceErrorMessages"
+		alias
+			"ReadLockCreationFailedMessage"
+		end
+
 	AssemblyRemovalFailedMessage: STRING is
 		external
 			"IL signature (): System.String use ISE.Reflection.ReflectionInterfaceErrorMessages"
@@ -111,6 +111,13 @@ feature -- Basic Operations
 			"AssembliesRetrievalFailedMessage"
 		end
 
+	HasReadLockMessage: STRING is
+		external
+			"IL signature (): System.String use ISE.Reflection.ReflectionInterfaceErrorMessages"
+		alias
+			"HasReadLockMessage"
+		end
+
 	AssemblyRemovalFailed: STRING is
 		external
 			"IL signature (): System.String use ISE.Reflection.ReflectionInterfaceErrorMessages"
@@ -123,13 +130,6 @@ feature -- Basic Operations
 			"IL signature (): System.String use ISE.Reflection.ReflectionInterfaceErrorMessages"
 		alias
 			"FileAccessFailedMessage"
-		end
-
-	HasWriteLockMessage: STRING is
-		external
-			"IL signature (): System.String use ISE.Reflection.ReflectionInterfaceErrorMessages"
-		alias
-			"HasWriteLockMessage"
 		end
 
 	InvalidAssemblyQualifiedNameMessage: STRING is

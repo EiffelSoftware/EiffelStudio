@@ -23,11 +23,74 @@ feature {NONE} -- Initialization
 
 feature -- Basic Operations
 
+	NeutralCulture: STRING is
+		external
+			"IL signature (): System.String use ISE.Reflection.ConversionSupport"
+		alias
+			"NeutralCulture"
+		end
+
+	ExportClauseFromText (a_text: STRING): ISE_REFLECTION_EXPORTCLAUSE is
+		external
+			"IL signature (System.String): ISE.Reflection.ExportClause use ISE.Reflection.ConversionSupport"
+		alias
+			"ExportClauseFromText"
+		end
+
+	EmptyString: STRING is
+		external
+			"IL signature (): System.String use ISE.Reflection.ConversionSupport"
+		alias
+			"EmptyString"
+		end
+
+	RenameClauseFromText (a_text: STRING): ISE_REFLECTION_RENAMECLAUSE is
+		external
+			"IL signature (System.String): ISE.Reflection.RenameClause use ISE.Reflection.ConversionSupport"
+		alias
+			"RenameClauseFromText"
+		end
+
+	ClosingCurlBracket: STRING is
+		external
+			"IL signature (): System.String use ISE.Reflection.ConversionSupport"
+		alias
+			"ClosingCurlBracket"
+		end
+
+	SourceFromText (a_text: STRING): STRING is
+		external
+			"IL signature (System.String): System.String use ISE.Reflection.ConversionSupport"
+		alias
+			"SourceFromText"
+		end
+
+	Space: STRING is
+		external
+			"IL signature (): System.String use ISE.Reflection.ConversionSupport"
+		alias
+			"Space"
+		end
+
+	OpeningCurlBracket: STRING is
+		external
+			"IL signature (): System.String use ISE.Reflection.ConversionSupport"
+		alias
+			"OpeningCurlBracket"
+		end
+
 	AssemblyDescriptorFromName (an_assembly_name: SYSTEM_REFLECTION_ASSEMBLYNAME): ISE_REFLECTION_ASSEMBLYDESCRIPTOR is
 		external
 			"IL signature (System.Reflection.AssemblyName): ISE.Reflection.AssemblyDescriptor use ISE.Reflection.ConversionSupport"
 		alias
 			"AssemblyDescriptorFromName"
+		end
+
+	TargetFromText (a_text: STRING): STRING is
+		external
+			"IL signature (System.String): System.String use ISE.Reflection.ConversionSupport"
+		alias
+			"TargetFromText"
 		end
 
 	AssemblyNameFromDescriptor (a_descriptor: ISE_REFLECTION_ASSEMBLYDESCRIPTOR): SYSTEM_REFLECTION_ASSEMBLYNAME is
@@ -37,18 +100,11 @@ feature -- Basic Operations
 			"AssemblyNameFromDescriptor"
 		end
 
-	NeutralCulture: STRING is
+	AsKeyword: STRING is
 		external
 			"IL signature (): System.String use ISE.Reflection.ConversionSupport"
 		alias
-			"NeutralCulture"
-		end
-
-	EmptyString: STRING is
-		external
-			"IL signature (): System.String use ISE.Reflection.ConversionSupport"
-		alias
-			"EmptyString"
+			"AsKeyword"
 		end
 
 end -- class ISE_REFLECTION_CONVERSIONSUPPORT

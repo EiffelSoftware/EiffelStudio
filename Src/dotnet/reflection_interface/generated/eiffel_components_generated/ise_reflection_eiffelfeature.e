@@ -17,13 +17,6 @@ feature {NONE} -- Initialization
 
 feature -- Access
 
-	frozen ReturnType: ISE_REFLECTION_SIGNATURETYPE is
-		external
-			"IL field signature :ISE.Reflection.SignatureType use ISE.Reflection.EiffelFeature"
-		alias
-			"ReturnType"
-		end
-
 	frozen Arguments: SYSTEM_COLLECTIONS_ARRAYLIST is
 		external
 			"IL field signature :System.Collections.ArrayList use ISE.Reflection.EiffelFeature"
@@ -38,11 +31,11 @@ feature -- Access
 			"EiffelName"
 		end
 
-	frozen IsPrefix: BOOLEAN is
+	frozen IsCreationRoutine: BOOLEAN is
 		external
 			"IL field signature :System.Boolean use ISE.Reflection.EiffelFeature"
 		alias
-			"IsPrefix"
+			"IsCreationRoutine"
 		end
 
 	frozen Comments: SYSTEM_COLLECTIONS_ARRAYLIST is
@@ -80,11 +73,11 @@ feature -- Access
 			"ExternalName"
 		end
 
-	frozen IsMethod: BOOLEAN is
+	frozen ReturnType: ISE_REFLECTION_SIGNATURETYPE is
 		external
-			"IL field signature :System.Boolean use ISE.Reflection.EiffelFeature"
+			"IL field signature :ISE.Reflection.SignatureType use ISE.Reflection.EiffelFeature"
 		alias
-			"IsMethod"
+			"ReturnType"
 		end
 
 	frozen IsField: BOOLEAN is
@@ -92,6 +85,13 @@ feature -- Access
 			"IL field signature :System.Boolean use ISE.Reflection.EiffelFeature"
 		alias
 			"IsField"
+		end
+
+	frozen IsPrefix: BOOLEAN is
+		external
+			"IL field signature :System.Boolean use ISE.Reflection.EiffelFeature"
+		alias
+			"IsPrefix"
 		end
 
 	frozen IsFrozen: BOOLEAN is
@@ -115,11 +115,11 @@ feature -- Access
 			"Preconditions"
 		end
 
-	frozen IsCreationRoutine: BOOLEAN is
+	frozen IsMethod: BOOLEAN is
 		external
 			"IL field signature :System.Boolean use ISE.Reflection.EiffelFeature"
 		alias
-			"IsCreationRoutine"
+			"IsMethod"
 		end
 
 	frozen Postconditions: SYSTEM_COLLECTIONS_ARRAYLIST is
@@ -173,6 +173,13 @@ feature -- Basic Operations
 			"AddComment"
 		end
 
+	Make is
+		external
+			"IL signature (): System.Void use ISE.Reflection.EiffelFeature"
+		alias
+			"Make"
+		end
+
 	AddArgument (an_argument: ISE_REFLECTION_NAMEDSIGNATURETYPE) is
 		external
 			"IL signature (ISE.Reflection.NamedSignatureType): System.Void use ISE.Reflection.EiffelFeature"
@@ -201,13 +208,6 @@ feature -- Basic Operations
 			"ArgumentFromInfo"
 		end
 
-	SetEiffelName (a_name: STRING) is
-		external
-			"IL signature (System.String): System.Void use ISE.Reflection.EiffelFeature"
-		alias
-			"SetEiffelName"
-		end
-
 	SetAbstract (a_value: BOOLEAN) is
 		external
 			"IL signature (System.Boolean): System.Void use ISE.Reflection.EiffelFeature"
@@ -229,11 +229,11 @@ feature -- Basic Operations
 			"set_postcondition"
 		end
 
-	SetExternalName (a_name: STRING) is
+	SetEiffelName (a_name: STRING) is
 		external
 			"IL signature (System.String): System.Void use ISE.Reflection.EiffelFeature"
 		alias
-			"SetExternalName"
+			"SetEiffelName"
 		end
 
 	SetReturnType (a_type: ISE_REFLECTION_SIGNATURETYPE) is
@@ -250,18 +250,18 @@ feature -- Basic Operations
 			"SetInfix"
 		end
 
-	Make is
-		external
-			"IL signature (): System.Void use ISE.Reflection.EiffelFeature"
-		alias
-			"Make"
-		end
-
 	SetPrefix (a_value: BOOLEAN) is
 		external
 			"IL signature (System.Boolean): System.Void use ISE.Reflection.EiffelFeature"
 		alias
 			"SetPrefix"
+		end
+
+	SetExternalName (a_name: STRING) is
+		external
+			"IL signature (System.String): System.Void use ISE.Reflection.EiffelFeature"
+		alias
+			"SetExternalName"
 		end
 
 end -- class ISE_REFLECTION_EIFFELFEATURE

@@ -20,13 +20,6 @@ feature {NONE} -- Initialization
 
 feature -- Access
 
-	frozen AssemblyFolderPath: STRING is
-		external
-			"IL field signature :System.String use ISE.Reflection.EiffelAssemblyCacheHandler"
-		alias
-			"AssemblyFolderPath"
-		end
-
 	frozen LastWriteSuccessful: BOOLEAN is
 		external
 			"IL field signature :System.Boolean use ISE.Reflection.EiffelAssemblyCacheHandler"
@@ -34,9 +27,16 @@ feature -- Access
 			"LastWriteSuccessful"
 		end
 
-	frozen EiffelAssembly: ISE_REFLECTION_EIFFELASSEMBLY is
+	frozen AssemblyFolderPath: STRING is
 		external
-			"IL field signature :ISE.Reflection.EiffelAssembly use ISE.Reflection.EiffelAssemblyCacheHandler"
+			"IL field signature :System.String use ISE.Reflection.EiffelAssemblyCacheHandler"
+		alias
+			"AssemblyFolderPath"
+		end
+
+	frozen EiffelAssembly: ISE_REFLECTION_EIFFELASSEMBLYFACTORY is
+		external
+			"IL field signature :ISE.Reflection.EiffelAssemblyFactory use ISE.Reflection.EiffelAssemblyCacheHandler"
 		alias
 			"EiffelAssembly"
 		end
@@ -71,13 +71,6 @@ feature -- Access
 
 feature -- Basic Operations
 
-	PrepareTypeStorage_AssemblyDescriptor (an_assembly_descriptor: ISE_REFLECTION_ASSEMBLYDESCRIPTOR) is
-		external
-			"IL signature (ISE.Reflection.AssemblyDescriptor): System.Void use ISE.Reflection.EiffelAssemblyCacheHandler"
-		alias
-			"PrepareTypeStorage"
-		end
-
 	ReplaceType (an_assembly_descriptor: ISE_REFLECTION_ASSEMBLYDESCRIPTOR; an_eiffel_class: ISE_REFLECTION_EIFFELCLASS): ISE_REFLECTION_TYPESTORER is
 		external
 			"IL signature (ISE.Reflection.AssemblyDescriptor, ISE.Reflection.EiffelClass): ISE.Reflection.TypeStorer use ISE.Reflection.EiffelAssemblyCacheHandler"
@@ -85,11 +78,11 @@ feature -- Basic Operations
 			"ReplaceType"
 		end
 
-	HasReadLockCode: INTEGER is
+	Commit is
 		external
-			"IL signature (): System.Int32 use ISE.Reflection.EiffelAssemblyCacheHandler"
+			"IL signature (): System.Void use ISE.Reflection.EiffelAssemblyCacheHandler"
 		alias
-			"HasReadLockCode"
+			"Commit"
 		end
 
 	WriteLockCreationFailedCode: INTEGER is
@@ -99,9 +92,9 @@ feature -- Basic Operations
 			"WriteLockCreationFailedCode"
 		end
 
-	StoreAssembly (an_eiffel_assembly: ISE_REFLECTION_EIFFELASSEMBLY): ISE_REFLECTION_TYPESTORER is
+	StoreAssembly (an_eiffel_assembly: ISE_REFLECTION_EIFFELASSEMBLYFACTORY): ISE_REFLECTION_TYPESTORER is
 		external
-			"IL signature (ISE.Reflection.EiffelAssembly): ISE.Reflection.TypeStorer use ISE.Reflection.EiffelAssemblyCacheHandler"
+			"IL signature (ISE.Reflection.EiffelAssemblyFactory): ISE.Reflection.TypeStorer use ISE.Reflection.EiffelAssemblyCacheHandler"
 		alias
 			"StoreAssembly"
 		end
@@ -127,13 +120,6 @@ feature -- Basic Operations
 			"UpdateIndex"
 		end
 
-	Commit is
-		external
-			"IL signature (): System.Void use ISE.Reflection.EiffelAssemblyCacheHandler"
-		alias
-			"Commit"
-		end
-
 	RemoveAssembly (a_descriptor: ISE_REFLECTION_ASSEMBLYDESCRIPTOR) is
 		external
 			"IL signature (ISE.Reflection.AssemblyDescriptor): System.Void use ISE.Reflection.EiffelAssemblyCacheHandler"
@@ -141,11 +127,25 @@ feature -- Basic Operations
 			"RemoveAssembly"
 		end
 
+	HasReadLockCode: INTEGER is
+		external
+			"IL signature (): System.Int32 use ISE.Reflection.EiffelAssemblyCacheHandler"
+		alias
+			"HasReadLockCode"
+		end
+
 	MakeCacheHandler is
 		external
 			"IL signature (): System.Void use ISE.Reflection.EiffelAssemblyCacheHandler"
 		alias
 			"MakeCacheHandler"
+		end
+
+	PrepareTypeStorage_AssemblyDescriptor (an_assembly_descriptor: ISE_REFLECTION_ASSEMBLYDESCRIPTOR) is
+		external
+			"IL signature (ISE.Reflection.AssemblyDescriptor): System.Void use ISE.Reflection.EiffelAssemblyCacheHandler"
+		alias
+			"PrepareTypeStorage"
 		end
 
 	GenerateAssemblyXmlFile is

@@ -124,7 +124,7 @@ cluster
 
 	all gobo:		"$EIFFEL_SRC\library\gobo\library"
 		exclude
-			"hact"; "se"; "ve"; "base"; "CVS"; 
+			"hact"; "se"; "ve"; "base"; "CVS"; "others";
 		end
 
 	all documentation:		"$EIFFEL_SRC\Eiffel\case\documentation"
@@ -198,7 +198,6 @@ external
 		"$(EIFFEL_SRC)\C_library\expat\xmlparse",
 		"$(EIFFEL_SRC)\library\exml\compiler_specific\ise\clib",
 		"$(EIFFEL_SRC)\library\wel\spec\windows\include",
-		"$(EIFFEL_SRC)\library\gobo\library\kernel\include",
 		"$(EIFFEL_SRC)\Eiffel\library\cli_writer\Clib"
 
 	object:

@@ -149,7 +149,7 @@ cluster
 
 	all gobo:		"$EIFFEL_SRC/library/gobo/library"
 		exclude
-			"CVS"; "hact"; "se"; "ve"; "base"; 
+			"CVS"; "hact"; "se"; "ve"; "base"; "others";
 		end
 
 	all case:		"$EIFFEL_SRC/Eiffel/case"
@@ -244,7 +244,6 @@ external
 		"\$(EIFFEL_SRC)/C/bench",
 		"\$(EIFFEL_SRC)/C/platform",
 		"\$(EIFFEL_SRC)/library/event/Clib",
-		"\$(EIFFEL_SRC)/library/gobo/library/kernel/include",
 		"\$(EIFFEL_SRC)/C_library/expat/xmlparse",
 		"\$(EIFFEL_SRC)/library/exml/compiler_specific/ise/clib",
 		"\$(EIFFEL_SRC)/library/vision2/implementation/gtk/Clib `gtk-config --cflags`",

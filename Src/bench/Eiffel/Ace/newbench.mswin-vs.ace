@@ -277,7 +277,7 @@ cluster
 
 	all gobo:		"$EIFFEL_SRC\library\gobo\library"
 		exclude
-			"hact"; "se"; "ve"; "base"; "CVS"; 
+			"hact"; "se"; "ve"; "base"; "CVS"; "others";
 		end
 
 	all documentation:		"$EIFFEL_SRC\Eiffel\case"
@@ -368,7 +368,6 @@ external
 	include_path:
 		"$(EIFFEL_SRC)\library\encryption\Clib",
 		"$(EIFFEL_SRC)\library\exml\compiler_specific\ise\clib",
-		"$(EIFFEL_SRC)\library\gobo\library\kernel\include",
 		"$(EIFFEL_SRC)\library\com\spec\windows\include",
 		"$(EIFFEL_SRC)\library\time\Clib",
 		"$(EIFFEL_SRC)\library\wel\spec\windows\include",

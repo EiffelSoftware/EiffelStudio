@@ -121,11 +121,7 @@ feature -- Access
 			-- as this can be very slow, and this feature is called many times during
 			-- a pick and drop.
 		local
-			env: EV_ENVIRONMENT
-			local_parent_object: GB_OBJECT
 			an_object: GB_OBJECT
-			a_component: GB_COMPONENT
-			new_type: STRING
 			menu_bar_object: GB_MENU_BAR_OBJECT
 		do
 			Result := Precursor {GB_CELL_OBJECT} (object_representation)
@@ -142,8 +138,6 @@ feature -- Access
 	build_display_object is
 			-- Build `display_object' from type of `Current'
 			-- and hence `object'.
-		local
-			container: EV_CONTAINER
 		do
 			create display_object.make_as_root_window (builder_window)
 		end

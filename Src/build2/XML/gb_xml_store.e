@@ -60,10 +60,9 @@ feature {GB_XML_HANDLER} -- Implementation
 			gb_cell_object: GB_CELL_OBJECT
 			gb_container_object: GB_CONTAINER_OBJECT
 			gb_primitive_object: GB_PRIMITIVE_OBJECT
-			layout_item, current_layout_item, t_layout: GB_LAYOUT_CONSTRUCTOR_ITEM
+			layout_item, current_layout_item: GB_LAYOUT_CONSTRUCTOR_ITEM
 			gb_titled_window_object: GB_TITLED_WINDOW_OBJECT
 			new_widget_element: XML_ELEMENT
-			gb_object: GB_OBJECT
 			gb_menu_bar_object: GB_MENU_BAR_OBJECT
 			gb_menu_object: GB_MENU_OBJECT
 		do

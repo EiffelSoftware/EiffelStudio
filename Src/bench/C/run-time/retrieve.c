@@ -633,7 +633,9 @@ rt_private void correct_one_mismatch (
 			eif_access (obj_i));
 #endif
 	REQUIRE ("Values in special", HEADER (values)->ov_flags & EO_SPEC);
-	if (flags & EO_SPEC) {
+	if (flags & EO_TUPLE) {
+		correct_object_mismatch (eif_access (obj_i), eif_access (vals_i), conversions);
+	} else if (flags & EO_SPEC) {
 		EIF_INTEGER i;
 		EIF_INTEGER ocount = RT_SPECIAL_COUNT (eif_access (obj_i));
 		EIF_INTEGER oelem_size = RT_SPECIAL_ELEM_SIZE (eif_access (obj_i));
@@ -1755,7 +1757,15 @@ rt_public EIF_REFERENCE rrt_nmake (long int objectCount)
 			int16 dftype = crflags & EO_TYPE;
 			if (conv->new_dftype != TYPE_UNDEFINED)
 				dftype = conv->new_dftype;
-			newadd = emalloc (dftype);
+				/* NOTE: Manu 05/30/2003
+				 * We have to use RTLNSMART because of the change in the TUPLE
+				 * implementation we did in version 5.4 of the compiler where
+				 * now TUPLEs are just a special case of SPECIAL objects.
+				 * So when we retrieve a TUPLE made with version 5.3, then
+				 * we take this path and to have correct mismatch work, we need
+				 * to create a proper TUPLE type, thus the use of RTLNSMART.
+				 */
+			newadd = RTLNSMART (dftype);
 		}
 
 #ifdef ISE_GC
@@ -3292,6 +3302,15 @@ rt_private void map_types (void)
 rt_private void check_mismatch (type_descriptor *t)
 {
 	int i;
+		/* Generate mismatch error when retrieving an old TUPLE specification
+		 * which has attributes in a system with the new TUPLE specification with
+		 * no attributes */
+	if
+		((Deif_bid(t->new_type) == egc_tup_dtype) &&
+		 (System(t->new_type).cn_nbattr != t->attribute_count))
+	{
+		t->mismatched = 1;
+	}
 	/* Determine if every attribute in new type has match in old type */
 	for (i=0; i<System (t->new_type).cn_nbattr; i++) {
 		int found = 0;

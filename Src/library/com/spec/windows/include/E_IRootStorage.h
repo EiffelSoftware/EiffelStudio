@@ -26,12 +26,12 @@ class E_IRootStorage
 {
 public:
 	// Commands
-	E_IRootStorage(EIF_POINTER pstgName);
+	E_IRootStorage(IUnknown * pstgName);
 	~E_IRootStorage();
 	void ccom_switch_to_file (EIF_POINTER filename);
 	
 	// Queries	
-	EIF_POINTER ccom_iroot_storage();
+	EIF_POINTER ccom_item();
 	
 private:	
 	IRootStorage * pIRootStorage;

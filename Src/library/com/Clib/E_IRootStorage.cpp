@@ -19,6 +19,7 @@
 
 E_IRootStorage::~E_IRootStorage ()
 {
+	if (pIRootStorage != NULL)
 	pIRootStorage->Release();
 };
 //---------------------------------------------------------------------
@@ -38,15 +39,22 @@ void E_IRootStorage::ccom_switch_to_file (EIF_POINTER filename)
 };
 
 //---------------------------------------------------------------------
-E_IRootStorage::E_IRootStorage (EIF_POINTER pstgName)
+E_IRootStorage::E_IRootStorage (IUnknown * pstgName)
 
 // Set `pIRootStorage' to known pointer to IRootStorage
 {
-	pIRootStorage = (IRootStorage *)pstgName;
+	HRESULT hr;
+
+	hr = pstgName->QueryInterface(IID_IRootStorage, (void **)&pIRootStorage);
+	if (hr != S_OK)
+	{
+		pIRootStorage = NULL;
+		com_eraise (f.c_format_message (hr), EN_PROG);
+	}	
 };
 //---------------------------------------------------------------------
 
-EIF_POINTER E_IRootStorage::ccom_iroot_storage()
+EIF_POINTER E_IRootStorage::ccom_item()
 {
 	return (EIF_POINTER)pIRootStorage;
 };

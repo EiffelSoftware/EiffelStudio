@@ -38,7 +38,7 @@ feature -- Access
 			-- `ref_class' cluster is used to resolve name conflict 
 			-- arising from class renaming.
 		require
-			is_class: is_class;
+			is_class_or_precursor: is_class or is_precursor;
 			valid_ref_class: valid_reference_class (reference_class)
 		do
 		end;

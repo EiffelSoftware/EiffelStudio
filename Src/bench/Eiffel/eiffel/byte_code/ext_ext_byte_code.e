@@ -68,9 +68,7 @@ feature -- Code generation
 					i > nb
 				loop
 					include_file := header_files.item (i)
-					if not queue.has (include_file) then
-						queue.extend (include_file)
-					end
+					queue.put (include_file)
 					i := i + 1
 				end
 			end
@@ -110,11 +108,8 @@ feature -- Basic routine
 
 	generate_basic_signature is
 		local
-			assignment: ASSIGN_B;
-			type_i: TYPE_I;
-			internal_name: STRING;
-			i: INTEGER;
-			ext: EXTERNAL_EXT_I
+			type_i: TYPE_I
+			internal_name: STRING
 			buf: GENERATION_BUFFER
 		do
 			buf := buffer
@@ -123,8 +118,9 @@ feature -- Basic routine
 			type_i := real_type (result_type);
 
 				-- Function's name
-			internal_name := body_id.feature_name
-				(System.class_type_of_id (context.current_type.type_id).id)
+			internal_name := Encoder.feature_name (
+					System.class_type_of_id (context.current_type.type_id).static_type_id,
+					body_index)
 
 			add_in_log (internal_name);
 
@@ -162,26 +158,33 @@ feature -- Basic routine
 	generate_basic_body is
 			-- Generate the body for an external function
 		local
-			i, count: INTEGER;
 			buf: GENERATION_BUFFER
+			is_func: BOOLEAN
 		do
 			buf := buffer
 
 			if has_return_type or else not result_type.is_void then
+				is_func := True
 				buf.putstring ("return ");
 				result_type.c_type.generate_cast (buf)
 			end
 
+				--| For external functions only:
 				--| External procedure will be generated as:
 				--| (void) (c_proc (args));
 				--| The extra parenthesis are necessary if c_proc is
 				--| an affectation e.g. c_proc(arg1, arg2) arg1 = arg2
 				--| Without the parenthesis, the cast is done only on the first
 				--| argument, not the entire expression (affectation)
-			buf.putchar ('(');
+			if is_func then
+				buf.putchar ('(');
+			end
 			buf.putstring (external_name);
 			generate_arguments_with_cast;
-			buf.putstring (");");
+			if is_func then
+				buf.putchar (')');
+			end
+			buf.putchar (';');
 			buf.new_line;
 		end;
 

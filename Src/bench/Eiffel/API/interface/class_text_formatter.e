@@ -8,10 +8,18 @@ indexing
 class CLASS_TEXT_FORMATTER
 
 inherit
+	E_TEXT_FORMATTER
 
-	E_TEXT_FORMATTER;
-	SHARED_INST_CONTEXT;
+	SHARED_INST_CONTEXT
+
 	SHARED_WORKBENCH
+
+	SHARED_FORMAT_INFO
+		rename
+			is_short as format_is_short,
+			set_is_short as format_set_is_short,
+			set_order_same_as_text as format_set_order_same_as_text
+		end
 
 feature -- Properties
 
@@ -80,7 +88,11 @@ feature -- Output
 		local
 			f: FORMAT_CONTEXT
 		do
-			!! f.make (e_class);
+			if is_with_breakable then
+				create {CLASS_DEBUG_CONTEXT} f.make (e_class)
+			else
+				create f.make (e_class)
+			end
 			if is_short or else e_class.lace_class.hide_implementation then
 				f.set_is_short
 			end;

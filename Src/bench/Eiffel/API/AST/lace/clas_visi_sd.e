@@ -1,9 +1,7 @@
 indexing
-
-	description: 
-		"";
+	description: "Description of a visible class in Ace";
 	date: "$Date$";
-	revision: "$Revision $"
+	revision: "$Revision$"
 
 class CLAS_VISI_SD
 
@@ -14,7 +12,7 @@ inherit
 			adapt
 		end
 
-feature {LACE_AST_FACTORY} -- Initialization
+feature {CLAS_VISI_SD, LACE_AST_FACTORY} -- Initialization
 
 	initialize (cn: like class_name; vn: like visible_name;
 		cr: like creation_restriction; er: like export_restriction;
@@ -36,29 +34,87 @@ feature {LACE_AST_FACTORY} -- Initialization
 			renamings_set: renamings = r
 		end
 
-feature {NONE} -- Initialization 
-
-	set is
-			-- Yacc initialization
-		do
-			class_name ?= yacc_arg (0);
-			visible_name ?= yacc_arg (1);
-			creation_restriction ?= yacc_arg (2);
-			export_restriction ?= yacc_arg (3);
-			renamings ?= yacc_arg (4)
-		end;
-
 feature -- Properties
 
-	class_name: ID_SD;
+	class_name: ID_SD
+			-- Eiffel class name of visible class
+			-- Never Void
 
-	visible_name: ID_SD;
+	visible_name: ID_SD
+			-- Exported name
+			-- Can be Void
 
-	creation_restriction: LACE_LIST [ID_SD];
+	creation_restriction: LACE_LIST [ID_SD]
+			-- Can be Void
 
-	export_restriction: LACE_LIST [ID_SD];
+	export_restriction: LACE_LIST [ID_SD]
+			-- Can be Void
 
-	renamings: LACE_LIST [TWO_NAME_SD];
+	renamings: LACE_LIST [TWO_NAME_SD]
+			-- Can be Void
+
+feature -- Duplication
+
+	duplicate: like Current is
+			-- Duplicate current object
+		do
+			create Result
+			Result.initialize (class_name.duplicate, duplicate_ast (visible_name),
+				duplicate_ast (creation_restriction), duplicate_ast (export_restriction),
+				duplicate_ast (renamings))
+		end
+
+feature -- Comparison
+
+	same_as (other: like Current): BOOLEAN is
+			-- Is `other' same as Current?
+		do
+			Result := other /= Void and then class_name.same_as (other.class_name)
+					and then same_ast (visible_name, other.visible_name)
+					and then same_ast (creation_restriction, other.creation_restriction)
+					and then same_ast (export_restriction, other.export_restriction)
+					and then same_ast (renamings, other.renamings)
+		end
+
+feature -- Saving
+
+	save (st: GENERATION_BUFFER) is
+			-- Save current in `st'.
+		do
+			class_name.save (st)
+			if visible_name /= Void then
+				st.putstring (" as ")
+				visible_name.save (st)
+			end
+			st.indent
+			if creation_restriction /= Void then
+				st.new_line
+				st.putstring ("create")
+				st.new_line
+				st.indent
+				creation_restriction.save_with_interval_separator (st, ",")
+				st.exdent
+			end
+			if export_restriction /= Void then
+				st.new_line
+				st.putstring ("export")
+				st.new_line
+				st.indent
+				export_restriction.save_with_interval_separator (st, ", ")
+				st.exdent
+			end
+			if renamings /= Void then
+				st.new_line
+				st.putstring ("rename")
+				st.new_line
+				st.indent
+				renamings.save_with_interval_separator (st, ", ")
+				st.exdent
+			end
+			st.new_line
+			st.putstring ("end")
+			st.exdent
+		end
 
 feature {COMPILER_EXPORTER}
 
@@ -149,3 +205,6 @@ feature {COMPILER_EXPORTER}
 		end;
 	
 end -- class CLAS_VISI_SD
+
+
+

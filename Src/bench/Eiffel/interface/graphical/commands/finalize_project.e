@@ -135,8 +135,6 @@ feature {NONE} -- Implementation
 
 	perform_compilation (argument: ANY) is
 			-- The real compilation work.
-		local
-			temp: STRING;
 		do
 			license_display
 			-- If the argument is `warner' the user 

@@ -42,7 +42,7 @@ feature
 
 			from
 				buffer.putstring ("char *(*");
-				buffer.putstring (rout_id.table_name);
+				buffer.putstring (Encoder.table_name (rout_id));
 				buffer.putstring ("[])() = {%N");
 				i := 1;
 				nb := final_table_size;
@@ -58,13 +58,13 @@ feature
 				if exists then
 					entry := local_copy.array_item (index);
 					if (index <= max_position) and then i = entry.type_id then
-						r_name := entry.routine_name;
+						r_name := entry.routine_name
 						buffer.putstring (function_ptr_cast_string);
 						buffer.putstring (r_name);
 						buffer.putstring (",%N");
 						index := index + 1;
 							-- Remember external declaration
-						Extern_declarations.add_routine (void_type, clone (r_name));
+						Extern_declarations.add_routine (void_type, r_name)
 					else
 						buffer.putstring (empty_function_ptr_string);
 					end;

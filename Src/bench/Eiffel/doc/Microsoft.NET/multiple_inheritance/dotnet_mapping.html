@@ -1,0 +1,89 @@
+<html>
+
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=windows-1252">
+<meta name="GENERATOR" content="Microsoft FrontPage 4.0">
+<meta name="ProgId" content="FrontPage.Editor.Document">
+<title>Multiple inheritance mapping to</title>
+<link rel="stylesheet" type="text/css" href="../default.css">
+</head>
+
+<body bgcolor="#FEFFE3">
+
+<h1>Multiple inheritance mapping to .NET</h1>
+
+<h2>Goals</h2>
+<p>Our goal is to generate a mapping that is both:</p>
+<ol>
+  <li>Efficient</li>
+  <li>CLS compliant</li>
+</ol>
+<p>Efficiency is always important for a compiler, no one wants their code to run
+slowly because the compiler did a very bad job at generating the code. Here
+efficiency means to generate as few as possible interfaces to map the Eiffel
+classes.</p>
+<p>CLS compliant is very important for people who choose Eiffel as a programming
+language (mostly because of its benefits: assertions, genericity,...) and that
+want to produce reusable components.</p>
+<h2>General description</h2>
+<p>Basically, we will promote classes that are multiply-inherited into .NET
+interfaces. To give an example if in Eiffel you have:</p>
+<pre>class
+	A
+inherit
+	B
+	C
+end</pre>
+<p>then in .NET you might have the following set of classes and interfaces:</p>
+<pre>class A implements IB and IC
+class B implements IB
+class C implements IC
+
+interface IB
+interface IC</pre>
+<p>This is one way of seeing it, but we could generate it in many different
+ways. It is important that:</p>
+
+<ul>
+  <li>the Eiffel for .NET compiler through the Assembly
+Manager can re-read the metadata
+to go back to the original form</li>
+  <li>other languages can understand the
+metadata.</li>
+</ul>
+
+<p>Because of the last point, we decided that we would indeed generate the
+following set of classes and interfaces:</p>
+<pre>class A_IMP implements B and C
+class B_IMP implements B
+class C_IMP implements C
+
+interface B
+interface C</pre>
+
+<p>So if in Eiffel you have the following piece of code:</p>
+
+<pre>a: A
+b: B
+
+create a
+b := a</pre>
+
+<p>It will translate in C# as:</p>
+
+<pre>A a;
+B b;
+
+/* Method 1 */
+a = new A_IMP();
+b = a;
+
+/* Method 2 */
+a = EiffelFactory.new_A();
+b = a;</pre>
+
+<p>&nbsp;</p>
+
+</body>
+
+</html>

@@ -27,7 +27,7 @@ feature {NONE} -- Initialization
 			valid_class_c: class_c /= Void;
 		do
 			!! eiffel_file.make (class_c.file_name, ast.end_position);
-			!! class_comments.make (class_c.id, 20);
+			!! class_comments.make (class_c.class_id, 20);
 			class_ast := ast
 		ensure
 			set: class_ast = ast	
@@ -46,11 +46,11 @@ feature -- Update
 			-- the temporary class comment server.
 		do
 			class_ast.register (Current);
-			if not class_comments.empty then
+			if not class_comments.is_empty then
 				Tmp_class_comments_server.put (class_comments)
 			end
 		ensure
-			in_tmp_class_comments_server: not class_comments.empty implies
+			in_tmp_class_comments_server: not class_comments.is_empty implies
 						Tmp_class_comments_server.has (class_comments.class_id)
 		end;
 

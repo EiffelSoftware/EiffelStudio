@@ -1,8 +1,6 @@
 indexing
-
-	description: 
-		"Stone representating a breakable point.";
-	date: "$Date$";
+	description: "Stone representating a breakable point."
+	date: "$Date$"
 	revision: "$Revision $"
 
 class BREAKABLE_STONE 
@@ -25,7 +23,8 @@ feature {NONE} -- Initialization
 		require
 			not_feature_i_void: e_feature /= Void
 		do
-			routine := e_feature;
+			routine := e_feature
+			body_index := e_feature.body_index
 			index := break_index
 		end; -- make
  
@@ -33,6 +32,9 @@ feature -- Properties
 
 	routine: E_FEATURE;
 			-- Associated routine
+
+	body_index: INTEGER;
+			-- body_index of the associated routine
 
 	index: INTEGER;
 			-- Breakpoint index in `routine'
@@ -55,40 +57,43 @@ feature -- Access
 
 	sign: STRING is 
 			-- Textual representation of the breakable mark.
-			-- Two different representations whether the breakpoint
-			-- is set or not.
+			-- Three different representations whether the breakpoint
+			-- is enabled, disabled or not set. If `display_arrow' is
+			-- True, also draw the arrow if necessary
 		local
 			status: APPLICATION_STATUS
 		do
-			status := Application.status;
-			if
-				status /= Void and status.is_stopped and
-				status.is_at (routine, index)
-			then
-					-- Execution stopped at that point.
-				Result := "->|"
-			elseif Application.is_breakpoint_set (routine, index) then
-				Result := "|||"
+			inspect Application.breakpoint_status (routine, index)
+			when 1 then
+				Result := Enabled_breakpoint_text
+			when -1 then
+				Result := Disabled_breakpoint_text
 			else
-				Result := ":::"
+				Result := Origin_text
 			end
-		end; 
 
-	origin_text: STRING is ":::";
+			status := Application.status
+			if status /= Void and then status.is_at(body_index, index) then
+					-- we will modify the string, so clone it
+				Result := clone(Result)
+					-- Execution stopped at that point - feature is active.
+				Result.replace_substring(Execution_mark,1,2)
+			end
+		end
 
 	stone_type: INTEGER is 
 		do 
 			Result := Breakable_type 
-		end;
+		end
  
 	stone_name: STRING is 
 		do 
 			Result := Interface_names.s_Showstops 
-		end;
+		end
 
-	stone_signature: STRING is "";
+	stone_signature: STRING is ""
  
-	header: STRING is "Stop point";
+	header: STRING is "Stop point"
 
 	click_list: ARRAY [CLICK_STONE] is
 		do
@@ -97,7 +102,7 @@ feature -- Access
 	icon_name: STRING is
 		do
 			Result := stone_signature
-		end;
+		end
  
 	clickable: BOOLEAN is
 			-- Is Current an element with recorded structures information?
@@ -111,6 +116,26 @@ feature -- Update
 			-- Process Current stone dropped in hole `hole'.
 		do
 			hole.process_breakable (Current)
-		end;
+		end
+
+feature {NONE} -- Constants
+
+	Origin_text: STRING is ":::"
+		-- text when no breakpoint is set and 
+		-- application is not stopped at this line
+
+	Enabled_breakpoint_text: STRING is "|||"
+		-- text when a breakpoint is set and enabled
+
+	Disabled_breakpoint_text: STRING is "///"
+		-- text when a breakpoint is set but disabled
+
+	Execution_mark: STRING is "->"
+		-- text when the application is stopped at this line
+		-- and feature on top of stack
+
+	Stack_mark: STRING is ">>"
+		-- text when the application is stopped at this line
+		-- and feature not on top of stack
 
 end -- class BREAKABLE_STONE

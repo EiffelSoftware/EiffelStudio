@@ -23,7 +23,7 @@ inherit
 
 	WARNER_CALLBACKS
 
-	BENCH_COMMAND_EXECUTOR
+	COMMAND_EXECUTOR
 		rename
 			execute as launch_ebench
 		end
@@ -99,7 +99,7 @@ feature {NONE} -- Implementation
 					last_name_chooser.call (Current)
 				else
 					dir_name := clone (last_name_chooser.selected_file)
-					if dir_name.empty then
+					if dir_name.is_empty then
 						choose_again := True
 						warner (Project_tool).custom_call (Current,
 							Warning_messages.w_directory_not_exist (dir_name),
@@ -110,7 +110,7 @@ feature {NONE} -- Implementation
 							--| will remove it
 						if dir_name.count > 1 then
 							last_char := dir_name.item (dir_name.count)
-							if last_char = Directory_separator then
+							if last_char = Operating_environment.Directory_separator then
 								dir_name.remove (dir_name.count)
 							end
 						end
@@ -132,7 +132,7 @@ feature {NONE} -- Implementation
 					last_name_chooser.call (Current)
 				else
 					dir_name := clone (last_name_chooser.selected_file)
-					if dir_name.empty then
+					if dir_name.is_empty then
 						choose_again := True
 						warner (Project_tool).custom_call (Current,
 							Warning_messages.w_directory_not_exist (dir_name),
@@ -143,11 +143,11 @@ feature {NONE} -- Implementation
 							--| will remove it
 						if dir_name.count > 1 then
 							last_char := dir_name.item (dir_name.count)
-							if last_char = Directory_separator then
+							if last_char = Operating_environment.Directory_separator then
 								dir_name.remove (dir_name.count)
 							end
 						end
-						ebench_name := ebench_command_name
+						ebench_name := clone ((create {EIFFEL_ENV}).Ebench_command_name)
 						ebench_name.append (" -create ")
 						ebench_name.append (dir_name)
 						launch_ebench (ebench_name)
@@ -190,7 +190,7 @@ feature -- Project initialization
 			retried: BOOLEAN
 		do
 			if not retried then
-				Eiffel_project.make_new (project_dir, True)
+				Eiffel_project.make_new (project_dir, True, Void, Void)
 				msg := clone (Interface_names.t_New_project)
 				msg.append (": ")
 				msg.append (project_dir.name)

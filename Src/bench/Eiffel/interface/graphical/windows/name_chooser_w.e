@@ -80,7 +80,7 @@ feature {PROJECT_W} -- Re mapping
 		local
 			new_x, new_y: INTEGER
 		do
-			if not last_directory_viewed.empty then
+			if not last_directory_viewed.is_empty then
 				set_directory (last_directory_viewed)
 			end
 			if is_popped_up then popdown end;
@@ -133,8 +133,6 @@ feature
 feature {NONE} -- Implementation
 
 	work (argument: ANY) is
-		local
-			mp: MOUSE_PTR
 		do
 			popdown;
 			if argument = Current then

@@ -21,7 +21,28 @@ inherit
 		end
 
 creation
-	make, make_open_append, make_open_write
+	make, make_open_append, make_open_write, make_c_code_file
+
+feature {NONE} -- Initialization
+
+	make_c_code_file (fn: STRING) is
+			-- Create file object with `fn' as file name
+			-- and open file for writing;
+			-- create it if it does not exist.
+			-- Insert `#line 2 "fn"' at beginning of file.
+		require
+			string_exists: fn /= Void;
+			string_not_empty: not fn.is_empty
+		local
+			tmp: GENERATION_BUFFER
+		do
+			make_open_write (fn)
+			put_string ("#line 2 %"")
+			create tmp.make (fn.count * 2)
+			tmp.escape_string (tmp, fn)
+			put_string (tmp)
+			put_string ("%"%N")
+		end
 
 feature
 

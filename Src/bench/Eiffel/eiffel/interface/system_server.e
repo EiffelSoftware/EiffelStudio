@@ -24,8 +24,6 @@ feature -- Initialization
 			!! body_server.make
 			!! byte_server.make
 			!! ast_server.make
-			!! rep_server.make
-			!! rep_feat_server.make
 			!! class_info_server.make
 			!! inv_ast_server.make
 			!! inv_byte_server.make
@@ -46,14 +44,11 @@ feature -- Clean up of the temporary server file
 			Tmp_feat_tbl_server.clear
 			Tmp_body_server.clear
 			Tmp_class_info_server.clear
-			Tmp_rep_info_server.clear
 			Tmp_byte_server.clear
 			Tmp_inv_byte_server.clear
 			Tmp_inv_ast_server.clear
 			Tmp_depend_server.clear
 			Tmp_rep_depend_server.clear
-			Tmp_rep_server.clear
-			Tmp_rep_feat_server.clear
 		end
 
 	tmp_purge is
@@ -62,12 +57,10 @@ feature -- Clean up of the temporary server file
 			Tmp_ast_server.files_purge
 			Tmp_feat_tbl_server.files_purge
 			Tmp_class_info_server.files_purge
-			Tmp_rep_info_server.files_purge
 			Tmp_byte_server.files_purge
 			Tmp_inv_byte_server.files_purge
 			Tmp_depend_server.files_purge
 			Tmp_rep_depend_server.files_purge
-			Tmp_rep_server.files_purge
 
 			server_controler.remove_useless_files
 		end
@@ -89,7 +82,6 @@ feature -- Purge of compilation files
 			m_feature_server.files_purge
 			m_rout_id_server.files_purge
 			m_desc_server.files_purge
-			rep_server.files_purge
 
 			server_controler.remove_useless_files
 		end
@@ -112,7 +104,6 @@ feature -- Purge of compilation files
 			m_feature_server.cache.wipe_out
 			m_rout_id_server.cache.wipe_out
 			m_desc_server.cache.wipe_out
-			rep_server.cache.wipe_out
 		end
 
 feature -- Access
@@ -135,12 +126,6 @@ feature -- Access
 
 	byte_server: BYTE_SERVER;
 			-- Server for byte code trees
-
-	rep_server: REP_SERVER;
-			-- Server for class that has replicated features 
-
-	rep_feat_server: REP_FEAT_SERVER;
-			-- Server for replicated features 
 
 	class_info_server: CLASS_INFO_SERVER;
 			-- Server for class information produced bu first pass

@@ -12,12 +12,17 @@ inherit
 		rename
 			extend as twl_extend
 		redefine
-			make
+			make, has
 		end
 
 	EB_CONSTANTS
+		undefine
+			copy, is_equal
+		end
 
 	RESOURCE_USER
+		undefine
+			copy, is_equal
 		redefine
 			update_integer_resource
 		end
@@ -37,7 +42,26 @@ feature -- Initialization
 feature -- Access
 
 	do_not_update: BOOLEAN
-			-- Update the stone history?	
+			-- Update the stone history?
+
+	has (v: like item): BOOLEAN is
+			-- Does chain include `v'?
+			-- (Reference or object equality,
+			-- based on `object_comparison'.)
+		local
+			pos: CURSOR
+		do
+			pos := cursor;
+			from
+				start
+			until
+				after or Result
+			loop
+				Result := item.same_as (v)
+				forth
+			end
+			go_to (pos)
+		end;
 
 feature -- Resource Update
 
@@ -72,11 +96,11 @@ feature -- Element change
 		do
 			if
 				not do_not_update and then v /= Void and then
-				(empty or else not v.same_as (last) or else
+				(is_empty or else not v.same_as (last) or else
 				not equal (v.stone_signature, last.stone_signature))
 			then
 				if
-					not empty and then
+					not is_empty and then
 					not islast and then
 					(not item.same_as (last) or else not equal (item.stone_signature, last.stone_signature))
 				then

@@ -50,7 +50,7 @@ feature -- Properties
 
 feature {NONE} -- Implementation
 
-	execute (argument: EV_ARGUMENT1 [ANY]; data: EV_EVENT_DATA) is
+	execute is
 			-- Retarget the object tool with the current object if any.
 		local
 			e_class: CLASS_C
@@ -61,14 +61,17 @@ feature {NONE} -- Implementation
 		do
 			status := Application.status
 			if status = Void then
-				create wd.make_default (tool.parent, Interface_names.t_Warning, Warning_messages.w_System_not_running)
+				create wd.make_with_text (Warning_messages.w_System_not_running)
+				wd.show_modal
 			elseif not status.is_stopped then
-				create wd.make_default (tool.parent, Interface_names.t_Warning, Warning_messages.w_System_not_stopped)
+				create wd.make_with_text (Warning_messages.w_System_not_stopped)
+				wd.show_modal
 			else
 				address := status.object_address
 				if address = Void or status.dynamic_class = Void then
 						-- Should never happen.
-					create wd.make_default (tool.parent, Interface_names.t_Warning, Warning_messages.w_Unknown_object)
+					create wd.make_with_text (Warning_messages.w_Unknown_object)
+					wd.show_modal
 				else
 					e_class := status.dynamic_class
 					create stone.make (address, status.e_feature.name, e_class)

@@ -6,8 +6,8 @@ inherit
 
 	ACCESS_B
 		redefine
-			enlarged, is_current, make_byte_code,
-			register_name, pre_inlined_code
+			enlarged, is_current, make_byte_code, generate_il_call_access,
+			register_name, pre_inlined_code, print_register
 		end;
 	
 feature 
@@ -46,6 +46,24 @@ feature
 		once
 			Result := "Current";
 		end;
+
+	print_register is
+			-- Print "Current" register
+		do
+			context.buffer.putstring (register_name)
+		end
+
+feature -- IL code generation
+
+	generate_il_call_access (is_target_of_call: BOOLEAN) is
+			-- Generate IL code for an access to Current
+		do
+			if is_target_of_call and then real_type (type).is_expanded then
+				il_generator.generate_current_address
+			else
+				il_generator.generate_current
+			end
+		end
 
 feature -- Byte code generation
 

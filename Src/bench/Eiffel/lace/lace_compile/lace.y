@@ -20,14 +20,14 @@ creation
 
 %start Ace_or_Properties
 
-%token LAC_ADAPT LAC_ALL LAC_AS LAC_ASSERTION LAC_C LAC_CHECK LAC_CLUSTER
-%token LAC_COLON LAC_COMMA LAC_CREATION LAC_DEBUG LAC_DEFAULT
-%token LAC_END LAC_ENSURE LAC_EXCLUDE LAC_EXECUTABLE LAC_EXPORT LAC_EXTERNAL
-%token LAC_GENERATE LAC_IDENTIFIER LAC_IGNORE LAC_INCLUDE LAC_INCLUDE_PATH
-%token LAC_INVARIANT LAC_LEFT_PARAM LAC_LOOP LAC_MAKE LAC_NO LAC_OBJECT
+%token LAC_ADAPT LAC_ALL LAC_AS LAC_ASSERTION LAC_CHECK LAC_CLUSTER
+%token LAC_COLON LAC_COMMA LAC_CREATION LAC_DEBUG LAC_DEFAULT LAC_DISABLED_DEBUG
+%token LAC_END LAC_ENSURE LAC_EXCLUDE LAC_DEPEND LAC_EXPORT LAC_EXTERNAL
+%token LAC_GENERATE LAC_IDENTIFIER LAC_IGNORE LAC_INCLUDE
+%token LAC_INVARIANT LAC_LEFT_PARAM LAC_LOOP LAC_NO
 %token LAC_OPTIMIZE LAC_OPTION LAC_PRECOMPILED LAC_RENAME LAC_REQUIRE
 %token LAC_RIGHT_PARAM LAC_ROOT LAC_SEMICOLON LAC_STRING LAC_SYSTEM
-%token LAC_TRACE LAC_USE LAC_VISIBLE LAC_YES
+%token LAC_TRACE LAC_USE LAC_VISIBLE LAC_YES LAC_LIBRARY
 
 %type <ACE_SD>				Ace
 %type <CLAS_VISI_SD>		Class_visibility
@@ -35,9 +35,9 @@ creation
 %type <CLUST_ADAPT_SD>		Cluster_adapt_clause
 %type <CLUSTER_SD>			Cluster_clause
 %type <D_OPTION_SD>			D_option_clause
-%type <ID_SD>				Name External_name Use Parent_tag System Cluster_mark
+%type <ID_SD>				Name External_name Use Use_opt Parent_tag System Cluster_mark
 							Creation_procedure
-%type <LANG_GEN_SD>			Language_generation
+--%type <LANG_GEN_SD>			Language_generation
 %type <LANG_TRIB_SD>		Language_contrib
 %type <LANGUAGE_NAME_SD>	Language_name
 %type <O_OPTION_SD>			O_option_clause
@@ -45,7 +45,8 @@ creation
 %type <OPTION_SD>			Option_name
 %type <ROOT_SD>				Root
 %type <TWO_NAME_SD>			External_rename_pair Class_rename_pair
-%type <YES_OR_NO_SD>		Generate_option Generate_option_value
+--%type <YES_OR_NO_SD>		Generate_option Generate_option_value
+%type <DEPEND_SD>			Depend_pair
 
 %type <LACE_LIST [CLAS_VISI_SD]>	Class_visi_list Visible Visible_opt
 %type <LACE_LIST [CLUST_ADAPT_SD]>	Name_adapt Name_adapt_opt Cluster_adapt_list
@@ -56,11 +57,12 @@ creation
 									Creation_restriction Creation_restriction_opt Target_list
 									Class_name_list File_list
 %type <LACE_LIST [INCLUDE_SD]>		Include Include_opt Include_file_list
-%type <LACE_LIST [LANG_GEN_SD]>		Generation Language_gen_list
+--%type <LACE_LIST [LANG_GEN_SD]>		Generation Language_gen_list
 %type <LACE_LIST [LANG_TRIB_SD]>	Externals Language_contrib_list
 %type <LACE_LIST [O_OPTION_SD]>		O_option_clause_list Options Options_opt
 %type <LACE_LIST [TWO_NAME_SD]>		External_rename_list External_rename External_rename_opt
 									Class_rename_list
+%type <LACE_LIST [DEPEND_SD]>		Depend_list Depend
 
 %type <PAIR [ID_SD, CLICK_AST]>		Clickable_name
 
@@ -77,7 +79,7 @@ Ace_or_Properties: Ace
 	;
 
 Ace: System Root Defaults_opt Clusters Externals Generation LAC_END
-			{ $$ := new_ace_sd ($1, $2, $3, $4, $5, $6, click_list) }
+			{ $$ := new_ace_sd ($1, $2, $3, $4, $5, click_list) }
 	;
 
 System: LAC_SYSTEM Name
@@ -104,12 +106,10 @@ Creation_procedure: -- Empty
 			{ $$ := $2 }
 	;
 
-Clusters: -- Empty
-			-- { $$ := Void }
-	|	LAC_CLUSTER Cluster_clause_list
+Clusters: LAC_CLUSTER Cluster_clause_list
 			{ $$ := $2 }
 	|	LAC_CLUSTER ASemi
-			-- { $$ := Void }
+			{ $$ := Void }
 	;
 
 Cluster_clause_list: Cluster_clause ASemi
@@ -125,13 +125,17 @@ Cluster_clause_list: Cluster_clause ASemi
 	;
 
 Cluster_clause: Name Parent_tag LAC_COLON Name
-			{ $$ := new_cluster_sd ($1, $2, $4, Void, False) }
+			{ $$ := new_cluster_sd ($1, $2, $4, Void, False, False) }
 	|	LAC_ALL Name Parent_tag LAC_COLON Name
-			{ $$ := new_cluster_sd ($2, $3, $5, Void, True) }
+			{ $$ := new_cluster_sd ($2, $3, $5, Void, True, False) }
+	|	LAC_LIBRARY Name Parent_tag LAC_COLON Name
+			{ $$ := new_cluster_sd ($2, $3, $5, Void, True, True) }
 	|	Name Parent_tag LAC_COLON Name Cluster_properties LAC_END
-			{ $$ := new_cluster_sd ($1, $2, $4, $5, False) }
+			{ $$ := new_cluster_sd ($1, $2, $4, $5, False, False) }
 	|	LAC_ALL Name Parent_tag LAC_COLON Name Cluster_properties LAC_END
-			{ $$ := new_cluster_sd ($2, $3, $5, $6, True) }
+			{ $$ := new_cluster_sd ($2, $3, $5, $6, True, False) }
+	|	LAC_LIBRARY Name Parent_tag LAC_COLON Name Cluster_properties LAC_END
+			{ $$ := new_cluster_sd ($2, $3, $5, $6, True, True) }
 	;
 
 Parent_tag: -- Empty
@@ -141,22 +145,55 @@ Parent_tag: -- Empty
 	;
 
 
-Cluster_properties: Use Include_opt Exclude_opt Name_adapt_opt Defaults_opt Options_opt Visible_opt
-			{ $$ := new_clust_prop_sd ($1, $2, $3, $4, $5, $6, $7) }
+Cluster_properties: Depend Use_opt Include_opt Exclude_opt Name_adapt_opt Defaults_opt Options_opt Visible_opt
+			{ $$ := new_clust_prop_sd ($1, $2, $3, $4, $5, $6, $7, $8) }
+	|	Use Include_opt Exclude_opt Name_adapt_opt Defaults_opt Options_opt Visible_opt
+			{ $$ := new_clust_prop_sd (Void, $1, $2, $3, $4, $5, $6, $7) }
 	|	Include Exclude_opt Name_adapt_opt Defaults_opt Options_opt Visible_opt
-			{ $$ := new_clust_prop_sd (Void, $1, $2, $3, $4, $5, $6) }
+			{ $$ := new_clust_prop_sd (Void, Void, $1, $2, $3, $4, $5, $6) }
 	|	Exclude Name_adapt_opt Defaults_opt Options_opt Visible_opt
-			{ $$ := new_clust_prop_sd (Void, Void, $1, $2, $3, $4, $5) }
+			{ $$ := new_clust_prop_sd (Void, Void, Void, $1, $2, $3, $4, $5) }
 	|	Name_adapt Defaults_opt Options_opt Visible_opt
-			{ $$ := new_clust_prop_sd (Void, Void, Void, $1, $2, $3, $4) }
+			{ $$ := new_clust_prop_sd (Void, Void, Void, Void, $1, $2, $3, $4) }
 	|	Defaults Options_opt Visible_opt
-			{ $$ := new_clust_prop_sd (Void, Void, Void, Void, $1, $2, $3) }
+			{ $$ := new_clust_prop_sd (Void, Void, Void, Void, Void, $1, $2, $3) }
 	|	Options Visible_opt
-			{ $$ := new_clust_prop_sd (Void, Void, Void, Void, Void, $1, $2) }
+			{ $$ := new_clust_prop_sd (Void, Void, Void, Void, Void, Void, $1, $2) }
 	|	Visible
-			{ $$ := new_clust_prop_sd (Void, Void, Void, Void, Void, Void, $1) }
+			{ $$ := new_clust_prop_sd (Void, Void, Void, Void, Void, Void, Void, $1) }
 	;
 
+Depend: LAC_DEPEND Depend_list
+			{ $$ := $2 }
+	|
+		LAC_DEPEND ASemi
+			-- { $$ := Void }
+	;
+
+Depend_list: Depend_pair ASemi
+			{
+				$$ := new_lace_list_depend_sd (10)
+				$$.extend ($1)
+			}
+	|
+		Depend_list Depend_pair ASemi
+			{
+				$$ := $1
+				$$.extend ($2)
+			}		
+	;
+
+Depend_pair: File_list LAC_COLON Name
+			{ $$ := new_depend_sd ($1, $3) }
+	;
+
+Use_opt: -- Empty
+			-- { $$ := Void }
+	|
+		Use
+			{ $$ := $1 }
+	;
+		
 Use: LAC_USE Name
 			{ $$ := $2 }
 	;
@@ -317,12 +354,19 @@ Option_name: LAC_ASSERTION
 			{ $$ := Assertion_keyword }
 	|	LAC_DEBUG
 			{ $$ := Debug_keyword }
+	|	LAC_DISABLED_DEBUG
+			{ $$ := Disabled_debug_keyword }
 	|	LAC_OPTIMIZE
 			{ $$ := Optimize_keyword }
 	|	LAC_TRACE
 			{ $$ := Trace_keyword }
 	|	Name
-			{ $$ := new_free_option_sd ($1) }
+			{
+				$$ := new_free_option_sd ($1)
+				if not $$.is_valid then
+					raise_error
+				end
+			}
 	;
 
 O_option_clause_list: O_option_clause ASemi
@@ -417,54 +461,45 @@ Language_contrib: Language_name LAC_COLON File_list
 			{ $$ := new_lang_trib_sd ($1, $3) }
 	;
 
-Language_name: LAC_C
-			{ $$ := C_keyword }
-	|	LAC_INCLUDE_PATH
-			{ $$ := Include_path_keyword }
-	|	LAC_MAKE
-			{ $$ := Make_keyword }
-	|	LAC_OBJECT
-			{ $$ := Object_keyword }
-	|	LAC_EXECUTABLE
-			{ $$ := Executable_keyword }
-	|	Name
+Language_name:
+		Name
 			{ $$ := new_language_name_sd ($1) }
 	;
-
+ 
 Generation: -- Empty
-			-- { $$ := Void }
+	-- { $$ := Void }
 	|	LAC_GENERATE Language_gen_list
-			{ $$ := $2 }
+--		{ $$ := $2 }
 	|	LAC_GENERATE ASemi
-			-- { $$ := Void }
+--		{ $$ := Void }
 	;
-
+	
 Language_gen_list: Language_generation ASemi
-			{
-				$$ := new_lace_list_lang_gen_sd (10)
-				$$.extend ($1)
-			}
+	{
+--		$$ := new_lace_list_lang_gen_sd (10)
+--		$$.extend ($1)
+	}
 	|	Language_gen_list Language_generation ASemi
-			{
-				$$ := $1
-				$$.extend ($2)
-			}
+	{
+--		$$ := $1
+--		$$.extend ($2)
+	}
 	;
-
+	
 Language_generation: Language_name Generate_option LAC_COLON Name
-			{ $$ := new_lang_gen_sd ($1, $2, $4) }
+--		{ $$ := new_lang_gen_sd ($1, $2, $4) }
 	;
-
+	
 Generate_option: -- Empty
-			-- { $$ := Void }
+	-- { $$ := Void }
 	|	LAC_LEFT_PARAM Generate_option_value LAC_RIGHT_PARAM
-			{ $$ := $2 }
+--		{ $$ := $2 }
 	;
-
+	
 Generate_option_value: LAC_YES
-			{ $$ := Yes_keyword }
+--		{ $$ := Yes_keyword }
 	|	LAC_NO
-			{ $$ := No_keyword }
+--		{ $$ := No_keyword } 
 	;
 
 Visible_opt: -- Empty
@@ -493,16 +528,16 @@ Class_visi_list: Class_visibility ASemi
 
 Class_visibility: Name
 			{ $$ := new_clas_visi_sd ($1, Void, Void, Void, Void) }
-	|	Name External_name Creation_restriction_opt Export_restriction_opt External_rename_opt LAC_END
-			{ $$ := new_clas_visi_sd ($1, $2, $3, $4, $5) }
-	|	Name Creation_restriction Export_restriction_opt External_rename_opt LAC_END
-			{ $$ := new_clas_visi_sd ($1, Void, $2, $3, $4) }
-	|	Name Export_restriction External_rename_opt LAC_END
-			{ $$ := new_clas_visi_sd ($1, Void, Void, $2, $3) }
-	|	Name External_rename LAC_END
-			{ $$ := new_clas_visi_sd ($1, Void, Void, Void, $2) }
 	|	Name LAC_END
 			{ $$ := new_clas_visi_sd ($1, Void, Void, Void, Void) }
+	|	Name External_rename LAC_END
+			{ $$ := new_clas_visi_sd ($1, Void, Void, Void, $2) }
+	|	Name Export_restriction External_rename_opt LAC_END
+			{ $$ := new_clas_visi_sd ($1, Void, Void, $2, $3) }
+	|	Name Creation_restriction Export_restriction_opt External_rename_opt LAC_END
+			{ $$ := new_clas_visi_sd ($1, Void, $2, $3, $4) }
+	|	Name External_name Creation_restriction_opt Export_restriction_opt External_rename_opt LAC_END
+			{ $$ := new_clas_visi_sd ($1, $2, $3, $4, $5) }
 	;
 
 External_name: LAC_AS Name
@@ -572,9 +607,9 @@ External_rename_pair: -- Empty
 	;
 
 Name: LAC_IDENTIFIER
-			{ $$ := new_id_sd (token_buffer) }
+			{ $$ := new_id_sd (token_buffer, False) }
 	|	LAC_STRING
-			{ $$ := new_id_sd (token_buffer) }
+			{ $$ := new_id_sd (token_buffer, True) }
 	;
 
 ASemi: -- Empty

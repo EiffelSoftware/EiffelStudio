@@ -56,6 +56,12 @@ feature
 			buffer.putstring ("L)")
 		end
 
+	generate_il is
+			-- Generate IL code for integer constant value.
+		do
+			il_generator.put_integer_32_constant (int_val)
+		end
+
 	make_byte_code (ba: BYTE_ARRAY) is
 			-- Generate byte code for an integer constant value.
 		do

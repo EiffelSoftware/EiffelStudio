@@ -21,13 +21,13 @@ creation
 
 feature -- Properties
 
-	class_id: CLASS_ID;
+	class_id: INTEGER;
 			-- Id of the class to which the feature table belongs to.
 
 	associated_class: CLASS_C is
 			-- Associated class
 		require
-			valid_class_id: class_id /= Void
+			valid_class_id: class_id /= 0
 		do
 			Result := Eiffel_system.class_of_id (class_id);
 		end;

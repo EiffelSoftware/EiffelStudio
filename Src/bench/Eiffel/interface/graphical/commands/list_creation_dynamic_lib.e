@@ -139,12 +139,12 @@ feature {NONE} -- Implementation
 			if list = Void then				
 				dynamic_lib_tool.process (d_class, d_routine, d_routine,
 											d_index, d_alias, d_call_type)
-			elseif list.empty then
+			elseif list.is_empty then
 				warner (dynamic_lib_tool.eb_shell).gotcha_call ("There is no valid creation for this feature.%N(ie: with no argument)")
 			elseif list.count =1 then
 				dynamic_lib_tool.process (d_class, list.first, d_routine,
 											d_index, d_alias, d_call_type)
-			elseif list /= Void and then not list.empty then
+			elseif list /= Void and then not list.is_empty then
 				!! a_list.make
 				from 
 					list.start

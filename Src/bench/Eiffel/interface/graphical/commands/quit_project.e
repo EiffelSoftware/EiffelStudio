@@ -9,9 +9,9 @@ class QUIT_PROJECT
 
 inherit
 
-	GRAPHICS;
-	PROJECT_CONTEXT;
-	SHARED_APPLICATION_EXECUTION;
+	GRAPHICS
+	PROJECT_CONTEXT
+	SHARED_APPLICATION_EXECUTION
 	PIXMAP_COMMAND
 		rename
 			init as make
@@ -30,19 +30,23 @@ creation
 feature -- Callbacks
 
 	exit_anyway is
-		local
-			mp: MOUSE_PTR
 		do
 			if Application.is_running then
-				Application.kill;
-			end;
-			discard_licenses;
+				Application.kill
+			end
+			discard_licenses
 
 			if Project_tool.initialized then
+					-- save environment
 				Project_tool.save_environment
+
+					-- Save breakpoints positions.
+					-- If there are no breakpoints, we save
+					-- an (almost) empty file.
+				Application.save_debug_info
 			end
 			exit
-		end;
+		end
 
 	do_not_exit (argument: ANY) is
 		do
@@ -91,7 +95,7 @@ feature {NONE} -- Implementation
 						"Quit EiffelBench?", "Exit");
 				end
 			end
-		end;
+		end
 
 feature {NONE} -- Attributes
 
@@ -102,18 +106,18 @@ feature {NONE} -- Attributes
 	name: STRING is
 			-- Name of the command.
 		do
-			Result := Interface_names.f_Exit_project;
-		end;
+			Result := Interface_names.f_Exit_project
+		end
  
 	menu_name: STRING is
 			-- Name used in menu entry
 		do
-			Result := Interface_names.m_Exit_project;
-		end;
+			Result := Interface_names.m_Exit_project
+		end
 
 	accelerator: STRING is
 			-- Accelerator action for menu entry
 		do
-		end;
+		end
 
 end -- class QUIT_PROJECT

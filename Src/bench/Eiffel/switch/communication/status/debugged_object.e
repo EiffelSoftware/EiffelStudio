@@ -47,7 +47,7 @@ feature
 
 feature -- Properties
 
-	attributes: LIST [DEBUG_VALUE];
+	attributes: LIST [ABSTRACT_DEBUG_VALUE];
 			-- Attributes of object being inspected (sorted by name)
 
 	is_special: BOOLEAN;

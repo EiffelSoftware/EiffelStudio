@@ -41,12 +41,6 @@ feature -- Initialization
 
 feature -- Processing
 
-	exit_now is
-			-- Force an immediate exit.
-		do
-			execute (kill_it, Void)
-		end
-	
 	recv_dead is
 			-- Wait for the application to be killed.
 		do
@@ -55,14 +49,11 @@ feature -- Processing
 
 feature -- Output
 
-	kill_it: EV_ARGUMENT1 [ANY] is
-		once
-			create Result.make (Void)
-		end
-
 	termination_processing is
 			-- Print the termination message to the debug_window
 			-- and reset the object windows.
+		local
+			status: APPLICATION_STATUS
 		do
 			debug_tool.clear_cursor_position
 			debug_window.clear_window
@@ -71,12 +62,13 @@ feature -- Output
 			debug_window.display
 			tool_supervisor.object_tool_mgr.reset
 			debug_tool.clear_object_tool
-			if Application.status.e_feature /= Void then
-				Application.status.set_is_stopped (False)
+			status := Application.status
+			if status /= Void and then status.body_index /= Void then
+				status.set_is_stopped (False)
 				tool_supervisor.feature_tool_mgr.show_stoppoint
-						(Application.status.e_feature, Application.status.break_index)
+						(status.body_index, status.break_index)
 				debug_tool.show_stoppoint
-						(Application.status.e_feature, Application.status.break_index)
+						(status.body_index, status.break_index)
 			end
 		end
 
@@ -88,28 +80,39 @@ feature -- Properties
 --			Result := Pixmaps.bm_Debug_quit 
 --		end
  
-feature {NONE} -- Implementation
+feature -- Execution
 
-	execute (argument: EV_ARGUMENT1 [ANY]; data: EV_EVENT_DATA) is
+	kill is
 			-- Continue execution.
 		local
 			status: APPLICATION_STATUS
 		do
 			status := Application.status
 			if status /= Void then
-				if argument /= kill_it then
-					if not status.is_stopped then
-							-- Ask the application to interrupt ASAP.
-						debug_window.clear_window
-						debug_window.put_string ("System is running")
-						debug_window.new_line
-						debug_window.put_string ("Interruption request")
-						debug_window.new_line
-						debug_window.display
-						Application.interrupt
-					end
-				else
-					Application.kill
+				Application.kill
+			else
+				--debug_window.clear_window
+				--debug_window.put_string ("System not launched")
+				--debug_window.display
+			end
+		end
+
+	interrupt (argument: ANY) is
+			-- Continue execution.
+		local
+			status: APPLICATION_STATUS
+		do
+			status := Application.status
+			if status /= Void then
+				if not status.is_stopped then
+						-- Ask the application to interrupt ASAP.
+					debug_window.clear_window
+					debug_window.put_string ("System is running")
+					debug_window.new_line
+					debug_window.put_string ("Interruption request")
+					debug_window.new_line
+					debug_window.display
+					Application.interrupt
 				end
 			else
 				--debug_window.clear_window
@@ -123,20 +126,20 @@ feature {NONE} -- Attributes
 	name: STRING is
 			-- Name of the command.
 		do
-			Result := Interface_names.f_Debug_quit
+			Result := Interface_names.f_Debug_kill
 		end
 
 	menu_name: STRING is
 			-- Name used in menu entry
 		do
-			Result := Interface_names.m_Debug_quit
+			Result := Interface_names.m_Debug_kill
 		end
 
-	accelerator: STRING is
-			-- Accelerator action for menu entry
-		do
-			Result := Interface_names.a_Debug_quit
-		end
+--	accelerator: STRING is
+--			-- Accelerator action for menu entry
+--		do
+--			Result := Interface_names.a_Debug_kill
+--		end
 
 	request: EWB_REQUEST
 			-- Request of some sort.

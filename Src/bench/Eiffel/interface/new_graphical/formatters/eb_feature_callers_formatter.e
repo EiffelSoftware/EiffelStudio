@@ -22,7 +22,7 @@ feature -- Initialization
 
 	make (a_tool: like tool) is
 		do
-			precursor (a_tool)
+			Precursor {EB_FILTERABLE} (a_tool)
 			to_show_all_callers :=
 				show_all_callers
 		end

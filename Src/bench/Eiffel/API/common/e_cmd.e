@@ -26,21 +26,4 @@ feature -- Execution
 		deferred
 		end;
 
-feature {NONE} -- Implementation
-
-	add_tabs (st:STRUCTURED_TEXT; i: INTEGER) is
-			-- Add `i' tabs to `structured_text'.
-		local
-			j: INTEGER
-		do
-			from
-				j := 1;
-			until
-				j > i
-			loop
-				st.add_indent;
-				j := j + 1
-			end;
-		end;
-
 end -- class E_CMD

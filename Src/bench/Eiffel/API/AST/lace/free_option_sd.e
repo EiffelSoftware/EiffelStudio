@@ -1,7 +1,7 @@
 indexing
 	description: "AST structure in Lace file for setting system level options.";
 	date: "$Date$";
-	revision: "$Revision $"
+	revision: "$Revision$"
 
 class FREE_OPTION_SD
 
@@ -10,8 +10,8 @@ inherit
 		rename
 			initialize as initialize_option
 		redefine
-			set, process_system_level_options, is_system_level,
-			is_valid, is_free_option
+			process_system_level_options, is_system_level,
+			is_free_option, duplicate, is_valid
 		end;
 
 	SHARED_RESCUE_STATUS;
@@ -20,68 +20,109 @@ inherit
 
 	SHARED_BENCH_LICENSES
 
-feature {LACE_AST_FACTORY} -- Initialization
+	SHARED_EIFFEL_PARSER
+
+feature {OPTION_SD, LACE_AST_FACTORY} -- Initialization
 
 	initialize (on: like option_name) is
 			-- Create a new FREE_OPTION AST node.
 		require
 			on_not_void: on /= Void
 		do
-			option_name := on
+			if option_codes.has (on) then
+				code := option_codes.item (on)
+			else
+					-- Will raise an error during parsing
+				code := -1
+			end
 		ensure
-			option_name_set: option_name = on
+			option_name_set: option_name.is_equal (on)
 		end
-
-feature {NONE} -- Initialization
-
-	set is
-			-- Yacc initialization.
-		do
-			option_name ?= yacc_arg (0);
-		ensure then
-			option_name_exists: option_name /= Void;
-		end;
 
 feature -- Properties
 
-	option_name: ID_SD;
+	is_valid: BOOLEAN is
+			-- Is current option valid?
+		do
+			Result := code /= -1
+		end
+
+	option_name: ID_SD is
 			-- Free option name
+		do
+			create Result.initialize (option_names.item (code))
+		end
+
+	code: INTEGER
+			-- Code representing option.
 
 	is_free_option: BOOLEAN is True
 
-feature {COMPILER_EXPORTER}
-
-	is_valid: BOOLEAN is
+	is_override: BOOLEAN is
+			-- Is Current the override_cluster option?
 		do
-			Result := valid_options.has (option_name)
-		end;
+			Result := override_cluster = code
+		end
+
+	address_expression,
+	arguments,
+	array_optimization,
+	check_vape,
+	collect,
+	console_application,
+	dead_code,
+	document,
+	dynamic_runtime,
+	exception_stack_managed,
+	hide,
+	hide_implementation,
+	msil_generation,
+	msil_generation_type,
+	msil_culture,
+	msil_version,
+	msil_assembly_compatibility,
+	msil_full_name,
+	il_verifiable,
+	inlining, 
+	inlining_size,
+	ise_gc_runtime,
+	java_generation,
+	line_generation,
+	multithreaded,
+	override_cluster,
+	profile,
+	server_file_size,
+	shared_library_definition,
+	working_directory,
+	force_recompile: INTEGER is unique
+
+feature -- Duplication
+
+	duplicate: like Current is
+			-- Duplicate current object.
+		do
+			create Result
+			Result.initialize (option_name.duplicate)
+		end
+
+feature {COMPILER_EXPORTER}
 
 	is_system_level: BOOLEAN is
 		local
 			opt: INTEGER
 		do
-			if is_valid then
-				opt := valid_options.item (option_name)
-				Result := opt /= hide and then
-					opt /= document and then
-					opt /= profile
-			end;
+			opt := code
+			Result := opt /= hide and then
+				opt /= document and then
+				opt /= profile
 		end;
 
-feature {NONE}
+feature {NONE} -- Codes and names.
 
-	dead_code, exception_stack_managed, collect,
-	code_replication, check_vape, array_optimization, inlining, 
-	inlining_size, server_file_size,
-	hide, override_cluster, address_expression, profile,
-	document, hide_implementation, java_generation, line_generation,
-	multithreaded, dynamic_runtime, console_application,
-	shared_library_definition: INTEGER is UNIQUE;
-
-	valid_options: HASH_TABLE [INTEGER, STRING] is
+	option_codes: HASH_TABLE [INTEGER, STRING] is
 			-- Possible values for free operators
 		once
-			!!Result.make (25);
+			!!Result.make (35);
 			Result.force (dead_code, "dead_code_removal");
 			Result.force (array_optimization, "array_optimization");
 			Result.force (inlining, "inlining");
@@ -100,10 +141,34 @@ feature {NONE}
 			Result.force (check_vape, "check_vape");
 			Result.force (hide, "hide");
 			Result.force (hide_implementation, "hide_implementation");
-			Result.force (java_generation, "java_generation")
 			Result.force (server_file_size, "server_file_size");
-			Result.force (code_replication, "code_replication");
-		end;
+			Result.force (java_generation, "java_generation")
+			Result.force (msil_generation, "msil_generation");
+			Result.force (msil_generation_type, "msil_generation_type");
+			Result.force (msil_culture, "msil_culture");
+			Result.force (msil_version, "msil_version");
+			Result.force (il_verifiable, "il_verifiable");
+			Result.force (msil_assembly_compatibility, "msil_assembly_compatibility");
+			Result.force (msil_full_name, "msil_full_name");
+			Result.force (ise_gc_runtime, "ise_gc_runtime");
+			Result.force (arguments, "arguments");
+			Result.force (working_directory, "working_directory");
+			Result.force (force_recompile, "force_recompile");
+		end
+
+	option_names: ARRAY [STRING] is
+			-- Name of each option associated to its code
+		once
+			from
+				create Result.make (0, 35)
+				option_codes.start
+			until
+				option_codes.after
+			loop
+				Result.force (option_codes.key_for_iteration, option_codes.item_for_iteration)	
+				option_codes.forth
+			end
+		end
 
 feature {COMPILER_EXPORTER}
 
@@ -111,8 +176,6 @@ feature {COMPILER_EXPORTER}
 			classes:EXTEND_TABLE [CLASS_I, STRING];
 			list: LACE_LIST [ID_SD]) is
 			-- Adapt should not process the system level options
-		require else
-			is_valid
 		local
 			hide_sd: HIDE_SD;
 			document_sd: DOCUMENT_SD;
@@ -120,7 +183,7 @@ feature {COMPILER_EXPORTER}
 			hide_imp_sd: HIDE_IMPLEMENTATION_SD;
 			opt: INTEGER
 		do
-			opt := valid_options.item (option_name);
+			opt := code
 			if opt = hide then
 				!! hide_sd;
 				hide_sd.adapt (value, classes, list)	
@@ -137,8 +200,6 @@ feature {COMPILER_EXPORTER}
 		end;
 
 	process_system_level_options (value: OPT_VAL_SD) is
-		require else
-			is_valid
 		local
 			error_found: BOOLEAN;
 			vd37: VD37;
@@ -146,238 +207,295 @@ feature {COMPILER_EXPORTER}
 			string_value: STRING;
 			path: DIRECTORY_NAME
 		do
-			inspect
-				valid_options.item (option_name)
-
-			when dead_code then
-				if value = Void then
-					error_found := True
-				elseif value.is_no then
-					System.set_remover_off (True)
-				elseif value.is_yes then
-					System.set_remover_off (False)
-				else
-					error_found := True;
-				end;
-
-			when array_optimization then
-				if value = Void then
-					error_found := True
-				elseif value.is_no then
-					System.set_array_optimization_on (False)
-				elseif value.is_yes then
-						-- FIXME: Since it is not working with 4.5.020 and
-						-- because we haven't find a bug fix yet, we disable
-						-- array optimization in 4.5.021.
-					System.set_array_optimization_on (False)
-				else
-					error_found := True;
-				end;
-
-			when inlining then
-				if value = Void then
-					error_found := True
-				elseif value.is_no then
-					System.set_inlining_on (False)
-				elseif value.is_yes then
-					System.set_inlining_on (True)
-				else
-					error_found := True;
-				end;
-
-			when inlining_size then
-				if value = Void then
-					error_found := True
-				elseif value.is_name then
-					string_value := value.value;
-					if string_value.is_integer then
-						i := value.value.to_integer;
-						if (i <= 0 or else i > 100) then
-							error_found := True
-						else
-							System.set_inlining_size (i)
-						end
-					else
-						error_found := True
-					end
-				else
-					error_found := True;
-				end;
-
-			when server_file_size then
-				if value = Void then
-					error_found := True
-				elseif value.is_name then
-					string_value := value.value;
-					if string_value.is_integer then 
-						i := value.value.to_integer;
-						if i <= 0 then
-							error_found := True
-						else
-							System.server_controler.set_block_size (i)
-						end
-					else
-						error_found := True
-					end
-				else
-					error_found := True;
-				end;
-
-			when check_vape then
-				if value = Void then
-					error_found := True
-				elseif value.is_no then
-					System.set_do_not_check_vape (True)
-				elseif value.is_yes then
-					System.set_do_not_check_vape (False)
-				else
-					error_found := True;
-				end;
-
-			when collect then
-				!!vd37;
-				Error_handler.insert_warning (vd37);
-
-			when exception_stack_managed then
-				if value = Void then
-					error_found := True
-				elseif value.is_no then
-					System.set_exception_stack_managed (False)
-				elseif value.is_yes then
-					System.set_exception_stack_managed (True)
-				else
-					error_found := True;
-				end;
-
-			when code_replication then
-				if value = Void then
-					error_found := True
-				elseif value.is_no then
-					System.set_code_replication_off (True);
-				elseif value.is_yes then
-					System.set_code_replication_off (False);
-				else
-					error_found := True;
-				end;
-
-			when override_cluster then
-				if value = Void or else not value.is_name then
-					error_found := true
-				elseif compilation_modes.is_precompiling then
-					error_found := true
-				elseif universe.has_override_cluster then
-					error_found := true
-				elseif universe.has_cluster_of_name (value.value) then
-					universe.set_override_cluster_name (value.value)
-				else
-					error_found := true
-				end
-
-			when address_expression then
-				if value = Void then
-					error_found := True
-				elseif value.is_no then
-					System.allow_address_expression (False)
-				elseif value.is_yes then
-					System.allow_address_expression (True)
-				else
-					error_found := True;
-				end;
-
-			when profile then
-				if value = Void then
-					error_found := True
-				else
-					Lace.ace_options.set_has_external_profile (not (value.is_yes or value.is_no) and value.is_name)
-				end
-
-			when java_generation then
-				if value = Void then
-					error_found := True
-				elseif value.is_no then
-					System.set_java_generation (False)
-				elseif value.is_yes then
-					System.set_java_generation (True)
-				else
-					error_found := True;
-				end;
-
-			when line_generation then
-				if value = Void then
-					error_found := True
-				elseif value.is_no then
-					System.set_line_generation (False)
-				elseif value.is_yes  or else value.is_all then
-					System.set_line_generation (True)
-				else
-					error_found := True;
-				end;
-
-			when dynamic_runtime then
-				if value = Void then
-					error_found := True
-				elseif value.is_no then
-					System.set_dynamic_runtime (False)
-				elseif value.is_yes or else value.is_all then
-					System.set_dynamic_runtime (True)
-				else
-					error_found := True;
-				end;
-
-			when console_application then
-				if value = Void then
-					error_found := True
-				elseif value.is_no then
-					System.set_console_application (False)
-				elseif value.is_yes or else value.is_all then
-					System.set_console_application (True)
-				else
-					error_found := True;
-				end;
-
-			when multithreaded then
-				if value = Void then
-					error_found := True
-				elseif value.is_no then
-					System.set_has_multithreaded (False)
-				elseif value.is_yes or else value.is_all then
-					System.set_has_multithreaded (True)
-				else
-					error_found := True
-				end
-
-			when hide then
-					-- This has been taken care of in `adapt'.
-
-			when document then
-				string_value := value.value;
-				!! path.make_from_string (string_value);
-				if path.is_valid then
-					System.set_document_path (path)
-				else
-					error_found := True
-				end;
-
-			when hide_implementation then
-					-- Processing for each class is done
-					-- in `adapt'
-				if not compilation_modes.is_precompiling then
-					error_found := True
-				end
-
-			when shared_library_definition then
-				if value = Void then
-					error_found := True
-				elseif value.is_name then
-					string_value := value.value;
-					System.set_dynamic_def_file (string_value)
-				else
-					error_found := True;
-				end;
-				
-			else
+			if value = Void then
 				error_found := True
-			end;
+			else
+				inspect
+					code
+
+				when dead_code then
+					if value.is_no then
+						System.set_remover_off (True)
+					elseif value.is_yes then
+						System.set_remover_off (False)
+					else
+						error_found := True;
+					end;
+
+				when array_optimization then
+					if value.is_no then
+						System.set_array_optimization_on (False)
+					elseif value.is_yes then
+							-- FIXME
+						System.set_array_optimization_on (False)
+					else
+						error_found := True;
+					end;
+
+				when inlining then
+					if value.is_no then
+						System.set_inlining_on (False)
+					elseif value.is_yes then
+						System.set_inlining_on (True)
+					else
+						error_found := True;
+					end;
+
+				when inlining_size then
+					if value.is_name then
+						string_value := value.value;
+						if string_value.is_integer then
+							i := value.value.to_integer;
+							if (i < 0 or else i > 100) then
+								error_found := True
+							else
+								System.set_inlining_size (i)
+							end
+						else
+							error_found := True
+						end
+					else
+						error_found := True;
+					end;
+
+				when server_file_size then
+					if value.is_name then
+						string_value := value.value;
+						if string_value.is_integer then 
+							i := value.value.to_integer;
+							if i <= 0 then
+								error_found := True
+							else
+								System.server_controler.set_block_size (i)
+							end
+						else
+							error_found := True
+						end
+					else
+						error_found := True;
+					end;
+
+				when check_vape then
+					if value.is_no then
+						System.set_do_not_check_vape (True)
+					elseif value.is_yes then
+						System.set_do_not_check_vape (False)
+					else
+						error_found := True;
+					end;
+
+				when collect then
+					create vd37;
+					Error_handler.insert_warning (vd37);
+
+				when exception_stack_managed then
+					if value.is_no then
+						System.set_exception_stack_managed (False)
+					elseif value.is_yes then
+						System.set_exception_stack_managed (True)
+					else
+						error_found := True;
+					end;
+
+				when override_cluster then
+					if not value.is_name then
+						error_found := true
+					elseif compilation_modes.is_precompiling then
+						error_found := true
+					elseif universe.has_override_cluster then
+						error_found := true
+					elseif universe.has_cluster_of_name (value.value) then
+						universe.set_override_cluster_name (value.value)
+					else
+						error_found := true
+					end
+
+				when address_expression then
+					if value.is_no then
+						System.allow_address_expression (False)
+					elseif value.is_yes then
+						System.allow_address_expression (True)
+					else
+						error_found := True;
+					end;
+
+				when profile then
+					Lace.ace_options.set_has_external_profile (not (value.is_yes or value.is_no) and value.is_name)
+
+				when java_generation then
+					if value.is_no then
+						System.set_java_generation (False)
+						set_il_parsing (False)
+					elseif value.is_yes then
+						System.set_java_generation (True)
+						set_il_parsing (True)
+					else
+						error_found := True;
+					end;
+
+				when msil_generation then
+					if value.is_no then
+						System.set_il_generation (False)
+						set_il_parsing (False)
+					elseif value.is_yes then
+						System.set_il_generation (True)
+						set_il_parsing (True)
+					else
+						error_found := True;
+					end;
+
+				when msil_generation_type then
+					if value.is_name then
+						string_value := value.value
+						string_value.to_lower
+						if
+							string_value.is_equal ("exe")
+							or else string_value.is_equal ("dll")
+						then
+							System.set_msil_generation_type (string_value)
+						else
+							error_found := True
+						end
+					else
+						error_found := True
+					end
+
+				when msil_culture then
+					if value.is_name then
+						System.set_msil_culture (value.value)	
+					else
+						error_found := True
+					end
+
+				when msil_version then
+					if value.is_name then
+						System.set_msil_version (value.value)	
+					else
+						error_found := True
+					end
+
+				when msil_full_name then
+					if value.is_name then
+						System.set_msil_full_name (value.value)	
+					else
+						error_found := True
+					end
+
+				when msil_assembly_compatibility then
+					if value.is_name then
+						System.set_msil_assembly_compatibility (value.value)	
+					else
+						error_found := True
+					end
+
+				when line_generation then
+					if value.is_no then
+						System.set_line_generation (False)
+					elseif value.is_yes  or else value.is_all then
+						System.set_line_generation (True)
+					else
+						error_found := True;
+					end;
+
+				when dynamic_runtime then
+					if value.is_no then
+						System.set_dynamic_runtime (False)
+					elseif value.is_yes or else value.is_all then
+						System.set_dynamic_runtime (True)
+					else
+						error_found := True;
+					end;
+
+				when ise_gc_runtime then
+					if value.is_no then
+						System.set_ise_gc_runtime (False)
+					elseif value.is_yes or else value.is_all then
+						System.set_ise_gc_runtime (True)
+					else
+						error_found := True;
+					end;
+
+				when console_application then
+					if value.is_no then
+						System.set_console_application (False)
+					elseif value.is_yes or else value.is_all then
+						System.set_console_application (True)
+					else
+						error_found := True;
+					end;
+
+				when multithreaded then
+					if value.is_no then
+						System.set_has_multithreaded (False)
+					elseif value.is_yes or else value.is_all then
+						System.set_has_multithreaded (True)
+					else
+						error_found := True
+					end
+
+				when hide then
+						-- This has been taken care of in `adapt'.
+
+				when document then
+					string_value := value.value;
+					!! path.make_from_string (string_value);
+					if path.is_valid then
+						System.set_document_path (path)
+					else
+						error_found := True
+					end;
+
+				when hide_implementation then
+						-- Processing for each class is done
+						-- in `adapt'
+					if not compilation_modes.is_precompiling then
+						error_found := True
+					end
+
+				when shared_library_definition then
+					if value.is_name then
+						string_value := value.value;
+						System.set_dynamic_def_file (string_value)
+					else
+						error_found := True;
+					end;
+
+				when arguments then
+					if not value.is_name then
+						error_found := True
+					else
+						Lace.argument_list.extend (value.value)
+					end
+				
+				when working_directory then
+					if not value.is_name then
+						error_found := True
+					else
+						Lace.set_application_working_directory (value.value)
+					end
+
+				when il_verifiable then
+					if value.is_no then
+						System.set_il_verifiable (False)
+					elseif value.is_yes then
+						System.set_il_verifiable (True)
+					else
+						error_found := True;
+					end;
+
+				when force_recompile then
+					if value.is_no then
+						Lace.set_full_degree_6_needed (False)
+					elseif value.is_yes then
+						Lace.set_full_degree_6_needed (True)
+					else
+						error_found := True;
+					end;
+
+				else
+					error_found := True
+				end;
+			end
 			if error_found then
 				error (value);
 			end;

@@ -22,7 +22,7 @@ feature -- Execution
 		local
 			classes: PART_SORTED_TWO_WAY_LIST [CLASS_C];
 			rout_id_set: ROUT_ID_SET;
-			rout_id: ROUTINE_ID;
+			rout_id: INTEGER;
 			i: INTEGER;
 			other_feature: E_FEATURE;
 			c: CLASS_C

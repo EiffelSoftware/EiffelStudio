@@ -1,5 +1,5 @@
 indexing
-	description: "Command to display the history of a feature."
+	description: "Command to display the descendants of a class."
 	date: "$Date$"
 	revision: "$Revision$"
 
@@ -7,65 +7,52 @@ class
 	EB_DESCENDANTS_FORMATTER
 
 inherit
-	EB_FILTERABLE
+	EB_CLASS_TEXT_FORMATTER
 		redefine
-			display_temp_header, post_fix
+			class_cmd
 		end
 
 creation
-
 	make
-
+	
 feature -- Properties
 
-	symbol: EV_PIXMAP is 
-		once 
-			Result := Pixmaps.bm_Showdescendants 
+	symbol: ARRAY [EV_PIXMAP] is
+			-- Graphical representation of the command.
+		once
+			create Result.make (1, 2)
+			Result.put (Pixmaps.Icon_format_descendants, 1)
+			Result.put (Pixmaps.Icon_format_descendants, 2)
+		end
+ 
+	class_cmd: E_SHOW_DESCENDANTS
+			-- Class command that can generate the information.
+
+	menu_name: STRING is
+			-- Identifier of `Current' in menus.
+		do
+			Result := Interface_names.m_Showdescendants
 		end
  
 feature {NONE} -- Properties
 
-	name: STRING is
+	command_name: STRING is
+			-- Name of the command.
 		do
-			Result := Interface_names.f_Showdescendants
-		end
-
-	menu_name: STRING is
-			-- Name used in menu entry
-		do
-			Result := Interface_names.m_Showdescendants
-		end
-
-	accelerator: STRING is
-			-- Accelerator action for menu entry
-		do
-		end
-
-	title_part: STRING is
-		do
-			Result := Interface_names.t_Descendants_of
+			Result := Interface_names.l_Descendants
 		end
 
 	post_fix: STRING is "des"
-
-feature {NONE} -- Attributes
-
-	create_structured_text (c: CLASSC_STONE): STRUCTURED_TEXT is
-			-- Display the descendants of `c' in tree form.
-		local
-			cmd: E_SHOW_DESCENDANTS
-		do
-			create cmd.make (c.e_class)
-			cmd.execute;
-			Result := cmd.structured_text
-		end
+			-- String symbol of the command, used as an extension when saving.
 
 feature {NONE} -- Implementation
 
-	display_temp_header (stone: STONE) is
-			-- Display a temporary header during the format processing.
+	create_class_cmd is
+			-- Create `class_cmd'.
+		require else
+			associated_class_non_void: associated_class /= Void
 		do
-			tool.set_title ("Searching for descendants...")
+			create class_cmd.make (associated_class)
 		end
 
 end -- class EB_DESCENDANTS_FORMATTER

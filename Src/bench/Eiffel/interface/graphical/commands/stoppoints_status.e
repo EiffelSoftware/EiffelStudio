@@ -68,31 +68,39 @@ feature -- Execution
 	work (argument: ANY) is
 			-- Perform edit operations.
 		local
-			d_bp: DEBUG_STOPIN_HOLE;
-			list: LINKED_LIST [E_FEATURE]
+			d_bp: DEBUG_STOPIN_HOLE
+			bps: BREAK_LIST
+			bp: BREAKPOINT
 		do
-			inspect
-				status_type
-			when disabled_type then
-				list := Application.debugged_routines;
-			when enabled_type then
-				list := Application.removed_routines;
-			end;
-			list.start;
-			list := list.duplicate (list.count);
+
+			-- loop on the breakpoint list and disable/enable every breakpoint
+			bps := Application.debug_info.breakpoints
 			from
-				list.start
+				bps.start
 			until
-				list.after
+				bps.after
 			loop
-				Application.switch_feature (list.item);
-				Window_manager.routine_win_mgr.resynchronize_debugger 
-						(list.item)
-				list.forth
+				bp := bps.item_for_iteration
+				
+				if not bp.is_not_set then
+						-- enable/disable only the breakpoint that are set
+					inspect	status_type
+					when disabled_type then
+						bp.disable
+					when enabled_type then
+						bp.enable
+					end
+				end
+				
+--				Window_manager.routine_win_mgr.resynchronize_debugger(bp.routine)
+				Window_manager.routine_win_mgr.resynchronize_debugger(Void)
+				Project_tool.resynchronize_debugger
+				bps.forth
 			end
-			!! d_bp.do_nothing;
-			d_bp.work (Void);
-		end;
+			
+			create d_bp.do_nothing
+			d_bp.work (Void)
+		end
 
 feature {NONE} -- Implementation
  
@@ -101,23 +109,4 @@ feature {NONE} -- Implementation
  
 	disabled_type, enabled_type: INTEGER is unique
 
-	update_debuggable_for (f: E_FEATURE) is
-			-- Update the debuggable information for feature `f'.
-			-- If `f' is already debuggable then switch it to another
-			-- category. Otherwize, set the first breakpoint.
-		require
-			f_is_valid: f /= Void;
-			is_debuggable: f.is_debuggable
-		do
-			if Application.has_feature (f) then
-				Application.switch_feature (f);
-				Window_manager.routine_win_mgr.resynchronize_debugger (f)
-			else
-				Application.add_feature (f);
-				Application.switch_breakpoint (f, 1);
-				Window_manager.routine_win_mgr.show_stoppoint (f, 1);
-				Project_tool.show_stoppoint (f, 1)
-			end
-		end;
- 
 end -- class STOPPOINTS_STATUS

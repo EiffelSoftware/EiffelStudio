@@ -22,14 +22,6 @@ feature {AST_FACTORY} -- Initialization
 			line_number := l
 		end
 
-feature {NONE} -- Initialization
-
-	set is
-			-- Yacc initialization
-		do
-			line_number := yacc_line_number
-		end
-
 feature -- Comparison
 		
 	is_equivalent (other: like Current): BOOLEAN is

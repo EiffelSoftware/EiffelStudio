@@ -75,7 +75,7 @@ feature -- Access
 					end
 				end
 			end
-			if Result.empty then
+			if Result.is_empty then
 				Result.put_front (Interface_names.h_No_help_available)
 			end;
 		end;

@@ -1,9 +1,16 @@
--- File for server
+indexing
+	description: "File for server."
+	date: "$Date$"
+	revision: "$Revision$"
 
 class SERVER_FILE
 
 inherit
 	IDABLE
+		rename
+			id as file_id,
+			set_id as set_file_id
+		end
 
 	PROJECT_CONTEXT
 
@@ -11,15 +18,20 @@ inherit
 
 	SHARED_EIFFEL_PROJECT
 
+	MEMORY
+		redefine
+			dispose
+		end
+
 creation
 	make
 
 feature -- Initialization
 
-	make (i: FILE_ID) is
+	make (i: INTEGER) is
 			-- Initialization
 		require
-			positive_argument: i /= Void
+			positive_argument: i /= 0
 		local
 			f_name: FILE_NAME
 			d_name: DIRECTORY_NAME
@@ -29,24 +41,24 @@ feature -- Initialization
 			!!d_name.make_from_string (Compilation_path)
 			!!temp.make (5)
 			temp.extend ('S')
-			temp.append_integer (i.packet_number)
+			temp.append_integer (packet_number (i))
 			d_name.extend (temp)
 			!!d.make (d_name)
 			if not d.exists then
 				d.create_dir
 			end
 			!!f_name.make_from_string (d_name)
-			f_name.set_file_name (i.file_name)
+			f_name.set_file_name (file_name (i))
 			file_make (f_name)
 			if not Eiffel_project.is_read_only then
 					--| Re-finalization after a crash: the COMP
 					--| directory doesn't grow and grow and grow
 				clear_content
 			end
-			id := i
+			file_id := i
 debug ("SERVER")
 	io.error.put_string ("Creating file ")
-	io.error.put_string (i.file_name)
+	io.error.put_string (file_name (i))
 	io.error.new_line
 end
 		end
@@ -57,7 +69,7 @@ feature -- Initialization
 			-- Create file object with `fn' as file name.
 		require
 			string_exists: fn /= Void
-			string_not_empty: not fn.empty
+			string_not_empty: not fn.is_empty
 		do
 			name := fn
 		ensure
@@ -72,9 +84,6 @@ feature -- Access
 
 	file_pointer: POINTER
 			-- File pointer as required in C
-
-	id: FILE_ID
-			-- Id of the file
 
 	occurence: INTEGER
 			-- Occurence of the file in the server control
@@ -92,12 +101,6 @@ feature -- Access
 			file_opened: is_open
 		do
 			Result := file_fd (file_pointer)
-		end
-
-	set_id (i: FILE_ID) is
-			-- Assign `i' to `id'.
-		do
-			id := i
 		end
 
 	add_occurence is
@@ -147,7 +150,7 @@ feature -- Status setting
 			is_open := True
 debug ("SERVER")
 	io.error.put_string ("Opening file ")
-	io.error.put_string (id.file_name)
+	io.error.put_string (file_name (file_id))
 	io.error.new_line
 end
 		ensure
@@ -193,7 +196,7 @@ end
 			file_pointer := default_pointer
 debug ("SERVER")
 	io.error.put_string ("Closing file ")
-	io.error.put_string (id.file_name)
+	io.error.put_string (file_name (file_id))
 	io.error.new_line
 end
 		ensure
@@ -220,12 +223,12 @@ end
 			fname: FILE_NAME
 			temp: STRING
 		do
-			!!fname.make_from_string (id.directory_path)
+			!!fname.make_from_string (directory_path (file_id))
 			!!temp.make (5)
 			temp.extend ('S')
-			temp.append_integer (id.packet_number)
+			temp.append_integer (packet_number (file_id))
 			fname.extend (temp)
-			fname.set_file_name (id.file_name)
+			fname.set_file_name (file_name (file_id))
 			name := fname
 		end
 
@@ -269,7 +272,7 @@ feature -- Status report
 			-- Does the Current server file contain
 			-- precompiled information?
 		do
-			Result := id.is_precompiled
+			Result := file_counter.is_precompiled (file_id)
 		end
 
 	need_purging: BOOLEAN is
@@ -298,9 +301,15 @@ feature -- Removal
 			exists: exists
 		local
 			external_name: ANY
+			retried: BOOLEAN
 		do
-			external_name := name.to_c
-			file_unlink ($external_name)
+			if not retried then
+				external_name := name.to_c
+				file_unlink ($external_name)
+			end
+		rescue
+			retried := True
+			retry
 		end
 
 feature -- Debug
@@ -308,7 +317,7 @@ feature -- Debug
 	trace is
 		do
 			io.error.putstring ("File E")
-			io.error.putint (id.id)
+			io.error.putint (file_id)
 			io.error.putstring ("%Nnb objects: ")
 			io.error.putint (number_of_objects)
 			io.error.putstring ("%Noccurence: ")
@@ -320,7 +329,53 @@ feature -- Debug
 			io.error.new_line
 		end
 
+feature -- Disposal
+
+	dispose is
+			-- Close file if not yet closed
+		do
+			if file_pointer /= default_pointer then
+				close
+			end
+		ensure then
+			file_pointer_set: file_pointer = default_pointer
+			not_is_open: not is_open
+		end
+
+feature {SERVER_CONTROL, SERVER_FILE} -- File access
+
+	packet_number (an_id: INTEGER): INTEGER is
+			-- Packet in which the file will be stored (100 is the default_size)
+		do
+			Result := (an_id // 100) + 1
+		end
+
+	file_name (an_id: INTEGER): STRING is
+			-- Server file basename
+		do
+			create Result.make (7)
+			Result.extend ('E')
+			Result.append_integer (an_id)
+		end
+
+	directory_path (an_id: INTEGER): STRING is
+			-- Server file directory path
+		do
+			if an_id > file_counter.precompiled_offset then
+				Result := Compilation_path
+			else
+				Result := Precompilation_directories.item
+						(file_counter.compilation_id (an_id)).compilation_path
+			end
+		end
+
 feature {NONE} -- Implementation
+
+	file_counter: FILE_COUNTER is
+			-- File counter
+		once
+			Result := server_controler.file_counter
+		end
 
 	buffered_file_info: UNIX_FILE_INFO is
 			-- Information about the file.

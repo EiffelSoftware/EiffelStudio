@@ -25,10 +25,9 @@ feature -- Execution
 			cursor: CURSOR;
 			nb_of_classes: INTEGER;
 			nb_of_clusters: INTEGER;
-			root_cluster: CLUSTER_I;
 		do
 			clusters := Eiffel_universe.clusters;
-			if not clusters.empty then
+			if not clusters.is_empty then
 			
 				nb_of_clusters := clusters.count;
 				structured_text.add_int (nb_of_clusters);

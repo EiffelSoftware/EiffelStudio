@@ -4,7 +4,8 @@ inherit
 
 	BOOL_BINARY_B
 		rename
-			Bc_xor as operator_constant
+			Bc_xor as operator_constant,
+			il_xor as il_operator_constant
 		redefine
 			is_commutative, print_register
 		end;

@@ -1,14 +1,11 @@
 indexing
-
-	description:
-		"precompiled options";
+	description: "Precompiled options in Ace";
 	date: "$Date$";
-	revision: "$Revision $"
+	revision: "$Revision$"
 
 class PRECOMPILED_SD
 
 inherit
-
 	OPTION_SD
 		redefine
 			is_precompiled, is_system_level,

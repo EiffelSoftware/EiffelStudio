@@ -122,8 +122,7 @@ feature
 				until
 					i > n
 				loop
-					type := argument_types.item (i).instantiation_in
-																(gen_type);
+					type := argument_types.item (i).instantiation_in (gen_type);
 					new_arguments.put (type, i);
 					i := i + 1;
 				end;
@@ -161,29 +160,22 @@ feature -- Hash code
 	hash_code: INTEGER is
 			-- Hash code for pattern
 		local
-			i, n, m: INTEGER;
+			i, n: INTEGER
 		do
-			Result := result_type.hash_code;
-			n := argument_count;
+			Result := result_type.hash_code
+			n := argument_count
 			if n > 0 then
 				from
-					i := 1;
+					i := 1
 				until
 					i > n
 				loop
-					inspect i \\ 6
-					when 1 then m := 10;
-					when 2 then m := 100;
-					when 3 then m := 1000;
-					when 4 then m := 10000;
-					when 5 then m := 100000;
-					when 0 then m := 1000000;
-					end;
-					Result := Result + m * argument_types.item (i).hash_code;
-					i := i + 1;
-				end;
-			end;
-		end;
+					Result := Result + (argument_types.item (i).hash_code |<< (i \\ 16))
+					i := i + 1
+				end
+				Result := Result.abs
+			end
+		end
 
 feature -- Debug
 
@@ -233,7 +225,7 @@ feature {NONE} -- Implementation
 					
 					other_cl_type_i ?= other_type
 					Result := Result and then deep_equal (cl_type_i.base_id, other_cl_type_i.base_id)
-					Result := Result and then (cl_type_i.is_expanded = other_cl_type_i.is_expanded)
+					Result := Result and then (cl_type_i.is_true_expanded = other_cl_type_i.is_true_expanded)
 					Result := Result and then (cl_type_i.is_separate = other_cl_type_i.is_separate)
 
 					gen_type_i ?= first_type

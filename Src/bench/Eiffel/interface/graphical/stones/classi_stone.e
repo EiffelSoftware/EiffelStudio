@@ -90,6 +90,9 @@ feature -- Access
 			Result.append (class_i.cluster.path)
 			Result.append_character (Directory_separator)
 			Result.append (class_i.base_name)
+			if class_i.is_read_only then
+				Result.append (" [READ-ONLY]")
+			end
 		end;
  
 	stone_type: INTEGER is do Result := Class_type end;

@@ -23,14 +23,6 @@ feature {AST_FACTORY} -- Initialization
 			features_set: features = f
 		end
 
-feature {NONE} -- Initialization
-
-	set is
-			-- Yacc initialization
-		do
-			features ?= yacc_arg (0)
-		end
-
 feature -- Attributes
 
 	features: EIFFEL_LIST [FEATURE_NAME]

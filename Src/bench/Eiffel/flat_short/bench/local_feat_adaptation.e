@@ -113,7 +113,7 @@ feature -- Access
 		do
 			if source_class /= Void then
 				Result := f.actual_type.
-					instantiation_in (target_type, source_class.id);
+					instantiation_in (target_type, source_class.class_id);
 			end
 		end;
 
@@ -194,40 +194,37 @@ feature -- Transformation
 			valid_feature_name: feature_name /= Void;
 			valid_global_type: global_type /= Void
 		local
-			index: INTEGER;
-			type: TYPE;
-			source_classc: CLASS_C;
 			new_feat: FEATURE_I
 		do
-			new_feat := compute_feature (feature_name);
+			new_feat := compute_feature (feature_name)
 			if new_feat /= Void then
-				!! Result;
-				Result.set_is_normal;
-				Result.set_feature_name (feature_name);
-				Result.set_source_feature (new_feat);
-				Result.set_source_type (source_type);
-				Result.set_target_type (target_type);
+				create Result
+				Result.set_is_normal
+				Result.set_feature_name (feature_name)
+				Result.set_source_feature (new_feat)
+				Result.set_source_type (source_type)
+				Result.set_target_type (target_type)
 				Result.set_private_select_table 
-							(global_type.target_feature_table);
-				Result.adapt;
+							(global_type.target_feature_table)
+				Result.adapt
 			else
-				Result := global_type.adapt_argument (feature_name);
+				Result := global_type.adapt_argument (feature_name)
 				if Result = Void then
 					Result := global_type.adapt_local (feature_name)
 					if Result = Void then
-						!! Result;
-						Result.set_is_normal;
-						Result.set_feature_name (feature_name);
-						Result.set_source_type (source_type);
-						Result.set_target_type (target_type);
-						Result.set_source_feature (new_feat);
+						create Result
+						Result.set_is_normal
+						Result.set_feature_name (feature_name)
+						Result.set_source_type (source_type)
+						Result.set_target_type (target_type)
+						Result.set_source_feature (new_feat)
 						Result.set_private_select_table 
-								(global_type.target_feature_table);
-						Result.adapt;
+								(global_type.target_feature_table)
+						Result.adapt
 					end
 				end
-			end;
-		end;
+			end
+		end
 
 	adapt_nested_feature (feature_name: STRING; 
 				global_type: GLOBAL_FEAT_ADAPTATION): like Current is
@@ -283,12 +280,9 @@ feature {LOCAL_FEAT_ADAPTATION, GLOBAL_FEAT_ADAPTATION} -- Implementation
 
 	adapt is
 		local
-			rout_id : ROUTINE_ID;
-			select_table : SELECT_TABLE;
-			new_feat: FEATURE_I;
-			old_cluster, source_cluster, target_cluster: CLUSTER_I;
-			last_source_type, last_target_type: TYPE_A;
-			constrained_type: TYPE_A;
+			rout_id : INTEGER
+			select_table : SELECT_TABLE
+			new_feat: FEATURE_I
 		do
 debug ("LOCAL_FEAT_ADAPTATION") 
 	io.error.putstring ("before adapting%N");
@@ -378,7 +372,7 @@ feature {NONE} -- Implementation
 		do
 			Result := private_target_select_table;
 			if Result = Void then
-				Result := Feat_tbl_server.item (target_class.id).origin_table
+				Result := Feat_tbl_server.item (target_class.class_id).origin_table
 			end;
 		end;
 				
@@ -449,7 +443,6 @@ feature {NONE} -- Implementation
 			-- Evaluate type `type' in relation to `last_type'.
 		local
 			last_constrained: TYPE_A;
-			last_id: INTEGER;
 			old_cluster: CLUSTER_I;
 			last_class: CLASS_C;
 			formal_type: FORMAL_A
@@ -481,7 +474,7 @@ feature {NONE} -- Implementation
 				-- which is done by applying `actual_type'.
 				-- Manus: 10/06/1999
 			Result := Result.instantiation_in 
-						(last_type.actual_type, last_class.id).actual_type;
+						(last_type.actual_type, last_class.class_id).actual_type;
 		end
 
 feature -- Debug

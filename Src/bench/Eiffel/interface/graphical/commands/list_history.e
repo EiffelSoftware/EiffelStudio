@@ -81,7 +81,6 @@ feature {NONE} -- Implementation
 			--| the position of the active item!!
 		local
 			cur: CURSOR
-			a_string: STRING
 			history: STONE_HISTORY
 		do
 			history := tool.history

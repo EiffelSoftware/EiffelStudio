@@ -1,15 +1,14 @@
 indexing
-	description: "AST representation of an `ensure' structure."
-	date: "$Date$"
-	revision: "$Revision$"
+	description	: "AST representation of an `ensure' structure."
+	date		: "$Date$"
+	revision	: "$Revision$"
 
 class ENSURE_AS
 
 inherit
 	ASSERT_LIST_AS
 		redefine 
-			put_clause_keywords,
-			simple_put_clause_keywords
+			put_clause_keywords
 		end
 
 feature -- Properties
@@ -29,18 +28,6 @@ feature {NONE} -- Implementation
 			if is_then then 
 				ctxt.put_space
 				ctxt.put_text_item_without_tabs (ti_Then_keyword)
-			end
-		end
-
-feature {NONE}
-	
-	simple_put_clause_keywords (ctxt: FORMAT_CONTEXT) is
-			-- Append keyword "ensure".
-		do
-			ctxt.put_text_item (ti_Ensure_keyword)
-			if is_then then
-				ctxt.put_space
-            	ctxt.put_text_item_without_tabs (ti_Then_keyword)
 			end
 		end
 

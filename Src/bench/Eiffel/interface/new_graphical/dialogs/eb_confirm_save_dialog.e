@@ -1,39 +1,52 @@
 indexing
-	description: "Dialog for confirming a save action"
-	date: "$Date$"
-	revision: "$Revision$"
+	description	: "Dialog for confirming a save action"
+	date		: "$Date$"
+	revision	: "$Revision$"
 
 class
 	EB_CONFIRM_SAVE_DIALOG
 
 inherit
-	EV_WARNING_DIALOG
+	EV_QUESTION_DIALOG
 
-	EB_EDITOR_COMMAND
-		rename
-			make as init_command
+	EB_CONSTANTS
+		export
+			{NONE} all
+		undefine
+			default_create, copy
 		end
 
-	NEW_EB_CONSTANTS
+	EB_SHARED_WINDOW_MANAGER
+		export
+			{NONE} all
+		undefine
+			default_create, copy
+		end
 
-creation
+create
 	make_and_launch
 
 feature {NONE} -- Initialization
 
-	make_and_launch (ed: like tool; a_caller: EB_CONFIRM_SAVE_CALLBACK) is
+	make_and_launch (a_target: like target; a_caller: EB_CONFIRM_SAVE_CALLBACK) is
 			-- Initialize and popup the dialog
+		local
+			clsi_stone: CLASSI_STONE
+			cls_name: STRING
 		do
-			init_command (ed)
+			target := a_target
 			caller := a_caller
-			make_with_text (ed.parent, Interface_names.t_Warning, Warning_messages.w_File_changed)
-			show_yes_no_cancel_buttons
-			add_yes_command (Current, Ok_to_save)
-			add_no_command (Current, Do_not_save)
-			add_cancel_command (Current, Void)
-			show
-		ensure
-			postcondition_clause: -- Your postcondition here
+			clsi_stone ?= target.stone
+			if clsi_stone /= Void then
+				cls_name := clsi_stone.class_name
+			end
+			make_with_text (Warning_messages.w_File_changed (cls_name))
+			button ("Yes").select_actions.extend (~save_text)
+			button ("No").select_actions.extend (~dont_save_text)
+		--	button ("Cancel").select_actions.extend (~destroy)
+			--| IEK Message dialogs by default destroy themselves on button press.
+			
+			show_modal_to_window (window_manager.last_focused_development_window.window)
 		end
 
 feature -- Access
@@ -41,29 +54,22 @@ feature -- Access
 	caller: EB_CONFIRM_SAVE_CALLBACK
 		-- object whose `process' feature will be executed on success
 
-feature {NONE} -- Constants
-
-	Ok_to_save : EV_ARGUMENT1 [ANY] is
-		once
-			create Result.make (Void)
-		end
-
-	Do_not_save : EV_ARGUMENT1 [ANY] is
-		once
-			create Result.make (Void)
-		end
+	target: EB_FILEABLE
+			-- Target for the command.
 
 feature -- Execution
 
-	execute (arg: EV_ARGUMENT1 [ANY]; data: EV_EVENT_DATA) is
+	save_text is
+			-- Save text and quit.
 		do
-			if arg /= Void then
-				if arg = Ok_to_save then
-					tool.save_text
-				end
-				caller.process
-			end
-			destroy
+			target.save_text
+			dont_save_text
+		end
+
+	dont_save_text is
+			-- Directly quit.
+		do
+			caller.process
 		end
 
 end -- class EB_CONFIRM_SAVE_DIALOG

@@ -34,7 +34,7 @@ feature -- Type check
 		local
 			last_type, last_constrained: TYPE_A
 			last_class: CLASS_C
-			last_id: CLASS_ID
+			last_id: INTEGER
 			a_feature: FEATURE_I
 			access_b: ACCESS_B
 			depend_unit: DEPEND_UNIT
@@ -44,7 +44,7 @@ feature -- Type check
 			last_type := context.item
 			last_constrained := context.last_constrained_type
 			last_class := last_constrained.associated_class
-			last_id := last_class.id
+			last_id := last_class.class_id
 
 			a_feature := last_class.feature_table.item (feature_name)
 

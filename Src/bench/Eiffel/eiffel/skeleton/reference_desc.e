@@ -5,7 +5,7 @@ inherit
 		rename
 			Reference_level as level
 		redefine
-			is_reference, real_sk_value
+			is_reference
 		end
 
 feature 
@@ -35,15 +35,6 @@ feature
 		do
 			buffer.putstring ("SK_REF");
 		end;
-
-	real_sk_value : INTEGER is
-		do
-			if class_type_i /= Void then
-				Result := class_type_i.sk_value
-			else
-				Result := Sk_ref
-			end
-		end
 
 	trace is
 		do

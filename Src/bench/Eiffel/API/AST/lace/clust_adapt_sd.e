@@ -1,9 +1,7 @@
 indexing
-
-	description: 
-		"";
+	description: "Cluster adaptation clause description in Ace";
 	date: "$Date$";
-	revision: "$Revision $"
+	revision: "$Revision$"
 
 deferred class CLUST_ADAPT_SD
 

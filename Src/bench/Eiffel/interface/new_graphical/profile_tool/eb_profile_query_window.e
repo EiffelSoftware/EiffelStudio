@@ -1,163 +1,180 @@
 indexing
-	description:
-		"Window to display results from a query."
-	date: "$Date$"
-	revision: "$Revision$"
+	description	: "Window to display results from a query."
+	author		: "Christophe BONNARD, Arnaud PICHERY [ aranud@mail.dotcom.fr ]"
+	date		: "$Date$"
+	revision	: "$Revision$"
 
 class
 	EB_PROFILE_QUERY_WINDOW
 
 inherit
-	EV_WINDOW
+	EV_TITLED_WINDOW
 
-	EB_PROFILE_TOOL_DATA
+	EB_CONSTANTS
+		export
+			{NONE} all
+		undefine
+			default_create, copy
+		end
 
-	NEW_EB_CONSTANTS
+	SHARED_QUERY_VALUES
+		export
+			{NONE} all
+		undefine
+			default_create, copy
+		end
 
-	SHARED_CONFIGURE_RESOURCES
+	EB_SHARED_INTERFACE_TOOLS
+		export
+			{NONE} all
+		undefine
+			default_create, copy
+		end
 
-	EV_COMMAND
+	EB_VISION2_FACILITIES
+		export
+			{NONE} all
+		undefine
+			default_create, copy
+		end
 
-creation
+create
 	make_default
-	
 
 feature {NONE} -- Initialization
 
-	make_default (a_tool: EB_PROFILE_TOOL) is
-			-- Create Current with `a_tool' as `tool'.
-		require
-			a_tool_not_void: a_tool /= Void
-			a_tool_exists: not a_tool.destroyed
+	make_default is
+			-- Create Current.
 		do
-			tool := a_tool
-			make_top_level
+			default_create
 			set_title (Interface_names.t_Profile_query_window)
+			set_icon_pixmap (Pixmaps.Icon_profiler_window)
 
 			create all_subqueries.make
 			create all_operators.make
 
+			init_commands
 			build_interface
---			set_composite_attributes (Current)
-		ensure
-			tool_set: tool.is_equal (a_tool)
+			resize_actions.extend (agent resize_columns)
 		end
-
+		
+	init_commands is
+			-- Initialize the commands
+		do
+			create run_query_cmd.make (Current)
+			create save_result_cmd.make (Current)
+		end
+		
+	resize_columns (a_x: INTEGER; a_y: INTEGER; a_width: INTEGER; a_height: INTEGER) is
+			-- Resize the columns for the active & inactive query lists
+		do
+			active_query_window.set_column_width (active_query_window.width, 1)
+			inactive_subqueries_window.set_column_width (inactive_subqueries_window.width, 1)
+		end
+		
 	build_interface is
 			-- Build the user interface.
 		local
-			string_arg: EV_ARGUMENT1 [STRING]
+			editor_window: EB_CLICKABLE_EDITOR
+			container: EV_VERTICAL_BOX			-- Widget containing all others
+			query_box: EV_HORIZONTAL_BOX		-- Form for the query
+			subquery_box: EV_HORIZONTAL_BOX		-- Box for `subquery_text'
+			query_button_form: EV_VERTICAL_BOX	-- Form with buttons allowing subqueries activation/inactivation
+			text_frame: EV_FRAME				-- Form for the text window
+			subquery_frame: EV_FRAME			-- Frame for the subquery
+			button_box: EV_HORIZONTAL_BOX		-- Box for the buttons
+			--| FIXME help_button: EV_BUTTON	-- Button for `help'
+			run_button: EV_BUTTON 				-- Button for `run_subquery_cmd'
+			save_as_button: EV_BUTTON			-- Button for `save_result_cmd'
+			close_button: EV_BUTTON				-- Button to close Current
+			add_or_operator_button: EV_BUTTON	-- Button to add a subquery with 'or' operator
+			add_and_operator_button: EV_BUTTON	-- Button to add a subquery with 'and' operator
+			set_and_operator_button: EV_BUTTON	-- Button to set all the selected subqueries operators to 'and'
+			set_or_operator_button: EV_BUTTON	-- Button to set all the selected subqueries operators to 'or'
+			reactivate_button: EV_BUTTON		-- Button to reactivate one or more subqueries
+			inactivate_button: EV_BUTTON		-- Button to inactivate one or more subqueries
 		do
-				--| Build forms
-			create container.make (Current)
-			container.set_spacing (4)
-			container.set_border_width (4)
+				--| Create the Active & Inactive list
+			create active_query_window
+			active_query_window.enable_multiple_selection
+			active_query_window.set_column_title (Interface_names.l_Active_query, 1)
+			create inactive_subqueries_window
+			inactive_subqueries_window.enable_multiple_selection
+			inactive_subqueries_window.set_column_title (Interface_names.l_Inactive_subqueries, 1)
 
-				--| Query manager
-			create query_box.make (container)
-			container.set_child_expandable (query_box, False)
-			query_box.set_spacing (4)
+				--| Query buttons (Activate, Inactivate, Or, And)
+			create reactivate_button.make_with_text_and_action ("< Activate", agent reactivate)
+			create inactivate_button.make_with_text_and_action ("Inactivate >", agent inactivate)
+			create set_or_operator_button.make_with_text_and_action (Interface_names.b_Or, agent change_operator ("or"))
+			create set_and_operator_button.make_with_text_and_action (Interface_names.b_And, agent change_operator ("and"))
+			create query_button_form
+			query_button_form.set_padding (Layout_constants.Small_border_size)
+			extend_button (query_button_form, reactivate_button)
+			extend_button (query_button_form, inactivate_button)
+			extend_button (query_button_form, set_or_operator_button)
+			extend_button (query_button_form, set_and_operator_button)
+			query_button_form.extend (create {EV_CELL}) -- Expandable item
 
-			create active_query_frame.make_with_text (query_box, Interface_names.l_Active_query)
-			active_query_frame.set_minimum_width (100)
-			create active_query_window.make (active_query_frame)
-			active_query_window.set_multiple_selection
+				--| Query box (contain Active Query, Add/Remove Buttons, Inactive Subqueries)
+			create query_box
+			query_box.set_padding (Layout_constants.Small_border_size)
+			query_box.extend (active_query_window) -- expandable item
+			query_box.extend (query_button_form)
+			query_box.disable_item_expand (query_button_form)
+			query_box.extend (inactive_subqueries_window) -- expandable item
 
-			create query_button_form.make (query_box)
-			query_box.set_child_expandable (query_button_form, False)
-			query_button_form.set_spacing (4)
+				--| Subquery frame
+			create add_and_operator_button.make_with_text_and_action (Interface_names.b_And, agent add_subquery ("and"))
+			create add_or_operator_button.make_with_text_and_action (Interface_names.b_Or, agent add_subquery ("or")) 
+			create subquery_text
 
-			create reactivate_label.make_with_text (query_button_form, Interface_names.l_Reactivate)
-			create reactivate_button.make_with_text (query_button_form, "<")
-			reactivate_button.set_horizontal_resize (False)
-			reactivate_button.set_vertical_resize (False)
-			reactivate_button.add_click_command (Current, reactivate_subqueries)
-			create inactivate_label.make_with_text (query_button_form, Interface_names.l_Inactivate)
-			create inactivate_button.make_with_text (query_button_form, ">")
-			inactivate_button.set_horizontal_resize (False)
-			inactivate_button.set_vertical_resize (False)
-			inactivate_button.add_click_command (Current, inactivate_subqueries)
+			create subquery_box
+			subquery_box.set_border_width (Layout_constants.Small_border_size)
+			subquery_box.set_padding (Layout_constants.Small_border_size)
+			subquery_box.extend (subquery_text) -- expandable item
+			extend_button (subquery_box, add_and_operator_button)
+			extend_button (subquery_box, add_or_operator_button)
 
-			create change_operator_label.make_with_text (query_button_form, Interface_names.l_Change_operator) 
-			create change_operator_box.make (query_button_form)
-			create change_operator_cmd.make (Current)
-			create set_or_operator_button.make_with_text (change_operator_box, Interface_names.b_Or)
-			set_or_operator_button.set_horizontal_resize (False)
-			set_or_operator_button.set_vertical_resize (False)
-			create string_arg.make("or")
-			set_or_operator_button.add_click_command (change_operator_cmd, string_arg)
-			create set_and_operator_button.make_with_text (change_operator_box, Interface_names.b_And)
-			set_and_operator_button.set_horizontal_resize (False)
-			set_and_operator_button.set_vertical_resize (False)
-			create string_arg.make("and")
-			set_and_operator_button.add_click_command (change_operator_cmd, string_arg)
-
-			create inactive_subqueries_frame.make_with_text (query_box, Interface_names.l_Inactive_subqueries)
-			inactive_subqueries_frame.set_minimum_width (100)
-			create inactive_subqueries_window.make (inactive_subqueries_frame)
-			inactive_subqueries_window.set_multiple_selection
+			create subquery_frame.make_with_text (Interface_names.l_Subquery)
+			subquery_frame.extend (subquery_box)
 
 				--| Result display
-			create text_frame.make_with_text (container, Interface_names.l_Results)
-			!EB_CLICKABLE_RICH_TEXT! text_window.make (text_frame)
-			text_window.init_resource_values
-			text_window.set_editable (False)
-
-				--| Subsquery frame
-			create subquery_frame.make_with_text (container, Interface_names.l_Subquery)
-			container.set_child_expandable (subquery_frame, False)
-
-			create subquery_box.make (subquery_frame)
-			subquery_box.set_border_width (4)
-			subquery_box.set_spacing (4)
-
-			create subquery_text.make (subquery_box)
-			subquery_text.set_horizontal_resize (True)
-			create add_box.make (subquery_box)
-			add_box.set_spacing (16)
-			create add_label.make_with_text (add_box, Interface_names.l_Add)
-			add_box.set_child_expandable (add_label, False)
-
-			create add_subquery_cmd.make(Current)
-
-			create add_and_operator_button.make_with_text (add_box, Interface_names.b_And)
-			add_box.set_child_expandable (add_and_operator_button, False)
-			add_and_operator_button.set_horizontal_resize (False)
-			add_and_operator_button.set_vertical_resize (False)
-			create string_arg.make("and")
-			add_and_operator_button.add_click_command (add_subquery_cmd, string_arg)
-
-			create add_or_operator_button.make_with_text (add_box, Interface_names.b_Or) 
-			add_box.set_child_expandable (add_or_operator_button, False)
-			add_or_operator_button.set_horizontal_resize (False)
-			add_or_operator_button.set_vertical_resize (False)
-			create string_arg.make("or")
-			add_or_operator_button.add_click_command (add_subquery_cmd, string_arg)
+			create editor_window.make (Void)
+			editor_window.set_tabulation_size (12)
+			editor_window.disable_editable
+			text_window := editor_window
+			create text_frame
+			text_frame.set_minimum_width (Layout_constants.Dialog_unit_to_pixels(100))
+			text_frame.set_style ((create {EV_FRAME_CONSTANTS}).Ev_frame_lowered)
+			text_frame.extend (editor_window.widget)
 
 				--| Build button bar
+			--|FIXME: Put the Help button back when help is available.
+			--|FIXME create help_button.make_with_text (Interface_names.b_Help)
+			create run_button.make_with_text_and_action (Interface_names.b_Update, agent run_query_cmd.execute)
+			create save_as_button.make_with_text_and_action (Interface_names.b_Save, agent save_result_cmd.execute)
+			create close_button.make_with_text_and_action (Interface_names.b_Close, agent close)
+			create button_box
+			button_box.set_border_width (Layout_constants.Small_border_size)
+			button_box.set_padding (Layout_constants.Small_border_size)
+			--| FIXME extend_button (button_box, help_button)
+			button_box.extend (create {EV_CELL}) -- expandable item
+			extend_button (button_box, run_button)
+			extend_button (button_box, save_as_button)
+			extend_button (button_box, close_button)
 
-			create button_box.make (container)
-			container.set_child_expandable (button_box, False)
-			button_box.set_border_width (4)
-
-			create run_button.make_with_text (button_box, Interface_names.b_Run)
-			run_button.set_minimum_width (100)
-			run_button.set_horizontal_resize (False)
-			run_button.set_vertical_resize (False)
-			create run_query_cmd.make (Current)
-			run_button.add_click_command (run_query_cmd, Void)
-			create save_as_button.make_with_text (button_box, Interface_names.b_Save)
-			save_as_button.set_minimum_width (100)
-			save_as_button.set_horizontal_resize (False)
-			save_as_button.set_vertical_resize (False)
-			create save_result_cmd.make (Current)
-			save_as_button.add_click_command (save_result_cmd, Void)
-			create close_button.make_with_text (button_box, Interface_names.b_Close)
-			close_button.set_minimum_width (100)
-			close_button.set_horizontal_resize (False)
-			close_button.set_vertical_resize (False)
-			create close_cmd.make (Current)
-			close_button.add_click_command (close_cmd, Void)
+				--| Build forms
+			create container
+			container.set_padding (Layout_constants.Small_padding_size)
+			container.set_border_width (Layout_constants.Small_border_size)
+			container.extend (query_box)
+			container.disable_item_expand (query_box)
+			container.extend (subquery_frame)
+			container.disable_item_expand (subquery_frame)
+			container.extend (text_frame) -- expandable item
+			container.extend (button_box)
+			container.disable_item_expand (button_box)
+			extend (container)
 
 				--| Sizing
 			set_window_size
@@ -166,13 +183,14 @@ feature {NONE} -- Initialization
 feature {EB_SAVE_RESULT_CMD} -- Save commands
 
 	save_it (ptf: RAW_FILE) is
+			-- Save window content in `ptf'.
 		do
 			ptf.create_read_write
-			ptf.putstring ("Options:%N========%N%N")
+			ptf.putstring ("Options:%N========%N")
 			ptf.putstring (profiler_options.image)
-			ptf.putstring ("%NQuery:%N======%N%N")
+			ptf.putstring ("%NQuery:%N======%N")
 			ptf.putstring (profiler_query.image)
-			ptf.putstring ("%NResults:%N========%N%N")
+			ptf.putstring ("%NResults:%N========%N")
 			ptf.putstring (text_window.text)
 			ptf.new_line
 			ptf.close
@@ -181,13 +199,18 @@ feature {EB_SAVE_RESULT_CMD} -- Save commands
 feature -- Status Setting
 
 	set_window_size is
+			-- Set window size, according to preferences.
 		do
-			set_size (query_window_width, query_window_height)
+--| FIXME ARNAUD: To be fixed (Save window size into preferences and restore it)
+			set_size (Layout_constants.Dialog_unit_to_pixels(600), Layout_constants.Dialog_unit_to_pixels(500))
+--| END FIXME ARNAUD.
 		end
 
 	update_window (st: STRUCTURED_TEXT; pq: PROFILER_QUERY;
 				po: PROFILER_OPTIONS; pi: PROFILE_INFORMATION) is
-			-- Update User Interface Widgets to reflect the parameters.
+			-- Update User Interface Widgets to reflect the parameters:
+			-- This window will be associated with `pq', will
+			-- use `po' and `profinfo', and display `st'.
 		do
 			profiler_query := pq
 			profiler_options := po
@@ -196,32 +219,29 @@ feature -- Status Setting
 			count_active_subqueries
 			if profiler_query.subqueries.count > active_subqueries then
 				from
-					profiler_query.subqueries.go_i_th ( active_subqueries + 1 )
-					profiler_query.subquery_operators.go_i_th ( active_subqueries )
+					profiler_query.subqueries.go_i_th (active_subqueries + 1)
+					profiler_query.subquery_operators.go_i_th (active_subqueries)
 					if profiler_query.subquery_operators.before then
 						profiler_query.subquery_operators.forth
 					end
 				until
 					profiler_query.subqueries.after 
 				loop
-					all_subqueries.extend ( profiler_query.subqueries.item )
+					all_subqueries.extend (profiler_query.subqueries.item)
 					profiler_query.subqueries.forth
 					if not profiler_query.subquery_operators.after then
-						all_operators.extend ( profiler_query.subquery_operators.item )
+						all_operators.extend (profiler_query.subquery_operators.item)
 						profiler_query.subquery_operators.forth
 					end
 				end
 			end
 
 			update_query_frame
-			subquery_text.set_text ("")
-			text_window.freeze
+			subquery_text.remove_text
 			text_window.clear_window
 			text_window.process_text (st)
-			text_window.set_editable (True)
 			text_window.set_position (1)
-			text_window.set_editable (False)
-			text_window.thaw
+			text_window.disable_editable
 		end
 
 feature -- Update
@@ -230,24 +250,25 @@ feature -- Update
 			-- Update the graphical resources.
 		do
 			text_window.clear_window
-			text_window.init_resource_values
-			run_query_cmd.execute (Void, Void)
+			run_query_cmd.execute
 		end
 
 	update_query_frame is
+			-- Refresh active and inactive subquery frames.
 		local
 			i : INTEGER
 			scrollable_subquery: EB_SUBQUERY_ITEM
 			op: STRING
 		do
-			active_query_window.clear_items
-			inactive_subqueries_window.clear_items
+			active_query_window.wipe_out
+			inactive_subqueries_window.wipe_out
 			if all_subqueries.count > 0 then
 				all_subqueries.start
+				create scrollable_subquery.make_first (all_subqueries.item.image)
 				if all_subqueries.item.is_active then
-					create scrollable_subquery.make_first (active_query_window, all_subqueries.item.image)
+					active_query_window.extend (scrollable_subquery)
 				else
-					create scrollable_subquery.make_first (inactive_subqueries_window, all_subqueries.item.image)
+					inactive_subqueries_window.extend (scrollable_subquery)
 				end
 				if all_operators.count > 0 then
 					from
@@ -263,9 +284,11 @@ feature -- Update
 							else
 								op := all_operators.item.actual_operator
 							end
-							create scrollable_subquery.make_normal (active_query_window, op, all_subqueries.item.image, i)
+							create scrollable_subquery.make_normal (op, all_subqueries.item.image, i)
+							active_query_window.extend (scrollable_subquery)
 						else
-							create scrollable_subquery.make_normal (inactive_subqueries_window, all_operators.item.actual_operator, all_subqueries.item.image, i)
+							create scrollable_subquery.make_normal (all_operators.item.actual_operator, all_subqueries.item.image, i)
+							inactive_subqueries_window.extend (scrollable_subquery)
 						end
 						all_subqueries.forth
 						all_operators.forth
@@ -276,6 +299,7 @@ feature -- Update
 		end
 
 	update_profiler_query is
+			-- Refresh `profiler_query' according to changes made on subquery list
 		do
 			profiler_query.set_subqueries (all_subqueries)
 			profiler_query.set_subquery_operators (all_operators)
@@ -283,104 +307,24 @@ feature -- Update
 
 feature {NONE} -- Attributes
 
-	tool: EB_PROFILE_TOOL
-			-- Tool as parent of Current
-
-	container: EV_VERTICAL_BOX
-			-- Widget containing all others
-
-	query_box: EV_HORIZONTAL_BOX
-			-- Form for the query
-
-	active_query_frame,
-			-- Frame for active query
-
-	inactive_subqueries_frame: EV_FRAME
-			-- Frame for inactive subqueries
-
-	query_button_form: EV_VERTICAL_BOX
-			-- Form with buttons allowing subqueries activation/inactivation
-
-	change_operator_box: EV_HORIZONTAL_BOX
-			-- Box for the subquery operator change buttons
-
-	text_frame: EV_FRAME
-			-- Form for the text window
-
-	subquery_frame: EV_FRAME
-			-- Frame for the subquery
-
-	subquery_box: EV_VERTICAL_BOX
-			-- Box for `subquery_text'
-
-	button_box: EV_HORIZONTAL_BOX
-			-- Box for the buttons
-
-	change_operator_label: EV_LABEL
-			-- Label for 'change_operator_button'
-
 	text_window: EB_FORMATTED_TEXT
 			-- Output text for the results
-
-	run_button,
-			-- Button for `run_subquery_cmd'
-
-	save_as_button,
-			-- Button for `save_result_cmd'
-
-	close_button,
-			-- Button to close Current
-
-	add_or_operator_button,
-			-- Button to add a subquery with 'or' operator
-
-	add_and_operator_button,
-			-- Button to add a subquery with 'and' operator
-
-	set_and_operator_button,
-			-- Button to set all the selected subqueries operators
-			-- to 'and'
-
-	set_or_operator_button: EV_BUTTON
-			-- Button to set all the selected subqueries operators
-			-- to 'or'
-
-	inactive_subqueries_form: EV_VERTICAL_BOX
-			-- Form for inactive subqueries
-
-	add_box: EV_HORIZONTAL_BOX
-
-	add_label,
-			-- Label for adding an operator
-
-	reactivate_label,
-			-- Label for 'reactivate_button'
-
-	inactivate_label: EV_LABEL
-			-- Label for 'inactivate_button
-
-	reactivate_button,
-			-- Button to reactivate one or more subqueries
-
-	inactivate_button: EV_BUTTON
-			-- Button to inactivate one or more subqueries
 
 	active_subqueries: INTEGER
 			-- Number of active subqueries in all_subqueries
 
 feature {EB_CHANGE_OPERATOR_CMD} -- Attributes
 
-	active_query_window,
+	active_query_window: EV_MULTI_COLUMN_LIST
 			--  Scrollable list of active subqueries
 
-	inactive_subqueries_window: EV_LIST
+	inactive_subqueries_window: EV_MULTI_COLUMN_LIST
 			-- Scrollable list if inactive queries
 
 feature {EB_ADD_SUBQUERY_CMD, EB_CHANGE_OPERATOR_CMD} -- Attributes
 
 	subquery_text: EV_TEXT_FIELD
 			-- Text field for eventual subqueries
-
 
 	all_subqueries: LINKED_LIST[SUBQUERY]
 			-- All the subqueries typed
@@ -403,11 +347,9 @@ feature {EB_RUN_QUERY_CMD} -- Attributes
 feature {EB_CLOSE_QUERY_WINDOW_CMD} -- User Interface
 
 	close is
-			-- Close Current and update `tool'
+			-- Close Current and update `parent'
 		do
-			hide
 			destroy
-			tool.query_window_is_closed (Current)
 		end
 
 feature {EB_ADD_SUBQUERY_CMD} -- Access
@@ -426,22 +368,7 @@ feature -- Commands
 	save_result_cmd: EB_SAVE_RESULT_CMD
 			-- Command to save the result of currently displayed query
 
-	close_cmd: EB_CLOSE_QUERY_WINDOW_CMD
-			-- Command to close Current
-
-	add_subquery_cmd: EB_ADD_SUBQUERY_CMD
-			-- Command to add a subquery
-
-	change_operator_cmd: EB_CHANGE_OPERATOR_CMD
-			-- Command to change subquery operators
-
 feature {NONE} -- Implementation
-
-	is_graphics_disabled: BOOLEAN is
-			-- Is Graphics disabled for the text window?
-		once 
-			Result := Configure_resources.get_boolean (r_Graphics_disabled, False) 
-		end
 
 	count_active_subqueries is
 			-- Number of active subqueries
@@ -460,11 +387,11 @@ feature {NONE} -- Implementation
 		end
 	
 	inactivate is
-		-- copy all the selected subqueries from `active_query_window'
-		-- into `inactive_subqueries_window', inactivate the corresponding subqueries
-		-- and operators in `all_subqueries' and `all_operators'
+			-- Copy all the selected subqueries from `active_query_window'
+			-- into `inactive_subqueries_window', inactivate the corresponding subqueries
+			-- and operators in `all_subqueries' and `all_operators'
 		local
-			selected_subqueries: LINKED_LIST [EV_LIST_ITEM]
+			selected_subqueries: DYNAMIC_LIST  [EV_MULTI_COLUMN_LIST_ROW]
 			selected_subquery: EB_SUBQUERY_ITEM
 			i: INTEGER
 		do
@@ -484,11 +411,10 @@ feature {NONE} -- Implementation
 					all_operators.go_i_th (i-1)
 					all_operators.item.inactivate
 				end					
-				selected_subquery.set_parent (Void)					
 				selected_subqueries.forth
 			end
 			if active_query_window.count > 0 then
-				selected_subquery ?= active_query_window.get_item (1)
+				selected_subquery ?= active_query_window.first
 				i := selected_subquery.number			
 				if i > 1 then
 					all_operators.go_i_th (i-1)
@@ -501,21 +427,21 @@ feature {NONE} -- Implementation
 		end
 
 	reactivate is
-		-- copy all the selected subqueries from `inactive_subqueries_window'
-		-- into `active_query_window', activate the corresponding subqueries
-		-- and operators in `all_subqueries' and `all_operators'
+			-- Copy all the selected subqueries from `inactive_subqueries_window'
+			-- into `active_query_window', activate the corresponding subqueries
+			-- and operators in `all_subqueries' and `all_operators'
 		local
-			selected_subqueries: LINKED_LIST [EV_LIST_ITEM]
+			selected_subqueries: DYNAMIC_LIST [EV_MULTI_COLUMN_LIST_ROW]
 			selected_subquery: EB_SUBQUERY_ITEM
 			i, smallest_active: INTEGER
-			empty: BOOLEAN
+			is_window_empty: BOOLEAN
 				-- is `active_subquery_window' empty?
 		do
 			if inactive_subqueries_window.count > 0 then
 				selected_subqueries := inactive_subqueries_window.selected_items
-				empty := (active_query_window.count = 0)
-				if not empty then
-					selected_subquery ?= active_query_window.get_item (1)
+				is_window_empty := (active_query_window.count = 0)
+				if not is_window_empty then
+					selected_subquery ?= active_query_window.first
 					smallest_active := selected_subquery.number
 				end
 				from
@@ -530,7 +456,7 @@ feature {NONE} -- Implementation
 					all_subqueries.go_i_th (i)
 					all_subqueries.item.activate
 						--| inactivate the operator in 'all_subquery_operators'
-					if empty then
+					if is_window_empty then
 						smallest_active := i
 					elseif i < smallest_active then
 						all_operators.go_i_th (smallest_active - 1)
@@ -548,28 +474,81 @@ feature {NONE} -- Implementation
 			end
 		end
 
-feature {NONE} -- Execution arguments
-
-	reactivate_subqueries: EV_ARGUMENT1 [ANY] is
-		once
-			create Result.make (Void)
-		end
-		
-	inactivate_subqueries: EV_ARGUMENT1 [ANY] is
-		once
-			create Result.make (Void)
-		end
-		
 feature {NONE} -- execution
 
-	execute (arg: EV_ARGUMENT1 [ANY]; data: EV_EVENT_DATA) is
-			-- activate or not queries, depending on `arg'.
+	add_subquery (string_arg: STRING) is
+			-- Add subquery to list of subqueries.
+			-- Subquery operator is given by `string_arg'.
+		local
+			parser: EB_QUERY_PARSER
+			txt: STRING
+			operator: SUBQUERY_OPERATOR
+			error_dialog: EV_WARNING_DIALOG
 		do
-			if arg = reactivate_subqueries then
-				reactivate
-			elseif arg = inactivate_subqueries then
-				inactivate
+			txt := subquery
+			if txt /= Void and then not txt.is_empty then 
+				clear_values
+				create parser
+				if parser.parse (txt, Current) then
+					all_subqueries.append (subqueries)
+					create operator.make (string_arg)
+					all_operators.extend (operator)
+					all_operators.append (subquery_operators)
+					update_query_frame
+					subquery_text.remove_text
+				else
+					create error_dialog.make_with_text (Warning_messages.w_Profiler_bad_query)
+					error_dialog.show_modal_to_window (Current)
+				end
 			end
+		end
+
+	change_operator (string_arg: STRING) is
+			-- Change selected subqueries
+			-- operators according to `string_arg'.
+		local
+			selected_subqueries: DYNAMIC_LIST  [EV_MULTI_COLUMN_LIST_ROW]
+			selected_subquery: EB_SUBQUERY_ITEM
+		do
+			if active_query_window.count > 0 then
+				from
+					selected_subqueries := active_query_window.selected_items
+					selected_subqueries.start
+				until
+					selected_subqueries.after
+				loop
+					selected_subquery ?= selected_subqueries.item
+					check
+						valid_entry: selected_subquery /= Void
+					end
+					if selected_subquery.number > 1 then
+						all_operators.go_i_th (selected_subquery.number - 1)
+						all_operators.item.change_operator (string_arg)
+					end
+					selected_subqueries.forth
+				end
+			end
+
+			if inactive_subqueries_window.count > 0 then
+				from
+					selected_subqueries := inactive_subqueries_window.selected_items
+					selected_subqueries.start
+				until
+					selected_subqueries.after
+				loop
+					selected_subquery ?= selected_subqueries.item
+					check
+						valid_entry: selected_subquery /= Void
+					end	
+					if selected_subquery.number > 1 then
+						all_operators.go_i_th (selected_subquery.number - 1)
+						all_operators.item.change_operator (string_arg)
+					end
+					selected_subqueries.forth
+				end
+			end
+
+			update_query_frame
 		end
 
 end -- class EB_PROFILE_QUERY_WINDOW

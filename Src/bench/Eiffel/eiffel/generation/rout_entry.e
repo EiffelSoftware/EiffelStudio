@@ -10,25 +10,25 @@ inherit
 
 	SHARED_ID_TABLES
 	SHARED_EXEC_TABLE
-	SHARED_USED_TABLE
 	SHARED_PATTERN_TABLE
+	SHARED_GENERATION
 	COMPILER_EXPORTER
 
 feature -- from ROUT_ENTRY
 
-	body_index: BODY_INDEX;
+	body_index: INTEGER;
 			-- Body index
 
 	written_type_id: INTEGER;
 			-- Type id where the feature is written in
 
-	pattern_id: PATTERN_ID;
+	pattern_id: INTEGER;
 			-- Pattern id of the entry
 	
 	is_attribute: BOOLEAN is false
 			-- is the feature_i associated an attribute ?	
 
-	set_body_index (i: BODY_INDEX) is
+	set_body_index (i: INTEGER) is
 			-- Assign `i' to `body_index'.
 		do
 			body_index := i;
@@ -40,25 +40,19 @@ feature -- from ROUT_ENTRY
 			written_type_id := i
 		end;
 
-	set_pattern_id (i: PATTERN_ID) is
+	set_pattern_id (i: INTEGER) is
 			-- Assign `i' to `pattern_id'.
 		do
 			pattern_id := i
 		end;
 
-	body_id: BODY_ID is
-			-- Body id of the feature
-		do
-			Result := Body_index_table.item (body_index);
-		end;
-
 feature -- previously in ROUT_UNIT
 
-	written_in: CLASS_ID
+	written_in: INTEGER
 			-- Id of the class where the associated feature of the
 			-- unit is written in
 
-	set_written_in (i: CLASS_ID) is
+	set_written_in (i: INTEGER) is
 			-- Assign `i' to `written_in'.
 		do
 			written_in := i
@@ -70,7 +64,7 @@ feature -- previously in ROUT_UNIT
 			Result := System.class_of_id (written_in);
 		end;
 
-	new_poly_table (routine_id: ROUTINE_ID): ROUT_TABLE is
+	new_poly_table (routine_id: INTEGER): ROUT_TABLE is
 			-- New associated polymorhic table
 		do
 			!!Result.make (routine_id);
@@ -121,26 +115,24 @@ feature -- from ROUT_ENTRY
 			Result := 	remover = Void						-- Workbench mode
 						or else system_i.remover_off		-- Dead code removal disconnected
 						--or else is_marked
-						or else remover.is_alive (body_id.id)	-- Final mode
+						or else remover.is_alive (body_index)	-- Final mode
 		end;
 
 	routine_name: STRING is
 			-- Routine name to generate
 		do
-			Result := body_id.feature_name (written_class_type.id);
+			Result := Encoder.feature_name (written_class_type.static_type_id, body_index);
 		end;
 
 	make_byte_code (ba: BYTE_ARRAY) is
 			-- Make byte code for current entry.
-		local
-			creation_type: CL_TYPE_I;
 		do
 				-- Dynamic type
 			ba.append_short_integer (type_id - 1);
 				-- Real body index
-			ba.append_short_integer (real_body_index.id - 1);
+			ba.append_short_integer (real_body_index - 1);
 				-- Pattern id
-			ba.append_short_integer (pattern_id.id);
+			ba.append_short_integer (pattern_id);
 		end;
 
 	written_class_type: CLASS_TYPE is
@@ -148,11 +140,10 @@ feature -- from ROUT_ENTRY
 			Result := System.class_type_of_id (written_type_id)
 		end;
 
-	real_body_index: REAL_BODY_INDEX is
+	real_body_index: INTEGER is
 			-- Real body index
 		do
-			Result := Dispatch_table.real_body_index
-									(body_index, written_class_type)
+			Result := Execution_table.real_body_index (body_index, written_class_type)
 		end;
 
 end

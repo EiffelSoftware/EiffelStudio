@@ -8,6 +8,10 @@ class
 	GENERATION_BUFFER
 
 inherit
+	STRING_CONVERTER
+		undefine
+			copy,out,is_equal
+		end
 	STRING
 		redefine
 			clear_all
@@ -50,6 +54,49 @@ feature -- Open, close buffer operations
 			-- extern C declaration in case a C++ compiler is used.
 		do
 			append ("%N#ifdef __cplusplus%N}%N#endif%N%N")
+		end
+
+	flush_buffer (file: INDENT_FILE) is
+			-- Flush buffer if `buffer.count' is about 500K.
+		require
+			file_not_void: file /= Void
+			file_exists: file.exists
+			file_opened_write: file.is_open_write
+		do
+			if count >= ((capacity * 85) // 100) then
+				file.putstring (Current)
+				clear_all
+			end
+		end
+
+feature -- Ids generation
+
+	generate_class_id (class_id: INTEGER) is
+			-- Generate textual representation of class id
+			-- in generated C code
+		do
+			putint (class_id)
+		end
+
+	generate_real_body_id (real_body_id: INTEGER) is
+			-- Generate textual representation of real body id
+			-- in generated C code
+		do
+			putint (real_body_id - 1)
+		end
+
+	generate_real_body_index (real_body_index: INTEGER) is
+			-- Generate textual representation of real body index
+			-- in generated C code
+		do
+			putint (real_body_index - 1)
+		end
+
+	generate_type_id (type_id: INTEGER) is
+			-- Generate textual representation of static type id
+			-- in generated C code
+		do
+			putint (type_id - 1)
 		end
 
 feature -- Element change
@@ -96,7 +143,7 @@ feature -- Element change
 					append_character ('%T')
 					i := i + 1
 				end
-				emitted := true
+				emitted := True
 			end
 		end
 
@@ -104,10 +151,10 @@ feature -- Element change
 			-- Write a '\n'.
 		do
 			append_character ('%N')
-			emitted := false
+			emitted := False
 		end
 
-	put_protected_local (i: INTEGER) is
+	put_protected_local_set (i: INTEGER) is
 			-- Write "l[`i']".
 		do
 			emit_tabs
@@ -115,6 +162,72 @@ feature -- Element change
 			append_character ('[')
 			append_integer (i)
 			append_character (']')
+		end
+
+	put_local_registration (i: INTEGER; loc_name: STRING) is
+			-- Write "RTLR(`i',`loc_name');".
+		require
+			i_positive: i >= 0
+			loc_name_not_void: loc_name /= Void
+			loc_name_not_empty: not loc_name.is_empty
+		do
+			emit_tabs
+			append ("RTLR(")
+			append_integer (i)
+			append_character (',')
+			append (loc_name)
+			append_character (')')
+			append_character (';')
+		end
+
+	put_argument_registration (i: INTEGER; arg: INTEGER) is
+			-- Write "RTLR(`i',arg`arg');".
+		require
+			i_positive: i >= 0
+			arg_positive: arg >= 0
+		do
+			emit_tabs
+			append ("RTLR(")
+			append_integer (i)
+			append_character (',')
+			append ("arg")
+			append_integer (arg)
+			append_character (')')
+			append_character (';')
+		end
+
+	put_current_registration (i: INTEGER) is
+			-- Write "RTLR(`i',Current);".
+		require
+			i_positive: i >= 0
+		do
+			emit_tabs
+			append ("RTLR(")
+			append_integer (i)
+			append (",Current);")
+		end
+
+	put_result_registration (i: INTEGER) is
+			-- Write "RTLR(`i',Result);".
+		require
+			i_positive: i >= 0
+		do
+			emit_tabs
+			append ("RTLR(")
+			append_integer (i)
+			append (",Result);")
+		end
+
+	reset_local_registration (i: INTEGER) is
+			-- Write "RTLRC(`i');".
+		require
+			i_positive: i >= 0
+		do
+			emit_tabs
+			append ("RTLRC(")
+			append_integer (i)
+			append_character (')')
+			append_character (';')
 		end
 
 	putchar (c: CHARACTER) is
@@ -150,89 +263,6 @@ feature -- Element change
 		do
 			emit_tabs
 			append (s)
-		end
-
-	escape_string (s: STRING) is
-			-- Append the escaped version of `s'
-		require
-			valid_arguments: s /= Void
-		local
-			i, nb: INTEGER
-		do
-			from
-				i := 1
-				nb := s.count
-			variant
-				i
-			until
-				i > nb
-			loop
-				escape_char(s.item (i))
-				i := i + 1
-			end
-		end
-
-	escape_char (c: CHARACTER) is
-			-- Write char `c' with C escape sequences
-		do
-			inspect c
-			 	when '"' then
-					append_character ('\')
-					append_character ('"')
-			 	when '\' then
-					append_character ('\')
-					append_character ('\')
-				when '%'' then
-					append_character ('\')
-					append_character (''')
-				when '?' then
-					append_character ('\')
-					append_character ('?')
-				else
-					if c < ' ' or c > '%/127/' then
-						-- Assume ASCII set, sorry--RAM.
-						append_character ('\')
-						putoctal (c.code)
-					else
-						append_character (c)
-					end
-			end
-		end
-
-feature {NONE} -- Implementations
-
-	putoctal (i: INTEGER) is
-			-- Print octal representation of `i'
-			--| always generate 3 digits
-		local
-			val, remain: INTEGER
-			s, t: STRING
-		do
-			if i = 0 then
-				append ("000")
-			elseif i < 8 then
-				append ("00")
-				append_integer (i)
-			else
-				if i < 64 then
-					append_character ('0')
-				end
-				
-				create s.make (3)
-				from
-					val := i
-				variant
-					val + 1
-				until
-					val = 0
-				loop
-					remain := val \\ 8
-					val := val // 8
-					t := remain.out
-					s.prepend (t)
-				end
-				append (s)
-			end
 		end
 
 feature {GENERATION_BUFFER} -- prototype code generation
@@ -327,7 +357,13 @@ feature -- prototype code generation
 				i := i + 1
 			end
 
-			append (")%N{%N%TGTCX") -- ss MT: GET CONTEXT
+			append_character (')')
+			new_line
+			append_character ('{')
+			new_line
+			indent
+			putstring ("GTCX")
+			exdent
 			new_line
 		end
 

@@ -106,8 +106,7 @@ feature {ROUTINE_TEXT_FIELD} -- Implementation
 			-- Execution of the command.
 		local
 			stone: CLASSC_STONE;
-			cname, class_name: STRING;
-			clusters: LINKED_LIST [CLUSTER_I];
+			cname: STRING;
 			sorted_classes: SORTED_TWO_WAY_LIST [CLASS_I];
 			mp: MOUSE_PTR;
 			choice_position: INTEGER;
@@ -115,9 +114,7 @@ feature {ROUTINE_TEXT_FIELD} -- Implementation
 			at_pos: INTEGER;
 			cluster_name: STRING;
 			cluster: CLUSTER_I;
-			pattern: STRING_PATTERN
---			matcher: KMP_WILD
-			classes_c: CLASS_C_SERVER
+			matcher: KMP_WILD
 			classes: ARRAY [CLASS_C]
 			class_c: CLASS_C
 			i, nb: INTEGER
@@ -142,19 +139,19 @@ feature {ROUTINE_TEXT_FIELD} -- Implementation
 					cname := clone (text);
 					cname.left_adjust;
 					cname.right_adjust;
-					if cname.empty then
+					if cname.is_empty then
 						warner (tool.popup_parent).gotcha_call (Warning_messages.w_Specify_a_class)
 					else
 						cname.to_lower;
-						!! pattern.make (0);
-						pattern.append (cname);
-						if not pattern.has_wild_cards then
+						create matcher.make_empty
+						matcher.set_pattern (cname);
+						if not matcher.has_wild_cards then
 							!! mp.set_watch_cursor;
 							at_pos := cname.index_of ('@', 1);
 							if at_pos = 0 then
 								class_list := Eiffel_universe.compiled_classes_with_name (cname);
 								mp.restore;
-								if class_list.empty then
+								if class_list.is_empty then
 									class_list := Void;
 									warner (tool.popup_parent).gotcha_call
 										(Warning_messages.w_Cannot_find_class (cname))
@@ -189,33 +186,23 @@ feature {ROUTINE_TEXT_FIELD} -- Implementation
 								end
 							end
 						else
+							!! mp.set_watch_cursor;
+							!! sorted_classes.make;
 							from
-								!! mp.set_watch_cursor;
-								!! sorted_classes.make;
---								!! matcher.make (cname, "")
-								classes_c := Eiffel_system.system.classes;
-								classes_c.start
+								classes := Eiffel_system.system.classes
+								i := classes.lower
+								nb := classes.upper
 							until
-								classes_c.after
+								i > nb
 							loop
-								from
-									classes := classes_c.item_for_iteration
-									i := classes.lower
-									nb := classes.upper
-								until
-									i > nb
-								loop
-									class_c := classes.item (i)
-									if class_c /= Void then
---										matcher.set_text (class_c.lace_class.name)
---										if matcher.search_for_pattern then
-										if pattern.matches (class_c.lace_class.name) then
-											sorted_classes.put_front (class_c.lace_class)
-										end
+								class_c := classes.item (i)
+								if class_c /= Void then
+									matcher.set_text (class_c.lace_class.name)
+									if matcher.search_for_pattern then
+										sorted_classes.put_front (class_c.lace_class)
 									end
-									i := i + 1
 								end
-								classes_c.forth
+								i := i + 1
 							end
 
 							class_i := Void;

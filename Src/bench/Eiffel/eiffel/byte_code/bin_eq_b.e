@@ -4,7 +4,8 @@ inherit
 	BIN_EQUAL_B
 		rename
 			Bc_eq as operator_constant,
-			Bc_false_compar as obvious_operator_constant
+			Bc_false_compar as obvious_operator_constant,
+			il_eq as il_operator_constant
 		redefine
 			enlarged, generate_operator
 		end
@@ -29,6 +30,14 @@ feature
 			!! Result;
 			Result.fill_from (Current);
 		end;
+
+feature -- IL code generation
+
+	generate_il_boolean_constant is
+			-- Generate IL True constant
+		do
+			il_generator.put_boolean_constant (False)
+		end
 
 feature -- Byte code generation
 

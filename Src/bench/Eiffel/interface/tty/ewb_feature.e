@@ -93,7 +93,6 @@ feature {NONE} -- Implementation
 			-- `feature_name' and execute associated command.
 		local
 			e_feature: E_FEATURE;
-			class_i: CLASS_I;
 		do
 			if feature_name = Void then
 				command_line_io.get_feature_name;
@@ -125,7 +124,7 @@ feature {NONE} -- Implementation
 			cmd := associated_cmd;
 			cmd.make (e_feature);
 			cmd.execute;
-			if filter_name /= Void and then not filter_name.empty then
+			if filter_name /= Void and then not filter_name.is_empty then
 				!! filter.make (filter_name);
 				filter.process_text (cmd.structured_text);
 				output_window.put_string (filter.image)

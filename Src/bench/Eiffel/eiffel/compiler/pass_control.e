@@ -53,7 +53,7 @@ feature
 	propagate_pass3: BOOLEAN is
 			-- Has a third pass to be propagated to clients ?
 		do
-			Result := not (propagators.empty and then melted_propagators.empty)
+			Result := not (propagators.is_empty and then melted_propagators.is_empty)
 		end;
 
 feature -- Debug

@@ -1,4 +1,7 @@
--- Standard byte code
+indexing
+	description	: "Standard Byte code generation for features"
+	date		: "$Date$"
+	revision	: "$Revision$"
 
 class STD_BYTE_CODE 
 
@@ -16,10 +19,24 @@ inherit
 			context as ast_context
 		end
 
-feature 
+	SHARED_ERROR_HANDLER
+
+	SHARED_DECLARATIONS
+
+feature -- Access
 
 	compound: BYTE_LIST [BYTE_NODE]
 			-- Compound byte code
+
+feature -- Status
+
+	is_global_once: BOOLEAN is
+			-- Is current once compiled in multithreaded mode with global status?
+		do
+			-- False
+		end
+
+feature -- Setting
 
 	set_compound (c: like compound) is
 			-- Assign `c' to `compound'.
@@ -27,24 +44,24 @@ feature
 			compound := c
 		end
 
+feature -- Analyzis
+
 	analyze is
 			-- Builds a proper context (for C code).
 		local
 			workbench_mode: BOOLEAN
 			type_i: TYPE_I
 			feat: FEATURE_I
-			have_assert: BOOLEAN
+			have_precond, have_postcond: BOOLEAN
 			inh_assert: INHERITED_ASSERTION
 			old_exp: UN_OLD_BL
-			a_class: CLASS_C
 		do
 			workbench_mode := context.workbench_mode
-			a_class := Context.associated_class
-			feat := a_class.feature_table.item (feature_name)
+			feat := Context.current_feature
 			inh_assert := Context.inherited_assertion
 			inh_assert.init
 			Context.set_origin_has_precondition (True)
-			if not a_class.is_basic and then feat.assert_id_set /= Void then
+			if not Context.associated_class.is_basic and then feat.assert_id_set /= Void then
 					--! Do not get inherited pre & post for basic types
 				formulate_inherited_assertions (feat.assert_id_set)
 			end
@@ -54,30 +71,35 @@ feature
 				-- can store information gathered by analyze.
 			enlarge_tree
 
+				-- Compute presence or not of pre/postconditions
+			if Context.origin_has_precondition then
+				have_precond := (precondition /= Void or else inh_assert.has_precondition) and then
+						(workbench_mode or else context.assertion_level.check_precond)
+			end
+			have_postcond := (postcondition /= Void or else inh_assert.has_postcondition) and then
+					(workbench_mode or else context.assertion_level.check_postcond)
+
+				-- Check if we need GC hooks for current body.
+			Context.compute_need_gc_hooks (have_precond or else have_postcond)
+
 				-- Analyze arguments
 			analyze_arguments
 
 				-- Analyze preconditions
-			if Context.origin_has_precondition then
-				have_assert := (precondition /= Void or else inh_assert.has_precondition) and then
-						(workbench_mode or else context.assertion_level.check_precond)
-			end
-			if have_assert then
+			if have_precond then
 				if workbench_mode then
 					context.add_dt_current
-				end
-				if precondition /= Void then
-					precondition.analyze
 				end
 				if inh_assert.has_precondition then
 					inh_assert.analyze_precondition
 				end	
+				if precondition /= Void then
+					precondition.analyze
+				end
 			end
-			have_assert := (postcondition /= Void or else inh_assert.has_postcondition) and then
-					(workbench_mode or else context.assertion_level.check_postcond)
 
 				-- Analyze postconditions
-			if have_assert then
+			if have_postcond then
 				if workbench_mode then
 					context.add_dt_current
 				end
@@ -90,7 +112,7 @@ feature
 						--| Need to do a special analyze for the old
 						--| expressions so that the registers being used
 						--| to store the old values will not be reused.
-						old_exp ?= old_expressions.item; -- Cannot fail
+						old_exp ?= old_expressions.item -- Cannot fail
 						old_exp.special_analyze
 						old_expressions.forth
 					end
@@ -103,7 +125,7 @@ feature
 				-- If result is expanded or a bit, we need to create it anyway
 			if not result_type.is_void then
 				type_i := context.real_type (result_type)
-				if type_i.is_expanded or else type_i.is_bit then
+				if type_i.is_true_expanded or else type_i.is_bit then
 					context.mark_result_used
 				end
 			end
@@ -120,7 +142,7 @@ feature
 				compound.analyze
 			end
 				-- Analyze postconditions
-			if have_assert then
+			if have_postcond then
 				if workbench_mode then
 					context.add_dt_current
 				end
@@ -146,6 +168,7 @@ feature
 					-- For RTPR and RTXP
 				context.add_to_dt_current (2)
 			end
+
 		end
 
 	analyze_arguments is
@@ -164,7 +187,7 @@ feature
 					i > nb
 				loop
 					arg := real_type (args @ 1)
-					if arg.is_expanded then
+					if arg.is_true_expanded then
 						context.force_gc_hooks
 						i := nb + 1
 					else
@@ -182,26 +205,50 @@ feature
 	generate is
 			-- Generate C code.
 		local
-			assignment: ASSIGN_B
 			type_i: TYPE_I
 			internal_name: STRING
 			buf: GENERATION_BUFFER
+			l_is_once: BOOLEAN
 		do
+			buf := buffer
+			l_is_once := is_once
+
 				-- Generate the header "int foo(Current, args)"
 			type_i := real_type (result_type)
 
 				-- Function's name
-			internal_name := body_id.feature_name
-				(System.class_type_of_id (context.current_type.type_id).id)
+			internal_name := Encoder.feature_name (
+				System.class_type_of_id (context.current_type.type_id).static_type_id,
+				body_index)
 
 				-- Add entry in the log file
 			add_in_log (internal_name)
 
+				-- If it is a once, performs once declaration.
+			if l_is_once then
+				generate_once_declaration (internal_name, type_i.c_type.c_string, type_i.c_type.is_void)
+			end
+
+			if rescue_clause /= Void then
+				buf.putstring ("#undef EIF_VOLATILE")
+				buf.new_line
+				buf.putstring ("#define EIF_VOLATILE volatile")
+				buf.new_line
+			end
+
 				-- Generate function signature
-			buf := buffer
 			buf.generate_function_signature
 				(type_i.c_type.c_string, internal_name, True,
 				 Context.header_buffer, argument_names, argument_types)
+
+				-- If it is a global once, performs mutex lock operation
+			if is_global_once then
+				buf.indent
+				buf.putstring ("EIF_GLOBAL_ONCE_MUTEX_LOCK;")
+				buf.new_line
+				buf.putchar ('{')
+				buf.new_line
+			end
 
 				-- Starting body of C routine
 			buf.indent
@@ -219,23 +266,25 @@ feature
 					buf.new_line
 				end
 			end
-
 				-- If necessary, generate the once stuff (i.e. checks if
 				-- the value of the once was already set within the same
 				-- thread).  That way we do not enter the body of the
 				-- once if it has already been done. Preconditions,
 				-- if any, are only tested on the very first call.
-			generate_once
+			generate_once (internal_name)
 
 				-- Before entering in the code generate GC hooks, i.e. pass
 				-- the addresses of all the reference variables.
 			context.generate_gc_hooks (False)
 
+				-- Record the locals, arguments and Current address for debugging.
+			generate_push_db
+			
 				-- Clone expanded parameters, raise exception in caller if
 				-- needed (void assigned to expanded).
 			generate_expanded_cloning
 
-				-- Generate execution trace information
+				-- Generate execution trace information (RTEAA)
 			generate_execution_trace
 
 				-- Generate trace macro (start)
@@ -289,6 +338,7 @@ feature
 				free_separate_parameters
 			end
 
+
 			if not result_type.is_void then
 					-- Function returns something. So generate the return
 					-- expression, if necessary. Otherwise, have some mercy
@@ -298,6 +348,7 @@ feature
 					-- No return, this is a procedure. However, remove the
 					-- GC hooks we've been generated.
 				finish_compound
+
 				if rescue_clause /= Void then
 					buf.putstring ("return;")
 					buf.new_line
@@ -307,16 +358,44 @@ feature
 				-- If there is a rescue clause, generate it now...
 			generate_rescue
 
-				-- End of C function
-			if is_once and then context.result_used then
-				buf.putstring ("%N#undef Result%N")
-			end
-
 			buf.exdent
+
+				-- End of C function
+			if l_is_once then
+				if is_global_once then
+					buf.putchar ('}')
+					buf.new_line
+					buf.exdent
+				else
+					buf.new_line
+					buf.putstring ("#undef Result")
+					buf.new_line
+				end
+			end
 
 				-- Leave a blank line after function definition
 			buf.putstring ("}%N%N")
+
+			if rescue_clause /= Void then
+				buf.putstring ("#undef EIF_VOLATILE")
+				buf.new_line
+				buf.putstring ("#define EIF_VOLATILE")
+				buf.new_line
+			end
+
 			Context.inherited_assertion.wipe_out
+
+debug ("DEBUGGER_HOOK")
+		-- ASSERTION TO CHECK THAT `number_of_breakpoint_slots' is correct
+	if
+		context.workbench_mode and then
+		get_current_frozen_debugger_hook + 1 /= context.current_feature.number_of_breakpoint_slots
+	then
+		io.putstring ("STD_BYTE_CODE: Error in breakable line number computation for: %N")
+		io.putstring ("{"+context.original_class_type.associated_class.lace_class.name+"}")
+		io.putstring ("."+context.current_feature.feature_name+"%N%N")
+	end
+end
 		end
 
 	generate_compound is
@@ -365,37 +444,40 @@ feature
 			type_i: TYPE_I
 			buf: GENERATION_BUFFER
 		do
+			buf := buffer
 				-- Do not forget to remove the GC hooks before returning
 				-- if they have already been generated. For instance, when
 				-- generating return for a once function, hooks have not
 				-- been generated.
 			type_i := real_type (result_type)
 			finish_compound
+
 			if not result_type.is_void then
-				buf := buffer
 				buf.putstring ("return ")
 					-- If Result was used, generate it. Otherwise, its value
 					-- is simply the initial one (i.e. generic 0).
-				if context.result_used then
-					if real_type (result_type).c_type.is_pointer then
-						context.Result_register.print_register_by_name
-					else
-						buf.putstring ("Result")
-					end
-					buf.putchar (';')
+					-- Note: in workbench, we always return the result. It may
+					--       have been changed by the user (see class EDIT_ITEM)
+				if context.workbench_mode or else context.result_used then
+					buf.putstring ("Result;")
 				else
 					type_i.c_type.generate_cast (buf)
 					buf.putstring ("0;")
 				end
 				buf.new_line
 			end
-		end; -- generate_return_exp
+		end -- generate_return_exp
 
-	generate_once is
+	generate_once (name: STRING) is
 			-- Generate test at the head of once routines
 		do
-			-- Do nothing
-		end; -- generate_once
+		end
+
+	generate_once_declaration (name, type: STRING; is_procedure: BOOLEAN) is
+			-- Generate static variable and their declarations used by
+			-- generation of opimized once functions.
+		do
+		end
 
 	generate_expanded_variables is
 			-- Create local expanded variables and Result
@@ -411,19 +493,21 @@ feature
 			written_type: CLASS_TYPE
 			c_name: STRING
 			buf: GENERATION_BUFFER
+			used_upper: INTEGER
 		do
 			buf := buffer
 			if locals /= Void then
 				count := locals.count
 				from
 					i := locals.lower
+					used_upper := context.local_vars.upper
 				until
 					i > count
 				loop
 					type_i := real_type (locals.item (i))
 							-- Generate only if variable used
-					if context.local_vars.item(i) then
-						if type_i.is_expanded then
+					if i <= used_upper and then context.local_vars.item(i) then
+						if type_i.is_true_expanded then
 							cl_type_i ?= type_i
 
 							gen_type  ?= cl_type_i
@@ -433,7 +517,7 @@ feature
 								generate_gen_type_conversion (gen_type)
 							end
 							context.local_var.set_position (i)
-							context.local_var.print_register_by_name
+							context.local_var.print_register
 							exp_type_id := cl_type_i.expanded_type_id - 1
 							if context.workbench_mode then
 									-- RTLX is a macro used to create
@@ -442,7 +526,7 @@ feature
 									buf.putstring (" = RTLX(typres")
 								else
 									buf.putstring (" = RTLX(RTUD(")
-									cl_type_i.associated_class_type.id.generated_id (buf)
+									buf.generate_type_id (cl_type_i.associated_class_type.static_type_id)
 									buf.putchar (')')
 								end
 							else
@@ -461,11 +545,13 @@ feature
 									else
 										written_type := written_class.meta_type (class_type.type).associated_class_type
 									end
-									c_name := creation_feature.body_id.feature_name (written_type.id)
+									c_name := Encoder.feature_name (written_type.static_type_id, creation_feature.body_index)
 									buf.putstring (");%N%T")
-									buf.putstring (clone (c_name))
+									buf.putstring (c_name)
 									buf.putchar ('(')
-									context.local_var.print_register_by_name
+									context.local_var.print_register
+									Extern_declarations.add_routine_with_signature (Void_c_type,
+										c_name, <<"EIF_REFERENCE">>)
 								end
 							end
 							buf.putstring (gc_rparan_comma)
@@ -475,9 +561,9 @@ feature
 							end
 							buf.new_line
 						elseif type_i.is_bit then
-							bit_i ?= type_i; -- Cannot fail
+							bit_i ?= type_i -- Cannot fail
 							context.local_var.set_position (i)
-							context.local_var.print_register_by_name
+							context.local_var.print_register
 							buf.putstring (" = RTLB(")
 							buf.putint (bit_i.size)
 							buf.putstring (gc_rparan_comma)
@@ -489,7 +575,7 @@ feature
 			end
 			type_i := real_type (result_type)
 			if context.result_used then
-				if type_i.is_expanded then
+				if type_i.is_true_expanded then
 					cl_type_i ?= type_i
 					exp_type_id := cl_type_i.expanded_type_id - 1
 
@@ -499,7 +585,7 @@ feature
 						generate_block_open
 						generate_gen_type_conversion (gen_type)
 					end
-					context.result_register.print_register_by_name
+					context.result_register.print_register
 					if context.workbench_mode then
 							-- RTLX is a macro used to create
 							-- expanded types
@@ -507,7 +593,7 @@ feature
 							buf.putstring (" = RTLX(typres")
 						else
 							buf.putstring (" = RTLX(RTUD(")
-							cl_type_i.associated_class_type.id.generated_id (buf)
+							buf.generate_type_id (cl_type_i.associated_class_type.static_type_id)
 							buf.putchar (')')
 						end
 					else
@@ -526,11 +612,14 @@ feature
 							else
 								written_type := written_class.meta_type (class_type.type).associated_class_type
 							end
-							c_name := creation_feature.body_id.feature_name (written_type.id)
+							c_name := Encoder.feature_name (written_type.static_type_id, creation_feature.body_index)
 							buf.putstring (");%N%T")
-							buf.putstring (clone (c_name))
+							buf.putstring (c_name)
 							buf.putchar ('(')
-							context.local_var.print_register_by_name
+							context.result_register.print_register
+							Extern_declarations.add_routine_with_signature (Void_c_type,
+								c_name, <<"EIF_REFERENCE">>)
+
 						end
 					end
 					buf.putstring (gc_rparan_comma)
@@ -540,8 +629,8 @@ feature
 					end
 					buf.new_line
 				elseif type_i.is_bit then
-					bit_i ?= type_i; -- Cannot fail
-					context.result_register.print_register_by_name
+					bit_i ?= type_i -- Cannot fail
+					context.result_register.print_register
 					buf.putstring (" = RTLB(")
 					buf.putint (bit_i.size)
 					buf.putstring (gc_rparan_comma)
@@ -566,10 +655,10 @@ feature
 					i > count
 				loop
 					arg := real_type (arguments.item (i))
-					if arg.is_expanded then
+					if arg.is_true_expanded then
 						context.arg_var.set_position (i)
 						buf.putstring ("if ((EIF_REFERENCE) 0 == ")
-						context.arg_var.print_register_by_name
+						context.arg_var.print_register
 						buf.putchar (')')
 						buf.new_line
 						buf.indent
@@ -607,10 +696,10 @@ feature
 		local
 			buf: GENERATION_BUFFER
 		do
-			context.arg_var.print_register_by_name
+			context.arg_var.print_register
 			buf := buffer
 			buf.putstring (" = RTCL(")
-			context.arg_var.print_register_by_name
+			context.arg_var.print_register
 				-- If `idx' is not -1, then the reference was the one for the
 				-- enclosing object and it needs adjusting by the expanded
 				-- object's offset whithin that bigger object.
@@ -623,39 +712,239 @@ feature
 			buf.new_line
 		end
 
+	generate_save_args is
+			-- Push the addresses of the arguments on the local variable stack.
+		local	
+			i		: INTEGER
+			count	: INTEGER
+			type_i	: TYPE_I
+			buf		: GENERATION_BUFFER
+		do
+			if context.workbench_mode then
+				buf := buffer
+				DEBUG ("C_DEBUGGER")
+					buf.putstring ("GENERATE SAVE ARGS%N")
+				end
+				if arguments /= Void then
+					from
+						count := arguments.count
+						i := arguments.lower
+						DEBUG ("C_DEBUGGER")
+							buf.putstring ("The number of arguments is ")
+							buf.putint (count)
+							buf.putstring ("%NThe lower bound is ")
+							buf.putint (i)
+							buf.putstring ("%N%N")
+						end
+					until
+						i > count
+					loop
+						type_i := real_type (arguments.item (i))
+							-- Local reference variable are declared via
+							-- the local variable array "l[]"
+						buf.putstring ("RTLU(")
+						type_i.c_type.generate_sk_value (buf)
+						buf.putstring (",&arg")
+						buf.putint (i)
+						buf.putstring (");")
+						buf.new_line
+						i := i + 1
+					end
+				else
+					DEBUG ("C_DEBUGGER")
+						buf.putstring ("arguments is void%N")
+					end
+				end	
+				DEBUG ("C_DEBUGGER")
+					buf.putstring ("END OF GENERATION%N%N%N")
+				end
+			end
+		end
+
+
+	generate_save_locals is
+			-- Push the addresses of the local variables on the local variable stack.
+		local	
+			i		: INTEGER
+			count	: INTEGER
+			type_i	: TYPE_I
+			buf		: GENERATION_BUFFER
+		do
+			if context.workbench_mode then
+				buf := buffer
+				DEBUG ("C_DEBUGGER")
+					buf.putstring ("GENERATE SAVE LOCALS%N")
+				end
+				if locals /= Void then
+					from
+						count := locals.count
+						i := locals.lower
+						DEBUG ("C_DEBUGGER")
+							buf.putstring ("/* The number of locals is ")
+							buf.putint (count)		
+							buf.putstring ("*/%N/* The lower bound is ")
+							buf.putint (i)
+							buf.putstring ("*/%N%N")
+						end
+					until
+						i > count
+					loop
+						type_i := real_type (locals.item (i))
+							-- Local reference variable are declared via
+							-- the local variable array "l[]"
+						buf.putstring ("RTLU(")
+						type_i.c_type.generate_sk_value (buf)
+						buf.putstring (", &loc")
+						buf.putint (i)
+						buf.putstring (");")
+						buf.new_line
+						i := i + 1
+					end
+				else
+					DEBUG ("C_DEBUGGER")
+						buf.putstring ("locals is void%N")
+					end
+				end	
+				DEBUG ("C_DEBUGGER")
+					buf.putstring ("END OF GENERATION%N%N%N")
+				end
+			end
+		end
+
+	generate_save_current is
+			-- Push the current object address on the local variable stack.
+		local
+			buf	: GENERATION_BUFFER
+		do
+			if context.workbench_mode then
+				buf := buffer
+				buf.putstring ("RTLU (SK_REF, &Current);")	
+				buf.new_line
+			end
+		end
+
+	generate_save_result is
+			-- Push the address of Result on the local variable stack.
+		local
+			buf		: GENERATION_BUFFER
+			type_i	: TYPE_I
+		do
+			if context.workbench_mode then
+				buf := buffer
+				if (not result_type.is_void) then
+					type_i := real_type (context.byte_code.result_type)
+					buf.putstring ("RTLU (")
+					type_i.c_type.generate_sk_value (buf)
+					buf.putstring (", &Result);")
+					buf.new_line
+				else
+					buf.putstring ("RTLU (SK_VOID, NULL);")
+					buf.new_line
+				end
+			end
+		end
+
+	generate_push_db is
+			-- generate the macros to save the arguments, locals and so of the feature
+			-- in the c debug pile.
+		local
+			buf	: GENERATION_BUFFER
+		do
+			if context.workbench_mode then 
+					-- first we save the Result register
+				generate_save_result
+					-- then we push the arguments of the function
+				generate_save_args
+					-- then we push current
+				generate_save_current
+					-- finally we push the local variables
+				generate_save_locals
+
+					-- Now we record the level of the local variable stack
+					-- to restore it in case of a rescue.
+				if rescue_clause /= Void then
+					buf := buffer
+					buf.putstring ("RTLXL;")
+					buf.new_line
+				end
+			end
+		end			
+
 	generate_locals is
 			-- Declare C local variables
 		local
-			i, count: INTEGER
-			type_i: TYPE_I
-			buf: GENERATION_BUFFER
+			i			: INTEGER
+			count		: INTEGER
+			type_i		: TYPE_I
+			buf			: GENERATION_BUFFER
+			used_local	: BOOLEAN
+			unused_locals: ARRAYED_LIST [INTEGER]
+			wkb_mode	: BOOLEAN
+			used_upper: INTEGER
+			has_rescue: BOOLEAN
+			l_is_once: BOOLEAN
 		do
-				-- Eiffel local variables.
+				-- Cache accessed attributes
 			buf := buffer
+			wkb_mode := context.workbench_mode
+			has_rescue := rescue_clause /= Void
+			l_is_once := is_once
+			
 			if locals /= Void then
 				from
 					count := locals.count
+					used_upper := context.local_vars.upper
 					i := locals.lower
 				until
 					i > count
 				loop
 					type_i := real_type (locals.item (i))
+							-- Check whether the variable is used or not.
+					if i > used_upper then
+						used_local := False
+					else
+						used_local := context.local_vars.item(i)
+					end
+					
 							-- Generate only if variable used
-					if context.local_vars.item(i) then
+					if wkb_mode or used_local then
 							-- Local reference variable are declared via
 							-- the local variable array "l[]".
-						if not context.need_gc_hooks or else
-							not type_i.c_type.is_pointer then
-							type_i.c_type.generate (buf)
-							buf.putstring ("loc")
-							buf.putint (i)
-							buf.putstring (" = ")
-							type_i.c_type.generate_cast (buf)
-							buf.putstring ("0;")
-							buf.new_line
+						if has_rescue and then not wkb_mode and then type_i.is_basic then
+							buf.putstring ("EIF_VOLATILE ")
 						end
+						type_i.c_type.generate (buf)
+						buf.putstring ("loc")
+						buf.putint (i)
+						buf.putstring (" = ")
+						type_i.c_type.generate_cast (buf)
+						buf.putstring (" 0;")
+						buf.new_line
+					end
+
+							-- Issue a warning message if the local is not used
+							-- (for the moment, we remember the local variable
+							-- number and we will issue the warning at the
+							-- end of the loop).
+					if wkb_mode and (not used_local) then
+						if unused_locals = Void then
+							create unused_locals.make (2)
+						end
+						unused_locals.force (i)
 					end
 					i := i + 1
+				end
+
+					-- Issue a warning for each unused local variable.
+				if unused_locals /= Void then
+					from
+						unused_locals.start
+					until
+						unused_locals.after
+					loop
+						issue_unused_local_warning (unused_locals.item)
+						unused_locals.forth
+					end
 				end
 			end
 
@@ -673,8 +962,8 @@ feature
 
 				-- Result is declared only if needed. For onces, it is
 				-- accessed via a key allowing us to have them per thread.
-			if (not result_type.is_void) and then context.result_used then
-				generate_result_declaration
+			if (not result_type.is_void) and then (wkb_mode or else context.result_used) then 
+				generate_result_declaration (has_rescue and then not wkb_mode)
 			end
 				-- Declare the 'dtype' variable which holds the pre-computed
 				-- dynamic type of current. To avoid unnecssary computations,
@@ -683,27 +972,24 @@ feature
 			if context.dt_current > 1 then
 					-- There has to be more than one usage of the dynamic type
 					-- of current in order to have this variable generated.
-				if is_once then
-					buf.putstring ("int dtype;")
+				if l_is_once then
+					buf.putstring ("RTCDD;")
 				else
-					buf.putstring ("int dtype = Dtype(Current);")
+					buf.putstring ("RTCDT;")
 				end
 				buf.new_line
 			end
 				-- Generate the int local variable saving the global `nstcall'.
-			if context.workbench_mode
-				or else
-				context.assertion_level.check_invariant
-			then
+			if wkb_mode or else context.assertion_level.check_invariant then
 				buf.putstring ("RTSN;")
 				buf.new_line
 			end
-			if context.workbench_mode then
+			if wkb_mode then
 					-- Generate local variable for saving the workbench
 					-- mode assertion level of the current object.
 				buf.putstring ("RTDA;")
 				buf.new_line
-				if rescue_clause /= Void then
+				if has_rescue then
 					buf.putstring ("RTDT;")
 					buf.new_line
 				end
@@ -713,13 +999,19 @@ feature
 				-- GC control (given by `ref_var_used').
 			i := context.ref_var_used
 			if i > 0 then
-				if rescue_clause /= Void then
+				if has_rescue then
 					buf.putstring ("RTXD;")
 					buf.new_line
 				else
 					buf.putstring ("RTLD;")
 					buf.new_line
 				end
+			end
+
+				-- Declare the variable local "backup" stack.
+			if wkb_mode and then has_rescue then
+				buf.putstring ("RTLXD;")
+				buf.new_line
 			end
 
 				-- Onces are processed via keys. We store a pointer to
@@ -729,7 +1021,10 @@ feature
 				-- Note that even if Result is not used in once functions,
 				-- we have to go through the key: we cannot simply return 0
 				-- in case some treatment with side effect were done.
-			if is_once then
+			if
+				l_is_once and then not is_global_once and then
+				(System.has_multithreaded or else not context.final_mode)
+			then
 				real_type (result_type).c_type.generate (buf)
 				buf.putstring ("*PResult = (")
 				real_type (result_type).c_type.generate (buf)
@@ -743,23 +1038,83 @@ feature
 			buf.new_line
 		end
 
-	generate_result_declaration is
+	issue_unused_local_warning (an_index: INTEGER) is
+		local
+			feature_as	: FEATURE_AS
+			routine_as	: ROUTINE_AS
+			i			: INTEGER
+			id_list		: EIFFEL_LIST [ID_AS]
+			rout_locals	: EIFFEL_LIST [TYPE_DEC_AS]
+			good_id_as	: ID_AS
+			warning_msg	: UNUSED_LOCAL_WARNING
+		do
+			feature_as := System.Body_server.item (body_index)
+			routine_as ?= feature_as.body.content
+			if routine_as /= Void then
+				rout_locals := routine_as.locals
+				rout_locals.start
+				from
+					i := 0
+				until
+					i = an_index or else rout_locals.after
+				loop
+					id_list := rout_locals.item.id_list
+					from
+						id_list.start
+					until	
+						i = an_index or else id_list.after
+					loop
+						i := i + 1
+						if i = an_index then 
+							good_id_as := id_list.item
+						end
+						id_list.forth
+					end
+					rout_locals.forth
+				end
+
+				if good_id_as /= Void then
+					create warning_msg
+					warning_msg.set_associated_local (good_id_as)
+					warning_msg.set_associated_type (context.current_type.type_a)
+					warning_msg.set_associated_feature_i (context.current_feature)
+					Error_handler.insert_warning (warning_msg)
+				end
+			end
+		end
+
+	generate_result_declaration (may_need_volatile: BOOLEAN) is
 			-- Generate the declaration of the Result entity
 		local
 			ctype: TYPE_C
+			type_i: TYPE_I
 			buf: GENERATION_BUFFER
+			l_global_once: BOOLEAN
 		do
-			ctype := real_type (result_type).c_type
-			if ctype.is_pointer then
-					-- The generation is included in the declaration of local
-					-- variable array, hehe.
-			else
+			l_global_once := is_global_once
+			if not is_once or else l_global_once then
 				buf := buffer
+				type_i := real_type (result_type)
+				ctype := type_i.c_type
+				if l_global_once then
+					buf.putstring ("static ")
+				end
+				if may_need_volatile and then type_i.is_basic then
+					buf.putstring ("EIF_VOLATILE ")
+				end
 				ctype.generate (buf)
 				buf.putstring ("Result = ")
 				ctype.generate_cast (buf)
-				buf.putstring ("0;")
+				buf.putstring (" 0;")
 				buf.new_line
+				if l_global_once then
+					if may_need_volatile then
+						buf.putstring ("static EIF_VOLATILE EIF_BOOLEAN done = 0;")
+					else
+						buf.putstring ("static EIF_BOOLEAN done = 0;")
+					end
+					buf.new_line
+				end
 			end
 		end
 
@@ -779,12 +1134,10 @@ feature
 	generate_precondition is
 			-- Generate precondition check if needed
 		local
-			workbench_mode: BOOLEAN
-			feat: FEATURE_I
-			have_assert: BOOLEAN
-			inh_assert: INHERITED_ASSERTION
-			count, i: INTEGER
-			buf: GENERATION_BUFFER
+			workbench_mode	: BOOLEAN
+			have_assert		: BOOLEAN
+			inh_assert		: INHERITED_ASSERTION
+			buf				: GENERATION_BUFFER
 		do
 			context.set_assertion_type (In_precondition)
 			workbench_mode := context.workbench_mode
@@ -814,33 +1167,26 @@ feature
 					buf.putstring ("CURCSFC;")
 					buf.new_line
 				end
-				if precondition /= Void then
-					context.set_is_prec_first_block (True)
-					Context.inc_label
-					precondition.generate
-					buf.putstring ("RTJB;")
-					buf.new_line
-					buf.exdent
-					if has_separate_call_in_precondition then
-						context.print_concurrent_label
-						buf.putchar (':')
-						buf.indent
-						buf.putstring (" CURSSFC;")
-						buf.new_line
-						buf.exdent
-					end
-					context.print_current_label
-					buf.putchar (':')
-					buf.new_line
-					buf.indent
-				end
-				
-				if inh_assert.has_precondition then
+			
+				Context.set_has_separate_call_in_precondition
+					(has_separate_call_in_precondition)
 
-					inh_assert.set_has_separate_call_in_precondition (has_separate_call_in_precondition)
-					inh_assert.set_std_obj (Current)
+				if inh_assert.has_precondition then
 					inh_assert.generate_precondition
 				end
+
+				if precondition /= Void then
+					Context.set_new_precondition_block (True)
+					precondition.generate
+				end
+	
+				buf.putstring ("RTJB;")
+				buf.new_line
+				buf.exdent
+				Context.print_current_label
+				buf.putchar (':')
+				buf.new_line
+				buf.indent
 
 				if has_separate_call_in_precondition then
 					buf.putstring ("if (!CURSFC) {")
@@ -900,11 +1246,11 @@ feature
 					buf.new_line
 					buf.indent
 				end
-				if postcondition /= Void then
-					postcondition.generate
-				end
 				if inh_assert.has_postcondition then
 					inh_assert.generate_postcondition
+				end
+				if postcondition /= Void then
+					postcondition.generate
 				end
 				generate_invariant_after
 				if workbench_mode then
@@ -957,13 +1303,13 @@ feature
 			if context.workbench_mode then
 				buf.putstring (tag)
 				buf.putchar ('(')
-				context.current_register.print_register_by_name
+				context.current_register.print_register
 				buf.putstring (", RTAL);")
 				buf.new_line
 			elseif context.assertion_level.check_invariant then
 				buf.putstring (tag)
 				buf.putchar ('(')
-				context.current_register.print_register_by_name
+				context.current_register.print_register
 				buf.putstring (gc_rparan_comma)
 				buf.new_line
 			end
@@ -984,6 +1330,11 @@ feature
 				buf.indent
 				buf.putstring ("RTEU;")
 				buf.new_line
+					-- Restore the C operational stack
+				if context.workbench_mode then
+					buf.putstring ("RTLXE;")
+					buf.new_line
+				end
 					-- Resynchronize local variables stack
 				nb_refs := context.ref_var_used
 				if nb_refs > 0 then
@@ -1023,10 +1374,12 @@ feature
 				buf.new_line
 					-- We only need this for finalized mode...
 				if trace_enabled then
-					buf.putstring ("RTLT;%N")
+					buf.putstring ("RTLT;")
+					buf.new_line
 				end
 				if profile_enabled then
-					buf.putstring ("RTLP;%N")
+					buf.putstring ("RTLP;")
+					buf.new_line
 				end
 			end
 		end
@@ -1035,9 +1388,10 @@ feature
 			-- Generate the execution trace stack handling
 		do
 			if exception_stack_managed then
-				generate_stack_macro ("RTEA")
+				generate_stack_macro ("RTEAA")
 			elseif rescue_clause /= Void then
-				buffer.putstring ("RTEV;%N")
+				buffer.putstring ("RTEV;")
+				buffer.new_line
 			end
 		end
 
@@ -1047,9 +1401,37 @@ feature
 		local
 			buf: GENERATION_BUFFER
 		do
-			if exception_stack_managed or else rescue_clause /= Void then
+			if rescue_clause /= Void then
+				buf := buffer
+				buf.putstring ("RTEOK;")
+				buf.new_line
+			elseif exception_stack_managed then
 				buf := buffer
 				buf.putstring ("RTEE;")
+				buf.new_line
+			end
+		end
+
+	generate_pop_debug_locals is
+			-- Generate the cleaning of the locals stack used by the debugger 
+			-- when stopped in a C function
+		local
+			buf: GENERATION_BUFFER
+			i: INTEGER
+		do
+			if context.workbench_mode then
+				-- we have saved at least Result and Current
+				i := 2
+				if locals /= Void then
+					i := i + locals.count
+				end
+				if arguments /= Void then
+					i := i + arguments.count
+				end
+				buf := buffer
+				buf.putstring ("RTLO(")
+				buf.putint (i)
+				buf.putstring (");")
 				buf.new_line
 			end
 		end
@@ -1127,8 +1509,9 @@ feature
 		end
 
 	generate_stack_macro (macro_name: STRING) is
-			-- Generate a macro call will the feature name, the feature origin
-			-- and `Current' as arguments
+			-- Generate a macro call will the feature name, the feature origin,
+			-- `Current', the number of locals, the number of arguments and the
+			-- real body id of the feature as arguments.
 		local
 			buf: GENERATION_BUFFER
 		do
@@ -1139,27 +1522,53 @@ feature
 			buf.putstring ("%", ")
 			feature_origin (buf)
 			buf.putstring (gc_comma)
-			context.Current_register.print_register_by_name
+			context.Current_register.print_register
+			buf.putstring (gc_comma)
+			if locals /= Void then
+				buf.putint (locals.count)
+			else
+				buf.putint (0)
+			end
+			buf.putstring (gc_comma)
+			if arguments /= Void then
+				buf.putint (arguments.count)
+			else
+				buf.putint (0)
+			end
+			buf.putstring (gc_comma)
+			buf.putint (real_body_id - 1)
 			buf.putstring (gc_rparan_comma)
 			buf.new_line
 		end
 
 	finish_compound is
 			-- Generate the end of the compound routine
+		local
+			buf: like buffer
 		do
-				-- Generate the removela of the GC hooks
+				-- Generate the hook corresponding to the end of the feature ("end;")
+			generate_frozen_end_debugger_hook
+
+				-- Generate the remove of the GC hooks
 			context.remove_gc_hooks
+				-- Generate the update of the locals stack used to debug in C
+			generate_pop_debug_locals
+				-- Generate trace macro (stop)
+			generate_trace_stop
+				-- Generate profile macro (stop)
+			generate_profile_stop
 				-- Generate the update of the trace stack before quitting
 				-- the routine
 			generate_pop_execution_trace
-				-- Generate trace macro (stop)
-			generate_trace_stop
 
-				-- Generate profile macro (stop)
-			generate_profile_stop
-
-			if rescue_clause /= Void then
-				buffer.putstring ("RTOK;%N")
+			if is_global_once then
+				buf := buffer
+				buf.new_line
+				buf.exdent
+				buf.putchar ('}')
+				buf.new_line
+				buf.putstring ("EIF_GLOBAL_ONCE_MUTEX_UNLOCK;")
+				buf.new_line
 			end
 		end
 
@@ -1180,6 +1589,7 @@ feature -- Byte code generation
 			if Context.origin_has_precondition then
 				have_assert := (precondition /= Void or else inh_assert.has_precondition)
 			end
+
 			if have_assert then
 				context.set_assertion_type (In_precondition)
 				ba.append (Bc_precond)
@@ -1189,24 +1599,26 @@ feature -- Byte code generation
 					ba.append (Bc_sep_unset)
 				end
 			end
-			if Context.origin_has_precondition and then (precondition /= Void) then
-				context.set_is_prec_first_block (True)
-				precondition.make_byte_code (ba)
+
+			if Context.origin_has_precondition then
+				if inh_assert.has_precondition then
+					inh_assert.make_precondition_byte_code (ba)
+				end
+
+				if precondition /= Void then
+					Context.set_new_precondition_block (True)
+					precondition.make_byte_code (ba)
+				end
+			end
+
+			if have_assert then
 				from
 				until
 					ba.forward_marks4.count = 0
 				loop
 					ba.write_forward4
 				end
-				ba.append (Bc_goto_body)
-				ba.mark_forward
-			end
 
-			if Context.origin_has_precondition and then inh_assert.has_precondition then
-				inh_assert.make_precondition_byte_code (ba)
-			end
-
-			if have_assert then
 				if has_separate_call_in_precondition then
 					ba.append (Bc_sep_raise_prec)
 						-- Reserve separeate parameters
@@ -1215,11 +1627,12 @@ feature -- Byte code generation
 				else
 					ba.append (Bc_raise_prec)
 				end
-				if precondition /= Void then
-					ba.write_forward
-				end
 				if inh_assert.has_precondition then
 					inh_assert.write_forward (ba)
+				
+					if precondition /= Void then
+						ba.write_forward
+					end
 				end
 				ba.write_forward
 			end
@@ -1230,7 +1643,7 @@ feature -- Byte code generation
 				ba.mark_forward
 			end
 
-			if 	postcondition /= Void and then 	
+			if postcondition /= Void and then 	
 				old_expressions /= Void then
 					-- Make byte code for old expression
 					--! Order is important since interpretor pops expression
@@ -1263,8 +1676,6 @@ feature -- Byte code generation
 				compound.make_byte_code (ba)
 			end
 
-			make_breakable (ba)
-
 				-- Make byte code for postcondition
 			if have_assert then
 				context.set_assertion_type (In_postcondition)
@@ -1272,12 +1683,12 @@ feature -- Byte code generation
 				ba.mark_forward
 			end
 
-			if postcondition /= Void then
-				postcondition.make_byte_code (ba)
-			end
-
 			if inh_assert.has_postcondition then
 				inh_assert.make_postcondition_byte_code (ba)
+			end
+
+			if postcondition /= Void then
+				postcondition.make_byte_code (ba)
 			end
 
 			if have_assert then
@@ -1288,6 +1699,9 @@ feature -- Byte code generation
 					-- Reserve separeate parameters
 				process_sep_paras_in_byte_code (ba, False)
 			end
+
+				-- Generate the hook corresponding to the final end.
+			context.generate_melted_end_debugger_hook (ba)
 		end
 
 feature -- Array optimization
@@ -1311,7 +1725,7 @@ feature -- Array optimization
 		do
 			Result := Current
 			opt_context := initial_optimization_context
-			if opt_context.array_desc.empty then
+			if opt_context.array_desc.is_empty then
 					-- No entity calls a special feature
 			else
 				optimizer := System.remover.array_optimizer
@@ -1335,12 +1749,12 @@ feature -- Array optimization
 			i, n: INTEGER
 			safe_array_desc, array_desc, g: TWO_WAY_SORTED_SET [INTEGER]
 		do
-			!!array_desc.make
-			!!safe_array_desc.make
-			!!Result.make (array_desc, safe_array_desc)
-			!!g.make
+			create array_desc.make
+			create safe_array_desc.make
+			create Result.make (array_desc, safe_array_desc)
+			create g.make
 			Result.set_generated_array_desc (g)
-			!!g.make
+			create g.make
 			Result.set_generated_offsets (g)
 			if arguments /= Void then
 				from
@@ -1425,7 +1839,7 @@ feature -- Inlining
 			if inliner.current_feature_inlined then
 					-- If something has been inlined, create
 					-- a new byte code
-				!!inlined_b
+				create inlined_b
 				inlined_b.fill_from (Current)
 				Result := inlined_b
 
@@ -1485,9 +1899,9 @@ feature -- Concurrent Eiffel
 				buf.putstring (":")
 				buf.indent
 				buf.new_line
-				!!var_name.make(10)
+				create var_name.make(10)
 				from 
-					!!var_name.make(10)
+					create var_name.make(10)
 					i := arguments.lower
 					count := arguments.count + i - 1
 				until
@@ -1501,7 +1915,7 @@ feature -- Concurrent Eiffel
 						reg := context.associated_register_table.item(var_name)
 						buf.putstring ("if (CURRSO(")
 						if reg /= Void then
-							reg.print_register_by_name
+							reg.print_register
 						else
 							buf.putstring (var_name)
 						end
@@ -1535,7 +1949,7 @@ feature -- Concurrent Eiffel
 				-- Free separate parameters
 			if arguments /= Void then
 				from 
-					!!var_name.make(10)
+					create var_name.make(10)
 					i := arguments.lower
 					count := arguments.count + i - 1
 					buf := buffer
@@ -1552,7 +1966,7 @@ feature -- Concurrent Eiffel
 						reg := context.associated_register_table.item(var_name)
 						buf.putstring ("CURFSO(")
 						if reg /= Void then
-							reg.print_register_by_name
+							reg.print_register
 						else
 							buf.putstring (var_name)
 						end
@@ -1576,7 +1990,7 @@ feature -- Concurrent Eiffel
 				-- Free separate parameters
 			if arguments /= Void then
 				from 
-					!!var_name.make(10)
+					create var_name.make(10)
 					i := arguments.lower
 					count := arguments.count + i - 1
 					buf := buffer
@@ -1593,7 +2007,7 @@ feature -- Concurrent Eiffel
 						reg := context.associated_register_table.item(var_name)
 						buf.putstring ("CURFSO(")
 						if reg /= Void then
-							reg.print_register_by_name
+							reg.print_register
 						else
 							buf.putstring (var_name)
 						end
@@ -1626,7 +2040,7 @@ feature -- Concurrent Eiffel
 		do
 			if System.has_separate then
 				ast_sep_call := Ast_context.separate_calls
-				if not ast_sep_call.empty then
+				if not ast_sep_call.is_empty then
 					separate_calls := clone (ast_sep_call)
 				end
 			end

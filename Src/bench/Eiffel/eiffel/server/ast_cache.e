@@ -1,10 +1,12 @@
--- Cache for routine tables
+indexing
+	description: "Cache for AST indexed by class id"
+	date: "$Date$"
+	revision: "$Revision$"
 
 class AST_CACHE 
 
 inherit
-
-	CACHE [CLASS_AS, CLASS_ID]
+	CACHE [CLASS_AS]
 
 creation
 

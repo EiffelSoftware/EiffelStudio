@@ -11,9 +11,73 @@ inherit
 
 	SHARED_COMPILATION_MODES
 
-	SHARED_ID
+feature -- Access
+
+	system_name: STRING;
+			-- System name
+
+	root_cluster: CLUSTER_I;
+			-- Root class of the system
+
+	root_class_name: STRING;
+			-- Root class name
+
+	creation_name: STRING;
+			-- Creation procedure name
+
+	c_file_names: LIST [STRING];
+			-- C file names to include
+
+	include_paths: LIST [STRING];
+			-- Include paths to add in the Makefile C flags
+
+	object_file_names: LIST [STRING];
+			-- Object file names to link with the application
+
+	makefile_names: LIST [STRING];
+			-- Makefile names to execute before the linking
+
+	assembly_names: LIST [STRING]
+			-- Assembly names needed by IL generation to find types
+
+	has_cpp_externals: BOOLEAN
+			-- Did system included a C++ external at some point.
+
+	debug_clauses: SEARCH_TABLE [STRING]
+			-- List of all debug clauses in Eiffel code.
+
+feature -- Access for precompilation configuration
+
+	compilation_id: INTEGER
+			-- Precompilation identifier
+
+	is_precompiled: BOOLEAN;
+			-- Is the Current system from a precompilation?
+
+	uses_precompiled: BOOLEAN;
+			-- Does current system use a precompiled library?
+
+	has_precompiled_preobj: BOOLEAN;
+			-- Does a `preobj' file exist for the current precompiled project?
+			-- This file might not exist as a result of merging precompilations
+
+	licensed_precompilation: BOOLEAN
+			-- Is the precompiled library protected by a license?
 
 feature -- Update
+
+	add_new_debug_clause (st: STRING) is
+			-- Add `st' to list of existing debug clauses.
+		require
+			st_not_void: st /= Void
+		do
+			if debug_clauses = Void then
+				create debug_clauses.make (10)
+			end
+			debug_clauses.put (st)
+		ensure
+			extended: debug_clauses.has (st)
+		end
 
 	set_system_name (s: STRING) is
 			-- Assign `s' to `system_name'.
@@ -63,8 +127,18 @@ feature -- Update
 			makefile_names := l
 		end
 
+	set_assembly_names (l: like assembly_names) is
+			-- Assign `l' to `assembly_names'.
+		do
+			assembly_names := l
+		ensure
+			assembly_names_set: assembly_names = l
+		end
+
 	set_has_cpp_externals (v: BOOLEAN) is
 			-- Set `has_cpp_externals' to `v'.
+		require
+			only_true: v
 		do
 			has_cpp_externals := v
 		ensure
@@ -73,17 +147,12 @@ feature -- Update
 
 feature -- Update for the precompilation
 
-	set_compilation_id is
+	set_compilation_id (i: INTEGER) is
 			-- Set `compilation_id' value.
-		local
-			str: ANY
 		do
-			if Compilation_modes.is_precompiling then
-				str := Project_directory_name.to_c;
-				compilation_id := eif_date ($str)
-			else
-				compilation_id := Normal_compilation
-			end
+			compilation_id := i
+		ensure
+			compilation_id_set: compilation_id = i
 		end
 
 	set_precompilation (b: BOOLEAN) is
@@ -102,60 +171,5 @@ feature -- Update for the precompilation
 		do
 			licensed_precompilation := b
 		end
-
-feature -- Access
-
-	system_name: STRING;
-			-- System name
-
-	root_cluster: CLUSTER_I;
-			-- Root class of the system
-
-	root_class_name: STRING;
-			-- Root class name
-
-	creation_name: STRING;
-			-- Creation procedure name
-
-	c_file_names: LIST [STRING];
-			-- C file names to include
-
-	include_paths: LIST [STRING];
-			-- Include paths to add in the Makefile C flags
-
-	object_file_names: LIST [STRING];
-			-- Object file names to link with the application
-
-	makefile_names: LIST [STRING];
-			-- Makefile names to execute before the linking
-
-	has_cpp_externals: BOOLEAN
-			-- Did system included a C++ external at some point.
-
-feature -- Access for the precompilation configuration
-
-	compilation_id: INTEGER
-			-- Precompilation identifier
-
-	is_precompiled: BOOLEAN;
-			-- Is the Current system from a precompilation?
-
-	uses_precompiled: BOOLEAN;
-			-- Does current system use a precompiled library?
-
-	has_precompiled_preobj: BOOLEAN;
-			-- Does a `preobj' file exist for the current precompiled project?
-			-- This file might not exist as a result of merging precompilations
-
-	licensed_precompilation: BOOLEAN
-			-- Is the precompiled library protected by a license?
-
-feature {NONE} -- External
-
-	eif_date (s: POINTER): INTEGER is
-			-- Date of file of name `s'.
-		external
-			"C"
-		end;
 
 end -- class SYSTEM_DESCRIPTION

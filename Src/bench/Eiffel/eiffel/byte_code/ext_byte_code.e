@@ -48,12 +48,9 @@ feature -- Routines for externals
 			encapsulated := e;
 		end;
 
-	is_external: BOOLEAN is
+	is_external: BOOLEAN is True
 			-- Is the current byte code a byte code for external
 			-- features ?
-		do
-			Result := True;
-		end;
 
 feature -- Byte code generation
 
@@ -69,11 +66,12 @@ feature -- Byte code generation
 			buf: GENERATION_BUFFER
 		do
 			buf := buffer
-			if context.result_used or postcondition /= Void or context.has_invariant then
-				buf.putstring ("Result = ");
-			else
-				buf.putstring ("return ");
-			end;
+
+			if not result_type.is_void then
+				buf.putstring ("return ")
+				result_type.c_type.generate_cast (buf)
+			end
+
 			buf.putstring (external_name);
 			buf.putchar ('(');
 			generate_arguments;
@@ -95,6 +93,7 @@ feature -- Byte code generation
 		end;
 
 	generate_current: BOOLEAN is False
+			-- Do we need to generate `Current'?
 
 feature -- Inlining
 

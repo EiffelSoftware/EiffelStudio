@@ -10,7 +10,7 @@ inherit
 		rename
 			initialize as initialize_basic_type
 		redefine
-			set, is_equivalent, append_to, format
+			is_equivalent, append_to, format
 		end
 
 feature {AST_FACTORY} -- Initialization
@@ -23,16 +23,6 @@ feature {AST_FACTORY} -- Initialization
 			bits_symbol := s
 		ensure
 			bits_symbol_set: bits_symbol = s
-		end
-
-feature {NONE} -- Initialization
-
-	set is
-			-- Yacc initilization
-		do
-			bits_symbol ?= yacc_arg (0)
-		ensure then
-			bits_symbol_exists: bits_symbol /= Void
 		end
 
 feature -- Attributes
@@ -92,10 +82,9 @@ feature
 			check
 				positive_bits_value: bits_value > 0
 			end
-			!! Result.make (constant)
-			Result.set_bit_count (bits_value)
+			create Result.make (constant, bits_value)
 			if System.in_pass3 then
-				!!depend_unit.make (context.a_class.id, constant)
+				!!depend_unit.make (context.a_class.class_id, constant)
 				context.supplier_ids.extend (depend_unit)
 			end
 		end; -- solved_type
@@ -115,8 +104,7 @@ feature
 				-- to `-1'.
 				-- But that's ok, since the result will never been used except for 
 				-- displaying an error.
-			create Result
-			Result.set_bit_count (-1)
+			create Result.make (-1)
 		ensure then
 			False
 		end; -- actual_type

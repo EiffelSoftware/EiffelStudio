@@ -40,7 +40,7 @@ feature -- Properties
 	error_position: INTEGER
 			-- Position in file where error occurred (during degree 3)?
 
-feature {E_PROJECT, COMPILER_EXPORTER, DEGREE_OUTPUT} -- Element change
+feature {E_PROJECT, COMPILER_EXPORTER, SHARED_ERROR_HANDLER} -- Element change
 
 	insert_interrupt_error (is_during_comp: BOOLEAN) is
 			-- Insert an `interrup_error' so that the compilation
@@ -54,6 +54,7 @@ feature {E_PROJECT, COMPILER_EXPORTER, DEGREE_OUTPUT} -- Element change
 				interrupt_error.set_during_compilation
 			end
 			insert_error (interrupt_error)
+			raise_error
 		end
 
 feature {COMPILER_EXPORTER, E_PROJECT} -- Output
@@ -63,12 +64,12 @@ feature {COMPILER_EXPORTER, E_PROJECT} -- Output
 		require	
 			non_void_error_displayer: error_displayer /= Void
 		do
-			if not warning_list.empty then
+			if has_warning then
 				error_displayer.trace_warnings (Current)
 				warning_list.wipe_out
 			end
 
-			if not error_list.empty then
+			if has_error then
 				error_displayer.trace_errors (Current)
 				error_position := 0
 				error_list.wipe_out
@@ -80,7 +81,7 @@ feature {COMPILER_EXPORTER, E_PROJECT} -- Output
 		require	
 			non_void_error_displayer: error_displayer /= Void
 		do
-			if not warning_list.empty then
+			if has_warning then
 				error_displayer.trace_warnings (Current)
 				warning_list.wipe_out
 			end
@@ -135,9 +136,15 @@ feature {COMPILER_EXPORTER} -- Error handling primitives
 		end
 
 	has_error: BOOLEAN is
-			-- Has the error handler detected an error so far ?
+			-- Has error handler detected an error so far?
 		do
-			Result := not error_list.empty
+			Result := not error_list.is_empty
+		end
+
+	has_warning: BOOLEAN is
+			-- Has error handler detected a warning so far?
+		do
+			Result := not warning_list.is_empty
 		end
 
 	raise_error is
@@ -145,7 +152,7 @@ feature {COMPILER_EXPORTER} -- Error handling primitives
 			-- of class SYSTEM_I
 		require
 			non_void_error_displayer: error_displayer /= Void
-			has_error: not error_list.empty
+			has_error: has_error
 		do
 			Rescue_status.set_is_error_exception (True)
 			raise ("Compiler error")
@@ -157,9 +164,15 @@ feature {COMPILER_EXPORTER} -- Error handling primitives
 		require	
 			non_void_error_displayer: error_displayer /= Void
 		do
-			if not error_list.empty then
+			if has_error then
 				raise_error
 			end
+		end
+
+	force_display is
+			-- Make sure the user can see the messages we send.
+		do
+			error_displayer.force_display
 		end
 
 	wipe_out is
@@ -179,23 +192,6 @@ feature {E_PROJECT, COMPILER_EXPORTER} -- Setting
 			error_displayer := ed
 		ensure
 			set: error_displayer = ed
-		end
-
-feature {COMPILER_EXPORTER} 
-
-	send_yacc_information is
-			-- Send to C code of Yacc information for making
-			-- error messages.
-		once
-			error_init ($Current, 	$make_syntax_error,
-									$make_string_too_long,
-									$make_string_extension,
-									$make_string_uncompleted,
-									$make_bad_character,
-									$make_string_empty,
-									$make_id_too_long,
-									$make_basic_generic_type,
-									$make_too_many_generics)
 		end
 
 feature {EXPR_ADDRESS_AS} -- Passed to C
@@ -222,95 +218,6 @@ feature {COMPILER_EXPORTER}
 			!! separate_error.init
 			insert_error (separate_error)
 			raise_error
-		end
-
-feature {NONE} -- Passed to C
-
-	make_string_too_long is
-			-- Build an error message for a too long manifest string.
-		local
-			string_too_long: STRING_TOO_LONG
-		do
-			!!string_too_long.init
-			insert_error (string_too_long)
-			raise_error
-		end
-
-	make_id_too_long is
-			-- Build an error message for a too long identifier.
-		local
-			id_too_long: ID_TOO_LONG
-		do
-			!!id_too_long.init
-			insert_error (id_too_long)
-			raise_error
-		end
-
-	make_too_many_generics is
-			-- Build an error message for too many generics.
-		local
-			too_many_generics: TOO_MANY_GENERICS
-		do
-			!!too_many_generics.init
-			insert_error (too_many_generics)
-			raise_error
-		end
-
-	make_string_extension is
-			-- Build an error message for a bad string extension.
-		local
-			string_extension: STRING_EXTENSION
-		do
-			!!string_extension.init
-			insert_error (string_extension)
-			raise_error
-		end
-
-	make_string_uncompleted is
-			-- Build an error message for an umcompleted string
-		local
-			string_uncompleted: STRING_UNCOMPLETED
-		do
-			!!string_uncompleted.init
-			insert_error (string_uncompleted)
-			raise_error
-		end
-
-	make_bad_character is
-			-- Build an error message for a bad character
-		local
-			bad_char: BAD_CHARACTER
-		do
-			!!bad_char.init
-			insert_error (bad_char)
-			raise_error
-		end
-
-	make_string_empty is
-			-- Build an error message for an empty string
-		local
-			string_empty: STRING_EMPTY
-		do
-			!!string_empty.init
-			insert_error (string_empty)
-			raise_error
-		end
-
-	make_basic_generic_type is
-		local
-			basic_gen_type_error: BASIC_GEN_TYPE_ERR
-		do
-			!!basic_gen_type_error.init
-			insert_error (basic_gen_type_error)
-			raise_error
-		end
-
-feature {NONE} -- Externals
-
-	error_init (obj: POINTER ptr1, ptr2, ptr3, ptr4, ptr5, ptr6, ptr7, ptr8, ptr9: POINTER) is
-			-- Initialize syntac error handling C primitives.
-		external
-			"C"
 		end
 
 invariant

@@ -18,7 +18,7 @@ feature
 	actual_type: POINTER_A is
 			-- Actual double type
 		once
-			Result := Pointer_type;
+			Result := Pointer_type
 		end; -- actual_type
 
 	generate_cecil_value is

@@ -72,7 +72,7 @@ feature -- types
 			type_i: TUPLE_TYPE_I
 		do
 			!!type_i
-			type_i.set_base_id (id)
+			type_i.set_base_id (class_id)
 			type_i.set_true_generics (Void)
 			type_i.set_meta_generic (Void)
 			class_type := new_type (type_i)
@@ -109,7 +109,6 @@ feature -- Actual class type
 			actual_generic: ARRAY [FORMAL_A]
 			formal: FORMAL_A
 		do
-			!!Result
 			if generics /= Void then
 				from
 					i := 1
@@ -123,9 +122,11 @@ feature -- Actual class type
 					actual_generic.put (formal, i)
 					i := i + 1
 				end
+			else
+				create actual_generic.make (1, 0)
 			end
-			Result.set_base_class_id (id)
-			Result.set_generics (actual_generic)
+			create Result.make (actual_generic)
+			Result.set_base_class_id (class_id)
 		end
 		
 feature {NONE}
@@ -136,13 +137,12 @@ feature {NONE}
 			any_a: CL_TYPE_A
 			gen: ARRAY [TYPE_A]
 		once
-			!!any_a
+			create any_a
 			any_a.set_base_class_id (System.any_id)
-			!!gen.make (1, 1)
+			create gen.make (1, 1)
 			gen.put (any_a, 1)
-			!!Result
+			create Result.make (gen)
 			Result.set_base_class_id (System.array_id)
-			Result.set_generics (gen)
 		end
 
 	Make_signature: DYN_PROC_I is

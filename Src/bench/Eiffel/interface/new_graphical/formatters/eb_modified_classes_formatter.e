@@ -20,7 +20,7 @@ feature -- Initialization
 
 	make (t: like tool) is 
 		do
-			precursor (t)
+			Precursor {EB_FILTERABLE} (t)
 			do_format := true
 		end 
 

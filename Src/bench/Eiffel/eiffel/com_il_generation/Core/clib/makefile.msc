@@ -1,0 +1,30 @@
+# ecom.lib - Makefile for Microsoft C
+
+CC = cl
+CFLAGS = -Ox -D "_WIN32_DCOM" -I$(ISE_EIFFEL)\bench\spec\windows\include -I$(EIFFEL_SRC)\library\com\spec\windows\include
+MTCFLAGS = -Ox -MT -DEIF_THREADS -D "_WIN32_DCOM" -I$(ISE_EIFFEL)\bench\spec\windows\include -I$(EIFFEL_SRC)\library\com\spec\windows\include
+
+.cpp.obj:
+	$(CC) $(CFLAGS) -c $<
+
+OBJECTS = ecom_gce_core_c.obj ecom_gec_core_c.obj ecom_core_core.obj
+
+MT_OBJECTS = MTecom_gce_core_c.obj MTecom_gec_core_c.obj MTecom_core_core.obj
+
+all:: ecom.lib mtecom.lib
+
+ecom.lib: $(OBJECTS)
+	lib /OUT:$@ $(OBJECTS)
+
+mtecom.lib: $(MT_OBJECTS)
+	lib /OUT:$@ $(MT_OBJECTS)
+
+MTecom_gce_core_c.obj: ecom_gce_core_c.cpp
+	$(CC) -Fo$@ $(MTCFLAGS) -c $?
+
+MTecom_gec_core_c.obj: ecom_gec_core_c.cpp
+	$(CC) -Fo$@ $(MTCFLAGS) -c $?
+
+MTecom_core_core.obj: ecom_core_core.cpp
+	$(CC) -Fo$@ $(MTCFLAGS) -c $?
+

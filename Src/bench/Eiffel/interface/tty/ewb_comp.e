@@ -1,21 +1,23 @@
 indexing
-
-	description: 
-		"Melt eiffel system.";
-	date: "$Date$";
+	description: "Melt eiffel system."
+	date: "$Date$"
 	revision: "$Revision $"
 
-class EWB_COMP
+class
+	EWB_COMP
 
 inherit
+	PROJECT_CONTEXT
 
-	PROJECT_CONTEXT;
-	EWB_EDIT;
+	EWB_EDIT
+
 	EWB_CMD
 		redefine
 			loop_action
-		end;
-	EIFFEL_ENV;
+		end
+
+	EIFFEL_ENV
+
 	SHARED_ERROR_BEHAVIOR
 
 feature -- Initialization
@@ -57,8 +59,7 @@ feature {NONE} -- Update
 			file_name, cmd: STRING;
 			option: CHARACTER;
 			exit: BOOLEAN;
-			file: PLAIN_TEXT_FILE;
-			cmd_exec: EXTERNAL_COMMAND_EXECUTOR
+			file, dest: PLAIN_TEXT_FILE;
 		do
 			from
 			until
@@ -72,7 +73,7 @@ feature {NONE} -- Update
 				io.readline;
 				cmd := io.laststring;
 				exit := True;
-				if cmd.empty or else cmd.count > 1 then
+				if cmd.is_empty or else cmd.count > 1 then
 					option := ' ';
 				else
 					option := cmd.item (1).lower
@@ -85,7 +86,7 @@ feature {NONE} -- Update
 					io.putstring ("File name (`Ace.ace' is the default): ");
 					io.readline;
 					file_name := io.laststring;
-					if not file_name.empty then
+					if not file_name.is_empty then
 						Eiffel_ace.set_file_name (clone(file_name));
 					else
 						!!file.make ("Ace.ace");
@@ -105,17 +106,14 @@ feature {NONE} -- Update
 					io.putstring ("File name: ");
 					io.readline;
 					file_name := io.laststring;
-					if file_name.empty then
+					if file_name.is_empty then
 						exit := True;
 					else
-						!!cmd.make (0);
-						cmd.append (Copy_cmd);
-						cmd.extend (' ');
-						cmd.append (Default_ace_name);
-						cmd.extend (' ');
-						cmd.append (file_name);
-						!! cmd_exec;
-						cmd_exec.execute (cmd);
+						create file.make_open_read (Default_ace_name)
+						create dest.make_open_write (file_name)
+						file.copy_to (dest)
+						file.close
+						dest.close
 						Eiffel_ace.set_file_name (clone(file_name));
 						edit (Eiffel_ace.file_name);
 					end;
@@ -132,7 +130,6 @@ feature {NONE} -- Update
 			non_void_lace: Eiffel_ace.file_name /= Void
 		local
 			exit: BOOLEAN;
-			str: STRING
 		do
 			from
 					-- Is the Ace file still there?
@@ -162,6 +159,8 @@ feature {NONE} -- Update
 		end;
 
 	execute is
+		require else
+			can_always_be_compiled: True
 		do
 			if Eiffel_project.is_read_only then
 				io.error.put_string ("Read-only project: cannot compile.%N")
@@ -185,7 +184,7 @@ feature {NONE} -- Output
 			-- Display message for finish_freezing script.
 		do
 			io.error.putstring ("You must now run %"");
-			io.error.putstring (Finish_freezing_script);
+			io.error.putstring (Platform_constants.Finish_freezing_script);
 			io.error.putstring ("%" in:%N%T");
 			if finalized_dir then
 				io.error.putstring (Final_generation_path)
@@ -198,26 +197,22 @@ feature {NONE} -- Output
 	print_header is
 			-- Print header information of compilation.
 		do
-			io.error.putstring ("%
-				%Eiffel compilation manager%N%
-				%  (version ");
-			io.error.putstring (Version_number);
-			io.error.putstring (")%N");
-		end;
+			Degree_output.put_header (Version_number)
+		end
 
 	print_tail is
 			-- Print completion message of compilation.
 		do
-			io.error.putstring ("System recompiled.%N")
-		end;
+			Degree_output.put_system_compiled
+		end
 
 feature {NONE} -- Compilation
 
 	perform_compilation is
 			-- Melt eiffel project.
 		do
-			Eiffel_project.melt;
-		end;
+			Eiffel_project.melt
+		end
 
 	save_project_again is
 			-- Try to save the project again.
@@ -227,7 +222,6 @@ feature {NONE} -- Compilation
 			finished: BOOLEAN;
 			temp: STRING
 			file_name: FILE_NAME
-			project_name: STRING
 		do
 			from
 			until
@@ -236,12 +230,10 @@ feature {NONE} -- Compilation
 				if Eiffel_project.save_error then
 					!! file_name.make_from_string (Eiffel_project.project_directory.name);
 					if Compilation_modes.is_precompiling then 
-						file_name.extend (eiffelgen);
 						file_name.set_file_name (dot_workbench)
 					else
-						project_name := clone (Eiffel_system.name)
-						project_name.append (Project_extension)
-						file_name.set_file_name (project_name)
+						file_name.set_file_name (Eiffel_system.name)
+						file_name.add_extension (Project_extension)
 					end
 
 					!! temp.make (0);

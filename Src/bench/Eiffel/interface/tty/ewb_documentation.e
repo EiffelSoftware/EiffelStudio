@@ -137,8 +137,6 @@ feature -- Execution
 				cmd.set_do_parents
 			end;
 			cmd.set_error_window (Output_window);
-			cmd.set_feature_clause_order
-				(Class_resources.feature_clause_order.actual_value);
 			cmd.execute;
 		end;
 

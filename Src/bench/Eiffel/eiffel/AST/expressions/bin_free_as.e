@@ -10,8 +10,10 @@ inherit
 		rename
 			initialize as initialize_binary_as
 		redefine
-			set, operator_is_keyword, is_equivalent
+			operator_is_keyword, is_equivalent
 		end
+
+	PREFIX_INFIX_NAMES
 
 feature {AST_FACTORY} -- Initialization
 
@@ -31,20 +33,6 @@ feature {AST_FACTORY} -- Initialization
 			right_set: right = r
 		end
 
-feature {NONE} -- Initialization
-
-	set is
-			-- Yacc initialization
-		do
-			left ?= yacc_arg (0)
-			op_name ?= yacc_arg (1)
-			right ?= yacc_arg (2)
-		ensure then
-			left_exists: left /= Void
-			right_exists: right /= Void
-			operator_exists: op_name /= Void
-		end
-
 feature -- Attributes
 
 	op_name: ID_AS
@@ -56,9 +44,7 @@ feature -- Properties
 			-- Internal name of the infixed feature associated to the
 			-- binary expression
 		do
-			!! Result.make (7 + op_name.count)
-			Result.append (Internal_infix)
-			Result.append (op_name)
+			Result := infix_function_name_with_symbol(op_name)
 		end
 
 	Internal_infix: STRING is "_infix_"

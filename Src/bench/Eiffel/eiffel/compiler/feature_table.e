@@ -3,7 +3,7 @@
 -- the feature id corresponding to the names (id of instance of FEATURE_I).
 
 class
-	FEATURE_TABLE 
+	FEATURE_TABLE
 
 inherit
 	IDABLE
@@ -64,27 +64,17 @@ creation
 	
 feature 
 
-	feat_tbl_id: CLASS_ID;
-			-- Id for feature table: it must be equal to the id of the
-			-- class to which the feature table belongs to.
-
 	origin_table: SELECT_TABLE;
 			-- Table of the features sorted by origin
 
 	associated_class: CLASS_C is
 			-- Associated class
 		require
-			feat_tbl_id /= Void
+			feat_tbl_id /= 0
 		do
 			Result := System.class_of_id (feat_tbl_id);
 		end;
 			
-	set_feat_tbl_id (i: CLASS_ID) is
-			-- Assign `i' to `feat_tbl_id'.
-		do
-			feat_tbl_id := i
-		end;
-
 	set_origin_table (t: like origin_table) is
 			-- Assign `t' to `origin_table'.
 		do
@@ -103,7 +93,7 @@ feature
 			feature_name: STRING;
 			f1, f2: FEATURE_I;
 			depend_unit: DEPEND_UNIT;
-			ext_i, other_ext_i: EXTERNAL_I
+			ext_i: EXTERNAL_I
 		do
 			if other.count = 0 then
 				Result := False
@@ -118,20 +108,9 @@ feature
 					f2 := other.item (feature_name);
 					f1 := item_for_iteration;
 					if f2 = Void then
-	debug ("ACTIVITY")
-		io.error.putstring ("%Tfeature ");
-		io.error.putstring (feature_name);
-		io.error.putstring (" is not in the table.%N");
-	end;
-							-- This is temporary according to the comments in EXTERNAL_I
-							-- If this is removed, add a test at the beginning on Void for `other'
-						if f1.written_in.is_equal (feat_tbl_id) and then f1.is_external then
-							ext_i ?= f1;
-							if ext_i.encapsulated then
-								System.set_freeze
-							end
-						end;
-						Result := False;
+							-- Old feature is not in Current feature table, this
+							-- is not equivalent
+						Result := False
 					else
 						check
 							f1.feature_name.is_equal (f2.feature_name);
@@ -143,9 +122,9 @@ feature
 		io.error.putstring (" is not equiv.%N");
 	end;
 							if f1.is_external then
-									-- `f1' and `f2' can be "not equiv" because of the export status
-									-- We need to freeze only if the information specific to EXTERNAL_I
-									-- is not equiv
+									-- `f1' and `f2' can be "not equiv" because of the
+									-- export status. We need to freeze only if the
+									-- information specific to EXTERNAL_I is not equiv
 								ext_i ?= f1;
 								if
 									not ext_i.freezing_equiv (f2)
@@ -266,7 +245,7 @@ end;
 					propagate_feature := True;
 				end;
 
-				if 	old_feature_i.written_in.is_equal (feat_tbl_id) then
+				if 	old_feature_i.written_in = feat_tbl_id then
 					if old_feature_i.is_external then
 							-- Delete one occurence of an external feature
 						external_i ?= old_feature_i;
@@ -280,15 +259,11 @@ end;
 								-- the list of new externals in inherit_table. Same thing
 								-- if it has to be removed
 							pass_control.remove_external (external_i.external_name);
-						else
-								-- If it was encapsulated, we need to regenerate the C code
-								-- of the class where it was defined
-							external_i.written_in.associated_class.set_must_be_recompiled (True)
 						end;
 					end;
 					if 	new_feature_i = Void
 						or else
-						not new_feature_i.written_in.is_equal (feat_tbl_id)
+						not (new_feature_i.written_in = feat_tbl_id)
 					then
 							-- A feature written in the associated class
 							-- disapear
@@ -302,7 +277,7 @@ end;
 					end;
 				end;
 
-				if feat_tbl_id /= Void then
+				if feat_tbl_id /= 0 then
 					-- Bug fix: moving a class around can create problems:
 					-- class test1 t: TEST2 end; class test2 inherit t1 end
 					-- class test2 moved from one cluster to another
@@ -340,29 +315,30 @@ end;
 				forth;
 			end;
 
-			if feat_tbl_id /= Void then
-				-- Bug fix: moving a class around can crete problems:
-				-- class test1 t: TEST2 end; class test2 inherit t1 end
-				-- class test2 moved from one cluster to another
-				-- Iteration on the features removed by `update_table'
-			from
-				removed_feature_ids.start
-			until
-				removed_feature_ids.after
-			loop
-debug ("ACTIVITY")
-	io.error.putstring ("%Tfeature of id ");
-	io.error.putint (removed_feature_ids.item);
-	io.error.putstring (" (removed by `update_table' is propagated to clients%N");
-end;
-				!!depend_unit.make_no_dead_code (feat_tbl_id, removed_feature_ids.item);
-				propagators.put (depend_unit);
-				removed_feature_ids.forth
-			end
+			if feat_tbl_id /= 0 then
+					-- Bug fix: moving a class around can crete problems:
+					-- class test1 t: TEST2 end; class test2 inherit t1 end
+					-- class test2 moved from one cluster to another
+					-- Iteration on the features removed by `update_table'
+				from
+					removed_feature_ids.start
+				until
+					removed_feature_ids.after
+				loop
+	debug ("ACTIVITY")
+		io.error.putstring ("%Tfeature of id ");
+		io.error.putint (removed_feature_ids.item);
+		io.error.putstring (" (removed by `update_table' is propagated to clients%N");
+	end;
+					!!depend_unit.make_no_dead_code (feat_tbl_id, removed_feature_ids.item);
+					propagators.put (depend_unit);
+					removed_feature_ids.forth
+				end
+				removed_feature_ids := Void
 			end
 		end;
 
-	propagate_assertions (assert_list: LINKED_LIST [ROUTINE_ID]) is
+	propagate_assertions (assert_list: LINKED_LIST [INTEGER]) is
 			-- Propagate features to Pass 4 using the routine ids
 			-- in `assert_list'.
 		local
@@ -373,7 +349,7 @@ end;
 			until
 				after
 			loop
-				if item_for_iteration.written_in.is_equal (feat_tbl_id) and then
+				if item_for_iteration.written_in = feat_tbl_id and then
 					not item_for_iteration.is_deferred then
 					from
 						assert_list.start;
@@ -409,7 +385,7 @@ feature -- Check
 			f: FEATURE_I;
 		do
 			from
-				removed_feature_ids.wipe_out;
+				create removed_feature_ids.make
 				start
 			until
 				after
@@ -422,11 +398,7 @@ debug ("ACTIVITY")
 	io.error.putstring (key_for_iteration);
 	io.error.putstring (" removed%N");
 end;
-					if not f.is_code_replicated then
-						Tmp_body_server.desactive (f.body_id);
-					else
-						Tmp_rep_feat_server.desactive (f.body_id);
-					end;
+					Tmp_body_server.desactive (f.body_index);
 						
 					-- There is no need for a corresponding "reactivate" here
 					-- since it will be done in by pass2 in `feature_unit' if need be
@@ -438,12 +410,9 @@ end;
 			end
 		end;
 
-	removed_feature_ids: LINKED_SET [INTEGER] is
+	removed_feature_ids: LINKED_LIST [INTEGER]
 			-- Set of feature_ids removed by `update_table'
 			--| It will be used for incrementality (propagation of pass3)
-		once
-			!!Result.make
-		end
 
 	check_table is
 			-- Check all the features in the table
@@ -451,7 +420,6 @@ end;
 			non_deferred, deferred_found: BOOLEAN;
 			feature_i: FEATURE_I;
 			vcch1: VCCH1;
-			pos: INTEGER;
 			select_table: SELECT_TABLE
 		do
 			from
@@ -489,7 +457,7 @@ io.error.putstring ("Check feature: ");
 io.error.putstring (f.feature_name);
 io.error.new_line;
 end;
-			if f.written_in.is_equal (feat_tbl_id) then
+			if f.written_in = feat_tbl_id then
 					-- Take a feature written in the class associated
 					-- to the feature table
 				arguments := f.arguments;
@@ -540,7 +508,7 @@ end;
 			go (pos);
 		end;
 
-	feature_of_body_id (i: BODY_ID): FEATURE_I is
+	feature_of_body_index (i: INTEGER): FEATURE_I is
 			-- Feature of body id equal to `i'.
 		local
 			feat: FEATURE_I;
@@ -553,7 +521,7 @@ end;
 				after or else Result /= Void
 			loop
 				feat := item_for_iteration;
-				if equal (feat.body_id, i) then
+				if feat.body_index = i then
 					Result := feat;
 				end;
 				forth;
@@ -561,7 +529,7 @@ end;
 			go (pos);
 		end;
 
-	feature_of_rout_id (rout_id: ROUTINE_ID): FEATURE_I is
+	feature_of_rout_id (rout_id: INTEGER): FEATURE_I is
 			-- Feature found in routine table rout_id
 		local
 			feat: FEATURE_I;
@@ -599,7 +567,7 @@ end;
 				after
 			loop
 				feature_i := item_for_iteration;
-				if feature_i.written_in.is_equal (feat_tbl_id) then
+				if feature_i.written_in = feat_tbl_id then
 						-- Feature written in the associated class
 					feature_i.update_instantiator2 (a_class);
 				end;
@@ -628,7 +596,7 @@ end;
 					if not attribute_type.is_none then
 							-- No attribute of NONE type in skeleton
 						attr_type := attribute_type.type_i;
-						if attr_type.has_formal or attr_type.is_expanded then
+						if attr_type.has_formal or attr_type.is_true_expanded then
 							!!generic_desc;
 							generic_desc.set_type (attr_type);
 							desc := generic_desc;
@@ -666,7 +634,7 @@ end;
 			tab: ARRAY [FEATURE_I];
 			feat: FEATURE_I;
 			i, nb: INTEGER;
-			rout_id: ROUTINE_ID;
+			rout_id: INTEGER;
 			a_class: CLASS_C;
 		do
 			a_class := associated_class;
@@ -686,11 +654,14 @@ end;
 						ba.append_int32_integer (0);
 					else
 						rout_id := feat.rout_id_set.first;
-						ba.append_int32_integer (rout_id.id);
+						ba.append_int32_integer (rout_id);
 					end;
 					i := i + 1
 				end
 			end;
+				-- Reset `visible_table_size' since size is computed
+				-- during generation.
+			a_class.set_visible_table_size (0)
 			if a_class.has_visible then
 				ba.append ('%/001/');
 				a_class.visible_level.make_byte_code (ba, Current);
@@ -707,11 +678,11 @@ end;
 			tab: ARRAY [FEATURE_I];
 			feat: FEATURE_I;
 			i, nb: INTEGER;
-			rout_id: ROUTINE_ID
+			rout_id: INTEGER
 		do
 			tab := routine_id_array;
 			buffer.putstring ("int32 ra");
-			buffer.putint (feat_tbl_id.id);
+			buffer.putint (feat_tbl_id);
 			buffer.putstring ("[] = {");
 			buffer.new_line;
 			from
@@ -726,7 +697,7 @@ end;
 					buffer.putint (0);
 				else
 					rout_id := feat.rout_id_set.first;
-					buffer.putint (rout_id.id);
+					buffer.putint (rout_id);
 debug
 buffer.putstring (" /* `");
 buffer.putstring (feat.feature_name);
@@ -756,7 +727,7 @@ end;
 			end;
 		end;
 
-	replicated_features: EXTEND_TABLE [ARRAYED_LIST [FEATURE_I], BODY_INDEX] is
+	replicated_features: EXTEND_TABLE [ARRAYED_LIST [FEATURE_I], INTEGER] is
 			-- Replicated features for Current feature table
 			-- hashed on body_index
 		local
@@ -770,9 +741,7 @@ end;
 				after
 			loop
 				feat := item_for_iteration;
-				if feat.is_replicated and then
-					feat.is_unselected
-				then
+				if feat.is_replicated and then feat.is_unselected then
 					list := Result.item (feat.body_index);
 					if list = Void then
 						!! list.make (1);
@@ -799,8 +768,7 @@ feature -- Case stuff
 				Result or else after 
 			loop
 				feat := item_for_iteration;
-				Result := feat.is_external and then
-					feat.written_in.is_equal (feat_tbl_id)
+				Result := feat.is_external and then feat.written_in = feat_tbl_id
 				forth
 			end
 		end;
@@ -810,7 +778,7 @@ feature -- API
 	api_table: E_FEATURE_TABLE is
 			-- API table of features
 		local
-			c_id: CLASS_ID;
+			c_id: INTEGER;
 			feat: FEATURE_I;
 		do
 			from
@@ -847,7 +815,7 @@ feature -- API
 			until
 				after
 			loop
-				if c_id.is_equal (item_for_iteration.written_in) then
+				if c_id = item_for_iteration.written_in then
 					list.put_front (item_for_iteration.api_feature (c_id))
 				end;
 				forth
@@ -868,16 +836,18 @@ feature -- Debugging
 	trace is
 			-- Debug purpose
 		do
-			io.error.putstring ("Feature table for ");
+			io.error.putstring ("%N%NFeature table for ");
 			io.error.putstring (associated_class.name);
-			io.error.new_line;
 			from
 				start;
 			until
 				after
 			loop
-				io.error.putchar ('%T');
-				item_for_iteration.trace;
+				io.error.putchar ('%N');
+				print (item_for_iteration.generator)
+				io.error.putchar (' ')
+				print (item_for_iteration.feature_name)
+--				item_for_iteration.trace;
 				forth;
 			end;
 		end;
@@ -899,7 +869,7 @@ feature -- Debugging
 if it.written_class > System.any_class.compiled_class then
 				it.trace;
 				io.error.putstring ("code id: ");
-				it.code_id.trace;
+				io.error.putint (it.code_id);
 				io.error.putstring (" DT: ");
 				io.error.putstring (it.generator);
 				io.error.new_line;

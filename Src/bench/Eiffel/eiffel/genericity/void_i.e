@@ -7,6 +7,8 @@ inherit
 		end
 
 	TYPE_C
+		export
+			{NONE} generate_access_cast
 		undefine
 			is_void, is_bit
 		end
@@ -36,6 +38,12 @@ feature
 			-- Debug purpose
 		do
 			buffer.putstring ("void")
+		end
+
+	il_type_name: STRING is
+			-- Name of current class type.
+		do
+			Result := "void"
 		end
 
 	same_as (other: TYPE_I): BOOLEAN is
@@ -70,31 +78,6 @@ feature
 	separate_send_macro: STRING is "not_implemented"
 			-- String generated to return the result of a separate call
 
-	generate (buffer: GENERATION_BUFFER) is
-			-- Generation
-		do
-			buffer.putstring ("void ")
-		end
-
-	generate_cast (buffer: GENERATION_BUFFER) is
-			-- Generation of a cast
-		do
-			buffer.putstring ("(void) ")
-		end
-
-	generate_access_cast (buffer: GENERATION_BUFFER) is
-			-- Generate access C cast in `buffer'.
-		do
-		ensure then
-			False
-		end
-
-	generate_size (buffer: GENERATION_BUFFER) is
-			-- Generate size of C type
-		do
-			buffer.putstring ("sizeof(void)")
-		end
-
 	hash_code: INTEGER is
 			-- Hash code for current type
 		once
@@ -123,8 +106,7 @@ feature
 	generate_sk_value (buffer: GENERATION_BUFFER) is
 			-- Generate SK value associated to current C type in `buffer'.
 		do
-		ensure then
-			False
+			buffer.putstring ("SK_VOID")
 		end
 
 	type_a: TYPE_A is

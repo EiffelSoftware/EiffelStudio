@@ -35,6 +35,7 @@ feature {NONE} -- Initialization
 		do
 			make_with_buffer (Empty_buffer)
 			!! token_buffer.make (Initial_buffer_size)
+			!! verbatim_marker.make (Initial_verbatim_marker_size)
 			!! current_position.reset
 			line_number := 1
 			filename := ""
@@ -49,6 +50,7 @@ feature -- Initialization
 		do
 			Precursor
 			token_buffer.clear_all
+			verbatim_marker.clear_all
 			current_position.reset
 			line_number := 1
 			inherit_context := False
@@ -87,6 +89,10 @@ feature -- Access
 	token_buffer: STRING
 			-- Buffer for lexial tokens
 
+	verbatim_marker: STRING
+			-- Sequence of characters between " and [
+			-- in Verbatim_string_opener
+
 	inherit_context: BOOLEAN
 			-- Was the last token an `end' keyword recognized
 			-- by an `inherit' clause with an empty parent
@@ -111,7 +117,7 @@ feature -- Error handling
 		local
 			an_error: SYNTAX_ERROR
 		do
-			!! an_error.make (current_position.start_position, current_position.end_position, filename, 0, a_message)
+			!! an_error.make (current_position.start_position, current_position.end_position, filename, 0, a_message, False)
 			Error_handler.insert_error (an_error)
 			Error_handler.raise_error
 		end
@@ -121,7 +127,7 @@ feature -- Error handling
 		local
 			an_error: BAD_CHARACTER
 		do
-			!! an_error.make (current_position.start_position, current_position.end_position, filename, 0, "")
+			!! an_error.make (current_position.start_position, current_position.end_position, filename, 0, "", False)
 			Error_handler.insert_error (an_error)
 			Error_handler.raise_error
 
@@ -137,7 +143,7 @@ feature -- Error handling
 		local
 			an_error: BAD_CHARACTER
 		do
-			!! an_error.make (current_position.start_position, current_position.end_position, filename, 0, "")
+			!! an_error.make (current_position.start_position, current_position.end_position, filename, 0, "", False)
 			Error_handler.insert_error (an_error)
 			Error_handler.raise_error
 
@@ -151,7 +157,7 @@ feature -- Error handling
 		local
 			an_error: STRING_EXTENSION
 		do
-			!! an_error.make (current_position.start_position, current_position.end_position, filename, 0, "")
+			!! an_error.make (current_position.start_position, current_position.end_position, filename, 0, "", False)
 			Error_handler.insert_error (an_error)
 			Error_handler.raise_error
 
@@ -164,7 +170,7 @@ feature -- Error handling
 		local
 			an_error: STRING_EXTENSION
 		do
-			!! an_error.make (current_position.start_position, current_position.end_position, filename, 0, "")
+			!! an_error.make (current_position.start_position, current_position.end_position, filename, 0, "", False)
 			Error_handler.insert_error (an_error)
 			Error_handler.raise_error
 
@@ -179,12 +185,35 @@ feature -- Error handling
 		local
 			an_error: STRING_UNCOMPLETED
 		do
-			!! an_error.make (current_position.start_position, current_position.end_position, filename, 0, "")
+			!! an_error.make (current_position.start_position, current_position.end_position, filename, 0, "", False)
 			Error_handler.insert_error (an_error)
 			Error_handler.raise_error
 
 				-- Dummy code (for error recovery) follows:
-			last_token := TE_STRING
+			if a_string.is_empty then
+				last_token := TE_EMPTY_STRING
+			else
+				last_token := TE_STRING
+			end
+		end
+
+	report_missing_end_of_verbatim_string_error (a_string: STRING) is
+			-- Invalid verbatim string: final bracket-quote missing.
+		require
+			a_string_not_void: a_string /= Void
+		local
+			an_error: VERBATIM_STRING_UNCOMPLETED
+		do
+			!! an_error.make (current_position.start_position, current_position.end_position, filename, 0, "", False)
+			Error_handler.insert_error (an_error)
+			Error_handler.raise_error
+
+				-- Dummy code (for error recovery) follows:
+			if a_string.is_empty then
+				last_token := TE_EMPTY_VERBATIM_STRING
+			else
+				last_token := TE_VERBATIM_STRING
+			end
 		end
 
 	report_unknown_token_error (a_token: CHARACTER) is
@@ -192,12 +221,44 @@ feature -- Error handling
 		local
 			an_error: SYNTAX_ERROR
 		do
-			!! an_error.make (current_position.start_position, current_position.end_position, filename, 0, "")
+			!! an_error.make (current_position.start_position, current_position.end_position, filename, 0, "", False)
 			Error_handler.insert_error (an_error)
 			Error_handler.raise_error
 		end
 
 feature {NONE} -- Implementation
+
+	is_verbatim_string_closer: BOOLEAN is
+			-- Is `text' a valid Verbatim_string_closer?
+		require
+			-- valid_text: `text' matches regexp [ \t\r]*\][^%\n"]*\"
+		local
+			i, j, nb: INTEGER
+			found: BOOLEAN
+		do
+				-- Look for first character ].
+				-- (Note that `text' matches the following
+				-- regexp:   [ \t\r]*\][^%\n"]*\"  .)
+			from j := 1 until found loop
+				if text_item (j) = ']' then
+					found := True
+				end
+				j := j + 1
+			end
+			nb := verbatim_marker.count
+			if nb = (text_count - j) then
+				Result := True
+				from i := 1 until i > nb loop
+					if verbatim_marker.item (i) = text_item (j) then
+						i := i + 1
+						j := j + 1
+					else
+						Result := False
+						i := nb + 1  -- Jump out of the loop.
+					end
+				end
+			end
+		end
 
 	process_character_code (code: INTEGER) is
 			-- Check whether `code' is a valid character code
@@ -286,12 +347,16 @@ feature {NONE} -- Constants
 			-- Initial size for `token_buffer'
 			-- (See `eif_rtlimits.h')
 
+	Initial_verbatim_marker_size: INTEGER is 3
+			-- Initial size for `verbatim_marker'
+
 	Maximum_character_code: INTEGER is 255
 			-- Largest supported code for CHARACTER values
 
 invariant
 
 	token_buffer_not_void: token_buffer /= Void
+	verbatim_marker_not_void: verbatim_marker /= Void
 	current_position_not_void: current_position /= Void
 	filename_not_void: filename /= Void
 
@@ -299,7 +364,7 @@ end -- class EIFFEL_SCANNER_SKELETON
 
 
 --|----------------------------------------------------------------
---| Copyright (C) 1992-1999, Interactive Software Engineering Inc.
+--| Copyright (C) 1992-2000, Interactive Software Engineering Inc.
 --| All rights reserved. Duplication and distribution prohibited
 --| without prior agreement with Interactive Software Engineering.
 --|

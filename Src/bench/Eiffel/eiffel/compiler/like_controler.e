@@ -4,7 +4,7 @@ class
 	LIKE_CONTROLER  
 
 inherit
-	LINKED_SET [ROUTINE_ID]
+	LINKED_SET [INTEGER]
 		rename
 			off as linked_set_off
 		redefine
@@ -12,8 +12,14 @@ inherit
 		end
 
 	EXCEPTIONS
+		undefine
+			copy, is_equal
+		end
 
 	SHARED_RESCUE_STATUS
+		undefine
+			copy, is_equal
+		end
 
 creation
 	make

@@ -29,8 +29,10 @@ X		([a-z]|[A-Z]|[0-9]|_)
 
 -- Comments
 
-"--".*			current_position.go_to (text_count)
-
+"--".*		{
+				current_position.go_to (text_count)
+				comment_list.extend (text_substring (1, text_count - 1))
+			}
 
 -- Separators
 
@@ -84,10 +86,6 @@ X		([a-z]|[A-Z]|[0-9]|_)
 				current_position.go_to (9)
 				last_token := LAC_ASSERTION
 			}
-[cC]		{
-				current_position.go_to (1)
-				last_token := LAC_C
-			}
 [cC][hH][eE][cC][kK]	{
 				current_position.go_to (5)
 				last_token := LAC_CHECK
@@ -96,6 +94,10 @@ X		([a-z]|[A-Z]|[0-9]|_)
 				current_position.go_to (7)
 				last_token := LAC_CLUSTER
 			}
+[cC][rR][eE][aA][tT][eE]	{
+				current_position.go_to (6)
+				last_token := LAC_CREATION
+			}
 [cC][rR][eE][aA][tT][iI][oO][nN]	{
 				current_position.go_to (8)
 				last_token := LAC_CREATION
@@ -103,6 +105,10 @@ X		([a-z]|[A-Z]|[0-9]|_)
 [dD][eE][bB][uU][gG]	{
 				current_position.go_to (5)
 				last_token := LAC_DEBUG
+			}
+[dD][iI][sS][aA][bB][lL][eE][dD]_[dD][eE][bB][uU][gG]	{
+				current_position.go_to (14)
+				last_token := LAC_DISABLED_DEBUG
 			}
 [dD][eE][fF][aA][uU][lL][tT]	{
 				current_position.go_to (7)
@@ -120,9 +126,9 @@ X		([a-z]|[A-Z]|[0-9]|_)
 				current_position.go_to (7)
 				last_token := LAC_EXCLUDE
 			}
-[eE][xX][eE][cC][uU][tT][aA][bB][lL][eE]	{
-				current_position.go_to (10)
-				last_token := LAC_EXECUTABLE
+[dD][eE][pP][eE][nN][dD]	{
+				current_position.go_to (6)
+				last_token := LAC_DEPEND
 			}
 [eE][xX][pP][oO][rR][tT]	{
 				current_position.go_to (6)
@@ -135,7 +141,8 @@ X		([a-z]|[A-Z]|[0-9]|_)
 [gG][eE][nN][eE][rR][aA][tT][eE]	{
 				current_position.go_to (8)
 				last_token := LAC_GENERATE
-			}
+			} 
+
 [iI][gG][nN][oO][rR][eE]	{
 				current_position.go_to (6)
 				last_token := LAC_IGNORE
@@ -144,29 +151,21 @@ X		([a-z]|[A-Z]|[0-9]|_)
 				current_position.go_to (7)
 				last_token := LAC_INCLUDE
 			}
-[iI][nN][cC][lL][uU][dD][eE]_[pP][aA][tT][hH]	{
-				current_position.go_to (12)
-				last_token := LAC_INCLUDE_PATH
-			}
 [iI][nN][vV][aA][rR][iI][aA][nN][tT]	{
 				current_position.go_to (9)
 				last_token := LAC_INVARIANT
+			}
+[lL][iI][bB][rR][aA][rR][yY]	{
+				current_position.go_to (7)
+				last_token := LAC_LIBRARY
 			}
 [lL][oO][oO][pP]	{
 				current_position.go_to (4)
 				last_token := LAC_LOOP
 			}
-[mM][aA][kK][eE]	{
-				current_position.go_to (4)
-				last_token := LAC_MAKE
-			}
 [nN][oO]	{
 				current_position.go_to (2)
 				last_token := LAC_NO
-			}
-[oO][bB][jJ][eE][cC][tT]	{
-				current_position.go_to (6)
-				last_token := LAC_OBJECT
 			}
 [oO][pP][tT][iI][mM][iI][zZ][eE]	{
 				current_position.go_to (8)
@@ -354,7 +353,7 @@ X		([a-z]|[A-Z]|[0-9]|_)
 				end
 				current_position.go_to (text_count)
 				set_start_condition (INITIAL)
-				if token_buffer.empty then
+				if token_buffer.is_empty then
 					report_string_empty_error
 				end
 				last_token := LAC_STRING

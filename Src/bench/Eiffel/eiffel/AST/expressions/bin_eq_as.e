@@ -15,20 +15,22 @@ inherit
 
 	SHARED_TYPES
 
-feature -- Properties
+	PREFIX_INFIX_NAMES
 
-	infix_function_name: STRING is 
-			-- Internal name of the infixed feature associated to the
-			-- binary expression
-		once
-			Result := "_infix_="
-		end
+feature -- Properties
 
 	operator_is_keyword: BOOLEAN is False
 	
 	operator_is_special: BOOLEAN is True
 	
 feature -- Type check, byte code and dead code removal
+
+	infix_function_name: STRING is
+			-- Internal name of the infixed feature associated to the
+			-- binary expression
+		once
+			Result := equal_infix
+		end
 
 	type_check is
 			-- type check on an equality test

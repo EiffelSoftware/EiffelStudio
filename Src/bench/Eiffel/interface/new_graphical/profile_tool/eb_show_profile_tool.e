@@ -9,46 +9,35 @@ class
 	EB_SHOW_PROFILE_TOOL
 
 inherit
-
---	EB_CONSTANTS
-
 	EB_SHARED_INTERFACE_TOOLS
-	EV_COMMAND
+	EB_MENUABLE_COMMAND
+	EB_CONSTANTS
 
-feature {NONE} -- Execution
+feature -- Access
 
-	execute (arg: EV_ARGUMENT1 [EV_CONTAINER]; data: EV_EVENT_DATA) is
-		local
---			mp: MOUSE_PTR
-			p_win: EB_PROFILE_WINDOW
-	do
-			if
-				not profile_tool_is_valid
-			then
-				create p_win.make_top_level
-				set_profile_tool (p_win.tool)
-			end
-			profile_tool.show
-				-- should be `raise'
---			mp.restore
+	menu_name: STRING is
+			-- Menu entry associated with `Current'.
+		do
+			Result := Interface_names.m_Profile_tool
 		end
 
-feature -- Properties
+feature -- Execution
 
---	name: STRING is
---		do
---			Result := Interface_names.f_Profile_tool
---		end
-
---	menu_name: STRING is
---			-- Name used in menu entry
---		do
---			Result := Interface_names.m_Profile_tool
---		end
-
---	accelerator: STRING is
---			-- Accelerator action for menu entry
---		do
---		end
+	execute is
+		local
+--			p_win: EB_PROFILE_WINDOW
+			wizard_manager: EB_PROFILER_WIZARD_MANAGER
+		do
+--|----------------------------------------------------------------------------------------
+--| FIXME ARNAUD: To be removed if we are sure we don't want the profiler window anymore.
+--|----------------------------------------------------------------------------------------
+--			if not profiler_is_valid then
+--				create p_win.make
+--				set_profiler_window (p_win)
+--			end
+--			profiler_window.raise
+--|----------------------------------------------------------------------------------------
+			create wizard_manager.make_and_launch (window_manager.last_focused_development_window.window)
+		end
 
 end -- class EB_SHOW_PROFILE_TOOL

@@ -66,12 +66,11 @@ feature {NONE} -- Implementation
 		local
 			fn: FILE_NAME;
 			f: PLAIN_TEXT_FILE;
-			temp: STRING;	
 			chooser: NAME_CHOOSER_W;
 		do
 			if argument /= Void and then argument = last_name_chooser then
 				!! fn.make_from_string (last_name_chooser.selected_file);
-				if not fn.empty then
+				if not fn.is_empty then
 					!! f.make (fn);
 					if
 						f.exists and then 
@@ -95,7 +94,7 @@ feature {NONE} -- Implementation
 			else
 				-- First click on open
 				if Eiffel_dynamic_lib.modified then
-					warner (popup_parent).custom_call (Current, Warning_messages.w_File_changed,
+					warner (popup_parent).custom_call (Current, Warning_messages.w_File_changed (Void),
 						Interface_names.b_Yes, Interface_names.b_No, Interface_names.b_Cancel)
 				elseif new_dynamic_lib_file then
 					new_dynamic_lib_file := False

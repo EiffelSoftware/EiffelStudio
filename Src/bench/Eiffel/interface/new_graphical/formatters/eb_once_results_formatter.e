@@ -74,11 +74,11 @@ feature {NONE} -- Properties
 		do
 			status := Application.status
 			if status = void then
-				create wd.make_default (tool.parent, Interface_names.t_Warning,
-					Warning_messages.w_System_not_running)
+				create wd.make_with_text (Warning_messages.w_System_not_running)
+				wd.show_modal
 			elseif not status.is_stopped then
-				create wd.make_default (tool.parent, Interface_names.t_Warning,
-					Warning_messages.w_System_not_stopped)
+				create wd.make_with_text (Warning_messages.w_System_not_stopped)
+				wd.show_modal
 			else
 				create Result.make
 				dynamic_class := object.dynamic_class

@@ -13,21 +13,10 @@ cluster
 	fast_compile : "."
 
 	-- EiffelBase:
-	base:				"$EIFFEL_SRC\library\base"
-	structures(base):		"$\structures"
-
-	kernel(base):		"$\kernel"
-	support(base):		"$\support"
-	access(structures):	"$\access"
-	cursors(structures):	"$\cursors"
-	dispenser(structures):	"$\dispenser"
-	list(structures):		"$\list"
-	set(structures):		"$\set"
-	sort(structures):		"$\sort"
-	storage(structures):	"$\storage"
-	table(structures):		"$\table_eiffel3"
-	traversing(structures):	"$\traversing"
-	tree(structures):		"$\tree"
+	all base:				"$EIFFEL_SRC\library\base"
+		exclude
+			"table_eiffel3"
+		end
 
 end
 

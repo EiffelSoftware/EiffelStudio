@@ -1,15 +1,12 @@
-
 class DEBUG_INFO
 
 inherit
-
 	SHARED_EIFFEL_PROJECT
 		export
 			{NONE} all
 		end
 
 creation {APPLICATION_EXECUTION}
-
 	make
 
 feature {NONE} -- Initialization
@@ -17,955 +14,916 @@ feature {NONE} -- Initialization
 	make is
 			-- Initialize Current.
 		do
-			make_debuggables;
-			make_breakpoints;
-			!! debugged_routines.make;
-			!! removed_routines.make
-		end;
+			create breakpoints.make
+		end
 
-feature -- Removal
-
-	remove_feature (f: E_FEATURE) is
-			-- Remove debugging informatin for feature `f'.
-		require
-			valid_f: f /= Void;
-			f_is_debuggable: f.is_debuggable;
-			has_f: has_feature (f)
-		local
-			old_feat: E_FEATURE;
-			d_list: LINKED_LIST [DEBUGGABLE];
-			breakable_points: SORTED_TWO_WAY_LIST [AST_POSITION];
-			r_body_id: REAL_BODY_ID;
-			body_id: BODY_ID;
-			b_list: BREAK_LIST;
-			sent_bp, new_bp: like new_breakpoints;
-			bp: BREAKPOINT
-		do
-			d_list := debuggables (f);
-			body_id := f.body_id;
-			from
-				sent_bp := sent_breakpoints;
-				new_bp := new_breakpoints;
-				d_list.start
-			until
-				d_list.after
-			loop
-				from
-					r_body_id := d_list.item.real_body_id;
-					breakable_points := d_list.item.breakable_points;
-					breakable_points.start
-				until
-					breakable_points.after
-				loop
-					!! bp;
-					bp.set_offset (breakable_points.item.position);
-					bp.set_real_body_id (r_body_id);
-						-- Update the new_bp to make sure that
-						-- the breakpoint will not stop here
-						-- at next execution
-					bp := sent_bp.item (bp);
-					if bp /= Void and then not bp.is_continue then
-						bp.set_continue;
-						new_bp.extend (bp)
-					end;
-					breakable_points.forth
-				end
-				d_list.forth
-			end;
-
-			old_feat := feature_of_body_id (debugged_routines, body_id);
-				-- Remove `f' from the stoppoint list
-			if old_feat /= Void then
-				debugged_routines.start;
-				debugged_routines.prune (old_feat);
-			else
-				old_feat := feature_of_body_id (removed_routines, body_id);
-				if old_feat /= Void then
-					removed_routines.start;
-					removed_routines.prune (old_feat)
-				end
-			end;
-			new_debuggables.remove (body_id);
-			sent_debuggables.remove (body_id);
-			if f.is_once then
-				once_debuggables.remove (body_id);
-				new_once_debuggables.remove (body_id)
-			end;
-		ensure
-			not_has_f: not has_feature (f)
-		end;
+feature -- global
 
 	wipe_out is
 			-- Empty Current.
 		do
-			clear_debuggables;
-			clear_breakpoints;
-			new_breakpoints.wipe_out;
-			debugged_routines.wipe_out;
-			removed_routines.wipe_out;
-				-- Reset the supermelted body_ids counters.
-				-- Do not call the once function `System' directly since it's
-				-- value may be replaced during the first compilation (as soon
-				-- as we figured out whether the system describes a Dynamic
-				-- Class Set or not).
-			Eiffel_project.reset_debug_counter
-		end;
+				-- re-create an empty list
+			create breakpoints.make
+		end
 
-	tenure is
-			-- Transfer all the structures sent to the application
-			-- into the appropriate data structures so that they
-			-- can be restored later, namely when the application
-			-- is being run again after having terminated.
-		do
-			tenure_debuggables;
-			tenure_breakpoints;
-		end;
-
-feature -- Properties
-
-	debugged_routines: LINKED_LIST [E_FEATURE];
-			-- Routines that are currently debugged
-
-	removed_routines: LINKED_LIST [E_FEATURE];
-			-- Routines that are not currently debugged
-
-feature -- Access
-
-	has_feature (f: E_FEATURE): BOOLEAN is
-			-- Has debuggable byte code already been 
-			-- generated for feature `f'?
-		local
-			body_id: BODY_ID
-		do
-			body_id := f.body_id;
-			if body_id /= Void then
-				Result := 
-					new_debuggables.has (body_id) or else 
-					once_debuggables.has (body_id) or else 
-					sent_debuggables.has (body_id)
-			end
-		ensure
-			has_debugged_feature: Result implies feature_of_body_id (debugged_routines, f.body_id) /= Void
-		end; 
-
-feature -- Element change
-
-	add_feature (f: E_FEATURE) is
-			-- Generate debuggable byte code corresponding to
-			-- `e_feature' and record the corresponding information.
-			-- Do nothing if `f' has previously been added.
+	save (raw_filename: FILE_NAME) is
+			-- Save debug information (so far, only the breakpoints)
+			-- into the file `raw_filename'.
 		require
-			valid_f: f /= Void;
-			f_is_debuggable: f.is_debuggable
+			valid_filename: raw_filename /= Void and then not raw_filename.is_empty
 		local
-			f_debuggables: LINKED_LIST [DEBUGGABLE];
-			body_id: BODY_ID
+			raw_file: RAW_FILE
+			retried: BOOLEAN
 		do
-			if not has_feature (f) then
-				body_id := f.body_id;
-				if f.is_once and then Once_request.already_called (f) then
-					f_debuggables := f.debuggables;
-					once_debuggables.put (f_debuggables, body_id);
-					new_once_debuggables.put (f_debuggables, body_id)
-				else
-					new_debuggables.put (f.debuggables, body_id)
-				end;
-				debugged_routines.extend (f)
-			end
-		ensure
-			has_feature: has_feature (f)
-		end; 
+			if not retried then
+					-- Reset information about the application
+					-- contained in the breakpoints.
+				restore
 
-	switch_feature (f: E_FEATURE) is
-			-- Switch `f' from debugged to removed or from removed to debugged.
+					-- save all breakpoints
+				create raw_file.make (raw_filename)
+				raw_file.open_write
+				raw_file.independent_store (breakpoints)
+				raw_file.close
+			end
+		rescue
+			retried := True
+			retry
+		end
+
+	load (raw_filename: FILE_NAME) is
+			-- Load debug information (so far, only the breakpoints)
+			-- from the file `raw_filename'.
 		require
-			has_feature: has_feature (f)
+			valid_filename: raw_filename /= Void and then not raw_filename.is_empty
 		local
-			body_id: BODY_ID;
-			old_feat: E_FEATURE
+			raw_file: RAW_FILE
+			retried: BOOLEAN
 		do
-			body_id := f.body_id;
-			old_feat := feature_of_body_id (debugged_routines, body_id);
-			if old_feat /= Void then
-				debugged_routines.start;
-				debugged_routines.prune (old_feat);
-				removed_routines.extend (old_feat)
-			else
-				old_feat := feature_of_body_id (removed_routines, body_id);
-				if old_feat /= Void then
-					removed_routines.start;
-					removed_routines.prune (old_feat);
-					debugged_routines.extend (old_feat)
+			if not retried then
+				create raw_file.make(raw_filename)
+				if raw_file.exists and then raw_file.is_readable then
+					raw_file.open_read
+					breakpoints ?= raw_file.retrieved
+					raw_file.close
+				end
+			
+				if breakpoints /= Void then
+						-- Reset information about the application
+						-- contained in the breakpoints (if any).
+					restore
 				end
 			end
-		end;
-
-feature -- Breakpoints
-
-	has_breakpoints: BOOLEAN is
-			-- Does the program have a breakpoint set?
-		do
-			Result := not debugged_routines.empty
-		end
-		
-	switch_breakpoint (f: E_FEATURE; i: INTEGER) is
-			-- Switch the `i'-th breakpoint of `f' ?
-		require
-			prepared_for_debug: has_feature (f)
-		local
-			debug_bodies: LINKED_LIST [DEBUGGABLE];
-			is_stop: BOOLEAN;
-			bp: BREAKPOINT;
-			ap: AST_POSITION;
-			pos: INTEGER;
-			debug_item: DEBUGGABLE
-		do
-			debug_bodies := debuggables (f);
-			from
-				debug_bodies.start;
-				ap := debug_bodies.item.breakable_points.i_th (i);
-				pos := ap.position;
-				is_stop := not ap.is_set;
-			until
-				debug_bodies.after
-			loop
-				debug_item := debug_bodies.item;
-				debug_item.breakable_points.i_th (i).set_stop (is_stop);
-				debug_bodies.forth
-			end;
-			if
-				is_stop and
-				feature_of_body_id (removed_routines, f.body_id) /= Void
-			then
-				switch_feature (f)
+			if breakpoints = Void then
+				create breakpoints.make
 			end
-		end;
-
-	is_breakpoint_set (f: E_FEATURE; i: INTEGER): BOOLEAN is
-			-- Is the `i'-th breakpoint of `f' set?
-		do
-			Result := feature_of_body_id (debugged_routines, f.body_id) /= Void and then 
-						debuggables (f).first.is_breakpoint_set (i)
-		end;
-
-	has_breakpoint_set (f: E_FEATURE): BOOLEAN is
-			-- Has `f' a breakpoint set to stop?
-		do
-			Result := feature_of_body_id (debugged_routines, f.body_id) /= Void and then 
-						debuggables (f).first.has_breakpoint_set
-		end;
-
-	breakpoints_set_for (f: E_FEATURE): LIST [INTEGER] is
-			-- Breakpoints set for feature `f'
-		require
-			has_feature: has_feature (f);
-		local
-			debuggable: DEBUGGABLE;
-			i, bp_count: INTEGER
-		do
-			! LINKED_LIST [INTEGER] ! Result.make;
-			debuggable := debuggables (f).first;
-			if debuggable.has_breakpoint_set then
-				from
-					bp_count := debuggable.breakable_points.count;
-					i := 1
-				until
-					i > bp_count
-				loop
-					if debuggable.is_breakpoint_set (i) then
-						Result.extend (i)
-					end;
-					i := i + 1
-				end;
-			end
-		ensure
-			non_void: Result /= Void
-		end;
-			
-feature -- Debug
-
-	trace is
-		local
-			i: INTEGER;
-			dl: EXTEND_TABLE [LINKED_LIST [DEBUGGABLE], BODY_ID];
-			second_time: BOOLEAN
-		do
-			io.putstring ("============ DEBUG INFO ===========%N%N");
-			io.putstring ("New extension: "); 
-			io.putint (new_extension); 
-			io.new_line;
-			io.putstring ("---> New debuggables%N");
-			trace_debuggables (new_debuggables);
-			io.putstring ("---> Sent debuggables%N");
-			trace_debuggables (sent_debuggables);
-		end;
-
-	trace_debuggables (dl: EXTEND_TABLE [LINKED_LIST [DEBUGGABLE], BODY_ID]) is
-		local
-			l: LINKED_LIST [DEBUGGABLE]
-		do
-			from
-				dl.start
-			until
-				dl.after
-			loop
-				l := dl.item_for_iteration;
-				from
-					l.start
-				until
-					l.after
-				loop
-					io.putstring (l.item.tagged_out);
-					l.item.trace
-					l.forth
-				end;
-				dl.forth
-			end;
+		rescue
+			breakpoints := Void
+			retried := True
+			retry
 		end
-
-feature {APPLICATION_EXECUTION, FAILURE_HDLR}
 
 	restore is
-			-- Restore all the data structures marked
-			-- as sent.
+			-- reset information about breakpoints set/removed during execution
 		do
-			restore_debuggables;
-			restore_breakpoints;
-		end;
+				-- loop on the entire list, and reset the application status of the breakpoint
+			from
+				breakpoints.start
+			until
+				breakpoints.after
+			loop
+				breakpoints.item_for_iteration.set_application_not_set
+				breakpoints.forth
+			end
 
-	resynchronize_breakpoints is
-			-- Resychronize the breakpoints after a compilation.
-		require
-			has_debugging_info: not removed_routines.empty or else
-						not debugged_routines.empty
+			update
+		end
+	
+	update is
+			-- remove breakpoint that no more usefull from the hash_table
+			-- see BREAKPOINT/is_usefull for further comments
 		local
-			rem_routines: like removed_routines;
-			deb_routines: like debugged_routines;
-			rem_list: FIXED_LIST [CELL2 [E_FEATURE, LIST [INTEGER]]];
-			deb_list: FIXED_LIST [CELL2 [E_FEATURE, LIST [INTEGER]]];
-			cell2: CELL2 [E_FEATURE, LIST [INTEGER]];
-			f: E_FEATURE
+			bp: BREAKPOINT
 		do
-			rem_list := feature_bp_list (removed_routines)
-			deb_list := feature_bp_list (debugged_routines)
+				-- remove useless breakpoints
+			from
+				breakpoints.start
+			until
+				breakpoints.after
+			loop
+				bp := breakpoints.item_for_iteration
+				if bp.is_not_usefull or bp.is_corrupted then
+					breakpoints.remove(bp)
+					breakpoints.start
+				else
+					breakpoints.forth
+				end
+			end
+		end
+		
+	has_breakpoints: BOOLEAN is
+			-- Does the program have a breakpoint (enabled or disabled) ?
+		local
+			bp: BREAKPOINT
+		do
+			error_in_bkpts := False
 
-			wipe_out; -- Clear the debugging information
-			-- Now update the debugging information
+				-- look for the first breakpoint set and enabled
 			from
-				deb_list.start
-			until	
-				deb_list.after
+				breakpoints.start
+			until
+				breakpoints.after or Result
 			loop
-				cell2 := deb_list.item;
-				f := cell2.item1.updated_version;
-				if f /= Void then
-					add_breakpoints_for_feature (f, cell2.item2)
-					debugged_routines.extend (f)
-				end;
-				deb_list.forth
-			end;	
+				bp := breakpoints.item_for_iteration
+				Result := bp.is_set and bp.is_valid
+				breakpoints.forth
+			end
+		end
+	
+	has_enabled_breakpoints: BOOLEAN is
+			-- Does the program have a breakpoint set?
+		local
+			bp: BREAKPOINT
+		do
+			error_in_bkpts := False
+				-- look for the first breakpoint set and enabled
 			from
-				rem_list.start
-			until	
-				rem_list.after
+				breakpoints.start
+			until
+				breakpoints.after or Result
 			loop
-				cell2 := rem_list.item;
-				f := cell2.item1.updated_version;
-				if f /= Void then
-					add_breakpoints_for_feature (f, cell2.item2)
-					removed_routines.extend (f)
-				end;
-				rem_list.forth
-			end;	
-		end;
+				bp := breakpoints.item_for_iteration
+				Result := bp.is_enabled and bp.is_valid
+				breakpoints.forth
+			end
+		end
+	
+	has_disabled_breakpoints: BOOLEAN is
+			-- Does the program have an enabled breakpoint?
+		local
+			bp: BREAKPOINT
+		do
+			error_in_bkpts := False
+				-- look for the first breakpoint set and disabled
+			from
+				breakpoints.start
+			until
+				breakpoints.after or Result
+			loop
+				bp := breakpoints.item_for_iteration
+				Result := bp.is_disabled and bp.is_valid
+				breakpoints.forth
+			end
+		end
+
+	error_in_bkpts: BOOLEAN
+			-- Did the last operation on breakpoints create an error (because a feature was not fully compiled)?
+
+feature -- changing all breakpoints
+
+	remove_all_breakpoints is
+			-- Remove all breakpoints which are currently set (enabled/disabled)
+		do
+			error_in_bkpts := False
+			from
+				breakpoints.start
+			until
+				breakpoints.after
+			loop
+				breakpoints.item_for_iteration.discard
+				breakpoints.forth
+			end
+		end
+
+	enable_all_breakpoints is
+			-- disable all breakpoints which are currently set and enabled
+		local
+			bp: BREAKPOINT
+		do
+			error_in_bkpts := False
+			from
+				breakpoints.start
+			until
+				breakpoints.after
+			loop
+				bp := breakpoints.item_for_iteration
+				if bp.is_disabled then
+					bp.enable
+				end
+				breakpoints.forth
+			end
+		end
+
+	disable_all_breakpoints is
+			-- disable all breakpoints which are currently set and enabled
+		local
+			bp: BREAKPOINT
+		do
+			error_in_bkpts := False
+			from
+				breakpoints.start
+			until
+				breakpoints.after
+			loop
+				bp := breakpoints.item_for_iteration
+				if bp.is_enabled then
+					bp.disable
+				end
+				breakpoints.forth
+			end
+		end
+
+feature -- changing breakpoints for a feature
 
 	add_breakpoints_for_feature (feat: E_FEATURE; a_list: LIST [INTEGER]) is
 			-- Add all the breakpoints `a_list' for feature `feat'.
 		local
-			debug_bodies: LINKED_LIST [DEBUGGABLE];
-			bps: SORTED_TWO_WAY_LIST [AST_POSITION]
 			id: INTEGER
+			bp: BREAKPOINT
 		do
-			debug_bodies := feat.debuggables;
-			new_debuggables.put (debug_bodies, feat.body_id);
+			error_in_bkpts := False
 			from
 				a_list.start
 			until
 				a_list.after
 			loop
-				id := a_list.item;
-				from
-					debug_bodies.start
-				until	
-					debug_bodies.after
-				loop
-					bps := debug_bodies.item.breakable_points;
-					if id <= bps.count then
-						bps.i_th (id).set_stop (True)
-					end;
-					debug_bodies.forth
-				end;
+				id := a_list.item
+
+				-- create breakpoint
+				-- by default, at creation the breakpoint is set and enabled
+				create bp.make (feat, id)
+
+				-- add the breakpoint. if it was already in the hashtable, we replace
+				-- the old version with the new one, and we send it again to the application
+				if not bp.is_corrupted then
+					breakpoints.add_breakpoint (bp)
+				else
+					error_in_bkpts := True
+				end
 				a_list.forth
 			end
-		end;
+		end
 
-	feature_bp_list (list: like debugged_routines):
-				FIXED_LIST [CELL2 [E_FEATURE, LIST [INTEGER]]] is
+	remove_breakpoints_in_feature(f: E_FEATURE) is
+			-- remove all breakpoints set for feature 'f'
+		local
+			f_real_body_id: INTEGER
+			bp: BREAKPOINT
+			retried: BOOLEAN
+		do
+			error_in_bkpts := False
+			if not retried then
+				f_real_body_id := f.real_body_id
+	
+				-- search in the list of all_breakpoints
+				-- all breakpoint set for feature 'f'
+				from
+					breakpoints.start
+				until
+					breakpoints.after
+				loop
+					bp := breakpoints.item_for_iteration
+					if bp.real_body_id.is_equal(f_real_body_id) and then bp.is_set then
+						bp.discard
+					end
+					breakpoints.forth
+				end
+			else
+				error_in_bkpts := True
+			end
+		rescue
+			retried := True
+			retry
+		end
+
+	disable_breakpoints_in_feature(f: E_FEATURE) is
+			-- disable all breakpoints set for feature 'f'
+		local
+			f_real_body_id: INTEGER
+			bp: BREAKPOINT
+			retried: BOOLEAN
+		do
+			error_in_bkpts := False
+			if not retried then
+				f_real_body_id := f.real_body_id
+	
+				-- search in the list of all_breakpoints
+				-- all breakpoint set for feature 'f'
+				from
+					breakpoints.start
+				until
+					breakpoints.after
+				loop
+					bp := breakpoints.item_for_iteration
+					if bp.real_body_id.is_equal(f_real_body_id) and then bp.is_set then
+						bp.disable
+					end
+					breakpoints.forth
+				end
+			else
+				error_in_bkpts := True
+			end
+		rescue
+			retried := True
+			retry
+		end
+
+	enable_breakpoints_in_feature(f: E_FEATURE) is
+			-- enable all breakpoints set for feature 'f'
+		local
+			f_real_body_id: INTEGER
+			bp: BREAKPOINT
+			retried: BOOLEAN
+		do
+			error_in_bkpts := False
+			if not retried then
+				f_real_body_id := f.real_body_id
+	
+				-- search in the list of all_breakpoints
+				-- all breakpoint set for feature 'f'
+				from
+					breakpoints.start
+				until
+					breakpoints.after
+				loop
+					bp := breakpoints.item_for_iteration
+					if bp.real_body_id.is_equal(f_real_body_id) and then bp.is_set then
+						bp.enable
+					end
+					breakpoints.forth
+				end
+			else
+				error_in_bkpts := True
+			end
+		rescue
+			retried := True
+			retry
+		end
+
+	enable_first_breakpoint_of_feature(f: E_FEATURE) is
+			-- enable the first breakpoints in feature 'f'
+		local
+			bp: BREAKPOINT
+		do
+			error_in_bkpts := False
+
+			create bp.make (f, 1)
+			if not bp.is_corrupted then
+				breakpoints.add_breakpoint (bp)
+			else
+				error_in_bkpts := True
+			end
+		end
+
+	enable_first_breakpoints_in_class(c: CLASS_C) is
+			-- enable all breakpoints set for feature 'f'
+		require
+			valid_class_c: c /= Void
+		local
+			wf: LIST [E_FEATURE]
+		do
+			error_in_bkpts := False
+
+			if c.has_feature_table then
+				wf := c.written_in_features
+				from
+					wf.start
+				until
+					wf.after
+				loop
+					if wf.item.is_debuggable then
+						enable_first_breakpoint_of_feature (wf.item)
+					end
+					wf.forth
+				end
+			else
+				error_in_bkpts := True
+			end
+		end
+
+feature -- getting breakpoints status for a feature
+
+	has_breakpoint_set (f: E_FEATURE): BOOLEAN is
+			-- Has `f' a breakpoint set to stop?
+		do
+			error_in_bkpts := False
+			if f.is_debuggable then
+				Result := not breakpoints_set_for(f).is_empty
+			end
+		end
+
+	breakpoints_set_for (f: E_FEATURE): LIST [INTEGER] is
+			-- Breakpoints set for feature `f'
+		require
+			f_is_debuggable: f.is_debuggable
+		local
+			bp: BREAKPOINT
+			f_real_body_id: INTEGER
+			retried: BOOLEAN
+		do
+			error_in_bkpts := False
+			create {LINKED_SET [INTEGER]} Result.make
+			if not retried then
+				f_real_body_id := f.real_body_id
+	
+					-- search in the list of all_breakpoints for
+					-- at leat one breakpoint set in this feature
+				from
+					breakpoints.start
+				until
+					breakpoints.after
+				loop
+					bp := breakpoints.item_for_iteration
+					if bp.real_body_id.is_equal(f_real_body_id) and then bp.is_set then
+						Result.extend(bp.breakable_line_number)
+					end
+					breakpoints.forth
+				end
+			end
+		ensure
+			non_void: Result /= Void
+		rescue
+			-- It's likely that we have not been able to compute `real_body_id' for `f'.
+			-- We will remove all breakpoints corresponding to the feature `f'.
+			from
+				breakpoints.start
+			until
+				breakpoints.after
+			loop
+				bp := breakpoints.item_for_iteration
+				if bp.routine.is_equal(f) then
+					bp.discard
+				end
+				breakpoints.forth
+			end
+				-- remove unused breakpoints
+			update
+			error_in_bkpts := True
+			retried := True
+			retry
+		end
+			
+	breakpoints_disabled_for (f: E_FEATURE): LIST [INTEGER] is
+			-- Breakpoints set for feature `f' and disabled
+		require
+			f_is_debuggable: f.is_debuggable
+		local
+			bp: BREAKPOINT
+			f_real_body_id: INTEGER
+			retried: BOOLEAN
+		do
+			error_in_bkpts := False
+			create {SORTED_TWO_WAY_LIST [INTEGER]} Result.make
+			if not retried then 
+				f_real_body_id := f.real_body_id
+
+					-- search in the list of all_breakpoints for
+					-- at leat one breakpoint disabled in this feature
+				from
+					breakpoints.start
+				until
+					breakpoints.after
+				loop
+					bp := breakpoints.item_for_iteration
+					if bp.real_body_id.is_equal(f_real_body_id) and then bp.is_disabled then
+						Result.extend(bp.breakable_line_number)
+					end
+					breakpoints.forth
+				end
+			end
+		ensure
+			non_void: Result /= Void
+		rescue
+			-- It's likely that we have not been able to compute `real_body_id' for `f'.
+			-- We will remove all breakpoints corresponding to the feature `f'.
+			from
+				breakpoints.start
+			until
+				breakpoints.after
+			loop
+				bp := breakpoints.item_for_iteration
+				if bp.is_corrupted or else bp.routine.is_equal(f) then
+					bp.discard
+				end
+				breakpoints.forth
+			end
+				-- remove unused breakpoints
+			update
+			error_in_bkpts := True
+			retried := True
+			retry
+		end
+			
+	breakpoints_enabled_for (f: E_FEATURE): LIST [INTEGER] is
+			-- Breakpoints set for feature `f' and enabled
+		require
+			f_is_debuggable: f.is_debuggable
+		local
+			bp: BREAKPOINT
+			f_real_body_id: INTEGER
+			retried: BOOLEAN
+		do
+			error_in_bkpts := False
+			create {SORTED_TWO_WAY_LIST [INTEGER]} Result.make
+			if not retried then
+				f_real_body_id := f.real_body_id
+
+					-- search in the list of all_breakpoints for
+					-- at leat one breakpoint enabled in this feature
+				from
+					breakpoints.start
+				until
+					breakpoints.after
+				loop
+					bp := breakpoints.item_for_iteration
+					if bp.real_body_id.is_equal(f_real_body_id) and then bp.is_enabled then
+						Result.extend(bp.breakable_line_number)
+					end
+					breakpoints.forth
+				end
+			end
+		ensure
+			non_void: Result /= Void
+		rescue
+			-- It's likely that we have not been able to compute `real_body_id' for `f'.
+			-- We will remove all breakpoints corresponding to the feature `f'.
+			from
+				breakpoints.start
+			until
+				breakpoints.after
+			loop
+				bp := breakpoints.item_for_iteration
+				if bp.is_corrupted or else bp.routine.is_equal(f) then
+					bp.discard
+				end
+				breakpoints.forth
+			end
+				-- remove unused breakpoints
+			update
+			error_in_bkpts := True
+			retried := True
+			retry
+		end
+
+feature -- changing breakpoints for a class
+
+	remove_breakpoints_in_class(c: CLASS_C) is
+			-- remove all breakpoints set for class 'c'
+		local
+			bp: BREAKPOINT
+		do
+			error_in_bkpts := False
+				-- search in the list of all_breakpoints
+				-- all breakpoint set for class 'c'
+			from
+				breakpoints.start
+			until
+				breakpoints.after
+			loop
+				bp := breakpoints.item_for_iteration
+				if bp.routine.associated_class.is_equal(c) and then bp.is_set then
+					bp.discard
+				end
+				breakpoints.forth
+			end
+		end
+
+	disable_breakpoints_in_class(c: CLASS_C) is
+			-- disable all breakpoints set for feature 'f'
+		local
+			bp: BREAKPOINT
+		do
+			error_in_bkpts := False
+				-- search in the list of all_breakpoints
+				-- all breakpoint set for class 'c'
+			from
+				breakpoints.start
+			until
+				breakpoints.after
+			loop
+				bp := breakpoints.item_for_iteration
+				if bp.routine.associated_class.is_equal(c) and then bp.is_set then
+					bp.disable
+				end
+				breakpoints.forth
+			end
+		end
+
+	enable_breakpoints_in_class(c: CLASS_C) is
+			-- enable all breakpoints set for feature 'f'
+		local
+			bp: BREAKPOINT
+		do
+			error_in_bkpts := False
+				-- search in the list of all_breakpoints
+				-- all breakpoint set for class 'c'
+			from
+				breakpoints.start
+			until
+				breakpoints.after
+			loop
+				bp := breakpoints.item_for_iteration
+				if bp.routine.associated_class.is_equal(c) and then bp.is_set then
+					bp.enable
+				end
+				breakpoints.forth
+			end
+		end
+
+feature -- changing a specified breakpoint
+
+	switch_breakpoint (f: E_FEATURE; i: INTEGER) is
+			-- Switch the `i'-th breakpoint of `f'
+		require
+			valid_f: not (f.is_deferred or else f.is_attribute or else f.is_constant or else f.is_unique)
+		local
+			bp: BREAKPOINT;
+		do
+			error_in_bkpts := False
+				-- create a 'fake' breakpoint, in order to get the real
+				-- one in hash tables
+			create bp.make(f, i)
+
+			if not bp.is_corrupted then
+					-- is the breakpoint known ?
+				if breakpoints.has(bp) then
+						-- yes, the breakpoint is already known, so switch it
+					breakpoints.found_item.switch
+				else
+						-- unknown breakpoint, add it
+					breakpoints.add_breakpoint (bp)
+				end
+			else
+				error_in_bkpts := True
+			end
+		end
+
+	remove_breakpoint (f: E_FEATURE; i: INTEGER) is
+			-- Switch the `i'-th breakpoint of `f'
+		require
+			valid_f: not (f.is_deferred or else f.is_attribute or else f.is_constant or else f.is_unique)
+		local
+			bp: BREAKPOINT;
+		do
+			error_in_bkpts := False
+				-- create a 'fake' breakpoint, in order to get the real
+				-- one in hash tables
+			create bp.make (f, i)
+
+			if not bp.is_corrupted then
+					-- is the breakpoint known ?
+				if breakpoints.has (bp) then
+						-- yes, the breakpoint is already known, so switch it
+					breakpoints.found_item.discard
+				end
+			else
+				error_in_bkpts := True
+			end
+		end
+
+	disable_breakpoint (f: E_FEATURE; i: INTEGER) is
+			-- disable the `i'-th breakpoint of `f'
+			-- if no breakpoint already exists for 'f' at 'i', a disabled breakpoint is created
+		require
+			valid_f: not (f.is_deferred or else f.is_attribute or else f.is_constant or else f.is_unique)
+		local
+			bp: BREAKPOINT;
+		do
+			error_in_bkpts := False
+				-- create a 'fake' breakpoint, in order to get the real one in hash table
+			create bp.make (f, i)
+
+			if not bp.is_corrupted then
+					-- is the breakpoint known ?
+				if breakpoints.has (bp) then
+						-- yes, the breakpoint is already known, so switch it
+					breakpoints.found_item.disable
+				else
+						-- unknown breakpoint, set it as disabled and add it
+					bp.disable
+					breakpoints.add_breakpoint (bp)
+				end
+			else
+				error_in_bkpts := True
+			end
+		end
+
+	enable_breakpoint (f: E_FEATURE; i: INTEGER) is
+			-- enable the `i'-th breakpoint of `f'
+			-- if no breakpoint already exists for 'f' at 'i', a breakpoint is created
+		require
+			valid_f: not (f.is_deferred or else f.is_attribute or else f.is_constant or else f.is_unique)
+		local
+			bp: BREAKPOINT;
+		do
+			error_in_bkpts := False
+
+				-- create a 'fake' breakpoint, in order to get the real one in hash table
+			create bp.make (f, i)
+
+			if not bp.is_corrupted then
+					-- is the breakpoint known ?
+				if breakpoints.has (bp) then
+						-- yes, the breakpoint is already known, so switch it
+					breakpoints.found_item.enable
+				else
+					breakpoints.add_breakpoint (bp)
+				end
+			else
+				error_in_bkpts := True
+			end
+		end
+
+feature -- getting the status of a specified breakpoint
+
+	is_breakpoint_set (f: E_FEATURE; i: INTEGER): BOOLEAN is
+			-- Is the `i'-th breakpoint of `f' set? (enabled or disabled)
+		local
+			bp: BREAKPOINT
+		do
+			error_in_bkpts := False
+			if not (f.is_deferred or else f.is_attribute or else f.is_constant or else f.is_unique) then
+					-- create a 'fake' breakpoint, in order to get the real one in hash table
+				create bp.make(f,i)
+				if not bp.is_corrupted then
+					if breakpoints.has(bp) then
+						Result := breakpoints.found_item.is_set
+					end
+				else
+					error_in_bkpts := True
+				end
+			end
+		end
+
+	is_breakpoint_enabled (f: E_FEATURE; i: INTEGER): BOOLEAN is
+			-- Is the `i'-th breakpoint of `f' enabled
+		local
+			bp: BREAKPOINT
+		do
+			error_in_bkpts := False
+			if not (f.is_deferred or else f.is_attribute or else f.is_constant or else f.is_unique) then
+				create bp.make(f,i)
+				if not bp.is_corrupted then
+					if breakpoints.has(bp) then
+						Result := breakpoints.found_item.is_enabled
+					end
+				else
+					error_in_bkpts := True
+				end
+			end
+		end
+
+	is_breakpoint_disabled (f: E_FEATURE; i: INTEGER): BOOLEAN is
+			-- Is the `i'-th breakpoint of `f' disabled
+		local
+			bp: BREAKPOINT
+		do
+			error_in_bkpts := False
+			if not (f.is_deferred or else f.is_attribute or else f.is_constant or else f.is_unique) then
+				create bp.make(f,i)
+				if not bp.is_corrupted then
+					if breakpoints.has(bp) then
+						Result := breakpoints.found_item.is_disabled
+					end
+				else
+					error_in_bkpts := True
+				end
+			end
+		end
+
+	breakpoint_status (f: E_FEATURE; i: INTEGER): INTEGER is
+			-- Returns 0 if the breakpoint is not set,
+			--         1 if the breakpoint is set,
+			--        -1 if the breakpoint is disabled
+		local
+			bp: BREAKPOINT
+		do
+--|			if not (f.is_deferred or else f.is_attribute or else f.is_constant or else f.is_unique) then
+			error_in_bkpts := False
+			if f.valid_body_index then
+				create bp.make(f,i)
+				if not bp.is_corrupted then
+					if breakpoints.has(bp) then
+						bp := breakpoints.found_item
+						if bp.is_enabled then
+							Result := 1
+						elseif bp.is_disabled then
+							Result := -1
+						end
+					end
+				else
+					error_in_bkpts := True
+				end
+			end
+		end
+
+feature -- Debug
+
+	trace is
+		do
+			io.put_string ("============ class DEBUG INFO ===========%N%N");
+			from
+				breakpoints.start
+			until	
+				breakpoints.after
+			loop
+				breakpoints.item_for_iteration.trace
+				breakpoints.forth
+			end
+			io.put_string ("===================================%N%N");
+		end
+
+feature {APPLICATION_EXECUTION, FAILURE_HDLR}
+
+	resynchronize_breakpoints is
+			-- Resychronize the breakpoints after a compilation.
+		do
+			error_in_bkpts := False
+				-- Remove useless breakpoints.
+			update
+
+				-- update every breakpoint
+			from
+				breakpoints.start
+			until	
+				breakpoints.after
+			loop
+				breakpoints.item_for_iteration.synchronize
+				breakpoints.forth
+			end
+
+				-- Remove useless breakpoints (the syunchronization
+				-- may have removed some breakpoints)
+			update
+		end
+
+	feature_bp_list (list: LINKED_LIST [E_FEATURE]): FIXED_LIST [CELL2 [E_FEATURE, LIST [INTEGER]]] is
 			-- Create a list with features and breakpoints
 		local
 			f: E_FEATURE;
 			cell2: CELL2 [E_FEATURE, LIST [INTEGER]]
 		do
+			error_in_bkpts := False
 			from
-				!! Result.make_filled (list.count)
+				create Result.make_filled (list.count)
 				Result.start;
 				list.start
 			until
 				list.after
 			loop
 				f := list.item;
-				!! cell2.make (f, breakpoints_set_for (f));
+				create cell2.make (f, breakpoints_set_for (f));
 				Result.replace (cell2);
 				Result.forth;
 				list.forth
 			end
-		end;
+		end
 
-feature {APPLICATION_STATUS}
-
-	breakable_index (f: E_FEATURE; origin_ct: CLASS_TYPE; offset: INTEGER): INTEGER is
+	features_with_breakpoint_set: LIST[E_FEATURE] is
+			-- list of all feature with a breakpoint set (enabled or disabled)
 		local
-			sd: like sent_debuggables
-			breakables: SORTED_TWO_WAY_LIST [AST_POSITION];
-			debuggable_list: LINKED_LIST [DEBUGGABLE];
-			i: INTEGER;
-			body_id: BODY_ID
+			bp: BREAKPOINT
+			known_features: ARRAYED_LIST[INTEGER]
+			body_index: INTEGER
 		do
-			sd := sent_debuggables;
-			body_id := f.body_id;
-			debuggable_list := sd.item (body_id);
-			if debuggable_list /= Void then
-					--| If there is more than one feature with the same `body_id',
-					--| it means that we have to deal with a generic feature.
-					--| This means that the generated byte code may vary along instantiations,
-					--| So we have to figure out, what `real_body_index' is used and get the
-					--| byte code for that particular instantiation.
-					--| If there is only one feature with `body_id', we can just get its
-					--| `breakable_points' (for obvious reasons).
+			error_in_bkpts := False
+			create {LINKED_LIST[E_FEATURE]} Result.make
+			create known_features.make(5) 
 
-				if debuggable_list.count > 1 then
-						--| Get a dispatch unit for `f.associated_feature_i'.
-					from
-						i := origin_ct.type_id;
-						debuggable_list.start
-					until
-						debuggable_list.after or else
-						i = debuggable_list.item.class_type.type_id
-					loop
-						debuggable_list.forth
-					end
-
-					if not debuggable_list.after then
-							--| This should always be true, for debugged execution cannot reach
-							--| a feature that we don't have byte code for.
-						breakables := debuggable_list.item.breakable_points
-					end
-				else
-					breakables := sd.item (body_id).first.breakable_points
-				end;
-
-					--| Now that we have the correct `breakables', traverse through it, in
-					--| in search of `offset'.
-				from
-					breakables.start;
-					i := 1	
-				until
-					Result > 0 or breakables.after
-				loop
-					if breakables.item.position = offset then
-						Result := i
-					else
-						i := i + 1;
-						breakables.forth;
+			from 
+				breakpoints.start
+			until
+				breakpoints.after
+			loop
+				bp := breakpoints.item_for_iteration
+				if bp.is_set and not bp.is_corrupted and then bp.is_valid then
+					body_index := bp.body_index
+						-- have we already added the feature corresponding to this breakpoint ?
+					if not known_features.has(body_index) then
+							-- feature not already added... so add it
+						known_features.extend(body_index)
+							-- add the feature to the result list
+						Result.extend (bp.routine)
 					end
 				end
+				breakpoints.forth
 			end
-		end; 
-
-feature {ONCE_REQUEST}
-
-	real_body_id (f: E_FEATURE): REAL_BODY_ID is
-			-- Real body id of `f' at execution time.
-			-- This id may have been modified during supermelting.
-		require
-			f_exists: f /= Void;
-			is_debuggable: f.is_debuggable
-		local
-			body_id: BODY_ID
-		do
-			body_id := f.body_id;
-			if sent_debuggables.has (body_id) then
-					-- `f' has been supermelted.
-				Result := sent_debuggables.found_item.first.real_body_id
-			else
-				Result := f.real_body_id
-			end
-		end;
+		ensure
+			non_void_result: Result /= Void
+		end
 
 feature {EWB_REQUEST}
 
-	new_breakpoints: BREAK_LIST;
-			-- Breakpoint settings or removals to
-			-- be sent to the application
+	breakpoints: BREAK_LIST
+			-- list of all breakpoints set, disabled and recently switched.
 
-	sent_breakpoints: BREAK_LIST;
-			-- Breakpoint settings or removals already
-			-- been sent to the application
-
-	new_debuggables: EXTEND_TABLE [LINKED_LIST [DEBUGGABLE], BODY_ID];
-			-- Debuggable structures not 
-			-- sent to the application yet
-
-	set_all_breakpoints is 
-			-- Set all the user-defined breakpoints.
-		do
-			from
-				debugged_routines.start
-			until
-				debugged_routines.after
-			loop
-				set_routine_breakpoints (debugged_routines.item);
-				debugged_routines.forth
-			end
-		end;
-
-	debuggable_count: INTEGER is
-			-- Number of new byte arrays since last transfer
-			-- between workbench and application 
-		do
-			from
-				new_debuggables.start
-			until
-				new_debuggables.after
-			loop
-				Result := Result + new_debuggables.item_for_iteration.count;
-				new_debuggables.forth
-			end
-		end; 
-
-	new_extension: INTEGER is
-			-- Number of new byte arrays since last transfer
-			-- between workbench and application corresponding
-			-- to features which were initially frozen
-			--|This information is usefull for the debugged
-			--|application in order to reallocate memory
-			--|for the melted table once and for all before
-			--|the actual transfer of debuggable byte code
-			--|occurs
-		local
-			ll: LINKED_LIST [DEBUGGABLE]
-		do
-			from
-				new_debuggables.start
-			until
-				new_debuggables.after
-			loop
-				ll := new_debuggables.item_for_iteration;	
-				from
-					ll.start
-				until
-					ll.after
-				loop
-					if ll.item.was_frozen then
-						Result := Result + 1;
-					end;
-					ll.forth
-				end;
-				new_debuggables.forth
-			end;
-				-- We have to make room for once routines in the melt
-				-- table, even if we do not send the corresponding
-				-- byte code (the body id is used anyway, shifting the
-				-- other body ids).
-			from
-				new_once_debuggables.start
-			until
-				new_once_debuggables.after
-			loop
-				ll := new_once_debuggables.item_for_iteration;	
-				from
-					ll.start
-				until
-					ll.after
-				loop
-					if ll.item.was_frozen then
-						Result := Result + 1;
-					end;
-					ll.forth
-				end;
-				new_once_debuggables.forth
-			end
-		end;
-
-	set_all_breakables is 
-			-- Set all the breakable points of all the debugged routines.
-		do
-			from
-				debugged_routines.start
-			until
-				debugged_routines.after
-			loop
-				set_routine_breakables (debugged_routines.item);
-				debugged_routines.forth
-			end
-		end;
-
-	set_out_of_routine_breakables (f: E_FEATURE) is 
-			-- Set all the breakable points of all the debugged routines
-			-- execept those of `f'.
-		require
-			f_exists: f /= Void
-		local
-			d_list: LINKED_LIST [DEBUGGABLE];
-			breakable_points: SORTED_TWO_WAY_LIST [AST_POSITION];
-			r_body_id: REAL_BODY_ID;
-			bp: BREAKPOINT
-		do
-			set_all_breakables;
-			if has_feature (f) and then not once_debuggables.has (f.body_id) then
-					-- If the supermelted byte code of a once routine has 
-					-- not been sent to the application (because it had 
-					-- already been called at that time) we don't sent its
-					-- breakpoints neither.
-				from
-					d_list := debuggables (f);
-					d_list.start
-				until
-					d_list.after
-				loop
-					from
-						breakable_points := d_list.item.breakable_points;
-						r_body_id := d_list.item.real_body_id;
-						breakable_points.start
-					until
-						breakable_points.after
-					loop
-						!! bp;
-						bp.set_continue;
-						bp.set_offset (breakable_points.item.position);
-						bp.set_real_body_id	(r_body_id);
-						new_breakpoints.extend (bp);
-						breakable_points.forth
-					end;
-					d_list.forth
-				end
-			end
-		end;
-
-	set_routine_breakpoints (f: E_FEATURE) is
-			-- Set the user-defined breakpoints in `f'.
-		require
-			f_exists: f /= Void;
-			has_feature (f);
-		local
-			d_list: LINKED_LIST [DEBUGGABLE];
-			breakable_points: SORTED_TWO_WAY_LIST [AST_POSITION];
-			r_body_id: REAL_BODY_ID;
-			bp: BREAKPOINT
-		do
-			if not once_debuggables.has (f.body_id) then
-					-- If the supermelted byte code of a once routine has 
-					-- not been sent to the application (because it had 
-					-- already been called at that time) we don't sent its
-					-- breakpoints neither.
-				from
-					d_list := debuggables (f);
-					d_list.start
-				until
-					d_list.after
-				loop
-					breakable_points := d_list.item.breakable_points;
-					r_body_id := d_list.item.real_body_id;
-					from
-						breakable_points.start
-					until
-						breakable_points.after
-					loop
-						if breakable_points.item.is_set then
-							!! bp;
-							bp.set_stop;
-							bp.set_offset (breakable_points.item.position);
-							bp.set_real_body_id	(r_body_id);
-							new_breakpoints.extend (bp);
-						end;
-						breakable_points.forth
-					end;
-					d_list.forth
-				end
-			end
-		end;
-
-	set_routine_breakables (f: E_FEATURE) is
-			-- Set all the breakable points of `f'.
-			-- Used for stepping through the routine.
-		require
-			f_exists: f /= Void;
-			has_feature (f)
-		local
-			d_list: LINKED_LIST [DEBUGGABLE];
-			breakable_points: SORTED_TWO_WAY_LIST [AST_POSITION];
-			r_body_id: REAL_BODY_ID;
-			bp: BREAKPOINT
-		do
-			if not once_debuggables.has (f.body_id) then
-					-- If the supermelted byte code of a once routine has 
-					-- not been sent to the application (because it had 
-					-- already been called at that time) we don't sent its
-					-- breakpoints neither.
-				from
-					d_list := debuggables (f);
-					d_list.start
-				until
-					d_list.after
-				loop
-					from
-						breakable_points := d_list.item.breakable_points;
-						r_body_id := d_list.item.real_body_id;
-						breakable_points.start
-					until
-						breakable_points.after
-					loop
-						!! bp;
-						bp.set_stop;
-						bp.set_offset (breakable_points.item.position);
-						bp.set_real_body_id	(r_body_id);
-						new_breakpoints.extend (bp);
-						breakable_points.forth
-					end;
-					d_list.forth
-				end
-			end
-		end;
-
-	set_routine_last_breakable (f: E_FEATURE) is
-			-- Set the last breakable point of `f'.
-			-- (end of compound, not of rescue clause)
-		require
-			f_exists: f /= Void;
-			has_feature (f)
-		local
-			d_list: LINKED_LIST [DEBUGGABLE];
-			ast_pos: AST_POSITION;
-			r_body_id: REAL_BODY_ID;
-			i: INTEGER;
-			bp: BREAKPOINT
-		do
-			if not once_debuggables.has (f.body_id) then
-					-- If the supermelted byte code of a once routine has 
-					-- not been sent to the application (because it had 
-					-- already been called at that time) we don't sent its
-					-- breakpoints neither.
-				d_list := debuggables (f);
-				from
-					i := d_list.first.breakable_points.count
-				until
-					i < 1 or else is_last_breakpoint (i, f)
-				loop
-					i := i - 1
-				end;
-				if i >= 1 then
-					from
-						d_list.start
-					until
-						d_list.after
-					loop
-						r_body_id := d_list.item.real_body_id;
-						ast_pos := d_list.item.breakable_points.i_th (i);
-						!! bp;
-						bp.set_stop;
-						bp.set_offset (ast_pos.position);
-						bp.set_real_body_id	(r_body_id);
-						new_breakpoints.extend (bp);
-						d_list.forth
-					end
-				end
-			end
-		end;
-
-	remove_all_breakpoints is
-			-- Remove all breakpoints which have been set and 
-			-- send to the application.
-		local
-			bp: BREAKPOINT
-		do
-			from
-				sent_breakpoints.start
-			until
-				sent_breakpoints.after
-			loop
-				bp := sent_breakpoints.item_for_iteration;
-				if not bp.is_continue then
-					bp := clone (bp);
-					bp.set_continue;
-					new_breakpoints.extend (bp)
-				end;
-				sent_breakpoints.forth
-			end
-		end;
-
-feature {APPLICATION_EXECUTION, NONE}
-
-	debuggables (f: E_FEATURE): LINKED_LIST [DEBUGGABLE] is
-			-- List of debuggables corresponding to feature `f'
-		require
-			has_feature: has_feature (f);
-		local
-			body_id: BODY_ID
-		do
-			body_id := f.body_id;
-			if new_debuggables.has (body_id) then
-				Result := new_debuggables.found_item
-			elseif once_debuggables.has (body_id) then
-				Result := once_debuggables.found_item
-			else
-				Result := sent_debuggables.item (body_id)
-			end;
-		ensure
-			Result /= Void
-		end; 
-
-feature {NONE} -- Implementation
+feature -- Access
 
 	Once_request: ONCE_REQUEST is
 			-- Facilities to inspect whether a once routine
 			-- has already been called
 		once
-			!! Result.make
-		end;
-
-	once_debuggables: EXTEND_TABLE [LINKED_LIST [DEBUGGABLE], BODY_ID];
-			-- Debuggable structures of once routines which have already
-			-- been called. In That case, the supermelted byte code
-			-- won't be sent to the application until next execution
-			-- to prevent any overriding of once's memory (i.e. already
-			-- called and result value if any)
-
-	new_once_debuggables: EXTEND_TABLE [LINKED_LIST [DEBUGGABLE], BODY_ID];
-			-- Debuggable structures of once routines which have already
-			-- been called, but were not recorded in `once_debuggables' last
-			-- time we sent information to the application
-			--| This table is useful to figure out the number of new melted
-			--| routines, and be able to reallocate the corresponding
-			--| data structures once and for all.
-			--| The structures held in this table are also held in
-			--| `once_debuggables', and this table must be cleared each
-			--| information are sent to the application.
-
-	sent_debuggables: EXTEND_TABLE [LINKED_LIST [DEBUGGABLE], BODY_ID];
-			-- Debuggable structures already 
-			-- sent to the application
-
-	tenure_breakpoints is
-			-- Tenure breakpoints. See comment
-			-- of feature `tenure'.		
-		do
-			sent_breakpoints.append (new_breakpoints);
-			new_breakpoints.wipe_out
-		end;
-
-	tenure_debuggables is
-			-- Tenure debuggables. See comment
-			-- of feature `tenure'.
-		do
-			sent_debuggables.merge (new_debuggables);
-			new_debuggables.clear_all;
-				-- Get rid of the new once routines already called.
-				-- These routines were already stored in `new_debuggables'.
-			new_once_debuggables.clear_all
-		end; -- tenure_debuggables
-
-	restore_debuggables is
-			-- Restore debuggables. See comment
-			-- of feature `restore'
-		do
-			sent_debuggables.merge (new_debuggables);
-			new_debuggables := sent_debuggables;
-			new_debuggables.merge (once_debuggables);
-			!! sent_debuggables.make (10);
-			once_debuggables.clear_all;
-			new_once_debuggables.clear_all
-		end; -- restore_debuggables
-
-	restore_breakpoints is
-			-- Restore breakpoints. See comment
-			-- of feature `restore'
-		do
-			clear_breakpoints
-		end;
-						
-	make_debuggables is
-		do
-			!! new_debuggables.make (10);
-			!! sent_debuggables.make (10);
-			!! once_debuggables.make (10);
-			!! new_once_debuggables.make (10)
-		end;
-
-	clear_debuggables is
-			-- Clear debuggable structures.
-		do
-			sent_debuggables.clear_all;
-			new_debuggables.clear_all;
-			once_debuggables.clear_all;
-			new_once_debuggables.clear_all
-		end; 
-
-	feature_of_body_id (list: LINKED_LIST [E_FEATURE]; body_id: BODY_ID): E_FEATURE is
-			-- Feature of body id `body_id' stored in `list';
-			-- Void if no such feature exists
-		require
-			list_not_void: list /= Void
-		do
-			from
-				list.start
-			until
-				Result /= Void or list.after
-			loop
-				if body_id.is_equal (list.item.body_id) then
-					Result := list.item
-				end;
-				list.forth
-			end
-		end;
-			
-	make_breakpoints is
-			-- Create breakpoints structures.
-		do
-			!! new_breakpoints.make;
-			!! sent_breakpoints.make
-		end;
-
-	clear_breakpoints is
-			-- Clear the breakpoint structures.
-		do
-			new_breakpoints.wipe_out;
-			sent_breakpoints.wipe_out
-		end;
-
-	is_last_breakpoint (i: INTEGER; f: E_FEATURE): BOOLEAN is
-			-- Is the `i'-th breakpoint of `f' the last breakable point?
-			-- (end of the compound, not of the rescue clause)
-		require
-			f_debuggable: has_feature (f)
-		local
-			breakable_points: SORTED_TWO_WAY_LIST [AST_POSITION];
-			internal_as: INTERNAL_AS
-		do
-			breakable_points := debuggables (f).first.breakable_points;
-			if i >= 1 and i <= breakable_points.count then
-				internal_as ?= breakable_points.i_th (i).ast_node
-			end;
-			Result := internal_as /= Void
-		end;
+			create Result.make
+		end
 
 end -- class DEBUG_INFO

@@ -30,17 +30,17 @@ feature
 	patterns: SEARCH_TABLE [PATTERN]
 			-- Shared references on patterns
 
-	info_array: HASH_TABLE [PATTERN_INFO, PATTERN_ID]
+	info_array: HASH_TABLE [PATTERN_INFO, INTEGER]
 			-- Table of pattern information in order to reference them
 			-- through an index.
 
-	last_pattern_id: PATTERN_ID
+	last_pattern_id: INTEGER
 			-- Pattern id processed after last insertion
 
 	c_patterns: SEARCH_TABLE [C_PATTERN_INFO]
 			-- Non formal patterns present already in the system
 
-	pattern_id_counter: PATTERN_ID_COUNTER
+	pattern_id_counter: COMPILER_COUNTER
 			-- Pattern id counter
 
 	c_pattern_id_counter: COUNTER
@@ -50,11 +50,11 @@ feature
 			-- Table creation
 		do
 			search_table_make (Chunk)
-			!!patterns.make (Chunk)
-			!!info_array.make (Chunk)
-			!!c_pattern_id_counter
+			!! patterns.make (Chunk)
+			!! info_array.make (Chunk)
+			!! c_pattern_id_counter
 			!! pattern_id_counter.make
-			!!c_patterns.make (Chunk)
+			!! c_patterns.make (Chunk)
 		end
 
 	Chunk: INTEGER is 100
@@ -98,14 +98,14 @@ feature
 			end
 		end
 
-	insert (written_in: CLASS_ID; pattern: PATTERN) is
+	insert (written_in: INTEGER; pattern: PATTERN) is
 		require
 			good_argument: pattern /= Void
 		local
 			other_pattern: PATTERN
 			info, other_info: PATTERN_INFO
 		do
-			!!info.make (written_in, pattern)
+			create info.make (written_in, pattern)
 			other_info := item (info)
 			if other_info = Void then
 				other_pattern := patterns.item (pattern)
@@ -124,7 +124,7 @@ feature
 			end
 		end
 
-	pattern_of_id (i: PATTERN_ID; type: CL_TYPE_I): PATTERN is
+	pattern_of_id (i: INTEGER; type: CL_TYPE_I): PATTERN is
 			-- Pattern information of id `i'.
 		require
 			valid_id: info_array.has (i)
@@ -132,7 +132,7 @@ feature
 			Result := info_array.item (i).instantiation_in (type)
 		end
 
-	c_pattern_id (pattern_id: PATTERN_ID; cl_type: CL_TYPE_I): INTEGER is
+	c_pattern_id (pattern_id: INTEGER; cl_type: CL_TYPE_I): INTEGER is
 			-- Pattern id of C pattern `p'
 		require
 			good_type: cl_type /= Void
@@ -153,40 +153,6 @@ feature
 			!!Result
 		end
 
-feature -- Merging
-
-	append (other: like Current) is
-			-- Append `other' to `Current'.
-			-- Used when merging precompilations.
-		require
-			other_not_void: other /= Void
-		local
-			pattern, other_pattern: PATTERN
-			info, other_info: PATTERN_INFO
-			other_info_array: HASH_TABLE [PATTERN_INFO, PATTERN_ID]
-		do
-			pattern_id_counter.append (other.pattern_id_counter)
-			other_info_array := other.info_array
-			from other_info_array.start until other_info_array.after loop
-				info := other_info_array.item_for_iteration
-				other_info := item (info)
-				if other_info = Void then
-					pattern := info.pattern
-					other_pattern := patterns.item (pattern)
-					if other_pattern = Void then
-						patterns.put (pattern)
-					else
-						info.set_pattern (other_pattern)
-					end
-					put (info)
-					info.set_pattern_id (last_pattern_id)
-					info_array.put (info, other_info_array.key_for_iteration)
-				end
-				other_info_array.forth
-			end
-			process
-		end
-
 feature -- Generation
 
 	generate is
@@ -200,8 +166,6 @@ feature -- Generation
 			buffer := generation_buffer
 			buffer.clear_all
 
-			buffer.open_write_c
-
 			buffer.putstring ("%
 				%#include %"eif_macros.h%"%N%
 				%#include %"eif_struct.h%"%N%
@@ -210,6 +174,8 @@ feature -- Generation
 			if System.has_separate then
 				buffer.putstring ("%%#include %"eif_curextern.h%"%N%N")
 			end
+
+			buffer.start_c_specific_code
 
 			generate_pattern (buffer)
 
@@ -249,9 +215,9 @@ feature -- Generation
 				end
 				buffer.putstring ("};%N%N")
 			end
-			buffer.close_c
+			buffer.end_c_specific_code
 
-			!! pattern_file.make_open_write (workbench_file_name (Epattern));
+			!! pattern_file.make_c_code_file (workbench_file_name (Epattern));
 			pattern_file.put_string (buffer)
 			pattern_file.close
 		end
@@ -272,36 +238,40 @@ feature -- Generation
 
 feature -- Concurrent Eiffel
 
-    generate_separate_pattern (buffer: GENERATION_BUFFER) is
-            -- Generate pattern for separate calls
+	generate_separate_pattern (buffer: GENERATION_BUFFER) is
+			-- Generate pattern for separate calls
 		require
 			has_separate_calls: System.has_separate
-        do
-            from
-                c_patterns.start
-            until
-                c_patterns.after
-            loop
-                c_patterns.item_for_iteration.generate_separate_pattern (buffer)
-                c_patterns.forth
-            end
-        end
+		do
+			from
+				c_patterns.start
+			until
+				c_patterns.after
+			loop
+				c_patterns.item_for_iteration.generate_separate_pattern (buffer)
+				c_patterns.forth
+			end
+		end
 
-    generate_only_separate_pattern (buffer: GENERATION_BUFFER) is
-            -- Generate pattern for separate calls in FIANALIZE mode.
-        do
-            from
-                c_patterns.start
-            until
-                c_patterns.after
-            loop
-                c_patterns.item_for_iteration.generate_only_separate_pattern (buffer)
-                c_patterns.forth
-            end
-        end
+	generate_only_separate_pattern (buffer: GENERATION_BUFFER) is
+			-- Generate pattern for separate calls in FIANALIZE mode.
+		require
+			has_separate_calls: System.has_separate
+		do
+			from
+				c_patterns.start
+			until
+				c_patterns.after
+			loop
+				c_patterns.item_for_iteration.generate_only_separate_pattern (buffer)
+				c_patterns.forth
+			end
+		end
 
 	generate_in_finalized_mode is
 			-- Generate separate pattern in Finalize mode in FIANALIZE mode.
+		require
+			has_separate_calls: System.has_separate
 		local
 			i, nb: INTEGER
 			final_pattern_file: INDENT_FILE
@@ -311,8 +281,6 @@ feature -- Concurrent Eiffel
 			buffer := generation_buffer
 			buffer.clear_all
 
-			buffer.open_write_c
-
 			buffer.putstring ("%
 				%#include %"eif_macros.h%"%N%
 				%#include %"eif_struct.h%"%N%
@@ -320,6 +288,8 @@ feature -- Concurrent Eiffel
 	
 			buffer.putstring ("%
 				%#include %"eif_curextern.h%"%N%N")
+
+			buffer.start_c_specific_code
 
 			generate_only_separate_pattern (buffer)
 
@@ -337,14 +307,14 @@ feature -- Concurrent Eiffel
 				i := i + 1
 			end
 			buffer.putstring ("};%N%N")
-			buffer.close_c
+			buffer.end_c_specific_code
 
-			!! final_pattern_file.make_open_write (gen_file_name (True, Epattern))
+			!! final_pattern_file.make_c_code_file (gen_file_name (True, Epattern))
 			final_pattern_file.put_string (buffer)
 			final_pattern_file.close
 		end
 
-	sep_insert (written_in: CLASS_ID; pattern: PATTERN): BOOLEAN is
+	sep_insert (written_in: INTEGER; pattern: PATTERN): BOOLEAN is
 		require
 			good_argument: pattern /= Void
 		local

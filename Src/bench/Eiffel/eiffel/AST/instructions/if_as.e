@@ -1,18 +1,18 @@
 indexing
-
-	description:
-			"Abstract description of a conditional instruction, %
-			%Version for Bench."
-	date: "$Date$"
-	revision: "$Revision$"
+	description	: "Abstract description of a conditional instruction, %
+				  %Version for Bench."
+	date		: "$Date$"
+	revision	: "$Revision$"
 
 class IF_AS
 
 inherit
 	INSTRUCTION_AS
 		redefine
-			number_of_stop_points,
-			byte_node, find_breakable, fill_calls_list, replicate
+			number_of_breakpoint_slots,
+			byte_node, 
+			fill_calls_list, 
+			replicate
 		end
 
 feature {AST_FACTORY} -- Initialization
@@ -38,21 +38,6 @@ feature {AST_FACTORY} -- Initialization
 			line_number_set: line_number = l
 		end
 
-feature {NONE} -- Initialization
-
-	set is
-			-- Yacc initialization
-		do
-			condition ?= yacc_arg (0)
-			compound ?= yacc_arg (1)
-			elsif_list ?= yacc_arg (2)
-			else_part ?= yacc_arg (3)
-			start_position := yacc_position
-			line_number    := yacc_line_number
-		ensure then
-			condition_exists: condition /= Void
-		end
-
 feature -- Attributes
 
 	condition: EXPR_AS
@@ -69,20 +54,18 @@ feature -- Attributes
 
 feature -- Access
 
-	number_of_stop_points: INTEGER is
+	number_of_breakpoint_slots: INTEGER is
 			-- Number of stop points for AST
 		do
-			Result := Result + 1
+			Result := 1 -- condition test
 			if compound /= Void then
-				Result := Result + compound.number_of_stop_points
+				Result := Result + compound.number_of_breakpoint_slots
 			end
-			Result := Result + 1
 			if elsif_list /= Void then
-				Result := Result + elsif_list.number_of_stop_points
+				Result := Result + elsif_list.number_of_breakpoint_slots
 			end
 			if else_part /= Void then
-				Result := Result + else_part.number_of_stop_points
-				Result := Result + 1
+				Result := Result + else_part.number_of_breakpoint_slots
 			end
 		end
 
@@ -111,7 +94,7 @@ feature -- Type check, byte code and dead code removal
 				-- Check conformance to boolean
 			current_context := context.item
 			if 	not current_context.is_boolean then
-				!!vwbe1
+				create vwbe1
 				context.init_error (vwbe1)
 				vwbe1.set_type (current_context)
 				Error_handler.insert_error (vwbe1)
@@ -138,7 +121,7 @@ feature -- Type check, byte code and dead code removal
 	byte_node: IF_B is
 			-- Associated byte node
 		do
-			!!Result
+			create Result
 			Result.set_condition (condition.byte_node)
 			if compound /= Void then
 				Result.set_compound (compound.byte_node)
@@ -152,25 +135,6 @@ feature -- Type check, byte code and dead code removal
 			Result.set_line_number (line_number)
 		end
 			
-feature -- Debugger
-
-	find_breakable is
-			-- Look for breakable instructions
-		do
-			record_break_node
-			if compound /= Void then
-				compound.find_breakable
-			end
-			record_break_node
-			if elsif_list /= Void then
-				elsif_list.find_breakable
-			end
-			if else_part /= Void then
-				else_part.find_breakable
-				record_break_node
-			end
-		end
-
 feature	-- Replication
 
 	fill_calls_list (l: CALLS_LIST) is
@@ -178,7 +142,7 @@ feature	-- Replication
 		local
 			new_list: like l
 		do
-			!!new_list.make
+			create new_list.make
 			condition.fill_calls_list (new_list)
 			l.merge (new_list)
 			if compound /= Void then
@@ -231,12 +195,11 @@ feature {AST_EIFFEL} -- Output
 				ctxt.exdent
 			end
 			ctxt.new_line
-			ctxt.put_breakable 
 			if elsif_list /= Void then
 				ctxt.set_separator (ti_Empty)
 				ctxt.set_no_new_line_between_tokens
 				ctxt.format_ast (elsif_list)
-				ctxt.set_separator (ti_Semi_colon)
+				ctxt.set_separator (Void)
 			end
 			if else_part /= Void then
 				ctxt.put_text_item (ti_Else_keyword)
@@ -246,7 +209,6 @@ feature {AST_EIFFEL} -- Output
 				ctxt.format_ast (else_part)
 				ctxt.exdent
 				ctxt.new_line
-				ctxt.put_breakable 
 			end
 			ctxt.put_text_item (ti_End_keyword)
 		end
@@ -278,4 +240,5 @@ feature {IF_AS} -- Replication
 		do
 			else_part := e
 		end
+
 end -- class IF_AS

@@ -1,20 +1,40 @@
 indexing
-	description: "Abstract notion of a command for an edit tool"
-	date: "$Date$"
-	revision: "$Revision$"
+	description	: "Abstract notion of a command for the editor"
+	date		: "$Date$"
+	revision	: "$Revision$"
 
-deferred class
+class
 	EB_EDITOR_COMMAND
 
 inherit
-	EB_TEXT_TOOL_CMD
+
+	EB_STANDARD_CMD
 		redefine
-			tool
+			initialize
 		end
 
-feature -- Properties
+	TEXT_OBSERVER
+		redefine
+			on_text_loaded
+		end
 
-	tool: EB_EDIT_TOOL
-			-- The tool
+creation
+	make
+
+feature -- Initialization
+
+	initialize is
+		do	
+			Precursor
+			disable_sensitive
+		end
+
+feature -- observer pattern
+
+	on_text_loaded is
+			-- make the command sensitive
+		do
+			enable_sensitive
+		end
 
 end -- class EB_EDITOR_COMMAND

@@ -1,1 +1,0 @@
-This cluster deals with the graphical information.

@@ -34,17 +34,9 @@ feature {ROUTINE_WIN_MGR} -- Displaying
 	display_header (stone: STONE) is
 		local
 			new_title: STRING;
-			fs: FEATURE_STONE;
 		do
 			!!new_title.make (0);
 			new_title.append (stone.header);
-			fs ?= stone;
-			if
-				(fs /= Void) and then
-				Application.has_breakpoint_set (fs.e_feature) 
-			then
-				new_title.append ("   (stop)");		
-			end;
 			tool.set_title (new_title);
 		end;
 

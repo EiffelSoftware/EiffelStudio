@@ -45,7 +45,7 @@ inherit
 			copy, is_equal
 		end
 
-	SHARED_PASS
+	SHARED_DEGREES
 		undefine
 			copy, is_equal
 		end
@@ -97,10 +97,10 @@ feature
 	parents: PARENT_LIST;
 			-- Compiled form of the parents of the current analyzed class
 
-	body_table: EXTEND_TABLE [READ_INFO, BODY_ID];
+	body_table: EXTEND_TABLE [READ_INFO, INTEGER];
 			-- Body table information for `Tmp_body_server'.
 
-	changed_features: LINKED_LIST [STRING];
+	changed_features: ARRAYED_LIST [STRING];
 			-- Changed features of `a_class'.
 
 	invariant_changed: BOOLEAN;
@@ -112,13 +112,10 @@ feature
 	origins: LINKED_LIST [STRING];
 			-- Origin features name list for pattern processing
 
-	new_body_id: BODY_ID;
-			-- Last new computed body id
-
 	supplier_status_modified: BOOLEAN;
 			-- The status (expanded, deferred) of a supplier has changed
 
-	assert_prop_list: LINKED_LIST [ROUTINE_ID];
+	assert_prop_list: LINKED_LIST [INTEGER];
 			-- List of routine ids for assertion modifications
 
 	adaptations: LINKED_LIST [FEATURE_ADAPTATION] is
@@ -139,24 +136,22 @@ feature
 	make (n: INTEGER) is
 			-- Hash table creation
 		do
-			extend_tbl_make (n);
-			!!inherited_features.make (n);
-			!!body_table.make (50);
-			!!changed_features.make;	
-			!!origins.make;
-			!!new_externals.make;
-		end;
+			extend_tbl_make (n)
+			create inherited_features.make (n)
+			create body_table.make (50)
+			create changed_features.make (100)
+			create origins.make
+			create new_externals.make
+		end
 
-	pass2 (pass_c: PASS2_C; is_supplier_status_modified: BOOLEAN) is
+	pass2 (pass_c: CLASS_C; is_supplier_status_modified: BOOLEAN) is
 			-- Second pass of the compiler on class `cl'. The ultimate
 			-- goal here is to calculate the feature table `inherited_features'.
 		require
-			argument_not_void: pass_c /= Void;
-			class_not_void: pass_c.associated_class /= Void;
-			class_info_exists: Class_info_server.has (pass_c.associated_class.id);
+			pass_c_not_void: pass_c /= Void
+			class_info_exists: Class_info_server.has (pass_c.class_id);
 		local
-			class_id: CLASS_ID;
-			i, nb: INTEGER;
+			class_id: INTEGER;
 			resulting_table: like inherited_features;
 			a_cluster: CLUSTER_I;
 			pass2_control: PASS2_CONTROL;
@@ -166,9 +161,7 @@ feature
 			creation_name: STRING;
 			equiv_tables: BOOLEAN;
 		do
-			new_body_id := Void;
-
-			a_class := pass_c.associated_class;
+			a_class := pass_c
 			supplier_status_modified := is_supplier_status_modified;
 
 			a_cluster := a_class.cluster;
@@ -178,7 +171,7 @@ feature
 
 				-- Empty the selection control list
 			Selected.wipe_out;
-			class_id := a_class.id;
+			class_id := a_class.class_id;
 
 				-- Look for the interpreted class information left
 				-- by the first pass if the class has syntactically changed.
@@ -278,24 +271,6 @@ feature
 			check
 				No_error: not Error_handler.has_error;
 			end;
-			if not System.code_replication_off then
-				if rep_parent_list.count > 0 then
-					process_replicated_features (resulting_table);
-				else
-					if Rep_server.has (a_class.id) then
-							--! Remove it from the server if it
-							--! previously existed
-						Rep_server.remove (a_class.id)
-					end;
-					if Tmp_rep_info_server.has (a_class.id) then
-						--| An error may have occured during Degree 3
-						--| and there may have been replicated info
-						--| originally and when recompiled 
-						--| these may have been removed.
-						Tmp_rep_info_server.remove (a_class.id)
-					end;
-				end;
-			end;
 
 				-- Pass2 controler evaluation
 			pass2_control := feature_table.pass2_control (resulting_table);
@@ -328,10 +303,10 @@ debug ("ACTIVITY")
 	end;
 end;
 					if a_class.is_used_as_expanded then
-						!!depend_unit.make_expanded_unit (a_class.id);
+						!!depend_unit.make_expanded_unit (a_class.class_id);
 						pass2_control.propagators.extend (depend_unit)
 					end;
-					!!depend_unit.make_creation_unit (a_class.id);
+					!!depend_unit.make_creation_unit (a_class.class_id);
 					pass2_control.propagators.extend (depend_unit)
 				end;
 			else
@@ -357,7 +332,7 @@ debug ("ACTIVITY")
 	io.error.putstring (creation_name);
 	io.error.putstring (" inserted in pass2_control.propagators%N");
 end;
-							!!depend_unit.make (a_class.id, resulting_table.found_item);
+							!!depend_unit.make (a_class.class_id, resulting_table.found_item);
 							pass2_control.propagators.extend (depend_unit);
 						end;
 					end;
@@ -366,7 +341,7 @@ end;
 				if a_class.is_used_as_expanded and then
 					(new_creators  = Void or else new_creators.count > 1)
 				then
-					!!depend_unit.make_expanded_unit (a_class.id);
+					!!depend_unit.make_expanded_unit (a_class.class_id);
 					pass2_control.propagators.extend (depend_unit)
 				end;
 				old_creators := Void
@@ -393,7 +368,7 @@ end;
 			end;
 
 				-- Propagation
-			pass_c.propagate (resulting_table, equiv_tables,
+			Degree_4.propagate (pass_c, resulting_table, equiv_tables,
 								pass2_control, assert_prop_list);
 			assert_prop_list := Void;
 
@@ -445,9 +420,9 @@ end;
 		require
 			a_class /= Void
 		local
-			id: CLASS_ID;
+			id: INTEGER;
 		do
-			id := a_class.id;
+			id := a_class.class_id;
 				-- Look for a previous feature table in server `Feat_tbl_server'
 				-- nb: we don't have to look for it in the temporary server
 				-- for feature table here, that's why we are using feature
@@ -497,7 +472,7 @@ end;
 			from
 				parent := parent_c.parent;
 					-- Look for the parent table on the disk
-				parent_table := Feat_tbl_server.item (parent.id);
+				parent_table := Feat_tbl_server.item (parent.class_id);
 				check
 					parent_table_exists: parent_table /= Void;
 						-- Because of topological sort, the parents are
@@ -519,8 +494,7 @@ end;
 				feature_i.instantiate (parent_c.parent_type);
 		
 					-- Creation of an inherited feature information unit	
-				!!info;
-				info.set_a_feature (feature_i);
+				create info.make (feature_i)
 				info.set_parent (parent_c);
 					-- Add the information to the concerned instance of
 					-- INHERIT_FEAT
@@ -549,7 +523,6 @@ end;
 			-- Check all the renamings made in the table of
 			-- inherited features
 		local
-			i, nb: INTEGER;
 			inh_feat: INHERIT_FEAT
 		do
 			from
@@ -575,7 +548,6 @@ end;
 			inherit_feat: INHERIT_FEAT;
 			inherited_info: INHERIT_INFO;
 			feature_i: FEATURE_I;
-			attribute: ATTRIBUTE_I;
 			def: DEFINITION;
 		do
 			from
@@ -665,7 +637,7 @@ end;
 								-- Computes an internal name for the feature
 								-- taking care of prefix/infix notations
 							feature_i := feature_unit (single_feature, feat_name);
-								-- Attributes `body_id', `feature_name' and
+								-- Attributes `body_index', `feature_name' and
 								-- `written_in' are ok now. If it is an old
 								-- instance of FEATURE_I from a previous
 								-- compilation, we know if it was an origin.
@@ -692,17 +664,17 @@ end;
 			feature_i: FEATURE_I;
 			feature_name: STRING;
 				-- Feature name
-			id: CLASS_ID;
+			id: INTEGER;
 				-- Current class id
 		do
 			from
-				id := a_class.id;
+				id := a_class.class_id;
 				feature_table.start;
 			until
 				feature_table.after
 			loop
 				feature_i := feature_table.item_for_iteration;
-				if feature_i.written_in.is_equal (id) then
+				if feature_i.written_in = id then
 					feature_name := feature_table.key_for_iteration;
 						-- recompute a former local declaration
 					analyze_local (feature_i.duplicate, feature_name);
@@ -720,18 +692,22 @@ end;
 		local
 			inherit_feat: INHERIT_FEAT;
 				-- Possible inherited features
-			inherited_feature, old_feature: FEATURE_I;
-			new_rout_id: ROUTINE_ID;
-			rout_id_set, new_rout_id_set: ROUT_ID_SET;
+			old_feature: FEATURE_I;
+			new_rout_id: INTEGER;
+			new_rout_id_set: ROUT_ID_SET;
 			redef: REDEFINITION;
 			info, inherited_info: INHERIT_INFO;
 			vmfn: VMFN;
 			vmfn1: VMFN1;
 			compute_new_rout_id: BOOLEAN;
-			replace_body_id: BOOLEAN
+			read_info: READ_INFO
 		do
 				-- Now, compute the routine id set of the feature.	
 			inherit_feat := item (feature_name);
+
+				-- Find out it there previously was a feature with name
+				-- `feature_name'
+			old_feature := feature_table.item (feature_name);
 
 			if inherit_feat = Void then
 					-- No feature inherited under name `feature_name'. This
@@ -748,11 +724,20 @@ end;
 					end;
 					new_rout_id := new_rout_id_set.first;
 					if feature_i.is_attribute then
-						compute_new_rout_id := not new_rout_id.is_attribute;
+						compute_new_rout_id := not Routine_id_counter.is_attribute (new_rout_id)
 					else
-						compute_new_rout_id := new_rout_id.is_attribute
+						compute_new_rout_id := Routine_id_counter.is_attribute (new_rout_id)
 					end;
 				else
+					if
+						old_feature /= Void and then not old_feature.is_origin
+					then
+							-- We changed the origin of the feature, we need to
+							-- mark the feature as changed since its assertions
+							-- could have been changed even though its body did
+							-- not changed
+						changed_features.extend (feature_name)
+					end
 					feature_i.set_is_origin (True);
 					compute_new_rout_id := True;
 				end;
@@ -764,9 +749,7 @@ end;
 				end;
 					-- Insertion into the system routine info table.
 				System.rout_info_table.put (new_rout_id, a_class);
-					--
-				!!info;
-				info.set_a_feature (feature_i);
+				create info.make (feature_i)
 			else
 					-- This is either an explicit redefinition through
 					-- the redefine clause or an implicit redefinition like
@@ -775,12 +758,26 @@ end;
 				if inherited_info = Void then
 						-- Implicit or explicit redefinition
 					new_rout_id_set := clone (inherit_feat.rout_id_set);
-						-- This is not an origin
+						-- This is not an origin.
 					feature_i.set_is_origin (False);
+					if
+						old_feature /= Void and then old_feature.is_origin
+					then
+							-- We changed the origin of the feature, we need to
+							-- mark the feature as changed since its assertions
+							-- could have been changed even though its body did
+							-- not change.
+						changed_features.extend (feature_name)
+					end
 						-- Routine id set for the redefinition
 					feature_i.set_rout_id_set (new_rout_id_set);
 						-- Mark the redefinition to be done.
-					!!info;
+						-- We pass `feature_i' as creation routine to
+						-- satisfy INHERIT_INFO invariant, but this is
+						-- not the correct value. The correct one will
+						-- will be set later by one of the routine that
+						-- calls `set_a_feature' from INHERIT_INFO.
+					create info.make (feature_i)
 					inherit_feat.set_inherited_info (info);
 						-- Store the redefintion for later
 					!!redef.make (inherit_feat, feature_i);
@@ -790,9 +787,9 @@ end;
 					!!vmfn;
 					vmfn.set_class (a_class);
 					vmfn.set_a_feature (feature_i);
-					vmfn.set_other_feature (inherited_features.item (feature_name));
+					vmfn.set_inherited_feature (inherited_features.item (feature_name));
 					Error_handler.insert_error (vmfn);
-				elseif not feature_i.is_code_replicated then
+				else
 						-- Name clash: a non-deferred feature is inherited
 					!!vmfn1;
 					vmfn1.set_class (a_class);
@@ -803,45 +800,31 @@ end;
 				end;
 			end;
 			if info /= Void then
-					-- Compute feature id and body index when no clash name
-				old_feature := feature_table.item (feature_name);
 				if old_feature = Void then
 						-- Since the old feature table hasn't a feature named
 						-- `feature_name', new feature id for the feature
 					give_new_feature_id (feature_i);
-						-- Compute a body index information
-					feature_i.set_body_index (Body_index_counter.next_id);
-					replace_body_id := False
 				else
 						-- Take the previous feature id
 					feature_i.set_feature_id (old_feature.feature_id);
-					if not old_feature.written_in.is_equal (a_class.id) then
+					if not (old_feature.written_in = a_class.class_id) then
+							-- It is a new feature, we need to create a new
+							-- body index.
 						feature_i.set_body_index (Body_index_counter.next_id);
-						replace_body_id := False
+
+							-- Update server information
+						read_info := body_table.item (old_feature.body_index)
+						body_table.remove (old_feature.body_index)
+						body_table.force (read_info, feature_i.body_index);	
 					else
 						feature_i.set_body_index (old_feature.body_index);
-						replace_body_id := True
+						if
+							(feature_i.is_attribute and then not old_feature.is_attribute) or else
+							(feature_i.is_deferred and then not old_feature.is_deferred)
+						then
+							System.execution_table.add_dead_function (old_feature.body_index)	
+						end
 					end;
-				end;
-					-- Update body index/body id correpondances
-				if new_body_id /= Void then
-						-- A new body id has been computed for `feature_i'.
-					--if replace_body_id then
-							-- we change the body_id correponding to an old body_index
-					--	feature_i.change_body_id
-					--else
-							-- we use a brand new body_index
-						Body_index_table.force
-									(new_body_id, feature_i.body_index);
-					--end
-debug ("ACTIVITY")
-	io.error.putstring ("Insert new body id: ");
-	new_body_id.trace;
-	io.error.putstring ("%NBody index: ");
-	feature_i.body_index.trace;
-	io.error.new_line;
-end
-					new_body_id := Void;
 				end;
 					-- Put new feature in `inherited_features'.
 				insert_feature (feature_i);
@@ -869,8 +852,8 @@ end
 			feature_i: FEATURE_I;
 			unique_feature: UNIQUE_I;
 				-- Feature coming from a previous recompilation
-			old_body_id, feature_body_id: BODY_ID;
-				-- Body id of a previous compiled feature
+			body_index: INTEGER;
+				-- Body index of a previous compiled feature
 			old_description: FEATURE_AS;
 				-- Abstract representation of a previous compiled feature
 			is_the_same, old_feature_in_class: BOOLEAN;
@@ -892,7 +875,7 @@ end;
 
 			Result := yacc_feature.new_feature;
 			Result.set_feature_name (feature_name);
-			Result.set_written_in (a_class.id);
+			Result.set_written_in (a_class.class_id);
 			Result.set_is_frozen (feat.is_frozen);
 			Result.set_is_infix (feat.is_infix);
 			Result.set_is_prefix (feat.is_prefix);
@@ -913,7 +896,13 @@ end;
 				if not external_i.encapsulated then
 					new_externals.put_front (external_i.external_name);
 				end;
-			end;
+			elseif
+				system.il_generation and then
+				Result.private_external_name = Void
+			then
+					-- Get external name of a pure Eiffel feature.
+				Result.set_external_name (yacc_feature.external_name)
+			end
 
 			read_info := class_info.index.item (yacc_feature.id);
 
@@ -921,20 +910,12 @@ end;
 			feature_i := feature_table.item (feature_name);
 
 			if feature_i /= Void then
-				old_feature_in_class := feature_i.written_in.is_equal (a_class.id);
-				old_body_id := feature_i.original_body_id;
-				if 	
-					old_feature_in_class and then 
-					not feature_i.is_code_replicated 
-				then
+				old_feature_in_class := feature_i.written_in = a_class.class_id
+				body_index := feature_i.body_index;
+				if old_feature_in_class then
 						-- Found a feature of same name and written in the
 						-- same class.
-debug ("ACTIVITY")
-	io.error.putstring ("Getting old_body ");
-	old_body_id.trace;
-	io.error.new_line;
-end;
-					old_description := Body_server.server_item (old_body_id);
+					old_description := Body_server.server_item (body_index);
 						-- Incrementality of the workbench is here: we
 						-- compare the content of a new feature and the
 						-- one of an old feature.
@@ -979,7 +960,7 @@ end;
 				end;
 				if not is_the_same or else
 					(supplier_status_modified and then
-					not pass2_controler.changed_status.disjoint (feature_i.suppliers))
+					not Degree_4.changed_status.disjoint (feature_i.suppliers))
 							-- The status of one of the suppliers of the feature has changed
 				then
 debug ("ACTIVITY")
@@ -988,80 +969,50 @@ debug ("ACTIVITY")
 	io.error.putstring ("%Nsupplier_status_modified ");
 	io.error.putbool (supplier_status_modified);
 	io.error.putstring ("%Nchanged status ");
-	io.error.putbool (not pass2_controler.changed_status.disjoint (feature_i.suppliers));
+	io.error.putbool (not Degree_4.changed_status.disjoint (feature_i.suppliers));
 	io.error.putstring ("%Nold_feature_in_class ");
 	io.error.putbool (old_feature_in_class);
 	io.error.new_line;
 end;
 
-					-- Feature has changed of body between two 
-					-- recompilations; attribute `body_id' must be renew and the
-					-- old body id should be remove from the body
-					-- server after compilation if successful.
-					if old_feature_in_class then
-						if not feature_i.is_code_replicated then
-							Tmp_body_server.desactive (old_body_id);
-						else
-							Tmp_rep_feat_server.desactive (old_body_id);
-						end;
-					end;
-						-- Computes a new body id for the changed
-						-- feature.
-					new_body_id := Body_id_counter.next_id;
-					--feature_i.change_body_id
-					--new_body_id := feature_i.body_id
-						-- Take reading information left by the server
-						-- `Tmp_ast_server' during first pass and put
-						-- it in the server `Tmp_body_server'.
-					body_table.put (read_info, new_body_id);	
+						-- Update `read_info' in BODY_SERVER
+					body_table.force (read_info, feature_i.body_index);	
+					Tmp_body_server.reactivate (body_index)
+
 						-- Insert the changed feature in the table of
 						-- changed features of class `a_class'.
-					depend_server.change_ids (new_body_id, old_body_id)
-					depend_server.item (feature_i.written_in).replace_key (new_body_id, old_body_id)
-debug ("ACTIVITY")
-	io.error.putstring (feature_name);
-	io.error.putstring (" inserted in changed_features%N%
-			%New body id: ");
-	new_body_id.trace;
-	io.error.new_line;
-end;
-					changed_features.put_front (feature_name);
+					changed_features.extend (feature_name);
 				else
 						-- Keep the type
 					Result.set_type (feature_i.type);
-						-- Relative offset of the unchanged feature
-						-- description could change.
-					body_table.put (read_info, old_body_id);
-						-- Restore good body id in `Body_index_table'.
-					if not equal (feature_i.body_id, old_body_id) then
-							-- An error happended and modification was undone
-						new_body_id := old_body_id;
-					end;
-					if not feature_i.is_code_replicated then
-						Tmp_body_server.reactivate (old_body_id);
-					else
-						Tmp_rep_feat_server.reactivate (old_body_id);
-					end;
+						-- Update `read_info' in BODY_SERVER
+					body_table.force (read_info, body_index);
+					Tmp_body_server.reactivate (body_index)
 				end;
 			else
-					-- New body id
-				new_body_id := Body_id_counter.next_id;
+					-- New body index for newly introduced feature.	
+				Result.set_body_index (Body_index_counter.next_id)
+
 					-- Take reading information for the body server left
 					-- by `Tmp_ast_server' during first pass and put it
 					-- the temporary body server.
-				body_table.put (read_info, new_body_id);
+				body_table.force (read_info, Result.body_index);
+
 					-- Insert the changed feature in the table of changed
 					-- features of `a_class'.
-debug ("ACTIVITY")
-	io.error.putstring (feature_name);
-	io.error.putstring (" inserted in changed_features (new body id)%N");
-end;
-				changed_features.put_front (feature_name);
+				changed_features.extend (feature_name);
+
+					-- If new external feature, we need to force a freeze if it
+					-- is encapsulated in order to force the generation of encapsulation.
+				if external_i /= Void and then external_i.encapsulated then
+					System.set_freeze
+				end
 			end;
+
 				-- Check incompatibily between `frozen' and `deferred'
 			if Result.is_frozen and then Result.is_deferred then
 					-- A deferred feature cannot be frozen
-				!!vffd4;
+				create vffd4;
 				vffd4.set_class (Result.written_class);
 				vffd4.set_feature_name (Result.feature_name);
 				Error_handler.insert_error (vffd4);
@@ -1109,7 +1060,7 @@ end;
 			loop
 				a_feature := resulting_table.item (origins.item);
 				if sys.has_separate and then a_class.is_used_as_separate then
-					if a_feature.sep_process_pattern and then sys.byte_context.generation_mode then
+					if a_feature.sep_process_pattern and then sys.byte_context.workbench_mode then
 						sys.set_freeze
 					end;
 				else
@@ -1147,10 +1098,10 @@ end;
 			rep_dep: REP_CLASS_DEPEND;
 			feat_rep_dep: REP_FEATURE_DEPEND;
 			feature_name: STRING
-			class_id: CLASS_ID
+			class_id: INTEGER
 		do
 			from
-				class_id := a_class.id
+				class_id := a_class.class_id
 				if Rep_depend_server.server_has (class_id) then
 					rep_dep := Rep_depend_server.server_item (class_id);
 				elseif Tmp_rep_depend_server.has (class_id) then
@@ -1178,12 +1129,6 @@ end;
 					Tmp_rep_depend_server.remove (class_id)
 				end;
 			end;
-		end;
-
-	Body_id_counter: BODY_ID_COUNTER is
-			-- Counter for body ids
-		once
-			Result := System.body_id_counter;
 		end;
 
 	Routine_id_counter: ROUTINE_COUNTER is
@@ -1228,7 +1173,7 @@ end;
 					else
 							-- Case of deferred features only
 						check
-							not inherit_feat.empty;
+							not inherit_feat.is_empty;
 						end;
 						feature_name := key_for_iteration;
 						deferred_info := inherit_feat.deferred_features.first;
@@ -1272,7 +1217,8 @@ end;
 			feature_name: STRING;
 		do
 				-- It is no more an origin
-			f.set_is_origin (False);
+			f.set_is_origin (False)
+
 				--  Check the routine table ids
 			rout_ids := inherit_feat.rout_id_set;
 			f.set_rout_id_set (clone (rout_ids));
@@ -1286,6 +1232,16 @@ end;
 			else
 					-- Take the old feature id
 				f.set_feature_id (old_feature.feature_id);
+				if
+					old_feature.can_be_encapsulated and then
+					old_feature.to_generate_in (a_class)
+				then
+						-- If it is an attribute that was generated in `a_class',
+						-- we have to redo mark it dead as an encapsulation. `is_valid'
+						-- on its execution unit will tell us if we still need the 
+						-- encapsulation or not.
+					system.execution_table.add_dead_function (old_feature.body_index)
+				end
 			end;
 				-- Concatenation of the export statuses of all the
 				-- precursors of the inherited feature: take care of new
@@ -1361,8 +1317,8 @@ end;
 			if inherited_features.conflict then
 				!!vmfn;
 				vmfn.set_class (a_class);
-				vmfn.set_a_feature (inherited_features.item (feature_name));
-				vmfn.set_other_feature (f);
+				vmfn.set_a_feature (f);
+				vmfn.set_inherited_feature (inherited_features.item (feature_name));
 				Error_handler.insert_error (vmfn);
 			end;
 		end;
@@ -1373,7 +1329,7 @@ end;
 			good_context: not (a_class = Void or else class_info = Void);
 			changed: a_class.changed;
 		local
-			class_id: CLASS_ID;
+			class_id: INTEGER;
 			invariant_info: READ_INFO;
 				-- information left by the temporary server `Tmp_ast_server'
 				-- and stored in `class_info'
@@ -1383,7 +1339,7 @@ end;
 				-- First: check is the invariant clause of the current
 				-- class has syntactically changed. If yes, flag 
 				-- `changed5' of `a_class' is set to True.
-			class_id := a_class.id;
+			class_id := a_class.class_id;
 			invariant_info := class_info.invariant_info;
 				-- Look in the non-temporary invariant AST server for
 				-- for an old invariant clause
@@ -1418,269 +1374,6 @@ end;
 					-- in CLASS_C
 				a_class.set_invariant_feature (Void);
 				Tmp_inv_ast_server.remove_id (class_id);
-			end;
-		end;
-
-feature -- Replications
- 
-	process_replicated_features (f_table: FEATURE_TABLE) is
-				-- Process replicated features detected in `treat_renamings'.
-				-- Check to see if code replication is necessary, and if so,
-				-- update the replicated feature accordingly.
-		require
-			valid_rep_count: rep_parent_list.count > 0
-		local
-			feature_as: FEATURE_AS;
-			new_feat, rep_feat, old_feat: FEATURE_I;
-			f_name: STRING;
-			rep_name_list: REP_NAME_LIST;
-			rep_name: REP_NAME;
-			calls_list: CALLS_LIST;
-			s_rep_name_list: S_REP_NAME_LIST;
-			rep_class_info: REP_CLASS_INFO;
-			tmp_rep_class_info: EXTEND_TABLE [S_REP_NAME_LIST, INTEGER];
-			stop, needs_replication: BOOLEAN;
-			written_in_cont: CLASS_ID;
-			body_id: BODY_ID;
-			same_features: BOOLEAN;
-			cur: CURSOR;
-			s_rep_name: S_REP_NAME;
-		do
-			from
-				rep_parent_list.start;
-				!!calls_list.make;
-				!!rep_class_info.make (a_class.id);
-				!!tmp_rep_class_info.make (a_class.id.id);
-			until
-				rep_parent_list.after
-			loop
-debug ("REPLICATION")
-				io.error.putstring ("Parent clause: ");
-				io.error.putstring (rep_parent_list.item.parent_clause.class_name);
-				io.error.new_line;
-end;
-				rep_name_list := rep_parent_list.item;
-				needs_replication := False;
-				from
-					-- Need to update because f_table contains unselected.
-					written_in_cont := Void;
-					rep_name_list.start
-				until
-					rep_name_list.after 
-				loop
-					rep_name := rep_name_list.item;
-					rep_feat :=	rep_name.rep_feature;  
-					if not rep_feat.is_deferred and then
-						not rep_feat.written_in.is_equal (a_class.id) 
-					then
-						if not equal (written_in_cont, rep_feat.written_in) then
-							written_in_cont := rep_feat.written_in;
-							rep_name_list.update_old_features (f_table,
-													written_in_cont);
-						end;
-						if tmp_rep_class_info.has (written_in_cont.id) then
-							s_rep_name_list := tmp_rep_class_info.found_item
-						else
-							!!s_rep_name_list.make (
-								rep_name_list.parent_clause.parent_id);
-							tmp_rep_class_info.put (s_rep_name_list,
-													written_in_cont.id);
-							rep_name_list.update_new_features (f_table,
-													written_in_cont);
-						end;
-						f_name := rep_feat.feature_name;
-debug ("REPLICATION")
-		io.error.putstring ("%Tchecking feature: ");
-		io.error.putstring (rep_feat.feature_name);
-		io.error.putstring (" ");
-		io.error.putstring (rep_feat.generator);
-		io.error.new_line;
-end;
-						old_feat :=	rep_name.old_feature;  
-						if	
-							old_feat /= Void
-						then
-							body_id := old_feat.body_id;
-							if Rep_feat_server.has (body_id) then
-								feature_as := Rep_feat_server.item (body_id)
-							else
-								feature_as := Body_server.item (body_id)
-							end;
-							calls_list.wipe_out;
-							feature_as.fill_calls_list (calls_list);
-							if rep_name_list.has_calls (calls_list) then
-debug ("ACTUAL_REPLICATION")
-		io.error.putstring ("%Tfeature going to be rep: ");
-		io.error.putstring (rep_name.new_feature.feature_name);
-		io.error.putstring (" ");
-		io.error.putstring (rep_name.new_feature.generator);
-		io.error.new_line;
-end;
-debug ("REPLICATION")
-		--calls_list.trace;
-		io.error.putstring ("%Tfeature going to be rep: ");
-		io.error.putstring (rep_name.new_feature.feature_name);
-		io.error.putstring (" ");
-		io.error.putstring (rep_name.new_feature.generator);
-		io.error.new_line;
-end;
-								new_feat := rep_name.new_feature;
-								replicate_feature (new_feat);
-								analyze_replicated_local (new_feat);
-								needs_replication := True;
-							end;
-						end;
-					end;
-					if needs_replication then
-						if not rep_class_info.has_list (s_rep_name_list) then
-							s_rep_name_list.update (rep_name_list);
-							rep_class_info.put_front (s_rep_name_list);
-						end;
-						!!s_rep_name;
-						s_rep_name.set_old_feature (rep_name.old_feature);
-						s_rep_name.set_new_feature (rep_name.new_feature);
-						s_rep_name_list.add_replicated_feature (s_rep_name);
-						needs_replication := False;
-					end;
-					rep_name_list.forth;
-				end;
-				tmp_rep_class_info.clear_all;
-				rep_parent_list.forth;
-			end;
-			if rep_class_info.count > 0 then
-				Tmp_rep_info_server.put (rep_class_info);
-			elseif Tmp_rep_info_server.has (a_class.id) then
-debug ("REPLICATION")
-	io.error.putstring ("removing class ");
-	io.error.putstring (a_class.name);
-	io.error.putstring (" from tmp_rep_info server%N");
-end;
-				Tmp_rep_info_server.remove (a_class.id);
-			end
-		end;
-
-	analyze_replicated_local (feature_i: FEATURE_I) is
-			-- Calculate body_id and feature_id for replicated
-			-- feature `feature_i'.
-		local
-			old_feature: FEATURE_I;
-			new_rout_id_set: ROUT_ID_SET;
-			info: INHERIT_INFO
-			replace_body_id: BOOLEAN
-		do
-			--! The routine id set of feature_i was already done
-			--! in unselected in selection list.
-			--! Insertion into the origin table was also done
-			old_feature := feature_table.item (feature_i.feature_name);
-				-- Compute feature id and body index when no clash name
-			if old_feature = Void then
-					-- Since the old feature table hasn't a feature named
-					-- `feature_name', new feature id for the feature
-				give_new_feature_id (feature_i);
-					-- Compute a body index information
-				feature_i.set_body_index (Body_index_counter.next_id);
-					-- A new body id has been computed for `feature_i'.
-				Body_index_table.force (new_body_id, feature_i.body_index);
-			else
-					-- Take the previous feature id
-				feature_i.set_feature_id (old_feature.feature_id);
-				if not equal (old_feature.written_in, a_class.id) then
-					feature_i.set_body_index (Body_index_counter.next_id);
-						-- A new body id has been computed for `feature_i'.
-					Body_index_table.force (new_body_id, feature_i.body_index);
-				else
-					feature_i.set_body_index (old_feature.body_index);
-					feature_i.change_body_id
-				end;
-			end;
-			new_body_id := Void;
-			Origins.put_front (feature_i.feature_name);
-		end;
-
-	replicate_feature (feat: FEATURE_I) is
-			-- If we found a feature named `feature_name' in a previous
-			-- feature table, don't change feature id. If this previous
-			-- feature didn't change, keep the body id, otherwise compute
-			-- a new body id.
-		local
-			feature_i: FEATURE_I;
-			unique_feature: UNIQUE_I;
-				-- Feature coming from a previous recompilation
-			old_body_id, feature_body_id: BODY_ID;
-				-- Body id of a previous compiled feature
-			old_description: FEATURE_AS;
-				-- Abstract representation of a previous compiled feature
-			is_the_same, old_feature_in_class: BOOLEAN;
-				-- Is the parsed feature the saem than a previous
-				-- compiled one ?
-			feature_name: STRING;
-			unique_counter: COUNTER;
-			integer_value: INT_VALUE_I;
-				-- Internal name of the feature
-			external_i: EXTERNAL_I;
-		do
-			feature_name := feat.feature_name;
-debug ("REPLICATION")
-	io.error.putstring ("REPLICATE FEATURE_UNIT on ");
-	io.error.putstring (feature_name);
-	io.error.putstring ("%N");
-end;
-			feat.set_written_in (a_class.id);
-			feat.set_is_code_replicated;
-
-
--- FIXME: ask Bertrand
--- The unique keeps the same value if it is replicated
-
---			if feat.is_unique then
---					-- Unique value processing
---				unique_feature ?= feat;
---				unique_counter := a_class.unique_counter;
---				!!integer_value;
---				integer_value.set_int_val (unique_counter.next);
---				unique_feature.set_value (integer_value);
-			if feat.is_external then
-					-- Track new externals introduced in the class
-				external_i ?= feat;
-				if not external_i.encapsulated then
-					new_externals.put_front (external_i.external_name);
-				end;
-			end;
- 
-				-- Look for a previous definition of the feature
-			feature_i := feature_table.item (feature_name);
-			if feature_i /= Void then
-				old_feature_in_class := feature_i.written_in.is_equal (a_class.id);
-				if old_feature_in_class then
-						-- Found a feature of same name and written in the
-						-- same class.
-						-- For now, give the current feature a 0 body_id.
-						-- During process_replication (in CLASS_C) we use
-						-- this value for incrementality (it indicates that
-						-- this feature already existed from the previous
-						-- value, hence we can compare AST).
-						--| A special note: we perform actual replication
-						--| at the end of the whole pass2 phase so that the
-						--| feature_tables of all classes are available 
-						--| when replicating `feature_i'.
-					old_body_id := Void;
-				else
-						-- New body id
-					new_body_id := Body_id_counter.next_id;
-debug ("REPLICATION")
-	io.error.putstring (feature_name);
-	io.error.putstring (" inserted in changed_features%N");
-end;
-					changed_features.put_front (feature_name);
-				end
-			else
-					-- New body id
-				new_body_id := Body_id_counter.next_id;
-debug ("REPLICATION")
-	io.error.putstring (feature_name);
-	io.error.putstring (" inserted in changed_features%N");
-end;
-				changed_features.put_front (feature_name);
 			end;
 		end;
 

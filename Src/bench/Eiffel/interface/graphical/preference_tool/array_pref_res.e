@@ -58,7 +58,7 @@ feature -- Output
 			if text = Void or else equal (ar.value, (text.text)) then
 					--| text /= Void means text has been displayed
 					--| and thus the user could have changed the value.
-				if ar.value = Void or else ar.value.empty then
+				if ar.value = Void or else ar.value.is_empty then
 					file.putstring ("%"%"");
 				else
 					file.putchar ('%"')
@@ -67,7 +67,7 @@ feature -- Output
 					file.putstring (txt)
 					file.putchar ('%"')
 				end
-			elseif text.text.empty then
+			elseif text.text.is_empty then
 				file.putstring ("%"%"")
 			else
 				file.putchar ('%"')

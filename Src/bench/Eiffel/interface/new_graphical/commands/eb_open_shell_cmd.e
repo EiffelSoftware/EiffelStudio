@@ -1,67 +1,79 @@
 indexing
-	description: "Command to open a shell with an editor."
-	date: "$Date$"
-	revision: "$Revision$"
+	description	: "Command to open a shell with an editor."
+	date		: "$Date$"
+	revision	: "$Revision$"
 
 class
-	EB_OPEN_SHELL_CMD
+	EB_OPEN_SHELL_COMMAND
 
 inherit
+	EB_DEVELOPMENT_WINDOW_COMMAND
+
+	EB_TOOLBARABLE_AND_MENUABLE_COMMAND
+		redefine
+			new_toolbar_item
+		end
+
 	SHARED_EIFFEL_PROJECT
---	HOLE_COMMAND
---		redefine 
---			compatible, process_feature, process_class,
---			process_class_syntax
---		end
-	EB_TOOL_COMMAND
 
 	SYSTEM_CONSTANTS
 
 	EB_GENERAL_DATA
-	NEW_EB_CONSTANTS
+
+	EB_CONSTANTS
+
+	EXECUTION_ENVIRONMENT
 
 creation
 	make
 
-feature -- Properties
+feature -- Basic operations
 
---	command_line_d: EB_SHELL_DIALOG
-			-- The command line dialog.
-
-	command_shell_name: STRING is
-			-- Name of the command to execute in the shell dialog.
+	new_toolbar_item (display_text: BOOLEAN; use_gray_icons: BOOLEAN): EB_COMMAND_TOOL_BAR_BUTTON is
+			-- Create a new toolbar button for this command.
 		do
-			Result := general_shell_command
+			Result := Precursor (display_text, use_gray_icons)
+--			Result.drop_actions.extend (~drop (?))
+--			Result.drop_actions.set_veto_pebble_function (~is_storable)
+			Result.drop_actions.extend (~process_class (?))
+			Result.drop_actions.extend (~process_feature (?))
 		end
 
---	symbol: EV_PIXMAP is 
---			-- Pixmap for the button.
---		once 
---			Result := Pixmaps.bm_Shell 
---		end
+feature {NONE} -- Update
 
-feature -- Access
+	drop (s: STONE) is
+		local
+			cs: CLASSI_STONE
+			fs: FEATURE_STONE
+			cl_syntax_s: CL_SYNTAX_STONE
+		do
+			fs ?= s
+			if fs /= Void then
+				process_feature (fs)
+			else
+				cs ?= s
+				if cs /= Void then
+					process_class (cs)
+				else
+					cl_syntax_s ?= s
+					if cl_syntax_s /= Void then
+						process_class_syntax (cl_syntax_s)
+					end
+				end
+			end
+		end
 
---	stone_type: INTEGER is do end
- 
---	compatible (dropped: STONE): BOOLEAN is
---			-- Can `Current' accept `dropped' ?
---		do
---			Result := dropped.stone_type = Class_type or else
---					dropped.stone_type = feature_type
---		end
-
-feature -- Update
+feature {NONE} -- Implementation
 
 	process_feature (fs: FEATURE_STONE) is
 			-- Process feature stone.
 		local
-			req: EXTERNAL_COMMAND_EXECUTOR
+			req: COMMAND_EXECUTOR
 			cmd_string: STRING
 		do
 				-- feature text area
 			cmd_string := clone (command_shell_name)
-			if not cmd_string.empty then
+			if not cmd_string.is_empty then
 				replace_target (cmd_string, fs.file_name)
 				cmd_string.replace_substring_all ("$line", fs.line_number.out)
 				create req
@@ -69,18 +81,22 @@ feature -- Update
 			end
 		end
 
-	process_class (cs: CLASSC_STONE) is
+	process_class (cs: CLASSI_STONE) is
 			-- Process class stone.
 		local
-			req: EXTERNAL_COMMAND_EXECUTOR
+			req: COMMAND_EXECUTOR
 			cmd_string: STRING
+			conv_f: FEATURE_STONE
 		do
-			cmd_string := clone (command_shell_name)
-			if not cmd_string.empty then
-				replace_target(cmd_string, cs.file_name)
-				cmd_string.replace_substring_all ("$line", "1")
-				create req
-				req.execute (cmd_string)
+			conv_f ?= cs
+			if conv_f = Void then
+				cmd_string := clone (command_shell_name)
+				if not cmd_string.is_empty then
+					replace_target(cmd_string, cs.file_name)
+					cmd_string.replace_substring_all ("$line", "1")
+					create req
+					req.execute (cmd_string)
+				end
 			end
 		end
 
@@ -88,11 +104,11 @@ feature -- Update
 			-- Process class syntax stone.
 			-- (from HOLE)
 		local
-			req: EXTERNAL_COMMAND_EXECUTOR
+			req: COMMAND_EXECUTOR
 			cmd_string: STRING
 		do
 			cmd_string := clone (command_shell_name)
-			if not cmd_string.empty then
+			if not cmd_string.is_empty then
 				replace_target(cmd_string, syn.file_name)
 				cmd_string.replace_substring_all ("$line", "1")
 				create req
@@ -106,9 +122,8 @@ feature -- Update
 			-- editor will be able to load the file
 		local
 			target_string: STRING
-			cwd:STRING
-			file:PLAIN_TEXT_FILE
-			code:INTEGER
+			cwd: STRING
+			file: PLAIN_TEXT_FILE
 		do
 			if fn = Void then
 				target_string := ""
@@ -126,107 +141,86 @@ feature -- Update
 				else
 					change_working_directory (cwd)
 					target_string := clone (fn)
-					target_string.prepend_character (Directory_separator)
+					target_string.prepend_character (Operating_environment.Directory_separator)
 					target_string.prepend (current_working_directory)
 				end
 			end
 			cmd.replace_substring_all ("$target", target_string)
 		end
 
-
-feature {NONE} -- Implementation
-
-	execute (argument: EV_ARGUMENT; data: EV_EVENT_DATA) is
-			-- If left mouse button was pressed -> execute command.
-			-- If right mouse button was pressed -> bring up shell dialog. 
+	execute is
 		local
-			req: EXTERNAL_COMMAND_EXECUTOR
+			req: COMMAND_EXECUTOR
 			cmd_string: STRING
-			feature_tool: EB_FEATURE_TOOL
-			class_tool: EB_CLASS_TOOL
-			feature_stone: FEATURE_STONE
 			line_nb: INTEGER
+			development_window: EB_DEVELOPMENT_WINDOW
 		do
-			feature_tool ?= tool
+			development_window := target
 			cmd_string := clone (command_shell_name)
-			if feature_tool /= Void then
-				feature_stone ?= feature_tool.stone 
-				if feature_stone /= Void then
-					process_feature (feature_stone)
-				end
-			else --if tool.file_name /= Void and then tool.stone /= Void then
-				class_tool ?= tool
-				if class_tool /= Void and then
-					(class_tool.last_format = class_tool.format_list.text_format)
-				then
-					line_nb := class_tool.text_area.current_line
-				end
-				if not cmd_string.empty then
-					replace_target (cmd_string, tool_file_name)
-					cmd_string.replace_substring_all ("$line", line_nb.out)
-					create req
-					req.execute (cmd_string)
-				end
+			line_nb := development_window.editor_tool.text_area.first_line_displayed
+			if not cmd_string.is_empty then
+				replace_target (cmd_string, window_file_name)
+				cmd_string.replace_substring_all ("$line", line_nb.out)
+				create req
+				req.execute (cmd_string)
 			end
 		end
 
-	tool_file_name: STRING is
-			-- Provides `tool''s file name, if possible.
-			-- (fs.file_name seems to be different from tool.file_name)
+	window_file_name: STRING is
+			-- Provides the filename of the current edited element, if possible.
 		local
-			ed: EB_EDIT_TOOL
 			fs: FILED_STONE
 		do
-			ed ?= tool
-			if ed /= Void then
-				fs := ed.stone
-				if fs /= void then
-					Result := fs.file_name
-				end
+			fs ?= target.stone
+			if fs /= Void then
+				Result := fs.file_name
 			end
 		end
 
-feature {NONE} -- Attributes
+feature {NONE} -- Implementation properties
 
-	name: STRING is
-			-- Name of the command.
+	command_shell_name: STRING is
+			-- Name of the command to execute in the shell dialog.
 		do
-			Result := Interface_names.f_Shell
+			Result := general_shell_command
 		end
 
 	menu_name: STRING is
-			-- Name used in menu entry
+			-- Name as it appears in the menu (with & symbol).
 		do
-			Result := Interface_names.m_Shell
+			Result := Interface_names.m_External_editor
 		end
 
-	accelerator: STRING is
-			-- Accelerator action for menu entry
+	pixmap: ARRAY [EV_PIXMAP] is
+			-- Pixmaps representing the command (one for the
+			-- gray version, one for the color version).
 		do
+			Result := Pixmaps.Icon_shell
 		end
 
-feature {NONE} -- Externals
+	tooltip: STRING is
+			-- Tooltip for the toolbar button.
+		do
+			Result := Interface_names.e_Shell
+		end
 
-	change_working_directory (path: STRING) is
-			-- Set the current directory to `path'
+	description: STRING is
+			-- Description for this command.
+		do
+			Result := Interface_names.e_Shell
+		end
+
+	name: STRING is "Open_shell"
+			-- Name of the command. Used to store the command in the
+			-- preferences.
+
+	is_storable (st: ANY): BOOLEAN is
+			-- Can `st' be dropped?
 		local
-			return_code:INTEGER
+			conv_st: STONE
 		do
-			return_code := eif_chdir (path.to_c)
-		end
-
-	current_working_directory: STRING is
-			-- Directory of current execution
-		external
-			"C | %"eif_dir.h%""
-		alias
-			"dir_current"
-		end
-
-	eif_chdir (s: ANY): INTEGER is
-			-- Set the current directory to `path'
-		external
-			"C | %"eif_dir.h%""
+			conv_st ?= st
+			Result := conv_st /= Void and then conv_st.is_storable
 		end
 
 end -- class EB_OPEN_SHELL_CMD

@@ -38,7 +38,7 @@ feature
 	is_equal (other: like Current): BOOLEAN is
 			-- Is `other' equal to Current ?
 		do
-			Result := rep_feature.written_in.is_equal (other.rep_feature.written_in)
+			Result := rep_feature.written_in = other.rep_feature.written_in
 		end;
 
 	set_old_feature (f: FEATURE_I) is

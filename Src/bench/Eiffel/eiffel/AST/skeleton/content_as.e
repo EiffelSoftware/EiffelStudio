@@ -84,6 +84,20 @@ feature -- Access
 		deferred
 		end
 
+	number_of_precondition_slots: INTEGER is
+			-- Number of postconditions
+			-- (inherited assertions are not taken into account)
+		do
+			-- Return 0
+		end
+
+	number_of_postcondition_slots: INTEGER is
+			-- Number of preconditions
+			-- (inherited assertions are not taken into account)
+		do
+			-- Return 0
+		end
+
 feature {BODY_AS} -- Type check and byte code
 
 	check_local_names is
@@ -93,7 +107,7 @@ feature {BODY_AS} -- Type check and byte code
 
 feature -- test for empty body
 
-	empty : BOOLEAN is
+	is_empty : BOOLEAN is
 			-- Is content empty?
 		do
 			Result := True  -- redefined in ROUTINE_AS

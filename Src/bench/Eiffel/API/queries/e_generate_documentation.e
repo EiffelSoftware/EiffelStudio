@@ -14,6 +14,11 @@ inherit
 
 	SHARED_TEXT_ITEMS
 
+	EB_FLAT_SHORT_DATA
+		export
+			{NONE} all
+		end
+
 creation
 	make_flat, 
 	make_flat_short, 
@@ -67,9 +72,6 @@ feature -- Status report
 	do_parents: BOOLEAN
 			-- Print the parents as well?
 
-	feature_clause_order: ARRAY [STRING]
-			-- Array of orderd feature clause comments
-
 	generate_window: DEGREE_OUTPUT
 			-- Generate window
 
@@ -91,155 +93,45 @@ feature -- Status setting
 			do_parents: do_parents
 		end;
 
-	set_feature_clause_order (fco: like feature_clause_order) is
-			-- Set `feature_clause_order' to `fco'.
-		do
-			feature_clause_order := fco
-		ensure
-			set: feature_clause_order = fco
-		end;
-
 feature -- Execution
 
 	execute is
 			-- Show classes in universe
 		local
-			clusters: LINKED_LIST [CLUSTER_I];
-			classes: EXTEND_TABLE [CLASS_I, STRING];
-			list: LINKED_LIST [CLASS_C];
-			a_class: CLASS_C;
-			a_cluster: CLUSTER_I;
-			filter: TEXT_FILTER;
-			class_formatter: CLASS_TEXT_FORMATTER;
-			file_name: FILE_NAME;
-			d_name: DIRECTORY_NAME;
-			dir: DIRECTORY;
-			d_output: DEGREE_OUTPUT;
-			type: STRING;
-			st, text_st: STRUCTURED_TEXT;
-			s_name: STRING
+			doc: DOCUMENTATION
+			dir: DIRECTORY
+			retried: BOOLEAN
 		do
-			clusters := Eiffel_universe.clusters;
-			if not clusters.empty then
-				error_window.clear_window;
-				if filter_name /= Void and then not filter_name.empty then
-					!! filter.make (filter_name);
-				end;
-				file_name := Eiffel_system.document_file_name;
-				if file_name /= Void then
-					d_name := Eiffel_system.document_path;
-					if d_name /= Void then
-						!! dir.make (d_name);
-						if not dir.exists then
-							dir.create_dir
-						end
-					end;
-					!! st.make;
-					st.add (ti_Before_cluster_declaration);
-					st.add (ti_Before_cluster_header);
-					s_name := clone (Eiffel_System.name);
-					s_name.to_upper;
-					st.add_string (s_name);
-					st.add (ti_After_cluster_header);
-					st.add_new_line;
-					st.add_new_line;
-					generate_cluster_list (st, Eiffel_system.sub_clusters, 1);
-					st.add (ti_After_cluster_declaration);
-					generate_output (filter, file_name, st);
-				end;
-				!! list.make;
-				from 
-					clusters.start 
-				until 
-					clusters.after 
-				loop
-					a_cluster := clusters.item;
-					if not a_cluster.is_precompiled or else
-						Eiffel_system.is_precompiled 
-					then
-						d_name := a_cluster.document_path;
-						if d_name /= Void then
-							!! dir.make (d_name);
-							if not dir.exists then
-								dir.create_dir
-							end;
-							file_name := a_cluster.document_file_name;
-							if file_name /= Void then
-								!! st.make;
-								a_cluster.generate_class_list (st);
-								generate_output (filter, file_name, st)
-							end
-						end;
-						classes := a_cluster.classes;
-						from 
-							classes.start 
-						until 
-							classes.after 
-						loop
-							a_class := classes.item_for_iteration.compiled_class;
-							if a_class /= Void then
-								list.put_front (a_class);
-							end	
-							classes.forth
-						end
-					end;
-					clusters.forth
-				end;
-				!! class_formatter;
-				class_formatter.set_feature_clause_order (feature_clause_order);
-				inspect
-					format_type
-				when flat_type then
-					type := "flat"
-				when flat_short_type then
-					class_formatter.set_is_short;
-					type := "flat/short"
-				when text_type then
-					class_formatter.set_order_same_as_text;
-					class_formatter.set_one_class_only
-					type := "text"
-				when short_type then
-					class_formatter.set_is_short;
-					class_formatter.set_one_class_only
-					type := "short"
-				end
-				if not list.empty then
-					d_output := generate_window;
-					d_output.put_start_documentation (list.count, type);
-					from 
-						list.start 
-					until 
-						list.after 
-					loop
-						a_class := list.item;
-						file_name := a_class.lace_class.document_file_name;
-						if file_name = Void then
-							d_output.skip_entity
-						else
-							d_output.put_class_document_message (a_class);
-							!! st.make;
-							if do_parents then	
-								append_parents (st, a_class)
-							end;
-							class_formatter.format (a_class);
-							text_st := class_formatter.text;
-							from
-								st.finish
-							until	
-								st.before
-							loop
-								text_st.put_front (st.item);
-								st.back
-							end;
-							generate_output (filter, file_name, text_st)
-						end;
-						list.forth
-					end;
-					d_output.finish_degree_output
-				end;
-				error_window.display;
+			if not retried then
+				create doc.make
+				doc.set_filter (filter_name)
+	
+				doc.set_class_formats (
+					format_type = text_type,
+					format_type = flat_type,
+					format_type = short_type,
+					format_type = flat_short_type,
+					True,
+					True
+				)
+	
+				create dir.make (Eiffel_system.document_path)
+				doc.set_directory (dir)
+				doc.set_all_universe
+				doc.set_cluster_formats (True, False)
+				doc.set_system_formats (True, True, True)
+				doc.set_excluded_indexing_items (excluded_indexing_items.linear_representation)
+				doc.generate (generate_window)
 			end
-		end;
+		rescue
+			error_window.put_string (
+				"'" + dir.name +
+				"' is not a valid directory and/or cannot be created")
+			error_window.new_line
+			error_window.put_string ("Please choose a valid and writable directory.")
+			retried := True
+			retry
+		end
 
 feature {NONE} -- Implementation
 
@@ -280,7 +172,7 @@ feature {NONE} -- Implementation
 			end;
 			processed.start; -- Remove class any
 			processed.remove;
-			if not processed.empty then
+			if not processed.is_empty then
 				if processed.count = 1 then
 					st.add_string ("Ancestor:")
 				else
@@ -348,7 +240,6 @@ feature {NONE} -- Implementation
 			valid_st: st /= Void
 		local
 			c: CLUSTER_I;
-			s_name: STRING
 		do
 			from
 				clusters.start
@@ -363,6 +254,23 @@ feature {NONE} -- Implementation
 				generate_cluster_list (st, c.sub_clusters, indent + 1);
 				clusters.forth
 			end
+		end;
+
+feature {NONE} -- Implementation
+
+	add_tabs (st:STRUCTURED_TEXT; i: INTEGER) is
+			-- Add `i' tabs to `structured_text'.
+		local
+			j: INTEGER
+		do
+			from
+				j := 1;
+			until
+				j > i
+			loop
+				st.add_indent;
+				j := j + 1
+			end;
 		end;
 
 end -- class E_GENERATE_DOCUMENTATION

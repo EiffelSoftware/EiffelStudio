@@ -20,7 +20,7 @@ inherit
 
 	FEATURE_BL
 		undefine
-			generate, enlarged, is_first, context_type
+			generate, enlarged, is_first, context_type, generate_end
 		select
 			parent
 		end

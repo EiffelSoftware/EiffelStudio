@@ -1,11 +1,9 @@
 indexing
+	description	: "Command to run the system while debugging."
+	date		: "$Date$"
+	revision	: "$Revision$"
 
-	description:	
-		"Command to run the system while debugging."
-	date: "$Date$"
-	revision: "$Revision$"
-
-class DEBUG_RUN 
+class DEBUG_RUN
 
 inherit
 	IPC_SHARED
@@ -22,9 +20,12 @@ inherit
 			{NONE} all
 		end
 
-	PIXMAP_COMMAND
+	HOLE_COMMAND
 		redefine
-			tool
+			tool, 
+			compatible, 
+			process_breakable,
+			make
 		end
 
 	SHARED_APPLICATION_EXECUTION
@@ -42,9 +43,9 @@ feature -- Initialization
 			-- Initialize the command, create a couple of requests and windows.
 			-- Add some actions as well.
 		do
-			init (a_tool)
-			!! run_request.make (Rqst_application)
-			!! cont_request.make (Rqst_cont)
+			{HOLE_COMMAND} Precursor (a_tool)
+			create run_request.make (Rqst_application)
+			create cont_request.make (Rqst_cont)
 		end
 
 feature -- Callbacks
@@ -80,18 +81,50 @@ feature -- Properties
 	melt_and_run: ANY is
 			-- Third button action
 		once
-		 	!! Result 
+		 	create Result 
+		end
+
+	compatible (dropped: STONE): BOOLEAN is
+			-- Can `Current' accept `dropped' ?
+		do
+				-- We only accept breakable line stones.
+			Result := dropped /= Void and then dropped.stone_type = Breakable_type
 		end
 
 feature -- Close window
 
-	close is
-			-- Close `argument_window'.
-		do
-			argument_window.close
-		end
-
 feature -- Execution
+
+	process_breakable (bs: BREAKABLE_STONE) is
+			-- Process breakable stone: i.e. run to cursor.
+		local
+			index: INTEGER
+			f: E_FEATURE
+			body_index: INTEGER
+			old_bp_status: INTEGER
+		do
+			if Eiffel_project.successful then
+				f := bs.routine
+				if f.is_debuggable then
+					index := bs.index
+					body_index := bs.body_index
+
+						-- Remember the status of the breakpoint
+					old_bp_status := Application.breakpoint_status (f, index)
+
+						-- Enable the breakpoint
+					Application.enable_breakpoint (f, index)
+					
+						-- Run the program
+					work (tool)
+	
+						-- Put back the status of the modified breakpoint.
+					Application.set_breakpoint_status (f, index, old_bp_status)
+				end
+			else
+				warner (Project_tool.popup_parent).gotcha_call (Warning_messages.w_Cannot_debug)
+			end
+		end
 
 	work (argument: ANY) is
 			-- What to do?
@@ -109,13 +142,6 @@ feature -- Execution
 					Application.set_execution_mode (User_stop_points)
 					launch_application (tool)
 					update_command.set_run_after_melt (false)
-				elseif argument = button_three_action then
-					if argument_window.destroyed then
-						argument_window.initialize (popup_parent, Current)
-						argument_window.call
-					else
-						argument_window.destroy
-					end
 				else
 					if argument /= tool  and then not need_to_wait then
 							--| It means that the user clicked on the EXEC_STOP, EXEC_STEP,
@@ -123,8 +149,8 @@ feature -- Execution
 						launch_application (argument)
 					elseif not need_to_wait then
 							--| The user clicked on the Run button and since `execution_mode'
-							--| is a shared variable, we need to update its value before to
-							--| launch the execution
+							--| is a shared variable, we need to update its value before
+							--| launching the execution
 						Application.set_execution_mode (User_stop_points)
 						launch_application (argument)
 					end
@@ -136,15 +162,11 @@ feature -- Execution
 			-- Launch the program from the project tool.
 		local
 			makefile_sh_name: FILE_NAME
-			status: APPLICATION_STATUS
-			ok: BOOLEAN
-			uf: RAW_FILE
-			make_f: PLAIN_TEXT_FILE
-			kept_objects: LINKED_SET [STRING]
-			ready_to_run: BOOLEAN
-			temp: STRING
-			project_w: PROJECT_W
-			mp: MOUSE_PTR
+			uf				: RAW_FILE
+			status			: APPLICATION_STATUS
+			kept_objects	: LINKED_SET [STRING]
+			mp				: MOUSE_PTR
+			make_f			: PLAIN_TEXT_FILE
 		do
 			if 
 				not tool.initialized or else
@@ -157,15 +179,12 @@ feature -- Execution
 				debug_window.display
 			elseif not Application.is_running then
 					-- Application is not running. Start it.
-debug
-	io.error.putstring (generator)
-	io.error.putstring (": Start execution%N")
-end
-				!!makefile_sh_name.make_from_string (Workbench_generation_path)
+				debug("DEBUGGER") io.putstring (generator+"(DEBUG_RUN): Start execution%N"); end
+				create makefile_sh_name.make_from_string (Workbench_generation_path)
 				makefile_sh_name.set_file_name (Makefile_SH)
 
-				!! uf.make (Eiffel_system.application_name (True))
-				!! make_f.make (makefile_sh_name)
+				create uf.make (Eiffel_system.application_name (True))
+				create make_f.make (makefile_sh_name)
 
 				if uf.exists then
 					if make_f.exists and then make_f.date > uf.date then
@@ -193,25 +212,25 @@ end
 				end
 			else
 				status := Application.status
-				if status.is_stopped then
+				if status /= Void and then status.is_stopped then
 					-- Application is stopped. Continue execution.
-debug
-	io.error.putstring (generator)
-	io.error.putstring (": Contine execution%N")
-end
-					!! mp.set_watch_cursor
+					debug("DEBUGGER") io.putstring (generator+": Contine execution%N"); end
+					create mp.set_watch_cursor
+
 						-- Ask the application to wean objects the
 						-- debugger doesn't need anymore.
 					kept_objects := window_manager.object_win_mgr.objects_kept
 					kept_objects.merge (Project_tool.kept_objects)
 					Application.continue (kept_objects)
 					Window_manager.object_win_mgr.hang_on
-					if status.e_feature /= Void then
-						Window_manager.routine_win_mgr.show_stoppoint 
-							(status.e_feature, status.break_index)
-						tool.show_stoppoint
-							(status.e_feature, status.break_index)
-					end
+
+						-- remove all arrows displayed (where we are stopped...)
+						--
+						-- update all opened feature tools by re-displaying the default
+						-- text instead of the arrow if application is stopped inside feature
+					tool.refresh_current_stoppoint
+					Window_manager.routine_win_mgr.synchronize_with_callstack
+
 					Project_tool.save_current_cursor_position
 					debug_window.clear_window
 					debug_window.put_string ("System is running")
@@ -231,8 +250,8 @@ end
 			Project_tool.save_current_cursor_position
 			debug_window.put_string ("Launching system...")
 			debug_window.new_line
-			!! mp.set_watch_cursor
-			Application.run (argument_window.argument_list)
+			create mp.set_watch_cursor
+			Application.run (current_cmd_line_argument, application_working_directory)
 			if Application.is_running then
 				debug_window.clear_window
 				debug_window.put_string ("System is running")
@@ -277,5 +296,9 @@ feature {NONE} -- Attributes
 	
 	need_to_wait: BOOLEAN
 			-- Do we need to wait until the end of the compilation?
+
+feature -- Property
+
+	stone_type: INTEGER is do end
 
 end -- DEBUG_RUN

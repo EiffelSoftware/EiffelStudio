@@ -7,7 +7,7 @@ feature
 	occurence: INTEGER;
 			-- Occurence of the external in the system
 
-	real_body_id: REAL_BODY_ID;
+	real_body_id: INTEGER;
 			-- Body id of the external after freezing
 
 	execution_unit: EXT_EXECUTION_UNIT;
@@ -16,14 +16,6 @@ feature
 	is_valid: BOOLEAN is
 		do
 			Result := (execution_unit /= Void)
-		end
-
-	is_cpp: BOOLEAN is
-			-- Is the external represented by Current written in C++?
-		do
-			if execution_unit /= Void then
-				Result := execution_unit.is_cpp
-			end
 		end
 
 	add_occurence is
@@ -40,7 +32,7 @@ feature
 			occurence := occurence - 1;
 		end;
 
-	set_real_body_id (i: REAL_BODY_ID) is
+	set_real_body_id (i: INTEGER) is
 			-- Assign `i' to `real_body_id'.
 		do
 			real_body_id := i;
@@ -57,7 +49,7 @@ feature
 		require
 			is_valid: is_valid
 		do
-			real_body_id := execution_unit.index;
+			real_body_id := execution_unit.real_body_index;
 		end;
 
 end

@@ -10,8 +10,9 @@ inherit
 		undefine
 			byte_node
 		redefine
-			number_of_stop_points, line_number,
-			find_breakable, type_check
+			number_of_breakpoint_slots, 
+			line_number,
+			type_check
 		end
 
 feature -- Access
@@ -21,7 +22,7 @@ feature -- Access
 	start_position: INTEGER
 			-- Start position of AST
 
-	number_of_stop_points: INTEGER is
+	number_of_breakpoint_slots: INTEGER is
 			-- Number of stop points for AST
 		do
 			Result := 1
@@ -30,16 +31,6 @@ feature -- Access
 	byte_node: INSTR_B is
 			-- Associated byte code
 		deferred
-		end
-
-feature -- Debugger
- 
-	find_breakable is
-			-- Look for instruction (this node IS an instruction).
-			-- This will be redefined for non-atomic instructions like loop
-			-- or inspect statements to actually propagate the message.
-		do
-			record_break_node		-- Most node are atomic instructions
 		end
 
 feature -- Update
@@ -54,6 +45,15 @@ feature -- Update
 	perform_type_check is
 			-- Type check the AST node.
 		deferred
-		end;	
- 
+		end
+
+feature {INTERNAL_AS} -- Status report
+
+	starts_with_parenthesis: BOOLEAN is
+			-- Is the first format item a "(".
+			-- See: INTERNAL_AS.format_compound.
+		do
+			-- False
+		end
+
 end -- class INSTRUCTION_AS

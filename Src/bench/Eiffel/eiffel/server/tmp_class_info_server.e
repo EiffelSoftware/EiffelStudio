@@ -1,22 +1,26 @@
--- Server for class information on temporary file. This server is
--- used during the compilation. The goal is to merge the file
--- Tmp_class_info_file and Class_info_file if the compilation is successful.
+indexing
+	description: "Server for class information on temporary file. This server is%
+			%used during the compilation. The goal is to merge the file%
+			%Tmp_class_info_file and Class_info_file if the compilation is successful.%
+			%Indexed by class id."
+	date: "$Date$"
+	revision: "$Revision$"
 
 class TMP_CLASS_INFO_SERVER 
 
 inherit
 
-	DELAY_SERVER [CLASS_INFO, CLASS_ID]
+	DELAY_SERVER [CLASS_INFO]
 
 creation
 	make
 	
 feature 
 
-	id (t: CLASS_INFO): CLASS_ID is
+	id (t: CLASS_INFO): INTEGER is
 			-- Id associated with `t'
 		do
-			Result := t.id
+			Result := t.class_id
 		end
 
 	cache: CLASS_INFO_CACHE is
@@ -25,7 +29,7 @@ feature
 			!! Result.make
 		end
 
-	Delayed: SEARCH_TABLE [CLASS_ID] is
+	Delayed: SEARCH_TABLE [INTEGER] is
 			-- Cache for delayed items
 		once
 			!!Result.make ((3 * Cache.cache_size) // 2)

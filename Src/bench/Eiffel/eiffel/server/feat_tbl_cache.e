@@ -1,9 +1,12 @@
--- Cache for routine tables
+indexing
+	description: "Cache for feature tables indexed by class id."
+	date: "$Date$"
+	revision: "$Revision$"
 
 class FEAT_TBL_CACHE 
 
 inherit
-	CACHE [FEATURE_TABLE, CLASS_ID]
+	CACHE [FEATURE_TABLE]
 
 creation
 	make

@@ -59,12 +59,12 @@ feature {NONE} -- Execution
 			cluster: CLUSTER_I;
 			class_list: LIST [CLASS_I]
 		do
-			if not class_name.empty then
+			if not class_name.is_empty then
 				at_pos := class_name.index_of ('@', 1);
 			end;
 			if at_pos = 0 then
 				class_list := Eiffel_universe.classes_with_name (class_name);
-				if class_list.empty then
+				if class_list.is_empty then
 					class_name.to_upper;
 					io.error.putstring (class_name);
 					!! id.make (0);

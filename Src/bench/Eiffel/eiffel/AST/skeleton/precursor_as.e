@@ -37,18 +37,6 @@ feature {AST_FACTORY} -- Initialization
 			parameters_set: parameters = p
 		end
 
-feature {NONE} -- Initialization
-
-	set is
-			-- Yacc initialization
-		do
-			parent_name ?= yacc_arg (0)
-			parameters ?= yacc_arg (1)
-			if parameters /= Void then
-				parameters.start
-			end
-		end
-
 feature -- Attributes
 
 	parent_name: ID_AS
@@ -103,8 +91,7 @@ feature -- Type check, byte code and dead code removal
 			vupr1: VUPR1
 			vupr2: VUPR2
 			vupr3: VUPR3
-			pre_table: LINKED_LIST [PAIR[CL_TYPE_A, ROUTINE_ID]]
-			pname: STRING
+			pre_table: LINKED_LIST [PAIR[CL_TYPE_A, INTEGER]]
 			feature_i: FEATURE_I
 			e_feature: E_FEATURE
 			parent_type: CL_TYPE_A
@@ -195,28 +182,23 @@ feature -- Type check, byte code and dead code removal
 			-- Type check the access to `a_feature' in `p_type'.
 		local
 			arg_type: TYPE_A
-			i, count, argument_position: INTEGER
+			i, count: INTEGER
 				-- Id of the class type on the stack
 			current_item: TYPE_A
 			last_type, last_constrained: TYPE_A
 				-- Type onto the stack
-			last_id: CLASS_ID
+			last_id: INTEGER
 			context_count: INTEGER
 				-- Id of the class correponding to `last_type'
 			last_class: CLASS_C
 			depend_unit: DEPEND_UNIT
-			access_b: FEATURE_B
+			access_b: CALL_ACCESS_B
 			vuar1: VUAR1
 			vuar2: VUAR2
 			obs_warn: OBS_FEAT_WARN
 			like_argument_detected : BOOLEAN
-			formal_type: FORMAL_A
 			gen_type: GEN_TYPE_A
 		do
-				-- Replace type on top of the stack
-				-- with parent type.
-			context.replace (p_type)
- 
 			last_type := context.item
 			if last_type.is_multi_type then
 				last_type := System.instantiator.array_type_a
@@ -225,11 +207,16 @@ feature -- Type check, byte code and dead code removal
 
 			last_constrained := context.last_constrained_type
 			last_class := last_constrained.associated_class
-			last_id := last_class.id
+
+				-- Type of feature has to be evaluated in the context of current
+				-- class type, except that `last_id' has to show from where we got
+				-- the routine, namely the parent. That way types of return type, and
+				-- parameters are correctly evaluated.
+			last_id := p_type.base_class_id
 
 				-- Supplier dependances update
 				-- Create self-dependance
-			!! depend_unit.make (context.a_class.id, context.a_feature)
+			!! depend_unit.make (context.a_class.class_id, context.a_feature)
 			context.supplier_ids.extend (depend_unit)
 
 				-- Create dependance on precursor
@@ -239,9 +226,9 @@ feature -- Type check, byte code and dead code removal
 				-- Attachments type check
 			count := parameter_count
 			if count /= a_feature.argument_count then
-				!! vuar1
+				create vuar1
 				context.init_error (vuar1)
-				vuar1.set_called_feature (a_feature)
+				vuar1.set_called_feature (a_feature, last_class.class_id)
 				vuar1.set_argument_count (count)
 				Error_handler.insert_error (vuar1)
 					-- Cannot go on here: too dangerous
@@ -279,7 +266,7 @@ feature -- Type check, byte code and dead code removal
 					if not current_item.conform_to (arg_type) then
 						!! vuar2
 						context.init_error (vuar2)
-						vuar2.set_called_feature (a_feature)
+						vuar2.set_called_feature (a_feature, last_class.class_id)
 						vuar2.set_argument_position (i)
 						vuar2.set_argument_name
 								(a_feature.argument_names.i_th (i))
@@ -316,7 +303,7 @@ feature -- Type check, byte code and dead code removal
 				else
 						-- The result is clearly defined so we need to find its type in the 
 						-- context of the caller of `Precursor'.
-					Result := Result.instantiation_in (current_item, current_item.associated_class.id).actual_type
+					Result := Result.instantiation_in (current_item, current_item.associated_class.class_id).actual_type
 				end
 			end
 
@@ -339,7 +326,7 @@ feature -- Type check, byte code and dead code removal
 			end
 
 				-- Access managment
-			access_b ?= a_feature.access (Result.type_i) -- Cannot fail
+			access_b ?= a_feature.access (Result.type_i)
 			access_b.set_precursor_type (p_type.type_i)
 			context.access_line.insert (access_b)
 		end
@@ -467,13 +454,13 @@ feature -- Replication
 
 feature {NONE}  -- precursor table
 
-	precursor_table : LINKED_LIST [PAIR[CL_TYPE_A, ROUTINE_ID]] is
+	precursor_table : LINKED_LIST [PAIR[CL_TYPE_A, INTEGER]] is
 				-- Table of parent types which have an effective
 				-- precursor of current feature. Indexed by
 				-- routine ids.
 		local
 			rout_id_set: ROUT_ID_SET
-			rout_id: ROUTINE_ID
+			rout_id: INTEGER
 			parents: FIXED_LIST [CL_TYPE_A]
 			a_parent: CLASS_C
 			a_feature: E_FEATURE
@@ -481,9 +468,9 @@ feature {NONE}  -- precursor table
 			spec_p_name: STRING
 			p_list: HASH_TABLE [CL_TYPE_A, STRING]
 			i, rc: INTEGER
-			pair: PAIR [CL_TYPE_A, ROUTINE_ID]
-			couple: PAIR [ROUTINE_ID, CLASS_ID]
-			check_written_in: LINKED_LIST [PAIR [ROUTINE_ID, CLASS_ID]]
+			pair: PAIR [CL_TYPE_A, INTEGER]
+			couple: PAIR [INTEGER, INTEGER]
+			check_written_in: LINKED_LIST [PAIR [INTEGER, INTEGER]]
 			r_class_i: CLASS_I
 			a_cluster: CLUSTER_I
 		do
@@ -572,24 +559,43 @@ feature {AST_EIFFEL} -- Output
 	simple_format (ctxt: FORMAT_CONTEXT) is
 			-- Reconstitute text.
 		local
-			p_name : STRING
+			p_name: STRING
+			real_feature: E_FEATURE
+			parent_class: CLASS_C
+			current_feature: E_FEATURE
 		do
 			ctxt.begin
 
+			current_feature := ctxt.global_adapt.target_enclosing_feature.api_feature (ctxt.class_c.class_id)
+
 			if parent_name /= Void then
+				parent_class := Universe.class_named (parent_name, ctxt.class_c.cluster).compiled_class
+			else
+				parent_class := current_feature.precursors.last
+			end
+
+			real_feature := current_feature.ancestor_version (parent_class)
+
+			ctxt.put_text_item (
+				create {PRECURSOR_KEYWORD_TEXT}.make (real_feature)
+			)
+
+			if parent_name /= Void then
+				ctxt.put_text_item (ti_space)
 				p_name := Clone (parent_name.string_value)
 				p_name.to_upper
 				ctxt.put_text_item (ti_L_curly)
 				ctxt.put_class_name (p_name)
 				ctxt.put_text_item (ti_R_curly)
-				ctxt.put_text_item (ti_space)
 			end
 
-			ctxt.put_text_item (ti_Precursor_keyword)
-
-				-- We simply use an empty feature name.
-			ctxt.prepare_for_feature ("", parameters)
-			ctxt.put_current_feature
+				-- We simply use an empty feature in
+				-- order to print the parameter list.
+			if parameter_count > 0 then
+				ctxt.put_text_item (ti_space)
+				ctxt.prepare_for_feature ("", parameters)
+				ctxt.put_current_feature
+			end
 
 			ctxt.commit
 		end
@@ -610,14 +616,14 @@ feature {COMPILER_EXPORTER} -- Replication {PRECURSOR_AS, USER_CMD, CMD}
 
 feature {NONE} -- Implementation
 
-	special_has (l: LINKED_LIST [PAIR [ROUTINE_ID, CLASS_ID]]; p: PAIR [ROUTINE_ID, CLASS_ID]): BOOLEAN is
+	special_has (l: LINKED_LIST [PAIR [INTEGER, INTEGER]]; p: PAIR [INTEGER, INTEGER]): BOOLEAN is
 			-- Does `l' contain `p'?
 		require
 			valid_pair: p /= Void
-			valid_pair_first: p.first /= Void
-			valid_pair_second: p.second /= Void
+			valid_pair_first: p.first /= 0
+			valid_pair_second: p.second /= 0
 		local
-			l_item: PAIR [ROUTINE_ID, CLASS_ID]
+			l_item: PAIR [INTEGER, INTEGER]
 		do
 			from
 				l.start
@@ -626,8 +632,8 @@ feature {NONE} -- Implementation
 				l.after or Result
 			loop
 				l_item := l.item
-				Result := l_item.first.is_equal (p.first) and then
-								l_item.second.is_equal (p.second)
+				Result := l_item.first = p.first and then
+								l_item.second = p.second
 				l.forth
 			end
 		end

@@ -1,38 +1,17 @@
 indexing
-	description: "Command to save the ace-file under a different name."
-	date: "$Date$"
-	revision: "$Revision$"
+	description	: "Command to save the ace-file under a different name."
+	date		: "$Date$"
+	revision	: "$Revision$"
 
 class
 	EB_SAVE_SYSTEM_AS_CMD
 
+obsolete "use EB_SAVE_AS_COMMAND instead"
+
 inherit
-	SHARED_EIFFEL_PROJECT
-	EB_SAVE_FILE_AS_CMD
-		redefine
-			tool, set_tool_new_name
-		end
+	EB_SAVE_FILE_AS_COMMAND
 
 creation
 	make
 
-feature -- Updating
-
-	set_tool_new_name (new_name: STRING) is
-			-- Update the file name of the ace file.
-		local
-			show_text: EB_TEXT_FORMATTER
-		do
-			precursor (new_name)
-			show_text ?= tool.last_format
-			if show_text /= Void then
-				Eiffel_ace.set_file_name (new_name)
-			end
-		end
-
-feature -- Implementation
-
-	tool: EB_SYSTEM_TOOL
-		-- the system tool
-
-end -- class EB_SAVE_SYSTEM_AS_CMD
+end

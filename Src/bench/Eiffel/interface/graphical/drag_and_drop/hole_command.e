@@ -28,6 +28,7 @@ feature -- Properties
 			-- Initialization of the hole is
 			-- done in the associated button
 		do
+			Result := tool.target
 		end;
 
 	icon_symbol, full_symbol: PIXMAP is

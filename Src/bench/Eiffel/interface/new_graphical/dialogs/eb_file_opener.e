@@ -7,65 +7,55 @@ class
 	EB_FILE_OPENER
 
 inherit
-	EV_COMMAND
+	EB_CONSTANTS
+		export
+			{NONE} all
+		end
 
-	NEW_EB_CONSTANTS
-
-creation
-	make_default
+create
+	make_with_parent
 
 feature {NONE} -- Initialization
 
-	make_default (par: EV_CONTAINER; a_caller: EB_FILE_OPENER_CALLBACK; fn: STRING) is
-			-- Initialize
+	make_with_parent (caller: EB_FILE_OPENER_CALLBACK; fn: STRING; parent_window: EV_WINDOW) is
+			-- Initialize with parent window `a_parent'
 		local
 			aok: BOOLEAN
 			wd: EV_WARNING_DIALOG
+			qd: EV_QUESTION_DIALOG
+			warning_message: STRING
+			file: RAW_FILE -- It should be PLAIN_TEXT_FILE, however windows will expand %R and %N as %N
 		do
-			caller := a_caller
-			if not fn.empty then
+			if not fn.is_empty then
 				create file.make (fn)
 				aok := True
 				if file.exists and then not file.is_plain then
-					aok := False
-					create wd.make_default (par, Interface_names.t_Warning,
-						Warning_messages.w_Not_a_plain_file (fn))
-				elseif file.exists and then file.is_writable then
-					aok := False
-					create wd.make_with_text (par, Interface_names.t_Warning,
-						Warning_messages.w_File_exists (fn))
-					wd.show_ok_cancel_buttons
-					wd.add_ok_command (Current, Void)
-					wd.show
+					warning_message := Warning_messages.w_Not_a_plain_file (fn)
+					
 				elseif file.exists and then not file.is_writable then
-					aok := False
-					create wd.make_default (par, Interface_names.t_Warning,
-						Warning_messages.w_Not_writable (fn))
+					warning_message := Warning_messages.w_Not_writable (fn)
+					
 				elseif not file.is_creatable then
-					aok := False
-					create wd.make_default (par, Interface_names.t_Warning,
-						Warning_messages.w_Not_creatable (fn))
+					warning_message := Warning_messages.w_Not_creatable (fn)
+					
+				elseif file.exists and then file.is_writable then
+					create qd.make_with_text (Warning_messages.w_File_exists (fn))
+					qd.show_modal_to_window (parent_window)
+					aok := qd.selected_button.is_equal ((create {EV_DIALOG_CONSTANTS}).ev_yes)
 				end
 			else
-				aok := False
-				create wd.make_default (par, Interface_names.t_Warning,
-					Warning_messages.w_Not_a_plain_file (fn))
+				warning_message := Warning_messages.w_Not_a_plain_file (fn)
 			end
-			if aok then caller.save_file (file) end
+			
+			if warning_message /= Void then
+				aok := False
+				create wd.make_with_text (warning_message)
+				wd.show_modal_to_window (parent_window)
+			end
+			
+			if aok then 
+				caller.save_file (file)
+			end
 		end
-
-feature {NONE} -- Execution
-
-	execute	(arg: EV_ARGUMENT; data: EV_EVENT_DATA) is
-		do
-			caller.save_file (file)
-		end
-
-feature {NONE} -- Implementation
-
-	file: RAW_FILE
-		-- It should be PLAIN_TEXT_FILE, however windows will expand %R and %N as %N
-
-	caller: EB_FILE_OPENER_CALLBACK
 
 end -- class EB_FILE_OPENER

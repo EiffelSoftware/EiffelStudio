@@ -6,6 +6,9 @@ indexing
 class
 	DYNAMIC_LIB_EXPORT_FEATURE
 
+inherit
+	SHARED_EIFFEL_PROJECT
+
 creation
 	make
 	
@@ -43,26 +46,56 @@ feature -- Attributes
 
 feature -- Access.
 
-	routine_id: INTEGER is
+	feature_id: INTEGER is
 			-- Routine id of exported feature.
 		do
-			Result := routine.id
+			Result := routine.feature_id
 		ensure
 			valid_result: Result > 0
 		end
 
+	exported_name: STRING is
+			-- The name under which this feature is exported.
+		do
+			if has_alias then
+				Result := alias_name
+			elseif routine /= Void then
+				Result := routine.name
+			elseif creation_routine /= Void then
+				Result := creation_routine.name
+			end
+		end
+
+	synchronize is
+			-- Update `Current' after a compilation.
+			-- Try to update the class and features.
+		do
+			if creation_routine /= Void then
+				creation_routine := creation_routine.updated_version
+			end
+			if routine /= Void then
+				routine := routine.updated_version
+			end
+		end
+
 feature -- Status
+
+	has_index: BOOLEAN is
+			-- Does `Current' specify an `index'?
+		do
+			Result := index > 0
+		end
 
 	has_alias: BOOLEAN is
 			-- Does Current specify an `alias_name'?
 		do
-			Result := alias_name /= Void and then not alias_name.empty
+			Result := alias_name /= Void and then not alias_name.is_empty
 		end
 
 	has_call_type: BOOLEAN is
 			-- Does Current specify a `call_type'?
 		do
-			Result := call_type /= Void and then not call_type.empty
+			Result := call_type /= Void and then not call_type.is_empty
 		end
 
 feature -- Settings
@@ -101,6 +134,13 @@ feature -- Settings
 			index_set: index = v
 		end
 
+	remove_index is
+			-- Remove the index.
+			--| In fact, set it to 0 so that it is ignored when the .c file is generated.
+		do
+			index := 0
+		end
+
 	set_alias_name (name: STRING) is
 			-- Set `name' to `alias_name'.
 		require
@@ -112,6 +152,12 @@ feature -- Settings
 			alias_name_set: alias_name /= Void and then alias_name.is_equal (name)
 		end
 
+	remove_alias_name is
+			-- Discard the current alias name if any.
+		do
+			alias_name := Void
+		end
+
 	set_call_type (name: STRING) is
 			-- Set `name' to `call_type'.
 		require
@@ -121,6 +167,12 @@ feature -- Settings
 			call_type := clone (name)
 		ensure
 			call_type_set: call_type /= Void and then call_type.is_equal (name)
+		end
+
+	remove_call_type is
+			-- Discard the current value of `call_type' if any.
+		do
+			call_type := Void
 		end
 
 end -- class DLL_EXPORT_FEATURE

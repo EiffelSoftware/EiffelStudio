@@ -43,15 +43,21 @@ feature
 				then
 					buffer.putstring ("(char *(*)()) 0");
 				else
-					written_class := System.class_of_id (feat.written_in);
 					class_type := System.class_type_of_id (type_id);
+					if feat.is_constant and then not feat.is_once then
+							-- A non-string constant has always its feature generated in
+							-- visible class.
+						written_class := System.class_of_id (class_type.associated_class.class_id)
+					else
+						written_class := System.class_of_id (feat.written_in);
+					end
 					if (written_class.generics = Void) then
 						written_type := written_class.types.first
 					else
 						written_type := written_class.meta_type 
 											(class_type.type).associated_class_type;
 					end;
-					routine_name := feat.body_id.feature_name (written_type.id);
+					routine_name := Encoder.feature_name (written_type.static_type_id, feat.body_index);
 debug ("CECIL")
     io.putstring ("Generating entry for feature: ");
     io.putstring (feat.feature_name);
@@ -80,7 +86,7 @@ end;
 						actual_type := gen_type_a.generics.item (formal_type.position)
 					end; 
 					c_type := actual_type.type_i.c_type;
-					Extern_declarations.add_routine (c_type, clone (routine_name));
+					Extern_declarations.add_routine (c_type, routine_name);
 				end;
 				buffer.putstring (",%N");
 				i := i + 1;
@@ -88,7 +94,7 @@ end;
 			buffer.putstring ("};%N%N");
 		end;
 
-	generate_workbench (buffer: GENERATION_BUFFER; class_id: CLASS_ID) is
+	generate_workbench (buffer: GENERATION_BUFFER; class_id: INTEGER) is
 			-- Generate workbench feature id array
 		local
 			i: INTEGER;
@@ -96,7 +102,7 @@ end;
 			local_values: like values
 		do
 			buffer.putstring ("uint32 cr");
-			buffer.putint (class_id.id);
+			buffer.putint (class_id);
 			buffer.putstring ("[] = {%N");
 			from
 				local_values := values
@@ -117,7 +123,7 @@ end;
 			buffer.putstring ("};%N%N");
 		end;
 
-	generate_precomp_workbench (buffer: GENERATION_BUFFER; class_id: CLASS_ID) is
+	generate_precomp_workbench (buffer: GENERATION_BUFFER; class_id: INTEGER) is
 			-- Generate workbench routine id array.
 			-- (Used when the class is precompiled.)
 		local
@@ -126,7 +132,7 @@ end;
 			local_values: like values
 		do
 			buffer.putstring ("uint32 cr");
-			buffer.putint (class_id.id);
+			buffer.putint (class_id);
 			buffer.putstring ("[] = {%N");
 			from
 				local_values := values
@@ -139,7 +145,7 @@ end;
 				if feat = Void then
 					buffer.putchar ('0');
 				else
-					buffer.putint (feat.rout_id_set.first.id);
+					buffer.putint (feat.rout_id_set.first);
 				end;
 				buffer.putstring (",%N");
 				i := i + 1
@@ -147,38 +153,37 @@ end;
 			buffer.putstring ("};%N%N");
 		end;
 
-	generate_name_table (buffer: GENERATION_BUFFER; id: CLASS_ID) is
+	generate_name_table (buffer: GENERATION_BUFFER; id: INTEGER) is
 			-- Generate name table in `buffer'.
 		require
 			good_argument: buffer /= Void;
 		local
-			i: INTEGER;
-			str: STRING;
-			feat: FEATURE_I;
+			i: INTEGER
+			str: STRING
 			local_copy: like Current
 		do
-			buffer.putstring ("char *cl");
-			buffer.putint (id.id);
-			buffer.putstring (" [] = {%N");
+			buffer.putstring ("char *cl")
+			buffer.putint (id)
+			buffer.putstring (" [] = {%N")
 			from
 				local_copy := Current
-				i := 0;
+				i := 0
 			until
 				i > upper
 			loop
-				str := local_copy.array_item (i);
+				str := local_copy.array_item (i)
 				if str = Void then
-					buffer.putstring ("(char *) 0");
+					buffer.putstring ("(char *) 0")
 				else
-					buffer.putchar ('"');
-					buffer.putstring (str);
-					buffer.putstring ("%"");
-				end;
-				buffer.putstring (",%N");
-				i := i + 1;
-			end;
-			buffer.putstring ("};%N%N");
-		end;
+					buffer.putchar ('"')
+					buffer.putstring (str)
+					buffer.putstring ("%"")
+				end
+				buffer.putstring (",%N")
+				i := i + 1
+			end
+			buffer.putstring ("};%N%N")
+		end
 
 	make_byte_code (ba: BYTE_ARRAY) is
 			-- Produce byte code for current cecil table.

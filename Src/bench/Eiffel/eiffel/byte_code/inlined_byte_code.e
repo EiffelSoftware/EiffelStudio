@@ -13,7 +13,6 @@ feature
 		do
 			arguments := std.arguments
 			body_index := std.body_index
-			byte_id := std.byte_id
 			feature_name := std.feature_name
 			locals := std.locals
 			old_expressions := std.old_expressions

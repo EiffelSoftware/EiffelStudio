@@ -17,7 +17,7 @@ feature
 
 feature {NONE} -- Implementation
 
-	execute (argument: EV_ARGUMENT; data: EV_EVENT_DATA) is
+	execute is
 			-- Quit cautiously a file.
 		local
 			csd: EB_CONFIRM_SAVE_DIALOG

@@ -45,7 +45,7 @@ feature -- Command execution
 				if conf_load.error_occured then
 					raise_config_error;
 				else
-					!! prof_invoker.make (profiler, argument_window.argument_list, profinfo, compile);
+					!! prof_invoker.make (profiler, current_cmd_line_argument, profinfo, compile);
 					if prof_invoker.must_invoke_profiler then
 						prof_invoker.invoke_profiler;
 					end;

@@ -69,10 +69,18 @@ feature -- Output
 			Result.append_integer (position)
 		end
 
-	append_to (st: STRUCTURED_TEXT) is
+	ext_append_to (st: STRUCTURED_TEXT; f: E_FEATURE) is
+		local
+			s: STRING
 		do
-			st.add_string ("Generic #")
-			st.add_int (position)
+			if f /= Void then
+				s := clone (f.associated_class.ast.generics.i_th (position).formal_name)
+				s.to_upper
+				st.add (create {GENERIC_TEXT}.make (s))
+			else
+				st.add (ti_Generic_index)
+				st.add_int (position)
+			end
 		end
 
 feature {COMPILER_EXPORTER}
@@ -104,7 +112,7 @@ feature {COMPILER_EXPORTER}
 			end
 		end
 
-	instantiation_in (type: TYPE_A; written_id: CLASS_ID): TYPE_A is
+	instantiation_in (type: TYPE_A; written_id: INTEGER): TYPE_A is
 			-- Instantiation of Current in the context of `class_type',
 			-- assuming that Current is written in class of id `written_id'.
 		local
@@ -143,26 +151,8 @@ feature {COMPILER_EXPORTER}
 	format (ctxt: FORMAT_CONTEXT) is
 			-- reconstitute text
 		do
-			ctxt.put_string (ctxt.formal_name (position))
-		end
-
-feature {COMPILER_EXPORTER} -- Storage information for EiffelCase
-
-	storage_info_with_name, storage_info (classc: CLASS_C): S_BASIC_TYPE_INFO is
-			-- Storage info for Current type in class `classc'
-		local
-			gens: EIFFEL_LIST [FORMAL_DEC_AS]
-			gen_name: STRING
-		do
-			gens := classc.generics
-			if gens /= Void and then position <= gens.count then
-				!! gen_name.make (0)
-				gen_name.append (gens.i_th (position).formal_name)
-				gen_name.to_upper
-				!! Result.make (gen_name)
-			else
-				!! Result.make ("G")
-			end
+			ctxt.put_text_item (create {GENERIC_TEXT}.make (ctxt.formal_name (position)))
+--			ctxt.put_string (ctxt.formal_name (position))
 		end
 
 end -- class FORMAL_A

@@ -16,7 +16,7 @@ feature
 	actual_type: BOOLEAN_A is
 			-- Actual boolean type
 		once
-			Result := Boolean_type;
+			Result := Boolean_type
 		end;
 
 	generate_cecil_value is

@@ -1,12 +1,15 @@
--- Abstract description of an Eiffel feature
+indexing
+	description	: "Abstract description of the body of an Eiffel feature."
+	date		: "$Date$"
+	revision	: "$Revision$"
 
 class BODY_AS
 
 inherit
 	AST_EIFFEL
 		redefine
-			number_of_stop_points, is_equivalent,
-			type_check, byte_node, find_breakable,
+			number_of_breakpoint_slots, is_equivalent,
+			type_check, byte_node,
 			fill_calls_list, replicate
 		end
 
@@ -22,17 +25,6 @@ feature {AST_FACTORY} -- Initialization
 			arguments_set: arguments = a
 			type_set: type = t
 			content_set: content = c
-		end
-
-feature {NONE} -- Initialization
-	
-	set is
-			-- Yacc initialization
-		do
-			arguments ?= yacc_arg (0)
-			type ?= yacc_arg (1)
-			content ?= yacc_arg (2)
-				-- Constant value or standard feature body
 		end
 
 feature -- Attributes
@@ -58,11 +50,29 @@ feature -- Comparison
 
 feature -- Access
 
-	number_of_stop_points: INTEGER is
+	number_of_breakpoint_slots: INTEGER is
 			-- Number of stop points for AST
 		do
 			if content /= Void then
-				Result := content.number_of_stop_points
+				Result := content.number_of_breakpoint_slots
+			end
+		end
+
+	number_of_precondition_slots: INTEGER is
+			-- Number of preconditions
+			-- (inherited assertions are not taken into account)
+		do
+			if content /= Void then
+				Result := content.number_of_precondition_slots
+			end
+		end
+
+	number_of_postcondition_slots: INTEGER is
+			-- Number of postconditions
+			-- (inherited assertions are not taken into account)
+		do
+			if content /= Void then
+				Result := content.number_of_postcondition_slots
 			end
 		end
 
@@ -89,10 +99,10 @@ feature -- Access
 
 feature -- empty body
 
-	empty : BOOLEAN is
+	is_empty : BOOLEAN is
 				-- Is body empty?
 		do
-			Result := (content = Void) or else (content.empty)
+			Result := (content = Void) or else (content.is_empty)
 		end
 
 feature -- default rescue
@@ -163,10 +173,10 @@ feature -- New feature description
 			const: CONSTANT_I
 			constant: CONSTANT_AS
 			routine: ROUTINE_AS
-			dyn_proc: DYN_PROC_I
 			def_func: DEF_FUNC_I
-			once_func: ONCE_FUNC_I
+			def_proc: DEF_PROC_I
 			dyn_func: DYN_FUNC_I
+			once_func: ONCE_FUNC_I
 			proc, func: PROCEDURE_I
 			extern_proc: EXTERNAL_I
 			extern_func: EXTERNAL_FUNC_I
@@ -180,27 +190,29 @@ feature -- New feature description
 			fvi: FLOAT_VALUE_I
 			cvi: VALUE_I
 			ext_lang: EXTERNAL_LANG_AS
+			extension: EXTERNAL_EXT_I
+			il_ext: IL_EXTENSION_I
+			is_deferred_external, is_attribute_external: BOOLEAN
 		do
 			if content = Void then
 					-- It is an attribute
-				!!attr
+				create attr
 				check
 					type_exists: type /= Void
 				end
 				attr.set_type (type)
 				Result := attr
 				Result.set_empty_body (True)
-
 			elseif content.is_constant then
 					-- It is a constant feature
 				constant ?= content
 				if content.is_unique then
 						-- No constant value is processed for a unique
 						-- feature, since the second pass does it.
-					!UNIQUE_I!const
+					create {UNIQUE_I} const
 				else
 					ras ?= type
-					!!const
+					create const
 						-- Constant value is processed here.
 					if (ras = Void) then
 						const.set_value (constant.value_i)
@@ -208,7 +220,8 @@ feature -- New feature description
 						cvi := constant.value_i
 						if cvi.is_double then
 							rvi ?= cvi
-							!!fvi; fvi.set_real_val (rvi.real_val)
+							create fvi
+							fvi.set_real_val (rvi.real_val)
 							const.set_value (fvi)
 						else
 							const.set_value (cvi)
@@ -230,30 +243,49 @@ feature -- New feature description
 				end
 				if routine.is_deferred then
 						-- Deferred procedure
-					!DEF_PROC_I!proc
+					create {DEF_PROC_I} proc
 				elseif routine.is_once then
 						-- Once procedure
-					!ONCE_PROC_I!proc
+					create {ONCE_PROC_I} proc
 				elseif routine.is_external then
+					
 						-- External procedure
-					!!extern_proc
 					external_body ?= routine.routine_body
 					ext_lang := external_body.language_name
+					extension := ext_lang.extension_i
 					if external_body.alias_name /= Void then
-						extern_proc.set_alias_name (external_body.alias_name.value)
+						extension.set_alias_name (external_body.alias_name.value)
 					end
-					extern_proc.set_extension (ext_lang.extension_i (external_body))
 
--- Assertions and Rescue compound are not supported in
--- externals.
---					extern_proc.set_encapsulated
---						(content.has_assertion or else content.has_rescue)
+					if System.il_generation then
+						il_ext ?= extension
+						is_deferred_external := il_ext /= Void and then il_ext.type = (create {SHARED_IL_CONSTANTS}).Deferred_type
+					end
+					if not is_deferred_external then
+						create extern_proc
+						extern_proc.set_extension (extension)
 
-						-- if there's a macro or a signature then encapsulate
-					extern_proc.set_encapsulated (ext_lang.need_encapsulation)
-					proc := extern_proc
+	-- Assertions and Rescue compound are not supported in
+	-- externals.
+	--					extern_proc.set_encapsulated
+	--						(content.has_assertion or else content.has_rescue)
+
+							-- if there's a macro or a signature then encapsulate
+						extern_proc.set_encapsulated (ext_lang.need_encapsulation)
+						proc := extern_proc
+					else
+						create def_proc
+						def_proc.set_extension (il_ext)
+						proc := def_proc
+					end
+					if
+						System.il_generation and then
+						external_body.alias_name /= Void
+					then
+						proc.set_external_name (external_body.alias_name.value)
+					end
 				else
-					!DYN_PROC_I!proc
+					create {DYN_PROC_I} proc
 				end
 				if arguments /= Void then
 						-- Arguments initialization
@@ -264,7 +296,7 @@ feature -- New feature description
 					proc.set_obsolete_message (routine.obsolete_message.value)
 				end
 				Result := proc
-				Result.set_empty_body (content.empty)
+				Result.set_empty_body (content.is_empty)
 			else
 				routine ?= content
 				check
@@ -272,48 +304,87 @@ feature -- New feature description
 				end
 				if routine.is_deferred then
 						-- Deferred function
-					!!def_func
+					create def_func
 					def_func.set_type (type)
 					func := def_func
 				elseif routine.is_once then
 						-- Once function
-					!!once_func
+					create once_func
 					once_func.set_type (type)
 					func := once_func
 				elseif routine.is_external then
-						-- External function
-					!!extern_func
+				
+						-- External procedure
 					external_body ?= routine.routine_body
 					ext_lang := external_body.language_name
+					extension := ext_lang.extension_i
 					if external_body.alias_name /= Void then
-						extern_func.set_alias_name (external_body.alias_name.value)
+						extension.set_alias_name (external_body.alias_name.value)
 					end
-					extern_func.set_extension (ext_lang.extension_i (external_body))
 
--- Assertions and Rescue compound are not supported in
--- externals.
---					extern_func.set_encapsulated
---						(content.has_assertion or else content.has_rescue)
+					if System.il_generation then
+						il_ext ?= extension
+						is_deferred_external := il_ext /= Void and then il_ext.type = (create {SHARED_IL_CONSTANTS}).Deferred_type
+						is_attribute_external := il_ext /= Void and then
+							(il_ext.type = (create {SHARED_IL_CONSTANTS}).Field_type or
+							il_ext.type = (create {SHARED_IL_CONSTANTS}).Static_field_type)
+							
+					end
+					if not is_deferred_external and not is_attribute_external then
+						create extern_func
+						extern_func.set_extension (extension)
 
-						-- if there's a macro or a signature then encapsulate
-					extern_func.set_encapsulated (ext_lang.need_encapsulation)
-					extern_func.set_type (type)
-					func := extern_func
+	-- Assertions and Rescue compound are not supported in
+	-- externals.
+	--					extern_func.set_encapsulated
+	--						(content.has_assertion or else content.has_rescue)
+
+							-- if there's a macro or a signature then encapsulate
+						extern_func.set_encapsulated (ext_lang.need_encapsulation)
+						extern_func.set_type (type)
+						func := extern_func
+					elseif is_attribute_external then
+						create attr
+						check
+							il_generation: System.il_generation
+							type_exists: type /= Void
+						end
+						attr.set_type (type)
+						attr.set_empty_body (True)
+						attr.set_extension (il_ext)
+						Result := attr
+						if external_body.alias_name /= Void then
+							Result.set_external_name (external_body.alias_name.value)
+						end
+					else
+						check
+							il_generation: System.il_generation
+						end
+						create def_func
+						def_func.set_extension (il_ext)
+						def_func.set_type (type)
+						func := def_func
+						if external_body.alias_name /= Void then
+							func.set_external_name (external_body.alias_name.value)
+						end
+					end
 				else
-					!!dyn_func
+					create dyn_func
 					dyn_func.set_type (type)
 					func := dyn_func
 				end
-				if arguments /= Void then
-						-- Arguments initialization
-					func.init_arg (arguments)
+				if not is_attribute_external then
+					if arguments /= Void then
+							-- Arguments initialization
+						func.init_arg (arguments)
+					end
+					func.init_assertion_flags (routine)
+					if routine.obsolete_message /= Void then
+						func.set_obsolete_message (routine.obsolete_message.value)
+					end
+					Result := func
+					Result.set_empty_body (content.is_empty)
 				end
-				func.init_assertion_flags (routine)
-				if routine.obsolete_message /= Void then
-					func.set_obsolete_message (routine.obsolete_message.value)
-				end
-				Result := func
-				Result.set_empty_body (content.empty)
 			end
 		end
 
@@ -376,16 +447,6 @@ end
 				Result := True
 			end
 		end
-				
-feature -- Debugger
- 
-	find_breakable is
-			-- Look for breakable instructions.
-		do
-			if content /= Void then
-				content.find_breakable
-			end
-		end
 
 feature -- Replication
 
@@ -418,10 +479,8 @@ feature {AST_EIFFEL} -- Output
 
 	simple_format (ctxt: FORMAT_CONTEXT) is
 			-- Reconstitute text.
-		local
-			routine_as: ROUTINE_AS
 		do
-			if arguments /= Void and then not arguments.empty then
+			if arguments /= Void and then not arguments.is_empty then
 				ctxt.put_space
 				ctxt.put_text_item_without_tabs (ti_L_parenthesis)
 				ctxt.set_separator (ti_Semi_colon)

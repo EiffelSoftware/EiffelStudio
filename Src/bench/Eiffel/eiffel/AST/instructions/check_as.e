@@ -9,7 +9,8 @@ class CHECK_AS
 inherit
 	INSTRUCTION_AS
 		redefine
-			byte_node, fill_calls_list, replicate
+			byte_node, fill_calls_list, replicate,
+			number_of_breakpoint_slots
 		end
 
 feature {AST_FACTORY} -- Initialization
@@ -26,20 +27,20 @@ feature {AST_FACTORY} -- Initialization
 			line_number_set: line_number = l
 		end
 
-feature {NONE} -- Initialization
-
-	set is
-			-- Yacc initialization
-		do
-			check_list ?= yacc_arg (0)
-			start_position := yacc_position
-			line_number    := yacc_line_number
-		end
-
 feature -- Attributes
 
 	check_list: EIFFEL_LIST [TAGGED_AS]
 			-- List of tagged boolean expression
+
+feature -- Access
+
+	number_of_breakpoint_slots: INTEGER is
+			-- Number of stop points for AST
+		do
+			if check_list /= Void then
+				Result := check_list.number_of_breakpoint_slots
+			end
+		end
 
 feature -- Comparison 
 
@@ -62,7 +63,7 @@ feature -- Type check, byte code and dead code removal
 	byte_node: CHECK_B is
 			-- Associated byte code
 		do
-			!!Result
+			create Result
 			if check_list /= Void then
 				Result.set_check_list (check_list.byte_node)
 			end
@@ -94,7 +95,6 @@ feature {AST_EIFFEL} -- Output
 	simple_format (ctxt: FORMAT_CONTEXT) is
 			-- Reconstitute Text
 		do
-			ctxt.put_breakable
 			ctxt.put_text_item (ti_check_keyword)
 			if check_list /= Void then
 				ctxt.indent
@@ -102,8 +102,8 @@ feature {AST_EIFFEL} -- Output
 				ctxt.set_new_line_between_tokens
 				ctxt.format_ast (check_list)
 				ctxt.exdent
-				ctxt.new_line
 			end
+			ctxt.new_line
 			ctxt.put_text_item (ti_End_keyword)
 		end
 			

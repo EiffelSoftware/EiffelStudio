@@ -10,6 +10,9 @@ class EB_SLICE_DIALOG
 inherit
 
 	EV_COMMAND
+		undefine
+			default_create
+		end
 --	ASCII
 --		rename
 --			star as ascii_star,
@@ -21,8 +24,14 @@ inherit
 --	WINDOW_ATTRIBUTES
 
 	SHARED_PLATFORM_CONSTANTS
+		undefine
+			default_create
+		end
 
 	NEW_EB_CONSTANTS
+		undefine
+			default_create
+		end
 
 creation
 
@@ -30,7 +39,7 @@ creation
 	
 feature -- Initialization
 
-	make_default (par: EV_WINDOW; cmd: EB_SLICE_COMMAND) is
+	make_default (cmd: EB_SLICE_COMMAND) is
 			-- Create a special object slice window.
 		local
 			bounds_box: EV_HORIZONTAL_BOX
@@ -38,25 +47,33 @@ feature -- Initialization
 			from_label, to_label: EV_LABEL
 			sp_capacity: INTEGER
 		do
-			make (par)
+			default_create
 			set_title (Interface_names.t_Slice_w)
 
-			create bounds_box.make (display_area)
+			create bounds_box
+			extend (bounds_box)
 
-			create from_label.make_with_text (bounds_box, "From: ")
-			from_label.set_right_alignment
-			create from_field.make (bounds_box)
-			create to_label.make_with_text (bounds_box, "To: ")
-			to_label.set_right_alignment
-			create to_field.make (bounds_box)
+			create from_label.make_with_text ("From: ")
+			bounds_box.extend (from_label)
+			from_label.align_text_right
+			create from_field
+			bounds_box.extend (bounds_box)
+			create to_label.make_with_text ("To: ")
+			bounds_box.extend (to_label)
+			to_label.align_text_right
+			create to_field
+			bounds_box.extend (to_field)
 
-			create ok_button.make_with_text (action_area, Interface_names.b_Ok)
-			create apply_button.make_with_text (action_area, Interface_names.b_Apply)
-			create cancel_button.make_with_text (action_area, Interface_names.b_Cancel)
+			create ok_button.make_with_text (Interface_names.b_Ok)
+			extend (ok_button)
+			create apply_button.make_with_text (Interface_names.b_Apply)
+			extend (apply_button)
+			create cancel_button.make_with_text (Interface_names.b_Cancel)
+			extend (cancel_button)
 
-			ok_button.add_click_command (Current, ok_it)
-			apply_button.add_click_command (Current, apply_it)
-			cancel_button.add_click_command (Current, cancel_it)
+			ok_button.select_actions.extend (~execute (ok_it))
+			apply_button.select_actions.extend (~execute (apply_it))
+			cancel_button.select_actions.extend (~execute (cancel_it))
 			associated_command := cmd
 --			set_composite_attributes (Current)
 
@@ -82,22 +99,22 @@ feature -- Initialization
 
 feature {NONE} -- Properties
 
-	ok_it: EV_ARGUMENT1 [ANY] is
+	ok_it: ANY is
 			-- Argument for the command
 		once
-			create Result.make (Void)
+			create Result
 		end
 
-	apply_it: EV_ARGUMENT1 [ANY] is
+	apply_it: ANY is
 			-- Argument for the command
 		once
-			create Result.make (Void)
+			create Result
 		end
 
-	cancel_it: EV_ARGUMENT1 [ANY] is
+	cancel_it: ANY is
 			-- Argument for the command
 		once
-			create Result.make (Void)
+			create Result
 		end
 
 	associated_command: EB_SLICE_COMMAND
@@ -108,7 +125,7 @@ feature {NONE} -- Properties
 
 feature {NONE} -- Implementation
 
-	execute (argument: EV_ARGUMENT1 [ANY]; data: EV_EVENT_DATA) is
+	execute (argument: ANY) is
 		local
 			sp_lower, sp_upper: INTEGER
 			lower_string, upper_string: STRING
@@ -139,7 +156,7 @@ feature {NONE} -- Implementation
 				sp_upper /= associated_command.sp_upper
 			then
 				associated_command.set_sp_bounds (sp_lower, sp_upper)
-				associated_command.execute (associated_command.callback, data)
+				associated_command.execute (associated_command.callback)
 			end
 			if argument /= apply_it then
 				destroy

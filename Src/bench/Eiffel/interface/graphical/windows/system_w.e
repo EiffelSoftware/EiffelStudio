@@ -129,19 +129,18 @@ feature -- Parsing
 
 	parse_file: BOOLEAN is
 		local
-			retried: BOOLEAN
 			syntax_error: SYNTAX_ERROR
 			syntax_stone: ACE_SYNTAX_STONE
 			error_msg, msg: STRING
 		do
-			Parser.parse_file (file_name)
+			Parser.parse_file (file_name, False)
 
 			syntax_error := Parser.last_syntax_error
 			if syntax_error /= Void then
 				error_msg := "Ace has syntax error"
 				msg := syntax_error.syntax_message
 
-				if not msg.empty then
+				if not msg.is_empty then
 					error_msg.append (" (")
 					error_msg.append (msg)
 					error_msg.extend (')')
@@ -347,7 +346,6 @@ feature {NONE} -- Implementation Graphical Interface
 			save_cmd: SAVE_SYSTEM
 			save_button: EB_BUTTON
 			save_menu_entry: EB_MENU_ENTRY
-			sep: SEPARATOR
 			sep1, sep2, sep3: THREE_D_SEPARATOR
 			stat_cmd: SHOW_STATISTICS
 			stat_button: FORMAT_BUTTON
@@ -373,9 +371,6 @@ feature {NONE} -- Implementation Graphical Interface
 			shell_cmd: SHELL_COMMAND
 			shell_button: EB_BUTTON_HOLE
 			shell_menu_entry: EB_MENU_ENTRY
-			case_storage_cmd: CASE_STORAGE
-			case_storage_button: EB_BUTTON
-			case_storage_menu_entry: EB_MENU_ENTRY
 		do
 				-- Should we have a close button?
 			has_close_button := General_resources.close_button.actual_value

@@ -73,7 +73,7 @@ feature {NONE} -- Initialization
 			initialize_transport;
 			list_make (30);
 			set_action ("c<Btn3Down>", Current, new_tooler_action)
-			set_action ("Shift<Btn3Down>", Current, super_melt_action)
+		--	set_action ("Shift<Btn3Down>", Current, super_melt_action)
 			set_action ("c<Btn1Down>", Current, Void)
 			highlighted_line := Void;
 			selected_clickable_text := Void;
@@ -608,7 +608,7 @@ feature -- Execution
 
 	execute (arg: ANY) is
 		do
-			if arg = new_tooler_action or else arg = super_melt_action then
+			if arg = new_tooler_action then -- or else arg = super_melt_action then
 				process_action (arg)
 			else
 				old_execute (arg)
@@ -617,7 +617,7 @@ feature -- Execution
 
 feature {TOOL_W} -- Updating
 
-	redisplay_breakable_mark (f: E_FEATURE; f_index: INTEGER) is
+	redisplay_breakable_mark (body_index: INTEGER; f_index: INTEGER) is
 			-- Redisplay the sign of the `index'-th breakable point.
 		local
 			bs: BREAKABLE_STONE;
@@ -633,7 +633,7 @@ feature {TOOL_W} -- Updating
 			end;
 			old_clickable_text := selected_clickable_text;
 			selected_clickable_text := Void;
-			find_breakable (f, f_index);
+			find_breakable (body_index, f_index);
 			if selected_clickable_text /= Void then
 				b_fig ?= selected_clickable_text;
 				update_breakable_figure (b_fig);
@@ -660,7 +660,7 @@ feature {TOOL_W} -- Updating
 			selected_clickable_text := old_clickable_text
 		end
 
-	highlight_breakable (f: E_FEATURE; f_index: INTEGER) is
+	highlight_breakable (body_index: INTEGER; f_index: INTEGER) is
 			-- Highlight the line containing the `index'-th breakable point.
 		do
 			-- Do nothing: breakable line is always highlighted
@@ -708,11 +708,11 @@ feature {TOOL_W, OBJECT_W} -- Implementation
 
 feature {NONE} -- Implementation
 
-	find_breakable (f: E_FEATURE; f_index: INTEGER) is
-			-- Breakable stone for feature `f' with index `f_index'
+	find_breakable (body_index: INTEGER; f_index: INTEGER) is
+			-- Breakable stone for feature of `body_index' with index `f_index'
 		local
 			b: BREAKABLE_STONE;
-			bid: BODY_ID;
+			bid: INTEGER;
 			a: like area;
 			fig: BREAKABLE_FIGURE;
 			i, c: INTEGER;
@@ -726,7 +726,7 @@ feature {NONE} -- Implementation
 				fig /= Void or else i >= c
 			loop
 				line := a.item (i);
-				fig := line.breakable_for (f, f_index);
+				fig := line.breakable_for (body_index, f_index);
 				i := i + 1
 			end;
 			if fig /= Void then

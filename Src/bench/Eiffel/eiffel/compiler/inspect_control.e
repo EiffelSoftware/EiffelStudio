@@ -180,22 +180,21 @@ feature
 	make_integer (bound: ATOMIC_AS): INT_VAL_B is
 			-- Integer bound associated to `bound'.
 		require
-			good_argument: bound /= Void;
-			consistency: bound.good_integer;
+			good_argument: bound /= Void
+			consistency: bound.good_integer
 		local
-			int_const_val: INT_CONST_VAL_B;
-			int_bound: INTEGER_AS;
-			id: ID_AS;
-			constant_i: CONSTANT_I;
-			integer_value: INT_VALUE_I;
-			constant_name: STRING;
-			written_class: CLASS_C;
-			int_value: INTEGER;
-			make_vomb5: BOOLEAN;
-			vomb5_value: INTEGER;
-			vomb5: VOMB5;
-			vomb4: VOMB4;
-			vomb6: VOMB6;
+			int_const_val: INT_CONST_VAL_B
+			int_bound: INTEGER_AS
+			id: ID_AS
+			constant_i: CONSTANT_I
+			integer_value: INT_VALUE_I
+			constant_name: STRING
+			written_class: CLASS_C
+			int_value: INTEGER
+			make_vomb5: BOOLEAN
+			vomb5: VOMB5
+			vomb4: VOMB4
+			vomb6: VOMB6
 		do
 			if bound.is_integer then
 				int_bound ?= bound;
@@ -204,7 +203,7 @@ feature
 				if int_value > 0 then
 					positive_value_found := True;
 					positive_value := int_value;
-					make_vomb5 := not unique_names.empty;
+					make_vomb5 := not unique_names.is_empty;
 				end;
 			else
 				id ?= bound;
@@ -241,7 +240,7 @@ feature
 					if int_value > 0 then
 						positive_value_found := True;
 						positive_value := int_value;
-						make_vomb5 := not unique_names.empty;
+						make_vomb5 := not unique_names.is_empty;
 					end;
 				end;
 			end;

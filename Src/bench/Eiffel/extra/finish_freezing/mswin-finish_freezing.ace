@@ -1,0 +1,69 @@
+system
+	finish_freezing
+
+root
+	FINISH_FREEZING: make
+
+default
+	assertion(no)
+	arguments(" ")
+	disabled_debug(yes)
+	disabled_debug("implementation")
+	disabled_debug("input")
+	disabled_debug("output")
+	disabled_debug("progress")
+	disabled_debug("subst")
+	disabled_debug("translate_appl")
+	disabled_debug("translate_application")
+	disabled_debug("translate_case")
+	disabled_debug("translate_cecil_and_dll")
+	disabled_debug("translate_dependencies")
+	disabled_debug("translate_echo")
+	disabled_debug("translate_externals")
+	disabled_debug("translate_line_change")
+	disabled_debug("translate_line_subst")
+	disabled_debug("translate_translate")
+	debug(no)
+	line_generation(no)
+	profile(no)
+	trace(no)
+	il_verifiable(yes)
+	msil_generation_type("exe")
+	check_vape(yes)
+	console_application(yes)
+	address_expression(no)
+	array_optimization(no)
+	dead_code_removal(yes)
+	dynamic_runtime(no)
+	exception_trace(no)
+	inlining(no)
+	multithreaded(no)
+
+
+cluster
+	finish_freezing:		"$EIFFEL_SRC\Eiffel\extra\finish_freezing\main"
+
+
+	resources:		"$EIFFEL_SRC\Eiffel\common\resources"
+
+	spec:		"$EIFFEL_SRC\Eiffel\extra\finish_freezing\spec\windows"
+
+	all base:		"$EIFFEL_SRC\library\base"
+		exclude
+			"table_eiffel3"; "CVS"; 
+		end
+
+	all wel:		"$EIFFEL_SRC\library\wel"
+		exclude
+			"CVS"; "spec"; "clib"; 
+		end
+
+external
+
+	include_path:
+		"$(EIFFEL_SRC)\library\wel\spec\$(ISE_PLATFORM)\include"
+
+	object:
+		"$(EIFFEL_SRC)\library\wel\spec\$(ISE_C_COMPILER)\lib\wel.lib"
+
+end

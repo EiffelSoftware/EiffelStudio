@@ -12,6 +12,8 @@ inherit
 		end
 	SHARED_GENERATION
 
+	SHARED_GEN_CONF_LEVEL
+
 feature 
 
 	analyze is
@@ -28,9 +30,17 @@ feature
 		do
 			buffer := context.buffer;
 			buffer.putstring ("Dftype(")
-			context.Current_register.print_register_by_name
+			context.Current_register.print_register
 			buffer.putchar (')')
 		end;
+
+feature -- Il code generation
+
+	generate_il is
+			-- Generate byte code for like Current creation type.
+		do
+			il_generator.create_like_current_object
+		end
 
 feature -- Byte code generation
 
@@ -51,16 +61,16 @@ feature -- Generic conformance
 	generate_cid (buffer: GENERATION_BUFFER; final_mode : BOOLEAN) is
 
 		do
-			buffer.putint (-12)
+			buffer.putint (Like_current_type)
 			buffer.putstring (", Dftype(")
-			context.Current_register.print_register_by_name
+			context.Current_register.print_register
 			buffer.putstring ("), ")
 		end
 
 	make_gen_type_byte_code (ba : BYTE_ARRAY) is
 
 		do
-			ba.append_short_integer (-12)
+			ba.append_short_integer (Like_current_type)
 		end
 
 	generate_cid_array (buffer : GENERATION_BUFFER; 
@@ -68,7 +78,8 @@ feature -- Generic conformance
 		local
 			dummy : INTEGER
 		do
-			buffer.putstring ("-12, 0,")
+			buffer.putint (Like_current_type)
+			buffer.putstring (", 0,")
 			dummy := idx_cnt.next
 			dummy := idx_cnt.next
 		end
@@ -82,7 +93,7 @@ feature -- Generic conformance
 			buffer.putstring ("typarr[")
 			buffer.putint (idx_cnt.value)
 			buffer.putstring ("] = Dftype(")
-			context.Current_register.print_register_by_name
+			context.Current_register.print_register
 			buffer.putstring (");")
 			buffer.new_line
 			dummy := idx_cnt.next
@@ -102,7 +113,7 @@ feature -- Assignment attempt
 
 		do
 			buffer.putstring ("Dftype(")
-			context.Current_register.print_register_by_name
+			context.Current_register.print_register
 			buffer.putstring (")")
 		end
 

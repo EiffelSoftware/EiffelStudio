@@ -22,7 +22,7 @@ feature
 	attribute_name: STRING;
 			-- Attribute name
 
-	rout_id: ROUTINE_ID;
+	rout_id: INTEGER;
 			-- Attribute routine id
 
 	set_feature_id (i: INTEGER) is
@@ -37,7 +37,7 @@ feature
 			attribute_name := s;
 		end;
 
-	set_rout_id (i: ROUTINE_ID) is
+	set_rout_id (i: INTEGER) is
 			-- Assign `i' to `rout_id'.
 		do
 			rout_id := i
@@ -53,17 +53,11 @@ feature
 		deferred
 		end;
 
-	real_sk_value: INTEGER is
-			-- sk_value including the type_id
-		do
-			Result := sk_value
-		end
-
 	infix "<" (other: like Current): BOOLEAN is
 			-- Is `other' greater then Current ?
 		do
 			Result := level < other.level
-				or else (level = other.level and then rout_id.id < other.rout_id.id)
+				or else (level = other.level and then rout_id < other.rout_id)
 		end;
 
 	is_reference: BOOLEAN is
@@ -167,7 +161,7 @@ feature
 		do
 			Result := 	other.level = level
 						and other.feature_id = feature_id
-						and other.rout_id.is_equal (rout_id)
+						and other.rout_id = rout_id
 		end;
 
 	trace is

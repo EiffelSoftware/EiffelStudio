@@ -98,14 +98,13 @@ feature {ROUTINE_CLASS_TEXT_FIELD} -- Implementation
 		local
 			e_class: CLASS_C;
 			rname, cname, feat_name: STRING;
-			temp: STRING;
 			f_table: E_FEATURE_TABLE;
 			e_feature: E_FEATURE;
 			stone: CLASSC_STONE;
 			feature_stone: FEATURE_STONE;
 			feat_names: SORTED_TWO_WAY_LIST [STRING];
 			mp: MOUSE_PTR;
-			pattern: STRING_PATTERN
+			matcher: KMP_WILD
 		do
 			if (choice /= Void) and then arg = choice then
 				if choice.position /= 0 then
@@ -125,14 +124,14 @@ feature {ROUTINE_CLASS_TEXT_FIELD} -- Implementation
 					rname.to_lower;
 					rname.left_adjust;
 					rname.right_adjust;
-					if not rname.empty then
+					if not rname.is_empty then
 						e_class := stone.e_class;	
 						if e_class /= Void then
 							f_table := e_class.api_feature_table;
 							if f_table /= Void then
-								!! pattern.make (0);
-								pattern.append (rname);
-								if pattern.has_wild_cards then
+								create matcher.make_empty
+								matcher.set_pattern (rname);
+								if matcher.has_wild_cards then
 									!! feat_names.make;
 									from
 										f_table.start
@@ -140,7 +139,8 @@ feature {ROUTINE_CLASS_TEXT_FIELD} -- Implementation
 										f_table.after
 									loop
 										feat_name := f_table.key_for_iteration;
-										if pattern.matches (feat_name) then
+										matcher.set_text (feat_name)
+										if matcher.search_for_pattern then
 											feat_names.extend (feat_name)
 										end;
 										f_table.forth

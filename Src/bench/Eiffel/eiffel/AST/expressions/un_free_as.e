@@ -10,9 +10,10 @@ inherit
 		rename
 			initialize as initialize_unary_as
 		redefine
-			byte_node,
-			set, is_equivalent
+			is_equivalent
 		end
+
+	PREFIX_INFIX_NAMES
 
 feature {AST_FACTORY} -- Initialization
 
@@ -29,18 +30,6 @@ feature {AST_FACTORY} -- Initialization
 			expr_set: expr = e
 		end
 
-feature {NONE} -- Initialization
-
-	set is
-			-- Yacc initialization
-		do
-			op_name ?= yacc_arg (0)
-			expr ?= yacc_arg (1)
-		ensure then
-			expr_exists: expr /= Void
-			op_name_exists: op_name /= Void
-		end
-
 feature -- Attributes
 
 	op_name: ID_AS
@@ -51,9 +40,7 @@ feature -- Properties
 	prefix_feature_name: STRING is
 			-- Internal name
 		do
-			!! Result.make (7 + op_name.count)
-			Result.append (Internal_prefix)
-			Result.append (op_name)
+			Result := prefix_feature_name_with_symbol(op_name)
 		end
 
 	Internal_prefix: STRING is "_prefix_"
@@ -75,19 +62,10 @@ feature -- Comparison
 
 feature -- Type check
 
-	byte_node: UN_FREE_B is
+	internal_byte_node: UN_FREE_B is
 			-- Associated byte code
-		local
-			access_line: ACCESS_LINE
-			feature_b: FEATURE_B
 		do
-			!! Result
-			Result.set_expr (expr.byte_node)
-
-			access_line := context.access_line
-			feature_b ?= access_line.access
-			Result.init (feature_b)
-			access_line.forth
+			create Result
 		end
 
 feature {UNARY_AS}	-- Replication

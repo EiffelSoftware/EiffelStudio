@@ -6,6 +6,7 @@ indexing
 class ROUTINE_W 
 
 inherit
+	SHARED_APPLICATION_EXECUTION
 	BAR_AND_TEXT
 		rename
 			Feature_resources as resources,
@@ -33,6 +34,7 @@ feature -- Initialization
 			-- Create a feature tool.
 		do
  			is_in_project_tool := False
+			last_body_index := -1 -- no feature has been displayed so far.
 			has_double_line_toolbar := resources.double_line_toolbar.actual_value
  			{BAR_AND_TEXT} Precursor (a_screen)
 		end
@@ -176,7 +178,7 @@ feature -- Update
 			if syn_error /= Void then
 				txt := "Class has syntax error "
 				msg := syn_error.syntax_message
-				if not msg.empty then
+				if not msg.is_empty then
 					txt.extend ('(')
 					txt.append (msg)
 					txt.extend (')')
@@ -201,8 +203,6 @@ feature -- Update
  
 	close_windows is
 			-- Pop down the associated windows.
-		local
-			ss: SEARCH_STRING
 		do
  			{BAR_AND_TEXT} Precursor
  			routine_text_field.close_choice_window
@@ -215,7 +215,7 @@ feature -- Update
 			positive_index: index >= 1
 		do
 			if in_debug_format then
-				text_window.highlight_breakable (stone.e_feature, index)
+				text_window.highlight_breakable (stone.e_feature.body_index, index)
 			end
 		end
 
@@ -230,7 +230,7 @@ feature -- Update
 			if (in_debug_format and then stone /= Void and then
 				stone.e_feature /= Void) and then
 			 	(feat = Void or else 
-				feat.body_id.is_equal (stone.e_feature.body_id))
+				feat.body_index = stone.e_feature.body_index)
 			then
 				cur := text_window.cursor
 				f := showstop_frmt_holder.associated_command
@@ -242,14 +242,40 @@ feature -- Update
 			end
 		end
 
+	synchronize_with_callstack is
+			-- Display/Hide the arrow if the current feature 
+			-- displayed is present in the callstack. Otherwise
+			-- do nothing.
+		local
+			curr_index: INTEGER
+			curr_bodyid: INTEGER
+			curr_callstack_elem: CALL_STACK_ELEMENT
+		do
+			if stone.e_feature /= Void then
+				curr_bodyid := stone.e_feature.body_index
+				curr_callstack_elem := Application.status.where.i_th(Application.current_execution_stack_number)
+				
+					-- display the arrow (if needed)
+				if curr_bodyid = curr_callstack_elem.body_index then
+					curr_index := curr_callstack_elem.break_index
+					show_stoppoint(curr_bodyid, curr_index)
+				elseif last_body_index /= -1 then
+					-- remove the arrow
+					remove_stoppoint_symbol
+				end 
+			end
+		end
+
 	set_debug_format is 
 			-- Set the current format to be in `debug_format'.		
 		do
 			set_read_only_text
 			set_last_format (showstop_frmt_holder)
 			synchronize
-		ensure
-			set: showstop_frmt_holder = last_format
+		--| Arnaud: We cannot ensure that the debug format is set
+		--| because some feature do not have any debug format (constants for example)
+		--ensure
+		--	set: showstop_frmt_holder = last_format
 		end
 
 	set_default_format is
@@ -263,25 +289,48 @@ feature -- Update
 			end
 		end
 
-	show_stoppoint (f: E_FEATURE index: INTEGER) is
+	show_stoppoint (body_index: INTEGER; index: INTEGER) is
 			-- If stone feature is equal to feature `f' and if in debug
 			-- mode then redisplay the sign of the `index'-th breakable point.
 			-- Otherwize, update the title of feature tool (to print `stop').
 		require
-			valid_feature: f /= Void and then f.body_id /= Void
+			valid_body_index: body_index >= 0
 			positive_index: index >= 1
 		do
 			if stone /= Void and then
 				stone.e_feature /= Void and then
-				f.body_id.is_equal (stone.e_feature.body_id)
+				body_index = stone.e_feature.body_index
 			then
 				if in_debug_format then
-					text_window.redisplay_breakable_mark (stone.e_feature, index)
+					text_window.redisplay_breakable_mark (body_index, index)
+
+					if last_body_index = body_index then
+							-- remove the old sign
+						text_window.redisplay_breakable_mark (body_index, last_breakable_index)
+					else
+						-- remember the current body_index
+						last_body_index := body_index
+					end
+						-- remember the current breakable index
+					last_breakable_index := index
+
 				elseif last_format = showtext_frmt_holder then
 					-- Update the title bar of the feature tool.
 					-- "(stop)" if the routine has a stop point set.
 					showtext_frmt_holder.associated_command.display_header (stone)
 				end
+			end
+		end
+
+	remove_stoppoint_symbol is
+			-- Remove the displayed arrow (because it's no longer valid)
+		do
+			if stone /= Void and then stone.e_feature /= Void and then in_debug_format then
+				text_window.redisplay_breakable_mark (stone.e_feature.body_index, last_breakable_index)
+
+					-- remember that the arrow is no longer displayed
+				last_body_index := -1
+				last_breakable_index := 1
 			end
 		end
 
@@ -348,7 +397,7 @@ feature -- Stone updating
 			c: CLASS_C
 			ris: ROUT_ID_SET
 			i: INTEGER
-			rout_id: ROUTINE_ID
+			rout_id: INTEGER
 			fi: E_FEATURE
 			fs: FEATURE_STONE
 			text: STRUCTURED_TEXT
@@ -405,8 +454,6 @@ feature -- Graphical Interface
 
 	update_routine_toolbar is
 			-- Updates the edit bar.
-		local
-			f_name: STRING
 		do
  			if stone /= Void then
  				class_text_field.update_class_name (stone.e_class.name)
@@ -520,8 +567,6 @@ feature -- Commands
 
 	class_text_field: ROUTINE_CLASS_TEXT_FIELD
 
-	super_melt_menu_entry: EB_MENU_ENTRY
-
 feature {NONE} -- Implementation Window Settings
 
 	resize_action is
@@ -588,7 +633,6 @@ feature {NONE} -- Implementation Graphical Interface
 			shell_cmd: SHELL_COMMAND
 			shell_button: EB_BUTTON_HOLE
 			shell_menu_entry: EB_MENU_ENTRY
-			super_melt_cmd: SUPER_MELT
 			previous_target_cmd: PREVIOUS_TARGET
 			previous_target_button: EB_BUTTON
 			previous_target_menu_entry: EB_MENU_ENTRY
@@ -596,7 +640,6 @@ feature {NONE} -- Implementation Graphical Interface
 			next_target_button: EB_BUTTON
 			next_target_menu_entry: EB_MENU_ENTRY
 			current_target_cmd: CURRENT_ROUTINE
-			current_target_button: EB_BUTTON
 			current_target_menu_entry: EB_MENU_ENTRY
 			sep: SEPARATOR
 			sep1, sep2, sep3, sep4: THREE_D_SEPARATOR
@@ -633,7 +676,6 @@ feature {NONE} -- Implementation Graphical Interface
 			exit_menu_entry: EB_MENU_ENTRY
 			class_hole_holder: HOLE_HOLDER
 			stop_hole_holder: HOLE_HOLDER
-			rc: ROW_COLUMN
 			search_button: EB_BUTTON
 			history_list_cmd: LIST_HISTORY
 			current_bar: TOOLBAR
@@ -673,14 +715,11 @@ feature {NONE} -- Implementation Graphical Interface
 				!! new_class_button.make (Project_tool.class_hole_holder.associated_command, current_bar)
 			end
 
-   			build_edit_menu (current_bar)
+			build_edit_menu (current_bar)
  			build_save_as_menu_entry
  			build_print_menu_entry
 
-  			!! super_melt_cmd.make (Current)
-			!! super_melt_menu_entry.make (super_melt_cmd, special_menu)
- 
-			build_filter_menu_entry
+ 			build_filter_menu_entry
 
  			!! current_target_cmd.make (Current)
 			!! sep.make (new_name, special_menu)
@@ -726,7 +765,7 @@ feature {NONE} -- Implementation Graphical Interface
  			label.set_text ("from: ")
  			label.set_right_alignment
   
-   			!! quit_cmd.make (Current)
+			!! quit_cmd.make (Current)
 			if not is_in_project_tool then
 				!! quit_menu_entry.make (quit_cmd, file_menu)
 				if has_close_button then
@@ -890,6 +929,12 @@ feature {NONE} -- Properties
 	
 	has_double_line_toolbar: BOOLEAN
 			-- Are we displaying two lines in the toolbar?
+
+	last_body_index: INTEGER
+			-- body_index of last feature where a breakable mark has been displayed
+
+	last_breakable_index: INTEGER
+			-- index of the last breakable mark displayed
 
 feature {TEXT_WINDOW} -- Properties
 

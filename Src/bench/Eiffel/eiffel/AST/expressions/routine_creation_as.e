@@ -25,7 +25,6 @@ feature {AST_FACTORY} -- Initialization
 			f_not_void: f /= Void
 		local
 			access_feat_as: DELAYED_ACCESS_FEAT_AS
-			current_as: CURRENT_AS
 			access_id_as: ACCESS_ID_AS
 		do
 			target := t
@@ -43,9 +42,13 @@ feature {AST_FACTORY} -- Initialization
 						target_ast := target.expression
 					else
 						if target.class_type = Void then
-								-- Target is Current
-							!! current_as
-							target_ast := current_as
+							if target.is_result then
+									-- Target is Result
+								create {RESULT_AS} target_ast
+							else
+									-- Target is Current
+								create {CURRENT_AS} target_ast
+							end
 						end
 					end
 				end
@@ -59,59 +62,19 @@ feature {AST_FACTORY} -- Initialization
 			operands_set: operands = o
 		end
 
-feature {NONE} -- Initialization
-
-	set is
-			-- Yacc initialization
-		local
-			access_feat_as: DELAYED_ACCESS_FEAT_AS
-			current_as: CURRENT_AS
-			access_id_as: ACCESS_ID_AS
-		do
-			target ?= yacc_arg (0)
-			feature_name ?= yacc_arg (1)
-			operands ?= yacc_arg (2)
-
-			if target /= Void then
-				if target.target /= Void then
-					-- Target is an entity
-					!!access_id_as
-					access_id_as.set_feature_name (target.target)
-					target_ast := access_id_as
-				else
-					if target.expression /= Void then
-						-- Target is an expression
-						target_ast := target.expression
-					else
-						if target.class_type = Void then
-							-- Target is Current
-							!!current_as
-							target_ast := current_as
-						end
-					end
-				end
-			end
-
-			!!access_feat_as.make (feature_name, operands)
-			call_ast := access_feat_as
-
-		ensure then
-			feature_name_exists: feature_name /= Void
-		end
-
 feature -- Attributes
 
 	target: OPERAND_AS
-			-- Target operand used when the feature will be called
+			-- Target operand used when the feature will be called.
 
 	feature_name: ID_AS
-			-- Feature name
+			-- Feature name.
 
 	operands : EIFFEL_LIST [OPERAND_AS]
 			-- List of operands used by the feature when called.
 
 	target_type : CL_TYPE_A
-			-- Type of the target
+			-- Type of the target.
 
 	open_map: ARRAY [INTEGER]
 			-- Maps i'th open operand to its position.
@@ -123,13 +86,13 @@ feature -- Attributes
 			-- Type of closed argument tuple.
 
 	target_ast: AST_EIFFEL
-			-- Ast created for target during type checking
+			-- Ast created for target during type checking.
 
 	call_ast: DELAYED_ACCESS_FEAT_AS
-			-- Ast created for delayed call during type checking
+			-- Ast created for delayed call during type checking.
 
 	type : GEN_TYPE_A
-			-- Type of routine object
+			-- Type of routine object.
 
 feature -- Comparison
 
@@ -144,7 +107,7 @@ feature -- Comparison
 feature -- Type check, byte code and dead code removal
 
 	type_check is
-			-- Type check a routine creation expression
+			-- Type check a routine creation expression.
 		local
 			a_class: CLASS_C
 			a_feature: FEATURE_I
@@ -187,28 +150,38 @@ feature -- Type check, byte code and dead code removal
 						end
 					else
 						if target.class_type /= Void then
-							-- Target is {TYPE}
+								-- Target is {TYPE}
 							target_type := target.type_a
-							a_class := target_type.associated_class
-							context.replace (target_type)
+								-- A void target_type means that it is `NONE'
+								-- and we do not accept this.
+							if target_type /= Void then
+								a_class := target_type.associated_class
+								context.replace (target_type)
+							end
 						else
-							-- Target is Current
+								-- Target is Current
 							target_ast.type_check
-							target_type := context.actual_class_type
-							a_class := context.a_class
+							if target.is_result then
+								target_type ?= context.feature_type
+								a_class := target_type.associated_class
+							else
+								target_type := context.actual_class_type
+								a_class := context.a_class
+							end
 						end
 					end
 				end
 			end
 
 			if target_type = Void or else target_type.is_basic then
-				-- Was not a class type or is basic.
-				-- Not supported. May change in the future - M.S.
-				-- Reason: We cannot call a feature with basic
-				-- call target!
-				!!not_supported
+					-- Was not a class type or is basic.
+					-- Not supported. May change in the future - M.S.
+					-- Reason: We cannot call a feature with basic
+					-- call target!
+				create not_supported
 				context.init_error (not_supported)
-				not_supported.set_message ("Type of target in a delayed call may not be a basic type.")
+				not_supported.set_message ("Type of target in a delayed %
+					%call may not be a basic type or NONE.")
 				Error_handler.insert_error (not_supported)
 				Error_handler.raise_error
 			end
@@ -234,10 +207,10 @@ feature -- Type check, byte code and dead code removal
 				Error_handler.insert_error (vxxx)
 			else
 					-- Dependance
-				!! depend_unit.make (a_class.id, a_feature)
+				!! depend_unit.make (a_class.class_id, a_feature)
 				context.supplier_ids.extend (depend_unit)
 
-				type := routine_type (a_table, a_feature, a_class.id)
+				type := routine_type (a_table, a_feature, a_class.class_id)
 				System.instantiator.dispatch (type, context.a_class)
 				context.put (type)
 			end
@@ -310,7 +283,7 @@ feature -- Type check, byte code and dead code removal
 				new_list.start
 				!!tuple_b
 				tuple_b.set_expressions (new_list)
-				tuple_type_i ?= closed_type.type_i
+				tuple_type_i := closed_type.type_i
 				tuple_b.set_type (tuple_type_i)
 			end
 
@@ -360,14 +333,14 @@ feature -- Type check, byte code and dead code removal
 				closed_b.set_expressions (new_list)
 			end
 
-			Result.init (target_type.type_i, a_class.id, a_feature,
+			Result.init (target_type.type_i, a_class.class_id, a_feature,
 						 type.type_i, tuple_b, open_b, closed_b)
 		end
 
 feature -- Replication
 
 	fill_calls_list (l: CALLS_LIST) is
-			-- find calls to Current
+			-- Find calls to Current.
 		do
 			if target_ast /= Void then
 				target_ast.fill_calls_list (l)
@@ -379,7 +352,7 @@ feature -- Replication
 		end
 
 	replicate (ctxt: REP_CONTEXT): like Current is
-			-- Adapt to replication
+			-- Adapt to replication.
 		do
 			Result := clone (Current)
 			ctxt.adapt_name (feature_name)
@@ -406,30 +379,49 @@ feature {AST_EIFFEL} -- Output
 
 	simple_format (ctxt: FORMAT_CONTEXT) is
 			-- Reconstitute text.
+		local
+			dummy_call: ACCESS_FEAT_AS
+			dummy_name: ID_AS
 		do
-			if target = Void then
-					-- A open operand for target.
-				ctxt.put_text_item (Ti_question)
-			else
-				if target /= Void then
-					if
-						target.class_type /= Void or
-						target.expression /= Void or
-						target.target /= Void
-					then
-							-- A closed operand for target
-						ctxt.format_ast (target)
-					end
-				else
-						-- Nothing to do, because it simply means
-						-- that the target is the Current object.
-				end
-			end
+			ctxt.put_text_item (ti_Agent_keyword)
+			ctxt.put_space
+			if target /= Void then
+				if
+					target.class_type /= Void or
+					target.expression /= Void or
+					target.target /= Void or
+					target.is_result
+				then
+					if target_ast /= Void then
+							-- A closed operand for target.
+						ctxt.format_ast (target_ast)
+					else
+						ctxt.put_text_item (ti_L_curly)
+						ctxt.format_ast (target.class_type)
+						ctxt.set_type_creation (target.class_type)
 
-			ctxt.put_text_item (Ti_tilda)
+							--| We have to create a dummy call because the current formating
+							--| algorithm which makes the assumption that a feature call is
+							--| either on Current or on something else (see CREATION_EXPR_AS).
+						create dummy_call
+						create dummy_name.initialize (ti_R_curly.image)
+						dummy_call.set_feature_name (dummy_name)
+						ctxt.format_ast (dummy_call)
+					end
+					ctxt.need_dot
+				else
+					-- No operand for target.
+				end
+			else
+					-- An open operand for target.
+				ctxt.put_text_item (Ti_question)
+				ctxt.need_dot
+			end
 
 				-- Display routine used by the Agent.
 			ctxt.format_ast (call_ast)
+
+			ctxt.set_type_creation (Void)
 		end
 
 feature {ROUTINE_CREATION_AS} -- Replication
@@ -466,8 +458,8 @@ feature {ROUTINE_CREATION_AS} -- Replication
 
 feature {NONE} -- Type
 
-	routine_type (a_table: FEATURE_TABLE; a_feature: FEATURE_I; cid : CLASS_ID) : GEN_TYPE_A is
-			-- Type of routine object
+	routine_type (a_table: FEATURE_TABLE; a_feature: FEATURE_I; cid : INTEGER) : GEN_TYPE_A is
+			-- Type of routine object.
 		require
 			valid_table: a_table /= Void;
 			valid_feature: a_feature /= Void;
@@ -484,23 +476,28 @@ feature {NONE} -- Type
 			operand: OPERAND_AS
 			is_open: BOOLEAN
 		do
-			create Result
 
 			if a_feature.is_function then
-				-- FUNCTION
+					-- generics are: base_type, open_types, result_type
+				create generics.make (1, 3)
+
+				create Result.make (generics)
 				Result.set_base_class_id (System.function_class_id)
-				-- generics are: base_type, open_types, result_type
-				!!generics.make (1, 3)
+
+
+					-- Look for declared type of feature
 				solved_type := Creation_evaluator.evaluated_type (
 										   a_feature.type, a_table, a_feature
 																 )
+					-- Find type of feature in context of `target_type'
 				solved_type := solved_type.instantiation_in (target_type, cid)
 				generics.put (solved_type.deep_actual_type, 3)
 			else
-				-- PROCEDURE
+					-- generics are: base_type, open_types
+				create generics.make (1, 2)
+
+				create Result.make (generics)
 				Result.set_base_class_id (System.procedure_class_id)
-				-- generics are: base_type, open_types
-				!!generics.make (1, 2)
 			end
 
 				-- FIXME: Emmanuel STAPF 10/27/99
@@ -515,9 +512,21 @@ feature {NONE} -- Type
 				-- In the previous example, we should look the feature table of the
 				-- `actual_class_type', but if we have `my_proc ((a.y)~f)', we need
 				-- to take the feature table of the real type of `a'.
-			solved_type := Creation_evaluator.evaluated_type (
-										   target_type, a_table, a_feature)
-			solved_type := solved_type.instantiation_in (target_type, cid)
+				--
+				-- Note: Emmanuel STAPF 10/04/2000
+				-- We now evaluate the target type in the context of the current class instead
+				-- of the context of the class corresponding to `target_type'. Doing that it makes
+				-- it possible to do what is described in the previous readme but it also enables to
+				-- use a generic class with a formal parameter of the current class (previously it
+				-- was crashing during the instantiation since the position of the formal was the one
+				-- from the current class and if the target class has less generic parameter than the
+				-- given position we were crashing, eg:
+				--  class A [G, H] and B [G]
+				--  f: B [H]
+				--  f~g
+				-- The creation of `f~g' crashed because we were looking for the second formal in B.
+			solved_type := Creation_evaluator.evaluated_type (target_type, context.a_class.feature_table, a_feature)
+			solved_type := solved_type.instantiation_in (context.actual_class_type, context.a_class.class_id)
 			tgt_type := solved_type.deep_actual_type
 			generics.put (tgt_type, 1)
 
@@ -553,10 +562,10 @@ feature {NONE} -- Type
 				end
 			end
 
-			if count > 0 then
-				!!open_map.make (1, count)
-				!!oargtypes.make (1, count)
+			create oargtypes.make (1, count)
 
+			if count > 0 then
+				create open_map.make (1, count)
 				if oidx > 1 then
 					open_map.put (0,1)
 					oargtypes.put (tgt_type,1)
@@ -569,18 +578,17 @@ feature {NONE} -- Type
 				count := 1 - count
 			end
 
-			if count > 0 then
-				!!closed_map.make (1, count)
-				!!cargtypes.make (1, count)
+			create cargtypes.make (1, count)
 
+			if count > 0 then
+				create closed_map.make (1, count)
 				if cidx > 1 then
 					closed_map.put (0,1)
 					cargtypes.put (tgt_type,1)
 				end
 			end
 
-			-- Create argument types
-
+				-- Create argument types
 			if args /= Void then
 				from
 					idx := 1
@@ -643,18 +651,15 @@ feature {NONE} -- Type
 				end
 			end
 
-			-- Create open argument type tuple
-			!!tuple
+				-- Create open argument type tuple
+			create tuple.make (oargtypes)
 			tuple.set_base_class_id (System.tuple_id)
-			tuple.set_generics (oargtypes)
 
 			generics.put (tuple, 2)
-			Result.set_generics (generics)
 
-			-- Create closed argument type tuple
-			!!tuple
+				-- Create closed argument type tuple
+			create tuple.make (cargtypes)
 			tuple.set_base_class_id (System.tuple_id)
-			tuple.set_generics (cargtypes)
 
 			closed_type := tuple
 		ensure
@@ -668,15 +673,15 @@ feature {NONE} -- Type
 			generics : ARRAY [TYPE_A]        
 			int_a: INTEGER_A
 		once
-			!!generics.make (1,1)
-			!!int_a
+			create generics.make (1,1)
+			create  int_a.make (32)
 			generics.put (int_a, 1)
-			!!type_a
+			create type_a.make (generics)
 			type_a.set_base_class_id (System.array_id)
-			type_a.set_generics (generics)
 
 			Result := type_a.type_i
 		end
 
 end -- class ROUTINE_CREATION_AS
+
 

@@ -101,7 +101,7 @@ feature -- Properties
 			-- Invariant server
 
 	target_replicated_feature_table: EXTEND_TABLE [
-			ARRAYED_LIST [FEATURE_I], BODY_INDEX];
+			ARRAYED_LIST [FEATURE_I], INTEGER];
 	   		-- Table containing replicated (conceptual) features of
 	   		-- class being flattend indexed by body_index
 
@@ -187,9 +187,9 @@ feature -- Element change
 			valid_target_class: target_class /= Void
 		local
 			l: LINKED_LIST [CLASS_C]
-			class_id: CLASS_ID
+			class_id: INTEGER
 		do
-			class_id := target_class.id
+			class_id := target_class.class_id
 			if Tmp_feat_tbl_server.has (class_id) then
 				target_feature_table := Tmp_feat_tbl_server.item (class_id);
 			elseif Feat_tbl_server.server_has (class_id) then
@@ -208,7 +208,7 @@ feature -- Element change
 			else
 				!! assert_server.make (target_feature_table.count);
 				!! l.make;
-				l.extend (System.general_class.compiled_class);
+				l.extend (System.any_class.compiled_class);
 				register_skipped_classes_assertions (l);
 			end;
 			current_class := target_class;
@@ -256,8 +256,12 @@ end;
 		require
 			valid_inv: inv /= Void
 		do
-			invariant_server.extend (inv);
-		end;
+			if target_class = inv.source_class then
+				invariant_server.put_front (inv)
+			else
+				invariant_server.extend (inv)
+			end
+		end
 
 	record_creation_feature (feat_adapter: FEATURE_ADAPTER) is
 			-- Record adapter feature `feat' if it is
@@ -297,7 +301,7 @@ end;
 		local
 			comments: EIFFEL_COMMENTS
 		do
-			if not current_category.empty then
+			if not current_category.is_empty then
 				comments := feature_clause_comments (feature_clause);
 				current_category.set_comments (comments);
 				if order_same_as_text then
@@ -331,17 +335,18 @@ end;
 			inv_as: INVARIANT_AS
 		do
 			from 
-				record_ancestors_of_class (target_class);
-				ancestors.start; -- Skip class ANY
-				ancestors.forth
+				record_ancestors_of_class (target_class)
+				ancestors.start
 			until
 				ancestors.after
 			loop
-				current_class := ancestors.item;
-				inv_as ?= current_class.invariant_ast;
-				if inv_as /= Void then
-					register_invariant (inv_as)
-				end;
+				current_class := ancestors.item
+				if current_class /= System.any_class.compiled_class then
+					inv_as := current_class.invariant_ast
+					if inv_as /= Void then
+						register_invariant (inv_as)
+					end
+				end
 				ancestors.forth
 			end
 		end
@@ -407,29 +412,6 @@ feature -- Output
 			invariant_server.format (ctxt);
 		end;
 
-feature -- EiffelCase output
-
-	store_case_information (s: S_CLASS_DATA) is
-			-- Store information relevant for EiffelCase
-			-- in `s' (feature_data and invariants).
-		local
-			s_clauses: ARRAYED_LIST [S_FEATURE_CLAUSE]
-		do
-			if not categories.empty then
-				!! s_clauses.make (2);
-				from
-					categories.start
-				until
-					categories.after
-				loop
-					s_clauses.extend (categories.item.storage_info)
-					categories.forth
-				end;
-				s.set_feature_clause_list (s_clauses)
-			end;
-			invariant_server.store_case_info (s);
-		end;
-
 feature {NONE} -- Implementation
 
 	current_class_ast: CLASS_AS is
@@ -441,7 +423,7 @@ feature {NONE} -- Implementation
 			file: RAW_FILE;
 			class_file_name: STRING;
 			vd21: VD21;
-			class_id: CLASS_ID
+			class_id: INTEGER
 		do
 			if
 				current_class.is_precompiled
@@ -452,7 +434,7 @@ debug ("FLAT_SHORT")
 	io.error.putstring (current_class.name);
 	io.error.new_line;
 end;
-				class_id := current_class.id
+				class_id := current_class.class_id
 
 				if Tmp_feat_tbl_server.has (class_id) then
 					current_feature_table := Tmp_feat_tbl_server.item (class_id)
@@ -516,39 +498,42 @@ end;
 
 	parse_ancestors is
 			-- Parse the ancestores of target_class.
+			-- (class ANY is skipped)
 		local
-			class_id: CLASS_ID
+			class_id: INTEGER
 		do
 			from 
-				record_ancestors_of_class (current_class);
-				ancestors.start; -- Skip class ANY
-				ancestors.forth
+				record_ancestors_of_class (current_class)
+				ancestors.start
 			until
 				ancestors.after
 			loop
-				current_class := ancestors.item;
-				class_id := current_class.id
+				current_class := ancestors.item
+				if current_class /= System.any_class.compiled_class then
+					class_id := current_class.class_id
+					if Tmp_feat_tbl_server.has (class_id) then
+						current_feature_table := Tmp_feat_tbl_server.item (class_id)
+					elseif Feat_tbl_server.server_has (class_id) then
+						current_feature_table := Feat_tbl_server.server_item (class_id)
+					else
+						create current_feature_table.make (0)
+						current_feature_table.init_origin_table
+					end
 
-				if Tmp_feat_tbl_server.has (class_id) then
-					current_feature_table := Tmp_feat_tbl_server.item (class_id)
-				elseif Feat_tbl_server.server_has (class_id) then
-					current_feature_table := Feat_tbl_server.server_item (class_id)
-				else
-					!! current_feature_table.make (0);
-					current_feature_table.init_origin_table
-				end;
+					System.set_current_class (current_class)
 
-				System.set_current_class (current_class);
-debug ("FLAT_SHORT")
-	io.error.putstring ("%TParsing & Registering class: ");
-	io.error.putstring (current_class.name);
-	io.error.new_line;
-end;
-				current_ast := current_class_ast;
-				register_current_ast;
-				ancestors.forth;
-			end;
-		end;
+					debug ("FLAT_SHORT")
+						io.error.putstring ("%TParsing & Registering class: ")
+						io.error.putstring (current_class.name)
+						io.error.new_line
+					end
+
+					current_ast := current_class_ast
+					register_current_ast
+				end
+				ancestors.forth
+			end
+		end
 
 	register_skipped_classes_assertions (l: LINKED_LIST [CLASS_C]) is
 			-- Register the assertions of classes that have
@@ -556,7 +541,7 @@ end;
 		local
 			f: FEATURE_I;
 			t: FEATURE_TABLE;
-			id: CLASS_ID;
+			id: INTEGER;
 			f_adapter: FEATURE_ADAPTER;
 			inv_as: INVARIANT_AS
 		do
@@ -582,7 +567,7 @@ end
 					t.after
 				loop
 					f := t.item_for_iteration;
-					if id.is_equal (f.written_in) and then 
+					if id = f.written_in and then 
 						f.has_assertion
 					then	
 						!! f_adapter;
@@ -603,10 +588,10 @@ end
 			-- Register the current_ast in the format registration.
 		do
 			if current_class.is_precompiled then
-				if Class_comments_server.has (current_class.id) then
-					class_comments := Class_comments_server.disk_item (current_class.id);
+				if Class_comments_server.has (current_class.class_id) then
+					class_comments := Class_comments_server.disk_item (current_class.class_id);
 				else
-					!! class_comments.make (current_class.id, 0);
+					!! class_comments.make (current_class.class_id, 0);
 				end;
 				debug ("COMMENTS")
 					if class_comments = Void then
@@ -637,7 +622,6 @@ end
 			ancestors_parents_not_void: ancestors /= Void
 		local
 			parents: FIXED_LIST [CL_TYPE_A];
-			index: INTEGER;	
 			a_parent: CLASS_C
 		do
 			from 
@@ -696,13 +680,13 @@ feature {NONE} -- Implementation
 				categories.after
 			loop
 				cat := categories.item;
-				if cat.empty then
+				if cat.is_empty then
 					categories.remove;
 				else
 						-- Update order number
 					eif_comments := cat.comments;
 					
-					if eif_comments = Void or else eif_comments.empty then
+					if eif_comments = Void or else eif_comments.is_empty then
 						order := default_feature_clause_order
 					else
 						comment := clone (eif_comments.first);

@@ -3,7 +3,6 @@
 class BYTE_CONTEXT
 
 inherit
-
 	SHARED_C_LEVEL
 		export
 			{NONE} all
@@ -15,62 +14,46 @@ inherit
 	COMPILER_EXPORTER
 
 creation
-
 	make, make_from_context
 
-feature
+feature -- Initialization
 
-	once_index : INTEGER        -- Index of current once routine
-
-	set_once_index (idx : INTEGER) is
-			-- Set `once_index' to `idx'
-		require
-			valid_index : idx >= 0
+	make is
+			-- Initialization
 		do
-			once_index := idx
-		ensure
-			index_set : once_index = idx
+			create register_server.make (True)
+			create local_vars.make (1, 50)
+			create local_index_table.make (10)
+			create associated_register_table.make (10)
+			create local_list.make
+			create old_expressions.make
+			create inherited_assertion.make
 		end
 
-	generation_mode: BOOLEAN
+feature -- Access
+
+	once_index : INTEGER
+			-- Index of current once routine
+
+	il_external_creation: BOOLEAN
+			-- Is current call to external feature a creation one?
+
+	workbench_mode: BOOLEAN
 			-- Mode of generation: if set to True, generation of C code
 			-- for the workbench otherwise generation of C code in final
 			-- mode
 
-	set_workbench_mode is
-			-- Set `generation_mode' to True.
-		do
-			generation_mode := True
-		end
-
-	set_final_mode is
-			-- Set `generation_mode' to False.
-		do
-			generation_mode := False
-		end
-
-	workbench_mode: BOOLEAN is
-			-- Is `generation_mode' set to True ?
-		do
-			Result := generation_mode
-		end
-
 	final_mode: BOOLEAN is
-			-- Is `generation_mode' set to False ?
+			-- Is generation of C code for finalized mode?
 		do
-			Result := not generation_mode
+			Result := not workbench_mode
 		end
 
 	has_cpp_externals_calls: BOOLEAN
 			-- Does the current generated class have a C++ call?
 
-	set_has_cpp_externals_calls (v: BOOLEAN) is
-			-- Set `has_cpp_externals_calls' with `v'.
-		do
-			has_cpp_externals_calls := v
-		ensure
-			has_cpp_externals_calls_set: has_cpp_externals_calls = v
-		end
+	current_feature: FEATURE_I
+			-- Current feature being processed.
 
 	current_type: CL_TYPE_I
 			-- Current class type in which byte code is processed
@@ -97,30 +80,6 @@ feature
 	old_expressions: LINKED_LIST [UN_OLD_B]
 			-- Used to record old expressions in Pass 3.
 
-	make is
-			-- Initialization
-		do
-			!!register_server.make (true)
-			!!local_vars.make (1, 1000)
-			!!local_index_table.make (10)
-			!!associated_register_table.make (10)
-			!!local_list.make
-			!!old_expressions.make
-			!!inherited_assertion.make
-		end
-
-	set_buffer (b: like buffer) is
-			-- Assign `b' to `buffer'.
-		do
-			buffer := b
-		end
-
-	set_header_buffer (b: like header_buffer) is
-			-- Assign `b' to `header_buffer'.
-		do
-			header_buffer := b
-		end
-
 	non_gc_tmp_vars: INTEGER
 			-- Total number of registers for references variables needed.
 
@@ -132,7 +91,7 @@ feature
 			-- Number of (declared) expanded arguments.
 
 	local_vars: ARRAY [BOOLEAN]
-			-- Local variables used have their flag set to true.
+			-- Local variables used have their flag set to True.
 
 	local_index_table: EXTEND_TABLE [INTEGER, STRING]
 			-- Index in local variable array (C code) for a given register
@@ -146,6 +105,9 @@ feature
 
 	current_used: BOOLEAN
 			-- Is Current used (apart from dtype computation) ?
+
+	current_used_count: INTEGER
+			-- How many times current is used?
 
 	result_used: BOOLEAN
 			-- Is Result used (apart from very last assignment) ?
@@ -165,8 +127,113 @@ feature
 	assertion_type: INTEGER
 			-- Type of assertion being generated
 
-	is_prec_first_block: BOOLEAN
-			-- Is precondition in first block
+	origin_has_precondition: BOOLEAN
+			-- Is Current feature have origin feature with precondition?
+			-- (This is used for cases where the origin of the
+			-- routine does not have a precondition and thus
+			-- the precondition will always be True)
+
+	is_first_precondition_block_generated: BOOLEAN
+			-- Is generation of first precondition block generated?
+
+	is_new_precondition_block: BOOLEAN
+			-- Is this the start of a new precondition block?
+
+feature -- Concurrent Eiffel
+
+	has_separate_call_in_precondition: BOOLEAN
+		-- Is there separate feature call in precondition?
+
+	set_has_separate_call_in_precondition (v: BOOLEAN) is
+		do
+			has_separate_call_in_precondition := v
+		end
+
+feature -- Setting
+
+	set_first_precondition_block_generated (v: BOOLEAN) is
+			-- Set `il_external_creation' with `v'.
+		do
+			is_first_precondition_block_generated := v
+		ensure
+			is_first_precondition_block_generated_set: is_first_precondition_block_generated = v
+		end
+
+	set_new_precondition_block (v: BOOLEAN) is
+			-- Set `il_external_creation' with `v'.
+		do
+			is_new_precondition_block := v
+		ensure
+			is_new_precondition_block_set: is_new_precondition_block = v
+		end
+
+	set_il_external_creation (v: BOOLEAN) is
+			-- Set `il_external_creation' with `v'.
+		do
+			il_external_creation := v
+		ensure
+			il_external_creation_set: il_external_creation = v
+		end
+
+	set_once_index (idx : INTEGER) is
+			-- Set `once_index' to `idx'
+		require
+			valid_index : idx >= 0
+		do
+			once_index := idx
+		ensure
+			index_set : once_index = idx
+		end
+
+	set_workbench_mode is
+			-- Set `workbench_mode' to True.
+		do
+			workbench_mode := True
+		ensure
+			workbench_mode_set: workbench_mode
+		end
+
+	set_final_mode is
+			-- Set `final_mode' to True.
+		do
+			workbench_mode := False
+		ensure
+			final_mode_set: final_mode
+		end
+
+	set_has_cpp_externals_calls (v: BOOLEAN) is
+			-- Set `has_cpp_externals_calls' with `v'.
+		do
+			has_cpp_externals_calls := v
+		ensure
+			has_cpp_externals_calls_set: has_cpp_externals_calls = v
+		end
+
+	set_buffer (b: like buffer) is
+			-- Assign `b' to `buffer'.
+		require
+			b_not_void: b /= Void
+		do
+			buffer := b
+		ensure
+			buffer_set: buffer = b
+		end
+
+	set_header_buffer (b: like header_buffer) is
+			-- Assign `b' to `header_buffer'.
+		require
+			b_not_void: b /= Void
+		do
+			header_buffer := b
+		ensure
+			header_buffer_set: header_buffer = b
+		end
+
+	set_assertion_type (a: INTEGER) is
+			-- Assign `a' to `assertion_type'
+		do
+			assertion_type := a
+		end
 
 	Current_register: REGISTRABLE is
 			-- An instance of Current register for local var index computation
@@ -191,7 +258,7 @@ feature
 				-- the Result register in once functions. The Result is always
 				-- recorded in the GC by RTOC, so there is no need to get an
 				-- l[] variable from the GC hooks. Here we are going to call
-				-- the print_register_by_name function on Result_register,
+				-- the print_register function on Result_register,
 				-- and this has been carefully patched in RESULT_BL to handle
 				-- the once cases.
 			!! dummy
@@ -200,18 +267,6 @@ feature
 
 	register_server: REGISTER_SERVER
 			-- Register number server
-
-	set_assertion_type (a: INTEGER) is
-			-- Assign `a' to `assertion_type'
-		do
-			assertion_type := a
-		end
-
-	set_is_prec_first_block (a: BOOLEAN) is
-			-- Assign `a' to `assertion_type'
-		do
-			is_prec_first_block := a
-		end
 
 	has_chained_prec: BOOLEAN is
 			-- Feature has chained preconditions?
@@ -234,12 +289,6 @@ feature
 		do
 			origin_has_precondition := b
 		end
-
-	origin_has_precondition: BOOLEAN
-			-- Is Current feature have origin feature with precondition?
-			-- (This is used for cases where the origin of the
-			-- routine does not have a precondition and thus
-			-- the precondition will always be true)
 
 	has_postcondition: BOOLEAN is
 			-- Do we have to generate any postcondition ?
@@ -339,6 +388,21 @@ feature
 			not Result.is_formal
 		end
 
+	creation_type (type: TYPE_I): TYPE_I is
+			-- Convenience
+		require
+			good_argument: type /= Void
+			valid_class_type: class_type /= Void
+		local
+			gen_type: GEN_TYPE_I
+		do
+			if type.has_true_formal then
+				gen_type ?= current_type
+				Result := type.creation_instantiation_in (gen_type)
+			else
+				Result := type
+			end
+		end
 
 	set_byte_code (bc: BYTE_CODE) is
 			-- Assign `bc' to byte_code.
@@ -373,6 +437,16 @@ feature
 			current_type := t.type
 		end
 
+	set_current_feature (f: FEATURE_I) is
+			-- Assign `f' to `current_feature'.
+		require
+			valid_f: f /= Void
+		do
+			current_feature := f
+		ensure
+			current_feature_set: current_feature = f
+		end
+
 	set_current_type (t: CL_TYPE_I) is
 			-- Assign `t' to `current_type'
 		require
@@ -405,15 +479,15 @@ feature
 		end
 
 	init_propagation is
-			-- Reset `propagated' to false.
+			-- Reset `propagated' to False.
 		do
-			propagated := false
+			propagated := False
 		end
 
 	set_propagated is
 			-- Signals register has been caught.
 		do
-			propagated := true
+			propagated := True
 		end
 
 	propagate_no_register: BOOLEAN is
@@ -465,9 +539,10 @@ feature
 		do
 				-- Not marking if inside inlined code:
 				-- Current is NOT in Current_b
+			current_used_count := current_used_count + 1
 			if not (current_used or else in_inlined_code) then
 				set_local_index ("Current", Current_b)
-				current_used := true
+				current_used := True
 			end
 		end
 
@@ -484,14 +559,14 @@ feature
 				then
 					set_local_index ("Result", Result_register)
 				end
-				result_used := true
+				result_used := True
 			end
 		end
 
-	mark_local_used (l: INTEGER) is
-			-- Signals that local variable `l' is used
+	mark_local_used (an_index: INTEGER) is
+			-- Signals that local variable `an_index' is used
 		do
-			local_vars.force(true, l)
+			local_vars.force (True, an_index)
 		end
 
 	inc_label is
@@ -504,11 +579,14 @@ feature
 			-- Generate label "body"
 			--|Note: the semi-colon is added, otherwise C compilers
 			--|complain when there are no instructions after the label.
+		local
+			buf: GENERATION_BUFFER
 		do
-			buffer.exdent
-			buffer.putstring ("body:;")
-			buffer.new_line
-			buffer.indent
+			buf := buffer
+			buf.exdent
+			buf.putstring ("body:;")
+			buf.new_line
+			buf.indent
 		end
 
 	print_body_label is
@@ -527,12 +605,15 @@ feature
 			-- Generate label number `l'
 		require
 			label_exists: l > 0
+		local
+			buf: GENERATION_BUFFER
 		do
-			buffer.exdent
+			buf := buffer
+			buf.exdent
 			print_label (l)
-			buffer.putchar (':')
-			buffer.new_line
-			buffer.indent
+			buf.putchar (':')
+			buf.new_line
+			buf.indent
 		end
 
 	print_current_label is
@@ -544,10 +625,13 @@ feature
 	print_label (l: INTEGER) is
 			-- Print label number `l'
 		require
-			label_exists: l > 0
+			label_exists: l >= 0
+		local
+			buf: GENERATION_BUFFER
 		do
-			buffer.putstring ("label_")
-			buffer.putint (l)
+			buf := buffer
+			buf.putstring ("label_")
+			buf.putint (l)
 		end
 
 	set_local_index (s: STRING; r: REGISTRABLE) is
@@ -556,7 +640,7 @@ feature
 		local
 			key: STRING
 		do
-			if need_gc_hooks and not local_index_table.has(s) then
+			if not local_index_table.has(s) then
 				key := clone (s)
 				local_index_table.put (local_index_counter, key)
 				local_index_counter := local_index_counter + 1
@@ -570,96 +654,98 @@ feature
 			Result := local_index_table.item (s)
 		end
 
-	need_gc_hook_computed: BOOLEAN
-			-- Have we already computed that value ?
-
-	need_gc_hook_saved: BOOLEAN
-			-- Saved value of `need_gc_hooks'.
+	need_gc_hook: BOOLEAN
+			-- Do we need to generate GC hooks?
+			-- Computed by compute_need_gc_hooks for each instance of BYTE_CODE.
 
 	force_gc_hooks is
 			-- Force usage of GC hooks
 		do
-			need_gc_hook_computed := true
-			need_gc_hook_saved := true
+			need_gc_hook := True
 		end
 
-	need_gc_hooks: BOOLEAN is
-			-- Do we need any GC hooks for the current feature
+	compute_need_gc_hooks (has_pre_post: BOOLEAN) is
+			-- Set `need_gc_hook' for current instance of BYTE_CODE
+			-- If `has_pre_post', `need_gc_hook' is set to True.
 		local
 			assign: ASSIGN_BL
 			call: CALL_B
 			constant_b: CONSTANT_B
+			attribute_b: ATTRIBUTE_B
 			compound: BYTE_LIST [BYTE_NODE]
-			rassign: REVERSE_BL
 			byte_node: BYTE_NODE
 			source_type: TYPE_I
 			target_type: TYPE_I
+			tmp: BOOLEAN
 		do
 				-- We won't need any RTLI if the only statement is an expanded
 				-- assignment in Result or a single call.
-			if need_gc_hook_computed then
-				Result := need_gc_hook_saved
-			else
-				need_gc_hook_computed := true
-				Result := true
-				if assertion_type /= In_invariant then
-						-- Not in an invariant generation
-					compound := byte_code.compound
-					if compound /= Void and then compound.count = 1 then
-						byte_node := compound.first
-						assign ?= byte_node
-						rassign ?= assign
-						if assign /= Void and then (rassign = Void) then
-							if assign.expand_return then
-									-- Assignment in Result is expanded in a
-									-- return instruction
-								Result := false
-							else
-								call ?= assign.source
-								if call /= Void and then call.is_single then
-										-- Simple assignment of a single call
-									if has_invariant then
-										Result := True
+
+				-- If there is a rescue clause, then we'll
+				-- need an execution vector, hence GC hooks
+				-- are really needed.
+				-- If some calls are inlined, we need to save Current, Result,
+				-- the arguments and locals in registers
+				-- If there are some pre/post conditions to check, we choose
+				-- to be safe by encapsulating even when not needed if the checks
+				-- are generated.
+			tmp := has_rescue or byte_code.has_inlined_code or has_pre_post
+
+			if not tmp and then assertion_type /= In_invariant then
+				tmp := True	
+					-- Not in an invariant generation
+				compound := byte_code.compound
+				if compound /= Void and then compound.count = 1 then
+					byte_node := compound.first
+					assign ?= byte_node
+					if assign /= Void then
+						if assign.expand_return then
+								-- Assignment in Result is expanded in a
+								-- return instruction
+							tmp := False
+						else
+							call ?= assign.source
+							if call /= Void and then call.is_single then
+									-- Simple assignment of a single call
+								if has_invariant then
+									tmp := True
+								else
+									constant_b ?= call
+									if (constant_b /= Void) then
+											-- If it is a constant. we don't need registers
+										tmp := False
+									elseif assign.target.is_result then
+											-- If we can optimize result := call, no registers
+											-- except if metamorphosis on Result
+										target_type := real_type (assign.target.type)
+										source_type := real_type (call.type)
+										tmp := not (target_type.is_basic or else
+											(not source_type.is_basic))
 									else
-										constant_b ?= call
-										if (constant_b /= Void) then
-												-- If it is a constant. we don't need registers
-											Result := False
-										elseif assign.target.is_result then
-												-- If we can optimize result := call, no registers
-												-- except if metamorphosis on Result
-											target_type := real_type (assign.target.type)
-											source_type := real_type (call.type)
-											Result := not (target_type.is_basic or else
-												(not source_type.is_basic))
+										attribute_b ?= call
+										if attribute_b /= Void then
+												-- An attribute access is safe
+											tmp := False
 										else
 												-- If it is not an instruction result := call but the
 												-- source is a predefined item (local, current, result
 												-- or argument), we can still optimize. Xavier
-											Result := not call.is_predefined
+											tmp := not call.is_predefined
 										end
 									end
 								end
 							end
-						else
-							call ?= byte_node
-							if call /= Void and then call.is_single then
-								-- A single call
-								Result := has_invariant
-							end
+						end
+					else
+						call ?= byte_node
+						if call /= Void and then call.is_single then
+							-- A single call
+							tmp := has_invariant
 						end
 					end
-						-- If there is a rescue clause, then we'll
-						-- need an execution vector, hence GC hooks
-						-- are really needed.
-					Result := Result or has_rescue
-
-						-- If some calls are inlined, we need to save Current, Result,
-						-- the arguments and locals in registers
-					Result := Result or byte_code.has_inlined_code
 				end
-				need_gc_hook_saved := Result
 			end
+			need_gc_hook := tmp
 		end
 
 	clear_old_expressions is
@@ -680,19 +766,23 @@ feature
 			exp_args := 0
 			dt_current := 0
 			inlined_dt_current := 0
-			result_used := false
-			current_used := false
-			need_gc_hook_computed := false
+			is_first_precondition_block_generated := False
+			is_new_precondition_block := False
+			has_separate_call_in_precondition := False
+			result_used := False
+			il_external_creation := False
+			current_feature := Void
+			current_used := False
+			current_used_count := 0
+			need_gc_hook := False
 			label := 0
 			if System.has_separate then
 				reservation_label :=0
 			end
-			is_prec_first_block := False
 			non_gc_reg_vars := 0
 			non_gc_tmp_vars := 0
 			local_list.wipe_out
-			breakable_points := Void
-			debug_mode := false
+			breakpoint_slots_number := 0;
 				-- This should not be necessary but may limit the
 				-- effect of bugs in register allocation (if any).
 			register_server.clear_all
@@ -734,6 +824,9 @@ feature
 		do
 			register_server := saved_context.register_server
 			current_used := saved_context.current_used
+			current_used_count := saved_context.current_used_count
+			need_gc_hook := saved_context.need_gc_hook
+			current_feature := saved_context.current_feature
 			result_used := saved_context.result_used
 			dt_current := saved_context.dt_current
 			inlined_dt_current := saved_context.inlined_dt_current
@@ -742,8 +835,6 @@ feature
 			local_index_table := saved_context.local_index_table
 			local_index_counter := saved_context.local_index_counter
 			associated_register_table := saved_context.associated_register_table
-			need_gc_hook_computed := saved_context.need_gc_hook_computed
-			need_gc_hook_saved := saved_context.need_gc_hook_saved
 		end
 
 	Local_var: LOCAL_B is
@@ -772,7 +863,7 @@ feature
 				buffer.putstring (gc_dtype)
 			else
 				buffer.putstring (gc_upper_dtype_lparan)
-				Current_register.print_register_by_name
+				Current_register.print_register
 				buffer.putchar (')')
 			end
 		end
@@ -794,13 +885,7 @@ feature
 				until
 					j > nb_vars
 				loop
-					if i = C_ref then
-						if not need_gc_hooks then
-							generate_tmp_var (i, j)
-						end
-					else
-						generate_tmp_var (i, j)
-					end
+					generate_tmp_var (i, j)
 					j := j + 1
 				end
 				i := i + 1
@@ -812,18 +897,26 @@ feature
 			-- garbage collector.
 		local
 			i, j: INTEGER
+			buf: GENERATION_BUFFER
+			has_rescue_clause: BOOLEAN
 		do
 			j := non_gc_tmp_vars
 			if j >= 1 then
 				from
 					i := 1
+					buf := buffer
+					has_rescue_clause := has_rescue
 				until
 					i > j
 				loop
-					buffer.putstring ("char *xp")
-					buffer.putint (i)
-					buffer.putchar (';')
-					buffer.new_line
+					if has_rescue_clause then
+						buf.putstring ("EIF_OBJECT EIF_VOLATILE xp")
+					else
+						buf.putstring ("EIF_OBJECT xp")
+					end
+					buf.putint (i)
+					buf.putchar (';')
+					buf.new_line
 					i := i + 1
 				end
 			end
@@ -832,25 +925,59 @@ feature
 	generate_tmp_var (ctype, num: INTEGER) is
 			-- Generate declaration for temporary variable `num'
 			-- whose C type is `ctype'.
+		local
+			buf: GENERATION_BUFFER
 		do
+			buf := buffer
+			if
+				has_rescue and then 
+				(ctype /= C_ref and then ctype /= C_pointer)
+			then
+					-- Protect access to local variables due
+					-- to rescue clause.
+				buf.putstring ("EIF_VOLATILE ")
+			end
+
 			inspect
 				ctype
-			when C_long then
-				buffer.putstring ("EIF_INTEGER ti")
+			when C_int8 then
+				buf.putstring ("EIF_INTEGER_8 ti8_")
+				buf.putint (num)
+			when C_int16 then
+				buf.putstring ("EIF_INTEGER_16 ti16_")
+				buf.putint (num)
+			when C_int32 then
+				buf.putstring ("EIF_INTEGER_32 ti32_")
+				buf.putint (num)
+			when C_int64 then
+				buf.putstring ("EIF_INTEGER_64 ti64_")
+				buf.putint (num)
 			when C_ref then
-				buffer.putstring ("EIF_REFERENCE tp")
+				buf.putstring ("EIF_REFERENCE tp")
+				buf.putint (num)
+				buf.putstring (" = NULL")
 			when C_float then
-				buffer.putstring ("EIF_REAL tf")
+				buf.putstring ("EIF_REAL tf")
+				buf.putint (num)
 			when C_char then
-				buffer.putstring ("EIF_CHARACTER tc")
+				buf.putstring ("EIF_CHARACTER tc")
+				buf.putint (num)
+			when C_wide_char then
+				buf.putstring ("EIF_WIDE_CHAR twc")
+				buf.putint (num)
 			when C_double then
-				buffer.putstring ("EIF_DOUBLE td")
+				buf.putstring ("EIF_DOUBLE td")
+				buf.putint (num)
 			when C_pointer then
-				buffer.putstring ("EIF_POINTER ta")
+				if has_rescue then
+					buf.putstring ("EIF_POINTER EIF_VOLATILE ta")
+				else
+					buf.putstring ("EIF_POINTER ta")
+				end
+				buf.putint (num)
 			end
-			buffer.putint (num)
-			buffer.putchar (';')
-			buffer.new_line
+			buf.putchar (';')
+			buf.new_line
 		end
 
 	generate_gc_hooks (compound_or_post: BOOLEAN) is
@@ -861,16 +988,17 @@ feature
 			--| `compound_or_post' indicate the generation of hooks
 			--| for the compound or post- pre- or invariant routine. -- FREDD
 		local
-			nb_refs: INTEGER;	-- Total number of references to be pushed
-			nb_exp: INTEGER;	-- Expanded argument number for cloning
+			nb_refs: INTEGER	-- Total number of references to be pushed
+			nb_exp: INTEGER	-- Expanded argument number for cloning
 			hash_table: EXTEND_TABLE [INTEGER, STRING]
 			associated: HASH_TABLE [REGISTRABLE, STRING]
 			rname: STRING
 			position: INTEGER
 			reg: REGISTRABLE
 			argument_b: ARGUMENT_B
-			bit_i: BIT_I
+			buf: GENERATION_BUFFER
 		do
+			buf := buffer
 			-- if more than, say, 20 local variables are to be initialized,
 			-- then it might be worthy to call bzero() instead of manually
 			-- setting the entries (beneficial both in code size and execution
@@ -881,16 +1009,17 @@ feature
 			else
 				nb_refs := ref_var_used
 			end
+
 				-- The hooks are only needed if there is at least one reference
 			if nb_refs > 0 then
 				if compound_or_post or else byte_code.rescue_clause = Void then
-					buffer.putstring ("RTLI(")
+					buf.putstring ("RTLI(")
 				else
-					buffer.putstring ("RTXI(")
+					buf.putstring ("RTXI(")
 				end
-				buffer.putint (nb_refs)
-				buffer.putstring (gc_rparan_comma)
-				buffer.new_line
+				buf.putint (nb_refs)
+				buf.putstring (gc_rparan_comma)
+				buf.new_line
 				if system.has_separate then
 					reset_added_gc_hooks
 				end
@@ -904,67 +1033,75 @@ feature
 					rname := hash_table.key_for_iteration
 					position := hash_table.item_for_iteration
 					reg := associated.item (rname)
+
+					check
+						reference_type: reg.c_type.is_pointer
+					end
+
 					argument_b ?= reg
-					if argument_b /= Void and then
-						real_type (argument_b.type).is_expanded and exp_args > 1
+					if
+						argument_b /= Void and then
+						real_type (argument_b.type).is_true_expanded and exp_args > 1
 					then
 						-- Expanded cloning protocol
-						buffer.putstring ("if (RTIE(")
-						buffer.putstring (rname)
-						buffer.putstring (")) {")
-						buffer.new_line
-						buffer.indent
+						buf.putstring ("if (RTIE(")
+						buf.putstring (rname)
+						buf.putstring (")) {")
+						buf.new_line
+						buf.indent
 						nb_exp := expanded_number (argument_b.position) - 1
-						buffer.putstring ("idx[")
-						buffer.putint (nb_exp)
-						buffer.putstring ("] = RTOF(arg")
-						buffer.putint (argument_b.position)
-						buffer.putstring (gc_rparan_comma)
-						buffer.new_line
-						buffer.put_protected_local (position)
-						buffer.putstring (" = RTEO(arg")
-						buffer.putint (argument_b.position)
-						buffer.putstring (gc_rparan_comma)
-						buffer.new_line
-						buffer.exdent
-						buffer.putstring (gc_lacc_else_r_acc)
-						buffer.new_line
-						buffer.indent
-						buffer.put_protected_local (position)
-						buffer.putstring (" = ")
-						buffer.putstring (rname)
-						buffer.putchar (';')
-						buffer.new_line
-						buffer.putstring ("idx[")
-						buffer.putint (nb_exp)
-						buffer.putstring ("] = -1;")
-						buffer.new_line
-						buffer.exdent
-						buffer.putchar ('}')
+						buf.putstring ("idx[")
+						buf.putint (nb_exp)
+						buf.putstring ("] = RTOF(arg")
+						buf.putint (argument_b.position)
+						buf.putstring (gc_rparan_comma)
+						buf.new_line
+						buf.put_argument_registration (position, argument_b.position)
+						buf.new_line
+						buf.putstring ("arg")
+						buf.putint (argument_b.position)
+						buf.putstring (" = (EIF_REFERENCE) RTEO(arg")
+						buf.putint (argument_b.position)
+						buf.putstring (gc_rparan_comma)
+						buf.new_line
+						buf.exdent
+						buf.putstring (gc_lacc_else_r_acc)
+						buf.new_line
+						buf.indent
+						buf.put_local_registration (position, rname)
+						buf.new_line
+						buf.putstring ("idx[")
+						buf.putint (nb_exp)
+						buf.putstring ("] = -1;")
+						buf.new_line
+						buf.exdent
+						buf.putchar ('}')
 					else
-						buffer.put_protected_local (position)
-						buffer.putstring (" = ")
-						if 	((reg.is_predefined or reg.is_temporary)
+						if
+							((reg.is_predefined or reg.is_temporary)
 							and not (reg.is_current or reg.is_argument)
 							and not (reg.is_result and compound_or_post))
 						then
-							buffer.putstring ("(EIF_REFERENCE) 0")
+							buf.put_local_registration (position, rname)
 						else
 							if (reg.c_type.is_bit) and (reg.is_argument) then
-								-- Clone argument if it is bit
-								buffer.putstring ("RTCB(")
-								buffer.putstring (rname)
-								buffer.putchar (')')
+									-- Clone argument if it is bit
+								buf.put_local_registration (position, rname)
+								buf.new_line
+								buf.putstring (rname)
+								buf.putstring (" = RTCB(")
+								buf.putstring (rname)
+								buf.putchar (')')
+								buf.putchar (';')
 							else
-								buffer.putstring (rname)
+								buf.put_local_registration (position, rname)
 							end
 						end
-						buffer.putchar (';')
 					end
-					buffer.new_line
+					buf.new_line
 					hash_table.forth
 				end
-				buffer.new_line
+				buf.new_line
 			end
 		end
 
@@ -983,7 +1120,7 @@ feature
 			until
 				Result /= 0 or i > count or i > arg_pos
 			loop
-				if real_type (arg_array.item (i)).is_expanded then
+				if real_type (arg_array.item (i)).is_true_expanded then
 					nb_exp := nb_exp + 1
 				end
 				if i = arg_pos then
@@ -997,15 +1134,17 @@ feature
 			-- Pop off pushed addresses on local stack
 		local
 			vars: INTEGER
+			buf: GENERATION_BUFFER
 		do
 			vars := ref_var_used
 			if vars > 0 then
+				buf := buffer
 				if byte_code.rescue_clause /= Void then
-					buffer.putstring ("RTXE;")
-					buffer.new_line
+					buf.putstring ("RTXE;")
+					buf.new_line
 				else
-					buffer.putstring ("RTLE;")
-					buffer.new_line
+					buf.putstring ("RTLE;")
+					buf.new_line
 				end
 			end
 		end
@@ -1013,7 +1152,7 @@ feature
 	ref_var_used: INTEGER is
 			-- Number of reference variable needed for GC hooks
 		do
-			if not need_gc_hooks then
+			if not need_gc_hook then
 				Result := 0
 			else
 				Result := local_index_table.count
@@ -1036,20 +1175,11 @@ feature
 
 feature -- Debugger
 
-	debug_mode: BOOLEAN
-			-- True when generating byte code with debugging hooks.
-
 	instruction_line: LINE [AST_EIFFEL]
 			-- List of breakable instructions on which a breakpoint may be set.
 
-	breakable_points: SORTED_TWO_WAY_LIST [AST_POSITION]
-			-- Mapping of AST nodes with breakable position in byte array
-
-	set_debug_mode (d: like debug_mode) is
-			-- Assign `d' to `debug_mode'.
-		do
-			debug_mode := d
-		end
+	breakpoint_slots_number: INTEGER
+			-- current number of breakpoint slots known
 
 	set_instruction_line (l: like instruction_line) is
 			-- Assign `l' to `instruction_line' and position FIFO stack at the
@@ -1057,54 +1187,53 @@ feature -- Debugger
 		do
 			instruction_line := l
 			l.start
-			!!breakable_points.make
 		end
 
-	record_breakable (ba: BYTE_ARRAY) is
-			-- Record breakable point (in debug mode only)
-		local
-			ast_node: AST_EIFFEL
-			ast_pos: AST_POSITION
+	get_next_breakpoint_slot: INTEGER is
+			-- increase the current number of breakpoint slots and then
+			-- return the current number of breakpoint slots. It is used
+			-- to get a "line number" when recording a breakable point
 		do
-			if debug_mode then
-				ba.mark_breakable
-					-- NB. The way lines are implemented
-					-- the ast_nodes are stored starting from
-					-- the second position of the line, hence
-					-- the `forth' instruction before `item'.
-				instruction_line.forth
-				ast_node := instruction_line.item
-					-- N.B. The way byte array is implemented
-					-- the position in the byte array is incremented after
-					-- insertion of a new byte code.
-					-- Therefore the offset of the breakable byte code
-					-- is equal to the position in the byte array
-					-- minus 1.
-				!! ast_pos.make (ba.position - 1, ast_node)
-				breakable_points.extend (ast_pos)
-			end
+			breakpoint_slots_number := breakpoint_slots_number + 1
+			Result := breakpoint_slots_number
+		end
+	
+	get_breakpoint_slot: INTEGER is
+			-- Return the current number of breakpoint slots. It is used
+			-- to get a "line number" when recording a breakable point
+		do
+			Result := breakpoint_slots_number
+		end
+
+	set_breakpoint_slot (a_number: INTEGER) is
+			-- Set the current number of breakpoint slots to `a_number'
+		do
+			breakpoint_slots_number := a_number
+		end
+
+	generate_melted_debugger_hook (ba: BYTE_ARRAY) is
+			-- Record breakable point (standard)
+		do
+			ba.generate_melted_debugger_hook(get_next_breakpoint_slot)
+		end
+
+	generate_melted_debugger_hook_nested (ba: BYTE_ARRAY) is
+			-- Record breakable point for nested call
+		do
+			ba.generate_melted_debugger_hook_nested(get_breakpoint_slot)
+		end
+
+	generate_melted_end_debugger_hook (ba: BYTE_ARRAY) is
+			-- Record the breakable point corresponding to the end of the feature.
+		do
+			ba.generate_melted_debugger_hook (current_feature.number_of_breakpoint_slots)
 		end
 
 	byte_prepend (ba, array: BYTE_ARRAY) is
 			-- Prepend `array' to byte array `ba' and update positions in the
 			-- breakable point list (provided we are in debug mode).
-		local
-			amount: INTEGER
 		do
 			ba.prepend (array)
-			if debug_mode then
-					-- N.B. The number of elements in
-					-- `array' is `array.position - 1'.
-				amount := array.position - 1
-				from
-					breakable_points.start
-				until
-					breakable_points.after
-				loop
-					breakable_points.item.shift (amount)
-					breakable_points.forth
-				end
-			end
 		end
 
 feature -- Inlining
@@ -1127,23 +1256,27 @@ feature -- Concurrent Eiffel
 	
 	print_concurrent_label is
 			-- Print label number `cur_label'.
+		local
+			buf: GENERATION_BUFFER
 		do
-			buffer.putstring ("cur_label_")
-			buffer.putint (label)
+			buf := buffer
+			buf.putstring ("cur_label_")
+			buf.putint (label)
 		end
 
 	reset_added_gc_hooks is 
 		local
 			i: INTEGER
+			buf: GENERATION_BUFFER
 		do
 			from 
 				i := ref_var_used - 1
+				buf := buffer
 			until
 				i < 0
 			loop
-				buffer.put_protected_local (ref_var_used + i)
-				buffer.putstring (" = (EIF_REFERENCE) 0;")
-				buffer.new_line
+				buf.reset_local_registration (ref_var_used + i)
+				buf.new_line
 				i := i - 1
 			end
 		end
@@ -1156,9 +1289,12 @@ feature -- Concurrent Eiffel
 		end
 
 	print_reservation_label is
+		local
+			buf: GENERATION_BUFFER
 		do
-			buffer.putstring ("res_label_")
-			buffer.putint (reservation_label)
+			buf := buffer
+			buf.putstring ("res_label_")
+			buf.putint (reservation_label)
 		end
 
 end

@@ -31,14 +31,14 @@ feature {AST_FACTORY} -- Initialization
 			expression_set: expression = e
 		end
 
-feature {NONE} -- Initialization
-
-	set is
-			-- Yacc initialization
+	initialize_result is
+			-- Create a new OPERAND_AST node on `Result'
+		require
+			not_is_result: not is_result
 		do
-			class_type ?= yacc_arg (0)
-			target ?= yacc_arg (0)
-			expression ?= yacc_arg (0)
+			is_result := True
+		ensure
+			is_resul_set: is_result
 		end
 
 feature -- Attributes
@@ -48,6 +48,9 @@ feature -- Attributes
 
 	target : ID_AS
 			-- Name of target of delayed call
+
+	is_result: BOOLEAN
+			-- Is operand `Result'
 
 	expression: EXPR_AS
 			-- Object expression given at routine object evaluation
@@ -67,6 +70,7 @@ feature
 	is_open : BOOLEAN is
 			-- Is it an open operand?
 		do
+			--| FIXME ... and "not Result" ?
 			Result := (expression = Void) and then (target = Void)
 		ensure
 			Result = (expression = Void) and then (target = Void)
@@ -206,6 +210,7 @@ feature {NONE}  -- Type
 			formal_position: INTEGER
 			not_supported: NOT_SUPPORTED
 			vtug: VTUG
+			vtcg3: VTCG3
 		do
 			a_class := context.a_class
 			a_table := a_class.feature_table
@@ -272,6 +277,17 @@ feature {NONE}  -- Type
 			gen_type ?= ttype
 			if gen_type /= Void then
 				System.instantiator.dispatch (gen_type, context.a_class)
+			end
+
+			ttype.reset_constraint_error_list
+			ttype.check_constraints (context.a_class)
+			if not ttype.constraint_error_list.is_empty then
+				create vtcg3
+				vtcg3.set_class (context.a_class)
+				vtcg3.set_feature (context.a_feature)
+				vtcg3.set_entity_name (target)
+				vtcg3.set_error_list (ttype.constraint_error_list)
+				Error_handler.insert_error (vtcg3)
 			end
 
 			-- Assignment attempt cannot fail

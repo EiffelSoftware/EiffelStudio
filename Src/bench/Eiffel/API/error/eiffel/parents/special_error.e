@@ -31,7 +31,7 @@ feature {NONE} -- Initialization
 			valid_c: c /= Void
 		do
 			error_case := case;
-			e_class := c
+			class_c := c
 		end;
 
 feature -- Properties

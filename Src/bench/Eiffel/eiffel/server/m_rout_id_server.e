@@ -1,16 +1,19 @@
--- Server for melted routine table byte code associated to file ".MLT3"
+indexing
+	description: "Server for melted routine table byte code indexed by class id"
+	date: "$Date$"
+	revision: "$Revision$"
 
 class M_ROUT_ID_SERVER
 
 inherit
-	COMPILER_SERVER [MELTED_ROUTID_ARRAY, CLASS_ID]
+	COMPILER_SERVER [MELTED_ROUTID_ARRAY]
 
 creation
 	make
 
 feature -- Access
 
-	id (t: MELTED_ROUTID_ARRAY): CLASS_ID is
+	id (t: MELTED_ROUTID_ARRAY): INTEGER is
 			-- Id associated with `t'
 		do
 			Result := t.class_id

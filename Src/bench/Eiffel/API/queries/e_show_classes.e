@@ -28,7 +28,7 @@ feature -- Execution
 			a_classe: CLASS_C;
 		do
 			clusters := Eiffel_universe.clusters;
-			if not clusters.empty then
+			if not clusters.is_empty then
 				!! sorted_classes.make;
 				from 
 					clusters.start 

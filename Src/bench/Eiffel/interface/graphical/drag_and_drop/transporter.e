@@ -136,7 +136,6 @@ feature -- Update
 		require
 			valid_s: s /= Void
 		local
-			scr: SCREEN;
 			target: HOLE
 		do
 			drag_source := s;
@@ -183,7 +182,6 @@ feature -- Execution
 			--	  Erase segment.
 		local
 			target: HOLE;
-			pointed_widget: WIDGET;
 			button_data: BUTTON_DATA;
 			scr: SCREEN
 		do

@@ -20,11 +20,12 @@ inherit
 			put_start_dead_code_removal_message,
 			put_end_dead_code_removal_message,
 			put_dead_code_removal_message,
-			put_start_reverse_engineering, put_case_cluster_message,
-			put_case_class_message, put_case_message, put_string,
+			put_case_cluster_message,
+			put_case_class_message, put_string,
 			put_resynchronizing_breakpoints_message,
 			put_class_document_message,
 			put_start_documentation,
+			put_initializing_documentation,
 			display_degree_output
 		end
 
@@ -108,6 +109,16 @@ feature -- Start output
 			tmp.append (current_degree.out)
 			set_project_icon_name (tmp)
 
+			if current_degree = 2 then
+					-- Cannot cancel a compilation after end of degree 3
+					-- because we do not save a compilation context after.
+				cancel_b.disable
+			elseif current_degree = -2 then
+					-- A finalization can be stopped at any time since it implies
+					-- to always recompile everything all the time.
+				cancel_b.enable
+			end
+
 			process_messages
 		end
 
@@ -144,42 +155,10 @@ feature -- Start output
 			process_messages
 		end
 
-	put_start_reverse_engineering (total_num: INTEGER) is
-			-- Initialize the reverse engineering part.
+	put_initializing_documentation is
+			-- Start documentation generation.
 		do
-			set_text (Interface_names.d_Reverse_engineering)
-			icon_name := Project_tool.icon_name
-			total_number := total_num
-			processed := 0
-
-			degree_text.set_text (Interface_names.d_Compilation_cluster)
-			entity_text.set_text (Interface_names.d_Compilation_class)
-			nbr_to_go_text.set_text (Interface_names.d_Classes_to_go)
-			current_nbr_to_go_text.set_text (total_num.out)
-			current_entity_text.set_text (Empty_string)
-
-			progress_bar.set_position (0)
-
-			process_messages
-		end
-
-	put_case_message (a_message: STRING) is
-			-- Put `a_message' in the output window.
-		do
-			if not exists then
-				create_window
-				degree_text.set_text (Empty_string)
-				entity_text.set_text (Empty_string)
-				nbr_to_go_text.set_text (Empty_string)
-				current_degree_text.set_text (Empty_string)
-				current_entity_text.set_text (Empty_string)
-				current_nbr_to_go_text.set_text (Empty_string)
-				percentage_text.set_text (Zero_percent)
-			end
-
-			put_non_degree_message (a_message)
-
-			process_messages
+			put_string ("Initializing")
 		end
 
 	put_start_documentation (total_num: INTEGER type: STRING) is
@@ -188,7 +167,6 @@ feature -- Start output
 			if not exists then
 				create_window
 			end
-			cancel_b.disable
 			set_text (Interface_names.d_Documentation)
 			icon_name := Project_tool.icon_name
 			total_number := total_num
@@ -230,9 +208,6 @@ feature -- End output
 	put_end_degree is
 			-- Put message indeicating the end of `current_degree'.
 		do
-			if current_degree = 3 then
-				cancel_b.disable
-			end
 			current_degree := 0
 			update_interface (Empty_string, 0, 100)
 			progress_bar.set_position (100)
@@ -266,17 +241,15 @@ feature -- End output
 
 feature -- Per entity output
 
-	put_degree_6 (a_cluster: CLUSTER_I) is
+	put_degree_6 (a_cluster: CLUSTER_SD; nbr_to_go: INTEGER) is
 			-- Put message to indicate that a_cluster' is being
 			-- compiled during degree six.
 		local
 			a_per: INTEGER
-			nbr_of_clusters: INTEGER
 		do
-			nbr_of_clusters := total_number - processed
-			a_per := percentage_calculation (nbr_of_clusters)
-
-			update_interface (a_cluster.cluster_name, nbr_of_clusters, a_per)
+			total_number := nbr_to_go + processed
+			a_per := percentage_calculation (nbr_to_go)
+			update_interface (a_cluster.cluster_name, nbr_to_go, a_per)
 			progress_bar.set_position (a_per)
 			processed := processed + 1
 
@@ -570,13 +543,8 @@ feature {NONE} -- Windows Message Handlers
 			-- Button Cancel has been pressed between degree 6 and degree 3.
 			-- We generate an exception that will be catch later by the rescue clause
 			-- in the compiler.
-		require else
-			is_compiling: current_degree <= 6;
-			is_before_degree_3_or_0: current_degree >= 3 or else current_degree = 0
 		do
-			cancel_b.disable
 			Error_handler.insert_interrupt_error (True)
-			process_messages
 		end
 
 feature {NONE} -- User Interface Objects

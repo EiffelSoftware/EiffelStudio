@@ -12,7 +12,7 @@ creation
 
 feature 
 
-	id: CLASS_ID;
+	class_id: INTEGER;
 			-- Class id of where feature was "conceptually"
 			-- replicated
 
@@ -22,14 +22,14 @@ feature
 	rout_id_set: ROUT_ID_SET;
 			-- Feature name
 
-	make (i: CLASS_ID; s: STRING; r: ROUT_ID_SET) is
+	make (i: INTEGER; s: STRING; r: ROUT_ID_SET) is
 			-- Initialization
 		require
-			valid_i: i /= Void;
+			valid_i: i /= 0;
 			valid_s: s /= Void;
 			valid_r: r /= Void
 		do
-			id := i;
+			class_id := i;
 			feature_name := s;
 			rout_id_set := r
 		end;
@@ -39,7 +39,7 @@ feature -- Debug
 	trace is
 		do
 			io.error.putstring ("Class id: ");
-			id.trace;
+			io.error.putint (class_id);
 			io.error.putstring (" feature name: ");
 			io.error.putstring (feature_name);
 			io.error.new_line;

@@ -35,7 +35,7 @@ feature -- Command Execution
 			string_arg: STRING
 		do
 			txt := tool.subquery
-			if txt /= Void and then not txt.empty then 
+			if txt /= Void and then not txt.is_empty then 
 				clear_values;
 				!! parser;
 				if parser.parse (txt, Current) then

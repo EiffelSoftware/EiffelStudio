@@ -38,6 +38,8 @@ feature
 			Result := value;
 		end;
 
+feature -- Byte code generation
+
 	make_byte_code (ba: BYTE_ARRAY) is
 			-- Generate byte code for an integer constant in an
 			-- interval

@@ -12,40 +12,33 @@ inherit
 
 feature -- Access
 
-	project_tool_x: INTEGER is
-		do
-			Result := resources.get_integer("project_tool_x", 0)
-		end
-
-	project_tool_y: INTEGER is
-		do
-			Result := resources.get_integer("project_tool_y", 0)
-		end
-
-	project_tool_width: INTEGER is
-		do
-			Result := resources.get_integer("project_tool_width", 481)
-		end
-
-	project_tool_height: INTEGER is
-		do
-			Result := resources.get_integer("project_tool_height", 340)
-		end
-
-	project_toolbar_visible: BOOLEAN is
-		do
-			Result := resources.get_boolean("project_tool_bar", True)
-		end
-
 	raise_on_error: BOOLEAN is
 		do
-			Result := resources.get_boolean("raise_on_error", True)
+			Result := boolean_resource_value ("raise_on_error", True)
+		end
+
+	context_unified_stone: BOOLEAN is
+		do
+			Result := boolean_resource_value ("unified_stone", False)
 		end
 
 	graphical_output_disabled: BOOLEAN is
 		do
-			Result := resources.get_boolean("graphical_output_disabled", False)
+			Result := boolean_resource_value ("graphical_output_disabled", False)
+		end
+		
+	confirm_freeze: BOOLEAN is
+			-- About the freezing dialog (Freezing implies some C compilation.
+			-- ..do you want to proceed? Yes/No): should we display it or
+			-- assume that the user has choosen "Yes"
+		do
+			Result := boolean_resource_value ("confirm_freeze", True)
 		end
 
+	set_confirm_freeze (new_value: BOOLEAN) is
+			-- Set `confirm_freeze' to `new_value'
+		do
+			set_boolean ("confirm_freeze", new_value)
+		end
 
 end -- class EB_PROJECT_TOOL_DATA

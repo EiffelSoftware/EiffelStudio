@@ -1,9 +1,12 @@
--- Server of class dependances for incremental type check
-
+indexing
+	description: "Server of class dependances for incremental type check indexed by class id."
+	date: "$Date$"
+	revision: "$Revision$"
+ 
 class DEPEND_SERVER 
 
 inherit
-	COMPILER_SERVER [CLASS_DEPENDANCE, CLASS_ID]
+	COMPILER_SERVER [CLASS_DEPENDANCE]
 		redefine
 			make, item, has
 		end
@@ -17,16 +20,16 @@ feature -- Initialisation
 		-- Creation
 		do
 			{COMPILER_SERVER}Precursor
-			!! bid_cid_table.make (200)
+			!! bindex_cid_table.make (200)
 		end
 
 	
 feature -- Access
 
-	id (t: CLASS_DEPENDANCE): CLASS_ID is
+	id (t: CLASS_DEPENDANCE): INTEGER is
 			-- Id associated with `t'
 		do
-			Result := t.id
+			Result := t.class_id
 		end
 
 	cache: DEPEND_CACHE is
@@ -35,36 +38,21 @@ feature -- Access
 			!! Result.make
 		end
 
-	bid_cid_table: EXTEND_TABLE [CLASS_ID, BODY_ID]
-			-- you give it a body_id and it tells you in which 
+	bindex_cid_table: EXTEND_TABLE [INTEGER, INTEGER]
+			-- you give it a body_index and it tells you in which 
 			-- class the corresponding feature is written
 
-	remove_correspondance (bid: BODY_ID) is
+	remove_correspondance (bindex: INTEGER) is
 		do
-			bid_cid_table.remove (bid)
+			bindex_cid_table.remove (bindex)
 		end
 
-	add_correspondance (bid: BODY_ID; cid: CLASS_ID) is
+	add_correspondance (bindex: INTEGER; cid: INTEGER) is
 		do
-		
-			bid_cid_table.put (cid, bid)
+			bindex_cid_table.put (cid, bindex)
 		end
 
-	change_ids (new_id, old_id: BODY_ID) is
-			-- update the keys in the class dependance of class_id
-			-- when a body id is changed
-		local
-			class_concerned: CLASS_ID
-		do
-			class_concerned := bid_cid_table.item (old_id)
-			if class_concerned /= Void then
-				item (class_concerned).change_ids (new_id, old_id)
-				bid_cid_table.remove (old_id)
-				bid_cid_table.put (class_concerned, new_id)		
-			end
-		end
-	
-	item (an_id: CLASS_ID): CLASS_DEPENDANCE is
+	item (an_id: INTEGER): CLASS_DEPENDANCE is
 			-- Class dependance of id 'an_id' . Look first in the temporary
 			-- depend server. It not present, look in itself.
 		do
@@ -75,7 +63,7 @@ feature -- Access
 			end; 
 		end;		
 		
-	has (an_id: CLASS_ID): BOOLEAN is
+	has (an_id: INTEGER): BOOLEAN is
 			-- Is an item of id `an_id' present in the current server?
 		do
 			Result := server_has (an_id) or else Tmp_depend_server.has (an_id);

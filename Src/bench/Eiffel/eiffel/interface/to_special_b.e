@@ -35,7 +35,7 @@ feature
 				-- Check if class has an attribute `area' of type SPECIAL [T].
 			area_feature ?= feature_table.item ("area");
 			if 	(area_feature = Void)
-				or else not equal (area_feature.written_in, id)
+				or else not (area_feature.written_in = class_id)
 				or else not Area_type.is_deep_equal (area_feature.type.actual_type)
 			then
 				!!special_error.make (Case_2, Current);
@@ -45,7 +45,7 @@ feature
 				-- Check if class has a procedure `make_area'.
 			make_area_feature ?= feature_table.item ("make_area");
 			if 	make_area_feature = Void
-				or else not equal (make_area_feature.written_in, id)
+				or else not (make_area_feature.written_in = class_id)
 			then
 				!!special_error.make (Case_3, Current);
 				Error_handler.insert_error (special_error);
@@ -58,13 +58,12 @@ feature
 			f: FORMAL_A;
 			gen: ARRAY [TYPE_A];
 		once
-			!!f;
-			f.set_position (1);
-			!!gen.make (1, 1);
-			gen.put (f, 1);
-			!!Result;
-			Result.set_generics (gen);
-			Result.set_base_class_id (System.special_id);
+			create f
+			f.set_position (1)
+			create gen.make (1, 1)
+			gen.put (f, 1)
+			create Result.make (gen)
+			Result.set_base_class_id (System.special_id)
 		end;
 
 	new_type (data: CL_TYPE_I): TO_SPECIAL_CLASS_TYPE is

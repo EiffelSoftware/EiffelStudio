@@ -29,14 +29,12 @@ feature -- Filtering Implementation
 				new_text := filtered_text (root_stone, filtername)
 				if new_text /= Void then
 					tool.text_area.clear_text
---					tool.set_editable (True)
 					tool.text_area.set_text (new_text)
 					display_filter_header (root_stone, filtername)
---					tool.set_file_name (filtered_file_name 
---							(root_stone, filtername))
+--					tool.set_file_name (filtered_file_name (root_stone, filtername))
 --|FIXME
 --| Christophe, 18 oct 1999
-					tool.text_area.set_editable (False)
+					tool.text_area.disable_editable
 					filter_name := clone (filtername)
 					filtered := true
 				end
@@ -60,8 +58,8 @@ feature -- Filtering Properties
 			wd: EV_WARNING_DIALOG
 		do
 			if filtername.empty then
-				create wd.make_default (tool.parent, Interface_names.t_Warning,
-					Warning_messages.w_No_filter_selected)
+				create wd.make_with_text (Warning_messages.w_No_filter_selected)
+				wd.show_modal
 			else
 				create full_pathname.make_from_string (filter_path)
 				full_pathname.set_file_name (filtername)
@@ -74,8 +72,8 @@ feature -- Filtering Properties
 					text_filter.process_text (tmp_text)
 					Result := text_filter.image
 				else
-					create wd.make_default (tool.parent, Interface_names.t_Warning,
-						Warning_messages.w_Cannot_read_filter (full_pathname))
+					create wd.make_with_text (Warning_messages.w_Cannot_read_filter (full_pathname))
+					wd.show_modal
 				end
 			end
 		end

@@ -34,7 +34,7 @@ feature
 		deferred
 		end;
 
-	generate (buffer: GENERATION_BUFFER; id: CLASS_ID) is
+	generate (buffer: GENERATION_BUFFER; id: INTEGER) is
 			-- Generate assertion value in `buffer'.
 		require
 			good_argument: buffer /= Void;

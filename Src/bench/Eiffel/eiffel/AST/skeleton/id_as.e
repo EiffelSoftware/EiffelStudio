@@ -10,11 +10,10 @@ inherit
 		undefine
 			copy, out, is_equal
 		redefine
-			pass_address, is_id,
+			is_id, is_equivalent,
 			good_integer, good_character,
 			make_integer, make_character,
-			record_dependances,
-			is_equivalent
+			record_dependances
 		end
 
 	STRING
@@ -33,23 +32,10 @@ feature {AST_FACTORY} -- Initialization
 			-- of characters contained in `s'.
 		require
 			s_not_void: s /= Void
-			s_not_empty: not s.empty
+			s_not_empty: not s.is_empty
 		do
 			make (s.count)
 			append_string (s)
-		end
-
-feature {NONE} -- Initialization
-
-	set is
-			-- Yacc initialization
-		local
-			s: STRING
-		do
-			s ?= yacc_arg (0)
-			append (s)
-		ensure then
-			not_empty: not empty
 		end
 
 feature -- Properties
@@ -72,7 +58,7 @@ feature -- Conveniences
 			depend_unit: DEPEND_UNIT 
 		do
 			constant_i ?= context.a_class.feature_table.item (Current)
-			!!depend_unit.make (context.a_class.id, constant_i)
+			!!depend_unit.make (context.a_class.class_id, constant_i)
 			context.supplier_ids.extend (depend_unit)
 		end
 
@@ -137,28 +123,6 @@ feature {AST_EIFFEL} -- Output
 	string_value: STRING is
 		do
 			Result := clone (Current)
-		end
-
-feature -- C interactions
-
-	pass_address (n: INTEGER) is
-			-- Eiffel-Yacc interface
-		do
-			c_get_address (n, $Current, $set)
-			getid_create ($make)
-			getid_area ($to_c)
-		end
-
-feature {NONE}
-
-	getid_create (ptr: POINTER) is
-		external
-			"C"
-		end
-
-	getid_area (ptr: POINTER) is
-		external
-			"C"
 		end
 
 end -- class ID_AS

@@ -1,9 +1,12 @@
--- Cache for polymorphic unit tables
+indexing
+	description: "Cache for polymorphic unit tables indexed by routine id."
+	date: "$Date$"
+	revision: "$Revision$"
 
 class POLY_CACHE
 
 inherit
-	CACHE [POLY_TABLE [ENTRY], ROUTINE_ID]
+	CACHE [POLY_TABLE [ENTRY]]
 
 creation
 	make

@@ -28,20 +28,10 @@ feature {AST_FACTORY} -- Initialization
 			value_set: value = s
 		end
 
-feature {NONE} -- Initilization
-
-	set is
-			-- Yacc initialization
-		do
-			value ?= yacc_arg (0)
-		ensure then
-			value_exists: value /= Void
-		end
-
 feature -- Properties
 
 	value: STRING
-			-- Integer value
+			-- Real string value.
 
 feature -- Comparison
 
@@ -89,8 +79,11 @@ feature -- Type check and byte code
 feature -- Output
 
 	string_value: STRING is
+			-- Formatted value.
 		do
 			Result := eiffel_string (value)
+			Result.precede ('"')
+			Result.extend ('"')
 		end
 
 feature {AST_EIFFEL} -- Output
@@ -98,16 +91,134 @@ feature {AST_EIFFEL} -- Output
 	simple_format (ctxt: FORMAT_CONTEXT) is
 			-- Reconstitute text.
 		do
-			ctxt.put_text_item (ti_Double_quote)
-			ctxt.put_string (eiffel_string (value))
-			ctxt.put_text_item_without_tabs (ti_Double_quote)
+			ctxt.put_string_item (string_value)
 		end
 
-feature {INFIX_AS} 
+feature {AST_EIFFEL, DOCUMENTATION_ROUTINES} -- Output
+
+	append_multilined (s: STRING; st: STRUCTURED_TEXT; ind: INTEGER) is
+			-- Format on a new line, breaking at every newline.
+			-- Indent `ind' times.
+		local
+			sb: STRING
+			n: INTEGER
+		do
+			st.add_new_line
+			st.add_indents (ind)
+			n := s.substring_index ("%%N", 1)
+			st.add_indexing_string (s.substring (1, n + 1) + "%%")
+			st.add_new_line
+			st.add_indents (ind)
+			s.tail (s.count - n - 1)
+			from
+				n := s.substring_index ("%%N", 1)
+			until
+				n = 0
+			loop
+				if n = 0 then
+					n := s.count
+				else
+					n := n + 1
+				end
+				sb := s.substring (1, n)
+				s.tail (s.count - n)
+				st.add_indexing_string ("%%" + sb + "%%")
+				st.add_new_line
+				st.add_indents (ind)
+				n := s.substring_index ("%%N", 1)
+			end
+			st.add_indexing_string ("%%" + s)
+		end
+
+feature {DOCUMENTATION_ROUTINES} -- Output
+
+	append_nice_multilined (s: STRING; st: STRUCTURED_TEXT; ind: INTEGER) is
+			-- Format on a new line, breaking at every newline.
+			-- Indent `ind' times.
+			-- Prune all '%' and special characters.
+		local
+			sb: STRING
+			n: INTEGER
+		do
+			st.add_new_line
+			st.add_indents (ind)
+			s.replace_substring_all ("%%T", "")
+			s.replace_substring_all ("%%R", "")
+			n := s.substring_index ("%%N", 1)
+			st.add_indexing_string (s.substring (1, n - 1))
+			st.add_new_line
+			st.add_indents (ind)
+			s.tail (s.count - n - 1)
+			from
+				n := s.substring_index ("%%N", 1)
+			until
+				n = 0
+			loop
+				if n = 0 then
+					n := s.count
+				else
+					n := n + 1
+				end
+				sb := s.substring (1, n - 2)
+				s.tail (s.count - n)
+				st.add_indexing_string (sb)
+				st.add_new_line
+				st.add_indents (ind)
+				n := s.substring_index ("%%N", 1)
+			end
+			st.add_indexing_string (s)
+		end
+
+	append_format_multilined (s: STRING; st: STRUCTURED_TEXT; in_index: BOOLEAN) is
+			-- Format on a new line, breaking at every newline.
+			-- Do not indent.
+			-- If `in_index', try to find meaningful substrings (URLs, ...).
+			-- Display %N... characters as they were typed.
+		require
+			valid_string: s /= Void
+			valid_text: st /= Void
+		local
+			sb: STRING
+			n: INTEGER
+		do
+				-- Forget differences between platforms.
+			s.prune_all ('%R')
+			from
+				n := s.index_of (carriage_return_char, 1)
+				if not s.is_empty then
+					st.add_new_line
+				end
+			until
+				n = 0
+			loop
+				sb := s.substring (1, n - 1)
+				s.tail (s.count - n)
+				if not sb.is_empty then
+					if in_index then
+						st.add_indexing_string (sb)
+					else
+						st.add_string (sb)
+					end
+				end
+				st.add_new_line
+				n := s.index_of (carriage_return_char, 1)
+			end
+			if not s.is_empty then
+				if in_index then
+					st.add_indexing_string (s)
+				else
+					st.add_string (s)
+				end
+			end
+		end
+
+feature {INFIX_AS, DOCUMENTATION_ROUTINES} -- Status setting
 
 	set_value (s: STRING) is
 		do
 			value := s
 		end
+
+	carriage_return_char: CHARACTER is '%N'
 
 end -- class STRING_AS

@@ -1,5 +1,5 @@
 indexing
-	description: "Encapsulation of a C extension."
+	description: "Encapsulation of a C extension and no generation has to be done."
 	date: "$Date$"
 	revision: "$Revision$"
 
@@ -19,19 +19,6 @@ feature -- Generation
 
 	generate_body is
 		do
-		end
-
-feature -- Properties
-
-	special_file_name: STRING
-			-- Special file name (dll or macro)
-
-feature -- Initialization
-
-	set_special_file_name (f: STRING) is
-			-- Assign `f' to `special_file_name'.
-		do
-			special_file_name := f
 		end
 
 end -- class C_EXT_BYTE_CODE

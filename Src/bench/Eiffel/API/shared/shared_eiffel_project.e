@@ -11,8 +11,8 @@ feature -- Access
 
 	Eiffel_project: E_PROJECT is
 		once
-			!! Result
-		end;	
+			create Result
+		end	
 
 	Eiffel_ace: E_ACE is
 			-- Eiffel system

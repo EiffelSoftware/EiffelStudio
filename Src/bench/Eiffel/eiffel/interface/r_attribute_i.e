@@ -6,23 +6,21 @@ inherit
 	ATTRIBUTE_I
 		redefine
 			replicated, code_id, unselected, transfer_to,
-			is_replicated, is_code_replicated,
-			set_is_code_replicated,
-			set_code_id
+			is_replicated, set_code_id
 		end
 
 feature
 
-	code_id: BODY_ID
+	code_id: INTEGER
 			-- Code id
 
-	set_code_id (i: BODY_ID) is
+	set_code_id (i: INTEGER) is
 			-- Assign `i' to `code_id'.
 		do
 			code_id := i
 		end
 
-	unselected (i: CLASS_ID): FEATURE_I is
+	unselected (i: INTEGER): FEATURE_I is
 			-- Unselected feature
 		local
 			unselect: RD2_ATTRIBUTE_I
@@ -50,15 +48,6 @@ feature
 			{ATTRIBUTE_I} precursor (f)
 			f.set_code_id (code_id)
 		end
-
-	set_is_code_replicated is
-			-- Set `is_code_replicated' to True.
-		do
-			is_code_replicated := True
-		end
-
-	is_code_replicated: BOOLEAN
-			-- Is Current feature code replicated
 
 	is_replicated: BOOLEAN is True
 			-- Is Current feature conceptually replicated (True)

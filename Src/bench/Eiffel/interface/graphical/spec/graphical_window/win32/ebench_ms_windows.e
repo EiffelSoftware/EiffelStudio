@@ -9,30 +9,13 @@ class
 inherit
 	TOOLKIT_IMP
 		redefine
-			message_loop, make, run
-		end
-
-creation
-	make
-
-feature -- Initialization
-
-	make (application_class: STRING) is
-			-- We create the toolkit and get the list of all the windows.
-		local
-			wel_window_manager: WEL_WINDOW_MANAGER
-		do
-			{TOOLKIT_IMP} Precursor (application_class)
-
-			!! wel_window_manager
-			windows := wel_window_manager.windows
-		end
-
-	run is
-			-- Create `main_window' and start the message loop.
-		do
 			message_loop
 		end
+
+	WEL_WINDOW_MANAGER
+		
+creation
+	make
 
 feature -- Process message event
 
@@ -90,7 +73,7 @@ feature {NONE} -- Implementation
 
 	find_current_window (hwnd: POINTER; main_w: WEL_WINDOW): WEL_WINDOW is
 		do
-			Result := windows.item (hwnd)
+			Result := window_of_item (hwnd)
 			if Result /= Void then
 				Result := find_top_parent (Result)
 			else
@@ -117,11 +100,6 @@ feature {NONE} -- Implementation
 				end
 			end
 		end
-
-feature {NONE} -- Access
-
-	windows: HASH_TABLE [WEL_WINDOW, POINTER]
-			-- List all the windows in your application.
 
 end -- class EBENCH_MS_WINDOWS
 

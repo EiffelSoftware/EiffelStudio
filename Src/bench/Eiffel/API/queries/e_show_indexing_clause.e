@@ -87,51 +87,88 @@ feature -- Execution
 	display_indexing (e_class: CLASS_C; st: STRUCTURED_TEXT) is
 			-- Display the indexing clause of `classc' if any.
 		local
-			indexes: EIFFEL_LIST [INDEX_AS];
-			index_list: EIFFEL_LIST [ATOMIC_AS];
-			index_tag: STRING;
-			index: INDEX_AS;
+			indexes: EIFFEL_LIST [INDEX_AS]
+			index_list: EIFFEL_LIST [ATOMIC_AS]
+			index_tag: STRING
+			index: INDEX_AS
 			ast: CLASS_AS
 		do
-			ast := e_class.ast;
+			ast := e_class.ast
 			if ast /= Void then
-				indexes := ast.indexes;
+				indexes := ast.top_indexes
 				if indexes /= Void then
 					from 
 						indexes.start 
 					until 
 						indexes.after 
 					loop
-						index := indexes.item;
-						index_tag := index.tag;
+						index := indexes.item
+						index_tag := index.tag
 						if 
 							index_tag /= Void and then
 							(not index_tag.is_equal ("status") and
 							not index_tag.is_equal ("date") and
 							not index_tag.is_equal ("revision"))
 						then
-							structured_text.add_new_line;
-							structured_text.add_indent;
-							structured_text.add_indent;
-							structured_text.add_string (index_tag);
+							structured_text.add_new_line
+							structured_text.add_indent
+							structured_text.add_indent
+							structured_text.add_string (index_tag)
 							structured_text.add_string (": ")
-							index_list := index.index_list;
+							index_list := index.index_list
 							from 
 								index_list.start 
 							until 
 								index_list.after 
 							loop
-								structured_text.add_string (index_list.item.string_value);
+								structured_text.add_string (index_list.item.string_value)
 								if not index_list.islast then
 									structured_text.add_string (", ")
-								end;
+								end
 								index_list.forth
 							end
-						end;
+						end
+						indexes.forth
+					end
+				end
+				indexes := ast.bottom_indexes
+				if indexes /= Void then
+					from 
+						indexes.start 
+					until 
+						indexes.after 
+					loop
+						index := indexes.item
+						index_tag := index.tag
+						if 
+							index_tag /= Void and then
+							(not index_tag.is_equal ("status") and
+							not index_tag.is_equal ("date") and
+							not index_tag.is_equal ("revision"))
+						then
+							structured_text.add_new_line
+							structured_text.add_indent
+							structured_text.add_indent
+							structured_text.add_string (index_tag)
+							structured_text.add_string (": ")
+							index_list := index.index_list
+							from 
+								index_list.start 
+							until 
+								index_list.after 
+							loop
+								structured_text.add_string (index_list.item.string_value)
+								if not index_list.islast then
+									structured_text.add_string (", ")
+								end
+								index_list.forth
+							end
+						end
 						indexes.forth
 					end
 				end
 			end
-		end;
+		end
 
 end -- class E_SHOW_INDEXING_CLAUSE
+

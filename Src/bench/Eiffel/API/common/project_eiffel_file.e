@@ -1,6 +1,6 @@
 indexing
 	description: 
-		"project.eif or precompile.eif file for an eiffelbench project.";
+		"project.eif or precompile.eif file for an eiffel project.";
 	date: "$Date$";
 	revision: "$Revision $"
 
@@ -47,9 +47,9 @@ feature -- Access
 	project_version_number: STRING;
 			-- Version number of project eiffel file
 
-	project_storable_version_number: STRING;
-			-- Version number of the storable version of the compiler used
-			-- to store the project file
+	ace_file_path: STRING
+			-- Path for the ace file corresponding to this project. Void
+			-- if none.
 
 	is_interrupted: BOOLEAN is
 			-- Was the retrieve of the project interrupted?
@@ -108,10 +108,6 @@ feature -- Update
 			-- Check the version number of the project.txt file.
 			-- If `precomp_id' is 0 then do not check precompilation_id.
 			-- If error ok set the error state.
-		local
-			f_parser: RESOURCE_PARSER;
-			project_txt_file: PLAIN_TEXT_FILE;
-			file_precomp_id: INTEGER
 		do
 			error_value := ok_value;
 
@@ -120,7 +116,7 @@ feature -- Update
 			parse_project_header
 
 			if error_value = ok_value then
-				if not project_storable_version_number.is_equal (storable_version_number) then
+				if not project_version_number.is_equal (version_number) then
 					error_value := incompatible_value;
 				elseif precomp_id /= 0 and then precomp_id /= precompilation_id then
 					error_value := invalid_precompilation_value;
@@ -158,7 +154,7 @@ feature {NONE} -- Implementation
 					full_collect
 					full_coalesce
 					collection_off
-					Result := retrieved;
+					Result := ise_compiler_retrieved (descriptor);
 					collection_on
 					full_collect
 					full_coalesce
@@ -188,13 +184,13 @@ feature {NONE} -- Implementation
 	parse_project_header is
 			-- Parse the project header file to get the following information:
 			-- version_number_tag
-			-- storable_version_number_tag
 			-- precompilation_id
+			-- ace file path (in version 5.0.18 and above)
 			--| The format is the followin:
 			--| -- system name is xxx
 			--| version_number_tag
-			--| storable_version_number_tag
 			--| precompilation_id
+			--| ace file path
 			--| -- end of info
 		require
 			is_open_read: is_readable
@@ -218,10 +214,10 @@ feature {NONE} -- Implementation
 
 					if version_number_tag.is_equal (string_tag) then
 						project_version_number := value
-					elseif storable_version_number_tag.is_equal (string_tag) then
-						project_storable_version_number := value
 					elseif precompilation_id_tag.is_equal (string_tag) then	
 						precompilation_id := value.to_integer
+					elseif ace_file_path_tag.is_equal (string_tag) then
+						ace_file_path := clone (value)
 					else
 						error_value := incompatible_value
 					end
@@ -236,6 +232,15 @@ feature {NONE} -- Implementation
 		rescue
 			retried := True
 			retry
+		end
+
+feature {NONE} -- External
+
+	ise_compiler_retrieved (f_desc: INTEGER) : ANY is
+		external
+			"C | %"pretrieve.h%""
+		alias
+			"parsing_retrieve"
 		end
 
 end -- class PROJECT_EIFFEL_FILE

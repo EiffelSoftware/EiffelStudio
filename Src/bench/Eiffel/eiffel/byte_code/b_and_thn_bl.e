@@ -20,10 +20,10 @@ feature
 			register := r;
 		end;
 
-	c_type: CHAR_I is
+	c_type: BOOLEAN_I is
 			-- Type is boolean
 		once
-			!!Result;
+			create Result;
 		end;
 
 	free_register is

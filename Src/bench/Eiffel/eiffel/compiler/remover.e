@@ -33,27 +33,25 @@ feature
 			-- static type `in_class'.
 		local
 			dep: DEPEND_UNIT
-			body_id: BODY_ID
 		do
 			from
-				!! dep.make (in_class.id, feat)
+				!! dep.make (in_class.class_id, feat)
 				control.extend (dep)
 			until
-				control.empty
+				control.is_empty
 			loop
 				dep := control.item
-				body_id := body_index_table.item (dep.body_index)
 				if
-					not dep.rout_id.is_attribute and then
-					not is_treated (body_id.id, dep.rout_id)
+					not System.routine_id_counter.is_attribute (dep.rout_id) and then
+					not is_treated (dep.body_index, dep.rout_id)
 				then
-					mark_treated (body_id.id, dep.rout_id)
-					mark (dep.feature_id, dep.body_index, body_id, dep.id, dep.written_in, dep.rout_id)
+					mark_treated (dep.body_index, dep.rout_id)
+					mark (dep.feature_id, dep.body_index, dep.class_id, dep.written_in, dep.rout_id)
 				end
 				control.remove
 			end
 		ensure
-			control_empty: control.empty
+			control_empty: control.is_empty
 		end
 
 feature -- Array optimization
@@ -76,11 +74,10 @@ feature -- Control
 
 feature {NONE}
 
-	propagate_feature (written_class_id: CLASS_ID; original_body_index: BODY_INDEX; original_body_id: BODY_ID; depend_list: FEATURE_DEPENDANCE) is
+	propagate_feature (written_class_id: INTEGER; original_body_index: INTEGER; depend_list: FEATURE_DEPENDANCE) is
 		local
 			depend_unit: DEPEND_UNIT
-			body_id: BODY_ID
-			rout_id: ROUTINE_ID
+			rout_id: INTEGER
 		do
 			from
 				depend_list.start
@@ -94,17 +91,16 @@ DEBUG ("DEAD_CODE")
 	end
 end
 				if not depend_unit.is_special then
-					body_id := body_index_table.item (depend_unit.body_index)
 DEBUG ("DEAD_CODE")
 	print_dep (depend_unit)
-	if is_treated (body_id.id, depend_unit.rout_id) then
+	if is_treated (depend_unit.body_index, depend_unit.rout_id) then
 		io.putstring ("previously treated%N")
 	end
 end
 					rout_id := depend_unit.rout_id
 					if
-						not rout_id.is_attribute and then
-						not is_treated (body_id.id, rout_id)
+						not System.Routine_id_counter.is_attribute (rout_id) and then
+						not is_treated (depend_unit.body_index, rout_id)
 					then
 						control.extend (depend_unit)
 					end
@@ -113,7 +109,7 @@ end
 				depend_list.forth
 			end
 				-- Array optimization
-			array_optimizer.process (written_class_id.associated_class, original_body_index, original_body_id, depend_list)
+			array_optimizer.process (System.class_of_id (written_class_id), original_body_index, depend_list)
 		end
 
 	features: INTEGER
@@ -121,10 +117,10 @@ end
 
 	features_per_message: INTEGER is 50
 	
-	mark_alive (body_id: INTEGER) is
+	mark_alive (body_index: INTEGER) is
 			-- Record feature `feat'
 		do
-			{FEAT_ITERATOR} Precursor (body_id)
+			{FEAT_ITERATOR} Precursor (body_index)
 
 			features := features + 1
 			if features = features_per_message then
@@ -142,27 +138,25 @@ feature -- for debug purpose
 
 	print_dep (dep: DEPEND_UNIT) is
 		local
-			body_id: BODY_ID
 			a_class: CLASS_C
 		do
-			body_id := body_index_table.item (dep.body_index)
-			a_class := dep.id.associated_class
-			io.putstring (a_class.feature_table.feature_of_body_id (body_id).feature_name)
+			a_class := System.class_of_id (dep.class_id)
+			io.putstring (a_class.feature_table.feature_of_body_index (dep.body_index).feature_name)
 			io.putstring (" (bid: ")
-			io.putint (body_id.id)
+			io.putint (dep.body_index)
 			io.putstring ("; fid: ")
 			io.putint (dep.feature_id)
 			io.putstring ("; rid: ")
-			io.putint (dep.rout_id.id)
+			io.putint (dep.rout_id)
 			io.putstring (") of ")
 			io.putstring (a_class.lace_class.name)
 			io.putstring (" (")
-			io.putint (a_class.id.id)
+			io.putint (a_class.class_id)
 			io.putstring (") originally in ")
-			a_class := dep.written_in.associated_class
+			a_class := System.class_of_id (dep.written_in)
 			io.putstring (a_class.lace_class.name)
 			io.putstring (" (")
-			io.putint (a_class.id.id)
+			io.putint (a_class.class_id)
 			io.putstring (")%N")
 		end
 			
@@ -186,7 +180,7 @@ feature -- for debug purpose
 				i := i + 1
 			end
 			io.putstring ("END OF USED TABLE%N")
-			io.putstring ("nb of body_id alive: ")
+			io.putstring ("nb of body_index alive: ")
 			io.putint (j)
 			io.putstring ("%N")
 		end
@@ -213,7 +207,7 @@ feature -- for debug purpose
 				i := i + 1
 			end
 			io.putstring ("END OF Marked TABLE%N")
-			io.putstring ("nb of body_id marked: ")
+			io.putstring ("nb of body_index marked: ")
 			io.putint (j)
 			io.putstring ("%N%N%N")
 		end		

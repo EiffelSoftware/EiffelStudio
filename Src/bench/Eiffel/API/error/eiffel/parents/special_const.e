@@ -19,7 +19,7 @@ feature -- Access
 
 	Case_5: STRING is "Class STRING must have exactly one attribute of reference type";
 
-	Case_6: STRING is "Class STRING must have only one creation procedure having an integer argument";
+	Case_6: STRING is "Class STRING must have at least one creation procedure having an integer argument";
 
 	Case_7: STRING is "Class ARRAY must have exactly one formal generic parameter";
 
@@ -27,7 +27,7 @@ feature -- Access
 
 	Case_9: STRING is "Class ARRAY must have exactly one attribute of reference type";
 
-	Case_10: STRING is "Class ARRAY must have only one creation procedure with two integer arguments";
+	Case_10: STRING is "Class ARRAY must have at least one creation procedure with two integer arguments";
 
 	Case_11: STRING is "Class SPECIAL must have exactly one formal generic parameter";
 

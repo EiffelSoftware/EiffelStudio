@@ -13,12 +13,12 @@ inherit
 		rename
 			initialize as d_initialize
 		redefine
-			set
+			duplicate, save, same_as
 		end;
 
 	EIFFEL_ENV
 
-feature {LACE_AST_FACTORY} -- Initialization
+feature {D_PRECOMPILED_SD, LACE_AST_FACTORY} -- Initialization
 
 	initialize (o: like option; v: like value; r: like renamings) is
 			-- Create a new D_PRECOMPILED AST node.
@@ -34,36 +34,47 @@ feature {LACE_AST_FACTORY} -- Initialization
 			renamings_set: renamings = r
 		end
 
-feature {NONE} -- Initialization
-
-	set is
-			-- Yacc initialization.
-		do
-			option ?= yacc_arg (0);
-			value ?= yacc_arg (1);
-			renamings ?= yacc_arg (2)
-		end
-
-feature {COMPILER_EXPORTER} -- Initialization
-
-	set_default_base_location is
-			-- For the melt_only version, if no precompiled project is
-			-- specified, set precomp to $EIFFEL4/precomp/spec/$PLATFORM/base.
-		local
-			id_sd: ID_SD
-		do
-			!PRECOMPILED_SD! option;
-			!NAME_SD! value;
-			!! id_sd.make (50);
-			id_sd.append (Default_precompiled_base_location);
-			value.set_value (id_sd);
-			renamings := Void
-		end
-
 feature -- Access
 
 	renamings: LACE_LIST [TWO_NAME_SD];
 			-- Cluster renaming list
+			-- Can be Void.
+
+feature -- Duplication
+
+	duplicate: like Current is
+			-- Duplicate current object
+		do
+			create Result
+			Result.initialize (option.duplicate, duplicate_ast (value), duplicate_ast (renamings))
+		end
+
+feature -- Comparison
+
+	same_as (other: like Current): BOOLEAN is
+			-- Is `other' same as Current?
+		do
+			Result := other /= Void and then option.same_as (other.option)
+			 		and then same_ast (value, other.value)
+					and then same_ast (renamings, other.renamings)
+		end
+
+
+feature -- Saving
+
+	save (st: GENERATION_BUFFER) is
+			-- Save current in `st'.
+		do
+			Precursor {D_OPTION_SD} (st)
+			if renamings /= Void then
+				st.new_line
+				st.putstring ("rename")
+				st.indent
+				renamings.save (st)
+				st.exdent
+				st.putstring ("end")
+			end
+		end
 
 feature {COMPILER_EXPORTER} -- Renaming
 
@@ -81,7 +92,7 @@ feature {COMPILER_EXPORTER} -- Renaming
 			vd49: VD49;
 			vd50: VD50
 		do
-			if renamings /= Void and then not renamings.empty then
+			if renamings /= Void and then not renamings.is_empty then
 				!! renamed_clusters.make (renamings.count);
 				from renamings.start until renamings.after loop
 					!! old_name.make (10);

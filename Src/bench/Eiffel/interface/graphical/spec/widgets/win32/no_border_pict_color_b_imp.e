@@ -67,7 +67,6 @@ feature
 			bitmap: WEL_BITMAP
 			pixmap_w: PIXMAP_IMP
 			dib: WEL_DIB
-			pixmap_x, pixmap_y : INTEGER
 		do
 			if pixmap /= Void then
 				pixmap_w ?= pixmap.implementation

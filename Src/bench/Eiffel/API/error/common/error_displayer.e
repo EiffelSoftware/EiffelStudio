@@ -14,7 +14,7 @@ feature -- Output
 			-- Display warnings messages from `handler'.
 		require
 			non_void_handler: handler /= Void;
-			not_empty_warnings: not handler.warning_list.empty
+			not_empty_warnings: not handler.warning_list.is_empty
 		deferred
 		end;
 
@@ -22,8 +22,13 @@ feature -- Output
 			-- Display error messages from `handler'.
 		require
 			non_void_handler: handler /= Void;
-			not_empty_errors: not handler.error_list.empty
+			not_empty_errors: not handler.error_list.is_empty
 		deferred
 		end;
+
+	force_display is
+			-- Make sure the user can see the messages we send.
+		deferred
+		end
 
 end -- class ERROR_DISPLAYER

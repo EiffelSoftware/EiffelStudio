@@ -206,15 +206,15 @@ feature -- Update
 		deferred
 		end
 
-	search_text (s: STRING is_case_sensitive: BOOLEAN) is
+	search_text (s: STRING; is_case_sensitive: BOOLEAN) is
 			-- Highlight and show next occurence of text `s'.
 		require
 			valid_s: s /= Void
-			s_not_empty: not s.empty
+			s_not_empty: not s.is_empty
 		deferred
 		end
 
-	replace_text (s, r: STRING replace_all, is_case_sensitive: BOOLEAN) is
+	replace_text (s, r: STRING; replace_all, is_case_sensitive: BOOLEAN) is
 			-- Replace next occurence of `s' with `r'.
 		require
 			valid_s: s /= Void
@@ -239,18 +239,18 @@ feature -- Cursor movement
 
 feature {TOOL_W} -- Updating
 
-	redisplay_breakable_mark (f: E_FEATURE index: INTEGER) is
+	redisplay_breakable_mark (body_index: INTEGER; index: INTEGER) is
 			-- Redisplay the sign of the `index'-th breakable point.
 		require
-			valid_f: f /= Void
+			valid_body_index: body_index >= 1
 			positive_index: index >= 1
 		deferred
 		end
 
-	highlight_breakable (f: E_FEATURE index: INTEGER) is
+	highlight_breakable (body_index: INTEGER; index: INTEGER) is
 			-- Highlight the line containing the `index'-th breakable point.
 		require
-			valid_f: f /= Void
+			valid_body_index: body_index >= 1
 			positive_index: index >= 1
 		deferred
 		end
@@ -300,12 +300,6 @@ feature {NONE} -- Command arguments
 			!! Result
 		end
 
-	super_melt_action: ANY is
-			-- Callback value to indicate that the feature will be super melted.
-		once
-			!! Result
-		end
-
 	insert_breakpoint_action: ANY is
 			-- Callback value to indicate that a breakpoint will be put at
 			-- the first call of the routine.
@@ -322,7 +316,6 @@ feature {NONE} -- Command arguments
 	process_action (arg: ANY) is
 			-- Process an action based on `arg'.
 		local
-			super_melt_cmd: SUPER_MELT
 			insert_breakpoint_cmd: BREAKPOINT_INSERTER
 			but_data: BUTTON_DATA
 			st: STONE
@@ -363,22 +356,12 @@ feature {NONE} -- Command arguments
 					end
 				end
 
-			elseif arg = super_melt_action then
-				but_data ?= context_data
-				update_before_transport (but_data)
-				st := focus
-				if st /= Void then
-					!! super_melt_cmd.do_nothing
-					super_melt_cmd.work (st)
-					deselect_all
-				end
-
 			elseif arg = insert_breakpoint_action then
 				but_data ?= context_data
 				update_before_transport (but_data)
 				st := focus
 				if st /= Void then
-					!! insert_breakpoint_cmd.do_nothing
+					create insert_breakpoint_cmd.do_nothing
 					insert_breakpoint_cmd.work (st)
 					deselect_all
 				end

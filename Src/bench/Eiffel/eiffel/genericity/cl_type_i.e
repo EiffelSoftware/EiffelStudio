@@ -1,4 +1,7 @@
--- Type class
+indexing
+	description: "Type class."
+	date: "$Date$"
+	revision: "$Revision$"
 
 class CL_TYPE_I
 
@@ -6,7 +9,7 @@ inherit
 	TYPE_I
 		redefine
 			is_reference,
-			is_expanded,
+			is_true_expanded,
 			is_separate,
 			is_valid,
 			is_explicit,
@@ -22,34 +25,10 @@ inherit
 			generate_cid_init
 		end
 
-feature
+feature -- Access
 
-	base_id: CLASS_ID
+	base_id: INTEGER
 			-- Base class id of the type class
-
-	is_expanded: BOOLEAN
-			-- Is the type expanded?
-
-	is_separate: BOOLEAN
-			-- Is the type separate?
-
-	set_base_id (c: CLASS_ID) is
-			-- Assign `c' to `base_id'.
-		do
-			base_id := c
-		end
-
-	set_is_expanded (b: BOOLEAN) is
-			-- Assign `b' to `is_expanded'.
-		do
-			is_expanded := b
-		end
-
-	set_is_separate (b: BOOLEAN) is
-			-- Assign `b' to `is_separate'.
-		do
-			is_separate := b
-		end
 
 	meta_generic: META_GENERIC is
 			-- Meta generic array describing the type class
@@ -60,14 +39,6 @@ feature
 	cr_info : CREATE_INFO
 			-- Additional information for the creation
 			-- of generic types with anchored parameters
-
-	set_cr_info (cinfo : CREATE_INFO) is
-			-- Set `cr_info' to `cinfo'.
-		do
-			cr_info := cinfo
-		ensure
-			cr_info_set : cr_info = cinfo
-		end
 
 	true_generics : ARRAY [TYPE_I] is
 			-- Array of generics: no mapping reference -> REFERENCE_I
@@ -81,36 +52,18 @@ feature
 			Result := System.class_of_id (base_id)
 		end
 
-	is_valid: BOOLEAN is
-			-- Is the base class still in the system ?
+	type_a: CL_TYPE_A is
 		do
-			Result := base_class /= Void
+			create Result
+			Result.set_is_true_expanded (is_true_expanded)
+			Result.set_is_separate (is_separate)
+			Result.set_base_class_id (base_id)
 		end
 
-	is_reference: BOOLEAN is
-			-- Is the type a reference type ?
+	il_type_name: STRING is
+			-- Class name of current type.
 		do
-			Result := not is_expanded
-		end; 
-
-	is_explicit: BOOLEAN is
-
-		do
-			Result := (cr_info = Void) or else (is_expanded or is_basic)
-		end
-
-	same_as (other: TYPE_I): BOOLEAN is
-			-- Is `other' equal to Current ?
-		local
-			other_cl_type: CL_TYPE_I
-		do
-			other_cl_type ?= other
-			Result := other_cl_type /= Void -- FIXME
-					and then equal (other_cl_type.base_id, base_id)
-					and then other_cl_type.is_expanded = is_expanded
-					and then other_cl_type.is_separate = is_separate
-					and then other_cl_type.meta_generic = Void
-					and then other_cl_type.true_generics = Void
+			Result := clone (base_class.external_class_name)
 		end
 
 	instantiation_in (other: GEN_TYPE_I): CL_TYPE_I is
@@ -135,11 +88,11 @@ feature
 			exp: EXPANDED_DESC
 			ref: REFERENCE_DESC
 		do
-			if is_expanded then
+			if is_true_expanded then
 				!! exp
-				is_expanded := False
+				is_true_expanded := False
 				exp.set_class_type (base_class.types.conservative_search_item (Current))
-				is_expanded := True
+				is_true_expanded := True
 				exp.set_type_i (Current)
 				Result := exp
 			elseif is_separate then
@@ -161,57 +114,15 @@ feature
 			Result := Reference_c_type
 		end
 
-	append_signature (st: STRUCTURED_TEXT) is
-		do
-			if is_expanded then
-				st.add_string ("expanded ")
-			elseif is_separate then
-				st.add_string ("separate ")
-			end
-			base_class.append_signature (st)
-		end
-
-	dump (buffer: GENERATION_BUFFER) is
-		local
-			s: STRING
-		do
-			if is_expanded then
-				buffer.putstring ("expanded ")
-			elseif is_separate then
-				buffer.putstring ("separate ")
-			end
-			s := clone (base_class.name)
-			s.to_upper
-			buffer.putstring (s)
-		end
-
-	has_associated_class_type: BOOLEAN is
-			-- Has `Current' an associated class type?
-		do
-			if is_expanded then
-				is_expanded := False
-				Result := base_class.types.has_type (Current)
-				is_expanded := True
-			elseif is_separate then
-				is_separate := False
-				Result := base_class.types.has_type (Current)
-				is_separate := True
-			else
-				Result := base_class.types.has_type (Current)
-			end
-		end
-
 	associated_class_type: CLASS_TYPE is
 			-- Associated class type
 		require
 		--	has: has_associated_class_type
-		local
-			types: TYPE_LIST
 		do
-			if is_expanded then
-				is_expanded := False
+			if is_true_expanded then
+				is_true_expanded := False
 				Result := base_class.types.conservative_search_item (Current)
-				is_expanded := True
+				is_true_expanded := True
 			elseif is_separate then
 				is_separate := False
 				Result := base_class.types.conservative_search_item (Current)
@@ -230,49 +141,171 @@ feature
 	expanded_type_id: INTEGER is
 			-- Type id of the corresponding expanded class type
 		do
-			is_expanded := False
+			is_true_expanded := False
 			Result := base_class.types.conservative_search_item (Current).type_id
-			is_expanded := True
-		end
-
-	generate_cecil_value (buffer: GENERATION_BUFFER) is
-			-- Generate cecil value
-		do
-				-- FIXME????: separate
-			if not is_expanded then
-				buffer.putstring ("SK_DTYPE")
-			else
-				buffer.putstring ("SK_EXP + (uint32) ")
-				buffer.putint (base_id.id)
-			end
-		end
-
-	hash_code: INTEGER is
-			-- Hash code for current type
-		do
-			Result := Other_code + base_id.hash_code
+			is_true_expanded := True
 		end
 
 	sk_value: INTEGER is
 			-- Generate SK value associated to the current type.
 		do
 				-- FIXME????: separate
-			if not is_expanded then
+			if not is_true_expanded then
 				Result := Sk_ref + (type_id - 1)
 			else
-				is_expanded := False
+				is_true_expanded := False
 				Result := Sk_exp + (type_id - 1)
-				is_expanded := True
+				is_true_expanded := True
 			end
 		end
 
 	cecil_value: INTEGER is
 		do
 				-- FIXME????: separate
-			if not is_expanded then
+			if not is_true_expanded then
 				Result := Sk_dtype
 			else
-				Result := Sk_exp + base_id.id
+				Result := Sk_exp + base_id
+			end
+		end
+
+	hash_code: INTEGER is
+			-- Hash code for current type
+		do
+			Result := Other_code + base_id
+		end
+
+feature -- Status
+
+	is_true_expanded: BOOLEAN
+			-- Is the type expanded?
+
+	is_separate: BOOLEAN
+			-- Is the type separate?
+
+	is_enum: BOOLEAN is
+			-- Is current type an IL enum type?
+			-- Useful to find out if some call optimization can be done
+			-- in FEATURE_B.
+		require
+			il_generation: System.il_generation
+		do
+			Result := is_true_expanded and then base_class.is_enum
+		end
+
+	is_valid: BOOLEAN is
+			-- Is the base class still in the system ?
+		do
+			Result := base_class /= Void
+		end
+
+	is_reference: BOOLEAN is
+			-- Is the type a reference type ?
+		do
+			Result := not is_true_expanded
+		end; 
+
+	is_explicit: BOOLEAN is
+
+		do
+			Result := (cr_info = Void) or else is_expanded
+		end
+
+	has_associated_class_type: BOOLEAN is
+			-- Has `Current' an associated class type?
+		do
+			if is_true_expanded then
+				is_true_expanded := False
+				Result := base_class.types.has_type (Current)
+				is_true_expanded := True
+			elseif is_separate then
+				is_separate := False
+				Result := base_class.types.has_type (Current)
+				is_separate := True
+			else
+				Result := base_class.types.has_type (Current)
+			end
+		end
+
+	same_as (other: TYPE_I): BOOLEAN is
+			-- Is `other' equal to Current ?
+		local
+			other_cl_type: CL_TYPE_I
+		do
+			other_cl_type ?= other
+			Result := other_cl_type /= Void -- FIXME
+					and then other_cl_type.base_id = base_id
+					and then other_cl_type.is_true_expanded = is_true_expanded
+					and then other_cl_type.is_separate = is_separate
+					and then other_cl_type.meta_generic = Void
+					and then other_cl_type.true_generics = Void
+		end
+
+feature -- Setting
+
+	set_base_id (c: INTEGER) is
+			-- Assign `c' to `base_id'.
+		do
+			base_id := c
+		end
+
+	set_is_true_expanded (b: BOOLEAN) is
+			-- Assign `b' to `is_true_expanded'.
+		do
+			is_true_expanded := b
+		end
+
+	set_is_separate (b: BOOLEAN) is
+			-- Assign `b' to `is_separate'.
+		do
+			is_separate := b
+		end
+
+	set_cr_info (cinfo : CREATE_INFO) is
+			-- Set `cr_info' to `cinfo'.
+		do
+			cr_info := cinfo
+		ensure
+			cr_info_set : cr_info = cinfo
+		end
+
+feature -- Formatting
+
+	append_signature (st: STRUCTURED_TEXT) is
+		do
+			if is_true_expanded then
+				st.add_string ("expanded ")
+			elseif is_separate then
+				st.add_string ("separate ")
+			end
+			base_class.append_signature (st)
+		end
+
+	dump (buffer: GENERATION_BUFFER) is
+		local
+			s: STRING
+		do
+			if is_true_expanded then
+				buffer.putstring ("expanded ")
+			elseif is_separate then
+				buffer.putstring ("separate ")
+			end
+			s := clone (base_class.name)
+			s.to_upper
+			buffer.putstring (s)
+		end
+
+feature -- C generation
+
+	generate_cecil_value (buffer: GENERATION_BUFFER) is
+			-- Generate cecil value
+		do
+				-- FIXME????: separate
+			if not is_true_expanded then
+				buffer.putstring ("SK_DTYPE")
+			else
+				buffer.putstring ("SK_EXP + (uint32) ")
+				buffer.putint (base_id)
 			end
 		end
 
@@ -290,16 +323,6 @@ feature {NONE} -- Array optimization
 			Result := System.array_class.compiled_class
 		end
 
-feature
-
-	type_a: CL_TYPE_A is
-		do
-			!!Result
-			Result.set_is_expanded (is_expanded)
-			Result.set_is_separate (is_separate)
-			Result.set_base_class_id (base_id)
-		end
-
 feature -- Generic conformance
 
 	generated_id (final_mode : BOOLEAN) : INTEGER is
@@ -308,11 +331,11 @@ feature -- Generic conformance
 			if final_mode then
 				Result := type_id - 1
 			else
-				Result := associated_class_type.id.id-1
+				Result := associated_class_type.static_type_id-1
 			end
 
-			if is_expanded then
-				Result := -256 - Result
+			if is_true_expanded then
+				Result := Expanded_level - Result
 			end
 		end
 
@@ -321,7 +344,7 @@ feature -- Generic conformance
 		do
 			if
 				use_info and then (cr_info /= Void)
-				and then not (is_expanded or is_basic)
+				and then not is_expanded
 			then
 				-- It's an anchored type 
 				cr_info.generate_cid (buffer, final_mode)
@@ -334,7 +357,7 @@ feature -- Generic conformance
 		do
 			if
 				use_info and then (cr_info /= Void)
-				and then not (is_expanded or is_basic)
+				and then not is_expanded
 			then
 				-- It's an anchored type 
 				cr_info.make_gen_type_byte_code (ba)
@@ -349,7 +372,7 @@ feature -- Generic conformance
 		do
 			if
 				use_info and then (cr_info /= Void)
-				and then not (is_expanded or is_basic)
+				and then not is_expanded
 			then
 				-- It's an anchored type 
 				cr_info.generate_cid_array (buffer, final_mode, idx_cnt)
@@ -368,7 +391,7 @@ feature -- Generic conformance
 		do
 			if
 				use_info and then (cr_info /= Void)
-				and then not (is_expanded or is_basic)
+				and then not is_expanded
 			then
 				-- It's an anchored type 
 				cr_info.generate_cid_init (buffer, final_mode, idx_cnt)

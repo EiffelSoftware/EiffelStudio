@@ -64,7 +64,7 @@ feature
 			-- Generate external call in a `typ' context
 		local
 			is_nested: BOOLEAN;
-			r_id: ROUTINE_ID;
+			r_id: INTEGER;
 			rout_info: ROUT_INFO;
 			is_boolean: BOOLEAN
 			buf: GENERATION_BUFFER
@@ -98,7 +98,7 @@ feature
 				r_id := typ.base_class.feature_table.item
 					(feature_name).rout_id_set.first;
 				rout_info := System.rout_info_table.item (r_id);
-				rout_info.origin.generated_id (buf);
+				buf.generate_class_id (rout_info.origin)
 				buf.putstring (gc_comma);
 				buf.putint (rout_info.offset);
 			else
@@ -107,7 +107,7 @@ feature
 				else
 					buf.putstring ("RTWF(");
 				end;
-				buf.putint (typ.associated_class_type.id.id - 1);
+				buf.putint (typ.associated_class_type.static_type_id - 1);
 				buf.putstring (gc_comma);
 				buf.putint (real_feature_id);
 			end;

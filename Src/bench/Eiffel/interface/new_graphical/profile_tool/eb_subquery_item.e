@@ -1,39 +1,38 @@
 indexing
-
-	description:
-		"Class to represent subquery in a SCROLLABLE_LIST"
-	date: "$Date$"
-	revision: "$Revision$"
-
+	description	: "Class to represent subquery in a EV_MULTI_COLUMN_LIST"
+	date		: "$Date$"
+	revision	: "$Revision$"
 
 class
 	EB_SUBQUERY_ITEM
 
 inherit
-	EV_LIST_ITEM
+	EV_MULTI_COLUMN_LIST_ROW
 
 creation
 	make_normal, make_first
 
 feature -- Creation
 
-	make_first (par: EV_LIST; a_subquery: STRING) is
+	make_first (a_subquery: STRING) is
 		do
 			create subquery.make (0)
 			subquery := a_subquery
 			create operator.make (0)
 			number := 1
-			make_with_text (par, value)
+			default_create
+			extend (value)
 		end
 
-	make_normal (par: EV_LIST; an_operator, a_subquery: STRING; i: INTEGER) is
+	make_normal (an_operator, a_subquery: STRING; i: INTEGER) is
 		do
 			create subquery.make (0)
 			create operator.make (0)
 			subquery := a_subquery
 			operator := an_operator
 			number := i
-			make_with_text (par, value)
+			default_create
+			extend (value)
 		end
 
 feature -- Access

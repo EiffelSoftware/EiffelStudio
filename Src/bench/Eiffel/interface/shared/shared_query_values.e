@@ -1,66 +1,68 @@
 class SHARED_QUERY_VALUES
 
-feature
+feature -- Access
 
-	output_names : ARRAY [ STRING ] is
+	output_names : ARRAY [STRING] is
 		once
-			!!Result.make(1, 0)
+			create Result.make(1, 0)
 			Result.compare_objects
 		end
 
-	filenames : ARRAY [ STRING ] is	
+	filenames : ARRAY [STRING] is	
 		once
-			!!Result.make(1, 0)
+			create Result.make(1, 0)
 			Result.compare_objects
 		end
 
 	language_names: ARRAY [STRING] is
 		once
-			!! Result.make (1, 0)
+			create Result.make (1, 0)
 			Result.compare_objects
 		end
 
-	column_names : ARRAY [ STRING ] is
+	column_names : ARRAY [STRING] is
 		once
-			!!Result.make(1, 0)
+			create Result.make(1, 0)
 			Result.compare_objects
 		end
 
-	binary_operators : ARRAY [ STRING ] is
+	binary_operators : ARRAY [STRING] is
 		once
-			!!Result.make(1, 0)
+			create Result.make(1, 0)
 			Result.compare_objects
 		end
 
-	values : ARRAY [ STRING ] is
+	values : ARRAY [STRING] is
 		once
-			!!Result.make(1, 0)
+			create Result.make(1, 0)
 			Result.compare_objects
 		end
 
-	boolean_operators : ARRAY [ STRING ] is
+	boolean_operators : ARRAY [STRING] is
 		once
-			!!Result.make(1, 0)
+			create Result.make(1, 0)
 			Result.compare_objects
 		end
 
 	subqueries: LINKED_LIST [SUBQUERY] is
 		once
-			!! Result.make
+			create Result.make
 		end
 
 	subquery_operators: LINKED_LIST [SUBQUERY_OPERATOR] is
 		once
-			!! Result.make
+			create Result.make
 		end
+
+feature -- Element change
 
 	clear_values is
 			-- Remove all old values, to be able to
 			-- reset values to their defaults.
 		local
-			empty_array: ARRAY [ STRING ]
+			empty_array: ARRAY [STRING]
 		do
-			!! empty_array.make (1, 0)
+			create empty_array.make (1, 0)
 			empty_array.compare_objects
 			output_names.copy (empty_array)
 			filenames.copy (empty_array)

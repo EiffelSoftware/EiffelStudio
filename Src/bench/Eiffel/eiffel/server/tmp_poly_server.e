@@ -1,9 +1,12 @@
--- Temporary server of polymorphic unit tables
+indexing
+	description: "Temporary server of polymorphic unit tables indexed by routine id."
+	date: "$Date$"
+	revision: "$Revision$"
 
 class TMP_POLY_SERVER
 
 inherit
-	DELAY_SERVER [POLY_TABLE [ENTRY], ROUTINE_ID]
+	DELAY_SERVER [POLY_TABLE [ENTRY]]
 		redefine
 			clear
 		end
@@ -13,7 +16,7 @@ creation
 
 feature
 
-	id (t: POLY_TABLE [ENTRY]): ROUTINE_ID is
+	id (t: POLY_TABLE [ENTRY]): INTEGER is
 			-- Id associated with `t'
 		do
 			Result := t.rout_id
@@ -25,7 +28,7 @@ feature
 			!! Result.make
 		end
 
-	Delayed: SEARCH_TABLE [ROUTINE_ID] is
+	Delayed: SEARCH_TABLE [INTEGER] is
 			-- Cache for delayed items
 		once
 			!! Result.make ((3 * Cache.cache_size) // 2)

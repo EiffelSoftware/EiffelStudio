@@ -4,19 +4,19 @@ inherit
 
 	EXPR_B
 		redefine
-			make_byte_code, enlarged,
-			has_gcable_variable, has_call
+			make_byte_code, enlarged, generate_il,
+			has_gcable_variable, has_call, size
 		end
 
 feature  -- Initialization
 
-	init (cl_type: CL_TYPE_I; cl_id: CLASS_ID; f: FEATURE_I; 
+	init (cl_type: CL_TYPE_I; cl_id: INTEGER; f: FEATURE_I; 
 		  r_type : GEN_TYPE_I; args : TUPLE_CONST_B;
 		  omap, cmap : ARRAY_CONST_B) is
 			-- Initialization
 		require
 			valid_type: cl_type /= Void
-			valid_id: cl_id /= Void
+			valid_id: cl_id /= 0
 			valid_feature: f /= Void
 			valid_type: r_type /= Void
 			valid_maps: omap /= Void or cmap /= Void
@@ -31,13 +31,13 @@ feature  -- Initialization
 			record_feature (cl_id, feature_id)
 		end
 
-	set_ids (cl_type : CL_TYPE_I; r_id: ROUTINE_ID; f_id: INTEGER;
+	set_ids (cl_type : CL_TYPE_I; r_id: INTEGER; f_id: INTEGER;
 			 r_type : GEN_TYPE_I; args : TUPLE_CONST_B;
 			 omap, cmap : ARRAY_CONST_B) is
 			-- Set ids and type
 		require
 			valid_class_type: cl_type /= Void
-			valid_routine_id: r_id /= Void
+			valid_routine_id: r_id /= 0
 			valid_type: r_type /= Void
 			valid_maps: omap /= Void or cmap /= Void
 		do
@@ -58,7 +58,7 @@ feature -- Attributes
 	feature_id: INTEGER
 			-- Feature id of the addressed feature
 
-	rout_id: ROUTINE_ID
+	rout_id: INTEGER
 			-- Routine id of the feature
 
 	type: GEN_TYPE_I
@@ -75,7 +75,7 @@ feature -- Attributes
 
 feature -- Address table
 
-	record_feature (cl_id: CLASS_ID; f_id: INTEGER) is
+	record_feature (cl_id: INTEGER; f_id: INTEGER) is
 			-- Record the feature in the address table if it is not there.
 			-- A refreezing will occur.
 		local
@@ -161,6 +161,14 @@ feature
 			end
 		end
 
+feature -- IL code generation
+
+	generate_il is
+			-- Generate IL code for routine creation.
+		do
+			check False end
+		end
+
 feature -- Byte code generation
 
 	make_byte_code (ba: BYTE_ARRAY) is
@@ -184,15 +192,23 @@ feature -- Byte code generation
 				closed_map.make_byte_code (ba)
 			end
 
-				-- Get address
+				-- Get address of routine
 			ba.append (Bc_addr)
 			ba.append_integer (feature_id)
 
 			cl_type_i ?= context.real_type (class_type)
-			ba.append_short_integer
-				   (cl_type_i.associated_class_type.id.id - 1)
+			ba.append_short_integer (cl_type_i.associated_class_type.static_type_id - 1)
 				-- Use RTWPPR
 			ba.append_short_integer (1)
+
+				-- Get address of true Eiffel routine
+			ba.append (Bc_addr)
+			ba.append_integer (feature_id)
+
+			cl_type_i ?= context.real_type (class_type)
+			ba.append_short_integer (cl_type_i.associated_class_type.static_type_id - 1)
+				-- Use RTWPP
+			ba.append_short_integer (0)
 
 				-- Now create routine object
 			ba.append (Bc_rcreate)
@@ -231,6 +247,15 @@ feature -- Byte code generation
 			end
 
 			ba.append_short_integer (-1)
+		end
+
+feature -- Inlining
+
+	size: INTEGER is
+		do
+				-- Inlining will not be done if the feature
+				-- has a creation instruction
+			Result := 101	-- equal to maximum size of inlining + 1 (Found in FREE_OPTION_SD)
 		end
 
 end -- class ROUTINE_CREATION_B

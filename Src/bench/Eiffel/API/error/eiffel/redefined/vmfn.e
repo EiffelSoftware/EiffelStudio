@@ -20,7 +20,7 @@ feature -- Properties
 			-- Feature implemented in the class of id `class_id'
 			-- responsible for the name clash
 
-	other_feature: E_FEATURE;
+	inherited_feature: E_FEATURE;
 			-- Inherited feature
 
 
@@ -33,10 +33,10 @@ feature -- Access
 		do
 			Result := is_class_defined and then
 				a_feature /= Void and then
-				other_feature /= Void
+				inherited_feature /= Void
 		ensure then
 			valid_a_feature: Result implies a_feature /= Void;
-			valid_other_feature: Result implies other_feature /= Void
+			valid_other_feature: Result implies inherited_feature /= Void
 		end
 
 feature -- Output
@@ -51,9 +51,9 @@ feature -- Output
 			a_feature.written_class.append_name (st);
 			st.add_new_line;
 			st.add_string ("Feature: ");
-			other_feature.append_signature (st);
+			inherited_feature.append_signature (st);
 			st.add_string (" Version from: ");
-			other_feature.written_class.append_name (st);
+			inherited_feature.written_class.append_name (st);
 			st.add_new_line;
 		end;
 
@@ -67,12 +67,19 @@ feature {COMPILER_EXPORTER}
 			a_feature := f.api_feature (f.written_in);
 		end;
 
-	set_other_feature (f: FEATURE_I) is
-			-- Assign `f' to `other_feature'.
+	set_inherited_feature (f: FEATURE_I) is
+			-- Assign `f' to `inherited_feature'.
 		require
 			valid_f: f /= Void
 		do
-			other_feature := f.api_feature (f.written_in);
+				-- Create a E_FEATURE object taken from current class so
+				-- that we get correct translation of any generic parameter:
+				-- Eg: in parent A [G] you have f (a: G)
+				-- in descendant B [G, H] inherit A [H], the signature of
+				-- `f' becomes f (a: H) and if you display the feature information
+				-- using parent class it will crash when trying to display the second
+				-- generic parameter which does not exist in B, only in A.
+			inherited_feature := f.api_feature (class_c.class_id);
 		end;
 
 end -- class VMFN

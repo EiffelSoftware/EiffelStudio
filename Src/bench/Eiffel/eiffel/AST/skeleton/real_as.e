@@ -26,14 +26,6 @@ feature {AST_FACTORY} -- Initialization
 			value_set: value = r
 		end
 
-feature {NONE} -- Initilization
-
-	set is
-			-- Yacc initialization
-		do
-			value ?= yacc_arg (0)
-		end
-
 feature -- Properties
 
 	value: STRING
@@ -74,7 +66,9 @@ feature {AST_EIFFEL} -- Output
 	simple_format (ctxt: FORMAT_CONTEXT) is
 			-- Reconstitute text.
 		do
-			ctxt.put_string (value)
+			ctxt.put_text_item (
+				create {NUMBER_TEXT}.make (string_value)
+			)
 		end
 
 	string_value: STRING is

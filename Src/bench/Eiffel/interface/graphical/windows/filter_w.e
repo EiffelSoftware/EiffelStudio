@@ -269,7 +269,7 @@ feature {NONE} -- Implementation
 				end;
 				filter_dir.close;
 				list.wipe_out;
-				if filter_names.empty then
+				if filter_names.is_empty then
 					!! str_element.make (0);
 					str_element.append ("");
 					list.put_right (str_element)

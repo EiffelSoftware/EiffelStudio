@@ -97,7 +97,7 @@ end
 					-- on which the attribute access is made. The lifetime of
 					-- this temporary is really short: just the time to make
 					-- the call...
-				!!tmp_register.make (Ref_type)
+				!!tmp_register.make (Reference_c_type)
 				basic_register := tmp_register
 			end
 debug
@@ -160,8 +160,6 @@ end
 
 	generate_attribute (reg: REGISTRABLE) is
 			-- Generate attribute or NONE instance.
-		local
-			r: REGISTER;	-- For debug
 		do
 			if type.is_none then
 				buffer.putstring ("(EIF_REFERENCE) 0")
@@ -186,7 +184,7 @@ end
 			type_c := type_i.c_type
 				-- No need to use dereferencing if object is an expanded
 				-- or if it is a bit.
-			if not type_i.is_expanded and then not type_c.is_bit then
+			if not type_i.is_true_expanded and then not type_c.is_bit then
 					-- For dereferencing, we need a star...
 				buf.putchar ('*')
 					-- ...followed by the appropriate access cast
@@ -205,7 +203,7 @@ end
 			if array_index >= 0 then
 					-- The access is polymorphic, which means the offset
 					-- is not a constant and has to be computed.
-				table_name := routine_id.table_name
+				table_name := Encoder.table_name (routine_id)
 				buf.putstring (" + (")
 				buf.putstring (table_name)
 				buf.putchar ('-')

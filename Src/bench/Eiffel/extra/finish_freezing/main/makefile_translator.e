@@ -5,42 +5,58 @@ creation
 
 feature -- Initialization
 
-	make is
+	make (mapped_path: BOOLEAN) is
+		local
+			error: BOOLEAN
+			error_msg: STRING
+			status_box: STATUS_BOX
 		do
-			!!options.make (25)
-			!!dependent_directories.make
+			create options.make (25)
+			create dependent_directories.make
 
-			eiffel4 := env.get ("EIFFEL4")
-			platform := env.get ("PLATFORM")
-			compiler := env.get ("COMPILER")
+			eiffel_dir := env.get ("ISE_EIFFEL")
+			platform := env.get ("ISE_PLATFORM")
+			compiler := env.get ("ISE_C_COMPILER")
 
 			uses_precompiled := False
 
-			if eiffel4 = Void or else eiffel4.empty then
-				io.error.putstring ("ERROR: Key 'EIFFEL4' was not found in registry!%N")
+			if eiffel_dir = Void or else eiffel_dir.is_empty then
+				error_msg := "ERROR: Key 'ISE_EIFFEL' was not found in registry!%N%N"
+				error := True
 			end
 
-			if platform = Void or else platform.empty then
-				io.error.putstring ("ERROR: Key 'PLATFORM' was not found in registry!%N")
+			if platform = Void or else platform.is_empty then
+				error_msg := "ERROR: Key 'ISE_PLATFORM' was not found in registry!%N%N"
+				error := True
 			end
 
-			if compiler = Void or else compiler.empty then
-				io.error.putstring ("ERROR: Key 'COMPILER' was not found in registry!%N")
+			if compiler = Void or else compiler.is_empty then
+				error_msg := "ERROR: Key 'ISE_C_COMPILER' was not found in registry!%N%N"
+				error := True
 			end
 
-			read_options
 
-			directory_separator := options.get_string ("directory_separator", "\")
-			object_extension := clone (options.get_string ("obj_file_ext", "obj"))
-			object_extension.prepend_character ('.')
+			if not error then
+				read_options
 
-			lib_extension := clone (options.get_string ("intermediate_file_ext", "lib"))
-			lib_extension.prepend_character ('.')
+				directory_separator := options.get_string ("directory_separator", "\")
+				object_extension := clone (options.get_string ("obj_file_ext", "obj"))
+				object_extension.prepend_character ('.')
 
-			quick_compilation := options.get_boolean ("quick_compilation", True)
-			if quick_compilation then
-				io.put_string ("Preparing C compilation...%N")
-				launch_quick_compilation
+				lib_extension := clone (options.get_string ("intermediate_file_ext", "lib"))
+				lib_extension.prepend_character ('.')
+	
+				quick_compilation := options.get_boolean ("quick_compilation", True)
+				if quick_compilation then
+					io.put_string ("Preparing C compilation...%N")
+					launch_quick_compilation
+				end
+			else
+				error_msg.append ("Could not launch finish_freezing. Make%N")
+				error_msg.append ("sure that the ISE EiffelBench environment%N")
+				error_msg.append ("has been correctly installed.%N%N")
+				create status_box.make (error_msg, True, False, True, mapped_path)
+				(create {EXCEPTIONS}).die (-1)
 			end
 		end
 
@@ -49,7 +65,7 @@ feature -- Initialization
 		local
 			quick_prg: STRING
 		do
-			quick_prg := clone (eiffel4)
+			quick_prg := clone (eiffel_dir)
 			quick_prg.append_character (operating_environment.directory_separator)
 			quick_prg.append ("bench")
 			quick_prg.append_character (operating_environment.directory_separator)
@@ -101,14 +117,14 @@ feature -- Access
 	appl: STRING			
 			-- Application name
 
-	eiffel4: STRING			
-			-- EIFFEL4 environment variable
+	eiffel_dir: STRING			
+			-- EIFFEL installation environment variable
 			
 	platform: STRING			
-			-- PLATFORM environment variable
+			-- ISE_PLATFORM environment variable
 	
 	compiler: STRING
-			-- COMPILER environment variable
+			-- ISE_C_COMPILER environment variable
 			
 	uses_precompiled: BOOLEAN
 
@@ -130,8 +146,8 @@ feature -- Execution
 			reader: RESOURCE_PARSER
 			filename: FILE_NAME -- the filename for the config.eif file
 		do
-			!! filename.make_from_string (config_eif_fn)
-			!! reader
+			create filename.make_from_string (config_eif_fn)
+			create reader
 			reader.parse_file (filename, options)
 		end
 
@@ -149,6 +165,7 @@ feature -- Execution
 		do
 				-- the command to execute the make utility on this platform
 			command := options.get_string ("make", Void)
+			subst_eiffel (command)
 			env.system (command)
 		end
 
@@ -342,7 +359,7 @@ feature {NONE} -- Translation
 				if do_subst then
 					translate_line_subst
 				else
-					if not lastline.empty then
+					if not lastline.is_empty then
 						translate_line_change
 					else
 						makefile.new_line
@@ -393,7 +410,7 @@ feature {NONE} -- Translation
 					end
 				end
 
-				if not lastline.empty then
+				if not lastline.is_empty then
 					subst_continuation (lastline)
 					subst_eiffel (lastline)
 					subst_platform (lastline)
@@ -408,6 +425,10 @@ feature {NONE} -- Translation
 					end
 					if lastline.count>6 and then lastline.substring (1,7).is_equal (".xpp.o:") then
 						lastline.replace_substring_all (".xpp.o:", options.get_string ("xppobj_text", Void))
+					end
+
+					if lastline.substring_index (".SUFFIXES", 1) /= 0 then
+						lastline.replace_substring_all (".o", options.get_string ("obj_text", ".obj")) 
 					end
 				end
 
@@ -444,7 +465,7 @@ feature {NONE} -- Translation
 
 			from
                until
-				lastline.empty or makefile_sh.end_of_file or not externals
+				lastline.is_empty or makefile_sh.end_of_file or not externals
 			loop
 				debug ("translate_externals")
 					debug ("input")
@@ -486,7 +507,6 @@ feature {NONE} -- Translation
 			-- Translate application section.
 		local
 			lastline: STRING
-			i: INTEGER
 			extension: STRING -- the extension of the filename (e.g. '.exe')
 			appl_exe: STRING -- the executable for the application
 			shared_library_pos: INTEGER
@@ -841,6 +861,9 @@ feature {NONE} -- Translation
 			lastline.replace_substring_all (".c.o:", options.get_string ("cobj_text", Void))
 			lastline.replace_substring_all (".cpp.o:", options.get_string ("cppobj_text", Void))
 			lastline.replace_substring_all (".o ", options.get_string ("obj_text", Void))
+			if lastline.substring_index (".SUFFIXES", 1) /= 0 then
+				lastline.replace_substring_all (".o", options.get_string ("obj_text", ".obj")) 
+			end
 			
 			-- replace .o:
 			replacement := clone (options.get_string ("intermediate_file_ext", Void))
@@ -859,6 +882,8 @@ feature {NONE} -- Translation
 			end
 			if lastline.count>8 and then lastline.substring_index ("$(LD) $(LDFLAGS) -r -o", 1) >0 then
 				lastline := clone  (options.get_string ("make_intermediate", Void))
+				subst_eiffel (lastline)
+				subst_platform (lastline)
 
 				debug ("translate_line_change")
 					debug ("input")
@@ -920,7 +945,6 @@ feature {NONE} -- Translation
 			-- Translate application generation code.
 		local
 			lastline: STRING
-			strpos: INTEGER
 			precompile_libs: STRING -- the precompiled libraries to use
 		do
 			debug ("progress")
@@ -1000,7 +1024,6 @@ feature {NONE} -- Translation
 			-- Translate cecil.
 		local
 			lastline: STRING
-			library_name: STRING -- the name of the library file
 			precompile_libs: STRING -- the precompiled libraries to use
 		do
 			debug ("progress")
@@ -1035,6 +1058,7 @@ feature {NONE} -- Translation
 
 			lastline.replace_substring_all ("$appl", appl)
 			subst_library (lastline)
+			subst_eiffel (lastline)
 			subst_precomp_libs (lastline, precompile_libs)
 
 			debug ("translate_cecil_and_dll")
@@ -1085,17 +1109,22 @@ feature {NONE} -- Translation
 			makefile.putstring (makefile_sh.laststring)
 			makefile.new_line
 
+			from
+			until
+				lastline.count = 12 and then lastline.substring (3,12).is_equal ("E1/emain.o")
+			loop
+				read_next
+				lastline := clone (makefile_sh.laststring)
+			end
+	
 				-- SHARED_CECIL_OBJECT
 			if uses_precompiled then
-				read_next
 				makefile.putchar ('%T')
 				makefile.putstring (precompile_libs)
 				makefile.putstring (options.get_string ("continuation", Void))
 				makefile.new_line
 			end
 
-			read_next
-			lastline := clone (makefile_sh.laststring)
 			lastline.replace_substring_all (".o", object_extension)
 			makefile.putstring (lastline)
 			makefile.new_line
@@ -1164,7 +1193,7 @@ feature {NONE} -- Translation
 			makefile.putstring (lastline)
 			makefile.new_line
 
-			read_next -- $(MV) $(EIFFEL4....
+			read_next -- $(MV) $(ISE_EIFFEL....
 			lastline := clone (makefile_sh.laststring)
 			subst_eiffel (lastline)
 			subst_platform (lastline)
@@ -1201,17 +1230,22 @@ feature {NONE} -- Translation
 			read_next
 			makefile.putstring (makefile_sh.laststring)
 			makefile.new_line
-			
-			if uses_precompiled then
+
+			from
+			until
+				lastline.count > 12 and then lastline.substring (3,12).is_equal ("$(OBJECTS)")
+			loop
 				read_next
+				lastline := clone (makefile_sh.laststring)
+			end
+				
+			if uses_precompiled then
 				makefile.putchar ('%T')
 				makefile.putstring (precompile_libs)
 				makefile.putstring (options.get_string ("continuation", Void))
 				makefile.new_line
 			end
 
-			read_next
-			lastline := clone (makefile_sh.laststring)
 			lastline.replace_substring_all (".o", object_extension)
 			subst_dir_sep (lastline)
 			makefile.putstring (lastline)
@@ -1250,14 +1284,15 @@ feature {NONE} -- Translation
 feature {NONE}	-- substitutions
 
 	subst_eiffel (line: STRING) is
-			-- Replace all occurrences of Eiffel4 environment variable in `line'
+			-- Replace all occurrences of `Eiffel_dir' environment variable in `line'
 		do
 			debug ("subst")
 				io.putstring("%Tsubst_eiffel%N")
 			end
 
-			if eiffel4 /= Void and then not eiffel4.empty then
-				line.replace_substring_all ("$(EIFFEL4)", eiffel4)
+			if eiffel_dir /= Void and then not eiffel_dir.is_empty then
+				line.replace_substring_all ("$(ISE_EIFFEL)", eiffel_dir)
+				line.replace_substring_all ("$(EIFFEL4)", eiffel_dir)
 			end
 		end
 
@@ -1268,8 +1303,8 @@ feature {NONE}	-- substitutions
 				io.putstring("%Tsubst_platform%N")
 			end
 
-			if platform /= Void and then not platform.empty then
-				line.replace_substring_all ("$(PLATFORM)", platform)
+			if platform /= Void and then not platform.is_empty then
+				line.replace_substring_all ("$(ISE_PLATFORM)", platform)
 			end
 		end
 
@@ -1280,8 +1315,8 @@ feature {NONE}	-- substitutions
 				io.putstring("%Tsubst_compiler%N")
 			end
 
-			if compiler /= Void and then not compiler.empty then
-				line.replace_substring_all ("$(COMPILER)", compiler)
+			if compiler /= Void and then not compiler.is_empty then
+				line.replace_substring_all ("$(ISE_C_COMPILER)", compiler)
 			end
 		end
 
@@ -1297,7 +1332,7 @@ feature {NONE}	-- substitutions
 
 			if concurrent then
 				library_name.append_character (' ')
-				default_net_lib := clone (eiffel4)
+				default_net_lib := clone (eiffel_dir)
 				default_net_lib.append (directory_separator)
 				default_net_lib.append ("library")
 				default_net_lib.append (directory_separator)
@@ -1328,7 +1363,7 @@ feature {NONE}	-- substitutions
 			dir_sep := ""
 			dir_sep.append (directory_separator)
 
-			if not line.empty then
+			if not line.is_empty then
 				line.replace_substring_all ("/", dir_sep)
 			end
 		end
@@ -1446,7 +1481,7 @@ feature {NONE} -- Implementation
 			end
 
 			from
-				if not line.empty then
+				if not line.is_empty then
 					wordstart := line.index_of ('$', 1)
 				else
 					wordstart := 0
@@ -1575,7 +1610,7 @@ feature {NONE} -- Implementation
 			line := clone (line_to_search)
 
 			from
-				if not line.empty then
+				if not line.is_empty then
 					precomp_lib_start :=  (line.substring_index (preobj, 1))
 				end
 
@@ -1589,14 +1624,14 @@ feature {NONE} -- Implementation
 						Result.remove (1)
 					end
 					Result.append (directory_separator)
-					Result.append ("$(COMPILER)")
+					Result.append ("$(ISE_C_COMPILER)")
 					Result.append (directory_separator)
 					Result.append ("precomp.lib")
 				else
 					uses_precompiled := false
 				end
 			until
-				makefile_sh.end_of_file or else line.empty
+				makefile_sh.end_of_file or else line.is_empty
 			loop
 				read_next
 				line := clone (makefile_sh.laststring)
@@ -1614,7 +1649,7 @@ feature {NONE} -- Implementation
 						concurrent := true
 					end
 
-				if not line.empty then
+				if not line.is_empty then
 					precomp_lib_start := line.substring_index (preobj, 1)
 				else
 					precomp_lib_start := 0
@@ -1630,11 +1665,11 @@ feature {NONE} -- Implementation
 						next_precomp_lib.remove (1)
 					end
 					next_precomp_lib.append (directory_separator)
-					next_precomp_lib.append ("$(COMPILER)")
+					next_precomp_lib.append ("$(ISE_C_COMPILER)")
 					next_precomp_lib.append (directory_separator)
 					next_precomp_lib.append ("precomp.lib")
 
-					if not Result.empty then
+					if not Result.is_empty then
 						Result.append_character (' ')
 					end
 					Result.append (next_precomp_lib)
@@ -1710,13 +1745,13 @@ feature {NONE} -- Implementation
 
 	config_eif_fn: STRING is
 			-- the full filename for the CONFIG.EIF file
-			-- currently: $EIFFEL4|bench|spec|$PLATFORM|config|config.eif
+			-- currently: $ISE_EIFFEL|bench|spec|$ISE_PLATFORM|config|config.eif
 		once
 			debug ("implementation")
 				io.putstring("%Tconfig_eif_fn = ")
 			end
 
-			Result := clone (eiffel4)
+			Result := clone (eiffel_dir)
 			Result.append_character (operating_environment.directory_separator)
 			Result.append ("bench")
 			Result.append_character (operating_environment.directory_separator)

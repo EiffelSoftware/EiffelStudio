@@ -8,8 +8,9 @@ inherit
 
 	INLINED_BYTE_CODE
 		undefine
-			is_once, generate_once, generate_result_declaration,
-			pre_inlined_code, inlined_byte_code
+			is_once, generate_once,
+			pre_inlined_code, inlined_byte_code, generate_once_declaration,
+			generate_il, generate_il_return, is_global_once
 		end
 
 end

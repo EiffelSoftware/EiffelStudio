@@ -62,7 +62,7 @@ feature -- Comparing
 		do
 			if has_wildcards (value) then
 				!! wildcard_matcher.make (value, item_value)
-				Result := wildcard_matcher.search_for_pattern
+				Result := wildcard_matcher.pattern_matches
 			else
 				Result := item_value.is_equal (value)
 			end

@@ -1,31 +1,27 @@
 deferred class BIN_EQUAL_B 
 
 inherit
-
-	BINARY_B
-		rename
-			register as left_register,
-			set_register as set_left_register,
-			free_register as old_free_register,
-			unanalyze as old_unanalyze
-		redefine
-			make_byte_code, is_commutative, print_register, type,
-			generate, analyze, is_unsafe, optimized_byte_node,
-			calls_special_features, pre_inlined_code, inlined_byte_code
-		end;
-
 	BINARY_B
 		rename
 			register as left_register,
 			set_register as set_left_register
 		redefine
-			free_register, unanalyze,
+			free_register, unanalyze, generate_il,
 			make_byte_code, is_commutative, print_register, type,
 			generate, analyze, is_unsafe, optimized_byte_node,
 			calls_special_features, pre_inlined_code, inlined_byte_code
-		select
-			free_register, unanalyze
 		end
+
+feature -- Status
+
+	is_built_in: BOOLEAN is
+			-- Is the current binary operator a built-in one ?
+		do
+			Result := True;
+		end;
+
+	is_commutative: BOOLEAN is true;
+			-- Operation is commutative.
 
 feature 
 
@@ -38,9 +34,6 @@ feature
 		do
 			Result := Boolean_c_type;
 		end;
-
-	is_commutative: BOOLEAN is true;
-			-- Operation is commutative.
 
 	generate_boolean_constant is
 		deferred
@@ -136,7 +129,7 @@ feature
 		local
 			void_register: REGISTER;
 		do
-			old_unanalyze;
+			Precursor {BINARY_B}
 			set_left_register (void_register);
 			set_right_register (void_register);
 		end;
@@ -144,7 +137,7 @@ feature
 	free_register is
 			-- Free registers used
 		do
-			old_free_register;
+			Precursor {BINARY_B}
 			if left_register /= Void then
 				left_register.free_register;
 			end;
@@ -183,6 +176,7 @@ feature
 		local
 			left_type: TYPE_I;
 			right_type: TYPE_I;
+			buf: GENERATION_BUFFER
 		do
 			left_type := context.real_type (left.type);
 			right_type := context.real_type (right.type);
@@ -193,13 +187,15 @@ feature
 			then
 					-- Simple type can never be Void
 				generate_boolean_constant;
-			elseif left_type.is_expanded or right_type.is_expanded or
+			elseif left_type.is_true_expanded or right_type.is_true_expanded or
 				left_register /= Void or right_register /= Void
 			then
 				generate_equal;
 			elseif left_type.is_bit or right_type.is_bit then
 				generate_bit_equal
 			else
+				buf := buffer
+				buf.putstring ("(EIF_BOOLEAN)(")
 				if left_register = Void then
 					left.print_register;
 				else
@@ -211,7 +207,34 @@ feature
 				else
 					right_register.print_register;
 				end;
+				buf.putchar (')')
 			end;
+		end;
+
+feature -- IL code generation
+
+	generate_il is
+			-- Generate byte code for equality test
+		local
+			left_type: TYPE_I
+			right_type: TYPE_I
+		do
+			left_type := context.real_type (left.type)
+			right_type := context.real_type (right.type)
+			
+			if
+				(left_type.is_none and right_type.is_basic) or
+				(left_type.is_basic and right_type.is_none)
+			then
+					-- Simple type can never be Void
+				generate_il_boolean_constant
+			else
+				Precursor {BINARY_B}
+			end
+		end
+
+	generate_il_boolean_constant is
+		deferred
 		end;
 
 feature -- Byte code generation
@@ -238,12 +261,6 @@ feature -- Byte code generation
 		deferred
 		end;
 
-	is_built_in: BOOLEAN is
-			-- Is the current binary operator a built-in one ?
-		do
-			Result := True;
-		end;
-
 	make_byte_code (ba: BYTE_ARRAY) is
 			-- Generate byte code for an equality test
 		local
@@ -268,7 +285,7 @@ feature -- Byte code generation
 				flag := true;
 			end;
 
-			if 	(lt.is_expanded or else rt.is_expanded)
+			if 	(lt.is_true_expanded or else rt.is_true_expanded)
 				or else
 				flag
 			then

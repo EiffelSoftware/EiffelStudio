@@ -17,7 +17,7 @@ feature
             is_nested: BOOLEAN
             type_i: TYPE_i
             type_c: TYPE_C
-            r_id: ROUTINE_ID
+            r_id: INTEGER
             rout_info: ROUT_INFO
             base_class: CLASS_C
 			cl_type: CL_TYPE_I
@@ -46,7 +46,7 @@ feature
 				buf.putstring("CURPI(")
 			elseif cl_type.is_feature_pointer then
 				buf.putstring("CURPP(")
-			elseif cl_type.is_expanded then
+			elseif cl_type.is_true_expanded then
 				buf.putstring("CURPO(")
 				-- FIXCONCURRENCY: We should make a clone here.
 			elseif cl_type.is_separate then
@@ -59,7 +59,7 @@ feature
             is_nested := not is_first
             type_i := real_type (type)
             type_c := type_i.c_type
-            if not type_i.is_expanded and then not type_c.is_bit then
+            if not type_i.is_true_expanded and then not type_c.is_bit then
                     -- For dereferencing, we need a star...
                 buf.putchar ('*')
                     -- ...followed by the appropriate access cast
@@ -88,7 +88,7 @@ feature
                 r_id := base_class.feature_table.item
                     (attribute_name).rout_id_set.first
                 rout_info := System.rout_info_table.item (r_id)
-                rout_info.origin.generated_id (buf)
+                buf.generate_class_id (rout_info.origin)
                 buf.putstring (gc_comma)
                 buf.putint (rout_info.offset)
             else
@@ -97,7 +97,7 @@ feature
                 else
                     buf.putstring ("RTWA(")
                 end
-                buf.putint (typ.associated_class_type.id.id - 1)
+                buf.putint (typ.associated_class_type.static_type_id - 1)
                 buf.putstring (gc_comma)
                 buf.putint (real_feature_id)
             end
@@ -117,7 +117,7 @@ feature
               buf.exdent
             end
 	
-			if not(cl_type.is_separate or cl_type.is_long or cl_type.is_feature_pointer or cl_type.is_boolean or cl_type.is_char or cl_type.is_double or cl_type.is_float or cl_type.is_expanded) then
+			if not (cl_type.is_separate or cl_type.is_expanded) then
                 buf.putstring(")")
             end
 			buf.putstring (", 0);")

@@ -1,20 +1,29 @@
 class EXPORT_SET_I 
 
 inherit
-
 	EXPORT_I
+		undefine
+			copy, is_equal
 		redefine
 			is_set
-		end;
+		end
+
 	LINKED_SET [CLIENT_I]
 		rename
 			is_subset as ll_is_subset
-		end;
-	SHARED_WORKBENCH;
+		end
+
+	SHARED_WORKBENCH
+		undefine
+			copy, is_equal
+		end
+
 	SHARED_TEXT_ITEMS
+		undefine
+			copy, is_equal
+		end
 
 creation
-
 	make
 
 feature -- Property
@@ -30,10 +39,9 @@ feature -- Access
 	same_as (other: EXPORT_I): BOOLEAN is
 			-- is `other' the same as Current ?
 		local
-			other_set: EXPORT_SET_I;
-			one_client, other_client: CLIENT_I;
-			pos: INTEGER;
-			c1, c2: CURSOR;
+			other_set: EXPORT_SET_I
+			one_client: CLIENT_I
+			c1, c2: CURSOR
 		do
 			other_set ?= other;
 			if other_set /= Void and then count = other_set.count then
@@ -156,8 +164,7 @@ feature {COMPILER_EXPORTER}
 			-- Is Current clients a subset or equal with  
 			-- `other' clients?
 		local
-			other_set: EXPORT_SET_I;
-			cur: CURSOR;
+			other_set: EXPORT_SET_I
 		do
 			if other.is_none then
 				Result := False
@@ -180,7 +187,7 @@ feature {COMPILER_EXPORTER}
 			end;
 		end;
 	
-	clause (written_in: CLASS_ID): CLIENT_I is
+	clause (written_in: INTEGER): CLIENT_I is
 			-- Clause of attribute `written_in' 
 		local
 			old_cursor: CURSOR;
@@ -191,7 +198,7 @@ feature {COMPILER_EXPORTER}
 			until
 				after or else Result /= Void
 			loop
-				if equal (item.written_in, written_in) then
+				if item.written_in = written_in then
 					Result := item;
 				end;
 				forth;
@@ -215,45 +222,11 @@ feature {COMPILER_EXPORTER}
 
 	format (ctxt: FORMAT_CONTEXT) is
 		do
-			from
-				start;
-			until
-				after
-			loop
-				ctxt.put_text_item (ti_L_curly);
-				item.format (ctxt);
-				ctxt.put_text_item_without_tabs (ti_R_curly);
-				forth;
-			end;
-		end;
-
-feature {COMPILER_EXPORTER} -- Case storage
-
-	storage_info: S_EXPORT_SET_I is
-			-- Case storage of export set 
-		local
-			l: LIST [STRING];
-			cl: STRING
-		do
-			!! Result.make (count);
-			from
-				start
-			until
-				after
-			loop
-					--| clients dynamic types is actually ID_AS not STRING.
-					--| We need to convert this to a string so that EiffelCase
-					--| can read it in.
-				from
-					l := item.clients;
-					l.start
-				until
-					l.after
-				loop
-					!! cl.make (0);
-					cl.append (l.item);
-					Result.extend (cl);
-					l.forth
+			from start until after loop
+				if not (item.clients.count = 1 and then item.clients.first.is_equal ("any")) then
+					ctxt.put_text_item (ti_L_curly)
+					item.format (ctxt)
+					ctxt.put_text_item_without_tabs (ti_R_curly)
 				end
 				forth
 			end

@@ -53,7 +53,7 @@ feature -- Access
 		local
 			routine_as: ROUTINE_AS
 		do
-			routine_as ?= Body_server.item (body_id).body.content;
+			routine_as ?= Body_server.item (body_index).body.content;
 			if routine_as /= Void then
 				Result := routine_as.locals
 			end;

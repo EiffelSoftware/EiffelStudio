@@ -3,14 +3,6 @@
 class CONSTRUCT_LIST [T]
 
 inherit
-
-	AST_YACC
-		undefine
-			copy, is_equal
-		redefine
-			pass_address
-		end
-
 	ARRAYED_LIST [T]
 
 creation
@@ -18,14 +10,7 @@ creation
 
 feature
 
-	pass_address (n: INTEGER) is
-			-- Eiffel-yacc interface
-		do
-			c_get_address (n, $Current, $make_filled);
-			c_get_list_area ($to_c);
-		end;
-
-	set is
+	initialize is
 		do
 			-- Do nothing
 		end;
@@ -57,14 +42,6 @@ feature
 			if a_occurrences = n then
 				Result := i
 			end
-		end;
-
-feature {NONE} -- Externals
-
-	c_get_list_area (ptr: POINTER) is
-			-- Send `ptr' to Yacc
-		external	
-			"C"
 		end;
 
 end

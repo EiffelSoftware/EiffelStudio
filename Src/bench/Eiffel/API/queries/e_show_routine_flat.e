@@ -26,14 +26,13 @@ feature -- Execution
 	work is
 		local
 			ctxt: FEATURE_TEXT_FORMATTER;
-			text_filter: TEXT_FILTER
 		do
 			!! ctxt;
+			ctxt.set_clickable
 				--| Show the flat format, that's why we are passing `False'
 				--| as parameter to the `format' feature
 			ctxt.format (current_feature, False);
-			structured_text.add_string (ctxt.text.image);
-			structured_text.add_new_line
+			structured_text := ctxt.text
 		end;
 
 end -- class E_SHOW_ROUTINE_FLAT

@@ -40,7 +40,7 @@ feature
                 buf.putstring("CURPI(")
             elseif cl_type.is_feature_pointer then
                 buf.putstring("CURPP(")
-            elseif cl_type.is_expanded then
+            elseif cl_type.is_true_expanded then
                 buf.putstring("CURPO(")
                 -- FIXCONCURRENCY: We should make a clone here.
             elseif cl_type.is_separate then
@@ -52,7 +52,7 @@ feature
  
 			old_generate_access_on_type (reg, typ)
 
-            if not(cl_type.is_separate or cl_type.is_long or cl_type.is_feature_pointer or cl_type.is_boolean or cl_type.is_char or cl_type.is_double or cl_type.is_float or cl_type.is_expanded) then
+            if not(cl_type.is_separate or cl_type.is_expanded) then
                 buf.putstring(")")
             end
             buf.putstring (", 0);")
@@ -100,7 +100,7 @@ feature
 			type_c := type_i.c_type
 				-- No need to use dereferencing if object is an expanded
 				-- or if it is a bit.
-			if not type_i.is_expanded and then not type_c.is_bit then
+			if not type_i.is_true_expanded and then not type_c.is_bit then
 					-- For dereferencing, we need a star...
 				buf.putchar ('*')
 					-- ...followed by the appropriate access cast
@@ -120,7 +120,7 @@ feature
 			if array_index >= 0 then
 					-- The access is polymorphic, which means the offset
 					-- is not a constant and has to be computed.
-				table_name := routine_id.table_name
+				table_name := Encoder.table_name (routine_id)
 				buf.putstring (" + (")
 				buf.putstring (table_name)
 				buf.putchar ('-')

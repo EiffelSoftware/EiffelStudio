@@ -38,7 +38,7 @@ feature -- C code generation
 			gen_type_i: GEN_TYPE_I;
 			buffer: GENERATION_BUFFER;
 		do
-			cl_type_i ?= context.real_type (type);
+			cl_type_i ?= context.creation_type (type);
 			gen_type_i ?= cl_type_i;
 
 			buffer := context.buffer;
@@ -48,13 +48,24 @@ feature -- C code generation
 			else
 				if context.workbench_mode then
 					buffer.putstring ("RTUD(");
-					cl_type_i.associated_class_type.id.generated_id (buffer)
+					buffer.generate_type_id (cl_type_i.associated_class_type.static_type_id)
 					buffer.putchar (')');
 				else
 					buffer.putint (cl_type_i.type_id - 1);
 				end;
 			end;
 		end;
+
+feature -- IL code generation
+
+	generate_il is
+			-- Generate IL code for a hardcoded creation type.
+		local
+			cl_type_i: CL_TYPE_I
+		do
+			cl_type_i ?= context.creation_type (type)
+			il_generator.create_object (cl_type_i)
+		end
 
 feature -- Byte code generation
 
@@ -65,7 +76,7 @@ feature -- Byte code generation
 			gen_type : GEN_TYPE_I
 		do
 			ba.append (Bc_ctype);
-			cl_type_i ?= context.real_type (type);
+			cl_type_i ?= context.creation_type (type);
 			gen_type  ?= cl_type_i;
 			ba.append_short_integer (cl_type_i.type_id - 1);
 
@@ -84,7 +95,7 @@ feature -- Generic conformance
 		local
 			gen_type : GEN_TYPE_I
 		do
-			gen_type ?= context.real_type (type)
+			gen_type ?= context.creation_type (type)
 
 			if gen_type /= Void then
 				node.generate_gen_type_conversion (gen_type)
@@ -97,7 +108,7 @@ feature -- Generic conformance
 			cl_type_i : CL_TYPE_I;
 			gen_type  : GEN_TYPE_I
 		do
-			cl_type_i ?= context.real_type (type);
+			cl_type_i ?= context.creation_type (type);
 			gen_type  ?= cl_type_i;
 
 			if gen_type /= Void then
@@ -105,7 +116,7 @@ feature -- Generic conformance
 			else
 				if context.workbench_mode then
 					buffer.putstring ("RTUD(")
-					cl_type_i.associated_class_type.id.generated_id (buffer)
+					buffer.generate_type_id (cl_type_i.associated_class_type.static_type_id)
 					buffer.putchar (')')
 				else
 					buffer.putint (cl_type_i.type_id - 1);
@@ -115,7 +126,7 @@ feature -- Generic conformance
 
 	type_to_create : CL_TYPE_I is
 		do
-			Result ?= context.real_type (type)
+			Result ?= context.creation_type (type)
 		end;
 
 feature -- Assignment attempt
@@ -125,11 +136,11 @@ feature -- Assignment attempt
 		local
 			cl_type_i : CL_TYPE_I
 		do
-			cl_type_i ?= context.real_type (type)
+			cl_type_i ?= context.creation_type (type)
 
 			if context.workbench_mode then
 				buffer.putstring ("RTUD(")
-				cl_type_i.associated_class_type.id.generated_id (buffer)
+				buffer.generate_type_id (cl_type_i.associated_class_type.static_type_id)
 				buffer.putchar (')')
 			else
 				buffer.putint (cl_type_i.type_id - 1)

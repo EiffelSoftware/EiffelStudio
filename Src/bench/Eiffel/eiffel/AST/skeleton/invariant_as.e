@@ -13,6 +13,10 @@ inherit
 		end
 
 	IDABLE
+		rename
+			id as class_id,
+			set_id as set_class_id
+		end
 
 feature {AST_FACTORY} -- Initialization
 
@@ -24,19 +28,7 @@ feature {AST_FACTORY} -- Initialization
 			assertion_list_set: assertion_list = a
 		end
 
-feature {NONE} -- Initialization
-
-	set is
-			-- Initialization routine.
-		do
-			assertion_list ?= yacc_arg (0)
-		end
-
 feature -- Attribute
-
-	id: CLASS_ID
-			-- Class id of the class to which current is the invariant
-			-- description
 
 	assertion_list: EIFFEL_LIST [TAGGED_AS]
 			-- Assertion list
@@ -89,7 +81,6 @@ feature -- Formatter
 			-- Reconstitute text.
 		do
 			ctxt.continue_on_failure
-			ctxt.set_separator (ti_Semi_colon)
 			ctxt.set_new_line_between_tokens
 			if assertion_list /= Void then
 				format_assertions (ctxt)
@@ -135,38 +126,6 @@ feature -- Formatter
 			end
 		end
 
-feature -- Case Storage
-
-	storage_info: FIXED_LIST [S_TAG_DATA] is
-			-- Storage information for Current in the
-			-- context class `classc'.
-		require
-			valid_assertions: assertion_list /= Void
-		local	
-			ctxt: FORMAT_CONTEXT
-		do
-			!! Result.make_filled (assertion_list.count)
-			!! ctxt.make_for_case
-			from
-				Result.start
-				assertion_list.start
-			until
-				assertion_list.after
-			loop
-				Result.replace (assertion_list.item.storage_info (ctxt))
-				Result.forth
-				assertion_list.forth
-			end
-		end
-
-feature -- Status setting
-
-	set_id (i: CLASS_ID) is
-			-- Assign `i' to `id'.
-		do
-			id := i
-		end
-
 feature {AST_EIFFEL} -- Output
 
 	simple_format (ctxt: FORMAT_CONTEXT) is
@@ -175,7 +134,6 @@ feature {AST_EIFFEL} -- Output
 			ctxt.put_text_item (ti_Invariant_keyword)
 			ctxt.indent
 			ctxt.new_line
-			ctxt.set_separator (ti_Semi_colon)
 			ctxt.set_new_line_between_tokens
 			if assertion_list /= Void then
 				simple_format_assertions (ctxt)

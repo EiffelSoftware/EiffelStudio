@@ -42,7 +42,8 @@ feature -- Callbacks
 		end
 
 	save_changes (argument: ANY) is
-			-- The user has been warned that he will lose his stuff
+			-- The user has been warned that he will lose his stuff and
+			-- has decided to save it.
 		do
 			if dynamic_lib_tool.save_cmd_holder /= Void then
 				dynamic_lib_tool.save_cmd_holder.associated_command.execute (Void)

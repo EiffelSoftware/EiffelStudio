@@ -14,9 +14,9 @@ feature -- Creation
 			-- `new_pattern' in text `new_text'.
 		require
 			new_pattern_non_void: new_pattern /= Void;
-			not_new_pattern_empty: not new_pattern.empty;
+			not_new_pattern_empty: not new_pattern.is_empty;
 			new_text_non_void: new_text /= Void;
-			not_new_text_empty: not new_text.empty
+			not_new_text_empty: not new_text.is_empty
 		do
 			set_pattern (new_pattern);
 			set_text (new_text);
@@ -36,8 +36,8 @@ feature -- Status setting
 	start_at (i: INTEGER) is
 			-- Start search at position `i'.
 		require
-			i_large_enough: i >= 0;
-			i_small_enough: i < text.count
+			i_large_enough: i >= 1;
+			i_small_enough: i <= text.count
 		do
 			index := i
 		ensure
@@ -61,10 +61,10 @@ feature -- Status setting
 			new_text_non_void: new_text /= Void;
 		do
 			text := new_text;
-			index := 0
+			index := 1
 		ensure
 			text_is_new_text: text = new_text;
-			search_from_start: index = 0
+			search_from_start: index = 1
 		end;
 
 feature -- Status report
@@ -93,9 +93,8 @@ feature -- Search
 			-- Search in the text to find the very next
 			-- occurrence of `pattern'.
 		require
-			pattern_valid: pattern /= Void and then not pattern.empty;
-			text_valid: text /= Void and then not text.empty;
-			meaningful_search: pattern.count < text.count
+			pattern_valid: pattern /= Void and then not pattern.is_empty
+			text_valid: text /= Void and then not text.is_empty
 		deferred
 		end;
 
@@ -118,3 +117,5 @@ end -- class MATCHER
 --| Electronic mail <info@eiffel.com>
 --| Customer support e-mail <support@eiffel.com>
 --|----------------------------------------------------------------
+
+

@@ -10,7 +10,7 @@ inherit
 			register_name,
 			make_byte_code, creation_access,
 			assign_code, expanded_assign_code, reverse_code,
-			assigns_to, pre_inlined_code, is_separate
+			assigns_to, pre_inlined_code, is_separate, generate_il_call_access
 		end
 
 feature 
@@ -59,6 +59,18 @@ feature
 		do
 			Result := "Result";
 		end;
+
+feature -- IL code generation
+
+	generate_il_call_access (is_target_of_call: BOOLEAN) is
+			-- Generate IL code for an access to Result.
+		do
+			if is_target_of_call and then real_type (type).is_expanded then
+				il_generator.generate_result_address
+			else
+				il_generator.generate_result
+			end
+		end
 
 feature -- Byte code generation
 

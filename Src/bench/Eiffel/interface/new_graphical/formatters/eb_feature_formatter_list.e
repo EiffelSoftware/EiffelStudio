@@ -1,5 +1,5 @@
 indexing
-	description: "Implementation of EB_FORMAT_LIST for the EiffelBench Feature Tool"
+	description: "Implementation of EB_FORMAT_LIST for the $EiffelGraphicalCompiler$ Feature Tool"
 	date: "$Date$"
 	revision: "$Revision$"
 
@@ -22,7 +22,7 @@ feature {NONE} -- Initialization
 		local
 			f : EB_FORMATTER
 		do
-			Precursor (a_tool)
+			Precursor {EB_FORMATTER_LIST} (a_tool)
 			
 			create {EB_TEXT_FORMATTER} f.make (tool)
 			add_formatter (f)
@@ -32,7 +32,7 @@ feature {NONE} -- Initialization
 			add_formatter (stop_points_format)
 
 			create {EB_FEATURE_CALLERS_FORMATTER} show_callers_format.make (tool)
-			add_formatter (f)
+			add_formatter (show_callers_format)
 			create {EB_FEATURE_HISTORY_FORMATTER} f.make (tool)
 			add_formatter (f)
 			create {EB_PAST_FORMATTER} f.make (tool)

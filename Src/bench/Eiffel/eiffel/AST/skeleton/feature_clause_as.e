@@ -30,19 +30,6 @@ feature {AST_FACTORY} -- Initialization
 			position_set: position = p
 		end
 
-feature {NONE} -- Initialization
-
-	set is
-			-- Yacc initialization
-		do
-			clients ?= yacc_arg (0)
-			features ?= yacc_arg (1)
-			position := yacc_int_arg (0)
-		ensure then
-			features_exists: features /= Void
-			positive_position: position > 0
-		end
-
 feature -- Attributes
 
 	clients: CLIENT_AS
@@ -53,6 +40,40 @@ feature -- Attributes
 
 	position: INTEGER
 			-- Position after feature keyword
+
+	comment (class_text: STRING): STRING is
+			-- Extract first line of comments on `Current' from `class_text'.
+		require
+			class_text_not_void: class_text /= Void
+		local
+			end_pos, real_pos: INTEGER
+			retried: BOOLEAN
+		do
+			if not retried then
+				real_pos := class_text.substring_index ("--", position)
+				if real_pos /= 0 then
+					if not features.is_empty then
+						end_pos := features.first.start_position
+					end
+					if end_pos = 0 or else real_pos < end_pos then
+						Result := class_text.substring (real_pos + 2, class_text.index_of ('%N', real_pos) - 1)
+						Result.prune_all_leading (' ')
+					else
+						create Result.make (0)
+					end
+				else
+					create Result.make (0)
+				end
+			else
+				create Result.make (0)
+			end
+		ensure
+			not_void: Result /= Void
+		rescue
+				-- `Position' might not be up-to-date, so that we may look after the end of the file.
+			retried := True
+			retry
+		end
 
 feature -- Comparison
 
@@ -226,23 +247,6 @@ feature {CLASS_AS} -- Implementation
 					ast_reg.register_feature (feat)
 					feat := next_feat
 				end
-			end
-		end
-
-feature -- Formatting
-
-	storage_info: LINKED_LIST [S_FEATURE_DATA] is
-			-- Storage information of Current
-		do
-			from
-				!! Result.make
-				features.start
-			until
-				features.after
-			loop
-				Result.put_right (features.item.storage_info)
-				Result.forth;	
-				features.forth
 			end
 		end
 

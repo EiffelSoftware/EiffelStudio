@@ -1,9 +1,7 @@
 indexing
-
-	description: 
-		"";
+	description: "Cluster property description for Ace";
 	date: "$Date$";
-	revision: "$Revision $"
+	revision: "$Revision$"
 
 class CLUST_PROP_SD
 
@@ -18,14 +16,15 @@ inherit
 	SHARED_ENV;
 	SYSTEM_CONSTANTS
 
-feature {LACE_AST_FACTORY} -- Initialization
+feature {CLUST_PROP_SD, LACE_AST_FACTORY} -- Initialization
 
-	initialize (us: like use_name; iop: like include_option;
+	initialize (dep: like dependencies; us: like use_name; iop: like include_option;
 		eo: like exclude_option; ao: like adapt_option;
 		dop: like default_option; o: like options;
 		vo: like visible_option) is
 			-- Create a new CLUST_PROP AST node.
 		do
+			dependencies := dep
 			use_name := us
 			include_option := iop
 			exclude_option := eo
@@ -34,6 +33,7 @@ feature {LACE_AST_FACTORY} -- Initialization
 			options := o
 			visible_option := vo
 		ensure
+			dependencies_set: dependencies = dep
 			use_name_set: use_name = us
 			include_option_set: include_option = iop
 			exclude_option_set: exclude_option = eo
@@ -43,21 +43,10 @@ feature {LACE_AST_FACTORY} -- Initialization
 			visible_option_set: visible_option = vo
 		end
 
-feature {NONE} -- Initialization
-
-	set is
-			-- Yacc initialization
-		do
-			use_name ?= yacc_arg (0);
-			include_option ?= yacc_arg (1);
-			exclude_option ?= yacc_arg (2);
-			adapt_option ?= yacc_arg (3);
-			default_option ?= yacc_arg (4);
-			options ?= yacc_arg (5);
-			visible_option ?= yacc_arg (6)
-		end;
-
 feature -- Properties
+
+	dependencies: LACE_LIST [DEPEND_SD]
+			-- External dependencies.
 
 	use_name: ID_SD;
 			-- Use file
@@ -79,6 +68,166 @@ feature -- Properties
 
 	visible_option: LACE_LIST [CLAS_VISI_SD];
 			-- Visibility
+
+feature -- Setting
+
+	set_include_option (l: like include_option) is
+			-- Assign `l' to `include_option'.
+		do
+			include_option := l
+		ensure
+			include_option_set: include_option = l
+		end
+
+	set_exclude_option (l: like exclude_option) is
+			-- Assign `l' to `exclude_option'.
+		do
+			exclude_option := l
+		ensure
+			exclude_option_set: exclude_option = l
+		end
+
+	set_default_option (l: like default_option) is
+			-- Assign `l' to `default_option'.
+		do
+			default_option := l
+		ensure
+			default_option_set: default_option = l
+		end
+
+	set_visible_option (l: like visible_option) is
+			-- Assign `l' to `visible_option'.
+		do
+			visible_option := l
+		ensure
+			visible_option_set: visible_option = l
+		end
+
+	set_use_name (s: like use_name) is
+			-- Assign `s' to `use_name'.
+		do
+			use_name := s
+		ensure
+			use_name_set: use_name = s
+		end
+
+feature -- Duplication
+
+	duplicate: like Current is
+			-- Duplicate current object
+		do
+			create Result
+			Result.initialize (
+				duplicate_ast (dependencies),
+				duplicate_ast (use_name), duplicate_ast (include_option),
+				duplicate_ast (exclude_option), duplicate_ast (adapt_option),
+				duplicate_ast (default_option), duplicate_ast (options),
+				duplicate_ast (visible_option))
+		end
+
+feature -- Comparison
+
+	same_as (other: like Current): BOOLEAN is
+			-- Is `other' same as Current?
+		do
+			Result := other /= Void and then same_ast (dependencies, other.dependencies)
+					and then same_ast (use_name, other.use_name)
+					and then same_ast (include_option, other.include_option)
+					and then same_ast (exclude_option, other.exclude_option)
+					and then same_ast (adapt_option, other.adapt_option)
+					and then same_ast (default_option, other.default_option)
+					and then same_ast (options, other.options)
+					and then same_ast (visible_option, other.visible_option)
+		end
+
+feature -- Saving
+
+	save (st: GENERATION_BUFFER) is
+			-- Save current in `st'.
+		local
+			need_end: BOOLEAN
+		do
+			if dependencies /= Void and then not dependencies.is_empty then
+				need_end := True
+				st.putstring ("depend")
+				st.new_line
+				st.indent
+				use_name.save (st)
+				st.exdent
+				st.new_line
+			end
+
+			if use_name /= Void and then not use_name.is_empty then
+				need_end := True
+				st.putstring ("use")
+				st.new_line
+				st.indent
+				use_name.save (st)
+				st.exdent
+				st.new_line
+			end
+
+			if include_option /= Void and then not include_option.is_empty then
+				need_end := True
+				st.putstring ("include")
+				st.new_line
+				st.indent
+				include_option.save_with_separator (st, "; ")
+				st.exdent
+				st.new_line
+			end
+
+			if exclude_option /= Void and then not exclude_option.is_empty then
+				need_end := True
+				st.putstring ("exclude")
+				st.new_line
+				st.indent
+				exclude_option.save_with_separator (st, "; ")
+				st.exdent
+				st.new_line
+			end
+
+			if adapt_option /= Void and then not adapt_option.is_empty then
+				need_end := True
+				st.putstring ("adapt")
+				st.new_line
+				st.indent
+				adapt_option.save_with_separator (st, "; ")
+				st.exdent
+				st.new_line
+			end
+
+			if default_option /= Void and then not default_option.is_empty then
+				need_end := True
+				st.putstring ("default")	
+				st.new_line
+				st.indent
+				default_option.save_with_new_line (st)
+				st.exdent
+			end
+
+			if options /= Void and then not options.is_empty then
+				need_end := True
+				st.putstring ("option")	
+				st.new_line
+				st.indent
+				options.save_with_new_line (st)
+				st.exdent
+			end
+
+			if visible_option /= Void and then not visible_option.is_empty then
+				need_end := True
+				st.putstring ("visible")
+				st.new_line
+				st.indent
+				visible_option.save_with_new_line (st)
+				st.exdent
+			end
+			
+			if need_end then
+				st.putstring ("end")
+			end
+		end
 
 feature {COMPILER_EXPORTER} -- Lace compilation
 
@@ -114,7 +263,7 @@ feature {COMPILER_EXPORTER} -- Lace compilation
 				else
 					use_file.open_read
 						-- Parse local ace file
-					Parser.parse_file (use_file_path);
+					Parser.parse_file (use_file_path, True);
 					cluster_prop ?= Parser.ast;
 					if cluster_prop /= Void then	
 							-- Local ace cannot have a use clause
@@ -137,14 +286,17 @@ feature {COMPILER_EXPORTER} -- Lace compilation
 	adapt is
 			-- Adapt cluster `cluster' with current options
 		do
+			if dependencies /= Void then
+				dependencies.adapt;
+			end
 				-- First include additonal classes
 			if include_option /= Void then
 				include_option.adapt;
 			end;
 				-- Second exclude classes
 			if exclude_option /= Void then
-                exclude_option.adapt;
-            end;
+				exclude_option.adapt;
+			end;
 			
 				-- Check sum error
 			Error_handler.checksum;
@@ -230,3 +382,5 @@ feature {COMPILER_EXPORTER} -- Lace compilation
 		end;
 
 end -- class CLUST_PROP_SD
+
+

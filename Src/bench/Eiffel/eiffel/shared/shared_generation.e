@@ -26,10 +26,10 @@ feature {NONE}
 
 	generation_buffer: GENERATION_BUFFER is
 			-- String where all the generation will happen
-			-- Default size is 300Ko, it will be resized when
+			-- Default size is 600Ko, it will be resized when
 			-- needed.
 		once
-			!! Result.make (300000)
+			create Result.make (600000)
 		end
 
 	header_generation_buffer: GENERATION_BUFFER is
@@ -37,7 +37,13 @@ feature {NONE}
 			-- file will happen. Default size is 50Ko, it will
 			-- be resized when needed.
 		once
-			!! Result.make (50000)
+			create Result.make (50000)
 		end
-			
+
+	Encoder: ENCODER is
+			-- To generate encoded name for Eiffel features at the C level.
+		once
+			create Result
+		end
+	
 end

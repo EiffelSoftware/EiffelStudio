@@ -43,7 +43,7 @@ feature -- Output
 			st.add_string ("Compiler version: ");
 			st.add_string (compiler_version);
 			st.add_new_line;
-			if precompiled_version.empty then
+			if precompiled_version.is_empty then
 				st.add_string ("File `project.txt' does not exist in the EIFGEN directory");
 			else
 				st.add_string ("Precompile compiled with version: ");

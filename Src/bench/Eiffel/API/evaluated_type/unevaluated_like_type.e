@@ -67,10 +67,12 @@ feature -- Setting
 
 feature -- Output
 
-	append_to (st: STRUCTURED_TEXT) is
+	ext_append_to (st: STRUCTURED_TEXT; f: E_FEATURE) is
 			-- Append Current type to `st'.
 		do
-			st.add_string (dump)
+			st.add (ti_Like_keyword)
+			st.add_space
+			st.add_default_string (anchor)
 		end
 
 	dump: STRING is
@@ -103,17 +105,12 @@ feature {NONE} -- Implementation
 		do
 		end
 	
-	instantiation_in (type: TYPE_A written_id: CLASS_ID): like Current is
+	instantiation_in (type: TYPE_A written_id: INTEGER): like Current is
 		do
 		end
 
 	type_i: TYPE_I is
 			-- C type
-		do
-		end
-
-	storage_info_with_name, storage_info (classc: CLASS_C): S_TYPE_INFO is
-			-- Storage info for Current type in class `classc'
 		do
 		end
 

@@ -35,7 +35,6 @@ feature -- Setting
 			terminal: TERMINAL_OUI;
 			fg_color: COLOR;
 			font: FONT
-			color_imp: COLOR_IMP
 		do
 			fg_color := Graphical_resources.foreground_color.actual_value;
 			font := Graphical_resources.font.actual_value;

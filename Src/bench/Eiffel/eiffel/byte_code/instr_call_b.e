@@ -8,7 +8,7 @@ inherit
 		redefine
 			enlarge_tree, analyze, generate, make_byte_code,
 			is_unsafe, optimized_byte_node, calls_special_features,
-			size, inlined_byte_code, pre_inlined_code
+			size, inlined_byte_code, pre_inlined_code, generate_il
 		end
 	
 feature 
@@ -38,13 +38,25 @@ feature
 			-- Generate the call
 		do
 			generate_line_info;
+			generate_frozen_debugger_hook
 			call.generate;
 		end;
+
+feature -- IL code generation
+
+	generate_il is
+			-- Generate IL code for an intruction call
+		do
+			generate_il_line_info
+			call.generate_il
+		end
+
+feature -- Byte code generation
 
 	make_byte_code (ba: BYTE_ARRAY) is
 			-- Generate byte code for an intruction call
 		do
-			make_breakable (ba);
+			context.generate_melted_debugger_hook (ba);
 			call.make_byte_code (ba);
 		end;
 

@@ -36,7 +36,6 @@ feature {NONE} -- Initialization
 			end
 			compiler_version := Version_number;
 			compilation_id := System.compilation_id
-			compilation_size := System.body_index_table.count
 			licensed := check_license
 			name := System.system_name
 		end
@@ -48,9 +47,6 @@ feature -- Access
 
 	compiler_version: STRING
 			-- Compiler version
-
-	compilation_size: INTEGER
-			-- Approximative size of the compilation unit
 
 	licensed: BOOLEAN
 			-- Is this precompilation protected by a license?

@@ -43,6 +43,8 @@ feature {TTY_RESOURCES} -- Initialization
 						"Duplication", "Miscellaneous",
 						"Basic operations", "Obsolete", "Inapplicable",
 						"Implementation", "*" >>)
+			!! excluded_indexing_items.make ("excluded_indexing_items", rt,
+						<< "revision", "date", "status" >>)
 		end
 
 feature -- Validation
@@ -56,6 +58,6 @@ feature -- Validation
 feature -- Resources
 
 	parse_class_after_saving: BOOLEAN_RESOURCE;
-	feature_clause_order: ARRAY_RESOURCE
+	feature_clause_order, excluded_indexing_items: ARRAY_RESOURCE
 
 end -- class CLASS_CATEGORY

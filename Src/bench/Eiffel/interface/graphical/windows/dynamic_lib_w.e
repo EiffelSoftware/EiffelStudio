@@ -227,9 +227,6 @@ feature -- Stone process
 		end
  
 	synchronize is
-		local
-			local_showflat_frmt_holder: FORMAT_HOLDER
-			local_showclick_frmt_holder: FORMAT_HOLDER
 		do
 			display_clickable_dynamic_lib_exports(False)
 			update_save_symbol
@@ -240,7 +237,6 @@ feature -- Stone process
 			-- do not change title, nor file_name
 		local
 			a_file: PLAIN_TEXT_FILE
-			content:STRING
 		do
 			create a_file.make (a_file_name)
 			if a_file.exists and then a_file.is_readable and then a_file.is_plain then
@@ -314,7 +310,7 @@ feature -- Stone process
 							st.add_string (class_name)
 						end
 
-						if (dl_exp.creation_routine /=Void) and then (dl_exp.routine.id /= dl_exp.creation_routine.id) then
+						if (dl_exp.creation_routine /=Void) and then (dl_exp.routine.feature_id /= dl_exp.creation_routine.feature_id) then
 							st.add_string (" (")
 							if is_clickable then
 -- 								st.add_feature_name (dl_exp.creation_routine, dl_exp.creation_routine.name)
@@ -531,7 +527,7 @@ feature {NONE} -- Implemetation Window Settings
 	set_format_label (s: STRING) is
 			-- Set the format label to `s'.
 		require
-			valid_arg: (s /= Void) and then not s.empty
+			valid_arg: (s /= Void) and then not s.is_empty
 		do
 			format_label.set_text (s)
 		end
@@ -567,7 +563,6 @@ feature {NONE} -- Implementation Graphical Interface
 			save_cmd: SAVE_FILE
 			save_button: EB_BUTTON
 			save_menu_entry: EB_MENU_ENTRY
-			history_list_cmd: LIST_HISTORY
 		do
 			!! open_cmd.make (Current)
 			!! open_button.make (open_cmd, dynamic_lib_toolbar)
@@ -594,7 +589,6 @@ feature {NONE} -- Implementation Graphical Interface
 	build_format_bar is
 			-- Build formatting buttons in `dynamic_lib_toolbar'.
 		local
-			version_menu_entry: EB_MENU_ENTRY
 			shell_cmd: SHELL_COMMAND
 			shell_button: EB_BUTTON_HOLE
 			shell_menu_entry: EB_MENU_ENTRY

@@ -74,7 +74,7 @@ feature -- Update
 		
 invariant
 
-	valid_name: name /= Void and then not name.empty;
+	valid_name: name /= Void and then not name.is_empty;
 	value_not_void: value /= Void
 
 end -- class RESOURCE

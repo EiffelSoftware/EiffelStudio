@@ -54,14 +54,19 @@ feature -- Output
 		do
 			actual_dump := actual_type.dump
 			!!Result.make (15 + actual_dump.count)
-			Result.append ("(like Current)")
+			Result.append ("[like Current] ")
 			Result.append (actual_dump)
 		end
 
-	append_to (st: STRUCTURED_TEXT) is
+	ext_append_to (st: STRUCTURED_TEXT; f: E_FEATURE) is
 		do
-			st.add_string ("(like Current) ")
-			actual_type.append_to (st)
+			st.add (ti_L_bracket)
+			st.add (ti_Like_keyword)
+			st.add_space
+			st.add (ti_Current)
+			st.add (ti_R_bracket)
+			st.add_space
+			actual_type.ext_append_to (st, f)
 		end
 
 feature {COMPILER_EXPORTER} -- Primitives
@@ -74,7 +79,7 @@ feature {COMPILER_EXPORTER} -- Primitives
 			Result.set_actual_type (feat_table.associated_class.actual_type)
 		end
 
-	instantiation_in (type: TYPE_A; written_id: CLASS_ID): LIKE_CURRENT is
+	instantiation_in (type: TYPE_A; written_id: INTEGER): LIKE_CURRENT is
 			-- Instantiation of Current in the context of `class_type',
 			-- assuming that Current is written in class of id `written_id'.
 		do
@@ -86,14 +91,6 @@ feature {COMPILER_EXPORTER} -- Primitives
 			-- Byte code information for entity type creation
 		once
 			!!Result
-		end
-
-feature {COMPILER_EXPORTER} -- Storage information for EiffelCase
-
-	storage_info_with_name, storage_info (classc: CLASS_C): S_BASIC_TYPE_INFO is
-			-- Storage info for Current type in class `classc'
-		do
-			!! Result.make ("like Current")
 		end
 
 end -- class LIKE_CURRENT

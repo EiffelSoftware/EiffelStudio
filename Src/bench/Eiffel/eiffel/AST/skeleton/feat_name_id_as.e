@@ -22,17 +22,6 @@ feature {AST_FACTORY} -- Initialization
 			is_frozen_set: is_frozen = b
 		end
 
-feature {NONE} -- Initialization
-
-	set is
-			-- Yacc initialization
-		do
-			feature_name ?= yacc_arg (0)
-			is_frozen := yacc_bool_arg (0)
-		ensure then
-			feature_name_exists: feature_name /= Void
-		end
-
 feature -- Attributes
 
 	feature_name: ID_AS

@@ -59,7 +59,7 @@ feature {NONE} -- Attributes
 	menu_name: STRING is
 			-- Name used in menu entry
 		once
-			Result := Interface_names.m_Find
+			Result := Interface_names.m_old_Find
 		end
 
 	accelerator: STRING is

@@ -155,20 +155,20 @@ feature -- Access
 			end
 		end;
 
-	breakable_for (f: E_FEATURE; f_index: INTEGER): BREAKABLE_FIGURE is
-			-- Breakable Text figure for feature `f' with index `f_index'
+	breakable_for (body_index: INTEGER; f_index: INTEGER): BREAKABLE_FIGURE is
+			-- Breakable Text figure for feature of `body_index' with index `f_index'
 		require
-			valid_f: f /= Void
+			valid_body_index: body_index > 0
 		local
 			a: like area;
 			i, c: INTEGER;
 			fig: BREAKABLE_FIGURE;
 			found: BOOLEAN;
 			b: BREAKABLE_STONE;
-			bid: BODY_ID
+			bid: INTEGER
 		do
 			from
-				bid := f.body_id;
+				bid := body_index;
 				c := count;
 				a := area;
 				i := 0
@@ -178,7 +178,7 @@ feature -- Access
 				fig ?= a.item (i);
 				if fig /= Void then
 					b := fig.stone;
-					found := (bid.is_equal (b.routine.body_id) and then
+					found := (bid.is_equal (b.routine.body_index) and then
 						b.index = f_index)
 				end;
 				i := i + 1

@@ -4,40 +4,37 @@ inherit
 	EWB_QUERY
 		redefine
 			loop_action
-		end;
+		end
 
 feature {NONE} -- Execute
 
 	loop_action is
 		local
-			command_arguments: EWB_ARGUMENTS;
-			i: INTEGER;
-			start, modval: INTEGER;
-			argument: STRING;
+			command_arguments: EWB_ARGUMENTS
 			query_parser: QUERY_PARSER
 		do
-			command_arguments := command_line_io.command_arguments;
+			command_arguments := command_line_io.command_arguments
 			if command_arguments.argument_count >= 4 then
-				!! subquery.make (command_arguments.item (2), command_arguments.item (3), command_arguments.item (4));
+				create subquery.make (command_arguments.item (2), command_arguments.item (3), command_arguments.item (4))
 			else
-				extra_help;
+				extra_help
 				from
-					io.putstring ("--> Subquery: ");
-					command_line_io.get_name;
+					io.putstring ("--> Subquery: ")
+					command_line_io.get_name
 					command_arguments := command_line_io.command_arguments;
-					!! query_parser
+					create query_parser
 				until
 					command_arguments.argument_count = 3 and then query_parser.parse (query_string (command_arguments), Current)
 						--| Guillaume - 09/26/97
 				loop
-					io.putstring ("--> Subquery: ");
-					command_line_io.get_name;
-					command_arguments := command_line_io.command_arguments;
-				end;
-				-- !! subquery.make (command_arguments.item (1), command_arguments.item (2), command_arguments.item (3)); --| Done in query_parser.parse
-			end;
-			execute;
-		end;
+					io.putstring ("--> Subquery: ")
+					command_line_io.get_name
+					command_arguments := command_line_io.command_arguments
+				end
+				-- create subquery.make (command_arguments.item (1), command_arguments.item (2), command_arguments.item (3)); --| Done in query_parser.parse
+			end
+			execute
+		end
 
 	execute is
 		local
@@ -45,7 +42,7 @@ feature {NONE} -- Execute
 		do
 			-- subqueries.extend (subquery); --| Done in query_parser.parse
 			if subqueries.count > 1 then
-				!! sq_op.make ("and");
+				create sq_op.make ("and");
 				subquery_operators.extend (sq_op);
 				from
 					subqueries.finish;
@@ -96,7 +93,7 @@ feature {NONE} -- Implementation
 		do
 			from
 				i := 1
-				!! Result.make (0)
+				create Result.make (0)
 			until
 				i > command_arguments.argument_count
 			loop

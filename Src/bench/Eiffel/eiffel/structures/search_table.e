@@ -55,7 +55,7 @@ feature -- Access and queries
 			Result := content.item (n)
 		end;
 
-	empty: BOOLEAN is
+	is_empty: BOOLEAN is
 			-- Is structure empty?
 		do
 			Result := (count = 0)
@@ -215,9 +215,9 @@ feature {NONE} -- Internal features
 		require
 			good_key: valid_key (search_key)
 		local
-			increment, hash_code, table_size: INTEGER;
-			first_deleted_position, trace_deleted, visited_count: INTEGER;
-			old_key: H;
+			increment, hash_code, table_size, pos: INTEGER;
+			first_deleted_position, visited_count: INTEGER;
+			old_key, default_key: H;
 			stop: BOOLEAN
 			local_content: SPECIAL [H]
 			local_deleted_marks: SPECIAL [BOOLEAN]
@@ -230,34 +230,35 @@ feature {NONE} -- Internal features
 				hash_code := search_key.hash_code;
 				-- Increment computed for no cycle: `table_size' is prime
 				increment := 1 + hash_code \\ (table_size - 1);
-				position := (hash_code \\ table_size) - increment;
+				pos := (hash_code \\ table_size) - increment;
 			until
 				stop or else visited_count >= table_size
 			loop
-				position := (position + increment) \\ table_size;
+				pos := (pos + increment) \\ table_size;
 				visited_count := visited_count + 1;
-				old_key := local_content.item (position);
-				if not valid_key (old_key) then
-					if not local_deleted_marks.item (position) then
+				old_key := local_content.item (pos);
+				if old_key = default_key then
+					if not local_deleted_marks.item (pos) then
 						control := Not_found;
-						stop := true;
+						stop := True;
 						if first_deleted_position >= 0 then
-							position := first_deleted_position
+							pos := first_deleted_position
 						end
 					elseif first_deleted_position < 0 then
-						first_deleted_position := position
+						first_deleted_position := pos
 					end
 				elseif search_key.is_equal (old_key) then
 					control := Found;
-					stop := true
+					stop := True
 				end
 			end;
 			if not stop then
 				control := Not_found;
 				if first_deleted_position >= 0 then
-					position := first_deleted_position
+					pos := first_deleted_position
 				end;
 			end;
+			position := pos
 		end;
 
 	add_space is

@@ -36,12 +36,6 @@ feature -- Properties
 	filter_dialog: EB_FILTER_DIALOG
 			-- Associated popup dialog
 
-	filter_it: EV_ARGUMENT1 [ANY] is
-			-- Argument for the command.
-		once
-			create Result.make (Void)
-		end
-
 	filter_name: STRING is
 			-- Name of the filter to be applied
 		local
@@ -77,39 +71,48 @@ feature -- Properties
 
 feature {EB_FILTER_DIALOG} -- Implementation
 
-	execute (argument: EV_ARGUMENT1 [ANY]; data: EV_EVENT_DATA) is
+	execute is
 			-- If left mouse button was pressed -> execute filter.
 			-- If right mouse button was pressed -> bring up filter dialog. 
+		local
+--			mp: MOUSE_PTR
+		do
+				-- Popup filter dialog
+--			create mp.set_watch_cursor
+			create filter_dialog.make (Current)
+--			mp.restore
+			filter_dialog.call (Current)
+		end
+
+	display_filter is
+			-- Display the filter output in `text_area'
+		local
+			ed: EB_EDIT_TOOL
+			csd: EB_CONFIRM_SAVE_DIALOG
+		do
+			ed ?= tool
+			if ed /= Void and then ed.text_area.changed then
+				create csd.make_and_launch (ed, Current)
+			else
+				process
+			end
+		end
+
+	execute_filter_callback is
 		local
 			cmd_string: STRING
 			filterable_format: EB_FILTERABLE
 			shell_request: EXTERNAL_COMMAND_EXECUTOR
 			filename, new_text: STRING
 --			mp: MOUSE_PTR
-			ed: EB_EDIT_TOOL
 			wd: EV_WARNING_DIALOG
-			csd: EB_CONFIRM_SAVE_DIALOG
 		do
-			if argument = Void then
-					-- Popup filter dialog
---				create mp.set_watch_cursor
-				create filter_dialog.make_with_command (Current)
---				mp.restore
-				filter_dialog.call (Current)
-			elseif argument = filter_it then
-					-- Display the filter output in `text_area'
-				ed ?= tool
-				if ed /= Void and then ed.text_area.changed then
-					create csd.make_and_launch (ed, Current)
-				else
-					process
-				end
-			elseif tool.stone /= Void then
+			if tool.stone /= Void then
 					-- Execute the shell command
 				filterable_format ?= tool.last_format
 				if filterable_format = Void then
-					create wd.make_default (tool.parent, Interface_names.t_Warning,
-						Warning_messages.w_Not_a_filterable_format)
+					create wd.make_with_text (Warning_messages.w_Not_a_filterable_format)
+					wd.show_modal
 				else
 --					create mp.set_watch_cursor
 					if 
@@ -161,14 +164,14 @@ feature {NONE} -- Implementation
 			if not a_filename.empty then
 				create new_file.make (a_filename)
 				if new_file.exists and then not new_file.is_plain then
-					create wd.make_default (tool.parent, Interface_names.t_Warning, 
-						Warning_messages.w_Not_a_plain_file (new_file.name))
+					create wd.make_with_text (Warning_messages.w_Not_a_plain_file (new_file.name))
+					wd.show_modal
 				elseif new_file.exists and then not new_file.is_writable then
-					create wd.make_default (tool.parent, Interface_names.t_Warning, 
-						Warning_messages.w_Not_writable (new_file.name))
+					create wd.make_with_text (Warning_messages.w_Not_writable (new_file.name))
+					wd.show_modal
 				elseif not new_file.exists and then not new_file.is_creatable then
-					create wd.make_default (tool.parent, Interface_names.t_Warning, 
-						Warning_messages.w_Not_creatable (new_file.name))
+					create wd.make_with_text (Warning_messages.w_Not_creatable (new_file.name))
+					wd.show_modal
 				else
 					new_file.open_write
 					if not a_text.empty then

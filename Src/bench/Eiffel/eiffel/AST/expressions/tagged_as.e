@@ -1,9 +1,8 @@
 indexing
-	description:
-		"Abstract description of a tagged expression. %
-		%Version for Bench."
-	date: "$Date$"
-	revision: "$Revision$"
+	description	: "Abstract description of a tagged expression. %
+				  %Version for Bench."
+	date		: "$Date$"
+	revision	: "$Revision$"
 
 class
 	TAGGED_AS
@@ -12,12 +11,13 @@ inherit
 	EXPR_AS
 		redefine
 			type_check, byte_node, format,
-			fill_calls_list, replicate
+			fill_calls_list, replicate,
+			number_of_breakpoint_slots, line_number
 		end
 
 feature {AST_FACTORY} -- Initialization
 
-	initialize (t: like tag; e: like expr; s: INTEGER) is
+	initialize (t: like tag; e: like expr; s, l: INTEGER; ) is
 			-- Create a new TAGGED AST node.
 		require
 			e_not_void: e /= Void
@@ -25,23 +25,20 @@ feature {AST_FACTORY} -- Initialization
 			tag := t
 			expr := e
 			start_position := s
+			line_number := l
 		ensure
 			tag_set: tag = t
 			expr_set: expr = e
 			start_position_set: start_position = s
 		end
 
-feature {NONE} -- Initialization
+feature -- Access
 
-	set is
-			-- Yacc initialization
-		do
-			tag ?= yacc_arg (0)
-			expr ?= yacc_arg (1)
-			start_position := yacc_position
-		ensure then
-			expr_exists: expr /= Void
-		end
+	number_of_breakpoint_slots: INTEGER is 1
+			-- Number of stop points for AST
+
+	line_number: INTEGER
+		-- Line position of assertions
 
 feature -- Attributes
 
@@ -95,22 +92,22 @@ feature -- Type check, byte code and dead code removal
 	byte_node: ASSERT_B is
 			-- Associated byte code
 		do
-			!!Result
+			create Result
 			Result.set_tag (tag)
 			Result.set_expr (expr.byte_node)
+			Result.set_line_number (line_number)
 		end
 
 	format (ctxt: FORMAT_CONTEXT) is
 			-- Reconstitute text.
 		do
-			ctxt.new_expression
-			ctxt.begin
-			simple_format (ctxt)
-			if ctxt.last_was_printed then
-				ctxt.commit
-			else
-				ctxt.rollback
-			end
+			internal_format (ctxt, not ctxt.is_with_breakable)
+		end
+
+	format_without_breakable_marks (ctxt: FORMAT_CONTEXT) is
+			-- Reconstitute text without creating the breakable marks
+		do
+			internal_format (ctxt, True)
 		end
 
 feature	-- Replication
@@ -120,7 +117,7 @@ feature	-- Replication
 		local
 			new_list: like l
 		do
-			!!new_list.make
+			create new_list.make
 			expr.fill_calls_list (new_list)
 			l.merge (new_list)
 		end
@@ -132,36 +129,44 @@ feature	-- Replication
 			Result.set_expr (expr.replicate (ctxt))
 		end
 
-feature -- Case Storage
-
-	storage_info (ctxt: FORMAT_CONTEXT): S_TAG_DATA is
-		require
-			valid_context: ctxt /= Void
-			empty_text: ctxt.text.empty
-		local
-			txt: STRING
-		do
-			expr.simple_format (ctxt)
-			if tag = Void then
-				!! Result.make (Void, ctxt.text.image)
-			else
-				!! Result.make (tag.string_value, ctxt.text.image)
-			end
-			ctxt.text.wipe_out
-		end
-
 feature {AST_EIFFEL} -- Output
 
 	simple_format (ctxt: FORMAT_CONTEXT) is
 			-- Reconstitute text.
 		do
+			ctxt.put_breakable
 			if tag /= Void then
-				ctxt.put_string (tag)
+				ctxt.put_text_item (
+					create {ASSERTION_TAG_TEXT}.make (tag.string_value)
+				)
 				ctxt.put_text_item_without_tabs (ti_Colon)
 				ctxt.put_space
 			end
 			ctxt.new_expression
 			ctxt.format_ast (expr)
+		end
+
+	internal_format (ctxt: FORMAT_CONTEXT; hide_breakable_marks: BOOLEAN) is
+		do
+			ctxt.new_expression
+			ctxt.begin
+			if not hide_breakable_marks then
+				ctxt.put_breakable
+			end
+			if tag /= Void then
+				ctxt.put_text_item (
+					create {ASSERTION_TAG_TEXT}.make (tag.string_value)
+				)
+				ctxt.put_text_item_without_tabs (ti_Colon)
+				ctxt.put_space
+			end
+			ctxt.new_expression
+			ctxt.format_ast (expr)
+			if ctxt.last_was_printed then
+				ctxt.commit
+			else
+				ctxt.rollback
+			end
 		end
 
 feature {TAGGED_AS}	-- Replication

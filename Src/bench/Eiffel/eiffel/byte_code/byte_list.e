@@ -8,7 +8,7 @@ inherit
 		undefine
 			copy, is_equal
 		redefine
-			enlarge_tree, analyze, generate, make_byte_code,
+			enlarge_tree, analyze, generate, generate_il, make_byte_code,
 			assigns_to, is_unsafe, optimized_byte_node,
 			calls_special_features, size, pre_inlined_code,
 			inlined_byte_code, has_separate_call
@@ -22,7 +22,7 @@ inherit
 creation
 	make, make_filled
 
-feature 
+feature -- Code analyzis
 
 	analyze is
 			-- Loop over `list' and analyze each item
@@ -41,6 +41,8 @@ feature
 			end
 		end
 
+feature -- C generation
+
 	generate is
 			-- Loop over `list' and generate each item
 		local
@@ -57,6 +59,46 @@ feature
 				i := i + 1
 			end
 		end
+
+feature -- IL code generation
+
+	generate_il is
+			-- Loop over `list' and generate IL code for each item
+		local
+			l_area: SPECIAL [T]
+			i, nb: INTEGER
+		do
+			from
+				l_area := area
+				nb := count
+			until
+				i = nb
+			loop
+				l_area.item (i).generate_il
+				i := i + 1
+			end
+		end
+
+feature -- Byte code generation
+
+	make_byte_code (ba: BYTE_ARRAY) is
+			-- Generates byte code for element in the list
+		local
+			l_area: SPECIAL [T]
+			i, nb: INTEGER
+		do
+			from
+				l_area := area
+				nb := count
+			until
+				i = nb
+			loop
+				l_area.item (i).make_byte_code (ba)
+				i := i + 1
+			end
+		end
+
+feature -- Tree enlargment
 
 	enlarge_tree is
 			-- Loop ovet `list' and enlarges each item
@@ -77,23 +119,6 @@ feature
 				else
 					l_item.enlarge_tree
 				end
-				i := i + 1
-			end
-		end
-
-	make_byte_code (ba: BYTE_ARRAY) is
-			-- Generates byte code for element in the list
-		local
-			l_area: SPECIAL [T]
-			i, nb: INTEGER
-		do
-			from
-				l_area := area
-				nb := count
-			until
-				i = nb
-			loop
-				l_area.item (i).make_byte_code (ba)
 				i := i + 1
 			end
 		end

@@ -4,7 +4,8 @@ inherit
 
 	NUM_BINARY_B
 		rename
-			Bc_plus as operator_constant
+			Bc_plus as operator_constant,
+			il_plus as il_operator_constant
 		redefine
 			generate_operator, is_commutative,
 			is_simple, generate_simple, generate_plus_plus,

@@ -81,7 +81,7 @@ feature -- Initialization
 			add_modify_action (Current, modify_event_action)
 			set_action ("Ctrl<Btn3Down>", Current, new_tooler_action)
 			set_action ("Ctrl<Btn1Down>", Current, retarget_tooler_action)
-			set_action ("Shift<Btn3Down>", Current, super_melt_action)
+--Arnaud	set_action ("Shift<Btn3Down>", Current, super_melt_action)
 			set_action ("Ctrl Shift<Btn3Down>", Current, insert_breakpoint_action)
 		end
 
@@ -290,7 +290,7 @@ feature -- Text manipulation
 			set_cursor_position (0)
 			set_changed (false)
 		ensure then
-			image.empty
+			image.is_empty
 			position = 0
 			clickable_count = 0
 			focus_start = 0
@@ -426,17 +426,18 @@ feature -- Update
 			end
 		end
 
-	redisplay_breakable_mark (f: E_FEATURE; index: INTEGER) is
-			-- Redisplay the sign of the `index'-th breakable point.
+	redisplay_breakable_mark (body_index: INTEGER; index: INTEGER) is
+			-- Redisplay the sign of the `index'-th breakable point
+			-- of the feature that have its body_index equal to `body_index'
+			-- Display the arrow "->" if `display_arrow' is True.
 		local
 			start_pos, end_pos: INTEGER
 			was_selection_active: BOOLEAN
 			status: APPLICATION_STATUS
 			cb: CLICK_BREAKABLE
-			bid: BODY_ID
 			bs: BREAKABLE_STONE
 		do
-			cb := breakable_for (f, index)
+			cb := breakable_for (body_index, index)
 			if cb /= Void then
 				changed := True
 				bs := cb.breakable
@@ -450,10 +451,7 @@ feature -- Update
 				replace (cb.start_position, cb.end_position, bs.sign)
 				changed := False
 				status := Application.status
-				if
-					status /= Void and status.is_stopped and
-					status.is_at (bs.routine, bs.index)
-				then
+				if status /= Void and then status.is_stopped and then status.is_at (bs.body_index, bs.index) then
 						-- Execution stopped at that breakpoint.
 						-- Show the point on the screen (scroll if
 						-- necessary)

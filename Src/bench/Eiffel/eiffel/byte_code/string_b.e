@@ -6,7 +6,7 @@ inherit
 
 	EXPR_B
 		redefine
-			enlarged, make_byte_code
+			enlarged, make_byte_code, generate_il
 		end;
 	
 feature 
@@ -39,13 +39,22 @@ feature
 		do
 		end;
 
+feature -- IL code generation
+
+	generate_il is
+			-- Generate IL code for a manifest string.
+		do
+			il_generator.put_manifest_string (value)
+		end
+
 feature -- Byte code generation
 
 	make_byte_code (ba: BYTE_ARRAY) is
 			-- Generate byte code for a manifest string
 		do
-			ba.append (Bc_string);
-			ba.append_raw_string (value);
+			ba.append (Bc_string)
+			ba.append_integer (value.count)
+			ba.append_raw_string (value)
 		end;
 
 end

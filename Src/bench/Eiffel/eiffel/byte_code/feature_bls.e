@@ -87,7 +87,7 @@ feature
 							loc_idx := -1
 						end
 						if loc_idx /= -1 then
-							buf.put_protected_local (context.ref_var_used + loc_idx)
+							buf.put_protected_local_set (context.ref_var_used + loc_idx)
 						else
 							-- It'll be the case when the value is "Void"
 							expr.print_register
@@ -136,7 +136,7 @@ feature
 					buf.putstring("CURPI(")
 				elseif cl_type.is_feature_pointer then
 					buf.putstring("CURPP(")
-				elseif cl_type.is_expanded then
+				elseif cl_type.is_true_expanded then
 					buf.putstring("CURPO(")
 					-- FIXCONCURRENCY: We should make a clone here.
 				elseif cl_type.is_separate then
@@ -160,7 +160,7 @@ feature
  
 			buf.putstring (")")
 			if cl_type /= Void  then
-				if not(cl_type.is_separate or cl_type.is_long or cl_type.is_feature_pointer or cl_type.is_boolean or cl_type.is_char or cl_type.is_double or cl_type.is_float or cl_type.is_expanded) then
+				if not (cl_type.is_separate or cl_type.is_expanded) then
 					buf.putstring(")")
 				end
 				buf.putstring (", 0);")

@@ -34,12 +34,8 @@ feature
 		do
 			target_type := real_type (attachment_type);
 			source_type := real_type (expression.type);
-			if not (target_type.is_none or target_type.is_expanded or
-				target_type.is_basic) and (source_type.is_basic or
-				source_type.is_expanded)
-			then
-				Result := true;
-			end;
+			Result := not (target_type.is_none or target_type.is_expanded) and then
+				(source_type.is_expanded)
 		end;
 
 	propagate (r: REGISTRABLE) is
@@ -102,14 +98,14 @@ feature
 							loc_idx := -1;
 						end;
 						if loc_idx /= -1 then
-							buf.put_protected_local (context.ref_var_used + loc_idx);
+							buf.put_protected_local_set (context.ref_var_used + loc_idx);
 							buf.putstring (" = ");
 							if not real_type(expression.type).is_separate then
 								buf.putstring (" CURLTS(");
-								expression.stored_register.print_register_by_name;
+								expression.stored_register.print_register;
 								buf.putstring ("); ");
 							else
-								expression.stored_register.print_register_by_name;
+								expression.stored_register.print_register;
 								buf.putstring (";");
 							end;
 							buf.new_line;
@@ -128,7 +124,7 @@ feature
 		do
 			buf := buffer
 			source_type := real_type (expression.type);
-			if source_type.is_expanded then
+			if source_type.is_true_expanded then
 					-- Expanded objects are cloned
 				register.print_register;
 				buf.putstring (" = ");
@@ -158,7 +154,7 @@ feature
 			source_type := real_type (expression.type);
 			if target_type.is_none then
 				buf.putstring ("(EIF_REFERENCE) 0");
-			elseif target_type.is_expanded then
+			elseif target_type.is_true_expanded then
 					-- The callee is responsible for cloning the reference.
 				expression.print_register;
 			elseif target_type.is_basic then
@@ -181,7 +177,7 @@ feature
 					-- is an attached register if the source is basic (e.g. if
 					-- we have the constant '4' or '5 - 3'). This is where
 					-- the 'register' attribute plays its role...
-				if source_type.is_basic or source_type.is_expanded then
+				if source_type.is_expanded then
 					register.print_register;
 				else
 					expression.print_register;

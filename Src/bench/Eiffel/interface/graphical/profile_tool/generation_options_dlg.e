@@ -245,7 +245,7 @@ feature {NONE} -- Implementation
 	fill_profiler_list is
 			-- Fill `profiler_list' with profilers
 			-- for which configuration files could be found
-			-- in "$EIFFEL4/bench/profiler".
+			-- in Eiffel installtion directory under "bench/profiler".
 		require
 			profiler_list_not_void: profiler_list /= Void
 		local
@@ -276,7 +276,7 @@ feature {NONE} -- Implementation
 					to_be_selected := to_be_selected + 1
 				end
 			end;
-			if not profiler_list.empty then
+			if not profiler_list.is_empty then
 				profiler_list.select_i_th (to_be_selected);
 				last_selected_position := to_be_selected
 			end

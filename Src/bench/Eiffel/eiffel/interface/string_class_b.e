@@ -83,7 +83,7 @@ feature
 				or else
 				(not set_count_feat.same_signature (Set_count_signature))
 				or else
-				not equal (set_count_feat.written_in, id)
+				not (set_count_feat.written_in = class_id)
 			then
 				!!special_error.make (Case_17, Current);
 				Error_handler.insert_error (special_error);
@@ -96,11 +96,10 @@ feature
 		local
 			gen: ARRAY [TYPE_A];
 		once
-			!!gen.make (1, 1);
-			gen.put (Character_type, 1);
-			!!Result;
-			Result.set_generics (gen);
-			Result.set_base_class_id (System.to_special_id);
+			create gen.make (1, 1)
+			gen.put (Character_type, 1)
+			create Result.make (gen)
+			Result.set_base_class_id (System.to_special_id)
 		end;
 
 	Make_signature: DYN_PROC_I is
@@ -135,14 +134,10 @@ feature
 		do
 			creators.start;
 			feat_table := feature_table;
-			feat := feat_table.item (creators.key_for_iteration);
---			if not feat.used then
-				remover.record (feat, Current);
---			end;
+			feat := feat_table.item ("make");
+			remover.record (feat, Current);
 			feat := feat_table.item ("set_count");
---			if not feat.used then
-				remover.record (feat, Current);
---			end;
+			remover.record (feat, Current);
 		end;
 
 end

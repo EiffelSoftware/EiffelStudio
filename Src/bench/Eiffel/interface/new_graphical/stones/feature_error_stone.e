@@ -12,7 +12,6 @@ inherit
 		rename
 			make as feat_make
 		redefine
---			process,
 			line_number
 		end
 
@@ -53,17 +52,5 @@ feature -- Access
 				file.close
 			end
 		end
-
-feature -- Update
-
---	process (hole: HOLE) is
---			-- Process Current stone dropped in hole `hole'.
---		do
---			if is_valid then
---				hole.process_feature_error (Current)
---			else
---				warner (hole.target.top).gotcha_call (invalid_stone_message)
---			end
---		end
 
 end -- class FEATURE_ERROR_STONE

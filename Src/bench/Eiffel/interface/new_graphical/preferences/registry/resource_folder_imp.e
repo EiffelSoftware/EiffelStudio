@@ -32,10 +32,9 @@ feature -- Initialization
 			structure := struct
 			handle := open_key_with_access (path, Key_read)
 			load_attributes
-			if not close_key (handle) then
-				check
-					Error: False
-				end
+			close_key (handle)
+			check
+				success: last_call_successful
 			end
 		end
 
@@ -61,10 +60,9 @@ feature -- Initialization
 				create child.make (key, child_handle, structure)
 				child.create_interface
 				child_list.extend (child)
-				if not close_key (child_handle) then
-					check
-							Error: False
-					end
+				close_key (child_handle)
+				check
+					success: last_call_successful
 				end
 				i := i + 1
 				key := enumerate_key (handle, i)
@@ -93,8 +91,13 @@ feature -- Update
 			name := "root"
 			description := "root folder"
 			handle := open_key_with_access (path, Key_read)
-			update_attributes (handle)
-			if not close_key (handle) then
+			if handle /= Default_pointer then
+				update_attributes (handle)
+				close_key (handle)
+				check
+					success: last_call_successful
+				end
+			else
 				check
 					Error: False
 				end
@@ -123,10 +126,9 @@ feature -- Update
 				if child /= Void then
 					child_handle := open_key (p_handle, key.name, Key_read)
 					child.update_attributes (child_handle)
-					if not close_key (child_handle) then
-						check
-								Error: False
-						end
+					close_key (child_handle)
+					check
+						success: last_call_successful
 					end
 				end
 				i := i + 1
@@ -194,10 +196,9 @@ feature -- Save
 --				end
 				resource_list.forth
 			end
-			if not close_key (handle) then
-				check
-					Error: False
-				end
+			close_key (handle)
+			check
+				success: last_call_successful
 			end
 		end
 
@@ -233,28 +234,9 @@ feature -- Save
 --				end
 				resource_list.forth
 			end
-			if not close_key (handle) then
-				check
-					Error: False
-				end
-			end
-		end
-
-	save_resource (res: RESOURCE; location: STRING; path: STRING) is
-		local
-			reg_resource: REGISTRY_RESOURCE
-			s: STRING
-			h: POINTER
-		do
-			s := location + "\" + path
-			create_new_key (s)
-			h := open_key_with_access (s, Key_write)
-			create reg_resource.make_from_resource (res)
-			set_key_value (h, res.registry_name, reg_resource.key_value)
-			if not close_key (h) then
-				check
-					Error: False
-				end
+			close_key (handle)
+			check
+				success: last_call_successful
 			end
 		end
 

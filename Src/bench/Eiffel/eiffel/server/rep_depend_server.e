@@ -1,10 +1,13 @@
--- Server for replicated features 
+indexing
+	description: "Server for replicated features indexed by class id."
+	date: "$Date$"
+	revision: "$Revision$"
 
 class
 	REP_DEPEND_SERVER 
 
 inherit
-	COMPILER_SERVER [REP_CLASS_DEPEND, CLASS_ID]
+	COMPILER_SERVER [REP_CLASS_DEPEND]
 		redefine
 			disk_item, has, item
 		end
@@ -20,13 +23,13 @@ feature -- Access
 			!! Result.make
 		end
 	
-	id (t: REP_CLASS_DEPEND): CLASS_ID is
+	id (t: REP_CLASS_DEPEND): INTEGER is
 			-- Id associated with `t'
 		do
-			Result := t.id
+			Result := t.class_id
 		end
 
-	item (an_id: CLASS_ID): REP_CLASS_DEPEND is
+	item (an_id: INTEGER): REP_CLASS_DEPEND is
 			-- Replicate features of class id `an_id'. 
 			-- Look first in the temporary rep feat server.
 		require else
@@ -39,7 +42,7 @@ feature -- Access
 			end;
 		end;
 
-	disk_item (an_id: CLASS_ID): REP_CLASS_DEPEND is
+	disk_item (an_id: INTEGER): REP_CLASS_DEPEND is
 			-- Byte code of body id `and_id'. Look first in the temporary
 			-- byte code server
 		do
@@ -50,11 +53,11 @@ feature -- Access
 			end;
 		end;
 
-	has (an_id: CLASS_ID): BOOLEAN is
+	has (an_id: INTEGER): BOOLEAN is
 			-- Is the id `an_id' present in `Tmp_rep_depend_server' or
 			-- Current ?
 		require else
-			positive_id: an_id /= Void
+			positive_id: an_id /= 0
 		do
 			Result := server_has (an_id) or else Tmp_rep_depend_server.has (an_id);
 		end;

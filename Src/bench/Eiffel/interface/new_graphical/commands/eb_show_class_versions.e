@@ -13,7 +13,7 @@ inherit
 
 	EB_EDITOR_COMMAND
 		redefine
-			tool, execute
+			tool
 		end
 
 	EB_CONFIRM_SAVE_CALLBACK
@@ -25,7 +25,7 @@ creation
 
 feature -- Properties
 
-	tool: EB_CLASS_TOOL
+	tool: EB_DEVELOPMENT_TOOL
 			-- Class tool
 
 --	name, menu_name: STRING is
@@ -44,7 +44,6 @@ feature -- Properties
 		local
 			file_name: STRING
 			f: PLAIN_TEXT_FILE
-			pos: INTEGER
 			wd: EV_WARNING_DIALOG
 		do
 			if position = 1 then
@@ -58,15 +57,15 @@ feature -- Properties
 				if f.exists and then f.is_readable and then f.is_plain then
 					tool.show_file (f)
 				else
- 					create wd.make_default (tool.parent, Interface_names.t_Warning,
-						Warning_messages.w_Cannot_read_file (file_name))
+ 					create wd.make_with_text (Warning_messages.w_Cannot_read_file (file_name))
+					wd.show_modal
 				end
 			end	
 		end
 
 feature {NONE} -- Implementation
 
-	stone: FILED_STONE
+	stone: CLASS_STONE
 			-- Stone of class window
 
 	position: INTEGER
@@ -78,41 +77,42 @@ feature {NONE} -- Implementation
 
 feature {NONE} -- Execution
 
-	execute (arg: EV_ARGUMENT1 [EB_CHOICE_DIALOG]; data: EV_EVENT_DATA) is
-			-- Ask for version displaying, or treat callback
-			-- from choice window
+	execute is
+			-- Ask for version displaying.
 		local
 			classi: CLASSI_STONE
 			classc: CLASSC_STONE
-			csd: EB_CONFIRM_SAVE_DIALOG
 		do
-			if arg = Void then
-					--| Event just triggered. We have to provide user a
-					--| dialog for him choice a version.
-				classi ?= tool.stone
-				if classi /= Void then
-					display_choice (classi.class_i)
+				--| Event just triggered. We have to provide user a
+				--| dialog for him choice a version.
+			classi ?= tool.stone
+			if classi /= Void then
+				display_choice (classi.class_i)
+			else
+				classc ?= tool.stone
+				if classc /= Void then
+ 					display_choice (classc.e_class.lace_class)
 				else
-					classc ?= tool.stone
-					if classc /= Void then
- 						display_choice (classc.e_class.lace_class)
-					else
-							--| If stone is not a class stone, it must be Void.
-						check
-							no_stone: tool.stone = Void
-						end
+						--| If stone is not a class stone, it must be Void.
+					check
+						no_stone: tool.stone = Void
 					end
 				end
-			else
-				position := arg.first.position
-				arg.first.destroy
-				if position /= 0 then
-					if tool.text_area.changed then
-						create csd.make_and_launch (tool, Current)
-							--| possible callback treated by `process'
-					else
-						process
-					end
+			end
+		end
+
+	process_ith (pos: INTEGER) is
+			-- Treat callback from choice window.
+		local
+			csd: EB_CONFIRM_SAVE_DIALOG
+		do
+			position := pos
+			if position /= 0 then
+				if tool.text_area.changed then
+					create csd.make_and_launch (tool, Current)
+						--| possible callback treated by `process'
+				else
+					process
 				end
 			end
 		end
@@ -174,7 +174,7 @@ feature {NONE} -- Implementation
 				end
 				i := i - 1
 			end
-			create choice.make_default (Current)
+			create choice.make_default (~process_ith (?))
 			stone := tool.stone
 			choice.set_title (Interface_names.t_Select_class_version)
 			choice.set_list (output_list)

@@ -10,10 +10,10 @@ inherit
 
 feature
 
-	access_in: CLASS_ID
+	access_in: INTEGER
 			-- Access class id
 
-	set_access_in (i: CLASS_ID) is
+	set_access_in (i: INTEGER) is
 			-- Assign `i' to `access_in'
 		do
 			access_in := i
@@ -30,7 +30,7 @@ feature
 			Result := rep
 		end; -- replicated
 
-	unselected (i: CLASS_ID): FEATURE_I is
+	unselected (i: INTEGER): FEATURE_I is
 			-- Unselected feature
 		local
 			rep: RD1_ATTRIBUTE_I
@@ -44,7 +44,7 @@ feature
 	transfer_to (f: like Current) is
 			-- Data transfer
 		do
-			{ATTRIBUTE_I} precursor (f)
+			{ATTRIBUTE_I} Precursor (f)
 			f.set_access_in (access_in)
 		end
 

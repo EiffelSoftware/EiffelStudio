@@ -1,22 +1,20 @@
 indexing
-
-	description: 
-		"";
+	description: "Optional option";
 	date: "$Date$";
-	revision: "$Revision $"
+	revision: "$Revision$"
 
-class O_OPTION_SD
+class
+	O_OPTION_SD
 
 inherit
-
 	D_OPTION_SD
 		rename
 			initialize as d_initialize
 		redefine
-			set, adapt
+			adapt, duplicate, save, same_as
 		end;
 
-feature {LACE_AST_FACTORY} -- Initialization
+feature {O_OPTION_SD, LACE_AST_FACTORY} -- Initialization
 
 	initialize (o: like option; v: like value; t: like target_list) is
 			-- Create a new O_OPTION AST node.
@@ -32,22 +30,43 @@ feature {LACE_AST_FACTORY} -- Initialization
 			target_list_set: target_list = t
 		end
 
-feature {NONE} -- Initialization 
-
-	set is
-			-- Yacc initialization
-		do
-			option ?= yacc_arg (0);
-			value ?= yacc_arg (1);
-			target_list ?= yacc_arg (2);
-		ensure then
-			target_list_exists: target_list /= Void;
-		end;
-
 feature -- Properties
 
 	target_list: LACE_LIST [ID_SD];
 			-- List of class targets
+
+feature -- Duplication
+
+	duplicate: like Current is
+			-- Duplicate current object
+		do
+			create Result
+			Result.initialize (option.duplicate,
+				duplicate_ast (value), duplicate_ast (target_list))
+		end
+
+feature -- Comparison
+
+	same_as (other: like Current): BOOLEAN is
+			-- Is `other' same as Current?
+		do
+			Result := other /= Void and then option.same_as (other.option)
+			 		and then same_ast (value, other.value)
+					and then same_ast (target_list, other.target_list)
+		end
+
+
+feature -- Saving
+
+	save (st: GENERATION_BUFFER) is
+			-- Save current in `st'.
+		do
+			Precursor {D_OPTION_SD} (st)
+			st.putstring (":")
+			if target_list /= Void then
+				target_list.save_with_interval_separator (st, ", ")
+			end
+		end
 
 feature {COMPILER_EXPORTER}
 

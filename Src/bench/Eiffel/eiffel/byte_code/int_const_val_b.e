@@ -2,31 +2,28 @@
 class INT_CONST_VAL_B 
 
 inherit
-
 	INT_VAL_B
 		rename
 			make as old_make
 		redefine
 			generation_value, make_byte_code
-		end;
+		end
+
 	SHARED_BYTE_CONTEXT
 		export
 			{NONE} all
-		end;
+		end
 
 creation
-
 	make
-
 	
 feature
 
-	rout_id: ROUTINE_ID;
+	rout_id: INTEGER;
 			-- Routine id of the constant
 
 	feature_id: INTEGER;
 			-- Feature id of the constant
-
 	
 feature 
 
@@ -65,13 +62,13 @@ feature -- Byte code generation
 			if base_class.is_precompiled then
 				rout_info := System.rout_info_table.item (rout_id);
 				ba.append (Bc_pfeature);
-				ba.append_integer (rout_info.origin.id);
+				ba.append_integer (rout_info.origin);
 				ba.append_integer (rout_info.offset)
 				ba.append_short_integer (-1);
 			else
 				ba.append (Bc_feature);
 				ba.append_integer (feature_id);
-				ba.append_short_integer (cl_type.associated_class_type.id.id - 1)
+				ba.append_short_integer (cl_type.associated_class_type.static_type_id - 1)
 				ba.append_short_integer (-1);
 			end
 		end;

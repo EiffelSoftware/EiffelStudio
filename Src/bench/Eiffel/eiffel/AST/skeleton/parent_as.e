@@ -1,8 +1,8 @@
 indexing
 
 	description: "Abstract description of a parent. Version for Bench."
-	date: "Date: $"
-	revision: "Revision: $"
+	date: "$Date$"
+	revision: "$Revision$"
 
 class PARENT_AS
 
@@ -31,23 +31,8 @@ feature {AST_FACTORY} -- Initialization
 			renaming_set: renaming = rn
 			exports_set: exports = e
 			undefining_set: undefining = u
-			redefininig_set: redefining = rd
+			redefining_set: redefining = rd
 			selecting_set: selecting = s
-		end
-
-feature {NONE} -- Initialization
-	
-	set is
-			-- Yacc initialization
-		do
-			type ?= yacc_arg (0)
-			renaming ?= yacc_arg (1)
-			exports ?= yacc_arg (2)
-			undefining ?= yacc_arg (3)
-			redefining ?= yacc_arg (4)
-			selecting ?= yacc_arg (5)
-		ensure then
-			type_exists: type /= Void
 		end
 
 feature -- Attributes
@@ -65,10 +50,32 @@ feature -- Attributes
 			-- Redefining clause
 
 	undefining: EIFFEL_LIST [FEATURE_NAME]
-			-- Define clause
+			-- Undefine clause
 
 	selecting: EIFFEL_LIST [FEATURE_NAME]
 			-- Select clause
+
+	start_position: INTEGER
+			-- Index in class text.
+
+--	end_position: INTEGER
+			-- Index in class text.
+
+feature {EIFFEL_PARSER} -- Element change
+
+	set_text_positions (sp: INTEGER) is
+			-- Set `start_position' to `sp'.
+			-- Set `end_position' to `ep'.
+		require
+			sp_positive: sp > 0
+--			ep_greater_than_sp: ep > sp
+		do
+			start_position := sp
+--			end_position := ep
+		ensure
+			start_position_set: start_position = sp
+--			end_position_set: end_position = ep
+		end
 
 feature -- Comparison
 
@@ -85,26 +92,10 @@ feature -- Comparison
 
 feature -- Access
 
-	is_subset_of (other: like Current): BOOLEAN is
-			-- Is Current a subset of `other'?
-			--| Does Current content appear in `other'?
-		require
-			valid_other: other /= Void
-			same_type: equivalent (type, other.type)
+	associated_class (reference_class: CLASS_C): CLASS_C is
+			-- Compiled class associated with `type'.
 		do
-			Result := is_list_subset_of (exports, other.exports)
-			if Result then
-				Result := is_list_subset_of (redefining, other.redefining)
-			end
-			if Result then
-				Result := is_list_subset_of (renaming, other.renaming)
-			end
-			if Result then
-				Result := is_list_subset_of (selecting, other.selecting)
-			end
-			if Result then
-				Result := is_list_subset_of (undefining, other.undefining)
-			end
+			Result := type.associated_eiffel_class (reference_class)
 		end
 
 feature -- Compiled parent computation
@@ -223,70 +214,29 @@ feature {AST_EIFFEL} -- Output
 			-- Reconstitute text.
 		local
 			end_to_print: BOOLEAN
+			pc: CLASS_C
 		do
+			pc := associated_class (ctxt.class_c)
+			ctxt.set_classes (pc, pc)
 			ctxt.format_ast (type)
 			if renaming /= Void then
-				ctxt.indent
-				ctxt.new_line
-				ctxt.put_text_item (ti_Rename_keyword)
-				ctxt.indent
-				ctxt.new_line
-				ctxt.set_separator (ti_Comma)
-				ctxt.set_new_line_between_tokens
-				ctxt.format_ast (renaming)
-				ctxt.exdent
-				ctxt.exdent
+				format_clause (ctxt, ti_Rename_keyword, renaming)
 				end_to_print := true
 			end
 			if exports /= Void then
-				ctxt.indent
-				ctxt.new_line
-				ctxt.put_text_item (ti_Export_keyword)
-				ctxt.indent
-				ctxt.new_line
-				ctxt.set_new_line_between_tokens
-				ctxt.format_ast (exports)
-				ctxt.exdent
-				ctxt.exdent
+				format_clause (ctxt, ti_Export_keyword, exports)
 				end_to_print := true
 			end
 			if undefining /= Void then
-				ctxt.indent
-				ctxt.new_line
-				ctxt.put_text_item (ti_Undefine_keyword)
-				ctxt.indent
-				ctxt.new_line
-				ctxt.set_separator (ti_Comma)
-				ctxt.set_space_between_tokens
-				ctxt.format_ast (undefining)
-				ctxt.exdent
-				ctxt.exdent
+				format_clause (ctxt, ti_Undefine_keyword, undefining)
 				end_to_print := true
 			end
 			if redefining /= Void then
-				ctxt.indent
-				ctxt.new_line
-				ctxt.put_text_item (ti_Redefine_keyword)
-				ctxt.indent
-				ctxt.new_line
-				ctxt.set_separator (ti_Comma)
-				ctxt.set_space_between_tokens
-				ctxt.format_ast (redefining)
-				ctxt.exdent
-				ctxt.exdent
+				format_clause (ctxt, ti_Redefine_keyword, redefining)
 				end_to_print := true
 			end
 			if selecting /= Void then
-				ctxt.indent
-				ctxt.new_line
-				ctxt.put_text_item (ti_Select_keyword)
-				ctxt.indent
-				ctxt.new_line
-				ctxt.set_separator (ti_Comma)
-				ctxt.set_space_between_tokens
-				ctxt.format_ast (selecting)
-				ctxt.exdent
-				ctxt.exdent
+				format_clause (ctxt, ti_Select_keyword, selecting)
 				end_to_print := true
 			end
 			if end_to_print then
@@ -297,126 +247,34 @@ feature {AST_EIFFEL} -- Output
 			end
 		end
 
-feature {NONE} -- Merging
+feature {NONE} -- Implementation
 
-	is_list_subset_of (list, other_list: EIFFEL_LIST [AST_EIFFEL]): BOOLEAN
-is
-			-- Is list `list' a subset of `other_list'?
-		local
-			item: AST_EIFFEL
-			found: BOOLEAN
-			l_area, o_area: SPECIAL [AST_EIFFEL]
-			l_count, o_count: INTEGER
-			i, j: INTEGER
+	format_clause (ctxt: FORMAT_CONTEXT; a_keyword: KEYWORD_TEXT; a_clause: EIFFEL_LIST [AST_EIFFEL]) is
+			-- Format one of rename, export, undefine, redefine or select clauses.
 		do
-			Result := True
-			if list /= Void then
-				if other_list = Void then
-					Result := False
-				else
-					from
-						l_area := list.area
-						l_count := list.count
-						o_area := other_list.area
-						o_count := other_list.count
-					until
-						i = l_count or else not Result
-					loop
-						item := l_area.item (i)
-						from
-							j := 0
-							found := False
-						until
-							j = o_count or else found
-						loop
-							found := equivalent (item, o_area.item (j))
-							j := j + 1
-						end
-						Result := found
-						i := i + 1
-					end
-				end
-			end
+			ctxt.indent
+			ctxt.new_line
+			ctxt.put_text_item (a_keyword)
+			ctxt.indent
+			ctxt.new_line
+			ctxt.set_separator (ti_Comma)
+			ctxt.set_new_line_between_tokens
+			ctxt.format_ast (a_clause)
+			ctxt.exdent
+			ctxt.exdent
 		end
 
-	merge_list (list, other_list: EIFFEL_LIST [AST_EIFFEL]): EIFFEL_LIST [AST_EIFFEL] is
-			-- Merge `other_list' with `list'?
-		local
-			item: AST_EIFFEL
-			temp_list: LINKED_LIST [AST_EIFFEL]
-			new_list: EIFFEL_LIST [AST_EIFFEL]
-			found: BOOLEAN
+feature -- Status report
+
+	is_effecting: BOOLEAN is
+			-- Is this parent clause redefining or undefining
+			-- one or more features?
 		do
-			if list = Void then
-				Result := other_list
-			elseif other_list = Void then
-				Result := Void
-			else
-				!! temp_list.make
-				Result := list
-				from
-					other_list.start
-				until
-					other_list.after or else found
-				loop
-					item := other_list.item
-					from
-						found := False
-						list.start
-					until
-						list.after or else found
-					loop
-						found := equivalent (item, list.item)
-						list.forth
-					end
-					if found then
-						temp_list.put_left (item)
-					end
-					other_list.forth
-				end
-				if not temp_list.empty then
-					!! Result.make_filled (list.count + temp_list.count)
-					Result.merge_after_position (0, list)
-					Result.merge_after_position (list.count, temp_list)
-				else
-					Result := list
-				end
-			end
+			Result := undefining /= Void and then not undefining.is_empty
+				and then redefining /= Void and then not redefining.is_empty
 		end
 
-feature {COMPILER_EXPORTER} -- Replication
-
-	set_exports (e: like exports) is
-		do
-			exports := e
-		end
-
-	set_type (t: like type) is
-		do
-			type := t
-		end
-
-	set_renaming (r: like renaming) is
-		do
-			renaming := r
-		end
-
-	set_redefining (r: like redefining) is
-		do
-			redefining := r
-		end
-
-	set_selecting (s: like selecting) is
-		do
-			selecting := s
-		end
-
-	set_undefining (u: like undefining) is
-		do
-			undefining := u
-		end
-
-feature {NONE}
+feature {NONE} -- Implementation
 
 	Redef: INTEGER is 1
 	Undef: INTEGER is 2

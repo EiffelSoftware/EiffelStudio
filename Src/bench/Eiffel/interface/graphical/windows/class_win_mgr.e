@@ -22,7 +22,7 @@ feature -- Initialization
 	make (a_screen: SCREEN) is
 			-- Initialize Current.
 		do
-			{EDITOR_MGR} precursor (a_screen)
+			{EDITOR_MGR} Precursor (a_screen)
 			Class_resources.add_user (Current)
 		end
 
@@ -58,7 +58,7 @@ feature -- Update
 			if old_res = cr.feature_clause_order then
 				clear_class_tables
 			end
-			{EDITOR_MGR} precursor (old_res, new_res)
+			{EDITOR_MGR} Precursor (old_res, new_res)
 		end
 
 feature {NONE} -- Properties

@@ -1,7 +1,7 @@
 indexing
-	description: "List used in abstract syntax trees. Version for Bench."
-	date: "$Date$"
-	revision: "$Revision$"
+	description	: "List used in abstract syntax trees. Version for Bench."
+	date		: "$Date$"
+	revision	: "$Revision$"
 
 class EIFFEL_LIST [T -> AST_EIFFEL]
 
@@ -10,12 +10,12 @@ inherit
 		rename
 			position as text_position
 		undefine
-			pass_address, copy, is_equal
+			copy, is_equal
 		redefine
 			byte_node, type_check,
-			find_breakable, format,
+			format,
 			fill_calls_list, replicate,
-			number_of_stop_points, is_equivalent
+			number_of_breakpoint_slots, is_equivalent
 		end
 
 	CONSTRUCT_LIST [T]
@@ -46,7 +46,7 @@ feature {NONE} -- Initialization
 
 feature -- Access
 
-	number_of_stop_points: INTEGER is
+	number_of_breakpoint_slots: INTEGER is
 			-- Number of stop points for AST
 		local
 			i, nb: INTEGER
@@ -58,7 +58,7 @@ feature -- Access
 			until
 				i = nb
 			loop
-				Result := Result + l_area.item (i).number_of_stop_points
+				Result := Result + l_area.item (i).number_of_breakpoint_slots
 				i := i + 1
 			end
 		end
@@ -175,25 +175,6 @@ feature -- Type check, byte code and dead code removal
 			end
 		end
 
-feature -- Debugger
- 
-	find_breakable is
-			-- Look for breakable instructions.
-		local
-			l_area: SPECIAL [T]
-			i, nb: INTEGER
-		do
-			from
-				l_area := area
-				nb := count
-			until
-				i = nb
-			loop
-				l_area.item (i).find_breakable
-				i := i + 1
-			end
-		end
-
 feature -- Formatter
 
 	format (ctxt : FORMAT_CONTEXT) is
@@ -230,46 +211,6 @@ feature -- Formatter
 				i := i + 1
 			end
 			if l_count > 0 and then not not_first then
-				ctxt.rollback
-			else
-				ctxt.commit
-			end
-		end
-
-	reversed_format (ctxt : FORMAT_CONTEXT) is
-			-- Build the structured text of the list in the reverse order.
-		local
-			i: INTEGER
-			failure: BOOLEAN
-			not_first:  BOOLEAN
-			must_abort: BOOLEAN
-		do
-			ctxt.begin
-			must_abort := ctxt.must_abort_on_failure
-			from	
-				i := count
-			until
-				i < 1 or failure
-			loop
-				if not_first then
-					ctxt.put_separator
-				end
-				ctxt.new_expression
-				ctxt.begin
-				i_th(i).format(ctxt)
-				if not ctxt.last_was_printed then
-					ctxt.rollback
-					if must_abort then
-						failure := true;	
-						not_first := false
-					end
-				else
-					ctxt.commit
-					not_first := true
-				end;	
-				i := i - 1
-			end
-			if i > 0 and then not not_first then
 				ctxt.rollback
 			else
 				ctxt.commit
@@ -340,33 +281,6 @@ feature {AST_EIFFEL, FORMAT_CONTEXT} -- Output
 				i_th (i).simple_format (ctxt)
 				ctxt.commit
 				i := i + 1
-			end
-			ctxt.commit
-		end
-
-	reversed_simple_format (ctxt: FORMAT_CONTEXT) is
-			-- Format the items in reversed order.
-			-- Needed for inspect statement, items are
-			-- stored in reversed order.
-		local
-			i: INTEGER
-			l_count: INTEGER
-		do
-			ctxt.begin
-			from
-				l_count := count
-				i := l_count
-			until
-				i < 1
-			loop
-				if i < l_count then
-					ctxt.put_separator
-				end
-				ctxt.new_expression
-				ctxt.begin
-				i_th (i).simple_format (ctxt)
-				ctxt.commit
-				i := i - 1
 			end
 			ctxt.commit
 		end

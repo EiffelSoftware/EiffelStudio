@@ -60,6 +60,19 @@ feature -- Access
 			Result := System.document_path
 		end;
 
+	context_diagram_path: DIRECTORY_NAME is
+			-- Path where context diagrams should be stored.
+		local
+			d: DIRECTORY
+		do
+			create Result.make_from_string (Project_directory_name)
+			Result.extend ("Diagrams")
+			create d.make (Result)
+			if not d.exists then
+				d.create_dir
+			end
+		end
+
 	document_file_name: FILE_NAME is
 			-- File name specified for the cluster text generation
 			-- Void result implies no document generation
@@ -72,7 +85,7 @@ feature -- Access
 
 feature -- Access
 
-	Any_id: CLASS_ID is
+	Any_id: INTEGER is
 			-- Identification for class ANY
 		require
 			compiled: Any_class.compiled
@@ -101,7 +114,7 @@ feature -- Access
 	Integer_class: CLASS_I is
 			-- Class INTEGER
 		once
-			Result := System.integer_class
+			Result := System.integer_32_class
 		end;
 
 	Real_class: CLASS_I is
@@ -157,10 +170,10 @@ feature -- Access
 			Result := System.classes.count
 		end;
 
-	class_of_id (i: CLASS_ID): CLASS_C is
+	class_of_id (i: INTEGER): CLASS_C is
 			-- Eiffel Class of id `i'
 		require
-			valid_id: i /= Void
+			valid_id: i /= 0
 		do
 			Result := System.class_of_id (i)
 		end;
@@ -177,17 +190,18 @@ feature -- Access
 		require
 			non_void_name: name /= Void
 		local
-			temp: STRING
+			tmp: STRING
 		do
-			!! temp.make (0);
-			temp.append (name);
-			temp.append (Executable_suffix);
 			if workbench_mode then
-				!! Result.make_from_string (Workbench_generation_path);
+				create Result.make_from_string (Workbench_generation_path)
 			else
-				!! Result.make_from_string (Final_generation_path);
-			end;
-			Result.set_file_name (temp);
+				create Result.make_from_string (Final_generation_path)
+			end
+			Result.set_file_name (name)
+			tmp := Platform_constants.Executable_suffix
+			if not tmp.is_empty then
+				Result.add_extension (Platform_constants.Executable_suffix)
+			end
 		end;
 
 	is_precompiled: BOOLEAN is
@@ -214,7 +228,7 @@ feature {COMPILER_EXPORTER, CALL_STACK_ELEMENT, RUN_INFO, REFERENCE_VALUE, EXPAN
 		do
 			ct := System.class_types.item (i);
 			if ct /= Void then
-				Result := ct.associated_eclass
+				Result := ct.associated_class
 			end
 		end;
 

@@ -6,10 +6,9 @@ class
 
 feature
 
-	shared_include_queue: LINKED_QUEUE [STRING] is
+	shared_include_queue: SEARCH_TABLE [STRING] is
 		once
-			!! Result.make
-			Result.compare_objects
+			create Result.make (10)
 		end
 
 end -- class SHARED_INCLUDE

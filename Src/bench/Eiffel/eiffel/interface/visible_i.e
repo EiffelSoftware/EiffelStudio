@@ -16,25 +16,11 @@ feature
 	renamings: HASH_TABLE [STRING, STRING];
 			-- Renaming table
 
-	is_visible (feat: FEATURE_I): BOOLEAN is
-			-- Is feature name `feat_name' visible ?
+	is_visible (feat: FEATURE_I; class_id: INTEGER): BOOLEAN is
+			-- Is feature name `feat_name' visible in context 
+			-- of class `class_id'?
 		do
 			-- Do nothing
-		end;
-
-	nb_visible (a_class: CLASS_C): INTEGER is
-			-- Number of visible items from the class `a_class'.
-		require
-			good_argument: a_class /= Void
-		do
-		end;
-
-	visible_table_size (a_class: CLASS_C): INTEGER is
-			-- Size of the visible features table
-		require
-			good_argument: a_class /= Void
-		do
-			Result := prime_size (nb_visible (a_class));
 		end;
 
 feature {NONE}
@@ -53,11 +39,13 @@ feature {NONE}
 
 feature 
 
-	real_name (feat: FEATURE_I): STRING is
-			-- Real external name for `feat'.
+	real_name (feat: FEATURE_I; class_id: INTEGER): STRING is
+			-- Real external name for `feat' in context
+			-- of `class_id'.
 		require
 			good_argument: feat /= Void;
-			is_visible (feat)
+			valid_class_id: class_id > 0
+			feat_is_visible: is_visible (feat, class_id)
 		local
 			feature_name: STRING;
 		do

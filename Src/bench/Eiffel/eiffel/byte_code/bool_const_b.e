@@ -4,7 +4,8 @@ inherit
 
 	EXPR_B
 		redefine
-			print_register, make_byte_code
+			print_register, make_byte_code, generate_il,
+			is_simple_expr, is_predefined
 		end;
 	
 feature 
@@ -38,6 +39,20 @@ feature
 			-- False
 		do
 		end;
+
+	is_simple_expr: BOOLEAN is true
+			-- A constant is a simple expression.
+
+	is_predefined: BOOLEAN is true
+			-- A constant is a predefined structure.
+
+feature -- IL code generation
+
+	generate_il is
+			-- Generate IL code for boolean constant.
+		do
+			il_generator.put_boolean_constant (value)
+		end
 
 feature -- Byte code generation
 

@@ -41,6 +41,12 @@ feature
 			buffer.putstring (real_val);
 		end;
 
+	generate_il is
+			-- Generate IL code for real constant value.
+		do
+			il_generator.put_double_constant (real_val.to_double)	
+		end
+
 	make_byte_code (ba: BYTE_ARRAY) is
 			-- Generate byte code for a real constant value
 		do

@@ -3,7 +3,6 @@
 class UNIQUE_I 
 
 inherit
-
 	CONSTANT_I
 		redefine
 			is_unique, check_types, equiv, value, 
@@ -79,7 +78,7 @@ feature
 			Result := rep
 		end
 
-	unselected (in: CLASS_ID): FEATURE_I is
+	unselected (in: INTEGER): FEATURE_I is
 			-- Unselected feature
 		local
 			unselect: D_UNIQUE_I

@@ -24,8 +24,6 @@ feature -- Adding information
 			-- Add `function' to cycle with `number'.
 		require
 			valid_cycle: has_cycle (number)
-		local
-			function_added: BOOLEAN
 		do
 			cyclic_functions.extend (function);
 			profile_data.add_function_to_cycle (function, number)

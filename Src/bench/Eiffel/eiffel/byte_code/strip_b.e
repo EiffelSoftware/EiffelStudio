@@ -6,8 +6,8 @@ inherit
 
 	EXPR_B
 		redefine
-			make_byte_code, enlarged, size
-		end;
+			make_byte_code, enlarged, size, generate_il
+		end
 	SHARED_INSTANTIATOR
 
 creation
@@ -16,22 +16,20 @@ creation
 	
 feature 
 
-	feature_ids: LINKED_SET [INTEGER];
+	feature_ids: LINKED_SET [INTEGER]
 			-- Set of attributes feature ids to strip from the current
 			-- type
 
 	make is
 		do
-			!!feature_ids.make;
-		end;
+			create feature_ids.make
+		end
 
 	type: GEN_TYPE_I is
 			-- Type of byte code strip expression
-		local
-			meta_generic: META_GENERIC;
 		once
 			Result := Instantiator.Array_type
-		end;
+		end
 
 	used (r: REGISTRABLE): BOOLEAN is
 		do
@@ -65,6 +63,16 @@ feature
 				feature_ids.forth;
 			end;
 		end;
+
+feature -- IL code generation
+
+	generate_il is
+			-- Generate IL code for strip expression.
+		do
+			check False end
+		end
+
+feature -- Byte code generation
 
 	make_byte_code (ba: BYTE_ARRAY) is
 			-- Generate byte code for a strip expression

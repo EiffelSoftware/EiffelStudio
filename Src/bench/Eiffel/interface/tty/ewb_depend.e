@@ -23,7 +23,7 @@ feature
 			fdep: FEATURE_DEPENDANCE;
 			supplier: CLASS_C;
 			supp_f: FEATURE_I;
-			class_id: CLASS_ID;
+			class_id: INTEGER;
 			fid: INTEGER;
 			st: STRUCTURED_TEXT
 		do

@@ -3,36 +3,32 @@
 class INVARIANT_B 
 
 inherit
-
-	IDABLE;
-	SHARED_BODY_ID;
-	BYTE_NODE
-		redefine
-			make_byte_code
-		end;
 	ASSERT_TYPE
 
-feature 
+	BYTE_NODE
+		redefine
+			make_byte_code, generate_il
+		end
 
-	id: CLASS_ID;
-			-- Id of the class to which the current invariant byte code
-			-- belongs to
+	IDABLE
+		rename
+			id as class_id,
+			set_id as set_class_id
+		end
+
+	SHARED_BODY_ID
+
+feature 
 
 	byte_list: BYTE_LIST [BYTE_NODE];
 			-- Invariant byte code list
 
 feature 
 
-	set_id (i: CLASS_ID) is
-			-- Assign `i' to `id'.
-		do
-			id := i;
-		end;
-
 	associated_class: CLASS_C is
 			-- Associated class
 		do
-			Result := System.class_of_id (id);
+			Result := System.class_of_id (class_id);
 		end;
 
 	set_byte_list (b: like byte_list) is
@@ -47,28 +43,34 @@ feature
 			has_invariant: byte_list /= Void
 		local
 			i: INTEGER;
-			body_id: BODY_ID;
+			body_index: INTEGER;
 			internal_name: STRING;
 			buf: GENERATION_BUFFER
 		do
+			buf := buffer
+
 				-- Set the control flag for enlarging the assertions
 			context.set_assertion_type (In_invariant);
 
 			byte_list.enlarge_tree;
 			byte_list.analyze;
+				-- For invariant, we always need the GC hook.
+			context.force_gc_hooks
+
 				--| Always mark current as used in all modes
 			context.mark_current_used;
 
 				-- Routine's name				
 			if context.final_mode then	
-				body_id := Invariant_body_id;
+				body_index := Invariant_body_index;
 			else
-				body_id := associated_class.invariant_feature.body_id;
+				body_index := associated_class.invariant_feature.body_index;
 			end;
-			internal_name := body_id.feature_name
-				(System.class_type_of_id (context.current_type.type_id).id);
 
-			buf := buffer
+			internal_name := Encoder.feature_name (
+				System.class_type_of_id (context.current_type.type_id).static_type_id,
+				body_index)
+
 			buf.generate_function_signature ("void", internal_name,
 					True, Context.header_buffer,
 					<<"Current", "where">>, <<"EIF_REFERENCE", "int">>);
@@ -80,7 +82,7 @@ feature
 			context.generate_temporary_ref_variables;
 				-- Dynamic type of Current
 			if context.dt_current > 1 then
-				buf.putstring ("int dtype = Dtype(Current);");
+				buf.putstring ("RTCDT;");
 				buf.new_line;
 			end;
 
@@ -113,6 +115,27 @@ feature
 			buf.putstring ("}%N%N");
 		end;
 
+feature -- IL code generation
+
+	generate_il is
+			-- Generate IL code for a class invariant clause.
+		local
+			end_of_assertion: IL_LABEL
+		do
+			context.local_list.wipe_out
+			context.set_assertion_type (In_invariant);
+
+			end_of_assertion := il_label_factory.new_label
+			il_generator.generate_in_assertion_test (end_of_assertion)
+			il_generator.generate_set_assertion_status
+
+			byte_list.generate_il
+
+			il_generator.generate_restore_assertion_status
+			il_generator.mark_label (end_of_assertion)
+			il_generator.generate_return
+		end
+
 feature -- Byte code geenration
 
 	make_byte_code (ba: BYTE_ARRAY) is
@@ -129,12 +152,16 @@ feature -- Byte code geenration
 		
 			Temp_byte_code_array.append (Bc_start);
 
-			Temp_byte_code_array.append_integer (0);
+				-- no Routine id
+			Temp_byte_code_array.append_integer (0)
+				-- no Real body id ( -1 because it's an invariant. We can't set a breakpoint )
+			Temp_byte_code_array.append_integer (-1)
+
 				-- Void result type
 			Temp_byte_code_array.append_integer (Void_c_type.sk_value);
 				-- No arguments
 			Temp_byte_code_array.append_short_integer (0);
-				-- Not a once
+				-- No name
 			Temp_byte_code_array.append ('%U');
 
 				-- No rescue

@@ -10,55 +10,55 @@ class PROJECT_CONTEXT
 inherit
 	SYSTEM_CONSTANTS
 
-feature {NONE} -- Eiffel Project Directories
+feature -- Eiffel Project Directories
 
 	Project_directory_name: DIRECTORY_NAME is
 			-- Shared project directory
 		once
-			!! Result.make
+			create Result.make
 		end
 
 	Precompilation_directories: EXTEND_TABLE [REMOTE_PROJECT_DIRECTORY,INTEGER] is
 			-- Shared precompilation directories, indexed by precompilation ids
 		once
-			!! Result.make (5)
+			create Result.make (5)
 		end
 
 	Backup_path: DIRECTORY_NAME is
 			-- Path to the backup directory
 		once
-			!! Result.make_from_string (Project_directory_name);
+			create Result.make_from_string (Project_directory_name);
 			Result.extend_from_array (<<Eiffelgen, Backup>>);
 		end
 
 	Case_storage_path: DIRECTORY_NAME is
 		once
-			!! Result.make_from_string (Project_directory_name);
+			create Result.make_from_string (Project_directory_name);
 			Result.extend_from_array (<<Casegen , Case_storage>>);
 		end
 
 	Case_gen_path: DIRECTORY_NAME is
 		once
-			!! Result.make_from_string (Project_directory_name);
+			create Result.make_from_string (Project_directory_name);
 			Result.extend (Casegen);
 		end
 
 	Documentation_path: DIRECTORY_NAME is
 		once
-			!! Result.make_from_string (Project_directory_name);
+			create Result.make_from_string (Project_directory_name);
 			Result.extend (Documentation);
 		end
 
 	Profiler_path: DIRECTORY_NAME is
 			-- Directory of the profiler's output files
 		once
-			!! Result.make_from_string (Eiffel_gen_path);
+			create Result.make_from_string (Eiffel_gen_path);
 			Result.extend (Profiler)
 		end
 
 	Eiffel_gen_path: DIRECTORY_NAME is
 		once
-			!! Result.make_from_string (Project_directory_name);
+			create Result.make_from_string (Project_directory_name);
 			Result.extend (Eiffelgen);
 		end
 
@@ -83,7 +83,7 @@ feature {NONE} -- Eiffel Project Directories
 			-- Full name of file where current precompilation
 			-- information is stored
 		do
-			!! Result.make_from_string (Project_directory_name);
+			create Result.make_from_string (Project_directory_name);
 			Result.extend (Eiffelgen);
 			Result.set_file_name (Precomp_eif);
 		end
@@ -91,7 +91,7 @@ feature {NONE} -- Eiffel Project Directories
 	Precompilation_driver: FILE_NAME is
 			-- Full name of the precompilation driver used
 		once
-			!! Result.make
+			create Result.make
 		end
 
 feature -- Temporary access prior to the creation or the opening of a file.
@@ -99,19 +99,19 @@ feature -- Temporary access prior to the creation or the opening of a file.
 	temp_workbench_generation_path: DIRECTORY_NAME is
 			-- Generate a temporary generation path
 		do
-			!! Result.make_from_string (Project_directory_name);
+			create Result.make_from_string (Project_directory_name);
 			Result.extend_from_array (<<Eiffelgen, W_code>>);
 		end
 
 	temp_final_generation_path: DIRECTORY_NAME is
 		do
-			!! Result.make_from_string (Project_directory_name);
+			create Result.make_from_string (Project_directory_name);
 			Result.extend_from_array (<<Eiffelgen, F_code>>);
 		end
 
 	temp_compilation_path: DIRECTORY_NAME is
 		do
-			!! Result.make_from_string (Project_directory_name);
+			create Result.make_from_string (Project_directory_name);
 			Result.extend_from_array (<<Eiffelgen, Comp>>);
 		end
 
@@ -121,26 +121,26 @@ feature {NONE} -- Directory creation
 		local
 			d: DIRECTORY
 		once
-			Create_eiffel_gen_directory;
-			!!d.make (Final_generation_path);
+			create_eiffel_gen_directory
+			create d.make (Final_generation_path)
 			if not d.exists then
 				d.create_dir
 			end;
-			!!d.make (Workbench_generation_path);
+			create d.make (Workbench_generation_path)
 			if not d.exists then
 				d.create_dir
-			end;
+			end
 		end
 
 	Create_case_storage_directory is
 		local
 			d: DIRECTORY
 		do
-			!!d.make (Case_gen_path);
+			create d.make (Case_gen_path);
 			if not d.exists then
 				d.create_dir
 			end;
-			!!d.make (Case_storage_path);
+			create d.make (Case_storage_path);
 			if not d.exists then
 				d.create_dir
 			end;
@@ -150,7 +150,7 @@ feature {NONE} -- Directory creation
 		local
 			d: DIRECTORY
 		once
-			!!d.make (Eiffel_gen_path);
+			create d.make (Eiffel_gen_path);
 			if not d.exists then
 				d.create_dir
 			end;
@@ -162,7 +162,7 @@ feature {NONE} -- Directory creation
 			d: DIRECTORY
 		once
 			Create_eiffel_gen_directory;
-			!!d.make (compilation_path);
+			create d.make (compilation_path);
 			if not d.exists then
 				d.create_dir
 			end
@@ -173,7 +173,7 @@ feature {NONE} -- Directory creation
 		local
 			d: DIRECTORY
 		once
-			!! d.make (Profiler_path);
+			create d.make (Profiler_path);
 			if not d.exists then
 				d.create_dir
 			end

@@ -22,7 +22,7 @@ feature {NONE} -- Formats
 			-- the user-specified format.
 		require
 			filename_not_void: filename /= Void;
-			not_filename_empty: not filename.empty
+			not_filename_empty: not filename.is_empty
 		local
 			construct, before, after: STRING;
 			construct_list: LINKED_LIST [STRING];
@@ -125,7 +125,7 @@ feature {NONE} -- Formats
 									construct.right_adjust;
 									construct.to_lower;
 									if 
-										not construct.empty and then 
+										not construct.is_empty and then 
 										before /= Void 
 									then
 										!!new_format.make (before, after);
@@ -140,10 +140,10 @@ debug ("FILTERS")
 	end;
 	io.error.new_line
 end
-									elseif construct.empty and before /= Void then
+									elseif construct.is_empty and before /= Void then
 										syntax_error ("Construct expected")
 									elseif 
-										not construct.empty and before = Void 
+										not construct.is_empty and before = Void 
 									then
 										syntax_error ("Appearance expected")
 									end

@@ -1,7 +1,7 @@
 indexing
-	description:	"Command to display text. No warning or watch cursor."
-	date: "$Date$"
-	revision: "$Revision$"
+	description	: "Command to display text. No warning or watch cursor."
+	date		: "$Date$"
+	revision	: "$Revision$"
 
 class
 	EB_TEXT_FORMATTER
@@ -12,7 +12,8 @@ inherit
 --			init as make,
 --			class_name as exception_class_name
 		redefine
-			format, display_header, file_name, display_temp_header
+			format, display_header, file_name, display_temp_header,
+			tool
 		end
 
 	SHARED_APPLICATION_EXECUTION
@@ -20,7 +21,6 @@ inherit
 	EB_SHARED_FORMAT_TABLES
 
 creation
-
 	make
 
 feature -- Properties
@@ -29,6 +29,8 @@ feature -- Properties
 		once 
 			Result := Pixmaps.bm_Showtext 
 		end
+
+	tool: EB_EDIT_TOOL
 	
 feature {EB_FEATURE_TOOL_LIST} -- Displaying
 
@@ -46,7 +48,6 @@ feature {EB_FEATURE_TOOL_LIST} -- Displaying
 			then
 				new_title.append ("   (stop)")		
 			end
-			tool.set_title (new_title)
 		end
 
 feature -- Formatting
@@ -58,12 +59,13 @@ feature -- Formatting
 			filed_stone: FILED_STONE
 			classc_stone: CLASSC_STONE
 			e_class: CLASS_C
-			class_tool: EB_CLASS_TOOL
+			class_tool: EB_DEVELOPMENT_TOOL
 			modified_class: BOOLEAN
 			retried: BOOLEAN
-			same_stone, error: BOOLEAN
+--			same_stone: BOOLEAN
+			error: BOOLEAN
 --			mp: MOUSE_PTR
-			cur: CURSOR
+--			cur: CURSOR
 			routine_w: EB_FEATURE_TOOL
 			st: STRUCTURED_TEXT
 			wd: EV_WARNING_DIALOG
@@ -94,12 +96,12 @@ feature -- Formatting
 							if filed_stone /= Void then
 								if filed_stone.file_name /= Void then
 									error := true
-									create wd.make_default (tool.parent, Interface_names.t_Warning,
-										Warning_messages.w_Cannot_read_file (filed_stone.file_name))
+									create wd.make_with_text (Warning_messages.w_Cannot_read_file (filed_stone.file_name))
+									wd.show_modal
 								else
 									error := true
-									create wd.make_default (tool.parent, Interface_names.t_Warning,
-										Warning_messages.w_No_associated_file)
+									create wd.make_with_text (Warning_messages.w_No_associated_file)
+									wd.show_modal
 								end
 							end			
 						end
@@ -112,7 +114,6 @@ feature -- Formatting
 --							cur := tool.text_area.cursor
 --						end
 						tool.text_area.clear_window
---						tool.set_editable_text
 --						tool.set_stone (stone)
 		--| FIXME
 		--| Christophe, 18 oct 1999
@@ -124,12 +125,12 @@ feature -- Formatting
 						then
 							st := rout_flat_context_text (routine_w.stone)
 							tool.text_area.process_text (st)
-							tool.text_area.show
+							tool.text_area.display
 						else	
 							tool.text_area.set_text (stone_text)
 						end
 --						tool.update_save_symbol
-						tool.set_mode_for_editing
+						tool.enable_editable
 --						tool.show_editable_text
 						if tool.stone.clickable then
 							if modified_class then
@@ -139,8 +140,8 @@ feature -- Formatting
 										-- internally (resynchronization, ...)
 									class_name := classc_stone.e_class.name
 									error := true
-									create wd.make_default (tool.parent, Interface_names.t_Warning,
-										Warning_messages.w_Class_modified (class_name))
+									create wd.make_with_text (Warning_messages.w_Class_modified (class_name))
+									wd.show_modal
 								end
 							elseif st = Void then
 								tool.text_area.update_clickable_from_stone (tool.stone)
@@ -158,8 +159,8 @@ feature -- Formatting
 			else
 --				create mp.do_nothing
 --				mp.restore
-				create wd.make_default (tool.parent, Interface_names.t_Warning,
-					Warning_messages.w_Cannot_retrieve_info)
+				create wd.make_with_text (Warning_messages.w_Cannot_retrieve_info)
+				wd.show_modal
 			end
 		rescue
 --			if original_exception = Io_exception then
@@ -178,11 +179,6 @@ feature {NONE} -- Implementation
 	display_temp_header (stone: STONE) is
 			-- Display a temporary header during the format processing.
 		do
-			if tool.last_format = Current then
-				tool.set_title ("Producing text format...")
-			else
-				tool.set_title ("Switching to text format...")
-			end
 		end
 
 	display_info (d: STONE) is do end
@@ -190,9 +186,9 @@ feature {NONE} -- Implementation
 
 feature {NONE} -- Properties
 
-	file_name (s: FILED_STONE): STRING is
+	file_name: STRING is
 		do
-			Result := s.file_name
+			Result := tool.stone.file_name
 		end
 
 	name: STRING is

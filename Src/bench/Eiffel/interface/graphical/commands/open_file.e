@@ -63,15 +63,13 @@ feature {NONE} -- Implementation
 		local
 			fn: FILE_NAME;
 			f: PLAIN_TEXT_FILE;
-			temp: STRING;	
-			chooser: NAME_CHOOSER_W;
 			class_i: CLASS_I;
 			classi_stone: CLASSI_STONE;
 			classc_stone: CLASSC_STONE
 		do
 			if argument /= Void and then argument = last_name_chooser then
 				!! fn.make_from_string (last_name_chooser.selected_file);
-				if not fn.empty then
+				if not fn.is_empty then
 					!! f.make (fn);
 					if
 						f.exists and then f.is_readable and then f.is_plain
@@ -109,7 +107,7 @@ feature {NONE} -- Implementation
 			else
 				-- First click on open
 				if text_window.changed then
-					warner (popup_parent).custom_call (Current, Warning_messages.w_File_changed,
+					warner (popup_parent).custom_call (Current, Warning_messages.w_File_changed (Void),
 						Interface_names.b_Yes, Interface_names.b_No, Interface_names.b_Cancel)
 				else
 					open_file

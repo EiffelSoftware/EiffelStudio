@@ -42,7 +42,7 @@ feature
 			argument_position: INTEGER
 			last_type: TYPE_A
 				-- Type onto the stack
-			last_id: CLASS_ID
+			last_id: INTEGER
 				-- Id of the class correponding to `last_type'
 			local_b: LOCAL_B
 			argument_b: ARGUMENT_B
@@ -53,7 +53,7 @@ feature
 			veen2B: VEEN2B
 		do
 			last_type := context.item
-			last_id := context.last_class.id
+			last_id := context.last_class.class_id
 
 			a_feature := context.a_feature
 				-- Look for an argument

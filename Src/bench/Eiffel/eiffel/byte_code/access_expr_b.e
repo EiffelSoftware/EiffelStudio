@@ -16,14 +16,26 @@ inherit
 			optimized_byte_node, size,
 			pre_inlined_code,
 			is_temporary, is_predefined,
-			register_name
+			register_name, generate_il,
+			is_hector
 		end;
 	
 feature 
 
 	expr: EXPR_B;
 			-- The expression
-	
+
+feature -- Status
+
+	is_hector: BOOLEAN is
+			-- Is the current expression an hector one ?
+			-- Definition: an expression <E> is hector if <E>
+			-- is of the form $<A> and <A> is an attribute
+			-- or a local variable.
+		do
+			Result := expr.is_hector
+		end
+
 	set_expr (e: EXPR_B) is
 			-- Set `expr' to `e'
 		do
@@ -122,6 +134,14 @@ feature
 				expr.print_register;
 			end;
 		end;
+
+feature -- IL code generation
+
+	generate_il is
+			-- Generate IL code for an expression access.
+		do
+			expr.generate_il
+		end
 
 feature -- Byte code generation
 

@@ -8,6 +8,14 @@ class
 
 feature -- Access
 
+	shell_editor: STRING is
+			-- Default editor.
+		do
+			Result := General_resources.editor.value;
+		end
+
+feature {NONE} -- Resources
+
 	General_Resources: GENERAL_CATEGORY is
 			-- Class tool specific parameters
 		once

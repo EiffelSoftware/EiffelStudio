@@ -1,10 +1,13 @@
--- Server for abstract syntax description of invariant
+indexing
+	description: "Server for abstract syntax description of invariant indexed by class id."
+	date: "$Date$"
+	revision: "$Revision$"
 
 class
 	INV_AST_SERVER 
 
 inherit
-	READ_SERVER [INVARIANT_AS, CLASS_ID]
+	READ_SERVER [INVARIANT_AS]
 		rename
 			ast_server as offsets
 		export
@@ -24,14 +27,14 @@ feature
 			!! Result.make
 		end
 		
-	has (an_id: CLASS_ID): BOOLEAN is
+	has (an_id: INTEGER): BOOLEAN is
 			-- Is the id `an_id' present either in Current or in
 			-- `Tmp_inv_ast_server' ?
 		do
 			Result := Tmp_inv_ast_server.has (an_id) or else server_has (an_id);
 		end;
 
-	item (an_id: CLASS_ID): INVARIANT_AS is
+	item (an_id: INTEGER): INVARIANT_AS is
 			-- Invariant of class of id `an_id'. Look for it first in
 			-- the associated temporary server
 	   do

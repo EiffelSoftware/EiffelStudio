@@ -1,6 +1,10 @@
--- Generic type class
+indexing
+	description: "Descritpion of an actual generical type."
+	date: "$Date$"
+	revision: "$Revision$"
 
-class GEN_TYPE_I
+class
+	GEN_TYPE_I
 
 inherit
 	CL_TYPE_I
@@ -12,8 +16,11 @@ inherit
 			is_valid,
 			is_explicit,
 			has_formal,
+			has_true_formal,
 			instantiation_in,
+			creation_instantiation_in,
 			dump,
+			il_type_name,
 			append_signature,
 			type_a,
 			generate_cid,
@@ -22,53 +29,7 @@ inherit
 			generate_cid_init
 		end
 
-feature -- Comparison
-
-	is_identical (other: TYPE_I): BOOLEAN is
-			-- Is `other' identical to Current ?
-			-- Also compare `true_generics'!
-		local
-			i, count: INTEGER
-			local_copy: like true_generics
-			other_gen: like true_generics
-			gen_type_i: GEN_TYPE_I
-		do
-			gen_type_i ?= other
-			if gen_type_i /= Void then
-				Result := equal (base_id, gen_type_i.base_id)
-						and then is_expanded = gen_type_i.is_expanded
-						and then is_separate = gen_type_i.is_separate
-						and then meta_generic.same_as (gen_type_i.meta_generic)
-				from
-					i := 1
-					local_copy := true_generics
-					count := local_copy.count
-					other_gen := gen_type_i.true_generics
-				until
-					i > count or else not Result
-				loop
-					Result := local_copy.item (i).is_identical (other_gen.item (i))
-					i := i + 1
-				end
-			end
-		end
-
-	same_as (other: TYPE_I): BOOLEAN is
-			-- Is `other' equal to Current ?
-			-- NOTE: we do not compare `true_generics'!
-		local
-			gen_type_i: GEN_TYPE_I
-		do
-			gen_type_i ?= other
-			if gen_type_i /= Void then
-				Result := equal (base_id, gen_type_i.base_id)
-						and then is_expanded = gen_type_i.is_expanded
-						and then is_separate = gen_type_i.is_separate
-						and then meta_generic.same_as (gen_type_i.meta_generic)
-			end
-		end
-
-feature
+feature -- Access
 
 	meta_generic: META_GENERIC
 			-- Meta generic description of the type class
@@ -78,7 +39,7 @@ feature
 		do
 			if m = Void then
 				-- TUPLE without generic parameters
-				!!meta_generic.make (0)
+				create meta_generic.make (0)
 			else
 				meta_generic := m
 			end
@@ -92,20 +53,10 @@ feature
 		do
 			if tgen = Void then
 				-- TUPLE without generic parameters
-				!!true_generics.make (1,0)
+				create true_generics.make (1,0)
 			else
 				true_generics := tgen
 			end
-		end
-
-	is_equal (other: like Current): BOOLEAN is
-			-- Is `other' attached to an object considered
-			-- equal to current object?
-		do
-			Result := equal (base_id, other.base_id)
-					and then is_expanded = other.is_expanded
-					and then is_separate = other.is_separate
-					and then meta_generic.same_as (other.meta_generic)
 		end
 
 	is_valid: BOOLEAN is
@@ -125,24 +76,49 @@ feature
 	instantiation_in (other: like Current): like Current is
 			-- Instantiation of Current in context of `other'
 		local
-			i, count, meta_position: INTEGER
-			formal: FORMAL_I
-			meta_gen: like meta_generic
-			true_gen: like true_generics
+			i		: INTEGER
+			count	: INTEGER
+			l_meta, meta_gen: like meta_generic
+			l_true, true_gen: like true_generics
 		do
 			from
 				Result := duplicate
+				l_meta := meta_generic
+				l_true := true_generics
 				meta_gen := Result.meta_generic
 				true_gen := Result.true_generics
 				i := 1
-				count := meta_generic.count
+				count := l_meta.count
 			until
 				i > count
 			loop
-				meta_gen.put
-					(meta_generic.item (i).instantiation_in (other), i)
-				true_gen.put
-					(true_generics.item (i).complete_instantiation_in (other), i)
+				meta_gen.put (l_meta.item (i).instantiation_in (other), i)
+				true_gen.put (l_true.item (i).complete_instantiation_in (other), i)
+				i := i + 1
+			end
+		end
+
+	creation_instantiation_in (other: like Current): like Current is
+			-- Instantiation of Current in context of `other'
+		local
+			i		: INTEGER
+			count	: INTEGER
+			l_meta, meta_gen: like meta_generic
+			l_true, true_gen: like true_generics
+		do
+			from
+				Result := duplicate
+				l_meta := meta_generic
+				l_true := true_generics
+				meta_gen := Result.meta_generic
+				true_gen := Result.true_generics
+				i := 1
+				count := l_meta.count
+			until
+				i > count
+			loop
+				meta_gen.put (l_meta.item (i).instantiation_in (other), i)
+				true_gen.put (l_true.item (i).creation_instantiation_in (other), i)
 				i := i + 1
 			end
 		end
@@ -151,16 +127,18 @@ feature
 
 		local
 			i, count: INTEGER
+			l_true: like true_generics
 		do
 			Result := (cr_info = Void)
 
 			from
 				i := 1
-				count := true_generics.count
+				l_true := true_generics
+				count := l_true.count
 			until
 				i > count or else not Result
 			loop
-				Result := true_generics.item (i).is_explicit
+				Result := l_true.item (i).is_explicit
 				i := i + 1
 			end
 		end
@@ -169,14 +147,34 @@ feature
 			-- Are some meta formals present in `meta_generic' ?
 		local
 			i, count: INTEGER
+			l_meta: like meta_generic
 		do
 			from
 				i := 1
-				count := meta_generic.count
+				l_meta := meta_generic
+				count := l_meta.count
 			until
 				i > count or else Result
 			loop
-				Result := meta_generic.item (i).has_formal
+				Result := l_meta.item (i).has_formal
+				i := i + 1
+			end
+		end
+
+	has_true_formal: BOOLEAN is
+			-- Are some formals present in `true_generic' ?
+		local
+			i, count: INTEGER
+			l_true: like true_generics
+		do
+			from
+				i := 1
+				l_true := true_generics
+				count := l_true.count
+			until
+				i > count or else Result
+			loop
+				Result := l_true.item (i).has_true_formal
 				i := i + 1
 			end
 		end
@@ -185,14 +183,16 @@ feature
 		local
 			i, count: INTEGER
 			s: STRING
+			l_meta: like meta_generic
 		do
-			if is_expanded then
+			if is_true_expanded then
 				buffer.putstring ("expanded ")
 			end
 			s := clone (base_class.name)
 			s.to_upper
 			buffer.putstring (s)
-			count := meta_generic.count
+			l_meta := meta_generic
+			count := l_meta.count
 
 			if count > 0 then
 				from
@@ -201,7 +201,7 @@ feature
 				until
 					i > count
 				loop
-					meta_generic.item (i).dump (buffer)
+					l_meta.item (i).dump (buffer)
 
 					if i < count then
 						buffer.putstring (", ")
@@ -212,15 +212,46 @@ feature
 			end
 		end
 
+	il_type_name: STRING is
+			-- Name of current class
+		local
+			i, count: INTEGER
+			tmp: STRING
+			l_meta: like meta_generic
+		do
+			Result := Precursor {CL_TYPE_I}
+
+			l_meta := meta_generic
+
+				-- Append generic information.
+			count := l_meta.count
+			if count > 0 then
+				from
+					i := 1
+				until
+					i > count
+				loop
+					Result.append ("_")
+					tmp := clone (l_meta.item (i).il_type_name)
+					tmp.replace_substring_all (".", "_")
+					Result.append (tmp)
+					i := i + 1
+				end
+			end
+		end
+
 	append_signature (st: STRUCTURED_TEXT) is
 		local
 			i, count: INTEGER
+			l_meta: like meta_generic
 		do
-			if is_expanded then
+			l_meta := meta_generic
+
+			if is_true_expanded then
 				st.add_string ("expanded ")
 			end
 			base_class.append_name (st)
-			count := meta_generic.count
+			count := l_meta.count
 
 			if count > 0 then
 				from
@@ -229,7 +260,7 @@ feature
 				until
 					i > count
 				loop
-					meta_generic.item (i).append_signature (st)
+					l_meta.item (i).append_signature (st)
 					if i < count then
 						st.add_string (", ")
 					end
@@ -243,20 +274,21 @@ feature
 		local
 			i: INTEGER
 			array: ARRAY [TYPE_A]
+			l_meta: like meta_generic
 		do
 			from
-				i := meta_generic.count
-				!!array.make (1, i)
+				l_meta := meta_generic
+				i := l_meta.count
+				create array.make (1, i)
 			until
 				i = 0
 			loop
-				array.put (meta_generic.item (i).type_a, i)
+				array.put (l_meta.item (i).type_a, i)
 				i := i - 1
 			end
-			!!Result
+			create Result.make (array)
 			Result.set_base_class_id (base_id)
-			Result.set_is_expanded (is_expanded)
-			Result.set_generics (array)
+			Result.set_is_true_expanded (is_true_expanded)
 		end
 
 feature -- Generic conformance
@@ -358,6 +390,62 @@ feature -- Generic conformance
 				true_generics.item (i).generate_cid_init (buffer, 
 												final_mode, use_info, idx_cnt)
 				i := i + 1
+			end
+		end
+
+feature -- Comparison
+
+	is_equal (other: like Current): BOOLEAN is
+			-- Is `other' attached to an object considered
+			-- equal to current object?
+		do
+			Result := base_id = other.base_id
+					and then is_true_expanded = other.is_true_expanded
+					and then is_separate = other.is_separate
+					and then meta_generic.same_as (other.meta_generic)
+		end
+
+	is_identical (other: TYPE_I): BOOLEAN is
+			-- Is `other' identical to Current ?
+			-- Also compare `true_generics'!
+		local
+			i, count: INTEGER
+			local_copy: like true_generics
+			other_gen: like true_generics
+			gen_type_i: GEN_TYPE_I
+		do
+			gen_type_i ?= other
+			if gen_type_i /= Void then
+				Result := base_id = gen_type_i.base_id
+						and then is_true_expanded = gen_type_i.is_true_expanded
+						and then is_separate = gen_type_i.is_separate
+						and then meta_generic.same_as (gen_type_i.meta_generic)
+				from
+					i := 1
+					local_copy := true_generics
+					count := local_copy.count
+					other_gen := gen_type_i.true_generics
+				until
+					i > count or else not Result
+				loop
+					Result := local_copy.item (i).is_identical (other_gen.item (i))
+					i := i + 1
+				end
+			end
+		end
+
+	same_as (other: TYPE_I): BOOLEAN is
+			-- Is `other' equal to Current ?
+			-- NOTE: we do not compare `true_generics'!
+		local
+			gen_type_i: GEN_TYPE_I
+		do
+			gen_type_i ?= other
+			if gen_type_i /= Void then
+				Result := base_id = gen_type_i.base_id
+						and then is_true_expanded = gen_type_i.is_true_expanded
+						and then is_separate = gen_type_i.is_separate
+						and then meta_generic.same_as (gen_type_i.meta_generic)
 			end
 		end
 

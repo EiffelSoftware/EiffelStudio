@@ -12,11 +12,12 @@ inherit
 			bit_balanced
 		end
 
-feature -- Properties
+	PREFIX_INFIX_NAMES
+		rename
+			xor_infix as infix_function_name
+		end
 
-	infix_function_name: STRING is "_infix_xor"
-			-- Internal name of the infixed feature associated to the
-			-- binary expression
+feature -- Properties
 
 	bit_balanced: BOOLEAN is True
 			-- Is the current binary operation subject to the

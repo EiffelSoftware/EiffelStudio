@@ -20,7 +20,7 @@ inherit
 
 feature -- Properties
 
-	involved_classes: LINKED_LIST [CLASS_ID];
+	involved_classes: LINKED_LIST [INTEGER];
 			-- Id's of classes invloved in the inheritance graph
 
 	code: STRING is "VHPR";
@@ -41,7 +41,7 @@ feature -- Output
 			until
 				involved_classes.after
 			loop
-				if not equal (involved_classes.item, involved_classes.first) then
+				if not (involved_classes.item = involved_classes.first) then
 					st.add_string (", ");
 				end;
 				Eiffel_system.class_of_id (involved_classes.item)
@@ -53,7 +53,7 @@ feature -- Output
 
 feature {COMPILER_EXPORTER} -- Setting
 
-	set_involved_classes (l: LINKED_LIST [CLASS_ID]) is
+	set_involved_classes (l: LINKED_LIST [INTEGER]) is
 			-- Assign `l' to `involved_classes'.
 		do
 			involved_classes := l;

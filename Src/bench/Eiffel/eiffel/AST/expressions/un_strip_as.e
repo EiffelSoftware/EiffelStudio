@@ -24,21 +24,6 @@ feature {AST_FACTORY} -- Initialization
 			id_list_set: id_list = i
 		end
 
-feature {NONE} -- Initialization
-
-	set is
-			-- Yacc initialization
-		do
-			id_list ?= yacc_arg (0)
-			if id_list = Void then
-				-- Empty list
-				!! id_list.make_filled (0)
-			end
-			id_list.compare_objects
-		ensure then
-			id_list /= Void
-		end
-
 feature -- Attributes
 
 	id_list: EIFFEL_LIST [ID_AS]
@@ -89,7 +74,7 @@ feature -- Type check, byte code and dead code removal
 						vwst1.set_attribute_name (an_id)
 						Error_handler.insert_error (vwst1)
 					else
-						!! depend_unit.make (context.a_class.id,
+						!! depend_unit.make (context.a_class.class_id,
 											attribute_i)
 						context.supplier_ids.extend (depend_unit)
 					end
@@ -109,13 +94,13 @@ feature -- Type check, byte code and dead code removal
 			generics: ARRAY [TYPE_A]
 			any_type: CL_TYPE_A
 		once
-			!! Result
-			Result.set_base_class_id (System.array_id)
-			!! generics.make (1,1)
-			!! any_type
+			create generics.make (1,1)
+			create any_type
 			any_type.set_base_class_id (System.any_id)
 			generics.put (any_type, 1)
-			Result.set_generics (generics)
+
+			create Result.make (generics)
+			Result.set_base_class_id (System.array_id)
 		end
 
 	byte_node: STRIP_B is

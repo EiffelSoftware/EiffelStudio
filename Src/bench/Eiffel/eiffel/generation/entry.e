@@ -58,16 +58,16 @@ feature -- for dead code removal
 
 feature -- Previously in POLY_UNIT
 
-	id: CLASS_ID
+	class_id: INTEGER
 			-- Id of the class associated to the current_unit
 
 	type_a: TYPE_A
 			-- Result type of the polymorphic entry
 
-	set_id (i: CLASS_ID) is
-			-- Assign `i' to `id'
+	set_class_id (i: INTEGER) is
+			-- Assign `i' to `class_id'
 		do
-			id := i
+			class_id := i
 		end
 
 	set_type_a (t: TYPE_A) is
@@ -78,10 +78,10 @@ feature -- Previously in POLY_UNIT
 
 feature -- previously in POLY_UNIT
 
-	new_poly_table (routine_id: ROUTINE_ID): POLY_TABLE [ENTRY] is
+	new_poly_table (routine_id: INTEGER): POLY_TABLE [ENTRY] is
 			-- New associated polymophic unit table
 		require
-			valid_routine_id: routine_id /= Void
+			valid_routine_id: routine_id /= 0
 		deferred
 		end;
 
@@ -131,7 +131,7 @@ feature -- from ENTRY
 				--or else --class_type.is_expanded
 				)
 			then
-				Result := class_type.associated_class_type.id.id;
+				Result := class_type.associated_class_type.static_type_id;
 			end;
 		end;
 
@@ -146,7 +146,7 @@ feature -- from ENTRY
 				--or else-class_type.is_expanded
 				)
 			then
-				class_type.associated_class_type.id.generated_id (buffer)
+				buffer.generate_type_id (class_type.associated_class_type.static_type_id)
 			else
 				buffer.putint (-1)
 			end

@@ -43,7 +43,6 @@ feature {NONE} -- Implementation
 			s1,s2: STRING;
 			i, j: INTEGER;
 			stop : BOOLEAN;
-			ptr: ANY;
 		do
 			from
 				Result := s;

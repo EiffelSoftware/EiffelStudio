@@ -108,7 +108,7 @@ feature
 						-- Check constrained genericity
 					solved_type.reset_constraint_error_list
 					solved_type.check_constraints (associated_class)
-					if not solved_type.constraint_error_list.empty then
+					if not solved_type.constraint_error_list.is_empty then
 						!! vtcg2
 						vtcg2.set_class (associated_class)
 						vtcg2.set_feature (f)
@@ -279,43 +279,6 @@ feature
 			loop
 				io.putstring (l_area.item (i).actual_type.dump)
 				io.new_line
-				i := i + 1
-			end
-		end
-
-feature {FEATURE_I} -- Case storage
-
-	storage_info (classc: CLASS_C): FIXED_LIST [S_ARGUMENT_DATA] is
-			-- Storage info for Current arguments.
-		require
-			valid_classc: classc /= Void
-		local
-			id: INTEGER
-			arg_name: STRING
-			type_a: TYPE_A
-			arg_data: S_ARGUMENT_DATA
-			l_area: SPECIAL [TYPE]
-			i, nb: INTEGER
-		do
-			!! Result.make_filled (count)
-			Result.start
-			from
-				argument_names.start
-				l_area := area
-				nb := count
-			until
-				i = nb
-			loop
-				!! arg_name.make (0)
-				arg_name.append (argument_names.item)
-				type_a := l_area.item (i).actual_type
-				check
-					valid_type_a: type_a /= Void
-				end
-				!! arg_data.make (arg_name, type_a.storage_info (classc))
-				Result.replace (arg_data)
-				argument_names.forth
-				Result.forth
 				i := i + 1
 			end
 		end

@@ -24,7 +24,7 @@ creation
 
 feature -- Execution
 
-	execute_licensed (argument: EV_ARGUMENT1 [ANY]; data: EV_EVENT_DATA) is
+	execute_licensed is
 			-- Retarget the object tool with the next object in history.
 		local
 			status: APPLICATION_STATUS
@@ -32,11 +32,11 @@ feature -- Execution
 		do
 			status := Application.status
 			if status = Void then
-				create wd.make_default (tool.parent, Interface_names.t_Warning, Warning_messages.w_System_not_running)
+				create wd.make_with_text (Warning_messages.w_System_not_running)
 			elseif not status.is_stopped then
-				create wd.make_default (tool.parent, Interface_names.t_Warning, Warning_messages.w_System_not_stopped)
+				create wd.make_with_text (Warning_messages.w_System_not_stopped)
 			else
-				{EB_NEXT_TARGET_CMD} Precursor (argument, data)
+				Precursor
 			end
 		end
 

@@ -6,70 +6,74 @@ feature {NONE}
 
 	Char_size: INTEGER is
 			-- Size of a character
-		once
-			Result := c_char_size;
+		external
+			"C [macro %"eif_eiffel.h%"]"
+		alias
+			"sizeof(EIF_CHARACTER)"
 		end;
 
-	Long_size: INTEGER is
-            -- Size of a long integer
-        once
-            Result := c_long_size;
-        end;
+	Int8_size: INTEGER is
+			-- Size of a 8 bits integer
+		external
+			"C [macro %"eif_eiffel.h%"]"
+		alias
+			"sizeof(EIF_INTEGER_8)"
+		end;
+
+	Int16_size: INTEGER is
+			-- Size of a 16 bits integer
+		external
+			"C [macro %"eif_eiffel.h%"]"
+		alias
+			"sizeof(EIF_INTEGER_16)"
+		end;
+
+	Int32_size: INTEGER is
+			-- Size of a 32 bits integer
+		external
+			"C [macro %"eif_eiffel.h%"]"
+		alias
+			"sizeof(EIF_INTEGER_32)"
+		end;
+
+	Int64_size: INTEGER is
+			-- Size of a 64 bits integer
+		external
+			"C [macro %"eif_eiffel.h%"]"
+		alias
+			"sizeof(EIF_INTEGER_64)"
+		end;
 
 	Float_size: INTEGER is
-            -- Size of a float
-        once
-            Result := c_float_size;
-        end;
+			-- Size of a float
+		external
+			"C [macro %"eif_eiffel.h%"]"
+		alias
+			"sizeof(EIF_REAL)"
+		end;
 
 	Double_size: INTEGER is
-            -- Size of a double
-        once
-            Result := c_double_size;
-        end;
+			-- Size of a double
+		external
+			"C [macro %"eif_eiffel.h%"]"
+		alias
+			"sizeof(EIF_DOUBLE)"
+		end;
 
 	Pointer_size: INTEGER is
 			-- Size of a function pointer
-		once
-			Result := c_pointer_size;
+		external
+			"C [macro %"eif_eiffel.h%"]"
+		alias
+			"sizeof(char *(*)())"
 		end;
 
 	Reference_size: INTEGER is
 			-- Size of a reference
-		once
-			Result := c_reference_size;
-		end;
-
-feature {NONE} -- External features
-
-	c_char_size: INTEGER is
 		external
-			"C"
-		end;
-
-	c_reference_size: INTEGER is
-		external
-			"C"
-		end;
-
-	c_pointer_size: INTEGER is
-		external
-			"C"
-		end;
-
-	c_double_size: INTEGER is
-		external
-			"C"
-		end;
-
-	c_float_size: INTEGER is
-		external
-			"C"
-		end;
-
-	c_long_size: INTEGER is
-		external
-			"C"
+			"C [macro %"eif_eiffel.h%"]"
+		alias
+			"sizeof(EIF_REFERENCE)"
 		end;
 
 end

@@ -84,7 +84,6 @@ feature -- Execution
 			-- Execute the command for associated hole.
 		local
 			fs: FEATURE_STONE;
-			super_melt_cmd: SUPER_MELT;
 			classc: CLASSC_STONE;
 			new_tool: CLASS_W
 		do
@@ -96,9 +95,9 @@ feature -- Execution
 					new_tool.process_feature (fs)
 				end
 			elseif argument = shift_button_three_action then
-				!! super_melt_cmd.do_nothing;
-				!! classc.make (fs.e_class);
-				super_melt_cmd.work (classc)
+--Arnaud		create super_melt_cmd.do_nothing;
+        		create classc.make (fs.e_class);
+--Arnaud		super_melt_cmd.work (classc)
 			else
 				default_work (argument)
 			end

@@ -13,7 +13,6 @@ inherit
 		end
 
 creation
-
 	make
 	
 feature -- Properties

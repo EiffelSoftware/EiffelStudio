@@ -4,6 +4,9 @@ indexing
 
 deferred class
 	RESOURCE_FOLDER_I
+	
+inherit
+	EB_CONSTANTS
 
 feature -- Initialization
 
@@ -89,8 +92,7 @@ feature -- Initialization
 					load_default_attributes (xml_data)
 				end
 			else
-				error_message := " does not exist%N"
-				error_message.prepend (file_name)
+				error_message := warning_messages.w_file_not_exist (file_name)
 			end
 --| FIXME ARNAUD, use an error manager
 --			if error_message /= Void then

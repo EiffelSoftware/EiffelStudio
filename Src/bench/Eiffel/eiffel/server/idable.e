@@ -1,21 +1,24 @@
--- Object identification used in server storage
+indexing
+	description: "Object identification used in server storage"
+	date: "$Date$"
+	revision: "$Revision$"
 
 deferred class IDABLE
 
 inherit
-
 	COMPILER_EXPORTER
 
 feature
 
-	id: COMPILER_ID is
+	id: INTEGER
 			-- Object id
-		deferred
-		end
 
-	set_id (i: like id) is
+	set_id (i: INTEGER) is
 			-- Set `id' to `i'
-		deferred
+		do
+			id := i
+		ensure
+			id_set: id = i
 		end
 
 end -- class IDABLE

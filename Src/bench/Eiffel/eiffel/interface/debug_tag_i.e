@@ -66,17 +66,17 @@ feature
 			l.go_to (old_cursor);
 		end;
 
-	generate (buffer: GENERATION_BUFFER; id: CLASS_ID) is
+	generate (buffer: GENERATION_BUFFER; id: INTEGER) is
 			-- Generate assertion value in `buffer'.
 		do
 			buffer.putstring ("{OPT_ALL, (int16) ");
 			buffer.putint (tags.count);
 			buffer.putstring (", keys");
-			buffer.putint (id.id);
+			buffer.putint (id);
 			buffer.putstring ("}");
 		end;
 
-	generate_keys (buffer: GENERATION_BUFFER; id: CLASS_ID) is
+	generate_keys (buffer: GENERATION_BUFFER; id: INTEGER) is
 			-- Generate keys C array
 		require
 			good_argument: buffer /= Void;
@@ -84,7 +84,7 @@ feature
 			l: SORTED_TWO_WAY_LIST [STRING];
 		do
 			buffer.putstring ("static char *keys");
-			buffer.putint (id.id);
+			buffer.putint (id);
 			buffer.putstring ("[] = {");
 			from
 				l := tags;

@@ -3,12 +3,11 @@ indexing
 	description: 
 		"Root cluster for eiffelbench under Windows.";
 	date: "$Date$";
-	revision: "$Revision $"
+	revision: "$Revision$"
 
 class EWB_WINDOWS
 
 inherit
-	SHARED_CONFIGURE_RESOURCES;
 	EWB
 		redefine
 			init_toolkit

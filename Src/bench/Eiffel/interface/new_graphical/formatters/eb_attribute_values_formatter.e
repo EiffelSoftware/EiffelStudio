@@ -61,16 +61,15 @@ feature {NONE} -- Properties
 			is_special: BOOLEAN
 			dynamic_class: CLASS_C
 			status: APPLICATION_STATUS
-			stone: CLASSC_STONE
 			wd: EV_WARNING_DIALOG
 		do
 			status := Application.status
 			if status = Void then
-				create wd.make_default (tool.parent, Interface_names.t_Warning,
-					Warning_messages.w_System_not_running)
+				create wd.make_with_text (Warning_messages.w_System_not_running)
+				wd.show_modal
 			elseif not status.is_stopped then
-				create wd.make_default (tool.parent, Interface_names.t_Warning,
-					Warning_messages.w_System_not_stopped)
+				create wd.make_with_text (Warning_messages.w_System_not_stopped)
+				wd.show_modal
 			else
 				create Result.make
 				create obj.make (object.object_address,

@@ -8,7 +8,7 @@ feature
 	Workbench: WORKBENCH_I is
 			-- Shared access to the workbench
 		once
-			!! Result
+			create Result
 		end
 
 	System: SYSTEM_I is

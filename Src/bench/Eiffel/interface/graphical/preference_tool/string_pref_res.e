@@ -22,7 +22,7 @@ feature -- Validation
 			-- Validate Current's new value.
 		do
 			if text /= Void then
-				if not text.text.empty then
+				if not text.text.is_empty then
 					is_resource_valid := associated_resource.is_valid (text.text)
 				else
 					is_resource_valid := True
@@ -77,20 +77,19 @@ feature {PREFERENCE_CATEGORY} -- Access
 			-- Save Current.
 		local
 			ar: like associated_resource
-			quotation_added: BOOLEAN
 		do
 			ar := associated_resource
 			if text = Void or else equal (ar.value, (text.text)) then
 					--| text /= Void means text has been displayed
 					--| and thus the user could have changed the value.
-				if ar.value = Void or else ar.value.empty then
+				if ar.value = Void or else ar.value.is_empty then
 					file.putstring ("%"%"");
 				else
 					file.putchar ('%"')
 					file_putstring (file, ar.value)
 					file.putchar ('%"')
 				end
-			elseif text.text.empty then
+			elseif text.text.is_empty then
 				file.putstring ("%"%"")
 			else
 				file.putchar ('%"')

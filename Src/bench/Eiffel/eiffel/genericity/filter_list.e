@@ -3,15 +3,24 @@ class FILTER_LIST
 inherit
 	LINKED_LIST [GEN_TYPE_I]
 		rename
-			append as list_append
+			append as list_append,
+			search as list_search
 		redefine
-			search
+			make
 		end
 
 creation
 	make
 
-feature
+feature -- Initialization
+
+	make is
+		do
+			Precursor {LINKED_LIST}
+			compare_objects
+		end
+
+feature -- Search
 
 	search (v: GEN_TYPE_I) is
 			-- Patch
@@ -28,6 +37,8 @@ feature
 					forth
 				end
 			end
+		ensure
+			object_found: (not exhausted and object_comparison) implies (v /= Void and then v.same_as (item))
 		end
 
 	clean is

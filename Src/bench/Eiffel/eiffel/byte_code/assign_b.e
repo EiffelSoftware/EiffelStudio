@@ -9,7 +9,7 @@ inherit
 			need_enlarging, enlarged, make_byte_code,
 			assigns_to, is_unsafe, optimized_byte_node,
 			calls_special_features, size, inlined_byte_code,
-			pre_inlined_code
+			pre_inlined_code, generate_il
 		end;
 	
 feature 
@@ -44,6 +44,30 @@ feature
 			Result.set_line_number (line_number)
 		end;
 
+feature -- IL code generation
+
+	generate_il is
+			-- Generate IL code for an assignment.
+		local
+			source_type: TYPE_I
+		do
+			generate_il_line_info
+
+				-- Code that needs to be generated when performing
+				-- assignment to an attribute.
+			target.generate_il_start_assignment
+
+				-- Generate expression byte code
+			source.generate_il
+			
+				-- Generate assignment header depending of the type
+				-- of the target (local, attribute or result).
+			source_type ?= context.real_type (source.type);
+
+				-- Generate assignment
+			target.generate_il_assignment (source_type)
+		end
+
 feature -- Byte code generation
 
 	make_byte_code (ba: BYTE_ARRAY) is
@@ -52,7 +76,7 @@ feature -- Byte code generation
 			source_type: TYPE_I;
 			target_type: TYPE_I;
 		do
-			make_breakable (ba);
+			context.generate_melted_debugger_hook (ba);
 
 				-- Generate expression byte code
 			source.make_byte_code (ba);

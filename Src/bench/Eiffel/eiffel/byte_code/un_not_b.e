@@ -3,7 +3,8 @@ class UN_NOT_B
 inherit
 	UNARY_B
 		rename
-			Bc_not as operator_constant
+			Bc_not as operator_constant,
+			Il_not as il_operator_constant
 		redefine
 			generate_operator, is_built_in, print_register
 		end;

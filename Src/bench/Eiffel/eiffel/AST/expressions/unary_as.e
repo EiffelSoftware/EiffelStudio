@@ -24,16 +24,6 @@ feature {AST_FACTORY} -- Initialization
 			expr_set: expr = e
 		end
 
-feature {NONE} -- Initialization
-
-	set is
-			-- Yacc initialization
-		do
-			expr ?= yacc_arg (0)
-		ensure then
-			expr_exists: expr /= Void
-		end
-
 feature -- Attributes
 
 	expr: EXPR_AS
@@ -76,26 +66,16 @@ feature -- Type check, byte code and dead code removal
 			prefix_feature: FEATURE_I
 			prefix_feature_type, last_constrained: TYPE_A
 			last_class: CLASS_C
-			feature_b: FEATURE_B
-			feature_bs: FEATURE_BS
 			depend_unit: DEPEND_UNIT
 			vwoe: VWOE
-			vkcn3: VKCN3
 			vhne: VHNE
 			vuex: VUEX
 		do
 				-- Check operand
 			expr.type_check
-
+			
 			last_constrained := context.last_constrained_type
-			if last_constrained.is_void then
-					-- No call when target is a procedure
-				!!vkcn3
-				context.init_error (vkcn3)
-				Error_handler.insert_error (vkcn3)
-					-- Cannot go on here
-				Error_handler.raise_error
-			elseif last_constrained.is_none then
+			if last_constrained.is_none then
 				!!vhne
 				context.init_error (vhne)
 				Error_handler.insert_error (vhne)
@@ -129,7 +109,7 @@ feature -- Type check, byte code and dead code removal
 			end
  
 				-- Suppliers update
-			!!depend_unit.make (last_class.id, prefix_feature)
+			!!depend_unit.make (last_class.class_id, prefix_feature)
 			context.supplier_ids.extend (depend_unit)
 
 				-- Assumes here that a prefix feature has no argument
@@ -146,36 +126,41 @@ feature -- Type check, byte code and dead code removal
 				-- Usual case
 				prefix_feature_type := prefix_feature_type.conformance_type
 				prefix_feature_type := prefix_feature_type.instantiation_in
-								(context.item, last_class.id).actual_type
+								(context.item, last_class.class_id).actual_type
 			end
 
 			context.replace (prefix_feature_type)
 
-			if last_constrained /= Void and then last_constrained.is_separate then
-debug io.putstring ("Now,  In UNARY_AS we perform try-assign on class ")
-io.putstring (context.a_class.name_in_upper)
-io.putstring (" at feature ")
-io.putstring (context.feature_name)
-io.new_line
-io.putstring ("    ** UNARY_AS We created FEATURE_SB here: <")
-io.putstring (feature_b.feature_name)
-io.putstring (">%N"); end
-				!!feature_bs
-				feature_bs.init (prefix_feature)
-				feature_bs.set_type (context.item.type_i)
-				context.access_line.insert (feature_bs)
-			else
-				!!feature_b
-				feature_b.init (prefix_feature)
-				feature_b.set_type (context.item.type_i)
-				context.access_line.insert (feature_b)
-			end
-
+			context.access_line.insert (prefix_feature.access (context.item.type_i))
 		end
 
-	byte_node: UNARY_B is
+	byte_node: EXPR_B is
 			-- Associated byte code
+		local
+			access_line: ACCESS_LINE
+			access_b: ACCESS_B
+			unary_b: UNARY_B
+			expr_b: EXPR_B
 		do
+			expr_b := expr.byte_node
+			access_line := context.access_line
+			access_b := access_line.access
+
+				-- If we have something like `a.f' where `a' is predefined
+				-- and `f' is a constant then we simply generate a byte
+				-- node that will be the constant only. Otherwise if `a' is
+				-- not predefined and `f' is a constant, we generate the
+				-- complete evaluation `a.f'. However during generation,
+				-- we will do an optimization by hardwiring value of constant.
+			if not (access_b.is_constant and expr_b.is_predefined) then
+				unary_b := internal_byte_node
+				unary_b.set_expr (expr_b)
+				unary_b.init (access_b)
+				Result := unary_b
+			else
+				Result := access_b
+			end
+			access_line.forth
 		end
 
 	format (ctxt: FORMAT_CONTEXT) is
@@ -190,6 +175,7 @@ io.putstring (">%N"); end
 				ctxt.need_dot
 				ctxt.prepare_for_prefix (prefix_feature_name)
 				ctxt.put_current_feature
+				ctxt.put_prefix_space
 				if ctxt.last_was_printed then
 					ctxt.commit
 				else
@@ -248,4 +234,13 @@ feature {UNARY_AS} -- Replication
 			expr := e
 		end
 
+feature {NONE} -- Implementation
+
+	internal_byte_node: UNARY_B is
+			-- Create typed byte code depending on Current.
+		deferred
+		end
+
+
 end -- class UNARY_AS
+

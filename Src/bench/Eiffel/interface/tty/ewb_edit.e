@@ -20,9 +20,9 @@ feature -- Element change
 		local
 			editor: STRING;
 			cmd: STRING;
-			cmd_exec: EXTERNAL_COMMAND_EXECUTOR
+			cmd_exec: COMMAND_EXECUTOR
 		do
-			editor := General_resources.editor.value;
+			editor := shell_editor
 			if editor /= Void then
 				!!cmd.make (0);
 				cmd.append (editor);

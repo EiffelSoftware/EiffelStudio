@@ -15,11 +15,11 @@ create
 
 feature -- Execution
 
-	execute (arg: EV_ARGUMENT; data: EV_EVENT_DATA) is
+	execute is
 		local
 			ad: EB_ARGUMENT_DIALOG
 		do
-			create ad.make_default (tool.parent_window, Void)
+			create ad.make_default (Void)
 		end
 
 end -- class EB_PROMPT_ARGUMENT_CMD

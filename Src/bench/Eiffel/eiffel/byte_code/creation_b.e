@@ -11,7 +11,7 @@ inherit
 			optimized_byte_node,
 			assigns_to,
 			calls_special_features, size,
-			inlined_byte_code, pre_inlined_code
+			inlined_byte_code, pre_inlined_code, generate_il
 		end
 	
 feature 
@@ -60,6 +60,101 @@ feature -- C code generation
 			Result.set_line_number (line_number)
 		end;
 
+feature -- IL code generation
+
+	generate_il is
+			-- Generate IL code for creation instruction
+		local
+			target_type: TYPE_I
+			create_type: CREATE_TYPE
+			create_feat: CREATE_FEAT
+			is_special, is_external: BOOLEAN
+			cl_type: CL_TYPE_I
+			class_c: CLASS_C
+			f: FEATURE_B
+		do
+			generate_il_line_info
+			target_type := Context.real_type (target.type)
+
+			if target_type.is_reference then
+
+					-- Analyze type of creation
+				create_type ?= info	
+				if create_type /= Void then
+					cl_type ?= create_type.type
+					check
+						cl_type_not_void: cl_type /= Void
+					end
+					class_c := cl_type.base_class
+					is_special := class_c.is_special
+					is_external := class_c.is_external
+				else
+					create_feat ?= info
+					if create_feat /= Void then
+						is_special := create_feat.is_array (target.type)
+						is_external := create_feat.is_external (target.type)
+					end
+				end
+
+					-- Issue current object if needed for assignment
+				target.generate_il_start_assignment
+
+				if is_external and then not is_special then
+					context.set_il_external_creation (True)
+					if System.java_generation then
+						info.generate_il
+						il_generator.duplicate_top
+					end
+						-- Creation call on an external class.
+					if call /= Void then
+						call.message.generate_il
+					end
+					context.set_il_external_creation (False)
+					target.generate_il_assignment (target_type)
+				else
+					if not is_special then
+							-- Standard creation call
+						info.generate_il
+						target.generate_il_assignment (target_type)
+						if call /= Void then
+							call.generate_il
+						end
+					else
+							-- Creation call on an ARRAY.
+						check
+							call_not_void: call /= Void
+						end
+						f ?= call.message
+						check
+							f_not_void: f /= Void
+							f_name_is_make: f.feature_name.is_equal ("make")
+						end
+
+						if create_feat /= Void then
+								-- If it is a creation of an attribute
+								-- we have to generate `count' first and then
+								-- the `create_feat' will generate correct IL
+								-- code
+							f.parameters.generate_il
+							create_feat.generate_il
+						else
+								-- We have to generate ourself the IL code.
+							f.generate_il_array_creation
+						end
+						target.generate_il_assignment (target_type)
+					end
+				end
+			else
+					-- Creation on expanded or basic types
+					-- Issue current object if needed for assignment
+				target.generate_il_start_assignment
+				target.generate_il_assignment (target_type)
+				if call /= Void then
+					call.message.generate_il	
+				end
+			end
+		end
+
 feature -- Byte code generation
 
 	make_byte_code (ba: BYTE_ARRAY) is
@@ -74,7 +169,7 @@ debug
 	info.trace;
 end;
 			target_type := Context.real_type (target.type);
-			make_breakable (ba);
+			context.generate_melted_debugger_hook (ba);
 			if target_type.is_separate then
 				ba.append (Bc_sep_create);
 				cl_type ?= target_type -- can't be fail
@@ -109,10 +204,8 @@ end;
 					if call /= Void then
 						call.make_creation_byte_code (ba);
 					end;
-					if not target_type.is_basic then
-						target.make_byte_code (ba);
-						ba.append (Bc_create_inv);
-					end;
+					target.make_byte_code (ba);
+					ba.append (Bc_create_inv);
 				end
 			end;
 		end;

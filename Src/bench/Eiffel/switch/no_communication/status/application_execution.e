@@ -11,11 +11,23 @@ creation
 
 	make
 
-feature
+feature -- Initialization
 
 	make is 
 		do
 		end;
+
+feature -- Load and Save
+
+	load_debug_info is
+		do
+		end
+
+	save_debug_info is
+		do
+		end
+
+feature
 
 	add_feature (f: E_FEATURE) is
 		do
@@ -129,6 +141,10 @@ feature
 	number_of_stack_elements: INTEGER is
 		do	
 		end;
+
+	has_breakpoints: BOOLEAN is
+		do
+		end
 
 	has_breakpoint_set (f: E_FEATURE): BOOLEAN is
 		do

@@ -10,6 +10,7 @@ inherit
 			extend as array_extend,
 			item as array_item,
 			empty as array_empty,
+			is_empty as array_is_empty,
 			entry as array_entry
 		end
 
@@ -46,6 +47,11 @@ inherit
 			copy, is_equal
 		end
 
+	SHARED_GENERATION
+		undefine
+			copy, is_equal
+		end
+
 	COMPILER_EXPORTER
 		undefine
 			copy, is_equal
@@ -53,7 +59,7 @@ inherit
 
 feature -- Initialization
 
-	make (routine_id: ROUTINE_ID) is
+	make (routine_id: INTEGER) is
 			-- Create table with associated `routine_ioid'
 		do
 			rout_id := routine_id
@@ -71,7 +77,7 @@ feature -- Initialization
 			-- Extend current to `n' elements.
 		require
 			large_enough: n > 0
-			not_empty: not empty
+			not_empty: not is_empty
 		do
 			if (max_position > upper) or else (upper - max_position < n) then
 				increase_size (n.max (upper // 2))
@@ -79,15 +85,6 @@ feature -- Initialization
 		end
 
 feature
-
-	rout_id: ROUTINE_ID
-			-- Routine id of the table
-
-	set_rout_id (id: ROUTINE_ID) is
-			-- Assign `id' to `rout_id'.
-		do
-			rout_id := id
-		end
 
 	is_polymorphic (type_id: INTEGER): BOOLEAN is
 			-- Is the table polymorphic from entry indexed by `type_id' to
@@ -127,7 +124,7 @@ feature
 	min_type_id: INTEGER is
 			-- Minimum effecitve type id of the table ?
 		require
-			not empty
+			not is_empty
 		do
 			Result := array_item (lower).type_id
 		end
@@ -135,7 +132,7 @@ feature
 	max_type_id: INTEGER is
 			-- Maximum type id of the table ?
 		require
-			not empty
+			not is_empty
 		do
 			Result := array_item (max_position).type_id
 		end
@@ -194,7 +191,6 @@ feature
 			-- Is the table effectively used ?
 		local
 			i, nb: INTEGER
-			entry: T
 			local_copy: POLY_TABLE [T]
 		do
 			from
@@ -212,18 +208,10 @@ feature
 	final_table_size: INTEGER is
 			-- Size of the C table
 		require
-			not empty
+			not is_empty
 			is_used: used
 		do
 			Result := max_used - min_used + 1
-		end
-
-	workbench_table_size: INTEGER is
-			-- Size of the C table
-		require
-			not empty
-		do
-			Result := max_type_id - min_type_id + 1
 		end
 
 	has_type_id (type_id: INTEGER): BOOLEAN is
@@ -250,8 +238,7 @@ feature
 		require
 			positive: type_id > 0
 		local
-			stop: BOOLEAN
-			i, nb, index: INTEGER
+			i, nb: INTEGER
 			local_copy: POLY_TABLE [T]
 		do
 			from
@@ -275,7 +262,7 @@ feature
 	has_one_type: BOOLEAN is
 			-- Is the type table not polymorphic ?
 		require
-			not_empty: not empty
+			not_empty: not is_empty
 		local
 			i, nb: INTEGER
 			local_copy: POLY_TABLE [T]
@@ -311,7 +298,7 @@ feature
 			local_copy := Current
 
 				-- First generate type arrays for generic types.
-			c_name := rout_id.type_table_name
+			c_name := Encoder.type_table_name (rout_id)
 
 			from
 				i := min_type_id;
@@ -397,83 +384,8 @@ feature
 			buffer.putstring ("};%N%N")
 		end
 
-	workbench_c_type: STRING is
-			-- Associated C item structure name
-		deferred
-		end
-
-	make_byte_code (ba: BYTE_ARRAY) is
-			-- Make byte code for the current poly table.
-		require
-			good_argument: ba /= Void
-			not_empty: not empty
-		local
-			entry: T
-			i, nb: INTEGER
-			local_copy: POLY_TABLE [T]
-		do
-			make_header_code (ba)
-
-				-- Entries byte code
-			from
-				local_copy := Current
-				i := lower
-				nb := max_position
-			until
-				i > nb
-			loop
-				local_copy.array_item(i).make_byte_code (ba)
-				i := i + 1
-			end
-
-			if has_type_table then
-				ba.append ('%/001/')
-				from
-					i := lower	-- nb has already been computed and set to `max_position'
-				until
-					i > nb
-				loop
-					entry := local_copy.array_item (i)
-					ba.append_short_integer (entry.type_id - 1)
-					ba.append_short_integer (entry.feature_type_id - 1)
-					if entry.is_generic then
-						entry.make_gen_type_byte_code (ba)
-					end
-					ba.append_short_integer (-1)
-					i := i + 1
-				end
-			else
-				ba.append ('%U')
-			end
-		end
-
-	make_header_code (ba: BYTE_ARRAY) is
-			-- Make header byte code
-		do
-				-- Routine id
-			ba.append_int32_integer (rout_id.id)
-				-- King of poly table: attribute / routine
-			if is_routine_table then
-				ba.append ('%/001/')
-			else
-				ba.append ('%U')
-			end
-				-- Minimum dynamic type
-			ba.append_short_integer (min_type_id - 1)
-				-- Maximum dynamic type
-			ba.append_short_integer (max_type_id - 1)
-				-- Count
-			ba.append_short_integer (count)
-		end
-
 	is_routine_table: BOOLEAN is
 			-- Is the current table a routine table ?
-		do
-			-- Do nothing
-		end
-
-	is_attribute_table: BOOLEAN is
-			-- Is the current table an attribute table ?
 		do
 			-- Do nothing
 		end
@@ -522,19 +434,74 @@ feature -- Insertion
 	merge (other: like Current) is
 			-- Put `other' into Current
 		local
-			i: INTEGER
+			tmp: ARRAY [ENTRY]
+			i, j, k, nb: INTEGER
+			t_max, o_max: INTEGER
+			t_item: ENTRY
+			o_item: T
 		do
 			i := max_position
-			max_position := i + other.max_position
-			if (max_position > upper) then
-				increase_size (max_position - i)
+			t_max := i
+			o_max := other.max_position
+			nb := i + o_max
+			max_position := nb
+			
+			if (nb > upper) then
+				increase_size (nb - i)
 			end
-			subcopy (other, other.lower, other.max_position, i + 1)
+
+			tmp := Tmp_poly_table
+			if (nb > tmp.upper) then
+				increase_tmp_size (nb - tmp.upper)
+			end
+			tmp.subcopy (Current, 1, i, 1)
+
+			from
+				k := 1
+				i := 1
+				j := 1
+			until
+				k > nb
+			loop
+				if i <= t_max then
+					if j <= o_max then
+						t_item := tmp.item (i)
+						o_item := other.array_item (j)
+						if (t_item.type_id > o_item.type_id) then
+							put (o_item, k)
+							j := j + 1
+						else
+							put (bad_cast_but_valid ($t_item), k)
+							i := i + 1
+						end
+						k := k + 1
+					else
+						from
+						until
+							i > t_max
+						loop
+							t_item := tmp.item (i)
+							put (bad_cast_but_valid ($t_item), k)
+							i := i + 1
+							k := k + 1
+						end
+					end
+				else
+					from
+					until
+						j > o_max
+					loop
+						put (other.array_item (j), k)
+						j := j + 1
+						k := k + 1
+					end
+				end
+			end
 		end
 
 feature -- Status
 
-	empty: BOOLEAN is
+	is_empty: BOOLEAN is
 			-- Is there an element?
 		do
 			Result := max_position = 0
@@ -656,4 +623,27 @@ feature {NONE} -- Implementation
 			upper := upper + n
 		end
 
+feature {POLY_TABLE} -- Special data
+
+	Tmp_poly_table: ARRAY [ENTRY] is
+			-- Contain a copy of Current during a merge
+		once
+			create Result.make (1, Block_size)
+		end
+
+	bad_cast_but_valid (e: POINTER): T is
+		external
+			"C [macro %"eif_eiffel.h%"]"
+		alias
+			"(EIF_REFERENCE)"
+		end
+
+	increase_tmp_size (n: INTEGER) is
+			-- Increase the current array of `n' elements.
+		do
+			Tmp_poly_table.make (1, Tmp_poly_table.upper + (1 + n // Block_size) * Block_size)
+		end
+
+	Block_size: INTEGER is 50
+			-- Size of a block of `Tmp_poly_table'.
 end

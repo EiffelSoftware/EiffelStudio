@@ -1,16 +1,15 @@
 indexing
-
-	description:
-		"Sub query used to build a total query to query the profile information";
-	date: "$Date$";
+	description: "Sub query used to build a total query to query the profile information"
+	date: "$Date$"
 	revision: "$Revision$"
 
-class SUBQUERY
+class 
+	SUBQUERY
 
 inherit
 	ACTIVATABLE
 
-creation
+create 
 	make
 
 feature -- Initialization
@@ -19,52 +18,52 @@ feature -- Initialization
 			-- Create a subquery for column `c', with operator `o',
 			-- and specified value `v'.
 		require
-			c_not_void: c /= Void;
-			o_not_void: o /= Void;
-			v_not_void: v /= Void;
+			c_not_void: c /= void
+			o_not_void: o /= void
+			v_not_void: v /= void
 		do
-			int_column := c;
-			int_operator := o;
-			int_value := v;
-			activate;
+			int_column := c
+			int_operator := o
+			int_value := v
+			activate
 		ensure
-			activated: is_active;
-			correct_body: column = c and then operator = o and then
-							value = v;
-		end;
-
+			activated: is_active
+			correct_body: column = c and then operator = o and then value = v
+		end
+	
 feature -- Properties
 
 	column: STRING is
 		do
-			Result := int_column;
-		end;
+			Result := int_column
+		end
 
 	operator: STRING is
 		do
-			Result := int_operator;
-		end;
+			Result := int_operator
+		end
 
 	value: STRING is
 		do
-			Result := int_value;
-		end;
+			Result := int_value
+		end
 
 	image: STRING is
 		do
-			!! Result.make(0)
+			create Result.make (0)
 			Result.append (column)
 			Result.extend (' ')
 			Result.append (operator)
 			Result.extend (' ')
 			Result.append (value)
-			Result.extend (' ')
 		end
-
+	
 feature {NONE} -- Attributes
 
-	int_column,
-	int_operator,
-	int_value: STRING;
+	int_column: STRING
 
+	int_operator: STRING
+
+	int_value: STRING
+	
 end -- class SUBQUERY

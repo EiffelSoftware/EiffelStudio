@@ -42,6 +42,7 @@ feature
 			feat_exists: feat /= Void;
 		local
 			gen_param: TYPE_I;
+			bit_i: BIT_I
 			is_expanded: BOOLEAN;
 			type_c: TYPE_C;
 			expanded_type, non_expanded_type: CL_TYPE_I;
@@ -49,7 +50,6 @@ feature
 			gen_type: GEN_TYPE_I;
 			gen_ptype: GEN_TYPE_I;
 			dtype: INTEGER;
-			c_name: STRING;
 			final_mode: BOOLEAN;
 			has_init, has_creation: BOOLEAN
 			encoded_name: STRING
@@ -57,7 +57,7 @@ feature
 			idx_cnt: COUNTER
 		do
 			gen_param := first_generic;
-			is_expanded := gen_param.is_expanded;
+			is_expanded := gen_param.is_true_expanded;
 			type_c := gen_param.c_type;
 
 				-- HEADER:
@@ -68,7 +68,7 @@ feature
 				--			EIF_REFERENCE ref;
 				--			struct union overhead *zone;
 			buffer.putstring ("/* make_area */%N");
-			encoded_name := feat.body_id.feature_name (id);
+			encoded_name := Encoder.feature_name (static_type_id, feat.body_index);
 
 			System.used_features_log_file.add (Current, "make_area", encoded_name);
 
@@ -77,13 +77,19 @@ feature
 
 			buffer.putstring ("%
 				%%TEIF_REFERENCE ref;%N%
+				%%TEIF_REFERENCE loc1 = NULL;%N%
 				%%Tunion overhead *zone;%N%
 				%%TRTLD;%N%N");
 
 				-- Garbage collector hooks
-			buffer.putstring ("%TRTLI(2);%N%
-				%%Tl[0] = Current;%N%
-				%%Tl[1] = (EIF_REFERENCE) 0;%N%N");
+			buffer.putstring ("%TRTLI(2);")
+			buffer.indent
+			buffer.new_line
+			buffer.put_current_registration (0)
+			buffer.new_line
+			buffer.put_local_registration (1, "loc1")
+			buffer.new_line
+			buffer.exdent
 
 			final_mode := byte_context.final_mode;
 			if 	(not final_mode)
@@ -112,26 +118,31 @@ feature
 			end;
 
 				-- Allocation of a special object
-				--		l[1] = spmalloc(arg1 * sizeof(EIF_REFERENCE) + LNGPAD(2));
-			buffer.putstring ("%Tl[1] = spmalloc(CHRPAD(arg1 * ");
+				--		loc1 = spmalloc(arg1 * sizeof(EIF_REFERENCE) + LNGPAD(2));
+			buffer.putstring ("%Tloc1 = spmalloc(CHRPAD(arg1 * ");
 		
 			if is_expanded then
 				buffer.putstring ("(EIF_Size(");
 				expanded_type ?= gen_param;
 				non_expanded_type := clone (expanded_type);
-				non_expanded_type.set_is_expanded (False);
+				non_expanded_type.set_is_true_expanded (False);
 				dtype := non_expanded_type.type_id - 1;
 				buffer.putint (dtype);
 				buffer.putstring (")+OVERHEAD)");
 			else
 				type_c.generate_size (buffer);
 			end;
-			buffer.putstring (") + LNGPAD(2));%N");
+			buffer.putstring (") + LNGPAD(2), ")
+			if gen_param.is_basic then
+				buffer.putstring ("EIF_TRUE);%N");
+			else
+				buffer.putstring ("EIF_FALSE);%N");
+			end
 
 				-- Header evaluation
-				--		zone = HEADER(l[1]);
-			buffer.putstring ("%Tzone = HEADER(l[1]);%N");
-			buffer.putstring ("%Tref = l[1] + (zone->ov_size & B_SIZE) - LNGPAD(2);");
+				--		zone = HEADER(loc1);
+			buffer.putstring ("%Tzone = HEADER(loc1);%N");
+			buffer.putstring ("%Tref = loc1 + (zone->ov_size & B_SIZE) - LNGPAD(2);");
 			buffer.new_line
 
 				-- Set dynamic type
@@ -224,7 +235,7 @@ feature
 							gen_ptype.generate_cid (buffer, final_mode, True)
 						end
 
-						buffer.putstring ("pdtype = RTCID(&typcache, l[0],")
+						buffer.putstring ("pdtype = RTCID(&typcache, Current,")
 						buffer.putint (gen_ptype.generated_id (final_mode))
 						buffer.putstring (", typarr);")
 						buffer.new_line
@@ -237,24 +248,24 @@ feature
 
 					if has_init then
 							-- Call initialization routines
-						buffer.putstring ("%T%Tinit = XCreate(")
+						buffer.putstring ("%T%Tinit = (void *(*)(EIF_REFERENCE, EIF_REFERENCE)) XCreate(")
 						buffer.putint (dtype)
 						buffer.putstring (");%N")
 					end
 
 					buffer.putstring ("%
-						%%T%Tfor (ref = l[1]+OVERHEAD, i = 0; i < arg1; i++,%
+						%%T%Tfor (ref = loc1+OVERHEAD, i = 0; i < arg1; i++,%
 								%ref += EIF_Size(");
 					buffer.putint (dtype);
 					buffer.putstring (")+OVERHEAD){%N%
-						%%T%T%THEADER(ref)->ov_size = ref - l[1];%N%
+						%%T%T%THEADER(ref)->ov_size = ref - loc1;%N%
 						%%T%T%THEADER(ref)->ov_flags = pdtype");
 					buffer.putstring (" + EO_EXP;%N")
 
 						-- FIXME: call to creation routine?????
 
 					if has_init then
-						buffer.putstring ("%T%T%T(init)(ref, l[1]);%N")
+						buffer.putstring ("%T%T%T(init)(ref, loc1);%N")
 					end
 
 					buffer.putstring ("%T%T};%N%T};%N")
@@ -269,11 +280,11 @@ feature
 				
 						-- Call initialization routines
 					buffer.putstring ("%
-									%%T{%N%
-									%%T%TEIF_REFERENCE ref;%N%
-									%%T%TEIF_INTEGER i;%N%
-									%%T%Tfnptr init;%N%
-									%%T%Tint16 pdtype;")
+							%%T{%N%
+							%%T%TEIF_REFERENCE ref;%N%
+							%%T%TEIF_INTEGER i;%N%
+							%%T%Tvoid *(*init)(EIF_REFERENCE, EIF_REFERENCE);%N%
+							%%T%Tint16 pdtype;")
 
 					buffer.new_line
 					gen_ptype ?= expanded_type
@@ -323,7 +334,7 @@ feature
 							gen_ptype.generate_cid (buffer, final_mode, True)
 						end
 
-						buffer.putstring ("pdtype = RTCID(&typcache, l[0],")
+						buffer.putstring ("pdtype = RTCID(&typcache, Current,")
 						buffer.putint (gen_ptype.generated_id (final_mode))
 						buffer.putstring (", typarr);")
 						buffer.new_line
@@ -334,28 +345,40 @@ feature
 						buffer.exdent
 					end
 
-					buffer.putstring ("%T%Tinit = XCreate(");
+					buffer.putstring ("%T%Tinit = (void *(*)(EIF_REFERENCE, EIF_REFERENCE)) XCreate(")
 					buffer.putint (dtype);
 					buffer.putstring (");%N%
-									%%T%Tfor (ref = l[1]+OVERHEAD, i = 0; i < arg1; i++,%
+									%%T%Tfor (ref = loc1+OVERHEAD, i = 0; i < arg1; i++,%
 									%ref += EIF_Size(");
 					buffer.putint (dtype);
 					buffer.putstring (")+OVERHEAD){%N%
-									%%T%T%THEADER(ref)->ov_size = ref - l[1];%N%
+									%%T%T%THEADER(ref)->ov_size = ref - loc1;%N%
 									%%T%T%THEADER(ref)->ov_flags = pdtype");
 					buffer.putstring (" + EO_EXP;%N%
-									%%T%T%Tif ((char *(*)()) 0 != init)%N%
-									%%T%T%T%T(init)(ref, l[1]);%N%
+									%%T%T%Tif (init)%N%
+									%%T%T%T%T(init)(ref, loc1);%N%
 									%%T%T};%N%T};%N");
 				end
 			else
 				type_c.generate_size (buffer);
 				buffer.putstring (";%N");
+				if gen_param.is_bit then
+						-- Initialize array of bits with default values
+					shared_include_queue.put ("%"eif_plug.h%"")
+					bit_i ?= gen_param
+					buffer.putstring ("%T{%N%T%TEIF_INTEGER i;%N%
+								%%T%Tfor (i = 0; i < arg1; i++) {%N");
+					buffer.putstring ("%T%T%T*((EIF_REFERENCE *) loc1 + i) = RTLB(")
+					buffer.putint (bit_i.size)
+					buffer.putstring (");%N")
+					buffer.putstring ("%T%T%TRTAS_OPT(*((EIF_REFERENCE *) loc1 + i), i, loc1);%
+						%%N%T%T}%N%T}%N")
+				end
 			end;
 				-- Assignment of result to `area'.
-			buffer.putstring ("%TRTAR(l[1], l[0]);%N%T");
+			buffer.putstring ("%TRTAR(loc1, Current);%N%T");
 			generate_area_access (buffer);
-			buffer.putstring (" = l[1];%N%
+			buffer.putstring (" = loc1;%N%
 							%%TRTLE;%N}%N%N");
 		end;
 
@@ -375,12 +398,12 @@ feature
 			good_argument: buffer /= Void;
 		local
 			area_feature: FEATURE_I;
-			rout_id: ROUTINE_ID;
+			rout_id: INTEGER;
 			table_name: STRING;
 			array_index: INTEGER
 			rout_info: ROUT_INFO
 		do
-			buffer.putstring ("*(EIF_REFERENCE *) (l[0]");
+			buffer.putstring ("*(EIF_REFERENCE *) (Current");
 
 			area_feature := associated_class.feature_table.item ("area");
 
@@ -390,15 +413,15 @@ feature
 			
 				if array_index >= 0 then
 						-- Access to area is polymorphic
-					table_name := rout_id.table_name;
+					table_name := Encoder.table_name (rout_id)
 					buffer.putstring (" + (");
 					buffer.putstring (table_name);
 					buffer.putchar ('-');
 					buffer.putint (array_index);
 					buffer.putchar (')');
-					buffer.putstring ("[Dtype(l[0])]");
+					buffer.putstring ("[Dtype(Current)]");
 						-- Remember extern declaration
-					Extern_declarations.add_attribute_table (clone (table_name));
+					Extern_declarations.add_attribute_table (table_name);
 					   -- Mark attribute table used
 					Eiffel_table.mark_used (rout_id);
 				else
@@ -415,17 +438,19 @@ feature
 			then
 				rout_info := System.rout_info_table.item (rout_id);
 				buffer.putstring ("+ RTWPA(");
-				rout_info.origin.generated_id (buffer);
+				buffer.generate_class_id (rout_info.origin)
 				buffer.putstring (", ");
 				buffer.putint (rout_info.offset);
-				buffer.putstring (", Dtype(l[0])))");
+				buffer.putstring (", Dtype(Current)))");
 			else
 				buffer.putstring ("+ RTWA(");
-				buffer.putint (id.id - 1);
+				buffer.putint (static_type_id - 1);
 				buffer.putstring (", ");
 				buffer.putint (area_feature.feature_id);
-				buffer.putstring (", Dtype(l[0])))");
+				buffer.putstring (", Dtype(Current)))");
 			end;				
 		end;
 
 end
+
+

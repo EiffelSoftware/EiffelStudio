@@ -6,10 +6,10 @@ inherit
 
 	INSTR_B
 		redefine
-			generate, make_byte_code
+			generate, make_byte_code, generate_il
 		end
 	
-feature 
+feature -- C code generation
 
 	generate is
 			-- Generate the retry instruction
@@ -20,6 +20,7 @@ feature
 		do
 			buf := buffer
 			generate_line_info
+			generate_frozen_debugger_hook
 
 				-- Clean up the trace and profiling stacks
 			workbench_mode := Context.workbench_mode
@@ -39,10 +40,20 @@ feature
 			buf.new_line
 		end
 
+feature -- IL code generation
+
+	generate_il is
+			-- Generate IL code for retry instruction.
+		do
+			il_generator.branch_to (il_label_factory.retry_label)
+		end
+
+feature -- Byte code generation
+
 	make_byte_code (ba: BYTE_ARRAY) is
 			-- Generate byte code for a retry instruction
 		do
-			make_breakable (ba)
+			context.generate_melted_debugger_hook (ba)
 			ba.append (Bc_retry)
 			ba.write_retry
 		end

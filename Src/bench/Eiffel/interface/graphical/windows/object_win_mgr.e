@@ -68,6 +68,20 @@ feature -- Synchronization
 			end
 		end
 
+	update is
+			-- Update the content of each object tool.
+		do
+			from
+				active_editors.start
+			until
+				active_editors.after
+			loop
+				active_editors.item.update
+				active_editors.forth
+			end
+		end
+
+
 feature {NONE} -- Properties
 
 	editor_type: OBJECT_W

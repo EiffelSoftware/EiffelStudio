@@ -59,7 +59,7 @@ feature -- Execution
 				if not text_window.changed then
 					execute_licensed (formatted);
 				else
-					warner (popup_parent).custom_call (Current, Warning_messages.w_File_changed,
+					warner (popup_parent).custom_call (Current, Warning_messages.w_File_changed (Void),
 						Interface_names.b_Yes, Interface_names.b_No, Interface_names.b_Cancel)
 				end
 			elseif argument = control_click then
@@ -70,7 +70,7 @@ feature -- Execution
 					execute_licensed (formatted);
 					mp.restore
 				else
-					warner (popup_parent).custom_call (Current, Warning_messages.w_File_changed,
+					warner (popup_parent).custom_call (Current, Warning_messages.w_File_changed (Void),
 						Interface_names.b_Yes, Interface_names.b_No, Interface_names.b_Cancel)
 				end
 			else

@@ -49,10 +49,9 @@ feature -- Execution
 			clients: LINKED_LIST [CLASS_C];
 			cfeat: STRING;
 			client: CLASS_C;
-			feat: E_FEATURE;
 			classes: PART_SORTED_TWO_WAY_LIST [CLASS_I];
 			list: SORTED_LIST [STRING];
-			table: HASH_TABLE [SORTED_LIST [STRING], CLASS_ID];
+			table: HASH_TABLE [SORTED_LIST [STRING], INTEGER];
 			st: like structured_text;
 			invariant_name: STRING
 		do
@@ -69,7 +68,7 @@ feature -- Execution
 				client := clients.item;
 				list := current_feature.callers (client)
 				if list /= Void then
-					table.put (list, client.id);
+					table.put (list, client.class_id);
 					classes.put_front (client.lace_class)
 				end;
 				clients.forth;
@@ -88,7 +87,7 @@ feature -- Execution
 				client.append_name (st);
 				st.add_new_line;
 				from
-					list := table.item (client.id);
+					list := table.item (client.class_id);
 					list.start
 				until
 					list.after
@@ -122,7 +121,7 @@ feature {NONE} -- Implementation
 			a_class: CLASS_C;
 			a_list: FIXED_LIST [CELL2 [CLASS_C,E_FEATURE]];
 			cell: CELL2 [CLASS_C,E_FEATURE];
-			rid: ROUTINE_ID;
+			rid: INTEGER;
 			st: like structured_text
 		do
 			rid := current_feature.rout_id_set.item (1);

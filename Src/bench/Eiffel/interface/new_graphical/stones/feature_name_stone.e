@@ -23,11 +23,18 @@ feature {NONE} -- Initialization
 	make (f_name: STRING; ec: CLASS_C) is
 		require
 			valid_f_name: f_name /= Void
+		local
+			f: FEATURE_I
 		do
 			e_class := ec
 			feature_name := f_name
-			start_position := -1
-			end_position := -1
+			f := ec.feature_named (f_name)
+				-- If `f' is `Void' the stone won't be valid.
+			if f /= void then
+				e_feature := f.e_feature
+			end
+			internal_start_position := -1
+			internal_end_position := -1
 		end
 
 feature -- Properties

@@ -1,10 +1,13 @@
--- Offset table associated to a cache
+indexing
+	description: "Offset table associated to a cache"
+	date: "$Date$"
+	revision: "$Revision$"
 
 deferred class
-	COMPILER_SERVER [T -> IDABLE, H -> COMPILER_ID]
+	COMPILER_SERVER [T -> IDABLE]
 
 inherit
-	ISE_SERVER [SERVER_INFO, T, H]
+	ISE_SERVER [SERVER_INFO, T]
 		redefine
 			make,
 			clear,
@@ -16,46 +19,44 @@ feature -- Initialization
 
 	make is
 		do
-			!! file_ids.make
+			create file_ids.make
 			file_ids.compare_objects
-			set_current_id
+			set_current_file_id
 			tbl_make (Chunk)
 		end
 
 feature
 
-	id (t: T): H is
+	id (t: T): INTEGER is
 			-- Id associated with `t'
 		require
 			t_not_void: t /= Void
 		deferred
 		end
 
-	current_id: FILE_ID
+	current_file_id: INTEGER
 			-- Current server file id used by primitive `put'.
 
-	file_ids: LINKED_SET [FILE_ID]
+	file_ids: LINKED_SET [INTEGER]
 			-- Set of server file ids under the control of the
 			-- current server
 
-	set_current_id is
-			-- Set `current_id' to a new value.
+	set_current_file_id is
+			-- Set `current_file_id' to a new value.
 		do
 debug ("SERVER")
 	io.error.putstring (generator)
-	io.error.putstring (" set_current_id%N")
+	io.error.putstring (" set_current_file_id%N")
 end
 			Server_controler.compute_new_id
-			current_id := Server_controler.last_computed_id
-			file_ids.extend (current_id)
+			current_file_id := Server_controler.last_computed_id
+			file_ids.extend (current_file_id)
 		end
 
-	put_precompiled (fid: FILE_ID; item_id: H; sinf: SERVER_INFO) is
-		local
-			server_file: SERVER_FILE
+	put_precompiled (fid: INTEGER; item_id: INTEGER; sinf: SERVER_INFO) is
 		do
 			file_ids.extend (fid)
-			force (sinf, updated_id (item_id))
+			force (sinf, item_id)
 		end
 
 	Size_limit: INTEGER is
@@ -71,15 +72,15 @@ end
 		do
 debug ("SERVER")
 	io.putstring ("Putting element of id: ")
-	io.putstring (t.id.dump)
+	io.putint (t.id)
 	io.putstring ("(")
-	io.putstring (updated_id (id (t)).dump)
+	io.putint (id (t))
 	io.putstring (") into")
 	io.putstring (generator)
 	io.new_line
 end
 				-- Update id of element
-			t.set_id (updated_id (id (t)))
+			t.set_id (id (t))
 
 				-- Write item to disk right away.
 			write (t)
@@ -87,7 +88,7 @@ end
 				-- Put `t' in cache if not full.
 			old_item := cache.item_id (id (t))
 			if old_item = Void then
-					-- No previous item of id `t.id'
+					-- No previous item of id `t'
 				cache.force (t)
 			else
 					-- There is a previous item and routine `item_id' 
@@ -99,19 +100,19 @@ end
 	write (t: T) is
 			-- Write item `t' on disk
 		local
-			an_id: H
+			an_id: INTEGER
 			pos: INTEGER
 			server_file, old_server_file: SERVER_FILE
 			info, old_info: SERVER_INFO
 		do
-			server_file := Server_controler.file_of_id (current_id)
+			server_file := Server_controler.file_of_id (current_file_id)
 			if
 				server_file = Void
 				or else server_file.last_offset > Size_limit * Server_controler.block_size
 				or else server_file.precompiled
 			then 
-				set_current_id
-				server_file := Server_controler.file_of_id (current_id)
+				set_current_file_id
+				server_file := Server_controler.file_of_id (current_file_id)
 			end
 			if not server_file.is_open then
 				Server_controler.open_file (server_file)
@@ -127,21 +128,21 @@ debug ("SERVER")
 end
 
 			pos := store_append (server_file.descriptor, $t, $make_index, $need_index, $Current)
-			!! info.make (pos, server_file.id)
+			!! info.make (pos, server_file.file_id)
 			server_file.add_occurence
 
 			old_info := tbl_item (an_id)
 			if old_info /= Void then
-				old_server_file := Server_controler.file_of_id (old_info.id)
+				old_server_file := Server_controler.file_of_id (old_info.file_id)
 				old_server_file.remove_occurence
 				if old_server_file.occurence = 0 then
-					file_ids.prune (old_server_file.id)
+					file_ids.prune (old_server_file.file_id)
 				end
 			end
 			force (info, an_id)
 		end
 
-	remove (an_id: H) is
+	remove (an_id: INTEGER) is
 			-- Remove information of id `an_id'.
 			-- NO precondition, the feature will check if the
 			-- server has the element to remove.
@@ -150,27 +151,24 @@ end
 		local
 			old_info: SERVER_INFO
 			old_server_file: SERVER_FILE
-			real_id: H
 		do
-			real_id := updated_id (an_id)
-			cache.remove_id (real_id)
-			old_info := tbl_item (real_id)
+			cache.remove_id (an_id)
+			old_info := tbl_item (an_id)
 			if old_info /= Void then
-				old_server_file := Server_controler.file_of_id (old_info.id)
+				old_server_file := Server_controler.file_of_id (old_info.file_id)
 				old_server_file.remove_occurence
 				if old_server_file.occurence = 0 then
-					file_ids.prune (old_server_file.id)
+					file_ids.prune (old_server_file.file_id)
 				end
-				tbl_remove (real_id)
+				tbl_remove (an_id)
 			end
 		end
 
-	item, frozen server_item (an_id: H): T is
+	item, frozen server_item (an_id: INTEGER): T is
 			-- Object of id `an_id'.
 		local
 			info: SERVER_INFO
 			server_file: SERVER_FILE
-			real_id: H
 		do
 
 debug ("SERVER")
@@ -180,8 +178,7 @@ debug ("SERVER")
 	print (an_id)
 end
 
-			real_id := updated_id (an_id)
-			Result := cache.item_id (real_id)
+			Result := cache.item_id (an_id)
 			if Result = Void then
 
 debug ("SERVER")
@@ -189,26 +186,25 @@ debug ("SERVER")
 end
 
 					-- Id not avaible in memory
-				info := tbl_item (real_id)
+				info := tbl_item (an_id)
 				if info /= Void then
-					server_file := Server_controler.file_of_id (info.id)
+					server_file := Server_controler.file_of_id (info.file_id)
 					if not server_file.is_open then
 						Server_controler.open_file (server_file)
 					end
 					Result := retrieve_all (server_file.descriptor, info.position)
 						-- Insert it in the queue
-					Result.set_id (real_id)
+					Result.set_id (an_id)
 					cache.force (Result)
 				end
 			end
 		end
 
-	disk_item (an_id: H): T is
+	disk_item (an_id: INTEGER): T is
 			-- Object of id `an_id' on disk.
 		local
 			info: SERVER_INFO
 			server_file: SERVER_FILE
-			real_id: H
 		do
 
 debug ("SERVER")
@@ -218,16 +214,15 @@ debug ("SERVER")
 	print (an_id)
 end
 
-			real_id := updated_id (an_id)
-			info := tbl_item (real_id)
+			info := tbl_item (an_id)
 			if info /= Void then
-				server_file := Server_controler.file_of_id (info.id)
+				server_file := Server_controler.file_of_id (info.file_id)
 				if not server_file.is_open then
 					Server_controler.open_file (server_file)
 				end
 					-- Id not avaible in memory
 				Result := retrieve_all (server_file.descriptor, info.position)
-				Result.set_id (real_id)
+				Result.set_id (an_id)
 			end
 		end
 
@@ -252,25 +247,25 @@ end
 				after
 			loop
 				info := item_for_iteration
-				server_file := Server_controler.file_of_id (info.id)
+				server_file := Server_controler.file_of_id (info.file_id)
 				server_file.remove_occurence
 				forth
 			end
 			file_ids.wipe_out
 			{ISE_SERVER} Precursor
 				-- Take a new file
-			set_current_id
+			set_current_file_id
 		end
 
-	take_control (other: COMPILER_SERVER [T, H]) is
+	take_control (other: COMPILER_SERVER [T]) is
 			-- Take control of `other'.
 		require
 			good_argument: other /= Void
 		local
 			info, old_info: SERVER_INFO
-			an_id: H
-			other_file_ids: LINKED_SET [FILE_ID]
-			other_cache: CACHE [T, H]
+			an_id: INTEGER
+			other_file_ids: LINKED_SET [INTEGER]
+			other_cache: CACHE [T]
 			old_server_file: SERVER_FILE
 		do
 			flush
@@ -284,10 +279,10 @@ end
 				an_id := other.key_for_iteration
 				old_info := tbl_item (an_id)
 				if old_info /= Void then
-					old_server_file := Server_controler.file_of_id (old_info.id)
+					old_server_file := Server_controler.file_of_id (old_info.file_id)
 					old_server_file.remove_occurence
 					if old_server_file.occurence = 0 then
-						file_ids.prune (old_server_file.id)
+						file_ids.prune (old_server_file.file_id)
 					end
 				end
 				force (info, an_id)
@@ -307,8 +302,8 @@ end
 			cache.copy (other_cache)
 			other_cache.make
 
-			current_id := other.current_id
-			other.set_current_id
+			current_file_id := other.current_file_id
+			other.set_current_file_id
 
 			--partial_purge
 		end;			
@@ -316,7 +311,7 @@ end
 	files_purge is
 			-- Purge the files, i.e. removed non used files from the disk
 		local
-			file_list: LINKED_LIST [FILE_ID]
+			file_list: LINKED_LIST [INTEGER]
 			server_file: SERVER_FILE
 		do
 			from
@@ -340,11 +335,11 @@ end
 		local
 			new: like Current
 			old_count: INTEGER
-			file_id: FILE_ID
+			file_id: INTEGER
 			old_info: SERVER_INFO
 			old_server_file: SERVER_FILE
-			order: LINKED_LIST [FILE_ID]
-			an_id: H
+			order: LINKED_LIST [INTEGER]
+			an_id: INTEGER
 		do
 				-- Clean first
 			flush
@@ -371,7 +366,7 @@ end
 				file_id := order.item
 debug ("SERVER")
 	io.put_string ("File: ")
-	io.put_string (file_id.file_name)
+	print (file_id)
 	io.new_line
 end
 				from
@@ -380,9 +375,9 @@ end
 					after
 				loop
 					old_info := item_for_iteration
-					old_server_file := Server_controler.file_of_id (old_info.id)
+					old_server_file := Server_controler.file_of_id (old_info.file_id)
 					an_id := key_for_iteration
-					if equal (old_info.id, file_id) then
+					if old_info.file_id = file_id then
 						if old_server_file.precompiled then
 							new.put_precompiled (file_id, an_id, old_info)
 						else
@@ -425,8 +420,8 @@ end
 		local
 			old_info: SERVER_INFO
 			old_server_file: SERVER_FILE
-			an_id: H
-			live_ids: LINKED_LIST [H]
+			an_id: INTEGER
+			live_ids: LINKED_LIST [INTEGER]
 			dead_files: LINKED_SET [SERVER_FILE]
 		do
 debug ("SERVER")
@@ -444,14 +439,14 @@ end
 			loop
 				old_info := item_for_iteration
 				an_id := key_for_iteration
-				old_server_file := Server_controler.file_of_id (old_info.id)
+				old_server_file := Server_controler.file_of_id (old_info.file_id)
 				if old_server_file.need_purging then
 						-- Avoid side effects on the iteration
 debug ("SERVER")
 	io.error.putstring ("Marking id ")
-	io.error.putint (an_id.id)
+	io.error.putint (an_id)
 	io.error.putstring (" from ")
-	io.error.putint (old_server_file.id.id)
+	io.error.putint (old_server_file.file_id)
 	io.error.new_line
 end
 					live_ids.extend (an_id)
@@ -468,7 +463,7 @@ end
 			loop
 debug ("SERVER")
 	io.error.putstring ("Rewritting id ")
-	io.error.putint (live_ids.item.id)
+	io.error.putint (live_ids.item)
 	io.error.new_line
 end
 				write (item (live_ids.item))
@@ -482,7 +477,7 @@ end
 				old_server_file := dead_files.item
 debug ("SERVER")
 	io.error.putstring ("Deleting file ")
-	io.error.putint (old_server_file.id.id)
+	io.error.putint (old_server_file.file_id)
 	io.error.new_line
 	old_server_file.trace
 end
@@ -538,7 +533,7 @@ feature -- Comparison
 				deep_equal (keys, other.keys) and
 				deep_equal (content, other.content) and
 				equal (deleted_marks, other.deleted_marks) and
-				equal (current_id, other.current_id) and
+				current_file_id = other.current_file_id and
 				deep_equal (file_ids, other.file_ids)
 		end
 

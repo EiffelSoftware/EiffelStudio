@@ -90,7 +90,7 @@ feature
 			Result := System.class_of_id (parent_id);
 		end;
 
-	parent_id: CLASS_ID is
+	parent_id: INTEGER is
 			-- Parent class id
 		do
 			Result := parent_type.base_class_id

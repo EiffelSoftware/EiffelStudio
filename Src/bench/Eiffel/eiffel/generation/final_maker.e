@@ -15,25 +15,25 @@ feature
 			-- Generates the .c -> .o compilation rule
 		do
 			Make_file.putstring ("%
-				%.SUFFIXES: .x .xpp%N%N%
+				%.SUFFIXES: .x .xpp .o%N%N%
 				%.c.o:%N%
 				%%T$(CC) $(CFLAGS) -c $<%N%N%
 				%.cpp.o:%N%
-				%%T$(CC) $(CFLAGS) -c $<%N%N")
+				%%T$(CPP) $(CPPFLAGS) -c $<%N%N")
 			Make_file.putstring ("%
 				%.x.o:%N%
-				%%T$(EIFFEL4)/bench/spec/$(PLATFORM)/bin/x2c $< $*.c%N%
+				%%T$(X2C) $< $*.c%N%
 				%%T$(CC) $(CFLAGS) -c $*.c%N%
 				%%T$(RM) $*.c%N%N%
 				%.xpp.o:%N%
-				%%T$(EIFFEL4)/bench/spec/$(PLATFORM)/bin/x2c $< $*.cpp%N%
-				%%T$(CPP) $(CFLAGS) -c $*.cpp%N%
+				%%T$(X2C) $< $*.cpp%N%
+				%%T$(CPP) $(CPPFLAGS) -c $*.cpp%N%
 				%%T$(RM) $*.cpp%N%N")
 			Make_file.putstring ("%
 				%.x.c:%N%
-				%%T$(EIFFEL4)/bench/spec/$(PLATFORM)/bin/x2c $< $*.c%N%N%
+				%%T$(X2C) $< $*.c%N%N%
 				%.xpp.cpp:%N%
-				%%T$(EIFFEL4)/bench/spec/$(PLATFORM)/bin/x2c $< $*.cpp%N%N")
+				%%T$(X2C) $< $*.cpp%N%N")
 		end;
 
 	add_specific_objects is
@@ -113,6 +113,7 @@ feature
 				cecil_basket.extend ("eif_threads.o"); cecil_basket.finish
 				cecil_basket.extend ("eif_rw_lock.o"); cecil_basket.finish
 				cecil_basket.extend ("gen_conf.o"); cecil_basket.finish
+				cecil_basket.extend ("eif_type_id.o"); cecil_basket.finish
 				cecil_basket.extend ("rout_obj.o"); cecil_basket.finish
 				cecil_basket.extend ("eif_once.o"); cecil_basket.finish
 				cecil_basket.extend ("eif_project.o"); cecil_basket.finish
@@ -162,6 +163,7 @@ feature
 				cecil_basket.extend ("MTeif_threads.o"); cecil_basket.finish
 				cecil_basket.extend ("MTeif_rw_lock.o"); cecil_basket.finish
 				cecil_basket.extend ("MTgen_conf.o"); cecil_basket.finish
+				cecil_basket.extend ("MTeif_type_id.o"); cecil_basket.finish
 				cecil_basket.extend ("MTrout_obj.o"); cecil_basket.finish
 				cecil_basket.extend ("MTeif_once.o"); cecil_basket.finish
 				cecil_basket.extend ("MTeif_project.o"); cecil_basket.finish
@@ -175,59 +177,57 @@ feature
 			a_class: CLASS_C;
 			types: TYPE_LIST;
 			cl_type: CLASS_TYPE;
-			object_name, file_name: STRING;
-			classes: CLASS_C_SERVER;
+			file_name: STRING;
 			class_array: ARRAY [CLASS_C];
 			i, nb: INTEGER;
 			string_list: LINKED_LIST [STRING]
 		do
-			classes := System.classes;
-			from classes.start until classes.after loop
-				class_array := classes.item_for_iteration;
-				nb := Class_counter.item (classes.key_for_iteration).count
-				from i := 1 until i > nb loop
-					a_class := class_array.item (i)
-					if a_class /= Void then
-						if not a_class.is_precompiled or else a_class.is_in_system then
-							from
-								types := a_class.types;
-								types.start
-							until
-								types.after
-							loop
-								cl_type := types.item;
-								if
-									types.has_type (cl_type.type)
-									and then types.found_item = cl_type
-								then
-									-- Do not generate twice the same type if it
-									-- has been derived in two different merged
-									-- precompiled libraries.
-									if not empty_class_types.has (cl_type.id) then
-											-- C code
-										object_name := cl_type.base_file_name;
-										!!file_name.make (16);
-										file_name.append (object_name);
-										file_name.append (".o");
-										string_list := object_baskets.item (cl_type.packet_number)
-										string_list.extend (file_name);
-										string_list.finish
-									end;
+			from
+				class_array := system.classes
+				nb := Class_counter.count
+				i := 1
+			until
+				i > nb
+			loop
+				a_class := class_array.item (i)
+				if a_class /= Void then
+					if not a_class.is_precompiled or else a_class.is_in_system then
+						from
+							types := a_class.types;
+							types.start
+						until
+							types.after
+						loop
+							cl_type := types.item;
+							if
+								types.has_type (cl_type.type)
+								and then types.found_item = cl_type
+							then
+								-- Do not generate twice the same type if it
+								-- has been derived in two different merged
+								-- precompiled libraries.
+								if not empty_class_types.has (cl_type.static_type_id) then
+										-- C code
+									!!file_name.make (16);
+									file_name.append (cl_type.base_file_name);
+									file_name.append (".o");
+									string_list := object_baskets.item (cl_type.packet_number)
+									string_list.extend (file_name);
+									string_list.finish
 								end;
-								types.forth;
 							end;
-						end
+							types.forth;
+						end;
 					end
-					i := i + 1
 				end
-				classes.forth
-			end;
+				i := i + 1
+			end
 		end;
 
 	run_time: STRING is
 			-- Run time with which the application must be linked
 		do
-			Result := "\$(EIFFEL4)/bench/spec/\$(PLATFORM)/lib/"
+			Result := "\$(ISE_EIFFEL)/bench/spec/\$(ISE_PLATFORM)/lib/"
 
 			if System.has_dynamic_runtime then
 				Result.append ("$shared_prefix")
@@ -246,13 +246,13 @@ feature
 			Result.append ("$eiflib")
 
 			if System.has_dynamic_runtime then
-				Result.append ("$shared_suffix")
+				Result.append ("$shared_rt_suffix")
 			else
 				Result.append ("$suffix")
 			end
 
 			if System.has_separate then
-				Result.append ("\$(EIFFEL4)/library/net/spec/\$(PLATFORM)/lib/libnet.a")
+				Result.append ("\$(ISE_EIFFEL)/library/net/spec/\$(ISE_PLATFORM)/lib/libnet.a")
 			end
 		end;
 

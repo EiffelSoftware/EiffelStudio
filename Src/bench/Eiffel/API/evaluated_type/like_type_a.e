@@ -29,7 +29,7 @@ feature -- Properties
 	has_like: BOOLEAN is True
 			-- Does the type have anchored type in its definition ?
 
-	rout_id: ROUTINE_ID
+	rout_id: INTEGER
 
 	set_rout_id (rid: like rout_id) is
 			-- Set `set_rout_id' to `rid'.
@@ -37,7 +37,7 @@ feature -- Properties
 			rout_id := rid
 		end
 
-	class_id: CLASS_ID
+	class_id: INTEGER
 			-- Class ID of the class where the anchor is referenced
 
 
@@ -81,7 +81,7 @@ feature -- Primitives
 		deferred
 		end
 
-	instantiation_in (type: TYPE_A written_id: CLASS_ID): like Current is
+	instantiation_in (type: TYPE_A written_id: INTEGER): like Current is
 			-- Instantiation of Current in the context of `class_type',
 			-- assuming that Current is written in class of id `written_id'.
 		deferred

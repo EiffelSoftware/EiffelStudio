@@ -1,13 +1,13 @@
 indexing
-	description: "Comment server for a class.";
+	description: "Comment server for a class indexed by class id.";
 	date: "$Date$";
-	revision: "$Revision $"
+	revision: "$Revision$"
 
 class
 	CLASS_COMMENTS_SERVER 
 
 inherit
-	COMPILER_SERVER [CLASS_COMMENTS, CLASS_ID]
+	COMPILER_SERVER [CLASS_COMMENTS]
 		export
 			{NONE} all;
 			{ANY} has, disk_item, clear, take_control
@@ -21,12 +21,12 @@ creation
 
 feature -- Update
 
-	take_control (other: COMPILER_SERVER [CLASS_COMMENTS, CLASS_ID]) is
+	take_control (other: COMPILER_SERVER [CLASS_COMMENTS]) is
 			-- Take control of `other'.
 		local
 			info, old_info: SERVER_INFO;
-			an_id: CLASS_ID;
-			other_file_ids: LINKED_SET [FILE_ID];
+			an_id: INTEGER;
+			other_file_ids: LINKED_SET [INTEGER];
 			old_server_file: SERVER_FILE;
 		do
 			flush;
@@ -40,10 +40,10 @@ feature -- Update
 				an_id := other.key_for_iteration;
 				old_info := tbl_item (an_id);
 				if old_info /= Void then
-					old_server_file := Server_controler.file_of_id (old_info.id);
+					old_server_file := Server_controler.file_of_id (old_info.file_id);
 					old_server_file.remove_occurence;
 					if old_server_file.occurence = 0 then
-						file_ids.prune (old_server_file.id);
+						file_ids.prune (old_server_file.file_id);
 					end;
 				end;
 				force (info, an_id);
@@ -55,8 +55,8 @@ feature -- Update
 			file_ids.merge (other_file_ids);
 			other_file_ids.wipe_out;
 
-			current_id := other.current_id;
-			other.set_current_id;
+			current_file_id := other.current_file_id;
+			other.set_current_file_id;
 		end;   
 
 feature -- Removal
@@ -81,19 +81,19 @@ feature -- Removal
 				after
 			loop
 				info := item_for_iteration;
-				server_file := Server_controler.file_of_id (info.id);
+				server_file := Server_controler.file_of_id (info.file_id);
 				server_file.remove_occurence;
 				forth;
 			end;
 			clear_all;
 			file_ids.wipe_out;
 				-- Take a new file
-			set_current_id;
+			set_current_file_id;
 		end;
 
 feature -- Removal
 
-	remove (an_id: CLASS_ID) is
+	remove (an_id: INTEGER) is
 			-- Remove information of id `an_id'.
 			-- NO precondition, the feature will check if the
 			-- server has the element to remove.
@@ -102,23 +102,21 @@ feature -- Removal
 		local
 			old_info: SERVER_INFO;
 			old_server_file: SERVER_FILE;
-			real_id: CLASS_ID
 		do
-			real_id := updated_id (an_id);
-			old_info := tbl_item (real_id);
+			old_info := tbl_item (an_id);
 			if old_info /= Void then
-				old_server_file := Server_controler.file_of_id (old_info.id);
+				old_server_file := Server_controler.file_of_id (old_info.file_id);
 				old_server_file.remove_occurence;
 				if old_server_file.occurence = 0 then
-					file_ids.prune (old_server_file.id);
+					file_ids.prune (old_server_file.file_id);
 				end;
-				tbl_remove (real_id);
+				tbl_remove (an_id);
 			end;
 		end;
 
 feature -- Access
 
-	id (t: CLASS_COMMENTS): CLASS_ID is
+	id (t: CLASS_COMMENTS): INTEGER is
 			-- Id associated with `t'
 		do
 			Result := t.class_id
@@ -126,7 +124,7 @@ feature -- Access
 
 feature {NONE} -- Implementation
 
-	Cache: CACHE [CLASS_COMMENTS, CLASS_ID] is
+	Cache: CACHE [CLASS_COMMENTS] is
 			-- No caching machanism 
 			-- (Returns void)
 		do

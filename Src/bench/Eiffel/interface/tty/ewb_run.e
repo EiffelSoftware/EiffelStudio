@@ -31,25 +31,25 @@ feature {NONE} -- Implementation
 			make_f: INDENT_FILE;
 			error: BOOLEAN;
 			system_name: STRING;
-			cmd_exec: EXTERNAL_COMMAND_EXECUTOR
+			cmd_exec: COMMAND_EXECUTOR
 		do
-			system_name := clone (Eiffel_system.name);
-			if system_name = Void then
-				io.putstring ("You must compile a project first.%N");
+			if Eiffel_system = Void or else Eiffel_system.name = Void then
+				output_window.put_string (Warning_messages.W_must_compile_first)
+				output_window.new_line
 			else
+				system_name := clone (Eiffel_system.name);
 				appl_name := Eiffel_system.application_name (True);
 				!! f.make (appl_name);
 				if not f.exists then
-					io.putstring ("The system ");
-					io.putstring (appl_name);
-					io.putstring (" does not exist.%N");
+					output_window.put_string (Warning_messages.w_file_not_exist (appl_name))
+					output_window.new_line
 				else
 					!! f_name.make_from_string (Workbench_generation_path);
 					f_name.set_file_name (Makefile_SH);
 					!! make_f.make (f_name);
 					if make_f.exists and then make_f.date > f.date then
-						io.putstring (Makefile_SH);
-						io.putstring (" is more recent than the system%N");
+						output_window.put_string (Warning_messages.w_MakefileSH_more_recent)
+						output_window.new_line
 						error := True
 					end;
 					if not error then

@@ -56,7 +56,7 @@ feature -- Properites
 					Result := comment_line;
 						-- Comment found	
 					start_pos := comment_pos + 2;
-					if start_pos < tc then
+					if start_pos <= tc then
 						comment_string := t.substring (start_pos, tc);
 						comment_string.right_adjust;
 					else

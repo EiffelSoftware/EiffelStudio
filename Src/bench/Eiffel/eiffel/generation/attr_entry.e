@@ -15,7 +15,7 @@ feature -- for dead code removal
 
 feature -- previously in ATTR_UNIT
 
-	new_poly_table (routine_id: ROUTINE_ID): ATTR_TABLE is
+	new_poly_table (routine_id: INTEGER): ATTR_TABLE is
 			-- New associated polymorhic table
 		do
 			!! Result.make (routine_id)

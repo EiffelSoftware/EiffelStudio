@@ -27,7 +27,7 @@ feature {NONE} -- Execution
 		do
 			args := arguments;
 				-- Display previous value
-			if args.empty then
+			if args.is_empty then
 				io.putstring ("No previous value%N")
 			else
 				io.putstring ("Previous value: `");
@@ -38,8 +38,8 @@ feature {NONE} -- Execution
 			io.putstring ("--> Arguments: ");
 			command_line_io.wait_for_return;
 			new_args := clone (io.laststring);
-			if new_args.empty then
-				if not args.empty then
+			if new_args.is_empty then
+				if not args.is_empty then
 					io.putstring ("No value entered. Do you want to: %N%
 								%D: delete the previous value%N%
 								%K: keep the previous value (default)%N%

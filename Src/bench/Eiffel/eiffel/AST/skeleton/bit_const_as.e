@@ -25,16 +25,6 @@ feature {AST_FACTORY} -- Initialization
 			value_set: value = b
 		end
 
-feature {NONE} -- Initialization
-
-	set is
-			-- Yacc initialization
-		do
-			value ?= yacc_arg (0)
-		ensure then
-			value_exists: not (value = Void or else value.empty)
-		end
-
 feature -- Attributes
 
 	value: ID_AS
@@ -55,8 +45,7 @@ feature -- Type check and byte code
 		local
 			bit_type: BITS_A
 		do
-			!!bit_type
-			bit_type.set_bit_count (value.count)
+			create bit_type.make (value.count)
 				-- Update the type stack
 			context.put (bit_type)
 		end
@@ -81,7 +70,7 @@ feature -- Output
 
 	string_value: STRING is
 		do
-			!! Result.make (0)
+			create Result.make (value.count)
 			Result.append (value)
 		end
 

@@ -30,18 +30,6 @@ feature {AST_FACTORY} -- Initialization
 			message_set: message = m
 		end
 
-feature {NONE} -- Initialization
-
-	set is
-			-- Yacc initilization
-		do
-			target ?= yacc_arg (0)
-			message ?= yacc_arg (1)
-		ensure then
-			target_exists: target /= Void
-			message_exists: message /= Void
-		end
-
 feature -- Attributes
 
 	target: ACCESS_AS
@@ -64,7 +52,6 @@ feature -- Type check, byte code and dead code removal
 	type_check is
 			-- Type check the call
 		local
-			curr_feat: FEATURE_I
 			vape_check: BOOLEAN
 			t: TYPE_A
 			not_supported: NOT_SUPPORTED

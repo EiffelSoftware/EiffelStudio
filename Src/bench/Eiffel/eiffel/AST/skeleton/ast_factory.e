@@ -503,10 +503,10 @@ feature -- Access
 			value_set: Result.value = c
 		end
 
-	new_character_type_as: CHAR_TYPE_AS is
+	new_character_type_as (is_wide: BOOLEAN): CHAR_TYPE_AS is
 			-- New type AST node for "CHARACTER"
 		do
-			!! Result
+			create Result.make (is_wide)
 			Result.initialize
 		ensure
 			type_as_not_void: Result /= Void
@@ -524,9 +524,9 @@ feature -- Access
 			line_number_set: Result.line_number = l
 		end
 
-	new_class_as (n: ID_AS;
-		is_d, is_e, is_s: BOOLEAN;
-		ind: EIFFEL_LIST [INDEX_AS];
+	new_class_as (n: ID_AS; ext_name: STRING;
+		is_d, is_e, is_s, is_fc, is_ex: BOOLEAN;
+		top_ind, bottom_ind: INDEXING_CLAUSE_AS;
 		g: EIFFEL_LIST [FORMAL_DEC_AS];
 		p: EIFFEL_LIST [PARENT_AS];
 		c: EIFFEL_LIST [CREATE_AS];
@@ -534,8 +534,7 @@ feature -- Access
 		inv: INVARIANT_AS;
 		s: SUPPLIERS_AS;
 		o: STRING_AS;
-		cl: CLICK_LIST;
-		e: INTEGER): CLASS_AS is
+		cl: CLICK_LIST): CLASS_AS is
 			-- New CLASS AST node
 		require
 			n_not_void: n /= Void
@@ -543,14 +542,18 @@ feature -- Access
 			cl_not_void: cl /= Void
 		do
 			!! Result
-			Result.initialize (n, is_d, is_e, is_s, ind, g, p, c, f, inv, s, o, cl, e)
+			Result.initialize (n, ext_name, is_d, is_e, is_s, is_fc, is_ex, top_ind, bottom_ind, g, p, c, f, inv, s, o, cl)
 		ensure
 			class_as_not_void: Result /= Void
 			class_name_set: Result.class_name = n
+			external_class_name_set: Result.external_class_name = ext_name
 			is_deferred_set: Result.is_deferred = is_d
 			is_expanded_set: Result.is_expanded = is_e
 			is_separate_set: Result.is_separate = is_s
-			indexes_set: Result.indexes = ind
+			is_frozen_set: Result.is_frozen = is_fc
+			is_external_set: Result.is_external = is_ex
+			first_indexes_set: Result.top_indexes = top_ind
+			last_indexes_set: Result.bottom_indexes = bottom_ind
 			generics_set: Result.generics = g
 			parents_set: Result.parents = p
 			creators_set: Result.creators = c
@@ -561,7 +564,6 @@ feature -- Access
 			suppliers_set: Result.suppliers = s
 			obsolete_message_set: Result.obsolete_message = o
 			click_list_set: Result.click_list = cl
-			end_position_set: Result.end_position = e
 		end
 
 	new_class_type_as (n: ID_AS; g: EIFFEL_LIST [TYPE]): CLASS_TYPE_AS is
@@ -595,7 +597,7 @@ feature -- Access
 			-- New CLIENT AST node
 		require
 			c_not_void: c /= Void
-			c_not_empty: not c.empty
+			c_not_empty: not c.is_empty
 		do
 			!! Result
 			Result.initialize (c)
@@ -643,13 +645,13 @@ feature -- Access
 			line_number_set: Result.line_number = l
 		end
 
-	new_creation_expr_as (t: TYPE; c: ACCESS_INV_AS): CREATION_EXPR_AS is
+	new_creation_expr_as (t: TYPE; c: ACCESS_INV_AS; s,l: INTEGER): CREATION_EXPR_AS is
 			-- New creation expression AST node
 		require
 			t_not_void: t /= Void
 		do
 			!! Result
-			Result.initialize (t, c)
+			Result.initialize (t, c, s, l)
 		ensure
 			creation_expr_as_not_void: Result /= Void
 			type_set: Result.type = t
@@ -714,7 +716,7 @@ feature -- Access
 			!! Result.make (n)
 		ensure
 			list_not_void: Result /= Void
-			list_empty: Result.empty
+			list_empty: Result.is_empty
 		end
 
 	new_eiffel_list_case_as (n: INTEGER): EIFFEL_LIST [CASE_AS] is
@@ -725,7 +727,7 @@ feature -- Access
 			!! Result.make (n)
 		ensure
 			list_not_void: Result /= Void
-			list_empty: Result.empty
+			list_empty: Result.is_empty
 		end
 
 	new_eiffel_list_create_as (n: INTEGER): EIFFEL_LIST [CREATE_AS] is
@@ -736,7 +738,7 @@ feature -- Access
 			!! Result.make (n)
 		ensure
 			list_not_void: Result /= Void
-			list_empty: Result.empty
+			list_empty: Result.is_empty
 		end
 
 	new_eiffel_list_elseif_as (n: INTEGER): EIFFEL_LIST [ELSIF_AS] is
@@ -747,7 +749,7 @@ feature -- Access
 			!! Result.make (n)
 		ensure
 			list_not_void: Result /= Void
-			list_empty: Result.empty
+			list_empty: Result.is_empty
 		end
 
 	new_eiffel_list_export_item_as (n: INTEGER): EIFFEL_LIST [EXPORT_ITEM_AS] is
@@ -758,7 +760,7 @@ feature -- Access
 			!! Result.make (n)
 		ensure
 			list_not_void: Result /= Void
-			list_empty: Result.empty
+			list_empty: Result.is_empty
 		end
 
 	new_eiffel_list_expr_as (n: INTEGER): EIFFEL_LIST [EXPR_AS] is
@@ -769,7 +771,7 @@ feature -- Access
 			!! Result.make (n)
 		ensure
 			list_not_void: Result /= Void
-			list_empty: Result.empty
+			list_empty: Result.is_empty
 		end
 
 	new_eiffel_list_feature_as (n: INTEGER): EIFFEL_LIST [FEATURE_AS] is
@@ -780,7 +782,7 @@ feature -- Access
 			!! Result.make (n)
 		ensure
 			list_not_void: Result /= Void
-			list_empty: Result.empty
+			list_empty: Result.is_empty
 		end
 
 	new_eiffel_list_feature_clause_as (n: INTEGER): EIFFEL_LIST [FEATURE_CLAUSE_AS] is
@@ -791,7 +793,7 @@ feature -- Access
 			!! Result.make (n)
 		ensure
 			list_not_void: Result /= Void
-			list_empty: Result.empty
+			list_empty: Result.is_empty
 		end
 
 	new_eiffel_list_feature_name (n: INTEGER): EIFFEL_LIST [FEATURE_NAME] is
@@ -802,7 +804,7 @@ feature -- Access
 			!! Result.make (n)
 		ensure
 			list_not_void: Result /= Void
-			list_empty: Result.empty
+			list_empty: Result.is_empty
 		end
 
 	new_eiffel_list_formal_dec_as (n: INTEGER): EIFFEL_LIST [FORMAL_DEC_AS] is
@@ -813,7 +815,7 @@ feature -- Access
 			!! Result.make (n)
 		ensure
 			list_not_void: Result /= Void
-			list_empty: Result.empty
+			list_empty: Result.is_empty
 		end
 
 	new_eiffel_list_id_as (n: INTEGER): EIFFEL_LIST [ID_AS] is
@@ -824,10 +826,10 @@ feature -- Access
 			!! Result.make (n)
 		ensure
 			list_not_void: Result /= Void
-			list_empty: Result.empty
+			list_empty: Result.is_empty
 		end
 
-	new_eiffel_list_index_as (n: INTEGER): EIFFEL_LIST [INDEX_AS] is
+	new_eiffel_list_index_as (n: INTEGER): INDEXING_CLAUSE_AS is
 			-- New empty list of INDEX_AS
 		require
 			n_positive: n >= 0
@@ -835,7 +837,7 @@ feature -- Access
 			!! Result.make (n)
 		ensure
 			list_not_void: Result /= Void
-			list_empty: Result.empty
+			list_empty: Result.is_empty
 		end
 
 	new_eiffel_list_instruction_as (n: INTEGER): EIFFEL_LIST [INSTRUCTION_AS] is
@@ -846,7 +848,7 @@ feature -- Access
 			!! Result.make (n)
 		ensure
 			list_not_void: Result /= Void
-			list_empty: Result.empty
+			list_empty: Result.is_empty
 		end
 
 	new_eiffel_list_interval_as (n: INTEGER): EIFFEL_LIST [INTERVAL_AS] is
@@ -857,7 +859,7 @@ feature -- Access
 			!! Result.make (n)
 		ensure
 			list_not_void: Result /= Void
-			list_empty: Result.empty
+			list_empty: Result.is_empty
 		end
 
 	new_eiffel_list_operand_as (n: INTEGER): EIFFEL_LIST [OPERAND_AS] is
@@ -868,7 +870,7 @@ feature -- Access
 			!! Result.make (n)
 		ensure
 			list_not_void: Result /= Void
-			list_empty: Result.empty
+			list_empty: Result.is_empty
 		end
 
 	new_eiffel_list_parent_as (n: INTEGER): EIFFEL_LIST [PARENT_AS] is
@@ -879,7 +881,7 @@ feature -- Access
 			!! Result.make (n)
 		ensure
 			list_not_void: Result /= Void
-			list_empty: Result.empty
+			list_empty: Result.is_empty
 		end
 
 	new_eiffel_list_rename_as (n: INTEGER): EIFFEL_LIST [RENAME_AS] is
@@ -890,7 +892,7 @@ feature -- Access
 			!! Result.make (n)
 		ensure
 			list_not_void: Result /= Void
-			list_empty: Result.empty
+			list_empty: Result.is_empty
 		end
 
 	new_eiffel_list_string_as (n: INTEGER): EIFFEL_LIST [STRING_AS] is
@@ -901,7 +903,7 @@ feature -- Access
 			!! Result.make (n)
 		ensure
 			list_not_void: Result /= Void
-			list_empty: Result.empty
+			list_empty: Result.is_empty
 		end
 
 	new_eiffel_list_tagged_as (n: INTEGER): EIFFEL_LIST [TAGGED_AS] is
@@ -912,7 +914,7 @@ feature -- Access
 			!! Result.make (n)
 		ensure
 			list_not_void: Result /= Void
-			list_empty: Result.empty
+			list_empty: Result.is_empty
 		end
 
 	new_eiffel_list_type (n: INTEGER): EIFFEL_LIST [TYPE] is
@@ -923,7 +925,7 @@ feature -- Access
 			!! Result.make (n)
 		ensure
 			list_not_void: Result /= Void
-			list_empty: Result.empty
+			list_empty: Result.is_empty
 		end
 
 	new_eiffel_list_type_dec_as (n: INTEGER): EIFFEL_LIST [TYPE_DEC_AS] is
@@ -934,7 +936,7 @@ feature -- Access
 			!! Result.make (n)
 		ensure
 			list_not_void: Result /= Void
-			list_empty: Result.empty
+			list_empty: Result.is_empty
 		end
 
 	new_elseif_as (e: EXPR_AS; c: EIFFEL_LIST [INSTRUCTION_AS]; l: INTEGER): ELSIF_AS is
@@ -1048,19 +1050,21 @@ feature -- Access
 			start_position_set: Result.start_position = s
 		end
 
-	new_feature_as (f: EIFFEL_LIST [FEATURE_NAME]; b: BODY_AS; s, e: INTEGER): FEATURE_AS is
+	new_feature_as (f: EIFFEL_LIST [FEATURE_NAME]; b: BODY_AS; i: INDEXING_CLAUSE_AS; s, e: INTEGER): FEATURE_AS is
 			-- New FEATURE AST node
 		require
 			f_not_void: f /= Void
-			f_not_empty: not f.empty
+			f_not_empty: not f.is_empty
 			b_not_void: b /= Void
+			can_have_indexing_clause: i /= Void implies f.count = 1
 		do
 			!! Result
-			Result.initialize (f, b, s, e)
+			Result.initialize (f, b, i, s, e)
 		ensure
 			feature_as_not_void: Result /= Void
 			feature_names_set: Result.feature_names = f
 			body_set: Result.body = b
+			indexes_set: Result.indexes = i
 		end
 
 	new_feature_clause_as (c: CLIENT_AS; f: EIFFEL_LIST [FEATURE_AS]; p: INTEGER): FEATURE_CLAUSE_AS is
@@ -1133,7 +1137,7 @@ feature -- Access
 			-- New ID AST node
 		require
 			s_not_void: s /= Void
-			s_not_empty: not s.empty
+			s_not_empty: not s.is_empty
 		do
 			!! Result.initialize (s)
 		ensure
@@ -1226,10 +1230,23 @@ feature -- Access
 			value_set: Result.value = i
 		end
 
-	new_integer_type_as: INT_TYPE_AS is
-			-- New type AST node for "INTEGER"
+	new_integer_as_from_hexa (s: STRING): INTEGER_AS is
+			-- New INTEGER AST node
 		do
 			!! Result
+			Result.initialize_from_hexa (s)
+		ensure
+			integer_as_not_void: Result /= Void
+			-- value_set: Make sure we translated `s'
+			-- correctly into correct integer value.
+		end
+
+	new_integer_type_as (n: INTEGER): INT_TYPE_AS is
+			-- New type AST node for "INTEGER" with `n' bits
+		require
+			valid_n: n = 8 or n = 16 or n = 32 or n = 64
+		do
+			create Result.make (n)
 			Result.initialize
 		ensure
 			type_as_not_void: Result /= Void
@@ -1344,6 +1361,19 @@ feature -- Access
 		ensure
 			once_as_not_void: Result /= Void
 			compound_set: Result.compound = c
+		end
+
+	new_result_operand_as (c: TYPE; t: ID_AS; e: EXPR_AS): OPERAND_AS is
+			-- New OPERAND AST node
+		do
+			!! Result
+			Result.initialize_result
+		ensure
+			operand_as_not_void: Result /= Void
+			is_result_set: Result.is_result
+			class_type_set: Result.class_type = Void
+			target_set: Result.target = Void
+			expression_set: Result.expression = Void
 		end
 
 	new_operand_as (c: TYPE; t: ID_AS; e: EXPR_AS): OPERAND_AS is
@@ -1571,18 +1601,33 @@ feature -- Access
 			value_set: Result.value = s
 		end
 
-	new_tagged_as (t: ID_AS; e: EXPR_AS; s: INTEGER): TAGGED_AS is
+	new_verbatim_string_as (s, marker: STRING): VERBATIM_STRING_AS is
+			-- New VERBATIM_STRING AST node
+		require
+			s_not_void: s /= Void
+			marker_not_void: marker /= Void
+		do
+			!! Result
+			Result.initialize (s, marker)
+		ensure
+			verbatim_string_as_not_void: Result /= Void
+			value_set: Result.value = s
+			marker_set: Result.verbatim_marker = marker
+		end
+
+	new_tagged_as (t: ID_AS; e: EXPR_AS; s, l: INTEGER): TAGGED_AS is
 			-- New TAGGED AST node
 		require
 			e_not_void: e /= Void
 		do
 			!! Result
-			Result.initialize (t, e, s)
+			Result.initialize (t, e, s, l)
 		ensure
 			tagged_as_not_void: Result /= Void
 			tag_set: Result.tag = t
 			expr_set: Result.expr = e
 			start_position_set: Result.start_position = s
+			line_number_set: Result.line_number = l
 		end
 
 	new_tuple_as (exp: EIFFEL_LIST [EXPR_AS]): TUPLE_AS is
@@ -1706,18 +1751,19 @@ feature -- Access
 			terminal_set: Result.terminal = t
 		end
 
-	new_variant_as (t: ID_AS; e: EXPR_AS; s: INTEGER): VARIANT_AS is
+	new_variant_as (t: ID_AS; e: EXPR_AS; s, l: INTEGER): VARIANT_AS is
 			-- New VARIANT AST node
 		require
 			e_not_void: e /= Void
 		do
 			!! Result
-			Result.initialize (t, e, s)
+			Result.initialize (t, e, s, l)
 		ensure
 			variant_as_not_void: Result /= Void
 			tag_set: Result.tag = t
 			expr_set: Result.expr = e
 			start_position_set: Result.start_position = s
+			line_number_set: Result.line_number = l
 		end
 
 end -- class AST_FACTORY

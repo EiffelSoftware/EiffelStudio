@@ -3,14 +3,16 @@
 class CREATE_ARG 
 
 inherit
-
 	CREATE_INFO
 		redefine
 			generate_cid, make_gen_type_byte_code,
 			generate_reverse, make_reverse_byte_code,
 			generate_cid_array, generate_cid_init
 		end
+
 	SHARED_GENERATION
+
+	SHARED_GEN_CONF_LEVEL
 
 feature 
 
@@ -54,6 +56,13 @@ feature
 			buffer.putchar (')');
 		end;
 
+feature -- IL code generation
+
+	generate_il is
+		do
+			--| FIXME: not yet supported
+		end
+
 feature -- Byte code generation
 
 	make_byte_code (ba: BYTE_ARRAY) is
@@ -95,16 +104,18 @@ feature -- Generic conformance
 	generate_cid (buffer: GENERATION_BUFFER; final_mode : BOOLEAN) is
 
 		do
-			buffer.putint (-11)
+			buffer.putint (Like_arg_type)
 			buffer.putstring (", RTCA(arg")
 			buffer.putint (position)
-			buffer.putstring (",-10), ")
+			buffer.putchar (',')
+			buffer.putint (Internal_type)
+			buffer.putstring ("), ")
 		end
 
 	make_gen_type_byte_code (ba : BYTE_ARRAY) is
 
 		do
-			ba.append_short_integer (-11)
+			ba.append_short_integer (Like_arg_type)
 			ba.append_short_integer (position)
 		end
 
@@ -113,7 +124,8 @@ feature -- Generic conformance
 		local
 			dummy : INTEGER
 		do
-			buffer.putstring ("-11, 0,")
+			buffer.putint (Like_arg_type)
+			buffer.putstring (", 0,")
 
 			dummy := idx_cnt.next
 			dummy := idx_cnt.next
@@ -129,7 +141,9 @@ feature -- Generic conformance
 			buffer.putint (idx_cnt.value)
 			buffer.putstring ("] = RTCA(arg")
 			buffer.putint (position)
-			buffer.putstring (",-10);")
+			buffer.putchar (',')
+			buffer.putint (Internal_type)
+			buffer.putstring (");")
 			buffer.new_line
 			dummy := idx_cnt.next
 		end
@@ -140,8 +154,7 @@ feature -- Generic conformance
 			type_i : TYPE_I;
 		do
 			type_i := context.byte_code.arguments.item (position);
-			type_i := context.constrained_type (type_i);
-			Result ?= context.instantiation_of (type_i);
+			Result ?= context.creation_type (type_i);
 		end;
 
 feature -- Assignment attempt
@@ -166,7 +179,7 @@ feature -- Assignment attempt
 		do
 			cl_type_i := type_to_create
 
-			ba.append_short_integer (-11)
+			ba.append_short_integer (Like_arg_type)
 			ba.append_short_integer (position)
 				-- Default creation type
 			ba.append_short_integer (cl_type_i.generated_id (False))

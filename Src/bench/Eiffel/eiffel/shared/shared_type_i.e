@@ -11,8 +11,14 @@ feature {NONE}
 	Char_c_type: CHAR_I is
 			-- Char C type
 		once
-			!!Result;
+			create Result.make (False)
 		end;
+
+	Wide_char_c_type: CHAR_I is
+			-- Wide char C type
+		once
+			create Result.make (True)
+		end
 
 	Pointer_c_type: POINTER_I is
 			-- Pointer C type
@@ -20,11 +26,29 @@ feature {NONE}
 			!! Result
 		end
 
+	int8_c_type: LONG_I is
+			-- int8 C type
+		once
+			create Result.make (8)
+		end
+
+	int16_c_type: LONG_I is
+			-- int16 C type
+		once
+			create Result.make (16)
+		end
+
 	Long_c_type: LONG_I is
 			-- long C type
 		once
-			!!Result;
+			create Result.make (32);
 		end;
+
+	int64_c_type: LONG_I is
+			-- int64 C type
+		once
+			create Result.make (64)
+		end
 
 	Float_c_type: FLOAT_I is
 			-- Float C type

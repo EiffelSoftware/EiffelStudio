@@ -1,6 +1,10 @@
--- Context for third pass
+indexing
+	description: "Context for third pass"
+	date: "$Date$"
+	revision: "$Revision$"
 
-class AST_CONTEXT 
+class
+	AST_CONTEXT 
 
 inherit
 	EXTEND_STACK [TYPE_A]
@@ -22,87 +26,99 @@ inherit
 
 creation
 	make
+
+feature {NONE} -- Initialization
+
+	make is
+			-- Create instance of AST_CONTEXT.	
+		do
+			extend_stack_make
+			create locals.make (10)
+			create access_line.make
+			create multi_line.make
+			create tuple_line.make
+			create interval_line.make
+			create creation_types.make
+			create parameters.make
+			create supplier_ids.make
+			create instruction_line.make
+			create separate_calls.make (1, 0)
+		end
 	
-feature 
+feature -- Access
 
 	a_class: CLASS_C
 			-- Current analyzed a_class
 
-	actual_class_type: CL_TYPE_A;
+	actual_class_type: CL_TYPE_A
 			-- Actual type of `a_class'
 
-	feature_table: FEATURE_TABLE;
+	feature_table: FEATURE_TABLE
 			-- Current a_feature table
 
-	a_feature: FEATURE_I;
+	a_feature: FEATURE_I
 			-- Current analyzed a_feature
 
-	locals: EXTEND_TABLE [LOCAL_INFO, STRING];
+	locals: EXTEND_TABLE [LOCAL_INFO, STRING]
 			-- Current local variables of the analyzed feature
 
 	has_loop: BOOLEAN
 			-- Does the current FEATURE_AS node contain a loop construct?
 
-	access_line: ACCESS_LINE;
+	access_line: ACCESS_LINE
 			-- List of access encountered by the type checker: then the
 			-- building of the byte code takes those access.
 
-	multi_line: LINE [MULTI_TYPE_A];
+	multi_line: LINE [MULTI_TYPE_A]
 			-- Line of manifest array types
 
-	tuple_line: LINE [TUPLE_TYPE_A];
+	tuple_line: LINE [TUPLE_TYPE_A]
 			-- Line of manifest tuple types
 
-	interval_line: LINE [INTERVAL_B];
+	interval_line: LINE [INTERVAL_B]
 			-- Line of intervals
 
-	creation_types: LINE [CREATE_INFO];
+	creation_types: LINE [CREATE_INFO]
 			-- Creation information types
 
 	
-	parameters: LINE [TYPE_A];
+	parameters: LINE [TYPE_A]
 			-- Features with arguments encountered during type check
 
-	level1: BOOLEAN;
+	level1: BOOLEAN
 			-- Level for checking old expression wich should be only in
 			-- postconditions
 			-- [Set on when type chking postconditions].
 
-	level2: BOOLEAN;
+	level2: BOOLEAN
 			-- Level of analysis for access, When analyzing an access id,
 			-- (instance of ACCESS_ID_AS), locals, arguments
 			-- are not taken into account if set to True.
 			-- Useful for analyzing class invariant.
 			-- [Set on when analyzing invariants].
 
-	level3: BOOLEAN;
+	level3: BOOLEAN
 			-- Level for analysis of feature rescue clause: usefull for
 			-- validating `retry' instruction
 			--[Set on when analyzing rescue clause]
 
-	level4: BOOLEAN;
+	level4: BOOLEAN
 			-- Level for analysis of precondition
 
-	check_for_special_error: BOOLEAN;
+	check_for_special_error: BOOLEAN
 			-- Flag for checking the vape error and vaol error
 			
-	supplier_ids: FEATURE_DEPENDANCE;
+	supplier_ids: FEATURE_DEPENDANCE
 			-- Supplier units
 
-	make is
-		do
-			extend_stack_make;
-			!! locals.make (10);
-			!! access_line.make;
-			!! multi_line.make;
-			!! tuple_line.make;
-			!! interval_line.make;
-			!! creation_types.make;
-			!! parameters.make;
-			!! supplier_ids.make;
-			!! instruction_line.make
-			!! separate_calls.make (1, 0)
-		end;
+	is_in_creation_expression: BOOLEAN
+			-- Are we type checking a creation expression?
+			-- Usefull, for not checking VAPE error in precondition
+			-- using creation expression, since type checking 
+			-- on CREATION_EXPR_AS will report a not sufficiently
+			-- exported creation routine.
+
+feature -- Setting
 
 	set_a_class (cl: CLASS_C) is
 			-- Assign `cl' to `a_class'.
@@ -135,6 +151,14 @@ feature
 		do
 			level3 := b;
 		end;
+
+	set_is_in_creation_expression (b: BOOLEAN) is
+			-- Assign `b' to `is_in_creation_expression'.
+		do
+			is_in_creation_expression := b
+		ensure
+			is_in_creation_expression_set: is_in_creation_expression = b
+		end
 
 	set_level4 (b: BOOLEAN) is
 			-- Assign `b' to `level4'.
@@ -204,7 +228,7 @@ feature
 	last_class: CLASS_C is
 			-- Class associated to the type on the stack
 		require
-			not empty;
+			not is_empty;
 		do
 			Result := last_constrained_type.associated_class;
 		end;
@@ -213,93 +237,93 @@ feature
 			-- Put actual type of current analyzed class onto the
 			-- type stack
 		do
-			put (actual_class_type);
-		end;
+			put (actual_class_type)
+		end
 
 	expression_begining: BOOLEAN is
 			-- Is the analysis on the beginning of an expression ?
 		do
-			Result := last_class = a_class;
-		end;
+			Result := last_class = a_class
+		end
 
 	last_constrained_type: TYPE_A is
 			-- Constrained type onto the stack
 		local
 			formal_type: FORMAL_A
 		do
-			Result := item;	
+			Result := item
 			if Result.is_formal then
-				formal_type ?= Result;
-				Result := a_class.constraint (formal_type.position);
-			end;
-		end;
+				formal_type ?= Result
+				Result := a_class.constraint (formal_type.position)
+			end
+		end
 
 	init_error (e: FEATURE_ERROR) is
 			-- Initialize `e'.
 		require
-			good_argument: not (e = Void);
+			good_argument: not (e = Void)
 		do
-			e.set_class (a_class);
+			e.set_class (a_class)
 			if a_feature /= Void then
-				e.set_feature (a_feature);
-			end;
-		end;
+				e.set_feature (a_feature)
+			end
+		end
 
 	init_byte_code (byte_code: BYTE_CODE) is
 			-- Initialiaze `byte_code'.
 		require
 			a_feature /= Void;
 		local
-			local_dec: ARRAY [TYPE_I];
-			local_info: LOCAL_INFO;
-			redef_body_id, local_count, argument_count, i, nb: INTEGER;
-			arguments: FEAT_ARG;
-			redef_bodies: ARRAY [INTEGER];
-			redef_byte: BYTE_CODE;
-			rout_id: ROUTINE_ID;
+			local_dec: ARRAY [TYPE_I]
+			local_info: LOCAL_INFO
+			local_count: INTEGER
+			argument_count: INTEGER
+			i: INTEGER
+			arguments: FEAT_ARG
+			rout_id: INTEGER
 		do
 				-- Name
-			byte_code.set_feature_name (feature_name);
+			byte_code.set_feature_name (feature_name)
 				-- Feature id
-			byte_code.set_body_index (a_feature.body_index);
+			byte_code.set_body_index (a_feature.body_index)
 				-- Result type if any
-			byte_code.set_result_type (a_feature.type.actual_type.type_i);
+			byte_code.set_result_type (a_feature.type.actual_type.type_i)
 				-- Routine id
-			rout_id := a_feature.rout_id_set.first;
-			byte_code.set_rout_id (rout_id);
+			rout_id := a_feature.rout_id_set.first
+			byte_code.set_rout_id (rout_id)
 				-- Pattern id
-			byte_code.set_pattern_id (a_feature.pattern_id);
+			byte_code.set_pattern_id (a_feature.pattern_id)
 				-- Local variable declarations
-			local_count := locals.count;
+			local_count := locals.count
 			if local_count > 0 then
 				from
-					locals.start;
-					!!local_dec.make (1, local_count);
+					locals.start
+					create local_dec.make (1, local_count)
 				until
 					locals.after
 				loop
-					local_info := locals.item_for_iteration;
-					local_dec.put (local_info.type.type_i, local_info.position);
-					locals.forth;
-				end;
-				byte_code.set_locals (local_dec);
-			end;
+					local_info := locals.item_for_iteration
+					local_dec.put (local_info.type.type_i, local_info.position)
+					locals.forth
+				end
+				byte_code.set_locals (local_dec)
+			end
 				-- Arguments declarations
-			argument_count := a_feature.argument_count;
+			argument_count := a_feature.argument_count
 			if argument_count > 0 then
 				from
-					arguments := a_feature.arguments;
-					i := 1;
-					!!local_dec.make (1, argument_count);
+					arguments := a_feature.arguments
+					i := 1
+					create local_dec.make (1, argument_count)
 				until
 					i > argument_count
 				loop
-					local_dec.put (arguments.i_th (i).actual_type.type_i, i);
-					i := i + 1;
-				end;
-				byte_code.set_arguments (local_dec);
-			end;
-		end;
+					local_dec.put (arguments.i_th (i).actual_type.type_i, i)
+					i := i + 1
+				end
+				byte_code.set_arguments (local_dec)
+			end
+		end
 
 feature -- Managing the type stack
 

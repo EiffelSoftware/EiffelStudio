@@ -35,17 +35,6 @@ feature {AST_FACTORY} -- Initialization
 			generics_set: generics = g
 		end
 
-feature {NONE} -- Initialization
-
-	set is
-			-- Yacc initialization
-		do
-			class_name ?= yacc_arg (0)
-			generics ?= yacc_arg (1)
-		ensure then
-			class_name_exists: class_name /= Void
-		end
-
 feature -- Attributes
 
 	class_name: ID_AS
@@ -96,27 +85,21 @@ feature -- Conveniences
 		local
 			a_class: CLASS_C
 			a_classi: CLASS_I
-			gen_type: GEN_TYPE_A
-			tuple_type : TUPLE_TYPE_A
 			actual_generic: ARRAY [TYPE_A]
 			i, count: INTEGER
 			type_a: TYPE_A
 			abort: BOOLEAN
 		do
-			if is_tuple then
-				!!tuple_type
-				Result := tuple_type
-			end
-
 			if generics /= Void then
-				if Result = Void then
-					!!gen_type
-					Result := gen_type
-				end
 				from
 					i := 1
 					count := generics.count
-					!!actual_generic.make (1, count)
+					create actual_generic.make (1, count)
+					if is_tuple then
+						create {TUPLE_TYPE_A} Result.make (actual_generic)
+					else
+						create {GEN_TYPE_A} Result.make (actual_generic)
+					end
 				until
 					i > count or else abort
 				loop
@@ -128,15 +111,10 @@ feature -- Conveniences
 					end
 					i := i + 1
 				end
-
-				if gen_type /= Void then
-					gen_type.set_generics (actual_generic)
-				else
-					tuple_type.set_generics (actual_generic)
-				end
 			else
-				if tuple_type /= Void then
-					tuple_type.set_generics (Void)
+				if is_tuple then
+					create actual_generic.make (1, 0)
+					create {TUPLE_TYPE_A} Result.make (actual_generic)
 				end
 			end
 
@@ -149,9 +127,9 @@ feature -- Conveniences
 				a_classi := Universe.class_named (class_name, Inst_context.cluster)
 				if a_classi /= Void and then a_classi.compiled_class /= Void then
 					a_class := a_classi.compiled_class
-					Result.set_base_class_id (a_class.id)
+					Result.set_base_class_id (a_class.class_id)
 						-- Base type class is expanded
-					Result.set_is_expanded (a_class.is_expanded)
+					Result.set_is_true_expanded (a_class.is_expanded)
 				else
 					Result := Void
 				end
@@ -162,25 +140,19 @@ feature -- Conveniences
 			-- Track expanded classes
 		local
 			a_class: CLASS_C
-			gen_type: GEN_TYPE_A
-			tuple_type : TUPLE_TYPE_A
 			actual_generic: ARRAY [TYPE_A]
 			i, count: INTEGER
 		do
-			if is_tuple then
-				!!tuple_type
-				Result := tuple_type
-			end
-
 			if generics /= Void then
-				if Result = Void then
-					!!gen_type
-					Result := gen_type
-				end
 				from
 					i := 1
 					count := generics.count
-					!!actual_generic.make (1, count)
+					create actual_generic.make (1, count)
+					if is_tuple then
+						create {TUPLE_TYPE_A} Result.make (actual_generic)
+					else
+						create {GEN_TYPE_A} Result.make (actual_generic)
+					end
 				until
 					i > count
 				loop
@@ -188,14 +160,10 @@ feature -- Conveniences
 						(generics.i_th (i).solved_type (feat_table, f), i)
 					i := i + 1
 				end
-				if gen_type /= Void then
-					gen_type.set_generics (actual_generic)
-				else
-					tuple_type.set_generics (actual_generic)
-				end
 			else
-				if tuple_type /= Void then
-					tuple_type.set_generics (Void)
+				if is_tuple then
+					create actual_generic.make (1, 0)
+					create {TUPLE_TYPE_A} Result.make (actual_generic)
 				end
 			end
 
@@ -204,9 +172,9 @@ feature -- Conveniences
 			end
 
 			a_class := Universe.class_named (class_name, Inst_context.cluster).compiled_class
-			Result.set_base_class_id (a_class.id)
+			Result.set_base_class_id (a_class.class_id)
 				-- Base type class is expanded
-			Result.set_is_expanded (a_class.is_expanded)
+			Result.set_is_true_expanded (a_class.is_expanded)
 			if a_class.is_expanded then
 				record_exp_dependance (a_class)
 			end
@@ -236,11 +204,11 @@ feature -- Conveniences
 				c_class.set_has_expanded
 				a_class.set_is_used_as_expanded
 				if System.in_pass3 then
-					!!d.make_expanded_unit (a_class.id)
+					!!d.make_expanded_unit (a_class.class_id)
 					context.supplier_ids.extend (d)
 					f := a_class.creation_feature
 					if f /= Void then
-						!!d.make (a_class.id, f)
+						!!d.make (a_class.class_id, f)
 						context.supplier_ids.extend (d)
 					end
 				end
@@ -258,8 +226,6 @@ feature -- Conveniences
 		local
 			a_class: CLASS_C
 			a_class_i: CLASS_I
-			gen_type: GEN_TYPE_A
-			tuple_type : TUPLE_TYPE_A
 			actual_generic: ARRAY [TYPE_A]
 			i, count: INTEGER
 			a_cluster: CLUSTER_I
@@ -269,34 +235,26 @@ feature -- Conveniences
 				-- Bug fix: `append_signature' can be called on invalid
 				-- types by the error mechanism
 			if a_class_i /= Void then
-				if is_tuple then
-					!!tuple_type
-					Result := tuple_type
-				end
-
 				if generics /= Void then
-					if Result = Void then
-						!!gen_type
-						Result := gen_type
-					end
 					from
 						i := 1
 						count := generics.count
-						!!actual_generic.make (1, count)
+						create actual_generic.make (1, count)
+						if is_tuple then
+							create {TUPLE_TYPE_A} Result.make  (actual_generic)
+						else
+							create {GEN_TYPE_A} Result.make (actual_generic)
+						end
 					until
 						i > count
 					loop
 						actual_generic.put (generics.i_th (i).actual_type, i)
 						i := i + 1
 					end
-					if gen_type /= Void then
-						gen_type.set_generics (actual_generic)
-					else
-						tuple_type.set_generics (actual_generic)
-					end
 				else
-					if tuple_type /= Void then
-						tuple_type.set_generics (Void)
+					if is_tuple then
+						create actual_generic.make (1, 0)
+						create {TUPLE_TYPE_A} Result.make (actual_generic)
 					end
 				end
 
@@ -305,9 +263,9 @@ feature -- Conveniences
 				end
 
 				a_class := a_class_i.compiled_class
-				Result.set_base_class_id (a_class.id)
+				Result.set_base_class_id (a_class.class_id)
 						-- Base type class is expanded
-				Result.set_is_expanded (a_class.is_expanded)
+				Result.set_is_true_expanded (a_class.is_expanded)
 				if a_class.is_expanded then
 					record_exp_dependance (a_class)
 				end
@@ -342,6 +300,7 @@ feature -- Conveniences
 					vtct.set_class (a_class)
 					vtct.set_class_name (class_name)
 					Error_handler.insert_error (vtct)
+					error_handler.raise_error
 				else
 					is_tuple_type := is_tuple
 					associated_class := class_i.compiled_class
@@ -421,7 +380,6 @@ feature -- Output
 
 	append_to (st: STRUCTURED_TEXT) is
 		local
-			class_c: CLASS_C
 			class_i: CLASS_I
 			c_name: STRING
 		do
@@ -467,8 +425,7 @@ feature -- Output
 
 	associated_classi: CLASS_I is
 			-- Associated class_i
-		local
-			class_i: CLASS_I
+			-- require: `Inst_context.cluster' not `Void'.
 		do
 			check
 				Inst_context.cluster /= Void

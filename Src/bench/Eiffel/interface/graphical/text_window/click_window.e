@@ -211,7 +211,6 @@ feature -- Processing for text_struct
 			-- Put a 'break stone' in the text.
 		local
 			breakable_stone: BREAKABLE_STONE
-			debug_mark: STRING
 			click_break: CLICK_BREAKABLE
 		do
 			!! breakable_stone.make (a_bp.e_feature, a_bp.index)
@@ -220,8 +219,7 @@ feature -- Processing for text_struct
 			else
 				put_normal_string (" ")
 				!! breakable_stone.make (a_bp.e_feature, a_bp.index)
-				!! click_break.make (breakable_stone,
-						text_position, text_position + 3)
+				!! click_break.make (breakable_stone, text_position, text_position + 3)
 				add_click_stone (click_break)
 				text_position := text_position + 3
 				image.append (breakable_stone.sign)
@@ -289,12 +287,13 @@ feature -- Update
 
 feature -- Breakpoint update
 
-	highlight_breakable (f: E_FEATURE index: INTEGER) is
-			-- Highlight the line containing the `index'-th breakable point.
+	highlight_breakable (body_index: INTEGER; index: INTEGER) is
+			-- Highlight the line containing the `index'-th breakable point
+			-- of the feature defined by `body_index'.
 		local
 			cb: CLICK_BREAKABLE
 		do
-			cb := breakable_for (f, index)
+			cb := breakable_for (body_index, index)
 			if index >= 1 and cb /= Void then
 				set_bounds (cb.start_position, cb.end_position)
 				highlight_focus
@@ -321,18 +320,17 @@ feature {NONE} -- Implementation
 			!! Result.make (10000)
 		end -- image
 
-	breakable_for (f: E_FEATURE index: INTEGER): CLICK_BREAKABLE is
-			-- Breakable stone for `f' with index `index'
+	breakable_for (bid: INTEGER; index: INTEGER): CLICK_BREAKABLE is
+			-- Breakable stone for the feature that have the body_index `bid'
+			-- with index `index'
 		local
 			cb: CLICK_BREAKABLE
 			b: BREAKABLE_STONE
-			bid: BODY_ID
 			found: BOOLEAN
 			i: INTEGER
 			local_copy: like Current
 		do
 			from
-				bid := f.body_id
 				local_copy := Current
 				i := 1
 			until
@@ -341,7 +339,7 @@ feature {NONE} -- Implementation
 				cb ?= local_copy.item (i)
 				if cb /= Void then
 					b := cb.breakable
-					found := (bid.is_equal (b.routine.body_id) and then b.index = index)
+					found := (bid = b.routine.body_index and then b.index = index)
 				end
 				i := i + 1
 			end

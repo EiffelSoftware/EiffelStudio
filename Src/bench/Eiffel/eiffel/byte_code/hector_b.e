@@ -10,7 +10,7 @@ inherit
 			calls_special_features, is_unsafe, optimized_byte_node,
 			pre_inlined_code, inlined_byte_code,
 			analyze, print_register,
-			generate, generate_operator
+			generate, generate_il
 		end
 
 creation
@@ -51,16 +51,29 @@ feature
 			context.init_propagation;
 			expr.propagate (No_register);
 			expr.analyze;
-			if expr.is_result and then expr.type.is_basic then
+			if expr.is_result and then real_type (expr.type).is_basic then
 				context.mark_result_used;
 			end
+		end
+
+feature -- IL code generation
+
+	il_operator_constant: INTEGER is
+		do
+			check False end
+		end
+
+	generate_il is
+			-- Generate IL code for unprotected external call argument.
+		do
+			check False end
 		end
 
 feature -- Byte code generation
 
 	operator_constant: CHARACTER is
 			-- Byte code constant associated to current binary
-            -- operation
+			-- operation
 		do
 		ensure then
 			False
@@ -91,22 +104,16 @@ feature -- Byte code generation
 			end
 		end
 
-	generate_operator is
-			-- Generate the operator
-		do
-			if expr.type.is_basic then
-				buffer.putstring ("(EIF_POINTER)&");
-			end
-		end
-
 	print_register is
 			-- Print expression value
 		local
 			buf: GENERATION_BUFFER
+			l_type: TYPE_I
 		do
-			if expr.type.is_basic and not expr.type.is_bit then
+			l_type := real_type (expr.type)
+			if l_type.is_basic and not l_type.is_bit then
 				buf := buffer
-				buf.putstring ("(EIF_POINTER)&(");
+				buf.putstring ("&(");
 				if expr.is_attribute then
 					expr.generate_access
 				else

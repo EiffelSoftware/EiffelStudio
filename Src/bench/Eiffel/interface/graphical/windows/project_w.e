@@ -11,6 +11,8 @@ inherit
 			edit_bar as project_toolbar,
 			Project_resources as resources,
 			progress_dialog as shared_progress_dialog
+		export {EDIT_ITEM, DEBUG_DYNAMIC_EVAL_HOLE}
+			window_manager
 		redefine
 			tool_name, process_system, process_error,
 			process_object, process_breakable, process_class,
@@ -59,27 +61,23 @@ feature -- Initialization
 	make (a_screen: SCREEN) is
 			-- Create a project application.
 		local
-			app_stopped_cmd: APPLICATION_STOPPED_CMD
 			titre: STRING
 		do
 			General_resources.add_user (Current)
 			Project_resources.add_user (Current)
-			!! menus.make (1,16)
+			create menus.make (1,16)
 			base_make (Icon_id.out, a_screen)
-			!! history.make
+			create history.make
 			register
 			titre := Interface_names.t_Project
 			set_title (Interface_names.t_Project)
 			set_icon_name (tool_name)
-			if Pixmaps.bm_Project_icon.is_valid then
-				set_icon_pixmap (Pixmaps.bm_Project_icon)
-			end
+--			if Pixmaps.bm_Project_icon.is_valid then
+--				set_icon_pixmap (Pixmaps.bm_Project_icon)
+--			end
 			set_action ("<Unmap>,<Prop>", Current, popdown)
 			set_action ("<Configure>", Current, remapped)
 			set_action ("<Visible>", Current, remapped)
-			!! app_stopped_cmd
-			Application.set_before_stopped_command (app_stopped_cmd)
-			Application.set_after_stopped_command (app_stopped_cmd)
 			tooltip_initialize (Current)
 
 			build_widgets
@@ -121,7 +119,7 @@ feature -- Resource Update
 				end
 			elseif old_res = pr.graphical_output_disabled then
 				if new_res.actual_value then	
-					!! progress_output
+					create progress_output
 				else
 					!GRAPHICAL_DEGREE_OUTPUT! progress_output
 				end
@@ -270,12 +268,12 @@ feature -- Access
 
 	popdown: ANY is
 		once
-			!! Result
+			create Result
 		end
 
 	remapped: ANY is
 		once
-			!! Result
+			create Result
 		end
 
 	eb_shell: EB_SHELL is
@@ -628,6 +626,14 @@ feature -- Execution Implementation
 
 feature -- Update
 
+	update_object_tool is
+			-- Update the object tool part of this Project tool if shown.
+		do
+			if object_part /= void and then object_form.managed then
+				object_part.update
+			end
+		end
+
 	synchronize_routine_tool_to_default is
 			-- Synchronize the routine tool to the debug format.
 		do
@@ -650,30 +656,44 @@ feature -- Update
 		end
 
 	resynchronize_debugger is
+			-- resynchronize display when a breakpoint is added/removed
 		do
 			if feature_part /= Void and then feature_form.managed then
 				feature_part.resynchronize_debugger (Void)
 			end
 		end
 
-	show_stoppoint (e_feature: E_FEATURE index: INTEGER) is
+	show_stoppoint (body_index: INTEGER; index: INTEGER) is
 			-- If stone feature is equal to feature `f' and if in debug
 			-- mode then redisplay the sign of the `index'-th breakable point.
 		require
-			valid_feature: e_feature /= Void and then e_feature.body_id /= Void
+			valid_feature: body_index >= 0
 		local
-			new_stone: FEATURE_STONE
 			display_cmd: DISPLAY_ROUTINE_PORTION
 		do
 			display_cmd ?= display_feature_cmd_holder.associated_command
 			if display_cmd.is_shown and then index > 0 then
-				feature_part.show_stoppoint (e_feature, index)
+				feature_part.show_stoppoint (body_index, index)
+			end
+		end
+
+	refresh_current_stoppoint is
+			-- update the display for the current stop point.
+		local
+			current_call_stack_item: CALL_STACK_ELEMENT
+		do
+			if Application.status /= Void and then Application.status.where /= Void then
+				current_call_stack_item := Application.status.current_stack_element
+					-- remove the arrow
+				show_stoppoint(current_call_stack_item.body_index, current_call_stack_item.break_index)
 			end
 		end
 
 	show_current_stoppoint is
 			-- Show breakable mark in the feature part if
-			-- the part is displayed
+			-- the part is displayed - work even if the current
+			-- feature is not the one on top of the stack
+			-- If the 
 		local
 			status: APPLICATION_STATUS
 			display_cmd: DISPLAY_ROUTINE_PORTION
@@ -681,26 +701,30 @@ feature -- Update
 			call_stack: CALL_STACK_ELEMENT
 			e_feature: E_FEATURE
 			index: INTEGER
+			body_index: INTEGER
 		do
 			if Application.is_running and then Application.is_stopped then
 				display_cmd ?= display_feature_cmd_holder.associated_command
 				if display_cmd.is_shown then
 					status := Application.status
 					if status.e_feature /= Void then
-						call_stack := status.current_stack_element
 						if Application.current_execution_stack_number = 1 then
 							e_feature := status.e_feature
 							index := status.break_index
+							body_index := e_feature.body_index
 						else
+							call_stack := status.current_stack_element
 							e_feature := call_stack.routine
+							index := call_stack.break_index
+							body_index := call_stack.body_index
 						end
 						if feature_part.last_format /= feature_part.showstop_frmt_holder then
 							feature_part.set_debug_format
 						end
-						!! new_stone.make (e_feature)
+						create new_stone.make (e_feature)
 						feature_part.process_feature (new_stone)
 						if index > 0 then
-							feature_part.show_stoppoint (e_feature, index)
+							feature_part.show_stoppoint (body_index, index)
 						end
 					end
 				end
@@ -733,7 +757,7 @@ feature -- Update
 							dynamic_class := call_stack.dynamic_class
 							object_address := call_stack.object_address
 						end
-						!! new_stone.make (object_address, call_stack.routine_name, dynamic_class)
+						create new_stone.make (object_address, call_stack.routine_name, dynamic_class)
 						if new_stone.same_as (object_part.stone) then
 							object_part.synchronize
 						else
@@ -749,7 +773,7 @@ feature -- Update
 		local
 			st: STRUCTURED_TEXT
 		do
-			!! st.make
+			create st.make
 			Application.status.display_status (st)
 			text_window.clear_window
 			text_window.process_text (st)
@@ -866,33 +890,33 @@ feature -- Graphical Interface
 			end
 			set_size (default_width, default_height)
 
-			!! global_form.make (new_name, Current)
+			create global_form.make (new_name, Current)
 
 			if General_resources.motif_1_2.actual_value then
-				!! global_verti_split_window.make_horizontal_with_proportion (new_name, global_form, 15)
+				create global_verti_split_window.make_horizontal_with_proportion (new_name, global_form, 15)
 			else
-				!! global_verti_split_window.make_vertical_with_proportion (new_name, global_form, 15)
+				create global_verti_split_window.make_vertical_with_proportion (new_name, global_form, 15)
 			end
 
- 			!! selector_form.make (new_name, global_verti_split_window)
-			!! selector_part.make ("Selector",selector_form) 
+ 			create selector_form.make (new_name, global_verti_split_window)
+			create selector_part.make ("Selector",selector_form) 
 
-			!! common_form.make (new_name, global_verti_split_window)
+			create common_form.make (new_name, global_verti_split_window)
 
-  			!! hori_split_window.make_horizontal_with_proportion (new_name, common_form,50)
+  			create hori_split_window.make_horizontal_with_proportion (new_name, common_form,50)
 
-			!! top_form.make (new_name, hori_split_window)
+			create top_form.make (new_name, hori_split_window)
 			top_form.set_size(hori_split_window.width,hori_split_window.height)
 
 			if General_resources.motif_1_2.actual_value then
-				!! top_verti_split_window.make_horizontal_with_proportion (new_name, top_form, 50)
+				create top_verti_split_window.make_horizontal_with_proportion (new_name, top_form, 50)
 			else
-				!! top_verti_split_window.make_vertical_with_proportion (new_name, top_form, 50)
+				create top_verti_split_window.make_vertical_with_proportion (new_name, top_form, 50)
 			end
 
-			!! project_form.make (new_name, top_verti_split_window)
-			!! object_form.make (new_name, top_verti_split_window)
-			!! feature_form.make (new_name, hori_split_window)
+			create project_form.make (new_name, top_verti_split_window)
+			create object_form.make (new_name, top_verti_split_window)
+			create feature_form.make (new_name, hori_split_window)
 
 			create_toolbar (global_form)
 			build_menu
@@ -902,14 +926,14 @@ feature -- Graphical Interface
 			build_format_bar
 			build_toolbar_menu
 
- 			!! feature_part.form_create (feature_form, 
+ 			create feature_part.form_create (feature_form, 
  					menus @ special_feature_menu, 
  					menus @ edit_feature_menu, 
  					menus @ format_feature_menu,
  					menus @ special_feature_menu)
 
 
-			!! object_part.form_create ( object_form, 
+			create object_part.form_create ( object_form, 
 					menus @ special_object_menu, 
 					menus @ edit_object_menu, 
 					menus @ format_object_menu,
@@ -947,30 +971,27 @@ feature -- Graphical Interface
 			-- Build the menu bar
 		local
 			sep: SEPARATOR
-			case_storage_cmd: CASE_STORAGE
-			case_storage_menu_entry: EB_MENU_ENTRY
-			document_submenu: MENU_PULL
 			generate_doc_cmd: DOCUMENT_GENERATION
 			generate_menu_entry: EB_MENU_ENTRY
 			generate_submenu: MENU_PULL
 			local_menu: MENU_PULL
 		do
-			!! menu_bar.make (new_name, global_form)
-			!! file_menu.make (Interface_names.m_File, menu_bar)
-			!! edit_menu.make (Interface_names.m_Edit, menu_bar)
-			!! local_menu.make (Interface_names.m_Compile, menu_bar)
+			create menu_bar.make (new_name, global_form)
+			create file_menu.make (Interface_names.m_File, menu_bar)
+			create edit_menu.make (Interface_names.m_Edit, menu_bar)
+			create local_menu.make (Interface_names.m_Compile, menu_bar)
 			menus.put (local_menu, compile_menu)
 
-			!! local_menu.make (Interface_names.m_Debug, menu_bar)
+			create local_menu.make (Interface_names.m_Debug, menu_bar)
 			menus.put (local_menu, debug_menu)
 
-			!! local_menu.make (Interface_names.m_Formats, menu_bar)
+			create local_menu.make (Interface_names.m_Formats, menu_bar)
 			menus.put (local_menu, format_menu)
 
-			!! local_menu.make (Interface_names.m_Special, menu_bar)
+			create local_menu.make (Interface_names.m_Special, menu_bar)
 			menus.put (local_menu, special_menu)
 
-			!! local_menu.make (Interface_names.m_Windows, menu_bar)
+			create local_menu.make (Interface_names.m_Window, menu_bar)
 			menus.put (local_menu, window_menu)
 
 			build_help_menu
@@ -978,78 +999,73 @@ feature -- Graphical Interface
 				--| Creation of empty menus that are disabled goes here,
 				--| for we want to create the object and / or feature portion
 				--| on demand and not on purpose.
-			!! local_menu.make (Interface_names.m_Feature, edit_menu)
+			create local_menu.make (Interface_names.m_Feature, edit_menu)
 			local_menu.button.set_insensitive
 			menus.put (local_menu, edit_feature_menu)
 
-			!! local_menu.make (Interface_names.m_Object, edit_menu)
+			create local_menu.make (Interface_names.m_Object, edit_menu)
 			local_menu.button.set_insensitive
 			menus.put (local_menu, edit_object_menu)
 
-			!! sep.make (Interface_names.t_Empty, edit_menu)
+			create sep.make (Interface_names.t_Empty, edit_menu)
 
-			!! local_menu.make (Interface_names.m_Feature, menus @ format_menu)
+			create local_menu.make (Interface_names.m_Feature, menus @ format_menu)
 			local_menu.button.set_insensitive
 			menus.put (local_menu, format_feature_menu)
 
-			!! local_menu.make (Interface_names.m_Object, menus @ format_menu)
+			create local_menu.make (Interface_names.m_Object, menus @ format_menu)
 			local_menu.button.set_insensitive
 			menus.put (local_menu, format_object_menu)
 
-			!! sep.make (Interface_names.t_Empty, menus @ format_menu)
+			create sep.make (Interface_names.t_Empty, menus @ format_menu)
 
-			!! local_menu.make (Interface_names.m_Feature, menus @ special_menu)
+			create local_menu.make (Interface_names.m_Feature, menus @ special_menu)
 			local_menu.button.set_insensitive
 			menus.put (local_menu, special_feature_menu)
 
-			!! local_menu.make (Interface_names.m_Object, menus @ special_menu)
+			create local_menu.make (Interface_names.m_Object, menus @ special_menu)
 			local_menu.button.set_insensitive
 			menus.put (local_menu, special_object_menu)
 
-			!! sep.make (Interface_names.t_Empty, menus @ special_menu)
-			!! case_storage_cmd
-			!! case_storage_menu_entry.make_default (case_storage_cmd, menus @ special_menu)
-			!! generate_submenu.make (Interface_names.m_Document, menus @ special_menu)
-			!! generate_doc_cmd.make_flat
-			!! generate_menu_entry.make (generate_doc_cmd, generate_submenu)
-			!! generate_doc_cmd.make_flat_short
-			!! generate_menu_entry.make (generate_doc_cmd, generate_submenu)
-			!! generate_doc_cmd.make_short
-			!! generate_menu_entry.make (generate_doc_cmd, generate_submenu)
-			!! generate_doc_cmd.make_text
-			!! generate_menu_entry.make (generate_doc_cmd, generate_submenu)
+			create sep.make (Interface_names.t_Empty, menus @ special_menu)
+			create generate_submenu.make (Interface_names.m_Document, menus @ special_menu)
+			create generate_doc_cmd.make_flat
+			create generate_menu_entry.make (generate_doc_cmd, generate_submenu)
+			create generate_doc_cmd.make_flat_short
+			create generate_menu_entry.make (generate_doc_cmd, generate_submenu)
+			create generate_doc_cmd.make_short
+			create generate_menu_entry.make (generate_doc_cmd, generate_submenu)
+			create generate_doc_cmd.make_text
+			create generate_menu_entry.make (generate_doc_cmd, generate_submenu)
 		end
 
 	build_file_menu is
 			-- Build the file menu.
 		local
 			new_cmd: NEW_PROJECT
-			new_button: EB_BUTTON
 			new_menu_entry: EB_MENU_ENTRY
 			open_cmd: OPEN_PROJECT
-			open_button: EB_BUTTON
 			open_menu_entry: EB_MENU_ENTRY
 			quit_cmd: QUIT_PROJECT
-			quit_button: EB_BUTTON
 			quit_menu_entry: EB_MENU_ENTRY
 		do
-			!! new_cmd.make (Current)
-			!! new_menu_entry.make (new_cmd, file_menu)
-			!! new_cmd_holder.make_plain (new_cmd)
+			create new_cmd.make (Current)
+			create new_menu_entry.make (new_cmd, file_menu)
+			create new_cmd_holder.make_plain (new_cmd)
 			new_cmd_holder.set_menu_entry (new_menu_entry)
 
-			!! open_cmd.make (Current)
-			!! open_menu_entry.make (open_cmd, file_menu)
-			!! open_cmd_holder.make_plain (open_cmd)
+			create open_cmd.make (Current)
+			create open_menu_entry.make (open_cmd, file_menu)
+			create open_cmd_holder.make_plain (open_cmd)
 			open_cmd_holder.set_menu_entry (open_menu_entry)
 
 			build_print_menu_entry
 
 			build_recent_project_menu_entries
 
-			!! quit_cmd.make (Current)
-			!! quit_menu_entry.make (quit_cmd, file_menu)
-			!! quit_cmd_holder.make_plain (quit_cmd)
+			create quit_cmd.make (Current)
+			create quit_menu_entry.make (quit_cmd, file_menu)
+			create quit_cmd_holder.make_plain (quit_cmd)
 			quit_cmd_holder.set_menu_entry (quit_menu_entry)
 		end
 		
@@ -1059,12 +1075,12 @@ feature -- Graphical Interface
 			sep: SEPARATOR
 			toolbar_t: TOGGLE_B
 		do
-			!! sep.make (Interface_names.t_Empty, menus @ special_menu)
-			!! toolbar_t.make (project_toolbar.identifier, menus @ special_menu)
+			create sep.make (Interface_names.t_Empty, menus @ special_menu)
+			create toolbar_t.make (project_toolbar.identifier, menus @ special_menu)
 			project_toolbar.init_toggle (toolbar_t)
-			!! toolbar_t.make (format_bar.identifier, menus @ special_menu)
+			create toolbar_t.make (format_bar.identifier, menus @ special_menu)
 			format_bar.init_toggle (toolbar_t)
-			!! toolbar_t.make (selector_part.identifier, menus @ special_menu)
+			create toolbar_t.make (selector_part.identifier, menus @ special_menu)
 			selector_part.init_toggle (toolbar_t)
 		end
 
@@ -1090,14 +1106,26 @@ feature -- Graphical Interface
 			object_cmd: OBJECT_HOLE
 			object_button: EB_BUTTON_HOLE
 			object_menu_entry: EB_MENU_ENTRY
+
 			clear_bp_cmd: DEBUG_CLEAR_STOP_POINTS_HOLE
 			clear_bp_button: EB_BUTTON_HOLE
 			clear_bp_menu_entry: EB_MENU_ENTRY
+
+			edit_object_cmd: DEBUG_EDIT_OBJECT_HOLE
+			edit_object_button: EB_BUTTON_HOLE
+			edit_object_menu_entry: EB_MENU_ENTRY
+
+			dynamic_eval_cmd: DEBUG_DYNAMIC_EVAL_HOLE
+			dynamic_eval_button: EB_BUTTON_HOLE
+			dynamic_eval_menu_entry: EB_MENU_ENTRY
+
+			enable_disable_bp_cmd: DEBUG_ENABLE_DISABLE_STOP_POINTS_HOLE
+			disable_bp_button: EB_BUTTON_HOLE
+			enable_disable_bp_menu_entry: EB_MENU_ENTRY
+
 			stop_points_cmd: DEBUG_STOPIN_HOLE
 			stop_points_button: EB_BUTTON_HOLE
 			stop_points_menu_entry: EB_MENU_ENTRY
-			stop_points_status_cmd: STOPPOINTS_STATUS
-			stop_points_status_menu_entry: EB_MENU_ENTRY
 
 			dynamic_lib_cmd: DYNAMIC_LIB_HOLE
 			dynamic_lib_button: EB_BUTTON_HOLE
@@ -1132,128 +1160,147 @@ feature -- Graphical Interface
 			build_file_menu
 
 			-- Help Menu
---			!! version_button.make (Version_number, help_menu)
+--			create version_button.make (Version_number, help_menu)
 
-			!! about_tool.make ("About_Dialog", screen)
-			!! about_cmd.make (about_tool)
-			!! about_menu_entry.make_default (about_cmd, help_menu)
+			create about_tool.make ("About_Dialog", screen)
+			create about_cmd.make (about_tool)
+			create about_menu_entry.make_default (about_cmd, help_menu)
 
 				-- Edit Menu
 			build_edit_menu (project_toolbar)
 
-			!! sep.make (Interface_names.t_Empty, edit_menu)
-			!! show_pref_cmd.make (Project_resources)
-			!! show_pref_menu_entry.make_default (show_pref_cmd, edit_menu)
+			create sep.make (Interface_names.t_Empty, edit_menu)
+			create show_pref_cmd.make (Project_resources)
+			create show_pref_menu_entry.make_default (show_pref_cmd, edit_menu)
 
 				-- Close all command
-			!! tool_action.make_close_all
-			!! tool_action_menu_entry.make_default (tool_action, menus @ window_menu)
+			create tool_action.make_close_all
+			create tool_action_menu_entry.make_default (tool_action, menus @ window_menu)
 
-			!! tool_action.make_raise_all
-			!! tool_action_menu_entry.make_default (tool_action, menus @ window_menu)
+			create tool_action.make_raise_all
+			create tool_action_menu_entry.make_default (tool_action, menus @ window_menu)
 
-			!! sep.make (Interface_names.t_Empty, menus @ window_menu)
+			create sep.make (Interface_names.t_Empty, menus @ window_menu)
 
 				-- Sub menus for open tools.
-			!! local_menu.make (Interface_names.m_Explain_tools, menus @ window_menu)
+			create local_menu.make (Interface_names.m_Explain_tools, menus @ window_menu)
 			menus.put (local_menu, open_explain_menu)
 
-			!! local_menu.make (Interface_names.m_Class_tools, menus @ window_menu)
+			create local_menu.make (Interface_names.m_Class_tools, menus @ window_menu)
 			menus.put (local_menu, open_classes_menu)
 
-			!! local_menu.make (Interface_names.m_Feature_tools, menus @ window_menu)
+			create local_menu.make (Interface_names.m_Feature_tools, menus @ window_menu)
 			menus.put (local_menu, open_routines_menu)
 
-			!! local_menu.make (Interface_names.m_Object_tools, menus @ window_menu)
+			create local_menu.make (Interface_names.m_Object_tools, menus @ window_menu)
 			menus.put (local_menu, open_objects_menu)
 
-			!! sep.make (Interface_names.t_Empty, menus @ window_menu)
+			create sep.make (Interface_names.t_Empty, menus @ window_menu)
 
 				-- Regular menu entries.
-			!! explain_cmd.make (Current)
-			!! explain_button.make (explain_cmd, project_toolbar)
-			!! explain_menu_entry.make (explain_cmd, menus @ open_explain_menu)
-			!! explain_hole_holder.make (explain_cmd, explain_button, explain_menu_entry)
+			create explain_cmd.make (Current)
+			create explain_button.make (explain_cmd, project_toolbar)
+			create explain_menu_entry.make (explain_cmd, menus @ open_explain_menu)
+			create explain_hole_holder.make (explain_cmd, explain_button, explain_menu_entry)
 
-			!! system_cmd.make (Current)
-			!! system_button.make (system_cmd, project_toolbar)
-			!! system_menu_entry.make (system_cmd, menus @ window_menu)
-			!! system_hole_holder.make (system_cmd, system_button, system_menu_entry)
+			create system_cmd.make (Current)
+			create system_button.make (system_cmd, project_toolbar)
+			create system_menu_entry.make (system_cmd, menus @ window_menu)
+			create system_hole_holder.make (system_cmd, system_button, system_menu_entry)
 			
-			!! class_cmd.make (Current)
-			!! class_button.make (class_cmd, project_toolbar)
-			!! class_menu_entry.make (class_cmd, menus @ open_classes_menu)
-			!! class_hole_holder.make (class_cmd, class_button, class_menu_entry)
+			create class_cmd.make (Current)
+			create class_button.make (class_cmd, project_toolbar)
+			create class_menu_entry.make (class_cmd, menus @ open_classes_menu)
+			create class_hole_holder.make (class_cmd, class_button, class_menu_entry)
 
-			!! dynamic_lib_cmd.make (Current)
-			!! dynamic_lib_button.make (dynamic_lib_cmd, project_toolbar)
-			!! dynamic_lib_menu_entry.make (dynamic_lib_cmd, menus @ window_menu)
-			!! dynamic_lib_hole_holder.make (dynamic_lib_cmd, dynamic_lib_button, dynamic_lib_menu_entry)
+			create dynamic_lib_cmd.make (Current)
+			create dynamic_lib_button.make (dynamic_lib_cmd, project_toolbar)
+			create dynamic_lib_menu_entry.make (dynamic_lib_cmd, menus @ window_menu)
+			create dynamic_lib_hole_holder.make (dynamic_lib_cmd, dynamic_lib_button, dynamic_lib_menu_entry)
 
-			!! routine_cmd.make (Current)
-			!! routine_button.make (routine_cmd, project_toolbar)
-			!! routine_menu_entry.make (routine_cmd, menus @ open_routines_menu)
-			!! routine_hole_holder.make (routine_cmd, routine_button, routine_menu_entry)
+			create routine_cmd.make (Current)
+			create routine_button.make (routine_cmd, project_toolbar)
+			create routine_menu_entry.make (routine_cmd, menus @ open_routines_menu)
+			create routine_hole_holder.make (routine_cmd, routine_button, routine_menu_entry)
 
-			!! shell_cmd.make (Current)
-			!! shell_button.make (shell_cmd, project_toolbar)
+			create shell_cmd.make (Current)
+			create shell_button.make (shell_cmd, project_toolbar)
 			shell_button.add_third_button_action
 
-			!! object_cmd.make (Current)
-			!! object_button.make (object_cmd, project_toolbar)
-			!! object_menu_entry.make (object_cmd, menus @ open_objects_menu)
-			!! object_hole_holder.make (object_cmd, object_button, object_menu_entry)
+			create object_cmd.make (Current)
+			create object_button.make (object_cmd, project_toolbar)
+			create object_menu_entry.make (object_cmd, menus @ open_objects_menu)
+			create object_hole_holder.make (object_cmd, object_button, object_menu_entry)
 
-			!! stop_points_cmd.make (Current)
-			!! stop_points_button.make (stop_points_cmd, project_toolbar)
-			!! stop_points_menu_entry.make (stop_points_cmd, menus @ debug_menu)
-			!! stop_points_hole_holder.make (stop_points_cmd, stop_points_button, stop_points_menu_entry)
+			create stop_points_cmd.make (Current)
+			create stop_points_button.make (stop_points_cmd, project_toolbar)
+			create stop_points_menu_entry.make (stop_points_cmd, menus @ debug_menu)
+			create stop_points_hole_holder.make (stop_points_cmd, stop_points_button, stop_points_menu_entry)
 
-			!! clear_bp_cmd.make (Current)
-			!! clear_bp_button.make (clear_bp_cmd, project_toolbar)
-			clear_bp_button.set_action ("c<Btn1Down>", 
-						clear_bp_cmd, clear_bp_cmd.clear_it_action)
-			!! clear_bp_menu_entry.make (clear_bp_cmd, menus @ debug_menu)
-			!! clear_bp_cmd_holder.make (clear_bp_cmd, clear_bp_button, clear_bp_menu_entry)
+				-- create menu entry for "Edit variable/attribute"
+			create edit_object_cmd.make (Current)
+			create edit_object_button.make (edit_object_cmd, project_toolbar)
+			create edit_object_menu_entry.make (edit_object_cmd, menus @ debug_menu)
+			create object_hole_holder.make (edit_object_cmd, edit_object_button, edit_object_menu_entry)
 
-			!! stop_points_status_cmd.make_enabled
-			!! stop_points_status_menu_entry.make_default (stop_points_status_cmd, menus @ debug_menu)
-			!! stop_points_status_cmd.make_disabled
-			!! stop_points_status_menu_entry.make_default (stop_points_status_cmd, menus @ debug_menu)
-			!! sep.make (Interface_names.t_Empty, menus @ debug_menu)
+				-- create menu entry for "Dynamic feature evaluation"
+			create dynamic_eval_cmd.make (Current)
+			create dynamic_eval_button.make (dynamic_eval_cmd, project_toolbar)
+			create dynamic_eval_menu_entry.make (dynamic_eval_cmd, menus @ debug_menu)
+			create object_hole_holder.make (dynamic_eval_cmd, dynamic_eval_button, dynamic_eval_menu_entry)
 
-			!! show_prof_cmd
-			!! show_prof_menu_entry.make_default (show_prof_cmd, menus @ window_menu)
+			create clear_bp_cmd.make (Current)
+			create clear_bp_button.make (clear_bp_cmd, project_toolbar)
+			clear_bp_button.set_action ("c<Btn1Down>", clear_bp_cmd, clear_bp_cmd.clear_it_action)
+			create clear_bp_menu_entry.make (clear_bp_cmd, menus @ debug_menu)
+			create clear_bp_cmd_holder.make (clear_bp_cmd, clear_bp_button, clear_bp_menu_entry)
 
-			!! display_feature_cmd.make (Current)
-			!! display_feature_button.make (display_feature_cmd, project_toolbar)
-			!! display_feature_menu_entry.make (display_feature_cmd, menus @ format_menu)
-			!! display_feature_cmd_holder.make (display_feature_cmd, display_feature_button, display_feature_menu_entry)
+				-- create menu entry for "enable all stop points"
+			create enable_disable_bp_cmd.make_enabled
+			create enable_disable_bp_menu_entry.make_default (enable_disable_bp_cmd, menus @ debug_menu)
+
+				-- create menu entry & icons for "disable all stop points"
+			create enable_disable_bp_cmd.make_disabled
+			create enable_disable_bp_menu_entry.make_default (enable_disable_bp_cmd, menus @ debug_menu)
+			create disable_bp_button.make (enable_disable_bp_cmd, project_toolbar)
+			--disable_bp_button.set_action ("c<Btn1Down>", enable_disable_bp_cmd, enable_disable_bp_cmd.disable_it_action)
+			create disable_bp_cmd_holder.make (enable_disable_bp_cmd, disable_bp_button, enable_disable_bp_menu_entry)
+
+				-- create separator
+			create sep.make (Interface_names.t_Empty, menus @ debug_menu)
+
+			create show_prof_cmd
+			create show_prof_menu_entry.make_default (show_prof_cmd, menus @ window_menu)
+
+			create display_feature_cmd.make (Current)
+			create display_feature_button.make (display_feature_cmd, project_toolbar)
+			create display_feature_menu_entry.make (display_feature_cmd, menus @ format_menu)
+			create display_feature_cmd_holder.make (display_feature_cmd, display_feature_button, display_feature_menu_entry)
 			display_feature_cmd.set_holder (display_feature_cmd_holder)
 
-			!! display_object_cmd.make (Current)
-			!! display_object_button.make (display_object_cmd, project_toolbar)
-			!! display_object_menu_entry.make (display_object_cmd, menus @ format_menu)
-			!! display_object_cmd_holder.make (display_object_cmd, display_object_button, display_object_menu_entry)
+			create display_object_cmd.make (Current)
+			create display_object_button.make (display_object_cmd, project_toolbar)
+			create display_object_menu_entry.make (display_object_cmd, menus @ format_menu)
+			create display_object_cmd_holder.make (display_object_cmd, display_object_button, display_object_menu_entry)
 			display_object_cmd.set_holder (display_object_cmd_holder)
 
-			!! update_cmd.make (Current)
-			!! update_button.make (update_cmd, project_toolbar)
+			create update_cmd.make (Current)
+			create update_button.make (update_cmd, project_toolbar)
 			update_button.set_action ("c<Btn1Down>", update_cmd, update_cmd.generate_code_only)
-			!! melt_menu_entry.make (update_cmd, menus @ compile_menu)
-			!! update_cmd_holder.make (update_cmd, update_button, melt_menu_entry)
+			create melt_menu_entry.make (update_cmd, menus @ compile_menu)
+			create update_cmd_holder.make (update_cmd, update_button, melt_menu_entry)
 
-			!! quick_update_cmd.make (Current)
+			create quick_update_cmd.make (Current)
 			quick_update_cmd.set_quick_melt
-			!! quick_update_button.make (quick_update_cmd, project_toolbar)
+			create quick_update_button.make (quick_update_cmd, project_toolbar)
 			quick_update_button.set_action ("c<Btn1Down>", quick_update_cmd, quick_update_cmd.generate_code_only)
-			!! quick_melt_menu_entry.make (quick_update_cmd, menus @ compile_menu)
-			!! quick_update_cmd_holder.make (quick_update_cmd, quick_update_button, quick_melt_menu_entry)
+			create quick_melt_menu_entry.make (quick_update_cmd, menus @ compile_menu)
+			create quick_update_cmd_holder.make (quick_update_cmd, quick_update_button, quick_melt_menu_entry)
 
-			!! sep1.make (interface_names.t_empty, project_toolbar)
+			create sep1.make (interface_names.t_empty, project_toolbar)
 			sep1.set_horizontal (False)
 
-			!! sep2.make (interface_names.t_empty, project_toolbar)
+			create sep2.make (interface_names.t_empty, project_toolbar)
 			sep2.set_horizontal (False)
 
 			project_toolbar.attach_left (explain_button, 5)
@@ -1273,14 +1320,21 @@ feature -- Graphical Interface
 			project_toolbar.attach_top (shell_button, 0)
 			project_toolbar.attach_left_widget (shell_button, object_button, 0)
 			project_toolbar.attach_top (object_button, 0)
+
 			project_toolbar.attach_left_widget (object_button, clear_bp_button, 0)
 			project_toolbar.attach_top (clear_bp_button, 0)
-			project_toolbar.attach_left_widget (clear_bp_button, stop_points_button, 0)
+			project_toolbar.attach_left_widget (clear_bp_button, disable_bp_button, 0)
+			project_toolbar.attach_top (disable_bp_button, 0)
+			project_toolbar.attach_left_widget (disable_bp_button, stop_points_button, 0)
 			project_toolbar.attach_top (stop_points_button, 0)
+			project_toolbar.attach_left_widget (stop_points_button, edit_object_button, 3)
+			project_toolbar.attach_top (edit_object_button, 0)
+			project_toolbar.attach_left_widget (edit_object_button, dynamic_eval_button, 0)
+			project_toolbar.attach_top (dynamic_eval_button, 0)
 
 			project_toolbar.attach_top (sep1, 0)
 			project_toolbar.attach_bottom (sep1, 0)
-			project_toolbar.attach_left_widget (stop_points_button, sep1, 5)
+			project_toolbar.attach_left_widget (dynamic_eval_button, sep1, 5)
 
 			project_toolbar.attach_top (display_object_button, 0)
 			project_toolbar.attach_left_widget (sep1, display_object_button, 5)
@@ -1298,7 +1352,7 @@ feature -- Graphical Interface
 
 			project_toolbar.attach_top (search_cmd_holder.associated_button, 0)
 			project_toolbar.attach_right_widget (sep2, search_cmd_holder.associated_button, 5)
-			!! do_nothing_cmd
+			create do_nothing_cmd
 			project_toolbar.set_action ("c<Btn1Down>", do_nothing_cmd, Void)
 		end
 
@@ -1308,7 +1362,9 @@ feature -- Graphical Interface
 			step_out_cmd: EXEC_LAST
 			step_out_button: EB_BUTTON
 			step_out_menu_entry: EB_MENU_ENTRY
-			stop_menu_entry: EB_MENU_ENTRY
+			step_into_cmd: EXEC_INTO
+			step_into_button: EB_BUTTON
+			step_into_menu_entry: EB_MENU_ENTRY
 			step_cmd: EXEC_STEP
 			step_button: EB_BUTTON
 			step_menu_entry: EB_MENU_ENTRY
@@ -1319,11 +1375,17 @@ feature -- Graphical Interface
 			sep1, sep2, sep3: THREE_D_SEPARATOR
 			run_final_cmd: EXEC_FINALIZED
 			run_final_menu_entry: EB_MENU_ENTRY
-			debug_quit_cmd: DEBUG_QUIT
-			debug_quit_button: EB_BUTTON
-			debug_quit_menu_entry: EB_MENU_ENTRY
+
+			debug_kill_cmd: DEBUG_QUIT
+			debug_kill_button: EB_BUTTON
+			debug_kill_menu_entry: EB_MENU_ENTRY
+
+			debug_interrupt_cmd: DEBUG_INTERRUPT
+			debug_interrupt_button: EB_BUTTON
+			debug_interrupt_menu_entry: EB_MENU_ENTRY
+
 			debug_run_cmd: DEBUG_RUN
-			debug_run_button: EB_BUTTON
+			debug_run_button: EB_BUTTON_HOLE
 			debug_run_menu_entry: EB_MENU_ENTRY
 			debug_status_cmd: DEBUG_STATUS
 			debug_status_button: EB_BUTTON
@@ -1334,65 +1396,72 @@ feature -- Graphical Interface
 			display_exception_menu_entry: EB_MENU_ENTRY
 			do_nothing_cmd: DO_NOTHING_CMD
 		do
-			!! debug_run_cmd.make (Current)
-			!! debug_run_button.make (debug_run_cmd, format_bar)
-			!! debug_run_menu_entry.make (debug_run_cmd, menus @ debug_menu)
-			!! debug_run_cmd_holder.make (debug_run_cmd, debug_run_button, debug_run_menu_entry)
+			create debug_run_cmd.make (Current)
+			create debug_run_button.make (debug_run_cmd, format_bar)
+			create debug_run_menu_entry.make (debug_run_cmd, menus @ debug_menu)
+			create debug_run_hole_holder.make (debug_run_cmd, debug_run_button, debug_run_menu_entry)
 			debug_run_button.add_third_button_action
 			debug_run_button.set_action ("Ctrl<Btn1Down>", debug_run_cmd, debug_run_cmd.melt_and_run)
 
+			create debug_status_cmd.make (Current)
+			create debug_status_button.make (debug_status_cmd, format_bar)
+			create debug_status_menu_entry.make (debug_status_cmd, menus @ debug_menu)
+			create debug_status_cmd_holder.make (debug_status_cmd, debug_status_button, debug_status_menu_entry)
 
-			!! debug_status_cmd.make (Current)
-			!! debug_status_button.make (debug_status_cmd, format_bar)
-			!! debug_status_menu_entry.make (debug_status_cmd, menus @ debug_menu)
-			!! debug_status_cmd_holder.make (debug_status_cmd, debug_status_button, debug_status_menu_entry)
-
-			!! display_exception_cmd.make (True, Current)
-			!! up_exception_stack_button.make (display_exception_cmd, format_bar)
-			!! display_exception_menu_entry.make (display_exception_cmd, menus @ debug_menu)
-			!! up_exception_stack_holder.make (display_exception_cmd,
+			create display_exception_cmd.make (True, Current)
+			create up_exception_stack_button.make (display_exception_cmd, format_bar)
+			create display_exception_menu_entry.make (display_exception_cmd, menus @ debug_menu)
+			create up_exception_stack_holder.make (display_exception_cmd,
 						up_exception_stack_button, display_exception_menu_entry)
 
-			!! display_exception_cmd.make (False, Current)
-			!! down_exception_stack_button.make (display_exception_cmd, format_bar)
-			!! display_exception_menu_entry.make (display_exception_cmd, menus @ debug_menu)
-			!! down_exception_stack_holder.make (display_exception_cmd,
+			create display_exception_cmd.make (False, Current)
+			create down_exception_stack_button.make (display_exception_cmd, format_bar)
+			create display_exception_menu_entry.make (display_exception_cmd, menus @ debug_menu)
+			create down_exception_stack_holder.make (display_exception_cmd,
 						down_exception_stack_button, display_exception_menu_entry)
 
-			!! debug_quit_cmd.make (Current)
-			!! debug_quit_button.make (debug_quit_cmd, format_bar)
-			!! debug_quit_menu_entry.make_button_only (debug_quit_cmd, menus @ debug_menu)
-			!! debug_quit_cmd_holder.make (debug_quit_cmd, debug_quit_button, debug_quit_menu_entry)
-			debug_quit_menu_entry.add_activate_action (debug_quit_cmd, debug_quit_cmd.kill_it)
-			debug_quit_button.set_action ("c<Btn1Down>", debug_quit_cmd, debug_quit_cmd.kill_it)
+			create debug_kill_cmd.make (Current)
+			create debug_kill_button.make (debug_kill_cmd, format_bar)
+			create debug_kill_menu_entry.make_button_only (debug_kill_cmd, menus @ debug_menu)
+			create debug_kill_cmd_holder.make (debug_kill_cmd, debug_kill_button, debug_kill_menu_entry)
 
-			!! sep.make (new_name, menus @ debug_menu)
+			create debug_interrupt_cmd.make (Current)
+			create debug_interrupt_button.make (debug_interrupt_cmd, format_bar)
+			create debug_interrupt_menu_entry.make_button_only (debug_interrupt_cmd, menus @ debug_menu)
+			create debug_interrupt_cmd_holder.make (debug_interrupt_cmd, debug_interrupt_button, debug_interrupt_menu_entry)
 
-			!! step_cmd.make (Current)
-			!! step_button.make (step_cmd, format_bar)
-			!! step_menu_entry.make (step_cmd, menus @ debug_menu)
-			!! exec_step_frmt_holder.make (step_cmd, step_button, step_menu_entry)
+			create sep.make (new_name, menus @ debug_menu)
 
-			!! step_out_cmd.make (Current)
-			!! step_out_button.make (step_out_cmd, format_bar)
-			!! step_out_menu_entry.make (step_out_cmd, menus @ debug_menu)
-			!! exec_last_frmt_holder.make (step_out_cmd, step_out_button, step_out_menu_entry)
+			create step_cmd.make (Current)
+			create step_button.make (step_cmd, format_bar)
+			create step_menu_entry.make (step_cmd, menus @ debug_menu)
+			create exec_step_frmt_holder.make (step_cmd, step_button, step_menu_entry)
 
-			!! nostop_cmd. make (Current)
-			!! nostop_button.make (nostop_cmd, format_bar)
-			!! nostop_menu_entry.make (nostop_cmd, menus @ debug_menu)
-			!! exec_nostop_frmt_holder.make (nostop_cmd, nostop_button, nostop_menu_entry)
+			create step_into_cmd.make (Current)
+			create step_into_button.make (step_into_cmd, format_bar)
+			create step_into_menu_entry.make (step_into_cmd, menus @ debug_menu)
+			create exec_last_frmt_holder.make (step_into_cmd, step_into_button, step_into_menu_entry)
 
-			!! run_final_cmd.make (Current)
-			!! run_final_menu_entry.make (run_final_cmd, menus @ debug_menu)
+			create step_out_cmd.make (Current)
+			create step_out_button.make (step_out_cmd, format_bar)
+			create step_out_menu_entry.make (step_out_cmd, menus @ debug_menu)
+			create exec_last_frmt_holder.make (step_out_cmd, step_out_button, step_out_menu_entry)
 
-			!! sep1.make (Interface_names.t_empty, format_bar)
+			create nostop_cmd. make (Current)
+			create nostop_button.make (nostop_cmd, format_bar)
+			create nostop_menu_entry.make (nostop_cmd, menus @ debug_menu)
+			create exec_nostop_frmt_holder.make (nostop_cmd, nostop_button, nostop_menu_entry)
+
+			create run_final_cmd.make (Current)
+			create run_final_menu_entry.make (run_final_cmd, menus @ debug_menu)
+
+			create sep1.make (Interface_names.t_empty, format_bar)
 			sep1.set_horizontal (False)
 
-			!! sep2.make (Interface_names.t_empty, format_bar)
+			create sep2.make (Interface_names.t_empty, format_bar)
 			sep2.set_horizontal (False)
 
-			!! sep3.make (Interface_names.t_empty, format_bar)
+			create sep3.make (Interface_names.t_empty, format_bar)
 			sep3.set_horizontal (False)
 
 				--| Attachements for the debugging tools will be made from right to left
@@ -1405,21 +1474,34 @@ feature -- Graphical Interface
 
 			format_bar.attach_top (nostop_button, 0)
 			format_bar.attach_right_widget (sep1, nostop_button, 5)
+
+			-- NO STOP button --
 			format_bar.attach_top (step_out_button, 0)
-			format_bar.attach_right_widget (nostop_button, step_out_button, 0)
+			format_bar.attach_right_widget (nostop_button, step_out_button, 1)
+
+			-- STEP OUT button --
+			format_bar.attach_top (step_into_button, 0)
+			format_bar.attach_right_widget (step_out_button, step_into_button, 1)
+
+			-- STEP INTO button --
 			format_bar.attach_top (step_button, 0)
-			format_bar.attach_right_widget (step_out_button, step_button, 0)
+			format_bar.attach_right_widget (step_into_button, step_button, 1)
 
 			format_bar.attach_top (sep2, 0)
 			format_bar.attach_bottom (sep2, 0)
-			format_bar.attach_right_widget (step_button, sep2, 5)
+			format_bar.attach_right_widget (step_button, sep2, 3)
 
-			format_bar.attach_top (debug_quit_button, 0)
-			format_bar.attach_right_widget (sep2, debug_quit_button, 5)
+			-- INTERRUPT button --
+			format_bar.attach_top (debug_interrupt_button, 0)
+			format_bar.attach_right_widget (sep2, debug_interrupt_button, 3)
+
+			-- KILL button --
+			format_bar.attach_top (debug_kill_button, 0)
+			format_bar.attach_right_widget (debug_interrupt_button, debug_kill_button, 1)
 
 			format_bar.attach_top (sep3, 0)
 			format_bar.attach_bottom (sep3, 0)
-			format_bar.attach_right_widget (debug_quit_button, sep3, 5)
+			format_bar.attach_right_widget (debug_kill_button, sep3, 5)
 
 			format_bar.attach_top (debug_status_button, 0)
 			format_bar.attach_right_widget (sep3, debug_status_button, 5)
@@ -1427,7 +1509,7 @@ feature -- Graphical Interface
 			format_bar.attach_right_widget (debug_status_button, down_exception_stack_button, 0)
 			format_bar.attach_top (up_exception_stack_button, 0)
 			format_bar.attach_right_widget (down_exception_stack_button, up_exception_stack_button, 0)
-			!! do_nothing_cmd
+			create do_nothing_cmd
 			format_bar.set_action ("c<Btn1Down>", do_nothing_cmd, Void)
 		end
 
@@ -1442,32 +1524,32 @@ feature -- Graphical Interface
 			c_compilation_menu_entry: EB_MENU_ENTRY
 			sep: SEPARATOR
 		do
---			!! special_cmd.make (Current)
---			!! special_cmd_holder.make_plain (special_cmd)
+--			create special_cmd.make (Current)
+--			create special_cmd_holder.make_plain (special_cmd)
 -- This becomes a general purpose about box.
 
-			!! freeze_cmd.make (Current)
-			!! freeze_menu_entry.make (freeze_cmd, menus @ compile_menu)
-			!! freeze_cmd_holder.make_plain (freeze_cmd)
+			create freeze_cmd.make (Current)
+			create freeze_menu_entry.make (freeze_cmd, menus @ compile_menu)
+			create freeze_cmd_holder.make_plain (freeze_cmd)
 			freeze_cmd_holder.set_menu_entry (freeze_menu_entry)
 
-			!! finalize_cmd.make (Current)
-			!! finalize_menu_entry.make (finalize_cmd, menus @ compile_menu)
-			!! finalize_cmd_holder.make_plain (finalize_cmd)
+			create finalize_cmd.make (Current)
+			create finalize_menu_entry.make (finalize_cmd, menus @ compile_menu)
+			create finalize_cmd_holder.make_plain (finalize_cmd)
 			finalize_cmd_holder.set_menu_entry (finalize_menu_entry)
 
-			!! precompile_cmd.make (Current)
-			!! precompile_menu_entry.make (precompile_cmd, menus @ compile_menu)
-			!! precompile_cmd_holder.make_plain (precompile_cmd)
+			create precompile_cmd.make (Current)
+			create precompile_menu_entry.make (precompile_cmd, menus @ compile_menu)
+			create precompile_cmd_holder.make_plain (precompile_cmd)
 			precompile_cmd_holder.set_menu_entry (precompile_menu_entry)
 
-			!! sep.make (Interface_names.t_Empty, menus @ compile_menu)
+			create sep.make (Interface_names.t_Empty, menus @ compile_menu)
 
-			!! c_compile_menu.make (Interface_names.m_C_compilation, menus @ compile_menu)
-			!! c_compilation.make_workbench
-			!! c_compilation_menu_entry.make_default (c_compilation, c_compile_menu)
-			!! c_compilation.make_final
-			!! c_compilation_menu_entry.make_default (c_compilation, c_compile_menu)
+			create c_compile_menu.make (Interface_names.m_C_compilation, menus @ compile_menu)
+			create c_compilation.make_workbench
+			create c_compilation_menu_entry.make_default (c_compilation, c_compile_menu)
+			create c_compilation.make_final
+			create c_compilation_menu_entry.make_default (c_compilation, c_compile_menu)
 		end
 
 	attach_all is
@@ -1484,7 +1566,7 @@ feature -- Graphical Interface
 			global_form.attach_right (toolbar_parent, 0)
 
 			if Platform_constants.is_windows then
-				!! sep.make (Interface_names.t_Empty, global_form)
+				create sep.make (Interface_names.t_Empty, global_form)
 				global_form.attach_top_widget (toolbar_parent, sep, 0)
 				global_form.attach_left (sep, 0)
 				global_form.attach_right (sep, 0)
@@ -1531,16 +1613,16 @@ feature -- Graphical Interface
 			open_cmd: OPEN_PROJECT
 			open_menu_entry: EB_MENU_ENTRY
 		do
-			!! environment_variable
+			create environment_variable
 
 				--| Need to put the string in SYSTEM_CONSTANTS
 			last_opened_projects := environment_variable.get (Bench_Recent_Files)
-			!! recent_project_list.make	
+			create recent_project_list.make	
 			recent_project_list.compare_objects
 
 			if last_opened_projects /= Void then
 				from
-					!! local_menu.make (Interface_names.m_Recent_project, file_menu)
+					create local_menu.make (Interface_names.m_Recent_project, file_menu)
 					menus.put (local_menu, recent_project_menu)
 					nb := last_opened_projects.occurrences (';')
 					old_pos := 1
@@ -1552,12 +1634,12 @@ feature -- Graphical Interface
 					project_file_name := last_opened_projects.substring (old_pos, pos - 1)
 					old_pos := pos + 1
 					i := i + 1
-					!! open_cmd.make_from_project_file (Current, project_file_name)
-					!! open_menu_entry.make (open_cmd, menus @ recent_project_menu)
+					create open_cmd.make_from_project_file (Current, project_file_name)
+					create open_menu_entry.make (open_cmd, menus @ recent_project_menu)
 					recent_project_list.extend (project_file_name)
 				end
 				if nb > 0 then
-					!! sep.make (Interface_names.t_Empty, file_menu)
+					create sep.make (Interface_names.t_Empty, file_menu)
 				end
 			end
 		end
@@ -1571,7 +1653,7 @@ feature -- Graphical Interface
 		local
 			environment_variable: EXECUTION_ENVIRONMENT
 			last_opened_projects: STRING
-			project_file_name: STRING
+			project_file_name: FILE_NAME
 			i: INTEGER
 		do
 				-- We save the environment variable only once and when the system
@@ -1582,13 +1664,10 @@ feature -- Graphical Interface
 				and then Eiffel_project.system.name /= Void
 			then
 				saving_done := True
-				!! last_opened_projects.make (512)
-				project_file_name := clone (project_directory_name)
-				if project_file_name.item (project_file_name.count) /= Directory_separator then
-					project_file_name.append_character (Directory_separator)
-				end
-				project_file_name.append (clone (eiffel_project.system.name))
-				project_file_name.append (clone (project_extension))
+				create last_opened_projects.make (512)
+				create project_file_name.make_from_string (project_directory_name)
+				project_file_name.set_file_name (eiffel_project.system.name)
+				project_file_name.add_extension (project_extension)
 	
 				if not recent_project_list.has (project_file_name) then
 					last_opened_projects.append (project_file_name)
@@ -1608,7 +1687,7 @@ feature -- Graphical Interface
 					recent_project_list.forth
 					i := i + 1
 				end
-				!! environment_variable
+				create environment_variable
 				environment_variable.put (last_opened_projects, Bench_Recent_Files)
 			end
 		end
@@ -1668,13 +1747,17 @@ feature -- Commands
 
 	quick_update_cmd_holder: COMMAND_HOLDER
 
-	debug_run_cmd_holder: COMMAND_HOLDER
+	debug_run_hole_holder: HOLE_HOLDER
 
 	debug_status_cmd_holder: COMMAND_HOLDER
 
-	debug_quit_cmd_holder: COMMAND_HOLDER
+	debug_interrupt_cmd_holder: COMMAND_HOLDER
+
+	debug_kill_cmd_holder: COMMAND_HOLDER
 
 	clear_bp_cmd_holder: COMMAND_HOLDER
+
+	disable_bp_cmd_holder: COMMAND_HOLDER
 
 	special_cmd_holder: COMMAND_HOLDER
 
@@ -1687,6 +1770,8 @@ feature -- Commands
 	display_feature_cmd_holder: COMMAND_HOLDER
 
 	display_object_cmd_holder: COMMAND_HOLDER
+
+	edit_object_cmd_holder: COMMAND_HOLDER
 
 	up_exception_stack_holder: COMMAND_HOLDER
 
@@ -1812,8 +1897,11 @@ feature -- Update
 			then
 				Application.set_current_execution_stack (dropped.level_number)
 				show_current_stoppoint
-				show_current_object
 				display_exception_stack
+				show_current_object
+
+					-- Display the callstack arrow in all opened feature tools.
+				Window_manager.routine_win_mgr.synchronize_with_callstack
 			end
 		end
  
@@ -1829,10 +1917,10 @@ feature {NONE} -- Implementation
 			a_color: COLOR
 		do
 			if a_menu.children_count = 1 then
-				!! sep.make (Interface_names.t_Empty, a_menu)
+				create sep.make (Interface_names.t_Empty, a_menu)
 			end
-			!! cmd.make (a_tool)
-			!! entry.make (cmd, a_menu, a_tool)
+			create cmd.make (a_tool)
+			create entry.make (cmd, a_menu, a_tool)
 			a_font := Graphical_resources.font.actual_value
 			if a_font /= Void then
 				entry.set_font (a_font)
@@ -1854,7 +1942,6 @@ feature {NONE} -- Implementation
 			done: BOOLEAN
 			list: ARRAYED_LIST [WIDGET]
 			menu_entry: TOOL_MENU_ENTRY
-			raise_cmd: RAISE_TOOL_CMD
 		do
 			from
 				list := a_menu.children
@@ -1880,7 +1967,6 @@ feature {NONE} -- Implementation
 			done: BOOLEAN
 			list: ARRAYED_LIST [WIDGET]
 			menu_entry: TOOL_MENU_ENTRY
-			raise_cmd: RAISE_TOOL_CMD
 		do
 			from
 				list := a_menu.children
@@ -1966,7 +2052,7 @@ feature {DISPLAY_ROUTINE_PORTION} -- Implementation
 		local
 			mp: MOUSE_PTR
 		do
-			!! mp.set_watch_cursor
+			create mp.set_watch_cursor
 			shown_portions := shown_portions + 1
 			feature_form.manage
 
@@ -2023,7 +2109,7 @@ feature {DISPLAY_OBJECT_PORTION} -- Implementation
 		local
 			mp: MOUSE_PTR
 		do
-			!! mp.set_watch_cursor
+			create mp.set_watch_cursor
 			shown_portions := shown_portions + 1
 
 			menus.item (edit_object_menu).button.set_sensitive
@@ -2069,13 +2155,13 @@ feature -- Information
 			-- Display information on how to launch EiffelBench.
 		local
 		do
-			!! Result.make
+			create Result.make
 			Result.add_new_line
-			Result.add_comment_text ("To create or open a project using")
+			Result.add_comment ("To create or open a project using")
 			Result.add_new_line
-			Result.add_comment_text ("EiffelBench: On the File menu,")
+			Result.add_comment ("EiffelBench: On the File menu,")
 			Result.add_new_line
-			Result.add_comment_text ("click %"New...%" or %"Open...%".")
+			Result.add_comment ("click %"New...%" or %"Open...%".")
 			Result.add_new_line
 		ensure
 			Result_not_void: Result /= Void
@@ -2091,12 +2177,12 @@ feature -- Information
 			if eiffel_project.system /= Void then	
 				root_class_name:= clone(eiffel_system.root_class_name)
 				if root_class_name /= Void then
-					!! st.make
-					st.add_comment_text ("SYSTEM        : ")
+					create st.make
+					st.add_comment ("SYSTEM        : ")
 					st.add_string (eiffel_system.name)
 
 					st.add_new_line
-					st.add_comment_text("ROOT CLASS    : ")
+					st.add_comment ("ROOT CLASS    : ")
 					root_class_c := Eiffel_universe.compiled_classes_with_name (root_class_name).i_th(1).compiled_class
 					root_class_name.to_upper
 					st.add_classi(root_class_c.lace_class, root_class_name)
@@ -2106,24 +2192,39 @@ feature -- Information
 							-- We do have a creation routine in the Ace file
 							--| This is not a precompilation or a fake compilation (root class = NONE)
 						st.add_new_line
-						st.add_comment_text ("CREATION      : ")
+						st.add_comment ("CREATION      : ")
 						st.add_feature_name (eiffel_ace.ast.root.creation_procedure_name, root_class_c)
 					end
 
 					st.add_new_line
 					st.add_new_line
-					st.add_comment_text ("ROOT CLUSTER  : ")
+					st.add_comment ("ROOT CLUSTER  : ")
 					st.add_string (eiffel_system.root_cluster.cluster_name)
 					st.add_new_line
-					st.add_comment_text ("ACE FILE      : ")
+					st.add_comment ("ACE FILE      : ")
 					st.add_string (eiffel_ace.file_name)
 					st.add_new_line
-					st.add_comment_text ("PROJECT PATH  : ")
+					st.add_comment ("PROJECT PATH  : ")
 					st.add_string (eiffel_project.name)
 					st.add_new_line
 					Result := st
 				end
 			end
+		end
+
+feature -- Attributes / Variables modification State Machines
+
+	edit_local: EDIT_LOCAL is
+			-- object used to modify a local variable / an argument 
+			-- or the result of a feature on the call stack
+		once
+			create Result
+		end
+
+	edit_attr: EDIT_ATTR is
+			-- object used to modify an object attribute 
+		once
+			create Result
 		end
 
 end

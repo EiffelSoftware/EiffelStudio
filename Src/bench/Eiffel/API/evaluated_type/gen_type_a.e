@@ -8,13 +8,28 @@ class GEN_TYPE_A
 inherit
 	CL_TYPE_A
 		redefine
-			generics, valid_generic, parent_type, dump, append_to,
+			generics, valid_generic, parent_type, dump, ext_append_to,
 			has_like, duplicate, solved_type, type_i, good_generics,
 			error_generics, check_constraints, has_formal_generic, instantiated_in,
 			has_expanded, is_valid, expanded_deferred, valid_expanded_creation,
 			same_as, same_class_type, format, is_equivalent,
-			storage_info, storage_info_with_name, deep_actual_type,
+			deep_actual_type,
 			conformance_type, update_dependance
+		end
+
+create
+	make
+
+feature {NONE} -- Initialization
+
+	make (g: like generics) is
+			-- Create Current with `g' types as generic parameter.
+		require
+			has_generics: g /= Void
+		do
+			generics := g
+		ensure
+			generics_set: generics = g
 		end
 
 feature -- Property
@@ -30,9 +45,9 @@ feature -- Comparison
 			i, nb: INTEGER
 			other_generics: like generics
 		do
-			Result := is_expanded = other.is_expanded and then
+			Result := is_true_expanded = other.is_true_expanded and then
 				is_separate = other.is_separate and then
-				equal (base_class_id, other.base_class_id)
+				base_class_id = other.base_class_id
 			if Result then
 				from
 					i := 1
@@ -61,9 +76,9 @@ feature -- Access
 			other_gen_type ?= other
 			if 	other_gen_type /= Void
 				and then
-				other_gen_type.base_class_id.is_equal (base_class_id)
+				other_gen_type.base_class_id = base_class_id
 				and then
-				is_expanded = other_gen_type.is_expanded
+				is_true_expanded = other_gen_type.is_true_expanded
 			then
 				from
 					i := 1
@@ -110,28 +125,31 @@ feature -- Output
 			end
 		end
 
-	append_to (st: STRUCTURED_TEXT) is
+	ext_append_to (st: STRUCTURED_TEXT; f: E_FEATURE) is
 		local
 			i, count: INTEGER
 		do
-			{CL_TYPE_A} Precursor (st)
+				-- Append classname "TUPLE"
+			{CL_TYPE_A} Precursor (st, f)
 
 			count := generics.count
 				-- TUPLE may have zero generic parameters
 			if count > 0 then
-				st.add_string (" [")
+				st.add_space
+				st.add (ti_L_bracket)
 				from
 					i := 1
 				until
 					i > count
 				loop
-					generics.item (i).append_to (st)
+					generics.item (i).ext_append_to (st, f)
 					if i /= count then
-						st.add_string (", ")
+						st.add (ti_Comma)
+						st.add_space
 					end
 					i := i + 1
 				end
-				st.add_string ("]")
+				st.add (ti_R_bracket)
 			end
 		end
 
@@ -155,8 +173,12 @@ feature {COMPILER_EXPORTER} -- Primitives
 
 	set_generics (g: like generics) is
 			-- Assign `g' to `generics'.
+		require
+			g_not_void: g /= Void
 		do
 			generics := g
+		ensure
+			generics_set: generics = g
 		end
 
 	has_formal: BOOLEAN is
@@ -182,7 +204,7 @@ feature {COMPILER_EXPORTER} -- Primitives
 			i, count: INTEGER
 		do
 			from
-				Result := is_expanded
+				Result := is_true_expanded
 				i := 1
 				count := generics.count
 			until
@@ -236,22 +258,22 @@ feature {COMPILER_EXPORTER} -- Primitives
 			from
 				i := 1
 				count := generics.count
-				!!meta_generic.make (count)
-				!!true_generics.make (1, count)
+				create meta_generic.make (count)
+				create true_generics.make (1, count)
 			until
 				i > count
 			loop
 				gt := generics.item (i)
-				meta_generic.put (generics.item (i).meta_type, i)
-				true_generics.put (generics.item (i).type_i, i)
+				meta_generic.put (gt.meta_type, i)
+				true_generics.put (gt.type_i, i)
 				i := i + 1
 			end
 
-			!!Result
+			create Result
 			Result.set_base_id (base_class_id)
 			Result.set_meta_generic (meta_generic)
 			Result.set_true_generics (true_generics)
-			Result.set_is_expanded (is_expanded)
+			Result.set_is_true_expanded (is_true_expanded)
 		end
 
 	solved_type (feat_table: FEATURE_TABLE; f: FEATURE_I): GEN_TYPE_A is
@@ -267,7 +289,7 @@ feature {COMPILER_EXPORTER} -- Primitives
 				from
 					i := 1
 					count := generics.count
-					!!new_generics.make (1, count)
+					create new_generics.make (1, count)
 				until
 					i > count
 				loop
@@ -275,10 +297,9 @@ feature {COMPILER_EXPORTER} -- Primitives
 							(generics.item (i).solved_type (feat_table, f), i)
 					i := i + 1
 				end
-				!!Result
+				create Result.make (new_generics)
 				Result.set_base_class_id (base_class_id)
-				Result.set_generics (new_generics)
-				Result.set_is_expanded (is_expanded)
+				Result.set_is_true_expanded (is_true_expanded)
 			end
 		end
 
@@ -294,17 +315,16 @@ feature {COMPILER_EXPORTER} -- Primitives
 				from
 					i := 1
 					count := generics.count
-					!!new_generics.make (1, count)
+					create new_generics.make (1, count)
 				until
 					i > count
 				loop
 					new_generics.put (generics.item (i).deep_actual_type, i)
 					i := i + 1
 				end
-				!!Result
+				create Result.make (new_generics)
 				Result.set_base_class_id (base_class_id)
-				Result.set_generics (new_generics)
-				Result.set_is_expanded (is_expanded)
+				Result.set_is_true_expanded (is_true_expanded)
 			end
 		end
 
@@ -320,17 +340,16 @@ feature {COMPILER_EXPORTER} -- Primitives
 				from
 					i := 1
 					count := generics.count
-					!!new_generics.make (1, count)
+					create new_generics.make (1, count)
 				until
 					i > count
 				loop
 					new_generics.put (generics.item (i).conformance_type, i)
 					i := i + 1
 				end
-				!!Result
+				create Result.make (new_generics)
 				Result.set_base_class_id (base_class_id)
-				Result.set_generics (new_generics)
-				Result.set_is_expanded (is_expanded)
+				Result.set_is_true_expanded (is_true_expanded)
 			end
 		end
 
@@ -366,7 +385,7 @@ feature {COMPILER_EXPORTER} -- Primitives
 			gen_type: GEN_TYPE_A
 			gen_type_generics: like generics
 		do
-			if base_class_id.is_equal (type.base_class_id) then
+			if base_class_id = type.base_class_id then
 				gen_type ?= type
 				if gen_type /= Void then
 					from
@@ -456,7 +475,7 @@ feature {COMPILER_EXPORTER} -- Primitives
 			from
 				i := 1
 				count := generics.count
-				!!duplicate_generics.make (1, count)
+				create duplicate_generics.make (1, count)
 			until
 				i > count
 			loop
@@ -526,7 +545,7 @@ feature {COMPILER_EXPORTER} -- Primitives
 		local
 			i, count: INTEGER
 			gen_param, to_check: TYPE_A
-			original_gen_param, constraint_type: TYPE_A
+			constraint_type: TYPE_A
 			formal_type, other_formal_type: FORMAL_A
 			gen_type: GEN_TYPE_A
 			pos: INTEGER
@@ -650,7 +669,6 @@ feature {COMPILER_EXPORTER} -- Primitives
 			-- effective representation of the current GEN_TYPE
 		require
 			new_generics_not_void: new_generics /= Void
-			equal_counts: generics.count = new_generics.count
 		local
 			i, count, pos: INTEGER
 			constraint_type: TYPE_A
@@ -685,7 +703,7 @@ feature {COMPILER_EXPORTER} -- Primitives
 			to_check: TYPE_A;
 			i: INTEGER;
 			formal_type: FORMAL_A) is
-				-- Check that the declaration of the generic class is conform to the
+				-- Check that declaration of generic class is conform to
 				-- defined creation constraint.
 		require
 			creation_constraint_exists: formal_dec_as.has_creation_constraint
@@ -721,7 +739,7 @@ feature {COMPILER_EXPORTER} -- Primitives
 					-- A creation procedure has to be specified, so if none is
 					-- specified or if there is no creation procedure in the class
 					-- corresponding to `to_check', this is not valid.
-				matched := creators_table /= Void and then not creators_table.empty
+				matched := creators_table /= Void and then not creators_table.is_empty
 				if matched then
 					from
 						crc_list.start
@@ -807,7 +825,7 @@ feature {COMPILER_EXPORTER} -- Primitives
 			other_gen_type ?= other
 			if  other_gen_type /= Void
 				and then
-				other_gen_type.base_class_id.is_equal (base_class_id)
+				other_gen_type.base_class_id = base_class_id
 			then
 				from
 					Result := True
@@ -895,65 +913,6 @@ feature {COMPILER_EXPORTER} -- Primitives
 			end
 		end
 
-feature {COMPILER_EXPORTER} -- Storage information for EiffelCase
-
-	storage_info (classc: CLASS_C): S_GEN_TYPE_INFO is
-			-- Storage info for Current type in class `classc'
-		local
-			gens: FIXED_LIST [S_TYPE_INFO]
-			count, i: INTEGER
-		do
-			!! Result.make_for_bench (Void, associated_class.id)
-			count := generics.count
-
-				-- TUPLE may have zero generics
-			if count > 0 then
-				!! gens.make_filled (count)
-				from
-					gens.start
-					i := 1
-				until
-					i > count
-				loop
-					gens.replace (generics.item (i).storage_info (classc))
-					gens.forth
-					i := i + 1
-				end
-				Result.set_generics (gens)
-			end
-		end
-
-	storage_info_with_name (classc: CLASS_C): S_GEN_TYPE_INFO is
-			-- Storage info for Current type in class `classc'
-			-- and store the name of the class for Current
-		local
-			gens: FIXED_LIST [S_TYPE_INFO]
-			count, i: INTEGER
-			ass_classc: CLASS_C
-			class_name: STRING
-		do
-			ass_classc := associated_class
-			class_name := clone (ass_classc.name)
-			!! Result.make_for_bench (class_name, ass_classc.id)
-			count := generics.count
-
-				-- TUPLE may have zero generics
-			if count > 0 then
-				!! gens.make_filled (count)
-				from
-					gens.start
-					i := 1
-				until
-					i > count
-				loop
-					gens.replace (generics.item (i).storage_info_with_name (classc))
-					gens.forth
-					i := i + 1
-				end
-				Result.set_generics (gens)
-			end
-		end
-
 feature {NONE} -- Error generation
 
 	generate_constraint_error (current_type, constraint_type: TYPE_A; position: INTEGER) is
@@ -961,19 +920,12 @@ feature {NONE} -- Error generation
 		local
 			constraint_info: CONSTRAINT_INFO
 		do
-			!! constraint_info
+			create constraint_info
 			constraint_info.set_type (Current)
 			constraint_info.set_actual_type (current_type)
 			constraint_info.set_formal_number (position)
 			constraint_info.set_constraint_type (constraint_type)
 			constraint_error_list.extend (constraint_info)
-		end
-
-	generate_constraint_creation_routine_error (current_type, constraint_type: TYPE_A; position: INTEGER) is
-			-- Build the error corresponding to the VTCG error
-		local
-			constraint_info: CONSTRAINT_INFO
-		do
 		end
 
 invariant

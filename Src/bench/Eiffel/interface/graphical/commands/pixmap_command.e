@@ -1,19 +1,18 @@
 indexing
-
-	description:	
-		"Command with an associated icon.";
-	date: "$Date$";
-	revision: "$Revision$"
+	description	: "Command with an associated icon.";
+	date		: "$Date$";
+	revision	: "$Revision$"
 
 deferred class PIXMAP_COMMAND
 
 inherit
-
 	TOOL_COMMAND
 		redefine
 			execute
-		end;
-	NAMER;
+		end
+
+	NAMER
+
 	BENCH_LICENSED_COMMAND
 		rename
 			parent_window as Project_tool

@@ -1,21 +1,10 @@
 class DYN_FUNC_I 
 
 inherit
-
-	DYN_PROC_I
-		rename
-			transfer_to as procedure_transfer_to
-		redefine
-			unselected, replicated, set_type, is_function, type,
-			new_api_feature
-		end;
-
 	DYN_PROC_I
 		redefine
 			transfer_to, new_api_feature,
 			unselected, replicated, set_type, is_function, type
-		select
-			transfer_to
 		end
 
 feature 
@@ -37,7 +26,7 @@ feature
 	transfer_to (other: like Current) is
 			-- Transfer datas form `other' into Current
 		do
-			procedure_transfer_to (other);
+			Precursor {DYN_PROC_I} (other);
 			other.set_type (type);
 		end;
 
@@ -52,7 +41,7 @@ feature
 			Result := rep;
 		end;
 
-	unselected (in: CLASS_ID): FEATURE_I is
+	unselected (in: INTEGER): FEATURE_I is
 			-- Unselected feature
 		local
 			unselect: D_DYN_FUNC_I;

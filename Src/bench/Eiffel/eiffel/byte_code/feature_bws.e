@@ -18,7 +18,7 @@ feature -- Concurrent Eiffel
 	generate_access_on_type (reg: REGISTRABLE; typ: CL_TYPE_I) is
 		local
 			is_nested: BOOLEAN;
-			r_id: ROUTINE_ID;
+			r_id: INTEGER;
 			rout_info: ROUT_INFO;
 			base_class: CLASS_C;
 			evaluated_type: TYPE_I;
@@ -51,7 +51,7 @@ feature -- Concurrent Eiffel
 					buf.putstring("CURPI(")
 				elseif cl_type.is_feature_pointer then
 					buf.putstring("CURPP(")
-				elseif cl_type.is_expanded then
+				elseif cl_type.is_true_expanded then
 					buf.putstring("CURPO(")
 					-- FIXCONCURRENCY: We should make a clone here.
 				elseif cl_type.is_separate then
@@ -79,7 +79,7 @@ feature -- Concurrent Eiffel
 				r_id := base_class.feature_table.item
 					(feature_name).rout_id_set.first;
 				rout_info := System.rout_info_table.item (r_id);
-				rout_info.origin.generated_id (buf)
+				buf.generate_class_id (rout_info.origin)
 				buf.putstring (gc_comma);
 				buf.putint (rout_info.offset);
 			else
@@ -88,7 +88,7 @@ feature -- Concurrent Eiffel
 				else
 					buf.putstring ("RTWF(");
 				end;
-				buf.putint (typ.associated_class_type.id.id - 1);
+				buf.putint (typ.associated_class_type.static_type_id - 1);
 				buf.putstring (gc_comma);
 				buf.putint (real_feature_id);
 			end;
@@ -99,7 +99,7 @@ feature -- Concurrent Eiffel
 					-- of dynamic type of Current.
 					if context.workbench_mode then
 						buf.putstring ("RTUD(");
-						precursor_type.associated_class_type.id.generated_id (buf)
+						buf.generate_type_id (precursor_type.associated_class_type.static_type_id)
 						buf.putchar (')');
 					else
 						buf.putint (precursor_type.type_id - 1);
@@ -133,7 +133,7 @@ feature -- Concurrent Eiffel
 	
 			buf.putstring (")");
 			if cl_type /= Void  then
-				if not(cl_type.is_separate or cl_type.is_long or cl_type.is_feature_pointer or cl_type.is_boolean or cl_type.is_char or cl_type.is_double or cl_type.is_float or cl_type.is_expanded) then
+				if not (cl_type.is_separate or cl_type.is_expanded) then
 					buf.putstring(")")
 				end
 				buf.putstring (", 0);");

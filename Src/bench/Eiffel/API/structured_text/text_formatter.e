@@ -1,30 +1,25 @@
 indexing
+	description: "Formats structured text."
+	date: "$Date$"
+	revision: "$Revision$"
 
-	description: 
-		"Formats structured text.";
-	date: "$Date$";
-	revision: "$Revision $"
-
-deferred class TEXT_FORMATTER
+deferred class
+	TEXT_FORMATTER
 
 feature -- Output
 
 	process_text (text: STRUCTURED_TEXT) is
 			-- Process structured text `text' to be
 			-- generated as output.
-		local
-			linkable: LINKABLE [TEXT_ITEM]
-			text_item: TEXT_ITEM
 		do
 			if text /= Void then
 				from
-					linkable := text.first_element
+					text.start
 				until
-					linkable = Void
+					text.after
 				loop
-					text_item := linkable.item;
-					text_item.append_to (Current);
-					linkable := linkable.right;
+					(text.item).append_to (Current)
+					text.forth
 				end;
 			end
 		end;
@@ -38,13 +33,76 @@ feature {TEXT_ITEM} -- Implementation
 		deferred
 		end;
 
-	process_string_text (text: BASIC_TEXT) is
+	process_character_text (text: CHARACTER_TEXT) is
 			-- Process string text `t'.
 		require
 			text_not_void: text /= Void
 		do
 			process_basic_text (text)
+		end
+
+	process_generic_text (text: GENERIC_TEXT) is
+			-- Process string text `t'.
+		require
+			text_not_void: text /= Void
+		do
+			process_basic_text (text)
+		end
+
+	process_indexing_tag_text (text: INDEXING_TAG_TEXT) is
+			-- Process string text `t'.
+		require
+			text_not_void: text /= Void
+		do
+			process_basic_text (text)
+		end
+
+	process_local_text (text: LOCAL_TEXT) is
+			-- Process string text `t'.
+		require
+			text_not_void: text /= Void
+		do
+			process_basic_text (text)
+		end
+
+	process_number_text (text: NUMBER_TEXT) is
+			-- Process string text `t'.
+		require
+			text_not_void: text /= Void
+		do
+			process_basic_text (text)
+		end
+
+	process_quoted_text (text: QUOTED_TEXT) is
+			-- Process the quoted `text' within a comment.
+		require
+			text_not_void: text /= Void
+		deferred
 		end;
+
+	process_assertion_tag_text (text: ASSERTION_TAG_TEXT) is
+			-- Process string text `t'.
+		require
+			text_not_void: text /= Void
+		do
+			process_basic_text (text)
+		end
+
+	process_string_text (text: STRING_TEXT) is
+			-- Process string text `t'.
+		require
+			text_not_void: text /= Void
+		do
+			process_basic_text (text)
+		end
+
+	process_reserved_word_text (text: RESERVED_WORD_TEXT) is
+			-- Process string text `t'.
+		require
+			text_not_void: text /= Void
+		do
+			process_basic_text (text)
+		end
 
 	process_comment_text (text: COMMENT_TEXT) is
 			-- Process comment text. 
@@ -58,13 +116,6 @@ feature {TEXT_ITEM} -- Implementation
 		require
 			text_not_void: text /= Void
 		do
-		end;
-
-	process_quoted_text (text: QUOTED_TEXT) is
-			-- Process the quoted `text' within a comment.
-		require
-			text_not_void: text /= Void
-		deferred
 		end;
 
 	process_class_name_text (text: CLASS_NAME_TEXT) is
@@ -95,11 +146,11 @@ feature {TEXT_ITEM} -- Implementation
 		deferred
 		end
 
-    process_feature_error (text: FEATURE_ERROR_TEXT) is
-            -- Process error feature text.
-        do
-            process_feature_text (text)
-        end;
+	process_feature_error (text: FEATURE_ERROR_TEXT) is
+	            -- Process error feature text.
+        	do
+        		process_feature_text (text)
+		end
 
 	process_feature_text (text: FEATURE_TEXT) is
 			-- Process feature text `text'.
@@ -107,6 +158,13 @@ feature {TEXT_ITEM} -- Implementation
 			text_not_void: text /= Void
 		deferred
 		end;
+
+	process_breakpoint_index (text: BREAKPOINT_TEXT) is
+			-- Process feature text `text'.
+		require
+			text_not_void: text /= Void
+		deferred
+		end
 
 	process_breakpoint (a_bp: BREAKPOINT_ITEM) is
 			-- Process breakpoint.
@@ -211,5 +269,18 @@ feature {TEXT_ITEM} -- Implementation
 			-- Process the current callstack text.
 		do
 		end;
+
+	process_menu_text (text: MENU_TEXT) is
+			-- Process menu item. This is only useful for generation to
+			-- formats that support hyperlinking.
+		do
+		end
+
+	process_class_menu_text (text: CLASS_MENU_TEXT) is
+			-- Process class menu item. This is only useful for generation to
+			-- formats that support hyperlinking.
+		do
+			process_menu_text (text)
+		end
 
 end -- class TEXT_FORMATTER

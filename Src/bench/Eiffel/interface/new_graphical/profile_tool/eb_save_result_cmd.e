@@ -1,18 +1,11 @@
 indexing
-
-	description:
-		"Command to save the query and options %
-		%currently displayed in a PROFILE_QUERY_WINDOW"
-	date: "$Date$"
-	revision: "$Revision$"
+	description	: "Command to save the query and options currently displayed in a PROFILE_QUERY_WINDOW"
+	date		: "$Date$"
+	revision	: "$Revision$"
 
 class EB_SAVE_RESULT_CMD
 
 inherit
---	COMMAND_W
--- command_w a refaire dans la nouvelle version
-	EV_COMMAND
-
 	EB_FILE_OPENER_CALLBACK
 
 creation
@@ -32,36 +25,29 @@ feature {NONE} -- Initialization
 
 feature {NONE} -- Command Execution
 
-	execute (arg: EV_ARGUMENT1 [EV_FILE_SAVE_DIALOG]; data: EV_EVENT_DATA) is
+	execute is
 			-- Execute Current
 		local
 			fsd: EV_FILE_SAVE_DIALOG
-			arg2: EV_ARGUMENT1 [EV_FILE_SAVE_DIALOG]
-			file_name: STRING
 		do
-			if arg = Void then
-				create fsd.make (query_window)
-				create arg2.make (fsd)
-				fsd.add_ok_command (Current, arg2)
-				fsd.show
-			else
-				fsd := arg.first
-				file_name := clone (fsd.file)
-				save_in (file_name)
-			end
+			create fsd
+			fsd.ok_actions.extend (agent save_in (fsd))
+			fsd.show_modal_to_window (query_window)
 		end
 
 feature -- Access
 
-	save_in (fn: STRING) is
+	save_in (dialog: EV_FILE_SAVE_DIALOG) is
 			-- Save options, result, and query
-			-- to a file named `fn'.
+			-- to file chosen in `dialog'.
 		require
-			fn_not_void: fn /= Void
+			dialog_exists: dialog /= Void
 		local
-			fo: EB_FILE_OPENER
+			file_name: STRING
+			file_opener: EB_FILE_OPENER
 		do
-			create fo.make_default (query_window, Current, fn)
+			file_name := clone (dialog.file_name)
+			create file_opener.make_with_parent (Current, file_name, query_window)
 		end
 
 feature {EB_FILE_OPENER} -- Callbacks

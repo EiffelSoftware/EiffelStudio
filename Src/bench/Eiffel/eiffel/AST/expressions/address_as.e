@@ -29,16 +29,6 @@ feature {AST_FACTORY} -- Initialization
 			feature_name_set: feature_name = f
 		end
 
-feature {NONE} -- Initialization
-
-	set is
-			-- Yacc initialization
-		do
-			feature_name ?= yacc_arg (0)
-		ensure then
-			feature_name_exists: feature_name /= Void
-		end
-
 feature -- Attribute
 
 	feature_name: FEATURE_NAME
@@ -105,7 +95,7 @@ feature -- Type check, byte code and dead code removal
 			if access.is_feature then
 				a_feature := context.feature_table.item(feature_name.internal_name)
 				!! address
-				address.init (context.a_class.id, a_feature)
+				address.init (context.a_class.class_id, a_feature)
 				Result := address
 			else
 				!! hector.make (access)

@@ -93,12 +93,4 @@ feature {FEATURE_CLAUSE_EXPORT, FORMAT_FEAT_CONTEXT} -- formatter
 		deferred
 		end;
 
-feature {S_CLASS_DATA, CATEGORY} -- Case storage
-
-	storage_info: S_EXPORT_I is
-		deferred
-		ensure
-			valid_result: Result /= Void
-		end
-
 end

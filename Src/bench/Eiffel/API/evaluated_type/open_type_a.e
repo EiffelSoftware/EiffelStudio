@@ -1,11 +1,10 @@
 indexing
-	description: "Description of an open class type."
+	description: "Type of operand `?' in argument list of an agent creation. Just a placeholder during type check."
 	date: "$Date$"
 	revision: "$Revision $"
 
-class OPEN_TYPE_A
-	-- Type of operand `.' in the argument list of a
-	-- delayed call. Just a placeholder during type check.
+class
+	OPEN_TYPE_A
 
 inherit
 	CL_TYPE_A
@@ -14,7 +13,7 @@ inherit
 			is_equivalent,
 			same_as,
 			associated_class,
-			append_to,
+			ext_append_to,
 			dump,
 			type_i,
 			good_generics,
@@ -23,9 +22,7 @@ inherit
 			instantiation_in,
 			instantiation_of,
 			same_class_type,
-			format,
-			storage_info,
-			storage_info_with_name
+			format
 		end
 
 feature -- Properties
@@ -67,17 +64,15 @@ feature -- Access
 
 feature -- Output
 
-	append_to (st: STRUCTURED_TEXT) is
+	ext_append_to (st: STRUCTURED_TEXT; f: E_FEATURE) is
 		do
-			st.add_string (".")
+			st.add (ti_Open_arg)
 		end
 
 	dump: STRING is
 			-- Dumped trace
-		local
-			class_name: STRING
 		do
-			!!Result.make (1)
+			create Result.make (1)
 			Result.append (".")
 		end
 
@@ -114,7 +109,7 @@ feature {COMPILER_EXPORTER} -- Conformance
 
 feature {COMPILER_EXPORTER} -- Instantitation of a feature type
 
-	instantiation_in (type: TYPE_A; written_id: CLASS_ID): TYPE_A is
+	instantiation_in (type: TYPE_A; written_id: INTEGER): TYPE_A is
 			-- Instantiation of Current in the context of `class_type'
 			-- assuming that Current is written in `written_id'
 		do
@@ -123,7 +118,7 @@ feature {COMPILER_EXPORTER} -- Instantitation of a feature type
 
 feature {COMPILER_EXPORTER} -- Instantiation of a type in the context of a descendant one
 
-	instantiation_of (type: TYPE; class_id: CLASS_ID): TYPE_A is
+	instantiation_of (type: TYPE; class_id: INTEGER): TYPE_A is
 			-- Instantiation of type `type' written in class of id `class_id'
 			-- in the context of Current
 		do
@@ -143,23 +138,6 @@ feature {COMPILER_EXPORTER} -- Instantiation of a type in the context of a desce
 
 		do
 			ctxt.put_string (".")
-		end
-
-feature {COMPILER_EXPORTER} -- Storage information for EiffelCase
-
-	storage_info (classc: CLASS_C): S_CLASS_TYPE_INFO is
-			-- Storage info for Current type in class `classc'
-		do
-		ensure then
-			not_called : False
-		end
-
-	storage_info_with_name (classc: CLASS_C): S_CLASS_TYPE_INFO is
-			-- Storage info for Current type in class `classc'
-			-- and store the name of the class for Current
-		do
-		ensure then
-			not_called : False
 		end
 
 end -- class OPEN_TYPE_A

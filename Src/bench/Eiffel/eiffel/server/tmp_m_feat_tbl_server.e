@@ -1,16 +1,19 @@
--- Temporary server for melted feature tables associated to file ".TMP_MLT1"
+indexing
+	description: "Temporary server for melted feature tables indexed by static type id."
+	date: "$Date$"
+	revision: "$Revision$"
 
 class TMP_M_FEAT_TBL_SERVER 
 
 inherit
-	DELAY_SERVER [MELTED_FEATURE_TABLE, TYPE_ID]
+	DELAY_SERVER [MELTED_FEATURE_TABLE]
 
 creation
 	make
 	
 feature 
 
-	id (t: MELTED_FEATURE_TABLE): TYPE_ID is
+	id (t: MELTED_FEATURE_TABLE): INTEGER is
 			-- Id associated with `t'
 		do
 			Result := t.type_id
@@ -22,7 +25,7 @@ feature
 			!! Result.make
 		end
 
-	Delayed: SEARCH_TABLE [TYPE_ID] is
+	Delayed: SEARCH_TABLE [INTEGER] is
 			-- Cache for delayed items
 		once
 			!!Result.make ((3 * Cache.cache_size) // 2)

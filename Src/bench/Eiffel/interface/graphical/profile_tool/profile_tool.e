@@ -184,7 +184,7 @@ feature {RUN_PROFILE_QUERY_CMD} -- Access
 			shared_values.filenames.force (filename, shared_values.filenames.lower);
 
 				--| Copy the subqueries
-			if not query_text.text.empty then
+			if not query_text.text.is_empty then
 				!! parser;
 				Result := parser.parse (query_text.text, shared_values)
 			else
@@ -220,7 +220,7 @@ feature {NONE} -- Graphical User Interface
 			!! menu_bar.make (Interface_names.t_Empty, global_form);
 			!! file_menu.make (Interface_names.m_File, menu_bar);
 			!! command_menu.make (Interface_names.m_Commands, menu_bar);
-			!! window_menu.make (Interface_names.m_Windows, menu_bar);
+			!! window_menu.make (Interface_names.m_window, menu_bar);
 			!! help_menu.make (Interface_names.m_Help, menu_bar);
 			menu_bar.set_help_button (help_menu.menu_button);
 
@@ -235,14 +235,20 @@ feature {NONE} -- Graphical User Interface
 			!! number_of_calls_switch.make (Interface_names.b_Number_of_calls, switch_form);
 			number_of_calls_switch.set_toggle_on;
 			!! time_switch.make (Interface_names.b_Function_time, switch_form);
+			time_switch.set_toggle_on
 			!! descendant_switch.make (Interface_names.b_Descendant_time, switch_form);
+			descendant_switch.set_toggle_on
 			!! total_time_switch.make (Interface_names.b_Total_time, switch_form);
+			total_time_switch.set_toggle_on
 			!! percentage_switch.make (Interface_names.b_Percentage, switch_form);
+			percentage_switch.set_toggle_on
 
 			!! eiffel_switch.make (Interface_names.b_Eiffel_features, language_form);
 			eiffel_switch.set_toggle_on;
 			!! c_switch.make (Interface_names.b_C_functions, language_form);
+			c_switch.set_toggle_on;
 			!! recursive_switch.make (Interface_names.b_Recursive_functions, language_form);
+			recursive_switch.set_toggle_on;
 
 			!! input_label.make (Interface_names.l_Input_file, text_form);
 			!! input_text.make (Interface_names.t_Empty, text_form);

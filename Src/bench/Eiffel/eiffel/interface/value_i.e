@@ -3,9 +3,9 @@
 deferred class VALUE_I 
 
 inherit
-
-	BYTE_CONST;
+	BYTE_CONST
 	SHARED_ARRAY_BYTE
+	SHARED_IL_CODE_GENERATOR
 	
 feature -- Comparison
 
@@ -75,11 +75,16 @@ feature
 		end;
 
 	generate (buffer: GENERATION_BUFFER) is
-			-- Generate value in `file'.
+			-- Generate value in `buffer'.
 		require
 			good_argument: buffer /= Void;
 		deferred
 		end;
+
+	generate_il is
+			-- Generate IL code for constant value.
+		deferred
+		end
 
 	make_byte_code (ba: BYTE_ARRAY) is
 			-- Generate byte code for a constant value.

@@ -36,7 +36,7 @@ feature
 			-- Generate value in `buffer'.
 		do
 			buffer.putstring ("RTMS_EX(%"")
-			buffer.escape_string (str_val)
+			buffer.escape_string (buffer,str_val)
 			buffer.putchar('"')
 			buffer.putchar(',')
 			buffer.putint(str_val.count)
@@ -50,14 +50,20 @@ feature
 		do
 			class_type ?= t;
 			Result := 	class_type /= Void
-						and then
-						equal (class_type.base_class_id, System.string_id);
+						and then class_type.base_class_id = System.string_id
 		end;
+
+	generate_il is
+			-- Generate IL code for string constant value.
+		do
+			il_generator.put_manifest_string (str_val)
+		end
 
 	make_byte_code (ba: BYTE_ARRAY) is
 			-- Generate byte code for a string constant value.
 		do
 			ba.append (Bc_string);
+			ba.append_integer (str_val.count)
 			ba.append_raw_string (str_val);
 		end;
 

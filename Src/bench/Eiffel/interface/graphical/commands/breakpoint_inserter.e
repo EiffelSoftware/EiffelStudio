@@ -8,17 +8,43 @@ class
 	BREAKPOINT_INSERTER
 
 inherit
-	SUPER_MELT
-		redefine
-			insert_breakpoint
+	EB_CONSTANTS
+
+	TOOL_COMMAND
+		rename
+			init as make
 		end
+
+	SHARED_APPLICATION_EXECUTION
 
 creation
 	make, do_nothing
 
-feature
+feature -- Access
+
+	name: STRING is
+		do
+			Result := Interface_names.f_Stoppable
+		end;
+
+	menu_name: STRING is
+			-- Name used in menu entry
+		do
+			Result := Interface_names.m_Stoppable
+		end;
+
+	accelerator: STRING is
+			-- Accelerator action for menu entry
+		do
+		end;
 
 	insert_breakpoint: BOOLEAN is True
 			-- To force a breakpoint at the first line.
+
+feature -- Execution
+
+	work (arg: ANY) is
+		do
+		end
 
 end -- class BREAKPOINT_INSERTER

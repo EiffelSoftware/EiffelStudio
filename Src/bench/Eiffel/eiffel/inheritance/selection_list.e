@@ -1,43 +1,58 @@
 class SELECTION_LIST 
 	
 inherit
-	COMPILER_EXPORTER
-
 	SORTED_TWO_WAY_LIST [INHERIT_INFO]
 
+	COMPILER_EXPORTER
+		undefine
+			is_equal
+		end
+
 	SHARED_WORKBENCH
+		undefine
+			is_equal
+		end
 
 	SHARED_ERROR_HANDLER
+		undefine
+			is_equal
+		end
 
 	SHARED_SELECTED
+		undefine
+			is_equal
+		end
 
 	SHARED_ORIGIN_TABLE
+		undefine
+			is_equal
+		end
 
 	SHARED_INHERITED
+		undefine
+			is_equal
+		end
 
 creation
 	make
 	
 feature 
 
-	selected_rout_id_set: ROUT_ID_SET;
+	selected_rout_id_set: ROUT_ID_SET
 
 	selection (parents: PARENT_LIST; old_t, new_t: FEATURE_TABLE): FEATURE_I is
 			-- Feautre selected in the list.
 		require
-			not empty;
+			not is_empty
 		local
-			a_feature, old_feature: FEATURE_I;
-			rout_id_set: ROUT_ID_SET;
-			new_rout_id: INTEGER;
-			feat_table: SELECT_TABLE;
-			first_feature: FEATURE_I;
+			feat_table		: SELECT_TABLE
+			first_feature	: FEATURE_I
 		do
 			selected_rout_id_set := Void
 			if count > 1 then
-				detect_replication (parents, new_t);
-			end;
-			first_feature := first.a_feature;
+				detect_replication (parents, new_t)
+			end
+			first_feature := first.a_feature
 			if one_body_only
 			and then
 				(	first_feature.written_class.generics = Void
@@ -59,7 +74,7 @@ feature
 						start;
 						feat_table := Origin_table.computed;
 					until
-						empty
+						is_empty
 					loop
 						unselect (new_t, old_t, feat_table);
 					end;
@@ -85,7 +100,7 @@ end;
 	parent_selection (parents: PARENT_LIST): FEATURE_I is
 			-- Manual selected feature
 		require
-			not empty
+			not is_empty
 		local
 			feature_i: FEATURE_I;
 			vmrc2: VMRC2;
@@ -126,7 +141,7 @@ end;
 	one_body_only: BOOLEAN is
 			-- Is only one body id invloved in the selection list ?
 		require
-			not empty
+			not is_empty
 		do
 			Result := 	first.a_feature.code_id
 						= 
@@ -136,13 +151,13 @@ end;
 	same_parent_type: BOOLEAN is
 			-- Are all the feature comming form the same written type ?
 		require
-			not empty;
+			not is_empty;
 			one_body_only;
 			has_generics: first.a_feature.written_class.generics /= Void;
 		local
 			instantiator, written_actual_type, written_type, to_compair: TYPE_A;
 			written_class: CLASS_C;
-			written_id: CLASS_ID;
+			written_id: INTEGER;
 			old_cursor: CURSOR;
 			info: INHERIT_INFO;
 		do
@@ -151,7 +166,7 @@ end;
 				info := first;
 				Result := True;
 				written_class := info.a_feature.written_class;
-				written_id := written_class.id;
+				written_id := written_class.class_id;
 				written_actual_type := written_class.actual_type;
 				to_compair := written_actual_type.duplicate;
 				if info.parent = Void then
@@ -186,25 +201,33 @@ end;
 			good_arguments: not (new_t = Void or old_t = Void);
 			not_off: not off
 		local
-			info: INHERIT_INFO;
-			a_feature, old_feature: FEATURE_I;
-			info_parent: PARENT_C;
-			rout_id_set: ROUT_ID_SET;
-			cond, in_generic_class: BOOLEAN;
-			first_body_id: BODY_ID;
-			written_id, id: CLASS_ID;
-			instantiator, to_compair, written_type, written_actual_type: TYPE_A;
-			written_class: CLASS_C;
-			feature_name: STRING;
-			old_pos: INTEGER;
-			r_id_set: ROUT_ID_SET;
-			i, nb: INTEGER;
-			new_rout_id, rid: ROUTINE_ID
+			info			: INHERIT_INFO
+			a_feature		: FEATURE_I
+			old_feature		: FEATURE_I
+			info_parent		: PARENT_C
+			rout_id_set		: ROUT_ID_SET
+			in_generic_class: BOOLEAN
+			first_body_index: INTEGER
+			written_id		: INTEGER
+			id				: INTEGER
+			instantiator	: TYPE_A
+			to_compair		: TYPE_A
+			written_actual_type: TYPE_A
+			written_class	: CLASS_C
+			feature_name	: STRING
+			r_id_set		: ROUT_ID_SET
+			i				: INTEGER
+			nb				: INTEGER
+			new_rout_id		: INTEGER
+			rid				: INTEGER
+			--cond			: BOOLEAN
+			--written_type	: TYPE_A
+			--old_pos		: INTEGER
 		do		
 			id := new_t.feat_tbl_id;
 			info := first;
 			a_feature := info.a_feature;
-			first_body_id := a_feature.body_id;
+			first_body_index := a_feature.body_index;
 				-- New unselected feature
 			r_id_set := a_feature.rout_id_set;
 			a_feature := a_feature.unselected (id);
@@ -220,7 +243,7 @@ end;
 				-- Process a new routine id
 			if 	old_feature /= Void and then
 				old_feature.is_attribute = a_feature.is_attribute and then
-				(old_feature.is_unselected and equal (old_feature.access_in, id))
+				(old_feature.is_unselected and old_feature.access_in = id)
 			then
 					-- Take an old one
 				new_rout_id := old_feature.rout_id_set.first;
@@ -266,7 +289,7 @@ end;
 				in_generic_class := written_class.generics /= Void;
 				if in_generic_class then
 						-- Prepare an instantiated type
-					written_id := written_class.id;
+					written_id := written_class.class_id;
 					written_actual_type := written_class.actual_type;
 					info_parent := info.parent;
 					to_compair := written_actual_type.duplicate;
@@ -278,53 +301,6 @@ end;
 					to_compair := to_compair.instantiation_in (instantiator, written_id);
 				end;
 			end;
-			
-			--| If code_replication_off then reuse the 
-			--| routine id if the body_id was the same. However, if the routine
-			--| needs to be code replicated it requires a new routine id since it
-			--| will have a new body id. The problem is that we do not know
-			--| that code replication is required until the process_replicated 
-			--| in INHERIT_TABLE which occurs after this processing. Hence, 
-			--| there is no way knowing that we can reuse a routine id. The
-			--| solution is that if code_replication_off is set to true then
-			--| each unselected routine originally under the same
-			--| routine id will be given a new routine id.
-			--if System.code_replication_off then
-				--from
-					--old_pos := index
-				--until
-					--after
-				--loop
-					--info := item;
-					--a_feature := info.a_feature;
-						---- First condition for unselection: same body id
-					--cond := equal (a_feature.body_id, first_body_id);
-					--if cond and then in_generic_class then
-							---- Second condition if written in a generic class: same
-							---- instantiated written actual type.
-						--info_parent := info.parent;
-						--if info_parent = Void then
-							--instantiator := written_actual_type;
-						--else
-							--instantiator := info_parent.parent_type;
-						--end;
-						--written_type := written_actual_type.duplicate;
-						--written_type := written_type.instantiation_in (instantiator, written_id);
-						--cond := to_compair.same_as (written_type);
-					--end;
-					--if cond then
-						--a_feature := a_feature.unselected (id);	
-						--a_feature.set_is_selected (False);
-						--a_feature.set_is_origin (True);
-						--a_feature.set_rout_id_set (rout_id_set.duplicate);
-						--new_t.replace (a_feature, a_feature.feature_name);
-						--remove
-					--else
-						--forth
-				--end
-				--end;
-				--go_i_th (old_pos)
-			--end
 		end;
 
 feature -- Conceptual Replication
@@ -336,57 +312,23 @@ feature -- Conceptual Replication
 		require
 			require_replication: count > 1
 		local
-			cur: CURSOR;
-			curr_feat, tmp_feat: FEATURE_I;
-			rep_name: REP_NAME;
-			replication: FEATURE_I;
-			rep_name_list: REP_NAME_LIST;
-			inh_info: INHERIT_INFO;
-			parent: PARENT_C;
-			parents: LINKED_LIST [PARENT_C];
+			curr_feat: FEATURE_I
+			replication: FEATURE_I
+			inh_info: INHERIT_INFO
 		do
 			from
 				start
 			until
 				after
 			loop
-				inh_info := item;
-				curr_feat := item.a_feature;
-debug ("ACTUAL_REPLICATION", "REPLICATION")
-	io.error.putstring ("(selection) Detecting replication: ");
-	io.error.putstring (curr_feat.feature_name);
-	io.error.new_line;
-end;
-				replication := curr_feat.replicated;
-				new_t.replace (replication, replication.feature_name);
-				inh_info.set_a_feature (replication);
-				if not System.code_replication_off then
-					if inh_info.parent = Void then
-						-- if feature was redefined or merged or joined
-						-- then try to find parent clause to which
-						-- it came from
-						parents := find_parents (parent_list,
-										curr_feat.feature_name);
-					else
-						!!parents.make;
-						parents.put_front (inh_info.parent);
-					end;
-					from
-						parents.start
-					until
-						parents.after
-					loop
-						parent := parents.item;
-						!!rep_name;
-						rep_name.set_rep_feature (replication);
-						rep_name_list := rep_list_item (parent);
-						rep_name_list.put_front (rep_name);
-						parents.forth
-					end;
-				end;
+				inh_info := item
+				curr_feat := item.a_feature
+				replication := curr_feat.replicated
+				new_t.replace (replication, replication.feature_name)
+				inh_info.set_a_feature (replication)
 				forth
-			end;
-		end;
+			end
+		end
 
 	rep_list_item (p: PARENT_C): REP_NAME_LIST is
 			-- Retrieve rep_name_list for parent `p'. If not
@@ -478,8 +420,8 @@ if item.a_feature.written_class > System.any_class.compiled_class and
 				io.error.putstring (item.a_feature.feature_name);
 				--io.error.putchar (' ');
 				item.a_feature.rout_id_set.trace;
-				io.error.putstring (" {body_id = ");
-				item.a_feature.body_id.trace;
+				io.error.putstring (" {body_index = ");
+				io.error.putint (item.a_feature.body_index)
 				io.error.putstring ("} written class: ");
 				io.error.putstring (item.a_feature.written_class.name);
 				io.error.new_line;
@@ -487,8 +429,8 @@ if item.a_feature.written_class > System.any_class.compiled_class and
 
 	if System.Feat_tbl_server.has (item.a_feature.written_in) then
 				io.error.putstring
-(item.a_feature.written_class.feature_table.feature_of_body_id
-(item.a_feature.body_id).feature_name);
+(item.a_feature.written_class.feature_table.feature_of_body_index
+(item.a_feature.body_index).feature_name);
 	else
 				io.error.putstring ("Dunno");
 	end;

@@ -10,14 +10,13 @@ indexing
 class CLASS_I 
 
 inherit
-
-	SHARED_ASSERTION_LEVEL;
 	SHARED_OPTION_LEVEL;
 	SHARED_OPTIMIZE_LEVEL;
 	SHARED_DEBUG_LEVEL;
 	SHARED_VISIBLE_LEVEL;
 	SHARED_WORKBENCH;
 	SYSTEM_CONSTANTS;
+	SHARED_LACE_PARSER
 	COMPARABLE
 		undefine
 			is_equal
@@ -25,51 +24,72 @@ inherit
 	COMPILER_EXPORTER
 
 creation {COMPILER_EXPORTER}
-
 	make
-
-creation 
-
-	make_with_cluster
 
 feature {NONE} -- Initialization
 
-	make is
-			-- initialization
+	make (a_name: like name) is
+			-- Create new CLASS_I object with name `a_name'.
+		require
+			a_name_not_void: a_name /= Void
 		do
-			reset_options;
+			reset_options
 			if not System.first_compilation then
 					-- Time check and genericity (a generic parameter cannot
 					-- have the same name as a class)
 				System.record_new_class_i (Current)
-			end;
-		end;
-
-	make_with_cluster (cluster_i: CLUSTER_I) is
-			-- Set `cluster' to `cluster_i'.
-		do
-			make;
-			set_cluster (cluster_i);
-		end;
+			end
+			name := a_name
+		ensure
+			name_set: name = a_name
+		end
 
 feature -- Properties
 
 	name: STRING;
 			-- Class name
 
+	name_in_upper: STRING is
+			-- Class name in upper case.
+		do
+			Result := clone (name)
+			Result.to_upper
+		end
+
 	cluster: CLUSTER_I;
 			-- Cluster to which the class belongs to
 
+	old_cluster_name: STRING
+			-- Cluster name to which a class in the override cluster used
+			-- to belong to.
+
 	base_name: STRING;
 			-- Base file name of the class
+	
+	source_base_name: STRING is
+			-- Base file name of the source file (if any) that was preprocessed to
+			-- create the class.
+		do
+			if internal_source_base_name = Void then
+				Result := base_name
+			else
+				Result := internal_source_base_name
+			end
+		end
+
+	old_base_name: like base_name
+			-- `base_name' of previous location of Current class.
 
 	hidden: BOOLEAN;
 			-- Is the class hidden in the precompilation sets?
 
+	is_read_only: BOOLEAN
+			-- Is class editable?
+
 	file_name: FILE_NAME is
 			-- Full file name of the class
 		do
-			!! Result.make_from_string (cluster.path);
+			create Result.make_from_string (cluster.path);
 			Result.set_file_name (base_name);
 		end;
 
@@ -103,6 +123,13 @@ feature -- Properties
 			base_name := s;	
 		end;
 
+	set_source_base_name (s: STRING) is
+			-- Assign `s' to `source_base_name'.
+		do
+			internal_source_base_name := s;	
+		end;
+
+
 	text: STRING is
 			-- Text of the Current lace file.
 			-- Void if unreadable file
@@ -110,14 +137,22 @@ feature -- Properties
 			valid_file_name: file_name /= Void
 		local
 			a_file: RAW_FILE
+			retried: BOOLEAN
 		do
-			!! a_file.make (file_name);
-			if a_file.exists and then a_file.is_readable then
-				a_file.open_read;
-				a_file.readstream (a_file.count);
-				a_file.close;
-				Result := clone (a_file.laststring)
+			if not retried then
+				create a_file.make (file_name);
+				if a_file.exists and then a_file.is_readable then
+					a_file.open_read;
+					a_file.readstream (a_file.count);
+					a_file.close;
+					Result := clone (a_file.laststring)
+				end
+			else
+				Result := Void
 			end
+		rescue
+			retried := True
+			retry
 		end;
 
 	hide_implementation: BOOLEAN is
@@ -125,6 +160,27 @@ feature -- Properties
 			-- precompiled classes?
 		do
 			Result := cluster.hide_implementation
+		end
+
+	class_name_changed: BOOLEAN is
+			-- Is stored `class_name' identical to one in associated class?
+		require
+			file_exists: exists
+		local
+			class_file: PLAIN_TEXT_FILE
+			new_class_name: STRING
+		do
+			create class_file.make_open_read (file_name)
+			Classname_finder.parse (class_file)
+			new_class_name := Classname_finder.classname
+			class_file.close
+
+			if new_class_name /= Void then
+				new_class_name.to_lower
+				Result := not new_class_name.is_equal (name)
+			else
+				Result := True
+			end
 		end
 
 feature -- Access
@@ -139,11 +195,19 @@ feature -- Access
 
 	date_has_changed: BOOLEAN is
 		local
-			str: ANY;
+			str: ANY
 		do
-			str := file_name.to_c;
-			Result := eif_date ($str) /= date;
-		end;
+			str := file_name.to_c
+			Result := eif_date ($str) /= date
+		end
+
+	exists: BOOLEAN is
+		local
+			file: RAW_FILE
+		do
+			create file.make (file_name)
+			Result := file.exists
+		end
 
 feature -- Setting
 
@@ -163,6 +227,14 @@ feature -- Setting
 			set_base_name (b);
 			set_date;
 		end;
+
+	set_read_only (v: BOOLEAN) is
+			-- Assign `v' to `is_read_only'.
+		do
+			is_read_only := v
+		ensure
+			is_read_only_set: is_read_only = v
+		end
 
 feature -- Comparison
 
@@ -197,7 +269,7 @@ feature {COMPILER_EXPORTER} -- Properties
 	pass2_done: BOOLEAN;
 			-- Pass2 has been done?
 
-feature {COMPILER_EXPORTER} -- Setting
+feature {COMPILER_EXPORTER, EB_CLUSTERS} -- Setting
 
 	reset_options is
 			-- Reset the option values of the class
@@ -209,7 +281,7 @@ debug
 	end;
 	io.error.new_line;
 end;
-			assertion_level := Default_level;
+			create assertion_level.make_no
 			trace_level := No_option;
 			profile_level := No_option;
 			optimize_level := No_optimize;
@@ -257,6 +329,59 @@ end;
 			cluster := c
 		end;
 
+	set_old_location_info (c: like cluster; n: like base_name) is
+			-- This applies for classes in override cluster and
+			-- set `c' to `old_cluster_name'
+		require
+			cluster_valid_non_void_assignment: c /= Void implies old_cluster_name = Void
+			cluster_valid_void_assignment: c = Void implies old_cluster_name /= Void
+			name_valid_non_void_assignment: n /= Void implies old_base_name = Void
+			name_valid_void_assignment: n = Void implies old_base_name /= Void
+		do
+			old_cluster_name := c.cluster_name
+			old_base_name := n
+		ensure
+			old_cluster_name_set: old_cluster_name = c.cluster_name
+			old_base_name_set: old_base_name = n
+		end
+
+	restore_class_i_information is
+			-- Restore CLASS_I object so that we can move it from its current
+			-- location to old one.
+		require
+			old_cluster_name_not_void: old_cluster_name /= Void
+			in_universe: Lace.old_universe.has_cluster_of_name (old_cluster_name)
+		do
+			if Lace.old_universe /= Void then
+				cluster := Lace.old_universe.cluster_of_name (old_cluster_name)
+
+				check
+					cluster_not_void: cluster /= Void
+				end
+
+					-- Insert class to new cluster `c'.
+				cluster.classes.put (Current, name)
+			end
+
+				-- Reset `override_cluster' info since it has been moved back to its previous
+				-- location.
+			base_name := old_base_name
+			old_base_name := Void
+			old_cluster_name := Void
+		end
+
+	reset_class_c_information (cl: CLASS_C) is
+			-- Set Current as `lace_class' of `cl' since file has been moved to override
+			-- cluster
+		do
+				-- If `cl' not void, it means that we are handling a class which is
+				-- in the system and therefore we update its info, otherwise we do nothing.
+			if cl /= Void then
+				cl.set_lace_class (Current)
+				set_compiled_class (cl)
+			end
+		end
+
 feature {COMPILER_EXPORTER} -- Compiled class
 
 	class_to_recompile: CLASS_C is
@@ -268,43 +393,57 @@ feature {COMPILER_EXPORTER} -- Compiled class
 		do
 			local_system := system;
 			if Current = local_system.boolean_class then
-				!BOOLEAN_B! Result.make (Current)
+				create {BOOLEAN_B} Result.make (Current)
 			elseif Current = local_system.character_class then
-				!CHARACTER_B! Result.make (Current)
-			elseif Current = local_system.integer_class then
-				!INTEGER_B! Result.make (Current)
+				create {CHARACTER_B} Result.make (Current, False)
+			elseif Current = local_system.wide_char_class then
+				create {CHARACTER_B} Result.make (Current, True)
+			elseif Current = local_system.integer_8_class then
+				create {INTEGER_B} Result.make (Current, 8)
+			elseif Current = local_system.integer_16_class then
+				create {INTEGER_B} Result.make (Current, 16)
+			elseif Current = local_system.integer_32_class then
+				create {INTEGER_B} Result.make (Current, 32)
+			elseif Current = local_system.integer_64_class then
+				create {INTEGER_B} Result.make (Current, 64)
 			elseif Current = local_system.real_class then
-				!REAL_B! Result.make (Current)
+				create {REAL_B} Result.make (Current)
 			elseif Current = local_system.double_class then
-				!DOUBLE_B! Result.make (Current)
+				create {DOUBLE_B} Result.make (Current)
 			elseif Current = local_system.pointer_class then
-				!POINTER_B! Result.make (Current)
-			elseif Current = local_system.any_class then
-				!ANY_B! Result.make (Current)
+				create {POINTER_B} Result.make (Current)
 			elseif Current = local_system.special_class then
-				!SPECIAL_B! Result.make (Current)
+				create {SPECIAL_B} Result.make (Current)
 			elseif Current = local_system.to_special_class then
-				!TO_SPECIAL_B! Result.make (Current)
+				create {TO_SPECIAL_B} Result.make (Current)
 			elseif Current = local_system.array_class then
-				!ARRAY_CLASS_B! Result.make (Current)
+				create {ARRAY_CLASS_B} Result.make (Current)
 			elseif Current = local_system.string_class then
-				!STRING_CLASS_B! Result.make (Current)
+				create {STRING_CLASS_B} Result.make (Current)
 			elseif Current = local_system.character_ref_class then
-				!CHARACTER_REF_B! Result.make (Current)
+				create {CHARACTER_REF_B} Result.make (Current, False)
+			elseif Current = local_system.wide_char_ref_class then
+				create {CHARACTER_REF_B} Result.make (Current, True)
 			elseif Current = local_system.boolean_ref_class then
-				!BOOLEAN_REF_B! Result.make (Current)
-			elseif Current = local_system.integer_ref_class then
-				!INTEGER_REF_B! Result.make (Current)
+				create {BOOLEAN_REF_B} Result.make (Current)
+			elseif Current = local_system.integer_8_ref_class then
+				create {INTEGER_REF_B} Result.make (Current, 8)
+			elseif Current = local_system.integer_16_ref_class then
+				create {INTEGER_REF_B} Result.make (Current, 16)
+			elseif Current = local_system.integer_32_ref_class then
+				create {INTEGER_REF_B} Result.make (Current, 32)
+			elseif Current = local_system.integer_64_ref_class then
+				create {INTEGER_REF_B} Result.make (Current, 64)
 			elseif Current = local_system.real_ref_class then
-				!REAL_REF_B! Result.make (Current)
+				create {REAL_REF_B} Result.make (Current)
 			elseif Current = local_system.double_ref_class then
-				!DOUBLE_REF_B! Result.make (Current)
+				create {DOUBLE_REF_B} Result.make (Current)
 			elseif Current = local_system.pointer_ref_class then
-				!POINTER_REF_B! Result.make (Current)
+				create {POINTER_REF_B} Result.make (Current)
 			elseif Current = local_system.tuple_class then
-				!TUPLE_CLASS_B! Result.make (Current)
+				create {TUPLE_CLASS_B} Result.make (Current)
 			else
-				!! Result.make (Current);
+				create Result.make (Current);
 			end;
 		ensure
 			Result_exists: Result /= Void;
@@ -313,15 +452,9 @@ feature {COMPILER_EXPORTER} -- Compiled class
 feature {COMPILER_EXPORTER} -- Setting
 
 	set_assertion_level (l: ASSERTION_I) is
-			-- Assign `l' to `assertion_level'.
+			-- Merge `l' to `assertion_level'.
 		do
-			assertion_level := l;
-debug
-	io.error.putstring ("set_assertion_level (");
-	io.error.putstring (name);
-	io.error.putstring ("): ");
-	l.trace;
-end;
+			assertion_level.merge (l)
 		end;
 
 	set_trace_level (t: like trace_level) is
@@ -365,7 +498,7 @@ end;
 				if debug_level.is_partial then
 					partial ?= debug_level;
 					other_partial ?= d;
-					!! new_partial.make;
+					create new_partial.make;
 					new_partial.merge (partial);
 					new_partial.merge (other_partial);
 					debug_level := new_partial;
@@ -414,20 +547,19 @@ end;
 			hidden := other.hidden;
 		end;
 
-feature -- Document processing
+feature {TEXT_FILTER} -- Document processing
 
 	document_file_name: FILE_NAME is
 			-- File name specified for the document
 			-- (.e is removed from end)
 		local
-			bname: STRING;
-			tmp: STRING
-			d_name: DIRECTORY_NAME;
-			i: INTEGER;
+			bname: STRING
+			d_name: DIRECTORY_NAME
+			i: INTEGER
 		do
 			d_name := cluster.document_path;
 			if d_name /= Void then
-				!! Result.make_from_string (d_name);
+				create Result.make_from_string (d_name);
 				bname := clone (base_name);
 				i := bname.count;
 				if 
@@ -441,11 +573,27 @@ feature -- Document processing
 			end
 		end
 
+	document_file_relative_path (sep: CHARACTER): EB_FILE_NAME is
+			-- Generate the relative path of the file
+			-- where Current should be generated.
+			-- Is relative to documentation root directory.
+			-- Use `sep' as platform specific file separator.
+		do
+			Result := cluster.relative_path (sep)
+			Result.extend (name)
+		ensure
+			Result_exists: Result /= Void
+		end
+
 feature {NONE} -- Document processing
 
 	No_word: STRING is "no"
 
 feature {NONE} -- Implementation
+
+	internal_source_base_name: STRING
+			-- Internal source base file name.
+			-- See `source_nase_name'.
 
 	valid_class_file_extension (c: CHARACTER): BOOLEAN is
 			-- Is `c' a valid class file extension?

@@ -1,18 +1,19 @@
--- Temporary server for melted feature byte code associated to file ".TMP_MLT2"
+indexing
+	description: "Temporary server for melted feature byte code indexed by real body id."
+	date: "$Date$"
+	revision: "$Revision$"
 
 class TMP_M_FEATURE_SERVER 
 
 inherit
-
-	DELAY_SERVER [MELT_FEATURE, REAL_BODY_ID]
-
+	DELAY_SERVER [MELT_FEATURE]
 
 creation
 	make
 
 feature 
 
-	id (t: MELT_FEATURE): REAL_BODY_ID is
+	id (t: MELT_FEATURE): INTEGER is
 			-- Id associated with `t'
 		do
 			Result := t.real_body_id
@@ -24,7 +25,7 @@ feature
 			!! Result.make
 		end
 
-	Delayed: SEARCH_TABLE [REAL_BODY_ID] is
+	Delayed: SEARCH_TABLE [INTEGER] is
 			-- Cache for delayed items
 		once
 			!!Result.make ((3 * Cache.cache_size) // 2)

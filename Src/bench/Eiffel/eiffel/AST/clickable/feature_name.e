@@ -28,7 +28,7 @@ inherit
 -- Undefined is_equal of AST_EIFFEL and CLICKABLE_AST because these are
 -- not consistent with infix < operator
 -- < is defined by the terms of < of feature name and is_equal 
--- (from general is c_standard_is_equal)
+-- (from ANY is c_standard_is_equal)
 
 feature -- Stoning
 

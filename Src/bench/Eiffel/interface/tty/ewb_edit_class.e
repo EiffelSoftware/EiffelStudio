@@ -33,8 +33,6 @@ feature {NONE} -- Execution
 
 	process_uncompiled_class (class_i: CLASS_I) is
 			-- Edit class `class_i'.
-		local
-			text: STRING;
 		do
 			edit (class_i.file_name);
 		end;

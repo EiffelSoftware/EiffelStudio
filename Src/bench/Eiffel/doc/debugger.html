@@ -1,0 +1,1409 @@
+<html xmlns:o="urn:schemas-microsoft-com:office:office"
+xmlns:w="urn:schemas-microsoft-com:office:word"
+xmlns="http://www.w3.org/TR/REC-html40">
+
+<head>
+<meta http-equiv=Content-Type content="text/html; charset=windows-1252">
+<meta name=ProgId content=Word.Document>
+<meta name=Generator content="Microsoft Word 9">
+<meta name=Originator content="Microsoft Word 9">
+<link rel=File-List href="./debugger_files/filelist.xml">
+<title>Inside the new Eiffel debugger</title>
+<!--[if gte mso 9]><xml>
+ <o:DocumentProperties>
+  <o:Author>Arnaud PICHERY</o:Author>
+  <o:LastAuthor>Arnaud PICHERY [aranud@mail.dotcom.fr]</o:LastAuthor>
+  <o:Revision>2</o:Revision>
+  <o:TotalTime>132</o:TotalTime>
+  <o:LastPrinted>1999-09-22T01:23:00Z</o:LastPrinted>
+  <o:Created>1999-09-22T01:32:00Z</o:Created>
+  <o:LastSaved>1999-09-22T01:32:00Z</o:LastSaved>
+  <o:Pages>8</o:Pages>
+  <o:Words>3268</o:Words>
+  <o:Characters>18631</o:Characters>
+  <o:Company>ISE</o:Company>
+  <o:Lines>155</o:Lines>
+  <o:Paragraphs>37</o:Paragraphs>
+  <o:CharactersWithSpaces>22880</o:CharactersWithSpaces>
+  <o:Version>9.2720</o:Version>
+ </o:DocumentProperties>
+</xml><![endif]--><!--[if gte mso 9]><xml>
+ <w:WordDocument>
+  <w:DrawingGridHorizontalSpacing>1.2 pt</w:DrawingGridHorizontalSpacing>
+  <w:DrawingGridVerticalSpacing>3.25 pt</w:DrawingGridVerticalSpacing>
+  <w:DisplayHorizontalDrawingGridEvery>0</w:DisplayHorizontalDrawingGridEvery>
+  <w:DisplayVerticalDrawingGridEvery>0</w:DisplayVerticalDrawingGridEvery>
+  <w:Compatibility>
+   <w:FootnoteLayoutLikeWW8/>
+   <w:ShapeLayoutLikeWW8/>
+   <w:AlignTablesRowByRow/>
+   <w:ForgetLastTabAlignment/>
+   <w:LayoutRawTableWidth/>
+   <w:LayoutTableRowsApart/>
+  </w:Compatibility>
+ </w:WordDocument>
+</xml><![endif]-->
+<style>
+<!--
+ /* Font Definitions */
+@font-face
+	{font-family:Wingdings;
+	panose-1:5 0 0 0 0 0 0 0 0 0;
+	mso-font-charset:2;
+	mso-generic-font-family:auto;
+	mso-font-pitch:variable;
+	mso-font-signature:0 268435456 0 0 -2147483648 0;}
+@font-face
+	{font-family:Tahoma;
+	panose-1:2 11 6 4 3 5 4 4 2 4;
+	mso-font-charset:0;
+	mso-generic-font-family:swiss;
+	mso-font-pitch:variable;
+	mso-font-signature:553679495 -2147483648 8 0 66047 0;}
+@font-face
+	{font-family:"Arial Black";
+	panose-1:2 11 10 4 2 1 2 2 2 4;
+	mso-font-charset:0;
+	mso-generic-font-family:swiss;
+	mso-font-pitch:variable;
+	mso-font-signature:647 0 0 0 159 0;}
+ /* Style Definitions */
+p.MsoNormal, li.MsoNormal, div.MsoNormal
+	{mso-style-parent:"";
+	margin:0in;
+	margin-bottom:.0001pt;
+	mso-pagination:widow-orphan;
+	font-size:10.0pt;
+	font-family:"Times New Roman";
+	mso-fareast-font-family:"Times New Roman";}
+h1
+	{mso-style-next:Normal;
+	margin-top:12.0pt;
+	margin-right:0in;
+	margin-bottom:3.0pt;
+	margin-left:0in;
+	mso-pagination:widow-orphan;
+	page-break-after:avoid;
+	mso-outline-level:1;
+	font-size:16.0pt;
+	font-family:Arial;
+	mso-font-kerning:16.0pt;}
+h2
+	{mso-style-next:Normal;
+	margin-top:12.0pt;
+	margin-right:0in;
+	margin-bottom:3.0pt;
+	margin-left:0in;
+	mso-pagination:widow-orphan;
+	page-break-after:avoid;
+	mso-outline-level:2;
+	font-size:14.0pt;
+	font-family:Arial;
+	font-style:italic;}
+h3
+	{mso-style-next:Normal;
+	margin-top:12.0pt;
+	margin-right:0in;
+	margin-bottom:3.0pt;
+	margin-left:0in;
+	mso-pagination:widow-orphan;
+	page-break-after:avoid;
+	mso-outline-level:3;
+	font-size:13.0pt;
+	font-family:Arial;}
+h4
+	{mso-style-next:Normal;
+	margin:0in;
+	margin-bottom:.0001pt;
+	text-align:center;
+	mso-pagination:widow-orphan;
+	page-break-after:avoid;
+	mso-outline-level:4;
+	font-size:24.0pt;
+	mso-bidi-font-size:10.0pt;
+	font-family:"Arial Black";
+	text-decoration:underline;
+	text-underline:single;}
+h5
+	{mso-style-next:Normal;
+	margin:0in;
+	margin-bottom:.0001pt;
+	mso-pagination:widow-orphan;
+	page-break-after:avoid;
+	mso-outline-level:5;
+	font-size:10.0pt;
+	font-family:Arial;
+	font-weight:normal;
+	text-decoration:underline;
+	text-underline:single;}
+p.MsoHeader, li.MsoHeader, div.MsoHeader
+	{margin:0in;
+	margin-bottom:.0001pt;
+	mso-pagination:widow-orphan;
+	tab-stops:center 3.0in right 6.0in;
+	font-size:10.0pt;
+	font-family:"Times New Roman";
+	mso-fareast-font-family:"Times New Roman";}
+p.MsoFooter, li.MsoFooter, div.MsoFooter
+	{margin:0in;
+	margin-bottom:.0001pt;
+	mso-pagination:widow-orphan;
+	tab-stops:center 3.0in right 6.0in;
+	font-size:10.0pt;
+	font-family:"Times New Roman";
+	mso-fareast-font-family:"Times New Roman";}
+p.MsoBodyText, li.MsoBodyText, div.MsoBodyText
+	{margin:0in;
+	margin-bottom:.0001pt;
+	text-align:justify;
+	mso-pagination:widow-orphan;
+	font-size:10.0pt;
+	font-family:Arial;
+	mso-fareast-font-family:"Times New Roman";}
+a:link, span.MsoHyperlink
+	{color:blue;
+	text-decoration:underline;
+	text-underline:single;}
+a:visited, span.MsoHyperlinkFollowed
+	{color:purple;
+	text-decoration:underline;
+	text-underline:single;}
+p.MsoDocumentMap, li.MsoDocumentMap, div.MsoDocumentMap
+	{margin:0in;
+	margin-bottom:.0001pt;
+	mso-pagination:widow-orphan;
+	background:navy;
+	font-size:10.0pt;
+	font-family:Tahoma;
+	mso-fareast-font-family:"Times New Roman";}
+pre
+	{margin:0in;
+	margin-bottom:.0001pt;
+	mso-pagination:widow-orphan;
+	font-size:10.0pt;
+	font-family:"Courier New";
+	mso-fareast-font-family:"Courier New";}
+@page Section1
+	{size:8.5in 11.0in;
+	margin:.6in .6in .6in .6in;
+	mso-header-margin:1.0in;
+	mso-footer-margin:1.0in;
+	mso-footer:url("./debugger_files/header.htm") f1;
+	mso-paper-source:0;}
+div.Section1
+	{page:Section1;}
+ /* List Definitions */
+@list l0
+	{mso-list-id:115763122;
+	mso-list-type:hybrid;
+	mso-list-template-ids:-1317634536 67698689 67698691 67698693 67698689 67698691 67698693 67698689 67698691 67698693;}
+@list l0:level1
+	{mso-level-number-format:bullet;
+	mso-level-text:\F0B7;
+	mso-level-tab-stop:.5in;
+	mso-level-number-position:left;
+	text-indent:-.25in;
+	font-family:Symbol;}
+@list l1
+	{mso-list-id:358505906;
+	mso-list-type:hybrid;
+	mso-list-template-ids:-2086905542 67698703 67698713 67698715 67698703 67698713 67698715 67698703 67698713 67698715;}
+@list l1:level1
+	{mso-level-tab-stop:.5in;
+	mso-level-number-position:left;
+	text-indent:-.25in;}
+@list l2
+	{mso-list-id:1150369602;
+	mso-list-type:hybrid;
+	mso-list-template-ids:-298580270 67698689 67698691 67698693 67698689 67698691 67698693 67698689 67698691 67698693;}
+@list l2:level1
+	{mso-level-number-format:bullet;
+	mso-level-text:\F0B7;
+	mso-level-tab-stop:.5in;
+	mso-level-number-position:left;
+	text-indent:-.25in;
+	font-family:Symbol;}
+@list l3
+	{mso-list-id:1324121845;
+	mso-list-type:hybrid;
+	mso-list-template-ids:-1684651908 67698689 67698691 67698693 67698689 67698691 67698693 67698689 67698691 67698693;}
+@list l3:level1
+	{mso-level-number-format:bullet;
+	mso-level-text:\F0B7;
+	mso-level-tab-stop:.5in;
+	mso-level-number-position:left;
+	text-indent:-.25in;
+	font-family:Symbol;}
+@list l4
+	{mso-list-id:1740010817;
+	mso-list-type:hybrid;
+	mso-list-template-ids:95303278 67698689 67698691 67698693 67698689 67698691 67698693 67698689 67698691 67698693;}
+@list l4:level1
+	{mso-level-number-format:bullet;
+	mso-level-text:\F0B7;
+	mso-level-tab-stop:.5in;
+	mso-level-number-position:left;
+	text-indent:-.25in;
+	font-family:Symbol;}
+ol
+	{margin-bottom:0in;}
+ul
+	{margin-bottom:0in;}
+-->
+</style>
+</head>
+
+<body lang=EN-US link=blue vlink=purple style='tab-interval:.2in'>
+
+<div class=Section1>
+
+<p class=MsoBodyText>Author: Arnaud PICHERY (<a
+href="mailto:aranud@mail.dotcom.fr"><b>aranud@mail.dotcom.fr</b></a>)</p>
+
+<p class=MsoBodyText>Date: <!--[if supportFields]><span style='mso-element:
+field-begin'></span><span style="mso-spacerun: yes"> </span>TIME \@ &quot;MMMM
+d, yyyy&quot; <span style='mso-element:field-separator'></span><![endif]-->September
+21, 1999<!--[if supportFields]><span style='mso-element:field-end'></span><![endif]--></p>
+
+<p class=MsoBodyText><![if !supportEmptyParas]>&nbsp;<![endif]><o:p></o:p></p>
+
+<p class=MsoBodyText><![if !supportEmptyParas]>&nbsp;<![endif]><o:p></o:p></p>
+
+<p class=MsoBodyText><![if !supportEmptyParas]>&nbsp;<![endif]><o:p></o:p></p>
+
+<h4>Inside the new Eiffel debugger</h4>
+
+<p class=MsoNormal><![if !supportEmptyParas]>&nbsp;<![endif]><o:p></o:p></p>
+
+<p class=MsoNormal><![if !supportEmptyParas]>&nbsp;<![endif]><o:p></o:p></p>
+
+<p class=MsoNormal><![if !supportEmptyParas]>&nbsp;<![endif]><o:p></o:p></p>
+
+<h1>Main Improvements</h1>
+
+<p class=MsoNormal style='text-align:justify'><span style='font-family:Arial'>The
+aim was to be able to debug frozen features as well as melted features. Before,
+only “supermelted” features could be debugged which means that every feature
+that contained a breakpoint was supermelted and the resulting byte code sent to
+the debugged application. Even melted feature had to be supermelted.<o:p></o:p></span></p>
+
+<p class=MsoNormal style='text-align:justify'><span style='font-family:Arial'><![if !supportEmptyParas]>&nbsp;<![endif]><o:p></o:p></span></p>
+
+<p class=MsoNormal style='text-align:justify'><span style='font-family:Arial'>The
+following table summarizes the differences between<o:p></o:p></span></p>
+
+<table border=1 cellspacing=0 cellpadding=0 style='border-collapse:collapse;
+ border:none;mso-border-alt:solid windowtext .5pt;mso-padding-alt:0in 5.4pt 0in 5.4pt'>
+ <tr style='height:12.1pt'>
+  <td width=271 valign=top style='width:203.05pt;border:solid windowtext .5pt;
+  background:#8C8C8C;padding:0in 5.4pt 0in 5.4pt;height:12.1pt'>
+  <p class=MsoNormal style='text-align:justify'><![if !supportEmptyParas]>&nbsp;<![endif]><span
+  style='font-family:Arial'><o:p></o:p></span></p>
+  </td>
+  <td width=108 valign=top style='width:80.85pt;border:solid windowtext .5pt;
+  border-left:none;mso-border-left-alt:solid windowtext .5pt;padding:0in 5.4pt 0in 5.4pt;
+  height:12.1pt'>
+  <p class=MsoNormal style='text-align:justify'><span style='font-family:Arial'>Melted<o:p></o:p></span></p>
+  </td>
+  <td width=139 valign=top style='width:104.0pt;border:solid windowtext .5pt;
+  border-left:none;mso-border-left-alt:solid windowtext .5pt;padding:0in 5.4pt 0in 5.4pt;
+  height:12.1pt'>
+  <p class=MsoNormal style='text-align:justify'><span style='font-family:Arial'>Supermelted<o:p></o:p></span></p>
+  </td>
+ </tr>
+ <tr style='height:12.1pt'>
+  <td width=271 valign=top style='width:203.05pt;border:solid windowtext .5pt;
+  border-top:none;mso-border-top-alt:solid windowtext .5pt;padding:0in 5.4pt 0in 5.4pt;
+  height:12.1pt'>
+  <p class=MsoNormal style='text-align:justify'><span style='font-family:Arial'>Byte
+  code to start the feature<o:p></o:p></span></p>
+  </td>
+  <td width=108 valign=top style='width:80.85pt;border-top:none;border-left:
+  none;border-bottom:solid windowtext .5pt;border-right:solid windowtext .5pt;
+  mso-border-top-alt:solid windowtext .5pt;mso-border-left-alt:solid windowtext .5pt;
+  padding:0in 5.4pt 0in 5.4pt;height:12.1pt'>
+  <p class=MsoNormal style='text-align:justify'><span style='font-family:Arial'>BC_START<o:p></o:p></span></p>
+  </td>
+  <td width=139 valign=top style='width:104.0pt;border-top:none;border-left:
+  none;border-bottom:solid windowtext .5pt;border-right:solid windowtext .5pt;
+  mso-border-top-alt:solid windowtext .5pt;mso-border-left-alt:solid windowtext .5pt;
+  padding:0in 5.4pt 0in 5.4pt;height:12.1pt'>
+  <p class=MsoNormal style='text-align:justify'><span style='font-family:Arial'>BC_DEBUGGABLE<o:p></o:p></span></p>
+  </td>
+ </tr>
+ <tr style='height:13.9pt'>
+  <td width=271 valign=top style='width:203.05pt;border:solid windowtext .5pt;
+  border-top:none;mso-border-top-alt:solid windowtext .5pt;padding:0in 5.4pt 0in 5.4pt;
+  height:13.9pt'>
+  <p class=MsoNormal style='text-align:justify'><span style='font-family:Arial'>Generation
+  of debugger hooks (BC_NEXT)<o:p></o:p></span></p>
+  </td>
+  <td width=108 valign=top style='width:80.85pt;border-top:none;border-left:
+  none;border-bottom:solid windowtext .5pt;border-right:solid windowtext .5pt;
+  mso-border-top-alt:solid windowtext .5pt;mso-border-left-alt:solid windowtext .5pt;
+  padding:0in 5.4pt 0in 5.4pt;height:13.9pt'>
+  <p class=MsoNormal style='text-align:justify'><span style='font-family:Arial'>No<o:p></o:p></span></p>
+  </td>
+  <td width=139 valign=top style='width:104.0pt;border-top:none;border-left:
+  none;border-bottom:solid windowtext .5pt;border-right:solid windowtext .5pt;
+  mso-border-top-alt:solid windowtext .5pt;mso-border-left-alt:solid windowtext .5pt;
+  padding:0in 5.4pt 0in 5.4pt;height:13.9pt'>
+  <p class=MsoNormal style='text-align:justify'><span style='font-family:Arial'>Yes<o:p></o:p></span></p>
+  </td>
+ </tr>
+ <tr style='height:13.0pt'>
+  <td width=271 valign=top style='width:203.05pt;border:solid windowtext .5pt;
+  border-top:none;mso-border-top-alt:solid windowtext .5pt;padding:0in 5.4pt 0in 5.4pt;
+  height:13.0pt'>
+  <p class=MsoNormal style='text-align:justify'><span style='font-family:Arial'>BYTE_CONTEXT
+  – debug_mode<o:p></o:p></span></p>
+  </td>
+  <td width=108 valign=top style='width:80.85pt;border-top:none;border-left:
+  none;border-bottom:solid windowtext .5pt;border-right:solid windowtext .5pt;
+  mso-border-top-alt:solid windowtext .5pt;mso-border-left-alt:solid windowtext .5pt;
+  padding:0in 5.4pt 0in 5.4pt;height:13.0pt'>
+  <p class=MsoNormal style='text-align:justify'><span style='font-family:Arial'>False<o:p></o:p></span></p>
+  </td>
+  <td width=139 valign=top style='width:104.0pt;border-top:none;border-left:
+  none;border-bottom:solid windowtext .5pt;border-right:solid windowtext .5pt;
+  mso-border-top-alt:solid windowtext .5pt;mso-border-left-alt:solid windowtext .5pt;
+  padding:0in 5.4pt 0in 5.4pt;height:13.0pt'>
+  <p class=MsoNormal style='text-align:justify'><span style='font-family:Arial'>True<o:p></o:p></span></p>
+  </td>
+ </tr>
+</table>
+
+<p class=MsoNormal style='text-align:justify'><span style='font-family:Arial'><![if !supportEmptyParas]>&nbsp;<![endif]><o:p></o:p></span></p>
+
+<p class=MsoNormal style='text-align:justify'><span style='font-family:Arial'>The
+way breakpoints were implemented was the following: by default, a debugger hook
+was placed at each breakable line in the byte code (code: BC_NEXT). If there
+was a breakpoint, a break was placed instead of the hook (BC_BREAK instead of
+BC_NEXT). At the start of the application and at each time the application was
+resumed, EiffelBench was sending the byte code of supermelted feature to the
+application. As a result of this mechanism it was impossible to put a new
+breakpoint in the current routine if you were already stopped in it because
+EiffelBench couldn’t change the byte code you were executing.<o:p></o:p></span></p>
+
+<p class=MsoNormal style='text-align:justify'><span style='font-family:Arial'><![if !supportEmptyParas]>&nbsp;<![endif]><o:p></o:p></span></p>
+
+<p class=MsoNormal style='text-align:justify'><span style='font-family:Arial'>To
+improve the new debugger, I first have added the debugger hook in frozen
+feature. The corresponding macro is RT_HOOK(current line number). Then I have
+added in the run-time a mechanism to set and remove a breakpoint during the
+execution of the application. Finally I have removed the “supermelt” notion.
+Now every melted feature contains debugger hook and start with a BC_START byte
+code.<o:p></o:p></span></p>
+
+<p class=MsoNormal style='text-align:justify'><span style='font-family:Arial'>Another
+main improvement in the debugger is the possibility to step-into a routine, and
+to step-out of the current routine. It is now possible because frozen feature
+now contain debugger hooks. Debugger hooks allow testing after each line if a
+breakpoint is set, or if the stack depth is too swallow, or…<o:p></o:p></span></p>
+
+<p class=MsoNormal style='text-align:justify'><span style='font-family:Arial'>Another
+improvement is the possibility to disable breakpoints separately. A new button
+in the toolbar has been added. By clicking on it, the user can disable all
+breakpoints, and he can disable the breakpoints he desires by clicking a
+breakable point, a feature or a class and droping it onto this button.<o:p></o:p></span></p>
+
+<h1>I. Run-time side</h1>
+
+<h2>The execution vector</h2>
+
+<p class=MsoNormal><![if !supportEmptyParas]>&nbsp;<![endif]><o:p></o:p></p>
+
+<p class=MsoNormal style='text-align:justify'><span style='font-family:Arial'>The
+debugger mainly relies on two data structures, which are the execution stack
+and the list of breakpoints. The execution stack is defined in the file
+“eif_types.h” as below:<o:p></o:p></span></p>
+
+<p class=MsoNormal style='text-align:justify'><span style='font-size:8.0pt;
+mso-bidi-font-size:10.0pt;font-family:"Courier New"'><br>
+/* Structure used as the execution vector. This is for both the execution<o:p></o:p></span></p>
+
+<p class=MsoNormal><span style='font-size:8.0pt;mso-bidi-font-size:10.0pt;
+font-family:"Courier New"'><span style="mso-spacerun: yes"> </span>* stack
+(eif_stack) and the exception trace stack (eif_trace).<o:p></o:p></span></p>
+
+<p class=MsoNormal><span style='font-size:8.0pt;mso-bidi-font-size:10.0pt;
+font-family:"Courier New"'><span style="mso-spacerun: yes"> </span>*/<o:p></o:p></span></p>
+
+<p class=MsoNormal><span style='font-size:8.0pt;mso-bidi-font-size:10.0pt;
+font-family:"Courier New"'>struct ex_vect {<o:p></o:p></span></p>
+
+<p class=MsoNormal><span style='font-size:8.0pt;mso-bidi-font-size:10.0pt;
+font-family:"Courier New"'><span style='mso-tab-count:1'>   </span>unsigned
+char<span style='mso-tab-count:1'> </span>ex_type;<span style='mso-tab-count:
+1'>   </span>/* Function call, pre-condition, etc... */<o:p></o:p></span></p>
+
+<p class=MsoNormal><span style='font-size:8.0pt;mso-bidi-font-size:10.0pt;
+font-family:"Courier New"'><span style='mso-tab-count:1'>   </span>int<span
+style='mso-tab-count:1'>  </span><span style='mso-tab-count:1'>   </span>ex_linenum;<span
+style='mso-tab-count:1'>   </span>/* current line number (line number &lt;=&gt;
+breakpoint slot) */<o:p></o:p></span></p>
+
+<p class=MsoNormal><span style='font-size:8.0pt;mso-bidi-font-size:10.0pt;
+font-family:"Courier New"'><span style='mso-tab-count:1'>   </span>int<span
+style="mso-spacerun: yes">  </span><span style='mso-tab-count:1'> </span><span
+style='mso-tab-count:1'>   </span>ex_bodyid;<span style='mso-tab-count:1'>   </span>/*
+body id of the feature */<o:p></o:p></span></p>
+
+<p class=MsoNormal><span style='font-size:8.0pt;mso-bidi-font-size:10.0pt;
+font-family:"Courier New"'><span style='mso-tab-count:1'>   </span>unsigned
+char<span style='mso-tab-count:1'>   </span>ex_retry;<span style='mso-tab-count:
+1'>   </span>/* True if function has been retried */<o:p></o:p></span></p>
+
+<p class=MsoNormal><span style='font-size:8.0pt;mso-bidi-font-size:10.0pt;
+font-family:"Courier New"'><span style='mso-tab-count:1'>   </span>unsigned
+char<span style='mso-tab-count:1'>   </span>ex_rescue;<span style='mso-tab-count:
+1'>   </span>/* True if function entered its rescue clause */<o:p></o:p></span></p>
+
+<p class=MsoNormal><span style='font-size:8.0pt;mso-bidi-font-size:10.0pt;
+font-family:"Courier New"'><span style='mso-tab-count:1'>   </span>unsigned
+char<span style='mso-tab-count:1'>   </span>ex_locnum;<span style='mso-tab-count:
+1'>   </span>/* number of local variables in the function */<o:p></o:p></span></p>
+
+<p class=MsoNormal><span style='font-size:8.0pt;mso-bidi-font-size:10.0pt;
+font-family:"Courier New"'><span style='mso-tab-count:1'>   </span>unsigned
+char<span style='mso-tab-count:1'>   </span>ex_argnum;<span style='mso-tab-count:
+1'>   </span>/* number of arguments of the function */<o:p></o:p></span></p>
+
+<p class=MsoNormal><span style='font-size:8.0pt;mso-bidi-font-size:10.0pt;
+font-family:"Courier New"'><span style='mso-tab-count:1'>   </span>union {<o:p></o:p></span></p>
+
+<p class=MsoNormal><span style='font-size:8.0pt;mso-bidi-font-size:10.0pt;
+font-family:"Courier New"'><span style='mso-tab-count:2'>     </span>unsigned
+int exu_lvl;<span style='mso-tab-count:1'>   </span>/* Level for multi-branch
+backtracking */<o:p></o:p></span></p>
+
+<p class=MsoNormal><span style='font-size:8.0pt;mso-bidi-font-size:10.0pt;
+font-family:"Courier New"'><span style='mso-tab-count:2'>     </span>int
+exu_sig;<span style='mso-tab-count:2'>      </span><span style='mso-tab-count:
+1'>   </span>/* Signal number */<o:p></o:p></span></p>
+
+<p class=MsoNormal><span style='font-size:8.0pt;mso-bidi-font-size:10.0pt;
+font-family:"Courier New"'><span style='mso-tab-count:2'>     </span>int
+exu_errno;<span style='mso-tab-count:2'>    </span><span style='mso-tab-count:
+1'>   </span>/* Error number reported by kernel */<o:p></o:p></span></p>
+
+<p class=MsoNormal><span style='font-size:8.0pt;mso-bidi-font-size:10.0pt;
+font-family:"Courier New"'><span style='mso-tab-count:2'>     </span>struct {<o:p></o:p></span></p>
+
+<p class=MsoNormal><span style='font-size:8.0pt;mso-bidi-font-size:10.0pt;
+font-family:"Courier New"'><span style='mso-tab-count:3'>        </span>char
+*exua_name;<span style='mso-tab-count:1'>   </span>/* The assertion tag */<o:p></o:p></span></p>
+
+<p class=MsoNormal><span style='font-size:8.0pt;mso-bidi-font-size:10.0pt;
+font-family:"Courier New"'><span style='mso-tab-count:3'>        </span>char
+*exua_where;<span style='mso-tab-count:1'>   </span>/* The routine name where
+assertion was found */<o:p></o:p></span></p>
+
+<p class=MsoNormal><span style='font-size:8.0pt;mso-bidi-font-size:10.0pt;
+font-family:"Courier New"'><span style='mso-tab-count:3'>        </span>int
+exua_from;<span style='mso-tab-count:1'> </span><span style='mso-tab-count:
+1'>   </span>/* And its origin (where it was written) */<o:p></o:p></span></p>
+
+<p class=MsoNormal><span style='font-size:8.0pt;mso-bidi-font-size:10.0pt;
+font-family:"Courier New"'><span style='mso-tab-count:3'>        </span>char
+*exua_oid;<span style='mso-tab-count:1'> </span>/* Object ID (value of Current)
+*/<o:p></o:p></span></p>
+
+<p class=MsoNormal><span style='font-size:8.0pt;mso-bidi-font-size:10.0pt;
+font-family:"Courier New"'><span style='mso-tab-count:2'>     </span>} exua;<span
+style='mso-tab-count:1'> </span><span style='mso-tab-count:3'>        </span>/*
+Used by assertions */<o:p></o:p></span></p>
+
+<p class=MsoNormal><span style='font-size:8.0pt;mso-bidi-font-size:10.0pt;
+font-family:"Courier New"'><span style='mso-tab-count:2'>     </span>struct {<o:p></o:p></span></p>
+
+<p class=MsoNormal><span style='font-size:8.0pt;mso-bidi-font-size:10.0pt;
+font-family:"Courier New"'><span style='mso-tab-count:3'>        </span>char
+*exur_jbuf;<span style='mso-tab-count:1'>   </span>/* Execution buffer address,
+null if none */<o:p></o:p></span></p>
+
+<p class=MsoNormal><span style='font-size:8.0pt;mso-bidi-font-size:10.0pt;
+font-family:"Courier New"'><span style='mso-tab-count:3'>        </span>char
+*exur_id;<span style='mso-tab-count:1'>  </span><span style='mso-tab-count:
+1'>   </span>/* Object ID (value of Current) */<o:p></o:p></span></p>
+
+<p class=MsoNormal><span style='font-size:8.0pt;mso-bidi-font-size:10.0pt;
+font-family:"Courier New"'><span style='mso-tab-count:3'>        </span>char
+*exur_rout;<span style='mso-tab-count:1'>   </span>/* The routine name */<o:p></o:p></span></p>
+
+<p class=MsoNormal><span style='font-size:8.0pt;mso-bidi-font-size:10.0pt;
+font-family:"Courier New"'><span style='mso-tab-count:3'>        </span>int
+exur_orig;<span style='mso-tab-count:1'> </span><span style='mso-tab-count:
+1'>   </span>/* Origin of the routine */<o:p></o:p></span></p>
+
+<p class=MsoNormal><span style='font-size:8.0pt;mso-bidi-font-size:10.0pt;
+font-family:"Courier New"'><span style='mso-tab-count:2'>     </span>} exur;<span
+style='mso-tab-count:1'> </span><span style='mso-tab-count:3'>        </span>/*
+Used by routines */<o:p></o:p></span></p>
+
+<p class=MsoNormal><span style='font-size:8.0pt;mso-bidi-font-size:10.0pt;
+font-family:"Courier New"'><span style='mso-tab-count:1'>   </span>} exu;<o:p></o:p></span></p>
+
+<p class=MsoNormal><span style='font-size:8.0pt;mso-bidi-font-size:10.0pt;
+font-family:"Courier New"'>};<o:p></o:p></span></p>
+
+<p class=MsoNormal><span style='font-size:8.0pt;mso-bidi-font-size:10.0pt;
+font-family:"Courier New"'><![if !supportEmptyParas]>&nbsp;<![endif]><o:p></o:p></span></p>
+
+<p class=MsoBodyText>During the execution of both melted and frozen features,
+ex_linenum and ex_body_id are updated. ex_linenum contains the current
+breakable line number, which means the current line number in the stop points
+view under EiffelBench. ex_body_id contains the real_body_id of the current
+feature (in fact, ex_body_id contains EiffelBench’s real_body_id - 1).</p>
+
+<h2>The debug information</h2>
+
+<p class=MsoNormal style='text-align:justify'><span style='font-family:Arial'>The
+ex_body_id is set up at the creation of a new execution vector during the
+execution of the C-routine new_exvect. Actually new_exvect is called through
+the RTEAA C-macro for frozen feature and through the C-routine interp (located
+in file interp.c) for melted feature. For melted feature, the real_body_id of
+the feature can be found after the BC_START byte code.</span><span
+style='font-size:8.0pt;mso-bidi-font-size:10.0pt;font-family:"Courier New"'><o:p></o:p></span></p>
+
+<p class=MsoNormal style='text-align:justify'><![if !supportEmptyParas]>&nbsp;<![endif]><o:p></o:p></p>
+
+<p class=MsoNormal style='text-align:justify'><span style='font-family:Arial'>In
+order to add and remove a breakpoint, the application needed to store somewhere
+the location of the breakpoints. The best place to store all the data the
+application needed was in the d_data variable which type is struct dbinfo.
+d_data is a kind of global variable defined in the file debug.c. The new
+variables I have added are the following;<o:p></o:p></span></p>
+
+<ul style='margin-top:0in' type=disc>
+ <li class=MsoNormal style='text-align:justify;mso-list:l2 level1 lfo2;
+     tab-stops:list .5in'><span style='font-family:Arial'>db_callstack_depth:
+     it contains the current stack depth, which is the current number of
+     routine the application entered to arrive where it is currently stopped.<o:p></o:p></span></li>
+ <li class=MsoNormal style='text-align:justify;mso-list:l2 level1 lfo2;
+     tab-stops:list .5in'><span style='font-family:Arial'>db_callstack_depth_stop:
+     it contains the limit depth before application stops. It is widely used to
+     handle step-out and step-by-step mechanism (see the step-out/step-by-step
+     chapter for further information)<o:p></o:p></span></li>
+ <li class=MsoNormal style='text-align:justify;mso-list:l2 level1 lfo2;
+     tab-stops:list .5in'><span style='font-family:Arial'>db_stepinto_mode: It
+     is a flag which is set when the user want to step into the next routine
+     (see the step-into chapter for further information)<o:p></o:p></span></li>
+ <li class=MsoNormal style='text-align:justify;mso-list:l2 level1 lfo2;
+     tab-stops:list .5in'><span style='font-family:Arial'>db_discard_breakpoints:
+     this is a flag too. When it is set, the application does not stop anymore
+     even if the db_step_into_mode is set or if a breakpoint is set, or…. This
+     flag is set after the end of the root creation feature to prevent the
+     application of stopping after the end of the root creation. In fact, after
+     the end of the root creation, the garbage collector calls the dispose
+     feature on all objects and without the flag set, the application may stop.<o:p></o:p></span></li>
+ <li class=MsoNormal style='text-align:justify;mso-list:l2 level1 lfo2;
+     tab-stops:list .5in'><span style='font-family:Arial'>db_bpinfo: here is
+     the list of all breakpoints set. The list is in fact a one-way-linked-list
+     of feature cells. Every feature cells contains a one-way-linked-list of
+     line number cells.<o:p></o:p></span></li>
+</ul>
+
+<p class=MsoNormal style='text-align:justify'><span style='font-family:Arial'><![if !supportEmptyParas]>&nbsp;<![endif]><o:p></o:p></span></p>
+
+<p class=MsoNormal><span style='font-size:8.0pt;mso-bidi-font-size:10.0pt;
+font-family:"Courier New"'>struct offset_list { <o:p></o:p></span></p>
+
+<p class=MsoNormal><span style='font-size:8.0pt;mso-bidi-font-size:10.0pt;
+font-family:"Courier New"'><span style='mso-tab-count:1'>   </span>uint32
+offset;<o:p></o:p></span></p>
+
+<p class=MsoNormal><span style='font-size:8.0pt;mso-bidi-font-size:10.0pt;
+font-family:"Courier New"'><span style='mso-tab-count:1'>   </span>struct
+offset_list *next;<o:p></o:p></span></p>
+
+<p class=MsoNormal><span style='font-size:8.0pt;mso-bidi-font-size:10.0pt;
+font-family:"Courier New"'>};<o:p></o:p></span></p>
+
+<p class=MsoNormal><span style='font-size:8.0pt;mso-bidi-font-size:10.0pt;
+font-family:"Courier New"'><![if !supportEmptyParas]>&nbsp;<![endif]><o:p></o:p></span></p>
+
+<p class=MsoNormal><span style='font-size:8.0pt;mso-bidi-font-size:10.0pt;
+font-family:"Courier New"'>/* breakpoint table. there is one entry per feature
+where<o:p></o:p></span></p>
+
+<p class=MsoNormal><span style='font-size:8.0pt;mso-bidi-font-size:10.0pt;
+font-family:"Courier New"'><span style="mso-spacerun: yes"> </span>* you can
+find a breakpoint<o:p></o:p></span></p>
+
+<p class=MsoNormal><span style='font-size:8.0pt;mso-bidi-font-size:10.0pt;
+font-family:"Courier New"'><span style="mso-spacerun: yes"> </span>*/ <o:p></o:p></span></p>
+
+<p class=MsoNormal><span style='font-size:8.0pt;mso-bidi-font-size:10.0pt;
+font-family:"Courier New"'>struct db_bpinfo {<o:p></o:p></span></p>
+
+<p class=MsoNormal><span style='font-size:8.0pt;mso-bidi-font-size:10.0pt;
+font-family:"Courier New"'><span style='mso-tab-count:1'>   </span>int body_id;<span
+style='mso-tab-count:2'>      </span><span style='mso-tab-count:2'>     </span>/*
+body_id of the feature where breakpoints are located */<o:p></o:p></span></p>
+
+<p class=MsoNormal><span style='font-size:8.0pt;mso-bidi-font-size:10.0pt;
+font-family:"Courier New"'><span style='mso-tab-count:1'>   </span>struct
+offset_list *first_offset;<span style='mso-tab-count:1'>  </span>/* list of all
+offset where a breakpoint is */<o:p></o:p></span></p>
+
+<p class=MsoNormal><span style='font-size:8.0pt;mso-bidi-font-size:10.0pt;
+font-family:"Courier New"'><span style='mso-tab-count:1'>   </span>struct
+db_bpinfo *next;<span style='mso-tab-count:2'>     </span>/* next feature that
+contains breakpoint(s) */<o:p></o:p></span></p>
+
+<p class=MsoNormal><span style='font-size:8.0pt;mso-bidi-font-size:10.0pt;
+font-family:"Courier New"'>};<o:p></o:p></span></p>
+
+<p class=MsoNormal><span style='font-size:8.0pt;mso-bidi-font-size:10.0pt;
+font-family:"Courier New"'><![if !supportEmptyParas]>&nbsp;<![endif]><o:p></o:p></span></p>
+
+<p class=MsoNormal><span style='font-size:8.0pt;mso-bidi-font-size:10.0pt;
+font-family:"Courier New"'>struct dbinfo {<o:p></o:p></span></p>
+
+<p class=MsoNormal><span style='font-size:8.0pt;mso-bidi-font-size:10.0pt;
+font-family:"Courier New"'><span style='mso-tab-count:1'>   </span>char
+*db_start;<span style='mso-tab-count:2'>    </span><span style='mso-tab-count:
+1'>   </span>/* Start of current byte code (dcall) */<o:p></o:p></span></p>
+
+<p class=MsoNormal><span style='font-size:8.0pt;mso-bidi-font-size:10.0pt;
+font-family:"Courier New"'><span style='mso-tab-count:1'>   </span>int db_status;<span
+style='mso-tab-count:2'>    </span><span style='mso-tab-count:2'>     </span>/*
+Execution status (dcall) */<o:p></o:p></span></p>
+
+<p class=MsoNormal><span style='font-size:8.0pt;mso-bidi-font-size:10.0pt;
+font-family:"Courier New"'><span style='mso-tab-count:1'>   </span>uint32
+db_callstack_depth;<span style='mso-tab-count:2'>     </span>/* number of
+routines on the eiffel stack */<o:p></o:p></span></p>
+
+<p class=MsoNormal><span style='font-size:8.0pt;mso-bidi-font-size:10.0pt;
+font-family:"Courier New"'><span style='mso-tab-count:1'>   </span>uint32
+db_callstack_depth_stop;<span style='mso-tab-count:1'>   </span>/* depth from
+which we must stop (step-by-step, stepinto..) */<o:p></o:p></span></p>
+
+<p class=MsoNormal><span style='font-size:8.0pt;mso-bidi-font-size:10.0pt;
+font-family:"Courier New"'><span style='mso-tab-count:1'>   </span>char
+db_stepinto_mode;<span style='mso-tab-count:3'>       </span>/* is stepinto activated
+? */<o:p></o:p></span></p>
+
+<p class=MsoNormal><span style='font-size:8.0pt;mso-bidi-font-size:10.0pt;
+font-family:"Courier New"'><span style='mso-tab-count:1'>   </span>char
+db_discard_breakpoints;<span style='mso-tab-count:1'> </span><span
+style='mso-tab-count:1'>   </span>/* when set, discard all breakpoints. used
+for run-no-stop, */<o:p></o:p></span></p>
+
+<p class=MsoNormal><span style='font-size:8.0pt;mso-bidi-font-size:10.0pt;
+font-family:"Courier New"'><span style='mso-tab-count:5'>              </span><span
+style='mso-tab-count:1'>   </span>/* and after the end of the root creation. it
+avoids the<span style="mso-spacerun: yes">    </span>*/<o:p></o:p></span></p>
+
+<p class=MsoNormal><span style='font-size:8.0pt;mso-bidi-font-size:10.0pt;
+font-family:"Courier New"'><span style='mso-tab-count:5'>              </span><span
+style='mso-tab-count:1'>   </span>/* application to stop after its end when
+garbage collector */<o:p></o:p></span></p>
+
+<p class=MsoNormal><span style='font-size:8.0pt;mso-bidi-font-size:10.0pt;
+font-family:"Courier New"'><span style='mso-tab-count:5'>              </span><span
+style='mso-tab-count:1'>   </span>/* destroys objects<span style="mso-spacerun:
+yes">                                         </span>*/<o:p></o:p></span></p>
+
+<p class=MsoNormal><span style='font-size:8.0pt;mso-bidi-font-size:10.0pt;
+font-family:"Courier New"'><span style='mso-tab-count:1'>   </span>struct
+db_bpinfo *db_bpinfo;<span style='mso-tab-count:1'>   </span><span
+style='mso-tab-count:1'>   </span>/* breakpoints table */<span
+style='mso-tab-count:1'>   </span><o:p></o:p></span></p>
+
+<p class=MsoNormal><span style='font-size:8.0pt;mso-bidi-font-size:10.0pt;
+font-family:"Courier New"'>};<o:p></o:p></span></p>
+
+<p class=MsoNormal><span style='font-size:8.0pt;mso-bidi-font-size:10.0pt;
+font-family:"Courier New"'><![if !supportEmptyParas]>&nbsp;<![endif]><o:p></o:p></span></p>
+
+<h2>The debugger hooks</h2>
+
+<p class=MsoNormal style='text-align:justify'><span style='font-family:Arial'>In
+order to stop the application when we want, I have added a debugger hook before
+each instruction (and before the final end of the feature). The debugger hook
+contains the current line number. For example a frozen feature with 3 lines
+will produce the following C code when frozen:<o:p></o:p></span></p>
+
+<p class=MsoNormal style='text-align:justify'><span style='font-family:Arial'><![if !supportEmptyParas]>&nbsp;<![endif]><o:p></o:p></span></p>
+
+<table border=1 cellspacing=0 cellpadding=0 style='margin-left:6.6pt;
+ border-collapse:collapse;border:none;mso-border-alt:solid windowtext .5pt;
+ mso-padding-alt:0in 5.4pt 0in 5.4pt'>
+ <tr>
+  <td width=139 valign=top style='width:1.45in;border:solid windowtext .5pt;
+  padding:0in 5.4pt 0in 5.4pt'>
+  <p class=MsoNormal style='text-align:justify'><span style='font-size:8.0pt;
+  mso-bidi-font-size:10.0pt;font-family:"Courier New"'><![if !supportEmptyParas]>&nbsp;<![endif]><o:p></o:p></span></p>
+  <p class=MsoNormal style='text-align:justify'><span style='font-size:8.0pt;
+  mso-bidi-font-size:10.0pt;font-family:"Courier New"'>RT_HOOK(1);<o:p></o:p></span></p>
+  <p class=MsoNormal style='text-align:justify'><span style='font-size:8.0pt;
+  mso-bidi-font-size:10.0pt;font-family:"Courier New"'>INSTRUCTION 1;<o:p></o:p></span></p>
+  <p class=MsoNormal style='text-align:justify'><span style='font-size:8.0pt;
+  mso-bidi-font-size:10.0pt;font-family:"Courier New"'>RT_HOOK(2);<o:p></o:p></span></p>
+  <p class=MsoNormal style='text-align:justify'><span style='font-size:8.0pt;
+  mso-bidi-font-size:10.0pt;font-family:"Courier New"'>INSTRUCTION 2;<o:p></o:p></span></p>
+  <p class=MsoNormal style='text-align:justify'><span style='font-size:8.0pt;
+  mso-bidi-font-size:10.0pt;font-family:"Courier New"'>RT_HOOK(3);<o:p></o:p></span></p>
+  <p class=MsoNormal style='text-align:justify'><span style='font-size:8.0pt;
+  mso-bidi-font-size:10.0pt;font-family:"Courier New"'>INSTRUCTION 3;<o:p></o:p></span></p>
+  <p class=MsoNormal style='text-align:justify'><span style='font-size:8.0pt;
+  mso-bidi-font-size:10.0pt;font-family:"Courier New"'>RT_HOOK(4)<o:p></o:p></span></p>
+  <p class=MsoNormal style='text-align:justify'><![if !supportEmptyParas]>&nbsp;<![endif]><span
+  style='font-size:8.0pt;mso-bidi-font-size:10.0pt;font-family:"Courier New"'><o:p></o:p></span></p>
+  </td>
+  <td width=139 valign=top style='width:1.45in;border:solid windowtext .5pt;
+  border-left:none;mso-border-left-alt:solid windowtext .5pt;padding:0in 5.4pt 0in 5.4pt'>
+  <p class=MsoNormal style='text-align:justify'><span style='font-size:8.0pt;
+  mso-bidi-font-size:10.0pt;font-family:"Courier New"'>do<o:p></o:p></span></p>
+  <p class=MsoNormal style='text-align:justify'><span style='font-size:8.0pt;
+  mso-bidi-font-size:10.0pt;font-family:"Courier New"'><![if !supportEmptyParas]>&nbsp;<![endif]><o:p></o:p></span></p>
+  <p class=MsoNormal style='text-align:justify'><span style='font-size:8.0pt;
+  mso-bidi-font-size:10.0pt;font-family:"Courier New"'><span
+  style="mso-spacerun: yes">    </span>Instruction 1<o:p></o:p></span></p>
+  <p class=MsoNormal style='text-align:justify'><span style='font-size:8.0pt;
+  mso-bidi-font-size:10.0pt;font-family:"Courier New"'><![if !supportEmptyParas]>&nbsp;<![endif]><o:p></o:p></span></p>
+  <p class=MsoNormal style='text-align:justify'><span style='font-size:8.0pt;
+  mso-bidi-font-size:10.0pt;font-family:"Courier New"'><span
+  style="mso-spacerun: yes">    </span>Instruction 2<o:p></o:p></span></p>
+  <p class=MsoNormal style='text-align:justify'><span style='font-size:8.0pt;
+  mso-bidi-font-size:10.0pt;font-family:"Courier New"'><![if !supportEmptyParas]>&nbsp;<![endif]><o:p></o:p></span></p>
+  <p class=MsoNormal style='text-align:justify'><span style='font-size:8.0pt;
+  mso-bidi-font-size:10.0pt;font-family:"Courier New"'><span
+  style="mso-spacerun: yes">    </span>Instruction 3<o:p></o:p></span></p>
+  <p class=MsoNormal style='text-align:justify'><span style='font-size:8.0pt;
+  mso-bidi-font-size:10.0pt;font-family:"Courier New"'>end<o:p></o:p></span></p>
+  </td>
+ </tr>
+</table>
+
+<p class=MsoNormal style='text-align:justify'><![if !supportEmptyParas]>&nbsp;<![endif]><o:p></o:p></p>
+
+<p class=MsoNormal style='text-align:justify'><span style='font-family:Arial'>For
+frozen feature, the debugger hook is the C macro RT_HOOK that calls the C
+function dnext_frozen. For melted feature, the debugger hook is the BC_NEXT
+byte code that calls when interpreted the C function dnext_melted. Starting
+from now, BC_NEXT has an argument which is the current line number (an Eiffel
+INTEGER, a C long). Dnext_frozen and dnext_melted do the same job: they check
+whether a breakpoint, the stack depth stop or the stepinto flag are set or not.
+In the positive case, the application stops.<o:p></o:p></span></p>
+
+<h2 style='text-align:justify'>Setting and removing breakpoints on the fly</h2>
+
+<p class=MsoNormal style='text-align:justify'><span style='font-family:Arial'>Setting
+a breakpoint is very simple on the run-time side. When the application is
+listening to EiffelBench, EiffelBench send a message to the application with
+the </span><span style='font-size:9.0pt;mso-bidi-font-size:10.0pt;font-family:
+"Courier New"'>real_body_id</span><span style='font-family:Arial'> of the
+feature of the breakpoint, its line number within the feature and its mode (if
+the application must set or remove the breakpoint). All we have to do is to
+create a new cell for the feature in the </span><span style='font-size:9.0pt;
+mso-bidi-font-size:10.0pt;font-family:"Courier New"'>bp_info</span><span
+style='font-size:9.0pt;mso-bidi-font-size:10.0pt;font-family:Arial'> </span><span
+style='font-family:Arial'>structure if it does not exist, and to create a new
+cell for the line number. That’s all. This is made by the </span><span
+style='font-size:9.0pt;mso-bidi-font-size:10.0pt;font-family:"Courier New"'>dsetbreak</span><span
+style='font-size:9.0pt;mso-bidi-font-size:10.0pt;font-family:Arial'> </span><span
+style='font-family:Arial'>C function.<o:p></o:p></span></p>
+
+<h2 style='text-align:justify'>Stepping into</h2>
+
+<p class=MsoNormal style='text-align:justify'><span style='font-family:Arial'>To
+implement the step-into mechanism I have used a simple flag. Actually stepping
+into the next function means stopping to the next instruction executed: If we
+can step into the function, the following instruction to be executed will be
+the first instruction of the function where we want step into. If we can’t step
+into the function (because it’s just a basic instruction), we will stop to the
+following instruction of the current routine, which is in fact the next
+instruction we will execute.<o:p></o:p></span></p>
+
+<p class=MsoNormal style='text-align:justify'><span style='font-family:Arial'>So,
+to step into next function, we just set the step-into flag. When it is set,
+application will stop at the next debugger hook encountered.<o:p></o:p></span></p>
+
+<h2 style='text-align:justify'>Stepping out</h2>
+
+<p class=MsoNormal style='text-align:justify'><span style='font-family:Arial'>To
+implement the step-out mechanism I have used the notion of stack depth. Assume
+that the application is stopped in a feature. The current call stack depth is
+3. The idea is to stop the application at the first following debugger hook with
+a current call stack depth of 2. So we set the callstack_depth_stop variable to
+2. The application will stop as soon as current_callstack_depth &lt;=
+callstack_depth_stop.<o:p></o:p></span></p>
+
+<h2 style='text-align:justify'>Step-by-step</h2>
+
+<p class=MsoNormal style='text-align:justify'><span style='font-family:Arial'>The
+way the step-by-step mechanism is implemented is the same as the step-out
+mechanism is. The only difference is that we set the callstack depth stop to
+the current callstack depth: Assume that the application is stopped in a
+feature. The current call stack depth is 3. The idea is to stop the application
+at the first following debugger hook with a current call stack depth of 3. So
+we set the callstack_depth_stop variable to 3. The application will stop as
+soon as current_callstack_depth &lt;= callstack_depth_stop. If the application
+start to step into a function, it will increase the current stack depth and the
+application will not stop inside the function.<o:p></o:p></span></p>
+
+<p class=MsoNormal style='text-align:justify'><![if !supportEmptyParas]>&nbsp;<![endif]><o:p></o:p></p>
+
+<p class=MsoNormal style='text-align:justify'><![if !supportEmptyParas]>&nbsp;<![endif]><o:p></o:p></p>
+
+<h1 style='text-align:justify'>II. Eiffel side</h1>
+
+<p class=MsoNormal style='text-align:justify'><![if !supportEmptyParas]>&nbsp;<![endif]><o:p></o:p></p>
+
+<p class=MsoNormal style='text-align:justify'><span style='font-family:Arial'>The
+Eiffel part of the new debugger is mainly located in the following four
+classes: BREAKPOINT, DEBUG_INFO, APPLICATION_EXECUTION and EWB_REQUEST.<o:p></o:p></span></p>
+
+<p class=MsoNormal style='text-align:justify'><span style='font-family:Arial'><![if !supportEmptyParas]>&nbsp;<![endif]><o:p></o:p></span></p>
+
+<h2 style='text-align:justify'>The BREAKPOINT class</h2>
+
+<p class=MsoNormal style='text-align:justify'><span style='font-family:Arial'>The
+BREAKPOINT class deals with the handling of one breakpoint. It has only a few
+attributes:<o:p></o:p></span></p>
+
+<p class=MsoNormal style='text-align:justify'><span style='font-family:Arial'>The
+breakable line number is the number of the line in the stop point view under
+EiffelBench where the breakpoint is set. The routine is the feature where the
+breakpoint is located. We also provide the real_body_id and the body_index
+which are extracted from the feature at the creation of the breakpoint and are
+updated after recompilation. real_body_id is useful because we need to send it
+to the application when we are setting a new breakpoint. body_index is used as
+a super-key (in the SQL sense). To get a breakpoint from a list of breakpoints,
+you only need its body_index and its line number; to compare to breakpoints, we
+will check whether they have the same body_index and the same line number. We
+can’t use the real_body_id to do this because the real_body_id may change
+during a recompilation.<o:p></o:p></span></p>
+
+<p class=MsoNormal style='text-align:justify'><i><span style='font-family:Arial'><![if !supportEmptyParas]>&nbsp;<![endif]><o:p></o:p></span></i></p>
+
+<pre style='text-align:justify;tab-stops:26.4pt 595.4pt 641.2pt 687.0pt 732.8pt'><i><span
+style='font-size:8.0pt;mso-bidi-font-size:10.0pt'>breakable_line_number</span></i><span
+style='font-size:8.0pt;mso-bidi-font-size:10.0pt'>:<i> <a
+href="file:///d:/45dev_bou/Ace/Documentation/kernel/integer.html">INTEGER</a></i>;<i><o:p></o:p></i></span></pre><pre
+style='text-align:justify;tab-stops:26.4pt 595.4pt 641.2pt 687.0pt 732.8pt'><i><span
+style='font-size:8.0pt;mso-bidi-font-size:10.0pt'><span style='mso-tab-count:
+1'>     </span></span></i><span style='font-size:8.0pt;mso-bidi-font-size:10.0pt'>-- line number of the breakpoint in the stoppoint view under EiffelBench<i><o:p></o:p></i></span></pre><pre
+style='text-align:justify;tab-stops:26.4pt 595.4pt 641.2pt 687.0pt 732.8pt'><i><span
+style='font-size:8.0pt;mso-bidi-font-size:10.0pt'><![if !supportEmptyParas]>&nbsp;<![endif]><o:p></o:p></span></i></pre><pre
+style='text-align:justify;tab-stops:26.4pt 595.4pt 641.2pt 687.0pt 732.8pt'><i><span
+style='font-size:8.0pt;mso-bidi-font-size:10.0pt'>routine</span></i><span
+style='font-size:8.0pt;mso-bidi-font-size:10.0pt'>:<i> <a
+href="file:///d:/45dev_bou/Ace/Documentation/api_interface/e_feature.html">E_FEATURE</a></i>;<i><o:p></o:p></i></span></pre><pre
+style='text-align:justify;tab-stops:26.4pt 595.4pt 641.2pt 687.0pt 732.8pt'><i><span
+style='font-size:8.0pt;mso-bidi-font-size:10.0pt'><span style='mso-tab-count:
+1'>     </span></span></i><span style='font-size:8.0pt;mso-bidi-font-size:10.0pt'>-- feature where this breakpoint is situated<i><o:p></o:p></i></span></pre><pre
+style='text-align:justify;tab-stops:26.4pt 595.4pt 641.2pt 687.0pt 732.8pt'><i><span
+style='font-size:8.0pt;mso-bidi-font-size:10.0pt'><![if !supportEmptyParas]>&nbsp;<![endif]><o:p></o:p></span></i></pre><pre
+style='text-align:justify;tab-stops:26.4pt 595.4pt 641.2pt 687.0pt 732.8pt'><i><span
+style='font-size:8.0pt;mso-bidi-font-size:10.0pt'>real_body_id</span></i><span
+style='font-size:8.0pt;mso-bidi-font-size:10.0pt'>:<i> <a
+href="file:///d:/45dev_bou/Ace/Documentation/real_body_ids/real_body_id.html">REAL_BODY_ID</a></i>;<i><o:p></o:p></i></span></pre><pre
+style='text-align:justify;tab-stops:26.4pt 595.4pt 641.2pt 687.0pt 732.8pt'><i><span
+style='font-size:8.0pt;mso-bidi-font-size:10.0pt'><span style='mso-tab-count:
+1'>     </span></span></i><span style='font-size:8.0pt;mso-bidi-font-size:10.0pt'>-- real_body_id of the feature where this breakpoint is situated<i><o:p></o:p></i></span></pre><pre
+style='text-align:justify;tab-stops:26.4pt 595.4pt 641.2pt 687.0pt 732.8pt'><i><span
+style='font-size:8.0pt;mso-bidi-font-size:10.0pt'><![if !supportEmptyParas]>&nbsp;<![endif]><o:p></o:p></span></i></pre><pre
+style='text-align:justify;tab-stops:26.4pt 595.4pt 641.2pt 687.0pt 732.8pt'><i><span
+style='font-size:8.0pt;mso-bidi-font-size:10.0pt'>body_index</span></i><span
+style='font-size:8.0pt;mso-bidi-font-size:10.0pt'>:<i> <a
+href="file:///d:/45dev_bou/Ace/Documentation/body_indexes/body_index.html">BODY_INDEX</a></i>;<i><o:p></o:p></i></span></pre><pre
+style='text-align:justify;tab-stops:26.4pt 595.4pt 641.2pt 687.0pt 732.8pt'><span
+style='font-size:8.0pt;mso-bidi-font-size:10.0pt'><span style='mso-tab-count:
+1'>     </span>-- real_body_id of the feature where this breakpoint is situated<i><o:p></o:p></i></span></pre><pre
+style='text-align:justify;tab-stops:26.4pt 595.4pt 641.2pt 687.0pt 732.8pt'><i><span
+style='font-size:8.0pt;mso-bidi-font-size:10.0pt'><![if !supportEmptyParas]>&nbsp;<![endif]><o:p></o:p></span></i></pre>
+
+<p class=MsoNormal style='text-align:justify'><span style='font-family:Arial'>The
+breakpoint has also two other attributes: the bench_status and the
+application_status. The bench_status reflects the current status of the
+breakpoint under EiffelBench. It can have 3 different values: set, disabled,
+not_set. Set means that the breakpoint is set and active, disabled means it is
+set but not disabled, and not_set means that the breakpoint has been removed.
+The application_status reflects the current status of the breakpoint under the
+application. It can have a different value than the bench status because we
+only resynchronize the two states when we are resuming or starting the
+application. The application_status can have 2 different values: set or
+not_set.<o:p></o:p></span></p>
+
+<p class=MsoHeader style='text-align:justify;tab-stops:.2in'><span
+style='font-family:Arial'><![if !supportEmptyParas]>&nbsp;<![endif]><o:p></o:p></span></p>
+
+<pre style='tab-stops:26.4pt 595.4pt 641.2pt 687.0pt 732.8pt'><i><span
+style='font-size:8.0pt;mso-bidi-font-size:10.0pt'>bench_status</span></i><span
+style='font-size:8.0pt;mso-bidi-font-size:10.0pt'>:<i> <a
+href="file:///d:/45dev_bou/Ace/Documentation/kernel/integer.html">INTEGER</a></i>;<i><o:p></o:p></i></span></pre><pre
+style='tab-stops:26.4pt 595.4pt 641.2pt 687.0pt 732.8pt'><i><span
+style='font-size:8.0pt;mso-bidi-font-size:10.0pt'><span style='mso-tab-count:
+1'>     </span></span></i><span style='font-size:8.0pt;mso-bidi-font-size:10.0pt'>-- current status within EiffelBench<i><o:p></o:p></i></span></pre><pre
+style='tab-stops:26.4pt 595.4pt 641.2pt 687.0pt 732.8pt'><i><span
+style='font-size:8.0pt;mso-bidi-font-size:10.0pt'><span style='mso-tab-count:
+1'>     </span></span></i><span style='font-size:8.0pt;mso-bidi-font-size:10.0pt'>--<i><o:p></o:p></i></span></pre><pre
+style='tab-stops:26.4pt 595.4pt 641.2pt 687.0pt 732.8pt'><i><span
+style='font-size:8.0pt;mso-bidi-font-size:10.0pt'><span style='mso-tab-count:
+1'>     </span></span></i><span style='font-size:8.0pt;mso-bidi-font-size:10.0pt'>-- see the private constants at the end of the class to see the<i><o:p></o:p></i></span></pre><pre
+style='tab-stops:26.4pt 595.4pt 641.2pt 687.0pt 732.8pt'><i><span
+style='font-size:8.0pt;mso-bidi-font-size:10.0pt'><span style='mso-tab-count:
+1'>     </span></span></i><span style='font-size:8.0pt;mso-bidi-font-size:10.0pt'>-- different possible value taken<i><o:p></o:p></i></span></pre><pre
+style='tab-stops:26.4pt 595.4pt 641.2pt 687.0pt 732.8pt'><i><span
+style='font-size:8.0pt;mso-bidi-font-size:10.0pt'><![if !supportEmptyParas]>&nbsp;<![endif]><o:p></o:p></span></i></pre><pre
+style='tab-stops:26.4pt 595.4pt 641.2pt 687.0pt 732.8pt'><i><span
+style='font-size:8.0pt;mso-bidi-font-size:10.0pt'>application_status</span></i><span
+style='font-size:8.0pt;mso-bidi-font-size:10.0pt'>:<i> <a
+href="file:///d:/45dev_bou/Ace/Documentation/kernel/integer.html">INTEGER</a></i>;<i><o:p></o:p></i></span></pre><pre
+style='tab-stops:26.4pt 595.4pt 641.2pt 687.0pt 732.8pt'><i><span
+style='font-size:8.0pt;mso-bidi-font-size:10.0pt'><span style='mso-tab-count:
+1'>     </span></span></i><span style='font-size:8.0pt;mso-bidi-font-size:10.0pt'>-- last status sent to the application, this is the current<i><o:p></o:p></i></span></pre><pre
+style='tab-stops:26.4pt 595.4pt 641.2pt 687.0pt 732.8pt'><i><span
+style='font-size:8.0pt;mso-bidi-font-size:10.0pt'><span style='mso-tab-count:
+1'>     </span></span></i><span style='font-size:8.0pt;mso-bidi-font-size:10.0pt'>-- status of this breakpoint from the application point of view<i><o:p></o:p></i></span></pre><pre
+style='tab-stops:26.4pt 595.4pt 641.2pt 687.0pt 732.8pt'><i><span
+style='font-size:8.0pt;mso-bidi-font-size:10.0pt'><span style='mso-tab-count:
+1'>     </span></span></i><span style='font-size:8.0pt;mso-bidi-font-size:10.0pt'>--<i><o:p></o:p></i></span></pre><pre
+style='tab-stops:26.4pt 595.4pt 641.2pt 687.0pt 732.8pt'><i><span
+style='font-size:8.0pt;mso-bidi-font-size:10.0pt'><span style='mso-tab-count:
+1'>     </span></span></i><span style='font-size:8.0pt;mso-bidi-font-size:10.0pt'>-- see the private constants at the end of the class to see the<i><o:p></o:p></i></span></pre><pre
+style='tab-stops:26.4pt 595.4pt 641.2pt 687.0pt 732.8pt'><i><span
+style='font-size:8.0pt;mso-bidi-font-size:10.0pt'><span style='mso-tab-count:
+1'>     </span></span></i><span style='font-size:8.0pt;mso-bidi-font-size:10.0pt'>-- different possible value taken<i><o:p></o:p></i></span></pre>
+
+<p class=MsoNormal style='text-align:justify'><span style='font-family:Arial'><![if !supportEmptyParas]>&nbsp;<![endif]><o:p></o:p></span></p>
+
+<p class=MsoHeader style='text-align:justify;tab-stops:.2in'><span
+style='font-family:Arial'>A user can set a breakpoint, remove a breakpoint,
+disable a breakpoint but also switch a breakpoint. The behavior of the switch
+feature is the following:<o:p></o:p></span></p>
+
+<p class=MsoHeader style='margin-left:.5in;text-align:justify;text-indent:-.25in;
+mso-list:l0 level1 lfo3;tab-stops:list .5in'><![if !supportLists]><span
+style='font-family:Symbol;mso-bidi-font-family:Arial'>·<span style='font:7.0pt "Times New Roman"'>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+</span></span><![endif]><span style='font-family:Arial'>if the breakpoint is
+set, we remove it.<o:p></o:p></span></p>
+
+<p class=MsoHeader style='margin-left:.5in;text-align:justify;text-indent:-.25in;
+mso-list:l0 level1 lfo3;tab-stops:list .5in'><![if !supportLists]><span
+style='font-family:Symbol;mso-bidi-font-family:Arial'>·<span style='font:7.0pt "Times New Roman"'>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+</span></span><![endif]><span style='font-family:Arial'>If the breakpoint is
+not set, we set it<o:p></o:p></span></p>
+
+<p class=MsoHeader style='margin-left:.5in;text-align:justify;text-indent:-.25in;
+mso-list:l0 level1 lfo3;tab-stops:list .5in'><![if !supportLists]><span
+style='font-family:Symbol;mso-bidi-font-family:Arial'>·<span style='font:7.0pt "Times New Roman"'>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+</span></span><![endif]><span style='font-family:Arial'>If the breakpoint is
+disabled, we enable it<o:p></o:p></span></p>
+
+<p class=MsoHeader style='text-align:justify;tab-stops:.2in'><span
+style='font-family:Arial'><![if !supportEmptyParas]>&nbsp;<![endif]><o:p></o:p></span></p>
+
+<b><i><span style='font-size:14.0pt;font-family:Arial;mso-fareast-font-family:
+"Times New Roman";mso-ansi-language:EN-US;mso-fareast-language:EN-US;
+mso-bidi-language:AR-SA'><br clear=all style='page-break-before:always'>
+</span></i></b>
+
+<h2 style='text-align:justify'>The DEBUG_INFO class</h2>
+
+<p class=MsoNormal style='text-align:justify'><span style='font-family:Arial'>The
+DEBUG_INFO class deals with the handling of the breakpoints of the application.
+It contains an attribute called </span><span style='font-size:9.0pt;mso-bidi-font-size:
+10.0pt;font-family:"Courier New"'>breakpoints</span><span style='font-family:
+Arial'> which is an hash_table of breakpoints(</span><span style='font-size:
+8.0pt;mso-bidi-font-size:10.0pt;font-family:"Courier New"'>HASH_TABLE[BREAKPOINT,BREAKPOINT]</span><span
+style='font-family:Arial'>). This class allows to perform a wide range of
+operation on breakpoints.<o:p></o:p></span></p>
+
+<p class=MsoNormal style='text-align:justify'><span style='font-family:Arial'>Remark:
+to find a specified breakpoint in the hash table, we always use the same
+method. We first create a ”fake” breakpoint with the same body_index and the
+same line number than the breakpoint we want to get, and then we call the
+hash_table feature get with the fake breakpoint as argument to retrieve the
+good breakpoint.<o:p></o:p></span></p>
+
+<p class=MsoNormal><![if !supportEmptyParas]>&nbsp;<![endif]><o:p></o:p></p>
+
+<h5>General Operations</h5>
+
+<p class=MsoNormal style='text-align:justify'><span style='font-size:8.0pt;
+mso-bidi-font-size:10.0pt;font-family:"Courier New"'><![if !supportEmptyParas]>&nbsp;<![endif]><o:p></o:p></span></p>
+
+<pre style='tab-stops:.2in'><i><span style='font-size:8.0pt;mso-bidi-font-size:
+10.0pt'><span style='mso-tab-count:1'>   </span>wipe_out </span></i><b><span
+style='font-size:8.0pt;mso-bidi-font-size:10.0pt'>is</span></b><i><span
+style='font-size:8.0pt;mso-bidi-font-size:10.0pt'><o:p></o:p></span></i></pre><pre
+style='tab-stops:.2in'><i><span style='font-size:8.0pt;mso-bidi-font-size:10.0pt'><span
+style='mso-tab-count:3'>        </span></span></i><span style='font-size:8.0pt;
+mso-bidi-font-size:10.0pt'>-- Empty Current.<i><o:p></o:p></i></span></pre><pre
+style='tab-stops:.2in'><i><span style='font-size:8.0pt;mso-bidi-font-size:10.0pt'><![if !supportEmptyParas]>&nbsp;<![endif]><o:p></o:p></span></i></pre><pre
+style='tab-stops:.2in'><i><span style='font-size:8.0pt;mso-bidi-font-size:10.0pt'><span
+style='mso-tab-count:1'>   </span>restore </span></i><b><span style='font-size:
+8.0pt;mso-bidi-font-size:10.0pt'>is</span></b><i><span style='font-size:8.0pt;
+mso-bidi-font-size:10.0pt'><o:p></o:p></span></i></pre><pre style='tab-stops:
+.2in'><i><span style='font-size:8.0pt;mso-bidi-font-size:10.0pt'><span
+style='mso-tab-count:3'>        </span></span></i><span style='font-size:8.0pt;
+mso-bidi-font-size:10.0pt'>-- reset information about breakpoints set/removed during execution<i><o:p></o:p></i></span></pre><pre
+style='tab-stops:.2in'><i><span style='font-size:8.0pt;mso-bidi-font-size:10.0pt'><![if !supportEmptyParas]>&nbsp;<![endif]><o:p></o:p></span></i></pre><pre
+style='tab-stops:.2in'><i><span style='font-size:8.0pt;mso-bidi-font-size:10.0pt'><span
+style='mso-tab-count:1'>   </span>update </span></i><b><span style='font-size:
+8.0pt;mso-bidi-font-size:10.0pt'>is</span></b><i><span style='font-size:8.0pt;
+mso-bidi-font-size:10.0pt'><o:p></o:p></span></i></pre><pre style='tab-stops:
+.2in'><i><span style='font-size:8.0pt;mso-bidi-font-size:10.0pt'><span
+style='mso-tab-count:3'>        </span></span></i><span style='font-size:8.0pt;
+mso-bidi-font-size:10.0pt'>-- remove breakpoint that no more useful from the hash_table<i><o:p></o:p></i></span></pre><pre
+style='tab-stops:.2in'><i><span style='font-size:8.0pt;mso-bidi-font-size:10.0pt'><span
+style='mso-tab-count:3'>        </span></span></i><span style='font-size:8.0pt;
+mso-bidi-font-size:10.0pt'>-- see BREAKPOINT/is_usefull for further comments<i><o:p></o:p></i></span></pre><pre
+style='tab-stops:.2in'><i><span style='font-size:8.0pt;mso-bidi-font-size:10.0pt'><![if !supportEmptyParas]>&nbsp;<![endif]><o:p></o:p></span></i></pre><pre
+style='tab-stops:.2in'><i><span style='font-size:8.0pt;mso-bidi-font-size:10.0pt'><span
+style='mso-tab-count:1'>   </span>has_breakpoints</span></i><span
+style='font-size:8.0pt;mso-bidi-font-size:10.0pt'>:<i> <a
+href="file:///d:/45dev_bou/Ace/Documentation/kernel/boolean.html">BOOLEAN</a> </i><b>is</b><i><o:p></o:p></i></span></pre><pre
+style='tab-stops:.2in'><i><span style='font-size:8.0pt;mso-bidi-font-size:10.0pt'><span
+style='mso-tab-count:3'>        </span></span></i><span style='font-size:8.0pt;
+mso-bidi-font-size:10.0pt'>-- Does the program have a breakpoint (enabled or disabled) ?<i><o:p></o:p></i></span></pre><pre
+style='tab-stops:.2in'><i><span style='font-size:8.0pt;mso-bidi-font-size:10.0pt'><![if !supportEmptyParas]>&nbsp;<![endif]><o:p></o:p></span></i></pre><pre
+style='tab-stops:.2in'><i><span style='font-size:8.0pt;mso-bidi-font-size:10.0pt'><span
+style='mso-tab-count:1'>   </span>has_enabled_breakpoints</span></i><span
+style='font-size:8.0pt;mso-bidi-font-size:10.0pt'>:<i> <a
+href="file:///d:/45dev_bou/Ace/Documentation/kernel/boolean.html">BOOLEAN</a> </i><b>is</b><i><o:p></o:p></i></span></pre><pre
+style='tab-stops:.2in'><i><span style='font-size:8.0pt;mso-bidi-font-size:10.0pt'><span
+style='mso-tab-count:3'>        </span></span></i><span style='font-size:8.0pt;
+mso-bidi-font-size:10.0pt'>-- Does the program have a breakpoint set?<i><o:p></o:p></i></span></pre><pre
+style='tab-stops:.2in'><i><span style='font-size:8.0pt;mso-bidi-font-size:10.0pt'><![if !supportEmptyParas]>&nbsp;<![endif]><o:p></o:p></span></i></pre><pre
+style='tab-stops:.2in'><i><span style='font-size:8.0pt;mso-bidi-font-size:10.0pt'><span
+style='mso-tab-count:1'>   </span>has_disabled_breakpoints</span></i><span
+style='font-size:8.0pt;mso-bidi-font-size:10.0pt'>:<i> <a
+href="file:///d:/45dev_bou/Ace/Documentation/kernel/boolean.html">BOOLEAN</a> </i><b>is</b><i><o:p></o:p></i></span></pre><pre
+style='tab-stops:.2in'><i><span style='font-size:8.0pt;mso-bidi-font-size:10.0pt'><span
+style='mso-tab-count:3'>        </span></span></i><span style='font-size:8.0pt;
+mso-bidi-font-size:10.0pt'>-- Does the program have an enabled breakpoint?<i><o:p></o:p></i></span></pre><pre
+style='tab-stops:.2in'><i><span style='font-size:8.0pt;mso-bidi-font-size:10.0pt'><![if !supportEmptyParas]>&nbsp;<![endif]><o:p></o:p></span></i></pre><pre
+style='tab-stops:.2in'><i><span style='font-size:8.0pt;mso-bidi-font-size:10.0pt'><span
+style='mso-tab-count:1'>   </span>resynchronize_breakpoints </span></i><b><span
+style='font-size:8.0pt;mso-bidi-font-size:10.0pt'>is</span></b><i><span
+style='font-size:8.0pt;mso-bidi-font-size:10.0pt'><o:p></o:p></span></i></pre><pre
+style='tab-stops:.2in'><i><span style='font-size:8.0pt;mso-bidi-font-size:10.0pt'><span
+style='mso-tab-count:3'>        </span></span></i><span style='font-size:8.0pt;
+mso-bidi-font-size:10.0pt'>-- Resychronize the breakpoints after a compilation.<i><o:p></o:p></i></span></pre><pre
+style='tab-stops:.2in'><i><span style='font-size:8.0pt;mso-bidi-font-size:10.0pt'><![if !supportEmptyParas]>&nbsp;<![endif]><o:p></o:p></span></i></pre><pre
+style='tab-stops:.2in'><i><span style='font-size:8.0pt;mso-bidi-font-size:10.0pt'><span
+style='mso-tab-count:1'>   </span>feature_bp_list </span></i><span
+style='font-size:8.0pt;mso-bidi-font-size:10.0pt'>(<i>list</i>:<i> <a
+href="file:///d:/45dev_bou/Ace/Documentation/list/linked_list.html">LINKED_LIST</a> </i>[<i><a
+href="file:///d:/45dev_bou/Ace/Documentation/api_interface/e_feature.html">E_FEATURE</a></i>]):<i> <a
+href="file:///d:/45dev_bou/Ace/Documentation/list/fixed_list.html">FIXED_LIST</a> </i>[<i><a
+href="file:///d:/45dev_bou/Ace/Documentation/struct_text/cell2.html">CELL2</a> </i>[<i><a
+href="file:///d:/45dev_bou/Ace/Documentation/api_interface/e_feature.html">E_FEATURE</a></i>,<i> <a
+href="file:///d:/45dev_bou/Ace/Documentation/list/list.html">LIST</a> </i>[<i><a
+href="file:///d:/45dev_bou/Ace/Documentation/kernel/integer.html">INTEGER</a></i>]]]<i> </i><b>is</b><i><o:p></o:p></i></span></pre><pre
+style='tab-stops:.2in'><i><span style='font-size:8.0pt;mso-bidi-font-size:10.0pt'><span
+style='mso-tab-count:3'>        </span></span></i><span style='font-size:8.0pt;
+mso-bidi-font-size:10.0pt'>-- Create a list with features and breakpoints<i><o:p></o:p></i></span></pre><pre
+style='tab-stops:.2in'><i><span style='font-size:8.0pt;mso-bidi-font-size:10.0pt'><![if !supportEmptyParas]>&nbsp;<![endif]><o:p></o:p></span></i></pre><pre
+style='tab-stops:.2in'><i><span style='font-size:8.0pt;mso-bidi-font-size:10.0pt'><span
+style='mso-tab-count:1'>   </span>features_with_breakpoint_set</span></i><span
+style='font-size:8.0pt;mso-bidi-font-size:10.0pt'>:<i> <a
+href="file:///d:/45dev_bou/Ace/Documentation/list/list.html">LIST</a> </i>[<i><a
+href="file:///d:/45dev_bou/Ace/Documentation/api_interface/e_feature.html">E_FEATURE</a></i>]<i> </i><b>is</b><i><o:p></o:p></i></span></pre><pre
+style='tab-stops:.2in'><i><span style='font-size:8.0pt;mso-bidi-font-size:10.0pt'><span
+style='mso-tab-count:3'>        </span></span></i><span style='font-size:8.0pt;
+mso-bidi-font-size:10.0pt'>-- list of all feature with a breakpoint set (enabled or disabled)<i><o:p></o:p></i></span></pre><pre
+style='tab-stops:.2in'><span style='mso-tab-count:1'>  </span></pre><pre
+style='tab-stops:.2in'><i><span style='font-size:8.0pt;mso-bidi-font-size:10.0pt'><span
+style='mso-tab-count:1'>   </span><o:p></o:p></span></i></pre>
+
+<p class=MsoBodyText><u>Changing all breakpoints<i><o:p></o:p></i></u></p>
+
+<p class=MsoBodyText><i><![if !supportEmptyParas]>&nbsp;<![endif]><o:p></o:p></i></p>
+
+<pre style='tab-stops:.2in'><i><span style='font-size:8.0pt;mso-bidi-font-size:
+10.0pt'><span style='mso-tab-count:1'>   </span>remove_all_breakpoints </span></i><b><span
+style='font-size:8.0pt;mso-bidi-font-size:10.0pt'>is</span></b><i><span
+style='font-size:8.0pt;mso-bidi-font-size:10.0pt'><o:p></o:p></span></i></pre><pre
+style='tab-stops:.2in'><i><span style='font-size:8.0pt;mso-bidi-font-size:10.0pt'><span
+style='mso-tab-count:3'>        </span></span></i><span style='font-size:8.0pt;
+mso-bidi-font-size:10.0pt'>-- Remove all breakpoints which are currently set (enabled/disabled)<i><o:p></o:p></i></span></pre><pre
+style='tab-stops:.2in'><i><span style='font-size:8.0pt;mso-bidi-font-size:10.0pt'><![if !supportEmptyParas]>&nbsp;<![endif]><o:p></o:p></span></i></pre><pre
+style='tab-stops:.2in'><i><span style='font-size:8.0pt;mso-bidi-font-size:10.0pt'><span
+style='mso-tab-count:1'>   </span>enable_all_breakpoints </span></i><b><span
+style='font-size:8.0pt;mso-bidi-font-size:10.0pt'>is</span></b><i><span
+style='font-size:8.0pt;mso-bidi-font-size:10.0pt'><o:p></o:p></span></i></pre><pre
+style='tab-stops:.2in'><i><span style='font-size:8.0pt;mso-bidi-font-size:10.0pt'><span
+style='mso-tab-count:3'>        </span></span></i><span style='font-size:8.0pt;
+mso-bidi-font-size:10.0pt'>-- disable all breakpoints which are currently set and enabled<i><o:p></o:p></i></span></pre><pre
+style='tab-stops:.2in'><i><span style='font-size:8.0pt;mso-bidi-font-size:10.0pt'><![if !supportEmptyParas]>&nbsp;<![endif]><o:p></o:p></span></i></pre><pre
+style='tab-stops:.2in'><i><span style='font-size:8.0pt;mso-bidi-font-size:10.0pt'><span
+style='mso-tab-count:1'>   </span>disable_all_breakpoints </span></i><b><span
+style='font-size:8.0pt;mso-bidi-font-size:10.0pt'>is</span></b><i><span
+style='font-size:8.0pt;mso-bidi-font-size:10.0pt'><o:p></o:p></span></i></pre><pre
+style='tab-stops:.2in'><i><span style='font-size:8.0pt;mso-bidi-font-size:10.0pt'><span
+style='mso-tab-count:3'>        </span></span></i><span style='font-size:8.0pt;
+mso-bidi-font-size:10.0pt'>-- disable all breakpoints which are currently set and enabled<i><o:p></o:p></i></span></pre>
+
+<p class=MsoBodyText><span style='mso-tab-count:1'>     </span></p>
+
+<p class=MsoBodyText><u>Changing all breakpoints for a feature<o:p></o:p></u></p>
+
+<p class=MsoBodyText><![if !supportEmptyParas]>&nbsp;<![endif]><o:p></o:p></p>
+
+<pre style='tab-stops:.2in'><i><span style='font-size:8.0pt;mso-bidi-font-size:
+10.0pt'><span style='mso-tab-count:1'>   </span>add_breakpoints_for_feature </span></i><span
+style='font-size:8.0pt;mso-bidi-font-size:10.0pt'>(<i>feat</i>:<i> <a
+href="file:///d:/45dev_bou/Ace/Documentation/api_interface/e_feature.html">E_FEATURE</a></i>;<i> a_list</i>:<i> <a
+href="file:///d:/45dev_bou/Ace/Documentation/list/list.html">LIST</a> </i>[<i><a
+href="file:///d:/45dev_bou/Ace/Documentation/kernel/integer.html">INTEGER</a></i>])<i> </i><b>is</b><i><o:p></o:p></i></span></pre><pre
+style='tab-stops:.2in'><i><span style='font-size:8.0pt;mso-bidi-font-size:10.0pt'><span
+style='mso-tab-count:3'>        </span></span></i><span style='font-size:8.0pt;
+mso-bidi-font-size:10.0pt'>-- Add all the breakpoints <i>a_list</i> for feature <i>feat</i>.<i><o:p></o:p></i></span></pre><pre
+style='tab-stops:.2in'><i><span style='font-size:8.0pt;mso-bidi-font-size:10.0pt'><![if !supportEmptyParas]>&nbsp;<![endif]><o:p></o:p></span></i></pre><pre
+style='tab-stops:.2in'><i><span style='font-size:8.0pt;mso-bidi-font-size:10.0pt'><span
+style='mso-tab-count:1'>   </span>remove_breakpoints_in_feature </span></i><span
+style='font-size:8.0pt;mso-bidi-font-size:10.0pt'>(<i>f</i>:<i> <a
+href="file:///d:/45dev_bou/Ace/Documentation/api_interface/e_feature.html">E_FEATURE</a></i>)<i> </i><b>is</b><i><o:p></o:p></i></span></pre><pre
+style='tab-stops:.2in'><i><span style='font-size:8.0pt;mso-bidi-font-size:10.0pt'><span
+style='mso-tab-count:3'>        </span></span></i><span style='font-size:8.0pt;
+mso-bidi-font-size:10.0pt'>-- remove all breakpoints set for feature 'f'<i><o:p></o:p></i></span></pre><pre
+style='tab-stops:.2in'><i><span style='font-size:8.0pt;mso-bidi-font-size:10.0pt'><![if !supportEmptyParas]>&nbsp;<![endif]><o:p></o:p></span></i></pre><pre
+style='tab-stops:.2in'><i><span style='font-size:8.0pt;mso-bidi-font-size:10.0pt'><span
+style='mso-tab-count:1'>   </span>disable_breakpoints_in_feature </span></i><span
+style='font-size:8.0pt;mso-bidi-font-size:10.0pt'>(<i>f</i>:<i> <a
+href="file:///d:/45dev_bou/Ace/Documentation/api_interface/e_feature.html">E_FEATURE</a></i>)<i> </i><b>is</b><i><o:p></o:p></i></span></pre><pre
+style='tab-stops:.2in'><i><span style='font-size:8.0pt;mso-bidi-font-size:10.0pt'><span
+style='mso-tab-count:3'>        </span></span></i><span style='font-size:8.0pt;
+mso-bidi-font-size:10.0pt'>-- disable all breakpoints set for feature 'f'<i><o:p></o:p></i></span></pre><pre
+style='tab-stops:.2in'><i><span style='font-size:8.0pt;mso-bidi-font-size:10.0pt'><![if !supportEmptyParas]>&nbsp;<![endif]><o:p></o:p></span></i></pre><pre
+style='tab-stops:.2in'><i><span style='font-size:8.0pt;mso-bidi-font-size:10.0pt'><span
+style='mso-tab-count:1'>   </span>enable_breakpoints_in_feature </span></i><span
+style='font-size:8.0pt;mso-bidi-font-size:10.0pt'>(<i>f</i>:<i> <a
+href="file:///d:/45dev_bou/Ace/Documentation/api_interface/e_feature.html">E_FEATURE</a></i>)<i> </i><b>is</b><i><o:p></o:p></i></span></pre><pre
+style='tab-stops:.2in'><i><span style='font-size:8.0pt;mso-bidi-font-size:10.0pt'><span
+style='mso-tab-count:3'>        </span></span></i><span style='font-size:8.0pt;
+mso-bidi-font-size:10.0pt'>-- enable all breakpoints set for feature 'f'<i><o:p></o:p></i></span></pre>
+
+<p class=MsoBodyText><span style='mso-tab-count:1'>     </span></p>
+
+<u><span style='font-size:10.0pt;font-family:Arial;mso-fareast-font-family:
+"Times New Roman";mso-ansi-language:EN-US;mso-fareast-language:EN-US;
+mso-bidi-language:AR-SA'><br clear=all style='page-break-before:always'>
+</span></u>
+
+<p class=MsoBodyText><u>Getting breakpoints status for a feature<o:p></o:p></u></p>
+
+<p class=MsoBodyText><![if !supportEmptyParas]>&nbsp;<![endif]><o:p></o:p></p>
+
+<pre style='tab-stops:.2in'><i><span style='font-size:8.0pt;mso-bidi-font-size:
+10.0pt'><span style='mso-tab-count:1'>   </span>has_breakpoint_set </span></i><span
+style='font-size:8.0pt;mso-bidi-font-size:10.0pt'>(<i>f</i>:<i> <a
+href="file:///d:/45dev_bou/Ace/Documentation/api_interface/e_feature.html">E_FEATURE</a></i>):<i> <a
+href="file:///d:/45dev_bou/Ace/Documentation/kernel/boolean.html">BOOLEAN</a> </i><b>is</b><i><o:p></o:p></i></span></pre><pre
+style='tab-stops:.2in'><i><span style='font-size:8.0pt;mso-bidi-font-size:10.0pt'><span
+style='mso-tab-count:3'>        </span></span></i><span style='font-size:8.0pt;
+mso-bidi-font-size:10.0pt'>-- Has <i>f</i> a breakpoint set to stop?<i><o:p></o:p></i></span></pre><pre
+style='tab-stops:.2in'><i><span style='font-size:8.0pt;mso-bidi-font-size:10.0pt'><![if !supportEmptyParas]>&nbsp;<![endif]><o:p></o:p></span></i></pre><pre
+style='tab-stops:.2in'><i><span style='font-size:8.0pt;mso-bidi-font-size:10.0pt'><span
+style='mso-tab-count:1'>   </span>breakpoints_set_for </span></i><span
+style='font-size:8.0pt;mso-bidi-font-size:10.0pt'>(<i>f</i>:<i> <a
+href="file:///d:/45dev_bou/Ace/Documentation/api_interface/e_feature.html">E_FEATURE</a></i>):<i> <a
+href="file:///d:/45dev_bou/Ace/Documentation/list/list.html">LIST</a> </i>[<i><a
+href="file:///d:/45dev_bou/Ace/Documentation/kernel/integer.html">INTEGER</a></i>]<i> </i><b>is</b><i><o:p></o:p></i></span></pre><pre
+style='tab-stops:.2in'><i><span style='font-size:8.0pt;mso-bidi-font-size:10.0pt'><span
+style='mso-tab-count:3'>        </span></span></i><span style='font-size:8.0pt;
+mso-bidi-font-size:10.0pt'>-- Breakpoints set for feature <i>f<o:p></o:p></i></span></pre><pre
+style='tab-stops:.2in'><i><span style='font-size:8.0pt;mso-bidi-font-size:10.0pt'><![if !supportEmptyParas]>&nbsp;<![endif]><o:p></o:p></span></i></pre><pre
+style='tab-stops:.2in'><i><span style='font-size:8.0pt;mso-bidi-font-size:10.0pt'><span
+style='mso-tab-count:1'>   </span>breakpoints_disabled_for </span></i><span
+style='font-size:8.0pt;mso-bidi-font-size:10.0pt'>(<i>f</i>:<i> <a
+href="file:///d:/45dev_bou/Ace/Documentation/api_interface/e_feature.html">E_FEATURE</a></i>):<i> <a
+href="file:///d:/45dev_bou/Ace/Documentation/list/list.html">LIST</a> </i>[<i><a
+href="file:///d:/45dev_bou/Ace/Documentation/kernel/integer.html">INTEGER</a></i>]<i> </i><b>is</b><i><o:p></o:p></i></span></pre><pre
+style='tab-stops:.2in'><i><span style='font-size:8.0pt;mso-bidi-font-size:10.0pt'><span
+style='mso-tab-count:3'>        </span></span></i><span style='font-size:8.0pt;
+mso-bidi-font-size:10.0pt'>-- Breakpoints set for feature <i>f</i> and disabled<i><o:p></o:p></i></span></pre><pre
+style='tab-stops:.2in'><i><span style='font-size:8.0pt;mso-bidi-font-size:10.0pt'><![if !supportEmptyParas]>&nbsp;<![endif]><o:p></o:p></span></i></pre><pre
+style='tab-stops:.2in'><i><span style='font-size:8.0pt;mso-bidi-font-size:10.0pt'><span
+style='mso-tab-count:1'>   </span>breakpoints_enabled_for </span></i><span
+style='font-size:8.0pt;mso-bidi-font-size:10.0pt'>(<i>f</i>:<i> <a
+href="file:///d:/45dev_bou/Ace/Documentation/api_interface/e_feature.html">E_FEATURE</a></i>):<i> <a
+href="file:///d:/45dev_bou/Ace/Documentation/list/list.html">LIST</a> </i>[<i><a
+href="file:///d:/45dev_bou/Ace/Documentation/kernel/integer.html">INTEGER</a></i>]<i> </i><b>is</b><i><o:p></o:p></i></span></pre><pre
+style='tab-stops:.2in'><i><span style='font-size:8.0pt;mso-bidi-font-size:10.0pt'><span
+style='mso-tab-count:3'>        </span></span></i><span style='font-size:8.0pt;
+mso-bidi-font-size:10.0pt'>-- Breakpoints set for feature <i>f</i> and enabled<i><o:p></o:p></i></span></pre>
+
+<p class=MsoBodyText><span style='mso-tab-count:1'>     </span></p>
+
+<p class=MsoBodyText><u>Changing breakpoints for a class<o:p></o:p></u></p>
+
+<p class=MsoBodyText><![if !supportEmptyParas]>&nbsp;<![endif]><o:p></o:p></p>
+
+<pre style='tab-stops:.2in'><i><span style='font-size:8.0pt;mso-bidi-font-size:
+10.0pt'><span style='mso-tab-count:1'>   </span>remove_breakpoints_in_class </span></i><span
+style='font-size:8.0pt;mso-bidi-font-size:10.0pt'>(<i>c</i>:<i> <a
+href="file:///d:/45dev_bou/Ace/Documentation/eiffel_interface/class_c.html">CLASS_C</a></i>)<i> </i><b>is</b><i><o:p></o:p></i></span></pre><pre
+style='tab-stops:.2in'><i><span style='font-size:8.0pt;mso-bidi-font-size:10.0pt'><span
+style='mso-tab-count:3'>        </span></span></i><span style='font-size:8.0pt;
+mso-bidi-font-size:10.0pt'>-- remove all breakpoints set for class 'c'<i><o:p></o:p></i></span></pre><pre
+style='tab-stops:.2in'><i><span style='font-size:8.0pt;mso-bidi-font-size:10.0pt'><![if !supportEmptyParas]>&nbsp;<![endif]><o:p></o:p></span></i></pre><pre
+style='tab-stops:.2in'><i><span style='font-size:8.0pt;mso-bidi-font-size:10.0pt'><span
+style='mso-tab-count:1'>   </span>disable_breakpoints_in_class </span></i><span
+style='font-size:8.0pt;mso-bidi-font-size:10.0pt'>(<i>c</i>:<i> <a
+href="file:///d:/45dev_bou/Ace/Documentation/eiffel_interface/class_c.html">CLASS_C</a></i>)<i> </i><b>is</b><i><o:p></o:p></i></span></pre><pre
+style='tab-stops:.2in'><i><span style='font-size:8.0pt;mso-bidi-font-size:10.0pt'><span
+style='mso-tab-count:3'>        </span></span></i><span style='font-size:8.0pt;
+mso-bidi-font-size:10.0pt'>-- disable all breakpoints set for feature 'f'<i><o:p></o:p></i></span></pre><pre
+style='tab-stops:.2in'><i><span style='font-size:8.0pt;mso-bidi-font-size:10.0pt'><![if !supportEmptyParas]>&nbsp;<![endif]><o:p></o:p></span></i></pre><pre
+style='tab-stops:.2in'><i><span style='font-size:8.0pt;mso-bidi-font-size:10.0pt'><span
+style='mso-tab-count:1'>   </span>enable_breakpoints_in_class </span></i><span
+style='font-size:8.0pt;mso-bidi-font-size:10.0pt'>(<i>c</i>:<i> <a
+href="file:///d:/45dev_bou/Ace/Documentation/eiffel_interface/class_c.html">CLASS_C</a></i>)<i> </i><b>is</b><i><o:p></o:p></i></span></pre><pre
+style='tab-stops:.2in'><i><span style='font-size:8.0pt;mso-bidi-font-size:10.0pt'><span
+style='mso-tab-count:3'>        </span></span></i><span style='font-size:8.0pt;
+mso-bidi-font-size:10.0pt'>-- enable all breakpoints set for feature 'f'<i><o:p></o:p></i></span></pre>
+
+<p class=MsoBodyText><span style='mso-tab-count:1'>     </span></p>
+
+<p class=MsoBodyText><u>Changing a specified breakpoint<o:p></o:p></u></p>
+
+<p class=MsoBodyText><![if !supportEmptyParas]>&nbsp;<![endif]><o:p></o:p></p>
+
+<pre style='tab-stops:.2in'><i><span style='font-size:8.0pt;mso-bidi-font-size:
+10.0pt'><span style='mso-tab-count:1'>   </span>switch_breakpoint </span></i><span
+style='font-size:8.0pt;mso-bidi-font-size:10.0pt'>(<i>f</i>:<i> <a
+href="file:///d:/45dev_bou/Ace/Documentation/api_interface/e_feature.html">E_FEATURE</a></i>;<i> i</i>:<i> <a
+href="file:///d:/45dev_bou/Ace/Documentation/kernel/integer.html">INTEGER</a></i>)<i> </i><b>is</b><i><o:p></o:p></i></span></pre><pre
+style='tab-stops:.2in'><i><span style='font-size:8.0pt;mso-bidi-font-size:10.0pt'><span
+style='mso-tab-count:3'>        </span></span></i><span style='font-size:8.0pt;
+mso-bidi-font-size:10.0pt'>-- Switch the <i>i</i>-th breakpoint of <i>f<o:p></o:p></i></span></pre><pre
+style='tab-stops:.2in'><i><span style='font-size:8.0pt;mso-bidi-font-size:10.0pt'><![if !supportEmptyParas]>&nbsp;<![endif]><o:p></o:p></span></i></pre><pre
+style='tab-stops:.2in'><i><span style='font-size:8.0pt;mso-bidi-font-size:10.0pt'><span
+style='mso-tab-count:1'>   </span>remove_breakpoint </span></i><span
+style='font-size:8.0pt;mso-bidi-font-size:10.0pt'>(<i>f</i>:<i> <a
+href="file:///d:/45dev_bou/Ace/Documentation/api_interface/e_feature.html">E_FEATURE</a></i>;<i> i</i>:<i> <a
+href="file:///d:/45dev_bou/Ace/Documentation/kernel/integer.html">INTEGER</a></i>)<i> </i><b>is</b><i><o:p></o:p></i></span></pre><pre
+style='tab-stops:.2in'><i><span style='font-size:8.0pt;mso-bidi-font-size:10.0pt'><span
+style='mso-tab-count:3'>        </span></span></i><span style='font-size:8.0pt;
+mso-bidi-font-size:10.0pt'>-- Switch the <i>i</i>-th breakpoint of <i>f<o:p></o:p></i></span></pre><pre
+style='tab-stops:.2in'><i><span style='font-size:8.0pt;mso-bidi-font-size:10.0pt'><![if !supportEmptyParas]>&nbsp;<![endif]><o:p></o:p></span></i></pre><pre
+style='tab-stops:.2in'><i><span style='font-size:8.0pt;mso-bidi-font-size:10.0pt'><span
+style='mso-tab-count:1'>   </span>disable_breakpoint </span></i><span
+style='font-size:8.0pt;mso-bidi-font-size:10.0pt'>(<i>f</i>:<i> <a
+href="file:///d:/45dev_bou/Ace/Documentation/api_interface/e_feature.html">E_FEATURE</a></i>;<i> i</i>:<i> <a
+href="file:///d:/45dev_bou/Ace/Documentation/kernel/integer.html">INTEGER</a></i>)<i> </i><b>is</b><i><o:p></o:p></i></span></pre><pre
+style='tab-stops:.2in'><i><span style='font-size:8.0pt;mso-bidi-font-size:10.0pt'><span
+style='mso-tab-count:3'>        </span></span></i><span style='font-size:8.0pt;
+mso-bidi-font-size:10.0pt'>-- disable the <i>i</i>-th breakpoint of <i>f<o:p></o:p></i></span></pre><pre
+style='tab-stops:.2in'><i><span style='font-size:8.0pt;mso-bidi-font-size:10.0pt'><span
+style='mso-tab-count:3'>        </span></span></i><span style='font-size:8.0pt;
+mso-bidi-font-size:10.0pt'>-- if no breakpoint already exists for 'f' at 'i', a disabled breakpoint is created<i><o:p></o:p></i></span></pre><pre
+style='tab-stops:.2in'><i><span style='font-size:8.0pt;mso-bidi-font-size:10.0pt'><![if !supportEmptyParas]>&nbsp;<![endif]><o:p></o:p></span></i></pre><pre
+style='tab-stops:.2in'><i><span style='font-size:8.0pt;mso-bidi-font-size:10.0pt'><span
+style='mso-tab-count:1'>   </span>enable_breakpoint </span></i><span
+style='font-size:8.0pt;mso-bidi-font-size:10.0pt'>(<i>f</i>:<i> <a
+href="file:///d:/45dev_bou/Ace/Documentation/api_interface/e_feature.html">E_FEATURE</a></i>;<i> i</i>:<i> <a
+href="file:///d:/45dev_bou/Ace/Documentation/kernel/integer.html">INTEGER</a></i>)<i> </i><b>is</b><i><o:p></o:p></i></span></pre><pre
+style='tab-stops:.2in'><i><span style='font-size:8.0pt;mso-bidi-font-size:10.0pt'><span
+style='mso-tab-count:3'>        </span></span></i><span style='font-size:8.0pt;
+mso-bidi-font-size:10.0pt'>-- enable the <i>i</i>-th breakpoint of <i>f<o:p></o:p></i></span></pre><pre
+style='tab-stops:.2in'><i><span style='font-size:8.0pt;mso-bidi-font-size:10.0pt'><span
+style='mso-tab-count:3'>        </span></span></i><span style='font-size:8.0pt;
+mso-bidi-font-size:10.0pt'>-- if no breakpoint already exists for 'f' at 'i', a breakpoint is created<i><o:p></o:p></i></span></pre>
+
+<p class=MsoBodyText><span style='mso-tab-count:1'>     </span></p>
+
+<p class=MsoBodyText><u>Getting the status of a specified breakpoint<o:p></o:p></u></p>
+
+<p class=MsoBodyText><![if !supportEmptyParas]>&nbsp;<![endif]><o:p></o:p></p>
+
+<pre style='tab-stops:.2in'><i><span style='font-size:8.0pt;mso-bidi-font-size:
+10.0pt'><span style='mso-tab-count:1'>   </span>is_breakpoint_set </span></i><span
+style='font-size:8.0pt;mso-bidi-font-size:10.0pt'>(<i>f</i>:<i> <a
+href="file:///d:/45dev_bou/Ace/Documentation/api_interface/e_feature.html">E_FEATURE</a></i>;<i> i</i>:<i> <a
+href="file:///d:/45dev_bou/Ace/Documentation/kernel/integer.html">INTEGER</a></i>):<i> <a
+href="file:///d:/45dev_bou/Ace/Documentation/kernel/boolean.html">BOOLEAN</a> </i><b>is</b><i><o:p></o:p></i></span></pre><pre
+style='tab-stops:.2in'><i><span style='font-size:8.0pt;mso-bidi-font-size:10.0pt'><span
+style='mso-tab-count:3'>        </span></span></i><span style='font-size:8.0pt;
+mso-bidi-font-size:10.0pt'>-- Is the <i>i</i>-th breakpoint of <i>f</i> set? (enabled or disabled)<i><o:p></o:p></i></span></pre><pre
+style='tab-stops:.2in'><i><span style='font-size:8.0pt;mso-bidi-font-size:10.0pt'><![if !supportEmptyParas]>&nbsp;<![endif]><o:p></o:p></span></i></pre><pre
+style='tab-stops:.2in'><i><span style='font-size:8.0pt;mso-bidi-font-size:10.0pt'><span
+style='mso-tab-count:1'>   </span>is_breakpoint_enabled </span></i><span
+style='font-size:8.0pt;mso-bidi-font-size:10.0pt'>(<i>f</i>:<i> <a
+href="file:///d:/45dev_bou/Ace/Documentation/api_interface/e_feature.html">E_FEATURE</a></i>;<i> i</i>:<i> <a
+href="file:///d:/45dev_bou/Ace/Documentation/kernel/integer.html">INTEGER</a></i>):<i> <a
+href="file:///d:/45dev_bou/Ace/Documentation/kernel/boolean.html">BOOLEAN</a> </i><b>is</b><i><o:p></o:p></i></span></pre><pre
+style='tab-stops:.2in'><i><span style='font-size:8.0pt;mso-bidi-font-size:10.0pt'><span
+style='mso-tab-count:3'>        </span></span></i><span style='font-size:8.0pt;
+mso-bidi-font-size:10.0pt'>-- Is the <i>i</i>-th breakpoint of <i>f</i> enabled<i><o:p></o:p></i></span></pre><pre
+style='tab-stops:.2in'><i><span style='font-size:8.0pt;mso-bidi-font-size:10.0pt'><![if !supportEmptyParas]>&nbsp;<![endif]><o:p></o:p></span></i></pre><pre
+style='tab-stops:.2in'><i><span style='font-size:8.0pt;mso-bidi-font-size:10.0pt'><span
+style='mso-tab-count:1'>   </span>is_breakpoint_disabled </span></i><span
+style='font-size:8.0pt;mso-bidi-font-size:10.0pt'>(<i>f</i>:<i> <a
+href="file:///d:/45dev_bou/Ace/Documentation/api_interface/e_feature.html">E_FEATURE</a></i>;<i> i</i>:<i> <a
+href="file:///d:/45dev_bou/Ace/Documentation/kernel/integer.html">INTEGER</a></i>):<i> <a
+href="file:///d:/45dev_bou/Ace/Documentation/kernel/boolean.html">BOOLEAN</a> </i><b>is</b><i><o:p></o:p></i></span></pre><pre
+style='tab-stops:.2in'><i><span style='font-size:8.0pt;mso-bidi-font-size:10.0pt'><span
+style='mso-tab-count:3'>        </span></span></i><span style='font-size:8.0pt;
+mso-bidi-font-size:10.0pt'>-- Is the <i>i</i>-th breakpoint of <i>f</i> disabled<i><o:p></o:p></i></span></pre><pre
+style='tab-stops:.2in'><i><span style='font-size:8.0pt;mso-bidi-font-size:10.0pt'><span
+style='mso-tab-count:1'>   </span><o:p></o:p></span></i></pre>
+
+<h2 style='text-align:justify'>The APPLICATION_EXECUTION class</h2>
+
+<p class=MsoBodyText>The APPLICATION_EXECUTION encapsulates most of the
+breakpoints features of the DEBUG_INFO class. There is nothing particular to
+explain here.</p>
+
+<p class=MsoBodyText><![if !supportEmptyParas]>&nbsp;<![endif]><o:p></o:p></p>
+
+<b><i><span style='font-size:14.0pt;font-family:Arial;mso-fareast-font-family:
+"Times New Roman";mso-ansi-language:EN-US;mso-fareast-language:EN-US;
+mso-bidi-language:AR-SA'><br clear=all style='page-break-before:always'>
+</span></i></b>
+
+<h2 style='text-align:justify'>The EWB_REQUEST class</h2>
+
+<p class=MsoBodyText>This is the class where breakpoints are sent to the
+application. The feature responsible for it is send_breakpoints. It always send
+request of type rqst_break to the application even for sending a stepinto flag,
+or a new limit for the depth stack.</p>
+
+<p class=MsoBodyText>The prototype for sending a breakpoint is the following:</p>
+
+<p class=MsoBodyText><span style='font-size:9.0pt;mso-bidi-font-size:10.0pt;
+font-family:"Courier New"'>send_rqst_3 (rqst_break, real_body_id - 1,
+what_to_do, line_number)<o:p></o:p></span></p>
+
+<p class=MsoBodyText>what_to_do can take 4 values which are</p>
+
+<p class=MsoBodyText style='margin-left:.5in;text-indent:-.25in;mso-list:l3 level1 lfo5;
+tab-stops:list .5in'><![if !supportLists]><span style='font-family:Symbol'>·<span
+style='font:7.0pt "Times New Roman"'>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+</span></span><![endif]>break_set: to set a new breakpoint</p>
+
+<p class=MsoBodyText style='margin-left:.5in;text-indent:-.25in;mso-list:l3 level1 lfo5;
+tab-stops:list .5in'><![if !supportLists]><span style='font-family:Symbol'>·<span
+style='font:7.0pt "Times New Roman"'>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+</span></span><![endif]>break_remove: to remove a breakpoint</p>
+
+<p class=MsoBodyText style='margin-left:.5in;text-indent:-.25in;mso-list:l3 level1 lfo5;
+tab-stops:list .5in'><![if !supportLists]><span style='font-family:Symbol'>·<span
+style='font:7.0pt "Times New Roman"'>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+</span></span><![endif]>break_set_stack_depth: to set a new limit for the stack
+depth (step-out/step-by-step). Supplying the body_id is senseless, so we put
+zero instead. And instead of the line number, we give the new stack depth
+limit.</p>
+
+<p class=MsoBodyText style='margin-left:.5in;text-indent:-.25in;mso-list:l3 level1 lfo5;
+tab-stops:list .5in'><![if !supportLists]><span style='font-family:Symbol'>·<span
+style='font:7.0pt "Times New Roman"'>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+</span></span><![endif]>break_set_stepinto: to activate the step-into flag.
+Here both body_id and line number are useless. So we put zero instead.</p>
+
+<p class=MsoBodyText><![if !supportEmptyParas]>&nbsp;<![endif]><o:p></o:p></p>
+
+</div>
+
+</body>
+
+</html>

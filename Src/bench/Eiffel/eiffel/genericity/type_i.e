@@ -9,6 +9,7 @@ inherit
 	SHARED_TYPE_I
 	SK_CONST
 	COMPILER_EXPORTER
+	SHARED_GEN_CONF_LEVEL
 
 feature
 
@@ -20,6 +21,13 @@ feature
 			-- Debug purpose
 		require
 			buffer_exists: buffer /= Void
+		deferred
+		end
+
+	il_type_name: STRING is
+			-- Name of current class type in IL generation.
+		require
+			in_il_generation: System.il_generation
 		deferred
 		end
 
@@ -91,12 +99,6 @@ feature
 			-- Do nothing
 		end
 
-	is_basic: BOOLEAN is
-			-- Is the type a basic type ?
-		do
-			-- Do nothing
-		end
-
 	is_reference: BOOLEAN is
 			-- Is the type a reference type ?
 		do
@@ -122,7 +124,19 @@ feature
 		end
 
 	is_expanded: BOOLEAN is
-			-- Is the type an expanded one ?
+			-- Is the type an expanded/basic one ?
+		do
+			Result := is_basic or else is_true_expanded
+		end
+
+	is_basic: BOOLEAN is
+			-- Is the type a basic type ?
+		do
+			-- Do nothing
+		end
+
+	is_true_expanded: BOOLEAN is
+			-- Is type an true expanded one, ie not a basic one?
 		do
 			-- Do nothing
 		end
@@ -152,6 +166,12 @@ feature
 		end
 
 	has_formal: BOOLEAN is
+			-- Has the type some formal in the first level of structure ?
+		do
+			-- Do nothing
+		end
+
+	has_true_formal: BOOLEAN is
 			-- Has the type some formal in its structure ?
 		do
 			-- Do nothing
@@ -168,13 +188,25 @@ feature
 		ensure
 			no_formal_in_Result: not Result.has_formal
 		end
-
+		
 	complete_instantiation_in (other: GEN_TYPE_I): TYPE_I is
 			-- Instantiation of Current in context of `other'
 			-- Actual generics of reference type are kept.
 		require
 			good_argument: other /= Void
 			other_is_data: not other.has_formal
+		do
+			Result := Current
+		end
+
+	creation_instantiation_in (other: GEN_TYPE_I): TYPE_I is
+			-- Instantiation of Current in context of `other'
+			-- Actual generics of reference type are kept.
+			-- Act like `complete_instantiation_in' but it does a complete
+			-- recursion. This is only used to generate the
+			-- correct code at run-time.
+		require
+			good_argument: other /= Void
 		do
 			Result := Current
 		end
@@ -228,7 +260,10 @@ feature -- Generic conformance
 	generated_id (final_mode : BOOLEAN) : INTEGER is
 			-- Mode dependent type id - just for convenience
 		do
-			Result := -10       -- Invalid type id.
+			Result := Internal_type       -- Invalid type id.
+			check
+				not_called: False
+			end
 		end
 
 	generate_cid (buffer : GENERATION_BUFFER; final_mode, use_info : BOOLEAN) is

@@ -26,8 +26,7 @@ feature {AST_FACTORY} -- Initialization
 				-- If there is no call we create `default_call'
 			if call = Void then
 					-- Create id. True name set later.
-				!! dcr_id.make (0)
-				dcr_id.make_from_string ("")
+				create dcr_id.make (0)
 				!ACCESS_ID_AS! default_call
 				default_call.set_feature_name (dcr_id)
 			end
@@ -37,31 +36,6 @@ feature {AST_FACTORY} -- Initialization
 			call_set: call = c
 			start_position_set: start_position = s
 			line_number_set: line_number = l
-		end
-
-feature {NONE} -- Initialization
-
-	set is
-			-- Yacc initialization
-		local
-			dcr_id : ID_AS
-		do
-			type ?= yacc_arg (0)
-			target ?= yacc_arg (1)
-			call ?= yacc_arg (2)
-			start_position := yacc_position
-			line_number    := yacc_line_number
-
-				-- If there's no call we create 'default_call'
-			if call = Void then
-					-- Create id. True name set later.
-				!! dcr_id.make (0)
-				dcr_id.make_from_string ("")
-				!ACCESS_ID_AS! default_call
-				default_call.set_feature_name (dcr_id)
-			end
-		ensure then
-			target_exists: target /= Void
 		end
 
 feature -- Attributes
@@ -118,13 +92,15 @@ feature -- Type check, byte code and dead code removal
 			vgcc4: VGCC4
 			vgcc5: VGCC5
 			vgcc7: VGCC7
+			vtcg3: VTCG3
 			vtug: VTUG
+			vtec1: VTEC1
+			vtec2: VTEC2
 			not_supported: NOT_SUPPORTED
 			gen_type: GEN_TYPE_A
 			formal_type: FORMAL_A
 			formal_dec: FORMAL_DEC_AS
 			formal_position: INTEGER
-			constraint_type: TYPE_A
 			is_formal_creation, is_default_creation: BOOLEAN
 			dcr_feat: FEATURE_I
 			dcr_id: ID_AS
@@ -148,7 +124,7 @@ feature -- Type check, byte code and dead code removal
 				-- Entity to create can only be an attribute, a local variable
 				-- a constraint generic parameter with creation clause or Result
 			if not access.is_creatable then
-				!! vgcc7
+				create vgcc7
 				context.init_error (vgcc7)
 				vgcc7.set_target_name (target.access_name)
 				vgcc7.set_type (creation_type)
@@ -169,7 +145,7 @@ feature -- Type check, byte code and dead code removal
 				else
 						-- An entity of type a formal generic parameter cannot be
 						-- created here because there is no creation routine constraints
-					!! vgcc1
+					create vgcc1
 					context.init_error (vgcc1)
 					vgcc1.set_target_name (target.access_name)
 					Error_handler.insert_error (vgcc1);					
@@ -178,14 +154,9 @@ feature -- Type check, byte code and dead code removal
 
 			Error_handler.checksum
 
-			if 	creation_type.is_none
-					--or else
-					--creation_type.is_expanded
-					--or else
-					--not creation_type.type_i.is_reference
-			then
-					-- An entity of expanded type cannot be created
-				!!vgcc3
+			if creation_type.is_none then
+					-- An entity of type NONE cannot be created
+				create vgcc3
 				context.init_error (vgcc3)
 				vgcc3.set_target_name (target.access_name)
 				vgcc3.set_type (creation_type)
@@ -198,8 +169,8 @@ feature -- Type check, byte code and dead code removal
 							-- !like a! is not supported in 3.2
 							-- The resolution of the type should be done
 							-- as the one for local variables (call to
-							-- local_evalutor and use of solved type!!)
-						!!not_supported
+							-- local_evalutor and use of solved typecreate )
+						create not_supported
 						context.init_error (not_supported)
 						not_supported.set_message ("An anchor type cannot be used as an explicit creation type")
 						Error_handler.insert_error (not_supported)
@@ -207,20 +178,40 @@ feature -- Type check, byte code and dead code removal
 					end
 					new_creation_type := type.actual_type
 					if new_creation_type /= Void then
+						if is_formal_creation then
+							create vgcc3
+							context.init_error (vgcc3)
+							vgcc3.set_target_name (target.access_name)
+							vgcc3.set_type (creation_type)
+							Error_handler.insert_error (vgcc3)
+						elseif new_creation_type.has_expanded then
+							if new_creation_type.expanded_deferred then
+								create vtec1
+								context.init_error (vtec1)
+								vtec1.set_entity_name (target.access_name)
+								Error_handler.insert_error (vtec1)
+							elseif not new_creation_type.valid_expanded_creation (context.a_class) then
+								create vtec2
+								context.init_error (vtec2)
+								vtec2.set_entity_name (target.access_name)
+								Error_handler.insert_error (vtec2)
+							end
+						end
 						if not new_creation_type.good_generics then
 							vtug := new_creation_type.error_generics
 							vtug.set_class (context.a_class)
 							vtug.set_feature (context.a_feature)
 							Error_handler.insert_error (vtug)
 							Error_handler.raise_error
-						elseif 	new_creation_type.is_none
-							or else
-							new_creation_type.is_expanded
-							or else
-							not new_creation_type.type_i.is_reference
+						elseif
+							new_creation_type.is_none or else
+							(creation_type.is_true_expanded and then new_creation_type.is_true_expanded
+							and then not new_creation_type.same_as (creation_type))
 						then
 								-- Cannot create instance of NONE
-							!!vgcc3
+								-- Or we cannot create an expanded type that is not the same
+								-- as the type of target itself expanded.
+							create vgcc3
 							context.init_error (vgcc3)
 							vgcc3.set_target_name (target.access_name)
 							vgcc3.set_type (creation_type)
@@ -230,28 +221,39 @@ feature -- Type check, byte code and dead code removal
 						then
 								-- Specified creation type must conform to
 								-- the entity type
-							!!vgcc31
+							create vgcc31
 							context.init_error (vgcc31)
 							vgcc31.set_target_name (target.access_name)
 							vgcc31.set_type (creation_type)
 							Error_handler.insert_error (vgcc31)
 						else
-							creation_type := new_creation_type
-							gen_type ?= creation_type
-							if gen_type /= Void then
-								Instantiator.dispatch (gen_type, context.a_class)
+							new_creation_type.reset_constraint_error_list
+							new_creation_type.check_constraints (context.a_class)
+							if not new_creation_type.constraint_error_list.is_empty then
+								create vtcg3
+								vtcg3.set_class (context.a_class)
+								vtcg3.set_feature (context.a_feature)
+								vtcg3.set_entity_name (target.access_name)
+								vtcg3.set_error_list (new_creation_type.constraint_error_list)
+								Error_handler.insert_error (vtcg3)
+							else
+								creation_type := new_creation_type
+								gen_type ?= creation_type
+								if gen_type /= Void then
+									Instantiator.dispatch (gen_type, context.a_class)
+								end
+		
+									-- Update type stack
+								context.replace (creation_type)
+									-- Update the access line
+								access := access.creation_access (creation_type.type_i)
+								context.access_line.change_item (access)
 							end
-	
-								-- Update type stack
-							context.replace (creation_type)
-								-- Update the access line
-							access := access.creation_access (creation_type.type_i)
-							context.access_line.change_item (access)
 						end
 					else
 							-- Cannot create instance of `type'.
 							--| Most probably a BITS_SYMBOLS_AS
-						!! vgcc3
+						create vgcc3
 						context.init_error (vgcc3)
 						vgcc3.set_target_name (target.access_name)
 						vgcc3.set_is_symbol
@@ -264,7 +266,7 @@ feature -- Type check, byte code and dead code removal
 				creation_class := creation_type.associated_class
 				if creation_class.is_deferred and then not is_formal_creation then
 						-- Associated class cannot be deferred
-					!!vgcc2
+					create vgcc2
 					context.init_error (vgcc2)
 					vgcc2.set_target_name (target.access_name)
 					vgcc2.set_type (creation_type)
@@ -311,7 +313,7 @@ feature -- Type check, byte code and dead code removal
 						if
 							not creation_class.valid_creation_procedure (feature_name)
 						then
-							!! vgcc5
+							create vgcc5
 							context.init_error (vgcc5)
 							vgcc5.set_target_name (target.access_name)
 							vgcc5.set_type (creation_type)
@@ -322,7 +324,7 @@ feature -- Type check, byte code and dead code removal
 							export_status := creators.item (feature_name)
 							if not export_status.valid_for (context.a_class) then
 									-- Creation procedure is not exported
-								!!vgcc5
+								create vgcc5
 								context.init_error (vgcc5)
 								vgcc5.set_target_name (target.access_name)
 								vgcc5.set_type (creation_type)
@@ -336,7 +338,7 @@ feature -- Type check, byte code and dead code removal
 							-- parameter has been listed in the constraint for the generic
 							-- parameter.
 						if not formal_dec.has_creation_feature_name (feature_name) then
-							!! vgcc11
+							create vgcc11
 							context.init_error (vgcc11)
 							vgcc11.set_target_name (target.access_name)
 							a_feature := creation_class.feature_table.item (feature_name)
@@ -347,15 +349,15 @@ feature -- Type check, byte code and dead code removal
 				else
 					if not is_formal_creation then
 						if (creators = Void) or is_default_creation then
-						elseif creators.empty then
-							!!vgcc5
+						elseif creators.is_empty then
+							create vgcc5
 							context.init_error (vgcc5)
 							vgcc5.set_target_name (target.access_name)
 							vgcc5.set_type (creation_type)
 							vgcc5.set_creation_feature (Void)
 							Error_handler.insert_error (vgcc5)
 						else
-							!!vgcc4
+							create vgcc4
 							context.init_error (vgcc4)
 							vgcc4.set_target_name (target.access_name)
 							vgcc4.set_type (creation_type)
@@ -364,7 +366,7 @@ feature -- Type check, byte code and dead code removal
 					else
 							-- An entity of type a formal generic parameter cannot be
 							-- created here because we need a creation routine call
-						!! vgcc1
+						create vgcc1
 						context.init_error (vgcc1)
 						vgcc1.set_target_name (target.access_name)
 						Error_handler.insert_error (vgcc1);				
@@ -376,15 +378,15 @@ feature -- Type check, byte code and dead code removal
 				-- Insert the creation without creation routine
 				-- (feature id = -1) in the dependance of the
 				-- current feature
-			!!depend_unit.make_creation_unit (creation_class.id)
+			create depend_unit.make_creation_unit (creation_class.class_id)
 			context.supplier_ids.extend (depend_unit)
 
 				-- Compute creation information
 			if formal_type /= Void then
-				!! create_formal_type.make (formal_position)
+				create create_formal_type.make (formal_position)
 				create_info := create_formal_type
 			elseif type /= Void then
-				!! create_type
+				create create_type
 				create_type.set_type (creation_type.type_i)
 				create_info := create_type
 			elseif access.is_result then
@@ -396,7 +398,7 @@ feature -- Type check, byte code and dead code removal
 				create_info := local_type.create_info
 			elseif access.is_attribute then
 				attribute_b ?= access
-				!! create_feat
+				create create_feat
 				create_feat.set_feature_id (attribute_b.attribute_id)
 				create_feat.set_feature_name (attribute_b.attribute_name)
 				create_info := create_feat
@@ -420,11 +422,11 @@ feature -- Type check, byte code and dead code removal
 			nested: NESTED_B
 			create_info: CREATE_INFO
 			create_feat: CREATE_FEAT
-			rout_id: ROUTINE_ID
+			rout_id: INTEGER
 			type_set: ROUT_ID_SET
 			the_call: like call
 		do
-			!!Result
+			create Result
 			access := target.byte_node
 			Result.set_target (access)
 		
@@ -442,7 +444,7 @@ feature -- Type check, byte code and dead code removal
 			end
 
 			if default_call = Void or else 
-						default_call.feature_name.empty then
+						default_call.feature_name.is_empty then
 				the_call := call
 			else
 				the_call := default_call
@@ -450,7 +452,7 @@ feature -- Type check, byte code and dead code removal
 
 			if the_call /= Void then
 				call_access := the_call.byte_node
-				!!nested
+				create nested
 				nested.set_target (access)
 				access.set_parent (nested)
 				nested.set_message (call_access)

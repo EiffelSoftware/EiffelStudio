@@ -78,7 +78,7 @@ feature {COMPILER_EXPORTER}
 		require
 			not (old_feat = Void or else new_feat = Void);
 		do
-			e_class := System.current_class;
+			class_c := System.current_class;
 			old_feature := old_feat.api_feature (old_feat.written_in);
 			new_feature := new_feat.api_feature (new_feat.written_in);
 		end;

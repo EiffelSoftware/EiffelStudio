@@ -189,7 +189,7 @@ feature {WINDOW_MGR} -- Properties
 			mp: MOUSE_PTR
 		do
 			if
-				not free_list.empty
+				not free_list.is_empty
 			then
 				free_list.start
 				Result := free_list.item

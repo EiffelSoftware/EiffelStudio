@@ -70,8 +70,6 @@ feature -- Output
 
 	init_resource_values is
 			-- Initialize the resource values.
-		local
-			previous_position: INTEGER
 		do
 			set_changed (True)
 			init_graphical_values
@@ -137,8 +135,6 @@ feature -- Update
 
 	put_after_class (e_class: CLASS_C str: STRING) is
 			-- Put "-- class" followed by `t' in the text.
-		local
-			class_stone: CLASSC_STONE
 		do
 			put_comment (" -- ")
 			put_keyword ("class ")
@@ -300,7 +296,6 @@ feature -- Text formatting
 			-- Process the quoted `text' within a comment.
 		local
 			breakable_stone: BREAKABLE_STONE
-			debug_mark: STRING
 			click_break: CLICK_BREAKABLE
 		do
 			!! breakable_stone.make (a_bp.e_feature, a_bp.index)
@@ -308,13 +303,11 @@ feature -- Text formatting
 				implementation.set_character_format_word (breakable_format)
 				put_stone (breakable_stone, a_bp.index.out)
 			else
-				put_string (" ")
 				!! click_break.make (breakable_stone, text_position, text_position + 3)
 				add_click_stone (click_break)
 				text_position := text_position + 3
 				implementation.set_character_format_word (breakable_format)
 				implementation.replace_selection (breakable_stone.sign)
-				put_string (" ")
 			end
 		end
 

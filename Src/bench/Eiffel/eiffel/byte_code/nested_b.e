@@ -10,10 +10,15 @@ inherit
 			need_invariant, set_need_invariant,
 			is_unsafe, calls_special_features, optimized_byte_node,
 			is_special_feature, size, pre_inlined_code,
-			inlined_byte_code,
+			inlined_byte_code, generate_il, need_target,
 			has_separate_call
 		end
-	
+
+	SHARED_IL_CONSTANTS
+		export
+			{NONE} all
+		end
+
 feature 
 
 	target: ACCESS_B;
@@ -43,13 +48,7 @@ feature
 	used (r: REGISTRABLE): BOOLEAN is
 			-- Is register `r' used in the local target or message ?
 		do
-			Result := message.forth_used (r) or target.used (r);
-		end;
-
-	forth_used (r: REGISTRABLE): BOOLEAN is
-			-- Is register `r' used in the forthcomming expressions ?
-		do
-			Result := message.forth_used (r);
+			Result := message.used (r) or target.used (r);
 		end;
 
 	is_single: BOOLEAN is
@@ -97,19 +96,82 @@ feature
 			message.set_need_invariant (b)
 		end
 
+feature -- IL code generation
+
+	need_target: BOOLEAN is
+			-- Does current call really need a target to be performed?
+			-- E.g. not (a constant or a static external)
+		do
+			Result := target.need_target
+		end
+		
+	generate_il is
+			-- Generate IL code for a nested call.
+		local
+			can_discard_target: BOOLEAN
+			is_target_generated: BOOLEAN
+		do
+			can_discard_target := not message.need_target
+
+			if can_discard_target then
+					-- If we have a constant or a static external call,
+					-- we can forget about the generation of `target' only
+					-- if it is not a routine call. If the generation
+					-- of `target' occured, we need to pop from
+					-- execution stack the value returned by `target'
+					-- because it is not needed to perform the call to `message'.
+				is_target_generated := (not target.is_predefined and
+					(parent /= Void or not target.is_attribute))
+			else
+				is_target_generated := True
+			end
+			
+			if is_target_generated then
+					-- We pass `True' to force a special treatment on 
+					-- generation of `target' if it is an expanded object.
+					-- Namely if `target' is predefined we will load
+					-- the address of `target' instead of `target' itself.
+					-- `message' will manage the boxing operation if needed.
+				target.generate_il_call_access (True)
+			end
+
+			if can_discard_target and is_target_generated then
+				il_generator.pop
+			end
+
+				-- Generate call
+			message.generate_il
+		end
+
 feature -- Byte code generation
 
 	make_byte_code (ba: BYTE_ARRAY) is
 			-- Generate byte code for a nested call.
 		do
+				-- generate the target byte code
 			target.make_byte_code (ba);
+
+			if target.is_feature then
+					-- insert a debugger hook without increasing the line number
+				context.generate_melted_debugger_hook_nested (ba); 
+			end
+	
+				-- generate the call byte code
 			message.make_byte_code (ba);
 		end;
 
 	make_creation_byte_code (ba: BYTE_ARRAY) is
 			-- Generate byte code for a nested call for a creation.
 		do
+				-- generate the target byte code
 			target.make_byte_code (ba);
+
+			if target.is_feature then
+					-- insert a debugger hook without increasing the line number
+				context.generate_melted_debugger_hook_nested (ba); 
+			end
+
+				-- generate the call byte code
 			message.make_creation_byte_code (ba);
 		end;
 
@@ -121,10 +183,6 @@ feature -- Array optimization
 		end
 
 	calls_special_features (array_desc: INTEGER): BOOLEAN is
-		local
-			local_b: LOCAL_B;
-			arg_b: ARGUMENT_B;
-			result_b: RESULT_B
 		do
 			if target.conforms_to_array_opt and then
 				(target.array_descriptor = array_desc)

@@ -8,7 +8,7 @@ class CL_TYPE_A
 inherit
 	TYPE_A
 		redefine
-			is_expanded,
+			is_true_expanded,
 			is_separate,
 			instantiation_in,
 			valid_generic,
@@ -24,7 +24,7 @@ inherit
 
 feature -- Properties
 
-	is_expanded: BOOLEAN
+	is_true_expanded: BOOLEAN
 			-- Is the type expanded ?
 
 	is_separate: BOOLEAN
@@ -40,14 +40,14 @@ feature -- Comparison
 	is_equivalent (other: like Current): BOOLEAN is
 			-- Is `other' equivalent to the current object ?
 		do
-			Result := is_expanded = other.is_expanded and then
+			Result := is_true_expanded = other.is_true_expanded and then
 				is_separate = other.is_separate and then
-				equal (base_class_id, other.base_class_id)
+				base_class_id = other.base_class_id
 		end
 
 feature -- Access
 
-	base_class_id: CLASS_ID
+	base_class_id: INTEGER
 			-- Class id of the associated class
 
 	same_as (other: TYPE_A): BOOLEAN is
@@ -59,9 +59,9 @@ feature -- Access
 			Result := 	other_class_type /= Void
 						and then
 							-- FIXME
-						equal (base_class_id, other_class_type.base_class_id)
+						base_class_id = other_class_type.base_class_id
 						and then
-						is_expanded = other_class_type.is_expanded
+						is_true_expanded = other_class_type.is_true_expanded
 						and then
 						is_separate = other_class_type.is_separate
 		end
@@ -82,12 +82,14 @@ feature -- Setting
 
 feature -- Output
 
-	append_to (st: STRUCTURED_TEXT) is
+	ext_append_to (st: STRUCTURED_TEXT; f: E_FEATURE) is
 		do
-			if is_expanded then
-				st.add_string ("expanded ")
+			if is_true_expanded then
+				st.add (ti_Expanded_keyword)
+				st.add_space
 			elseif is_separate then
-				st.add_string ("separate ")
+				st.add (ti_Separate_keyword)
+				st.add_space
 			end
 			associated_class.append_name (st)
 		end
@@ -99,7 +101,7 @@ feature -- Output
 		do
 			class_name := clone (associated_class.name)
 			class_name.to_upper
-			if is_expanded then
+			if is_true_expanded then
 				!!Result.make (class_name.count + 9)
 				Result.append ("expanded ")
 			elseif is_separate then
@@ -113,10 +115,10 @@ feature -- Output
 
 feature {COMPILER_EXPORTER}
 
-	set_is_expanded (b: BOOLEAN) is
-			-- Assign `b' to `is_expanded'.
+	set_is_true_expanded (b: BOOLEAN) is
+			-- Assign `b' to `is_true_expanded'.
 		do
-			is_expanded := b
+			is_true_expanded := b
 		end
 
 	set_is_separate (b: BOOLEAN) is
@@ -129,7 +131,7 @@ feature {COMPILER_EXPORTER}
 			-- C type
 		do
 			!!Result
-			Result.set_is_expanded (is_expanded)
+			Result.set_is_true_expanded (is_true_expanded)
 			Result.set_is_separate (is_separate)
 			Result.set_base_id (base_class_id)
 		end
@@ -137,8 +139,7 @@ feature {COMPILER_EXPORTER}
 	meta_type: TYPE_I is
 			-- Meta type of the type
 		do
-				-- FIXME ???: separate
-			if is_expanded then
+			if is_true_expanded then
 				Result := type_i
 			else
 				Result := Reference_c_type
@@ -162,7 +163,7 @@ feature {COMPILER_EXPORTER}
 	has_expanded: BOOLEAN is
 			-- Has the current type some expanded types in its declration ?
 		do
-			Result := is_expanded
+			Result := is_true_expanded
 		end
 
 feature {COMPILER_EXPORTER} -- Conformance
@@ -180,19 +181,19 @@ feature {COMPILER_EXPORTER} -- Conformance
 				if other_class_type.is_none then
 						-- No type conforms directly to NONE
 					Result := False
-				elseif other_class_type.is_expanded then
+				elseif other_class_type.is_true_expanded then
 						-- No type conforms directly to `other'.
 					current_class := associated_class
 					parent_class := other_class_type.associated_class
 					Result := 	((not in_generics) and then
 								same_class_type (other_class_type))
 								or else 
-								(is_expanded and then
+								(is_true_expanded and then
 								current_class.conform_to (parent_class))
 				else
 					current_class := associated_class
 					parent_class := other_class_type.associated_class
-					Result := 	(not (in_generics and then is_expanded))
+					Result := 	(not (in_generics and then is_true_expanded))
 								and then
 								current_class.conform_to (parent_class)
 								and then
@@ -254,7 +255,7 @@ feature {COMPILER_EXPORTER} -- Instantitation of a feature type
 			Result := feat_type.instantiation_in (Current, f.written_in)
 		end
 
-	instantiation_in (type: TYPE_A; written_id: CLASS_ID): TYPE_A is
+	instantiation_in (type: TYPE_A; written_id: INTEGER): TYPE_A is
 			-- Instantiation of Current in the context of `class_type'
 			-- assuming that Current is written in `written_id'
 		local
@@ -270,14 +271,14 @@ feature {COMPILER_EXPORTER} -- Instantitation of a feature type
 
 feature {COMPILER_EXPORTER} -- Instantiation of a type in the context of a descendant one
 
-	instantiation_of (type: TYPE; class_id: CLASS_ID): TYPE_A is
+	instantiation_of (type: TYPE; class_id: INTEGER): TYPE_A is
 			-- Instantiation of type `type' written in class of id `class_id'
 			-- in the context of Current
 		local
 			instantiation: TYPE_A
 			gen_type: GEN_TYPE_A
 		do
-			if class_id.is_equal (base_class_id) then
+			if class_id = base_class_id then
 					-- Feature is written in the class associated to the
 					-- current actual class type
 				instantiation := Current
@@ -336,7 +337,7 @@ feature {COMPILER_EXPORTER} -- Instantiation of a type in the context of a desce
 	same_class_type (other: CL_TYPE_A): BOOLEAN is
 			-- Is the current type the same as `other' ?
 		do
-			Result := base_class_id.is_equal (other.base_class_id)
+			Result := base_class_id = other.base_class_id
 		end
 
 	create_info: CREATE_TYPE is
@@ -350,26 +351,6 @@ feature {COMPILER_EXPORTER} -- Instantiation of a type in the context of a desce
 			--
 		do
 			ctxt.put_classi (associated_class.lace_class)
-		end
-
-feature {COMPILER_EXPORTER} -- Storage information for EiffelCase
-
-	storage_info (classc: CLASS_C): S_CLASS_TYPE_INFO is
-			-- Storage info for Current type in class `classc'
-		do
-			!! Result.make_for_bench (Void, associated_class.id)
-		end
-
-	storage_info_with_name (classc: CLASS_C): S_CLASS_TYPE_INFO is
-			-- Storage info for Current type in class `classc'
-			-- and store the name of the class for Current
-		local
-			ass_classc: CLASS_C
-			class_name: STRING
-		do
-			ass_classc := associated_class
-			class_name := clone (ass_classc.name)
-			!! Result.make_for_bench (class_name, ass_classc.id)
 		end
 
 end -- class CL_TYPE_A

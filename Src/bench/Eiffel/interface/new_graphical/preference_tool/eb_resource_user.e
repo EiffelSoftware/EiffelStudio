@@ -1,9 +1,7 @@
 indexing
-
-	description:
-		"Abstarct notion of a user of resources."
-	author: "Christophe Bonnard"
-	date: "$Date$"
+	description	: "Abstract notion of a user of resources."
+	author		: "Christophe Bonnard"
+	date		: "$Date$"
 
 deferred class
 	EB_RESOURCE_USER

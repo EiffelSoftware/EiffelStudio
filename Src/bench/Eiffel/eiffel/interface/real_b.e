@@ -18,7 +18,7 @@ feature
 	actual_type: REAL_A is
 			-- actual real type
 		once
-			Result := Real_type;
+			Result := Real_type
 		end;
 
 	generate_cecil_value is

@@ -24,13 +24,13 @@ creation
 
 feature -- Creation
 
-	make (c_id: CLASS_ID; sz: INTEGER) is
+	make (c_id: INTEGER; sz: INTEGER) is
 		do
 			class_id := c_id;
 			array_make (0, sz-1)
 		end;
 
-	class_id: CLASS_ID;
+	class_id: INTEGER;
 
 feature -- Generation
 
@@ -75,7 +75,7 @@ feature -- Generation
 							-- into the run-time dispatch table) and the type
 							-- of the feature.
 						buffer.putstring (uint16);
-						buffer.putint (re.real_body_index.id - 1);
+						buffer.putint (re.real_body_index - 1);
 						buffer.putstring (int16);
 						buffer.putint (re.static_feature_type_id - 1);
 
@@ -172,7 +172,7 @@ feature -- Generation
 						buffer.putstring (desc1);
 						buffer.putint (nb);
 						buffer.putstring (info);
-						re.real_body_index.generated_id (buffer);
+						buffer.generate_real_body_index (re.real_body_index);
 						buffer.putstring (desc2);
 						buffer.putint (nb);
 						buffer.putstring (type);
@@ -307,7 +307,7 @@ feature -- Melting
 			local_copy: ARRAY [ENTRY]
 		do
 				-- Append the id of the origin class
-			ba.append_short_integer (class_id.id);
+			ba.append_short_integer (class_id);
 
 				-- Append the size of the descriptor unit
 			ba.append_short_integer (upper - lower + 1);
@@ -327,7 +327,7 @@ feature -- Melting
 							-- Write the body index of the routine (index
 							-- into the run-time dispatch table) and the type
 							-- of the feature.
-						ba.append_short_integer (re.real_body_index.id - 1);
+						ba.append_short_integer (re.real_body_index- 1);
 						ba.append_short_integer (re.static_feature_type_id -1);
 
 						if re.is_generic then

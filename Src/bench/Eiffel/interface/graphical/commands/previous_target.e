@@ -55,7 +55,7 @@ feature -- Execution
 			if not text_window.changed then
 				execute_licensed (argument)
 			 else
-				warner (popup_parent).custom_call (Current, Warning_messages.w_File_changed,
+				warner (popup_parent).custom_call (Current, Warning_messages.w_File_changed (Void),
 					Interface_names.b_Yes, Interface_names.b_No, Interface_names.b_Cancel)
 			end
 		end;
@@ -94,7 +94,7 @@ feature {NONE} -- Implementation
 			history: STONE_HISTORY
 		do
 			history := tool.history;
-			if history.empty or else (history.isfirst or history.before) then
+			if history.is_empty or else (history.isfirst or history.before) then
 				warner (popup_parent).gotcha_call (Warning_messages.w_Beginning_of_history)
 			else
 				history.back;

@@ -68,43 +68,39 @@ feature -- Input/output
 	get_name is
 			-- Get the name of the last entered text
 		local
-			i, j: INTEGER;
-			done: BOOLEAN;
-			item: CHARACTER;
-			arg: STRING;
+			i, j: INTEGER
+			item: CHARACTER
+			arg: STRING
 			count: INTEGER
 		do
-			wait_for_return;
-			count := io.laststring.count;
-			!! arg.make (count);
-			command_arguments.wipe_out;
+			wait_for_return
+			count := io.laststring.count
+			create arg.make (count)
+			command_arguments.wipe_out
 			from
-				i := 1;
-				j := 1;
+				i := 1
+				j := 1
 			until
 				(i > count)
 			loop
-				item := io.laststring.item (i);
-				if
-					(item = ' ') or else
-					(item = '%T')
-				then
+				item := io.laststring.item (i)
+				if (item = ' ') or else (item = '%T') then
 					if arg.count /= 0 then
-						command_arguments.force (arg, j);
-						j := j + 1;
-						!!arg.make (count -i);
-					end;
+						command_arguments.force (arg, j)
+						j := j + 1
+						create arg.make (count - i)
+					end
 				else
 					arg.extend (item)
-				end;
+				end
 				i := i + 1
-			end;
+			end
 			if j = 1 or else arg.count /= 0 then
 					-- If we are processing more than one word, we don't
 					-- want to keep the trailing white spaces
-				command_arguments.force (arg, j);
-			end;
-		end;
+				command_arguments.force (arg, j)
+			end
+		end
 
 	get_class_name is
 		do
@@ -114,7 +110,7 @@ feature -- Input/output
 			end;
 			get_last_input;
 			last_input.to_lower;
-			if last_input.empty then
+			if last_input.is_empty then
 				abort := True
 			end;
 		end;
@@ -127,7 +123,7 @@ feature -- Input/output
 			end;
 			get_last_input;
 			last_input.to_lower;
-			if last_input.empty then
+			if last_input.is_empty then
 				abort := True
 			end;
 		end;
@@ -163,7 +159,7 @@ feature -- Input/output
 				get_name;
 			end;
 			get_last_input;
-			if last_input = Void or else last_input.empty then
+			if last_input = Void or else last_input.is_empty then
 				last_input := value.out
 			else
 				tmp := clone (last_input);
@@ -195,7 +191,7 @@ feature -- Input/output
 					get_name;
 					get_last_input
 				until
-					last_input.empty or else last_input.is_equal ("workbench") or else
+					last_input.is_empty or else last_input.is_equal ("workbench") or else
 					last_input.is_equal ("final")
 				loop
 					io.putstring ("--> Compile type (default: `workbench'): ");

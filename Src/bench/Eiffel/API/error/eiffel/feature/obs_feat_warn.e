@@ -86,7 +86,7 @@ feature {ACCESS_FEAT_AS, PRECURSOR_AS} -- Setting
 			valid_associated_class: associated_class /= Void
 		do
 			if f /= Void then
-				a_feature := f.api_feature (associated_class.id)
+				a_feature := f.api_feature (associated_class.class_id)
 			end
 		end;
 

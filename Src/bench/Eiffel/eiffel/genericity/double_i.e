@@ -9,7 +9,7 @@ inherit
 			is_numeric,
 			same_as,
 			description, sk_value, generate_cecil_value, hash_code,
-			byte_code_cast, generated_id
+			generate_byte_code_cast, generated_id
 		end
 
 	BYTE_CONST
@@ -22,10 +22,10 @@ feature
 			Result := C_double
 		end
 
-	byte_code_cast: CHARACTER is
+	generate_byte_code_cast (ba: BYTE_ARRAY) is
 			-- Code for interpreter cast
 		do
-			Result := Bc_cast_double
+			ba.append (Bc_cast_double)
 		end
 
 	is_double: BOOLEAN is True
@@ -43,7 +43,7 @@ feature
 	dump (buffer: GENERATION_BUFFER) is
 			-- Debug purpose
 		do
-			buffer.putstring ("DOUBLE")
+			buffer.putstring ("EIF_DOUBLE")
 		end
 
 	description: DOUBLE_DESC is
@@ -68,30 +68,6 @@ feature
 
 	separate_send_macro: STRING is "CURSQRD"
 			-- String generated to return the result of a separate call
-
-	generate (buffer: GENERATION_BUFFER) is
-			-- Generate C type in `buffer'.
-		do
-			buffer.putstring ("EIF_DOUBLE ")
-		end
-
-	generate_cast (buffer: GENERATION_BUFFER) is
-			-- Generate C cast in `buffer'.
-		do
-			buffer.putstring ("(EIF_DOUBLE) ")
-		end
-
-	generate_access_cast (buffer: GENERATION_BUFFER) is
-			-- Generate access C cast in `buffer'.
-		do
-			buffer.putstring ("(EIF_DOUBLE *) ")
-		end
-
-	generate_size (buffer: GENERATION_BUFFER) is
-			-- Generate size of C type
-		do
-			buffer.putstring ("sizeof(EIF_DOUBLE)")
-		end
 
 	hash_code: INTEGER is
 			-- Hash code for current type
@@ -134,7 +110,7 @@ feature -- Generic conformance
 	generated_id (final_mode : BOOLEAN) : INTEGER is
 
 		do
-			Result := -6        -- Code for DOUBLE
+			Result := Double_type
 		end
 
 feature

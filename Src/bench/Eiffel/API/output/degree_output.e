@@ -16,6 +16,10 @@ feature -- Access
 	current_degree: INTEGER;
 			-- Current degree being displayed
 
+	last_reached_degree: INTEGER;
+			-- Current degree being displayed if a compilation is under way,
+			-- or else the degree that was attained during the last compilation.
+
 	total_number: INTEGER;
 			-- Number of entities being processed
 
@@ -29,6 +33,7 @@ feature -- Start output features
 		do
 			total_number := total_nbr;
 			current_degree := 6;
+			last_reached_degree := 6;
 			processed := 0
 		end;
 
@@ -47,6 +52,7 @@ feature -- Start output features
 		do
 			total_number := total_nbr;
 			current_degree := degree_nbr;
+			last_reached_degree := degree_nbr;
 			processed := 0
 		end;
 
@@ -88,21 +94,14 @@ feature -- Start output features
 		do
 		end;
 
-	put_case_message (a_message: STRING) is
-			-- Put `a_message' to the output window.
+	put_initializing_documentation is
+			-- Start documentation generation.
 		do
-			io.error.putstring (a_message);
-			io.error.new_line
-		end;
+			io.error.putstring ("Initializing documentation");
+			io.error.new_line;
+		end
 
-	put_start_reverse_engineering (total_num: integer) is
-			-- initialize the reverse engineering part.
-		do
-			total_number := total_num;
-			processed := 0;
-		end;
-
-	put_start_documentation (total_num: integer; type: STRING) is
+	put_start_documentation (total_num: INTEGER; type: STRING) is
 			-- Initialize the document generation.
 		require
 			valid_type: type /= Void
@@ -117,29 +116,46 @@ feature -- Start output features
 	put_string (a_message: STRING) is
 			-- Put `a_message' to output window.
 		do
-			io.error.putstring (a_message);
+			io.error.putstring (a_message)
 			io.error.new_line
-		end;
+		end
 
 	put_resynchronizing_breakpoints_message is
 			-- Put a message to indicate that the 
 			-- breakpoints are being resynchronized.
 		do
-		end;
+		end
+
+	put_system_compiled is
+			-- Put message indicating that the system has been compiled.
+		do
+			io.error.put_string ("System recompiled.")
+			io.error.new_line
+		end
+
+	put_header (displayed_version_number: STRING) is
+		do
+			io.error.putstring (
+				"Eiffel compilation manager%N%
+				%  (version ")
+			io.error.putstring (displayed_version_number)
+			io.error.putstring (")%N")
+		end
 
 feature -- Output on per class
 
-	put_degree_6 (a_cluster: CLUSTER_I) is
+	put_degree_6 (a_cluster: CLUSTER_SD; nbr_to_go: INTEGER) is
 			-- Put message to indicate that `a_cluster' is being
 			-- compiled during degree six' clusters to go. 
 		require
 			cluster_not_void: a_cluster /= Void
+			positive_nbr_to_go: nbr_to_go >= 0
 			in_degree_six: current_degree = 6
 		do
-			display_degree (degree_6_message, total_number - processed, 
-					a_cluster.cluster_name)
-			processed := processed + 1;
-		end;
+			total_number := nbr_to_go + processed
+			display_degree (degree_message (6), nbr_to_go, a_cluster.cluster_name)
+			processed := processed + 1
+		end
 
 	put_recursive_degree_6 (a_cluster: CLUSTER_I; a_path: STRING) is
 			-- Put message to indicate that `a_cluster' is being compiled
@@ -152,24 +168,18 @@ feature -- Output on per class
 			-- Do nothing, but do something in graphical mode.
 		end
 
-	skip_entity is
-			-- Increment the processed by 1 (for both classes and clusters).
-		do
-			processed := processed + 1
-		end;
-
 	put_degree_5 (a_class: CLASS_C; nbr_to_go: INTEGER) is
 			-- Put message to indicate that `a_class' is being
 			-- compiled during degree five with `nbr_to_go' 
 			-- classes to go.
 		require
-			class_not_void: a_class /= Void;
+			class_not_void: a_class /= Void
 			positive_nbr_to_go: nbr_to_go >= 0
 			in_degree_5: current_degree = 5
 		do
-			total_number := nbr_to_go + processed;
-			display_degree (degree_5_message, nbr_to_go, a_class.name_in_upper);
-			processed := processed + 1;
+			total_number := nbr_to_go + processed
+			display_degree (degree_message(5), nbr_to_go, a_class.name_in_upper)
+			processed := processed + 1
 		end;
 
 	put_degree_4 (a_class: CLASS_C; nbr_to_go: INTEGER) is
@@ -177,14 +187,14 @@ feature -- Output on per class
 			-- compiled during degree four with `nbr_to_go' 
 			-- classes to go out of `total_nbr'..
 		require
-			class_not_void: a_class /= Void;
-			positive_nbr_to_go: nbr_to_go >= 0;
+			class_not_void: a_class /= Void
+			positive_nbr_to_go: nbr_to_go >= 0
 			in_degree_4: current_degree = 4
 		do
-			total_number := nbr_to_go + processed;
-			display_degree (degree_4_message, nbr_to_go, a_class.name_in_upper);
+			total_number := nbr_to_go + processed
+			display_degree (degree_message(4), nbr_to_go, a_class.name_in_upper)
 			processed := processed + 1;
-		end;
+		end
 
 	put_degree_3 (a_class: CLASS_C; nbr_to_go: INTEGER) is
 			-- Put message to indicate that `a_class' is being
@@ -195,9 +205,9 @@ feature -- Output on per class
 			positive_nbr_to_go: nbr_to_go >= 0
 			in_degree_3: current_degree = 3
 		do
-			processed := processed + 1; -- Used when error ocurrs
-			display_degree (degree_3_message, nbr_to_go, a_class.name_in_upper)
-		end;
+			processed := processed + 1 -- Used when error ocurrs
+			display_degree (degree_message(3), nbr_to_go, a_class.name_in_upper)
+		end
 
 	put_degree_2 (a_class: CLASS_C; nbr_to_go: INTEGER) is
 			-- Put message to indicate that `a_class' is being
@@ -208,8 +218,8 @@ feature -- Output on per class
 			positive_nbr_to_go: nbr_to_go >= 0;
 			in_degree_2: current_degree = 2
 		do
-			display_degree (degree_2_message, nbr_to_go, a_class.name_in_upper)
-		end;
+			display_degree (degree_message(2), nbr_to_go, a_class.name_in_upper)
+		end
 
 	put_degree_1 (a_class: CLASS_C; nbr_to_go: INTEGER) is
 			-- Put message to indicate that `a_class' is being
@@ -220,8 +230,8 @@ feature -- Output on per class
 			positive_nbr_to_go: nbr_to_go >= 0;
 			in_degree_1: current_degree = 1
 		do
-			display_degree (degree_1_message, nbr_to_go, a_class.name_in_upper)
-		end;
+			display_degree (degree_message(1), nbr_to_go, a_class.name_in_upper)
+		end
 
 	put_degree_minus_1 (a_class: CLASS_C; nbr_to_go: INTEGER) is
 			-- Put message to indicate that `a_class' is being
@@ -232,32 +242,32 @@ feature -- Output on per class
 			positive_nbr_to_go: nbr_to_go >= 0;
 			in_degree_minus_1: current_degree = -1
 		do
-			display_degree (degree_minus_1_message, nbr_to_go, a_class.name_in_upper)
-		end;
+			display_degree (degree_message(-1), nbr_to_go, a_class.name_in_upper)
+		end
 
 	put_degree_minus_2 (a_class: CLASS_C; nbr_to_go: INTEGER) is
 			-- Put message to indicate that `a_class' is being
 			-- compiled during degree minus four with `nbr_to_go' 
 			-- classes to go.
 		require
-			class_not_void: a_class /= Void;
-			positive_nbr_to_go: nbr_to_go >= 0;
+			class_not_void: a_class /= Void
+			positive_nbr_to_go: nbr_to_go >= 0
 			in_degree_minus_2: current_degree = -2
 		do
-			display_degree (degree_minus_2_message, nbr_to_go, a_class.name_in_upper)
-		end;
+			display_degree (degree_message (-2), nbr_to_go, a_class.name_in_upper)
+		end
 
 	put_degree_minus_3 (a_class: CLASS_C; nbr_to_go: INTEGER) is
 			-- Put message to indicate that `a_class' is being
 			-- compiled during degree minus five with `nbr_to_go' 
 			-- classes to go.
 		require
-			class_not_void: a_class /= Void;
-			positive_nbr_to_go: nbr_to_go >= 0;
+			class_not_void: a_class /= Void
+			positive_nbr_to_go: nbr_to_go >= 0
 			in_degree_minus_3: current_degree = -3
 		do
-			display_degree (degree_minus_3_message, nbr_to_go, a_class.name_in_upper)
-		end;
+			display_degree (degree_message (-3), nbr_to_go, a_class.name_in_upper)
+		end
 
 	put_dead_code_removal_message (total_nbr, nbr_to_go: INTEGER) is
 			-- Put message progress the start of dead code removal.
@@ -268,7 +278,7 @@ feature -- Output on per class
 			io.error.putstring ("%TFeatures to go: ")
 			io.error.putint (nbr_to_go)
 			io.error.new_line
-		end;
+		end
 
 	put_case_cluster_message (a_name: STRING) is
 			-- Put message to indicate that `a_name' is being
@@ -278,12 +288,12 @@ feature -- Output on per class
 		local	
 			str: STRING
 		do	
-			str := clone (a_name);
-			str.to_lower;
-			io.error.putstring (case_cluster_message);
-			io.error.putstring (str);
+			str := clone (a_name)
+			str.to_lower
+			io.error.putstring (case_cluster_message)
+			io.error.putstring (str)
 			io.error.new_line
-		end;
+		end
 
 	put_case_class_message (a_class: CLASS_C) is
 			-- Put message to indicate that `a_class' is being
@@ -294,7 +304,7 @@ feature -- Output on per class
 			display_degree (case_class_message, 
 					total_number - processed, a_class.name_in_upper)
 			processed := processed + 1;
-		end;
+		end
 
 	put_class_document_message (a_class: CLASS_C) is
 			-- Put message to indicate that `a_class' is being
@@ -305,13 +315,24 @@ feature -- Output on per class
 			display_degree (document_class_message, 
 					total_number - processed, a_class.name_in_upper)
 			processed := processed + 1;
-		end;
+		end
 
 	skip_case_class is
 			-- Process the skipping of a case class.
 		do
 			processed := processed + 1;
-		end;
+		end
+
+feature -- Other
+
+	display_degree_output (deg_nbr: STRING; to_go: INTEGER; total: INTEGER) is
+			-- Display degree `deg_nbr' with entity `a_class'.
+		do
+			total_number := total;
+			io.error.putstring (percentage_output (to_go));
+			io.error.putstring (deg_nbr);
+			io.error.new_line
+		end
 
 feature {NONE} -- Implementation
 
@@ -349,7 +370,7 @@ feature {NONE} -- Implementation
 			end;
 			Result.append (to_go_out)
 			Result.append ("] ")
-		end;
+		end
 
 	display_degree (deg_nbr: STRING; to_go: INTEGER; a_name: STRING) is
 			-- Display degree `deg_nbr' with entity `a_class'.
@@ -358,7 +379,7 @@ feature {NONE} -- Implementation
 			io.error.putstring (deg_nbr);
 			io.error.putstring (a_name);
 			io.error.new_line
-		end;
+		end
 
 	percentage_calculation (to_go: INTEGER): INTEGER is
 			-- Percentage calcuation based on `to_go' and `total_number'
@@ -367,30 +388,22 @@ feature {NONE} -- Implementation
 			if Result = 100 and then to_go /= 0 then
 				Result := 99
 			end	
-		end;
+		end
 
-feature 
-
-	display_degree_output (deg_nbr: STRING; to_go: INTEGER; total: INTEGER) is
-			-- Display degree `deg_nbr' with entity `a_class'.
+	degree_message (a_degree: INTEGER): STRING is 
+			-- Display the message corresponding to degree `a_degree'.
 		do
-			total_number := total;
-			io.error.putstring (percentage_output (to_go));
-			io.error.putstring (deg_nbr);
-			io.error.new_line
-		end;
+			create Result.make (20)
+			Result.append ("Degree ")
+			Result.append_integer(a_degree)
+			if a_degree = 6 then
+				Result.append (" cluster ")
+			else
+				Result.append (" class ")
+			end
+		end
 
 feature {NONE} -- Constants
-
-	degree_6_message: STRING is "Degree 6 cluster ";
-	degree_5_message: STRING is "Degree 5 class ";
-	degree_4_message: STRING is "Degree 4 class ";
-	degree_3_message: STRING is "Degree 3 class ";
-	degree_2_message: STRING is "Degree 2 class ";
-	degree_1_message: STRING is "Degree 1 class ";
-	degree_minus_1_message: STRING is "Degree -1 class ";
-	degree_minus_2_message: STRING is "Degree -2 class ";
-	degree_minus_3_message: STRING is "Degree -3 class ";
 
 	melting_changes_message: STRING is "Melting changes";
 	freezing_system_message: STRING is "Freezing system";

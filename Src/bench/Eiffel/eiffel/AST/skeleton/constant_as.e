@@ -26,16 +26,6 @@ feature {AST_FACTORY} -- Initialization
 			value_set: value = v
 		end
 
-feature {NONE} -- Initialization
-
-	set is 
-			-- Yacc initialisation
-		do
-			value ?= yacc_arg (0)
-		ensure then
-			value_exists: value /= Void
-		end
-
 feature -- Attributes
 
 	value: EXPR_AS

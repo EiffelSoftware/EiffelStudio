@@ -86,36 +86,27 @@ feature -- Filling
 			class_array: ARRAY [CLASS_C]
 			i, nb: INTEGER
 			a_class: CLASS_C
-			classes: CLASS_C_SERVER
 		do
-			classes := System.classes
+			class_array := System.classes
 			check
-				consistency: count = classes.count
+				consistency: count = System.classes.count
 			end
 
 			count := 0
 			from 
-				classes.start 
+				nb := Class_counter.count
+				i := 1 
 			until 
-				classes.after 
+				i > nb 
 			loop
-				from 
-					class_array := classes.item_for_iteration
-					nb := Class_counter.item (classes.key_for_iteration).count
-					i := 1 
-				until 
-					i > nb 
-				loop
-					a_class := class_array.item (i)
-					if a_class /= Void then
-						count := count + 1
-						a_class.set_topological_id (count)
-						original.put (a_class, count)
-						successors.put (a_class.descendants, count)
-					end
-					i := i + 1
+				a_class := class_array.item (i)
+				if a_class /= Void then
+					count := count + 1
+					a_class.set_topological_id (count)
+					original.put (a_class, count)
+					successors.put (a_class.descendants, count)
 				end
-				classes.forth
+				i := i + 1
 			end
 		end
 
@@ -172,7 +163,6 @@ feature -- Filling
 		local
 			next, k, succ_id: INTEGER
 			item, succ_item: CLASS_C
-			i, nb_item: INTEGER
 			succ: LINKED_LIST [CLASS_C]
 		do
 			if Configure_resources.get_boolean ("topo", True) then
@@ -189,7 +179,7 @@ feature -- Filling
 			else
 				from
 				until
-					outsides2.empty
+					outsides2.is_empty
 				loop
 					item := outsides2.first
 					outsides2.start
@@ -319,7 +309,7 @@ feature -- Filling
 		local
 			i: INTEGER
 			no_cycle: BOOLEAN
-			name_list: LINKED_LIST [CLASS_ID]
+			name_list: LINKED_LIST [INTEGER]
 			a_class: CLASS_C
 			vhpr1: VHPR1
 		do
@@ -337,7 +327,7 @@ feature -- Filling
 					if name_list = Void then
 						!! name_list.make
 					end
-					name_list.put_front (a_class.id)
+					name_list.put_front (a_class.class_id)
 				end
 				i := i + 1
 			end
@@ -385,21 +375,11 @@ feature -- Update System
 			-- Sort all the data structures of the system by following the new
 			-- topological sort
 		local
-			classes: CLASS_C_SERVER
 			nb: INTEGER
-			old_cursor: CURSOR
 		do
-			from
-				classes := System.classes
-				classes.start
-			until
-				classes.after
-			loop
-				order := classes.item_for_iteration
-				nb := class_counter.item (classes.key_for_iteration).count
-				sort_class_c (nb)
-				classes.forth
-			end
+			order := System.classes
+			nb := class_counter.count
+			sort_class_c (nb)
 		end
 
 feature -- Wipe out

@@ -7,8 +7,7 @@ inherit
 	CURRENT_B
 		redefine
 			parent, generate, set_parent, used,
-			analyze, free_register, print_register,
-			propagate
+			analyze, free_register, propagate
 		end;
 	
 feature 
@@ -47,12 +46,6 @@ feature
 	free_register is
 			-- Do nothing
 		do
-		end;
-
-	print_register is
-			-- Print "Current" register
-		do
-			print_register_by_name;
 		end;
 
 end

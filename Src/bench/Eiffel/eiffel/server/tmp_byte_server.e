@@ -1,38 +1,25 @@
--- Server for byte code on temporary file. This server is
--- used during the compilation. The goal is to merge the file Tmp_byte_file
--- and Byte_file if the compilation is successful.
+indexing
+	description: "Server for byte code on temporary file, indexed by body index.%
+				%This server is used during the compilation. The goal is to%
+				%merge the file Tmp_byte_file and Byte_file if the compilation%
+				%is successful."
+	date: "$Date$"
+	revision: "$Revision$"
 
 class TMP_BYTE_SERVER 
 
 inherit
-	DELAY_SERVER [BYTE_CODE, BODY_ID]
-		redefine
-			ontable, updated_id
-		end
+	DELAY_SERVER [BYTE_CODE]
 
 creation
 	make
 	
 feature 
 
-	ontable: O_N_TABLE [BODY_ID] is
-			-- Mapping table between old id s and new ids.
-			-- Used by `change_id'
-		require else
-			True
-		once
-			Result := System.onbidt
-		end;
-
-	updated_id (i: BODY_ID): BODY_ID is
-		do
-			Result := ontable.item (i)
-		end
-
-	id (t: BYTE_CODE): BODY_ID is
+	id (t: BYTE_CODE): INTEGER is
 			-- Id associated with `t'
 		do
-			Result := t.byte_id
+			Result := t.body_index
 		end
 
 	cache: BYTE_CACHE is
@@ -41,7 +28,7 @@ feature
 			!! Result.make
 		end
 
-	Delayed: SEARCH_TABLE [BODY_ID] is
+	Delayed: SEARCH_TABLE [INTEGER] is
 			-- Cache for delayed items
 		once
 			!!Result.make ((3 * Cache.cache_size) // 2)

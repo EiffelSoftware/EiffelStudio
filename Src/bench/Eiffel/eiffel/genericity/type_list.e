@@ -127,25 +127,6 @@ feature -- Traversals
 			end
 		end
 
-	update_valid_body_ids is
-			-- Proceed to the `update_valid_body_ids' on the items
-			-- of the list
-		local
-			ct: CLASS_TYPE
-		do
-			from
-				start
-			until
-				after
-			loop
-				ct := item
-				if not ct.is_precompiled then
-					ct.update_valid_body_ids
-				end
-				forth
-			end
-		end
-
 	melt is
 			-- Proceed to the `melt' on the items of the list
 		local
@@ -164,8 +145,8 @@ feature -- Traversals
 			end
 		end
 
-	update_dispatch_table is
-			-- Proceed to the `update_dispatch_table' on the items of the list
+	update_execution_table is
+			-- Proceed to the `update_execution_table' on the items of the list
 		local
 			ct: CLASS_TYPE
 		do
@@ -176,7 +157,7 @@ feature -- Traversals
 			loop
 				ct := item
 				if not ct.is_precompiled then
-					ct.update_dispatch_table
+					ct.update_execution_table
 				end
 				forth
 			end
@@ -209,7 +190,7 @@ feature -- Merging
 			other_not_void: other /= Void
 		local
 			class_type: CLASS_TYPE;
-			other_id: TYPE_ID
+			other_id: INTEGER
 		do
 			from
 				other.start
@@ -217,11 +198,11 @@ feature -- Merging
 				other.after
 			loop
 				class_type := other.item;
-				other_id := class_type.id;
+				other_id := class_type.static_type_id;
 				from 
 					start
 				until
-					after or else equal (item.id, other_id)
+					after or else item.static_type_id = other_id
 				loop
 					forth
 				end;

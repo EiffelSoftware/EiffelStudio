@@ -1,9 +1,7 @@
 indexing
-
-	description: 
-		"";
+	description: "Optimize option in Ace";
 	date: "$Date$";
-	revision: "$Revision $"
+	revision: "$Revision$"
 
 class OPTIMIZE_SD
 

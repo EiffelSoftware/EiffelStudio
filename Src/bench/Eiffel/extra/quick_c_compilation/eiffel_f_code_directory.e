@@ -29,7 +29,6 @@ feature
 			l_start, string_count: INTEGER
 			finished_file: PLAIN_TEXT_FILE
 			finished_file_name: FILE_NAME
-			new_make, old_make: PLAIN_TEXT_FILE
 		do
 				-- Create `big_file_name' with a number as a suffix, in order not to
 				-- confuse the C debugger.
@@ -134,8 +133,7 @@ feature
 			l_files: LINKED_LIST [C_FILE]
 			l_file: C_FILE
 			l_directories: LINEAR[EIFFEL_F_CODE_DIRECTORY]
-			l_big_file_name, l_makefile_sh_name, l_old_name: STRING
-			l_makefile_sh: PLAIN_TEXT_FILE
+			l_big_file_name: STRING
 			is_x_file: BOOLEAN
 			is_cpp_file: BOOLEAN
 			input_string: STRING
@@ -153,7 +151,7 @@ feature
 	debug ("OUTPUT")
 				print ("x/c files%N")
 	end
-				if not l_files.empty then 
+				if not l_files.is_empty then 
 					l_big_file_name := clone (name)
 					l_big_file_name.append_character (Directory_separator)
 					l_big_file_name.append (big_file_name)
@@ -181,7 +179,6 @@ feature
 						l_file.open_read
 						l_file.read_all (input_string)
 							-- Generate the `line' statement for the C debugger.
-						big_file.put_string ("#line 1 %"" + generate_name (l_file.name) + "%"%N")
 						big_file.put_string (input_string)
 						l_file.close
 						l_files.forth
@@ -203,7 +200,7 @@ feature
 						end
 					end
 					big_file.change_name (l_big_file_name)
-				end -- not l_files.empty
+				end -- not l_files.is_empty
 
 				makefile_sh.open_read
 				makefile_sh.read_stream (makefile_sh.count)
@@ -280,37 +277,6 @@ feature -- Constants
 	big_file_prefix: STRING is "big_file_"
 			-- Prefix of the big_file name.
 
-feature {NONE} -- Implementation
-
-	generate_name (file_name: STRING): STRING is
-			-- On Windows, convert all `\' sequence by `\\'.
-			-- On Unix platforms, returns `file_name'
-		local
-			l_count, i, j: INTEGER
-		do
-			if Directory_separator = '\' then
-				create Result.make (file_name.count + file_name.occurrences ('\'))
-				Result.fill_blank
-				from
-					i := 1
-					j := 1
-					l_count := file_name.count
-				until
-					i > l_count
-				loop
-					Result.put (file_name.item (i), j)
-					if file_name.item (i) = '\' then
-						j := j + 1
-						Result.put ('\', j)
-					end
-					i := i + 1
-					j := j + 1
-				end
-			else
-				Result := file_name
-			end
-		end
-
 	buffered_input_string: STRING is
 			-- Buffer string filled by reading into a file.
 		once
@@ -318,3 +284,4 @@ feature {NONE} -- Implementation
 		end
 
 end -- class EIFFEL_F_CODE_DIRECTORY
+

@@ -1,28 +1,37 @@
 indexing
-
-	description: "Abstract description of a debug clause. Version for Bench."
-	date: "$Date$"
-	revision: "$Revision$"
+	description	: "Abstract description of a debug clause. Version for Bench."
+	date		: "$Date$"
+	revision	: "$Revision$"
 
 class DEBUG_AS
 
 inherit
 	INSTRUCTION_AS
 		redefine
-			number_of_stop_points,
-			byte_node, find_breakable, fill_calls_list, replicate
+			number_of_breakpoint_slots,
+			byte_node, 
+			fill_calls_list, 
+			replicate
 		end
 
 feature {AST_FACTORY} -- Initialization
 
 	initialize (k: like keys; c: like compound; s, l: INTEGER) is
 			-- Create a new DEBUG AST node.
+		local
+			str: STRING
 		do
 			keys := k
 				-- Debug keys are not case sensitive
 			if keys /= Void then
-				from keys.start until keys.after loop
-					keys.item.value.to_lower
+				from
+					keys.start
+				until
+					keys.after
+				loop
+					str := keys.item.value
+					str.to_lower
+					System.add_new_debug_clause (str)
 					keys.forth
 				end
 			end
@@ -37,29 +46,6 @@ feature {AST_FACTORY} -- Initialization
 			line_number_set: line_number = l
 		end
 
-feature {NONE} -- Initialization
-
-	set is
-			-- Yacc initialization
-		do
-			keys ?= yacc_arg (0)
-			compound ?= yacc_arg (1)
-
-				-- Debug keys are not case sensitive
-			if keys /= Void then
-				from
-					keys.start
-				until
-					keys.after
-				loop
-					keys.item.value.to_lower
-					keys.forth
-				end
-			end
-			start_position := yacc_position
-			line_number    := yacc_line_number
-		end
-
 feature -- Attributes
 
 	compound: EIFFEL_LIST [INSTRUCTION_AS]
@@ -70,13 +56,11 @@ feature -- Attributes
 
 feature -- Access
 
-	number_of_stop_points: INTEGER is
+	number_of_breakpoint_slots: INTEGER is
 			-- Number of stop points for AST
 		do
-			Result := 1
 			if compound /= Void then
-				Result := Result + compound.number_of_stop_points
-				Result := Result + 1
+				Result := Result + compound.number_of_breakpoint_slots
 			end
 		end
 
@@ -104,7 +88,7 @@ feature -- Type check, byte code and dead code removal
 		local
 			node_keys: ARRAYED_LIST [STRING]
 		do
-			!!Result
+			create Result
 			if compound /= Void then
 				Result.set_compound (compound.byte_node)
 				if keys /= Void then
@@ -122,19 +106,6 @@ feature -- Type check, byte code and dead code removal
 				end
 			end
 			Result.set_line_number (line_number)
-		end
-
-feature -- Debugger
-
-	find_breakable is
-			-- Record each instruction in the debug compound as being breakable,
-			-- as well as the end of the debug compound itself.
-		do
- 			record_break_node;  
- 			if compound /= Void then
-				compound.find_breakable
- 				record_break_node
-			end
 		end
 
 feature -- Replication
@@ -162,10 +133,9 @@ feature {AST_EIFFEL} -- Output
 	simple_format (ctxt: FORMAT_CONTEXT) is
 			-- Reconstitute text.
 		do
-			ctxt.put_breakable
 			ctxt.put_text_item (ti_Debug_keyword)
 			ctxt.put_space
-			if keys /= Void and then not keys.empty then
+			if keys /= Void and then not keys.is_empty then
 				ctxt.put_text_item_without_tabs (ti_L_parenthesis)
 				ctxt.set_separator (ti_Comma)
 				ctxt.set_no_new_line_between_tokens
@@ -175,13 +145,12 @@ feature {AST_EIFFEL} -- Output
 			if compound /= Void then
 				ctxt.indent
 				ctxt.new_line
-				ctxt.set_separator (ti_Semi_colon)
+				ctxt.set_separator (Void)
 				ctxt.set_new_line_between_tokens
 				ctxt.format_ast (compound)
 				ctxt.exdent
 			end
 			ctxt.new_line
-			ctxt.put_breakable
 			ctxt.put_text_item (ti_End_keyword)
 		end
 

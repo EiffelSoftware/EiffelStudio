@@ -8,8 +8,18 @@ class
 
 inherit
 	EV_DIALOG
+
 	EV_COMMAND
-	INTERFACE_NAMES
+		undefine
+			default_create
+		end
+
+	EB_CONSTANTS
+		export
+			{NONE} all
+		undefine
+			default_create
+		end
 
 creation
 	make_default
@@ -19,24 +29,39 @@ feature {NONE} -- Initialization
 	make_default (a_caller: like caller; t: STRING; msg: STRING) is
 		local
 			i: EV_BUTTON
+			vb: EV_VERTICAL_BOX
+			hb: EV_HORIZONTAL_BOX
 		do
+			create vb
+			create hb
+			hb.set_padding (4)
+			hb.enable_homogeneous
 			caller := a_caller
-			make (caller.associated_window)
+			default_create
 			set_title (t)
-			create label.make_with_text (display_area, msg)
-			create i.make_with_text (action_area, b_Browse)
-			i.add_click_command (Current, Browse_it)
-			create i.make_with_text (action_area, "Default")
-			i.add_click_command (Current, Build_it)
-			create i.make_with_text (action_area, b_Cancel)
-			i.add_click_command (Current, Void)
-			set_modal (True)
-			show
+			create label.make_with_text (msg)
+			vb.extend (label)
+			create i.make_with_text (Interface_names.b_Browse)
+			hb.extend (i)
+			hb.disable_item_expand (i)
+			i.select_actions.extend (~execute (Browse_it))
+			create i.make_with_text (Interface_names.b_Default)
+			hb.extend (i)
+			hb.disable_item_expand (i)
+			i.select_actions.extend (~execute (Build_it))
+			create i.make_with_text (Interface_names.b_Cancel)
+			hb.extend (i)
+			hb.disable_item_expand (i)
+			i.select_actions.extend (~execute (Void))
+			vb.extend (hb)
+			extend (vb)
+			disable_user_resize
+			show_modal
 		end
 
 feature {NONE} -- Execution
 
-	execute (arg: EV_ARGUMENT1 [ANY]; data: EV_EVENT_DATA) is
+	execute (arg: ANY) is
 		do
 			destroy
 			if arg = Browse_it then
@@ -48,18 +73,18 @@ feature {NONE} -- Execution
 
 feature {NONE} -- Implementation
 
-	Browse_it: EV_ARGUMENT1 [ANY] is
+	Browse_it: ANY is
 		once
-			create Result.make (Void)
+			create Result
 		end
 
-	Build_it: EV_ARGUMENT1 [ANY] is
+	Build_it: ANY is
 		once
-			create Result.make (Void)
+			create Result
 		end
 
 	label: EV_LABEL
 
-	caller: EB_SHOW_DYNAMIC_LIB_TOOL
+	caller: EB_SHOW_DYNAMIC_LIB_WINDOW_COMMAND
 
 end -- class EB_CHOOSE_DYNAMIC_LIB_DIALOG

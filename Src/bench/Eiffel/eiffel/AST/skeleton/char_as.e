@@ -24,14 +24,6 @@ feature {AST_FACTORY} -- Initialization
 			value_set: value = c
 		end
 
-feature {NONE} -- Initialization
-
-	set is
-			-- Yacc initialization
-		do
-			value := yacc_char_arg (0)
-		end
-
 feature -- Properties
 
 	value: CHARACTER
@@ -84,6 +76,8 @@ feature -- Output
 	string_value: STRING is
 		do
 			Result := char_text (value)
+			Result.precede ('%'')
+			Result.extend ('%'')
 		end
 
 feature {AST_EIFFEL} -- Output
@@ -91,9 +85,13 @@ feature {AST_EIFFEL} -- Output
 	simple_format (ctxt : FORMAT_CONTEXT) is
 			-- Reconstiture text.
 		do
-			ctxt.put_text_item_without_tabs (ti_Quote)
-			ctxt.put_string (char_text (value))
-			ctxt.put_text_item_without_tabs (ti_Quote)
+			--| VB 05/23/2000 Removed in favor of literal char symbol.
+			--|ctxt.put_text_item_without_tabs (ti_Quote)
+			--|ctxt.put_string (char_text (value))
+			--|ctxt.put_text_item_without_tabs (ti_Quote)
+			ctxt.put_text_item (
+				create {CHARACTER_TEXT}.make (string_value)
+			)
 		end
 
 end -- class CHAR_AS

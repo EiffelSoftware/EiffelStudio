@@ -11,9 +11,6 @@ class VMFN1
 inherit
 	
 	VMFN
-		rename
-			other_feature as inherited_feature,
-			set_other_feature as set_inherited_feature
 		redefine
 			build_explain, is_defined
 		end

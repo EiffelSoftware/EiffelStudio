@@ -1,16 +1,19 @@
--- Server for melted feature tables associated to file ".MLT1"
+indexing
+	description: "Server for melted feature tables indexed by static type id."
+	date: "$Date$"
+	revision: "$Revision$"
 
 class M_FEAT_TBL_SERVER 
 
 inherit
-	COMPILER_SERVER [MELTED_FEATURE_TABLE, TYPE_ID]
+	COMPILER_SERVER [MELTED_FEATURE_TABLE]
 
 creation
 	make
 	
 feature -- Access
 
-	id (t: MELTED_FEATURE_TABLE): TYPE_ID is
+	id (t: MELTED_FEATURE_TABLE): INTEGER is
 			-- Id associated with `t'
 		do
 			Result := t.type_id

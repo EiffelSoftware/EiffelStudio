@@ -8,11 +8,14 @@ class TUPLE_TYPE_A
 inherit
 	GEN_TYPE_A
 		redefine
-			valid_generic, set_generics, solved_type, type_i, good_generics,
+			valid_generic, solved_type, good_generics,
 			error_generics, check_constraints,
 			same_as, same_class_type, is_tuple, associated_class,
-			substitute, internal_conform_to, set_base_class_id
+			internal_conform_to, set_base_class_id, type_i
 		end
+
+create
+	make
 
 feature -- Properties
 
@@ -37,10 +40,8 @@ feature -- Access
 		do
 			other_tuple_type ?= other
 			if other_tuple_type /= Void
-				and then
-				other_tuple_type.base_class_id.is_equal (base_class_id)
-				and then
-				is_expanded = other_tuple_type.is_expanded
+				and then other_tuple_type.base_class_id = base_class_id
+				and then is_true_expanded = other_tuple_type.is_true_expanded
 			then
 				from
 					i := 1
@@ -64,21 +65,10 @@ feature -- Access
 
 feature {COMPILER_EXPORTER} -- Primitives
 
-	set_generics (g: like generics) is
-			-- Assign `g' to `generics'.
-		do
-			generics := g
-
-			if g = Void then
-				!!generics.make (1,0)
-			end
-		end
-
 	internal_conform_to (other: TYPE_A; in_generics: BOOLEAN): BOOLEAN is
 			-- Does Current conform to `other' ?
 		local
 			tuple_type: TUPLE_TYPE_A
-			other_type: CL_TYPE_A
 			i, count, other_count: INTEGER
 			other_generics: ARRAY [TYPE_A]
 		do
@@ -114,31 +104,36 @@ feature {COMPILER_EXPORTER} -- Primitives
 		end
 
 	type_i: TUPLE_TYPE_I is
-			-- Meta generic interpretation of the TUPLE type
+			-- Meta generic interpretation of the generic type
+			-- Same definition as in GEN_TYPE_A except return type
+			-- which is TUPLE_TYPE_I.
 		local
 			i, count: INTEGER
 			meta_generic: META_GENERIC
 			true_generics: ARRAY [TYPE_I]
+			gt:TYPE_A
 		do
 			from
 				i := 1
 				count := generics.count
-				!!meta_generic.make (count)
-				!!true_generics.make (1, count)
+				create meta_generic.make (count)
+				create true_generics.make (1, count)
 			until
 				i > count
 			loop
-				meta_generic.put (generics.item (i).meta_type, i)
-				true_generics.put (generics.item (i).type_i, i)
+				gt := generics.item (i)
+				meta_generic.put (gt.meta_type, i)
+				true_generics.put (gt.type_i, i)
 				i := i + 1
 			end
 
-			!!Result
+			create Result
 			Result.set_base_id (base_class_id)
 			Result.set_meta_generic (meta_generic)
 			Result.set_true_generics (true_generics)
-			Result.set_is_expanded (is_expanded)
+			Result.set_is_true_expanded (is_true_expanded)
 		end
+
 
 	solved_type (feat_table: FEATURE_TABLE; f: FEATURE_I): TUPLE_TYPE_A is
 			-- Calculate type in function of feature `f' and the feature
@@ -161,10 +156,9 @@ feature {COMPILER_EXPORTER} -- Primitives
 						(generics.item (i).solved_type (feat_table, f), i)
 					i := i + 1
 				end
-				!!Result
+				create Result.make (new_generics)
 				Result.set_base_class_id (base_class_id)
-				Result.set_generics (new_generics)
-				Result.set_is_expanded (is_expanded)
+				Result.set_is_true_expanded (is_true_expanded)
 			end
 		end
 
@@ -175,7 +169,7 @@ feature {COMPILER_EXPORTER} -- Primitives
 			tuple_type: TUPLE_TYPE_A
 			tuple_type_generics: like generics
 		do
-			if base_class_id.is_equal (type.base_class_id) then
+			if base_class_id = type.base_class_id then
 				tuple_type ?= type
 				if tuple_type /= Void then
 					from
@@ -257,36 +251,6 @@ feature {COMPILER_EXPORTER} -- Primitives
 			end
 		end
 
-	substitute (new_generics: ARRAY [TYPE_A]) is
-			-- Take the arguments from `new_generics' to create an
-			-- effective representation of the current TUPLE_TYPE
-		local
-			i, count, pos: INTEGER
-			constraint_type: TYPE_A
-			formal_type: FORMAL_A
-			gen_type: GEN_TYPE_A
-		do
-			from
-				i := 1
-				count := generics.count
-			until
-				i > count
-			loop
-				constraint_type := generics.item (i)
-
-				if constraint_type.is_formal then
-					formal_type ?= constraint_type
-					pos := formal_type.position
-					generics.force (new_generics.item (pos), i)
-				elseif constraint_type.generics /= Void then
-					gen_type ?= constraint_type
-					gen_type.substitute (new_generics)
-				end
-			
-				i := i + 1
-			end
-		end
-
 	same_class_type (other: CL_TYPE_A): BOOLEAN is
 			-- Is the current type the same as `other' ?
 		local
@@ -296,8 +260,7 @@ feature {COMPILER_EXPORTER} -- Primitives
 		do
 			other_tuple_type ?= other
 			if  other_tuple_type /= Void
-				and then
-				other_tuple_type.base_class_id.is_equal (base_class_id)
+				and then other_tuple_type.base_class_id = base_class_id
 			then
 				from
 					i := 1

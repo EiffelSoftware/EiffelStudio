@@ -20,17 +20,9 @@ feature -- Properties
 
 	class_name: STRING
  
-	class_header_file: STRING
- 
 	type: INTEGER
  
 feature -- Convenience
- 
-	set_class_header_file (h: STRING) is
-			-- Assign `h' to `class_header_file'.
-		do
-			class_header_file := h
-		end
  
 	set_class_name (n: STRING) is
 			-- Assign `n' to `class_name'.
@@ -49,21 +41,13 @@ feature -- Code generation
 	is_special: BOOLEAN is True
 
 	generate is
-		local
-			buf: GENERATION_BUFFER
-			queue: like shared_include_queue
 		do
 			generate_include_files
-			queue := shared_include_queue
-			if not queue.has (class_header_file) then
-				queue.extend (class_header_file)
-			end
 			generate_signature
 		end
 
 	generate_body is
 		local
-			i, count: INTEGER
 			buf: GENERATION_BUFFER
 		do
 				-- Set `has_cpp_externals_calls' of BYTE_CONTEXT to True since

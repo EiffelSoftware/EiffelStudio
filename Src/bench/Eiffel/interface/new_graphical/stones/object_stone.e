@@ -8,10 +8,14 @@ class
 	OBJECT_STONE 
 
 inherit
-	STONE
+	CLASSC_STONE
+		rename
+			make as class_make
 		redefine
-			is_valid, synchronized_stone, same_as, history_name
+			is_valid, same_as, history_name,
+			stone_signature, header, stone_cursor, x_stone_cursor
 		end
+
 	SHARED_APPLICATION_EXECUTION
 	
 creation
@@ -25,6 +29,7 @@ feature {NONE} -- Initialization
 			dclass_exists: dclass /= Void
 			not_name_void: a_name /= Void
 		do
+			class_make (dclass)
 			name := a_name
 			object_address := addr
 			dynamic_class := dclass
@@ -43,32 +48,20 @@ feature -- Properties
 
 feature -- Access
 
-	origin_text: STRING is ""
-
-	stone_type: INTEGER is
-		do
-			Result := Object_type
-		end
-
---	stone_cursor: SCREEN_CURSOR is
+	stone_cursor: EV_CURSOR is
 			-- Cursor associated with Current stone during transport
 			-- when widget at cursor position is compatible with Current stone
---		do
---			Result := Cursors.cur_Object
---		end
+		do
+			Result := Cursors.cur_Object
+		end
  
---	x_stone_cursor: SCREEN_CURSOR is
+	x_stone_cursor: EV_CURSOR is
 			-- Cursor associated with Current stone during transport
 			-- when widget at cursor position is not compatible with Current stone
---		do
---			Result := Cursors.cur_X_object
---		end
- 
-	stone_name: STRING is
 		do
-			Result := Interface_names.s_Object_stone
+			Result := Cursors.cur_X_object
 		end
-
+ 
 	stone_signature: STRING is
 		do
 			create Result.make (0)
@@ -79,16 +72,6 @@ feature -- Access
 			Result.append (object_address)
 		end
  
-	icon_name: STRING is
-		do
-			Result := stone_signature
-		end
- 
-	clickable: BOOLEAN is True
-			-- Is Current an element with recorded structures information?
-
-	click_list: ARRAY [CLICK_STONE]
-
 	history_name: STRING is
 			-- Name used in the history list
 		do
@@ -99,6 +82,19 @@ feature -- Access
 			Result.append (" [")
 			Result.append (object_address)
 			Result.append ("]")
+		end
+
+	header: STRING is
+		do
+			Result := history_name
+		end
+
+feature -- Status setting
+
+	set_associated_tree_item (item: EV_TREE_ITEM) is
+			-- Associate `Current' with a tree item in the object tree.
+		do
+			tree_item := item
 		end
 
 feature -- Status report
@@ -126,22 +122,9 @@ feature -- Status report
 					Application.is_valid_object_address (object_address)
 		end
 
-	synchronized_stone: OBJECT_STONE is
-			-- Clone of `Current' after an execution step
-			-- (May be Void if not valid anymore)
-		do
-			if is_valid then
-				Result := clone (Current)
-			end
-		end
-
-feature -- Update
-
---	process (hole: HOLE) is
---			-- Process Current stone dropped in hole `hole'.
---		do
---			hole.process_object (Current)
---		end
+	tree_item: EV_TREE_ITEM
+			-- Tree item representing `Current' in the object tree.
+			-- May be Void, even if `Current' is represented in the object tree.
 
 invariant
 

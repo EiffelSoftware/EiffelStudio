@@ -73,12 +73,4 @@ feature {COMPILER_EXPORTER}
 			ctxt.put_text_item_without_tabs (ti_R_curly);
 		end;
 
-feature {COMPILER_EXPORTER} -- Case storage
-
-	storage_info: S_EXPORT_SET_I is
-			-- Stored information of export none
-		do
-			!! Result.make_none
-		end
-
 end

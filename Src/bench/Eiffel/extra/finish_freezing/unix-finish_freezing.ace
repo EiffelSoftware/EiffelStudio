@@ -1,0 +1,52 @@
+system
+	finish_freezing
+
+root
+	FINISH_FREEZING: make
+
+default
+	assertion(no)
+	address_expression(no)
+	array_optimization(no)
+	console_application(yes)
+	dead_code_removal(yes)
+	dynamic_runtime(no)
+	exception_trace(no)
+	inlining(no)
+	multithreaded(no)
+	check_vape(yes)
+	arguments(" ")
+	disabled_debug(yes)
+	disabled_debug("translate_externals")
+	disabled_debug("translate_application")
+	disabled_debug("translate_line_subst")
+	disabled_debug("input")
+	disabled_debug("translate_case")
+	disabled_debug("translate_dependencies")
+	disabled_debug("implementation")
+	disabled_debug("translate_translate")
+	disabled_debug("subst")
+	disabled_debug("translate_echo")
+	disabled_debug("progress")
+	disabled_debug("output")
+	disabled_debug("translate_cecil_and_dll")
+	disabled_debug("translate_appl")
+	disabled_debug("translate_line_change")
+	debug(no)
+	line_generation(no)
+	profile(no)
+	trace(no)
+
+cluster
+	finish_freezing:		"$EIFFEL_SRC\Eiffel\extra\finish_freezing\main"
+
+	resources:		"$EIFFEL_SRC\Eiffel\common\resources"
+
+	spec:		"$EIFFEL_SRC\Eiffel\extra\finish_freezing\spec\unix"
+
+	all base:		"$EIFFEL_SRC\library\base"
+		exclude
+			"table_eiffel3"; "CVS"; 
+		end
+
+end

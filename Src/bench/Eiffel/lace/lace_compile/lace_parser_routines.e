@@ -12,6 +12,9 @@ feature
 	ast: AST_LACE;
 			-- Last AS description
 
+	is_in_use_file: BOOLEAN
+			-- Are we parsing `use' specification of Lace or Lace itself?
+
 	open_file (file: RAW_FILE): BOOLEAN is
 			-- Open file `file' and catch possible exception
 		require
@@ -34,61 +37,61 @@ feature
 			-- Parse file named `file_name' and make built ast node
 			-- (void if failure) available through `ast'.
 		local
-			file, copy_file: RAW_FILE;
-			f_name: FILE_NAME;
-			vd21: VD21;
-			vd22: VD22;
-			ptr: POINTER;
+			file, copy_file: RAW_FILE
+			f_name: FILE_NAME
+			vd21: VD21
+			vd22: VD22
 		do
-			!!file.make (file_name);
+			create file.make (file_name)
 			if not file.is_readable then
-				!!vd21;
-				vd21.set_file_name (file_name);
-				Error_handler.insert_error (vd21);
+				create vd21
+				vd21.set_file_name (file_name)
+				Error_handler.insert_error (vd21)
 				Error_handler.raise_error
 			else
 				if not open_file (file) then
 						-- Error when opening file
-					!!vd22;
-					vd22.set_file_name (file_name);
-					Error_handler.insert_error (vd22);
+					create vd22
+					vd22.set_file_name (file_name)
+					Error_handler.insert_error (vd22)
 					Error_handler.raise_error
 				else
 						-- Save the source in a Backup directory
 					if Workbench.automatic_backup then
-						!! f_name.make_from_string (Workbench.backup_subdirectory);
-						f_name.set_file_name ("Ace");
-						!! copy_file.make (f_name);
+						create f_name.make_from_string (Workbench.backup_subdirectory);
+						f_name.set_file_name ("Ace.ace")
+						create copy_file.make (f_name)
 						if copy_file.is_creatable then
 							copy_file.open_write
-							file.readstream (file.count);
-							file.start;
-							copy_file.putstring (file.laststring);
-							copy_file.close;
+							file.readstream (file.count)
+							file.start
+							copy_file.putstring (file.laststring)
+							copy_file.close
 						end
 					end
 
 					parse_lace (file)
 
-					file.close;
-				end;
-			end;
+					file.close
+				end
+			end
 		rescue
 			if Rescue_status.is_error_exception then
 					-- Close file in case of syntax error in lace file
 				if file /= Void then
-					file.close;
-				end;
-			end;
+					file.close
+				end
+			end
 		end;
 
-	parse_file (file_name: STRING) is
+	parse_file (file_name: STRING; in_use_file: BOOLEAN) is
 			-- Parse file named `file_name' and make built ast node
 			-- (void if failure) available through `ast'.
 		local
 			retried: BOOLEAN
 			syntax_error: SYNTAX_ERROR
 		do
+			is_in_use_file := in_use_file
 			if not retried then
 				set_last_syntax_error (Void);
 				build_ast (file_name)

@@ -96,6 +96,8 @@ feature {NONE}
 			a_dc.line (0, height - 1, width, height - 1);
 			a_dc.line (0, 0, width - 1, 0);
 			a_dc.line (0, 0, 0, height - 1);
+			a_dc.unselect_pen
+			pen.delete
 		end
 
 	draw_unselected_border (a_dc: WEL_DC) is
@@ -109,11 +111,16 @@ feature {NONE}
 			a_dc.select_pen (pen);
 			a_dc.line (0, 0, width - 1, 0);
 			a_dc.line (0, 0, 0, height - 1);
+			a_dc.unselect_pen
+			pen.delete
+
 			!! color.make_system (color_btnshadow)
 			!! pen.make (ps_solid, 1, color);
 			a_dc.select_pen (pen);
 			a_dc.line (width - 1, 0, width - 1, height);
 			a_dc.line (0, height - 1, width, height - 1)
+			a_dc.unselect_pen
+			pen.delete
 		end
 
 	draw_selected_border (a_dc: WEL_DC) is
@@ -130,11 +137,16 @@ feature {NONE}
 				a_dc.select_pen (pen)
 				a_dc.line (0, 0, width, 0);
 				a_dc.line (0, 0, 0, height);
+				a_dc.unselect_pen
+				pen.delete
+
 				!! color.make_system (color_btnhighlight)
 				!! pen.make (ps_solid, 1, color);
 				a_dc.select_pen (pen);
 				a_dc.line (width - 1, 1, width - 1, height);
 				a_dc.line (1, height - 1, width, height - 1)
+				a_dc.unselect_pen
+				pen.delete
 			end
 		end
 

@@ -55,7 +55,7 @@ feature -- Properties
 		do
 			loc_clusters := clusters
 			!! Result.make
-			if not loc_clusters.empty then
+			if not loc_clusters.is_empty then
 				Result.force (loc_clusters.first)
 				from
 					loc_clusters.start
@@ -412,30 +412,46 @@ feature {COMPILER_EXPORTER} -- Implementation
 		require
 			system_exists: system /= Void
 		do
-			system.set_general_class (unique_class ("general"))
 			system.set_any_class (unique_class ("any"))
 			system.set_boolean_class (unique_class ("boolean"))
-			system.set_character_class (unique_class ("character"))
-			system.set_integer_class (unique_class ("integer"))
+			system.set_character_class (unique_class ("character"), False)
+			system.set_integer_class (unique_class ("integer_8"), 8)
+			system.set_integer_class (unique_class ("integer_16"), 16)
+			system.set_integer_class (unique_class ("integer"), 32)
+			system.set_integer_class (unique_class ("integer_64"), 64)
 			system.set_real_class (unique_class ("real"))
 			system.set_double_class (unique_class ("double"))
-			system.set_pointer_class (unique_class ("pointer"))
 			system.set_string_class (unique_class ("string"))
-			system.set_array_class (unique_class ("array"))
-			system.set_special_class (unique_class ("special"))
-			system.set_to_special_class (unique_class ("to_special"))
-			system.set_bit_class (unique_class ("bit_ref"))
-			system.set_character_ref_class (unique_class ("character_ref"))
-			system.set_boolean_ref_class (unique_class("boolean_ref"))
-			system.set_integer_ref_class (unique_class("integer_ref"))
-			system.set_real_ref_class (unique_class("real_ref"))
-			system.set_double_ref_class (unique_class("double_ref"))
-			system.set_pointer_ref_class (unique_class("pointer_ref"))
-			system.set_memory_class_i (unique_class ("memory"))
-			system.set_tuple_class (unique_class ("tuple"))
-			system.set_routine_class (unique_class ("routine"))
-			system.set_procedure_class (unique_class ("procedure"))
-			system.set_function_class (unique_class ("function"))
+			system.set_pointer_class (unique_class ("pointer"))
+
+			if not system.il_generation then
+				system.set_tuple_class (unique_class ("tuple"))
+				system.set_array_class (unique_class ("array"))
+				system.set_to_special_class (unique_class ("to_special"))
+				system.set_special_class (unique_class ("special"))
+				system.set_bit_class (unique_class ("bit_ref"))
+				system.set_character_ref_class (unique_class ("character_ref"), False)
+				system.set_boolean_ref_class (unique_class("boolean_ref"))
+				system.set_integer_ref_class (unique_class("integer_8_ref"), 8)
+				system.set_integer_ref_class (unique_class("integer_16_ref"), 16)
+				system.set_integer_ref_class (unique_class("integer_ref"), 32)
+				system.set_integer_ref_class (unique_class("integer_64_ref"), 64)
+				system.set_real_ref_class (unique_class("real_ref"))
+				system.set_double_ref_class (unique_class("double_ref"))
+				system.set_pointer_ref_class (unique_class("pointer_ref"))
+				system.set_memory_class_i (unique_class ("memory"))
+				system.set_routine_class (unique_class ("routine"))
+				system.set_procedure_class (unique_class ("procedure"))
+				system.set_function_class (unique_class ("function"))
+				system.set_character_class (unique_class ("wide_character"), True)
+				system.set_character_ref_class (unique_class ("wide_character_ref"), True)
+			else
+					-- In IL generation an ARRAY is equivalent to a SPECIAL object
+					-- in normal generation
+				system.set_special_class (unique_class ("array"))
+				system.set_array_class (system.special_class)
+			end
+
 				-- Check sum error
 			Error_handler.checksum
 		end
@@ -606,9 +622,11 @@ feature {COMPILER_EXPORTER} -- Implementation
 			until
 				clusters.after or else Result
 			loop
-				found := clusters.item.classes.has (class_name)
-				Result := found and then one_found
-				one_found := one_found or else found
+				if not clusters.item.belongs_to_all then
+					found := clusters.item.classes.has (class_name)
+					Result := found and then one_found
+					one_found := one_found or else found
+				end
 				clusters.forth
 			end
 		end
@@ -628,7 +646,7 @@ feature {COMPILER_EXPORTER} -- Implementation
 			end
 
 			if has_override_cluster then
-				-- Remove classes which are overridden
+					-- Remove classes which are overridden
 				ovc := override_cluster
 
 				from

@@ -9,11 +9,12 @@ class
 inherit
 	ARITHMETIC_AS
 
-feature -- Properties
+	PREFIX_INFIX_NAMES
+		rename
+			minus_infix as infix_function_name
+		end
 
-	infix_function_name: STRING is "_infix_minus"
-			-- Internal name of the infixed feature associated to the
-			-- binary expression
+feature -- Properties
 
 	byte_anchor: BIN_MINUS_B is
 			-- Byte code type

@@ -20,6 +20,8 @@ feature
 	license_checksum: INTEGER is 100
 
 	product_key: STRING is ""
+	
+	non_commercial_product_key: STRING is ""
 
 feature
 

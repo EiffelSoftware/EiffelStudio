@@ -1,9 +1,7 @@
 indexing
-
-	description: 
-		"";
+	description: "Trace option in Ace";
 	date: "$Date$";
-	revision: "$Revision $"
+	revision: "$Revision$"
 
 class TRACE_SD
 
@@ -12,7 +10,8 @@ inherit
 	OPTION_SD
 		redefine
 			is_trace
-		end;
+		end
+
 	SHARED_OPTION_LEVEL
 
 feature -- Properties

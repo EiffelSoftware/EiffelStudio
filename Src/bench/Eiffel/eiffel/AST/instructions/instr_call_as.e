@@ -10,7 +10,8 @@ class
 inherit
 	INSTRUCTION_AS
 		redefine
-			byte_node, fill_calls_list, replicate
+			byte_node, fill_calls_list, replicate,
+			starts_with_parenthesis
 		end
 
 	SHARED_TYPES
@@ -29,18 +30,6 @@ feature {AST_FACTORY} -- Initialization
 			call_set: call = c
 			start_position_set: start_position = s
 			line_number_set: line_number = l
-		end
-
-feature {NONE} -- Initialization
-
-	set is
-			-- Yacc initialization
-		do
-			call ?= yacc_arg (0)
-			start_position := yacc_position
-			line_number    := yacc_line_number
-		ensure then
-			call_exists: call /= Void
 		end
 
 feature -- Attributes
@@ -117,6 +106,18 @@ feature {INSTR_CALL_AS, CMD, USER_CMD, ROUTINE_AS} -- Replication
 			valid_arg: c /= Void
 		do
 			call := c
+		end
+
+feature {INTERNAL_AS} -- Status report
+
+	starts_with_parenthesis: BOOLEAN is
+			-- Is the first format item a "(".
+			-- See: INTERNAL_AS.format_compound.
+		local
+			nested: NESTED_EXPR_AS
+		do
+			nested ?= call
+			Result := nested /= Void
 		end
 
 end -- class INSTR_CALL_AS

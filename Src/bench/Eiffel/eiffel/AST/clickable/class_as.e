@@ -3,7 +3,8 @@ indexing
 	date: "$Date$"
 	revision: "$Revision$"
 
-class CLASS_AS
+class
+	CLASS_AS
 
 inherit
 	AST_EIFFEL
@@ -19,14 +20,20 @@ inherit
 	COMPILER_EXPORTER
 
 	IDABLE
+		rename
+			id as class_id,
+			set_id as set_class_id
+		end
 
 	SHARED_INST_CONTEXT
 
 feature {AST_FACTORY} -- Initialization
 
 	initialize (n: like class_name;
-		is_d, is_e, is_s: BOOLEAN;
-		ind: like indexes;
+		ext_name: STRING;
+		is_d, is_e, is_s, is_fc, is_ex: BOOLEAN;
+		top_ind: like top_indexes;
+		bottom_ind: like bottom_indexes;
 		g: like generics;
 		p: like parents;
 		c: like creators;
@@ -34,8 +41,7 @@ feature {AST_FACTORY} -- Initialization
 		inv: like invariant_part;
 		s: like suppliers;
 		o: like obsolete_message;
-		cl: like click_list;
-		e: INTEGER) is
+		cl: like click_list) is
 			-- Create a new CLASS AST node.
 		require
 			n_not_void: n /= Void
@@ -43,10 +49,14 @@ feature {AST_FACTORY} -- Initialization
 			cl_not_void: cl /= Void
 		do
 			class_name := n
+			external_class_name := ext_name
 			is_deferred := is_d
 			is_expanded := is_e
 			is_separate := is_s
-			indexes := ind
+			is_frozen := is_fc
+			is_external := is_ex
+			top_indexes := top_ind
+			bottom_indexes := bottom_ind
 			generics := g
 			parents := p
 			creators := c
@@ -59,10 +69,10 @@ feature {AST_FACTORY} -- Initialization
 					-- The keyword `invariant' followed by no assertion
 					-- at all is not significant.
 				invariant_part := Void
+				has_empty_invariant := True
 			end
 			suppliers := s
 			obsolete_message := o
-			end_position := e
 
 				-- Check for Concurrent Eiffel
 			if is_separate and not System.Concurrent_eiffel then
@@ -73,10 +83,14 @@ feature {AST_FACTORY} -- Initialization
 			click_list := cl
 		ensure
 			class_name_set: class_name = n
+			external_class_name_set: external_class_name = ext_name
 			is_deferred_set: is_deferred = is_d
 			is_expanded_set: is_expanded = is_e
 			is_separate_set: is_separate = is_s
-			indexes_set: indexes = ind
+			is_frozen_set: is_frozen = is_fc
+			is_external_set: is_external = is_ex
+			top_indexes_set: top_indexes = top_ind
+			bottom_indexes_set: bottom_indexes = bottom_ind
 			generics_set: generics = g
 			parents_set: parents = p
 			creators_set: creators = c
@@ -86,66 +100,25 @@ feature {AST_FACTORY} -- Initialization
 			suppliers_set: suppliers = s
 			obsolete_message_set: obsolete_message = o
 			click_list_set: click_list = cl
-			end_position_set: end_position = e
-		end
-
-feature {NONE} -- Initialization
-
-	set is
-			-- Initialization routine.
-		local
-			click_class_name: CLICK_AST
-		do
-			class_name ?= yacc_arg (0)
-			is_deferred := yacc_bool_arg (0)
-			is_expanded := yacc_bool_arg (1)
-			is_separate := yacc_bool_arg (2)
-			indexes ?= yacc_arg (1)
-			generics ?= yacc_arg (2)
-			parents ?= yacc_arg (3)
-			creators ?= yacc_arg (4)
-			features ?= yacc_arg (5)
-			invariant_part ?= yacc_arg (6)
-			if (invariant_part /= Void)
-				and then
-				invariant_part.assertion_list = Void
-			then
-					-- The keyword `invariant' followed by no assertion
-					-- at all is not significant.
-				invariant_part := Void
-			end
-			suppliers ?= yacc_arg (7)
-			obsolete_message ?= yacc_arg (9);	
-			end_position := yacc_int_arg (0)
-
-				-- Check for Concurrent Eiffel
-			if is_separate and not System.Concurrent_eiffel then
-				Error_handler.make_separate_syntax_error
-			end
-
-				-- Click list management
-			click_list ?= yacc_arg (8)
-			click_class_name ?= click_list.first
-			click_class_name.set_node (Current)
-		ensure then
-			class_name_exists: class_name /= Void
-			suppliers_exists: suppliers /= Void
 		end
 
 feature -- Attributes
 
-	id: CLASS_ID
-			-- Class id
-
 	class_name: ID_AS
 			-- Class name
+
+	external_class_name: STRING
+			-- External_name of class if `is_external'.
 
 	obsolete_message: STRING_AS
 			-- Obsolete message clause 
 			-- (Void if was not present)
 
-	indexes: EIFFEL_LIST [INDEX_AS]
-			-- Index clause
+	top_indexes: INDEXING_CLAUSE_AS
+			-- Indexing clause at top of class.
+
+	bottom_indexes: INDEXING_CLAUSE_AS
+			-- Indexing clause at bottom of class.
 
 	generics: EIFFEL_LIST [FORMAL_DEC_AS]
 			-- Formal generic parameter list
@@ -165,51 +138,83 @@ feature -- Attributes
 	suppliers: SUPPLIERS_AS
 			-- Supplier types
 
-	is_deferred: BOOLEAN;
+	is_deferred: BOOLEAN
 			-- Is the class deferred ?
 
-	is_expanded: BOOLEAN;
+	is_expanded: BOOLEAN
 			-- Is the class expanded ?
 
-	is_separate: BOOLEAN;
+	is_separate: BOOLEAN
 			-- Is the class separate ?
 
-	end_position: INTEGER;
+	is_frozen: BOOLEAN
+			-- Is class frozen, ie we cannot inherit from it.
+
+	is_external: BOOLEAN
+			-- Is class just an encapsulation of an already generated class.
+
+	click_list: CLICK_LIST
+			-- Clickable AST items for current class.
+
+	end_position: INTEGER
 			-- Position of last end keyword
+
+	feature_clause_insert_position: INTEGER
+			-- Position at end of features
+
+	inherit_clause_insert_position: INTEGER
+			-- Position at end of inherit clause.
+
+	generics_start_position: INTEGER
+			-- Position at start of formal generics.
+
+	generics_end_position: INTEGER
+			-- Position at end of formal generics.
+
+	invariant_insertion_position: INTEGER
+			-- Position at end of invariant.
+
+	has_empty_invariant: BOOLEAN
+			-- Does class have an empty invariant clause?
+
+feature -- Status report
 
 	is_class: BOOLEAN is True
 			-- Does the Current AST represent a class?
 
-feature -- Access
+feature {EIFFEL_PARSER} -- Element change
 
-	feature_clause_of_feature (f: FEATURE_AS): INTEGER is
-			-- Number of feature clause containing feature `f'.
-			-- 0 if `f' is not in Current class.
-		local
-			saved: INTEGER
-			name: STRING
-			fc: FEATURE_CLAUSE_AS
+	set_text_positions (ep, fp, ip, gs, ge, np: INTEGER) is
+			-- Set positions in class text.
+		require
+			ep_positive: ep > 0
+			fp_positive: fp > 0
+			ip_positive: ip > 0
+			gs_positive: gs > 0
+			ge_positive_or_not_present: ge >= 0
+			np_positive: np > 0
 		do
-			if features /= Void then
-				saved := features.index
-				from
-					features.start
-				until
-					features.after
-				loop
-					fc := features.item
-					if fc.has_feature (f) then
-						Result := features.index
-						features.finish
-					end
-					features.forth
-				end
-				features.go_i_th (saved)
-			end
+			end_position := ep
+			feature_clause_insert_position := fp
+			inherit_clause_insert_position := ip
+			generics_start_position := gs
+			generics_end_position := ge
+			invariant_insertion_position := np
+		ensure
+			end_position_set: end_position = ep
+			feature_clause_insert_position_set: feature_clause_insert_position = fp
+			inherit_clause_insert_position_set: inherit_clause_insert_position = ip
+			generics_start_position: generics_start_position = gs
+			generics_end_position: generics_end_position = ge
+			invariant_insertion_position: invariant_insertion_position = np
 		end
 
+feature -- Access
+
 	feature_with_name (n: STRING): FEATURE_AS is
-			-- Feature ast with internal name `n'
+			-- Feature AST with internal name `n'.
+		require
+			n_not_void: n /= Void
 		local
 			cur: CURSOR
 		do
@@ -227,22 +232,76 @@ feature -- Access
 			end
 		end
 
-	has_feature_name (n: FEATURE_NAME): BOOLEAN is
-			-- Does `n' appear in class-text?
+	parent_with_name (n: STRING): PARENT_AS is
+			-- Parent AST with class name `n'.
+		require
+			n_not_void: n /= Void
 		local
 			cur: CURSOR
+			pn: STRING
 		do
-			if features /= Void then
-				cur := features.cursor	
+			if parents /= Void then
+				cur := parents.cursor
 				from
-					features.start
+					parents.start
 				until
-					features.after or else Result
+					parents.after or else Result /= Void
 				loop
-					Result := features.item.has_feature_name (n)
-					features.forth
+					pn := parents.item.type.class_name
+					if pn.is_equal (n) then
+						Result := parents.item
+					end
+					parents.forth
 				end
-				features.go_to (cur)
+				parents.go_to (cur)
+			end
+		end
+
+	clickable_item (a_clickable: CLICKABLE_AST): CLICK_AST is
+			-- Corresponding click-item for `a_clickable'.
+			-- `Void' if not in `click_list'.
+		require
+			a_clickable_not_void: a_clickable /= Void
+		do
+			Result := click_list.item_by_node (a_clickable)
+		ensure
+			correct_item: Result /= Void implies Result.node = a_clickable
+		end
+
+	click_ast: CLICK_AST is
+			-- Position of class name.
+		do
+			Result := clickable_item (Current)
+		ensure
+			not_void: Result /= Void
+			correct_item: Result.node = Current
+		end
+
+	generics_as_string: STRING is
+			-- Output `formal_decs' as string to `generics'.
+			-- `Void' if `generics' `Void'.
+		local
+			i: INTEGER
+		do
+			if generics /= Void then
+				create Result.make (3)
+				Result.extend ('[')
+				from i := 1 until i > generics.count loop
+					if i > 1 then
+						Result.append (", ")
+					end
+					Result.append (generics.i_th (i).constraint_string)
+					i := i + 1
+				end
+				Result.extend (']')
+			end
+		end
+
+	custom_attribute: EIFFEL_LIST [CREATION_EXPR_AS] is
+			-- Custom attribute of current class if any.
+		do
+			if top_indexes /= Void then
+				Result := top_indexes.custom_attribute
 			end
 		end
 
@@ -251,11 +310,11 @@ feature -- Comparison
 	is_equivalent (other: like Current): BOOLEAN is
 			-- Is `other' equivalent to the current object ?
 		do
--- FIXME: suppliers_AS not used ???!!!
 			Result := equivalent (class_name, other.class_name) and then
 				equivalent (creators, other.creators) and then
 				equivalent (generics, other.generics) and then
-				equivalent (indexes, other.indexes) and then
+				equivalent (top_indexes, other.top_indexes) and then
+				equivalent (bottom_indexes, other.bottom_indexes) and then
 				equivalent (invariant_part, other.invariant_part) and then
 				equivalent (obsolete_message, other.obsolete_message) and then
 				equivalent (parents, other.parents) and then
@@ -263,104 +322,6 @@ feature -- Comparison
 				is_deferred = other.is_deferred and then
 				is_expanded = other.is_expanded and then
 				is_separate = other.is_separate 
-		end
-
-	is_equiv (other: like Current): BOOLEAN is
-			-- Is `other' class equivalent to Current?
-		require
-			valid_other: other /= Void
-		do
--- FIXME
-			Result := is_equivalent (other)
-		end
-
-feature {COMPILER_EXPORTER} -- Element change
-
-	add_feature_to_feature_clause (fc_num: INTEGER; f: FEATURE_AS) is
-			-- Add feature `f' to feature clause number `fc_num'
-		require
-			feature_clauses_exist: features /= Void
-			fc_num_ok: features.valid_index (fc_num)
-		local
-			saved, feat_count, offset: INTEGER
-		do
-			saved := features.index
-			features.go_i_th (fc_num)
-			features.item.add_feature (f)
-			features.forth
-			from
-				offset := f.end_position - f.start_position + 2
-					--| feature size + 1 semicolumn
-			until
-				features.off
-			loop
-				features.item.update_positions_with_offset (offset)
-				features.forth
-			end
-			if features.valid_cursor_index (saved) then
-				features.go_i_th (saved)
-			end
-		end
-
-	remove_feature_from_feature_clause (fc_num: INTEGER; f: FEATURE_AS) is
-			-- Remove feature `f' from feature clause number `fc_num'
-		require
-			feature_clauses_exist: features /= Void
-			fc_num_ok: features.valid_index (fc_num)
-		local
-			index, offset: INTEGER
-		do
-			index := features.index
-			features.go_i_th (fc_num)
-			features.item.remove_feature (f)
-			features.forth
-			from
-				offset := - (f.end_position - f.start_position + 2) --%%%%
-					--| feature size + 1 semicolumn
-	
-			until
-				features.off
-			loop
-				features.item.update_positions_with_offset (offset)
-				features.forth
-			end
-			if features.valid_cursor_index (index) then
-				features.go_i_th (index)
-			end
-		end
-
-	replace_feature_of_feature_clause (fc_num: INTEGER; old_f, new_f: FEATURE_AS) is
-			-- Replace feature `old_f' in feature clause number `fc_num'
-			-- by feature `new_f'
-		require
-			feature_clauses_exist: features /= Void
-			fc_num_ok: features.valid_index (fc_num)
-		local
-			index, offset: INTEGER
-		do
-			index := features.index
-			features.go_i_th (fc_num)
-			features.item.replace_feature (old_f, new_f)
-			features.forth
-			from
-				offset := (new_f.end_position - old_f.end_position) --%%%%
-			until
-				features.off
-			loop
-				features.item.update_positions_with_offset (offset)
-				features.forth
-			end
-			if features.valid_cursor_index (index) then
-				features.go_i_th (index)
-			end
-		end
-
-feature {COMPILER_EXPORTER} -- Setting
-
-	set_id (i: CLASS_ID) is
-			-- Assign `i' to `id'.
-		do
-			id := i
 		end
 
 feature {CLASS_C, COMPILED_CLASS_INFO} -- Class information
@@ -371,13 +332,13 @@ feature {CLASS_C, COMPILED_CLASS_INFO} -- Class information
 		local
 			parent_list: PARENT_LIST
 		do
-			!!Result
-			if parents /= Void then
-				!!parent_list.make_filled (parents.count)
-			elseif not ("general").is_equal (class_name) then
-				!!parent_list.make_filled (1)
+			create Result
+			if parents /= Void and not parents.is_empty then
+				create parent_list.make_filled (parents.count)
+			elseif not ("any").is_equal (class_name) then
+				create parent_list.make_filled (1)
 			else
-				!!parent_list.make (0)
+				create parent_list.make (0)
 			end
 			Result.set_parents (parent_list)
 				-- List `parent_list' will be filled by feature `init'
@@ -394,66 +355,14 @@ feature -- Stoning
 						reference_class.cluster).compiled_class
 		end
 
-	click_list: CLICK_LIST
-
 feature -- Formatting
 
 	format (ctxt: FORMAT_CONTEXT) is
-		local
-			s: STRING
 		do
 			ctxt.put_front_text_item (ti_Before_class_declaration)
 			ctxt.prepare_class_text
-			if indexes /= Void and not indexes.empty then
-				ctxt.put_text_item (ti_Before_indexing)
-				ctxt.put_text_item (ti_Indexing_keyword)
-				ctxt.indent
-				ctxt.new_line
-				if ctxt.is_short then
-					ctxt.set_separator (Void)
-				else
-					ctxt.set_separator (ti_Semi_colon)
-				end
-				ctxt.set_new_line_between_tokens
-				indexes.format (ctxt)
-				ctxt.put_text_item (ti_After_indexing)
-				ctxt.exdent
-				ctxt.new_line
-				ctxt.new_line
-			end
-
-			ctxt.put_text_item (ti_Before_class_header)
-			if is_expanded then
-				ctxt.put_text_item (ti_Expanded_keyword)
-				ctxt.put_space
-			elseif is_deferred then
-				ctxt.put_text_item (ti_Deferred_keyword)
-				ctxt.put_space
-			end
-			ctxt.put_text_item (ti_Class_keyword)
-			ctxt.put_space
-			if ctxt.is_short then
-				ctxt.put_text_item (ti_Interface_keyword)
-				ctxt.indent
-				ctxt.new_line
-			end
-			ctxt.put_classi (ctxt.class_c.lace_class);	
-			ctxt.put_text_item (ti_After_class_header)
-			if ctxt.is_short then
-				ctxt.exdent
-			end
-
-			if generics /= Void then
-				ctxt.put_space
-				ctxt.put_text_item_without_tabs (ti_Before_formal_generics)
-				ctxt.put_text_item_without_tabs (ti_L_bracket)
-				ctxt.set_space_between_tokens
-				ctxt.set_separator (ti_Comma)
-				generics.format (ctxt)
-				ctxt.put_text_item_without_tabs (ti_R_bracket)
-				ctxt.put_text_item_without_tabs (ti_After_formal_generics)
-			end
-			ctxt.new_line
+			format_indexes (ctxt, top_indexes)
+			format_header (ctxt)
 			if ctxt.is_clickable_format and obsolete_message /= Void then
 				ctxt.new_line
 				ctxt.put_text_item (ti_Before_obsolete)
@@ -470,7 +379,7 @@ feature -- Formatting
 				ctxt.indent
 				ctxt.new_line
 				ctxt.set_new_line_between_tokens
-				ctxt.set_separator (ti_Semi_colon)
+				ctxt.set_separator (ti_New_line)
 				ctxt.set_classes (ctxt.class_c, ctxt.class_c)
 				parents.format (ctxt)
 				ctxt.set_classes (Void, Void)
@@ -494,14 +403,73 @@ feature -- Formatting
 					-- We reset `ctxt' so that we can print again.
 				ctxt.set_last_was_printed (True)
 			end;		
-			ctxt.format_categories;	
-			ctxt.format_invariants;	
+			ctxt.format_categories
+			ctxt.format_invariants
+			format_indexes (ctxt, bottom_indexes)
 			ctxt.put_text_item (ti_Before_class_end)
 			ctxt.put_text_item (ti_End_keyword)
 			ctxt.end_class_text
 			ctxt.put_text_item (ti_After_class_end)
 			ctxt.put_text_item (ti_After_class_declaration)
 			ctxt.new_line
+		end
+
+	format_indexes (ctxt: FORMAT_CONTEXT; i: EIFFEL_LIST [INDEX_AS]) is
+			-- Format `i'.
+		do
+			if i /= Void and not i.is_empty then
+				ctxt.put_text_item (ti_Before_indexing)
+				ctxt.put_text_item (ti_Indexing_keyword)
+				ctxt.indent
+				ctxt.new_line
+				ctxt.set_separator (Void)
+				ctxt.set_new_line_between_tokens
+				i.format (ctxt)
+				ctxt.put_text_item (ti_After_indexing)
+				ctxt.exdent
+				ctxt.new_line
+				ctxt.new_line
+			end
+		end
+
+	format_header (ctxt: FORMAT_CONTEXT) is
+			-- Format header, ie classname and generics.
+		do
+			ctxt.put_text_item (ti_Before_class_header)
+			if is_expanded then
+				ctxt.put_text_item (ti_Expanded_keyword)
+				ctxt.put_space
+			elseif is_deferred then
+				ctxt.put_text_item (ti_Deferred_keyword)
+				ctxt.put_space
+			end
+			ctxt.put_text_item (ti_Class_keyword)
+			ctxt.put_space
+			if ctxt.is_short then
+				ctxt.put_text_item (ti_Interface_keyword)
+			end
+			ctxt.indent
+			ctxt.new_line
+			ctxt.put_classi (ctxt.class_c.lace_class)
+			ctxt.put_text_item (ti_After_class_header)
+			ctxt.exdent
+			format_generics (ctxt)
+			ctxt.new_line
+		end
+
+	format_generics (ctxt: FORMAT_CONTEXT) is
+			-- Format formal generics.
+		do
+			if generics /= Void then
+				ctxt.put_space
+				ctxt.put_text_item_without_tabs (ti_Before_formal_generics)
+				ctxt.put_text_item_without_tabs (ti_L_bracket)
+				ctxt.set_space_between_tokens
+				ctxt.set_separator (ti_Comma)
+				generics.format (ctxt)
+				ctxt.put_text_item_without_tabs (ti_R_bracket)
+				ctxt.put_text_item_without_tabs (ti_After_formal_generics)
+			end
 		end
 
 feature {AST_REGISTRATION} -- Implementation
@@ -512,7 +480,6 @@ feature {AST_REGISTRATION} -- Implementation
 		local
 			f: like features;	
 			fc, next_fc: FEATURE_CLAUSE_AS
-			inv_adapter: INVARIANT_ADAPTER
 			e_file: EIFFEL_FILE
 			l_count: INTEGER
 			feature_list: EIFFEL_LIST [FEATURE_AS]
@@ -563,7 +530,7 @@ feature {AST_REGISTRATION} -- Implementation
 							-- Register all the features.
 						fc.register_features (ast_reg)
 							-- Now Register feature clause.
-						if feature_list.empty then
+						if feature_list.is_empty then
 							e_file.set_next_feature (Void)
 						else
 							e_file.set_next_feature (feature_list.i_th (1))
@@ -575,94 +542,6 @@ feature {AST_REGISTRATION} -- Implementation
 			end
 			if invariant_part /= Void then
 				ast_reg.register_invariant (invariant_part)
-			end
-		end
-
-feature {CASE_CLASS_INFO} -- Case storage output
-
-	header_storage_info (classc: CLASS_C): S_CLASS_DATA_R331 is
-			-- Header storage information for Current
-			-- (such as index and class name)
-		require
-			valid_classc: classc /= Void
-		local
-			g_l: FIXED_LIST [S_GENERIC_DATA]
-			i_l: FIXED_LIST [S_TAG_DATA]
-			c_l: LINKED_LIST [STRING]
-			f_l: EIFFEL_LIST [FEATURE_NAME]
-			s_chart: S_CLASS_CHART
-			gen: FORMAL_DEC_AS
-			gen_name: STRING
-			gen_data: S_GENERIC_DATA
-			type_info: S_TYPE_INFO
-			name: STRING
-		do
-			!! name.make (1)
-			name.make_from_string (class_name.string_value)
-			name.to_upper
-			!! Result.make (name)
-			Result.set_reversed_engineered
-			if indexes /= Void then
-				!! s_chart
-				from
-					!! i_l.make_filled (indexes.count)
-					i_l.start
-					indexes.start
-				until
-					indexes.after
-				loop
-					i_l.replace (indexes.item.storage_info)
-					i_l.forth
-					indexes.forth
-				end
-				s_chart.set_indexes (i_l)
-				Result.set_chart (s_chart)
-			end
-			if generics /= Void then
-				!! g_l.make_filled (generics.count)
-				from
-					generics.start
-					g_l.start
-				until
-					generics.after
-				loop
-					gen := generics.item
-					!! gen_name.make (0)
-					gen_name.append (gen.formal_name)
-					gen_name.to_upper
-					if gen.constraint = Void then
-						!! gen_data.make (gen_name, Void)
-					else
-						type_info := gen.constraint_type.storage_info (classc)
-						!! gen_data.make (gen_name, type_info)
-					end
-					g_l.replace (gen_data)
-					g_l.forth
-					generics.forth
-				end
-				Result.set_generics (g_l)
-			end
-			if creators /= Void then
-				from
-					!! c_l.make
-					creators.start
-				until
-					creators.after
-				loop
-					f_l := creators.item.feature_list
-					if f_l /= Void then
-						from
-							f_l.start
-						until
-							f_l.after
-						loop
-							c_l.extend (f_l.item.visual_name)
-							f_l.forth
-						end
-					end
-					creators.forth
-				end
-				Result.set_creation_features (c_l)
 			end
 		end
 
@@ -692,18 +571,7 @@ feature {COMPILER_EXPORTER} -- Output
 		do
 			c_name := class_name.string_value
 			c_name.to_upper
-			if indexes /= Void and not indexes.empty then
-				ctxt.put_text_item (ti_Indexing_keyword)
-				ctxt.indent
-				ctxt.new_line
-				ctxt.set_separator (ti_Semi_colon)
-				ctxt.set_new_line_between_tokens
-				indexes.simple_format (ctxt)
-				ctxt.exdent
-				ctxt.new_line
-				ctxt.new_line
-			end
-
+			format_indexes (ctxt, top_indexes)
 			if is_expanded then
 				ctxt.put_text_item (ti_Expanded_keyword)
 				ctxt.put_space
@@ -715,8 +583,10 @@ feature {COMPILER_EXPORTER} -- Output
 				ctxt.put_space
 			end
 			ctxt.put_text_item (ti_Class_keyword)
-			ctxt.put_space
+			ctxt.indent
+			ctxt.new_line
 			ctxt.put_class_name (c_name)
+			ctxt.exdent
 
 			if generics /= Void then
 				ctxt.put_space
@@ -765,7 +635,7 @@ feature {COMPILER_EXPORTER} -- Output
 			if invariant_part /= Void then
 				invariant_part.simple_format (ctxt)
 			end
-
+			format_indexes (ctxt, bottom_indexes)
 			ctxt.put_text_item (ti_End_keyword)
 
 			ctxt.put_space
@@ -780,44 +650,9 @@ feature {COMPILER_EXPORTER} -- Output
 
 feature {COMPILER_EXPORTER} -- Setting
 
-	set_class_name (c: like class_name) is
+	set_top_indexes (i: like top_indexes) is
 		do
-			class_name := c
-		end
-
-	set_indexes (i: like indexes) is
-		do
-			indexes := i
-		end
-
-	set_features (f: like features) is
-		do
-			features := f
-		end
-
-	set_generics (g: like generics) is
-		do
-			generics := g
-		end
-
-	set_parents (p: like parents) is
-		do
-			parents := p
-		end
-
-	set_creators (c: like creators) is
-		do
-			creators := c
-		end
-
-	set_invariant_part (i: like invariant_part) is
-		do
-			invariant_part := i
-		end
-
-	set_suppliers (s: like suppliers) is
-		do
-			suppliers := s
+			top_indexes := i
 		end
   
 feature {NONE} -- Implementation
@@ -859,7 +694,7 @@ feature {NONE} -- Implementation
 					  -- Need to set next feature if it exists
 					  -- for extracting feature clause comments.
 				feature_list := fc.features
-				if feature_list.empty then
+				if feature_list.is_empty then
 					e_file.set_next_feature (Void)
 				else
 					e_file.set_next_feature (feature_list.i_th (1))

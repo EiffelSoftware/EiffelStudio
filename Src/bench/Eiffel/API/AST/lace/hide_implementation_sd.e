@@ -1,10 +1,8 @@
 indexing
-
-	description:
-		"AST structure in Lace file for hide%
-		%option for hiding precompiled classes.";
+	description: "AST structure in Lace file for hide%
+			%option for hiding precompiled classes.";
 	date: "$Date$";
-	revision: "$Revision $"
+	revision: "$Revision$"
 
 class HIDE_IMPLEMENTATION_SD
 
@@ -22,8 +20,7 @@ feature {COMPILER_EXPORTER}
 			classes:EXTEND_TABLE [CLASS_I, STRING];
 			list: LACE_LIST [ID_SD]) is
 		local
-			error_raised, is_hidden: BOOLEAN;
-			class_name: STRING;
+			error_raised, is_hidden: BOOLEAN
 		do
 			if Compilation_modes.is_precompiling then
 				if value /= Void then

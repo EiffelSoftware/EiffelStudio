@@ -40,10 +40,9 @@ feature -- Callbacks
 			new_file: RAW_FILE;	-- It should be PLAIN_TEXT_FILE, however windows will expand %R and %N as %N
 			to_write: STRING;
 			aok: BOOLEAN;
-			temp: STRING
 		do
 			fn := clone (last_name_chooser.selected_file);
-			if not fn.empty then
+			if not fn.is_empty then
 				!!new_file.make (fn);
 				aok := True;
 				if (new_file.exists) and then (not new_file.is_plain) then
@@ -75,7 +74,7 @@ feature -- Callbacks
 			if aok then
 				to_write := text_window.text;
 				new_file.open_write;
-				if not to_write.empty then
+				if not to_write.is_empty then
 					to_write.prune_all ('%R')
 					if general_resources.text_mode.value.is_equal ("UNIX") then
 						new_file.putstring (to_write)

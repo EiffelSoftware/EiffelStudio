@@ -4,7 +4,8 @@ inherit
 
 	UNARY_B
 		rename
-			Bc_uminus as operator_constant
+			Bc_uminus as operator_constant,
+			Il_uminus as il_operator_constant
 		redefine
 			generate_operator, is_built_in
 		end;

@@ -273,7 +273,7 @@ feature -- Generation
 				buf.new_line;
 				buf.putstring ("int inlined_dtype = ");
 				buf.putstring (gc_upper_dtype_lparan);
-				current_reg.print_register_by_name;
+				current_reg.print_register;
 				buf.putstring (");");
 				buf.new_line
 			end;
@@ -363,12 +363,12 @@ feature {NONE} -- Registers
 
 	get_inlined_param_registers (a: ARRAY [TYPE_I]): ARRAY [REGISTRABLE] is
 		local
-			i ,count: INTEGER;
-			is_param_temporary_reg, failed: BOOLEAN;
-			local_reg: REGISTRABLE;
-			p: PARAMETER_B;
-			expr: EXPR_B;
-			nest, msg: NESTED_B;
+			i ,count: INTEGER
+			is_param_temporary_reg: BOOLEAN
+			local_reg: REGISTRABLE
+			p: PARAMETER_B
+			expr: EXPR_B
+			nest, msg: NESTED_B
 			void_reg: VOID_REGISTER
 		do
 			if a /= Void then
@@ -376,7 +376,7 @@ feature {NONE} -- Registers
 					i := 1;
 					count := a.count;
 					check
-						count /= parameters.count
+						same_count: count = parameters.count
 					end;
 					!!Result.make (1, count);
 					!! temporary_parameters.make (1, count);

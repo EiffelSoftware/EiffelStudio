@@ -25,7 +25,7 @@ feature -- format
 			filed_stone: FILED_STONE
 			classc_stone: CLASSC_STONE
 			e_class: CLASS_C
-			class_tool: EB_CLASS_TOOL
+			class_tool: EB_DEVELOPMENT_TOOL
 			modified_class: BOOLEAN
 			retried: BOOLEAN
 			same_stone, error: BOOLEAN
@@ -59,11 +59,11 @@ feature -- format
 								if filed_stone /= Void then
 									error := true
 									if filed_stone.file_name /= Void then
-										create wd.make_default (tool.parent, Interface_names.t_Warning,	
-											Warning_messages.w_Cannot_read_file (filed_stone.file_name))
+										create wd.make_with_text (Warning_messages.w_Cannot_read_file (filed_stone.file_name))
+										wd.show_modal
 									else
-										create wd.make_default (tool.parent, Interface_names.t_Warning,
-											Warning_messages.w_No_associated_file)
+										create wd.make_with_text (Warning_messages.w_No_associated_file)
+										wd.show_modal
 									end
 								end			
 							end
@@ -100,8 +100,8 @@ feature -- format
 											-- internally (resynchronization, ...)
 										class_name := classc_stone.e_class.name
 										error := true
-										create wd.make_default (tool_parent, Interface_names.t_Warning, 
-											Warning_messages.w_Class_modified (class_name))
+										create wd.make_with_text (Warning_messages.w_Class_modified (class_name))
+										wd.show_modal
 									end
 								elseif st = Void then
 									class_tool.update_clickable_format (classc_stone.e_class)
@@ -120,7 +120,8 @@ feature -- format
 						filtered := false
 					end
 				else
-					create wd.make_default (tool_parent, Interface_names.t_Warning, Warning_messages.w_Cannot_retrieve_info)
+					create wd.make_with_text (Warning_messages.w_Cannot_retrieve_info)
+					wd.show_modal
 				end
 			end
 		rescue

@@ -494,7 +494,7 @@ feature -- Output
 				comments.after
 			loop
 				txt := comments.item;
-				if txt.empty or else txt.item (1) /= '|' then
+				if txt.is_empty or else txt.item (1) /= '|' then
 					put_text_item (ti_Dashdash);
 					put_comment_text (comments.item)
 					new_line;
@@ -528,13 +528,13 @@ feature -- Output
 				i >= c_count
 			loop
 				if between_quotes and c_area.item (i) = '%'' then
-					if not s.empty then
+					if not s.is_empty then
 						text.add_quoted_text (s);
 						!! s.make (0)
 					end;
 					between_quotes := false
 				elseif not between_quotes and c_area.item (i) = '`' then
-					if not s.empty then
+					if not s.is_empty then
 						text.add_comment_text (s)
 						!! s.make (0)
 					end;
@@ -544,7 +544,7 @@ feature -- Output
 				end;
 				i := i + 1
 			end;
-			if not s.empty then
+			if not s.is_empty then
 				text.add_comment_text (s)
 			end
 		end;

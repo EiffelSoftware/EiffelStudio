@@ -52,8 +52,8 @@ feature {NONE} -- Commands
 		do
 			create color_tool
 			color_tool.set_color (resource.valid_actual_value)
-			color_tool.ok_actions.extend (~update_changes)
-			color_tool.show_modal_to_window (caller)
+			color_tool.ok_actions.extend (agent update_changes)
+			color_tool.show_modal_to_window (change_dialog)
 		end 
 
 	update_changes is
@@ -76,17 +76,7 @@ feature {NONE} -- Commands
 			color_b.set_background_color (color)
 			resource.set_value_with_color (s, color)
 			update_resource
-			caller.update
-		end
-
-	set_as_auto is
-			-- Set `Current' as an auto color (a default must be used).
-		require
-			resource_may_be_void: resource.is_voidable
-		do
-			resource.set_void
-			update_resource
-			caller.update
+			caller.update (resource)
 		end
 
 feature {NONE} -- Implementation
@@ -96,15 +86,16 @@ feature {NONE} -- Implementation
 		local
 			h2: EV_HORIZONTAL_BOX
 			color_frame: EV_FRAME
+			a_frame: EV_FRAME
 		do
 			create color_b
 			color_b.set_text ("Auto")
 
-			create change_b.make_with_text_and_action ("Change...", ~change)
-			change_b.set_minimum_size (Layout_constants.Default_button_width, Layout_constants.Default_button_height)
+			create change_b.make_with_text_and_action ("Change...", agent change)
+			Layout_constants.set_default_size_for_button (change_b)
 
-			create reset_b.make_with_text_and_action ("Auto", ~set_as_auto)
-			reset_b.set_minimum_size (Layout_constants.Default_button_width, Layout_constants.Default_button_height)
+			create reset_b.make_with_text_and_action ("Auto", agent set_as_auto)
+			Layout_constants.set_default_size_for_button (reset_b)
 
 			create color_frame
 			color_frame.extend (color_b)
@@ -112,16 +103,27 @@ feature {NONE} -- Implementation
 			
 			create h2
 			h2.set_padding (Layout_constants.Dialog_unit_to_pixels (3))
-			h2.set_border_width (Layout_constants.Dialog_unit_to_pixels (3))
-			h2.extend (create {EV_CELL})
 			h2.extend (color_frame)
 			h2.disable_item_expand (color_frame)
 			h2.extend (change_b)
 			h2.disable_item_expand (change_b)
 			h2.extend (reset_b)
 			h2.disable_item_expand (reset_b)
+			h2.extend (create {EV_CELL})
 
-			change_item_widget := h2
+			create a_frame
+			a_frame.extend (h2)
+			change_item_widget := a_frame
+		end
+
+	set_as_auto is
+			-- Set `Current' as an auto color (a default must be used).
+		require
+			resource_may_be_void: resource.is_voidable
+		do
+			resource.set_void
+			update_resource
+			caller.update (resource)
 		end
 
 	color_tool: EV_COLOR_DIALOG

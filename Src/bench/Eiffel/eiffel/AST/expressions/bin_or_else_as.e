@@ -9,11 +9,13 @@ class
 inherit
 	BINARY_AS
 
+	PREFIX_INFIX_NAMES
+		rename
+			or_else_infix as infix_function_name
+		end
+
 feature -- Properties
 
-	infix_function_name: STRING is "_infix_or_else"
-			-- Internal name of the infixed feature associated to the
-			-- binary expression
 
 	byte_anchor: B_OR_ELSE_B is
 			-- Byte code type

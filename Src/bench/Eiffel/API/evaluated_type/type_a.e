@@ -9,10 +9,8 @@ inherit
 	TYPE
 		rename
 			position as comment_position
-		undefine
-			append_to
 		redefine
-			is_solved, same_as, format
+			is_solved, same_as, format, append_to
 		end
 
 	SHARED_EIFFEL_PROJECT
@@ -86,7 +84,19 @@ feature -- Properties
 		end
 
 	is_expanded: BOOLEAN is
-			-- Is the current actual type an expanded one ?
+			-- Is the current actual type an expanded/basic one ?
+		do
+			Result := is_true_expanded or else is_basic
+		end
+
+	is_true_expanded: BOOLEAN is
+			-- Is the current actual type an expanded one only?
+		do
+			-- Do nothing
+		end
+
+	is_basic: BOOLEAN is
+			-- Is the current actual type a basic type ?
 		do
 			-- Do nothing
 		end
@@ -99,12 +109,6 @@ feature -- Properties
 
 	is_none: BOOLEAN is
 			-- Is the current actual type a none type ?
-		do
-			-- Do nothing
-		end
-
-	is_basic: BOOLEAN is
-			-- Is the current actual type a basic type ?
 		do
 			-- Do nothing
 		end
@@ -193,6 +197,16 @@ feature -- Access
 feature -- Output
 
 	append_to (structured_text: STRUCTURED_TEXT) is
+			-- Append `Current' to `text'.
+		do
+			ext_append_to (structured_text, Void)
+		end
+
+	ext_append_to (structured_text: STRUCTURED_TEXT; f: E_FEATURE) is
+			-- Append `Current' to `text'.
+			-- `f' is used to retreive the generic type or argument name as string.
+			-- This replaces the old "Generic #2" or "arg #1" texts in feature signature views.
+			-- Actually used in FORMAL_A and LIKE_ARGUMENT.
 		deferred
 		end
 
@@ -299,12 +313,12 @@ feature {COMPILER_EXPORTER} -- Access
 			Result := Current
 		end
 
-	instantiation_in (type: TYPE_A; written_id: CLASS_ID): TYPE_A is
+	instantiation_in (type: TYPE_A; written_id: INTEGER): TYPE_A is
 			-- Instantiation of Current in the context of `class_type'
 			-- assuming that Current is written in the class of id `written_id'.
 		require
 			good_argument: type /= Void
-			positive_id: written_id /= Void
+			positive_id: written_id > 0
 		do
 			Result := Current
 		end
@@ -359,7 +373,7 @@ feature {COMPILER_EXPORTER} -- Access
 			act_type: TYPE_A
 		do
 			act_type := actual_type
-			Result := act_type.is_expanded and then
+			Result := act_type.is_true_expanded and then
 						act_type.associated_class.is_deferred
 		end
 
@@ -375,7 +389,7 @@ feature {COMPILER_EXPORTER} -- Access
 			creation_name: STRING
 			creation_feature: FEATURE_I
 		do
-			if is_expanded then
+			if is_true_expanded then
 				a_class := associated_class
 				creators := a_class.creators
 				if creators = Void then
@@ -395,12 +409,25 @@ feature {COMPILER_EXPORTER} -- Access
 			end
 		end
 
+	weight: INTEGER is
+			-- Weight of Current.
+			-- Used to evaluate type of an expression with balancing rule.
+		do
+		end
+
 	heaviest (type: TYPE_A): TYPE_A is
-			-- Heaviest numeric type for balancing rule
+			-- Heaviest numeric type for balancing rule.
+			-- When Current is a bit type, `type' has to be
+			-- a bit type as well.
 		require
 			good_argument: type /= Void
-		do	
-			-- Do nothing
+			consistency: is_bits implies type.is_bits
+		do
+			if weight > type.weight then
+				Result := Current
+			else
+				Result := type
+			end
 		end
 
 	create_info: CREATE_INFO is
@@ -439,7 +466,7 @@ feature {COMPILER_EXPORTER} -- Access
 			like_feat ?= Current
 			if like_feat /= Void then
 					-- we must had a dependance to the anchor feature
-				a_class := like_feat.class_id.associated_class
+				a_class := System.class_of_id (like_feat.class_id)
 				feature_i := a_class.feature_table.item (like_feat.feature_name)
 				!! depend_unit.make (like_feat.class_id, feature_i)
 				feat_depend.extend (depend_unit)
@@ -452,21 +479,6 @@ feature {COMPILER_EXPORTER}
 			-- Reconstitute text
 		do
 			ctxt.put_string (dump)
-		end
-
-	storage_info (classc: CLASS_C): S_TYPE_INFO is
-			-- Storage info for Current type in class `classc'
-		deferred
-		ensure
-			valid_result: result /= Void
-		end
-
-	storage_info_with_name (classc: CLASS_C): S_TYPE_INFO is
-			-- Storage info for Current type in class `classc'
-			-- and store the name of the class for Current
-		deferred
-		ensure
-			valid_result: result /= Void
 		end
 
 end -- class TYPE_A

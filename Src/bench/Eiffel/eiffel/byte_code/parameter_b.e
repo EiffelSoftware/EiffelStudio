@@ -11,7 +11,7 @@ inherit
 			stored_register, is_unsafe, optimized_byte_node,
 			calls_special_features, size,
 			pre_inlined_code, inlined_byte_code,
-			allocates_memory
+			allocates_memory, generate_il
 		end;
 	
 feature 
@@ -91,6 +91,28 @@ feature
 			Result.fill_from (Current);
 		end;
 
+feature -- IL code generation
+
+	generate_il is
+			-- Generate IL code for `expression'
+		local
+			target_type, source_type: TYPE_I
+		do
+			expression.generate_il
+
+			target_type := context.real_type (attachment_type);
+			if target_type.is_none then
+					-- Do nothing
+			elseif target_type.is_reference then
+				source_type := context.real_type (expression.type)
+				if source_type.is_expanded then
+						-- Source is an expanded type and target is a reference:
+						-- metamorphose with boxing.
+					generate_il_metamorphose (source_type, True)
+				end
+			end
+		end
+
 feature -- Byte code generation
 
 	make_byte_code (ba: BYTE_ARRAY) is
@@ -106,7 +128,7 @@ feature -- Byte code generation
 
 			if target_type.is_none then
 					-- Do nothing
-			elseif target_type.is_expanded then
+			elseif target_type.is_true_expanded then
 					-- The feature called with this actual parameter
 					-- will do the copy and trigger a possible exception
 					-- Do nothing here.
@@ -120,7 +142,7 @@ feature -- Byte code generation
 					if
 						basic_source.level /= basic_target.level
 					then
-						ba.append (basic_target.byte_code_cast);
+						basic_target.generate_byte_code_cast (ba)
 					end;
 				end;
 			else
@@ -129,7 +151,7 @@ feature -- Byte code generation
 						-- metamorphose
 					basic_type ?= source_type;
 					ba.append (Bc_metamorphose);
-				elseif source_type.is_expanded then
+				elseif source_type.is_true_expanded then
 						-- Source is expanded and target is a reference:
 						-- clone
 					ba.append (Bc_clone);

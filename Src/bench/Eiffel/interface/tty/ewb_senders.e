@@ -1,8 +1,8 @@
 indexing
 
 	description: 
-		"Displays the senders of a feature in output_window.";
-	date: "$Date$";
+		"Displays the senders of a feature in output_window."
+	date: "$Date$"
 	revision: "$Revision $"
 
 class EWB_SENDERS 
@@ -16,7 +16,7 @@ inherit
 			abbreviation as callers_abb
 		redefine
 			loop_action
-		end;
+		end
 	TTY_CONSTANTS
 
 creation
@@ -35,31 +35,30 @@ feature -- Setting
 
 feature {NONE} -- Implementation
 
-	to_show_all_callers: BOOLEAN;
+	to_show_all_callers: BOOLEAN
 			-- Is the format going to show all callers?
 
 	associated_cmd: E_SHOW_CALLERS is
 			-- Associated feature command to be executed
 			-- after successfully retrieving the feature_i
 		do
-			!! Result.do_nothing;
+			create Result.do_nothing
 			if to_show_all_callers then
-				Result.set_all_callers;
+				Result.set_all_callers
 			end
-		end;
+		end
 
 	loop_action is
 		do
-			command_line_io.get_class_name;
-			class_name := command_line_io.last_input;
-			command_line_io.get_feature_name;
-			feature_name := command_line_io.last_input;
-			command_line_io.get_filter_name;
-			filter_name := command_line_io.last_input;
-			command_line_io.get_option_value ("All senders",
-				Feature_resources.show_all_callers.actual_value);
-			to_show_all_callers := command_line_io.last_input.to_boolean;
-			check_arguments_and_execute;
-		end;
+			command_line_io.get_class_name
+			class_name := command_line_io.last_input
+			command_line_io.get_feature_name
+			feature_name := command_line_io.last_input
+			command_line_io.get_filter_name
+			filter_name := command_line_io.last_input
+			command_line_io.get_option_value ("All senders", show_all_callers)
+			to_show_all_callers := command_line_io.last_input.to_boolean
+			check_arguments_and_execute
+		end
 
 end -- class EWB_SENDERS

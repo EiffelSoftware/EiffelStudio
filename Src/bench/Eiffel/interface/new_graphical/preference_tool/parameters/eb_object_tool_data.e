@@ -13,17 +13,17 @@ feature -- Access
 
 	object_tool_width: INTEGER is
 		do
-			Result := resources.get_integer ("object_tool_width", 440)
+			Result := integer_resource_value ("object_tool_width", 440)
 		end
 
 	object_tool_height: INTEGER is
 		do
-			Result := resources.get_integer ("object_tool_height", 500)
+			Result := integer_resource_value ("object_tool_height", 500)
 		end
 
 	object_tool_bar: BOOLEAN is
 		do
-			Result := resources.get_boolean ("object_tool_bar", True)
+			Result := boolean_resource_value ("object_tool_bar", True)
 		end
 
 end -- class EB_OBJECT_TOOL_DATA

@@ -3,10 +3,9 @@
 deferred class EXPR_B
 
 inherit
-
 	REGISTRABLE
 		redefine
-			get_register, free_register
+			get_register, free_register, print_register
 		end
 
 	BYTE_NODE
@@ -15,9 +14,8 @@ inherit
 			pre_inlined_code, inlined_byte_code
 		end
 	SHARED_C_LEVEL
-	TYPE_I_CONST
 
-feature
+feature -- Access
 
 	type: TYPE_I is
 			-- Expression type
@@ -34,6 +32,30 @@ feature
 			-- Is register `r' used in local or forthcomming dot calls ?
 		deferred
 		end
+
+feature -- Il code generation
+
+	generate_il_metamorphose (a_type: TYPE_I; real_metamorphose: BOOLEAN) is
+			-- Generate a metamorphose of target object.
+			-- If `real_metamorphose' is set to True, target is an
+			-- expanded type and feature is defined  in a non-expanded class.
+			-- If False, feature is defined in an expanded
+			-- class we simply need to load address of target.
+		local
+			local_number: INTEGER
+		do
+			if real_metamorphose then
+				il_generator.generate_metamorphose (a_type)
+			else
+				context.add_local (a_type)
+				local_number := context.local_list.count
+				il_generator.put_local_info (a_type, "dummy_" + local_number.out)
+				il_generator.generate_local_assignment (local_number)
+				il_generator.generate_local_address (local_number)			
+			end
+		end
+
+feature -- C generation
 
 	get_register is
 			-- Get a temporary register to hold result of expr. If a register

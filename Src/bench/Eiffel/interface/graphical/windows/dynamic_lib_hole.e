@@ -15,7 +15,7 @@ inherit
 		redefine
 			symbol, full_symbol, icon_symbol,
 			name, stone_type, process_class, process_feature,
-			compatible, process_classi, receive, menu_name, accelerator,
+			compatible, process_classi, menu_name, accelerator,
 			work
 		end
 
@@ -180,14 +180,6 @@ feature -- Update
 			end
 		end;
 
-	receive (a_stone: STONE) is
-			-- Process dropped stone `a_stone'
-		do
-			if a_stone.is_valid and then compatible (a_stone) then
-				a_stone.process (Current)
-			end
-		end;
-
 feature {NONE} -- Execution
 
 	work (argument: ANY) is
@@ -204,7 +196,7 @@ feature {NONE} -- Execution
 						-- of one.
 					if argument /= Void and then argument = last_name_chooser then
 						fn := clone (last_name_chooser.selected_file);
-						if not fn.empty then
+						if not fn.is_empty then
 							!! f.make (fn);
 							if 
 								f.exists and then 
@@ -257,7 +249,7 @@ feature {NONE} -- Execution
 						end
 					else
 						if Eiffel_dynamic_lib.modified then
-							warner (popup_parent).custom_call (Current, Warning_messages.w_File_changed,
+							warner (popup_parent).custom_call (Current, Warning_messages.w_File_changed (Void),
 							Interface_names.b_Yes, Interface_names.b_No, Interface_names.b_Cancel)
 						else
 							!! f.make_open_read (Eiffel_dynamic_lib.file_name)

@@ -1,95 +1,69 @@
--- Skeleton constants
+indexing
+	description: "Skeleton constants."
+	warning: "When updating this class, do not forget to update the run-time counterpart%N%
+			%too (eif_struct.h)"
+	date: "$Date$"
+	revision: "$Revision$"
 
 class SK_CONST
 	
 feature {NONE}
 
-	Sk_exp: INTEGER is
-			-- Hexa value 0x80000000
-		external
-			"C [macro %"eif_struct.h%"]"
-		alias
-			"SK_EXP"
-		end
+	Sk_exp: INTEGER is 0x80000000
+			-- Defined in eif_struct.h as SK_EXP
 
-	Sk_bool: INTEGER is
-			-- Hexa value 0x04000000
-		external
-			"C [macro %"eif_struct.h%"]"
-		alias
-			"SK_BOOL"
-		end
+	Sk_bool: INTEGER is 0x04000000
+			-- Defined in eif_struct.h as SK_BOOL
 
-	Sk_char: INTEGER is
-			-- Hexa value 0x08000000
-		external
-			"C [macro %"eif_struct.h%"]"
-		alias
-			"SK_CHAR"
-		end
+	Sk_char: INTEGER is 0x08000000
+			-- Defined in eif_struct.h as SK_CHAR
 
-	Sk_int: INTEGER is
-			-- Hexa value 0x10000000
-		external
-			"C [macro %"eif_struct.h%"]"
-		alias
-			"SK_INT"
-		end
+	Sk_int8: INTEGER is 0x0c000000
+			-- Defined in eif_struct.h as SK_INT8
 
-	Sk_float: INTEGER is
-			-- Hexa value 0x18000000
-		external
-			"C [macro %"eif_struct.h%"]"
-		alias
-			"SK_FLOAT"
-		end
+	Sk_int: INTEGER is 0x10000000
+			-- Defined in eif_struct.h as SK_INT
 
-	Sk_double: INTEGER is
-			-- Hexa value 0x20000000
-		external
-			"C [macro %"eif_struct.h%"]"
-		alias
-			"SK_DOUBLE"
-		end
+	Sk_int32: INTEGER is 0x10000000
+			-- Defined in eif_struct.h as SK_INT32
 
-	Sk_bit: INTEGER is
-			-- Hexa value 0x28000000
-		external
-			"C [macro %"eif_struct.h%"]"
-		alias
-			"SK_BIT"
-		end
+	Sk_int16: INTEGER is 0x14000000
+			-- Defined in eif_struct.h as SK_INT16
 
-	Sk_pointer: INTEGER is
-			-- Hexa value 0x40000000
-		external
-			"C [macro %"eif_struct.h%"]"
-		alias
-			"SK_POINTER"
-		end
+	Sk_float: INTEGER is 0x18000000
+			-- Defined in eif_struct.h as SK_FLOAT
 
-	Sk_ref: INTEGER is
-			-- Hexa value 0xf8000000
-		external
-			"C [macro %"eif_struct.h%"]"
-		alias
-			"SK_REF"
-		end
+	Sk_wchar: INTEGER is 0x1c000000
+			-- Defined in eif_struct.h as SK_WCHAR
 
-	Sk_void: INTEGER is
-			-- Hexa value 0x00000000
-		external
-			"C [macro %"eif_struct.h%"]"
-		alias
-			"SK_VOID"
-		end
+	Sk_double: INTEGER is 0x20000000
+			-- Defined in eif_struct.h as SK_DOUBLE
 
-	Sk_dtype: INTEGER is
-			-- Hexa value 0x0000ffff
-		external
-			"C [macro %"eif_struct.h%"]"
-		alias
-			"SK_DTYPE"
-		end
+	Sk_int64: INTEGER is 0x24000000
+			-- Defined in eif_struct.h as SK_INT64
+
+	Sk_bit: INTEGER is 0x28000000
+			-- Defined in eif_struct.h as SK_BIT
+
+	Sk_pointer: INTEGER is 0x40000000
+			-- Defined in eif_struct.h as SK_POINTER
+
+	Sk_ref: INTEGER is 0xf8000000
+			-- Defined in eif_struct.h as SK_REF
+
+	Sk_void: INTEGER is 0x00000000
+			-- Defined in eif_struct.h as SK_VOID
+
+	Sk_dtype: INTEGER is 0x0000ffff
+			-- Defined in eif_struct.h as SK_DTYPE
+
+	--| -----------------------------
+	--| also defined in eif_struct.h:
+	--| SK_BMASK		0x07ffffff
+	--| SK_SIMPLE		0x7c000000
+	--| SK_HEAD			0xff000000
+	--| SK_INVALID		0xffffffff
+	--| SK_MASK			0x7fffffff
+	--| -----------------------------
 
 end

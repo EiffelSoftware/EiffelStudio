@@ -65,7 +65,7 @@ feature -- Status setting
 			-- Set `value' to `new_value'.
 		do
 			value := new_value;
-			if new_value.empty then
+			if new_value.is_empty then
 				actual_value := Void
 			else
 				!! actual_value.make;

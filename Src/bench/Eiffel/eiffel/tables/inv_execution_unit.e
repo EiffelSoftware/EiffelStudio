@@ -3,28 +3,17 @@
 class INV_EXECUTION_UNIT 
 
 inherit
-
 	EXECUTION_UNIT
 		redefine
-			is_valid, make, real_pattern_id
+			is_valid, real_pattern_id
 		end
 
-creation
-
+create
 	make
 
-	
 feature 
 
 	real_pattern_id: INTEGER is do end;
-
-	make (cl_type: CLASS_TYPE; f: INVARIANT_FEAT_I) is
-			-- Initialization
-		do
-			class_type := cl_type;
-			body_id := f.body_id;
-			type := Void_c_type;
-		end;
 
 	is_valid: BOOLEAN is
 			-- Is the invariant execution unit still valid ?
@@ -33,7 +22,7 @@ feature
 		do
 			assoc := associated_class;
 			Result := assoc /= Void and then assoc.has_invariant and then
-				equal (assoc.invariant_feature.body_id, body_id)
+				assoc.invariant_feature.body_index = body_index
 		end;
 
 	associated_class: CLASS_C is

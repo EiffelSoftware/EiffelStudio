@@ -25,20 +25,19 @@ feature
 			-- of the `old' classes but only if the system is moved
 			-- i.e. if a class has been added or removed
 		local
-			new_classes: LINKED_LIST [CLASS_I];
-			old_classes: HASH_TABLE [BOOLEAN, CLASS_ID];
-			clusters: LINKED_LIST [CLUSTER_I];
-			class_name: STRING;
-			cluster: CLUSTER_I;
-			class_c: CLASS_C;
-			class_i: CLASS_I;
-			checked_classes: HASH_TABLE [BOOLEAN, CLASS_ID];
-			clients: LINKED_LIST [CLASS_C];
-			check_clients: BOOLEAN;
-			class_id: CLASS_ID
+			new_classes: LINKED_LIST [CLASS_I]
+			old_classes: HASH_TABLE [BOOLEAN, INTEGER]
+			clusters: LINKED_LIST [CLUSTER_I]
+			class_name: STRING
+			class_c: CLASS_C
+			class_i: CLASS_I
+			checked_classes: HASH_TABLE [BOOLEAN, INTEGER]
+			clients: LINKED_LIST [CLASS_C]
+			check_clients: BOOLEAN
+			class_id: INTEGER
 		do
 			new_classes := System.new_classes;
-			if not new_classes.empty then
+			if not new_classes.is_empty then
 debug ("ACTIVITY")
 io.error.putstring ("TIME_CHECK check_suppliers_of_unchanged_classes%N");
 end;
@@ -69,7 +68,7 @@ end;
 							if class_c /= Void then
 									-- A compiled class has been found
 									-- Insert it in the list
-								old_classes.put (True, class_c.id);
+								old_classes.put (True, class_c.class_id);
 								check_clients := True;
 							end;
 						end;
@@ -106,9 +105,9 @@ end;
 									not class_c.changed
 										-- Pass1 will be done entirely on the class
 								and then
-									checked_classes.item (class_c.id) = False
+									checked_classes.item (class_c.class_id) = False
 								then
-									checked_classes.put (True, class_c.id);
+									checked_classes.put (True, class_c.class_id);
 debug ("ACTIVITY")
 io.error.putstring ("%T%Tcheck: ");
 io.error.putstring (class_c.name);

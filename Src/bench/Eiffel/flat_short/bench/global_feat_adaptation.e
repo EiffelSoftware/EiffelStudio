@@ -126,7 +126,7 @@ feature -- Transformation
 		local
 			tmp: STRING
 		do
-			!! Result;
+			create Result;
 			Result.set_source_type (source_enclosing_class.actual_type);
 			Result.set_target_type (target_enclosing_class.actual_type);
 			Result.set_source_feature (source_enclosing_feature);
@@ -143,22 +143,21 @@ feature -- Transformation
 		require
 			valid_f_name: f_name /= Void
 		local
-			s_type, t_type: TYPE_A;
-			local_info: LOCAL_INFO
+			s_type, t_type: TYPE_A
 		do
 			if source_locals /= Void then
-				s_type := source_locals.item (f_name);
+				s_type := source_locals.item (f_name)
 				if s_type /= Void then
-					t_type := target_locals.item (f_name);
-					!! Result;
-					Result.set_is_normal;
-					Result.set_source_type (s_type);
-					Result.set_target_type (t_type);
-					Result.set_feature_name (f_name);
+					t_type := target_locals.item (f_name)
+					create Result
+					Result.set_is_normal
+					Result.set_source_type (s_type)
+					Result.set_target_type (t_type)
+					Result.set_feature_name (f_name)
 					Result.set_evaluated_type
 				end
 			end
-		end;
+		end
 
 	adapt_argument (feature_name: STRING): LOCAL_FEAT_ADAPTATION is
 			-- Feature adaptation for argument with `feature_name'
@@ -197,7 +196,7 @@ feature -- Transformation
 								formal_type ?= t_type;
 								t_type := target_enclosing_class.constraint (formal_type.position)
 							end;
-							!! Result;
+							create Result;
 							Result.set_is_normal;
 							Result.set_source_type (s_type);
 							Result.set_target_type (t_type);
@@ -221,7 +220,7 @@ feature -- Transformation
 		do
 			if private_adapt_result = Void then
 				if source_enclosing_feature = Void then	
-					!! private_adapt_result;
+					create private_adapt_result;
 					private_adapt_result.set_is_normal;
 					private_adapt_result.set_feature_name ("Result");
 					private_adapt_result.set_source_type (Void);
@@ -237,7 +236,7 @@ feature -- Transformation
 						formal_type ?= t_type;
 			 			t_type := target_enclosing_class.constraint (formal_type.position)
 					end;
-					!! private_adapt_result;
+					create private_adapt_result;
 					private_adapt_result.set_is_normal;
 					private_adapt_result.set_feature_name ("Result");
 					private_adapt_result.set_source_type (s_type);
@@ -257,7 +256,7 @@ feature -- Transformation
 			if private_adapt_current = Void then
 				s_type := source_enclosing_class.actual_type;
 				t_type := target_enclosing_class.actual_type;
-				!! private_adapt_current;
+				create private_adapt_current;
 				private_adapt_current.set_is_normal;
 				private_adapt_current.set_feature_name ("Current");
 				private_adapt_current.set_source_type (s_type);
@@ -281,12 +280,11 @@ feature {FORMAT_CONTEXT} -- Implementation
 			-- Set source_locals and target_locals
 			-- according to feature as `source_as'.
 		local
-			s_locals: EXTEND_TABLE [LOCAL_INFO, STRING];
-			old_cluster: CLUSTER_I;
-			old_written_in: INTEGER;
-			s_type, t_type: TYPE_A;
-			l_name: STRING;
-			local_info: LOCAL_INFO;
+			s_locals: EXTEND_TABLE [LOCAL_INFO, STRING]
+			old_cluster: CLUSTER_I
+			s_type, t_type: TYPE_A
+			l_name: STRING
+			local_info: LOCAL_INFO
 			formal_type: FORMAL_A
 		do	
 			if not is_short then
@@ -303,7 +301,7 @@ feature {FORMAT_CONTEXT} -- Implementation
 						source_enclosing_feature = Void
 					then
 						from
-							!! source_locals.make (s_locals.count);
+							create source_locals.make (s_locals.count);
 							s_locals.start;
 						until
 							s_locals.after
@@ -326,8 +324,8 @@ feature {FORMAT_CONTEXT} -- Implementation
 						target_locals := source_locals
 					else
 						from
-							!! source_locals.make (s_locals.count);
-							!! target_locals.make (s_locals.count);
+							create source_locals.make (s_locals.count);
+							create target_locals.make (s_locals.count);
 							s_locals.start;
 						until
 							s_locals.after
@@ -355,7 +353,7 @@ feature {FORMAT_CONTEXT} -- Implementation
 									end;
 				 					t_type := t_type.instantiation_in 
 											(target_enclosing_class.actual_type,
-											source_enclosing_class.id).actual_type;
+											source_enclosing_class.class_id).actual_type;
 									if t_type.is_formal then
 										formal_type ?= t_type;
 				 						t_type := target_enclosing_class.constraint 

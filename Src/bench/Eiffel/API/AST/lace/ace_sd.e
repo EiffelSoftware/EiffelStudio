@@ -1,25 +1,27 @@
 indexing
-	description: "";
-	date: "$Date$";
-	revision: "$Revision $"
+	description: "Representation of a Lace AST"
+	date: "$Date$"
+	revision: "$Revision$"
 
 class ACE_SD
 
 inherit
-
 	AST_LACE
 		redefine
 			adapt
-		end;
-	SHARED_USE;
-	EIFFEL_ENV;
+		end
+
+	SHARED_USE
+
+	EIFFEL_ENV
+
 	SHARED_EIFFEL_PROJECT
 
-feature {LACE_AST_FACTORY} -- Initialization
+feature {ACE_SD, LACE_AST_FACTORY} -- Initialization
 
 	initialize (sn: like system_name; r: like root;
 		d: like defaults; c: like clusters; e: like externals;
-		g: like generation; cl: like click_list) is
+		cl: like click_list) is
 			-- Create a new ACE AST node.
 		require
 			sn_not_void: sn /= Void
@@ -31,7 +33,6 @@ feature {LACE_AST_FACTORY} -- Initialization
 			defaults := d
 			clusters := c
 			externals := e
-			generation := g
 			click_list := cl
 		ensure
 			system_name_set: system_name = sn
@@ -39,26 +40,8 @@ feature {LACE_AST_FACTORY} -- Initialization
 			defaults_set: defaults = d
 			clusters_set: clusters = c
 			externals_set: externals = e
-			generation_set: generation = g
 			click_list_set: click_list = cl
 		end
-
-feature {NONE} -- Initialization
-
-	set is
-			-- Yacc initialization
-		do
-			system_name ?= yacc_arg (0);
-			root ?= yacc_arg (1);
-			defaults ?= yacc_arg (2);
-			clusters ?= yacc_arg (3);
-			Externals ?= yacc_arg (4);
-			Generation ?= yacc_arg (5);
-			click_list ?= yacc_arg (6)
-		ensure then
-			system_name_exists: system_name /= Void;
-			root_exists: root /= Void;
-		end;
 
 feature -- Properties
 
@@ -77,11 +60,172 @@ feature -- Properties
 	externals: LACE_LIST [LANG_TRIB_SD];
 			-- Description of extenal clauses
 
-	generation: LACE_LIST [LANG_GEN_SD];
-			-- Description of the generation clause
-
 	click_list: CLICK_LIST;
 			-- Structure containing elements to click on AST nodes
+
+	comment_list: ARRAYED_LIST [STRING]
+			-- List of comments usually associated with `default' clause.
+
+feature -- Setting
+
+	set_defaults (d: like defaults) is
+			-- Set `defaults' with `d'.
+		do
+			defaults := d
+		ensure
+			defaults_set: defaults = d
+		end
+
+	set_system_name (sn: like system_name) is
+			-- Set `system_name' with `sn'.
+		require
+			sn_not_void: sn /= Void
+		do
+			system_name := sn
+		ensure
+			system_name_set: system_name = sn
+		end
+
+	set_root (r: like root) is
+			-- Set `root' with `r'.
+		require
+			r_not_void: r /= Void
+		do
+			root := r
+		ensure
+			root_set: root = r
+		end
+
+	set_clusters (cl: like clusters) is
+			-- Set `clusters' with `cl'.
+		require
+			cl_not_void: cl /= Void
+		do
+			clusters := cl
+		ensure
+			clusters_set: clusters = cl
+		end
+
+	set_externals (e: like externals) is
+			-- Set `externals' with `r'.
+		require
+			e_not_void: e /= Void
+		do
+			externals := e
+		ensure
+			externals_set: externals = e
+		end
+
+feature -- Duplication
+
+	duplicate: like Current is
+			-- Duplicate current object
+		do
+			create Result
+			Result.initialize (system_name.duplicate, root.duplicate,
+				duplicate_ast (defaults), duplicate_ast (clusters), duplicate_ast (externals), click_list)
+			Result.set_comment_list (comment_list)
+		end
+
+feature -- Comparison
+
+	same_as (other: like Current): BOOLEAN is
+			-- Is `other' same as Current?
+		do
+			Result := other /= Void and then system_name.same_as (other.system_name)
+					and then root.same_as (other.root)
+					and then same_ast (defaults, other.defaults)
+					and then same_ast (clusters, other.clusters)
+					and then same_ast (externals, other.externals)
+		end
+
+feature -- Saving
+
+	save (st: GENERATION_BUFFER) is
+			-- Save current in `st'.
+		do
+			st.putstring ("system")
+			st.new_line
+			st.indent
+			system_name.save (st)
+			st.exdent
+			st.new_line
+			st.new_line
+
+			st.putstring ("root")
+			st.new_line
+			st.indent
+			root.save (st)
+			st.exdent
+			st.new_line
+			st.new_line
+
+			if defaults /= Void then
+				st.putstring ("default")	
+				st.new_line
+				st.indent
+				defaults.save_with_new_line (st)
+				st.exdent
+				st.new_line
+			end
+
+			if comment_list /= Void and then not comment_list.is_empty then
+					-- Saving comments
+				st.new_line
+				from
+					comment_list.start
+				until
+					comment_list.after
+				loop
+					st.putstring (comment_list.item)
+					st.new_line
+					comment_list.forth
+				end
+			end
+	
+			st.new_line
+			st.putstring ("cluster")
+			st.new_line
+			st.indent
+			if clusters /= Void then
+				clusters.save_with_new_line (st)
+			end
+			st.exdent
+
+			if externals /= Void then
+				st.putstring ("external")
+				st.new_line
+				st.indent
+				externals.save_with_new_line (st)
+				st.exdent
+			end
+
+			st.new_line
+			st.putstring ("end")
+			st.new_line
+		end
+
+feature -- Changes
+
+	updated_ast (old_ast, new_ast: like Current): like Current is
+		require
+			old_ast_not_void: old_ast /= Void
+			new_ast_not_void: new_ast /= Void
+		do
+			Result := new_ast.duplicate
+		ensure
+			Result_not_void: Result /= Void
+		end
+
+feature -- Setting
+
+	set_comment_list (o: like comment_list) is
+			-- Assign `o' to `comment_list'.
+		do
+			comment_list := o
+		ensure
+			comment_list_set: comment_list = o
+		end
 
 feature {COMPILER_EXPORTER} -- Lace compilation
 
@@ -99,11 +243,15 @@ feature {COMPILER_EXPORTER} -- Lace compilation
 				-- universe.
 			build_precompiled
 
+				-- Initialize override_cluster_name if any
+			set_override_cluster
+
 				-- Then build the clusters with the files *.e found
 				-- in the clusters
-			build_clusters;
+			build_clusters
+
 				-- Reset the options of the CLASS_I
-			reset_options;
+			reset_options
 
 				-- Second adaptation of Use files
 			adapt_use;
@@ -114,7 +262,7 @@ feature {COMPILER_EXPORTER} -- Lace compilation
 
 			Degree_output.put_end_degree_6;
 
-			process_system_level_options;
+			process_system_level_options
 
 			process_defaults_and_options;
 
@@ -124,9 +272,6 @@ feature {COMPILER_EXPORTER} -- Lace compilation
 
 			process_external_clause;
 			System.reset_generate_clause;
-			if Generation /= Void then
-				Generation.adapt
-			end;
 
 			if Compilation_modes.is_precompiling then
 				update_document_path
@@ -158,7 +303,6 @@ feature {COMPILER_EXPORTER} -- Lace compilation
 				System.set_freeze
 			end
 		end
-
 	process_defaults_and_options is
 		do
 			process_defaults;
@@ -170,57 +314,39 @@ feature {COMPILER_EXPORTER} -- Lace compilation
 			process_options;
 		end;
 
-	precomp_project_names: LINKED_LIST [STRING] is
+	precompiled_project: PAIR [D_PRECOMPILED_SD, STRING] is
+			-- Precompilation options, as specified in the
+			-- default clause in the Ace file
 		local
-			d_option: D_OPTION_SD;
-			value: OPT_VAL_SD;
+			d_precompiled_option: D_PRECOMPILED_SD;
+			value: OPT_VAL_SD
+			found: BOOLEAN
+			vd38: VD38
 		do
-			!! Result.make;
 			if defaults /= Void then
 				from
 					defaults.start
 				until
 					defaults.after
 				loop
-					d_option := defaults.item;
-					if d_option.option.is_precompiled then
-						value := d_option.value;
-						if value.is_name then
-								-- If it is not a NAME_SD, the normal
-								-- adapt will trigger the error
-							Result.extend (value.value)
-						end
-					end;
-					defaults.forth
-				end
-			end;
-				-- Do not call the once function `System' directly since it's
-				-- value may be replaced during the first compilation (as soon
-				-- as we figured out whether the system describes a Dynamic
-				-- Class Set or not).
-		ensure
-			precomp_project_names_not_void: Result /=  Void
-		end;
-
-	precompiled_options: HASH_TABLE [D_PRECOMPILED_SD, STRING] is
-			-- Precompilation options, as specified in the
-			-- default clause in the Ace file
-		local
-			d_precompiled_option: D_PRECOMPILED_SD;
-			value: OPT_VAL_SD
-		do
-			!! Result.make (5);
-			if defaults /= Void then
-				from defaults.start until defaults.after loop
 					d_precompiled_option ?= defaults.item;
 					if d_precompiled_option /= Void then
-						value := d_precompiled_option.value;
-						if value.is_name then
-								-- If it is not a NAME_SD, the normal
-								-- adapt will trigger the error
-							Result.force (d_precompiled_option, value.value)
+						if found then
+							create vd38
+							Error_handler.insert_error (vd38)
+							Error_handler.raise_error
+						else
+							value := d_precompiled_option.value;
+							if value.is_name then
+								create Result
+									-- If it is not a NAME_SD, the normal
+									-- adapt will trigger the error
+								Result.set_first (d_precompiled_option)
+								Result.set_second (value.value)
+							end
+							found := True
 						end
-					end;
+					end
 					defaults.forth
 				end
 			end;
@@ -228,8 +354,6 @@ feature {COMPILER_EXPORTER} -- Lace compilation
 				-- value may be replaced during the first compilation (as soon
 				-- as we figured out whether the system describes a Dynamic
 				-- Class Set or not).
-		ensure
-			precompiled_options_not_void: precompiled_options /= Void
 		end;
 
 	process_system_level_options is
@@ -251,27 +375,52 @@ feature {COMPILER_EXPORTER} -- Lace compilation
 		end;
 
 	build_clusters is
-			-- Analysis of the AS description of the SDF in order to 
-			-- build the clusters
+			-- Analysis of AS description of SDF in order to 
+			-- build clusters.
+		local
+			clus: CLUSTER_SD
+			override_name: STRING
+			clus_name: STRING
 		do
 			if clusters /= Void then
+					-- We get all clusters from Ace file. If they have the `all' or
+					-- `library' specification we expand the list of clusters by
+					-- looking at the subdirectories through `expand_recursive_clusters'
+					-- which has a small side effect that updates the `clusters' objects
+					-- by adding new item to it.
+					--
+					-- Note: because we accepted in 4.5 `all' specification on `override_cluster'
+					-- we cannot expand it like the other cluster with `all' because everything
+					-- has been created with only one override_cluster in mind. As a consequence
+					-- I (Manu) kept the previous implementation of `all' specification in
+					-- CLUSTER_I, where all classes belong to the top cluster.
 				Degree_output.put_start_degree_6 (clusters.count);
 				from
 					clusters.start
+					override_name := Universe.override_cluster_name
 				until
 					clusters.after
 				loop
-					clusters.item.build;
-					clusters.forth;
-				end;
+					clus := clusters.item
+					clus_name := clus.cluster_name
+					if
+						clus.is_recursive and then
+						(override_name = Void or else not clus_name.is_equal (override_name))
+					then
+						clus.expand_recursive_clusters (clusters)
+					end
+					Degree_output.put_degree_6 (clus, clusters.count - clusters.index + 1)
+					clus.build
+					clusters.forth
+				end
 			else
 				Degree_output.put_start_degree_6 (0)
-			end;
-		end;
+			end
+		end
 
 	build_precompiled is
 			-- Re-insert the precompiled clusters into
-			-- the universe.
+			-- universe.
 		local
 			old_clusters: LINKED_LIST [CLUSTER_I];
 			old_cluster, cluster: CLUSTER_I;
@@ -284,7 +433,7 @@ feature {COMPILER_EXPORTER} -- Lace compilation
 			loop
 				old_cluster := old_clusters.item;
 				if old_cluster.is_precompiled then
-					!!cluster.make_from_old_cluster (old_cluster);
+					create cluster.make_from_precompiled_cluster (old_cluster);
 					Universe.insert_cluster (cluster);
 					update_sub_clusters (cluster, old_cluster);
 				end;
@@ -446,6 +595,29 @@ feature {COMPILER_EXPORTER} -- Lace compilation
 			Result := root.compile_all_classes
 		end;
 
+	set_override_cluster is
+			-- Initialize `Universe' with override_cluster_name found in Ace file
+			-- if any. This name can be invalid in which case it does not matter,
+			-- otherwise it helps us to build a valid override cluster during
+			-- `build_clusters'.
+		local
+			free_option_sd: FREE_OPTION_SD
+		do
+			if defaults /= Void then
+				from
+					defaults.start
+				until
+					defaults.after
+				loop
+					free_option_sd ?= defaults.item.option
+					if free_option_sd /= Void and then free_option_sd.is_override then
+						Universe.set_override_cluster_name (defaults.item.value.value)
+					end
+					defaults.forth
+				end
+			end
+		end
+
 feature {NONE} -- Incrementality
 
 	is_subset (original_list, new_list: LIST [STRING]): BOOLEAN is
@@ -514,12 +686,14 @@ feature {NONE} -- Incrementality
 			System.set_array_optimization_on (False)
 			System.set_inlining_on (False)
 			System.set_inlining_size (4)			
-			System.set_code_replication_off (True)
 			System.set_exception_stack_managed (False)
 			System.server_controler.set_block_size (1024)
 			System.set_do_not_check_vape (False)
 			System.allow_address_expression (False)			
 			System.set_dynamic_def_file (Void)
+			System.set_ise_gc_runtime (True)
+			System.set_il_verifiable (True)
 		end
 
 end -- class ACE_SD
+

@@ -1,18 +1,18 @@
 indexing
-
-	description:
-			"Abstract description of a multi_branch instruction, %
-			%Version for Bench."
-	date: "$Date$"
-	revision: "$Revision$"
+	description	: "Abstract description of a multi_branch instruction, %
+				  %Version for Bench."
+	date		: "$Date$"
+	revision	: "$Revision$"
 
 class INSPECT_AS
 
 inherit
 	INSTRUCTION_AS
 		redefine
-			number_of_stop_points,
-			byte_node, find_breakable, fill_calls_list, replicate
+			number_of_breakpoint_slots,
+			byte_node, 
+			fill_calls_list, 
+			replicate
 		end
 
 	SHARED_INSPECT
@@ -37,28 +37,6 @@ feature {AST_FACTORY} -- Initialization
 			line_number_set: line_number = l
 		end
 
-feature {NONE} -- Initialization
-
-	set is
-			-- Yacc alternatives
-		do
-			switch ?= yacc_arg (0)
-			case_list ?= yacc_arg (1)
-			else_part ?= yacc_arg (2)
-				-- We need to check for the existence of a `else' clause
-				-- in the inspect statement even if `else_part' is Void.
-				--| Note: we cannot generate a generic class from C if we don't have
-				--| the type of the generic parameter, that's why we are doing it
-				--| from the Eiffel side.
-			if else_part = Void and then yacc_bool_arg (0) then
-				!! else_part.make (0)
-			end
-			start_position := yacc_position
-			line_number    := yacc_line_number
-		ensure then
-			switch_exists: switch /= Void
-		end
-
 feature -- Attributes
 
 	switch: EXPR_AS
@@ -72,16 +50,15 @@ feature -- Attributes
 
 feature -- Access
 
-	number_of_stop_points: INTEGER is
+	number_of_breakpoint_slots: INTEGER is
 			-- Number of stop points for AST
 		do
-			Result := 1
+			Result := 1 -- "inspect cond" line
 			if case_list /= Void then
-				Result := Result + case_list.number_of_stop_points
+				Result := Result + case_list.number_of_breakpoint_slots
 			end
 			if else_part /= Void then
-				Result := Result + else_part.number_of_stop_points
-				Result := Result + 1
+				Result := Result + else_part.number_of_breakpoint_slots
 			end
 		end
 
@@ -107,7 +84,7 @@ feature -- Type check, byte code and dead code removal
 			switch.type_check
 
 				-- Initialization of the multi-branch controler
-			!!controler.make
+			create controler.make
 			Inspect_controlers.put_front (controler)
 			controler.set_node (Current)
 			controler.set_feature_table (context.a_class.feature_table)
@@ -121,7 +98,7 @@ feature -- Type check, byte code and dead code removal
 				controler.set_character_type
 			else
 					-- Error
-				!!vomb1
+				create vomb1
 				context.init_error (vomb1)
 				vomb1.set_type (current_item)
 				Error_handler.insert_error (vomb1)
@@ -147,17 +124,18 @@ feature -- Type check, byte code and dead code removal
 			-- Associated byte code
 		local
 			tmp: BYTE_LIST [BYTE_NODE]
+			loc_case_list: like case_list
 		do
-			!!Result
+			create Result
 			Result.set_switch (switch.byte_node)
-			if case_list /= Void then
+			loc_case_list := case_list
+			if loc_case_list /= Void then
 					-- The AST stores the inspect cases in reverse order
 					-- compared to the way the user wrote them. So we
 					-- put them back in the correct order in the generated
 					-- byte code so that it will match the displayed text
 					-- when debugging.
-				tmp := case_list.reversed_byte_node
-				tmp := tmp.remove_voids
+				tmp := loc_case_list.byte_node.remove_voids
 				if tmp /= Void then
 					Result.set_case_list (tmp)
 				end
@@ -168,21 +146,6 @@ feature -- Type check, byte code and dead code removal
 			Result.set_line_number (line_number)
 		end
 
-feature -- Debugger
-
-	find_breakable is
-			-- Look for breakable instructions.
-		do
-			record_break_node
-			if case_list /= Void then
-				case_list.find_breakable
-			end
-			if else_part /= Void then
-				else_part.find_breakable
-				record_break_node
-			end
-		end
-
 feature -- Replication
 
 	fill_calls_list (l: CALLS_LIST) is
@@ -190,7 +153,7 @@ feature -- Replication
 		local
 			new_list: like l
 		do
-			!!new_list.make
+			create new_list.make
 			switch.fill_calls_list (new_list)
 			l.merge (new_list)
 			if case_list /= Void then
@@ -231,18 +194,17 @@ feature {AST_EIFFEL} -- Output
 			if case_list /= Void then
 				ctxt.set_separator (ti_Empty)
 				ctxt.set_no_new_line_between_tokens
-				ctxt.reversed_format_list (case_list)
+				case_list.format (ctxt)
 			end
 			if else_part /= Void then
 				ctxt.put_text_item (ti_Else_keyword)
 				ctxt.indent
 				ctxt.new_line
-				ctxt.set_separator (ti_Semi_colon)
+				ctxt.set_separator (Void)
 				ctxt.set_new_line_between_tokens
 				ctxt.format_ast (else_part)
 				ctxt.new_line
 				ctxt.exdent
-				ctxt.put_breakable
 			end
 			ctxt.put_text_item (ti_End_keyword)
 		end

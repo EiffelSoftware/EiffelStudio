@@ -6,9 +6,9 @@ indexing
 class DLL_EXT_BYTE_CODE
 
 inherit
-	C_EXT_BYTE_CODE
+	EXT_EXT_BYTE_CODE
 		redefine
-			is_special, generate_body, generate_signature
+			is_special, generate_body
 		end
 
 feature -- Properties
@@ -18,6 +18,9 @@ feature -- Properties
 
 	dll_index: INTEGER
 		-- Dll index
+
+	dll_name: STRING
+			-- Special file name (dll or macro)
 
 feature -- Initialization
 
@@ -33,11 +36,17 @@ feature -- Initialization
 			dll_index := i
 		end
 
+	set_dll_name (f: STRING) is
+			-- Assign `f' to `dll_name'.
+		do
+			dll_name := f
+		end
+
 feature -- Convenience
 
 	is_special: BOOLEAN is
 		do
-			Result := special_file_name /=  Void
+			Result := dll_name /=  Void
 		end
 
 feature -- Code generation
@@ -53,45 +62,32 @@ feature -- Code generation
 			end
 		end
 
-	generate_signature is
-		do
-			if is_special then
-				generate_basic_signature
-			elseif encapsulated then
-				old_generate
-			end
-		end
-
 feature {NONE} -- Internal generation
 
 	generate_dll_body (is_win_32: BOOLEAN) is
 			-- Generate body for an external of type dllwin32
 		local
 			buf: GENERATION_BUFFER
-			queue: like shared_include_queue
 		do
 			buf := buffer
 
-			queue := shared_include_queue
-			if not queue.has (eif_misc_h) then
-				queue.extend (eif_misc_h)
-			end
+			shared_include_queue.put (eif_misc_h)
 
-			buffer.putstring ("static char done = 0;")
+			buf.putstring ("static char done = 0;")
 			buf.new_line
-			buffer.putstring ("static EIF_POINTER fp = NULL;")
+			buf.putstring ("static EIF_POINTER fp = NULL;")
 			buf.new_line
 	
 			buf.putstring ("if (!done) {")
 			buf.indent
 			buf.new_line
 				-- Declare local variables required by the call
-			buf.putstring ("HANDLE a_result;")
+			buf.putstring ("HMODULE a_result;")
 			buf.new_line
 
 				-- Now comes the body
 			buf.putstring ("a_result = eif_load_dll(")
-			buf.putstring (special_file_name)
+			buf.putstring (dll_name)
 			buf.putstring (");")
 			buf.new_line
 			buf.putstring ("if (a_result == NULL) eraise(%"Can not load library%",EN_PROG);")
@@ -133,18 +129,20 @@ feature {NONE} -- Internal generation
 				if has_arg_list then
 					result_type.c_type.generate_function_cast_type (buf, stdcall, argument_types)
 				else
-					result_type.c_type.generate_function_cast_type (buf, stdcall, <<>>)
+					result_type.c_type.generate_function_cast_type (buf, stdcall, <<"void">>)
 				end
 			else
 				if has_arg_list then
 					result_type.c_type.generate_function_cast (buf, argument_types)
 				else
-					result_type.c_type.generate_function_cast (buf, <<>>)
+					result_type.c_type.generate_function_cast (buf, <<"void">>)
 				end
 			end
 			buf.putstring ("fp )")
 			if arguments /= Void then
 				generate_arguments_with_cast
+			else
+				buf.putstring ("()")
 			end
 			buf.putchar (';');
 			buf.new_line

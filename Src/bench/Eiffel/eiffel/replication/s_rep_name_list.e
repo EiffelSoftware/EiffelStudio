@@ -11,8 +11,12 @@ inherit
 	LINKED_LIST [S_REP_NAME]
 		rename
 			make as old_make
-		end;
+		end
+
 	SHARED_WORKBENCH
+		undefine
+			copy, is_equal
+		end
 
 creation
 
@@ -20,7 +24,7 @@ creation
 
 feature
 
-	parent_clause: CLASS_ID;
+	parent_clause: INTEGER;
 			-- Parent clause where replication came from 
 
 	replicated_features: LINKED_LIST [S_REP_NAME];
@@ -28,7 +32,7 @@ feature
 			-- The origin of these features were written_in the same
 			-- class 
 
-	make (p: CLASS_ID) is
+	make (p: INTEGER) is
 			-- Make current with parent `p'.
 		do
 			parent_clause := p;

@@ -13,13 +13,16 @@ inherit
 			make as table_make
 		export
 			{NONE} all;
-			{ANY} put, clear_all, remove, item, empty
-		end;
+			{ANY} put, clear_all, remove, item, is_empty
+		end
+
 	IDABLE
 		rename
-			id as class_id
+			id as class_id,
+			set_id as set_class_id
 		export
-			{NONE} all;
+			{NONE} all
+			{ANY} class_id, set_class_id
 		undefine
 			is_equal, copy
 		end
@@ -33,24 +36,12 @@ feature {NONE} -- Initialization
 			-- Create precompiled comments with class_id `id'
 			-- with initial size `init_size'.
 		require
-			valid_id: id /= Void
+			valid_id: id /= 0
 		do
 			table_make (init_size);
 			class_id := id
 		ensure
 			class_id = id
-		end;
-
-feature -- Properties
-
-	class_id: CLASS_ID;
-			-- Class id for class comments
-
-feature {NONE} -- Implementation
-
-	set_id (i: like class_id) is
-		do
-			class_id := i
 		end;
 
 feature -- Debug
@@ -72,6 +63,6 @@ feature -- Debug
 
 invariant
 
-	class_id_not_void: class_id /= Void
+	class_id_not_void: class_id /= 0
 
 end -- class CLASS_COMMENTS

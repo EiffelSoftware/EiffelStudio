@@ -20,26 +20,23 @@ creation
 
 feature -- Properties
 
-	is_keyword: BOOLEAN;
+	is_keyword: BOOLEAN is
 			-- Is Current a keyword?
+		require
+			valid_image: image /= Void and then not image.is_empty
+		do
+			Result := (image @ 1).is_alpha
+		end
 
 	is_symbol: BOOLEAN is
 			-- Is Current a symbol?
+		require
+			valid_image: image /= Void and then not image.is_empty
 		do	
 			Result := not is_keyword
 		ensure
 			not_keyword: Result = not is_keyword
-		end;
-
-feature -- Setting
-
-	set_is_keyword is
-			-- Set is_keyword to True.
-		do
-			is_keyword := True
-		ensure
-			is_keyword: is_keyword
-		end;
+		end
 
 feature {TEXT_FORMATTER} -- Implementation
 

@@ -268,7 +268,7 @@ feature {NONE} -- Implementation
 				then
 						-- The system has been successfully melted.
 						-- The system can be executed as required.
-					tool.debug_run_cmd_holder.associated_command.execute (text_window)
+					tool.debug_run_hole_holder.associated_command.execute (text_window)
 				end
 			else
 				end_run_confirmed := true
@@ -406,7 +406,6 @@ feature {NONE} -- Implementation Execution
 		local
 			fn: STRING
 			f: PLAIN_TEXT_FILE
-			temp: STRING
 			arg: ANY
 		do
 			if argument = generate_code_only then
@@ -440,7 +439,7 @@ feature {NONE} -- Implementation Execution
 						warner_ok (arg)
 					elseif arg = last_name_chooser then
 						fn := clone (last_name_chooser.selected_file)
-						if not fn.empty then
+						if not fn.is_empty then
 							!! f.make (fn)
 							if
 								f.exists and then 

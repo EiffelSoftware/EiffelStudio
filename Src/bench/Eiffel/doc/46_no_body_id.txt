@@ -1,0 +1,145 @@
+Document made on: 05/20/2000 by `manus'.
+
+Purpose:
+========
+
+To explain recent modification on execution table, dispatch table
+and indexing using `body_index' instead of `body_id'.
+
+
+Origine of change:
+==================
+
+An incrementality bug found when developing the EiffelVision 2 library. The
+scenario was the following: you have many classes that merge a deferred 
+feature with an attribute. When you were changing a class that is inherited
+from the class that defines either the attribute or the deferred feature
+and then changing only one class that does the merging, you add the bad
+surprise of seeing the merged features of all other classes that have
+not been changed to loose their encapsulation function in workbench mode.
+
+The reason was that when doing the small change after the big one, only one
+body id was changed, not all of them. And also because their execution unit
+was still referencing the old body_id that is no longer valid anymore, we
+were removing when shaking the `dispatch_table' and the `execution_table'.
+
+To be clearer, here is an example:
+
+class
+	A
+end
+
+class
+	B
+inherit
+	A
+feature
+
+	item: INTEGER is
+		deferred
+		end
+end
+
+class
+	C
+feature
+	item: INTEGER
+end
+
+class D
+inherit
+	B
+	C
+end
+
+class E
+inherit
+	B
+	C
+end
+
+Simply compile this system. Everything works fine. Now modify A by simply
+adding a feature:
+
+class
+	A
+feature
+	f is do end
+end
+
+Recompile, it will recompile all descendants of A. Everything is still fine.
+
+Change D and add a new feature:
+
+class
+	D
+inherit
+	B
+	C
+feature
+	g is do end
+end
+
+Refreeze, your system is not valid anymore, because the EXECUTION_UNIT of
+`item' in the context of D and E had a new body_id  with the first compilation.
+With the second compilation, only the body_id of `item' in D has been changed
+in the associated EXECUTION_UNIT, not the one from E. Therefore when we shake the
+table, it discard the EXECUTION_UNIT of E because associated to a dead body_id.
+
+
+What has been changed:
+======================
+
+We notice that we did not need to make a correspondance table between `real_body_index'
+and `real_body_id', it was largely enough at run-time to have only the `real_body_index'
+to perform a call. This had the consequence of using EXECUTION_TABLE instead of
+DISPATCH_TABLE which becomes now obsolete.
+
+The set of EXECUTION_UNIT is now fixed and we reassign to a new melted feature the
+same EXECUTION_UNIT of its frozen couterpart. As a result we are loosing the nice
+idea of `frozen' feature whose `real_body_id' was below `zeroc'. Now, it is simply
+the same execution unit and instead of using `zeroc' it is simply better to talk about
+the number of frozen features instead.
+
+We did the change in a step-by-step fashion. First we decide to use the `body_index'
+to compute the body_id as it was done before, but this was not satisfactory because
+a body_id change too many times. This implies us to use the body_index to generate
+the name of features and had the consequence of make us change `feature_name' from
+ENCODER so that it takes a BODY_INDEX instead of a BODY_ID and we had to change
+all its caller.
+
+The key benefit is that ìn generation we do not need most of the conversion function
+between body_index and body_id.
+
+
+Interesting things:
+===================
+
+An incremental issue has been found: when an ATTRIBUTE_I had to be generated in
+current class (eg redefinition of a function into an attribute) and when we were
+removing the things that should have make it not to be generated in current class,
+it was still generated in, because the `generated_in' flag was not reset when
+taking the old ATTRIBUTE_I information to update current feature table.
+
+
+Going further:
+==============
+
+To make things more consistency we started to replace all use of body_ids by the use
+of body_indexes. We have done it for dead code removal, inliner and the BYTE_SERVERs.
+
+
+Problems:
+=========
+
+We now have an incrementality problem when changing the signature of an
+existing feature. Because the generated C code will still use the same
+pattern id to call the new melted code where it should have generate a new one.
+A workaround is to freeze.
+
+
+Fix for pattern:
+================
+
+We should now store the body_index with each pattern_id instead of storing this info
+in the EXECUTION_UNIT.

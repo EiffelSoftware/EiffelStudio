@@ -26,7 +26,6 @@ feature -- Update
 			a_parent: WEL_COMPOSITE_WINDOW;
 			rich_edit: WEL_RICH_EDIT;
 			file_name: STRING;
-			st: SCROLLED_T
 		do
 			rich_edit ?= a_cmd.text_window.widget.implementation;
 			if rich_edit /= Void then

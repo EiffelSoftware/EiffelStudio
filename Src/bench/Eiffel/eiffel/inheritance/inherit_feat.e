@@ -5,11 +5,11 @@
 class INHERIT_FEAT 
 
 inherit
-	SHARED_INHERITED;
-	SHARED_WORKBENCH;
-	SHARED_SERVER;
-	SHARED_ERROR_HANDLER;
-	SHARED_EXPORT_STATUS;
+	SHARED_INHERITED
+	SHARED_WORKBENCH
+	SHARED_SERVER
+	SHARED_ERROR_HANDLER
+	SHARED_EXPORT_STATUS
 	COMPILER_EXPORTER
 
 creation
@@ -17,26 +17,26 @@ creation
 	
 feature 
 
-	deferred_features: LINKED_LIST [INHERIT_INFO];
+	deferred_features: LINKED_LIST [INHERIT_INFO]
 			-- List of deferred inherited features informations
 
-	features: LINKED_LIST [INHERIT_INFO];
+	features: LINKED_LIST [INHERIT_INFO]
 			-- List of informations on non-deferred inherited features
 
-	inherited_info: INHERIT_INFO;
+	inherited_info: INHERIT_INFO
 			-- Feature inherited chosen among the deferred features and
 			-- the non-deferred.  If a redefinition is expected, this
 			-- attribute will be Void after feature `process'.
 
-	rout_id_set: ROUT_ID_SET;
+	rout_id_set: ROUT_ID_SET
 			-- Set of routine ids computed for the inherited feature
 
 	make is
 			-- Lists creation
 		do
-			!! deferred_features.make
-			!! features.make
-			!! rout_id_set.make (5);
+			create deferred_features.make
+			create features.make
+			create rout_id_set.make (5)
 		end
 
 	has_assertion: BOOLEAN is
@@ -45,7 +45,7 @@ feature
 		do
 			Result := check_assertion (deferred_features) or else
 						check_assertion (features)
-		end;
+		end
 
 	check_assertion (list: LINKED_LIST [INHERIT_INFO]): BOOLEAN is
 			-- Check to see if list has assertion
@@ -58,41 +58,41 @@ feature
 			loop
 				Result := list.item.inherited_assertion;
 				list.forth
-			end;			
-		end;
+			end
+		end
 
 	wipe_out is
 			-- Clear the structure
 		do
-			deferred_features.wipe_out;
-			features.wipe_out;
-			inherited_info := Void;
-			rout_id_set.wipe_out;
-		end;
+			deferred_features.wipe_out
+			features.wipe_out
+			inherited_info := Void
+			rout_id_set.wipe_out
+		end
 
 	set_inherited_info (f: INHERIT_INFO) is
 			-- Assign `f' to `inherited_info'.
 		do
-			inherited_info := f;
-		end;
+			inherited_info := f
+		end
 
 	nb_features: INTEGER is
 			-- Count of `features'.
 		do
-			Result := features.count;
-		end;
+			Result := features.count
+		end
 
 	nb_deferred: INTEGER is
 			-- Count of `deferred_features'.
 		do
-			Result := deferred_features.count;
-		end;
+			Result := deferred_features.count
+		end
 
-	empty: BOOLEAN is
+	is_empty: BOOLEAN is
 			-- Are the feature info lists empty ?
 		do
-			Result := nb_features = 0 and then nb_deferred = 0;
-		end;
+			Result := nb_features = 0 and then nb_deferred = 0
+		end
 
 	insert (info: INHERIT_INFO) is
 			-- Insert `info' in one of the two lists.
@@ -104,50 +104,46 @@ feature
 				-- The position of the list of features must be saved
 				-- because feature `treat_renamings' could call it.
 			if info.a_feature.is_deferred then
-				old_cursor := deferred_features.cursor;
-				deferred_features.start;
-				deferred_features.put_left (info);
-				deferred_features.go_to (old_cursor);
+				old_cursor := deferred_features.cursor
+				deferred_features.start
+				deferred_features.put_left (info)
+				deferred_features.go_to (old_cursor)
 			else
-				old_cursor := features.cursor;
-				features.start;
-				features.put_left (info);
-				features.go_to (old_cursor);
-			end;
-		end;
+				old_cursor := features.cursor
+				features.start
+				features.put_left (info)
+				features.go_to (old_cursor)
+			end
+		end
 
 	inherited_feature: FEATURE_I is
 			-- Feature in information `inherited_info'
 		require
 			inherited_info_exists: inherited_info /= Void
 		do
-			Result := inherited_info.a_feature;
-		end;
+			Result := inherited_info.a_feature
+		end
 
 	check_renamings is
 			-- Check renamings in the two lists
 		do
 			if deferred_features /= Void then
-				treat_renamings (deferred_features);
-			end;
+				treat_renamings (deferred_features)
+			end
 			if features /= Void then
-				treat_renamings (features);
-			end;
-		end;
+				treat_renamings (features)
+			end
+		end
 
 	treat_renamings (feat: LINKED_LIST [INHERIT_INFO]) is
 			-- Check renamings in the feature list `feat'.
 		require
 			good_argument: feat /= Void
 		local
-			next_info, next: INHERIT_INFO;
-			feature_name, new_name, other_renaming: STRING;
-			parent: PARENT_C;
-			pos: INTEGER;
-			body_id: BODY_ID;
-			duplication: BOOLEAN;
-			other_renamings: EXTEND_TABLE [STRING, STRING];
-			replication: FEATURE_I;
+			next: INHERIT_INFO
+			feature_name, new_name: STRING
+			parent: PARENT_C
+			replication: FEATURE_I
 				-- Replicated feature in case of repeated inheritance
 		do
 			from
@@ -164,55 +160,6 @@ feature
 						-- Detection of a renaming clause: check repeated
 						-- inheritance possible replication
 					new_name := parent.renaming.item (feature_name);
-					--if System.code_replication_off then
-						--pos := feat.position;
-						--from
-							-- Looking for a case of replication through
-							-- repeated inheritance. There must be two same
-							-- body ids. This case of replication is
-							-- limited :- it only detects replication
-							-- through renaming (this is the old method
-							-- for detection and has been used by the 
-							-- compiler since the dawn of time). We 
-							-- still have this here just in case the
-							-- that code replication causes problems.
-							--body_id := next.a_feature.code_id;
-							--feat.start;
-						--until
-							--feat.after or else duplication
-						--loop
-							--next_info := feat.item;
-							--if 	next_info /= next
-								--and then
-								--equal (next_info.a_feature.code_id, body_id)
-							--then
-								--other_renamings := next_info.parent.renaming;
-								--if other_renamings /= Void then
-									--other_renaming := 
-												--other_renamings.item (feature_name);
-								--end;
-									---- Replication if same code id but not the
-									---- same renaming
-								--duplication :=
-									--not equal(new_name, other_renaming);
-							----end;
-							--feat.forth;
-						--end;
-						--feat.go (pos);
---	
-							---- Duplication of the instance of FEATURE_I for 
-							-- renaming
-						--if duplication then
-								---- Feature replication in case of repeated
-								---- inheritance: process a new body id.
-								---- Give a new body id to the replication
-							--replication := next.a_feature.replicated;
-						--else
-							--replication := clone (next.a_feature);
-						--end;
-					--else
-						--replication := clone (next.a_feature);
-					--end;
 					replication := clone (next.a_feature);
 						-- Mark it as processed
 					next.set_renaming_processed;
@@ -224,7 +171,7 @@ feature
 						-- Remove the information
 					feat.remove;
 						-- Remove empty structure
-					if empty then
+					if is_empty then
 						Inherit_table.remove (feature_name);
 					end;
 				else
@@ -290,8 +237,7 @@ feature
 						features.forth;
 					else
 						new_deferred := a_feature.new_deferred;
-						!!new_info;
-						new_info.set_a_feature (new_deferred);
+						create new_info.make (new_deferred)
 						new_info.set_parent (info.parent);
 						insert (new_info);
 						features.remove;
@@ -317,7 +263,7 @@ feature
 			features /= Void;
 			nb_features > 0;
 		local
-			att: ATTRIBUTE_I
+			encapsulated_i: ENCAPSULATED_I
 			vmfn2: VMFN2;
 		do
 			if features_all_redefined (feature_name) then
@@ -325,17 +271,16 @@ feature
 			elseif features_all_the_same then
 					-- Shared features
 				inherited_info := features.first;
--- TEMPORARY fix
-				att ?= inherited_info.a_feature
-				if att /= Void and then att.generate_in = Void then
+				encapsulated_i ?= inherited_info.a_feature
+				if encapsulated_i /= Void and then encapsulated_i.generate_in = 0 then
 					from
 						features.start
 						inherited_info := Void
 					until
 						features.after or else inherited_info /= Void
 					loop
-						att ?= features.item.a_feature
-						if att /= Void and then att.generate_in /= Void then
+						encapsulated_i ?= features.item.a_feature
+						if encapsulated_i /= Void and then encapsulated_i.generate_in /= 0 then
 							inherited_info := features.item
 						end
 						features.forth
@@ -389,8 +334,8 @@ feature
 		require
 			good_context: nb_features > 0;
 		local
-			body_id: BODY_ID;
-			written_id: CLASS_ID;
+			body_id: INTEGER;
+			written_id: INTEGER;
 			first_feature: FEATURE_I;
 			written_class: CLASS_C;
 			to_compair, written_type, written_actual_type: TYPE_A;
@@ -406,7 +351,7 @@ feature
 			until
 				features.after or else not Result
 			loop
-				Result := equal (body_id, features.item.a_feature.code_id);
+				Result := body_id = features.item.a_feature.code_id
 				features.forth;
 			end;
 				-- Second condition: if the feature is written in a
@@ -418,7 +363,7 @@ feature
 						-- generic class
 					from
 						written_actual_type := written_class.actual_type;
-						written_id := written_class.id;
+						written_id := written_class.class_id;
 						to_compair := written_actual_type.duplicate;
 						to_compair := to_compair.instantiation_in
 							(features.first.parent.parent_type, written_id);
@@ -441,7 +386,7 @@ feature
 	all_attributes: BOOLEAN is
 			-- Are all the inherited features non-deferred attributes ?
 		do
-			if deferred_features.empty then
+			if deferred_features.is_empty then
 				from
 					Result := True;
 					features.start
@@ -458,7 +403,7 @@ feature
 			-- Concatenation of all the export statuses of the inherited
 			-- features (`feature_name' is the renamed name...)
 		require
-			not empty;
+			not is_empty;
 			feature_name /= Void;
 		local
 			export_status: EXPORT_I;

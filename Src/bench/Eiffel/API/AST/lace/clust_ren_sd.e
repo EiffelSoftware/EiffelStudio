@@ -1,25 +1,23 @@
 indexing
-
-	description: 
-		"";
+	description: "Description of a renaming clause in Ace file";
 	date: "$Date$";
-	revision: "$Revision $"
+	revision: "$Revision$"
 
 class CLUST_REN_SD
 
 inherit
-
 	CLUST_ADAPT_SD
 		redefine
-			set, adapt
+			adapt
 		end
 
-feature {LACE_AST_FACTORY} -- Initialization
+feature {CLUST_REN_SD, LACE_AST_FACTORY} -- Initialization
 
 	initialize (cn: like cluster_name; r: like renamings) is
 			-- Create a new CLUST_REN AST node.
 		require
 			cn_not_void: cn /= Void
+			r_not_void: r /= Void
 		do
 			cluster_name := cn
 			cluster_name.to_lower
@@ -29,22 +27,42 @@ feature {LACE_AST_FACTORY} -- Initialization
 			renamings_set: renamings = r
 		end
 
-feature {NONE} -- Initialization 
-
-	set is
-			-- Yacc initialization
-		do
-			cluster_name ?= yacc_arg (0);
-			cluster_name.to_lower;
-			renamings ?= yacc_arg (1);
-		ensure then
-			cluster_name_exists: cluster_name /= Void;
-		end;
-
 feature -- Properties
 
 	renamings: LACE_LIST [TWO_NAME_SD];
 			-- Renaming list
+
+feature -- Duplication
+
+	duplicate: like Current is
+			-- Duplicate current object.
+		do
+			create Result
+			Result.initialize (cluster_name.duplicate, renamings.duplicate)
+		end
+
+feature -- Comparison
+
+	same_as (other: like Current): BOOLEAN is
+			-- Is `other' same as Current?
+		do
+			Result := other /= Void and then cluster_name.same_as (other.cluster_name)
+					and then renamings.same_as (other.renamings)
+		end
+
+feature -- Save 
+
+	save (st: GENERATION_BUFFER) is
+			-- Save current in `st'.
+		do
+			cluster_name.save (st)
+			st.putstring (": rename")
+			st.new_line
+			st.indent
+			renamings.save_with_new_line (st)
+			st.exdent
+			st.new_line
+		end
 
 feature {COMPILER_EXPORTER} -- Lace compilation
 

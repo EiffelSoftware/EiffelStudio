@@ -72,7 +72,7 @@ feature
 					-- on which the attribute access is made. The lifetime of
 					-- this temporary is really short: just the time to make
 					-- the call...
-				!!tmp_register.make (Ref_type);
+				!!tmp_register.make (Reference_c_type);
 				basic_register := tmp_register;
 			end;
 			if parameters /= Void then
@@ -139,7 +139,6 @@ feature
 			-- Generate external call in a `typ' context
 		local
 			table_name: STRING;
-			i: INTEGER;
 			is_boolean: BOOLEAN;
 			type_c: TYPE_C
 			buf: GENERATION_BUFFER
@@ -148,6 +147,7 @@ feature
 		do
 			check
 				final_mode: context.final_mode
+				extension_not_void: encapsulated implies extension /= Void
 			end;
 			is_boolean := type.is_boolean;
 
@@ -159,7 +159,7 @@ feature
 					-- The call is polymorphic, so generate access to the
 					-- routine table. The dereferenced function pointer has
 					-- to be enclosed in parenthesis.
-				table_name := routine_id.table_name;
+				table_name := Encoder.table_name (routine_id)
 
 				if is_boolean then
 					buf.putstring ("EIF_TEST((");
@@ -168,7 +168,8 @@ feature
 				end;
 				if
 					not encapsulated and then
-					extension /= Void and then extension.has_arg_list
+					extension /= Void and then
+					extension.has_arg_list
 				then
 					type_c.generate_external_function_cast (buf, extension)
 					extension.generate_header_files
@@ -201,7 +202,9 @@ feature
 					if is_boolean then
 						buf.putstring ("EIF_TEST(");
 					else
-						type_c.generate_cast (buf);
+						if extension.has_return_type then
+							type_c.generate_cast (buf);
+						end
 					end;
 					extension.generate_header_files
 
@@ -218,11 +221,15 @@ feature
 						extension.has_include_list
 					then
 						extension.generate_header_files
-						type_c.generate_cast (buf);
+						if extension.has_return_type then
+							type_c.generate_cast (buf);
+						end
 						buf.putstring (external_name);
 					else
 						if extension /= Void and then extension.has_signature then
-							type_c.generate_cast (buf);
+							if extension.has_return_type then
+								type_c.generate_cast (buf);
+							end
 
 								-- Generate the right name to call the external
 								-- In the case of a signature or a macro, the call will be direct
@@ -269,13 +276,16 @@ feature
 				not_polymorphic := Eiffel_table.is_polymorphic (routine_id, class_type.type_id, True) < 0
 
 				if is_macro_extension then
-					if parameters /= Void then
+					if not not_polymorphic or else parameters /= Void then
 						buf.putchar ('(')
-						extension.generate_parameter_list (parameters)
+						if parameters /= Void then
+							extension.generate_parameter_list (parameters)
+						end
 						buf.putchar (')')
 					end
-					if not_polymorphic then
-							--| See comments in `generate_access_on_type'
+					if not_polymorphic and extension.has_return_type then
+							-- Opening `(' is generated from MACRO_EXTENSION_I in
+							-- generate_external_name.
 						buf.putchar (')');
 					end
 				elseif is_struct_extension and then not_polymorphic then

@@ -26,7 +26,7 @@ feature -- Output
 		do
 			print_error_message (st);
 			st.add_string ("Class: ");
-			e_class.append_signature (st);
+			class_c.append_signature (st);
 			st.add_new_line;
 			if feature_name /= Void then
 				st.add_string ("Feature name: ");

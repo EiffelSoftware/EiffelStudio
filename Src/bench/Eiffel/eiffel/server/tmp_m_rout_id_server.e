@@ -1,15 +1,19 @@
+indexing
+	description: "Temporary server for melted routine indexed by class id."
+	date: "$Date$"
+	revision: "$Revision$"
 
 class TMP_M_ROUT_ID_SERVER
 
 inherit
-	DELAY_SERVER [MELTED_ROUTID_ARRAY, CLASS_ID]
+	DELAY_SERVER [MELTED_ROUTID_ARRAY]
 
 creation
 	make
 
 feature
 
-	id (t: MELTED_ROUTID_ARRAY): CLASS_ID is
+	id (t: MELTED_ROUTID_ARRAY): INTEGER is
 			-- Id associated with `t'
 		do
 			Result := t.class_id
@@ -21,7 +25,7 @@ feature
 			!! Result.make
 		end
 
-	Delayed: SEARCH_TABLE [CLASS_ID] is
+	Delayed: SEARCH_TABLE [INTEGER] is
 			-- Cache for delayed items
 		once
 			!!Result.make ((3 * Cache.cache_size) // 2)

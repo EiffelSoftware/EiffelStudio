@@ -1,9 +1,11 @@
--- Access to an Eiffel feature
+indexing
+	description	: "Byte code generation for feature call."
+	date: "$Date$"
+	revision: "$Revision$"
 
 class FEATURE_B 
 
 inherit
-
 	CALL_ACCESS_B
 		redefine
 			is_feature, set_parameters, 
@@ -14,112 +16,87 @@ inherit
 			size, pre_inlined_code, inlined_byte_code,
 			has_separate_call, reset_added_gc_hooks,
 			make_precursor_byte_code
-		end;
-	SHARED_TABLE;
+		end
+
+	SHARED_TABLE
+
 	SHARED_SERVER
-	SHARED_ID_TABLES
 
-feature 
+feature -- Access
 
-	feature_name: STRING;
+	feature_name: STRING
 			-- Name of the feature called
 
-	feature_id: INTEGER;
+	feature_id: INTEGER
 			-- Feature id: this is the key for the call in workbench mode
 
-	type: TYPE_I;
+	type: TYPE_I
 			-- Type of the call
 
-	body_index: BODY_INDEX
+	body_index: INTEGER
 			-- Body Index of the feature
-
-	body_id: BODY_ID is
-			-- Body Id of the feature.
-		require
-			has_body_id: has_body_id (body_index)
-		do
-			Result := Body_index_table.item (body_index)
-		ensure
-			non_void_body_id: Result /= Void
-		end
-
-	has_body_id (v: BODY_INDEX): BOOLEAN is
-			-- Does the system have `v' as BODY_INDEX?
-		do
-			Result := Body_index_table.has (body_index)
-		end
 
 	is_once: BOOLEAN
 			-- Is the current feature a once function
 			--| Used when inlining is turned on in final mode, because we are not
 			--| allowed to inline once routines
 
-	parameters: BYTE_LIST [EXPR_B];
+	parameters: BYTE_LIST [EXPR_B]
 			-- Feature parameters: can be Void
-
-	precursor_type : CL_TYPE_I
-			-- Type of parent in a precursor call
-
-	set_precursor_type (p_type : CL_TYPE_I) is
-			-- Assign `p_type' to `precursor_type'.
-		do
-			precursor_type := p_type
-		ensure
-			precursor_set : precursor_type = p_type
-		end
 		
 	set_parameters (p: like parameters) is
 			-- Assign `p' to `parameters'.
 		do
-			parameters := p;
-		end; 
+			parameters := p
+		end 
 
 	set_type (t: TYPE_I) is
 			-- Assign `t' to `type'.
 		do
-			type := t;
-		end;
+			type := t
+		end
 
 	special_routines: SPECIAL_FEATURES is
 			-- Array containing special routines.
 		once
-			!!Result
-		end;
+			create Result
+		end
 
 	is_feature_special (compilation_type: BOOLEAN): BOOLEAN is
 			-- Search for feature_name in special_routines.
 			-- This is used for simple types only.
 			-- If found return True (and keep reference position).
-			-- Otherwize, return false;
+			-- Otherwize, return false
 		do
-			Result := special_routines.has (feature_name, compilation_type);
-		end;
+			Result := special_routines.has (feature_name, compilation_type)
+		end
 
 	init (f: FEATURE_I) is
 			-- Initialization
 		require
-			good_argument: f /= Void;
+			good_argument: f /= Void
 		do
-			feature_name := f.feature_name;
-			feature_id := f.feature_id;
+			feature_name := f.feature_name
+			feature_id := f.feature_id
 			body_index := f.body_index
 			routine_id := f.rout_id_set.first
 			is_once := f.is_once
-		end;
+			written_in := f.written_in
+		end
 
-	is_feature: BOOLEAN is True;
+	is_feature: BOOLEAN is True
 			-- Is Current an access to an Eiffel feature ?
 
 	same (other: ACCESS_B): BOOLEAN is
 			-- Is `other' the same access as Current ?
 		local
-			feature_b: FEATURE_B;
+			feature_b: FEATURE_B
 		do
-			feature_b ?= other;
+			feature_b ?= other
 			if feature_b /= Void then
-				Result := feature_id = feature_b.feature_id;
-			end;
-		end;
+				Result := feature_id = feature_b.feature_id
+			end
+		end
 
 	enlarged: FEATURE_B is
 			-- Enlarge the tree to get more attributes and return the
@@ -128,13 +105,13 @@ feature
 			feature_bl: FEATURE_BL
 		do
 			if context.final_mode then
-				!!feature_bl;
+				create feature_bl
 			else
-				!FEATURE_BW!feature_bl.make;
-			end;
-			feature_bl.fill_from (Current);
+				create {FEATURE_BW} feature_bl.make
+			end
+			feature_bl.fill_from (Current)
 			Result := feature_bl
-		end;
+		end
 
 feature -- Context type
 
@@ -145,9 +122,156 @@ feature -- Context type
 				Result := {CALL_ACCESS_B} Precursor
 			else
 				Result := precursor_type
-				Result := Context.real_type (Result);
-			end;
-		end;
+				Result := Context.real_type (Result)
+			end
+		end
+
+feature -- IL code generation
+
+	generate_il_call (inv_checked: BOOLEAN) is
+			-- Generate IL code for feature call.
+			-- If `invariant_checked' generates invariant check
+			-- before call.
+		local
+			cl_type: CL_TYPE_I
+			return_type: TYPE_I
+			class_type: CLASS_TYPE
+			special_class_type: SPECIAL_CLASS_TYPE
+			invariant_checked: BOOLEAN
+			class_c: CLASS_C
+			local_number: INTEGER
+			real_metamorphose: BOOLEAN
+			is_call_optimized: BOOLEAN
+		do
+				-- Get type on which call will be performed.
+			cl_type ?= context_type
+			check
+				valid_type: cl_type /= Void
+			end
+
+				-- Let's find out if we are performing a call on a basic type
+				-- or on an enum type. This happens only when we are calling
+				-- magically added feature on basic types.
+			is_call_optimized := (cl_type.is_basic or cl_type.is_enum)
+				and then is_feature_special (False)
+
+			class_type := cl_type.associated_class_type
+			class_c := class_type.associated_class
+
+			invariant_checked := class_c.assertion_level.check_invariant
+					and then class_c.has_invariant
+					and then (not is_first or invariant_checked)
+			
+			if cl_type.is_expanded and then not is_call_optimized then
+					-- Current type is expanded. We need to find out if
+					-- we need to generate a box operation, meaning that
+					-- the feature is inherited from a non-expanded class.
+				real_metamorphose := need_real_metamorphose (cl_type)
+			end
+
+			if is_first then
+					-- First call in dot expression, we need to generate Current
+					-- only when we do not call a static feature.
+				if cl_type.is_reference then
+						-- Normal call, we simply push current object.
+					il_generator.generate_current
+				else
+					if real_metamorphose and then not is_call_optimized then
+							-- Feature is written in an inherited class of current
+							-- expanded class. We need to box.
+						il_generator.generate_metamorphose (cl_type)
+					end
+				end
+			elseif cl_type.is_expanded and then not is_call_optimized then
+					-- A metamorphose is required to perform call.
+				generate_il_metamorphose (cl_type, real_metamorphose)
+			end
+
+			if invariant_checked then
+					-- Need a copy of top to perform invariant checking.
+				il_generator.duplicate_top
+			end
+
+			if parameters /= Void then
+					-- Generate parameters if any.
+				parameters.generate_il
+			end
+
+			return_type := real_type (type)
+
+			if cl_type.base_class.is_special then
+				special_class_type ?= class_type
+				special_class_type.generate_il (feature_name)
+				if System.il_verifiable then
+					if 
+						not return_type.is_expanded and then
+						not return_type.is_none and then
+						not return_type.is_void
+					then
+						il_generator.generate_check_cast (return_type, return_type)
+					end
+				end
+			else
+					-- Perform call to feature
+				if is_call_optimized then
+					special_routines.generate_il (cl_type)
+				else
+					if precursor_type /= Void then
+							-- In IL, if you can call Precursor, it means that parent is
+							-- not expanded and therefore we can safely generate a static
+							-- call to Precursor feature.
+						il_generator.generate_feature_access (cl_type, feature_id, False)
+					else
+						il_generator.generate_feature_access (cl_type, feature_id,
+							cl_type.is_reference or else real_metamorphose)
+					end
+					if System.il_verifiable then
+						if 
+							not return_type.is_expanded and then
+							not return_type.is_none and then
+							not return_type.is_void
+						then
+							il_generator.generate_check_cast (return_type, return_type)
+						end
+					end
+				end
+				if invariant_checked then
+					if type.is_void then
+						il_generator.generate_invariant_checking (cl_type)
+					else
+							-- It is a function and we need to save the result onto
+							-- a local variable.
+						context.add_local (return_type)
+						local_number := context.local_list.count
+						il_generator.put_local_info (return_type, "dummy_" + local_number.out)
+						il_generator.generate_local_assignment (local_number)
+						il_generator.generate_invariant_checking (cl_type)
+						il_generator.generate_local (local_number)
+					end
+				end
+			end
+		end
+
+	generate_il_array_creation is
+			-- Perform creation of an array.
+		require
+			parameters_not_void: parameters /= Void
+			parameters_count: parameters.count = 1
+		local
+			cl_type: CL_TYPE_I
+			class_type: SPECIAL_CLASS_TYPE
+		do
+			cl_type ?= context_type
+			check
+				valid_type: cl_type /= Void
+				type_is_special: cl_type.base_class.is_special
+				class_type_exists: cl_type.associated_class_type /= Void
+			end
+
+			parameters.generate_il
+			class_type ?= cl_type.associated_class_type
+			class_type.generate_il (feature_name)
+		end
 
 feature -- Byte code generation
 
@@ -161,6 +285,7 @@ feature -- Byte code generation
 			parameter_b: PARAMETER_B
 			hector_b: HECTOR_B
 			expr_address_b: EXPR_ADDRESS_B
+			access_expression_b: ACCESS_EXPR_B
 		do
 			if parameters /= Void then
 					-- Generate the expression address byte code
@@ -181,6 +306,8 @@ feature -- Byte code generation
 					parameters.forth
 				end
 
+				has_hector := has_hector or else (parent /= Void and then parent.target.is_hector)
+
 					-- Generate byte code for parameters
 				from
 					parameters.start
@@ -194,6 +321,32 @@ feature -- Byte code generation
 			end
 
 			if has_hector then
+				if (parent /= Void and then parent.target.is_hector) then
+						-- We are in the case of a nested calls which have
+						-- a target using the `$' operator. It can only be the case
+						-- of `($a).f (..)'. where `($a)' represents an
+						-- ACCESS_EXPR_B object which contains an HECTOR_B
+						-- or an EXPR_ADDESS_B object.
+					access_expression_b ?= parent.target
+					check
+						has_access_expression: access_expression_b /= Void
+					end
+					hector_b ?= access_expression_b.expr
+					if hector_b /= Void then
+						hector_b.make_protected_byte_code (ba, parameters.count)
+					else
+						expr_address_b ?= parameter_b.expression
+						check
+							expr_address_b_not_void: expr_address_b /= Void
+						end
+						if expr_address_b.is_protected then
+							i := i + 1
+							expr_address_b.make_protected_byte_code (ba,
+								parameters.count,
+								parameters.count + nb_expr_address - i)
+						end
+					end
+				end
 				from
 					parameters.start
 				until
@@ -221,7 +374,6 @@ feature -- Byte code generation
 			end
 
 			standard_make_code (ba, flag)
-			make_java_typecode (ba)
 
 			if nb_expr_address > 0 then
 				ba.append (Bc_pop)
@@ -233,96 +385,105 @@ feature -- Byte code generation
 			-- Make byte code for special calls.
 		do
 			special_routines.make_byte_code (ba, basic_type)
-		end;
+		end
 
 	make_precursor_byte_code (ba: BYTE_ARRAY) is
 			-- Add dynamic type of parent.
+		local
+			gen_type_i: GEN_TYPE_I
+			cl_type_i: CL_TYPE_I
 		do
 			if precursor_type /= Void then
-				ba.append_short_integer (precursor_type.associated_class_type.id.id - 1)
+					gen_type_i ?= context.current_type
+					if gen_type_i /= Void then
+						cl_type_i := precursor_type.instantiation_in (gen_type_i)
+						ba.append_short_integer (cl_type_i.associated_class_type.static_type_id - 1)
+					else
+						ba.append_short_integer (precursor_type.associated_class_type.static_type_id - 1)
+					end
 			else
 				ba.append_short_integer (-1)
 			end
-		end;
+		end
 
 	code_first: CHARACTER is
 			-- Code when Eiffel call is first (no invariant)
 		once
 			Result := Bc_feature
-		end;
+		end
 
 	code_next: CHARACTER is
 			-- Code when Eiffel call is nested (invariant)
 		once
-			Result := Bc_feature_inv;
-		end;
+			Result := Bc_feature_inv
+		end
 
 	precomp_code_first: CHARACTER is
 			-- Code when Eiffel precompiled call is first (no invariant)
 		once
-			Result := Bc_pfeature;
-		end;
+			Result := Bc_pfeature
+		end
 
 	precomp_code_next: CHARACTER is
 			-- Code when Eiffel precompiled call is nested (invariant)
 		once
-			Result := Bc_pfeature_inv;
-		end;
+			Result := Bc_pfeature_inv
+		end
 
 feature -- Array optimization
 
 	is_special_feature: BOOLEAN is
 		local
-			cl_type: CL_TYPE_I;
-			base_class: CLASS_C;
-			f: FEATURE_I;
-			dep: DEPEND_UNIT
-		do
-			cl_type ?= context_type; -- Cannot fail
-			base_class := cl_type.base_class;
-			f := base_class.feature_table.item (feature_name);
-			!!dep.make (base_class.id, f);
-			Result := optimizer.special_features.has (dep);
-		end;
-
-	is_unsafe: BOOLEAN is
-		local
-			cl_type: CL_TYPE_I;
-			base_class: CLASS_C;
+			cl_type: CL_TYPE_I
+			base_class: CLASS_C
 			f: FEATURE_I
 			dep: DEPEND_UNIT
 		do
-			cl_type ?= context_type; -- Cannot fail
-			base_class := cl_type.base_class;
-			f := base_class.feature_table.item (feature_name);
+			cl_type ?= context_type -- Cannot fail
+			base_class := cl_type.base_class
+			f := base_class.feature_table.item (feature_name)
+			!!dep.make (base_class.class_id, f)
+			Result := optimizer.special_features.has (dep)
+		end
+
+	is_unsafe: BOOLEAN is
+		local
+			cl_type: CL_TYPE_I
+			base_class: CLASS_C
+			f: FEATURE_I
+			dep: DEPEND_UNIT
+		do
+			cl_type ?= context_type -- Cannot fail
+			base_class := cl_type.base_class
+			f := base_class.feature_table.item (feature_name)
 debug ("OPTIMIZATION")
-	io.error.putstring ("%N%N%NTESTING is_unsafe for ");
-	io.error.putstring (feature_name);
+	io.error.putstring ("%N%N%NTESTING is_unsafe for ")
+	io.error.putstring (feature_name)
 	io.error.putstring (" from ")
-	io.error.putstring (base_class.name);
-	io.error.putstring (" is NOT safe%N");
-end;
-			optimizer.test_safety (f, base_class);
-			!! dep.make (base_class.id, f)
+	io.error.putstring (base_class.name)
+	io.error.putstring (" is NOT safe%N")
+end
+			optimizer.test_safety (f, base_class)
+			!! dep.make (base_class.class_id, f)
 			Result := (not optimizer.is_safe (dep))
 				or else (parameters /= Void and then parameters.is_unsafe)
 debug ("OPTIMIZATION")
 	if Result then
-		io.error.putstring (f.feature_name);
+		io.error.putstring (f.feature_name)
 		io.error.putstring (" from ")
-		io.error.putstring (base_class.name);
-		io.error.putstring (" is NOT safe%N");
-	end;
+		io.error.putstring (base_class.name)
+		io.error.putstring (" is NOT safe%N")
+	end
 end
 		end
 
 	optimized_byte_node: like Current is
 		do
-			Result := Current;
+			Result := Current
 			if parameters /= Void then
 				parameters := parameters.optimized_byte_node
 			end
-		end;
+		end
 
 	calls_special_features (array_desc: INTEGER): BOOLEAN is
 		do
@@ -357,15 +518,15 @@ feature -- Inlining
 			if parent /= Void then
 				Result := Current
 			else
-				!!nested_b;
-				!!inlined_current_b;
-				nested_b.set_target (inlined_current_b);
-				inlined_current_b.set_parent (nested_b);
+				create nested_b
+				create inlined_current_b
+				nested_b.set_target (inlined_current_b)
+				inlined_current_b.set_parent (nested_b)
 
-				nested_b.set_message (Current);
-				parent := nested_b;
+				nested_b.set_message (Current)
+				parent := nested_b
 
-				Result := nested_b;
+				Result := nested_b
 			end
 			if parameters /= Void then
 				parameters := parameters.pre_inlined_code
@@ -377,99 +538,97 @@ feature -- Inlining
 			inlined_feat_b: INLINED_FEAT_B
 			inline: BOOLEAN
 			inliner: INLINER
-			type_i: TYPE_I;
+			type_i: TYPE_I
 			cl_type: CL_TYPE_I
 			bc: STD_BYTE_CODE
 			old_c_t: CL_TYPE_I
-			computed_body_id: BODY_ID
 		do
 			if not is_once then
-				type_i := context_type;
+				type_i := context_type
 				if not type_i.is_basic then
-					cl_type ?= type_i; -- Cannot fail
+					cl_type ?= type_i -- Cannot fail
 						-- Inline only if it is not polymorphic and if it can be inlined.
 					if Eiffel_table.is_polymorphic (routine_id, cl_type.type_id, True) = -1 then
-						inliner := System.remover.inliner;
-						computed_body_id := body_id
-						inline := inliner.inline (type, computed_body_id)
-					end;
+						inliner := System.remover.inliner
+						inline := inliner.inline (type, body_index)
+					end
 				end
 			end
 
 			if inline then
 					-- Creation of a special node for the entire
 					-- feature (descendant of STD_BYTE_CODE)
-				inliner.set_current_feature_inlined;
+				inliner.set_current_feature_inlined
 				if cl_type.base_class.is_special then
-					!SPECIAL_INLINED_FEAT_B! inlined_feat_b
+					create {SPECIAL_INLINED_FEAT_B} inlined_feat_b
 				else
-					!! inlined_feat_b;
+					create inlined_feat_b
 				end
 				inlined_feat_b.fill_from (Current)
-				bc ?= Byte_server.disk_item (computed_body_id);
+				bc ?= Byte_server.disk_item (body_index)
 
-				old_c_t := Context.current_type;
-				Context.set_current_type (current_type);
-				bc := bc.pre_inlined_code;
-				Context.set_current_type (old_c_t);
+				old_c_t := Context.current_type
+				Context.set_current_type (current_type)
+				bc := bc.pre_inlined_code
+				Context.set_current_type (old_c_t)
 
-				inlined_feat_b.set_inlined_byte_code (bc);
+				inlined_feat_b.set_inlined_byte_code (bc)
 				Result := inlined_feat_b
 			else
 				Result := Current
 				if parameters /= Void then
 					parameters := parameters.inlined_byte_code
 				end
-			end;
-		end;
+			end
+		end
 
 	current_type: CL_TYPE_I is
 			-- Current type for the call (NOT the static type but the
 			-- type corresponding to the written in class)
 		local
-			written_class: CLASS_C
-			tuple_class: TUPLE_CLASS_B
+			written_class	: CLASS_C
+			tuple_class		: TUPLE_CLASS_B
 			original_feature: FEATURE_I
-			gen_type_i: GEN_TYPE_I
-			tuple_type_i: TUPLE_TYPE_I
-			m: META_GENERIC
-			true_gen : ARRAY [TYPE_I]
-			actual_gen: ARRAY [TYPE_A]
-			real_target_type, actual_type: TYPE_A
-			constraint: TYPE_A
-			formal_a: FORMAL_A
-			nb_generics, i: INTEGER
-			t_i: TYPE_I
+			gen_type_i		: GEN_TYPE_I
+			tuple_type_i	: TUPLE_TYPE_I
+			m				: META_GENERIC
+			true_gen		: ARRAY [TYPE_I]
+			actual_gen		: ARRAY [TYPE_A]
+			real_target_type: TYPE_A
+			actual_type		: TYPE_A
+			constraint		: TYPE_A
+			formal_a		: FORMAL_A
+			nb_generics, i	: INTEGER
 		do
 			original_feature := context_type.type_a.associated_class.
-									feature_table.origin_table.item (routine_id);
-			written_class := original_feature.written_class;
+									feature_table.origin_table.item (routine_id)
+			written_class := original_feature.written_class
 
 			if written_class.generics = Void then
 				Result := written_class.types.first.type
 			else
 
-				real_target_type := context_type.type_a;
+				real_target_type := context_type.type_a
 					-- LINKED_LIST [STRING] is recorded as LINKED_LIST [REFERENCE_I]
 					-- => LINKED_LIST [ANY] after previous call
 
 				from
 					i := 1
-					nb_generics := written_class.generics.count;
-					!!m.make (nb_generics)
-					!!true_gen.make (1, nb_generics)
-					!!actual_gen.make (1, nb_generics)
+					nb_generics := written_class.generics.count
+					create m.make (nb_generics)
+					create true_gen.make (1, nb_generics)
+					create actual_gen.make (1, nb_generics)
 				until
 					i > nb_generics
 				loop
-					!!formal_a;
-					formal_a.set_position (i);
-					actual_type := formal_a.instantiation_in (real_target_type, written_class.id)
+					create formal_a
+					formal_a.set_position (i)
+					actual_type := formal_a.instantiation_in (real_target_type, written_class.class_id)
 					actual_gen.put (actual_type, i)
 					if actual_type.is_basic then
 						m.put (actual_type.type_i, i)
 					else
-						constraint := written_class.constraint (i);
+						constraint := written_class.constraint (i)
 						m.put (constraint.type_i, i)
 					end
 					true_gen.put (actual_type.type_i, i)
@@ -478,14 +637,14 @@ feature -- Inlining
 
 				tuple_class ?= written_class
 				if tuple_class = Void then
-					!!gen_type_i;
-					gen_type_i.set_base_id (written_class.id)
+					create gen_type_i
+					gen_type_i.set_base_id (written_class.class_id)
 					gen_type_i.set_meta_generic (m)
 					gen_type_i.set_true_generics (true_gen)
 					Result := gen_type_i
 				else
-					!!tuple_type_i;
-					tuple_type_i.set_base_id (written_class.id)
+					create tuple_type_i
+					tuple_type_i.set_base_id (written_class.class_id)
 					tuple_type_i.set_meta_generic (m)
 					tuple_type_i.set_true_generics (true_gen)
 					Result := tuple_type_i
@@ -499,83 +658,82 @@ feature -- Concurrent Eiffel
 		-- Does the feature call attach a local object to separate formal
 		-- parameter?
 		local
-			p: PARAMETER_B;
+			p: PARAMETER_B
 		do
-			Result := false;
+			Result := false
 			if parameters /= Void then
 				from
 					parameters.start
 				until
 					Result or parameters.after
 				loop
-					p ?= parameters.item;
+					p ?= parameters.item
 					if real_type(p.attachment_type).is_separate and
 						not real_type(p.expression.type).is_separate then
-						Result := True;
-					end;
-					parameters.forth;
-				end;
-			end;
+						Result := True
+					end
+					parameters.forth
+				end
+			end
 		end
 
 	has_separate_call: BOOLEAN is
 			-- Is there separate feature call in the assertion?
 		local
-			p: PARAMETER_B;
-			class_type: CL_TYPE_I;
+			p: PARAMETER_B
+			class_type: CL_TYPE_I
 		do
-			class_type ?= context_type;
+			class_type ?= context_type
 			if class_type /= Void then
-				Result := class_type.is_separate;
-			end;
+				Result := class_type.is_separate
+			end
 			if not Result and parameters /= Void  then
 				from
 					parameters.start
 				until
 					Result or parameters.after
 				loop
-					p ?= parameters.item;
+					p ?= parameters.item
 					-- can't fail but it failed for class RESOURCE_STRING_LEX
 					if p /= Void and then p.expression /= Void then
-						Result := p.expression.has_separate_call;
-					end;
-					parameters.forth;
-				end;
-			end;
+						Result := p.expression.has_separate_call
+					end
+					parameters.forth
+				end
+			end
 		end
 
 	reset_added_gc_hooks is
 		local
-			expr: PARAMETER_B;
-			para_type: TYPE_I;
-			loc_idx: INTEGER
-			buf: GENERATION_BUFFER
+			expr		: PARAMETER_B
+			para_type	: TYPE_I
+			loc_idx		: INTEGER
+			buf			: GENERATION_BUFFER
 		do
 			if system.has_separate and then parameters /= Void then
 				from
 					buf := buffer
-					parameters.start;
+					parameters.start
 				until
 					parameters.after
 				loop
-					expr ?= parameters.item;	-- Cannot fail
+					expr ?= parameters.item	-- Cannot fail
 					if expr /= Void then
-						para_type := real_type(expr.attachment_type);
+						para_type := real_type(expr.attachment_type)
 						if para_type.is_separate then
 							if expr.stored_register.register_name /= Void then
-								loc_idx := context.local_index (expr.stored_register.register_name);
+								loc_idx := context.local_index (expr.stored_register.register_name)
 							else
-								loc_idx := -1;
-							end;
+								loc_idx := -1
+							end
 							if loc_idx /= -1 then
-								buf.put_protected_local (context.ref_var_used + loc_idx);
-								buf.putstring (" = (EIF_REFERENCE) 0;");
-								buf.new_line;
+								buf.reset_local_registration (context.ref_var_used + loc_idx)
+								buf.new_line
 							end
 						end
 					end
-					parameters.forth;
-				end;
+					parameters.forth
+				end
 			end
 		end
 

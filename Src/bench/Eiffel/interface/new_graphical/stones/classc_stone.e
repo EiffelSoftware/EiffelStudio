@@ -8,16 +8,13 @@ class
 	CLASSC_STONE
 
 inherit
-
-	CLASS_STONE
+	CLASSI_STONE
+		rename
+			make as classi_make
 		redefine
-			is_valid, synchronized_stone, invalid_stone_message
-		end
-	HASHABLE_STONE
-		undefine
-			header
-		redefine
-			is_valid, synchronized_stone, invalid_stone_message
+			is_valid, synchronized_stone,
+			class_i, cluster, class_name, file_name, 
+			header, stone_signature, history_name
 		end
 
 creation
@@ -53,36 +50,21 @@ feature -- Properties
 
 feature -- Access
 
---	stone_cursor: SCREEN_CURSOR is
-			-- Cursor associated with Current stone during transport
-			-- when widget at cursor position is compatible with Current stone
---		do
---			Result := Cursors.cur_Class
---		end
-
---	x_stone_cursor: SCREEN_CURSOR is
-			-- Cursor associated with Current stone during transport
-			-- when widget at cursor position is not compatible with Current stone
---		do
---			Result := Cursors.cur_X_Class
---		end
-
 	stone_signature: STRING is
 		do
 			Result := e_class.class_signature
 		end
 
-	icon_name: STRING is
+	history_name: STRING is
 		do
-			Result := clone (e_class.name)
-			Result.to_upper
+			Result := Interface_names.s_Class_stone + stone_signature
 		end
 
 	header: STRING is
 			-- Display class name, class' cluster and class location in 
 			-- window title bar.
 		do
-			create Result.make (20)
+			create Result.make (80)
 			Result.append (stone_signature)
 			Result.append ("  in cluster ")
 			Result.append (e_class.cluster.cluster_name)
@@ -90,48 +72,16 @@ feature -- Access
 				Result.append ("  (precompiled)")
 			else
 				Result.append ("   located in ")
-				Result.append (e_class.lace_class.cluster.path)
-				Result.append_character (Directory_separator)
-				Result.append (e_class.lace_class.base_name)
+				Result.append (e_class.lace_class.file_name)
 			end
 		end
 
-	stone_type: INTEGER is 
-		do 
-			Result := Class_type 
-		end
-
-	stone_name: STRING is 
-		do 
-			Result := Interface_names.s_Class_stone
-		end
- 
-	click_list: CLICK_STONE_ARRAY is
-		local
-			c_list: CLICK_LIST
-		do
-			c_list := e_class.click_list
-			if c_list /= Void then
-				create Result.make (c_list, e_class)
-			end
-		end
- 
-	file_name: STRING is
+	file_name: FILE_NAME is
 			-- The one from CLASSC
 		do
 			if e_class /= Void then
-				Result := e_class.file_name
+				create Result.make_from_string (e_class.file_name)
 			end
-		end
-
-	set_file_name (s: STRING) is 
-		do 	
-		end
-
-	clickable: BOOLEAN is
-			-- Is Current an element with recorded structures information?
-		do
-			Result := e_class.has_ast
 		end
 
 feature -- Status report
@@ -139,58 +89,46 @@ feature -- Status report
 	is_valid: BOOLEAN is
 			-- Is `Current' a valid stone?
 		do
-			Result :=  Precursor {CLASS_STONE} and then e_class /= Void
-		end
-
-	invalid_stone_message: STRING is
-			-- Message displayed for an invalid_stone
-		do
-			Result := Warning_messages.w_Class_not_in_universe
+			Result :=	e_class /= Void and then
+						e_class.is_valid and then
+						Precursor {CLASSI_STONE}
 		end
 
 feature -- Synchronization
 
-	synchronized_stone: CLASS_STONE is
+	synchronized_stone: CLASSI_STONE is
 			-- Clone of `Current' stone after a recompilation
 			-- (May be Void if not valid anymore. It may also be a 
 			-- classi_stone if the class is not compiled anymore)
 		local
 			new_cluster: CLUSTER_I
+			new_ci: CLASS_I
 		do
 			if e_class /= Void then
 				if e_class.is_valid then
-					!CLASSC_STONE! Result.make (e_class)
+					if is_valid then
+						Result := Current
+					else
+						Result := create {CLASSC_STONE}.make (e_class)
+					end
 				else
 					new_cluster := Eiffel_universe.cluster_of_name 
 							(e_class.cluster.cluster_name)
-					if 
-						new_cluster /= Void and then
-						new_cluster.classes.has_item (e_class.lace_class)
-					then
-						!CLASSI_STONE! Result.make (e_class.lace_class)
+					if new_cluster /= Void then
+						new_ci := new_cluster.class_with_name (e_class.lace_class.name)
+						if 
+							new_ci /= Void
+						then
+							if not new_ci.compiled then
+								!CLASSI_STONE! Result.make (e_class.lace_class)
+							else
+								create {CLASSC_STONE} Result.make (new_ci.compiled_class)
+							end
+							
+						end
 					end
 				end
 			end
 		end
-
-feature -- Hashable
-
-	hash_code: INTEGER is
-			-- Hash code value
-		do
-			Result := e_class.name.hash_code
-		end
-
-feature -- Update
-
---	process (hole: HOLE) is
---			-- Process Current stone dropped in hole `hole'.
---		do
---			if is_valid then
---				hole.process_class (Current)
---			else
---				warner (hole.target.top).gotcha_call (invalid_stone_message)
---			end	
---		end
 
 end -- class CLASSC_STONE

@@ -54,22 +54,24 @@ feature -- Properties
 
 feature {NONE} -- Implementation
 
-	execute (argument: EV_ARGUMENT1 [ANY]; data: EV_EVENT_DATA) is
+	execute is
 			-- Retarget the feature tool with the current routine if any.
 		local
-			e_class: CLASS_C
 			status: APPLICATION_STATUS
 			st: FEATURE_STONE
 			wd: EV_WARNING_DIALOG
 		do
 			status := Application.status
 			if status = Void then
-				create wd.make_default (tool.parent, Interface_names.t_Warning, Warning_messages.w_System_not_running)
+				create wd.make_with_text (Warning_messages.w_System_not_running)
+				wd.show_modal
 			elseif not status.is_stopped then
-				create wd.make_default (tool.parent, Interface_names.t_Warning, Warning_messages.w_System_not_stopped)
+				create wd.make_with_text (Warning_messages.w_System_not_stopped)
+				wd.show_modal
 			elseif status.e_feature = Void or status.dynamic_class = Void then
 					-- Should never happen.
-				create wd.make_default (tool.parent, Interface_names.t_Warning, Warning_messages.w_Unknown_feature)
+				create wd.make_with_text (Warning_messages.w_Unknown_feature)
+				wd.show_modal
 			else
 				create st.make (status.e_feature)
 				tool.process_feature (st)

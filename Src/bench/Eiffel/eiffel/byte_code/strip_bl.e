@@ -47,15 +47,11 @@ feature
 			buf.putchar ('{');
 			buf.new_line;
 			buf.indent;
-			buf.putstring ("static char *items[");
-			buf.putstring ("] = { ");
 			generate_attribute_names_list;
-			buf.putstring (" };");
-			buf.new_line;
 			print_register;
 			buf.putstring (" = ");
 			buf.putstring ("RTST(");
-			Context.Current_register.print_register_by_name;
+			Context.Current_register.print_register;
 			buf.putstring (gc_comma);
 			buf.putint (cl_type.type_id - 1);
 			buf.putstring (", items, ");
@@ -69,25 +65,35 @@ feature
 
 	generate_attribute_names_list is
 			-- Generate routine ids (from feature ids) as a C list.
+		require
+			attribute_names_not_void: attribute_names /= Void
 		local
 			attr_names: LINKED_LIST [STRING];	
 			buf: GENERATION_BUFFER
 		do
 			buf := buffer
 			attr_names := attribute_names;
-			from
-				attr_names.start
-			until
-				attr_names.after
-			loop
-				buf.putchar ('"');
-				buf.putstring (attr_names.item);
-				buf.putchar ('"');
-				attr_names.forth;
-				if not attr_names.after then
-					buf.putstring (gc_comma);
-				end;	
-			end;
+			if not attr_names.is_empty then
+				buf.putstring ("static char *items[");
+				buf.putstring ("] = { ");
+				from
+					attr_names.start
+				until
+					attr_names.after
+				loop
+					buf.putchar ('"');
+					buf.putstring (attr_names.item);
+					buf.putchar ('"');
+					attr_names.forth;
+					if not attr_names.after then
+						buf.putstring (gc_comma);
+					end;	
+				end;
+				buf.putstring (" };");
+			else
+				buf.putstring ("static char **items = NULL;")
+			end
+			buf.new_line;
 		end;
 
 	set_feature_ids (ids: like feature_ids) is

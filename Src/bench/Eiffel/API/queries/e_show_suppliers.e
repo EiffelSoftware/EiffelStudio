@@ -30,7 +30,7 @@ feature -- Output
 			structured_text.add_new_line;
 			structured_text.add_new_line;
 			from	
-				suppliers := sorted_list (current_class.suppliers.e_classes);
+				suppliers := sorted_list (current_class.suppliers.classes);
 				suppliers.start
 			until
 				suppliers.after

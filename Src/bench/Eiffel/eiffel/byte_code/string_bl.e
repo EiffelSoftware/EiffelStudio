@@ -80,10 +80,10 @@ feature
 		local
 			buf: GENERATION_BUFFER
 		do
-				-- RTMS is the macro used to create Eiffel strings from C ones
+				-- RTMS_EX is the macro used to create Eiffel strings from C ones
 			buf := buffer
 			buf.putstring ("RTMS_EX(%"")
-			buf.escape_string (value)
+			buf.escape_string (buffer,value)
 			buf.putchar('"')
 			buf.putchar(',')
 			buf.putint(value.count)

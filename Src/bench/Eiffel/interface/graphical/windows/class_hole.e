@@ -15,7 +15,7 @@ inherit
 			symbol, full_symbol, icon_symbol,
 			name, stone_type, process_class, process_feature,
 			process_class_syntax, process_classi,
-			compatible, receive, menu_name, accelerator
+			compatible, menu_name, accelerator, receive
 		end
 
 creation
@@ -98,7 +98,7 @@ feature -- Update
 			else
 				tool.receive (syn)
 			end
-		end;
+		end
 
 	process_classi (st: CLASSI_STONE) is
 		do
@@ -107,21 +107,21 @@ feature -- Update
 			else
 				tool.receive (st)
 			end
-		end;
+		end
 
 	process_feature (st: FEATURE_STONE) is
 		do
 			if not st.is_valid then
-				warner (Project_tool).gotcha_call (Warning_messages.w_Feature_not_compiled);
+				warner (Project_tool).gotcha_call (Warning_messages.w_Feature_not_compiled)
 			else
 				create_class_tool (st)
 			end
-		end;
+		end
 
 	receive (a_stone: STONE) is
 			-- Process dropped stone `a_stone'
 		do
-			if a_stone.is_valid and then compatible (a_stone) then
+			if compatible (a_stone) and then a_stone.is_valid then
 				a_stone.process (Current)
 			end
 		end;
@@ -135,9 +135,9 @@ feature {NONE} -- Implementation
 		local
 			new_tool: CLASS_W
 		do
-			new_tool := window_manager.class_window;
-			new_tool.display;
+			new_tool := window_manager.class_window
+			new_tool.display
 			new_tool.receive (a_stone)
-		end;
+		end
 
 end -- class CLASS_HOLE

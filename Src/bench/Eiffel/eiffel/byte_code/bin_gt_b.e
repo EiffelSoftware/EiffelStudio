@@ -4,7 +4,8 @@ inherit
 
 	COMP_BINARY_B
 		rename
-			Bc_gt as operator_constant
+			Bc_gt as operator_constant,
+			il_gt as il_operator_constant
 		redefine
 			generate_operator
 		end;

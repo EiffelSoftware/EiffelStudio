@@ -8,7 +8,7 @@ inherit
 		redefine
 			make_byte_code, enlarged, enlarge_tree, is_unsafe,
 			optimized_byte_node, calls_special_features, size,
-			pre_inlined_code, inlined_byte_code
+			pre_inlined_code, inlined_byte_code, generate_il
 		end
 	
 feature 
@@ -65,6 +65,62 @@ feature
 			Result.enlarge_tree;
 		end;
 
+feature -- IL generation
+
+	generate_il is
+			-- Generate IL code for manifest arrays.
+		local
+			real_ty: GEN_TYPE_I
+			actual_type: CL_TYPE_I
+			expr: EXPR_B
+			class_type: SPECIAL_CLASS_TYPE
+			local_array: INTEGER
+			i: INTEGER
+		do
+			real_ty ?= context.real_type (type)
+			class_type ?= real_ty.associated_class_type
+			check
+				class_type /= Void
+			end
+
+			context.add_local (real_ty)
+			local_array := context.local_list.count
+			il_generator.put_local_info (class_type.type, "dummy_" + local_array.out)
+			il_generator.put_integer_32_constant (expressions.count)
+			class_type.generate_il ("make")
+			il_generator.generate_local_assignment (local_array)
+
+			from
+				expressions.start
+			until
+				expressions.after
+			loop
+				expr ?= expressions.item
+				actual_type ?= context.real_type (expr.type)
+
+					-- Prepare call to `put'.
+				il_generator.generate_local (local_array)
+				il_generator.put_integer_32_constant (i)
+
+					-- Generate expression
+				expr.generate_il
+				if
+					actual_type /= Void and then
+					need_metamorphosis (actual_type)
+				then 
+						-- We generate a boxed version of type.
+					expr.generate_il_metamorphose (actual_type, True)
+				end
+				class_type.generate_il ("put")
+				i := i + 1
+				expressions.forth
+			end
+
+			il_generator.generate_local (local_array)
+		end
+
+feature -- Byte code generation
+
 	make_byte_code (ba: BYTE_ARRAY) is
 			-- Generate byte code for a manifest array
 		local
@@ -77,7 +133,7 @@ feature
 			target_type: TYPE_I;
 			basic_i: BASIC_I;
 			base_class: CLASS_C;
-			r_id: ROUTINE_ID;
+			r_id: INTEGER;
 			rout_info: ROUT_INFO
 		do
 			real_ty ?= context.real_type (type);
@@ -123,17 +179,17 @@ feature
 				ba.append (Bc_parray);
 				r_id := feat_i.rout_id_set.first;
 				rout_info := System.rout_info_table.item (r_id);
-				ba.append_integer (rout_info.origin.id);
+				ba.append_integer (rout_info.origin);
 				ba.append_integer (rout_info.offset);	
 				ba.append_short_integer (real_ty.associated_class_type.type_id - 1);
-				ba.append_short_integer (context.class_type.id.id - 1)
+				ba.append_short_integer (context.class_type.static_type_id - 1)
 				real_ty.make_gen_type_byte_code (ba, true)
 				ba.append_short_integer (-1);
 			else
 				ba.append (Bc_array);
-				ba.append_short_integer (real_ty.associated_class_type.id.id - 1);
+				ba.append_short_integer (real_ty.associated_class_type.static_type_id - 1);
 				ba.append_short_integer (real_ty.associated_class_type.type_id - 1);
-				ba.append_short_integer (context.current_type.associated_class_type.id.id - 1)
+				ba.append_short_integer (context.current_type.associated_class_type.static_type_id - 1)
 				real_ty.make_gen_type_byte_code (ba, true)
 				ba.append_short_integer (-1);
 				feat_id := feat_i.feature_id;

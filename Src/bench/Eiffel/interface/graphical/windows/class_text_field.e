@@ -105,8 +105,7 @@ feature {NONE} -- Execution
 			at_pos: INTEGER;
 			cluster: CLUSTER_I;
 			cluster_name: STRING;
-			pattern: STRING_PATTERN
---			matcher: KMP_WILD
+			matcher: KMP_WILD
 			classes: EXTEND_TABLE [CLASS_I, STRING]
 		do
 			if (choice /= Void) and then (arg = choice) then
@@ -129,19 +128,19 @@ feature {NONE} -- Execution
 					cname := clone (text);
 					cname.left_adjust;
 					cname.right_adjust;
-					if cname.empty then
+					if cname.is_empty then
 						warner (tool.popup_parent).gotcha_call (Warning_messages.w_Specify_a_class)
 					else
 						cname.to_lower;
-						!! pattern.make (0);
-						pattern.append (cname);
-						if not pattern.has_wild_cards then
+						create matcher.make_empty
+						matcher.set_pattern (cname);
+						if not matcher.has_wild_cards then
 							!! mp.set_watch_cursor;
 							at_pos := cname.index_of ('@', 1);
 							if at_pos = 0 then
 								class_list := Eiffel_universe.classes_with_name (cname)
 								mp.restore;
-								if class_list.empty then
+								if class_list.is_empty then
 									class_list := Void;
 									if new_class_win = Void then
 										!! new_class_win.make (tool)
@@ -183,7 +182,6 @@ feature {NONE} -- Execution
 							from
 								!! mp.set_watch_cursor
 								!! sorted_classes.make
---								!! matcher.make (cname, "")
 								clusters := Eiffel_universe.clusters
 								clusters.start
 							until
@@ -195,9 +193,8 @@ feature {NONE} -- Execution
 								until
 									classes.after
 								loop
---									matcher.set_text (classes.key_for_iteration) 
---									if matcher.search_for_pattern then
-									if pattern.matches (classes.key_for_iteration) then
+									matcher.set_text (classes.key_for_iteration) 
+									if matcher.search_for_pattern then
 										sorted_classes.put_front (classes.item_for_iteration)
 									end
 									classes.forth

@@ -1,2 +1,0 @@
-This will manage the interaction between Ebench and Case parts,
-in other words it takes the place of the previous Kernel Cluster.

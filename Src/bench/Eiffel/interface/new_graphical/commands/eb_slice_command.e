@@ -22,9 +22,9 @@ creation
 
 feature -- Properties
 
-	callback: EV_ARGUMENT1 [ANY] is
+	callback: ANY is
 		once
-			create Result.make (Void)
+			create Result
 		end
 
 	tool: EB_OBJECT_TOOL
@@ -59,7 +59,7 @@ feature -- Bounds
 
 feature {EB_SLICE_DIALOG} -- Implementation
 
-	execute (argument: EV_ARGUMENT1 [ANY]; data: EV_EVENT_DATA) is
+	execute (argument: ANY) is
 			-- If left mouse button was pressed -> truncate special objects
 			-- If right mouse button was pressed -> bring up slice window. 
 		local
@@ -71,7 +71,7 @@ feature {EB_SLICE_DIALOG} -- Implementation
 		do
 --			create mp.set_watch_cursor
 			if argument = Void then
-				create slice_window.make_default (tool.parent_window, Current)
+				create slice_window.make_default (Current)
 			else
 				current_format := tool.last_format
 				if tool.format_is_show_attibutes then

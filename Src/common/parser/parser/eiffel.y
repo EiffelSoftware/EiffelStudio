@@ -14,7 +14,7 @@ inherit
 
 creation
 
-	make
+	make, make_il_parser
 
 %}
 
@@ -38,7 +38,7 @@ creation
 
 %token		TE_ALIAS TE_ALL TE_INTEGER TE_CHAR TE_REAL TE_STRING
 %token		TE_ID TE_A_BIT TE_BANG TE_BIT TE_SEMICOLON TE_TILDE
-%token		TE_COLON TE_COMMA TE_CREATION TE_LARRAY TE_RARRAY TE_RPARAN
+%token		TE_COLON TE_COMMA TE_CREATE TE_CREATION TE_LARRAY TE_RARRAY TE_RPARAN
 %token		TE_LCURLY TE_RCURLY TE_LSQURE TE_RSQURE TE_CONSTRAIN
 %token		TE_FALSE TE_TRUE TE_ACCEPT TE_ADDRESS TE_AS TE_ASSIGN
 %token		TE_CHECK TE_CLASS TE_CURRENT TE_DEBUG TE_DEFERRED TE_DO
@@ -46,11 +46,14 @@ creation
 %token		TE_EXTERNAL TE_FEATURE TE_FROM TE_FROZEN TE_IF TE_INDEXING
 %token		TE_INFIX TE_INHERIT TE_INSPECT TE_INVARIANT TE_IS
 %token		TE_LIKE TE_LOCAL TE_LOOP TE_OBSOLETE TE_ONCE TE_PRECURSOR
+%token		TE_AGENT
 %token		TE_PREFIX TE_REDEFINE TE_RENAME TE_REQUIRE TE_RESCUE
 %token		TE_RESULT TE_RETRY TE_SELECT TE_SEPARATE TE_THEN TE_UNDEFINE
 %token		TE_UNIQUE TE_UNTIL TE_VARIANT TE_WHEN TE_QUESTION TE_CURLYTILDE
 %token		TE_BOOLEAN_ID TE_CHARACTER_ID TE_DOUBLE_ID TE_INTEGER_ID
+%token		TE_INTEGER_8_ID TE_INTEGER_16_ID TE_INTEGER_64_ID TE_WIDE_CHAR_ID
 %token		TE_NONE_ID TE_POINTER_ID TE_REAL_ID TE_EMPTY_STRING
+%token		TE_VERBATIM_STRING TE_EMPTY_VERBATIM_STRING
 
 %token		TE_STR_LT TE_STR_LE TE_STR_GT TE_STR_GE TE_STR_MINUS
 %token		TE_STR_PLUS TE_STR_STAR TE_STR_SLASH TE_STR_MOD
@@ -80,7 +83,7 @@ creation
 %type <ELSIF_AS>			Elseif_part
 %type <ENSURE_AS>			Postcondition
 %type <EXPORT_ITEM_AS>		New_export_item
-%type <EXPR_AS>				Expression Actual_parameter
+%type <EXPR_AS>				Expression
 %type <EXTERNAL_AS>			External
 %type <EXTERNAL_LANG_AS>	External_language
 %type <FEATURE_AS>			Feature_declaration
@@ -101,7 +104,7 @@ creation
 %type <NESTED_AS>			Call_on_feature_access Call_on_precursor
 							Call_on_feature Call_on_result Call_on_current
 %type <NESTED_EXPR_AS>		Call_on_expression
-%type <OPERAND_AS>			Delayed_qualifier Delayed_actual
+%type <OPERAND_AS>			Delayed_actual
 %type <PARENT_AS>			Parent Parent_clause
 %type <PRECURSOR_AS>		A_precursor
 %type <REAL_AS>				Real_constant
@@ -115,8 +118,8 @@ creation
 %type <STRING_AS>			Obsolete Manifest_string External_name Non_empty_string
 %type <TAGGED_AS>			Assertion_clause Assertion_clause_impl
 %type <TUPLE_AS>			Manifest_tuple
-%type <TYPE>				Type Type_mark Class_type Constraint Creation_type Non_class_type
-%type <TYPE_DEC_AS>			Entity_declaration_group
+%type <TYPE>				Type Type_mark Class_type Creation_type Non_class_type
+%type <TYPE_DEC_AS>			Entity_declaration_group Local_entity_declaration_group
 %type <VARIANT_AS>			Variant
 
 %type <EIFFEL_LIST [ATOMIC_AS]>			Index_terms
@@ -131,7 +134,7 @@ creation
 										Redefine_opt Select Select_opt Creation_constraint
 %type <EIFFEL_LIST [FORMAL_DEC_AS]>		Formal_generics Formal_generic_list_opt Formal_generic_list
 %type <EIFFEL_LIST [ID_AS]>				Client_list Class_list Identifier_list Strip_identifier_list
-%type <EIFFEL_LIST [INDEX_AS]>			Indexing Index_list
+%type <INDEXING_CLAUSE_AS>			Indexing Index_list Dotnet_indexing_opt Dotnet_indexing
 %type <EIFFEL_LIST [INSTRUCTION_AS]>	Rescue Compound Instruction_list Else_part
 										Inspect_default
 %type <EIFFEL_LIST [INTERVAL_AS]>		Choices
@@ -143,17 +146,22 @@ creation
 %type <EIFFEL_LIST [TYPE]>				Generics_opt Type_list
 %type <EIFFEL_LIST [TYPE_DEC_AS]>		Formal_arguments Entity_declaration_list_opt
 										Entity_declaration_list Local_declarations
+										Local_entity_declaration_list_opt
+										Local_entity_declaration_list
 
 %type <PAIR [ID_AS, CLICK_AST]>			Clickable_identifier Clickable_id Clickable_boolean
 										Clickable_character Clickable_double Clickable_integer
+										Clickable_integer_8 Clickable_integer_16
+										Clickable_integer_64 Clickable_wide_char
 										Clickable_none Clickable_pointer Clickable_real
 %type <PAIR [FEATURE_NAME, CLICK_AST]>					Infix Prefix Feature_name New_feature
 %type <PAIR [STRING_AS, CLICK_AST]>						Infix_operator Prefix_operator
 %type <PAIR [EIFFEL_LIST [FEATURE_NAME], CLICK_AST]>	New_feature_list
+%type <PAIR [TYPE, EIFFEL_LIST [FEATURE_NAME]]>	Constraint
 
 %type <TOKEN_LOCATION>		Position
 
-%expect 106
+%expect 194
 
 %%
 
@@ -162,23 +170,53 @@ creation
 
 
 Class_declaration:
-		Indexing
-		Header_mark
-		TE_CLASS
-		Clickable_identifier
-		Formal_generics
-		Obsolete
-		Inheritance
-		Creators
-		Features
-		Class_invariant
-		Indexing
-		TE_END
+		Indexing							-- $1
+		Header_mark							-- $2
+		TE_CLASS							-- $3
+		Clickable_identifier				-- $4
+		Formal_generics						-- $5
+		External_name						-- $6
+		Obsolete							-- $7
+		Inheritance Position				-- $8 $9
+		Creators							-- $10
+		Features Position					-- $11 $12
+		Class_invariant Position			-- $13 $14
+		Indexing							-- $15
+		Class_end							-- $16
 			{
-				root_node := new_class_description ($4,
-					is_deferred, is_expanded, is_separate,
-					$1, $11, $5, $7, $8, $9, $10, suppliers, $6, click_list,
-					current_position.start_position)
+				root_node := new_class_description ($4, $6,
+					is_deferred, is_expanded, is_separate, is_frozen_class, is_external_class,
+					$1, $15, $5, $8, $10, $11, $13, suppliers, $7, click_list
+				)
+
+				if real_class_end_position = 0 then
+					root_node.set_text_positions (
+						start_position,
+						$12.start_position,
+						$9.start_position,
+						formal_generics_start_position,
+						formal_generics_end_position,
+						$14.start_position
+					)
+				else
+					root_node.set_text_positions (
+						real_class_end_position,
+						real_class_end_position,
+						real_class_end_position,
+						formal_generics_start_position,
+						formal_generics_end_position,
+						real_class_end_position
+					)
+				end
+			}
+	;
+
+Class_end: TE_END
+			{
+				if inherit_context then
+					inherit_context := False
+					real_class_end_position := 0
+				end
 			}
 	;
 
@@ -186,11 +224,19 @@ Clickable_identifier: Clickable_id
 			{ $$ := $1 }
 	|	Clickable_boolean
 			{ $$ := $1 }
+	|	Clickable_wide_char
+			{ $$ := $1 }
 	|	Clickable_character
 			{ $$ := $1 }
 	|	Clickable_double
 			{ $$ := $1 }
+	|	Clickable_integer_8
+			{ $$ := $1 }
+	|	Clickable_integer_16
+			{ $$ := $1 }
 	|	Clickable_integer
+			{ $$ := $1 }
+	|	Clickable_integer_64
 			{ $$ := $1 }
 	|	Clickable_none
 			{ $$ := $1 }
@@ -209,15 +255,31 @@ Clickable_boolean: TE_BOOLEAN_ID
 	;
 
 Clickable_character: TE_CHARACTER_ID
-			{ $$ := new_clickable_id (new_character_id_as) }
+			{ $$ := new_clickable_id (new_character_id_as (False)) }
+	;
+
+Clickable_wide_char: TE_WIDE_CHAR_ID
+			{ $$ := new_clickable_id (new_character_id_as (True)) }
 	;
 
 Clickable_double: TE_DOUBLE_ID
 			{ $$ := new_clickable_id (new_double_id_as) }
 	;
 
+Clickable_integer_8: TE_INTEGER_8_ID
+			{ $$ := new_clickable_id (new_integer_id_as (8)) }
+	;
+
+Clickable_integer_16: TE_INTEGER_16_ID
+			{ $$ := new_clickable_id (new_integer_id_as (16)) }
+	;
+
 Clickable_integer: TE_INTEGER_ID
-			{ $$ := new_clickable_id (new_integer_id_as) }
+			{ $$ := new_clickable_id (new_integer_id_as (32)) }
+	;
+
+Clickable_integer_64: TE_INTEGER_64_ID
+			{ $$ := new_clickable_id (new_integer_id_as (64)) }
 	;
 
 Clickable_none: TE_NONE_ID
@@ -242,6 +304,22 @@ Indexing: -- Empty
 			{ $$ := $2 }
 	|	TE_INDEXING 
 			-- { $$ := Void }
+	;
+
+Dotnet_indexing_opt: -- Empty
+			-- { $$ := Void }
+	| TE_INDEXING Index_list
+			{ $$ := $2 }
+	| TE_INDEXING
+			{ $$ := Void }
+	;
+
+Dotnet_indexing: -- Empty
+			-- { $$ := Void }
+	| TE_INDEXING Index_list TE_END
+			{ $$ := $2 }
+	| TE_INDEXING TE_END
+			{ $$ := Void }
 	;
 
 Index_list: Index_clause
@@ -287,35 +365,70 @@ Index_value: Identifier
 			{ $$ := $1 }
 	|	Manifest_constant
 			{ $$ := $1 }
+	|	Creation_expression TE_END
+			{
+				create {CUSTOM_ATTRIBUTE_AS} $$.initialize ($1)
+			}
 	;
 
 
 -- Header mark
 
 
-Header_mark: -- Empty
+Header_mark: Frozen_mark External_mark
 			{
 				is_deferred := False
 				is_expanded := False
 				is_separate := False
 			}
-	|	TE_DEFERRED
+	|	TE_DEFERRED External_mark
 			{
+				is_frozen_class := False
 				is_deferred := True
 				is_expanded := False
 				is_separate := False
 			}
-	|	TE_EXPANDED
+	|	Frozen_mark TE_EXPANDED External_mark
 			{
 				is_deferred := False
 				is_expanded := True
 				is_separate := False
 			}
-	|	TE_SEPARATE
+	|	Frozen_mark TE_SEPARATE External_mark
 			{
 				is_deferred := False
 				is_expanded := False
 				is_separate := True
+			}
+	;
+
+Frozen_mark: -- Empty
+			{
+				is_frozen_class := False
+			}
+	|	TE_FROZEN
+			{
+				if il_parser then
+					is_frozen_class := True
+				else
+						-- Trigger a syntax error.
+					raise_error
+				end
+			}
+	;
+
+External_mark: -- Empty
+			{
+				is_external_class := False
+			}
+	|	TE_EXTERNAL
+			{
+				if il_parser then
+					is_external_class := True
+				else
+						-- Trigger a syntax error.
+					raise_error
+				end
 			}
 	;
 
@@ -331,14 +444,13 @@ Obsolete: -- Empty
 
 
 -- Features
- 
 
 Features: -- Empty
 			-- { $$ := Void }
 	|	Feature_clause_list
 			{
 				$$ := $1
-				if $$.empty then
+				if $$.is_empty then
 					$$ := Void
 				end
 			}
@@ -357,7 +469,7 @@ Feature_clause_list: Feature_clause
 	;
 
 Feature_clause: Feature_client_clause
-			-- { $$ := Void }
+			{ $$ := new_feature_clause_as (Void, new_eiffel_list_feature_as (0), fclause_pos) }
 	|	Feature_client_clause Feature_declaration_list
 			{ $$ := new_feature_clause_as ($1, $2, fclause_pos) }
 	;
@@ -386,15 +498,17 @@ Client_list: TE_LCURLY TE_RCURLY
 			{ $$ := $2 }
 	;
 
-Class_list: Identifier
+Class_list: Clickable_identifier
 			{
 				$$ := new_eiffel_list_id_as (Initial_class_list_size)
-				$$.extend ($1)
+				$$.extend ($1.first)
+				$1.second.set_node (new_class_type_as ($1.first, Void))
 			}
-	|	Class_list TE_COMMA Identifier
+	|	Class_list TE_COMMA Clickable_identifier
 			{
 				$$ := $1
-				$$.extend ($3)
+				$$.extend ($3.first)
+				$3.second.set_node (new_class_type_as ($3.first, Void))
 			}
 	;
 
@@ -414,8 +528,21 @@ ASemi: -- Empty
 	|	TE_SEMICOLON
 	;
 
-Feature_declaration: New_feature_list Declaration_body ASemi
-			{ $$ := new_feature_declaration ($1, $2) }
+Optional_semicolons: -- Empty
+	|	Optional_semicolons TE_SEMICOLON
+	;
+
+Feature_declaration: New_feature_list Declaration_body Optional_semicolons
+			{
+					-- Generate a syntax error when `feature_indexes' is not
+					-- Void and it applies to synonyms of the current feature
+					-- declaration.
+				if (il_parser and feature_indexes /= Void and $1.first.count /= 1) then
+					raise_error
+				end
+				$$ := new_feature_declaration ($1, $2, feature_indexes)
+				feature_indexes := Void
+			}
 	;
 
 New_feature_list: New_feature
@@ -458,18 +585,27 @@ Declaration_body: Formal_arguments Type_mark Constant_or_routine
 			{ $$ := new_declaration_body ($1, $2, $3) }
 	;
 
-Constant_or_routine: -- Empty
-			-- { $$ := Void }
+Constant_or_routine: Dotnet_indexing
+			{ feature_indexes := $1 }
 	|	TE_IS Feature_value
 			{ $$ := $2 }
 	;
 
-Feature_value: Manifest_constant
-			{ $$ := new_constant_as (new_value_as ($1)) }
-	|	TE_UNIQUE
-			{ $$ := new_constant_as (new_value_as (new_unique_as)) }
-	|	Routine
-			{ $$ := $1 }
+Feature_value: Manifest_constant Dotnet_indexing
+			{
+				$$ := new_constant_as (new_value_as ($1))
+				feature_indexes := $2
+			}
+	|	TE_UNIQUE Dotnet_indexing
+			{
+				$$ := new_constant_as (new_value_as (new_unique_as))
+				feature_indexes := $2
+			}
+	|	Dotnet_indexing_opt Routine
+			{
+				$$ := $2
+				feature_indexes := $1
+			}
 	;
 
 
@@ -481,7 +617,7 @@ Inheritance: -- Empty
 	|	TE_INHERIT Parent_list
 			{ $$ := $2 }
 	|	TE_INHERIT ASemi
-			-- { $$ := Void }
+			{ $$ := new_eiffel_list_parent_as (0) }
 	;
 
 Parent_list: Parent
@@ -496,12 +632,16 @@ Parent_list: Parent
 			} 
 	;
 
-Parent: Parent_clause
-			{ $$ := $1 }
-	|	Parent_clause TE_SEMICOLON
+Parent: Position Parent_clause
+			{
+				$$ := $2
+				$2.set_text_positions ($1.start_position)
+			}
+	|	Position Parent_clause TE_SEMICOLON
 			{
 				inherit_context := False
-				$$ := $1
+				$$ := $2
+				$2.set_text_positions ($1.start_position)
 			}
 	;
 
@@ -538,6 +678,7 @@ Parent_clause: Clickable_identifier Generics_opt
 	|	Clickable_identifier Generics_opt TE_END
 			{
 				inherit_context := True
+				real_class_end_position := end_position - 3
 				$$ := new_parent_clause ($1, $2, Void, Void, Void, Void, Void)
 			}
 	;
@@ -674,7 +815,39 @@ Entity_declaration_list: Entity_declaration_group
 			}
 	;
 
-Entity_declaration_group: Identifier_list TE_COLON Type ASemi
+Entity_declaration_group: Identifier_list TE_COLON Parameter_passing_type Type ASemi
+			{ $$ := new_type_dec_as ($1, $4) }
+	;
+
+Parameter_passing_type: -- Empty
+	|	TE_LSQURE Identifier TE_RSQURE
+			{
+				if il_parser then
+						-- Trigger a syntax error.
+					raise_error
+				end
+			}
+	;
+
+Local_entity_declaration_list_opt: -- Empty
+			-- { $$ := Void }
+	|	Local_entity_declaration_list
+			{ $$ := $1 }
+	;
+
+Local_entity_declaration_list: Local_entity_declaration_group
+			{
+				$$ := new_eiffel_list_type_dec_as (Initial_entity_declaration_list_size)
+				$$.extend ($1)
+			}
+	|	Local_entity_declaration_list Local_entity_declaration_group
+			{
+				$$ := $1
+				$$.extend ($2)
+			}
+	;
+
+Local_entity_declaration_group: Identifier_list TE_COLON Type ASemi
 			{ $$ := new_type_dec_as ($1, $3) }
 	;
 
@@ -702,10 +875,15 @@ Type_mark: -- Empty
 			{ $$ := $2 }
 	;
 
-Routine: Obsolete
+Routine:
+		Obsolete
 			{ fbody_pos := current_position.start_position } 
-		Precondition Local_declarations
-		Routine_body Postcondition Rescue TE_END
+		Precondition
+		Local_declarations
+		Routine_body
+		Postcondition
+		Rescue
+		TE_END
 			{ $$ := new_routine_as ($1, $3, $4, $5, $6, $7, fbody_pos) }
 	;
 
@@ -741,7 +919,7 @@ Internal: TE_DO Compound
 
 Local_declarations: -- Empty
 			-- { $$ := Void }
-	|	TE_LOCAL Entity_declaration_list_opt
+	|	TE_LOCAL Local_entity_declaration_list_opt
 			{ $$ := $2 }
 	;
 
@@ -834,7 +1012,7 @@ Assertion: -- Empty
 	|	Assertion_list
 			{
 				$$ := $1
-				if $$.empty then
+				if $$.is_empty then
 					$$ := Void
 				end
 			}
@@ -857,9 +1035,9 @@ Assertion_clause: Set_position Assertion_clause_impl ASemi
 	;
 
 Assertion_clause_impl: Expression
-			{ $$ := new_tagged_as (Void, $1, yacc_position) }
+			{ $$ := new_tagged_as (Void, $1, yacc_position, yacc_line_number) }
 	|	Identifier TE_COLON Expression
-			{ $$ := new_tagged_as ($1, $3, yacc_position) }
+			{ $$ := new_tagged_as ($1, $3, yacc_position, yacc_line_number) }
 	|	Identifier TE_COLON 
 			-- { $$ := Void }
 	;
@@ -893,11 +1071,19 @@ Class_type: Clickable_id Generics_opt
 	|	Clickable_boolean Generics_opt
 			{ $$ := new_boolean_type ($1.second, $2 /= Void) }
 	|	Clickable_character Generics_opt
-			{ $$ := new_character_type ($1.second, $2 /= Void) }
+			{ $$ := new_character_type ($1.second, $2 /= Void, False) }
+	|	Clickable_wide_char Generics_opt
+			{ $$ := new_character_type ($1.second, $2 /= Void, True) }
 	|	Clickable_double Generics_opt
 			{ $$ := new_double_type ($1.second, $2 /= Void) }
+	|	Clickable_integer_8 Generics_opt
+			{ $$ := new_integer_type ($1.second, $2 /= Void, 8) }
+	|	Clickable_integer_16 Generics_opt
+			{ $$ := new_integer_type ($1.second, $2 /= Void, 16) }
 	|	Clickable_integer Generics_opt
-			{ $$ := new_integer_type ($1.second, $2 /= Void) }
+			{ $$ := new_integer_type ($1.second, $2 /= Void, 32) }
+	|	Clickable_integer_64 Generics_opt
+			{ $$ := new_integer_type ($1.second, $2 /= Void, 64) }
 	|	Clickable_none Generics_opt
 			{ $$ := new_none_type ($1.second, $2 /= Void) }
 	|	Clickable_pointer Generics_opt
@@ -931,9 +1117,17 @@ Type_list: Type
 
 
 Formal_generics:
-			-- { $$ := Void }
-	|	TE_LSQURE Formal_generic_list_opt TE_RSQURE
-			{ $$ := $2 }
+			{
+				-- $$ := Void
+				formal_generics_start_position := start_position
+				formal_generics_end_position := 0
+			}
+	|	Position TE_LSQURE Formal_generic_list_opt TE_RSQURE
+			{
+				$$ := $3
+				formal_generics_start_position := $1.start_position
+				formal_generics_end_position := start_position
+			}
 	;
 
 Formal_generic_list_opt: -- Empty
@@ -957,22 +1151,26 @@ Formal_generic_list: Formal_generic
 Formal_generic:
 		TE_ID
 			{ formal_parameters.extend (new_id_as (token_buffer)) }
-		Constraint Creation_constraint
+		Constraint
 			{
-				check formal_exists: not formal_parameters.empty end
-				$$ := new_formal_dec_as (formal_parameters.last, $3, $4, formal_parameters.count)
+				check formal_exists: not formal_parameters.is_empty end
+				$$ := new_formal_dec_as (formal_parameters.last, $3.first, $3.second, formal_parameters.count)
 			}
 	;
 
 Constraint: -- Empty
-			-- { $$ := Void }
-	|	TE_CONSTRAIN Class_type 
-			{ $$ := $2 }
+			{ create $$ }
+	|	TE_CONSTRAIN Class_type Creation_constraint
+			{
+				create $$
+				$$.set_first ($2)
+				$$.set_second ($3)
+			}
 	;
 
 Creation_constraint: -- Empty
 			-- { $$ := Void }
-	|	TE_CREATION Feature_list TE_END
+	|	TE_CREATE Feature_list TE_END
 			{ $$ := $2 }
 	;
 
@@ -1117,9 +1315,9 @@ Class_invariant: -- Empty
 Variant: -- Empty
 			-- { $$ := Void }
 	|	TE_VARIANT Identifier TE_COLON Expression
-			{ $$ := new_variant_as ($2, $4, yacc_position) }
+			{ $$ := new_variant_as ($2, $4, yacc_position, yacc_line_number) }
 	|	TE_VARIANT Expression
-			{ $$ := new_variant_as (Void, $2, yacc_position) }
+			{ $$ := new_variant_as (Void, $2, yacc_position, yacc_line_number) }
 	;
 
 Debug: Position TE_DEBUG Debug_keys Compound TE_END 
@@ -1194,7 +1392,23 @@ Creation_clause_list: Creation_clause
 			}
 	;
 
-Creation_clause: TE_CREATION
+Creation_clause:
+		TE_CREATE
+			{
+				inherit_context := False
+				$$ := new_create_as (Void, Void)
+			}
+	|	TE_CREATE Clients Feature_list
+			{
+				inherit_context := False
+				$$ := new_create_as ($2, $3)
+			}
+	|	TE_CREATE Client_list 
+			{
+				inherit_context := False
+				$$ := new_create_as (new_client_as ($2), Void)
+			}
+	|	 TE_CREATION
 			{
 				inherit_context := False
 				$$ := new_create_as (Void, Void)
@@ -1211,20 +1425,35 @@ Creation_clause: TE_CREATION
 			}
 	;
 
-Delayed_call: Delayed_qualifier Identifier Delayed_actuals
-			{ $$ := new_routine_creation_as ($1, $2, $3) }
-	;
-
-Delayed_qualifier: Identifier TE_TILDE
-			{ $$ := new_operand_as (Void, $1, Void) }
-	|	TE_LPARAN Expression TE_RPARAN TE_TILDE
-			{ $$ := new_operand_as (Void, Void, $2) }
-	|	TE_LCURLY Type TE_CURLYTILDE
-			{ $$ := new_operand_as ($2, Void, Void) }
-	|	TE_QUESTION TE_TILDE
-			-- { $$ := Void }
-	|	TE_TILDE
-			{ $$ := new_operand_as (Void, Void, Void) }
+Delayed_call:
+		TE_AGENT TE_RESULT TE_DOT Identifier Delayed_actuals
+		{ $$ := new_routine_creation_as (new_result_operand_as (Void, Void, Void), $4, $5) }
+	|	TE_AGENT TE_CURRENT TE_DOT Identifier Delayed_actuals
+		{ $$ := new_routine_creation_as (new_operand_as (Void, Void, Void), $4, $5) }
+	|	TE_AGENT Identifier TE_DOT Identifier Delayed_actuals
+		{ $$ := new_routine_creation_as (new_operand_as (Void, $2, Void), $4, $5) }
+	|	TE_AGENT TE_LPARAN Expression TE_RPARAN TE_DOT Identifier Delayed_actuals
+		{ $$ := new_routine_creation_as (new_operand_as (Void, Void, $3), $6, $7) }
+	|	TE_AGENT TE_LCURLY Type TE_RCURLY TE_DOT Identifier Delayed_actuals
+		{ $$ := new_routine_creation_as (new_operand_as ($3, Void, Void), $6, $7) }
+	|	TE_AGENT TE_QUESTION TE_DOT Identifier Delayed_actuals
+		{ $$ := new_routine_creation_as (Void, $4, $5) }
+	|	TE_AGENT Identifier Delayed_actuals
+		{ $$ := new_routine_creation_as (new_operand_as (Void, Void, Void), $2, $3) }
+	|	TE_RESULT TE_TILDE Identifier Delayed_actuals
+		{ $$ := new_routine_creation_as (new_result_operand_as (Void, Void, Void), $3, $4) }
+	|	TE_CURRENT TE_TILDE Identifier Delayed_actuals
+		{ $$ := new_routine_creation_as (new_operand_as (Void, Void, Void), $3, $4) }
+	|	Identifier TE_TILDE Identifier Delayed_actuals
+		{ $$ := new_routine_creation_as (new_operand_as (Void, $1, Void), $3, $4) }
+	|	TE_LPARAN Expression TE_RPARAN TE_TILDE Identifier Delayed_actuals
+		{ $$ := new_routine_creation_As (new_operand_as (Void, Void, $2), $5, $6) }
+	|	TE_LCURLY Type TE_CURLYTILDE Identifier Delayed_actuals
+		{ $$ := new_routine_creation_as (new_operand_as ($2, Void, Void), $4, $5) }
+	|	TE_QUESTION TE_TILDE Identifier Delayed_actuals
+		{ $$ := new_routine_creation_as (Void, $3, $4) }
+	|	TE_TILDE Identifier Delayed_actuals
+		{ $$ := new_routine_creation_as (new_operand_as (Void, Void, Void), $2, $3) }
 	;
 
 Delayed_actuals: -- Empty
@@ -1247,18 +1476,26 @@ Delayed_actual_list: Delayed_actual
 
 Delayed_actual: TE_QUESTION
 			{ $$ := new_operand_as (Void, Void, Void) }
-	|	Actual_parameter
+	|	Expression
 			{ $$ := new_operand_as (Void, Void, $1) }
 	|	TE_LCURLY Clickable_id Generics_opt TE_RCURLY
 			{ $$ := new_operand_as (new_class_type ($2, $3), Void, Void) }
 	|	TE_LCURLY Clickable_boolean Generics_opt TE_RCURLY
 			{ $$ := new_operand_as (new_boolean_type ($2.second, $3 /= Void), Void, Void) }
 	|	TE_LCURLY Clickable_character Generics_opt TE_RCURLY
-			{ $$ := new_operand_as (new_character_type ($2.second, $3 /= Void), Void, Void) }
+			{ $$ := new_operand_as (new_character_type ($2.second, $3 /= Void, False), Void, Void) }
+	|	TE_LCURLY Clickable_wide_char Generics_opt TE_RCURLY
+			{ $$ := new_operand_as (new_character_type ($2.second, $3 /= Void, True), Void, Void) }
 	|	TE_LCURLY Clickable_double Generics_opt TE_RCURLY
 			{ $$ := new_operand_as (new_double_type ($2.second, $3 /= Void), Void, Void) }
+	|	TE_LCURLY Clickable_integer_8 Generics_opt TE_RCURLY
+			{ $$ := new_operand_as (new_integer_type ($2.second, $3 /= Void, 8), Void, Void) }
+	|	TE_LCURLY Clickable_integer_16 Generics_opt TE_RCURLY
+			{ $$ := new_operand_as (new_integer_type ($2.second, $3 /= Void, 16), Void, Void) }
 	|	TE_LCURLY Clickable_integer Generics_opt TE_RCURLY
-			{ $$ := new_operand_as (new_integer_type ($2.second, $3 /= Void), Void, Void) }
+			{ $$ := new_operand_as (new_integer_type ($2.second, $3 /= Void, 32), Void, Void) }
+	|	TE_LCURLY Clickable_integer_64 Generics_opt TE_RCURLY
+			{ $$ := new_operand_as (new_integer_type ($2.second, $3 /= Void, 64), Void, Void) }
 	|	TE_LCURLY Clickable_none Generics_opt TE_RCURLY
 			{ $$ := new_operand_as (new_none_type ($2.second, $3 /= Void), Void, Void) }
 	|	TE_LCURLY Clickable_pointer Generics_opt TE_RCURLY
@@ -1271,16 +1508,16 @@ Delayed_actual: TE_QUESTION
 
 Creation: TE_BANG Creation_type TE_BANG Creation_target Creation_call
 			{ $$ := new_creation_as ($2, $4, $5, yacc_position, yacc_line_number) }
-	|	TE_CREATION Creation_target Creation_call
+	|	TE_CREATE Creation_target Creation_call
 			{ $$ := new_creation_as (Void, $2, $3, yacc_position, yacc_line_number) }
-	|	TE_CREATION TE_LCURLY Type TE_RCURLY Creation_target Creation_call
+	|	TE_CREATE TE_LCURLY Type TE_RCURLY Creation_target Creation_call
 			{ $$ := new_creation_as ($3, $5, $6, yacc_position, yacc_line_number) }
 	;
 
-Creation_expression: TE_CREATION TE_LCURLY Type TE_RCURLY Creation_call
-			{ $$ := new_creation_expr_as ($3, $5) }
+Creation_expression: TE_CREATE TE_LCURLY Type TE_RCURLY Creation_call
+			{ $$ := new_creation_expr_as ($3, $5, yacc_position, yacc_line_number) }
 	|	TE_BANG Type TE_BANG Creation_call
-			{ $$ := new_creation_expr_as ($2, $4) }
+			{ $$ := new_creation_expr_as ($2, $4, yacc_position, yacc_line_number) }
 	;
 
 Creation_type: -- Empty
@@ -1396,10 +1633,6 @@ Expression: Expression_constant
 			{ $$ := new_un_free_as ($1, $2) }
 	|	TE_STRIP TE_LPARAN Strip_identifier_list TE_RPARAN
 			{ $$ := new_un_strip_as ($3) }
-	;
-
-Actual_parameter: Expression
-			{ $$ := $1 }
 	|	TE_ADDRESS Feature_name
 			{ $$ := new_address_as ($2.first) }
 	|	TE_ADDRESS TE_LPARAN Expression TE_RPARAN
@@ -1474,7 +1707,13 @@ A_precursor: TE_PRECURSOR Parameters
 			{ $$ := new_precursor ($2, $5) }
 	|	TE_LCURLY Clickable_double TE_RCURLY TE_PRECURSOR Parameters
 			{ $$ := new_precursor ($2, $5) }
+	|	TE_LCURLY Clickable_integer_8 TE_RCURLY TE_PRECURSOR Parameters
+			{ $$ := new_precursor ($2, $5) }
+	|	TE_LCURLY Clickable_integer_16 TE_RCURLY TE_PRECURSOR Parameters
+			{ $$ := new_precursor ($2, $5) }
 	|	TE_LCURLY Clickable_integer TE_RCURLY TE_PRECURSOR Parameters
+			{ $$ := new_precursor ($2, $5) }
+	|	TE_LCURLY Clickable_integer_64 TE_RCURLY TE_PRECURSOR Parameters
 			{ $$ := new_precursor ($2, $5) }
 	|	TE_LCURLY Clickable_none TE_RCURLY TE_PRECURSOR Parameters
 			{ $$ := new_precursor ($2, $5) }
@@ -1521,12 +1760,12 @@ Parameters: -- Empty
 			{ $$ := $2 }
 	;
 
-Parameter_list: Actual_parameter
+Parameter_list: Expression
 			{
 				$$ := new_eiffel_list_expr_as (Initial_parameter_list_size)
 				$$.extend ($1)
 			}
-	|	Parameter_list TE_COMMA Actual_parameter
+	|	Parameter_list TE_COMMA Expression
 			{
 				$$ := $1
 				$$.extend ($3)
@@ -1560,11 +1799,19 @@ Identifier: TE_ID
 	|	TE_BOOLEAN_ID
 			{ $$ := new_boolean_id_as }
 	|	TE_CHARACTER_ID
-			{ $$ := new_character_id_as }
+			{ $$ := new_character_id_as (False) }
+	|	TE_WIDE_CHAR_ID
+			{ $$ := new_character_id_as (True) }
 	|	TE_DOUBLE_ID
 			{ $$ := new_double_id_as }
+	|	TE_INTEGER_8_ID
+			{ $$ := new_integer_id_as (8) }
+	|	TE_INTEGER_16_ID
+			{ $$ := new_integer_id_as (16) }
 	|	TE_INTEGER_ID
-			{ $$ := new_integer_id_as }
+			{ $$ := new_integer_id_as (32) }
+	|	TE_INTEGER_64_ID
+			{ $$ := new_integer_id_as (64) }
 	|	TE_NONE_ID
 			{ $$ := new_none_id_as }
 	|	TE_POINTER_ID
@@ -1595,6 +1842,11 @@ Expression_constant: Boolean_constant
 			{
 				if token_buffer.is_integer then
 					$$ := new_integer_as (token_buffer.to_integer)
+				elseif
+					token_buffer.item (1) = '0' and then
+					token_buffer.item (2).lower = 'x'
+				then
+					$$ := new_integer_as_from_hexa (token_buffer)
 				else
 					report_integer_too_large_error (token_buffer)
 						-- Dummy code (for error recovery) follows:
@@ -1617,7 +1869,7 @@ Boolean_constant: TE_FALSE
 
 Character_constant: TE_CHAR
 			{
-				check is_character: not token_buffer.empty end
+				check is_character: not token_buffer.is_empty end
 				$$ := new_character_as (token_buffer.item (1))
 			}
 	;
@@ -1626,6 +1878,11 @@ Integer_constant: TE_INTEGER
 			{
 				if token_buffer.is_integer then
 					$$ := new_integer_as (token_buffer.to_integer)
+				elseif
+					token_buffer.item (1) = '0' and then
+					token_buffer.item (2).lower = 'x'
+				then
+					$$ := new_integer_as_from_hexa (token_buffer)
 				else
 					report_integer_too_large_error (token_buffer)
 						-- Dummy code (for error recovery) follows:
@@ -1636,6 +1893,11 @@ Integer_constant: TE_INTEGER
 			{
 				if token_buffer.is_integer then
 					$$ := new_integer_as (token_buffer.to_integer)
+				elseif
+					token_buffer.item (1) = '0' and then
+					token_buffer.item (2).lower = 'x'
+				then
+					$$ := new_integer_as_from_hexa (token_buffer)
 				else
 					report_integer_too_large_error (token_buffer)
 						-- Dummy code (for error recovery) follows:
@@ -1646,6 +1908,11 @@ Integer_constant: TE_INTEGER
 			{
 				if token_buffer.is_integer then
 					$$ := new_integer_as (- token_buffer.to_integer)
+				elseif
+					token_buffer.item (1) = '0' and then
+					token_buffer.item (2).lower = 'x'
+				then
+					$$ := new_integer_as_from_hexa (token_buffer)	
 				else
 					token_buffer.precede ('-')
 					report_integer_too_small_error (token_buffer)
@@ -1674,10 +1941,14 @@ Manifest_string: Non_empty_string
 			{ $$ := $1 }
 	|	TE_EMPTY_STRING
 			{ $$ := new_empty_string_as }
+	|	TE_EMPTY_VERBATIM_STRING
+			{ $$ := new_empty_verbatim_string_as (cloned_string (verbatim_marker)) }
 	;
 
 Non_empty_string: TE_STRING
 			{ $$ := new_string_as (cloned_string (token_buffer)) }
+	|	TE_VERBATIM_STRING
+			{ $$ := new_verbatim_string_as (cloned_string (token_buffer), cloned_string (verbatim_marker)) }
 	|	TE_STR_LT
 			{ $$ := new_lt_string_as }
 	|	TE_STR_LE
@@ -1788,7 +2059,7 @@ end -- class EIFFEL_PARSER
 
 
 --|----------------------------------------------------------------
---| Copyright (C) 1992-1999, Interactive Software Engineering Inc.
+--| Copyright (C) 1992-2000, Interactive Software Engineering Inc.
 --| All rights reserved. Duplication and distribution prohibited
 --| without prior agreement with Interactive Software Engineering.
 --|

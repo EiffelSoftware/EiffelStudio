@@ -50,6 +50,7 @@ extern "C" {
 	struct eif_par_types **egc_partab;
 	int    egc_partab_size;
 	void (*egc_system_mod_init) (void);	
+	int egc_type_of_gc;
 
 
 #ifdef WORKBENCH
@@ -74,9 +75,15 @@ extern "C" {
 	long *egc_fsize;
 #endif
 
+	int32 egc_rcdt;				/* E1/einit.c */
+	int32 egc_rcorigin;			/* E1/einit.c */
+	int32 egc_rcoffset;			/* E1/einit.c */
+	int32 egc_rcarg;				/* E1/einit.c */
 
 	char *egc_system_name;
 	EIF_INTEGER egc_compiler_tag;
+
+	int egc_platform_level;
 
 #ifdef __cplusplus
 }

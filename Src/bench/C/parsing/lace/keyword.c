@@ -10,11 +10,11 @@ struct token {
 };
 
 #define MIN_WORD_LENGTH 1
-#define MAX_WORD_LENGTH 12
+#define MAX_WORD_LENGTH 13
 #define MIN_HASH_VALUE 1
 #define MAX_HASH_VALUE 92
 /*
-   36 keywords
+   37 keywords
    92 is the maximum key range
 */
 
@@ -89,6 +89,7 @@ struct token * in_word_set2 (register char *str, register unsigned int len)
       {"use", 			LAC_USE},
       {"ensure", 			LAC_ENSURE},
       {"loop", 			LAC_LOOP},
+      {"multithreaded", 		LAC_MULTITHREADED},
       {"precompiled", 	LAC_PRECOMPILED},
       {"debug", 			LAC_DEBUG},
       {"require", 		LAC_REQUIRE},
@@ -172,12 +173,14 @@ struct token * in_word_set2 (register char *str, register unsigned int len)
               resword = &wordlist[31]; break;
             case  54:
               resword = &wordlist[32]; break;
-            case  61:
+            case  58:
               resword = &wordlist[33]; break;
-            case  90:
+            case  61:
               resword = &wordlist[34]; break;
-            case  92:
+            case  90:
               resword = &wordlist[35]; break;
+            case  92:
+              resword = &wordlist[36]; break;
             default: return 0;
             }
           if (*str == *resword->name && !strcmp (str + 1, resword->name + 1))

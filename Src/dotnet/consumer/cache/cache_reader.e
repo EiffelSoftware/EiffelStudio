@@ -12,185 +12,158 @@ inherit
 			{ANY} all
 		end
 
-	SHARED_CONSUMED_ASSEMBLY_FACTORY
-		export
-			{NONE} all
-		end
-
 create
 	make
 
 feature -- Access
 
 	consumed_assemblies: ARRAY [CONSUMED_ASSEMBLY] is
-			-- Assemblies in EAC
+			-- Returns all completed consumed assemblies
+		local
+			l_assemblies: ARRAYED_LIST [CONSUMED_ASSEMBLY]
 		do
 			if is_initialized then
-				Result := info.assemblies			
+				create l_assemblies.make_from_array (info.assemblies)
+				from
+					l_assemblies.start
+				until
+					l_assemblies.after
+				loop
+					if not l_assemblies.item.is_consumed then
+						l_assemblies.remove
+					else
+						l_assemblies.forth
+					end
+				end
+				Result := l_assemblies
 			end
 		end
 
-	consumed_assembly (an_assembly_name: STRING): CONSUMED_ASSEMBLY is
-			-- Consumed assembly associated to `an_assembly_name'.
+	consumed_assembly_from_path (a_path: STRING): CONSUMED_ASSEMBLY is
+			-- Find a consumed assembly in cache that matches `a_path'.
 		require
-			non_void_assembly_name: an_assembly_name /= Void
-			not_empty_assembly_name: not an_assembly_name.is_empty
+			non_void_path: a_path /= Void
+			valid_path: not a_path.is_empty
 		local
 			i: INTEGER
 			l_consumed_assemblies: ARRAY [CONSUMED_ASSEMBLY]
 		do
-			l_consumed_assemblies := consumed_assemblies
+			l_consumed_assemblies := info.assemblies
 			from
 				i := 1
 			until
 				i > l_consumed_assemblies.count or Result /= Void
 			loop
-				if l_consumed_assemblies.item (i).name.is_equal (an_assembly_name) then
+				if l_consumed_assemblies.item (i).has_same_path (a_path) then
 					Result := l_consumed_assemblies.item (i)
 				end
 				i := i + 1
 			end
 		end
 
-	assembly_types (aname: ASSEMBLY_NAME): CONSUMED_ASSEMBLY_TYPES is
+	assembly_types (a_assembly: CONSUMED_ASSEMBLY): CONSUMED_ASSEMBLY_TYPES is
 			-- Assembly information from EAC
 		require
-			non_void_name: aname /= Void
-			valid_name: is_assembly_in_cache (aname)
+			non_void_assembly: a_assembly /= Void
+			valid_assembly: is_assembly_in_cache (a_assembly.gac_path, True)
 		local
 			des: EIFFEL_XML_DESERIALIZER
 		do
 			create des
-			des.deserialize (absolute_assembly_path (aname) + Assembly_types_file_name)
+			des.deserialize (absolute_assembly_path_from_consumed_assembly (a_assembly) + assembly_types_file_name)
 			Result ?= des.deserialized_object
 		ensure
 			non_void_info: Result /= Void
 		end
 		
-	assembly_types_from_consumed_assembly (ca: CONSUMED_ASSEMBLY): CONSUMED_ASSEMBLY_TYPES is
-			-- Assembly information from EAC for `ca'.
-		require
-			non_void_assembly: ca /= Void
-		local
-			des: EIFFEL_XML_DESERIALIZER
-		do
-			create des
-			des.deserialize (absolute_assembly_path_from_consumed_assembly (ca) + Assembly_types_file_name)
-			Result ?= des.deserialized_object
-		ensure
-			non_void_info: Result /= Void
-		end
-		
-	consumed_type_from_dotnet_type_name (ca: CONSUMED_ASSEMBLY; type: STRING): CONSUMED_TYPE is
+	consumed_type_from_dotnet_type_name (a_assembly: CONSUMED_ASSEMBLY; type: STRING): CONSUMED_TYPE is
 			-- Type information from type `type' contained in `ca'
 		require
-			non_void_assembly: ca /= Void
+			non_void_assembly: a_assembly /= Void
+			valid_assembly: is_assembly_in_cache (a_assembly.gac_path, True)
 		local
 			des: EIFFEL_XML_DESERIALIZER
 			type_path: STRING
 		do
 			create des
-			type_path := absolute_assembly_path_from_consumed_assembly (ca) + Classes_path + type + ".xml"			
+			type_path := absolute_assembly_path_from_consumed_assembly (a_assembly) + classes_path + type + ".xml"			
 			des.deserialize (type_path)
 			Result ?= des.deserialized_object
+		ensure
+			non_void_result: Result /= Void
 		end
 		
-	consumed_type_from_consumed_referenced_type (ca: CONSUMED_ASSEMBLY; crt: CONSUMED_REFERENCED_TYPE): CONSUMED_TYPE is
+	consumed_type_from_consumed_referenced_type (a_assembly: CONSUMED_ASSEMBLY; a_crt: CONSUMED_REFERENCED_TYPE): CONSUMED_TYPE is
 			-- Type information from consumed referenced type `crt'.
 		require
-			non_void_referenced_type: crt /= Void
+			non_void_assembly: a_assembly /= Void
+			valid_assembly: is_assembly_in_cache (a_assembly.gac_path, True)
+			non_void_referenced_type: a_crt /= Void
 		local
-			ca_mapping: CONSUMED_ASSEMBLY_MAPPING
+			l_ca_mapping: CONSUMED_ASSEMBLY_MAPPING
 		do
-			ca_mapping := assembly_mapping_from_consumed_assembly (ca)
-			Result := consumed_type_from_dotnet_type_name (ca_mapping.assemblies @ crt.assembly_id, crt.name)
+			l_ca_mapping := assembly_mapping_from_consumed_assembly (a_assembly)
+			Result := consumed_type_from_dotnet_type_name (l_ca_mapping.assemblies @ a_crt.assembly_id, a_crt.name)
 		ensure
 			non_void_info: Result /= Void
 		end
-	
-	assembly_mapping (aname: ASSEMBLY_NAME): CONSUMED_ASSEMBLY_MAPPING is
-			-- Assembly information from EAC
+		
+	assembly_mapping_from_consumed_assembly (a_assembly: CONSUMED_ASSEMBLY): CONSUMED_ASSEMBLY_MAPPING is
+			-- Assembly information from EAC for `a_assembly'.
 		require
-			non_void_name: aname /= Void
-			valid_name: is_assembly_in_cache (aname)
+			non_void_assembly: a_assembly /= Void
+			valid_assembly: is_assembly_in_cache (a_assembly.gac_path, True)
 		local
 			des: EIFFEL_XML_DESERIALIZER
 		do
 			create des
-			des.deserialize (absolute_assembly_path (aname) + Assembly_mapping_file_name)
+			des.deserialize (absolute_assembly_path_from_consumed_assembly (a_assembly) + Assembly_mapping_file_name)
 			Result ?= des.deserialized_object
 		ensure
 			non_void_info: Result /= Void
 		end
 		
-	assembly_mapping_from_consumed_assembly (ca: CONSUMED_ASSEMBLY): CONSUMED_ASSEMBLY_MAPPING is
-			-- Assembly information from EAC for `ca'.
-		require
-			non_void_name: ca /= Void
-		local
-			des: EIFFEL_XML_DESERIALIZER
-		do
-			create des
-			des.deserialize (absolute_assembly_path_from_consumed_assembly (ca) + Assembly_mapping_file_name)
-			Result ?= des.deserialized_object
-		ensure
-			non_void_info: Result /= Void
-		end
-		
-	consumed_type (t: TYPE): CONSUMED_TYPE is
+	consumed_type (a_type: TYPE): CONSUMED_TYPE is
 			-- Consumed type corresponding to `t'.
 		require
-			non_void_type: t /= Void
-			valid_type: is_type_in_cache (t)
+			non_void_type: a_type /= Void
+			valid_type: is_type_in_cache (a_type)
 		local
-			des: EIFFEL_XML_DESERIALIZER
+			l_des: EIFFEL_XML_DESERIALIZER
+			l_ca: CONSUMED_ASSEMBLY
 		do
-			create des
-			des.deserialize (absolute_type_path (t))
-			Result ?= des.deserialized_object
+			l_ca := consumed_assembly_from_path (a_type.assembly.location)
+			create l_des
+			l_des.deserialize (absolute_type_path (l_ca, a_type))
+			Result ?= l_des.deserialized_object
 		ensure
 			non_void_consumed_type: Result /= Void
 		end
 	
-	client_assemblies (assembly: CONSUMED_ASSEMBLY): ARRAY [CONSUMED_ASSEMBLY] is
-			-- List of assemblies in EAC depending on `assembly'.
+	client_assemblies (a_assembly: CONSUMED_ASSEMBLY): ARRAY [CONSUMED_ASSEMBLY] is
+			-- List of assemblies in EAC depending on `a_assembly'.
 		require
-			non_void_assembly: assembly /= Void
+			non_void_assembly: a_assembly /= Void
 		local
-			i, j, index: INTEGER
-			assemblies: like consumed_assemblies
-			converter: CACHE_CONVERSION
-			a: ASSEMBLY
-			names: NATIVE_ARRAY [ASSEMBLY_NAME]
-			ca: CONSUMED_ASSEMBLY
+			l_client_assemblies: ARRAYED_LIST [CONSUMED_ASSEMBLY]
+			l_referenced_assemblies: like assembly_mapping_from_consumed_assembly
+			l_assemblies: like consumed_assemblies
+			i: INTEGER
 		do
-			create Result.make (1, 0)
-			assemblies := consumed_assemblies
-			index := 1
-			create converter
+			l_assemblies := consumed_assemblies
+			create l_client_assemblies.make (l_assemblies.count)
 			from
 				i := 1
 			until
-				i > assemblies.count
+				i > l_assemblies.count
 			loop
-				a := converter.assembly (assemblies.item (i))
-				if converter.successful then
-					names := a.get_referenced_assemblies
-					from
-						j := 0
-					until
-						j = names.count
-					loop
-						ca := Consumed_assembly_factory.consumed_assembly_from_name (names.item (j))
-						if ca.is_equal (assembly) then
-							Result.force (ca, index)
-							index := index + 1
-						end
-						j := j + 1
-					end
-					i := i + 1					
+				l_referenced_assemblies := assembly_mapping_from_consumed_assembly (l_assemblies.item (i))
+				if l_referenced_assemblies.assemblies.has (a_assembly) then
+					l_client_assemblies.extend (l_assemblies.item (i))
 				end
+				i := i + 1
 			end
+			Result := l_client_assemblies
 		end
 		
 feature -- Status Report
@@ -201,20 +174,31 @@ feature -- Status Report
 			Result := (create {RAW_FILE}.make (Absolute_info_path)).exists
 		end
 
-	is_assembly_in_cache (aname: ASSEMBLY_NAME): BOOLEAN is
-			-- Is `aname' in EAC?
+	is_assembly_in_cache (a_path: STRING; a_consumed: BOOLEAN): BOOLEAN is
+			-- Is `a_path' in cache and if `a_consumed' has it been consumed
+		require
+			non_void_path: a_path /= Void
+			valid_path: not a_path.is_empty
+		local
+			l_ca: CONSUMED_ASSEMBLY
 		do
-			if aname.get_public_key_token /= Void then
-				Result := (create {DIRECTORY}.make (absolute_assembly_path (aname))).exists			
-			end
+			l_ca := consumed_assembly_from_path (a_path)
+			Result := l_ca /= Void and (not a_consumed or l_ca.is_consumed)
 		end
 	
-	is_type_in_cache (t: TYPE): BOOLEAN is
-			-- Is `t' in EAC?
+	is_type_in_cache (a_type: TYPE): BOOLEAN is
+			-- Is `a_type' in EAC?
+		require
+			non_void_type: a_type /= Void
+		local
+			l_ca: CONSUMED_ASSEMBLY
+			l_type_path: STRING
 		do
-			if t.assembly.get_name.get_public_key_token /= Void then
-				Result := (create {RAW_FILE}.make (absolute_type_path (t))).exists			
-			end
+			l_ca := consumed_assembly_from_path (a_type.assembly.location)
+			l_type_path := absolute_type_path (l_ca, a_type)
+			if l_type_path /= Void and not l_type_path.is_empty then
+				Result := (create {RAW_FILE}.make (l_type_path)).exists	
+			end		
 		end
 		
 feature {CACHE_WRITER} -- Implementation
@@ -226,18 +210,20 @@ feature {CACHE_WRITER} -- Implementation
 		local
 			des: EIFFEL_XML_DESERIALIZER
 		do
-			if not is_initialized then
-				create Result.make (clr_version)
-				(create {EIFFEL_XML_SERIALIZER}).serialize (Result, Absolute_info_path)
-			else
+			if is_initialized then
 				create des
 				des.deserialize (Absolute_info_path)
 				if des.successful then
 					Result ?= des.deserialized_object
 				end
 			end
+			if Result = Void then
+					-- cache info is not initalized or is outdated
+				create Result.make (clr_version)
+				(create {EIFFEL_XML_SERIALIZER}).serialize (Result, absolute_info_path)
+			end
 		ensure
 			non_void_if_initialized: is_initialized implies Result /= Void
-		end		
+		end
 
 end -- class CACHE_READER

@@ -17,7 +17,10 @@
 #include "eif_err_msg.h"
 #include "eif_econsole.h"
 #include "eif_error.h"
+
+#ifdef WORKBENCH
 #include "server.h"	/* For `debug_mode' */
+#endif
 
 #define BUFFER_SIZE 2056
 #define KEY_CR (EIF_CHARACTER) 13
@@ -387,7 +390,11 @@ void eif_console_cleanup (EIF_BOOLEAN crashed)
 		if (eif_thr_is_root())
 #endif
 		{
+#ifdef WORKBENCH
 			if (crashed || debug_mode) {
+#else
+			if (crashed) {
+#endif
 				eif_console_putstring("\nPress Return to finish the execution...\0", 40);
 				c = eif_console_readchar ();
 			}

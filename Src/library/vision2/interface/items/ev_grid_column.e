@@ -8,23 +8,17 @@ class
 
 inherit
 	REFACTORING_HELPER
-	
--- EV_SELECTABLE
-
-create {EV_GRID_I}
-	make_with_grid_i
-
-feature {NONE} -- Initialization
-
-	make_with_grid_i (a_grid_i: EV_GRID_I) is
-			-- Make `Current' associated with `a_grid_i'
-		require
-			a_grid_i_not_void: a_grid_i /= Void
-		do
-			parent_grid_i := a_grid_i
-		ensure
-			parent_grid_i = a_grid_i
+		undefine
+			default_create, copy, is_equal
 		end
+	
+	EV_SELECTABLE
+		redefine
+			implementation
+		end
+		
+create
+	{EV_GRID_I} default_create
 
 feature -- Access
 
@@ -33,7 +27,7 @@ feature -- Access
 		require
 			is_parented: parent /= Void
 		do
-			to_implement ("EV_GRID_COLUMN.count")
+			Result := implementation.title
 		ensure
 			title_not_void: Result /= Void
 		end
@@ -44,14 +38,8 @@ feature -- Access
 			i_positive: i > 0
 			i_less_than_count: i <= count
 			is_parented: parent /= Void
-		local
-			grid_row: SPECIAL [EV_GRID_ITEM]
 		do
-			grid_row :=  parent_grid_i.row_list @ i
-			if grid_row = Void then
-					-- The row is new, so no item existed
-					
-			end
+			Result := implementation.item (i)
 		ensure
 			item_not_void: Result /= Void
 		end
@@ -59,9 +47,7 @@ feature -- Access
 	parent: EV_GRID is
 			-- Grid to which current column belongs
 		do
-			if parent_grid_i /= Void then
-				Result := parent_grid_i.interface
-			end
+			Result := implementation.parent
 		end
 		
 	selected_items: ARRAYED_LIST [EV_GRID_ITEM] is
@@ -69,7 +55,7 @@ feature -- Access
 		require
 			is_parented: parent /= Void
 		do
-			to_implement ("EV_GRID_COLUMN.selected_items")
+			Result := implementation.selected_items 
 		ensure
 			result_not_void: Result /= Void
 		end
@@ -79,7 +65,7 @@ feature -- Access
 		require
 			is_parented: parent /= Void
 		do
-			to_implement ("EV_GRID_COLUMN.width")
+			Result := implementation.width
 		ensure
 			Result_non_negative: Result >= 0
 		end
@@ -91,7 +77,7 @@ feature -- Status report
 		require
 			is_parented: parent /= Void
 		do
-			Result := internal_index
+			Result := implementation.index
 		ensure
 			index_positive: Result > 0
 			index_less_than_column_count: Result <= parent.column_count
@@ -102,7 +88,7 @@ feature -- Status report
 		require
 			is_parented: parent /= Void
 		do
-			to_implement ("EV_GRID_COLUMN.count")
+			Result := implementation.count
 		ensure
 			count_positive: Result > 0
 		end
@@ -116,7 +102,7 @@ feature -- Element change
 			a_item_not_void: a_item /= Void
 			is_parented: parent /= Void
 		do
-			to_implement ("EV_GRID_COLUMN.set_item")
+			implementation.set_item (i, a_item)
 		ensure
 			item_set: item (i) = a_item
 		end
@@ -126,7 +112,7 @@ feature -- Element change
 		require
 			is_parented: parent /= Void
 		do
-			to_implement ("EV_GRID_COLUMN.title")
+			implementation.set_title (a_title)
 		ensure
 			title_set: title = a_title
 		end
@@ -137,7 +123,7 @@ feature -- Element change
 			a_color_not_void: a_color /= Void
 			is_parented: parent /= Void
 		do
-			to_implement ("EV_GRID_COLUMN.background_color")
+			implementation.set_background_color (a_color)
 		ensure
 			--background_color_set: forall (item(j).background_color = a_color)
 		end
@@ -148,38 +134,23 @@ feature -- Element change
 			width_non_negative: a_width >= 0
 			is_parented: parent /= Void
 		do
-			to_implement ("EV_GRID_COLUMN.set_width")
+			implementation.set_width (a_width)
 		ensure
 			width_set: width = a_width
 		end
+		
+feature {EV_ANY, EV_ANY_I} -- Implementation
 
-feature {EV_GRID_I} -- Implementation
+	implementation: EV_GRID_COLUMN_I
+		-- Responsible for interaction with native graphics toolkit.
+	
+feature {NONE} -- Implementation
 
-	set_index (a_index: INTEGER) is
-			-- Set the `index' for `Current'
-		require
-			a_index_valid: a_index > 0
+	create_implementation is
+			-- See `{EV_ANY}.create_implementation'.
 		do
-			internal_index := a_index
+			create {EV_GRID_COLUMN_I} implementation.make (Current)
 		end
-
-	remove_parent_grid_i is
-			-- Set `parent_grid_i' to Void
-		require
-			is_parented: parent /= Void
-		do
-			parent_grid_i := Void
-		ensure
-			parent_grid_i_unset: parent_grid_i = Void
-		end
-
-feature {EV_GRID_I, EV_GRID_DRAWER_I, EV_GRID_COLUMN} -- Implementation
-
-	internal_index: INTEGER
-		-- Index of `Current' in `parent_grid_i'
-
-	parent_grid_i: EV_GRID_I
-		-- Grid that `Current' resides in.
 
 end
 

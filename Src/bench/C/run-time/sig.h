@@ -23,27 +23,12 @@ extern "C" {
 
 #include "eif_globals.h"
 
-#define SIGSTACK	200		/* Size of FIFO stack for signal buffering */
-
-/* Structure used as FIFO stack for signal buffering. I really do not expect
- * this stack to overflow, so it has a huge fixed size--RAM. Should it really
- * overflow, we would panic immediately :-(.
- */
-struct s_stack {
-	int s_min;				/* Minimum value of circular buffer */
-	int s_max;				/* Maximum value of circular buffer */
-	char s_pending;			/* Are any signals pending? */
-	char s_buf[SIGSTACK];	/* The circular buffer used as a FIFO stack */
-};
-
 /* Testing for pending signals -- if signals are pending, the signal dispatch
  * routine should be called. Tests are made at some strategic points in the
  * run-time to guard against longjmps in signal handlers.
  */
 #define signal_pending		sig_stk.s_pending
 
-extern int esigblk;				/* Are signals blocked for later delivery? */
-extern struct s_stack sig_stk;	/* The signal stack */
 extern void esdpch(EIF_CONTEXT_NOARG);			/* Dispatch queued signals */
 extern char *signame(int sig);			/* Give English description of a signal */
 extern void initsig(void);			/* Initialize the Eiffel handling of signals */

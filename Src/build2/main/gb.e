@@ -18,6 +18,11 @@ inherit
 		undefine
 			default_create, copy
 		end
+		
+	GB_SHARED_TOOLS
+		undefine
+			default_create, copy
+		end
 
 create
 	execute
@@ -38,12 +43,6 @@ feature {NONE} -- Initialization
 			Precursor {EV_APPLICATION}
 			-- Any General initialization can be added here.
 			-- This will be executed before the program is launched.
-		end
-		
-	main_window: GB_MAIN_WINDOW is
-			-- `Result' is main window of `Current'.
-		once
-			create Result
 		end
 
 end

@@ -1,9 +1,7 @@
---| FIXME NOT_REVIEWED this file has not been reviewed
 indexing
 	description:
-		"EiffelVision window, gtk implementation."
+		"Eiffel Vision titled window. GTK+ implementation."
 	status: "See notice at end of class"
-	id: "$Id$"
 	date: "$Date$"
 	revision: "$Revision$"
 	
@@ -31,18 +29,12 @@ create
 feature {NONE} -- Initialization
 	
 	make (an_interface: like interface) is
-			--FIXME comment
+			-- Create the titled window.
 		do
-			-- Create the window
 			base_make (an_interface)
 			set_c_object (C.gtk_window_new (C.Gtk_window_toplevel_enum))
-
-			-- set the events to be handled by the window
-			-- FIXME probably obsolete?? c_gtk_widget_set_all_events (c_object)
-
+			-- `set_title' causes the window to be realized.
 			set_title("")
-			-- set title also realizes the window.
-
 			accel_group := C.gtk_accel_group_new
 			C.gtk_window_add_accel_group (c_object, accel_group)
 		end
@@ -74,147 +66,77 @@ feature {NONE} -- Accelerators
 				" removed from window: " + title + ".%N")
 		end
 
-feature  -- Access
+feature -- Access
 
 	icon_name: STRING is
-			-- Short form of application name to be
-			-- displayed by the window manager when
-			-- application is iconified
+			-- Alternative name, displayed when window is minimised.
 		do
 			if icon_name_holder /= Void then
 				Result := icon_name_holder
 			else
 				Result := title
 			end
-		end
+		end 
 
-	icon_name_holder: STRING
-			-- Name holder for applications icon name
-
---| FIXME
---| Christophe, PR-2186
---| This is the sole non crashing icon-related feature.
---| Althrough they are not critical at all for developping, they should be
---| implemented for releasing V2-based applications.
-
-        icon_mask: EV_PIXMAP
-                        -- Bitmap that could be used by window manager
-                        -- to clip `icon_pixmap' bitmap to make the
-                        -- icon nonrectangular 
-
-        icon_pixmap: EV_PIXMAP
-                        -- Bitmap that could be used by the window manager
-                        -- as the application's icon
-
+	icon_pixmap: EV_PIXMAP
+			-- Window icon.
 	
+	icon_mask: EV_PIXMAP
+			-- Transparency mask for `icon_pixmap'.
+
 feature -- Status report
 
-        is_iconic_state: BOOLEAN is
-                        -- Does application start in iconic state?
-		do
-			check
-                                not_yet_implemented: False
-                        end
-                end
+	is_minimized: BOOLEAN
+			-- Is displayed iconified/minimised?
 
- 	is_minimized: BOOLEAN is
-			-- Is the window minimized (iconic state)?
-		do
-			Result := True	
-		end
-
-	is_maximized: BOOLEAN is
-			-- Is the window maximized (take the all screen).
-		do
-			check
-				not_yet_implemented: False
-            		end	
-		end
+	is_maximized: BOOLEAN
+			-- Is displayed at maximum size?
 
 feature -- Status setting
 
-	set_iconic_state is
-                        -- Set start state of the application to be iconic.
-		do
-			check
-				not_yet_implemented: False
-            		end	
-        	end
-
-	set_normal_state is
-                        -- Set start state of the application to be normal.
-		do
-			check
-				not_yet_implemented: False
-            		end
-        	end
-
-	set_maximize_state is
-			-- Set start state of the application to be
-			-- maximized.
-		do
-			check
-				to_be_implemented: False
-			end
-		end
-
 	raise is
-			-- Raise a window. ie: put the window on the front
-			-- of the screen.
+			-- Request that window be displayed above all other windows.
 		do
 			C.gdk_window_raise (C.gtk_widget_struct_window (c_object))
 		end
 
 	lower is
-			-- Lower a window. ie: put the window on the back
-			-- of the screen.
+			-- Request that window be displayed below all other windows.
 		do
 			C.gdk_window_lower (C.gtk_widget_struct_window (c_object))
 		end
 
 	minimize is
-			-- Minimize the window.
+			-- Display iconified/minimised.
 		do
-			check
-				to_be_implemented: False
-			end
 		end
 
 	maximize is
-			-- Minimize the window.
+			-- Display at maximum size.
 		do
-			check
-				to_be_implemented: False
-			end
 		end
 
 	restore is
-			-- Restore the window when it is minimized or
-			-- maximized. Do nothing otherwise.
+			-- Restore to original position when minimized or maximized.
 		do
-			check
-				to_be_implemented: False
-			end
 		end
 
 feature -- Element change
 
-        set_icon_name (new_name: STRING) is
-                        -- Set `icon_name' to `new_name'.
-		local
-			gdkwin: POINTER
+	set_icon_name (an_icon_name: STRING) is
+			-- Assign `an_icon_name' to `icon_name'.
 		do
---FIXME			c_gtk_window_set_icon_name (c_object, eiffel_to_c (new_name))
-			icon_name_holder := new_name
-                end
+			C.gdk_window_set_icon_name (c_object, eiffel_to_c (an_icon_name))
+			icon_name_holder := an_icon_name
+		end
 
-	set_icon_mask (mask: EV_PIXMAP) is
-			-- Set `icon_mask' to `mask'.
+	set_icon_mask (an_icon_mask: EV_PIXMAP) is
+			-- Assign `an_icon_mask' to `icon_mask'.
 		local
 			mask_imp: EV_PIXMAP_IMP
 			icon_pixmap_imp: EV_PIXMAP_IMP
 		do
-			icon_mask := mask
+			icon_mask := an_icon_mask
 			mask_imp ?= icon_mask.implementation
 			check
 				mask_implementation_exists: mask_imp /= Void
@@ -230,27 +152,25 @@ feature -- Element change
 			end
                 end
 
-	set_icon_pixmap (pixmap: EV_PIXMAP) is
-			-- Set `icon_pixmap' to `pixmap'.
+	set_icon_pixmap (an_icon: EV_PIXMAP) is
+			-- Assign `an_icon' to `icon'.
 		local
 			pixmap_imp: EV_PIXMAP_IMP
 			mask_imp: EV_PIXMAP_IMP
 			icon_window: EV_WINDOW
 			icon_window_imp: EV_WINDOW_IMP
 		do
-			icon_pixmap := pixmap
-			pixmap_imp ?= pixmap.implementation
+			icon_pixmap := an_icon
+			pixmap_imp ?= an_icon.implementation
 			check
 				icon_implementation_exists: pixmap_imp /= Void
 			end
 
 			create icon_window
-			
-			icon_window.set_size (pixmap.width, pixmap.height)
-			io.putstring (pixmap.height.out + "%N")
-			icon_window.extend (pixmap)
-		
-			
+			icon_window.set_size (an_icon.width, an_icon.height)
+			io.putstring (an_icon.height.out + "%N")
+			icon_window.extend (an_icon)
+
 			icon_window_imp ?= icon_window.implementation			
 			C.gtk_widget_shape_combine_mask (icon_window_imp.c_object, pixmap_imp.mask, 0, 0)
 			--icon_window.show
@@ -268,19 +188,14 @@ feature -- Element change
 				--	default_pointer, default_pointer)
 
 			end
-	end
-
-	gdkpix, gdkmask : POINTER
+		end
 
 feature {EV_ANY_I} -- Implementation
 
-	interface: EV_TITLED_WINDOW
+	icon_name_holder: STRING
+			-- Name holder for applications icon name
 
-		-- FIXME move this into Eiffel
-	c_gtk_window_set_icon (window, pixmap, pixwind, maskpix: POINTER) is
-		external
-			"C (GtkWidget *, GtkPixmap *, GtkWidget *, GtkPixmap *) | %"gtk_eiffel.h%""
-		end
+	interface: EV_TITLED_WINDOW
 
 end -- class EV_TITLED_WINDOW_IMP
 
@@ -305,6 +220,11 @@ end -- class EV_TITLED_WINDOW_IMP
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.37  2000/03/07 01:37:59  brendel
+--| Reviewed.
+--| is_minimized and is_maximized are now attributes.
+--| To be implemented.
+--|
 --| Revision 1.36  2000/02/24 01:49:32  king
 --| Properly indented code
 --|

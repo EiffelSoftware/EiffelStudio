@@ -21,7 +21,7 @@ feature
 			if not (error_occurred or project_is_new) then
 				retrieve_project;
 				if not error_occurred then
-					!!stone.make (system);
+					!!stone.make;
 					if stone.is_valid then
 						text := stone.origin_text
 					end;

@@ -7,7 +7,8 @@ inherit
 		redefine
 			name, help_message, abbreviation,
 			execute, loop_execute
-		end
+		end;
+	SHARED_ERROR_HANDLER
 
 creation
 
@@ -63,30 +64,86 @@ feature
 		end;
 
 	execute is
+		local
+			rescued: BOOLEAN
 		do
-			init;
-			if not error_occurred and then Lace.file_name /= Void then
-				compile;
-				if Workbench.successfull then
+			if not rescued then
+				init;
+				if not error_occurred and then Lace.file_name /= Void then
+					finalization_compile
+				end;
+			end
+		end;
+
+	finalization_compile is
+			-- Finalize the system.
+		local
+			exit, rescued: BOOLEAN
+		do
+			from
+			until
+				exit
+			loop
+				if rescued then
+					if stop_on_error then
+						lic_die (-1);
+					end;
+					if termination_requested then
+						--lic_die (0);
+						-- es3 -loop does NOT like lic_die(0)
+						exit := true
+					end;
+					rescued := false
+				end;
+				if not exit then
+						-- Do not call the once function `System' directly
+						-- since it's value may be replaced during the first
+						-- compilation (as soon as we figured out whether the
+						-- system describes a Dynamic Class Set or not).
+					Workbench.system.set_dle_finalize (true);
+					compile;
+					if Workbench.successfull then
 						-- Save the project before the finalization in order to
 						-- be able to use the project for other melting/freezing
 						-- or finalization afterwards.
-					terminate_project;
-					System.finalized_generation (keep_assertions);
-					if System.poofter_finalization then
-						io.error.putstring 
-							("Warning: the finalized system might not be optimal%N%
-								%%Tin size and speed. In order to produce an optimal%N%
-								%%Texecutable, finalize the system from scratch and do%N%
-								%%Tnot use precompilation.%N%N");
+						terminate_project;
+						System.finalized_generation (keep_assertions);
+						if System.extendible then
+							terminate_project
+						end;
+						if
+							System.poofter_finalization and
+							not System.is_dynamic
+						then
+							io.error.putstring 
+					("Warning: the finalized system might not be optimal%N%
+					%%Tin size and speed. In order to produce an optimal%N%
+					%%Texecutable, finalize the system from scratch and do%N%
+					%%Tnot use precompilation.%N%N");
+						end;
+						print_tail;
+						prompt_finish_freezing (True);
+						if System.is_dynamic then
+							dle_link_system
+						end;
+						if not System.freezing_occurred then
+							link_driver
+						end
 					end;
-					print_tail;
-					prompt_finish_freezing (True);
-					if not System.freezing_occurred then
-						link_driver
-					end
-				end;
-			end;
+					exit := true
+				end
+			end
+		rescue
+			if Rescue_status.is_error_exception then
+					-- A validity error has been detected during the
+					-- finalization. This happens with DLE dealing 
+					-- with statically bound feature calls.
+				Rescue_status.set_is_error_exception (false);
+				rescued := true;
+				Error_handler.trace;
+				System.set_current_class (Void);
+				retry
+			end
 		end;
 
 end

@@ -189,11 +189,14 @@ feature -- Compilation
 				if Workbench.successfull then
 					terminate_project;
 					print_tail;
+					if System.is_dynamic then
+						dle_link_system
+					end;
 					if System.freezing_occurred then
 						prompt_finish_freezing (False)
 					else
 						link_driver
-					end;
+					end
 				end;
 			end;
 		end;
@@ -217,7 +220,11 @@ feature -- Compilation
 			app_name: STRING
 			file_name: FILE_NAME;
 		do
-			if not melt_only and then System.uses_precompiled then
+			if
+				not melt_only and then
+				System.uses_precompiled and then
+				not System.is_dynamic
+			then
 -- FIXME: check Makefile.SH
 -- FIXME: check Makefile.SH
 -- FIXME: check Makefile.SH
@@ -243,5 +250,39 @@ feature {NONE} -- Externals
 		external
 			"C"
 		end
+
+feature -- DLE
+
+	dle_link_system is
+			-- Link executable and melted.eif files from the static system.
+		require
+			dynamic_system: System.is_dynamic
+		local
+			uf: PLAIN_TEXT_FILE;
+			app_name: STRING;
+			file_name: FILE_NAME
+		do
+			!!file_name.make_from_string (Workbench_generation_path);
+			app_name := clone (System.system_name);
+			app_name.append (Executable_suffix);
+			file_name.set_file_name (app_name);
+			!!uf.make (file_name);
+			if not uf.exists then
+				!! file_name.make_from_string (Extendible_W_code);
+				app_name := clone (System.dle_system_name);
+				app_name.append (Executable_suffix);
+				file_name.set_file_name (app_name);
+				eif_link_driver (Workbench_generation_path.to_c,
+					System.system_name.to_c,
+					Prelink_command_name.to_c,
+					file_name.to_c);
+				!! file_name.make_from_string (Extendible_W_code);
+				file_name.set_file_name (Updt);
+				eif_link_driver (Workbench_generation_path.to_c,
+					Updt.to_c,
+					Prelink_command_name.to_c,
+					file_name.to_c)
+			end
+		end;
 
 end

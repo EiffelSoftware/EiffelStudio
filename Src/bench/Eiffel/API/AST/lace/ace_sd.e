@@ -96,23 +96,36 @@ feature -- Lace compilation
 
 				-- Initialization
 			Use_properties.clear_all;
-				-- First re-insert the precompiled clusters into the
-				-- universe.
-			build_precompiled;
-				-- Then build the clusters with the files *.e found
-				-- in the clusters
-			build_clusters;
-
+			if System.is_dynamic then
+					-- First re-insert the static clusters into the
+					-- universe (when compiling a dynamic class set).
+				build_static;
+					-- Then build the clusters with the files *.e found
+					-- in the clusters
+				build_dle_clusters
+			else
+					-- First re-insert the precompiled clusters into the
+					-- universe.
+				build_precompiled;
+					-- Then build the clusters with the files *.e found
+					-- in the clusters
+				build_clusters
+			end;
 				-- Reset the options of the CLASS_I
 			reset_options;
 
 				-- Second adaptation of Use files
 			adapt_use;
 
-			update_clusters;
-
-				-- Remove inexistant clusters from the system
-			process_removed_clusters;
+			if System.is_dynamic then
+				update_dle_clusters;
+					-- Remove inexistant clusters from the system
+				process_removed_dle_clusters
+			else
+				update_clusters;
+					-- Remove inexistant clusters from the system
+				process_removed_clusters
+			end;
 
 			process_system_level_options;
 
@@ -164,7 +177,12 @@ feature -- Lace compilation
 							!!vd38;
 							Error_handler.insert_error (vd38);
 							Error_handler.raise_error;
-						elseif System.precompilation then
+						elseif Workbench.system.precompilation then
+								-- Do not call the once function `System'
+								-- directly since it's value may be replaced
+								-- during the first compilation (as soon as
+								-- we figured out whether the system describes
+								-- a Dynamic Class Set or not).
 							!!vd44;
 							Error_handler.insert_error (vd44);
 							Error_handler.raise_error;
@@ -181,7 +199,15 @@ feature -- Lace compilation
 					defaults.forth
 				end
 			end;
-			if melt_only and then not System.precompilation and then Result = Void then
+				-- Do not call the once function `System' directly since it's
+				-- value may be replaced during the first compilation (as soon
+				-- as we figured out whether the system describes a Dynamic
+				-- Class Set or not).
+			if
+				melt_only and then
+				not Workbench.system.precompilation and then
+				Result = Void
+			then
 					-- For the melt_only version, if no precompiled project is specified,
 					-- return $EIFFEL3/precomp/spec/$PLATFORM/base
 				Result := Default_precompiled_location
@@ -377,4 +403,203 @@ feature -- Lace compilation
 			Result := root.compile_all_classes
 		end;
 
+feature -- DLE
+
+	build_static is
+			-- Re-insert the static clusters into the unverse.
+			-- Do not insert precompiled clusters since they 
+			-- already have been re-inserted.
+		require
+			dynamic_system: System.is_dynamic
+		local
+			old_clusters: LINKED_LIST [CLUSTER_I];
+			old_cluster, cluster: CLUSTER_I
+		do
+			from
+				old_clusters := Lace.old_universe.clusters;
+				old_clusters.start
+			until
+				old_clusters.after
+			loop
+				old_cluster := old_clusters.item;
+				if old_cluster.is_static then
+					!! cluster.make (old_cluster.dollar_path);
+					cluster.copy_old_cluster (old_cluster);
+					cluster.set_cluster_name (old_cluster.cluster_name);
+					Universe.insert_cluster (cluster)
+				end;
+				old_clusters.forth
+			end
+		end;
+
+	update_dle_clusters is
+			-- Update the dynamic clusters: remove the classes removed
+			-- from the system, examine the differences in the
+			-- ignore and rename clauses.
+		require
+			dynamic_system: System.is_dynamic
+		local
+			cluster_list: LINKED_LIST [CLUSTER_I];
+			cluster: CLUSTER_I
+		do
+			from
+				cluster_list := Universe.clusters;
+				cluster_list.start
+			until
+				cluster_list.after
+			loop
+				cluster := cluster_list.item;
+				if cluster.is_dynamic then
+					cluster.update_cluster
+				end;
+				cluster_list.forth
+			end
+		end;
+
+	process_removed_dle_clusters is
+			-- Remove the classes from the clusters removed from the system
+			-- Ignore static clusters.
+		require
+			dynamic_system: System.is_dynamic
+		local
+			old_clusters: LINKED_LIST [CLUSTER_I];
+			old_cluster: CLUSTER_I
+		do
+			old_clusters := Lace.old_universe.clusters;
+			from
+				old_clusters.start
+			until
+				old_clusters.after
+			loop
+				old_cluster := old_clusters.item;
+				if not Universe.has_cluster_of_path (old_cluster.path) then
+						-- Defensive programming test. The old cluster
+						-- should never be static at this stage. 
+					if old_cluster.is_dynamic then
+						old_cluster.remove_cluster
+					end
+				end;
+				old_clusters.forth
+			end
+		end;
+
+	build_dle_clusters is
+			-- Analysis of the AS description of the SDF in order to 
+			-- build the clusters.
+		require
+			dynamic_system: System.is_dynamic
+		do
+			if clusters /= Void then
+				from
+					clusters.start
+				until
+					clusters.after
+				loop
+					clusters.item.build_dle;
+					clusters.forth
+				end
+			end
+		end;
+
+	extendible_project_name: STRING is
+			-- Directory name of the dynamically extendible system;
+			-- Check also whether the combination of options is valid
+		local
+			system_i: SYSTEM_I;
+			precomp_found, found: BOOLEAN;
+			extendible: BOOLEAN;
+			d_option: D_OPTION_SD;
+			value: OPT_VAL_SD;
+			string_value: STRING;
+			v9xc: V9XC;
+			v9xq: V9XQ;
+			v9xd: V9XD;
+			v9xp: V9XP;
+			v9dp: V9DP;
+			v9cd: V9CD;
+			v9cx: V9CX
+		do
+			system_i := Workbench.system;
+				-- Do not call the once function `System'
+				-- directly since it's value may be replaced
+				-- during the first compilation (as soon as
+				-- we figured out whether the system describes
+				-- a Dynamic Class Set or not).
+			if defaults /= Void then
+				from
+					defaults.start
+				until
+					defaults.after
+				loop
+					d_option := defaults.item;
+					if d_option.option.is_extending then
+						if found then
+								-- Two `extending' options in the same Ace.
+							!!v9xc;
+							Error_handler.insert_error (v9xc);
+							Error_handler.raise_error
+						elseif system_i.precompilation then
+								-- `exdending' option when precompiling.
+							!!v9xq;
+							Error_handler.insert_error (v9xq);
+							Error_handler.raise_error
+						else
+							found := True;
+							value := d_option.value;
+							if value.is_name then
+									-- If it is not a NAME_SD, the normal
+									-- adapt will trigger the error
+								Result := value.value
+							end
+						end
+					elseif d_option.option.is_extendible then
+						value := d_option.value;
+						if value.is_no then
+							extendible := false
+						elseif value.is_yes then
+							extendible := true
+						end
+					elseif d_option.option.is_precompiled then
+						precomp_found := true
+					end;
+					defaults.forth
+				end
+			end;
+			if Result /= Void then
+				if extendible then
+						-- `extendible' and `extending' options in the same Ace.
+					!!v9xd;
+					Error_handler.insert_error (v9xd);
+					Error_handler.raise_error
+				elseif precomp_found then
+						-- `extending' and `precompiled' options in the same Ace
+					!!v9xp;
+					Error_handler.insert_error (v9xp);
+					Error_handler.raise_error
+				end
+			end;
+			if extendible and system_i.precompilation then
+					-- `extendible' option when precompiling.
+				!!v9dp;
+				Error_handler.insert_error (v9dp);
+				Error_handler.raise_error
+			end;
+			if Lace.not_first_parsing then
+				if extendible /= system_i.extendible then
+						-- Cannot change the `extendible' status between
+						-- two compilations.
+					!!v9cd;
+					Error_handler.insert_error (v9cd);
+					Error_handler.raise_error
+				end;
+				if Result /= Void xor system_i.is_dynamic then
+						-- Cannot change the `extending' status between
+						-- two compilations.
+					!!v9cx;
+					Error_handler.insert_error (v9cx);
+					Error_handler.raise_error
+				end
+			end
+		end;
+			
 end

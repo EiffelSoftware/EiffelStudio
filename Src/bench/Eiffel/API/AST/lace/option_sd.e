@@ -70,6 +70,16 @@ feature -- Free options
 			-- Do nothing
 		end;
 
+	is_extending: BOOLEAN is
+		do
+			-- Do nothing
+		end;
+
+	is_extendible: BOOLEAN is
+		do
+			-- Do nothing
+		end;
+
 feature -- Adapt
 
 	process_system_level_options (value: OPT_VAL_SD) is

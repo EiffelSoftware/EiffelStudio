@@ -11,12 +11,20 @@ creation
 
 feature 
 
-	make (a_systemi: SYSTEM_I) is
+	make is
 		do
-			system_i := a_systemi
 		end;
 
-	system_i: SYSTEM_I
+	system_i: SYSTEM_I is
+			-- Since there is only one system per project, it's value
+			-- can be shared by all the system stones (i.e. not need
+			-- for a special attribute). The once function `System'
+			-- is not called here since it's value might be replaced
+			-- after the first compilation (as soon as we figured out
+			-- whether the system discribes a Dynamic Class Set or not)
+		do
+			Result := Workbench.system
+		end;
 
 feature
 

@@ -23,13 +23,8 @@ inherit
 			default_create, copy
 		end
 		
-	GB_CONSTANTS
-		undefine
-			default_create, copy
-		end
-	
 	INSTALLATION_LOCATOR
-		undefine
+		undefine	
 			default_create, copy
 		end
 
@@ -53,23 +48,25 @@ feature -- Initialization
 			ok_button: EV_BUTTON
 			white_cell: EV_CELL
 			file_name: FILE_NAME
+			file: RAW_FILE
 		do
 			default_create
 			set_title ("EiffelVision2 Tour")
 			disable_user_resize
 
 				-- Create controls.
+			create eiffel_image
 			if installation_location /= Void then
 				create file_name.make_from_string (installation_location)
 				file_name.extend ("bitmaps")
 				file_name.extend ("png")
 				file_name.extend ("bm_about.png")
-				create eiffel_image
-				eiffel_image.set_with_named_file (file_name.out)
-				eiffel_image.set_minimum_size (eiffel_image.width, eiffel_image.height)
-				eiffel_image.set_background_color (White)
-			else
-				create eiffel_image
+				create file.make (file_name)
+				if file.exists then
+					eiffel_image.set_with_named_file (file_name.out)
+					eiffel_image.set_minimum_size (eiffel_image.width, eiffel_image.height)
+					eiffel_image.set_background_color (White)				
+				end
 			end
 			create info_label.make_with_text (t_info)
 			info_label.align_text_left

@@ -101,7 +101,7 @@ feature {EV_ANY, EV_ANY_IMP} -- Command
 				NULL,
 				NULL
 			)
-			C.gtk_object_unref (c_object)
+			C.gtk_object_destroy (c_object)
 			c_object := NULL
 		ensure then
 			c_object_detached: c_object = NULL

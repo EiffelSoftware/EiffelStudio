@@ -9,8 +9,6 @@ class
 	
 inherit
 	GB_CELL_OBJECT
-		export
-			{GB_WINDOW_SELECTOR_ITEM} output_name
 		redefine
 			object, display_object, is_full, build_display_object, build_drop_actions_for_layout_item,
 			add_new_object_wrapper, add_new_component_wrapper, can_add_child, add_child_object, accepts_child,
@@ -20,16 +18,22 @@ inherit
 	GB_SHARED_TOOLS
 		export
 			{NONE} all
+		undefine
+			copy
 		end
 		
 	GB_SHARED_PIXMAPS
 		export
 			{NONE} all
+		undefine
+			copy
 		end
 
 	GB_SHARED_OBJECT_HANDLER
 		export
 			{NONE} all
+		undefine
+			copy
 		end
 		
 create
@@ -45,9 +49,6 @@ feature -- Access
 	display_object: GB_CELL_DISPLAY_OBJECT
 		-- The representation of `object' used in `build_window'.
 		-- This is used in the builder window.
-		
-	window_selector_item: GB_WINDOW_SELECTOR_ITEM
-		-- Representation of `Current' in `window_selector'.
 		
 	is_full: BOOLEAN is
 			-- Is `Current' full?
@@ -328,18 +329,6 @@ feature {GB_WINDOW_SELECTOR, GB_TITLED_WINDOW_OBJECT, GB_OBJECT_HANDLER} -- Basi
 		do
 			layout_item.set_pixmap (pixmap_by_name (type.as_lower))
 			window_selector_item.set_pixmap (pixmap_by_name (type.as_lower))
-		end
-	
-feature {GB_WINDOW_SELECTOR_ITEM, GB_OBJECT_HANDLER} -- Implementation
-		
-	set_window_selector_item (a_window_selector_item: GB_WINDOW_SELECTOR_ITEM) is
-			-- Assign `a_window_selctor_item' to `window_selector_item'.
-		require
-			item_not_void: a_window_selector_item /= Void
-		do
-			window_selector_item := a_window_selector_item
-		ensure
-			item_set: window_selector_item = a_window_selector_item
 		end
 		
 feature {GB_OBJECT_HANDLER} -- Implementation

@@ -30,7 +30,7 @@ feature -- Initialization
 
 feature -- Access
 
-	window: PRECOMP_MAIN_WINDOW
+	window: MAIN_WINDOW
 		-- The main_window.
 
 	type: INTEGER

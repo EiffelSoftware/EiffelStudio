@@ -209,20 +209,22 @@ feature {NONE} -- Implementation
 			select_table := format_reg.target_feature_table.origin_table;
 			s_feat := format_reg.current_feature_table.item
 						(old_name.internal_name);
-			rout_id := s_feat.rout_id_set.first;
-			t_feat := select_table.item (rout_id);
-			if s_feat /= Void and then t_feat /= Void then
-				body_index := s_feat.body_index;
-				source_feature := s_feat;
-				target_feature := t_feat;
-				format_reg.assert_server.register_adapter (Current);
-				if equal (t_feat.written_in, s_feat.written_in) and then
-					equal (t_feat.body_index, s_feat.body_index)
-				then
+			if s_feat /= Void then
+				rout_id := s_feat.rout_id_set.first;
+				t_feat := select_table.item (rout_id);
+				if t_feat /= Void then
+					body_index := s_feat.body_index;
+					source_feature := s_feat;
+					target_feature := t_feat;
+					format_reg.assert_server.register_adapter (Current);
+					if equal (t_feat.written_in, s_feat.written_in) and then
+						equal (t_feat.body_index, s_feat.body_index)
+					then
 						-- Only register if the target and source
 						-- feature are written in the same class
 						-- and are refering to the same body
-					register_feature (t_feat, False, format_reg);
+						register_feature (t_feat, False, format_reg);
+					end
 				end
 			else
 					-- Newly added feature which hasn't been compiled

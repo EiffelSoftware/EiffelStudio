@@ -207,28 +207,36 @@ feature -- Transformation
 	adapt_result: LOCAL_FEAT_ADAPTATION is
 			-- Feature adaptation for instructions 
 			-- with `Result' keyword
+			--| Return Void if not found
 		local
 			s_type, t_type: TYPE_A;
 			formal_type: FORMAL_A
 		do
 			if private_adapt_result = Void then
-			
-				s_type := source_enclosing_feature.type.actual_type;
-				if s_type.is_formal then
-					formal_type ?= s_type;
-			 		s_type := source_enclosing_class.constraint (formal_type.position)
-				end;
-				t_type := target_enclosing_feature.type.actual_type;
-				if t_type.is_formal then
-					formal_type ?= t_type;
-			 		t_type := target_enclosing_class.constraint (formal_type.position)
-				end;
-				!! private_adapt_result;
-				private_adapt_result.set_is_normal;
-				private_adapt_result.set_feature_name ("Result");
-				private_adapt_result.set_source_type (s_type);
-				private_adapt_result.set_target_type (t_type);
-				private_adapt_result.set_evaluated_type
+				if source_enclosing_feature = Void then	
+					!! private_adapt_result;
+					private_adapt_result.set_is_normal;
+					private_adapt_result.set_feature_name ("Result");
+					private_adapt_result.set_source_type (Void);
+					private_adapt_result.set_target_type (Void)
+				else
+					s_type := source_enclosing_feature.type.actual_type;
+					if s_type.is_formal then
+						formal_type ?= s_type;
+			 			s_type := source_enclosing_class.constraint (formal_type.position)
+					end;
+					t_type := target_enclosing_feature.type.actual_type;
+					if t_type.is_formal then
+						formal_type ?= t_type;
+			 			t_type := target_enclosing_class.constraint (formal_type.position)
+					end;
+					!! private_adapt_result;
+					private_adapt_result.set_is_normal;
+					private_adapt_result.set_feature_name ("Result");
+					private_adapt_result.set_source_type (s_type);
+					private_adapt_result.set_target_type (t_type);
+					private_adapt_result.set_evaluated_type
+				end
 			end;
 			Result := private_adapt_result
 		end;

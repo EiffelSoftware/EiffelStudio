@@ -48,7 +48,7 @@ feature {NONE} -- Initialization
 			base_make (an_interface)
 			ev_wel_control_container_make
 			create ev_children.make (2)
-		end		
+		end	
 
 feature -- Status setting
 
@@ -116,7 +116,7 @@ feature {EV_ANY_I} -- Implementation
 	default_style: INTEGER is
 		do
 			Result := Ws_child + Ws_visible
-				-- + Ws_clipchildren + Ws_clipsiblings
+				 + Ws_clipchildren + Ws_clipsiblings
 		end
 
 	interface: EV_FIXED

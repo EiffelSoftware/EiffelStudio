@@ -53,6 +53,11 @@ feature -- Initialization
 			first_window.key_press_actions.extend(~on_key_down)
 			first_window.key_release_actions.extend(~on_key_up)
 			first_window.key_press_string_actions.extend(~on_char)
+			first_window.pointer_button_press_actions.extend(~on_mouse_button_down)
+			first_window.pointer_button_release_actions.extend(~on_mouse_button_up)
+--			my_device.key_press_actions.extend(~on_key_down)
+--			my_device.key_release_actions.extend(~on_key_up)
+--			my_device.key_press_string_actions.extend(~on_char)
 			my_device.pointer_button_press_actions.extend(~on_mouse_button_down)
 			my_device.pointer_button_release_actions.extend(~on_mouse_button_up)
 			my_device.expose_actions.extend (~on_repaint)
@@ -560,6 +565,8 @@ feature {NONE} -- Handle keystokes
 			-- Perform a basic cursor move such as go_left,
 			-- go_right, ... an example of agent `action' is
 			-- cursor~go_left_char
+		local
+			old_line, new_line: INTEGER
 		do
 			if shifted_key then
 					-- We want to create or modify a selection.
@@ -568,13 +575,17 @@ feature {NONE} -- Handle keystokes
 					has_selection := True
 					selection_start := clone (cursor)
 				end
-				invalidate_cursor_rect (False)
+				old_line := cursor.y_in_lines
 				action.call([])
 				if selection_start.is_equal (cursor) then
 						-- If nothing is selected, we forget the selection.
 					has_selection := False
 				end
-				invalidate_cursor_rect (True)
+				new_line := cursor.y_in_lines
+				if old_line /= new_line then
+					invalidate_line (old_line, False)
+				end
+				invalidate_line (new_line, True)
 			elseif has_selection then
 					-- There was a selection, but we destroy it.
 				action.call([])
@@ -586,9 +597,13 @@ feature {NONE} -- Handle keystokes
 				my_device.redraw
 			else
 					-- There is no selection. Normal move.
-				invalidate_cursor_rect (False)
+				old_line := cursor.y_in_lines
 				action.call([])
-				invalidate_cursor_rect (True)
+				new_line := cursor.y_in_lines
+				if old_line /= new_line then
+					invalidate_line (old_line, False)
+				end
+				invalidate_line (new_line, True)
 			end
 		end
 
@@ -944,7 +959,21 @@ feature {NONE} -- Display functions
 		do
    				-- Invalidate old cursor location.
 			cursor_up := (cursor.y_in_lines-first_line_displayed) * line_increment
-			my_device.redraw_rectangle(0, cursor_up, my_device.width, cursor_up + line_increment)
+			my_device.redraw_rectangle(0, cursor_up, my_device.width, cursor_up + line_increment -1)
+			if flush_screen then
+				my_device.flush
+			end
+		end
+
+	invalidate_line (line_number: INTEGER; flush_screen: BOOLEAN) is
+			-- Set the line where the cursor is situated to be redrawn
+			-- Redraw immediately if `flush' is set.
+		local
+			cursor_up: INTEGER
+		do
+   				-- Invalidate old cursor location.
+			cursor_up := (line_number - first_line_displayed) * line_increment
+			my_device.redraw_rectangle (0, cursor_up, my_device.width, cursor_up + line_increment -1)
 			if flush_screen then
 				my_device.flush
 			end

@@ -20,14 +20,13 @@ inherit
 		redefine
 			interface,
 			internal_set_caret_position,
-			insert_text,
-			visual_widget
+			insert_text
 		end
 		
 	EV_FONTABLE_IMP
 		redefine
 			interface,
-			visual_widget
+			fontable_widget
 		end
 
 create
@@ -45,12 +44,6 @@ feature {NONE} -- Initialization
 			C.gtk_widget_show (entry_widget)
 			C.gtk_container_add (c_object, entry_widget)
 			C.gtk_text_set_editable (entry_widget, True)
-		end
-		
-	visual_widget: POINTER is
-			-- The widget the user sees on the screen.
-		do
-			Result := entry_widget
 		end
 
 feature -- Access
@@ -292,7 +285,7 @@ feature -- Basic operation
 
 	scroll_to_line (i: INTEGER) is
 		do
-		--	C.gtk_adjustment_set_value (vertical_adjustment_struct, (i - 1) * line_height)
+			C.gtk_adjustment_set_value (vertical_adjustment_struct, (i - 1) * line_height)
 		end
 
 feature -- Assertions
@@ -307,6 +300,12 @@ feature -- Assertions
 		end
 		
 feature {NONE} -- Implementation
+
+	fontable_widget: POINTER is
+			-- Widget that is fontable.
+		do
+			Result := entry_widget
+		end
 
 	vertical_adjustment_struct: POINTER is
 			-- Pointer to vertical adjustment struct use in the scrollbar.

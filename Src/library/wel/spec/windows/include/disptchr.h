@@ -17,6 +17,8 @@
 extern "C" {
 #endif
 
+EIF_REFERENCE generize (EIF_OBJECT g_item);
+
 typedef EIF_INTEGER (* EIF_WNDPROC)
 	(EIF_OBJ,     /* WEL_DISPATCHER Eiffel object */
 	 EIF_POINTER, /* hwnd */

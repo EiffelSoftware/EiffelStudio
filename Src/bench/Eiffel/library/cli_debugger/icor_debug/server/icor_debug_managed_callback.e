@@ -242,26 +242,26 @@ feature {NONE} -- debugger behavior
 			l_previous_stack_info := Eifnet_debugger_info.previous_stack_info
 			l_current_stack_info := Eifnet_debugger_info.current_stack_info
 							
-			create l_copy.make_copy (l_previous_stack_info)
-			
 			l_il_debug_info := Eifnet_debugger_info.debugger.Il_debug_info_recorder
-			if l_il_debug_info.has_info_about_module (l_copy.current_module_name) then
+			if l_il_debug_info.has_info_about_module (l_previous_stack_info.current_module_name) then
 				l_feat := l_il_debug_info.feature_i_by_module_feature_token (
-							l_copy.current_module_name,
-							l_copy.current_feature_token
+							l_previous_stack_info.current_module_name,
+							l_previous_stack_info.current_feature_token
 						)
 				l_class_type := l_il_debug_info.class_type_for_module_class_token (
-							l_copy.current_module_name,				
-							l_copy.current_class_token
+							l_previous_stack_info.current_module_name,				
+							l_previous_stack_info.current_class_token
 						)
 				l_potential_il_offset := l_il_debug_info.approximate_feature_breakable_il_offset_for (
 												l_class_type, 
 												l_feat, 
-												l_copy.current_il_offset
+												l_previous_stack_info.current_il_offset
 												)
 					--| current il offset if corresponding to a bp slot, or approximate offset.
 			end	
 				
+
+			create l_copy.make_copy (l_previous_stack_info)
 			l_copy.set_current_il_offset (l_potential_il_offset)
 			if l_copy.is_equal (l_current_stack_info) then
 				Eifnet_debugger_info.debugger.do_continue				

@@ -13,8 +13,32 @@
 
 ecom_runtime_ec rt_ec;
 
-//-------------------------------------------------------------------------
+HRESULT * ecom_runtime_ec::ccom_ec_pointed_hresult (EIF_REFERENCE a_ref, HRESULT * old)
 
+// create HRESULT * from ECOM_HRESULT
+{
+	EIF_OBJECT eif_object = eif_protect (a_ref);
+	
+	HRESULT * hresult =0;
+	HRESULT tmp_hresult = 0;
+
+	tmp_hresult = (HRESULT) eif_field (eif_access(eif_object), "item", EIF_INTEGER);
+
+	if ( old == NULL)
+	{
+		hresult = (HRESULT *)CoTaskMemAlloc (sizeof (HRESULT));
+		*hresult = tmp_hresult;
+	}
+	else
+	{
+		*old = tmp_hresult;
+		hresult = NULL;
+	}
+	eif_wean (eif_object);
+	return hresult;
+}
+
+//-------------------------------------------------------------------------
 VARIANT_BOOL *ecom_runtime_ec::ccom_ec_pointed_boolean (EIF_REFERENCE a_bool, VARIANT_BOOL * old)
 
 // Create VARIANT_BOOL from ECOM_BOOLEAN
@@ -25,7 +49,6 @@ VARIANT_BOOL *ecom_runtime_ec::ccom_ec_pointed_boolean (EIF_REFERENCE a_bool, VA
 
 	eif_object = eif_protect (a_bool);
 
-	result = (VARIANT_BOOL *) CoTaskMemAlloc (sizeof (VARIANT_BOOL));
 	temp_bool = (EIF_BOOLEAN) eif_field (eif_access (eif_object), "item", EIF_BOOLEAN);
 
 	eif_wean (eif_object);
@@ -39,6 +62,7 @@ VARIANT_BOOL *ecom_runtime_ec::ccom_ec_pointed_boolean (EIF_REFERENCE a_bool, VA
 	}
 	else
 	{
+		result = (VARIANT_BOOL *) CoTaskMemAlloc (sizeof (VARIANT_BOOL));
 		if (temp_bool == EIF_TRUE)
 			*result = VARIANT_TRUE;
 		else

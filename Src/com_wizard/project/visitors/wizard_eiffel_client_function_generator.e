@@ -173,6 +173,8 @@ feature {NONE} -- Implementation
 
 						elseif visitor.is_enumeration then
 							Result.append (Eif_integer)
+						elseif is_hresult (visitor.vt_type) or is_error (visitor.vt_type) then
+							Result.append (visitor.c_type)
 						else
 							Result.append (Eif_object)
 						end
@@ -189,7 +191,8 @@ feature {NONE} -- Implementation
 			create visitor
 			visitor.visit (func_desc.return_type)
 
-			if not is_void (visitor.vt_type) and not is_hresult (visitor.vt_type) then
+			if not is_void (visitor.vt_type) and not is_hresult (visitor.vt_type) and
+					not is_error (visitor.vt_type) then
 				return_type.append (Colon)
 				return_type.append (Space)
 
@@ -256,6 +259,11 @@ feature {NONE} -- Implementation
 						tmp_string.append (Pointer_type)
 					elseif visitor.is_enumeration then
 						tmp_string.append (Integer_type)
+					elseif is_paramflag_fin (arguments.item.flags) and
+							not is_paramflag_fout (arguments.item.flags) and
+							(is_hresult (visitor.vt_type) or is_error (visitor.vt_type))
+					then
+						tmp_string.append (Integer_type)
 					else
 						tmp_string.append (visitor.eiffel_type)
 					end
@@ -271,6 +279,7 @@ feature {NONE} -- Implementation
 
 			if 
 				not is_hresult (visitor.vt_type) and
+				not is_error (visitor.vt_type) and
 				not is_void (visitor.vt_type)
 			then
 				pointed_descriptor ?= func_desc.return_type
@@ -348,6 +357,12 @@ feature {NONE} -- Implementation
 						then
 							tmp_string.append (arguments.item.name)
 							tmp_string.append (Item_function)
+						elseif is_paramflag_fin (arguments.item.flags) and
+								not is_paramflag_fout (arguments.item.flags) and
+								(is_hresult (visitor.vt_type) or is_error (visitor.vt_type))
+						then
+							tmp_string.append (arguments.item.name)
+							tmp_string.append (Item_function)
 						else
 							tmp_string.append (arguments.item.name)
 						end
@@ -363,7 +378,8 @@ feature {NONE} -- Implementation
 
 			if 
 				not is_hresult (visitor.vt_type) and
-				not is_void (visitor.vt_type)
+				not is_void (visitor.vt_type) and
+				not is_error (visitor.vt_type)
 			then
 				tmp_string.prepend (Result_clause)
 			end

@@ -277,6 +277,31 @@ EIF_REFERENCE ecom_runtime_ce::ccom_ce_pointed_short (short * an_integer, EIF_OB
 	else
 		return NULL;
 };
+
+//-------------------------------------------------------------------------
+EIF_REFERENCE ecom_runtime_ce::ccom_ce_pointed_hresult (HRESULT * a_hresult, EIF_OBJECT an_object)
+
+// Create ECOM_HRESULT from HRESULT *
+{
+	EIF_OBJECT result;
+	EIF_TYPE_ID type_id;
+	EIF_PROC set_item;
+
+	type_id = eif_type_id ("ECOM_HRESULT");
+	if ((an_object == NULL) || (eif_access (an_object) == NULL))
+		result = eif_create (type_id);
+	else
+		result = an_object;
+		
+	set_item = eif_proc ("set_item", type_id);
+	set_item (eif_access (result), (EIF_INTEGER)*a_hresult);
+
+	if ((an_object == NULL) || (eif_access (an_object) == NULL))
+		return eif_wean (result);
+	else
+		return NULL;
+};
+
 //-------------------------------------------------------------------------
 
 EIF_REFERENCE ecom_runtime_ce::ccom_ce_pointed_long (long * an_integer, EIF_OBJECT an_object)

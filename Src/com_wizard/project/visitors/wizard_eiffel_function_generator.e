@@ -81,7 +81,7 @@ feature {NONE} -- Implementation
 			visitor.visit (func_desc.return_type)
 
 			-- Eiffel will not have result type if the result type is "void" or "HRESULT"
-			if not is_hresult (visitor.vt_type) and then not is_void (visitor.vt_type) then
+			if not is_hresult (visitor.vt_type) and not is_error (visitor.vt_type) and not is_void (visitor.vt_type) then
 				feature_writer.set_result_type (visitor.eiffel_type)
 			end
 

@@ -4350,10 +4350,12 @@ feature -- Once management
 				-- to avoid storing invalid result in case of exception:
 				--       done := true
 				--       try {
-				--          ... -- code of once feature body
+				--          ... -- code of once feature body (including rescue clause)
 				--       }
 				--       catch (Object e) {
 				--          exception := e
+				--          volatile ready := true -- only in process-relative code
+				--          rethrow
 				--       }
 
 				-- Thread-relative code looks like
@@ -4437,6 +4439,8 @@ feature -- Once management
 				--       }
 				--       catch (Object e) {
 				--          exception := e
+				--          volatile ready := true -- only in process-relative code
+				--          rethrow
 				--       }
 			fault_label := create_label
 			generate_leave_to (fault_label)
@@ -4445,16 +4449,25 @@ feature -- Once management
 			method_body.update_stack_depth (1)
 			method_body.once_catch_block.set_handler_offset (method_body.count)
 			method_body.put_opcode_mdtoken (feature {MD_OPCODES}.Stsfld, exception_token)
-			generate_leave_to (fault_label)
-			method_body.once_catch_block.set_handler_end (method_body.count)
-			mark_label (fault_label)
-
 			if ready_token /= 0 then
 					-- Notify other threads that result is ready:
 					--          volatile ready := true
 				check sync_token /= 0 end
 				check once_ready_label /= Void end
 				is_process_relative := True
+				put_boolean_constant (True)
+				method_body.put_opcode (feature {MD_OPCODES}.volatile)
+				method_body.put_opcode_mdtoken (feature {MD_OPCODES}.Stsfld, ready_token)
+			end
+				-- Rethrow exception to make original stack trace available to application
+				-- as otherwise it will be lost
+			method_body.put_rethrow
+			method_body.once_catch_block.set_handler_end (method_body.count)
+			mark_label (fault_label)
+
+			if is_process_relative then
+					-- Notify other threads that result is ready:
+					--          volatile ready := true
 				put_boolean_constant (True)
 				method_body.put_opcode (feature {MD_OPCODES}.volatile)
 				method_body.put_opcode_mdtoken (feature {MD_OPCODES}.Stsfld, ready_token)

@@ -12,7 +12,7 @@ inherit
 		rename
 			start_position as text_position
 		redefine
-			format, simple_format
+			format, simple_format, has_formal_generic
 		end
 
 	CLICKABLE_AST
@@ -61,6 +61,9 @@ feature -- Properties
 
 	is_class: BOOLEAN is True
 			-- Does the Current AST represent a class?
+
+	has_formal_generic: BOOLEAN is True
+			-- Has type a formal generic parameter?
 
 feature -- Comparison
 

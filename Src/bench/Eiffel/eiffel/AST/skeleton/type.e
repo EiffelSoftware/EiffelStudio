@@ -17,6 +17,12 @@ feature -- Properties
 			-- Do nothing
 		end;
 
+	has_formal_generic: BOOLEAN is
+			-- Has type a formal generic parameter?
+		do
+			-- Do nothing
+		end
+
 	is_void: BOOLEAN is
 			-- Is the type void (procedure type) ?
 		do

@@ -32,7 +32,7 @@ feature
 			-- Is `font_name' defined for current terminal?
 		require
 			exists: not destroyed;
-			font_name_not_void: not (font_name = Void)
+			font_name_not_void: font_name /= Void
 		do
 			Result := implementation.is_font_defined (font_name)
 		end;
@@ -41,7 +41,7 @@ feature
 			-- Set font of every labels to `a_font_name'.
 		require
 			exists: not destroyed;
-			font_name_not_void: not (a_font_name = Void);
+			font_name_not_void: a_font_name /= Void;
 			font_name_defined: is_font_defined (a_font_name)
 		do
 			implementation.set_label_font (a_font_name);
@@ -51,7 +51,7 @@ feature
 			-- Set font of every buttons to `a_font_name'.
 		require
 			exists: not destroyed;
-			font_name_not_void: not (a_font_name = Void);
+			font_name_not_void: a_font_name /= Void;
 			font_name_defined: is_font_defined (a_font_name)
 		do
 			implementation.set_button_font (a_font_name);
@@ -61,7 +61,7 @@ feature
 			-- Set font of every text to `a_font_name'.
 		require
 			exists: not destroyed;
-			font_name_not_void: not (a_font_name = Void);
+			font_name_not_void: a_font_name /= Void;
 			font_name_defined: is_font_defined (a_font_name)
 		do
 			implementation.set_text_font (a_font_name);

@@ -262,7 +262,7 @@ feature -- Text
 			-- Set scale text to `a_text'.
 		require
 			exists: not destroyed;
-			not_text_void: not (a_text = Void)
+			not_text_void: a_text /= Void
 		do
 			implementation.set_text (a_text);
 		ensure

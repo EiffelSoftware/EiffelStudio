@@ -30,8 +30,8 @@ feature {NONE} -- Creation
 			-- Create a working dialog with `a_name' as identifier,
 			-- `a_parent' as parent and call `set_default'.
 		require
-			name_not_void: not (a_name = Void);
-			parent_not_void: not (a_parent = Void)
+			name_not_void: a_name /= Void;
+			parent_not_void: a_parent /= Void
 		do
 			depth := a_parent.depth+1;
 			widget_manager.new (Current, a_parent);

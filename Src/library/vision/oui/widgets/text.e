@@ -126,7 +126,7 @@ feature -- Callbacks (removing)
 			-- text is deleted from or inserted in current text widget.
 		require
 			exists: not destroyed;
-			not_a_command_void: not (a_command = Void)
+			not_a_command_void: a_command /= Void
 		do
 			implementation.remove_modify_action (a_command, argument)
 		end; -- remove_modify_action
@@ -136,7 +136,7 @@ feature -- Callbacks (removing)
 			-- insert cursor is moved to a new position.
 		require
 			exists: not destroyed;
-			not_a_command_void: not (a_command = Void)
+			not_a_command_void: a_command /= Void
 		do
 			implementation.remove_motion_action (a_command, argument)
 		end; -- remove_motion_action

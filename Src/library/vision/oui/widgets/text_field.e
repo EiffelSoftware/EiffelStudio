@@ -88,7 +88,7 @@ feature -- Text size
 			-- when an activate event occurs.
 		require
 			exists: not destroyed;
-			not_a_command_void: not (a_command = Void)
+			not_a_command_void: a_command /= Void
 		do
 			implementation.remove_activate_action (a_command, argument)
 		end; -- remove_modify_action
@@ -137,7 +137,7 @@ feature -- Text manipulation
 			-- Append `a_text' at the end of current text.
 		require
 			exists: not destroyed;
-			not_a_text_void: not (a_text = Void)
+			not_a_text_void: a_text /= Void
 		do
 			implementation.append (a_text)
 		end;
@@ -155,7 +155,7 @@ feature -- Text manipulation
 			-- Same as `replace (a_position, a_position, a_text)'.
 		require
 			exists: not destroyed;
-			not_a_text_void: not (a_text = Void);
+			not_a_text_void: a_text /= Void;
 			a_position_large_enough: a_position >= 0;
 			a_position_small_enough: a_position <= count
 		do
@@ -171,7 +171,7 @@ feature -- Text manipulation
 			-- Replace text from `from_position' to `to_position' by `a_text'.
 		require
 			exists: not destroyed;
-			not_text_void: not (a_text = Void);
+			not_text_void: a_text /= Void;
 			from_position_smaller_th_to_position: from_position <= to_position;
 			from_position_large_enough: from_position >= 0;
 			to_position_small_enough: to_position <= count
@@ -187,7 +187,7 @@ feature -- Text manipulation
 			-- Set `text' to `a_text'.
 		require
 			exists: not destroyed;
-			not_a_text_void: not (a_text = Void)
+			not_a_text_void: a_text /= Void
 		do
 			implementation.set_text (a_text)
 		end; 

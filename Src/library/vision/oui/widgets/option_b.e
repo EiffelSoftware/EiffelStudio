@@ -80,7 +80,7 @@ feature
 			-- Set `selected_button' to `button'
 		require
 			exists: not destroyed;
-			button_exists: not (button = Void)
+			button_exists: button /= Void
 		do
 			implementation.set_selected_button (button)
 		ensure
@@ -93,7 +93,7 @@ feature
 			-- is armed.
 		require
 			exists: not destroyed;
-			menu_not_void: not (a_menu = Void);
+			menu_not_void: a_menu /= Void;
 			same_parent: a_menu.parent = parent
 		do
 			implementation.attach_menu (a_menu)

@@ -318,18 +318,18 @@ feature {NONE} -- Implementation
 			C.gtk_container_add (list_widget, v_imp.c_object)
 			v_imp.set_item_parent_imp (Current)
 
-			temp_string := ("button-press-event").to_c
-			temp_sig_id := c_signal_connect (
-				v_imp.c_object,
-				$temp_string,
-				agent on_item_clicked
-				)
-			real_signal_connect (
+			v_imp.real_signal_connect (
 				v_imp.c_object,
 				"key-press-event",
 				agent on_key_pressed,
 				key_event_translate_agent
 			)	
+			v_imp.real_signal_connect (
+				v_imp.c_object,
+				"button-press-event",
+				agent on_item_clicked,
+				Default_translate
+				)
 			v_imp.key_press_actions.extend (agent on_key_pressed)
 		end
 

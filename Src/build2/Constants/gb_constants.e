@@ -487,11 +487,11 @@ feature -- Warning Dialogs
 	
 	Component_tool_button_warning: STRING is "Please drop a component on this button%NUse right click for both pick and drop actions."
 	
-	Project_exists_warning: STRING is "A Build project already exists in the selected directory. Do you wish to overwrite this project?"
+	Project_exists_warning: STRING is "An EiffelBuild project already exists in the selected directory. Do you wish to overwrite this project?"
 	
 	Directory_exists_warning: STRING is "The selected directory does not exist. Would you like to create it?"
 
-	Invalid_project_warning: STRING is "Invalid build project file. Please select a different file."
+	Invalid_project_warning: STRING is "Invalid EiffelBuild project file. Please select a different file."
 		-- Warning displayed when a user attempts to open an invalid build project.
 
 	Duplicate_name_warning_part1: STRING is "'"
@@ -524,7 +524,7 @@ feature -- Warning Dialogs
 	
 	Matching_class_and_application_names_warning: STRING is "Application and class names conflict."
 	
-	Invalid_bpr_file: STRING is "The .BPR file you are attempting to load was created with the beta version of EiffelBuild.%NThe information stored in the project settings are incompatible with this version of Build.%NClick 'Continue' if you wish to load the project, with default Build settings."
+	Invalid_bpr_file: STRING is "The .BPR file you are attempting to load was created with the beta version of EiffelBuild.%NThe information stored in the project settings are incompatible with this version of EiffelBuild.%NClick 'Continue' if you wish to load the project, with default EiffelBuild settings."
 
 feature -- Object editor properties
 
@@ -617,6 +617,9 @@ feature -- Object editor properties
 	
 	gb_ev_notebook_tab_position: STRING is "Tab Position"
 	gb_ev_notebook_tab_position_tooltip: STRING is "feature `tab_position' from EV_NOTEBOOK"
+	
+	gb_ev_progress_bar_is_segmented: STRING is "Is segmented?"
+	gb_ev_progress_bar_is_segmented_tooltip: STRING is "feature `is_segmented' from EV_PROGRESS_BAR"
 	
 	select_button_text: STRING is "Select..."
 

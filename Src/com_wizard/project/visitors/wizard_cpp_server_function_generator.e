@@ -504,6 +504,11 @@ feature {NONE} -- Implementation
 					Result.append (New_line_tab)
 					Result.append (Eif_double)
 					return_type := clone (Eif_double)
+				elseif is_byref (visitor.vt_type) and is_void (visitor.vt_type) then
+					Result := cecil_function_code (Eif_pointer_function, Eif_pointer_function_name)
+					Result.append (New_line_tab)
+					Result.append (Eif_pointer)
+					return_type := clone (Eif_pointer)
 				end
 			elseif (visitor.vt_type = Vt_bool) then
 				Result := cecil_function_code (Eif_boolean_function, Eif_boolean_function_name)

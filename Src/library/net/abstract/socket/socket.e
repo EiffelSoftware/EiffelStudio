@@ -83,7 +83,7 @@ feature -- Element change
 			eif_net_independent_store (descriptor, $object)
 		end
 
-feature
+feature -- Basic commands
 
 	create_from_descriptor (fd: INTEGER) is
 			-- Create socket from the socket descriptor `fd'.
@@ -213,7 +213,7 @@ feature
 	descriptor: INTEGER;
 			-- Socket descriptor of current socket
 
-feature -- Misc.
+feature -- Miscellaneous
 
 	name: STRING is
 			-- Socket name
@@ -223,7 +223,7 @@ feature -- Misc.
 			create Result.make (0)
 		end
 
-feature -- Ouput
+feature -- Output
 
 	put_new_line, new_line is
 			-- Write a "new_line" character to socket.

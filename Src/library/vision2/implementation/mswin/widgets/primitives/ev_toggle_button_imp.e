@@ -35,8 +35,12 @@ inherit
 			height as wel_height,
 			text as wel_text,
 			item as wel_item,
-			move as move_to,
-			enabled as is_sensitive
+			enabled as is_sensitive,
+			x as x_position,
+			y as y_position,
+			move_and_resize as wel_move_and_resize,
+			move as wel_move,
+			resize as wel_resize
 		undefine
 			window_process_message,
 			remove_command,
@@ -109,6 +113,16 @@ end -- class EV_TOGGLE_BUTTON_IMP
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.24  2000/03/17 17:03:23  rogers
+--| renamed
+--| 	x -> x_position,
+--| 	y -> y_position,
+--| 	move -> wel_move,
+--| 	move_and_resize -> wel_move_and_Resize,
+--| 	resize -> wel_resize
+--| from
+--| 	WEL_SELECTABLE_BUTTON
+--|
 --| Revision 1.23  2000/03/09 16:25:18  brendel
 --| Added 2 FIXME's at undefine clause about newly added creation procedures
 --| to WEL, but it is unclear what exactly has to be done.
@@ -127,7 +141,8 @@ end -- class EV_TOGGLE_BUTTON_IMP
 --| Now uses WEL_SELECTABLE_BUTTON instead of calling win32 directly.
 --|
 --| Revision 1.18  2000/02/23 20:22:57  rogers
---| Improved comments. Removed old command association. Removed on_bn_clicked, as ancestor version is now used. Added interface.
+--| Improved comments. Removed old command association. Removed on_bn_clicked, as ancestor version
+--| is now used. Added interface.
 --|
 --| Revision 1.17  2000/02/19 06:34:13  oconnor
 --| removed old command stuff
@@ -149,7 +164,8 @@ end -- class EV_TOGGLE_BUTTON_IMP
 --| Commented out old command execution.
 --|
 --| Revision 1.14.4.2  2000/01/10 19:03:36  rogers
---| Changed to comply with major Vision2 changes. see diff for redefinitions. make_with_text is removed. All references to item are replaced with wel_item.
+--| Changed to comply with major Vision2 changes. see diff for redefinitions. make_with_text is removed.
+--| All references to item are replaced with wel_item.
 --|
 --| Revision 1.14.4.1  1999/11/24 17:30:35  oconnor
 --| merged with DEVEL branch

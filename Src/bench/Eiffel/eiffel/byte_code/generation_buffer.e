@@ -267,22 +267,6 @@ feature -- Element change
 			current_buffer.append_character (';')
 		end
 
-	put_argument_registration (i: INTEGER; arg: INTEGER) is
-			-- Write "RTLR(`i',arg`arg');".
-		require
-			i_positive: i >= 0
-			arg_positive: arg >= 0
-		do
-			emit_tabs
-			append ("RTLR(")
-			current_buffer.append_integer (i)
-			current_buffer.append_character (',')
-			append ("arg")
-			current_buffer.append_integer (arg)
-			current_buffer.append_character (')')
-			current_buffer.append_character (';')
-		end
-
 	put_current_registration (i: INTEGER) is
 			-- Write "RTLR(`i',Current);".
 		require

@@ -499,13 +499,13 @@ feature -- COM types -- 7
 
 feature -- Generator constants -- 8
 
-	Register_dll_server_function_name: STRING is "register_dll_server"
+	Register_dll_server_function_name: STRING is "dll_register_server"
 
-	Unregister_dll_server_function_name: STRING is "unregister_dll_server"
+	Unregister_dll_server_function_name: STRING is "dll_unregister_server"
 
 	Can_unload_dll_now_function_name: STRING is "dll_can_unload_now"
 
-	Get_class_object_function_name: STRING is "class_object"
+	Get_class_object_function_name: STRING is "dll_get_class_object"
 
 	Ccom_get_class_object_function_name: STRING is "ccom_class_object"
 

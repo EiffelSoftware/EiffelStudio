@@ -94,6 +94,7 @@ feature -- Reset
 			last_p_icd_thread           := Default_pointer		
 				--| StepComplete |--
 			last_step_complete_reason   := 0
+			last_exception_is_handled   := False
 			
 				--| Param   |--
 			param_arguments := Void
@@ -265,6 +266,15 @@ feature {EIFNET_DEBUGGER_INFO_ACCESSOR} -- Access
 		
 	last_step_complete_reason: INTEGER
 			-- Last `reason' from a `step_complete' callback
+			
+	last_exception_is_handled: BOOLEAN
+			-- Is last exception handled ?
+			-- the value is pertinent only in the Exception callback context.
+			--
+			-- If last_exception_handled is True, this is a "first chance" exception that
+			-- hasn't had a chance to be processed by the application.  If
+			-- last_exception_handled is False, this is an unhandled exception which will
+			-- terminate the process.			
 
 feature {EIFNET_DEBUGGER_INFO_ACCESSOR} -- Change
 
@@ -338,6 +348,12 @@ feature {EIFNET_DEBUGGER_INFO_ACCESSOR} -- Change
 			last_step_complete_reason := val
 		end
 
+	set_last_exception_handled (val: BOOLEAN) is
+			-- Set `last_exception_is_handled' to `val'
+		do
+			last_exception_is_handled := val
+		end
+		
 feature {EIFNET_DEBUGGER_INFO_ACCESSOR} -- Full Update
 
 	update_data is

@@ -217,7 +217,7 @@ feature {NONE} -- Implementation
 			Result.append ("%N%T")
 			if not visitor.is_basic_type and not visitor.is_enumeration then
 				if visitor.need_generate_ce then
-					Result.append (Generated_ce_mapper)
+					Result.append (visitor.ce_mapper.variable_name)
 				else
 					Result.append ("rt_ce")
 				end
@@ -403,7 +403,7 @@ feature {NONE} -- Implementation
 					Result.append (l_value)
 					Result.append (" = ")
 					if visitor.need_generate_ec then
-						Result.append (Generated_ec_mapper)
+						Result.append (visitor.ec_mapper.variable_name)
 					else
 						Result.append ("rt_ec")
 					end
@@ -419,7 +419,7 @@ feature {NONE} -- Implementation
 				else
 					create l_value.make (500)
 					if visitor.need_generate_ec then
-						l_value.append (Generated_ec_mapper)
+						l_value.append (visitor.ec_mapper.variable_name)
 					else
 						l_value.append ("rt_ec")
 					end

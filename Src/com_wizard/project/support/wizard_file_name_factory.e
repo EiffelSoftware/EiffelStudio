@@ -354,6 +354,8 @@ feature {NONE} -- Implementation
 	process_c (is_cpp: BOOLEAN) is
 			-- Set `last_created_file_name' with file name for `a_generator'.
 			-- Set `last_created_header_file_name' with header file name for `a_generator'.
+		require
+			non_void_transient_writer: transient_writer /= Void
 		local
 			a_c_writer: WIZARD_WRITER_C
 		do

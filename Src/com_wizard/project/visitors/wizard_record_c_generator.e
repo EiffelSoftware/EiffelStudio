@@ -227,7 +227,7 @@ feature {NONE} -- Implementation
 				end
 				Result.append (")(")
 				if l_visitor.need_generate_ce then
-					Result.append (Generated_ce_mapper)
+					Result.append (l_visitor.ce_mapper.variable_name)
 				else
 					Result.append ("rt_ce")
 				end
@@ -304,11 +304,11 @@ feature {NONE} -- Implementation
 					Result.append ("))")
 				else
 					if l_visitor.need_generate_ec then
-						Result.append (Generated_ec_mapper)
+						Result.append (l_visitor.ec_mapper.variable_name)
 					else
 						Result.append ("rt_ec")
 					end
-					Result.append (".")
+					Result.append_character ('.')
 					Result.append (l_visitor.ec_function_name)
 					Result.append (" (eif_access (_field_), ((")
 					Result.append (c_type)
@@ -330,7 +330,7 @@ feature {NONE} -- Implementation
 			else
 				if l_visitor.need_free_memory then					
 					if l_visitor.need_generate_free_memory then
-						Result.append (Generated_ce_mapper)
+						Result.append (l_visitor.ce_mapper.variable_name)
 						Result.append (".")
 					end
 					Result.append (l_visitor.free_memory_function_name)
@@ -359,7 +359,7 @@ feature {NONE} -- Implementation
 					Result.append (" *)_field_)")
 				else
 					if l_visitor.need_generate_ec then
-						Result.append (Generated_ec_mapper)
+						Result.append (l_visitor.ec_mapper.variable_name)
 					else
 						Result.append ("rt_ec")
 					end

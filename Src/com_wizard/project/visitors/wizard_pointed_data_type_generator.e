@@ -293,7 +293,7 @@ feature -- Basic operations
 				free_memory_function_body := "%Tif (a_pointer != NULL)%N%T{%N%T%T"
 				if pointed_visitor.need_free_memory then
 					if pointed_visitor.need_generate_free_memory then
-						free_memory_function_body.append (Generated_ce_mapper)
+						free_memory_function_body.append (pointed_visitor.ce_mapper.variable_name)
 						free_memory_function_body.append (".")
 					end
 					free_memory_function_body.append (pointed_visitor.free_memory_function_name)
@@ -325,13 +325,13 @@ feature -- Basic operations
 				ce_function_signature.append (c_type)
 				ce_function_signature.append (" a_pointer, EIF_OBJECT an_object")
 				ce_function_return_type := "EIF_REFERENCE"
-				ce_function_body := ce_function_body_cell (c_type, pointed_visitor.ce_function_name, pointed_visitor.eiffel_type, pointed_visitor.can_free, pointed_visitor.need_generate_ce, pointed_visitor.writable)
+				ce_function_body := ce_function_body_cell (c_type, pointed_visitor)
 				create ec_function_signature.make (100)
 				ec_function_signature.append ("EIF_REFERENCE eif_ref, ")
 				ec_function_signature.append (c_type)
 				ec_function_signature.append (" old")
 				ec_function_return_type := c_type.twin
-				ec_function_body := ec_function_body_cell (pointed_visitor.eiffel_type, pointed_visitor.c_type, pointed_visitor.ec_function_name, pointed_visitor.need_generate_ec, pointed_visitor.writable, pointed_visitor)
+				ec_function_body := ec_function_body_cell (pointed_visitor)
 			end
 			set_visitor_atributes (a_visitor)
 		end
@@ -364,8 +364,7 @@ feature {NONE} -- Implementation
 			valid_result: Result /= Void and then not Result.is_empty
 		end
 
-	ce_function_body_cell (a_c_type, element_ce_function, element_eiffel_name: STRING;
-					can_free_pointer, need_generate_ce_element, a_writable: BOOLEAN): STRING is
+	ce_function_body_cell (a_c_type: STRING; a_visitor: WIZARD_DATA_TYPE_VISITOR): STRING is
 			-- C to Eiffel function body, for types pointed to all types 
 			-- other then records and interfaces.
 			--		Parameters
@@ -377,10 +376,7 @@ feature {NONE} -- Implementation
 		require
 			non_void_a_c_type: a_c_type /= Void
 			valid_a_c_type: not a_c_type.is_empty
-			non_void_element_ce_function: element_ce_function /= Void
-			valid_element_ce_function: not element_ce_function.is_empty
-			non_void_element_eiffel_name: element_eiffel_name /= Void
-			valid_element_eiffel_name: not element_eiffel_name.is_empty
+			non_void_visitor: a_visitor /= Void
 		do
 			create Result.make (10000)
 			Result.append ("%TEIF_TYPE_ID type_id = -1;%N%T")
@@ -388,7 +384,7 @@ feature {NONE} -- Implementation
 			Result.append ("EIF_OBJECT result = 0;%N%T")
 			Result.append ("EIF_OBJECT tmp_object = 0;%N%N%T")
 			Result.append ("type_id = eif_type_id (%"CELL [")
-			Result.append (element_eiffel_name)
+			Result.append (a_visitor.eiffel_type)
 			Result.append ("]%");%N%T")
 			Result.append ("set_item = eif_procedure (%"put%", type_id);%N%N%T")
 			Result.append ("if ((an_object == NULL) || (eif_access (an_object) == NULL))%N%T")
@@ -404,14 +400,17 @@ feature {NONE} -- Implementation
 			Result.append ("if (*(" + a_c_type + ") a_pointer != NULL)%N%T%T")
 			
 			Result.append ("tmp_object = eif_protect (")
-			if not need_generate_ce_element then
-				Result.append ("rt_ce.")
+			if not a_visitor.need_generate_ce then
+				Result.append ("rt_ce")
+			else
+				Result.append (a_visitor.ce_mapper.variable_name)
 			end
-			Result.append (element_ce_function)
+			Result.append_character ('.')
+			Result.append (a_visitor.ce_function_name)
 			Result.append (" (*(")
 			Result.append (a_c_type)
 			Result.append (") a_pointer")
-			if a_writable then
+			if a_visitor.writable then
 				Result.append (", NULL")
 			end
 			Result.append ("));%N%T")
@@ -427,22 +426,17 @@ feature {NONE} -- Implementation
 			valid_result: not Result.is_empty
 		end
 
-	ec_function_body_cell (element_eiffel_type, element_c_type, element_ec_function: STRING;
-					need_generate_element_ec_function: BOOLEAN;
-					element_writable: BOOLEAN; element_visitor: WIZARD_DATA_TYPE_VISITOR): STRING is
+	ec_function_body_cell (a_visitor: WIZARD_DATA_TYPE_VISITOR): STRING is
 			-- Eiffel to C function body for CELL type
 		require
-			non_void_element_eiffel_type: element_eiffel_type /= Void
-			non_void_element_c_type: element_c_type /= Void
-			non_void_element_ec_function: element_ec_function /= Void
-
-			valid_element_eiffel_type: not element_eiffel_type.is_empty
-			valid_element_c_type: not element_c_type.is_empty
-			valid_element_ec_function: not element_ec_function.is_empty
+			non_void_visitor: a_visitor /= Void
+		local
+			l_c_type: STRING
 		do
-			create Result.make (10000)
+			create Result.make (2000)
 			Result.append ("%TEIF_OBJECT eif_object = 0;%N%T")
-			Result.append (element_c_type)
+			l_c_type := a_visitor.c_type
+			Result.append (l_c_type)
 			Result.append (" * result = 0;%N%T")
 			Result.append ("EIF_REFERENCE cell_item = 0;%N%N%T")
 			Result.append ("eif_object = eif_protect (eif_ref);%N%T")
@@ -450,31 +444,34 @@ feature {NONE} -- Implementation
 			Result.append ("result = old;%N%T")
 			Result.append ("else%N%T%T")
 			Result.append ("result = (")
-			Result.append (element_c_type)
+			Result.append (l_c_type)
 			Result.append (" *) CoTaskMemAlloc (sizeof (")
-			Result.append (element_c_type)
+			Result.append (l_c_type)
 			Result.append ("));%N%T")
 			Result.append ("cell_item = eif_field (eif_access (eif_object), %"item%", EIF_REFERENCE);%N%T")
-			if element_visitor.need_free_memory then
+			if a_visitor.need_free_memory then
 				Result.append ("if (*result != NULL)%N%T%
 							%{%N%T%T")
-				if element_visitor.need_generate_free_memory then
-					Result.append (Generated_ce_mapper)
+				if a_visitor.need_generate_free_memory then
+					Result.append (a_visitor.ec_mapper.variable_name)
 					Result.append (".")
 				end
-				Result.append (element_visitor.free_memory_function_name) 
+				Result.append (a_visitor.free_memory_function_name) 
 				Result.append ("(*result);%N%T%T%
 								%*result = NULL;%N%T%
 							%}%N%T")
 			end
 			Result.append ("if (cell_item != NULL)%N%T%T")
 			Result.append ("*result = ")
-			if not need_generate_element_ec_function then
-				Result.append ("rt_ec.")
+			if a_visitor.need_generate_ec then
+				Result.append (a_visitor.ec_mapper.variable_name)
+			else
+				Result.append ("rt_ec")
 			end
-			Result.append (element_ec_function)
+			Result.append_character ('.')
+			Result.append (a_visitor.ec_function_name)
 			Result.append (" (cell_item")
-			if element_writable then
+			if a_visitor.writable then
 				Result.append (", NULL")
 			end
 			Result.append (");%N%T")

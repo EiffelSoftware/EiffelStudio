@@ -233,7 +233,7 @@ feature {NONE} -- Implementation
 						l_body.append (")a_value")
 					else
 						if visitor.need_generate_ec then
-							l_body.append (Generated_ec_mapper)
+							l_body.append (visitor.ec_mapper.variable_name)
 						else
 							l_body.append ("rt_ec")
 						end

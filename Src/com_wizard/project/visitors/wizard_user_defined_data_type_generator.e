@@ -121,9 +121,7 @@ feature -- Processing
 				vt_type := a_type_visitor.vt_type
 
 			else
-				ce_function_body := ce_function_body_alias 
-					(eiffel_type, a_type_visitor.ce_function_name, a_type_visitor.need_generate_ce, a_type_visitor.writable)
-
+				ce_function_body := ce_function_body_alias (eiffel_type, a_type_visitor)
 				create ce_function_return_type.make (100)
 				ce_function_return_type.append (Eif_reference)
 			end
@@ -457,14 +455,12 @@ feature {NONE} -- Implementation
 			valid_body: not Result.is_empty
 		end
 
-	ce_function_body_alias (a_class_name, ce_function_for_alias: STRING; 
-					need_generate_alias, a_writable: BOOLEAN): STRING is
+	ce_function_body_alias (a_class_name: STRING; a_visitor: WIZARD_DATA_TYPE_VISITOR): STRING is
 			-- ce function body for aliases
 		require
 			non_void_class_name: a_class_name /= Void
 			valid_class_name: not a_class_name.is_empty
-			non_void_ce_function: ce_function_for_alias /= Void
-			valid_ce_function: not ce_function_for_alias.is_empty
+			non_void_visitor: a_visitor /= Void
 		do
 			create Result.make (1000)
 			Result.append ("EIF_TYPE_ID type_id = -1;%N%T")
@@ -476,15 +472,15 @@ feature {NONE} -- Implementation
 			Result.append ("result = eif_create (type_id);%N%T")
 			Result.append ("make = eif_procedure (%"make_from_alias%", type_id);%N%N%T")
 			Result.append ("make (eif_access (result), ")
-			if need_generate_alias then
-				Result.append (Generated_ce_mapper)
+			if a_visitor.need_generate_ce then
+				Result.append (a_visitor.ce_mapper.variable_name)
 			else
 				Result.append ("rt_ce")
 			end
 			Result.append (".")
-			Result.append (ce_function_for_alias)
+			Result.append (a_visitor.ce_function_name)
 			Result.append (" (an_alias")
-			if a_writable then
+			if a_visitor.writable then
 				Result.append (", ")
 				Result.append ("NULL")
 			end

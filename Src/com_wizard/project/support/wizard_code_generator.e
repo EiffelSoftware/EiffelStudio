@@ -78,8 +78,6 @@ feature -- Basic operations
 			-- Code generation
 		do			
 			message_output.add_title (Generation_title)
-			create_generated_ce_mapper
-			create_generated_ec_mapper
 			create_alias_c_writer 
 			if not environment.abort then
 				process_type_descriptors 
@@ -211,32 +209,49 @@ feature -- Basic operations
 	generate_mappers_and_c_alias is
 			-- Generating extra files
 		local
-			generated_globals: WIZARD_GENERATED_RT_GLOBALS_GENERATOR
+			l_globals: WIZARD_GENERATED_RT_GLOBALS_GENERATOR
+			l_mapper: WIZARD_WRITER_MAPPER_CLASS
 		do
 			message_output.add_message (Runtime_functions_generation)
 			progress_report.set_title (Runtime_functions_generation)
-			Shared_file_name_factory.create_generated_mapper_file_name (Generated_ce_mapper_writer)
+
+			from
+				Generated_ce_mappers.start
+			until
+				Generated_ce_mappers.after
+			loop
+				l_mapper := Generated_ce_mappers.item
+				Shared_file_name_factory.create_generated_mapper_file_name (l_mapper)
+				l_mapper.save_file (Shared_file_name_factory.last_created_file_name)
+				l_mapper.save_declaration_header_file (Shared_file_name_factory.last_created_declaration_header_file_name)
+				l_mapper.save_definition_header_file (Shared_file_name_factory.last_created_header_file_name)
+				Generated_ce_mappers.forth
+			end
+
 			progress_report.step
-			Generated_ce_mapper_writer.save_file (Shared_file_name_factory.last_created_file_name)
-			progress_report.step
-			Generated_ce_mapper_writer.save_declaration_header_file (Shared_file_name_factory.last_created_declaration_header_file_name)	
-			Generated_ce_mapper_writer.save_definition_header_file (Shared_file_name_factory.last_created_header_file_name)	
-			progress_report.step
-			Shared_file_name_factory.create_generated_mapper_file_name (Generated_ec_mapper_writer)
-			progress_report.step
-			Generated_ec_mapper_writer.save_file (Shared_file_name_factory.last_created_file_name)
-			progress_report.step
-			Generated_ec_mapper_writer.save_declaration_header_file (Shared_file_name_factory.last_created_declaration_header_file_name)
-			Generated_ec_mapper_writer.save_definition_header_file (Shared_file_name_factory.last_created_header_file_name)
+			
+			from
+				Generated_ec_mappers.start
+			until
+				Generated_ec_mappers.after
+			loop
+				l_mapper := Generated_ec_mappers.item
+				Shared_file_name_factory.create_generated_mapper_file_name (l_mapper)
+				l_mapper.save_file (Shared_file_name_factory.last_created_file_name)
+				l_mapper.save_declaration_header_file (Shared_file_name_factory.last_created_declaration_header_file_name)
+				l_mapper.save_definition_header_file (Shared_file_name_factory.last_created_header_file_name)
+				Generated_ec_mappers.forth
+			end
+
 			progress_report.step
 			Shared_file_name_factory.create_c_alias_file_name (Alias_c_writer)
 			progress_report.step
 			Alias_c_writer.save_header_file (Shared_file_name_factory.last_created_header_file_name)
 			progress_report.step
-			create generated_globals.generate 
+			create l_globals.generate 
 			progress_report.step
-			set_generated_ce_mapper (Void)
-			set_generated_ec_mapper (Void)
+			Generated_ce_mappers.wipe_out
+			Generated_ec_mappers.wipe_out
 			set_alias_c_writer (Void)
 		end
 	

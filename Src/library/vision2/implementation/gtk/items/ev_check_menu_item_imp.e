@@ -24,8 +24,6 @@ inherit
 creation
 	make,
 	make_with_text
---	make_with_pixmap,
---	make_with_all
 
 feature {NONE} -- Initialization
 	
@@ -59,6 +57,24 @@ feature -- Status setting
 			-- Make `flag' the new state of the menu-item.
 		do
 			gtk_check_menu_item_set_active (widget, flag)
+		end
+
+feature -- Event : command association
+
+	add_deactivate_command (cmd: EV_COMMAND; arg: EV_ARGUMENT) is
+			-- Make `cmd' the executed command when the item is
+			-- unactivated.
+		do
+			add_command (widget, "deselect", cmd, arg)
+		end	
+
+feature -- Event -- removing command association
+
+	remove_deactivate_commands is
+			-- Empty the list of commands to be executed when
+			-- the item is deactivated.
+		do	
+			remove_commands (widget, deselect_id)
 		end
 
 end -- class EV_CHECK_MENU_ITEM_IMP

@@ -1,49 +1,31 @@
 indexing
-	description: "EiffelVision item, gtk implementation";
-	status: "See notice at end of class"
-	date: "$Date$";
+	description: "EiffelVision simple item, gtk implementation."
+	status: "See notice at end of class."
+	date: "$Date$"
 	revision: "$Revision$"
 
-deferred class 
-	EV_ITEM_IMP
+deferred class
+	EV_SIMPLE_ITEM_IMP
 
 inherit
-	EV_ITEM_I
+	EV_SIMPLE_ITEM_I
 
-	EV_GTK_ITEMS_EXTERNALS
-		
-	EV_WIDGET_IMP
-			-- Inheriting from widget,
-			-- because items are widget in gtk
+	EV_ITEM_IMP
+
+	EV_TEXTABLE_IMP
+
+	EV_PIXMAPABLE_IMP
 		rename
 			set_parent as widget_set_parent,
 			parent_imp as widget_parent_imp,
 			parent_set as widget_parent_set,
 			add_double_click_command as old_add_dblclk,
 			remove_double_click_commands as old_remove_dblclk
-		redefine
+		undefine
 			has_parent
 		end
 
-feature -- Access
-
-	parent_widget: EV_WIDGET is
-			-- Parent widget of the current item
-		do
-			check
-				not_yet_implemented: False
-			end
-		end
-
-feature -- Assertion features
-
-	has_parent: BOOLEAN is
-			-- True if the widget has a parent, False otherwise
-		do
-			Result := parent_imp /= void
-		end
-
-end -- class EV_ITEM_IMP
+end -- class EV_SIMPLE_ITEM_IMP
 
 --|----------------------------------------------------------------
 --| EiffelVision: library of reusable components for ISE Eiffel.

@@ -305,9 +305,7 @@ feature {GB_CODE_GENERATOR} -- Implementation
 			-- that was not named by the user.
 		local
 			application_element, window_element,
-			new_type_element, directory_element: XM_ELEMENT
-			window_selector_item: GB_WINDOW_SELECTOR_ITEM
-			window_selector_layout: GB_WINDOW_SELECTOR_DIRECTORY_ITEM
+			new_type_element: XM_ELEMENT
 			namespace: XM_NAMESPACE
 			constants_list: HASH_TABLE [GB_CONSTANT, STRING]
 		do
@@ -340,46 +338,52 @@ feature {GB_CODE_GENERATOR} -- Implementation
 				constants_list.forth
 			end
 
-				-- Now store all directories and windows.
-			from 
-				window_selector.start
+			store_windows (window_selector, application_element, generation_settings)
+				-- Store all directories and windows.
+		end
+		
+	store_windows (children_list: EV_TREE_NODE_LIST; xml_element: XM_ELEMENT; generation_settings: GB_GENERATION_SETTINGS) is
+			-- Store all windows and directoris contained within `children_list' into `xml_settings', using geenration
+			-- settings `generation_settings'.
+		require
+			children_list_not_void: children_list /= Void
+			xml_element_not_void: xml_element /= Void
+			generation_settings_not_void: generation_settings /= Void
+		local
+			window_selector_item: GB_WINDOW_SELECTOR_ITEM
+			window_selector_directory_item: GB_WINDOW_SELECTOR_DIRECTORY_ITEM
+			new_element, new_type_element: XM_ELEMENT
+		do
+			from
+				children_list.start
 			until
-				window_selector.off
+				children_list.off
 			loop
-				window_selector_item ?= window_selector.item
+				window_selector_item ?= children_list.item
 				 if window_selector_item /= Void then
 				 		-- We ignore directories, although we should add them soon.
-					window_element := create_widget_instance (application_element, window_selector_item.object.type)
-					application_element.force_last (window_element)
-					add_new_object_to_output (window_selector_item.object, window_element, generation_settings)		
-				end
-				window_selector_layout ?= window_selector.item
-				if window_selector_layout /= Void then
-					directory_element := create_widget_instance (application_element, directory_string)	
-					application_element.force_last (directory_element)
-					new_type_element := new_child_element (directory_element, Internal_properties_string, "")
-					directory_element.force_last (new_type_element)
-					window_selector_layout.generate_xml (new_type_element)
-					from
-						window_selector_layout.start
-					until
-						window_selector_layout.off
-					loop
-						window_selector_item ?= window_selector_layout.item
-						if window_selector_item /= Void then
-							window_element := create_widget_instance (directory_element, window_selector_item.object.type)
-							directory_element.force_last (window_element)
-							add_new_object_to_output (window_selector_item.object, window_element, generation_settings)	
+					new_element := create_widget_instance (xml_element, window_selector_item.object.type)
+					xml_element.force_last (new_element)
+					add_new_object_to_output (window_selector_item.object, new_element, generation_settings)		
+				else
+					window_selector_directory_item ?= children_list.item
+					if window_selector_directory_item /= Void then
+						new_element := create_widget_instance (xml_element, directory_string)	
+						xml_element.force_last (new_element)
+						new_type_element := new_child_element (new_element, Internal_properties_string, "")
+						new_element.force_last (new_type_element)
+						window_selector_directory_item.generate_xml (new_type_element)
+						store_windows (children_list.item, new_element, generation_settings)
+					else
+						check
+							unsupported_type_found: False
 						end
-						window_selector_layout.forth
 					end
 				end
-				check
-					item_is_directory_or_window: window_selector_item /= Void or window_selector_layout /= Void
-				end
-				window_selector.forth
+				children_list.forth
 			end
 		end
+		
 		
 	document: XM_DOCUMENT
 		-- Result of last call to `generate_document'.

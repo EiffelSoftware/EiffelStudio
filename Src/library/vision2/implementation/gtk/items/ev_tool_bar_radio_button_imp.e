@@ -18,12 +18,17 @@ inherit
 
 	EV_TOOL_BAR_SELECT_BUTTON_IMP
 		redefine
+			parent_imp,
 			make,
 			interface,
-			connect_signals
+			connect_signals,
+			enable_select
 		end
 
-	--| FIXME EV_RADIO_PEER!
+	EV_RADIO_PEER_IMP
+		redefine
+			interface
+		end
 
 create
 	make
@@ -37,49 +42,83 @@ feature {NONE} -- Initialization
 			enable_select
 		end
 
-feature -- Status report
-
-	peers: LINKED_LIST [like interface] is
-			-- List of all radio items in the group `Current' is in.
-		do
-			if parent_imp /= Void then
-				--Result := parent_imp.radio_group
-			else
-				create Result.make
-				Result.extend (interface)
-			end
-		end
-
-	selected_peer: like interface is
-			-- Radio item that is currently selected.
-		do
-			if parent_imp /= Void then
-				--Result := parent_imp.selected_peer
-			else
-				Result := interface
-			end
-		end
-
 feature {NONE} -- Implementation
 
-	disable_select is
-			-- Unselect the radio button.
+	parent_imp: EV_TOOL_BAR_IMP is
 		do
-			C.gtk_toggle_button_set_active (c_object, False)
+			Result ?= Precursor
 		end
 
 	connect_signals is
 			-- Connect on_activate to toggled signal
 		do
-			signal_connect ("toggled", ~on_activate, default_translate)
+			signal_connect ("toggled", ~on_activate, Void)
 		end
 		
 	on_activate is
 			-- The button has been activated by the user (pushed).
-		do		
+		local
+			a_peers: like peers
+			radio_imp: like Current
+			gdk_event_mask: INTEGER
+		do
+			if is_selected and not just_selected then
+				just_selected := True
+				a_peers := peers
+				from
+					a_peers.start
+				until
+					a_peers.after
+				loop
+					radio_imp ?= a_peers.item.implementation
+					if radio_imp /= Current and radio_imp.is_selected then
+						radio_imp.disable_select
+					end
+					a_peers.forth
+				end
+				interface.press_actions.call ([])
+			else
+				if just_selected then
+					gdk_event_mask := C.gdk_window_get_events (
+						C.gtk_widget_struct_window (c_object)
+					)
+					C.gdk_window_set_events (
+						C.gtk_widget_struct_window (c_object), 0
+					)
+					enable_select
+					C.gdk_window_set_events (
+						C.gtk_widget_struct_window (c_object),
+						gdk_event_mask
+					)
+				end
+			end			
 		end
 
+	just_selected: BOOLEAN
+		-- Has the radio button just been selected by the user.
+
 feature {EV_ANY_I} -- Implementation
+
+	enable_select is
+			-- Select the radio button.
+		do
+			just_selected := True
+			Precursor
+		end
+
+	disable_select is
+			-- Unselect the radio button.
+		do
+			just_selected := False
+			C.gtk_toggle_button_set_active (c_object, False)
+		end
+
+	gslist: POINTER is
+		do
+			if parent_imp /= Void then
+				Result := parent_imp.radio_group
+			end
+		end
 
 	interface: EV_TOOL_BAR_RADIO_BUTTON
 
@@ -106,6 +145,9 @@ end -- class EV_TOOL_BAR_RADIO_BUTTON_IMP
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.18  2000/04/13 22:01:06  king
+--| Implemented radio grouping functionality
+--|
 --| Revision 1.17  2000/04/12 00:18:47  king
 --| Initial implementation for radio grouping
 --|

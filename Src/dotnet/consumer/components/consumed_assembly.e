@@ -7,11 +7,10 @@ class
 	CONSUMED_ASSEMBLY
 
 inherit
-	CACHE_SETTINGS
-		export
-			{NONE} all
+	ANY
 		redefine
-			is_equal, out
+			is_equal,
+			out
 		end
 
 create
@@ -19,8 +18,9 @@ create
 
 feature {NONE} -- Initialization
 
-	make (id, n, v, c, k, loc, gp: STRING; a_in_gac: BOOLEAN) is
+	make (id, fn, n, v, c, k, loc, gp: STRING; a_in_gac: BOOLEAN) is
 			-- Set `unique_id' with `id'
+			-- Set `folder_name' with 'fn'
 			-- Set `name' with `n'.
 			-- Set `version' with `v'.
 			-- Set `culture' with `c'.
@@ -52,16 +52,10 @@ feature {NONE} -- Initialization
 			unique_id := id
 			is_in_gac := a_in_gac
 			
-			if concervative_mode then
-				folder_name := id.twin
-			else
-				create folder_name.make (n.count + id.count + 1)
-				folder_name.append (n)
-				folder_name.append_character ('!')
-				folder_name.append (id)				
-			end
+			folder_name := fn
 		ensure
 			name_set: name = n
+			folder_name_set: folder_name = fn
 			version_set: version = v
 			culture_set: culture = c
 			key_set: key = k

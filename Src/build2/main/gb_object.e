@@ -56,6 +56,7 @@ feature {NONE} -- Initialization
 			type := a_type
 			build_display_object
 			create name.make (0)
+			create edited_name.make (0)
 		ensure
 			type_assigned: type = a_type
 			object_assigned: object = an_object
@@ -493,12 +494,22 @@ feature {GB_OBJECT_EDITOR} -- Implementation
 			-- Assign `name' to `edited_name'.
 		do
 			edited_name := name
+			if name.is_empty then
+				layout_item.set_text (type.substring (4, type.count))
+			else
+				layout_item.set_text (name + ": " + type.substring (4, type.count))			
+			end
 		end
 		
 	accept_edited_name is
 			-- Assign `edited_name' to `name'
 		do
 			name := edited_name
+			if name.is_empty then
+				layout_item.set_text (type.substring (4, type.count))
+			else
+				layout_item.set_text (name + ": " + type.substring (4, type.count))			
+			end
 		end
 	
 	output_name: STRING is

@@ -7,11 +7,14 @@ inherit
 
 	FORMATTER
 		rename
-			display_header as format_display_header
+			display_header as format_display_header,
+			class_name as exception_class_name
 		redefine
 			format, file_name, dark_symbol
 		end;
 	FORMATTER
+		rename
+			class_name as exception_class_name
 		redefine
 			format, display_header, file_name, dark_symbol
 		select

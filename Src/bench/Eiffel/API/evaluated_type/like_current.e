@@ -76,33 +76,26 @@ feature {COMPILER_EXPORTER} -- Primitives
 	instantiation_in (type: TYPE_A; written_id: INTEGER): LIKE_CURRENT is
 			-- Instantiation of Current in the context of `class_type',
 			-- assuming that Current is written in class of id `written_id'.
-		local
-			l_int: MANIFEST_INTEGER_A
 		do
 			create Result
 				-- Special cases for calls on a target which is a manifest integer
 				-- that might be compatible with _8 or _16. The returned
 				-- `actual_type' should not take into consideration the
 				-- `compatibility_size' of `type', just its intrinsic type.
-			l_int ?= type
-			if l_int /= Void then
-					-- Because manifest integers are by default 32 bits, when
-					-- you apply a routine whose result is of type `like Current'
-					-- then it should really be a 32 bits integer. Note that in the
-					-- past we were keeping the size of the manifest integers and the
-					-- following code was accepted:
-					-- i16: INTEGER_16
-					-- i8: INTEGER_8
-					-- i16 := 0x00FF & i8
-					-- Now the code is rejected because target expect an INTEGER_16
-					-- and not an INTEGER, therefore the code needs to be fixed with:
-					-- i16 := (0x00FF).to_integer_16 & i8
-					-- or
-					-- i16 := (0x00FF & i8).to_integer_16
-				Result.set_actual_type (l_int.real_integer_type)
-			else
-				Result.set_actual_type (type)
-			end
+				-- Because manifest integers are by default 32 bits, when
+				-- you apply a routine whose result is of type `like Current'
+				-- then it should really be a 32 bits integer. Note that in the
+				-- past we were keeping the size of the manifest integers and the
+				-- following code was accepted:
+				-- i16: INTEGER_16
+				-- i8: INTEGER_8
+				-- i16 := 0x00FF & i8
+				-- Now the code is rejected because target expect an INTEGER_16
+				-- and not an INTEGER, therefore the code needs to be fixed with:
+				-- i16 := (0x00FF).to_integer_16 & i8
+				-- or
+				-- i16 := (0x00FF & i8).to_integer_16
+			Result.set_actual_type (type.intrinsic_type)
 		end
 
 	create_info: CREATE_CURRENT is

@@ -24,6 +24,9 @@ inherit
 		end
 		
 	GB_CONSTANTS
+		undefine
+			default_create, copy
+		end
 	
 	INSTALLATION_LOCATOR
 		undefine

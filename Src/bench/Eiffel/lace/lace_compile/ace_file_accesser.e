@@ -24,22 +24,17 @@ feature {NONE} -- Initialization
 
 	make (a_file_name: STRING) is
 			-- Initialize ast.
-		local
-			is_successful: BOOLEAN
 		do
-			is_successful := False
 			ace_file_name := a_file_name
 			if ace_file_name = Void then
 				ace_file_name := clone (default_ace_file_name)
 			end
 			root_ast := parsed_ast (ace_file_name)
-			is_successful := root_ast /= Void
-			if not is_successful then
-				last_error_message := Warning_messages.w_Cannot_read_file (ace_file_name) +
-					"%NNot a valid configuration file."
+			if root_ast = Void then
+				create root_ast
 			end
 		ensure
-			ace_parsed: is_valid implies root_ast /= Void
+			non_void_ast: root_ast /= Void
 		end
 		
 feature -- Access
@@ -54,25 +49,23 @@ feature -- Access
 			-- System name.
 		do
 			Result := root_ast.system_name
-		ensure
-			non_void_system_name: Result /= Void
 		end
 
 	root_class_name: STRING is
 			-- Root class name.
 		do
-			Result := clone (root_ast.root.root_name)
-			Result.to_upper
-		ensure
-			non_void_root_class_name: Result /= Void
+			if root_ast.root /= Void then
+				Result := clone (root_ast.root.root_name)
+				Result.to_upper
+			end
 		end
 
 	creation_routine_name: STRING is
 			-- Creation routine name.
 		do
-			Result := root_ast.root.creation_procedure_name
-		ensure
-			non_void_creation_routine: Result /= Void
+			if root_ast.root /= Void then
+				Result := root_ast.root.creation_procedure_name
+			end
 		end
 
 	require_evaluated: BOOLEAN is
@@ -760,8 +753,15 @@ feature -- Element change
 		require
 			new_name_exists: new_name /= Void
 			new_name_not_empty: not new_name.is_empty
+		local
+			id_sd: ID_SD
 		do
-			root_ast.root.set_root_name (new_id_sd (new_name, False))
+			if root_ast.root = Void then
+				create id_sd.initialize (new_name)
+				root_ast.set_root (new_root_sd (id_sd, Void, Void))
+			else
+				root_ast.root.set_root_name (new_id_sd (new_name, False))
+			end
 		end
 
 	set_creation_routine_name (new_name: STRING) is
@@ -1594,7 +1594,7 @@ feature {NONE} -- Implementation
 		end
 
 invariant
-	valid_ast: is_valid
+	non_void_root_ast: root_ast /= Void
 	
 end -- class ACE_FILE_ACCESSER
 

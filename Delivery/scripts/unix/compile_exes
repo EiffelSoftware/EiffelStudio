@@ -206,6 +206,14 @@ if [ -z "$MULTIPLE_EDITIONS" ]; then
 	gunzip -c build.gz > $INSTALL_DIR/build/spec/$ISE_PLATFORM/bin/build
 fi
 
+remtrace Vision2_tour
+cd $EXPORT_DIR/vision2_tour
+safe_md $INSTALL_DIR/vision2_tour/spec
+safe_md $INSTALL_DIR/vision2_tour/spec/$ISE_PLATFORM
+safe_md $INSTALL_DIR/vision2_tour/spec/$ISE_PLATFORM/bin
+untgz_ccode vision2_tour
+move vision2_tour $INSTALL_DIR/vision2_tour/spec/$ISE_PLATFORM/bin
+
 remtrace Recompile CD key validator
 cd $EXPORT_DIR
 untgz_ccode setup

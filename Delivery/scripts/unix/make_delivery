@@ -81,6 +81,8 @@ fullrf studio/wizards/new_projects/dotnet.dsc
 
 remtrace build
 exprt -r $DEFAULT_CVS_TAG -d build Delivery/build
+remtrace vision2_tour
+exprt -r $DEFAULT_CVS_TAG -d vision2_tour Delivery/vision2_tour
 remtrace eifinit
 exprt -r $DEFAULT_CVS_TAG -d eifinit Delivery/eifinit
 remtrace install

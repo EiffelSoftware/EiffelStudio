@@ -85,6 +85,30 @@ feature -- Access
 	paragraph_space_after: STRING is "\sa"
 		-- String denoting space after paragraph.
 		
+	rtf_family_tech: STRING is "ftech"
+	
+	rtf_family_tech_int: INTEGER is 1
+	
+	rtf_family_roman: STRING is "froman"
+	
+	rtf_family_roman_int: INTEGER is 2
+	
+	rtf_family_swiss: STRING is "fswiss"
+	
+	rtf_family_swiss_int: INTEGER is 3
+	
+	rtf_family_script: STRING is "fscript"
+	
+	rtf_family_script_int: INTEGER is 4
+	
+	rtf_family_modern: STRING is "fmodern"
+	
+	rtf_family_modern_int: INTEGER is 5
+	
+	rtf_family_nill: STRING is "fnill"
+	
+	rtf_family_nill_int: INTEGER is 6
+		
 	rtf_newline: STRING is "\par%N"
 		-- String denoting RTF newline.
 		
@@ -118,5 +142,23 @@ feature -- Access
 	rtf_close_brace_character: CHARACTER is '}'
 	
 	rtf_fonttable: STRING is "fonttbl"
+	
+	rtf_colortbl: STRING is "colortbl"
+	
+	rtf_charset: STRING is "fcharset"
+	
+	rtf_bold: STRING is "b"
+	
+	rtf_highlight: STRING is "highlight"
+	
+	rtf_color: STRING is "cf"
+	
+	rtf_font: STRING is "f"
+	
+	rtf_font_size: STRING is "fs"
+	
+	rtf_new_line: STRING is "par"
+	
+	rtf_user_props: STRING is "*"
 
 end -- class EV_RICH_TEXT_CONSTANTS_I

@@ -8,6 +8,11 @@ class
 	WIZARD_MANAGER
 
 inherit
+	WIZARD_CLEANER	
+		export
+			{NONE} all
+		end
+
 	WIZARD_SHARED_DATA
 		export
 			{NONE} all
@@ -300,6 +305,7 @@ feature {NONE} -- Implementation
 						end
 
 						-- Compiling generated C code
+						parent.add_title (Compilation_title)
 						change_working_directory (shared_wizard_environment.destination_folder)
 						if shared_wizard_environment.client then
 							Clib_folder_name := clone (Client)
@@ -330,6 +336,7 @@ feature {NONE} -- Implementation
 						end
 					end
 				end
+				clean_all
 				report_finish
 			end
 		end
@@ -469,7 +476,10 @@ feature {NONE} -- Implementation
 
 	Generation_title: STRING is "Generating code"
 			-- Generation message
-		
+	
+	Compilation_title: STRING is "Compiling generated code"
+			-- Compilation message
+
 	C_client_compilation_title: STRING is "Compiling generated C client code"
 			-- C compilation message
 

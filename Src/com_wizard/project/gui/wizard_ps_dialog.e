@@ -47,8 +47,10 @@ feature -- Behavior
 		do
 			if control = virtual_table_standard_radio then
 				proxy_stub_input_edit.enable
+				browse_button.enable
 			elseif control = virtual_table_universal_radio or control = automation_radio then
 				proxy_stub_input_edit.disable
+				browse_button.disable
 			elseif control = browse_button then
 				File_selection_dialog.activate (Current)
 				if File_selection_dialog.selected then

@@ -92,7 +92,7 @@ feature
 			end
 		end;
 
-feature {WIDGET_WINDOWS} -- Implementation
+feature {WIDGET_WINDOWS, ACCELERABLE_WINDOWS} -- Implementation
 
 	parse (s: STRING) is
 		local
@@ -230,7 +230,7 @@ feature {WIDGET_WINDOWS} -- Implementation
 			end
 		end
 
-feature {WIDGET_ACTIONS, WIDGET_WINDOWS}
+feature {WIDGET_ACTIONS, WIDGET_WINDOWS, ACCELERABLE_WINDOWS}
 
 	equiv (other: TRANSLATION_COMMAND) : BOOLEAN is
 		do
@@ -259,7 +259,6 @@ feature {WIDGET_ACTIONS, WIDGET_WINDOWS}
 							Result := not bd.keyboard.shift_pressed and
 								not bd.keyboard.modifiers.item (1) and
 								not bd.keyboard.control_pressed
-
 						else
 							Result := true
 						end
@@ -351,7 +350,7 @@ feature {WIDGET_ACTIONS}
 	exact: BOOLEAN
 			-- There must be an exact match of this translation
 
-feature {WIDGET_WINDOWS, TRANSLATION_COMMAND, WIDGET_ACTIONS}
+feature {WIDGET_WINDOWS, TRANSLATION_COMMAND, WIDGET_ACTIONS, ACCELERABLE_WINDOWS}
 
 	command: COMMAND
 
@@ -380,13 +379,13 @@ feature {WIDGET_WINDOWS, TRANSLATION_COMMAND, WIDGET_ACTIONS}
 			-- Key to be pressed
 			-- Represented as a virtual key string
 
-	key_action: BOOLEAN 
+	key_action: BOOLEAN
 			-- Is this action dependent on a key
 			
 	mouse_action: BOOLEAN
 			-- Is this action dependent on a mouse action?
 			
-	other_action: BOOLEAN 
+	other_action: BOOLEAN
 			-- Is this action independent of the mouse and keyboard
 
 	configure_action: BOOLEAN is
@@ -413,10 +412,10 @@ feature {WIDGET_WINDOWS, TRANSLATION_COMMAND, WIDGET_ACTIONS}
 			Result := special_translation_number = 1
 		end
 
-	translation : STRING
+	translation: STRING
 			-- Text of translation
 
-	special_translation_number : INTEGER 
+	special_translation_number : INTEGER
 			-- Number of matched special translation
 
 	special_translations : ARRAY [STRING] is
@@ -430,7 +429,6 @@ feature {WIDGET_WINDOWS, TRANSLATION_COMMAND, WIDGET_ACTIONS}
 		end
 
 end -- class TRANSLATION_COMMAND
-
 
 --|----------------------------------------------------------------
 --| EiffelVision: library of reusable components for ISE Eiffel 3.

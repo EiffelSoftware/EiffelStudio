@@ -402,10 +402,11 @@ feature  -- Generation
 			temp := clone (eiffel_type);
 			temp.to_upper;
 			Result.append (temp);
-			if visual_name /= Void and then not visual_name.empty then
-				Result.append ("%T%T-- ");
-				Result.append (visual_name);
-			end;
+			-- Add this later
+			--if visual_name /= Void and then not visual_name.empty then
+				--Result.append ("%T%T-- ");
+				--Result.append (visual_name);
+			--end;
 			Result.append ("%N%Ninherit%N%N%T");
 			if (parent_type = Void) then
 				if undoable then
@@ -679,9 +680,10 @@ feature -- Text generation
 					!!doc;
 					doc.set_directory_name (Environment.commands_directory);
 					doc.set_document_name (eiffel_type);
-					temp := clone (eiffel_text);
+					eiffel_text := clone (temp);
 					if temp.item (1) /= '-' and label /= Void 
-					  and then not label.empty then
+					 	and then not label.empty 
+					then
 						temp.prepend ("%N");
 						temp.prepend (label);
 						temp.prepend ("-- ");

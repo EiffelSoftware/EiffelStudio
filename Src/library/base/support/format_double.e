@@ -166,8 +166,8 @@ feature -- Conversion
 		do
 			if d < 0 then
 				sign := -1
-				integral := -floor (d)
-				fraction := floor ((d - floor (d)) * 10^(decimals+1))
+				integral :=  floor (-d)
+				fraction := floor ((-d - integral ) * 10^(decimals+1))
 			elseif d > 0 then
 				sign := 1
 				integral := floor (d)

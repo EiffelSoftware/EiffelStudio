@@ -33,6 +33,7 @@ feature -- Initialization
 			register_type (create {INTEGER_RESOURCE_TYPE}.make)
 			register_type (create {STRING_RESOURCE_TYPE}.make)
 			register_type (create {ARRAY_RESOURCE_TYPE}.make)
+			register_type (create {SINGLE_ARRAY_ITEM_RESOURCE_TYPE}.make)
 		ensure
 			basic_types_registered: basic_types_registered
 		end

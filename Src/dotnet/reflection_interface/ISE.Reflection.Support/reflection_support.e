@@ -45,7 +45,6 @@ feature -- Access
 			description: "Path to Eiffel delivery"
 			external_name: "EiffelDeliveryPath"
 		local
-			--env: SYSTEM_ENVIRONMENT
 			registry_key: MICROSOFT_WIN32_REGISTRYKEY
 			registry: MICROSOFT_WIN32_REGISTRY
 			keys: ARRAY [STRING]
@@ -54,20 +53,23 @@ feature -- Access
 			retried: BOOLEAN
 		do
 			if not retried then
-				--Result := env.Get_Environment_Variable (Key)
 				registry_key := registry.current_user.open_sub_key (ISE_Eiffel_key_path)
-				Result ?= registry_key.get_value (Key)
-				if Result /= Void then
-					if Result.get_length > 0 then
-						if Result.Ends_With ("\") then
-							Result := Result.Substring_int32_int32 (0, Result.get_Length - 1)
+				if registry_key /= Void then
+					Result ?= registry_key.get_value (Key)
+					if Result /= Void then
+						if Result.get_length > 0 then
+							if Result.Ends_With ("\") then
+								Result := Result.Substring_int32_int32 (0, Result.get_Length - 1)
+							end
+						else
+							create_error (error_messages.Registry_key_not_registered, error_messages.Registry_key_not_registered_message)
 						end
 					else
 						create_error (error_messages.Registry_key_not_registered, error_messages.Registry_key_not_registered_message)
-					end
+					end	
 				else
-					create_error (error_messages.Registry_key_not_registered, error_messages.Registry_key_not_registered_message)
-				end			
+					create_error (error_messages.Registry_key_not_registered, error_messages.Registry_key_not_registered_message)				
+				end
 			end
 		rescue
 			retried := True
@@ -114,9 +116,6 @@ feature -- Access
 			external_name: "XmlAssemblyFilename"
 		require
 			non_void_assembly_descriptor: an_assembly_descriptor /= Void
-			non_void_assembly_version: an_assembly_descriptor.get_version /= Void
-			non_void_assembly_culture: an_assembly_descriptor.get_culture /= Void
-			non_void_assembly_public_key: an_assembly_descriptor.get_public_key /= Void
 		local
 			assembly_folder_path: STRING
 			retried: BOOLEAN
@@ -184,29 +183,31 @@ feature -- Basic Operations
 			assembly_path: STRING
 			file: SYSTEM_IO_FILE
 			retried: BOOLEAN		
-			white_space_handling: SYSTEM_XML_WHITESPACEHANDLING	
+			white_space_handling: SYSTEM_XML_WHITESPACEHANDLING
 		do
 			if not retried then
 				index_path := Eiffel_delivery_path
 				index_path := index_path.Concat_String_String_String_String (index_path, Assemblies_folder_path, dictionary.Index_filename, dictionary.Xml_extension)
 
-				create xml_reader.make_xmltextreader_10 (index_path)
-				xml_reader.set_Whitespace_Handling (white_space_handling.none)
-				xml_reader.Read_Start_Element_String (xml_elements.Assemblies_element)
-				from
-				until
-					not xml_reader.get_Name.Equals_String (xml_elements.Assembly_filename_element)
-				loop
-					assembly_path := xml_reader.Read_Element_String_String (xml_elements.Assembly_filename_element)	
-					assembly_path := assembly_path.replace (Eiffel_key, Eiffel_delivery_path)
-					if support.has_read_lock (assembly_path) then
-						file.delete (assembly_path.Concat_String_String_String (assembly_path, "\", support.read_lock_filename))
-					elseif support.has_write_lock (assembly_path) then
-						file.delete (assembly_path.Concat_String_String_String (assembly_path, "\", support.write_lock_filename))	
+				if file.exists (index_path) then
+					create xml_reader.make_xmltextreader_10 (index_path)
+					xml_reader.set_Whitespace_Handling (white_space_handling.none)
+					xml_reader.Read_Start_Element_String (xml_elements.Assemblies_element)
+					from
+					until
+						not xml_reader.get_Name.Equals_String (xml_elements.Assembly_filename_element)
+					loop
+						assembly_path := xml_reader.Read_Element_String_String (xml_elements.Assembly_filename_element)	
+						assembly_path := assembly_path.replace (Eiffel_key, Eiffel_delivery_path)
+						if support.has_read_lock (assembly_path) then
+							file.delete (assembly_path.Concat_String_String_String (assembly_path, "\", support.read_lock_filename))
+						elseif support.has_write_lock (assembly_path) then
+							file.delete (assembly_path.Concat_String_String_String (assembly_path, "\", support.write_lock_filename))	
+						end
 					end
+					xml_reader.Read_End_Element
+					xml_reader.Close
 				end
-				xml_reader.Read_End_Element
-				xml_reader.Close
 			end
 		rescue
 			retried := True
@@ -217,6 +218,8 @@ feature -- Basic Operations
 		indexing
 			description: "Remove read and write locks from folder corresponding to `a_descriptor'."
 			external_name: "CleanAssembly"
+		require
+			non_void_descriptor: a_descriptor /= Void
 		local
 			assembly_path: STRING
 			file: SYSTEM_IO_FILE

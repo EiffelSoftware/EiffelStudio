@@ -17,6 +17,8 @@ feature -- Access
 			external_name: "AssemblyDescriptorFromName"
 		require
 			non_void_assembly_name: an_assembly_name /= Void
+			non_void_name: an_assembly_name.get_name /= Void
+			non_void_version: an_assembly_name.get_version /= Void
 		local
 			assembly_info: ARRAY [ANY]
 			a_name: STRING

@@ -91,6 +91,9 @@ feature -- Eiffel names from .NET information
 			external_name: "ArgumentFromInfo"
 		require
 			non_void_info: info /= Void
+			non_void_parameter_name: info.get_name /= Void
+			non_void_parameter_type: info.get_parameter_type /= Void
+			non_void_parameter_type_fullname: info.get_parameter_type.get_full_name /= Void
 		local
 			i: INTEGER
 			an_argument: NAMED_SIGNATURE_TYPE
@@ -102,7 +105,7 @@ feature -- Eiffel names from .NET information
 					i = arguments.get_count 
 				loop
 					an_argument ?= arguments.get_item (i)
-					if an_argument /= Void then
+					if an_argument /= Void and then an_argument.eiffel_name /= Void and then an_argument.type_eiffel_name /= Void and then an_argument.external_name /= Void and then an_argument.type_full_external_name /= Void then
 						if info.get_name.equals_string (an_argument.external_name) and then info.get_parameter_type.get_full_name.equals_string (an_argument.type_full_external_name) then
 							create Result.make (2)
 							Result.put (0, an_argument.eiffel_name)

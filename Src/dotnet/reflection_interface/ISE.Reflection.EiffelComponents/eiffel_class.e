@@ -450,7 +450,7 @@ feature -- Status Setting
 	set_external_names (a_full_name: like full_external_name) is 
 		indexing
 			description: "[
-						Set `full_external_name' from `a_full_name'.
+						Set `full_external_name' with `a_full_name'.
 						Set `external_name' and `namespace' from `a_full_name'.
 					  ]"
 			external_name: "SetExternalNames"
@@ -714,22 +714,8 @@ feature {NONE} -- Implementation
 			external_name: "HasCreationRoutine"
 		require
 			non_void_info: info /= Void
---		local
---			i: INTEGER
---			a_routine_name: STRING
 		do
 			Result := has_routine (info, initialization_features)
-	--		from
-	--			routine := Void
-	--		until
-	--			i = creation_routines.get_count or Result
-	--		loop
-	--			a_routine_name ?= creation_routines.get_item (i)
-	--			if a_routine_name /= Void then
-	--				Result := has_routine (info, initialization_features)
-	--			end
-	--			i := i + 1
-	--		end
 		end
 
 	attribute: EIFFEL_FEATURE
@@ -747,6 +733,7 @@ feature {NONE} -- Implementation
 			external_name: "HasAttribute"
 		require
 			non_void_info: info /= Void
+			non_void_member_name: info.get_name /= Void
 			non_void_list: a_list /= Void
 		local
 			i: INTEGER
@@ -760,7 +747,7 @@ feature {NONE} -- Implementation
 					i = a_list.get_count or Result
 				loop
 					eiffel_feature ?= a_list.get_item (i)
-					if eiffel_feature /= Void then
+					if eiffel_feature /= Void and then eiffel_feature.external_name /= Void then
 						if info.get_name.equals_String (eiffel_feature.external_name) then
 							attribute := eiffel_feature
 							Result := True
@@ -791,6 +778,7 @@ feature {NONE} -- Implementation
 			external_name: "HasRoutine"
 		require
 			non_void_info: info /= Void
+			non_void_methodname: info.get_name /= Void
 			non_void_list: a_list /= Void
 		local
 			i: INTEGER
@@ -806,7 +794,7 @@ feature {NONE} -- Implementation
 					i = a_list.get_count or Result
 				loop
 					eiffel_feature ?= a_list.get_item (i)
-					if eiffel_feature /= Void then
+					if eiffel_feature /= Void and then eiffel_feature.external_name /= Void then
 						if info.get_name.equals_string (eiffel_feature.external_name) then
 							Result := intern_has_routine (eiffel_feature, info)
 						elseif constructor_info /= Void then	
@@ -838,7 +826,7 @@ feature {NONE} -- Implementation
 			matching: BOOLEAN		
 		do
 			arguments := eiffel_feature.arguments
-			if arguments.get_count > 0 then
+			if arguments /= Void and then arguments.get_count > 0 then
 				matching := matching_arguments (info, arguments)
 				if matching then
 					routine := eiffel_feature
@@ -874,7 +862,7 @@ feature {NONE} -- Implementation
 							j = arguments.get_count or not Result
 						loop
 							an_argument ?= arguments.get_item (j)
-							if an_argument /= Void then
+							if an_argument /= Void and then an_argument.type_full_external_name /= Void then
 								Result := info.get_parameters.item (j).get_parameter_type.get_full_name.equals_String (an_argument.type_full_external_name)
 							else
 								Result := False

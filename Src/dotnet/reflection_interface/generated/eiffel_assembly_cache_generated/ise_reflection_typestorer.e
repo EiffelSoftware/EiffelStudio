@@ -169,6 +169,13 @@ feature -- Basic Operations
 			"Exists"
 		end
 
+	is_valid_directory_path (a_folder_name: STRING): BOOLEAN is
+		external
+			"IL signature (System.String): System.Boolean use ISE.Reflection.TypeStorer"
+		alias
+			"IsValidDirectoryPath"
+		end
+		
 	generate_xml_features_element (features: SYSTEM_COLLECTIONS_ARRAYLIST) is
 		external
 			"IL signature (System.Collections.ArrayList): System.Void use ISE.Reflection.TypeStorer"

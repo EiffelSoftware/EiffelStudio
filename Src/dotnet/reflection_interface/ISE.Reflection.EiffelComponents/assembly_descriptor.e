@@ -54,6 +54,10 @@ feature {NONE} -- Initialization
 			external_name: "MakeFromAssembly"
 		require
 			non_void_assembly: a_dot_net_assembly /= Void
+			non_void_assembly_name: a_dot_net_assembly.get_name /= Void
+			non_void_name: a_dot_net_assembly.get_name.get_name /= Void
+			non_void_version: a_dot_net_assembly.get_name.get_version /= Void
+			non_void_public_key: a_dot_net_assembly.get_name.get_public_key_token /= Void
 		local
 			an_assembly_name: SYSTEM_REFLECTION_ASSEMBLYNAME
 			convert: CONVERT

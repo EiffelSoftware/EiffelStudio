@@ -24,6 +24,7 @@ feature {NONE} -- Initialization
 		require
 			non_void_folder_name: a_folder_name /= Void
 			not_empty_folder_name: a_folder_name.get_length > 0
+			valid_folder_name: is_valid_directory_path (a_folder_name)
 		do
 			assembly_folder_name := a_folder_name
 			create error_messages
@@ -78,6 +79,19 @@ feature -- Status Report
 			last_error := support.get_last_error
 			retry
 		end
+	
+	is_valid_directory_path (a_folder_name: STRING): BOOLEAN is
+		indexing
+			description: "Is `a_folder_name' a valid directory path"
+			external_name: "IsValidDirectoryPath"
+		require
+			non_void_folder_name: a_folder_name /= Void
+			not_empty_folder_name: a_folder_name.get_length > 0
+		local
+			dir: SYSTEM_IO_DIRECTORY
+		do
+			Result := dir.exists (a_folder_name)
+		end
 		
 feature -- Basic Operations
 
@@ -92,6 +106,11 @@ feature -- Basic Operations
 			non_void_eiffel_class: an_eiffel_class /= Void
 			non_void_eiffel_class_name: an_eiffel_class.get_eiffel_name /= Void
 			not_empty_eiffel_class_name: an_eiffel_class.get_eiffel_name.get_length > 0	
+			non_void_assembly_descriptor: an_eiffel_class.get_assembly_descriptor /= Void
+			non_void_full_external_name: an_eiffel_class.get_full_external_name /= Void
+			not_empty_full_external_name: an_eiffel_class.get_full_external_name.get_length > 0
+			non_void_external_name: an_eiffel_class.get_external_name /= Void
+			not_empty_external_name: an_eiffel_class.get_external_name.get_length > 0
 			not_committed: not committed
 		local
 			public_string: STRING
@@ -248,6 +267,9 @@ feature {NONE} -- Implementation
 			non_void_eiffel_class: eiffel_class /= Void
 			non_void_class_name: eiffel_class.get_Eiffel_Name /= Void
 			not_empty_class_name: eiffel_class.get_Eiffel_Name.get_length > 0
+			non_void_external_name: eiffel_class.get_external_name /= Void
+			not_empty_external_name: eiffel_class.get_external_name.get_length > 0
+			non_void_assembly_descriptor: eiffel_class.get_assembly_descriptor /= Void
 		local
 			creation_routines: SYSTEM_COLLECTIONS_ARRAYLIST	
 			retried: BOOLEAN
@@ -420,6 +442,9 @@ feature {NONE} -- Implementation
 			non_void_eiffel_class: eiffel_class /= Void
 			non_void_eiffel_class_name: eiffel_class.get_Eiffel_Name /= Void
 			not_empty_eiffel_class_name: eiffel_class.get_Eiffel_Name.get_length > 0
+			non_void_external_name: eiffel_class.get_external_name /= Void
+			not_empty_external_name: eiffel_class.get_external_name.get_length > 0
+			non_void_assembly_descriptor: eiffel_class.get_assembly_descriptor /= Void
 		local
 			retried: BOOLEAN
 		do
@@ -556,8 +581,6 @@ feature {NONE} -- Implementation
 			external_name: "GenerateXmlClassBody"
 		require
 			non_void_eiffel_class: eiffel_class /= Void
-			non_void_eiffel_class_name: eiffel_class.get_eiffel_name /= Void
-			not_empty_eiffel_class_name: eiffel_class.get_eiffel_name.get_length > 0
 		local
 			initialization_features: SYSTEM_COLLECTIONS_ARRAYLIST
 			access_features: SYSTEM_COLLECTIONS_ARRAYLIST
@@ -772,6 +795,8 @@ feature {NONE} -- Implementation
 		indexing
 			description: "Generate XML feature element corresponding to `a_feature'."
 			external_name: "GenerateXmlFeatureElement"
+		require
+			non_void_feature: a_feature /= Void
 		local
 			arguments: SYSTEM_COLLECTIONS_ARRAYLIST
 			preconditions: SYSTEM_COLLECTIONS_ARRAYLIST
@@ -1145,7 +1170,6 @@ feature {NONE} -- Implementation
 			subset: STRING			
 			dtd_path: STRING
 			i: INTEGER
-			assembly_types: SYSTEM_COLLECTIONS_ARRAYLIST
 			assembly_type: ISE_REFLECTION_EIFFELCLASS
 			retried: BOOLEAN
 			white_space_handling: SYSTEM_XML_WHITESPACEHANDLING
@@ -1243,5 +1267,9 @@ feature {NONE} -- Implementation
 			description: "Name of `assembly_description.xml"
 			external_name: "AssemblyDescriptionFilename"
 		end
-		
+
+invariant
+	non_void_assembly_folder_name: assembly_folder_name /= Void
+	not_empty_assembly_folder_name: assembly_folder_name.get_length > 0
+	
 end -- TYPE_STORER

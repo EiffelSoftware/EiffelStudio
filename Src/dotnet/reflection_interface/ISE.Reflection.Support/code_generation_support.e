@@ -47,6 +47,7 @@ feature -- Access
 		require
 			non_void_filename: a_filename /= Void
 			not_empty_filename: a_filename.get_length > 0
+			valid_filename: is_valid_filename (a_filename)
 		local
 			retried: BOOLEAN
 			white_space_handling: SYSTEM_XML_WHITESPACEHANDLING
@@ -103,6 +104,7 @@ feature -- Access
 		require
 			non_void_filename: a_filename /= Void
 			not_empty_filename: a_filename.get_length > 0
+			valid_filename: is_valid_filename (a_filename)
 		local
 			assembly_description: SYSTEM_XML_XMLTEXTREADER
 			assembly_name: STRING
@@ -160,9 +162,16 @@ feature -- Access
 				if assembly_description.get_Name.equals_string (xml_elements.Emitter_version_number_element) then
 					emitter_version_number := assembly_description.read_element_string_string (xml_elements.Emitter_version_number_element)
 				end
-				create a_descriptor.make1
-				a_descriptor.make (assembly_name, assembly_version, assembly_culture, assembly_public_key)
-				create Result.make (a_descriptor, eiffel_cluster_path, emitter_version_number)
+				
+				if assembly_name /= Void and assembly_version /= Void and assembly_culture /= Void and assembly_public_key /= Void and then
+					assembly_name.get_length > 0 and assembly_version.get_length > 0 and assembly_culture.get_length > 0 and assembly_public_key.get_length > 0 then
+				
+					create a_descriptor.make1
+					a_descriptor.make (assembly_name, assembly_version, assembly_culture, assembly_public_key)
+					create Result.make (a_descriptor, eiffel_cluster_path, emitter_version_number)
+				else
+					Result := Void
+				end
 				assembly_description.Close
 				slash_index := a_filename.last_index_of ("\")
 				if slash_index /= -1 then
@@ -241,10 +250,10 @@ feature -- Status Report
 			retry
 		end
 
-	valid_path (a_path: STRING): BOOLEAN is
+	is_valid_directory_path (a_path: STRING): BOOLEAN is
 		indexing
 			description: "Is `a_path' valid?"
-			external_name: "ValidPath"
+			external_name: "IsValidDirectoryPath"
 		require
 			non_void_path: a_path /= Void
 			not_empty_path: a_path.get_length > 0
@@ -254,6 +263,19 @@ feature -- Status Report
 			Result := dir.exists (a_path)
 		end
 
+	is_valid_filename (a_filename: STRING): BOOLEAN is
+		indexing
+			description: "Is `a_filename' a valid file name?"
+			external_name: "IsValidFilename"
+		require
+			non_void_filename: a_filename /= Void
+			not_empty_filename: a_filename.get_length > 0
+		local
+			file: SYSTEM_IO_FILE
+		do
+			Result := file.exists (a_filename)
+		end
+		
 feature -- Basic Operations
 
 	create_folder (a_path: STRING) is
@@ -301,7 +323,7 @@ feature -- Basic Operations
 				i := i - 1
 			end
 		ensure
-			valid_path: valid_path (a_path)
+			valid_path: is_valid_directory_path (a_path)
 		end
 	
 	compute_generic_names (a_count: INTEGER) is

@@ -13,7 +13,9 @@ feature -- Access
 			description: "Assembly info [name, version, culture, public key] corresponding to `an_assembly_name'"
 			external_name: "AssemblyInfoFromName"
 		require
-			non_void_assembly_name: an_assembly_name /= Void
+			non_void_assembly: an_assembly_name /= Void
+			non_void_assembly_name: an_assembly_name.get_name /= Void
+			non_void_assembly_version: an_assembly_name.get_version /= Void
 		local
 			a_name: STRING
 			a_version: STRING
@@ -29,15 +31,19 @@ feature -- Access
 				if a_culture /= Void and then a_culture.get_length = 0 then
 					a_culture := Neutral_culture
 				end
-				a_public_key := decode_key (an_assembly_name.get_public_key_token)	
-				
+				if an_assembly_name.get_public_key_token /= Void then
+					a_public_key := decode_key (an_assembly_name.get_public_key_token)	
+				else
+					a_public_key := Void
+				end
 				Result.put (0, a_name)
 				Result.put (1, a_version)
 				Result.put (2, a_culture)
 				Result.put (3, a_public_key)
 			end
 		ensure
-			non_void_assembly_descriptor: Result /= Void
+			non_void_assembly_info: Result /= Void
+			valid_assembly_info: Result.count = 4
 		rescue
 			retried := True
 			retry

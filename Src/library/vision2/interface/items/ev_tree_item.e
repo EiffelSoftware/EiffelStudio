@@ -38,6 +38,14 @@ inherit
 create
 	default_create
 
+feature -- Access
+	
+	parent_tree: EV_TREE is
+			-- Root tree that item is held within.
+		do
+			Result := implementation.parent_tree
+		end
+
 
 feature -- Status report
 
@@ -55,12 +63,6 @@ feature -- Status report
 			in_tree: parent_tree /= Void
 		do
 			Result := implementation.is_expanded
-		end
-
-	parent_tree: EV_TREE is
-			-- Tree widget that item is contained within.
-		do
-			Result := implementation.parent_tree
 		end
 
 feature -- Status setting
@@ -97,7 +99,7 @@ feature -- Status setting
 			-- Expand the item.
 		require
 			in_tree: parent_tree /= Void
-			is_parent: count > 0
+			expandable: count > 0
 		do
 			implementation.set_expand (True)
 		ensure
@@ -108,7 +110,7 @@ feature -- Status setting
 			-- Collapse the item.
 		require
 			in_tree: parent_tree /= Void
-			is_parent: count > 0
+			collapsable: count > 0
 		do
 			implementation.set_expand (False)
 		ensure
@@ -172,6 +174,9 @@ end -- class EV_TREE_ITEM
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.30  2000/02/24 20:12:26  king
+--| Tidied up comments and tags
+--|
 --| Revision 1.29  2000/02/23 21:21:58  king
 --| Added action sequences
 --|

@@ -885,7 +885,6 @@ end
 				finish_compilation
 
 					-- Produce the update file
-				private_melt := False
 				if not il_generation and then not freeze then
 					Degree_output.put_melting_changes_message
 
@@ -905,10 +904,11 @@ end
 				freeze_system
 				private_freeze := False
 			end
-			if il_generation and not degree_minus_1.is_empty then
+			if il_generation and then (private_melt or else not degree_minus_1.is_empty then
 				Degree_minus_1.wipe_out
 				generate_il
 			end
+			private_melt := False
 			first_compilation := False
 		end
 
@@ -1581,6 +1581,7 @@ feature -- IL code generation
 		do
 			create il_generator.make (Degree_output)
 			il_generator.generate 
+			il_generator.deploy
 			if il_c_externals.count > 0 then
 				if in_final_mode then
 					create {FINAL_MAKER} makefile_generator.make
@@ -2301,7 +2302,7 @@ feature -- Dead code removal
 		local
 			class_array: ARRAY [CLASS_C]
 			i, nb: INTEGER
-			a_class: CLASS_C
+			l_class: CLASS_C
 			root_feat: FEATURE_I
 			ct: CLASS_TYPE
 		do
@@ -2313,22 +2314,22 @@ feature -- Dead code removal
 
 				-- First, inspection of the Eiffel code
 			if creation_name /= Void then
-				a_class := root_class.compiled_class
-				root_feat := a_class.feature_table.item (creation_name)
-				remover.record (root_feat, a_class)
+				l_class := root_class.compiled_class
+				root_feat := l_class.feature_table.item (creation_name)
+				remover.record (root_feat, l_class)
 			end
 
 			remover.mark_dispose
 			class_array := classes
 			nb := class_counter.count
 			from i := 1 until i > nb loop
-				a_class := class_array.item (i)
+				l_class := class_array.item (i)
 				if
-					a_class /= Void and then
-					(not a_class.is_precompiled or else a_class.is_in_system)
+					l_class /= Void and then
+					(not l_class.is_precompiled or else l_class.is_in_system)
 				then
-					if a_class.visible_level.has_visible then
-						a_class.mark_visible (remover)
+					if l_class.visible_level.has_visible then
+						l_class.mark_visible (remover)
 					end
 				end
 				i := i + 1
@@ -2350,18 +2351,22 @@ feature -- Dead code removal
 			end
 
 				-- Protection of `make' from ARRAY
-			array_class.compiled_class.mark_all_used (remover)
-
-				-- Protection of feature `make' of class STRING
-			string_class.compiled_class.mark_all_used (remover)
+			l_class := array_class.compiled_class
+			remover.record (l_class.feature_table.item_id (feature {PREDEFINED_NAMES}.Make_name_id), l_class)
+			
+				-- Protection of feature `make' and `set_count' of class STRING
+			l_class := string_class.compiled_class
+			remover.record (l_class.feature_table.item_id (feature {PREDEFINED_NAMES}.Make_name_id), l_class)
+			remover.record (l_class.feature_table.item_id (feature {PREDEFINED_NAMES}.Set_count_name_id), l_class)
 
 				-- Protection of feature `make' of class TUPLE
-			tuple_class.compiled_class.mark_all_used (remover)
+			l_class := tuple_class.compiled_class
+			remover.record (l_class.feature_table.item_id (feature {PREDEFINED_NAMES}.Make_name_id), l_class)
 
-				-- Protection of features in ROUTINE classes
-			routine_class.compiled_class.mark_all_used (remover)
-			procedure_class.compiled_class.mark_all_used (remover)
-			function_class.compiled_class.mark_all_used (remover)
+				-- Protection of feature `set_rout_disp' of ROUTINE classes
+			l_class := routine_class.compiled_class
+			remover.record (l_class.feature_table.item_id (feature {PREDEFINED_NAMES}.set_rout_disp_name_id), l_class)
+			
 debug ("DEAD_CODE")
 			remover.dump_alive
 			remover.dump_marked

@@ -78,7 +78,7 @@ EIF_POINTER v;
 {
 		/* If the path is not empty, include a separator */
 		/* Otherwise, it will just be a relative path name */
-	if ((char *)p != (char *)0)
+	if (*((char *)p) == '\0')
 #ifdef __WATCOMC__
 		strcat ((char *)p, "\\");
 #else

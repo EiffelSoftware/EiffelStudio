@@ -32,6 +32,9 @@ feature -- Access
 	value: STRING
 			-- Character value
 
+	is_dotnet_string: BOOLEAN
+			-- Is current a manifest System.String constant?
+
 feature -- Properties
 
 	type: CL_TYPE_I is
@@ -57,12 +60,26 @@ feature -- Properties
 	allocates_memory: BOOLEAN is True
 			-- Current always allocates memory.
 
+feature -- Settings
+
+	set_is_dotnet_string (v: like is_dotnet_string) is
+			-- Set `is_dotnet_string' with `v'.
+		do
+			is_dotnet_string := v
+		ensure
+			is_dotnet_string_set: is_dotnet_string = v
+		end
+
 feature -- IL code generation
 
 	generate_il is
 			-- Generate IL code for a manifest string.
 		do
-			il_generator.put_manifest_string (value)
+			if is_dotnet_string then
+				il_generator.put_system_string (value)
+			else
+				il_generator.put_manifest_string (value)
+			end
 		end
 
 feature -- Byte code generation

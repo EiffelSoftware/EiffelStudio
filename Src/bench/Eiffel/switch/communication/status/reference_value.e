@@ -34,7 +34,7 @@ inherit
 			is_equal
 		end;
 
-creation {DEBUG_VALUE_EXPORTER}
+create {DEBUG_VALUE_EXPORTER}
 
 	make, make_attribute
 

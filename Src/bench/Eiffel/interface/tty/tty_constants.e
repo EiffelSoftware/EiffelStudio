@@ -7,24 +7,20 @@ indexing
 
 class TTY_CONSTANTS
 
-feature {NONE} -- Resources
+inherit
+	EB_GENERAL_DATA
+		export
+			{NONE} all
+		end
 
-	General_resources: GENERAL_CATEGORY is
-			-- General resources
-		once
-			!! Result.make
-		end;
+	EB_CLASS_TOOL_DATA
+		export
+			{NONE} all
+		end
 
-	Class_resources: CLASS_CATEGORY is
-			-- Resources for the class tool
-		once
-			!! Result.make
-		end;
-
-	Feature_resources: ROUTINE_CATEGORY is
-			-- Resources for the feature tool
-		once
-			!! Result.make
-		end;
+	EB_FEATURE_TOOL_DATA
+		export
+			{NONE} all
+		end
 
 end -- class TTY_CONSTANTS

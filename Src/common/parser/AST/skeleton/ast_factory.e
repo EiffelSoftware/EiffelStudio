@@ -2,8 +2,6 @@ indexing
 
 	description: "AST node factories"
 	status: "See notice at end of class"
-	date: "$Date$"
-	revision: "$Revision$"
 
 class AST_FACTORY
 
@@ -507,7 +505,7 @@ feature -- Access
 	new_character_type_as (is_wide: BOOLEAN): CHAR_TYPE_AS is
 			-- New type AST node for "CHARACTER"
 		do
-			create Result
+			create Result.make (is_wide)
 			Result.initialize
 		ensure
 			type_as_not_void: Result /= Void
@@ -1081,8 +1079,7 @@ feature -- Access
 			l_not_void: l /= Void
 			s_not_void: s /= Void
 		do
-			create Result
-			Result.initialize (l, s)
+			create Result.initialize (l, s)
 		ensure
 			external_lang_as_not_void: Result /= Void
 			language_name_set: Result.language_name = l
@@ -1398,7 +1395,7 @@ feature -- Access
 			compound_set: Result.compound = c
 		end
 
-	new_result_operand_as (c: EIFFEL_TYPE; t: ID_AS; e: EXPR_AS): OPERAND_AS is
+	new_result_operand_as: OPERAND_AS is
 			-- New OPERAND AST node
 		do
 			create Result
@@ -1609,7 +1606,7 @@ feature -- Access
 			locals_set: Result.locals = l
 			routine_body_set: Result.routine_body = b
 			postcondition_set: Result.postcondition = po
-			rescue_clauses_set: Result.rescue_clauses = r
+			rescue_clause_set: Result.rescue_clauses = r
 			body_start_position_set: Result.body_start_position = p
 			body_end_line_number_set: Result.end_location.is_equal (end_loc)
 		end
@@ -1620,7 +1617,21 @@ feature -- Access
 			f_not_void: f /= Void
 		do
 			create Result
-			Result.initialize (t, f, o)
+			Result.initialize (t, f, o, True)
+		ensure
+			routine_creation_as_not_void: Result /= Void
+			target_set: Result.target = t
+			feature_name_set: Result.feature_name = f
+			operands_set: Result.operands = o
+		end
+
+	new_unqualified_routine_creation_as (t: OPERAND_AS; f: ID_AS; o: EIFFEL_LIST [OPERAND_AS]): ROUTINE_CREATION_AS is
+			-- New ROUTINE_CREATION AST node where target is not specified.
+		require
+			f_not_void: f /= Void
+		do
+			create Result
+			Result.initialize (t, f, o, False)
 		ensure
 			routine_creation_as_not_void: Result /= Void
 			target_set: Result.target = t

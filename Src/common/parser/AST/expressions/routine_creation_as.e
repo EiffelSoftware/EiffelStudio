@@ -12,14 +12,41 @@ inherit
 
 feature {AST_FACTORY} -- Initialization
 
-	initialize (t: like target; f: like feature_name; o: like operands) is
+	initialize (t: like target; f: like feature_name; o: like operands; has_target: BOOLEAN) is
 			-- Create a new ROUTINE_CREATION AST node.
 		require
 			f_not_void: f /= Void
+		local
+			access_id_as: ACCESS_ID_AS
 		do
 			target := t
 			feature_name := f
 			operands := o
+			if target /= Void then
+				if target.target /= Void then
+						-- Target is an entity
+					!!access_id_as
+					access_id_as.set_feature_name (target.target)
+					target_ast := access_id_as
+				else
+					if target.expression /= Void then
+							-- Target is an expression
+						target_ast := target.expression
+					else
+						if target.class_type = Void then
+							if target.is_result then
+									-- Target is Result
+								create {RESULT_AS} target_ast
+							else
+									-- Target is Current
+								create {CURRENT_AS} target_ast
+							end
+						end
+					end
+				end
+			end
+
+			create call_ast.make (feature_name, operands, has_target)
 		ensure
 			target_set: target = t
 			feature_name_set: feature_name = f
@@ -44,6 +71,12 @@ feature -- Attributes
 
 	operands : EIFFEL_LIST [OPERAND_AS]
 			-- List of operands used by the feature when called.
+
+	target_ast: AST_EIFFEL
+			-- Ast created for target during type checking.
+
+	call_ast: DELAYED_ACCESS_FEAT_AS
+			-- Ast created for delayed call during type checking.
 
 feature -- Comparison
 
@@ -71,6 +104,12 @@ feature {ROUTINE_CREATION_AS}
 			target := t
 		end
 
+	set_target_ast (t : like target_ast) is
+			-- Set `target_ast' to `t'.
+		do
+			target_ast := t
+		end
+
 	set_feature_name (f : like feature_name) is
 			-- Set `feature_name' to `f'.
 		do
@@ -81,6 +120,12 @@ feature {ROUTINE_CREATION_AS}
 			-- Set `operands' to `o'.
 		do
 			operands := o
+		end
+
+	set_call_ast (c : like call_ast) is
+			-- Set `call_ast' to `c'.
+		do
+			call_ast := c
 		end
 
 end -- class ROUTINE_CREATION_AS

@@ -43,7 +43,7 @@ feature
 	rout_id: ROUTINE_ID;
 			-- Routine id of the feature
 
-	pattern_id: INTEGER;
+	pattern_id: PATTERN_ID;
 			-- Pattern id of the feature
 
 	-- The corresponding C name of the generated feature in the concatenation
@@ -134,7 +134,7 @@ feature
 			rout_id := i;
 		end;
 
-	set_pattern_id (i: INTEGER) is
+	set_pattern_id (i: PATTERN_ID) is
 			-- Assign `i' to `pattern_id'.
 		do
 			pattern_id := i;

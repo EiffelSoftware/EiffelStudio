@@ -18,7 +18,7 @@ feature
 	written_type_id: INTEGER;
 			-- Type id where the feature is written in
 
-	pattern_id: INTEGER;
+	pattern_id: PATTERN_ID;
 			-- Pattern id of the entry
 
 	set_body_index (i: BODY_INDEX) is
@@ -33,7 +33,7 @@ feature
 			written_type_id := i
 		end;
 
-	set_pattern_id (i: INTEGER) is
+	set_pattern_id (i: PATTERN_ID) is
 			-- Assign `i' to `pattern_id'.
 		do
 			pattern_id := i
@@ -74,7 +74,7 @@ feature
 				-- Real body index
 			ba.append_short_integer (real_body_index.id - 1);
 				-- Pattern id
-			ba.append_short_integer (pattern_id);
+			ba.append_short_integer (pattern_id.id);
 		end;
 
 	generate_workbench_info (file: INDENT_FILE) is
@@ -83,7 +83,7 @@ feature
 			file.putstring ("{(int16) ");
 			file.putint (real_body_index.id - 1);
 			file.putstring (", (int16) ");
-			file.putint (pattern_id);
+			file.putint (pattern_id.id);
 			file.putchar ('}');
 		end;
 

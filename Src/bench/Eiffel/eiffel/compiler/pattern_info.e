@@ -25,7 +25,7 @@ creation
 	
 feature 
 
-	pattern_id: INTEGER;
+	pattern_id: PATTERN_ID;
 			-- Pattern unique identifier
 
 	written_in: CLASS_ID;
@@ -53,7 +53,7 @@ feature
 			pattern := p;
 		end;
 
-	set_pattern_id (i: INTEGER) is
+	set_pattern_id (i: PATTERN_ID) is
 			-- Assign `i' to `pattern_id'.
 		do
 			pattern_id := i;

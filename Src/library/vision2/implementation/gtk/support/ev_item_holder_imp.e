@@ -76,6 +76,18 @@ feature -- Basic operations
 			end
 		end
 
+feature {EV_ITEM_HOLDER_IMP, EV_ITEM_IMP} -- Implementation
+
+	add_item (item_imp: EV_ITEM_IMP) is
+			-- Add `item' to the list.
+		deferred
+		end
+
+	remove_item (item_imp: EV_ITEM_IMP) is
+			-- Remove `item_imp' from the list.
+		deferred
+		end
+
 feature {EV_ITEM_HOLDER_IMP} -- Implementation
  
  	ev_children: ARRAYED_LIST [EV_ITEM_IMP] is

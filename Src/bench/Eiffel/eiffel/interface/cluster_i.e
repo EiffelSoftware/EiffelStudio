@@ -146,11 +146,11 @@ feature {COMPILER_EXPORTER} -- Conveniences
 			end;
 		end;
 
-    set_is_override_cluster (flag: BOOLEAN) is
-            -- Set `is_override_cluster' to `flag'.
-        do
-            is_override_cluster := flag
-        end;
+	set_is_override_cluster (flag: BOOLEAN) is
+			-- Set `is_override_cluster' to `flag'.
+		do
+			is_override_cluster := flag
+		end;
 
 feature {COMPILER_EXPORTER} -- Creation feature
 
@@ -642,6 +642,9 @@ end;
 				classes.item_for_iteration.reset_options;
 				classes.forth
 			end;
+			if not is_precompiled then
+				private_document_path := Void
+			end
 		end;
 
 	update_cluster is
@@ -1071,7 +1074,59 @@ feature {COMPILER_EXPORTER} -- DLE
 				classes.forth
 			end
 		end;
-		
+
+feature -- Document processing
+
+	document_path: DIRECTORY_NAME is
+			-- Path specified for the documents directory.
+			-- Void result implies no document generation
+		local
+			tmp: STRING
+		do
+			tmp := private_document_path;
+			if tmp = Void then
+				Result := System.document_path
+			elseif not tmp.is_equal (No_word) then
+				!! Result.make_from_string (tmp)
+			end;
+		end;
+
+	set_document_path (a_path: like document_path) is
+			-- Set `document_path' to `a_path'
+		do
+			private_document_path := a_path
+		ensure
+			set: document_path = a_path
+		end;
+
+	update_document_path is
+			-- Update the `document_path' to the default value
+			-- if is has not been set yet.
+		require
+			is_precompiling: Compilation_modes.is_precompiling
+		local
+			a_path: like private_document_path
+		do
+			a_path := private_document_path;
+			if a_path = Void then
+				a_path := System.document_path;
+				if a_path = Void then
+					private_document_path := No_word
+				else
+					private_document_path := a_path
+				end
+			end
+		ensure
+			document_path_not_void: document_path /= Void
+		end;
+
+feature {NONE} -- Document processing
+
+	No_word: STRING is "no";
+
+	private_document_path: STRING
+			-- Path specified in Ace for the documents directory
+
 feature {NONE} -- Externals
 
 	c_clname (file_pointer: POINTER): STRING is

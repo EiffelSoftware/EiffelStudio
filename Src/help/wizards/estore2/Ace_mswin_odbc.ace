@@ -1,5 +1,5 @@
 system
-	STORE_WIZARD
+	STORE_WIZARD_ODBC
 
 root
 	WIZARD_PROJECT_MANAGER(wizard_tool): "make_and_launch"
@@ -41,7 +41,7 @@ cluster
 
 	all Events:				"$EIFFEL4\library\event"
 
-	all web: 				"$EIFFEL4\library\wel_devel"
+	all wel: 				"$EIFFEL4\library\wel_devel"
 
 	all wizard_tool:				"$EIFFEL4\tools\wizard"
 

@@ -17,7 +17,8 @@ inherit
 
 	EV_CONTAINER_IMP
 		redefine
-			set_foreground_color
+			set_foreground_color,
+			set_background_color
 		end
 	
 feature -- Initialization
@@ -40,8 +41,7 @@ feature -- Initialization
 
 			-- show the pixmap now that it has a parent.
 			gtk_widget_show (pixmap_widget)
-		end			
-		
+		end					
 
 feature -- Access
 
@@ -105,7 +105,21 @@ feature {EV_CONTAINER} -- Element change
 			-- Redefined because the text is in a gtk_label.
 		do
 			c_gtk_widget_set_fg_color (widget, color.red, color.green, color.blue)
-			c_gtk_widget_set_fg_color (label_widget, color.red, color.green, color.blue)
+
+			if label_widget /= default_pointer then
+				c_gtk_widget_set_fg_color (label_widget, color.red, color.green, color.blue)
+			end
+		end
+
+	set_background_color (color: EV_COLOR) is
+			-- Assign `color' as new `foreground_color'.
+			-- Redefined because the text is in a gtk_label.
+		do
+			c_gtk_widget_set_bg_color (widget, color.red, color.green, color.blue)
+
+			if label_widget /= default_pointer then
+				c_gtk_widget_set_bg_color (label_widget, color.red, color.green, color.blue)
+			end
 		end
 
 feature -- Implementation

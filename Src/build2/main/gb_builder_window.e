@@ -76,6 +76,7 @@ feature -- Status setting
 				-- object.
 			drop_actions.wipe_out
 			drop_actions.extend (agent object.add_new_object_wrapper (?))
+			drop_actions.extend (agent object.add_new_component_wrapper (?))
 			drop_actions.set_veto_pebble_function (agent object.can_add_child (?))		
 		end
 		

@@ -28,11 +28,12 @@ feature -- Creation
 		
 feature -- TOC Management
 
-	new_toc is
+	new_toc (a_name: STRING) is
 			-- A new empty toc
 		do
 			create loaded_toc.make_empty
-			loaded_tocs.extend (loaded_toc, loaded_toc.name)
+			loaded_toc.set_name (a_name)
+			add_toc (loaded_toc)
 			load_toc (loaded_toc.name)
 		end		
 
@@ -57,14 +58,13 @@ feature -- TOC Management
 			loaded_widgets.replace_key (loaded_toc.name, loaded_toc.old_name)
 		end		
 	
-	build_toc (a_dir: DIRECTORY) is
+	build_toc (a_name: STRING; a_dir: DIRECTORY) is
 			-- Build toc from contents of `a_dir'
-		local
-			l_loaded_toc: TABLE_OF_CONTENTS
 		do
-			create l_loaded_toc.make_from_directory (a_dir)
-			loaded_tocs.extend (l_loaded_toc, l_loaded_toc.name)
-			load_toc (l_loaded_toc.name)
+			create loaded_toc.make_from_directory (a_dir)
+			loaded_toc.set_name (a_name)
+			add_toc (loaded_toc)
+			load_toc (loaded_toc.name)
 		end	
 		
 	load_toc (a_name: STRING) is
@@ -85,12 +85,52 @@ feature -- TOC Management
 					xml_toc_converter.process_document (xml)
 					loaded_toc := xml_toc_converter.toc
 					loaded_toc.set_name (a_name)
-					loaded_tocs.extend (loaded_toc, a_name)
+					add_toc (loaded_toc)
 					xml_toc_converter := Void					
 				end
 			end
 			display_toc
 		end		
+	
+	add_toc (a_toc: TABLE_OF_CONTENTS) is
+			-- Add toc
+		require
+			toc_not_void: a_toc /= Void
+		do
+			if not loaded_tocs.has (a_toc.name) then				
+				loaded_tocs.extend (a_toc, a_toc.name)	
+			end
+		ensure
+			has_toc: loaded_tocs.has (a_toc.name)
+		end		
+	
+	merge_tocs (tocs: LIST [TABLE_OF_CONTENTS]; a_name: STRING) is
+			-- Merge `tocs' into new toc with `a_name'
+		require
+			tocs_not_void: tocs /= Void
+			mergable: tocs.count > 1
+			name_not_void: a_name /= Void
+			name_not_empty: not a_name.is_empty
+		local
+			l_new_toc: TABLE_OF_CONTENTS 
+		do
+			create l_new_toc.make_empty
+			from
+				tocs.start
+			until
+				tocs.after
+			loop
+				l_new_toc.add_node (tocs.item)
+				tocs.item.set_title (tocs.item.name)
+				tocs.forth
+			end
+			l_new_toc.set_name (a_name)
+			l_new_toc.flatten_ids
+			add_toc (l_new_toc)
+			load_toc (l_new_toc.name)	
+		end		
+	
+feature -- Node 	
 		
 	new_node (is_heading: BOOLEAN) is
 			-- Add new node to `displayed_toc'
@@ -109,35 +149,27 @@ feature -- TOC Management
 			end	
 		end		
 		
-	toggle_include_node is
-			-- Toggle `included' property of selected node in displayed toc for sorting and generation
-		local
-			l_node: TABLE_OF_CONTENTS_WIDGET_NODE
-		do
-			if displayed_toc.selected_item /= Void then
-				l_node ?= displayed_toc.selected_item
-				if l_node /= Void then
-					l_node.set_included (not l_node.include)
-					displayed_toc.set_modified (True)
-				end
-			end	
-		end		
-		
 feature -- Commands		
 		
-	sort_toc (index_root, empty_elements, no_index, sub_elements, alpha: BOOLEAN) is
-			-- Sort `loaded toc'
+	sort_toc (index_root, empty_elements, no_index, sub_elements, alpha: BOOLEAN; a_desc: STRING) is
+			-- Sort `loaded toc'.  (A new sorted is created from the current toc)
 		do	
-			loaded_toc := clone (loaded_toc)
+			create loaded_toc.make_from_toc (loaded_toc)
 			synchronize
-			loaded_toc.set_name (next_toc_name)
+			
+			if a_desc.is_empty then
+				loaded_toc.set_name (next_toc_name)
+			else
+				loaded_toc.set_name (a_desc)
+			end			
+			
 			loaded_toc.set_make_index_root (index_root)
 			loaded_toc.set_filter_empty_nodes (not empty_elements)
 			loaded_toc.set_filter_nodes_no_index (not no_index)
 			loaded_toc.set_filter_skipped_sub_nodes (not sub_elements)			
 			loaded_toc.set_filter_alphabetically (alpha)
 			loaded_toc.sort	
-			loaded_tocs.extend (loaded_toc, loaded_toc.name)
+			add_toc (loaded_toc)
 			load_toc (loaded_toc.name)
 		end		
 
@@ -162,7 +194,7 @@ feature -- Access
 	loaded_toc: TABLE_OF_CONTENTS
 			-- Toc currently loaded (Void if none loaded)
 
-	displayed_tocs_list: ARRAY [STRING] is
+	displayed_tocs: ARRAY [STRING] is
 			-- Return a list of all toc widgets names
 		do
 			Result := loaded_widgets.current_keys

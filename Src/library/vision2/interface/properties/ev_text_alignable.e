@@ -29,7 +29,6 @@ feature -- Access
 			bridge_ok: Result = implementation.text_alignment
 		end
 
-
 feature -- Status report
 
 	is_left_aligned: BOOLEAN is
@@ -47,8 +46,7 @@ feature -- Status report
 		do
 			Result := text_alignment = feature {EV_TEXT_ALIGNMENT_CONSTANTS}.Ev_text_alignment_center
 		end
-		
-		
+
 	is_right_aligned: BOOLEAN is
 			-- Is `Current' right aligned?
 		require

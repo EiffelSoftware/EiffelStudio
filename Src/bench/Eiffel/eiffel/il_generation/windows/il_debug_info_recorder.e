@@ -90,7 +90,7 @@ feature {EIFNET_DEBUGGER} -- reset live data
 			-- Reset data used during debugging session
 		do
 			if internal_module_key_table = Void then
-				create internal_module_key_table.make (10)
+				create internal_module_key_table.make (50)
 			else
 				internal_module_key_table.wipe_out
 			end
@@ -106,8 +106,6 @@ feature {IL_CODE_GENERATOR} -- Access
 
 	start_recording_session (debug_mode: BOOLEAN) is
 			-- Start recording session.
-		require
-			is_outside_recording: not is_recording
 		do
 			debug ("debugger_il_info_trace")
 				print ("IL_DEBUG_INFO_RECORDER.init_recording_session .. %N")
@@ -1022,19 +1020,26 @@ feature {NONE} -- Debugger Info List
 			-- [CLASS_TYPE.static_type_id] => [IL_DEBUG_INFO_FROM_CLASS_TYPE]
 
 feature {IL_CODE_GENERATOR, APPLICATION_EXECUTION_DOTNET} -- {SHARED_IL_DEBUG_INFO_RECORDER} -- Persistence
-	
-	load_final_data is
-			-- Load final data
+
+	load_data_for_debugging	is
+			-- Load workbench data (mainly for debugging)
 		do
-			load (final_il_info_file_name)
-			last_loading_is_workbench := False
+			is_recording := False
+			load_workbench_data
 		end
-		
+	
 	load_workbench_data is
 			-- Load workbench data (mainly for debugging)
 		do
 			load (il_info_file_name)
 			last_loading_is_workbench := True
+		end
+
+	load_final_data is
+			-- Load final data
+		do
+			load (final_il_info_file_name)
+			last_loading_is_workbench := False
 		end
 		
 	last_loading_is_workbench: BOOLEAN
@@ -1187,7 +1192,7 @@ feature {NONE}-- Implementation for save and load task
 		do
 			if not retried then
 				debug ("debugger_il_info_trace")
-					print ("Importing IL Info from [" + a_fn + "] %N")
+					io.error.put_string ("Importing IL Info from [" + a_fn + "] %N")
 				end
 				Result := True
 
@@ -1208,7 +1213,15 @@ feature {NONE}-- Implementation for save and load task
 
 						if not is_from_precompiled then
 								--| when we load the project, by default we load as workbench
-							l_current_project_path := direct_module_key (workbench_module_directory_path_name)
+							if is_recording then
+								if context.workbench_mode then
+									l_current_project_path := direct_module_key (workbench_module_directory_path_name)
+								else
+									l_current_project_path := direct_module_key (finalized_module_directory_path_name)
+								end
+							else
+								l_current_project_path := direct_module_key (workbench_module_directory_path_name)
+							end
 
 								--| First, we check if the project didn't moved to a new location
 							if 
@@ -1221,14 +1234,16 @@ feature {NONE}-- Implementation for save and load task
 									l_dbg_system_name /= Void
 									l_dbg_info_project_path /= Void
 								end
-								io.error.put_string ("Your project's location changed !!!%N")
-								io.error.put_string (" [Previous] %N")
-								io.error.put_string ("  - System   = " + l_dbg_system_name + "%N")
-								io.error.put_string ("  - Location = " + l_dbg_info_project_path +"%N")
-								io.error.put_string (" [Current ] %N")
-								io.error.put_string ("  - System   = " + system.name + "%N")
-								io.error.put_string ("  - Location = " + l_current_project_path +"%N")
-								io.error.put_string (" => Updating data ... ")
+								debug ("debugger_il_info_trace")
+									io.error.put_string ("Your project's location changed !!!%N")
+									io.error.put_string (" [Previous] %N")
+									io.error.put_string ("  - System   = " + l_dbg_system_name + "%N")
+									io.error.put_string ("  - Location = " + l_dbg_info_project_path +"%N")
+									io.error.put_string (" [Current ] %N")
+									io.error.put_string ("  - System   = " + system.name + "%N")
+									io.error.put_string ("  - Location = " + l_current_project_path +"%N")
+									io.error.put_string (" => Updating data ... ")
+								end
 								from
 									create l_patched_dbg_info_modules.make (l_dbg_info_modules.count)
 									l_dbg_info_modules.start

@@ -132,6 +132,7 @@ feature -- Execution
 			font_name: STRING
 		do
 			if arg = font_action then
+				get_font_box
 				popup_font_box
 			elseif arg = fb_ok_action then
 				font_name := font_box.font.name;
@@ -140,9 +141,11 @@ feature -- Execution
 				end;
 				font_box.popdown;
 				font_box.remove_ok_action (Current, fb_ok_action)
+				font_box := Void
 			elseif arg = fb_cancel_action then
 				font_box.popdown;
 				font_box.remove_ok_action (Current, fb_ok_action)
+				font_box := Void
 			else
 				{PREFERENCE_RESOURCE} Precursor (arg)
 			end
@@ -161,17 +164,21 @@ feature {NONE} -- Implementation
 			!! Result
 		end
 
-	font_box: FONT_BOX_D is
+	font_box: FONT_BOX_D
+			-- Current opened FONT_BOX_D.
+
+	get_font_box is
 			-- Font box dialog
 		local
 			mp: MOUSE_PTR
-		once
+		do
 			!! mp.set_watch_cursor;
-			!! Result.make ("Font Box", text.top);
-			Result.hide_apply_button;
-			Result.add_cancel_action (Current, fb_cancel_action);
-			Result.set_default_position (False);
-			Result.set_exclusive_grab;
+			!! font_box.make ("Font Box", text.top);
+			font_box.set_font (associated_resource.actual_value)
+			font_box.hide_apply_button;
+			font_box.add_cancel_action (Current, fb_cancel_action);
+			font_box.set_default_position (False);
+			font_box.set_exclusive_grab;
 			mp.restore
 		end;
 

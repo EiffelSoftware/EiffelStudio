@@ -24,8 +24,9 @@ feature {EV_WIDGET} -- Initialization
 			-- this feature to give their size to the parent that
 			-- adapts itself.
 		do
-			set_automatic_resize (True)
-			set_automatic_position (False)
+			set_expand (True)
+			set_vertical_resize (True)
+			set_horizontal_resize (True)
 		end
 
 	initialize_colors is
@@ -52,17 +53,16 @@ feature -- Access
 		deferred
 		end
 
-	automatic_resize: BOOLEAN
-			-- Is the widget resized automatically when
-			-- the parent resize ?  In this case,
-			-- automatic_position has no effect.
-			-- True by default.
+	expandable: BOOLEAN
+			-- Does the widget expand its cell to take the
+			-- size the parent would like to give to it.
 
-	automatic_position: BOOLEAN
-			-- Does the widget take a new position when
-			-- the parent resize ?  
-			-- (If it does, its size doesn't changed).  
-			-- False by default.
+	resize_type: INTEGER
+			-- How the widget resize itself in the cell
+			-- 0 : no resizing, the widget move
+			-- 1 : only the width changes
+			-- 2 : only the height changes
+			-- 3 : both width and height change
 
 	background_color: EV_COLOR_IMP is
 			-- Color used for the background of the widget
@@ -94,6 +94,24 @@ feature -- Status Report
 		require
 			exists: not destroyed
 		deferred
+		end
+
+	horizontal_resizable: BOOLEAN is
+			-- Does the widget change its width when the parent
+			-- want to resize the widget
+		require
+			exists: not destroyed
+		do
+			Result := (resize_type = 1) or (resize_type = 3)	
+		end
+
+	vertical_resizable: BOOLEAN is
+			-- Does the widget change its width when the parent
+			-- want to resize the widget
+		require
+			exists: not destroyed
+		do
+			Result := (resize_type = 2) or (resize_type = 3)	
 		end
 
 feature -- Status setting
@@ -139,24 +157,56 @@ feature -- Status setting
 			flag = insensitive
 		end
 
-	set_automatic_resize (flag: BOOLEAN) is
-			-- Make `flag' the new `automatic_resize'.
+	set_expand (flag: BOOLEAN) is
+			-- Make `flag' the new expand option.
 		require
 			exists: not destroyed
 		do
-			automatic_resize := flag
-		ensure
-			automatic_resize_set: automatic_resize = flag
+			expandable := flag
 		end
 
-	set_automatic_position (flag: BOOLEAN) is
-			-- Make `flag' the new `automatic_position'.
+	set_horizontal_resize (flag: BOOLEAN) is
+			-- Adapt `resize_type' to `flag'.
 		require
 			exists: not destroyed
 		do
-			automatic_position := flag
+			if flag then
+				if vertical_resizable then
+					resize_type := 3
+				else
+					resize_type := 1
+				end
+			else
+				if vertical_resizable then
+					resize_type := 2
+				else
+					resize_type := 0
+				end				
+			end
 		ensure
-			automatic_position_set: automatic_position = flag
+			horizontal_resize_set: horizontal_resizable = flag
+		end
+
+	set_vertical_resize (flag: BOOLEAN) is
+			-- Adapt `resize_type' to `flag'.
+		require
+			exists: not destroyed
+		do
+			if flag then
+				if horizontal_resizable then
+					resize_type := 3
+				else
+					resize_type := 2
+				end
+			else
+				if horizontal_resizable then
+					resize_type := 1
+				else
+					resize_type := 0
+				end				
+			end
+		ensure
+			vertical_resize_set: vertical_resizable = flag
 		end
 
 	set_background_color (color: EV_COLOR) is
@@ -451,8 +501,6 @@ feature -- Implementation
 			-- It is not possible to change the parent,
 			-- therefore, if there is already a parent,
 			-- we don't do anything
-		require
-			parent_not_void: par /= Void
 		deferred
 		end
 
@@ -466,10 +514,11 @@ feature -- Implementation
 			interface_set: interface = the_interface
 		end
 
---invariant
+invariant
 
 --	backgound_color_not_void: background_color /= Void
 --	foreground_color_not_void: foreground_color /= Void
+	good_resize_type: resize_type >= 0 and resize_type <= 3
 	
 end -- class EV_WIDGET_I
 

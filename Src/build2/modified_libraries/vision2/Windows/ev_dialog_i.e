@@ -23,6 +23,18 @@ feature -- Status Report
 			-- pressing ALT-F4)
 		deferred
 		end
+		
+	is_modal: BOOLEAN is
+			-- Is `Current' shown modally to another window?
+			-- If `True' then `Current' must be closed before
+			-- application can receive user events again?
+		deferred
+		end
+		
+	is_relative: BOOLEAN is
+			-- Is `Current' shown relative to another window?
+		deferred
+		end
 	
 	default_push_button: EV_BUTTON is
 			-- Default pushed button. This is the button that

@@ -23,8 +23,6 @@ inherit
 			interface,
 			make,
 			show,
-			enable_modal,
-			disable_modal,
 			process_message,
 			set_x_position,
 			set_y_position,
@@ -81,19 +79,21 @@ feature -- Status Report
 			-- (Through a clik on the Window Menu, or by
 			-- pressing ALT-F4).
 
-feature -- Status Setting
-	
-	enable_modal is
-			-- Set the dialog to be modal.
+	is_modal: BOOLEAN is
+			-- Is `Current' shown modally to another window?
+			-- If `True' then `Current' must be closed before
+			-- application can receive user events again?
 		do
-			is_modal := True
+			Result := False
+		end
+		
+	is_relative: BOOLEAN is
+			-- Is `Current' shown relative to another window?
+		do
+			Result := False
 		end
 
-	disable_modal is
-			-- Set the dialog not to be modal.
-		do
-			is_modal := False
-		end
+feature -- Status Setting
 
 	enable_closeable is
 			-- Set `Current' to be closeable by the user.
@@ -399,7 +399,6 @@ feature {NONE} -- Implementation
 			is_in_min_width := other_imp.is_in_min_width
 			is_minheight_recomputation_needed := other_imp.is_minheight_recomputation_needed
 			is_minwidth_recomputation_needed := other_imp.is_minwidth_recomputation_needed
-			is_modal := other_imp.is_modal
 			is_notify_originator := other_imp.is_notify_originator
 			is_pnd_in_transport := other_imp.is_pnd_in_transport
 			is_transport_enabled := other_imp.is_transport_enabled

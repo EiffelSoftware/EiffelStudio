@@ -9,47 +9,51 @@ link32= '$compiler_path\bin\link'
 #
 #-- MT debug
 #-----------
-#ccflags='-YX -nologo -Zi -MTd -DEIF_THREADS'
+#ccflags='-W3 -nologo -Zi -MTd -DEIF_THREADS'
+#dllflags='-W3 -nologo -Zi -MTd -subsystem:WINDOWS -dll -incremental:no'
 #link_line='$compiler_path\bin\lib -OUT:$@ $(OBJECTS) -DEBUGTYPE:BOTH -NODEFAULTLIB:LIBC.LIB'
 #link_wline='$compiler_path\bin\lib -OUT:$@ $(WOBJECTS) -DEBUGTYPE:BOTH -NODEFAULTLIB:LIBC.LIB'
 #
 #-- MT no debug
 #--------------
-#ccflags='-YX -nologo -MT -DEIF_THREADS'
+#ccflags='-W3 -nologo -MT -DEIF_THREADS'
+#dllflags='-W3 -nologo -MT -subsystem:WINDOWS -dll -incremental:no'
 #link_line='$compiler_path\bin\lib -OUT:$@ $(OBJECTS)'
 #link_wline='$compiler_path\bin\lib -OUT:$@ $(WOBJECTS)'
 #
 #-- MT DLL debug
 #--------------
-#ccflags='-YX -nologo -Zi -MDd -DEIF_THREADS'
+#ccflags='-W3 -nologo -Zi -MDd -DEIF_THREADS'
+#dllflags='-W3 -nologo -Zi -MDd -subsystem:WINDOWS -dll -incremental:no'
 #link_line='$compiler_path\bin\lib -OUT:$@ $(OBJECTS) -DEBUGTYPE:BOTH -NODEFAULTLIB:LIBC.LIB'
 #link_wline='$compiler_path\bin\lib -OUT:$@ $(WOBJECTS) -DEBUGTYPE:BOTH -NODEFAULTLIB:LIBC.LIB'
 #
 #-- MT DLL no debug
 #------------------
-#ccflags='-YX -nologo -MD -DEIF_THREADS'
+#ccflags='-W3 -nologo -MD -DEIF_THREADS'
+#dllflags='-W3 -nologo -MD -subsystem:WINDOWS -dll -incremental:no'
 #link_line='$compiler_path\bin\lib -OUT:$@ $(OBJECTS)'
 #link_wline='$compiler_path\bin\lib -OUT:$@ $(WOBJECTS)'
 #
 #-- no MT debug
 #--------
-ccflags='-YX -Zi -nologo'
-dllflags='-nologo -subsystem:WINDOWS -dll -incremental:no -debug'
-link_line='$compiler_path\bin\lib -OUT:$(OUTDIR)\$@ $(OBJECTS) -DEBUGTYPE:BOTH'
-link_wline='$compiler_path\bin\lib -OUT:$(OUTDIR)\$@ $(WOBJECTS) -DEBUGTYPE:BOTH'
-link_eline='$compiler_path\bin\lib -OUT:$(OUTDIR)\$@ $(EOBJECTS) -DEBUGTYPE:BOTH'
+#ccflags='-W3 -Zi -nologo'
+#dllflags='-W3 -Zi -nologo -subsystem:WINDOWS -dll -incremental:no'
+#link_line='$compiler_path\bin\lib -OUT:$(OUTDIR)\$@ $(OBJECTS) -DEBUGTYPE:BOTH'
+#link_wline='$compiler_path\bin\lib -OUT:$(OUTDIR)\$@ $(WOBJECTS) -DEBUGTYPE:BOTH'
+#link_eline='$compiler_path\bin\lib -OUT:$(OUTDIR)\$@ $(EOBJECTS) -DEBUGTYPE:BOTH'
 #
 #-- no MT no debug
 #--------
-#ccflags='-YX -nologo'
-#dllflags='-nologo -subsystem:WINDOWS -dll -incremental:no'
-#link_line='$compiler_path\bin\lib -OUT:$@ $(OBJECTS)'
-#link_wline='$compiler_path\bin\lib -OUT:$@ $(WOBJECTS)'
-#link_eline='$compiler_path\bin\lib -OUT:$@ $(EOBJECTS)'
+ccflags='-W3 -nologo'
+dllflags='-W3 -nologo -subsystem:WINDOWS -dll -incremental:no'
+link_line='$compiler_path\bin\lib -OUT:$@ $(OBJECTS)'
+link_wline='$compiler_path\bin\lib -OUT:$@ $(WOBJECTS)'
+link_eline='$compiler_path\bin\lib -OUT:$@ $(EOBJECTS)'
 #
-#optimize='-Ox'
-optimize=''
+optimize='-Ox'
+#optimize=''
 cc='cl'
 extra_object_files=''
-compiler_path='c:\progra~1\DevStudio\VC'
+compiler_path='D:\apps\DevStudio\VC'
 #

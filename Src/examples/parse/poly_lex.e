@@ -8,7 +8,7 @@ inherit
 
 	CONSTANTS
 		undefine
-			consistent, copy, is_equal, setup
+			copy, is_equal
 		end
 
 feature {NONE}

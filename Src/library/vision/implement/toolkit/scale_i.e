@@ -143,7 +143,7 @@ feature -- Element change
 	set_maximum (new_maximum: INTEGER) is
 			-- Set maximum value of the slider to `new_maximum'.
 		require
-			maximum_greater_than_minimum: new_maximum > minimum
+			valid_maximum: valid_maximum (new_maximum)
 		deferred
 		ensure
 			set: maximum = new_maximum
@@ -152,7 +152,7 @@ feature -- Element change
 	set_minimum (new_minimum: INTEGER) is
 			-- Set minimum value of the slider to `new_minimum'.
 		require
-			minimum_smaller_than_maximum: new_minimum < maximum
+			valid_minimum: valid_minimum (new_minimum)
 		deferred
 		ensure
 			set: minimum = new_minimum
@@ -194,6 +194,20 @@ feature -- Removal
 			not_a_command_void: a_command /= Void
 		deferred
 		end;
+
+feature 
+
+	valid_maximum (a_maximum: INTEGER): BOOLEAN is
+			-- Is `a_maximum' valid?
+		do
+			Result := a_maximum > minimum
+		end
+
+	valid_minimum (a_minimum: INTEGER): BOOLEAN is
+			-- is `a_minimum' valid?
+		do
+			Result := a_minimum < maximum
+		end
 
 end -- class SCALE_I
 

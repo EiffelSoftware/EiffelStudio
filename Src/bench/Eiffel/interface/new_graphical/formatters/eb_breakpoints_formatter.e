@@ -84,11 +84,11 @@ feature -- Properties
 	do_flat: BOOLEAN
 			-- If True, do a flat
 
---	symbol: EV_PIXMAP is
---			-- Pixmap for the button.
---		once
---			Result := Pixmaps.bm_Breakpoint
---		end -- symbol
+	symbol: EV_PIXMAP is
+			-- Pixmap for the button.
+		once
+			Result := Pixmaps.bm_Breakpoint
+		end -- symbol
 
 feature -- Status setting
 
@@ -154,5 +154,7 @@ feature {NONE} -- Access
 				Result := Interface_names.t_Non_clickable_stoppoints_of
 			end
 		end
+
+	post_fix: STRING is "brk"
 
 end -- class EB_BREAKPOINTS_FORMATTER

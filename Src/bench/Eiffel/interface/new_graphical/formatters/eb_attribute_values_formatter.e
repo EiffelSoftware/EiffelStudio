@@ -22,11 +22,11 @@ feature -- Properties
 	tool: EB_OBJECT_TOOL
 			-- Tool of inspected object
 
---	symbol: EV_PIXMAP is 
---			-- Pixmap for the button.
---		once 
---			Result := Pixmaps.bm_Showattributes 
---		end
+	symbol: EV_PIXMAP is 
+			-- Pixmap for the button.
+		once 
+			Result := Pixmaps.bm_Showattributes 
+		end
 	
 feature {NONE} -- Properties
 
@@ -50,6 +50,8 @@ feature {NONE} -- Properties
 		do
 			Result := Interface_names.t_Attrvalues_of
 		end
+
+	post_fix: STRING is "att"
 
 	create_structured_text (object: OBJECT_STONE): STRUCTURED_TEXT is
 		local

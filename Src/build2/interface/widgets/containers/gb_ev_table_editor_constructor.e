@@ -58,7 +58,7 @@ feature -- Access
 			homogeneous_button.select_actions.extend (agent update_editors)
 			Result.extend (homogeneous_button)
 			create layout_button.make_with_text ("Position children...")
-			if first.widget_count = 0 then
+			if first.count = 0 then
 				layout_button.disable_sensitive
 			end
 			layout_button.select_actions.extend (agent show_layout_window)
@@ -106,20 +106,20 @@ feature -- Access
 			counter: INTEGER
 			item: EV_WIDGET
 		do
-			create Result.make (table.widget_count)
+			create Result.make (table.count)
 			from
 				counter := 0
 			until
-				Result.count = table.widget_count
+				Result.count = table.count
 			loop
-				item := table.item ((counter // table.columns) + 1, (counter \\ table.rows) + 1)
+				item := table.item_at_position ((counter // table.columns) + 1, (counter \\ table.rows) + 1)
 				if item /= Void then
 					Result.extend (item)	
 				end
 				counter := counter + 1	
 			end
 		ensure
-			count_correct: Result.count = table.widget_count
+			count_correct: Result.count = table.count
 		end
 
 feature {NONE} -- Implementation
@@ -343,7 +343,7 @@ feature {NONE} -- Implementation
 					-- second place.
 				
 				if objects @ 2 /= Void then
-					second_widget := (objects @ 2).item (first.item_column_position (v), first.item_row_position (v))
+					second_widget := (objects @ 2).item_at_position (first.item_column_position (v), first.item_row_position (v))
 					(objects @ 2).set_item_span (second_widget, columns, rows)
 				end
 					-- Flag that notification is required for all corresponding editors.
@@ -364,7 +364,7 @@ feature {NONE} -- Implementation
 					-- Now we need to get the widget represented in objects at the
 					-- second place. We must do this before we move the first widget.
 				if objects @ 2 /= Void then
-					second_widget := (objects @ 2).item (first.item_column_position (v), first.item_row_position (v))
+					second_widget := (objects @ 2).item_at_position (first.item_column_position (v), first.item_row_position (v))
 				end
 	
 				first.set_item_position_and_span (v, a_column, a_row, columns, rows)
@@ -520,7 +520,7 @@ feature {NONE} -- Implementation
 				until
 					row_counter = a_row + a_row_span or Result /= 0
 				loop
-					if first.item (column_counter, row_counter) /= Void and first.item (column_counter, row_counter) /= widget then
+					if first.item_at_position (column_counter, row_counter) /= Void and first.item_at_position (column_counter, row_counter) /= widget then
 						Result := column_counter + 1
 					end
 					row_counter := row_counter + 1
@@ -545,7 +545,7 @@ feature {NONE} -- Implementation
 				until
 					column_counter = a_column + a_column_span or Result /= 0
 				loop
-					if first.item (column_counter, row_counter) /= Void and first.item (column_counter, row_counter) /= widget then
+					if first.item_at_position (column_counter, row_counter) /= Void and first.item_at_position (column_counter, row_counter) /= widget then
 						Result := row_counter + 1
 					end
 					column_counter := column_counter + 1
@@ -666,7 +666,7 @@ feature {NONE} -- Implementation
 				y := y // grid_size + 1
 					-- Only perform the query if valid coordinates.
 				if x <= first.columns and y <= first.rows then
-					selected_item := first.item (x, y)
+					selected_item := first.item_at_position (x, y)
 					if selected_item /= Void then
 						list.retrieve_item_by_data (selected_item, True).enable_select
 					end
@@ -824,7 +824,7 @@ feature {NONE} -- Implementation
 			-- Is table represented by `Current', 
 			-- 1x1 and full?
 		do
-			Result := first.widget_count = 1 and first.rows = 1 and first.columns = 1			
+			Result := first.count = 1 and first.rows = 1 and first.columns = 1			
 		end
 	
 	update_prompt is

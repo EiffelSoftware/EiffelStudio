@@ -40,7 +40,7 @@ feature
 			until
 				i > C_nb_types
 			loop
-				create reg.make (true);
+				create reg.make
 				registers.put (reg, i);
 				i := i + 1;
 			end;

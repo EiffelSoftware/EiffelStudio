@@ -17,9 +17,11 @@ feature -- Access
 
 feature -- Basic operations
 
-	generate_functions_and_properties (descriptor: WIZARD_INTERFACE_DESCRIPTOR) is
+	generate_functions_and_properties (a_component_descriptor: WIZARD_COMPONENT_DESCRIPTOR;
+				descriptor: WIZARD_INTERFACE_DESCRIPTOR) is
 			-- Generate functions and properties.
 		require
+			non_void_component: a_component_descriptor /= Void
 			non_void_descriptor: descriptor /= Void
 			non_void_cpp_class_writer: cpp_class_writer /= Void
 		deferred

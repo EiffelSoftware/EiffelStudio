@@ -29,6 +29,7 @@ feature
 			then
 				!!vjrv;
 				context.init_error (vjrv);
+				vjrv.set_target_name (target.access_name);
 				vjrv.set_target_type (target_type);
 				Error_handler.insert_error (vjrv);
 			end;

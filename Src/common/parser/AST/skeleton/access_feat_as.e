@@ -172,6 +172,7 @@ feature -- Type check, byte code and dead code removal
 							!!vuar2;
 							context.init_error (vuar2);
 							vuar2.set_called_feature (a_feature);
+							vuar2.set_argument_position (i);
 							vuar2.set_argument_name
 									(a_feature.argument_names.i_th (i));
 							vuar2.set_formal_type (arg_type);
@@ -294,7 +295,12 @@ feature -- Type check, byte code and dead code removal
 			else
 				ctxt.rollback
 			end;
-	end;
+		end;
+
+	access_name: STRING is
+		do
+			Result := feature_name
+		end;
 
 feature -- Replication
 

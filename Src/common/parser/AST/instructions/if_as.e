@@ -54,7 +54,7 @@ feature -- Type check, byte code and dead code removal
 			if 	not Boolean_type.conform_to (current_context) then
 				!!vwbe1;
 				context.init_error (vwbe1);
-				vwbe1.set_conditional (Current);
+				vwbe1.set_type (current_context);
 				Error_handler.insert_error (vwbe1);
 			end;
 

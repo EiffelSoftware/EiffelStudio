@@ -53,7 +53,6 @@ feature -- Type check, byte code and dead code removal
 					!!vwst2;
 					context.init_error (vwst2);
 					vwst2.set_attribute_name (an_id);
-					vwst2.set_strip_expr (Current);
 					Error_handler.insert_error (vwst2);
 				end;
 				id_list.go (pos);
@@ -62,7 +61,6 @@ feature -- Type check, byte code and dead code removal
 					!!vwst1;
 					context.init_error (vwst1);
 					vwst1.set_attribute_name (an_id);
-					vwst1.set_strip_expr (Current);
 					Error_handler.insert_error (vwst1);
 				end;
 				id_list.forth;

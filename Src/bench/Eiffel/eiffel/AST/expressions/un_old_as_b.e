@@ -29,7 +29,6 @@ feature -- Type check, byte code and dead code removal
 					-- postcondition
 				!!vaol1;
 				context.init_error (vaol1);
-				vaol1.set_old_expr (Current);
 				Error_handler.insert_error (vaol1);
 			end;
 

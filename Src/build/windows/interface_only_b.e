@@ -50,9 +50,4 @@ feature {NONE}
 			end
 		end
 
-feature
-
-	continue_after_popdown (box: MESSAGE_D; ok: BOOLEAN) is
-		do
-		end
 end

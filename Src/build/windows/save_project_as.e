@@ -7,8 +7,6 @@ inherit
 		export
 			{NONE} all;
 			{ANY} execute
-		undefine
-			continue_after_popdown
 		end;
 
 creation
@@ -27,12 +25,5 @@ feature {NONE}
 
 	caller: SAVE_AS_PROJ_WIN;
 			-- Calling window that executed this command
-
-	continue_after_popdown (box: ERROR_BOX; ok: BOOLEAN) is
-		do
-			if box = error_box then
-				caller.continue_after_error;
-			end;
-		end;
 
 end

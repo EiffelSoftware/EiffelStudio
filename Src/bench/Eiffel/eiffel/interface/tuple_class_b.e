@@ -5,46 +5,28 @@ inherit
 	CLASS_C
 		redefine
 			check_validity, mark_all_used, actual_type,
-			init_types, update_types
+			init_types, update_types, is_tuple
 		end
 
 	SPECIAL_CONST
 
 creation
 	make
-	
+
+feature -- Status report
+
+	is_tuple: BOOLEAN is True
+			-- Current class is TUPLE.
+
 feature 
 
 	check_validity is
 			-- Check validity of class TUPLE
 		local
-			stop, error: BOOLEAN
+			error: BOOLEAN
 			special_error: SPECIAL_ERROR
 			creat_feat: FEATURE_I
-			array_p, parent_t: CL_TYPE_A
 		do
-			if not System.il_generation then
-				-- First check that class inherits directly from parent
-				-- ARRAY [ANY]
-
-				from
-					parents.start
-					array_p := Array_parent
-				until
-					parents.after or else stop
-				loop
-					parent_t := parents.item
-					stop := parent_t.same_type (array_p) and then
-						parent_t.is_equivalent (array_p)
-					parents.forth
-				end
-
-				if not stop then
-					!!special_error.make (Case_18, Current)
-					Error_handler.insert_error (special_error)
-				end
-			end
-			
 			-- Second, check if there is only one creation procedure 
 			-- having no arguments.
 

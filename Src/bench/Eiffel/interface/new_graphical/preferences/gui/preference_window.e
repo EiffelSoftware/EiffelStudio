@@ -300,7 +300,9 @@ feature -- Fill Lists
 		do
 			create it
 			it.set_text (folder.name)
-			it.set_tooltip (folder.description)
+--| FIXME ARNAUD, uncomment this line when tooltips are working
+--			it.set_tooltip (folder.description)
+--| END FIXME
 			it.set_data (folder)
 			it.select_actions.extend (~fill_right_list (it))
 			l := folder.child_list

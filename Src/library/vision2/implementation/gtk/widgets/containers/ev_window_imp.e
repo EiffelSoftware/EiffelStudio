@@ -272,10 +272,8 @@ feature -- Status setting
 	destroy is
 			-- Render `Current' unusable.
 		do
-			lower_bar.wipe_out
-			upper_bar.wipe_out
-			remove_menu_bar
 			Precursor {EV_CONTAINER_IMP}
+			hide
 		end
 		
 	show is

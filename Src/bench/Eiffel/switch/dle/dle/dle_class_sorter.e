@@ -7,7 +7,8 @@ inherit
 	CLASS_SORTER
 		redefine
 			fill_original, fill
-		end
+		end;
+	COMPILER_EXPORTER
 
 creation
 
@@ -23,6 +24,7 @@ feature
 			i, nb, class_id: INTEGER;
 			cl_id: INTEGER;
 			cl: CLASS_C;
+			e_class: E_CLASS;
 			class_array: ARRAY [CLASS_C]
 		do
 			check
@@ -41,6 +43,7 @@ feature
 					-- Since a class can be removed, test here if `cl' is
 					-- not Void.
 				if cl /= Void then
+					e_class := cl.e_class;
 					cl_id := cl.topological_id;
 
 debug ("DLE TOPO")
@@ -57,8 +60,8 @@ end;
 						cl_id := count;
 						cl.set_topological_id (cl_id)
 					end;
-					original.put (cl, cl_id);
-					successors.put (cl.descendants, cl_id)
+					original.put (e_class, cl_id);
+					successors.put (e_class.descendants, cl_id)
 
 debug ("DLE TOPO")
 	io.error.put_integer (cl_id);
@@ -75,8 +78,8 @@ end
 			-- Fill `precursor_count' and `outsides'.
 		local
 			i, k, succ_id: INTEGER;
-			succ: LINKED_LIST [CLASS_C];
-			cl: CLASS_C
+			succ: LINKED_LIST [E_CLASS];
+			cl: E_CLASS
 		do
 			from
 				i := 1
@@ -95,7 +98,7 @@ end
 					succ.off
 				loop
 					cl := succ.item;
-					if cl.is_dynamic then
+					if cl.compiled_info.is_dynamic then
 							-- Static classes are already sorted, so they
 							-- are considered having no precursors.
 						succ_id := cl.topological_id;

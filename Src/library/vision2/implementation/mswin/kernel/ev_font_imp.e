@@ -63,8 +63,8 @@ feature {EV_FONTABLE_IMP, EV_FONT_DIALOG_IMP} -- Initialization
 
 				-- Create and setup the preferred font face mechanism
 			create preferred_families
-			preferred_families.add_actions.extend (agent update_preferred_faces)
-			preferred_families.remove_actions.extend (agent update_preferred_faces)
+			preferred_families.internal_add_actions.extend (agent update_preferred_faces)
+			preferred_families.internal_remove_actions.extend (agent update_preferred_faces)
 
 				-- Retrieve shape, weight and family from
 				-- the default font returned by Windows.
@@ -381,12 +381,12 @@ feature {EV_ANY_I} -- Implementation
 				dc.release		
 				create wel_font.make_indirect (wel_log_font)
 					-- retrieve values set by windows
-				Wel_log_font.update_by_font(wel_font)
+				Wel_log_font.update_by_font (wel_font)
 			end
 
 				-- Update internal attributes.
 			internal_face_name := Wel_log_font.face_name.twin
-			update_internal_is_proportional(Wel_log_font)
+			update_internal_is_proportional (Wel_log_font)
 		end
 
 	set_name (str: STRING) is

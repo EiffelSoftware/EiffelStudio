@@ -125,7 +125,7 @@ feature {NONE} -- Cookie access and settings
 	c_protect_cookie (a: ANY): POINTER is
 			-- Protect `a'.
 		external
-			"C [macro %"estream.h%"] (EIF_REFERENCE): EIF_OBJECT"
+			"C [macro %"estream.h%"] (EIF_OBJECT): EIF_OBJECT"
 		alias
 			"eif_adopt"
 		end

@@ -61,7 +61,6 @@ feature {GB_XML_STORE} -- Output
 	modify_from_xml (element: XM_ELEMENT) is
 			-- Update all items in `objects' based on information held in `element'.
 		local
-			full_information: HASH_TABLE [ELEMENT_INFORMATION, STRING]
 			element_info: ELEMENT_INFORMATION
 		do
 			full_information := get_unique_full_info (element)
@@ -78,7 +77,6 @@ feature {GB_XML_STORE} -- Output
 			-- Build from XML any information that was
 			-- deferred during the load/build cycle.
 		local
-			full_information: HASH_TABLE [ELEMENT_INFORMATION, STRING]
 			element_info: ELEMENT_INFORMATION
 			names: ARRAYED_LIST [STRING]
 		do
@@ -108,7 +106,6 @@ feature {GB_CODE_GENERATOR} -- Output
 			-- settings held in `Current' which is
 			-- in a compilable format.
 		local
-			full_information: HASH_TABLE [ELEMENT_INFORMATION, STRING]
 			element_info: ELEMENT_INFORMATION
 			names: ARRAYED_LIST [STRING]
 			children_names: ARRAYED_LIST [STRING]

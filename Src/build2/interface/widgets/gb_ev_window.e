@@ -66,9 +66,9 @@ feature -- Access
 			
 				-- Set up maximum_width and maximum_height.
 			
-			create maximum_width_input.make (Current, Result, gb_ev_window_maximum_width, gb_ev_window_maximum_width_tooltip,
+			create maximum_width_input.make (Current, Result, Maximum_width_string ,gb_ev_window_maximum_width, gb_ev_window_maximum_width_tooltip,
 				agent set_maximum_width (?), agent valid_maximum_width (?))
-			create maximum_height_input.make (Current, Result, gb_ev_window_maximum_height,gb_ev_window_maximum_height_tooltip,
+			create maximum_height_input.make (Current, Result, Maximum_height_string, gb_ev_window_maximum_height,gb_ev_window_maximum_height_tooltip,
 				agent set_maximum_height (?), agent valid_maximum_height (?))
 			
 				-- Set up title.
@@ -133,7 +133,6 @@ feature {GB_XML_STORE} -- Output
 	modify_from_xml (element: XM_ELEMENT) is
 			-- Update all items in `objects' based on information held in `element'.
 		local
-			full_information: HASH_TABLE [ELEMENT_INFORMATION, STRING]
 			element_info: ELEMENT_INFORMATION
 			stripped_text: STRING
 		do
@@ -170,7 +169,6 @@ feature {GB_XML_STORE} -- Output
 			-- settings held in `Current' which is
 			-- in a compilable format.
 		local
-			full_information: HASH_TABLE [ELEMENT_INFORMATION, STRING]
 			element_info: ELEMENT_INFORMATION
 			escaped_text: STRING
 		do
@@ -266,6 +264,14 @@ feature {NONE} -- Implementation
 			end
 		end
 
+
+	integer_constant_selected (constant: GB_CONSTANT; name: STRING) is
+			--
+		do
+			check
+				not_yet_implemented: False
+			end
+		end
 		
 	User_can_resize_string: STRING is "User_can_resize"
 	Maximum_width_string: STRING is "Maximum_width"

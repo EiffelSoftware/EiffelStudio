@@ -58,7 +58,6 @@ feature {GB_XML_STORE} -- Output
 			-- Build from XML any information that was
 			-- deferred during the load/build cycle.
 		local
-			full_information: HASH_TABLE [ELEMENT_INFORMATION, STRING]
 			element_info: ELEMENT_INFORMATION
 		do
 			full_information := get_unique_full_info (element)
@@ -91,7 +90,6 @@ feature {GB_CODE_GENERATOR} -- Output
 			-- settings held in `Current' which is
 			-- in a compilable format.
 		local
-			full_information: HASH_TABLE [ELEMENT_INFORMATION, STRING]
 			element_info: ELEMENT_INFORMATION
 		do
 			Result := ""

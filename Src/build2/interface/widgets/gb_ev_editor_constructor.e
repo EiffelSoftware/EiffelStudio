@@ -79,11 +79,6 @@ feature {NONE} -- Implementation
 		deferred
 		end
 		
-	object: GB_OBJECT is
-			-- Object referenced by `Current'.
-		deferred
-		end
-		
 	update_editors is
 			-- Short version for calling everywhere.
 		deferred
@@ -181,6 +176,13 @@ feature {NONE} -- Implementation
 				shared_tools.type_selector.update_drop_actions_for_all_children (an_object)
 				Result := an_object
 			end
+		end
+		
+feature {GB_INTEGER_INPUT_FIELD} -- Implementation
+
+	object: GB_OBJECT is
+			-- Object referenced by `Current'.
+		deferred
 		end
 
 end -- class GB_EV_EDITOR

@@ -152,7 +152,7 @@ feature -- Output
 			Result := items
 			if Result = Void then
 				create items.make
-				fill_items (Min_slice_ref.item, (capacity - 1).min (Max_slice_ref.item))
+				fill_items (Min_slice_ref.item, Max_slice_ref.item)
 				Result := items
 			end
 		end
@@ -161,25 +161,29 @@ feature -- Output
 			-- Get Items for attributes
 		require
 			items_not_void: items /= Void
-			a_slice_min <= a_slice_max
+			slice_valid: a_slice_min <= a_slice_max
 		local
 			l_elt: ICOR_DEBUG_VALUE
 			l_att_debug_value: ABSTRACT_DEBUG_VALUE
 			i: INTEGER
 		do			
-			set_sp_bounds (a_slice_min, (capacity - 1).min (a_slice_max))
-			from
-				i := sp_lower
-			until
-				i > sp_upper
-			loop
-				l_elt := array_value.get_element_at_position (i)
-				if l_elt /= Void then
-					l_att_debug_value := Eifnet_debug_value_factory.debug_value_from (l_elt, icd_frame)
-					l_att_debug_value.set_name (i.out)
-					items.extend (l_att_debug_value)
+			if capacity > 0 then
+				set_sp_bounds (a_slice_min, (capacity - 1).min (a_slice_max))
+				if sp_lower <= sp_upper then
+					from
+						i := sp_lower
+					until
+						i > sp_upper
+					loop
+						l_elt := array_value.get_element_at_position (i)
+						if l_elt /= Void then
+							l_att_debug_value := Eifnet_debug_value_factory.debug_value_from (l_elt, icd_frame)
+							l_att_debug_value.set_name (i.out)
+							items.extend (l_att_debug_value)
+						end
+						i := i + 1
+					end
 				end
-				i := i + 1
 			end
 		end
 

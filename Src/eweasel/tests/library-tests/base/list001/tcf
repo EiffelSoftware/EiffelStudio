@@ -1,5 +1,5 @@
 test_name is-equal
-test_description New implementation of  LIST.is_equal tested with different descendants
+test_description New implementation of LIST.is_equal tested with different descendants
 
 define OUTPUT $TEST
 copy_sub 	Ace $TEST Ace

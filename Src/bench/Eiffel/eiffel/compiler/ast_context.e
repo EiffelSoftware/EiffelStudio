@@ -40,6 +40,9 @@ feature
 	locals: EXTEND_TABLE [LOCAL_INFO, STRING];
 			-- Current local variables of the analyzed feature
 
+	has_loop: BOOLEAN
+			-- Does the current FEATURE_AS node contain a loop construct?
+
 	access_line: ACCESS_LINE;
 			-- List of access encountered by the type checker: then the
 			-- building of the byte code takes those access.
@@ -164,6 +167,14 @@ feature
 		do
 			Result := check_for_special_error
 		end;
+
+	set_has_loop (v: BOOLEAN) is
+			-- Assign `v' to `has_loop'.
+		do
+			has_loop := v
+		ensure
+			has_loop_set: has_loop = v
+		end
 
 	set_locals (l: like locals) is
 			-- Assign `l' to `locals'.

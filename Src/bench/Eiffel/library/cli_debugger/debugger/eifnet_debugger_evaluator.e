@@ -150,9 +150,6 @@ feature {EIFNET_EXPORTER, EB_OBJECT_TOOL} -- Basic value creation
 	new_void_evaluation (a_frame: ICOR_DEBUG_FRAME): ICOR_DEBUG_VALUE is
 			-- New Object evaluation with Void
 		require
-		local
-			l_gen_obj: ICOR_DEBUG_GENERIC_VALUE
-			
 		do
 			prepare_evaluation (a_frame)
 			Result := last_icor_debug_eval.create_value (element_type_class, Void)

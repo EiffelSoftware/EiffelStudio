@@ -21,6 +21,8 @@ feature -- Access
 	cursor: CURSOR is
 			-- Current cursor position
 		deferred
+		ensure
+			cursor_not_void: Result /= Void
 		end
 
 feature -- Status report

@@ -181,84 +181,92 @@ feature -- Events handling
 				when Key_enter then
 					close_and_complete
 				when Key_up then
-					if to_be_inserted.has_focus then
-						if choice_list.count > 0 then
-							choice_list.first.enable_select
-						end
-						choice_list.set_focus
-					else
-						if choice_list.selected_item /= Void then
-							ix:= choice_list.index_of (choice_list.selected_item,1)
-							if ix <= 1 then
-								ix := choice_list.count
-							else
-								ix := (ix - 1)
+					if not choice_list.is_empty
+						if to_be_inserted.has_focus then
+							if choice_list.count > 0 then
+								choice_list.first.enable_select
 							end
+							choice_list.set_focus
 						else
-							ix := 1
+							if choice_list.selected_item /= Void then
+								ix:= choice_list.index_of (choice_list.selected_item,1)
+								if ix <= 1 then
+									ix := choice_list.count
+								else
+									ix := (ix - 1)
+								end
+							else
+								ix := 1
+							end
+							choice_list.i_th (ix).enable_select
+							choice_list.ensure_item_visible (choice_list.i_th(ix))
 						end
-						choice_list.i_th (ix).enable_select
-						choice_list.ensure_item_visible (choice_list.i_th(ix))
 					end
 				when Key_down then
-					if to_be_inserted.has_focus then
-						if choice_list.count > 0 then
-							choice_list.first.enable_select
-						end
-						choice_list.set_focus
-					else
-						if choice_list.selected_item /= Void then
-							ix:= choice_list.index_of (choice_list.selected_item,1)
-							if ix >= choice_list.count then
-								ix := 1
-							else
-								ix := (ix + 1)
+					if not choice_list.is_empty then
+						if to_be_inserted.has_focus then
+							if choice_list.count > 0 then
+								choice_list.first.enable_select
 							end
+							choice_list.set_focus
 						else
-							ix := 1
+							if choice_list.selected_item /= Void then
+								ix:= choice_list.index_of (choice_list.selected_item,1)
+								if ix >= choice_list.count then
+									ix := 1
+								else
+									ix := (ix + 1)
+								end
+							else
+								ix := 1
+							end
+							choice_list.i_th (ix).enable_select
+							choice_list.ensure_item_visible (choice_list.i_th(ix))
 						end
-						choice_list.i_th (ix).enable_select
-						choice_list.ensure_item_visible (choice_list.i_th(ix))
 					end
 				when Key_page_up then
-					if to_be_inserted.has_focus then
-						if choice_list.count > 0 then
-							choice_list.first.enable_select
-						end
-						choice_list.set_focus
-					else
-						if choice_list.selected_item /= Void then
-							ix:= choice_list.index_of (choice_list.selected_item,1)
-							if ix <= 10 then
-								ix := choice_list.count
-							else
-								ix := ix - 10
+					if not choice_list.is_empty then
+						if to_be_inserted.has_focus then
+							if choice_list.count > 0 then
+								choice_list.first.enable_select
 							end
+							choice_list.set_focus
 						else
-							ix := 1
+							if choice_list.selected_item /= Void then
+								ix:= choice_list.index_of (choice_list.selected_item,1)
+								if ix <= 10 then
+									ix := choice_list.count
+								else
+									ix := ix - 10
+								end
+							else
+								ix := 1
+							end
+							choice_list.i_th (ix).enable_select
+							choice_list.ensure_item_visible (choice_list.i_th(ix))
 						end
-						choice_list.i_th (ix).enable_select
-						choice_list.ensure_item_visible (choice_list.i_th(ix))
 					end
 				when Key_page_down then
-					if to_be_inserted.has_focus then
-						if choice_list.count > 0 then
-							choice_list.first.enable_select
-						end
-						choice_list.set_focus
-					else
-						if choice_list.selected_item /= Void then
-							ix:= choice_list.index_of (choice_list.selected_item,1)
-							if ix > choice_list.count - 10 then
-								ix := 1
-							else
-								ix := ix + 10
+					if not choice_list.is_empty then
+						if to_be_inserted.has_focus then
+							if choice_list.count > 0 then
+								choice_list.first.enable_select
 							end
+							choice_list.set_focus
 						else
-							ix := 1
+							if choice_list.selected_item /= Void then
+								ix:= choice_list.index_of (choice_list.selected_item,1)
+								if ix > choice_list.count - 10 then
+									ix := 1
+								else
+									ix := ix + 10
+								end
+							else
+								ix := 1
+							end
+							choice_list.i_th (ix).enable_select
+							choice_list.ensure_item_visible (choice_list.i_th(ix))
 						end
-						choice_list.i_th (ix).enable_select
-						choice_list.ensure_item_visible (choice_list.i_th(ix))
 					end
 				when Key_escape then
 					exit
@@ -289,7 +297,7 @@ feature -- Events handling
 		local
 			searched_w: STRING
 		do
-			if to_be_inserted.text /= Void and then not to_be_inserted.text.is_empty then
+			if not to_be_inserted.text.is_empty then
 				searched_w := to_be_inserted.text.out
 			end
 			build_displayed_list (searched_w)

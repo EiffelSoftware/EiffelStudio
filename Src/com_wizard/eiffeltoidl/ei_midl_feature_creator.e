@@ -70,7 +70,7 @@ feature -- Basic operations
 			midl_feature.set_comment (l_feature.comment)
 
 			if not l_feature.result_type.is_empty then
-				if type_mapper.support_eiffel_type (l_feature.result_type) then
+				if type_mapper.supported_eiffel_type (l_feature.result_type) then
 					midl_feature.set_result_type (type_mapper.com_type (l_feature.result_type))
 				else
 					l_succeed := False
@@ -83,9 +83,8 @@ feature -- Basic operations
 				until
 					l_feature.parameters.after
 				loop
-					if type_mapper.support_eiffel_type (l_feature.parameters.item.type) then
+					if type_mapper.supported_eiffel_type (l_feature.parameters.item.type) then
 						com_type := type_mapper.com_type (l_feature.parameters.item.type)
-
 						if com_type /= Void then
 							tmp_name := clone (l_feature.parameters.item.name)
 							if c_keywords.has (tmp_name) then

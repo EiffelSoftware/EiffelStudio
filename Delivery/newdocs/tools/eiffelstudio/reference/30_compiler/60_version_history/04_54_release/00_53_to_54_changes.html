@@ -34,7 +34,22 @@
         <h3>Language issues</h3>
         
         
-        <h3>Store/Retrieve issues</h3>
+        <ul>
+          <li>Now checks for valid export status in agent creation. Meaning that 
+          in class <span class="eclass">MY_CLASS</span>, the following agent creation
+          <span class="ekeyword">agent</span> <span class="efeature">target</span>.<span class="efeature">call</span> is valid if and 
+          only if <span class="efeature">call</span> is exported to <span class="eclass">MY_CLASS</span>.</li>
+</ul>
+        
+        
+        <h3>Compiler issues</h3>
+<ul>
+  <li>Fixed non-detection of changes when changing code from
+          <span class="ekeyword">agent</span> <span class="efeature">call </span>to
+          <span class="ekeyword">agent</span> <span class="ekeyword">Current</span>.<span class="efeature">call</span>. 
+  Which should check for the validity of export of <span class="efeature">call </span>
+  to current class.</li>
+</ul>
         
         
         <h3>Runtime/code generation issues</h3>
@@ -47,6 +62,20 @@
         
         
         <h3>.NET issues</h3>
+        
+        
+        <ul>
+          <li>Fixed bug in code generation  with following statement:<br>
+<pre>	l_time: <span class="eclass">TIME_SPAN</span>
+	
+	<span class="efeature">print</span> (l_time.<span class="efeature">total_milliseconds</span>.<span class="efeature">out</span>)
+</pre>
+</li>
+          <li>&nbsp;</li>
+</ul>
+        
+        
+        <h3>Store/Retrieve issues</h3>
         
         
         </BODY>

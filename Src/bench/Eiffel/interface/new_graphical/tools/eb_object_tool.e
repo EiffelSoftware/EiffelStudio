@@ -544,6 +544,53 @@ feature {NONE} -- Implementation
 			w_dlg.show_modal_to_window (Debugger_manager.debugging_window.window)		
 		end
 		
+	build_exception_info (a_tree: EV_TREE) is
+			-- Display exception info
+			-- for now only for Dotnet systems
+		local
+			item: EV_TREE_ITEM
+			l_exception_detail: TUPLE [STRING, STRING]
+			l_exception_class_detail: STRING
+			l_exception_module_detail: STRING
+			l_exception_to_string: STRING
+			exception_item: EV_TREE_ITEM
+		do
+			if Application.is_dotnet and then Application.imp_dotnet.exception_occured then
+				l_exception_detail := Application.imp_dotnet.exception_details
+				if l_exception_detail /= Void then
+					l_exception_module_detail ?= l_exception_detail.item (2)
+					
+					create exception_item
+					if Application.imp_dotnet.exception_handled then
+						exception_item.set_text ("Exception raised :: First chance")
+					else
+						exception_item.set_text ("Exception raised :: UnHandled")
+					end
+					exception_item.set_pixmap (Pixmaps.Icon_green_tick)
+					
+					l_exception_to_string := Application.imp_dotnet.exception_to_string
+					if l_exception_to_string /= Void then
+						create item
+						item.set_data (l_exception_to_string)
+						item.set_text ("Double click to see Exception or Ctrl-C to copy to clipboard")-- + l_exception_to_string)
+						item.set_tooltip (l_exception_to_string)
+						item.set_pixmap (Pixmaps.Icon_exception)
+						item.pointer_double_press_actions.extend (agent show_text_in_popup (l_exception_to_string, ?,?,?,?,?,?,?,?))
+						exception_item.extend (item)						
+					end						
+
+					create item
+					item.set_text ("Module " + l_exception_module_detail)
+					item.set_data (l_exception_module_detail)
+					item.set_pixmap (Pixmaps.Icon_exception)
+					exception_item.extend (item)
+
+					a_tree.extend (exception_item)
+					exception_item.expand
+				end
+			end
+		end
+
 	build_local_tree is
 			-- Create the tree that contains locals and parameters.
 		local
@@ -559,133 +606,98 @@ feature {NONE} -- Implementation
 			i: INTEGER
 			dbg_nb: INTEGER
 
-			l_exception_detail: TUPLE [STRING, STRING]
-			l_exception_class_detail: STRING
-			l_exception_module_detail: STRING
-			l_exception_to_string: STRING
-			exception_item: EV_TREE_ITEM
 		do
 			local_tree.wipe_out
-			cse := current_stack_element
 
-			if Application.is_dotnet then
-				cse_dotnet ?= cse
+			if Application.call_stack_is_empty and then Application.is_dotnet then
+						build_exception_info (local_tree)
+			else
+				cse := current_stack_element
 
-				create module_item
-				module_item.set_text ("Module = " + cse_dotnet.dotnet_module_filename)
-				module_item.set_pixmap (Pixmaps.Icon_green_tick)
-				local_tree.extend (module_item)				
+				if Application.is_dotnet then
+					cse_dotnet ?= cse
 
---FIXME jfiat [2003/10/08 - 11:54] Do we want to display Exception information ?
+					create module_item
+					module_item.set_text ("Module = " + cse_dotnet.dotnet_module_filename)
+					module_item.set_data (cse_dotnet.dotnet_module_name)
+					module_item.set_pixmap (Pixmaps.Icon_green_tick)
+					local_tree.extend (module_item)				
 
-				if Application.imp_dotnet.exception_occured then
-					l_exception_detail := Application.imp_dotnet.exception_details
-					if l_exception_detail /= Void then
-						l_exception_class_detail ?= l_exception_detail.item (1)
-						l_exception_module_detail ?= l_exception_detail.item (2)
-						
-						create exception_item
-						exception_item.set_text ("Exception raised")
-						exception_item.set_pixmap (Pixmaps.Icon_green_tick)
-						local_tree.extend (exception_item)
-						
-						
-						l_exception_to_string := Application.imp_dotnet.exception_to_string
-						if l_exception_to_string /= Void then
-							create item
-							item.set_text ("Double click to see Exception")-- + l_exception_to_string)
-							item.set_tooltip (l_exception_to_string)
-							item.set_pixmap (Pixmaps.Icon_exception)
-							item.pointer_double_press_actions.extend (agent show_text_in_popup (l_exception_to_string, ?,?,?,?,?,?,?,?))
-							exception_item.extend (item)						
-						end						
-
-						create item
-						item.set_text (l_exception_class_detail)
-						item.set_pixmap (Pixmaps.Icon_exception)
-						exception_item.extend (item)
-
-						create item
-						item.set_text ("Module " + l_exception_module_detail)
-						item.set_pixmap (Pixmaps.Icon_exception)
-						exception_item.extend (item)
-
-						exception_item.expand
+					build_exception_info (local_tree)
+				end
+				
+					-- Fill in the arguments, if any.
+				list := cse.arguments
+				if
+					list /= Void and then
+					not list.is_empty
+				then
+					create item
+					item.set_text (Interface_names.l_Arguments)
+					item.set_pixmap (Pixmaps.Icon_feature_clause_any)
+					local_tree.extend (item)
+					from
+						list.start
+					until
+						list.after
+					loop
+						item.extend (debug_value_to_item (list.item))
+						list.forth
+					end
+					if expand_args then
+						item.expand
 					end
 				end
-			end
-			
-				-- Fill in the arguments, if any.
-			list := cse.arguments
-			if
-				list /= Void and then
-				not list.is_empty
-			then
-				create item
-				item.set_text (Interface_names.l_Arguments)
-				item.set_pixmap (Pixmaps.Icon_feature_clause_any)
-				local_tree.extend (item)
-				from
-					list.start
-				until
-					list.after
-				loop
-					item.extend (debug_value_to_item (list.item))
-					list.forth
-				end
-				if expand_args then
-					item.expand
-				end
-			end
 
-				-- Fill in the locals, if any.
-			list := cse.locals
-			if
-				list /= Void and then
-				not list.is_empty
-			then
-				create item
-				item.set_text (Interface_names.l_Locals)
-				item.set_pixmap (Pixmaps.Icon_feature_clause_any)
-				local_tree.extend (item)
-				dbg_nb := list.count
-				create tmp.make (1, dbg_nb)
-				from
-					list.start
-					i := 1
-				until
-					list.after
-				loop
-					tmp.put (list.item, i)
-					i := i + 1
-					list.forth
+					-- Fill in the locals, if any.
+				list := cse.locals
+				if
+					list /= Void and then
+					not list.is_empty
+				then
+					create item
+					item.set_text (Interface_names.l_Locals)
+					item.set_pixmap (Pixmaps.Icon_feature_clause_any)
+					local_tree.extend (item)
+					dbg_nb := list.count
+					create tmp.make (1, dbg_nb)
+					from
+						list.start
+						i := 1
+					until
+						list.after
+					loop
+						tmp.put (list.item, i)
+						i := i + 1
+						list.forth
+					end
+					tmp.sort
+					from
+						i := 1
+					until
+						i > dbg_nb
+					loop
+						item.extend (debug_value_to_item (tmp @ i))
+						i := i + 1
+					end
+					if expand_locals then
+						item.expand
+					end
 				end
-				tmp.sort
-				from
-					i := 1
-				until
-					i > dbg_nb
-				loop
-					item.extend (debug_value_to_item (tmp @ i))
-					i := i + 1
-				end
-				if expand_locals then
-					item.expand
-				end
-			end
 
-				-- Display the result, if any.
-			dv := cse.result_value
-			if
-				dv /= Void
-			then
-				create item
-				item.set_text (Interface_names.l_Result)
-				item.set_pixmap (Pixmaps.Icon_feature_clause_any)
-				local_tree.extend (item)
-				item.extend (debug_value_to_item (dv))
-				if expand_result then
-					item.expand
+					-- Display the result, if any.
+				dv := cse.result_value
+				if
+					dv /= Void
+				then
+					create item
+					item.set_text (Interface_names.l_Result)
+					item.set_pixmap (Pixmaps.Icon_feature_clause_any)
+					local_tree.extend (item)
+					item.extend (debug_value_to_item (dv))
+					if expand_result then
+						item.expand
+					end
 				end
 			end
 		end
@@ -729,20 +741,24 @@ feature {NONE} -- Implementation
 			end
 
 			if Application.is_dotnet then
-				value := application.imp_dotnet.status.current_stack_element_dotnet.current_object
-				Application.imp_dotnet.keep_object (value)	
-				check 
-					value_not_void: value /= Void
+				if not Application.call_stack_is_empty then
+					value := application.imp_dotnet.status.current_stack_element_dotnet.current_object
+					Application.imp_dotnet.keep_object (value)	
+					check 
+						value_not_void: value /= Void
+					end
+					create {EB_OBJECT_DISPLAY_PARAMETERS_DOTNET} current_object.make_from_debug_value (value)
 				end
-				create {EB_OBJECT_DISPLAY_PARAMETERS_DOTNET} current_object.make_from_debug_value (value)
 			else
 				create {EB_OBJECT_DISPLAY_PARAMETERS_CLASSIC} current_object.make_from_stack_element (current_stack_element)
 			end
-			current_object.set_display (display_first)
-			current_object.set_display_attributes (display_first_attributes)
-			current_object.set_display_onces (display_first_onces)
-			current_object.set_display_special (display_first_special)
-			current_object.to_tree_item (object_tree)
+			if current_object /= Void then
+				current_object.set_display (display_first)
+				current_object.set_display_attributes (display_first_attributes)
+				current_object.set_display_onces (display_first_onces)
+				current_object.set_display_special (display_first_special)
+				current_object.to_tree_item (object_tree)
+			end
 			
 			add_displayed_objects_to_tree (object_tree)
 		end
@@ -918,6 +934,7 @@ feature {NONE} -- Implementation
 		local
 			csts: EV_KEY_CONSTANTS
 			dv: ABSTRACT_DEBUG_VALUE
+			text_data: STRING
 			it: EV_TREE_NODE
 		do
 			create csts
@@ -931,8 +948,15 @@ feature {NONE} -- Implementation
 				if it /= Void then
 					dv ?= it.data
 				end
+					--| if the NODE contains a DEBUG_VALUE
 				if dv /= Void then
 					ev_application.clipboard.set_text (dv.dump_value.full_output)
+				else
+					text_data ?= it.data
+						--| if the NODE contains a STRING value
+					if text_data /= Void then
+						ev_application.clipboard.set_text (text_data)
+					end
 				end
 			end
 		end

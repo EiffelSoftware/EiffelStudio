@@ -1,6 +1,6 @@
 indexing
 	description: "Entry in a menu used to hide or show %
-				% the context catalog."
+				% all the command tools."
 	id: "$Id$"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -22,9 +22,9 @@ feature {NONE}
 			-- Display or hide the context catalog.
 		do
 			if armed then
-				main_panel.show_command_editor
+				window_mgr.show_all_command_tools
 			else
-				main_panel.hide_command_editor
+				window_mgr.hide_all_command_tools
 			end
 		end
 

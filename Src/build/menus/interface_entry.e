@@ -24,10 +24,8 @@ feature {NONE}
 			-- Display or hide the interface.
 		do
 			if armed then
---				new_main_panel.show_interface
 				main_panel.show_interface
 			else
---				new_main_panel.hide_interface
 				main_panel.hide_interface
 			end
 		end

@@ -10,31 +10,36 @@ class
 feature -- Common
 
 	Actions: STRING is "&Actions"
-	Exit: STRING is "E&xit"
-	Exit_tool: STRING is "Exit &tool"
 	File: STRING is "&File"
-	Generate: STRING is "&Generate Eiffel code"
 	Help: STRING is "&Help"
 	Menu_bar: STRING is "Menu bar"
 	View: STRING is "&View"
+	Windows: STRING is "&Windows"
 
 feature -- Menus on main panel
 
 		-- Submenus of `File'
 
+	Exit: STRING is "E&xit"
+	Exit_tool: STRING is "Exit &tool"
+	Generate: STRING is "&Generate Eiffel code"
 	Import: STRING is "&Import EiffelBuild code"
+	Save: STRING is "&Save project"
+	Toolkit: STRING is "Select &Toolkit"
 
 		-- Submenus of `View'
 
-	Application_editor: STRING is "&Application editor"
-	Context: STRING is "Con&text"
 	Context_catalog: STRING is "Context &catalog"
 	Context_editor: STRING is "Context &editor"
 	Context_tree: STRING is "Context &tree"
 	Command_catalog: STRING is "Command &catalog"
+	
+		-- Submenus of `Windows'
+	
+	Application_editor: STRING is "&Application editor"
 	Editors: STRING is "&Editors"
 	History_window: STRING is "&History window"
-	Instance_editor: STRING is "Command &tool"
+	Instance_editor: STRING is "Command &tools"
 	Interface: STRING is "&Interface"
 	Interface_only: STRING is "Interface &only"
 	Class_importer: STRING is "Class im&porter"

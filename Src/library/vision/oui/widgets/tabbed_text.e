@@ -52,13 +52,13 @@ feature -- Status report
 feature -- Status setting
 
 	set_no_tabs is
-				-- Turn of tabulation
+			-- Turn of tabulation.
 		do
 			implementation.set_no_tabs
 		end
 	
 	set_tab_position (tab_position: INTEGER) is
-				-- Set tabs at every `tab_position'
+			-- Set tabs at every `tab_position'.
 		require
 			valid_tab_position: tab_position > 1
 		do
@@ -68,7 +68,7 @@ feature -- Status setting
 		end
 
 	set_tab_positions (tab_position_array: ARRAY [INTEGER]) is
-				-- Set tabs at positions specified in `tab_position_array'
+			-- Set tabs at positions specified in `tab_position_array'.
 		require
 			tab_position_array_exists: tab_position_array /= Void
 			tab_position_array_filled: not tab_position_array.empty

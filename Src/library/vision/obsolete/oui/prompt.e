@@ -7,7 +7,7 @@ indexing
 class PROMPT 
 
 obsolete
-	"This is only implemented for Motif.  Use MEL_SELCTION_BOX instead."
+	"This is only implemented for Motif.  Use MEL_SELECTION_BOX instead."
 
 inherit
 

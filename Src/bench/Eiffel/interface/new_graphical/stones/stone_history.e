@@ -20,7 +20,7 @@ inherit
 --			update_integer_resource
 		end
 
-creation
+create
 	make
 
 feature -- Initialization
@@ -28,7 +28,7 @@ feature -- Initialization
 	make is
 			-- Initialize Current
 		do
-			{TWO_WAY_LIST} Precursor
+			Precursor {TWO_WAY_LIST}
 			register
 			Object_comparison := True
 		end

@@ -17,7 +17,7 @@ inherit
 			header, stone_signature, history_name
 		end
 
-creation
+create
 	make
 	
 feature {NONE} -- Initialization
@@ -120,7 +120,7 @@ feature -- Synchronization
 							new_ci /= Void
 						then
 							if not new_ci.compiled then
-								!CLASSI_STONE! Result.make (e_class.lace_class)
+								create {CLASSI_STONE} Result.make (e_class.lace_class)
 							else
 								create {CLASSC_STONE} Result.make (new_ci.compiled_class)
 							end

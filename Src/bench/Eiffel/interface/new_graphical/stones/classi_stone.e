@@ -16,7 +16,7 @@ inherit
 
 	SHARED_EIFFEL_PROJECT
 
-creation
+create
 	make
 	
 feature {NONE} -- Initialization
@@ -126,9 +126,9 @@ feature -- Access
 						new_ci /= Void
 					then
 						if new_ci.compiled then
-							!CLASSC_STONE! Result.make (new_ci.compiled_class)
+							create {CLASSC_STONE} Result.make (new_ci.compiled_class)
 						else
-							!CLASSI_STONE! Result.make (new_ci)
+							create {CLASSI_STONE} Result.make (new_ci)
 						end
 					end
 				end

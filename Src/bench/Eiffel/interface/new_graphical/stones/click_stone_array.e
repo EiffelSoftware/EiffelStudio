@@ -14,7 +14,7 @@ inherit
 			make as array_make
 		end;
 
-creation
+create
 
 	make
 	
@@ -46,14 +46,14 @@ feature {NONE} -- Initialization
 					a_click_ast := list.i_th (pos);
 					clickable := a_click_ast.node;
 					if clickable.is_class or else clickable.is_precursor then
-						!CLASSC_STONE! stone.make 
+						create {CLASSC_STONE} stone.make 
 							(clickable.associated_eiffel_class (ref_class))
 					else
-						!FEATURE_NAME_STONE! stone.make 
+						create {FEATURE_NAME_STONE} stone.make 
 							(clickable.associated_feature_name,
 								ref_class)
 					end;
-					!! new_click_stone.make
+					create new_click_stone.make
 						(stone,
 						a_click_ast.start_position,
 						a_click_ast.end_position);

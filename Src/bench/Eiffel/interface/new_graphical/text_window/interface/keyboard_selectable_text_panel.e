@@ -39,11 +39,11 @@ feature -- Initialization
 			----------------------------
 			-- Vision2 initialisation --
 			----------------------------
-			editor_area.key_press_actions.extend (~on_key_down)
+			editor_area.key_press_actions.extend (agent on_key_down)
 			create key_action_timer.make_with_interval (0)
 
-			editor_area.focus_in_actions.extend (~gain_focus)
-			editor_area.focus_out_actions.extend (~lose_focus)
+			editor_area.focus_in_actions.extend (agent gain_focus)
+			editor_area.focus_out_actions.extend (agent lose_focus)
 
 			editor_area.enable_sensitive
 		end
@@ -173,9 +173,9 @@ feature {NONE} -- Process Vision2 events
 					key_action_timer.set_interval (40)
 					continue_key_action := true
 					if ctrled_key then
-						key_action_timer.actions.extend (~repeat_ctrled_key (ev_key))
+						key_action_timer.actions.extend (agent repeat_ctrled_key (ev_key))
 					else
-						key_action_timer.actions.extend (~repeat_extended_key (ev_key))
+						key_action_timer.actions.extend (agent repeat_extended_key (ev_key))
 					end
 				end
 			end
@@ -248,29 +248,29 @@ feature {NONE} -- Handle keystokes
 
 			when Key_left then
 					-- Left arrow action
-				basic_cursor_move (cursor~go_left_word)
+				basic_cursor_move (agent cursor.go_left_word)
 
 			when Key_right then
 					-- Right arrow action
-				basic_cursor_move (cursor~go_right_word)
+				basic_cursor_move (agent cursor.go_right_word)
 
 			when Key_up then
 					-- Up arrow action
-				basic_cursor_move (cursor~go_up_line)
+				basic_cursor_move (agent cursor.go_up_line)
 
 			when Key_down then
 					-- Down arrow action
-				basic_cursor_move (cursor~go_down_line)
+				basic_cursor_move (agent cursor.go_down_line)
 				
 			when Key_home then
 				set_first_line_displayed (1, True)
-				basic_cursor_move (cursor~set_y_in_lines (1))
-				basic_cursor_move (cursor~go_start_line)
+				basic_cursor_move (agent cursor.set_y_in_lines (1))
+				basic_cursor_move (agent cursor.go_start_line)
 
 			when Key_end then
 				set_first_line_displayed (maximum_top_line_index, True)
-				basic_cursor_move (cursor~set_y_in_lines (number_of_lines))
-				basic_cursor_move (cursor~go_end_line)
+				basic_cursor_move (agent cursor.set_y_in_lines (number_of_lines))
+				basic_cursor_move (agent cursor.go_end_line)
 
 			else
 					-- Key not handled
@@ -296,49 +296,49 @@ feature {NONE} -- Handle keystokes
 
 			when Key_left then
 					-- Left arrow action
-				basic_cursor_move (cursor~go_left_char)
+				basic_cursor_move (agent cursor.go_left_char)
 	
 			when Key_right then
 					-- Right arrow action
-				basic_cursor_move (cursor~go_right_char)
+				basic_cursor_move (agent cursor.go_right_char)
 
 			when Key_up then
 					-- Up arrow action
-				basic_cursor_move (cursor~go_up_line)
+				basic_cursor_move (agent cursor.go_up_line)
 
 			when Key_down then
 					-- Down arrow action
-				basic_cursor_move (cursor~go_down_line)
+				basic_cursor_move (agent cursor.go_down_line)
 
 			when Key_home then
 					-- Home key action
-				basic_cursor_move (cursor~go_start_line)
+				basic_cursor_move (agent cursor.go_start_line)
 
 			when Key_end then
 					-- End key action
 				if shifted_key and then cursor.line.first_token = cursor.token and then cursor.pos_in_token = 1 then
-					basic_cursor_move (cursor~go_end_line)
-					basic_cursor_move (cursor~go_right_char)
+					basic_cursor_move (agent cursor.go_end_line)
+					basic_cursor_move (agent cursor.go_right_char)
 				else
-					basic_cursor_move (cursor~go_end_line)
+					basic_cursor_move (agent cursor.go_end_line)
 				end
 
 			when Key_page_up then
 				if cursor.y_in_lines >= first_line_displayed and cursor.y_in_lines <= first_line_displayed + number_of_lines_displayed then
 					set_first_line_displayed ((first_line_displayed - number_of_lines_displayed).max (1), True)
-					basic_cursor_move (cursor~set_y_in_lines ((cursor.y_in_lines - number_of_lines_displayed).max (1)))
+					basic_cursor_move (agent cursor.set_y_in_lines ((cursor.y_in_lines - number_of_lines_displayed).max (1)))
 				else
 					set_first_line_displayed ((first_line_displayed - number_of_lines_displayed).max (1), True)
-					basic_cursor_move (cursor~set_y_in_lines ((first_line_displayed + number_of_lines_displayed - 1).min (number_of_lines)))
+					basic_cursor_move (agent cursor.set_y_in_lines ((first_line_displayed + number_of_lines_displayed - 1).min (number_of_lines)))
 				end
 
 			when Key_page_down then
 				if cursor.y_in_lines >= first_line_displayed and cursor.y_in_lines <= first_line_displayed + number_of_lines_displayed then
 					set_first_line_displayed ((first_line_displayed + number_of_lines_displayed).min (maximum_top_line_index), True)
-					basic_cursor_move (cursor~set_y_in_lines ((cursor.y_in_lines + number_of_lines_displayed).min (number_of_lines)))
+					basic_cursor_move (agent cursor.set_y_in_lines ((cursor.y_in_lines + number_of_lines_displayed).min (number_of_lines)))
 				else
 					set_first_line_displayed ((first_line_displayed + number_of_lines_displayed - 1).min (maximum_top_line_index), True)
-					basic_cursor_move (cursor~set_y_in_lines (first_line_displayed))
+					basic_cursor_move (agent cursor.set_y_in_lines (first_line_displayed))
 				end
 			else
 					-- Key not handled

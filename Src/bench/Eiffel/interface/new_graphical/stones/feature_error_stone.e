@@ -15,7 +15,7 @@ inherit
 			line_number
 		end
 
-creation
+create
 	make
 
 feature {NONE} -- Initialization

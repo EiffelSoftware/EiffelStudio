@@ -65,7 +65,7 @@ feature {NONE} -- Initialization
 	 make is
 			-- Initialize the editor.
 		do
-			{SELECTABLE_TEXT_PANEL} Precursor
+			Precursor {SELECTABLE_TEXT_PANEL}
 
 			if Editor_preferences.smart_identation then
 				text_displayed.enable_smart_indentation
@@ -82,9 +82,9 @@ feature {NONE} -- Initialization
 	build_editor_area is
 			-- Initialize variables and objects related to display.
 		do
-			{SELECTABLE_TEXT_PANEL} Precursor
-			editor_area.key_press_string_actions.extend (~on_char)
-			editor_area.key_release_actions.extend (~on_key_up)
+			Precursor {SELECTABLE_TEXT_PANEL}
+			editor_area.key_press_string_actions.extend (agent on_char)
+			editor_area.key_release_actions.extend (agent on_key_up)
 			basic_pointer := editor_area.pointer_style
 		end
 
@@ -132,7 +132,7 @@ feature -- Content change
 			-- Wipe out the text area.
 		do
 			disable_editable
-			{SELECTABLE_TEXT_PANEL} Precursor
+			Precursor {SELECTABLE_TEXT_PANEL}
 		end
 		
 	display_message (message: STRING) is
@@ -423,7 +423,7 @@ feature {NONE} -- Handle keystokes
 				ev_key.code
 			when Key_x then
 					-- Ctrl-X (cut)
-				run_if_editable (~cut_selection)
+				run_if_editable (agent cut_selection)
 
 			when Key_c then
 					-- Ctrl-C (copy)
@@ -431,11 +431,11 @@ feature {NONE} -- Handle keystokes
 
 			when Key_v then
 					-- Ctrl-V (paste)
-				run_if_editable (~paste)
+				run_if_editable (agent paste)
 
 			when Key_u then
 					-- Ctrl-U
-				run_if_editable (~set_selection_case(shifted_key))
+				run_if_editable (agent set_selection_case(shifted_key))
 
 				-- Undo / redo now use accelerator.
 --			when Key_z then
@@ -458,10 +458,10 @@ feature {NONE} -- Handle keystokes
 			when Key_k then
 				if shifted_key then
 						-- Ctrl+Shift+K uncomment selection
-					run_if_editable (~uncomment_selection)
+					run_if_editable (agent uncomment_selection)
 				else
 						-- Ctrl+K
-					run_if_editable (~comment_selection)
+					run_if_editable (agent comment_selection)
 				end
 
 			when Key_insert then
@@ -1117,7 +1117,7 @@ feature {NONE} -- Text Loading
 	reset is
 			-- Reinitialize `Current' so that it can receive a new content.
 		do
-			{SELECTABLE_TEXT_PANEL} Precursor		
+			Precursor {SELECTABLE_TEXT_PANEL}		
 			date_of_file_when_loaded := 0
 			open_backup := False
 			file_name := Void
@@ -1126,7 +1126,7 @@ feature {NONE} -- Text Loading
 	on_text_loaded is
 			-- Finish editor setup as the entire text has been loaded.
 		do
-			{SELECTABLE_TEXT_PANEL} Precursor
+			Precursor {SELECTABLE_TEXT_PANEL}
 			if open_backup then
 				text_observer_manager.set_changed (True, True)
 			end
@@ -1141,7 +1141,7 @@ feature {NONE} -- retrieving backup
 			dial: EV_WARNING_DIALOG
 		do
 			create dial.make_with_text (Warning_messages.w_Found_backup)
-			dial.set_buttons_and_actions (<<	Interface_names.b_Open_backup, Interface_names.b_Open_original>>, <<~open_backup_selected, ~open_normal_selected>>)
+			dial.set_buttons_and_actions (<<	Interface_names.b_Open_backup, Interface_names.b_Open_original>>, <<agent open_backup_selected, agent open_normal_selected>>)
 			dial.set_default_push_button (dial.button (Interface_names.b_Open_backup))
 			dial.set_default_cancel_button (dial.button (Interface_names.b_Open_original))
 			dial.set_title (Interface_names.t_Open_backup)

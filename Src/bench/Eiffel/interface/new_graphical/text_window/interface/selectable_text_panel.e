@@ -31,17 +31,17 @@ feature {NONE} -- Initialization
 			----------------------------
 			-- Vision2 initialisation --
 			----------------------------
-			editor_area.pointer_button_press_actions.extend (~on_mouse_button_down)
-			editor_area.pointer_double_press_actions.extend (~on_double_click)
-			editor_area.pointer_button_release_actions.extend (~on_mouse_button_up)
-			editor_area.pointer_motion_actions.extend (~on_mouse_move)
+			editor_area.pointer_button_press_actions.extend (agent on_mouse_button_down)
+			editor_area.pointer_double_press_actions.extend (agent on_double_click)
+			editor_area.pointer_button_release_actions.extend (agent on_mouse_button_up)
+			editor_area.pointer_motion_actions.extend (agent on_mouse_move)
 
 			create click_delay.make_with_interval (0)
 			click_delay.actions.wipe_out
-			click_delay.actions.extend (~mouse_time_out_action)
+			click_delay.actions.extend (agent mouse_time_out_action)
 
 			create autoscroll.make_with_interval (0)
-			autoscroll.actions.extend (~scroll)
+			autoscroll.actions.extend (agent scroll)
 		end
 
 feature {NONE} -- Process Vision2 events

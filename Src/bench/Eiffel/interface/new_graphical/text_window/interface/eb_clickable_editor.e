@@ -64,18 +64,18 @@ feature {NONE}-- Initialization
 			-- Create array of customizable commands.
 		do
 			create customizable_commands.make (3, 7)
-			customizable_commands.put (~search, 3)
-			customizable_commands.put (~replace, 4)
-			customizable_commands.put (~find_selection, 5)
-			customizable_commands.put (~find_next, 6)
-			customizable_commands.put (~find_previous, 7)
+			customizable_commands.put (agent search, 3)
+			customizable_commands.put (agent replace, 4)
+			customizable_commands.put (agent find_selection, 5)
+			customizable_commands.put (agent find_next, 6)
+			customizable_commands.put (agent find_previous, 7)
 		end
 
 	build_editor_area is
 			-- Initialize variables and objects related to display.
 		do
-			{EB_EDITOR} Precursor
-			editor_area.set_pebble_function (~pebble_from_x_y)
+			Precursor {EB_EDITOR}
+			editor_area.set_pebble_function (agent pebble_from_x_y)
 			editor_area.enable_pebble_positioning
 		end
 
@@ -224,7 +224,7 @@ feature -- Possibly delayed operations
 					display_line_with_context (l_num)
 					refresh_now
 				else
-					after_reading_text_actions.extend(~display_line_when_ready (l_num, highlight))
+					after_reading_text_actions.extend(agent display_line_when_ready (l_num, highlight))
 				end
 		end
 
@@ -240,7 +240,7 @@ feature -- Possibly delayed operations
 					set_first_line_displayed (ln, True)
 					refresh_now
 				else
-					after_reading_text_actions.extend(~display_line_at_top_when_ready (l_num))
+					after_reading_text_actions.extend(agent display_line_at_top_when_ready (l_num))
 				end
 		end
 
@@ -261,7 +261,7 @@ feature -- Possibly delayed operations
 						set_first_line_displayed (fld, True)
 					end
 				else
-					after_reading_text_actions.extend(~ highlight_when_ready (a, b))
+					after_reading_text_actions.extend(agent highlight_when_ready (a, b))
 				end
 		end
 
@@ -283,7 +283,7 @@ feature -- Possibly delayed operations
 				end
 				refresh
 			else
-				after_reading_text_actions.extend(~scroll_to_when_ready (pos))
+				after_reading_text_actions.extend(agent scroll_to_when_ready (pos))
 			end
 		end
 
@@ -301,7 +301,7 @@ feature -- Possibly delayed operations
 				end
 				refresh
 			else
-				after_reading_text_actions.extend(~scroll_to_end_when_ready)
+				after_reading_text_actions.extend(agent scroll_to_end_when_ready)
 			end
 		end
 
@@ -312,7 +312,7 @@ feature -- Possibly delayed operations
 			if text_is_fully_loaded then
 				display_breakpoint_number (bpn)
 			else
-				after_reading_text_actions.extend(~display_breakpoint_number (bpn))
+				after_reading_text_actions.extend(agent display_breakpoint_number (bpn))
 			end
 		end
 
@@ -398,7 +398,7 @@ feature -- Search commands
 	copy_selection is
 			-- Copy current selection to clipboard.
 		do
-			{EB_EDITOR} Precursor
+			Precursor {EB_EDITOR}
 			if dev_window /= Void then
 				dev_window.update_paste_cmd
 			end
@@ -438,7 +438,7 @@ feature {NONE}-- Process Vision2 Events
 			if pick_n_drop_status = pnd_pick then
 				refresh_now
 			end
-			{EB_EDITOR} Precursor (abs_x_pos, y_pos, button, unused1, unused2, unused3, a_screen_x, a_screen_y)
+			Precursor {EB_EDITOR} (abs_x_pos, y_pos, button, unused1, unused2, unused3, a_screen_x, a_screen_y)
 		end
 
 	on_click_in_margin (x_pos, y_pos, button: INTEGER; a_screen_x, a_screen_y: INTEGER) is
@@ -459,7 +459,7 @@ feature {NONE}-- Process Vision2 Events
 					if bkstn /= Void then
 						bkstn.toggle_bkpt
 					end
-					{EB_EDITOR} Precursor (x_pos, y_pos, 1, a_screen_x, a_screen_y)
+					Precursor {EB_EDITOR} (x_pos, y_pos, 1, a_screen_x, a_screen_y)
 				end
 			elseif button = 3 then
 				on_click_in_text (x_pos - left_margin_width, y_pos, 3, a_screen_x, a_screen_y)
@@ -478,7 +478,7 @@ feature {NONE}-- Process Vision2 Events
 			cur: EDITOR_CURSOR
 		do
 			if button = 1 and then pick_n_drop_status /= pnd_drop then
-				{EB_EDITOR} Precursor (x_pos, y_pos, button, a_screen_x, a_screen_y)
+				Precursor {EB_EDITOR} (x_pos, y_pos, button, a_screen_x, a_screen_y)
 			elseif button = 3 then
 				mouse_right_button_down := True
 				if x_pos <= 0 then
@@ -532,7 +532,7 @@ feature {NONE}-- Process Vision2 Events
 			if executed_command then
 				check_cursor_position
 			else
-				{EB_EDITOR} Precursor (ev_key)
+				Precursor {EB_EDITOR} (ev_key)
 			end
 		end
 
@@ -557,7 +557,7 @@ feature {NONE}-- Process Vision2 Events
 			if executed_command then
 				check_cursor_position
 			else
-				{EB_EDITOR} Precursor (ev_key)
+				Precursor {EB_EDITOR} (ev_key)
 			end
 		end
 
@@ -637,7 +637,7 @@ feature {NONE} -- Text Loading
 			-- Reinitialize `Current' so that it can receive a new content.
 		do
 				-- First abort our previous actions.
-			{EB_EDITOR} Precursor
+			Precursor {EB_EDITOR}
 			if search_tool /= Void then
 				search_tool.force_new_search
 			end
@@ -647,7 +647,7 @@ feature {NONE} -- Text Loading
 	on_text_loaded  is
 			-- Finish editor setup as the entire text has been loaded.
 		do
-			{EB_EDITOR} Precursor
+			Precursor {EB_EDITOR}
 			from
 				after_reading_text_actions.start
 			until
@@ -777,7 +777,7 @@ feature {NONE} -- Implementation
 	gain_focus is
 			-- Update the editor as it has just gained the focus.
 		do
-			{EB_EDITOR} Precursor
+			Precursor {EB_EDITOR}
 			if dev_window /= Void then
 				dev_window.set_current_editor (Current)
 			end

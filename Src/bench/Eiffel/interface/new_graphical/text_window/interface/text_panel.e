@@ -52,20 +52,20 @@ feature {NONE} -- Initialization
 			editor_width := 100
 			offset := 0
 
-			editor_area.expose_actions.extend (~on_repaint)
-			editor_area.resize_actions.extend (~on_size)
+			editor_area.expose_actions.extend (agent on_repaint)
+			editor_area.resize_actions.extend (agent on_size)
 				
 				-- Create scrollbars
 
 			create vertical_scrollbar.make_with_value_range (create {INTEGER_INTERVAL}.make (0, 1))
 			vertical_scrollbar.set_step (1)
-			vertical_scrollbar.change_actions.extend (~on_vertical_scroll)
+			vertical_scrollbar.change_actions.extend (agent on_vertical_scroll)
 
 			create horizontal_scrollbar.make_with_value_range (create {INTEGER_INTERVAL}.make (0, 1))
 			horizontal_scrollbar.set_step (5)
-			horizontal_scrollbar.change_actions.extend (~on_horizontal_scroll)
+			horizontal_scrollbar.change_actions.extend (agent on_horizontal_scroll)
 
-			update_scroll_agent := ~update_scrollbars_display
+			update_scroll_agent := agent update_scrollbars_display
 
 			create widget
 

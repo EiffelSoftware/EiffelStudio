@@ -10,7 +10,7 @@ class
 inherit
 	SYNTAX_STONE
 
-creation
+create
 	make
 
 feature -- Access

@@ -35,7 +35,7 @@ inherit
 			{NONE} all
 		end
 
-creation
+create
 	make
 	
 feature {NONE} -- Initialization
@@ -112,27 +112,27 @@ feature -- Basic operations
 			create menu
 				-- "Enable"
 			create item.make_with_text (Interface_names.m_Enable_this_bkpt)
-			item.select_actions.extend (Application~enable_breakpoint (routine, index))
-			item.select_actions.extend (Output_manager~display_stop_points)
-			item.select_actions.extend (window_manager~quick_refresh_all)
+			item.select_actions.extend (agent Application.enable_breakpoint (routine, index))
+			item.select_actions.extend (agent Output_manager.display_stop_points)
+			item.select_actions.extend (agent window_manager.quick_refresh_all)
 			if Application.is_breakpoint_enabled (routine, index) then
 				item.disable_sensitive
 			end
 			menu.extend (item)
 				-- "Disable"
 			create item.make_with_text (Interface_names.m_Disable_this_bkpt)
-			item.select_actions.extend (Application~disable_breakpoint (routine, index))
-			item.select_actions.extend (Output_manager~display_stop_points)
-			item.select_actions.extend (window_manager~quick_refresh_all)
+			item.select_actions.extend (agent Application.disable_breakpoint (routine, index))
+			item.select_actions.extend (agent Output_manager.display_stop_points)
+			item.select_actions.extend (agent window_manager.quick_refresh_all)
 			if Application.is_breakpoint_disabled (routine, index) then
 				item.disable_sensitive
 			end
 			menu.extend (item)
 				-- "Remove"
 			create item.make_with_text (Interface_names.m_Remove_this_bkpt)
-			item.select_actions.extend (Application~remove_breakpoint (routine, index))
-			item.select_actions.extend (Output_manager~display_stop_points)
-			item.select_actions.extend (window_manager~quick_refresh_all)
+			item.select_actions.extend (agent Application.remove_breakpoint (routine, index))
+			item.select_actions.extend (agent Output_manager.display_stop_points)
+			item.select_actions.extend (agent window_manager.quick_refresh_all)
 			if not Application.is_breakpoint_set (routine, index) then
 				item.disable_sensitive
 			end
@@ -141,18 +141,18 @@ feature -- Basic operations
 			if not Application.is_breakpoint_set (routine, index) then
 					-- "Set conditional breakpoint"
 				create item.make_with_text (Interface_names.m_Set_conditional_breakpoint)
-				item.select_actions.extend (~set_conditional_breakpoint (routine, index))
+				item.select_actions.extend (agent set_conditional_breakpoint (routine, index))
 				menu.extend (item)
 			else
 				if Application.condition (routine, index) = Void then
 						-- "Edit condition" (no remove)
 					create item.make_with_text (Interface_names.m_Edit_condition)
-					item.select_actions.extend (~set_conditional_breakpoint (routine, index))
+					item.select_actions.extend (agent set_conditional_breakpoint (routine, index))
 					menu.extend (item)
 				else
 						-- "Edit condition" (with remove)
 					create item.make_with_text (Interface_names.m_Edit_condition)
-					item.select_actions.extend (~edit_condition (routine, index))
+					item.select_actions.extend (agent edit_condition (routine, index))
 					menu.extend (item)
 				end
 			end
@@ -162,8 +162,8 @@ feature -- Basic operations
 					-- `conv_dev = Void' should never happen.
 				menu.extend (create {EV_MENU_SEPARATOR})
 					-- "Run to breakpoint"
-				item.select_actions.extend (debugger_manager~set_debugging_window (conv_dev))
-				item.select_actions.extend ((debugger_manager.debug_run_cmd)~process_breakable (Current))
+				item.select_actions.extend (agent debugger_manager.set_debugging_window (conv_dev))
+				item.select_actions.extend (agent (debugger_manager.debug_run_cmd).process_breakable (Current))
 				menu.extend (item)
 			end
 
@@ -208,11 +208,11 @@ feature -- Basic operations
 			d.set_maximum_height (d.minimum_height)
 			
 				-- Set up actions
-			okb.select_actions.extend (~create_conditional_breakpoint (f, pos, d, tf))
-			cancelb.select_actions.extend (d~destroy)
+			okb.select_actions.extend (agent create_conditional_breakpoint (f, pos, d, tf))
+			cancelb.select_actions.extend (agent d.destroy)
 			d.set_default_push_button (okb)
 			d.set_default_cancel_button (cancelb)
-			d.show_actions.extend (tf~set_focus)
+			d.show_actions.extend (agent tf.set_focus)
 			d.show_modal_to_window (Window_manager.last_focused_window.window)
 		end
 
@@ -265,13 +265,13 @@ feature -- Basic operations
 			d.set_maximum_height (d.minimum_height)
 			
 				-- Set up actions
-			okb.select_actions.extend (~create_conditional_breakpoint (f, pos, d, tf))
-			removeb.select_actions.extend (Application~remove_condition (f, pos))
-			removeb.select_actions.extend (d~destroy)
-			cancelb.select_actions.extend (d~destroy)
+			okb.select_actions.extend (agent create_conditional_breakpoint (f, pos, d, tf))
+			removeb.select_actions.extend (agent Application.remove_condition (f, pos))
+			removeb.select_actions.extend (agent d.destroy)
+			cancelb.select_actions.extend (agent d.destroy)
 			d.set_default_push_button (okb)
 			d.set_default_cancel_button (cancelb)
-			d.show_actions.extend (tf~set_focus)
+			d.show_actions.extend (agent tf.set_focus)
 			d.show_modal_to_window (Window_manager.last_focused_window.window)
 		end
 

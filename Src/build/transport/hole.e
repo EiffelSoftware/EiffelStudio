@@ -84,7 +84,13 @@ feature {STONE}
 		require
 			valid_stone: dropped /= Void
 		do
-		end;
+		end
+
+	process_argument (dropped: ARG_INST_ICON) is
+		require
+			valid_stone: dropped /= Void
+		do
+		end
 
 	process_behavior (dropped: BEHAVIOR_STONE) is
 		require

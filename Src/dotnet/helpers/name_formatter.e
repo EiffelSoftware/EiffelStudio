@@ -184,6 +184,9 @@ feature -- Basic Operations
 			else
 				Result := name
 			end
+			if name.item (name.count) = '&' then
+				Result := Result.substring (1, Result.count - 1)
+			end
 			l_arg := argument_mapping_table
 			l_arg.search (Result)
 			if l_arg.found then
@@ -198,9 +201,6 @@ feature -- Basic Operations
 					Result.append (in_string)
 					Result.append (formatted_variable_type_name (container))
 				else
-					if name.item (name.count) = '&' then
-						Result := name.substring (1, Result.count - 1)
-					end
 					if Result.item (Result.count) = ']' then
 						container := Result.substring (1, Result.count - 2)
 						create Result.make (container.count + 6)
@@ -326,6 +326,13 @@ feature {NONE} -- Implementation
 			Result.put ("SYSTEM_RANDOM", "Random")
 			Result.put ("SYSTEM_CONTAINER", "Container")
 			Result.put ("SYSTEM_CONVERT", "Convert")
+			
+				-- Threading conflicts
+			Result.put ("SYSTEM_THREAD", "Thread")
+			Result.put ("SYSTEM_MUTEX", "Mutex")
+
+				-- Zone
+			Result.put ("SYSTEM_ZONE", "Zone")
 		end
 
 	variable_mapping_table: HASH_TABLE [STRING, STRING] is

@@ -15,6 +15,11 @@ inherit
 
 	EV_ITEM_I
 
+	EV_PIXMAP_CONTAINER_I
+		redefine
+			pixmap_size_ok
+		end
+
 feature {NONE} -- Initialization
 	
 	make_with_text (par: EV_MENU_ITEM_CONTAINER; txt: STRING) is
@@ -37,6 +42,21 @@ feature -- Status setting
    			-- `flag'. 
    		deferred
    		end
+
+feature {NONE} -- Implementation
+
+	pixmap_size_ok (pixmap: EV_PIXMAP): BOOLEAN is
+			-- Check if the size of the pixmap is ok for
+			-- the container.
+		do
+			io.put_string ("Width : ")
+			io.putint (pixmap.width)
+			io.put_new_line
+			io.put_string ("Height : ")
+			io.putint (pixmap.height)
+			io.put_new_line
+			Result := (pixmap.width <= 16) and (pixmap.height <= 16)
+		end
 
 end -- class EV_MENU_ITEM_I
 

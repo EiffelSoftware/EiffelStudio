@@ -11,8 +11,9 @@ deferred class
 	EV_LIST_ITEM_I
 	
 inherit
-
 	EV_ITEM_I
+
+	EV_PIXMAP_CONTAINER_I
 
 feature {NONE} -- Initialization
 

@@ -1,5 +1,8 @@
 indexing
-	description: "Set of features to access ISE runtime functionality"
+	description: "[
+		Set of features to access ISE runtime functionality.
+		To be used at your own risk.
+		]"
 	date: "$Date$"
 	revision: "$Revision$"
 

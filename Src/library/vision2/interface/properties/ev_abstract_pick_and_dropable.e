@@ -35,12 +35,16 @@ feature -- Access
 			-- `Result' is cursor displayed when the screen pointer is over a
 			-- target that accepts `pebble' during pick and drop.
 		deferred
+		ensure
+			result_not_void: Result /= Void
 		end
 
 	deny_cursor: EV_CURSOR is
 			-- `Result' is cursor displayed when the screen pointer is over a
 			-- target that does not accept `pebble' during pick and drop.
 		deferred
+		ensure
+			result_not_void: Result /= Void
 		end 
 
 feature -- Status setting
@@ -162,10 +166,6 @@ feature {NONE} -- Implementation
 		once
 			create Result
 		end
-		
-invariant
-	accept_cursor_not_void: accept_cursor /= Void
-	deny_cursor_not_void: deny_cursor /= Void
 
 end -- class EV_ABSTRACT_PICK_AND_DROPABLE
 

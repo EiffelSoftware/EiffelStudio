@@ -17,7 +17,7 @@ creation
 
 feature {NONE} -- Initialization
 
-	make (height, width, escapement, orientation, weight, 
+	make (a_height, a_width, escapement, orientation, weight, 
 			italic, underline, strike_out, charset,
 			output_precision, clip_precision, quality,
 			pitch_and_family: INTEGER; a_face_name: STRING) is
@@ -28,7 +28,7 @@ feature {NONE} -- Initialization
 			a_wel_string: WEL_STRING
 		do
 			create a_wel_string.make (a_face_name)
-			item := cwin_create_font (height, width, escapement,
+			item := cwin_create_font (a_height, a_width, escapement,
 				orientation, weight, italic, underline,
 				strike_out, charset, output_precision,
 				clip_precision, quality, pitch_and_family, a_wel_string.item)
@@ -75,7 +75,7 @@ feature -- Re-initialisation
 			end
 		end
 
-feature	-- Access
+feature -- Access
 
 	log_font: WEL_LOG_FONT is
 			-- Log font structure associated to `Current'
@@ -87,9 +87,73 @@ feature	-- Access
 			result_not_void: Result /= Void
 		end
 
+	width: INTEGER is
+			-- Character width of current fixed-width font.
+		do
+			Result := string_width ("x")
+		end
+
+	height: INTEGER is
+			-- Preferred font height measured in screen pixels.
+			-- NOTE: this function may return 0, which means that
+			--       the font has been created without any particular
+			--       height restriction - Windows use the best value
+			--       and we can't know what height it is. Too bad !
+		do
+			Result := log_font.height.abs
+		end
+
+	string_width (a_string: STRING): INTEGER is
+			-- Width of `a_string'.
+		do
+			Result := string_size (a_string).integer_item (1)
+		end
+
+	string_height (a_string: STRING): INTEGER is
+			-- Height of `a_string'.
+		do
+			Result := string_size (a_string).integer_item (2)
+		end
+
+	string_size (a_string: STRING): TUPLE [INTEGER, INTEGER] is
+			-- [width, height] of `a_string'.
+		local
+			cur_width, cur_height: INTEGER
+			index, n: INTEGER
+			screen_dc: WEL_SCREEN_DC
+			extent: WEL_SIZE
+		do
+			create screen_dc
+			screen_dc.get
+			screen_dc.select_font (Current)
+			from
+				n := 1
+			until
+				n > a_string.count
+			loop
+				index := a_string.index_of ('%N', n)
+				if index > 0 then
+					extent := screen_dc.string_size (
+						a_string.substring (n, index - 1)
+					)
+					n := index + 1
+				else
+					extent := screen_dc.string_size (
+						a_string.substring (n, a_string.count)
+					)
+					n := a_string.count + 1
+				end
+				cur_width := cur_width.max (extent.width)
+				cur_height := cur_height + extent.height
+			end
+			screen_dc.unselect_font
+			screen_dc.quick_release
+			Result := [cur_width, cur_height]
+		end
+
 feature {NONE} -- Implementation
 
-	cwin_create_font (height, width, escapement, orientation, weight,
+	cwin_create_font (a_height, a_width, escapement, orientation, weight,
 			italic, underline, strike_out,
 			charset, output_precision, clip_precision,
 			quality, pitch_and_family: INTEGER;

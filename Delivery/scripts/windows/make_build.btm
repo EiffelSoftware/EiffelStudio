@@ -6,6 +6,7 @@ exprt -r %DEFAULT_CVS_TAG -d build2 Src/build2
 cdd %EIFFEL_SRC\build2\modified_libraries\exml\lib\implementation\expat\compiler_specific\ise\clib
 nmake /f makefile.win.msc
 
+remtrace Enterprise version of EiffelBuild
 cdd %EIFFEL_SRC/build2
 clean_project
 finalize ace.ace
@@ -15,4 +16,18 @@ iff not exist build.exe then
 	remtrace Could not finalize a new EiffelBuild
 	CANCEL
 endiff
-move build.exe %INSTALL_DIR\build\spec\%ISE_PLATFORM\bin
+move build.exe %INSTALL_DIR\releases\enterprise\
+
+iff not defined BUILD_ENTERPRISE_ONLY then
+	remtrace Free version of EiffelBuild
+	cdd %EIFFEL_SRC/build2
+	clean_project
+	finalize evaluation_ace.ace
+	fff
+	cleanup_eiffel build.exe
+	iff not exist build.exe then
+		remtrace Could not finalize a new EiffelBuild
+		CANCEL
+	endiff
+	move build.exe %INSTALL_DIR\releases\free_version
+end

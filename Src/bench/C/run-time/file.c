@@ -406,39 +406,8 @@ rt_public void file_ps(FILE *f, char *str, EIF_INTEGER len)
 		return;			/* Nothing to be done */
 
 	errno = 0;
-	if (1 != fwrite(str, len, 1, f))
+	if (1 != fwrite(str, sizeof (char) * len, 1, f))
 		eio();
-}
-
-rt_public void file_pt_ps(FILE *f, char *str, EIF_INTEGER len)
-{
-#ifdef __WINDOWS_386__
-	/* Write string `str' on `f' */
-
-	char *s;
-	int i;
-
-	if (len == 0)		/* Empty string */
-		return;			/* Nothing to be done */
-
-	errno = 0;
-	for (s = str, i = 0; i < len; i++, s++)
-		if ((*s != '\r') && (*s != '\n'))
-			if (fputc (*s, f) == EOF)
-				eio();
-			else
-				;
-		else
-			{
-			if (*s == '\n')
-				if (fputs ("\n", f) == EOF)
-					eio();
-		/* 	else
-				skip the \r 's */
-			}
-#else
-	file_ps (f, str, len);
-#endif	
 }
 
 rt_public void file_pc(FILE *f, char c)

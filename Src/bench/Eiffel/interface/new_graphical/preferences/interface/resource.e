@@ -13,6 +13,16 @@ inherit
 
 feature -- Setting
 
+	set_description (new_description: STRING) is
+			-- Set `description' to `new_description'.
+		require
+			new_description_exists: new_description /= Void
+		do
+			description := new_description
+		ensure
+			description_set: description.is_equal (new_description)
+		end
+
 	set_value (new_value: STRING) is
 			-- Set `value' to `new_value'.
 		require
@@ -43,6 +53,9 @@ feature -- Access
 			Result.replace_substring_all ("_", " ")
 			Result.put (Result.item (1).upper, 1)
 		end
+
+	description: STRING
+			-- Description of what the resource is all about.
 
 	value: STRING is
 			-- Value of the resource as it appears to the right

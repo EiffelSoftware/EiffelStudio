@@ -202,8 +202,10 @@ end
 		do
 			array_index := Eiffel_table.is_polymorphic (routine_id, typ.type_id, True)
 			buf := buffer
+			is_deferred := False
 			if array_index = -2 then
 					-- Call to a deferred feature without implementation
+				is_deferred := True
 				buf.putchar ('(')
 				real_type (type).c_type.generate_function_cast (buf, <<>>)
 				buf.putstring (" RTNR)")
@@ -258,6 +260,7 @@ end
 					buf.putchar (')')
 				else
 						-- Call to a deferred feature without implementation
+					is_deferred := True
 					buf.putchar ('(')
 					real_type (type).c_type.generate_function_cast (buf, <<>>)
 					buf.putstring (" RTNR)")
@@ -277,48 +280,49 @@ end
 			i, nb: INTEGER
 			p: like parameters
 		do
-			p := parameters
-			if p /= Void then
-				buf := buffer
-				l_area := p.area
-				nb := p.count
-				p := Void
-				if system.has_separate then
-					from
-					until
-						i = nb
-					loop
-						expr := l_area.item (i);	-- Cannot fail
-						para ?= expr
-						buf.putstring (gc_comma)
-						if para /= Void and then para.stored_register.register_name /= Void then
-							loc_idx := context.local_index (para.stored_register.register_name)
-							para_type := real_type(para.attachment_type)
-							if para_type /= Void and then para_type.is_separate then
-								buf.putstring ("l[")
-								buf.putint (context.ref_var_used + loc_idx)
-								buf.putstring ("]")
+			if not is_deferred then
+				p := parameters
+				if p /= Void then
+					buf := buffer
+					l_area := p.area
+					nb := p.count
+					p := Void
+					if system.has_separate then
+						from
+						until
+							i = nb
+						loop
+							expr := l_area.item (i);	-- Cannot fail
+							para ?= expr
+							buf.putstring (gc_comma)
+							if para /= Void and then para.stored_register.register_name /= Void then
+								loc_idx := context.local_index (para.stored_register.register_name)
+								para_type := real_type(para.attachment_type)
+								if para_type /= Void and then para_type.is_separate then
+									buf.putstring ("l[")
+									buf.putint (context.ref_var_used + loc_idx)
+									buf.putstring ("]")
+								else
+									expr.print_register
+								end
 							else
 								expr.print_register
 							end
-						else
-							expr.print_register
-						end
+								i := i + 1
 							i := i + 1
-						i := i + 1
-					end
-				else
-					from
-					until
-						i = nb
-					loop
-						buf.putstring (gc_comma)
-						expr := l_area.item (i);	-- Cannot fail
-						expr.print_register
-						i := i + 1
+						end
+					else
+						from
+						until
+							i = nb
+						loop
+							buf.putstring (gc_comma)
+							expr := l_area.item (i);	-- Cannot fail
+							expr.print_register
+							i := i + 1
+						end
 					end
 				end
-				
 			end
 		end
 
@@ -457,5 +461,10 @@ feature -- Concurrent Eiffel
 				end
 			end
 		end
+
+feature {NONE} -- Implementation
+
+	is_deferred: BOOLEAN
+			-- Is current feature call a deferred feature without implementation?
 
 end

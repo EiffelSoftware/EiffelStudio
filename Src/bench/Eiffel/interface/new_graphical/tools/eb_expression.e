@@ -597,7 +597,6 @@ feature {NONE} -- Implementation
 					-- Initialize the communication.
 				Init_recv_c
 			end
-		
 			
 				-- First find out the generic derivation if any in which we are
 				-- evaluation `f'.
@@ -622,6 +621,14 @@ feature {NONE} -- Implementation
 
 					-- Get real feature
 				realf := f.ancestor_version (f.written_class)
+				if realf = Void then
+						--| FIXME JFIAT: 2004-02-01 : why `realf' can be Void in some case ?
+						--| occured for EV_RICH_TEXT_IMP.line_index (...)
+					print ("f.ancestor_version (f.written_class) = Void%N")
+					print ("  f.feature_signature = " + f.feature_signature + "%N")
+					print ("  f.written_class     = " + f.written_class.name_in_upper + "%N")
+					realf := f
+				end
 				
 				check
 					valid_class_type: l_class_type /= Void
@@ -675,6 +682,9 @@ feature {NONE} -- Implementation
 								(not byte_context.real_type (
 									realf.arguments.i_th (parameters.index).type_i).is_basic)
 							then
+								debug ("debugger_trace_eval")
+									print ("Send Metamorphose request ... %N")
+								end
 								send_rqst_0 (Rqst_metamorphose)
 							end
 							parameters.forth

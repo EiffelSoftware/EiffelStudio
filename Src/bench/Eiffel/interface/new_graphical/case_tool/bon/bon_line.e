@@ -74,7 +74,7 @@ feature {EV_FIGURE_DRAWER, EV_FIGURE} -- Implementation
 		local
 			s: INTEGER
 		do
-			Precursor
+			Precursor {EV_FIGURE_LINE}
 			s := Arrow_size + line_width
 			if cut_figure /= Void then
 					--| FIXME remove magic numbers.
@@ -104,7 +104,7 @@ feature {NONE} -- Implementation
 		local
 			p: EV_RELATIVE_POINT
 		do
-			Result := Precursor
+			Result := Precursor {EV_FIGURE_LINE}
 			if is_cut_figure then
 				p := cut_figure_point_a
 				Result.include (p.x_abs, p.y_abs)

@@ -289,6 +289,7 @@ feature {NONE} -- Implementation: access
 			put ("System.Boolean") check found_item = system_boolean_name_id end
 			put ("get_hash_code") check found_item = get_hash_code_name_id end
 			put ("equals") check found_item = equals_name_id end
+			put ("three_way_comparison") check found_item = three_way_comparison_name_id end
 		end
 		
 invariant

@@ -113,10 +113,10 @@ feature {NONE} -- Implementation
 			j := ace_text.substring_index (project_location_tag, i + 1)
 			
 			ace_text.replace_substring_all (project_location_tag, "")			
-			ace_text.insert (project_location, i)
+			ace_text.insert_string (project_location, i)
 			temp_string := project_location
 			if j >0 then
-				ace_text.insert (project_location, j - project_location_tag.count + temp_string.count)
+				ace_text.insert_string (project_location, j - project_location_tag.count + temp_string.count)
 			end	
 			
 			ace_file_name := clone (generated_path)
@@ -150,7 +150,7 @@ feature {NONE} -- Implementation
 				
 				main_window_tag_index := application_text.substring_index (main_window_tag, 1)
 				application_text.replace_substring_all (main_window_tag, "")			
-				application_text.insert (main_window_type, main_window_tag_index)
+				application_text.insert_string (main_window_type, main_window_tag_index)
 			
 				application_file_name := clone (generated_path)
 				application_file_name.extend ("build_application.e")
@@ -211,26 +211,26 @@ feature {NONE} -- Implementation
 	
 				local_tag_index := class_text.substring_index (local_tag, 1)
 				class_text.replace_substring_all (local_tag, "")			
-				class_text.insert (local_string, local_tag_index)
+				class_text.insert_string (local_string, local_tag_index)
 				
 				create_tag_index := class_text.substring_index (create_tag, 1)
 				class_text.replace_substring_all (create_tag, "")			
-				class_text.insert (create_string, create_tag_index)
+				class_text.insert_string (create_string, create_tag_index)
 				
 				build_tag_index := class_text.substring_index (build_tag, 1)
 				class_text.replace_substring_all (build_tag, "")			
-				class_text.insert (build_string, build_tag_index)
+				class_text.insert_string (build_string, build_tag_index)
 				
 				set_tag_index := class_text.substring_index (set_tag, 1)
 				class_text.replace_substring_all (set_tag, "")			
-				class_text.insert (set_string, set_tag_index)
+				class_text.insert_string (set_string, set_tag_index)
 				
 					-- Need to add pixmap initialization if `class_text' contains
 					-- `pixmap'. If it does, this means that some pixmaps have been set,
 					-- and we must add a pixmap to `class_text'. This really is somewhat of a hack. Julian.
 				if class_text.substring_index (pixmap_name, 1) /= 0 then
-					class_text.insert (pixmap_name + ": EV_PIXMAP" + indent, local_tag_index)
-					class_text.insert ("create " + pixmap_name + indent, create_tag_index + pixmap_name.count +
+					class_text.insert_string (pixmap_name + ": EV_PIXMAP" + indent, local_tag_index)
+					class_text.insert_string ("create " + pixmap_name + indent, create_tag_index + pixmap_name.count +
 						(": EV_PIXMAP").count + indent.count)
 				end
 					

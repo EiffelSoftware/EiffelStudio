@@ -1,10 +1,9 @@
 indexing
-        description: "EiffelVision push button.%
-					% Mswindows implementation."
-        status: "See notice at end of class"
-        id: "$$"
-        date: "$$"
-        revision: "$$"
+	description: "EiffelVision push button.%
+				% Mswindows implementation."
+	status: "See notice at end of class"
+	date: "$$"
+	revision: "$$"
         
 class
     EV_BUTTON_IMP
@@ -28,7 +27,12 @@ inherit
 			set_default_size
 		end
 	
---	EV_PIXMAP_CONTAINER_IMP
+	EV_PIXMAP_CONTAINER_IMP
+		undefine
+			pixmap_size_ok
+		redefine
+			add_pixmap
+		end
 
 	EV_FONTABLE_IMP
 
@@ -37,7 +41,7 @@ inherit
 			{NONE} all
 		end
 
-	WEL_PUSH_BUTTON
+	WEL_OWNER_DRAW_BUTTON
 		rename
 			make as wel_make,
 			parent as wel_parent,
@@ -61,7 +65,8 @@ inherit
 			on_char,
 			on_key_up
 		redefine
-			on_bn_clicked
+			on_bn_clicked,
+			default_process_message
 		end
 
 creation
@@ -100,9 +105,46 @@ feature {NONE} -- Initialization
 
 feature -- Event - command association
 
-	add_click_command (a_command: EV_COMMAND; arguments: EV_ARGUMENTS) is	
+	add_click_command (cmd: EV_COMMAND; arg: EV_ARGUMENTS) is	
+			-- Add 'cmd' to the list of commands to be executed
+			-- the button is pressed.
 		do
-			add_command (Cmd_click, a_command, arguments)
+			add_command (Cmd_click, cmd, arg)
+		end
+
+feature {NONE} -- Implementation	
+	
+	extra_width: INTEGER
+
+	set_default_size is
+		-- Resize to a default size.
+		local
+			fw: EV_FONT_IMP
+			w,h: INTEGER
+		do
+			-- A minimum width to be sure.
+			w := extra_width
+	
+			-- The pixmap must go in,
+			if pixmap_imp /= Void then
+				w := w + pixmap_imp.width
+				h := h + pixmap_imp.height + 11
+			end
+
+			-- the text too.
+			if text /= "" then
+				fw ?= font.implementation
+				check
+					font_not_void: fw /= Void
+				end
+				w := w + fw.string_width (Current, text)
+				h := h.max (fw.string_height (Current, text) + 11)
+				--7 * fw.string_height (Current, text) // 4 - 2)
+			end
+
+			-- Finaly, we set the minimum values.
+			set_minimum_width (w)
+			set_minimum_height (h)
 		end
 
 	on_bn_clicked is
@@ -111,40 +153,146 @@ feature -- Event - command association
 			execute_command (Cmd_click, Void)
 		end
 
-feature {NONE} -- Implementation	
-	
-	set_default_size is
-		-- Resize to a default size.
-		local
-			fw: EV_FONT_IMP
+	default_process_message (msg, wparam, lparam: INTEGER) is
+		   -- Process `msg' which has not been processed by
+		   -- `process_message'.
 		do
-			fw ?= font.implementation
-			check
-				font_not_void: fw /= Void
+			if msg = Wm_erasebkgnd then
+				disable_default_processing
 			end
-			set_minimum_width (fw.string_width (Current, text) + Extra_width)
-			set_minimum_height (7 * fw.string_height (Current, text) // 4 - 2)
+ 		end
+
+	add_pixmap (pixmap: EV_PIXMAP) is
+			-- Add a pixmap in the container
+		do
+			{EV_PIXMAP_CONTAINER_IMP} Precursor (pixmap)
+			set_default_size
 		end
 
-	extra_width: INTEGER
+	background_brush: WEL_BRUSH is
+		do
+			!! Result.make_solid (background_color)
+		end
 
-feature {NONE} -- Implementation of EV_PIXMAP_CONTAINER_IMP
+	current_state: INTEGER
+			-- An Integer to know if the button is up or down.
+			-- We us an integer for the toggle buttons.
 
---	add_pixmap (pixmap: EV_PIXMAP) is
-			-- Add `pixmap' to the button.
---		local
---			dc: WEL_CLIENT_DC
---			pixmap_imp: EV_PIXMAP_IMP
---		do
---			pixmap_imp ?= pixmap.implementation
---			check
---				pixmap_not_void: pixmap_imp /= Void
---			end
---			!! dc.make (Current)
---			dc.get
---			dc.copy_dc (pixmap_imp, client_rect)
---			dc.release
---		end
+	on_draw (struct: WEL_DRAW_ITEM_STRUCT) is
+			-- Called when the system ask to redraw
+			-- the container
+		local
+			action: INTEGER
+			dc: WEL_DC
+		do
+			action := struct.item_action
+			dc := struct.dc
+			if action = Oda_focus then
+				draw_focus (dc)
+			elseif action = Oda_select then
+				select_action
+				dc.fill_rect (client_rect, background_brush)
+				draw_edge (dc)
+				draw_body (dc)
+				draw_focus (dc)
+			elseif action = Oda_drawentire then
+				dc.fill_rect (client_rect, background_brush)
+				if struct.item_state = Ods_focus then
+					draw_focus (dc)
+				end
+				draw_edge (dc)
+				draw_body (dc)
+			end
+		end
+
+	wel_window: WEL_WINDOW is
+			-- Window used to create the pixmap : Current
+		do
+			Result ?= Current
+		end
+
+feature {NONE} -- Basic operation
+
+	select_action is
+			-- Action to be down when `Oda_select'.
+			-- We obtain alway 0 or 1, the two states.
+		do
+			current_state := (current_state + 1) \\ 2
+		end
+
+	is_down: BOOLEAN is
+			-- Say if the button is down or not.
+		do
+			if current_state = 0 then
+				Result := False
+			else
+				Result := True
+			end
+		end
+
+	draw_edge (dc: WEL_DC) is
+			-- Draw the edge of the button.
+		do
+			if is_down then
+				routine_draw_edge (dc, client_rect, Edge_sunken, Bf_rect)
+			else
+				routine_draw_edge (dc, client_rect, Edge_raised, Bf_rect + Bf_soft)
+			end
+		end
+
+	draw_focus (dc: WEL_DC) is
+			-- Draw the focus line around the button.
+		local
+			rect: WEL_RECT
+		do
+			!! rect.make (3, 3, width - 3, height - 3)
+			draw_focus_rect (dc, rect)
+		end
+
+	draw_body (dc: WEL_DC) is
+			-- Draw the body of the button : bitmap + text
+		local
+			inrect: WEL_RECT
+			tx, ty: INTEGER
+		do
+			-- First, we set the rectangle we will draw in, it depends if the
+			-- button is up or down
+			if is_down then
+				!! inrect.make (5, 6, width - 5, height - 5)
+			else
+				!! inrect.make (5, 5, width - 5, height - 6)
+			end
+
+			-- If sensitive, we draw everything normaly.
+			if not insensitive then
+				if pixmap_imp /= Void and text /= "" then
+					dc.bit_blt (inrect.left, inrect.top, inrect.width, inrect.height, pixmap_imp, 0, 0, Srccopy)
+					inrect.set_left (pixmap_imp.width + 5)
+					dc.draw_centered_text (text, inrect)
+				elseif pixmap_imp /= Void then
+					dc.bit_blt (inrect.left, inrect.top, inrect.width, inrect.height, pixmap_imp, 0, 0, Srccopy)
+				elseif text /= "" then
+					dc.draw_centered_text (text, inrect)
+				end
+
+			-- If insensitive, the text is gray.
+			-- We don't set the pixmap gray, because the quality is bad.
+			else
+				if pixmap_imp /= Void and text /= "" then
+					dc.bit_blt (inrect.left, inrect.top, inrect.width, inrect.height, pixmap_imp, 0, 0, Srccopy)
+					inrect.set_left (pixmap_imp.width + 5)
+					tx := inrect.left + (inrect.width - dc.string_width (text)) // 2
+					ty := inrect.top + ((inrect.height - dc.string_height (text)) // 2) 
+					draw_insensitive_text (dc, text, tx, ty)
+				elseif pixmap_imp /= Void then
+					dc.bit_blt (inrect.left, inrect.top, inrect.width, inrect.height, pixmap_imp, 0, 0, Srccopy)
+				elseif text /= "" then
+					tx := inrect.left + (inrect.width - dc.string_width (text)) // 2
+					ty := inrect.top + ((inrect.height - dc.string_height (text)) // 2)
+					draw_insensitive_text (dc, text, tx, ty)
+				end
+			end
+		end	
 
 end -- class EV_BUTTON_IMP
 

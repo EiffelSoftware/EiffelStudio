@@ -10,7 +10,7 @@ class
 inherit
 	WEL_BAR
 		redefine
-			on_size
+			on_size, make_by_id
 		end
 
 	WEL_SCROLL_BAR_CONSTANTS
@@ -61,7 +61,6 @@ feature {NONE} -- Initialization
 				default_pointer)
 			id := an_id
 			create scroll_info_struct.make
-			is_horizontal := True
 			set_line (Default_line_value)
 		ensure
 			parent_set: parent = a_parent
@@ -72,10 +71,24 @@ feature {NONE} -- Initialization
 			maximum_equal_zero: maximum = 0
 		end
 
+	make_by_id (a_parent: WEL_DIALOG; an_id: INTEGER) is
+			-- Make a control identified by `an_id' with `a_parent'
+			-- as parent.
+		do
+			Precursor {WEL_BAR} (a_parent, an_id)
+			create scroll_info_struct.make
+			set_line (Default_line_value)
+		end
+
 feature -- Access
 
-	is_horizontal: BOOLEAN
+	is_horizontal: BOOLEAN is
 			-- Is current scrollbar an horizontal one?
+		do
+				-- Bit at position 0 (i.e. value 1) in `style'
+				-- represents the orientation of scrollbar.
+			Result := (style & 1) = Sbs_horz
+		end
 
 	line: INTEGER
 			-- Number of scroll units per line

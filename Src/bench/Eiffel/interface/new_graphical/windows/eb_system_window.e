@@ -108,7 +108,7 @@ feature -- Actions
 			file_dialog: EV_FILE_OPEN_DIALOG
 		do
 			create file_dialog
-			file_dialog.set_filter ("*.ace")
+			file_dialog.filters.extend (["*.ace", "Ace Files (*.ace)"])
 			file_dialog.open_actions.extend (agent retrieve_ace_file (file_dialog))
 			file_dialog.show_modal_to_window (window)
 		end

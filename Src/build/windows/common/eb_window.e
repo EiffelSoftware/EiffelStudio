@@ -27,6 +27,7 @@ feature -- Initialization
 		do
 			Precursor (par)
 --			add_undo_redo_accelerator (Current)
+			set_geometry
 		end
 
 feature -- Access
@@ -36,7 +37,6 @@ feature -- Access
 		do
 
 		end
-
 
 	set_x_y (x0, y0: INTEGER) is
 			-- Check to see if the x and y position are correct and

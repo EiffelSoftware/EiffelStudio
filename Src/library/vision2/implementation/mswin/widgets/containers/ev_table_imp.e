@@ -17,7 +17,12 @@ class
 inherit
 	EV_TABLE_I
 		redefine
-			interface
+			interface,
+			put,
+			set_item_position,
+			remove,
+			resize,
+			set_item_span
 		end
 		
 	EV_CONTAINER_IMP
@@ -50,7 +55,13 @@ feature {NONE} -- Initialization
 		do
 			base_make (an_interface)
 			ev_wel_control_container_make
+			columns := 1
+			rows := 1
 			create ev_children.make (2)
+			create internal_array.make (1, 1)
+				-- Ensure that `internal_item_list' is
+				-- not `Void'.
+			rebuild_internal_item_list
 		end	
 
 	initialize is
@@ -149,26 +160,7 @@ feature {EV_TABLE_I} -- Access
 			Result := widget_child.bottom_attachment - widget_child.top_attachment
 		end
 
-
 feature {EV_TABLE_I} -- Status report
-
-	rows: INTEGER is
-			-- Number of rows in `Current'
-		do
-			Result := rows_minimum.count
-		end
-
-	columns: INTEGER is
-			-- Number of columns in `Current'
-		do
-			Result := columns_minimum.count
-		end
-
-	widget_count: INTEGER is
-			-- Number of widgets in `Current'.
-		do
-			Result := ev_children.count
-		end
 
 	top_level_window_imp: EV_WINDOW_IMP
 			-- Top level window that contains `Current'.
@@ -195,7 +187,6 @@ feature {EV_TABLE_I} -- Status report
 				ev_children.go_to (loc_cursor)
 			end
 		end
-
 
 feature -- Status settings
 
@@ -291,14 +282,14 @@ feature -- Status settings
 			end
 		end
 
-	put, set_position_by_widget
-		(child: EV_WIDGET; a_x, a_y, a_width, a_height: INTEGER) is
+	put (child: EV_WIDGET; a_x, a_y, a_width, a_height: INTEGER) is
 			--	Add `child' to `Current' at cell position `a_x', `a_y',
 			-- with size `a_width', `a_height' in cells.
 		local
 			table_child: EV_TABLE_CHILD_IMP
 			child_imp: EV_WIDGET_IMP
 		do
+			Precursor {EV_TABLE_I} (child, a_x, a_y, a_width, a_height)
 			child.implementation.on_parented
 			child_imp ?= child.implementation
 			check
@@ -313,9 +304,8 @@ feature -- Status settings
 				-- Set the attachment of the table child.
 			table_child.set_attachment
 				(a_y - 1, a_x - 1, a_y + a_height - 1, a_x + a_width - 1)
-		
 
-			-- We show the child and resize the container
+				-- We show the child and resize the container
 			child_imp.show
 			notify_change (1 + 2, Current)
 			new_item_actions.call ([child])
@@ -324,6 +314,7 @@ feature -- Status settings
 	resize (a_column, a_row: INTEGER) is
 			-- Resize the table to `a_column', `a_row'.
 		do
+			Precursor {EV_TABLE_I} (a_column, a_row)
 			initialize_columns (a_column)
 			initialize_rows (a_row)
 			notify_change (1 + 2, Current)
@@ -336,6 +327,7 @@ feature -- Status settings
 			widget_imp: EV_WIDGET_IMP
 			tchild: EV_TABLE_CHILD_IMP
 		do
+			Precursor {EV_TABLE_I} (v)
 				-- Retrieve implementation of `v'.
 			widget_imp ?= v.implementation
 			check
@@ -347,6 +339,7 @@ feature -- Status settings
 			tchild := find_widget_child (widget_imp)
 				-- Remove the table child from `ev_children'.
 			ev_children.prune_all (tchild)
+
 				-- Update changes.
 			notify_change (2 + 1, Current)
 				-- Update the parent of `child_imp'.
@@ -361,6 +354,7 @@ feature -- Status settings
 			table_child: EV_TABLE_CHILD_IMP
 			child_imp: EV_WIDGET_IMP
 		do
+			Precursor {EV_TABLE_I} (v, a_column, a_row)
 			child_imp ?= v.implementation
 			check
 				valid_child: child_imp /= Void
@@ -377,6 +371,7 @@ feature -- Status settings
 			table_child: EV_TABLE_CHILD_IMP
 			child_imp: EV_WIDGET_IMP
 		do
+			Precursor {EV_TABLE_I} (v, column_span, row_span)
 			child_imp ?= v.implementation
 			check
 				valid_child: child_imp /= Void
@@ -743,7 +738,7 @@ feature {NONE} -- Implementation
 			if parent_imp /= Void then
 				parent_imp.interface.prune (Current.interface)
 			end
-			interface.discard_items
+			internal_array.discard_items
 			wel_destroy
 			is_destroyed := True
 		end

@@ -36,10 +36,10 @@ feature {NONE} -- Initialization
 			key: EV_KEY
 		do
 			Precursor {EB_STANDARD_CMD}
-			set_tooltip ("New project...")
+			set_tooltip ("New Project...")
 			set_pixmaps ((create {GB_SHARED_PIXMAPS}).icon_new_editor)
-			set_name ("New project...")
-			set_menu_name ("New project...")
+			set_name ("New Project...")
+			set_menu_name ("New Project...")
 			enable_sensitive
 
 					-- Now add an accelerator for `Current'.

@@ -89,7 +89,7 @@ rt_public void eif_thr_init_root(void)
 	 */
 
 	EIF_TSD_CREATE(eif_global_key,"Couldn't create global key for root thread");
-	EIF_MUTEX_CREATE(eif_gc_mutex, "Couldn't create GC mutex");
+	EIF_LW_MUTEX_CREATE(eif_gc_mutex, "Couldn't create GC mutex");
 	LAUNCH_MUTEX_CREATE;
 	EIF_MUTEX_CREATE(eif_global_once_mutex, "Couldn't create global once mutex");
 	eif_thr_register();

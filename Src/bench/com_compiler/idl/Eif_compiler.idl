@@ -471,6 +471,9 @@ interface IEiffelClassDescriptor: IUnknown
 
   [helpstring ("Is class generic?")]
   HRESULT is_generic ([out, retval] VARIANT_BOOL * return_value);
+
+  [helpstring ("Is class part of a library?")]
+  HRESULT is_library ([out, retval] VARIANT_BOOL * return_value);
 };
 //---------------------------------------------------------------------
 

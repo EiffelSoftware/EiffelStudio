@@ -160,7 +160,7 @@ feature -- Access
 			if internal_text = Void then
 				internal_text := ""
 			end
-			Result := internal_text
+			Result := clone (internal_text)
 		end
 
 feature -- Element change

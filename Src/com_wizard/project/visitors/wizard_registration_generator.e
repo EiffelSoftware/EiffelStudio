@@ -40,6 +40,30 @@ feature -- Access
 		deferred
 		end
 
+	ccom_dll_register_server: STRING is "ccom_dll_register_server"
+			-- Used for code generation.
+
+	ccom_dll_unregister_server: STRING is "ccom_dll_unregister_server"
+			-- Used for code generation.
+
+	ccom_dll_get_class_object: STRING is "ccom_dll_get_class_object"
+			-- Used for code generation.
+
+	ccom_dll_can_unload_now: STRING is "ccom_dll_can_unload_now"
+			-- Used for code generation.
+
+	Ccom_initialize_com: STRING is "ccom_initialize_com"
+			-- Used for code generation.
+
+	Ccom_cleanup_com: STRING is "ccom_cleanup_com"
+			-- Used for code generation.
+
+	Ccom_register_server: STRING is "ccom_register_server"
+			-- Used for code generation.
+
+	Ccom_unregister_server: STRING is "ccom_unregister_server"
+			-- Used for code generation.
+
 feature -- Basic operations
 
 	create_file_name (a_factory: WIZARD_FILE_NAME_FACTORY) is

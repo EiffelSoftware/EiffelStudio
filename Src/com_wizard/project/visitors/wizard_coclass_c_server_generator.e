@@ -108,11 +108,6 @@ feature -- Basic operations
 			create a_class_object
 			a_class_object.initialize
 			a_class_object.generate (a_descriptor)
-
---			-- Generate server registration code
---			create a_registration_code_gen
---			a_registration_code_gen.initialize
---			a_registration_code_gen.generate (a_descriptor)
 		end
 
 	create_file_name (a_factory: WIZARD_FILE_NAME_FACTORY) is
@@ -688,13 +683,37 @@ feature {NONE} -- Implementation
 		do
 			create func_writer.make
 			tmp_body := clone (Tab)
-			tmp_body.append (Return)
+			tmp_body.append (Long_macro)
 			tmp_body.append (Space)
+			tmp_body.append ("res")
+			tmp_body.append (Space_equal_space)
 			tmp_body.append (Interlocked_decrement)
 			tmp_body.append (Space_open_parenthesis)
 			tmp_body.append (Ampersand)
 			tmp_body.append (Ref_count)
 			tmp_body.append (Close_parenthesis)
+			tmp_body.append (Semicolon)
+			tmp_body.append (New_line_tab)
+
+			tmp_body.append (If_keyword)
+			tmp_body.append (Space)
+			tmp_body.append (Open_parenthesis)
+			tmp_body.append ("res")
+			tmp_body.append (Space)
+			tmp_body.append (C_equal)
+			tmp_body.append (Space)
+			tmp_body.append (Zero)
+			tmp_body.append (New_line_tab_tab)
+
+			tmp_body.append (Delete)
+			tmp_body.append (Space)
+			tmp_body.append (This)
+			tmp_body.append (Semicolon)
+			tmp_body.append (New_line_tab)
+
+			tmp_body.append (Return)
+			tmp_body.append (Space)
+			tmp_body.append ("res")
 			tmp_body.append (Semicolon)
 
 			func_writer.set_name ("Release")

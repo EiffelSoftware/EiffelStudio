@@ -30,7 +30,6 @@ feature -- Access
 	Implementation: INTEGER is 7
 	
 	Externals: INTEGER is 8
-			-- Feature clauses
 
 	feature_clauses: HASH_TABLE [STRING, INTEGER] is
 			-- Feature clauses

@@ -502,9 +502,10 @@ feature {EV_ANY_I, EV_POPUP_MENU_HANDLER} -- Implementation
 	
 	menu_opened (a_menu: WEL_MENU) is
 			-- Call `select_actions' for `a_menu'.
+		require
+			a_menu_not_void: a_menu /= Void
 		local
 			cur: CURSOR
-			menu_item: EV_MENU_ITEM_IMP
 			sub_menu: EV_MENU_IMP
 			wel_menu: WEL_MENU
 		do
@@ -514,12 +515,9 @@ feature {EV_ANY_I, EV_POPUP_MENU_HANDLER} -- Implementation
 			until
 				ev_children.after
 			loop	
-				menu_item := ev_children.item
-				if menu_item /= Void then
-					sub_menu ?= menu_item
-				end
+				sub_menu ?= ev_children.item
 				if sub_menu /= Void then
-					wel_menu ?= sub_menu
+					wel_menu := sub_menu
 					if wel_menu.item = a_menu.item then
 						if sub_menu.select_actions_internal /= Void then
 							sub_menu.select_actions_internal.call (Void)

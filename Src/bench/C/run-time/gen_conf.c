@@ -292,6 +292,7 @@ rt_public int eifthd_gen_conf (int16, int16);
 #endif
 /*------------------------------------------------------------------*/
 
+rt_shared size_t eif_typename_len (int16 dftype);
 rt_private int16 eif_gen_param (int16, int16, int, char *, long *);
 rt_private void eif_create_typename (int16, char*);
 rt_private EIF_GEN_DER *eif_new_gen_der(long, int16*, int16, char, char, int16);
@@ -2331,7 +2332,7 @@ rt_shared char *eif_typename (int16 dftype)
 {
 	/* Not MT-safe. */
 	EIF_GEN_DER *gdp;
-	int         len;
+	size_t len;
 	char    *result;
 			
 	REQUIRE("Valid type", (dftype >= 0) && (dftype < next_gen_id));
@@ -2522,10 +2523,11 @@ rt_private void eif_create_typename (int16 dftype, char *result)
 /* dftype : full type id; RTUD(yes)                                 */
 /*------------------------------------------------------------------*/
 
-rt_shared int eif_typename_len (int16 dftype)
+rt_shared size_t eif_typename_len (int16 dftype)
 {
 	EIF_GEN_DER *gdp;
-	int16       *gp, i, len = 0, dtype;
+	int16       *gp, i, dtype;
+	size_t len = 0;
 	int         size;
 	int	needs_expanded = 0, needs_reference = 0;
 

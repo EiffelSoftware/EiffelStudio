@@ -33,6 +33,17 @@ inherit
 			set_font as set_gc_font
 		end
 
+feature {NONE} -- Initialization
+
+	create_gc (a_drawable: MEL_DRAWABLE) is
+			-- Create a graphic context for `a_drawable'.
+		require
+			valid_drawable: a_drawable /= Void and then a_drawable.is_valid
+	   	do
+			make_gc (a_drawable);
+			set_gc_values	
+		end
+
 feature -- Access
 
 	is_drawable: BOOLEAN is
@@ -248,10 +259,12 @@ feature {NONE} -- Implementation
 			gc_subwindow_mode 	:= -1;
 	
 			def_screen := display.default_screen;
-				-- Default foreground color is black
-			gc_bg_color			:= def_screen.black_pixel.identifier;
-				-- Default foreground color is white
-			gc_fg_color			:= def_screen.white_pixel.identifier;
+				-- Set the default background color of the GC to white
+			gc_bg_color	:= def_screen.white_pixel.identifier;
+			x_set_background (display_handle, graphic_context, gc_bg_color)
+				-- Set the default foreground color of the GC to black
+			gc_fg_color	:= def_screen.black_pixel.identifier;
+			x_set_foreground (display_handle, graphic_context, gc_fg_color)
 		end;
 
 		-- Saved Gc values

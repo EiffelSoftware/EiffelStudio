@@ -290,4 +290,5 @@ rt_private Signal_t timeout(void)
 {
 	longjmp(env, 1);			/* Alarm signal received */
 	/* NOTREACHED */
+	return 0;
 }

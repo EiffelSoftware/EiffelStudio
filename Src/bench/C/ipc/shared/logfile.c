@@ -55,6 +55,7 @@ rt_private int loglvl = 20;			/* Logging level */
 rt_private void expand(char *, char*);	/* Run the %m %e expansion on the string */
 rt_private int add_error(char *);			/* Prints description of error in errno */
 rt_private int add_errcode(char *);			/* Print the symbolic error name */
+rt_public void dexit(int);
 
 rt_public char *progname = "ram";	/* Program name */
 
@@ -66,6 +67,12 @@ extern int errno;				/* System error report variable */
 extern Time_t time(time_t *);			/* Time in seconds since the Epoch */
 extern int file_lock();			/* Obtain a lock file with .lock extension */ /* %%ss undefined nowhere */
 extern void release_lock(void);		/* Release previous lock */
+
+rt_public void dexit(int status)
+{
+	add_log(12, "exiting with status %d", status);
+	exit(status);
+}
 
 /* VARARGS2 */
 #ifdef EIF_WIN32

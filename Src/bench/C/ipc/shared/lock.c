@@ -13,6 +13,7 @@
 #include "eif_config.h"
 #include "eif_portable.h"
 #include <errno.h>
+#include "stdio.h"
 #include <sys/types.h>
 #include <sys/stat.h>
 
@@ -35,6 +36,8 @@ rt_private void check_lock(char *file);				/* Make sure lockfile is not too old 
 
 #ifndef EIF_WIN32
 extern int errno;						/* System error status */
+#else
+#include "io.h"
 #endif
 
 extern Time_t time(Time_t *t);					/* Current time */

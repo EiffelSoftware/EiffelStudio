@@ -536,11 +536,7 @@ feature -- Removal
 	wipe_out is
 			-- Remove all items.
 		do
-			active := Void
-			first_element := Void
-			before := True
-			after := False
-			count := 0
+			internal_wipe_out
 		end
 
 feature -- Duplication
@@ -550,26 +546,27 @@ feature -- Duplication
 			-- to `other', so as to yield equal objects.
 		local
 			cur: LINKED_LIST_CURSOR [G]
-			new_list: like Current
 			obj_comparison: BOOLEAN
 		do
 			obj_comparison := other.object_comparison
+			standard_copy (other)
 			if not other.is_empty then
+				internal_wipe_out
 				cur ?= other.cursor
-				create new_list.make
 				from
 					other.start
 				until
 					other.off
 				loop
-					new_list.extend (other.item)
+					extend (other.item)
+						-- For speeding up next insertion, we go
+						-- to the end, that way `extend' does not
+						-- need to traverse the list completely.
+					finish
 					other.forth
 				end
 				other.go_to (cur)
-			else
-				new_list := other
 			end
-			standard_copy (new_list)
 			object_comparison := obj_comparison
 		end
 
@@ -652,6 +649,26 @@ feature {LINKED_LIST} -- Implementation
 		require
 			non_void_cell: v /= Void
 		do
+		end
+
+feature {NONE} -- Implementation
+
+	frozen internal_wipe_out is
+			-- Remove all items.
+			--| Used by `copy' instead of `wipe_out' to ensure that it
+			--| will behave consistently even in descendants that 
+			--| redefine `wipe_out'.
+		require
+			prunable
+		do
+			active := Void
+			first_element := Void
+			before := True
+			after := False
+			count := 0
+		ensure
+			wiped_out: is_empty
+			is_before: before
 		end
 
 invariant

@@ -59,6 +59,7 @@ feature -- Saving
 		do
 			option.save (st)
 			if value /= Void then
+				st.putchar (' ')
 				value.save (st)
 			end
 		end

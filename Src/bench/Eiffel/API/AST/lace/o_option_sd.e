@@ -62,7 +62,8 @@ feature -- Saving
 			-- Save current in `st'.
 		do
 			Precursor {D_OPTION_SD} (st)
-			st.putstring (":")
+			st.putchar (':')
+			st.putchar (' ')
 			if target_list /= Void then
 				target_list.save_with_interval_separator (st, ", ")
 			end

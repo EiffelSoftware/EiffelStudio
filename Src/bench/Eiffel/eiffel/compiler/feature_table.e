@@ -285,7 +285,7 @@ debug ("ACTIVITY")
 	io.error.putstring (old_feature_i.feature_name);
 	io.error.putstring (" is propagated to clients%N");
 end;
-					!!depend_unit.make (feat_tbl_id, new_feature_i);
+					!!depend_unit.make_no_dead_code (feat_tbl_id, old_feature_i.feature_id);
 					propagators.put (depend_unit);
 					propagate_feature := False;
 				end;
@@ -297,7 +297,7 @@ end;
 				then
 						-- Detect an attribute changed into a function.
 					if depend_unit = Void then
-						!!depend_unit.make (feat_tbl_id, new_feature_i);
+						!!depend_unit.make_no_dead_code (feat_tbl_id, old_feature_i.feature_id);
 					end;
 debug ("ACTIVITY")
 	io.error.putstring ("Melted propagators: ");
@@ -328,7 +328,7 @@ debug ("ACTIVITY")
     io.error.putint (removed_feature_ids.item);
     io.error.putstring (" (removed by `update_table' is propagated to clients%N");
 end;
-				!!depend_unit.make (feat_tbl_id,feature_of_feature_id (removed_feature_ids.item));
+				!!depend_unit.make_no_dead_code (feat_tbl_id, removed_feature_ids.item);
 				propagators.put (depend_unit);
 				removed_feature_ids.forth
 			end

@@ -19,20 +19,20 @@ feature {NONE} -- Initialization
 	make (h: STRING; p: INTEGER) is
 			-- Create proxy information for host `h' and port `p'.
 		require
-			host_name_not_empty: h /= Void and then not h.is_empty
+			host_not_empty: h /= Void and then not h.is_empty
 			port_number_non_negative: p >= 0
 		do
-			host_name := h
+			host := h
 			port := p
 		ensure
-			host_name_set: host_name = h
+			host_set: host = h
 			port_set: port = p
 		end
 
 feature -- Access
 
-	host_name: STRING
-			-- Name of proxy host
+	host: STRING
+			-- Name or address of proxy host
 
 	port: INTEGER
 			-- Port of proxy
@@ -42,16 +42,16 @@ feature -- Status setting
 	set_host (h: STRING) is
 			-- Set host name to `h'.
 		require
-			host_name_not_empty: h /= Void and then not h.is_empty
+			host_not_empty: h /= Void and then not h.is_empty
 		do
-			host_name := h
+			host := h
 		ensure
-			host_name_set: host_name = h
+			host_set: host = h
 		end
 			
 invariant
 
-	host_name_not_empty: host_name /= Void and then not host_name.is_empty
+	host_not_empty: host /= Void and then not host.is_empty
 	port_non_negative: port >= 0
 
 end -- class PROXY_INFORMATION

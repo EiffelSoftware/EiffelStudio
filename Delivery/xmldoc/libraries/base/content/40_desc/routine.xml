@@ -8,23 +8,29 @@
 	</meta_data>
 	<paragraph>
 		<paragraph>  To create a DESC object representing a routine from a DLL, use a  declaration such as:</paragraph>
-		<code_block>your_routine: DLL_32_ROUTINE </code_block>
+		<code_block>
+	<feature_name>your_routine</feature_name><symbol>:</symbol> <class_name>DLL_32_ROUTINE</class_name> 
+		</code_block>
 		<paragraph>  where 
 			<code>
 				<local_variable>your_routine</local_variable>
 			</code> should be replaced by whatever name you have chosen to  denote the routine in your software, and execute a creation instruction of the form:
 		</paragraph>
-		<code_block>create your_routine.make_by_name (
-  your_dll,
-  "your_routine_name",
-  &lt;&lt;argtyp1, argtyp2, ...&gt;&gt;,
-  res_type) </code_block>
+		<code_block>
+	<keyword>create</keyword> <feature_name>your_routine</feature_name>.<feature_name>make_by_name</feature_name> <symbol>(</symbol>
+    		<feature_name>your_dll</feature_name>,
+    		<string>"your_routine_name"</string>,
+    		<symbol>&lt;&lt;</symbol>argtyp1, argtyp2, ...<symbol>&gt;&gt;</symbol>&gt;,
+    		<feature_name>res_type</feature_name><symbol>)</symbol> 
+		</code_block>
 		<paragraph>  or, if you prefer for faster access to identify the routine by an integer index rather  than a name:</paragraph>
-		<code_block>create your_routine.make_by_index (
-  your_dll,
-  your_routine_index, -- The only differing line
-  &lt;&lt;argtyp1, argtyp2, ...&gt;&gt;,
-  res_type) </code_block>
+		<code_block>
+	<keyword>create</keyword> <feature_name>your_routine</feature_name>.<feature_name>make_by_name</feature_name> <symbol>(</symbol>
+    		<feature_name>your_dll</feature_name>,
+    		<feature_name>your_routine_index</feature_name>, <comment>-- The only differing line</comment>
+    		<symbol>&lt;&lt;</symbol>argtyp1, argtyp2, ...<symbol>&gt;&gt;</symbol>&gt;,
+    		<feature_name>res_type</feature_name><symbol>)</symbol> 
+		</code_block>
 		<paragraph>where 
 			<code>
 				<local_variable>your_dll</local_variable>

@@ -65,23 +65,24 @@
 				<string>POLYGON</string>
 			</code> may begin as:
 		</paragraph>
-		<code_block>class RECTANGLE
-	inherit
-		POLYGON
-			redefine
-				perimeter
-			end
+		<code_block>
+<keyword>class</keyword> <class_name>RECTANGLE</class_name>
+	<keyword>inherit</keyword>
+		<class_name>POLYGON</class_name>
+			<keyword>redefine</keyword>
+				<feature_name>perimeter</feature_name>
+			<keyword>end</keyword>
 
-feature -- Specific features of rectangles, such as:
+<keyword>feature</keyword> <comment>-- Specific features of rectangles, such as:</comment>
 
-	side1: REAL
-	side2: REAL
+	<feature_name>side1</feature_name><symbol>:</symbol> <class_name>REAL</class_name>
+	<feature_name>side2</feature_name><symbol>:</symbol> <class_name>REAL</class_name>
 
-	perimeter: REAL is
-			-- Rectangle-specific version
-		do
-			Result := 2 * (side1 + side2)
-		end
+	<feature_name>perimeter</feature_name><symbol>:</symbol> <class_name>REAL</class_name> <keyword>is</keyword>
+			<comment>-- Rectangle-specific version</comment>
+		<keyword>do</keyword>
+			Result <symbol>:</symbol><symbol>=</symbol> 2 * <symbol>(</symbol><feature_name>side1</feature_name> <symbol>+</symbol> <feature_name>side2</feature_name><symbol>)</symbol>
+		<keyword>end</keyword>
 
 ... Other RECTANGLE features ...
 </code_block>
@@ -105,17 +106,17 @@ feature -- Specific features of rectangles, such as:
 			</code> .  The version to use in any call is determined by the run-time form of the target.  Consider the following class fragment:
 		</paragraph>
 		<code_block>
-	p: POLYGON
-	r: RECTANGLE
+	<local_variable>p</local_variable>: <class_name>POLYGON</class_name>
+	<local_variable>r</local_variable>: <class_name>RECTANGLE</class_name>
 
-	... create p
-	create r ...
+	... <keyword>create</keyword> <local_variable>p</local_variable>
+	<keyword>create</keyword> <local_variable>r</local_variable> ...
 
-	if c then
-		p := r
-	end
+	<keyword>if</keyword> c <keyword>then</keyword>
+		<local_variable>p</local_variable> <symbol>:=</symbol> <local_variable>r</local_variable>
+	<keyword>end</keyword>
 
-	print (p . perimeter)
+	<feature_name>print</feature_name> <symbol>(</symbol><local_variable>p</local_variable>.<feature_name>perimeter</feature_name><symbol>)</symbol>
 </code_block>
 		<paragraph>The polymorphic assignment
 			<code>

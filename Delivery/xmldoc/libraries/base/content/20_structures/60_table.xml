@@ -35,47 +35,9 @@
 			</code>, the basic operations are
 		</paragraph>
 		<code_block>
-			
-			<local_variable>a</local_variable>
-			
-			<symbol>.</symbol>put
-			
-			<symbol>(</symbol>
-			
-			<local_variable>x</local_variable>
-			
-			<symbol>,</symbol>
-			
-			<local_variable>i</local_variable>
-			
-			<symbol>)</symbol>
-			
-			<line_break/>
-			
-			<local_variable>x</local_variable>
-			
-			<symbol>:=</symbol>
-			
-			<local_variable>a</local_variable>
-			
-			<symbol>.</symbol>item
-			
-			<symbol>(</symbol>
-			
-			<local_variable>i</local_variable>
-			
-			<symbol>)</symbol>
-			
-			<line_break/>
-			
-			<local_variable>x</local_variable>
-			
-			<symbol>:=</symbol>
-			
-			<local_variable>a</local_variable>@
-			
-			<local_variable>i</local_variable>
-		
+	<feature_name>a</feature_name>.<feature_name>put</feature_name> <symbol>(</symbol><feature_name>x</feature_name>, i<symbol>)</symbol>
+	<feature_name>x</feature_name> <symbol>:</symbol><symbol>=</symbol> <feature_name>a</feature_name>.<feature_name>item</feature_name> <symbol>(</symbol>i<symbol>)</symbol>
+	<feature_name>x</feature_name> <symbol>:</symbol><symbol>=</symbol> <feature_name>a</feature_name> @ i 			
 		</code_block>
 		<paragraph> The first causes the value of a at index 
 			<code>
@@ -113,38 +75,9 @@
 			<item>Different keys may hash into the same integer value, requiring extra processing  to find an acceptable index.</item>
 		</list>
 		<paragraph> With good implementations, however, it is possible to use hash tables with a performance that is not much worse than that of arrays and, most importantly, may be treated as if the time for a put, an item or a remove were constant. This will mean that you can consider operations such as</paragraph>
-		<code_block>
-			
-			<local_variable>h</local_variable>
-			
-			<symbol>.</symbol>put
-			
-			<symbol>(</symbol>
-			
-			<local_variable>x</local_variable>
-			
-			<symbol>,</symbol>
-			
-			<local_variable>k</local_variable>
-			
-			<symbol>)</symbol>
-			
-			<line_break/>
-			
-			<local_variable>h</local_variable>
-			
-			<symbol>:=</symbol>
-			
-			<local_variable>a</local_variable>
-			
-			<symbol>.</symbol>item
-			
-			<symbol>(</symbol>
-			
-			<local_variable>k</local_variable>
-			
-			<symbol>)</symbol>
-		
+		<code_block>			
+	<feature_name>h</feature_name>.<feature_name>put</feature_name> <symbol>(</symbol><feature_name>x</feature_name>, <feature_name>k</feature_name><symbol>)</symbol>
+	<feature_name>h</feature_name> <symbol>:</symbol><symbol>=</symbol> <feature_name>a</feature_name>.<feature_name>item</feature_name> <symbol>(</symbol><feature_name>k</feature_name><symbol>)</symbol> 	
 		</code_block>
 		<paragraph> where 
 			<code>
@@ -219,11 +152,7 @@
 			</link> takes two generic parameters:
 		</paragraph>
 		<code_block>
-			<keyword>class</keyword>			
-			<link>
-				<url>../../reference/structures/table/hash_table_chart.html</url>
-				<label>HASH_TABLE</label>
-			</link> [G, H -&gt; HASHABLE] ... 
+	<keyword>class</keyword> <class_name>HASH_TABLE</class_name> <symbol>[</symbol><class_name>G</class_name>, <class_name>H</class_name> <symbol>-&gt;</symbol> <class_name>HASHABLE</class_name><symbol>]</symbol> ...
 		</code_block>
 		<paragraph> G represents the type of the objects to be stored in the hash table, H the type of their keys.
 			<line_break/> When viewed as an implementation of containers, 
@@ -233,12 +162,7 @@
 			</link>, in a strict sense, represents bags rather than sets: unlike the other classes in this chapter, it allows an object to have two or more distinct occurrences in a single container. But this is only true if we consider a hash table as a repository of objects of type G. In reality each item of the table is identified by a pair of values, one from G and one from H. Because the keys must uniquely identify objects, the hash table viewed as a container of such pairs is indeed a set. The creation procedure make takes an integer argument, as in
 		</paragraph>
 		<code_block>				
-			<keyword>create</keyword>			
-			<local_variable>my_table</local_variable>
-			<symbol>.</symbol>make
-			<symbol>(</symbol>
-			<local_variable>n</local_variable>
-			<symbol>)</symbol>
+	<keyword>create</keyword> <feature_name>my_table</feature_name>.<feature_name>make</feature_name> <symbol>(</symbol><feature_name>n</feature_name><symbol>)</symbol>
 		</code_block>
 		<paragraph> The value of 
 			<code>

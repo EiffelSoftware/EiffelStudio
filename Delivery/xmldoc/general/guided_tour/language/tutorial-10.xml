@@ -25,16 +25,18 @@
 			</code> clause:
 		</paragraph>
 		<code_block>
-indexing ... class D creation ... inherit
+<keyword>indexing</keyword> ...
 
-    A
+<keyword>class</keyword> 
+	<class_name>D</class_name>
 
-    B
+<keyword>inherit</keyword>
+    <class_name>A</class_name>
+    <class_name>B</class_name>
 
     ...
 
-feature
-
+<keyword>feature</keyword>
     ...
 </code_block>
 		<paragraph>This makes
@@ -132,35 +134,29 @@ feature
 			<span>and</span> redo.  The mechanism is feature redefinition:
 		</paragraph>
 		<code_block>
-indexing
+<keyword>indexing</keyword>
+    description<symbol>:</symbol> "Savings accounts"
 
-    description: "Savings accounts"
+<keyword>class</keyword>
+    <class_name>SAVINGS_ACCOUNT</class_name>
 
-class
+<keyword>inherit</keyword>
+    <class_name>ACCOUNT</class_name>
+         <keyword>redefine</keyword> 
+		deposit 
+	 <keyword>end</keyword>
 
-    SAVINGS_ACCOUNT
+<keyword>feature</keyword> -- Element change
 
-inherit
-
-    ACCOUNT
-
-         redefine deposit end
-
-feature -- Element change
-
-     deposit ( sum : INTEGER ) is
-
-            -- Add sum to account.
-
-         do
-
+     deposit <symbol>(</symbol>sum<symbol>:</symbol> <class_name>INTEGER</class_name><symbol>)</symbol> <keyword>is</keyword>
+            <comment>-- Add sum to account.</comment>
+         <keyword>do</keyword>
             ... New implementation (see below) ...
-
-         end
+         <keyword>end</keyword>
 
     ... Other features ...
 
-end -- class SAVINGS_ACCOUNT
+<keyword>end</keyword> -- class SAVINGS_ACCOUNT
 </code_block>
 		<paragraph>Without the
 			<code>
@@ -191,8 +187,8 @@ end -- class SAVINGS_ACCOUNT
 			</code> " above) could be of the form
 		</paragraph>
 		<code_block>
-Precursor (sum)
-	-- Apply ACCOUNT's version of deposit
+<keyword>Precursor</keyword> (sum)
+	<comment>-- Apply ACCOUNT's version of deposit</comment>
 	.. Instructions to update the interest ...
 </code_block>
 		<paragraph>Besides changing the implementation of a routine, a redefinition can turn an argument-less function into an attribute; for example a proper descendant of
@@ -328,11 +324,12 @@ Precursor (sum)
 		</paragraph>
 		<paragraph>So with the inheritance structure that we have seen, the declarations</paragraph>
 		<code_block>
-	acc : ACCOUNT ; sav : SAVINGS_ACCOUNT
+	acc<symbol>:</symbol> <class_name>ACCOUNT</class_name>
+	sav<symbol>:</symbol> <class_name>SAVINGS_ACCOUNT</class_name>
 </code_block>
 		<paragraph>make it valid to write the assignment</paragraph>
 		<code_block>
-	acc := sav
+	acc <symbol>:</symbol><symbol>=</symbol> sav
 </code_block>
 		<paragraph>which will assign to
 			<code>
@@ -620,7 +617,7 @@ Precursor (sum)
 			</code> .  Then we have to ask what the effect will be for a call of the form
 		</paragraph>
 		<code_block>
-	acc .  deposit ( some_value )
+	<feature_name>acc</feature_name>.<feature_name>deposit</feature_name> <symbol>(</symbol>some_value<symbol>)</symbol>
 </code_block>
 		<paragraph>Dynamic binding is the clearly correct answer: the call will execute the version of
 			<code>
@@ -699,7 +696,7 @@ Precursor (sum)
 			</code> represent the current list element, you can repeatedly apply
 		</paragraph>
 		<code_block>
-	acc .  deposit (...)
+	<feature_name>acc</feature_name>.<feature_name>deposit</feature_name> (...)
 </code_block>
 		<paragraph>to have the appropriate variant of the
 			<code>
@@ -801,50 +798,35 @@ Precursor (sum)
 			</code> (add an item at the end of the list) will have no implementation and hence will be declared as deferred.  Here is the corresponding form, illustrating the syntax for both deferred classes and their deferred features:
 		</paragraph>
 		<code_block>
-indexing
+<keyword>indexing</keyword>
+    description<symbol>:</symbol> "Sequential finite lists, without a commitment<symbol>%</symbol><symbol>[</symbol>
+                to a representation<symbol>%</symbol><symbol>]</symbol>"
 
-    description: "Sequential finite lists, without a commitment%[
+<keyword>deferred</keyword> <keyword>class</keyword>
+    <class_name>LIST</class_name> <symbol>[</symbol><class_name>G</class_name><symbol>]</symbol>
 
-                to a representation%]"
+<keyword>feature</keyword> -- Access
 
-deferred class
-
-    LIST [ G ]
-
-feature -- Access
-
-    count: INTEGER is
-
-            -- Number of items in list
-
-         do
-
+    count<symbol>:</symbol> <class_name>INTEGER</class_name> <keyword>is</keyword>
+            <comment>-- Number of items in list</comment>
+         <keyword>do</keyword>
             ... See below; this feature can be effective ...
+         <keyword>end</keyword>
 
-         end
+<keyword>feature</keyword> -- Element change
 
-feature -- Element change
+    ext<keyword>end</keyword> <symbol>(</symbol>x<symbol>:</symbol> <class_name>G</class_name><symbol>)</symbol> <keyword>is</keyword>
+            <comment>-- Add x at end of list.</comment>
+         <keyword>require</keyword>
+            space_available<symbol>:</symbol> <keyword>not</keyword> full
+         <keyword>deferred</keyword>
+         <keyword>ensure</keyword>
+            one_more<symbol>:</symbol> count <symbol>=</symbol> <keyword>old</keyword> count <symbol>+</symbol> 1
+         <keyword>end</keyword>
 
-    extend (x: G) is
+... Other feature declarations and invariants ...
 
-            -- Add x at end of list.
-
-         require
-
-            space_available: not full
-
-         deferred
-
-         ensure
-
-            one_more: count = old count + 1
-
-         end
-
-... Other feature declarations and invariant ...
-
-end -- class LIST
-
+<keyword>end</keyword> -- <keyword>class</keyword> <class_name>LIST</class_name>
 </code_block>
 		<paragraph>A deferred feature (considered to be a routine, although it can yield an attribute in a proper descendant) has the single keyword
 			<code>
@@ -875,19 +857,14 @@ end -- class LIST
 			</code> as a function:
 		</paragraph>
 		<code_block>
-    count: INTEGER is
-
-            -- Number of items in list
-
-         do
-
-             from start until after loop
-
-                Result := Result + 1; forth
-
-             end
-
-         end
+    count<symbol>:</symbol> <class_name>INTEGER</class_name> <keyword>is</keyword>
+            <comment>-- Number of items in list</comment>
+         <keyword>do</keyword>
+             <keyword>from</keyword> start <keyword>until</keyword> after <keyword>loop</keyword>
+                Result <symbol>:</symbol><symbol>=</symbol> Result <symbol>+</symbol> 1
+		forth
+             <keyword>end</keyword>
+         <keyword>end</keyword>
 </code_block>
 		<paragraph>This implementation relies on the loop construct described below (
 			<code>
@@ -913,21 +890,14 @@ end -- class LIST
 			</code> itself appears as
 		</paragraph>
 		<code_block>
-    forth is
-
-            -- Advance cursor by one position
-
-         require
-
-            not_after: not after
-
-         deferred
-
-         ensure
-
-            moved_right: index = old index + 1
-
-         end
+    <feature_name>forth</feature_name> <keyword>is</keyword>
+            <comment>-- Advance cursor by one position</comment>
+         <keyword>require</keyword>
+            not_after<symbol>:</symbol> <keyword>not</keyword> <feature_name>after</feature_name>
+         <keyword>deferred</keyword>
+         <keyword>ensure</keyword>
+            moved_right<symbol>:</symbol> <feature_name>index</feature_name> <symbol>=</symbol> <keyword>old</keyword> <feature_name>index</feature_name> <symbol>+</symbol> 1
+         <keyword>end</keyword>
 </code_block>
 		<paragraph>where
 			<code>
@@ -1083,82 +1053,65 @@ end -- class LIST
 		</paragraph>
 		<paragraph>Note the use of assertions to define semantic properties of the class, its instances and its features.  Although often presented as high-level, most object-oriented analysis methods (with the exception of Waldn's and Nerson's Business Object Notation) have no support for the expression of such properties, limiting themselves instead to the description of broad structural relationships.  </paragraph>
 		<code_block>
-indexing
+<keyword>indexing</keyword>
+    description<symbol>:</symbol> "Individual fragments of a broadcasting schedule"
 
-    description: "Individual fragments of a broadcasting schedule"
+<keyword>deferred</keyword> <keyword>class</keyword>
+    <class_name>SEGMENT</class_name>
 
-deferred class
+<keyword>feature</keyword> -- Access
 
-    SEGMENT
+    schedule<symbol>:</symbol> <class_name>SCHEDULE</class_name> <keyword>is</keyword> <keyword>deferred</keyword> <keyword>end</keyword>
+            <comment>-- Schedule to which segment belongs</comment>
 
-feature -- Access
+    index<symbol>:</symbol> <class_name>INTEGER</class_name> <keyword>is</keyword> <keyword>deferred</keyword> <keyword>end</keyword>
+            <comment>-- Position of segment in its schedule</comment>
 
-    schedule: SCHEDULE is deferred end
-            -- Schedule to which segment belongs
+    starting_time, ending_time<symbol>:</symbol> <class_name>INTEGER</class_name> <keyword>is</keyword> <keyword>deferred</keyword> <keyword>end</keyword>
+            <comment>-- Beginning and end of scheduled air time</comment>
 
-    index: INTEGER is deferred end
-            -- Position of segment in its schedule
+    next<symbol>:</symbol> <class_name>SEGMENT</class_name> <keyword>is</keyword> <keyword>deferred</keyword> <keyword>end</keyword>
+            <comment>-- Segment to be played next, if any</comment>
 
-    starting_time, ending_time: INTEGER is deferred end
-            -- Beginning and end of scheduled air time
+    sponsor<symbol>:</symbol> <class_name>COMPANY</class_name> <keyword>is</keyword> <keyword>deferred</keyword> <keyword>end</keyword>
+            <comment>-- Segment's principal sponsor</comment>
 
-    next: SEGMENT is deferred end
-            -- Segment to be played next, if any
+    rating<symbol>:</symbol> <class_name>INTEGER</class_name> <keyword>is</keyword> <keyword>deferred</keyword> <keyword>end</keyword>
+            <comment>-- Segment's rating (for children's viewing etc.)</comment>
 
-    sponsor: COMPANY is deferred end
-            -- Segment's principal sponsor
+    Minimum_duration<symbol>:</symbol> <class_name>INTEGER</class_name> <keyword>is</keyword> 30
+            <comment>-- Minimum length of segments, in seconds</comment>
 
-    rating: INTEGER is deferred end
-            -- Segment's rating (for children's viewing etc.)
+    Maximum_interval<symbol>:</symbol> <class_name>INTEGER</class_name> <keyword>is</keyword> 2
+            <comment>-- Maximum time (seconds) between successive segments</comment>
 
-    Minimum_duration: INTEGER is 30
-            -- Minimum length of segments, in seconds
+<keyword>feature</keyword> -- Element change
 
-    Maximum_interval: INTEGER is 2
-            -- Maximum time (seconds) between successive segments
-
-feature -- Element change
-
-    set_sponsor (s: SPONSOR) is
-
-         require
-
-            not_void: s /= Void
-
-         deferred
-
-         ensure
-
-            sponsor_set: sponsor = s
-
-         end
+    set_spons<keyword>or</keyword> <symbol>(</symbol>s<symbol>:</symbol> <class_name>SPONSOR</class_name><symbol>)</symbol> <keyword>is</keyword>
+         <keyword>require</keyword>
+            not_void<symbol>:</symbol> s <symbol>/=</symbol> Void
+         <keyword>deferred</keyword>
+         <keyword>ensure</keyword>
+            sponsor_set<symbol>:</symbol> spons<keyword>or</keyword> <symbol>=</symbol> s
+         <keyword>end</keyword>
 
     ... change_next, set_rating omitted ...
 
-invariant
-
-    in_list: (1 &lt;= index) and (index &lt;= schedule . segments . count)
-
-    in_schedule: schedule . segments . item (index) = Current
-
-    next_in_list: (next /= Void) implies
-                    ( schedule . segments . item (index + 1) = next)
-
-    no_next_iff_last: (next = Void) =
-                    (index = schedule . segments . count)
-
-    non_negative_rating: rating &gt;= 0
-
-    positive times: (starting_time &gt; 0) and (ending_time &gt; 0)
-
-    sufficient_duration: ending_time - starting_time &gt;=
+<keyword>invariant</keyword>
+    in_list<symbol>:</symbol> <symbol>(</symbol>1 &lt;<symbol>=</symbol> index<symbol>)</symbol> <keyword>and</keyword> <symbol>(</symbol>index &lt;<symbol>=</symbol> <feature_name>schedule</feature_name>.<feature_name>segments</feature_name>.<feature_name>count</feature_name><symbol>)</symbol>
+    in_schedule<symbol>:</symbol> <feature_name>schedule</feature_name>.<feature_name>segments</feature_name>.<feature_name>item</feature_name> <symbol>(</symbol>index<symbol>)</symbol> <symbol>=</symbol> Current
+    next_in_list<symbol>:</symbol> <symbol>(</symbol>next <symbol>/=</symbol> Void<symbol>)</symbol> <keyword>implies</keyword>
+                    <symbol>(</symbol><feature_name>schedule</feature_name>.<feature_name>segments</feature_name>.<feature_name>item</feature_name> <symbol>(</symbol>index <symbol>+</symbol> 1<symbol>)</symbol> <symbol>=</symbol> next<symbol>)</symbol>
+    no_next_if_last<symbol>:</symbol> <symbol>(</symbol>next <symbol>=</symbol> Void<symbol>)</symbol> <symbol>=</symbol>
+                    <symbol>(</symbol>index <symbol>=</symbol> <feature_name>schedule</feature_name>.<feature_name>segments</feature_name>.<feature_name>count</feature_name><symbol>)</symbol>
+    non_negative_rating<symbol>:</symbol> rating &gt;<symbol>=</symbol> 0
+    positive times<symbol>:</symbol> <symbol>(</symbol>starting_time &gt; 0<symbol>)</symbol> <keyword>and</keyword> <symbol>(</symbol>ending_time &gt; 0<symbol>)</symbol>
+    sufficient_duration<symbol>:</symbol> ending_time - starting_time &gt;<symbol>=</symbol>
                     Minimum_duration
-
-    decent_interval: (next . starting_time) - ending_time &lt;=
+    decent_interval<symbol>:</symbol> <symbol>(</symbol>next <feature_name/>.<feature_name/> starting_time<symbol>)</symbol> - ending_time &lt;<symbol>=</symbol>
                     Maximum_interval
 
-end
-
+<keyword>end</keyword>
 </code_block>
 		<heading>
 			<size>2</size>
@@ -1240,57 +1193,40 @@ end
 			</code>.
 		</info>
 		<code_block>
-indexing
+<keyword>indexing</keyword>
+    description<symbol>:</symbol> "Objects that can be compared according to a total preorder relation"
 
-    description: "Objects that can be compared according to a total preorder relation"
+<keyword>deferred</keyword> <keyword>class</keyword>
+    <class_name>COMPARABLE</class_name>
 
-deferred class
+<keyword>feature</keyword> -- Comparison
 
-    COMPARABLE
+    <keyword>infix</keyword> "&lt;" <symbol>(</symbol>other<symbol>:</symbol> <keyword>like</keyword> Current<symbol>)</symbol><symbol>:</symbol> <class_name>BOOLEAN</class_name> <keyword>is</keyword>
+            <comment>-- Is current object less than other ?</comment>
+        <keyword>require</keyword>
+            other_exists<symbol>:</symbol> other <symbol>/=</symbol> Void
+         <keyword>deferred</keyword>
+         <keyword>ensure</keyword>
+            asymmetric<symbol>:</symbol> Result <keyword>implies</keyword> <keyword>not</keyword> <symbol>(</symbol>other &lt; Current<symbol>)</symbol>
+         <keyword>end</keyword>
 
-feature -- Comparison
+    <keyword>infix</keyword> "&lt;<symbol>=</symbol>" <symbol>(</symbol>other<symbol>:</symbol> <keyword>like</keyword> Current<symbol>)</symbol><symbol>:</symbol> <class_name>BOOLEAN</class_name> <keyword>is</keyword>
+            <comment>-- Is current object less than or equal to other ?</comment>
+        <keyword>require</keyword>
+            other_exists<symbol>:</symbol> other <symbol>/=</symbol> Void
+         <keyword>do</keyword>
+            Result <symbol>:</symbol><symbol>=</symbol> <symbol>(</symbol>Current &lt; other<symbol>)</symbol> <keyword>or</keyword> is_equal <symbol>(</symbol>other<symbol>)</symbol>
+         <keyword>ensure</keyword>
+            definition<symbol>:</symbol> Result <symbol>=</symbol> <symbol>(</symbol>Current &lt; other<symbol>)</symbol> <keyword>or</keyword>
+                            is_equal <symbol>(</symbol>other<symbol>)</symbol>
+         <keyword>end</keyword>
 
-    infix "&lt;" (other: like Current): BOOLEAN is
-            -- Is current object less than other ?
+... Other features<symbol>:</symbol> <keyword>infix</keyword> "&gt;", min, max, ...
 
-        require
+<keyword>invariant</keyword>
+    irreflexive<symbol>:</symbol> <keyword>not</keyword> <symbol>(</symbol>Current &lt; Current<symbol>)</symbol>
 
-            other_exists: other /= Void
-
-         deferred
-
-         ensure
-
-            asymmetric: Result implies not (other &lt; Current)
-
-         end
-
-    infix "&lt;=" (other: like Current): BOOLEAN is
-            -- Is current object less than or equal to other ?
-
-        require
-
-            other_exists: other /= Void
-
-         do
-
-            Result := (Current &lt; other) or is_equal (other)
-
-         ensure
-
-            definition: Result = (Current &lt; other) or
-                            is_equal (other)
-
-         end
-
-... Other features: infix "&gt;", min, max, ...
-
-invariant
-
-    irreflexive: not (Current &lt; Current)
-
-end -- class COMPARABLE
-
+<keyword>end</keyword> -- class COMPARABLE
 </code_block>
 		<heading>
 			<size>2</size>
@@ -1349,31 +1285,26 @@ end -- class COMPARABLE
 			</code> subclause, as in
 		</paragraph>
 		<code_block>
-indexing
+<keyword>indexing</keyword>
+    description<symbol>:</symbol> "Sequential finite lists implemented <keyword>as</keyword> arrays"
 
-    description: "Sequential finite lists implemented as arrays"
+<keyword>class</keyword>
+    <class_name>ARRAYED_LIST</class_name> <symbol>[</symbol><class_name>G</class_name><symbol>]</symbol>
 
-class
+<keyword>inherit</keyword>
+    <class_name>LIST</class_name> <symbol>[</symbol><class_name>G</class_name><symbol>]</symbol>
 
-    ARRAYED_LIST [ G ]
+    <class_name>ARRAY</class_name> <symbol>[</symbol><class_name>G</class_name><symbol>]</symbol>
+         <keyword>rename</keyword>
+            count <keyword>as</keyword> capacity, 
+	    item <keyword>as</keyword> array_item
+         <keyword>end</keyword>
 
-inherit
-
-    LIST [ G ]
-
-    ARRAY [ G ]
-
-         rename
-
-            count as capacity, item as array_item
-
-         end
-
-feature
+<keyword>feature</keyword>
 
     ...
 
-end -- class ARRAYED_LIST
+<keyword>end</keyword> -- class ARRAYED_LIST
 </code_block>
 		<paragraph>Here both
 			<code>
@@ -1542,7 +1473,7 @@ The invariants of all the parents of a class apply to the class itself.
 			</code> of the form
 		</paragraph>
 		<code_block>
-	if a1 .  pre then a1 .  r end
+	<keyword>if</keyword> <feature_name>a1</feature_name>.<feature_name>pre</feature_name> <keyword>then</keyword> <feature_name>a1</feature_name>.<feature_name>r</feature_name> <keyword>end</keyword>
 </code_block>
 		<paragraph>or just
 			<code>
@@ -1741,20 +1672,13 @@ In the redeclared version of a routine, it is not permitted to use a require or 
 			</link> ) as
 		</paragraph>
 		<code_block>
-    extend (x: G) is
-
+    <feature_name>extend</feature_name> (x: G) is
             -- Add x at end of list.
-
          require
-
-            space_available: not full
-
+            space_available: not <feature_name>full</feature_name>
          deferred
-
          ensure
-
             one_more: count = old count + 1
-
          end
 </code_block>
 		<paragraph>The precondition expresses that it is only possible to add an item to a list if the representation is not full.  We may well consider -- in line with the Eiffel principle that whenever possible structures should be of unbounded capacity -- that

@@ -259,7 +259,7 @@
 			</code> itself.  Note how EiffelStudio, when producing the flat form, adds a line of the form
 		</paragraph>
 		<code_block>
-	-- (From CLASS_OF_ORIGIN )
+	<comment>-- (From CLASS_OF_ORIGIN)</comment>
 </code_block>
 		<paragraph>to the header comments of inherited routines, to document where they come from.  </paragraph>
 		<paragraph>The flat form is an important notion of object technology, making it possible to understand a class by itself, regardless of the possibly rich inheritance structure that led to it.  Looking at the Flat view of

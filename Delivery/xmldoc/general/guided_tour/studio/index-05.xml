@@ -45,8 +45,10 @@
 				<keyword>Next</keyword>
 			</code> .  This brings up a File Explorer inviting you to select an Ace file.  The file you want is, depending on your platform, one of
 		</paragraph>
-		<code_block>	<keyword>$ISE_EIFFEL\examples\studio\tour\Ace.mswin.ace</keyword>
-	<keyword>$ISE_EIFFEL/examples/studio/tour/Ace.unix.ace</keyword></code_block>
+		<code_block>	
+	<keyword>$ISE_EIFFEL\examples\studio\tour\Ace.mswin.ace</keyword>
+	<keyword>$ISE_EIFFEL/examples/studio/tour/Ace.unix.ace</keyword>
+</code_block>
 		<paragraph>(the first one for Windows, the second for Unix; remember that
 			<code>
 				<keyword>$ISE_EIFFEL</keyword>
@@ -83,8 +85,9 @@
 			</code> to confirm.  This selects the Ace file and starts compilation of your project.
 		</paragraph>
 		<paragraph>During Eiffel compilation, a progress bar displays the successive compilation steps, or "degrees".  The bulk of our little project is the EiffelBase library, which the EiffelStudio installation procedure has precompiled; so just now there's only a few extra classes to compile, and the process is almost instantaneous on a state-of-the-art computer.  Even if you had to compile the EiffelBase classes, EiffelStudio compilation is so fast that you would hardly have the time to read the "degree" messages; you can see them later in compilations of bigger classes and systems.  </paragraph>
-		<code_block><italic>On an IBM Thinkpad, Pentium III 850 MHz, 256 MB, running Windows 2000 Professional, Eiffel compilation
-takes about 9 seconds for the entire Guided Tour system including non-precompiled EiffelBase.   </italic></code_block>
+		<note>
+			<italic>On an IBM Thinkpad, Pentium III 850 MHz, 256 MB, running Windows 2000 Professional, Eiffel compilationtakes about 9 seconds for the entire Guided Tour system including non-precompiled EiffelBase.   </italic>
+		</note>
 		<paragraph>After Eiffel compilation completes you will see the message</paragraph>
 		<code_block>	<keyword>System had to be frozen to include new externals.   </keyword>
 	<keyword>Eiffel compilation system recompiled.   </keyword>

@@ -19,7 +19,7 @@
 			<bold>event-driven programming</bold> for Graphical User Interfaces (GUI), including Web programming.  In GUI programming you will want to record properties of the form
 		</paragraph>
 		<code_block>
-"When the user clicks this OK button, the system must update the file"
+<string>"When the user clicks this OK button, the system must update the file"</string>
 </code_block>
 		<paragraph>each involves a
 			<bold>control</bold> (here the OK button), an
@@ -83,10 +83,8 @@
 			</code> is such an agent object, the call
 		</paragraph>
 		<code_block>
-your_agent.
-			<feature_name>call</feature_name> ([ a, b ])
-
-		</code_block>
+<feature_name>your_agent</feature_name>.<feature_name>call</feature_name> <symbol>(</symbol><symbol>[</symbol> a<symbol>,</symbol> b <symbol>]</symbol><symbol>)</symbol>
+</code_block>
 		<paragraph>where
 			<code>
 				<string>a</string>
@@ -177,12 +175,7 @@ your_agent.
 		</info>
 		<paragraph>A typical use of agents with EiffelVision 2 is</paragraph>
 		<code_block>
-ok_button.
-			<feature_name>select_actions</feature_name>.
-			<feature_name>extend</feature_name> (
-			<keyword>agent</keyword> your_routine )
-
-		</code_block>
+<feature_name>ok_button</feature_name>.<feature_name>select_actions</feature_name>.<feature_name>extend</feature_name> (<keyword>agent</keyword> your_routine)</code_block>
 		<paragraph>which says: "add
 			<code>
 				<string>your_routine</string>

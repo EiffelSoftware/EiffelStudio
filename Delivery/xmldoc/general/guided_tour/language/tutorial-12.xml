@@ -39,7 +39,7 @@
 		</heading>
 		<paragraph>In the simplest form, also one of the most common, you obtain an agent just by writing</paragraph>
 		<code_block>
-	agent r
+	<keyword>agent</keyword> <feature_name>r</feature_name>
 </code_block>
 		<paragraph>where
 			<code>
@@ -47,7 +47,7 @@
 			</code> is the name of a routine of the enclosing class.  This is an expression, which you may assign to a writable entity, or pass as argument to aroutine.  Here for example is how you will specify event handling in the style of the EiffelVision 2 GUI library:
 		</paragraph>
 		<code_block>
-	your_icon .  click_actions .extend ( agent your_routine )
+	<feature_name>your_icon</feature_name>.<feature_name>click_actions</feature_name>.<feature_name>extend</feature_name> <symbol>(</symbol><keyword>agent</keyword> your_routine<symbol>)</symbol>
 </code_block>
 		<paragraph>This adds to the end of my_icon
 			<code>
@@ -79,11 +79,11 @@
 			</code> through a call such as
 		</paragraph>
 		<code_block>
-	your_integrator .  integral ( agent your_function, 0, 1 )
+	<feature_name>your_integrator</feature_name>.<feature_name>integral</feature_name> <symbol>(</symbol><keyword>agent</keyword> your_function, 0, 1<symbol>)</symbol>
 </code_block>
 		<paragraph>In the third example area cited above, you may call an iterator of EiffelBase through</paragraph>
 		<code_block>
-	your_list .  do_all ( agent your_proc )
+	<feature_name>your_list</feature_name>.<feature_name>do_all</feature_name> <symbol>(</symbol><keyword>agent</keyword> your_proc<symbol>)</symbol>
 </code_block>
 		<paragraph>with
 			<code>
@@ -226,48 +226,26 @@
 			</code> :
 		</paragraph>
 		<code_block>
-integral
-
-    ( f: FUNCTION [ANY, TUPLE [REAL], REAL];
-
-    low, high: REAL): REAL is
-
-            -- Integral of f over the interval [ low , high ]
-
-     require
-
-        meaningful_interval: low &lt;= high
-
-     local
-
-        x: REAL
-
-     do
-
-         from
-
-            x := low
-
-         invariant
-
-            x &gt;= low ; x &lt;= high + step
-
-            -- Result approximates the integral over
-
-            -- the interval [ low , low . max ( x - step )]
-
-         until x &gt; high loop
-
-            Result := Result + step *
-
-
-
-
-            x := x + step
-
-        end
-
-    end
+integral <symbol>(</symbol>f<symbol>:</symbol> <class_name>FUNCTION</class_name> <symbol>[</symbol><class_name>ANY</class_name>, <class_name>TUPLE</class_name> <symbol>[</symbol><class_name>REAL</class_name><symbol>]</symbol>, <class_name>REAL</class_name><symbol>]</symbol>; low, high<symbol>:</symbol> <class_name>REAL</class_name><symbol>)</symbol><symbol>:</symbol> <class_name>REAL</class_name> <keyword>is</keyword>
+            <comment>-- Integral of f over the interval [low, high]</comment>
+     <keyword>require</keyword>
+        meaningful_interval<symbol>:</symbol> low &lt;<symbol>=</symbol> high
+     <keyword>local</keyword>
+	x<symbol>:</symbol> <class_name>REAL</class_name>
+     <keyword>do</keyword>
+	<keyword>from</keyword>
+		x <symbol>:</symbol><symbol>=</symbol> low
+        <keyword>invariant</keyword>
+		x &gt;<symbol>=</symbol> low ; x &lt;<symbol>=</symbol> high <symbol>+</symbol> step
+        	    <comment>-- Result approximates the integral over</comment>
+	            <comment>-- the interval [low, low.max ( x - step )]</comment>
+        <keyword>until</keyword> 
+		x &gt; high
+	<keyword>loop</keyword>
+		Result <symbol>:</symbol><symbol>=</symbol> Result <symbol>+</symbol> step *
+		x <symbol>:</symbol><symbol>=</symbol> x <symbol>+</symbol> step
+        <keyword>end</keyword>
+    <keyword>end</keyword>
 </code_block>
 		<paragraph>Function
 			<code>
@@ -336,7 +314,7 @@ integral
 		</paragraph>
 		<paragraph>Similarly, consider the agent that the call seen above:</paragraph>
 		<code_block>
-	your_icon . click_actions .extend ( agent your_routine )
+	<feature_name>your_icon</feature_name>.<feature_name>click_actions</feature_name>.<feature_name>extend</feature_name> <symbol>(</symbol><keyword>agent</keyword> your_routine<symbol>)</symbol>
 </code_block>
 		<paragraph>added to an EiffelVision list.  When the EiffelVision mechanism detects a mouse click event, it will apply to each element
 			<code>
@@ -347,7 +325,7 @@ integral
 			</code> click_actions, an instruction such as
 		</paragraph>
 		<code_block>
-	item .  call ([ x, y ])
+	<feature_name>item</feature_name>.<feature_name>call</feature_name> <symbol>(</symbol><symbol>[</symbol>x, y<symbol>]</symbol><symbol>)</symbol>
 </code_block>
 		<paragraph>where
 			<code>
@@ -367,7 +345,7 @@ integral
 			</code>, the effect will be the same as that of calling
 		</paragraph>
 		<code_block>
-	your_routine ( x, y )
+	<feature_name>your_routine</feature_name> (x, y)
 </code_block>
 		<paragraph>assuming that
 			<code>
@@ -394,15 +372,13 @@ integral
 		</paragraph>
 		<paragraph>Assume for example that a cartographical application lets a user record the location of a city by clicking on the corresponding position on the map.  The application may do this through a procedure</paragraph>
 		<code_block>
-record_city ( cn : STRING ; pop : INTEGER; x, y : INTEGER )
-
-        -- Record that the city of name name is at coordinates
-
-        -- x and y with population pop .
+	record_city <symbol>(</symbol>cn<symbol>:</symbol> <class_name>STRING</class_name>; pop<symbol>:</symbol> <class_name>INTEGER</class_name>; x, y<symbol>:</symbol> <class_name>INTEGER</class_name><symbol>)</symbol>
+	        <comment>-- Record that the city of name name is at coordinates</comment>
+	        <comment>-- x and y with population pop.</comment>
 </code_block>
 		<paragraph>Then you can associate it with the GUI through a call such as</paragraph>
 		<code_block>
-map .  click_actions .extend ( agent record_city ( name, population, ?, ? ))
+	<feature_name>map</feature_name>.<feature_name>click_actions</feature_name>.<feature_name>extend</feature_name> <symbol>(</symbol><keyword>agent</keyword> record_city <symbol>(</symbol>name, population, ?, ?<symbol>)</symbol><symbol>)</symbol>
 </code_block>
 		<paragraph>assuming that the information on the
 			<code>
@@ -518,7 +494,7 @@ map .  click_actions .extend ( agent record_city ( name, population, ?, ? ))
 			</code> your_routine are acceptable in exactly the same situations, since both represent routines with two arguments.  The type of both is
 		</paragraph>
 		<code_block>
-	PROCEDURE [ ANY, TUPLE [ INTEGER, INTEGER ]]
+	<class_name>PROCEDURE</class_name> <symbol>[</symbol> <class_name>ANY</class_name>, <class_name>TUPLE</class_name> <symbol>[</symbol> <class_name>INTEGER</class_name>, <class_name>INTEGER</class_name> <symbol>]</symbol><symbol>]</symbol>
 </code_block>
 		<paragraph>where the tuple type specifies the open operands.  </paragraph>
 		<paragraph>A completely closed agent, such as
@@ -589,7 +565,7 @@ map .  click_actions .extend ( agent record_city ( name, population, ?, ? ))
 		</paragraph>
 		<paragraph>As another example of the mechanism's versatility, we saw above an integral function that could integrate a function of one variable over an interval, as in</paragraph>
 		<code_block>
-	your_integrator .  integral ( agent your_function (0, 1) )
+	<feature_name>your_integrator</feature_name>.<feature_name>integral</feature_name> <symbol>(</symbol><keyword>agent</keyword> your_function <symbol>(</symbol>0, 1<symbol>)</symbol><symbol>)</symbol>
 </code_block>
 		<paragraph>Now assume that
 			<code>
@@ -606,7 +582,7 @@ map .  click_actions .extend ( agent record_city ( name, population, ?, ? ))
 			</code> as before, judiciously selecting what to close and what to leave open:
 		</paragraph>
 		<code_block>
-	your_integrator .  integral ( agent function3 ( 3.  5, ?, 6.  0 ), 0, 1 )
+	<feature_name>your_integrator</feature_name>.<feature_name>integral</feature_name> <symbol>(</symbol><keyword>agent</keyword> function3 <symbol>(</symbol><feature_name>3</feature_name>.<feature_name>5</feature_name>, ?, <feature_name>6</feature_name>.<feature_name>0</feature_name><symbol>)</symbol>, 0, 1<symbol>)</symbol>
 </code_block>
 		<heading>
 			<size>2</size>
@@ -643,7 +619,7 @@ map .  click_actions .extend ( agent record_city ( name, population, ?, ? ))
 			</code> .  Agents, too, have a qualified variant as in
 		</paragraph>
 		<code_block>
-	agent a .  g
+	<keyword>agent</keyword> <feature_name>a</feature_name>.<feature_name>g</feature_name>
 </code_block>
 		<paragraph>which is closed on its target
 			<code>
@@ -701,24 +677,24 @@ map .  click_actions .extend ( agent record_city ( name, population, ?, ? ))
 			</code>.  As in creation expressions, we must list the type explicitly; the convention is the same: write the types in braces, as in
 		</paragraph>
 		<code_block>
-agent { SOME_TYPE } . g
+	<keyword>agent</keyword> <symbol>{</symbol><class_name>SOME_TYPE</class_name><symbol>}</symbol><feature_name/>.<feature_name>g</feature_name>
 
-agent { SOME_TYPE } . g ( ? , ? )
+	<keyword>agent</keyword> <symbol>{</symbol><class_name>SOME_TYPE</class_name><symbol>}</symbol><feature_name/>.<feature_name>g</feature_name> <symbol>(</symbol>?, ?<symbol>)</symbol>
 
-agent { SOME_TYPE } . g ( ? , y )
+	<keyword>agent</keyword> <symbol>{</symbol><class_name>SOME_TYPE</class_name><symbol>}</symbol><feature_name/>.<feature_name>g</feature_name> <symbol>(</symbol>?, y<symbol>)</symbol>
 </code_block>
 		<paragraph>The first two of these examples are open on he target and both operands; they mean the same.  The third is closed on one argument, open on the other and on the target.  </paragraph>
 		<paragraph>These possibilities give even more flexibility to the mechanism because they mean that an operation that needs agents with certain arguments open doesn't care whether they come from an argument or an operand of the original routine.  This is particularly useful for iterators and means that if you have two lists</paragraph>
 		<code_block>
-your_account_list : LIST [ ACCOUNT ]
+	your_account_list<symbol>:</symbol> <class_name>LIST</class_name> <symbol>[</symbol><class_name>ACCOUNT</class_name><symbol>]</symbol>
 
-your_integer_list : LIST [ INTEGER ]
+	your_integer_list<symbol>:</symbol> <class_name>LIST</class_name> <symbol>[</symbol><class_name>INTEGER</class_name><symbol>]</symbol>
 </code_block>
 		<paragraph>you may write both</paragraph>
 		<code_block>
-your_ acccount_list . do_all ( agent deposit_one_grand )
+	<feature_name>your_account_list</feature_name>.<feature_name>do_all</feature_name> <symbol>(</symbol><keyword>agent</keyword> deposit_one_grand<symbol>)</symbol>
 
-your_ integer_list . do_all ( agent add_to_n )
+	<feature_name>your_integer_list</feature_name>.<feature_name>do_all</feature_name> <symbol>(</symbol><keyword>agent</keyword> add_to_n<symbol>)</symbol>
 </code_block>
 		<paragraph>even though the two procedures used in the agents have quite different forms.  We are assuming here that the first one, in class
 			<code>
@@ -726,11 +702,11 @@ your_ integer_list . do_all ( agent add_to_n )
 			</code>, issomething like
 		</paragraph>
 		<code_block>
-deposit_one_grand is
-
-        -- Add one thousand dollars to balance of account.
-
-     do balance := balance + 1000 end
+deposit_one_gr<keyword>and</keyword> <keyword>is</keyword>
+        <comment>-- Add one thousand dollars to balance of account.</comment>
+     <keyword>do</keyword> 
+	balance <symbol>:</symbol><symbol>=</symbol> balance <symbol>+</symbol> 1000 
+     <keyword>end</keyword>
 </code_block>
 		<paragraph>so that it doesn't take an argument: it is normally called on its target, as in
 			<code>
@@ -739,11 +715,7 @@ deposit_one_grand is
 			<span>.  </span> deposit_one_grand.  In contrast, the other routine has an argument:
 		</paragraph>
 		<code_block>
-add_to_n ( x: INTEGER ) is
 
-        -- Add x to the value of total .
-
-     do total := total + x end
 </code_block>
 		<paragraph>where
 			<code>

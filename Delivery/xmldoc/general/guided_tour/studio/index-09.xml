@@ -37,9 +37,7 @@
 		</paragraph>
 		<paragraph>Click the following menu entry, used to generate documentation:</paragraph>
 		<code_block>
-
 			<keyword>Project --&gt; Generate documentation...</keyword>
-
 		</code_block>
 		<paragraph>This is the next-to-last entry in the
 			<code>
@@ -133,9 +131,7 @@
 			</code> extension that it finds in a subdirectory of the installation:
 		</paragraph>
 		<code_block>
-
 			<keyword>$ISE_EIFFEL/examples/studio/filters</keyword>
-
 		</code_block>
 		<paragraph>To define a new filter, simply add a file to this directory.  Filters are expressed in a simple notation called EFF (
 			<span>Eiffel Filter Format</span> ), general enough to support a wide variety of tools for text processing, project management, Web publishing etc.  The best way to define a new filter is usually to start from an existing one and adapt it.  You will find the specification of EFF at the end of this manual, in
@@ -309,9 +305,7 @@
 		</div>
 		<paragraph>By default, as shown, EiffelStudio will produce the documentation in a subdirectory -- created for the occasion, if it doesn't exist yet -- of the project directory:</paragraph>
 		<code_block>
-	Project_directory /
-			<keyword>Documentation</keyword>
-
+	Project_directory /<keyword>Documentation</keyword>
 		</code_block>
 		<paragraph>You may, however, select any other location you like.  In the case of HTML generation, as here, EiffelStudio takes great care to use only
 			<bold>relative hyperlinks</bold> so that you can move the
@@ -606,9 +600,7 @@
 					<label> 19, page 144</label>
 				</link>).
 				<code_block>
-
 					<keyword>$ISE_EIFFEL/examples/studio/filters</keyword>
-
 				</code_block>
 			</item>
 		</list>

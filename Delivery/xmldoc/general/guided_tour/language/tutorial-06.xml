@@ -294,15 +294,11 @@
 			<bold>external</bold> , coming from languages such as C, C++, Java, C# Fortran and others.  For example a feature declaration may appear (in lieu of the forms seen later) as
 		</paragraph>
 		<code_block>
-file_status ( filedesc: INTEGER): INTEGER is
-
-        -- Status indicator for filedesc
-
-     external
-
-         " C " alias " _fstat "
-
-     end
+<feature_name>file_status</feature_name> (<local_variable>filedesc</local_variable>: <class_name>INTEGER</class_name>): <class_name>INTEGER </class_name><keyword>is</keyword>
+        <comment>-- Status indicator for filedesc</comment>
+     <keyword>external</keyword>
+         <string>"C"</string> <keyword>alias</keyword>  <string>"_fstat"</string>
+     <keyword>end</keyword>
 </code_block>
 		<paragraph>to indicate that it is actually an encapsulation of a C function whose original name is
 			<code>

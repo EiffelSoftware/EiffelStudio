@@ -717,9 +717,7 @@
 				</code> file:
 			</paragraph>
 			<code_block>
-
 				<keyword>http://metrics.eiffel.com/vision.xml</keyword>
-
 			</code_block>
 			<paragraph>If you do not have access to the Web,
 				<code>

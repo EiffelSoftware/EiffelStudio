@@ -46,20 +46,16 @@
 			</code> procedure solves it: we can simply include a call
 		</paragraph>
 		<code_block>
-	setup
+	<feature_name>setup</feature_name>
 </code_block>
 		<paragraph>at the beginning of each affected routine; the first one to come in will perform the needed initializations; subsequent calls will have, as desired, no effect.  </paragraph>
 		<paragraph>Once functions will give us shared objects.  A common scheme is</paragraph>
 		<code_block>
-console: WINDOW is
-
-        -- Shared console window
-
-     once
-
-         create Result . make (...)
-
-     end
+console<symbol>:</symbol> <class_name>WINDOW</class_name> <keyword>is</keyword>
+        <comment>-- Shared console window</comment>
+     <keyword>once</keyword>
+         <keyword>create</keyword> Result.<feature_name>make</feature_name> <symbol>(</symbol>...<symbol>)</symbol>
+     <keyword>end</keyword>
 </code_block>
 		<paragraph>Whatever client first calls this function will create the appropriate window and return a reference to it.  Subsequent calls, from anywhere in the system, will return that same reference.  The simplest way to make this function available to a set of classes is to include it in a class
 			<code>
@@ -117,7 +113,7 @@ console: WINDOW is
 		<paragraph>The attributes studied earlier were variable: each represents a field present in each instance of the class and changeable by its routines.  </paragraph>
 		<paragraph>It is also possible to declare constant attributes, as in</paragraph>
 		<code_block>
-	Solar_system_planet_count : INTEGER is 9
+	<feature_name>Solar_system_planet_count</feature_name>: INTEGER is 9
 </code_block>
 		<paragraph>These will have the same value for every instance and hence do not need to occupy any space in objects at execution time.  (In other approaches similar needs would be addressed by symbolic constants, as in Pascal or Ada, or macros, as in C.  )</paragraph>
 		<paragraph>What comes after the
@@ -169,7 +165,7 @@ console: WINDOW is
 		</paragraph>
 		<paragraph>For integer constants, it is also possible to avoid specifying the values.  A declaration of the form</paragraph>
 		<code_block>
-	a, b, c, ...n : INTEGER is unique
+	a, b, c, ... n <symbol>:</symbol> <class_name>INTEGER</class_name> <keyword>is</keyword> <keyword>unique</keyword>
 </code_block>
 		<paragraph>introduces
 			<code>
@@ -219,7 +215,7 @@ console: WINDOW is
 		</paragraph>
 		<paragraph>Manifest constants are also available for strings, using double quotes as in</paragraph>
 		<code_block>
-	User_friendly_error_message : STRING is "Go get a life !"
+	User_friendly_error_message<symbol>:</symbol> <class_name>STRING</class_name> <keyword>is</keyword> <string>"Go get a life !"</string>
 </code_block>
 		<paragraph>with special characters again using the
 			<code>
@@ -310,25 +306,16 @@ console: WINDOW is
 		</paragraph>
 		<paragraph>A multi-branch instruction has the form</paragraph>
 		<code_block>
-inspect
-
+<keyword>inspect</keyword>
     exp
-
-when v 1 then
-
+<keyword>when</keyword> v 1 <keyword>then</keyword>
     inst 1
-
-when v 2 then
-
+<keyword>when</keyword> v 2 <keyword>then</keyword>
     inst 2
-
 ...
-
-else
-
+<keyword>else</keyword>
     inst 0
-
-end
+<keyword>end</keyword>
 </code_block>
 		<paragraph>where the
 			<code>
@@ -437,28 +424,17 @@ end
 		</paragraph>
 		<paragraph>The loop construct has the form</paragraph>
 		<code_block>
-from
-
+<keyword>from</keyword>
     initialization
-
-until
-
+<keyword>until</keyword>
     exit
-
-invariant
-
+<keyword>invariant</keyword>
     inv
-
-variant
-
+<keyword>variant</keyword>
     var
-
-loop
-
+<keyword>loop</keyword>
     body
-
-end
-
+<keyword>end</keyword>
 </code_block>
 		<paragraph>where the
 			<code>
@@ -613,20 +589,13 @@ end
 			</code> involves calling a routine with a precondition, where the call, for good reason, does not explicitly test for the precondition.  Consider a routine of the form
 		</paragraph>
 		<code_block>
-r (ref: SOME_REFERENCE_TYPE) is
-
-     require
-
-        not_void: r /= Void
-
-     do
-
-        r . some_feature
-
+r <symbol>(</symbol>ref<symbol>:</symbol> <class_name>SOME_REFERENCE_TYPE</class_name><symbol>)</symbol> <keyword>is</keyword>
+     <keyword>require</keyword>
+        not_void<symbol>:</symbol> r <symbol>/=</symbol> Void
+     <keyword>do</keyword>
+        <feature_name>r</feature_name>.<feature_name>some_feature</feature_name>
         ...
-
-     end
-
+     <keyword>end</keyword>
 </code_block>
 		<paragraph>Because of the call to
 			<code>
@@ -634,7 +603,7 @@ r (ref: SOME_REFERENCE_TYPE) is
 			</code>, the routine will only work if its precondition is satisfied on entry.  To guarantee this precondition, the caller may protect it by the corresponding test, as in
 		</paragraph>
 		<code_block>
-	if x /= Void then a .  r ( x ) end
+	<keyword>if</keyword> x <symbol>/=</symbol> Void <keyword>then</keyword> <feature_name>a</feature_name>.<feature_name>r</feature_name> <symbol>(</symbol>x<symbol>)</symbol> <keyword>end</keyword>
 </code_block>
 		<paragraph>but this is not the only possible scheme; for example if an
 			<code>
@@ -669,16 +638,12 @@ r (ref: SOME_REFERENCE_TYPE) is
 			</code> that you know is not void.  You should document this knowledge by writing the call as
 		</paragraph>
 		<code_block>
-     check
-
-        x_not_void: x /= Void end
-
-            -- Because x was obtained as a clone of y ,
-            -- and y is not void because [ etc. ]
-
-     end
-
-a . r (x)
+     <keyword>check</keyword>
+        x_not_void<symbol>:</symbol> x <symbol>/=</symbol> Void <keyword>end</keyword>
+            <comment>-- Because x was obtained as a clone of y ,</comment>
+            <comment>-- and y is not void because [ etc. ]</comment>
+     <keyword>end</keyword>
+	<feature_name>a</feature_name>.<feature_name>r</feature_name> <symbol>(</symbol>x<symbol>)</symbol>
 </code_block>
 		<info>Note the recommended convention: extra indentation of the
 			<code>
@@ -700,21 +665,14 @@ a . r (x)
 			</code>, using the syntax
 		</paragraph>
 		<code_block>
-enter ( i : INTEGER ; x: G) is
-
-    obsolete
-
-         " Use ` put ( x, i )' instead "
-
-     require
-
+enter <symbol>(</symbol> i <symbol>:</symbol> <class_name>INTEGER</class_name> ; x<symbol>:</symbol> <class_name>G</class_name><symbol>)</symbol> <keyword>is</keyword>
+    <keyword>obsolete</keyword>
+         " Use ` put <symbol>(</symbol> x, i <symbol>)</symbol><symbol>'</symbol> instead "
+     <keyword>require</keyword>
         ...
-
-     do
-
-        put (x, i)
-
-     end
+     <keyword>do</keyword>
+        put <symbol>(</symbol>x, i<symbol>)</symbol>
+     <keyword>end</keyword>
 </code_block>
 		<paragraph>you state that you are now advising against using it, and suggest a replacement through the message that follows the keyword
 			<code>
@@ -763,8 +721,8 @@ enter ( i : INTEGER ; x: G) is
 			</link> ):
 		</paragraph>
 		<code_block>
-	create x . make ( 2000 )
-	create x
+	<keyword>create</keyword> <feature_name>x</feature_name>.<feature_name>make</feature_name> <symbol>(</symbol> 2000 <symbol>)</symbol>
+	<keyword>create</keyword> x
 </code_block>
 		<paragraph>the first one if the corresponding class has a
 			<code>
@@ -772,7 +730,7 @@ enter ( i : INTEGER ; x: G) is
 			</code> clause, the second one if not.  In either form you may include a type name in braces, as in
 		</paragraph>
 		<code_block>
-	create { SAVINGS_ACCOUNT } x .  make ( 2000 )
+	<keyword>create</keyword> <symbol>{</symbol><class_name>SAVINGS_ACCOUNT</class_name><symbol>}</symbol> <feature_name>x</feature_name>.<feature_name>make</feature_name> <symbol>(</symbol>2000<symbol>)</symbol>
 </code_block>
 		<paragraph>which is valid only if the type listed, here
 			<code>
@@ -786,36 +744,26 @@ enter ( i : INTEGER ; x: G) is
 			</code>.  This avoids introducing a local entity, as in
 		</paragraph>
 		<code_block>
-local
-
-    sx : SAVINGS_ACCOUNT
-
-do
-
-    create xs . make ( 2000 )
-
-    x := xs
-
+<keyword>local</keyword>
+    sx<symbol>:</symbol> <class_name>SAVINGS_ACCOUNT</class_name>
+<keyword>do</keyword>
+    <keyword>create</keyword> <feature_name>xs</feature_name>.<feature_name>make</feature_name> <symbol>(</symbol>2000<symbol>)</symbol>
+    x <symbol>:</symbol><symbol>=</symbol> xs
         ...
 </code_block>
 		<paragraph>and has exactly the same effect.  Another variant is the
 			<bold>creation expression</bold>, which always lists the type, but returns a value instead of being an instruction.  It is useful in the following context:
 		</paragraph>
 		<code_block>
-	some_routine ( create { ACCOUNT } .  make ( 2000 ))
+	some_routine <symbol>(</symbol><keyword>create</keyword> <symbol>{</symbol><class_name>ACCOUNT</class_name><symbol>}</symbol><feature_name></feature_name>.<feature_name>make</feature_name> <symbol>(</symbol>2000<symbol>)</symbol><symbol>)</symbol>
 </code_block>
 		<paragraph>which you may again view as an abbreviation for a more verbose form that would need a local entity, using a creation instruction:</paragraph>
 		<code_block>
-local
-
-    x : ACCOUNT
-
-do
-
-    create x . make ( 2000 )
-
-     some_routine ( x )
-
+<keyword>local</keyword>
+    x<symbol>:</symbol> <class_name>ACCOUNT</class_name>
+<keyword>do</keyword>
+    <keyword>create</keyword> <feature_name>x</feature_name>.<feature_name>make</feature_name> <symbol>(</symbol>2000<symbol>)</symbol>
+    some_routine <symbol>(</symbol>x<symbol>)</symbol>
         ...
 </code_block>
 		<paragraph>Unlike creation instructions, creation expressions must always list the type explicitly,
@@ -919,7 +867,7 @@ do
 			</code> stands for many possible types, all of which may have their own creation procedures.  To allow such creation instructions, we rely on constrained genericity.  You may declare a class as
 		</paragraph>
 		<code_block>
-	[G -&gt; T create cp end ]
+	<symbol>[</symbol><class_name>G</class_name> -&gt; <class_name>T</class_name> <keyword>create</keyword> cp <keyword>end</keyword> <symbol>]</symbol>
 </code_block>
 		<paragraph>to make
 			<code>
@@ -986,7 +934,7 @@ do
 		</heading>
 		<paragraph>The study of genericity described arrays.  Another common kind of container objects bears some resemblance to arrays: sequences, or "tuples", of elements of specified types.  The difference is that all elements of an array were of the same type, or a conforming one, whereas for tuples you will specify the types we want for each relevant element.  A typical tuple type is of the form</paragraph>
 		<code_block>
-	TUPLE [ X, Y, Z ]
+	<class_name>TUPLE</class_name> <symbol>[</symbol><class_name>X</class_name>, <class_name>Y</class_name>, <class_name>Z</class_name><symbol>]</symbol>
 </code_block>
 		<paragraph>denoting a tuple of least three elements, such that the type of the first conforms to
 			<code>
@@ -1014,7 +962,7 @@ do
 		</info>
 		<paragraph>To write the tuples themselves -- the sequences of elements, instances of a tuple type -- you will also use square brackets; for example</paragraph>
 		<code_block>
-	[ x1, y1, z1 ]
+	<symbol>[</symbol>x1, y1, z1<symbol>]</symbol>
 </code_block>
 		<paragraph>with
 			<code>
@@ -1142,7 +1090,7 @@ do
 			</code>, so that clients can call it under the form
 		</paragraph>
 		<code_block>
-	write ([ your_integer, your_real, your_account ])
+	
 </code_block>
 		<paragraph>As soon as you need a type with more specific features, you should define a class.  </paragraph>
 	</paragraph></document>

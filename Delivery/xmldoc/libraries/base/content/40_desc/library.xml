@@ -8,13 +8,17 @@
 	</meta_data>
 	<paragraph>
 		<paragraph>  To create a DESC object representing a library and load that library,  use a declaration such as:</paragraph>
-		<code_block>your_dll: DLL_32 </code_block>
+		<code_block>
+	<feature_name>your_dll</feature_name><symbol>:</symbol> <class_name>DLL_32</class_name> 
+		</code_block>
 		<paragraph>where 
 			<code>
 				<local_variable>your_dll</local_variable>
 			</code> should be replaced by whatever name you have chosen to  denote the library in your software, and execute a creation instruction of the form:
 		</paragraph>
-		<code_block>create your_dll.make ("your_lib_name") </code_block>
+		<code_block>
+	<keyword>create</keyword> <feature_name>your_dll</feature_name>.<feature_name>make</feature_name> <symbol>(</symbol>"your_lib_name"<symbol>)</symbol> 
+	</code_block>
 		<paragraph>where 
 			<code>
 				<local_variable>your_lib_name</local_variable>

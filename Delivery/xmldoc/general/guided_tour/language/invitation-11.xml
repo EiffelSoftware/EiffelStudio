@@ -23,17 +23,18 @@
 				<string>ARRAY</string>
 			</code>, as follows:
 		</paragraph>
-		<code_block>class ARRAYED_LIST [G]
-	inherit
-		LIST [G]
-		ARRAY [G]
+		<code_block>
+<keyword>class</keyword> <class_name>ARRAYED_LIST</class_name> <symbol>[</symbol><generics>G</generics><symbol>]</symbol>
+	<keyword>inherit</keyword>
+		<class_name>LIST</class_name> <symbol>[</symbol><generics>G</generics><symbol>]</symbol>
+		<class_name>ARRAY</class_name> <symbol>[</symbol><generics>G</generics><symbol>]</symbol>
 
-	export ... See below ... end
+	<keyword>export</keyword> ... See below ... <keyword>end</keyword>
 
-feature
+<keyword>feature</keyword>
 	... Specific features of fixed-size lists ...
 
-end -- class ARRAYED_LIST
+<keyword>end</keyword> <comment>-- ARRAYED_LIST</comment>
 </code_block>
 		<paragraph>The
 			<code>
@@ -65,12 +66,13 @@ end -- class ARRAYED_LIST
 				<string>ARRAYED_LIST</string>
 			</code> 's clients.  The syntax to achieve this is straightforward:
 		</paragraph>
-		<code_block>class ARRAYED_LIST [G]
-	inherit
-		LIST [G]
-		ARRAY [G]
+		<code_block>
+<keyword>class</keyword> <class_name>ARRAYED_LIST</class_name> <symbol>[</symbol><generics>G</generics><symbol>]</symbol>
+	<keyword>inherit</keyword>
+		<class_name>LIST</class_name> <symbol>[</symbol><generics>G</generics><symbol>]</symbol>
+		<class_name>ARRAY</class_name> <symbol>[</symbol><generics>G</generics><symbol>]</symbol>
 
-	export {NONE} all end
+	<keyword>export</keyword> <symbol>{</symbol>NONE<symbol>}</symbol> <keyword>all</keyword> <keyword>end</keyword>
 
 	... The rest as above ...
 </code_block>
@@ -91,21 +93,22 @@ end -- class ARRAYED_LIST
 		<paragraph>The very power of inheritance demands adequate means to keep it under control.  Multiple inheritance, in particular, raises the question of name conflicts between features inherited from different parents; this case will inevitably arise in practice, especially for classes contributed by independent developers.  You may remove such a name conflict through
 			<bold>renaming</bold>, as in
 		</paragraph>
-		<code_block>class C
-	inherit
-		A
-			rename
-				x as x1,
-				y as y1
-			end
+		<code_block>
+<keyword>class</keyword> <class_name>C</class_name>
+	<keyword>inherit</keyword>
+		<class_name>A</class_name>
+			<keyword>rename</keyword>
+				<feature_name>x</feature_name> <keyword>as</keyword> <feature_name>x1</feature_name><symbol>,</symbol>
+				<feature_name>y</feature_name> <keyword>as</keyword> <feature_name>y1</feature_name>
+			<keyword>end</keyword>
 
-		B
-			rename
-				x as x2,
-				y as y2
-			end
+		<class_name>B</class_name>
+			<keyword>rename</keyword>
+				<feature_name>x</feature_name> <keyword>as</keyword> <feature_name>x2</feature_name><symbol>,</symbol>
+				<feature_name>y</feature_name> <keyword>as</keyword> <feature_name>y2</feature_name>
+			<keyword>end</keyword>
 
-feature ...
+<keyword>feature</keyword> ...
 </code_block>
 		<paragraph>Here, if both
 			<code>

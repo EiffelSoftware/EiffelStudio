@@ -114,9 +114,7 @@
 			</paragraph>
 			<paragraph>Similarly, in an HTML format, the entry</paragraph>
 			<code_block>
-
 				<keyword>External |&lt;B&gt; * &lt;/B&gt;</keyword>
-
 			</code_block>
 			<paragraph>means that the Eiffel keyword
 				<code>
@@ -133,9 +131,7 @@
 				</code> .  If, however, all keywords are to use boldface, it is preferable to write a single entry
 			</paragraph>
 			<code_block>
-
 				<keyword>Keyword |&lt;B&gt; * &lt;/B&gt;</keyword>
-
 			</code_block>
 			<paragraph>which, thanks to the asterisk, will govern all construct specimens of the
 				<code>

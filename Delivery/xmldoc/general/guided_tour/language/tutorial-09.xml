@@ -22,9 +22,7 @@
 			<span>contracts</span> -- describing each party's expectations and guarantees.
 		</paragraph>
 		<paragraph>An Eiffel contract is similar to a real-life contract between two people or two companies, which it is convenient to express in the form of tables listing the expectations and guarantees.  Here for example is how we could sketch the contract between a homeowner and the telephone company:</paragraph>
-		<code_block>
-provide_service  OBLIGATIONS  BENEFITS Client  (Satisfy precondition:) Pay bill  (From postcondition:) Get telephone service Supplier  (Satisfy postcondition:) Provide telephone service  (From precondition:) No need to provide anything if bill not paid
-</code_block>
+		<table><row><cell>provide_service  OBLIGATIONS  BENEFITS Client  (Satisfy precondition:) Pay bill  (From postcondition:) Get telephone service Supplier  (Satisfy postcondition:) Provide telephone service  (From precondition:) No need to provide anything if bill not paid</cell></row></table>
 		<paragraph>Note how the obligation for each of the parties maps onto a benefit for the other.  This will be a general pattern.  </paragraph>
 		<paragraph>The client's obligation, which protects the supplier, is called a
 			<bold>precondition</bold>.  It states what the client must satisfy before requesting a certain service.  The client's benefit, which describes what the supplier must do (assuming the precondition was satisfied), is called a
@@ -57,68 +55,52 @@ provide_service  OBLIGATIONS  BENEFITS Client  (Satisfy precondition:) Pay bill 
 			</code> with more assertions:
 		</paragraph>
 		<code_block>
-indexing
+<keyword>indexing</keyword>
+    description<symbol>:</symbol> "Simple bank accounts"
 
-    description: "Simple bank accounts"
+<keyword>class</keyword>
+    <class_name>ACCOUNT</class_name>
 
-class
+<keyword>feature</keyword> -- Access
 
-    ACCOUNT
+    <feature_name>balance</feature_name><symbol>:</symbol> <class_name>INTEGER</class_name>
+            <comment>-- Current balance</comment>
 
-feature -- Access
+    <feature_name>deposit_count</feature_name><symbol>:</symbol> <class_name>INTEGER</class_name> <keyword>is</keyword>
+            <comment>-- Number of deposits made since opening</comment>
+         <keyword>do</keyword>
+            ... As before ...
+         <keyword>end</keyword>
 
-    balance: INTEGER
+<keyword>feature</keyword> -- Element change
 
-            -- Current balance
+    <feature_name>deposit</feature_name> <symbol>(</symbol>sum<symbol>:</symbol> <class_name>INTEGER</class_name><symbol>)</symbol> <keyword>is</keyword>
+            <comment>-- Add sum to account.</comment>
 
-    deposit_count: INTEGER is
-
-            -- Number of deposits made since opening
-
-         do
+         <keyword>require</keyword>
+            non_negative<symbol>:</symbol> sum &gt;<symbol>=</symbol> 0
+         <keyword>do</keyword>
 
             ... As before ...
 
-         end
+         <keyword>ensure</keyword>
+            one_more_deposit<symbol>:</symbol>
+                <feature_name>deposit_count</feature_name> <symbol>=</symbol> <keyword>old</keyword> <feature_name>deposit_count</feature_name> <symbol>+</symbol> 1
+            updated<symbol>:</symbol> <feature_name>balance</feature_name> <symbol>=</symbol> <keyword>old</keyword> <feature_name>balance</feature_name> <symbol>+</symbol> sum
+         <keyword>end</keyword>
 
-feature -- Element change
+<keyword>feature</keyword> <symbol>{</symbol> NONE <symbol>}</symbol> -- Implementation
 
-    deposit (sum: INTEGER) is
+    <feature_name>all_deposits</feature_name><symbol>:</symbol> <class_name>DEPOSIT_LIST</class_name>
+           <comment>-- List of deposits since account's opening.</comment>
 
-            -- Add sum to account.
+<keyword>invariant</keyword>
+    consistent_balance<symbol>:</symbol> <symbol>(</symbol><feature_name>all_deposits</feature_name> <symbol>/=</symbol> Void<symbol>)</symbol> <keyword>implies</keyword>
+                            <symbol>(</symbol><feature_name>balance</feature_name> <symbol>=</symbol> <feature_name>all_deposits</feature_name> <feature_name/>.<feature_name/> total<symbol>)</symbol>
+    zero_if_no_deposits<symbol>:</symbol> <symbol>(</symbol><feature_name>all_deposits</feature_name> <symbol>=</symbol> Void<symbol>)</symbol> <keyword>implies</keyword>
+                            <symbol>(</symbol>balance <symbol>=</symbol> 0<symbol>)</symbol>
 
-         require
-
-            non_negative: sum &gt;= 0
-
-         do
-
-            ... As before ...
-
-         ensure
-
-            one_more_deposit:
-                deposit_count = old deposit_count + 1
-
-            updated: balance = old balance + sum
-
-         end
-
-feature { NONE } -- Implementation
-
-    all_deposits: DEPOSIT_LIST
-
-            -- List of deposits since account's opening.
-
-invariant
-
-    consistent_balance: (all_deposits /= Void) implies
-                            (balance = all_deposits . total)
-
-    zero_if_no_deposits: (all_deposits = Void) implies
-                            (balance = 0)
-
-end -- class ACCOUNT
+<keyword>end</keyword> -- class ACCOUNT
 </code_block>
 		<paragraph>Each assertion is made of one or more subclauses, each of them a boolean expression (with the additional possibility of the
 			<code>
@@ -175,9 +157,7 @@ end -- class ACCOUNT
 			</code> had on entry to the routine.
 		</paragraph>
 		<paragraph>The precondition and postcondition state the terms of the contract between the routine and its clients, similar to the earlier example of a human contract:</paragraph>
-		<code_block>
-deposit  OBLIGATIONS  BENEFITS Client  (Satisfy precondition:) Use a non-negative argument.   (From postcondition:) Get deposits list and balance updated.  Supplier  (Satisfy postcondition:) Update deposits list and balance.   (From precondition:) No need to handle negative arguments.
-</code_block>
+		<table><row><cell>deposit  OBLIGATIONS  BENEFITS Client  (Satisfy precondition:) Use a non-negative argument.   (From postcondition:) Get deposits list and balance updated.  Supplier  (Satisfy postcondition:) Update deposits list and balance.   (From precondition:) No need to handle negative arguments.</cell></row></table>
 		<paragraph>The class invariant, as noted, applies to all features.  It must be satisfied on exit by any creation procedure, and is implicitly added to both the precondition and postcondition of every exported routine.  In this respect it is both good news and bad news for the routine implementer: good news because it guarantees that the object will initially be in a stable state, averting the need in the example to check that the total of
 			<code>
 				<string>all_deposits</string>
@@ -208,7 +188,7 @@ deposit  OBLIGATIONS  BENEFITS Client  (Satisfy precondition:) Use a non-negativ
 			</code> is exported, a call may test for the precondition
 		</paragraph>
 		<code_block>
-	if x .  n&gt; 0 then x .  r end
+	<keyword>if</keyword> <feature_name>x</feature_name>.<feature_name>n</feature_name> &gt; 0 <keyword>then</keyword> <feature_name>x</feature_name>.<feature_name>r</feature_name> <keyword>end</keyword>
 </code_block>
 		<paragraph>possibly with an
 			<code>
@@ -349,45 +329,34 @@ deposit  OBLIGATIONS  BENEFITS Client  (Satisfy precondition:) Use a non-negativ
 			</code> in the latest version given:
 		</paragraph>
 		<code_block>
-indexing
+<keyword>indexing</keyword>
+    description<symbol>:</symbol> "Simple bank accounts"
 
-    description: "Simple bank accounts"
+<keyword>class</keyword> interface
+    <class_name>ACCOUNT</class_name>
 
-class interface
+<keyword>feature</keyword> -- Access
 
-    ACCOUNT
+    balance<symbol>:</symbol> <class_name>INTEGER</class_name>
+            <comment>-- Current balance</comment>
 
-feature -- Access
+    deposit_count<symbol>:</symbol> <class_name>INTEGER</class_name>
+            <comment>-- Number of deposits made since opening</comment>
 
-    balance: INTEGER
+<keyword>feature</keyword> -- Element change
 
-            -- Current balance
+    deposit <symbol>(</symbol>sum<symbol>:</symbol> <class_name>INTEGER</class_name><symbol>)</symbol>
+            <comment>-- Add sum to account.</comment>
+         <keyword>require</keyword>
+            non_negative<symbol>:</symbol> sum &gt;<symbol>=</symbol> 0
+         <keyword>ensure</keyword>
+            one_more_deposit<symbol>:</symbol> deposit_count <symbol>=</symbol> <keyword>old</keyword> deposit_count <symbol>+</symbol> 1
+            updated<symbol>:</symbol> balance <symbol>=</symbol> <keyword>old</keyword> balance <symbol>+</symbol> sum
 
-    deposit_count: INTEGER
+<keyword>invariant</keyword>
+    consistent_balance<symbol>:</symbol> balance <symbol>=</symbol> <feature_name>all_deposits</feature_name>.<feature_name>total</feature_name>
 
-            -- Number of deposits made since opening
-
-feature -- Element change
-
-    deposit (sum: INTEGER)
-
-            -- Add sum to account.
-
-         require
-
-            non_negative: sum &gt;= 0
-
-         ensure
-
-            one_more_deposit: deposit_count = old deposit_count + 1
-
-            updated: balance = old balance + sum
-
-invariant
-
-    consistent_balance: balance = all_deposits . total
-
-end -- class interface ACCOUNT
+<keyword>end</keyword> -- class interface ACCOUNT
 </code_block>
 		<paragraph>The words
 			<code>
@@ -488,39 +457,23 @@ end -- class interface ACCOUNT
 			</code>, as in:
 		</paragraph>
 		<code_block>
-read_next_character (f: FILE) is
-
-        -- Make next character available in last_character ;
-
-        -- if impossible, set failed to True.
-
-     require
-
-        readable: file . readable
-
-     local
-
-        impossible: BOOLEAN
-
-     do
-
-         if impossible then
-
-            failed := True
-
-         else
-
-            last_character := low_level_read_function ( f )
-
-         end
-
-     rescue
-
-        impossible := True
-
-         retry
-
-     end
+read_next_character <symbol>(</symbol>f<symbol>:</symbol> <class_name>FILE</class_name><symbol>)</symbol> <keyword>is</keyword>
+        <comment>-- Make next character available in last_character.</comment>
+        <comment>-- If impossible, set failed to True.</comment>
+     <keyword>require</keyword>
+        readable<symbol>:</symbol> <feature_name>file</feature_name>.<feature_name>readable</feature_name>
+     <keyword>local</keyword>
+         impossible<symbol>:</symbol> <class_name>BOOLEAN</class_name>
+     <keyword>do</keyword>
+         <keyword>if</keyword> impossible <keyword>then</keyword>
+            failed <symbol>:</symbol><symbol>=</symbol> True
+         <keyword>else</keyword>
+            last_character <symbol>:</symbol><symbol>=</symbol> low_level_read_function <symbol>(</symbol>f<symbol>)</symbol>
+         <keyword>end</keyword>
+     <keyword>rescue</keyword>
+        impossible <symbol>:</symbol><symbol>=</symbol> True
+        <keyword>retry</keyword>
+     <keyword>end</keyword>
 </code_block>
 		<paragraph>This example includes the only two constructs needed for exception handling:
 			<code>
@@ -562,30 +515,18 @@ read_next_character (f: FILE) is
 		</paragraph>
 		<paragraph>A variant would be</paragraph>
 		<code_block>
-     local
-
-        attempts: INTEGER
-
-     do
-
-         if attempts &lt; Max_attempts then
-
-            last_character := low_level_read_function (f)
-
-         else
-
-            failed := True
-
-         end
-
-     rescue
-
-        attempts := attempts + 1
-
-         retry
-
-     end
-
+     <keyword>local</keyword>
+         attempts<symbol>:</symbol> <class_name>INTEGER</class_name>
+     <keyword>do</keyword>
+         <keyword>if</keyword> attempts &lt; Max_attempts <keyword>then</keyword>
+            last_character <symbol>:</symbol><symbol>=</symbol> low_level_read_function <symbol>(</symbol>f<symbol>)</symbol>
+         <keyword>else</keyword>
+            failed <symbol>:</symbol><symbol>=</symbol> True
+         <keyword>end</keyword>
+     <keyword>rescue</keyword>
+        attempts <symbol>:</symbol><symbol>=</symbol> attempts <symbol>+</symbol> 1
+        <keyword>retry</keyword>
+     <keyword>end</keyword>
 </code_block>
 		<paragraph>which would try again up to
 			<code>
@@ -598,25 +539,16 @@ read_next_character (f: FILE) is
 			</code> to record its inability to do so.  In contrast, consider the new variant
 		</paragraph>
 		<code_block>
-     local
-
-        attempts: INTEGER
-
-     do
-
-        last_character := low_level_read_function (f)
-
-     rescue
-
-        attempts := attempts + 1
-
-         if attempts &lt; Max_attempts then
-
-             retry
-
-         end
-
-     end
+     <keyword>local</keyword>
+         attempts<symbol>:</symbol> <class_name>INTEGER</class_name>
+     <keyword>do</keyword>
+         last_character <symbol>:</symbol><symbol>=</symbol> low_level_read_function <symbol>(</symbol>f<symbol>)</symbol>
+     <keyword>rescue</keyword>
+         attempts <symbol>:</symbol><symbol>=</symbol> attempts <symbol>+</symbol> 1
+         <keyword>if</keyword> attempts &lt; Max_attempts <keyword>then</keyword>
+             <keyword>retry</keyword>
+         <keyword>end</keyword>
+     <keyword>end</keyword>
 </code_block>
 		<paragraph>with no more role for
 			<code>
@@ -648,7 +580,7 @@ read_next_character (f: FILE) is
 			</code> clause -- the case for the vast majority of routines in most systems -- is that it is equivalent to
 		</paragraph>
 		<code_block>
-rescue
+
 	default_rescue
 </code_block>
 		<paragraph>where procedure

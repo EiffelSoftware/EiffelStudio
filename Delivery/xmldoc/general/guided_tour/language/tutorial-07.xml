@@ -21,7 +21,7 @@
 			<size>2</size>
 			<content>Objects, fields, values and references</content>
 		</heading>
-		<paragraph>A class was defined as the static description of a a type of run-time data structures.  The data structures described by a class are called
+		<paragraph>A class was defined as the static description of a a type of run-time data structures.  The data structures described by a ca class are called
 			<bold>instances</bold> of the class, which in turn is called their
 			<bold>generating class</bold> (or just "
 			<span>generator</span> ").  An instance of
@@ -148,71 +148,50 @@
 		</heading>
 		<paragraph>The following simple class text illustrates the preceding concepts</paragraph>
 		<code_block>
-indexing
+<keyword>indexing</keyword>
+    description<symbol>:</symbol> <string>"Simple bank accounts"</string>
 
-    description: "Simple bank accounts"
+<keyword>class</keyword>
+    <class_name>ACCOUNT</class_name>
 
-class
+<keyword>feature</keyword> -- Access
 
-    ACCOUNT
+    <feature_name>balance</feature_name><symbol>:</symbol> <class_name>INTEGER</class_name>
+            <comment>-- Current balance</comment>
 
-feature -- Access
+    <feature_name>deposit_count</feature_name><symbol>:</symbol> <class_name>INTEGER</class_name> <keyword>is</keyword>
+            <comment>-- Number of deposits made since opening</comment>
+         <keyword>do</keyword>
+             <keyword>if</keyword> <feature_name>all_deposits</feature_name> <symbol>/=</symbol> Void <keyword>then</keyword>
+                Result <symbol>:</symbol><symbol>=</symbol> <feature_name>all_deposits</feature_name>.<feature_name>count</feature_name>
+             <keyword>end</keyword>
+         <keyword>end</keyword>
 
-    balance: INTEGER
+<keyword>feature</keyword> -- Element change
 
-            -- Current balance
+    <feature_name>deposit</feature_name> <symbol>(</symbol>sum<symbol>:</symbol> <class_name>INTEGER</class_name><symbol>)</symbol> <keyword>is</keyword>
+            <comment>-- Add sum to account.</comment>
+         <keyword>do</keyword>
+ 	     <keyword>if</keyword> <feature_name>all_deposits</feature_name> <symbol>=</symbol> Void <keyword>then</keyword>
+                 <keyword>create</keyword> <feature_name>all_deposits</feature_name>
+             <keyword>end</keyword>
 
-    deposit_count: INTEGER is
+            <feature_name>all_deposits</feature_name>.<feature_name>ext</feature_name><keyword>end</keyword> <symbol>(</symbol>sum<symbol>)</symbol>
+            <feature_name>balance</feature_name> <symbol>:</symbol><symbol>=</symbol> <feature_name>balance</feature_name> <symbol>+</symbol> sum
+         <keyword>end</keyword>
 
-            -- Number of deposits made since opening
+<keyword>feature</keyword> <symbol>{</symbol>NONE<symbol>}</symbol> -- Implementation
 
-         do
+    <feature_name>all_deposits</feature_name><symbol>:</symbol> <class_name>DEPOSIT_LIST</class_name>
+            <comment>-- List of deposits since account's opening.</comment>
 
-             if all_deposits /= Void then
+<keyword>invariant</keyword>
+    consistent_balance<symbol>:</symbol>
+    	<symbol>(</symbol><feature_name>all_deposits</feature_name> <symbol>/=</symbol> Void<symbol>)</symbol> <keyword>implies</keyword> <symbol>(</symbol><feature_name>balance</feature_name> <symbol>=</symbol> <feature_name>all_deposits</feature_name>.<feature_name>total</feature_name><symbol>)</symbol>
+    zero_if_no_deposits<symbol>:</symbol>
+        <symbol>(</symbol><feature_name>all_deposits</feature_name> <symbol>=</symbol> Void<symbol>)</symbol> <keyword>implies</keyword> <symbol>(</symbol><feature_name>balance</feature_name> <symbol>=</symbol> 0<symbol>)</symbol>
 
-                Result := all_deposits . count
-
-             end
-
-         end
-
-feature -- Element change
-
-    deposit (sum: INTEGER) is
-
-            -- Add sum to account.
-
-         do
-
-             if all_deposits= Void then
-
-                 create all_deposits
-
-             end
-
-            all_deposits . extend (sum)
-
-            balance := balance + sum
-
-         end
-
-feature { NONE } -- Implementation
-
-    all_deposits: DEPOSIT_LIST
-
-            -- List of deposits since account's opening.
-
-invariant
-
-    consistent_balance:
-
-    (all_deposits /= Void) implies (balance = all_deposits . total)
-    zero_if_no_deposits:
-
-        (all_deposits = Void) implies (balance = 0)
-
-end -- class ACCOUNT
-
+<keyword>end</keyword> -- <keyword>class</keyword> <class_name>ACCOUNT</class_name>
 </code_block>
 		<paragraph>(The
 			<code>
@@ -303,9 +282,7 @@ end -- class ACCOUNT
 			<url>tutorial-7.png</url>
 		</image>
 		<paragraph>The language specifies default initialization values for all possible types:</paragraph>
-		<code_block>Type  Default value INTEGER, REAL, DOUBLE  Zero BOOLEAN  False CHARACTER  Null Reference types (such as ACCOUNT and DEPOSIT_LIST )  Void reference Composite expanded types (see next)  Same rules, applied recursively to all fields
-
-</code_block>
+		<table><row><cell>Type  Default value INTEGER, REAL, DOUBLE  Zero BOOLEAN  False CHARACTER  Null Reference types (such as ACCOUNT and DEPOSIT_LIST )  Void reference Composite expanded types (see next)  Same rules, applied recursively to all fields</cell></row></table>
 		<paragraph>It is possible to override the initialization values by providing -- as in the earlier example of class
 			<code>
 				<string>HELLO</string>
@@ -315,34 +292,26 @@ end -- class ACCOUNT
 			</code> to make sure that every account is created with an initial deposit:
 		</paragraph>
 		<code_block>
-indexing
+<keyword>indexing</keyword>
+     description <symbol>:</symbol> " Simple bank accounts, initialized with a first deposit "
 
-     description : " Simple bank accounts, initialized with a first deposit "
+<keyword>class</keyword>
+    <class_name>ACCOUNT1</class_name>
 
-class
+<keyword>create</keyword>
+     <feature_name>make</feature_name>
 
-    ACCOUNT1
+<keyword>feature</keyword> -- Initialization
 
-create
+         <feature_name>make</feature_name> <symbol>(</symbol> sum <symbol>:</symbol> <class_name>INTEGER</class_name> <symbol>)</symbol> <keyword>is</keyword>
+            <comment>-- Initialize account with sum .</comment>
+         <keyword>do</keyword>
+             <feature_name>deposit</feature_name> <symbol>(</symbol> sum <symbol>)</symbol>
+         <keyword>end</keyword>
 
-     make
+-- The rest of the class <keyword>as</keyword> for <class_name>ACCOUNT</class_name>
 
-feature -- Initialization
-
-         make ( sum : INTEGER ) is
-
-            -- Initialize account with sum .
-
-         do
-
-             deposit ( sum )
-
-         end
-
- The rest of the class as for ACCOUNT
-
-end -- class ACCOUNT1
-
+<keyword>end</keyword> -- <keyword>class</keyword> <class_name>ACCOUNT1</class_name>
 </code_block>
 		<paragraph>A
 			<code>
@@ -372,8 +341,7 @@ end -- class ACCOUNT1
 			</code> ; you must use the form
 		</paragraph>
 		<code_block>
-	<keyword>create</keyword> x.make ( 2000 )
-</code_block>
+	<keyword>create</keyword> <feature_name>x</feature_name>.<feature_name>make</feature_name> (2000)</code_block>
 		<paragraph>known as a creation call.  Such a creation call will have the same effect as the original form -- creation, initialization, attachment to
 			<code>
 				<string>-- x</string>
@@ -473,23 +441,15 @@ end -- class ACCOUNT1
 		</list>
 		<paragraph>The third case, local entities, arises when a routine needs some auxiliary values for its computation.  Here is an example of the syntax:</paragraph>
 		<code_block>
-     deposit ( sum : INTEGER ) is
-
-            -- Add sum to account.
-
-         local
-
-             new : AMOUNT
-
-         do
-
-             create new . make ( sum )
-
-             all_deposits . extend ( new )
-
-             balance := balance + sum
-
-         end
+     <feature_name>deposit</feature_name> <symbol>(</symbol> sum <symbol>:</symbol> <class_name>INTEGER</class_name> <symbol>)</symbol> <keyword>is</keyword>
+            <comment>-- Add sum to account.</comment>
+         <keyword>local</keyword>
+             new <symbol>:</symbol> <class_name>AMOUNT</class_name>
+         <keyword>do</keyword>
+             <keyword>create</keyword> <feature_name>new</feature_name>.<feature_name>make</feature_name> <symbol>(</symbol>sum<symbol>)</symbol>
+             <feature_name>all_deposits</feature_name>.<feature_name>extend</feature_name> <symbol>(</symbol>new<symbol>)</symbol>
+             <feature_name>balance</feature_name> <symbol>:</symbol><symbol>=</symbol> <feature_name>balance</feature_name> <symbol>+</symbol> sum
+         <keyword>end</keyword>
 </code_block>
 		<paragraph>This example is a variant of
 			<code>
@@ -529,16 +489,13 @@ end -- class ACCOUNT1
 			</code>, which read
 		</paragraph>
 		<code_block>
-deposit_count : INTEGER is
-
-        -- Number of deposits made since opening (provisional version)
-
-         if all_deposits /= Void then
-
-             Result := all_deposits . count
-
-         end
-
+	<feature_name>deposit_count</feature_name> <symbol>:</symbol> <class_name>INTEGER</class_name> <keyword>is</keyword>
+	        	<comment>-- Number of deposits made since opening (provisional version)</comment>
+	<keyword>do</keyword>
+		<keyword>if</keyword> <feature_name>all_deposits</feature_name> <symbol>/=</symbol> Void <keyword>then</keyword>
+			Result <symbol>:</symbol><symbol>=</symbol> <feature_name>all_deposit</feature_name>.<feature_name>count</feature_name>
+		<keyword>end</keyword>
+	<keyword>end</keyword>
 </code_block>
 		<paragraph>The value returned by any call will be the value of the expression
 			<code>
@@ -577,7 +534,7 @@ deposit_count : INTEGER is
 		</heading>
 		<paragraph>Apart from object creation, the basic computational mechanism, in the object-oriented style of computation represented by Eiffel, is feature call.  In its basic form, it appears as</paragraph>
 		<code_block>
-	target.feature ( argument1, ...)
+	<feature_name>target</feature_name>.<feature_name>feature</feature_name> <symbol>(</symbol> argument1, ...<symbol>)</symbol>
 </code_block>
 		<paragraph>where
 			<code>
@@ -599,7 +556,7 @@ deposit_count : INTEGER is
 			</code> denotes a procedure, the call is an instruction, as in
 		</paragraph>
 		<code_block>
-	all_deposits.extend ( new )
+	<feature_name>all_deposits</feature_name>.<feature_name>extend</feature_name> (new)
 </code_block>
 		<paragraph>If
 			<code>
@@ -607,7 +564,7 @@ deposit_count : INTEGER is
 			</code> denotes a query (function or attribute), the call is an expression, as in the right-hand side of
 		</paragraph>
 		<code_block>
-	Result := all_deposits.count
+	Result <symbol>:=</symbol> <feature_name>all_deposits</feature_name>.<feature_name>count</feature_name>
 </code_block>
 		<paragraph>Following the principle of Uniform Access (page
 			<link>
@@ -628,10 +585,8 @@ deposit_count : INTEGER is
 		</paragraph>
 		<paragraph>In the case of a routine with arguments -- procedure or function -- the routine will be declared, in its class, as</paragraph>
 		<code_block>
-feature ( formal1 : TYPE1 ; ...) is
-
-     do ... end
-
+<feature_name>feature</feature_name> <symbol>(</symbol>formal1: <class_name>TYPE1</class_name>; ...<symbol>)</symbol> <keyword>is</keyword>
+     <keyword>do</keyword> ... <keyword>end</keyword>
 </code_block>
 		<paragraph>meaning that, at the time of each call, the value of each formal will be set to the corresponding actual (
 			<code>
@@ -679,9 +634,8 @@ feature ( formal1 : TYPE1 ; ...) is
 			</code> as
 		</paragraph>
 		<code_block>
-infix " + " ( other : INTEGER ): INTEGER is
-
-     do ... end
+<keyword>infix</keyword> "<feature_name>+</feature_name>" <symbol>(</symbol>other: <class_name>INTEGER</class_name><symbol>)</symbol>: <class_name>INTEGER</class_name> <keyword>is</keyword>
+     <keyword>do</keyword> ... <keyword>end</keyword>
 </code_block>
 		<paragraph>Such a feature has all the properties and prerogatives of a normal "identifier" feature, except for the form of the calls, which is infix, as in
 			<code>
@@ -752,11 +706,11 @@ infix " + " ( other : INTEGER ): INTEGER is
 		</heading>
 		<paragraph>Every entity appearing in an Eiffel text is declared as being of a certain type, using the syntax already encountered in the above examples:</paragraph>
 		<code_block>
-	entity_name: TYPE_NAME
+	<feature_name>entity_name</feature_name><symbol>:</symbol> <class_name>TYPE_NAME</class_name>
 </code_block>
 		<paragraph>This applies to attributes, formal arguments of routines and local entities.  You will also declare the result type for a function, as in the earlier example</paragraph>
 		<code_block>
-	deposit_count: INTEGER <keyword>is</keyword> ...
+	<feature_name>deposit_count</feature_name><symbol>:</symbol> <class_name>INTEGER</class_name> <keyword>is</keyword> ...
 </code_block>
 		<paragraph>Specifying such a function result type also declares, implicitly, the type for
 			<code>
@@ -815,7 +769,7 @@ infix " + " ( other : INTEGER ): INTEGER is
 		<paragraph>It was noted above that a value is either an object or a reference.  This corresponds to two kinds of type: reference types and expanded types.  </paragraph>
 		<paragraph>If a class is declared as just</paragraph>
 		<code_block>
-	<keyword>class</keyword> CLASS_NAME ...
+	<keyword>class</keyword> <class_name>CLASS_NAME</class_name> ...
 </code_block>
 		<paragraph>it defines a reference type.  The entities declared of that type will denote references.  So in the declaration</paragraph>
 		<code_block>
@@ -838,25 +792,20 @@ infix " + " ( other : INTEGER ): INTEGER is
 			</code>, as in the EiffelBase class definition
 		</paragraph>
 		<code_block>
-indexing
+<keyword>indexing</keyword>
+     description <symbol>:</symbol> "Integer values"
 
-     description : " Integer values "
+<keyword>expanded</keyword> <keyword>class</keyword>
+     <class_name>INTEGER</class_name>
 
-expanded class
+<keyword>feature</keyword> -- Basic operations
 
-     INTEGER
-
-feature -- Basic operations
-
-    infix " + " ( other : INTEGER ): INTEGER is
-
-         do ... end
+    <keyword>infix</keyword> "<symbol>+</symbol>" <symbol>(</symbol>other<symbol>:</symbol> <class_name>INTEGER</class_name><symbol>)</symbol><symbol>:</symbol> <class_name>INTEGER</class_name> <keyword>is</keyword>
+         <keyword>do</keyword> ... <keyword>end</keyword>
 
     ... Other feature declarations ...
 
-end -- class INTEGER
-
-
+<keyword>end</keyword> <comment>-- class INTEGER</comment>
 </code_block>
 		<paragraph>In this case the value of an entity declared as
 			<code>
@@ -868,7 +817,7 @@ end -- class INTEGER
 		</paragraph>
 		<paragraph>It is also possible, for some non-expanded class C, to declare an entity as</paragraph>
 		<code_block>
-	x: <keyword>expanded</keyword> C
+	<feature_name>x</feature_name><symbol>:</symbol> <keyword>expanded</keyword> 
 </code_block>
 		<paragraph>so that the values for
 			<code>
@@ -910,14 +859,13 @@ end -- class INTEGER
 		</paragraph>
 		<paragraph>Expanded declarations make it possible to construct composite objects with subobjects, as in the following abbreviated class declaration (indexing clause and routines omitted):</paragraph>
 		<code_block>
-class CAR feature
+<keyword>class</keyword> <class_name>CAR</class_name> <keyword>feature</keyword>
 
-     engine : expanded ENGINE
+     <feature_name>engine</feature_name> <symbol>:</symbol> <keyword>expanded</keyword> <class_name>ENGINE</class_name>
 
-     originating_plant : PLANT
+     <feature_name>originating_plant</feature_name> <symbol>:</symbol> <class_name>PLANT</class_name>
 
-end -- class CAR
-
+<keyword>end</keyword> -- class CAR
 </code_block>
 		<paragraph>Here is an illustration of the structure of a typical instance of
 			<code>
@@ -1083,7 +1031,8 @@ end -- class CAR
 			</code> as a function that performs
 		</paragraph>
 		<code_block>
-	<keyword>create</keyword> ResultResult.copy ( y )
+	<keyword>create</keyword> Result
+	Result.<feature_name>copy</feature_name> <symbol>(</symbol> <feature_name>y</feature_name> <symbol>)</symbol>
 </code_block>
 		<paragraph>So in the assignment
 			<code>
@@ -1378,7 +1327,7 @@ end -- class CAR
 			<bold>persistence</bold> facility.  A call of the form
 		</paragraph>
 		<code_block>
-	x.store ( Some_file_or_network_connection )
+	<feature_name>x</feature_name>.<feature_name>store</feature_name> <symbol>(</symbol> Some_file_or_network_connection <symbol>)</symbol>
 </code_block>
 		<paragraph>will store a copy of the entire object structure starting at
 			<code>
@@ -1504,14 +1453,13 @@ end -- class CAR
 			</code> clause, introducing one or more feature declarations, may appear not only as
 		</paragraph>
 		<code_block>
-feature -- Comment identifying the feature category
+<keyword>feature</keyword> <comment>-- Comment identifying the feature category</comment>
 
     ... Feature declaration ...
 
     ... Feature declaration ...
 
     ...
-
 </code_block>
 		<paragraph>but may also include a list of classes in braces,
 			<code>
@@ -1534,11 +1482,11 @@ feature -- Comment identifying the feature category
 			</code> :
 		</paragraph>
 		<code_block>
-feature { NONE } -- Implementation
+<keyword>feature</keyword> <symbol>{</symbol> NONE <symbol>}</symbol> <comment>-- Implementation</comment>
 
-     all_deposits : DEPOSIT_LIST
+     <feature_name>all_deposits</feature_name> <symbol>:</symbol> <class_name>DEPOSIT_LIST</class_name>
 
-            -- List of deposits since account's opening.
+            <comment>-- List of deposits since account's opening.</comment>
 
 </code_block>
 		<paragraph>This form indicates that the features appearing in that clause are only
@@ -1574,7 +1522,7 @@ feature { NONE } -- Implementation
 			</code> and a call of the form
 		</paragraph>
 		<code_block>
-	acc.all_deposits
+	<feature_name>acc</feature_name>.<feature_name>all_deposits</feature_name>
 </code_block>
 		<paragraph>violates the Feature Call rule and will be rejected by the EiffelStudio compiler.  </paragraph>
 		<paragraph>Besides fully exported features (introduced by
@@ -1604,7 +1552,7 @@ feature { NONE } -- Implementation
 			</code> ), it is possible to export features selectively to some specified classes, using the specification
 		</paragraph>
 		<code_block>
-	<keyword>feature</keyword> { A, B, ...}
+	<keyword>feature</keyword> <symbol>{</symbol> <class_name>A</class_name>, <class_name>B</class_name>, ...<symbol>}</symbol>
 </code_block>
 		<paragraph>for arbitrary classes
 			<code>
@@ -1673,7 +1621,7 @@ feature { NONE } -- Implementation
 			<bold>current routine</bold>, is beingexecuted, with the current object as its target.  (We will see below how the current object and current routine are determined.  ) The text of a class, in particular its routines, make constant implicit references to the current object.  For example in the instruction
 		</paragraph>
 		<code_block>
-	balance := balance + sum
+	<feature_name>balance</feature_name> <symbol>:</symbol><symbol>=</symbol> <feature_name>balance </feature_name><symbol>+</symbol> <feature_name>sum</feature_name>
 </code_block>
 		<paragraph>appearing in the body of procedure
 			<code>
@@ -1699,15 +1647,11 @@ feature { NONE } -- Implementation
 			</code> variant
 		</paragraph>
 		<code_block>
-make ( sum : INTEGER ) is
-
-        -- Initialize account with sum .
-
-    do
-
-         deposit ( sum )
-
-     end
+make <symbol>(</symbol>sum<symbol>:</symbol> <class_name>INTEGER</class_name><symbol>)</symbol> <keyword>is</keyword>
+        	<comment>-- Initialize account with sum .</comment>
+	<keyword>do</keyword>
+		<feature_name>deposit</feature_name> <symbol>(</symbol>sum<symbol>)</symbol>
+	<keyword>end</keyword>
 </code_block>
 		<paragraph>contains a call to the procedure
 			<code>
@@ -1758,15 +1702,11 @@ make ( sum : INTEGER ) is
 			</code>, would be a test of the form
 		</paragraph>
 		<code_block>
-if other = Current then
-
-     report_error (" Error: trying to merge an account with itself !")
-
-else
-
-    ... Normal processing (merging two different accounts) ...
-
-end
+<keyword>if</keyword> other <symbol>=</symbol> Current <keyword>then</keyword>
+     <feature_name>report_err</feature_name><keyword>or</keyword> <symbol>(</symbol><string>"Error: trying to merge an account with itself!"</string><symbol>)</symbol>
+<keyword>else</keyword>
+    ... Normal processing (merging two different account) ...
+<keyword>end</keyword>
 </code_block>
 		<paragraph>With these notions it is not hard to define precisely the overall scenario of a system execution by defining which object and routine will, at each instant, be the current object and the current routine:</paragraph>
 		<paragraph> Starting a system execution, as we have seen, consists in creating an instance of the root class, the root object, and executing a designated creation procedure, the root procedure, with the rootobject as its target.  The root object is the initial current object, and the root procedure is the initial current procedure.  </paragraph>
@@ -1886,15 +1826,11 @@ end
 			</code> 's type has defined the procedure
 		</paragraph>
 		<code_block>
-set_attribute (v: VALUE_TYPE) is
-
-        -- Set value of attribute to v .
-
-     do
-
-        attribute := v
-
-     end
+<feature_name>set_attribute</feature_name> <symbol>(</symbol>v: <class_name>VALUE_TYPE</class_name>) <keyword>is</keyword>
+		<comment>-- Set value of attribute to v .</comment>
+	<keyword>do</keyword>
+		<feature_name>attribute</feature_name> <symbol>:=</symbol> v
+	<keyword>end</keyword>
 </code_block>
 		<paragraph>This rule is essential to enforcing the method.  Permitting direct assignments to an object's fields -- as in C++ and Java -- would violate all the tenets of information hiding by letting clients circumvent the interface carefully crafted by the author of a supplier class.  It is the responsibility of each class author to define the exact privileges that the class gives to each of its clients, in particular field modification rights.  Building a class is like building a machine: you design the internals, to give yourself the appropriate mechanisms; and you design the control panel, letting users (clients) access the desired subset of these mechanisms, safely and conveniently.  </paragraph>
 		<paragraph>The levels of privilege available to the class author include, for any field:</paragraph>

@@ -86,7 +86,24 @@
 				<string>False</string>
 			</code>depending on the outcome.  Here is the text of the routine:
 		</paragraph>
-		<code_block>attempt_transmission (message: STRING) is-- Try to transmit message , at most 50 times.-- Set successful accordingly.localfailures: INTEGERdoif failures &lt; 50 thentransmit (message); successful := Trueelsesuccessful := Falseendrescuefailures := failures + 1; retryend</code_block>
+		<code_block>
+<feature_name>attempt_transmission</feature_name> <symbol>(</symbol><local_variable>message</local_variable><symbol>:</symbol> <class_name>STRING</class_name><symbol>)</symbol> <keyword>is</keyword> 
+		<comment>-- Try to transmit message, at most 50 times.
+		-- Set successful accordingly.</comment>
+	<keyword>local</keyword> 
+		<local_variable>failures</local_variable><symbol>:</symbol> <class_name>INTEGER</class_name> 
+	<keyword>do</keyword> 
+		<keyword>if</keyword> <local_variable>failures</local_variable> &lt; 50 <keyword>then</keyword>
+			<feature_name>transmit</feature_name> <symbol>(</symbol><local_variable>message</local_variable><symbol>)</symbol>
+			<feature_name>successful</feature_name> <symbol>:</symbol><symbol>=</symbol> True
+		<keyword>else</keyword> 
+			<feature_name>successful</feature_name> <symbol>:</symbol><symbol>=</symbol> False
+		<keyword>end</keyword> 
+	<keyword>rescue</keyword> 
+		<local_variable>failures</local_variable> <symbol>:</symbol><symbol>=</symbol> <local_variable>failures</local_variable> <symbol>+</symbol> 1
+		<keyword>retry</keyword> 
+	<keyword>end</keyword> 
+</code_block>
 		<paragraph>Initialization rules ensure that 
 			<code>
 				<string>failures</string>

@@ -56,15 +56,35 @@
 			<size>2</size> The structure of universal classes
 		</heading>
 		<paragraph>Every class which has no inheritance clause is understood to have an inheritance clause of the form</paragraph>
-		<code_block>Missing</code_block>
+		<code_block>
+	<keyword>inherit</keyword>
+		<class_name>ANY</class_name>
+</code_block>
 		<paragraph>As a result, every developer-defined class is a descendant of ANY. You may introduce your own project specific features in ANY so that all the classes of your system will be able to use these features.</paragraph>
 		<heading>
 			<size>2</size>Using the universal classes
 		</heading>
 		<paragraph>If you need to rename or redefine a feature inherited from one of the universal classes, you should include an explicit inheritance clause, as in</paragraph>
-		<code_block>Missing</code_block>
+		<code_block>
+<keyword>class</keyword>
+   <class_name>C</class_name>
+<keyword>inherit</keyword>
+   <class_name>ANY</class_name>
+      <keyword>rename</keyword>
+         <feature_name>out</feature_name> <keyword>as</keyword> <feature_name>basic_out</feature_name>
+      <keyword>redefine</keyword>
+         <feature_name>print</feature_name>
+      <keyword>end</keyword>
+   ...
+<keyword>feature</keyword>
+   ...
+<keyword>end</keyword> 
+</code_block>
 		<paragraph>The features of ANY are usable in both qualified and unqualified form. For example, the argumentless function out, which produces a printable representation of any object, may be called under either of the forms</paragraph>
-		<code_block>Missing</code_block>
+		<code_block>
+	<feature_name>x</feature_name> <symbol>:</symbol><symbol>=</symbol> <feature_name>out</feature_name>
+	<feature_name>x</feature_name> <symbol>:</symbol><symbol>=</symbol> <feature_name>a</feature_name>.<feature_name>out</feature_name> 
+</code_block>
 		<paragraph>The first call yields a printable representation of the current object; the second, which assumes that a is not void, yields a printable representation of the object attached to a.</paragraph>
 		<heading>
 			<size>2</size>Input and output features
@@ -135,9 +155,13 @@
 			<size>2</size>Copy and comparison routines
 		</heading>
 		<paragraph>Procedure copy copies the fields of an object onto those of another. It is used under the form</paragraph>
-		<code_block>Missing</code_block>
+		<code_block>
+	<feature_name>target</feature_name>.<feature_name>copy</feature_name> <symbol>(</symbol><feature_name>source</feature_name><symbol>)</symbol>
+</code_block>
 		<paragraph>Here both target and source must be non-void; this means that copy is only good for copying onto an object that already exists. If you need both to allocate a new object and to initialize it as a copy of another, use the function clone. For non-void source, the assignment</paragraph>
-		<code_block>Missing</code_block>
+		<code_block>
+	<feature_name>target</feature_name> <symbol>:</symbol><symbol>=</symbol> <feature_name>clone</feature_name> <symbol>(</symbol><feature_name>source</feature_name><symbol>)</symbol>
+</code_block>
 		<paragraph>starts by creating a new object. If 
 			<code>
 				<local_variable>source</local_variable>
@@ -218,7 +242,9 @@
 		<paragraph>The basic types BOOLEAN, CHARACTER, INTEGER, REAL and DOUBLE are defined by classes of the Kernel library.
 			<line_break/>  In reading the class specifications for the numeric types INTEGER, REAL and DOUBLE, you might think that the type declarations are too restrictive. For example the addition operation in class REAL reads
 		</paragraph>
-		<code_block>Missing</code_block>
+		<code_block>
+	<keyword>infix</keyword> "<symbol>+</symbol>" <symbol>(</symbol>other<symbol>:</symbol> <class_name>REAL</class_name><symbol>)</symbol><symbol>:</symbol> <class_name>REAL</class_name> 
+</code_block>
 		<paragraph>but there is actually no problem here. A language convention applicable to all arithmetic expressions, the Balancing rule, states that in any such expression all operands are considered to be converted to the heaviest type, where DOUBLE is heavier than REAL and REAL is heavier than INTEGER. So mixed-type arithmetic, consistent with common practice, is possible and indeed frequent. </paragraph>
 		<heading>
 			<size>2</size>Arrays
@@ -226,7 +252,9 @@
 		<paragraph>To create and manipulate one-dimensional arrays, use class ARRAY of the Kernel Library. Arrays are not primitive language elements; instead, they are handled through class ARRAY. This class is 'normal' in the sense that it may be used just as any other class by client and descendant classes. It is also somewhat special, however, in that the Eiffel compiler knows about it and uses this knowledge to generate efficient code for array operations.
 			<line_break/>  To create an instance of ARRAY, use the creation instruction 
 		</paragraph>
-		<code_block>Missing</code_block>
+		<code_block>
+	<keyword>create</keyword> <feature_name>my_array</feature_name>.<feature_name>make</feature_name> <symbol>(</symbol>1, u<symbol>)</symbol> 
+</code_block>
 		<paragraph>where the arguments indicate the lower and upper bounds. These bounds will then be accessible as 
 			<code>
 				<local_variable>my_array</local_variable>
@@ -248,7 +276,10 @@
 			</code>count; feature capacity is a synonym for count. The class invariant expresses the relation between count, lower and upper.
 			<line_break/> To access and change the item at index i in array a, you may use features item and put, as in 
 		</paragraph>
-		<code_block>Missing</code_block>
+		<code_block>
+	<feature_name>x</feature_name> <symbol>:</symbol><symbol>=</symbol> <feature_name>my_array</feature_name>.<feature_name>item</feature_name> <symbol>(</symbol>i<symbol>)</symbol>
+	<feature_name>my_array</feature_name>.<feature_name>put</feature_name> <symbol>(</symbol>new_value, i<symbol>)</symbol>
+</code_block>
 		<paragraph>Function item has an infix synonym, 
 			<code>
 				<keyword>infix</keyword>
@@ -260,7 +291,9 @@
 				<symbol>"</symbol>
 			</code>, so that you may also write the first assignment above more concisely as
 		</paragraph>
-		<code_block>Missing</code_block>
+		<code_block>
+	<feature_name>x</feature_name> <symbol>:</symbol><symbol>=</symbol> <feature_name>my_array</feature_name> <feature_name>@</feature_name> i
+</code_block>
 		<line_break/> Features item, 
 		<code>
 			<keyword>infix</keyword>
@@ -281,9 +314,28 @@
 			<bold> CAUTION</bold>: Although ARRAY benefits from an efficient implementation, its more advanced facilities such as resizing do not come for free. For extensive computations on large arrays, an optimization may be desirable, bypassing these facilities. The technique yields loops that run at about the same speed as the corresponding loops written in C or Fortran (the usual references for array computations). It is of interest for advanced uses only, so that you may safely skip this section on first reading unless your domain of application is numerical computation or some other area requiring high-performance array manipulations.
 		</paragraph>
 		<paragraph> The optimization relies on the class SPECIAL, used internally by ARRAY but of no direct interest to client developers in most common uses. With the declarations </paragraph>
-		<code_block>Missing</code_block>
+		<code_block>
+	<feature_name>my_array</feature_name><symbol>:</symbol> <class_name>ARRAY</class_name> <symbol>[</symbol><class_name>SOME_TYPE</class_name><symbol>]</symbol>
+	<feature_name>direct_access</feature_name><symbol>:</symbol> <class_name>SPECIAL</class_name> <symbol>[</symbol><class_name>SOME_TYPE</class_name><symbol>]</symbol>
+</code_block>
 		<paragraph>you may use direct_access in lieu of my_array within a critical loop, provided none of the operations may resize the array. Typically, the operations should only include put and item. In such a case you can use the following scheme: </paragraph>
-		<code_block>Missing</code_block>
+		<code_block>
+	<feature_name>direct_access</feature_name><symbol>:</symbol><symbol>=</symbol> <feature_name>my_array</feature_name>.<feature_name>area</feature_name>
+		
+	<comment>-- The critical loop:</comment>
+	<keyword>from</keyword>
+	   some_initialization
+	   <feature_name>index</feature_name> <symbol>:</symbol><symbol>=</symbol> some_initial_index
+	<keyword>until</keyword>
+	   <feature_name>index</feature_name> <symbol>=</symbol> some_final_index
+	<keyword>loop</keyword>
+	   ...
+	   <feature_name>x</feature_name> <symbol>:</symbol><symbol>=</symbol> <feature_name>direct_access</feature_name>.<feature_name>item</feature_name> <symbol>(</symbol>index<symbol>)</symbol>
+	   ...
+	   <feature_name>direct_access</feature_name>.<feature_name>put</feature_name> <symbol>(</symbol>some_value, index<symbol>)</symbol>
+	   ...
+	<keyword>end</keyword>
+</code_block>
 		<paragraph> This replaces an original loop where the operations were on 
 			<code>
 				<local_variable>my_array</local_variable>
@@ -604,9 +656,11 @@
 		<heading>
 			<size>2</size>Strings
 		</heading>
-		<paragraph>Strings are handled by class STRING, similar in many respects to ARRAY. Strings are of arbitrary size. The make creation procedure takes an integer argument, as in&lt;</paragraph>
-		<code_block>Missing
-			
+		<paragraph>Strings are handled by class STRING, similar in many respects to ARRAY. Strings are of arbitrary size. The make creation procedure takes an integer argument, as in:</paragraph>
+		<code_block>
+	s, s1, s2, s3<symbol>:</symbol> <class_name>STRING</class_name>
+	...
+	<keyword>create</keyword> <feature_name>s</feature_name>.<feature_name>make</feature_name> <symbol>(</symbol>30<symbol>)</symbol> 
 		</code_block>
 		<paragraph>The argument indicates the number of characters for the initial allocation. This is not an absolute limit: the string will automatically grow or shrink as a result of future operations. You may always request a resizing explicitly by calling procedure resize.</paragraph>
 		<heading>
@@ -776,7 +830,8 @@
 			<size>2</size>Basic input and output
 		</heading>
 		<paragraph> Regardless of the operating system that you use, for simple input and output STD_FILES is sufficient. You may inherit from that class to gain direct access to its features; or you may declare an entity of type STD_FILES. But remember that a feature of this type is always available: io, from class ANY. Thanks to this feature you may include simple input and output in any class, with instructions such as</paragraph>
-		<code_block>Missing
+		<code_block>
+	<feature_name>io</feature_name>.<feature_name>put_string</feature_name> <symbol>(</symbol>"My message"<symbol>)</symbol> 
 		</code_block>
 		<paragraph>STD_FILES defines three default files through features input, outputand error. These features are Once functions, so that the first reference to any one of them will automatically create the corresponding file descriptor and open the associated file.
 			<line_break/> To simplify the writing of common input and output operations, the most frequently used features of class FILE - for reading and writing integers, reals and so on, as discussed next - have been repeated in STD_FILES so as to apply to the default input and output. Procedure put_string in the example at the beginning of this section is typical: it writes its output on the standard output. More generally, STD_FILES has all the 
@@ -842,10 +897,7 @@
 			<line_break/> Feature retrieved returns a result of type STORABLE and is typically used through an assignment attempt of the form
 		</paragraph>
 		<code_block>
-			<local_variable>x</local_variable>
-			<symbol>?=</symbol> retrieved<symbol>(</symbol>
-			<local_variable>my_descriptor</local_variable>
-			<symbol>)</symbol>
+	<feature_name>x</feature_name> <symbol>?=</symbol> <feature_name>retrieved</feature_name> <symbol>(</symbol>my_descriptor<symbol>)</symbol> 
 		</code_block>
 		<line_break/>
 		<paragraph>The assignment attempt is necessary because retrieved returns a result of type STORABLE whereas the type of 
@@ -893,7 +945,41 @@
 			</code> as following:
 		</paragraph>
 		<code_block>
-			Missing
+<feature_name>correct_mismatch</feature_name> <keyword>is</keyword>
+      <comment>-- Attempt to correct object mismatch during retrieve using `mismatch_information'.</comment>
+   <keyword>local</keyword>
+      array_content<symbol>:</symbol> <class_name>ARRAY</class_name> <symbol>[</symbol><class_name>G</class_name><symbol>]</symbol>
+      array_keys<symbol>:</symbol> <class_name>ARRAY</class_name> <symbol>[</symbol><class_name>H</class_name><symbol>]</symbol>
+      array_marks<symbol>:</symbol> <class_name>ARRAY</class_name> <symbol>[</symbol><class_name>BOOLEAN</class_name><symbol>]</symbol>
+   <keyword>do</keyword>
+      <comment>-- In version 5.1 and earlier, `content', `keys' and `deleted_marks'</comment>
+      <comment>-- where of base class ARRAY. In 5.2 we changed it to be a SPECIAL for</comment>
+      <comment>-- efficiency reasons. In order to retrieve an old HASH_TABLE we</comment>
+      <comment>-- need to convert those ARRAY instances into SPECIAL instances.</comment>
+
+      <comment>-- Convert `content' from ARRAY to SPECIAL</comment>
+      array_content <symbol>?=</symbol> <feature_name>mismatch_information</feature_name>.<feature_name>item</feature_name> <symbol>(</symbol>"content"<symbol>)</symbol>
+      <keyword>if</keyword> array_content <symbol>/=</symbol> Void <keyword>then</keyword>
+         content <symbol>:</symbol><symbol>=</symbol> <feature_name>array_content</feature_name>.<feature_name>area</feature_name>
+      <keyword>end</keyword>
+
+      <comment>-- Convert `keys' from ARRAY to SPECIAL</comment>
+      array_keys <symbol>?=</symbol> <feature_name>mismatch_information</feature_name>.<feature_name>item</feature_name> <symbol>(</symbol>"keys"<symbol>)</symbol>
+      <keyword>if</keyword> array_keys <symbol>/=</symbol> Void <keyword>then</keyword>
+         keys <symbol>:</symbol><symbol>=</symbol> <feature_name>array_keys</feature_name>.<feature_name>area</feature_name>
+      <keyword>end</keyword>
+
+      <comment>-- Convert `deleted_marks' from ARRAY to SPECIAL</comment>
+      array_marks <symbol>?=</symbol> <feature_name>mismatch_information</feature_name>.<feature_name>item</feature_name> <symbol>(</symbol>"deleted_marks"<symbol>)</symbol>
+      <keyword>if</keyword> array_marks <symbol>/=</symbol> Void <keyword>then</keyword>
+         deleted_marks <symbol>:</symbol><symbol>=</symbol> <feature_name>array_marks</feature_name>.<feature_name>area</feature_name>
+      <keyword>end</keyword>
+
+      <keyword>if</keyword> content <symbol>=</symbol> Void <keyword>or</keyword> keys <symbol>=</symbol> Void <keyword>or</keyword> deleted_marks <symbol>=</symbol> Void <keyword>then</keyword>
+         <comment>-- Could not retrieve old version of HASH_TABLE. We throw an exception.</comment>
+         <keyword>Precursor</keyword> <symbol>{</symbol><class_name>TABLE</class_name><symbol>}</symbol>
+      <keyword>end</keyword>
+   <keyword>end</keyword>
 		</code_block>
 		<paragraph>Note the use of 
 			<code>
@@ -1025,7 +1111,7 @@
 		</heading>
 		<paragraph>Writing, assembling and compiling a system yields an executable command. The system's users will call that command with arguments. These are normally provided in textual form on the command line, as in</paragraph>
 		<code_block>
-			<bold>your_system</bold> arg1 arg2 arg3 </code_block>
+	<bold>your_system</bold> arg1 arg2 arg3 </code_block>
 		<paragraph> although one may conceive of other ways of entering the command arguments, such as tabular or graphical form-filling. In any case the software must be able to access the values passed as command arguments.
 			<line_break/> A language mechanism is available for that purpose: the Root Class rule indicates that the creation procedure of the root class may have a single argument (in the Eiffel sense of argument to a routine) of type ARRAY [STRING
 			<code>

@@ -14,7 +14,7 @@
 			</code> for Eiffel Compilation -- execute
 		</paragraph>
 		<code_block>
-			<keyword>ec</keyword> option &amp; [ class_name ] [ feature_name ]
+			<keyword>ec</keyword> option &amp; [class_name] [feature_name]
 		</code_block>
 		<paragraph>Specify
 			<code>

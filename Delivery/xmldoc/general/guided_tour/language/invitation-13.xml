@@ -25,9 +25,7 @@
 				<string>G</string>
 			</code>, representing the element to be inserted.  Then with a declaration such as
 		</paragraph>
-		<code_block>	pl:
-			<class_name>LIST</class_name> [
-			<class_name>POLYGON</class_name>]
+		<code_block>	pl<symbol>:</symbol><class_name>LIST</class_name> <symbol>[</symbol><class_name>POLYGON</class_name><symbol>]</symbol>
 		</code_block>
 		<paragraph>the type rules imply that in a call
 			<code>
@@ -86,9 +84,7 @@
 				<string>pl</string>
 			</code> .  A fully general list would be declared as
 		</paragraph>
-		<code_block>
-			<class_name>LIST</class_name> [
-			<class_name>ANY</class_name>]
+		<code_block>	<class_name>LIST</class_name> <symbol>[</symbol><class_name>ANY</class_name><symbol>]</symbol>
 		</code_block>
 		<paragraph>where
 			<code>
@@ -98,10 +94,7 @@
 		<paragraph>The other mechanism for combining genericity and inheritance is
 			<bold>constrained genericity</bold>.  By indicating a class name after a formal generic parameter, as in
 		</paragraph>
-		<code_block>
-			<class_name>VECTOR</class_name> [
-			<generics>T</generics> -&gt;
-			<class_name>NUMERIC</class_name> ]
+		<code_block>	<class_name>VECTOR</class_name> <symbol>[</symbol><generics>T</generics> <symbol>-</symbol>&gt;<class_name> NUMERIC</class_name><symbol>]</symbol>
 		</code_block>
 		<paragraph>you express that only descendants of that class (here
 			<code>
@@ -155,10 +148,7 @@
 				<string>ANY</string>
 			</code>, as in
 		</paragraph>
-		<code_block>
-			<class_name>LIST</class_name> [
-			<generics>G</generics> -&gt;
-			<class_name>ANY</class_name> ]
+		<code_block>	<class_name>LIST</class_name> <symbol>[</symbol><generics>G</generics> <symbol>-</symbol>&gt;<class_name>ANY</class_name><symbol>]</symbol>
 		</code_block>
 		<paragraph>Something else you may have guessed: if
 			<code>

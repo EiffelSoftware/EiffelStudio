@@ -43,13 +43,7 @@ feature {NONE} -- Implementation
 	tooltip: STRING is
 			-- Tooltip for the toolbar button.
 		do
-			Result := "Undo last action"
-		end
-
-	description: STRING is
-			-- Description for this command.
-		do
-			Result := "Undo last undoable command"
+			Result := Interface_names.f_diagram_undo
 		end
 
 	name: STRING is "Undo_command"

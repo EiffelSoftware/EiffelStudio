@@ -43,13 +43,7 @@ feature {NONE} -- Implementation
 	tooltip: STRING is
 			-- Tooltip for the toolbar button.
 		do
-			Result := "Redo last action"
-		end
-
-	description: STRING is
-			-- Description for this command.
-		do
-			Result := "Redo last undoable command"
+			Result := Interface_names.f_diagram_redo
 		end
 
 	name: STRING is "Redo_command"

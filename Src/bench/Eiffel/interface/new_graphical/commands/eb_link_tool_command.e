@@ -9,7 +9,8 @@ class
 inherit
 	EB_CONTEXT_DIAGRAM_COMMAND
 		redefine
-			new_toolbar_item
+			new_toolbar_item,
+			menu_name
 		end
 
 create
@@ -213,13 +214,13 @@ feature {NONE} -- Implementation
 	tooltip: STRING is
 			-- Tooltip for the toolbar button.
 		do
-			Result := "Put right angles"
+			Result := Interface_names.f_diagram_link_tool
 		end
 
-	description: STRING is
-			-- Description for this command.
+	menu_name: STRING is
+			-- Name of the menu entry
 		do
-			Result := "Link tool"
+			Result := Interface_names.m_diagram_link_tool
 		end
 
 	name: STRING is "Link_tool"

@@ -9,7 +9,8 @@ class
 inherit
 	EB_CONTEXT_DIAGRAM_COMMAND
 		redefine
-			new_toolbar_item
+			new_toolbar_item,
+			menu_name
 		end
 
 create
@@ -102,13 +103,13 @@ feature -- Basic operations
 	tooltip: STRING is
 			-- Tooltip for the toolbar button.
 		do
-			Result := "Export diagram to PNG"
+			Result := Interface_names.f_diagram_to_png
 		end
 
-	description: STRING is
-			-- Description for this command.
+	menu_name: STRING is
+			-- Name for the menu entry.
 		do
-			Result := "Convert diagram to PNG"
+			Result := Interface_names.m_diagram_to_png
 		end
 
 	name: STRING is "Diagram_to_png"

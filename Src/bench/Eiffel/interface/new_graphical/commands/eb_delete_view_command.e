@@ -8,6 +8,9 @@ class
 
 inherit
 	EB_CONTEXT_DIAGRAM_COMMAND
+		redefine
+			menu_name
+		end
 
 create
 	make
@@ -36,13 +39,13 @@ feature {NONE} -- Implementation
 	tooltip: STRING is
 			-- Tooltip for the toolbar button.
 		do
-			Result := "Delete current view"
+			Result := Interface_names.f_diagram_delete_view
 		end
 
-	description: STRING is
-			-- Description for this command.
+	menu_name: STRING is
+			-- Name for the menu entry.
 		do
-			Result := "Delete diagram views"
+			Result := Interface_names.m_diagram_delete_view
 		end
 
 	name: STRING is "Delete_view"

@@ -76,13 +76,7 @@ feature {NONE} -- Implementation
 	tooltip: STRING is
 			-- Tooltip for the toolbar button.
 		do
-			Result := "Include all classes of cluster"
-		end
-
-	description: STRING is
-			-- Description for this command.
-		do
-			Result := "Fill cluster with all its classes"
+			Result := Interface_names.f_diagram_fill_cluster
 		end
 
 	name: STRING is "Cluster_filling"

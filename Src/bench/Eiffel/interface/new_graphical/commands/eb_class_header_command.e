@@ -308,13 +308,7 @@ feature {NONE} -- Implementation
 	tooltip: STRING is
 			-- Tooltip for the toolbar button.
 		do
-			Result := "Change class name and generics"
-		end
-
-	description: STRING is
-			-- Description for this command.
-		do
-			Result := "Change class header"
+			Result := Interface_names.f_diagram_change_header
 		end
 
 	stone_as: CLASS_AS

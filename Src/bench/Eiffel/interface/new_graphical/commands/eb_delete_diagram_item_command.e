@@ -11,8 +11,11 @@ inherit
 	EB_CONTEXT_DIAGRAM_COMMAND
 		rename
 			make as make_context_diagram
+		undefine
+			menu_name
 		redefine
-			new_toolbar_item
+			new_toolbar_item,
+			description
 		select
 			name
 		end
@@ -404,13 +407,13 @@ feature -- Initialization
 	tooltip: STRING is
 			-- Tooltip for the toolbar button.
 		do
-			Result := "Delete"
+			Result := Interface_names.f_diagram_delete
 		end
 
 	description: STRING is
 			-- Description for this command.
 		do
-			Result := "Delete graphical items, remove code from system"
+			Result := Interface_names.l_diagram_delete
 		end
 
 	name: STRING is "Delete_item"

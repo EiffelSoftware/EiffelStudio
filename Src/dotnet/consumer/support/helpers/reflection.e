@@ -50,6 +50,12 @@ feature -- Status Report
 			Result := ca = Void or else ca.is_compliant
 		end
 
+	is_public_static_field (a_field: FIELD_INFO): BOOLEAN is
+			-- Is `a_field' public and static?
+		do
+			Result := a_field.is_public and a_field.is_static
+		end
+		
 feature {NONE} -- Implementation
 
 	cls_compliant_attribute_type: TYPE is

@@ -235,6 +235,10 @@ feature -- Update
 				need_to_update_attributes := False
 			end
 			if need_to_resynchronize then
+				Project_tool.initialize_text_window_resources;
+				Project_tool.synchronize;
+				System_tool.initialize_text_window_resources;
+				System_tool.synchronize;
 				routine_win_mgr.synchronize;
 				class_win_mgr.synchronize;
 				object_win_mgr.synchronize;

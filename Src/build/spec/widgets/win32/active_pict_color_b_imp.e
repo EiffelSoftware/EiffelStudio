@@ -38,16 +38,20 @@ feature {NONE}
 
 	on_mouse_enter is
 		do
-			Precursor
+			{PICT_COLOR_B_IMP} Precursor
 			mouse_in := True
-			invalidate
+			if exists then
+				invalidate
+			end
 		end
 
 	on_mouse_leave is
 		do
-			Precursor
+			{PICT_COLOR_B_IMP} Precursor
 			mouse_in := False
-			invalidate
+			if exists then
+				invalidate
+			end
 		end
 
 feature {NONE}

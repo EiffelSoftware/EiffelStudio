@@ -3,7 +3,7 @@
 	<paragraph>
 		<paragraph>Before trying the examples, please take a moment and look at the 
 			<link>
-				<url>description</url>
+				<url>how_to_compile.xml</url>
 				<label>description</label>
 			</link> that will explain how to compile the CECIL samples. 
 		</paragraph>

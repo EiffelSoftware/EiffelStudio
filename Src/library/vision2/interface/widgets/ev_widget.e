@@ -139,24 +139,24 @@ feature -- Status setting
 			flag = insensitive	
 		end
 
-	set_automatic_resize (state: BOOLEAN) is
-			-- Set `automatic_resize' at `state'.
+	set_automatic_resize (resize: BOOLEAN) is
+			-- Set `automatic_resize' to `resize'.
 		require
 			exists: not destroyed
 		do
-			automatic_resize := state
+			automatic_resize := resize
 		ensure
-			automatic_resize_set: automatic_resize = state
+			automatic_resize_set: automatic_resize = resize
 		end
 
-	set_automatic_position (state: BOOLEAN) is
-			-- Set `automatic_position' at `state'.
+	set_automatic_position (position: BOOLEAN) is
+			-- Set `automatic_position' at `position'.
 		require
 			exists: not destroyed
 		do
-			automatic_position := state
+			automatic_position := position
 		ensure
-			automatic_position_set: automatic_position = state
+			automatic_position_set: automatic_position = position
 		end
 
 	-- What is this for?

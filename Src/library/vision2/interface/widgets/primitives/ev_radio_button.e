@@ -1,10 +1,12 @@
 indexing
-	description: "EiffelVision radio button. Widget that has a %
-				% round check box and a text."
+	description: "EiffelVision radio button. Radio buttons are%
+                     %similar to check buttons except that radio%
+                     %buttons are grouped so that only one may be%
+                     %selected at a time."
 	status: "See notice at end of class"
-	id: "$$"
-	date: "$$"
-	revision: "$$"
+	id: "$Id$"
+	date: "$Date$"
+	revision: "$Revision$"
 
 class
 	EV_RADIO_BUTTON

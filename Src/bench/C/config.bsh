@@ -1,0 +1,15 @@
+#
+# This is the configuration file for BORLAND C++
+#
+borland-=''
+include_path='$compiler_path\include'
+lib_path='$compiler_path\lib'
+make='$compiler_path\bin\make'
+ccflags='-N -M -w-'
+cc='bcc32'
+optimize='-O2'
+link_line='&$compiler_path\bin\tlib /c $@ +$**'
+link_wline='&$compiler_path\bin\tlib /c $@ +$**'
+extra_object_files='$compiler_path\bin\c0w32.obj'
+compiler_path='d:\apps\bc5'
+#

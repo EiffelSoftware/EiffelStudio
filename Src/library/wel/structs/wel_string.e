@@ -116,7 +116,6 @@ feature -- Access
 			result_not_void: Result /= Void
 		end
 
-		
 	length: INTEGER is
 			-- String length
 		do

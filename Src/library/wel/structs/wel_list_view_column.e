@@ -14,7 +14,13 @@ inherit
 			make as structure_make
 		end
 
-	WEL_LVCF_CONSTANTS
+	WEL_LIST_VIEW_CONSTANTS
+		export
+			{NONE} all
+			{ANY} valid_lvcfmt_constant,
+					lvscw_autosize,
+					Lvscw_autosize_useheader					 
+		end
 
 creation
 	make,
@@ -179,7 +185,9 @@ feature -- Element change
 	set_width (a_width: INTEGER) is
 			-- Set the width of the column to `a_width'.
 		require
-			positive_width: a_width >= 0
+			valid_width: a_width >= 0 or 
+			a_width = Lvscw_autosize or
+			a_width = Lvscw_autosize_useheader
 		do
 			cwel_lv_column_add_mask (item, Lvcf_width)
 			cwel_lv_column_set_cx (item, a_width)

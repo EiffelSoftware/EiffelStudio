@@ -52,7 +52,7 @@ mv='/usr/5bin/mv'
 ranlib=':'
 rm='/usr/5bin/rm'
 eunicefix=':'
-command_makefile='make'
+command_makefile='make -f'
 
 start_test='if [ ! -f finished ] ; then'
 end_test='; fi'

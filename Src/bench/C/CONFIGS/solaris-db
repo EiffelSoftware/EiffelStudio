@@ -24,14 +24,15 @@ mtcppflags='-D_REENTRANT -DEIF_THREADS -DSOLARIS_THREADS'
 ccflags=''
 sharedccflags='-fPIC'
 cppflags=''
-sharedsuffix='.so'
+shared_suffix='.so'
 sharedlibversion='.1.0'
 ldflags=''
-ldsharedflags='-shared'
+ldsharedflags='-shared -o'
 
 libs='-lsocket -lnsl -lm'
 mtlibs='-lsocket -lnsl -lm -lthread'
 
+shared_prefix='lib'
 prefix='lib'
 mt_prefix='mt'
 concurrent_prefix='c'
@@ -46,7 +47,7 @@ mv='/usr/5bin/mv'
 ranlib=':'
 rm='/usr/5bin/rm'
 eunicefix=':'
-command_makefile='make'
+command_makefile='make -f'
 
 #######################################
 # Flags for run-time compilation only #

@@ -20,16 +20,20 @@ ld='ld'
 ccflags='-D_REENTRANT -DEIF_THREADS -DHAS_SEMA -DEIF_POSIX_THREADS'
 cppflags=''
 ldflags=''
+mtldsharedflags='-G -o'
+ldsharedflags='-G -o'
 
 #libs='-lsocket -lnsl -lm'
 libs='-lpthread -lsocket -lnsl -lm '
 
 prefix='lib'
+shared_prefix='lib'
 mt_prefix='mt'
 concurrent_prefix='c'
 eiflib='finalized'
 wkeiflib='wkbench'
 suffix='.a'
+shared_suffix='.so'
 
 optimize='-O'
 large=''
@@ -38,7 +42,7 @@ mv='/usr/5bin/mv'
 ranlib=':'
 rm='/usr/5bin/rm'
 eunicefix=':'
-command_makefile='make'
+command_makefile='make -f'
 
 #######################################
 # Flags for run-time compilation only #

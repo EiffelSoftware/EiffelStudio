@@ -332,10 +332,9 @@ feature -- Basic operations
 			-- Destroy the window and quit the application
 			-- if `Current' is the application's main window.
 		do
+			cwin_destroy_window (item)
 			if application_main_window.is_application_main_window (Current) then
 				cwin_post_quit_message (0)
-			else
-				cwin_destroy_window (item)
 			end
 		end
 

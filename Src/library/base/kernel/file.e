@@ -1361,13 +1361,13 @@ feature {NONE} -- Implementation
 	true_string: STRING is
 			-- Character string "true"
 		once
-			Result := "true"
+			Result := "True"
 		end;
 
 	false_string: STRING is
 			-- Character string "false"
 		once
-			Result := "false"
+			Result := "False"
 		end;
 
 	buffered_file_info: UNIX_FILE_INFO is

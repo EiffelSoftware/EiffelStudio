@@ -229,6 +229,9 @@ feature {NONE} -- Implementation
 			v_imp.set_item_parent_imp (Current)
 			real_signal_connect (v_imp.c_object, "button-press-event", on_item_clicked_intermediary_agent, Void)
 			real_signal_connect (v_imp.c_object, "key-press-event", on_key_pressed_intermediary_agent, key_event_translate_agent)
+			if count = 1 and is_sensitive then
+				C.gtk_list_item_select (v_imp.c_object)
+			end
 		end
 
 	remove_i_th (a_position: INTEGER) is

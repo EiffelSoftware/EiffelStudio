@@ -32,7 +32,7 @@ accessing or modifying.</p>
 
 <p align="left">However, it can be more flexible to determine the type of data
 you are dealing with at run-time. This can be particularly useful for GUI
-applications, take a look at the <A HREF="../../40_dataview_cluster/index.html">dataview cluster</A>.</p>
+applications, take a look at the <A HREF="../../40_dataview_cluster/index.html">DataView cluster</A>.</p>
 
 <p align="left">Each data structure carries some meta-data about its type so
 that the run-time typing hazards can be avoided with assertions based on this
@@ -72,14 +72,15 @@ following operations:</p>
 table or view name: one database table/view row correspond to one Eiffel object.
 Each table attribute will correspond to a class attribute with the same name. <i>set</i>
 commands enable to change the object content to insert rows in the database or
-update rows. DB_SELECTION class can directly map database results into these
+update rows. <a class="eclass" href="../../../../store/reference/interface/db_selection_chart.html">DB_SELECTION</a> class can directly map database results into these
 objects, and you can directly create a table/view row from one object with the
-DB_STORE class. Take a look at the [link]data-object[] coupling section.</p>
+<a class="eclass" href="../../../../store/reference/interface/db_store_chart.html">DB_STORE</a> class. Take a look at the
+data-object coupling section.</p>
 <p align="left">[Note on the types and default values]</p>
 <h3 align="left">2.2. <a name="cap_manipulation"></a> Manipulating abstract table/view rows content</h3>
-<p align="left">Each table/view storage structure inherits from the <a class="eclass" href="../../reference/generation/tables_access/abstract/db_table_chart.html">DB_TABLE</a>
-abstract class. This enables to handle <a class="eclass" href="../../reference/generation/tables_access/abstract/db_table_chart.html">DB_TABLE</a> objects as abstract database table/view structures.</p>
-<p align="left">You can then access or modify <a class="eclass" href="../../reference/generation/tables_access/abstract/db_table_chart.html">DB_TABLE</a> attributes: instead of accessing attributes with their <i>name</i>,
+<p align="left">Each table/view storage structure inherits from the <a class="eclass" href="../../../reference/generation/tables_access/abstract/db_table_chart.html">DB_TABLE</a>
+abstract class. This enables to handle <a class="eclass" href="../../../reference/generation/tables_access/abstract/db_table_chart.html">DB_TABLE</a> objects as abstract database table/view structures.</p>
+<p align="left">You can then access or modify <a class="eclass" href="../../../reference/generation/tables_access/abstract/db_table_chart.html">DB_TABLE</a> attributes: instead of accessing attributes with their <i>name</i>,
 which implies that the object type is known at compile-time, attributes can then
 be accessed with a <i>code</i>.</p>
 <BR><CODE>
@@ -92,11 +93,11 @@ display_attribute (code: INTEGER) is<br>
 &nbsp;&nbsp;&nbsp; end
 </CODE>
 <p class="note"><b>Note:</b> to access attributes data with <i>code</i>, you
-need to use the <a class="eclass" href="../../reference/generation/tables_access/abstract/db_table_description_chart.html">DB_TABLE_DESCRIPTION</a>
-object associated to your <a class="eclass" href="../../reference/generation/tables_access/abstract/db_table_chart.html">DB_TABLE</a>
+need to use the <a class="eclass" href="../../../reference/generation/tables_access/abstract/db_table_description_chart.html">DB_TABLE_DESCRIPTION</a>
+object associated to your <a class="eclass" href="../../../reference/generation/tables_access/abstract/db_table_chart.html">DB_TABLE</a>
 object.</p>
 <h3 align="left">2.3. <a name="cap_objects_metadata"></a> Getting objects metadata</h3>
-<p align="left">While manipulating <a class="eclass" href="../../reference/generation/tables_access/abstract/db_table_chart.html">DB_TABLE</a> objects, you can easily get:</p>
+<p align="left">While manipulating <a class="eclass" href="../../../reference/generation/tables_access/abstract/db_table_chart.html">DB_TABLE</a> objects, you can easily get:</p>
 <ul>
   <li>
     <p align="left">Which database table/view the object references.</li>
@@ -104,8 +105,8 @@ object.</p>
     <p align="left">What are the types of its attributes.</li>
 </ul>
     <p align="left" class="note"><b>Note:</b> you also get objects metadata
-    through the <a class="eclass" href="../../reference/generation/tables_access/abstract/db_table_description_chart.html">DB_TABLE_DESCRIPTION</a>
-    object associated to your <a class="eclass" href="../../reference/generation/tables_access/abstract/db_table_chart.html">
+    through the <a class="eclass" href="../../../reference/generation/tables_access/abstract/db_table_description_chart.html">DB_TABLE_DESCRIPTION</a>
+    object associated to your <a class="eclass" href="../../../reference/generation/tables_access/abstract/db_table_chart.html">
     DB_TABLE</a> object.
 <p align="left">Objects metadata used in assertions ensures objects type
 validity. To illustrates this, let's look at the contract form of a class that
@@ -123,9 +124,9 @@ compute (tablerow: DB_TABLE)<br>
 </code></p>
 <h3 align="left">2.4. <a name="cap_database_metadata"></a> Accessing database metadata</h3>
 <p align="left">Basic database metadata is also available: the
-DB_SPECIFIC_TABLES_ACCESS_USE class (generated), stores INTEGER codes for each
+<SPAN class="eclass">DB_SPECIFIC_TABLES_ACCESS_USE</SPAN> class (generated), stores <a class="eclass" href="../../../../base/reference/kernel/integer_chart.html">INTEGER</a> codes for each
 database table/view. These codes afford related table/view name and related new
-storing objects (i.e. that conforms to <a class="eclass" href="../../reference/generation/tables_access/abstract/db_table_chart.html">
+storing objects (i.e. that conforms to <a class="eclass" href="../../../reference/generation/tables_access/abstract/db_table_chart.html">
     DB_TABLE</a> class).</p>
 <p align="left"><CODE>
 tables: DB_SPECIFIC_TABLES_ACCESS<br>
@@ -137,7 +138,7 @@ tables: DB_SPECIFIC_TABLES_ACCESS<br>
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; Result := tables.obj (code)<br>
 &nbsp;&nbsp;&nbsp; end</code></p>
 <h3 align="left">2.5. <a name="cap_more"></a> More interesting features</h3>
-<p align="left">The <a class="eclass" href="../../reference/generation/tables_access/abstract/db_table_description_chart.html">DB_TABLE_DESCRIPTION</a>
+<p align="left">The <a class="eclass" href="../../../reference/generation/tables_access/abstract/db_table_description_chart.html">DB_TABLE_DESCRIPTION</a>
 class offers more features to get table row attributes as conveniently as
 possible:</p>
 <ul>
@@ -150,7 +151,7 @@ possible:</p>
   <li>
     <p align="left">The list of table/view row attributes mapped to a function.</li>
   <li>
-    <p align="left">Printable attribute values (i.e. the associated STRING
+    <p align="left">Printable attribute values (i.e. the associated <a class="eclass" href="../../../../base/reference/kernel/string_chart.html">STRING</a>
     values)</li>
 </ul>
 <h2 align="left">3. <a name="implementation"></a>Implementation</h2>
@@ -160,12 +161,12 @@ possible:</p>
 <ul>
   <li>
     <p align="left">Classes holding database table rows content (inheriting from
-    <a class="eclass" href="../../reference/generation/tables_access/abstract/db_table_chart.html">DB_TABLE</a>)</li>
+    <a class="eclass" href="../../../reference/generation/tables_access/abstract/db_table_chart.html">DB_TABLE</a>)</li>
   <li>
-    <p align="left">Classes describing database tables (inheriting from <a class="eclass" href="../../reference/generation/tables_access/abstract/db_table_description_chart.html">DB_TABLE_DESCRIPTION</a>)</li>
+    <p align="left">Classes describing database tables (inheriting from <a class="eclass" href="../../../reference/generation/tables_access/abstract/db_table_description_chart.html">DB_TABLE_DESCRIPTION</a>)</li>
   <li>
     <p align="left">A class describing the database and giving access to the
-    previous types of classes (inheriting from <a class="eclass" href="../../reference/generation/tables_access/abstract/db_tables_access_chart.html">DB_TABLES_ACCESS</a>)</li>
+    previous types of classes (inheriting from <a class="eclass" href="../../../reference/generation/tables_access/abstract/db_tables_access_chart.html">DB_TABLES_ACCESS</a>)</li>
 </ul>
 
 <p align="left">One database table is hence associated to one table class and one
@@ -189,14 +190,14 @@ classes.</p>
     <p align="left">Green classes are database-specific.</li>
 </ul>
 <h2 align="left">2. <a name="table-descr_relationship"></a> Table and description classes relationship</h2>
-<p align="left">Table classes, that inherit from <a class="eclass" href="../../reference/generation/tables_access/abstract/db_table_chart.html">DB_TABLE</a>,
-and description classes, that inherit from <a class="eclass" href="../../reference/generation/tables_access/abstract/db_table_description_chart.html">DB_TABLE_DESCRIPTION</a>,
+<p align="left">Table classes, that inherit from <a class="eclass" href="../../../reference/generation/tables_access/abstract/db_table_chart.html">DB_TABLE</a>,
+and description classes, that inherit from <a class="eclass" href="../../../reference/generation/tables_access/abstract/db_table_description_chart.html">DB_TABLE_DESCRIPTION</a>,
 both deals with database tables. This section explains what are their own role
 and their relationship.</p>
 <h3 align="left">2.1. Table classes</h3>
 <p align="left">As seen in the previous section, table classes merely store table rows attribute values. Their objects can be
 <u> considered as</u> database
-table rows, or more precisely, database table rows on the Eiffel side. These classes inherit from <a class="eclass" href="../../reference/generation/tables_access/abstract/db_table_chart.html">DB_TABLE</a>. </p>
+table rows, or more precisely, database table rows on the Eiffel side. These classes inherit from <a class="eclass" href="../../../reference/generation/tables_access/abstract/db_table_chart.html">DB_TABLE</a>. </p>
 <p align="left">Each of these classes are associated to a description
 class. </p>
 <p align="left" class="tip"><b>Tip:</b> Use table classes to <i>carry</i>
@@ -212,7 +213,7 @@ data.&nbsp;&nbsp; </p>
   <li>
     <p align="left"><a href="#cap_more">Facilitating data management</a>.</li>
 </ul>
-<p align="left">These descriptions inherit from <a class="eclass" href="../../reference/generation/tables_access/abstract/db_table_description_chart.html">DB_TABLE_DESCRIPTION</a>.</p>
+<p align="left">These descriptions inherit from <a class="eclass" href="../../../reference/generation/tables_access/abstract/db_table_description_chart.html">DB_TABLE_DESCRIPTION</a>.</p>
 <p align="left">Since they only describes a table and provide tools, description objects
 can be unique. EiffelStore ensures their unicity for resources optimization.</p>
 <p align="left" class="tip"><b>Tip:</b> Use description classes to <i>access and
@@ -246,12 +247,13 @@ io.putstring (description.attribute (description.id_name) + &quot;: &quot;)<br>
 io.putstring (description.attribute (description.id_code).out)</code></p>
 <p>As descriptions are unique, this means that description objects are also
 associated to a specific table object to deal with it (i.e. access or modify its
-content). Actually, the [link]table_description[] feature associates the
+content). Actually, the <a class="efeature" href="../../../../store/reference/generation/tables_access/abstract/db_table.html#f_table_description">table_description</a> feature associates the
 description with the current object and then returns this description.&nbsp;</p>
-<p class="note"><b>Note:</b> The [link]table_description[] feature is still a
+<p class="note"><b>Note:</b> The <a class="efeature" href="../../../../store/reference/generation/tables_access/abstract/db_table.html#f_table_description">table_description</a>
+feature is still a
 query as the association part should not be visible at the interface
 level.&nbsp;</p>
-<p>On the whole, you have to pay attention to always execute [link]table_description[]
+<p>On the whole, you have to pay attention to always execute <a class="efeature" href="../../../../store/reference/generation/tables_access/abstract/db_table.html#f_table_description">table_description</a>
 on your table/view row to get the appropriate description.</p>
 <h2 align="left">3. <a name="table_access_classes"></a>Table access classes</h2>
 <h3 align="left">3.1. Overview</h3>
@@ -273,7 +275,7 @@ relations.</p>
 <p align="left" class="figuretitle">Relationship between the tables access
 object, description and table objects</p>
 <h3 align="left">3.2. DB_SPECIFIC_TABLES_ACCESS class</h3>
-<p align="left">The DB_SPECIFIC_TABLES_ACCESS class stores the unique table
+<p align="left">The <SPAN class="eclass">DB_SPECIFIC_TABLES_ACCESS</SPAN> class stores the unique table
 description object. It also provides the following facilities:</p>
 <ul>
   <li>
@@ -286,11 +288,11 @@ description object. It also provides the following facilities:</p>
     <p align="left">Table names from a table code</li>
 </ul>
 <p align="left" class="Note"><b>Note</b>: database table codes given in the
-class match the table codes provided by <a href="../../reference/generation/tables_access/abstract/db_table_description_chart.html"> DB_TABLE_DESCRIPTION</a>.</p>
+class match the table codes provided by <a class="eclass" href="../../../reference/generation/tables_access/abstract/db_table_description_chart.html">DB_TABLE_DESCRIPTION</a>.</p>
 <h3 align="left">3.3. Abstract access class</h3>
-<p align="left">The <a href="../../reference/generation/tables_access/abstract/db_tables_access_chart.html"> DB_TABLES_ACCESS</a> class provides an interface for the
-DB_SPECIFIC_TABLES_ACCESS class which is non-specific to the database. This can
-be used by non database-specific code (for instance the DataView cluster) to
+<p align="left">The <a class="eclass" href="../../../reference/generation/tables_access/abstract/db_tables_access_chart.html">DB_TABLES_ACCESS</a> class provides an interface for the
+<SPAN class="eclass">DB_SPECIFIC_TABLES_ACCESS</SPAN> class which is non-specific to the database. This can
+be used by non database-specific code (for instance the <A HREF="../../40_dataview_cluster/index.html">DataView cluster</A>) to
 access database tables.</p>
 <p align="left">Unique table description objects and table codes are of course
 not directly available from this class, but the following features are still
@@ -304,14 +306,13 @@ available:</p>
     <p align="left">Table names from a table code</li>
 </ul>
 <h3 align="left">3.4. Use classes</h3>
-<p align="left">The DB_SPECIFIC_TABLES_ACCESS object can be accessed as a kind
+<p align="left">The <SPAN class="eclass">DB_SPECIFIC_TABLES_ACCESS</SPAN> object can be accessed as a kind
 of &quot;global variable&quot; by any class which inherits from
-DB_SPECIFIC_TABLES_ACCESS_USE. This class also ensures DB_SPECIFIC_TABLES_ACCESS
+<SPAN class="eclass">DB_SPECIFIC_TABLES_ACCESS_USE</SPAN>. This class also ensures <SPAN class="eclass">DB_SPECIFIC_TABLES_ACCESS</SPAN>
 object unicity.</p>
-<p align="left">The <a href="../../reference/generation/tables_access/abstract/db_tables_access_use_chart.html"> DB_TABLES_ACCESS_USE</a> class affords the same possibility but
-with no reference to the DB_SPECIFIC_TABLES_ACCESS object. The unique
-DB_SPECIFIC_TABLES_ACCESS should be set to this class as of type <a href="../../reference/generation/tables_access/abstract/db_tables_access_chart.html">
-DB_TABLES_ACCESS</a>.</p>
+<p align="left">The <a class="eclass" href="../../../reference/generation/tables_access/abstract/db_tables_access_use_chart.html">DB_TABLES_ACCESS_USE</a> class affords the same possibility but
+with no reference to the <SPAN class="eclass">DB_SPECIFIC_TABLES_ACCESS</SPAN> object. The unique
+<SPAN class="eclass">DB_SPECIFIC_TABLES_ACCESS</SPAN> should be set to this class as of type <a class="eclass" href="../../../reference/generation/tables_access/abstract/db_tables_access_chart.html">DB_TABLES_ACCESS</a>.</p>
 <br>
 
 </body>

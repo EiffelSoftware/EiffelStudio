@@ -1,43 +1,71 @@
-<!DOCTYPE HTML public "-//W3C//DTD HTML 4.0 Frameset//EN">
-
-<HTML>
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2//EN">
+<HTML XMLNS:MSHelp="http://msdn.microsoft.com/mshelp">
+	<XML>
+		<MSHelp:Keyword Index="K" Term="Taxonomy" />
+		<MSHelp:Keyword Index="K" Term="EiffelBase, Taxonomy" />
+		<MSHelp:Attr Name="Product" Value="Eiffel"/>
+		<MSHelp:Attr Name="Locale" Value="kbEnglish"/>
+	</XML>
 	<HEAD>
-		<TITLE>EiffelBase Data Structures, Taxonomy</TITLE>
-		<LINK REL=StyleSheet HREF="../../../../default.css">
+		<TITLE>EiffelBase, Abstract Container Structures: The Taxonomy</TITLE>
+		<LINK HREF="../../../../default.css" TYPE="text/css" REL="STYLESHEET">
 	</HEAD>
-
 	<BODY>
-		<H1>Abstract Container Structures: The Taxonomy</H1>
-			<P>
-				A container data structure (or container in the sequel) is an object which serves
-				to store and access collections of objects, called the <B>items</B> of the
-				container. All classes describing containers are descendants of the deferred
-				class <A HREF="../../reference/structures/access/container_chart.html">CONTAINER</A>.
-			<P>
-				A container can be studied from three viewpoints: access, storage and traversal.
-			<UL>
-				<LI>The <B>access</B> criterion affects how the clients of a container can access its items. For
-				example, in a stack or queue, only one item is accessible at any given time, and
-				clients do not choose that item; in contrast, clients of an array or hash table must
-				provide an index, or more generally a key, to access an item.
-				<LI>The <B>storage</B> criterion affects how the items are put together. For example some
-				containers are finite, others potentially infinite; among finite structures, some are
-				bounded, others unbounded.
-				<LI>The <B>traversal</B> criterion affects how, if in any way, the items of a container can be
-				traversed. A traversal is a mechanism which makes it possible to examine each
-				item of a container once, in a clearly specified order. For example some containers
-				can be traversed sequentially, in one direction or two; tree structures lend themselves
-				to preorder, postorder and breadth-first traversals.
-			</UL>
-			<P>
-				For each of these criteria the Base library offers a single-inheritance hierarchy of
-				deferred classes. The top of the access hierarchy is class
-				<A HREF="../../reference/structures/access/collection_chart.html">COLLECTION</A>;
-				the top of the storage hierarchy is class
-				<A HREF="/libraries/base/reference/structures/storage/box_chart.html">BOX</A>; the top of the
-				traversal hierarchy is class
-				<A HREF="/libraries/base/reference/structures/traversing/traversable_chart.html">TRAVERSABLE</A>.
-				These three classes are heirs of the most general class,
-				<A HREF="../../reference/structures/access/container_chart.html">CONTAINER</A>.
-		</BODY>
+		<TABLE CLASS="HEADER">
+			<TR>
+				<TD CLASS="HEADER">Eiffel ENViSioN!</TD>
+			</TR>
+			<TR>
+				<TD CLASS="SUBHEADER">EiffelBase, Abstract Container Structures: The Taxonomy</TD>
+			</TR>
+		</TABLE>
+		<TABLE CLASS="FRAME">
+			<TR>
+				<TD>
+					<P>
+					A container data structure (or container in the sequel) is an object which serves
+					to store and access collections of objects, called the <B>items</B> of the
+					container. All classes describing containers are descendants of the deferred
+					class <A HREF="../../reference/structures/access/container_chart.html">CONTAINER</A>.
+					</P>
+
+					<P>A container can be studied from three viewpoints: access, storage and traversal.</P>
+					
+					<UL>
+						<LI>The <B>access</B> criterion affects how the clients of a container can access its items. For
+						example, in a stack or queue, only one item is accessible at any given time, and
+						clients do not choose that item; in contrast, clients of an array or hash table must
+						provide an index, or more generally a key, to access an item.</li>
+						
+						<LI>The <B>storage</B> criterion affects how the items are put together. For example some
+						containers are finite, others potentially infinite; among finite structures, some are
+						bounded, others unbounded.</li>
+						
+						<LI>The <B>traversal</B> criterion affects how, if in any way, the items of a container can be
+						traversed. A traversal is a mechanism which makes it possible to examine each
+						item of a container once, in a clearly specified order. For example some containers
+						can be traversed sequentially, in one direction or two; tree structures lend themselves
+						to preorder, postorder and breadth-first traversals.</li>
+					</UL>
+					
+					<P>
+					For each of these criteria the Base library offers a single-inheritance hierarchy of
+					deferred classes. The top of the access hierarchy is class
+					<A HREF="../../reference/structures/access/collection_chart.html">COLLECTION</A>;
+					the top of the storage hierarchy is class
+					<A HREF="/libraries/base/reference/structures/storage/box_chart.html">BOX</A>; the top of the
+					traversal hierarchy is class
+					<A HREF="/libraries/base/reference/structures/traversing/traversable_chart.html">TRAVERSABLE</A>.
+					These three classes are heirs of the most general class,
+					<A HREF="../../reference/structures/access/container_chart.html">CONTAINER</A>.
+					</P>
+				</TD>
+			</TR>
+		</TABLE>
+		<TABLE CLASS="FOOTER">
+			<TR>
+				<TD>© 2003-2004 Eiffel Software. All rights reserved.</TD>
+			</TR>
+		</TABLE>
+	</BODY>
 </HTML>

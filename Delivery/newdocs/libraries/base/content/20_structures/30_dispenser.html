@@ -1,40 +1,58 @@
-<!DOCTYPE HTML public "-//W3C//DTD HTML 4.0 Frameset//EN">
-
-<HTML>
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2//EN">
+<HTML XMLNS:MSHelp="http://msdn.microsoft.com/mshelp">
+	<XML>
+		<MSHelp:Keyword Index="K" Term="Dispensers" />
+		<MSHelp:Keyword Index="K" Term="EiffelBase, Dispensers" />
+		<MSHelp:Attr Name="Product" Value="Eiffel"/>
+		<MSHelp:Attr Name="Locale" Value="kbEnglish"/>
+	</XML>
 	<HEAD>
-		<TITLE>EiffelBase Data Structures, Dispensers</TITLE>
-		<LINK REL=StyleSheet HREF="../../../../default.css">
+		<TITLE>EiffelBase, Dispensers</TITLE>
+		<LINK HREF="../../../../default.css" TYPE="text/css" REL="STYLESHEET">
 	</HEAD>
-
 	<BODY>
-		<H1>Dispensers</H1>
-			<P>
-				A dispenser is called that way because of the image of a vending machine (a dispenser)
-				of a rather primitive nature, in which there is only one button. If you press the button
-				and the dispenser is not empty, you get one of its items in the exit tray at the bottom, but
-				you do not choose that item: the machine does. There is also an input slot at the top, into
-				which you may deposit new items; but you have no control over the order in which
-				successive button press operations will retrieve these items.
-			<P>
-				The deferred class <A CLASS="eclass" HREF="../../reference/structures/dispenser/dispenser_chart.html">
-				DISPENSER</A> provides the facilities which will be shared by all specialized classes.
-				In fact, the interface of all dispenser classes is nearly identical, with the exception of
-				a few extra possibilities offered by priority queues. Many kinds of dispenser are possible,
-				each defined by the relation that the machine defines between the order in which items
-				are inserted and the order in which they are	returned. The Base libraries support three
-				important categories - stacks, queues, and priority queues:
-			<UL>
-				<LI>A stack is a dispenser with a last-in, first-out (LIFO) internal policy: items come
-				out in the reverse order of their insertion. Each button press returns the last
-				deposited item.
-				<LI>A queue is a dispenser with a first-in, first-out (FIFO) internal policy: items come
-				out in the order of their insertion. Each button press returns the oldest item
-				deposited and not yet removed.
-				<LI>In a priority queue, items have an associated notion of order; the element that
-				comes out at any given time is the largest of those which are in the dispenser.
-			</UL>
-			<H2>Stacks</H2>
-			<P>
+		<TABLE CLASS="HEADER" ID="Table1">
+			<TR>
+				<TD CLASS="HEADER">Eiffel ENViSioN!</TD>
+			</TR>
+			<TR>
+				<TD CLASS="SUBHEADER">EiffelBase, Dispensers</TD>
+			</TR>
+		</TABLE>
+		<TABLE CLASS="FRAME" ID="Table2">
+			<TR>
+				<TD>
+					<P>
+					A dispenser is called that way because of the image of a vending machine (a dispenser)
+					of a rather primitive nature, in which there is only one button. If you press the button
+					and the dispenser is not empty, you get one of its items in the exit tray at the bottom, but
+					you do not choose that item: the machine does. There is also an input slot at the top, into
+					which you may deposit new items; but you have no control over the order in which
+					successive button press operations will retrieve these items.</P>
+					
+					<P>
+					The deferred class <A CLASS="eclass" HREF="../../reference/structures/dispenser/dispenser_chart.html">
+					DISPENSER</A> provides the facilities which will be shared by all specialized classes.
+					In fact, the interface of all dispenser classes is nearly identical, with the exception of
+					a few extra possibilities offered by priority queues. Many kinds of dispenser are possible,
+					each defined by the relation that the machine defines between the order in which items
+					are inserted and the order in which they are	returned. The Base libraries support three
+					important categories - stacks, queues, and priority queues:</P>
+					
+				<UL>
+					<LI>A stack is a dispenser with a last-in, first-out (LIFO) internal policy: items come
+					out in the reverse order of their insertion. Each button press returns the last
+					deposited item.</LI>
+					<LI>A queue is a dispenser with a first-in, first-out (FIFO) internal policy: items come
+					out in the order of their insertion. Each button press returns the oldest item
+					deposited and not yet removed.</LI>
+					<LI>In a priority queue, items have an associated notion of order; the element that
+					comes out at any given time is the largest of those which are in the dispenser.</LI>
+				</UL>
+				
+				<H2>Stacks</H2>
+			
+				<P>
 				Stacks - dispensers with a LIFO retrieval policy - are a ubiquitous structure in software
 				development. Their most famous application is to parsing (syntactic analysis), but many
 				other types of systems use one or more stacks.
@@ -49,54 +67,70 @@
 				(remove the oldest element),
 				<A CLASS="efeature" HREF="../../reference/structures/dispenser/stack.html#f_is_empty">is_empty</A>
 				(test for empty queue).<BR>
-				Three effective heirs are provided:
-			<UL>
-				<LI><A CLASS="eclass" HREF="../../reference/structures/dispenser/linked_stack_chart.html">LINKED_STACK</A>
-				: stacks implemented as linked lists, with no limit on the number of items (
-				<A CLASS="efeature" HREF="../../reference/structures/dispenser/linked_stack.html#f_count">count</A>).
-				<LI><A CLASS="eclass" HREF="../../reference/structures/dispenser/bounded_stack_chart.html">BOUNDED_STACK
-				</A>: stacks implemented as arrays. For such stacks, the maximum number of items
-				(<A CLASS="efeature" HREF="../../reference/structures/dispenser/bounded_stack.html#f_capacity">capacity
-				</A>) is set at creation time.
-				<LI><A CLASS="eclass" HREF="../../reference/structures/dispenser/arrayed_stack_chart.html">ARRAYED_STACK</A>
-				: also implemented as arrays, but in this case there is no limit on the number of items; the
-				interface is the same as
-				<A CLASS="eclass" HREF="../../reference/structures/dispenser/linked_stack_chart.html">LINKED_STACK</A>
-				except for	the creation procedure. If the number of elements exceeds the initially allocated
-				capacity, the array will simply be resized.
-			</UL>
-			<H2>Queues</H2>
-			<P>
+				Three effective heirs are provided:</P>
+				
+				<UL>
+					<LI><A CLASS="eclass" HREF="../../reference/structures/dispenser/linked_stack_chart.html">LINKED_STACK</A>
+					: stacks implemented as linked lists, with no limit on the number of items (
+					<A CLASS="efeature" HREF="../../reference/structures/dispenser/linked_stack.html#f_count">count</A>).</LI>
+					<LI><A CLASS="eclass" HREF="../../reference/structures/dispenser/bounded_stack_chart.html">BOUNDED_STACK
+					</A>: stacks implemented as arrays. For such stacks, the maximum number of items
+					(<A CLASS="efeature" HREF="../../reference/structures/dispenser/bounded_stack.html#f_capacity">capacity
+					</A>) is set at creation time.</LI>
+					<LI><A CLASS="eclass" HREF="../../reference/structures/dispenser/arrayed_stack_chart.html">ARRAYED_STACK</A>
+					: also implemented as arrays, but in this case there is no limit on the number of items; the
+					interface is the same as
+					<A CLASS="eclass" HREF="../../reference/structures/dispenser/linked_stack_chart.html">LINKED_STACK</A>
+					except for	the creation procedure. If the number of elements exceeds the initially allocated
+					capacity, the array will simply be resized.</LI>
+				</UL>
+				
+				<H2>Queues</H2>
+			
+				<P>
 				Class <A CLASS="eclass" HREF="../../reference/structures/dispenser/queue_chart.html">QUEUE</A> describes
 				general queues, without commitment to a representation. This is a deferred class which
 				may not be directly instantiated. Three non-deferred heirs are also provided, distinguished
-				by the same properties as their stack counterparts:
-			<UL>
-				<LI><A CLASS="eclass" HREF="../../reference/structures/dispenser/linked_queue_chart.html">LINKED_QUEUE</A>.
-				<LI><A CLASS="eclass" HREF="../../reference/structures/dispenser/bounded_queue_chart.html">BOUNDED_QUEUE</A>.
-				<LI><A CLASS="eclass" HREF="../../reference/structures/dispenser/arrayed_queue_chart.html">ARRAYED_QUEUE</A>.
-			</UL>
-			<H2>Priority Queues</H2>
-			<P>
+				by the same properties as their stack counterparts:</P>
+				
+				<UL>
+					<LI><A CLASS="eclass" HREF="../../reference/structures/dispenser/linked_queue_chart.html">LINKED_QUEUE</A>.</LI>
+					<LI><A CLASS="eclass" HREF="../../reference/structures/dispenser/bounded_queue_chart.html">BOUNDED_QUEUE</A>.</LI>
+					<LI><A CLASS="eclass" HREF="../../reference/structures/dispenser/arrayed_queue_chart.html">ARRAYED_QUEUE</A>.</LI>
+				</UL>
+				
+				<H2>Priority Queues</H2>
+				
+				<P>
 				In a priority queue, each item has an associated priority value, and there is an order
 				relation on these values. The item returned by item or removed by remove is the
 				element with the highest priority.	The most general class is
 				<A CLASS="eclass" HREF="../../reference/structures/dispenser/priority_queue_chart.html">PRIORITY_QUEUE</A>
-				, which is deferred. Two effective variants are provided:
-			<UL>
-				<LI><A CLASS="eclass" HREF="../../reference/structures/dispenser/linked_priority_queue_chart.html">
-				LINKED_PRIORITY_QUEUE</A>, a linked list implementation.
-				<LI><A CLASS="eclass" HREF="../../reference/structures/dispenser/heap_priority_queue_chart.html">
-				HEAP_PRIORITY_QUEUE</A> which is more efficient and is to be preferred in
-				most cases. A heap is organized like a binary tree, although physically stored in
-				an array; elements with a high priority percolate towards the root.
-			</UL>
-			<P>
+				, which is deferred. Two effective variants are provided:</P>
+
+				<UL>
+					<LI><A CLASS="eclass" HREF="../../reference/structures/dispenser/linked_priority_queue_chart.html">
+					LINKED_PRIORITY_QUEUE</A>, a linked list implementation.</LI>
+					<LI><A CLASS="eclass" HREF="../../reference/structures/dispenser/heap_priority_queue_chart.html">
+					HEAP_PRIORITY_QUEUE</A> which is more efficient and is to be preferred in
+					most cases. A heap is organized like a binary tree, although physically stored in
+					an array; elements with a high priority percolate towards the root.</LI>
+				</UL>
+
+				<P>
 				Because it must be possible to compare priorities, the type of the items must
 				conform to <A CLASS="eclass" HREF="../../reference/kernel/part_comparable.html">
 				PART_COMPARABLE</A>. Constrained genericity ensures this; all the priority
 				queue classes have a formal generic parameter constrained by
 				<A CLASS="eclass" HREF="../../reference/kernel/part_comparable.html">
-				PART_COMPARABLE</A>.
+				PART_COMPARABLE</A>.</P>
+				</TD>
+			</TR>
+		</TABLE>
+		<TABLE CLASS="FOOTER" ID="Table3">
+			<TR>
+				<TD>© 2003-2004 Eiffel Software. All rights reserved.</TD>
+			</TR>
+		</TABLE>
 	</BODY>
 </HTML>

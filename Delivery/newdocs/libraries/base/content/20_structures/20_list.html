@@ -1,946 +1,1117 @@
-<!DOCTYPE HTML public "-//W3C//DTD HTML 4.0 Frameset//EN">
-
-<HTML>
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2//EN">
+<HTML XMLNS:MSHelp="http://msdn.microsoft.com/mshelp">
+	<XML>
+		<MSHelp:Keyword Index="K" Term="Lists" />
+		<MSHelp:Keyword Index="K" Term="EiffelBase, Lists" />
+		<MSHelp:Attr Name="Product" Value="Eiffel"/>
+		<MSHelp:Attr Name="Locale" Value="kbEnglish"/>
+	</XML>
 	<HEAD>
 		<TITLE>EiffelBase Data Structures, Lists</TITLE>
-		<LINK REL=StyleSheet HREF="../../../../default.css">
+		<LINK HREF="../../../../default.css" TYPE="text/css" REL="STYLESHEET">
 	</HEAD>
-
 	<BODY>
-		<H1>Lists</H1>
-        <h2>OVERVIEW</h2>
-        <p>Many applications need sequential structures, also called linear structures, in particular
-        lists and circular chains. Apart from three classes describing individual list cells, all the classes involved are
-        descendants of class <a CLASS="eclass" href="../../reference/structures/traversing/linear_chart.html">LINEAR</a>, one of the deferred classes describing general traversal
-        properties and introduced in the chapter that described the general data structure
-        taxonomy. More precisely, all but one of the classes of interest for the present
-        discussion are descendants, direct or indirect, from a class called <a CLASS="eclass" href="../../reference/structures/list/chain_chart.html"> CHAIN</a> which
-        describes general sequential structures possessing a cursor as well as insertion
-        properties. The exception is class <a CLASS="eclass" href="../../reference/support/countable_sequence_chart.html">COUNTABLE_SEQUENCE</a>, which describes infinite
-        structures; all the others describe finite structures.<br>
-        <a CLASS="eclass" href="../../reference/structures/list/chain_chart.html">CHAIN</a> is an heir of
-        <a CLASS="eclass" href="../../reference/structures/list/sequence_chart.html">SEQUENCE</a>, which describes a more general notion of
-        sequence. <a CLASS="eclass" href="../../reference/structures/list/sequence_chart.html">SEQUENCE</a>
-        is a descendant of <a CLASS="eclass" href="../../reference/structures/traversing/linear_chart.html">LINEAR</a>.
-        There are two main categories of sequential structures: some, called circular chains,
-        are cyclic; others, called lists, are not. Another distinction exists between dynamic
-        structures, which may be extended at will, and fixed ones, which have a bounded
-        capacity.<br>
-        In all of the structures under review you may insert two or more occurrences of a
-        given item in such a way that the occurrences are distinguishable. In other words, the
-        structures are bags rather than just sets, although it is possible to use them to implement
-        sets.</p>
-        <h2> HIGHER-LEVEL TRAVERSAL CLASSES</h2>
-        <p>The list and chain classes are characterized, for their traversal properties, as being linear
-        and, more precisely, bilinear. In the traversal hierarchy, the relevant deferred classes
-        are <a CLASS="eclass" href="../../reference/structures/traversing/linear_chart.html">LINEAR</a> and
-        <a CLASS="eclass" href="../../reference/structures/traversing/bilinear_chart.html">BILINEAR</a>, introduced in the
-        <a href="10_taxonomy.html">discussion</a> of the general taxonomy.</p>
-        <h3>Linear structures</h3>
-        <p><a CLASS="eclass" href="../../reference/structures/traversing/linear_chart.html">LINEAR</a>
-        describes sequential structures that may be traversed one way. It introduces in
-        particular the following features, illustrated on the figure below:</p>
-        <ul>
-          <li><a CLASS="efeature" href="../../reference/structures/traversing/linear.html#f_after">after</a>, a boolean-valued query which determines whether you have moved past<br>
-        the last position (a more precise specification is given below).</li>
-          <li><a CLASS="efeature" href="../../reference/structures/traversing/linear.html#f_off">off</a>, a boolean-valued query which is false if and only if there is no item at the
-            current position; for <a class="eclass" href="../../reference/structures/traversing/linear_chart.html">LINEAR</a>
-            this is the same as:<br>
-            <code>
-            <a CLASS="efeature" href="../../reference/structures/traversing/linear.html#f_is_empty">is_empty</a>
-            <a CLASS="efeature" href="../../reference/kernel/boolean.html#f__infix_and">and</a>
-            <a CLASS="efeature" href="../../reference/kernel/boolean.html#f__prefix_not">not</a>
-            <a CLASS="efeature" href="../../reference/structures/traversing/linear.html#f_after">after</a>
-            </code></li>
-          <li><a CLASS="efeature" href="../../reference/structures/traversing/linear.html#item">item</a>, a query which returns the item at the current position - provided of course<br>
-        there is one, as expressed by the precondition:<br>
-        <code>
-         <a CLASS="efeature" href="../../reference/kernel/boolean.html#f__prefix_not">not</a>
-         <a CLASS="efeature" href="../../reference/structures/traversing/linear.html#f_off">off</a>
-         </code></li>
-          <li><a CLASS="efeature" href="../../reference/structures/traversing/linear.html#f_start">start</a>, a command to move to the first position if any (if
-          <a CLASS="efeature" href="../../reference/structures/traversing/linear.html#f_is_empty">is_empty</a>
-          is true the command has no effect).</li>
-          <li><a CLASS="efeature" href="../../reference/structures/traversing/linear.html#f_forth">forth</a>, a command to advance by one position; the precondition is not after.</li>
-          <li><a CLASS="efeature" href="../../reference/structures/traversing/linear.html#f_finish">finish</a>, a command to move to the last position; the precondition is:<br>
-          <code>
-          <a CLASS="efeature" href="../../reference/kernel/boolean.html#f__prefix_not">not</a>
-         <a CLASS="efeature" href="../../reference/structures/traversing/linear.html#f_is_empty">is_empty</a>.
-         </code>
-          </ul>
-        <p><img border="0" src="linear.png" width="330" height="140"></p>
-        <p class="figuretitle">fig.1: Linear Structure</p>
-        <p>
-        There is also a procedure <a CLASS="efeature" href="../../reference/structures/traversing/linear.html#f_search"> search</a> with one argument, which determines whether the
-        value of that argument appears in the structure at or after the current position, and if not
-        makes <a CLASS="efeature" href="../../reference/structures/traversing/linear.html#f_after">after</a> become true. This procedure is internally used by the default
-        implementation of the
-        <a CLASS="efeature" href="../../reference/structures/traversing/linear.html#f_has">has</a>
-        function (the general membership test) for linear structures.
-        Like has for all containers, <a CLASS="efeature" href="../../reference/structures/traversing/linear.html#f_search"> search</a>
-        uses object or reference equality depending on the value set for <a CLASS="efeature" href="../../reference/structures/traversing/linear.html#f_object_comparison">object_comparison</a>.</p>
-        <p>
-        An invariant property of <a CLASS="eclass" href="../../reference/structures/traversing/linear_chart.html">LINEAR</a>
-        structures is that the current position may go off one step past the last item if any, but no further. The precondition of <a CLASS="efeature" href="../../reference/structures/traversing/linear.html#f_forth">forth</a>
-        - not after - helps ensure this. The first item (if any) being at position 1, the maximum allowable
-        position is <a CLASS="efeature" href="../../reference/structures/traversing/linear.html#f_count">count</a> + 1, where
-        <a CLASS="efeature" href="../../reference/structures/traversing/linear.html#f_count">count</a>
-        is the number of items.</p>
-        <h3>
- Bilinear structures</h3>
-        <p>
-        <a CLASS="eclass" href="../../reference/structures/traversing/bilinear_chart.html">BILINEAR</a>
-        describes linear structures which may be traversed both ways. It inherits
-        from <a CLASS="eclass" href="../../reference/structures/traversing/linear_chart.html">LINEAR</a>
-        and extends it with two new features which ensure complete symmetry between the two directions of movement:
-        <ul>
-        <li> <a CLASS="efeature" href="../../reference/structures/traversing/bilinear.html#f_before">before</a>, a boolean-valued query which determines whether you have moved to the<br>
-        left of the first position (a more precise specification is given below).<br>
-        <li> <a CLASS="efeature" href="../../reference/structures/traversing/bilinear.html#f_back">back</a>, a command to move backward by one position; the precondition is not<br>
-        before.
-        </ul>
-        <p>
-        For bilinear structures the position can range between 0 (not just 1) and
-        <a CLASS="efeature" href="../../reference/structures/traversing/bilinear.html#f_count">count</a>
-        + 1. Query <a CLASS="efeature" href="../../reference/structures/traversing/bilinear.html#f_off">off</a>
-        is accordingly redefined so as to yield the value of after or before.</p>
-        <img border="0" src="bilinear.png" width="342" height="142"><br>
-        <p class="figuretitle">fig.2: Bilinear Structure</p>
-        <h3>
-        Invariant properties for after, before and off</h3>
-        <p>
-        The redefinition of <a CLASS="efeature" href="../../reference/structures/traversing/bilinear.html#f_off">off</a>
-        illustrates a general methodological advice about invariants: be careful about not over-constraining the invariant by including properties that may be
-        made more general in descendants. It might have been tempting to include in
-        <a CLASS="eclass" href="../../reference/structures/traversing/linear_chart.html">LINEAR</a>
-        an invariant clause of the form<br>
-        <code>
-        <a CLASS="efeature" href="../../reference/structures/traversing/bilinear.html#f_off">off</a>
-        <SPAN CLASS=".esymbol">=</SPAN>
-        <a CLASS="efeature" href="../../reference/structures/traversing/bilinear.html#f_is_empty">is_empty</a>
-        <a CLASS="efeature" href="../../reference/kernel/boolean.html#f__infix_or">or</A>
-        <a CLASS="efeature" href="../../reference/structures/traversing/bilinear.html#f_after">after</a><br>
-        </code>This property, however, would be too constraining. More precisely, it is always true
-        that the right-hand side implies the left-hand-side: if a linear structure is either empty or
-        after, then it is off. But the converse is not true, since certain kinds of linear structure,
-        for example bilinear ones, may be off but neither empty nor after.<br>
-        The actual invariant for class <a CLASS="eclass" href="../../reference/structures/traversing/bilinear_chart.html">BILINEAR</a>
-        is obtained in three stages. In class <a CLASS="eclass" href="../../reference/structures/traversing/bilinear_chart.html">TRAVERSABLE</a>
-        the feature off is deferred and a basic property of that feature is<br>
-        expressed by the invariant clause<br>
-        <code>
-        <SPAN CLASS="etag">empty_constraint</SPAN><SPAN CLASS="esymbol">:</SPAN>
-        <a CLASS="efeature" href="../../reference/structures/traversing/bilinear.html#f_is_empty">is_empty</a>
-        <a CLASS="efeature" href="../../reference/kernel/boolean.html#f__infix_implies">implies</A>
-        <a CLASS="efeature" href="../../reference/structures/traversing/bilinear.html#f_off">off<br>
-        </a></code>In
-        <a CLASS="eclass" href="../../reference/structures/traversing/linear_chart.html">LINEAR</a>, feature
-         <a CLASS="efeature" href="../../reference/structures/traversing/linear.html#f_off">off</a>
-         is effected through an implementation which returns the
-value of the expression <a CLASS="efeature" href="../../reference/structures/traversing/bilinear.html#f_is_empty">is_empty</a>
-         or <a CLASS="efeature" href="../../reference/structures/traversing/bilinear.html#f_after">after</a>. The class adds an invariant clause which,
-however, says less than the implementation to leave some room for variation:
-        <br>
-        <code>
-        <SPAN CLASS="etag">after_constraint</SPAN><SPAN CLASS="esymbol">:</SPAN>
-        <a CLASS="efeature" href="../../reference/structures/traversing/bilinear.html#f_after">after</a>
-        <a CLASS="efeature" href="../../reference/kernel/boolean.html#f__infix_implies">implies</A>
-        <a CLASS="efeature" href="../../reference/structures/traversing/bilinear.html#f_off">off</a>
-        </code><br>
-Finally <a CLASS="eclass" href="../../reference/structures/traversing/bilinear_chart.html">BILINEAR</a>, an heir of
-         <a CLASS="eclass" href="../../reference/structures/traversing/linear_chart.html">LINEAR</a>, redefines
-         <a CLASS="efeature" href="../../reference/structures/traversing/linear.html#f_off">off</a>
-         to return the value of the expression<br>
-        <code>
-        <a CLASS="efeature" href="../../reference/structures/traversing/bilinear.html#f_before">before</a>
-        <a CLASS="efeature" href="../../reference/kernel/boolean.html#f__infix_or">or</A>
-        <a CLASS="efeature" href="../../reference/structures/traversing/bilinear.html#f_after">after</a>
-        </code><br>
-         and adds the invariant clause<br>
-        <code>
-        <SPAN CLASS="etag">before_constraint</SPAN><SPAN CLASS="esymbol">:</SPAN>
-        <a CLASS="efeature" href="../../reference/structures/traversing/bilinear.html#f_before">before</a>
-        <a CLASS="efeature" href="../../reference/kernel/boolean.html#f__infix_implies">implies</A>
-        <a CLASS="efeature" href="../../reference/structures/traversing/bilinear.html#f_off">off</a>
-        </code><br>
-        The new implementation of
-        <a CLASS="efeature" href="../../reference/structures/traversing/bilinear.html#f_off">off</a><br>
-        <code>
-        <a CLASS="efeature" href="../../reference/structures/traversing/bilinear.html#f_after">after</a>
-        <a CLASS="efeature" href="../../reference/kernel/boolean.html#f__infix_or">or</A>
-        <a CLASS="efeature" href="../../reference/structures/traversing/bilinear.html#f_before">before</a>
-        </code><br>would not guarantee the
-invariant clause inherited from <a CLASS="eclass" href="../../reference/structures/traversing/bilinear_chart.html">TRAVERSABLE</a>
-        were it not for another clause
-introduced in <a CLASS="eclass" href="../../reference/structures/traversing/bilinear_chart.html">BILINEAR</a>:<br>
-        <code>
-        <SPAN CLASS="etag">empty_property</SPAN><SPAN CLASS="esymbol">:</SPAN>
-        <a CLASS="efeature" href="../../reference/structures/traversing/bilinear.html#f_is_empty">is_empty</a>
-        <a CLASS="efeature" href="../../reference/kernel/boolean.html#f__infix_implies">implies</A>
-        <SPAN CLASS="esymbol">(</SPAN><a CLASS="efeature" href="../../reference/structures/traversing/bilinear.html#f_after">after</a>
-        <a CLASS="efeature" href="../../reference/kernel/boolean.html#f__infix_or">or</A>
-        <a CLASS="efeature" href="../../reference/structures/traversing/bilinear.html#f_before">before</a><SPAN CLASS="esymbol">)</SPAN>
-        </code><br>which indicates that an empty bilinear structure must always be after or before &#8722; but not
-both, however, as stated by the last new clause, the reason for which is discussed in
-detail below:<br>
-		 <code>
-        <SPAN CLASS="etag">not_both</SPAN><SPAN CLASS="esymbol">:</SPAN>
-		 <a CLASS="efeature" href="../../reference/kernel/boolean.html#f__prefix_not">not</A>
-        <SPAN CLASS="esymbol">(</SPAN><a CLASS="efeature" href="../../reference/structures/traversing/bilinear.html#f_after">after</a>
-        <a CLASS="efeature" href="../../reference/kernel/boolean.html#f__infix_and">and</A>
-        <a CLASS="efeature" href="../../reference/structures/traversing/bilinear.html#f_before">before</a><SPAN CLASS="esymbol">)</SPAN>
-        </code><br>
-		 The flat-short form of <a CLASS="eclass" href="../../reference/structures/traversing/bilinear_chart.html">BILINEAR</a>
-        shows the
-		 complete reconstructed invariant:<br>
-         <code>
-        <SPAN CLASS="etag">not_both</SPAN><SPAN CLASS="esymbol">:</SPAN>
-		 <a CLASS="efeature" href="../../reference/kernel/boolean.html#f__prefix_not">not</A>
-        <SPAN CLASS="esymbol">(</SPAN><a CLASS="efeature" href="../../reference/structures/traversing/bilinear.html#f_after">after</a>
-        <a CLASS="efeature" href="../../reference/kernel/boolean.html#f__infix_and">and</A>
-        <a CLASS="efeature" href="../../reference/structures/traversing/bilinear.html#f_before">before</a><SPAN CLASS="esymbol">)<br>
-         </SPAN>
-        <SPAN CLASS="etag">empty_property</SPAN><SPAN CLASS="esymbol">:</SPAN>
-        <a CLASS="efeature" href="../../reference/structures/traversing/bilinear.html#f_is_empty">is_empty</a>
-        <a CLASS="efeature" href="../../reference/kernel/boolean.html#f__infix_implies">implies</A>
-        <SPAN CLASS="esymbol">(</SPAN><a CLASS="efeature" href="../../reference/structures/traversing/bilinear.html#f_after">after</a>
-        <a CLASS="efeature" href="../../reference/kernel/boolean.html#f__infix_or">or</A>
-        <a CLASS="efeature" href="../../reference/structures/traversing/bilinear.html#f_before">before</a><SPAN CLASS="esymbol">)</SPAN>
-         <br>
-         <SPAN CLASS="etag">before_constraint</SPAN><SPAN CLASS="esymbol">:</SPAN>
-        <a CLASS="efeature" href="../../reference/structures/traversing/bilinear.html#f_before">before</a>
-        <a CLASS="efeature" href="../../reference/kernel/boolean.html#f__infix_implies">implies</A>
-        <a CLASS="efeature" href="../../reference/structures/traversing/bilinear.html#f_off">off</a>
-         <br>
-         <SPAN CLASS="etag">after_constraint</SPAN><SPAN CLASS="esymbol">:</SPAN>
-        <a CLASS="efeature" href="../../reference/structures/traversing/bilinear.html#f_after">after</a>
-        <a CLASS="efeature" href="../../reference/kernel/boolean.html#f__infix_implies">implies</A>
-        <a CLASS="efeature" href="../../reference/structures/traversing/bilinear.html#f_off">off</a>
-         <br>
-         <SPAN CLASS="etag">empty_constraint</SPAN><SPAN CLASS="esymbol">:</SPAN>
-        <a CLASS="efeature" href="../../reference/structures/traversing/bilinear.html#f_is_empty">is_empty</a>
-        <a CLASS="efeature" href="../../reference/kernel/boolean.html#f__infix_implies">implies</A>
-        <a CLASS="efeature" href="../../reference/structures/traversing/bilinear.html#f_off">off</a>
-        </code>
-         <h3> Iteration patterns</h3>
-        <p>For a more general form of
-		 this scheme, applicable to
-		 circular chains as well as
-		 other linear structures,
-		 replace <a CLASS="efeature" href="../../reference/structures/traversing/bilinear.html#f_off">off</a>
-        by <a CLASS="efeature" href="../../reference/structures/traversing/bilinear.html#f_exhausted">exhausted</a>.
-        With the features shown above, a typical iteration mechanism on a non-empty linear
-		 structure lin is of the form:<br>
-		 <code>
-		 <SPAN CLASS="ekeyword">from</SPAN><BR>&nbsp;&nbsp;&nbsp;<SPAN CLASS="elocal">lin</SPAN><SPAN CLASS="esymbol">.</SPAN><a CLASS="efeature" href="../../reference/structures/traversing/bilinear.html#f_start">start</a><br>
-        <SPAN CLASS="elocal">&nbsp;&nbsp;&nbsp;some_optional_initializing_operation</SPAN>
-        <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">lin</SPAN><SPAN CLASS="esymbol">)</SPAN><br>
-        <SPAN CLASS="ekeyword">until</SPAN><BR>
-        &nbsp;&nbsp;&nbsp;<SPAN CLASS="elocal">lin</SPAN><SPAN CLASS="esymbol">.</SPAN><a CLASS="efeature" href="../../reference/structures/traversing/bilinear.html#f_off">off</a><br>
-        <SPAN CLASS="ekeyword">loop</SPAN><BR>
-        &nbsp;&nbsp;&nbsp;<SPAN CLASS="elocal">lin</SPAN><SPAN CLASS="esymbol">.</SPAN><SPAN CLASS="elocal">some_action</SPAN>
-        <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">lin</SPAN><SPAN CLASS="esymbol">.</SPAN><a CLASS="efeature" href="../../reference/structures/traversing/bilinear.html#f_item">item</a><SPAN CLASS="esymbol">)</SPAN><br>
-        &nbsp;&nbsp;&nbsp;<SPAN CLASS="elocal">lin</SPAN><SPAN CLASS="esymbol">.</SPAN><a CLASS="efeature" href="../../reference/structures/traversing/bilinear.html#f_forth">forth</a><br>
-        <SPAN CLASS="ekeyword">end</SPAN>
-        </code><br>The value of
-        <SPAN CLASS="elocal">lin</SPAN><SPAN CLASS="esymbol">.</SPAN><a CLASS="efeature" href="../../reference/structures/traversing/bilinear.html#f_off">off</a>
-        is always true for an empty structure, so in this case the loop will, correctly, execute only its initialization actions if present.<br>
-        This is a very common pattern, which you will find in the library classes themselves
-        (for example <a CLASS="efeature" href="../../reference/structures/traversing/bilinear.html#f_has">has</a>
-        is implemented in this way) and many application clients. The iterator classes corresponding to linear structures (<a class="eclass" href="../../reference/structures/iteration/linear_iterator_chart.html">LINEAR_ITERATOR</a>,
-        <a class="eclass" href="../../reference/structures/iteration/two_way_chain_iterator_chart.html">TWO_WAY_CHAIN_ITERATOR</a>) turn this pattern and several related ones into actual
-        reusable routines.<br>
-        For bilinear structures there is another traversal mechanism going backward rather
-        than forward; it is the same as above except that <a CLASS="efeature" href="../../reference/structures/traversing/bilinear.html#f_finish">finish</a>
-        replaces <a CLASS="efeature" href="../../reference/structures/traversing/bilinear.html#f_start">start</a>
-        and <a CLASS="efeature" href="../../reference/structures/traversing/bilinear.html#f_back">back</a>
-        replaces <a CLASS="efeature" href="../../reference/structures/traversing/bilinear.html#f_forth">finish</a>. The exit condition remains
-        <a CLASS="efeature" href="../../reference/structures/traversing/bilinear.html#f_off">off</a>
-        since <a CLASS="efeature" href="../../reference/structures/traversing/bilinear.html#f_before">before</a>, like
-        <a CLASS="efeature" href="../../reference/structures/traversing/bilinear.html#f_after">after</a>, implies
-        <a CLASS="efeature" href="../../reference/structures/traversing/bilinear.html#f_off">off</a>.
-        <h3>A precise view of after and before</h3>
-        <p>
-        Getting the specification of <a CLASS="efeature" href="../../reference/structures/traversing/bilinear.html#f_after">after</a>
-        and <a CLASS="efeature" href="../../reference/structures/traversing/bilinear.html#f_before">before</a>
-        right, so that it will handle all cases properly, requires some care.<br>
-        For every one of the structures under discussion there is a notion of current position,
-        which we may call the cursor position even though for the moment the cursor is a
-        virtual notion only. (Actual cursor objects will come later when we combine
-        <a CLASS="eclass" href="../../reference/structures/traversing/linear_chart.html">LINEAR</a>,
-        <a CLASS="eclass" href="../../reference/structures/traversing/bilinear_chart.html">BILINEAR</a>
-        and other classes from the traversal hierarchy with <a class="eclass" href="../../reference/structures/access/cursor_structure_chart.html">CURSOR_STRUCTURE</a>
-        and other classes from the collection hierarchy.) The informal definition is that
-        <a CLASS="efeature" href="../../reference/structures/traversing/bilinear.html#f_after">after</a>
-        is true if and only if the cursor - in this informal sense of a fictitious marker signaling the
-        current position - is one position after the last item, if any, and that
-        <a CLASS="efeature" href="../../reference/structures/traversing/bilinear.html#f_before">before</a>
-        is true if and only if the cursor is one position before the first item.
-        When the cursor is on any of the items, <a CLASS="efeature" href="../../reference/structures/traversing/bilinear.html#f_after">after</a>
-        and <a CLASS="efeature" href="../../reference/structures/traversing/bilinear.html#f_before">before</a>
-        are false; <a CLASS="efeature" href="../../reference/structures/traversing/bilinear.html#f_after">after</a>
-        holds when the cursor is to the right of the last item, and before when it is to the
-        left of the first item. This leaves open the question of what conventions to take for an empty structure. If
-        iteration schemes of the above type are to work, then after must be true for an empty
-        structure. For a bilinear structure, however, we should have total symmetry between the
-        two pairs of features
-        <ul>
-          <li><a CLASS="efeature" href="../../reference/structures/traversing/bilinear.html#f_start">start</a>,
-            <a CLASS="efeature" href="../../reference/structures/traversing/bilinear.html#f_forth">forth</a>,
-            <a CLASS="efeature" href="../../reference/structures/traversing/bilinear.html#f_after">after</a>.</li>
-          <li><a CLASS="efeature" href="../../reference/structures/traversing/bilinear.html#f_finish">finish</a>,
-            <a CLASS="efeature" href="../../reference/structures/traversing/bilinear.html#f_back">back</a>,
-            <a CLASS="efeature" href="../../reference/structures/traversing/bilinear.html#f_before">before</a>.</li>
-        </ul>
-        <p>So for an empty list both <a CLASS="efeature" href="../../reference/structures/traversing/bilinear.html#f_before">before</a>
-        and <a CLASS="efeature" href="../../reference/structures/traversing/bilinear.html#f_after">after</a>
-        should be true. This scheme was used in early version of the Base libraries. It has some disadvantages, however; in particular it
-        is not compatible with the simple, symmetric properties:<br>
-        <code>
-        <a CLASS="efeature" href="../../reference/structures/traversing/bilinear.html#f_after">after</a>
-        <SPAN CLASS="esymbol">=</SPAN> <SPAN CLASS="esymbol">(</SPAN><a CLASS="efeature" href="../../reference/structures/traversing/linear.html#f_index">index</a>
-        <SPAN CLASS="esymbol">=</SPAN>
-        <a CLASS="efeature" href="../../reference/structures/traversing/linear.html#f_count">count</a>
-        <SPAN CLASS="esymbol">+</SPAN> 1<SPAN CLASS="esymbol">)</SPAN><br>
-		 <a CLASS="efeature" href="../../reference/structures/traversing/bilinear.html#f_before">before</a>
-        <SPAN CLASS="esymbol">=</SPAN> <SPAN CLASS="esymbol">(</SPAN><a CLASS="efeature" href="../../reference/structures/traversing/linear.html#f_index">index</a>
-        <SPAN CLASS="esymbol">=</SPAN> 0<SPAN CLASS="esymbol">)</SPAN>
-        </code><br>
-        which express elementary definitions for <a CLASS="efeature" href="../../reference/structures/traversing/bilinear.html#f_after">after</a>
-        and <a CLASS="efeature" href="../../reference/structures/traversing/bilinear.html#f_before">before</a>
-        in terms of index, the current position, and <a CLASS="efeature" href="../../reference/structures/traversing/bilinear.html#f_count">count</a>, the number of items (items being numbered from 1 to
-        <a CLASS="efeature" href="../../reference/structures/traversing/bilinear.html#f_count">count</a>). For
-        an empty structure <a CLASS="efeature" href="../../reference/structures/traversing/bilinear.html#f_count">count</a>
-        is zero, so if we want <a CLASS="efeature" href="../../reference/structures/traversing/bilinear.html#f_after">after</a>
-        and <a CLASS="efeature" href="../../reference/structures/traversing/bilinear.html#f_before">before</a>
-        to be both true in this case we have to sacrifice one of the above properties, since the first would imply index
-        to 1 and the second to 0. But again symmetry reigns supreme: we should either
-        keep both properties or renounce both. The solution was to renounce both and replace
-        them by slightly more complicated ones:<br>
-        <code>
-        <a CLASS="efeature" href="../../reference/structures/traversing/bilinear.html#f_after">after</a>
-        <SPAN CLASS="esymbol">=</SPAN> <SPAN CLASS="esymbol">(<a class="efeature" href="../../reference/structures/traversing/linear.html#f_is_empty">is_</a></SPAN><a class="efeature" href="../../reference/structures/traversing/linear.html#f_is_empty">empty</a>
-        <a CLASS="efeature" href="../../reference/kernel/boolean.html#f__infix_or">or</A><a CLASS="efeature" href="../../reference/kernel/boolean.html#f__infix_or">
-        </A><SPAN CLASS="esymbol">(</SPAN><a CLASS="efeature" href="../../reference/structures/traversing/linear.html#f_index">index</a>
-        <SPAN CLASS="esymbol">=</SPAN>
-        <a CLASS="efeature" href="../../reference/structures/traversing/linear.html#f_count">count</a>
-        <SPAN CLASS="esymbol">+</SPAN> 1<SPAN CLASS="esymbol">))</SPAN><br>
-		 <a CLASS="efeature" href="../../reference/structures/traversing/bilinear.html#f_before">before</a>
-        <SPAN CLASS="esymbol">=</SPAN>  <SPAN CLASS="esymbol">(<a class="efeature" href="../../reference/structures/traversing/linear.html#f_is_empty">is_</a></SPAN><a class="efeature" href="../../reference/structures/traversing/linear.html#f_is_empty">empty</a>
-        <a CLASS="efeature" href="../../reference/kernel/boolean.html#f__infix_or">or</A><a CLASS="efeature" href="../../reference/kernel/boolean.html#f__infix_or">
-        </A><SPAN CLASS="esymbol">(</SPAN><a CLASS="efeature" href="../../reference/structures/traversing/linear.html#f_index">index</a>
-        <SPAN CLASS="esymbol">=</SPAN> 0<SPAN CLASS="esymbol">))</SPAN>
-        </code><br>
-        When a structure is created, some initializations will have to be made; the default
-        initializations will usually lead to a value of 0 rather than 1 for index, although this
-        dissymetry is not apparent in the assertions. Although acceptable, this solution leads to small but unpleasant complications, in
-        particular frequent conditional instructions of the form<br>
-        <code>
-        <SPAN CLASS="ekeyword">if</SPAN>
-        <a CLASS="efeature" href="../../reference/structures/traversing/linear.html#f_after">after</a>
-        <a CLASS="efeature" href="../../reference/kernel/boolean.html#f__infix_and">and</A>
-        <a CLASS="efeature" href="../../reference/kernel/boolean.html#f__prefix_not">not</A>
-        <a CLASS="efeature" href="../../reference/structures/traversing/linear.html#f_is_empty">is_empty</a>
-        <SPAN CLASS="ekeyword">then</SPAN>...
-        </code><br>
-        The solution finally retained for the Base libraries uses a different technique, which
-        has turned out to be preferable. The idea is to replace the conceptual picture by
-        one in which there are always two fictitious sentinel items. The two sentinel
-        items are only present conceptually. They are of course not taken into account for the computation of
-        <a CLASS="efeature" href="../../reference/structures/traversing/bilinear.html#f_count">count</a>
-        and, although it is possible to conceive of an implementation which would actually
-        reserve space for them (for example in an array representation), none of the
-        implementations used in Base for the classes of this documentation and other descendants of
-        <a CLASS="eclass" href="../../reference/structures/traversing/linear_chart.html">LINEAR</a>
-        do. The only purpose of the sentinels is to provide two valid theoretical
-        cursor positions, which exist regardless of the number of actual (non-sentinel) items in
-        the structure.<br>
-        The sentinel items always appear at positions 0 and <a CLASS="efeature" href="../../reference/structures/traversing/bilinear.html#f_count">count</a>
-        + 1; this property is true even if the structure is empty of items, in which case <a CLASS="efeature" href="../../reference/structures/traversing/bilinear.html#f_count">count</a>
-        is zero. As a result, the following properties are part of the invariant:<br>
-        <code>
-        0 <SPAN CLASS="esymbol">&lt;=</SPAN>
-        <a CLASS="efeature" href="../../reference/structures/traversing/bilinear.html#f_index">index</a><br>
-        <a CLASS="efeature" href="../../reference/structures/traversing/bilinear.html#f_index">index</a>
-        <SPAN CLASS="esymbol">&lt;=</SPAN>
-        <a CLASS="efeature" href="../../reference/structures/traversing/bilinear.html#f_count">count</a>
-        <SPAN CLASS="esymbol">+</SPAN>
-        1<br>
-        <a CLASS="efeature" href="../../reference/structures/traversing/bilinear.html#f_before">before</a>
-        <SPAN CLASS="esymbol">=</SPAN> <SPAN CLASS="esymbol">(</SPAN><a CLASS="efeature" href="../../reference/structures/traversing/bilinear.html#f_index">index</a>
-        <SPAN CLASS="esymbol">=</SPAN> 0<SPAN CLASS="esymbol">)</SPAN><br>
-        <a CLASS="efeature" href="../../reference/structures/traversing/bilinear.html#f_after">after</a>
-        <SPAN CLASS="esymbol">=</SPAN>
-        (<a CLASS="efeature" href="../../reference/structures/traversing/bilinear.html#f_index">index</a>
-        <SPAN CLASS="esymbol">=</SPAN>
-        <a CLASS="efeature" href="../../reference/structures/traversing/bilinear.html#f_count">count</a>
-        <SPAN CLASS="esymbol">+</SPAN> 1<SPAN CLASS="esymbol">)</SPAN><br>
-        <a CLASS="efeature" href="../../reference/kernel/boolean.html#f__prefix_not">not</A>
-        <SPAN CLASS="esymbol">(</SPAN><a CLASS="efeature" href="../../reference/structures/traversing/linear.html#f_after">after</a>
-        <a CLASS="efeature" href="../../reference/kernel/boolean.html#f__infix_and">and</A>
-        <a CLASS="efeature" href="../../reference/structures/traversing/bilinear.html#f_before">before</a><SPAN CLASS="esymbol">)</SPAN>
-        </code><br>
-        The last property given indicates that a structure can never be both <a CLASS="efeature" href="../../reference/structures/traversing/bilinear.html#f_after">after</a>
-        and <a CLASS="efeature" href="../../reference/structures/traversing/bilinear.html#f_before">before</a>,
-        since even in an empty structure the two sentinels are still present, with the cursor on
-        one of them. For an empty structure, index will be zero by convention, so that
-        <a CLASS="efeature" href="../../reference/structures/traversing/bilinear.html#f_before">before</a>
-        will be true and <a CLASS="efeature" href="../../reference/structures/traversing/bilinear.html#f_after">after</a>
-        false. But this property is not reflected in any of the invariant clauses.</p>
-        <h3>Some lessons</h3>
-        <p>This discussion has illustrated some of the important patterns of reasoning that are
-        frequently involved in serious object-oriented design. Among the lessons are four ideas
-        which you may find useful in many different cases. First, consistency is once again the central principle. Throughout the design of a
-        class library we must constantly ask ourselves:</p>
-        <ul>
-          <li>“How do I make my next design decision compatible with the previous ones?”</li>
-          <li>“How do I take my next design decision so that it will be easy - or at least
-            possible - to make future ones compatible with it?”</li>
-        </ul>
-        Another frequent concern, partly a consequence of consistency, is
-        symmetry. To mathematicians and physicists, symmetry considerations are often important in guiding
-        the search for a solution to a problem; if the problem exhibits a certain symmetry, a
-        candidate solution will be rejected if it does not satisfy that symmetry. Such was the
-        situation here: since the structure’s specification is symmetric with respect to the two
-        possible directions of traversal, so too should the feature design be.<br>
-        The third lesson is also well-known in mathematics and physics: the usefulness of
-        looking at limit cases. To check that a design is sound it is often useful to examine what
-        becomes of it when it is applied to extreme situations - in particular, as was done in this
-        example, empty structures.<br>
-        Finally, the only way to make delicate design decisions is to express the issues
-        clearly through assertions, most notably invariants. To analyze the properties under
-        discussion, and weigh the various alternatives, we need the precision of mathematical
-        logic. Once again note that without assertions it would be impossible to build a good
-        library; we would have no way to know precisely what we are talking about.
-        <h2> SEQUENCES AND CHAINS</h2>
-        <p>Still deferred, classes <a class="eclass" href="../../reference/structures/list/sequence_chart.html">SEQUENCE</a> and
-        <a class="eclass" href="../../reference/structures/list/chain_chart.html"> CHAIN</a> provide the basis for all list and chain
-        classes, as well as for many trees and for dispensers.<br>
-        <a class="eclass" href="../../reference/structures/list/sequence_chart.html">SEQUENCE</a> is constructed with the full extent of the
-        technique described in the discussion of the taxonomy: using multiple inheritance to
-        combine one class each from the access, traversal and storage hierarchy.
-        <a class="eclass" href="../../reference/structures/list/sequence_chart.html">SEQUENCE</a> indeed has three parents:</p>
-        <ul>
-          <li><a CLASS="eclass" href="../../reference/structures/access/active_chart.html">ACTIVE</a>
-            gives the access properties. A sequence is an active structure with a
-            notion of current item. Remember that active structures are a special case of
-            bags.</li>
-          <li><a CLASS="eclass" href="../../reference/structures/traversing/bilinear_chart.html">BILINEAR</a>, as studied above, indicates that a sequence may be traversed both
-            ways.</li>
-          <li><a class="eclass" href="../../reference/structures/storage/finite_chart.html">FINITE</a>, from the storage hierarchy, indicates that the class describes finite
-            sequences. (A class <a CLASS="eclass" href="../../reference/support/countable_sequence_chart.html">COUNTABLE_SEQUENCE</a>
-            is also present, as described below.)</li>
-        </ul>
-        <p>To the features of <a CLASS="eclass" href="../../reference/structures/traversing/bilinear_chart.html">BILINEAR</a>,
-        <a class="eclass" href="../../reference/structures/list/sequence_chart.html">SEQUENCE</a> principally adds features for adding,
-        changing and removing items. A few procedures in particular serve to insert items at the
-        end:</p>
-        <ul>
-          <li><SPAN CLASS="elocal">s</SPAN><SPAN CLASS="esymbol">.</SPAN><a class="efeature" href="../../reference/structures/list/sequence.html#f_put">put</a>
-          <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">v</SPAN><SPAN CLASS="esymbol">)</SPAN>
-          adds <SPAN CLASS="elocal">v</SPAN> at the end of a sequence <SPAN CLASS="elocal">s</SPAN>.</li>
-          <li><a class="efeature" href="../../reference/structures/list/sequence.html#f_extend">extend</a>
-          and
-          <a class="efeature" href="../../reference/structures/list/sequence.html#f_force">force</a>,
-          at the <a class="eclass" href="../../reference/structures/list/sequence_chart.html">SEQUENCE</a> level, do the same as
-          <a class="efeature" href="../../reference/structures/list/sequence.html#f_put">put</a>.</li>
-          <li><SPAN CLASS="elocal">s</SPAN><SPAN CLASS="esymbol">.</SPAN><a class="efeature" href="../../reference/structures/list/sequence.html#f_append">append</a>
-          <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">s1</SPAN><SPAN CLASS="esymbol">)</SPAN>
-          adds to the end of <SPAN CLASS="elocal">s</SPAN> the items of <SPAN CLASS="elocal">s1</SPAN> (another sequence), preserving
-            their <SPAN CLASS="elocal">s1</SPAN> order.</li>
-        </ul>
-        <p>Other procedures work on the current position:</p>
-        <ul>
-          <li><SPAN CLASS="elocal">s</SPAN><SPAN CLASS="esymbol">.</SPAN><a class="efeature" href="../../reference/structures/list/sequence.html#f_remove">remove</a>
-         removes the item at current position.</li>
-          <li><SPAN CLASS="elocal">s</SPAN><SPAN CLASS="esymbol">.</SPAN><a class="efeature" href="../../reference/structures/list/sequence.html#f_replace">replace</a>
-         <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">v</SPAN><SPAN CLASS="esymbol">)</SPAN>
-         replaces by <SPAN CLASS="elocal">v</SPAN> the item at current position.</li>
-        </ul>
-        <p><a class="eclass" href="../../reference/structures/list/sequence_chart.html">SEQUENCE</a>, however,
-        does not provide a procedure to insert an item at the current position, since not all
-        implementations of sequences support this possibility; you will find it in
-        descendants of <a class="eclass" href="../../reference/structures/list/sequence_chart.html">SEQUENCE</a>
-        seen below.<br>
-        Yet another group of features are based on the first occurrence of a certain item, or
-        on all occurrences:</p>
-        <ul>
-          <li><SPAN CLASS="elocal">s</SPAN><SPAN CLASS="esymbol">.</SPAN><a class="efeature" href="../../reference/structures/list/sequence.html#f_prune">prune</a>
-         <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">v</SPAN><SPAN CLASS="esymbol">)</SPAN>
-		 removes the first occurrence of <SPAN CLASS="elocal">v</SPAN> in <SPAN CLASS="elocal">s</SPAN>, if any.</li>
-          <li><SPAN CLASS="elocal">s</SPAN><SPAN CLASS="esymbol">.</SPAN><a class="efeature" href="../../reference/structures/list/sequence.html#f_prune_all">prune_all</a>
-         <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">v</SPAN><SPAN CLASS="esymbol">)</SPAN>
-         removes all occurrences of <SPAN CLASS="elocal">v</SPAN>.</li>
-        </ul>
-        <p>These procedures have various abstract preconditions: <SPAN CLASS="elocal">s</SPAN><SPAN CLASS="esymbol">.</SPAN><a class="efeature" href="../../reference/structures/list/sequence.html#f_extendible">extendible</a>
-		 for additions,
-		 <SPAN CLASS="elocal">s</SPAN><SPAN CLASS="esymbol">.</SPAN><a class="efeature" href="../../reference/structures/list/sequence.html#f_writable">writable</a>
- 	    for replacements,
- 	    <SPAN CLASS="elocal">s</SPAN><SPAN CLASS="esymbol">.</SPAN><a class="efeature" href="../../reference/structures/list/sequence.html#f_prunable">prunable</a>
-	    for removals. Properties <a class="efeature" href="../../reference/structures/list/sequence.html#f_extendible">extendible</a>
-        and <a class="efeature" href="../../reference/structures/list/sequence.html#f_prunable">prunable</a>
-        characterize general categories of container structures rather than individual
-        instances; for example <a class="efeature" href="../../reference/structures/list/sequence.html#f_extendible">extendible</a>
-        is always true for the “dynamic” structures seen
-        below. In contrast, <a class="efeature" href="../../reference/structures/list/sequence.html#f_writable">writable</a>
-        depends on the current status of each instance. In general <a class="efeature" href="../../reference/structures/list/sequence.html#f_writable">writable</a>
-        will be true if there is an item at the current position.</p>
-        <h3>Chains</h3>
-        <p>Chains are sequences with a few more properties: items may be accessed through their
-        indices, and it is possible to define cursor objects attached to individual items.<br>
-        Class <a class="eclass" href="../../reference/structures/list/chain_chart.html">CHAIN</a> is an heir of <a class="eclass" href="../../reference/structures/list/sequence_chart.html">SEQUENCE</a>. It gets its access properties from
-        <a class="eclass" href="../../reference/structures/access/cursor_structure_chart.html">CURSOR_STRUCTURE</a>
-        (which adds the notion of cursor to the features of <a CLASS="eclass" href="../../reference/structures/access/active.html">ACTIVE</a>,
-        already present in <a class="eclass" href="../../reference/structures/list/sequence_chart.html">SEQUENCE</a>) and is also an heir of
-        <a class="eclass" href="../../reference/structures/access/indexable_chart.html">INDEXABLE</a>. This ancestry
-        implies in particular the presence of the following features:</p>
-        <ul>
-          <li><a class="efeature" href="../../reference/structures/access/cursor_structure.html#f_cursor">cursor</a>, from
-            <a class="eclass" href="../../reference/structures/access/cursor_structure_chart.html">CURSOR_STRUCTURE</a>, which makes it possible to keep a
-            reference to an item of the structure.</li>
-          <li><a class="efeature" href="../../reference/structures/access/table.html#f_i_th">i_th</a>
-            and <a class="efeature" href="../../reference/structures/access/table.html#f_put_i_th">put_i_th</a>
-            from <a class="eclass" href="../../reference/structures/access/table_chart.html">TABLE</a>,
-            via <a class="eclass" href="../../reference/structures/access/indexable_chart.html">INDEXABLE</a>, which make it possible to
-            access and replace the value of an item given by its integer index.</li>
-        </ul>
-        <p>These features were called item and put in <a class="eclass" href="../../reference/structures/access/table_chart.html">TABLE</a>, but are renamed here to remove the conflict
-        with homonymous features from <a class="eclass" href="../../reference/structures/list/sequence_chart.html">SEQUENCE</a>.<br>
-        Procedure put for chains is the version obtained from <a class="eclass" href="../../reference/structures/access/cursor_structure_chart.html">CURSOR_STRUCTURE</a>,
-        which has the same effect as replace - replacing the value of the item at cursor position.
-        The put procedure from <a class="eclass" href="../../reference/structures/list/sequence_chart.html">SEQUENCE</a>
-        is renamed sequence_ put. This feature is not
-        exported by <a class="eclass" href="../../reference/structures/list/chain.html">CHAIN</a>, however, since its effect (adding an item at the end) may be
-        obtained through the simpler name extend.</p>
-        <h3>Dynamic chains</h3>
-        <p>By default, chains can only be extended at the end, through extend and sequence_ put.
-        Of particular interest are those chains where clients can insert and remove items at any
-        position. Such chains are said to be dynamic, and described by <a class="eclass" href="../../reference/structures/list/chain_chart.html"> CHAIN</a>’s heir
-        <a class="eclass" href="../../reference/structures/list/dynamic_chain_chart.html">DYNAMIC_CHAIN</a>. The new features are predictable:</p>
-        <ul>
-          <li>Procedure <a class="efeature" href="../../reference/structures/list/dynamic_chain.html#f_put_front">put_front</a>
-            adds an item before the first. (As noted, the procedures to add an item after the last are already available in chains.)</li>
-          <li>Procedures <a class="efeature" href="../../reference/structures/list/dynamic_chain.html#f_put_left">put_left</a>
-            and <a class="efeature" href="../../reference/structures/list/dynamic_chain.html#f_put_right">put_right</a>
-            add an item at the left and right of the cursor position.</li>
-          <li>Procedures <a class="efeature" href="../../reference/structures/list/dynamic_chain.html#f_remove_left">remove_left</a>
-            and <a class="efeature" href="../../reference/structures/list/dynamic_chain.html#f_remove_right">remove_right</a>
-            remove an item at the left and right or the cursor position.</li>
-          <li>Procedures <a class="efeature" href="../../reference/structures/list/dynamic_chain.html#f_merge_left">merge_left</a>
-            and <a class="efeature" href="../../reference/structures/list/dynamic_chain.html#f_merge_right">merge_right</a>
-            are similar to <a class="efeature" href="../../reference/structures/list/dynamic_chain.html#f_put_left">put_left</a>
-            and <a class="efeature" href="../../reference/structures/list/dynamic_chain.html#f_put_right">put_right</a>
-            but insert another dynamic chain rather than a single item. As the word “merge”
-            suggests, the merged structure, passed as argument, does not survive the process;
-            it is emptied of its items. To preserve it, perform a clone or copy before the merge
-            operation.</li>
-        </ul>
-        <p>The class also provides implementations of <a class="efeature" href="../../reference/structures/list/dynamic_chain.html#f_prune">prune</a>,
-        <a class="efeature" href="../../reference/structures/list/dynamic_chain.html#f_prune_all">prune_all</a>
-        and <a class="efeature" href="../../reference/structures/list/dynamic_chain.html#f_wipe_out">wipe_out</a>
-        from <a href="../../reference/structures/access/collection_chart.html">COLLECTION</a>. To make these implementations useful, it defines queries
-        <a class="efeature" href="../../reference/structures/list/dynamic_chain.html#f_extendible">extendible</a>
-        and <a class="efeature" href="../../reference/structures/list/dynamic_chain.html#f_prunable">prunable</a>
-        so that they return the value true.</p>
-        <h2>LISTS AND CIRCULAR STRUCTURES</h2>
-        <p>A chain is a finite sequential structure. This property means that items are arranged in a
-        linear order and may be traversed from the first to the last. To do this you may use a
-        loop of the form shown above, based on procedures <a CLASS="efeature" href="../../reference/structures/traversing/bilinear.html#f_start">start</a>
-        and <a CLASS="efeature" href="../../reference/structures/traversing/bilinear.html#f_forth">forth</a>.<br>
-        This property leaves room for several variants. In particular chains may be straight
-        or circular.</p>
-        <ul>
-          <li>
-        A straight chain, which from now on will be called a list, has a beginning and an
-        end.</li>
-        <li>
-        A circular chain, as represented by class <a class="eclass" href="../../reference/structures/list/circular_chart.html">CIRCULAR</a>
-        and its descendants, has a much more flexible notion of first item. It is organized so that every item has a
-        successor.</li>
-        </ul>
-        This representation is conceptual only; in fact the implementations of circular
-        chains found in the Base libraries are based on lists, implemented in one of the ways
-        described below (in particular linked and arrayed).<br>
-        The major originality of circular chains is that unless the structure is empty
-        procedure <a CLASS="efeature" href="../../reference/structures/list/circular.html#f_forth">forth</a>
-        is always applicable: it will cycle past the last item, coming back to the<br>
-        first. The symmetric property applies to <a CLASS="efeature" href="../../reference/structures/list/circular.html#f_back">back</a>.
-        The cyclic nature of <a CLASS="efeature" href="../../reference/structures/list/circular.html#f_forth">forth</a>
-        and <a CLASS="efeature" href="../../reference/structures/list/circular.html#f_back">back</a>
-        for circular chains is expressed precisely by the assertions. The version of
-        <a class="efeature" href="../../reference/structures/list/chain.html#f_forth">forth</a>
-        for class
-        <a class="eclass" href="../../reference/structures/list/chain_chart.html">CHAIN</a>, which comes from
-        <a CLASS="eclass" href="../../reference/structures/traversing/linear_chart.html">LINEAR</a>,
-        has precondition<br>
-        <code>
-        <a CLASS="efeature" href="../../reference/kernel/boolean.html#f__prefix_not">not</a>
-        <a CLASS="efeature" href="../../reference/structures/list/circular.html#f_after">after</a>
-        </code><br>
-        Similarly, the precondition for <a CLASS="efeature" href="../../reference/structures/list/circular.html#f_back">back</a>
-        is<br>
-        <code>
-        <a CLASS="efeature" href="../../reference/kernel/boolean.html#f__prefix_not">not</a>
-        <a CLASS="efeature" href="../../reference/structures/list/circular.html#f_before">before</a>
-        </code><br>
-        For lists, <a CLASS="efeature" href="../../reference/structures/traversing/bilinear.html#f_after">after</a>
-        becomes true when the cursor moves past the last item. For circular chains, however,
-        <a CLASS="efeature" href="../../reference/structures/list/circular.html#f_after">after</a>
-        and <a CLASS="efeature" href="../../reference/structures/list/circular.html#f_before">before</a>
-        are never true except for an empty structure; this is expressed by the invariant clauses of
-        class <a class="eclass" href="../../reference/structures/list/circular_chart.html">CIRCULAR</a>:<br>
-        <code>
-        <SPAN CLASS="etag">not_before_unless_empty</SPAN><SPAN CLASS="esymbol">:</SPAN>
-        <A CLASS="efeature" HREF="../../reference/structures/list/circular.html#f_before">before</A>
-        <a CLASS="efeature" href="../../reference/kernel/boolean.html#f__infix_implies">implies</A>
-        <A CLASS="efeature" HREF="../../reference/structures/list/circular.html#f_is_empty">is_empty</A><br>
-        <SPAN CLASS="etag">not_after_unless_empty</SPAN><SPAN CLASS="esymbol">:</SPAN>
-        <A CLASS="efeature" HREF="../../reference/structures/list/circular.html#f_after">after</A>
-        <a CLASS="efeature" href="../../reference/kernel/boolean.html#f__infix_implies">implies</A>
-        <A CLASS="efeature" HREF="../../reference/structures/list/circular.html#f_is_empty">is_empty</A><br>
-        <SPAN CLASS="etag">not_off_unless_empty</SPAN><SPAN CLASS="esymbol">:</SPAN>
-        <A CLASS="efeature" HREF="../../reference/structures/list/circular.html#f_off">off</A>
-        <a CLASS="efeature" href="../../reference/kernel/boolean.html#f__infix_implies">implies</A>
-        <A CLASS="efeature" HREF="../../reference/structures/list/circular.html#f_is_empty">is_empty</A><br>
-        </code><br>
-        For a non-empty circular chain, then, you can circle forever around the items, using
-        <a CLASS="efeature" href="../../reference/structures/list/circular.html#f_forth">forth</a>
-        or <a CLASS="efeature" href="../../reference/structures/list/circular.html#f_back">back</a>.
-        <h3>Choosing the first item</h3>
-        <p>For a list, the <a CLASS="efeature" href="../../reference/structures/list/circular.html#f_first">first</a>
-        and <a CLASS="efeature" href="../../reference/structures/list/circular.html#f_last">last</a>
-        items are fixed, and correspond to specific places in the
-        physical representation.<br>
-        A circular chain also needs a notion of <a CLASS="efeature" href="../../reference/structures/list/circular.html#f_first">first</a>
-        item, if only to enable a client to initiate
-        a traversal through procedure start. Similarly, there is a <a CLASS="efeature" href="../../reference/structures/list/circular.html#f_last">last</a>
-        item - the one just before
-        the first in a cyclic traversal. (If the chain has just one item, it is both
-        <a CLASS="efeature" href="../../reference/structures/list/circular.html#f_first">first</a>
-        and <a CLASS="efeature" href="../../reference/structures/list/circular.html#f_last">last</a>.)<br>
-        For circular chains, however, there is no reason why the first item should always
-        remain the same. One of the benefits that clients may expect from the use of a circular<br>
-        structure is the ability to choose any item as the logical first. Class <a class="eclass" href="../../reference/structures/list/circular_chart.html">CIRCULAR</a>
-        offers for that purpose the procedure <a class="efeature" href="../../reference/structures/list/circular.html#f_set_start">set_start</a> which designates the current cursor position as the first in the circular chain.
-        Subsequent calls to <a class="efeature" href="../../reference/structures/list/circular.html#f_start">start</a>
-        will move the cursor to this position; calls to <a class="efeature" href="../../reference/structures/list/circular.html#f_finish">finish</a>
-        will move
-        the cursor to the cyclically preceding position. With most implementations, there will then be two notions of
-        <a CLASS="efeature" href="../../reference/structures/list/circular.html#f_first">first</a>
-        position: the
-        logical first, which clients may freely choose through calls to <a class="efeature" href="../../reference/structures/list/circular.html#f_set_start">set_start</a>; and the physical
-        first, which results from the implementation. In a representation using an array with
-        indices from 1 to capacity, for example, the physical first is position 1, and the logical
-        first may be any index in the permitted range. In a linked representation, there will be a
-        cell <a class="efeature" href="../../reference/structures/list/circular.html#f_first">first</a> element
-        corresponding to the physical first, but the logical first is any cell in
-        the chain.<br>
-        In such cases the circular chain classes have features called <SPAN CLASS="efeature">standard_first</SPAN>,
-        <SPAN CLASS="efeature">standard_last</SPAN>,
-        <SPAN CLASS="efeature">standard_start</SPAN>
-        and so on, which are not exported (so that you will not see them in the flat-short forms) but serve to implement visible features such
-        as <a CLASS="efeature" href="../../reference/structures/list/circular.html#f_first">first</a>,
-        <a CLASS="efeature" href="../../reference/structures/list/circular.html#f_last">last</a>
-        and <a CLASS="efeature" href="../../reference/structures/list/circular.html#f_forth">forth</a>. For example a possible implementation of
-        <a CLASS="efeature" href="../../reference/structures/list/circular.html#f_forth">forth</a>
-        for circular chains is<br>
-        <code>
-        <a CLASS="efeature" href="../../reference/structures/list/circular.html#f_forth">forth</a> <SPAN CLASS="ekeyword">is</SPAN><br>
-        &nbsp;&nbsp;&nbsp;<SPAN CLASS="ecomment">-- Move cursor to next item, cyclically.</SPAN><br>
-        <SPAN CLASS="ekeyword">do</SPAN><br>
-        &nbsp;&nbsp;&nbsp;<SPAN CLASS="efeature">standard_forth</SPAN><br>
-        &nbsp;&nbsp;&nbsp;<SPAN CLASS="ekeyword">if</SPAN>
-        <SPAN CLASS="efeature" >standard_after</SPAN>
-        <SPAN CLASS="ekeyword">then</SPAN><br>
-        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<SPAN CLASS="efeature">standard_start</SPAN><br>
-        &nbsp;&nbsp;&nbsp;<SPAN CLASS="ekeyword">end</SPAN><br>
-        &nbsp;&nbsp;&nbsp;<SPAN CLASS="ekeyword">if</SPAN>
-        <a CLASS="efeature" href="../../reference/structures/list/circular.html#f_isfirst">isfirst</a>
-        <SPAN CLASS="ekeyword">then</SPAN><br>
-        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a CLASS="efeature" href="../../reference/structures/list/circular.html#f_exhausted">exhausted</A>
-        <SPAN CLASS="esymbol">:=</SPAN> <SPAN CLASS="efeature">True</SPAN><br>
-        &nbsp;&nbsp;&nbsp;<SPAN CLASS="ekeyword">end</SPAN><br>
-        <SPAN CLASS="ekeyword">end</SPAN>
-        </code>
-        <br>
-        <h3>Traversing a list or circular chain</h3>
-        <p>The properties of
-        <a CLASS="efeature" href="../../reference/structures/list/circular.html#f_forth">forth</a>
-        for circular chains imply that a traversal loop written as<br>
-        <code>
-        <SPAN CLASS="ekeyword">from</SPAN><br>
-        &nbsp;&nbsp;&nbsp;<SPAN CLASS="elocal">lin</SPAN><SPAN CLASS="esymbol">.</SPAN><a CLASS="efeature" href="../../reference/structures/list/circular.html#f_start">start</a><br>
-        <SPAN CLASS="ekeyword">until</SPAN><br>
-        &nbsp;&nbsp;&nbsp;<SPAN CLASS="elocal">lin</SPAN><SPAN CLASS="esymbol">.</SPAN><a CLASS="efeature" href="../../reference/structures/list/circular.html#f_off">off</a><br>
-		 <SPAN CLASS="ekeyword">loop</SPAN><br>
-        &nbsp;&nbsp;&nbsp;...<br>
-        &nbsp;&nbsp;&nbsp;<SPAN CLASS="elocal">lin</SPAN><SPAN CLASS="esymbol">.</SPAN><a CLASS="efeature" href="../../reference/structures/list/circular.html#f_forth">forth</a><br>
-		 <SPAN CLASS="ekeyword">end</SPAN>
-		 </code><br>
-        would not work if <SPAN CLASS="elocal">lin</sPAN> is a non-empty circular structure:
-        <A CLASS="efeature" HREF="../../reference/structures/list/circular.html#f_off">off</a> would never become true, so
-        that the loop would forever cycle over the structure’s items. The same would apply to a
-        loop using finish and back instead of start and forth. This behavior is the natural result of the semantics defined for off , forth and back
-        for circular structures. But it prevents us from using these features to perform a single
-        traversal which will visit every item once.<br>
-        Using exhausted in lieu of off solves this problem. In class <a class="eclass" href="../../reference/structures/list/circular_chart.html">CIRCULAR</a>,
-        <a CLASS="efeature" href="../../reference/structures/list/circular.html#f_exhausted"> exhausted</a>
-        is an attribute which is set to false by <a class="efeature" href="../../reference/structures/list/circular.html#f_start">start</a>
-        and <a class="efeature" href="../../reference/structures/list/circular.html#f_finish">finish</a>, and is set to true by
-        <a CLASS="efeature" href="../../reference/structures/list/circular.html#f_forth">forth</a>
-        when
-        advancing from the last item to the first and by back when backing up from the first
-        item to the last. So you should write the loop as<br>
-        <code>
-        <SPAN CLASS="ekeyword">from</SPAN><br>
-        &nbsp;&nbsp;&nbsp;<SPAN CLASS="elocal">lin</SPAN><SPAN CLASS="esymbol">.</SPAN><a CLASS="efeature" href="../../reference/structures/list/circular.html#f_start">start</a><br>
-        &nbsp;&nbsp;&nbsp;<SPAN CLASS="efeature">some_optional_initializing_operation</SPAN>
-        <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">lin</SPAN><SPAN CLASS="esymbol">)</SPAN><br>
-        <SPAN CLASS="ekeyword">until</SPAN><br>
-        &nbsp;&nbsp;&nbsp;<SPAN CLASS="elocal">lin</SPAN><SPAN CLASS="esymbol">.</SPAN><a CLASS="efeature" href="../../reference/structures/list/circular.html#f_off">exhausted</a><br>
-		 <SPAN CLASS="ekeyword">loop</SPAN><br>
-        &nbsp;&nbsp;&nbsp;...<br>
-        &nbsp;&nbsp;&nbsp;<SPAN CLASS="elocal">lin</SPAN><SPAN CLASS="esymbol">.some_action
-        (</SPAN><SPAN CLASS="elocal">lin</SPAN><SPAN CLASS="esymbol">.</SPAN><a CLASS="efeature" href="../../reference/structures/list/circular.html#f_forth">item</a><SPAN CLASS="esymbol">)</SPAN><br>
-        &nbsp;&nbsp;&nbsp;<SPAN CLASS="elocal">lin</SPAN><SPAN CLASS="esymbol">.</SPAN><a CLASS="efeature" href="../../reference/structures/list/circular.html#f_forth">forth</a><br>
-		 <SPAN CLASS="ekeyword">end</SPAN>
-        </code><br>
-        This form is applicable to all linear structures, circular or not, since exhausted is introduced in class
-        <a CLASS="eclass" href="../../reference/structures/traversing/linear_chart.html">LINEAR</a>
-        as a function which returns the same value as off .Its redefinition into an attribute, modified by start, finish, forth and back, does not occur
-        until class <a class="eclass" href="../../reference/structures/list/circular.html">CIRCULAR</a>.<br>
-        Because exhausted is more general than off , the iteration scheme just given (and its
-        equivalent going backwards) is preferable to the earlier one using off , especially if there
-        is any chance that the iteration might one day be applied to a lin structure that is
-        circular. Classes of the Iteration library, in particular LINEAR_ITERATOR, rely on this
-        scheme for iterating over linear structures.</p>
-        <h3>Dynamic structures<br>
-        </h3>
-        <p>For both lists and circular chains, the most flexible variants, said to be dynamic, allow
-        insertions and deletions at any position.<br>
-        The corresponding classes are descendants of <a class="eclass" href="../../reference/structures/list/dynamic_list_chart.html">DYNAMIC_LIST</a>
-        and <a class="eclass" href="../../reference/structures/list/dynamic_circular_chart.html">DYNAMIC_CIRCULAR</a>, themselves heirs of
-        <a class="eclass" href="../../reference/structures/list/dynamic_chain_chart.html">DYNAMIC_CHAIN</a>
-        studied above.<br>
-        </p>
-        <h3>Infinite sequences<br>
-        </h3>
-        <p>Class <a CLASS="eclass" href="/libraries/base/reference/support/countable_sequence_chart.html">COUNTABLE_SEQUENCES</a>, built by inheritance from
-        <a CLASS="eclass" href="../../reference/structures/storage/countable_chart.html">COUNTABLE</a>, <a CLASS="eclass" href="../../reference/structures/traversing/linear.html">LINEAR</a>
-        and <a CLASS="eclass" href="../../reference/structures/access/active_chart.html">ACTIVE</a>, is similar to <a class="eclass" href="../../reference/structures/list/sequence.html">SEQUENCE</a>
-        but describes infinite rather than finite sequences.</p>
-        <h2>IMPLEMENTATIONS</h2>
-        <p>We have by now seen the concepts underlying the linear structures of the Base libraries,
-        especially lists and circular chains. Let us look at the techniques used to
-        implement them.</p>
-        <h3>Linked and arrayed implementations</h3>
-        <p>Most of the implementations belong to one of four general categories, better described<br>
-        as two categories with two subcategories each:</p>
-        <ul>
-          <li>Linked implementations, which may be one-way or two-way.</li>
-        	<li>Arrayed implementations, which may be resizable or fixed.</li>
-        </ul>
-        <p>A linked implementation uses linked cells, each containing an item and a reference
-        to the next cell. One-way structures are described by classes whose names begin with
-        LINKED_, for example <a class="eclass" href="../../reference/structures/list/linked_list_chart.html">LINKED_LIST</a>. Two-way structures use cells which, in
-        addition to the reference to the next cell, also include a reference to the previous one.
-        Their names begin with TWO_WAY_.<br>
-        An arrayed implementation uses an array to represent a linear structure. If the array
-        is resizable, the corresponding class name begins with ARRAYED_, for example<br>
-        <a class="eclass" href="../../reference/structures/list/arrayed_list_chart.html">ARRAYED_LIST</a>; if not, the prefix is FIXED_.</p>
-        <h3>Linked structures</h3>
-        <p>A linked structure requires two classes: one, such as <a class="eclass" href="../../reference/structures/list/linked_list_chart.html">LINKED_LIST</a>, describes the list
-        proper; the other, such as <a class="eclass" href="../../reference/structures/list/linkable_chart.html">LINKABLE</a>, describes the individual list cells. The figure
-        should help understand the difference; it describes a linked list, but the implementation
-        of linked circular chains is similar.<p>
-        <img border="0" src="linked_list.png"></p>
-        <p class="figuretitle">fig.3: Linked list and linked cells</p>
-        <p>
-        The instance of type <a class="eclass" href="../../reference/structures/list/linked_list_chart.html">LINKED_LIST</a> shown at the top contains general information
-        about the list, such as the number of items (<a CLASS="efeature" HREF="../../reference/structures/list/linked_list.html#f_count">count</a>) and a reference to the first element
-        (<a CLASS="efeature" HREF="../../reference/structures/list/linked_list.html#f_first">first</a>). Because lists are active structures with a notion of current position,
-        there is also a reference active to the cell at the current position. An entity declared as<br>
-        <code>
-        <SPAN CLASS="elocal">my_list</SPAN><SPAN CLASS="esymbol">:</SPAN> <a class="eclass" href="../../reference/structures/list/linked_list_chart.html">LINKED_LIST</a>
-        <SPAN CLASS="esymbol">[</SPAN><SPAN CLASS="eclass">SOME_TYPE</SPAN><SPAN CLASS="esymbol">]</SPAN>
-        </code><br>
-        will have as its run-time value (if not void) a reference to such an object, which is really
-        a list header. The actual list content is given by the <a class="eclass" href="../../reference/structures/list/linkable_chart.html">LINKABLE</a>
-        instances, each of which contains a value of type <SPAN CLASS="eclass">SOME_TYPE</SPAN> and a reference to the next item, called
-        <a CLASS="efeature" HREF="../../reference/structures/list/linked_list.html#f_right">right</a>.<br>
-        Clearly, a header of type <a class="eclass" href="../../reference/structures/list/linked_list_chart.html">LINKED_LIST</a>
-        <SPAN CLASS="esymbol">[</SPAN><SPAN CLASS="eclass">SOME_TYPE</SPAN><SPAN CLASS="esymbol">]</SPAN> will be associated with cells of type <a class="eclass" href="../../reference/structures/list/linkable.html">LINKABLE</a>
-        <SPAN CLASS="esymbol">[</SPAN><SPAN CLASS="eclass">SOME_TYPE</SPAN><SPAN CLASS="esymbol">]</SPAN> for the same actual generic parameter <SPAN CLASS="eclass">SOME_TYPE</SPAN>.<br>
-        Features such as <a CLASS="efeature" HREF="../../reference/structures/list/linked_list.html#f_active">active</a>
-        and <a CLASS="efeature" HREF="../../reference/structures/list/linked_list.html#f_first">first</a>
-        are used only for the implementation; they are not exported, and so you will not find them in the flat-short specifications,
-        although the figures show them to illustrate the representation technique.<br>
-        A similar implementation is used for two-way-linked structures such as two-way
-        lists and two-way circular chains.</p>
-        <p>
-        <img border="0" src="two_way_list.png"></p>
-        <p class="figuretitle">fig.4: Two way linked list</p>
-        <h3>
- Linked cells</h3>
-        <p>
-    The classes describing list cells are descendants of a deferred class called
-    <a class="eclass" href="../../reference/structures/list/cell_chart.html">CELL</a>, whose
-    features are:
-        <ul>
-          <li><a CLASS="efeature" HREF="../../reference/structures/list/cell.html#f_item">item</a>, the contents of the cell.</li>
-   	 		<li><a CLASS="efeature" HREF="../../reference/structures/list/cell.html#f_put">put</a>
-   	 		<SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">v</SPAN><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="ekeyword">like</SPAN> <SPAN CLASS="efeature">item</SPAN><SPAN CLASS="esymbol">)</SPAN>, which replaces the contents of the cell by a new value.
-        </ul>
-        <p>
-    Class <a class="eclass" href="../../reference/structures/list/linkable_chart.html">LINKABLE</a>
-        is an effective descendant of <a class="eclass" href="../../reference/structures/list/cell_chart.html">CELL</a>, used for one-way linked
-        structures. It introduces features right, a reference to another cell to which the current<br>
-    cell will be linked. Two-way linked structures use <a class="eclass" href="../../reference/structures/list/bi_linkable_chart.html">BI_LINKABLE</a>, an heir of <a class="eclass" href="../../reference/structures/list/linkable.html">LINKABLE</a>
-        which to the above features adds left, a reference to the preceding cell in the structure.</p>
-    <p CLASS="warning"><b>Caution</b>:
-    Do not confuse the item feature of <a class="eclass" href="../../reference/structures/list/cell_chart.html">CELL</a>
-    and its descendants, such as <a class="eclass" href="../../reference/structures/list/linkable_chart.html">LINKABLE</a>,
-    with the item feature of the classes describing linear structures, such as <a class="eclass" href="../../reference/structures/list/linked_list_chart.html">LINKED_LIST</a>.
-    For a linked list, item returns the item at cursor position.</p>
-    <p>It may be implemented as<br>
-    <CODE>
-    <SPAN CLASS="efeature">item</SPAN><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="eclass">G</SPAN> <SPAN CLASS="ekeyword">is</SPAN><br>
-    &nbsp;&nbsp;&nbsp;<SPAN CLASS="ecomment">-- Current item</SPAN><br>
-    <SPAN CLASS="ekeyword">do</SPAN><br>
-    &nbsp;&nbsp;&nbsp;<SPAN CLASS="ekeyword">Result</SPAN> <SPAN CLASS="esymbol">:=</SPAN> <SPAN CLASS="efeature">active</SPAN><SPAN CLASS="esymbol">.</SPAN><SPAN CLASS="efeature">item</SPAN><br>
-    <SPAN CLASS="ekeyword">end</SPAN><br>
-    </CODE>
-    <br>
-    using the item feature of <a class="eclass" href="../../reference/structures/list/linkable_chart.html">LINKABLE</a>, applied to <a CLASS="efeature" HREF="../../reference/structures/list/linked_list.html#f_active">active</a>.
-    <h3>One-way and two-way linked chains</h3>
-        <p>
-    If you look at the interfaces of one-way and two-way linked structures, you will notice
-        that they are almost identical. This is because it is possible to implement features such
-        as back for one-way structures such as described by <a class="eclass" href="../../reference/structures/list/linked_list_chart.html">LINKED_LIST</a>
-        and <a class="eclass" href="../../reference/structures/list/linked_circular_chart.html">LINKED_CIRCULAR</a>. A simple implementation of back stores away a
-        reference to the current active item, executes start, and then performs forth until the item to the right of the
-        cursor position is the previous active.<br>
-    Although correct, such an implementation is of course rather inefficient since it
-        requires a traversal of the list. In terms of algorithmic complexity, it is in O (count),
-    meaning that its execution time is on the average proportional to the number of items in
-    the structure. In contrast, forth is O (1), that is to say, takes an execution time bounded
-    by a constant.
-        <p CLASS="warning">
-    <b>Caution</b>: As a consequence, you should not use one-way linked structures if you need to
-    execute more than occasional back operations (and other operations requiring access to
-    previous items, such as <a class="efeature" href="../../reference/structures/list/linked_list.html#f_remove_left">remove_left</A>).
-    <p>Two-way linked structures, such as those
-        described by <a class="eclass" href="../../reference/structures/list/two_way_list_chart.html">TWO_WAY_LIST</a> and
-        <a class="eclass" href="../../reference/structures/list/two_way_circular_chart.html">TWO_WAY_CIRCULAR</a>, treat the two directions
-        symmetrically, so that back will be just as efficient as forth. Hence the following
-        important advice: If you need to traverse a linked structure both ways, not just left to right, use
-        the <SPAN CLASS="eclass">TWO_WAY_</SPAN> classes, not the <SPAN CLASS="eclass">LINKED_</SPAN> versions. The
-        <SPAN CLASS="eclass">TWO_WAY_</SPAN> structures will take up more space, since they use
-        <a class="eclass" href="../../reference/structures/list/bi_linkable_chart.html">BI_LINKABLE</a>
-        rather than <a class="eclass" href="../../reference/structures/list/linkable_chart.html">LINKABLE</a>
-        cells, but for most applications this space penalty is justified by the considerable gains in time that will result if right-to-left operations are frequently
-        needed.
-        <h3>
-    Arrayed chains</h3>
-        <p>
-    Arrayed structures as described by <a class="eclass" href="../../reference/structures/list/arrayed_list_chart.html">ARRAYED_LIST</a>,
-        <a class="eclass" href="../../reference/structures/list/fixed_list_chart.html">FIXED_LIST</a> and
-        <a class="eclass" href="../../reference/structures/list/arrayed_circular_chart.html">ARRAYED_CIRCULAR</a>
-        use arrays for their implementations. A list or circular chain of count items
-    may be stored in positions 1 to count of an array of capacity items, where capacity
-    &gt;= count.<br>
-    An instance of <a class="eclass" href="../../reference/structures/list/fixed_list_chart.html">FIXED_LIST</a>, as the name suggests, has a fixed number of items. In
-    particular:
-        <ul>
-          <li>Query <a class="efeature" href="../../reference/structures/list/fixed_list.html#f_extendible">extendible</a> has value false for <a class="eclass" href="../../reference/structures/list/fixed_list_chart.html">FIXED_LIST</a>: you may replace existing
-            items, but not add any, even at the end. A <a class="eclass" href="../../reference/structures/list/fixed_list_chart.html">FIXED_LIST</a>
-            is created with a certain
-            number of items and retains that number.</li>
-          <li>As a result, <a class="eclass" href="../../reference/structures/list/fixed_list_chart.html">FIXED_LIST</a>
-            joins the deferred feature <a class="efeature" href="../../reference/structures/list/list.html#f_count">count</a> of <a class="eclass" href="../../reference/structures/list/list_chart.html">LIST</a>
-            with the
-            feature <a class="eclass" href="../../reference/kernel/array.html#f_count">count</a> of <a class="eclass" href="../../reference/kernel/array_chart.html">ARRAY</a>, which satisfies the property <a class="eclass" href="../../reference/kernel/array.html#f_count">count</a>
-            = capacity.</li>
-          <li>Query <a class="efeature" href="../../reference/structures/list/fixed_list.html#f_prunable">prunable</a> has value false too: it is not possible to remove an item from a
-            fixed list.</li>
-        </ul>
-        <p>In contrast, <a class="eclass" href="../../reference/structures/list/arrayed_list_chart.html">ARRAYED_LIST</a>
-        has almost the same interface as <a class="eclass" href="../../reference/structures/list/linked_list_chart.html">LINKED_LIST</a>.
-        In particular, it is possible to add items at the end using procedure extend; if the call causes
-        the list to grow beyond the current array’s capacity, it will trigger a resizing. This is
-        achieved by using the procedure force of class ARRAY to implement extend.
-        <a class="eclass" href="../../reference/structures/list/arrayed_list_chart.html">ARRAYED_LIST</a> even has the insertion procedures (<a class="efeature" href="../../reference/structures/list/arrayed_list.html#f_put_front">put_front</a>,
-        <a class="efeature" href="../../reference/structures/list/arrayed_list.html#f_put_left">put_left</a>,
-        <a class="efeature" href="../../reference/structures/list/arrayed_list.html#f_put_right">put_right</a>)
-        and removal procedures (<a class="efeature" href="../../reference/structures/list/arrayed_list.html#f_prune">prune</a>,
-        <a class="efeature" href="../../reference/structures/list/arrayed_list.html#f_remove">remove</a>,
-        <a class="efeature" href="../../reference/structures/list/arrayed_list.html#f_remove_left">remove_left</a>,
-        <a class="efeature" href="../../reference/structures/list/arrayed_list.html#f_remove_right">remove_right</a>) that apply to
-        arbitrary positions and appear in the linked implementations. These procedures,
-        however, are rather inefficient, since they usually require moving a whole set of array
-        items, an O (<a class="efeature" href="../../reference/structures/list/arrayed_list.html#f_count">count</a>) operation.
-        (Procedure <a class="efeature" href="../../reference/structures/list/arrayed_list.html#f_extend">extend</a>
-        does not suffer from this problem,
-        since it is easy to add an item to the end of an array, especially if there is still room so
-        that no resizing is necessary.)</p>
-        <p class="warning"><b>Caution</b>:
-        The situation of these features in <a class="eclass" href="../../reference/structures/list/arrayed_list_chart.html">ARRAYED_LIST</a>
-        is similar to the situation of <a class="efeature" href="../../reference/structures/list/linked_list.html#f_back">back</a>
-        in classes describing one-way linked structures: it is convenient to include them because they may be needed once in a while
-        and an implementation exists; but using them more than occasionally may result in serious inefficiencies. If you do need to
-        perform arbitrary insertions and removal, use linked structures, not arrayed ones.</p>
-        <p>Arrayed structures, however, use up less space than linked representations. So they
-        are appropriate for chains on which, except possibly for insertions at the end, few
-        insertion and removal operations or none at all are expected after creation.
-        <a class="eclass" href="../../reference/structures/list/fixed_list_chart.html">FIXED_LIST</a>
-        offers few advantages over <a class="eclass" href="../../reference/structures/list/arrayed_list_chart.html">ARRAYED_LIST</a>.
-        <a class="eclass" href="../../reference/structures/list/fixed_list_chart.html">FIXED_LIST</a> may be useful,
-        however, for cases in which the fixed number of items is part of
-        the specification, and any attempt to add more items must be treated as an error.
-        For circular chains only one variant is available,
-        <a class="eclass" href="../../reference/structures/list/arrayed_circular_chart.html">ARRAYED_CIRCULAR</a>, although
-        writing a <span class="eclass">FIXED_</SPAN> version would be a simple exercise.</p>
-        <h3>Multi-arrayed lists</h3>
-        <p>For lists one more variant is available, combining some of the advantages of arrayed
-        and linked implementations:
-        <a class="eclass" href="../../reference/structures/list/multi_array_list_chart.html">MULTI_ARRAY_LIST</a>. With this implementation a list is<br>
-        divided into a number of blocks. Each block is an array, but the successive arrays are
-        linked.</p>
-        <h2>SORTED LINEAR STRUCTURES</h2>
-        <p>The class <a class="eclass" href="../../reference/structures/sort/comparable_struct_chart.html">COMPARABLE_STRUCT</a>, an heir of
-        <a class="eclass" href="../../reference/structures/traversing/bilinear_chart.html">BILINEAR</a>, is declared as<br>
-        <code>
-        <SPAN CLASS="ekeyword">deferred class</SPAN><br>
-        &nbsp;&nbsp; <a class="eclass" href="../../reference/structures/sort/comparable_struct_chart.html">COMPARABLE_STRUCT</a>
-        <SPAN CLASS="esymbol">[</SPAN><SPAN CLASS="eclass">G</SPAN> <SPAN CLASS="ekeyword">-></SPAN>
-        <a class="eclass" href="../../reference/kernel/comparable_chart.html">COMPARABLE</a><SPAN CLASS="esymbol">]</SPAN><br>
-        <SPAN CLASS="ekeyword">inherit</SPAN><br>
-        &nbsp;&nbsp; <a class="eclass" href="../../reference/structures/traversing/bilinear_chart.html">BILINEAR</a><br>
-        <SPAN CLASS="ekeyword">feature</SPAN><br>
-        &nbsp;&nbsp; ...
-        </code><br>
-        <p>As indicated by the constrained generic parameter it describes bilinear structures
-        whose items may be compared by a total order relation.</p>
-        <p class="warning"><b>Caution</b>: Note that the class name, chosen for brevity’s sake, is slightly misleading: it is not the structures
-        that are comparable but their items.</p>
-        <p> <a class="eclass" href="../../reference/structures/sort/comparable_struct_chart.html">COMPARABLE_STRUCT</a>
-        introduces the features min and max, giving access to
-        the minimum and maximum elements of a structure; these are always present for a finite<br>
-        structure with a total order relation. <a class="eclass" href="../../reference/structures/sort/sorted_struct_chart.html">SORTED_STRUCT</a>, an heir of <a class="eclass" href="../../reference/structures/sort/comparable_struct_chart.html">COMPARABLE_STRUCT</a>, describes structures that
-        can be sorted; it introduces the query sorted and the command sort.<br>
-        The deferred class <a class="eclass" href="../../reference/structures/list/part_sorted_list.html">PART_SORTED_LIST</a> describes lists whose items are kept
-        ordered in a way that is compatible with a partial order relation defined on them. The<br>
-        class is declared as<br>
-        <code>
-        <SPAN CLASS="ekeyword">deferred class</SPAN><br>
-        &nbsp;&nbsp; <a class="eclass" href="../../reference/structures/list/part_sorted_list_chart.html">PART_SORTED_LIST</a>
-        <SPAN CLASS="esymbol">[</SPAN><SPAN CLASS="eclass">G</SPAN> <SPAN CLASS="ekeyword">-></SPAN>
-        <a class="eclass" href="../../reference/kernel/comparable_chart.html">COMPARABLE</a><SPAN CLASS="esymbol">]</SPAN>...</code><br>
-        <p>An implementation based on two-way linked lists is available through the effective
-        heir <a class="eclass" href="../../reference/structures/list/sorted_two_way_list_chart.html">SORTED_TWO_WAY_LIST</a>.<br>
-        The deferred class <a class="eclass" href="../../reference/structures/list/sorted_list_chart.html">SORTED_LIST</a>, which inherits from
-        <a class="eclass" href="../../reference/structures/list/part_sorted_list_chart.html">PART_SORTED_LIST</a>, assumes that the order relation on G is a total order. As a result, the class is able to<br>
-        introduce features min, max and median. Here too a a two-way linked list
-        implementation is available, through the effective class <a class="eclass" href="../../reference/structures/list/sorted_two_way_list_chart.html">SORTED_TWO_WAY_LIST</a></p>
+		<TABLE CLASS="HEADER" ID="Table1">
+			<TR>
+				<TD CLASS="HEADER">Eiffel ENViSioN!</TD>
+			</TR>
+			<TR>
+				<TD CLASS="SUBHEADER">EiffelBase Data Structures, Lists</TD>
+			</TR>
+		</TABLE>
+		<TABLE CLASS="FRAME">
+			<TR>
+				<TD>
+					<H1>Overview</H1>
+					
+					<P>Many applications need sequential structures, also called linear structures, in particular
+					lists and circular chains. Apart from three classes describing individual list cells, all the classes involved are
+					descendants of class <A CLASS="eclass" href="../../reference/structures/traversing/linear_chart.html">LINEAR</A>, one of the deferred classes describing general traversal
+					properties and introduced in the chapter that described the general data structure
+					taxonomy. More precisely, all but one of the classes of interest for the present
+					discussion are descendants, direct or indirect, from a class called <A CLASS="eclass" href="../../reference/structures/list/chain_chart.html"> CHAIN</A> which
+					describes general sequential structures possessing a cursor as well as insertion
+					properties. The exception is class <A CLASS="eclass" href="../../reference/support/countable_sequence_chart.html">COUNTABLE_SEQUENCE</A>, which describes infinite
+					structures; all the others describe finite structures.<BR>
+					
+					<A CLASS="eclass" href="../../reference/structures/list/chain_chart.html">CHAIN</A> is an heir of
+					<A CLASS="eclass" href="../../reference/structures/list/sequence_chart.html">SEQUENCE</A>, which describes a more general notion of
+					sequence. <A CLASS="eclass" href="../../reference/structures/list/sequence_chart.html">SEQUENCE</A>
+					is a descendant of <A CLASS="eclass" href="../../reference/structures/traversing/linear_chart.html">LINEAR</A>.
+					There are two main categories of sequential structures: some, called circular chains,
+					are cyclic; others, called lists, are not. Another distinction exists between dynamic
+					structures, which may be extended at will, and fixed ones, which have a bounded
+					capacity.<BR>
+					
+					In all of the structures under review you may insert two or more occurrences of a
+					given item in such a way that the occurrences are distinguishable. In other words, the
+					structures are bags rather than just sets, although it is possible to use them to implement
+					sets.</P>
+					
+					<H1>Higher Level Traversal Classes</H1>
+					
+					<P>The list and chain classes are characterized, for their traversal properties, as being linear
+					and, more precisely, bilinear. In the traversal hierarchy, the relevant deferred classes
+					are <A CLASS="eclass" href="../../reference/structures/traversing/linear_chart.html">LINEAR</A> and
+					<A CLASS="eclass" href="../../reference/structures/traversing/bilinear_chart.html">BILINEAR</A>, introduced in the
+					<A href="10_taxonomy.html">discussion</A> of the general taxonomy.</P>
+					
+					<H2>Linear structures</H2>
+					
+					<P><A CLASS="eclass" href="../../reference/structures/traversing/linear_chart.html">LINEAR</A>
+					describes sequential structures that may be traversed one way. It introduces in
+					particular the following features, illustrated on the figure below:</P>
+					
+					<UL>
+						<LI><A CLASS="efeature" href="../../reference/structures/traversing/linear.html#f_after">after</A>, a boolean-valued query which determines whether you have moved past
+						the last position (a more precise specification is given below).</LI>
+						
+						<LI><A CLASS="efeature" href="../../reference/structures/traversing/linear.html#f_off">off</A>, a boolean-valued query which is false if and only if there is no item at the
+							current position; for <A class="eclass" href="../../reference/structures/traversing/linear_chart.html">LINEAR</A>
+							this is the same as:<BR>
+							<CODE>
+							<A CLASS="efeature" href="../../reference/structures/traversing/linear.html#f_is_empty">is_empty</A>
+							<A CLASS="efeature" href="../../reference/kernel/boolean.html#f__infix_and">and</A>
+							<A CLASS="efeature" href="../../reference/kernel/boolean.html#f__prefix_not">not</A>
+							<A CLASS="efeature" href="../../reference/structures/traversing/linear.html#f_after">after</A>
+							</CODE></LI>
+						<LI><A CLASS="efeature" href="../../reference/structures/traversing/linear.html#item">item</A>, a query which returns the item at the current position - provided of course
+						there is one, as expressed by the precondition:<BR>
+						<CODE>
+						<A CLASS="efeature" href="../../reference/kernel/boolean.html#f__prefix_not">not</A>
+						<A CLASS="efeature" href="../../reference/structures/traversing/linear.html#f_off">off</A>
+						</CODE></LI>
+						<LI><A CLASS="efeature" href="../../reference/structures/traversing/linear.html#f_start">start</A>, a command to move to the first position if any (if
+						<A CLASS="efeature" href="../../reference/structures/traversing/linear.html#f_is_empty">is_empty</A>
+						is true the command has no effect).</LI>
+						<LI><A CLASS="efeature" href="../../reference/structures/traversing/linear.html#f_forth">forth</A>, a command to advance by one position; the precondition is not after.</LI>
+						<LI><A CLASS="efeature" href="../../reference/structures/traversing/linear.html#f_finish">finish</A>, a command to move to the last position; the precondition is:<BR>
+						<CODE>
+						<A CLASS="efeature" href="../../reference/kernel/boolean.html#f__prefix_not">not</A>
+						<A CLASS="efeature" href="../../reference/structures/traversing/linear.html#f_is_empty">is_empty</A>.
+						</CODE></LI>
+					</UL>
+					
+					<IMG src="linear.png"/>
+					
+					<P class="figuretitle">fig.1: Linear Structure</P>
+					
+					<P>
+					There is also a procedure <A CLASS="efeature" href="../../reference/structures/traversing/linear.html#f_search"> search</A> with one argument, which determines whether the
+					value of that argument appears in the structure at or after the current position, and if not
+					makes <A CLASS="efeature" href="../../reference/structures/traversing/linear.html#f_after">after</A> become true. This procedure is internally used by the default
+					implementation of the
+					<A CLASS="efeature" href="../../reference/structures/traversing/linear.html#f_has">has</A>
+					function (the general membership test) for linear structures.
+					Like has for all containers, <A CLASS="efeature" href="../../reference/structures/traversing/linear.html#f_search"> search</A>
+					uses object or reference equality depending on the value set for <A CLASS="efeature" href="../../reference/structures/traversing/linear.html#f_object_comparison">object_comparison</A>.</P>
+					
+					<P>
+					An invariant property of <A CLASS="eclass" href="../../reference/structures/traversing/linear_chart.html">LINEAR</A>
+					structures is that the current position may go off one step past the last item if any, but no further. The precondition of <A CLASS="efeature" href="../../reference/structures/traversing/linear.html#f_forth">forth</A>
+					- not after - helps ensure this. The first item (if any) being at position 1, the maximum allowable
+					position is <A CLASS="efeature" href="../../reference/structures/traversing/linear.html#f_count">count</A> + 1, where
+					<A CLASS="efeature" href="../../reference/structures/traversing/linear.html#f_count">count</A>
+					is the number of items.</P>
+					
+					<H2>Bilinear structures</H2>
+					
+					<P>
+					<A CLASS="eclass" href="../../reference/structures/traversing/bilinear_chart.html">BILINEAR</A>
+					describes linear structures which may be traversed both ways. It inherits
+					from <A CLASS="eclass" href="../../reference/structures/traversing/linear_chart.html">LINEAR</A>
+					and extends it with two new features which ensure complete symmetry between the two directions of movement:</P>
+					
+					<UL>
+						<LI> <A CLASS="efeature" href="../../reference/structures/traversing/bilinear.html#f_before">before</A>, a boolean-valued query which determines whether you have moved to the
+						left of the first position (a more precise specification is given below).</LI>
+						
+						<LI> <A CLASS="efeature" href="../../reference/structures/traversing/bilinear.html#f_back">back</A>, a command to move backward by one position; the precondition is not
+						before.</LI>
+					</UL>
+					
+					<P>
+					For bilinear structures the position can range between 0 (not just 1) and
+					<A CLASS="efeature" href="../../reference/structures/traversing/bilinear.html#f_count">count</A>
+					+ 1. Query <A CLASS="efeature" href="../../reference/structures/traversing/bilinear.html#f_off">off</A>
+					is accordingly redefined so as to yield the value of after or before.</P>
+					
+					<IMG src="bilinear.png"/>
+					<P class="figuretitle">fig.2: Bilinear Structure</P>
+					
+					<H2>Invariant properties for after, before and off</H2>
+					
+					<P>
+					The redefinition of <A CLASS="efeature" href="../../reference/structures/traversing/bilinear.html#f_off">off</A>
+					illustrates a general methodological advice about invariants: be careful about not over-constraining the invariant by including properties that may be
+					made more general in descendants. It might have been tempting to include in
+					<A CLASS="eclass" href="../../reference/structures/traversing/linear_chart.html">LINEAR</A>
+					an invariant clause of the form</P>
+					
+					<CODE>
+						<A CLASS="efeature" href="../../reference/structures/traversing/bilinear.html#f_off">off</A>
+						<SPAN CLASS=".esymbol">=</SPAN>
+						<A CLASS="efeature" href="../../reference/structures/traversing/bilinear.html#f_is_empty">is_empty</A>
+						<A CLASS="efeature" href="../../reference/kernel/boolean.html#f__infix_or">or</A>
+						<A CLASS="efeature" href="../../reference/structures/traversing/bilinear.html#f_after">after</A>
+					</CODE>
+					
+					<P>This property, however, would be too constraining. More precisely, it is always true
+					that the right-hand side implies the left-hand-side: if a linear structure is either empty or
+					after, then it is off. But the converse is not true, since certain kinds of linear structure,
+					for example bilinear ones, may be off but neither empty nor after.<BR>
+					
+					The actual invariant for class <A CLASS="eclass" href="../../reference/structures/traversing/bilinear_chart.html">BILINEAR</A>
+					is obtained in three stages. In class <A CLASS="eclass" href="../../reference/structures/traversing/bilinear_chart.html">TRAVERSABLE</A>
+					the feature off is deferred and a basic property of that feature is expressed by the invariant clause</P>
+					
+					<CODE>
+						<SPAN CLASS="etag">empty_constraint</SPAN><SPAN CLASS="esymbol">:</SPAN>
+						<A CLASS="efeature" href="../../reference/structures/traversing/bilinear.html#f_is_empty">is_empty</A>
+						<A CLASS="efeature" href="../../reference/kernel/boolean.html#f__infix_implies">implies</A>
+						<A CLASS="efeature" href="../../reference/structures/traversing/bilinear.html#f_off">off</A>
+					</CODE>
+					
+					<P>In
+					<A CLASS="eclass" href="../../reference/structures/traversing/linear_chart.html">LINEAR</A>, feature
+					<A CLASS="efeature" href="../../reference/structures/traversing/linear.html#f_off">off</A>
+					is effected through an implementation which returns the
+					value of the expression <A CLASS="efeature" href="../../reference/structures/traversing/bilinear.html#f_is_empty">is_empty</A>
+					or <A CLASS="efeature" href="../../reference/structures/traversing/bilinear.html#f_after">after</A>. The class adds an invariant clause which,
+					however, says less than the implementation to leave some room for variation:</P>
+					
+					CODE>
+						<SPAN CLASS="etag">after_constraint</SPAN><SPAN CLASS="esymbol">:</SPAN>
+						<A CLASS="efeature" href="../../reference/structures/traversing/bilinear.html#f_after">after</A>
+						<A CLASS="efeature" href="../../reference/kernel/boolean.html#f__infix_implies">implies</A>
+						<A CLASS="efeature" href="../../reference/structures/traversing/bilinear.html#f_off">off</A>
+					</CODE>
+					
+					<P>Finally <A CLASS="eclass" href="../../reference/structures/traversing/bilinear_chart.html">BILINEAR</A>, an heir of
+					<A CLASS="eclass" href="../../reference/structures/traversing/linear_chart.html">LINEAR</A>, redefines
+					<A CLASS="efeature" href="../../reference/structures/traversing/linear.html#f_off">off</A>
+					to return the value of the expression</P>
+					
+					<CODE>
+						<A CLASS="efeature" href="../../reference/structures/traversing/bilinear.html#f_before">before</A>
+						<A CLASS="efeature" href="../../reference/kernel/boolean.html#f__infix_or">or</A>
+						<A CLASS="efeature" href="../../reference/structures/traversing/bilinear.html#f_after">after</A>
+					</CODE>
+					
+					<P>and adds the invariant clause</P>
+					
+					<CODE>
+						<SPAN CLASS="etag">before_constraint</SPAN><SPAN CLASS="esymbol">:</SPAN>
+						<A CLASS="efeature" href="../../reference/structures/traversing/bilinear.html#f_before">before</A>
+						<A CLASS="efeature" href="../../reference/kernel/boolean.html#f__infix_implies">implies</A>
+						<A CLASS="efeature" href="../../reference/structures/traversing/bilinear.html#f_off">off</A>
+					</CODE>
+					
+					<P>The new implementation of
+					<A CLASS="efeature" href="../../reference/structures/traversing/bilinear.html#f_off">off</A></P>
+						
+					<CODE>
+						<A CLASS="efeature" href="../../reference/structures/traversing/bilinear.html#f_after">after</A>
+						<A CLASS="efeature" href="../../reference/kernel/boolean.html#f__infix_or">or</A>
+						<A CLASS="efeature" href="../../reference/structures/traversing/bilinear.html#f_before">before</A>
+					</CODE>
+					
+					<P>would not guarantee the
+					invariant clause inherited from <A CLASS="eclass" href="../../reference/structures/traversing/bilinear_chart.html">TRAVERSABLE</A>
+					were it not for another clause
+					introduced in <A CLASS="eclass" href="../../reference/structures/traversing/bilinear_chart.html">BILINEAR</A>:</P>
+					
+					<CODE>
+					<SPAN CLASS="etag">empty_property</SPAN><SPAN CLASS="esymbol">:</SPAN>
+						<A CLASS="efeature" href="../../reference/structures/traversing/bilinear.html#f_is_empty">is_empty</A>
+						<A CLASS="efeature" href="../../reference/kernel/boolean.html#f__infix_implies">implies</A>
+						<SPAN CLASS="esymbol">(</SPAN><A CLASS="efeature" href="../../reference/structures/traversing/bilinear.html#f_after">after</A>
+						<A CLASS="efeature" href="../../reference/kernel/boolean.html#f__infix_or">or</A>
+						<A CLASS="efeature" href="../../reference/structures/traversing/bilinear.html#f_before">before</A><SPAN CLASS="esymbol">)</SPAN>
+					</CODE>
+					
+					<P>which indicates that an empty bilinear structure must always be after or before &#8722; but not
+					both, however, as stated by the last new clause, the reason for which is discussed in
+					detail below:</P>
+					
+					<CODE>
+						<SPAN CLASS="etag">not_both</SPAN><SPAN CLASS="esymbol">:</SPAN>
+						<A CLASS="efeature" href="../../reference/kernel/boolean.html#f__prefix_not">not</A>
+						<SPAN CLASS="esymbol">(</SPAN><A CLASS="efeature" href="../../reference/structures/traversing/bilinear.html#f_after">after</A>
+						<A CLASS="efeature" href="../../reference/kernel/boolean.html#f__infix_and">and</A>
+						<A CLASS="efeature" href="../../reference/structures/traversing/bilinear.html#f_before">before</A><SPAN CLASS="esymbol">)</SPAN>
+					</CODE>
+					
+					<P>
+					The flat-short form of <A CLASS="eclass" href="../../reference/structures/traversing/bilinear_chart.html">BILINEAR</A>
+					shows the
+					complete reconstructed invariant:</P>
+					
+					<CODE>
+						<SPAN CLASS="etag">not_both</SPAN><SPAN CLASS="esymbol">:</SPAN>
+						<A CLASS="efeature" href="../../reference/kernel/boolean.html#f__prefix_not">not</A>
+						<SPAN CLASS="esymbol">(</SPAN><A CLASS="efeature" href="../../reference/structures/traversing/bilinear.html#f_after">after</A>
+						<A CLASS="efeature" href="../../reference/kernel/boolean.html#f__infix_and">and</A>
+						<A CLASS="efeature" href="../../reference/structures/traversing/bilinear.html#f_before">before</A><SPAN CLASS="esymbol">)<BR>
+						</SPAN>
+						<SPAN CLASS="etag">empty_property</SPAN><SPAN CLASS="esymbol">:</SPAN>
+						<A CLASS="efeature" href="../../reference/structures/traversing/bilinear.html#f_is_empty">is_empty</A>
+						<A CLASS="efeature" href="../../reference/kernel/boolean.html#f__infix_implies">implies</A>
+						<SPAN CLASS="esymbol">(</SPAN><A CLASS="efeature" href="../../reference/structures/traversing/bilinear.html#f_after">after</A>
+						<A CLASS="efeature" href="../../reference/kernel/boolean.html#f__infix_or">or</A>
+						<A CLASS="efeature" href="../../reference/structures/traversing/bilinear.html#f_before">before</A><SPAN CLASS="esymbol">)</SPAN>
+						<BR>
+						<SPAN CLASS="etag">before_constraint</SPAN><SPAN CLASS="esymbol">:</SPAN>
+						<A CLASS="efeature" href="../../reference/structures/traversing/bilinear.html#f_before">before</A>
+						<A CLASS="efeature" href="../../reference/kernel/boolean.html#f__infix_implies">implies</A>
+						<A CLASS="efeature" href="../../reference/structures/traversing/bilinear.html#f_off">off</A>
+						<BR>
+						<SPAN CLASS="etag">after_constraint</SPAN><SPAN CLASS="esymbol">:</SPAN>
+						<A CLASS="efeature" href="../../reference/structures/traversing/bilinear.html#f_after">after</A>
+						<A CLASS="efeature" href="../../reference/kernel/boolean.html#f__infix_implies">implies</A>
+						<A CLASS="efeature" href="../../reference/structures/traversing/bilinear.html#f_off">off</A>
+						<BR>
+						<SPAN CLASS="etag">empty_constraint</SPAN><SPAN CLASS="esymbol">:</SPAN>
+						<A CLASS="efeature" href="../../reference/structures/traversing/bilinear.html#f_is_empty">is_empty</A>
+						<A CLASS="efeature" href="../../reference/kernel/boolean.html#f__infix_implies">implies</A>
+						<A CLASS="efeature" href="../../reference/structures/traversing/bilinear.html#f_off">off</A>
+					</CODE>
+					
+					<H2> Iteration patterns</H2>
+					
+					<P>For a more general form of
+					this scheme, applicable to
+					circular chains as well as
+					other linear structures,
+					replace <A CLASS="efeature" href="../../reference/structures/traversing/bilinear.html#f_off">off</A>
+					by <A CLASS="efeature" href="../../reference/structures/traversing/bilinear.html#f_exhausted">exhausted</A>.
+					With the features shown above, a typical iteration mechanism on a non-empty linear
+					structure lin is of the form:</P>
+					
+					<CODE>
+						<SPAN CLASS="ekeyword">from</SPAN><BR>&nbsp;&nbsp;&nbsp;<SPAN CLASS="elocal">lin</SPAN><SPAN CLASS="esymbol">.</SPAN><A CLASS="efeature" href="../../reference/structures/traversing/bilinear.html#f_start">start</A><BR>
+						<SPAN CLASS="elocal">&nbsp;&nbsp;&nbsp;some_optional_initializing_operation</SPAN>
+						<SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">lin</SPAN><SPAN CLASS="esymbol">)</SPAN><BR>
+						<SPAN CLASS="ekeyword">until</SPAN><BR>
+						&nbsp;&nbsp;&nbsp;<SPAN CLASS="elocal">lin</SPAN><SPAN CLASS="esymbol">.</SPAN><A CLASS="efeature" href="../../reference/structures/traversing/bilinear.html#f_off">off</A><BR>
+						<SPAN CLASS="ekeyword">loop</SPAN><BR>
+						&nbsp;&nbsp;&nbsp;<SPAN CLASS="elocal">lin</SPAN><SPAN CLASS="esymbol">.</SPAN><SPAN CLASS="elocal">some_action</SPAN>
+						<SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">lin</SPAN><SPAN CLASS="esymbol">.</SPAN><A CLASS="efeature" href="../../reference/structures/traversing/bilinear.html#f_item">item</A><SPAN CLASS="esymbol">)</SPAN><BR>
+						&nbsp;&nbsp;&nbsp;<SPAN CLASS="elocal">lin</SPAN><SPAN CLASS="esymbol">.</SPAN><A CLASS="efeature" href="../../reference/structures/traversing/bilinear.html#f_forth">forth</A><BR>
+						<SPAN CLASS="ekeyword">end</SPAN>
+					</CODE>
+					
+					<P>The value of
+					<SPAN CLASS="elocal">lin</SPAN><SPAN CLASS="esymbol">.</SPAN><A CLASS="efeature" href="../../reference/structures/traversing/bilinear.html#f_off">off</A>
+					is always true for an empty structure, so in this case the loop will, correctly, execute only its initialization actions if present.<BR>
+					
+					This is a very common pattern, which you will find in the library classes themselves
+					(for example <A CLASS="efeature" href="../../reference/structures/traversing/bilinear.html#f_has">has</A>
+					is implemented in this way) and many application clients. The iterator classes corresponding to linear structures (<A class="eclass" href="../../reference/structures/iteration/linear_iterator_chart.html">LINEAR_ITERATOR</A>,
+					<A class="eclass" href="../../reference/structures/iteration/two_way_chain_iterator_chart.html">TWO_WAY_CHAIN_ITERATOR</A>) turn this pattern and several related ones into actual
+					reusable routines.<BR>
+					
+					For bilinear structures there is another traversal mechanism going backward rather
+					than forward; it is the same as above except that <A CLASS="efeature" href="../../reference/structures/traversing/bilinear.html#f_finish">finish</A>
+					replaces <A CLASS="efeature" href="../../reference/structures/traversing/bilinear.html#f_start">start</A>
+					and <A CLASS="efeature" href="../../reference/structures/traversing/bilinear.html#f_back">back</A>
+					replaces <A CLASS="efeature" href="../../reference/structures/traversing/bilinear.html#f_forth">finish</A>. The exit condition remains
+					<A CLASS="efeature" href="../../reference/structures/traversing/bilinear.html#f_off">off</A>
+					since <A CLASS="efeature" href="../../reference/structures/traversing/bilinear.html#f_before">before</A>, like
+					<A CLASS="efeature" href="../../reference/structures/traversing/bilinear.html#f_after">after</A>, implies
+					<A CLASS="efeature" href="../../reference/structures/traversing/bilinear.html#f_off">off</A>.</P>
+					
+					<H2>A precise view of after and before</H2>
+					
+					<P>
+					Getting the specification of <A CLASS="efeature" href="../../reference/structures/traversing/bilinear.html#f_after">after</A>
+					and <A CLASS="efeature" href="../../reference/structures/traversing/bilinear.html#f_before">before</A>
+					right, so that it will handle all cases properly, requires some care.<BR>
+					For every one of the structures under discussion there is a notion of current position,
+					which we may call the cursor position even though for the moment the cursor is a
+					virtual notion only. (Actual cursor objects will come later when we combine
+					<A CLASS="eclass" href="../../reference/structures/traversing/linear_chart.html">LINEAR</A>,
+					<A CLASS="eclass" href="../../reference/structures/traversing/bilinear_chart.html">BILINEAR</A>
+					and other classes from the traversal hierarchy with <A class="eclass" href="../../reference/structures/access/cursor_structure_chart.html">CURSOR_STRUCTURE</A>
+					and other classes from the collection hierarchy.) The informal definition is that
+					<A CLASS="efeature" href="../../reference/structures/traversing/bilinear.html#f_after">after</A>
+					is true if and only if the cursor - in this informal sense of a fictitious marker signaling the
+					current position - is one position after the last item, if any, and that
+					<A CLASS="efeature" href="../../reference/structures/traversing/bilinear.html#f_before">before</A>
+					is true if and only if the cursor is one position before the first item.
+					When the cursor is on any of the items, <A CLASS="efeature" href="../../reference/structures/traversing/bilinear.html#f_after">after</A>
+					and <A CLASS="efeature" href="../../reference/structures/traversing/bilinear.html#f_before">before</A>
+					are false; <A CLASS="efeature" href="../../reference/structures/traversing/bilinear.html#f_after">after</A>
+					holds when the cursor is to the right of the last item, and before when it is to the
+					left of the first item. This leaves open the question of what conventions to take for an empty structure. If
+					iteration schemes of the above type are to work, then after must be true for an empty
+					structure. For a bilinear structure, however, we should have total symmetry between the
+					two pairs of features</P>
+					
+					<UL>
+						<LI><A CLASS="efeature" href="../../reference/structures/traversing/bilinear.html#f_start">start</A>,
+							<A CLASS="efeature" href="../../reference/structures/traversing/bilinear.html#f_forth">forth</A>,
+							<A CLASS="efeature" href="../../reference/structures/traversing/bilinear.html#f_after">after</A>.</LI>
+						<LI><A CLASS="efeature" href="../../reference/structures/traversing/bilinear.html#f_finish">finish</A>,
+							<A CLASS="efeature" href="../../reference/structures/traversing/bilinear.html#f_back">back</A>,
+							<A CLASS="efeature" href="../../reference/structures/traversing/bilinear.html#f_before">before</A>.</LI>
+					</UL>
+					
+					<P>So for an empty list both <A CLASS="efeature" href="../../reference/structures/traversing/bilinear.html#f_before">before</A>
+					and <A CLASS="efeature" href="../../reference/structures/traversing/bilinear.html#f_after">after</A>
+					should be true. This scheme was used in early version of the Base libraries. It has some disadvantages, however; in particular it
+					is not compatible with the simple, symmetric properties:</P>
+					
+					<CODE>
+						<A CLASS="efeature" href="../../reference/structures/traversing/bilinear.html#f_after">after</A>
+						<SPAN CLASS="esymbol">=</SPAN> <SPAN CLASS="esymbol">(</SPAN><A CLASS="efeature" href="../../reference/structures/traversing/linear.html#f_index">index</A>
+						<SPAN CLASS="esymbol">=</SPAN>
+						<A CLASS="efeature" href="../../reference/structures/traversing/linear.html#f_count">count</A>
+						<SPAN CLASS="esymbol">+</SPAN> 1<SPAN CLASS="esymbol">)</SPAN><BR>
+						<A CLASS="efeature" href="../../reference/structures/traversing/bilinear.html#f_before">before</A>
+						<SPAN CLASS="esymbol">=</SPAN> <SPAN CLASS="esymbol">(</SPAN><A CLASS="efeature" href="../../reference/structures/traversing/linear.html#f_index">index</A>
+						<SPAN CLASS="esymbol">=</SPAN> 0<SPAN CLASS="esymbol">)</SPAN>
+					</CODE>
+					
+					<P>
+					which express elementary definitions for <A CLASS="efeature" href="../../reference/structures/traversing/bilinear.html#f_after">after</A>
+					and <A CLASS="efeature" href="../../reference/structures/traversing/bilinear.html#f_before">before</A>
+					in terms of index, the current position, and <A CLASS="efeature" href="../../reference/structures/traversing/bilinear.html#f_count">count</A>, the number of items (items being numbered from 1 to
+					<A CLASS="efeature" href="../../reference/structures/traversing/bilinear.html#f_count">count</A>). For
+					an empty structure <A CLASS="efeature" href="../../reference/structures/traversing/bilinear.html#f_count">count</A>
+					is zero, so if we want <A CLASS="efeature" href="../../reference/structures/traversing/bilinear.html#f_after">after</A>
+					and <A CLASS="efeature" href="../../reference/structures/traversing/bilinear.html#f_before">before</A>
+					to be both true in this case we have to sacrifice one of the above properties, since the first would imply index
+					to 1 and the second to 0. But again symmetry reigns supreme: we should either
+					keep both properties or renounce both. The solution was to renounce both and replace
+					them by slightly more complicated ones:</P>
+					
+					<CODE>
+						<A CLASS="efeature" href="../../reference/structures/traversing/bilinear.html#f_after">after</A>
+						<SPAN CLASS="esymbol">=</SPAN> <SPAN CLASS="esymbol">(<A class="efeature" href="../../reference/structures/traversing/linear.html#f_is_empty">is_</A></SPAN><A class="efeature" href="../../reference/structures/traversing/linear.html#f_is_empty">empty</A>
+						<A CLASS="efeature" href="../../reference/kernel/boolean.html#f__infix_or">or</A><A CLASS="efeature" href="../../reference/kernel/boolean.html#f__infix_or">
+						</A><SPAN CLASS="esymbol">(</SPAN><A CLASS="efeature" href="../../reference/structures/traversing/linear.html#f_index">index</A>
+						<SPAN CLASS="esymbol">=</SPAN>
+						<A CLASS="efeature" href="../../reference/structures/traversing/linear.html#f_count">count</A>
+						<SPAN CLASS="esymbol">+</SPAN> 1<SPAN CLASS="esymbol">))</SPAN><BR>
+						<A CLASS="efeature" href="../../reference/structures/traversing/bilinear.html#f_before">before</A>
+						<SPAN CLASS="esymbol">=</SPAN>  <SPAN CLASS="esymbol">(<A class="efeature" href="../../reference/structures/traversing/linear.html#f_is_empty">is_</A></SPAN><A class="efeature" href="../../reference/structures/traversing/linear.html#f_is_empty">empty</A>
+						<A CLASS="efeature" href="../../reference/kernel/boolean.html#f__infix_or">or</A><A CLASS="efeature" href="../../reference/kernel/boolean.html#f__infix_or">
+						</A><SPAN CLASS="esymbol">(</SPAN><A CLASS="efeature" href="../../reference/structures/traversing/linear.html#f_index">index</A>
+						<SPAN CLASS="esymbol">=</SPAN> 0<SPAN CLASS="esymbol">))</SPAN>
+					</CODE>
+					
+					<P>
+					When a structure is created, some initializations will have to be made; the default
+					initializations will usually lead to a value of 0 rather than 1 for index, although this
+					dissymetry is not apparent in the assertions. Although acceptable, this solution leads to small but unpleasant complications, in
+					particular frequent conditional instructions of the form</P>
+					
+					<CODE>
+						<SPAN CLASS="ekeyword">if</SPAN>
+						<A CLASS="efeature" href="../../reference/structures/traversing/linear.html#f_after">after</A>
+						<A CLASS="efeature" href="../../reference/kernel/boolean.html#f__infix_and">and</A>
+						<A CLASS="efeature" href="../../reference/kernel/boolean.html#f__prefix_not">not</A>
+						<A CLASS="efeature" href="../../reference/structures/traversing/linear.html#f_is_empty">is_empty</A>
+						<SPAN CLASS="ekeyword">then</SPAN>...
+					</CODE>
+					
+					<P>
+					The solution finally retained for the Base libraries uses a different technique, which
+					has turned out to be preferable. The idea is to replace the conceptual picture by
+					one in which there are always two fictitious sentinel items. The two sentinel
+					items are only present conceptually. They are of course not taken into account for the computation of
+					<A CLASS="efeature" href="../../reference/structures/traversing/bilinear.html#f_count">count</A>
+					and, although it is possible to conceive of an implementation which would actually
+					reserve space for them (for example in an array representation), none of the
+					implementations used in Base for the classes of this documentation and other descendants of
+					<A CLASS="eclass" href="../../reference/structures/traversing/linear_chart.html">LINEAR</A>
+					do. The only purpose of the sentinels is to provide two valid theoretical
+					cursor positions, which exist regardless of the number of actual (non-sentinel) items in
+					the structure.<BR>
+					The sentinel items always appear at positions 0 and <A CLASS="efeature" href="../../reference/structures/traversing/bilinear.html#f_count">count</A>
+					+ 1; this property is true even if the structure is empty of items, in which case <A CLASS="efeature" href="../../reference/structures/traversing/bilinear.html#f_count">count</A>
+					is zero. As a result, the following properties are part of the invariant:</P>
+					
+					<CODE>
+						0 <SPAN CLASS="esymbol">&lt;=</SPAN>
+						<A CLASS="efeature" href="../../reference/structures/traversing/bilinear.html#f_index">index</A><BR>
+						<A CLASS="efeature" href="../../reference/structures/traversing/bilinear.html#f_index">index</A>
+						<SPAN CLASS="esymbol">&lt;=</SPAN>
+						<A CLASS="efeature" href="../../reference/structures/traversing/bilinear.html#f_count">count</A>
+						<SPAN CLASS="esymbol">+</SPAN>
+						1<BR>
+						<A CLASS="efeature" href="../../reference/structures/traversing/bilinear.html#f_before">before</A>
+						<SPAN CLASS="esymbol">=</SPAN> <SPAN CLASS="esymbol">(</SPAN><A CLASS="efeature" href="../../reference/structures/traversing/bilinear.html#f_index">index</A>
+						<SPAN CLASS="esymbol">=</SPAN> 0<SPAN CLASS="esymbol">)</SPAN><BR>
+						<A CLASS="efeature" href="../../reference/structures/traversing/bilinear.html#f_after">after</A>
+						<SPAN CLASS="esymbol">=</SPAN>
+						(<A CLASS="efeature" href="../../reference/structures/traversing/bilinear.html#f_index">index</A>
+						<SPAN CLASS="esymbol">=</SPAN>
+						<A CLASS="efeature" href="../../reference/structures/traversing/bilinear.html#f_count">count</A>
+						<SPAN CLASS="esymbol">+</SPAN> 1<SPAN CLASS="esymbol">)</SPAN><BR>
+						<A CLASS="efeature" href="../../reference/kernel/boolean.html#f__prefix_not">not</A>
+						<SPAN CLASS="esymbol">(</SPAN><A CLASS="efeature" href="../../reference/structures/traversing/linear.html#f_after">after</A>
+						<A CLASS="efeature" href="../../reference/kernel/boolean.html#f__infix_and">and</A>
+						<A CLASS="efeature" href="../../reference/structures/traversing/bilinear.html#f_before">before</A><SPAN CLASS="esymbol">)</SPAN>
+					</CODE>
+
+					<P>
+					The last property given indicates that a structure can never be both <A CLASS="efeature" href="../../reference/structures/traversing/bilinear.html#f_after">after</A>
+					and <A CLASS="efeature" href="../../reference/structures/traversing/bilinear.html#f_before">before</A>,
+					since even in an empty structure the two sentinels are still present, with the cursor on
+					one of them. For an empty structure, index will be zero by convention, so that
+					<A CLASS="efeature" href="../../reference/structures/traversing/bilinear.html#f_before">before</A>
+					will be true and <A CLASS="efeature" href="../../reference/structures/traversing/bilinear.html#f_after">after</A>
+					false. But this property is not reflected in any of the invariant clauses.</P>
+					
+					<H2>Some lessons</H2>
+					
+					<P>This discussion has illustrated some of the important patterns of reasoning that are
+					frequently involved in serious object-oriented design. Among the lessons are four ideas
+					which you may find useful in many different cases. First, consistency is once again the central principle. Throughout the design of a
+					class library we must constantly ask ourselves:</P>
+					
+					<UL>
+						<LI>“How do I make my next design decision compatible with the previous ones?”</LI>
+						<LI>“How do I take my next design decision so that it will be easy - or at least
+							possible - to make future ones compatible with it?”</LI>
+					</UL>
+					
+					<P>Another frequent concern, partly a consequence of consistency, is
+					symmetry. To mathematicians and physicists, symmetry considerations are often important in guiding
+					the search for a solution to a problem; if the problem exhibits a certain symmetry, a
+					candidate solution will be rejected if it does not satisfy that symmetry. Such was the
+					situation here: since the structure’s specification is symmetric with respect to the two
+					possible directions of traversal, so too should the feature design be.<BR>
+					The third lesson is also well-known in mathematics and physics: the usefulness of
+					looking at limit cases. To check that a design is sound it is often useful to examine what
+					becomes of it when it is applied to extreme situations - in particular, as was done in this
+					example, empty structures.<BR>
+					Finally, the only way to make delicate design decisions is to express the issues
+					clearly through assertions, most notably invariants. To analyze the properties under
+					discussion, and weigh the various alternatives, we need the precision of mathematical
+					logic. Once again note that without assertions it would be impossible to build a good
+					library; we would have no way to know precisely what we are talking about.</P>
+					
+					<H1>Sequences And Chains</H1>
+					
+					<P>Still deferred, classes <A class="eclass" href="../../reference/structures/list/sequence_chart.html">SEQUENCE</A> and
+					<A class="eclass" href="../../reference/structures/list/chain_chart.html">CHAIN</A> provide the basis for all list and chain
+					classes, as well as for many trees and for dispensers.<BR>
+					
+					<A class="eclass" href="../../reference/structures/list/sequence_chart.html">SEQUENCE</A> is constructed with the full extent of the
+					technique described in the discussion of the taxonomy: using multiple inheritance to
+					combine one class each from the access, traversal and storage hierarchy.
+					<A class="eclass" href="../../reference/structures/list/sequence_chart.html">SEQUENCE</A> indeed has three parents:</P>
+					
+					<UL>
+						<LI><A CLASS="eclass" href="../../reference/structures/access/active_chart.html">ACTIVE</A>
+							gives the access properties. A sequence is an active structure with a
+							notion of current item. Remember that active structures are a special case of
+							bags.</LI>
+						<LI><A CLASS="eclass" href="../../reference/structures/traversing/bilinear_chart.html">BILINEAR</A>, as studied above, indicates that a sequence may be traversed both
+							ways.</LI>
+						<LI><A class="eclass" href="../../reference/structures/storage/finite_chart.html">FINITE</A>, from the storage hierarchy, indicates that the class describes finite
+							sequences. (A class <A CLASS="eclass" href="../../reference/support/countable_sequence_chart.html">COUNTABLE_SEQUENCE</A>
+							is also present, as described below.)</LI>
+					</UL>
+					
+					<P>To the features of <A CLASS="eclass" href="../../reference/structures/traversing/bilinear_chart.html">BILINEAR</A>,
+					<A class="eclass" href="../../reference/structures/list/sequence_chart.html">SEQUENCE</A> principally adds features for adding,
+					changing and removing items. A few procedures in particular serve to insert items at the
+					end:</P>
+					
+					<UL>
+						<LI><SPAN CLASS="elocal">s</SPAN><SPAN CLASS="esymbol">.</SPAN><A class="efeature" href="../../reference/structures/list/sequence.html#f_put">put</A>
+						<SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">v</SPAN><SPAN CLASS="esymbol">)</SPAN>
+						adds <SPAN CLASS="elocal">v</SPAN> at the end of a sequence <SPAN CLASS="elocal">s</SPAN>.</LI>
+						<LI><A class="efeature" href="../../reference/structures/list/sequence.html#f_extend">extend</A>
+						and
+						<A class="efeature" href="../../reference/structures/list/sequence.html#f_force">force</A>,
+						at the <A class="eclass" href="../../reference/structures/list/sequence_chart.html">SEQUENCE</A> level, do the same as
+						<A class="efeature" href="../../reference/structures/list/sequence.html#f_put">put</A>.</LI>
+						<LI><SPAN CLASS="elocal">s</SPAN><SPAN CLASS="esymbol">.</SPAN><A class="efeature" href="../../reference/structures/list/sequence.html#f_append">append</A>
+						<SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">s1</SPAN><SPAN CLASS="esymbol">)</SPAN>
+						adds to the end of <SPAN CLASS="elocal">s</SPAN> the items of <SPAN CLASS="elocal">s1</SPAN> (another sequence), preserving
+						their <SPAN CLASS="elocal">s1</SPAN> order.</LI>
+					</UL>
+					
+					<P>Other procedures work on the current position:</P>
+					
+					<UL>
+						<LI><SPAN CLASS="elocal">s</SPAN><SPAN CLASS="esymbol">.</SPAN><A class="efeature" href="../../reference/structures/list/sequence.html#f_remove">remove</A>
+						removes the item at current position.</LI>
+						<LI><SPAN CLASS="elocal">s</SPAN><SPAN CLASS="esymbol">.</SPAN><A class="efeature" href="../../reference/structures/list/sequence.html#f_replace">replace</A>
+						<SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">v</SPAN><SPAN CLASS="esymbol">)</SPAN>
+						replaces by <SPAN CLASS="elocal">v</SPAN> the item at current position.</LI>
+					</UL>
+					
+					<P><A class="eclass" href="../../reference/structures/list/sequence_chart.html">SEQUENCE</A>, however,
+					does not provide a procedure to insert an item at the current position, since not all
+					implementations of sequences support this possibility; you will find it in
+					descendants of <A class="eclass" href="../../reference/structures/list/sequence_chart.html">SEQUENCE</A>
+					seen below.<BR>
+					
+					Yet another group of features are based on the first occurrence of a certain item, or
+					on all occurrences:</P>
+					
+					<UL>
+						<LI><SPAN CLASS="elocal">s</SPAN><SPAN CLASS="esymbol">.</SPAN><A class="efeature" href="../../reference/structures/list/sequence.html#f_prune">prune</A>
+						<SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">v</SPAN><SPAN CLASS="esymbol">)</SPAN>
+						removes the first occurrence of <SPAN CLASS="elocal">v</SPAN> in <SPAN CLASS="elocal">s</SPAN>, if any.</LI>
+						<LI><SPAN CLASS="elocal">s</SPAN><SPAN CLASS="esymbol">.</SPAN><A class="efeature" href="../../reference/structures/list/sequence.html#f_prune_all">prune_all</A>
+						<SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">v</SPAN><SPAN CLASS="esymbol">)</SPAN>
+						removes all occurrences of <SPAN CLASS="elocal">v</SPAN>.</LI>
+					</UL>
+					
+					<P>These procedures have various abstract preconditions: <SPAN CLASS="elocal">s</SPAN><SPAN CLASS="esymbol">.</SPAN><A class="efeature" href="../../reference/structures/list/sequence.html#f_extendible">extendible</A>
+					for additions,
+					<SPAN CLASS="elocal">s</SPAN><SPAN CLASS="esymbol">.</SPAN><A class="efeature" href="../../reference/structures/list/sequence.html#f_writable">writable</A>
+ 					for replacements,
+ 					<SPAN CLASS="elocal">s</SPAN><SPAN CLASS="esymbol">.</SPAN><A class="efeature" href="../../reference/structures/list/sequence.html#f_prunable">prunable</A>
+					for removals. Properties <A class="efeature" href="../../reference/structures/list/sequence.html#f_extendible">extendible</A>
+					and <A class="efeature" href="../../reference/structures/list/sequence.html#f_prunable">prunable</A>
+					characterize general categories of container structures rather than individual
+					instances; for example <A class="efeature" href="../../reference/structures/list/sequence.html#f_extendible">extendible</A>
+					is always true for the “dynamic” structures seen
+					below. In contrast, <A class="efeature" href="../../reference/structures/list/sequence.html#f_writable">writable</A>
+					depends on the current status of each instance. In general <A class="efeature" href="../../reference/structures/list/sequence.html#f_writable">writable</A>
+					will be true if there is an item at the current position.</P>
+					
+					<H2>Chains</H2>
+					
+					<P>Chains are sequences with a few more properties: items may be accessed through their
+					indices, and it is possible to define cursor objects attached to individual items.<BR>
+					Class <A class="eclass" href="../../reference/structures/list/chain_chart.html">CHAIN</A> is an heir of <A class="eclass" href="../../reference/structures/list/sequence_chart.html">SEQUENCE</A>. It gets its access properties from
+					<A class="eclass" href="../../reference/structures/access/cursor_structure_chart.html">CURSOR_STRUCTURE</A>
+					(which adds the notion of cursor to the features of <A CLASS="eclass" href="../../reference/structures/access/active.html">ACTIVE</A>,
+					already present in <A class="eclass" href="../../reference/structures/list/sequence_chart.html">SEQUENCE</A>) and is also an heir of
+					<A class="eclass" href="../../reference/structures/access/indexable_chart.html">INDEXABLE</A>. This ancestry
+					implies in particular the presence of the following features:</P>
+					
+					<UL>
+						<LI><A class="efeature" href="../../reference/structures/access/cursor_structure.html#f_cursor">cursor</A>, from
+							<A class="eclass" href="../../reference/structures/access/cursor_structure_chart.html">CURSOR_STRUCTURE</A>, which makes it possible to keep a
+							reference to an item of the structure.</LI>
+						<LI><A class="efeature" href="../../reference/structures/access/table.html#f_i_th">i_th</A>
+							and <A class="efeature" href="../../reference/structures/access/table.html#f_put_i_th">put_i_th</A>
+							from <A class="eclass" href="../../reference/structures/access/table_chart.html">TABLE</A>,
+							via <A class="eclass" href="../../reference/structures/access/indexable_chart.html">INDEXABLE</A>, which make it possible to
+							access and replace the value of an item given by its integer index.</LI>
+					</UL>
+					
+					<P>These features were called item and put in <A class="eclass" href="../../reference/structures/access/table_chart.html">TABLE</A>, but are renamed here to remove the conflict
+					with homonymous features from <A class="eclass" href="../../reference/structures/list/sequence_chart.html">SEQUENCE</A>.<BR>
+					Procedure put for chains is the version obtained from <A class="eclass" href="../../reference/structures/access/cursor_structure_chart.html">CURSOR_STRUCTURE</A>,
+					which has the same effect as replace - replacing the value of the item at cursor position.
+					The put procedure from <A class="eclass" href="../../reference/structures/list/sequence_chart.html">SEQUENCE</A>
+					is renamed sequence_ put. This feature is not
+					exported by <A class="eclass" href="../../reference/structures/list/chain.html">CHAIN</A>, however, since its effect (adding an item at the end) may be
+					obtained through the simpler name extend.</P>
+					
+					<H2>Dynamic chains</H2>
+					
+					<P>By default, chains can only be extended at the end, through extend and sequence_ put.
+					Of particular interest are those chains where clients can insert and remove items at any
+					position. Such chains are said to be dynamic, and described by <A class="eclass" href="../../reference/structures/list/chain_chart.html"> CHAIN</A>’s heir
+					<A class="eclass" href="../../reference/structures/list/dynamic_chain_chart.html">DYNAMIC_CHAIN</A>. The new features are predictable:</P>
+
+					<UL>
+						<LI>Procedure <A class="efeature" href="../../reference/structures/list/dynamic_chain.html#f_put_front">put_front</A>
+							adds an item before the first. (As noted, the procedures to add an item after the last are already available in chains.)</LI>
+						<LI>Procedures <A class="efeature" href="../../reference/structures/list/dynamic_chain.html#f_put_left">put_left</A>
+							and <A class="efeature" href="../../reference/structures/list/dynamic_chain.html#f_put_right">put_right</A>
+							add an item at the left and right of the cursor position.</LI>
+						<LI>Procedures <A class="efeature" href="../../reference/structures/list/dynamic_chain.html#f_remove_left">remove_left</A>
+							and <A class="efeature" href="../../reference/structures/list/dynamic_chain.html#f_remove_right">remove_right</A>
+							remove an item at the left and right or the cursor position.</LI>
+						<LI>Procedures <A class="efeature" href="../../reference/structures/list/dynamic_chain.html#f_merge_left">merge_left</A>
+							and <A class="efeature" href="../../reference/structures/list/dynamic_chain.html#f_merge_right">merge_right</A>
+							are similar to <A class="efeature" href="../../reference/structures/list/dynamic_chain.html#f_put_left">put_left</A>
+							and <A class="efeature" href="../../reference/structures/list/dynamic_chain.html#f_put_right">put_right</A>
+							but insert another dynamic chain rather than a single item. As the word “merge”
+							suggests, the merged structure, passed as argument, does not survive the process;
+							it is emptied of its items. To preserve it, perform a clone or copy before the merge
+							operation.</LI>
+					</UL>
+					
+					<P>The class also provides implementations of <A class="efeature" href="../../reference/structures/list/dynamic_chain.html#f_prune">prune</A>,
+					<A class="efeature" href="../../reference/structures/list/dynamic_chain.html#f_prune_all">prune_all</A>
+					and <A class="efeature" href="../../reference/structures/list/dynamic_chain.html#f_wipe_out">wipe_out</A>
+					from <A href="../../reference/structures/access/collection_chart.html">COLLECTION</A>. To make these implementations useful, it defines queries
+					<A class="efeature" href="../../reference/structures/list/dynamic_chain.html#f_extendible">extendible</A>
+					and <A class="efeature" href="../../reference/structures/list/dynamic_chain.html#f_prunable">prunable</A>
+					so that they return the value true.</P>
+					
+					<H1>Lists And Circular Structures</H1>
+					
+					<P>A chain is a finite sequential structure. This property means that items are arranged in a
+					linear order and may be traversed from the first to the last. To do this you may use a
+					loop of the form shown above, based on procedures <A CLASS="efeature" href="../../reference/structures/traversing/bilinear.html#f_start">start</A>
+					and <A CLASS="efeature" href="../../reference/structures/traversing/bilinear.html#f_forth">forth</A>.<BR>
+					This property leaves room for several variants. In particular chains may be straight
+					or circular.</P>
+					
+					<UL>
+						<LI>
+						A straight chain, which from now on will be called a list, has a beginning and an
+						end.</LI>
+						<LI>
+						A circular chain, as represented by class <A class="eclass" href="../../reference/structures/list/circular_chart.html">CIRCULAR</A>
+						and its descendants, has a much more flexible notion of first item. It is organized so that every item has a
+						successor.</LI>
+					</UL>
+					
+					<P>This representation is conceptual only; in fact the implementations of circular
+					chains found in the Base libraries are based on lists, implemented in one of the ways
+					described below (in particular linked and arrayed).<BR>
+					
+					The major originality of circular chains is that unless the structure is empty
+					procedure <A CLASS="efeature" href="../../reference/structures/list/circular.html#f_forth">forth</A>
+					is always applicable: it will cycle past the last item, coming back to the<BR>
+					
+					first. The symmetric property applies to <A CLASS="efeature" href="../../reference/structures/list/circular.html#f_back">back</A>.
+					The cyclic nature of <A CLASS="efeature" href="../../reference/structures/list/circular.html#f_forth">forth</A>
+					and <A CLASS="efeature" href="../../reference/structures/list/circular.html#f_back">back</A>
+					for circular chains is expressed precisely by the assertions. The version of
+					<A class="efeature" href="../../reference/structures/list/chain.html#f_forth">forth</A>
+					for class
+					<A class="eclass" href="../../reference/structures/list/chain_chart.html">CHAIN</A>, which comes from
+					<A CLASS="eclass" href="../../reference/structures/traversing/linear_chart.html">LINEAR</A>,
+					has precondition</P>
+					
+					<CODE>
+						<A CLASS="efeature" href="../../reference/kernel/boolean.html#f__prefix_not">not</A>
+						<A CLASS="efeature" href="../../reference/structures/list/circular.html#f_after">after</A>
+					</CODE>
+					
+					<P>Similarly, the precondition for <A CLASS="efeature" href="../../reference/structures/list/circular.html#f_back">back</A>
+					is</P>
+					
+					<CODE>
+						<A CLASS="efeature" href="../../reference/kernel/boolean.html#f__prefix_not">not</A>
+						<A CLASS="efeature" href="../../reference/structures/list/circular.html#f_before">before</A>
+					</CODE>
+					
+					<P>For lists, <A CLASS="efeature" href="../../reference/structures/traversing/bilinear.html#f_after">after</A>
+					becomes true when the cursor moves past the last item. For circular chains, however,
+					<A CLASS="efeature" href="../../reference/structures/list/circular.html#f_after">after</A>
+					and <A CLASS="efeature" href="../../reference/structures/list/circular.html#f_before">before</A>
+					are never true except for an empty structure; this is expressed by the invariant clauses of
+					class <A class="eclass" href="../../reference/structures/list/circular_chart.html">CIRCULAR</A>:</P>
+					
+					<CODE>
+						<SPAN CLASS="etag">not_before_unless_empty</SPAN><SPAN CLASS="esymbol">:</SPAN>
+						<A CLASS="efeature" HREF="../../reference/structures/list/circular.html#f_before">before</A>
+						<A CLASS="efeature" href="../../reference/kernel/boolean.html#f__infix_implies">implies</A>
+						<A CLASS="efeature" HREF="../../reference/structures/list/circular.html#f_is_empty">is_empty</A><BR>
+						<SPAN CLASS="etag">not_after_unless_empty</SPAN><SPAN CLASS="esymbol">:</SPAN>
+						<A CLASS="efeature" HREF="../../reference/structures/list/circular.html#f_after">after</A>
+						<A CLASS="efeature" href="../../reference/kernel/boolean.html#f__infix_implies">implies</A>
+						<A CLASS="efeature" HREF="../../reference/structures/list/circular.html#f_is_empty">is_empty</A><BR>
+						<SPAN CLASS="etag">not_off_unless_empty</SPAN><SPAN CLASS="esymbol">:</SPAN>
+						<A CLASS="efeature" HREF="../../reference/structures/list/circular.html#f_off">off</A>
+						<A CLASS="efeature" href="../../reference/kernel/boolean.html#f__infix_implies">implies</A>
+						<A CLASS="efeature" HREF="../../reference/structures/list/circular.html#f_is_empty">is_empty</A><BR>
+					</CODE>
+					
+					<P>For a non-empty circular chain, then, you can circle forever around the items, using
+					<A CLASS="efeature" href="../../reference/structures/list/circular.html#f_forth">forth</A>
+					or <A CLASS="efeature" href="../../reference/structures/list/circular.html#f_back">back</A>.</P>
+					
+					<H2>Choosing the first item</H2>
+					
+					<P>For a list, the <A CLASS="efeature" href="../../reference/structures/list/circular.html#f_first">first</A>
+					and <A CLASS="efeature" href="../../reference/structures/list/circular.html#f_last">last</A>
+					items are fixed, and correspond to specific places in the
+					physical representation.<BR>
+					
+					A circular chain also needs a notion of <A CLASS="efeature" href="../../reference/structures/list/circular.html#f_first">first</A>
+					item, if only to enable a client to initiate
+					a traversal through procedure start. Similarly, there is a <A CLASS="efeature" href="../../reference/structures/list/circular.html#f_last">last</A>
+					item - the one just before
+					the first in a cyclic traversal. (If the chain has just one item, it is both
+					<A CLASS="efeature" href="../../reference/structures/list/circular.html#f_first">first</A>
+					and <A CLASS="efeature" href="../../reference/structures/list/circular.html#f_last">last</A>.)<BR>
+					For circular chains, however, there is no reason why the first item should always
+					remain the same. One of the benefits that clients may expect from the use of a circular<BR>
+					structure is the ability to choose any item as the logical first. Class <A class="eclass" href="../../reference/structures/list/circular_chart.html">CIRCULAR</A>
+					offers for that purpose the procedure <A class="efeature" href="../../reference/structures/list/circular.html#f_set_start">set_start</A> which designates the current cursor position as the first in the circular chain.
+					Subsequent calls to <A class="efeature" href="../../reference/structures/list/circular.html#f_start">start</A>
+					will move the cursor to this position; calls to <A class="efeature" href="../../reference/structures/list/circular.html#f_finish">finish</A>
+					will move
+					the cursor to the cyclically preceding position. With most implementations, there will then be two notions of
+					<A CLASS="efeature" href="../../reference/structures/list/circular.html#f_first">first</A>
+					position: the
+					logical first, which clients may freely choose through calls to <A class="efeature" href="../../reference/structures/list/circular.html#f_set_start">set_start</A>; and the physical
+					first, which results from the implementation. In a representation using an array with
+					indices from 1 to capacity, for example, the physical first is position 1, and the logical
+					first may be any index in the permitted range. In a linked representation, there will be a
+					cell <A class="efeature" href="../../reference/structures/list/circular.html#f_first">first</A> element
+					corresponding to the physical first, but the logical first is any cell in
+					the chain.<BR>
+					
+					In such cases the circular chain classes have features called <SPAN CLASS="efeature">standard_first</SPAN>,
+					<SPAN CLASS="efeature">standard_last</SPAN>,
+					<SPAN CLASS="efeature">standard_start</SPAN>
+					and so on, which are not exported (so that you will not see them in the flat-short forms) but serve to implement visible features such
+					as <A CLASS="efeature" href="../../reference/structures/list/circular.html#f_first">first</A>,
+					<A CLASS="efeature" href="../../reference/structures/list/circular.html#f_last">last</A>
+					and <A CLASS="efeature" href="../../reference/structures/list/circular.html#f_forth">forth</A>. For example a possible implementation of
+					<A CLASS="efeature" href="../../reference/structures/list/circular.html#f_forth">forth</A>
+					for circular chains is</P>
+					
+					<CODE>
+						<A CLASS="efeature" href="../../reference/structures/list/circular.html#f_forth">forth</A> <SPAN CLASS="ekeyword">is</SPAN><BR>
+						&nbsp;&nbsp;&nbsp;<SPAN CLASS="ecomment">-- Move cursor to next item, cyclically.</SPAN><BR>
+						<SPAN CLASS="ekeyword">do</SPAN><BR>
+						&nbsp;&nbsp;&nbsp;<SPAN CLASS="efeature">standard_forth</SPAN><BR>
+						&nbsp;&nbsp;&nbsp;<SPAN CLASS="ekeyword">if</SPAN>
+						<SPAN CLASS="efeature" >standard_after</SPAN>
+						<SPAN CLASS="ekeyword">then</SPAN><BR>
+						&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<SPAN CLASS="efeature">standard_start</SPAN><BR>
+						&nbsp;&nbsp;&nbsp;<SPAN CLASS="ekeyword">end</SPAN><BR>
+						&nbsp;&nbsp;&nbsp;<SPAN CLASS="ekeyword">if</SPAN>
+						<A CLASS="efeature" href="../../reference/structures/list/circular.html#f_isfirst">isfirst</A>
+						<SPAN CLASS="ekeyword">then</SPAN><BR>
+						&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<A CLASS="efeature" href="../../reference/structures/list/circular.html#f_exhausted">exhausted</A>
+						<SPAN CLASS="esymbol">:=</SPAN> <SPAN CLASS="efeature">True</SPAN><BR>
+						&nbsp;&nbsp;&nbsp;<SPAN CLASS="ekeyword">end</SPAN><BR>
+						<SPAN CLASS="ekeyword">end</SPAN>
+					</CODE>
+					
+					<H2>Traversing a list or circular chain</H2>
+					
+					<P>The properties of
+					<A CLASS="efeature" href="../../reference/structures/list/circular.html#f_forth">forth</A>
+					for circular chains imply that a traversal loop written as</P>
+					
+					<CODE>
+						<SPAN CLASS="ekeyword">from</SPAN><BR>
+						&nbsp;&nbsp;&nbsp;<SPAN CLASS="elocal">lin</SPAN><SPAN CLASS="esymbol">.</SPAN><A CLASS="efeature" href="../../reference/structures/list/circular.html#f_start">start</A><BR>
+						<SPAN CLASS="ekeyword">until</SPAN><BR>
+						&nbsp;&nbsp;&nbsp;<SPAN CLASS="elocal">lin</SPAN><SPAN CLASS="esymbol">.</SPAN><A CLASS="efeature" href="../../reference/structures/list/circular.html#f_off">off</A><BR>
+						<SPAN CLASS="ekeyword">loop</SPAN><BR>
+						&nbsp;&nbsp;&nbsp;...<BR>
+						&nbsp;&nbsp;&nbsp;<SPAN CLASS="elocal">lin</SPAN><SPAN CLASS="esymbol">.</SPAN><A CLASS="efeature" href="../../reference/structures/list/circular.html#f_forth">forth</A><BR>
+						<SPAN CLASS="ekeyword">end</SPAN>
+					</CODE>
+					
+					<P>would not work if <SPAN CLASS="elocal">lin</sPAN> is a non-empty circular structure:
+					<A CLASS="efeature" HREF="../../reference/structures/list/circular.html#f_off">off</a> would never become true, so
+					that the loop would forever cycle over the structure’s items. The same would apply to a
+					loop using finish and back instead of start and forth. This behavior is the natural result of the semantics defined for off , forth and back
+					for circular structures. But it prevents us from using these features to perform a single
+					traversal which will visit every item once.<BR>
+					Using exhausted in lieu of off solves this problem. In class <A class="eclass" href="../../reference/structures/list/circular_chart.html">CIRCULAR</A>,
+					<A CLASS="efeature" href="../../reference/structures/list/circular.html#f_exhausted"> exhausted</A>
+					is an attribute which is set to false by <A class="efeature" href="../../reference/structures/list/circular.html#f_start">start</A>
+					and <A class="efeature" href="../../reference/structures/list/circular.html#f_finish">finish</A>, and is set to true by
+					<A CLASS="efeature" href="../../reference/structures/list/circular.html#f_forth">forth</A>
+					when
+					advancing from the last item to the first and by back when backing up from the first
+					item to the last. So you should write the loop as</P>
+					
+					<CODE>
+						<SPAN CLASS="ekeyword">from</SPAN><BR>
+						&nbsp;&nbsp;&nbsp;<SPAN CLASS="elocal">lin</SPAN><SPAN CLASS="esymbol">.</SPAN><A CLASS="efeature" href="../../reference/structures/list/circular.html#f_start">start</A><BR>
+						&nbsp;&nbsp;&nbsp;<SPAN CLASS="efeature">some_optional_initializing_operation</SPAN>
+						<SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">lin</SPAN><SPAN CLASS="esymbol">)</SPAN><BR>
+						<SPAN CLASS="ekeyword">until</SPAN><BR>
+						&nbsp;&nbsp;&nbsp;<SPAN CLASS="elocal">lin</SPAN><SPAN CLASS="esymbol">.</SPAN><A CLASS="efeature" href="../../reference/structures/list/circular.html#f_off">exhausted</A><BR>
+						<SPAN CLASS="ekeyword">loop</SPAN><BR>
+						&nbsp;&nbsp;&nbsp;...<BR>
+						&nbsp;&nbsp;&nbsp;<SPAN CLASS="elocal">lin</SPAN><SPAN CLASS="esymbol">.some_action
+						(</SPAN><SPAN CLASS="elocal">lin</SPAN><SPAN CLASS="esymbol">.</SPAN><A CLASS="efeature" href="../../reference/structures/list/circular.html#f_forth">item</A><SPAN CLASS="esymbol">)</SPAN><BR>
+						&nbsp;&nbsp;&nbsp;<SPAN CLASS="elocal">lin</SPAN><SPAN CLASS="esymbol">.</SPAN><A CLASS="efeature" href="../../reference/structures/list/circular.html#f_forth">forth</A><BR>
+						<SPAN CLASS="ekeyword">end</SPAN>
+					</CODE>
+					
+					<P>This form is applicable to all linear structures, circular or not, since exhausted is introduced in class
+					<A CLASS="eclass" href="../../reference/structures/traversing/linear_chart.html">LINEAR</A>
+					as a function which returns the same value as off .Its redefinition into an attribute, modified by start, finish, forth and back, does not occur
+					until class <A class="eclass" href="../../reference/structures/list/circular.html">CIRCULAR</A>.<BR>
+					Because exhausted is more general than off , the iteration scheme just given (and its
+					equivalent going backwards) is preferable to the earlier one using off , especially if there
+					is any chance that the iteration might one day be applied to a lin structure that is
+					circular. Classes of the Iteration library, in particular LINEAR_ITERATOR, rely on this
+					scheme for iterating over linear structures.</P>
+					
+					<H2>Dynamic structures</H2>
+					
+					<P>For both lists and circular chains, the most flexible variants, said to be dynamic, allow
+					insertions and deletions at any position.<BR>
+					
+					The corresponding classes are descendants of <A class="eclass" href="../../reference/structures/list/dynamic_list_chart.html">DYNAMIC_LIST</A>
+					and <A class="eclass" href="../../reference/structures/list/dynamic_circular_chart.html">DYNAMIC_CIRCULAR</A>, themselves heirs of
+					<A class="eclass" href="../../reference/structures/list/dynamic_chain_chart.html">DYNAMIC_CHAIN</A>
+					studied above.<BR></P>
+					
+					<H2>Infinite sequences</H2>
+					
+					<P>Class <A CLASS="eclass" href="/libraries/base/reference/support/countable_sequence_chart.html">COUNTABLE_SEQUENCES</A>, built by inheritance from
+					<A CLASS="eclass" href="../../reference/structures/storage/countable_chart.html">COUNTABLE</A>, <A CLASS="eclass" href="../../reference/structures/traversing/linear.html">LINEAR</A>
+					and <A CLASS="eclass" href="../../reference/structures/access/active_chart.html">ACTIVE</A>, is similar to <A class="eclass" href="../../reference/structures/list/sequence.html">SEQUENCE</A>
+					but describes infinite rather than finite sequences.</P>
+					
+					<H1>Implementations</H1>
+					
+					<P>We have by now seen the concepts underlying the linear structures of the Base libraries,
+					especially lists and circular chains. Let us look at the techniques used to
+					implement them.</P>
+					
+					<H2>Linked and arrayed implementations</H2>
+					
+					<P>Most of the implementations belong to one of four general categories, better described<BR>
+					as two categories with two subcategories each:</P>
+					
+					<UL>
+						<LI>Linked implementations, which may be one-way or two-way.</LI>
+        				<LI>Arrayed implementations, which may be resizable or fixed.</LI>
+					</UL>
+					
+					<P>A linked implementation uses linked cells, each containing an item and a reference
+					to the next cell. One-way structures are described by classes whose names begin with
+					LINKED_, for example <A class="eclass" href="../../reference/structures/list/linked_list_chart.html">LINKED_LIST</A>. Two-way structures use cells which, in
+					addition to the reference to the next cell, also include a reference to the previous one.
+					Their names begin with TWO_WAY_.<BR>
+					An arrayed implementation uses an array to represent a linear structure. If the array
+					is resizable, the corresponding class name begins with ARRAYED_, for example<BR>
+					<A class="eclass" href="../../reference/structures/list/arrayed_list_chart.html">ARRAYED_LIST</A>; if not, the prefix is FIXED_.</P>
+
+					<H2>Linked structures</H2>
+
+					<P>A linked structure requires two classes: one, such as <A class="eclass" href="../../reference/structures/list/linked_list_chart.html">LINKED_LIST</A>, describes the list
+					proper; the other, such as <A class="eclass" href="../../reference/structures/list/linkable_chart.html">LINKABLE</A>, describes the individual list cells. The figure
+					should help understand the difference; it describes a linked list, but the implementation
+					of linked circular chains is similar.</P>
+					
+					<IMG src="linked_list.png"/>
+					<P class="figuretitle">fig.3: Linked list and linked cells</P>
+					
+					<P>
+					The instance of type <A class="eclass" href="../../reference/structures/list/linked_list_chart.html">LINKED_LIST</A> shown at the top contains general information
+					about the list, such as the number of items (<A CLASS="efeature" HREF="../../reference/structures/list/linked_list.html#f_count">count</A>) and a reference to the first element
+					(<A CLASS="efeature" HREF="../../reference/structures/list/linked_list.html#f_first">first</A>). Because lists are active structures with a notion of current position,
+					there is also a reference active to the cell at the current position. An entity declared as</P>
+					
+					<CODE>
+						<SPAN CLASS="elocal">my_list</SPAN><SPAN CLASS="esymbol">:</SPAN> <A class="eclass" href="../../reference/structures/list/linked_list_chart.html">LINKED_LIST</A>
+						<SPAN CLASS="esymbol">[</SPAN><SPAN CLASS="eclass">SOME_TYPE</SPAN><SPAN CLASS="esymbol">]</SPAN>
+					</CODE>
+					
+					<P>will have as its run-time value (if not void) a reference to such an object, which is really
+					a list header. The actual list content is given by the <A class="eclass" href="../../reference/structures/list/linkable_chart.html">LINKABLE</A>
+					instances, each of which contains a value of type <SPAN CLASS="eclass">SOME_TYPE</SPAN> and a reference to the next item, called
+					<A CLASS="efeature" HREF="../../reference/structures/list/linked_list.html#f_right">right</A>.<BR>
+					Clearly, a header of type <A class="eclass" href="../../reference/structures/list/linked_list_chart.html">LINKED_LIST</A>
+					<SPAN CLASS="esymbol">[</SPAN><SPAN CLASS="eclass">SOME_TYPE</SPAN><SPAN CLASS="esymbol">]</SPAN> will be associated with cells of type <A class="eclass" href="../../reference/structures/list/linkable.html">LINKABLE</A>
+					<SPAN CLASS="esymbol">[</SPAN><SPAN CLASS="eclass">SOME_TYPE</SPAN><SPAN CLASS="esymbol">]</SPAN> for the same actual generic parameter <SPAN CLASS="eclass">SOME_TYPE</SPAN>.<BR>
+					Features such as <A CLASS="efeature" HREF="../../reference/structures/list/linked_list.html#f_active">active</A>
+					and <A CLASS="efeature" HREF="../../reference/structures/list/linked_list.html#f_first">first</A>
+					are used only for the implementation; they are not exported, and so you will not find them in the flat-short specifications,
+					although the figures show them to illustrate the representation technique.<BR>
+					
+					A similar implementation is used for two-way-linked structures such as two-way
+					lists and two-way circular chains.</P>
+
+					<IMG src="two_way_list.png"/>
+					<P class="figuretitle">fig.4: Two way linked list</P>
+
+					<H2>Linked cells</H2>
+					
+					<P>
+					The classes describing list cells are descendants of a deferred class called
+					<A class="eclass" href="../../reference/structures/list/cell_chart.html">CELL</A>, whose
+					features are:</P>
+					
+					<UL>
+						<LI><A CLASS="efeature" HREF="../../reference/structures/list/cell.html#f_item">item</A>, the contents of the cell.</LI>
+   	 					<LI><A CLASS="efeature" HREF="../../reference/structures/list/cell.html#f_put">put</A>
+   	 					<SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">v</SPAN><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="ekeyword">like</SPAN> <SPAN CLASS="efeature">item</SPAN><SPAN CLASS="esymbol">)</SPAN>, which replaces the contents of the cell by a new value.
+					</UL>
+					
+					<P>
+					Class <A class="eclass" href="../../reference/structures/list/linkable_chart.html">LINKABLE</A>
+					is an effective descendant of <A class="eclass" href="../../reference/structures/list/cell_chart.html">CELL</A>, used for one-way linked
+					structures. It introduces features right, a reference to another cell to which the current<BR>
+					cell will be linked. Two-way linked structures use <A class="eclass" href="../../reference/structures/list/bi_linkable_chart.html">BI_LINKABLE</A>, an heir of <A class="eclass" href="../../reference/structures/list/linkable.html">LINKABLE</A>
+					which to the above features adds left, a reference to the preceding cell in the structure.</P>
+					
+					<P CLASS="warning"><B>Caution</B>:
+					Do not confuse the item feature of <A class="eclass" href="../../reference/structures/list/cell_chart.html">CELL</A>
+					and its descendants, such as <A class="eclass" href="../../reference/structures/list/linkable_chart.html">LINKABLE</A>,
+					with the item feature of the classes describing linear structures, such as <A class="eclass" href="../../reference/structures/list/linked_list_chart.html">LINKED_LIST</A>.
+					For a linked list, item returns the item at cursor position.</P>
+
+					<P>It may be implemented as</P>
+					
+					<CODE>
+						<SPAN CLASS="efeature">item</SPAN><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="eclass">G</SPAN> <SPAN CLASS="ekeyword">is</SPAN><BR>
+						&nbsp;&nbsp;&nbsp;<SPAN CLASS="ecomment">-- Current item</SPAN><BR>
+						<SPAN CLASS="ekeyword">do</SPAN><BR>
+						&nbsp;&nbsp;&nbsp;<SPAN CLASS="ekeyword">Result</SPAN> <SPAN CLASS="esymbol">:=</SPAN> <SPAN CLASS="efeature">active</SPAN><SPAN CLASS="esymbol">.</SPAN><SPAN CLASS="efeature">item</SPAN><BR>
+						<SPAN CLASS="ekeyword">end</SPAN><BR>
+					</CODE>
+
+					<P>using the item feature of <A class="eclass" href="../../reference/structures/list/linkable_chart.html">LINKABLE</A>, applied to <A CLASS="efeature" HREF="../../reference/structures/list/linked_list.html#f_active">active</A>.</P>
+				
+					<H2>One-way and two-way linked chains</H2>
+
+					<P>If you look at the interfaces of one-way and two-way linked structures, you will notice
+					that they are almost identical. This is because it is possible to implement features such
+					as back for one-way structures such as described by <A class="eclass" href="../../reference/structures/list/linked_list_chart.html">LINKED_LIST</A>
+					and <A class="eclass" href="../../reference/structures/list/linked_circular_chart.html">LINKED_CIRCULAR</A>. A simple implementation of back stores away a
+					reference to the current active item, executes start, and then performs forth until the item to the right of the
+					cursor position is the previous active.<BR>
+					Although correct, such an implementation is of course rather inefficient since it
+					requires a traversal of the list. In terms of algorithmic complexity, it is in O (count),
+					meaning that its execution time is on the average proportional to the number of items in
+					the structure. In contrast, forth is O (1), that is to say, takes an execution time bounded
+					by a constant.</P>
+					
+					<P CLASS="warning">
+					<B>Caution</B>: As a consequence, you should not use one-way linked structures if you need to
+					execute more than occasional back operations (and other operations requiring access to
+					previous items, such as <A class="efeature" href="../../reference/structures/list/linked_list.html#f_remove_left">remove_left</A>).</P>
+					
+					<P>Two-way linked structures, such as those
+					described by <A class="eclass" href="../../reference/structures/list/two_way_list_chart.html">TWO_WAY_LIST</A> and
+					<A class="eclass" href="../../reference/structures/list/two_way_circular_chart.html">TWO_WAY_CIRCULAR</A>, treat the two directions
+					symmetrically, so that back will be just as efficient as forth. Hence the following
+					important advice: If you need to traverse a linked structure both ways, not just left to right, use
+					the <SPAN CLASS="eclass">TWO_WAY_</SPAN> classes, not the <SPAN CLASS="eclass">LINKED_</SPAN> versions. The
+					<SPAN CLASS="eclass">TWO_WAY_</SPAN> structures will take up more space, since they use
+					<A class="eclass" href="../../reference/structures/list/bi_linkable_chart.html">BI_LINKABLE</A>
+					rather than <A class="eclass" href="../../reference/structures/list/linkable_chart.html">LINKABLE</A>
+					cells, but for most applications this space penalty is justified by the considerable gains in time that will result if right-to-left operations are frequently
+					needed.</P>
+					
+					<H2>Arrayed chains</H2>
+					
+					<P>
+					Arrayed structures as described by <A class="eclass" href="../../reference/structures/list/arrayed_list_chart.html">ARRAYED_LIST</A>,
+					<A class="eclass" href="../../reference/structures/list/fixed_list_chart.html">FIXED_LIST</A> and
+					<A class="eclass" href="../../reference/structures/list/arrayed_circular_chart.html">ARRAYED_CIRCULAR</A>
+					use arrays for their implementations. A list or circular chain of count items
+					may be stored in positions 1 to count of an array of capacity items, where capacity
+					&gt;= count.<BR>
+					
+					An instance of <A class="eclass" href="../../reference/structures/list/fixed_list_chart.html">FIXED_LIST</A>, as the name suggests, has a fixed number of items. In
+					particular:</P>
+					
+					<UL>
+						<LI>Query <A class="efeature" href="../../reference/structures/list/fixed_list.html#f_extendible">extendible</A> has value false for <A class="eclass" href="../../reference/structures/list/fixed_list_chart.html">FIXED_LIST</A>: you may replace existing
+							items, but not add any, even at the end. A <A class="eclass" href="../../reference/structures/list/fixed_list_chart.html">FIXED_LIST</A>
+							is created with a certain
+							number of items and retains that number.</LI>
+						<LI>As a result, <A class="eclass" href="../../reference/structures/list/fixed_list_chart.html">FIXED_LIST</A>
+							joins the deferred feature <A class="efeature" href="../../reference/structures/list/list.html#f_count">count</A> of <A class="eclass" href="../../reference/structures/list/list_chart.html">LIST</A>
+							with the
+							feature <A class="eclass" href="../../reference/kernel/array.html#f_count">count</A> of <A class="eclass" href="../../reference/kernel/array_chart.html">ARRAY</A>, which satisfies the property <A class="eclass" href="../../reference/kernel/array.html#f_count">count</A>
+							= capacity.</LI>
+						<LI>Query <A class="efeature" href="../../reference/structures/list/fixed_list.html#f_prunable">prunable</A> has value false too: it is not possible to remove an item from a
+							fixed list.</LI>
+					</UL>
+					
+					<P>In contrast, <A class="eclass" href="../../reference/structures/list/arrayed_list_chart.html">ARRAYED_LIST</A>
+					has almost the same interface as <A class="eclass" href="../../reference/structures/list/linked_list_chart.html">LINKED_LIST</A>.
+					In particular, it is possible to add items at the end using procedure extend; if the call causes
+					the list to grow beyond the current array’s capacity, it will trigger a resizing. This is
+					achieved by using the procedure force of class ARRAY to implement extend.
+					<A class="eclass" href="../../reference/structures/list/arrayed_list_chart.html">ARRAYED_LIST</A> even has the insertion procedures (<A class="efeature" href="../../reference/structures/list/arrayed_list.html#f_put_front">put_front</A>,
+					<A class="efeature" href="../../reference/structures/list/arrayed_list.html#f_put_left">put_left</A>,
+					<A class="efeature" href="../../reference/structures/list/arrayed_list.html#f_put_right">put_right</A>)
+					and removal procedures (<A class="efeature" href="../../reference/structures/list/arrayed_list.html#f_prune">prune</A>,
+					<A class="efeature" href="../../reference/structures/list/arrayed_list.html#f_remove">remove</A>,
+					<A class="efeature" href="../../reference/structures/list/arrayed_list.html#f_remove_left">remove_left</A>,
+					<A class="efeature" href="../../reference/structures/list/arrayed_list.html#f_remove_right">remove_right</A>) that apply to
+					arbitrary positions and appear in the linked implementations. These procedures,
+					however, are rather inefficient, since they usually require moving a whole set of array
+					items, an O (<A class="efeature" href="../../reference/structures/list/arrayed_list.html#f_count">count</A>) operation.
+					(Procedure <A class="efeature" href="../../reference/structures/list/arrayed_list.html#f_extend">extend</A>
+					does not suffer from this problem,
+					since it is easy to add an item to the end of an array, especially if there is still room so
+					that no resizing is necessary.)</P>
+					
+					<P class="warning"><B>Caution</B>:
+					The situation of these features in <A class="eclass" href="../../reference/structures/list/arrayed_list_chart.html">ARRAYED_LIST</A>
+					is similar to the situation of <A class="efeature" href="../../reference/structures/list/linked_list.html#f_back">back</A>
+					in classes describing one-way linked structures: it is convenient to include them because they may be needed once in a while
+					and an implementation exists; but using them more than occasionally may result in serious inefficiencies. If you do need to
+					perform arbitrary insertions and removal, use linked structures, not arrayed ones.</P>
+					
+					<P>Arrayed structures, however, use up less space than linked representations. So they
+					are appropriate for chains on which, except possibly for insertions at the end, few
+					insertion and removal operations or none at all are expected after creation.
+					<A class="eclass" href="../../reference/structures/list/fixed_list_chart.html">FIXED_LIST</A>
+					offers few advantages over <A class="eclass" href="../../reference/structures/list/arrayed_list_chart.html">ARRAYED_LIST</A>.
+					<A class="eclass" href="../../reference/structures/list/fixed_list_chart.html">FIXED_LIST</A> may be useful,
+					however, for cases in which the fixed number of items is part of
+					the specification, and any attempt to add more items must be treated as an error.
+					For circular chains only one variant is available,
+					<A class="eclass" href="../../reference/structures/list/arrayed_circular_chart.html">ARRAYED_CIRCULAR</A>, although
+					writing a <SPAN class="eclass">FIXED_</SPAN> version would be a simple exercise.</P>
+					
+					<H2>Multi-arrayed lists</H2>
+					
+					<P>For lists one more variant is available, combining some of the advantages of arrayed
+					and linked implementations:
+					<A class="eclass" href="../../reference/structures/list/multi_array_list_chart.html">MULTI_ARRAY_LIST</A>. With this implementation a list is<BR>
+					divided into a number of blocks. Each block is an array, but the successive arrays are
+					linked.</P>
+					
+					<H1>Sorted Linear Structures</H1>
+					
+					<P>The class <A class="eclass" href="../../reference/structures/sort/comparable_struct_chart.html">COMPARABLE_STRUCT</A>, an heir of
+					<A class="eclass" href="../../reference/structures/traversing/bilinear_chart.html">BILINEAR</A>, is declared as</P>
+					
+					<CODE>
+						<SPAN CLASS="ekeyword">deferred class</SPAN><BR>
+						&nbsp;&nbsp; <A class="eclass" href="../../reference/structures/sort/comparable_struct_chart.html">COMPARABLE_STRUCT</A>
+						<SPAN CLASS="esymbol">[</SPAN><SPAN CLASS="eclass">G</SPAN> <SPAN CLASS="ekeyword">-></SPAN>
+						<A class="eclass" href="../../reference/kernel/comparable_chart.html">COMPARABLE</A><SPAN CLASS="esymbol">]</SPAN><BR>
+						<SPAN CLASS="ekeyword">inherit</SPAN><BR>
+						&nbsp;&nbsp; <A class="eclass" href="../../reference/structures/traversing/bilinear_chart.html">BILINEAR</A><BR>
+						<SPAN CLASS="ekeyword">feature</SPAN><BR>
+						&nbsp;&nbsp; ...
+					</CODE>
+					
+					<P>As indicated by the constrained generic parameter it describes bilinear structures
+					whose items may be compared by a total order relation.</P>
+					
+					<P class="warning"><B>Caution</B>: Note that the class name, chosen for brevity’s sake, is slightly misleading: it is not the structures
+					that are comparable but their items.</P>
+					
+					<P> <A class="eclass" href="../../reference/structures/sort/comparable_struct_chart.html">COMPARABLE_STRUCT</A>
+					introduces the features min and max, giving access to
+					the minimum and maximum elements of a structure; these are always present for a finite<BR>
+					structure with a total order relation. <A class="eclass" href="../../reference/structures/sort/sorted_struct_chart.html">SORTED_STRUCT</A>, an heir of <A class="eclass" href="../../reference/structures/sort/comparable_struct_chart.html">COMPARABLE_STRUCT</A>, describes structures that
+					can be sorted; it introduces the query sorted and the command sort.<BR>
+					The deferred class <A class="eclass" href="../../reference/structures/list/part_sorted_list.html">PART_SORTED_LIST</A> describes lists whose items are kept
+					ordered in a way that is compatible with a partial order relation defined on them. The class is declared as</P>
+					
+					<CODE>
+						<SPAN CLASS="ekeyword">deferred class</SPAN><BR>
+						&nbsp;&nbsp; <A class="eclass" href="../../reference/structures/list/part_sorted_list_chart.html">PART_SORTED_LIST</A>
+						<SPAN CLASS="esymbol">[</SPAN><SPAN CLASS="eclass">G</SPAN> <SPAN CLASS="ekeyword">-></SPAN>
+						<A class="eclass" href="../../reference/kernel/comparable_chart.html">COMPARABLE</A><SPAN CLASS="esymbol">]</SPAN>...
+					</CODE>
+					
+					<P>An implementation based on two-way linked lists is available through the effective
+					heir <A class="eclass" href="../../reference/structures/list/sorted_two_way_list_chart.html">SORTED_TWO_WAY_LIST</A>.<BR>
+					The deferred class <A class="eclass" href="../../reference/structures/list/sorted_list_chart.html">SORTED_LIST</A>, which inherits from
+					<A class="eclass" href="../../reference/structures/list/part_sorted_list_chart.html">PART_SORTED_LIST</A>, assumes that the order relation on G is a total order. As a result, the class is able to
+					introduce features min, max and median. Here too a a two-way linked list
+					implementation is available, through the effective class <A class="eclass" href="../../reference/structures/list/sorted_two_way_list_chart.html">SORTED_TWO_WAY_LIST</A></P>
+				</TD>
+			</TR>
+		</TABLE>
+		<TABLE CLASS="FOOTER" ID="Table3">
+			<TR>
+				<TD>© 2003-2004 Eiffel Software. All rights reserved.</TD>
+			</TR>
+		</TABLE>
 	</BODY>
 </HTML>

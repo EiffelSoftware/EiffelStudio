@@ -19,7 +19,8 @@ namespace ISE.Runtime {
 	}
 
 	public delegate int WEL_DISPATCHER_DELEGATE (IntPtr hwnd, int msg, int wparam, int lparam);
-	public delegate void EV_PIXMAP_IMP_DELEGATE (int error_code, int data_type, int pixmap_width, int pixmap_height, IntPtr rgb_data, IntPtr alpha_data);
+	public delegate void EV_PIXMAP_IMP_DELEGATE (int error_code, int data_type, int pixmap_width,
+		int pixmap_height, IntPtr rgb_data, IntPtr alpha_data);
 
 	public class RUN_TIME
 	{
@@ -67,20 +68,6 @@ namespace ISE.Runtime {
 			throw e;
 		}
 
-	}
-
-	[CLSCompliantAttribute (false)]
-	public interface _EIFFEL_TYPE_INFO {
-		int ____type_id();
-		void ____set_type_id(Int32 type_id);
-	}
-
-	public class EIFFEL_TYPES {
-		public static EIFFEL_TYPE_INFO [] eiffel_types;
-			// List all computed Eiffel types.
-	}
-
-	public class EIFFEL_TYPE_INFO {
 	}
 }
 

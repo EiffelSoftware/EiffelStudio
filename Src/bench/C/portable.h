@@ -61,6 +61,13 @@ typedef unsigned int uint32;
 #define INT32_MIN (- INT32_MAX - 1)
 
 /*
+ * Integer 16 bit constants
+ */
+
+#define INT16_MAX 65535
+#define UINT16_MAX 32767
+
+/*
  * Scope control pseudo-keywords
  */
 #define rt_public				/* default C scope */

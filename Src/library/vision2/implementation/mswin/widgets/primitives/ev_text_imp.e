@@ -13,8 +13,9 @@ inherit
 		
 	EV_TEXT_COMPONENT_IMP
 		undefine
-			on_key_down,
 			set_default_options
+		redefine
+			on_key_down
 		end
 
 	WEL_MULTIPLE_LINE_EDIT
@@ -51,7 +52,8 @@ inherit
 		redefine
 			default_style,
 			default_ex_style,
-			on_en_change
+			on_en_change,
+			on_key_down
 		end
 
 creation
@@ -131,6 +133,19 @@ feature {NONE} -- WEL Implementation
 			-- that may have altered the text.
 		do
 			execute_command (Cmd_change, Void)
+		end
+
+	on_key_down (virtual_key, key_data: INTEGER) is
+			-- Executed when a key is pressed.
+			-- We verify that there is indeed a command to avoid
+			-- the creation of an object for nothing.
+		local
+			data: EV_KEY_EVENT_DATA
+		do
+			if has_command (Cmd_key_press) then
+				data := get_key_data (virtual_key, key_data)
+				execute_command (Cmd_key_press, data)
+			end
 		end
 
 end -- class EV_TEXT_IMP

@@ -38,7 +38,7 @@ feature -- Initialization
 			non_void_file_extensions: a_file_extensions /= Void
 			non_void_title: a_title /= Void
 		do
-			text_box_setup (a_label, a_key, a_path_validator, Void)
+			text_box_setup (a_label, a_key, a_path_validator, Void, Void)
 			file_extensions := a_file_extensions
 			title := a_title
 			auto_save := True

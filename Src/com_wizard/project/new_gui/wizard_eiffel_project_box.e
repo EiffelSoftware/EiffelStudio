@@ -35,8 +35,8 @@ feature {NONE} -- Initialization
 			initialize_checker
 			epr_box.setup ("Path to Eiffel project file (*.epr):", "epr_key", agent is_valid_eiffel_project (?, Invalid_project), create {ARRAYED_LIST [TUPLE [STRING, STRING]]}.make_from_array (<<["*.epr", "Eiffel Project File (*.epr)"]>>), "Browse for Eiffel Project File")
 			ace_file_box.setup ("Path to system's ace file (*.ace):", "ace_key", agent is_valid_ace_file (?, Invalid_ace), create {ARRAYED_LIST [TUPLE [STRING, STRING]]}.make_from_array (<<["*.ace", "LACE File (*.ace)"], ["*.*", "All Files (*.*)"]>>), "Browse for system's ace file")
-			facade_box.setup ("Name of Eiffel facade class:", "facade_key", agent is_valid_eiffel_class (?, Invalid_class), Void)
-			facade_cluster_box.setup ("Name of Eiffel facade class cluster:", "cluster_key", agent is_valid_cluster (?, Invalid_cluster), Void)
+			facade_box.setup ("Name of Eiffel facade class:", "facade_key", agent is_valid_eiffel_class (?, Invalid_class), Void, Void)
+			facade_cluster_box.setup ("Name of Eiffel facade class cluster:", "cluster_key", agent is_valid_cluster (?, Invalid_cluster), Void, Void)
 		end
 
 feature -- Basic Operations

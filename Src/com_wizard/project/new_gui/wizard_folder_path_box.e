@@ -36,7 +36,7 @@ feature -- Initialization
 			non_void_title: a_title /= Void
 			non_void_path_validator: a_path_validator /= Void
 		do
-			text_box_setup (a_label, a_key, a_path_validator, Void)
+			text_box_setup (a_label, a_key, a_path_validator, Void, Void)
 			title := a_title
 			auto_save := True
 		ensure

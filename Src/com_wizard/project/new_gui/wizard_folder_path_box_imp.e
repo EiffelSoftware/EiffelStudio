@@ -53,7 +53,7 @@ feature {NONE}-- Initialization
 			disable_item_expand (path_text_box)
 			
 				--Connect events.
-			path_combo.select_actions.extend (agent on_return)
+			path_combo.select_actions.extend (agent on_select)
 			path_combo.change_actions.extend (agent on_change)
 			path_combo.return_actions.extend (agent on_return)
 			path_combo.focus_in_actions.extend (agent on_mouse_enter)
@@ -88,13 +88,18 @@ feature {NONE} -- Implementation
 		deferred
 		end
 	
-	on_return is
+	on_select is
 			-- Called by `select_actions' of `path_combo'.
 		deferred
 		end
 	
 	on_change is
 			-- Called by `change_actions' of `path_combo'.
+		deferred
+		end
+	
+	on_return is
+			-- Called by `return_actions' of `path_combo'.
 		deferred
 		end
 	

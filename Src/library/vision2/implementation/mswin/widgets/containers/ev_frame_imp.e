@@ -339,8 +339,16 @@ feature {NONE} -- WEL Implementation
 					paint_dc.fill_rect (r, bk_brush)
 				end
 			else
-				if item = Void then
-					r.set_rect (1, 1, cur_width - 1, cur_height - 1)
+				if item /= Void then
+						-- If the item does not cover all of the background area then
+						-- Note the 4 is due to the frame border.
+					if cur_height - item.height > 4 then
+						r.set_rect (1, item.height - 2, cur_width - 1, cur_height - 1)
+						paint_dc.fill_rect (r, bk_brush)
+					end
+				else
+						-- If there is no item, then we must always fill in the background.
+					r.set_rect (1, half + 1, cur_width - 1, cur_height - 1)
 					paint_dc.fill_rect (r, bk_brush)
 				end
 			end
@@ -421,6 +429,11 @@ end -- class EV_FRAME_IMP
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.42  2001/06/29 22:51:47  rogers
+--| Fixed another bug in `on_paint'. When there is no text, and an item does
+--| not fill all of `Current' then we must re-draw the non covered background
+--| ourselves.
+--|
 --| Revision 1.41  2001/06/29 22:23:19  rogers
 --| Undid previous change, as it was not the best solution. Fixed bug in
 --| `Current' with a text set, but containing an item which did not fill all of

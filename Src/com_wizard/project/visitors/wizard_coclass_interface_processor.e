@@ -65,10 +65,12 @@ feature -- Basic operations
 		deferred
 		end
 
-	need_source_generation (an_implemented_interface: WIZARD_IMPLEMENTED_INTERFACE_DESCRIPTOR): BOOLEAN is
-			-- Does `an_implemented_interface' need to be generated as source interface?
+	remove_from_system_interfaces (an_implemented_interface: WIZARD_IMPLEMENTED_INTERFACE_DESCRIPTOR) is
+			-- Does `an_implemented_interface' need to be removed from `system_descriptor.interfaces'?
 		do
-			Result := not system_descriptor.interfaces.has (an_implemented_interface)
+			if system_descriptor.interfaces.has (an_implemented_interface) then
+				system_descriptor.interfaces.prune (an_implemented_interface)
+			end
 		end
 
 feature {NONE} -- Implementation

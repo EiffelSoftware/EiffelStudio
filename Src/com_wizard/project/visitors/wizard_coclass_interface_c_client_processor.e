@@ -63,10 +63,9 @@ feature -- Basic operations
 			c_server_visitor: WIZARD_C_SERVER_VISITOR
 			source_generator: WIZARD_SOURCE_INTERFACE_C_CLIENT_GENERATOR
 		do
-			if need_source_generation (an_interface.implemented_interface) then
-				create c_server_visitor
-				c_server_visitor.visit (an_interface.implemented_interface)
-			end
+			remove_from_system_interfaces (an_interface.implemented_interface)
+			create c_server_visitor
+			c_server_visitor.visit (an_interface.implemented_interface)
 			create source_generator.generate (an_interface, coclass_generator.cpp_class_writer)
 		end
 

@@ -366,8 +366,7 @@ feature -- Basic operation
 		ensure
 			result_not_void: Result /= Void
 		end
-		
-		
+
 	add_new_window (window_object: GB_TITLED_WINDOW_OBJECT) is
 			-- Perform necessary initialzation for new window,
 			-- `window_object'.
@@ -565,137 +564,178 @@ feature -- Basic operation
 			window_selector.wipe_out
 		end
 		
-	string_is_object_name (object_name: STRING; an_object: GB_OBJECT): BOOLEAN is
+	string_is_object_name (object_name: STRING; an_object: GB_OBJECT; compare_original_object: BOOLEAN): BOOLEAN is
+			-- Is `object_name' a valid named for `an_object', or does it clash
+			-- with an existing name in the scope of `an_object'. For example, objects in
+			-- different windows may have the same name, but windows must have unique names as
+			-- must objects in the same window.
+		require
+			object_name_not_void: object_name /= Void
+			an_object_not_void: an_object /= Void
 		local
-			current_name_lower, name_lower: STRING
-			current_object: GB_OBJECT
+			parent_object: GB_OBJECT
+			window_objects: ARRAYED_LIST [GB_OBJECT]
 		do
 			if not object_name.is_empty then
-				name_lower := object_name
-				name_lower.to_lower
-				from
-					objects.start
-				until
-					objects.off or Result
-				loop
-					current_object := objects.item
-						-- If `an_object' /= `Void' then do not check against `an_object' when found.
-					if (an_object /= Void and then current_object /= an_object) or (an_object = Void) then
-						current_name_lower := current_object.name
-						current_name_lower.to_lower
-						if current_name_lower.is_equal (name_lower) then
+				string_is_object_name_result := False
+				parent_object := an_object.top_level_parent_object
+				recursive_do_all (parent_object, agent check_object_name (object_name, an_object, compare_original_object,  ?))
+				Result := string_is_object_name_result
+				if parent_object = an_object then
+					-- `an_object' is a window as it has no parent, therefore, we must check that the name
+					-- does not clash with that of any other titled windows.
+					window_objects ?= Window_selector.objects
+					from
+						window_objects.start
+					until
+						window_objects.off
+					loop
+						if window_objects.item.name.as_lower.is_equal (object_name.as_lower) then
 							Result := True
 						end
+						window_objects.forth
 					end
-					objects.forth
 				end
 			end
 		end
 		
+	check_object_name (object_name: STRING; original_object: GB_OBJECT; compare_original_object: BOOLEAN; an_object: GB_OBJECT) is
+			-- Is `object_name' a valid object name for `original_object' in the scope of `an_object'. If `compare_original_object' then
+			-- check must include the original object, and result may be queried from `string_is_object_name_result'.
+		local
+			current_name_lower, name_lower: STRING
+		do
+			if (not compare_original_object and then original_object /= an_object) or compare_original_object then
+				name_lower := object_name.as_lower
+				current_name_lower := an_object.name.as_lower
+				if current_name_lower.is_equal (name_lower) then
+					string_is_object_name_result := True
+				end
+			end
+		end
+		
+	string_is_object_name_result: BOOLEAN
+		-- Result used for `string_is_object_name'.
+		
+	string_is_feature_name_result: BOOLEAN
+		-- Result used for `string_is_object_name'.
+		
 	string_is_feature_name (object_name: STRING; an_object: GB_OBJECT): BOOLEAN is
 			-- Is `object_name' already used as a feature name for event connection?
+		require
+			object_name_not_void: object_name /= Void
+			an_object_not_void: an_object /= Void
 		local
-			object_events: ARRAYED_LIST [GB_ACTION_SEQUENCE_INFO]
-			name_lower: STRING
-			current_object: GB_OBJECT
+			parent_object: GB_OBJECT
 		do
 				-- Do nothing if `object_name' is empty.
 			if not object_name.is_empty then
-				name_lower := object_name
-				name_lower.to_lower
-				from
-					objects.start
-				until
-					objects.off or Result
-				loop
-					current_object := objects.item
-						-- Access events of `current_object' locally, for speed
-					object_events := current_object.events
-						-- No need to check further if `object_events' is empty.
-						-- Note that we always check the events, even if `an_object' /= `Void'.
-					if not object_events.is_empty then
-						from
-							object_events.start
-						until
-								-- No need to loop if already found.
-							object_events.off or Result
-						loop
-							if name_lower.is_equal (object_events.item.feature_name) then
-								Result := True
-							end
-							object_events.forth
+				string_is_feature_name_result := False
+				parent_object := an_object.top_level_parent_object
+				recursive_do_all (parent_object, agent check_feature_name (object_name, an_object, ?))
+				Result := string_is_feature_name_result
+			end
+		end
+		
+	check_feature_name (object_name: STRING; original_object, an_object: GB_OBJECT) is
+			-- Is `object_name' a valid feature name for `original_object', in the context
+			-- of `an_object'? Result mat be queried from `string_is_feature_name_result'.
+		local
+			object_events: ARRAYED_LIST [GB_ACTION_SEQUENCE_INFO]
+			name_lower: STRING
+		do
+			if original_object /= an_object then
+				name_lower := object_name.as_lower
+					-- Access events of `current_object' locally, for speed
+				object_events := an_object.events
+					-- No need to check further if `object_events' is empty.
+					-- Note that we always check the events, even if `an_object' /= `Void'.
+				if not object_events.is_empty then
+					from
+						object_events.start
+					until
+							-- No need to loop if already found.
+						object_events.off or string_is_feature_name_result
+					loop
+						if name_lower.is_equal (object_events.item.feature_name) then
+							string_is_feature_name_result := True
 						end
+						object_events.forth
 					end
-
-					objects.forth
 				end
 			end
 		end
 		
 	name_in_use (object_name: STRING; an_object: GB_OBJECT): BOOLEAN is
-			-- Is a GB_OBJECT with name matching `object_name' contained
-			-- in `objects' or `events' of all objects in `objects.
-			-- Case insensitive search. Ignore `an_object' name
-			-- if not `Void', but still check the events for `an_object'.
+			-- Is `object_name' a valid name for `an_object'? Must check
+			-- all other object names in the current scope (window) as `an_object',
+			-- including names of all connceted events in scope.
+			-- Case insensitive, does not compare name of `an_object'.
 			-- Returns `False' if `object_name' is empty. This is because you are
 			-- allowed to have as many "unnamed" objects as you wish.
+		require
+			object_name_not_void: object_name /= Void
+			an_object_not_void: an_object /= Void
 		do
-			Result := string_is_object_name (object_name, an_object) or
+			Result := string_is_object_name (object_name, an_object, False) or
 				string_is_feature_name (object_name, an_object)
 		end
 		
-	existing_feature_matches (feature_name, type: STRING): BOOLEAN is
-			-- Do all action sequences with feature named `feature_name' connected,
-			-- have a type that is compatible (argument wise) with `type'.
+	existing_feature_matches (feature_name, type: STRING; an_object: GB_OBJECT): BOOLEAN is
+			-- Do all action sequences with feature named `feature_name' connected, in scope of `an_object'
+			-- have a type that is compatible (argument wise) with `type'?
 		require
-			feature_name_already_used: string_is_feature_name (feature_name, Void)
+			feature_name_not_empty: feature_name /= Void and then not feature_name.is_empty
+			type_exists: type /= Void and then not type.is_empty
+			feature_name_already_used: string_is_feature_name (feature_name, an_object)
 		local
-			name_lower: STRING
-			current_object: GB_OBJECT
+			parent_object: GB_OBJECT
+		do
+			existing_feature_matches_result := True
+			parent_object := an_object.top_level_parent_object
+			recursive_do_all (parent_object, agent check_feature_clash (feature_name.as_lower, type, ?))
+			Result := existing_feature_matches_result
+		end
+		
+	check_feature_clash (feature_name, type: STRING; an_object: GB_OBJECT) is
+			-- Is feature name valid for action sequence type `type' in the context of
+			-- `an_object'. Store result in `existing_feature_matches_result'.
+		local
 			object_events: ARRAYED_LIST [GB_ACTION_SEQUENCE_INFO]
 			action_sequence1, action_sequence2: GB_EV_ACTION_SEQUENCE
 			first_types, second_types: STRING
 		do
-			Result := True
-			name_lower := feature_name.as_lower
+			object_events := an_object.events
+				-- Note that we always check the events, even if `an_object' /= `Void'.
+			if not an_object.events.is_empty then
 				from
-					objects.start
+					object_events.start
 				until
-					objects.off or not Result
+						-- No need to loop if already found not to match.
+					object_events.off or not existing_feature_matches_result
 				loop
-					current_object := objects.item
-						-- Access events of `current_object' locally, for speed
-					object_events := current_object.events
-						-- Note that we always check the events, even if `an_object' /= `Void'.
-					if not object_events.is_empty then
-						from
-							object_events.start
-						until
-								-- No need to loop if already found not to match.
-							object_events.off or not Result
-						loop
-							if name_lower.is_equal (object_events.item.feature_name) then
-								action_sequence1 ?= new_instance_of (dynamic_type_from_string ("GB_" + type))
-								check
-									action_sequence_not_void: action_sequence1 /= Void
-								end
-								action_sequence2 ?= new_instance_of (dynamic_type_from_string ("GB_" + object_events.item.type))
-								check
-									action_sequence_not_void: action_sequence2 /= Void
-								end
-								first_types := action_sequence1.argument_types_as_string
-								second_types := action_sequence2.argument_types_as_string
-								if not equal (first_types, second_types) then
-									Result := False
-								end
-							end
-							object_events.forth
+					if feature_name.is_equal (object_events.item.feature_name) then
+						action_sequence1 ?= new_instance_of (dynamic_type_from_string ("GB_" + type))
+						check
+							action_sequence_not_void: action_sequence1 /= Void
+						end
+						action_sequence2 ?= new_instance_of (dynamic_type_from_string ("GB_" + object_events.item.type))
+						check
+							action_sequence_not_void: action_sequence2 /= Void
+						end
+						first_types := action_sequence1.argument_types_as_string
+						second_types := action_sequence2.argument_types_as_string
+						if not equal (first_types, second_types) then
+							existing_feature_matches_result := False
 						end
 					end
-
-					objects.forth
+					object_events.forth
 				end
+			end
 		end
+
+	existing_feature_matches_result: BOOLEAN
+		-- Last result of call to `existing_feature_matches'
 
 	mark_as_deleted (an_object: GB_OBJECT) is
 			-- Move `an_object' and all children at all levels in
@@ -1162,7 +1202,7 @@ feature {GB_COMMAND_DELETE_OBJECT, GB_COMMAND_DELETE_WINDOW_OBJECT} -- Implement
 					-- is contained.
 				if object_contained_in_object (deleted_object, editor.object) or
 					deleted_object = editor.object then
-						-- If we are the doced object editor, then just empty it.
+						-- If we are the docked object editor, then just empty it.
 						-- If not, we destroy the editor and the containing window.
 					if editor = docked_object_editor then
 						editor.make_empty
@@ -1220,10 +1260,12 @@ feature -- Access
 
 	objects: ARRAYED_LIST [GB_OBJECT]
 		-- All objects currently in system.
+		-- Mutually exclusive with `deleted_objects'.
 		
 	deleted_objects: ARRAYED_LIST [GB_OBJECT]
 		-- All objects that have been deleted in
 		-- this session of the application.
+		-- Mutually exclusivve with `objects'.
 		
 	root_window_object: GB_TITLED_WINDOW_OBJECT
 		-- The object representing the window that will be launched by the application.

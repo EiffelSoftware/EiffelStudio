@@ -36,8 +36,6 @@ feature -- Update
 						error_raised := True;
 						error (value);
 					end;
-				else
-					is_hidden := True;
 				end;
 				if not error_raised then
 					if list = Void then

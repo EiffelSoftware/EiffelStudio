@@ -22,7 +22,19 @@ rt_private char *rcsid =
 rt_public EIF_INTEGER hashcode(register char *s, register EIF_INTEGER count)
 {
 	/* Compute the hash code associated with given string s. The magic number
-	 * below is the greatest prime lower than 2^23.
+	 * below is the greatest prime lower than 2^23 so that this magic number
+	 * shifted to the left does not exceed 2^31.
+	 *
+	 * Note: Manu 09/27/2002: They are some other algorithms very similar to
+	 * the one we are currently using, but I figure out if one day we do some
+	 * serious performance checking, that it might be good to have some
+	 * alternatives:
+	 *
+	 *	djb2 algorithm
+	 *	register1 size_t hashval = 5381;
+			
+	 *	while (count--)
+	 *		hashval = ((hashval << 5) + hashval) + c; *//* hashval * 33 + c *//*
 	 */
 
 	register1 size_t hashval = 0;
@@ -31,6 +43,7 @@ rt_public EIF_INTEGER hashcode(register char *s, register EIF_INTEGER count)
 	while (count--)
 		hashval = ((hashval % magic) << 8) + (size_t) *s++;
 
+	
 	return (EIF_INTEGER) (hashval & 0x7fffffff);	/* Clear bit 31 (no unsigned in Eiffel) */
 }
 

@@ -278,9 +278,13 @@ rt_public EIF_CHARACTER eif_dir_separator (void)
 {
 #if defined EIF_WIN32
 	return '\\';
+#elif defined EIF_VMS_V6_ONLY
+	/** return '.'; **/	/* should cause error (no return) */
 #elif defined EIF_VMS
-	/* This is a gross oversimplification! */
-	return '.';
+	/** return '.'; **/
+	/*** This is a gross oversimplification! VMS has multiple path separators, and also allows UNIX paths. ***/
+	/* This allows handling like UNIX, until this is replaced with a better abstraction. */
+	return '/';
 #else
 	return '/';
 #endif
@@ -601,8 +605,7 @@ rt_public void eif_dir_delete(char *name)
 	int status;						/* Status from system call */
 
 #ifdef EIF_VMS
-	printf("Directory delete not implemented yet.\n");
-	printf("Directory: %s\n",name);
+	printf("Directory delete not implemented yet: Directory: %s\n", name);
 #else
 	file_stat(name, &buf);			/* Side effect: ensure file exists */
 
@@ -622,21 +625,16 @@ rt_public void eif_dir_delete(char *name)
 
 
 #ifdef EIF_VMS
-#define USE_VMS_WRAPPERS
+#define MY_VMS_WRAPPERS
 /**
-*** VMS wrappers for readdir package (readdir, opendir, closedir, etc.).
+*** VMS wrappers for readdir package (opendir, readdir, closedir, etc.).
 *** The wrappers ensure that only the latest file versions are returned from readdir.
 **/
 
-#ifdef  USE_VMS_WRAPPERS
-typedef struct {
-	size_t siz;
-	int magic;
-	DIR* dirp;
-	char *prev;
-} EIF_VMS_DIR;
-#define MAGIC 7652
-
+#ifdef  MY_VMS_WRAPPERS
+typedef struct { size_t siz; int magic; DIR* dirp; char *prev; } EIF_VMS_DIR;
+static const int magic = 7652;
+#ifdef moose
 #undef opendir   
 #undef closedir  
 #undef rewinddir 
@@ -645,18 +643,37 @@ typedef struct {
 #undef telldir   
 #endif
 
-rt_public DIR* eif_vms_opendir (const char *dirname)
+/* define the local readdir package macros to call the underlying readdir functions.
+#ifdef USE_VMS_JACKETS  /* if using VMS Porting package ("The Jackets") -- see eif_portable.h
+/* n.b. this depends on the definitions in vms_jackets.h */
+#define DECC_OPENDIR	GENERIC_OPENDIR_JACKET
+#define DECC_CLOSEDIR	GENERIC_CLOSEDIR_JACKET
+#define	DECC_READDIR	GENERIC_READDIR_JACKET
+#define DECC_REWINDDIR	GENERIC_REWINDDIR_JACKET
+#define DECC_SEEKDIR	GENERIC_SEEKDIR_JACKET
+#define	DECC_TELLDIR	GENERIC_TELLDIR_JACKET
+#else
+#define DECC_OPENDIR	DECC$OPENDIR
+#define DECC_CLOSEDIR	DECC$CLOSEDIR
+#define DECC_READDIR	DECC$READDIR
+#define DECC_REWINDDIR	DECC$REWINDDIR
+#define DECC_SEEKDIR	DECC$SEEKDIR
+#define DECC_TELLDIR	DECC$TELLDIR
+#endif /* VMS_JACKETS
+#endif /* MY_VMS_WRAPPERS */
+
+rt_public DIR* eif_vms_opendir (const char *dir_name)
 {
-    DIR* DECC$OPENDIR (const char* dirname);
-#ifdef USE_VMS_WRAPPERS
+    DIR* DECC_OPENDIR (const char* dir_name);
+#ifdef MY_VMS_WRAPPERS
     EIF_VMS_DIR* res = NULL;
     const size_t siz = sizeof *res;
     struct dirent *ep;
     if ( (res = calloc (1, sizeof *res)) ) {
 	if ( (res->prev = calloc (FILENAME_MAX +1, sizeof(char))) ) {
-	    res->magic = MAGIC;		/* magic number */
+	    res->magic = magic;		/* magic number */
 	    res->siz = sizeof *res;		/* size of structure */
-	    res->dirp = DECC$OPENDIR (dirname);
+	    res->dirp = DECC_OPENDIR (dir_name);
 	} 
 	if (!res->dirp) { 
 	    eif_free (res->prev);
@@ -666,18 +683,18 @@ rt_public DIR* eif_vms_opendir (const char *dirname)
     } 
     return (DIR*)res;
 #else
-    return DECC$OPENDIR (dirname);
+    return DECC_OPENDIR (dir_name);
 #endif
 }
 
 rt_public int eif_vms_closedir (DIR* notadirp)
 {
-    int DECC$CLOSEDIR (DIR *dirp);
-#ifdef USE_VMS_WRAPPERS
+    int DECC_CLOSEDIR (DIR *dirp);
+#ifdef MY_VMS_WRAPPERS
     EIF_VMS_DIR* evdp = (EIF_VMS_DIR*)notadirp;
     int res = 0;
     if (evdp) {
-	if (evdp->dirp) res = DECC$CLOSEDIR (evdp->dirp);
+	if (evdp->dirp) res = DECC_CLOSEDIR (evdp->dirp);
 	eif_free (evdp->prev);
 	eif_free (evdp);
     } else {
@@ -685,18 +702,18 @@ rt_public int eif_vms_closedir (DIR* notadirp)
     }
     return res;
 #else
-    return DECC$CLOSEDIR (notadirp);
+    return DECC_CLOSEDIR (notadirp);
 #endif
 }
 
 rt_public struct dirent * eif_vms_readdir (DIR* notadirp)
 {
-    struct dirent * DECC$READDIR (DIR*);
-#ifdef USE_VMS_WRAPPERS
+    struct dirent * DECC_READDIR (DIR*);
+#ifdef MY_VMS_WRAPPERS
     EIF_VMS_DIR* evdp = (EIF_VMS_DIR*)notadirp;
     struct dirent * res;
     do {    /* read directory until different filename encountered */
-	if ( (res = DECC$READDIR (evdp->dirp)) ) {
+	if ( (res = DECC_READDIR (evdp->dirp)) ) {
 	    char *endp = strchr (res->d_name, ';');
 	    if (endp)
 		res->d_name[endp - res->d_name] = '\0';
@@ -707,41 +724,41 @@ rt_public struct dirent * eif_vms_readdir (DIR* notadirp)
     } else *evdp->prev = '\0';
     return res;
 #else
-    return DECC$READDIR (notadirp);
+    return DECC_READDIR (notadirp);
 #endif
 }
 
 rt_public void eif_vms_rewinddir (DIR* notadirp)
 {
-    void DECC$REWINDDIR (DIR *dirp);
-#ifdef USE_VMS_WRAPPERS
+    void DECC_REWINDDIR (DIR *dirp);
+#ifdef MY_VMS_WRAPPERS
     EIF_VMS_DIR* evdp = (EIF_VMS_DIR*)notadirp;
-    DECC$REWINDDIR (evdp->dirp);
+    DECC_REWINDDIR (evdp->dirp);
     *evdp->prev = '\0';
 #else
-    DECC$REWINDDIR (notadirp);
+    DECC_REWINDDIR (notadirp);
 #endif
 }
 
 rt_public void eif_vms_seekdir (DIR* notadirp, long int loc)
 {
-    void DECC$SEEKDIR (DIR*, long int);
-#ifdef USE_VMS_WRAPPERS
+    void DECC_SEEKDIR (DIR*, long int);
+#ifdef MY_VMS_WRAPPERS
     EIF_VMS_DIR* evdp = (EIF_VMS_DIR*)notadirp;
-    (void) DECC$SEEKDIR (evdp->dirp, loc);
+    (void) DECC_SEEKDIR (evdp->dirp, loc);
 #else
-    DECC$SEEKDIR (notadirp, loc);
+    DECC_SEEKDIR (notadirp, loc);
 #endif
 }
 
 rt_public long eif_vms_telldir (DIR* notadirp)
 {
-    long DECC$TELLDIR (DIR*);
-#ifdef USE_VMS_WRAPPERS
+    long DECC_TELLDIR (DIR*);
+#ifdef MY_VMS_WRAPPERS
     EIF_VMS_DIR* evdp = (EIF_VMS_DIR*)notadirp;
-    return DECC$TELLDIR (evdp->dirp);
+    return DECC_TELLDIR (evdp->dirp);
 #else
-    return DECC$TELLDIR (notadirp);
+    return DECC_TELLDIR (notadirp);
 #endif
 }
 
@@ -805,8 +822,8 @@ char * dir_dot_dir (char * duplicate)
 /*#define TEST*/
 
     /* Number of elements in vms_versions array */
-#define CARDINALITY(a)	( sizeof(a) / sizeof (*a) )
-#define VERSIZE(e)	( CARDINALITY (e->vms_versions ) )
+#define CARDINALITY(a)	(  sizeof(a) / sizeof(*(a))  )
+#define VERSIZE(e)	(  CARDINALITY(e->vms_versions)  )
 
 
 /*

@@ -170,7 +170,12 @@ rt_public EIF_POINTER file_open(char *name, int how)
 {
 	/* Open file `name' with the corresponding type 'how'. */
 
-#if defined EIF_WINDOWS || defined EIF_VMS
+#if defined EIF_WINDOWS
+	if (how < 10)
+		return (EIF_POINTER) file_fopen(name, file_open_mode(how,'t'));
+	else
+		return (EIF_POINTER) file_fopen(name, file_open_mode(how,'b'));
+#elif defined EIF_VMS
 	if (how < 10)
 		return (EIF_POINTER) file_fopen(name, file_open_mode(how,'t'));
 	else
@@ -252,17 +257,20 @@ rt_public EIF_POINTER file_binary_reopen(char *name, int how, FILE *old)
 #endif
 
 #ifdef EIF_VMS
+#ifndef USE_VMS_JACKETS
+#undef fopen	/* remove fopen jacket */
+#define fopen DECC$FOPEN
+FILE* DECC$FOPEN (char *name, char*type, ...) ;
+#endif /* VMS_JACKETS */
 /* copies type to vms_type, removing 't' if present. returns TRUE if 't' was present, else FALSE. */
-rt_private int file_open_type_text (const char* type, char* vms_type)
+rt_private int vms_file_open_type (const char* type, char* vms_type)
 {
     char *p;
     strcpy (vms_type, type);
-    if ( (p=strchr(vms_type,'t')) ) {	/* if 't' present in copied string */
+    if (p = strchr(vms_type,'t'))	/* if 't' present in copied string */
 	strcpy (p, p+1);		/* then remove it */
-	return 1;
-    }
-    else return 0;
-} /* end file_open_type_text () */
+    return (p != NULL);
+} /* end vms_file_open_type () */
 #endif /* EIF_VMS */
 
 rt_private char *file_fopen(char *name, char *type)
@@ -278,9 +286,19 @@ rt_private char *file_fopen(char *name, char *type)
 	{
 	    char vms_type[FILE_TYPE_MAX+4];  /* must be at least as big as static char type[] in file_open_mode()  */
 	    assert (strlen(type) < sizeof vms_type);
-	    if (file_open_type_text (type, vms_type) && (type[0] == 'w' || 1))
-		 fp = fopen (name, vms_type, "rat=cr","rfm=stmlf", "shr=get");
-	    else fp = fopen (name, vms_type, "shr=get");
+	    vms_file_open_type (type, vms_type);
+	    if (vms_file_open_type (type, vms_type) && type[0] == 'w'  && 0) {
+		    /* text file open for write (create): force stream_lf */
+#ifdef USE_VMS_JACKETS
+		/* define VMS_OPEN_ARGS_1 " ", "ctx=stm" */
+		fp = fopen (name, vms_type, "rat=cr","rfm=stmlf", "shr=get");
+#else
+		fp = fopen (name, vms_type, "rat=cr","rfm=stmlf", "shr=get");
+#endif
+	    } else {
+		/* binary, or text file for read: force stream access */
+		fp = fopen (name, vms_type, "ctx=stm", "shr=get");
+	    }
 	    err = (errno == EVMSERR ? vaxc$errno : errno);
 	}
 #else
@@ -466,7 +484,7 @@ rt_public void file_ps(FILE *f, char *str, EIF_INTEGER len)
 	    else if (len < l) 
 		res = fprintf (f, "%.*s", len, str);
 	    else 
-		res = decc$record_write (f, str, len);
+		res = DECC$RECORD_WRITE (f, str, len);
 	    err = (errno == EVMSERR ? vaxc$errno : errno);
 	    if (res < 0)
 		eise_io("FILE: unable to write STRING object.");

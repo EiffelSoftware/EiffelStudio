@@ -7,7 +7,7 @@
  #    #     #    #    #  #    #   ###    #    #
  #    #     #     ####    ####    ###     ####
 
-	Miscellenaous Eiffel externals
+	Miscellaneous Eiffel externals
 
 */
 
@@ -38,6 +38,8 @@ doc:<file name="misc.c" header="eif_misc.h" version="$Id$" summary="Miscellenaou
 
 #include <ctype.h>			/* For toupper(), is_alpha(), ... */
 #include <stdio.h>
+
+
 
 rt_public EIF_INTEGER bointdiv(EIF_INTEGER n1, EIF_INTEGER n2)
 {
@@ -71,8 +73,9 @@ rt_public EIF_INTEGER eif_system (char *s)
 	old_signal_hdlr = signal (SIGCLD, SIG_IGN);
 #endif
 
-#ifdef EIF_VMS	/* if s contains '[', prepend 'run ' */
+#ifdef EIF_VMS	/* if s contains any VMS filespec delimiters, prepend 'RUN ' command */
 	{ /* if it contains a '[' before a space (ie. no verb), prepend "run " */
+		/* ***VMS FIXME*** revisit this for long filenames - may contain space in filename */
 		char *p = strchr (s, '[');
 		if ( (p) && p < strchr (s, ' ') ) {
 			char * run_cmd = eif_malloc (10 + strlen(s));
@@ -159,17 +162,25 @@ rt_public void eif_system_asynchronous (char *cmd)
 	}
 #endif /* not VMS (skip fork/parent code if VMS) */
 
-/* child */
+/* child (except on VMS, where this code runs in the parent) */
 	meltpath = (char *) (strdup (cmd));
 	if (!meltpath)
 		return;
 
-#ifdef EIF_VMS
+#ifdef EIF_VMS_V6_ONLY
 	appname = rindex (meltpath, ']');
 	if (appname)
 		*appname = 0;
 	else
 		strcpy (meltpath, "[]");
+#elif defined EIF_VMS
+	{
+	    size_t siz = eifrt_vms_dirname_len (meltpath);
+	    if (siz)
+		meltpath[siz] = '\0';
+	    else
+		strcpy (meltpath, "[]");
+	}
 #else
 	appname = rindex (meltpath, '/');
 	if (appname)
@@ -192,12 +203,12 @@ rt_public void eif_system_asynchronous (char *cmd)
 #ifndef EIF_VMS
 	status = system(cmd);				/* Run command via /bin/sh */
 #else	/* VMS */
-	status = ipcvms_spawn(cmd, 1);
+	status = eifrt_vms_spawn(cmd, 1);
 #endif	/* EIF_VMS */
 
 #ifdef EIF_VMS
 	if (status) {	/* command failed */
-		char *pgmname = ipcvms_get_progname(NULL);
+		const char *pgmname = eifrt_vms_get_progname (NULL,0);
 		fprintf (stderr, "%s: %s: \n-- error from system() call: %d\n"
 			"-- failed cmd: \"%s\" -- %s\n", 
 			pgmname, __FILE__, errno, cmd, strerror(errno));

@@ -41,6 +41,8 @@ feature -- Initialization
 			feature_c_names.compare_objects
 			
 			a_creator.initialize_descriptor (Current)
+		ensure
+			dual: dual implies dispinterface_descriptor /= Void
 		end
 
 feature -- Access
@@ -53,6 +55,9 @@ feature -- Access
 
 	inherited_interface: WIZARD_INTERFACE_DESCRIPTOR
 			-- Description of inherited interface
+
+	inherited_interface_descriptor: WIZARD_INHERITED_INTERFACE_DESCRIPTOR
+			-- Interface descriptor.
 
 	dual: BOOLEAN
 			-- Is dual interface?
@@ -210,6 +215,14 @@ feature -- Element Change
 			interface_set: inherited_interface = an_interface
 		end
 
+	set_inherited_interface_descriptor (a_descriptor: WIZARD_INHERITED_INTERFACE_DESCRIPTOR) is
+			-- Set `inherited_interface_descriptor' with `a_descriptor'
+		do
+			inherited_interface_descriptor := a_descriptor
+		ensure
+			interface_set: inherited_interface_descriptor = a_descriptor
+		end
+
 	set_dispinterface_descriptor (an_interface: WIZARD_INTERFACE_DESCRIPTOR) is
 			-- Set `dispinterface_descriptor' with `an_interface'
 		do
@@ -297,6 +310,16 @@ feature -- Status Report
 		end	
 
 feature -- Basic operations
+
+	initialize_inherited_interface is
+			-- Initialize inherited interface.
+		require
+			non_void_descriptor: inherited_interface_descriptor /= Void
+		do
+			inherited_interface ?= inherited_interface_descriptor.library.descriptors.item (inherited_interface_descriptor.index);
+		ensure
+			non_void_inherited_interface: inherited_interface /= Void
+		end
 
 	disambiguate_eiffel_names is
 			-- Disambiguate feature names.

@@ -521,7 +521,7 @@ feature {COMPILER_EXPORTER} -- Implementation
 			end
 			l_class := unique_class ("memory")
 			if l_class /= Void then
-				system.set_memory_class_i (l_class)
+				system.set_memory_class (l_class)
 			end
 			l_class := unique_class ("routine")
 			if l_class /= Void then

@@ -31,7 +31,7 @@ feature
 			unit: ROUT_ENTRY
 			old_position: INTEGER
 		do
-			if System.memory_class_i /= Void and then System.memory_class_i.is_compiled then
+			if System.memory_class /= Void and then System.memory_class.is_compiled then
 				dispose_rout_id := System.memory_dispose_id
 				table ?= Tmp_poly_server.item (dispose_rout_id);
 				if table /= Void then

@@ -84,7 +84,7 @@ feature -- Access
 	pointer_ref_class: CLASS_I
 			-- Class POINTER_REF
 
-	memory_class_i: CLASS_I
+	memory_class: CLASS_I
 			-- Class MEMORY
 
 	tuple_class: CLASS_I
@@ -345,14 +345,19 @@ feature -- Settings
 			any_class_set: any_class = c
 		end
 
-	set_system_object_class (c: EXTERNAL_CLASS_I) is
+	set_system_object_class (c: CLASS_I) is
 			-- Assign `c' to `system_object_class
 		require
 			c_not_void: c /= Void
+		local
+			l_ext: EXTERNAL_CLASS_I
 		do
-			system_object_class := c
+			l_ext ?= c
+			if l_ext /= Void then
+				system_object_class := l_ext
+			end
 		ensure
-			system_object_class_set: system_object_class = c
+			system_object_class_set: c.is_external_class implies system_object_class = c
 		end
 
 	set_boolean_class (c: CLASS_I) is
@@ -581,14 +586,14 @@ feature -- Settings
 			pointer_ref_class_set: pointer_ref_class = c
 		end
 
-	set_memory_class_i (c: CLASS_I) is
-			-- Assign `c' to `memory_class_i'.
+	set_memory_class (c: CLASS_I) is
+			-- Assign `c' to `memory_class'.
 		require
 			c_not_void: c /= Void
 		do
-			memory_class_i := c
+			memory_class := c
 		ensure
-			memory_class_set: memory_class_i = c
+			memory_class_set: memory_class = c
 		end
 
 	set_tuple_class (c: CLASS_I) is

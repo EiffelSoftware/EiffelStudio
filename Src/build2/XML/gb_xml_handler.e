@@ -87,7 +87,18 @@ feature -- Basic operations
 			xml_load.load
 			main_window.enable_menus
 		end
-	
+		
+	import (file_name: STRING) is
+			-- Import Build file `file_name'.
+		require
+			file_name_not_void: file_name /= Void
+		local
+			xml_load: GB_XML_IMPORT
+		do
+			create xml_load
+			xml_load.import (file_name)
+		end
+
 	load_components is
 			-- Load previously stored components in `component_document',
 			-- or create `component_document' if no component file exists.

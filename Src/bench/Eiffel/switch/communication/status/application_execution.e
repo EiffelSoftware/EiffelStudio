@@ -341,7 +341,9 @@ feature -- Access
 	breakpoint_status (f: E_FEATURE; i: INTEGER): INTEGER is
 			-- Returns 0 if the breakpoint is not set,
 			--         1 if the breakpoint is set and enabled,
-			--         -1 if the breakpoint is set but disabled
+			--		   2 if the breakpoint is enabled and has a condition,
+			--         -1 if the breakpoint is set but disabled,
+			--		   -2 if the breakpoint is disabled and has a condition
 		do
 			Result := debug_info.breakpoint_status(f, i)
 		end

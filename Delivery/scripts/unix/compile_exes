@@ -1,13 +1,13 @@
 #!/bin/sh
  
 # Set up the environment
+source set_aliases
 LASTTIME=`date +%s`
 LASTTIME_TOT=`date +%s`
 OLD_PATH=$PATH
 INIT_DIR=`pwd`
 TMP_EIFFEL_SRC=$EIFFEL_SRC
 EIFFEL_SRC=$EXPORT_DIR
-source set_aliases
 INSTALL_LOG=$COMPILE_LOG
 INSTALL_DIR=$FINAL_INSTALL_DIR
 echo > $INSTALL_LOG
@@ -120,5 +120,7 @@ if [ ! -f x2c ]; then
 	CANCEL
 fi
 move x2c $INSTALL_DIR/studio/spec/$ISE_PLATFORM/bin
+
+source compile_wizards
 
 CANCEL

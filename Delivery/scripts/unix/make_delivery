@@ -49,6 +49,9 @@ remtrace `date +%c`
 
 source check_environment
 cd $INIT_DIR
+if [ -e $EXPORT_DIR ]; then
+	fullrd $EXPORT_DIR
+fi
 safe_md $EXPORT_DIR
 
 give_time_to warm up

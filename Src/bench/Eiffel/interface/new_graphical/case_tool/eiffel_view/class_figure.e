@@ -161,7 +161,7 @@ feature {NONE} -- Implementation
 			cf: EIFFEL_CLASS_FIGURE
 			l_selected: LIST [EG_FIGURE]
 		do
-			if world.selected_figures.is_empty or else not world.selected_figures.has (Current) then
+			if world.selected_figures.count < 2 or else not world.selected_figures.has (Current) then
 				if model.is_compiled then
 					create {CLASSC_FIGURE_STONE} Result.make (Current)
 				else

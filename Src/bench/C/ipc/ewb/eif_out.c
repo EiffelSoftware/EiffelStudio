@@ -19,8 +19,8 @@
 #ifdef EIF_WIN32
 #include "stream.h"
 extern STREAM *sp;
-extern start_timer();			/* Starts the timer for communication */
-extern stop_timer();			/* Stops the timer */
+extern void start_timer(void);			/* Starts the timer for communication */
+extern void stop_timer(void);			/* Stops the timer */
 #endif
 
 rt_public void send_rqst_0 (long int code)
@@ -151,7 +151,6 @@ rt_public EIF_BOOLEAN recv_ack (void)
 		default:
 			return (EIF_BOOLEAN) 0;
 		}
-		break;
 	default:
 		return (EIF_BOOLEAN) 0;
 	}

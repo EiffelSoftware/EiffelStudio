@@ -30,7 +30,8 @@ inherit
 			set_effects as wel_set_effects,
 			set_background_color as wel_set_background_color,
 			background_color as wel_background_color,
-			height as wel_height
+			height as wel_height,
+			height_in_points as wel_height_in_points
 		undefine
 			default_create, copy, is_equal, out
 		end
@@ -161,6 +162,7 @@ feature -- Status setting
 			-- Make `value' the new font.
 		local
 			font_imp: EV_FONT_IMP
+			l_log_font: WEL_LOG_FONT
 		do
 			font_imp ?= a_font.implementation
 			if font_imp.internal_face_name /= Void then
@@ -177,11 +179,12 @@ feature -- Status setting
 				-- and its properties including `wel_font'.
 				-- Therefore, we must query the `log_font' from `wel_font' directly to ensure
 				-- that it is the correct version. Julian.
-			set_pitch_and_family (font_imp.wel_font.log_font.pitch_and_family)
-			
-			set_height_in_pixels (font_imp.height)
-			set_char_set (font_imp.wel_log_font.char_set)			
-			if font_imp.wel_font.log_font.weight >= 700 then
+			l_log_font := font_imp.wel_font.log_font
+			set_pitch_and_family (l_log_font.pitch_and_family)
+
+			set_height_in_points (font_imp.height_in_points)
+			set_char_set (l_log_font.char_set)
+			if log_font.weight >= 700 then
 				enable_bold
 			else
 				disable_bold
@@ -191,6 +194,9 @@ feature -- Status setting
 			else
 				disable_italic
 			end
+				-- Now dispose of the temporary log font as
+				-- querying it creates a new one each time.
+			l_log_font.dispose
 		end
 
 	set_color (a_color: EV_COLOR) is
@@ -320,6 +326,12 @@ feature {EV_RICH_TEXT_BUFFERING_STRUCTURES_I} -- Implementation
 		do
 			Result := height_in_pixels
 		end
+		
+	height_in_points: INTEGER is
+			-- Height of `Current' in points.
+		do
+			Result := wel_height_in_points
+		end	
 		
 	fcolor: INTEGER is
 			-- foreground color RGB packed into 24 bit.

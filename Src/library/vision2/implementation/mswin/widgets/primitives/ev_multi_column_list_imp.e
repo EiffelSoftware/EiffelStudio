@@ -270,6 +270,12 @@ feature -- Status setting
 						Lvs_nocolumnheader)
 				end
 				multiple_selection_enabled := True
+				
+					-- The scroll bars become hidden, but by calling `update_item'
+					-- it forces `Current' to redisplay them if necessary.
+				if count > 0 then
+					update_item (count)	
+				end
 			end
 		end
 
@@ -295,6 +301,11 @@ feature -- Status setting
 					-- Reselect the top most item
 				if old_selected_item /= Void then
 					old_selected_item.enable_select
+				end
+					-- The scroll bars become hidden, but by calling `update_item'
+					-- it forces `Current' to redisplay them if necessary.
+				if count > 0 then
+					update_item (count)	
 				end
 			end
 		end

@@ -5834,7 +5834,7 @@ end
 				if has_syntax_warning then
 					Error_handler.insert_warning (
 						create {SYNTAX_WARNING}.make (yytype58 (yyvs.item (yyvsp - 3)).start_position,
-						yytype58 (yyvs.item (yyvsp - 3)).end_position, filename, 0, "Use keyword `create' instead."))
+						yytype58 (yyvs.item (yyvsp - 3)).end_position, filename, 0, "Make an expanded version of the base class associated with this type."))
 				end
 			
 			yyval := yyval63
@@ -8511,7 +8511,7 @@ end
 				if has_syntax_warning then
 					Error_handler.insert_warning (
 						create {SYNTAX_WARNING}.make (yytype58 (yyvs.item (yyvsp - 5)).start_position,
-						yytype58 (yyvs.item (yyvsp - 5)).end_position, filename, 0, "Use keyword `create' instead."))
+						yytype58 (yyvs.item (yyvsp - 5)).end_position, filename, 0, "Make an expanded version of the base class associated with this type."))
 				end
 		
 			yyval := yyval46

@@ -687,10 +687,8 @@ feature {NONE} -- Implementation
 			toolbar_parent.set_margin_height (0)
 			toolbar_parent.set_spacing (1)
 			!! edit_bar.make (Interface_names.n_Command_bar_name, toolbar_parent)
- 			edit_bar.set_height (23)
 			!! sep.make (Interface_names.t_Empty, toolbar_parent)
 			!! format_bar.make (Interface_names.n_Format_bar_name, toolbar_parent)
- 			format_bar.set_height (23)
 		end
 
 feature {PROJECT_W} -- Implementation

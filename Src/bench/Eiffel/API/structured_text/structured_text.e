@@ -241,7 +241,7 @@ feature -- Element change
 		local
 			l_item: like item
 		do
-			!BASIC_TEXT! l_item.make (str);
+			!CLUSTER_NAME_TEXT! l_item.make (str, e_cluster);
 			add (l_item)
 		end;
 

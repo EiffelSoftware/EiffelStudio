@@ -206,6 +206,7 @@ feature {NONE} -- Execution
 			list_width: INTEGER
 		do
 			if not ((create {PLATFORM}).is_windows) then
+				clear
 				right_list.remove_selection
 			elseif  not inside_on_resize_right_list_column then
 				inside_on_resize_right_list_column := True

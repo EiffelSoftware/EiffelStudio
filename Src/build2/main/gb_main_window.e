@@ -119,7 +119,14 @@ feature -- Basic operation
 			box_exists: vb /= Void
 		do
 			build_widget_structure (vb)
-			type_selector.ensure_top_item_visible
+				-- When we are launching as the Envision modification
+				-- wizard, we will not be able to ensure that the top item
+				-- is visible as at window will not be displayed. If this is
+				-- the case, then we perform the "itme_visible" i
+				-- `make_and_launch_as_modify_wizard' of WIZARD_PROJECT_MANAGER.
+			if is_show_requested then
+				type_selector.ensure_top_item_visible
+			end
 			initialize_split_areas
 			command_handler.update
 		end

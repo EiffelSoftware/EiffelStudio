@@ -18,7 +18,8 @@ inherit
 			class_ast as current_ast
 		end;
 	MEMORY;
-	COMPILER_EXPORTER
+	COMPILER_EXPORTER;
+	SHARED_BENCH_RESOURCES
 
 creation
 
@@ -35,6 +36,9 @@ feature -- Initialization
 			target_class := target;
 			client := cl;	
 			initialize;
+			if not order_same_as_text then
+				creators := target.creators;
+			end;
 			processed_parents.extend (System.any_class.compiled_class);
 		end;
 
@@ -45,6 +49,7 @@ feature -- Initialization
 			!! categories.make;
 			!! invariant_server.make;
 			!! current_category.make;
+			!! creation_table.make (2);
 		end;
 
 feature -- Properties
@@ -55,11 +60,17 @@ feature -- Properties
 	target_feature_table: FEATURE_TABLE;
 			-- Feature table for target_class
 
+	creators: EXTEND_TABLE [EXPORT_I, STRING]
+			-- Creators of `target_class'
+
 	current_class: CLASS_C;
 			-- Class being analyzed
 
 	current_feature_table: FEATURE_TABLE;
 			-- Feature table for for current_ast structure
+
+	creation_table: HASH_TABLE [FEATURE_ADAPTER, STRING];
+			-- Table of feature adapter for a given feature name
 
 	categories:	PART_SORTED_TWO_WAY_LIST [CATEGORY];
 			-- Categories for class_c
@@ -220,6 +231,24 @@ end;
 			invariant_server.extend (inv);
 		end;
 
+	record_creation_feature (feat_adapter: FEATURE_ADAPTER) is
+			-- Record adapter feature `feat' if it is
+			-- a creation routine.
+		require
+			valid_feat_adapter: feat_adapter /= Void
+		local
+			target_feature: FEATURE_I;
+			tmp_creators: like creators
+		do
+			tmp_creators := creators;
+			if tmp_creators /= Void then
+				target_feature := feat_adapter.target_feature;
+				if tmp_creators.has (target_feature.feature_name) then
+					creation_table.put (feat_adapter, target_feature.feature_name)
+				end
+			end
+		end;
+
 	register_feature (feature_as: FEATURE_AS_B) is
 			-- Register feature `feature_as' for format
 			-- processing
@@ -251,7 +280,7 @@ end;
 					if not categories.after then
 						categories.item.merge (current_category);
 					else
-						categories.extend (current_category);
+						categories.put_front (current_category);
 					end
 				end
 			end;
@@ -272,6 +301,7 @@ feature -- Removal
 	wipe_out is
 			-- Wipe out Current structure.
 		do
+			creators := Void;
 			target_ast := Void;
 			target_feature_table := Void;
 			current_class := Void;
@@ -280,6 +310,7 @@ feature -- Removal
 			categories.wipe_out;
 			current_category.wipe_out;
 			assert_server := Void;
+			creation_table := Void;
 			class_comments := Void;
 			target_replicated_feature_table := Void;
 		end;
@@ -301,17 +332,21 @@ feature -- Output
 		require
 			valid_ctxt: ctxt /= Void
 		local
-			cat: like current_category
+			cat: like current_category;
+			array: ARRAY [STRING]
 		do
+			if not order_same_as_text then
+				array := feature_clauses_array;
+				update_feature_clause_order (array);
+				categories.sort
+			end;
 			from
 				categories.start;
 			until
 				categories.after
 			loop
 				cat := categories.item;
-				if not cat.empty then
-					cat.format (ctxt);
-				end;
+				cat.format (ctxt);
 				categories.forth;
 			end;	
 		end;
@@ -500,6 +535,83 @@ end;
 			current_ast.register (Current);
 		ensure
 			consistency: (eiffel_file = Void) = (class_comments /= Void)
+		end;
+
+feature {NONE} -- Implementation
+
+	update_feature_clause_order (array: ARRAY [STRING]) is
+			-- Update the feature clause order.
+		require
+			valid_array: array /= Void 
+		local
+			cat: like current_category;
+			feature_clause_order_table: HASH_TABLE [INTEGER, STRING];
+			default_feature_clause_order: INTEGER;
+			order, i, c: INTEGER;	
+			comment: STRING;
+			eif_comments: EIFFEL_COMMENTS
+		do
+			!! feature_clause_order_table.make (array.count);
+			from
+				i := 1;
+				c := array.count
+			until
+				i > c
+			loop
+				comment := array.item (i);
+				if comment.is_equal ("*") then
+					default_feature_clause_order := i
+				else
+					feature_clause_order_table.put (i, comment)
+				end;
+				i := i + 1
+			end;
+			if default_feature_clause_order = 0 then
+				-- Didn't find `*' so make it the
+				-- largest value in order to be placed last
+				-- in the list.
+				default_feature_clause_order := i
+			end
+			from
+				categories.start;
+			until
+				categories.after
+			loop
+				cat := categories.item;
+				if cat.empty then
+					categories.remove;
+				else
+						-- Update order number
+					eif_comments := cat.comments;
+					
+					if eif_comments = Void or else eif_comments.empty then
+						order := default_feature_clause_order
+					else
+						comment := clone (eif_comments.first);
+						comment.left_adjust; -- Remove leading blanks
+						order := feature_clause_order_table.item (comment);
+						if order = 0 then
+								-- Didn't find order - use default
+							order := default_feature_clause_order
+						end
+					end;
+					cat.set_order (order);
+					categories.forth;
+				end;
+			end;	
+		end;
+
+	feature_clauses_array: ARRAY [STRING] is
+			-- Array of ordered feature clause comments
+		do
+			Result := Resources.get_array ("feature_clause_order",
+						<< "Initialization", "Access", "Measurement",
+						"Comparison", "Status report", "Status setting",
+						"Cursor movement", "Element change", "Removal",
+						"Resizing", "Transformation", "Conversion",
+						"Duplication", "Miscellaneous", 
+						"Basic operations", "Obsolete", "Inapplicable",
+						"Implementation", "*" >>)
 		end;
 
 feature {NONE} -- External features

@@ -23,7 +23,7 @@ inherit
 
 creation
 
-	make
+	make, initialize
 
 feature {AST_FACTORY} -- Initialization
 

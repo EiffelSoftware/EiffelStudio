@@ -23,8 +23,6 @@ feature {NONE} -- Initialization
 			-- to be freed.
 			-- Caution: `a_pointer' must be a pointer
 			-- comming from Windows.
-		require
-			a_pointer_not_void: a_pointer /= default_pointer
 		do
 			item := a_pointer
 			shared := True

@@ -15,7 +15,7 @@ inherit
 
 	DIALOG_M;
 
-	MESSAGE_M
+	MESSAGE_BOX_M
 		rename
 			make as message_m_make
 		undefine

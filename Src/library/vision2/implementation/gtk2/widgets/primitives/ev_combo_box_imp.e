@@ -12,7 +12,8 @@ class
 inherit
 	EV_COMBO_BOX_I
 		undefine
-			wipe_out
+			wipe_out,
+			call_pebble_function
 		redefine
 			interface
 		end
@@ -21,7 +22,10 @@ inherit
 		undefine
 			create_focus_in_actions,
 			create_focus_out_actions,
-			needs_event_box
+			needs_event_box,
+			pre_pick_steps,
+			call_pebble_function,
+			enable_transport
 		redefine
 			initialize,
 			make,

@@ -12,8 +12,7 @@ inherit
 			finalize,
 			get_hash_code,
 			equals,
-			to_string,
-			memberwise_clone
+			to_string
 		end
 
 	ICOMPARABLE

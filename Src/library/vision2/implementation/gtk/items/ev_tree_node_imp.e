@@ -9,6 +9,8 @@ class
 
 inherit
 	EV_TREE_NODE_I
+		redefine
+			interface
 		select
 			interface
 		end
@@ -35,10 +37,8 @@ inherit
 	EV_TREE_NODE_ACTION_SEQUENCES_IMP
 		
 	EV_PND_DEFERRED_ITEM
-		undefine
-			copy,
-			is_equal,
-			dispose
+		redefine
+			interface
 		end
 
 create
@@ -62,7 +62,7 @@ feature {NONE} -- Initialization
 		end
 		
 	dispose is
-			-- 
+			-- Clean up
 		do
 			Precursor {EV_ITEM_LIST_IMP}
 			if not is_in_final_collect then
@@ -613,7 +613,10 @@ feature {EV_ITEM_LIST_IMP} -- Implementation
 
 	list_widget: POINTER 
 			-- Pointer to the items own gtktree.
+			
+feature {EV_ANY_I} -- Implementation
 
+	interface: EV_TREE_NODE
 
 end -- class EV_TREE_NODE_IMP
 

@@ -184,7 +184,6 @@ feature -- Access
 										current_data_element ?= inner_element.item_for_iteration
 										if current_data_element /= Void then
 											char_data := current_data_element.content
-											char_data.replace_substring_all ("%T","")	
 											if data_valid (char_data) then
 												info.set_data (char_data)
 												info.set_as_constant
@@ -198,7 +197,6 @@ feature -- Access
 								current_data_element ?= current_element.item_for_iteration
 								if current_data_element /= Void then
 									char_data := current_data_element.content
-									char_data.replace_substring_all ("%T","")	
 									if data_valid (char_data) then
 										info.set_data (char_data)
 									end

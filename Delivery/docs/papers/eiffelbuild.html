@@ -1,0 +1,83 @@
+<html>
+
+<head>
+<meta http-equiv="Content-Language" content="en-us">
+<meta http-equiv="Content-Type" content="text/html; charset=windows-1252">
+<meta name="GENERATOR" content="Microsoft FrontPage 4.0">
+<meta name="ProgId" content="FrontPage.Editor.Document">
+<title>EiffelBuild</title>
+<link rev="made" href="mailto:webmaster@eiffel.com">
+<link rel="stylesheet" href="../styles/tech.css" type="text/css">
+<meta name="Microsoft Border" content="t, default">
+</head>
+
+<body><!--msnavigation--><table border="0" cellpadding="0" cellspacing="0" width="100%"><tr><td><table border="0" cellspacing="0" cellpadding="0" width="100%">
+  <tr>
+    <td valign="top" bgcolor="#000063" width="291"><b><font face="Arial" size="4" color="#FFFFFF">Interactive<br>
+      Software Engineering</font></b></td>
+    <td valign="top" bgcolor="#000063" width="720"><b><font face="Arial" size="6" color="#FFFFCC">EiffelBuild</font></b></td>
+  </tr>
+  <tr>
+    <td colspan="2" valign="top" width="100%">
+<p align="right"><nobr>[&nbsp;<a href="../index.html">Home</a>&nbsp;]</nobr> <nobr>[&nbsp;<a href="index.html">Technology&nbsp;Papers</a>&nbsp;]</nobr> <nobr>[&nbsp;<a href="../install.html">Installation&nbsp;Notes</a>&nbsp;]</nobr> <nobr>[&nbsp;<a href="../Eiffel/index.html">About&nbsp;Eiffel</a>&nbsp;]</nobr>
+    </td>
+  </tr>
+</table></td></tr><!--msnavigation--></table><!--msnavigation--><table border="0" cellpadding="0" cellspacing="0" width="100%"><tr><!--msnavigation--><td valign="top"><table cols="1" cellpadding="5" cellspacing="0" border="0">
+<tr><td>
+
+<h2>Color problems under Windows 95 and Windows NT:</h2>
+    <ul>
+          <li>In general, color may not appear directly on the interface when applied, but will appear in the generated code if it is
+    possible to set a color. Moreover, no context under Windows 95 or NT support pixmaps as background.&nbsp;<br><br>
+	See the limitations below for more specific information about each context.</li>
+      <li>PUSH_B: the standard windows button can not be colored at	all.</li>
+      <li>LABEL: the foreground color can be changed independantly on each label. The foreground color is shared by all labels,
+    so setting a background color in one label will change it for every labels.</li>
+      <li>TEXT_FIELD: colors cannot be changed.</li>
+      <li>TOGGLE_B: colors cannot be changed.</li>
+      <li>PICT_COLOR_B: setting a pixmap as background has the same effect as setting the pixmap name on the attribute page. On&nbsp;
+    Windows, the button will be resized to the size of the bitmap in the generated code.</li>
+      <li>SCALE: color changes will not appear in the interface. Only the background
+    color can be changed.</li>
+      <li>SCROLLABLE_LIST: colors cannot be changed.</li>
+      <li>DRAWING_BOX: colors cannot be changed.</li>
+      <li>BULLETIN: colors cannot be changed.</li>
+    </ul>
+
+<p>&nbsp;<h2>Moving and resizing contexts:</h2>
+    <ul>
+      <li>To resize a context, be sure that the cursor has the shape of a corner cursor. Some context may not be resized if you click on sensitive parts	such as the scroll bar on a
+    SCROLLED_T.</li>
+      <li>To group contexts, you can either control-right-click on the interface once,
+    stretch the rectangle that appears and control-right-click again, or control-left-click on the contexts on the CONTEXT TREE. control-left-click	will not work on the interface.</li>
+      <li>Please see below for more specific information. If nothing about a specific context is specified, this context works as expected.</li>
+      <li>SCALE: To resize or to move a SCALE, click on the blanck part on the left.	If you click on the scale itself, you will have to do it twice, the first	time to grab the widget, the second time to release it with the good	size/position.</li>
+      <li>SCROLLED_T: to resize a SCROLLED_T, you can only grab the top left corner.
+    The scrollbar on the right and at the bottom are completely insensitive. This
+    is also true for moving the context.</li>
+      <li>DRAWING_BOX (tip about resizing): since the widget is actually composed of
+    two widgets, to resize the widget using the top left corner, you have to click
+    a little inside the drawing area if you want to grab it.</li>
+      <li>OPT_PULL: it is not possible to move an OPT_PULL with the mouse. To change	its position, use the CONTEXT TREE and conrol-right-click. It is not possible
+    neither to resize it. It will be resized automatically according to the width	of its largest entry.</li>
+    </ul>
+<p>&nbsp;</p>
+
+<h2>Unfixed bug:<br>
+    </h2>
+<blockquote>
+    BAR: you can add a menu bar on each window. But you can only have one BAR	per window, even if it is technically posible to add more. When you retrieve
+    an existing window with a menu bar from a previous project, the bar may not
+    appear at the top of the window, but actually be at the bottom. Although the
+    interface does not look as expected, the generated code will be fine.
+</blockquote>
+
+<h2>General tip:</h2>
+<blockquote>
+  <p>	If an action is not working, remember that there are several ways to achieve
+  an action with EiffelBuild. For instance, to display a context editor, you can either control-right-click on the context on the interface, control-right-click on the
+  context in the CONTEXT TREE, or drag the context and drop it in the corresponding hole.</p>
+</blockquote>
+<p>&nbsp;</td></tr></table>&nbsp;<!--msnavigation--></td></tr><!--msnavigation--></table></body>
+
+</html>

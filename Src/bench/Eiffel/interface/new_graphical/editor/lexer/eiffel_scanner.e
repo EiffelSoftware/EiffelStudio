@@ -94,46 +94,64 @@ if yy_act = 4 then
 						update_token_list
 						i_ := i_ + 1
 					end
+					in_comments := False
 					
 else
---|#line 67
+--|#line 68
  
 						-- comments
 					create {EDITOR_TOKEN_COMMENT} curr_token.make(text)
 					update_token_list
+					in_comments := True
 					
 end
 end
 else
 if yy_act <= 7 then
 if yy_act = 6 then
---|#line 75
-
-						-- Symbols
-					create {EDITOR_TOKEN_TEXT} curr_token.make(text)
-					update_token_list
-					
-else
---|#line 76
-
-						-- Symbols
-					create {EDITOR_TOKEN_TEXT} curr_token.make(text)
-					update_token_list
-					
-end
-else
-if yy_act = 8 then
 --|#line 77
 
 						-- Symbols
-					create {EDITOR_TOKEN_TEXT} curr_token.make(text)
+					if not in_comments then
+						create {EDITOR_TOKEN_TEXT} curr_token.make(text)
+					else
+						create {EDITOR_TOKEN_COMMENT} curr_token.make(text)
+					end
 					update_token_list
 					
 else
 --|#line 78
 
 						-- Symbols
-					create {EDITOR_TOKEN_TEXT} curr_token.make(text)
+					if not in_comments then
+						create {EDITOR_TOKEN_TEXT} curr_token.make(text)
+					else
+						create {EDITOR_TOKEN_COMMENT} curr_token.make(text)
+					end
+					update_token_list
+					
+end
+else
+if yy_act = 8 then
+--|#line 79
+
+						-- Symbols
+					if not in_comments then
+						create {EDITOR_TOKEN_TEXT} curr_token.make(text)
+					else
+						create {EDITOR_TOKEN_COMMENT} curr_token.make(text)
+					end
+					update_token_list
+					
+else
+--|#line 80
+
+						-- Symbols
+					if not in_comments then
+						create {EDITOR_TOKEN_TEXT} curr_token.make(text)
+					else
+						create {EDITOR_TOKEN_COMMENT} curr_token.make(text)
+					end
 					update_token_list
 					
 end
@@ -143,33 +161,49 @@ else
 if yy_act <= 13 then
 if yy_act <= 11 then
 if yy_act = 10 then
---|#line 79
-
-						-- Symbols
-					create {EDITOR_TOKEN_TEXT} curr_token.make(text)
-					update_token_list
-					
-else
---|#line 80
-
-						-- Symbols
-					create {EDITOR_TOKEN_TEXT} curr_token.make(text)
-					update_token_list
-					
-end
-else
-if yy_act = 12 then
 --|#line 81
 
 						-- Symbols
-					create {EDITOR_TOKEN_TEXT} curr_token.make(text)
+					if not in_comments then
+						create {EDITOR_TOKEN_TEXT} curr_token.make(text)
+					else
+						create {EDITOR_TOKEN_COMMENT} curr_token.make(text)
+					end
 					update_token_list
 					
 else
 --|#line 82
 
 						-- Symbols
-					create {EDITOR_TOKEN_TEXT} curr_token.make(text)
+					if not in_comments then
+						create {EDITOR_TOKEN_TEXT} curr_token.make(text)
+					else
+						create {EDITOR_TOKEN_COMMENT} curr_token.make(text)
+					end
+					update_token_list
+					
+end
+else
+if yy_act = 12 then
+--|#line 83
+
+						-- Symbols
+					if not in_comments then
+						create {EDITOR_TOKEN_TEXT} curr_token.make(text)
+					else
+						create {EDITOR_TOKEN_COMMENT} curr_token.make(text)
+					end
+					update_token_list
+					
+else
+--|#line 84
+
+						-- Symbols
+					if not in_comments then
+						create {EDITOR_TOKEN_TEXT} curr_token.make(text)
+					else
+						create {EDITOR_TOKEN_COMMENT} curr_token.make(text)
+					end
 					update_token_list
 					
 end
@@ -177,33 +211,49 @@ end
 else
 if yy_act <= 15 then
 if yy_act = 14 then
---|#line 83
-
-						-- Symbols
-					create {EDITOR_TOKEN_TEXT} curr_token.make(text)
-					update_token_list
-					
-else
---|#line 84
-
-						-- Symbols
-					create {EDITOR_TOKEN_TEXT} curr_token.make(text)
-					update_token_list
-					
-end
-else
-if yy_act = 16 then
 --|#line 85
 
 						-- Symbols
-					create {EDITOR_TOKEN_TEXT} curr_token.make(text)
+					if not in_comments then
+						create {EDITOR_TOKEN_TEXT} curr_token.make(text)
+					else
+						create {EDITOR_TOKEN_COMMENT} curr_token.make(text)
+					end
 					update_token_list
 					
 else
 --|#line 86
 
 						-- Symbols
-					create {EDITOR_TOKEN_TEXT} curr_token.make(text)
+					if not in_comments then
+						create {EDITOR_TOKEN_TEXT} curr_token.make(text)
+					else
+						create {EDITOR_TOKEN_COMMENT} curr_token.make(text)
+					end
+					update_token_list
+					
+end
+else
+if yy_act = 16 then
+--|#line 87
+
+						-- Symbols
+					if not in_comments then
+						create {EDITOR_TOKEN_TEXT} curr_token.make(text)
+					else
+						create {EDITOR_TOKEN_COMMENT} curr_token.make(text)
+					end
+					update_token_list
+					
+else
+--|#line 88
+
+						-- Symbols
+					if not in_comments then
+						create {EDITOR_TOKEN_TEXT} curr_token.make(text)
+					else
+						create {EDITOR_TOKEN_COMMENT} curr_token.make(text)
+					end
 					update_token_list
 					
 end
@@ -216,41 +266,61 @@ if yy_act <= 22 then
 if yy_act <= 20 then
 if yy_act <= 19 then
 if yy_act = 18 then
---|#line 92
+--|#line 98
  
-						-- Operator Symbol 
-					create {EDITOR_TOKEN_OPERATOR} curr_token.make(text)
+						-- Operator Symbol
+					if not in_comments then
+						create {EDITOR_TOKEN_OPERATOR} curr_token.make(text)
+					else
+						create {EDITOR_TOKEN_COMMENT} curr_token.make(text)
+					end
 					update_token_list
 					
 else
---|#line 93
+--|#line 99
  
-						-- Operator Symbol 
-					create {EDITOR_TOKEN_OPERATOR} curr_token.make(text)
+						-- Operator Symbol
+					if not in_comments then
+						create {EDITOR_TOKEN_OPERATOR} curr_token.make(text)
+					else
+						create {EDITOR_TOKEN_COMMENT} curr_token.make(text)
+					end
 					update_token_list
 					
 end
 else
---|#line 94
+--|#line 100
  
-						-- Operator Symbol 
-					create {EDITOR_TOKEN_OPERATOR} curr_token.make(text)
+						-- Operator Symbol
+					if not in_comments then
+						create {EDITOR_TOKEN_OPERATOR} curr_token.make(text)
+					else
+						create {EDITOR_TOKEN_COMMENT} curr_token.make(text)
+					end
 					update_token_list
 					
 end
 else
 if yy_act = 21 then
---|#line 95
+--|#line 101
  
-						-- Operator Symbol 
-					create {EDITOR_TOKEN_OPERATOR} curr_token.make(text)
+						-- Operator Symbol
+					if not in_comments then
+						create {EDITOR_TOKEN_OPERATOR} curr_token.make(text)
+					else
+						create {EDITOR_TOKEN_COMMENT} curr_token.make(text)
+					end
 					update_token_list
 					
 else
---|#line 96
+--|#line 102
  
-						-- Operator Symbol 
-					create {EDITOR_TOKEN_OPERATOR} curr_token.make(text)
+						-- Operator Symbol
+					if not in_comments then
+						create {EDITOR_TOKEN_OPERATOR} curr_token.make(text)
+					else
+						create {EDITOR_TOKEN_COMMENT} curr_token.make(text)
+					end
 					update_token_list
 					
 end
@@ -258,33 +328,49 @@ end
 else
 if yy_act <= 24 then
 if yy_act = 23 then
---|#line 97
+--|#line 103
  
-						-- Operator Symbol 
-					create {EDITOR_TOKEN_OPERATOR} curr_token.make(text)
+						-- Operator Symbol
+					if not in_comments then
+						create {EDITOR_TOKEN_OPERATOR} curr_token.make(text)
+					else
+						create {EDITOR_TOKEN_COMMENT} curr_token.make(text)
+					end
 					update_token_list
 					
 else
---|#line 98
+--|#line 104
  
-						-- Operator Symbol 
-					create {EDITOR_TOKEN_OPERATOR} curr_token.make(text)
+						-- Operator Symbol
+					if not in_comments then
+						create {EDITOR_TOKEN_OPERATOR} curr_token.make(text)
+					else
+						create {EDITOR_TOKEN_COMMENT} curr_token.make(text)
+					end
 					update_token_list
 					
 end
 else
 if yy_act = 25 then
---|#line 99
+--|#line 105
  
-						-- Operator Symbol 
-					create {EDITOR_TOKEN_OPERATOR} curr_token.make(text)
+						-- Operator Symbol
+					if not in_comments then
+						create {EDITOR_TOKEN_OPERATOR} curr_token.make(text)
+					else
+						create {EDITOR_TOKEN_COMMENT} curr_token.make(text)
+					end
 					update_token_list
 					
 else
---|#line 100
+--|#line 106
  
-						-- Operator Symbol 
-					create {EDITOR_TOKEN_OPERATOR} curr_token.make(text)
+						-- Operator Symbol
+					if not in_comments then
+						create {EDITOR_TOKEN_OPERATOR} curr_token.make(text)
+					else
+						create {EDITOR_TOKEN_COMMENT} curr_token.make(text)
+					end
 					update_token_list
 					
 end
@@ -294,33 +380,49 @@ else
 if yy_act <= 30 then
 if yy_act <= 28 then
 if yy_act = 27 then
---|#line 101
+--|#line 107
  
-						-- Operator Symbol 
-					create {EDITOR_TOKEN_OPERATOR} curr_token.make(text)
+						-- Operator Symbol
+					if not in_comments then
+						create {EDITOR_TOKEN_OPERATOR} curr_token.make(text)
+					else
+						create {EDITOR_TOKEN_COMMENT} curr_token.make(text)
+					end
 					update_token_list
 					
 else
---|#line 102
+--|#line 108
  
-						-- Operator Symbol 
-					create {EDITOR_TOKEN_OPERATOR} curr_token.make(text)
+						-- Operator Symbol
+					if not in_comments then
+						create {EDITOR_TOKEN_OPERATOR} curr_token.make(text)
+					else
+						create {EDITOR_TOKEN_COMMENT} curr_token.make(text)
+					end
 					update_token_list
 					
 end
 else
 if yy_act = 29 then
---|#line 103
+--|#line 109
  
-						-- Operator Symbol 
-					create {EDITOR_TOKEN_OPERATOR} curr_token.make(text)
+						-- Operator Symbol
+					if not in_comments then
+						create {EDITOR_TOKEN_OPERATOR} curr_token.make(text)
+					else
+						create {EDITOR_TOKEN_COMMENT} curr_token.make(text)
+					end
 					update_token_list
 					
 else
---|#line 104
+--|#line 110
  
-						-- Operator Symbol 
-					create {EDITOR_TOKEN_OPERATOR} curr_token.make(text)
+						-- Operator Symbol
+					if not in_comments then
+						create {EDITOR_TOKEN_OPERATOR} curr_token.make(text)
+					else
+						create {EDITOR_TOKEN_COMMENT} curr_token.make(text)
+					end
 					update_token_list
 					
 end
@@ -328,33 +430,49 @@ end
 else
 if yy_act <= 32 then
 if yy_act = 31 then
---|#line 105
+--|#line 111
  
-						-- Operator Symbol 
-					create {EDITOR_TOKEN_OPERATOR} curr_token.make(text)
+						-- Operator Symbol
+					if not in_comments then
+						create {EDITOR_TOKEN_OPERATOR} curr_token.make(text)
+					else
+						create {EDITOR_TOKEN_COMMENT} curr_token.make(text)
+					end
 					update_token_list
 					
 else
---|#line 106
+--|#line 112
  
-						-- Operator Symbol 
-					create {EDITOR_TOKEN_OPERATOR} curr_token.make(text)
+						-- Operator Symbol
+					if not in_comments then
+						create {EDITOR_TOKEN_OPERATOR} curr_token.make(text)
+					else
+						create {EDITOR_TOKEN_COMMENT} curr_token.make(text)
+					end
 					update_token_list
 					
 end
 else
 if yy_act = 33 then
---|#line 107
+--|#line 113
  
-						-- Operator Symbol 
-					create {EDITOR_TOKEN_OPERATOR} curr_token.make(text)
+						-- Operator Symbol
+					if not in_comments then
+						create {EDITOR_TOKEN_OPERATOR} curr_token.make(text)
+					else
+						create {EDITOR_TOKEN_COMMENT} curr_token.make(text)
+					end
 					update_token_list
 					
 else
---|#line 108
+--|#line 114
  
-						-- Operator Symbol 
-					create {EDITOR_TOKEN_OPERATOR} curr_token.make(text)
+						-- Operator Symbol
+					if not in_comments then
+						create {EDITOR_TOKEN_OPERATOR} curr_token.make(text)
+					else
+						create {EDITOR_TOKEN_COMMENT} curr_token.make(text)
+					end
 					update_token_list
 					
 end
@@ -369,41 +487,61 @@ if yy_act <= 39 then
 if yy_act <= 37 then
 if yy_act <= 36 then
 if yy_act = 35 then
---|#line 109
+--|#line 115
  
-						-- Operator Symbol 
-					create {EDITOR_TOKEN_OPERATOR} curr_token.make(text)
+						-- Operator Symbol
+					if not in_comments then
+						create {EDITOR_TOKEN_OPERATOR} curr_token.make(text)
+					else
+						create {EDITOR_TOKEN_COMMENT} curr_token.make(text)
+					end
 					update_token_list
 					
 else
---|#line 110
+--|#line 116
  
-						-- Operator Symbol 
-					create {EDITOR_TOKEN_OPERATOR} curr_token.make(text)
+						-- Operator Symbol
+					if not in_comments then
+						create {EDITOR_TOKEN_OPERATOR} curr_token.make(text)
+					else
+						create {EDITOR_TOKEN_COMMENT} curr_token.make(text)
+					end
 					update_token_list
 					
 end
 else
---|#line 118
+--|#line 128
 
 										-- Keyword
-										create {EDITOR_TOKEN_KEYWORD} curr_token.make(text)
+										if not in_comments then
+											create {EDITOR_TOKEN_KEYWORD} curr_token.make(text)
+										else
+											create {EDITOR_TOKEN_COMMENT} curr_token.make(text)
+										end
 										update_token_list
 										
 end
 else
 if yy_act = 38 then
---|#line 119
+--|#line 129
 
 										-- Keyword
-										create {EDITOR_TOKEN_KEYWORD} curr_token.make(text)
+										if not in_comments then
+											create {EDITOR_TOKEN_KEYWORD} curr_token.make(text)
+										else
+											create {EDITOR_TOKEN_COMMENT} curr_token.make(text)
+										end
 										update_token_list
 										
 else
---|#line 120
+--|#line 130
 
 										-- Keyword
-										create {EDITOR_TOKEN_KEYWORD} curr_token.make(text)
+										if not in_comments then
+											create {EDITOR_TOKEN_KEYWORD} curr_token.make(text)
+										else
+											create {EDITOR_TOKEN_COMMENT} curr_token.make(text)
+										end
 										update_token_list
 										
 end
@@ -411,33 +549,49 @@ end
 else
 if yy_act <= 41 then
 if yy_act = 40 then
---|#line 121
+--|#line 131
 
 										-- Keyword
-										create {EDITOR_TOKEN_KEYWORD} curr_token.make(text)
+										if not in_comments then
+											create {EDITOR_TOKEN_KEYWORD} curr_token.make(text)
+										else
+											create {EDITOR_TOKEN_COMMENT} curr_token.make(text)
+										end
 										update_token_list
 										
 else
---|#line 122
+--|#line 132
 
 										-- Keyword
-										create {EDITOR_TOKEN_KEYWORD} curr_token.make(text)
+										if not in_comments then
+											create {EDITOR_TOKEN_KEYWORD} curr_token.make(text)
+										else
+											create {EDITOR_TOKEN_COMMENT} curr_token.make(text)
+										end
 										update_token_list
 										
 end
 else
 if yy_act = 42 then
---|#line 123
+--|#line 133
 
 										-- Keyword
-										create {EDITOR_TOKEN_KEYWORD} curr_token.make(text)
+										if not in_comments then
+											create {EDITOR_TOKEN_KEYWORD} curr_token.make(text)
+										else
+											create {EDITOR_TOKEN_COMMENT} curr_token.make(text)
+										end
 										update_token_list
 										
 else
---|#line 124
+--|#line 134
 
 										-- Keyword
-										create {EDITOR_TOKEN_KEYWORD} curr_token.make(text)
+										if not in_comments then
+											create {EDITOR_TOKEN_KEYWORD} curr_token.make(text)
+										else
+											create {EDITOR_TOKEN_COMMENT} curr_token.make(text)
+										end
 										update_token_list
 										
 end
@@ -447,33 +601,49 @@ else
 if yy_act <= 47 then
 if yy_act <= 45 then
 if yy_act = 44 then
---|#line 125
+--|#line 135
 
 										-- Keyword
-										create {EDITOR_TOKEN_KEYWORD} curr_token.make(text)
+										if not in_comments then
+											create {EDITOR_TOKEN_KEYWORD} curr_token.make(text)
+										else
+											create {EDITOR_TOKEN_COMMENT} curr_token.make(text)
+										end
 										update_token_list
 										
 else
---|#line 126
+--|#line 136
 
 										-- Keyword
-										create {EDITOR_TOKEN_KEYWORD} curr_token.make(text)
+										if not in_comments then
+											create {EDITOR_TOKEN_KEYWORD} curr_token.make(text)
+										else
+											create {EDITOR_TOKEN_COMMENT} curr_token.make(text)
+										end
 										update_token_list
 										
 end
 else
 if yy_act = 46 then
---|#line 127
+--|#line 137
 
 										-- Keyword
-										create {EDITOR_TOKEN_KEYWORD} curr_token.make(text)
+										if not in_comments then
+											create {EDITOR_TOKEN_KEYWORD} curr_token.make(text)
+										else
+											create {EDITOR_TOKEN_COMMENT} curr_token.make(text)
+										end
 										update_token_list
 										
 else
---|#line 128
+--|#line 138
 
 										-- Keyword
-										create {EDITOR_TOKEN_KEYWORD} curr_token.make(text)
+										if not in_comments then
+											create {EDITOR_TOKEN_KEYWORD} curr_token.make(text)
+										else
+											create {EDITOR_TOKEN_COMMENT} curr_token.make(text)
+										end
 										update_token_list
 										
 end
@@ -481,33 +651,49 @@ end
 else
 if yy_act <= 49 then
 if yy_act = 48 then
---|#line 129
+--|#line 139
 
 										-- Keyword
-										create {EDITOR_TOKEN_KEYWORD} curr_token.make(text)
+										if not in_comments then
+											create {EDITOR_TOKEN_KEYWORD} curr_token.make(text)
+										else
+											create {EDITOR_TOKEN_COMMENT} curr_token.make(text)
+										end
 										update_token_list
 										
 else
---|#line 130
+--|#line 140
 
 										-- Keyword
-										create {EDITOR_TOKEN_KEYWORD} curr_token.make(text)
+										if not in_comments then
+											create {EDITOR_TOKEN_KEYWORD} curr_token.make(text)
+										else
+											create {EDITOR_TOKEN_COMMENT} curr_token.make(text)
+										end
 										update_token_list
 										
 end
 else
 if yy_act = 50 then
---|#line 131
+--|#line 141
 
 										-- Keyword
-										create {EDITOR_TOKEN_KEYWORD} curr_token.make(text)
+										if not in_comments then
+											create {EDITOR_TOKEN_KEYWORD} curr_token.make(text)
+										else
+											create {EDITOR_TOKEN_COMMENT} curr_token.make(text)
+										end
 										update_token_list
 										
 else
---|#line 132
+--|#line 142
 
 										-- Keyword
-										create {EDITOR_TOKEN_KEYWORD} curr_token.make(text)
+										if not in_comments then
+											create {EDITOR_TOKEN_KEYWORD} curr_token.make(text)
+										else
+											create {EDITOR_TOKEN_COMMENT} curr_token.make(text)
+										end
 										update_token_list
 										
 end
@@ -519,33 +705,49 @@ if yy_act <= 59 then
 if yy_act <= 55 then
 if yy_act <= 53 then
 if yy_act = 52 then
---|#line 133
+--|#line 143
 
 										-- Keyword
-										create {EDITOR_TOKEN_KEYWORD} curr_token.make(text)
+										if not in_comments then
+											create {EDITOR_TOKEN_KEYWORD} curr_token.make(text)
+										else
+											create {EDITOR_TOKEN_COMMENT} curr_token.make(text)
+										end
 										update_token_list
 										
 else
---|#line 134
+--|#line 144
 
 										-- Keyword
-										create {EDITOR_TOKEN_KEYWORD} curr_token.make(text)
+										if not in_comments then
+											create {EDITOR_TOKEN_KEYWORD} curr_token.make(text)
+										else
+											create {EDITOR_TOKEN_COMMENT} curr_token.make(text)
+										end
 										update_token_list
 										
 end
 else
 if yy_act = 54 then
---|#line 135
+--|#line 145
 
 										-- Keyword
-										create {EDITOR_TOKEN_KEYWORD} curr_token.make(text)
+										if not in_comments then
+											create {EDITOR_TOKEN_KEYWORD} curr_token.make(text)
+										else
+											create {EDITOR_TOKEN_COMMENT} curr_token.make(text)
+										end
 										update_token_list
 										
 else
---|#line 136
+--|#line 146
 
 										-- Keyword
-										create {EDITOR_TOKEN_KEYWORD} curr_token.make(text)
+										if not in_comments then
+											create {EDITOR_TOKEN_KEYWORD} curr_token.make(text)
+										else
+											create {EDITOR_TOKEN_COMMENT} curr_token.make(text)
+										end
 										update_token_list
 										
 end
@@ -553,33 +755,49 @@ end
 else
 if yy_act <= 57 then
 if yy_act = 56 then
---|#line 137
+--|#line 147
 
 										-- Keyword
-										create {EDITOR_TOKEN_KEYWORD} curr_token.make(text)
+										if not in_comments then
+											create {EDITOR_TOKEN_KEYWORD} curr_token.make(text)
+										else
+											create {EDITOR_TOKEN_COMMENT} curr_token.make(text)
+										end
 										update_token_list
 										
 else
---|#line 138
+--|#line 148
 
 										-- Keyword
-										create {EDITOR_TOKEN_KEYWORD} curr_token.make(text)
+										if not in_comments then
+											create {EDITOR_TOKEN_KEYWORD} curr_token.make(text)
+										else
+											create {EDITOR_TOKEN_COMMENT} curr_token.make(text)
+										end
 										update_token_list
 										
 end
 else
 if yy_act = 58 then
---|#line 139
+--|#line 149
 
 										-- Keyword
-										create {EDITOR_TOKEN_KEYWORD} curr_token.make(text)
+										if not in_comments then
+											create {EDITOR_TOKEN_KEYWORD} curr_token.make(text)
+										else
+											create {EDITOR_TOKEN_COMMENT} curr_token.make(text)
+										end
 										update_token_list
 										
 else
---|#line 140
+--|#line 150
 
 										-- Keyword
-										create {EDITOR_TOKEN_KEYWORD} curr_token.make(text)
+										if not in_comments then
+											create {EDITOR_TOKEN_KEYWORD} curr_token.make(text)
+										else
+											create {EDITOR_TOKEN_COMMENT} curr_token.make(text)
+										end
 										update_token_list
 										
 end
@@ -589,33 +807,49 @@ else
 if yy_act <= 63 then
 if yy_act <= 61 then
 if yy_act = 60 then
---|#line 141
+--|#line 151
 
 										-- Keyword
-										create {EDITOR_TOKEN_KEYWORD} curr_token.make(text)
+										if not in_comments then
+											create {EDITOR_TOKEN_KEYWORD} curr_token.make(text)
+										else
+											create {EDITOR_TOKEN_COMMENT} curr_token.make(text)
+										end
 										update_token_list
 										
 else
---|#line 142
+--|#line 152
 
 										-- Keyword
-										create {EDITOR_TOKEN_KEYWORD} curr_token.make(text)
+										if not in_comments then
+											create {EDITOR_TOKEN_KEYWORD} curr_token.make(text)
+										else
+											create {EDITOR_TOKEN_COMMENT} curr_token.make(text)
+										end
 										update_token_list
 										
 end
 else
 if yy_act = 62 then
---|#line 143
+--|#line 153
 
 										-- Keyword
-										create {EDITOR_TOKEN_KEYWORD} curr_token.make(text)
+										if not in_comments then
+											create {EDITOR_TOKEN_KEYWORD} curr_token.make(text)
+										else
+											create {EDITOR_TOKEN_COMMENT} curr_token.make(text)
+										end
 										update_token_list
 										
 else
---|#line 144
+--|#line 154
 
 										-- Keyword
-										create {EDITOR_TOKEN_KEYWORD} curr_token.make(text)
+										if not in_comments then
+											create {EDITOR_TOKEN_KEYWORD} curr_token.make(text)
+										else
+											create {EDITOR_TOKEN_COMMENT} curr_token.make(text)
+										end
 										update_token_list
 										
 end
@@ -623,33 +857,49 @@ end
 else
 if yy_act <= 65 then
 if yy_act = 64 then
---|#line 145
+--|#line 155
 
 										-- Keyword
-										create {EDITOR_TOKEN_KEYWORD} curr_token.make(text)
+										if not in_comments then
+											create {EDITOR_TOKEN_KEYWORD} curr_token.make(text)
+										else
+											create {EDITOR_TOKEN_COMMENT} curr_token.make(text)
+										end
 										update_token_list
 										
 else
---|#line 146
+--|#line 156
 
 										-- Keyword
-										create {EDITOR_TOKEN_KEYWORD} curr_token.make(text)
+										if not in_comments then
+											create {EDITOR_TOKEN_KEYWORD} curr_token.make(text)
+										else
+											create {EDITOR_TOKEN_COMMENT} curr_token.make(text)
+										end
 										update_token_list
 										
 end
 else
 if yy_act = 66 then
---|#line 147
+--|#line 157
 
 										-- Keyword
-										create {EDITOR_TOKEN_KEYWORD} curr_token.make(text)
+										if not in_comments then
+											create {EDITOR_TOKEN_KEYWORD} curr_token.make(text)
+										else
+											create {EDITOR_TOKEN_COMMENT} curr_token.make(text)
+										end
 										update_token_list
 										
 else
---|#line 148
+--|#line 158
 
 										-- Keyword
-										create {EDITOR_TOKEN_KEYWORD} curr_token.make(text)
+										if not in_comments then
+											create {EDITOR_TOKEN_KEYWORD} curr_token.make(text)
+										else
+											create {EDITOR_TOKEN_COMMENT} curr_token.make(text)
+										end
 										update_token_list
 										
 end
@@ -666,41 +916,61 @@ if yy_act <= 72 then
 if yy_act <= 70 then
 if yy_act <= 69 then
 if yy_act = 68 then
---|#line 149
+--|#line 159
 
 										-- Keyword
-										create {EDITOR_TOKEN_KEYWORD} curr_token.make(text)
+										if not in_comments then
+											create {EDITOR_TOKEN_KEYWORD} curr_token.make(text)
+										else
+											create {EDITOR_TOKEN_COMMENT} curr_token.make(text)
+										end
 										update_token_list
 										
 else
---|#line 150
+--|#line 160
 
 										-- Keyword
-										create {EDITOR_TOKEN_KEYWORD} curr_token.make(text)
+										if not in_comments then
+											create {EDITOR_TOKEN_KEYWORD} curr_token.make(text)
+										else
+											create {EDITOR_TOKEN_COMMENT} curr_token.make(text)
+										end
 										update_token_list
 										
 end
 else
---|#line 151
+--|#line 161
 
 										-- Keyword
-										create {EDITOR_TOKEN_KEYWORD} curr_token.make(text)
+										if not in_comments then
+											create {EDITOR_TOKEN_KEYWORD} curr_token.make(text)
+										else
+											create {EDITOR_TOKEN_COMMENT} curr_token.make(text)
+										end
 										update_token_list
 										
 end
 else
 if yy_act = 71 then
---|#line 152
+--|#line 162
 
 										-- Keyword
-										create {EDITOR_TOKEN_KEYWORD} curr_token.make(text)
+										if not in_comments then
+											create {EDITOR_TOKEN_KEYWORD} curr_token.make(text)
+										else
+											create {EDITOR_TOKEN_COMMENT} curr_token.make(text)
+										end
 										update_token_list
 										
 else
---|#line 153
+--|#line 163
 
 										-- Keyword
-										create {EDITOR_TOKEN_KEYWORD} curr_token.make(text)
+										if not in_comments then
+											create {EDITOR_TOKEN_KEYWORD} curr_token.make(text)
+										else
+											create {EDITOR_TOKEN_COMMENT} curr_token.make(text)
+										end
 										update_token_list
 										
 end
@@ -708,33 +978,49 @@ end
 else
 if yy_act <= 74 then
 if yy_act = 73 then
---|#line 154
+--|#line 164
 
 										-- Keyword
-										create {EDITOR_TOKEN_KEYWORD} curr_token.make(text)
+										if not in_comments then
+											create {EDITOR_TOKEN_KEYWORD} curr_token.make(text)
+										else
+											create {EDITOR_TOKEN_COMMENT} curr_token.make(text)
+										end
 										update_token_list
 										
 else
---|#line 155
+--|#line 165
 
 										-- Keyword
-										create {EDITOR_TOKEN_KEYWORD} curr_token.make(text)
+										if not in_comments then
+											create {EDITOR_TOKEN_KEYWORD} curr_token.make(text)
+										else
+											create {EDITOR_TOKEN_COMMENT} curr_token.make(text)
+										end
 										update_token_list
 										
 end
 else
 if yy_act = 75 then
---|#line 156
+--|#line 166
 
 										-- Keyword
-										create {EDITOR_TOKEN_KEYWORD} curr_token.make(text)
+										if not in_comments then
+											create {EDITOR_TOKEN_KEYWORD} curr_token.make(text)
+										else
+											create {EDITOR_TOKEN_COMMENT} curr_token.make(text)
+										end
 										update_token_list
 										
 else
---|#line 157
+--|#line 167
 
 										-- Keyword
-										create {EDITOR_TOKEN_KEYWORD} curr_token.make(text)
+										if not in_comments then
+											create {EDITOR_TOKEN_KEYWORD} curr_token.make(text)
+										else
+											create {EDITOR_TOKEN_COMMENT} curr_token.make(text)
+										end
 										update_token_list
 										
 end
@@ -744,33 +1030,49 @@ else
 if yy_act <= 80 then
 if yy_act <= 78 then
 if yy_act = 77 then
---|#line 158
+--|#line 168
 
 										-- Keyword
-										create {EDITOR_TOKEN_KEYWORD} curr_token.make(text)
+										if not in_comments then
+											create {EDITOR_TOKEN_KEYWORD} curr_token.make(text)
+										else
+											create {EDITOR_TOKEN_COMMENT} curr_token.make(text)
+										end
 										update_token_list
 										
 else
---|#line 159
+--|#line 169
 
 										-- Keyword
-										create {EDITOR_TOKEN_KEYWORD} curr_token.make(text)
+										if not in_comments then
+											create {EDITOR_TOKEN_KEYWORD} curr_token.make(text)
+										else
+											create {EDITOR_TOKEN_COMMENT} curr_token.make(text)
+										end
 										update_token_list
 										
 end
 else
 if yy_act = 79 then
---|#line 160
+--|#line 170
 
 										-- Keyword
-										create {EDITOR_TOKEN_KEYWORD} curr_token.make(text)
+										if not in_comments then
+											create {EDITOR_TOKEN_KEYWORD} curr_token.make(text)
+										else
+											create {EDITOR_TOKEN_COMMENT} curr_token.make(text)
+										end
 										update_token_list
 										
 else
---|#line 161
+--|#line 171
 
 										-- Keyword
-										create {EDITOR_TOKEN_KEYWORD} curr_token.make(text)
+										if not in_comments then
+											create {EDITOR_TOKEN_KEYWORD} curr_token.make(text)
+										else
+											create {EDITOR_TOKEN_COMMENT} curr_token.make(text)
+										end
 										update_token_list
 										
 end
@@ -778,33 +1080,49 @@ end
 else
 if yy_act <= 82 then
 if yy_act = 81 then
---|#line 162
+--|#line 172
 
 										-- Keyword
-										create {EDITOR_TOKEN_KEYWORD} curr_token.make(text)
+										if not in_comments then
+											create {EDITOR_TOKEN_KEYWORD} curr_token.make(text)
+										else
+											create {EDITOR_TOKEN_COMMENT} curr_token.make(text)
+										end
 										update_token_list
 										
 else
---|#line 163
+--|#line 173
 
 										-- Keyword
-										create {EDITOR_TOKEN_KEYWORD} curr_token.make(text)
+										if not in_comments then
+											create {EDITOR_TOKEN_KEYWORD} curr_token.make(text)
+										else
+											create {EDITOR_TOKEN_COMMENT} curr_token.make(text)
+										end
 										update_token_list
 										
 end
 else
 if yy_act = 83 then
---|#line 164
+--|#line 174
 
 										-- Keyword
-										create {EDITOR_TOKEN_KEYWORD} curr_token.make(text)
+										if not in_comments then
+											create {EDITOR_TOKEN_KEYWORD} curr_token.make(text)
+										else
+											create {EDITOR_TOKEN_COMMENT} curr_token.make(text)
+										end
 										update_token_list
 										
 else
---|#line 165
+--|#line 175
 
 										-- Keyword
-										create {EDITOR_TOKEN_KEYWORD} curr_token.make(text)
+										if not in_comments then
+											create {EDITOR_TOKEN_KEYWORD} curr_token.make(text)
+										else
+											create {EDITOR_TOKEN_COMMENT} curr_token.make(text)
+										end
 										update_token_list
 										
 end
@@ -817,41 +1135,61 @@ if yy_act <= 89 then
 if yy_act <= 87 then
 if yy_act <= 86 then
 if yy_act = 85 then
---|#line 166
+--|#line 176
 
 										-- Keyword
-										create {EDITOR_TOKEN_KEYWORD} curr_token.make(text)
+										if not in_comments then
+											create {EDITOR_TOKEN_KEYWORD} curr_token.make(text)
+										else
+											create {EDITOR_TOKEN_COMMENT} curr_token.make(text)
+										end
 										update_token_list
 										
 else
---|#line 167
+--|#line 177
 
 										-- Keyword
-										create {EDITOR_TOKEN_KEYWORD} curr_token.make(text)
+										if not in_comments then
+											create {EDITOR_TOKEN_KEYWORD} curr_token.make(text)
+										else
+											create {EDITOR_TOKEN_COMMENT} curr_token.make(text)
+										end
 										update_token_list
 										
 end
 else
---|#line 168
+--|#line 178
 
 										-- Keyword
-										create {EDITOR_TOKEN_KEYWORD} curr_token.make(text)
+										if not in_comments then
+											create {EDITOR_TOKEN_KEYWORD} curr_token.make(text)
+										else
+											create {EDITOR_TOKEN_COMMENT} curr_token.make(text)
+										end
 										update_token_list
 										
 end
 else
 if yy_act = 88 then
---|#line 169
+--|#line 179
 
 										-- Keyword
-										create {EDITOR_TOKEN_KEYWORD} curr_token.make(text)
+										if not in_comments then
+											create {EDITOR_TOKEN_KEYWORD} curr_token.make(text)
+										else
+											create {EDITOR_TOKEN_COMMENT} curr_token.make(text)
+										end
 										update_token_list
 										
 else
---|#line 170
+--|#line 180
 
 										-- Keyword
-										create {EDITOR_TOKEN_KEYWORD} curr_token.make(text)
+										if not in_comments then
+											create {EDITOR_TOKEN_KEYWORD} curr_token.make(text)
+										else
+											create {EDITOR_TOKEN_COMMENT} curr_token.make(text)
+										end
 										update_token_list
 										
 end
@@ -859,32 +1197,48 @@ end
 else
 if yy_act <= 91 then
 if yy_act = 90 then
---|#line 171
+--|#line 181
 
 										-- Keyword
-										create {EDITOR_TOKEN_KEYWORD} curr_token.make(text)
-										update_token_list
-										
-else
---|#line 172
-
-										-- Keyword
-										create {EDITOR_TOKEN_KEYWORD} curr_token.make(text)
-										update_token_list
-										
-end
-else
-if yy_act = 92 then
---|#line 173
-
-										-- Keyword
-										create {EDITOR_TOKEN_KEYWORD} curr_token.make(text)
+										if not in_comments then
+											create {EDITOR_TOKEN_KEYWORD} curr_token.make(text)
+										else
+											create {EDITOR_TOKEN_COMMENT} curr_token.make(text)
+										end
 										update_token_list
 										
 else
 --|#line 182
 
-										create {EDITOR_TOKEN_TEXT} curr_token.make(text)
+										-- Keyword
+										if not in_comments then
+											create {EDITOR_TOKEN_KEYWORD} curr_token.make(text)
+										else
+											create {EDITOR_TOKEN_COMMENT} curr_token.make(text)
+										end
+										update_token_list
+										
+end
+else
+if yy_act = 92 then
+--|#line 183
+
+										-- Keyword
+										if not in_comments then
+											create {EDITOR_TOKEN_KEYWORD} curr_token.make(text)
+										else
+											create {EDITOR_TOKEN_COMMENT} curr_token.make(text)
+										end
+										update_token_list
+										
+else
+--|#line 196
+
+										if not in_comments then
+											create {EDITOR_TOKEN_TEXT} curr_token.make(text)
+										else
+											create {EDITOR_TOKEN_COMMENT} curr_token.make(text)
+										end
 										update_token_list
 										
 end
@@ -894,29 +1248,45 @@ else
 if yy_act <= 97 then
 if yy_act <= 95 then
 if yy_act = 94 then
---|#line 190
+--|#line 208
 
-										create {EDITOR_TOKEN_TEXT} curr_token.make(text)
+										if not in_comments then
+											create {EDITOR_TOKEN_TEXT} curr_token.make(text)
+										else
+											create {EDITOR_TOKEN_COMMENT} curr_token.make(text)
+										end
 										update_token_list
 										
 else
---|#line 200
+--|#line 222
 
-					create {EDITOR_TOKEN_CHARACTER} curr_token.make(text)
+					if not in_comments then
+						create {EDITOR_TOKEN_CHARACTER} curr_token.make(text)
+					else
+						create {EDITOR_TOKEN_COMMENT} curr_token.make(text)
+					end
 					update_token_list
 					
 end
 else
 if yy_act = 96 then
---|#line 201
+--|#line 223
 
-					create {EDITOR_TOKEN_CHARACTER} curr_token.make(text)
+					if not in_comments then
+						create {EDITOR_TOKEN_CHARACTER} curr_token.make(text)
+					else
+						create {EDITOR_TOKEN_COMMENT} curr_token.make(text)
+					end
 					update_token_list
 					
 else
---|#line 202
+--|#line 224
 
-					create {EDITOR_TOKEN_CHARACTER} curr_token.make(text)
+					if not in_comments then
+						create {EDITOR_TOKEN_CHARACTER} curr_token.make(text)
+					else
+						create {EDITOR_TOKEN_COMMENT} curr_token.make(text)
+					end
 					update_token_list
 					
 end
@@ -924,29 +1294,45 @@ end
 else
 if yy_act <= 99 then
 if yy_act = 98 then
---|#line 203
+--|#line 225
 
-					create {EDITOR_TOKEN_CHARACTER} curr_token.make(text)
+					if not in_comments then
+						create {EDITOR_TOKEN_CHARACTER} curr_token.make(text)
+					else
+						create {EDITOR_TOKEN_COMMENT} curr_token.make(text)
+					end
 					update_token_list
 					
 else
---|#line 204
+--|#line 226
 
-					create {EDITOR_TOKEN_CHARACTER} curr_token.make(text)
+					if not in_comments then
+						create {EDITOR_TOKEN_CHARACTER} curr_token.make(text)
+					else
+						create {EDITOR_TOKEN_COMMENT} curr_token.make(text)
+					end
 					update_token_list
 					
 end
 else
 if yy_act = 100 then
---|#line 205
+--|#line 227
 
-					create {EDITOR_TOKEN_CHARACTER} curr_token.make(text)
+					if not in_comments then
+						create {EDITOR_TOKEN_CHARACTER} curr_token.make(text)
+					else
+						create {EDITOR_TOKEN_COMMENT} curr_token.make(text)
+					end
 					update_token_list
 					
 else
---|#line 206
+--|#line 228
 
-					create {EDITOR_TOKEN_CHARACTER} curr_token.make(text)
+					if not in_comments then
+						create {EDITOR_TOKEN_CHARACTER} curr_token.make(text)
+					else
+						create {EDITOR_TOKEN_COMMENT} curr_token.make(text)
+					end
 					update_token_list
 					
 end
@@ -961,36 +1347,56 @@ if yy_act <= 106 then
 if yy_act <= 104 then
 if yy_act <= 103 then
 if yy_act = 102 then
---|#line 207
+--|#line 229
 
-					create {EDITOR_TOKEN_CHARACTER} curr_token.make(text)
+					if not in_comments then
+						create {EDITOR_TOKEN_CHARACTER} curr_token.make(text)
+					else
+						create {EDITOR_TOKEN_COMMENT} curr_token.make(text)
+					end
 					update_token_list
 					
 else
---|#line 208
+--|#line 230
 
-					create {EDITOR_TOKEN_CHARACTER} curr_token.make(text)
+					if not in_comments then
+						create {EDITOR_TOKEN_CHARACTER} curr_token.make(text)
+					else
+						create {EDITOR_TOKEN_COMMENT} curr_token.make(text)
+					end
 					update_token_list
 					
 end
 else
---|#line 209
+--|#line 231
 
-					create {EDITOR_TOKEN_CHARACTER} curr_token.make(text)
+					if not in_comments then
+						create {EDITOR_TOKEN_CHARACTER} curr_token.make(text)
+					else
+						create {EDITOR_TOKEN_COMMENT} curr_token.make(text)
+					end
 					update_token_list
 					
 end
 else
 if yy_act = 105 then
---|#line 210
+--|#line 232
 
-					create {EDITOR_TOKEN_CHARACTER} curr_token.make(text)
+					if not in_comments then
+						create {EDITOR_TOKEN_CHARACTER} curr_token.make(text)
+					else
+						create {EDITOR_TOKEN_COMMENT} curr_token.make(text)
+					end
 					update_token_list
 					
 else
---|#line 211
+--|#line 233
 
-					create {EDITOR_TOKEN_CHARACTER} curr_token.make(text)
+					if not in_comments then
+						create {EDITOR_TOKEN_CHARACTER} curr_token.make(text)
+					else
+						create {EDITOR_TOKEN_COMMENT} curr_token.make(text)
+					end
 					update_token_list
 					
 end
@@ -998,29 +1404,45 @@ end
 else
 if yy_act <= 108 then
 if yy_act = 107 then
---|#line 212
+--|#line 234
 
-					create {EDITOR_TOKEN_CHARACTER} curr_token.make(text)
+					if not in_comments then
+						create {EDITOR_TOKEN_CHARACTER} curr_token.make(text)
+					else
+						create {EDITOR_TOKEN_COMMENT} curr_token.make(text)
+					end
 					update_token_list
 					
 else
---|#line 213
+--|#line 235
 
-					create {EDITOR_TOKEN_CHARACTER} curr_token.make(text)
+					if not in_comments then
+						create {EDITOR_TOKEN_CHARACTER} curr_token.make(text)
+					else
+						create {EDITOR_TOKEN_COMMENT} curr_token.make(text)
+					end
 					update_token_list
 					
 end
 else
 if yy_act = 109 then
---|#line 214
+--|#line 236
 
-					create {EDITOR_TOKEN_CHARACTER} curr_token.make(text)
+					if not in_comments then
+						create {EDITOR_TOKEN_CHARACTER} curr_token.make(text)
+					else
+						create {EDITOR_TOKEN_COMMENT} curr_token.make(text)
+					end
 					update_token_list
 					
 else
---|#line 215
+--|#line 237
 
-					create {EDITOR_TOKEN_CHARACTER} curr_token.make(text)
+					if not in_comments then
+						create {EDITOR_TOKEN_CHARACTER} curr_token.make(text)
+					else
+						create {EDITOR_TOKEN_COMMENT} curr_token.make(text)
+					end
 					update_token_list
 					
 end
@@ -1030,29 +1452,45 @@ else
 if yy_act <= 114 then
 if yy_act <= 112 then
 if yy_act = 111 then
---|#line 216
+--|#line 238
 
-					create {EDITOR_TOKEN_CHARACTER} curr_token.make(text)
+					if not in_comments then
+						create {EDITOR_TOKEN_CHARACTER} curr_token.make(text)
+					else
+						create {EDITOR_TOKEN_COMMENT} curr_token.make(text)
+					end
 					update_token_list
 					
 else
---|#line 217
+--|#line 239
 
-					create {EDITOR_TOKEN_CHARACTER} curr_token.make(text)
+					if not in_comments then
+						create {EDITOR_TOKEN_CHARACTER} curr_token.make(text)
+					else
+						create {EDITOR_TOKEN_COMMENT} curr_token.make(text)
+					end
 					update_token_list
 					
 end
 else
 if yy_act = 113 then
---|#line 218
+--|#line 240
 
-					create {EDITOR_TOKEN_CHARACTER} curr_token.make(text)
+					if not in_comments then
+						create {EDITOR_TOKEN_CHARACTER} curr_token.make(text)
+					else
+						create {EDITOR_TOKEN_COMMENT} curr_token.make(text)
+					end
 					update_token_list
 					
 else
---|#line 219
+--|#line 241
 
-					create {EDITOR_TOKEN_CHARACTER} curr_token.make(text)
+					if not in_comments then
+						create {EDITOR_TOKEN_CHARACTER} curr_token.make(text)
+					else
+						create {EDITOR_TOKEN_COMMENT} curr_token.make(text)
+					end
 					update_token_list
 					
 end
@@ -1060,36 +1498,52 @@ end
 else
 if yy_act <= 116 then
 if yy_act = 115 then
---|#line 220
+--|#line 242
 
-					create {EDITOR_TOKEN_CHARACTER} curr_token.make(text)
+					if not in_comments then
+						create {EDITOR_TOKEN_CHARACTER} curr_token.make(text)
+					else
+						create {EDITOR_TOKEN_COMMENT} curr_token.make(text)
+					end
 					update_token_list
 					
 else
---|#line 221
+--|#line 243
 
-					create {EDITOR_TOKEN_CHARACTER} curr_token.make(text)
+					if not in_comments then
+						create {EDITOR_TOKEN_CHARACTER} curr_token.make(text)
+					else
+						create {EDITOR_TOKEN_COMMENT} curr_token.make(text)
+					end
 					update_token_list
 					
 end
 else
 if yy_act = 117 then
---|#line 226
+--|#line 252
 
-					code_ := text_substring (4, text_count - 2).to_integer
-					if code_ > Platform.Maximum_character_code then
-						-- Character error. Consedered as text.
-						create {EDITOR_TOKEN_TEXT} curr_token.make(text)
+					if not in_comments then
+						code_ := text_substring (4, text_count - 2).to_integer
+						if code_ > Platform.Maximum_character_code then
+							-- Character error. Consedered as text.
+							create {EDITOR_TOKEN_TEXT} curr_token.make(text)
+						else
+							create {EDITOR_TOKEN_CHARACTER} curr_token.make(text)
+						end
 					else
-						create {EDITOR_TOKEN_CHARACTER} curr_token.make(text)
+						create {EDITOR_TOKEN_COMMENT} curr_token.make(text)
 					end
 					update_token_list
 					
 else
---|#line 237
+--|#line 267
 
 					-- Character error. Catch-all rules (no backing up)
-					create {EDITOR_TOKEN_TEXT} curr_token.make(text)
+					if not in_comments then
+						create {EDITOR_TOKEN_TEXT} curr_token.make(text)
+					else
+						create {EDITOR_TOKEN_COMMENT} curr_token.make(text)
+					end
 					update_token_list
 					
 end
@@ -1101,33 +1555,49 @@ if yy_act <= 126 then
 if yy_act <= 122 then
 if yy_act <= 120 then
 if yy_act = 119 then
---|#line 238
+--|#line 268
 
 					-- Character error. Catch-all rules (no backing up)
-					create {EDITOR_TOKEN_TEXT} curr_token.make(text)
+					if not in_comments then
+						create {EDITOR_TOKEN_TEXT} curr_token.make(text)
+					else
+						create {EDITOR_TOKEN_COMMENT} curr_token.make(text)
+					end
 					update_token_list
 					
 else
---|#line 247
+--|#line 281
 
 					-- Eiffel String
-					create {EDITOR_TOKEN_STRING} curr_token.make(text)
+					if not in_comments then
+						create {EDITOR_TOKEN_STRING} curr_token.make(text)
+					else
+						create {EDITOR_TOKEN_COMMENT} curr_token.make(text)
+					end
 					update_token_list
 					
 end
 else
 if yy_act = 121 then
---|#line 248
+--|#line 282
 
 					-- Eiffel String
-					create {EDITOR_TOKEN_STRING} curr_token.make(text)
+					if not in_comments then
+						create {EDITOR_TOKEN_STRING} curr_token.make(text)
+					else
+						create {EDITOR_TOKEN_COMMENT} curr_token.make(text)
+					end
 					update_token_list
 					
 else
---|#line 249
+--|#line 283
 
 					-- Eiffel String
-					create {EDITOR_TOKEN_STRING} curr_token.make(text)
+					if not in_comments then
+						create {EDITOR_TOKEN_STRING} curr_token.make(text)
+					else
+						create {EDITOR_TOKEN_COMMENT} curr_token.make(text)
+					end
 					update_token_list
 					
 end
@@ -1135,33 +1605,49 @@ end
 else
 if yy_act <= 124 then
 if yy_act = 123 then
---|#line 257
+--|#line 295
 
 					-- Eiffel Bit
-					create {EDITOR_TOKEN_NUMBER} curr_token.make(text)
+					if not in_comments then
+						create {EDITOR_TOKEN_NUMBER} curr_token.make(text)
+					else
+						create {EDITOR_TOKEN_COMMENT} curr_token.make(text)
+					end
 					update_token_list
 					
 else
---|#line 265
+--|#line 307
 
 						-- Eiffel Integer
-						create {EDITOR_TOKEN_NUMBER} curr_token.make(text)
+						if not in_comments then
+							create {EDITOR_TOKEN_NUMBER} curr_token.make(text)
+						else
+							create {EDITOR_TOKEN_COMMENT} curr_token.make(text)
+						end
 						update_token_list
 						
 end
 else
 if yy_act = 125 then
---|#line 266
+--|#line 308
 
 						-- Eiffel Integer
-						create {EDITOR_TOKEN_NUMBER} curr_token.make(text)
+						if not in_comments then
+							create {EDITOR_TOKEN_NUMBER} curr_token.make(text)
+						else
+							create {EDITOR_TOKEN_COMMENT} curr_token.make(text)
+						end
 						update_token_list
 						
 else
---|#line 271
+--|#line 317
 
 						-- Eiffel Integer Error (considered as text)
-						create {EDITOR_TOKEN_TEXT} curr_token.make(text)
+						if not in_comments then
+							create {EDITOR_TOKEN_TEXT} curr_token.make(text)
+						else
+							create {EDITOR_TOKEN_COMMENT} curr_token.make(text)
+						end
 						update_token_list
 						
 end
@@ -1172,34 +1658,50 @@ if yy_act <= 130 then
 if yy_act <= 128 then
 if yy_act = 127 then
 	yy_position := yy_position - 1
---|#line 279
+--|#line 329
 
 							-- Eiffel reals & doubles
-						create {EDITOR_TOKEN_NUMBER} curr_token.make(text)
+						if not in_comments then
+							create {EDITOR_TOKEN_NUMBER} curr_token.make(text)
+						else
+							create {EDITOR_TOKEN_COMMENT} curr_token.make(text)
+						end
 						update_token_list
 						
 else
---|#line 280
+--|#line 330
 
 							-- Eiffel reals & doubles
-						create {EDITOR_TOKEN_NUMBER} curr_token.make(text)
+						if not in_comments then
+							create {EDITOR_TOKEN_NUMBER} curr_token.make(text)
+						else
+							create {EDITOR_TOKEN_COMMENT} curr_token.make(text)
+						end
 						update_token_list
 						
 end
 else
 if yy_act = 129 then
---|#line 281
+--|#line 331
 
 							-- Eiffel reals & doubles
-						create {EDITOR_TOKEN_NUMBER} curr_token.make(text)
+						if not in_comments then
+							create {EDITOR_TOKEN_NUMBER} curr_token.make(text)
+						else
+							create {EDITOR_TOKEN_COMMENT} curr_token.make(text)
+						end
 						update_token_list
 						
 else
 	yy_position := yy_position - 1
---|#line 282
+--|#line 332
 
 							-- Eiffel reals & doubles
-						create {EDITOR_TOKEN_NUMBER} curr_token.make(text)
+						if not in_comments then
+							create {EDITOR_TOKEN_NUMBER} curr_token.make(text)
+						else
+							create {EDITOR_TOKEN_COMMENT} curr_token.make(text)
+						end
 						update_token_list
 						
 end
@@ -1207,26 +1709,38 @@ end
 else
 if yy_act <= 132 then
 if yy_act = 131 then
---|#line 283
+--|#line 333
 
 							-- Eiffel reals & doubles
-						create {EDITOR_TOKEN_NUMBER} curr_token.make(text)
+						if not in_comments then
+							create {EDITOR_TOKEN_NUMBER} curr_token.make(text)
+						else
+							create {EDITOR_TOKEN_COMMENT} curr_token.make(text)
+						end
 						update_token_list
 						
 else
---|#line 284
+--|#line 334
 
 							-- Eiffel reals & doubles
-						create {EDITOR_TOKEN_NUMBER} curr_token.make(text)
+						if not in_comments then
+							create {EDITOR_TOKEN_NUMBER} curr_token.make(text)
+						else
+							create {EDITOR_TOKEN_COMMENT} curr_token.make(text)
+						end
 						update_token_list
 						
 end
 else
 if yy_act = 133 then
---|#line 297
+--|#line 351
 
 					-- Error (considered as text)
-				create {EDITOR_TOKEN_TEXT} curr_token.make(text)
+				if not in_comments then
+					create {EDITOR_TOKEN_TEXT} curr_token.make(text)
+				else
+					create {EDITOR_TOKEN_COMMENT} curr_token.make(text)
+				end
 				update_token_list
 				
 else
@@ -1342,13 +1856,12 @@ feature {NONE} -- Table templates
 			  301,  293,   66,   66,  339,   66,   66,   66,   66,   66,
 			   66,   66,   66,   68,   68,  300,   68,   68,   68,   68,
 			   68,   68,   68,   68,  128,  128,  297,  128,  128,  128,
-			  128,  128,  128,  128,  128,   71,   71,  281,   71,   71,
-			   71,   71,   71,   71,   71,   71,  155,  155,  155,  155,
-			  155,  155,  280,  155,  155,  155,  155,  384,  384,  384,
-			  384,  384,  384,  278,  384,  384,  384,  384,  277,  275,
+			  128,  128,  128,  128,  128,  155,  155,  155,  155,  155,
+			  155,  281,  155,  155,  155,  155,  384,  384,  384,  384,
+			  384,  384,  280,  384,  384,  384,  384,  278,  277,  275,
 			  273,  267,  265,  264,  263,  261,  259,  258,  257,  251,
-
 			  247,  246,  227,  226,  225,  224,  223,  222,  221,  220,
+
 			  219,  218,  217,  216,  215,  214,  213,  212,  210,  209,
 			  208,  207,  206,  204,  198,  189,  182,  177,  176,  165,
 			  163,  129,   67,   67,   60,   59,   58,   57,  126,  125,
@@ -1358,8 +1871,8 @@ feature {NONE} -- Table templates
 			  435,  435,  435,  435,  435,  435,  435,  435,  435,  435,
 			  435,  435,  435,  435,  435,  435,  435,  435,  435,  435,
 			  435,  435,  435,  435,  435,  435,  435,  435,  435,  435,
-
 			  435,  435,  435,  435,  435,  435,  435,  435,  435,  435,
+
 			  435,  435,  435,  435,  435,  435,  435,  435,  435,  435,
 			  435,  435,  435,  435,  435,  435,  435>>)
 		end
@@ -1451,13 +1964,12 @@ feature {NONE} -- Table templates
 			  245,  431,  438,  438,  434,  438,  438,  438,  438,  438,
 			  438,  438,  438,  439,  439,  244,  439,  439,  439,  439,
 			  439,  439,  439,  439,  441,  441,  241,  441,  441,  441,
-			  441,  441,  441,  441,  441,  442,  442,  203,  442,  442,
-			  442,  442,  442,  442,  442,  442,  443,  443,  443,  443,
-			  443,  443,  202,  443,  443,  443,  443,  444,  444,  444,
-			  444,  444,  444,  200,  444,  444,  444,  444,  199,  197,
+			  441,  441,  441,  441,  441,  442,  442,  442,  442,  442,
+			  442,  203,  442,  442,  442,  442,  443,  443,  443,  443,
+			  443,  443,  202,  443,  443,  443,  443,  200,  199,  197,
 			  195,  190,  188,  186,  184,  182,  180,  179,  178,  173,
-
 			  169,  168,  151,  150,  149,  148,  147,  146,  145,  144,
+
 			  143,  142,  141,  140,  139,  138,  137,  136,  134,  133,
 			  132,  131,  130,  124,  120,  116,  109,  106,  104,   95,
 			   93,   68,   67,   66,   60,   59,   58,   57,   51,   49,
@@ -1467,8 +1979,8 @@ feature {NONE} -- Table templates
 			  435,  435,  435,  435,  435,  435,  435,  435,  435,  435,
 			  435,  435,  435,  435,  435,  435,  435,  435,  435,  435,
 			  435,  435,  435,  435,  435,  435,  435,  435,  435,  435,
-
 			  435,  435,  435,  435,  435,  435,  435,  435,  435,  435,
+
 			  435,  435,  435,  435,  435,  435,  435,  435,  435,  435,
 			  435,  435,  435,  435,  435,  435,  435>>)
 		end
@@ -1478,31 +1990,31 @@ feature {NONE} -- Table templates
 			-- but once functions cannot be declared with anchored types.
 		once
 			Result := yy_fixed_array (<<
-			    0,    0,    0,  851,  852,  848,  846,  844,  842,  840,
-			   68,    0,  852,  838,   66,  852,  852,  852,  852,  852,
-			   62,   62,   62,   71,   75,  819,  852,   60,  852,   72,
-			  818,   69,  806,   72,   62,   62,   94,    0,  108,   63,
-			  799,  116,   41,  808,   74,  111,   84,   88,   55,  797,
-			  852,  783,  852,  852,  131,  852,  852,  835,  833,  831,
-			  829,  852,  153,  157,  158,    0,  826,  825,  820,  183,
-			    0,    0,  852,  852,  165,  852,  852,  138,  215,  180,
-			  852,  152,  852,  852,  852,  852,  852,  852,    0,  152,
-			  172,    0,  122,  798,  178,  797,  174,  192,    0,  174,
+			    0,    0,    0,  841,  842,  838,  836,  834,  832,  830,
+			   68,    0,  842,  828,   66,  842,  842,  842,  842,  842,
+			   62,   62,   62,   71,   75,  809,  842,   60,  842,   72,
+			  808,   69,  796,   72,   62,   62,   94,    0,  108,   63,
+			  789,  116,   41,  798,   74,  111,   84,   88,   55,  787,
+			  842,  773,  842,  842,  131,  842,  842,  825,  823,  821,
+			  819,  842,  153,  157,  158,    0,  816,  815,  810,  183,
+			    0,  842,  842,  842,  165,  842,  842,  138,  215,  180,
+			  842,  152,  842,  842,  842,  842,  842,  842,    0,  152,
+			  172,    0,  122,  788,  178,  787,  174,  192,    0,  174,
 
-			  195,  202,  139,  180,  786,    0,  784,  216,    0,  788,
-			  216,  193,  202,  219,  223,    0,  793,  245,  217,  222,
-			  792,  222,  263,  229,  791,  234,  852,  248,  852,  852,
-			  811,  810,  809,  808,  807,  103,  806,  805,  804,  803,
-			  802,  801,  800,  799,  798,  797,  796,  795,  794,  793,
-			  792,  791,  284,  302,  275,  852,  288,  309,  314,  280,
-			  307,  259,    0,  283,  285,  293,  291,  289,  769,  768,
-			    0,  291,  319,  767,  294,  294,  305,  310,  766,  765,
-			  753,  320,  763,  322,  751,    0,  751,    0,  760,  321,
-			  759,  325,  309,  325,  321,  758,  328,  753,  139,  756,
+			  195,  202,  139,  180,  776,    0,  774,  216,    0,  778,
+			  216,  193,  202,  219,  223,    0,  783,  245,  217,  222,
+			  782,  222,  263,  229,  781,  234,  842,  248,  842,  842,
+			  801,  800,  799,  798,  797,  103,  796,  795,  794,  793,
+			  792,  791,  790,  789,  788,  787,  786,  785,  784,  783,
+			  782,  781,  284,  302,  275,  842,  288,  309,  314,  280,
+			  307,  259,    0,  283,  285,  293,  291,  289,  759,  758,
+			    0,  291,  319,  757,  294,  294,  305,  310,  756,  755,
+			  743,  320,  753,  322,  741,    0,  741,    0,  750,  321,
+			  749,  325,  309,  325,  321,  748,  328,  743,  139,  746,
 
-			  751,  323,  736,  721,  327,    0,  852,  852,  852,  852,
-			  852,  350,  852,  852,  852,  852,  852,  852,  852,  852,
-			  852,  852,  852,  852,  852,  852,  852,  852,  356,  371,
+			  745,  323,  736,  725,  327,    0,  842,  842,  842,  842,
+			  842,  350,  842,  842,  842,  842,  842,  842,  842,  842,
+			  842,  842,  842,  842,  842,  842,  842,  842,  356,  371,
 			  374,  377,  379,  386,  384,  388,  392,  397,  401,  403,
 			  356,  708,  364,  369,  703,  686,  375,  683,  383,  386,
 			  385,  386,  685,  387,    0,  678,  673,  656,  395,  673,
@@ -1514,19 +2026,19 @@ feature {NONE} -- Table templates
 			  461,    0,  441,  472,  613,  475,  460,  467,    0,  468,
 			  473,  567,  550,  498,  482,  495,    0,  478,  470,  437,
 			  436,  472,  434,  472,    0,  474,  490,    0,  420,  397,
-			    0,  479,  852,  531,  503,  505,  497,  533,  536,  538,
+			    0,  479,  842,  531,  503,  505,  497,  533,  536,  538,
 			  542,  546,  548,  555,  553,    0,  343,  513,  351,    0,
 			    0,  271,    0,  519,  251,    0,  518,  530,  530,  532,
 			  522,  533,  536,  543,    0,  234,    0,    0,    0,  541,
 			  548,    0,  543,  571,  577,  586,  595,  602,  600,  604,
-			  569,  608,  610,  612,  852,  614,  621,  552,    0,  564,
+			  569,  608,  610,  612,  842,  614,  621,  552,    0,  564,
 			  577,  598,    0,    0,  227,    0,    0,  599,  227,  212,
 
 			  183,    0,  167,  155,    0,  125,  623,  627,  629,  631,
 			  633,  640,  108,  646,  648,  650,    0,    0,    0,    0,
 			    0,  609,    0,  614,    0,    0,    0,  653,   72,  655,
-			  660,  663,    0,    0,  666,  852,  687,  705,  721,  732,
-			  691,  743,  754,  765,  776>>)
+			  660,  663,    0,    0,  666,  842,  687,  705,  721,  732,
+			  691,  743,  754,  765>>)
 		end
 
 	yy_def_template: ANY is
@@ -1541,7 +2053,7 @@ feature {NONE} -- Table templates
 			  440,  440,  440,  440,  440,  440,  440,  440,  440,  440,
 			  435,  435,  435,  435,  435,  435,  435,  435,  435,  435,
 			  435,  435,  436,  436,  436,  437,  438,  438,  441,  441,
-			  441,  442,  435,  435,  435,  435,  435,  443,  435,  435,
+			  441,  435,  435,  435,  435,  435,  435,  442,  435,  435,
 			  435,  435,  435,  435,  435,  435,  435,  435,  440,  440,
 			  440,  440,  440,  440,  440,  440,  440,  440,  440,  440,
 
@@ -1565,13 +2077,13 @@ feature {NONE} -- Table templates
 			  440,  440,  440,  440,  440,  440,  440,  440,  440,  440,
 			  440,  440,  440,  440,  440,  440,  440,  440,  440,  440,
 			  440,  440,  440,  435,  435,  435,  435,  435,  435,  435,
-			  435,  435,  435,  435,  443,  435,  440,  440,  440,  440,
+			  435,  435,  435,  435,  442,  435,  440,  440,  440,  440,
 
 			  440,  440,  440,  440,  440,  440,  440,  440,  440,  440,
 			  440,  440,  440,  440,  440,  440,  440,  440,  440,  440,
 			  440,  440,  440,  440,  440,  440,  440,  440,  440,  440,
 			  440,  440,  435,  435,  435,  435,  435,  435,  435,  435,
-			  435,  435,  435,  435,  444,  440,  440,  440,  440,  440,
+			  435,  435,  435,  435,  443,  440,  440,  440,  440,  440,
 			  440,  440,  440,  440,  440,  440,  440,  440,  440,  440,
 			  440,  440,  440,  440,  440,  440,  440,  440,  440,  440,
 			  440,  440,  440,  435,  435,  435,  435,  435,  435,  435,
@@ -1582,7 +2094,7 @@ feature {NONE} -- Table templates
 			  435,  435,  435,  435,  435,  435,  440,  440,  440,  440,
 			  440,  440,  440,  440,  440,  440,  440,  435,  435,  435,
 			  435,  435,  440,  440,  435,    0,  435,  435,  435,  435,
-			  435,  435,  435,  435,  435>>)
+			  435,  435,  435,  435>>)
 		end
 
 	yy_ec_template: ANY is
@@ -1692,7 +2204,7 @@ feature {NONE} -- Table templates
 
 feature {NONE} -- Constants
 
-	yyJam_base: INTEGER is 852
+	yyJam_base: INTEGER is 842
 			-- Position in `yy_nxt'/`yy_chk' tables
 			-- where default jam table starts
 
@@ -1764,6 +2276,7 @@ feature -- Start Job / Reinitialization
 			eif_buffer.wipe_out
 			end_token := Void
 			first_token := Void
+			in_comments := False
 		end
 
 feature -- Access
@@ -1801,6 +2314,9 @@ feature {NONE} -- Constants
 
 	Init_buffer_size: INTEGER is 80 
 				-- Initial size for `eif_buffer'
+
+	in_comments: BOOLEAN
+			-- Are we inside a comment?
 
 invariant
 

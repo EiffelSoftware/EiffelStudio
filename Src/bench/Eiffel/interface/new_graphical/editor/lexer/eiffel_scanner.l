@@ -59,15 +59,17 @@ creation
 						update_token_list
 						i_ := i_ + 1
 					end
+					in_comments := False
 					}
 
 
 ----------/** Eiffel comments **/-----------------------------------------------
 
-"--".*				{ 
+"--"				{ 
 						-- comments
 					create {EDITOR_TOKEN_COMMENT} curr_token.make(text)
 					update_token_list
+					in_comments := True
 					}
 
 ----------/** Eiffel symbols **/------------------------------------------------
@@ -85,7 +87,11 @@ creation
 "]"					|
 "$"					{
 						-- Symbols
-					create {EDITOR_TOKEN_TEXT} curr_token.make(text)
+					if not in_comments then
+						create {EDITOR_TOKEN_TEXT} curr_token.make(text)
+					else
+						create {EDITOR_TOKEN_COMMENT} curr_token.make(text)
+					end
 					update_token_list
 					}
 
@@ -108,8 +114,12 @@ creation
 "="					|
 ">"					|
 "<"					{ 
-						-- Operator Symbol 
-					create {EDITOR_TOKEN_OPERATOR} curr_token.make(text)
+						-- Operator Symbol
+					if not in_comments then
+						create {EDITOR_TOKEN_OPERATOR} curr_token.make(text)
+					else
+						create {EDITOR_TOKEN_COMMENT} curr_token.make(text)
+					end
 					update_token_list
 					}
 
@@ -172,7 +182,11 @@ creation
 [wW][hH][eE][nN]						|
 [xX][oO][rR]							{
 										-- Keyword
-										create {EDITOR_TOKEN_KEYWORD} curr_token.make(text)
+										if not in_comments then
+											create {EDITOR_TOKEN_KEYWORD} curr_token.make(text)
+										else
+											create {EDITOR_TOKEN_COMMENT} curr_token.make(text)
+										end
 										update_token_list
 										}
 
@@ -180,7 +194,11 @@ creation
 ----------/** Eiffel identifiers **/--------------------------------------------
 
 [a-zA-Z][a-zA-Z0-9_]*					{
-										create {EDITOR_TOKEN_TEXT} curr_token.make(text)
+										if not in_comments then
+											create {EDITOR_TOKEN_TEXT} curr_token.make(text)
+										else
+											create {EDITOR_TOKEN_COMMENT} curr_token.make(text)
+										end
 										update_token_list
 										}
 
@@ -188,7 +206,11 @@ creation
 ----------/** Eiffel free operators **/-----------------------------------------
 
 [@#|&][^%" \t\r\n]*						{
-										create {EDITOR_TOKEN_TEXT} curr_token.make(text)
+										if not in_comments then
+											create {EDITOR_TOKEN_TEXT} curr_token.make(text)
+										else
+											create {EDITOR_TOKEN_COMMENT} curr_token.make(text)
+										end
 										update_token_list
 										}
 	-- Note: Accepts non-printable characters as well,
@@ -219,17 +241,25 @@ creation
 \'%\)\'				|
 \'%<\'				|
 \'%>\'				{
-					create {EDITOR_TOKEN_CHARACTER} curr_token.make(text)
+					if not in_comments then
+						create {EDITOR_TOKEN_CHARACTER} curr_token.make(text)
+					else
+						create {EDITOR_TOKEN_COMMENT} curr_token.make(text)
+					end
 					update_token_list
 					}
 
 \'%\/[0-9]+\/\'		{
-					code_ := text_substring (4, text_count - 2).to_integer
-					if code_ > Platform.Maximum_character_code then
-						-- Character error. Consedered as text.
-						create {EDITOR_TOKEN_TEXT} curr_token.make(text)
+					if not in_comments then
+						code_ := text_substring (4, text_count - 2).to_integer
+						if code_ > Platform.Maximum_character_code then
+							-- Character error. Consedered as text.
+							create {EDITOR_TOKEN_TEXT} curr_token.make(text)
+						else
+							create {EDITOR_TOKEN_CHARACTER} curr_token.make(text)
+						end
 					else
-						create {EDITOR_TOKEN_CHARACTER} curr_token.make(text)
+						create {EDITOR_TOKEN_COMMENT} curr_token.make(text)
 					end
 					update_token_list
 					}
@@ -237,7 +267,11 @@ creation
 \'.{1,2}			|
 \'%\/[0-9]+(\/)?	{
 					-- Character error. Catch-all rules (no backing up)
-					create {EDITOR_TOKEN_TEXT} curr_token.make(text)
+					if not in_comments then
+						create {EDITOR_TOKEN_TEXT} curr_token.make(text)
+					else
+						create {EDITOR_TOKEN_COMMENT} curr_token.make(text)
+					end
 					update_token_list
 					}
 
@@ -248,7 +282,11 @@ creation
 \%.*\"				|
 \".*\%				{
 					-- Eiffel String
-					create {EDITOR_TOKEN_STRING} curr_token.make(text)
+					if not in_comments then
+						create {EDITOR_TOKEN_STRING} curr_token.make(text)
+					else
+						create {EDITOR_TOKEN_COMMENT} curr_token.make(text)
+					end
 					update_token_list
 					}
 
@@ -256,7 +294,11 @@ creation
 
 [0-1]+[bB]			{
 					-- Eiffel Bit
-					create {EDITOR_TOKEN_NUMBER} curr_token.make(text)
+					if not in_comments then
+						create {EDITOR_TOKEN_NUMBER} curr_token.make(text)
+					else
+						create {EDITOR_TOKEN_COMMENT} curr_token.make(text)
+					end
 					update_token_list
 					}
 						
@@ -265,12 +307,20 @@ creation
 [0-9]+					|
 [0-9]{1,3}(_[0-9]{3})+	{
 						-- Eiffel Integer
-						create {EDITOR_TOKEN_NUMBER} curr_token.make(text)
+						if not in_comments then
+							create {EDITOR_TOKEN_NUMBER} curr_token.make(text)
+						else
+							create {EDITOR_TOKEN_COMMENT} curr_token.make(text)
+						end
 						update_token_list
 						}
 [0-9_]+					{
 						-- Eiffel Integer Error (considered as text)
-						create {EDITOR_TOKEN_TEXT} curr_token.make(text)
+						if not in_comments then
+							create {EDITOR_TOKEN_TEXT} curr_token.make(text)
+						else
+							create {EDITOR_TOKEN_COMMENT} curr_token.make(text)
+						end
 						update_token_list
 						}
 
@@ -283,7 +333,11 @@ creation
 [0-9]{1,3}(_[0-9]{3})*\.([0-9]{1,3}(_[0-9]{3})*)?[eE][+-]?[0-9]{1,3}(_[0-9]{3})*	|
 ([0-9]{1,3}(_[0-9]{3})*)?\.[0-9]{1,3}(_[0-9]{3})*([eE][+-]?[0-9]{1,3}(_[0-9]{3})*)?	{
 							-- Eiffel reals & doubles
-						create {EDITOR_TOKEN_NUMBER} curr_token.make(text)
+						if not in_comments then
+							create {EDITOR_TOKEN_NUMBER} curr_token.make(text)
+						else
+							create {EDITOR_TOKEN_COMMENT} curr_token.make(text)
+						end
 						update_token_list
 						}
 
@@ -296,7 +350,11 @@ creation
 <<EOF>>			terminate
 .				{
 					-- Error (considered as text)
-				create {EDITOR_TOKEN_TEXT} curr_token.make(text)
+				if not in_comments then
+					create {EDITOR_TOKEN_TEXT} curr_token.make(text)
+				else
+					create {EDITOR_TOKEN_COMMENT} curr_token.make(text)
+				end
 				update_token_list
 				}
 
@@ -336,6 +394,7 @@ feature -- Start Job / Reinitialization
 			eif_buffer.wipe_out
 			end_token := Void
 			first_token := Void
+			in_comments := False
 		end
 
 feature -- Access
@@ -373,6 +432,9 @@ feature {NONE} -- Constants
 
 	Init_buffer_size: INTEGER is 80 
 				-- Initial size for `eif_buffer'
+
+	in_comments: BOOLEAN
+			-- Are we inside a comment?
 
 invariant
 

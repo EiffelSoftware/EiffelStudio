@@ -298,7 +298,9 @@ feature {NONE} -- Implementation
 
 invariant
 
-	sign_times_abs: item /= 1/0 and item /= 0/0 implies sign * abs = item
+--FIXME	sign_times_abs: item /= 1/0 and item /= 0/0 implies sign * abs = item
+--This is not accepted by the Microsoft C compiler.
+
 			-- IEEE 754 specifies that certain floating point operations
 			-- have a result that is not a number (NaN). sign_times_abs
 			-- does not hold when item is not a number.

@@ -17,25 +17,17 @@ feature {NONE} -- Initialization
 	
 feature {EV_WIDGET} -- Initialization
 		
+	plateform_build (par: EV_CONTAINER_I) is
+			-- Plateform dependant initializations.
+		deferred
+		end
+
 	build is
-			-- Called after the creation of the widget and after
-			-- having stored the parent and the current object
-			-- as the child of the parent. Many widget redefine
-			-- this feature to give their size to the parent that
-			-- adapts itself.
+			-- Common initializations for Gtk and Windows.
 		do
 			set_expand (True)
 			set_vertical_resize (True)
 			set_horizontal_resize (True)
-		end
-
-	initialize_colors is
-			-- Called after the creation of the widget and after
-			-- having stored the parent. It define the default
-			-- colors of a widget which are the same than the
-			-- parent. This feature is redefined by several
-			-- children.
-		do
 			set_background_color (parent_imp.background_color.interface)
 			set_foreground_color (parent_imp.foreground_color.interface)
 		end
@@ -496,13 +488,13 @@ feature -- Event - command association
 	
 feature -- Implementation
 
-	test_and_set_parent (par: EV_CONTAINER) is
+--	test_and_set_parent (par: EV_CONTAINER) is
 			-- Set the parent to `par.implementation'.
 			-- It is not possible to change the parent,
 			-- therefore, if there is already a parent,
 			-- we don't do anything
-		deferred
-		end
+--		deferred
+--		end
 
 	set_interface (the_interface: EV_WIDGET) is
 			-- Make `interface' the interface of the current object.

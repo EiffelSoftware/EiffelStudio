@@ -26,7 +26,8 @@ feature {NONE} -- Implementation
 		do
 			Precursor (an_interface)
 			set_c_object (C.gtk_event_box_new)		
-			gtk_progress_bar := C.gtk_progress_bar_new_with_adjustment (adjustment)
+			gtk_progress_bar :=
+				 C.gtk_progress_bar_new_with_adjustment (adjustment)
 			C.gtk_widget_show (gtk_progress_bar)
 			C.gtk_container_add (c_object, gtk_progress_bar)
 		end
@@ -45,13 +46,19 @@ feature -- Status setting
 	enable_segmentation is
 			-- Display bar divided into segments.
 		do
-			C.gtk_progress_bar_set_bar_style (gtk_progress_bar, C.Gtk_progress_discrete_enum)
+			C.gtk_progress_bar_set_bar_style (
+				gtk_progress_bar,
+				C.Gtk_progress_discrete_enum
+			)
 		end
 
 	disable_segmentation is
 			-- Display bar without segments.
 		do
-			C.gtk_progress_bar_set_bar_style (gtk_progress_bar, C.Gtk_progress_continuous_enum)
+			C.gtk_progress_bar_set_bar_style (
+				gtk_progress_bar,
+			 	C.Gtk_progress_continuous_enum
+			)
 		end
 
 feature {EV_ANY_I} -- Implementation
@@ -83,6 +90,9 @@ end -- class EV_PROGRESS_BAR_IMP
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.15  2000/04/14 17:08:40  oconnor
+--| formatting
+--|
 --| Revision 1.14  2000/04/13 18:45:28  brendel
 --| removed set_proportion and proportion.
 --|
@@ -113,7 +123,8 @@ end -- class EV_PROGRESS_BAR_IMP
 --| changed percentage to proportion
 --|
 --| Revision 1.10.6.2  2000/01/14 21:47:31  king
---| Reduced the number of calls to external user c-functions, converted to new structure
+--| Reduced the number of calls to external user c-functions, converted to new
+--| structure
 --|
 --| Revision 1.10.6.1  1999/11/24 17:29:57  oconnor
 --| merged with DEVEL branch
@@ -123,7 +134,6 @@ end -- class EV_PROGRESS_BAR_IMP
 --|
 --| Revision 1.10.2.2  1999/11/02 17:20:04  oconnor
 --| Added CVS log, redoing creation sequence
---|
 --|
 --|-----------------------------------------------------------------------------
 --| End of CVS log

@@ -79,6 +79,9 @@ end -- class EV_SPIN_BUTTON_IMP
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.10  2000/04/14 17:05:47  oconnor
+--| formatting
+--|
 --| Revision 1.9  2000/02/22 18:39:39  oconnor
 --| updated copyright date and formatting
 --|
@@ -93,7 +96,8 @@ end -- class EV_SPIN_BUTTON_IMP
 --| merged changes from prerelease_20000214
 --|
 --| Revision 1.5.6.7  2000/02/11 18:25:27  king
---| Added entry widget pointer in EV_TEXT_FIELD_IMP to accomodate the fact that combo box is not an entry widget
+--| Added entry widget pointer in EV_TEXT_FIELD_IMP to accomodate the fact that
+--| combo box is not an entry widget
 --|
 --| Revision 1.5.6.6  2000/02/04 04:25:39  oconnor
 --| released
@@ -118,7 +122,6 @@ end -- class EV_SPIN_BUTTON_IMP
 --|
 --| Revision 1.5.2.2  1999/11/02 17:20:04  oconnor
 --| Added CVS log, redoing creation sequence
---|
 --|
 --|-----------------------------------------------------------------------------
 --| End of CVS log

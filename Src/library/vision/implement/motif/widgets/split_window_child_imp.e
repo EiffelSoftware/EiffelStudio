@@ -36,13 +36,21 @@ feature -- Sizing policy
 
 	set_size (new_width:INTEGER; new_height: INTEGER) is
 		do
-
+debug ("SPLIT")
+			io.put_string ("%NSet_size: ");
+			io.put_string ("%N%Tnew_width = ");
+			io.put_integer (new_width)
+			io.put_string ("%N%Tnew_height = ");
+			io.put_integer (new_height)
+			io.new_line
+end
 			if parent.is_vertical then
-				set_pane_minimum ( new_width)
+				set_pane_minimum ( new_width.abs)
 			else
-				set_pane_minimum ( new_height)
+				set_pane_minimum ( new_height.abs)
 			end
-			Precursor (new_width,new_height)
+
+			Precursor (new_width.abs,new_height.abs)
 			set_pane_minimum (1)
 
 		end

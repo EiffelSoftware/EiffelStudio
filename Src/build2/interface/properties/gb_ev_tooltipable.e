@@ -103,9 +103,6 @@ feature {GB_CODE_GENERATOR} -- Output
 		end
 
 feature {NONE} -- Implementation
-
---	check_button: EV_CHECK_BUTTON
-		-- Check button used for setting sensitive attribute.
 	
 	tooltip_entry: EV_TEXT_FIELD
 		-- Holds the text to be used for the tooltip.

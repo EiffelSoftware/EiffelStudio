@@ -159,6 +159,10 @@ feature -- Basic operations
 				new_pos := pos
 			elseif scroll_code = Sb_thumbtrack then
 				new_pos := pos
+			elseif scroll_code = Sb_top then
+				new_pos := minimum
+			elseif scroll_code = Sb_bottom then
+				new_pos := maximum
 			end
 			if new_pos > maximum then
 				new_pos := maximum

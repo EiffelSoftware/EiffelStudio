@@ -73,17 +73,17 @@ feature -- Access
 			end
 		end
 	
-	namespace_types (namespace_name: STRING): ARRAY [STRING] is
-			-- Types that belong to namespace `namespace_name'.
+	namespace_types (namespace_name: STRING): ARRAY [INTEGER] is
+			-- Indices of types that belong to namespace `namespace_name'.
 		require
 			non_void_name: namespace_name /= Void 
 			valid_name: namespaces.has (namespace_name)
 		local
 			i, l_index, types_count, count: INTEGER
 			name: STRING
-			l_types: ARRAYED_LIST [STRING]
+			l_types_index: ARRAYED_LIST [INTEGER]
 		do
-			create l_types.make (index)
+			create l_types_index.make (index)
 			from
 				i := 1
 				count := dotnet_names.count
@@ -93,19 +93,19 @@ feature -- Access
 				name := dotnet_names.item (i)
 				l_index := name.substring_index (namespace_name, 1)
 				if l_index = 1 then
-					l_types.extend (name)
+					l_types_index.extend (i)
 					types_count := types_count + 1
 				end
 				i := i + 1
 			end
 			create Result.make (1, types_count)
 			from
-				l_types.start
+				l_types_index.start
 			until
-				l_types.after
+				l_types_index.after
 			loop
-				Result.put (l_types.item, l_types.index)
-				l_types.forth
+				Result.put (l_types_index.item, l_types_index.index)
+				l_types_index.forth
 			end
 		end
 		

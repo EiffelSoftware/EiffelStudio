@@ -55,6 +55,20 @@ feature -- Menu texts.
 	
 	Gb_view_menu_text: STRING is "&View"
 	
+	Gb_view_preferences_text: STRING is "Preferences"
+	
+	Gb_view_tools_text: STRING is "Tools"
+	
+	Show_hide_component_viewer_menu_text: STRING is "component viewer"
+	
+	Show_hide_builder_window_menu_text: STRING is "builder window"
+	
+	Show_hide_display_window_menu_text: STRING is "display window"
+	
+	Show_hide_history_window_menu_text: STRING is "history window"
+	
+	Show_tool_windows_modeless_text: STRING is "Tools always on top?"
+	
 feature -- String representations of class names.
 
 	Gb_primitive_object_class_name: STRING is "GB_PRIMITIVE_OBJECT"
@@ -656,6 +670,10 @@ feature -- Object editor properties
 	
 	gb_ev_container_radio_groups: STRING is "Merged radio groups"
 	gb_ev_container_radio_groups_tooltip: STRING is "feature `merge_radio_groups' from EV_CONTAINER"
+	gb_ev_container_propagate_foreground_color: STRING is "Propagate"
+	gb_ev_container_propagate_foreground_color_tooltip: STRING is "Propagate foreground color to all children."
+	gb_ev_container_propagate_background_color: STRING is "Propagate"
+	gb_ev_container_propagate_background_color_tooltip: STRING is "Propagate background color to all children."
 	
 	gb_ev_text_component_is_editable: STRING is "Is editable?"
 	gb_ev_text_component_is_editable_tooltip: STRING is "feature `is_editable' from EV_TEXT_COMPONENT"

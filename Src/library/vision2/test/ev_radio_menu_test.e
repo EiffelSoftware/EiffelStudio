@@ -25,6 +25,7 @@ feature -- Access
 		do
 		--	first_window.show
 		--	destroy
+			post_launch_actions.extend (~destroy)
 		end
 
 end -- class ROOT_CLASS

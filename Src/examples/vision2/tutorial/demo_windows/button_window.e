@@ -13,6 +13,8 @@ inherit
 			make
 		end
 
+	PIXMAP_PATH
+
 creation
 	make
 
@@ -22,29 +24,35 @@ feature {NONE} -- Initialization
 			-- Create the demo in `par'.
 			-- We create the box first without parent because it
 			-- is faster.
+		local
+			pixmap: EV_PIXMAP
 		do
-			{EV_VERTICAL_BOX} Precursor (Void)
+			{EV_VERTICAL_BOX} Precursor (par)
 
 			set_homogeneous (False)
 			!! b1.make_with_text (Current, "Button")
---			!! pixmap.make_from_file (b1, the_parent.pixname("power_small.xpm"))
+
 			!! b2.make (Current)
---			!! pixmap.make_from_file (b2, the_parent.pixname("power_small.xpm"))
+			create pixmap.make_from_file (pixmap_path ("save.bmp"))
+			b2.set_pixmap (pixmap)
+
 			!! toggle_b.make_with_text (Current, "Toggle Button")
+
 			!! check_b.make_with_text (Current, "Check Button")
+			!! check_b.make_with_text (Current, "Check 2")
+			check_b.set_pixmap (pixmap)
+
 			!! frame.make_with_text (Current, "Frame")
 			!! box.make (frame)
 			!! radio1_b.make_with_text (box, "Radio 1")
 			!! radio2_b.make_with_text (box, "Radio 2")
+			radio2_b.set_pixmap (pixmap)
 			!! radio3_b.make_with_text (box, "Radio 3")
-
-			set_parent (par)
 		end
 
 feature -- Access
 
 	b1, b2, b3, b4: EV_BUTTON
-	pixmap: EV_PIXMAP
 	toggle_b: EV_TOGGLE_BUTTON
 	check_b: EV_CHECK_BUTTON
 	radio1_b: EV_RADIO_BUTTON

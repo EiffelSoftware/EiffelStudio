@@ -175,6 +175,34 @@ feature -- Access
 					feature {IL_CASING_CONVERSION}.upper_case))
 		end
 
+	conformance_table: PACKED_BOOLEANS
+			-- Conformance table for current type.
+
+feature -- Status report
+
+	conform_to (other: CLASS_TYPE): BOOLEAN is
+			-- Does `Current' type conform to `other'?
+		require
+			other_not_void: other /= Void
+			conformance_table_not_void: conformance_table /= Void
+			final_mode: byte_context.final_mode
+		local
+			l_other_type_id: INTEGER
+			l_packed: PACKED_BOOLEANS
+		do
+			l_other_type_id := other.type_id
+			Result := l_other_type_id = type_id
+			if not Result then
+				l_packed := conformance_table
+				if l_other_type_id <= l_packed.upper then
+					Result := l_packed.item (l_other_type_id)
+				end
+			end
+		ensure
+			conform_to_definition:
+				Result implies associated_class.conform_to (other.associated_class)
+		end
+		
 feature -- Settings
 
 	set_is_changed (b: BOOLEAN) is
@@ -288,6 +316,63 @@ feature -- Settings
 			l_pos := internal_type_name.last_index_of ('.', internal_type_name.count)
 			internal_type_name := internal_type_name.substring (l_pos + 1, internal_type_name.count)
 			is_dotnet_name := System.dotnet_naming_convention
+		end
+
+feature -- Update
+
+	reset_conformance_table is
+			-- Reset conformance table for current type.
+		do
+			conformance_table := Void
+		ensure
+			conformance_table_reset: conformance_table = Void
+		end
+		
+	build_conformance_table is
+			-- Build conformance table for current type.
+		do
+			create conformance_table.make (type_id)
+			build_conformance_table_of (Current)
+		ensure
+			conformance_table_not_void: conformance_table /= Void
+		end
+
+	build_conformance_table_of (cl: CLASS_TYPE) is
+			-- Build recursively the conformance table of class `cl'.
+		require
+			cl_not_void: cl /= Void
+			conformance_table_not_void: cl.conformance_table /= Void
+		local
+			a_parent: CLASS_TYPE
+			a_table: like conformance_table
+			l_area: SPECIAL [CL_TYPE_A]
+			l_parent_type: CL_TYPE_I
+			l_gen_type: GEN_TYPE_I
+			i, nb: INTEGER
+		do
+			a_table := cl.conformance_table
+			if type_id > a_table.upper or else a_table.item (type_id) = False then
+					-- The parent has not been inserted yet. We use `force' as `type_id'
+					-- might be greater than what `a_table' can hold.
+				a_table.force (True, type_id)
+				from
+					l_area := associated_class.parents.area
+					nb := associated_class.parents.count
+					l_gen_type ?= type
+				until
+					i = nb
+				loop
+					l_parent_type := l_area.item (i).type_i
+					if l_gen_type /= Void then
+							-- Current class type is generic, we need to evaluate parent
+							-- type in context of current class type.
+						l_parent_type := l_parent_type.instantiation_in (l_gen_type)
+					end
+					a_parent := l_parent_type.associated_class_type
+					a_parent.build_conformance_table_of (cl)
+					i := i + 1
+				end
+			end
 		end
 		
 feature -- Conveniences

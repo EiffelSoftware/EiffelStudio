@@ -52,16 +52,16 @@ feature
 			fname := clone (filtername);
 			fname.append (".fil");
 			full_pathname.set_file_name (fname);
-			!!filter_file.make (full_pathname.path);
+			!!filter_file.make (full_pathname);
 			if filter_file.exists and then filter_file.is_readable then
-				!!text_filter.make_from_filename (full_pathname.path);
+				!!text_filter.make_from_filename (full_pathname);
 				file_suffix := text_filter.file_suffix;
 				context := filter_context (stone);
 				text_filter.process_text (context.text);
 				Result := text_filter.image
 			else
 				warner (text_window).gotcha_call 
-					(w_Cannot_read_filter (full_pathname.path))
+					(w_Cannot_read_filter (full_pathname))
 			end
 		end;
 
@@ -110,7 +110,7 @@ feature
 				Result.append (filtername)
 			end;
 			fname.set_file_name (Result);
-			Result := fname.path
+			Result := fname
 		end;
 
 	filter_name: STRING;

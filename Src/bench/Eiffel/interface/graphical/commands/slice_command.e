@@ -74,7 +74,7 @@ feature {NONE} -- Implementation
 			mp: MOUSE_PTR
 		do
 			!! mp.set_watch_cursor;
-			if argument = Void then
+			if argument = button_three_action then
 					-- 3rd button pressed
 				slice_window.call 
 			elseif argument = slice_window then

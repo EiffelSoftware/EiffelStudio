@@ -24,8 +24,10 @@ creation
 
 	make
 
-	
-feature 
+feature {NONE, GROUP}
+
+	eiffel_text: STRING;
+			-- contains initialization and creation (portion at end of text)
 
 	make (a_name: STRING; context_list: LINKED_LIST [CONTEXT]) is
 		local
@@ -105,9 +107,6 @@ feature
 				context_list.forth
 			end;
 			trim;
-			Shared_group_list.finish;
-			Shared_group_list.put_right (Current);
-	
 				-- Creation of the first instance
 				-- to replace the grouped contexts
 			!!group_c;
@@ -142,7 +141,7 @@ feature
 				group_c.widget.manage;
 			end;
 
-				-- Save the text generated
+				-- Save the text generated (creation & initialization)
 			Eiffel_text := group_c.group_text;
 
 				--  After the text generation, the flags
@@ -159,14 +158,97 @@ feature
 			context_catalog.add_new_group (Current);
 		end;
 
+feature
 
 	entity_name: STRING;
 
 	identifier: INTEGER;
 
-	eiffel_text: STRING;
-
 	counter: INTEGER;
+
+	entity_name_to_upper: STRING is
+		do
+			Result := clone (entity_name);
+			Result.to_upper
+		end;
+
+	updated_eiffel_text: STRING is
+			-- Updated eiffel text to reflect
+			-- any modifications made to group types
+		do
+            !!Result.make (100);
+            Result.append ("class ");
+            Result.append (entity_name_to_upper);
+
+            -- Inheritance
+            Result.append ("%N%Ninherit%N%N%TEB_BULLETIN");
+            Result.append ("%N%T%Trename%N%T%T%Tmake as eb_bulletin_make");
+            Result.append ("%N%T%Tend;");
+
+            -- Feature clause
+            Result.append ("%N%Ncreation%N%N%Tmake");
+            Result.append ("%N%Nfeature%N%N");
+
+            -- Group declaration 
+            Result.append (group_declaration);
+			Result.append (eiffel_text);
+			Result.append ("%T%Tend;%N%Nend%N%N");
+		end;
+
+	 group_declaration: STRING is
+            -- Eiffel declaration of group widgets.
+        local
+            s_group: S_GROUP;
+			i: INTEGER;
+			group: GROUP;
+			decl: STRING
+        do
+            !!Result.make (0);
+            from
+				i := 1;
+            until
+				i > count
+            loop
+                s_group ?= item (i);
+                if s_group /= Void then
+					group := corresponding_group (s_group.group_type)
+					if group = Void then
+							-- Should not happen. Something may have
+							-- went wrong in importing of groups
+						io.error.putstring ("Not able to find group: ");
+						io.error.putstring (s_group.internal_name);
+						io.error.putstring (".%N");
+					else	
+						!! decl.make (0);
+						decl.extend ('%T');
+						decl.append (s_group.internal_name);
+						decl.append (": ");
+						decl.append (group.entity_name_to_upper);
+						decl.append (";%N");
+						Result.append (decl)
+					end
+                end;
+              	i := i + 1 
+            end;
+        end;
+
+feature {NONE}
+
+	corresponding_group (a_type: INTEGER): GROUP is
+			-- Group associated with `a_type' identifier
+		do
+			from
+                Shared_group_list.start
+            until
+                Shared_group_list.after or else Result /= Void
+            loop
+                if Shared_group_list.item.identifier = a_type then
+                    Result := Shared_group_list.item;
+                else
+                    Shared_group_list.forth
+                end;
+            end;
+		end
 	
 feature {NONE}
 
@@ -204,7 +286,7 @@ feature {NONE}
 		end;
 feature 
 
-	context_type: CONTEXT_TYPE is
+	context_type: CONTEXT_GROUP_TYPE is
 		local
 			a_list: LINKED_LIST [CONTEXT_GROUP_TYPE];
 			found: BOOLEAN
@@ -247,7 +329,6 @@ feature
 		do
 			counter := counter - 1;
 		end;
-
 	
 feature {NONE}
 
@@ -284,8 +365,14 @@ feature {NONE}
 			end;
 		end;
 
-	
-feature 
+feature
+
+	set_entity_name (new_name: STRING) is
+		require
+			valid_new_name: new_name /= Void
+		do
+			entity_name := clone (new_name)
+		end; 
 
 	new_id_after_import: INTEGER is
 		local
@@ -313,7 +400,6 @@ feature
 				Shared_group_list.forth;
 			end;
 			if different then
-				eiffel_text := Void;
 				entity_name := generated_name;
 			end;
 			if not found or different then
@@ -336,14 +422,14 @@ feature
 				i > count
 			loop
 				saved_group ?= item (i);
-				if not (saved_group = Void) then
+				if (saved_group /= Void) then
 					saved_group.set_group_type (group_table.item (saved_group.group_type));
+					saved_group.update_group_within_group_id (group_table);
 				end;
 				i := i + 1;
 			end;
 		end;
 
-	
 feature {NONE}
 
 	save_context (a_context: CONTEXT): S_CONTEXT is
@@ -382,7 +468,7 @@ feature
 				identifier > count
 			loop
 				a_context := create_context_tree (group_c);
-				a_context.retrieve_oui_group_child_widget;
+				a_context.retrieve_oui_widget;
 				a_context.widget.manage;
 				identifier := identifier + 1;
 				group_c.add_group_child (a_context);
@@ -391,7 +477,7 @@ feature
 			if (eiffel_text = Void) then
 				eiffel_text := group_c.group_text
 			end;
-		end	;
+		end;
 	
 feature {NONE}
 
@@ -427,7 +513,7 @@ feature
 			from
 				Shared_group_list.start
 			until
-				Shared_group_list.after or used
+				Shared_group_list.after or else used
 			loop
 				if Shared_group_list.item /= Current then
 					used := Shared_group_list.item.use_group (identifier);
@@ -453,13 +539,34 @@ feature {GROUP}
 				i > count or found
 			loop
 				saved_group ?= item (i);
-				if not (saved_group = Void) and then
+				if saved_group /= Void and then
 					saved_group.group_type = a_group_id then
 					found := True;
 				end;
 				i := i + 1;
 			end;
 			Result := found;
+		end;
+
+feature {CONTEXT_GROUP_TYPE}
+
+	update_entity_name_in_tree is
+			-- Update the entity_name (eiffel_type for group_c) in
+			-- context tree
+		do
+			Tree.disable_drawing;
+			from
+				Shared_window_list.start
+			until
+				Shared_window_list.after
+			loop
+				Shared_window_list.item.update_group_name_in_tree (Current);
+				Shared_window_list.forth
+			end
+			Tree.enable_drawing;
+			if not Shared_window_list.empty then
+				Tree.display (Shared_window_list.first)
+			end
 		end;
 
 end

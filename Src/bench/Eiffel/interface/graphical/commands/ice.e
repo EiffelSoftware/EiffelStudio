@@ -37,7 +37,7 @@ feature {NONE}
 			else
 				warner (text_window).custom_call (void ,
 						"A compilation must complete%
-						%succesfully before purge", void, void, "OK");
+						%successfully before purge", void, void, "OK");
 			end;
 		end;
  

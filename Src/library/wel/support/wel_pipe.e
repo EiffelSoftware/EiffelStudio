@@ -13,7 +13,9 @@ inherit
 	STRING_HANDLER
 
 creation
-	make
+	make, 
+	make_named, 
+	make_client
 	
 feature {NONE} -- Initialization
 
@@ -25,6 +27,103 @@ feature {NONE} -- Initialization
 			exists := cwin_create_pipe ($output_handle, $input_handle, security_attributes.item, 0)
 		end
 		
+	make_named (a_name: STRING; a_direction: INTEGER) is
+			-- Create a named pipe with name `name' and 'a_direction'
+		require
+			non_void_name: a_name /= Void
+			valid_name: not a_name.is_empty
+			valid_direction: a_direction = inbound or a_direction = outbound or a_direction = duplex
+		local
+			l_handle: INTEGER
+			l_connected: BOOLEAN
+			ws: WEL_STRING
+		do
+			create ws.make (format_pipe_name (a_name))
+			create security_attributes.make
+			security_attributes.set_inherit_handle (True)
+			
+			input_closed := True
+			output_closed := True
+			
+			l_handle := cwin_create_named_pipe (ws.item, a_direction, 0, 255, max_pipe_buffer_length, max_pipe_buffer_length, 0, default_pointer)
+			if l_handle /= -1 then
+				if a_direction = inbound or a_direction = duplex then
+					output_handle := l_handle
+					output_closed := False
+				end
+				if a_direction = outbound or a_direction = duplex then
+					input_handle := l_handle
+					input_closed := False
+				end
+				
+				l_connected := cwin_connect_named_pipe (l_handle, default_pointer)
+				check
+					connected: l_connected
+				end
+			end
+		end
+	
+	make_client (a_name: STRING; a_direction: INTEGER; a_wait_server: BOOLEAN) is
+			-- Create a pipe connecting to named pipe with name `name' and 'a_direction'
+			-- named pipe must have previously been created.
+			-- if `a_wait_server' then execution halts until a compatible server has been created
+		require
+			non_void_name: a_name /= Void
+			valid_name: not a_name.is_empty
+			valid_direction: a_direction = inbound or a_direction = outbound or a_direction = duplex
+		local
+			l_handle: INTEGER
+			l_create_mode: INTEGER
+			ws: WEL_STRING
+		do
+			create ws.make (format_pipe_name (a_name))
+			
+			input_closed := True
+			output_closed := True
+			
+			if a_wait_server then
+				from
+				until
+					cwin_wait_piped_name (ws.item, 0)		
+				loop
+					cwin_sleep (10)					
+				end
+			end
+			
+			if cwin_wait_piped_name (ws.item, 0) then
+				inspect a_direction
+				when Inbound then
+					l_create_mode := generic_read
+				when Outbound then
+					l_create_mode := generic_write
+				when Duplex then
+					l_create_mode := generic_read.bit_or (generic_write)
+				end
+				l_handle := cwin_create_file (ws.item, l_create_mode, 0x0, default_pointer, 0x4, 0x100, 0)
+				if l_handle /= -1 then
+					if a_direction = inbound or a_direction = duplex then
+						output_handle := l_handle
+						output_closed := False
+					end
+					if a_direction = outbound or a_direction = duplex then
+						input_handle := l_handle
+						input_closed := False
+					end					
+				end
+			end
+		end
+
+feature -- Access
+
+	inbound: INTEGER is 0x01
+			-- Named pipe will be written to
+
+	outbound: INTEGER is 0x02
+			-- Named pipe will be listened to
+
+	duplex:  INTEGER is 0x03
+			-- Named pipe will be written and listened to
+	
 feature -- Status Report
 
 	exists: BOOLEAN
@@ -61,12 +160,20 @@ feature -- Status setting
 
 	close is
 			-- Close pipe.
-		require
-			output_open: not output_closed
-			input_open: not input_closed
 		do
-			output_closed := cwin_close_handle (output_handle)
-			input_closed := cwin_close_handle (input_handle)
+			if not output_closed then
+				output_closed := cwin_close_handle (output_handle)
+			end
+			if not input_closed then
+				if input_handle /= output_handle then
+					input_closed := cwin_close_handle (input_handle)
+				else
+					input_closed := True
+				end
+			end
+		ensure
+			output_has_close: output_closed
+			input_has_close: input_closed
 		end
 
 	close_output is
@@ -121,10 +228,62 @@ feature -- Output
 
 feature {NONE} -- Implementation
 
+	format_pipe_name (a_name: STRING): STRING is
+			-- 
+		require
+			non_void_name: a_name /= Void
+			valid_name: not a_name.is_empty
+		do
+			Result := "\\.\pipe\" + a_name
+		ensure
+			non_void_Result: Result /= Void
+		end
+
 	security_attributes: WEL_SECURITY_ATTRIBUTES
 			-- Security attributes used to create pipe
+			
+	max_pipe_buffer_length: INTEGER is 4096
+			-- max length for pipe buffer
+			
+	generic_read: INTEGER is 0x80000000
+			-- generic read mode
+			
+	generic_write: INTEGER is 0x40000000
+			-- generic write mode			
 
 feature {NONE} -- Externals
+
+	cwin_create_named_pipe (a_name: POINTER; an_integer, an_integer2, an_integer3, an_integer4, an_integer5, an_integer6: INTEGER; a_pointer: POINTER): like output_handle is 
+			-- SDK CreateNamedPiper
+		external
+			"C [macro <winbase.h>] (LPCTSTR, DWORD, DWORD, DWORD, DWORD, DWORD, DWORD, LPSECURITY_ATTRIBUTES): HANDLE"
+		alias
+			"CreateNamedPipe"
+		end
+		
+	cwin_create_file (a_name: POINTER; an_integer, an_integer2: INTEGER; a_pointer: POINTER; an_integer3, an_integer4: INTEGER; a_handle: INTEGER): like input_handle is
+			-- SDK CreateFile
+		external
+			"C [macro <winbase.h>] (LPCTSTR, DWORD, DWORD, LPSECURITY_ATTRIBUTES, DWORD, DWORD, HANDLE): HANDLE"
+		alias
+			"CreateFile"
+		end
+
+	cwin_connect_named_pipe (a_handle: like input_handle; a_pointer: POINTER): BOOLEAN is
+			-- SDK ConnectNamedPipe
+		external
+			"C [macro <winbase.h>] (HANDLE, LPOVERLAPPED): BOOL"
+		alias
+			"ConnectNamedPipe"
+		end
+	
+	cwin_wait_piped_name (a_name: POINTER; a_integer: INTEGER): BOOLEAN is
+			-- SDK WaitNamedPipe
+		external
+			"C [macro <winbase.h>] (LPCTSTR, DWORD): BOOL"
+		alias
+			"WaitNamedPipe"
+		end
 
 	cwin_read_file (a_handle: like output_handle; a_buffer: POINTER; an_integer:INTEGER; a_pointer1, a_pointer2: POINTER): BOOLEAN is
 			-- SDK ReadFile
@@ -156,6 +315,14 @@ feature {NONE} -- Externals
 			"C [macro <winbase.h>] (HANDLE): BOOL"
 		alias
 			"CloseHandle"
+		end
+		
+	cwin_sleep (a_milliseconds:INTEGER) is
+			-- SDK Sleep
+		external
+			"C [macro <winbase.h>] (DWORD)"
+		alias
+			"Sleep"
 		end
 
 end -- class WIZARD_PIPE

@@ -165,9 +165,13 @@ feature -- Update
 			version_not_void: version /= Void
 			version_not_empty: not version.is_empty
 		do
-			clr_runtime_version := version
+			if not (create {SHARED_WORKBENCH}).Workbench.has_compilation_started then
+				clr_runtime_version := version
+			end
 		ensure
-			clr_runtime_version_set: clr_runtime_version = version
+			clr_runtime_version_set:
+				(create {SHARED_WORKBENCH}).Workbench.has_compilation_started or else
+				clr_runtime_version = version
 		end
 		
 	set_msil_generation_type (s: STRING) is

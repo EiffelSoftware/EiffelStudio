@@ -23,6 +23,7 @@ feature -- Basic operations
 			dialog: EB_CREATE_CLASS_DIALOG
 		do
 			create dialog.make_default (tool.development_window)
+			dialog.set_stone_when_finished
 			dialog.call_default
 		end
 

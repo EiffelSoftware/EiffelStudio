@@ -99,6 +99,10 @@ feature -- Event : command association
 		do
 		end
 
+	add_change_command (a_command: EV_COMMAND; arguments: EV_ARGUMENTS) is
+		do
+		end
+	
 feature {EV_COMBO_BOX_ITEM_IMP} -- Implementation
 
 	ev_children: LINKED_LIST [EV_COMBO_BOX_ITEM_IMP]

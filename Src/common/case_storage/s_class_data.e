@@ -303,7 +303,7 @@ feature -- Storage
 		do
 			!! dir.make (directory_path (storage_path, view_id));
 			if not dir.exists then
-				dir.create
+				dir.create_dir
 			end;
 
 			!! internal_file.make (file_path (storage_path, view_id, True));

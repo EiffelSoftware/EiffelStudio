@@ -1585,13 +1585,14 @@ feature -- IL code generation
 		do
 			create il_generator.make (Degree_output)
 			il_generator.generate 
-			if il_c_externals.count > 0 then
+			if (in_final_mode or freeze) and then il_c_externals.count > 0 then
 				old_remover_off := remover_off
 				remover_off := True
 				if in_final_mode then
 					create {FINAL_MAKER} makefile_generator.make
 				else
 					create {WBENCH_MAKER} makefile_generator.make
+					externals.freeze
 				end
 				open_log_files
 				freezing_occurred := True
@@ -1600,6 +1601,10 @@ feature -- IL code generation
 
 				makefile_generator.generate_il
 				remover_off := old_remover_off
+
+				if not in_final_mode then
+					private_freeze := False
+				end
 			end
 			il_generator.deploy
 		end

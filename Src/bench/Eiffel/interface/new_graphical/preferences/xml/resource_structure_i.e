@@ -8,13 +8,16 @@ deferred class
 feature -- Initialization
 
 	make (in: like interface) is
+			-- Creation procedure.
 		do
 			interface := in
 		end
 
 	make_default (default_file: STRING) is
-				-- Initialize Current from file
-				-- named `default_file'.
+			-- Initialize Current from file
+			-- named `default_file'.
+		require
+			default_file_exists: default_file /= Void
 		local
 			file_name: FILE_NAME
 		do
@@ -32,7 +35,7 @@ feature -- Access
 
 	item, resource (resource_name: STRING): RESOURCE is
 			-- Resource named `resource_name'.
-			-- Name includes path.
+			-- Name does not include path.
 		do
 			Result := table.item (resource_name)
 		end
@@ -69,6 +72,7 @@ feature -- Access
 		end
 
 	child_list (path: STRING): LINKED_LIST [like folder] is
+			-- List of child folder of folder located at `path'.
 		local
 			f: like folder
 		do
@@ -77,6 +81,7 @@ feature -- Access
 		end
 
 	resource_list (path: STRING): LINKED_LIST [RESOURCE] is
+			-- List of resources of folder located at `path'.
 		local
 			f: like folder
 		do
@@ -87,11 +92,13 @@ feature -- Access
 feature -- Modification
 
 	put_resource (r: RESOURCE) is
+			-- Add `r' in resource hash table.
 		do
 			table.put_resource (r)
 		end
 
 	replace_resource (r: RESOURCE) is
+			-- Replace `r' in resource hash table.
 		do
 			table.replace_resource (r)
 		end
@@ -99,6 +106,7 @@ feature -- Modification
 feature -- Save
 
 	save is
+			-- Save contents of structure.
 		deferred
 		end
 
@@ -108,6 +116,7 @@ feature -- Status report
 			-- Root of the folder hierarchy.
 
 	has_folder (s: STRING): BOOLEAN is
+			-- Does folder `s' exists?
 		do
 			Result := (folder (s) /= Void)
 		end
@@ -115,6 +124,7 @@ feature -- Status report
 feature -- Implementation
 
 	interface: RESOURCE_STRUCTURE
+		-- Interface of Current.
 
 feature {NONE} -- Implementation
 

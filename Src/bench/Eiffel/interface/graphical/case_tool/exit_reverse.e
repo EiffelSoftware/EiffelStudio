@@ -7,7 +7,6 @@ class
 	EXIT_REVERSE
 
 inherit
-
 	CASE_COMMAND2
 
 creation
@@ -15,9 +14,10 @@ creation
 	make
 
 feature
-	execute ( a: ANY ) is 
-	do
-		case_window.unrealize
-	end	
+
+	execute (a: ANY) is 
+		do
+			case_window.hide
+		end	
 
 end -- class EXIT_REVERSE

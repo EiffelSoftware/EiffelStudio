@@ -8,6 +8,7 @@ default
 	assertion (check)
 	assertion (require)
 	assertion (ensure)
+	arguments ("D:\VSIP\Wizards\Build  visualstudio_project %"C:\Documents and Settings\Julian Rogers\My Documents\Visual Studio Projects%" Project1 3211650")
 	arguments (" ")
 	disabled_debug (yes)
 	disabled_debug ("dlg_dispatcher")
@@ -22,16 +23,15 @@ default
 	profile (no)
 	trace (no)
 	il_verifiable (yes)
+	cls_compliant (yes)
+	dotnet_naming_convention (yes)
 	msil_generation_type ("exe")
 	check_vape (no)
 	console_application (no)
-	address_expression (no)
 	array_optimization (yes)
 	dead_code_removal (yes)
-	dynamic_runtime (no)
 	exception_trace (yes)
 	inlining (no)
-	multithreaded (no)
 
 
 -- Note that we exclude EV_WIDGET, as we have a new version for build, which allows
@@ -41,7 +41,7 @@ default
 cluster
 	all build2:		"D:\work\build2"
 		exclude
-			"object_editor"; "eifgen"; "EIFGEN" "templates"; 
+			"object_editor"; "eifgen"; "EIFGEN"; "templates" "Gtk"; 
 		end
 
 	dev:		"D:\work\library"
@@ -52,7 +52,9 @@ cluster
 		include
 			"ev_button"; 
 		exclude
-			"new_figures"; "gtk"; "components"; "obsolete"; "release"; "ev_widget.e"; "ev_pixmapable.e"
+			"new_figures"; "gtk"; "components"; "obsolete"; "release"; "ev_widget.e"; "ev_pixmapable.e";
+			"ev_dialog.e"; "ev_dialog_i.e"; "ev_dialog_imp.e"; "ev_dialog_imp_common.e"; "ev_dialog_imp_modal.e";
+			"ev_dialog_imp_modeless.e";
 		end
 
 	all base:		"d:\work\library\base"
@@ -115,6 +117,11 @@ cluster
 			"hact"; "se"; "ve"; "base"; "CVS"; "test"; 
 		end
 
+	all wizard_library:		"D:\work\library\wizard"
+		exclude
+			"unix"; 
+		end
+
 external
 
 	include_path:
@@ -122,7 +129,8 @@ external
 		"d:\work\library\wel\spec\windows\include",
 		"d:\work\library\vision2\spec\include",
 		"d:\work\library\gobo_16\library\kernel\include",
-		"d:\work\library\exml_02_cvs_anon\exml\exml\lib\implementation\expat\compiler_specific\ise\clib"
+		"d:\work\library\exml_02_cvs_anon\exml\exml\lib\implementation\expat\compiler_specific\ise\clib",
+		"d:\work\library\wizard\help\clib"
 
 	object:
 		"d:\work\library\wel\spec\$(ISE_C_COMPILER)\lib\wel.lib",
@@ -130,6 +138,7 @@ external
 		"d:\work\library\vision2\spec\$(ISE_C_COMPILER)\lib\zlib.lib",
 		"d:\work\library\vision2\spec\$(ISE_C_COMPILER)\lib\libpng.lib",
 		"d:\work\library\exml_02_cvs_anon\exml\exml\lib\implementation\expat\compiler_specific\ise\clib\msc\exml.lib",
-		"d:\work\library\expat\lib\xmlparse.lib"
+		"d:\work\library\expat\lib\xmlparse.lib",
+		"d:\work\library\wizard\help\clib\htmlhelp.lib"
 
 end

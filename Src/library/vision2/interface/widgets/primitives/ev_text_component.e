@@ -357,6 +357,8 @@ feature {EV_ANY_I} -- Implementation
 invariant
 	text_not_void: is_usable implies text /= Void
 	text_length_consistent: text_length = text.count
+	selection_consistent: has_selection implies text.substring (selection_start, selection_end).is_equal (selected_text)
+
 			
 end -- class EV_TEXT_COMPONENT
 

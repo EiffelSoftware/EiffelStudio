@@ -1188,6 +1188,38 @@ feature -- Basic operations
 			cwin_win_help (item, a_wel_string.item, a_command, data)
 		end
 
+	set_class_icon (new_icon: WEL_ICON) is
+			-- Replace the current icon for the class which this window
+			-- belongs to.
+			--
+			-- The SetClassLong function replaces the specified 32-bit (long) 
+			-- value at the specified offset into the extra class memory 
+			-- or the WNDCLASSEX structure for the class to which the 
+			-- specified window belongs. 
+		do
+			cwin_set_class_long (
+				item, 
+				Wel_gcl_constants.Gcl_hicon, 
+				cwel_pointer_to_integer(new_icon.item)
+				)
+		end
+
+	set_class_small_icon (new_icon: WEL_ICON) is
+			-- Replace the current icon for the class which this window
+			-- belongs to.
+			--
+			-- The SetClassLong function replaces the specified 32-bit (long) 
+			-- value at the specified offset into the extra class memory 
+			-- or the WNDCLASSEX structure for the class to which the 
+			-- specified window belongs. 
+		do
+			cwin_set_class_long (
+				item, 
+				Wel_gcl_constants.Gcl_hiconsm, 
+				cwel_pointer_to_integer(new_icon.item)
+				)
+		end
+
 feature -- Removal
 
 	destroy is
@@ -1617,6 +1649,13 @@ feature {NONE} -- Removal
 			item := default_pointer
 		end
 
+feature {NONE} -- Constants
+
+	Wel_gcl_constants: WEL_GCL_CONSTANTS is
+		once
+			create Result
+		end	
+
 feature {NONE} -- Externals
 
 	cwin_create_window_ex (a_ex_stlyle: INTEGER; a_class_name,
@@ -1997,6 +2036,14 @@ feature {NONE} -- Externals
 			"C (): EIF_BOOLEAN | %"wel_mousehook.h%""
 		end
 
+	cwin_set_class_long (hwnd: POINTER; n_index: INTEGER;
+			new_value: INTEGER) is
+			-- SDK SetClassLong
+		external
+			"C [macro %"wel.h%"] (HWND, int, LONG)"
+		alias
+			"SetClassLong"
+		end
 
 end -- class WEL_WINDOW
 

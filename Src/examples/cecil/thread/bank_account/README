@@ -1,4 +1,4 @@
-CECIL multithreaded example: tst
+CECIL multithreaded example, for ISE Eiffel 4.5 and later
 
 DESCRIPTION
 	This program launch two types of threads: the spenders withdraw some money
@@ -14,16 +14,20 @@ DESCRIPTION
 	SPENDERS numbers of spenders.
 
 COMPILATION
+	You can comment or not the `precompiled' option in the default clause 
+	the Ace file. With a precompiled library the system will not be optimized.
 	From ebench: open a new project in this directory, choose the proper
-	ace file (unix.ace, linux.ace, win.ace depending on your platforms), and		then select Compile>finalize. 
+	ace file (unix.ace, linux.ace, win.ace depending on your platforms), and	
+	then select Compile>finalize. 
 	From a console:
 	> es4 -finalize -ace platform.win
-	where platform is unix, linux or win.
+	where platform can be unix, linux or win.
 
 	The executable name is `tst' and is located in the root cluster: 
 	it displays the bank account report every LISTSZ transactions.
 	
 NOTE
+	The example compiles with ISE EiffelBench 4.5 and later.
 	The Makefile works only in with a finalized CECIL library.
 	On windows, the Makefile only works with MS Visual C++.
 	You must rewrite the Makefile for frozen mode and for other Windows

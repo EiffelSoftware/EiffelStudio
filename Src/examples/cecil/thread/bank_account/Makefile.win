@@ -5,7 +5,7 @@ EIFLIB = libbank_account.lib
 LD = link
 MAKE=nmake
 
-all: $(OBJECTS) $(EIFLIB) cecil
+all: $(OBJECTS) $(EIFLIB) tst
 
 main.obj: 
 	$(CC) $(CFLAGS) -c main.c -Fo$@
@@ -17,7 +17,7 @@ $(EIFLIB):
 	cd EIFGEN\F_code
 	$(MAKE) cecil
 	cd ..\..
-cecil: $(OBJECTS)  $(EIFLIB)
+tst: $(OBJECTS)  $(EIFLIB)
 	$(LD) @cecil.lnk
 
 

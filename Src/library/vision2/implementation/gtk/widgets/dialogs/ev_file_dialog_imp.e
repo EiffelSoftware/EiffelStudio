@@ -112,6 +112,11 @@ feature -- Status report
 			end
 		end
 
+
+	selected_filter_index: INTEGER is
+		do
+		end
+
 feature -- Element change
 
 	set_filter (a_filter: STRING) is

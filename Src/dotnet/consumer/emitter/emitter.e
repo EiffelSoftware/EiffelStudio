@@ -271,12 +271,6 @@ feature {NONE} -- Implementation
 			if not retried then
 				if not (list_assemblies or init or usage_display) and target_path = Void then
 					set_error (No_target, Void)
-				elseif not (list_assemblies or init or usage_display) then
-					if consume_from_fullname then
-						assembly := feature {ASSEMBLY}.load_string (target_path.to_cil)
-					else
-						assembly := feature {ASSEMBLY}.load_from (target_path.to_cil)
-					end					
 				elseif put_in_eac and destination_path /= Void then
 					set_error (No_destination_if_put_in_eac, Void)
 				elseif put_in_eac and force_local_generation then
@@ -287,6 +281,14 @@ feature {NONE} -- Implementation
 					set_error (Cannot_force_and_exclude_references, Void)
 				elseif not (list_assemblies or init or usage_display) and destination_path = Void then
 					destination_path := (create {EXECUTION_ENVIRONMENT}).current_working_directory
+				end
+				
+				if not (list_assemblies or init or usage_display) then
+					if consume_from_fullname then
+						assembly := feature {ASSEMBLY}.load_string (target_path.to_cil)
+					else
+						assembly := feature {ASSEMBLY}.load_from (target_path.to_cil)
+					end
 				end
 			else
 				set_error (Invalid_target_path, target_path)

@@ -19,7 +19,8 @@ inherit
 feature -- Access
 
 	pixmap: EV_PIXMAP is
-			-- Image displayed on `Current'.
+			-- Copy of image displayed on `Current'.
+			-- Void if none.
 		require
 			not_destroyed: not is_destroyed
 		do
@@ -32,18 +33,21 @@ feature -- Access
 feature -- Element change
 
 	set_pixmap (a_pixmap: EV_PIXMAP) is
-			-- Assign `a_pixmap' to `pixmap'.
+			-- Display image of `a_pixmap' on `Current'.
+			-- Image of `pixmap' will be a copy of `a_pixmap'.
+			-- Image may be scaled in some descendents, i.e EV_TREE_ITEM
+			-- See EV_TREE.set_pixmaps_size.
 		require
 			not_destroyed: not is_destroyed
 			pixmap_not_void: a_pixmap /= Void
 		do
 			implementation.set_pixmap (a_pixmap)
 		ensure
-			pixmap_assigned: a_pixmap.is_equal (pixmap) and pixmap /= a_pixmap
+			pixmap_assigned: pixmap_equal_to (a_pixmap) and pixmap /= a_pixmap
 		end
 
 	remove_pixmap is
-			-- Make `pixmap' `Void'.
+			-- Remove image displayed on `Current'.
 		require
 			not_destroyed: not is_destroyed
 		do
@@ -58,6 +62,12 @@ feature {NONE} -- Contract support
 			-- Is `Current' in its default state?
 		do
 			Result := Precursor {EV_ANY} and pixmap = void
+		end
+		
+	pixmap_equal_to (a_pixmap: EV_PIXMAP): BOOLEAN is
+			-- Is `a_pixmap' equal to `pixmap'?
+		do
+			Result := implementation.pixmap_equal_to (a_pixmap)
 		end
 
 feature {EV_ANY_I} -- Implementation

@@ -40,6 +40,17 @@ feature -- Basic operation.
 			first_space := string.index_of (' ', 1)
 			second_space := string.index_of (' ', first_space + 1)
 			a_name := string.substring (1, first_space - 1)
+			
+				-- For backwards compatibility, any action sequences that have changed name
+				-- must be handled here.
+				-- "column_resize_actions" was renamed with CVS version 1.6 of this file so
+				-- that Build no longer generated an obsolete action sequence. We change the
+				-- name manually so old projects may be loaded.
+			if a_name.is_equal ("column_resize_actions") then
+				a_name := "column_resized_actions"
+			end
+			
+			
 			a_class_name := string.substring (first_space + 1, second_space - 1)
 			a_feature_name := string.substring (second_space + 1, string.count)
 				-- We must build the action sequenceas class corresponding to

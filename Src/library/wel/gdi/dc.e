@@ -1595,8 +1595,9 @@ feature {NONE} -- Externals
 			"RoundRect"
 		end
 
-	cwin_bit_blt (hdc_dest: POINTER; x_dest, y_dest, a_width, a_height: INTEGER;
-			hdc_src: POINTER; x_src, y_src, rop: INTEGER) is
+	cwin_bit_blt (hdc_dest: POINTER; x_dest, y_dest, a_width,
+			a_height: INTEGER; hdc_src: POINTER; x_src,
+			y_src, rop: INTEGER) is
 			-- SDK BitBlt
 		external
 			"C [macro <wel.h>] (HDC, int, int, int, int, HDC, %
@@ -1635,8 +1636,8 @@ feature {NONE} -- Externals
 			"SetStretchBltMode"
 		end
 
-	cwin_pat_blt (hdc_dest: POINTER; x_dest, y_dest, a_width, a_height: INTEGER;
-			rop: INTEGER) is
+	cwin_pat_blt (hdc_dest: POINTER; x_dest, y_dest, a_width,
+			a_height: INTEGER; rop: INTEGER) is
 			-- SDK PatBlt
 		external
 			"C [macro <wel.h>] (HDC, int, int, int, int, DWORD)"

@@ -45,6 +45,13 @@ feature -- Commands
 			end
 			if preferences.include_navigation_links then
 				insert_navigation_links
+			end			
+			if 
+				preferences.generate_dhtml_filter and then
+				generation_data.is_generating and then
+				shared_constants.help_constants.is_web_help
+			then			
+				insert_filter_script
 			end
 		end		
 
@@ -191,6 +198,40 @@ feature {NONE} -- Processing
 					end
 				end
 			end
+		end		
+
+	insert_filter_script is
+			-- Insert filter script for web generated help project.
+			-- Note: this is required because Internet Explorer does not
+			-- support captureEvents() JavaScript method and therefore
+			-- a page load event handler is required for all page so that
+			-- it can filter out unwanted content at loading time.
+		local
+			l_script_text: STRING
+			l_parent,
+			l_script_tag: XM_ELEMENT
+		do
+			l_script_text := "function pageLoad (){parent.toc_frame.documentLoaded();}"
+			l_parent := internal_xml.element_by_name ("document")
+			if l_parent /= Void then
+					-- Insert script in header
+				l_parent := l_parent.element_by_name ("meta_data")
+				if l_parent /= Void then										
+					create l_script_tag.make (l_parent, "script", create {XM_NAMESPACE}.make_default)
+					l_script_tag.put_last (create {XM_ATTRIBUTE}.make ("Language", create {XM_NAMESPACE}.make_default, "JavaScript", l_script_tag))
+					l_script_tag.put_last (create {XM_CHARACTER_DATA}.make (l_script_tag, l_script_text))
+					l_parent.put_last (l_script_tag)
+				end
+			end	
+			l_parent := internal_xml.element_by_name ("document")
+			if l_parent /= Void then
+					-- Insert onload event handler in body
+				l_parent := l_parent.element_by_name ("paragraph")
+				if l_parent /= Void then
+					l_parent.put_last (create {XM_ATTRIBUTE}.make ("onLoad", create {XM_NAMESPACE}.make_default, "pageLoad()", l_parent))
+				end
+			end
+			
 		end		
 
 feature {NONE} -- Implementation

@@ -308,13 +308,6 @@ feature {NONE} -- Implementation
 		end
 
 invariant
-	--title_not_void: is_usable implies title /= Void
-
-
---| FIXME IEK When Using X we can only use hints to set max/min dimensions,
---| This means that the width can be greater than the max width set (& height)
-	--width_not_greater_than_maximum_width: width <= maximum_width
-	--height_not_greater_than_maximum_height: height <= maximum_height
 
 	consistent_horizontal_bounds: maximum_width >= minimum_width 
 	consistent_vertical_bounds: maximum_height >= minimum_height

@@ -9,7 +9,7 @@ deferred class EIFFEL_PARSER_SKELETON
 
 inherit
 
-	YY_PARSER_SKELETON [ANY]
+	YY_NEW_PARSER_SKELETON
 		rename
 			parse as yyparse,
 			make as make_parser_skeleton
@@ -72,7 +72,16 @@ feature {NONE} -- Initialization
 			make
 		ensure
 			expression_parser: expression_parser
-		end		
+		end
+
+	make_indexing_parser is
+			-- Create a new Eiffel indexing clause parser.
+		do
+			indexing_parser := True
+			make
+		ensure
+			indexing_parser: indexing_parser
+		end
 
 feature -- Initialization
 
@@ -102,6 +111,9 @@ feature -- Status report
 	expression_parser: BOOLEAN
 			-- Is current Eiffel parser an expression parser ?
 			
+	indexing_parser: BOOLEAN
+			-- Is current Eiffel parser an indexing clause parser ?
+			
 	has_externals: BOOLEAN
 			-- Did last parse find external declarations?
 
@@ -109,13 +121,13 @@ feature -- Parsing
 
 	parse (a_file: KL_BINARY_INPUT_FILE) is
 			-- Parse Eiffel class text from `a_file'.
-			-- Make result available in `root_node'.
+			-- Make result available in appropriate result node.
 			-- An exception is raised if a syntax error is found.
 		require
 			a_file_not_void: a_file /= Void
 			a_file_open_read: a_file.is_open_read
 		do
-			root_node := Void
+			reset_nodes
 			File_buffer.set_file (a_file)
 			input_buffer := File_buffer
 			yy_load_input_buffer
@@ -128,12 +140,12 @@ feature -- Parsing
 
 	parse_from_string (a_string: STRING) is
 			-- Parse Eiffel class text in `a_string'.
-			-- Make result available in `root_node'.
+			-- Make result available in appropriate result node.
 			-- An exception is raised if a syntax error is found.
 		require
 			a_string_not_void: a_string /= Void
 		do
-			root_node := Void
+			reset_nodes
 			create input_buffer.make (a_string)
 			yy_load_input_buffer
 			yyparse
@@ -142,13 +154,7 @@ feature -- Parsing
 			reset
 		end
 
-feature -- Access
-
-	yacc_position: INTEGER
-			-- Position recorded in AST
-
-	yacc_line_number: INTEGER
-			-- Line number recorded in AST
+feature -- Access: result nodes
 
 	root_node: CLASS_AS
 			-- Root node of AST
@@ -158,6 +164,17 @@ feature -- Access
 			
 	expression_node: EXPR_AS
 			-- Expression node of AST
+
+	indexing_node: INDEXING_CLAUSE_AS
+			-- Indexing clause node of AST
+
+feature -- Access
+
+	yacc_position: INTEGER
+			-- Position recorded in AST
+
+	yacc_line_number: INTEGER
+			-- Line number recorded in AST
 
 	suppliers: SUPPLIERS_AS
 			-- Suppliers of class being parsed
@@ -199,13 +216,30 @@ feature -- Setting
 
 feature -- Removal
 
+	reset_nodes is
+			-- Clean all top nodes.
+		do
+			root_node := Void
+			type_node := Void
+			expression_node := Void
+			indexing_node := Void
+		ensure
+			root_node_void: root_node = Void
+			type_node_void: type_node = Void
+			expression_node_void: expression_node = Void
+			indexing_node_void: indexing_node = Void
+		end
+
 	wipe_out is
 			-- Release unused objects to garbage collector.
 		do
-			root_node := Void
+			reset_nodes
 			clear_stacks
 		ensure
 			root_node_void: root_node = Void
+			type_node_void: type_node = Void
+			expression_node_void: expression_node = Void
+			indexing_node_void: indexing_node = Void
 		end
 
 	clear_all is
@@ -414,12 +448,15 @@ feature {NONE} -- Actions
 			-- New precursor AST node;
 			-- Update the clickable list.
 		require
-			n_not_void: n /= Void
-			class_name_not_void: n.first /= Void
-			click_ast_not_void: n.second /= Void
+			class_name_not_void: n /= Void implies n.first /= Void
+			click_ast_not_void: n /= Void implies n.second /= Void
 		do
-			Result := new_precursor_as (n.first, args)
-			n.second.set_node (Result)
+			if n = Void then
+				Result := new_precursor_as (Void, args)
+			else
+				Result := new_precursor_as (n.first, args)
+				n.second.set_node (Result)
+			end
 			if old_syntax_location /= Void and has_syntax_warning then
 				Error_handler.insert_warning (
 					create {SYNTAX_WARNING}.make (old_syntax_location.start_position,
@@ -825,6 +862,73 @@ feature {NONE} -- Type factory
 			click_ast_updated: click_ast.node = Result
 		end
 
+feature {NONE} -- Basic type factory
+
+	new_integer_value (is_signed: BOOLEAN; sign_symbol: CHARACTER; a_type: TYPE_AS; buffer: STRING): INTEGER_CONSTANT is
+			-- Create a new integer constant value
+		require
+			buffer_not_void: buffer /= Void
+		local
+			l_type: TYPE_A
+		do
+			if a_type /= Void then
+				l_type := a_type.actual_type
+			end
+			if l_type /= Void then
+				if not l_type.is_integer and not l_type.is_natural then
+					report_invalid_type_for_integer_error (a_type, buffer)
+				end
+			end
+			if buffer.is_integer then
+				if is_signed then
+					create Result.make_from_string (l_type, sign_symbol = '-', buffer)
+				else
+					create Result.make_from_string (l_type, False, buffer)
+				end
+			elseif
+				buffer.item (1) = '0' and then
+				buffer.item (2).lower = 'x'
+			then
+				if is_signed then
+					create Result.make_from_hexa_string (l_type, sign_symbol, buffer)
+				else
+					create Result.make_from_hexa_string (l_type, '%U', buffer)
+				end
+			else
+				if is_signed and sign_symbol = '-' then
+						-- Add `-' for a better reporting.
+					buffer.precede ('-')
+				end
+				report_integer_too_large_error (buffer)
+					-- Dummy code (for error recovery) follows:
+				create Result.make_from_string (l_type, False, "0")
+			end
+			if not Result.is_initialized then
+				report_integer_too_large_error (buffer)
+			end
+		end
+
+	new_real_value (is_signed: BOOLEAN; sign_symbol: CHARACTER; a_type: TYPE_AS; buffer: STRING): REAL_AS is
+			-- Create a new real constant value.
+		require
+			buffer_not_void: buffer /= Void
+		local
+			l_type: TYPE_A
+		do
+			if a_type /= Void then
+				l_type := a_type.actual_type
+			end
+			if l_type /= Void then
+				if not l_type.is_real_32 and not l_type.is_real_64 then
+					report_invalid_type_for_real_error (a_type, buffer)
+				end
+			end
+			if is_signed and sign_symbol = '-' then
+				buffer.precede ('-')
+			end
+			create Result.make (l_type, buffer)
+		end
+		
 feature {NONE} -- Error handling
 
 	report_basic_generic_type_error is
@@ -833,6 +937,38 @@ feature {NONE} -- Error handling
 			an_error: BASIC_GEN_TYPE_ERR
 		do
 			create an_error.make (current_position.start_position, current_position.end_position, filename, 0, "", False)
+			Error_handler.insert_error (an_error)
+			Error_handler.raise_error
+		end
+
+	report_invalid_type_for_real_error (a_type: TYPE_AS; a_real: STRING) is
+			-- Error when an incorrect type `a_type' is specified for a real constant `a_real'.
+		require
+			a_type_not_void: a_type /= Void
+			a_real_not_void: a_real /= Void
+		local
+			an_error: SYNTAX_ERROR
+		do
+			create an_error.make (
+				current_position.start_position, current_position.end_position, filename, 0,
+				"Specified type %"" + a_type.dump +
+					"%" is not a valid type for real constant %"" + a_real + "%"", False)
+			Error_handler.insert_error (an_error)
+			Error_handler.raise_error
+		end
+
+	report_invalid_type_for_integer_error (a_type: TYPE_AS; an_int: STRING) is
+			-- Error when an incorrect type `a_type' is specified for a real constant `a_real'.
+		require
+			a_type_not_void: a_type /= Void
+			an_int_not_void: an_int /= Void
+		local
+			an_error: SYNTAX_ERROR
+		do
+			create an_error.make (
+				current_position.start_position, current_position.end_position, filename, 0,
+				"Specified type %"" + a_type.dump +
+					"%" is not a valid type for integer constant %"" + an_int + "%"", False)
 			Error_handler.insert_error (an_error)
 			Error_handler.raise_error
 		end

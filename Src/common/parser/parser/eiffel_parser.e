@@ -14,7 +14,7 @@ inherit
 	SHARED_NAMES_HEAP
 
 create
-	make, make_il_parser, make_type_parser, make_expression_parser
+	make, make_il_parser, make_type_parser, make_expression_parser, make_indexing_parser
 
 feature {NONE} -- Implementation
 
@@ -31,6 +31,666 @@ feature {NONE} -- Implementation
 			yypgoto ?= yypgoto_template
 			yytable ?= yytable_template
 			yycheck ?= yycheck_template
+		end
+
+	yy_create_value_stacks is
+			-- Create value stacks.
+		do
+		end
+
+	yy_init_value_stacks is
+			-- Initialize value stacks.
+		do
+			yyvsp1 := -1
+			yyvsp2 := -1
+			yyvsp3 := -1
+			yyvsp4 := -1
+			yyvsp5 := -1
+			yyvsp6 := -1
+			yyvsp7 := -1
+			yyvsp8 := -1
+			yyvsp9 := -1
+			yyvsp10 := -1
+			yyvsp11 := -1
+			yyvsp12 := -1
+			yyvsp13 := -1
+			yyvsp14 := -1
+			yyvsp15 := -1
+			yyvsp16 := -1
+			yyvsp17 := -1
+			yyvsp18 := -1
+			yyvsp19 := -1
+			yyvsp20 := -1
+			yyvsp21 := -1
+			yyvsp22 := -1
+			yyvsp23 := -1
+			yyvsp24 := -1
+			yyvsp25 := -1
+			yyvsp26 := -1
+			yyvsp27 := -1
+			yyvsp28 := -1
+			yyvsp29 := -1
+			yyvsp30 := -1
+			yyvsp31 := -1
+			yyvsp32 := -1
+			yyvsp33 := -1
+			yyvsp34 := -1
+			yyvsp35 := -1
+			yyvsp36 := -1
+			yyvsp37 := -1
+			yyvsp38 := -1
+			yyvsp39 := -1
+			yyvsp40 := -1
+			yyvsp41 := -1
+			yyvsp42 := -1
+			yyvsp43 := -1
+			yyvsp44 := -1
+			yyvsp45 := -1
+			yyvsp46 := -1
+			yyvsp47 := -1
+			yyvsp48 := -1
+			yyvsp49 := -1
+			yyvsp50 := -1
+			yyvsp51 := -1
+			yyvsp52 := -1
+			yyvsp53 := -1
+			yyvsp54 := -1
+			yyvsp55 := -1
+			yyvsp56 := -1
+			yyvsp57 := -1
+			yyvsp58 := -1
+			yyvsp59 := -1
+			yyvsp60 := -1
+			yyvsp61 := -1
+			yyvsp62 := -1
+			yyvsp63 := -1
+			yyvsp64 := -1
+			yyvsp65 := -1
+			yyvsp66 := -1
+			yyvsp67 := -1
+			yyvsp68 := -1
+			yyvsp69 := -1
+			yyvsp70 := -1
+			yyvsp71 := -1
+			yyvsp72 := -1
+			yyvsp73 := -1
+			yyvsp74 := -1
+			yyvsp75 := -1
+			yyvsp76 := -1
+			yyvsp77 := -1
+			yyvsp78 := -1
+			yyvsp79 := -1
+			yyvsp80 := -1
+			yyvsp81 := -1
+			yyvsp82 := -1
+			yyvsp83 := -1
+			yyvsp84 := -1
+			yyvsp85 := -1
+			yyvsp86 := -1
+			yyvsp87 := -1
+			yyvsp88 := -1
+			yyvsp89 := -1
+			yyvsp90 := -1
+			yyvsp91 := -1
+			yyvsp92 := -1
+			yyvsp93 := -1
+			yyvsp94 := -1
+			yyvsp95 := -1
+			yyvsp96 := -1
+		end
+
+	yy_clear_value_stacks is
+			-- Clear objects in semantic value stacks so that
+			-- they can be collected by the garbage collector.
+		do
+			if yyvs1 /= Void then
+				yyvs1.clear_all
+			end
+			if yyvs2 /= Void then
+				yyvs2.clear_all
+			end
+			if yyvs3 /= Void then
+				yyvs3.clear_all
+			end
+			if yyvs4 /= Void then
+				yyvs4.clear_all
+			end
+			if yyvs5 /= Void then
+				yyvs5.clear_all
+			end
+			if yyvs6 /= Void then
+				yyvs6.clear_all
+			end
+			if yyvs7 /= Void then
+				yyvs7.clear_all
+			end
+			if yyvs8 /= Void then
+				yyvs8.clear_all
+			end
+			if yyvs9 /= Void then
+				yyvs9.clear_all
+			end
+			if yyvs10 /= Void then
+				yyvs10.clear_all
+			end
+			if yyvs11 /= Void then
+				yyvs11.clear_all
+			end
+			if yyvs12 /= Void then
+				yyvs12.clear_all
+			end
+			if yyvs13 /= Void then
+				yyvs13.clear_all
+			end
+			if yyvs14 /= Void then
+				yyvs14.clear_all
+			end
+			if yyvs15 /= Void then
+				yyvs15.clear_all
+			end
+			if yyvs16 /= Void then
+				yyvs16.clear_all
+			end
+			if yyvs17 /= Void then
+				yyvs17.clear_all
+			end
+			if yyvs18 /= Void then
+				yyvs18.clear_all
+			end
+			if yyvs19 /= Void then
+				yyvs19.clear_all
+			end
+			if yyvs20 /= Void then
+				yyvs20.clear_all
+			end
+			if yyvs21 /= Void then
+				yyvs21.clear_all
+			end
+			if yyvs22 /= Void then
+				yyvs22.clear_all
+			end
+			if yyvs23 /= Void then
+				yyvs23.clear_all
+			end
+			if yyvs24 /= Void then
+				yyvs24.clear_all
+			end
+			if yyvs25 /= Void then
+				yyvs25.clear_all
+			end
+			if yyvs26 /= Void then
+				yyvs26.clear_all
+			end
+			if yyvs27 /= Void then
+				yyvs27.clear_all
+			end
+			if yyvs28 /= Void then
+				yyvs28.clear_all
+			end
+			if yyvs29 /= Void then
+				yyvs29.clear_all
+			end
+			if yyvs30 /= Void then
+				yyvs30.clear_all
+			end
+			if yyvs31 /= Void then
+				yyvs31.clear_all
+			end
+			if yyvs32 /= Void then
+				yyvs32.clear_all
+			end
+			if yyvs33 /= Void then
+				yyvs33.clear_all
+			end
+			if yyvs34 /= Void then
+				yyvs34.clear_all
+			end
+			if yyvs35 /= Void then
+				yyvs35.clear_all
+			end
+			if yyvs36 /= Void then
+				yyvs36.clear_all
+			end
+			if yyvs37 /= Void then
+				yyvs37.clear_all
+			end
+			if yyvs38 /= Void then
+				yyvs38.clear_all
+			end
+			if yyvs39 /= Void then
+				yyvs39.clear_all
+			end
+			if yyvs40 /= Void then
+				yyvs40.clear_all
+			end
+			if yyvs41 /= Void then
+				yyvs41.clear_all
+			end
+			if yyvs42 /= Void then
+				yyvs42.clear_all
+			end
+			if yyvs43 /= Void then
+				yyvs43.clear_all
+			end
+			if yyvs44 /= Void then
+				yyvs44.clear_all
+			end
+			if yyvs45 /= Void then
+				yyvs45.clear_all
+			end
+			if yyvs46 /= Void then
+				yyvs46.clear_all
+			end
+			if yyvs47 /= Void then
+				yyvs47.clear_all
+			end
+			if yyvs48 /= Void then
+				yyvs48.clear_all
+			end
+			if yyvs49 /= Void then
+				yyvs49.clear_all
+			end
+			if yyvs50 /= Void then
+				yyvs50.clear_all
+			end
+			if yyvs51 /= Void then
+				yyvs51.clear_all
+			end
+			if yyvs52 /= Void then
+				yyvs52.clear_all
+			end
+			if yyvs53 /= Void then
+				yyvs53.clear_all
+			end
+			if yyvs54 /= Void then
+				yyvs54.clear_all
+			end
+			if yyvs55 /= Void then
+				yyvs55.clear_all
+			end
+			if yyvs56 /= Void then
+				yyvs56.clear_all
+			end
+			if yyvs57 /= Void then
+				yyvs57.clear_all
+			end
+			if yyvs58 /= Void then
+				yyvs58.clear_all
+			end
+			if yyvs59 /= Void then
+				yyvs59.clear_all
+			end
+			if yyvs60 /= Void then
+				yyvs60.clear_all
+			end
+			if yyvs61 /= Void then
+				yyvs61.clear_all
+			end
+			if yyvs62 /= Void then
+				yyvs62.clear_all
+			end
+			if yyvs63 /= Void then
+				yyvs63.clear_all
+			end
+			if yyvs64 /= Void then
+				yyvs64.clear_all
+			end
+			if yyvs65 /= Void then
+				yyvs65.clear_all
+			end
+			if yyvs66 /= Void then
+				yyvs66.clear_all
+			end
+			if yyvs67 /= Void then
+				yyvs67.clear_all
+			end
+			if yyvs68 /= Void then
+				yyvs68.clear_all
+			end
+			if yyvs69 /= Void then
+				yyvs69.clear_all
+			end
+			if yyvs70 /= Void then
+				yyvs70.clear_all
+			end
+			if yyvs71 /= Void then
+				yyvs71.clear_all
+			end
+			if yyvs72 /= Void then
+				yyvs72.clear_all
+			end
+			if yyvs73 /= Void then
+				yyvs73.clear_all
+			end
+			if yyvs74 /= Void then
+				yyvs74.clear_all
+			end
+			if yyvs75 /= Void then
+				yyvs75.clear_all
+			end
+			if yyvs76 /= Void then
+				yyvs76.clear_all
+			end
+			if yyvs77 /= Void then
+				yyvs77.clear_all
+			end
+			if yyvs78 /= Void then
+				yyvs78.clear_all
+			end
+			if yyvs79 /= Void then
+				yyvs79.clear_all
+			end
+			if yyvs80 /= Void then
+				yyvs80.clear_all
+			end
+			if yyvs81 /= Void then
+				yyvs81.clear_all
+			end
+			if yyvs82 /= Void then
+				yyvs82.clear_all
+			end
+			if yyvs83 /= Void then
+				yyvs83.clear_all
+			end
+			if yyvs84 /= Void then
+				yyvs84.clear_all
+			end
+			if yyvs85 /= Void then
+				yyvs85.clear_all
+			end
+			if yyvs86 /= Void then
+				yyvs86.clear_all
+			end
+			if yyvs87 /= Void then
+				yyvs87.clear_all
+			end
+			if yyvs88 /= Void then
+				yyvs88.clear_all
+			end
+			if yyvs89 /= Void then
+				yyvs89.clear_all
+			end
+			if yyvs90 /= Void then
+				yyvs90.clear_all
+			end
+			if yyvs91 /= Void then
+				yyvs91.clear_all
+			end
+			if yyvs92 /= Void then
+				yyvs92.clear_all
+			end
+			if yyvs93 /= Void then
+				yyvs93.clear_all
+			end
+			if yyvs94 /= Void then
+				yyvs94.clear_all
+			end
+			if yyvs95 /= Void then
+				yyvs95.clear_all
+			end
+			if yyvs96 /= Void then
+				yyvs96.clear_all
+			end
+		end
+
+	yy_push_last_value (yychar1: INTEGER) is
+			-- Push semantic value associated with token `last_token'
+			-- (with internal id `yychar1') on top of corresponding
+			-- value stack.
+		do
+			yyvsp1 := yyvsp1 + 1
+			if yyvsp1 >= yyvsc1 then
+				if yyvs1 = Void then
+					debug ("GEYACC")
+						std.error.put_line ("Create yyvs1")
+					end
+					create yyspecial_routines1
+					yyvsc1 := yyInitial_yyvs_size
+					yyvs1 := yyspecial_routines1.make (yyvsc1)
+				else
+					debug ("GEYACC")
+						std.error.put_line ("Resize yyvs1")
+					end
+					yyvsc1 := yyvsc1 + yyInitial_yyvs_size
+					yyvs1 := yyspecial_routines1.resize (yyvs1, yyvsc1)
+				end
+			end
+			yyvs1.put (last_any_value, yyvsp1)
+		end
+
+	yy_push_error_value is
+			-- Push semantic value associated with token 'error'
+			-- on top of corresponding value stack.
+		local
+			yyval1: ANY
+		do
+			yyvsp1 := yyvsp1 + 1
+			if yyvsp1 >= yyvsc1 then
+				if yyvs1 = Void then
+					debug ("GEYACC")
+						std.error.put_line ("Create yyvs1")
+					end
+					create yyspecial_routines1
+					yyvsc1 := yyInitial_yyvs_size
+					yyvs1 := yyspecial_routines1.make (yyvsc1)
+				else
+					debug ("GEYACC")
+						std.error.put_line ("Resize yyvs1")
+					end
+					yyvsc1 := yyvsc1 + yyInitial_yyvs_size
+					yyvs1 := yyspecial_routines1.resize (yyvs1, yyvsc1)
+				end
+			end
+			yyvs1.put (yyval1, yyvsp1)
+		end
+
+	yy_pop_last_value (yystate: INTEGER) is
+			-- Pop semantic value from stack when in state `yystate'.
+		local
+			yy_type_id: INTEGER
+		do
+			yy_type_id := yytypes1.item (yystate)
+			inspect yy_type_id
+			when 1 then
+				yyvsp1 := yyvsp1 - 1
+			when 2 then
+				yyvsp2 := yyvsp2 - 1
+			when 3 then
+				yyvsp3 := yyvsp3 - 1
+			when 4 then
+				yyvsp4 := yyvsp4 - 1
+			when 5 then
+				yyvsp5 := yyvsp5 - 1
+			when 6 then
+				yyvsp6 := yyvsp6 - 1
+			when 7 then
+				yyvsp7 := yyvsp7 - 1
+			when 8 then
+				yyvsp8 := yyvsp8 - 1
+			when 9 then
+				yyvsp9 := yyvsp9 - 1
+			when 10 then
+				yyvsp10 := yyvsp10 - 1
+			when 11 then
+				yyvsp11 := yyvsp11 - 1
+			when 12 then
+				yyvsp12 := yyvsp12 - 1
+			when 13 then
+				yyvsp13 := yyvsp13 - 1
+			when 14 then
+				yyvsp14 := yyvsp14 - 1
+			when 15 then
+				yyvsp15 := yyvsp15 - 1
+			when 16 then
+				yyvsp16 := yyvsp16 - 1
+			when 17 then
+				yyvsp17 := yyvsp17 - 1
+			when 18 then
+				yyvsp18 := yyvsp18 - 1
+			when 19 then
+				yyvsp19 := yyvsp19 - 1
+			when 20 then
+				yyvsp20 := yyvsp20 - 1
+			when 21 then
+				yyvsp21 := yyvsp21 - 1
+			when 22 then
+				yyvsp22 := yyvsp22 - 1
+			when 23 then
+				yyvsp23 := yyvsp23 - 1
+			when 24 then
+				yyvsp24 := yyvsp24 - 1
+			when 25 then
+				yyvsp25 := yyvsp25 - 1
+			when 26 then
+				yyvsp26 := yyvsp26 - 1
+			when 27 then
+				yyvsp27 := yyvsp27 - 1
+			when 28 then
+				yyvsp28 := yyvsp28 - 1
+			when 29 then
+				yyvsp29 := yyvsp29 - 1
+			when 30 then
+				yyvsp30 := yyvsp30 - 1
+			when 31 then
+				yyvsp31 := yyvsp31 - 1
+			when 32 then
+				yyvsp32 := yyvsp32 - 1
+			when 33 then
+				yyvsp33 := yyvsp33 - 1
+			when 34 then
+				yyvsp34 := yyvsp34 - 1
+			when 35 then
+				yyvsp35 := yyvsp35 - 1
+			when 36 then
+				yyvsp36 := yyvsp36 - 1
+			when 37 then
+				yyvsp37 := yyvsp37 - 1
+			when 38 then
+				yyvsp38 := yyvsp38 - 1
+			when 39 then
+				yyvsp39 := yyvsp39 - 1
+			when 40 then
+				yyvsp40 := yyvsp40 - 1
+			when 41 then
+				yyvsp41 := yyvsp41 - 1
+			when 42 then
+				yyvsp42 := yyvsp42 - 1
+			when 43 then
+				yyvsp43 := yyvsp43 - 1
+			when 44 then
+				yyvsp44 := yyvsp44 - 1
+			when 45 then
+				yyvsp45 := yyvsp45 - 1
+			when 46 then
+				yyvsp46 := yyvsp46 - 1
+			when 47 then
+				yyvsp47 := yyvsp47 - 1
+			when 48 then
+				yyvsp48 := yyvsp48 - 1
+			when 49 then
+				yyvsp49 := yyvsp49 - 1
+			when 50 then
+				yyvsp50 := yyvsp50 - 1
+			when 51 then
+				yyvsp51 := yyvsp51 - 1
+			when 52 then
+				yyvsp52 := yyvsp52 - 1
+			when 53 then
+				yyvsp53 := yyvsp53 - 1
+			when 54 then
+				yyvsp54 := yyvsp54 - 1
+			when 55 then
+				yyvsp55 := yyvsp55 - 1
+			when 56 then
+				yyvsp56 := yyvsp56 - 1
+			when 57 then
+				yyvsp57 := yyvsp57 - 1
+			when 58 then
+				yyvsp58 := yyvsp58 - 1
+			when 59 then
+				yyvsp59 := yyvsp59 - 1
+			when 60 then
+				yyvsp60 := yyvsp60 - 1
+			when 61 then
+				yyvsp61 := yyvsp61 - 1
+			when 62 then
+				yyvsp62 := yyvsp62 - 1
+			when 63 then
+				yyvsp63 := yyvsp63 - 1
+			when 64 then
+				yyvsp64 := yyvsp64 - 1
+			when 65 then
+				yyvsp65 := yyvsp65 - 1
+			when 66 then
+				yyvsp66 := yyvsp66 - 1
+			when 67 then
+				yyvsp67 := yyvsp67 - 1
+			when 68 then
+				yyvsp68 := yyvsp68 - 1
+			when 69 then
+				yyvsp69 := yyvsp69 - 1
+			when 70 then
+				yyvsp70 := yyvsp70 - 1
+			when 71 then
+				yyvsp71 := yyvsp71 - 1
+			when 72 then
+				yyvsp72 := yyvsp72 - 1
+			when 73 then
+				yyvsp73 := yyvsp73 - 1
+			when 74 then
+				yyvsp74 := yyvsp74 - 1
+			when 75 then
+				yyvsp75 := yyvsp75 - 1
+			when 76 then
+				yyvsp76 := yyvsp76 - 1
+			when 77 then
+				yyvsp77 := yyvsp77 - 1
+			when 78 then
+				yyvsp78 := yyvsp78 - 1
+			when 79 then
+				yyvsp79 := yyvsp79 - 1
+			when 80 then
+				yyvsp80 := yyvsp80 - 1
+			when 81 then
+				yyvsp81 := yyvsp81 - 1
+			when 82 then
+				yyvsp82 := yyvsp82 - 1
+			when 83 then
+				yyvsp83 := yyvsp83 - 1
+			when 84 then
+				yyvsp84 := yyvsp84 - 1
+			when 85 then
+				yyvsp85 := yyvsp85 - 1
+			when 86 then
+				yyvsp86 := yyvsp86 - 1
+			when 87 then
+				yyvsp87 := yyvsp87 - 1
+			when 88 then
+				yyvsp88 := yyvsp88 - 1
+			when 89 then
+				yyvsp89 := yyvsp89 - 1
+			when 90 then
+				yyvsp90 := yyvsp90 - 1
+			when 91 then
+				yyvsp91 := yyvsp91 - 1
+			when 92 then
+				yyvsp92 := yyvsp92 - 1
+			when 93 then
+				yyvsp93 := yyvsp93 - 1
+			when 94 then
+				yyvsp94 := yyvsp94 - 1
+			when 95 then
+				yyvsp95 := yyvsp95 - 1
+			when 96 then
+				yyvsp96 := yyvsp96 - 1
+			else
+				debug ("GEYACC")
+					std.error.put_string ("Error in parser: unknown type id: ")
+					std.error.put_integer (yy_type_id)
+					std.error.put_new_line
+				end
+				abort
+			end
 		end
 
 feature {NONE} -- Semantic actions
@@ -59,604 +719,604 @@ feature {NONE} -- Semantic actions
 		do
 			inspect yy_act
 			when 1 then
-					--|#line 176 "eiffel.y"
+					--|#line <not available> "eiffel.y"
 				yy_do_action_1
 			when 2 then
-					--|#line 183 "eiffel.y"
+					--|#line <not available> "eiffel.y"
 				yy_do_action_2
 			when 3 then
-					--|#line 190 "eiffel.y"
+					--|#line <not available> "eiffel.y"
 				yy_do_action_3
 			when 4 then
-					--|#line 199 "eiffel.y"
+					--|#line <not available> "eiffel.y"
 				yy_do_action_4
 			when 5 then
-					--|#line 242 "eiffel.y"
+					--|#line <not available> "eiffel.y"
 				yy_do_action_5
 			when 6 then
-					--|#line 251 "eiffel.y"
+					--|#line <not available> "eiffel.y"
 				yy_do_action_6
 			when 7 then
-					--|#line 259 "eiffel.y"
+					--|#line <not available> "eiffel.y"
 				yy_do_action_7
 			when 8 then
-					--|#line 271 "eiffel.y"
+					--|#line <not available> "eiffel.y"
 				yy_do_action_8
 			when 9 then
-					--|#line 273 "eiffel.y"
+					--|#line <not available> "eiffel.y"
 				yy_do_action_9
 			when 10 then
-					--|#line 273 "eiffel.y"
+					--|#line <not available> "eiffel.y"
 				yy_do_action_10
 			when 11 then
-					--|#line 283 "eiffel.y"
+					--|#line <not available> "eiffel.y"
 				yy_do_action_11
 			when 12 then
-					--|#line 287 "eiffel.y"
+					--|#line <not available> "eiffel.y"
 				yy_do_action_12
 			when 13 then
-					--|#line 289 "eiffel.y"
+					--|#line <not available> "eiffel.y"
 				yy_do_action_13
 			when 14 then
-					--|#line 291 "eiffel.y"
+					--|#line <not available> "eiffel.y"
 				yy_do_action_14
 			when 15 then
-					--|#line 295 "eiffel.y"
+					--|#line <not available> "eiffel.y"
 				yy_do_action_15
 			when 16 then
-					--|#line 297 "eiffel.y"
+					--|#line <not available> "eiffel.y"
 				yy_do_action_16
 			when 17 then
-					--|#line 299 "eiffel.y"
+					--|#line <not available> "eiffel.y"
 				yy_do_action_17
 			when 18 then
-					--|#line 303 "eiffel.y"
+					--|#line <not available> "eiffel.y"
 				yy_do_action_18
 			when 19 then
-					--|#line 308 "eiffel.y"
+					--|#line <not available> "eiffel.y"
 				yy_do_action_19
 			when 20 then
-					--|#line 315 "eiffel.y"
+					--|#line <not available> "eiffel.y"
 				yy_do_action_20
 			when 21 then
-					--|#line 319 "eiffel.y"
+					--|#line <not available> "eiffel.y"
 				yy_do_action_21
 			when 22 then
-					--|#line 321 "eiffel.y"
+					--|#line <not available> "eiffel.y"
 				yy_do_action_22
 			when 23 then
-					--|#line 333 "eiffel.y"
+					--|#line <not available> "eiffel.y"
 				yy_do_action_23
 			when 24 then
-					--|#line 338 "eiffel.y"
+					--|#line <not available> "eiffel.y"
 				yy_do_action_24
 			when 25 then
-					--|#line 343 "eiffel.y"
+					--|#line <not available> "eiffel.y"
 				yy_do_action_25
 			when 26 then
-					--|#line 350 "eiffel.y"
+					--|#line <not available> "eiffel.y"
 				yy_do_action_26
 			when 27 then
-					--|#line 352 "eiffel.y"
+					--|#line <not available> "eiffel.y"
 				yy_do_action_27
 			when 28 then
-					--|#line 354 "eiffel.y"
+					--|#line <not available> "eiffel.y"
 				yy_do_action_28
 			when 29 then
-					--|#line 358 "eiffel.y"
+					--|#line <not available> "eiffel.y"
 				yy_do_action_29
 			when 30 then
-					--|#line 368 "eiffel.y"
+					--|#line <not available> "eiffel.y"
 				yy_do_action_30
 			when 31 then
-					--|#line 374 "eiffel.y"
+					--|#line <not available> "eiffel.y"
 				yy_do_action_31
 			when 32 then
-					--|#line 381 "eiffel.y"
+					--|#line <not available> "eiffel.y"
 				yy_do_action_32
 			when 33 then
-					--|#line 387 "eiffel.y"
+					--|#line <not available> "eiffel.y"
 				yy_do_action_33
 			when 34 then
-					--|#line 395 "eiffel.y"
+					--|#line <not available> "eiffel.y"
 				yy_do_action_34
 			when 35 then
-					--|#line 399 "eiffel.y"
+					--|#line <not available> "eiffel.y"
 				yy_do_action_35
 			when 36 then
-					--|#line 410 "eiffel.y"
+					--|#line <not available> "eiffel.y"
 				yy_do_action_36
 			when 37 then
-					--|#line 414 "eiffel.y"
+					--|#line <not available> "eiffel.y"
 				yy_do_action_37
 			when 38 then
-					--|#line 429 "eiffel.y"
+					--|#line <not available> "eiffel.y"
 				yy_do_action_38
 			when 39 then
-					--|#line 431 "eiffel.y"
+					--|#line <not available> "eiffel.y"
 				yy_do_action_39
 			when 40 then
-					--|#line 438 "eiffel.y"
+					--|#line <not available> "eiffel.y"
 				yy_do_action_40
 			when 41 then
-					--|#line 440 "eiffel.y"
+					--|#line <not available> "eiffel.y"
 				yy_do_action_41
 			when 42 then
-					--|#line 449 "eiffel.y"
+					--|#line <not available> "eiffel.y"
 				yy_do_action_42
 			when 43 then
-					--|#line 454 "eiffel.y"
+					--|#line <not available> "eiffel.y"
 				yy_do_action_43
 			when 44 then
-					--|#line 461 "eiffel.y"
+					--|#line <not available> "eiffel.y"
 				yy_do_action_44
 			when 45 then
-					--|#line 463 "eiffel.y"
+					--|#line <not available> "eiffel.y"
 				yy_do_action_45
 			when 46 then
-					--|#line 467 "eiffel.y"
+					--|#line <not available> "eiffel.y"
 				yy_do_action_46
 			when 47 then
-					--|#line 467 "eiffel.y"
+					--|#line <not available> "eiffel.y"
 				yy_do_action_47
 			when 48 then
-					--|#line 476 "eiffel.y"
+					--|#line <not available> "eiffel.y"
 				yy_do_action_48
 			when 49 then
-					--|#line 478 "eiffel.y"
+					--|#line <not available> "eiffel.y"
 				yy_do_action_49
 			when 50 then
-					--|#line 482 "eiffel.y"
+					--|#line <not available> "eiffel.y"
 				yy_do_action_50
 			when 51 then
-					--|#line 487 "eiffel.y"
+					--|#line <not available> "eiffel.y"
 				yy_do_action_51
 			when 52 then
-					--|#line 491 "eiffel.y"
+					--|#line <not available> "eiffel.y"
 				yy_do_action_52
 			when 53 then
-					--|#line 497 "eiffel.y"
+					--|#line <not available> "eiffel.y"
 				yy_do_action_53
 			when 54 then
-					--|#line 505 "eiffel.y"
+					--|#line <not available> "eiffel.y"
 				yy_do_action_54
 			when 55 then
-					--|#line 510 "eiffel.y"
+					--|#line <not available> "eiffel.y"
 				yy_do_action_55
 			when 56 then
-					--|#line 517 "eiffel.y"
+					--|#line <not available> "eiffel.y"
 				yy_do_action_56
 			when 57 then
-					--|#line 518 "eiffel.y"
+					--|#line <not available> "eiffel.y"
 				yy_do_action_57
 			when 58 then
-					--|#line 521 "eiffel.y"
+					--|#line <not available> "eiffel.y"
 				yy_do_action_58
 			when 59 then
-					--|#line 534 "eiffel.y"
+					--|#line <not available> "eiffel.y"
 				yy_do_action_59
 			when 60 then
-					--|#line 536 "eiffel.y"
+					--|#line <not available> "eiffel.y"
 				yy_do_action_60
 			when 61 then
-					--|#line 543 "eiffel.y"
+					--|#line <not available> "eiffel.y"
 				yy_do_action_61
 			when 62 then
-					--|#line 547 "eiffel.y"
+					--|#line <not available> "eiffel.y"
 				yy_do_action_62
 			when 63 then
-					--|#line 549 "eiffel.y"
+					--|#line <not available> "eiffel.y"
 				yy_do_action_63
 			when 64 then
-					--|#line 553 "eiffel.y"
+					--|#line <not available> "eiffel.y"
 				yy_do_action_64
 			when 65 then
-					--|#line 555 "eiffel.y"
+					--|#line <not available> "eiffel.y"
 				yy_do_action_65
 			when 66 then
-					--|#line 557 "eiffel.y"
+					--|#line <not available> "eiffel.y"
 				yy_do_action_66
 			when 67 then
-					--|#line 561 "eiffel.y"
+					--|#line <not available> "eiffel.y"
 				yy_do_action_67
 			when 68 then
-					--|#line 566 "eiffel.y"
+					--|#line <not available> "eiffel.y"
 				yy_do_action_68
 			when 69 then
-					--|#line 570 "eiffel.y"
+					--|#line <not available> "eiffel.y"
 				yy_do_action_69
 			when 70 then
-					--|#line 574 "eiffel.y"
+					--|#line <not available> "eiffel.y"
 				yy_do_action_70
 			when 71 then
-					--|#line 576 "eiffel.y"
+					--|#line <not available> "eiffel.y"
 				yy_do_action_71
 			when 72 then
-					--|#line 580 "eiffel.y"
+					--|#line <not available> "eiffel.y"
 				yy_do_action_72
 			when 73 then
-					--|#line 585 "eiffel.y"
+					--|#line <not available> "eiffel.y"
 				yy_do_action_73
 			when 74 then
-					--|#line 590 "eiffel.y"
+					--|#line <not available> "eiffel.y"
 				yy_do_action_74
 			when 75 then
-					--|#line 601 "eiffel.y"
+					--|#line <not available> "eiffel.y"
 				yy_do_action_75
 			when 76 then
-					--|#line 603 "eiffel.y"
+					--|#line <not available> "eiffel.y"
 				yy_do_action_76
 			when 77 then
-					--|#line 605 "eiffel.y"
+					--|#line <not available> "eiffel.y"
 				yy_do_action_77
 			when 78 then
-					--|#line 609 "eiffel.y"
+					--|#line <not available> "eiffel.y"
 				yy_do_action_78
 			when 79 then
-					--|#line 614 "eiffel.y"
+					--|#line <not available> "eiffel.y"
 				yy_do_action_79
 			when 80 then
-					--|#line 621 "eiffel.y"
+					--|#line <not available> "eiffel.y"
 				yy_do_action_80
 			when 81 then
-					--|#line 626 "eiffel.y"
+					--|#line <not available> "eiffel.y"
 				yy_do_action_81
 			when 82 then
-					--|#line 634 "eiffel.y"
+					--|#line <not available> "eiffel.y"
 				yy_do_action_82
 			when 83 then
-					--|#line 639 "eiffel.y"
+					--|#line <not available> "eiffel.y"
 				yy_do_action_83
 			when 84 then
-					--|#line 644 "eiffel.y"
+					--|#line <not available> "eiffel.y"
 				yy_do_action_84
 			when 85 then
-					--|#line 649 "eiffel.y"
+					--|#line <not available> "eiffel.y"
 				yy_do_action_85
 			when 86 then
-					--|#line 654 "eiffel.y"
+					--|#line <not available> "eiffel.y"
 				yy_do_action_86
 			when 87 then
-					--|#line 659 "eiffel.y"
+					--|#line <not available> "eiffel.y"
 				yy_do_action_87
 			when 88 then
-					--|#line 664 "eiffel.y"
+					--|#line <not available> "eiffel.y"
 				yy_do_action_88
 			when 89 then
-					--|#line 672 "eiffel.y"
+					--|#line <not available> "eiffel.y"
 				yy_do_action_89
 			when 90 then
-					--|#line 674 "eiffel.y"
+					--|#line <not available> "eiffel.y"
 				yy_do_action_90
 			when 91 then
-					--|#line 678 "eiffel.y"
+					--|#line <not available> "eiffel.y"
 				yy_do_action_91
 			when 92 then
-					--|#line 683 "eiffel.y"
+					--|#line <not available> "eiffel.y"
 				yy_do_action_92
 			when 93 then
-					--|#line 690 "eiffel.y"
+					--|#line <not available> "eiffel.y"
 				yy_do_action_93
 			when 94 then
-					--|#line 694 "eiffel.y"
+					--|#line <not available> "eiffel.y"
 				yy_do_action_94
 			when 95 then
-					--|#line 696 "eiffel.y"
+					--|#line <not available> "eiffel.y"
 				yy_do_action_95
 			when 96 then
-					--|#line 700 "eiffel.y"
+					--|#line <not available> "eiffel.y"
 				yy_do_action_96
 			when 97 then
-					--|#line 708 "eiffel.y"
+					--|#line <not available> "eiffel.y"
 				yy_do_action_97
 			when 98 then
-					--|#line 712 "eiffel.y"
+					--|#line <not available> "eiffel.y"
 				yy_do_action_98
 			when 99 then
-					--|#line 719 "eiffel.y"
+					--|#line <not available> "eiffel.y"
 				yy_do_action_99
 			when 100 then
-					--|#line 728 "eiffel.y"
+					--|#line <not available> "eiffel.y"
 				yy_do_action_100
 			when 101 then
-					--|#line 736 "eiffel.y"
+					--|#line <not available> "eiffel.y"
 				yy_do_action_101
 			when 102 then
-					--|#line 738 "eiffel.y"
+					--|#line <not available> "eiffel.y"
 				yy_do_action_102
 			when 103 then
-					--|#line 740 "eiffel.y"
+					--|#line <not available> "eiffel.y"
 				yy_do_action_103
 			when 104 then
-					--|#line 744 "eiffel.y"
+					--|#line <not available> "eiffel.y"
 				yy_do_action_104
 			when 105 then
-					--|#line 746 "eiffel.y"
+					--|#line <not available> "eiffel.y"
 				yy_do_action_105
 			when 106 then
-					--|#line 752 "eiffel.y"
+					--|#line <not available> "eiffel.y"
 				yy_do_action_106
 			when 107 then
-					--|#line 757 "eiffel.y"
+					--|#line <not available> "eiffel.y"
 				yy_do_action_107
 			when 108 then
-					--|#line 765 "eiffel.y"
+					--|#line <not available> "eiffel.y"
 				yy_do_action_108
 			when 109 then
-					--|#line 771 "eiffel.y"
+					--|#line <not available> "eiffel.y"
 				yy_do_action_109
 			when 110 then
-					--|#line 779 "eiffel.y"
+					--|#line <not available> "eiffel.y"
 				yy_do_action_110
 			when 111 then
-					--|#line 784 "eiffel.y"
+					--|#line <not available> "eiffel.y"
 				yy_do_action_111
 			when 112 then
-					--|#line 791 "eiffel.y"
+					--|#line <not available> "eiffel.y"
 				yy_do_action_112
 			when 113 then
-					--|#line 793 "eiffel.y"
+					--|#line <not available> "eiffel.y"
 				yy_do_action_113
 			when 114 then
-					--|#line 797 "eiffel.y"
+					--|#line <not available> "eiffel.y"
 				yy_do_action_114
 			when 115 then
-					--|#line 799 "eiffel.y"
+					--|#line <not available> "eiffel.y"
 				yy_do_action_115
 			when 116 then
-					--|#line 803 "eiffel.y"
+					--|#line <not available> "eiffel.y"
 				yy_do_action_116
 			when 117 then
-					--|#line 805 "eiffel.y"
+					--|#line <not available> "eiffel.y"
 				yy_do_action_117
 			when 118 then
-					--|#line 809 "eiffel.y"
+					--|#line <not available> "eiffel.y"
 				yy_do_action_118
 			when 119 then
-					--|#line 811 "eiffel.y"
+					--|#line <not available> "eiffel.y"
 				yy_do_action_119
 			when 120 then
-					--|#line 815 "eiffel.y"
+					--|#line <not available> "eiffel.y"
 				yy_do_action_120
 			when 121 then
-					--|#line 817 "eiffel.y"
+					--|#line <not available> "eiffel.y"
 				yy_do_action_121
 			when 122 then
-					--|#line 821 "eiffel.y"
+					--|#line <not available> "eiffel.y"
 				yy_do_action_122
 			when 123 then
-					--|#line 823 "eiffel.y"
+					--|#line <not available> "eiffel.y"
 				yy_do_action_123
 			when 124 then
-					--|#line 831 "eiffel.y"
+					--|#line <not available> "eiffel.y"
 				yy_do_action_124
 			when 125 then
-					--|#line 833 "eiffel.y"
+					--|#line <not available> "eiffel.y"
 				yy_do_action_125
 			when 126 then
-					--|#line 837 "eiffel.y"
+					--|#line <not available> "eiffel.y"
 				yy_do_action_126
 			when 127 then
-					--|#line 839 "eiffel.y"
+					--|#line <not available> "eiffel.y"
 				yy_do_action_127
 			when 128 then
-					--|#line 843 "eiffel.y"
+					--|#line <not available> "eiffel.y"
 				yy_do_action_128
 			when 129 then
-					--|#line 848 "eiffel.y"
+					--|#line <not available> "eiffel.y"
 				yy_do_action_129
 			when 130 then
-					--|#line 855 "eiffel.y"
+					--|#line <not available> "eiffel.y"
 				yy_do_action_130
 			when 131 then
-					--|#line 859 "eiffel.y"
+					--|#line <not available> "eiffel.y"
 				yy_do_action_131
 			when 132 then
-					--|#line 860 "eiffel.y"
+					--|#line <not available> "eiffel.y"
 				yy_do_action_132
 			when 133 then
-					--|#line 869 "eiffel.y"
+					--|#line <not available> "eiffel.y"
 				yy_do_action_133
 			when 134 then
-					--|#line 871 "eiffel.y"
+					--|#line <not available> "eiffel.y"
 				yy_do_action_134
 			when 135 then
-					--|#line 875 "eiffel.y"
+					--|#line <not available> "eiffel.y"
 				yy_do_action_135
 			when 136 then
-					--|#line 880 "eiffel.y"
+					--|#line <not available> "eiffel.y"
 				yy_do_action_136
 			when 137 then
-					--|#line 887 "eiffel.y"
+					--|#line <not available> "eiffel.y"
 				yy_do_action_137
 			when 138 then
-					--|#line 891 "eiffel.y"
+					--|#line <not available> "eiffel.y"
 				yy_do_action_138
 			when 139 then
-					--|#line 897 "eiffel.y"
+					--|#line <not available> "eiffel.y"
 				yy_do_action_139
 			when 140 then
-					--|#line 905 "eiffel.y"
+					--|#line <not available> "eiffel.y"
 				yy_do_action_140
 			when 141 then
-					--|#line 907 "eiffel.y"
+					--|#line <not available> "eiffel.y"
 				yy_do_action_141
 			when 142 then
-					--|#line 911 "eiffel.y"
+					--|#line <not available> "eiffel.y"
 				yy_do_action_142
 			when 143 then
-					--|#line 913 "eiffel.y"
+					--|#line <not available> "eiffel.y"
 				yy_do_action_143
 			when 144 then
-					--|#line 917 "eiffel.y"
+					--|#line <not available> "eiffel.y"
 				yy_do_action_144
 			when 145 then
-					--|#line 917 "eiffel.y"
+					--|#line <not available> "eiffel.y"
 				yy_do_action_145
 			when 146 then
-					--|#line 932 "eiffel.y"
+					--|#line <not available> "eiffel.y"
 				yy_do_action_146
 			when 147 then
-					--|#line 934 "eiffel.y"
+					--|#line <not available> "eiffel.y"
 				yy_do_action_147
 			when 148 then
-					--|#line 936 "eiffel.y"
+					--|#line <not available> "eiffel.y"
 				yy_do_action_148
 			when 149 then
-					--|#line 940 "eiffel.y"
+					--|#line <not available> "eiffel.y"
 				yy_do_action_149
 			when 150 then
-					--|#line 947 "eiffel.y"
+					--|#line <not available> "eiffel.y"
 				yy_do_action_150
 			when 151 then
-					--|#line 952 "eiffel.y"
+					--|#line <not available> "eiffel.y"
 				yy_do_action_151
 			when 152 then
-					--|#line 954 "eiffel.y"
+					--|#line <not available> "eiffel.y"
 				yy_do_action_152
 			when 153 then
-					--|#line 958 "eiffel.y"
+					--|#line <not available> "eiffel.y"
 				yy_do_action_153
 			when 154 then
-					--|#line 960 "eiffel.y"
+					--|#line <not available> "eiffel.y"
 				yy_do_action_154
 			when 155 then
-					--|#line 964 "eiffel.y"
+					--|#line <not available> "eiffel.y"
 				yy_do_action_155
 			when 156 then
-					--|#line 966 "eiffel.y"
+					--|#line <not available> "eiffel.y"
 				yy_do_action_156
 			when 157 then
-					--|#line 970 "eiffel.y"
+					--|#line <not available> "eiffel.y"
 				yy_do_action_157
 			when 158 then
-					--|#line 972 "eiffel.y"
+					--|#line <not available> "eiffel.y"
 				yy_do_action_158
 			when 159 then
-					--|#line 976 "eiffel.y"
+					--|#line <not available> "eiffel.y"
 				yy_do_action_159
 			when 160 then
-					--|#line 981 "eiffel.y"
+					--|#line <not available> "eiffel.y"
 				yy_do_action_160
 			when 161 then
-					--|#line 988 "eiffel.y"
+					--|#line <not available> "eiffel.y"
 				yy_do_action_161
 			when 162 then
-					--|#line 992 "eiffel.y"
+					--|#line <not available> "eiffel.y"
 				yy_do_action_162
 			when 163 then
-					--|#line 993 "eiffel.y"
+					--|#line <not available> "eiffel.y"
 				yy_do_action_163
 			when 164 then
-					--|#line 996 "eiffel.y"
+					--|#line <not available> "eiffel.y"
 				yy_do_action_164
 			when 165 then
-					--|#line 998 "eiffel.y"
+					--|#line <not available> "eiffel.y"
 				yy_do_action_165
 			when 166 then
-					--|#line 1000 "eiffel.y"
+					--|#line <not available> "eiffel.y"
 				yy_do_action_166
 			when 167 then
-					--|#line 1002 "eiffel.y"
+					--|#line <not available> "eiffel.y"
 				yy_do_action_167
 			when 168 then
-					--|#line 1004 "eiffel.y"
+					--|#line <not available> "eiffel.y"
 				yy_do_action_168
 			when 169 then
-					--|#line 1006 "eiffel.y"
+					--|#line <not available> "eiffel.y"
 				yy_do_action_169
 			when 170 then
-					--|#line 1008 "eiffel.y"
+					--|#line <not available> "eiffel.y"
 				yy_do_action_170
 			when 171 then
-					--|#line 1010 "eiffel.y"
+					--|#line <not available> "eiffel.y"
 				yy_do_action_171
 			when 172 then
-					--|#line 1012 "eiffel.y"
+					--|#line <not available> "eiffel.y"
 				yy_do_action_172
 			when 173 then
-					--|#line 1014 "eiffel.y"
+					--|#line <not available> "eiffel.y"
 				yy_do_action_173
 			when 174 then
-					--|#line 1018 "eiffel.y"
+					--|#line <not available> "eiffel.y"
 				yy_do_action_174
 			when 175 then
-					--|#line 1020 "eiffel.y"
+					--|#line <not available> "eiffel.y"
 				yy_do_action_175
 			when 176 then
-					--|#line 1020 "eiffel.y"
+					--|#line <not available> "eiffel.y"
 				yy_do_action_176
 			when 177 then
-					--|#line 1027 "eiffel.y"
+					--|#line <not available> "eiffel.y"
 				yy_do_action_177
 			when 178 then
-					--|#line 1027 "eiffel.y"
+					--|#line <not available> "eiffel.y"
 				yy_do_action_178
 			when 179 then
-					--|#line 1036 "eiffel.y"
+					--|#line <not available> "eiffel.y"
 				yy_do_action_179
 			when 180 then
-					--|#line 1038 "eiffel.y"
+					--|#line <not available> "eiffel.y"
 				yy_do_action_180
 			when 181 then
-					--|#line 1038 "eiffel.y"
+					--|#line <not available> "eiffel.y"
 				yy_do_action_181
 			when 182 then
-					--|#line 1045 "eiffel.y"
+					--|#line <not available> "eiffel.y"
 				yy_do_action_182
 			when 183 then
-					--|#line 1045 "eiffel.y"
+					--|#line <not available> "eiffel.y"
 				yy_do_action_183
 			when 184 then
-					--|#line 1054 "eiffel.y"
+					--|#line <not available> "eiffel.y"
 				yy_do_action_184
 			when 185 then
-					--|#line 1056 "eiffel.y"
+					--|#line <not available> "eiffel.y"
 				yy_do_action_185
 			when 186 then
-					--|#line 1065 "eiffel.y"
+					--|#line <not available> "eiffel.y"
 				yy_do_action_186
 			when 187 then
-					--|#line 1070 "eiffel.y"
+					--|#line <not available> "eiffel.y"
 				yy_do_action_187
 			when 188 then
-					--|#line 1077 "eiffel.y"
+					--|#line <not available> "eiffel.y"
 				yy_do_action_188
 			when 189 then
-					--|#line 1081 "eiffel.y"
+					--|#line <not available> "eiffel.y"
 				yy_do_action_189
 			when 190 then
-					--|#line 1083 "eiffel.y"
+					--|#line <not available> "eiffel.y"
 				yy_do_action_190
 			when 191 then
-					--|#line 1085 "eiffel.y"
+					--|#line <not available> "eiffel.y"
 				yy_do_action_191
 			when 192 then
-					--|#line 1093 "eiffel.y"
+					--|#line <not available> "eiffel.y"
 				yy_do_action_192
 			when 193 then
-					--|#line 1095 "eiffel.y"
+					--|#line <not available> "eiffel.y"
 				yy_do_action_193
 			when 194 then
-					--|#line 1099 "eiffel.y"
+					--|#line <not available> "eiffel.y"
 				yy_do_action_194
 			when 195 then
-					--|#line 1108 "eiffel.y"
+					--|#line <not available> "eiffel.y"
 				yy_do_action_195
 			when 196 then
-					--|#line 1110 "eiffel.y"
+					--|#line <not available> "eiffel.y"
 				yy_do_action_196
 			when 197 then
-					--|#line 1112 "eiffel.y"
+					--|#line <not available> "eiffel.y"
 				yy_do_action_197
 			when 198 then
-					--|#line 1114 "eiffel.y"
+					--|#line <not available> "eiffel.y"
 				yy_do_action_198
 			when 199 then
-					--|#line 1116 "eiffel.y"
+					--|#line <not available> "eiffel.y"
 				yy_do_action_199
 			when 200 then
-					--|#line 1120 "eiffel.y"
+					--|#line <not available> "eiffel.y"
 				yy_do_action_200
 			else
 				debug ("GEYACC")
@@ -673,604 +1333,604 @@ feature {NONE} -- Semantic actions
 		do
 			inspect yy_act
 			when 201 then
-					--|#line 1124 "eiffel.y"
+					--|#line <not available> "eiffel.y"
 				yy_do_action_201
 			when 202 then
-					--|#line 1126 "eiffel.y"
+					--|#line <not available> "eiffel.y"
 				yy_do_action_202
 			when 203 then
-					--|#line 1128 "eiffel.y"
+					--|#line <not available> "eiffel.y"
 				yy_do_action_203
 			when 204 then
-					--|#line 1132 "eiffel.y"
+					--|#line <not available> "eiffel.y"
 				yy_do_action_204
 			when 205 then
-					--|#line 1134 "eiffel.y"
+					--|#line <not available> "eiffel.y"
 				yy_do_action_205
 			when 206 then
-					--|#line 1138 "eiffel.y"
+					--|#line <not available> "eiffel.y"
 				yy_do_action_206
 			when 207 then
-					--|#line 1143 "eiffel.y"
+					--|#line <not available> "eiffel.y"
 				yy_do_action_207
 			when 208 then
-					--|#line 1154 "eiffel.y"
+					--|#line <not available> "eiffel.y"
 				yy_do_action_208
 			when 209 then
-					--|#line 1160 "eiffel.y"
+					--|#line <not available> "eiffel.y"
 				yy_do_action_209
 			when 210 then
-					--|#line 1168 "eiffel.y"
+					--|#line <not available> "eiffel.y"
 				yy_do_action_210
 			when 211 then
-					--|#line 1170 "eiffel.y"
+					--|#line <not available> "eiffel.y"
 				yy_do_action_211
 			when 212 then
-					--|#line 1174 "eiffel.y"
+					--|#line <not available> "eiffel.y"
 				yy_do_action_212
 			when 213 then
-					--|#line 1179 "eiffel.y"
+					--|#line <not available> "eiffel.y"
 				yy_do_action_213
 			when 214 then
-					--|#line 1186 "eiffel.y"
+					--|#line <not available> "eiffel.y"
 				yy_do_action_214
 			when 215 then
-					--|#line 1203 "eiffel.y"
+					--|#line <not available> "eiffel.y"
 				yy_do_action_215
 			when 216 then
-					--|#line 1221 "eiffel.y"
+					--|#line <not available> "eiffel.y"
 				yy_do_action_216
 			when 217 then
-					--|#line 1240 "eiffel.y"
+					--|#line <not available> "eiffel.y"
 				yy_do_action_217
 			when 218 then
-					--|#line 1240 "eiffel.y"
+					--|#line <not available> "eiffel.y"
 				yy_do_action_218
 			when 219 then
-					--|#line 1253 "eiffel.y"
+					--|#line <not available> "eiffel.y"
 				yy_do_action_219
 			when 220 then
-					--|#line 1255 "eiffel.y"
+					--|#line <not available> "eiffel.y"
 				yy_do_action_220
 			when 221 then
-					--|#line 1263 "eiffel.y"
+					--|#line <not available> "eiffel.y"
 				yy_do_action_221
 			when 222 then
-					--|#line 1265 "eiffel.y"
+					--|#line <not available> "eiffel.y"
 				yy_do_action_222
 			when 223 then
-					--|#line 1273 "eiffel.y"
+					--|#line <not available> "eiffel.y"
 				yy_do_action_223
 			when 224 then
-					--|#line 1279 "eiffel.y"
+					--|#line <not available> "eiffel.y"
 				yy_do_action_224
 			when 225 then
-					--|#line 1281 "eiffel.y"
+					--|#line <not available> "eiffel.y"
 				yy_do_action_225
 			when 226 then
-					--|#line 1285 "eiffel.y"
+					--|#line <not available> "eiffel.y"
 				yy_do_action_226
 			when 227 then
-					--|#line 1290 "eiffel.y"
+					--|#line <not available> "eiffel.y"
 				yy_do_action_227
 			when 228 then
-					--|#line 1297 "eiffel.y"
+					--|#line <not available> "eiffel.y"
 				yy_do_action_228
 			when 229 then
-					--|#line 1301 "eiffel.y"
+					--|#line <not available> "eiffel.y"
 				yy_do_action_229
 			when 230 then
-					--|#line 1303 "eiffel.y"
+					--|#line <not available> "eiffel.y"
 				yy_do_action_230
 			when 231 then
-					--|#line 1307 "eiffel.y"
+					--|#line <not available> "eiffel.y"
 				yy_do_action_231
 			when 232 then
-					--|#line 1313 "eiffel.y"
+					--|#line <not available> "eiffel.y"
 				yy_do_action_232
 			when 233 then
-					--|#line 1315 "eiffel.y"
+					--|#line <not available> "eiffel.y"
 				yy_do_action_233
 			when 234 then
-					--|#line 1319 "eiffel.y"
+					--|#line <not available> "eiffel.y"
 				yy_do_action_234
 			when 235 then
-					--|#line 1324 "eiffel.y"
+					--|#line <not available> "eiffel.y"
 				yy_do_action_235
 			when 236 then
-					--|#line 1331 "eiffel.y"
+					--|#line <not available> "eiffel.y"
 				yy_do_action_236
 			when 237 then
-					--|#line 1335 "eiffel.y"
+					--|#line <not available> "eiffel.y"
 				yy_do_action_237
 			when 238 then
-					--|#line 1340 "eiffel.y"
+					--|#line <not available> "eiffel.y"
 				yy_do_action_238
 			when 239 then
-					--|#line 1347 "eiffel.y"
+					--|#line <not available> "eiffel.y"
 				yy_do_action_239
 			when 240 then
-					--|#line 1349 "eiffel.y"
+					--|#line <not available> "eiffel.y"
 				yy_do_action_240
 			when 241 then
-					--|#line 1351 "eiffel.y"
+					--|#line <not available> "eiffel.y"
 				yy_do_action_241
 			when 242 then
-					--|#line 1353 "eiffel.y"
+					--|#line <not available> "eiffel.y"
 				yy_do_action_242
 			when 243 then
-					--|#line 1355 "eiffel.y"
+					--|#line <not available> "eiffel.y"
 				yy_do_action_243
 			when 244 then
-					--|#line 1357 "eiffel.y"
+					--|#line <not available> "eiffel.y"
 				yy_do_action_244
 			when 245 then
-					--|#line 1359 "eiffel.y"
+					--|#line <not available> "eiffel.y"
 				yy_do_action_245
 			when 246 then
-					--|#line 1361 "eiffel.y"
+					--|#line <not available> "eiffel.y"
 				yy_do_action_246
 			when 247 then
-					--|#line 1363 "eiffel.y"
+					--|#line <not available> "eiffel.y"
 				yy_do_action_247
 			when 248 then
-					--|#line 1365 "eiffel.y"
+					--|#line <not available> "eiffel.y"
 				yy_do_action_248
 			when 249 then
-					--|#line 1367 "eiffel.y"
+					--|#line <not available> "eiffel.y"
 				yy_do_action_249
 			when 250 then
-					--|#line 1369 "eiffel.y"
+					--|#line <not available> "eiffel.y"
 				yy_do_action_250
 			when 251 then
-					--|#line 1371 "eiffel.y"
+					--|#line <not available> "eiffel.y"
 				yy_do_action_251
 			when 252 then
-					--|#line 1373 "eiffel.y"
+					--|#line <not available> "eiffel.y"
 				yy_do_action_252
 			when 253 then
-					--|#line 1375 "eiffel.y"
+					--|#line <not available> "eiffel.y"
 				yy_do_action_253
 			when 254 then
-					--|#line 1377 "eiffel.y"
+					--|#line <not available> "eiffel.y"
 				yy_do_action_254
 			when 255 then
-					--|#line 1379 "eiffel.y"
+					--|#line <not available> "eiffel.y"
 				yy_do_action_255
 			when 256 then
-					--|#line 1381 "eiffel.y"
+					--|#line <not available> "eiffel.y"
 				yy_do_action_256
 			when 257 then
-					--|#line 1386 "eiffel.y"
+					--|#line <not available> "eiffel.y"
 				yy_do_action_257
 			when 258 then
-					--|#line 1388 "eiffel.y"
+					--|#line <not available> "eiffel.y"
 				yy_do_action_258
 			when 259 then
-					--|#line 1397 "eiffel.y"
+					--|#line <not available> "eiffel.y"
 				yy_do_action_259
 			when 260 then
-					--|#line 1403 "eiffel.y"
+					--|#line <not available> "eiffel.y"
 				yy_do_action_260
 			when 261 then
-					--|#line 1405 "eiffel.y"
+					--|#line <not available> "eiffel.y"
 				yy_do_action_261
 			when 262 then
-					--|#line 1409 "eiffel.y"
+					--|#line <not available> "eiffel.y"
 				yy_do_action_262
 			when 263 then
-					--|#line 1411 "eiffel.y"
+					--|#line <not available> "eiffel.y"
 				yy_do_action_263
 			when 264 then
-					--|#line 1411 "eiffel.y"
+					--|#line <not available> "eiffel.y"
 				yy_do_action_264
 			when 265 then
-					--|#line 1422 "eiffel.y"
+					--|#line <not available> "eiffel.y"
 				yy_do_action_265
 			when 266 then
-					--|#line 1424 "eiffel.y"
+					--|#line <not available> "eiffel.y"
 				yy_do_action_266
 			when 267 then
-					--|#line 1426 "eiffel.y"
+					--|#line <not available> "eiffel.y"
 				yy_do_action_267
 			when 268 then
-					--|#line 1430 "eiffel.y"
+					--|#line <not available> "eiffel.y"
 				yy_do_action_268
 			when 269 then
-					--|#line 1436 "eiffel.y"
+					--|#line <not available> "eiffel.y"
 				yy_do_action_269
 			when 270 then
-					--|#line 1438 "eiffel.y"
+					--|#line <not available> "eiffel.y"
 				yy_do_action_270
 			when 271 then
-					--|#line 1440 "eiffel.y"
+					--|#line <not available> "eiffel.y"
 				yy_do_action_271
 			when 272 then
-					--|#line 1444 "eiffel.y"
+					--|#line <not available> "eiffel.y"
 				yy_do_action_272
 			when 273 then
-					--|#line 1449 "eiffel.y"
+					--|#line <not available> "eiffel.y"
 				yy_do_action_273
 			when 274 then
-					--|#line 1456 "eiffel.y"
+					--|#line <not available> "eiffel.y"
 				yy_do_action_274
 			when 275 then
-					--|#line 1460 "eiffel.y"
+					--|#line <not available> "eiffel.y"
 				yy_do_action_275
 			when 276 then
-					--|#line 1462 "eiffel.y"
+					--|#line <not available> "eiffel.y"
 				yy_do_action_276
 			when 277 then
-					--|#line 1471 "eiffel.y"
+					--|#line <not available> "eiffel.y"
 				yy_do_action_277
 			when 278 then
-					--|#line 1473 "eiffel.y"
+					--|#line <not available> "eiffel.y"
 				yy_do_action_278
 			when 279 then
-					--|#line 1477 "eiffel.y"
+					--|#line <not available> "eiffel.y"
 				yy_do_action_279
 			when 280 then
-					--|#line 1479 "eiffel.y"
+					--|#line <not available> "eiffel.y"
 				yy_do_action_280
 			when 281 then
-					--|#line 1483 "eiffel.y"
+					--|#line <not available> "eiffel.y"
 				yy_do_action_281
 			when 282 then
-					--|#line 1485 "eiffel.y"
+					--|#line <not available> "eiffel.y"
 				yy_do_action_282
 			when 283 then
-					--|#line 1489 "eiffel.y"
+					--|#line <not available> "eiffel.y"
 				yy_do_action_283
 			when 284 then
-					--|#line 1494 "eiffel.y"
+					--|#line <not available> "eiffel.y"
 				yy_do_action_284
 			when 285 then
-					--|#line 1501 "eiffel.y"
+					--|#line <not available> "eiffel.y"
 				yy_do_action_285
 			when 286 then
-					--|#line 1507 "eiffel.y"
+					--|#line <not available> "eiffel.y"
 				yy_do_action_286
 			when 287 then
-					--|#line 1512 "eiffel.y"
+					--|#line <not available> "eiffel.y"
 				yy_do_action_287
 			when 288 then
-					--|#line 1517 "eiffel.y"
+					--|#line <not available> "eiffel.y"
 				yy_do_action_288
 			when 289 then
-					--|#line 1527 "eiffel.y"
+					--|#line <not available> "eiffel.y"
 				yy_do_action_289
 			when 290 then
-					--|#line 1537 "eiffel.y"
+					--|#line <not available> "eiffel.y"
 				yy_do_action_290
 			when 291 then
-					--|#line 1549 "eiffel.y"
+					--|#line <not available> "eiffel.y"
 				yy_do_action_291
 			when 292 then
-					--|#line 1551 "eiffel.y"
+					--|#line <not available> "eiffel.y"
 				yy_do_action_292
 			when 293 then
-					--|#line 1553 "eiffel.y"
+					--|#line <not available> "eiffel.y"
 				yy_do_action_293
 			when 294 then
-					--|#line 1571 "eiffel.y"
+					--|#line <not available> "eiffel.y"
 				yy_do_action_294
 			when 295 then
-					--|#line 1573 "eiffel.y"
+					--|#line <not available> "eiffel.y"
 				yy_do_action_295
 			when 296 then
-					--|#line 1575 "eiffel.y"
+					--|#line <not available> "eiffel.y"
 				yy_do_action_296
 			when 297 then
-					--|#line 1577 "eiffel.y"
+					--|#line <not available> "eiffel.y"
 				yy_do_action_297
 			when 298 then
-					--|#line 1579 "eiffel.y"
+					--|#line <not available> "eiffel.y"
 				yy_do_action_298
 			when 299 then
-					--|#line 1581 "eiffel.y"
+					--|#line <not available> "eiffel.y"
 				yy_do_action_299
 			when 300 then
-					--|#line 1583 "eiffel.y"
+					--|#line <not available> "eiffel.y"
 				yy_do_action_300
 			when 301 then
-					--|#line 1587 "eiffel.y"
+					--|#line <not available> "eiffel.y"
 				yy_do_action_301
 			when 302 then
-					--|#line 1589 "eiffel.y"
+					--|#line <not available> "eiffel.y"
 				yy_do_action_302
 			when 303 then
-					--|#line 1591 "eiffel.y"
+					--|#line <not available> "eiffel.y"
 				yy_do_action_303
 			when 304 then
-					--|#line 1593 "eiffel.y"
+					--|#line <not available> "eiffel.y"
 				yy_do_action_304
 			when 305 then
-					--|#line 1595 "eiffel.y"
+					--|#line <not available> "eiffel.y"
 				yy_do_action_305
 			when 306 then
-					--|#line 1597 "eiffel.y"
+					--|#line <not available> "eiffel.y"
 				yy_do_action_306
 			when 307 then
-					--|#line 1601 "eiffel.y"
+					--|#line <not available> "eiffel.y"
 				yy_do_action_307
 			when 308 then
-					--|#line 1603 "eiffel.y"
+					--|#line <not available> "eiffel.y"
 				yy_do_action_308
 			when 309 then
-					--|#line 1605 "eiffel.y"
+					--|#line <not available> "eiffel.y"
 				yy_do_action_309
 			when 310 then
-					--|#line 1609 "eiffel.y"
+					--|#line <not available> "eiffel.y"
 				yy_do_action_310
 			when 311 then
-					--|#line 1614 "eiffel.y"
+					--|#line <not available> "eiffel.y"
 				yy_do_action_311
 			when 312 then
-					--|#line 1621 "eiffel.y"
+					--|#line <not available> "eiffel.y"
 				yy_do_action_312
 			when 313 then
-					--|#line 1627 "eiffel.y"
+					--|#line <not available> "eiffel.y"
 				yy_do_action_313
 			when 314 then
-					--|#line 1629 "eiffel.y"
+					--|#line <not available> "eiffel.y"
 				yy_do_action_314
 			when 315 then
-					--|#line 1631 "eiffel.y"
+					--|#line <not available> "eiffel.y"
 				yy_do_action_315
 			when 316 then
-					--|#line 1640 "eiffel.y"
+					--|#line <not available> "eiffel.y"
 				yy_do_action_316
 			when 317 then
-					--|#line 1642 "eiffel.y"
+					--|#line <not available> "eiffel.y"
 				yy_do_action_317
 			when 318 then
-					--|#line 1644 "eiffel.y"
+					--|#line <not available> "eiffel.y"
 				yy_do_action_318
 			when 319 then
-					--|#line 1646 "eiffel.y"
+					--|#line <not available> "eiffel.y"
 				yy_do_action_319
 			when 320 then
-					--|#line 1648 "eiffel.y"
+					--|#line <not available> "eiffel.y"
 				yy_do_action_320
 			when 321 then
-					--|#line 1650 "eiffel.y"
+					--|#line <not available> "eiffel.y"
 				yy_do_action_321
 			when 322 then
-					--|#line 1654 "eiffel.y"
+					--|#line <not available> "eiffel.y"
 				yy_do_action_322
 			when 323 then
-					--|#line 1663 "eiffel.y"
+					--|#line <not available> "eiffel.y"
 				yy_do_action_323
 			when 324 then
-					--|#line 1665 "eiffel.y"
+					--|#line <not available> "eiffel.y"
 				yy_do_action_324
 			when 325 then
-					--|#line 1669 "eiffel.y"
+					--|#line <not available> "eiffel.y"
 				yy_do_action_325
 			when 326 then
-					--|#line 1671 "eiffel.y"
+					--|#line <not available> "eiffel.y"
 				yy_do_action_326
 			when 327 then
-					--|#line 1682 "eiffel.y"
+					--|#line <not available> "eiffel.y"
 				yy_do_action_327
 			when 328 then
-					--|#line 1684 "eiffel.y"
+					--|#line <not available> "eiffel.y"
 				yy_do_action_328
 			when 329 then
-					--|#line 1688 "eiffel.y"
+					--|#line <not available> "eiffel.y"
 				yy_do_action_329
 			when 330 then
-					--|#line 1690 "eiffel.y"
+					--|#line <not available> "eiffel.y"
 				yy_do_action_330
 			when 331 then
-					--|#line 1694 "eiffel.y"
+					--|#line <not available> "eiffel.y"
 				yy_do_action_331
 			when 332 then
-					--|#line 1696 "eiffel.y"
+					--|#line <not available> "eiffel.y"
 				yy_do_action_332
 			when 333 then
-					--|#line 1704 "eiffel.y"
+					--|#line <not available> "eiffel.y"
 				yy_do_action_333
 			when 334 then
-					--|#line 1706 "eiffel.y"
+					--|#line <not available> "eiffel.y"
 				yy_do_action_334
 			when 335 then
-					--|#line 1708 "eiffel.y"
+					--|#line <not available> "eiffel.y"
 				yy_do_action_335
 			when 336 then
-					--|#line 1710 "eiffel.y"
+					--|#line <not available> "eiffel.y"
 				yy_do_action_336
 			when 337 then
-					--|#line 1712 "eiffel.y"
+					--|#line <not available> "eiffel.y"
 				yy_do_action_337
 			when 338 then
-					--|#line 1714 "eiffel.y"
+					--|#line <not available> "eiffel.y"
 				yy_do_action_338
 			when 339 then
-					--|#line 1716 "eiffel.y"
+					--|#line <not available> "eiffel.y"
 				yy_do_action_339
 			when 340 then
-					--|#line 1718 "eiffel.y"
+					--|#line <not available> "eiffel.y"
 				yy_do_action_340
 			when 341 then
-					--|#line 1720 "eiffel.y"
+					--|#line <not available> "eiffel.y"
 				yy_do_action_341
 			when 342 then
-					--|#line 1724 "eiffel.y"
+					--|#line <not available> "eiffel.y"
 				yy_do_action_342
 			when 343 then
-					--|#line 1732 "eiffel.y"
+					--|#line <not available> "eiffel.y"
 				yy_do_action_343
 			when 344 then
-					--|#line 1735 "eiffel.y"
+					--|#line <not available> "eiffel.y"
 				yy_do_action_344
 			when 345 then
-					--|#line 1737 "eiffel.y"
+					--|#line <not available> "eiffel.y"
 				yy_do_action_345
 			when 346 then
-					--|#line 1739 "eiffel.y"
+					--|#line <not available> "eiffel.y"
 				yy_do_action_346
 			when 347 then
-					--|#line 1741 "eiffel.y"
+					--|#line <not available> "eiffel.y"
 				yy_do_action_347
 			when 348 then
-					--|#line 1743 "eiffel.y"
+					--|#line <not available> "eiffel.y"
 				yy_do_action_348
 			when 349 then
-					--|#line 1745 "eiffel.y"
+					--|#line <not available> "eiffel.y"
 				yy_do_action_349
 			when 350 then
-					--|#line 1747 "eiffel.y"
+					--|#line <not available> "eiffel.y"
 				yy_do_action_350
 			when 351 then
-					--|#line 1749 "eiffel.y"
+					--|#line <not available> "eiffel.y"
 				yy_do_action_351
 			when 352 then
-					--|#line 1751 "eiffel.y"
+					--|#line <not available> "eiffel.y"
 				yy_do_action_352
 			when 353 then
-					--|#line 1753 "eiffel.y"
+					--|#line <not available> "eiffel.y"
 				yy_do_action_353
 			when 354 then
-					--|#line 1755 "eiffel.y"
+					--|#line <not available> "eiffel.y"
 				yy_do_action_354
 			when 355 then
-					--|#line 1757 "eiffel.y"
+					--|#line <not available> "eiffel.y"
 				yy_do_action_355
 			when 356 then
-					--|#line 1759 "eiffel.y"
+					--|#line <not available> "eiffel.y"
 				yy_do_action_356
 			when 357 then
-					--|#line 1761 "eiffel.y"
+					--|#line <not available> "eiffel.y"
 				yy_do_action_357
 			when 358 then
-					--|#line 1763 "eiffel.y"
+					--|#line <not available> "eiffel.y"
 				yy_do_action_358
 			when 359 then
-					--|#line 1765 "eiffel.y"
+					--|#line <not available> "eiffel.y"
 				yy_do_action_359
 			when 360 then
-					--|#line 1767 "eiffel.y"
+					--|#line <not available> "eiffel.y"
 				yy_do_action_360
 			when 361 then
-					--|#line 1769 "eiffel.y"
+					--|#line <not available> "eiffel.y"
 				yy_do_action_361
 			when 362 then
-					--|#line 1771 "eiffel.y"
+					--|#line <not available> "eiffel.y"
 				yy_do_action_362
 			when 363 then
-					--|#line 1773 "eiffel.y"
+					--|#line <not available> "eiffel.y"
 				yy_do_action_363
 			when 364 then
-					--|#line 1775 "eiffel.y"
+					--|#line <not available> "eiffel.y"
 				yy_do_action_364
 			when 365 then
-					--|#line 1779 "eiffel.y"
+					--|#line <not available> "eiffel.y"
 				yy_do_action_365
 			when 366 then
-					--|#line 1782 "eiffel.y"
+					--|#line <not available> "eiffel.y"
 				yy_do_action_366
 			when 367 then
-					--|#line 1784 "eiffel.y"
+					--|#line <not available> "eiffel.y"
 				yy_do_action_367
 			when 368 then
-					--|#line 1786 "eiffel.y"
+					--|#line <not available> "eiffel.y"
 				yy_do_action_368
 			when 369 then
-					--|#line 1788 "eiffel.y"
+					--|#line <not available> "eiffel.y"
 				yy_do_action_369
 			when 370 then
-					--|#line 1790 "eiffel.y"
+					--|#line <not available> "eiffel.y"
 				yy_do_action_370
 			when 371 then
-					--|#line 1792 "eiffel.y"
+					--|#line <not available> "eiffel.y"
 				yy_do_action_371
 			when 372 then
-					--|#line 1794 "eiffel.y"
+					--|#line <not available> "eiffel.y"
 				yy_do_action_372
 			when 373 then
-					--|#line 1796 "eiffel.y"
+					--|#line <not available> "eiffel.y"
 				yy_do_action_373
 			when 374 then
-					--|#line 1798 "eiffel.y"
+					--|#line <not available> "eiffel.y"
 				yy_do_action_374
 			when 375 then
-					--|#line 1800 "eiffel.y"
+					--|#line <not available> "eiffel.y"
 				yy_do_action_375
 			when 376 then
-					--|#line 1802 "eiffel.y"
+					--|#line <not available> "eiffel.y"
 				yy_do_action_376
 			when 377 then
-					--|#line 1804 "eiffel.y"
+					--|#line <not available> "eiffel.y"
 				yy_do_action_377
 			when 378 then
-					--|#line 1806 "eiffel.y"
+					--|#line <not available> "eiffel.y"
 				yy_do_action_378
 			when 379 then
-					--|#line 1808 "eiffel.y"
+					--|#line <not available> "eiffel.y"
 				yy_do_action_379
 			when 380 then
-					--|#line 1810 "eiffel.y"
+					--|#line <not available> "eiffel.y"
 				yy_do_action_380
 			when 381 then
-					--|#line 1812 "eiffel.y"
+					--|#line <not available> "eiffel.y"
 				yy_do_action_381
 			when 382 then
-					--|#line 1814 "eiffel.y"
+					--|#line <not available> "eiffel.y"
 				yy_do_action_382
 			when 383 then
-					--|#line 1818 "eiffel.y"
+					--|#line <not available> "eiffel.y"
 				yy_do_action_383
 			when 384 then
-					--|#line 1826 "eiffel.y"
+					--|#line <not available> "eiffel.y"
 				yy_do_action_384
 			when 385 then
-					--|#line 1828 "eiffel.y"
+					--|#line <not available> "eiffel.y"
 				yy_do_action_385
 			when 386 then
-					--|#line 1830 "eiffel.y"
+					--|#line <not available> "eiffel.y"
 				yy_do_action_386
 			when 387 then
-					--|#line 1832 "eiffel.y"
+					--|#line <not available> "eiffel.y"
 				yy_do_action_387
 			when 388 then
-					--|#line 1834 "eiffel.y"
+					--|#line <not available> "eiffel.y"
 				yy_do_action_388
 			when 389 then
-					--|#line 1836 "eiffel.y"
+					--|#line <not available> "eiffel.y"
 				yy_do_action_389
 			when 390 then
-					--|#line 1838 "eiffel.y"
+					--|#line <not available> "eiffel.y"
 				yy_do_action_390
 			when 391 then
-					--|#line 1840 "eiffel.y"
+					--|#line <not available> "eiffel.y"
 				yy_do_action_391
 			when 392 then
-					--|#line 1842 "eiffel.y"
+					--|#line <not available> "eiffel.y"
 				yy_do_action_392
 			when 393 then
-					--|#line 1844 "eiffel.y"
+					--|#line <not available> "eiffel.y"
 				yy_do_action_393
 			when 394 then
-					--|#line 1846 "eiffel.y"
+					--|#line <not available> "eiffel.y"
 				yy_do_action_394
 			when 395 then
-					--|#line 1848 "eiffel.y"
+					--|#line <not available> "eiffel.y"
 				yy_do_action_395
 			when 396 then
-					--|#line 1852 "eiffel.y"
+					--|#line <not available> "eiffel.y"
 				yy_do_action_396
 			when 397 then
-					--|#line 1856 "eiffel.y"
+					--|#line <not available> "eiffel.y"
 				yy_do_action_397
 			when 398 then
-					--|#line 1860 "eiffel.y"
+					--|#line <not available> "eiffel.y"
 				yy_do_action_398
 			when 399 then
-					--|#line 1864 "eiffel.y"
+					--|#line <not available> "eiffel.y"
 				yy_do_action_399
 			when 400 then
-					--|#line 1868 "eiffel.y"
+					--|#line <not available> "eiffel.y"
 				yy_do_action_400
 			else
 				debug ("GEYACC")
@@ -1287,305 +1947,380 @@ feature {NONE} -- Semantic actions
 		do
 			inspect yy_act
 			when 401 then
-					--|#line 1872 "eiffel.y"
+					--|#line <not available> "eiffel.y"
 				yy_do_action_401
 			when 402 then
-					--|#line 1874 "eiffel.y"
+					--|#line <not available> "eiffel.y"
 				yy_do_action_402
 			when 403 then
-					--|#line 1876 "eiffel.y"
+					--|#line <not available> "eiffel.y"
 				yy_do_action_403
 			when 404 then
-					--|#line 1878 "eiffel.y"
+					--|#line <not available> "eiffel.y"
 				yy_do_action_404
 			when 405 then
-					--|#line 1882 "eiffel.y"
+					--|#line <not available> "eiffel.y"
 				yy_do_action_405
 			when 406 then
-					--|#line 1886 "eiffel.y"
+					--|#line <not available> "eiffel.y"
 				yy_do_action_406
 			when 407 then
-					--|#line 1893 "eiffel.y"
+					--|#line <not available> "eiffel.y"
 				yy_do_action_407
 			when 408 then
-					--|#line 1901 "eiffel.y"
+					--|#line <not available> "eiffel.y"
 				yy_do_action_408
 			when 409 then
-					--|#line 1903 "eiffel.y"
+					--|#line <not available> "eiffel.y"
 				yy_do_action_409
 			when 410 then
-					--|#line 1907 "eiffel.y"
+					--|#line <not available> "eiffel.y"
 				yy_do_action_410
 			when 411 then
-					--|#line 1909 "eiffel.y"
+					--|#line <not available> "eiffel.y"
 				yy_do_action_411
 			when 412 then
-					--|#line 1913 "eiffel.y"
+					--|#line <not available> "eiffel.y"
 				yy_do_action_412
 			when 413 then
-					--|#line 1915 "eiffel.y"
+					--|#line <not available> "eiffel.y"
 				yy_do_action_413
 			when 414 then
-					--|#line 1917 "eiffel.y"
+					--|#line <not available> "eiffel.y"
 				yy_do_action_414
 			when 415 then
-					--|#line 1921 "eiffel.y"
+					--|#line <not available> "eiffel.y"
 				yy_do_action_415
 			when 416 then
-					--|#line 1934 "eiffel.y"
+					--|#line <not available> "eiffel.y"
 				yy_do_action_416
 			when 417 then
-					--|#line 1938 "eiffel.y"
+					--|#line <not available> "eiffel.y"
 				yy_do_action_417
 			when 418 then
-					--|#line 1940 "eiffel.y"
+					--|#line <not available> "eiffel.y"
 				yy_do_action_418
 			when 419 then
-					--|#line 1942 "eiffel.y"
+					--|#line <not available> "eiffel.y"
 				yy_do_action_419
 			when 420 then
-					--|#line 1946 "eiffel.y"
+					--|#line <not available> "eiffel.y"
 				yy_do_action_420
 			when 421 then
-					--|#line 1951 "eiffel.y"
+					--|#line <not available> "eiffel.y"
 				yy_do_action_421
 			when 422 then
-					--|#line 1958 "eiffel.y"
+					--|#line <not available> "eiffel.y"
 				yy_do_action_422
 			when 423 then
-					--|#line 1960 "eiffel.y"
+					--|#line <not available> "eiffel.y"
 				yy_do_action_423
 			when 424 then
-					--|#line 1964 "eiffel.y"
+					--|#line <not available> "eiffel.y"
 				yy_do_action_424
 			when 425 then
-					--|#line 1969 "eiffel.y"
+					--|#line <not available> "eiffel.y"
 				yy_do_action_425
 			when 426 then
-					--|#line 1980 "eiffel.y"
+					--|#line <not available> "eiffel.y"
 				yy_do_action_426
 			when 427 then
-					--|#line 1989 "eiffel.y"
+					--|#line <not available> "eiffel.y"
 				yy_do_action_427
 			when 428 then
-					--|#line 1991 "eiffel.y"
+					--|#line <not available> "eiffel.y"
 				yy_do_action_428
 			when 429 then
-					--|#line 1993 "eiffel.y"
+					--|#line <not available> "eiffel.y"
 				yy_do_action_429
 			when 430 then
-					--|#line 1995 "eiffel.y"
+					--|#line <not available> "eiffel.y"
 				yy_do_action_430
 			when 431 then
-					--|#line 1997 "eiffel.y"
+					--|#line <not available> "eiffel.y"
 				yy_do_action_431
 			when 432 then
-					--|#line 1999 "eiffel.y"
+					--|#line <not available> "eiffel.y"
 				yy_do_action_432
 			when 433 then
-					--|#line 2003 "eiffel.y"
+					--|#line <not available> "eiffel.y"
 				yy_do_action_433
 			when 434 then
-					--|#line 2006 "eiffel.y"
+					--|#line <not available> "eiffel.y"
 				yy_do_action_434
 			when 435 then
-					--|#line 2008 "eiffel.y"
+					--|#line <not available> "eiffel.y"
 				yy_do_action_435
 			when 436 then
-					--|#line 2010 "eiffel.y"
+					--|#line <not available> "eiffel.y"
 				yy_do_action_436
 			when 437 then
-					--|#line 2012 "eiffel.y"
+					--|#line <not available> "eiffel.y"
 				yy_do_action_437
 			when 438 then
-					--|#line 2014 "eiffel.y"
+					--|#line <not available> "eiffel.y"
 				yy_do_action_438
 			when 439 then
-					--|#line 2022 "eiffel.y"
+					--|#line <not available> "eiffel.y"
 				yy_do_action_439
 			when 440 then
-					--|#line 2024 "eiffel.y"
+					--|#line <not available> "eiffel.y"
 				yy_do_action_440
 			when 441 then
-					--|#line 2028 "eiffel.y"
+					--|#line <not available> "eiffel.y"
 				yy_do_action_441
 			when 442 then
-					--|#line 2035 "eiffel.y"
+					--|#line <not available> "eiffel.y"
 				yy_do_action_442
 			when 443 then
-					--|#line 2038 "eiffel.y"
+					--|#line <not available> "eiffel.y"
 				yy_do_action_443
 			when 444 then
-					--|#line 2042 "eiffel.y"
+					--|#line <not available> "eiffel.y"
 				yy_do_action_444
 			when 445 then
-					--|#line 2062 "eiffel.y"
+					--|#line <not available> "eiffel.y"
 				yy_do_action_445
 			when 446 then
-					--|#line 2080 "eiffel.y"
+					--|#line <not available> "eiffel.y"
 				yy_do_action_446
 			when 447 then
-					--|#line 2102 "eiffel.y"
+					--|#line <not available> "eiffel.y"
 				yy_do_action_447
 			when 448 then
-					--|#line 2104 "eiffel.y"
+					--|#line <not available> "eiffel.y"
 				yy_do_action_448
 			when 449 then
-					--|#line 2106 "eiffel.y"
+					--|#line <not available> "eiffel.y"
 				yy_do_action_449
 			when 450 then
-					--|#line 2113 "eiffel.y"
+					--|#line <not available> "eiffel.y"
 				yy_do_action_450
 			when 451 then
-					--|#line 2117 "eiffel.y"
+					--|#line <not available> "eiffel.y"
 				yy_do_action_451
 			when 452 then
-					--|#line 2119 "eiffel.y"
+					--|#line <not available> "eiffel.y"
 				yy_do_action_452
 			when 453 then
-					--|#line 2121 "eiffel.y"
+					--|#line <not available> "eiffel.y"
 				yy_do_action_453
 			when 454 then
-					--|#line 2125 "eiffel.y"
+					--|#line <not available> "eiffel.y"
 				yy_do_action_454
 			when 455 then
-					--|#line 2127 "eiffel.y"
+					--|#line <not available> "eiffel.y"
 				yy_do_action_455
 			when 456 then
-					--|#line 2129 "eiffel.y"
+					--|#line <not available> "eiffel.y"
 				yy_do_action_456
 			when 457 then
-					--|#line 2131 "eiffel.y"
+					--|#line <not available> "eiffel.y"
 				yy_do_action_457
 			when 458 then
-					--|#line 2133 "eiffel.y"
+					--|#line <not available> "eiffel.y"
 				yy_do_action_458
 			when 459 then
-					--|#line 2135 "eiffel.y"
+					--|#line <not available> "eiffel.y"
 				yy_do_action_459
 			when 460 then
-					--|#line 2137 "eiffel.y"
+					--|#line <not available> "eiffel.y"
 				yy_do_action_460
 			when 461 then
-					--|#line 2139 "eiffel.y"
+					--|#line <not available> "eiffel.y"
 				yy_do_action_461
 			when 462 then
-					--|#line 2141 "eiffel.y"
+					--|#line <not available> "eiffel.y"
 				yy_do_action_462
 			when 463 then
-					--|#line 2143 "eiffel.y"
+					--|#line <not available> "eiffel.y"
 				yy_do_action_463
 			when 464 then
-					--|#line 2145 "eiffel.y"
+					--|#line <not available> "eiffel.y"
 				yy_do_action_464
 			when 465 then
-					--|#line 2147 "eiffel.y"
+					--|#line <not available> "eiffel.y"
 				yy_do_action_465
 			when 466 then
-					--|#line 2149 "eiffel.y"
+					--|#line <not available> "eiffel.y"
 				yy_do_action_466
 			when 467 then
-					--|#line 2151 "eiffel.y"
+					--|#line <not available> "eiffel.y"
 				yy_do_action_467
 			when 468 then
-					--|#line 2153 "eiffel.y"
+					--|#line <not available> "eiffel.y"
 				yy_do_action_468
 			when 469 then
-					--|#line 2155 "eiffel.y"
+					--|#line <not available> "eiffel.y"
 				yy_do_action_469
 			when 470 then
-					--|#line 2157 "eiffel.y"
+					--|#line <not available> "eiffel.y"
 				yy_do_action_470
 			when 471 then
-					--|#line 2159 "eiffel.y"
+					--|#line <not available> "eiffel.y"
 				yy_do_action_471
 			when 472 then
-					--|#line 2161 "eiffel.y"
+					--|#line <not available> "eiffel.y"
 				yy_do_action_472
 			when 473 then
-					--|#line 2163 "eiffel.y"
+					--|#line <not available> "eiffel.y"
 				yy_do_action_473
 			when 474 then
-					--|#line 2165 "eiffel.y"
+					--|#line <not available> "eiffel.y"
 				yy_do_action_474
 			when 475 then
-					--|#line 2169 "eiffel.y"
+					--|#line <not available> "eiffel.y"
 				yy_do_action_475
 			when 476 then
-					--|#line 2171 "eiffel.y"
+					--|#line <not available> "eiffel.y"
 				yy_do_action_476
 			when 477 then
-					--|#line 2173 "eiffel.y"
+					--|#line <not available> "eiffel.y"
 				yy_do_action_477
 			when 478 then
-					--|#line 2175 "eiffel.y"
+					--|#line <not available> "eiffel.y"
 				yy_do_action_478
 			when 479 then
-					--|#line 2179 "eiffel.y"
+					--|#line <not available> "eiffel.y"
 				yy_do_action_479
 			when 480 then
-					--|#line 2181 "eiffel.y"
+					--|#line <not available> "eiffel.y"
 				yy_do_action_480
 			when 481 then
-					--|#line 2183 "eiffel.y"
+					--|#line <not available> "eiffel.y"
 				yy_do_action_481
 			when 482 then
-					--|#line 2185 "eiffel.y"
+					--|#line <not available> "eiffel.y"
 				yy_do_action_482
 			when 483 then
-					--|#line 2187 "eiffel.y"
+					--|#line <not available> "eiffel.y"
 				yy_do_action_483
 			when 484 then
-					--|#line 2189 "eiffel.y"
+					--|#line <not available> "eiffel.y"
 				yy_do_action_484
 			when 485 then
-					--|#line 2191 "eiffel.y"
+					--|#line <not available> "eiffel.y"
 				yy_do_action_485
 			when 486 then
-					--|#line 2193 "eiffel.y"
+					--|#line <not available> "eiffel.y"
 				yy_do_action_486
 			when 487 then
-					--|#line 2195 "eiffel.y"
+					--|#line <not available> "eiffel.y"
 				yy_do_action_487
 			when 488 then
-					--|#line 2197 "eiffel.y"
+					--|#line <not available> "eiffel.y"
 				yy_do_action_488
 			when 489 then
-					--|#line 2199 "eiffel.y"
+					--|#line <not available> "eiffel.y"
 				yy_do_action_489
 			when 490 then
-					--|#line 2201 "eiffel.y"
+					--|#line <not available> "eiffel.y"
 				yy_do_action_490
 			when 491 then
-					--|#line 2203 "eiffel.y"
+					--|#line <not available> "eiffel.y"
 				yy_do_action_491
 			when 492 then
-					--|#line 2205 "eiffel.y"
+					--|#line <not available> "eiffel.y"
 				yy_do_action_492
 			when 493 then
-					--|#line 2207 "eiffel.y"
+					--|#line <not available> "eiffel.y"
 				yy_do_action_493
 			when 494 then
-					--|#line 2209 "eiffel.y"
+					--|#line <not available> "eiffel.y"
 				yy_do_action_494
 			when 495 then
-					--|#line 2211 "eiffel.y"
+					--|#line <not available> "eiffel.y"
 				yy_do_action_495
 			when 496 then
-					--|#line 2213 "eiffel.y"
+					--|#line <not available> "eiffel.y"
 				yy_do_action_496
 			when 497 then
-					--|#line 2217 "eiffel.y"
+					--|#line <not available> "eiffel.y"
 				yy_do_action_497
 			when 498 then
-					--|#line 2221 "eiffel.y"
+					--|#line <not available> "eiffel.y"
 				yy_do_action_498
 			when 499 then
-					--|#line 2225 "eiffel.y"
+					--|#line <not available> "eiffel.y"
 				yy_do_action_499
 			when 500 then
-					--|#line 2229 "eiffel.y"
+					--|#line <not available> "eiffel.y"
 				yy_do_action_500
+			when 501 then
+					--|#line <not available> "eiffel.y"
+				yy_do_action_501
+			when 502 then
+					--|#line <not available> "eiffel.y"
+				yy_do_action_502
+			when 503 then
+					--|#line <not available> "eiffel.y"
+				yy_do_action_503
+			when 504 then
+					--|#line <not available> "eiffel.y"
+				yy_do_action_504
+			when 505 then
+					--|#line <not available> "eiffel.y"
+				yy_do_action_505
+			when 506 then
+					--|#line <not available> "eiffel.y"
+				yy_do_action_506
+			when 507 then
+					--|#line <not available> "eiffel.y"
+				yy_do_action_507
+			when 508 then
+					--|#line <not available> "eiffel.y"
+				yy_do_action_508
+			when 509 then
+					--|#line <not available> "eiffel.y"
+				yy_do_action_509
+			when 510 then
+					--|#line <not available> "eiffel.y"
+				yy_do_action_510
+			when 511 then
+					--|#line <not available> "eiffel.y"
+				yy_do_action_511
+			when 512 then
+					--|#line <not available> "eiffel.y"
+				yy_do_action_512
+			when 513 then
+					--|#line <not available> "eiffel.y"
+				yy_do_action_513
+			when 514 then
+					--|#line <not available> "eiffel.y"
+				yy_do_action_514
+			when 515 then
+					--|#line <not available> "eiffel.y"
+				yy_do_action_515
+			when 516 then
+					--|#line <not available> "eiffel.y"
+				yy_do_action_516
+			when 517 then
+					--|#line <not available> "eiffel.y"
+				yy_do_action_517
+			when 518 then
+					--|#line <not available> "eiffel.y"
+				yy_do_action_518
+			when 519 then
+					--|#line <not available> "eiffel.y"
+				yy_do_action_519
+			when 520 then
+					--|#line <not available> "eiffel.y"
+				yy_do_action_520
+			when 521 then
+					--|#line <not available> "eiffel.y"
+				yy_do_action_521
+			when 522 then
+					--|#line <not available> "eiffel.y"
+				yy_do_action_522
+			when 523 then
+					--|#line <not available> "eiffel.y"
+				yy_do_action_523
+			when 524 then
+					--|#line <not available> "eiffel.y"
+				yy_do_action_524
+			when 525 then
+					--|#line <not available> "eiffel.y"
+				yy_do_action_525
 			else
 				debug ("GEYACC")
 					std.error.put_string ("Error in parser: unknown rule id: ")
@@ -1597,91 +2332,149 @@ feature {NONE} -- Semantic actions
 		end
 
 	yy_do_action_1 is
-			--|#line 176 "eiffel.y"
+			--|#line <not available> "eiffel.y"
+		local
+			yyval1: ANY
 		do
---|#line 176 "eiffel.y"
+--|#line <not available> "eiffel.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'eiffel.y' at line 176")
+	std.error.put_line ("Executing parser user-code from file 'eiffel.y' at line <not available>")
 end
 
-			yyval := yyval_default;
-				if type_parser then
+				if type_parser or expression_parser or indexing_parser then
 					raise_error
 				end
 			
-
 if yy_parsing_status = yyContinue then
 	yyssp := yyssp - 1
-	yyvs.put (yyval, yyvsp)
+	yyvs1.put (yyval1, yyvsp1)
 end
 		end
 
 	yy_do_action_2 is
-			--|#line 183 "eiffel.y"
+			--|#line <not available> "eiffel.y"
+		local
+			yyval1: ANY
 		do
---|#line 183 "eiffel.y"
+--|#line <not available> "eiffel.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'eiffel.y' at line 183")
+	std.error.put_line ("Executing parser user-code from file 'eiffel.y' at line <not available>")
 end
 
-			yyval := yyval_default;
-				if not type_parser then
+				if not type_parser or expression_parser or indexing_parser then
 					raise_error
 				end
-				type_node := yytype63 (yyvs.item (yyvsp))
+				type_node := yyvs63.item (yyvsp63)
 			
-
 if yy_parsing_status = yyContinue then
 	yyssp := yyssp - 2
-	yyvsp := yyvsp - 1
-	yyvs.put (yyval, yyvsp)
+	yyvsp1 := yyvsp1 + 1
+	yyvsp33 := yyvsp33 -1
+	yyvsp63 := yyvsp63 -1
+	if yyvsp1 >= yyvsc1 then
+		if yyvs1 = Void then
+			debug ("GEYACC")
+				std.error.put_line ("Create yyvs1")
+			end
+			create yyspecial_routines1
+			yyvsc1 := yyInitial_yyvs_size
+			yyvs1 := yyspecial_routines1.make (yyvsc1)
+		else
+			debug ("GEYACC")
+				std.error.put_line ("Resize yyvs1")
+			end
+			yyvsc1 := yyvsc1 + yyInitial_yyvs_size
+			yyvs1 := yyspecial_routines1.resize (yyvs1, yyvsc1)
+		end
+	end
+	yyvs1.put (yyval1, yyvsp1)
 end
 		end
 
 	yy_do_action_3 is
-			--|#line 190 "eiffel.y"
+			--|#line <not available> "eiffel.y"
+		local
+			yyval1: ANY
 		do
---|#line 190 "eiffel.y"
+--|#line <not available> "eiffel.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'eiffel.y' at line 190")
+	std.error.put_line ("Executing parser user-code from file 'eiffel.y' at line <not available>")
 end
 
-			yyval := yyval_default;
-				if not expression_parser then
+				if not expression_parser or type_parser or indexing_parser then
 					raise_error
 				end
-				expression_node := yytype25 (yyvs.item (yyvsp))
+				expression_node := yyvs25.item (yyvsp25)
 			
-
 if yy_parsing_status = yyContinue then
 	yyssp := yyssp - 2
-	yyvsp := yyvsp - 1
-	yyvs.put (yyval, yyvsp)
+	yyvsp25 := yyvsp25 -1
+	yyvs1.put (yyval1, yyvsp1)
 end
 		end
 
 	yy_do_action_4 is
-			--|#line 199 "eiffel.y"
+			--|#line <not available> "eiffel.y"
+		local
+			yyval1: ANY
 		do
---|#line 199 "eiffel.y"
+--|#line <not available> "eiffel.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'eiffel.y' at line 199")
+	std.error.put_line ("Executing parser user-code from file 'eiffel.y' at line <not available>")
 end
 
-			yyval := yyval_default;
-				root_node := new_class_description (yytype92 (yyvs.item (yyvsp - 13)), yytype60 (yyvs.item (yyvsp - 11)),
+				if not indexing_parser or type_parser or expression_parser then
+					raise_error
+				end
+				indexing_node := yyvs81.item (yyvsp81)
+			
+if yy_parsing_status = yyContinue then
+	yyssp := yyssp - 1
+	yyvsp1 := yyvsp1 + 1
+	yyvsp81 := yyvsp81 -1
+	if yyvsp1 >= yyvsc1 then
+		if yyvs1 = Void then
+			debug ("GEYACC")
+				std.error.put_line ("Create yyvs1")
+			end
+			create yyspecial_routines1
+			yyvsc1 := yyInitial_yyvs_size
+			yyvs1 := yyspecial_routines1.make (yyvsc1)
+		else
+			debug ("GEYACC")
+				std.error.put_line ("Resize yyvs1")
+			end
+			yyvsc1 := yyvsc1 + yyInitial_yyvs_size
+			yyvs1 := yyspecial_routines1.resize (yyvs1, yyvsc1)
+		end
+	end
+	yyvs1.put (yyval1, yyvsp1)
+end
+		end
+
+	yy_do_action_5 is
+			--|#line <not available> "eiffel.y"
+		local
+			yyval1: ANY
+		do
+--|#line <not available> "eiffel.y"
+debug ("GEYACC")
+	std.error.put_line ("Executing parser user-code from file 'eiffel.y' at line <not available>")
+end
+
+				root_node := new_class_description (yyvs92.item (yyvsp92), yyvs60.item (yyvsp60 - 1),
 					is_deferred, is_expanded, is_separate, is_frozen_class, is_external_class,
-					yytype81 (yyvs.item (yyvsp - 16)), yytype81 (yyvs.item (yyvsp - 1)), yytype77 (yyvs.item (yyvsp - 12)), yytype85 (yyvs.item (yyvsp - 9)), yytype69 (yyvs.item (yyvsp - 7)), yytype68 (yyvs.item (yyvsp - 6)), yytype74 (yyvs.item (yyvsp - 5)), yytype42 (yyvs.item (yyvsp - 3)), suppliers, yytype60 (yyvs.item (yyvsp - 10)), click_list
+					yyvs81.item (yyvsp81 - 1), yyvs81.item (yyvsp81), yyvs77.item (yyvsp77), yyvs85.item (yyvsp85), yyvs69.item (yyvsp69), yyvs68.item (yyvsp68), yyvs74.item (yyvsp74), yyvs42.item (yyvsp42), suppliers, yyvs60.item (yyvsp60), click_list
 				)
 
 				if real_class_end_position = 0 then
 					root_node.set_text_positions (
 						current_position.start_position,
-						yytype58 (yyvs.item (yyvsp - 4)).start_position,
-						yytype58 (yyvs.item (yyvsp - 8)).start_position,
+						yyvs58.item (yyvsp58 - 1).start_position,
+						yyvs58.item (yyvsp58 - 2).start_position,
 						formal_generics_start_position,
 						formal_generics_end_position,
-						yytype58 (yyvs.item (yyvsp - 2)).start_position
+						yyvs58.item (yyvsp58).start_position
 					)
 				else
 					root_node.set_text_positions (
@@ -1694,408 +2487,544 @@ end
 					)
 				end
 			
-
 if yy_parsing_status = yyContinue then
 	yyssp := yyssp - 17
-	yyvsp := yyvsp - 16
-	yyvs.put (yyval, yyvsp)
+	yyvsp1 := yyvsp1 -2
+	yyvsp81 := yyvsp81 -2
+	yyvsp92 := yyvsp92 -1
+	yyvsp77 := yyvsp77 -1
+	yyvsp60 := yyvsp60 -2
+	yyvsp85 := yyvsp85 -1
+	yyvsp58 := yyvsp58 -3
+	yyvsp69 := yyvsp69 -1
+	yyvsp68 := yyvsp68 -1
+	yyvsp74 := yyvsp74 -1
+	yyvsp42 := yyvsp42 -1
+	yyvs1.put (yyval1, yyvsp1)
 end
 		end
 
-	yy_do_action_5 is
-			--|#line 242 "eiffel.y"
+	yy_do_action_6 is
+			--|#line <not available> "eiffel.y"
+		local
+			yyval1: ANY
 		do
---|#line 242 "eiffel.y"
+--|#line <not available> "eiffel.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'eiffel.y' at line 242")
+	std.error.put_line ("Executing parser user-code from file 'eiffel.y' at line <not available>")
 end
 
-			yyval := yyval_default;
 				if inherit_context then
 					inherit_context := False
 					real_class_end_position := 0
 				end
 			
-
 if yy_parsing_status = yyContinue then
 	yyssp := yyssp - 1
-	yyvs.put (yyval, yyvsp)
+	yyvs1.put (yyval1, yyvsp1)
 end
 		end
 
-	yy_do_action_6 is
-			--|#line 251 "eiffel.y"
+	yy_do_action_7 is
+			--|#line <not available> "eiffel.y"
 		local
 			yyval92: PAIR [ID_AS, CLICK_AST]
 		do
---|#line 251 "eiffel.y"
+--|#line <not available> "eiffel.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'eiffel.y' at line 251")
+	std.error.put_line ("Executing parser user-code from file 'eiffel.y' at line <not available>")
 end
-
 
 				if not case_sensitive then
 					token_buffer.to_lower
 				end
 				yyval92 := new_clickable_id (create {ID_AS}.initialize (token_buffer))
 			
-			yyval := yyval92
 if yy_parsing_status = yyContinue then
 	yyssp := yyssp - 1
-	yyvs.put (yyval, yyvsp)
+	yyvsp92 := yyvsp92 + 1
+	yyvsp1 := yyvsp1 -1
+	if yyvsp92 >= yyvsc92 then
+		if yyvs92 = Void then
+			debug ("GEYACC")
+				std.error.put_line ("Create yyvs92")
+			end
+			create yyspecial_routines92
+			yyvsc92 := yyInitial_yyvs_size
+			yyvs92 := yyspecial_routines92.make (yyvsc92)
+		else
+			debug ("GEYACC")
+				std.error.put_line ("Resize yyvs92")
+			end
+			yyvsc92 := yyvsc92 + yyInitial_yyvs_size
+			yyvs92 := yyspecial_routines92.resize (yyvs92, yyvsc92)
+		end
+	end
+	yyvs92.put (yyval92, yyvsp92)
 end
 		end
 
-	yy_do_action_7 is
-			--|#line 259 "eiffel.y"
+	yy_do_action_8 is
+			--|#line <not available> "eiffel.y"
 		local
 			yyval92: PAIR [ID_AS, CLICK_AST]
 		do
---|#line 259 "eiffel.y"
+--|#line <not available> "eiffel.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'eiffel.y' at line 259")
+	std.error.put_line ("Executing parser user-code from file 'eiffel.y' at line <not available>")
 end
-
 
 				if not case_sensitive then
 					token_buffer.to_upper
 				end
 				yyval92 := new_clickable_id (create {ID_AS}.initialize (token_buffer))
 			
-			yyval := yyval92
 if yy_parsing_status = yyContinue then
 	yyssp := yyssp - 1
-	yyvs.put (yyval, yyvsp)
-end
-		end
-
-	yy_do_action_8 is
-			--|#line 271 "eiffel.y"
-		local
-			yyval81: INDEXING_CLAUSE_AS
-		do
---|#line 271 "eiffel.y"
-debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'eiffel.y' at line 271")
-end
-
-
-
-			yyval := yyval81
-if yy_parsing_status = yyContinue then
-	yyvsp := yyvsp + 1
-	if yyvsp >= yyvsc then
-		yyvsc := yyvsc + yyInitial_stack_size
-		yyvs := FIXED_ARRAY_.resize (yyvs, yyvsc)
-		debug ("GEYACC")
-			std.error.put_string ("Stack (yyvs) size increased to ")
-			std.error.put_integer (yyvsc)
-			std.error.put_new_line
+	yyvsp92 := yyvsp92 + 1
+	yyvsp1 := yyvsp1 -1
+	if yyvsp92 >= yyvsc92 then
+		if yyvs92 = Void then
+			debug ("GEYACC")
+				std.error.put_line ("Create yyvs92")
+			end
+			create yyspecial_routines92
+			yyvsc92 := yyInitial_yyvs_size
+			yyvs92 := yyspecial_routines92.make (yyvsc92)
+		else
+			debug ("GEYACC")
+				std.error.put_line ("Resize yyvs92")
+			end
+			yyvsc92 := yyvsc92 + yyInitial_yyvs_size
+			yyvs92 := yyspecial_routines92.resize (yyvs92, yyvsc92)
 		end
 	end
-	yyvs.put (yyval, yyvsp)
+	yyvs92.put (yyval92, yyvsp92)
 end
 		end
 
 	yy_do_action_9 is
-			--|#line 273 "eiffel.y"
+			--|#line <not available> "eiffel.y"
 		local
 			yyval81: INDEXING_CLAUSE_AS
 		do
---|#line 273 "eiffel.y"
+--|#line <not available> "eiffel.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'eiffel.y' at line 273")
+	std.error.put_line ("Executing parser user-code from file 'eiffel.y' at line <not available>")
 end
 
 
-				yyval81 := yytype81 (yyvs.item (yyvsp))
-				set_has_old_verbatim_strings_warning (initial_has_old_verbatim_strings_warning)
-			
-			yyval := yyval81
 if yy_parsing_status = yyContinue then
-	yyssp := yyssp - 3
-	yyvsp := yyvsp - 2
-	yyvs.put (yyval, yyvsp)
+	yyssp := yyssp - 0
+	yyvsp81 := yyvsp81 + 1
+	if yyvsp81 >= yyvsc81 then
+		if yyvs81 = Void then
+			debug ("GEYACC")
+				std.error.put_line ("Create yyvs81")
+			end
+			create yyspecial_routines81
+			yyvsc81 := yyInitial_yyvs_size
+			yyvs81 := yyspecial_routines81.make (yyvsc81)
+		else
+			debug ("GEYACC")
+				std.error.put_line ("Resize yyvs81")
+			end
+			yyvsc81 := yyvsc81 + yyInitial_yyvs_size
+			yyvs81 := yyspecial_routines81.resize (yyvs81, yyvsc81)
+		end
+	end
+	yyvs81.put (yyval81, yyvsp81)
 end
 		end
 
 	yy_do_action_10 is
-			--|#line 273 "eiffel.y"
+			--|#line <not available> "eiffel.y"
 		local
 			yyval81: INDEXING_CLAUSE_AS
 		do
---|#line 273 "eiffel.y"
+--|#line <not available> "eiffel.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'eiffel.y' at line 273")
+	std.error.put_line ("Executing parser user-code from file 'eiffel.y' at line <not available>")
 end
 
-
-				initial_has_old_verbatim_strings_warning := has_old_verbatim_strings_warning
-				set_has_old_verbatim_strings_warning (false)
+				yyval81 := yyvs81.item (yyvsp81)
+				set_has_old_verbatim_strings_warning (initial_has_old_verbatim_strings_warning)
 			
-			yyval := yyval81
 if yy_parsing_status = yyContinue then
-	yyvsp := yyvsp + 1
-	if yyvsp >= yyvsc then
-		yyvsc := yyvsc + yyInitial_stack_size
-		yyvs := FIXED_ARRAY_.resize (yyvs, yyvsc)
-		debug ("GEYACC")
-			std.error.put_string ("Stack (yyvs) size increased to ")
-			std.error.put_integer (yyvsc)
-			std.error.put_new_line
-		end
-	end
-	yyvs.put (yyval, yyvsp)
+	yyssp := yyssp - 3
+	yyvsp81 := yyvsp81 -1
+	yyvsp1 := yyvsp1 -1
+	yyvs81.put (yyval81, yyvsp81)
 end
 		end
 
 	yy_do_action_11 is
-			--|#line 283 "eiffel.y"
+			--|#line <not available> "eiffel.y"
 		local
 			yyval81: INDEXING_CLAUSE_AS
 		do
---|#line 283 "eiffel.y"
+--|#line <not available> "eiffel.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'eiffel.y' at line 283")
+	std.error.put_line ("Executing parser user-code from file 'eiffel.y' at line <not available>")
 end
 
-
-
-			yyval := yyval81
+				initial_has_old_verbatim_strings_warning := has_old_verbatim_strings_warning
+				set_has_old_verbatim_strings_warning (false)
+			
 if yy_parsing_status = yyContinue then
-	yyssp := yyssp - 1
-	yyvs.put (yyval, yyvsp)
+	yyssp := yyssp - 0
+	yyvsp81 := yyvsp81 + 1
+	if yyvsp81 >= yyvsc81 then
+		if yyvs81 = Void then
+			debug ("GEYACC")
+				std.error.put_line ("Create yyvs81")
+			end
+			create yyspecial_routines81
+			yyvsc81 := yyInitial_yyvs_size
+			yyvs81 := yyspecial_routines81.make (yyvsc81)
+		else
+			debug ("GEYACC")
+				std.error.put_line ("Resize yyvs81")
+			end
+			yyvsc81 := yyvsc81 + yyInitial_yyvs_size
+			yyvs81 := yyspecial_routines81.resize (yyvs81, yyvsc81)
+		end
+	end
+	yyvs81.put (yyval81, yyvsp81)
 end
 		end
 
 	yy_do_action_12 is
-			--|#line 287 "eiffel.y"
+			--|#line <not available> "eiffel.y"
 		local
 			yyval81: INDEXING_CLAUSE_AS
 		do
---|#line 287 "eiffel.y"
+--|#line <not available> "eiffel.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'eiffel.y' at line 287")
+	std.error.put_line ("Executing parser user-code from file 'eiffel.y' at line <not available>")
 end
 
 
-
-			yyval := yyval81
 if yy_parsing_status = yyContinue then
-	yyvsp := yyvsp + 1
-	if yyvsp >= yyvsc then
-		yyvsc := yyvsc + yyInitial_stack_size
-		yyvs := FIXED_ARRAY_.resize (yyvs, yyvsc)
-		debug ("GEYACC")
-			std.error.put_string ("Stack (yyvs) size increased to ")
-			std.error.put_integer (yyvsc)
-			std.error.put_new_line
+	yyssp := yyssp - 1
+	yyvsp81 := yyvsp81 + 1
+	yyvsp1 := yyvsp1 -1
+	if yyvsp81 >= yyvsc81 then
+		if yyvs81 = Void then
+			debug ("GEYACC")
+				std.error.put_line ("Create yyvs81")
+			end
+			create yyspecial_routines81
+			yyvsc81 := yyInitial_yyvs_size
+			yyvs81 := yyspecial_routines81.make (yyvsc81)
+		else
+			debug ("GEYACC")
+				std.error.put_line ("Resize yyvs81")
+			end
+			yyvsc81 := yyvsc81 + yyInitial_yyvs_size
+			yyvs81 := yyspecial_routines81.resize (yyvs81, yyvsc81)
 		end
 	end
-	yyvs.put (yyval, yyvsp)
+	yyvs81.put (yyval81, yyvsp81)
 end
 		end
 
 	yy_do_action_13 is
-			--|#line 289 "eiffel.y"
+			--|#line <not available> "eiffel.y"
 		local
 			yyval81: INDEXING_CLAUSE_AS
 		do
---|#line 289 "eiffel.y"
+--|#line <not available> "eiffel.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'eiffel.y' at line 289")
+	std.error.put_line ("Executing parser user-code from file 'eiffel.y' at line <not available>")
 end
 
 
-yyval81 := yytype81 (yyvs.item (yyvsp)) 
-			yyval := yyval81
 if yy_parsing_status = yyContinue then
-	yyssp := yyssp - 2
-	yyvsp := yyvsp - 1
-	yyvs.put (yyval, yyvsp)
+	yyssp := yyssp - 0
+	yyvsp81 := yyvsp81 + 1
+	if yyvsp81 >= yyvsc81 then
+		if yyvs81 = Void then
+			debug ("GEYACC")
+				std.error.put_line ("Create yyvs81")
+			end
+			create yyspecial_routines81
+			yyvsc81 := yyInitial_yyvs_size
+			yyvs81 := yyspecial_routines81.make (yyvsc81)
+		else
+			debug ("GEYACC")
+				std.error.put_line ("Resize yyvs81")
+			end
+			yyvsc81 := yyvsc81 + yyInitial_yyvs_size
+			yyvs81 := yyspecial_routines81.resize (yyvs81, yyvsc81)
+		end
+	end
+	yyvs81.put (yyval81, yyvsp81)
 end
 		end
 
 	yy_do_action_14 is
-			--|#line 291 "eiffel.y"
+			--|#line <not available> "eiffel.y"
 		local
 			yyval81: INDEXING_CLAUSE_AS
 		do
---|#line 291 "eiffel.y"
+--|#line <not available> "eiffel.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'eiffel.y' at line 291")
+	std.error.put_line ("Executing parser user-code from file 'eiffel.y' at line <not available>")
 end
 
-
-yyval81 := Void 
-			yyval := yyval81
+yyval81 := yyvs81.item (yyvsp81) 
 if yy_parsing_status = yyContinue then
-	yyssp := yyssp - 1
-	yyvs.put (yyval, yyvsp)
+	yyssp := yyssp - 2
+	yyvsp1 := yyvsp1 -1
+	yyvs81.put (yyval81, yyvsp81)
 end
 		end
 
 	yy_do_action_15 is
-			--|#line 295 "eiffel.y"
+			--|#line <not available> "eiffel.y"
 		local
 			yyval81: INDEXING_CLAUSE_AS
 		do
---|#line 295 "eiffel.y"
+--|#line <not available> "eiffel.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'eiffel.y' at line 295")
+	std.error.put_line ("Executing parser user-code from file 'eiffel.y' at line <not available>")
 end
 
-
-
-			yyval := yyval81
+yyval81 := Void 
 if yy_parsing_status = yyContinue then
-	yyvsp := yyvsp + 1
-	if yyvsp >= yyvsc then
-		yyvsc := yyvsc + yyInitial_stack_size
-		yyvs := FIXED_ARRAY_.resize (yyvs, yyvsc)
-		debug ("GEYACC")
-			std.error.put_string ("Stack (yyvs) size increased to ")
-			std.error.put_integer (yyvsc)
-			std.error.put_new_line
+	yyssp := yyssp - 1
+	yyvsp81 := yyvsp81 + 1
+	yyvsp1 := yyvsp1 -1
+	if yyvsp81 >= yyvsc81 then
+		if yyvs81 = Void then
+			debug ("GEYACC")
+				std.error.put_line ("Create yyvs81")
+			end
+			create yyspecial_routines81
+			yyvsc81 := yyInitial_yyvs_size
+			yyvs81 := yyspecial_routines81.make (yyvsc81)
+		else
+			debug ("GEYACC")
+				std.error.put_line ("Resize yyvs81")
+			end
+			yyvsc81 := yyvsc81 + yyInitial_yyvs_size
+			yyvs81 := yyspecial_routines81.resize (yyvs81, yyvsc81)
 		end
 	end
-	yyvs.put (yyval, yyvsp)
+	yyvs81.put (yyval81, yyvsp81)
 end
 		end
 
 	yy_do_action_16 is
-			--|#line 297 "eiffel.y"
+			--|#line <not available> "eiffel.y"
 		local
 			yyval81: INDEXING_CLAUSE_AS
 		do
---|#line 297 "eiffel.y"
+--|#line <not available> "eiffel.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'eiffel.y' at line 297")
+	std.error.put_line ("Executing parser user-code from file 'eiffel.y' at line <not available>")
 end
 
 
-yyval81 := yytype81 (yyvs.item (yyvsp - 1)) 
-			yyval := yyval81
 if yy_parsing_status = yyContinue then
-	yyssp := yyssp - 3
-	yyvsp := yyvsp - 2
-	yyvs.put (yyval, yyvsp)
+	yyssp := yyssp - 0
+	yyvsp81 := yyvsp81 + 1
+	if yyvsp81 >= yyvsc81 then
+		if yyvs81 = Void then
+			debug ("GEYACC")
+				std.error.put_line ("Create yyvs81")
+			end
+			create yyspecial_routines81
+			yyvsc81 := yyInitial_yyvs_size
+			yyvs81 := yyspecial_routines81.make (yyvsc81)
+		else
+			debug ("GEYACC")
+				std.error.put_line ("Resize yyvs81")
+			end
+			yyvsc81 := yyvsc81 + yyInitial_yyvs_size
+			yyvs81 := yyspecial_routines81.resize (yyvs81, yyvsc81)
+		end
+	end
+	yyvs81.put (yyval81, yyvsp81)
 end
 		end
 
 	yy_do_action_17 is
-			--|#line 299 "eiffel.y"
+			--|#line <not available> "eiffel.y"
 		local
 			yyval81: INDEXING_CLAUSE_AS
 		do
---|#line 299 "eiffel.y"
+--|#line <not available> "eiffel.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'eiffel.y' at line 299")
+	std.error.put_line ("Executing parser user-code from file 'eiffel.y' at line <not available>")
 end
 
-
-yyval81 := Void 
-			yyval := yyval81
+yyval81 := yyvs81.item (yyvsp81) 
 if yy_parsing_status = yyContinue then
-	yyssp := yyssp - 2
-	yyvsp := yyvsp - 1
-	yyvs.put (yyval, yyvsp)
+	yyssp := yyssp - 3
+	yyvsp1 := yyvsp1 -2
+	yyvs81.put (yyval81, yyvsp81)
 end
 		end
 
 	yy_do_action_18 is
-			--|#line 303 "eiffel.y"
+			--|#line <not available> "eiffel.y"
 		local
 			yyval81: INDEXING_CLAUSE_AS
 		do
---|#line 303 "eiffel.y"
+--|#line <not available> "eiffel.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'eiffel.y' at line 303")
+	std.error.put_line ("Executing parser user-code from file 'eiffel.y' at line <not available>")
 end
 
-
-				yyval81 := new_eiffel_list_index_as (Initial_index_list_size)
-				yyval81.extend (yytype35 (yyvs.item (yyvsp)))
-			
-			yyval := yyval81
+yyval81 := Void 
 if yy_parsing_status = yyContinue then
-	yyssp := yyssp - 1
-	yyvs.put (yyval, yyvsp)
+	yyssp := yyssp - 2
+	yyvsp81 := yyvsp81 + 1
+	yyvsp1 := yyvsp1 -2
+	if yyvsp81 >= yyvsc81 then
+		if yyvs81 = Void then
+			debug ("GEYACC")
+				std.error.put_line ("Create yyvs81")
+			end
+			create yyspecial_routines81
+			yyvsc81 := yyInitial_yyvs_size
+			yyvs81 := yyspecial_routines81.make (yyvsc81)
+		else
+			debug ("GEYACC")
+				std.error.put_line ("Resize yyvs81")
+			end
+			yyvsc81 := yyvsc81 + yyInitial_yyvs_size
+			yyvs81 := yyspecial_routines81.resize (yyvs81, yyvsc81)
+		end
+	end
+	yyvs81.put (yyval81, yyvsp81)
 end
 		end
 
 	yy_do_action_19 is
-			--|#line 308 "eiffel.y"
+			--|#line <not available> "eiffel.y"
 		local
 			yyval81: INDEXING_CLAUSE_AS
 		do
---|#line 308 "eiffel.y"
+--|#line <not available> "eiffel.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'eiffel.y' at line 308")
+	std.error.put_line ("Executing parser user-code from file 'eiffel.y' at line <not available>")
 end
 
-
-				yyval81 := yytype81 (yyvs.item (yyvsp - 1))
-				yyval81.extend (yytype35 (yyvs.item (yyvsp)))
+				yyval81 := new_eiffel_list_index_as (Initial_index_list_size)
+				yyval81.extend (yyvs35.item (yyvsp35))
 			
-			yyval := yyval81
 if yy_parsing_status = yyContinue then
-	yyssp := yyssp - 2
-	yyvsp := yyvsp - 1
-	yyvs.put (yyval, yyvsp)
+	yyssp := yyssp - 1
+	yyvsp81 := yyvsp81 + 1
+	yyvsp35 := yyvsp35 -1
+	if yyvsp81 >= yyvsc81 then
+		if yyvs81 = Void then
+			debug ("GEYACC")
+				std.error.put_line ("Create yyvs81")
+			end
+			create yyspecial_routines81
+			yyvsc81 := yyInitial_yyvs_size
+			yyvs81 := yyspecial_routines81.make (yyvsc81)
+		else
+			debug ("GEYACC")
+				std.error.put_line ("Resize yyvs81")
+			end
+			yyvsc81 := yyvsc81 + yyInitial_yyvs_size
+			yyvs81 := yyspecial_routines81.resize (yyvs81, yyvsc81)
+		end
+	end
+	yyvs81.put (yyval81, yyvsp81)
 end
 		end
 
 	yy_do_action_20 is
-			--|#line 315 "eiffel.y"
+			--|#line <not available> "eiffel.y"
 		local
-			yyval35: INDEX_AS
+			yyval81: INDEXING_CLAUSE_AS
 		do
---|#line 315 "eiffel.y"
+--|#line <not available> "eiffel.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'eiffel.y' at line 315")
+	std.error.put_line ("Executing parser user-code from file 'eiffel.y' at line <not available>")
 end
 
-
-yyval35 := new_index_as (yytype33 (yyvs.item (yyvsp - 2)), yytype66 (yyvs.item (yyvsp - 1)), yytype58 (yyvs.item (yyvsp - 3))) 
-			yyval := yyval35
+				yyval81 := yyvs81.item (yyvsp81)
+				yyval81.extend (yyvs35.item (yyvsp35))
+			
 if yy_parsing_status = yyContinue then
-	yyssp := yyssp - 4
-	yyvsp := yyvsp - 3
-	yyvs.put (yyval, yyvsp)
+	yyssp := yyssp - 2
+	yyvsp35 := yyvsp35 -1
+	yyvs81.put (yyval81, yyvsp81)
 end
 		end
 
 	yy_do_action_21 is
-			--|#line 319 "eiffel.y"
+			--|#line <not available> "eiffel.y"
 		local
-			yyval33: ID_AS
+			yyval35: INDEX_AS
 		do
---|#line 319 "eiffel.y"
+--|#line <not available> "eiffel.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'eiffel.y' at line 319")
+	std.error.put_line ("Executing parser user-code from file 'eiffel.y' at line <not available>")
 end
 
-
-yyval33 := yytype33 (yyvs.item (yyvsp - 1)) 
-			yyval := yyval33
+yyval35 := new_index_as (yyvs33.item (yyvsp33), yyvs66.item (yyvsp66), yyvs58.item (yyvsp58)) 
 if yy_parsing_status = yyContinue then
-	yyssp := yyssp - 2
-	yyvsp := yyvsp - 1
-	yyvs.put (yyval, yyvsp)
+	yyssp := yyssp - 4
+	yyvsp35 := yyvsp35 + 1
+	yyvsp58 := yyvsp58 -1
+	yyvsp33 := yyvsp33 -1
+	yyvsp66 := yyvsp66 -1
+	yyvsp1 := yyvsp1 -1
+	if yyvsp35 >= yyvsc35 then
+		if yyvs35 = Void then
+			debug ("GEYACC")
+				std.error.put_line ("Create yyvs35")
+			end
+			create yyspecial_routines35
+			yyvsc35 := yyInitial_yyvs_size
+			yyvs35 := yyspecial_routines35.make (yyvsc35)
+		else
+			debug ("GEYACC")
+				std.error.put_line ("Resize yyvs35")
+			end
+			yyvsc35 := yyvsc35 + yyInitial_yyvs_size
+			yyvs35 := yyspecial_routines35.resize (yyvs35, yyvsc35)
+		end
+	end
+	yyvs35.put (yyval35, yyvsp35)
 end
 		end
 
 	yy_do_action_22 is
-			--|#line 321 "eiffel.y"
+			--|#line <not available> "eiffel.y"
 		local
 			yyval33: ID_AS
 		do
---|#line 321 "eiffel.y"
+--|#line <not available> "eiffel.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'eiffel.y' at line 321")
+	std.error.put_line ("Executing parser user-code from file 'eiffel.y' at line <not available>")
 end
 
+yyval33 := yyvs33.item (yyvsp33) 
+if yy_parsing_status = yyContinue then
+	yyssp := yyssp - 2
+	yyvsp1 := yyvsp1 -1
+	yyvs33.put (yyval33, yyvsp33)
+end
+		end
+
+	yy_do_action_23 is
+			--|#line <not available> "eiffel.y"
+		local
+			yyval33: ID_AS
+		do
+--|#line <not available> "eiffel.y"
+debug ("GEYACC")
+	std.error.put_line ("Executing parser user-code from file 'eiffel.y' at line <not available>")
+end
 
 				if has_syntax_warning then
 					Error_handler.insert_warning (
@@ -2105,287 +3034,381 @@ end
 				end
 				yyval33 := Void
 			
-			yyval := yyval33
 if yy_parsing_status = yyContinue then
-	yyvsp := yyvsp + 1
-	if yyvsp >= yyvsc then
-		yyvsc := yyvsc + yyInitial_stack_size
-		yyvs := FIXED_ARRAY_.resize (yyvs, yyvsc)
-		debug ("GEYACC")
-			std.error.put_string ("Stack (yyvs) size increased to ")
-			std.error.put_integer (yyvsc)
-			std.error.put_new_line
+	yyssp := yyssp - 0
+	yyvsp33 := yyvsp33 + 1
+	if yyvsp33 >= yyvsc33 then
+		if yyvs33 = Void then
+			debug ("GEYACC")
+				std.error.put_line ("Create yyvs33")
+			end
+			create yyspecial_routines33
+			yyvsc33 := yyInitial_yyvs_size
+			yyvs33 := yyspecial_routines33.make (yyvsc33)
+		else
+			debug ("GEYACC")
+				std.error.put_line ("Resize yyvs33")
+			end
+			yyvsc33 := yyvsc33 + yyInitial_yyvs_size
+			yyvs33 := yyspecial_routines33.resize (yyvs33, yyvsc33)
 		end
 	end
-	yyvs.put (yyval, yyvsp)
-end
-		end
-
-	yy_do_action_23 is
-			--|#line 333 "eiffel.y"
-		local
-			yyval66: EIFFEL_LIST [ATOMIC_AS]
-		do
---|#line 333 "eiffel.y"
-debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'eiffel.y' at line 333")
-end
-
-
-				yyval66 := new_eiffel_list_atomic_as (Initial_index_terms_size)
-				yyval66.extend (yytype7 (yyvs.item (yyvsp)))
-			
-			yyval := yyval66
-if yy_parsing_status = yyContinue then
-	yyssp := yyssp - 1
-	yyvs.put (yyval, yyvsp)
+	yyvs33.put (yyval33, yyvsp33)
 end
 		end
 
 	yy_do_action_24 is
-			--|#line 338 "eiffel.y"
+			--|#line <not available> "eiffel.y"
 		local
 			yyval66: EIFFEL_LIST [ATOMIC_AS]
 		do
---|#line 338 "eiffel.y"
+--|#line <not available> "eiffel.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'eiffel.y' at line 338")
+	std.error.put_line ("Executing parser user-code from file 'eiffel.y' at line <not available>")
 end
 
-
-				yyval66 := yytype66 (yyvs.item (yyvsp - 2))
-				yyval66.extend (yytype7 (yyvs.item (yyvsp)))
+				yyval66 := new_eiffel_list_atomic_as (Initial_index_terms_size)
+				yyval66.extend (yyvs7.item (yyvsp7))
 			
-			yyval := yyval66
 if yy_parsing_status = yyContinue then
-	yyssp := yyssp - 3
-	yyvsp := yyvsp - 2
-	yyvs.put (yyval, yyvsp)
+	yyssp := yyssp - 1
+	yyvsp66 := yyvsp66 + 1
+	yyvsp7 := yyvsp7 -1
+	if yyvsp66 >= yyvsc66 then
+		if yyvs66 = Void then
+			debug ("GEYACC")
+				std.error.put_line ("Create yyvs66")
+			end
+			create yyspecial_routines66
+			yyvsc66 := yyInitial_yyvs_size
+			yyvs66 := yyspecial_routines66.make (yyvsc66)
+		else
+			debug ("GEYACC")
+				std.error.put_line ("Resize yyvs66")
+			end
+			yyvsc66 := yyvsc66 + yyInitial_yyvs_size
+			yyvs66 := yyspecial_routines66.resize (yyvs66, yyvsc66)
+		end
+	end
+	yyvs66.put (yyval66, yyvsp66)
 end
 		end
 
 	yy_do_action_25 is
-			--|#line 343 "eiffel.y"
+			--|#line <not available> "eiffel.y"
 		local
 			yyval66: EIFFEL_LIST [ATOMIC_AS]
 		do
---|#line 343 "eiffel.y"
+--|#line <not available> "eiffel.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'eiffel.y' at line 343")
+	std.error.put_line ("Executing parser user-code from file 'eiffel.y' at line <not available>")
 end
 
-
--- TO DO: remove this TE_SEMICOLON (see: INDEX_AS.index_list /= Void)
-				yyval66 := new_eiffel_list_atomic_as (0)
+				yyval66 := yyvs66.item (yyvsp66)
+				yyval66.extend (yyvs7.item (yyvsp7))
 			
-			yyval := yyval66
 if yy_parsing_status = yyContinue then
-	yyssp := yyssp - 1
-	yyvs.put (yyval, yyvsp)
+	yyssp := yyssp - 3
+	yyvsp1 := yyvsp1 -1
+	yyvsp7 := yyvsp7 -1
+	yyvs66.put (yyval66, yyvsp66)
 end
 		end
 
 	yy_do_action_26 is
-			--|#line 350 "eiffel.y"
+			--|#line <not available> "eiffel.y"
 		local
-			yyval7: ATOMIC_AS
+			yyval66: EIFFEL_LIST [ATOMIC_AS]
 		do
---|#line 350 "eiffel.y"
+--|#line <not available> "eiffel.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'eiffel.y' at line 350")
+	std.error.put_line ("Executing parser user-code from file 'eiffel.y' at line <not available>")
 end
 
-
-yyval7 := yytype33 (yyvs.item (yyvsp)) 
-			yyval := yyval7
+-- TO DO: remove this TE_SEMICOLON (see: INDEX_AS.index_list /= Void)
+				yyval66 := new_eiffel_list_atomic_as (0)
+			
 if yy_parsing_status = yyContinue then
 	yyssp := yyssp - 1
-	yyvs.put (yyval, yyvsp)
+	yyvsp66 := yyvsp66 + 1
+	yyvsp1 := yyvsp1 -1
+	if yyvsp66 >= yyvsc66 then
+		if yyvs66 = Void then
+			debug ("GEYACC")
+				std.error.put_line ("Create yyvs66")
+			end
+			create yyspecial_routines66
+			yyvsc66 := yyInitial_yyvs_size
+			yyvs66 := yyspecial_routines66.make (yyvsc66)
+		else
+			debug ("GEYACC")
+				std.error.put_line ("Resize yyvs66")
+			end
+			yyvsc66 := yyvsc66 + yyInitial_yyvs_size
+			yyvs66 := yyspecial_routines66.resize (yyvs66, yyvsc66)
+		end
+	end
+	yyvs66.put (yyval66, yyvsp66)
 end
 		end
 
 	yy_do_action_27 is
-			--|#line 352 "eiffel.y"
+			--|#line <not available> "eiffel.y"
 		local
 			yyval7: ATOMIC_AS
 		do
---|#line 352 "eiffel.y"
+--|#line <not available> "eiffel.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'eiffel.y' at line 352")
+	std.error.put_line ("Executing parser user-code from file 'eiffel.y' at line <not available>")
 end
 
-
-yyval7 := yytype7 (yyvs.item (yyvsp)) 
-			yyval := yyval7
+yyval7 := yyvs33.item (yyvsp33) 
 if yy_parsing_status = yyContinue then
 	yyssp := yyssp - 1
-	yyvs.put (yyval, yyvsp)
+	yyvsp7 := yyvsp7 + 1
+	yyvsp33 := yyvsp33 -1
+	if yyvsp7 >= yyvsc7 then
+		if yyvs7 = Void then
+			debug ("GEYACC")
+				std.error.put_line ("Create yyvs7")
+			end
+			create yyspecial_routines7
+			yyvsc7 := yyInitial_yyvs_size
+			yyvs7 := yyspecial_routines7.make (yyvsc7)
+		else
+			debug ("GEYACC")
+				std.error.put_line ("Resize yyvs7")
+			end
+			yyvsc7 := yyvsc7 + yyInitial_yyvs_size
+			yyvs7 := yyspecial_routines7.resize (yyvs7, yyvsc7)
+		end
+	end
+	yyvs7.put (yyval7, yyvsp7)
 end
 		end
 
 	yy_do_action_28 is
-			--|#line 354 "eiffel.y"
+			--|#line <not available> "eiffel.y"
 		local
 			yyval7: ATOMIC_AS
 		do
---|#line 354 "eiffel.y"
+--|#line <not available> "eiffel.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'eiffel.y' at line 354")
+	std.error.put_line ("Executing parser user-code from file 'eiffel.y' at line <not available>")
 end
 
-
-				create {CUSTOM_ATTRIBUTE_AS} yyval7.initialize (yytype20 (yyvs.item (yyvsp - 1)), Void)
-			
-			yyval := yyval7
+yyval7 := yyvs7.item (yyvsp7) 
 if yy_parsing_status = yyContinue then
-	yyssp := yyssp - 2
-	yyvsp := yyvsp - 1
-	yyvs.put (yyval, yyvsp)
+	yyssp := yyssp - 1
+	yyvs7.put (yyval7, yyvsp7)
 end
 		end
 
 	yy_do_action_29 is
-			--|#line 358 "eiffel.y"
+			--|#line <not available> "eiffel.y"
 		local
 			yyval7: ATOMIC_AS
 		do
---|#line 358 "eiffel.y"
+--|#line <not available> "eiffel.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'eiffel.y' at line 358")
+	std.error.put_line ("Executing parser user-code from file 'eiffel.y' at line <not available>")
 end
 
-
-				create {CUSTOM_ATTRIBUTE_AS} yyval7.initialize (yytype20 (yyvs.item (yyvsp - 2)), yytype62 (yyvs.item (yyvsp - 1)))
+				create {CUSTOM_ATTRIBUTE_AS} yyval7.initialize (yyvs20.item (yyvsp20), Void)
 			
-			yyval := yyval7
 if yy_parsing_status = yyContinue then
-	yyssp := yyssp - 3
-	yyvsp := yyvsp - 2
-	yyvs.put (yyval, yyvsp)
+	yyssp := yyssp - 2
+	yyvsp7 := yyvsp7 + 1
+	yyvsp20 := yyvsp20 -1
+	yyvsp1 := yyvsp1 -1
+	if yyvsp7 >= yyvsc7 then
+		if yyvs7 = Void then
+			debug ("GEYACC")
+				std.error.put_line ("Create yyvs7")
+			end
+			create yyspecial_routines7
+			yyvsc7 := yyInitial_yyvs_size
+			yyvs7 := yyspecial_routines7.make (yyvsc7)
+		else
+			debug ("GEYACC")
+				std.error.put_line ("Resize yyvs7")
+			end
+			yyvsc7 := yyvsc7 + yyInitial_yyvs_size
+			yyvs7 := yyspecial_routines7.resize (yyvs7, yyvsc7)
+		end
+	end
+	yyvs7.put (yyval7, yyvsp7)
 end
 		end
 
 	yy_do_action_30 is
-			--|#line 368 "eiffel.y"
+			--|#line <not available> "eiffel.y"
+		local
+			yyval7: ATOMIC_AS
 		do
---|#line 368 "eiffel.y"
+--|#line <not available> "eiffel.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'eiffel.y' at line 368")
+	std.error.put_line ("Executing parser user-code from file 'eiffel.y' at line <not available>")
 end
 
-			yyval := yyval_default;
-				is_deferred := False
-				is_expanded := False
-				is_separate := False
+				create {CUSTOM_ATTRIBUTE_AS} yyval7.initialize (yyvs20.item (yyvsp20), yyvs62.item (yyvsp62))
 			
-
 if yy_parsing_status = yyContinue then
-	yyssp := yyssp - 2
-	yyvsp := yyvsp - 1
-	yyvs.put (yyval, yyvsp)
+	yyssp := yyssp - 3
+	yyvsp7 := yyvsp7 + 1
+	yyvsp20 := yyvsp20 -1
+	yyvsp62 := yyvsp62 -1
+	yyvsp1 := yyvsp1 -1
+	if yyvsp7 >= yyvsc7 then
+		if yyvs7 = Void then
+			debug ("GEYACC")
+				std.error.put_line ("Create yyvs7")
+			end
+			create yyspecial_routines7
+			yyvsc7 := yyInitial_yyvs_size
+			yyvs7 := yyspecial_routines7.make (yyvsc7)
+		else
+			debug ("GEYACC")
+				std.error.put_line ("Resize yyvs7")
+			end
+			yyvsc7 := yyvsc7 + yyInitial_yyvs_size
+			yyvs7 := yyspecial_routines7.resize (yyvs7, yyvsc7)
+		end
+	end
+	yyvs7.put (yyval7, yyvsp7)
 end
 		end
 
 	yy_do_action_31 is
-			--|#line 374 "eiffel.y"
+			--|#line <not available> "eiffel.y"
+		local
+			yyval1: ANY
 		do
---|#line 374 "eiffel.y"
+--|#line <not available> "eiffel.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'eiffel.y' at line 374")
+	std.error.put_line ("Executing parser user-code from file 'eiffel.y' at line <not available>")
 end
 
-			yyval := yyval_default;
+				is_deferred := False
+				is_expanded := False
+				is_separate := False
+			
+if yy_parsing_status = yyContinue then
+	yyssp := yyssp - 2
+	yyvsp1 := yyvsp1 -1
+	yyvs1.put (yyval1, yyvsp1)
+end
+		end
+
+	yy_do_action_32 is
+			--|#line <not available> "eiffel.y"
+		local
+			yyval1: ANY
+		do
+--|#line <not available> "eiffel.y"
+debug ("GEYACC")
+	std.error.put_line ("Executing parser user-code from file 'eiffel.y' at line <not available>")
+end
+
 				is_frozen_class := False
 				is_deferred := True
 				is_expanded := False
 				is_separate := False
 			
-
 if yy_parsing_status = yyContinue then
 	yyssp := yyssp - 2
-	yyvsp := yyvsp - 1
-	yyvs.put (yyval, yyvsp)
-end
-		end
-
-	yy_do_action_32 is
-			--|#line 381 "eiffel.y"
-		do
---|#line 381 "eiffel.y"
-debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'eiffel.y' at line 381")
-end
-
-			yyval := yyval_default;
-				is_deferred := False
-				is_expanded := True
-				is_separate := False
-			
-
-if yy_parsing_status = yyContinue then
-	yyssp := yyssp - 3
-	yyvsp := yyvsp - 2
-	yyvs.put (yyval, yyvsp)
+	yyvsp1 := yyvsp1 -1
+	yyvs1.put (yyval1, yyvsp1)
 end
 		end
 
 	yy_do_action_33 is
-			--|#line 387 "eiffel.y"
+			--|#line <not available> "eiffel.y"
+		local
+			yyval1: ANY
 		do
---|#line 387 "eiffel.y"
+--|#line <not available> "eiffel.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'eiffel.y' at line 387")
+	std.error.put_line ("Executing parser user-code from file 'eiffel.y' at line <not available>")
 end
 
-			yyval := yyval_default;
 				is_deferred := False
-				is_expanded := False
-				is_separate := True
+				is_expanded := True
+				is_separate := False
 			
-
 if yy_parsing_status = yyContinue then
 	yyssp := yyssp - 3
-	yyvsp := yyvsp - 2
-	yyvs.put (yyval, yyvsp)
+	yyvsp1 := yyvsp1 -2
+	yyvs1.put (yyval1, yyvsp1)
 end
 		end
 
 	yy_do_action_34 is
-			--|#line 395 "eiffel.y"
+			--|#line <not available> "eiffel.y"
+		local
+			yyval1: ANY
 		do
---|#line 395 "eiffel.y"
+--|#line <not available> "eiffel.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'eiffel.y' at line 395")
+	std.error.put_line ("Executing parser user-code from file 'eiffel.y' at line <not available>")
 end
 
-			yyval := yyval_default;
-				is_frozen_class := False
+				is_deferred := False
+				is_expanded := False
+				is_separate := True
 			
-
 if yy_parsing_status = yyContinue then
-	yyvsp := yyvsp + 1
-	if yyvsp >= yyvsc then
-		yyvsc := yyvsc + yyInitial_stack_size
-		yyvs := FIXED_ARRAY_.resize (yyvs, yyvsc)
-		debug ("GEYACC")
-			std.error.put_string ("Stack (yyvs) size increased to ")
-			std.error.put_integer (yyvsc)
-			std.error.put_new_line
-		end
-	end
-	yyvs.put (yyval, yyvsp)
+	yyssp := yyssp - 3
+	yyvsp1 := yyvsp1 -2
+	yyvs1.put (yyval1, yyvsp1)
 end
 		end
 
 	yy_do_action_35 is
-			--|#line 399 "eiffel.y"
+			--|#line <not available> "eiffel.y"
+		local
+			yyval1: ANY
 		do
---|#line 399 "eiffel.y"
+--|#line <not available> "eiffel.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'eiffel.y' at line 399")
+	std.error.put_line ("Executing parser user-code from file 'eiffel.y' at line <not available>")
 end
 
-			yyval := yyval_default;
+				is_frozen_class := False
+			
+if yy_parsing_status = yyContinue then
+	yyssp := yyssp - 0
+	yyvsp1 := yyvsp1 + 1
+	if yyvsp1 >= yyvsc1 then
+		if yyvs1 = Void then
+			debug ("GEYACC")
+				std.error.put_line ("Create yyvs1")
+			end
+			create yyspecial_routines1
+			yyvsc1 := yyInitial_yyvs_size
+			yyvs1 := yyspecial_routines1.make (yyvsc1)
+		else
+			debug ("GEYACC")
+				std.error.put_line ("Resize yyvs1")
+			end
+			yyvsc1 := yyvsc1 + yyInitial_yyvs_size
+			yyvs1 := yyspecial_routines1.resize (yyvs1, yyvsc1)
+		end
+	end
+	yyvs1.put (yyval1, yyvsp1)
+end
+		end
+
+	yy_do_action_36 is
+			--|#line <not available> "eiffel.y"
+		local
+			yyval1: ANY
+		do
+--|#line <not available> "eiffel.y"
+debug ("GEYACC")
+	std.error.put_line ("Executing parser user-code from file 'eiffel.y' at line <not available>")
+end
+
 					-- I'm adding a few comments line
 					-- here because otherwise the generated
 					-- parser is very different from the
@@ -2393,49 +3416,57 @@ end
 					-- emitted.
 				is_frozen_class := True
 			
-
 if yy_parsing_status = yyContinue then
 	yyssp := yyssp - 1
-	yyvs.put (yyval, yyvsp)
-end
-		end
-
-	yy_do_action_36 is
-			--|#line 410 "eiffel.y"
-		do
---|#line 410 "eiffel.y"
-debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'eiffel.y' at line 410")
-end
-
-			yyval := yyval_default;
-				is_external_class := False
-			
-
-if yy_parsing_status = yyContinue then
-	yyvsp := yyvsp + 1
-	if yyvsp >= yyvsc then
-		yyvsc := yyvsc + yyInitial_stack_size
-		yyvs := FIXED_ARRAY_.resize (yyvs, yyvsc)
-		debug ("GEYACC")
-			std.error.put_string ("Stack (yyvs) size increased to ")
-			std.error.put_integer (yyvsc)
-			std.error.put_new_line
-		end
-	end
-	yyvs.put (yyval, yyvsp)
+	yyvs1.put (yyval1, yyvsp1)
 end
 		end
 
 	yy_do_action_37 is
-			--|#line 414 "eiffel.y"
+			--|#line <not available> "eiffel.y"
+		local
+			yyval1: ANY
 		do
---|#line 414 "eiffel.y"
+--|#line <not available> "eiffel.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'eiffel.y' at line 414")
+	std.error.put_line ("Executing parser user-code from file 'eiffel.y' at line <not available>")
 end
 
-			yyval := yyval_default;
+				is_external_class := False
+			
+if yy_parsing_status = yyContinue then
+	yyssp := yyssp - 0
+	yyvsp1 := yyvsp1 + 1
+	if yyvsp1 >= yyvsc1 then
+		if yyvs1 = Void then
+			debug ("GEYACC")
+				std.error.put_line ("Create yyvs1")
+			end
+			create yyspecial_routines1
+			yyvsc1 := yyInitial_yyvs_size
+			yyvs1 := yyspecial_routines1.make (yyvsc1)
+		else
+			debug ("GEYACC")
+				std.error.put_line ("Resize yyvs1")
+			end
+			yyvsc1 := yyvsc1 + yyInitial_yyvs_size
+			yyvs1 := yyspecial_routines1.resize (yyvs1, yyvsc1)
+		end
+	end
+	yyvs1.put (yyval1, yyvsp1)
+end
+		end
+
+	yy_do_action_38 is
+			--|#line <not available> "eiffel.y"
+		local
+			yyval1: ANY
+		do
+--|#line <not available> "eiffel.y"
+debug ("GEYACC")
+	std.error.put_line ("Executing parser user-code from file 'eiffel.y' at line <not available>")
+end
+
 				if il_parser then
 					is_external_class := True
 				else
@@ -2443,3894 +3474,5253 @@ end
 					raise_error
 				end
 			
-
 if yy_parsing_status = yyContinue then
 	yyssp := yyssp - 1
-	yyvs.put (yyval, yyvsp)
-end
-		end
-
-	yy_do_action_38 is
-			--|#line 429 "eiffel.y"
-		local
-			yyval60: STRING_AS
-		do
---|#line 429 "eiffel.y"
-debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'eiffel.y' at line 429")
-end
-
-
-
-			yyval := yyval60
-if yy_parsing_status = yyContinue then
-	yyvsp := yyvsp + 1
-	if yyvsp >= yyvsc then
-		yyvsc := yyvsc + yyInitial_stack_size
-		yyvs := FIXED_ARRAY_.resize (yyvs, yyvsc)
-		debug ("GEYACC")
-			std.error.put_string ("Stack (yyvs) size increased to ")
-			std.error.put_integer (yyvsc)
-			std.error.put_new_line
-		end
-	end
-	yyvs.put (yyval, yyvsp)
+	yyvs1.put (yyval1, yyvsp1)
 end
 		end
 
 	yy_do_action_39 is
-			--|#line 431 "eiffel.y"
+			--|#line <not available> "eiffel.y"
 		local
 			yyval60: STRING_AS
 		do
---|#line 431 "eiffel.y"
+--|#line <not available> "eiffel.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'eiffel.y' at line 431")
+	std.error.put_line ("Executing parser user-code from file 'eiffel.y' at line <not available>")
 end
 
 
-yyval60 := yytype60 (yyvs.item (yyvsp)) 
-			yyval := yyval60
 if yy_parsing_status = yyContinue then
-	yyssp := yyssp - 2
-	yyvsp := yyvsp - 1
-	yyvs.put (yyval, yyvsp)
+	yyssp := yyssp - 0
+	yyvsp60 := yyvsp60 + 1
+	if yyvsp60 >= yyvsc60 then
+		if yyvs60 = Void then
+			debug ("GEYACC")
+				std.error.put_line ("Create yyvs60")
+			end
+			create yyspecial_routines60
+			yyvsc60 := yyInitial_yyvs_size
+			yyvs60 := yyspecial_routines60.make (yyvsc60)
+		else
+			debug ("GEYACC")
+				std.error.put_line ("Resize yyvs60")
+			end
+			yyvsc60 := yyvsc60 + yyInitial_yyvs_size
+			yyvs60 := yyspecial_routines60.resize (yyvs60, yyvsc60)
+		end
+	end
+	yyvs60.put (yyval60, yyvsp60)
 end
 		end
 
 	yy_do_action_40 is
-			--|#line 438 "eiffel.y"
+			--|#line <not available> "eiffel.y"
 		local
-			yyval74: EIFFEL_LIST [FEATURE_CLAUSE_AS]
+			yyval60: STRING_AS
 		do
---|#line 438 "eiffel.y"
+--|#line <not available> "eiffel.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'eiffel.y' at line 438")
+	std.error.put_line ("Executing parser user-code from file 'eiffel.y' at line <not available>")
 end
 
-
-
-			yyval := yyval74
+yyval60 := yyvs60.item (yyvsp60) 
 if yy_parsing_status = yyContinue then
-	yyvsp := yyvsp + 1
-	if yyvsp >= yyvsc then
-		yyvsc := yyvsc + yyInitial_stack_size
-		yyvs := FIXED_ARRAY_.resize (yyvs, yyvsc)
-		debug ("GEYACC")
-			std.error.put_string ("Stack (yyvs) size increased to ")
-			std.error.put_integer (yyvsc)
-			std.error.put_new_line
-		end
-	end
-	yyvs.put (yyval, yyvsp)
+	yyssp := yyssp - 2
+	yyvsp1 := yyvsp1 -1
+	yyvs60.put (yyval60, yyvsp60)
 end
 		end
 
 	yy_do_action_41 is
-			--|#line 440 "eiffel.y"
+			--|#line <not available> "eiffel.y"
 		local
 			yyval74: EIFFEL_LIST [FEATURE_CLAUSE_AS]
 		do
---|#line 440 "eiffel.y"
+--|#line <not available> "eiffel.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'eiffel.y' at line 440")
+	std.error.put_line ("Executing parser user-code from file 'eiffel.y' at line <not available>")
 end
 
 
-				yyval74 := yytype74 (yyvs.item (yyvsp))
-				if yyval74.is_empty then
-					yyval74 := Void
-				end
-			
-			yyval := yyval74
 if yy_parsing_status = yyContinue then
-	yyssp := yyssp - 1
-	yyvs.put (yyval, yyvsp)
+	yyssp := yyssp - 0
+	yyvsp74 := yyvsp74 + 1
+	if yyvsp74 >= yyvsc74 then
+		if yyvs74 = Void then
+			debug ("GEYACC")
+				std.error.put_line ("Create yyvs74")
+			end
+			create yyspecial_routines74
+			yyvsc74 := yyInitial_yyvs_size
+			yyvs74 := yyspecial_routines74.make (yyvsc74)
+		else
+			debug ("GEYACC")
+				std.error.put_line ("Resize yyvs74")
+			end
+			yyvsc74 := yyvsc74 + yyInitial_yyvs_size
+			yyvs74 := yyspecial_routines74.resize (yyvs74, yyvsc74)
+		end
+	end
+	yyvs74.put (yyval74, yyvsp74)
 end
 		end
 
 	yy_do_action_42 is
-			--|#line 449 "eiffel.y"
+			--|#line <not available> "eiffel.y"
 		local
 			yyval74: EIFFEL_LIST [FEATURE_CLAUSE_AS]
 		do
---|#line 449 "eiffel.y"
+--|#line <not available> "eiffel.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'eiffel.y' at line 449")
+	std.error.put_line ("Executing parser user-code from file 'eiffel.y' at line <not available>")
 end
 
-
-				yyval74 := new_eiffel_list_feature_clause_as (Initial_feature_clause_list_size)
-				add_to_feature_clause_list (yyval74, yytype29 (yyvs.item (yyvsp)))
+				yyval74 := yyvs74.item (yyvsp74)
+				if yyval74.is_empty then
+					yyval74 := Void
+				end
 			
-			yyval := yyval74
 if yy_parsing_status = yyContinue then
 	yyssp := yyssp - 1
-	yyvs.put (yyval, yyvsp)
+	yyvs74.put (yyval74, yyvsp74)
 end
 		end
 
 	yy_do_action_43 is
-			--|#line 454 "eiffel.y"
+			--|#line <not available> "eiffel.y"
 		local
 			yyval74: EIFFEL_LIST [FEATURE_CLAUSE_AS]
 		do
---|#line 454 "eiffel.y"
+--|#line <not available> "eiffel.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'eiffel.y' at line 454")
+	std.error.put_line ("Executing parser user-code from file 'eiffel.y' at line <not available>")
 end
 
-
-				yyval74 := yytype74 (yyvs.item (yyvsp - 1))
-				add_to_feature_clause_list (yyval74, yytype29 (yyvs.item (yyvsp)))
+				yyval74 := new_eiffel_list_feature_clause_as (Initial_feature_clause_list_size)
+				add_to_feature_clause_list (yyval74, yyvs29.item (yyvsp29))
 			
-			yyval := yyval74
 if yy_parsing_status = yyContinue then
-	yyssp := yyssp - 2
-	yyvsp := yyvsp - 1
-	yyvs.put (yyval, yyvsp)
+	yyssp := yyssp - 1
+	yyvsp74 := yyvsp74 + 1
+	yyvsp29 := yyvsp29 -1
+	if yyvsp74 >= yyvsc74 then
+		if yyvs74 = Void then
+			debug ("GEYACC")
+				std.error.put_line ("Create yyvs74")
+			end
+			create yyspecial_routines74
+			yyvsc74 := yyInitial_yyvs_size
+			yyvs74 := yyspecial_routines74.make (yyvsc74)
+		else
+			debug ("GEYACC")
+				std.error.put_line ("Resize yyvs74")
+			end
+			yyvsc74 := yyvsc74 + yyInitial_yyvs_size
+			yyvs74 := yyspecial_routines74.resize (yyvs74, yyvsc74)
+		end
+	end
+	yyvs74.put (yyval74, yyvsp74)
 end
 		end
 
 	yy_do_action_44 is
-			--|#line 461 "eiffel.y"
+			--|#line <not available> "eiffel.y"
 		local
-			yyval29: FEATURE_CLAUSE_AS
+			yyval74: EIFFEL_LIST [FEATURE_CLAUSE_AS]
 		do
---|#line 461 "eiffel.y"
+--|#line <not available> "eiffel.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'eiffel.y' at line 461")
+	std.error.put_line ("Executing parser user-code from file 'eiffel.y' at line <not available>")
 end
 
-
-yyval29 := new_feature_clause_as (Void, new_eiffel_list_feature_as (0), fclause_pos) 
-			yyval := yyval29
+				yyval74 := yyvs74.item (yyvsp74)
+				add_to_feature_clause_list (yyval74, yyvs29.item (yyvsp29))
+			
 if yy_parsing_status = yyContinue then
-	yyssp := yyssp - 1
-	yyvs.put (yyval, yyvsp)
+	yyssp := yyssp - 2
+	yyvsp29 := yyvsp29 -1
+	yyvs74.put (yyval74, yyvsp74)
 end
 		end
 
 	yy_do_action_45 is
-			--|#line 463 "eiffel.y"
+			--|#line <not available> "eiffel.y"
 		local
 			yyval29: FEATURE_CLAUSE_AS
 		do
---|#line 463 "eiffel.y"
+--|#line <not available> "eiffel.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'eiffel.y' at line 463")
+	std.error.put_line ("Executing parser user-code from file 'eiffel.y' at line <not available>")
 end
 
-
-yyval29 := new_feature_clause_as (yytype15 (yyvs.item (yyvsp - 1)), yytype73 (yyvs.item (yyvsp)), fclause_pos) 
-			yyval := yyval29
+yyval29 := new_feature_clause_as (Void, new_eiffel_list_feature_as (0), fclause_pos) 
 if yy_parsing_status = yyContinue then
-	yyssp := yyssp - 2
-	yyvsp := yyvsp - 1
-	yyvs.put (yyval, yyvsp)
+	yyssp := yyssp - 1
+	yyvsp29 := yyvsp29 + 1
+	yyvsp15 := yyvsp15 -1
+	if yyvsp29 >= yyvsc29 then
+		if yyvs29 = Void then
+			debug ("GEYACC")
+				std.error.put_line ("Create yyvs29")
+			end
+			create yyspecial_routines29
+			yyvsc29 := yyInitial_yyvs_size
+			yyvs29 := yyspecial_routines29.make (yyvsc29)
+		else
+			debug ("GEYACC")
+				std.error.put_line ("Resize yyvs29")
+			end
+			yyvsc29 := yyvsc29 + yyInitial_yyvs_size
+			yyvs29 := yyspecial_routines29.resize (yyvs29, yyvsc29)
+		end
+	end
+	yyvs29.put (yyval29, yyvsp29)
 end
 		end
 
 	yy_do_action_46 is
-			--|#line 467 "eiffel.y"
+			--|#line <not available> "eiffel.y"
 		local
-			yyval15: CLIENT_AS
+			yyval29: FEATURE_CLAUSE_AS
 		do
---|#line 467 "eiffel.y"
+--|#line <not available> "eiffel.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'eiffel.y' at line 467")
+	std.error.put_line ("Executing parser user-code from file 'eiffel.y' at line <not available>")
 end
 
-
-yyval15 := yytype15 (yyvs.item (yyvsp)) 
-			yyval := yyval15
+yyval29 := new_feature_clause_as (yyvs15.item (yyvsp15), yyvs73.item (yyvsp73), fclause_pos) 
 if yy_parsing_status = yyContinue then
-	yyssp := yyssp - 3
-	yyvsp := yyvsp - 2
-	yyvs.put (yyval, yyvsp)
+	yyssp := yyssp - 2
+	yyvsp29 := yyvsp29 + 1
+	yyvsp15 := yyvsp15 -1
+	yyvsp73 := yyvsp73 -1
+	if yyvsp29 >= yyvsc29 then
+		if yyvs29 = Void then
+			debug ("GEYACC")
+				std.error.put_line ("Create yyvs29")
+			end
+			create yyspecial_routines29
+			yyvsc29 := yyInitial_yyvs_size
+			yyvs29 := yyspecial_routines29.make (yyvsc29)
+		else
+			debug ("GEYACC")
+				std.error.put_line ("Resize yyvs29")
+			end
+			yyvsc29 := yyvsc29 + yyInitial_yyvs_size
+			yyvs29 := yyspecial_routines29.resize (yyvs29, yyvsc29)
+		end
+	end
+	yyvs29.put (yyval29, yyvsp29)
 end
 		end
 
 	yy_do_action_47 is
-			--|#line 467 "eiffel.y"
+			--|#line <not available> "eiffel.y"
 		local
 			yyval15: CLIENT_AS
 		do
---|#line 467 "eiffel.y"
+--|#line <not available> "eiffel.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'eiffel.y' at line 467")
+	std.error.put_line ("Executing parser user-code from file 'eiffel.y' at line <not available>")
 end
 
-
-				inherit_context := False
-				fclause_pos := current_position.twin
-			
-			yyval := yyval15
+yyval15 := yyvs15.item (yyvsp15) 
 if yy_parsing_status = yyContinue then
-	yyvsp := yyvsp + 1
-	if yyvsp >= yyvsc then
-		yyvsc := yyvsc + yyInitial_stack_size
-		yyvs := FIXED_ARRAY_.resize (yyvs, yyvsc)
-		debug ("GEYACC")
-			std.error.put_string ("Stack (yyvs) size increased to ")
-			std.error.put_integer (yyvsc)
-			std.error.put_new_line
-		end
-	end
-	yyvs.put (yyval, yyvsp)
+	yyssp := yyssp - 3
+	yyvsp15 := yyvsp15 -1
+	yyvsp1 := yyvsp1 -1
+	yyvs15.put (yyval15, yyvsp15)
 end
 		end
 
 	yy_do_action_48 is
-			--|#line 476 "eiffel.y"
+			--|#line <not available> "eiffel.y"
 		local
 			yyval15: CLIENT_AS
 		do
---|#line 476 "eiffel.y"
+--|#line <not available> "eiffel.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'eiffel.y' at line 476")
+	std.error.put_line ("Executing parser user-code from file 'eiffel.y' at line <not available>")
 end
 
-
-
-			yyval := yyval15
+				inherit_context := False
+				fclause_pos := current_position.twin
+			
 if yy_parsing_status = yyContinue then
-	yyvsp := yyvsp + 1
-	if yyvsp >= yyvsc then
-		yyvsc := yyvsc + yyInitial_stack_size
-		yyvs := FIXED_ARRAY_.resize (yyvs, yyvsc)
-		debug ("GEYACC")
-			std.error.put_string ("Stack (yyvs) size increased to ")
-			std.error.put_integer (yyvsc)
-			std.error.put_new_line
+	yyssp := yyssp - 0
+	yyvsp15 := yyvsp15 + 1
+	if yyvsp15 >= yyvsc15 then
+		if yyvs15 = Void then
+			debug ("GEYACC")
+				std.error.put_line ("Create yyvs15")
+			end
+			create yyspecial_routines15
+			yyvsc15 := yyInitial_yyvs_size
+			yyvs15 := yyspecial_routines15.make (yyvsc15)
+		else
+			debug ("GEYACC")
+				std.error.put_line ("Resize yyvs15")
+			end
+			yyvsc15 := yyvsc15 + yyInitial_yyvs_size
+			yyvs15 := yyspecial_routines15.resize (yyvs15, yyvsc15)
 		end
 	end
-	yyvs.put (yyval, yyvsp)
+	yyvs15.put (yyval15, yyvsp15)
 end
 		end
 
 	yy_do_action_49 is
-			--|#line 478 "eiffel.y"
+			--|#line <not available> "eiffel.y"
 		local
 			yyval15: CLIENT_AS
 		do
---|#line 478 "eiffel.y"
+--|#line <not available> "eiffel.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'eiffel.y' at line 478")
+	std.error.put_line ("Executing parser user-code from file 'eiffel.y' at line <not available>")
 end
 
 
-yyval15 := new_client_as (yytype78 (yyvs.item (yyvsp))) 
-			yyval := yyval15
 if yy_parsing_status = yyContinue then
-	yyssp := yyssp - 1
-	yyvs.put (yyval, yyvsp)
+	yyssp := yyssp - 0
+	yyvsp15 := yyvsp15 + 1
+	if yyvsp15 >= yyvsc15 then
+		if yyvs15 = Void then
+			debug ("GEYACC")
+				std.error.put_line ("Create yyvs15")
+			end
+			create yyspecial_routines15
+			yyvsc15 := yyInitial_yyvs_size
+			yyvs15 := yyspecial_routines15.make (yyvsc15)
+		else
+			debug ("GEYACC")
+				std.error.put_line ("Resize yyvs15")
+			end
+			yyvsc15 := yyvsc15 + yyInitial_yyvs_size
+			yyvs15 := yyspecial_routines15.resize (yyvs15, yyvsc15)
+		end
+	end
+	yyvs15.put (yyval15, yyvsp15)
 end
 		end
 
 	yy_do_action_50 is
-			--|#line 482 "eiffel.y"
+			--|#line <not available> "eiffel.y"
 		local
-			yyval78: EIFFEL_LIST [ID_AS]
+			yyval15: CLIENT_AS
 		do
---|#line 482 "eiffel.y"
+--|#line <not available> "eiffel.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'eiffel.y' at line 482")
+	std.error.put_line ("Executing parser user-code from file 'eiffel.y' at line <not available>")
 end
 
-
-				yyval78 := new_eiffel_list_id_as (1)
-				yyval78.extend (new_none_id_as)
-			
-			yyval := yyval78
+yyval15 := new_client_as (yyvs78.item (yyvsp78)) 
 if yy_parsing_status = yyContinue then
-	yyssp := yyssp - 2
-	yyvsp := yyvsp - 1
-	yyvs.put (yyval, yyvsp)
+	yyssp := yyssp - 1
+	yyvsp15 := yyvsp15 + 1
+	yyvsp78 := yyvsp78 -1
+	if yyvsp15 >= yyvsc15 then
+		if yyvs15 = Void then
+			debug ("GEYACC")
+				std.error.put_line ("Create yyvs15")
+			end
+			create yyspecial_routines15
+			yyvsc15 := yyInitial_yyvs_size
+			yyvs15 := yyspecial_routines15.make (yyvsc15)
+		else
+			debug ("GEYACC")
+				std.error.put_line ("Resize yyvs15")
+			end
+			yyvsc15 := yyvsc15 + yyInitial_yyvs_size
+			yyvs15 := yyspecial_routines15.resize (yyvs15, yyvsc15)
+		end
+	end
+	yyvs15.put (yyval15, yyvsp15)
 end
 		end
 
 	yy_do_action_51 is
-			--|#line 487 "eiffel.y"
+			--|#line <not available> "eiffel.y"
 		local
 			yyval78: EIFFEL_LIST [ID_AS]
 		do
---|#line 487 "eiffel.y"
+--|#line <not available> "eiffel.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'eiffel.y' at line 487")
+	std.error.put_line ("Executing parser user-code from file 'eiffel.y' at line <not available>")
 end
 
-
-yyval78 := yytype78 (yyvs.item (yyvsp - 1)) 
-			yyval := yyval78
+				yyval78 := new_eiffel_list_id_as (1)
+				yyval78.extend (new_none_id_as)
+			
 if yy_parsing_status = yyContinue then
-	yyssp := yyssp - 3
-	yyvsp := yyvsp - 2
-	yyvs.put (yyval, yyvsp)
+	yyssp := yyssp - 2
+	yyvsp78 := yyvsp78 + 1
+	yyvsp1 := yyvsp1 -2
+	if yyvsp78 >= yyvsc78 then
+		if yyvs78 = Void then
+			debug ("GEYACC")
+				std.error.put_line ("Create yyvs78")
+			end
+			create yyspecial_routines78
+			yyvsc78 := yyInitial_yyvs_size
+			yyvs78 := yyspecial_routines78.make (yyvsc78)
+		else
+			debug ("GEYACC")
+				std.error.put_line ("Resize yyvs78")
+			end
+			yyvsc78 := yyvsc78 + yyInitial_yyvs_size
+			yyvs78 := yyspecial_routines78.resize (yyvs78, yyvsc78)
+		end
+	end
+	yyvs78.put (yyval78, yyvsp78)
 end
 		end
 
 	yy_do_action_52 is
-			--|#line 491 "eiffel.y"
+			--|#line <not available> "eiffel.y"
 		local
 			yyval78: EIFFEL_LIST [ID_AS]
 		do
---|#line 491 "eiffel.y"
+--|#line <not available> "eiffel.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'eiffel.y' at line 491")
+	std.error.put_line ("Executing parser user-code from file 'eiffel.y' at line <not available>")
 end
 
-
-				yyval78 := new_eiffel_list_id_as (Initial_class_list_size)
-				yyval78.extend (yytype92 (yyvs.item (yyvsp)).first)
-				yytype92 (yyvs.item (yyvsp)).second.set_node (new_class_type_as (yytype92 (yyvs.item (yyvsp)).first, Void, False, False))
-			
-			yyval := yyval78
+yyval78 := yyvs78.item (yyvsp78) 
 if yy_parsing_status = yyContinue then
-	yyssp := yyssp - 1
-	yyvs.put (yyval, yyvsp)
+	yyssp := yyssp - 3
+	yyvsp1 := yyvsp1 -2
+	yyvs78.put (yyval78, yyvsp78)
 end
 		end
 
 	yy_do_action_53 is
-			--|#line 497 "eiffel.y"
+			--|#line <not available> "eiffel.y"
 		local
 			yyval78: EIFFEL_LIST [ID_AS]
 		do
---|#line 497 "eiffel.y"
+--|#line <not available> "eiffel.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'eiffel.y' at line 497")
+	std.error.put_line ("Executing parser user-code from file 'eiffel.y' at line <not available>")
 end
 
-
-				yyval78 := yytype78 (yyvs.item (yyvsp - 2))
-				yyval78.extend (yytype92 (yyvs.item (yyvsp)).first)
-				yytype92 (yyvs.item (yyvsp)).second.set_node (new_class_type_as (yytype92 (yyvs.item (yyvsp)).first, Void, False, False))
+				yyval78 := new_eiffel_list_id_as (Initial_class_list_size)
+				yyval78.extend (yyvs92.item (yyvsp92).first)
+				yyvs92.item (yyvsp92).second.set_node (new_class_type_as (yyvs92.item (yyvsp92).first, Void, False, False))
 			
-			yyval := yyval78
 if yy_parsing_status = yyContinue then
-	yyssp := yyssp - 3
-	yyvsp := yyvsp - 2
-	yyvs.put (yyval, yyvsp)
+	yyssp := yyssp - 1
+	yyvsp78 := yyvsp78 + 1
+	yyvsp92 := yyvsp92 -1
+	if yyvsp78 >= yyvsc78 then
+		if yyvs78 = Void then
+			debug ("GEYACC")
+				std.error.put_line ("Create yyvs78")
+			end
+			create yyspecial_routines78
+			yyvsc78 := yyInitial_yyvs_size
+			yyvs78 := yyspecial_routines78.make (yyvsc78)
+		else
+			debug ("GEYACC")
+				std.error.put_line ("Resize yyvs78")
+			end
+			yyvsc78 := yyvsc78 + yyInitial_yyvs_size
+			yyvs78 := yyspecial_routines78.resize (yyvs78, yyvsc78)
+		end
+	end
+	yyvs78.put (yyval78, yyvsp78)
 end
 		end
 
 	yy_do_action_54 is
-			--|#line 505 "eiffel.y"
+			--|#line <not available> "eiffel.y"
 		local
-			yyval73: EIFFEL_LIST [FEATURE_AS]
+			yyval78: EIFFEL_LIST [ID_AS]
 		do
---|#line 505 "eiffel.y"
+--|#line <not available> "eiffel.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'eiffel.y' at line 505")
+	std.error.put_line ("Executing parser user-code from file 'eiffel.y' at line <not available>")
 end
 
-
-				yyval73 := new_eiffel_list_feature_as (Initial_feature_declaration_list_size)
-				yyval73.extend (yytype28 (yyvs.item (yyvsp)))
+				yyval78 := yyvs78.item (yyvsp78)
+				yyval78.extend (yyvs92.item (yyvsp92).first)
+				yyvs92.item (yyvsp92).second.set_node (new_class_type_as (yyvs92.item (yyvsp92).first, Void, False, False))
 			
-			yyval := yyval73
 if yy_parsing_status = yyContinue then
-	yyssp := yyssp - 1
-	yyvs.put (yyval, yyvsp)
+	yyssp := yyssp - 3
+	yyvsp1 := yyvsp1 -1
+	yyvsp92 := yyvsp92 -1
+	yyvs78.put (yyval78, yyvsp78)
 end
 		end
 
 	yy_do_action_55 is
-			--|#line 510 "eiffel.y"
+			--|#line <not available> "eiffel.y"
 		local
 			yyval73: EIFFEL_LIST [FEATURE_AS]
 		do
---|#line 510 "eiffel.y"
+--|#line <not available> "eiffel.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'eiffel.y' at line 510")
+	std.error.put_line ("Executing parser user-code from file 'eiffel.y' at line <not available>")
 end
 
-
-				yyval73 := yytype73 (yyvs.item (yyvsp - 1))
-				yyval73.extend (yytype28 (yyvs.item (yyvsp)))
+				yyval73 := new_eiffel_list_feature_as (Initial_feature_declaration_list_size)
+				yyval73.extend (yyvs28.item (yyvsp28))
 			
-			yyval := yyval73
 if yy_parsing_status = yyContinue then
-	yyssp := yyssp - 2
-	yyvsp := yyvsp - 1
-	yyvs.put (yyval, yyvsp)
+	yyssp := yyssp - 1
+	yyvsp73 := yyvsp73 + 1
+	yyvsp28 := yyvsp28 -1
+	if yyvsp73 >= yyvsc73 then
+		if yyvs73 = Void then
+			debug ("GEYACC")
+				std.error.put_line ("Create yyvs73")
+			end
+			create yyspecial_routines73
+			yyvsc73 := yyInitial_yyvs_size
+			yyvs73 := yyspecial_routines73.make (yyvsc73)
+		else
+			debug ("GEYACC")
+				std.error.put_line ("Resize yyvs73")
+			end
+			yyvsc73 := yyvsc73 + yyInitial_yyvs_size
+			yyvs73 := yyspecial_routines73.resize (yyvs73, yyvsc73)
+		end
+	end
+	yyvs73.put (yyval73, yyvsp73)
 end
 		end
 
 	yy_do_action_56 is
-			--|#line 517 "eiffel.y"
+			--|#line <not available> "eiffel.y"
+		local
+			yyval73: EIFFEL_LIST [FEATURE_AS]
 		do
---|#line 517 "eiffel.y"
+--|#line <not available> "eiffel.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'eiffel.y' at line 517")
+	std.error.put_line ("Executing parser user-code from file 'eiffel.y' at line <not available>")
 end
 
-			yyval := yyval_default;
-
-
+				yyval73 := yyvs73.item (yyvsp73)
+				yyval73.extend (yyvs28.item (yyvsp28))
+			
 if yy_parsing_status = yyContinue then
-	yyvsp := yyvsp + 1
-	if yyvsp >= yyvsc then
-		yyvsc := yyvsc + yyInitial_stack_size
-		yyvs := FIXED_ARRAY_.resize (yyvs, yyvsc)
-		debug ("GEYACC")
-			std.error.put_string ("Stack (yyvs) size increased to ")
-			std.error.put_integer (yyvsc)
-			std.error.put_new_line
-		end
-	end
-	yyvs.put (yyval, yyvsp)
+	yyssp := yyssp - 2
+	yyvsp28 := yyvsp28 -1
+	yyvs73.put (yyval73, yyvsp73)
 end
 		end
 
 	yy_do_action_57 is
-			--|#line 518 "eiffel.y"
+			--|#line <not available> "eiffel.y"
+		local
+			yyval1: ANY
 		do
---|#line 518 "eiffel.y"
+--|#line <not available> "eiffel.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'eiffel.y' at line 518")
+	std.error.put_line ("Executing parser user-code from file 'eiffel.y' at line <not available>")
 end
-
-			yyval := yyval_default;
 
 
 if yy_parsing_status = yyContinue then
-	yyssp := yyssp - 1
-	yyvs.put (yyval, yyvsp)
+	yyssp := yyssp - 0
+	yyvsp1 := yyvsp1 + 1
+	if yyvsp1 >= yyvsc1 then
+		if yyvs1 = Void then
+			debug ("GEYACC")
+				std.error.put_line ("Create yyvs1")
+			end
+			create yyspecial_routines1
+			yyvsc1 := yyInitial_yyvs_size
+			yyvs1 := yyspecial_routines1.make (yyvsc1)
+		else
+			debug ("GEYACC")
+				std.error.put_line ("Resize yyvs1")
+			end
+			yyvsc1 := yyvsc1 + yyInitial_yyvs_size
+			yyvs1 := yyspecial_routines1.resize (yyvs1, yyvsc1)
+		end
+	end
+	yyvs1.put (yyval1, yyvsp1)
 end
 		end
 
 	yy_do_action_58 is
-			--|#line 521 "eiffel.y"
+			--|#line <not available> "eiffel.y"
 		local
-			yyval28: FEATURE_AS
+			yyval1: ANY
 		do
---|#line 521 "eiffel.y"
+--|#line <not available> "eiffel.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'eiffel.y' at line 521")
+	std.error.put_line ("Executing parser user-code from file 'eiffel.y' at line <not available>")
 end
 
 
-					-- Generate a syntax error when `feature_indexes' is not
-					-- Void and it applies to synonyms of the current feature
-					-- declaration.
-				if (il_parser and feature_indexes /= Void and yytype95 (yyvs.item (yyvsp - 2)).first.count /= 1) then
-					raise_error
-				end
-				yyval28 := new_feature_declaration (yytype95 (yyvs.item (yyvsp - 2)), yytype9 (yyvs.item (yyvsp - 1)), feature_indexes)
-				feature_indexes := Void
-			
-			yyval := yyval28
 if yy_parsing_status = yyContinue then
-	yyssp := yyssp - 3
-	yyvsp := yyvsp - 2
-	yyvs.put (yyval, yyvsp)
+	yyssp := yyssp - 1
+	yyvs1.put (yyval1, yyvsp1)
 end
 		end
 
 	yy_do_action_59 is
-			--|#line 534 "eiffel.y"
+			--|#line <not available> "eiffel.y"
 		local
-			yyval95: PAIR [EIFFEL_LIST [FEATURE_NAME], CLICK_AST]
+			yyval28: FEATURE_AS
 		do
---|#line 534 "eiffel.y"
+--|#line <not available> "eiffel.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'eiffel.y' at line 534")
+	std.error.put_line ("Executing parser user-code from file 'eiffel.y' at line <not available>")
 end
 
-
-yyval95 := new_clickable_feature_name_list (yytype93 (yyvs.item (yyvsp)), Initial_new_feature_list_size) 
-			yyval := yyval95
+					-- Generate a syntax error when `feature_indexes' is not
+					-- Void and it applies to synonyms of the current feature
+					-- declaration.
+				if (il_parser and feature_indexes /= Void and yyvs95.item (yyvsp95).first.count /= 1) then
+					raise_error
+				end
+				yyval28 := new_feature_declaration (yyvs95.item (yyvsp95), yyvs9.item (yyvsp9), feature_indexes)
+				feature_indexes := Void
+			
 if yy_parsing_status = yyContinue then
-	yyssp := yyssp - 1
-	yyvs.put (yyval, yyvsp)
+	yyssp := yyssp - 3
+	yyvsp28 := yyvsp28 + 1
+	yyvsp95 := yyvsp95 -1
+	yyvsp9 := yyvsp9 -1
+	yyvsp1 := yyvsp1 -1
+	if yyvsp28 >= yyvsc28 then
+		if yyvs28 = Void then
+			debug ("GEYACC")
+				std.error.put_line ("Create yyvs28")
+			end
+			create yyspecial_routines28
+			yyvsc28 := yyInitial_yyvs_size
+			yyvs28 := yyspecial_routines28.make (yyvsc28)
+		else
+			debug ("GEYACC")
+				std.error.put_line ("Resize yyvs28")
+			end
+			yyvsc28 := yyvsc28 + yyInitial_yyvs_size
+			yyvs28 := yyspecial_routines28.resize (yyvs28, yyvsc28)
+		end
+	end
+	yyvs28.put (yyval28, yyvsp28)
 end
 		end
 
 	yy_do_action_60 is
-			--|#line 536 "eiffel.y"
+			--|#line <not available> "eiffel.y"
 		local
 			yyval95: PAIR [EIFFEL_LIST [FEATURE_NAME], CLICK_AST]
 		do
---|#line 536 "eiffel.y"
+--|#line <not available> "eiffel.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'eiffel.y' at line 536")
+	std.error.put_line ("Executing parser user-code from file 'eiffel.y' at line <not available>")
 end
 
-
-				yyval95 := yytype95 (yyvs.item (yyvsp - 2))
-				yyval95.first.extend (yytype93 (yyvs.item (yyvsp)).first)
-			
-			yyval := yyval95
+yyval95 := new_clickable_feature_name_list (yyvs93.item (yyvsp93), Initial_new_feature_list_size) 
 if yy_parsing_status = yyContinue then
-	yyssp := yyssp - 3
-	yyvsp := yyvsp - 2
-	yyvs.put (yyval, yyvsp)
+	yyssp := yyssp - 1
+	yyvsp95 := yyvsp95 + 1
+	yyvsp93 := yyvsp93 -1
+	if yyvsp95 >= yyvsc95 then
+		if yyvs95 = Void then
+			debug ("GEYACC")
+				std.error.put_line ("Create yyvs95")
+			end
+			create yyspecial_routines95
+			yyvsc95 := yyInitial_yyvs_size
+			yyvs95 := yyspecial_routines95.make (yyvsc95)
+		else
+			debug ("GEYACC")
+				std.error.put_line ("Resize yyvs95")
+			end
+			yyvsc95 := yyvsc95 + yyInitial_yyvs_size
+			yyvs95 := yyspecial_routines95.resize (yyvs95, yyvsc95)
+		end
+	end
+	yyvs95.put (yyval95, yyvsp95)
 end
 		end
 
 	yy_do_action_61 is
-			--|#line 543 "eiffel.y"
+			--|#line <not available> "eiffel.y"
 		local
-			yyval93: PAIR [FEATURE_NAME, CLICK_AST]
+			yyval95: PAIR [EIFFEL_LIST [FEATURE_NAME], CLICK_AST]
 		do
---|#line 543 "eiffel.y"
+--|#line <not available> "eiffel.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'eiffel.y' at line 543")
+	std.error.put_line ("Executing parser user-code from file 'eiffel.y' at line <not available>")
 end
 
-
-yyval93 := yytype93 (yyvs.item (yyvsp)) 
-			yyval := yyval93
+				yyval95 := yyvs95.item (yyvsp95)
+				yyval95.first.extend (yyvs93.item (yyvsp93).first)
+			
 if yy_parsing_status = yyContinue then
-	yyssp := yyssp - 2
-	yyvsp := yyvsp - 1
-	yyvs.put (yyval, yyvsp)
+	yyssp := yyssp - 3
+	yyvsp1 := yyvsp1 -1
+	yyvsp93 := yyvsp93 -1
+	yyvs95.put (yyval95, yyvsp95)
 end
 		end
 
 	yy_do_action_62 is
-			--|#line 547 "eiffel.y"
+			--|#line <not available> "eiffel.y"
+		local
+			yyval93: PAIR [FEATURE_NAME, CLICK_AST]
 		do
---|#line 547 "eiffel.y"
+--|#line <not available> "eiffel.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'eiffel.y' at line 547")
+	std.error.put_line ("Executing parser user-code from file 'eiffel.y' at line <not available>")
 end
 
-			yyval := yyval_default;
-is_frozen := False 
-
+yyval93 := yyvs93.item (yyvsp93) 
 if yy_parsing_status = yyContinue then
-	yyvsp := yyvsp + 1
-	if yyvsp >= yyvsc then
-		yyvsc := yyvsc + yyInitial_stack_size
-		yyvs := FIXED_ARRAY_.resize (yyvs, yyvsc)
-		debug ("GEYACC")
-			std.error.put_string ("Stack (yyvs) size increased to ")
-			std.error.put_integer (yyvsc)
-			std.error.put_new_line
-		end
-	end
-	yyvs.put (yyval, yyvsp)
+	yyssp := yyssp - 2
+	yyvsp1 := yyvsp1 -1
+	yyvs93.put (yyval93, yyvsp93)
 end
 		end
 
 	yy_do_action_63 is
-			--|#line 549 "eiffel.y"
+			--|#line <not available> "eiffel.y"
+		local
+			yyval1: ANY
 		do
---|#line 549 "eiffel.y"
+--|#line <not available> "eiffel.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'eiffel.y' at line 549")
+	std.error.put_line ("Executing parser user-code from file 'eiffel.y' at line <not available>")
 end
 
-			yyval := yyval_default;
-is_frozen := True 
-
+is_frozen := False 
 if yy_parsing_status = yyContinue then
-	yyssp := yyssp - 1
-	yyvs.put (yyval, yyvsp)
+	yyssp := yyssp - 0
+	yyvsp1 := yyvsp1 + 1
+	if yyvsp1 >= yyvsc1 then
+		if yyvs1 = Void then
+			debug ("GEYACC")
+				std.error.put_line ("Create yyvs1")
+			end
+			create yyspecial_routines1
+			yyvsc1 := yyInitial_yyvs_size
+			yyvs1 := yyspecial_routines1.make (yyvsc1)
+		else
+			debug ("GEYACC")
+				std.error.put_line ("Resize yyvs1")
+			end
+			yyvsc1 := yyvsc1 + yyInitial_yyvs_size
+			yyvs1 := yyspecial_routines1.resize (yyvs1, yyvsc1)
+		end
+	end
+	yyvs1.put (yyval1, yyvsp1)
 end
 		end
 
 	yy_do_action_64 is
-			--|#line 553 "eiffel.y"
+			--|#line <not available> "eiffel.y"
 		local
-			yyval93: PAIR [FEATURE_NAME, CLICK_AST]
+			yyval1: ANY
 		do
---|#line 553 "eiffel.y"
+--|#line <not available> "eiffel.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'eiffel.y' at line 553")
+	std.error.put_line ("Executing parser user-code from file 'eiffel.y' at line <not available>")
 end
 
-
-yyval93 := new_clickable_feature_name (yytype92 (yyvs.item (yyvsp))) 
-			yyval := yyval93
+is_frozen := True 
 if yy_parsing_status = yyContinue then
 	yyssp := yyssp - 1
-	yyvs.put (yyval, yyvsp)
+	yyvs1.put (yyval1, yyvsp1)
 end
 		end
 
 	yy_do_action_65 is
-			--|#line 555 "eiffel.y"
+			--|#line <not available> "eiffel.y"
 		local
 			yyval93: PAIR [FEATURE_NAME, CLICK_AST]
 		do
---|#line 555 "eiffel.y"
+--|#line <not available> "eiffel.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'eiffel.y' at line 555")
+	std.error.put_line ("Executing parser user-code from file 'eiffel.y' at line <not available>")
 end
 
-
-yyval93 := yytype93 (yyvs.item (yyvsp)) 
-			yyval := yyval93
+yyval93 := new_clickable_feature_name (yyvs92.item (yyvsp92)) 
 if yy_parsing_status = yyContinue then
 	yyssp := yyssp - 1
-	yyvs.put (yyval, yyvsp)
+	yyvsp93 := yyvsp93 + 1
+	yyvsp92 := yyvsp92 -1
+	if yyvsp93 >= yyvsc93 then
+		if yyvs93 = Void then
+			debug ("GEYACC")
+				std.error.put_line ("Create yyvs93")
+			end
+			create yyspecial_routines93
+			yyvsc93 := yyInitial_yyvs_size
+			yyvs93 := yyspecial_routines93.make (yyvsc93)
+		else
+			debug ("GEYACC")
+				std.error.put_line ("Resize yyvs93")
+			end
+			yyvsc93 := yyvsc93 + yyInitial_yyvs_size
+			yyvs93 := yyspecial_routines93.resize (yyvs93, yyvsc93)
+		end
+	end
+	yyvs93.put (yyval93, yyvsp93)
 end
 		end
 
 	yy_do_action_66 is
-			--|#line 557 "eiffel.y"
+			--|#line <not available> "eiffel.y"
 		local
 			yyval93: PAIR [FEATURE_NAME, CLICK_AST]
 		do
---|#line 557 "eiffel.y"
+--|#line <not available> "eiffel.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'eiffel.y' at line 557")
+	std.error.put_line ("Executing parser user-code from file 'eiffel.y' at line <not available>")
 end
 
-
-yyval93 := yytype93 (yyvs.item (yyvsp)) 
-			yyval := yyval93
+yyval93 := yyvs93.item (yyvsp93) 
 if yy_parsing_status = yyContinue then
 	yyssp := yyssp - 1
-	yyvs.put (yyval, yyvsp)
+	yyvs93.put (yyval93, yyvsp93)
 end
 		end
 
 	yy_do_action_67 is
-			--|#line 561 "eiffel.y"
+			--|#line <not available> "eiffel.y"
 		local
 			yyval93: PAIR [FEATURE_NAME, CLICK_AST]
 		do
---|#line 561 "eiffel.y"
+--|#line <not available> "eiffel.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'eiffel.y' at line 561")
+	std.error.put_line ("Executing parser user-code from file 'eiffel.y' at line <not available>")
 end
 
-
-yyval93 := new_clickable_infix (yytype94 (yyvs.item (yyvsp))) 
-			yyval := yyval93
+yyval93 := yyvs93.item (yyvsp93) 
 if yy_parsing_status = yyContinue then
-	yyssp := yyssp - 2
-	yyvsp := yyvsp - 1
-	yyvs.put (yyval, yyvsp)
+	yyssp := yyssp - 1
+	yyvs93.put (yyval93, yyvsp93)
 end
 		end
 
 	yy_do_action_68 is
-			--|#line 566 "eiffel.y"
+			--|#line <not available> "eiffel.y"
 		local
 			yyval93: PAIR [FEATURE_NAME, CLICK_AST]
 		do
---|#line 566 "eiffel.y"
+--|#line <not available> "eiffel.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'eiffel.y' at line 566")
+	std.error.put_line ("Executing parser user-code from file 'eiffel.y' at line <not available>")
 end
 
-
-yyval93 := new_clickable_prefix (yytype94 (yyvs.item (yyvsp))) 
-			yyval := yyval93
+yyval93 := new_clickable_infix (yyvs94.item (yyvsp94)) 
 if yy_parsing_status = yyContinue then
 	yyssp := yyssp - 2
-	yyvsp := yyvsp - 1
-	yyvs.put (yyval, yyvsp)
+	yyvsp93 := yyvsp93 + 1
+	yyvsp1 := yyvsp1 -1
+	yyvsp94 := yyvsp94 -1
+	if yyvsp93 >= yyvsc93 then
+		if yyvs93 = Void then
+			debug ("GEYACC")
+				std.error.put_line ("Create yyvs93")
+			end
+			create yyspecial_routines93
+			yyvsc93 := yyInitial_yyvs_size
+			yyvs93 := yyspecial_routines93.make (yyvsc93)
+		else
+			debug ("GEYACC")
+				std.error.put_line ("Resize yyvs93")
+			end
+			yyvsc93 := yyvsc93 + yyInitial_yyvs_size
+			yyvs93 := yyspecial_routines93.resize (yyvs93, yyvsc93)
+		end
+	end
+	yyvs93.put (yyval93, yyvsp93)
 end
 		end
 
 	yy_do_action_69 is
-			--|#line 570 "eiffel.y"
+			--|#line <not available> "eiffel.y"
 		local
-			yyval9: BODY_AS
+			yyval93: PAIR [FEATURE_NAME, CLICK_AST]
 		do
---|#line 570 "eiffel.y"
+--|#line <not available> "eiffel.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'eiffel.y' at line 570")
+	std.error.put_line ("Executing parser user-code from file 'eiffel.y' at line <not available>")
 end
 
-
-yyval9 := new_declaration_body (yytype90 (yyvs.item (yyvsp - 2)), yytype63 (yyvs.item (yyvsp - 1)), yytype16 (yyvs.item (yyvsp))) 
-			yyval := yyval9
+yyval93 := new_clickable_prefix (yyvs94.item (yyvsp94)) 
 if yy_parsing_status = yyContinue then
-	yyssp := yyssp - 3
-	yyvsp := yyvsp - 2
-	yyvs.put (yyval, yyvsp)
+	yyssp := yyssp - 2
+	yyvsp93 := yyvsp93 + 1
+	yyvsp1 := yyvsp1 -1
+	yyvsp94 := yyvsp94 -1
+	if yyvsp93 >= yyvsc93 then
+		if yyvs93 = Void then
+			debug ("GEYACC")
+				std.error.put_line ("Create yyvs93")
+			end
+			create yyspecial_routines93
+			yyvsc93 := yyInitial_yyvs_size
+			yyvs93 := yyspecial_routines93.make (yyvsc93)
+		else
+			debug ("GEYACC")
+				std.error.put_line ("Resize yyvs93")
+			end
+			yyvsc93 := yyvsc93 + yyInitial_yyvs_size
+			yyvs93 := yyspecial_routines93.resize (yyvs93, yyvsc93)
+		end
+	end
+	yyvs93.put (yyval93, yyvsp93)
 end
 		end
 
 	yy_do_action_70 is
-			--|#line 574 "eiffel.y"
+			--|#line <not available> "eiffel.y"
 		local
-			yyval16: CONTENT_AS
+			yyval9: BODY_AS
 		do
---|#line 574 "eiffel.y"
+--|#line <not available> "eiffel.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'eiffel.y' at line 574")
+	std.error.put_line ("Executing parser user-code from file 'eiffel.y' at line <not available>")
 end
 
-
-feature_indexes := yytype81 (yyvs.item (yyvsp)) 
-			yyval := yyval16
+yyval9 := new_declaration_body (yyvs90.item (yyvsp90), yyvs63.item (yyvsp63), yyvs16.item (yyvsp16)) 
 if yy_parsing_status = yyContinue then
-	yyssp := yyssp - 1
-	yyvs.put (yyval, yyvsp)
+	yyssp := yyssp - 3
+	yyvsp9 := yyvsp9 + 1
+	yyvsp90 := yyvsp90 -1
+	yyvsp63 := yyvsp63 -1
+	yyvsp16 := yyvsp16 -1
+	if yyvsp9 >= yyvsc9 then
+		if yyvs9 = Void then
+			debug ("GEYACC")
+				std.error.put_line ("Create yyvs9")
+			end
+			create yyspecial_routines9
+			yyvsc9 := yyInitial_yyvs_size
+			yyvs9 := yyspecial_routines9.make (yyvsc9)
+		else
+			debug ("GEYACC")
+				std.error.put_line ("Resize yyvs9")
+			end
+			yyvsc9 := yyvsc9 + yyInitial_yyvs_size
+			yyvs9 := yyspecial_routines9.resize (yyvs9, yyvsc9)
+		end
+	end
+	yyvs9.put (yyval9, yyvsp9)
 end
 		end
 
 	yy_do_action_71 is
-			--|#line 576 "eiffel.y"
+			--|#line <not available> "eiffel.y"
 		local
 			yyval16: CONTENT_AS
 		do
---|#line 576 "eiffel.y"
+--|#line <not available> "eiffel.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'eiffel.y' at line 576")
+	std.error.put_line ("Executing parser user-code from file 'eiffel.y' at line <not available>")
 end
 
-
-yyval16 := yytype16 (yyvs.item (yyvsp)) 
-			yyval := yyval16
+feature_indexes := yyvs81.item (yyvsp81) 
 if yy_parsing_status = yyContinue then
-	yyssp := yyssp - 2
-	yyvsp := yyvsp - 1
-	yyvs.put (yyval, yyvsp)
+	yyssp := yyssp - 1
+	yyvsp16 := yyvsp16 + 1
+	yyvsp81 := yyvsp81 -1
+	if yyvsp16 >= yyvsc16 then
+		if yyvs16 = Void then
+			debug ("GEYACC")
+				std.error.put_line ("Create yyvs16")
+			end
+			create yyspecial_routines16
+			yyvsc16 := yyInitial_yyvs_size
+			yyvs16 := yyspecial_routines16.make (yyvsc16)
+		else
+			debug ("GEYACC")
+				std.error.put_line ("Resize yyvs16")
+			end
+			yyvsc16 := yyvsc16 + yyInitial_yyvs_size
+			yyvs16 := yyspecial_routines16.resize (yyvs16, yyvsc16)
+		end
+	end
+	yyvs16.put (yyval16, yyvsp16)
 end
 		end
 
 	yy_do_action_72 is
-			--|#line 580 "eiffel.y"
+			--|#line <not available> "eiffel.y"
 		local
 			yyval16: CONTENT_AS
 		do
---|#line 580 "eiffel.y"
+--|#line <not available> "eiffel.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'eiffel.y' at line 580")
+	std.error.put_line ("Executing parser user-code from file 'eiffel.y' at line <not available>")
 end
 
-
-				yyval16 := new_constant_as (create {VALUE_AS}.initialize (yytype7 (yyvs.item (yyvsp - 1))))
-				feature_indexes := yytype81 (yyvs.item (yyvsp))
-			
-			yyval := yyval16
+yyval16 := yyvs16.item (yyvsp16) 
 if yy_parsing_status = yyContinue then
 	yyssp := yyssp - 2
-	yyvsp := yyvsp - 1
-	yyvs.put (yyval, yyvsp)
+	yyvsp1 := yyvsp1 -1
+	yyvs16.put (yyval16, yyvsp16)
 end
 		end
 
 	yy_do_action_73 is
-			--|#line 585 "eiffel.y"
+			--|#line <not available> "eiffel.y"
 		local
 			yyval16: CONTENT_AS
 		do
---|#line 585 "eiffel.y"
+--|#line <not available> "eiffel.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'eiffel.y' at line 585")
+	std.error.put_line ("Executing parser user-code from file 'eiffel.y' at line <not available>")
 end
 
-
-				yyval16 := new_constant_as (create {VALUE_AS}.initialize (new_unique_as))
-				feature_indexes := yytype81 (yyvs.item (yyvsp))
+				create {CONSTANT_AS} yyval16.make (create {VALUE_AS}.initialize (yyvs7.item (yyvsp7)))
+				feature_indexes := yyvs81.item (yyvsp81)
 			
-			yyval := yyval16
 if yy_parsing_status = yyContinue then
 	yyssp := yyssp - 2
-	yyvsp := yyvsp - 1
-	yyvs.put (yyval, yyvsp)
+	yyvsp16 := yyvsp16 + 1
+	yyvsp7 := yyvsp7 -1
+	yyvsp81 := yyvsp81 -1
+	if yyvsp16 >= yyvsc16 then
+		if yyvs16 = Void then
+			debug ("GEYACC")
+				std.error.put_line ("Create yyvs16")
+			end
+			create yyspecial_routines16
+			yyvsc16 := yyInitial_yyvs_size
+			yyvs16 := yyspecial_routines16.make (yyvsc16)
+		else
+			debug ("GEYACC")
+				std.error.put_line ("Resize yyvs16")
+			end
+			yyvsc16 := yyvsc16 + yyInitial_yyvs_size
+			yyvs16 := yyspecial_routines16.resize (yyvs16, yyvsc16)
+		end
+	end
+	yyvs16.put (yyval16, yyvsp16)
 end
 		end
 
 	yy_do_action_74 is
-			--|#line 590 "eiffel.y"
+			--|#line <not available> "eiffel.y"
 		local
 			yyval16: CONTENT_AS
 		do
---|#line 590 "eiffel.y"
+--|#line <not available> "eiffel.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'eiffel.y' at line 590")
+	std.error.put_line ("Executing parser user-code from file 'eiffel.y' at line <not available>")
 end
 
-
-				yyval16 := yytype56 (yyvs.item (yyvsp))
-				feature_indexes := yytype81 (yyvs.item (yyvsp - 1))
+				create {CONSTANT_AS} yyval16.make (create {VALUE_AS}.initialize (new_unique_as))
+				feature_indexes := yyvs81.item (yyvsp81)
 			
-			yyval := yyval16
 if yy_parsing_status = yyContinue then
 	yyssp := yyssp - 2
-	yyvsp := yyvsp - 1
-	yyvs.put (yyval, yyvsp)
+	yyvsp16 := yyvsp16 + 1
+	yyvsp1 := yyvsp1 -1
+	yyvsp81 := yyvsp81 -1
+	if yyvsp16 >= yyvsc16 then
+		if yyvs16 = Void then
+			debug ("GEYACC")
+				std.error.put_line ("Create yyvs16")
+			end
+			create yyspecial_routines16
+			yyvsc16 := yyInitial_yyvs_size
+			yyvs16 := yyspecial_routines16.make (yyvsc16)
+		else
+			debug ("GEYACC")
+				std.error.put_line ("Resize yyvs16")
+			end
+			yyvsc16 := yyvsc16 + yyInitial_yyvs_size
+			yyvs16 := yyspecial_routines16.resize (yyvs16, yyvsc16)
+		end
+	end
+	yyvs16.put (yyval16, yyvsp16)
 end
 		end
 
 	yy_do_action_75 is
-			--|#line 601 "eiffel.y"
+			--|#line <not available> "eiffel.y"
 		local
-			yyval85: EIFFEL_LIST [PARENT_AS]
+			yyval16: CONTENT_AS
 		do
---|#line 601 "eiffel.y"
+--|#line <not available> "eiffel.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'eiffel.y' at line 601")
+	std.error.put_line ("Executing parser user-code from file 'eiffel.y' at line <not available>")
 end
 
-
-
-			yyval := yyval85
+				yyval16 := yyvs56.item (yyvsp56)
+				feature_indexes := yyvs81.item (yyvsp81)
+			
 if yy_parsing_status = yyContinue then
-	yyvsp := yyvsp + 1
-	if yyvsp >= yyvsc then
-		yyvsc := yyvsc + yyInitial_stack_size
-		yyvs := FIXED_ARRAY_.resize (yyvs, yyvsc)
-		debug ("GEYACC")
-			std.error.put_string ("Stack (yyvs) size increased to ")
-			std.error.put_integer (yyvsc)
-			std.error.put_new_line
+	yyssp := yyssp - 2
+	yyvsp16 := yyvsp16 + 1
+	yyvsp81 := yyvsp81 -1
+	yyvsp56 := yyvsp56 -1
+	if yyvsp16 >= yyvsc16 then
+		if yyvs16 = Void then
+			debug ("GEYACC")
+				std.error.put_line ("Create yyvs16")
+			end
+			create yyspecial_routines16
+			yyvsc16 := yyInitial_yyvs_size
+			yyvs16 := yyspecial_routines16.make (yyvsc16)
+		else
+			debug ("GEYACC")
+				std.error.put_line ("Resize yyvs16")
+			end
+			yyvsc16 := yyvsc16 + yyInitial_yyvs_size
+			yyvs16 := yyspecial_routines16.resize (yyvs16, yyvsc16)
 		end
 	end
-	yyvs.put (yyval, yyvsp)
+	yyvs16.put (yyval16, yyvsp16)
 end
 		end
 
 	yy_do_action_76 is
-			--|#line 603 "eiffel.y"
+			--|#line <not available> "eiffel.y"
 		local
 			yyval85: EIFFEL_LIST [PARENT_AS]
 		do
---|#line 603 "eiffel.y"
+--|#line <not available> "eiffel.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'eiffel.y' at line 603")
+	std.error.put_line ("Executing parser user-code from file 'eiffel.y' at line <not available>")
 end
 
 
-yyval85 := yytype85 (yyvs.item (yyvsp)) 
-			yyval := yyval85
 if yy_parsing_status = yyContinue then
-	yyssp := yyssp - 2
-	yyvsp := yyvsp - 1
-	yyvs.put (yyval, yyvsp)
+	yyssp := yyssp - 0
+	yyvsp85 := yyvsp85 + 1
+	if yyvsp85 >= yyvsc85 then
+		if yyvs85 = Void then
+			debug ("GEYACC")
+				std.error.put_line ("Create yyvs85")
+			end
+			create yyspecial_routines85
+			yyvsc85 := yyInitial_yyvs_size
+			yyvs85 := yyspecial_routines85.make (yyvsc85)
+		else
+			debug ("GEYACC")
+				std.error.put_line ("Resize yyvs85")
+			end
+			yyvsc85 := yyvsc85 + yyInitial_yyvs_size
+			yyvs85 := yyspecial_routines85.resize (yyvs85, yyvsc85)
+		end
+	end
+	yyvs85.put (yyval85, yyvsp85)
 end
 		end
 
 	yy_do_action_77 is
-			--|#line 605 "eiffel.y"
+			--|#line <not available> "eiffel.y"
 		local
 			yyval85: EIFFEL_LIST [PARENT_AS]
 		do
---|#line 605 "eiffel.y"
+--|#line <not available> "eiffel.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'eiffel.y' at line 605")
+	std.error.put_line ("Executing parser user-code from file 'eiffel.y' at line <not available>")
 end
 
-
-yyval85 := new_eiffel_list_parent_as (0) 
-			yyval := yyval85
+yyval85 := yyvs85.item (yyvsp85) 
 if yy_parsing_status = yyContinue then
 	yyssp := yyssp - 2
-	yyvsp := yyvsp - 1
-	yyvs.put (yyval, yyvsp)
+	yyvsp1 := yyvsp1 -1
+	yyvs85.put (yyval85, yyvsp85)
 end
 		end
 
 	yy_do_action_78 is
-			--|#line 609 "eiffel.y"
+			--|#line <not available> "eiffel.y"
 		local
 			yyval85: EIFFEL_LIST [PARENT_AS]
 		do
---|#line 609 "eiffel.y"
+--|#line <not available> "eiffel.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'eiffel.y' at line 609")
+	std.error.put_line ("Executing parser user-code from file 'eiffel.y' at line <not available>")
 end
 
-
-				yyval85 := new_eiffel_list_parent_as (Initial_parent_list_size)
-				yyval85.extend (yytype47 (yyvs.item (yyvsp)))
-			
-			yyval := yyval85
+yyval85 := new_eiffel_list_parent_as (0) 
 if yy_parsing_status = yyContinue then
-	yyssp := yyssp - 1
-	yyvs.put (yyval, yyvsp)
+	yyssp := yyssp - 2
+	yyvsp85 := yyvsp85 + 1
+	yyvsp1 := yyvsp1 -2
+	if yyvsp85 >= yyvsc85 then
+		if yyvs85 = Void then
+			debug ("GEYACC")
+				std.error.put_line ("Create yyvs85")
+			end
+			create yyspecial_routines85
+			yyvsc85 := yyInitial_yyvs_size
+			yyvs85 := yyspecial_routines85.make (yyvsc85)
+		else
+			debug ("GEYACC")
+				std.error.put_line ("Resize yyvs85")
+			end
+			yyvsc85 := yyvsc85 + yyInitial_yyvs_size
+			yyvs85 := yyspecial_routines85.resize (yyvs85, yyvsc85)
+		end
+	end
+	yyvs85.put (yyval85, yyvsp85)
 end
 		end
 
 	yy_do_action_79 is
-			--|#line 614 "eiffel.y"
+			--|#line <not available> "eiffel.y"
 		local
 			yyval85: EIFFEL_LIST [PARENT_AS]
 		do
---|#line 614 "eiffel.y"
+--|#line <not available> "eiffel.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'eiffel.y' at line 614")
+	std.error.put_line ("Executing parser user-code from file 'eiffel.y' at line <not available>")
 end
 
-
-				yyval85 := yytype85 (yyvs.item (yyvsp - 1))
-				yyval85.extend (yytype47 (yyvs.item (yyvsp)))
+				yyval85 := new_eiffel_list_parent_as (Initial_parent_list_size)
+				yyval85.extend (yyvs47.item (yyvsp47))
 			
-			yyval := yyval85
 if yy_parsing_status = yyContinue then
-	yyssp := yyssp - 2
-	yyvsp := yyvsp - 1
-	yyvs.put (yyval, yyvsp)
+	yyssp := yyssp - 1
+	yyvsp85 := yyvsp85 + 1
+	yyvsp47 := yyvsp47 -1
+	if yyvsp85 >= yyvsc85 then
+		if yyvs85 = Void then
+			debug ("GEYACC")
+				std.error.put_line ("Create yyvs85")
+			end
+			create yyspecial_routines85
+			yyvsc85 := yyInitial_yyvs_size
+			yyvs85 := yyspecial_routines85.make (yyvsc85)
+		else
+			debug ("GEYACC")
+				std.error.put_line ("Resize yyvs85")
+			end
+			yyvsc85 := yyvsc85 + yyInitial_yyvs_size
+			yyvs85 := yyspecial_routines85.resize (yyvs85, yyvsc85)
+		end
+	end
+	yyvs85.put (yyval85, yyvsp85)
 end
 		end
 
 	yy_do_action_80 is
-			--|#line 621 "eiffel.y"
+			--|#line <not available> "eiffel.y"
 		local
-			yyval47: PARENT_AS
+			yyval85: EIFFEL_LIST [PARENT_AS]
 		do
---|#line 621 "eiffel.y"
+--|#line <not available> "eiffel.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'eiffel.y' at line 621")
+	std.error.put_line ("Executing parser user-code from file 'eiffel.y' at line <not available>")
 end
 
-
-				yyval47 := yytype47 (yyvs.item (yyvsp))
-				yytype47 (yyvs.item (yyvsp)).set_location (yytype58 (yyvs.item (yyvsp - 1)))
+				yyval85 := yyvs85.item (yyvsp85)
+				yyval85.extend (yyvs47.item (yyvsp47))
 			
-			yyval := yyval47
 if yy_parsing_status = yyContinue then
 	yyssp := yyssp - 2
-	yyvsp := yyvsp - 1
-	yyvs.put (yyval, yyvsp)
+	yyvsp47 := yyvsp47 -1
+	yyvs85.put (yyval85, yyvsp85)
 end
 		end
 
 	yy_do_action_81 is
-			--|#line 626 "eiffel.y"
+			--|#line <not available> "eiffel.y"
 		local
 			yyval47: PARENT_AS
 		do
---|#line 626 "eiffel.y"
+--|#line <not available> "eiffel.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'eiffel.y' at line 626")
+	std.error.put_line ("Executing parser user-code from file 'eiffel.y' at line <not available>")
 end
 
-
-				inherit_context := False
-				yyval47 := yytype47 (yyvs.item (yyvsp - 1))
-				yytype47 (yyvs.item (yyvsp - 1)).set_location (yytype58 (yyvs.item (yyvsp - 2)))
+				yyval47 := yyvs47.item (yyvsp47)
+				yyvs47.item (yyvsp47).set_location (yyvs58.item (yyvsp58))
 			
-			yyval := yyval47
 if yy_parsing_status = yyContinue then
-	yyssp := yyssp - 3
-	yyvsp := yyvsp - 2
-	yyvs.put (yyval, yyvsp)
+	yyssp := yyssp - 2
+	yyvsp58 := yyvsp58 -1
+	yyvs47.put (yyval47, yyvsp47)
 end
 		end
 
 	yy_do_action_82 is
-			--|#line 634 "eiffel.y"
+			--|#line <not available> "eiffel.y"
 		local
 			yyval47: PARENT_AS
 		do
---|#line 634 "eiffel.y"
+--|#line <not available> "eiffel.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'eiffel.y' at line 634")
+	std.error.put_line ("Executing parser user-code from file 'eiffel.y' at line <not available>")
 end
 
-
 				inherit_context := False
-				yyval47 := new_parent_clause (yytype92 (yyvs.item (yyvsp - 1)), yytype89 (yyvs.item (yyvsp)), Void, Void, Void, Void, Void)
+				yyval47 := yyvs47.item (yyvsp47)
+				yyvs47.item (yyvsp47).set_location (yyvs58.item (yyvsp58))
 			
-			yyval := yyval47
 if yy_parsing_status = yyContinue then
-	yyssp := yyssp - 2
-	yyvsp := yyvsp - 1
-	yyvs.put (yyval, yyvsp)
+	yyssp := yyssp - 3
+	yyvsp58 := yyvsp58 -1
+	yyvsp1 := yyvsp1 -1
+	yyvs47.put (yyval47, yyvsp47)
 end
 		end
 
 	yy_do_action_83 is
-			--|#line 639 "eiffel.y"
+			--|#line <not available> "eiffel.y"
 		local
 			yyval47: PARENT_AS
 		do
---|#line 639 "eiffel.y"
+--|#line <not available> "eiffel.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'eiffel.y' at line 639")
+	std.error.put_line ("Executing parser user-code from file 'eiffel.y' at line <not available>")
 end
 
-
 				inherit_context := False
-				yyval47 := new_parent_clause (yytype92 (yyvs.item (yyvsp - 7)), yytype89 (yyvs.item (yyvsp - 6)), yytype86 (yyvs.item (yyvsp - 5)), yytype71 (yyvs.item (yyvsp - 4)), yytype76 (yyvs.item (yyvsp - 3)), yytype76 (yyvs.item (yyvsp - 2)), yytype76 (yyvs.item (yyvsp - 1)))
+				yyval47 := new_parent_clause (yyvs92.item (yyvsp92), yyvs89.item (yyvsp89), Void, Void, Void, Void, Void)
 			
-			yyval := yyval47
 if yy_parsing_status = yyContinue then
-	yyssp := yyssp - 8
-	yyvsp := yyvsp - 7
-	yyvs.put (yyval, yyvsp)
+	yyssp := yyssp - 2
+	yyvsp47 := yyvsp47 + 1
+	yyvsp92 := yyvsp92 -1
+	yyvsp89 := yyvsp89 -1
+	if yyvsp47 >= yyvsc47 then
+		if yyvs47 = Void then
+			debug ("GEYACC")
+				std.error.put_line ("Create yyvs47")
+			end
+			create yyspecial_routines47
+			yyvsc47 := yyInitial_yyvs_size
+			yyvs47 := yyspecial_routines47.make (yyvsc47)
+		else
+			debug ("GEYACC")
+				std.error.put_line ("Resize yyvs47")
+			end
+			yyvsc47 := yyvsc47 + yyInitial_yyvs_size
+			yyvs47 := yyspecial_routines47.resize (yyvs47, yyvsc47)
+		end
+	end
+	yyvs47.put (yyval47, yyvsp47)
 end
 		end
 
 	yy_do_action_84 is
-			--|#line 644 "eiffel.y"
+			--|#line <not available> "eiffel.y"
 		local
 			yyval47: PARENT_AS
 		do
---|#line 644 "eiffel.y"
+--|#line <not available> "eiffel.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'eiffel.y' at line 644")
+	std.error.put_line ("Executing parser user-code from file 'eiffel.y' at line <not available>")
 end
 
-
 				inherit_context := False
-				yyval47 := new_parent_clause (yytype92 (yyvs.item (yyvsp - 6)), yytype89 (yyvs.item (yyvsp - 5)), Void, yytype71 (yyvs.item (yyvsp - 4)), yytype76 (yyvs.item (yyvsp - 3)), yytype76 (yyvs.item (yyvsp - 2)), yytype76 (yyvs.item (yyvsp - 1)))
+				yyval47 := new_parent_clause (yyvs92.item (yyvsp92), yyvs89.item (yyvsp89), yyvs86.item (yyvsp86), yyvs71.item (yyvsp71), yyvs76.item (yyvsp76 - 2), yyvs76.item (yyvsp76 - 1), yyvs76.item (yyvsp76))
 			
-			yyval := yyval47
 if yy_parsing_status = yyContinue then
-	yyssp := yyssp - 7
-	yyvsp := yyvsp - 6
-	yyvs.put (yyval, yyvsp)
+	yyssp := yyssp - 8
+	yyvsp47 := yyvsp47 + 1
+	yyvsp92 := yyvsp92 -1
+	yyvsp89 := yyvsp89 -1
+	yyvsp86 := yyvsp86 -1
+	yyvsp71 := yyvsp71 -1
+	yyvsp76 := yyvsp76 -3
+	yyvsp1 := yyvsp1 -1
+	if yyvsp47 >= yyvsc47 then
+		if yyvs47 = Void then
+			debug ("GEYACC")
+				std.error.put_line ("Create yyvs47")
+			end
+			create yyspecial_routines47
+			yyvsc47 := yyInitial_yyvs_size
+			yyvs47 := yyspecial_routines47.make (yyvsc47)
+		else
+			debug ("GEYACC")
+				std.error.put_line ("Resize yyvs47")
+			end
+			yyvsc47 := yyvsc47 + yyInitial_yyvs_size
+			yyvs47 := yyspecial_routines47.resize (yyvs47, yyvsc47)
+		end
+	end
+	yyvs47.put (yyval47, yyvsp47)
 end
 		end
 
 	yy_do_action_85 is
-			--|#line 649 "eiffel.y"
+			--|#line <not available> "eiffel.y"
 		local
 			yyval47: PARENT_AS
 		do
---|#line 649 "eiffel.y"
+--|#line <not available> "eiffel.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'eiffel.y' at line 649")
+	std.error.put_line ("Executing parser user-code from file 'eiffel.y' at line <not available>")
 end
 
-
 				inherit_context := False
-				yyval47 := new_parent_clause (yytype92 (yyvs.item (yyvsp - 5)), yytype89 (yyvs.item (yyvsp - 4)), Void, Void, yytype76 (yyvs.item (yyvsp - 3)), yytype76 (yyvs.item (yyvsp - 2)), yytype76 (yyvs.item (yyvsp - 1)))
+				yyval47 := new_parent_clause (yyvs92.item (yyvsp92), yyvs89.item (yyvsp89), Void, yyvs71.item (yyvsp71), yyvs76.item (yyvsp76 - 2), yyvs76.item (yyvsp76 - 1), yyvs76.item (yyvsp76))
 			
-			yyval := yyval47
 if yy_parsing_status = yyContinue then
-	yyssp := yyssp - 6
-	yyvsp := yyvsp - 5
-	yyvs.put (yyval, yyvsp)
+	yyssp := yyssp - 7
+	yyvsp47 := yyvsp47 + 1
+	yyvsp92 := yyvsp92 -1
+	yyvsp89 := yyvsp89 -1
+	yyvsp71 := yyvsp71 -1
+	yyvsp76 := yyvsp76 -3
+	yyvsp1 := yyvsp1 -1
+	if yyvsp47 >= yyvsc47 then
+		if yyvs47 = Void then
+			debug ("GEYACC")
+				std.error.put_line ("Create yyvs47")
+			end
+			create yyspecial_routines47
+			yyvsc47 := yyInitial_yyvs_size
+			yyvs47 := yyspecial_routines47.make (yyvsc47)
+		else
+			debug ("GEYACC")
+				std.error.put_line ("Resize yyvs47")
+			end
+			yyvsc47 := yyvsc47 + yyInitial_yyvs_size
+			yyvs47 := yyspecial_routines47.resize (yyvs47, yyvsc47)
+		end
+	end
+	yyvs47.put (yyval47, yyvsp47)
 end
 		end
 
 	yy_do_action_86 is
-			--|#line 654 "eiffel.y"
+			--|#line <not available> "eiffel.y"
 		local
 			yyval47: PARENT_AS
 		do
---|#line 654 "eiffel.y"
+--|#line <not available> "eiffel.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'eiffel.y' at line 654")
+	std.error.put_line ("Executing parser user-code from file 'eiffel.y' at line <not available>")
 end
 
-
 				inherit_context := False
-				yyval47 := new_parent_clause (yytype92 (yyvs.item (yyvsp - 4)), yytype89 (yyvs.item (yyvsp - 3)), Void, Void, Void, yytype76 (yyvs.item (yyvsp - 2)), yytype76 (yyvs.item (yyvsp - 1)))
+				yyval47 := new_parent_clause (yyvs92.item (yyvsp92), yyvs89.item (yyvsp89), Void, Void, yyvs76.item (yyvsp76 - 2), yyvs76.item (yyvsp76 - 1), yyvs76.item (yyvsp76))
 			
-			yyval := yyval47
 if yy_parsing_status = yyContinue then
-	yyssp := yyssp - 5
-	yyvsp := yyvsp - 4
-	yyvs.put (yyval, yyvsp)
+	yyssp := yyssp - 6
+	yyvsp47 := yyvsp47 + 1
+	yyvsp92 := yyvsp92 -1
+	yyvsp89 := yyvsp89 -1
+	yyvsp76 := yyvsp76 -3
+	yyvsp1 := yyvsp1 -1
+	if yyvsp47 >= yyvsc47 then
+		if yyvs47 = Void then
+			debug ("GEYACC")
+				std.error.put_line ("Create yyvs47")
+			end
+			create yyspecial_routines47
+			yyvsc47 := yyInitial_yyvs_size
+			yyvs47 := yyspecial_routines47.make (yyvsc47)
+		else
+			debug ("GEYACC")
+				std.error.put_line ("Resize yyvs47")
+			end
+			yyvsc47 := yyvsc47 + yyInitial_yyvs_size
+			yyvs47 := yyspecial_routines47.resize (yyvs47, yyvsc47)
+		end
+	end
+	yyvs47.put (yyval47, yyvsp47)
 end
 		end
 
 	yy_do_action_87 is
-			--|#line 659 "eiffel.y"
+			--|#line <not available> "eiffel.y"
 		local
 			yyval47: PARENT_AS
 		do
---|#line 659 "eiffel.y"
+--|#line <not available> "eiffel.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'eiffel.y' at line 659")
+	std.error.put_line ("Executing parser user-code from file 'eiffel.y' at line <not available>")
 end
 
-
 				inherit_context := False
-				yyval47 := new_parent_clause (yytype92 (yyvs.item (yyvsp - 3)), yytype89 (yyvs.item (yyvsp - 2)), Void, Void, Void, Void, yytype76 (yyvs.item (yyvsp - 1)))
+				yyval47 := new_parent_clause (yyvs92.item (yyvsp92), yyvs89.item (yyvsp89), Void, Void, Void, yyvs76.item (yyvsp76 - 1), yyvs76.item (yyvsp76))
 			
-			yyval := yyval47
 if yy_parsing_status = yyContinue then
-	yyssp := yyssp - 4
-	yyvsp := yyvsp - 3
-	yyvs.put (yyval, yyvsp)
+	yyssp := yyssp - 5
+	yyvsp47 := yyvsp47 + 1
+	yyvsp92 := yyvsp92 -1
+	yyvsp89 := yyvsp89 -1
+	yyvsp76 := yyvsp76 -2
+	yyvsp1 := yyvsp1 -1
+	if yyvsp47 >= yyvsc47 then
+		if yyvs47 = Void then
+			debug ("GEYACC")
+				std.error.put_line ("Create yyvs47")
+			end
+			create yyspecial_routines47
+			yyvsc47 := yyInitial_yyvs_size
+			yyvs47 := yyspecial_routines47.make (yyvsc47)
+		else
+			debug ("GEYACC")
+				std.error.put_line ("Resize yyvs47")
+			end
+			yyvsc47 := yyvsc47 + yyInitial_yyvs_size
+			yyvs47 := yyspecial_routines47.resize (yyvs47, yyvsc47)
+		end
+	end
+	yyvs47.put (yyval47, yyvsp47)
 end
 		end
 
 	yy_do_action_88 is
-			--|#line 664 "eiffel.y"
+			--|#line <not available> "eiffel.y"
 		local
 			yyval47: PARENT_AS
 		do
---|#line 664 "eiffel.y"
+--|#line <not available> "eiffel.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'eiffel.y' at line 664")
+	std.error.put_line ("Executing parser user-code from file 'eiffel.y' at line <not available>")
 end
 
-
-				inherit_context := True
-				real_class_end_position := current_position.end_position - 3
-				yyval47 := new_parent_clause (yytype92 (yyvs.item (yyvsp - 2)), yytype89 (yyvs.item (yyvsp - 1)), Void, Void, Void, Void, Void)
+				inherit_context := False
+				yyval47 := new_parent_clause (yyvs92.item (yyvsp92), yyvs89.item (yyvsp89), Void, Void, Void, Void, yyvs76.item (yyvsp76))
 			
-			yyval := yyval47
 if yy_parsing_status = yyContinue then
-	yyssp := yyssp - 3
-	yyvsp := yyvsp - 2
-	yyvs.put (yyval, yyvsp)
+	yyssp := yyssp - 4
+	yyvsp47 := yyvsp47 + 1
+	yyvsp92 := yyvsp92 -1
+	yyvsp89 := yyvsp89 -1
+	yyvsp76 := yyvsp76 -1
+	yyvsp1 := yyvsp1 -1
+	if yyvsp47 >= yyvsc47 then
+		if yyvs47 = Void then
+			debug ("GEYACC")
+				std.error.put_line ("Create yyvs47")
+			end
+			create yyspecial_routines47
+			yyvsc47 := yyInitial_yyvs_size
+			yyvs47 := yyspecial_routines47.make (yyvsc47)
+		else
+			debug ("GEYACC")
+				std.error.put_line ("Resize yyvs47")
+			end
+			yyvsc47 := yyvsc47 + yyInitial_yyvs_size
+			yyvs47 := yyspecial_routines47.resize (yyvs47, yyvsc47)
+		end
+	end
+	yyvs47.put (yyval47, yyvsp47)
 end
 		end
 
 	yy_do_action_89 is
-			--|#line 672 "eiffel.y"
+			--|#line <not available> "eiffel.y"
 		local
-			yyval86: EIFFEL_LIST [RENAME_AS]
+			yyval47: PARENT_AS
 		do
---|#line 672 "eiffel.y"
+--|#line <not available> "eiffel.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'eiffel.y' at line 672")
+	std.error.put_line ("Executing parser user-code from file 'eiffel.y' at line <not available>")
 end
 
-
-
-			yyval := yyval86
+				inherit_context := True
+				real_class_end_position := current_position.end_position - 3
+				yyval47 := new_parent_clause (yyvs92.item (yyvsp92), yyvs89.item (yyvsp89), Void, Void, Void, Void, Void)
+			
 if yy_parsing_status = yyContinue then
-	yyssp := yyssp - 1
-	yyvs.put (yyval, yyvsp)
+	yyssp := yyssp - 3
+	yyvsp47 := yyvsp47 + 1
+	yyvsp92 := yyvsp92 -1
+	yyvsp89 := yyvsp89 -1
+	yyvsp1 := yyvsp1 -1
+	if yyvsp47 >= yyvsc47 then
+		if yyvs47 = Void then
+			debug ("GEYACC")
+				std.error.put_line ("Create yyvs47")
+			end
+			create yyspecial_routines47
+			yyvsc47 := yyInitial_yyvs_size
+			yyvs47 := yyspecial_routines47.make (yyvsc47)
+		else
+			debug ("GEYACC")
+				std.error.put_line ("Resize yyvs47")
+			end
+			yyvsc47 := yyvsc47 + yyInitial_yyvs_size
+			yyvs47 := yyspecial_routines47.resize (yyvs47, yyvsc47)
+		end
+	end
+	yyvs47.put (yyval47, yyvsp47)
 end
 		end
 
 	yy_do_action_90 is
-			--|#line 674 "eiffel.y"
+			--|#line <not available> "eiffel.y"
 		local
 			yyval86: EIFFEL_LIST [RENAME_AS]
 		do
---|#line 674 "eiffel.y"
+--|#line <not available> "eiffel.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'eiffel.y' at line 674")
+	std.error.put_line ("Executing parser user-code from file 'eiffel.y' at line <not available>")
 end
 
 
-yyval86 := yytype86 (yyvs.item (yyvsp)) 
-			yyval := yyval86
 if yy_parsing_status = yyContinue then
-	yyssp := yyssp - 2
-	yyvsp := yyvsp - 1
-	yyvs.put (yyval, yyvsp)
+	yyssp := yyssp - 1
+	yyvsp86 := yyvsp86 + 1
+	yyvsp1 := yyvsp1 -1
+	if yyvsp86 >= yyvsc86 then
+		if yyvs86 = Void then
+			debug ("GEYACC")
+				std.error.put_line ("Create yyvs86")
+			end
+			create yyspecial_routines86
+			yyvsc86 := yyInitial_yyvs_size
+			yyvs86 := yyspecial_routines86.make (yyvsc86)
+		else
+			debug ("GEYACC")
+				std.error.put_line ("Resize yyvs86")
+			end
+			yyvsc86 := yyvsc86 + yyInitial_yyvs_size
+			yyvs86 := yyspecial_routines86.resize (yyvs86, yyvsc86)
+		end
+	end
+	yyvs86.put (yyval86, yyvsp86)
 end
 		end
 
 	yy_do_action_91 is
-			--|#line 678 "eiffel.y"
+			--|#line <not available> "eiffel.y"
 		local
 			yyval86: EIFFEL_LIST [RENAME_AS]
 		do
---|#line 678 "eiffel.y"
+--|#line <not available> "eiffel.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'eiffel.y' at line 678")
+	std.error.put_line ("Executing parser user-code from file 'eiffel.y' at line <not available>")
 end
 
-
-				yyval86 := new_eiffel_list_rename_as (Initial_rename_list_size)
-				yyval86.extend (yytype51 (yyvs.item (yyvsp)))
-			
-			yyval := yyval86
+yyval86 := yyvs86.item (yyvsp86) 
 if yy_parsing_status = yyContinue then
-	yyssp := yyssp - 1
-	yyvs.put (yyval, yyvsp)
+	yyssp := yyssp - 2
+	yyvsp1 := yyvsp1 -1
+	yyvs86.put (yyval86, yyvsp86)
 end
 		end
 
 	yy_do_action_92 is
-			--|#line 683 "eiffel.y"
+			--|#line <not available> "eiffel.y"
 		local
 			yyval86: EIFFEL_LIST [RENAME_AS]
 		do
---|#line 683 "eiffel.y"
+--|#line <not available> "eiffel.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'eiffel.y' at line 683")
+	std.error.put_line ("Executing parser user-code from file 'eiffel.y' at line <not available>")
 end
 
-
-				yyval86 := yytype86 (yyvs.item (yyvsp - 2))
-				yyval86.extend (yytype51 (yyvs.item (yyvsp)))
+				yyval86 := new_eiffel_list_rename_as (Initial_rename_list_size)
+				yyval86.extend (yyvs51.item (yyvsp51))
 			
-			yyval := yyval86
 if yy_parsing_status = yyContinue then
-	yyssp := yyssp - 3
-	yyvsp := yyvsp - 2
-	yyvs.put (yyval, yyvsp)
+	yyssp := yyssp - 1
+	yyvsp86 := yyvsp86 + 1
+	yyvsp51 := yyvsp51 -1
+	if yyvsp86 >= yyvsc86 then
+		if yyvs86 = Void then
+			debug ("GEYACC")
+				std.error.put_line ("Create yyvs86")
+			end
+			create yyspecial_routines86
+			yyvsc86 := yyInitial_yyvs_size
+			yyvs86 := yyspecial_routines86.make (yyvsc86)
+		else
+			debug ("GEYACC")
+				std.error.put_line ("Resize yyvs86")
+			end
+			yyvsc86 := yyvsc86 + yyInitial_yyvs_size
+			yyvs86 := yyspecial_routines86.resize (yyvs86, yyvsc86)
+		end
+	end
+	yyvs86.put (yyval86, yyvsp86)
 end
 		end
 
 	yy_do_action_93 is
-			--|#line 690 "eiffel.y"
+			--|#line <not available> "eiffel.y"
 		local
-			yyval51: RENAME_AS
+			yyval86: EIFFEL_LIST [RENAME_AS]
 		do
---|#line 690 "eiffel.y"
+--|#line <not available> "eiffel.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'eiffel.y' at line 690")
+	std.error.put_line ("Executing parser user-code from file 'eiffel.y' at line <not available>")
 end
 
-
-yyval51 := new_rename_pair (yytype93 (yyvs.item (yyvsp - 2)), yytype93 (yyvs.item (yyvsp))) 
-			yyval := yyval51
+				yyval86 := yyvs86.item (yyvsp86)
+				yyval86.extend (yyvs51.item (yyvsp51))
+			
 if yy_parsing_status = yyContinue then
 	yyssp := yyssp - 3
-	yyvsp := yyvsp - 2
-	yyvs.put (yyval, yyvsp)
+	yyvsp1 := yyvsp1 -1
+	yyvsp51 := yyvsp51 -1
+	yyvs86.put (yyval86, yyvsp86)
 end
 		end
 
 	yy_do_action_94 is
-			--|#line 694 "eiffel.y"
+			--|#line <not available> "eiffel.y"
 		local
-			yyval71: EIFFEL_LIST [EXPORT_ITEM_AS]
+			yyval51: RENAME_AS
 		do
---|#line 694 "eiffel.y"
+--|#line <not available> "eiffel.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'eiffel.y' at line 694")
+	std.error.put_line ("Executing parser user-code from file 'eiffel.y' at line <not available>")
 end
 
-
-
-			yyval := yyval71
+yyval51 := new_rename_pair (yyvs93.item (yyvsp93 - 1), yyvs93.item (yyvsp93)) 
 if yy_parsing_status = yyContinue then
-	yyvsp := yyvsp + 1
-	if yyvsp >= yyvsc then
-		yyvsc := yyvsc + yyInitial_stack_size
-		yyvs := FIXED_ARRAY_.resize (yyvs, yyvsc)
-		debug ("GEYACC")
-			std.error.put_string ("Stack (yyvs) size increased to ")
-			std.error.put_integer (yyvsc)
-			std.error.put_new_line
+	yyssp := yyssp - 3
+	yyvsp51 := yyvsp51 + 1
+	yyvsp93 := yyvsp93 -2
+	yyvsp1 := yyvsp1 -1
+	if yyvsp51 >= yyvsc51 then
+		if yyvs51 = Void then
+			debug ("GEYACC")
+				std.error.put_line ("Create yyvs51")
+			end
+			create yyspecial_routines51
+			yyvsc51 := yyInitial_yyvs_size
+			yyvs51 := yyspecial_routines51.make (yyvsc51)
+		else
+			debug ("GEYACC")
+				std.error.put_line ("Resize yyvs51")
+			end
+			yyvsc51 := yyvsc51 + yyInitial_yyvs_size
+			yyvs51 := yyspecial_routines51.resize (yyvs51, yyvsc51)
 		end
 	end
-	yyvs.put (yyval, yyvsp)
+	yyvs51.put (yyval51, yyvsp51)
 end
 		end
 
 	yy_do_action_95 is
-			--|#line 696 "eiffel.y"
+			--|#line <not available> "eiffel.y"
 		local
 			yyval71: EIFFEL_LIST [EXPORT_ITEM_AS]
 		do
---|#line 696 "eiffel.y"
+--|#line <not available> "eiffel.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'eiffel.y' at line 696")
+	std.error.put_line ("Executing parser user-code from file 'eiffel.y' at line <not available>")
 end
 
 
-yyval71 := yytype71 (yyvs.item (yyvsp)) 
-			yyval := yyval71
 if yy_parsing_status = yyContinue then
-	yyssp := yyssp - 1
-	yyvs.put (yyval, yyvsp)
+	yyssp := yyssp - 0
+	yyvsp71 := yyvsp71 + 1
+	if yyvsp71 >= yyvsc71 then
+		if yyvs71 = Void then
+			debug ("GEYACC")
+				std.error.put_line ("Create yyvs71")
+			end
+			create yyspecial_routines71
+			yyvsc71 := yyInitial_yyvs_size
+			yyvs71 := yyspecial_routines71.make (yyvsc71)
+		else
+			debug ("GEYACC")
+				std.error.put_line ("Resize yyvs71")
+			end
+			yyvsc71 := yyvsc71 + yyInitial_yyvs_size
+			yyvs71 := yyspecial_routines71.resize (yyvs71, yyvsc71)
+		end
+	end
+	yyvs71.put (yyval71, yyvsp71)
 end
 		end
 
 	yy_do_action_96 is
-			--|#line 700 "eiffel.y"
+			--|#line <not available> "eiffel.y"
 		local
 			yyval71: EIFFEL_LIST [EXPORT_ITEM_AS]
 		do
---|#line 700 "eiffel.y"
+--|#line <not available> "eiffel.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'eiffel.y' at line 700")
+	std.error.put_line ("Executing parser user-code from file 'eiffel.y' at line <not available>")
 end
 
-
-				if yytype71 (yyvs.item (yyvsp)).is_empty then
-					yyval71 := Void
-				else
-					yyval71 := yytype71 (yyvs.item (yyvsp))
-				end
-			
-			yyval := yyval71
+yyval71 := yyvs71.item (yyvsp71) 
 if yy_parsing_status = yyContinue then
-	yyssp := yyssp - 2
-	yyvsp := yyvsp - 1
-	yyvs.put (yyval, yyvsp)
+	yyssp := yyssp - 1
+	yyvs71.put (yyval71, yyvsp71)
 end
 		end
 
 	yy_do_action_97 is
-			--|#line 708 "eiffel.y"
+			--|#line <not available> "eiffel.y"
 		local
 			yyval71: EIFFEL_LIST [EXPORT_ITEM_AS]
 		do
---|#line 708 "eiffel.y"
+--|#line <not available> "eiffel.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'eiffel.y' at line 708")
+	std.error.put_line ("Executing parser user-code from file 'eiffel.y' at line <not available>")
 end
 
-
-
-			yyval := yyval71
+				if yyvs71.item (yyvsp71).is_empty then
+					yyval71 := Void
+				else
+					yyval71 := yyvs71.item (yyvsp71)
+				end
+			
 if yy_parsing_status = yyContinue then
 	yyssp := yyssp - 2
-	yyvsp := yyvsp - 1
-	yyvs.put (yyval, yyvsp)
+	yyvsp1 := yyvsp1 -1
+	yyvs71.put (yyval71, yyvsp71)
 end
 		end
 
 	yy_do_action_98 is
-			--|#line 712 "eiffel.y"
+			--|#line <not available> "eiffel.y"
 		local
 			yyval71: EIFFEL_LIST [EXPORT_ITEM_AS]
 		do
---|#line 712 "eiffel.y"
+--|#line <not available> "eiffel.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'eiffel.y' at line 712")
+	std.error.put_line ("Executing parser user-code from file 'eiffel.y' at line <not available>")
 end
 
 
-				yyval71 := new_eiffel_list_export_item_as (Initial_new_export_list_size)
-				if yytype24 (yyvs.item (yyvsp)) /= Void then
-					yyval71.extend (yytype24 (yyvs.item (yyvsp)))
-				end
-			
-			yyval := yyval71
 if yy_parsing_status = yyContinue then
-	yyssp := yyssp - 1
-	yyvs.put (yyval, yyvsp)
+	yyssp := yyssp - 2
+	yyvsp71 := yyvsp71 + 1
+	yyvsp1 := yyvsp1 -2
+	if yyvsp71 >= yyvsc71 then
+		if yyvs71 = Void then
+			debug ("GEYACC")
+				std.error.put_line ("Create yyvs71")
+			end
+			create yyspecial_routines71
+			yyvsc71 := yyInitial_yyvs_size
+			yyvs71 := yyspecial_routines71.make (yyvsc71)
+		else
+			debug ("GEYACC")
+				std.error.put_line ("Resize yyvs71")
+			end
+			yyvsc71 := yyvsc71 + yyInitial_yyvs_size
+			yyvs71 := yyspecial_routines71.resize (yyvs71, yyvsc71)
+		end
+	end
+	yyvs71.put (yyval71, yyvsp71)
 end
 		end
 
 	yy_do_action_99 is
-			--|#line 719 "eiffel.y"
+			--|#line <not available> "eiffel.y"
 		local
 			yyval71: EIFFEL_LIST [EXPORT_ITEM_AS]
 		do
---|#line 719 "eiffel.y"
+--|#line <not available> "eiffel.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'eiffel.y' at line 719")
+	std.error.put_line ("Executing parser user-code from file 'eiffel.y' at line <not available>")
 end
 
-
-				yyval71 := yytype71 (yyvs.item (yyvsp - 1))
-				if yytype24 (yyvs.item (yyvsp)) /= Void then
-					yyval71.extend (yytype24 (yyvs.item (yyvsp)))
+				yyval71 := new_eiffel_list_export_item_as (Initial_new_export_list_size)
+				if yyvs24.item (yyvsp24) /= Void then
+					yyval71.extend (yyvs24.item (yyvsp24))
 				end
 			
-			yyval := yyval71
 if yy_parsing_status = yyContinue then
-	yyssp := yyssp - 2
-	yyvsp := yyvsp - 1
-	yyvs.put (yyval, yyvsp)
+	yyssp := yyssp - 1
+	yyvsp71 := yyvsp71 + 1
+	yyvsp24 := yyvsp24 -1
+	if yyvsp71 >= yyvsc71 then
+		if yyvs71 = Void then
+			debug ("GEYACC")
+				std.error.put_line ("Create yyvs71")
+			end
+			create yyspecial_routines71
+			yyvsc71 := yyInitial_yyvs_size
+			yyvs71 := yyspecial_routines71.make (yyvsc71)
+		else
+			debug ("GEYACC")
+				std.error.put_line ("Resize yyvs71")
+			end
+			yyvsc71 := yyvsc71 + yyInitial_yyvs_size
+			yyvs71 := yyspecial_routines71.resize (yyvs71, yyvsc71)
+		end
+	end
+	yyvs71.put (yyval71, yyvsp71)
 end
 		end
 
 	yy_do_action_100 is
-			--|#line 728 "eiffel.y"
+			--|#line <not available> "eiffel.y"
 		local
-			yyval24: EXPORT_ITEM_AS
+			yyval71: EIFFEL_LIST [EXPORT_ITEM_AS]
 		do
---|#line 728 "eiffel.y"
+--|#line <not available> "eiffel.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'eiffel.y' at line 728")
+	std.error.put_line ("Executing parser user-code from file 'eiffel.y' at line <not available>")
 end
 
-
-				if yytype30 (yyvs.item (yyvsp - 1)) /= Void then
-					yyval24 := new_export_item_as (new_client_as (yytype78 (yyvs.item (yyvsp - 2))), yytype30 (yyvs.item (yyvsp - 1)))
+				yyval71 := yyvs71.item (yyvsp71)
+				if yyvs24.item (yyvsp24) /= Void then
+					yyval71.extend (yyvs24.item (yyvsp24))
 				end
 			
-			yyval := yyval24
 if yy_parsing_status = yyContinue then
-	yyssp := yyssp - 3
-	yyvsp := yyvsp - 2
-	yyvs.put (yyval, yyvsp)
+	yyssp := yyssp - 2
+	yyvsp24 := yyvsp24 -1
+	yyvs71.put (yyval71, yyvsp71)
 end
 		end
 
 	yy_do_action_101 is
-			--|#line 736 "eiffel.y"
+			--|#line <not available> "eiffel.y"
 		local
-			yyval30: FEATURE_SET_AS
+			yyval24: EXPORT_ITEM_AS
 		do
---|#line 736 "eiffel.y"
+--|#line <not available> "eiffel.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'eiffel.y' at line 736")
+	std.error.put_line ("Executing parser user-code from file 'eiffel.y' at line <not available>")
 end
 
-
-
-			yyval := yyval30
+				if yyvs30.item (yyvsp30) /= Void then
+					yyval24 := new_export_item_as (new_client_as (yyvs78.item (yyvsp78)), yyvs30.item (yyvsp30))
+				end
+			
 if yy_parsing_status = yyContinue then
-	yyvsp := yyvsp + 1
-	if yyvsp >= yyvsc then
-		yyvsc := yyvsc + yyInitial_stack_size
-		yyvs := FIXED_ARRAY_.resize (yyvs, yyvsc)
-		debug ("GEYACC")
-			std.error.put_string ("Stack (yyvs) size increased to ")
-			std.error.put_integer (yyvsc)
-			std.error.put_new_line
+	yyssp := yyssp - 3
+	yyvsp24 := yyvsp24 + 1
+	yyvsp78 := yyvsp78 -1
+	yyvsp30 := yyvsp30 -1
+	yyvsp1 := yyvsp1 -1
+	if yyvsp24 >= yyvsc24 then
+		if yyvs24 = Void then
+			debug ("GEYACC")
+				std.error.put_line ("Create yyvs24")
+			end
+			create yyspecial_routines24
+			yyvsc24 := yyInitial_yyvs_size
+			yyvs24 := yyspecial_routines24.make (yyvsc24)
+		else
+			debug ("GEYACC")
+				std.error.put_line ("Resize yyvs24")
+			end
+			yyvsc24 := yyvsc24 + yyInitial_yyvs_size
+			yyvs24 := yyspecial_routines24.resize (yyvs24, yyvsc24)
 		end
 	end
-	yyvs.put (yyval, yyvsp)
+	yyvs24.put (yyval24, yyvsp24)
 end
 		end
 
 	yy_do_action_102 is
-			--|#line 738 "eiffel.y"
+			--|#line <not available> "eiffel.y"
 		local
 			yyval30: FEATURE_SET_AS
 		do
---|#line 738 "eiffel.y"
+--|#line <not available> "eiffel.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'eiffel.y' at line 738")
+	std.error.put_line ("Executing parser user-code from file 'eiffel.y' at line <not available>")
 end
 
 
-yyval30 := new_all_as 
-			yyval := yyval30
 if yy_parsing_status = yyContinue then
-	yyssp := yyssp - 1
-	yyvs.put (yyval, yyvsp)
+	yyssp := yyssp - 0
+	yyvsp30 := yyvsp30 + 1
+	if yyvsp30 >= yyvsc30 then
+		if yyvs30 = Void then
+			debug ("GEYACC")
+				std.error.put_line ("Create yyvs30")
+			end
+			create yyspecial_routines30
+			yyvsc30 := yyInitial_yyvs_size
+			yyvs30 := yyspecial_routines30.make (yyvsc30)
+		else
+			debug ("GEYACC")
+				std.error.put_line ("Resize yyvs30")
+			end
+			yyvsc30 := yyvsc30 + yyInitial_yyvs_size
+			yyvs30 := yyspecial_routines30.resize (yyvs30, yyvsc30)
+		end
+	end
+	yyvs30.put (yyval30, yyvsp30)
 end
 		end
 
 	yy_do_action_103 is
-			--|#line 740 "eiffel.y"
+			--|#line <not available> "eiffel.y"
 		local
 			yyval30: FEATURE_SET_AS
 		do
---|#line 740 "eiffel.y"
+--|#line <not available> "eiffel.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'eiffel.y' at line 740")
+	std.error.put_line ("Executing parser user-code from file 'eiffel.y' at line <not available>")
 end
 
-
-yyval30 := new_feature_list_as (yytype76 (yyvs.item (yyvsp))) 
-			yyval := yyval30
+yyval30 := new_all_as 
 if yy_parsing_status = yyContinue then
 	yyssp := yyssp - 1
-	yyvs.put (yyval, yyvsp)
+	yyvsp30 := yyvsp30 + 1
+	yyvsp1 := yyvsp1 -1
+	if yyvsp30 >= yyvsc30 then
+		if yyvs30 = Void then
+			debug ("GEYACC")
+				std.error.put_line ("Create yyvs30")
+			end
+			create yyspecial_routines30
+			yyvsc30 := yyInitial_yyvs_size
+			yyvs30 := yyspecial_routines30.make (yyvsc30)
+		else
+			debug ("GEYACC")
+				std.error.put_line ("Resize yyvs30")
+			end
+			yyvsc30 := yyvsc30 + yyInitial_yyvs_size
+			yyvs30 := yyspecial_routines30.resize (yyvs30, yyvsc30)
+		end
+	end
+	yyvs30.put (yyval30, yyvsp30)
 end
 		end
 
 	yy_do_action_104 is
-			--|#line 744 "eiffel.y"
+			--|#line <not available> "eiffel.y"
 		local
-			yyval68: EIFFEL_LIST [CONVERT_FEAT_AS]
+			yyval30: FEATURE_SET_AS
 		do
---|#line 744 "eiffel.y"
+--|#line <not available> "eiffel.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'eiffel.y' at line 744")
+	std.error.put_line ("Executing parser user-code from file 'eiffel.y' at line <not available>")
 end
 
-
-
-			yyval := yyval68
+yyval30 := new_feature_list_as (yyvs76.item (yyvsp76)) 
 if yy_parsing_status = yyContinue then
-	yyvsp := yyvsp + 1
-	if yyvsp >= yyvsc then
-		yyvsc := yyvsc + yyInitial_stack_size
-		yyvs := FIXED_ARRAY_.resize (yyvs, yyvsc)
-		debug ("GEYACC")
-			std.error.put_string ("Stack (yyvs) size increased to ")
-			std.error.put_integer (yyvsc)
-			std.error.put_new_line
+	yyssp := yyssp - 1
+	yyvsp30 := yyvsp30 + 1
+	yyvsp76 := yyvsp76 -1
+	if yyvsp30 >= yyvsc30 then
+		if yyvs30 = Void then
+			debug ("GEYACC")
+				std.error.put_line ("Create yyvs30")
+			end
+			create yyspecial_routines30
+			yyvsc30 := yyInitial_yyvs_size
+			yyvs30 := yyspecial_routines30.make (yyvsc30)
+		else
+			debug ("GEYACC")
+				std.error.put_line ("Resize yyvs30")
+			end
+			yyvsc30 := yyvsc30 + yyInitial_yyvs_size
+			yyvs30 := yyspecial_routines30.resize (yyvs30, yyvsc30)
 		end
 	end
-	yyvs.put (yyval, yyvsp)
+	yyvs30.put (yyval30, yyvsp30)
 end
 		end
 
 	yy_do_action_105 is
-			--|#line 746 "eiffel.y"
+			--|#line <not available> "eiffel.y"
 		local
 			yyval68: EIFFEL_LIST [CONVERT_FEAT_AS]
 		do
---|#line 746 "eiffel.y"
+--|#line <not available> "eiffel.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'eiffel.y' at line 746")
+	std.error.put_line ("Executing parser user-code from file 'eiffel.y' at line <not available>")
 end
 
 
-			yyval68 := yytype68 (yyvs.item (yyvsp))
-		
-			yyval := yyval68
 if yy_parsing_status = yyContinue then
-	yyssp := yyssp - 2
-	yyvsp := yyvsp - 1
-	yyvs.put (yyval, yyvsp)
+	yyssp := yyssp - 0
+	yyvsp68 := yyvsp68 + 1
+	if yyvsp68 >= yyvsc68 then
+		if yyvs68 = Void then
+			debug ("GEYACC")
+				std.error.put_line ("Create yyvs68")
+			end
+			create yyspecial_routines68
+			yyvsc68 := yyInitial_yyvs_size
+			yyvs68 := yyspecial_routines68.make (yyvsc68)
+		else
+			debug ("GEYACC")
+				std.error.put_line ("Resize yyvs68")
+			end
+			yyvsc68 := yyvsc68 + yyInitial_yyvs_size
+			yyvs68 := yyspecial_routines68.resize (yyvs68, yyvsc68)
+		end
+	end
+	yyvs68.put (yyval68, yyvsp68)
 end
 		end
 
 	yy_do_action_106 is
-			--|#line 752 "eiffel.y"
+			--|#line <not available> "eiffel.y"
 		local
 			yyval68: EIFFEL_LIST [CONVERT_FEAT_AS]
 		do
---|#line 752 "eiffel.y"
+--|#line <not available> "eiffel.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'eiffel.y' at line 752")
+	std.error.put_line ("Executing parser user-code from file 'eiffel.y' at line <not available>")
 end
 
-
-			yyval68 := new_eiffel_list_convert (Initial_convert_list_size)
-			yyval68.extend (yytype17 (yyvs.item (yyvsp)))
+			yyval68 := yyvs68.item (yyvsp68)
 		
-			yyval := yyval68
 if yy_parsing_status = yyContinue then
-	yyssp := yyssp - 1
-	yyvs.put (yyval, yyvsp)
+	yyssp := yyssp - 2
+	yyvsp1 := yyvsp1 -1
+	yyvs68.put (yyval68, yyvsp68)
 end
 		end
 
 	yy_do_action_107 is
-			--|#line 757 "eiffel.y"
+			--|#line <not available> "eiffel.y"
 		local
 			yyval68: EIFFEL_LIST [CONVERT_FEAT_AS]
 		do
---|#line 757 "eiffel.y"
+--|#line <not available> "eiffel.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'eiffel.y' at line 757")
+	std.error.put_line ("Executing parser user-code from file 'eiffel.y' at line <not available>")
 end
 
-
-			yyval68 := yytype68 (yyvs.item (yyvsp - 2))
-			yyval68.extend (yytype17 (yyvs.item (yyvsp)))
+			yyval68 := new_eiffel_list_convert (Initial_convert_list_size)
+			yyval68.extend (yyvs17.item (yyvsp17))
 		
-			yyval := yyval68
 if yy_parsing_status = yyContinue then
-	yyssp := yyssp - 3
-	yyvsp := yyvsp - 2
-	yyvs.put (yyval, yyvsp)
+	yyssp := yyssp - 1
+	yyvsp68 := yyvsp68 + 1
+	yyvsp17 := yyvsp17 -1
+	if yyvsp68 >= yyvsc68 then
+		if yyvs68 = Void then
+			debug ("GEYACC")
+				std.error.put_line ("Create yyvs68")
+			end
+			create yyspecial_routines68
+			yyvsc68 := yyInitial_yyvs_size
+			yyvs68 := yyspecial_routines68.make (yyvsc68)
+		else
+			debug ("GEYACC")
+				std.error.put_line ("Resize yyvs68")
+			end
+			yyvsc68 := yyvsc68 + yyInitial_yyvs_size
+			yyvs68 := yyspecial_routines68.resize (yyvs68, yyvsc68)
+		end
+	end
+	yyvs68.put (yyval68, yyvsp68)
 end
 		end
 
 	yy_do_action_108 is
-			--|#line 765 "eiffel.y"
+			--|#line <not available> "eiffel.y"
 		local
-			yyval17: CONVERT_FEAT_AS
+			yyval68: EIFFEL_LIST [CONVERT_FEAT_AS]
 		do
---|#line 765 "eiffel.y"
+--|#line <not available> "eiffel.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'eiffel.y' at line 765")
+	std.error.put_line ("Executing parser user-code from file 'eiffel.y' at line <not available>")
 end
 
-
-				-- True because this is a conversion feature used as a creation
-				-- procedure in current class.
-			yyval17 := new_convert_feat_as (True, yytype93 (yyvs.item (yyvsp - 5)).first, yytype89 (yyvs.item (yyvsp - 2)))
+			yyval68 := yyvs68.item (yyvsp68)
+			yyval68.extend (yyvs17.item (yyvsp17))
 		
-			yyval := yyval17
 if yy_parsing_status = yyContinue then
-	yyssp := yyssp - 6
-	yyvsp := yyvsp - 5
-	yyvs.put (yyval, yyvsp)
+	yyssp := yyssp - 3
+	yyvsp1 := yyvsp1 -1
+	yyvsp17 := yyvsp17 -1
+	yyvs68.put (yyval68, yyvsp68)
 end
 		end
 
 	yy_do_action_109 is
-			--|#line 771 "eiffel.y"
+			--|#line <not available> "eiffel.y"
 		local
 			yyval17: CONVERT_FEAT_AS
 		do
---|#line 771 "eiffel.y"
+--|#line <not available> "eiffel.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'eiffel.y' at line 771")
+	std.error.put_line ("Executing parser user-code from file 'eiffel.y' at line <not available>")
 end
 
-
-				-- False because this is not a conversion feature used as a creation
-				-- procedure.
-			yyval17 := new_convert_feat_as (False, yytype93 (yyvs.item (yyvsp - 4)).first, yytype89 (yyvs.item (yyvsp - 1)))
+				-- True because this is a conversion feature used as a creation
+				-- procedure in current class.
+			yyval17 := new_convert_feat_as (True, yyvs93.item (yyvsp93).first, yyvs89.item (yyvsp89))
 		
-			yyval := yyval17
 if yy_parsing_status = yyContinue then
-	yyssp := yyssp - 5
-	yyvsp := yyvsp - 4
-	yyvs.put (yyval, yyvsp)
+	yyssp := yyssp - 6
+	yyvsp17 := yyvsp17 + 1
+	yyvsp93 := yyvsp93 -1
+	yyvsp1 := yyvsp1 -4
+	yyvsp89 := yyvsp89 -1
+	if yyvsp17 >= yyvsc17 then
+		if yyvs17 = Void then
+			debug ("GEYACC")
+				std.error.put_line ("Create yyvs17")
+			end
+			create yyspecial_routines17
+			yyvsc17 := yyInitial_yyvs_size
+			yyvs17 := yyspecial_routines17.make (yyvsc17)
+		else
+			debug ("GEYACC")
+				std.error.put_line ("Resize yyvs17")
+			end
+			yyvsc17 := yyvsc17 + yyInitial_yyvs_size
+			yyvs17 := yyspecial_routines17.resize (yyvs17, yyvsc17)
+		end
+	end
+	yyvs17.put (yyval17, yyvsp17)
 end
 		end
 
 	yy_do_action_110 is
-			--|#line 779 "eiffel.y"
+			--|#line <not available> "eiffel.y"
 		local
-			yyval76: EIFFEL_LIST [FEATURE_NAME]
+			yyval17: CONVERT_FEAT_AS
 		do
---|#line 779 "eiffel.y"
+--|#line <not available> "eiffel.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'eiffel.y' at line 779")
+	std.error.put_line ("Executing parser user-code from file 'eiffel.y' at line <not available>")
 end
 
-
-				yyval76 := new_eiffel_list_feature_name (Initial_feature_list_size)
-				yyval76.extend (yytype93 (yyvs.item (yyvsp)).first)
-			
-			yyval := yyval76
+				-- False because this is not a conversion feature used as a creation
+				-- procedure.
+			yyval17 := new_convert_feat_as (False, yyvs93.item (yyvsp93).first, yyvs89.item (yyvsp89))
+		
 if yy_parsing_status = yyContinue then
-	yyssp := yyssp - 1
-	yyvs.put (yyval, yyvsp)
+	yyssp := yyssp - 5
+	yyvsp17 := yyvsp17 + 1
+	yyvsp93 := yyvsp93 -1
+	yyvsp1 := yyvsp1 -3
+	yyvsp89 := yyvsp89 -1
+	if yyvsp17 >= yyvsc17 then
+		if yyvs17 = Void then
+			debug ("GEYACC")
+				std.error.put_line ("Create yyvs17")
+			end
+			create yyspecial_routines17
+			yyvsc17 := yyInitial_yyvs_size
+			yyvs17 := yyspecial_routines17.make (yyvsc17)
+		else
+			debug ("GEYACC")
+				std.error.put_line ("Resize yyvs17")
+			end
+			yyvsc17 := yyvsc17 + yyInitial_yyvs_size
+			yyvs17 := yyspecial_routines17.resize (yyvs17, yyvsc17)
+		end
+	end
+	yyvs17.put (yyval17, yyvsp17)
 end
 		end
 
 	yy_do_action_111 is
-			--|#line 784 "eiffel.y"
+			--|#line <not available> "eiffel.y"
 		local
 			yyval76: EIFFEL_LIST [FEATURE_NAME]
 		do
---|#line 784 "eiffel.y"
+--|#line <not available> "eiffel.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'eiffel.y' at line 784")
+	std.error.put_line ("Executing parser user-code from file 'eiffel.y' at line <not available>")
 end
 
-
-				yyval76 := yytype76 (yyvs.item (yyvsp - 2))
-				yyval76.extend (yytype93 (yyvs.item (yyvsp)).first)
+				yyval76 := new_eiffel_list_feature_name (Initial_feature_list_size)
+				yyval76.extend (yyvs93.item (yyvsp93).first)
 			
-			yyval := yyval76
 if yy_parsing_status = yyContinue then
-	yyssp := yyssp - 3
-	yyvsp := yyvsp - 2
-	yyvs.put (yyval, yyvsp)
+	yyssp := yyssp - 1
+	yyvsp76 := yyvsp76 + 1
+	yyvsp93 := yyvsp93 -1
+	if yyvsp76 >= yyvsc76 then
+		if yyvs76 = Void then
+			debug ("GEYACC")
+				std.error.put_line ("Create yyvs76")
+			end
+			create yyspecial_routines76
+			yyvsc76 := yyInitial_yyvs_size
+			yyvs76 := yyspecial_routines76.make (yyvsc76)
+		else
+			debug ("GEYACC")
+				std.error.put_line ("Resize yyvs76")
+			end
+			yyvsc76 := yyvsc76 + yyInitial_yyvs_size
+			yyvs76 := yyspecial_routines76.resize (yyvs76, yyvsc76)
+		end
+	end
+	yyvs76.put (yyval76, yyvsp76)
 end
 		end
 
 	yy_do_action_112 is
-			--|#line 791 "eiffel.y"
+			--|#line <not available> "eiffel.y"
 		local
 			yyval76: EIFFEL_LIST [FEATURE_NAME]
 		do
---|#line 791 "eiffel.y"
+--|#line <not available> "eiffel.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'eiffel.y' at line 791")
+	std.error.put_line ("Executing parser user-code from file 'eiffel.y' at line <not available>")
 end
 
-
-
-			yyval := yyval76
+				yyval76 := yyvs76.item (yyvsp76)
+				yyval76.extend (yyvs93.item (yyvsp93).first)
+			
 if yy_parsing_status = yyContinue then
-	yyvsp := yyvsp + 1
-	if yyvsp >= yyvsc then
-		yyvsc := yyvsc + yyInitial_stack_size
-		yyvs := FIXED_ARRAY_.resize (yyvs, yyvsc)
-		debug ("GEYACC")
-			std.error.put_string ("Stack (yyvs) size increased to ")
-			std.error.put_integer (yyvsc)
-			std.error.put_new_line
-		end
-	end
-	yyvs.put (yyval, yyvsp)
+	yyssp := yyssp - 3
+	yyvsp1 := yyvsp1 -1
+	yyvsp93 := yyvsp93 -1
+	yyvs76.put (yyval76, yyvsp76)
 end
 		end
 
 	yy_do_action_113 is
-			--|#line 793 "eiffel.y"
+			--|#line <not available> "eiffel.y"
 		local
 			yyval76: EIFFEL_LIST [FEATURE_NAME]
 		do
---|#line 793 "eiffel.y"
+--|#line <not available> "eiffel.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'eiffel.y' at line 793")
+	std.error.put_line ("Executing parser user-code from file 'eiffel.y' at line <not available>")
 end
 
 
-yyval76 := yytype76 (yyvs.item (yyvsp)) 
-			yyval := yyval76
 if yy_parsing_status = yyContinue then
-	yyssp := yyssp - 1
-	yyvs.put (yyval, yyvsp)
+	yyssp := yyssp - 0
+	yyvsp76 := yyvsp76 + 1
+	if yyvsp76 >= yyvsc76 then
+		if yyvs76 = Void then
+			debug ("GEYACC")
+				std.error.put_line ("Create yyvs76")
+			end
+			create yyspecial_routines76
+			yyvsc76 := yyInitial_yyvs_size
+			yyvs76 := yyspecial_routines76.make (yyvsc76)
+		else
+			debug ("GEYACC")
+				std.error.put_line ("Resize yyvs76")
+			end
+			yyvsc76 := yyvsc76 + yyInitial_yyvs_size
+			yyvs76 := yyspecial_routines76.resize (yyvs76, yyvsc76)
+		end
+	end
+	yyvs76.put (yyval76, yyvsp76)
 end
 		end
 
 	yy_do_action_114 is
-			--|#line 797 "eiffel.y"
+			--|#line <not available> "eiffel.y"
 		local
 			yyval76: EIFFEL_LIST [FEATURE_NAME]
 		do
---|#line 797 "eiffel.y"
+--|#line <not available> "eiffel.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'eiffel.y' at line 797")
+	std.error.put_line ("Executing parser user-code from file 'eiffel.y' at line <not available>")
 end
 
-
-
-			yyval := yyval76
+yyval76 := yyvs76.item (yyvsp76) 
 if yy_parsing_status = yyContinue then
 	yyssp := yyssp - 1
-	yyvs.put (yyval, yyvsp)
+	yyvs76.put (yyval76, yyvsp76)
 end
 		end
 
 	yy_do_action_115 is
-			--|#line 799 "eiffel.y"
+			--|#line <not available> "eiffel.y"
 		local
 			yyval76: EIFFEL_LIST [FEATURE_NAME]
 		do
---|#line 799 "eiffel.y"
+--|#line <not available> "eiffel.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'eiffel.y' at line 799")
+	std.error.put_line ("Executing parser user-code from file 'eiffel.y' at line <not available>")
 end
 
 
-yyval76 := yytype76 (yyvs.item (yyvsp)) 
-			yyval := yyval76
 if yy_parsing_status = yyContinue then
-	yyssp := yyssp - 2
-	yyvsp := yyvsp - 1
-	yyvs.put (yyval, yyvsp)
+	yyssp := yyssp - 1
+	yyvsp76 := yyvsp76 + 1
+	yyvsp1 := yyvsp1 -1
+	if yyvsp76 >= yyvsc76 then
+		if yyvs76 = Void then
+			debug ("GEYACC")
+				std.error.put_line ("Create yyvs76")
+			end
+			create yyspecial_routines76
+			yyvsc76 := yyInitial_yyvs_size
+			yyvs76 := yyspecial_routines76.make (yyvsc76)
+		else
+			debug ("GEYACC")
+				std.error.put_line ("Resize yyvs76")
+			end
+			yyvsc76 := yyvsc76 + yyInitial_yyvs_size
+			yyvs76 := yyspecial_routines76.resize (yyvs76, yyvsc76)
+		end
+	end
+	yyvs76.put (yyval76, yyvsp76)
 end
 		end
 
 	yy_do_action_116 is
-			--|#line 803 "eiffel.y"
+			--|#line <not available> "eiffel.y"
 		local
 			yyval76: EIFFEL_LIST [FEATURE_NAME]
 		do
---|#line 803 "eiffel.y"
+--|#line <not available> "eiffel.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'eiffel.y' at line 803")
+	std.error.put_line ("Executing parser user-code from file 'eiffel.y' at line <not available>")
 end
 
-
-
-			yyval := yyval76
+yyval76 := yyvs76.item (yyvsp76) 
 if yy_parsing_status = yyContinue then
-	yyvsp := yyvsp + 1
-	if yyvsp >= yyvsc then
-		yyvsc := yyvsc + yyInitial_stack_size
-		yyvs := FIXED_ARRAY_.resize (yyvs, yyvsc)
-		debug ("GEYACC")
-			std.error.put_string ("Stack (yyvs) size increased to ")
-			std.error.put_integer (yyvsc)
-			std.error.put_new_line
-		end
-	end
-	yyvs.put (yyval, yyvsp)
+	yyssp := yyssp - 2
+	yyvsp1 := yyvsp1 -1
+	yyvs76.put (yyval76, yyvsp76)
 end
 		end
 
 	yy_do_action_117 is
-			--|#line 805 "eiffel.y"
+			--|#line <not available> "eiffel.y"
 		local
 			yyval76: EIFFEL_LIST [FEATURE_NAME]
 		do
---|#line 805 "eiffel.y"
+--|#line <not available> "eiffel.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'eiffel.y' at line 805")
+	std.error.put_line ("Executing parser user-code from file 'eiffel.y' at line <not available>")
 end
 
 
-yyval76 := yytype76 (yyvs.item (yyvsp)) 
-			yyval := yyval76
 if yy_parsing_status = yyContinue then
-	yyssp := yyssp - 1
-	yyvs.put (yyval, yyvsp)
+	yyssp := yyssp - 0
+	yyvsp76 := yyvsp76 + 1
+	if yyvsp76 >= yyvsc76 then
+		if yyvs76 = Void then
+			debug ("GEYACC")
+				std.error.put_line ("Create yyvs76")
+			end
+			create yyspecial_routines76
+			yyvsc76 := yyInitial_yyvs_size
+			yyvs76 := yyspecial_routines76.make (yyvsc76)
+		else
+			debug ("GEYACC")
+				std.error.put_line ("Resize yyvs76")
+			end
+			yyvsc76 := yyvsc76 + yyInitial_yyvs_size
+			yyvs76 := yyspecial_routines76.resize (yyvs76, yyvsc76)
+		end
+	end
+	yyvs76.put (yyval76, yyvsp76)
 end
 		end
 
 	yy_do_action_118 is
-			--|#line 809 "eiffel.y"
+			--|#line <not available> "eiffel.y"
 		local
 			yyval76: EIFFEL_LIST [FEATURE_NAME]
 		do
---|#line 809 "eiffel.y"
+--|#line <not available> "eiffel.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'eiffel.y' at line 809")
+	std.error.put_line ("Executing parser user-code from file 'eiffel.y' at line <not available>")
 end
 
-
-
-			yyval := yyval76
+yyval76 := yyvs76.item (yyvsp76) 
 if yy_parsing_status = yyContinue then
 	yyssp := yyssp - 1
-	yyvs.put (yyval, yyvsp)
+	yyvs76.put (yyval76, yyvsp76)
 end
 		end
 
 	yy_do_action_119 is
-			--|#line 811 "eiffel.y"
+			--|#line <not available> "eiffel.y"
 		local
 			yyval76: EIFFEL_LIST [FEATURE_NAME]
 		do
---|#line 811 "eiffel.y"
+--|#line <not available> "eiffel.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'eiffel.y' at line 811")
+	std.error.put_line ("Executing parser user-code from file 'eiffel.y' at line <not available>")
 end
 
 
-yyval76 := yytype76 (yyvs.item (yyvsp)) 
-			yyval := yyval76
 if yy_parsing_status = yyContinue then
-	yyssp := yyssp - 2
-	yyvsp := yyvsp - 1
-	yyvs.put (yyval, yyvsp)
+	yyssp := yyssp - 1
+	yyvsp76 := yyvsp76 + 1
+	yyvsp1 := yyvsp1 -1
+	if yyvsp76 >= yyvsc76 then
+		if yyvs76 = Void then
+			debug ("GEYACC")
+				std.error.put_line ("Create yyvs76")
+			end
+			create yyspecial_routines76
+			yyvsc76 := yyInitial_yyvs_size
+			yyvs76 := yyspecial_routines76.make (yyvsc76)
+		else
+			debug ("GEYACC")
+				std.error.put_line ("Resize yyvs76")
+			end
+			yyvsc76 := yyvsc76 + yyInitial_yyvs_size
+			yyvs76 := yyspecial_routines76.resize (yyvs76, yyvsc76)
+		end
+	end
+	yyvs76.put (yyval76, yyvsp76)
 end
 		end
 
 	yy_do_action_120 is
-			--|#line 815 "eiffel.y"
+			--|#line <not available> "eiffel.y"
 		local
 			yyval76: EIFFEL_LIST [FEATURE_NAME]
 		do
---|#line 815 "eiffel.y"
+--|#line <not available> "eiffel.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'eiffel.y' at line 815")
+	std.error.put_line ("Executing parser user-code from file 'eiffel.y' at line <not available>")
 end
 
-
-
-			yyval := yyval76
+yyval76 := yyvs76.item (yyvsp76) 
 if yy_parsing_status = yyContinue then
-	yyvsp := yyvsp + 1
-	if yyvsp >= yyvsc then
-		yyvsc := yyvsc + yyInitial_stack_size
-		yyvs := FIXED_ARRAY_.resize (yyvs, yyvsc)
-		debug ("GEYACC")
-			std.error.put_string ("Stack (yyvs) size increased to ")
-			std.error.put_integer (yyvsc)
-			std.error.put_new_line
-		end
-	end
-	yyvs.put (yyval, yyvsp)
+	yyssp := yyssp - 2
+	yyvsp1 := yyvsp1 -1
+	yyvs76.put (yyval76, yyvsp76)
 end
 		end
 
 	yy_do_action_121 is
-			--|#line 817 "eiffel.y"
+			--|#line <not available> "eiffel.y"
 		local
 			yyval76: EIFFEL_LIST [FEATURE_NAME]
 		do
---|#line 817 "eiffel.y"
+--|#line <not available> "eiffel.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'eiffel.y' at line 817")
+	std.error.put_line ("Executing parser user-code from file 'eiffel.y' at line <not available>")
 end
 
 
-yyval76 := yytype76 (yyvs.item (yyvsp)) 
-			yyval := yyval76
 if yy_parsing_status = yyContinue then
-	yyssp := yyssp - 1
-	yyvs.put (yyval, yyvsp)
+	yyssp := yyssp - 0
+	yyvsp76 := yyvsp76 + 1
+	if yyvsp76 >= yyvsc76 then
+		if yyvs76 = Void then
+			debug ("GEYACC")
+				std.error.put_line ("Create yyvs76")
+			end
+			create yyspecial_routines76
+			yyvsc76 := yyInitial_yyvs_size
+			yyvs76 := yyspecial_routines76.make (yyvsc76)
+		else
+			debug ("GEYACC")
+				std.error.put_line ("Resize yyvs76")
+			end
+			yyvsc76 := yyvsc76 + yyInitial_yyvs_size
+			yyvs76 := yyspecial_routines76.resize (yyvs76, yyvsc76)
+		end
+	end
+	yyvs76.put (yyval76, yyvsp76)
 end
 		end
 
 	yy_do_action_122 is
-			--|#line 821 "eiffel.y"
+			--|#line <not available> "eiffel.y"
 		local
 			yyval76: EIFFEL_LIST [FEATURE_NAME]
 		do
---|#line 821 "eiffel.y"
+--|#line <not available> "eiffel.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'eiffel.y' at line 821")
+	std.error.put_line ("Executing parser user-code from file 'eiffel.y' at line <not available>")
 end
 
-
-
-			yyval := yyval76
+yyval76 := yyvs76.item (yyvsp76) 
 if yy_parsing_status = yyContinue then
 	yyssp := yyssp - 1
-	yyvs.put (yyval, yyvsp)
+	yyvs76.put (yyval76, yyvsp76)
 end
 		end
 
 	yy_do_action_123 is
-			--|#line 823 "eiffel.y"
+			--|#line <not available> "eiffel.y"
 		local
 			yyval76: EIFFEL_LIST [FEATURE_NAME]
 		do
---|#line 823 "eiffel.y"
+--|#line <not available> "eiffel.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'eiffel.y' at line 823")
+	std.error.put_line ("Executing parser user-code from file 'eiffel.y' at line <not available>")
 end
 
 
-yyval76 := yytype76 (yyvs.item (yyvsp)) 
-			yyval := yyval76
 if yy_parsing_status = yyContinue then
-	yyssp := yyssp - 2
-	yyvsp := yyvsp - 1
-	yyvs.put (yyval, yyvsp)
+	yyssp := yyssp - 1
+	yyvsp76 := yyvsp76 + 1
+	yyvsp1 := yyvsp1 -1
+	if yyvsp76 >= yyvsc76 then
+		if yyvs76 = Void then
+			debug ("GEYACC")
+				std.error.put_line ("Create yyvs76")
+			end
+			create yyspecial_routines76
+			yyvsc76 := yyInitial_yyvs_size
+			yyvs76 := yyspecial_routines76.make (yyvsc76)
+		else
+			debug ("GEYACC")
+				std.error.put_line ("Resize yyvs76")
+			end
+			yyvsc76 := yyvsc76 + yyInitial_yyvs_size
+			yyvs76 := yyspecial_routines76.resize (yyvs76, yyvsc76)
+		end
+	end
+	yyvs76.put (yyval76, yyvsp76)
 end
 		end
 
 	yy_do_action_124 is
-			--|#line 831 "eiffel.y"
+			--|#line <not available> "eiffel.y"
 		local
-			yyval90: EIFFEL_LIST [TYPE_DEC_AS]
+			yyval76: EIFFEL_LIST [FEATURE_NAME]
 		do
---|#line 831 "eiffel.y"
+--|#line <not available> "eiffel.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'eiffel.y' at line 831")
+	std.error.put_line ("Executing parser user-code from file 'eiffel.y' at line <not available>")
 end
 
-
-
-			yyval := yyval90
+yyval76 := yyvs76.item (yyvsp76) 
 if yy_parsing_status = yyContinue then
-	yyvsp := yyvsp + 1
-	if yyvsp >= yyvsc then
-		yyvsc := yyvsc + yyInitial_stack_size
-		yyvs := FIXED_ARRAY_.resize (yyvs, yyvsc)
-		debug ("GEYACC")
-			std.error.put_string ("Stack (yyvs) size increased to ")
-			std.error.put_integer (yyvsc)
-			std.error.put_new_line
-		end
-	end
-	yyvs.put (yyval, yyvsp)
+	yyssp := yyssp - 2
+	yyvsp1 := yyvsp1 -1
+	yyvs76.put (yyval76, yyvsp76)
 end
 		end
 
 	yy_do_action_125 is
-			--|#line 833 "eiffel.y"
+			--|#line <not available> "eiffel.y"
 		local
 			yyval90: EIFFEL_LIST [TYPE_DEC_AS]
 		do
---|#line 833 "eiffel.y"
+--|#line <not available> "eiffel.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'eiffel.y' at line 833")
+	std.error.put_line ("Executing parser user-code from file 'eiffel.y' at line <not available>")
 end
 
 
-yyval90 := yytype90 (yyvs.item (yyvsp - 1)) 
-			yyval := yyval90
 if yy_parsing_status = yyContinue then
-	yyssp := yyssp - 3
-	yyvsp := yyvsp - 2
-	yyvs.put (yyval, yyvsp)
+	yyssp := yyssp - 0
+	yyvsp90 := yyvsp90 + 1
+	if yyvsp90 >= yyvsc90 then
+		if yyvs90 = Void then
+			debug ("GEYACC")
+				std.error.put_line ("Create yyvs90")
+			end
+			create yyspecial_routines90
+			yyvsc90 := yyInitial_yyvs_size
+			yyvs90 := yyspecial_routines90.make (yyvsc90)
+		else
+			debug ("GEYACC")
+				std.error.put_line ("Resize yyvs90")
+			end
+			yyvsc90 := yyvsc90 + yyInitial_yyvs_size
+			yyvs90 := yyspecial_routines90.resize (yyvs90, yyvsc90)
+		end
+	end
+	yyvs90.put (yyval90, yyvsp90)
 end
 		end
 
 	yy_do_action_126 is
-			--|#line 837 "eiffel.y"
+			--|#line <not available> "eiffel.y"
 		local
 			yyval90: EIFFEL_LIST [TYPE_DEC_AS]
 		do
---|#line 837 "eiffel.y"
+--|#line <not available> "eiffel.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'eiffel.y' at line 837")
+	std.error.put_line ("Executing parser user-code from file 'eiffel.y' at line <not available>")
 end
 
-
-
-			yyval := yyval90
+yyval90 := yyvs90.item (yyvsp90) 
 if yy_parsing_status = yyContinue then
-	yyvsp := yyvsp + 1
-	if yyvsp >= yyvsc then
-		yyvsc := yyvsc + yyInitial_stack_size
-		yyvs := FIXED_ARRAY_.resize (yyvs, yyvsc)
-		debug ("GEYACC")
-			std.error.put_string ("Stack (yyvs) size increased to ")
-			std.error.put_integer (yyvsc)
-			std.error.put_new_line
-		end
-	end
-	yyvs.put (yyval, yyvsp)
+	yyssp := yyssp - 3
+	yyvsp1 := yyvsp1 -2
+	yyvs90.put (yyval90, yyvsp90)
 end
 		end
 
 	yy_do_action_127 is
-			--|#line 839 "eiffel.y"
+			--|#line <not available> "eiffel.y"
 		local
 			yyval90: EIFFEL_LIST [TYPE_DEC_AS]
 		do
---|#line 839 "eiffel.y"
+--|#line <not available> "eiffel.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'eiffel.y' at line 839")
+	std.error.put_line ("Executing parser user-code from file 'eiffel.y' at line <not available>")
 end
 
 
-yyval90 := yytype90 (yyvs.item (yyvsp)) 
-			yyval := yyval90
 if yy_parsing_status = yyContinue then
-	yyssp := yyssp - 1
-	yyvs.put (yyval, yyvsp)
+	yyssp := yyssp - 0
+	yyvsp90 := yyvsp90 + 1
+	if yyvsp90 >= yyvsc90 then
+		if yyvs90 = Void then
+			debug ("GEYACC")
+				std.error.put_line ("Create yyvs90")
+			end
+			create yyspecial_routines90
+			yyvsc90 := yyInitial_yyvs_size
+			yyvs90 := yyspecial_routines90.make (yyvsc90)
+		else
+			debug ("GEYACC")
+				std.error.put_line ("Resize yyvs90")
+			end
+			yyvsc90 := yyvsc90 + yyInitial_yyvs_size
+			yyvs90 := yyspecial_routines90.resize (yyvs90, yyvsc90)
+		end
+	end
+	yyvs90.put (yyval90, yyvsp90)
 end
 		end
 
 	yy_do_action_128 is
-			--|#line 843 "eiffel.y"
+			--|#line <not available> "eiffel.y"
 		local
 			yyval90: EIFFEL_LIST [TYPE_DEC_AS]
 		do
---|#line 843 "eiffel.y"
+--|#line <not available> "eiffel.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'eiffel.y' at line 843")
+	std.error.put_line ("Executing parser user-code from file 'eiffel.y' at line <not available>")
 end
 
-
-				yyval90 := new_eiffel_list_type_dec_as (Initial_entity_declaration_list_size)
-				yyval90.extend (yytype64 (yyvs.item (yyvsp)))
-			
-			yyval := yyval90
+yyval90 := yyvs90.item (yyvsp90) 
 if yy_parsing_status = yyContinue then
 	yyssp := yyssp - 1
-	yyvs.put (yyval, yyvsp)
+	yyvs90.put (yyval90, yyvsp90)
 end
 		end
 
 	yy_do_action_129 is
-			--|#line 848 "eiffel.y"
+			--|#line <not available> "eiffel.y"
 		local
 			yyval90: EIFFEL_LIST [TYPE_DEC_AS]
 		do
---|#line 848 "eiffel.y"
+--|#line <not available> "eiffel.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'eiffel.y' at line 848")
+	std.error.put_line ("Executing parser user-code from file 'eiffel.y' at line <not available>")
 end
 
-
-				yyval90 := yytype90 (yyvs.item (yyvsp - 1))
-				yyval90.extend (yytype64 (yyvs.item (yyvsp)))
+				yyval90 := new_eiffel_list_type_dec_as (Initial_entity_declaration_list_size)
+				yyval90.extend (yyvs64.item (yyvsp64))
 			
-			yyval := yyval90
 if yy_parsing_status = yyContinue then
-	yyssp := yyssp - 2
-	yyvsp := yyvsp - 1
-	yyvs.put (yyval, yyvsp)
+	yyssp := yyssp - 1
+	yyvsp90 := yyvsp90 + 1
+	yyvsp64 := yyvsp64 -1
+	if yyvsp90 >= yyvsc90 then
+		if yyvs90 = Void then
+			debug ("GEYACC")
+				std.error.put_line ("Create yyvs90")
+			end
+			create yyspecial_routines90
+			yyvsc90 := yyInitial_yyvs_size
+			yyvs90 := yyspecial_routines90.make (yyvsc90)
+		else
+			debug ("GEYACC")
+				std.error.put_line ("Resize yyvs90")
+			end
+			yyvsc90 := yyvsc90 + yyInitial_yyvs_size
+			yyvs90 := yyspecial_routines90.resize (yyvs90, yyvsc90)
+		end
+	end
+	yyvs90.put (yyval90, yyvsp90)
 end
 		end
 
 	yy_do_action_130 is
-			--|#line 855 "eiffel.y"
+			--|#line <not available> "eiffel.y"
 		local
-			yyval64: TYPE_DEC_AS
+			yyval90: EIFFEL_LIST [TYPE_DEC_AS]
 		do
---|#line 855 "eiffel.y"
+--|#line <not available> "eiffel.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'eiffel.y' at line 855")
+	std.error.put_line ("Executing parser user-code from file 'eiffel.y' at line <not available>")
 end
 
-
-yyval64 := new_type_dec_as (yytype80 (yyvs.item (yyvsp - 5)), yytype63 (yyvs.item (yyvsp - 1)), yytype58 (yyvs.item (yyvsp - 4))) 
-			yyval := yyval64
+				yyval90 := yyvs90.item (yyvsp90)
+				yyval90.extend (yyvs64.item (yyvsp64))
+			
 if yy_parsing_status = yyContinue then
-	yyssp := yyssp - 6
-	yyvsp := yyvsp - 5
-	yyvs.put (yyval, yyvsp)
+	yyssp := yyssp - 2
+	yyvsp64 := yyvsp64 -1
+	yyvs90.put (yyval90, yyvsp90)
 end
 		end
 
 	yy_do_action_131 is
-			--|#line 859 "eiffel.y"
+			--|#line <not available> "eiffel.y"
+		local
+			yyval64: TYPE_DEC_AS
 		do
---|#line 859 "eiffel.y"
+--|#line <not available> "eiffel.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'eiffel.y' at line 859")
+	std.error.put_line ("Executing parser user-code from file 'eiffel.y' at line <not available>")
 end
 
-			yyval := yyval_default;
-
-
+yyval64 := new_type_dec_as (yyvs80.item (yyvsp80), yyvs63.item (yyvsp63), yyvs58.item (yyvsp58)) 
 if yy_parsing_status = yyContinue then
-	yyvsp := yyvsp + 1
-	if yyvsp >= yyvsc then
-		yyvsc := yyvsc + yyInitial_stack_size
-		yyvs := FIXED_ARRAY_.resize (yyvs, yyvsc)
-		debug ("GEYACC")
-			std.error.put_string ("Stack (yyvs) size increased to ")
-			std.error.put_integer (yyvsc)
-			std.error.put_new_line
+	yyssp := yyssp - 6
+	yyvsp64 := yyvsp64 + 1
+	yyvsp80 := yyvsp80 -1
+	yyvsp58 := yyvsp58 -1
+	yyvsp1 := yyvsp1 -3
+	yyvsp63 := yyvsp63 -1
+	if yyvsp64 >= yyvsc64 then
+		if yyvs64 = Void then
+			debug ("GEYACC")
+				std.error.put_line ("Create yyvs64")
+			end
+			create yyspecial_routines64
+			yyvsc64 := yyInitial_yyvs_size
+			yyvs64 := yyspecial_routines64.make (yyvsc64)
+		else
+			debug ("GEYACC")
+				std.error.put_line ("Resize yyvs64")
+			end
+			yyvsc64 := yyvsc64 + yyInitial_yyvs_size
+			yyvs64 := yyspecial_routines64.resize (yyvs64, yyvsc64)
 		end
 	end
-	yyvs.put (yyval, yyvsp)
+	yyvs64.put (yyval64, yyvsp64)
 end
 		end
 
 	yy_do_action_132 is
-			--|#line 860 "eiffel.y"
+			--|#line <not available> "eiffel.y"
+		local
+			yyval1: ANY
 		do
---|#line 860 "eiffel.y"
+--|#line <not available> "eiffel.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'eiffel.y' at line 860")
+	std.error.put_line ("Executing parser user-code from file 'eiffel.y' at line <not available>")
 end
 
-			yyval := yyval_default;
+
+if yy_parsing_status = yyContinue then
+	yyssp := yyssp - 0
+	yyvsp1 := yyvsp1 + 1
+	if yyvsp1 >= yyvsc1 then
+		if yyvs1 = Void then
+			debug ("GEYACC")
+				std.error.put_line ("Create yyvs1")
+			end
+			create yyspecial_routines1
+			yyvsc1 := yyInitial_yyvs_size
+			yyvs1 := yyspecial_routines1.make (yyvsc1)
+		else
+			debug ("GEYACC")
+				std.error.put_line ("Resize yyvs1")
+			end
+			yyvsc1 := yyvsc1 + yyInitial_yyvs_size
+			yyvs1 := yyspecial_routines1.resize (yyvs1, yyvsc1)
+		end
+	end
+	yyvs1.put (yyval1, yyvsp1)
+end
+		end
+
+	yy_do_action_133 is
+			--|#line <not available> "eiffel.y"
+		local
+			yyval1: ANY
+		do
+--|#line <not available> "eiffel.y"
+debug ("GEYACC")
+	std.error.put_line ("Executing parser user-code from file 'eiffel.y' at line <not available>")
+end
+
 				if il_parser then
 						-- Trigger a syntax error.
 					raise_error
 				end
 			
-
 if yy_parsing_status = yyContinue then
 	yyssp := yyssp - 3
-	yyvsp := yyvsp - 2
-	yyvs.put (yyval, yyvsp)
-end
-		end
-
-	yy_do_action_133 is
-			--|#line 869 "eiffel.y"
-		local
-			yyval90: EIFFEL_LIST [TYPE_DEC_AS]
-		do
---|#line 869 "eiffel.y"
-debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'eiffel.y' at line 869")
-end
-
-
-yyval90 := new_eiffel_list_type_dec_as (0) 
-			yyval := yyval90
-if yy_parsing_status = yyContinue then
-	yyvsp := yyvsp + 1
-	if yyvsp >= yyvsc then
-		yyvsc := yyvsc + yyInitial_stack_size
-		yyvs := FIXED_ARRAY_.resize (yyvs, yyvsc)
-		debug ("GEYACC")
-			std.error.put_string ("Stack (yyvs) size increased to ")
-			std.error.put_integer (yyvsc)
-			std.error.put_new_line
-		end
-	end
-	yyvs.put (yyval, yyvsp)
+	yyvsp1 := yyvsp1 -1
+	yyvsp33 := yyvsp33 -1
+	yyvs1.put (yyval1, yyvsp1)
 end
 		end
 
 	yy_do_action_134 is
-			--|#line 871 "eiffel.y"
+			--|#line <not available> "eiffel.y"
 		local
 			yyval90: EIFFEL_LIST [TYPE_DEC_AS]
 		do
---|#line 871 "eiffel.y"
+--|#line <not available> "eiffel.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'eiffel.y' at line 871")
+	std.error.put_line ("Executing parser user-code from file 'eiffel.y' at line <not available>")
 end
 
-
-yyval90 := yytype90 (yyvs.item (yyvsp)) 
-			yyval := yyval90
+yyval90 := new_eiffel_list_type_dec_as (0) 
 if yy_parsing_status = yyContinue then
-	yyssp := yyssp - 1
-	yyvs.put (yyval, yyvsp)
+	yyssp := yyssp - 0
+	yyvsp90 := yyvsp90 + 1
+	if yyvsp90 >= yyvsc90 then
+		if yyvs90 = Void then
+			debug ("GEYACC")
+				std.error.put_line ("Create yyvs90")
+			end
+			create yyspecial_routines90
+			yyvsc90 := yyInitial_yyvs_size
+			yyvs90 := yyspecial_routines90.make (yyvsc90)
+		else
+			debug ("GEYACC")
+				std.error.put_line ("Resize yyvs90")
+			end
+			yyvsc90 := yyvsc90 + yyInitial_yyvs_size
+			yyvs90 := yyspecial_routines90.resize (yyvs90, yyvsc90)
+		end
+	end
+	yyvs90.put (yyval90, yyvsp90)
 end
 		end
 
 	yy_do_action_135 is
-			--|#line 875 "eiffel.y"
+			--|#line <not available> "eiffel.y"
 		local
 			yyval90: EIFFEL_LIST [TYPE_DEC_AS]
 		do
---|#line 875 "eiffel.y"
+--|#line <not available> "eiffel.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'eiffel.y' at line 875")
+	std.error.put_line ("Executing parser user-code from file 'eiffel.y' at line <not available>")
 end
 
-
-				yyval90 := new_eiffel_list_type_dec_as (Initial_entity_declaration_list_size)
-				yyval90.extend (yytype64 (yyvs.item (yyvsp)))
-			
-			yyval := yyval90
+yyval90 := yyvs90.item (yyvsp90) 
 if yy_parsing_status = yyContinue then
 	yyssp := yyssp - 1
-	yyvs.put (yyval, yyvsp)
+	yyvs90.put (yyval90, yyvsp90)
 end
 		end
 
 	yy_do_action_136 is
-			--|#line 880 "eiffel.y"
+			--|#line <not available> "eiffel.y"
 		local
 			yyval90: EIFFEL_LIST [TYPE_DEC_AS]
 		do
---|#line 880 "eiffel.y"
+--|#line <not available> "eiffel.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'eiffel.y' at line 880")
+	std.error.put_line ("Executing parser user-code from file 'eiffel.y' at line <not available>")
 end
 
-
-				yyval90 := yytype90 (yyvs.item (yyvsp - 1))
-				yyval90.extend (yytype64 (yyvs.item (yyvsp)))
+				yyval90 := new_eiffel_list_type_dec_as (Initial_entity_declaration_list_size)
+				yyval90.extend (yyvs64.item (yyvsp64))
 			
-			yyval := yyval90
 if yy_parsing_status = yyContinue then
-	yyssp := yyssp - 2
-	yyvsp := yyvsp - 1
-	yyvs.put (yyval, yyvsp)
+	yyssp := yyssp - 1
+	yyvsp90 := yyvsp90 + 1
+	yyvsp64 := yyvsp64 -1
+	if yyvsp90 >= yyvsc90 then
+		if yyvs90 = Void then
+			debug ("GEYACC")
+				std.error.put_line ("Create yyvs90")
+			end
+			create yyspecial_routines90
+			yyvsc90 := yyInitial_yyvs_size
+			yyvs90 := yyspecial_routines90.make (yyvsc90)
+		else
+			debug ("GEYACC")
+				std.error.put_line ("Resize yyvs90")
+			end
+			yyvsc90 := yyvsc90 + yyInitial_yyvs_size
+			yyvs90 := yyspecial_routines90.resize (yyvs90, yyvsc90)
+		end
+	end
+	yyvs90.put (yyval90, yyvsp90)
 end
 		end
 
 	yy_do_action_137 is
-			--|#line 887 "eiffel.y"
+			--|#line <not available> "eiffel.y"
 		local
-			yyval64: TYPE_DEC_AS
+			yyval90: EIFFEL_LIST [TYPE_DEC_AS]
 		do
---|#line 887 "eiffel.y"
+--|#line <not available> "eiffel.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'eiffel.y' at line 887")
+	std.error.put_line ("Executing parser user-code from file 'eiffel.y' at line <not available>")
 end
 
-
-yyval64 := new_type_dec_as (yytype80 (yyvs.item (yyvsp - 4)), yytype63 (yyvs.item (yyvsp - 1)), yytype58 (yyvs.item (yyvsp - 3))) 
-			yyval := yyval64
+				yyval90 := yyvs90.item (yyvsp90)
+				yyval90.extend (yyvs64.item (yyvsp64))
+			
 if yy_parsing_status = yyContinue then
-	yyssp := yyssp - 5
-	yyvsp := yyvsp - 4
-	yyvs.put (yyval, yyvsp)
+	yyssp := yyssp - 2
+	yyvsp64 := yyvsp64 -1
+	yyvs90.put (yyval90, yyvsp90)
 end
 		end
 
 	yy_do_action_138 is
-			--|#line 891 "eiffel.y"
+			--|#line <not available> "eiffel.y"
 		local
-			yyval80: ARRAYED_LIST [INTEGER]
+			yyval64: TYPE_DEC_AS
 		do
---|#line 891 "eiffel.y"
+--|#line <not available> "eiffel.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'eiffel.y' at line 891")
+	std.error.put_line ("Executing parser user-code from file 'eiffel.y' at line <not available>")
 end
 
-
-				create yyval80.make (Initial_identifier_list_size)
-				Names_heap.put (yytype33 (yyvs.item (yyvsp)))
-				yyval80.extend (Names_heap.found_item)
-			
-			yyval := yyval80
+yyval64 := new_type_dec_as (yyvs80.item (yyvsp80), yyvs63.item (yyvsp63), yyvs58.item (yyvsp58)) 
 if yy_parsing_status = yyContinue then
-	yyssp := yyssp - 1
-	yyvs.put (yyval, yyvsp)
+	yyssp := yyssp - 5
+	yyvsp64 := yyvsp64 + 1
+	yyvsp80 := yyvsp80 -1
+	yyvsp58 := yyvsp58 -1
+	yyvsp1 := yyvsp1 -2
+	yyvsp63 := yyvsp63 -1
+	if yyvsp64 >= yyvsc64 then
+		if yyvs64 = Void then
+			debug ("GEYACC")
+				std.error.put_line ("Create yyvs64")
+			end
+			create yyspecial_routines64
+			yyvsc64 := yyInitial_yyvs_size
+			yyvs64 := yyspecial_routines64.make (yyvsc64)
+		else
+			debug ("GEYACC")
+				std.error.put_line ("Resize yyvs64")
+			end
+			yyvsc64 := yyvsc64 + yyInitial_yyvs_size
+			yyvs64 := yyspecial_routines64.resize (yyvs64, yyvsc64)
+		end
+	end
+	yyvs64.put (yyval64, yyvsp64)
 end
 		end
 
 	yy_do_action_139 is
-			--|#line 897 "eiffel.y"
+			--|#line <not available> "eiffel.y"
 		local
 			yyval80: ARRAYED_LIST [INTEGER]
 		do
---|#line 897 "eiffel.y"
+--|#line <not available> "eiffel.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'eiffel.y' at line 897")
+	std.error.put_line ("Executing parser user-code from file 'eiffel.y' at line <not available>")
 end
 
-
-				yyval80 := yytype80 (yyvs.item (yyvsp - 2))
-				Names_heap.put (yytype33 (yyvs.item (yyvsp)))
+				create yyval80.make (Initial_identifier_list_size)
+				Names_heap.put (yyvs33.item (yyvsp33))
 				yyval80.extend (Names_heap.found_item)
 			
-			yyval := yyval80
 if yy_parsing_status = yyContinue then
-	yyssp := yyssp - 3
-	yyvsp := yyvsp - 2
-	yyvs.put (yyval, yyvsp)
+	yyssp := yyssp - 1
+	yyvsp80 := yyvsp80 + 1
+	yyvsp33 := yyvsp33 -1
+	if yyvsp80 >= yyvsc80 then
+		if yyvs80 = Void then
+			debug ("GEYACC")
+				std.error.put_line ("Create yyvs80")
+			end
+			create yyspecial_routines80
+			yyvsc80 := yyInitial_yyvs_size
+			yyvs80 := yyspecial_routines80.make (yyvsc80)
+		else
+			debug ("GEYACC")
+				std.error.put_line ("Resize yyvs80")
+			end
+			yyvsc80 := yyvsc80 + yyInitial_yyvs_size
+			yyvs80 := yyspecial_routines80.resize (yyvs80, yyvsc80)
+		end
+	end
+	yyvs80.put (yyval80, yyvsp80)
 end
 		end
 
 	yy_do_action_140 is
-			--|#line 905 "eiffel.y"
+			--|#line <not available> "eiffel.y"
 		local
 			yyval80: ARRAYED_LIST [INTEGER]
 		do
---|#line 905 "eiffel.y"
+--|#line <not available> "eiffel.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'eiffel.y' at line 905")
+	std.error.put_line ("Executing parser user-code from file 'eiffel.y' at line <not available>")
 end
 
-
-create yyval80.make (0) 
-			yyval := yyval80
+				yyval80 := yyvs80.item (yyvsp80)
+				Names_heap.put (yyvs33.item (yyvsp33))
+				yyval80.extend (Names_heap.found_item)
+			
 if yy_parsing_status = yyContinue then
-	yyvsp := yyvsp + 1
-	if yyvsp >= yyvsc then
-		yyvsc := yyvsc + yyInitial_stack_size
-		yyvs := FIXED_ARRAY_.resize (yyvs, yyvsc)
-		debug ("GEYACC")
-			std.error.put_string ("Stack (yyvs) size increased to ")
-			std.error.put_integer (yyvsc)
-			std.error.put_new_line
-		end
-	end
-	yyvs.put (yyval, yyvsp)
+	yyssp := yyssp - 3
+	yyvsp1 := yyvsp1 -1
+	yyvsp33 := yyvsp33 -1
+	yyvs80.put (yyval80, yyvsp80)
 end
 		end
 
 	yy_do_action_141 is
-			--|#line 907 "eiffel.y"
+			--|#line <not available> "eiffel.y"
 		local
 			yyval80: ARRAYED_LIST [INTEGER]
 		do
---|#line 907 "eiffel.y"
+--|#line <not available> "eiffel.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'eiffel.y' at line 907")
+	std.error.put_line ("Executing parser user-code from file 'eiffel.y' at line <not available>")
 end
 
-
-yyval80 := yytype80 (yyvs.item (yyvsp)) 
-			yyval := yyval80
+create yyval80.make (0) 
 if yy_parsing_status = yyContinue then
-	yyssp := yyssp - 1
-	yyvs.put (yyval, yyvsp)
+	yyssp := yyssp - 0
+	yyvsp80 := yyvsp80 + 1
+	if yyvsp80 >= yyvsc80 then
+		if yyvs80 = Void then
+			debug ("GEYACC")
+				std.error.put_line ("Create yyvs80")
+			end
+			create yyspecial_routines80
+			yyvsc80 := yyInitial_yyvs_size
+			yyvs80 := yyspecial_routines80.make (yyvsc80)
+		else
+			debug ("GEYACC")
+				std.error.put_line ("Resize yyvs80")
+			end
+			yyvsc80 := yyvsc80 + yyInitial_yyvs_size
+			yyvs80 := yyspecial_routines80.resize (yyvs80, yyvsc80)
+		end
+	end
+	yyvs80.put (yyval80, yyvsp80)
 end
 		end
 
 	yy_do_action_142 is
-			--|#line 911 "eiffel.y"
+			--|#line <not available> "eiffel.y"
 		local
-			yyval63: TYPE_AS
+			yyval80: ARRAYED_LIST [INTEGER]
 		do
---|#line 911 "eiffel.y"
+--|#line <not available> "eiffel.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'eiffel.y' at line 911")
+	std.error.put_line ("Executing parser user-code from file 'eiffel.y' at line <not available>")
 end
 
-
-
-			yyval := yyval63
+yyval80 := yyvs80.item (yyvsp80) 
 if yy_parsing_status = yyContinue then
-	yyvsp := yyvsp + 1
-	if yyvsp >= yyvsc then
-		yyvsc := yyvsc + yyInitial_stack_size
-		yyvs := FIXED_ARRAY_.resize (yyvs, yyvsc)
-		debug ("GEYACC")
-			std.error.put_string ("Stack (yyvs) size increased to ")
-			std.error.put_integer (yyvsc)
-			std.error.put_new_line
-		end
-	end
-	yyvs.put (yyval, yyvsp)
+	yyssp := yyssp - 1
+	yyvs80.put (yyval80, yyvsp80)
 end
 		end
 
 	yy_do_action_143 is
-			--|#line 913 "eiffel.y"
+			--|#line <not available> "eiffel.y"
 		local
 			yyval63: TYPE_AS
 		do
---|#line 913 "eiffel.y"
+--|#line <not available> "eiffel.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'eiffel.y' at line 913")
+	std.error.put_line ("Executing parser user-code from file 'eiffel.y' at line <not available>")
 end
 
 
-yyval63 := yytype63 (yyvs.item (yyvsp)) 
-			yyval := yyval63
 if yy_parsing_status = yyContinue then
-	yyssp := yyssp - 2
-	yyvsp := yyvsp - 1
-	yyvs.put (yyval, yyvsp)
+	yyssp := yyssp - 0
+	yyvsp63 := yyvsp63 + 1
+	if yyvsp63 >= yyvsc63 then
+		if yyvs63 = Void then
+			debug ("GEYACC")
+				std.error.put_line ("Create yyvs63")
+			end
+			create yyspecial_routines63
+			yyvsc63 := yyInitial_yyvs_size
+			yyvs63 := yyspecial_routines63.make (yyvsc63)
+		else
+			debug ("GEYACC")
+				std.error.put_line ("Resize yyvs63")
+			end
+			yyvsc63 := yyvsc63 + yyInitial_yyvs_size
+			yyvs63 := yyspecial_routines63.resize (yyvs63, yyvsc63)
+		end
+	end
+	yyvs63.put (yyval63, yyvsp63)
 end
 		end
 
 	yy_do_action_144 is
-			--|#line 917 "eiffel.y"
+			--|#line <not available> "eiffel.y"
 		local
-			yyval56: ROUTINE_AS
+			yyval63: TYPE_AS
 		do
---|#line 917 "eiffel.y"
+--|#line <not available> "eiffel.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'eiffel.y' at line 917")
+	std.error.put_line ("Executing parser user-code from file 'eiffel.y' at line <not available>")
 end
 
-
-				yyval56 := new_routine_as (yytype60 (yyvs.item (yyvsp - 7)), yytype52 (yyvs.item (yyvsp - 5)), yytype90 (yyvs.item (yyvsp - 4)), yytype55 (yyvs.item (yyvsp - 3)), yytype23 (yyvs.item (yyvsp - 2)), yytype82 (yyvs.item (yyvsp - 1)), fbody_pos, current_position, once_manifest_string_count)
-				once_manifest_string_count := 0
-			
-			yyval := yyval56
+yyval63 := yyvs63.item (yyvsp63) 
 if yy_parsing_status = yyContinue then
-	yyssp := yyssp - 8
-	yyvsp := yyvsp - 7
-	yyvs.put (yyval, yyvsp)
+	yyssp := yyssp - 2
+	yyvsp1 := yyvsp1 -1
+	yyvs63.put (yyval63, yyvsp63)
 end
 		end
 
 	yy_do_action_145 is
-			--|#line 917 "eiffel.y"
+			--|#line <not available> "eiffel.y"
 		local
 			yyval56: ROUTINE_AS
 		do
---|#line 917 "eiffel.y"
+--|#line <not available> "eiffel.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'eiffel.y' at line 917")
+	std.error.put_line ("Executing parser user-code from file 'eiffel.y' at line <not available>")
 end
 
-
-fbody_pos := current_position.start_position 
-			yyval := yyval56
+				yyval56 := new_routine_as (yyvs60.item (yyvsp60), yyvs52.item (yyvsp52), yyvs90.item (yyvsp90), yyvs55.item (yyvsp55), yyvs23.item (yyvsp23), yyvs82.item (yyvsp82), fbody_pos, current_position, once_manifest_string_count)
+				once_manifest_string_count := 0
+			
 if yy_parsing_status = yyContinue then
-	yyvsp := yyvsp + 1
-	if yyvsp >= yyvsc then
-		yyvsc := yyvsc + yyInitial_stack_size
-		yyvs := FIXED_ARRAY_.resize (yyvs, yyvsc)
-		debug ("GEYACC")
-			std.error.put_string ("Stack (yyvs) size increased to ")
-			std.error.put_integer (yyvsc)
-			std.error.put_new_line
-		end
-	end
-	yyvs.put (yyval, yyvsp)
+	yyssp := yyssp - 8
+	yyvsp60 := yyvsp60 -1
+	yyvsp52 := yyvsp52 -1
+	yyvsp90 := yyvsp90 -1
+	yyvsp55 := yyvsp55 -1
+	yyvsp23 := yyvsp23 -1
+	yyvsp82 := yyvsp82 -1
+	yyvsp1 := yyvsp1 -1
+	yyvs56.put (yyval56, yyvsp56)
 end
 		end
 
 	yy_do_action_146 is
-			--|#line 932 "eiffel.y"
+			--|#line <not available> "eiffel.y"
 		local
-			yyval55: ROUT_BODY_AS
+			yyval56: ROUTINE_AS
 		do
---|#line 932 "eiffel.y"
+--|#line <not available> "eiffel.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'eiffel.y' at line 932")
+	std.error.put_line ("Executing parser user-code from file 'eiffel.y' at line <not available>")
 end
 
-
-yyval55 := yytype40 (yyvs.item (yyvsp)) 
-			yyval := yyval55
+fbody_pos := current_position.start_position 
 if yy_parsing_status = yyContinue then
-	yyssp := yyssp - 1
-	yyvs.put (yyval, yyvsp)
+	yyssp := yyssp - 0
+	yyvsp56 := yyvsp56 + 1
+	if yyvsp56 >= yyvsc56 then
+		if yyvs56 = Void then
+			debug ("GEYACC")
+				std.error.put_line ("Create yyvs56")
+			end
+			create yyspecial_routines56
+			yyvsc56 := yyInitial_yyvs_size
+			yyvs56 := yyspecial_routines56.make (yyvsc56)
+		else
+			debug ("GEYACC")
+				std.error.put_line ("Resize yyvs56")
+			end
+			yyvsc56 := yyvsc56 + yyInitial_yyvs_size
+			yyvs56 := yyspecial_routines56.resize (yyvs56, yyvsc56)
+		end
+	end
+	yyvs56.put (yyval56, yyvsp56)
 end
 		end
 
 	yy_do_action_147 is
-			--|#line 934 "eiffel.y"
+			--|#line <not available> "eiffel.y"
 		local
 			yyval55: ROUT_BODY_AS
 		do
---|#line 934 "eiffel.y"
+--|#line <not available> "eiffel.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'eiffel.y' at line 934")
+	std.error.put_line ("Executing parser user-code from file 'eiffel.y' at line <not available>")
 end
 
-
-yyval55 := yytype26 (yyvs.item (yyvsp)) 
-			yyval := yyval55
+yyval55 := yyvs40.item (yyvsp40) 
 if yy_parsing_status = yyContinue then
 	yyssp := yyssp - 1
-	yyvs.put (yyval, yyvsp)
+	yyvsp55 := yyvsp55 + 1
+	yyvsp40 := yyvsp40 -1
+	if yyvsp55 >= yyvsc55 then
+		if yyvs55 = Void then
+			debug ("GEYACC")
+				std.error.put_line ("Create yyvs55")
+			end
+			create yyspecial_routines55
+			yyvsc55 := yyInitial_yyvs_size
+			yyvs55 := yyspecial_routines55.make (yyvsc55)
+		else
+			debug ("GEYACC")
+				std.error.put_line ("Resize yyvs55")
+			end
+			yyvsc55 := yyvsc55 + yyInitial_yyvs_size
+			yyvs55 := yyspecial_routines55.resize (yyvs55, yyvsc55)
+		end
+	end
+	yyvs55.put (yyval55, yyvsp55)
 end
 		end
 
 	yy_do_action_148 is
-			--|#line 936 "eiffel.y"
+			--|#line <not available> "eiffel.y"
 		local
 			yyval55: ROUT_BODY_AS
 		do
---|#line 936 "eiffel.y"
+--|#line <not available> "eiffel.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'eiffel.y' at line 936")
+	std.error.put_line ("Executing parser user-code from file 'eiffel.y' at line <not available>")
 end
 
-
-yyval55 := new_deferred_as 
-			yyval := yyval55
+yyval55 := yyvs26.item (yyvsp26) 
 if yy_parsing_status = yyContinue then
 	yyssp := yyssp - 1
-	yyvs.put (yyval, yyvsp)
+	yyvsp55 := yyvsp55 + 1
+	yyvsp26 := yyvsp26 -1
+	if yyvsp55 >= yyvsc55 then
+		if yyvs55 = Void then
+			debug ("GEYACC")
+				std.error.put_line ("Create yyvs55")
+			end
+			create yyspecial_routines55
+			yyvsc55 := yyInitial_yyvs_size
+			yyvs55 := yyspecial_routines55.make (yyvsc55)
+		else
+			debug ("GEYACC")
+				std.error.put_line ("Resize yyvs55")
+			end
+			yyvsc55 := yyvsc55 + yyInitial_yyvs_size
+			yyvs55 := yyspecial_routines55.resize (yyvs55, yyvsc55)
+		end
+	end
+	yyvs55.put (yyval55, yyvsp55)
 end
 		end
 
 	yy_do_action_149 is
-			--|#line 940 "eiffel.y"
+			--|#line <not available> "eiffel.y"
 		local
-			yyval26: EXTERNAL_AS
+			yyval55: ROUT_BODY_AS
 		do
---|#line 940 "eiffel.y"
+--|#line <not available> "eiffel.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'eiffel.y' at line 940")
+	std.error.put_line ("Executing parser user-code from file 'eiffel.y' at line <not available>")
 end
 
-
-				yyval26 := new_external_as (yytype27 (yyvs.item (yyvsp - 1)), yytype60 (yyvs.item (yyvsp)))
-				has_externals := True
-			
-			yyval := yyval26
+yyval55 := new_deferred_as 
 if yy_parsing_status = yyContinue then
-	yyssp := yyssp - 3
-	yyvsp := yyvsp - 2
-	yyvs.put (yyval, yyvsp)
+	yyssp := yyssp - 1
+	yyvsp55 := yyvsp55 + 1
+	yyvsp1 := yyvsp1 -1
+	if yyvsp55 >= yyvsc55 then
+		if yyvs55 = Void then
+			debug ("GEYACC")
+				std.error.put_line ("Create yyvs55")
+			end
+			create yyspecial_routines55
+			yyvsc55 := yyInitial_yyvs_size
+			yyvs55 := yyspecial_routines55.make (yyvsc55)
+		else
+			debug ("GEYACC")
+				std.error.put_line ("Resize yyvs55")
+			end
+			yyvsc55 := yyvsc55 + yyInitial_yyvs_size
+			yyvs55 := yyspecial_routines55.resize (yyvs55, yyvsc55)
+		end
+	end
+	yyvs55.put (yyval55, yyvsp55)
 end
 		end
 
 	yy_do_action_150 is
-			--|#line 947 "eiffel.y"
+			--|#line <not available> "eiffel.y"
 		local
-			yyval27: EXTERNAL_LANG_AS
+			yyval26: EXTERNAL_AS
 		do
---|#line 947 "eiffel.y"
+--|#line <not available> "eiffel.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'eiffel.y' at line 947")
+	std.error.put_line ("Executing parser user-code from file 'eiffel.y' at line <not available>")
 end
 
-
-yyval27 := new_external_lang_as (yytype60 (yyvs.item (yyvsp)), yytype58 (yyvs.item (yyvsp - 1))) 
-			yyval := yyval27
+				yyval26 := new_external_as (yyvs27.item (yyvsp27), yyvs60.item (yyvsp60))
+				has_externals := True
+			
 if yy_parsing_status = yyContinue then
-	yyssp := yyssp - 2
-	yyvsp := yyvsp - 1
-	yyvs.put (yyval, yyvsp)
+	yyssp := yyssp - 3
+	yyvsp26 := yyvsp26 + 1
+	yyvsp1 := yyvsp1 -1
+	yyvsp27 := yyvsp27 -1
+	yyvsp60 := yyvsp60 -1
+	if yyvsp26 >= yyvsc26 then
+		if yyvs26 = Void then
+			debug ("GEYACC")
+				std.error.put_line ("Create yyvs26")
+			end
+			create yyspecial_routines26
+			yyvsc26 := yyInitial_yyvs_size
+			yyvs26 := yyspecial_routines26.make (yyvsc26)
+		else
+			debug ("GEYACC")
+				std.error.put_line ("Resize yyvs26")
+			end
+			yyvsc26 := yyvsc26 + yyInitial_yyvs_size
+			yyvs26 := yyspecial_routines26.resize (yyvs26, yyvsc26)
+		end
+	end
+	yyvs26.put (yyval26, yyvsp26)
 end
 		end
 
 	yy_do_action_151 is
-			--|#line 952 "eiffel.y"
+			--|#line <not available> "eiffel.y"
 		local
-			yyval60: STRING_AS
+			yyval27: EXTERNAL_LANG_AS
 		do
---|#line 952 "eiffel.y"
+--|#line <not available> "eiffel.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'eiffel.y' at line 952")
+	std.error.put_line ("Executing parser user-code from file 'eiffel.y' at line <not available>")
 end
 
-
-
-			yyval := yyval60
+yyval27 := new_external_lang_as (yyvs60.item (yyvsp60), yyvs58.item (yyvsp58)) 
 if yy_parsing_status = yyContinue then
-	yyvsp := yyvsp + 1
-	if yyvsp >= yyvsc then
-		yyvsc := yyvsc + yyInitial_stack_size
-		yyvs := FIXED_ARRAY_.resize (yyvs, yyvsc)
-		debug ("GEYACC")
-			std.error.put_string ("Stack (yyvs) size increased to ")
-			std.error.put_integer (yyvsc)
-			std.error.put_new_line
+	yyssp := yyssp - 2
+	yyvsp27 := yyvsp27 + 1
+	yyvsp58 := yyvsp58 -1
+	yyvsp60 := yyvsp60 -1
+	if yyvsp27 >= yyvsc27 then
+		if yyvs27 = Void then
+			debug ("GEYACC")
+				std.error.put_line ("Create yyvs27")
+			end
+			create yyspecial_routines27
+			yyvsc27 := yyInitial_yyvs_size
+			yyvs27 := yyspecial_routines27.make (yyvsc27)
+		else
+			debug ("GEYACC")
+				std.error.put_line ("Resize yyvs27")
+			end
+			yyvsc27 := yyvsc27 + yyInitial_yyvs_size
+			yyvs27 := yyspecial_routines27.resize (yyvs27, yyvsc27)
 		end
 	end
-	yyvs.put (yyval, yyvsp)
+	yyvs27.put (yyval27, yyvsp27)
 end
 		end
 
 	yy_do_action_152 is
-			--|#line 954 "eiffel.y"
+			--|#line <not available> "eiffel.y"
 		local
 			yyval60: STRING_AS
 		do
---|#line 954 "eiffel.y"
+--|#line <not available> "eiffel.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'eiffel.y' at line 954")
+	std.error.put_line ("Executing parser user-code from file 'eiffel.y' at line <not available>")
 end
 
 
-yyval60 := yytype60 (yyvs.item (yyvsp)) 
-			yyval := yyval60
 if yy_parsing_status = yyContinue then
-	yyssp := yyssp - 2
-	yyvsp := yyvsp - 1
-	yyvs.put (yyval, yyvsp)
+	yyssp := yyssp - 0
+	yyvsp60 := yyvsp60 + 1
+	if yyvsp60 >= yyvsc60 then
+		if yyvs60 = Void then
+			debug ("GEYACC")
+				std.error.put_line ("Create yyvs60")
+			end
+			create yyspecial_routines60
+			yyvsc60 := yyInitial_yyvs_size
+			yyvs60 := yyspecial_routines60.make (yyvsc60)
+		else
+			debug ("GEYACC")
+				std.error.put_line ("Resize yyvs60")
+			end
+			yyvsc60 := yyvsc60 + yyInitial_yyvs_size
+			yyvs60 := yyspecial_routines60.resize (yyvs60, yyvsc60)
+		end
+	end
+	yyvs60.put (yyval60, yyvsp60)
 end
 		end
 
 	yy_do_action_153 is
-			--|#line 958 "eiffel.y"
+			--|#line <not available> "eiffel.y"
 		local
-			yyval40: INTERNAL_AS
+			yyval60: STRING_AS
 		do
---|#line 958 "eiffel.y"
+--|#line <not available> "eiffel.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'eiffel.y' at line 958")
+	std.error.put_line ("Executing parser user-code from file 'eiffel.y' at line <not available>")
 end
 
-
-yyval40 := new_do_as (yytype82 (yyvs.item (yyvsp))) 
-			yyval := yyval40
+yyval60 := yyvs60.item (yyvsp60) 
 if yy_parsing_status = yyContinue then
 	yyssp := yyssp - 2
-	yyvsp := yyvsp - 1
-	yyvs.put (yyval, yyvsp)
+	yyvsp1 := yyvsp1 -1
+	yyvs60.put (yyval60, yyvsp60)
 end
 		end
 
 	yy_do_action_154 is
-			--|#line 960 "eiffel.y"
+			--|#line <not available> "eiffel.y"
 		local
 			yyval40: INTERNAL_AS
 		do
---|#line 960 "eiffel.y"
+--|#line <not available> "eiffel.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'eiffel.y' at line 960")
+	std.error.put_line ("Executing parser user-code from file 'eiffel.y' at line <not available>")
 end
 
-
-yyval40 := new_once_as (yytype82 (yyvs.item (yyvsp))) 
-			yyval := yyval40
+yyval40 := new_do_as (yyvs82.item (yyvsp82)) 
 if yy_parsing_status = yyContinue then
 	yyssp := yyssp - 2
-	yyvsp := yyvsp - 1
-	yyvs.put (yyval, yyvsp)
+	yyvsp40 := yyvsp40 + 1
+	yyvsp1 := yyvsp1 -1
+	yyvsp82 := yyvsp82 -1
+	if yyvsp40 >= yyvsc40 then
+		if yyvs40 = Void then
+			debug ("GEYACC")
+				std.error.put_line ("Create yyvs40")
+			end
+			create yyspecial_routines40
+			yyvsc40 := yyInitial_yyvs_size
+			yyvs40 := yyspecial_routines40.make (yyvsc40)
+		else
+			debug ("GEYACC")
+				std.error.put_line ("Resize yyvs40")
+			end
+			yyvsc40 := yyvsc40 + yyInitial_yyvs_size
+			yyvs40 := yyspecial_routines40.resize (yyvs40, yyvsc40)
+		end
+	end
+	yyvs40.put (yyval40, yyvsp40)
 end
 		end
 
 	yy_do_action_155 is
-			--|#line 964 "eiffel.y"
+			--|#line <not available> "eiffel.y"
 		local
-			yyval90: EIFFEL_LIST [TYPE_DEC_AS]
+			yyval40: INTERNAL_AS
 		do
---|#line 964 "eiffel.y"
+--|#line <not available> "eiffel.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'eiffel.y' at line 964")
+	std.error.put_line ("Executing parser user-code from file 'eiffel.y' at line <not available>")
 end
 
-
-
-			yyval := yyval90
+yyval40 := new_once_as (yyvs82.item (yyvsp82)) 
 if yy_parsing_status = yyContinue then
-	yyvsp := yyvsp + 1
-	if yyvsp >= yyvsc then
-		yyvsc := yyvsc + yyInitial_stack_size
-		yyvs := FIXED_ARRAY_.resize (yyvs, yyvsc)
-		debug ("GEYACC")
-			std.error.put_string ("Stack (yyvs) size increased to ")
-			std.error.put_integer (yyvsc)
-			std.error.put_new_line
+	yyssp := yyssp - 2
+	yyvsp40 := yyvsp40 + 1
+	yyvsp1 := yyvsp1 -1
+	yyvsp82 := yyvsp82 -1
+	if yyvsp40 >= yyvsc40 then
+		if yyvs40 = Void then
+			debug ("GEYACC")
+				std.error.put_line ("Create yyvs40")
+			end
+			create yyspecial_routines40
+			yyvsc40 := yyInitial_yyvs_size
+			yyvs40 := yyspecial_routines40.make (yyvsc40)
+		else
+			debug ("GEYACC")
+				std.error.put_line ("Resize yyvs40")
+			end
+			yyvsc40 := yyvsc40 + yyInitial_yyvs_size
+			yyvs40 := yyspecial_routines40.resize (yyvs40, yyvsc40)
 		end
 	end
-	yyvs.put (yyval, yyvsp)
+	yyvs40.put (yyval40, yyvsp40)
 end
 		end
 
 	yy_do_action_156 is
-			--|#line 966 "eiffel.y"
+			--|#line <not available> "eiffel.y"
 		local
 			yyval90: EIFFEL_LIST [TYPE_DEC_AS]
 		do
---|#line 966 "eiffel.y"
+--|#line <not available> "eiffel.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'eiffel.y' at line 966")
+	std.error.put_line ("Executing parser user-code from file 'eiffel.y' at line <not available>")
 end
 
 
-yyval90 := yytype90 (yyvs.item (yyvsp)) 
-			yyval := yyval90
 if yy_parsing_status = yyContinue then
-	yyssp := yyssp - 2
-	yyvsp := yyvsp - 1
-	yyvs.put (yyval, yyvsp)
+	yyssp := yyssp - 0
+	yyvsp90 := yyvsp90 + 1
+	if yyvsp90 >= yyvsc90 then
+		if yyvs90 = Void then
+			debug ("GEYACC")
+				std.error.put_line ("Create yyvs90")
+			end
+			create yyspecial_routines90
+			yyvsc90 := yyInitial_yyvs_size
+			yyvs90 := yyspecial_routines90.make (yyvsc90)
+		else
+			debug ("GEYACC")
+				std.error.put_line ("Resize yyvs90")
+			end
+			yyvsc90 := yyvsc90 + yyInitial_yyvs_size
+			yyvs90 := yyspecial_routines90.resize (yyvs90, yyvsc90)
+		end
+	end
+	yyvs90.put (yyval90, yyvsp90)
 end
 		end
 
 	yy_do_action_157 is
-			--|#line 970 "eiffel.y"
+			--|#line <not available> "eiffel.y"
 		local
-			yyval82: EIFFEL_LIST [INSTRUCTION_AS]
+			yyval90: EIFFEL_LIST [TYPE_DEC_AS]
 		do
---|#line 970 "eiffel.y"
+--|#line <not available> "eiffel.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'eiffel.y' at line 970")
+	std.error.put_line ("Executing parser user-code from file 'eiffel.y' at line <not available>")
 end
 
-
-
-			yyval := yyval82
+yyval90 := yyvs90.item (yyvsp90) 
 if yy_parsing_status = yyContinue then
-	yyssp := yyssp - 1
-	yyvs.put (yyval, yyvsp)
+	yyssp := yyssp - 2
+	yyvsp1 := yyvsp1 -1
+	yyvs90.put (yyval90, yyvsp90)
 end
 		end
 
 	yy_do_action_158 is
-			--|#line 972 "eiffel.y"
+			--|#line <not available> "eiffel.y"
 		local
 			yyval82: EIFFEL_LIST [INSTRUCTION_AS]
 		do
---|#line 972 "eiffel.y"
+--|#line <not available> "eiffel.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'eiffel.y' at line 972")
+	std.error.put_line ("Executing parser user-code from file 'eiffel.y' at line <not available>")
 end
 
 
-yyval82 := yytype82 (yyvs.item (yyvsp)) 
-			yyval := yyval82
 if yy_parsing_status = yyContinue then
-	yyssp := yyssp - 2
-	yyvsp := yyvsp - 1
-	yyvs.put (yyval, yyvsp)
+	yyssp := yyssp - 1
+	yyvsp82 := yyvsp82 + 1
+	yyvsp1 := yyvsp1 -1
+	if yyvsp82 >= yyvsc82 then
+		if yyvs82 = Void then
+			debug ("GEYACC")
+				std.error.put_line ("Create yyvs82")
+			end
+			create yyspecial_routines82
+			yyvsc82 := yyInitial_yyvs_size
+			yyvs82 := yyspecial_routines82.make (yyvsc82)
+		else
+			debug ("GEYACC")
+				std.error.put_line ("Resize yyvs82")
+			end
+			yyvsc82 := yyvsc82 + yyInitial_yyvs_size
+			yyvs82 := yyspecial_routines82.resize (yyvs82, yyvsc82)
+		end
+	end
+	yyvs82.put (yyval82, yyvsp82)
 end
 		end
 
 	yy_do_action_159 is
-			--|#line 976 "eiffel.y"
+			--|#line <not available> "eiffel.y"
 		local
 			yyval82: EIFFEL_LIST [INSTRUCTION_AS]
 		do
---|#line 976 "eiffel.y"
+--|#line <not available> "eiffel.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'eiffel.y' at line 976")
+	std.error.put_line ("Executing parser user-code from file 'eiffel.y' at line <not available>")
 end
 
-
-				yyval82 := new_eiffel_list_instruction_as (Initial_compound_size)
-				yyval82.extend (yytype38 (yyvs.item (yyvsp)))
-			
-			yyval := yyval82
+yyval82 := yyvs82.item (yyvsp82) 
 if yy_parsing_status = yyContinue then
-	yyssp := yyssp - 1
-	yyvs.put (yyval, yyvsp)
+	yyssp := yyssp - 2
+	yyvsp1 := yyvsp1 -1
+	yyvs82.put (yyval82, yyvsp82)
 end
 		end
 
 	yy_do_action_160 is
-			--|#line 981 "eiffel.y"
+			--|#line <not available> "eiffel.y"
 		local
 			yyval82: EIFFEL_LIST [INSTRUCTION_AS]
 		do
---|#line 981 "eiffel.y"
+--|#line <not available> "eiffel.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'eiffel.y' at line 981")
+	std.error.put_line ("Executing parser user-code from file 'eiffel.y' at line <not available>")
 end
 
-
-				yyval82 := yytype82 (yyvs.item (yyvsp - 1))
-				yyval82.extend (yytype38 (yyvs.item (yyvsp)))
+				yyval82 := new_eiffel_list_instruction_as (Initial_compound_size)
+				yyval82.extend (yyvs38.item (yyvsp38))
 			
-			yyval := yyval82
 if yy_parsing_status = yyContinue then
-	yyssp := yyssp - 2
-	yyvsp := yyvsp - 1
-	yyvs.put (yyval, yyvsp)
+	yyssp := yyssp - 1
+	yyvsp82 := yyvsp82 + 1
+	yyvsp38 := yyvsp38 -1
+	if yyvsp82 >= yyvsc82 then
+		if yyvs82 = Void then
+			debug ("GEYACC")
+				std.error.put_line ("Create yyvs82")
+			end
+			create yyspecial_routines82
+			yyvsc82 := yyInitial_yyvs_size
+			yyvs82 := yyspecial_routines82.make (yyvsc82)
+		else
+			debug ("GEYACC")
+				std.error.put_line ("Resize yyvs82")
+			end
+			yyvsc82 := yyvsc82 + yyInitial_yyvs_size
+			yyvs82 := yyspecial_routines82.resize (yyvs82, yyvsc82)
+		end
+	end
+	yyvs82.put (yyval82, yyvsp82)
 end
 		end
 
 	yy_do_action_161 is
-			--|#line 988 "eiffel.y"
+			--|#line <not available> "eiffel.y"
 		local
-			yyval38: INSTRUCTION_AS
+			yyval82: EIFFEL_LIST [INSTRUCTION_AS]
 		do
---|#line 988 "eiffel.y"
+--|#line <not available> "eiffel.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'eiffel.y' at line 988")
+	std.error.put_line ("Executing parser user-code from file 'eiffel.y' at line <not available>")
 end
 
-
-yyval38 := yytype38 (yyvs.item (yyvsp - 1)) 
-			yyval := yyval38
+				yyval82 := yyvs82.item (yyvsp82)
+				yyval82.extend (yyvs38.item (yyvsp38))
+			
 if yy_parsing_status = yyContinue then
-	yyssp := yyssp - 3
-	yyvsp := yyvsp - 2
-	yyvs.put (yyval, yyvsp)
+	yyssp := yyssp - 2
+	yyvsp38 := yyvsp38 -1
+	yyvs82.put (yyval82, yyvsp82)
 end
 		end
 
 	yy_do_action_162 is
-			--|#line 992 "eiffel.y"
+			--|#line <not available> "eiffel.y"
+		local
+			yyval38: INSTRUCTION_AS
 		do
---|#line 992 "eiffel.y"
+--|#line <not available> "eiffel.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'eiffel.y' at line 992")
+	std.error.put_line ("Executing parser user-code from file 'eiffel.y' at line <not available>")
 end
 
-			yyval := yyval_default;
-
-
+yyval38 := yyvs38.item (yyvsp38) 
 if yy_parsing_status = yyContinue then
-	yyvsp := yyvsp + 1
-	if yyvsp >= yyvsc then
-		yyvsc := yyvsc + yyInitial_stack_size
-		yyvs := FIXED_ARRAY_.resize (yyvs, yyvsc)
-		debug ("GEYACC")
-			std.error.put_string ("Stack (yyvs) size increased to ")
-			std.error.put_integer (yyvsc)
-			std.error.put_new_line
-		end
-	end
-	yyvs.put (yyval, yyvsp)
+	yyssp := yyssp - 3
+	yyvsp1 := yyvsp1 -2
+	yyvs38.put (yyval38, yyvsp38)
 end
 		end
 
 	yy_do_action_163 is
-			--|#line 993 "eiffel.y"
+			--|#line <not available> "eiffel.y"
+		local
+			yyval1: ANY
 		do
---|#line 993 "eiffel.y"
+--|#line <not available> "eiffel.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'eiffel.y' at line 993")
+	std.error.put_line ("Executing parser user-code from file 'eiffel.y' at line <not available>")
 end
-
-			yyval := yyval_default;
 
 
 if yy_parsing_status = yyContinue then
-	yyssp := yyssp - 2
-	yyvsp := yyvsp - 1
-	yyvs.put (yyval, yyvsp)
+	yyssp := yyssp - 0
+	yyvsp1 := yyvsp1 + 1
+	if yyvsp1 >= yyvsc1 then
+		if yyvs1 = Void then
+			debug ("GEYACC")
+				std.error.put_line ("Create yyvs1")
+			end
+			create yyspecial_routines1
+			yyvsc1 := yyInitial_yyvs_size
+			yyvs1 := yyspecial_routines1.make (yyvsc1)
+		else
+			debug ("GEYACC")
+				std.error.put_line ("Resize yyvs1")
+			end
+			yyvsc1 := yyvsc1 + yyInitial_yyvs_size
+			yyvs1 := yyspecial_routines1.resize (yyvs1, yyvsc1)
+		end
+	end
+	yyvs1.put (yyval1, yyvsp1)
 end
 		end
 
 	yy_do_action_164 is
-			--|#line 996 "eiffel.y"
+			--|#line <not available> "eiffel.y"
 		local
-			yyval38: INSTRUCTION_AS
+			yyval1: ANY
 		do
---|#line 996 "eiffel.y"
+--|#line <not available> "eiffel.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'eiffel.y' at line 996")
+	std.error.put_line ("Executing parser user-code from file 'eiffel.y' at line <not available>")
 end
 
 
-yyval38 := yytype19 (yyvs.item (yyvsp)) 
-			yyval := yyval38
 if yy_parsing_status = yyContinue then
-	yyssp := yyssp - 1
-	yyvs.put (yyval, yyvsp)
+	yyssp := yyssp - 2
+	yyvsp1 := yyvsp1 -1
+	yyvs1.put (yyval1, yyvsp1)
 end
 		end
 
 	yy_do_action_165 is
-			--|#line 998 "eiffel.y"
+			--|#line <not available> "eiffel.y"
 		local
 			yyval38: INSTRUCTION_AS
 		do
---|#line 998 "eiffel.y"
+--|#line <not available> "eiffel.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'eiffel.y' at line 998")
+	std.error.put_line ("Executing parser user-code from file 'eiffel.y' at line <not available>")
 end
 
-
-yyval38 := yytype37 (yyvs.item (yyvsp)) 
-			yyval := yyval38
+yyval38 := yyvs19.item (yyvsp19) 
 if yy_parsing_status = yyContinue then
 	yyssp := yyssp - 1
-	yyvs.put (yyval, yyvsp)
+	yyvsp38 := yyvsp38 + 1
+	yyvsp19 := yyvsp19 -1
+	if yyvsp38 >= yyvsc38 then
+		if yyvs38 = Void then
+			debug ("GEYACC")
+				std.error.put_line ("Create yyvs38")
+			end
+			create yyspecial_routines38
+			yyvsc38 := yyInitial_yyvs_size
+			yyvs38 := yyspecial_routines38.make (yyvsc38)
+		else
+			debug ("GEYACC")
+				std.error.put_line ("Resize yyvs38")
+			end
+			yyvsc38 := yyvsc38 + yyInitial_yyvs_size
+			yyvs38 := yyspecial_routines38.resize (yyvs38, yyvsc38)
+		end
+	end
+	yyvs38.put (yyval38, yyvsp38)
 end
 		end
 
 	yy_do_action_166 is
-			--|#line 1000 "eiffel.y"
+			--|#line <not available> "eiffel.y"
 		local
 			yyval38: INSTRUCTION_AS
 		do
---|#line 1000 "eiffel.y"
+--|#line <not available> "eiffel.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'eiffel.y' at line 1000")
+	std.error.put_line ("Executing parser user-code from file 'eiffel.y' at line <not available>")
 end
 
-
-yyval38 := yytype6 (yyvs.item (yyvsp)) 
-			yyval := yyval38
+yyval38 := yyvs37.item (yyvsp37) 
 if yy_parsing_status = yyContinue then
 	yyssp := yyssp - 1
-	yyvs.put (yyval, yyvsp)
+	yyvsp38 := yyvsp38 + 1
+	yyvsp37 := yyvsp37 -1
+	if yyvsp38 >= yyvsc38 then
+		if yyvs38 = Void then
+			debug ("GEYACC")
+				std.error.put_line ("Create yyvs38")
+			end
+			create yyspecial_routines38
+			yyvsc38 := yyInitial_yyvs_size
+			yyvs38 := yyspecial_routines38.make (yyvsc38)
+		else
+			debug ("GEYACC")
+				std.error.put_line ("Resize yyvs38")
+			end
+			yyvsc38 := yyvsc38 + yyInitial_yyvs_size
+			yyvs38 := yyspecial_routines38.resize (yyvs38, yyvsc38)
+		end
+	end
+	yyvs38.put (yyval38, yyvsp38)
 end
 		end
 
 	yy_do_action_167 is
-			--|#line 1002 "eiffel.y"
+			--|#line <not available> "eiffel.y"
 		local
 			yyval38: INSTRUCTION_AS
 		do
---|#line 1002 "eiffel.y"
+--|#line <not available> "eiffel.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'eiffel.y' at line 1002")
+	std.error.put_line ("Executing parser user-code from file 'eiffel.y' at line <not available>")
 end
 
-
-yyval38 := yytype54 (yyvs.item (yyvsp)) 
-			yyval := yyval38
+yyval38 := yyvs6.item (yyvsp6) 
 if yy_parsing_status = yyContinue then
 	yyssp := yyssp - 1
-	yyvs.put (yyval, yyvsp)
+	yyvsp38 := yyvsp38 + 1
+	yyvsp6 := yyvsp6 -1
+	if yyvsp38 >= yyvsc38 then
+		if yyvs38 = Void then
+			debug ("GEYACC")
+				std.error.put_line ("Create yyvs38")
+			end
+			create yyspecial_routines38
+			yyvsc38 := yyInitial_yyvs_size
+			yyvs38 := yyspecial_routines38.make (yyvsc38)
+		else
+			debug ("GEYACC")
+				std.error.put_line ("Resize yyvs38")
+			end
+			yyvsc38 := yyvsc38 + yyInitial_yyvs_size
+			yyvs38 := yyspecial_routines38.resize (yyvs38, yyvsc38)
+		end
+	end
+	yyvs38.put (yyval38, yyvsp38)
 end
 		end
 
 	yy_do_action_168 is
-			--|#line 1004 "eiffel.y"
+			--|#line <not available> "eiffel.y"
 		local
 			yyval38: INSTRUCTION_AS
 		do
---|#line 1004 "eiffel.y"
+--|#line <not available> "eiffel.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'eiffel.y' at line 1004")
+	std.error.put_line ("Executing parser user-code from file 'eiffel.y' at line <not available>")
 end
 
-
-yyval38 := yytype34 (yyvs.item (yyvsp)) 
-			yyval := yyval38
+yyval38 := yyvs54.item (yyvsp54) 
 if yy_parsing_status = yyContinue then
 	yyssp := yyssp - 1
-	yyvs.put (yyval, yyvsp)
+	yyvsp38 := yyvsp38 + 1
+	yyvsp54 := yyvsp54 -1
+	if yyvsp38 >= yyvsc38 then
+		if yyvs38 = Void then
+			debug ("GEYACC")
+				std.error.put_line ("Create yyvs38")
+			end
+			create yyspecial_routines38
+			yyvsc38 := yyInitial_yyvs_size
+			yyvs38 := yyspecial_routines38.make (yyvsc38)
+		else
+			debug ("GEYACC")
+				std.error.put_line ("Resize yyvs38")
+			end
+			yyvsc38 := yyvsc38 + yyInitial_yyvs_size
+			yyvs38 := yyspecial_routines38.resize (yyvs38, yyvsc38)
+		end
+	end
+	yyvs38.put (yyval38, yyvsp38)
 end
 		end
 
 	yy_do_action_169 is
-			--|#line 1006 "eiffel.y"
+			--|#line <not available> "eiffel.y"
 		local
 			yyval38: INSTRUCTION_AS
 		do
---|#line 1006 "eiffel.y"
+--|#line <not available> "eiffel.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'eiffel.y' at line 1006")
+	std.error.put_line ("Executing parser user-code from file 'eiffel.y' at line <not available>")
 end
 
-
-yyval38 := yytype36 (yyvs.item (yyvsp)) 
-			yyval := yyval38
+yyval38 := yyvs34.item (yyvsp34) 
 if yy_parsing_status = yyContinue then
 	yyssp := yyssp - 1
-	yyvs.put (yyval, yyvsp)
+	yyvsp38 := yyvsp38 + 1
+	yyvsp34 := yyvsp34 -1
+	if yyvsp38 >= yyvsc38 then
+		if yyvs38 = Void then
+			debug ("GEYACC")
+				std.error.put_line ("Create yyvs38")
+			end
+			create yyspecial_routines38
+			yyvsc38 := yyInitial_yyvs_size
+			yyvs38 := yyspecial_routines38.make (yyvsc38)
+		else
+			debug ("GEYACC")
+				std.error.put_line ("Resize yyvs38")
+			end
+			yyvsc38 := yyvsc38 + yyInitial_yyvs_size
+			yyvs38 := yyspecial_routines38.resize (yyvs38, yyvsc38)
+		end
+	end
+	yyvs38.put (yyval38, yyvsp38)
 end
 		end
 
 	yy_do_action_170 is
-			--|#line 1008 "eiffel.y"
+			--|#line <not available> "eiffel.y"
 		local
 			yyval38: INSTRUCTION_AS
 		do
---|#line 1008 "eiffel.y"
+--|#line <not available> "eiffel.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'eiffel.y' at line 1008")
+	std.error.put_line ("Executing parser user-code from file 'eiffel.y' at line <not available>")
 end
 
-
-yyval38 := yytype43 (yyvs.item (yyvsp)) 
-			yyval := yyval38
+yyval38 := yyvs36.item (yyvsp36) 
 if yy_parsing_status = yyContinue then
 	yyssp := yyssp - 1
-	yyvs.put (yyval, yyvsp)
+	yyvsp38 := yyvsp38 + 1
+	yyvsp36 := yyvsp36 -1
+	if yyvsp38 >= yyvsc38 then
+		if yyvs38 = Void then
+			debug ("GEYACC")
+				std.error.put_line ("Create yyvs38")
+			end
+			create yyspecial_routines38
+			yyvsc38 := yyInitial_yyvs_size
+			yyvs38 := yyspecial_routines38.make (yyvsc38)
+		else
+			debug ("GEYACC")
+				std.error.put_line ("Resize yyvs38")
+			end
+			yyvsc38 := yyvsc38 + yyInitial_yyvs_size
+			yyvs38 := yyspecial_routines38.resize (yyvs38, yyvsc38)
+		end
+	end
+	yyvs38.put (yyval38, yyvsp38)
 end
 		end
 
 	yy_do_action_171 is
-			--|#line 1010 "eiffel.y"
+			--|#line <not available> "eiffel.y"
 		local
 			yyval38: INSTRUCTION_AS
 		do
---|#line 1010 "eiffel.y"
+--|#line <not available> "eiffel.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'eiffel.y' at line 1010")
+	std.error.put_line ("Executing parser user-code from file 'eiffel.y' at line <not available>")
 end
 
-
-yyval38 := yytype21 (yyvs.item (yyvsp)) 
-			yyval := yyval38
+yyval38 := yyvs43.item (yyvsp43) 
 if yy_parsing_status = yyContinue then
 	yyssp := yyssp - 1
-	yyvs.put (yyval, yyvsp)
+	yyvsp38 := yyvsp38 + 1
+	yyvsp43 := yyvsp43 -1
+	if yyvsp38 >= yyvsc38 then
+		if yyvs38 = Void then
+			debug ("GEYACC")
+				std.error.put_line ("Create yyvs38")
+			end
+			create yyspecial_routines38
+			yyvsc38 := yyInitial_yyvs_size
+			yyvs38 := yyspecial_routines38.make (yyvsc38)
+		else
+			debug ("GEYACC")
+				std.error.put_line ("Resize yyvs38")
+			end
+			yyvsc38 := yyvsc38 + yyInitial_yyvs_size
+			yyvs38 := yyspecial_routines38.resize (yyvs38, yyvsc38)
+		end
+	end
+	yyvs38.put (yyval38, yyvsp38)
 end
 		end
 
 	yy_do_action_172 is
-			--|#line 1012 "eiffel.y"
+			--|#line <not available> "eiffel.y"
 		local
 			yyval38: INSTRUCTION_AS
 		do
---|#line 1012 "eiffel.y"
+--|#line <not available> "eiffel.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'eiffel.y' at line 1012")
+	std.error.put_line ("Executing parser user-code from file 'eiffel.y' at line <not available>")
 end
 
-
-yyval38 := yytype14 (yyvs.item (yyvsp)) 
-			yyval := yyval38
+yyval38 := yyvs21.item (yyvsp21) 
 if yy_parsing_status = yyContinue then
 	yyssp := yyssp - 1
-	yyvs.put (yyval, yyvsp)
+	yyvsp38 := yyvsp38 + 1
+	yyvsp21 := yyvsp21 -1
+	if yyvsp38 >= yyvsc38 then
+		if yyvs38 = Void then
+			debug ("GEYACC")
+				std.error.put_line ("Create yyvs38")
+			end
+			create yyspecial_routines38
+			yyvsc38 := yyInitial_yyvs_size
+			yyvs38 := yyspecial_routines38.make (yyvsc38)
+		else
+			debug ("GEYACC")
+				std.error.put_line ("Resize yyvs38")
+			end
+			yyvsc38 := yyvsc38 + yyInitial_yyvs_size
+			yyvs38 := yyspecial_routines38.resize (yyvs38, yyvsc38)
+		end
+	end
+	yyvs38.put (yyval38, yyvsp38)
 end
 		end
 
 	yy_do_action_173 is
-			--|#line 1014 "eiffel.y"
+			--|#line <not available> "eiffel.y"
 		local
 			yyval38: INSTRUCTION_AS
 		do
---|#line 1014 "eiffel.y"
+--|#line <not available> "eiffel.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'eiffel.y' at line 1014")
+	std.error.put_line ("Executing parser user-code from file 'eiffel.y' at line <not available>")
 end
 
-
-yyval38 := yytype53 (yyvs.item (yyvsp)) 
-			yyval := yyval38
+yyval38 := yyvs14.item (yyvsp14) 
 if yy_parsing_status = yyContinue then
 	yyssp := yyssp - 1
-	yyvs.put (yyval, yyvsp)
+	yyvsp38 := yyvsp38 + 1
+	yyvsp14 := yyvsp14 -1
+	if yyvsp38 >= yyvsc38 then
+		if yyvs38 = Void then
+			debug ("GEYACC")
+				std.error.put_line ("Create yyvs38")
+			end
+			create yyspecial_routines38
+			yyvsc38 := yyInitial_yyvs_size
+			yyvs38 := yyspecial_routines38.make (yyvsc38)
+		else
+			debug ("GEYACC")
+				std.error.put_line ("Resize yyvs38")
+			end
+			yyvsc38 := yyvsc38 + yyInitial_yyvs_size
+			yyvs38 := yyspecial_routines38.resize (yyvs38, yyvsc38)
+		end
+	end
+	yyvs38.put (yyval38, yyvsp38)
 end
 		end
 
 	yy_do_action_174 is
-			--|#line 1018 "eiffel.y"
+			--|#line <not available> "eiffel.y"
 		local
-			yyval52: REQUIRE_AS
+			yyval38: INSTRUCTION_AS
 		do
---|#line 1018 "eiffel.y"
+--|#line <not available> "eiffel.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'eiffel.y' at line 1018")
+	std.error.put_line ("Executing parser user-code from file 'eiffel.y' at line <not available>")
 end
 
-
-
-			yyval := yyval52
+yyval38 := yyvs53.item (yyvsp53) 
 if yy_parsing_status = yyContinue then
-	yyvsp := yyvsp + 1
-	if yyvsp >= yyvsc then
-		yyvsc := yyvsc + yyInitial_stack_size
-		yyvs := FIXED_ARRAY_.resize (yyvs, yyvsc)
-		debug ("GEYACC")
-			std.error.put_string ("Stack (yyvs) size increased to ")
-			std.error.put_integer (yyvsc)
-			std.error.put_new_line
+	yyssp := yyssp - 1
+	yyvsp38 := yyvsp38 + 1
+	yyvsp53 := yyvsp53 -1
+	if yyvsp38 >= yyvsc38 then
+		if yyvs38 = Void then
+			debug ("GEYACC")
+				std.error.put_line ("Create yyvs38")
+			end
+			create yyspecial_routines38
+			yyvsc38 := yyInitial_yyvs_size
+			yyvs38 := yyspecial_routines38.make (yyvsc38)
+		else
+			debug ("GEYACC")
+				std.error.put_line ("Resize yyvs38")
+			end
+			yyvsc38 := yyvsc38 + yyInitial_yyvs_size
+			yyvs38 := yyspecial_routines38.resize (yyvs38, yyvsc38)
 		end
 	end
-	yyvs.put (yyval, yyvsp)
+	yyvs38.put (yyval38, yyvsp38)
 end
 		end
 
 	yy_do_action_175 is
-			--|#line 1020 "eiffel.y"
+			--|#line <not available> "eiffel.y"
 		local
 			yyval52: REQUIRE_AS
 		do
---|#line 1020 "eiffel.y"
+--|#line <not available> "eiffel.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'eiffel.y' at line 1020")
+	std.error.put_line ("Executing parser user-code from file 'eiffel.y' at line <not available>")
 end
 
 
-				id_level := Normal_level
-				yyval52 := new_require_as (yytype88 (yyvs.item (yyvsp)))
-			
-			yyval := yyval52
 if yy_parsing_status = yyContinue then
-	yyssp := yyssp - 3
-	yyvsp := yyvsp - 2
-	yyvs.put (yyval, yyvsp)
+	yyssp := yyssp - 0
+	yyvsp52 := yyvsp52 + 1
+	if yyvsp52 >= yyvsc52 then
+		if yyvs52 = Void then
+			debug ("GEYACC")
+				std.error.put_line ("Create yyvs52")
+			end
+			create yyspecial_routines52
+			yyvsc52 := yyInitial_yyvs_size
+			yyvs52 := yyspecial_routines52.make (yyvsc52)
+		else
+			debug ("GEYACC")
+				std.error.put_line ("Resize yyvs52")
+			end
+			yyvsc52 := yyvsc52 + yyInitial_yyvs_size
+			yyvs52 := yyspecial_routines52.resize (yyvs52, yyvsc52)
+		end
+	end
+	yyvs52.put (yyval52, yyvsp52)
 end
 		end
 
 	yy_do_action_176 is
-			--|#line 1020 "eiffel.y"
+			--|#line <not available> "eiffel.y"
 		local
 			yyval52: REQUIRE_AS
 		do
---|#line 1020 "eiffel.y"
+--|#line <not available> "eiffel.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'eiffel.y' at line 1020")
+	std.error.put_line ("Executing parser user-code from file 'eiffel.y' at line <not available>")
 end
 
-
-id_level := Assert_level 
-			yyval := yyval52
+				id_level := Normal_level
+				yyval52 := new_require_as (yyvs88.item (yyvsp88))
+			
 if yy_parsing_status = yyContinue then
-	yyvsp := yyvsp + 1
-	if yyvsp >= yyvsc then
-		yyvsc := yyvsc + yyInitial_stack_size
-		yyvs := FIXED_ARRAY_.resize (yyvs, yyvsc)
-		debug ("GEYACC")
-			std.error.put_string ("Stack (yyvs) size increased to ")
-			std.error.put_integer (yyvsc)
-			std.error.put_new_line
-		end
-	end
-	yyvs.put (yyval, yyvsp)
+	yyssp := yyssp - 3
+	yyvsp1 := yyvsp1 -1
+	yyvsp88 := yyvsp88 -1
+	yyvs52.put (yyval52, yyvsp52)
 end
 		end
 
 	yy_do_action_177 is
-			--|#line 1027 "eiffel.y"
+			--|#line <not available> "eiffel.y"
 		local
 			yyval52: REQUIRE_AS
 		do
---|#line 1027 "eiffel.y"
+--|#line <not available> "eiffel.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'eiffel.y' at line 1027")
+	std.error.put_line ("Executing parser user-code from file 'eiffel.y' at line <not available>")
 end
 
-
-				id_level := Normal_level
-				yyval52 := new_require_else_as (yytype88 (yyvs.item (yyvsp)))
-			
-			yyval := yyval52
+id_level := Assert_level 
 if yy_parsing_status = yyContinue then
-	yyssp := yyssp - 4
-	yyvsp := yyvsp - 3
-	yyvs.put (yyval, yyvsp)
+	yyssp := yyssp - 0
+	yyvsp52 := yyvsp52 + 1
+	if yyvsp52 >= yyvsc52 then
+		if yyvs52 = Void then
+			debug ("GEYACC")
+				std.error.put_line ("Create yyvs52")
+			end
+			create yyspecial_routines52
+			yyvsc52 := yyInitial_yyvs_size
+			yyvs52 := yyspecial_routines52.make (yyvsc52)
+		else
+			debug ("GEYACC")
+				std.error.put_line ("Resize yyvs52")
+			end
+			yyvsc52 := yyvsc52 + yyInitial_yyvs_size
+			yyvs52 := yyspecial_routines52.resize (yyvs52, yyvsc52)
+		end
+	end
+	yyvs52.put (yyval52, yyvsp52)
 end
 		end
 
 	yy_do_action_178 is
-			--|#line 1027 "eiffel.y"
+			--|#line <not available> "eiffel.y"
 		local
 			yyval52: REQUIRE_AS
 		do
---|#line 1027 "eiffel.y"
+--|#line <not available> "eiffel.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'eiffel.y' at line 1027")
+	std.error.put_line ("Executing parser user-code from file 'eiffel.y' at line <not available>")
 end
 
-
-id_level := Assert_level 
-			yyval := yyval52
+				id_level := Normal_level
+				yyval52 := new_require_else_as (yyvs88.item (yyvsp88))
+			
 if yy_parsing_status = yyContinue then
-	yyvsp := yyvsp + 1
-	if yyvsp >= yyvsc then
-		yyvsc := yyvsc + yyInitial_stack_size
-		yyvs := FIXED_ARRAY_.resize (yyvs, yyvsc)
-		debug ("GEYACC")
-			std.error.put_string ("Stack (yyvs) size increased to ")
-			std.error.put_integer (yyvsc)
-			std.error.put_new_line
-		end
-	end
-	yyvs.put (yyval, yyvsp)
+	yyssp := yyssp - 4
+	yyvsp1 := yyvsp1 -2
+	yyvsp88 := yyvsp88 -1
+	yyvs52.put (yyval52, yyvsp52)
 end
 		end
 
 	yy_do_action_179 is
-			--|#line 1036 "eiffel.y"
+			--|#line <not available> "eiffel.y"
 		local
-			yyval23: ENSURE_AS
+			yyval52: REQUIRE_AS
 		do
---|#line 1036 "eiffel.y"
+--|#line <not available> "eiffel.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'eiffel.y' at line 1036")
+	std.error.put_line ("Executing parser user-code from file 'eiffel.y' at line <not available>")
 end
 
-
-
-			yyval := yyval23
+id_level := Assert_level 
 if yy_parsing_status = yyContinue then
-	yyvsp := yyvsp + 1
-	if yyvsp >= yyvsc then
-		yyvsc := yyvsc + yyInitial_stack_size
-		yyvs := FIXED_ARRAY_.resize (yyvs, yyvsc)
-		debug ("GEYACC")
-			std.error.put_string ("Stack (yyvs) size increased to ")
-			std.error.put_integer (yyvsc)
-			std.error.put_new_line
+	yyssp := yyssp - 0
+	yyvsp52 := yyvsp52 + 1
+	if yyvsp52 >= yyvsc52 then
+		if yyvs52 = Void then
+			debug ("GEYACC")
+				std.error.put_line ("Create yyvs52")
+			end
+			create yyspecial_routines52
+			yyvsc52 := yyInitial_yyvs_size
+			yyvs52 := yyspecial_routines52.make (yyvsc52)
+		else
+			debug ("GEYACC")
+				std.error.put_line ("Resize yyvs52")
+			end
+			yyvsc52 := yyvsc52 + yyInitial_yyvs_size
+			yyvs52 := yyspecial_routines52.resize (yyvs52, yyvsc52)
 		end
 	end
-	yyvs.put (yyval, yyvsp)
+	yyvs52.put (yyval52, yyvsp52)
 end
 		end
 
 	yy_do_action_180 is
-			--|#line 1038 "eiffel.y"
+			--|#line <not available> "eiffel.y"
 		local
 			yyval23: ENSURE_AS
 		do
---|#line 1038 "eiffel.y"
+--|#line <not available> "eiffel.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'eiffel.y' at line 1038")
+	std.error.put_line ("Executing parser user-code from file 'eiffel.y' at line <not available>")
 end
 
 
-				id_level := Normal_level
-				yyval23 := new_ensure_as (yytype88 (yyvs.item (yyvsp)))
-			
-			yyval := yyval23
 if yy_parsing_status = yyContinue then
-	yyssp := yyssp - 3
-	yyvsp := yyvsp - 2
-	yyvs.put (yyval, yyvsp)
+	yyssp := yyssp - 0
+	yyvsp23 := yyvsp23 + 1
+	if yyvsp23 >= yyvsc23 then
+		if yyvs23 = Void then
+			debug ("GEYACC")
+				std.error.put_line ("Create yyvs23")
+			end
+			create yyspecial_routines23
+			yyvsc23 := yyInitial_yyvs_size
+			yyvs23 := yyspecial_routines23.make (yyvsc23)
+		else
+			debug ("GEYACC")
+				std.error.put_line ("Resize yyvs23")
+			end
+			yyvsc23 := yyvsc23 + yyInitial_yyvs_size
+			yyvs23 := yyspecial_routines23.resize (yyvs23, yyvsc23)
+		end
+	end
+	yyvs23.put (yyval23, yyvsp23)
 end
 		end
 
 	yy_do_action_181 is
-			--|#line 1038 "eiffel.y"
+			--|#line <not available> "eiffel.y"
 		local
 			yyval23: ENSURE_AS
 		do
---|#line 1038 "eiffel.y"
+--|#line <not available> "eiffel.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'eiffel.y' at line 1038")
+	std.error.put_line ("Executing parser user-code from file 'eiffel.y' at line <not available>")
 end
 
-
-id_level := Assert_level 
-			yyval := yyval23
+				id_level := Normal_level
+				yyval23 := new_ensure_as (yyvs88.item (yyvsp88))
+			
 if yy_parsing_status = yyContinue then
-	yyvsp := yyvsp + 1
-	if yyvsp >= yyvsc then
-		yyvsc := yyvsc + yyInitial_stack_size
-		yyvs := FIXED_ARRAY_.resize (yyvs, yyvsc)
-		debug ("GEYACC")
-			std.error.put_string ("Stack (yyvs) size increased to ")
-			std.error.put_integer (yyvsc)
-			std.error.put_new_line
-		end
-	end
-	yyvs.put (yyval, yyvsp)
+	yyssp := yyssp - 3
+	yyvsp1 := yyvsp1 -1
+	yyvsp88 := yyvsp88 -1
+	yyvs23.put (yyval23, yyvsp23)
 end
 		end
 
 	yy_do_action_182 is
-			--|#line 1045 "eiffel.y"
+			--|#line <not available> "eiffel.y"
 		local
 			yyval23: ENSURE_AS
 		do
---|#line 1045 "eiffel.y"
+--|#line <not available> "eiffel.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'eiffel.y' at line 1045")
+	std.error.put_line ("Executing parser user-code from file 'eiffel.y' at line <not available>")
 end
 
-
-				id_level := Normal_level
-				yyval23 := new_ensure_then_as (yytype88 (yyvs.item (yyvsp)))
-			
-			yyval := yyval23
+id_level := Assert_level 
 if yy_parsing_status = yyContinue then
-	yyssp := yyssp - 4
-	yyvsp := yyvsp - 3
-	yyvs.put (yyval, yyvsp)
+	yyssp := yyssp - 0
+	yyvsp23 := yyvsp23 + 1
+	if yyvsp23 >= yyvsc23 then
+		if yyvs23 = Void then
+			debug ("GEYACC")
+				std.error.put_line ("Create yyvs23")
+			end
+			create yyspecial_routines23
+			yyvsc23 := yyInitial_yyvs_size
+			yyvs23 := yyspecial_routines23.make (yyvsc23)
+		else
+			debug ("GEYACC")
+				std.error.put_line ("Resize yyvs23")
+			end
+			yyvsc23 := yyvsc23 + yyInitial_yyvs_size
+			yyvs23 := yyspecial_routines23.resize (yyvs23, yyvsc23)
+		end
+	end
+	yyvs23.put (yyval23, yyvsp23)
 end
 		end
 
 	yy_do_action_183 is
-			--|#line 1045 "eiffel.y"
+			--|#line <not available> "eiffel.y"
 		local
 			yyval23: ENSURE_AS
 		do
---|#line 1045 "eiffel.y"
+--|#line <not available> "eiffel.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'eiffel.y' at line 1045")
+	std.error.put_line ("Executing parser user-code from file 'eiffel.y' at line <not available>")
 end
 
-
-id_level := Assert_level 
-			yyval := yyval23
+				id_level := Normal_level
+				yyval23 := new_ensure_then_as (yyvs88.item (yyvsp88))
+			
 if yy_parsing_status = yyContinue then
-	yyvsp := yyvsp + 1
-	if yyvsp >= yyvsc then
-		yyvsc := yyvsc + yyInitial_stack_size
-		yyvs := FIXED_ARRAY_.resize (yyvs, yyvsc)
-		debug ("GEYACC")
-			std.error.put_string ("Stack (yyvs) size increased to ")
-			std.error.put_integer (yyvsc)
-			std.error.put_new_line
-		end
-	end
-	yyvs.put (yyval, yyvsp)
+	yyssp := yyssp - 4
+	yyvsp1 := yyvsp1 -2
+	yyvsp88 := yyvsp88 -1
+	yyvs23.put (yyval23, yyvsp23)
 end
 		end
 
 	yy_do_action_184 is
-			--|#line 1054 "eiffel.y"
+			--|#line <not available> "eiffel.y"
 		local
-			yyval88: EIFFEL_LIST [TAGGED_AS]
+			yyval23: ENSURE_AS
 		do
---|#line 1054 "eiffel.y"
+--|#line <not available> "eiffel.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'eiffel.y' at line 1054")
+	std.error.put_line ("Executing parser user-code from file 'eiffel.y' at line <not available>")
 end
 
-
-
-			yyval := yyval88
+id_level := Assert_level 
 if yy_parsing_status = yyContinue then
-	yyvsp := yyvsp + 1
-	if yyvsp >= yyvsc then
-		yyvsc := yyvsc + yyInitial_stack_size
-		yyvs := FIXED_ARRAY_.resize (yyvs, yyvsc)
-		debug ("GEYACC")
-			std.error.put_string ("Stack (yyvs) size increased to ")
-			std.error.put_integer (yyvsc)
-			std.error.put_new_line
+	yyssp := yyssp - 0
+	yyvsp23 := yyvsp23 + 1
+	if yyvsp23 >= yyvsc23 then
+		if yyvs23 = Void then
+			debug ("GEYACC")
+				std.error.put_line ("Create yyvs23")
+			end
+			create yyspecial_routines23
+			yyvsc23 := yyInitial_yyvs_size
+			yyvs23 := yyspecial_routines23.make (yyvsc23)
+		else
+			debug ("GEYACC")
+				std.error.put_line ("Resize yyvs23")
+			end
+			yyvsc23 := yyvsc23 + yyInitial_yyvs_size
+			yyvs23 := yyspecial_routines23.resize (yyvs23, yyvsc23)
 		end
 	end
-	yyvs.put (yyval, yyvsp)
+	yyvs23.put (yyval23, yyvsp23)
 end
 		end
 
 	yy_do_action_185 is
-			--|#line 1056 "eiffel.y"
+			--|#line <not available> "eiffel.y"
 		local
 			yyval88: EIFFEL_LIST [TAGGED_AS]
 		do
---|#line 1056 "eiffel.y"
+--|#line <not available> "eiffel.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'eiffel.y' at line 1056")
+	std.error.put_line ("Executing parser user-code from file 'eiffel.y' at line <not available>")
 end
 
 
-				yyval88 := yytype88 (yyvs.item (yyvsp))
-				if yyval88.is_empty then
-					yyval88 := Void
-				end
-			
-			yyval := yyval88
 if yy_parsing_status = yyContinue then
-	yyssp := yyssp - 1
-	yyvs.put (yyval, yyvsp)
+	yyssp := yyssp - 0
+	yyvsp88 := yyvsp88 + 1
+	if yyvsp88 >= yyvsc88 then
+		if yyvs88 = Void then
+			debug ("GEYACC")
+				std.error.put_line ("Create yyvs88")
+			end
+			create yyspecial_routines88
+			yyvsc88 := yyInitial_yyvs_size
+			yyvs88 := yyspecial_routines88.make (yyvsc88)
+		else
+			debug ("GEYACC")
+				std.error.put_line ("Resize yyvs88")
+			end
+			yyvsc88 := yyvsc88 + yyInitial_yyvs_size
+			yyvs88 := yyspecial_routines88.resize (yyvs88, yyvsc88)
+		end
+	end
+	yyvs88.put (yyval88, yyvsp88)
 end
 		end
 
 	yy_do_action_186 is
-			--|#line 1065 "eiffel.y"
+			--|#line <not available> "eiffel.y"
 		local
 			yyval88: EIFFEL_LIST [TAGGED_AS]
 		do
---|#line 1065 "eiffel.y"
+--|#line <not available> "eiffel.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'eiffel.y' at line 1065")
+	std.error.put_line ("Executing parser user-code from file 'eiffel.y' at line <not available>")
 end
 
-
-				yyval88 := new_eiffel_list_tagged_as (Initial_assertion_list_size)
-				add_to_assertion_list (yyval88, yytype61 (yyvs.item (yyvsp)))
+				yyval88 := yyvs88.item (yyvsp88)
+				if yyval88.is_empty then
+					yyval88 := Void
+				end
 			
-			yyval := yyval88
 if yy_parsing_status = yyContinue then
 	yyssp := yyssp - 1
-	yyvs.put (yyval, yyvsp)
+	yyvs88.put (yyval88, yyvsp88)
 end
 		end
 
 	yy_do_action_187 is
-			--|#line 1070 "eiffel.y"
+			--|#line <not available> "eiffel.y"
 		local
 			yyval88: EIFFEL_LIST [TAGGED_AS]
 		do
---|#line 1070 "eiffel.y"
+--|#line <not available> "eiffel.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'eiffel.y' at line 1070")
+	std.error.put_line ("Executing parser user-code from file 'eiffel.y' at line <not available>")
 end
 
-
-				yyval88 := yytype88 (yyvs.item (yyvsp - 1))
-				add_to_assertion_list (yyval88, yytype61 (yyvs.item (yyvsp)))
+				yyval88 := new_eiffel_list_tagged_as (Initial_assertion_list_size)
+				add_to_assertion_list (yyval88, yyvs61.item (yyvsp61))
 			
-			yyval := yyval88
 if yy_parsing_status = yyContinue then
-	yyssp := yyssp - 2
-	yyvsp := yyvsp - 1
-	yyvs.put (yyval, yyvsp)
+	yyssp := yyssp - 1
+	yyvsp88 := yyvsp88 + 1
+	yyvsp61 := yyvsp61 -1
+	if yyvsp88 >= yyvsc88 then
+		if yyvs88 = Void then
+			debug ("GEYACC")
+				std.error.put_line ("Create yyvs88")
+			end
+			create yyspecial_routines88
+			yyvsc88 := yyInitial_yyvs_size
+			yyvs88 := yyspecial_routines88.make (yyvsc88)
+		else
+			debug ("GEYACC")
+				std.error.put_line ("Resize yyvs88")
+			end
+			yyvsc88 := yyvsc88 + yyInitial_yyvs_size
+			yyvs88 := yyspecial_routines88.resize (yyvs88, yyvsc88)
+		end
+	end
+	yyvs88.put (yyval88, yyvsp88)
 end
 		end
 
 	yy_do_action_188 is
-			--|#line 1077 "eiffel.y"
+			--|#line <not available> "eiffel.y"
 		local
-			yyval61: TAGGED_AS
+			yyval88: EIFFEL_LIST [TAGGED_AS]
 		do
---|#line 1077 "eiffel.y"
+--|#line <not available> "eiffel.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'eiffel.y' at line 1077")
+	std.error.put_line ("Executing parser user-code from file 'eiffel.y' at line <not available>")
 end
 
-
-yyval61 := yytype61 (yyvs.item (yyvsp - 1)) 
-			yyval := yyval61
+				yyval88 := yyvs88.item (yyvsp88)
+				add_to_assertion_list (yyval88, yyvs61.item (yyvsp61))
+			
 if yy_parsing_status = yyContinue then
-	yyssp := yyssp - 3
-	yyvsp := yyvsp - 2
-	yyvs.put (yyval, yyvsp)
+	yyssp := yyssp - 2
+	yyvsp61 := yyvsp61 -1
+	yyvs88.put (yyval88, yyvsp88)
 end
 		end
 
 	yy_do_action_189 is
-			--|#line 1081 "eiffel.y"
+			--|#line <not available> "eiffel.y"
 		local
 			yyval61: TAGGED_AS
 		do
---|#line 1081 "eiffel.y"
+--|#line <not available> "eiffel.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'eiffel.y' at line 1081")
+	std.error.put_line ("Executing parser user-code from file 'eiffel.y' at line <not available>")
 end
 
-
-yyval61 := new_tagged_as (Void, yytype25 (yyvs.item (yyvsp)), yytype58 (yyvs.item (yyvsp - 1))) 
-			yyval := yyval61
+yyval61 := yyvs61.item (yyvsp61) 
 if yy_parsing_status = yyContinue then
-	yyssp := yyssp - 2
-	yyvsp := yyvsp - 1
-	yyvs.put (yyval, yyvsp)
+	yyssp := yyssp - 3
+	yyvsp1 := yyvsp1 -2
+	yyvs61.put (yyval61, yyvsp61)
 end
 		end
 
 	yy_do_action_190 is
-			--|#line 1083 "eiffel.y"
+			--|#line <not available> "eiffel.y"
 		local
 			yyval61: TAGGED_AS
 		do
---|#line 1083 "eiffel.y"
+--|#line <not available> "eiffel.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'eiffel.y' at line 1083")
+	std.error.put_line ("Executing parser user-code from file 'eiffel.y' at line <not available>")
 end
 
-
-yyval61 := new_tagged_as (yytype33 (yyvs.item (yyvsp - 2)), yytype25 (yyvs.item (yyvsp)), yytype58 (yyvs.item (yyvsp - 3))) 
-			yyval := yyval61
+yyval61 := new_tagged_as (Void, yyvs25.item (yyvsp25), yyvs58.item (yyvsp58)) 
 if yy_parsing_status = yyContinue then
-	yyssp := yyssp - 4
-	yyvsp := yyvsp - 3
-	yyvs.put (yyval, yyvsp)
+	yyssp := yyssp - 2
+	yyvsp61 := yyvsp61 + 1
+	yyvsp58 := yyvsp58 -1
+	yyvsp25 := yyvsp25 -1
+	if yyvsp61 >= yyvsc61 then
+		if yyvs61 = Void then
+			debug ("GEYACC")
+				std.error.put_line ("Create yyvs61")
+			end
+			create yyspecial_routines61
+			yyvsc61 := yyInitial_yyvs_size
+			yyvs61 := yyspecial_routines61.make (yyvsc61)
+		else
+			debug ("GEYACC")
+				std.error.put_line ("Resize yyvs61")
+			end
+			yyvsc61 := yyvsc61 + yyInitial_yyvs_size
+			yyvs61 := yyspecial_routines61.resize (yyvs61, yyvsc61)
+		end
+	end
+	yyvs61.put (yyval61, yyvsp61)
 end
 		end
 
 	yy_do_action_191 is
-			--|#line 1085 "eiffel.y"
+			--|#line <not available> "eiffel.y"
 		local
 			yyval61: TAGGED_AS
 		do
---|#line 1085 "eiffel.y"
+--|#line <not available> "eiffel.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'eiffel.y' at line 1085")
+	std.error.put_line ("Executing parser user-code from file 'eiffel.y' at line <not available>")
 end
 
-
-
-			yyval := yyval61
+yyval61 := new_tagged_as (yyvs33.item (yyvsp33), yyvs25.item (yyvsp25), yyvs58.item (yyvsp58)) 
 if yy_parsing_status = yyContinue then
-	yyssp := yyssp - 3
-	yyvsp := yyvsp - 2
-	yyvs.put (yyval, yyvsp)
+	yyssp := yyssp - 4
+	yyvsp61 := yyvsp61 + 1
+	yyvsp58 := yyvsp58 -1
+	yyvsp33 := yyvsp33 -1
+	yyvsp1 := yyvsp1 -1
+	yyvsp25 := yyvsp25 -1
+	if yyvsp61 >= yyvsc61 then
+		if yyvs61 = Void then
+			debug ("GEYACC")
+				std.error.put_line ("Create yyvs61")
+			end
+			create yyspecial_routines61
+			yyvsc61 := yyInitial_yyvs_size
+			yyvs61 := yyspecial_routines61.make (yyvsc61)
+		else
+			debug ("GEYACC")
+				std.error.put_line ("Resize yyvs61")
+			end
+			yyvsc61 := yyvsc61 + yyInitial_yyvs_size
+			yyvs61 := yyspecial_routines61.resize (yyvs61, yyvsc61)
+		end
+	end
+	yyvs61.put (yyval61, yyvsp61)
 end
 		end
 
 	yy_do_action_192 is
-			--|#line 1093 "eiffel.y"
+			--|#line <not available> "eiffel.y"
 		local
-			yyval63: TYPE_AS
+			yyval61: TAGGED_AS
 		do
---|#line 1093 "eiffel.y"
+--|#line <not available> "eiffel.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'eiffel.y' at line 1093")
+	std.error.put_line ("Executing parser user-code from file 'eiffel.y' at line <not available>")
 end
 
 
-yyval63 := yytype63 (yyvs.item (yyvsp)) 
-			yyval := yyval63
 if yy_parsing_status = yyContinue then
-	yyssp := yyssp - 1
-	yyvs.put (yyval, yyvsp)
+	yyssp := yyssp - 3
+	yyvsp61 := yyvsp61 + 1
+	yyvsp58 := yyvsp58 -1
+	yyvsp33 := yyvsp33 -1
+	yyvsp1 := yyvsp1 -1
+	if yyvsp61 >= yyvsc61 then
+		if yyvs61 = Void then
+			debug ("GEYACC")
+				std.error.put_line ("Create yyvs61")
+			end
+			create yyspecial_routines61
+			yyvsc61 := yyInitial_yyvs_size
+			yyvs61 := yyspecial_routines61.make (yyvsc61)
+		else
+			debug ("GEYACC")
+				std.error.put_line ("Resize yyvs61")
+			end
+			yyvsc61 := yyvsc61 + yyInitial_yyvs_size
+			yyvs61 := yyspecial_routines61.resize (yyvs61, yyvsc61)
+		end
+	end
+	yyvs61.put (yyval61, yyvsp61)
 end
 		end
 
 	yy_do_action_193 is
-			--|#line 1095 "eiffel.y"
+			--|#line <not available> "eiffel.y"
 		local
 			yyval63: TYPE_AS
 		do
---|#line 1095 "eiffel.y"
+--|#line <not available> "eiffel.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'eiffel.y' at line 1095")
+	std.error.put_line ("Executing parser user-code from file 'eiffel.y' at line <not available>")
 end
 
-
-yyval63 := yytype63 (yyvs.item (yyvsp)) 
-			yyval := yyval63
+yyval63 := yyvs63.item (yyvsp63) 
 if yy_parsing_status = yyContinue then
 	yyssp := yyssp - 1
-	yyvs.put (yyval, yyvsp)
+	yyvs63.put (yyval63, yyvsp63)
 end
 		end
 
 	yy_do_action_194 is
-			--|#line 1099 "eiffel.y"
+			--|#line <not available> "eiffel.y"
 		local
 			yyval63: TYPE_AS
 		do
---|#line 1099 "eiffel.y"
+--|#line <not available> "eiffel.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'eiffel.y' at line 1099")
+	std.error.put_line ("Executing parser user-code from file 'eiffel.y' at line <not available>")
 end
 
-
-				yyval63 := new_class_type (yytype92 (yyvs.item (yyvsp - 1)), yytype89 (yyvs.item (yyvsp)), True, False)
-				if has_syntax_warning then
-					Error_handler.insert_warning (
-						create {SYNTAX_WARNING}.make (yytype58 (yyvs.item (yyvsp - 3)).start_position,
-						yytype58 (yyvs.item (yyvsp - 3)).end_position, filename, 0, "Make an expanded version of the base class associated with this type."))
-				end
-			
-			yyval := yyval63
+yyval63 := yyvs63.item (yyvsp63) 
 if yy_parsing_status = yyContinue then
-	yyssp := yyssp - 4
-	yyvsp := yyvsp - 3
-	yyvs.put (yyval, yyvsp)
+	yyssp := yyssp - 1
+	yyvs63.put (yyval63, yyvsp63)
 end
 		end
 
 	yy_do_action_195 is
-			--|#line 1108 "eiffel.y"
+			--|#line <not available> "eiffel.y"
 		local
 			yyval63: TYPE_AS
 		do
---|#line 1108 "eiffel.y"
+--|#line <not available> "eiffel.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'eiffel.y' at line 1108")
+	std.error.put_line ("Executing parser user-code from file 'eiffel.y' at line <not available>")
 end
 
-
-yyval63 := new_class_type (yytype92 (yyvs.item (yyvsp - 1)), yytype89 (yyvs.item (yyvsp)), False, True) 
-			yyval := yyval63
+				yyval63 := new_class_type (yyvs92.item (yyvsp92), yyvs89.item (yyvsp89), True, False)
+				if has_syntax_warning then
+					Error_handler.insert_warning (
+						create {SYNTAX_WARNING}.make (yyvs58.item (yyvsp58).start_position,
+						yyvs58.item (yyvsp58).end_position, filename, 0, "Make an expanded version of the base class associated with this type."))
+				end
+			
 if yy_parsing_status = yyContinue then
-	yyssp := yyssp - 3
-	yyvsp := yyvsp - 2
-	yyvs.put (yyval, yyvsp)
+	yyssp := yyssp - 4
+	yyvsp63 := yyvsp63 + 1
+	yyvsp58 := yyvsp58 -1
+	yyvsp1 := yyvsp1 -1
+	yyvsp92 := yyvsp92 -1
+	yyvsp89 := yyvsp89 -1
+	if yyvsp63 >= yyvsc63 then
+		if yyvs63 = Void then
+			debug ("GEYACC")
+				std.error.put_line ("Create yyvs63")
+			end
+			create yyspecial_routines63
+			yyvsc63 := yyInitial_yyvs_size
+			yyvs63 := yyspecial_routines63.make (yyvsc63)
+		else
+			debug ("GEYACC")
+				std.error.put_line ("Resize yyvs63")
+			end
+			yyvsc63 := yyvsc63 + yyInitial_yyvs_size
+			yyvs63 := yyspecial_routines63.resize (yyvs63, yyvsc63)
+		end
+	end
+	yyvs63.put (yyval63, yyvsp63)
 end
 		end
 
 	yy_do_action_196 is
-			--|#line 1110 "eiffel.y"
+			--|#line <not available> "eiffel.y"
 		local
 			yyval63: TYPE_AS
 		do
---|#line 1110 "eiffel.y"
+--|#line <not available> "eiffel.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'eiffel.y' at line 1110")
+	std.error.put_line ("Executing parser user-code from file 'eiffel.y' at line <not available>")
 end
 
-
-yyval63 := new_bits_as (yytype39 (yyvs.item (yyvsp))) 
-			yyval := yyval63
+yyval63 := new_class_type (yyvs92.item (yyvsp92), yyvs89.item (yyvsp89), False, True) 
 if yy_parsing_status = yyContinue then
-	yyssp := yyssp - 2
-	yyvsp := yyvsp - 1
-	yyvs.put (yyval, yyvsp)
+	yyssp := yyssp - 3
+	yyvsp63 := yyvsp63 + 1
+	yyvsp1 := yyvsp1 -1
+	yyvsp92 := yyvsp92 -1
+	yyvsp89 := yyvsp89 -1
+	if yyvsp63 >= yyvsc63 then
+		if yyvs63 = Void then
+			debug ("GEYACC")
+				std.error.put_line ("Create yyvs63")
+			end
+			create yyspecial_routines63
+			yyvsc63 := yyInitial_yyvs_size
+			yyvs63 := yyspecial_routines63.make (yyvsc63)
+		else
+			debug ("GEYACC")
+				std.error.put_line ("Resize yyvs63")
+			end
+			yyvsc63 := yyvsc63 + yyInitial_yyvs_size
+			yyvs63 := yyspecial_routines63.resize (yyvs63, yyvsc63)
+		end
+	end
+	yyvs63.put (yyval63, yyvsp63)
 end
 		end
 
 	yy_do_action_197 is
-			--|#line 1112 "eiffel.y"
+			--|#line <not available> "eiffel.y"
 		local
 			yyval63: TYPE_AS
 		do
---|#line 1112 "eiffel.y"
+--|#line <not available> "eiffel.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'eiffel.y' at line 1112")
+	std.error.put_line ("Executing parser user-code from file 'eiffel.y' at line <not available>")
 end
 
-
-yyval63 := new_bits_symbol_as (yytype33 (yyvs.item (yyvsp))) 
-			yyval := yyval63
+yyval63 := new_bits_as (yyvs39.item (yyvsp39)) 
 if yy_parsing_status = yyContinue then
 	yyssp := yyssp - 2
-	yyvsp := yyvsp - 1
-	yyvs.put (yyval, yyvsp)
+	yyvsp63 := yyvsp63 + 1
+	yyvsp1 := yyvsp1 -1
+	yyvsp39 := yyvsp39 -1
+	if yyvsp63 >= yyvsc63 then
+		if yyvs63 = Void then
+			debug ("GEYACC")
+				std.error.put_line ("Create yyvs63")
+			end
+			create yyspecial_routines63
+			yyvsc63 := yyInitial_yyvs_size
+			yyvs63 := yyspecial_routines63.make (yyvsc63)
+		else
+			debug ("GEYACC")
+				std.error.put_line ("Resize yyvs63")
+			end
+			yyvsc63 := yyvsc63 + yyInitial_yyvs_size
+			yyvs63 := yyspecial_routines63.resize (yyvs63, yyvsc63)
+		end
+	end
+	yyvs63.put (yyval63, yyvsp63)
 end
 		end
 
 	yy_do_action_198 is
-			--|#line 1114 "eiffel.y"
+			--|#line <not available> "eiffel.y"
 		local
 			yyval63: TYPE_AS
 		do
---|#line 1114 "eiffel.y"
+--|#line <not available> "eiffel.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'eiffel.y' at line 1114")
+	std.error.put_line ("Executing parser user-code from file 'eiffel.y' at line <not available>")
 end
 
-
-yyval63 := new_like_id_as (yytype33 (yyvs.item (yyvsp))) 
-			yyval := yyval63
+yyval63 := new_bits_symbol_as (yyvs33.item (yyvsp33)) 
 if yy_parsing_status = yyContinue then
 	yyssp := yyssp - 2
-	yyvsp := yyvsp - 1
-	yyvs.put (yyval, yyvsp)
+	yyvsp63 := yyvsp63 + 1
+	yyvsp1 := yyvsp1 -1
+	yyvsp33 := yyvsp33 -1
+	if yyvsp63 >= yyvsc63 then
+		if yyvs63 = Void then
+			debug ("GEYACC")
+				std.error.put_line ("Create yyvs63")
+			end
+			create yyspecial_routines63
+			yyvsc63 := yyInitial_yyvs_size
+			yyvs63 := yyspecial_routines63.make (yyvsc63)
+		else
+			debug ("GEYACC")
+				std.error.put_line ("Resize yyvs63")
+			end
+			yyvsc63 := yyvsc63 + yyInitial_yyvs_size
+			yyvs63 := yyspecial_routines63.resize (yyvs63, yyvsc63)
+		end
+	end
+	yyvs63.put (yyval63, yyvsp63)
 end
 		end
 
 	yy_do_action_199 is
-			--|#line 1116 "eiffel.y"
+			--|#line <not available> "eiffel.y"
 		local
 			yyval63: TYPE_AS
 		do
---|#line 1116 "eiffel.y"
+--|#line <not available> "eiffel.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'eiffel.y' at line 1116")
+	std.error.put_line ("Executing parser user-code from file 'eiffel.y' at line <not available>")
 end
 
-
-yyval63 := new_like_current_as 
-			yyval := yyval63
+yyval63 := new_like_id_as (yyvs33.item (yyvsp33)) 
 if yy_parsing_status = yyContinue then
 	yyssp := yyssp - 2
-	yyvsp := yyvsp - 1
-	yyvs.put (yyval, yyvsp)
+	yyvsp63 := yyvsp63 + 1
+	yyvsp1 := yyvsp1 -1
+	yyvsp33 := yyvsp33 -1
+	if yyvsp63 >= yyvsc63 then
+		if yyvs63 = Void then
+			debug ("GEYACC")
+				std.error.put_line ("Create yyvs63")
+			end
+			create yyspecial_routines63
+			yyvsc63 := yyInitial_yyvs_size
+			yyvs63 := yyspecial_routines63.make (yyvsc63)
+		else
+			debug ("GEYACC")
+				std.error.put_line ("Resize yyvs63")
+			end
+			yyvsc63 := yyvsc63 + yyInitial_yyvs_size
+			yyvs63 := yyspecial_routines63.resize (yyvs63, yyvsc63)
+		end
+	end
+	yyvs63.put (yyval63, yyvsp63)
 end
 		end
 
 	yy_do_action_200 is
-			--|#line 1120 "eiffel.y"
+			--|#line <not available> "eiffel.y"
 		local
 			yyval63: TYPE_AS
 		do
---|#line 1120 "eiffel.y"
+--|#line <not available> "eiffel.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'eiffel.y' at line 1120")
+	std.error.put_line ("Executing parser user-code from file 'eiffel.y' at line <not available>")
 end
 
-
-yyval63 := new_class_type (yytype92 (yyvs.item (yyvsp - 1)), yytype89 (yyvs.item (yyvsp)), False, False) 
-			yyval := yyval63
+yyval63 := new_like_current_as 
 if yy_parsing_status = yyContinue then
 	yyssp := yyssp - 2
-	yyvsp := yyvsp - 1
-	yyvs.put (yyval, yyvsp)
+	yyvsp63 := yyvsp63 + 1
+	yyvsp1 := yyvsp1 -2
+	if yyvsp63 >= yyvsc63 then
+		if yyvs63 = Void then
+			debug ("GEYACC")
+				std.error.put_line ("Create yyvs63")
+			end
+			create yyspecial_routines63
+			yyvsc63 := yyInitial_yyvs_size
+			yyvs63 := yyspecial_routines63.make (yyvsc63)
+		else
+			debug ("GEYACC")
+				std.error.put_line ("Resize yyvs63")
+			end
+			yyvsc63 := yyvsc63 + yyInitial_yyvs_size
+			yyvs63 := yyspecial_routines63.resize (yyvs63, yyvsc63)
+		end
+	end
+	yyvs63.put (yyval63, yyvsp63)
 end
 		end
 
 	yy_do_action_201 is
-			--|#line 1124 "eiffel.y"
+			--|#line <not available> "eiffel.y"
 		local
-			yyval89: EIFFEL_LIST [TYPE_AS]
+			yyval63: TYPE_AS
 		do
---|#line 1124 "eiffel.y"
+--|#line <not available> "eiffel.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'eiffel.y' at line 1124")
+	std.error.put_line ("Executing parser user-code from file 'eiffel.y' at line <not available>")
 end
 
-
-
-			yyval := yyval89
+yyval63 := new_class_type (yyvs92.item (yyvsp92), yyvs89.item (yyvsp89), False, False) 
 if yy_parsing_status = yyContinue then
-	yyvsp := yyvsp + 1
-	if yyvsp >= yyvsc then
-		yyvsc := yyvsc + yyInitial_stack_size
-		yyvs := FIXED_ARRAY_.resize (yyvs, yyvsc)
-		debug ("GEYACC")
-			std.error.put_string ("Stack (yyvs) size increased to ")
-			std.error.put_integer (yyvsc)
-			std.error.put_new_line
+	yyssp := yyssp - 2
+	yyvsp63 := yyvsp63 + 1
+	yyvsp92 := yyvsp92 -1
+	yyvsp89 := yyvsp89 -1
+	if yyvsp63 >= yyvsc63 then
+		if yyvs63 = Void then
+			debug ("GEYACC")
+				std.error.put_line ("Create yyvs63")
+			end
+			create yyspecial_routines63
+			yyvsc63 := yyInitial_yyvs_size
+			yyvs63 := yyspecial_routines63.make (yyvsc63)
+		else
+			debug ("GEYACC")
+				std.error.put_line ("Resize yyvs63")
+			end
+			yyvsc63 := yyvsc63 + yyInitial_yyvs_size
+			yyvs63 := yyspecial_routines63.resize (yyvs63, yyvsc63)
 		end
 	end
-	yyvs.put (yyval, yyvsp)
+	yyvs63.put (yyval63, yyvsp63)
 end
 		end
 
 	yy_do_action_202 is
-			--|#line 1126 "eiffel.y"
+			--|#line <not available> "eiffel.y"
 		local
 			yyval89: EIFFEL_LIST [TYPE_AS]
 		do
---|#line 1126 "eiffel.y"
+--|#line <not available> "eiffel.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'eiffel.y' at line 1126")
+	std.error.put_line ("Executing parser user-code from file 'eiffel.y' at line <not available>")
 end
 
 
-
-			yyval := yyval89
 if yy_parsing_status = yyContinue then
-	yyssp := yyssp - 2
-	yyvsp := yyvsp - 1
-	yyvs.put (yyval, yyvsp)
+	yyssp := yyssp - 0
+	yyvsp89 := yyvsp89 + 1
+	if yyvsp89 >= yyvsc89 then
+		if yyvs89 = Void then
+			debug ("GEYACC")
+				std.error.put_line ("Create yyvs89")
+			end
+			create yyspecial_routines89
+			yyvsc89 := yyInitial_yyvs_size
+			yyvs89 := yyspecial_routines89.make (yyvsc89)
+		else
+			debug ("GEYACC")
+				std.error.put_line ("Resize yyvs89")
+			end
+			yyvsc89 := yyvsc89 + yyInitial_yyvs_size
+			yyvs89 := yyspecial_routines89.resize (yyvs89, yyvsc89)
+		end
+	end
+	yyvs89.put (yyval89, yyvsp89)
 end
 		end
 
 	yy_do_action_203 is
-			--|#line 1128 "eiffel.y"
+			--|#line <not available> "eiffel.y"
 		local
 			yyval89: EIFFEL_LIST [TYPE_AS]
 		do
---|#line 1128 "eiffel.y"
+--|#line <not available> "eiffel.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'eiffel.y' at line 1128")
+	std.error.put_line ("Executing parser user-code from file 'eiffel.y' at line <not available>")
 end
 
 
-yyval89 := yytype89 (yyvs.item (yyvsp - 1)) 
-			yyval := yyval89
 if yy_parsing_status = yyContinue then
-	yyssp := yyssp - 3
-	yyvsp := yyvsp - 2
-	yyvs.put (yyval, yyvsp)
+	yyssp := yyssp - 2
+	yyvsp89 := yyvsp89 + 1
+	yyvsp1 := yyvsp1 -2
+	if yyvsp89 >= yyvsc89 then
+		if yyvs89 = Void then
+			debug ("GEYACC")
+				std.error.put_line ("Create yyvs89")
+			end
+			create yyspecial_routines89
+			yyvsc89 := yyInitial_yyvs_size
+			yyvs89 := yyspecial_routines89.make (yyvsc89)
+		else
+			debug ("GEYACC")
+				std.error.put_line ("Resize yyvs89")
+			end
+			yyvsc89 := yyvsc89 + yyInitial_yyvs_size
+			yyvs89 := yyspecial_routines89.resize (yyvs89, yyvsc89)
+		end
+	end
+	yyvs89.put (yyval89, yyvsp89)
 end
 		end
 
 	yy_do_action_204 is
-			--|#line 1132 "eiffel.y"
+			--|#line <not available> "eiffel.y"
 		local
 			yyval89: EIFFEL_LIST [TYPE_AS]
 		do
---|#line 1132 "eiffel.y"
+--|#line <not available> "eiffel.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'eiffel.y' at line 1132")
+	std.error.put_line ("Executing parser user-code from file 'eiffel.y' at line <not available>")
 end
 
-
-
-			yyval := yyval89
+yyval89 := yyvs89.item (yyvsp89) 
 if yy_parsing_status = yyContinue then
-	yyssp := yyssp - 2
-	yyvsp := yyvsp - 1
-	yyvs.put (yyval, yyvsp)
+	yyssp := yyssp - 3
+	yyvsp1 := yyvsp1 -2
+	yyvs89.put (yyval89, yyvsp89)
 end
 		end
 
 	yy_do_action_205 is
-			--|#line 1134 "eiffel.y"
+			--|#line <not available> "eiffel.y"
 		local
 			yyval89: EIFFEL_LIST [TYPE_AS]
 		do
---|#line 1134 "eiffel.y"
+--|#line <not available> "eiffel.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'eiffel.y' at line 1134")
+	std.error.put_line ("Executing parser user-code from file 'eiffel.y' at line <not available>")
 end
 
-
-yyval89 := yytype89 (yyvs.item (yyvsp - 1)) 
-			yyval := yyval89
+				yyval89 := new_eiffel_list_type (Initial_type_list_size)
+				yyval89.extend (yyvs63.item (yyvsp63))
+			
 if yy_parsing_status = yyContinue then
-	yyssp := yyssp - 3
-	yyvsp := yyvsp - 2
-	yyvs.put (yyval, yyvsp)
+	yyssp := yyssp - 1
+	yyvsp89 := yyvsp89 + 1
+	yyvsp63 := yyvsp63 -1
+	if yyvsp89 >= yyvsc89 then
+		if yyvs89 = Void then
+			debug ("GEYACC")
+				std.error.put_line ("Create yyvs89")
+			end
+			create yyspecial_routines89
+			yyvsc89 := yyInitial_yyvs_size
+			yyvs89 := yyspecial_routines89.make (yyvsc89)
+		else
+			debug ("GEYACC")
+				std.error.put_line ("Resize yyvs89")
+			end
+			yyvsc89 := yyvsc89 + yyInitial_yyvs_size
+			yyvs89 := yyspecial_routines89.resize (yyvs89, yyvsc89)
+		end
+	end
+	yyvs89.put (yyval89, yyvsp89)
 end
 		end
 
 	yy_do_action_206 is
-			--|#line 1138 "eiffel.y"
+			--|#line <not available> "eiffel.y"
 		local
 			yyval89: EIFFEL_LIST [TYPE_AS]
 		do
---|#line 1138 "eiffel.y"
+--|#line <not available> "eiffel.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'eiffel.y' at line 1138")
+	std.error.put_line ("Executing parser user-code from file 'eiffel.y' at line <not available>")
 end
 
-
-				yyval89 := new_eiffel_list_type (Initial_type_list_size)
-				yyval89.extend (yytype63 (yyvs.item (yyvsp)))
+				yyval89 := yyvs89.item (yyvsp89)
+				yyval89.extend (yyvs63.item (yyvsp63))
 			
-			yyval := yyval89
 if yy_parsing_status = yyContinue then
-	yyssp := yyssp - 1
-	yyvs.put (yyval, yyvsp)
+	yyssp := yyssp - 3
+	yyvsp1 := yyvsp1 -1
+	yyvsp63 := yyvsp63 -1
+	yyvs89.put (yyval89, yyvsp89)
 end
 		end
 
 	yy_do_action_207 is
-			--|#line 1143 "eiffel.y"
-		local
-			yyval89: EIFFEL_LIST [TYPE_AS]
-		do
---|#line 1143 "eiffel.y"
-debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'eiffel.y' at line 1143")
-end
-
-
-				yyval89 := yytype89 (yyvs.item (yyvsp - 2))
-				yyval89.extend (yytype63 (yyvs.item (yyvsp)))
-			
-			yyval := yyval89
-if yy_parsing_status = yyContinue then
-	yyssp := yyssp - 3
-	yyvsp := yyvsp - 2
-	yyvs.put (yyval, yyvsp)
-end
-		end
-
-	yy_do_action_208 is
-			--|#line 1154 "eiffel.y"
+			--|#line <not available> "eiffel.y"
 		local
 			yyval77: EIFFEL_LIST [FORMAL_DEC_AS]
 		do
---|#line 1154 "eiffel.y"
+--|#line <not available> "eiffel.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'eiffel.y' at line 1154")
+	std.error.put_line ("Executing parser user-code from file 'eiffel.y' at line <not available>")
 end
-
 
 				-- $$ := Void
 				formal_generics_start_position := current_position.start_position
 				formal_generics_end_position := 0
 			
-			yyval := yyval77
 if yy_parsing_status = yyContinue then
-	yyvsp := yyvsp + 1
-	if yyvsp >= yyvsc then
-		yyvsc := yyvsc + yyInitial_stack_size
-		yyvs := FIXED_ARRAY_.resize (yyvs, yyvsc)
-		debug ("GEYACC")
-			std.error.put_string ("Stack (yyvs) size increased to ")
-			std.error.put_integer (yyvsc)
-			std.error.put_new_line
+	yyssp := yyssp - 0
+	yyvsp77 := yyvsp77 + 1
+	if yyvsp77 >= yyvsc77 then
+		if yyvs77 = Void then
+			debug ("GEYACC")
+				std.error.put_line ("Create yyvs77")
+			end
+			create yyspecial_routines77
+			yyvsc77 := yyInitial_yyvs_size
+			yyvs77 := yyspecial_routines77.make (yyvsc77)
+		else
+			debug ("GEYACC")
+				std.error.put_line ("Resize yyvs77")
+			end
+			yyvsc77 := yyvsc77 + yyInitial_yyvs_size
+			yyvs77 := yyspecial_routines77.resize (yyvs77, yyvsc77)
 		end
 	end
-	yyvs.put (yyval, yyvsp)
+	yyvs77.put (yyval77, yyvsp77)
+end
+		end
+
+	yy_do_action_208 is
+			--|#line <not available> "eiffel.y"
+		local
+			yyval77: EIFFEL_LIST [FORMAL_DEC_AS]
+		do
+--|#line <not available> "eiffel.y"
+debug ("GEYACC")
+	std.error.put_line ("Executing parser user-code from file 'eiffel.y' at line <not available>")
+end
+
+				yyval77 := yyvs77.item (yyvsp77)
+				formal_generics_start_position := yyvs58.item (yyvsp58).start_position
+				formal_generics_end_position := current_position.start_position
+			
+if yy_parsing_status = yyContinue then
+	yyssp := yyssp - 4
+	yyvsp58 := yyvsp58 -1
+	yyvsp1 := yyvsp1 -2
+	yyvs77.put (yyval77, yyvsp77)
 end
 		end
 
 	yy_do_action_209 is
-			--|#line 1160 "eiffel.y"
+			--|#line <not available> "eiffel.y"
 		local
 			yyval77: EIFFEL_LIST [FORMAL_DEC_AS]
 		do
---|#line 1160 "eiffel.y"
+--|#line <not available> "eiffel.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'eiffel.y' at line 1160")
+	std.error.put_line ("Executing parser user-code from file 'eiffel.y' at line <not available>")
 end
 
 
-				yyval77 := yytype77 (yyvs.item (yyvsp - 1))
-				formal_generics_start_position := yytype58 (yyvs.item (yyvsp - 3)).start_position
-				formal_generics_end_position := current_position.start_position
-			
-			yyval := yyval77
 if yy_parsing_status = yyContinue then
-	yyssp := yyssp - 4
-	yyvsp := yyvsp - 3
-	yyvs.put (yyval, yyvsp)
+	yyssp := yyssp - 0
+	yyvsp77 := yyvsp77 + 1
+	if yyvsp77 >= yyvsc77 then
+		if yyvs77 = Void then
+			debug ("GEYACC")
+				std.error.put_line ("Create yyvs77")
+			end
+			create yyspecial_routines77
+			yyvsc77 := yyInitial_yyvs_size
+			yyvs77 := yyspecial_routines77.make (yyvsc77)
+		else
+			debug ("GEYACC")
+				std.error.put_line ("Resize yyvs77")
+			end
+			yyvsc77 := yyvsc77 + yyInitial_yyvs_size
+			yyvs77 := yyspecial_routines77.resize (yyvs77, yyvsc77)
+		end
+	end
+	yyvs77.put (yyval77, yyvsp77)
 end
 		end
 
 	yy_do_action_210 is
-			--|#line 1168 "eiffel.y"
+			--|#line <not available> "eiffel.y"
 		local
 			yyval77: EIFFEL_LIST [FORMAL_DEC_AS]
 		do
---|#line 1168 "eiffel.y"
+--|#line <not available> "eiffel.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'eiffel.y' at line 1168")
+	std.error.put_line ("Executing parser user-code from file 'eiffel.y' at line <not available>")
 end
 
-
-
-			yyval := yyval77
+yyval77 := yyvs77.item (yyvsp77) 
 if yy_parsing_status = yyContinue then
-	yyvsp := yyvsp + 1
-	if yyvsp >= yyvsc then
-		yyvsc := yyvsc + yyInitial_stack_size
-		yyvs := FIXED_ARRAY_.resize (yyvs, yyvsc)
-		debug ("GEYACC")
-			std.error.put_string ("Stack (yyvs) size increased to ")
-			std.error.put_integer (yyvsc)
-			std.error.put_new_line
-		end
-	end
-	yyvs.put (yyval, yyvsp)
+	yyssp := yyssp - 1
+	yyvs77.put (yyval77, yyvsp77)
 end
 		end
 
 	yy_do_action_211 is
-			--|#line 1170 "eiffel.y"
+			--|#line <not available> "eiffel.y"
 		local
 			yyval77: EIFFEL_LIST [FORMAL_DEC_AS]
 		do
---|#line 1170 "eiffel.y"
+--|#line <not available> "eiffel.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'eiffel.y' at line 1170")
+	std.error.put_line ("Executing parser user-code from file 'eiffel.y' at line <not available>")
 end
 
-
-yyval77 := yytype77 (yyvs.item (yyvsp)) 
-			yyval := yyval77
+				yyval77 := new_eiffel_list_formal_dec_as (Initial_formal_generic_list_size)
+				yyval77.extend (yyvs32.item (yyvsp32))
+			
 if yy_parsing_status = yyContinue then
 	yyssp := yyssp - 1
-	yyvs.put (yyval, yyvsp)
+	yyvsp77 := yyvsp77 + 1
+	yyvsp32 := yyvsp32 -1
+	if yyvsp77 >= yyvsc77 then
+		if yyvs77 = Void then
+			debug ("GEYACC")
+				std.error.put_line ("Create yyvs77")
+			end
+			create yyspecial_routines77
+			yyvsc77 := yyInitial_yyvs_size
+			yyvs77 := yyspecial_routines77.make (yyvsc77)
+		else
+			debug ("GEYACC")
+				std.error.put_line ("Resize yyvs77")
+			end
+			yyvsc77 := yyvsc77 + yyInitial_yyvs_size
+			yyvs77 := yyspecial_routines77.resize (yyvs77, yyvsc77)
+		end
+	end
+	yyvs77.put (yyval77, yyvsp77)
 end
 		end
 
 	yy_do_action_212 is
-			--|#line 1174 "eiffel.y"
+			--|#line <not available> "eiffel.y"
 		local
 			yyval77: EIFFEL_LIST [FORMAL_DEC_AS]
 		do
---|#line 1174 "eiffel.y"
+--|#line <not available> "eiffel.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'eiffel.y' at line 1174")
+	std.error.put_line ("Executing parser user-code from file 'eiffel.y' at line <not available>")
 end
 
-
-				yyval77 := new_eiffel_list_formal_dec_as (Initial_formal_generic_list_size)
-				yyval77.extend (yytype32 (yyvs.item (yyvsp)))
+				yyval77 := yyvs77.item (yyvsp77)
+				yyval77.extend (yyvs32.item (yyvsp32))
 			
-			yyval := yyval77
 if yy_parsing_status = yyContinue then
-	yyssp := yyssp - 1
-	yyvs.put (yyval, yyvsp)
+	yyssp := yyssp - 3
+	yyvsp1 := yyvsp1 -1
+	yyvsp32 := yyvsp32 -1
+	yyvs77.put (yyval77, yyvsp77)
 end
 		end
 
 	yy_do_action_213 is
-			--|#line 1179 "eiffel.y"
-		local
-			yyval77: EIFFEL_LIST [FORMAL_DEC_AS]
-		do
---|#line 1179 "eiffel.y"
-debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'eiffel.y' at line 1179")
-end
-
-
-				yyval77 := yytype77 (yyvs.item (yyvsp - 2))
-				yyval77.extend (yytype32 (yyvs.item (yyvsp)))
-			
-			yyval := yyval77
-if yy_parsing_status = yyContinue then
-	yyssp := yyssp - 3
-	yyvsp := yyvsp - 2
-	yyvs.put (yyval, yyvsp)
-end
-		end
-
-	yy_do_action_214 is
-			--|#line 1186 "eiffel.y"
+			--|#line <not available> "eiffel.y"
 		local
 			yyval31: FORMAL_AS
 		do
---|#line 1186 "eiffel.y"
+--|#line <not available> "eiffel.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'eiffel.y' at line 1186")
+	std.error.put_line ("Executing parser user-code from file 'eiffel.y' at line <not available>")
 end
-
 
 				if None_classname.is_equal (token_buffer) then
 						-- Trigger an error when constraint is NONE.
@@ -6347,24 +8737,39 @@ end
 					yyval31 := new_formal_as (create {ID_AS}.initialize (token_buffer), True, False)
 				end
 			
-			yyval := yyval31
 if yy_parsing_status = yyContinue then
 	yyssp := yyssp - 2
-	yyvsp := yyvsp - 1
-	yyvs.put (yyval, yyvsp)
+	yyvsp31 := yyvsp31 + 1
+	yyvsp1 := yyvsp1 -2
+	if yyvsp31 >= yyvsc31 then
+		if yyvs31 = Void then
+			debug ("GEYACC")
+				std.error.put_line ("Create yyvs31")
+			end
+			create yyspecial_routines31
+			yyvsc31 := yyInitial_yyvs_size
+			yyvs31 := yyspecial_routines31.make (yyvsc31)
+		else
+			debug ("GEYACC")
+				std.error.put_line ("Resize yyvs31")
+			end
+			yyvsc31 := yyvsc31 + yyInitial_yyvs_size
+			yyvs31 := yyspecial_routines31.resize (yyvs31, yyvsc31)
+		end
+	end
+	yyvs31.put (yyval31, yyvsp31)
 end
 		end
 
-	yy_do_action_215 is
-			--|#line 1203 "eiffel.y"
+	yy_do_action_214 is
+			--|#line <not available> "eiffel.y"
 		local
 			yyval31: FORMAL_AS
 		do
---|#line 1203 "eiffel.y"
+--|#line <not available> "eiffel.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'eiffel.y' at line 1203")
+	std.error.put_line ("Executing parser user-code from file 'eiffel.y' at line <not available>")
 end
-
 
 				if None_classname.is_equal (token_buffer) then
 						-- Trigger an error when constraint is NONE.
@@ -6381,24 +8786,39 @@ end
 					yyval31 := new_formal_as (create {ID_AS}.initialize (token_buffer), False, True)
 				end
 			
-			yyval := yyval31
 if yy_parsing_status = yyContinue then
 	yyssp := yyssp - 2
-	yyvsp := yyvsp - 1
-	yyvs.put (yyval, yyvsp)
+	yyvsp31 := yyvsp31 + 1
+	yyvsp1 := yyvsp1 -2
+	if yyvsp31 >= yyvsc31 then
+		if yyvs31 = Void then
+			debug ("GEYACC")
+				std.error.put_line ("Create yyvs31")
+			end
+			create yyspecial_routines31
+			yyvsc31 := yyInitial_yyvs_size
+			yyvs31 := yyspecial_routines31.make (yyvsc31)
+		else
+			debug ("GEYACC")
+				std.error.put_line ("Resize yyvs31")
+			end
+			yyvsc31 := yyvsc31 + yyInitial_yyvs_size
+			yyvs31 := yyspecial_routines31.resize (yyvs31, yyvsc31)
+		end
+	end
+	yyvs31.put (yyval31, yyvsp31)
 end
 		end
 
-	yy_do_action_216 is
-			--|#line 1221 "eiffel.y"
+	yy_do_action_215 is
+			--|#line <not available> "eiffel.y"
 		local
 			yyval31: FORMAL_AS
 		do
---|#line 1221 "eiffel.y"
+--|#line <not available> "eiffel.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'eiffel.y' at line 1221")
+	std.error.put_line ("Executing parser user-code from file 'eiffel.y' at line <not available>")
 end
-
 
 				if None_classname.is_equal (token_buffer) then
 						-- Trigger an error when constraint is NONE.
@@ -6415,5910 +8835,9880 @@ end
 					yyval31 := new_formal_as (create {ID_AS}.initialize (token_buffer), False, False)
 				end
 			
-			yyval := yyval31
 if yy_parsing_status = yyContinue then
 	yyssp := yyssp - 1
-	yyvs.put (yyval, yyvsp)
+	yyvsp31 := yyvsp31 + 1
+	yyvsp1 := yyvsp1 -1
+	if yyvsp31 >= yyvsc31 then
+		if yyvs31 = Void then
+			debug ("GEYACC")
+				std.error.put_line ("Create yyvs31")
+			end
+			create yyspecial_routines31
+			yyvsc31 := yyInitial_yyvs_size
+			yyvs31 := yyspecial_routines31.make (yyvsc31)
+		else
+			debug ("GEYACC")
+				std.error.put_line ("Resize yyvs31")
+			end
+			yyvsc31 := yyvsc31 + yyInitial_yyvs_size
+			yyvs31 := yyspecial_routines31.resize (yyvs31, yyvsc31)
+		end
+	end
+	yyvs31.put (yyval31, yyvsp31)
+end
+		end
+
+	yy_do_action_216 is
+			--|#line <not available> "eiffel.y"
+		local
+			yyval32: FORMAL_DEC_AS
+		do
+--|#line <not available> "eiffel.y"
+debug ("GEYACC")
+	std.error.put_line ("Executing parser user-code from file 'eiffel.y' at line <not available>")
+end
+
+				yyval32 := new_formal_dec_as (yyvs31.item (yyvsp31), yyvs96.item (yyvsp96).first, yyvs96.item (yyvsp96).second)
+			
+if yy_parsing_status = yyContinue then
+	yyssp := yyssp - 3
+	yyvsp31 := yyvsp31 -1
+	yyvsp96 := yyvsp96 -1
+	yyvs32.put (yyval32, yyvsp32)
 end
 		end
 
 	yy_do_action_217 is
-			--|#line 1240 "eiffel.y"
+			--|#line <not available> "eiffel.y"
 		local
 			yyval32: FORMAL_DEC_AS
 		do
---|#line 1240 "eiffel.y"
+--|#line <not available> "eiffel.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'eiffel.y' at line 1240")
+	std.error.put_line ("Executing parser user-code from file 'eiffel.y' at line <not available>")
 end
 
-
-				yyval32 := new_formal_dec_as (yytype31 (yyvs.item (yyvsp - 2)), yytype96 (yyvs.item (yyvsp)).first, yytype96 (yyvs.item (yyvsp)).second)
+					-- Needs to be done here, in case current formal is used in
+					-- Constraint.
+				formal_parameters.extend (yyvs31.item (yyvsp31))
+				yyvs31.item (yyvsp31).set_position (formal_parameters.count)
 			
-			yyval := yyval32
 if yy_parsing_status = yyContinue then
-	yyssp := yyssp - 3
-	yyvsp := yyvsp - 2
-	yyvs.put (yyval, yyvsp)
+	yyssp := yyssp - 0
+	yyvsp32 := yyvsp32 + 1
+	if yyvsp32 >= yyvsc32 then
+		if yyvs32 = Void then
+			debug ("GEYACC")
+				std.error.put_line ("Create yyvs32")
+			end
+			create yyspecial_routines32
+			yyvsc32 := yyInitial_yyvs_size
+			yyvs32 := yyspecial_routines32.make (yyvsc32)
+		else
+			debug ("GEYACC")
+				std.error.put_line ("Resize yyvs32")
+			end
+			yyvsc32 := yyvsc32 + yyInitial_yyvs_size
+			yyvs32 := yyspecial_routines32.resize (yyvs32, yyvsc32)
+		end
+	end
+	yyvs32.put (yyval32, yyvsp32)
 end
 		end
 
 	yy_do_action_218 is
-			--|#line 1240 "eiffel.y"
+			--|#line <not available> "eiffel.y"
 		local
-			yyval32: FORMAL_DEC_AS
+			yyval96: PAIR [TYPE_AS, EIFFEL_LIST [FEATURE_NAME]]
 		do
---|#line 1240 "eiffel.y"
+--|#line <not available> "eiffel.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'eiffel.y' at line 1240")
+	std.error.put_line ("Executing parser user-code from file 'eiffel.y' at line <not available>")
 end
 
-
-					-- Needs to be done here, in case current formal is used in
-					-- Constraint.
-				formal_parameters.extend (yytype31 (yyvs.item (yyvsp)))
-				yytype31 (yyvs.item (yyvsp)).set_position (formal_parameters.count)
-			
-			yyval := yyval32
+create yyval96 
 if yy_parsing_status = yyContinue then
-	yyvsp := yyvsp + 1
-	if yyvsp >= yyvsc then
-		yyvsc := yyvsc + yyInitial_stack_size
-		yyvs := FIXED_ARRAY_.resize (yyvs, yyvsc)
-		debug ("GEYACC")
-			std.error.put_string ("Stack (yyvs) size increased to ")
-			std.error.put_integer (yyvsc)
-			std.error.put_new_line
+	yyssp := yyssp - 0
+	yyvsp96 := yyvsp96 + 1
+	if yyvsp96 >= yyvsc96 then
+		if yyvs96 = Void then
+			debug ("GEYACC")
+				std.error.put_line ("Create yyvs96")
+			end
+			create yyspecial_routines96
+			yyvsc96 := yyInitial_yyvs_size
+			yyvs96 := yyspecial_routines96.make (yyvsc96)
+		else
+			debug ("GEYACC")
+				std.error.put_line ("Resize yyvs96")
+			end
+			yyvsc96 := yyvsc96 + yyInitial_yyvs_size
+			yyvs96 := yyspecial_routines96.resize (yyvs96, yyvsc96)
 		end
 	end
-	yyvs.put (yyval, yyvsp)
+	yyvs96.put (yyval96, yyvsp96)
 end
 		end
 
 	yy_do_action_219 is
-			--|#line 1253 "eiffel.y"
+			--|#line <not available> "eiffel.y"
 		local
 			yyval96: PAIR [TYPE_AS, EIFFEL_LIST [FEATURE_NAME]]
 		do
---|#line 1253 "eiffel.y"
+--|#line <not available> "eiffel.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'eiffel.y' at line 1253")
+	std.error.put_line ("Executing parser user-code from file 'eiffel.y' at line <not available>")
 end
 
-
-create yyval96 
-			yyval := yyval96
+				create yyval96
+				yyval96.set_first (yyvs63.item (yyvsp63))
+				yyval96.set_second (yyvs76.item (yyvsp76))
+			
 if yy_parsing_status = yyContinue then
-	yyvsp := yyvsp + 1
-	if yyvsp >= yyvsc then
-		yyvsc := yyvsc + yyInitial_stack_size
-		yyvs := FIXED_ARRAY_.resize (yyvs, yyvsc)
-		debug ("GEYACC")
-			std.error.put_string ("Stack (yyvs) size increased to ")
-			std.error.put_integer (yyvsc)
-			std.error.put_new_line
+	yyssp := yyssp - 3
+	yyvsp96 := yyvsp96 + 1
+	yyvsp1 := yyvsp1 -1
+	yyvsp63 := yyvsp63 -1
+	yyvsp76 := yyvsp76 -1
+	if yyvsp96 >= yyvsc96 then
+		if yyvs96 = Void then
+			debug ("GEYACC")
+				std.error.put_line ("Create yyvs96")
+			end
+			create yyspecial_routines96
+			yyvsc96 := yyInitial_yyvs_size
+			yyvs96 := yyspecial_routines96.make (yyvsc96)
+		else
+			debug ("GEYACC")
+				std.error.put_line ("Resize yyvs96")
+			end
+			yyvsc96 := yyvsc96 + yyInitial_yyvs_size
+			yyvs96 := yyspecial_routines96.resize (yyvs96, yyvsc96)
 		end
 	end
-	yyvs.put (yyval, yyvsp)
+	yyvs96.put (yyval96, yyvsp96)
 end
 		end
 
 	yy_do_action_220 is
-			--|#line 1255 "eiffel.y"
+			--|#line <not available> "eiffel.y"
 		local
-			yyval96: PAIR [TYPE_AS, EIFFEL_LIST [FEATURE_NAME]]
+			yyval76: EIFFEL_LIST [FEATURE_NAME]
 		do
---|#line 1255 "eiffel.y"
+--|#line <not available> "eiffel.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'eiffel.y' at line 1255")
+	std.error.put_line ("Executing parser user-code from file 'eiffel.y' at line <not available>")
 end
 
 
-				create yyval96
-				yyval96.set_first (yytype63 (yyvs.item (yyvsp - 1)))
-				yyval96.set_second (yytype76 (yyvs.item (yyvsp)))
-			
-			yyval := yyval96
 if yy_parsing_status = yyContinue then
-	yyssp := yyssp - 3
-	yyvsp := yyvsp - 2
-	yyvs.put (yyval, yyvsp)
+	yyssp := yyssp - 0
+	yyvsp76 := yyvsp76 + 1
+	if yyvsp76 >= yyvsc76 then
+		if yyvs76 = Void then
+			debug ("GEYACC")
+				std.error.put_line ("Create yyvs76")
+			end
+			create yyspecial_routines76
+			yyvsc76 := yyInitial_yyvs_size
+			yyvs76 := yyspecial_routines76.make (yyvsc76)
+		else
+			debug ("GEYACC")
+				std.error.put_line ("Resize yyvs76")
+			end
+			yyvsc76 := yyvsc76 + yyInitial_yyvs_size
+			yyvs76 := yyspecial_routines76.resize (yyvs76, yyvsc76)
+		end
+	end
+	yyvs76.put (yyval76, yyvsp76)
 end
 		end
 
 	yy_do_action_221 is
-			--|#line 1263 "eiffel.y"
+			--|#line <not available> "eiffel.y"
 		local
 			yyval76: EIFFEL_LIST [FEATURE_NAME]
 		do
---|#line 1263 "eiffel.y"
+--|#line <not available> "eiffel.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'eiffel.y' at line 1263")
+	std.error.put_line ("Executing parser user-code from file 'eiffel.y' at line <not available>")
 end
 
-
-
-			yyval := yyval76
+yyval76 := yyvs76.item (yyvsp76) 
 if yy_parsing_status = yyContinue then
-	yyvsp := yyvsp + 1
-	if yyvsp >= yyvsc then
-		yyvsc := yyvsc + yyInitial_stack_size
-		yyvs := FIXED_ARRAY_.resize (yyvs, yyvsc)
-		debug ("GEYACC")
-			std.error.put_string ("Stack (yyvs) size increased to ")
-			std.error.put_integer (yyvsc)
-			std.error.put_new_line
-		end
-	end
-	yyvs.put (yyval, yyvsp)
+	yyssp := yyssp - 3
+	yyvsp1 := yyvsp1 -2
+	yyvs76.put (yyval76, yyvsp76)
 end
 		end
 
 	yy_do_action_222 is
-			--|#line 1265 "eiffel.y"
+			--|#line <not available> "eiffel.y"
 		local
-			yyval76: EIFFEL_LIST [FEATURE_NAME]
+			yyval34: IF_AS
 		do
---|#line 1265 "eiffel.y"
+--|#line <not available> "eiffel.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'eiffel.y' at line 1265")
+	std.error.put_line ("Executing parser user-code from file 'eiffel.y' at line <not available>")
 end
 
-
-yyval76 := yytype76 (yyvs.item (yyvsp - 1)) 
-			yyval := yyval76
+				yyval34 := new_if_as (yyvs25.item (yyvsp25), yyvs82.item (yyvsp82 - 1), yyvs70.item (yyvsp70), yyvs82.item (yyvsp82), yyvs58.item (yyvsp58), current_position)
+			
 if yy_parsing_status = yyContinue then
-	yyssp := yyssp - 3
-	yyvsp := yyvsp - 2
-	yyvs.put (yyval, yyvsp)
+	yyssp := yyssp - 8
+	yyvsp34 := yyvsp34 + 1
+	yyvsp58 := yyvsp58 -1
+	yyvsp1 := yyvsp1 -3
+	yyvsp25 := yyvsp25 -1
+	yyvsp82 := yyvsp82 -2
+	yyvsp70 := yyvsp70 -1
+	if yyvsp34 >= yyvsc34 then
+		if yyvs34 = Void then
+			debug ("GEYACC")
+				std.error.put_line ("Create yyvs34")
+			end
+			create yyspecial_routines34
+			yyvsc34 := yyInitial_yyvs_size
+			yyvs34 := yyspecial_routines34.make (yyvsc34)
+		else
+			debug ("GEYACC")
+				std.error.put_line ("Resize yyvs34")
+			end
+			yyvsc34 := yyvsc34 + yyInitial_yyvs_size
+			yyvs34 := yyspecial_routines34.resize (yyvs34, yyvsc34)
+		end
+	end
+	yyvs34.put (yyval34, yyvsp34)
 end
 		end
 
 	yy_do_action_223 is
-			--|#line 1273 "eiffel.y"
+			--|#line <not available> "eiffel.y"
 		local
-			yyval34: IF_AS
+			yyval70: EIFFEL_LIST [ELSIF_AS]
 		do
---|#line 1273 "eiffel.y"
+--|#line <not available> "eiffel.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'eiffel.y' at line 1273")
+	std.error.put_line ("Executing parser user-code from file 'eiffel.y' at line <not available>")
 end
 
 
-				yyval34 := new_if_as (yytype25 (yyvs.item (yyvsp - 5)), yytype82 (yyvs.item (yyvsp - 3)), yytype70 (yyvs.item (yyvsp - 2)), yytype82 (yyvs.item (yyvsp - 1)), yytype58 (yyvs.item (yyvsp - 7)), current_position)
-			
-			yyval := yyval34
 if yy_parsing_status = yyContinue then
-	yyssp := yyssp - 8
-	yyvsp := yyvsp - 7
-	yyvs.put (yyval, yyvsp)
+	yyssp := yyssp - 0
+	yyvsp70 := yyvsp70 + 1
+	if yyvsp70 >= yyvsc70 then
+		if yyvs70 = Void then
+			debug ("GEYACC")
+				std.error.put_line ("Create yyvs70")
+			end
+			create yyspecial_routines70
+			yyvsc70 := yyInitial_yyvs_size
+			yyvs70 := yyspecial_routines70.make (yyvsc70)
+		else
+			debug ("GEYACC")
+				std.error.put_line ("Resize yyvs70")
+			end
+			yyvsc70 := yyvsc70 + yyInitial_yyvs_size
+			yyvs70 := yyspecial_routines70.resize (yyvs70, yyvsc70)
+		end
+	end
+	yyvs70.put (yyval70, yyvsp70)
 end
 		end
 
 	yy_do_action_224 is
-			--|#line 1279 "eiffel.y"
+			--|#line <not available> "eiffel.y"
 		local
 			yyval70: EIFFEL_LIST [ELSIF_AS]
 		do
---|#line 1279 "eiffel.y"
+--|#line <not available> "eiffel.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'eiffel.y' at line 1279")
+	std.error.put_line ("Executing parser user-code from file 'eiffel.y' at line <not available>")
 end
 
-
-
-			yyval := yyval70
+yyval70 := yyvs70.item (yyvsp70) 
 if yy_parsing_status = yyContinue then
-	yyvsp := yyvsp + 1
-	if yyvsp >= yyvsc then
-		yyvsc := yyvsc + yyInitial_stack_size
-		yyvs := FIXED_ARRAY_.resize (yyvs, yyvsc)
-		debug ("GEYACC")
-			std.error.put_string ("Stack (yyvs) size increased to ")
-			std.error.put_integer (yyvsc)
-			std.error.put_new_line
-		end
-	end
-	yyvs.put (yyval, yyvsp)
+	yyssp := yyssp - 1
+	yyvs70.put (yyval70, yyvsp70)
 end
 		end
 
 	yy_do_action_225 is
-			--|#line 1281 "eiffel.y"
+			--|#line <not available> "eiffel.y"
 		local
 			yyval70: EIFFEL_LIST [ELSIF_AS]
 		do
---|#line 1281 "eiffel.y"
+--|#line <not available> "eiffel.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'eiffel.y' at line 1281")
+	std.error.put_line ("Executing parser user-code from file 'eiffel.y' at line <not available>")
 end
 
-
-yyval70 := yytype70 (yyvs.item (yyvsp)) 
-			yyval := yyval70
+				yyval70 := new_eiffel_list_elseif_as (Initial_elseif_list_size)
+				yyval70.extend (yyvs22.item (yyvsp22))
+			
 if yy_parsing_status = yyContinue then
 	yyssp := yyssp - 1
-	yyvs.put (yyval, yyvsp)
+	yyvsp70 := yyvsp70 + 1
+	yyvsp22 := yyvsp22 -1
+	if yyvsp70 >= yyvsc70 then
+		if yyvs70 = Void then
+			debug ("GEYACC")
+				std.error.put_line ("Create yyvs70")
+			end
+			create yyspecial_routines70
+			yyvsc70 := yyInitial_yyvs_size
+			yyvs70 := yyspecial_routines70.make (yyvsc70)
+		else
+			debug ("GEYACC")
+				std.error.put_line ("Resize yyvs70")
+			end
+			yyvsc70 := yyvsc70 + yyInitial_yyvs_size
+			yyvs70 := yyspecial_routines70.resize (yyvs70, yyvsc70)
+		end
+	end
+	yyvs70.put (yyval70, yyvsp70)
 end
 		end
 
 	yy_do_action_226 is
-			--|#line 1285 "eiffel.y"
+			--|#line <not available> "eiffel.y"
 		local
 			yyval70: EIFFEL_LIST [ELSIF_AS]
 		do
---|#line 1285 "eiffel.y"
+--|#line <not available> "eiffel.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'eiffel.y' at line 1285")
+	std.error.put_line ("Executing parser user-code from file 'eiffel.y' at line <not available>")
 end
 
-
-				yyval70 := new_eiffel_list_elseif_as (Initial_elseif_list_size)
-				yyval70.extend (yytype22 (yyvs.item (yyvsp)))
+				yyval70 := yyvs70.item (yyvsp70)
+				yyval70.extend (yyvs22.item (yyvsp22))
 			
-			yyval := yyval70
 if yy_parsing_status = yyContinue then
-	yyssp := yyssp - 1
-	yyvs.put (yyval, yyvsp)
+	yyssp := yyssp - 2
+	yyvsp22 := yyvsp22 -1
+	yyvs70.put (yyval70, yyvsp70)
 end
 		end
 
 	yy_do_action_227 is
-			--|#line 1290 "eiffel.y"
+			--|#line <not available> "eiffel.y"
 		local
-			yyval70: EIFFEL_LIST [ELSIF_AS]
+			yyval22: ELSIF_AS
 		do
---|#line 1290 "eiffel.y"
+--|#line <not available> "eiffel.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'eiffel.y' at line 1290")
+	std.error.put_line ("Executing parser user-code from file 'eiffel.y' at line <not available>")
 end
 
-
-				yyval70 := yytype70 (yyvs.item (yyvsp - 1))
-				yyval70.extend (yytype22 (yyvs.item (yyvsp)))
-			
-			yyval := yyval70
+yyval22 := new_elseif_as (yyvs25.item (yyvsp25), yyvs82.item (yyvsp82), yyvs58.item (yyvsp58)) 
 if yy_parsing_status = yyContinue then
-	yyssp := yyssp - 2
-	yyvsp := yyvsp - 1
-	yyvs.put (yyval, yyvsp)
+	yyssp := yyssp - 5
+	yyvsp22 := yyvsp22 + 1
+	yyvsp58 := yyvsp58 -1
+	yyvsp1 := yyvsp1 -2
+	yyvsp25 := yyvsp25 -1
+	yyvsp82 := yyvsp82 -1
+	if yyvsp22 >= yyvsc22 then
+		if yyvs22 = Void then
+			debug ("GEYACC")
+				std.error.put_line ("Create yyvs22")
+			end
+			create yyspecial_routines22
+			yyvsc22 := yyInitial_yyvs_size
+			yyvs22 := yyspecial_routines22.make (yyvsc22)
+		else
+			debug ("GEYACC")
+				std.error.put_line ("Resize yyvs22")
+			end
+			yyvsc22 := yyvsc22 + yyInitial_yyvs_size
+			yyvs22 := yyspecial_routines22.resize (yyvs22, yyvsc22)
+		end
+	end
+	yyvs22.put (yyval22, yyvsp22)
 end
 		end
 
 	yy_do_action_228 is
-			--|#line 1297 "eiffel.y"
+			--|#line <not available> "eiffel.y"
 		local
-			yyval22: ELSIF_AS
+			yyval82: EIFFEL_LIST [INSTRUCTION_AS]
 		do
---|#line 1297 "eiffel.y"
+--|#line <not available> "eiffel.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'eiffel.y' at line 1297")
+	std.error.put_line ("Executing parser user-code from file 'eiffel.y' at line <not available>")
 end
 
 
-yyval22 := new_elseif_as (yytype25 (yyvs.item (yyvsp - 2)), yytype82 (yyvs.item (yyvsp)), yytype58 (yyvs.item (yyvsp - 4))) 
-			yyval := yyval22
 if yy_parsing_status = yyContinue then
-	yyssp := yyssp - 5
-	yyvsp := yyvsp - 4
-	yyvs.put (yyval, yyvsp)
+	yyssp := yyssp - 0
+	yyvsp82 := yyvsp82 + 1
+	if yyvsp82 >= yyvsc82 then
+		if yyvs82 = Void then
+			debug ("GEYACC")
+				std.error.put_line ("Create yyvs82")
+			end
+			create yyspecial_routines82
+			yyvsc82 := yyInitial_yyvs_size
+			yyvs82 := yyspecial_routines82.make (yyvsc82)
+		else
+			debug ("GEYACC")
+				std.error.put_line ("Resize yyvs82")
+			end
+			yyvsc82 := yyvsc82 + yyInitial_yyvs_size
+			yyvs82 := yyspecial_routines82.resize (yyvs82, yyvsc82)
+		end
+	end
+	yyvs82.put (yyval82, yyvsp82)
 end
 		end
 
 	yy_do_action_229 is
-			--|#line 1301 "eiffel.y"
+			--|#line <not available> "eiffel.y"
 		local
 			yyval82: EIFFEL_LIST [INSTRUCTION_AS]
 		do
---|#line 1301 "eiffel.y"
+--|#line <not available> "eiffel.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'eiffel.y' at line 1301")
+	std.error.put_line ("Executing parser user-code from file 'eiffel.y' at line <not available>")
 end
 
-
-
-			yyval := yyval82
+yyval82 := yyvs82.item (yyvsp82) 
 if yy_parsing_status = yyContinue then
-	yyvsp := yyvsp + 1
-	if yyvsp >= yyvsc then
-		yyvsc := yyvsc + yyInitial_stack_size
-		yyvs := FIXED_ARRAY_.resize (yyvs, yyvsc)
-		debug ("GEYACC")
-			std.error.put_string ("Stack (yyvs) size increased to ")
-			std.error.put_integer (yyvsc)
-			std.error.put_new_line
-		end
-	end
-	yyvs.put (yyval, yyvsp)
+	yyssp := yyssp - 2
+	yyvsp1 := yyvsp1 -1
+	yyvs82.put (yyval82, yyvsp82)
 end
 		end
 
 	yy_do_action_230 is
-			--|#line 1303 "eiffel.y"
+			--|#line <not available> "eiffel.y"
 		local
-			yyval82: EIFFEL_LIST [INSTRUCTION_AS]
+			yyval36: INSPECT_AS
 		do
---|#line 1303 "eiffel.y"
+--|#line <not available> "eiffel.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'eiffel.y' at line 1303")
+	std.error.put_line ("Executing parser user-code from file 'eiffel.y' at line <not available>")
 end
 
-
-yyval82 := yytype82 (yyvs.item (yyvsp)) 
-			yyval := yyval82
+				yyval36 := new_inspect_as (yyvs25.item (yyvsp25), yyvs67.item (yyvsp67), yyvs82.item (yyvsp82), yyvs58.item (yyvsp58), current_position)
+			
 if yy_parsing_status = yyContinue then
-	yyssp := yyssp - 2
-	yyvsp := yyvsp - 1
-	yyvs.put (yyval, yyvsp)
+	yyssp := yyssp - 6
+	yyvsp36 := yyvsp36 + 1
+	yyvsp1 := yyvsp1 -2
+	yyvsp58 := yyvsp58 -1
+	yyvsp25 := yyvsp25 -1
+	yyvsp67 := yyvsp67 -1
+	yyvsp82 := yyvsp82 -1
+	if yyvsp36 >= yyvsc36 then
+		if yyvs36 = Void then
+			debug ("GEYACC")
+				std.error.put_line ("Create yyvs36")
+			end
+			create yyspecial_routines36
+			yyvsc36 := yyInitial_yyvs_size
+			yyvs36 := yyspecial_routines36.make (yyvsc36)
+		else
+			debug ("GEYACC")
+				std.error.put_line ("Resize yyvs36")
+			end
+			yyvsc36 := yyvsc36 + yyInitial_yyvs_size
+			yyvs36 := yyspecial_routines36.resize (yyvs36, yyvsc36)
+		end
+	end
+	yyvs36.put (yyval36, yyvsp36)
 end
 		end
 
 	yy_do_action_231 is
-			--|#line 1307 "eiffel.y"
+			--|#line <not available> "eiffel.y"
 		local
-			yyval36: INSPECT_AS
+			yyval67: EIFFEL_LIST [CASE_AS]
 		do
---|#line 1307 "eiffel.y"
+--|#line <not available> "eiffel.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'eiffel.y' at line 1307")
+	std.error.put_line ("Executing parser user-code from file 'eiffel.y' at line <not available>")
 end
 
 
-				yyval36 := new_inspect_as (yytype25 (yyvs.item (yyvsp - 3)), yytype67 (yyvs.item (yyvsp - 2)), yytype82 (yyvs.item (yyvsp - 1)), yytype58 (yyvs.item (yyvsp - 4)), current_position)
-			
-			yyval := yyval36
 if yy_parsing_status = yyContinue then
-	yyssp := yyssp - 6
-	yyvsp := yyvsp - 5
-	yyvs.put (yyval, yyvsp)
+	yyssp := yyssp - 0
+	yyvsp67 := yyvsp67 + 1
+	if yyvsp67 >= yyvsc67 then
+		if yyvs67 = Void then
+			debug ("GEYACC")
+				std.error.put_line ("Create yyvs67")
+			end
+			create yyspecial_routines67
+			yyvsc67 := yyInitial_yyvs_size
+			yyvs67 := yyspecial_routines67.make (yyvsc67)
+		else
+			debug ("GEYACC")
+				std.error.put_line ("Resize yyvs67")
+			end
+			yyvsc67 := yyvsc67 + yyInitial_yyvs_size
+			yyvs67 := yyspecial_routines67.resize (yyvs67, yyvsc67)
+		end
+	end
+	yyvs67.put (yyval67, yyvsp67)
 end
 		end
 
 	yy_do_action_232 is
-			--|#line 1313 "eiffel.y"
+			--|#line <not available> "eiffel.y"
 		local
 			yyval67: EIFFEL_LIST [CASE_AS]
 		do
---|#line 1313 "eiffel.y"
+--|#line <not available> "eiffel.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'eiffel.y' at line 1313")
+	std.error.put_line ("Executing parser user-code from file 'eiffel.y' at line <not available>")
 end
 
-
-
-			yyval := yyval67
+yyval67 := yyvs67.item (yyvsp67) 
 if yy_parsing_status = yyContinue then
-	yyvsp := yyvsp + 1
-	if yyvsp >= yyvsc then
-		yyvsc := yyvsc + yyInitial_stack_size
-		yyvs := FIXED_ARRAY_.resize (yyvs, yyvsc)
-		debug ("GEYACC")
-			std.error.put_string ("Stack (yyvs) size increased to ")
-			std.error.put_integer (yyvsc)
-			std.error.put_new_line
-		end
-	end
-	yyvs.put (yyval, yyvsp)
+	yyssp := yyssp - 1
+	yyvs67.put (yyval67, yyvsp67)
 end
 		end
 
 	yy_do_action_233 is
-			--|#line 1315 "eiffel.y"
+			--|#line <not available> "eiffel.y"
 		local
 			yyval67: EIFFEL_LIST [CASE_AS]
 		do
---|#line 1315 "eiffel.y"
+--|#line <not available> "eiffel.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'eiffel.y' at line 1315")
+	std.error.put_line ("Executing parser user-code from file 'eiffel.y' at line <not available>")
 end
 
-
-yyval67 := yytype67 (yyvs.item (yyvsp)) 
-			yyval := yyval67
+				yyval67 := new_eiffel_list_case_as (Initial_when_part_list_size)
+				yyval67.extend (yyvs12.item (yyvsp12))
+			
 if yy_parsing_status = yyContinue then
 	yyssp := yyssp - 1
-	yyvs.put (yyval, yyvsp)
+	yyvsp67 := yyvsp67 + 1
+	yyvsp12 := yyvsp12 -1
+	if yyvsp67 >= yyvsc67 then
+		if yyvs67 = Void then
+			debug ("GEYACC")
+				std.error.put_line ("Create yyvs67")
+			end
+			create yyspecial_routines67
+			yyvsc67 := yyInitial_yyvs_size
+			yyvs67 := yyspecial_routines67.make (yyvsc67)
+		else
+			debug ("GEYACC")
+				std.error.put_line ("Resize yyvs67")
+			end
+			yyvsc67 := yyvsc67 + yyInitial_yyvs_size
+			yyvs67 := yyspecial_routines67.resize (yyvs67, yyvsc67)
+		end
+	end
+	yyvs67.put (yyval67, yyvsp67)
 end
 		end
 
 	yy_do_action_234 is
-			--|#line 1319 "eiffel.y"
+			--|#line <not available> "eiffel.y"
 		local
 			yyval67: EIFFEL_LIST [CASE_AS]
 		do
---|#line 1319 "eiffel.y"
+--|#line <not available> "eiffel.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'eiffel.y' at line 1319")
+	std.error.put_line ("Executing parser user-code from file 'eiffel.y' at line <not available>")
 end
 
-
-				yyval67 := new_eiffel_list_case_as (Initial_when_part_list_size)
-				yyval67.extend (yytype12 (yyvs.item (yyvsp)))
+				yyval67 := yyvs67.item (yyvsp67)
+				yyval67.extend (yyvs12.item (yyvsp12))
 			
-			yyval := yyval67
 if yy_parsing_status = yyContinue then
-	yyssp := yyssp - 1
-	yyvs.put (yyval, yyvsp)
+	yyssp := yyssp - 2
+	yyvsp12 := yyvsp12 -1
+	yyvs67.put (yyval67, yyvsp67)
 end
 		end
 
 	yy_do_action_235 is
-			--|#line 1324 "eiffel.y"
+			--|#line <not available> "eiffel.y"
 		local
-			yyval67: EIFFEL_LIST [CASE_AS]
+			yyval12: CASE_AS
 		do
---|#line 1324 "eiffel.y"
+--|#line <not available> "eiffel.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'eiffel.y' at line 1324")
+	std.error.put_line ("Executing parser user-code from file 'eiffel.y' at line <not available>")
 end
 
-
-				yyval67 := yytype67 (yyvs.item (yyvsp - 1))
-				yyval67.extend (yytype12 (yyvs.item (yyvsp)))
-			
-			yyval := yyval67
+yyval12 := new_case_as (yyvs83.item (yyvsp83), yyvs82.item (yyvsp82), yyvs58.item (yyvsp58)) 
 if yy_parsing_status = yyContinue then
-	yyssp := yyssp - 2
-	yyvsp := yyvsp - 1
-	yyvs.put (yyval, yyvsp)
+	yyssp := yyssp - 5
+	yyvsp12 := yyvsp12 + 1
+	yyvsp1 := yyvsp1 -2
+	yyvsp58 := yyvsp58 -1
+	yyvsp83 := yyvsp83 -1
+	yyvsp82 := yyvsp82 -1
+	if yyvsp12 >= yyvsc12 then
+		if yyvs12 = Void then
+			debug ("GEYACC")
+				std.error.put_line ("Create yyvs12")
+			end
+			create yyspecial_routines12
+			yyvsc12 := yyInitial_yyvs_size
+			yyvs12 := yyspecial_routines12.make (yyvsc12)
+		else
+			debug ("GEYACC")
+				std.error.put_line ("Resize yyvs12")
+			end
+			yyvsc12 := yyvsc12 + yyInitial_yyvs_size
+			yyvs12 := yyspecial_routines12.resize (yyvs12, yyvsc12)
+		end
+	end
+	yyvs12.put (yyval12, yyvsp12)
 end
 		end
 
 	yy_do_action_236 is
-			--|#line 1331 "eiffel.y"
+			--|#line <not available> "eiffel.y"
 		local
-			yyval12: CASE_AS
+			yyval83: EIFFEL_LIST [INTERVAL_AS]
 		do
---|#line 1331 "eiffel.y"
+--|#line <not available> "eiffel.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'eiffel.y' at line 1331")
+	std.error.put_line ("Executing parser user-code from file 'eiffel.y' at line <not available>")
 end
 
-
-yyval12 := new_case_as (yytype83 (yyvs.item (yyvsp - 2)), yytype82 (yyvs.item (yyvsp)), yytype58 (yyvs.item (yyvsp - 3))) 
-			yyval := yyval12
+				yyval83 := new_eiffel_list_interval_as (Initial_choices_size)
+				yyval83.extend (yyvs41.item (yyvsp41))
+			
 if yy_parsing_status = yyContinue then
-	yyssp := yyssp - 5
-	yyvsp := yyvsp - 4
-	yyvs.put (yyval, yyvsp)
+	yyssp := yyssp - 1
+	yyvsp83 := yyvsp83 + 1
+	yyvsp41 := yyvsp41 -1
+	if yyvsp83 >= yyvsc83 then
+		if yyvs83 = Void then
+			debug ("GEYACC")
+				std.error.put_line ("Create yyvs83")
+			end
+			create yyspecial_routines83
+			yyvsc83 := yyInitial_yyvs_size
+			yyvs83 := yyspecial_routines83.make (yyvsc83)
+		else
+			debug ("GEYACC")
+				std.error.put_line ("Resize yyvs83")
+			end
+			yyvsc83 := yyvsc83 + yyInitial_yyvs_size
+			yyvs83 := yyspecial_routines83.resize (yyvs83, yyvsc83)
+		end
+	end
+	yyvs83.put (yyval83, yyvsp83)
 end
 		end
 
 	yy_do_action_237 is
-			--|#line 1335 "eiffel.y"
+			--|#line <not available> "eiffel.y"
 		local
 			yyval83: EIFFEL_LIST [INTERVAL_AS]
 		do
---|#line 1335 "eiffel.y"
+--|#line <not available> "eiffel.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'eiffel.y' at line 1335")
+	std.error.put_line ("Executing parser user-code from file 'eiffel.y' at line <not available>")
 end
 
-
-				yyval83 := new_eiffel_list_interval_as (Initial_choices_size)
-				yyval83.extend (yytype41 (yyvs.item (yyvsp)))
+				yyval83 := yyvs83.item (yyvsp83)
+				yyval83.extend (yyvs41.item (yyvsp41))
 			
-			yyval := yyval83
 if yy_parsing_status = yyContinue then
-	yyssp := yyssp - 1
-	yyvs.put (yyval, yyvsp)
+	yyssp := yyssp - 3
+	yyvsp1 := yyvsp1 -1
+	yyvsp41 := yyvsp41 -1
+	yyvs83.put (yyval83, yyvsp83)
 end
 		end
 
 	yy_do_action_238 is
-			--|#line 1340 "eiffel.y"
+			--|#line <not available> "eiffel.y"
 		local
-			yyval83: EIFFEL_LIST [INTERVAL_AS]
+			yyval41: INTERVAL_AS
 		do
---|#line 1340 "eiffel.y"
+--|#line <not available> "eiffel.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'eiffel.y' at line 1340")
+	std.error.put_line ("Executing parser user-code from file 'eiffel.y' at line <not available>")
 end
 
-
-				yyval83 := yytype83 (yyvs.item (yyvsp - 2))
-				yyval83.extend (yytype41 (yyvs.item (yyvsp)))
-			
-			yyval := yyval83
+yyval41 := new_interval_as (yyvs39.item (yyvsp39), Void) 
 if yy_parsing_status = yyContinue then
-	yyssp := yyssp - 3
-	yyvsp := yyvsp - 2
-	yyvs.put (yyval, yyvsp)
+	yyssp := yyssp - 1
+	yyvsp41 := yyvsp41 + 1
+	yyvsp39 := yyvsp39 -1
+	if yyvsp41 >= yyvsc41 then
+		if yyvs41 = Void then
+			debug ("GEYACC")
+				std.error.put_line ("Create yyvs41")
+			end
+			create yyspecial_routines41
+			yyvsc41 := yyInitial_yyvs_size
+			yyvs41 := yyspecial_routines41.make (yyvsc41)
+		else
+			debug ("GEYACC")
+				std.error.put_line ("Resize yyvs41")
+			end
+			yyvsc41 := yyvsc41 + yyInitial_yyvs_size
+			yyvs41 := yyspecial_routines41.resize (yyvs41, yyvsc41)
+		end
+	end
+	yyvs41.put (yyval41, yyvsp41)
 end
 		end
 
 	yy_do_action_239 is
-			--|#line 1347 "eiffel.y"
+			--|#line <not available> "eiffel.y"
 		local
 			yyval41: INTERVAL_AS
 		do
---|#line 1347 "eiffel.y"
+--|#line <not available> "eiffel.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'eiffel.y' at line 1347")
+	std.error.put_line ("Executing parser user-code from file 'eiffel.y' at line <not available>")
 end
 
-
-yyval41 := new_interval_as (yytype39 (yyvs.item (yyvsp)), Void) 
-			yyval := yyval41
+yyval41 := new_interval_as (yyvs39.item (yyvsp39 - 1), yyvs39.item (yyvsp39)) 
 if yy_parsing_status = yyContinue then
-	yyssp := yyssp - 1
-	yyvs.put (yyval, yyvsp)
+	yyssp := yyssp - 3
+	yyvsp41 := yyvsp41 + 1
+	yyvsp39 := yyvsp39 -2
+	yyvsp1 := yyvsp1 -1
+	if yyvsp41 >= yyvsc41 then
+		if yyvs41 = Void then
+			debug ("GEYACC")
+				std.error.put_line ("Create yyvs41")
+			end
+			create yyspecial_routines41
+			yyvsc41 := yyInitial_yyvs_size
+			yyvs41 := yyspecial_routines41.make (yyvsc41)
+		else
+			debug ("GEYACC")
+				std.error.put_line ("Resize yyvs41")
+			end
+			yyvsc41 := yyvsc41 + yyInitial_yyvs_size
+			yyvs41 := yyspecial_routines41.resize (yyvs41, yyvsc41)
+		end
+	end
+	yyvs41.put (yyval41, yyvsp41)
 end
 		end
 
 	yy_do_action_240 is
-			--|#line 1349 "eiffel.y"
+			--|#line <not available> "eiffel.y"
 		local
 			yyval41: INTERVAL_AS
 		do
---|#line 1349 "eiffel.y"
+--|#line <not available> "eiffel.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'eiffel.y' at line 1349")
+	std.error.put_line ("Executing parser user-code from file 'eiffel.y' at line <not available>")
 end
 
-
-yyval41 := new_interval_as (yytype39 (yyvs.item (yyvsp - 2)), yytype39 (yyvs.item (yyvsp))) 
-			yyval := yyval41
+yyval41 := new_interval_as (yyvs13.item (yyvsp13), Void) 
 if yy_parsing_status = yyContinue then
-	yyssp := yyssp - 3
-	yyvsp := yyvsp - 2
-	yyvs.put (yyval, yyvsp)
+	yyssp := yyssp - 1
+	yyvsp41 := yyvsp41 + 1
+	yyvsp13 := yyvsp13 -1
+	if yyvsp41 >= yyvsc41 then
+		if yyvs41 = Void then
+			debug ("GEYACC")
+				std.error.put_line ("Create yyvs41")
+			end
+			create yyspecial_routines41
+			yyvsc41 := yyInitial_yyvs_size
+			yyvs41 := yyspecial_routines41.make (yyvsc41)
+		else
+			debug ("GEYACC")
+				std.error.put_line ("Resize yyvs41")
+			end
+			yyvsc41 := yyvsc41 + yyInitial_yyvs_size
+			yyvs41 := yyspecial_routines41.resize (yyvs41, yyvsc41)
+		end
+	end
+	yyvs41.put (yyval41, yyvsp41)
 end
 		end
 
 	yy_do_action_241 is
-			--|#line 1351 "eiffel.y"
+			--|#line <not available> "eiffel.y"
 		local
 			yyval41: INTERVAL_AS
 		do
---|#line 1351 "eiffel.y"
+--|#line <not available> "eiffel.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'eiffel.y' at line 1351")
+	std.error.put_line ("Executing parser user-code from file 'eiffel.y' at line <not available>")
 end
 
-
-yyval41 := new_interval_as (yytype13 (yyvs.item (yyvsp)), Void) 
-			yyval := yyval41
+yyval41 := new_interval_as (yyvs13.item (yyvsp13 - 1), yyvs13.item (yyvsp13)) 
 if yy_parsing_status = yyContinue then
-	yyssp := yyssp - 1
-	yyvs.put (yyval, yyvsp)
+	yyssp := yyssp - 3
+	yyvsp41 := yyvsp41 + 1
+	yyvsp13 := yyvsp13 -2
+	yyvsp1 := yyvsp1 -1
+	if yyvsp41 >= yyvsc41 then
+		if yyvs41 = Void then
+			debug ("GEYACC")
+				std.error.put_line ("Create yyvs41")
+			end
+			create yyspecial_routines41
+			yyvsc41 := yyInitial_yyvs_size
+			yyvs41 := yyspecial_routines41.make (yyvsc41)
+		else
+			debug ("GEYACC")
+				std.error.put_line ("Resize yyvs41")
+			end
+			yyvsc41 := yyvsc41 + yyInitial_yyvs_size
+			yyvs41 := yyspecial_routines41.resize (yyvs41, yyvsc41)
+		end
+	end
+	yyvs41.put (yyval41, yyvsp41)
 end
 		end
 
 	yy_do_action_242 is
-			--|#line 1353 "eiffel.y"
+			--|#line <not available> "eiffel.y"
 		local
 			yyval41: INTERVAL_AS
 		do
---|#line 1353 "eiffel.y"
+--|#line <not available> "eiffel.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'eiffel.y' at line 1353")
+	std.error.put_line ("Executing parser user-code from file 'eiffel.y' at line <not available>")
 end
 
-
-yyval41 := new_interval_as (yytype13 (yyvs.item (yyvsp - 2)), yytype13 (yyvs.item (yyvsp))) 
-			yyval := yyval41
+yyval41 := new_interval_as (yyvs33.item (yyvsp33), Void) 
 if yy_parsing_status = yyContinue then
-	yyssp := yyssp - 3
-	yyvsp := yyvsp - 2
-	yyvs.put (yyval, yyvsp)
+	yyssp := yyssp - 1
+	yyvsp41 := yyvsp41 + 1
+	yyvsp33 := yyvsp33 -1
+	if yyvsp41 >= yyvsc41 then
+		if yyvs41 = Void then
+			debug ("GEYACC")
+				std.error.put_line ("Create yyvs41")
+			end
+			create yyspecial_routines41
+			yyvsc41 := yyInitial_yyvs_size
+			yyvs41 := yyspecial_routines41.make (yyvsc41)
+		else
+			debug ("GEYACC")
+				std.error.put_line ("Resize yyvs41")
+			end
+			yyvsc41 := yyvsc41 + yyInitial_yyvs_size
+			yyvs41 := yyspecial_routines41.resize (yyvs41, yyvsc41)
+		end
+	end
+	yyvs41.put (yyval41, yyvsp41)
 end
 		end
 
 	yy_do_action_243 is
-			--|#line 1355 "eiffel.y"
+			--|#line <not available> "eiffel.y"
 		local
 			yyval41: INTERVAL_AS
 		do
---|#line 1355 "eiffel.y"
+--|#line <not available> "eiffel.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'eiffel.y' at line 1355")
+	std.error.put_line ("Executing parser user-code from file 'eiffel.y' at line <not available>")
 end
 
-
-yyval41 := new_interval_as (yytype33 (yyvs.item (yyvsp)), Void) 
-			yyval := yyval41
+yyval41 := new_interval_as (yyvs33.item (yyvsp33 - 1), yyvs33.item (yyvsp33)) 
 if yy_parsing_status = yyContinue then
-	yyssp := yyssp - 1
-	yyvs.put (yyval, yyvsp)
+	yyssp := yyssp - 3
+	yyvsp41 := yyvsp41 + 1
+	yyvsp33 := yyvsp33 -2
+	yyvsp1 := yyvsp1 -1
+	if yyvsp41 >= yyvsc41 then
+		if yyvs41 = Void then
+			debug ("GEYACC")
+				std.error.put_line ("Create yyvs41")
+			end
+			create yyspecial_routines41
+			yyvsc41 := yyInitial_yyvs_size
+			yyvs41 := yyspecial_routines41.make (yyvsc41)
+		else
+			debug ("GEYACC")
+				std.error.put_line ("Resize yyvs41")
+			end
+			yyvsc41 := yyvsc41 + yyInitial_yyvs_size
+			yyvs41 := yyspecial_routines41.resize (yyvs41, yyvsc41)
+		end
+	end
+	yyvs41.put (yyval41, yyvsp41)
 end
 		end
 
 	yy_do_action_244 is
-			--|#line 1357 "eiffel.y"
+			--|#line <not available> "eiffel.y"
 		local
 			yyval41: INTERVAL_AS
 		do
---|#line 1357 "eiffel.y"
+--|#line <not available> "eiffel.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'eiffel.y' at line 1357")
+	std.error.put_line ("Executing parser user-code from file 'eiffel.y' at line <not available>")
 end
 
-
-yyval41 := new_interval_as (yytype33 (yyvs.item (yyvsp - 2)), yytype33 (yyvs.item (yyvsp))) 
-			yyval := yyval41
+yyval41 := new_interval_as (yyvs33.item (yyvsp33), yyvs39.item (yyvsp39)) 
 if yy_parsing_status = yyContinue then
 	yyssp := yyssp - 3
-	yyvsp := yyvsp - 2
-	yyvs.put (yyval, yyvsp)
+	yyvsp41 := yyvsp41 + 1
+	yyvsp33 := yyvsp33 -1
+	yyvsp1 := yyvsp1 -1
+	yyvsp39 := yyvsp39 -1
+	if yyvsp41 >= yyvsc41 then
+		if yyvs41 = Void then
+			debug ("GEYACC")
+				std.error.put_line ("Create yyvs41")
+			end
+			create yyspecial_routines41
+			yyvsc41 := yyInitial_yyvs_size
+			yyvs41 := yyspecial_routines41.make (yyvsc41)
+		else
+			debug ("GEYACC")
+				std.error.put_line ("Resize yyvs41")
+			end
+			yyvsc41 := yyvsc41 + yyInitial_yyvs_size
+			yyvs41 := yyspecial_routines41.resize (yyvs41, yyvsc41)
+		end
+	end
+	yyvs41.put (yyval41, yyvsp41)
 end
 		end
 
 	yy_do_action_245 is
-			--|#line 1359 "eiffel.y"
+			--|#line <not available> "eiffel.y"
 		local
 			yyval41: INTERVAL_AS
 		do
---|#line 1359 "eiffel.y"
+--|#line <not available> "eiffel.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'eiffel.y' at line 1359")
+	std.error.put_line ("Executing parser user-code from file 'eiffel.y' at line <not available>")
 end
 
-
-yyval41 := new_interval_as (yytype33 (yyvs.item (yyvsp - 2)), yytype39 (yyvs.item (yyvsp))) 
-			yyval := yyval41
+yyval41 := new_interval_as (yyvs39.item (yyvsp39), yyvs33.item (yyvsp33)) 
 if yy_parsing_status = yyContinue then
 	yyssp := yyssp - 3
-	yyvsp := yyvsp - 2
-	yyvs.put (yyval, yyvsp)
+	yyvsp41 := yyvsp41 + 1
+	yyvsp39 := yyvsp39 -1
+	yyvsp1 := yyvsp1 -1
+	yyvsp33 := yyvsp33 -1
+	if yyvsp41 >= yyvsc41 then
+		if yyvs41 = Void then
+			debug ("GEYACC")
+				std.error.put_line ("Create yyvs41")
+			end
+			create yyspecial_routines41
+			yyvsc41 := yyInitial_yyvs_size
+			yyvs41 := yyspecial_routines41.make (yyvsc41)
+		else
+			debug ("GEYACC")
+				std.error.put_line ("Resize yyvs41")
+			end
+			yyvsc41 := yyvsc41 + yyInitial_yyvs_size
+			yyvs41 := yyspecial_routines41.resize (yyvs41, yyvsc41)
+		end
+	end
+	yyvs41.put (yyval41, yyvsp41)
 end
 		end
 
 	yy_do_action_246 is
-			--|#line 1361 "eiffel.y"
+			--|#line <not available> "eiffel.y"
 		local
 			yyval41: INTERVAL_AS
 		do
---|#line 1361 "eiffel.y"
+--|#line <not available> "eiffel.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'eiffel.y' at line 1361")
+	std.error.put_line ("Executing parser user-code from file 'eiffel.y' at line <not available>")
 end
 
-
-yyval41 := new_interval_as (yytype39 (yyvs.item (yyvsp - 2)), yytype33 (yyvs.item (yyvsp))) 
-			yyval := yyval41
+yyval41 := new_interval_as (yyvs33.item (yyvsp33), yyvs13.item (yyvsp13)) 
 if yy_parsing_status = yyContinue then
 	yyssp := yyssp - 3
-	yyvsp := yyvsp - 2
-	yyvs.put (yyval, yyvsp)
+	yyvsp41 := yyvsp41 + 1
+	yyvsp33 := yyvsp33 -1
+	yyvsp1 := yyvsp1 -1
+	yyvsp13 := yyvsp13 -1
+	if yyvsp41 >= yyvsc41 then
+		if yyvs41 = Void then
+			debug ("GEYACC")
+				std.error.put_line ("Create yyvs41")
+			end
+			create yyspecial_routines41
+			yyvsc41 := yyInitial_yyvs_size
+			yyvs41 := yyspecial_routines41.make (yyvsc41)
+		else
+			debug ("GEYACC")
+				std.error.put_line ("Resize yyvs41")
+			end
+			yyvsc41 := yyvsc41 + yyInitial_yyvs_size
+			yyvs41 := yyspecial_routines41.resize (yyvs41, yyvsc41)
+		end
+	end
+	yyvs41.put (yyval41, yyvsp41)
 end
 		end
 
 	yy_do_action_247 is
-			--|#line 1363 "eiffel.y"
+			--|#line <not available> "eiffel.y"
 		local
 			yyval41: INTERVAL_AS
 		do
---|#line 1363 "eiffel.y"
+--|#line <not available> "eiffel.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'eiffel.y' at line 1363")
+	std.error.put_line ("Executing parser user-code from file 'eiffel.y' at line <not available>")
 end
 
-
-yyval41 := new_interval_as (yytype33 (yyvs.item (yyvsp - 2)), yytype13 (yyvs.item (yyvsp))) 
-			yyval := yyval41
+yyval41 := new_interval_as (yyvs13.item (yyvsp13), yyvs33.item (yyvsp33)) 
 if yy_parsing_status = yyContinue then
 	yyssp := yyssp - 3
-	yyvsp := yyvsp - 2
-	yyvs.put (yyval, yyvsp)
+	yyvsp41 := yyvsp41 + 1
+	yyvsp13 := yyvsp13 -1
+	yyvsp1 := yyvsp1 -1
+	yyvsp33 := yyvsp33 -1
+	if yyvsp41 >= yyvsc41 then
+		if yyvs41 = Void then
+			debug ("GEYACC")
+				std.error.put_line ("Create yyvs41")
+			end
+			create yyspecial_routines41
+			yyvsc41 := yyInitial_yyvs_size
+			yyvs41 := yyspecial_routines41.make (yyvsc41)
+		else
+			debug ("GEYACC")
+				std.error.put_line ("Resize yyvs41")
+			end
+			yyvsc41 := yyvsc41 + yyInitial_yyvs_size
+			yyvs41 := yyspecial_routines41.resize (yyvs41, yyvsc41)
+		end
+	end
+	yyvs41.put (yyval41, yyvsp41)
 end
 		end
 
 	yy_do_action_248 is
-			--|#line 1365 "eiffel.y"
+			--|#line <not available> "eiffel.y"
 		local
 			yyval41: INTERVAL_AS
 		do
---|#line 1365 "eiffel.y"
+--|#line <not available> "eiffel.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'eiffel.y' at line 1365")
+	std.error.put_line ("Executing parser user-code from file 'eiffel.y' at line <not available>")
 end
 
-
-yyval41 := new_interval_as (yytype13 (yyvs.item (yyvsp - 2)), yytype33 (yyvs.item (yyvsp))) 
-			yyval := yyval41
+yyval41 := new_interval_as (yyvs49.item (yyvsp49), Void) 
 if yy_parsing_status = yyContinue then
-	yyssp := yyssp - 3
-	yyvsp := yyvsp - 2
-	yyvs.put (yyval, yyvsp)
+	yyssp := yyssp - 1
+	yyvsp41 := yyvsp41 + 1
+	yyvsp49 := yyvsp49 -1
+	if yyvsp41 >= yyvsc41 then
+		if yyvs41 = Void then
+			debug ("GEYACC")
+				std.error.put_line ("Create yyvs41")
+			end
+			create yyspecial_routines41
+			yyvsc41 := yyInitial_yyvs_size
+			yyvs41 := yyspecial_routines41.make (yyvsc41)
+		else
+			debug ("GEYACC")
+				std.error.put_line ("Resize yyvs41")
+			end
+			yyvsc41 := yyvsc41 + yyInitial_yyvs_size
+			yyvs41 := yyspecial_routines41.resize (yyvs41, yyvsc41)
+		end
+	end
+	yyvs41.put (yyval41, yyvsp41)
 end
 		end
 
 	yy_do_action_249 is
-			--|#line 1367 "eiffel.y"
+			--|#line <not available> "eiffel.y"
 		local
 			yyval41: INTERVAL_AS
 		do
---|#line 1367 "eiffel.y"
+--|#line <not available> "eiffel.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'eiffel.y' at line 1367")
+	std.error.put_line ("Executing parser user-code from file 'eiffel.y' at line <not available>")
 end
 
-
-yyval41 := new_interval_as (yytype49 (yyvs.item (yyvsp)), Void) 
-			yyval := yyval41
+yyval41 := new_interval_as (yyvs49.item (yyvsp49), yyvs33.item (yyvsp33)) 
 if yy_parsing_status = yyContinue then
-	yyssp := yyssp - 1
-	yyvs.put (yyval, yyvsp)
+	yyssp := yyssp - 3
+	yyvsp41 := yyvsp41 + 1
+	yyvsp49 := yyvsp49 -1
+	yyvsp1 := yyvsp1 -1
+	yyvsp33 := yyvsp33 -1
+	if yyvsp41 >= yyvsc41 then
+		if yyvs41 = Void then
+			debug ("GEYACC")
+				std.error.put_line ("Create yyvs41")
+			end
+			create yyspecial_routines41
+			yyvsc41 := yyInitial_yyvs_size
+			yyvs41 := yyspecial_routines41.make (yyvsc41)
+		else
+			debug ("GEYACC")
+				std.error.put_line ("Resize yyvs41")
+			end
+			yyvsc41 := yyvsc41 + yyInitial_yyvs_size
+			yyvs41 := yyspecial_routines41.resize (yyvs41, yyvsc41)
+		end
+	end
+	yyvs41.put (yyval41, yyvsp41)
 end
 		end
 
 	yy_do_action_250 is
-			--|#line 1369 "eiffel.y"
+			--|#line <not available> "eiffel.y"
 		local
 			yyval41: INTERVAL_AS
 		do
---|#line 1369 "eiffel.y"
+--|#line <not available> "eiffel.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'eiffel.y' at line 1369")
+	std.error.put_line ("Executing parser user-code from file 'eiffel.y' at line <not available>")
 end
 
-
-yyval41 := new_interval_as (yytype49 (yyvs.item (yyvsp - 2)), yytype33 (yyvs.item (yyvsp))) 
-			yyval := yyval41
+yyval41 := new_interval_as (yyvs33.item (yyvsp33), yyvs49.item (yyvsp49)) 
 if yy_parsing_status = yyContinue then
 	yyssp := yyssp - 3
-	yyvsp := yyvsp - 2
-	yyvs.put (yyval, yyvsp)
+	yyvsp41 := yyvsp41 + 1
+	yyvsp33 := yyvsp33 -1
+	yyvsp1 := yyvsp1 -1
+	yyvsp49 := yyvsp49 -1
+	if yyvsp41 >= yyvsc41 then
+		if yyvs41 = Void then
+			debug ("GEYACC")
+				std.error.put_line ("Create yyvs41")
+			end
+			create yyspecial_routines41
+			yyvsc41 := yyInitial_yyvs_size
+			yyvs41 := yyspecial_routines41.make (yyvsc41)
+		else
+			debug ("GEYACC")
+				std.error.put_line ("Resize yyvs41")
+			end
+			yyvsc41 := yyvsc41 + yyInitial_yyvs_size
+			yyvs41 := yyspecial_routines41.resize (yyvs41, yyvsc41)
+		end
+	end
+	yyvs41.put (yyval41, yyvsp41)
 end
 		end
 
 	yy_do_action_251 is
-			--|#line 1371 "eiffel.y"
+			--|#line <not available> "eiffel.y"
 		local
 			yyval41: INTERVAL_AS
 		do
---|#line 1371 "eiffel.y"
+--|#line <not available> "eiffel.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'eiffel.y' at line 1371")
+	std.error.put_line ("Executing parser user-code from file 'eiffel.y' at line <not available>")
 end
 
-
-yyval41 := new_interval_as (yytype33 (yyvs.item (yyvsp - 2)), yytype49 (yyvs.item (yyvsp))) 
-			yyval := yyval41
+yyval41 := new_interval_as (yyvs49.item (yyvsp49 - 1), yyvs49.item (yyvsp49)) 
 if yy_parsing_status = yyContinue then
 	yyssp := yyssp - 3
-	yyvsp := yyvsp - 2
-	yyvs.put (yyval, yyvsp)
+	yyvsp41 := yyvsp41 + 1
+	yyvsp49 := yyvsp49 -2
+	yyvsp1 := yyvsp1 -1
+	if yyvsp41 >= yyvsc41 then
+		if yyvs41 = Void then
+			debug ("GEYACC")
+				std.error.put_line ("Create yyvs41")
+			end
+			create yyspecial_routines41
+			yyvsc41 := yyInitial_yyvs_size
+			yyvs41 := yyspecial_routines41.make (yyvsc41)
+		else
+			debug ("GEYACC")
+				std.error.put_line ("Resize yyvs41")
+			end
+			yyvsc41 := yyvsc41 + yyInitial_yyvs_size
+			yyvs41 := yyspecial_routines41.resize (yyvs41, yyvsc41)
+		end
+	end
+	yyvs41.put (yyval41, yyvsp41)
 end
 		end
 
 	yy_do_action_252 is
-			--|#line 1373 "eiffel.y"
+			--|#line <not available> "eiffel.y"
 		local
 			yyval41: INTERVAL_AS
 		do
---|#line 1373 "eiffel.y"
+--|#line <not available> "eiffel.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'eiffel.y' at line 1373")
+	std.error.put_line ("Executing parser user-code from file 'eiffel.y' at line <not available>")
 end
 
-
-yyval41 := new_interval_as (yytype49 (yyvs.item (yyvsp - 2)), yytype49 (yyvs.item (yyvsp))) 
-			yyval := yyval41
+yyval41 := new_interval_as (yyvs49.item (yyvsp49), yyvs39.item (yyvsp39)) 
 if yy_parsing_status = yyContinue then
 	yyssp := yyssp - 3
-	yyvsp := yyvsp - 2
-	yyvs.put (yyval, yyvsp)
+	yyvsp41 := yyvsp41 + 1
+	yyvsp49 := yyvsp49 -1
+	yyvsp1 := yyvsp1 -1
+	yyvsp39 := yyvsp39 -1
+	if yyvsp41 >= yyvsc41 then
+		if yyvs41 = Void then
+			debug ("GEYACC")
+				std.error.put_line ("Create yyvs41")
+			end
+			create yyspecial_routines41
+			yyvsc41 := yyInitial_yyvs_size
+			yyvs41 := yyspecial_routines41.make (yyvsc41)
+		else
+			debug ("GEYACC")
+				std.error.put_line ("Resize yyvs41")
+			end
+			yyvsc41 := yyvsc41 + yyInitial_yyvs_size
+			yyvs41 := yyspecial_routines41.resize (yyvs41, yyvsc41)
+		end
+	end
+	yyvs41.put (yyval41, yyvsp41)
 end
 		end
 
 	yy_do_action_253 is
-			--|#line 1375 "eiffel.y"
+			--|#line <not available> "eiffel.y"
 		local
 			yyval41: INTERVAL_AS
 		do
---|#line 1375 "eiffel.y"
+--|#line <not available> "eiffel.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'eiffel.y' at line 1375")
+	std.error.put_line ("Executing parser user-code from file 'eiffel.y' at line <not available>")
 end
 
-
-yyval41 := new_interval_as (yytype49 (yyvs.item (yyvsp - 2)), yytype39 (yyvs.item (yyvsp))) 
-			yyval := yyval41
+yyval41 := new_interval_as (yyvs39.item (yyvsp39), yyvs49.item (yyvsp49)) 
 if yy_parsing_status = yyContinue then
 	yyssp := yyssp - 3
-	yyvsp := yyvsp - 2
-	yyvs.put (yyval, yyvsp)
+	yyvsp41 := yyvsp41 + 1
+	yyvsp39 := yyvsp39 -1
+	yyvsp1 := yyvsp1 -1
+	yyvsp49 := yyvsp49 -1
+	if yyvsp41 >= yyvsc41 then
+		if yyvs41 = Void then
+			debug ("GEYACC")
+				std.error.put_line ("Create yyvs41")
+			end
+			create yyspecial_routines41
+			yyvsc41 := yyInitial_yyvs_size
+			yyvs41 := yyspecial_routines41.make (yyvsc41)
+		else
+			debug ("GEYACC")
+				std.error.put_line ("Resize yyvs41")
+			end
+			yyvsc41 := yyvsc41 + yyInitial_yyvs_size
+			yyvs41 := yyspecial_routines41.resize (yyvs41, yyvsc41)
+		end
+	end
+	yyvs41.put (yyval41, yyvsp41)
 end
 		end
 
 	yy_do_action_254 is
-			--|#line 1377 "eiffel.y"
+			--|#line <not available> "eiffel.y"
 		local
 			yyval41: INTERVAL_AS
 		do
---|#line 1377 "eiffel.y"
+--|#line <not available> "eiffel.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'eiffel.y' at line 1377")
+	std.error.put_line ("Executing parser user-code from file 'eiffel.y' at line <not available>")
 end
 
-
-yyval41 := new_interval_as (yytype39 (yyvs.item (yyvsp - 2)), yytype49 (yyvs.item (yyvsp))) 
-			yyval := yyval41
+yyval41 := new_interval_as (yyvs49.item (yyvsp49), yyvs13.item (yyvsp13)) 
 if yy_parsing_status = yyContinue then
 	yyssp := yyssp - 3
-	yyvsp := yyvsp - 2
-	yyvs.put (yyval, yyvsp)
+	yyvsp41 := yyvsp41 + 1
+	yyvsp49 := yyvsp49 -1
+	yyvsp1 := yyvsp1 -1
+	yyvsp13 := yyvsp13 -1
+	if yyvsp41 >= yyvsc41 then
+		if yyvs41 = Void then
+			debug ("GEYACC")
+				std.error.put_line ("Create yyvs41")
+			end
+			create yyspecial_routines41
+			yyvsc41 := yyInitial_yyvs_size
+			yyvs41 := yyspecial_routines41.make (yyvsc41)
+		else
+			debug ("GEYACC")
+				std.error.put_line ("Resize yyvs41")
+			end
+			yyvsc41 := yyvsc41 + yyInitial_yyvs_size
+			yyvs41 := yyspecial_routines41.resize (yyvs41, yyvsc41)
+		end
+	end
+	yyvs41.put (yyval41, yyvsp41)
 end
 		end
 
 	yy_do_action_255 is
-			--|#line 1379 "eiffel.y"
+			--|#line <not available> "eiffel.y"
 		local
 			yyval41: INTERVAL_AS
 		do
---|#line 1379 "eiffel.y"
+--|#line <not available> "eiffel.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'eiffel.y' at line 1379")
+	std.error.put_line ("Executing parser user-code from file 'eiffel.y' at line <not available>")
 end
 
-
-yyval41 := new_interval_as (yytype49 (yyvs.item (yyvsp - 2)), yytype13 (yyvs.item (yyvsp))) 
-			yyval := yyval41
+yyval41 := new_interval_as (yyvs13.item (yyvsp13), yyvs49.item (yyvsp49)) 
 if yy_parsing_status = yyContinue then
 	yyssp := yyssp - 3
-	yyvsp := yyvsp - 2
-	yyvs.put (yyval, yyvsp)
+	yyvsp41 := yyvsp41 + 1
+	yyvsp13 := yyvsp13 -1
+	yyvsp1 := yyvsp1 -1
+	yyvsp49 := yyvsp49 -1
+	if yyvsp41 >= yyvsc41 then
+		if yyvs41 = Void then
+			debug ("GEYACC")
+				std.error.put_line ("Create yyvs41")
+			end
+			create yyspecial_routines41
+			yyvsc41 := yyInitial_yyvs_size
+			yyvs41 := yyspecial_routines41.make (yyvsc41)
+		else
+			debug ("GEYACC")
+				std.error.put_line ("Resize yyvs41")
+			end
+			yyvsc41 := yyvsc41 + yyInitial_yyvs_size
+			yyvs41 := yyspecial_routines41.resize (yyvs41, yyvsc41)
+		end
+	end
+	yyvs41.put (yyval41, yyvsp41)
 end
 		end
 
 	yy_do_action_256 is
-			--|#line 1381 "eiffel.y"
+			--|#line <not available> "eiffel.y"
 		local
-			yyval41: INTERVAL_AS
+			yyval82: EIFFEL_LIST [INSTRUCTION_AS]
 		do
---|#line 1381 "eiffel.y"
+--|#line <not available> "eiffel.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'eiffel.y' at line 1381")
+	std.error.put_line ("Executing parser user-code from file 'eiffel.y' at line <not available>")
 end
 
 
-yyval41 := new_interval_as (yytype13 (yyvs.item (yyvsp - 2)), yytype49 (yyvs.item (yyvsp))) 
-			yyval := yyval41
 if yy_parsing_status = yyContinue then
-	yyssp := yyssp - 3
-	yyvsp := yyvsp - 2
-	yyvs.put (yyval, yyvsp)
+	yyssp := yyssp - 0
+	yyvsp82 := yyvsp82 + 1
+	if yyvsp82 >= yyvsc82 then
+		if yyvs82 = Void then
+			debug ("GEYACC")
+				std.error.put_line ("Create yyvs82")
+			end
+			create yyspecial_routines82
+			yyvsc82 := yyInitial_yyvs_size
+			yyvs82 := yyspecial_routines82.make (yyvsc82)
+		else
+			debug ("GEYACC")
+				std.error.put_line ("Resize yyvs82")
+			end
+			yyvsc82 := yyvsc82 + yyInitial_yyvs_size
+			yyvs82 := yyspecial_routines82.resize (yyvs82, yyvsc82)
+		end
+	end
+	yyvs82.put (yyval82, yyvsp82)
 end
 		end
 
 	yy_do_action_257 is
-			--|#line 1386 "eiffel.y"
+			--|#line <not available> "eiffel.y"
 		local
 			yyval82: EIFFEL_LIST [INSTRUCTION_AS]
 		do
---|#line 1386 "eiffel.y"
+--|#line <not available> "eiffel.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'eiffel.y' at line 1386")
+	std.error.put_line ("Executing parser user-code from file 'eiffel.y' at line <not available>")
 end
 
-
-
-			yyval := yyval82
+				yyval82 := yyvs82.item (yyvsp82)
+				if yyval82 = Void then
+					yyval82 := new_eiffel_list_instruction_as (0)
+				end
+			
 if yy_parsing_status = yyContinue then
-	yyvsp := yyvsp + 1
-	if yyvsp >= yyvsc then
-		yyvsc := yyvsc + yyInitial_stack_size
-		yyvs := FIXED_ARRAY_.resize (yyvs, yyvsc)
-		debug ("GEYACC")
-			std.error.put_string ("Stack (yyvs) size increased to ")
-			std.error.put_integer (yyvsc)
-			std.error.put_new_line
-		end
-	end
-	yyvs.put (yyval, yyvsp)
+	yyssp := yyssp - 2
+	yyvsp1 := yyvsp1 -1
+	yyvs82.put (yyval82, yyvsp82)
 end
 		end
 
 	yy_do_action_258 is
-			--|#line 1388 "eiffel.y"
+			--|#line <not available> "eiffel.y"
 		local
-			yyval82: EIFFEL_LIST [INSTRUCTION_AS]
+			yyval43: LOOP_AS
 		do
---|#line 1388 "eiffel.y"
+--|#line <not available> "eiffel.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'eiffel.y' at line 1388")
+	std.error.put_line ("Executing parser user-code from file 'eiffel.y' at line <not available>")
 end
 
-
-				yyval82 := yytype82 (yyvs.item (yyvsp))
-				if yyval82 = Void then
-					yyval82 := new_eiffel_list_instruction_as (0)
-				end
+				yyval43 := new_loop_as (yyvs82.item (yyvsp82 - 1), yyvs88.item (yyvsp88), yyvs65.item (yyvsp65), yyvs25.item (yyvsp25), yyvs82.item (yyvsp82), yyvs58.item (yyvsp58), current_position)
 			
-			yyval := yyval82
 if yy_parsing_status = yyContinue then
-	yyssp := yyssp - 2
-	yyvsp := yyvsp - 1
-	yyvs.put (yyval, yyvsp)
+	yyssp := yyssp - 10
+	yyvsp43 := yyvsp43 + 1
+	yyvsp1 := yyvsp1 -4
+	yyvsp82 := yyvsp82 -2
+	yyvsp88 := yyvsp88 -1
+	yyvsp65 := yyvsp65 -1
+	yyvsp58 := yyvsp58 -1
+	yyvsp25 := yyvsp25 -1
+	if yyvsp43 >= yyvsc43 then
+		if yyvs43 = Void then
+			debug ("GEYACC")
+				std.error.put_line ("Create yyvs43")
+			end
+			create yyspecial_routines43
+			yyvsc43 := yyInitial_yyvs_size
+			yyvs43 := yyspecial_routines43.make (yyvsc43)
+		else
+			debug ("GEYACC")
+				std.error.put_line ("Resize yyvs43")
+			end
+			yyvsc43 := yyvsc43 + yyInitial_yyvs_size
+			yyvs43 := yyspecial_routines43.resize (yyvs43, yyvsc43)
+		end
+	end
+	yyvs43.put (yyval43, yyvsp43)
 end
 		end
 
 	yy_do_action_259 is
-			--|#line 1397 "eiffel.y"
+			--|#line <not available> "eiffel.y"
 		local
-			yyval43: LOOP_AS
+			yyval88: EIFFEL_LIST [TAGGED_AS]
 		do
---|#line 1397 "eiffel.y"
+--|#line <not available> "eiffel.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'eiffel.y' at line 1397")
+	std.error.put_line ("Executing parser user-code from file 'eiffel.y' at line <not available>")
 end
 
 
-				yyval43 := new_loop_as (yytype82 (yyvs.item (yyvsp - 8)), yytype88 (yyvs.item (yyvsp - 7)), yytype65 (yyvs.item (yyvsp - 6)), yytype25 (yyvs.item (yyvsp - 3)), yytype82 (yyvs.item (yyvsp - 1)), yytype58 (yyvs.item (yyvsp - 4)), current_position)
-			
-			yyval := yyval43
 if yy_parsing_status = yyContinue then
-	yyssp := yyssp - 10
-	yyvsp := yyvsp - 9
-	yyvs.put (yyval, yyvsp)
+	yyssp := yyssp - 0
+	yyvsp88 := yyvsp88 + 1
+	if yyvsp88 >= yyvsc88 then
+		if yyvs88 = Void then
+			debug ("GEYACC")
+				std.error.put_line ("Create yyvs88")
+			end
+			create yyspecial_routines88
+			yyvsc88 := yyInitial_yyvs_size
+			yyvs88 := yyspecial_routines88.make (yyvsc88)
+		else
+			debug ("GEYACC")
+				std.error.put_line ("Resize yyvs88")
+			end
+			yyvsc88 := yyvsc88 + yyInitial_yyvs_size
+			yyvs88 := yyspecial_routines88.resize (yyvs88, yyvsc88)
+		end
+	end
+	yyvs88.put (yyval88, yyvsp88)
 end
 		end
 
 	yy_do_action_260 is
-			--|#line 1403 "eiffel.y"
+			--|#line <not available> "eiffel.y"
 		local
 			yyval88: EIFFEL_LIST [TAGGED_AS]
 		do
---|#line 1403 "eiffel.y"
+--|#line <not available> "eiffel.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'eiffel.y' at line 1403")
+	std.error.put_line ("Executing parser user-code from file 'eiffel.y' at line <not available>")
 end
 
-
-
-			yyval := yyval88
+yyval88 := yyvs88.item (yyvsp88) 
 if yy_parsing_status = yyContinue then
-	yyvsp := yyvsp + 1
-	if yyvsp >= yyvsc then
-		yyvsc := yyvsc + yyInitial_stack_size
-		yyvs := FIXED_ARRAY_.resize (yyvs, yyvsc)
-		debug ("GEYACC")
-			std.error.put_string ("Stack (yyvs) size increased to ")
-			std.error.put_integer (yyvsc)
-			std.error.put_new_line
-		end
-	end
-	yyvs.put (yyval, yyvsp)
+	yyssp := yyssp - 2
+	yyvsp1 := yyvsp1 -1
+	yyvs88.put (yyval88, yyvsp88)
 end
 		end
 
 	yy_do_action_261 is
-			--|#line 1405 "eiffel.y"
+			--|#line <not available> "eiffel.y"
 		local
-			yyval88: EIFFEL_LIST [TAGGED_AS]
+			yyval42: INVARIANT_AS
 		do
---|#line 1405 "eiffel.y"
+--|#line <not available> "eiffel.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'eiffel.y' at line 1405")
+	std.error.put_line ("Executing parser user-code from file 'eiffel.y' at line <not available>")
 end
 
 
-yyval88 := yytype88 (yyvs.item (yyvsp)) 
-			yyval := yyval88
 if yy_parsing_status = yyContinue then
-	yyssp := yyssp - 2
-	yyvsp := yyvsp - 1
-	yyvs.put (yyval, yyvsp)
+	yyssp := yyssp - 0
+	yyvsp42 := yyvsp42 + 1
+	if yyvsp42 >= yyvsc42 then
+		if yyvs42 = Void then
+			debug ("GEYACC")
+				std.error.put_line ("Create yyvs42")
+			end
+			create yyspecial_routines42
+			yyvsc42 := yyInitial_yyvs_size
+			yyvs42 := yyspecial_routines42.make (yyvsc42)
+		else
+			debug ("GEYACC")
+				std.error.put_line ("Resize yyvs42")
+			end
+			yyvsc42 := yyvsc42 + yyInitial_yyvs_size
+			yyvs42 := yyspecial_routines42.resize (yyvs42, yyvsc42)
+		end
+	end
+	yyvs42.put (yyval42, yyvsp42)
 end
 		end
 
 	yy_do_action_262 is
-			--|#line 1409 "eiffel.y"
+			--|#line <not available> "eiffel.y"
 		local
 			yyval42: INVARIANT_AS
 		do
---|#line 1409 "eiffel.y"
+--|#line <not available> "eiffel.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'eiffel.y' at line 1409")
+	std.error.put_line ("Executing parser user-code from file 'eiffel.y' at line <not available>")
 end
 
-
-
-			yyval := yyval42
+				id_level := Normal_level
+				inherit_context := False
+				yyval42 := new_invariant_as (yyvs88.item (yyvsp88), once_manifest_string_count)
+				once_manifest_string_count := 0
+			
 if yy_parsing_status = yyContinue then
-	yyvsp := yyvsp + 1
-	if yyvsp >= yyvsc then
-		yyvsc := yyvsc + yyInitial_stack_size
-		yyvs := FIXED_ARRAY_.resize (yyvs, yyvsc)
-		debug ("GEYACC")
-			std.error.put_string ("Stack (yyvs) size increased to ")
-			std.error.put_integer (yyvsc)
-			std.error.put_new_line
-		end
-	end
-	yyvs.put (yyval, yyvsp)
+	yyssp := yyssp - 3
+	yyvsp1 := yyvsp1 -1
+	yyvsp88 := yyvsp88 -1
+	yyvs42.put (yyval42, yyvsp42)
 end
 		end
 
 	yy_do_action_263 is
-			--|#line 1411 "eiffel.y"
+			--|#line <not available> "eiffel.y"
 		local
 			yyval42: INVARIANT_AS
 		do
---|#line 1411 "eiffel.y"
+--|#line <not available> "eiffel.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'eiffel.y' at line 1411")
+	std.error.put_line ("Executing parser user-code from file 'eiffel.y' at line <not available>")
 end
 
-
-				id_level := Normal_level
-				inherit_context := False
-				yyval42 := new_invariant_as (yytype88 (yyvs.item (yyvsp)), once_manifest_string_count)
-				once_manifest_string_count := 0
-			
-			yyval := yyval42
+id_level := Invariant_level 
 if yy_parsing_status = yyContinue then
-	yyssp := yyssp - 3
-	yyvsp := yyvsp - 2
-	yyvs.put (yyval, yyvsp)
+	yyssp := yyssp - 0
+	yyvsp42 := yyvsp42 + 1
+	if yyvsp42 >= yyvsc42 then
+		if yyvs42 = Void then
+			debug ("GEYACC")
+				std.error.put_line ("Create yyvs42")
+			end
+			create yyspecial_routines42
+			yyvsc42 := yyInitial_yyvs_size
+			yyvs42 := yyspecial_routines42.make (yyvsc42)
+		else
+			debug ("GEYACC")
+				std.error.put_line ("Resize yyvs42")
+			end
+			yyvsc42 := yyvsc42 + yyInitial_yyvs_size
+			yyvs42 := yyspecial_routines42.resize (yyvs42, yyvsc42)
+		end
+	end
+	yyvs42.put (yyval42, yyvsp42)
 end
 		end
 
 	yy_do_action_264 is
-			--|#line 1411 "eiffel.y"
+			--|#line <not available> "eiffel.y"
 		local
-			yyval42: INVARIANT_AS
+			yyval65: VARIANT_AS
 		do
---|#line 1411 "eiffel.y"
+--|#line <not available> "eiffel.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'eiffel.y' at line 1411")
+	std.error.put_line ("Executing parser user-code from file 'eiffel.y' at line <not available>")
 end
 
 
-id_level := Invariant_level 
-			yyval := yyval42
 if yy_parsing_status = yyContinue then
-	yyvsp := yyvsp + 1
-	if yyvsp >= yyvsc then
-		yyvsc := yyvsc + yyInitial_stack_size
-		yyvs := FIXED_ARRAY_.resize (yyvs, yyvsc)
-		debug ("GEYACC")
-			std.error.put_string ("Stack (yyvs) size increased to ")
-			std.error.put_integer (yyvsc)
-			std.error.put_new_line
+	yyssp := yyssp - 0
+	yyvsp65 := yyvsp65 + 1
+	if yyvsp65 >= yyvsc65 then
+		if yyvs65 = Void then
+			debug ("GEYACC")
+				std.error.put_line ("Create yyvs65")
+			end
+			create yyspecial_routines65
+			yyvsc65 := yyInitial_yyvs_size
+			yyvs65 := yyspecial_routines65.make (yyvsc65)
+		else
+			debug ("GEYACC")
+				std.error.put_line ("Resize yyvs65")
+			end
+			yyvsc65 := yyvsc65 + yyInitial_yyvs_size
+			yyvs65 := yyspecial_routines65.resize (yyvs65, yyvsc65)
 		end
 	end
-	yyvs.put (yyval, yyvsp)
+	yyvs65.put (yyval65, yyvsp65)
 end
 		end
 
 	yy_do_action_265 is
-			--|#line 1422 "eiffel.y"
+			--|#line <not available> "eiffel.y"
 		local
 			yyval65: VARIANT_AS
 		do
---|#line 1422 "eiffel.y"
+--|#line <not available> "eiffel.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'eiffel.y' at line 1422")
+	std.error.put_line ("Executing parser user-code from file 'eiffel.y' at line <not available>")
 end
 
-
-
-			yyval := yyval65
+yyval65 := new_variant_as (yyvs33.item (yyvsp33), yyvs25.item (yyvsp25), current_position) 
 if yy_parsing_status = yyContinue then
-	yyvsp := yyvsp + 1
-	if yyvsp >= yyvsc then
-		yyvsc := yyvsc + yyInitial_stack_size
-		yyvs := FIXED_ARRAY_.resize (yyvs, yyvsc)
-		debug ("GEYACC")
-			std.error.put_string ("Stack (yyvs) size increased to ")
-			std.error.put_integer (yyvsc)
-			std.error.put_new_line
+	yyssp := yyssp - 4
+	yyvsp65 := yyvsp65 + 1
+	yyvsp1 := yyvsp1 -2
+	yyvsp33 := yyvsp33 -1
+	yyvsp25 := yyvsp25 -1
+	if yyvsp65 >= yyvsc65 then
+		if yyvs65 = Void then
+			debug ("GEYACC")
+				std.error.put_line ("Create yyvs65")
+			end
+			create yyspecial_routines65
+			yyvsc65 := yyInitial_yyvs_size
+			yyvs65 := yyspecial_routines65.make (yyvsc65)
+		else
+			debug ("GEYACC")
+				std.error.put_line ("Resize yyvs65")
+			end
+			yyvsc65 := yyvsc65 + yyInitial_yyvs_size
+			yyvs65 := yyspecial_routines65.resize (yyvs65, yyvsc65)
 		end
 	end
-	yyvs.put (yyval, yyvsp)
+	yyvs65.put (yyval65, yyvsp65)
 end
 		end
 
 	yy_do_action_266 is
-			--|#line 1424 "eiffel.y"
+			--|#line <not available> "eiffel.y"
 		local
 			yyval65: VARIANT_AS
 		do
---|#line 1424 "eiffel.y"
+--|#line <not available> "eiffel.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'eiffel.y' at line 1424")
+	std.error.put_line ("Executing parser user-code from file 'eiffel.y' at line <not available>")
 end
 
-
-yyval65 := new_variant_as (yytype33 (yyvs.item (yyvsp - 2)), yytype25 (yyvs.item (yyvsp)), current_position) 
-			yyval := yyval65
+yyval65 := new_variant_as (Void, yyvs25.item (yyvsp25), current_position) 
 if yy_parsing_status = yyContinue then
-	yyssp := yyssp - 4
-	yyvsp := yyvsp - 3
-	yyvs.put (yyval, yyvsp)
+	yyssp := yyssp - 2
+	yyvsp65 := yyvsp65 + 1
+	yyvsp1 := yyvsp1 -1
+	yyvsp25 := yyvsp25 -1
+	if yyvsp65 >= yyvsc65 then
+		if yyvs65 = Void then
+			debug ("GEYACC")
+				std.error.put_line ("Create yyvs65")
+			end
+			create yyspecial_routines65
+			yyvsc65 := yyInitial_yyvs_size
+			yyvs65 := yyspecial_routines65.make (yyvsc65)
+		else
+			debug ("GEYACC")
+				std.error.put_line ("Resize yyvs65")
+			end
+			yyvsc65 := yyvsc65 + yyInitial_yyvs_size
+			yyvs65 := yyspecial_routines65.resize (yyvs65, yyvsc65)
+		end
+	end
+	yyvs65.put (yyval65, yyvsp65)
 end
 		end
 
 	yy_do_action_267 is
-			--|#line 1426 "eiffel.y"
+			--|#line <not available> "eiffel.y"
 		local
-			yyval65: VARIANT_AS
+			yyval21: DEBUG_AS
 		do
---|#line 1426 "eiffel.y"
+--|#line <not available> "eiffel.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'eiffel.y' at line 1426")
+	std.error.put_line ("Executing parser user-code from file 'eiffel.y' at line <not available>")
 end
 
-
-yyval65 := new_variant_as (Void, yytype25 (yyvs.item (yyvsp)), current_position) 
-			yyval := yyval65
+				yyval21 := new_debug_as (yyvs87.item (yyvsp87), yyvs82.item (yyvsp82), yyvs58.item (yyvsp58), current_position)
+			
 if yy_parsing_status = yyContinue then
-	yyssp := yyssp - 2
-	yyvsp := yyvsp - 1
-	yyvs.put (yyval, yyvsp)
+	yyssp := yyssp - 5
+	yyvsp21 := yyvsp21 + 1
+	yyvsp58 := yyvsp58 -1
+	yyvsp1 := yyvsp1 -2
+	yyvsp87 := yyvsp87 -1
+	yyvsp82 := yyvsp82 -1
+	if yyvsp21 >= yyvsc21 then
+		if yyvs21 = Void then
+			debug ("GEYACC")
+				std.error.put_line ("Create yyvs21")
+			end
+			create yyspecial_routines21
+			yyvsc21 := yyInitial_yyvs_size
+			yyvs21 := yyspecial_routines21.make (yyvsc21)
+		else
+			debug ("GEYACC")
+				std.error.put_line ("Resize yyvs21")
+			end
+			yyvsc21 := yyvsc21 + yyInitial_yyvs_size
+			yyvs21 := yyspecial_routines21.resize (yyvs21, yyvsc21)
+		end
+	end
+	yyvs21.put (yyval21, yyvsp21)
 end
 		end
 
 	yy_do_action_268 is
-			--|#line 1430 "eiffel.y"
+			--|#line <not available> "eiffel.y"
 		local
-			yyval21: DEBUG_AS
+			yyval87: EIFFEL_LIST [STRING_AS]
 		do
---|#line 1430 "eiffel.y"
+--|#line <not available> "eiffel.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'eiffel.y' at line 1430")
+	std.error.put_line ("Executing parser user-code from file 'eiffel.y' at line <not available>")
 end
 
 
-				yyval21 := new_debug_as (yytype87 (yyvs.item (yyvsp - 2)), yytype82 (yyvs.item (yyvsp - 1)), yytype58 (yyvs.item (yyvsp - 4)), current_position)
-			
-			yyval := yyval21
 if yy_parsing_status = yyContinue then
-	yyssp := yyssp - 5
-	yyvsp := yyvsp - 4
-	yyvs.put (yyval, yyvsp)
+	yyssp := yyssp - 0
+	yyvsp87 := yyvsp87 + 1
+	if yyvsp87 >= yyvsc87 then
+		if yyvs87 = Void then
+			debug ("GEYACC")
+				std.error.put_line ("Create yyvs87")
+			end
+			create yyspecial_routines87
+			yyvsc87 := yyInitial_yyvs_size
+			yyvs87 := yyspecial_routines87.make (yyvsc87)
+		else
+			debug ("GEYACC")
+				std.error.put_line ("Resize yyvs87")
+			end
+			yyvsc87 := yyvsc87 + yyInitial_yyvs_size
+			yyvs87 := yyspecial_routines87.resize (yyvs87, yyvsc87)
+		end
+	end
+	yyvs87.put (yyval87, yyvsp87)
 end
 		end
 
 	yy_do_action_269 is
-			--|#line 1436 "eiffel.y"
+			--|#line <not available> "eiffel.y"
 		local
 			yyval87: EIFFEL_LIST [STRING_AS]
 		do
---|#line 1436 "eiffel.y"
+--|#line <not available> "eiffel.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'eiffel.y' at line 1436")
+	std.error.put_line ("Executing parser user-code from file 'eiffel.y' at line <not available>")
 end
 
 
-
-			yyval := yyval87
 if yy_parsing_status = yyContinue then
-	yyvsp := yyvsp + 1
-	if yyvsp >= yyvsc then
-		yyvsc := yyvsc + yyInitial_stack_size
-		yyvs := FIXED_ARRAY_.resize (yyvs, yyvsc)
-		debug ("GEYACC")
-			std.error.put_string ("Stack (yyvs) size increased to ")
-			std.error.put_integer (yyvsc)
-			std.error.put_new_line
+	yyssp := yyssp - 2
+	yyvsp87 := yyvsp87 + 1
+	yyvsp1 := yyvsp1 -2
+	if yyvsp87 >= yyvsc87 then
+		if yyvs87 = Void then
+			debug ("GEYACC")
+				std.error.put_line ("Create yyvs87")
+			end
+			create yyspecial_routines87
+			yyvsc87 := yyInitial_yyvs_size
+			yyvs87 := yyspecial_routines87.make (yyvsc87)
+		else
+			debug ("GEYACC")
+				std.error.put_line ("Resize yyvs87")
+			end
+			yyvsc87 := yyvsc87 + yyInitial_yyvs_size
+			yyvs87 := yyspecial_routines87.resize (yyvs87, yyvsc87)
 		end
 	end
-	yyvs.put (yyval, yyvsp)
+	yyvs87.put (yyval87, yyvsp87)
 end
 		end
 
 	yy_do_action_270 is
-			--|#line 1438 "eiffel.y"
+			--|#line <not available> "eiffel.y"
 		local
 			yyval87: EIFFEL_LIST [STRING_AS]
 		do
---|#line 1438 "eiffel.y"
+--|#line <not available> "eiffel.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'eiffel.y' at line 1438")
+	std.error.put_line ("Executing parser user-code from file 'eiffel.y' at line <not available>")
 end
 
-
-
-			yyval := yyval87
+yyval87 := yyvs87.item (yyvsp87) 
 if yy_parsing_status = yyContinue then
-	yyssp := yyssp - 2
-	yyvsp := yyvsp - 1
-	yyvs.put (yyval, yyvsp)
+	yyssp := yyssp - 3
+	yyvsp1 := yyvsp1 -2
+	yyvs87.put (yyval87, yyvsp87)
 end
 		end
 
 	yy_do_action_271 is
-			--|#line 1440 "eiffel.y"
+			--|#line <not available> "eiffel.y"
 		local
 			yyval87: EIFFEL_LIST [STRING_AS]
 		do
---|#line 1440 "eiffel.y"
+--|#line <not available> "eiffel.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'eiffel.y' at line 1440")
+	std.error.put_line ("Executing parser user-code from file 'eiffel.y' at line <not available>")
 end
 
-
-yyval87 := yytype87 (yyvs.item (yyvsp - 1)) 
-			yyval := yyval87
+				yyval87 := new_eiffel_list_string_as (Initial_debug_key_list_size)
+				yyval87.extend (yyvs60.item (yyvsp60))
+			
 if yy_parsing_status = yyContinue then
-	yyssp := yyssp - 3
-	yyvsp := yyvsp - 2
-	yyvs.put (yyval, yyvsp)
+	yyssp := yyssp - 1
+	yyvsp87 := yyvsp87 + 1
+	yyvsp60 := yyvsp60 -1
+	if yyvsp87 >= yyvsc87 then
+		if yyvs87 = Void then
+			debug ("GEYACC")
+				std.error.put_line ("Create yyvs87")
+			end
+			create yyspecial_routines87
+			yyvsc87 := yyInitial_yyvs_size
+			yyvs87 := yyspecial_routines87.make (yyvsc87)
+		else
+			debug ("GEYACC")
+				std.error.put_line ("Resize yyvs87")
+			end
+			yyvsc87 := yyvsc87 + yyInitial_yyvs_size
+			yyvs87 := yyspecial_routines87.resize (yyvs87, yyvsc87)
+		end
+	end
+	yyvs87.put (yyval87, yyvsp87)
 end
 		end
 
 	yy_do_action_272 is
-			--|#line 1444 "eiffel.y"
+			--|#line <not available> "eiffel.y"
 		local
 			yyval87: EIFFEL_LIST [STRING_AS]
 		do
---|#line 1444 "eiffel.y"
+--|#line <not available> "eiffel.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'eiffel.y' at line 1444")
+	std.error.put_line ("Executing parser user-code from file 'eiffel.y' at line <not available>")
 end
 
-
-				yyval87 := new_eiffel_list_string_as (Initial_debug_key_list_size)
-				yyval87.extend (yytype60 (yyvs.item (yyvsp)))
+				yyval87 := yyvs87.item (yyvsp87)
+				yyval87.extend (yyvs60.item (yyvsp60))
 			
-			yyval := yyval87
 if yy_parsing_status = yyContinue then
-	yyssp := yyssp - 1
-	yyvs.put (yyval, yyvsp)
+	yyssp := yyssp - 3
+	yyvsp1 := yyvsp1 -1
+	yyvsp60 := yyvsp60 -1
+	yyvs87.put (yyval87, yyvsp87)
 end
 		end
 
 	yy_do_action_273 is
-			--|#line 1449 "eiffel.y"
+			--|#line <not available> "eiffel.y"
 		local
-			yyval87: EIFFEL_LIST [STRING_AS]
+			yyval53: RETRY_AS
 		do
---|#line 1449 "eiffel.y"
+--|#line <not available> "eiffel.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'eiffel.y' at line 1449")
+	std.error.put_line ("Executing parser user-code from file 'eiffel.y' at line <not available>")
 end
 
-
-				yyval87 := yytype87 (yyvs.item (yyvsp - 2))
-				yyval87.extend (yytype60 (yyvs.item (yyvsp)))
-			
-			yyval := yyval87
+yyval53 := new_retry_as (current_position) 
 if yy_parsing_status = yyContinue then
-	yyssp := yyssp - 3
-	yyvsp := yyvsp - 2
-	yyvs.put (yyval, yyvsp)
+	yyssp := yyssp - 1
+	yyvsp53 := yyvsp53 + 1
+	yyvsp1 := yyvsp1 -1
+	if yyvsp53 >= yyvsc53 then
+		if yyvs53 = Void then
+			debug ("GEYACC")
+				std.error.put_line ("Create yyvs53")
+			end
+			create yyspecial_routines53
+			yyvsc53 := yyInitial_yyvs_size
+			yyvs53 := yyspecial_routines53.make (yyvsc53)
+		else
+			debug ("GEYACC")
+				std.error.put_line ("Resize yyvs53")
+			end
+			yyvsc53 := yyvsc53 + yyInitial_yyvs_size
+			yyvs53 := yyspecial_routines53.resize (yyvs53, yyvsc53)
+		end
+	end
+	yyvs53.put (yyval53, yyvsp53)
 end
 		end
 
 	yy_do_action_274 is
-			--|#line 1456 "eiffel.y"
+			--|#line <not available> "eiffel.y"
 		local
-			yyval53: RETRY_AS
+			yyval82: EIFFEL_LIST [INSTRUCTION_AS]
 		do
---|#line 1456 "eiffel.y"
+--|#line <not available> "eiffel.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'eiffel.y' at line 1456")
+	std.error.put_line ("Executing parser user-code from file 'eiffel.y' at line <not available>")
 end
 
 
-yyval53 := new_retry_as (current_position) 
-			yyval := yyval53
 if yy_parsing_status = yyContinue then
-	yyssp := yyssp - 1
-	yyvs.put (yyval, yyvsp)
+	yyssp := yyssp - 0
+	yyvsp82 := yyvsp82 + 1
+	if yyvsp82 >= yyvsc82 then
+		if yyvs82 = Void then
+			debug ("GEYACC")
+				std.error.put_line ("Create yyvs82")
+			end
+			create yyspecial_routines82
+			yyvsc82 := yyInitial_yyvs_size
+			yyvs82 := yyspecial_routines82.make (yyvsc82)
+		else
+			debug ("GEYACC")
+				std.error.put_line ("Resize yyvs82")
+			end
+			yyvsc82 := yyvsc82 + yyInitial_yyvs_size
+			yyvs82 := yyspecial_routines82.resize (yyvs82, yyvsc82)
+		end
+	end
+	yyvs82.put (yyval82, yyvsp82)
 end
 		end
 
 	yy_do_action_275 is
-			--|#line 1460 "eiffel.y"
+			--|#line <not available> "eiffel.y"
 		local
 			yyval82: EIFFEL_LIST [INSTRUCTION_AS]
 		do
---|#line 1460 "eiffel.y"
+--|#line <not available> "eiffel.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'eiffel.y' at line 1460")
+	std.error.put_line ("Executing parser user-code from file 'eiffel.y' at line <not available>")
 end
 
-
-
-			yyval := yyval82
-if yy_parsing_status = yyContinue then
-	yyvsp := yyvsp + 1
-	if yyvsp >= yyvsc then
-		yyvsc := yyvsc + yyInitial_stack_size
-		yyvs := FIXED_ARRAY_.resize (yyvs, yyvsc)
-		debug ("GEYACC")
-			std.error.put_string ("Stack (yyvs) size increased to ")
-			std.error.put_integer (yyvsc)
-			std.error.put_new_line
-		end
-	end
-	yyvs.put (yyval, yyvsp)
-end
-		end
-
-	yy_do_action_276 is
-			--|#line 1462 "eiffel.y"
-		local
-			yyval82: EIFFEL_LIST [INSTRUCTION_AS]
-		do
---|#line 1462 "eiffel.y"
-debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'eiffel.y' at line 1462")
-end
-
-
-				yyval82 := yytype82 (yyvs.item (yyvsp))
+				yyval82 := yyvs82.item (yyvsp82)
 				if yyval82 = Void then
 					yyval82 := new_eiffel_list_instruction_as (0)
 				end
 			
-			yyval := yyval82
 if yy_parsing_status = yyContinue then
 	yyssp := yyssp - 2
-	yyvsp := yyvsp - 1
-	yyvs.put (yyval, yyvsp)
+	yyvsp1 := yyvsp1 -1
+	yyvs82.put (yyval82, yyvsp82)
+end
+		end
+
+	yy_do_action_276 is
+			--|#line <not available> "eiffel.y"
+		local
+			yyval6: ASSIGN_AS
+		do
+--|#line <not available> "eiffel.y"
+debug ("GEYACC")
+	std.error.put_line ("Executing parser user-code from file 'eiffel.y' at line <not available>")
+end
+
+yyval6 := new_assign_as (new_access_id_as (yyvs33.item (yyvsp33), Void), yyvs25.item (yyvsp25), yyvs58.item (yyvsp58)) 
+if yy_parsing_status = yyContinue then
+	yyssp := yyssp - 4
+	yyvsp6 := yyvsp6 + 1
+	yyvsp58 := yyvsp58 -1
+	yyvsp33 := yyvsp33 -1
+	yyvsp1 := yyvsp1 -1
+	yyvsp25 := yyvsp25 -1
+	if yyvsp6 >= yyvsc6 then
+		if yyvs6 = Void then
+			debug ("GEYACC")
+				std.error.put_line ("Create yyvs6")
+			end
+			create yyspecial_routines6
+			yyvsc6 := yyInitial_yyvs_size
+			yyvs6 := yyspecial_routines6.make (yyvsc6)
+		else
+			debug ("GEYACC")
+				std.error.put_line ("Resize yyvs6")
+			end
+			yyvsc6 := yyvsc6 + yyInitial_yyvs_size
+			yyvs6 := yyspecial_routines6.resize (yyvs6, yyvsc6)
+		end
+	end
+	yyvs6.put (yyval6, yyvsp6)
 end
 		end
 
 	yy_do_action_277 is
-			--|#line 1471 "eiffel.y"
+			--|#line <not available> "eiffel.y"
 		local
 			yyval6: ASSIGN_AS
 		do
---|#line 1471 "eiffel.y"
+--|#line <not available> "eiffel.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'eiffel.y' at line 1471")
+	std.error.put_line ("Executing parser user-code from file 'eiffel.y' at line <not available>")
 end
 
-
-yyval6 := new_assign_as (new_access_id_as (yytype33 (yyvs.item (yyvsp - 2)), Void), yytype25 (yyvs.item (yyvsp)), yytype58 (yyvs.item (yyvsp - 3))) 
-			yyval := yyval6
+yyval6 := new_assign_as (new_result_as, yyvs25.item (yyvsp25), yyvs58.item (yyvsp58)) 
 if yy_parsing_status = yyContinue then
 	yyssp := yyssp - 4
-	yyvsp := yyvsp - 3
-	yyvs.put (yyval, yyvsp)
+	yyvsp6 := yyvsp6 + 1
+	yyvsp58 := yyvsp58 -1
+	yyvsp1 := yyvsp1 -2
+	yyvsp25 := yyvsp25 -1
+	if yyvsp6 >= yyvsc6 then
+		if yyvs6 = Void then
+			debug ("GEYACC")
+				std.error.put_line ("Create yyvs6")
+			end
+			create yyspecial_routines6
+			yyvsc6 := yyInitial_yyvs_size
+			yyvs6 := yyspecial_routines6.make (yyvsc6)
+		else
+			debug ("GEYACC")
+				std.error.put_line ("Resize yyvs6")
+			end
+			yyvsc6 := yyvsc6 + yyInitial_yyvs_size
+			yyvs6 := yyspecial_routines6.resize (yyvs6, yyvsc6)
+		end
+	end
+	yyvs6.put (yyval6, yyvsp6)
 end
 		end
 
 	yy_do_action_278 is
-			--|#line 1473 "eiffel.y"
+			--|#line <not available> "eiffel.y"
 		local
-			yyval6: ASSIGN_AS
+			yyval54: REVERSE_AS
 		do
---|#line 1473 "eiffel.y"
+--|#line <not available> "eiffel.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'eiffel.y' at line 1473")
+	std.error.put_line ("Executing parser user-code from file 'eiffel.y' at line <not available>")
 end
 
-
-yyval6 := new_assign_as (new_result_as, yytype25 (yyvs.item (yyvsp)), yytype58 (yyvs.item (yyvsp - 3))) 
-			yyval := yyval6
+yyval54 := new_reverse_as (new_access_id_as (yyvs33.item (yyvsp33), Void), yyvs25.item (yyvsp25), yyvs58.item (yyvsp58)) 
 if yy_parsing_status = yyContinue then
 	yyssp := yyssp - 4
-	yyvsp := yyvsp - 3
-	yyvs.put (yyval, yyvsp)
+	yyvsp54 := yyvsp54 + 1
+	yyvsp58 := yyvsp58 -1
+	yyvsp33 := yyvsp33 -1
+	yyvsp1 := yyvsp1 -1
+	yyvsp25 := yyvsp25 -1
+	if yyvsp54 >= yyvsc54 then
+		if yyvs54 = Void then
+			debug ("GEYACC")
+				std.error.put_line ("Create yyvs54")
+			end
+			create yyspecial_routines54
+			yyvsc54 := yyInitial_yyvs_size
+			yyvs54 := yyspecial_routines54.make (yyvsc54)
+		else
+			debug ("GEYACC")
+				std.error.put_line ("Resize yyvs54")
+			end
+			yyvsc54 := yyvsc54 + yyInitial_yyvs_size
+			yyvs54 := yyspecial_routines54.resize (yyvs54, yyvsc54)
+		end
+	end
+	yyvs54.put (yyval54, yyvsp54)
 end
 		end
 
 	yy_do_action_279 is
-			--|#line 1477 "eiffel.y"
+			--|#line <not available> "eiffel.y"
 		local
 			yyval54: REVERSE_AS
 		do
---|#line 1477 "eiffel.y"
+--|#line <not available> "eiffel.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'eiffel.y' at line 1477")
+	std.error.put_line ("Executing parser user-code from file 'eiffel.y' at line <not available>")
 end
 
-
-yyval54 := new_reverse_as (new_access_id_as (yytype33 (yyvs.item (yyvsp - 2)), Void), yytype25 (yyvs.item (yyvsp)), yytype58 (yyvs.item (yyvsp - 3))) 
-			yyval := yyval54
+yyval54 := new_reverse_as (new_result_as, yyvs25.item (yyvsp25), yyvs58.item (yyvsp58)) 
 if yy_parsing_status = yyContinue then
 	yyssp := yyssp - 4
-	yyvsp := yyvsp - 3
-	yyvs.put (yyval, yyvsp)
+	yyvsp54 := yyvsp54 + 1
+	yyvsp58 := yyvsp58 -1
+	yyvsp1 := yyvsp1 -2
+	yyvsp25 := yyvsp25 -1
+	if yyvsp54 >= yyvsc54 then
+		if yyvs54 = Void then
+			debug ("GEYACC")
+				std.error.put_line ("Create yyvs54")
+			end
+			create yyspecial_routines54
+			yyvsc54 := yyInitial_yyvs_size
+			yyvs54 := yyspecial_routines54.make (yyvsc54)
+		else
+			debug ("GEYACC")
+				std.error.put_line ("Resize yyvs54")
+			end
+			yyvsc54 := yyvsc54 + yyInitial_yyvs_size
+			yyvs54 := yyspecial_routines54.resize (yyvs54, yyvsc54)
+		end
+	end
+	yyvs54.put (yyval54, yyvsp54)
 end
 		end
 
 	yy_do_action_280 is
-			--|#line 1479 "eiffel.y"
+			--|#line <not available> "eiffel.y"
 		local
-			yyval54: REVERSE_AS
+			yyval69: EIFFEL_LIST [CREATE_AS]
 		do
---|#line 1479 "eiffel.y"
+--|#line <not available> "eiffel.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'eiffel.y' at line 1479")
+	std.error.put_line ("Executing parser user-code from file 'eiffel.y' at line <not available>")
 end
 
 
-yyval54 := new_reverse_as (new_result_as, yytype25 (yyvs.item (yyvsp)), yytype58 (yyvs.item (yyvsp - 3))) 
-			yyval := yyval54
 if yy_parsing_status = yyContinue then
-	yyssp := yyssp - 4
-	yyvsp := yyvsp - 3
-	yyvs.put (yyval, yyvsp)
+	yyssp := yyssp - 0
+	yyvsp69 := yyvsp69 + 1
+	if yyvsp69 >= yyvsc69 then
+		if yyvs69 = Void then
+			debug ("GEYACC")
+				std.error.put_line ("Create yyvs69")
+			end
+			create yyspecial_routines69
+			yyvsc69 := yyInitial_yyvs_size
+			yyvs69 := yyspecial_routines69.make (yyvsc69)
+		else
+			debug ("GEYACC")
+				std.error.put_line ("Resize yyvs69")
+			end
+			yyvsc69 := yyvsc69 + yyInitial_yyvs_size
+			yyvs69 := yyspecial_routines69.resize (yyvs69, yyvsc69)
+		end
+	end
+	yyvs69.put (yyval69, yyvsp69)
 end
 		end
 
 	yy_do_action_281 is
-			--|#line 1483 "eiffel.y"
+			--|#line <not available> "eiffel.y"
 		local
 			yyval69: EIFFEL_LIST [CREATE_AS]
 		do
---|#line 1483 "eiffel.y"
+--|#line <not available> "eiffel.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'eiffel.y' at line 1483")
+	std.error.put_line ("Executing parser user-code from file 'eiffel.y' at line <not available>")
 end
 
-
-
-			yyval := yyval69
+yyval69 := yyvs69.item (yyvsp69) 
 if yy_parsing_status = yyContinue then
-	yyvsp := yyvsp + 1
-	if yyvsp >= yyvsc then
-		yyvsc := yyvsc + yyInitial_stack_size
-		yyvs := FIXED_ARRAY_.resize (yyvs, yyvsc)
-		debug ("GEYACC")
-			std.error.put_string ("Stack (yyvs) size increased to ")
-			std.error.put_integer (yyvsc)
-			std.error.put_new_line
-		end
-	end
-	yyvs.put (yyval, yyvsp)
+	yyssp := yyssp - 1
+	yyvs69.put (yyval69, yyvsp69)
 end
 		end
 
 	yy_do_action_282 is
-			--|#line 1485 "eiffel.y"
+			--|#line <not available> "eiffel.y"
 		local
 			yyval69: EIFFEL_LIST [CREATE_AS]
 		do
---|#line 1485 "eiffel.y"
+--|#line <not available> "eiffel.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'eiffel.y' at line 1485")
+	std.error.put_line ("Executing parser user-code from file 'eiffel.y' at line <not available>")
 end
 
-
-yyval69 := yytype69 (yyvs.item (yyvsp)) 
-			yyval := yyval69
+				yyval69 := new_eiffel_list_create_as (Initial_creation_clause_list_size)
+				yyval69.extend (yyvs18.item (yyvsp18))
+			
 if yy_parsing_status = yyContinue then
 	yyssp := yyssp - 1
-	yyvs.put (yyval, yyvsp)
+	yyvsp69 := yyvsp69 + 1
+	yyvsp18 := yyvsp18 -1
+	if yyvsp69 >= yyvsc69 then
+		if yyvs69 = Void then
+			debug ("GEYACC")
+				std.error.put_line ("Create yyvs69")
+			end
+			create yyspecial_routines69
+			yyvsc69 := yyInitial_yyvs_size
+			yyvs69 := yyspecial_routines69.make (yyvsc69)
+		else
+			debug ("GEYACC")
+				std.error.put_line ("Resize yyvs69")
+			end
+			yyvsc69 := yyvsc69 + yyInitial_yyvs_size
+			yyvs69 := yyspecial_routines69.resize (yyvs69, yyvsc69)
+		end
+	end
+	yyvs69.put (yyval69, yyvsp69)
 end
 		end
 
 	yy_do_action_283 is
-			--|#line 1489 "eiffel.y"
+			--|#line <not available> "eiffel.y"
 		local
 			yyval69: EIFFEL_LIST [CREATE_AS]
 		do
---|#line 1489 "eiffel.y"
+--|#line <not available> "eiffel.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'eiffel.y' at line 1489")
+	std.error.put_line ("Executing parser user-code from file 'eiffel.y' at line <not available>")
 end
 
-
-				yyval69 := new_eiffel_list_create_as (Initial_creation_clause_list_size)
-				yyval69.extend (yytype18 (yyvs.item (yyvsp)))
+				yyval69 := yyvs69.item (yyvsp69)
+				yyval69.extend (yyvs18.item (yyvsp18))
 			
-			yyval := yyval69
 if yy_parsing_status = yyContinue then
-	yyssp := yyssp - 1
-	yyvs.put (yyval, yyvsp)
+	yyssp := yyssp - 2
+	yyvsp18 := yyvsp18 -1
+	yyvs69.put (yyval69, yyvsp69)
 end
 		end
 
 	yy_do_action_284 is
-			--|#line 1494 "eiffel.y"
+			--|#line <not available> "eiffel.y"
 		local
-			yyval69: EIFFEL_LIST [CREATE_AS]
+			yyval18: CREATE_AS
 		do
---|#line 1494 "eiffel.y"
+--|#line <not available> "eiffel.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'eiffel.y' at line 1494")
+	std.error.put_line ("Executing parser user-code from file 'eiffel.y' at line <not available>")
 end
 
-
-				yyval69 := yytype69 (yyvs.item (yyvsp - 1))
-				yyval69.extend (yytype18 (yyvs.item (yyvsp)))
+				inherit_context := False
+				yyval18 := new_create_as (Void, Void)
 			
-			yyval := yyval69
 if yy_parsing_status = yyContinue then
-	yyssp := yyssp - 2
-	yyvsp := yyvsp - 1
-	yyvs.put (yyval, yyvsp)
+	yyssp := yyssp - 1
+	yyvsp18 := yyvsp18 + 1
+	yyvsp1 := yyvsp1 -1
+	if yyvsp18 >= yyvsc18 then
+		if yyvs18 = Void then
+			debug ("GEYACC")
+				std.error.put_line ("Create yyvs18")
+			end
+			create yyspecial_routines18
+			yyvsc18 := yyInitial_yyvs_size
+			yyvs18 := yyspecial_routines18.make (yyvsc18)
+		else
+			debug ("GEYACC")
+				std.error.put_line ("Resize yyvs18")
+			end
+			yyvsc18 := yyvsc18 + yyInitial_yyvs_size
+			yyvs18 := yyspecial_routines18.resize (yyvs18, yyvsc18)
+		end
+	end
+	yyvs18.put (yyval18, yyvsp18)
 end
 		end
 
 	yy_do_action_285 is
-			--|#line 1501 "eiffel.y"
+			--|#line <not available> "eiffel.y"
 		local
 			yyval18: CREATE_AS
 		do
---|#line 1501 "eiffel.y"
+--|#line <not available> "eiffel.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'eiffel.y' at line 1501")
+	std.error.put_line ("Executing parser user-code from file 'eiffel.y' at line <not available>")
 end
 
-
 				inherit_context := False
-				yyval18 := new_create_as (Void, Void)
+				yyval18 := new_create_as (yyvs15.item (yyvsp15), yyvs76.item (yyvsp76))
 			
-			yyval := yyval18
 if yy_parsing_status = yyContinue then
-	yyssp := yyssp - 1
-	yyvs.put (yyval, yyvsp)
+	yyssp := yyssp - 3
+	yyvsp18 := yyvsp18 + 1
+	yyvsp1 := yyvsp1 -1
+	yyvsp15 := yyvsp15 -1
+	yyvsp76 := yyvsp76 -1
+	if yyvsp18 >= yyvsc18 then
+		if yyvs18 = Void then
+			debug ("GEYACC")
+				std.error.put_line ("Create yyvs18")
+			end
+			create yyspecial_routines18
+			yyvsc18 := yyInitial_yyvs_size
+			yyvs18 := yyspecial_routines18.make (yyvsc18)
+		else
+			debug ("GEYACC")
+				std.error.put_line ("Resize yyvs18")
+			end
+			yyvsc18 := yyvsc18 + yyInitial_yyvs_size
+			yyvs18 := yyspecial_routines18.resize (yyvs18, yyvsc18)
+		end
+	end
+	yyvs18.put (yyval18, yyvsp18)
 end
 		end
 
 	yy_do_action_286 is
-			--|#line 1507 "eiffel.y"
+			--|#line <not available> "eiffel.y"
 		local
 			yyval18: CREATE_AS
 		do
---|#line 1507 "eiffel.y"
+--|#line <not available> "eiffel.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'eiffel.y' at line 1507")
+	std.error.put_line ("Executing parser user-code from file 'eiffel.y' at line <not available>")
 end
 
-
 				inherit_context := False
-				yyval18 := new_create_as (yytype15 (yyvs.item (yyvsp - 1)), yytype76 (yyvs.item (yyvsp)))
+				yyval18 := new_create_as (new_client_as (yyvs78.item (yyvsp78)), Void)
 			
-			yyval := yyval18
 if yy_parsing_status = yyContinue then
-	yyssp := yyssp - 3
-	yyvsp := yyvsp - 2
-	yyvs.put (yyval, yyvsp)
+	yyssp := yyssp - 2
+	yyvsp18 := yyvsp18 + 1
+	yyvsp1 := yyvsp1 -1
+	yyvsp78 := yyvsp78 -1
+	if yyvsp18 >= yyvsc18 then
+		if yyvs18 = Void then
+			debug ("GEYACC")
+				std.error.put_line ("Create yyvs18")
+			end
+			create yyspecial_routines18
+			yyvsc18 := yyInitial_yyvs_size
+			yyvs18 := yyspecial_routines18.make (yyvsc18)
+		else
+			debug ("GEYACC")
+				std.error.put_line ("Resize yyvs18")
+			end
+			yyvsc18 := yyvsc18 + yyInitial_yyvs_size
+			yyvs18 := yyspecial_routines18.resize (yyvs18, yyvsc18)
+		end
+	end
+	yyvs18.put (yyval18, yyvsp18)
 end
 		end
 
 	yy_do_action_287 is
-			--|#line 1512 "eiffel.y"
+			--|#line <not available> "eiffel.y"
 		local
 			yyval18: CREATE_AS
 		do
---|#line 1512 "eiffel.y"
+--|#line <not available> "eiffel.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'eiffel.y' at line 1512")
+	std.error.put_line ("Executing parser user-code from file 'eiffel.y' at line <not available>")
 end
-
-
-				inherit_context := False
-				yyval18 := new_create_as (new_client_as (yytype78 (yyvs.item (yyvsp))), Void)
-			
-			yyval := yyval18
-if yy_parsing_status = yyContinue then
-	yyssp := yyssp - 2
-	yyvsp := yyvsp - 1
-	yyvs.put (yyval, yyvsp)
-end
-		end
-
-	yy_do_action_288 is
-			--|#line 1517 "eiffel.y"
-		local
-			yyval18: CREATE_AS
-		do
---|#line 1517 "eiffel.y"
-debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'eiffel.y' at line 1517")
-end
-
 
 				inherit_context := False
 				yyval18 := new_create_as (Void, Void)
 				if has_syntax_warning then
 					Error_handler.insert_warning (
-						create {SYNTAX_WARNING}.make (yytype58 (yyvs.item (yyvsp - 1)).start_position,
-						yytype58 (yyvs.item (yyvsp - 1)).end_position, filename, 0, "Use keyword `create' instead."))
+						create {SYNTAX_WARNING}.make (yyvs58.item (yyvsp58).start_position,
+						yyvs58.item (yyvsp58).end_position, filename, 0, "Use keyword `create' instead."))
 				end
 			
-			yyval := yyval18
 if yy_parsing_status = yyContinue then
 	yyssp := yyssp - 2
-	yyvsp := yyvsp - 1
-	yyvs.put (yyval, yyvsp)
+	yyvsp18 := yyvsp18 + 1
+	yyvsp58 := yyvsp58 -1
+	yyvsp1 := yyvsp1 -1
+	if yyvsp18 >= yyvsc18 then
+		if yyvs18 = Void then
+			debug ("GEYACC")
+				std.error.put_line ("Create yyvs18")
+			end
+			create yyspecial_routines18
+			yyvsc18 := yyInitial_yyvs_size
+			yyvs18 := yyspecial_routines18.make (yyvsc18)
+		else
+			debug ("GEYACC")
+				std.error.put_line ("Resize yyvs18")
+			end
+			yyvsc18 := yyvsc18 + yyInitial_yyvs_size
+			yyvs18 := yyspecial_routines18.resize (yyvs18, yyvsc18)
+		end
+	end
+	yyvs18.put (yyval18, yyvsp18)
+end
+		end
+
+	yy_do_action_288 is
+			--|#line <not available> "eiffel.y"
+		local
+			yyval18: CREATE_AS
+		do
+--|#line <not available> "eiffel.y"
+debug ("GEYACC")
+	std.error.put_line ("Executing parser user-code from file 'eiffel.y' at line <not available>")
+end
+
+				inherit_context := False
+				yyval18 := new_create_as (yyvs15.item (yyvsp15), yyvs76.item (yyvsp76))
+				if has_syntax_warning then
+					Error_handler.insert_warning (
+						create {SYNTAX_WARNING}.make (yyvs58.item (yyvsp58).start_position,
+						yyvs58.item (yyvsp58).end_position, filename, 0, "Use keyword `create' instead."))
+				end
+			
+if yy_parsing_status = yyContinue then
+	yyssp := yyssp - 4
+	yyvsp18 := yyvsp18 + 1
+	yyvsp58 := yyvsp58 -1
+	yyvsp1 := yyvsp1 -1
+	yyvsp15 := yyvsp15 -1
+	yyvsp76 := yyvsp76 -1
+	if yyvsp18 >= yyvsc18 then
+		if yyvs18 = Void then
+			debug ("GEYACC")
+				std.error.put_line ("Create yyvs18")
+			end
+			create yyspecial_routines18
+			yyvsc18 := yyInitial_yyvs_size
+			yyvs18 := yyspecial_routines18.make (yyvsc18)
+		else
+			debug ("GEYACC")
+				std.error.put_line ("Resize yyvs18")
+			end
+			yyvsc18 := yyvsc18 + yyInitial_yyvs_size
+			yyvs18 := yyspecial_routines18.resize (yyvs18, yyvsc18)
+		end
+	end
+	yyvs18.put (yyval18, yyvsp18)
 end
 		end
 
 	yy_do_action_289 is
-			--|#line 1527 "eiffel.y"
+			--|#line <not available> "eiffel.y"
 		local
 			yyval18: CREATE_AS
 		do
---|#line 1527 "eiffel.y"
+--|#line <not available> "eiffel.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'eiffel.y' at line 1527")
+	std.error.put_line ("Executing parser user-code from file 'eiffel.y' at line <not available>")
 end
 
-
 				inherit_context := False
-				yyval18 := new_create_as (yytype15 (yyvs.item (yyvsp - 1)), yytype76 (yyvs.item (yyvsp)))
+				yyval18 := new_create_as (new_client_as (yyvs78.item (yyvsp78)), Void)
 				if has_syntax_warning then
 					Error_handler.insert_warning (
-						create {SYNTAX_WARNING}.make (yytype58 (yyvs.item (yyvsp - 3)).start_position,
-						yytype58 (yyvs.item (yyvsp - 3)).end_position, filename, 0, "Use keyword `create' instead."))
+						create {SYNTAX_WARNING}.make (yyvs58.item (yyvsp58).start_position,
+						yyvs58.item (yyvsp58).end_position, filename, 0, "Use keyword `create' instead."))
 				end
 			
-			yyval := yyval18
 if yy_parsing_status = yyContinue then
-	yyssp := yyssp - 4
-	yyvsp := yyvsp - 3
-	yyvs.put (yyval, yyvsp)
+	yyssp := yyssp - 3
+	yyvsp18 := yyvsp18 + 1
+	yyvsp58 := yyvsp58 -1
+	yyvsp1 := yyvsp1 -1
+	yyvsp78 := yyvsp78 -1
+	if yyvsp18 >= yyvsc18 then
+		if yyvs18 = Void then
+			debug ("GEYACC")
+				std.error.put_line ("Create yyvs18")
+			end
+			create yyspecial_routines18
+			yyvsc18 := yyInitial_yyvs_size
+			yyvs18 := yyspecial_routines18.make (yyvsc18)
+		else
+			debug ("GEYACC")
+				std.error.put_line ("Resize yyvs18")
+			end
+			yyvsc18 := yyvsc18 + yyInitial_yyvs_size
+			yyvs18 := yyspecial_routines18.resize (yyvs18, yyvsc18)
+		end
+	end
+	yyvs18.put (yyval18, yyvsp18)
 end
 		end
 
 	yy_do_action_290 is
-			--|#line 1537 "eiffel.y"
+			--|#line <not available> "eiffel.y"
 		local
-			yyval18: CREATE_AS
+			yyval57: ROUTINE_CREATION_AS
 		do
---|#line 1537 "eiffel.y"
+--|#line <not available> "eiffel.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'eiffel.y' at line 1537")
+	std.error.put_line ("Executing parser user-code from file 'eiffel.y' at line <not available>")
 end
 
-
-				inherit_context := False
-				yyval18 := new_create_as (new_client_as (yytype78 (yyvs.item (yyvsp))), Void)
-				if has_syntax_warning then
-					Error_handler.insert_warning (
-						create {SYNTAX_WARNING}.make (yytype58 (yyvs.item (yyvsp - 2)).start_position,
-						yytype58 (yyvs.item (yyvsp - 2)).end_position, filename, 0, "Use keyword `create' instead."))
-				end
-			
-			yyval := yyval18
+yyval57 := new_routine_creation_as (new_operand_as (Void, Void, Void), yyvs33.item (yyvsp33), yyvs84.item (yyvsp84), False) 
 if yy_parsing_status = yyContinue then
 	yyssp := yyssp - 3
-	yyvsp := yyvsp - 2
-	yyvs.put (yyval, yyvsp)
+	yyvsp57 := yyvsp57 + 1
+	yyvsp1 := yyvsp1 -1
+	yyvsp33 := yyvsp33 -1
+	yyvsp84 := yyvsp84 -1
+	if yyvsp57 >= yyvsc57 then
+		if yyvs57 = Void then
+			debug ("GEYACC")
+				std.error.put_line ("Create yyvs57")
+			end
+			create yyspecial_routines57
+			yyvsc57 := yyInitial_yyvs_size
+			yyvs57 := yyspecial_routines57.make (yyvsc57)
+		else
+			debug ("GEYACC")
+				std.error.put_line ("Resize yyvs57")
+			end
+			yyvsc57 := yyvsc57 + yyInitial_yyvs_size
+			yyvs57 := yyspecial_routines57.resize (yyvs57, yyvsc57)
+		end
+	end
+	yyvs57.put (yyval57, yyvsp57)
 end
 		end
 
 	yy_do_action_291 is
-			--|#line 1549 "eiffel.y"
+			--|#line <not available> "eiffel.y"
 		local
 			yyval57: ROUTINE_CREATION_AS
 		do
---|#line 1549 "eiffel.y"
+--|#line <not available> "eiffel.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'eiffel.y' at line 1549")
+	std.error.put_line ("Executing parser user-code from file 'eiffel.y' at line <not available>")
 end
 
-
-yyval57 := new_routine_creation_as (new_operand_as (Void, Void, Void), yytype33 (yyvs.item (yyvsp - 1)), yytype84 (yyvs.item (yyvsp)), False) 
-			yyval := yyval57
+yyval57 := new_routine_creation_as (yyvs46.item (yyvsp46), yyvs33.item (yyvsp33), yyvs84.item (yyvsp84), True) 
 if yy_parsing_status = yyContinue then
-	yyssp := yyssp - 3
-	yyvsp := yyvsp - 2
-	yyvs.put (yyval, yyvsp)
+	yyssp := yyssp - 5
+	yyvsp57 := yyvsp57 + 1
+	yyvsp1 := yyvsp1 -2
+	yyvsp46 := yyvsp46 -1
+	yyvsp33 := yyvsp33 -1
+	yyvsp84 := yyvsp84 -1
+	if yyvsp57 >= yyvsc57 then
+		if yyvs57 = Void then
+			debug ("GEYACC")
+				std.error.put_line ("Create yyvs57")
+			end
+			create yyspecial_routines57
+			yyvsc57 := yyInitial_yyvs_size
+			yyvs57 := yyspecial_routines57.make (yyvsc57)
+		else
+			debug ("GEYACC")
+				std.error.put_line ("Resize yyvs57")
+			end
+			yyvsc57 := yyvsc57 + yyInitial_yyvs_size
+			yyvs57 := yyspecial_routines57.resize (yyvs57, yyvsc57)
+		end
+	end
+	yyvs57.put (yyval57, yyvsp57)
 end
 		end
 
 	yy_do_action_292 is
-			--|#line 1551 "eiffel.y"
+			--|#line <not available> "eiffel.y"
 		local
 			yyval57: ROUTINE_CREATION_AS
 		do
---|#line 1551 "eiffel.y"
+--|#line <not available> "eiffel.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'eiffel.y' at line 1551")
+	std.error.put_line ("Executing parser user-code from file 'eiffel.y' at line <not available>")
 end
 
-
-yyval57 := new_routine_creation_as (yytype46 (yyvs.item (yyvsp - 3)), yytype33 (yyvs.item (yyvsp - 1)), yytype84 (yyvs.item (yyvsp)), True) 
-			yyval := yyval57
+			yyval57 := yyvs59.item (yyvsp59).first
+			if has_syntax_warning then
+				Error_handler.insert_warning (
+					create {SYNTAX_WARNING}.make (yyvs59.item (yyvsp59).second.start_position,
+					yyvs59.item (yyvsp59).second.end_position, filename, 0, "Use keyword `agent' instead."))
+			end
+		
 if yy_parsing_status = yyContinue then
-	yyssp := yyssp - 5
-	yyvsp := yyvsp - 4
-	yyvs.put (yyval, yyvsp)
+	yyssp := yyssp - 1
+	yyvsp57 := yyvsp57 + 1
+	yyvsp59 := yyvsp59 -1
+	if yyvsp57 >= yyvsc57 then
+		if yyvs57 = Void then
+			debug ("GEYACC")
+				std.error.put_line ("Create yyvs57")
+			end
+			create yyspecial_routines57
+			yyvsc57 := yyInitial_yyvs_size
+			yyvs57 := yyspecial_routines57.make (yyvsc57)
+		else
+			debug ("GEYACC")
+				std.error.put_line ("Resize yyvs57")
+			end
+			yyvsc57 := yyvsc57 + yyInitial_yyvs_size
+			yyvs57 := yyspecial_routines57.resize (yyvs57, yyvsc57)
+		end
+	end
+	yyvs57.put (yyval57, yyvsp57)
 end
 		end
 
 	yy_do_action_293 is
-			--|#line 1553 "eiffel.y"
+			--|#line <not available> "eiffel.y"
 		local
-			yyval57: ROUTINE_CREATION_AS
+			yyval59: PAIR [ROUTINE_CREATION_AS, TOKEN_LOCATION]
 		do
---|#line 1553 "eiffel.y"
+--|#line <not available> "eiffel.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'eiffel.y' at line 1553")
+	std.error.put_line ("Executing parser user-code from file 'eiffel.y' at line <not available>")
 end
 
-
-			yyval57 := yytype59 (yyvs.item (yyvsp)).first
-			if has_syntax_warning then
-				Error_handler.insert_warning (
-					create {SYNTAX_WARNING}.make (yytype59 (yyvs.item (yyvsp)).second.start_position,
-					yytype59 (yyvs.item (yyvsp)).second.end_position, filename, 0, "Use keyword `agent' instead."))
-			end
-		
-			yyval := yyval57
+yyval59 := new_old_routine_creation_as (yyvs58.item (yyvsp58), new_operand_as (Void, Void, Void), yyvs33.item (yyvsp33), yyvs84.item (yyvsp84), False) 
 if yy_parsing_status = yyContinue then
-	yyssp := yyssp - 1
-	yyvs.put (yyval, yyvsp)
+	yyssp := yyssp - 4
+	yyvsp59 := yyvsp59 + 1
+	yyvsp1 := yyvsp1 -1
+	yyvsp58 := yyvsp58 -1
+	yyvsp33 := yyvsp33 -1
+	yyvsp84 := yyvsp84 -1
+	if yyvsp59 >= yyvsc59 then
+		if yyvs59 = Void then
+			debug ("GEYACC")
+				std.error.put_line ("Create yyvs59")
+			end
+			create yyspecial_routines59
+			yyvsc59 := yyInitial_yyvs_size
+			yyvs59 := yyspecial_routines59.make (yyvsc59)
+		else
+			debug ("GEYACC")
+				std.error.put_line ("Resize yyvs59")
+			end
+			yyvsc59 := yyvsc59 + yyInitial_yyvs_size
+			yyvs59 := yyspecial_routines59.resize (yyvs59, yyvsc59)
+		end
+	end
+	yyvs59.put (yyval59, yyvsp59)
 end
 		end
 
 	yy_do_action_294 is
-			--|#line 1571 "eiffel.y"
+			--|#line <not available> "eiffel.y"
 		local
 			yyval59: PAIR [ROUTINE_CREATION_AS, TOKEN_LOCATION]
 		do
---|#line 1571 "eiffel.y"
+--|#line <not available> "eiffel.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'eiffel.y' at line 1571")
+	std.error.put_line ("Executing parser user-code from file 'eiffel.y' at line <not available>")
 end
 
-
-yyval59 := new_old_routine_creation_as (yytype58 (yyvs.item (yyvsp - 2)), new_operand_as (Void, Void, Void), yytype33 (yyvs.item (yyvsp - 1)), yytype84 (yyvs.item (yyvsp)), False) 
-			yyval := yyval59
+yyval59 := new_old_routine_creation_as (yyvs58.item (yyvsp58), new_operand_as (Void, yyvs33.item (yyvsp33 - 1), Void), yyvs33.item (yyvsp33), yyvs84.item (yyvsp84), True) 
 if yy_parsing_status = yyContinue then
-	yyssp := yyssp - 4
-	yyvsp := yyvsp - 3
-	yyvs.put (yyval, yyvsp)
+	yyssp := yyssp - 5
+	yyvsp59 := yyvsp59 + 1
+	yyvsp33 := yyvsp33 -2
+	yyvsp1 := yyvsp1 -1
+	yyvsp58 := yyvsp58 -1
+	yyvsp84 := yyvsp84 -1
+	if yyvsp59 >= yyvsc59 then
+		if yyvs59 = Void then
+			debug ("GEYACC")
+				std.error.put_line ("Create yyvs59")
+			end
+			create yyspecial_routines59
+			yyvsc59 := yyInitial_yyvs_size
+			yyvs59 := yyspecial_routines59.make (yyvsc59)
+		else
+			debug ("GEYACC")
+				std.error.put_line ("Resize yyvs59")
+			end
+			yyvsc59 := yyvsc59 + yyInitial_yyvs_size
+			yyvs59 := yyspecial_routines59.resize (yyvs59, yyvsc59)
+		end
+	end
+	yyvs59.put (yyval59, yyvsp59)
 end
 		end
 
 	yy_do_action_295 is
-			--|#line 1573 "eiffel.y"
+			--|#line <not available> "eiffel.y"
 		local
 			yyval59: PAIR [ROUTINE_CREATION_AS, TOKEN_LOCATION]
 		do
---|#line 1573 "eiffel.y"
+--|#line <not available> "eiffel.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'eiffel.y' at line 1573")
+	std.error.put_line ("Executing parser user-code from file 'eiffel.y' at line <not available>")
 end
 
-
-yyval59 := new_old_routine_creation_as (yytype58 (yyvs.item (yyvsp - 2)), new_operand_as (Void, yytype33 (yyvs.item (yyvsp - 4)), Void), yytype33 (yyvs.item (yyvsp - 1)), yytype84 (yyvs.item (yyvsp)), True) 
-			yyval := yyval59
+yyval59 := new_old_routine_creation_as (yyvs58.item (yyvsp58), new_operand_as (Void, Void, yyvs25.item (yyvsp25)), yyvs33.item (yyvsp33), yyvs84.item (yyvsp84), True) 
 if yy_parsing_status = yyContinue then
-	yyssp := yyssp - 5
-	yyvsp := yyvsp - 4
-	yyvs.put (yyval, yyvsp)
+	yyssp := yyssp - 7
+	yyvsp59 := yyvsp59 + 1
+	yyvsp1 := yyvsp1 -3
+	yyvsp25 := yyvsp25 -1
+	yyvsp58 := yyvsp58 -1
+	yyvsp33 := yyvsp33 -1
+	yyvsp84 := yyvsp84 -1
+	if yyvsp59 >= yyvsc59 then
+		if yyvs59 = Void then
+			debug ("GEYACC")
+				std.error.put_line ("Create yyvs59")
+			end
+			create yyspecial_routines59
+			yyvsc59 := yyInitial_yyvs_size
+			yyvs59 := yyspecial_routines59.make (yyvsc59)
+		else
+			debug ("GEYACC")
+				std.error.put_line ("Resize yyvs59")
+			end
+			yyvsc59 := yyvsc59 + yyInitial_yyvs_size
+			yyvs59 := yyspecial_routines59.resize (yyvs59, yyvsc59)
+		end
+	end
+	yyvs59.put (yyval59, yyvsp59)
 end
 		end
 
 	yy_do_action_296 is
-			--|#line 1575 "eiffel.y"
+			--|#line <not available> "eiffel.y"
 		local
 			yyval59: PAIR [ROUTINE_CREATION_AS, TOKEN_LOCATION]
 		do
---|#line 1575 "eiffel.y"
+--|#line <not available> "eiffel.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'eiffel.y' at line 1575")
+	std.error.put_line ("Executing parser user-code from file 'eiffel.y' at line <not available>")
 end
 
-
-yyval59 := new_old_routine_creation_as (yytype58 (yyvs.item (yyvsp - 2)), new_operand_as (Void, Void, yytype25 (yyvs.item (yyvsp - 5))), yytype33 (yyvs.item (yyvsp - 1)), yytype84 (yyvs.item (yyvsp)), True) 
-			yyval := yyval59
+yyval59 := new_old_routine_creation_as (yyvs58.item (yyvsp58), new_result_operand_as, yyvs33.item (yyvsp33), yyvs84.item (yyvsp84), True) 
 if yy_parsing_status = yyContinue then
-	yyssp := yyssp - 7
-	yyvsp := yyvsp - 6
-	yyvs.put (yyval, yyvsp)
+	yyssp := yyssp - 5
+	yyvsp59 := yyvsp59 + 1
+	yyvsp1 := yyvsp1 -2
+	yyvsp58 := yyvsp58 -1
+	yyvsp33 := yyvsp33 -1
+	yyvsp84 := yyvsp84 -1
+	if yyvsp59 >= yyvsc59 then
+		if yyvs59 = Void then
+			debug ("GEYACC")
+				std.error.put_line ("Create yyvs59")
+			end
+			create yyspecial_routines59
+			yyvsc59 := yyInitial_yyvs_size
+			yyvs59 := yyspecial_routines59.make (yyvsc59)
+		else
+			debug ("GEYACC")
+				std.error.put_line ("Resize yyvs59")
+			end
+			yyvsc59 := yyvsc59 + yyInitial_yyvs_size
+			yyvs59 := yyspecial_routines59.resize (yyvs59, yyvsc59)
+		end
+	end
+	yyvs59.put (yyval59, yyvsp59)
 end
 		end
 
 	yy_do_action_297 is
-			--|#line 1577 "eiffel.y"
+			--|#line <not available> "eiffel.y"
 		local
 			yyval59: PAIR [ROUTINE_CREATION_AS, TOKEN_LOCATION]
 		do
---|#line 1577 "eiffel.y"
+--|#line <not available> "eiffel.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'eiffel.y' at line 1577")
+	std.error.put_line ("Executing parser user-code from file 'eiffel.y' at line <not available>")
 end
 
-
-yyval59 := new_old_routine_creation_as (yytype58 (yyvs.item (yyvsp - 2)), new_result_operand_as, yytype33 (yyvs.item (yyvsp - 1)), yytype84 (yyvs.item (yyvsp)), True) 
-			yyval := yyval59
+yyval59 := new_old_routine_creation_as (yyvs58.item (yyvsp58), new_operand_as (Void, Void, Void), yyvs33.item (yyvsp33), yyvs84.item (yyvsp84), True) 
 if yy_parsing_status = yyContinue then
 	yyssp := yyssp - 5
-	yyvsp := yyvsp - 4
-	yyvs.put (yyval, yyvsp)
+	yyvsp59 := yyvsp59 + 1
+	yyvsp1 := yyvsp1 -2
+	yyvsp58 := yyvsp58 -1
+	yyvsp33 := yyvsp33 -1
+	yyvsp84 := yyvsp84 -1
+	if yyvsp59 >= yyvsc59 then
+		if yyvs59 = Void then
+			debug ("GEYACC")
+				std.error.put_line ("Create yyvs59")
+			end
+			create yyspecial_routines59
+			yyvsc59 := yyInitial_yyvs_size
+			yyvs59 := yyspecial_routines59.make (yyvsc59)
+		else
+			debug ("GEYACC")
+				std.error.put_line ("Resize yyvs59")
+			end
+			yyvsc59 := yyvsc59 + yyInitial_yyvs_size
+			yyvs59 := yyspecial_routines59.resize (yyvs59, yyvsc59)
+		end
+	end
+	yyvs59.put (yyval59, yyvsp59)
 end
 		end
 
 	yy_do_action_298 is
-			--|#line 1579 "eiffel.y"
+			--|#line <not available> "eiffel.y"
 		local
 			yyval59: PAIR [ROUTINE_CREATION_AS, TOKEN_LOCATION]
 		do
---|#line 1579 "eiffel.y"
+--|#line <not available> "eiffel.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'eiffel.y' at line 1579")
+	std.error.put_line ("Executing parser user-code from file 'eiffel.y' at line <not available>")
 end
 
-
-yyval59 := new_old_routine_creation_as (yytype58 (yyvs.item (yyvsp - 2)), new_operand_as (Void, Void, Void), yytype33 (yyvs.item (yyvsp - 1)), yytype84 (yyvs.item (yyvsp)), True) 
-			yyval := yyval59
+yyval59 := new_old_routine_creation_as (yyvs58.item (yyvsp58), new_operand_as (yyvs63.item (yyvsp63), Void, Void), yyvs33.item (yyvsp33), yyvs84.item (yyvsp84), True) 
 if yy_parsing_status = yyContinue then
-	yyssp := yyssp - 5
-	yyvsp := yyvsp - 4
-	yyvs.put (yyval, yyvsp)
+	yyssp := yyssp - 6
+	yyvsp59 := yyvsp59 + 1
+	yyvsp1 := yyvsp1 -2
+	yyvsp63 := yyvsp63 -1
+	yyvsp58 := yyvsp58 -1
+	yyvsp33 := yyvsp33 -1
+	yyvsp84 := yyvsp84 -1
+	if yyvsp59 >= yyvsc59 then
+		if yyvs59 = Void then
+			debug ("GEYACC")
+				std.error.put_line ("Create yyvs59")
+			end
+			create yyspecial_routines59
+			yyvsc59 := yyInitial_yyvs_size
+			yyvs59 := yyspecial_routines59.make (yyvsc59)
+		else
+			debug ("GEYACC")
+				std.error.put_line ("Resize yyvs59")
+			end
+			yyvsc59 := yyvsc59 + yyInitial_yyvs_size
+			yyvs59 := yyspecial_routines59.resize (yyvs59, yyvsc59)
+		end
+	end
+	yyvs59.put (yyval59, yyvsp59)
 end
 		end
 
 	yy_do_action_299 is
-			--|#line 1581 "eiffel.y"
+			--|#line <not available> "eiffel.y"
 		local
 			yyval59: PAIR [ROUTINE_CREATION_AS, TOKEN_LOCATION]
 		do
---|#line 1581 "eiffel.y"
+--|#line <not available> "eiffel.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'eiffel.y' at line 1581")
+	std.error.put_line ("Executing parser user-code from file 'eiffel.y' at line <not available>")
 end
 
-
-yyval59 := new_old_routine_creation_as (yytype58 (yyvs.item (yyvsp - 2)), new_operand_as (yytype63 (yyvs.item (yyvsp - 4)), Void, Void), yytype33 (yyvs.item (yyvsp - 1)), yytype84 (yyvs.item (yyvsp)), True) 
-			yyval := yyval59
+yyval59 := new_old_routine_creation_as (yyvs58.item (yyvsp58), Void, yyvs33.item (yyvsp33), yyvs84.item (yyvsp84), True) 
 if yy_parsing_status = yyContinue then
-	yyssp := yyssp - 6
-	yyvsp := yyvsp - 5
-	yyvs.put (yyval, yyvsp)
+	yyssp := yyssp - 5
+	yyvsp59 := yyvsp59 + 1
+	yyvsp1 := yyvsp1 -2
+	yyvsp58 := yyvsp58 -1
+	yyvsp33 := yyvsp33 -1
+	yyvsp84 := yyvsp84 -1
+	if yyvsp59 >= yyvsc59 then
+		if yyvs59 = Void then
+			debug ("GEYACC")
+				std.error.put_line ("Create yyvs59")
+			end
+			create yyspecial_routines59
+			yyvsc59 := yyInitial_yyvs_size
+			yyvs59 := yyspecial_routines59.make (yyvsc59)
+		else
+			debug ("GEYACC")
+				std.error.put_line ("Resize yyvs59")
+			end
+			yyvsc59 := yyvsc59 + yyInitial_yyvs_size
+			yyvs59 := yyspecial_routines59.resize (yyvs59, yyvsc59)
+		end
+	end
+	yyvs59.put (yyval59, yyvsp59)
 end
 		end
 
 	yy_do_action_300 is
-			--|#line 1583 "eiffel.y"
+			--|#line <not available> "eiffel.y"
 		local
-			yyval59: PAIR [ROUTINE_CREATION_AS, TOKEN_LOCATION]
+			yyval46: OPERAND_AS
 		do
---|#line 1583 "eiffel.y"
+--|#line <not available> "eiffel.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'eiffel.y' at line 1583")
+	std.error.put_line ("Executing parser user-code from file 'eiffel.y' at line <not available>")
 end
 
-
-yyval59 := new_old_routine_creation_as (yytype58 (yyvs.item (yyvsp - 2)), Void, yytype33 (yyvs.item (yyvsp - 1)), yytype84 (yyvs.item (yyvsp)), True) 
-			yyval := yyval59
+yyval46 := new_operand_as (Void, yyvs33.item (yyvsp33), Void) 
 if yy_parsing_status = yyContinue then
-	yyssp := yyssp - 5
-	yyvsp := yyvsp - 4
-	yyvs.put (yyval, yyvsp)
+	yyssp := yyssp - 1
+	yyvsp46 := yyvsp46 + 1
+	yyvsp33 := yyvsp33 -1
+	if yyvsp46 >= yyvsc46 then
+		if yyvs46 = Void then
+			debug ("GEYACC")
+				std.error.put_line ("Create yyvs46")
+			end
+			create yyspecial_routines46
+			yyvsc46 := yyInitial_yyvs_size
+			yyvs46 := yyspecial_routines46.make (yyvsc46)
+		else
+			debug ("GEYACC")
+				std.error.put_line ("Resize yyvs46")
+			end
+			yyvsc46 := yyvsc46 + yyInitial_yyvs_size
+			yyvs46 := yyspecial_routines46.resize (yyvs46, yyvsc46)
+		end
+	end
+	yyvs46.put (yyval46, yyvsp46)
 end
 		end
 
 	yy_do_action_301 is
-			--|#line 1587 "eiffel.y"
+			--|#line <not available> "eiffel.y"
 		local
 			yyval46: OPERAND_AS
 		do
---|#line 1587 "eiffel.y"
+--|#line <not available> "eiffel.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'eiffel.y' at line 1587")
+	std.error.put_line ("Executing parser user-code from file 'eiffel.y' at line <not available>")
 end
 
-
-yyval46 := new_operand_as (Void, yytype33 (yyvs.item (yyvsp)), Void) 
-			yyval := yyval46
+yyval46 := new_operand_as (Void, Void, yyvs25.item (yyvsp25)) 
 if yy_parsing_status = yyContinue then
-	yyssp := yyssp - 1
-	yyvs.put (yyval, yyvsp)
+	yyssp := yyssp - 3
+	yyvsp46 := yyvsp46 + 1
+	yyvsp1 := yyvsp1 -2
+	yyvsp25 := yyvsp25 -1
+	if yyvsp46 >= yyvsc46 then
+		if yyvs46 = Void then
+			debug ("GEYACC")
+				std.error.put_line ("Create yyvs46")
+			end
+			create yyspecial_routines46
+			yyvsc46 := yyInitial_yyvs_size
+			yyvs46 := yyspecial_routines46.make (yyvsc46)
+		else
+			debug ("GEYACC")
+				std.error.put_line ("Resize yyvs46")
+			end
+			yyvsc46 := yyvsc46 + yyInitial_yyvs_size
+			yyvs46 := yyspecial_routines46.resize (yyvs46, yyvsc46)
+		end
+	end
+	yyvs46.put (yyval46, yyvsp46)
 end
 		end
 
 	yy_do_action_302 is
-			--|#line 1589 "eiffel.y"
+			--|#line <not available> "eiffel.y"
 		local
 			yyval46: OPERAND_AS
 		do
---|#line 1589 "eiffel.y"
+--|#line <not available> "eiffel.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'eiffel.y' at line 1589")
+	std.error.put_line ("Executing parser user-code from file 'eiffel.y' at line <not available>")
 end
 
-
-yyval46 := new_operand_as (Void, Void, yytype25 (yyvs.item (yyvsp - 1))) 
-			yyval := yyval46
+yyval46 := new_result_operand_as 
 if yy_parsing_status = yyContinue then
-	yyssp := yyssp - 3
-	yyvsp := yyvsp - 2
-	yyvs.put (yyval, yyvsp)
+	yyssp := yyssp - 1
+	yyvsp46 := yyvsp46 + 1
+	yyvsp1 := yyvsp1 -1
+	if yyvsp46 >= yyvsc46 then
+		if yyvs46 = Void then
+			debug ("GEYACC")
+				std.error.put_line ("Create yyvs46")
+			end
+			create yyspecial_routines46
+			yyvsc46 := yyInitial_yyvs_size
+			yyvs46 := yyspecial_routines46.make (yyvsc46)
+		else
+			debug ("GEYACC")
+				std.error.put_line ("Resize yyvs46")
+			end
+			yyvsc46 := yyvsc46 + yyInitial_yyvs_size
+			yyvs46 := yyspecial_routines46.resize (yyvs46, yyvsc46)
+		end
+	end
+	yyvs46.put (yyval46, yyvsp46)
 end
 		end
 
 	yy_do_action_303 is
-			--|#line 1591 "eiffel.y"
+			--|#line <not available> "eiffel.y"
 		local
 			yyval46: OPERAND_AS
 		do
---|#line 1591 "eiffel.y"
+--|#line <not available> "eiffel.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'eiffel.y' at line 1591")
+	std.error.put_line ("Executing parser user-code from file 'eiffel.y' at line <not available>")
 end
 
-
-yyval46 := new_result_operand_as 
-			yyval := yyval46
+yyval46 := new_operand_as (Void, Void, Void) 
 if yy_parsing_status = yyContinue then
 	yyssp := yyssp - 1
-	yyvs.put (yyval, yyvsp)
+	yyvsp46 := yyvsp46 + 1
+	yyvsp1 := yyvsp1 -1
+	if yyvsp46 >= yyvsc46 then
+		if yyvs46 = Void then
+			debug ("GEYACC")
+				std.error.put_line ("Create yyvs46")
+			end
+			create yyspecial_routines46
+			yyvsc46 := yyInitial_yyvs_size
+			yyvs46 := yyspecial_routines46.make (yyvsc46)
+		else
+			debug ("GEYACC")
+				std.error.put_line ("Resize yyvs46")
+			end
+			yyvsc46 := yyvsc46 + yyInitial_yyvs_size
+			yyvs46 := yyspecial_routines46.resize (yyvs46, yyvsc46)
+		end
+	end
+	yyvs46.put (yyval46, yyvsp46)
 end
 		end
 
 	yy_do_action_304 is
-			--|#line 1593 "eiffel.y"
+			--|#line <not available> "eiffel.y"
 		local
 			yyval46: OPERAND_AS
 		do
---|#line 1593 "eiffel.y"
+--|#line <not available> "eiffel.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'eiffel.y' at line 1593")
+	std.error.put_line ("Executing parser user-code from file 'eiffel.y' at line <not available>")
 end
 
-
-yyval46 := new_operand_as (Void, Void, Void) 
-			yyval := yyval46
+yyval46 := new_operand_as (yyvs63.item (yyvsp63), Void, Void)
 if yy_parsing_status = yyContinue then
 	yyssp := yyssp - 1
-	yyvs.put (yyval, yyvsp)
+	yyvsp46 := yyvsp46 + 1
+	yyvsp63 := yyvsp63 -1
+	if yyvsp46 >= yyvsc46 then
+		if yyvs46 = Void then
+			debug ("GEYACC")
+				std.error.put_line ("Create yyvs46")
+			end
+			create yyspecial_routines46
+			yyvsc46 := yyInitial_yyvs_size
+			yyvs46 := yyspecial_routines46.make (yyvsc46)
+		else
+			debug ("GEYACC")
+				std.error.put_line ("Resize yyvs46")
+			end
+			yyvsc46 := yyvsc46 + yyInitial_yyvs_size
+			yyvs46 := yyspecial_routines46.resize (yyvs46, yyvsc46)
+		end
+	end
+	yyvs46.put (yyval46, yyvsp46)
 end
 		end
 
 	yy_do_action_305 is
-			--|#line 1595 "eiffel.y"
+			--|#line <not available> "eiffel.y"
 		local
 			yyval46: OPERAND_AS
 		do
---|#line 1595 "eiffel.y"
+--|#line <not available> "eiffel.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'eiffel.y' at line 1595")
+	std.error.put_line ("Executing parser user-code from file 'eiffel.y' at line <not available>")
 end
 
-
-yyval46 := new_operand_as (yytype63 (yyvs.item (yyvsp - 1)), Void, Void)
-			yyval := yyval46
+yyval46 := Void 
 if yy_parsing_status = yyContinue then
-	yyssp := yyssp - 3
-	yyvsp := yyvsp - 2
-	yyvs.put (yyval, yyvsp)
+	yyssp := yyssp - 1
+	yyvsp46 := yyvsp46 + 1
+	yyvsp1 := yyvsp1 -1
+	if yyvsp46 >= yyvsc46 then
+		if yyvs46 = Void then
+			debug ("GEYACC")
+				std.error.put_line ("Create yyvs46")
+			end
+			create yyspecial_routines46
+			yyvsc46 := yyInitial_yyvs_size
+			yyvs46 := yyspecial_routines46.make (yyvsc46)
+		else
+			debug ("GEYACC")
+				std.error.put_line ("Resize yyvs46")
+			end
+			yyvsc46 := yyvsc46 + yyInitial_yyvs_size
+			yyvs46 := yyspecial_routines46.resize (yyvs46, yyvsc46)
+		end
+	end
+	yyvs46.put (yyval46, yyvsp46)
 end
 		end
 
 	yy_do_action_306 is
-			--|#line 1597 "eiffel.y"
+			--|#line <not available> "eiffel.y"
 		local
-			yyval46: OPERAND_AS
+			yyval84: EIFFEL_LIST [OPERAND_AS]
 		do
---|#line 1597 "eiffel.y"
+--|#line <not available> "eiffel.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'eiffel.y' at line 1597")
+	std.error.put_line ("Executing parser user-code from file 'eiffel.y' at line <not available>")
 end
 
 
-yyval46 := Void 
-			yyval := yyval46
 if yy_parsing_status = yyContinue then
-	yyssp := yyssp - 1
-	yyvs.put (yyval, yyvsp)
+	yyssp := yyssp - 0
+	yyvsp84 := yyvsp84 + 1
+	if yyvsp84 >= yyvsc84 then
+		if yyvs84 = Void then
+			debug ("GEYACC")
+				std.error.put_line ("Create yyvs84")
+			end
+			create yyspecial_routines84
+			yyvsc84 := yyInitial_yyvs_size
+			yyvs84 := yyspecial_routines84.make (yyvsc84)
+		else
+			debug ("GEYACC")
+				std.error.put_line ("Resize yyvs84")
+			end
+			yyvsc84 := yyvsc84 + yyInitial_yyvs_size
+			yyvs84 := yyspecial_routines84.resize (yyvs84, yyvsc84)
+		end
+	end
+	yyvs84.put (yyval84, yyvsp84)
 end
 		end
 
 	yy_do_action_307 is
-			--|#line 1601 "eiffel.y"
+			--|#line <not available> "eiffel.y"
 		local
 			yyval84: EIFFEL_LIST [OPERAND_AS]
 		do
---|#line 1601 "eiffel.y"
+--|#line <not available> "eiffel.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'eiffel.y' at line 1601")
+	std.error.put_line ("Executing parser user-code from file 'eiffel.y' at line <not available>")
 end
 
 
-
-			yyval := yyval84
 if yy_parsing_status = yyContinue then
-	yyvsp := yyvsp + 1
-	if yyvsp >= yyvsc then
-		yyvsc := yyvsc + yyInitial_stack_size
-		yyvs := FIXED_ARRAY_.resize (yyvs, yyvsc)
-		debug ("GEYACC")
-			std.error.put_string ("Stack (yyvs) size increased to ")
-			std.error.put_integer (yyvsc)
-			std.error.put_new_line
+	yyssp := yyssp - 2
+	yyvsp84 := yyvsp84 + 1
+	yyvsp1 := yyvsp1 -2
+	if yyvsp84 >= yyvsc84 then
+		if yyvs84 = Void then
+			debug ("GEYACC")
+				std.error.put_line ("Create yyvs84")
+			end
+			create yyspecial_routines84
+			yyvsc84 := yyInitial_yyvs_size
+			yyvs84 := yyspecial_routines84.make (yyvsc84)
+		else
+			debug ("GEYACC")
+				std.error.put_line ("Resize yyvs84")
+			end
+			yyvsc84 := yyvsc84 + yyInitial_yyvs_size
+			yyvs84 := yyspecial_routines84.resize (yyvs84, yyvsc84)
 		end
 	end
-	yyvs.put (yyval, yyvsp)
+	yyvs84.put (yyval84, yyvsp84)
 end
 		end
 
 	yy_do_action_308 is
-			--|#line 1603 "eiffel.y"
+			--|#line <not available> "eiffel.y"
 		local
 			yyval84: EIFFEL_LIST [OPERAND_AS]
 		do
---|#line 1603 "eiffel.y"
+--|#line <not available> "eiffel.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'eiffel.y' at line 1603")
+	std.error.put_line ("Executing parser user-code from file 'eiffel.y' at line <not available>")
 end
 
-
-
-			yyval := yyval84
+yyval84 := yyvs84.item (yyvsp84) 
 if yy_parsing_status = yyContinue then
-	yyssp := yyssp - 2
-	yyvsp := yyvsp - 1
-	yyvs.put (yyval, yyvsp)
+	yyssp := yyssp - 3
+	yyvsp1 := yyvsp1 -2
+	yyvs84.put (yyval84, yyvsp84)
 end
 		end
 
 	yy_do_action_309 is
-			--|#line 1605 "eiffel.y"
+			--|#line <not available> "eiffel.y"
 		local
 			yyval84: EIFFEL_LIST [OPERAND_AS]
 		do
---|#line 1605 "eiffel.y"
+--|#line <not available> "eiffel.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'eiffel.y' at line 1605")
+	std.error.put_line ("Executing parser user-code from file 'eiffel.y' at line <not available>")
 end
 
-
-yyval84 := yytype84 (yyvs.item (yyvsp - 1)) 
-			yyval := yyval84
+				yyval84 := new_eiffel_list_operand_as (Initial_operand_list_size)
+				yyval84.extend (yyvs46.item (yyvsp46))
+			
 if yy_parsing_status = yyContinue then
-	yyssp := yyssp - 3
-	yyvsp := yyvsp - 2
-	yyvs.put (yyval, yyvsp)
+	yyssp := yyssp - 1
+	yyvsp84 := yyvsp84 + 1
+	yyvsp46 := yyvsp46 -1
+	if yyvsp84 >= yyvsc84 then
+		if yyvs84 = Void then
+			debug ("GEYACC")
+				std.error.put_line ("Create yyvs84")
+			end
+			create yyspecial_routines84
+			yyvsc84 := yyInitial_yyvs_size
+			yyvs84 := yyspecial_routines84.make (yyvsc84)
+		else
+			debug ("GEYACC")
+				std.error.put_line ("Resize yyvs84")
+			end
+			yyvsc84 := yyvsc84 + yyInitial_yyvs_size
+			yyvs84 := yyspecial_routines84.resize (yyvs84, yyvsc84)
+		end
+	end
+	yyvs84.put (yyval84, yyvsp84)
 end
 		end
 
 	yy_do_action_310 is
-			--|#line 1609 "eiffel.y"
+			--|#line <not available> "eiffel.y"
 		local
 			yyval84: EIFFEL_LIST [OPERAND_AS]
 		do
---|#line 1609 "eiffel.y"
+--|#line <not available> "eiffel.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'eiffel.y' at line 1609")
+	std.error.put_line ("Executing parser user-code from file 'eiffel.y' at line <not available>")
 end
 
-
-				yyval84 := new_eiffel_list_operand_as (Initial_operand_list_size)
-				yyval84.extend (yytype46 (yyvs.item (yyvsp)))
+				yyval84 := yyvs84.item (yyvsp84)
+				yyval84.extend (yyvs46.item (yyvsp46))
 			
-			yyval := yyval84
 if yy_parsing_status = yyContinue then
-	yyssp := yyssp - 1
-	yyvs.put (yyval, yyvsp)
+	yyssp := yyssp - 3
+	yyvsp1 := yyvsp1 -1
+	yyvsp46 := yyvsp46 -1
+	yyvs84.put (yyval84, yyvsp84)
 end
 		end
 
 	yy_do_action_311 is
-			--|#line 1614 "eiffel.y"
+			--|#line <not available> "eiffel.y"
 		local
-			yyval84: EIFFEL_LIST [OPERAND_AS]
+			yyval46: OPERAND_AS
 		do
---|#line 1614 "eiffel.y"
+--|#line <not available> "eiffel.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'eiffel.y' at line 1614")
+	std.error.put_line ("Executing parser user-code from file 'eiffel.y' at line <not available>")
 end
 
-
-				yyval84 := yytype84 (yyvs.item (yyvsp - 2))
-				yyval84.extend (yytype46 (yyvs.item (yyvsp)))
-			
-			yyval := yyval84
+yyval46 := new_operand_as (Void, Void, Void) 
 if yy_parsing_status = yyContinue then
-	yyssp := yyssp - 3
-	yyvsp := yyvsp - 2
-	yyvs.put (yyval, yyvsp)
+	yyssp := yyssp - 1
+	yyvsp46 := yyvsp46 + 1
+	yyvsp1 := yyvsp1 -1
+	if yyvsp46 >= yyvsc46 then
+		if yyvs46 = Void then
+			debug ("GEYACC")
+				std.error.put_line ("Create yyvs46")
+			end
+			create yyspecial_routines46
+			yyvsc46 := yyInitial_yyvs_size
+			yyvs46 := yyspecial_routines46.make (yyvsc46)
+		else
+			debug ("GEYACC")
+				std.error.put_line ("Resize yyvs46")
+			end
+			yyvsc46 := yyvsc46 + yyInitial_yyvs_size
+			yyvs46 := yyspecial_routines46.resize (yyvs46, yyvsc46)
+		end
+	end
+	yyvs46.put (yyval46, yyvsp46)
 end
 		end
 
 	yy_do_action_312 is
-			--|#line 1621 "eiffel.y"
+			--|#line <not available> "eiffel.y"
 		local
 			yyval46: OPERAND_AS
 		do
---|#line 1621 "eiffel.y"
+--|#line <not available> "eiffel.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'eiffel.y' at line 1621")
+	std.error.put_line ("Executing parser user-code from file 'eiffel.y' at line <not available>")
 end
 
-
-yyval46 := new_operand_as (Void, Void, Void) 
-			yyval := yyval46
+yyval46 := new_operand_as (yyvs63.item (yyvsp63), Void, Void) 
 if yy_parsing_status = yyContinue then
-	yyssp := yyssp - 1
-	yyvs.put (yyval, yyvsp)
+	yyssp := yyssp - 2
+	yyvsp46 := yyvsp46 + 1
+	yyvsp1 := yyvsp1 -1
+	yyvsp63 := yyvsp63 -1
+	if yyvsp46 >= yyvsc46 then
+		if yyvs46 = Void then
+			debug ("GEYACC")
+				std.error.put_line ("Create yyvs46")
+			end
+			create yyspecial_routines46
+			yyvsc46 := yyInitial_yyvs_size
+			yyvs46 := yyspecial_routines46.make (yyvsc46)
+		else
+			debug ("GEYACC")
+				std.error.put_line ("Resize yyvs46")
+			end
+			yyvsc46 := yyvsc46 + yyInitial_yyvs_size
+			yyvs46 := yyspecial_routines46.resize (yyvs46, yyvsc46)
+		end
+	end
+	yyvs46.put (yyval46, yyvsp46)
 end
 		end
 
 	yy_do_action_313 is
-			--|#line 1627 "eiffel.y"
+			--|#line <not available> "eiffel.y"
 		local
 			yyval46: OPERAND_AS
 		do
---|#line 1627 "eiffel.y"
+--|#line <not available> "eiffel.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'eiffel.y' at line 1627")
+	std.error.put_line ("Executing parser user-code from file 'eiffel.y' at line <not available>")
 end
 
-
-yyval46 := new_operand_as (new_class_type (yytype92 (yyvs.item (yyvsp - 1)), Void, False, False), Void, Void) 
-			yyval := yyval46
+yyval46 := new_operand_as (Void, Void, yyvs25.item (yyvsp25)) 
 if yy_parsing_status = yyContinue then
-	yyssp := yyssp - 3
-	yyvsp := yyvsp - 2
-	yyvs.put (yyval, yyvsp)
+	yyssp := yyssp - 1
+	yyvsp46 := yyvsp46 + 1
+	yyvsp25 := yyvsp25 -1
+	if yyvsp46 >= yyvsc46 then
+		if yyvs46 = Void then
+			debug ("GEYACC")
+				std.error.put_line ("Create yyvs46")
+			end
+			create yyspecial_routines46
+			yyvsc46 := yyInitial_yyvs_size
+			yyvs46 := yyspecial_routines46.make (yyvsc46)
+		else
+			debug ("GEYACC")
+				std.error.put_line ("Resize yyvs46")
+			end
+			yyvsc46 := yyvsc46 + yyInitial_yyvs_size
+			yyvs46 := yyspecial_routines46.resize (yyvs46, yyvsc46)
+		end
+	end
+	yyvs46.put (yyval46, yyvsp46)
 end
 		end
 
 	yy_do_action_314 is
-			--|#line 1629 "eiffel.y"
+			--|#line <not available> "eiffel.y"
 		local
-			yyval46: OPERAND_AS
+			yyval19: CREATION_AS
 		do
---|#line 1629 "eiffel.y"
+--|#line <not available> "eiffel.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'eiffel.y' at line 1629")
+	std.error.put_line ("Executing parser user-code from file 'eiffel.y' at line <not available>")
 end
 
-
-yyval46 := new_operand_as (new_class_type (yytype92 (yyvs.item (yyvsp - 2)), yytype89 (yyvs.item (yyvsp - 1)), False, False), Void, Void) 
-			yyval := yyval46
+				yyval19 := new_creation_as (yyvs63.item (yyvsp63), yyvs2.item (yyvsp2), yyvs4.item (yyvsp4), yyvs58.item (yyvsp58))
+				if has_syntax_warning then
+					Error_handler.insert_warning (
+						create {SYNTAX_WARNING}.make (yyvs58.item (yyvsp58).start_position,
+						yyvs58.item (yyvsp58).end_position, filename, 0, "Use keyword `create' instead."))
+				end
+			
 if yy_parsing_status = yyContinue then
-	yyssp := yyssp - 4
-	yyvsp := yyvsp - 3
-	yyvs.put (yyval, yyvsp)
+	yyssp := yyssp - 6
+	yyvsp19 := yyvsp19 + 1
+	yyvsp58 := yyvsp58 -1
+	yyvsp1 := yyvsp1 -2
+	yyvsp63 := yyvsp63 -1
+	yyvsp2 := yyvsp2 -1
+	yyvsp4 := yyvsp4 -1
+	if yyvsp19 >= yyvsc19 then
+		if yyvs19 = Void then
+			debug ("GEYACC")
+				std.error.put_line ("Create yyvs19")
+			end
+			create yyspecial_routines19
+			yyvsc19 := yyInitial_yyvs_size
+			yyvs19 := yyspecial_routines19.make (yyvsc19)
+		else
+			debug ("GEYACC")
+				std.error.put_line ("Resize yyvs19")
+			end
+			yyvsc19 := yyvsc19 + yyInitial_yyvs_size
+			yyvs19 := yyspecial_routines19.resize (yyvs19, yyvsc19)
+		end
+	end
+	yyvs19.put (yyval19, yyvsp19)
 end
 		end
 
 	yy_do_action_315 is
-			--|#line 1631 "eiffel.y"
+			--|#line <not available> "eiffel.y"
 		local
-			yyval46: OPERAND_AS
+			yyval19: CREATION_AS
 		do
---|#line 1631 "eiffel.y"
+--|#line <not available> "eiffel.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'eiffel.y' at line 1631")
+	std.error.put_line ("Executing parser user-code from file 'eiffel.y' at line <not available>")
 end
 
-
-				yyval46 := new_operand_as (new_class_type (yytype92 (yyvs.item (yyvsp - 2)), yytype89 (yyvs.item (yyvsp - 1)), True, False), Void, Void)
-				if has_syntax_warning then
-					Error_handler.insert_warning (
-						create {SYNTAX_WARNING}.make (yytype58 (yyvs.item (yyvsp - 5)).start_position,
-						yytype58 (yyvs.item (yyvsp - 5)).end_position, filename, 0, "Make an expanded version of the base class associated with this type."))
-				end
-		
-			yyval := yyval46
+yyval19 := new_creation_as (Void, yyvs2.item (yyvsp2), yyvs4.item (yyvsp4), yyvs58.item (yyvsp58)) 
 if yy_parsing_status = yyContinue then
-	yyssp := yyssp - 6
-	yyvsp := yyvsp - 5
-	yyvs.put (yyval, yyvsp)
+	yyssp := yyssp - 4
+	yyvsp19 := yyvsp19 + 1
+	yyvsp58 := yyvsp58 -1
+	yyvsp1 := yyvsp1 -1
+	yyvsp2 := yyvsp2 -1
+	yyvsp4 := yyvsp4 -1
+	if yyvsp19 >= yyvsc19 then
+		if yyvs19 = Void then
+			debug ("GEYACC")
+				std.error.put_line ("Create yyvs19")
+			end
+			create yyspecial_routines19
+			yyvsc19 := yyInitial_yyvs_size
+			yyvs19 := yyspecial_routines19.make (yyvsc19)
+		else
+			debug ("GEYACC")
+				std.error.put_line ("Resize yyvs19")
+			end
+			yyvsc19 := yyvsc19 + yyInitial_yyvs_size
+			yyvs19 := yyspecial_routines19.resize (yyvs19, yyvsc19)
+		end
+	end
+	yyvs19.put (yyval19, yyvsp19)
 end
 		end
 
 	yy_do_action_316 is
-			--|#line 1640 "eiffel.y"
+			--|#line <not available> "eiffel.y"
 		local
-			yyval46: OPERAND_AS
+			yyval19: CREATION_AS
 		do
---|#line 1640 "eiffel.y"
+--|#line <not available> "eiffel.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'eiffel.y' at line 1640")
+	std.error.put_line ("Executing parser user-code from file 'eiffel.y' at line <not available>")
 end
 
-
-yyval46 := new_operand_as (new_class_type (yytype92 (yyvs.item (yyvsp - 2)), yytype89 (yyvs.item (yyvsp - 1)), False, True), Void, Void) 
-			yyval := yyval46
+yyval19 := new_creation_as (yyvs63.item (yyvsp63), yyvs2.item (yyvsp2), yyvs4.item (yyvsp4), yyvs58.item (yyvsp58)) 
 if yy_parsing_status = yyContinue then
 	yyssp := yyssp - 5
-	yyvsp := yyvsp - 4
-	yyvs.put (yyval, yyvsp)
+	yyvsp19 := yyvsp19 + 1
+	yyvsp58 := yyvsp58 -1
+	yyvsp1 := yyvsp1 -1
+	yyvsp63 := yyvsp63 -1
+	yyvsp2 := yyvsp2 -1
+	yyvsp4 := yyvsp4 -1
+	if yyvsp19 >= yyvsc19 then
+		if yyvs19 = Void then
+			debug ("GEYACC")
+				std.error.put_line ("Create yyvs19")
+			end
+			create yyspecial_routines19
+			yyvsc19 := yyInitial_yyvs_size
+			yyvs19 := yyspecial_routines19.make (yyvsc19)
+		else
+			debug ("GEYACC")
+				std.error.put_line ("Resize yyvs19")
+			end
+			yyvsc19 := yyvsc19 + yyInitial_yyvs_size
+			yyvs19 := yyspecial_routines19.resize (yyvs19, yyvsc19)
+		end
+	end
+	yyvs19.put (yyval19, yyvsp19)
 end
 		end
 
 	yy_do_action_317 is
-			--|#line 1642 "eiffel.y"
+			--|#line <not available> "eiffel.y"
 		local
-			yyval46: OPERAND_AS
+			yyval20: CREATION_EXPR_AS
 		do
---|#line 1642 "eiffel.y"
+--|#line <not available> "eiffel.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'eiffel.y' at line 1642")
+	std.error.put_line ("Executing parser user-code from file 'eiffel.y' at line <not available>")
 end
 
-
-yyval46 := new_operand_as (new_bits_as (yytype39 (yyvs.item (yyvsp - 1))), Void, Void) 
-			yyval := yyval46
+yyval20 := new_creation_expr_as (yyvs63.item (yyvsp63), yyvs4.item (yyvsp4), yyvs58.item (yyvsp58)) 
 if yy_parsing_status = yyContinue then
 	yyssp := yyssp - 4
-	yyvsp := yyvsp - 3
-	yyvs.put (yyval, yyvsp)
+	yyvsp20 := yyvsp20 + 1
+	yyvsp1 := yyvsp1 -1
+	yyvsp63 := yyvsp63 -1
+	yyvsp58 := yyvsp58 -1
+	yyvsp4 := yyvsp4 -1
+	if yyvsp20 >= yyvsc20 then
+		if yyvs20 = Void then
+			debug ("GEYACC")
+				std.error.put_line ("Create yyvs20")
+			end
+			create yyspecial_routines20
+			yyvsc20 := yyInitial_yyvs_size
+			yyvs20 := yyspecial_routines20.make (yyvsc20)
+		else
+			debug ("GEYACC")
+				std.error.put_line ("Resize yyvs20")
+			end
+			yyvsc20 := yyvsc20 + yyInitial_yyvs_size
+			yyvs20 := yyspecial_routines20.resize (yyvs20, yyvsc20)
+		end
+	end
+	yyvs20.put (yyval20, yyvsp20)
 end
 		end
 
 	yy_do_action_318 is
-			--|#line 1644 "eiffel.y"
+			--|#line <not available> "eiffel.y"
 		local
-			yyval46: OPERAND_AS
+			yyval20: CREATION_EXPR_AS
 		do
---|#line 1644 "eiffel.y"
+--|#line <not available> "eiffel.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'eiffel.y' at line 1644")
+	std.error.put_line ("Executing parser user-code from file 'eiffel.y' at line <not available>")
 end
 
-
-yyval46 := new_operand_as (new_bits_symbol_as (yytype33 (yyvs.item (yyvsp - 1))), Void, Void) 
-			yyval := yyval46
+				yyval20 := new_creation_expr_as (yyvs63.item (yyvsp63), yyvs4.item (yyvsp4), yyvs58.item (yyvsp58))
+				if has_syntax_warning then
+					Error_handler.insert_warning (
+						create {SYNTAX_WARNING}.make (yyvs58.item (yyvsp58).start_position,
+						yyvs58.item (yyvsp58).end_position, filename, 0, "Use keyword `create' instead."))
+				end
+			
 if yy_parsing_status = yyContinue then
-	yyssp := yyssp - 4
-	yyvsp := yyvsp - 3
-	yyvs.put (yyval, yyvsp)
+	yyssp := yyssp - 5
+	yyvsp20 := yyvsp20 + 1
+	yyvsp1 := yyvsp1 -2
+	yyvsp63 := yyvsp63 -1
+	yyvsp58 := yyvsp58 -1
+	yyvsp4 := yyvsp4 -1
+	if yyvsp20 >= yyvsc20 then
+		if yyvs20 = Void then
+			debug ("GEYACC")
+				std.error.put_line ("Create yyvs20")
+			end
+			create yyspecial_routines20
+			yyvsc20 := yyInitial_yyvs_size
+			yyvs20 := yyspecial_routines20.make (yyvsc20)
+		else
+			debug ("GEYACC")
+				std.error.put_line ("Resize yyvs20")
+			end
+			yyvsc20 := yyvsc20 + yyInitial_yyvs_size
+			yyvs20 := yyspecial_routines20.resize (yyvs20, yyvsc20)
+		end
+	end
+	yyvs20.put (yyval20, yyvsp20)
 end
 		end
 
 	yy_do_action_319 is
-			--|#line 1646 "eiffel.y"
+			--|#line <not available> "eiffel.y"
 		local
-			yyval46: OPERAND_AS
+			yyval63: TYPE_AS
 		do
---|#line 1646 "eiffel.y"
+--|#line <not available> "eiffel.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'eiffel.y' at line 1646")
+	std.error.put_line ("Executing parser user-code from file 'eiffel.y' at line <not available>")
 end
 
 
-yyval46 := new_operand_as (new_like_id_as (yytype33 (yyvs.item (yyvsp - 1))), Void, Void) 
-			yyval := yyval46
 if yy_parsing_status = yyContinue then
-	yyssp := yyssp - 4
-	yyvsp := yyvsp - 3
-	yyvs.put (yyval, yyvsp)
+	yyssp := yyssp - 0
+	yyvsp63 := yyvsp63 + 1
+	if yyvsp63 >= yyvsc63 then
+		if yyvs63 = Void then
+			debug ("GEYACC")
+				std.error.put_line ("Create yyvs63")
+			end
+			create yyspecial_routines63
+			yyvsc63 := yyInitial_yyvs_size
+			yyvs63 := yyspecial_routines63.make (yyvsc63)
+		else
+			debug ("GEYACC")
+				std.error.put_line ("Resize yyvs63")
+			end
+			yyvsc63 := yyvsc63 + yyInitial_yyvs_size
+			yyvs63 := yyspecial_routines63.resize (yyvs63, yyvsc63)
+		end
+	end
+	yyvs63.put (yyval63, yyvsp63)
 end
 		end
 
 	yy_do_action_320 is
-			--|#line 1648 "eiffel.y"
+			--|#line <not available> "eiffel.y"
 		local
-			yyval46: OPERAND_AS
+			yyval63: TYPE_AS
 		do
---|#line 1648 "eiffel.y"
+--|#line <not available> "eiffel.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'eiffel.y' at line 1648")
+	std.error.put_line ("Executing parser user-code from file 'eiffel.y' at line <not available>")
 end
 
-
-yyval46 := new_operand_as (new_like_current_as, Void, Void) 
-			yyval := yyval46
+yyval63 := yyvs63.item (yyvsp63) 
 if yy_parsing_status = yyContinue then
-	yyssp := yyssp - 4
-	yyvsp := yyvsp - 3
-	yyvs.put (yyval, yyvsp)
+	yyssp := yyssp - 1
+	yyvs63.put (yyval63, yyvsp63)
 end
 		end
 
 	yy_do_action_321 is
-			--|#line 1650 "eiffel.y"
+			--|#line <not available> "eiffel.y"
 		local
-			yyval46: OPERAND_AS
+			yyval2: ACCESS_AS
 		do
---|#line 1650 "eiffel.y"
+--|#line <not available> "eiffel.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'eiffel.y' at line 1650")
+	std.error.put_line ("Executing parser user-code from file 'eiffel.y' at line <not available>")
 end
 
-
-yyval46 := new_operand_as (Void, Void, yytype25 (yyvs.item (yyvsp))) 
-			yyval := yyval46
+yyval2 := new_access_id_as (yyvs33.item (yyvsp33), Void) 
 if yy_parsing_status = yyContinue then
 	yyssp := yyssp - 1
-	yyvs.put (yyval, yyvsp)
+	yyvsp2 := yyvsp2 + 1
+	yyvsp33 := yyvsp33 -1
+	if yyvsp2 >= yyvsc2 then
+		if yyvs2 = Void then
+			debug ("GEYACC")
+				std.error.put_line ("Create yyvs2")
+			end
+			create yyspecial_routines2
+			yyvsc2 := yyInitial_yyvs_size
+			yyvs2 := yyspecial_routines2.make (yyvsc2)
+		else
+			debug ("GEYACC")
+				std.error.put_line ("Resize yyvs2")
+			end
+			yyvsc2 := yyvsc2 + yyInitial_yyvs_size
+			yyvs2 := yyspecial_routines2.resize (yyvs2, yyvsc2)
+		end
+	end
+	yyvs2.put (yyval2, yyvsp2)
 end
 		end
 
 	yy_do_action_322 is
-			--|#line 1654 "eiffel.y"
+			--|#line <not available> "eiffel.y"
 		local
-			yyval19: CREATION_AS
+			yyval2: ACCESS_AS
 		do
---|#line 1654 "eiffel.y"
+--|#line <not available> "eiffel.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'eiffel.y' at line 1654")
+	std.error.put_line ("Executing parser user-code from file 'eiffel.y' at line <not available>")
 end
 
-
-				yyval19 := new_creation_as (yytype63 (yyvs.item (yyvsp - 3)), yytype2 (yyvs.item (yyvsp - 1)), yytype4 (yyvs.item (yyvsp)), yytype58 (yyvs.item (yyvsp - 5)))
-				if has_syntax_warning then
-					Error_handler.insert_warning (
-						create {SYNTAX_WARNING}.make (yytype58 (yyvs.item (yyvsp - 5)).start_position,
-						yytype58 (yyvs.item (yyvsp - 5)).end_position, filename, 0, "Use keyword `create' instead."))
-				end
-			
-			yyval := yyval19
+yyval2 := new_result_as 
 if yy_parsing_status = yyContinue then
-	yyssp := yyssp - 6
-	yyvsp := yyvsp - 5
-	yyvs.put (yyval, yyvsp)
+	yyssp := yyssp - 1
+	yyvsp2 := yyvsp2 + 1
+	yyvsp1 := yyvsp1 -1
+	if yyvsp2 >= yyvsc2 then
+		if yyvs2 = Void then
+			debug ("GEYACC")
+				std.error.put_line ("Create yyvs2")
+			end
+			create yyspecial_routines2
+			yyvsc2 := yyInitial_yyvs_size
+			yyvs2 := yyspecial_routines2.make (yyvsc2)
+		else
+			debug ("GEYACC")
+				std.error.put_line ("Resize yyvs2")
+			end
+			yyvsc2 := yyvsc2 + yyInitial_yyvs_size
+			yyvs2 := yyspecial_routines2.resize (yyvs2, yyvsc2)
+		end
+	end
+	yyvs2.put (yyval2, yyvsp2)
 end
 		end
 
 	yy_do_action_323 is
-			--|#line 1663 "eiffel.y"
+			--|#line <not available> "eiffel.y"
 		local
-			yyval19: CREATION_AS
+			yyval4: ACCESS_INV_AS
 		do
---|#line 1663 "eiffel.y"
+--|#line <not available> "eiffel.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'eiffel.y' at line 1663")
+	std.error.put_line ("Executing parser user-code from file 'eiffel.y' at line <not available>")
 end
 
 
-yyval19 := new_creation_as (Void, yytype2 (yyvs.item (yyvsp - 1)), yytype4 (yyvs.item (yyvsp)), yytype58 (yyvs.item (yyvsp - 3))) 
-			yyval := yyval19
 if yy_parsing_status = yyContinue then
-	yyssp := yyssp - 4
-	yyvsp := yyvsp - 3
-	yyvs.put (yyval, yyvsp)
+	yyssp := yyssp - 0
+	yyvsp4 := yyvsp4 + 1
+	if yyvsp4 >= yyvsc4 then
+		if yyvs4 = Void then
+			debug ("GEYACC")
+				std.error.put_line ("Create yyvs4")
+			end
+			create yyspecial_routines4
+			yyvsc4 := yyInitial_yyvs_size
+			yyvs4 := yyspecial_routines4.make (yyvsc4)
+		else
+			debug ("GEYACC")
+				std.error.put_line ("Resize yyvs4")
+			end
+			yyvsc4 := yyvsc4 + yyInitial_yyvs_size
+			yyvs4 := yyspecial_routines4.resize (yyvs4, yyvsc4)
+		end
+	end
+	yyvs4.put (yyval4, yyvsp4)
 end
 		end
 
 	yy_do_action_324 is
-			--|#line 1665 "eiffel.y"
+			--|#line <not available> "eiffel.y"
 		local
-			yyval19: CREATION_AS
+			yyval4: ACCESS_INV_AS
 		do
---|#line 1665 "eiffel.y"
+--|#line <not available> "eiffel.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'eiffel.y' at line 1665")
+	std.error.put_line ("Executing parser user-code from file 'eiffel.y' at line <not available>")
 end
 
-
-yyval19 := new_creation_as (yytype63 (yyvs.item (yyvsp - 3)), yytype2 (yyvs.item (yyvsp - 1)), yytype4 (yyvs.item (yyvsp)), yytype58 (yyvs.item (yyvsp - 6))) 
-			yyval := yyval19
+yyval4 := new_access_inv_as (yyvs33.item (yyvsp33), yyvs72.item (yyvsp72)) 
 if yy_parsing_status = yyContinue then
-	yyssp := yyssp - 7
-	yyvsp := yyvsp - 6
-	yyvs.put (yyval, yyvsp)
+	yyssp := yyssp - 3
+	yyvsp4 := yyvsp4 + 1
+	yyvsp1 := yyvsp1 -1
+	yyvsp33 := yyvsp33 -1
+	yyvsp72 := yyvsp72 -1
+	if yyvsp4 >= yyvsc4 then
+		if yyvs4 = Void then
+			debug ("GEYACC")
+				std.error.put_line ("Create yyvs4")
+			end
+			create yyspecial_routines4
+			yyvsc4 := yyInitial_yyvs_size
+			yyvs4 := yyspecial_routines4.make (yyvsc4)
+		else
+			debug ("GEYACC")
+				std.error.put_line ("Resize yyvs4")
+			end
+			yyvsc4 := yyvsc4 + yyInitial_yyvs_size
+			yyvs4 := yyspecial_routines4.resize (yyvs4, yyvsc4)
+		end
+	end
+	yyvs4.put (yyval4, yyvsp4)
 end
 		end
 
 	yy_do_action_325 is
-			--|#line 1669 "eiffel.y"
+			--|#line <not available> "eiffel.y"
 		local
-			yyval20: CREATION_EXPR_AS
+			yyval37: INSTR_CALL_AS
 		do
---|#line 1669 "eiffel.y"
+--|#line <not available> "eiffel.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'eiffel.y' at line 1669")
+	std.error.put_line ("Executing parser user-code from file 'eiffel.y' at line <not available>")
 end
 
-
-yyval20 := new_creation_expr_as (yytype63 (yyvs.item (yyvsp - 3)), yytype4 (yyvs.item (yyvsp)), yytype58 (yyvs.item (yyvsp - 1))) 
-			yyval := yyval20
+yyval37 := new_instr_call_as (yyvs2.item (yyvsp2), yyvs58.item (yyvsp58)) 
 if yy_parsing_status = yyContinue then
-	yyssp := yyssp - 6
-	yyvsp := yyvsp - 5
-	yyvs.put (yyval, yyvsp)
+	yyssp := yyssp - 2
+	yyvsp37 := yyvsp37 + 1
+	yyvsp58 := yyvsp58 -1
+	yyvsp2 := yyvsp2 -1
+	if yyvsp37 >= yyvsc37 then
+		if yyvs37 = Void then
+			debug ("GEYACC")
+				std.error.put_line ("Create yyvs37")
+			end
+			create yyspecial_routines37
+			yyvsc37 := yyInitial_yyvs_size
+			yyvs37 := yyspecial_routines37.make (yyvsc37)
+		else
+			debug ("GEYACC")
+				std.error.put_line ("Resize yyvs37")
+			end
+			yyvsc37 := yyvsc37 + yyInitial_yyvs_size
+			yyvs37 := yyspecial_routines37.resize (yyvs37, yyvsc37)
+		end
+	end
+	yyvs37.put (yyval37, yyvsp37)
 end
 		end
 
 	yy_do_action_326 is
-			--|#line 1671 "eiffel.y"
+			--|#line <not available> "eiffel.y"
 		local
-			yyval20: CREATION_EXPR_AS
+			yyval37: INSTR_CALL_AS
 		do
---|#line 1671 "eiffel.y"
+--|#line <not available> "eiffel.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'eiffel.y' at line 1671")
+	std.error.put_line ("Executing parser user-code from file 'eiffel.y' at line <not available>")
 end
 
-
-				yyval20 := new_creation_expr_as (yytype63 (yyvs.item (yyvsp - 3)), yytype4 (yyvs.item (yyvsp)), yytype58 (yyvs.item (yyvsp - 1)))
-				if has_syntax_warning then
-					Error_handler.insert_warning (
-						create {SYNTAX_WARNING}.make (yytype58 (yyvs.item (yyvsp - 1)).start_position,
-						yytype58 (yyvs.item (yyvsp - 1)).end_position, filename, 0, "Use keyword `create' instead."))
-				end
-			
-			yyval := yyval20
+yyval37 := new_instr_call_as (yyvs44.item (yyvsp44), yyvs58.item (yyvsp58)) 
 if yy_parsing_status = yyContinue then
-	yyssp := yyssp - 5
-	yyvsp := yyvsp - 4
-	yyvs.put (yyval, yyvsp)
+	yyssp := yyssp - 2
+	yyvsp37 := yyvsp37 + 1
+	yyvsp58 := yyvsp58 -1
+	yyvsp44 := yyvsp44 -1
+	if yyvsp37 >= yyvsc37 then
+		if yyvs37 = Void then
+			debug ("GEYACC")
+				std.error.put_line ("Create yyvs37")
+			end
+			create yyspecial_routines37
+			yyvsc37 := yyInitial_yyvs_size
+			yyvs37 := yyspecial_routines37.make (yyvsc37)
+		else
+			debug ("GEYACC")
+				std.error.put_line ("Resize yyvs37")
+			end
+			yyvsc37 := yyvsc37 + yyInitial_yyvs_size
+			yyvs37 := yyspecial_routines37.resize (yyvs37, yyvsc37)
+		end
+	end
+	yyvs37.put (yyval37, yyvsp37)
 end
 		end
 
 	yy_do_action_327 is
-			--|#line 1682 "eiffel.y"
+			--|#line <not available> "eiffel.y"
 		local
-			yyval63: TYPE_AS
+			yyval37: INSTR_CALL_AS
 		do
---|#line 1682 "eiffel.y"
+--|#line <not available> "eiffel.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'eiffel.y' at line 1682")
+	std.error.put_line ("Executing parser user-code from file 'eiffel.y' at line <not available>")
 end
 
-
-
-			yyval := yyval63
+yyval37 := new_instr_call_as (yyvs44.item (yyvsp44), yyvs58.item (yyvsp58)) 
 if yy_parsing_status = yyContinue then
-	yyvsp := yyvsp + 1
-	if yyvsp >= yyvsc then
-		yyvsc := yyvsc + yyInitial_stack_size
-		yyvs := FIXED_ARRAY_.resize (yyvs, yyvsc)
-		debug ("GEYACC")
-			std.error.put_string ("Stack (yyvs) size increased to ")
-			std.error.put_integer (yyvsc)
-			std.error.put_new_line
+	yyssp := yyssp - 2
+	yyvsp37 := yyvsp37 + 1
+	yyvsp58 := yyvsp58 -1
+	yyvsp44 := yyvsp44 -1
+	if yyvsp37 >= yyvsc37 then
+		if yyvs37 = Void then
+			debug ("GEYACC")
+				std.error.put_line ("Create yyvs37")
+			end
+			create yyspecial_routines37
+			yyvsc37 := yyInitial_yyvs_size
+			yyvs37 := yyspecial_routines37.make (yyvsc37)
+		else
+			debug ("GEYACC")
+				std.error.put_line ("Resize yyvs37")
+			end
+			yyvsc37 := yyvsc37 + yyInitial_yyvs_size
+			yyvs37 := yyspecial_routines37.resize (yyvs37, yyvsc37)
 		end
 	end
-	yyvs.put (yyval, yyvsp)
+	yyvs37.put (yyval37, yyvsp37)
 end
 		end
 
 	yy_do_action_328 is
-			--|#line 1684 "eiffel.y"
+			--|#line <not available> "eiffel.y"
 		local
-			yyval63: TYPE_AS
+			yyval37: INSTR_CALL_AS
 		do
---|#line 1684 "eiffel.y"
+--|#line <not available> "eiffel.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'eiffel.y' at line 1684")
+	std.error.put_line ("Executing parser user-code from file 'eiffel.y' at line <not available>")
 end
 
-
-yyval63 := yytype63 (yyvs.item (yyvsp)) 
-			yyval := yyval63
+yyval37 := new_instr_call_as (yyvs44.item (yyvsp44), yyvs58.item (yyvsp58)) 
 if yy_parsing_status = yyContinue then
-	yyssp := yyssp - 1
-	yyvs.put (yyval, yyvsp)
+	yyssp := yyssp - 2
+	yyvsp37 := yyvsp37 + 1
+	yyvsp58 := yyvsp58 -1
+	yyvsp44 := yyvsp44 -1
+	if yyvsp37 >= yyvsc37 then
+		if yyvs37 = Void then
+			debug ("GEYACC")
+				std.error.put_line ("Create yyvs37")
+			end
+			create yyspecial_routines37
+			yyvsc37 := yyInitial_yyvs_size
+			yyvs37 := yyspecial_routines37.make (yyvsc37)
+		else
+			debug ("GEYACC")
+				std.error.put_line ("Resize yyvs37")
+			end
+			yyvsc37 := yyvsc37 + yyInitial_yyvs_size
+			yyvs37 := yyspecial_routines37.resize (yyvs37, yyvsc37)
+		end
+	end
+	yyvs37.put (yyval37, yyvsp37)
 end
 		end
 
 	yy_do_action_329 is
-			--|#line 1688 "eiffel.y"
+			--|#line <not available> "eiffel.y"
 		local
-			yyval2: ACCESS_AS
+			yyval37: INSTR_CALL_AS
 		do
---|#line 1688 "eiffel.y"
+--|#line <not available> "eiffel.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'eiffel.y' at line 1688")
+	std.error.put_line ("Executing parser user-code from file 'eiffel.y' at line <not available>")
 end
 
-
-yyval2 := new_access_id_as (yytype33 (yyvs.item (yyvsp)), Void) 
-			yyval := yyval2
+yyval37 := new_instr_call_as (yyvs45.item (yyvsp45), yyvs58.item (yyvsp58)) 
 if yy_parsing_status = yyContinue then
-	yyssp := yyssp - 1
-	yyvs.put (yyval, yyvsp)
+	yyssp := yyssp - 2
+	yyvsp37 := yyvsp37 + 1
+	yyvsp58 := yyvsp58 -1
+	yyvsp45 := yyvsp45 -1
+	if yyvsp37 >= yyvsc37 then
+		if yyvs37 = Void then
+			debug ("GEYACC")
+				std.error.put_line ("Create yyvs37")
+			end
+			create yyspecial_routines37
+			yyvsc37 := yyInitial_yyvs_size
+			yyvs37 := yyspecial_routines37.make (yyvsc37)
+		else
+			debug ("GEYACC")
+				std.error.put_line ("Resize yyvs37")
+			end
+			yyvsc37 := yyvsc37 + yyInitial_yyvs_size
+			yyvs37 := yyspecial_routines37.resize (yyvs37, yyvsc37)
+		end
+	end
+	yyvs37.put (yyval37, yyvsp37)
 end
 		end
 
 	yy_do_action_330 is
-			--|#line 1690 "eiffel.y"
+			--|#line <not available> "eiffel.y"
 		local
-			yyval2: ACCESS_AS
+			yyval37: INSTR_CALL_AS
 		do
---|#line 1690 "eiffel.y"
+--|#line <not available> "eiffel.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'eiffel.y' at line 1690")
+	std.error.put_line ("Executing parser user-code from file 'eiffel.y' at line <not available>")
 end
 
-
-yyval2 := new_result_as 
-			yyval := yyval2
+yyval37 := new_instr_call_as (yyvs48.item (yyvsp48), yyvs58.item (yyvsp58)) 
 if yy_parsing_status = yyContinue then
-	yyssp := yyssp - 1
-	yyvs.put (yyval, yyvsp)
+	yyssp := yyssp - 2
+	yyvsp37 := yyvsp37 + 1
+	yyvsp58 := yyvsp58 -1
+	yyvsp48 := yyvsp48 -1
+	if yyvsp37 >= yyvsc37 then
+		if yyvs37 = Void then
+			debug ("GEYACC")
+				std.error.put_line ("Create yyvs37")
+			end
+			create yyspecial_routines37
+			yyvsc37 := yyInitial_yyvs_size
+			yyvs37 := yyspecial_routines37.make (yyvsc37)
+		else
+			debug ("GEYACC")
+				std.error.put_line ("Resize yyvs37")
+			end
+			yyvsc37 := yyvsc37 + yyInitial_yyvs_size
+			yyvs37 := yyspecial_routines37.resize (yyvs37, yyvsc37)
+		end
+	end
+	yyvs37.put (yyval37, yyvsp37)
 end
 		end
 
 	yy_do_action_331 is
-			--|#line 1694 "eiffel.y"
+			--|#line <not available> "eiffel.y"
 		local
-			yyval4: ACCESS_INV_AS
+			yyval37: INSTR_CALL_AS
 		do
---|#line 1694 "eiffel.y"
+--|#line <not available> "eiffel.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'eiffel.y' at line 1694")
+	std.error.put_line ("Executing parser user-code from file 'eiffel.y' at line <not available>")
 end
 
-
-
-			yyval := yyval4
+yyval37 := new_instr_call_as (yyvs44.item (yyvsp44), yyvs58.item (yyvsp58)) 
 if yy_parsing_status = yyContinue then
-	yyvsp := yyvsp + 1
-	if yyvsp >= yyvsc then
-		yyvsc := yyvsc + yyInitial_stack_size
-		yyvs := FIXED_ARRAY_.resize (yyvs, yyvsc)
-		debug ("GEYACC")
-			std.error.put_string ("Stack (yyvs) size increased to ")
-			std.error.put_integer (yyvsc)
-			std.error.put_new_line
+	yyssp := yyssp - 2
+	yyvsp37 := yyvsp37 + 1
+	yyvsp58 := yyvsp58 -1
+	yyvsp44 := yyvsp44 -1
+	if yyvsp37 >= yyvsc37 then
+		if yyvs37 = Void then
+			debug ("GEYACC")
+				std.error.put_line ("Create yyvs37")
+			end
+			create yyspecial_routines37
+			yyvsc37 := yyInitial_yyvs_size
+			yyvs37 := yyspecial_routines37.make (yyvsc37)
+		else
+			debug ("GEYACC")
+				std.error.put_line ("Resize yyvs37")
+			end
+			yyvsc37 := yyvsc37 + yyInitial_yyvs_size
+			yyvs37 := yyspecial_routines37.resize (yyvs37, yyvsc37)
 		end
 	end
-	yyvs.put (yyval, yyvsp)
+	yyvs37.put (yyval37, yyvsp37)
 end
 		end
 
 	yy_do_action_332 is
-			--|#line 1696 "eiffel.y"
+			--|#line <not available> "eiffel.y"
 		local
-			yyval4: ACCESS_INV_AS
+			yyval37: INSTR_CALL_AS
 		do
---|#line 1696 "eiffel.y"
+--|#line <not available> "eiffel.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'eiffel.y' at line 1696")
+	std.error.put_line ("Executing parser user-code from file 'eiffel.y' at line <not available>")
 end
 
-
-yyval4 := new_access_inv_as (yytype33 (yyvs.item (yyvsp - 1)), yytype72 (yyvs.item (yyvsp))) 
-			yyval := yyval4
+yyval37 := new_instr_call_as (yyvs49.item (yyvsp49), yyvs58.item (yyvsp58)) 
 if yy_parsing_status = yyContinue then
-	yyssp := yyssp - 3
-	yyvsp := yyvsp - 2
-	yyvs.put (yyval, yyvsp)
+	yyssp := yyssp - 2
+	yyvsp37 := yyvsp37 + 1
+	yyvsp58 := yyvsp58 -1
+	yyvsp49 := yyvsp49 -1
+	if yyvsp37 >= yyvsc37 then
+		if yyvs37 = Void then
+			debug ("GEYACC")
+				std.error.put_line ("Create yyvs37")
+			end
+			create yyspecial_routines37
+			yyvsc37 := yyInitial_yyvs_size
+			yyvs37 := yyspecial_routines37.make (yyvsc37)
+		else
+			debug ("GEYACC")
+				std.error.put_line ("Resize yyvs37")
+			end
+			yyvsc37 := yyvsc37 + yyInitial_yyvs_size
+			yyvs37 := yyspecial_routines37.resize (yyvs37, yyvsc37)
+		end
+	end
+	yyvs37.put (yyval37, yyvsp37)
 end
 		end
 
 	yy_do_action_333 is
-			--|#line 1704 "eiffel.y"
+			--|#line <not available> "eiffel.y"
 		local
 			yyval37: INSTR_CALL_AS
 		do
---|#line 1704 "eiffel.y"
+--|#line <not available> "eiffel.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'eiffel.y' at line 1704")
+	std.error.put_line ("Executing parser user-code from file 'eiffel.y' at line <not available>")
 end
 
-
-yyval37 := new_instr_call_as (yytype2 (yyvs.item (yyvsp)), yytype58 (yyvs.item (yyvsp - 1))) 
-			yyval := yyval37
+yyval37 := new_instr_call_as (yyvs44.item (yyvsp44), yyvs58.item (yyvsp58)) 
 if yy_parsing_status = yyContinue then
 	yyssp := yyssp - 2
-	yyvsp := yyvsp - 1
-	yyvs.put (yyval, yyvsp)
+	yyvsp37 := yyvsp37 + 1
+	yyvsp58 := yyvsp58 -1
+	yyvsp44 := yyvsp44 -1
+	if yyvsp37 >= yyvsc37 then
+		if yyvs37 = Void then
+			debug ("GEYACC")
+				std.error.put_line ("Create yyvs37")
+			end
+			create yyspecial_routines37
+			yyvsc37 := yyInitial_yyvs_size
+			yyvs37 := yyspecial_routines37.make (yyvsc37)
+		else
+			debug ("GEYACC")
+				std.error.put_line ("Resize yyvs37")
+			end
+			yyvsc37 := yyvsc37 + yyInitial_yyvs_size
+			yyvs37 := yyspecial_routines37.resize (yyvs37, yyvsc37)
+		end
+	end
+	yyvs37.put (yyval37, yyvsp37)
 end
 		end
 
 	yy_do_action_334 is
-			--|#line 1706 "eiffel.y"
+			--|#line <not available> "eiffel.y"
 		local
-			yyval37: INSTR_CALL_AS
+			yyval14: CHECK_AS
 		do
---|#line 1706 "eiffel.y"
+--|#line <not available> "eiffel.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'eiffel.y' at line 1706")
+	std.error.put_line ("Executing parser user-code from file 'eiffel.y' at line <not available>")
 end
 
-
-yyval37 := new_instr_call_as (yytype44 (yyvs.item (yyvsp)), yytype58 (yyvs.item (yyvsp - 1))) 
-			yyval := yyval37
+yyval14 := new_check_as (yyvs88.item (yyvsp88), yyvs58.item (yyvsp58), current_position) 
 if yy_parsing_status = yyContinue then
-	yyssp := yyssp - 2
-	yyvsp := yyvsp - 1
-	yyvs.put (yyval, yyvsp)
+	yyssp := yyssp - 4
+	yyvsp14 := yyvsp14 + 1
+	yyvsp58 := yyvsp58 -1
+	yyvsp1 := yyvsp1 -2
+	yyvsp88 := yyvsp88 -1
+	if yyvsp14 >= yyvsc14 then
+		if yyvs14 = Void then
+			debug ("GEYACC")
+				std.error.put_line ("Create yyvs14")
+			end
+			create yyspecial_routines14
+			yyvsc14 := yyInitial_yyvs_size
+			yyvs14 := yyspecial_routines14.make (yyvsc14)
+		else
+			debug ("GEYACC")
+				std.error.put_line ("Resize yyvs14")
+			end
+			yyvsc14 := yyvsc14 + yyInitial_yyvs_size
+			yyvs14 := yyspecial_routines14.resize (yyvs14, yyvsc14)
+		end
+	end
+	yyvs14.put (yyval14, yyvsp14)
 end
 		end
 
 	yy_do_action_335 is
-			--|#line 1708 "eiffel.y"
+			--|#line <not available> "eiffel.y"
 		local
-			yyval37: INSTR_CALL_AS
+			yyval63: TYPE_AS
 		do
---|#line 1708 "eiffel.y"
+--|#line <not available> "eiffel.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'eiffel.y' at line 1708")
+	std.error.put_line ("Executing parser user-code from file 'eiffel.y' at line <not available>")
 end
 
-
-yyval37 := new_instr_call_as (yytype44 (yyvs.item (yyvsp)), yytype58 (yyvs.item (yyvsp - 1))) 
-			yyval := yyval37
+yyval63 := yyvs63.item (yyvsp63) 
 if yy_parsing_status = yyContinue then
-	yyssp := yyssp - 2
-	yyvsp := yyvsp - 1
-	yyvs.put (yyval, yyvsp)
+	yyssp := yyssp - 3
+	yyvsp1 := yyvsp1 -2
+	yyvs63.put (yyval63, yyvsp63)
 end
 		end
 
 	yy_do_action_336 is
-			--|#line 1710 "eiffel.y"
+			--|#line <not available> "eiffel.y"
 		local
-			yyval37: INSTR_CALL_AS
+			yyval25: EXPR_AS
 		do
---|#line 1710 "eiffel.y"
+--|#line <not available> "eiffel.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'eiffel.y' at line 1710")
+	std.error.put_line ("Executing parser user-code from file 'eiffel.y' at line <not available>")
 end
 
-
-yyval37 := new_instr_call_as (yytype44 (yyvs.item (yyvsp)), yytype58 (yyvs.item (yyvsp - 1))) 
-			yyval := yyval37
+create {VALUE_AS} yyval25.initialize (yyvs39.item (yyvsp39)) 
 if yy_parsing_status = yyContinue then
-	yyssp := yyssp - 2
-	yyvsp := yyvsp - 1
-	yyvs.put (yyval, yyvsp)
+	yyssp := yyssp - 1
+	yyvsp25 := yyvsp25 + 1
+	yyvsp39 := yyvsp39 -1
+	if yyvsp25 >= yyvsc25 then
+		if yyvs25 = Void then
+			debug ("GEYACC")
+				std.error.put_line ("Create yyvs25")
+			end
+			create yyspecial_routines25
+			yyvsc25 := yyInitial_yyvs_size
+			yyvs25 := yyspecial_routines25.make (yyvsc25)
+		else
+			debug ("GEYACC")
+				std.error.put_line ("Resize yyvs25")
+			end
+			yyvsc25 := yyvsc25 + yyInitial_yyvs_size
+			yyvs25 := yyspecial_routines25.resize (yyvs25, yyvsc25)
+		end
+	end
+	yyvs25.put (yyval25, yyvsp25)
 end
 		end
 
 	yy_do_action_337 is
-			--|#line 1712 "eiffel.y"
+			--|#line <not available> "eiffel.y"
 		local
-			yyval37: INSTR_CALL_AS
+			yyval25: EXPR_AS
 		do
---|#line 1712 "eiffel.y"
+--|#line <not available> "eiffel.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'eiffel.y' at line 1712")
+	std.error.put_line ("Executing parser user-code from file 'eiffel.y' at line <not available>")
 end
 
-
-yyval37 := new_instr_call_as (yytype45 (yyvs.item (yyvsp)), yytype58 (yyvs.item (yyvsp - 1))) 
-			yyval := yyval37
+create {VALUE_AS} yyval25.initialize (yyvs50.item (yyvsp50)) 
 if yy_parsing_status = yyContinue then
-	yyssp := yyssp - 2
-	yyvsp := yyvsp - 1
-	yyvs.put (yyval, yyvsp)
+	yyssp := yyssp - 1
+	yyvsp25 := yyvsp25 + 1
+	yyvsp50 := yyvsp50 -1
+	if yyvsp25 >= yyvsc25 then
+		if yyvs25 = Void then
+			debug ("GEYACC")
+				std.error.put_line ("Create yyvs25")
+			end
+			create yyspecial_routines25
+			yyvsc25 := yyInitial_yyvs_size
+			yyvs25 := yyspecial_routines25.make (yyvsc25)
+		else
+			debug ("GEYACC")
+				std.error.put_line ("Resize yyvs25")
+			end
+			yyvsc25 := yyvsc25 + yyInitial_yyvs_size
+			yyvs25 := yyspecial_routines25.resize (yyvs25, yyvsc25)
+		end
+	end
+	yyvs25.put (yyval25, yyvsp25)
 end
 		end
 
 	yy_do_action_338 is
-			--|#line 1714 "eiffel.y"
+			--|#line <not available> "eiffel.y"
 		local
-			yyval37: INSTR_CALL_AS
+			yyval25: EXPR_AS
 		do
---|#line 1714 "eiffel.y"
+--|#line <not available> "eiffel.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'eiffel.y' at line 1714")
+	std.error.put_line ("Executing parser user-code from file 'eiffel.y' at line <not available>")
 end
 
-
-yyval37 := new_instr_call_as (yytype48 (yyvs.item (yyvsp)), yytype58 (yyvs.item (yyvsp - 1))) 
-			yyval := yyval37
+yyval25 := yyvs25.item (yyvsp25) 
 if yy_parsing_status = yyContinue then
-	yyssp := yyssp - 2
-	yyvsp := yyvsp - 1
-	yyvs.put (yyval, yyvsp)
+	yyssp := yyssp - 1
+	yyvs25.put (yyval25, yyvsp25)
 end
 		end
 
 	yy_do_action_339 is
-			--|#line 1716 "eiffel.y"
+			--|#line <not available> "eiffel.y"
 		local
-			yyval37: INSTR_CALL_AS
+			yyval25: EXPR_AS
 		do
---|#line 1716 "eiffel.y"
+--|#line <not available> "eiffel.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'eiffel.y' at line 1716")
+	std.error.put_line ("Executing parser user-code from file 'eiffel.y' at line <not available>")
 end
 
-
-yyval37 := new_instr_call_as (yytype44 (yyvs.item (yyvsp)), yytype58 (yyvs.item (yyvsp - 1))) 
-			yyval := yyval37
+yyval25 := yyvs25.item (yyvsp25) 
 if yy_parsing_status = yyContinue then
-	yyssp := yyssp - 2
-	yyvsp := yyvsp - 1
-	yyvs.put (yyval, yyvsp)
+	yyssp := yyssp - 1
+	yyvs25.put (yyval25, yyvsp25)
 end
 		end
 
 	yy_do_action_340 is
-			--|#line 1718 "eiffel.y"
+			--|#line <not available> "eiffel.y"
 		local
-			yyval37: INSTR_CALL_AS
+			yyval25: EXPR_AS
 		do
---|#line 1718 "eiffel.y"
+--|#line <not available> "eiffel.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'eiffel.y' at line 1718")
+	std.error.put_line ("Executing parser user-code from file 'eiffel.y' at line <not available>")
 end
 
-
-yyval37 := new_instr_call_as (yytype49 (yyvs.item (yyvsp)), yytype58 (yyvs.item (yyvsp - 1))) 
-			yyval := yyval37
+yyval25 := new_bin_plus_as (yyvs25.item (yyvsp25 - 1), yyvs25.item (yyvsp25)) 
 if yy_parsing_status = yyContinue then
-	yyssp := yyssp - 2
-	yyvsp := yyvsp - 1
-	yyvs.put (yyval, yyvsp)
+	yyssp := yyssp - 3
+	yyvsp25 := yyvsp25 -1
+	yyvsp1 := yyvsp1 -1
+	yyvs25.put (yyval25, yyvsp25)
 end
 		end
 
 	yy_do_action_341 is
-			--|#line 1720 "eiffel.y"
+			--|#line <not available> "eiffel.y"
 		local
-			yyval37: INSTR_CALL_AS
+			yyval25: EXPR_AS
 		do
---|#line 1720 "eiffel.y"
+--|#line <not available> "eiffel.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'eiffel.y' at line 1720")
+	std.error.put_line ("Executing parser user-code from file 'eiffel.y' at line <not available>")
 end
 
-
-yyval37 := new_instr_call_as (yytype44 (yyvs.item (yyvsp)), yytype58 (yyvs.item (yyvsp - 1))) 
-			yyval := yyval37
+yyval25 := new_bin_minus_as (yyvs25.item (yyvsp25 - 1), yyvs25.item (yyvsp25)) 
 if yy_parsing_status = yyContinue then
-	yyssp := yyssp - 2
-	yyvsp := yyvsp - 1
-	yyvs.put (yyval, yyvsp)
+	yyssp := yyssp - 3
+	yyvsp25 := yyvsp25 -1
+	yyvsp1 := yyvsp1 -1
+	yyvs25.put (yyval25, yyvsp25)
 end
 		end
 
 	yy_do_action_342 is
-			--|#line 1724 "eiffel.y"
+			--|#line <not available> "eiffel.y"
 		local
-			yyval14: CHECK_AS
+			yyval25: EXPR_AS
 		do
---|#line 1724 "eiffel.y"
+--|#line <not available> "eiffel.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'eiffel.y' at line 1724")
+	std.error.put_line ("Executing parser user-code from file 'eiffel.y' at line <not available>")
 end
 
-
-yyval14 := new_check_as (yytype88 (yyvs.item (yyvsp - 1)), yytype58 (yyvs.item (yyvsp - 3)), current_position) 
-			yyval := yyval14
+yyval25 := new_bin_star_as (yyvs25.item (yyvsp25 - 1), yyvs25.item (yyvsp25)) 
 if yy_parsing_status = yyContinue then
-	yyssp := yyssp - 4
-	yyvsp := yyvsp - 3
-	yyvs.put (yyval, yyvsp)
+	yyssp := yyssp - 3
+	yyvsp25 := yyvsp25 -1
+	yyvsp1 := yyvsp1 -1
+	yyvs25.put (yyval25, yyvsp25)
 end
 		end
 
 	yy_do_action_343 is
-			--|#line 1732 "eiffel.y"
+			--|#line <not available> "eiffel.y"
 		local
 			yyval25: EXPR_AS
 		do
---|#line 1732 "eiffel.y"
+--|#line <not available> "eiffel.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'eiffel.y' at line 1732")
+	std.error.put_line ("Executing parser user-code from file 'eiffel.y' at line <not available>")
 end
 
-
-create {VALUE_AS} yyval25.initialize (yytype39 (yyvs.item (yyvsp))) 
-			yyval := yyval25
+yyval25 := new_bin_slash_as (yyvs25.item (yyvsp25 - 1), yyvs25.item (yyvsp25)) 
 if yy_parsing_status = yyContinue then
-	yyssp := yyssp - 1
-	yyvs.put (yyval, yyvsp)
+	yyssp := yyssp - 3
+	yyvsp25 := yyvsp25 -1
+	yyvsp1 := yyvsp1 -1
+	yyvs25.put (yyval25, yyvsp25)
 end
 		end
 
 	yy_do_action_344 is
-			--|#line 1735 "eiffel.y"
+			--|#line <not available> "eiffel.y"
 		local
 			yyval25: EXPR_AS
 		do
---|#line 1735 "eiffel.y"
+--|#line <not available> "eiffel.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'eiffel.y' at line 1735")
+	std.error.put_line ("Executing parser user-code from file 'eiffel.y' at line <not available>")
 end
 
-
-yyval25 := yytype25 (yyvs.item (yyvsp)) 
-			yyval := yyval25
+yyval25 := new_bin_mod_as (yyvs25.item (yyvsp25 - 1), yyvs25.item (yyvsp25)) 
 if yy_parsing_status = yyContinue then
-	yyssp := yyssp - 1
-	yyvs.put (yyval, yyvsp)
+	yyssp := yyssp - 3
+	yyvsp25 := yyvsp25 -1
+	yyvsp1 := yyvsp1 -1
+	yyvs25.put (yyval25, yyvsp25)
 end
 		end
 
 	yy_do_action_345 is
-			--|#line 1737 "eiffel.y"
+			--|#line <not available> "eiffel.y"
 		local
 			yyval25: EXPR_AS
 		do
---|#line 1737 "eiffel.y"
+--|#line <not available> "eiffel.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'eiffel.y' at line 1737")
+	std.error.put_line ("Executing parser user-code from file 'eiffel.y' at line <not available>")
 end
 
-
-yyval25 := new_bin_plus_as (yytype25 (yyvs.item (yyvsp - 2)), yytype25 (yyvs.item (yyvsp))) 
-			yyval := yyval25
+yyval25 := new_bin_div_as (yyvs25.item (yyvsp25 - 1), yyvs25.item (yyvsp25)) 
 if yy_parsing_status = yyContinue then
 	yyssp := yyssp - 3
-	yyvsp := yyvsp - 2
-	yyvs.put (yyval, yyvsp)
+	yyvsp25 := yyvsp25 -1
+	yyvsp1 := yyvsp1 -1
+	yyvs25.put (yyval25, yyvsp25)
 end
 		end
 
 	yy_do_action_346 is
-			--|#line 1739 "eiffel.y"
+			--|#line <not available> "eiffel.y"
 		local
 			yyval25: EXPR_AS
 		do
---|#line 1739 "eiffel.y"
+--|#line <not available> "eiffel.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'eiffel.y' at line 1739")
+	std.error.put_line ("Executing parser user-code from file 'eiffel.y' at line <not available>")
 end
 
-
-yyval25 := new_bin_minus_as (yytype25 (yyvs.item (yyvsp - 2)), yytype25 (yyvs.item (yyvsp))) 
-			yyval := yyval25
+yyval25 := new_bin_power_as (yyvs25.item (yyvsp25 - 1), yyvs25.item (yyvsp25)) 
 if yy_parsing_status = yyContinue then
 	yyssp := yyssp - 3
-	yyvsp := yyvsp - 2
-	yyvs.put (yyval, yyvsp)
+	yyvsp25 := yyvsp25 -1
+	yyvsp1 := yyvsp1 -1
+	yyvs25.put (yyval25, yyvsp25)
 end
 		end
 
 	yy_do_action_347 is
-			--|#line 1741 "eiffel.y"
+			--|#line <not available> "eiffel.y"
 		local
 			yyval25: EXPR_AS
 		do
---|#line 1741 "eiffel.y"
+--|#line <not available> "eiffel.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'eiffel.y' at line 1741")
+	std.error.put_line ("Executing parser user-code from file 'eiffel.y' at line <not available>")
 end
 
-
-yyval25 := new_bin_star_as (yytype25 (yyvs.item (yyvsp - 2)), yytype25 (yyvs.item (yyvsp))) 
-			yyval := yyval25
+yyval25 := new_bin_and_as (yyvs25.item (yyvsp25 - 1), yyvs25.item (yyvsp25)) 
 if yy_parsing_status = yyContinue then
 	yyssp := yyssp - 3
-	yyvsp := yyvsp - 2
-	yyvs.put (yyval, yyvsp)
+	yyvsp25 := yyvsp25 -1
+	yyvsp1 := yyvsp1 -1
+	yyvs25.put (yyval25, yyvsp25)
 end
 		end
 
 	yy_do_action_348 is
-			--|#line 1743 "eiffel.y"
+			--|#line <not available> "eiffel.y"
 		local
 			yyval25: EXPR_AS
 		do
---|#line 1743 "eiffel.y"
+--|#line <not available> "eiffel.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'eiffel.y' at line 1743")
+	std.error.put_line ("Executing parser user-code from file 'eiffel.y' at line <not available>")
 end
 
-
-yyval25 := new_bin_slash_as (yytype25 (yyvs.item (yyvsp - 2)), yytype25 (yyvs.item (yyvsp))) 
-			yyval := yyval25
+yyval25 := new_bin_and_then_as (yyvs25.item (yyvsp25 - 1), yyvs25.item (yyvsp25)) 
 if yy_parsing_status = yyContinue then
-	yyssp := yyssp - 3
-	yyvsp := yyvsp - 2
-	yyvs.put (yyval, yyvsp)
+	yyssp := yyssp - 4
+	yyvsp25 := yyvsp25 -1
+	yyvsp1 := yyvsp1 -2
+	yyvs25.put (yyval25, yyvsp25)
 end
 		end
 
 	yy_do_action_349 is
-			--|#line 1745 "eiffel.y"
+			--|#line <not available> "eiffel.y"
 		local
 			yyval25: EXPR_AS
 		do
---|#line 1745 "eiffel.y"
+--|#line <not available> "eiffel.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'eiffel.y' at line 1745")
+	std.error.put_line ("Executing parser user-code from file 'eiffel.y' at line <not available>")
 end
 
-
-yyval25 := new_bin_mod_as (yytype25 (yyvs.item (yyvsp - 2)), yytype25 (yyvs.item (yyvsp))) 
-			yyval := yyval25
+yyval25 := new_bin_or_as (yyvs25.item (yyvsp25 - 1), yyvs25.item (yyvsp25)) 
 if yy_parsing_status = yyContinue then
 	yyssp := yyssp - 3
-	yyvsp := yyvsp - 2
-	yyvs.put (yyval, yyvsp)
+	yyvsp25 := yyvsp25 -1
+	yyvsp1 := yyvsp1 -1
+	yyvs25.put (yyval25, yyvsp25)
 end
 		end
 
 	yy_do_action_350 is
-			--|#line 1747 "eiffel.y"
+			--|#line <not available> "eiffel.y"
 		local
 			yyval25: EXPR_AS
 		do
---|#line 1747 "eiffel.y"
+--|#line <not available> "eiffel.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'eiffel.y' at line 1747")
+	std.error.put_line ("Executing parser user-code from file 'eiffel.y' at line <not available>")
 end
 
-
-yyval25 := new_bin_div_as (yytype25 (yyvs.item (yyvsp - 2)), yytype25 (yyvs.item (yyvsp))) 
-			yyval := yyval25
+yyval25 := new_bin_or_else_as (yyvs25.item (yyvsp25 - 1), yyvs25.item (yyvsp25)) 
 if yy_parsing_status = yyContinue then
-	yyssp := yyssp - 3
-	yyvsp := yyvsp - 2
-	yyvs.put (yyval, yyvsp)
+	yyssp := yyssp - 4
+	yyvsp25 := yyvsp25 -1
+	yyvsp1 := yyvsp1 -2
+	yyvs25.put (yyval25, yyvsp25)
 end
 		end
 
 	yy_do_action_351 is
-			--|#line 1749 "eiffel.y"
+			--|#line <not available> "eiffel.y"
 		local
 			yyval25: EXPR_AS
 		do
---|#line 1749 "eiffel.y"
+--|#line <not available> "eiffel.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'eiffel.y' at line 1749")
+	std.error.put_line ("Executing parser user-code from file 'eiffel.y' at line <not available>")
 end
 
-
-yyval25 := new_bin_power_as (yytype25 (yyvs.item (yyvsp - 2)), yytype25 (yyvs.item (yyvsp))) 
-			yyval := yyval25
+yyval25 := new_bin_implies_as (yyvs25.item (yyvsp25 - 1), yyvs25.item (yyvsp25)) 
 if yy_parsing_status = yyContinue then
 	yyssp := yyssp - 3
-	yyvsp := yyvsp - 2
-	yyvs.put (yyval, yyvsp)
+	yyvsp25 := yyvsp25 -1
+	yyvsp1 := yyvsp1 -1
+	yyvs25.put (yyval25, yyvsp25)
 end
 		end
 
 	yy_do_action_352 is
-			--|#line 1751 "eiffel.y"
+			--|#line <not available> "eiffel.y"
 		local
 			yyval25: EXPR_AS
 		do
---|#line 1751 "eiffel.y"
+--|#line <not available> "eiffel.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'eiffel.y' at line 1751")
+	std.error.put_line ("Executing parser user-code from file 'eiffel.y' at line <not available>")
 end
 
-
-yyval25 := new_bin_and_as (yytype25 (yyvs.item (yyvsp - 2)), yytype25 (yyvs.item (yyvsp))) 
-			yyval := yyval25
+yyval25 := new_bin_xor_as (yyvs25.item (yyvsp25 - 1), yyvs25.item (yyvsp25)) 
 if yy_parsing_status = yyContinue then
 	yyssp := yyssp - 3
-	yyvsp := yyvsp - 2
-	yyvs.put (yyval, yyvsp)
+	yyvsp25 := yyvsp25 -1
+	yyvsp1 := yyvsp1 -1
+	yyvs25.put (yyval25, yyvsp25)
 end
 		end
 
 	yy_do_action_353 is
-			--|#line 1753 "eiffel.y"
+			--|#line <not available> "eiffel.y"
 		local
 			yyval25: EXPR_AS
 		do
---|#line 1753 "eiffel.y"
+--|#line <not available> "eiffel.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'eiffel.y' at line 1753")
+	std.error.put_line ("Executing parser user-code from file 'eiffel.y' at line <not available>")
 end
 
-
-yyval25 := new_bin_and_then_as (yytype25 (yyvs.item (yyvsp - 3)), yytype25 (yyvs.item (yyvsp))) 
-			yyval := yyval25
+yyval25 := new_bin_ge_as (yyvs25.item (yyvsp25 - 1), yyvs25.item (yyvsp25)) 
 if yy_parsing_status = yyContinue then
-	yyssp := yyssp - 4
-	yyvsp := yyvsp - 3
-	yyvs.put (yyval, yyvsp)
+	yyssp := yyssp - 3
+	yyvsp25 := yyvsp25 -1
+	yyvsp1 := yyvsp1 -1
+	yyvs25.put (yyval25, yyvsp25)
 end
 		end
 
 	yy_do_action_354 is
-			--|#line 1755 "eiffel.y"
+			--|#line <not available> "eiffel.y"
 		local
 			yyval25: EXPR_AS
 		do
---|#line 1755 "eiffel.y"
+--|#line <not available> "eiffel.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'eiffel.y' at line 1755")
+	std.error.put_line ("Executing parser user-code from file 'eiffel.y' at line <not available>")
 end
 
-
-yyval25 := new_bin_or_as (yytype25 (yyvs.item (yyvsp - 2)), yytype25 (yyvs.item (yyvsp))) 
-			yyval := yyval25
+yyval25 := new_bin_gt_as (yyvs25.item (yyvsp25 - 1), yyvs25.item (yyvsp25)) 
 if yy_parsing_status = yyContinue then
 	yyssp := yyssp - 3
-	yyvsp := yyvsp - 2
-	yyvs.put (yyval, yyvsp)
+	yyvsp25 := yyvsp25 -1
+	yyvsp1 := yyvsp1 -1
+	yyvs25.put (yyval25, yyvsp25)
 end
 		end
 
 	yy_do_action_355 is
-			--|#line 1757 "eiffel.y"
+			--|#line <not available> "eiffel.y"
 		local
 			yyval25: EXPR_AS
 		do
---|#line 1757 "eiffel.y"
+--|#line <not available> "eiffel.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'eiffel.y' at line 1757")
+	std.error.put_line ("Executing parser user-code from file 'eiffel.y' at line <not available>")
 end
 
-
-yyval25 := new_bin_or_else_as (yytype25 (yyvs.item (yyvsp - 3)), yytype25 (yyvs.item (yyvsp))) 
-			yyval := yyval25
+yyval25 := new_bin_le_as (yyvs25.item (yyvsp25 - 1), yyvs25.item (yyvsp25)) 
 if yy_parsing_status = yyContinue then
-	yyssp := yyssp - 4
-	yyvsp := yyvsp - 3
-	yyvs.put (yyval, yyvsp)
+	yyssp := yyssp - 3
+	yyvsp25 := yyvsp25 -1
+	yyvsp1 := yyvsp1 -1
+	yyvs25.put (yyval25, yyvsp25)
 end
 		end
 
 	yy_do_action_356 is
-			--|#line 1759 "eiffel.y"
+			--|#line <not available> "eiffel.y"
 		local
 			yyval25: EXPR_AS
 		do
---|#line 1759 "eiffel.y"
+--|#line <not available> "eiffel.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'eiffel.y' at line 1759")
+	std.error.put_line ("Executing parser user-code from file 'eiffel.y' at line <not available>")
 end
 
-
-yyval25 := new_bin_implies_as (yytype25 (yyvs.item (yyvsp - 2)), yytype25 (yyvs.item (yyvsp))) 
-			yyval := yyval25
+yyval25 := new_bin_lt_as (yyvs25.item (yyvsp25 - 1), yyvs25.item (yyvsp25)) 
 if yy_parsing_status = yyContinue then
 	yyssp := yyssp - 3
-	yyvsp := yyvsp - 2
-	yyvs.put (yyval, yyvsp)
+	yyvsp25 := yyvsp25 -1
+	yyvsp1 := yyvsp1 -1
+	yyvs25.put (yyval25, yyvsp25)
 end
 		end
 
 	yy_do_action_357 is
-			--|#line 1761 "eiffel.y"
+			--|#line <not available> "eiffel.y"
 		local
 			yyval25: EXPR_AS
 		do
---|#line 1761 "eiffel.y"
+--|#line <not available> "eiffel.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'eiffel.y' at line 1761")
+	std.error.put_line ("Executing parser user-code from file 'eiffel.y' at line <not available>")
 end
 
-
-yyval25 := new_bin_xor_as (yytype25 (yyvs.item (yyvsp - 2)), yytype25 (yyvs.item (yyvsp))) 
-			yyval := yyval25
+yyval25 := new_bin_eq_as (yyvs25.item (yyvsp25 - 1), yyvs25.item (yyvsp25)) 
 if yy_parsing_status = yyContinue then
 	yyssp := yyssp - 3
-	yyvsp := yyvsp - 2
-	yyvs.put (yyval, yyvsp)
+	yyvsp25 := yyvsp25 -1
+	yyvsp1 := yyvsp1 -1
+	yyvs25.put (yyval25, yyvsp25)
 end
 		end
 
 	yy_do_action_358 is
-			--|#line 1763 "eiffel.y"
+			--|#line <not available> "eiffel.y"
 		local
 			yyval25: EXPR_AS
 		do
---|#line 1763 "eiffel.y"
+--|#line <not available> "eiffel.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'eiffel.y' at line 1763")
+	std.error.put_line ("Executing parser user-code from file 'eiffel.y' at line <not available>")
 end
 
-
-yyval25 := new_bin_ge_as (yytype25 (yyvs.item (yyvsp - 2)), yytype25 (yyvs.item (yyvsp))) 
-			yyval := yyval25
+yyval25 := new_bin_ne_as (yyvs25.item (yyvsp25 - 1), yyvs25.item (yyvsp25)) 
 if yy_parsing_status = yyContinue then
 	yyssp := yyssp - 3
-	yyvsp := yyvsp - 2
-	yyvs.put (yyval, yyvsp)
+	yyvsp25 := yyvsp25 -1
+	yyvsp1 := yyvsp1 -1
+	yyvs25.put (yyval25, yyvsp25)
 end
 		end
 
 	yy_do_action_359 is
-			--|#line 1765 "eiffel.y"
+			--|#line <not available> "eiffel.y"
 		local
 			yyval25: EXPR_AS
 		do
---|#line 1765 "eiffel.y"
+--|#line <not available> "eiffel.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'eiffel.y' at line 1765")
+	std.error.put_line ("Executing parser user-code from file 'eiffel.y' at line <not available>")
 end
 
-
-yyval25 := new_bin_gt_as (yytype25 (yyvs.item (yyvsp - 2)), yytype25 (yyvs.item (yyvsp))) 
-			yyval := yyval25
+yyval25 := new_bin_free_as (yyvs25.item (yyvsp25 - 1), yyvs33.item (yyvsp33), yyvs25.item (yyvsp25)) 
 if yy_parsing_status = yyContinue then
 	yyssp := yyssp - 3
-	yyvsp := yyvsp - 2
-	yyvs.put (yyval, yyvsp)
+	yyvsp25 := yyvsp25 -1
+	yyvsp33 := yyvsp33 -1
+	yyvs25.put (yyval25, yyvsp25)
 end
 		end
 
 	yy_do_action_360 is
-			--|#line 1767 "eiffel.y"
+			--|#line <not available> "eiffel.y"
 		local
 			yyval25: EXPR_AS
 		do
---|#line 1767 "eiffel.y"
+--|#line <not available> "eiffel.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'eiffel.y' at line 1767")
+	std.error.put_line ("Executing parser user-code from file 'eiffel.y' at line <not available>")
 end
 
-
-yyval25 := new_bin_le_as (yytype25 (yyvs.item (yyvsp - 2)), yytype25 (yyvs.item (yyvsp))) 
-			yyval := yyval25
+create {VALUE_AS} yyval25.initialize (yyvs7.item (yyvsp7)) 
 if yy_parsing_status = yyContinue then
-	yyssp := yyssp - 3
-	yyvsp := yyvsp - 2
-	yyvs.put (yyval, yyvsp)
+	yyssp := yyssp - 1
+	yyvsp25 := yyvsp25 + 1
+	yyvsp7 := yyvsp7 -1
+	if yyvsp25 >= yyvsc25 then
+		if yyvs25 = Void then
+			debug ("GEYACC")
+				std.error.put_line ("Create yyvs25")
+			end
+			create yyspecial_routines25
+			yyvsc25 := yyInitial_yyvs_size
+			yyvs25 := yyspecial_routines25.make (yyvsc25)
+		else
+			debug ("GEYACC")
+				std.error.put_line ("Resize yyvs25")
+			end
+			yyvsc25 := yyvsc25 + yyInitial_yyvs_size
+			yyvs25 := yyspecial_routines25.resize (yyvs25, yyvsc25)
+		end
+	end
+	yyvs25.put (yyval25, yyvsp25)
 end
 		end
 
 	yy_do_action_361 is
-			--|#line 1769 "eiffel.y"
+			--|#line <not available> "eiffel.y"
 		local
 			yyval25: EXPR_AS
 		do
---|#line 1769 "eiffel.y"
+--|#line <not available> "eiffel.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'eiffel.y' at line 1769")
+	std.error.put_line ("Executing parser user-code from file 'eiffel.y' at line <not available>")
 end
 
-
-yyval25 := new_bin_lt_as (yytype25 (yyvs.item (yyvsp - 2)), yytype25 (yyvs.item (yyvsp))) 
-			yyval := yyval25
+yyval25 := yyvs25.item (yyvsp25)
 if yy_parsing_status = yyContinue then
-	yyssp := yyssp - 3
-	yyvsp := yyvsp - 2
-	yyvs.put (yyval, yyvsp)
+	yyssp := yyssp - 1
+	yyvs25.put (yyval25, yyvsp25)
 end
 		end
 
 	yy_do_action_362 is
-			--|#line 1771 "eiffel.y"
+			--|#line <not available> "eiffel.y"
 		local
 			yyval25: EXPR_AS
 		do
---|#line 1771 "eiffel.y"
+--|#line <not available> "eiffel.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'eiffel.y' at line 1771")
+	std.error.put_line ("Executing parser user-code from file 'eiffel.y' at line <not available>")
 end
 
-
-yyval25 := new_bin_eq_as (yytype25 (yyvs.item (yyvsp - 2)), yytype25 (yyvs.item (yyvsp))) 
-			yyval := yyval25
+create {VOID_AS} yyval25 
 if yy_parsing_status = yyContinue then
-	yyssp := yyssp - 3
-	yyvsp := yyvsp - 2
-	yyvs.put (yyval, yyvsp)
+	yyssp := yyssp - 1
+	yyvsp25 := yyvsp25 + 1
+	yyvsp1 := yyvsp1 -1
+	if yyvsp25 >= yyvsc25 then
+		if yyvs25 = Void then
+			debug ("GEYACC")
+				std.error.put_line ("Create yyvs25")
+			end
+			create yyspecial_routines25
+			yyvsc25 := yyInitial_yyvs_size
+			yyvs25 := yyspecial_routines25.make (yyvsc25)
+		else
+			debug ("GEYACC")
+				std.error.put_line ("Resize yyvs25")
+			end
+			yyvsc25 := yyvsc25 + yyInitial_yyvs_size
+			yyvs25 := yyspecial_routines25.resize (yyvs25, yyvsc25)
+		end
+	end
+	yyvs25.put (yyval25, yyvsp25)
 end
 		end
 
 	yy_do_action_363 is
-			--|#line 1773 "eiffel.y"
+			--|#line <not available> "eiffel.y"
 		local
 			yyval25: EXPR_AS
 		do
---|#line 1773 "eiffel.y"
+--|#line <not available> "eiffel.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'eiffel.y' at line 1773")
+	std.error.put_line ("Executing parser user-code from file 'eiffel.y' at line <not available>")
 end
 
-
-yyval25 := new_bin_ne_as (yytype25 (yyvs.item (yyvsp - 2)), yytype25 (yyvs.item (yyvsp))) 
-			yyval := yyval25
+create {VALUE_AS} yyval25.initialize (yyvs5.item (yyvsp5)) 
 if yy_parsing_status = yyContinue then
-	yyssp := yyssp - 3
-	yyvsp := yyvsp - 2
-	yyvs.put (yyval, yyvsp)
+	yyssp := yyssp - 1
+	yyvsp25 := yyvsp25 + 1
+	yyvsp5 := yyvsp5 -1
+	if yyvsp25 >= yyvsc25 then
+		if yyvs25 = Void then
+			debug ("GEYACC")
+				std.error.put_line ("Create yyvs25")
+			end
+			create yyspecial_routines25
+			yyvsc25 := yyInitial_yyvs_size
+			yyvs25 := yyspecial_routines25.make (yyvsc25)
+		else
+			debug ("GEYACC")
+				std.error.put_line ("Resize yyvs25")
+			end
+			yyvsc25 := yyvsc25 + yyInitial_yyvs_size
+			yyvs25 := yyspecial_routines25.resize (yyvs25, yyvsc25)
+		end
+	end
+	yyvs25.put (yyval25, yyvsp25)
 end
 		end
 
 	yy_do_action_364 is
-			--|#line 1775 "eiffel.y"
+			--|#line <not available> "eiffel.y"
 		local
 			yyval25: EXPR_AS
 		do
---|#line 1775 "eiffel.y"
+--|#line <not available> "eiffel.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'eiffel.y' at line 1775")
+	std.error.put_line ("Executing parser user-code from file 'eiffel.y' at line <not available>")
 end
 
-
-yyval25 := new_bin_free_as (yytype25 (yyvs.item (yyvsp - 2)), yytype33 (yyvs.item (yyvsp - 1)), yytype25 (yyvs.item (yyvsp))) 
-			yyval := yyval25
+create {VALUE_AS} yyval25.initialize (yyvs62.item (yyvsp62)) 
 if yy_parsing_status = yyContinue then
-	yyssp := yyssp - 3
-	yyvsp := yyvsp - 2
-	yyvs.put (yyval, yyvsp)
+	yyssp := yyssp - 1
+	yyvsp25 := yyvsp25 + 1
+	yyvsp62 := yyvsp62 -1
+	if yyvsp25 >= yyvsc25 then
+		if yyvs25 = Void then
+			debug ("GEYACC")
+				std.error.put_line ("Create yyvs25")
+			end
+			create yyspecial_routines25
+			yyvsc25 := yyInitial_yyvs_size
+			yyvs25 := yyspecial_routines25.make (yyvsc25)
+		else
+			debug ("GEYACC")
+				std.error.put_line ("Resize yyvs25")
+			end
+			yyvsc25 := yyvsc25 + yyInitial_yyvs_size
+			yyvs25 := yyspecial_routines25.resize (yyvs25, yyvsc25)
+		end
+	end
+	yyvs25.put (yyval25, yyvsp25)
 end
 		end
 
 	yy_do_action_365 is
-			--|#line 1779 "eiffel.y"
+			--|#line <not available> "eiffel.y"
 		local
 			yyval25: EXPR_AS
 		do
---|#line 1779 "eiffel.y"
+--|#line <not available> "eiffel.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'eiffel.y' at line 1779")
+	std.error.put_line ("Executing parser user-code from file 'eiffel.y' at line <not available>")
 end
 
-
-create {VALUE_AS} yyval25.initialize (yytype7 (yyvs.item (yyvsp))) 
-			yyval := yyval25
+yyval25 := new_expr_call_as (yyvs11.item (yyvsp11)) 
 if yy_parsing_status = yyContinue then
 	yyssp := yyssp - 1
-	yyvs.put (yyval, yyvsp)
+	yyvsp25 := yyvsp25 + 1
+	yyvsp11 := yyvsp11 -1
+	if yyvsp25 >= yyvsc25 then
+		if yyvs25 = Void then
+			debug ("GEYACC")
+				std.error.put_line ("Create yyvs25")
+			end
+			create yyspecial_routines25
+			yyvsc25 := yyInitial_yyvs_size
+			yyvs25 := yyspecial_routines25.make (yyvsc25)
+		else
+			debug ("GEYACC")
+				std.error.put_line ("Resize yyvs25")
+			end
+			yyvsc25 := yyvsc25 + yyInitial_yyvs_size
+			yyvs25 := yyspecial_routines25.resize (yyvs25, yyvsc25)
+		end
+	end
+	yyvs25.put (yyval25, yyvsp25)
 end
 		end
 
 	yy_do_action_366 is
-			--|#line 1782 "eiffel.y"
+			--|#line <not available> "eiffel.y"
 		local
 			yyval25: EXPR_AS
 		do
---|#line 1782 "eiffel.y"
+--|#line <not available> "eiffel.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'eiffel.y' at line 1782")
+	std.error.put_line ("Executing parser user-code from file 'eiffel.y' at line <not available>")
 end
 
-
-create {VALUE_AS} yyval25.initialize (yytype39 (yyvs.item (yyvsp))) 
-			yyval := yyval25
+yyval25 := yyvs57.item (yyvsp57) 
 if yy_parsing_status = yyContinue then
 	yyssp := yyssp - 1
-	yyvs.put (yyval, yyvsp)
+	yyvsp25 := yyvsp25 + 1
+	yyvsp57 := yyvsp57 -1
+	if yyvsp25 >= yyvsc25 then
+		if yyvs25 = Void then
+			debug ("GEYACC")
+				std.error.put_line ("Create yyvs25")
+			end
+			create yyspecial_routines25
+			yyvsc25 := yyInitial_yyvs_size
+			yyvs25 := yyspecial_routines25.make (yyvsc25)
+		else
+			debug ("GEYACC")
+				std.error.put_line ("Resize yyvs25")
+			end
+			yyvsc25 := yyvsc25 + yyInitial_yyvs_size
+			yyvs25 := yyspecial_routines25.resize (yyvs25, yyvsc25)
+		end
+	end
+	yyvs25.put (yyval25, yyvsp25)
 end
 		end
 
 	yy_do_action_367 is
-			--|#line 1784 "eiffel.y"
+			--|#line <not available> "eiffel.y"
 		local
 			yyval25: EXPR_AS
 		do
---|#line 1784 "eiffel.y"
+--|#line <not available> "eiffel.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'eiffel.y' at line 1784")
+	std.error.put_line ("Executing parser user-code from file 'eiffel.y' at line <not available>")
 end
 
-
-create {VOID_AS} yyval25 
-			yyval := yyval25
+yyval25 := new_paran_as (yyvs25.item (yyvsp25)) 
 if yy_parsing_status = yyContinue then
-	yyssp := yyssp - 1
-	yyvs.put (yyval, yyvsp)
+	yyssp := yyssp - 3
+	yyvsp1 := yyvsp1 -2
+	yyvs25.put (yyval25, yyvsp25)
 end
 		end
 
 	yy_do_action_368 is
-			--|#line 1786 "eiffel.y"
+			--|#line <not available> "eiffel.y"
 		local
 			yyval25: EXPR_AS
 		do
---|#line 1786 "eiffel.y"
+--|#line <not available> "eiffel.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'eiffel.y' at line 1786")
+	std.error.put_line ("Executing parser user-code from file 'eiffel.y' at line <not available>")
 end
 
-
-create {VALUE_AS} yyval25.initialize (yytype5 (yyvs.item (yyvsp))) 
-			yyval := yyval25
+yyval25 := new_un_minus_as (yyvs25.item (yyvsp25)) 
 if yy_parsing_status = yyContinue then
-	yyssp := yyssp - 1
-	yyvs.put (yyval, yyvsp)
+	yyssp := yyssp - 2
+	yyvsp1 := yyvsp1 -1
+	yyvs25.put (yyval25, yyvsp25)
 end
 		end
 
 	yy_do_action_369 is
-			--|#line 1788 "eiffel.y"
+			--|#line <not available> "eiffel.y"
 		local
 			yyval25: EXPR_AS
 		do
---|#line 1788 "eiffel.y"
+--|#line <not available> "eiffel.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'eiffel.y' at line 1788")
+	std.error.put_line ("Executing parser user-code from file 'eiffel.y' at line <not available>")
 end
 
-
-create {VALUE_AS} yyval25.initialize (yytype62 (yyvs.item (yyvsp))) 
-			yyval := yyval25
+yyval25 := new_un_plus_as (yyvs25.item (yyvsp25)) 
 if yy_parsing_status = yyContinue then
-	yyssp := yyssp - 1
-	yyvs.put (yyval, yyvsp)
+	yyssp := yyssp - 2
+	yyvsp1 := yyvsp1 -1
+	yyvs25.put (yyval25, yyvsp25)
 end
 		end
 
 	yy_do_action_370 is
-			--|#line 1790 "eiffel.y"
+			--|#line <not available> "eiffel.y"
 		local
 			yyval25: EXPR_AS
 		do
---|#line 1790 "eiffel.y"
+--|#line <not available> "eiffel.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'eiffel.y' at line 1790")
+	std.error.put_line ("Executing parser user-code from file 'eiffel.y' at line <not available>")
 end
 
-
-yyval25 := new_expr_call_as (yytype11 (yyvs.item (yyvsp))) 
-			yyval := yyval25
+yyval25 := new_un_not_as (yyvs25.item (yyvsp25)) 
 if yy_parsing_status = yyContinue then
-	yyssp := yyssp - 1
-	yyvs.put (yyval, yyvsp)
+	yyssp := yyssp - 2
+	yyvsp1 := yyvsp1 -1
+	yyvs25.put (yyval25, yyvsp25)
 end
 		end
 
 	yy_do_action_371 is
-			--|#line 1792 "eiffel.y"
+			--|#line <not available> "eiffel.y"
 		local
 			yyval25: EXPR_AS
 		do
---|#line 1792 "eiffel.y"
+--|#line <not available> "eiffel.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'eiffel.y' at line 1792")
+	std.error.put_line ("Executing parser user-code from file 'eiffel.y' at line <not available>")
 end
 
-
-yyval25 := yytype57 (yyvs.item (yyvsp)) 
-			yyval := yyval25
+yyval25 := new_un_old_as (yyvs25.item (yyvsp25)) 
 if yy_parsing_status = yyContinue then
-	yyssp := yyssp - 1
-	yyvs.put (yyval, yyvsp)
+	yyssp := yyssp - 2
+	yyvsp1 := yyvsp1 -1
+	yyvs25.put (yyval25, yyvsp25)
 end
 		end
 
 	yy_do_action_372 is
-			--|#line 1794 "eiffel.y"
+			--|#line <not available> "eiffel.y"
 		local
 			yyval25: EXPR_AS
 		do
---|#line 1794 "eiffel.y"
+--|#line <not available> "eiffel.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'eiffel.y' at line 1794")
+	std.error.put_line ("Executing parser user-code from file 'eiffel.y' at line <not available>")
 end
 
-
-yyval25 := new_paran_as (yytype25 (yyvs.item (yyvsp - 1))) 
-			yyval := yyval25
+yyval25 := new_un_free_as (yyvs33.item (yyvsp33), yyvs25.item (yyvsp25)) 
 if yy_parsing_status = yyContinue then
-	yyssp := yyssp - 3
-	yyvsp := yyvsp - 2
-	yyvs.put (yyval, yyvsp)
+	yyssp := yyssp - 2
+	yyvsp33 := yyvsp33 -1
+	yyvs25.put (yyval25, yyvsp25)
 end
 		end
 
 	yy_do_action_373 is
-			--|#line 1796 "eiffel.y"
+			--|#line <not available> "eiffel.y"
 		local
 			yyval25: EXPR_AS
 		do
---|#line 1796 "eiffel.y"
+--|#line <not available> "eiffel.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'eiffel.y' at line 1796")
+	std.error.put_line ("Executing parser user-code from file 'eiffel.y' at line <not available>")
 end
 
-
-yyval25 := new_un_minus_as (yytype25 (yyvs.item (yyvsp))) 
-			yyval := yyval25
+yyval25 := new_un_strip_as (yyvs80.item (yyvsp80)) 
 if yy_parsing_status = yyContinue then
-	yyssp := yyssp - 2
-	yyvsp := yyvsp - 1
-	yyvs.put (yyval, yyvsp)
+	yyssp := yyssp - 4
+	yyvsp25 := yyvsp25 + 1
+	yyvsp1 := yyvsp1 -3
+	yyvsp80 := yyvsp80 -1
+	if yyvsp25 >= yyvsc25 then
+		if yyvs25 = Void then
+			debug ("GEYACC")
+				std.error.put_line ("Create yyvs25")
+			end
+			create yyspecial_routines25
+			yyvsc25 := yyInitial_yyvs_size
+			yyvs25 := yyspecial_routines25.make (yyvsc25)
+		else
+			debug ("GEYACC")
+				std.error.put_line ("Resize yyvs25")
+			end
+			yyvsc25 := yyvsc25 + yyInitial_yyvs_size
+			yyvs25 := yyspecial_routines25.resize (yyvs25, yyvsc25)
+		end
+	end
+	yyvs25.put (yyval25, yyvsp25)
 end
 		end
 
 	yy_do_action_374 is
-			--|#line 1798 "eiffel.y"
+			--|#line <not available> "eiffel.y"
 		local
 			yyval25: EXPR_AS
 		do
---|#line 1798 "eiffel.y"
+--|#line <not available> "eiffel.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'eiffel.y' at line 1798")
+	std.error.put_line ("Executing parser user-code from file 'eiffel.y' at line <not available>")
 end
 
-
-yyval25 := new_un_plus_as (yytype25 (yyvs.item (yyvsp))) 
-			yyval := yyval25
+yyval25 := new_address_as (yyvs93.item (yyvsp93).first) 
 if yy_parsing_status = yyContinue then
 	yyssp := yyssp - 2
-	yyvsp := yyvsp - 1
-	yyvs.put (yyval, yyvsp)
+	yyvsp25 := yyvsp25 + 1
+	yyvsp1 := yyvsp1 -1
+	yyvsp93 := yyvsp93 -1
+	if yyvsp25 >= yyvsc25 then
+		if yyvs25 = Void then
+			debug ("GEYACC")
+				std.error.put_line ("Create yyvs25")
+			end
+			create yyspecial_routines25
+			yyvsc25 := yyInitial_yyvs_size
+			yyvs25 := yyspecial_routines25.make (yyvsc25)
+		else
+			debug ("GEYACC")
+				std.error.put_line ("Resize yyvs25")
+			end
+			yyvsc25 := yyvsc25 + yyInitial_yyvs_size
+			yyvs25 := yyspecial_routines25.resize (yyvs25, yyvsc25)
+		end
+	end
+	yyvs25.put (yyval25, yyvsp25)
 end
 		end
 
 	yy_do_action_375 is
-			--|#line 1800 "eiffel.y"
+			--|#line <not available> "eiffel.y"
 		local
 			yyval25: EXPR_AS
 		do
---|#line 1800 "eiffel.y"
+--|#line <not available> "eiffel.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'eiffel.y' at line 1800")
+	std.error.put_line ("Executing parser user-code from file 'eiffel.y' at line <not available>")
 end
 
-
-yyval25 := new_un_not_as (yytype25 (yyvs.item (yyvsp))) 
-			yyval := yyval25
+yyval25 := new_expr_address_as (yyvs25.item (yyvsp25)) 
 if yy_parsing_status = yyContinue then
-	yyssp := yyssp - 2
-	yyvsp := yyvsp - 1
-	yyvs.put (yyval, yyvsp)
+	yyssp := yyssp - 4
+	yyvsp1 := yyvsp1 -3
+	yyvs25.put (yyval25, yyvsp25)
 end
 		end
 
 	yy_do_action_376 is
-			--|#line 1802 "eiffel.y"
+			--|#line <not available> "eiffel.y"
 		local
 			yyval25: EXPR_AS
 		do
---|#line 1802 "eiffel.y"
+--|#line <not available> "eiffel.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'eiffel.y' at line 1802")
+	std.error.put_line ("Executing parser user-code from file 'eiffel.y' at line <not available>")
 end
 
-
-yyval25 := new_un_old_as (yytype25 (yyvs.item (yyvsp))) 
-			yyval := yyval25
+yyval25 := new_address_current_as 
 if yy_parsing_status = yyContinue then
 	yyssp := yyssp - 2
-	yyvsp := yyvsp - 1
-	yyvs.put (yyval, yyvsp)
+	yyvsp25 := yyvsp25 + 1
+	yyvsp1 := yyvsp1 -2
+	if yyvsp25 >= yyvsc25 then
+		if yyvs25 = Void then
+			debug ("GEYACC")
+				std.error.put_line ("Create yyvs25")
+			end
+			create yyspecial_routines25
+			yyvsc25 := yyInitial_yyvs_size
+			yyvs25 := yyspecial_routines25.make (yyvsc25)
+		else
+			debug ("GEYACC")
+				std.error.put_line ("Resize yyvs25")
+			end
+			yyvsc25 := yyvsc25 + yyInitial_yyvs_size
+			yyvs25 := yyspecial_routines25.resize (yyvs25, yyvsc25)
+		end
+	end
+	yyvs25.put (yyval25, yyvsp25)
 end
 		end
 
 	yy_do_action_377 is
-			--|#line 1804 "eiffel.y"
+			--|#line <not available> "eiffel.y"
 		local
 			yyval25: EXPR_AS
 		do
---|#line 1804 "eiffel.y"
+--|#line <not available> "eiffel.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'eiffel.y' at line 1804")
+	std.error.put_line ("Executing parser user-code from file 'eiffel.y' at line <not available>")
 end
 
-
-yyval25 := new_un_free_as (yytype33 (yyvs.item (yyvsp - 1)), yytype25 (yyvs.item (yyvsp))) 
-			yyval := yyval25
+yyval25 := new_address_result_as 
 if yy_parsing_status = yyContinue then
 	yyssp := yyssp - 2
-	yyvsp := yyvsp - 1
-	yyvs.put (yyval, yyvsp)
+	yyvsp25 := yyvsp25 + 1
+	yyvsp1 := yyvsp1 -2
+	if yyvsp25 >= yyvsc25 then
+		if yyvs25 = Void then
+			debug ("GEYACC")
+				std.error.put_line ("Create yyvs25")
+			end
+			create yyspecial_routines25
+			yyvsc25 := yyInitial_yyvs_size
+			yyvs25 := yyspecial_routines25.make (yyvsc25)
+		else
+			debug ("GEYACC")
+				std.error.put_line ("Resize yyvs25")
+			end
+			yyvsc25 := yyvsc25 + yyInitial_yyvs_size
+			yyvs25 := yyspecial_routines25.resize (yyvs25, yyvsc25)
+		end
+	end
+	yyvs25.put (yyval25, yyvsp25)
 end
 		end
 
 	yy_do_action_378 is
-			--|#line 1806 "eiffel.y"
+			--|#line <not available> "eiffel.y"
 		local
 			yyval25: EXPR_AS
 		do
---|#line 1806 "eiffel.y"
+--|#line <not available> "eiffel.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'eiffel.y' at line 1806")
+	std.error.put_line ("Executing parser user-code from file 'eiffel.y' at line <not available>")
 end
 
-
-yyval25 := new_un_strip_as (yytype80 (yyvs.item (yyvsp - 1))) 
-			yyval := yyval25
+create {TYPE_EXPR_AS} yyval25.make (yyvs63.item (yyvsp63)) 
 if yy_parsing_status = yyContinue then
-	yyssp := yyssp - 4
-	yyvsp := yyvsp - 3
-	yyvs.put (yyval, yyvsp)
+	yyssp := yyssp - 1
+	yyvsp25 := yyvsp25 + 1
+	yyvsp63 := yyvsp63 -1
+	if yyvsp25 >= yyvsc25 then
+		if yyvs25 = Void then
+			debug ("GEYACC")
+				std.error.put_line ("Create yyvs25")
+			end
+			create yyspecial_routines25
+			yyvsc25 := yyInitial_yyvs_size
+			yyvs25 := yyspecial_routines25.make (yyvsc25)
+		else
+			debug ("GEYACC")
+				std.error.put_line ("Resize yyvs25")
+			end
+			yyvsc25 := yyvsc25 + yyInitial_yyvs_size
+			yyvs25 := yyspecial_routines25.resize (yyvs25, yyvsc25)
+		end
+	end
+	yyvs25.put (yyval25, yyvsp25)
 end
 		end
 
 	yy_do_action_379 is
-			--|#line 1808 "eiffel.y"
+			--|#line <not available> "eiffel.y"
 		local
 			yyval25: EXPR_AS
 		do
---|#line 1808 "eiffel.y"
+--|#line <not available> "eiffel.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'eiffel.y' at line 1808")
+	std.error.put_line ("Executing parser user-code from file 'eiffel.y' at line <not available>")
 end
 
-
-yyval25 := new_address_as (yytype93 (yyvs.item (yyvsp)).first) 
-			yyval := yyval25
+create {VALUE_AS} yyval25.initialize (yyvs39.item (yyvsp39)) 
 if yy_parsing_status = yyContinue then
-	yyssp := yyssp - 2
-	yyvsp := yyvsp - 1
-	yyvs.put (yyval, yyvsp)
+	yyssp := yyssp - 1
+	yyvsp25 := yyvsp25 + 1
+	yyvsp39 := yyvsp39 -1
+	if yyvsp25 >= yyvsc25 then
+		if yyvs25 = Void then
+			debug ("GEYACC")
+				std.error.put_line ("Create yyvs25")
+			end
+			create yyspecial_routines25
+			yyvsc25 := yyInitial_yyvs_size
+			yyvs25 := yyspecial_routines25.make (yyvsc25)
+		else
+			debug ("GEYACC")
+				std.error.put_line ("Resize yyvs25")
+			end
+			yyvsc25 := yyvsc25 + yyInitial_yyvs_size
+			yyvs25 := yyspecial_routines25.resize (yyvs25, yyvsc25)
+		end
+	end
+	yyvs25.put (yyval25, yyvsp25)
 end
 		end
 
 	yy_do_action_380 is
-			--|#line 1810 "eiffel.y"
+			--|#line <not available> "eiffel.y"
 		local
 			yyval25: EXPR_AS
 		do
---|#line 1810 "eiffel.y"
+--|#line <not available> "eiffel.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'eiffel.y' at line 1810")
+	std.error.put_line ("Executing parser user-code from file 'eiffel.y' at line <not available>")
 end
 
-
-yyval25 := new_expr_address_as (yytype25 (yyvs.item (yyvsp - 1))) 
-			yyval := yyval25
+create {VALUE_AS} yyval25.initialize (yyvs50.item (yyvsp50)) 
 if yy_parsing_status = yyContinue then
-	yyssp := yyssp - 4
-	yyvsp := yyvsp - 3
-	yyvs.put (yyval, yyvsp)
+	yyssp := yyssp - 1
+	yyvsp25 := yyvsp25 + 1
+	yyvsp50 := yyvsp50 -1
+	if yyvsp25 >= yyvsc25 then
+		if yyvs25 = Void then
+			debug ("GEYACC")
+				std.error.put_line ("Create yyvs25")
+			end
+			create yyspecial_routines25
+			yyvsc25 := yyInitial_yyvs_size
+			yyvs25 := yyspecial_routines25.make (yyvsc25)
+		else
+			debug ("GEYACC")
+				std.error.put_line ("Resize yyvs25")
+			end
+			yyvsc25 := yyvsc25 + yyInitial_yyvs_size
+			yyvs25 := yyspecial_routines25.resize (yyvs25, yyvsc25)
+		end
+	end
+	yyvs25.put (yyval25, yyvsp25)
 end
 		end
 
 	yy_do_action_381 is
-			--|#line 1812 "eiffel.y"
+			--|#line <not available> "eiffel.y"
 		local
 			yyval25: EXPR_AS
 		do
---|#line 1812 "eiffel.y"
+--|#line <not available> "eiffel.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'eiffel.y' at line 1812")
+	std.error.put_line ("Executing parser user-code from file 'eiffel.y' at line <not available>")
 end
 
-
-yyval25 := new_address_current_as 
-			yyval := yyval25
+yyval25 := new_expr_call_as (yyvs44.item (yyvsp44)) 
 if yy_parsing_status = yyContinue then
-	yyssp := yyssp - 2
-	yyvsp := yyvsp - 1
-	yyvs.put (yyval, yyvsp)
+	yyssp := yyssp - 1
+	yyvsp25 := yyvsp25 + 1
+	yyvsp44 := yyvsp44 -1
+	if yyvsp25 >= yyvsc25 then
+		if yyvs25 = Void then
+			debug ("GEYACC")
+				std.error.put_line ("Create yyvs25")
+			end
+			create yyspecial_routines25
+			yyvsc25 := yyInitial_yyvs_size
+			yyvs25 := yyspecial_routines25.make (yyvsc25)
+		else
+			debug ("GEYACC")
+				std.error.put_line ("Resize yyvs25")
+			end
+			yyvsc25 := yyvsc25 + yyInitial_yyvs_size
+			yyvs25 := yyspecial_routines25.resize (yyvs25, yyvsc25)
+		end
+	end
+	yyvs25.put (yyval25, yyvsp25)
 end
 		end
 
 	yy_do_action_382 is
-			--|#line 1814 "eiffel.y"
+			--|#line <not available> "eiffel.y"
 		local
 			yyval25: EXPR_AS
 		do
---|#line 1814 "eiffel.y"
+--|#line <not available> "eiffel.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'eiffel.y' at line 1814")
+	std.error.put_line ("Executing parser user-code from file 'eiffel.y' at line <not available>")
 end
 
-
-yyval25 := new_address_result_as 
-			yyval := yyval25
+yyval25 := new_expr_call_as (yyvs49.item (yyvsp49)) 
 if yy_parsing_status = yyContinue then
-	yyssp := yyssp - 2
-	yyvsp := yyvsp - 1
-	yyvs.put (yyval, yyvsp)
+	yyssp := yyssp - 1
+	yyvsp25 := yyvsp25 + 1
+	yyvsp49 := yyvsp49 -1
+	if yyvsp25 >= yyvsc25 then
+		if yyvs25 = Void then
+			debug ("GEYACC")
+				std.error.put_line ("Create yyvs25")
+			end
+			create yyspecial_routines25
+			yyvsc25 := yyInitial_yyvs_size
+			yyvs25 := yyspecial_routines25.make (yyvsc25)
+		else
+			debug ("GEYACC")
+				std.error.put_line ("Resize yyvs25")
+			end
+			yyvsc25 := yyvsc25 + yyInitial_yyvs_size
+			yyvs25 := yyspecial_routines25.resize (yyvs25, yyvsc25)
+		end
+	end
+	yyvs25.put (yyval25, yyvsp25)
 end
 		end
 
 	yy_do_action_383 is
-			--|#line 1818 "eiffel.y"
+			--|#line <not available> "eiffel.y"
 		local
-			yyval33: ID_AS
+			yyval25: EXPR_AS
 		do
---|#line 1818 "eiffel.y"
+--|#line <not available> "eiffel.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'eiffel.y' at line 1818")
+	std.error.put_line ("Executing parser user-code from file 'eiffel.y' at line <not available>")
 end
 
-
-create yyval33.initialize (token_buffer) 
-			yyval := yyval33
+create {TYPE_ADAPTATION_AS} yyval25.make (yyvs63.item (yyvsp63), yyvs25.item (yyvsp25)) 
 if yy_parsing_status = yyContinue then
-	yyssp := yyssp - 1
-	yyvs.put (yyval, yyvsp)
+	yyssp := yyssp - 2
+	yyvsp63 := yyvsp63 -1
+	yyvs25.put (yyval25, yyvsp25)
 end
 		end
 
 	yy_do_action_384 is
-			--|#line 1826 "eiffel.y"
+			--|#line <not available> "eiffel.y"
 		local
-			yyval11: CALL_AS
+			yyval33: ID_AS
 		do
---|#line 1826 "eiffel.y"
+--|#line <not available> "eiffel.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'eiffel.y' at line 1826")
+	std.error.put_line ("Executing parser user-code from file 'eiffel.y' at line <not available>")
 end
 
-
-yyval11 := yytype44 (yyvs.item (yyvsp)) 
-			yyval := yyval11
+create yyval33.initialize (token_buffer) 
 if yy_parsing_status = yyContinue then
 	yyssp := yyssp - 1
-	yyvs.put (yyval, yyvsp)
+	yyvsp33 := yyvsp33 + 1
+	yyvsp1 := yyvsp1 -1
+	if yyvsp33 >= yyvsc33 then
+		if yyvs33 = Void then
+			debug ("GEYACC")
+				std.error.put_line ("Create yyvs33")
+			end
+			create yyspecial_routines33
+			yyvsc33 := yyInitial_yyvs_size
+			yyvs33 := yyspecial_routines33.make (yyvsc33)
+		else
+			debug ("GEYACC")
+				std.error.put_line ("Resize yyvs33")
+			end
+			yyvsc33 := yyvsc33 + yyInitial_yyvs_size
+			yyvs33 := yyspecial_routines33.resize (yyvs33, yyvsc33)
+		end
+	end
+	yyvs33.put (yyval33, yyvsp33)
 end
 		end
 
 	yy_do_action_385 is
-			--|#line 1828 "eiffel.y"
+			--|#line <not available> "eiffel.y"
 		local
 			yyval11: CALL_AS
 		do
---|#line 1828 "eiffel.y"
+--|#line <not available> "eiffel.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'eiffel.y' at line 1828")
+	std.error.put_line ("Executing parser user-code from file 'eiffel.y' at line <not available>")
 end
 
-
-yyval11 := yytype44 (yyvs.item (yyvsp)) 
-			yyval := yyval11
+yyval11 := yyvs44.item (yyvsp44) 
 if yy_parsing_status = yyContinue then
 	yyssp := yyssp - 1
-	yyvs.put (yyval, yyvsp)
+	yyvsp11 := yyvsp11 + 1
+	yyvsp44 := yyvsp44 -1
+	if yyvsp11 >= yyvsc11 then
+		if yyvs11 = Void then
+			debug ("GEYACC")
+				std.error.put_line ("Create yyvs11")
+			end
+			create yyspecial_routines11
+			yyvsc11 := yyInitial_yyvs_size
+			yyvs11 := yyspecial_routines11.make (yyvsc11)
+		else
+			debug ("GEYACC")
+				std.error.put_line ("Resize yyvs11")
+			end
+			yyvsc11 := yyvsc11 + yyInitial_yyvs_size
+			yyvs11 := yyspecial_routines11.resize (yyvs11, yyvsc11)
+		end
+	end
+	yyvs11.put (yyval11, yyvsp11)
 end
 		end
 
 	yy_do_action_386 is
-			--|#line 1830 "eiffel.y"
+			--|#line <not available> "eiffel.y"
 		local
 			yyval11: CALL_AS
 		do
---|#line 1830 "eiffel.y"
+--|#line <not available> "eiffel.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'eiffel.y' at line 1830")
+	std.error.put_line ("Executing parser user-code from file 'eiffel.y' at line <not available>")
 end
 
-
-yyval11 := yytype44 (yyvs.item (yyvsp)) 
-			yyval := yyval11
+yyval11 := yyvs44.item (yyvsp44) 
 if yy_parsing_status = yyContinue then
 	yyssp := yyssp - 1
-	yyvs.put (yyval, yyvsp)
+	yyvsp11 := yyvsp11 + 1
+	yyvsp44 := yyvsp44 -1
+	if yyvsp11 >= yyvsc11 then
+		if yyvs11 = Void then
+			debug ("GEYACC")
+				std.error.put_line ("Create yyvs11")
+			end
+			create yyspecial_routines11
+			yyvsc11 := yyInitial_yyvs_size
+			yyvs11 := yyspecial_routines11.make (yyvsc11)
+		else
+			debug ("GEYACC")
+				std.error.put_line ("Resize yyvs11")
+			end
+			yyvsc11 := yyvsc11 + yyInitial_yyvs_size
+			yyvs11 := yyspecial_routines11.resize (yyvs11, yyvsc11)
+		end
+	end
+	yyvs11.put (yyval11, yyvsp11)
 end
 		end
 
 	yy_do_action_387 is
-			--|#line 1832 "eiffel.y"
+			--|#line <not available> "eiffel.y"
 		local
 			yyval11: CALL_AS
 		do
---|#line 1832 "eiffel.y"
+--|#line <not available> "eiffel.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'eiffel.y' at line 1832")
+	std.error.put_line ("Executing parser user-code from file 'eiffel.y' at line <not available>")
 end
 
-
-yyval11 := new_current_as 
-			yyval := yyval11
+yyval11 := yyvs44.item (yyvsp44) 
 if yy_parsing_status = yyContinue then
 	yyssp := yyssp - 1
-	yyvs.put (yyval, yyvsp)
+	yyvsp11 := yyvsp11 + 1
+	yyvsp44 := yyvsp44 -1
+	if yyvsp11 >= yyvsc11 then
+		if yyvs11 = Void then
+			debug ("GEYACC")
+				std.error.put_line ("Create yyvs11")
+			end
+			create yyspecial_routines11
+			yyvsc11 := yyInitial_yyvs_size
+			yyvs11 := yyspecial_routines11.make (yyvsc11)
+		else
+			debug ("GEYACC")
+				std.error.put_line ("Resize yyvs11")
+			end
+			yyvsc11 := yyvsc11 + yyInitial_yyvs_size
+			yyvs11 := yyspecial_routines11.resize (yyvs11, yyvsc11)
+		end
+	end
+	yyvs11.put (yyval11, yyvsp11)
 end
 		end
 
 	yy_do_action_388 is
-			--|#line 1834 "eiffel.y"
+			--|#line <not available> "eiffel.y"
 		local
 			yyval11: CALL_AS
 		do
---|#line 1834 "eiffel.y"
+--|#line <not available> "eiffel.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'eiffel.y' at line 1834")
+	std.error.put_line ("Executing parser user-code from file 'eiffel.y' at line <not available>")
 end
 
-
-yyval11 := new_result_as 
-			yyval := yyval11
+yyval11 := new_current_as 
 if yy_parsing_status = yyContinue then
 	yyssp := yyssp - 1
-	yyvs.put (yyval, yyvsp)
+	yyvsp11 := yyvsp11 + 1
+	yyvsp1 := yyvsp1 -1
+	if yyvsp11 >= yyvsc11 then
+		if yyvs11 = Void then
+			debug ("GEYACC")
+				std.error.put_line ("Create yyvs11")
+			end
+			create yyspecial_routines11
+			yyvsc11 := yyInitial_yyvs_size
+			yyvs11 := yyspecial_routines11.make (yyvsc11)
+		else
+			debug ("GEYACC")
+				std.error.put_line ("Resize yyvs11")
+			end
+			yyvsc11 := yyvsc11 + yyInitial_yyvs_size
+			yyvs11 := yyspecial_routines11.resize (yyvs11, yyvsc11)
+		end
+	end
+	yyvs11.put (yyval11, yyvsp11)
 end
 		end
 
 	yy_do_action_389 is
-			--|#line 1836 "eiffel.y"
+			--|#line <not available> "eiffel.y"
 		local
 			yyval11: CALL_AS
 		do
---|#line 1836 "eiffel.y"
+--|#line <not available> "eiffel.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'eiffel.y' at line 1836")
+	std.error.put_line ("Executing parser user-code from file 'eiffel.y' at line <not available>")
 end
 
-
-yyval11 := yytype2 (yyvs.item (yyvsp)) 
-			yyval := yyval11
+yyval11 := new_result_as 
 if yy_parsing_status = yyContinue then
 	yyssp := yyssp - 1
-	yyvs.put (yyval, yyvsp)
+	yyvsp11 := yyvsp11 + 1
+	yyvsp1 := yyvsp1 -1
+	if yyvsp11 >= yyvsc11 then
+		if yyvs11 = Void then
+			debug ("GEYACC")
+				std.error.put_line ("Create yyvs11")
+			end
+			create yyspecial_routines11
+			yyvsc11 := yyInitial_yyvs_size
+			yyvs11 := yyspecial_routines11.make (yyvsc11)
+		else
+			debug ("GEYACC")
+				std.error.put_line ("Resize yyvs11")
+			end
+			yyvsc11 := yyvsc11 + yyInitial_yyvs_size
+			yyvs11 := yyspecial_routines11.resize (yyvs11, yyvsc11)
+		end
+	end
+	yyvs11.put (yyval11, yyvsp11)
 end
 		end
 
 	yy_do_action_390 is
-			--|#line 1838 "eiffel.y"
+			--|#line <not available> "eiffel.y"
 		local
 			yyval11: CALL_AS
 		do
---|#line 1838 "eiffel.y"
+--|#line <not available> "eiffel.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'eiffel.y' at line 1838")
+	std.error.put_line ("Executing parser user-code from file 'eiffel.y' at line <not available>")
 end
 
-
-yyval11 := yytype45 (yyvs.item (yyvsp)) 
-			yyval := yyval11
+yyval11 := yyvs2.item (yyvsp2) 
 if yy_parsing_status = yyContinue then
 	yyssp := yyssp - 1
-	yyvs.put (yyval, yyvsp)
+	yyvsp11 := yyvsp11 + 1
+	yyvsp2 := yyvsp2 -1
+	if yyvsp11 >= yyvsc11 then
+		if yyvs11 = Void then
+			debug ("GEYACC")
+				std.error.put_line ("Create yyvs11")
+			end
+			create yyspecial_routines11
+			yyvsc11 := yyInitial_yyvs_size
+			yyvs11 := yyspecial_routines11.make (yyvsc11)
+		else
+			debug ("GEYACC")
+				std.error.put_line ("Resize yyvs11")
+			end
+			yyvsc11 := yyvsc11 + yyInitial_yyvs_size
+			yyvs11 := yyspecial_routines11.resize (yyvs11, yyvsc11)
+		end
+	end
+	yyvs11.put (yyval11, yyvsp11)
 end
 		end
 
 	yy_do_action_391 is
-			--|#line 1840 "eiffel.y"
+			--|#line <not available> "eiffel.y"
 		local
 			yyval11: CALL_AS
 		do
---|#line 1840 "eiffel.y"
+--|#line <not available> "eiffel.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'eiffel.y' at line 1840")
+	std.error.put_line ("Executing parser user-code from file 'eiffel.y' at line <not available>")
 end
 
-
-yyval11 := yytype48 (yyvs.item (yyvsp)) 
-			yyval := yyval11
+yyval11 := yyvs45.item (yyvsp45) 
 if yy_parsing_status = yyContinue then
 	yyssp := yyssp - 1
-	yyvs.put (yyval, yyvsp)
+	yyvsp11 := yyvsp11 + 1
+	yyvsp45 := yyvsp45 -1
+	if yyvsp11 >= yyvsc11 then
+		if yyvs11 = Void then
+			debug ("GEYACC")
+				std.error.put_line ("Create yyvs11")
+			end
+			create yyspecial_routines11
+			yyvsc11 := yyInitial_yyvs_size
+			yyvs11 := yyspecial_routines11.make (yyvsc11)
+		else
+			debug ("GEYACC")
+				std.error.put_line ("Resize yyvs11")
+			end
+			yyvsc11 := yyvsc11 + yyInitial_yyvs_size
+			yyvs11 := yyspecial_routines11.resize (yyvs11, yyvsc11)
+		end
+	end
+	yyvs11.put (yyval11, yyvsp11)
 end
 		end
 
 	yy_do_action_392 is
-			--|#line 1842 "eiffel.y"
+			--|#line <not available> "eiffel.y"
 		local
 			yyval11: CALL_AS
 		do
---|#line 1842 "eiffel.y"
+--|#line <not available> "eiffel.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'eiffel.y' at line 1842")
+	std.error.put_line ("Executing parser user-code from file 'eiffel.y' at line <not available>")
 end
 
-
-yyval11 := yytype44 (yyvs.item (yyvsp)) 
-			yyval := yyval11
+yyval11 := yyvs48.item (yyvsp48) 
 if yy_parsing_status = yyContinue then
 	yyssp := yyssp - 1
-	yyvs.put (yyval, yyvsp)
+	yyvsp11 := yyvsp11 + 1
+	yyvsp48 := yyvsp48 -1
+	if yyvsp11 >= yyvsc11 then
+		if yyvs11 = Void then
+			debug ("GEYACC")
+				std.error.put_line ("Create yyvs11")
+			end
+			create yyspecial_routines11
+			yyvsc11 := yyInitial_yyvs_size
+			yyvs11 := yyspecial_routines11.make (yyvsc11)
+		else
+			debug ("GEYACC")
+				std.error.put_line ("Resize yyvs11")
+			end
+			yyvsc11 := yyvsc11 + yyInitial_yyvs_size
+			yyvs11 := yyspecial_routines11.resize (yyvs11, yyvsc11)
+		end
+	end
+	yyvs11.put (yyval11, yyvsp11)
 end
 		end
 
 	yy_do_action_393 is
-			--|#line 1844 "eiffel.y"
+			--|#line <not available> "eiffel.y"
 		local
 			yyval11: CALL_AS
 		do
---|#line 1844 "eiffel.y"
+--|#line <not available> "eiffel.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'eiffel.y' at line 1844")
+	std.error.put_line ("Executing parser user-code from file 'eiffel.y' at line <not available>")
 end
 
-
-yyval11 := yytype49 (yyvs.item (yyvsp)) 
-			yyval := yyval11
+yyval11 := yyvs44.item (yyvsp44) 
 if yy_parsing_status = yyContinue then
 	yyssp := yyssp - 1
-	yyvs.put (yyval, yyvsp)
+	yyvsp11 := yyvsp11 + 1
+	yyvsp44 := yyvsp44 -1
+	if yyvsp11 >= yyvsc11 then
+		if yyvs11 = Void then
+			debug ("GEYACC")
+				std.error.put_line ("Create yyvs11")
+			end
+			create yyspecial_routines11
+			yyvsc11 := yyInitial_yyvs_size
+			yyvs11 := yyspecial_routines11.make (yyvsc11)
+		else
+			debug ("GEYACC")
+				std.error.put_line ("Resize yyvs11")
+			end
+			yyvsc11 := yyvsc11 + yyInitial_yyvs_size
+			yyvs11 := yyspecial_routines11.resize (yyvs11, yyvsc11)
+		end
+	end
+	yyvs11.put (yyval11, yyvsp11)
 end
 		end
 
 	yy_do_action_394 is
-			--|#line 1846 "eiffel.y"
+			--|#line <not available> "eiffel.y"
 		local
 			yyval11: CALL_AS
 		do
---|#line 1846 "eiffel.y"
+--|#line <not available> "eiffel.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'eiffel.y' at line 1846")
+	std.error.put_line ("Executing parser user-code from file 'eiffel.y' at line <not available>")
 end
 
-
-yyval11 := yytype44 (yyvs.item (yyvsp)) 
-			yyval := yyval11
+yyval11 := yyvs49.item (yyvsp49) 
 if yy_parsing_status = yyContinue then
 	yyssp := yyssp - 1
-	yyvs.put (yyval, yyvsp)
+	yyvsp11 := yyvsp11 + 1
+	yyvsp49 := yyvsp49 -1
+	if yyvsp11 >= yyvsc11 then
+		if yyvs11 = Void then
+			debug ("GEYACC")
+				std.error.put_line ("Create yyvs11")
+			end
+			create yyspecial_routines11
+			yyvsc11 := yyInitial_yyvs_size
+			yyvs11 := yyspecial_routines11.make (yyvsc11)
+		else
+			debug ("GEYACC")
+				std.error.put_line ("Resize yyvs11")
+			end
+			yyvsc11 := yyvsc11 + yyInitial_yyvs_size
+			yyvs11 := yyspecial_routines11.resize (yyvs11, yyvsc11)
+		end
+	end
+	yyvs11.put (yyval11, yyvsp11)
 end
 		end
 
 	yy_do_action_395 is
-			--|#line 1848 "eiffel.y"
+			--|#line <not available> "eiffel.y"
 		local
 			yyval11: CALL_AS
 		do
---|#line 1848 "eiffel.y"
+--|#line <not available> "eiffel.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'eiffel.y' at line 1848")
+	std.error.put_line ("Executing parser user-code from file 'eiffel.y' at line <not available>")
 end
 
-
-yyval11 := yytype20 (yyvs.item (yyvsp)) 
-			yyval := yyval11
+yyval11 := yyvs44.item (yyvsp44) 
 if yy_parsing_status = yyContinue then
 	yyssp := yyssp - 1
-	yyvs.put (yyval, yyvsp)
+	yyvsp11 := yyvsp11 + 1
+	yyvsp44 := yyvsp44 -1
+	if yyvsp11 >= yyvsc11 then
+		if yyvs11 = Void then
+			debug ("GEYACC")
+				std.error.put_line ("Create yyvs11")
+			end
+			create yyspecial_routines11
+			yyvsc11 := yyInitial_yyvs_size
+			yyvs11 := yyspecial_routines11.make (yyvsc11)
+		else
+			debug ("GEYACC")
+				std.error.put_line ("Resize yyvs11")
+			end
+			yyvsc11 := yyvsc11 + yyInitial_yyvs_size
+			yyvs11 := yyspecial_routines11.resize (yyvs11, yyvsc11)
+		end
+	end
+	yyvs11.put (yyval11, yyvsp11)
 end
 		end
 
 	yy_do_action_396 is
-			--|#line 1852 "eiffel.y"
+			--|#line <not available> "eiffel.y"
 		local
-			yyval44: NESTED_AS
+			yyval11: CALL_AS
 		do
---|#line 1852 "eiffel.y"
+--|#line <not available> "eiffel.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'eiffel.y' at line 1852")
+	std.error.put_line ("Executing parser user-code from file 'eiffel.y' at line <not available>")
 end
 
-
-yyval44 := new_nested_as (new_current_as, yytype11 (yyvs.item (yyvsp))) 
-			yyval := yyval44
+yyval11 := yyvs20.item (yyvsp20) 
 if yy_parsing_status = yyContinue then
-	yyssp := yyssp - 3
-	yyvsp := yyvsp - 2
-	yyvs.put (yyval, yyvsp)
+	yyssp := yyssp - 1
+	yyvsp11 := yyvsp11 + 1
+	yyvsp20 := yyvsp20 -1
+	if yyvsp11 >= yyvsc11 then
+		if yyvs11 = Void then
+			debug ("GEYACC")
+				std.error.put_line ("Create yyvs11")
+			end
+			create yyspecial_routines11
+			yyvsc11 := yyInitial_yyvs_size
+			yyvs11 := yyspecial_routines11.make (yyvsc11)
+		else
+			debug ("GEYACC")
+				std.error.put_line ("Resize yyvs11")
+			end
+			yyvsc11 := yyvsc11 + yyInitial_yyvs_size
+			yyvs11 := yyspecial_routines11.resize (yyvs11, yyvsc11)
+		end
+	end
+	yyvs11.put (yyval11, yyvsp11)
 end
 		end
 
 	yy_do_action_397 is
-			--|#line 1856 "eiffel.y"
+			--|#line <not available> "eiffel.y"
 		local
 			yyval44: NESTED_AS
 		do
---|#line 1856 "eiffel.y"
+--|#line <not available> "eiffel.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'eiffel.y' at line 1856")
+	std.error.put_line ("Executing parser user-code from file 'eiffel.y' at line <not available>")
 end
 
-
-yyval44 := new_nested_as (new_result_as, yytype11 (yyvs.item (yyvsp))) 
-			yyval := yyval44
+yyval44 := new_nested_as (new_current_as, yyvs11.item (yyvsp11)) 
 if yy_parsing_status = yyContinue then
 	yyssp := yyssp - 3
-	yyvsp := yyvsp - 2
-	yyvs.put (yyval, yyvsp)
+	yyvsp44 := yyvsp44 + 1
+	yyvsp1 := yyvsp1 -2
+	yyvsp11 := yyvsp11 -1
+	if yyvsp44 >= yyvsc44 then
+		if yyvs44 = Void then
+			debug ("GEYACC")
+				std.error.put_line ("Create yyvs44")
+			end
+			create yyspecial_routines44
+			yyvsc44 := yyInitial_yyvs_size
+			yyvs44 := yyspecial_routines44.make (yyvsc44)
+		else
+			debug ("GEYACC")
+				std.error.put_line ("Resize yyvs44")
+			end
+			yyvsc44 := yyvsc44 + yyInitial_yyvs_size
+			yyvs44 := yyspecial_routines44.resize (yyvs44, yyvsc44)
+		end
+	end
+	yyvs44.put (yyval44, yyvsp44)
 end
 		end
 
 	yy_do_action_398 is
-			--|#line 1860 "eiffel.y"
+			--|#line <not available> "eiffel.y"
 		local
 			yyval44: NESTED_AS
 		do
---|#line 1860 "eiffel.y"
+--|#line <not available> "eiffel.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'eiffel.y' at line 1860")
+	std.error.put_line ("Executing parser user-code from file 'eiffel.y' at line <not available>")
 end
 
-
-yyval44 := new_nested_as (yytype2 (yyvs.item (yyvsp - 2)), yytype11 (yyvs.item (yyvsp))) 
-			yyval := yyval44
+yyval44 := new_nested_as (new_result_as, yyvs11.item (yyvsp11)) 
 if yy_parsing_status = yyContinue then
 	yyssp := yyssp - 3
-	yyvsp := yyvsp - 2
-	yyvs.put (yyval, yyvsp)
+	yyvsp44 := yyvsp44 + 1
+	yyvsp1 := yyvsp1 -2
+	yyvsp11 := yyvsp11 -1
+	if yyvsp44 >= yyvsc44 then
+		if yyvs44 = Void then
+			debug ("GEYACC")
+				std.error.put_line ("Create yyvs44")
+			end
+			create yyspecial_routines44
+			yyvsc44 := yyInitial_yyvs_size
+			yyvs44 := yyspecial_routines44.make (yyvsc44)
+		else
+			debug ("GEYACC")
+				std.error.put_line ("Resize yyvs44")
+			end
+			yyvsc44 := yyvsc44 + yyInitial_yyvs_size
+			yyvs44 := yyspecial_routines44.resize (yyvs44, yyvsc44)
+		end
+	end
+	yyvs44.put (yyval44, yyvsp44)
 end
 		end
 
 	yy_do_action_399 is
-			--|#line 1864 "eiffel.y"
+			--|#line <not available> "eiffel.y"
 		local
-			yyval45: NESTED_EXPR_AS
+			yyval44: NESTED_AS
 		do
---|#line 1864 "eiffel.y"
+--|#line <not available> "eiffel.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'eiffel.y' at line 1864")
+	std.error.put_line ("Executing parser user-code from file 'eiffel.y' at line <not available>")
 end
 
-
-yyval45 := new_nested_expr_as (yytype25 (yyvs.item (yyvsp - 3)), yytype11 (yyvs.item (yyvsp))) 
-			yyval := yyval45
+yyval44 := new_nested_as (yyvs2.item (yyvsp2), yyvs11.item (yyvsp11)) 
 if yy_parsing_status = yyContinue then
-	yyssp := yyssp - 5
-	yyvsp := yyvsp - 4
-	yyvs.put (yyval, yyvsp)
+	yyssp := yyssp - 3
+	yyvsp44 := yyvsp44 + 1
+	yyvsp2 := yyvsp2 -1
+	yyvsp1 := yyvsp1 -1
+	yyvsp11 := yyvsp11 -1
+	if yyvsp44 >= yyvsc44 then
+		if yyvs44 = Void then
+			debug ("GEYACC")
+				std.error.put_line ("Create yyvs44")
+			end
+			create yyspecial_routines44
+			yyvsc44 := yyInitial_yyvs_size
+			yyvs44 := yyspecial_routines44.make (yyvsc44)
+		else
+			debug ("GEYACC")
+				std.error.put_line ("Resize yyvs44")
+			end
+			yyvsc44 := yyvsc44 + yyInitial_yyvs_size
+			yyvs44 := yyspecial_routines44.resize (yyvs44, yyvsc44)
+		end
+	end
+	yyvs44.put (yyval44, yyvsp44)
 end
 		end
 
 	yy_do_action_400 is
-			--|#line 1868 "eiffel.y"
+			--|#line <not available> "eiffel.y"
 		local
-			yyval44: NESTED_AS
+			yyval45: NESTED_EXPR_AS
 		do
---|#line 1868 "eiffel.y"
+--|#line <not available> "eiffel.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'eiffel.y' at line 1868")
+	std.error.put_line ("Executing parser user-code from file 'eiffel.y' at line <not available>")
 end
 
-
-yyval44 := new_nested_as (yytype48 (yyvs.item (yyvsp - 2)), yytype11 (yyvs.item (yyvsp))) 
-			yyval := yyval44
+yyval45 := new_nested_expr_as (yyvs25.item (yyvsp25), yyvs11.item (yyvsp11)) 
 if yy_parsing_status = yyContinue then
-	yyssp := yyssp - 3
-	yyvsp := yyvsp - 2
-	yyvs.put (yyval, yyvsp)
+	yyssp := yyssp - 5
+	yyvsp45 := yyvsp45 + 1
+	yyvsp1 := yyvsp1 -3
+	yyvsp25 := yyvsp25 -1
+	yyvsp11 := yyvsp11 -1
+	if yyvsp45 >= yyvsc45 then
+		if yyvs45 = Void then
+			debug ("GEYACC")
+				std.error.put_line ("Create yyvs45")
+			end
+			create yyspecial_routines45
+			yyvsc45 := yyInitial_yyvs_size
+			yyvs45 := yyspecial_routines45.make (yyvsc45)
+		else
+			debug ("GEYACC")
+				std.error.put_line ("Resize yyvs45")
+			end
+			yyvsc45 := yyvsc45 + yyInitial_yyvs_size
+			yyvs45 := yyspecial_routines45.resize (yyvs45, yyvsc45)
+		end
+	end
+	yyvs45.put (yyval45, yyvsp45)
 end
 		end
 
 	yy_do_action_401 is
-			--|#line 1872 "eiffel.y"
+			--|#line <not available> "eiffel.y"
 		local
-			yyval48: PRECURSOR_AS
+			yyval44: NESTED_AS
 		do
---|#line 1872 "eiffel.y"
+--|#line <not available> "eiffel.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'eiffel.y' at line 1872")
+	std.error.put_line ("Executing parser user-code from file 'eiffel.y' at line <not available>")
 end
 
-
-yyval48 := new_precursor_as (Void, yytype72 (yyvs.item (yyvsp))) 
-			yyval := yyval48
+yyval44 := new_nested_as (yyvs48.item (yyvsp48), yyvs11.item (yyvsp11)) 
 if yy_parsing_status = yyContinue then
-	yyssp := yyssp - 2
-	yyvsp := yyvsp - 1
-	yyvs.put (yyval, yyvsp)
+	yyssp := yyssp - 3
+	yyvsp44 := yyvsp44 + 1
+	yyvsp48 := yyvsp48 -1
+	yyvsp1 := yyvsp1 -1
+	yyvsp11 := yyvsp11 -1
+	if yyvsp44 >= yyvsc44 then
+		if yyvs44 = Void then
+			debug ("GEYACC")
+				std.error.put_line ("Create yyvs44")
+			end
+			create yyspecial_routines44
+			yyvsc44 := yyInitial_yyvs_size
+			yyvs44 := yyspecial_routines44.make (yyvsc44)
+		else
+			debug ("GEYACC")
+				std.error.put_line ("Resize yyvs44")
+			end
+			yyvsc44 := yyvsc44 + yyInitial_yyvs_size
+			yyvs44 := yyspecial_routines44.resize (yyvs44, yyvsc44)
+		end
+	end
+	yyvs44.put (yyval44, yyvsp44)
 end
 		end
 
 	yy_do_action_402 is
-			--|#line 1874 "eiffel.y"
+			--|#line <not available> "eiffel.y"
 		local
 			yyval48: PRECURSOR_AS
 		do
---|#line 1874 "eiffel.y"
+--|#line <not available> "eiffel.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'eiffel.y' at line 1874")
+	std.error.put_line ("Executing parser user-code from file 'eiffel.y' at line <not available>")
 end
 
-
-yyval48 := new_precursor (yytype92 (yyvs.item (yyvsp - 2)), yytype72 (yyvs.item (yyvsp)), Void) 
-			yyval := yyval48
+yyval48 := new_precursor_as (Void, yyvs72.item (yyvsp72)) 
 if yy_parsing_status = yyContinue then
-	yyssp := yyssp - 5
-	yyvsp := yyvsp - 4
-	yyvs.put (yyval, yyvsp)
+	yyssp := yyssp - 2
+	yyvsp48 := yyvsp48 + 1
+	yyvsp1 := yyvsp1 -1
+	yyvsp72 := yyvsp72 -1
+	if yyvsp48 >= yyvsc48 then
+		if yyvs48 = Void then
+			debug ("GEYACC")
+				std.error.put_line ("Create yyvs48")
+			end
+			create yyspecial_routines48
+			yyvsc48 := yyInitial_yyvs_size
+			yyvs48 := yyspecial_routines48.make (yyvsc48)
+		else
+			debug ("GEYACC")
+				std.error.put_line ("Resize yyvs48")
+			end
+			yyvsc48 := yyvsc48 + yyInitial_yyvs_size
+			yyvs48 := yyspecial_routines48.resize (yyvs48, yyvsc48)
+		end
+	end
+	yyvs48.put (yyval48, yyvsp48)
 end
 		end
 
 	yy_do_action_403 is
-			--|#line 1876 "eiffel.y"
+			--|#line <not available> "eiffel.y"
 		local
 			yyval48: PRECURSOR_AS
 		do
---|#line 1876 "eiffel.y"
+--|#line <not available> "eiffel.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'eiffel.y' at line 1876")
+	std.error.put_line ("Executing parser user-code from file 'eiffel.y' at line <not available>")
 end
 
-
-yyval48 := new_precursor (yytype92 (yyvs.item (yyvsp - 5)), yytype72 (yyvs.item (yyvsp)), yytype58 (yyvs.item (yyvsp - 2))) 
-			yyval := yyval48
+yyval48 := new_precursor (yyvs92.item (yyvsp92), yyvs72.item (yyvsp72), Void) 
 if yy_parsing_status = yyContinue then
-	yyssp := yyssp - 8
-	yyvsp := yyvsp - 7
-	yyvs.put (yyval, yyvsp)
+	yyssp := yyssp - 5
+	yyvsp48 := yyvsp48 + 1
+	yyvsp1 := yyvsp1 -3
+	yyvsp92 := yyvsp92 -1
+	yyvsp72 := yyvsp72 -1
+	if yyvsp48 >= yyvsc48 then
+		if yyvs48 = Void then
+			debug ("GEYACC")
+				std.error.put_line ("Create yyvs48")
+			end
+			create yyspecial_routines48
+			yyvsc48 := yyInitial_yyvs_size
+			yyvs48 := yyspecial_routines48.make (yyvsc48)
+		else
+			debug ("GEYACC")
+				std.error.put_line ("Resize yyvs48")
+			end
+			yyvsc48 := yyvsc48 + yyInitial_yyvs_size
+			yyvs48 := yyspecial_routines48.resize (yyvs48, yyvsc48)
+		end
+	end
+	yyvs48.put (yyval48, yyvsp48)
 end
 		end
 
 	yy_do_action_404 is
-			--|#line 1878 "eiffel.y"
+			--|#line <not available> "eiffel.y"
 		local
-			yyval48: PRECURSOR_AS
+			yyval44: NESTED_AS
 		do
---|#line 1878 "eiffel.y"
+--|#line <not available> "eiffel.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'eiffel.y' at line 1878")
+	std.error.put_line ("Executing parser user-code from file 'eiffel.y' at line <not available>")
 end
 
-
-yyval48 := new_precursor (yytype92 (yyvs.item (yyvsp - 4)), yytype72 (yyvs.item (yyvsp)), yytype58 (yyvs.item (yyvsp - 2))) 
-			yyval := yyval48
+yyval44 := yyvs44.item (yyvsp44) 
 if yy_parsing_status = yyContinue then
-	yyssp := yyssp - 6
-	yyvsp := yyvsp - 5
-	yyvs.put (yyval, yyvsp)
+	yyssp := yyssp - 1
+	yyvs44.put (yyval44, yyvsp44)
 end
 		end
 
 	yy_do_action_405 is
-			--|#line 1882 "eiffel.y"
+			--|#line <not available> "eiffel.y"
 		local
 			yyval44: NESTED_AS
 		do
---|#line 1882 "eiffel.y"
+--|#line <not available> "eiffel.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'eiffel.y' at line 1882")
+	std.error.put_line ("Executing parser user-code from file 'eiffel.y' at line <not available>")
 end
 
-
-yyval44 := new_nested_as (yytype49 (yyvs.item (yyvsp - 2)), yytype11 (yyvs.item (yyvsp))) 
-			yyval := yyval44
+yyval44 := yyvs44.item (yyvsp44) 
 if yy_parsing_status = yyContinue then
-	yyssp := yyssp - 3
-	yyvsp := yyvsp - 2
-	yyvs.put (yyval, yyvsp)
+	yyssp := yyssp - 1
+	yyvs44.put (yyval44, yyvsp44)
 end
 		end
 
 	yy_do_action_406 is
-			--|#line 1886 "eiffel.y"
+			--|#line <not available> "eiffel.y"
 		local
-			yyval49: STATIC_ACCESS_AS
+			yyval44: NESTED_AS
 		do
---|#line 1886 "eiffel.y"
+--|#line <not available> "eiffel.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'eiffel.y' at line 1886")
+	std.error.put_line ("Executing parser user-code from file 'eiffel.y' at line <not available>")
 end
 
-
-				yyval49 := new_static_access_as (yytype63 (yyvs.item (yyvsp - 4)), yytype33 (yyvs.item (yyvsp - 1)), yytype72 (yyvs.item (yyvsp)));
-			
-			yyval := yyval49
+yyval44 := new_nested_as (yyvs49.item (yyvsp49), yyvs11.item (yyvsp11)) 
 if yy_parsing_status = yyContinue then
-	yyssp := yyssp - 7
-	yyvsp := yyvsp - 6
-	yyvs.put (yyval, yyvsp)
+	yyssp := yyssp - 3
+	yyvsp44 := yyvsp44 + 1
+	yyvsp49 := yyvsp49 -1
+	yyvsp1 := yyvsp1 -1
+	yyvsp11 := yyvsp11 -1
+	if yyvsp44 >= yyvsc44 then
+		if yyvs44 = Void then
+			debug ("GEYACC")
+				std.error.put_line ("Create yyvs44")
+			end
+			create yyspecial_routines44
+			yyvsc44 := yyInitial_yyvs_size
+			yyvs44 := yyspecial_routines44.make (yyvsc44)
+		else
+			debug ("GEYACC")
+				std.error.put_line ("Resize yyvs44")
+			end
+			yyvsc44 := yyvsc44 + yyInitial_yyvs_size
+			yyvs44 := yyspecial_routines44.resize (yyvs44, yyvsc44)
+		end
+	end
+	yyvs44.put (yyval44, yyvsp44)
 end
 		end
 
 	yy_do_action_407 is
-			--|#line 1893 "eiffel.y"
+			--|#line <not available> "eiffel.y"
 		local
-			yyval49: STATIC_ACCESS_AS
+			yyval44: NESTED_AS
 		do
---|#line 1893 "eiffel.y"
+--|#line <not available> "eiffel.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'eiffel.y' at line 1893")
+	std.error.put_line ("Executing parser user-code from file 'eiffel.y' at line <not available>")
 end
 
-
-				yyval49 := new_static_access_as (yytype63 (yyvs.item (yyvsp - 3)), yytype33 (yyvs.item (yyvsp)), Void);
-			
-			yyval := yyval49
+yyval44 := new_nested_as (yyvs49.item (yyvsp49), yyvs11.item (yyvsp11)) 
 if yy_parsing_status = yyContinue then
-	yyssp := yyssp - 6
-	yyvsp := yyvsp - 5
-	yyvs.put (yyval, yyvsp)
+	yyssp := yyssp - 3
+	yyvsp44 := yyvsp44 + 1
+	yyvsp49 := yyvsp49 -1
+	yyvsp1 := yyvsp1 -1
+	yyvsp11 := yyvsp11 -1
+	if yyvsp44 >= yyvsc44 then
+		if yyvs44 = Void then
+			debug ("GEYACC")
+				std.error.put_line ("Create yyvs44")
+			end
+			create yyspecial_routines44
+			yyvsc44 := yyInitial_yyvs_size
+			yyvs44 := yyspecial_routines44.make (yyvsc44)
+		else
+			debug ("GEYACC")
+				std.error.put_line ("Resize yyvs44")
+			end
+			yyvsc44 := yyvsc44 + yyInitial_yyvs_size
+			yyvs44 := yyspecial_routines44.resize (yyvs44, yyvsc44)
+		end
+	end
+	yyvs44.put (yyval44, yyvsp44)
 end
 		end
 
 	yy_do_action_408 is
-			--|#line 1901 "eiffel.y"
+			--|#line <not available> "eiffel.y"
 		local
-			yyval11: CALL_AS
+			yyval49: STATIC_ACCESS_AS
 		do
---|#line 1901 "eiffel.y"
+--|#line <not available> "eiffel.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'eiffel.y' at line 1901")
+	std.error.put_line ("Executing parser user-code from file 'eiffel.y' at line <not available>")
 end
 
-
-yyval11 := yytype44 (yyvs.item (yyvsp)) 
-			yyval := yyval11
+yyval49 := yyvs49.item (yyvsp49) 
 if yy_parsing_status = yyContinue then
 	yyssp := yyssp - 1
-	yyvs.put (yyval, yyvsp)
+	yyvs49.put (yyval49, yyvsp49)
 end
 		end
 
 	yy_do_action_409 is
-			--|#line 1903 "eiffel.y"
+			--|#line <not available> "eiffel.y"
 		local
-			yyval11: CALL_AS
+			yyval49: STATIC_ACCESS_AS
 		do
---|#line 1903 "eiffel.y"
+--|#line <not available> "eiffel.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'eiffel.y' at line 1903")
+	std.error.put_line ("Executing parser user-code from file 'eiffel.y' at line <not available>")
 end
 
-
-yyval11 := yytype3 (yyvs.item (yyvsp)) 
-			yyval := yyval11
+yyval49 := yyvs49.item (yyvsp49) 
 if yy_parsing_status = yyContinue then
 	yyssp := yyssp - 1
-	yyvs.put (yyval, yyvsp)
+	yyvs49.put (yyval49, yyvsp49)
 end
 		end
 
 	yy_do_action_410 is
-			--|#line 1907 "eiffel.y"
+			--|#line <not available> "eiffel.y"
 		local
-			yyval44: NESTED_AS
+			yyval49: STATIC_ACCESS_AS
 		do
---|#line 1907 "eiffel.y"
+--|#line <not available> "eiffel.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'eiffel.y' at line 1907")
+	std.error.put_line ("Executing parser user-code from file 'eiffel.y' at line <not available>")
 end
 
-
-yyval44 := new_nested_as (yytype3 (yyvs.item (yyvsp - 2)), yytype3 (yyvs.item (yyvsp))) 
-			yyval := yyval44
+yyval49 := new_static_access_as (yyvs63.item (yyvsp63), yyvs33.item (yyvsp33), yyvs72.item (yyvsp72)); 
 if yy_parsing_status = yyContinue then
-	yyssp := yyssp - 3
-	yyvsp := yyvsp - 2
-	yyvs.put (yyval, yyvsp)
+	yyssp := yyssp - 4
+	yyvsp49 := yyvsp49 + 1
+	yyvsp63 := yyvsp63 -1
+	yyvsp1 := yyvsp1 -1
+	yyvsp33 := yyvsp33 -1
+	yyvsp72 := yyvsp72 -1
+	if yyvsp49 >= yyvsc49 then
+		if yyvs49 = Void then
+			debug ("GEYACC")
+				std.error.put_line ("Create yyvs49")
+			end
+			create yyspecial_routines49
+			yyvsc49 := yyInitial_yyvs_size
+			yyvs49 := yyspecial_routines49.make (yyvsc49)
+		else
+			debug ("GEYACC")
+				std.error.put_line ("Resize yyvs49")
+			end
+			yyvsc49 := yyvsc49 + yyInitial_yyvs_size
+			yyvs49 := yyspecial_routines49.resize (yyvs49, yyvsc49)
+		end
+	end
+	yyvs49.put (yyval49, yyvsp49)
 end
 		end
 
 	yy_do_action_411 is
-			--|#line 1909 "eiffel.y"
+			--|#line <not available> "eiffel.y"
 		local
-			yyval44: NESTED_AS
+			yyval49: STATIC_ACCESS_AS
 		do
---|#line 1909 "eiffel.y"
+--|#line <not available> "eiffel.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'eiffel.y' at line 1909")
+	std.error.put_line ("Executing parser user-code from file 'eiffel.y' at line <not available>")
 end
 
-
-yyval44 := new_nested_as (yytype3 (yyvs.item (yyvsp - 2)), yytype44 (yyvs.item (yyvsp))) 
-			yyval := yyval44
+				yyval49 := new_static_access_as (yyvs63.item (yyvsp63), yyvs33.item (yyvsp33), yyvs72.item (yyvsp72));
+				if has_syntax_warning then
+					Error_handler.insert_warning (
+						create {SYNTAX_WARNING}.make (yyvs58.item (yyvsp58).start_position,
+							yyvs58.item (yyvsp58).end_position, filename, 0, "Remove the `feature' keyword."))
+				end
+			
 if yy_parsing_status = yyContinue then
-	yyssp := yyssp - 3
-	yyvsp := yyvsp - 2
-	yyvs.put (yyval, yyvsp)
+	yyssp := yyssp - 6
+	yyvsp49 := yyvsp49 + 1
+	yyvsp1 := yyvsp1 -2
+	yyvsp58 := yyvsp58 -1
+	yyvsp63 := yyvsp63 -1
+	yyvsp33 := yyvsp33 -1
+	yyvsp72 := yyvsp72 -1
+	if yyvsp49 >= yyvsc49 then
+		if yyvs49 = Void then
+			debug ("GEYACC")
+				std.error.put_line ("Create yyvs49")
+			end
+			create yyspecial_routines49
+			yyvsc49 := yyInitial_yyvs_size
+			yyvs49 := yyspecial_routines49.make (yyvsc49)
+		else
+			debug ("GEYACC")
+				std.error.put_line ("Resize yyvs49")
+			end
+			yyvsc49 := yyvsc49 + yyInitial_yyvs_size
+			yyvs49 := yyspecial_routines49.resize (yyvs49, yyvsc49)
+		end
+	end
+	yyvs49.put (yyval49, yyvsp49)
 end
 		end
 
 	yy_do_action_412 is
-			--|#line 1913 "eiffel.y"
+			--|#line <not available> "eiffel.y"
 		local
-			yyval33: ID_AS
+			yyval11: CALL_AS
 		do
---|#line 1913 "eiffel.y"
+--|#line <not available> "eiffel.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'eiffel.y' at line 1913")
+	std.error.put_line ("Executing parser user-code from file 'eiffel.y' at line <not available>")
 end
 
-
-yyval33 := yytype33 (yyvs.item (yyvsp))
-			yyval := yyval33
+yyval11 := yyvs44.item (yyvsp44) 
 if yy_parsing_status = yyContinue then
 	yyssp := yyssp - 1
-	yyvs.put (yyval, yyvsp)
+	yyvsp11 := yyvsp11 + 1
+	yyvsp44 := yyvsp44 -1
+	if yyvsp11 >= yyvsc11 then
+		if yyvs11 = Void then
+			debug ("GEYACC")
+				std.error.put_line ("Create yyvs11")
+			end
+			create yyspecial_routines11
+			yyvsc11 := yyInitial_yyvs_size
+			yyvs11 := yyspecial_routines11.make (yyvsc11)
+		else
+			debug ("GEYACC")
+				std.error.put_line ("Resize yyvs11")
+			end
+			yyvsc11 := yyvsc11 + yyInitial_yyvs_size
+			yyvs11 := yyspecial_routines11.resize (yyvs11, yyvsc11)
+		end
+	end
+	yyvs11.put (yyval11, yyvsp11)
 end
 		end
 
 	yy_do_action_413 is
-			--|#line 1915 "eiffel.y"
+			--|#line <not available> "eiffel.y"
 		local
-			yyval33: ID_AS
+			yyval11: CALL_AS
 		do
---|#line 1915 "eiffel.y"
+--|#line <not available> "eiffel.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'eiffel.y' at line 1915")
+	std.error.put_line ("Executing parser user-code from file 'eiffel.y' at line <not available>")
 end
 
-
-yyval33 := yytype93 (yyvs.item (yyvsp)).first.internal_name 
-			yyval := yyval33
+yyval11 := yyvs3.item (yyvsp3) 
 if yy_parsing_status = yyContinue then
 	yyssp := yyssp - 1
-	yyvs.put (yyval, yyvsp)
+	yyvsp11 := yyvsp11 + 1
+	yyvsp3 := yyvsp3 -1
+	if yyvsp11 >= yyvsc11 then
+		if yyvs11 = Void then
+			debug ("GEYACC")
+				std.error.put_line ("Create yyvs11")
+			end
+			create yyspecial_routines11
+			yyvsc11 := yyInitial_yyvs_size
+			yyvs11 := yyspecial_routines11.make (yyvsc11)
+		else
+			debug ("GEYACC")
+				std.error.put_line ("Resize yyvs11")
+			end
+			yyvsc11 := yyvsc11 + yyInitial_yyvs_size
+			yyvs11 := yyspecial_routines11.resize (yyvs11, yyvsc11)
+		end
+	end
+	yyvs11.put (yyval11, yyvsp11)
 end
 		end
 
 	yy_do_action_414 is
-			--|#line 1917 "eiffel.y"
+			--|#line <not available> "eiffel.y"
 		local
-			yyval33: ID_AS
+			yyval44: NESTED_AS
 		do
---|#line 1917 "eiffel.y"
+--|#line <not available> "eiffel.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'eiffel.y' at line 1917")
+	std.error.put_line ("Executing parser user-code from file 'eiffel.y' at line <not available>")
 end
 
-
-yyval33 := yytype93 (yyvs.item (yyvsp)).first.internal_name 
-			yyval := yyval33
+yyval44 := new_nested_as (yyvs3.item (yyvsp3 - 1), yyvs3.item (yyvsp3)) 
 if yy_parsing_status = yyContinue then
-	yyssp := yyssp - 1
-	yyvs.put (yyval, yyvsp)
+	yyssp := yyssp - 3
+	yyvsp44 := yyvsp44 + 1
+	yyvsp3 := yyvsp3 -2
+	yyvsp1 := yyvsp1 -1
+	if yyvsp44 >= yyvsc44 then
+		if yyvs44 = Void then
+			debug ("GEYACC")
+				std.error.put_line ("Create yyvs44")
+			end
+			create yyspecial_routines44
+			yyvsc44 := yyInitial_yyvs_size
+			yyvs44 := yyspecial_routines44.make (yyvsc44)
+		else
+			debug ("GEYACC")
+				std.error.put_line ("Resize yyvs44")
+			end
+			yyvsc44 := yyvsc44 + yyInitial_yyvs_size
+			yyvs44 := yyspecial_routines44.resize (yyvs44, yyvsc44)
+		end
+	end
+	yyvs44.put (yyval44, yyvsp44)
 end
 		end
 
 	yy_do_action_415 is
-			--|#line 1921 "eiffel.y"
+			--|#line <not available> "eiffel.y"
 		local
-			yyval2: ACCESS_AS
+			yyval44: NESTED_AS
 		do
---|#line 1921 "eiffel.y"
+--|#line <not available> "eiffel.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'eiffel.y' at line 1921")
+	std.error.put_line ("Executing parser user-code from file 'eiffel.y' at line <not available>")
 end
 
-
-				inspect id_level
-				when Normal_level then
-					yyval2 := new_access_id_as (yytype33 (yyvs.item (yyvsp - 1)), yytype72 (yyvs.item (yyvsp)))
-				when Assert_level then
-					yyval2 := new_access_assert_as (yytype33 (yyvs.item (yyvsp - 1)), yytype72 (yyvs.item (yyvsp)))
-				when Invariant_level then
-					yyval2 := new_access_inv_as (yytype33 (yyvs.item (yyvsp - 1)), yytype72 (yyvs.item (yyvsp)))
-				end
-			
-			yyval := yyval2
+yyval44 := new_nested_as (yyvs3.item (yyvsp3), yyvs44.item (yyvsp44)) 
 if yy_parsing_status = yyContinue then
-	yyssp := yyssp - 2
-	yyvsp := yyvsp - 1
-	yyvs.put (yyval, yyvsp)
+	yyssp := yyssp - 3
+	yyvsp3 := yyvsp3 -1
+	yyvsp1 := yyvsp1 -1
+	yyvs44.put (yyval44, yyvsp44)
 end
 		end
 
 	yy_do_action_416 is
-			--|#line 1934 "eiffel.y"
+			--|#line <not available> "eiffel.y"
 		local
-			yyval3: ACCESS_FEAT_AS
+			yyval33: ID_AS
 		do
---|#line 1934 "eiffel.y"
+--|#line <not available> "eiffel.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'eiffel.y' at line 1934")
+	std.error.put_line ("Executing parser user-code from file 'eiffel.y' at line <not available>")
 end
 
-
-yyval3 := new_access_feat_as (yytype33 (yyvs.item (yyvsp - 1)), yytype72 (yyvs.item (yyvsp))) 
-			yyval := yyval3
+yyval33 := yyvs33.item (yyvsp33)
 if yy_parsing_status = yyContinue then
-	yyssp := yyssp - 2
-	yyvsp := yyvsp - 1
-	yyvs.put (yyval, yyvsp)
+	yyssp := yyssp - 1
+	yyvs33.put (yyval33, yyvsp33)
 end
 		end
 
 	yy_do_action_417 is
-			--|#line 1938 "eiffel.y"
+			--|#line <not available> "eiffel.y"
 		local
-			yyval72: EIFFEL_LIST [EXPR_AS]
+			yyval33: ID_AS
 		do
---|#line 1938 "eiffel.y"
+--|#line <not available> "eiffel.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'eiffel.y' at line 1938")
+	std.error.put_line ("Executing parser user-code from file 'eiffel.y' at line <not available>")
 end
 
-
-
-			yyval := yyval72
+yyval33 := yyvs93.item (yyvsp93).first.internal_name 
 if yy_parsing_status = yyContinue then
-	yyvsp := yyvsp + 1
-	if yyvsp >= yyvsc then
-		yyvsc := yyvsc + yyInitial_stack_size
-		yyvs := FIXED_ARRAY_.resize (yyvs, yyvsc)
-		debug ("GEYACC")
-			std.error.put_string ("Stack (yyvs) size increased to ")
-			std.error.put_integer (yyvsc)
-			std.error.put_new_line
+	yyssp := yyssp - 1
+	yyvsp33 := yyvsp33 + 1
+	yyvsp93 := yyvsp93 -1
+	if yyvsp33 >= yyvsc33 then
+		if yyvs33 = Void then
+			debug ("GEYACC")
+				std.error.put_line ("Create yyvs33")
+			end
+			create yyspecial_routines33
+			yyvsc33 := yyInitial_yyvs_size
+			yyvs33 := yyspecial_routines33.make (yyvsc33)
+		else
+			debug ("GEYACC")
+				std.error.put_line ("Resize yyvs33")
+			end
+			yyvsc33 := yyvsc33 + yyInitial_yyvs_size
+			yyvs33 := yyspecial_routines33.resize (yyvs33, yyvsc33)
 		end
 	end
-	yyvs.put (yyval, yyvsp)
+	yyvs33.put (yyval33, yyvsp33)
 end
 		end
 
 	yy_do_action_418 is
-			--|#line 1940 "eiffel.y"
+			--|#line <not available> "eiffel.y"
 		local
-			yyval72: EIFFEL_LIST [EXPR_AS]
+			yyval33: ID_AS
 		do
---|#line 1940 "eiffel.y"
+--|#line <not available> "eiffel.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'eiffel.y' at line 1940")
+	std.error.put_line ("Executing parser user-code from file 'eiffel.y' at line <not available>")
 end
 
-
-
-			yyval := yyval72
+yyval33 := yyvs93.item (yyvsp93).first.internal_name 
 if yy_parsing_status = yyContinue then
-	yyssp := yyssp - 2
-	yyvsp := yyvsp - 1
-	yyvs.put (yyval, yyvsp)
+	yyssp := yyssp - 1
+	yyvsp33 := yyvsp33 + 1
+	yyvsp93 := yyvsp93 -1
+	if yyvsp33 >= yyvsc33 then
+		if yyvs33 = Void then
+			debug ("GEYACC")
+				std.error.put_line ("Create yyvs33")
+			end
+			create yyspecial_routines33
+			yyvsc33 := yyInitial_yyvs_size
+			yyvs33 := yyspecial_routines33.make (yyvsc33)
+		else
+			debug ("GEYACC")
+				std.error.put_line ("Resize yyvs33")
+			end
+			yyvsc33 := yyvsc33 + yyInitial_yyvs_size
+			yyvs33 := yyspecial_routines33.resize (yyvs33, yyvsc33)
+		end
+	end
+	yyvs33.put (yyval33, yyvsp33)
 end
 		end
 
 	yy_do_action_419 is
-			--|#line 1942 "eiffel.y"
+			--|#line <not available> "eiffel.y"
 		local
-			yyval72: EIFFEL_LIST [EXPR_AS]
+			yyval2: ACCESS_AS
 		do
---|#line 1942 "eiffel.y"
+--|#line <not available> "eiffel.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'eiffel.y' at line 1942")
+	std.error.put_line ("Executing parser user-code from file 'eiffel.y' at line <not available>")
 end
 
-
-yyval72 := yytype72 (yyvs.item (yyvsp - 1)) 
-			yyval := yyval72
+				inspect id_level
+				when Normal_level then
+					yyval2 := new_access_id_as (yyvs33.item (yyvsp33), yyvs72.item (yyvsp72))
+				when Assert_level then
+					yyval2 := new_access_assert_as (yyvs33.item (yyvsp33), yyvs72.item (yyvsp72))
+				when Invariant_level then
+					yyval2 := new_access_inv_as (yyvs33.item (yyvsp33), yyvs72.item (yyvsp72))
+				end
+			
 if yy_parsing_status = yyContinue then
-	yyssp := yyssp - 3
-	yyvsp := yyvsp - 2
-	yyvs.put (yyval, yyvsp)
+	yyssp := yyssp - 2
+	yyvsp2 := yyvsp2 + 1
+	yyvsp33 := yyvsp33 -1
+	yyvsp72 := yyvsp72 -1
+	if yyvsp2 >= yyvsc2 then
+		if yyvs2 = Void then
+			debug ("GEYACC")
+				std.error.put_line ("Create yyvs2")
+			end
+			create yyspecial_routines2
+			yyvsc2 := yyInitial_yyvs_size
+			yyvs2 := yyspecial_routines2.make (yyvsc2)
+		else
+			debug ("GEYACC")
+				std.error.put_line ("Resize yyvs2")
+			end
+			yyvsc2 := yyvsc2 + yyInitial_yyvs_size
+			yyvs2 := yyspecial_routines2.resize (yyvs2, yyvsc2)
+		end
+	end
+	yyvs2.put (yyval2, yyvsp2)
 end
 		end
 
 	yy_do_action_420 is
-			--|#line 1946 "eiffel.y"
+			--|#line <not available> "eiffel.y"
 		local
-			yyval72: EIFFEL_LIST [EXPR_AS]
+			yyval3: ACCESS_FEAT_AS
 		do
---|#line 1946 "eiffel.y"
+--|#line <not available> "eiffel.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'eiffel.y' at line 1946")
+	std.error.put_line ("Executing parser user-code from file 'eiffel.y' at line <not available>")
 end
 
-
-				yyval72 := new_eiffel_list_expr_as (Initial_parameter_list_size)
-				yyval72.extend (yytype25 (yyvs.item (yyvsp)))
-			
-			yyval := yyval72
+yyval3 := new_access_feat_as (yyvs33.item (yyvsp33), yyvs72.item (yyvsp72)) 
 if yy_parsing_status = yyContinue then
-	yyssp := yyssp - 1
-	yyvs.put (yyval, yyvsp)
+	yyssp := yyssp - 2
+	yyvsp3 := yyvsp3 + 1
+	yyvsp33 := yyvsp33 -1
+	yyvsp72 := yyvsp72 -1
+	if yyvsp3 >= yyvsc3 then
+		if yyvs3 = Void then
+			debug ("GEYACC")
+				std.error.put_line ("Create yyvs3")
+			end
+			create yyspecial_routines3
+			yyvsc3 := yyInitial_yyvs_size
+			yyvs3 := yyspecial_routines3.make (yyvsc3)
+		else
+			debug ("GEYACC")
+				std.error.put_line ("Resize yyvs3")
+			end
+			yyvsc3 := yyvsc3 + yyInitial_yyvs_size
+			yyvs3 := yyspecial_routines3.resize (yyvs3, yyvsc3)
+		end
+	end
+	yyvs3.put (yyval3, yyvsp3)
 end
 		end
 
 	yy_do_action_421 is
-			--|#line 1951 "eiffel.y"
+			--|#line <not available> "eiffel.y"
 		local
 			yyval72: EIFFEL_LIST [EXPR_AS]
 		do
---|#line 1951 "eiffel.y"
+--|#line <not available> "eiffel.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'eiffel.y' at line 1951")
+	std.error.put_line ("Executing parser user-code from file 'eiffel.y' at line <not available>")
 end
 
 
-				yyval72 := yytype72 (yyvs.item (yyvsp - 2))
-				yyval72.extend (yytype25 (yyvs.item (yyvsp)))
-			
-			yyval := yyval72
 if yy_parsing_status = yyContinue then
-	yyssp := yyssp - 3
-	yyvsp := yyvsp - 2
-	yyvs.put (yyval, yyvsp)
+	yyssp := yyssp - 0
+	yyvsp72 := yyvsp72 + 1
+	if yyvsp72 >= yyvsc72 then
+		if yyvs72 = Void then
+			debug ("GEYACC")
+				std.error.put_line ("Create yyvs72")
+			end
+			create yyspecial_routines72
+			yyvsc72 := yyInitial_yyvs_size
+			yyvs72 := yyspecial_routines72.make (yyvsc72)
+		else
+			debug ("GEYACC")
+				std.error.put_line ("Resize yyvs72")
+			end
+			yyvsc72 := yyvsc72 + yyInitial_yyvs_size
+			yyvs72 := yyspecial_routines72.resize (yyvs72, yyvsc72)
+		end
+	end
+	yyvs72.put (yyval72, yyvsp72)
 end
 		end
 
 	yy_do_action_422 is
-			--|#line 1958 "eiffel.y"
+			--|#line <not available> "eiffel.y"
 		local
 			yyval72: EIFFEL_LIST [EXPR_AS]
 		do
---|#line 1958 "eiffel.y"
+--|#line <not available> "eiffel.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'eiffel.y' at line 1958")
+	std.error.put_line ("Executing parser user-code from file 'eiffel.y' at line <not available>")
 end
 
 
-yyval72 := new_eiffel_list_expr_as (0) 
-			yyval := yyval72
 if yy_parsing_status = yyContinue then
-	yyvsp := yyvsp + 1
-	if yyvsp >= yyvsc then
-		yyvsc := yyvsc + yyInitial_stack_size
-		yyvs := FIXED_ARRAY_.resize (yyvs, yyvsc)
-		debug ("GEYACC")
-			std.error.put_string ("Stack (yyvs) size increased to ")
-			std.error.put_integer (yyvsc)
-			std.error.put_new_line
+	yyssp := yyssp - 2
+	yyvsp72 := yyvsp72 + 1
+	yyvsp1 := yyvsp1 -2
+	if yyvsp72 >= yyvsc72 then
+		if yyvs72 = Void then
+			debug ("GEYACC")
+				std.error.put_line ("Create yyvs72")
+			end
+			create yyspecial_routines72
+			yyvsc72 := yyInitial_yyvs_size
+			yyvs72 := yyspecial_routines72.make (yyvsc72)
+		else
+			debug ("GEYACC")
+				std.error.put_line ("Resize yyvs72")
+			end
+			yyvsc72 := yyvsc72 + yyInitial_yyvs_size
+			yyvs72 := yyspecial_routines72.resize (yyvs72, yyvsc72)
 		end
 	end
-	yyvs.put (yyval, yyvsp)
+	yyvs72.put (yyval72, yyvsp72)
 end
 		end
 
 	yy_do_action_423 is
-			--|#line 1960 "eiffel.y"
+			--|#line <not available> "eiffel.y"
 		local
 			yyval72: EIFFEL_LIST [EXPR_AS]
 		do
---|#line 1960 "eiffel.y"
+--|#line <not available> "eiffel.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'eiffel.y' at line 1960")
+	std.error.put_line ("Executing parser user-code from file 'eiffel.y' at line <not available>")
 end
 
-
-yyval72 := yytype72 (yyvs.item (yyvsp)) 
-			yyval := yyval72
+yyval72 := yyvs72.item (yyvsp72) 
 if yy_parsing_status = yyContinue then
-	yyssp := yyssp - 1
-	yyvs.put (yyval, yyvsp)
+	yyssp := yyssp - 3
+	yyvsp1 := yyvsp1 -2
+	yyvs72.put (yyval72, yyvsp72)
 end
 		end
 
 	yy_do_action_424 is
-			--|#line 1964 "eiffel.y"
+			--|#line <not available> "eiffel.y"
 		local
 			yyval72: EIFFEL_LIST [EXPR_AS]
 		do
---|#line 1964 "eiffel.y"
+--|#line <not available> "eiffel.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'eiffel.y' at line 1964")
+	std.error.put_line ("Executing parser user-code from file 'eiffel.y' at line <not available>")
 end
 
-
-				yyval72 := new_eiffel_list_expr_as (Initial_expression_list_size)
-				yyval72.extend (yytype25 (yyvs.item (yyvsp)))
+				yyval72 := new_eiffel_list_expr_as (Initial_parameter_list_size)
+				yyval72.extend (yyvs25.item (yyvsp25))
 			
-			yyval := yyval72
 if yy_parsing_status = yyContinue then
 	yyssp := yyssp - 1
-	yyvs.put (yyval, yyvsp)
+	yyvsp72 := yyvsp72 + 1
+	yyvsp25 := yyvsp25 -1
+	if yyvsp72 >= yyvsc72 then
+		if yyvs72 = Void then
+			debug ("GEYACC")
+				std.error.put_line ("Create yyvs72")
+			end
+			create yyspecial_routines72
+			yyvsc72 := yyInitial_yyvs_size
+			yyvs72 := yyspecial_routines72.make (yyvsc72)
+		else
+			debug ("GEYACC")
+				std.error.put_line ("Resize yyvs72")
+			end
+			yyvsc72 := yyvsc72 + yyInitial_yyvs_size
+			yyvs72 := yyspecial_routines72.resize (yyvs72, yyvsc72)
+		end
+	end
+	yyvs72.put (yyval72, yyvsp72)
 end
 		end
 
 	yy_do_action_425 is
-			--|#line 1969 "eiffel.y"
+			--|#line <not available> "eiffel.y"
 		local
 			yyval72: EIFFEL_LIST [EXPR_AS]
 		do
---|#line 1969 "eiffel.y"
+--|#line <not available> "eiffel.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'eiffel.y' at line 1969")
+	std.error.put_line ("Executing parser user-code from file 'eiffel.y' at line <not available>")
 end
 
-
-				yyval72 := yytype72 (yyvs.item (yyvsp - 2))
-				yyval72.extend (yytype25 (yyvs.item (yyvsp)))
+				yyval72 := yyvs72.item (yyvsp72)
+				yyval72.extend (yyvs25.item (yyvsp25))
 			
-			yyval := yyval72
 if yy_parsing_status = yyContinue then
 	yyssp := yyssp - 3
-	yyvsp := yyvsp - 2
-	yyvs.put (yyval, yyvsp)
+	yyvsp1 := yyvsp1 -1
+	yyvsp25 := yyvsp25 -1
+	yyvs72.put (yyval72, yyvsp72)
 end
 		end
 
 	yy_do_action_426 is
-			--|#line 1980 "eiffel.y"
+			--|#line <not available> "eiffel.y"
+		local
+			yyval72: EIFFEL_LIST [EXPR_AS]
+		do
+--|#line <not available> "eiffel.y"
+debug ("GEYACC")
+	std.error.put_line ("Executing parser user-code from file 'eiffel.y' at line <not available>")
+end
+
+yyval72 := new_eiffel_list_expr_as (0) 
+if yy_parsing_status = yyContinue then
+	yyssp := yyssp - 0
+	yyvsp72 := yyvsp72 + 1
+	if yyvsp72 >= yyvsc72 then
+		if yyvs72 = Void then
+			debug ("GEYACC")
+				std.error.put_line ("Create yyvs72")
+			end
+			create yyspecial_routines72
+			yyvsc72 := yyInitial_yyvs_size
+			yyvs72 := yyspecial_routines72.make (yyvsc72)
+		else
+			debug ("GEYACC")
+				std.error.put_line ("Resize yyvs72")
+			end
+			yyvsc72 := yyvsc72 + yyInitial_yyvs_size
+			yyvs72 := yyspecial_routines72.resize (yyvs72, yyvsc72)
+		end
+	end
+	yyvs72.put (yyval72, yyvsp72)
+end
+		end
+
+	yy_do_action_427 is
+			--|#line <not available> "eiffel.y"
+		local
+			yyval72: EIFFEL_LIST [EXPR_AS]
+		do
+--|#line <not available> "eiffel.y"
+debug ("GEYACC")
+	std.error.put_line ("Executing parser user-code from file 'eiffel.y' at line <not available>")
+end
+
+yyval72 := yyvs72.item (yyvsp72) 
+if yy_parsing_status = yyContinue then
+	yyssp := yyssp - 1
+	yyvs72.put (yyval72, yyvsp72)
+end
+		end
+
+	yy_do_action_428 is
+			--|#line <not available> "eiffel.y"
+		local
+			yyval72: EIFFEL_LIST [EXPR_AS]
+		do
+--|#line <not available> "eiffel.y"
+debug ("GEYACC")
+	std.error.put_line ("Executing parser user-code from file 'eiffel.y' at line <not available>")
+end
+
+				yyval72 := new_eiffel_list_expr_as (Initial_expression_list_size)
+				yyval72.extend (yyvs25.item (yyvsp25))
+			
+if yy_parsing_status = yyContinue then
+	yyssp := yyssp - 1
+	yyvsp72 := yyvsp72 + 1
+	yyvsp25 := yyvsp25 -1
+	if yyvsp72 >= yyvsc72 then
+		if yyvs72 = Void then
+			debug ("GEYACC")
+				std.error.put_line ("Create yyvs72")
+			end
+			create yyspecial_routines72
+			yyvsc72 := yyInitial_yyvs_size
+			yyvs72 := yyspecial_routines72.make (yyvsc72)
+		else
+			debug ("GEYACC")
+				std.error.put_line ("Resize yyvs72")
+			end
+			yyvsc72 := yyvsc72 + yyInitial_yyvs_size
+			yyvs72 := yyspecial_routines72.resize (yyvs72, yyvsc72)
+		end
+	end
+	yyvs72.put (yyval72, yyvsp72)
+end
+		end
+
+	yy_do_action_429 is
+			--|#line <not available> "eiffel.y"
+		local
+			yyval72: EIFFEL_LIST [EXPR_AS]
+		do
+--|#line <not available> "eiffel.y"
+debug ("GEYACC")
+	std.error.put_line ("Executing parser user-code from file 'eiffel.y' at line <not available>")
+end
+
+				yyval72 := yyvs72.item (yyvsp72)
+				yyval72.extend (yyvs25.item (yyvsp25))
+			
+if yy_parsing_status = yyContinue then
+	yyssp := yyssp - 3
+	yyvsp1 := yyvsp1 -1
+	yyvsp25 := yyvsp25 -1
+	yyvs72.put (yyval72, yyvsp72)
+end
+		end
+
+	yy_do_action_430 is
+			--|#line <not available> "eiffel.y"
 		local
 			yyval33: ID_AS
 		do
---|#line 1980 "eiffel.y"
+--|#line <not available> "eiffel.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'eiffel.y' at line 1980")
+	std.error.put_line ("Executing parser user-code from file 'eiffel.y' at line <not available>")
 end
-
 
 				if not case_sensitive then
 					token_buffer.to_lower
 				end
 				create yyval33.initialize (token_buffer)
 			
-			yyval := yyval33
 if yy_parsing_status = yyContinue then
 	yyssp := yyssp - 1
-	yyvs.put (yyval, yyvsp)
-end
+	yyvsp33 := yyvsp33 + 1
+	yyvsp1 := yyvsp1 -1
+	if yyvsp33 >= yyvsc33 then
+		if yyvs33 = Void then
+			debug ("GEYACC")
+				std.error.put_line ("Create yyvs33")
+			end
+			create yyspecial_routines33
+			yyvsc33 := yyInitial_yyvs_size
+			yyvs33 := yyspecial_routines33.make (yyvsc33)
+		else
+			debug ("GEYACC")
+				std.error.put_line ("Resize yyvs33")
+			end
+			yyvsc33 := yyvsc33 + yyInitial_yyvs_size
+			yyvs33 := yyspecial_routines33.resize (yyvs33, yyvsc33)
 		end
-
-	yy_do_action_427 is
-			--|#line 1989 "eiffel.y"
-		local
-			yyval7: ATOMIC_AS
-		do
---|#line 1989 "eiffel.y"
-debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'eiffel.y' at line 1989")
-end
-
-
-yyval7 := yytype10 (yyvs.item (yyvsp)) 
-			yyval := yyval7
-if yy_parsing_status = yyContinue then
-	yyssp := yyssp - 1
-	yyvs.put (yyval, yyvsp)
-end
-		end
-
-	yy_do_action_428 is
-			--|#line 1991 "eiffel.y"
-		local
-			yyval7: ATOMIC_AS
-		do
---|#line 1991 "eiffel.y"
-debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'eiffel.y' at line 1991")
-end
-
-
-yyval7 := yytype13 (yyvs.item (yyvsp)) 
-			yyval := yyval7
-if yy_parsing_status = yyContinue then
-	yyssp := yyssp - 1
-	yyvs.put (yyval, yyvsp)
-end
-		end
-
-	yy_do_action_429 is
-			--|#line 1993 "eiffel.y"
-		local
-			yyval7: ATOMIC_AS
-		do
---|#line 1993 "eiffel.y"
-debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'eiffel.y' at line 1993")
-end
-
-
-yyval7 := yytype39 (yyvs.item (yyvsp)) 
-			yyval := yyval7
-if yy_parsing_status = yyContinue then
-	yyssp := yyssp - 1
-	yyvs.put (yyval, yyvsp)
-end
-		end
-
-	yy_do_action_430 is
-			--|#line 1995 "eiffel.y"
-		local
-			yyval7: ATOMIC_AS
-		do
---|#line 1995 "eiffel.y"
-debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'eiffel.y' at line 1995")
-end
-
-
-yyval7 := yytype50 (yyvs.item (yyvsp)) 
-			yyval := yyval7
-if yy_parsing_status = yyContinue then
-	yyssp := yyssp - 1
-	yyvs.put (yyval, yyvsp)
+	end
+	yyvs33.put (yyval33, yyvsp33)
 end
 		end
 
 	yy_do_action_431 is
-			--|#line 1997 "eiffel.y"
+			--|#line <not available> "eiffel.y"
 		local
 			yyval7: ATOMIC_AS
 		do
---|#line 1997 "eiffel.y"
+--|#line <not available> "eiffel.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'eiffel.y' at line 1997")
+	std.error.put_line ("Executing parser user-code from file 'eiffel.y' at line <not available>")
 end
 
-
-yyval7 := yytype8 (yyvs.item (yyvsp)) 
-			yyval := yyval7
+yyval7 := yyvs10.item (yyvsp10) 
 if yy_parsing_status = yyContinue then
 	yyssp := yyssp - 1
-	yyvs.put (yyval, yyvsp)
+	yyvsp7 := yyvsp7 + 1
+	yyvsp10 := yyvsp10 -1
+	if yyvsp7 >= yyvsc7 then
+		if yyvs7 = Void then
+			debug ("GEYACC")
+				std.error.put_line ("Create yyvs7")
+			end
+			create yyspecial_routines7
+			yyvsc7 := yyInitial_yyvs_size
+			yyvs7 := yyspecial_routines7.make (yyvsc7)
+		else
+			debug ("GEYACC")
+				std.error.put_line ("Resize yyvs7")
+			end
+			yyvsc7 := yyvsc7 + yyInitial_yyvs_size
+			yyvs7 := yyspecial_routines7.resize (yyvs7, yyvsc7)
+		end
+	end
+	yyvs7.put (yyval7, yyvsp7)
 end
 		end
 
 	yy_do_action_432 is
-			--|#line 1999 "eiffel.y"
+			--|#line <not available> "eiffel.y"
 		local
 			yyval7: ATOMIC_AS
 		do
---|#line 1999 "eiffel.y"
+--|#line <not available> "eiffel.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'eiffel.y' at line 1999")
+	std.error.put_line ("Executing parser user-code from file 'eiffel.y' at line <not available>")
 end
 
-
-yyval7 := yytype60 (yyvs.item (yyvsp)) 
-			yyval := yyval7
+yyval7 := yyvs13.item (yyvsp13) 
 if yy_parsing_status = yyContinue then
 	yyssp := yyssp - 1
-	yyvs.put (yyval, yyvsp)
+	yyvsp7 := yyvsp7 + 1
+	yyvsp13 := yyvsp13 -1
+	if yyvsp7 >= yyvsc7 then
+		if yyvs7 = Void then
+			debug ("GEYACC")
+				std.error.put_line ("Create yyvs7")
+			end
+			create yyspecial_routines7
+			yyvsc7 := yyInitial_yyvs_size
+			yyvs7 := yyspecial_routines7.make (yyvsc7)
+		else
+			debug ("GEYACC")
+				std.error.put_line ("Resize yyvs7")
+			end
+			yyvsc7 := yyvsc7 + yyInitial_yyvs_size
+			yyvs7 := yyspecial_routines7.resize (yyvs7, yyvsc7)
+		end
+	end
+	yyvs7.put (yyval7, yyvsp7)
 end
 		end
 
 	yy_do_action_433 is
-			--|#line 2003 "eiffel.y"
+			--|#line <not available> "eiffel.y"
 		local
 			yyval7: ATOMIC_AS
 		do
---|#line 2003 "eiffel.y"
+--|#line <not available> "eiffel.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'eiffel.y' at line 2003")
+	std.error.put_line ("Executing parser user-code from file 'eiffel.y' at line <not available>")
 end
 
-
-yyval7 := yytype10 (yyvs.item (yyvsp)) 
-			yyval := yyval7
+yyval7 := yyvs39.item (yyvsp39) 
 if yy_parsing_status = yyContinue then
 	yyssp := yyssp - 1
-	yyvs.put (yyval, yyvsp)
+	yyvsp7 := yyvsp7 + 1
+	yyvsp39 := yyvsp39 -1
+	if yyvsp7 >= yyvsc7 then
+		if yyvs7 = Void then
+			debug ("GEYACC")
+				std.error.put_line ("Create yyvs7")
+			end
+			create yyspecial_routines7
+			yyvsc7 := yyInitial_yyvs_size
+			yyvs7 := yyspecial_routines7.make (yyvsc7)
+		else
+			debug ("GEYACC")
+				std.error.put_line ("Resize yyvs7")
+			end
+			yyvsc7 := yyvsc7 + yyInitial_yyvs_size
+			yyvs7 := yyspecial_routines7.resize (yyvs7, yyvsc7)
+		end
+	end
+	yyvs7.put (yyval7, yyvsp7)
 end
 		end
 
 	yy_do_action_434 is
-			--|#line 2006 "eiffel.y"
+			--|#line <not available> "eiffel.y"
 		local
 			yyval7: ATOMIC_AS
 		do
---|#line 2006 "eiffel.y"
+--|#line <not available> "eiffel.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'eiffel.y' at line 2006")
+	std.error.put_line ("Executing parser user-code from file 'eiffel.y' at line <not available>")
 end
 
-
-yyval7 := yytype13 (yyvs.item (yyvsp)) 
-			yyval := yyval7
+yyval7 := yyvs50.item (yyvsp50) 
 if yy_parsing_status = yyContinue then
 	yyssp := yyssp - 1
-	yyvs.put (yyval, yyvsp)
+	yyvsp7 := yyvsp7 + 1
+	yyvsp50 := yyvsp50 -1
+	if yyvsp7 >= yyvsc7 then
+		if yyvs7 = Void then
+			debug ("GEYACC")
+				std.error.put_line ("Create yyvs7")
+			end
+			create yyspecial_routines7
+			yyvsc7 := yyInitial_yyvs_size
+			yyvs7 := yyspecial_routines7.make (yyvsc7)
+		else
+			debug ("GEYACC")
+				std.error.put_line ("Resize yyvs7")
+			end
+			yyvsc7 := yyvsc7 + yyInitial_yyvs_size
+			yyvs7 := yyspecial_routines7.resize (yyvs7, yyvsc7)
+		end
+	end
+	yyvs7.put (yyval7, yyvsp7)
 end
 		end
 
 	yy_do_action_435 is
-			--|#line 2008 "eiffel.y"
+			--|#line <not available> "eiffel.y"
 		local
 			yyval7: ATOMIC_AS
 		do
---|#line 2008 "eiffel.y"
+--|#line <not available> "eiffel.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'eiffel.y' at line 2008")
+	std.error.put_line ("Executing parser user-code from file 'eiffel.y' at line <not available>")
 end
 
-
-yyval7 := new_real_as (cloned_string (token_buffer)) 
-			yyval := yyval7
+yyval7 := yyvs8.item (yyvsp8) 
 if yy_parsing_status = yyContinue then
 	yyssp := yyssp - 1
-	yyvs.put (yyval, yyvsp)
+	yyvsp7 := yyvsp7 + 1
+	yyvsp8 := yyvsp8 -1
+	if yyvsp7 >= yyvsc7 then
+		if yyvs7 = Void then
+			debug ("GEYACC")
+				std.error.put_line ("Create yyvs7")
+			end
+			create yyspecial_routines7
+			yyvsc7 := yyInitial_yyvs_size
+			yyvs7 := yyspecial_routines7.make (yyvsc7)
+		else
+			debug ("GEYACC")
+				std.error.put_line ("Resize yyvs7")
+			end
+			yyvsc7 := yyvsc7 + yyInitial_yyvs_size
+			yyvs7 := yyspecial_routines7.resize (yyvs7, yyvsc7)
+		end
+	end
+	yyvs7.put (yyval7, yyvsp7)
 end
 		end
 
 	yy_do_action_436 is
-			--|#line 2010 "eiffel.y"
+			--|#line <not available> "eiffel.y"
 		local
 			yyval7: ATOMIC_AS
 		do
---|#line 2010 "eiffel.y"
+--|#line <not available> "eiffel.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'eiffel.y' at line 2010")
+	std.error.put_line ("Executing parser user-code from file 'eiffel.y' at line <not available>")
 end
 
-
-yyval7 := yytype8 (yyvs.item (yyvsp)) 
-			yyval := yyval7
+yyval7 := yyvs60.item (yyvsp60) 
 if yy_parsing_status = yyContinue then
 	yyssp := yyssp - 1
-	yyvs.put (yyval, yyvsp)
+	yyvsp7 := yyvsp7 + 1
+	yyvsp60 := yyvsp60 -1
+	if yyvsp7 >= yyvsc7 then
+		if yyvs7 = Void then
+			debug ("GEYACC")
+				std.error.put_line ("Create yyvs7")
+			end
+			create yyspecial_routines7
+			yyvsc7 := yyInitial_yyvs_size
+			yyvs7 := yyspecial_routines7.make (yyvsc7)
+		else
+			debug ("GEYACC")
+				std.error.put_line ("Resize yyvs7")
+			end
+			yyvsc7 := yyvsc7 + yyInitial_yyvs_size
+			yyvs7 := yyspecial_routines7.resize (yyvs7, yyvsc7)
+		end
+	end
+	yyvs7.put (yyval7, yyvsp7)
 end
 		end
 
 	yy_do_action_437 is
-			--|#line 2012 "eiffel.y"
+			--|#line <not available> "eiffel.y"
 		local
 			yyval7: ATOMIC_AS
 		do
---|#line 2012 "eiffel.y"
+--|#line <not available> "eiffel.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'eiffel.y' at line 2012")
+	std.error.put_line ("Executing parser user-code from file 'eiffel.y' at line <not available>")
 end
 
-
-yyval7 := yytype60 (yyvs.item (yyvsp)) 
-			yyval := yyval7
+yyval7 := yyvs10.item (yyvsp10) 
 if yy_parsing_status = yyContinue then
 	yyssp := yyssp - 1
-	yyvs.put (yyval, yyvsp)
+	yyvsp7 := yyvsp7 + 1
+	yyvsp10 := yyvsp10 -1
+	if yyvsp7 >= yyvsc7 then
+		if yyvs7 = Void then
+			debug ("GEYACC")
+				std.error.put_line ("Create yyvs7")
+			end
+			create yyspecial_routines7
+			yyvsc7 := yyInitial_yyvs_size
+			yyvs7 := yyspecial_routines7.make (yyvsc7)
+		else
+			debug ("GEYACC")
+				std.error.put_line ("Resize yyvs7")
+			end
+			yyvsc7 := yyvsc7 + yyInitial_yyvs_size
+			yyvs7 := yyspecial_routines7.resize (yyvs7, yyvsc7)
+		end
+	end
+	yyvs7.put (yyval7, yyvsp7)
 end
 		end
 
 	yy_do_action_438 is
-			--|#line 2014 "eiffel.y"
+			--|#line <not available> "eiffel.y"
 		local
 			yyval7: ATOMIC_AS
 		do
---|#line 2014 "eiffel.y"
+--|#line <not available> "eiffel.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'eiffel.y' at line 2014")
+	std.error.put_line ("Executing parser user-code from file 'eiffel.y' at line <not available>")
 end
 
-
-				yytype60 (yyvs.item (yyvsp)).set_is_once_string (True)
-				once_manifest_string_count := once_manifest_string_count + 1
-				yyval7 := yytype60 (yyvs.item (yyvsp))
-			
-			yyval := yyval7
+yyval7 := yyvs39.item (yyvsp39) 
 if yy_parsing_status = yyContinue then
-	yyssp := yyssp - 2
-	yyvsp := yyvsp - 1
-	yyvs.put (yyval, yyvsp)
+	yyssp := yyssp - 1
+	yyvsp7 := yyvsp7 + 1
+	yyvsp39 := yyvsp39 -1
+	if yyvsp7 >= yyvsc7 then
+		if yyvs7 = Void then
+			debug ("GEYACC")
+				std.error.put_line ("Create yyvs7")
+			end
+			create yyspecial_routines7
+			yyvsc7 := yyInitial_yyvs_size
+			yyvs7 := yyspecial_routines7.make (yyvsc7)
+		else
+			debug ("GEYACC")
+				std.error.put_line ("Resize yyvs7")
+			end
+			yyvsc7 := yyvsc7 + yyInitial_yyvs_size
+			yyvs7 := yyspecial_routines7.resize (yyvs7, yyvsc7)
+		end
+	end
+	yyvs7.put (yyval7, yyvsp7)
 end
 		end
 
 	yy_do_action_439 is
-			--|#line 2022 "eiffel.y"
+			--|#line <not available> "eiffel.y"
 		local
-			yyval10: BOOL_AS
+			yyval7: ATOMIC_AS
 		do
---|#line 2022 "eiffel.y"
+--|#line <not available> "eiffel.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'eiffel.y' at line 2022")
+	std.error.put_line ("Executing parser user-code from file 'eiffel.y' at line <not available>")
 end
 
-
-yyval10 := new_boolean_as (False) 
-			yyval := yyval10
+yyval7 := yyvs39.item (yyvsp39) 
 if yy_parsing_status = yyContinue then
 	yyssp := yyssp - 1
-	yyvs.put (yyval, yyvsp)
+	yyvsp7 := yyvsp7 + 1
+	yyvsp39 := yyvsp39 -1
+	if yyvsp7 >= yyvsc7 then
+		if yyvs7 = Void then
+			debug ("GEYACC")
+				std.error.put_line ("Create yyvs7")
+			end
+			create yyspecial_routines7
+			yyvsc7 := yyInitial_yyvs_size
+			yyvs7 := yyspecial_routines7.make (yyvsc7)
+		else
+			debug ("GEYACC")
+				std.error.put_line ("Resize yyvs7")
+			end
+			yyvsc7 := yyvsc7 + yyInitial_yyvs_size
+			yyvs7 := yyspecial_routines7.resize (yyvs7, yyvsc7)
+		end
+	end
+	yyvs7.put (yyval7, yyvsp7)
 end
 		end
 
 	yy_do_action_440 is
-			--|#line 2024 "eiffel.y"
+			--|#line <not available> "eiffel.y"
 		local
-			yyval10: BOOL_AS
+			yyval7: ATOMIC_AS
 		do
---|#line 2024 "eiffel.y"
+--|#line <not available> "eiffel.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'eiffel.y' at line 2024")
+	std.error.put_line ("Executing parser user-code from file 'eiffel.y' at line <not available>")
 end
 
-
-yyval10 := new_boolean_as (True) 
-			yyval := yyval10
+yyval7 := yyvs50.item (yyvsp50) 
 if yy_parsing_status = yyContinue then
 	yyssp := yyssp - 1
-	yyvs.put (yyval, yyvsp)
+	yyvsp7 := yyvsp7 + 1
+	yyvsp50 := yyvsp50 -1
+	if yyvsp7 >= yyvsc7 then
+		if yyvs7 = Void then
+			debug ("GEYACC")
+				std.error.put_line ("Create yyvs7")
+			end
+			create yyspecial_routines7
+			yyvsc7 := yyInitial_yyvs_size
+			yyvs7 := yyspecial_routines7.make (yyvsc7)
+		else
+			debug ("GEYACC")
+				std.error.put_line ("Resize yyvs7")
+			end
+			yyvsc7 := yyvsc7 + yyInitial_yyvs_size
+			yyvs7 := yyspecial_routines7.resize (yyvs7, yyvsc7)
+		end
+	end
+	yyvs7.put (yyval7, yyvsp7)
 end
 		end
 
 	yy_do_action_441 is
-			--|#line 2028 "eiffel.y"
+			--|#line <not available> "eiffel.y"
 		local
-			yyval13: CHAR_AS
+			yyval7: ATOMIC_AS
 		do
---|#line 2028 "eiffel.y"
+--|#line <not available> "eiffel.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'eiffel.y' at line 2028")
+	std.error.put_line ("Executing parser user-code from file 'eiffel.y' at line <not available>")
 end
 
-
-				check is_character: not token_buffer.is_empty end
-				yyval13 := new_character_as (token_buffer.item (1))
-			
-			yyval := yyval13
+yyval7 := yyvs50.item (yyvsp50) 
 if yy_parsing_status = yyContinue then
 	yyssp := yyssp - 1
-	yyvs.put (yyval, yyvsp)
+	yyvsp7 := yyvsp7 + 1
+	yyvsp50 := yyvsp50 -1
+	if yyvsp7 >= yyvsc7 then
+		if yyvs7 = Void then
+			debug ("GEYACC")
+				std.error.put_line ("Create yyvs7")
+			end
+			create yyspecial_routines7
+			yyvsc7 := yyInitial_yyvs_size
+			yyvs7 := yyspecial_routines7.make (yyvsc7)
+		else
+			debug ("GEYACC")
+				std.error.put_line ("Resize yyvs7")
+			end
+			yyvsc7 := yyvsc7 + yyInitial_yyvs_size
+			yyvs7 := yyspecial_routines7.resize (yyvs7, yyvsc7)
+		end
+	end
+	yyvs7.put (yyval7, yyvsp7)
 end
 		end
 
 	yy_do_action_442 is
-			--|#line 2035 "eiffel.y"
+			--|#line <not available> "eiffel.y"
 		local
-			yyval39: INTEGER_CONSTANT
+			yyval7: ATOMIC_AS
 		do
---|#line 2035 "eiffel.y"
+--|#line <not available> "eiffel.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'eiffel.y' at line 2035")
+	std.error.put_line ("Executing parser user-code from file 'eiffel.y' at line <not available>")
 end
 
-
-yyval39 := yytype39 (yyvs.item (yyvsp)) 
-			yyval := yyval39
+yyval7 := yyvs13.item (yyvsp13) 
 if yy_parsing_status = yyContinue then
 	yyssp := yyssp - 1
-	yyvs.put (yyval, yyvsp)
+	yyvsp7 := yyvsp7 + 1
+	yyvsp13 := yyvsp13 -1
+	if yyvsp7 >= yyvsc7 then
+		if yyvs7 = Void then
+			debug ("GEYACC")
+				std.error.put_line ("Create yyvs7")
+			end
+			create yyspecial_routines7
+			yyvsc7 := yyInitial_yyvs_size
+			yyvs7 := yyspecial_routines7.make (yyvsc7)
+		else
+			debug ("GEYACC")
+				std.error.put_line ("Resize yyvs7")
+			end
+			yyvsc7 := yyvsc7 + yyInitial_yyvs_size
+			yyvs7 := yyspecial_routines7.resize (yyvs7, yyvsc7)
+		end
+	end
+	yyvs7.put (yyval7, yyvsp7)
 end
 		end
 
 	yy_do_action_443 is
-			--|#line 2038 "eiffel.y"
+			--|#line <not available> "eiffel.y"
 		local
-			yyval39: INTEGER_CONSTANT
+			yyval7: ATOMIC_AS
 		do
---|#line 2038 "eiffel.y"
+--|#line <not available> "eiffel.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'eiffel.y' at line 2038")
+	std.error.put_line ("Executing parser user-code from file 'eiffel.y' at line <not available>")
 end
 
-
-yyval39 := yytype39 (yyvs.item (yyvsp)) 
-			yyval := yyval39
+yyval7 := yyvs8.item (yyvsp8) 
 if yy_parsing_status = yyContinue then
 	yyssp := yyssp - 1
-	yyvs.put (yyval, yyvsp)
+	yyvsp7 := yyvsp7 + 1
+	yyvsp8 := yyvsp8 -1
+	if yyvsp7 >= yyvsc7 then
+		if yyvs7 = Void then
+			debug ("GEYACC")
+				std.error.put_line ("Create yyvs7")
+			end
+			create yyspecial_routines7
+			yyvsc7 := yyInitial_yyvs_size
+			yyvs7 := yyspecial_routines7.make (yyvsc7)
+		else
+			debug ("GEYACC")
+				std.error.put_line ("Resize yyvs7")
+			end
+			yyvsc7 := yyvsc7 + yyInitial_yyvs_size
+			yyvs7 := yyspecial_routines7.resize (yyvs7, yyvsc7)
+		end
+	end
+	yyvs7.put (yyval7, yyvsp7)
 end
 		end
 
 	yy_do_action_444 is
-			--|#line 2042 "eiffel.y"
+			--|#line <not available> "eiffel.y"
 		local
-			yyval39: INTEGER_CONSTANT
+			yyval7: ATOMIC_AS
 		do
---|#line 2042 "eiffel.y"
+--|#line <not available> "eiffel.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'eiffel.y' at line 2042")
+	std.error.put_line ("Executing parser user-code from file 'eiffel.y' at line <not available>")
 end
 
-
-				if token_buffer.is_integer then
-					yyval39 := new_integer_as (False, token_buffer)
-				elseif
-					token_buffer.item (1) = '0' and then
-					token_buffer.item (2).lower = 'x'
-				then
-					yyval39 := new_integer_as_from_hexa ('%U', token_buffer)
-				else
-					report_integer_too_large_error (token_buffer)
-						-- Dummy code (for error recovery) follows:
-					yyval39 := new_integer_as (False, "0")
-				end
-				if not yyval39.is_initialized then
-					report_integer_too_large_error (token_buffer)
-				end
-			
-			yyval := yyval39
+yyval7 := yyvs60.item (yyvsp60) 
 if yy_parsing_status = yyContinue then
 	yyssp := yyssp - 1
-	yyvs.put (yyval, yyvsp)
+	yyvsp7 := yyvsp7 + 1
+	yyvsp60 := yyvsp60 -1
+	if yyvsp7 >= yyvsc7 then
+		if yyvs7 = Void then
+			debug ("GEYACC")
+				std.error.put_line ("Create yyvs7")
+			end
+			create yyspecial_routines7
+			yyvsc7 := yyInitial_yyvs_size
+			yyvs7 := yyspecial_routines7.make (yyvsc7)
+		else
+			debug ("GEYACC")
+				std.error.put_line ("Resize yyvs7")
+			end
+			yyvsc7 := yyvsc7 + yyInitial_yyvs_size
+			yyvs7 := yyspecial_routines7.resize (yyvs7, yyvsc7)
+		end
+	end
+	yyvs7.put (yyval7, yyvsp7)
 end
 		end
 
 	yy_do_action_445 is
-			--|#line 2062 "eiffel.y"
+			--|#line <not available> "eiffel.y"
 		local
-			yyval39: INTEGER_CONSTANT
+			yyval7: ATOMIC_AS
 		do
---|#line 2062 "eiffel.y"
+--|#line <not available> "eiffel.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'eiffel.y' at line 2062")
+	std.error.put_line ("Executing parser user-code from file 'eiffel.y' at line <not available>")
 end
 
-
-				if token_buffer.is_integer then
-					yyval39 := new_integer_as (False, token_buffer)
-				elseif
-					token_buffer.item (1) = '0' and then
-					token_buffer.item (2).lower = 'x'
-				then
-					yyval39 := new_integer_as_from_hexa ('+', token_buffer)
-				else
-					report_integer_too_large_error (token_buffer)
-						-- Dummy code (for error recovery) follows:
-					yyval39 := new_integer_as (False, "0")
-				end
-				if not yyval39.is_initialized then
-					report_integer_too_large_error (token_buffer)
-				end
+				yyvs60.item (yyvsp60).set_is_once_string (True)
+				once_manifest_string_count := once_manifest_string_count + 1
+				yyval7 := yyvs60.item (yyvsp60)
 			
-			yyval := yyval39
 if yy_parsing_status = yyContinue then
 	yyssp := yyssp - 2
-	yyvsp := yyvsp - 1
-	yyvs.put (yyval, yyvsp)
+	yyvsp7 := yyvsp7 + 1
+	yyvsp1 := yyvsp1 -1
+	yyvsp60 := yyvsp60 -1
+	if yyvsp7 >= yyvsc7 then
+		if yyvs7 = Void then
+			debug ("GEYACC")
+				std.error.put_line ("Create yyvs7")
+			end
+			create yyspecial_routines7
+			yyvsc7 := yyInitial_yyvs_size
+			yyvs7 := yyspecial_routines7.make (yyvsc7)
+		else
+			debug ("GEYACC")
+				std.error.put_line ("Resize yyvs7")
+			end
+			yyvsc7 := yyvsc7 + yyInitial_yyvs_size
+			yyvs7 := yyspecial_routines7.resize (yyvs7, yyvsc7)
+		end
+	end
+	yyvs7.put (yyval7, yyvsp7)
 end
 		end
 
 	yy_do_action_446 is
-			--|#line 2080 "eiffel.y"
+			--|#line <not available> "eiffel.y"
 		local
-			yyval39: INTEGER_CONSTANT
+			yyval10: BOOL_AS
 		do
---|#line 2080 "eiffel.y"
+--|#line <not available> "eiffel.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'eiffel.y' at line 2080")
+	std.error.put_line ("Executing parser user-code from file 'eiffel.y' at line <not available>")
 end
 
-
-				if token_buffer.is_integer then
-					yyval39 := new_integer_as (True, token_buffer)
-				elseif
-					token_buffer.item (1) = '0' and then
-					token_buffer.item (2).lower = 'x'
-				then
-					yyval39 := new_integer_as_from_hexa ('-', token_buffer)
-				else
-					token_buffer.precede ('-')
-					report_integer_too_small_error (token_buffer)
-						-- Dummy code (for error recovery) follows:
-					yyval39 := new_integer_as (False, "0")
-				end
-				if not yyval39.is_initialized then
-					token_buffer.precede ('-')
-					report_integer_too_small_error (token_buffer)
-				end
-			
-			yyval := yyval39
+yyval10 := new_boolean_as (False) 
 if yy_parsing_status = yyContinue then
-	yyssp := yyssp - 2
-	yyvsp := yyvsp - 1
-	yyvs.put (yyval, yyvsp)
+	yyssp := yyssp - 1
+	yyvsp10 := yyvsp10 + 1
+	yyvsp1 := yyvsp1 -1
+	if yyvsp10 >= yyvsc10 then
+		if yyvs10 = Void then
+			debug ("GEYACC")
+				std.error.put_line ("Create yyvs10")
+			end
+			create yyspecial_routines10
+			yyvsc10 := yyInitial_yyvs_size
+			yyvs10 := yyspecial_routines10.make (yyvsc10)
+		else
+			debug ("GEYACC")
+				std.error.put_line ("Resize yyvs10")
+			end
+			yyvsc10 := yyvsc10 + yyInitial_yyvs_size
+			yyvs10 := yyspecial_routines10.resize (yyvs10, yyvsc10)
+		end
+	end
+	yyvs10.put (yyval10, yyvsp10)
 end
 		end
 
 	yy_do_action_447 is
-			--|#line 2102 "eiffel.y"
+			--|#line <not available> "eiffel.y"
 		local
-			yyval50: REAL_AS
+			yyval10: BOOL_AS
 		do
---|#line 2102 "eiffel.y"
+--|#line <not available> "eiffel.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'eiffel.y' at line 2102")
+	std.error.put_line ("Executing parser user-code from file 'eiffel.y' at line <not available>")
 end
 
-
-yyval50 := new_real_as (cloned_string (token_buffer)) 
-			yyval := yyval50
+yyval10 := new_boolean_as (True) 
 if yy_parsing_status = yyContinue then
 	yyssp := yyssp - 1
-	yyvs.put (yyval, yyvsp)
+	yyvsp10 := yyvsp10 + 1
+	yyvsp1 := yyvsp1 -1
+	if yyvsp10 >= yyvsc10 then
+		if yyvs10 = Void then
+			debug ("GEYACC")
+				std.error.put_line ("Create yyvs10")
+			end
+			create yyspecial_routines10
+			yyvsc10 := yyInitial_yyvs_size
+			yyvs10 := yyspecial_routines10.make (yyvsc10)
+		else
+			debug ("GEYACC")
+				std.error.put_line ("Resize yyvs10")
+			end
+			yyvsc10 := yyvsc10 + yyInitial_yyvs_size
+			yyvs10 := yyspecial_routines10.resize (yyvs10, yyvsc10)
+		end
+	end
+	yyvs10.put (yyval10, yyvsp10)
 end
 		end
 
 	yy_do_action_448 is
-			--|#line 2104 "eiffel.y"
+			--|#line <not available> "eiffel.y"
 		local
-			yyval50: REAL_AS
+			yyval13: CHAR_AS
 		do
---|#line 2104 "eiffel.y"
+--|#line <not available> "eiffel.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'eiffel.y' at line 2104")
+	std.error.put_line ("Executing parser user-code from file 'eiffel.y' at line <not available>")
 end
 
-
-yyval50 := new_real_as (cloned_string (token_buffer)) 
-			yyval := yyval50
+				check is_character: not token_buffer.is_empty end
+				yyval13 := new_character_as (token_buffer.item (1))
+			
 if yy_parsing_status = yyContinue then
-	yyssp := yyssp - 2
-	yyvsp := yyvsp - 1
-	yyvs.put (yyval, yyvsp)
+	yyssp := yyssp - 1
+	yyvsp13 := yyvsp13 + 1
+	yyvsp1 := yyvsp1 -1
+	if yyvsp13 >= yyvsc13 then
+		if yyvs13 = Void then
+			debug ("GEYACC")
+				std.error.put_line ("Create yyvs13")
+			end
+			create yyspecial_routines13
+			yyvsc13 := yyInitial_yyvs_size
+			yyvs13 := yyspecial_routines13.make (yyvsc13)
+		else
+			debug ("GEYACC")
+				std.error.put_line ("Resize yyvs13")
+			end
+			yyvsc13 := yyvsc13 + yyInitial_yyvs_size
+			yyvs13 := yyspecial_routines13.resize (yyvs13, yyvsc13)
+		end
+	end
+	yyvs13.put (yyval13, yyvsp13)
 end
 		end
 
 	yy_do_action_449 is
-			--|#line 2106 "eiffel.y"
+			--|#line <not available> "eiffel.y"
 		local
-			yyval50: REAL_AS
+			yyval13: CHAR_AS
 		do
---|#line 2106 "eiffel.y"
+--|#line <not available> "eiffel.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'eiffel.y' at line 2106")
+	std.error.put_line ("Executing parser user-code from file 'eiffel.y' at line <not available>")
 end
 
-
-				token_buffer.precede ('-')
-				yyval50 := new_real_as (cloned_string (token_buffer))
+				check is_character: not token_buffer.is_empty end
+				fixme ("We should handle `Type' instead of ignoring it.")
+				yyval13 := new_character_as (token_buffer.item (1))
 			
-			yyval := yyval50
 if yy_parsing_status = yyContinue then
 	yyssp := yyssp - 2
-	yyvsp := yyvsp - 1
-	yyvs.put (yyval, yyvsp)
+	yyvsp13 := yyvsp13 + 1
+	yyvsp63 := yyvsp63 -1
+	yyvsp1 := yyvsp1 -1
+	if yyvsp13 >= yyvsc13 then
+		if yyvs13 = Void then
+			debug ("GEYACC")
+				std.error.put_line ("Create yyvs13")
+			end
+			create yyspecial_routines13
+			yyvsc13 := yyInitial_yyvs_size
+			yyvs13 := yyspecial_routines13.make (yyvsc13)
+		else
+			debug ("GEYACC")
+				std.error.put_line ("Resize yyvs13")
+			end
+			yyvsc13 := yyvsc13 + yyInitial_yyvs_size
+			yyvs13 := yyspecial_routines13.resize (yyvs13, yyvsc13)
+		end
+	end
+	yyvs13.put (yyval13, yyvsp13)
 end
 		end
 
 	yy_do_action_450 is
-			--|#line 2113 "eiffel.y"
+			--|#line <not available> "eiffel.y"
 		local
-			yyval8: BIT_CONST_AS
+			yyval39: INTEGER_CONSTANT
 		do
---|#line 2113 "eiffel.y"
+--|#line <not available> "eiffel.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'eiffel.y' at line 2113")
+	std.error.put_line ("Executing parser user-code from file 'eiffel.y' at line <not available>")
 end
 
-
-yyval8 := new_bit_const_as (create {ID_AS}.initialize (token_buffer)) 
-			yyval := yyval8
+yyval39 := yyvs39.item (yyvsp39) 
 if yy_parsing_status = yyContinue then
 	yyssp := yyssp - 1
-	yyvs.put (yyval, yyvsp)
+	yyvs39.put (yyval39, yyvsp39)
 end
 		end
 
 	yy_do_action_451 is
-			--|#line 2117 "eiffel.y"
+			--|#line <not available> "eiffel.y"
 		local
-			yyval60: STRING_AS
+			yyval39: INTEGER_CONSTANT
 		do
---|#line 2117 "eiffel.y"
+--|#line <not available> "eiffel.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'eiffel.y' at line 2117")
+	std.error.put_line ("Executing parser user-code from file 'eiffel.y' at line <not available>")
 end
 
-
-yyval60 := yytype60 (yyvs.item (yyvsp)) 
-			yyval := yyval60
+yyval39 := yyvs39.item (yyvsp39) 
 if yy_parsing_status = yyContinue then
 	yyssp := yyssp - 1
-	yyvs.put (yyval, yyvsp)
+	yyvs39.put (yyval39, yyvsp39)
 end
 		end
 
 	yy_do_action_452 is
-			--|#line 2119 "eiffel.y"
+			--|#line <not available> "eiffel.y"
 		local
-			yyval60: STRING_AS
+			yyval39: INTEGER_CONSTANT
 		do
---|#line 2119 "eiffel.y"
+--|#line <not available> "eiffel.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'eiffel.y' at line 2119")
+	std.error.put_line ("Executing parser user-code from file 'eiffel.y' at line <not available>")
 end
 
-
-yyval60 := new_empty_string_as 
-			yyval := yyval60
+yyval39 := yyvs39.item (yyvsp39) 
 if yy_parsing_status = yyContinue then
 	yyssp := yyssp - 1
-	yyvs.put (yyval, yyvsp)
+	yyvs39.put (yyval39, yyvsp39)
 end
 		end
 
 	yy_do_action_453 is
-			--|#line 2121 "eiffel.y"
+			--|#line <not available> "eiffel.y"
 		local
-			yyval60: STRING_AS
+			yyval39: INTEGER_CONSTANT
 		do
---|#line 2121 "eiffel.y"
+--|#line <not available> "eiffel.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'eiffel.y' at line 2121")
+	std.error.put_line ("Executing parser user-code from file 'eiffel.y' at line <not available>")
 end
 
-
-yyval60 := new_empty_verbatim_string_as (verbatim_marker.substring (2, verbatim_marker.count), not has_old_verbatim_strings and then verbatim_marker.item (1) = ']') 
-			yyval := yyval60
+yyval39 := new_integer_value (True, '+', Void, token_buffer) 
 if yy_parsing_status = yyContinue then
-	yyssp := yyssp - 1
-	yyvs.put (yyval, yyvsp)
+	yyssp := yyssp - 2
+	yyvsp39 := yyvsp39 + 1
+	yyvsp1 := yyvsp1 -2
+	if yyvsp39 >= yyvsc39 then
+		if yyvs39 = Void then
+			debug ("GEYACC")
+				std.error.put_line ("Create yyvs39")
+			end
+			create yyspecial_routines39
+			yyvsc39 := yyInitial_yyvs_size
+			yyvs39 := yyspecial_routines39.make (yyvsc39)
+		else
+			debug ("GEYACC")
+				std.error.put_line ("Resize yyvs39")
+			end
+			yyvsc39 := yyvsc39 + yyInitial_yyvs_size
+			yyvs39 := yyspecial_routines39.resize (yyvs39, yyvsc39)
+		end
+	end
+	yyvs39.put (yyval39, yyvsp39)
 end
 		end
 
 	yy_do_action_454 is
-			--|#line 2125 "eiffel.y"
+			--|#line <not available> "eiffel.y"
 		local
-			yyval60: STRING_AS
+			yyval39: INTEGER_CONSTANT
 		do
---|#line 2125 "eiffel.y"
+--|#line <not available> "eiffel.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'eiffel.y' at line 2125")
+	std.error.put_line ("Executing parser user-code from file 'eiffel.y' at line <not available>")
 end
 
-
-yyval60 := new_string_as (cloned_string (token_buffer)) 
-			yyval := yyval60
+yyval39 := new_integer_value (True, '-', Void, token_buffer) 
 if yy_parsing_status = yyContinue then
-	yyssp := yyssp - 1
-	yyvs.put (yyval, yyvsp)
+	yyssp := yyssp - 2
+	yyvsp39 := yyvsp39 + 1
+	yyvsp1 := yyvsp1 -2
+	if yyvsp39 >= yyvsc39 then
+		if yyvs39 = Void then
+			debug ("GEYACC")
+				std.error.put_line ("Create yyvs39")
+			end
+			create yyspecial_routines39
+			yyvsc39 := yyInitial_yyvs_size
+			yyvs39 := yyspecial_routines39.make (yyvsc39)
+		else
+			debug ("GEYACC")
+				std.error.put_line ("Resize yyvs39")
+			end
+			yyvsc39 := yyvsc39 + yyInitial_yyvs_size
+			yyvs39 := yyspecial_routines39.resize (yyvs39, yyvsc39)
+		end
+	end
+	yyvs39.put (yyval39, yyvsp39)
 end
 		end
 
 	yy_do_action_455 is
-			--|#line 2127 "eiffel.y"
+			--|#line <not available> "eiffel.y"
 		local
-			yyval60: STRING_AS
+			yyval39: INTEGER_CONSTANT
 		do
---|#line 2127 "eiffel.y"
+--|#line <not available> "eiffel.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'eiffel.y' at line 2127")
+	std.error.put_line ("Executing parser user-code from file 'eiffel.y' at line <not available>")
 end
 
-
-yyval60 := new_verbatim_string_as (cloned_string (token_buffer), verbatim_marker.substring (2, verbatim_marker.count), not has_old_verbatim_strings and then verbatim_marker.item (1) = ']') 
-			yyval := yyval60
+yyval39 := new_integer_value (False, '%U', Void, token_buffer) 
 if yy_parsing_status = yyContinue then
 	yyssp := yyssp - 1
-	yyvs.put (yyval, yyvsp)
+	yyvsp39 := yyvsp39 + 1
+	yyvsp1 := yyvsp1 -1
+	if yyvsp39 >= yyvsc39 then
+		if yyvs39 = Void then
+			debug ("GEYACC")
+				std.error.put_line ("Create yyvs39")
+			end
+			create yyspecial_routines39
+			yyvsc39 := yyInitial_yyvs_size
+			yyvs39 := yyspecial_routines39.make (yyvsc39)
+		else
+			debug ("GEYACC")
+				std.error.put_line ("Resize yyvs39")
+			end
+			yyvsc39 := yyvsc39 + yyInitial_yyvs_size
+			yyvs39 := yyspecial_routines39.resize (yyvs39, yyvsc39)
+		end
+	end
+	yyvs39.put (yyval39, yyvsp39)
 end
 		end
 
 	yy_do_action_456 is
-			--|#line 2129 "eiffel.y"
+			--|#line <not available> "eiffel.y"
 		local
-			yyval60: STRING_AS
+			yyval39: INTEGER_CONSTANT
 		do
---|#line 2129 "eiffel.y"
+--|#line <not available> "eiffel.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'eiffel.y' at line 2129")
+	std.error.put_line ("Executing parser user-code from file 'eiffel.y' at line <not available>")
 end
 
-
-yyval60 := new_lt_string_as 
-			yyval := yyval60
+yyval39 := yyvs39.item (yyvsp39) 
 if yy_parsing_status = yyContinue then
 	yyssp := yyssp - 1
-	yyvs.put (yyval, yyvsp)
+	yyvs39.put (yyval39, yyvsp39)
 end
 		end
 
 	yy_do_action_457 is
-			--|#line 2131 "eiffel.y"
+			--|#line <not available> "eiffel.y"
 		local
-			yyval60: STRING_AS
+			yyval39: INTEGER_CONSTANT
 		do
---|#line 2131 "eiffel.y"
+--|#line <not available> "eiffel.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'eiffel.y' at line 2131")
+	std.error.put_line ("Executing parser user-code from file 'eiffel.y' at line <not available>")
 end
 
-
-yyval60 := new_le_string_as 
-			yyval := yyval60
+yyval39 := yyvs39.item (yyvsp39) 
 if yy_parsing_status = yyContinue then
 	yyssp := yyssp - 1
-	yyvs.put (yyval, yyvsp)
+	yyvs39.put (yyval39, yyvsp39)
 end
 		end
 
 	yy_do_action_458 is
-			--|#line 2133 "eiffel.y"
+			--|#line <not available> "eiffel.y"
 		local
-			yyval60: STRING_AS
+			yyval39: INTEGER_CONSTANT
 		do
---|#line 2133 "eiffel.y"
+--|#line <not available> "eiffel.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'eiffel.y' at line 2133")
+	std.error.put_line ("Executing parser user-code from file 'eiffel.y' at line <not available>")
 end
 
-
-yyval60 := new_gt_string_as 
-			yyval := yyval60
+yyval39 := new_integer_value (False, '%U', yyvs63.item (yyvsp63), token_buffer) 
 if yy_parsing_status = yyContinue then
-	yyssp := yyssp - 1
-	yyvs.put (yyval, yyvsp)
+	yyssp := yyssp - 2
+	yyvsp39 := yyvsp39 + 1
+	yyvsp63 := yyvsp63 -1
+	yyvsp1 := yyvsp1 -1
+	if yyvsp39 >= yyvsc39 then
+		if yyvs39 = Void then
+			debug ("GEYACC")
+				std.error.put_line ("Create yyvs39")
+			end
+			create yyspecial_routines39
+			yyvsc39 := yyInitial_yyvs_size
+			yyvs39 := yyspecial_routines39.make (yyvsc39)
+		else
+			debug ("GEYACC")
+				std.error.put_line ("Resize yyvs39")
+			end
+			yyvsc39 := yyvsc39 + yyInitial_yyvs_size
+			yyvs39 := yyspecial_routines39.resize (yyvs39, yyvsc39)
+		end
+	end
+	yyvs39.put (yyval39, yyvsp39)
 end
 		end
 
 	yy_do_action_459 is
-			--|#line 2135 "eiffel.y"
+			--|#line <not available> "eiffel.y"
 		local
-			yyval60: STRING_AS
+			yyval39: INTEGER_CONSTANT
 		do
---|#line 2135 "eiffel.y"
+--|#line <not available> "eiffel.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'eiffel.y' at line 2135")
+	std.error.put_line ("Executing parser user-code from file 'eiffel.y' at line <not available>")
 end
 
-
-yyval60 := new_ge_string_as 
-			yyval := yyval60
+yyval39 := new_integer_value (True, '+', yyvs63.item (yyvsp63), token_buffer) 
 if yy_parsing_status = yyContinue then
-	yyssp := yyssp - 1
-	yyvs.put (yyval, yyvsp)
+	yyssp := yyssp - 3
+	yyvsp39 := yyvsp39 + 1
+	yyvsp63 := yyvsp63 -1
+	yyvsp1 := yyvsp1 -2
+	if yyvsp39 >= yyvsc39 then
+		if yyvs39 = Void then
+			debug ("GEYACC")
+				std.error.put_line ("Create yyvs39")
+			end
+			create yyspecial_routines39
+			yyvsc39 := yyInitial_yyvs_size
+			yyvs39 := yyspecial_routines39.make (yyvsc39)
+		else
+			debug ("GEYACC")
+				std.error.put_line ("Resize yyvs39")
+			end
+			yyvsc39 := yyvsc39 + yyInitial_yyvs_size
+			yyvs39 := yyspecial_routines39.resize (yyvs39, yyvsc39)
+		end
+	end
+	yyvs39.put (yyval39, yyvsp39)
 end
 		end
 
 	yy_do_action_460 is
-			--|#line 2137 "eiffel.y"
+			--|#line <not available> "eiffel.y"
 		local
-			yyval60: STRING_AS
+			yyval39: INTEGER_CONSTANT
 		do
---|#line 2137 "eiffel.y"
+--|#line <not available> "eiffel.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'eiffel.y' at line 2137")
+	std.error.put_line ("Executing parser user-code from file 'eiffel.y' at line <not available>")
 end
 
-
-yyval60 := new_minus_string_as 
-			yyval := yyval60
+yyval39 := new_integer_value (True, '-', yyvs63.item (yyvsp63), token_buffer) 
 if yy_parsing_status = yyContinue then
-	yyssp := yyssp - 1
-	yyvs.put (yyval, yyvsp)
+	yyssp := yyssp - 3
+	yyvsp39 := yyvsp39 + 1
+	yyvsp63 := yyvsp63 -1
+	yyvsp1 := yyvsp1 -2
+	if yyvsp39 >= yyvsc39 then
+		if yyvs39 = Void then
+			debug ("GEYACC")
+				std.error.put_line ("Create yyvs39")
+			end
+			create yyspecial_routines39
+			yyvsc39 := yyInitial_yyvs_size
+			yyvs39 := yyspecial_routines39.make (yyvsc39)
+		else
+			debug ("GEYACC")
+				std.error.put_line ("Resize yyvs39")
+			end
+			yyvsc39 := yyvsc39 + yyInitial_yyvs_size
+			yyvs39 := yyspecial_routines39.resize (yyvs39, yyvsc39)
+		end
+	end
+	yyvs39.put (yyval39, yyvsp39)
 end
 		end
 
 	yy_do_action_461 is
-			--|#line 2139 "eiffel.y"
+			--|#line <not available> "eiffel.y"
 		local
-			yyval60: STRING_AS
+			yyval50: REAL_AS
 		do
---|#line 2139 "eiffel.y"
+--|#line <not available> "eiffel.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'eiffel.y' at line 2139")
+	std.error.put_line ("Executing parser user-code from file 'eiffel.y' at line <not available>")
 end
 
-
-yyval60 := new_plus_string_as 
-			yyval := yyval60
+yyval50 := yyvs50.item (yyvsp50) 
 if yy_parsing_status = yyContinue then
 	yyssp := yyssp - 1
-	yyvs.put (yyval, yyvsp)
+	yyvs50.put (yyval50, yyvsp50)
 end
 		end
 
 	yy_do_action_462 is
-			--|#line 2141 "eiffel.y"
+			--|#line <not available> "eiffel.y"
 		local
-			yyval60: STRING_AS
+			yyval50: REAL_AS
 		do
---|#line 2141 "eiffel.y"
+--|#line <not available> "eiffel.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'eiffel.y' at line 2141")
+	std.error.put_line ("Executing parser user-code from file 'eiffel.y' at line <not available>")
 end
 
-
-yyval60 := new_star_string_as 
-			yyval := yyval60
+yyval50 := yyvs50.item (yyvsp50) 
 if yy_parsing_status = yyContinue then
 	yyssp := yyssp - 1
-	yyvs.put (yyval, yyvsp)
+	yyvs50.put (yyval50, yyvsp50)
 end
 		end
 
 	yy_do_action_463 is
-			--|#line 2143 "eiffel.y"
+			--|#line <not available> "eiffel.y"
 		local
-			yyval60: STRING_AS
+			yyval50: REAL_AS
 		do
---|#line 2143 "eiffel.y"
+--|#line <not available> "eiffel.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'eiffel.y' at line 2143")
+	std.error.put_line ("Executing parser user-code from file 'eiffel.y' at line <not available>")
 end
 
-
-yyval60 := new_slash_string_as 
-			yyval := yyval60
+yyval50 := yyvs50.item (yyvsp50) 
 if yy_parsing_status = yyContinue then
 	yyssp := yyssp - 1
-	yyvs.put (yyval, yyvsp)
+	yyvs50.put (yyval50, yyvsp50)
 end
 		end
 
 	yy_do_action_464 is
-			--|#line 2145 "eiffel.y"
+			--|#line <not available> "eiffel.y"
 		local
-			yyval60: STRING_AS
+			yyval50: REAL_AS
 		do
---|#line 2145 "eiffel.y"
+--|#line <not available> "eiffel.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'eiffel.y' at line 2145")
+	std.error.put_line ("Executing parser user-code from file 'eiffel.y' at line <not available>")
 end
 
-
-yyval60 := new_mod_string_as 
-			yyval := yyval60
+yyval50 := new_real_value (False, '%U', Void, token_buffer) 
 if yy_parsing_status = yyContinue then
 	yyssp := yyssp - 1
-	yyvs.put (yyval, yyvsp)
+	yyvsp50 := yyvsp50 + 1
+	yyvsp1 := yyvsp1 -1
+	if yyvsp50 >= yyvsc50 then
+		if yyvs50 = Void then
+			debug ("GEYACC")
+				std.error.put_line ("Create yyvs50")
+			end
+			create yyspecial_routines50
+			yyvsc50 := yyInitial_yyvs_size
+			yyvs50 := yyspecial_routines50.make (yyvsc50)
+		else
+			debug ("GEYACC")
+				std.error.put_line ("Resize yyvs50")
+			end
+			yyvsc50 := yyvsc50 + yyInitial_yyvs_size
+			yyvs50 := yyspecial_routines50.resize (yyvs50, yyvsc50)
+		end
+	end
+	yyvs50.put (yyval50, yyvsp50)
 end
 		end
 
 	yy_do_action_465 is
-			--|#line 2147 "eiffel.y"
+			--|#line <not available> "eiffel.y"
 		local
-			yyval60: STRING_AS
+			yyval50: REAL_AS
 		do
---|#line 2147 "eiffel.y"
+--|#line <not available> "eiffel.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'eiffel.y' at line 2147")
+	std.error.put_line ("Executing parser user-code from file 'eiffel.y' at line <not available>")
 end
 
-
-yyval60 := new_div_string_as 
-			yyval := yyval60
+yyval50 := new_real_value (True, '+', Void, token_buffer) 
 if yy_parsing_status = yyContinue then
-	yyssp := yyssp - 1
-	yyvs.put (yyval, yyvsp)
+	yyssp := yyssp - 2
+	yyvsp50 := yyvsp50 + 1
+	yyvsp1 := yyvsp1 -2
+	if yyvsp50 >= yyvsc50 then
+		if yyvs50 = Void then
+			debug ("GEYACC")
+				std.error.put_line ("Create yyvs50")
+			end
+			create yyspecial_routines50
+			yyvsc50 := yyInitial_yyvs_size
+			yyvs50 := yyspecial_routines50.make (yyvsc50)
+		else
+			debug ("GEYACC")
+				std.error.put_line ("Resize yyvs50")
+			end
+			yyvsc50 := yyvsc50 + yyInitial_yyvs_size
+			yyvs50 := yyspecial_routines50.resize (yyvs50, yyvsc50)
+		end
+	end
+	yyvs50.put (yyval50, yyvsp50)
 end
 		end
 
 	yy_do_action_466 is
-			--|#line 2149 "eiffel.y"
+			--|#line <not available> "eiffel.y"
 		local
-			yyval60: STRING_AS
+			yyval50: REAL_AS
 		do
---|#line 2149 "eiffel.y"
+--|#line <not available> "eiffel.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'eiffel.y' at line 2149")
+	std.error.put_line ("Executing parser user-code from file 'eiffel.y' at line <not available>")
 end
 
-
-yyval60 := new_power_string_as 
-			yyval := yyval60
+yyval50 := new_real_value (True, '-', Void, token_buffer) 
 if yy_parsing_status = yyContinue then
-	yyssp := yyssp - 1
-	yyvs.put (yyval, yyvsp)
+	yyssp := yyssp - 2
+	yyvsp50 := yyvsp50 + 1
+	yyvsp1 := yyvsp1 -2
+	if yyvsp50 >= yyvsc50 then
+		if yyvs50 = Void then
+			debug ("GEYACC")
+				std.error.put_line ("Create yyvs50")
+			end
+			create yyspecial_routines50
+			yyvsc50 := yyInitial_yyvs_size
+			yyvs50 := yyspecial_routines50.make (yyvsc50)
+		else
+			debug ("GEYACC")
+				std.error.put_line ("Resize yyvs50")
+			end
+			yyvsc50 := yyvsc50 + yyInitial_yyvs_size
+			yyvs50 := yyspecial_routines50.resize (yyvs50, yyvsc50)
+		end
+	end
+	yyvs50.put (yyval50, yyvsp50)
 end
 		end
 
 	yy_do_action_467 is
-			--|#line 2151 "eiffel.y"
+			--|#line <not available> "eiffel.y"
 		local
-			yyval60: STRING_AS
+			yyval50: REAL_AS
 		do
---|#line 2151 "eiffel.y"
+--|#line <not available> "eiffel.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'eiffel.y' at line 2151")
+	std.error.put_line ("Executing parser user-code from file 'eiffel.y' at line <not available>")
 end
 
-
-yyval60 := new_string_as (cloned_string (token_buffer)) 
-			yyval := yyval60
+yyval50 := yyvs50.item (yyvsp50) 
 if yy_parsing_status = yyContinue then
 	yyssp := yyssp - 1
-	yyvs.put (yyval, yyvsp)
+	yyvs50.put (yyval50, yyvsp50)
 end
 		end
 
 	yy_do_action_468 is
-			--|#line 2153 "eiffel.y"
+			--|#line <not available> "eiffel.y"
 		local
-			yyval60: STRING_AS
+			yyval50: REAL_AS
 		do
---|#line 2153 "eiffel.y"
+--|#line <not available> "eiffel.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'eiffel.y' at line 2153")
+	std.error.put_line ("Executing parser user-code from file 'eiffel.y' at line <not available>")
 end
 
-
-yyval60 := new_string_as (cloned_string (token_buffer)) 
-			yyval := yyval60
+yyval50 := yyvs50.item (yyvsp50) 
 if yy_parsing_status = yyContinue then
 	yyssp := yyssp - 1
-	yyvs.put (yyval, yyvsp)
+	yyvs50.put (yyval50, yyvsp50)
 end
 		end
 
 	yy_do_action_469 is
-			--|#line 2155 "eiffel.y"
+			--|#line <not available> "eiffel.y"
 		local
-			yyval60: STRING_AS
+			yyval50: REAL_AS
 		do
---|#line 2155 "eiffel.y"
+--|#line <not available> "eiffel.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'eiffel.y' at line 2155")
+	std.error.put_line ("Executing parser user-code from file 'eiffel.y' at line <not available>")
 end
 
-
-yyval60 := new_string_as (cloned_string (token_buffer)) 
-			yyval := yyval60
+yyval50 := new_real_value (False, '%U', yyvs63.item (yyvsp63), token_buffer) 
 if yy_parsing_status = yyContinue then
-	yyssp := yyssp - 1
-	yyvs.put (yyval, yyvsp)
+	yyssp := yyssp - 2
+	yyvsp50 := yyvsp50 + 1
+	yyvsp63 := yyvsp63 -1
+	yyvsp1 := yyvsp1 -1
+	if yyvsp50 >= yyvsc50 then
+		if yyvs50 = Void then
+			debug ("GEYACC")
+				std.error.put_line ("Create yyvs50")
+			end
+			create yyspecial_routines50
+			yyvsc50 := yyInitial_yyvs_size
+			yyvs50 := yyspecial_routines50.make (yyvsc50)
+		else
+			debug ("GEYACC")
+				std.error.put_line ("Resize yyvs50")
+			end
+			yyvsc50 := yyvsc50 + yyInitial_yyvs_size
+			yyvs50 := yyspecial_routines50.resize (yyvs50, yyvsc50)
+		end
+	end
+	yyvs50.put (yyval50, yyvsp50)
 end
 		end
 
 	yy_do_action_470 is
-			--|#line 2157 "eiffel.y"
+			--|#line <not available> "eiffel.y"
 		local
-			yyval60: STRING_AS
+			yyval50: REAL_AS
 		do
---|#line 2157 "eiffel.y"
+--|#line <not available> "eiffel.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'eiffel.y' at line 2157")
+	std.error.put_line ("Executing parser user-code from file 'eiffel.y' at line <not available>")
 end
 
-
-yyval60 := new_string_as (cloned_string (token_buffer)) 
-			yyval := yyval60
+yyval50 := new_real_value (True, '+', yyvs63.item (yyvsp63), token_buffer) 
 if yy_parsing_status = yyContinue then
-	yyssp := yyssp - 1
-	yyvs.put (yyval, yyvsp)
+	yyssp := yyssp - 3
+	yyvsp50 := yyvsp50 + 1
+	yyvsp63 := yyvsp63 -1
+	yyvsp1 := yyvsp1 -2
+	if yyvsp50 >= yyvsc50 then
+		if yyvs50 = Void then
+			debug ("GEYACC")
+				std.error.put_line ("Create yyvs50")
+			end
+			create yyspecial_routines50
+			yyvsc50 := yyInitial_yyvs_size
+			yyvs50 := yyspecial_routines50.make (yyvsc50)
+		else
+			debug ("GEYACC")
+				std.error.put_line ("Resize yyvs50")
+			end
+			yyvsc50 := yyvsc50 + yyInitial_yyvs_size
+			yyvs50 := yyspecial_routines50.resize (yyvs50, yyvsc50)
+		end
+	end
+	yyvs50.put (yyval50, yyvsp50)
 end
 		end
 
 	yy_do_action_471 is
-			--|#line 2159 "eiffel.y"
+			--|#line <not available> "eiffel.y"
 		local
-			yyval60: STRING_AS
+			yyval50: REAL_AS
 		do
---|#line 2159 "eiffel.y"
+--|#line <not available> "eiffel.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'eiffel.y' at line 2159")
+	std.error.put_line ("Executing parser user-code from file 'eiffel.y' at line <not available>")
 end
 
-
-yyval60 := new_string_as (cloned_string (token_buffer)) 
-			yyval := yyval60
+yyval50 := new_real_value (True, '-', yyvs63.item (yyvsp63), token_buffer) 
 if yy_parsing_status = yyContinue then
-	yyssp := yyssp - 1
-	yyvs.put (yyval, yyvsp)
+	yyssp := yyssp - 3
+	yyvsp50 := yyvsp50 + 1
+	yyvsp63 := yyvsp63 -1
+	yyvsp1 := yyvsp1 -2
+	if yyvsp50 >= yyvsc50 then
+		if yyvs50 = Void then
+			debug ("GEYACC")
+				std.error.put_line ("Create yyvs50")
+			end
+			create yyspecial_routines50
+			yyvsc50 := yyInitial_yyvs_size
+			yyvs50 := yyspecial_routines50.make (yyvsc50)
+		else
+			debug ("GEYACC")
+				std.error.put_line ("Resize yyvs50")
+			end
+			yyvsc50 := yyvsc50 + yyInitial_yyvs_size
+			yyvs50 := yyspecial_routines50.resize (yyvs50, yyvsc50)
+		end
+	end
+	yyvs50.put (yyval50, yyvsp50)
 end
 		end
 
 	yy_do_action_472 is
-			--|#line 2161 "eiffel.y"
+			--|#line <not available> "eiffel.y"
 		local
-			yyval60: STRING_AS
+			yyval8: BIT_CONST_AS
 		do
---|#line 2161 "eiffel.y"
+--|#line <not available> "eiffel.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'eiffel.y' at line 2161")
+	std.error.put_line ("Executing parser user-code from file 'eiffel.y' at line <not available>")
 end
 
-
-yyval60 := new_string_as (cloned_string (token_buffer)) 
-			yyval := yyval60
+yyval8 := new_bit_const_as (create {ID_AS}.initialize (token_buffer)) 
 if yy_parsing_status = yyContinue then
 	yyssp := yyssp - 1
-	yyvs.put (yyval, yyvsp)
+	yyvsp8 := yyvsp8 + 1
+	yyvsp1 := yyvsp1 -1
+	if yyvsp8 >= yyvsc8 then
+		if yyvs8 = Void then
+			debug ("GEYACC")
+				std.error.put_line ("Create yyvs8")
+			end
+			create yyspecial_routines8
+			yyvsc8 := yyInitial_yyvs_size
+			yyvs8 := yyspecial_routines8.make (yyvsc8)
+		else
+			debug ("GEYACC")
+				std.error.put_line ("Resize yyvs8")
+			end
+			yyvsc8 := yyvsc8 + yyInitial_yyvs_size
+			yyvs8 := yyspecial_routines8.resize (yyvs8, yyvsc8)
+		end
+	end
+	yyvs8.put (yyval8, yyvsp8)
 end
 		end
 
 	yy_do_action_473 is
-			--|#line 2163 "eiffel.y"
+			--|#line <not available> "eiffel.y"
 		local
 			yyval60: STRING_AS
 		do
---|#line 2163 "eiffel.y"
+--|#line <not available> "eiffel.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'eiffel.y' at line 2163")
+	std.error.put_line ("Executing parser user-code from file 'eiffel.y' at line <not available>")
 end
 
-
-yyval60 := new_string_as (cloned_string (token_buffer)) 
-			yyval := yyval60
+yyval60 := yyvs60.item (yyvsp60) 
 if yy_parsing_status = yyContinue then
 	yyssp := yyssp - 1
-	yyvs.put (yyval, yyvsp)
+	yyvs60.put (yyval60, yyvsp60)
 end
 		end
 
 	yy_do_action_474 is
-			--|#line 2165 "eiffel.y"
+			--|#line <not available> "eiffel.y"
 		local
 			yyval60: STRING_AS
 		do
---|#line 2165 "eiffel.y"
+--|#line <not available> "eiffel.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'eiffel.y' at line 2165")
+	std.error.put_line ("Executing parser user-code from file 'eiffel.y' at line <not available>")
 end
 
-
-yyval60 := new_string_as (cloned_string (token_buffer)) 
-			yyval := yyval60
+yyval60 := yyvs60.item (yyvsp60) 
 if yy_parsing_status = yyContinue then
 	yyssp := yyssp - 1
-	yyvs.put (yyval, yyvsp)
+	yyvs60.put (yyval60, yyvsp60)
 end
 		end
 
 	yy_do_action_475 is
-			--|#line 2169 "eiffel.y"
+			--|#line <not available> "eiffel.y"
 		local
-			yyval94: PAIR [STRING_AS, CLICK_AST]
+			yyval60: STRING_AS
 		do
---|#line 2169 "eiffel.y"
+--|#line <not available> "eiffel.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'eiffel.y' at line 2169")
+	std.error.put_line ("Executing parser user-code from file 'eiffel.y' at line <not available>")
 end
 
-
-yyval94 := new_clickable_string (new_minus_string_as) 
-			yyval := yyval94
+yyval60 := yyvs60.item (yyvsp60) 
 if yy_parsing_status = yyContinue then
 	yyssp := yyssp - 1
-	yyvs.put (yyval, yyvsp)
+	yyvs60.put (yyval60, yyvsp60)
 end
 		end
 
 	yy_do_action_476 is
-			--|#line 2171 "eiffel.y"
+			--|#line <not available> "eiffel.y"
 		local
-			yyval94: PAIR [STRING_AS, CLICK_AST]
+			yyval60: STRING_AS
 		do
---|#line 2171 "eiffel.y"
+--|#line <not available> "eiffel.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'eiffel.y' at line 2171")
+	std.error.put_line ("Executing parser user-code from file 'eiffel.y' at line <not available>")
 end
 
-
-yyval94 := new_clickable_string (new_plus_string_as) 
-			yyval := yyval94
+yyval60 := new_empty_string_as 
 if yy_parsing_status = yyContinue then
 	yyssp := yyssp - 1
-	yyvs.put (yyval, yyvsp)
+	yyvsp60 := yyvsp60 + 1
+	yyvsp1 := yyvsp1 -1
+	if yyvsp60 >= yyvsc60 then
+		if yyvs60 = Void then
+			debug ("GEYACC")
+				std.error.put_line ("Create yyvs60")
+			end
+			create yyspecial_routines60
+			yyvsc60 := yyInitial_yyvs_size
+			yyvs60 := yyspecial_routines60.make (yyvsc60)
+		else
+			debug ("GEYACC")
+				std.error.put_line ("Resize yyvs60")
+			end
+			yyvsc60 := yyvsc60 + yyInitial_yyvs_size
+			yyvs60 := yyspecial_routines60.resize (yyvs60, yyvsc60)
+		end
+	end
+	yyvs60.put (yyval60, yyvsp60)
 end
 		end
 
 	yy_do_action_477 is
-			--|#line 2173 "eiffel.y"
+			--|#line <not available> "eiffel.y"
 		local
-			yyval94: PAIR [STRING_AS, CLICK_AST]
+			yyval60: STRING_AS
 		do
---|#line 2173 "eiffel.y"
+--|#line <not available> "eiffel.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'eiffel.y' at line 2173")
+	std.error.put_line ("Executing parser user-code from file 'eiffel.y' at line <not available>")
 end
 
-
-yyval94 := new_clickable_string (new_not_string_as) 
-			yyval := yyval94
+yyval60 := new_empty_verbatim_string_as (verbatim_marker.substring (2, verbatim_marker.count), not has_old_verbatim_strings and then verbatim_marker.item (1) = ']') 
 if yy_parsing_status = yyContinue then
 	yyssp := yyssp - 1
-	yyvs.put (yyval, yyvsp)
+	yyvsp60 := yyvsp60 + 1
+	yyvsp1 := yyvsp1 -1
+	if yyvsp60 >= yyvsc60 then
+		if yyvs60 = Void then
+			debug ("GEYACC")
+				std.error.put_line ("Create yyvs60")
+			end
+			create yyspecial_routines60
+			yyvsc60 := yyInitial_yyvs_size
+			yyvs60 := yyspecial_routines60.make (yyvsc60)
+		else
+			debug ("GEYACC")
+				std.error.put_line ("Resize yyvs60")
+			end
+			yyvsc60 := yyvsc60 + yyInitial_yyvs_size
+			yyvs60 := yyspecial_routines60.resize (yyvs60, yyvsc60)
+		end
+	end
+	yyvs60.put (yyval60, yyvsp60)
 end
 		end
 
 	yy_do_action_478 is
-			--|#line 2175 "eiffel.y"
+			--|#line <not available> "eiffel.y"
 		local
-			yyval94: PAIR [STRING_AS, CLICK_AST]
+			yyval60: STRING_AS
 		do
---|#line 2175 "eiffel.y"
+--|#line <not available> "eiffel.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'eiffel.y' at line 2175")
+	std.error.put_line ("Executing parser user-code from file 'eiffel.y' at line <not available>")
 end
 
-
-yyval94 := new_clickable_string (new_string_as (cloned_lower_string (token_buffer))) 
-			yyval := yyval94
+				fixme ("We should handle `Type' instead of ignoring it.")
+				yyval60 := yyvs60.item (yyvsp60)
+			
 if yy_parsing_status = yyContinue then
-	yyssp := yyssp - 1
-	yyvs.put (yyval, yyvsp)
+	yyssp := yyssp - 4
+	yyvsp1 := yyvsp1 -2
+	yyvsp63 := yyvsp63 -1
+	yyvs60.put (yyval60, yyvsp60)
 end
 		end
 
 	yy_do_action_479 is
-			--|#line 2179 "eiffel.y"
+			--|#line <not available> "eiffel.y"
 		local
-			yyval94: PAIR [STRING_AS, CLICK_AST]
+			yyval60: STRING_AS
 		do
---|#line 2179 "eiffel.y"
+--|#line <not available> "eiffel.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'eiffel.y' at line 2179")
+	std.error.put_line ("Executing parser user-code from file 'eiffel.y' at line <not available>")
 end
 
-
-yyval94 := new_clickable_string (new_lt_string_as) 
-			yyval := yyval94
+yyval60 := new_string_as (cloned_string (token_buffer)) 
 if yy_parsing_status = yyContinue then
 	yyssp := yyssp - 1
-	yyvs.put (yyval, yyvsp)
+	yyvsp60 := yyvsp60 + 1
+	yyvsp1 := yyvsp1 -1
+	if yyvsp60 >= yyvsc60 then
+		if yyvs60 = Void then
+			debug ("GEYACC")
+				std.error.put_line ("Create yyvs60")
+			end
+			create yyspecial_routines60
+			yyvsc60 := yyInitial_yyvs_size
+			yyvs60 := yyspecial_routines60.make (yyvsc60)
+		else
+			debug ("GEYACC")
+				std.error.put_line ("Resize yyvs60")
+			end
+			yyvsc60 := yyvsc60 + yyInitial_yyvs_size
+			yyvs60 := yyspecial_routines60.resize (yyvs60, yyvsc60)
+		end
+	end
+	yyvs60.put (yyval60, yyvsp60)
 end
 		end
 
 	yy_do_action_480 is
-			--|#line 2181 "eiffel.y"
+			--|#line <not available> "eiffel.y"
 		local
-			yyval94: PAIR [STRING_AS, CLICK_AST]
+			yyval60: STRING_AS
 		do
---|#line 2181 "eiffel.y"
+--|#line <not available> "eiffel.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'eiffel.y' at line 2181")
+	std.error.put_line ("Executing parser user-code from file 'eiffel.y' at line <not available>")
 end
 
-
-yyval94 := new_clickable_string (new_le_string_as) 
-			yyval := yyval94
+yyval60 := new_verbatim_string_as (cloned_string (token_buffer), verbatim_marker.substring (2, verbatim_marker.count), not has_old_verbatim_strings and then verbatim_marker.item (1) = ']') 
 if yy_parsing_status = yyContinue then
 	yyssp := yyssp - 1
-	yyvs.put (yyval, yyvsp)
+	yyvsp60 := yyvsp60 + 1
+	yyvsp1 := yyvsp1 -1
+	if yyvsp60 >= yyvsc60 then
+		if yyvs60 = Void then
+			debug ("GEYACC")
+				std.error.put_line ("Create yyvs60")
+			end
+			create yyspecial_routines60
+			yyvsc60 := yyInitial_yyvs_size
+			yyvs60 := yyspecial_routines60.make (yyvsc60)
+		else
+			debug ("GEYACC")
+				std.error.put_line ("Resize yyvs60")
+			end
+			yyvsc60 := yyvsc60 + yyInitial_yyvs_size
+			yyvs60 := yyspecial_routines60.resize (yyvs60, yyvsc60)
+		end
+	end
+	yyvs60.put (yyval60, yyvsp60)
 end
 		end
 
 	yy_do_action_481 is
-			--|#line 2183 "eiffel.y"
+			--|#line <not available> "eiffel.y"
 		local
-			yyval94: PAIR [STRING_AS, CLICK_AST]
+			yyval60: STRING_AS
 		do
---|#line 2183 "eiffel.y"
+--|#line <not available> "eiffel.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'eiffel.y' at line 2183")
+	std.error.put_line ("Executing parser user-code from file 'eiffel.y' at line <not available>")
 end
 
-
-yyval94 := new_clickable_string (new_gt_string_as) 
-			yyval := yyval94
+yyval60 := new_lt_string_as 
 if yy_parsing_status = yyContinue then
 	yyssp := yyssp - 1
-	yyvs.put (yyval, yyvsp)
+	yyvsp60 := yyvsp60 + 1
+	yyvsp1 := yyvsp1 -1
+	if yyvsp60 >= yyvsc60 then
+		if yyvs60 = Void then
+			debug ("GEYACC")
+				std.error.put_line ("Create yyvs60")
+			end
+			create yyspecial_routines60
+			yyvsc60 := yyInitial_yyvs_size
+			yyvs60 := yyspecial_routines60.make (yyvsc60)
+		else
+			debug ("GEYACC")
+				std.error.put_line ("Resize yyvs60")
+			end
+			yyvsc60 := yyvsc60 + yyInitial_yyvs_size
+			yyvs60 := yyspecial_routines60.resize (yyvs60, yyvsc60)
+		end
+	end
+	yyvs60.put (yyval60, yyvsp60)
 end
 		end
 
 	yy_do_action_482 is
-			--|#line 2185 "eiffel.y"
+			--|#line <not available> "eiffel.y"
 		local
-			yyval94: PAIR [STRING_AS, CLICK_AST]
+			yyval60: STRING_AS
 		do
---|#line 2185 "eiffel.y"
+--|#line <not available> "eiffel.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'eiffel.y' at line 2185")
+	std.error.put_line ("Executing parser user-code from file 'eiffel.y' at line <not available>")
 end
 
-
-yyval94 := new_clickable_string (new_ge_string_as) 
-			yyval := yyval94
+yyval60 := new_le_string_as 
 if yy_parsing_status = yyContinue then
 	yyssp := yyssp - 1
-	yyvs.put (yyval, yyvsp)
+	yyvsp60 := yyvsp60 + 1
+	yyvsp1 := yyvsp1 -1
+	if yyvsp60 >= yyvsc60 then
+		if yyvs60 = Void then
+			debug ("GEYACC")
+				std.error.put_line ("Create yyvs60")
+			end
+			create yyspecial_routines60
+			yyvsc60 := yyInitial_yyvs_size
+			yyvs60 := yyspecial_routines60.make (yyvsc60)
+		else
+			debug ("GEYACC")
+				std.error.put_line ("Resize yyvs60")
+			end
+			yyvsc60 := yyvsc60 + yyInitial_yyvs_size
+			yyvs60 := yyspecial_routines60.resize (yyvs60, yyvsc60)
+		end
+	end
+	yyvs60.put (yyval60, yyvsp60)
 end
 		end
 
 	yy_do_action_483 is
-			--|#line 2187 "eiffel.y"
+			--|#line <not available> "eiffel.y"
 		local
-			yyval94: PAIR [STRING_AS, CLICK_AST]
+			yyval60: STRING_AS
 		do
---|#line 2187 "eiffel.y"
+--|#line <not available> "eiffel.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'eiffel.y' at line 2187")
+	std.error.put_line ("Executing parser user-code from file 'eiffel.y' at line <not available>")
 end
 
-
-yyval94 := new_clickable_string (new_minus_string_as) 
-			yyval := yyval94
+yyval60 := new_gt_string_as 
 if yy_parsing_status = yyContinue then
 	yyssp := yyssp - 1
-	yyvs.put (yyval, yyvsp)
+	yyvsp60 := yyvsp60 + 1
+	yyvsp1 := yyvsp1 -1
+	if yyvsp60 >= yyvsc60 then
+		if yyvs60 = Void then
+			debug ("GEYACC")
+				std.error.put_line ("Create yyvs60")
+			end
+			create yyspecial_routines60
+			yyvsc60 := yyInitial_yyvs_size
+			yyvs60 := yyspecial_routines60.make (yyvsc60)
+		else
+			debug ("GEYACC")
+				std.error.put_line ("Resize yyvs60")
+			end
+			yyvsc60 := yyvsc60 + yyInitial_yyvs_size
+			yyvs60 := yyspecial_routines60.resize (yyvs60, yyvsc60)
+		end
+	end
+	yyvs60.put (yyval60, yyvsp60)
 end
 		end
 
 	yy_do_action_484 is
-			--|#line 2189 "eiffel.y"
+			--|#line <not available> "eiffel.y"
 		local
-			yyval94: PAIR [STRING_AS, CLICK_AST]
+			yyval60: STRING_AS
 		do
---|#line 2189 "eiffel.y"
+--|#line <not available> "eiffel.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'eiffel.y' at line 2189")
+	std.error.put_line ("Executing parser user-code from file 'eiffel.y' at line <not available>")
 end
 
-
-yyval94 := new_clickable_string (new_plus_string_as) 
-			yyval := yyval94
+yyval60 := new_ge_string_as 
 if yy_parsing_status = yyContinue then
 	yyssp := yyssp - 1
-	yyvs.put (yyval, yyvsp)
+	yyvsp60 := yyvsp60 + 1
+	yyvsp1 := yyvsp1 -1
+	if yyvsp60 >= yyvsc60 then
+		if yyvs60 = Void then
+			debug ("GEYACC")
+				std.error.put_line ("Create yyvs60")
+			end
+			create yyspecial_routines60
+			yyvsc60 := yyInitial_yyvs_size
+			yyvs60 := yyspecial_routines60.make (yyvsc60)
+		else
+			debug ("GEYACC")
+				std.error.put_line ("Resize yyvs60")
+			end
+			yyvsc60 := yyvsc60 + yyInitial_yyvs_size
+			yyvs60 := yyspecial_routines60.resize (yyvs60, yyvsc60)
+		end
+	end
+	yyvs60.put (yyval60, yyvsp60)
 end
 		end
 
 	yy_do_action_485 is
-			--|#line 2191 "eiffel.y"
+			--|#line <not available> "eiffel.y"
 		local
-			yyval94: PAIR [STRING_AS, CLICK_AST]
+			yyval60: STRING_AS
 		do
---|#line 2191 "eiffel.y"
+--|#line <not available> "eiffel.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'eiffel.y' at line 2191")
+	std.error.put_line ("Executing parser user-code from file 'eiffel.y' at line <not available>")
 end
 
-
-yyval94 := new_clickable_string (new_star_string_as) 
-			yyval := yyval94
+yyval60 := new_minus_string_as 
 if yy_parsing_status = yyContinue then
 	yyssp := yyssp - 1
-	yyvs.put (yyval, yyvsp)
+	yyvsp60 := yyvsp60 + 1
+	yyvsp1 := yyvsp1 -1
+	if yyvsp60 >= yyvsc60 then
+		if yyvs60 = Void then
+			debug ("GEYACC")
+				std.error.put_line ("Create yyvs60")
+			end
+			create yyspecial_routines60
+			yyvsc60 := yyInitial_yyvs_size
+			yyvs60 := yyspecial_routines60.make (yyvsc60)
+		else
+			debug ("GEYACC")
+				std.error.put_line ("Resize yyvs60")
+			end
+			yyvsc60 := yyvsc60 + yyInitial_yyvs_size
+			yyvs60 := yyspecial_routines60.resize (yyvs60, yyvsc60)
+		end
+	end
+	yyvs60.put (yyval60, yyvsp60)
 end
 		end
 
 	yy_do_action_486 is
-			--|#line 2193 "eiffel.y"
+			--|#line <not available> "eiffel.y"
 		local
-			yyval94: PAIR [STRING_AS, CLICK_AST]
+			yyval60: STRING_AS
 		do
---|#line 2193 "eiffel.y"
+--|#line <not available> "eiffel.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'eiffel.y' at line 2193")
+	std.error.put_line ("Executing parser user-code from file 'eiffel.y' at line <not available>")
 end
 
-
-yyval94 := new_clickable_string (new_slash_string_as) 
-			yyval := yyval94
+yyval60 := new_plus_string_as 
 if yy_parsing_status = yyContinue then
 	yyssp := yyssp - 1
-	yyvs.put (yyval, yyvsp)
+	yyvsp60 := yyvsp60 + 1
+	yyvsp1 := yyvsp1 -1
+	if yyvsp60 >= yyvsc60 then
+		if yyvs60 = Void then
+			debug ("GEYACC")
+				std.error.put_line ("Create yyvs60")
+			end
+			create yyspecial_routines60
+			yyvsc60 := yyInitial_yyvs_size
+			yyvs60 := yyspecial_routines60.make (yyvsc60)
+		else
+			debug ("GEYACC")
+				std.error.put_line ("Resize yyvs60")
+			end
+			yyvsc60 := yyvsc60 + yyInitial_yyvs_size
+			yyvs60 := yyspecial_routines60.resize (yyvs60, yyvsc60)
+		end
+	end
+	yyvs60.put (yyval60, yyvsp60)
 end
 		end
 
 	yy_do_action_487 is
-			--|#line 2195 "eiffel.y"
+			--|#line <not available> "eiffel.y"
 		local
-			yyval94: PAIR [STRING_AS, CLICK_AST]
+			yyval60: STRING_AS
 		do
---|#line 2195 "eiffel.y"
+--|#line <not available> "eiffel.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'eiffel.y' at line 2195")
+	std.error.put_line ("Executing parser user-code from file 'eiffel.y' at line <not available>")
 end
 
-
-yyval94 := new_clickable_string (new_mod_string_as) 
-			yyval := yyval94
+yyval60 := new_star_string_as 
 if yy_parsing_status = yyContinue then
 	yyssp := yyssp - 1
-	yyvs.put (yyval, yyvsp)
+	yyvsp60 := yyvsp60 + 1
+	yyvsp1 := yyvsp1 -1
+	if yyvsp60 >= yyvsc60 then
+		if yyvs60 = Void then
+			debug ("GEYACC")
+				std.error.put_line ("Create yyvs60")
+			end
+			create yyspecial_routines60
+			yyvsc60 := yyInitial_yyvs_size
+			yyvs60 := yyspecial_routines60.make (yyvsc60)
+		else
+			debug ("GEYACC")
+				std.error.put_line ("Resize yyvs60")
+			end
+			yyvsc60 := yyvsc60 + yyInitial_yyvs_size
+			yyvs60 := yyspecial_routines60.resize (yyvs60, yyvsc60)
+		end
+	end
+	yyvs60.put (yyval60, yyvsp60)
 end
 		end
 
 	yy_do_action_488 is
-			--|#line 2197 "eiffel.y"
+			--|#line <not available> "eiffel.y"
 		local
-			yyval94: PAIR [STRING_AS, CLICK_AST]
+			yyval60: STRING_AS
 		do
---|#line 2197 "eiffel.y"
+--|#line <not available> "eiffel.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'eiffel.y' at line 2197")
+	std.error.put_line ("Executing parser user-code from file 'eiffel.y' at line <not available>")
 end
 
-
-yyval94 := new_clickable_string (new_div_string_as) 
-			yyval := yyval94
+yyval60 := new_slash_string_as 
 if yy_parsing_status = yyContinue then
 	yyssp := yyssp - 1
-	yyvs.put (yyval, yyvsp)
+	yyvsp60 := yyvsp60 + 1
+	yyvsp1 := yyvsp1 -1
+	if yyvsp60 >= yyvsc60 then
+		if yyvs60 = Void then
+			debug ("GEYACC")
+				std.error.put_line ("Create yyvs60")
+			end
+			create yyspecial_routines60
+			yyvsc60 := yyInitial_yyvs_size
+			yyvs60 := yyspecial_routines60.make (yyvsc60)
+		else
+			debug ("GEYACC")
+				std.error.put_line ("Resize yyvs60")
+			end
+			yyvsc60 := yyvsc60 + yyInitial_yyvs_size
+			yyvs60 := yyspecial_routines60.resize (yyvs60, yyvsc60)
+		end
+	end
+	yyvs60.put (yyval60, yyvsp60)
 end
 		end
 
 	yy_do_action_489 is
-			--|#line 2199 "eiffel.y"
+			--|#line <not available> "eiffel.y"
 		local
-			yyval94: PAIR [STRING_AS, CLICK_AST]
+			yyval60: STRING_AS
 		do
---|#line 2199 "eiffel.y"
+--|#line <not available> "eiffel.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'eiffel.y' at line 2199")
+	std.error.put_line ("Executing parser user-code from file 'eiffel.y' at line <not available>")
 end
 
-
-yyval94 := new_clickable_string (new_power_string_as) 
-			yyval := yyval94
+yyval60 := new_mod_string_as 
 if yy_parsing_status = yyContinue then
 	yyssp := yyssp - 1
-	yyvs.put (yyval, yyvsp)
+	yyvsp60 := yyvsp60 + 1
+	yyvsp1 := yyvsp1 -1
+	if yyvsp60 >= yyvsc60 then
+		if yyvs60 = Void then
+			debug ("GEYACC")
+				std.error.put_line ("Create yyvs60")
+			end
+			create yyspecial_routines60
+			yyvsc60 := yyInitial_yyvs_size
+			yyvs60 := yyspecial_routines60.make (yyvsc60)
+		else
+			debug ("GEYACC")
+				std.error.put_line ("Resize yyvs60")
+			end
+			yyvsc60 := yyvsc60 + yyInitial_yyvs_size
+			yyvs60 := yyspecial_routines60.resize (yyvs60, yyvsc60)
+		end
+	end
+	yyvs60.put (yyval60, yyvsp60)
 end
 		end
 
 	yy_do_action_490 is
-			--|#line 2201 "eiffel.y"
+			--|#line <not available> "eiffel.y"
 		local
-			yyval94: PAIR [STRING_AS, CLICK_AST]
+			yyval60: STRING_AS
 		do
---|#line 2201 "eiffel.y"
+--|#line <not available> "eiffel.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'eiffel.y' at line 2201")
+	std.error.put_line ("Executing parser user-code from file 'eiffel.y' at line <not available>")
 end
 
-
-yyval94 := new_clickable_string (new_and_string_as) 
-			yyval := yyval94
+yyval60 := new_div_string_as 
 if yy_parsing_status = yyContinue then
 	yyssp := yyssp - 1
-	yyvs.put (yyval, yyvsp)
+	yyvsp60 := yyvsp60 + 1
+	yyvsp1 := yyvsp1 -1
+	if yyvsp60 >= yyvsc60 then
+		if yyvs60 = Void then
+			debug ("GEYACC")
+				std.error.put_line ("Create yyvs60")
+			end
+			create yyspecial_routines60
+			yyvsc60 := yyInitial_yyvs_size
+			yyvs60 := yyspecial_routines60.make (yyvsc60)
+		else
+			debug ("GEYACC")
+				std.error.put_line ("Resize yyvs60")
+			end
+			yyvsc60 := yyvsc60 + yyInitial_yyvs_size
+			yyvs60 := yyspecial_routines60.resize (yyvs60, yyvsc60)
+		end
+	end
+	yyvs60.put (yyval60, yyvsp60)
 end
 		end
 
 	yy_do_action_491 is
-			--|#line 2203 "eiffel.y"
+			--|#line <not available> "eiffel.y"
 		local
-			yyval94: PAIR [STRING_AS, CLICK_AST]
+			yyval60: STRING_AS
 		do
---|#line 2203 "eiffel.y"
+--|#line <not available> "eiffel.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'eiffel.y' at line 2203")
+	std.error.put_line ("Executing parser user-code from file 'eiffel.y' at line <not available>")
 end
 
-
-yyval94 := new_clickable_string (new_and_then_string_as) 
-			yyval := yyval94
+yyval60 := new_power_string_as 
 if yy_parsing_status = yyContinue then
 	yyssp := yyssp - 1
-	yyvs.put (yyval, yyvsp)
+	yyvsp60 := yyvsp60 + 1
+	yyvsp1 := yyvsp1 -1
+	if yyvsp60 >= yyvsc60 then
+		if yyvs60 = Void then
+			debug ("GEYACC")
+				std.error.put_line ("Create yyvs60")
+			end
+			create yyspecial_routines60
+			yyvsc60 := yyInitial_yyvs_size
+			yyvs60 := yyspecial_routines60.make (yyvsc60)
+		else
+			debug ("GEYACC")
+				std.error.put_line ("Resize yyvs60")
+			end
+			yyvsc60 := yyvsc60 + yyInitial_yyvs_size
+			yyvs60 := yyspecial_routines60.resize (yyvs60, yyvsc60)
+		end
+	end
+	yyvs60.put (yyval60, yyvsp60)
 end
 		end
 
 	yy_do_action_492 is
-			--|#line 2205 "eiffel.y"
+			--|#line <not available> "eiffel.y"
 		local
-			yyval94: PAIR [STRING_AS, CLICK_AST]
+			yyval60: STRING_AS
 		do
---|#line 2205 "eiffel.y"
+--|#line <not available> "eiffel.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'eiffel.y' at line 2205")
+	std.error.put_line ("Executing parser user-code from file 'eiffel.y' at line <not available>")
 end
 
-
-yyval94 := new_clickable_string (new_implies_string_as) 
-			yyval := yyval94
+yyval60 := new_string_as (cloned_string (token_buffer)) 
 if yy_parsing_status = yyContinue then
 	yyssp := yyssp - 1
-	yyvs.put (yyval, yyvsp)
+	yyvsp60 := yyvsp60 + 1
+	yyvsp1 := yyvsp1 -1
+	if yyvsp60 >= yyvsc60 then
+		if yyvs60 = Void then
+			debug ("GEYACC")
+				std.error.put_line ("Create yyvs60")
+			end
+			create yyspecial_routines60
+			yyvsc60 := yyInitial_yyvs_size
+			yyvs60 := yyspecial_routines60.make (yyvsc60)
+		else
+			debug ("GEYACC")
+				std.error.put_line ("Resize yyvs60")
+			end
+			yyvsc60 := yyvsc60 + yyInitial_yyvs_size
+			yyvs60 := yyspecial_routines60.resize (yyvs60, yyvsc60)
+		end
+	end
+	yyvs60.put (yyval60, yyvsp60)
 end
 		end
 
 	yy_do_action_493 is
-			--|#line 2207 "eiffel.y"
+			--|#line <not available> "eiffel.y"
 		local
-			yyval94: PAIR [STRING_AS, CLICK_AST]
+			yyval60: STRING_AS
 		do
---|#line 2207 "eiffel.y"
+--|#line <not available> "eiffel.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'eiffel.y' at line 2207")
+	std.error.put_line ("Executing parser user-code from file 'eiffel.y' at line <not available>")
 end
 
-
-yyval94 := new_clickable_string (new_or_string_as) 
-			yyval := yyval94
+yyval60 := new_string_as (cloned_string (token_buffer)) 
 if yy_parsing_status = yyContinue then
 	yyssp := yyssp - 1
-	yyvs.put (yyval, yyvsp)
+	yyvsp60 := yyvsp60 + 1
+	yyvsp1 := yyvsp1 -1
+	if yyvsp60 >= yyvsc60 then
+		if yyvs60 = Void then
+			debug ("GEYACC")
+				std.error.put_line ("Create yyvs60")
+			end
+			create yyspecial_routines60
+			yyvsc60 := yyInitial_yyvs_size
+			yyvs60 := yyspecial_routines60.make (yyvsc60)
+		else
+			debug ("GEYACC")
+				std.error.put_line ("Resize yyvs60")
+			end
+			yyvsc60 := yyvsc60 + yyInitial_yyvs_size
+			yyvs60 := yyspecial_routines60.resize (yyvs60, yyvsc60)
+		end
+	end
+	yyvs60.put (yyval60, yyvsp60)
 end
 		end
 
 	yy_do_action_494 is
-			--|#line 2209 "eiffel.y"
+			--|#line <not available> "eiffel.y"
 		local
-			yyval94: PAIR [STRING_AS, CLICK_AST]
+			yyval60: STRING_AS
 		do
---|#line 2209 "eiffel.y"
+--|#line <not available> "eiffel.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'eiffel.y' at line 2209")
+	std.error.put_line ("Executing parser user-code from file 'eiffel.y' at line <not available>")
 end
 
-
-yyval94 := new_clickable_string (new_or_else_string_as) 
-			yyval := yyval94
+yyval60 := new_string_as (cloned_string (token_buffer)) 
 if yy_parsing_status = yyContinue then
 	yyssp := yyssp - 1
-	yyvs.put (yyval, yyvsp)
+	yyvsp60 := yyvsp60 + 1
+	yyvsp1 := yyvsp1 -1
+	if yyvsp60 >= yyvsc60 then
+		if yyvs60 = Void then
+			debug ("GEYACC")
+				std.error.put_line ("Create yyvs60")
+			end
+			create yyspecial_routines60
+			yyvsc60 := yyInitial_yyvs_size
+			yyvs60 := yyspecial_routines60.make (yyvsc60)
+		else
+			debug ("GEYACC")
+				std.error.put_line ("Resize yyvs60")
+			end
+			yyvsc60 := yyvsc60 + yyInitial_yyvs_size
+			yyvs60 := yyspecial_routines60.resize (yyvs60, yyvsc60)
+		end
+	end
+	yyvs60.put (yyval60, yyvsp60)
 end
 		end
 
 	yy_do_action_495 is
-			--|#line 2211 "eiffel.y"
+			--|#line <not available> "eiffel.y"
 		local
-			yyval94: PAIR [STRING_AS, CLICK_AST]
+			yyval60: STRING_AS
 		do
---|#line 2211 "eiffel.y"
+--|#line <not available> "eiffel.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'eiffel.y' at line 2211")
+	std.error.put_line ("Executing parser user-code from file 'eiffel.y' at line <not available>")
 end
 
-
-yyval94 := new_clickable_string (new_xor_string_as) 
-			yyval := yyval94
+yyval60 := new_string_as (cloned_string (token_buffer)) 
 if yy_parsing_status = yyContinue then
 	yyssp := yyssp - 1
-	yyvs.put (yyval, yyvsp)
+	yyvsp60 := yyvsp60 + 1
+	yyvsp1 := yyvsp1 -1
+	if yyvsp60 >= yyvsc60 then
+		if yyvs60 = Void then
+			debug ("GEYACC")
+				std.error.put_line ("Create yyvs60")
+			end
+			create yyspecial_routines60
+			yyvsc60 := yyInitial_yyvs_size
+			yyvs60 := yyspecial_routines60.make (yyvsc60)
+		else
+			debug ("GEYACC")
+				std.error.put_line ("Resize yyvs60")
+			end
+			yyvsc60 := yyvsc60 + yyInitial_yyvs_size
+			yyvs60 := yyspecial_routines60.resize (yyvs60, yyvsc60)
+		end
+	end
+	yyvs60.put (yyval60, yyvsp60)
 end
 		end
 
 	yy_do_action_496 is
-			--|#line 2213 "eiffel.y"
+			--|#line <not available> "eiffel.y"
 		local
-			yyval94: PAIR [STRING_AS, CLICK_AST]
+			yyval60: STRING_AS
 		do
---|#line 2213 "eiffel.y"
+--|#line <not available> "eiffel.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'eiffel.y' at line 2213")
+	std.error.put_line ("Executing parser user-code from file 'eiffel.y' at line <not available>")
 end
 
-
-yyval94 := new_clickable_string (new_string_as (cloned_lower_string (token_buffer))) 
-			yyval := yyval94
+yyval60 := new_string_as (cloned_string (token_buffer)) 
 if yy_parsing_status = yyContinue then
 	yyssp := yyssp - 1
-	yyvs.put (yyval, yyvsp)
+	yyvsp60 := yyvsp60 + 1
+	yyvsp1 := yyvsp1 -1
+	if yyvsp60 >= yyvsc60 then
+		if yyvs60 = Void then
+			debug ("GEYACC")
+				std.error.put_line ("Create yyvs60")
+			end
+			create yyspecial_routines60
+			yyvsc60 := yyInitial_yyvs_size
+			yyvs60 := yyspecial_routines60.make (yyvsc60)
+		else
+			debug ("GEYACC")
+				std.error.put_line ("Resize yyvs60")
+			end
+			yyvsc60 := yyvsc60 + yyInitial_yyvs_size
+			yyvs60 := yyspecial_routines60.resize (yyvs60, yyvsc60)
+		end
+	end
+	yyvs60.put (yyval60, yyvsp60)
 end
 		end
 
 	yy_do_action_497 is
-			--|#line 2217 "eiffel.y"
+			--|#line <not available> "eiffel.y"
 		local
-			yyval5: ARRAY_AS
+			yyval60: STRING_AS
 		do
---|#line 2217 "eiffel.y"
+--|#line <not available> "eiffel.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'eiffel.y' at line 2217")
+	std.error.put_line ("Executing parser user-code from file 'eiffel.y' at line <not available>")
 end
 
-
-yyval5 := new_array_as (yytype72 (yyvs.item (yyvsp - 1))) 
-			yyval := yyval5
+yyval60 := new_string_as (cloned_string (token_buffer)) 
 if yy_parsing_status = yyContinue then
-	yyssp := yyssp - 3
-	yyvsp := yyvsp - 2
-	yyvs.put (yyval, yyvsp)
+	yyssp := yyssp - 1
+	yyvsp60 := yyvsp60 + 1
+	yyvsp1 := yyvsp1 -1
+	if yyvsp60 >= yyvsc60 then
+		if yyvs60 = Void then
+			debug ("GEYACC")
+				std.error.put_line ("Create yyvs60")
+			end
+			create yyspecial_routines60
+			yyvsc60 := yyInitial_yyvs_size
+			yyvs60 := yyspecial_routines60.make (yyvsc60)
+		else
+			debug ("GEYACC")
+				std.error.put_line ("Resize yyvs60")
+			end
+			yyvsc60 := yyvsc60 + yyInitial_yyvs_size
+			yyvs60 := yyspecial_routines60.resize (yyvs60, yyvsc60)
+		end
+	end
+	yyvs60.put (yyval60, yyvsp60)
 end
 		end
 
 	yy_do_action_498 is
-			--|#line 2221 "eiffel.y"
+			--|#line <not available> "eiffel.y"
 		local
-			yyval62: TUPLE_AS
+			yyval60: STRING_AS
 		do
---|#line 2221 "eiffel.y"
+--|#line <not available> "eiffel.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'eiffel.y' at line 2221")
+	std.error.put_line ("Executing parser user-code from file 'eiffel.y' at line <not available>")
 end
 
-
-yyval62 := new_tuple_as (yytype72 (yyvs.item (yyvsp - 1))) 
-			yyval := yyval62
+yyval60 := new_string_as (cloned_string (token_buffer)) 
 if yy_parsing_status = yyContinue then
-	yyssp := yyssp - 3
-	yyvsp := yyvsp - 2
-	yyvs.put (yyval, yyvsp)
+	yyssp := yyssp - 1
+	yyvsp60 := yyvsp60 + 1
+	yyvsp1 := yyvsp1 -1
+	if yyvsp60 >= yyvsc60 then
+		if yyvs60 = Void then
+			debug ("GEYACC")
+				std.error.put_line ("Create yyvs60")
+			end
+			create yyspecial_routines60
+			yyvsc60 := yyInitial_yyvs_size
+			yyvs60 := yyspecial_routines60.make (yyvsc60)
+		else
+			debug ("GEYACC")
+				std.error.put_line ("Resize yyvs60")
+			end
+			yyvsc60 := yyvsc60 + yyInitial_yyvs_size
+			yyvs60 := yyspecial_routines60.resize (yyvs60, yyvsc60)
+		end
+	end
+	yyvs60.put (yyval60, yyvsp60)
 end
 		end
 
 	yy_do_action_499 is
-			--|#line 2225 "eiffel.y"
+			--|#line <not available> "eiffel.y"
+		local
+			yyval60: STRING_AS
 		do
---|#line 2225 "eiffel.y"
+--|#line <not available> "eiffel.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'eiffel.y' at line 2225")
+	std.error.put_line ("Executing parser user-code from file 'eiffel.y' at line <not available>")
 end
 
-			yyval := yyval_default;
-
-
+yyval60 := new_string_as (cloned_string (token_buffer)) 
 if yy_parsing_status = yyContinue then
-	yyvsp := yyvsp + 1
-	if yyvsp >= yyvsc then
-		yyvsc := yyvsc + yyInitial_stack_size
-		yyvs := FIXED_ARRAY_.resize (yyvs, yyvsc)
-		debug ("GEYACC")
-			std.error.put_string ("Stack (yyvs) size increased to ")
-			std.error.put_integer (yyvsc)
-			std.error.put_new_line
+	yyssp := yyssp - 1
+	yyvsp60 := yyvsp60 + 1
+	yyvsp1 := yyvsp1 -1
+	if yyvsp60 >= yyvsc60 then
+		if yyvs60 = Void then
+			debug ("GEYACC")
+				std.error.put_line ("Create yyvs60")
+			end
+			create yyspecial_routines60
+			yyvsc60 := yyInitial_yyvs_size
+			yyvs60 := yyspecial_routines60.make (yyvsc60)
+		else
+			debug ("GEYACC")
+				std.error.put_line ("Resize yyvs60")
+			end
+			yyvsc60 := yyvsc60 + yyInitial_yyvs_size
+			yyvs60 := yyspecial_routines60.resize (yyvs60, yyvsc60)
 		end
 	end
-	yyvs.put (yyval, yyvsp)
+	yyvs60.put (yyval60, yyvsp60)
 end
 		end
 
 	yy_do_action_500 is
-			--|#line 2229 "eiffel.y"
+			--|#line <not available> "eiffel.y"
 		local
-			yyval58: TOKEN_LOCATION
+			yyval94: PAIR [STRING_AS, CLICK_AST]
 		do
---|#line 2229 "eiffel.y"
+--|#line <not available> "eiffel.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'eiffel.y' at line 2229")
+	std.error.put_line ("Executing parser user-code from file 'eiffel.y' at line <not available>")
+end
+
+yyval94 := new_clickable_string (new_minus_string_as) 
+if yy_parsing_status = yyContinue then
+	yyssp := yyssp - 1
+	yyvsp94 := yyvsp94 + 1
+	yyvsp1 := yyvsp1 -1
+	if yyvsp94 >= yyvsc94 then
+		if yyvs94 = Void then
+			debug ("GEYACC")
+				std.error.put_line ("Create yyvs94")
+			end
+			create yyspecial_routines94
+			yyvsc94 := yyInitial_yyvs_size
+			yyvs94 := yyspecial_routines94.make (yyvsc94)
+		else
+			debug ("GEYACC")
+				std.error.put_line ("Resize yyvs94")
+			end
+			yyvsc94 := yyvsc94 + yyInitial_yyvs_size
+			yyvs94 := yyspecial_routines94.resize (yyvs94, yyvsc94)
+		end
+	end
+	yyvs94.put (yyval94, yyvsp94)
+end
+		end
+
+	yy_do_action_501 is
+			--|#line <not available> "eiffel.y"
+		local
+			yyval94: PAIR [STRING_AS, CLICK_AST]
+		do
+--|#line <not available> "eiffel.y"
+debug ("GEYACC")
+	std.error.put_line ("Executing parser user-code from file 'eiffel.y' at line <not available>")
+end
+
+yyval94 := new_clickable_string (new_plus_string_as) 
+if yy_parsing_status = yyContinue then
+	yyssp := yyssp - 1
+	yyvsp94 := yyvsp94 + 1
+	yyvsp1 := yyvsp1 -1
+	if yyvsp94 >= yyvsc94 then
+		if yyvs94 = Void then
+			debug ("GEYACC")
+				std.error.put_line ("Create yyvs94")
+			end
+			create yyspecial_routines94
+			yyvsc94 := yyInitial_yyvs_size
+			yyvs94 := yyspecial_routines94.make (yyvsc94)
+		else
+			debug ("GEYACC")
+				std.error.put_line ("Resize yyvs94")
+			end
+			yyvsc94 := yyvsc94 + yyInitial_yyvs_size
+			yyvs94 := yyspecial_routines94.resize (yyvs94, yyvsc94)
+		end
+	end
+	yyvs94.put (yyval94, yyvsp94)
+end
+		end
+
+	yy_do_action_502 is
+			--|#line <not available> "eiffel.y"
+		local
+			yyval94: PAIR [STRING_AS, CLICK_AST]
+		do
+--|#line <not available> "eiffel.y"
+debug ("GEYACC")
+	std.error.put_line ("Executing parser user-code from file 'eiffel.y' at line <not available>")
+end
+
+yyval94 := new_clickable_string (new_not_string_as) 
+if yy_parsing_status = yyContinue then
+	yyssp := yyssp - 1
+	yyvsp94 := yyvsp94 + 1
+	yyvsp1 := yyvsp1 -1
+	if yyvsp94 >= yyvsc94 then
+		if yyvs94 = Void then
+			debug ("GEYACC")
+				std.error.put_line ("Create yyvs94")
+			end
+			create yyspecial_routines94
+			yyvsc94 := yyInitial_yyvs_size
+			yyvs94 := yyspecial_routines94.make (yyvsc94)
+		else
+			debug ("GEYACC")
+				std.error.put_line ("Resize yyvs94")
+			end
+			yyvsc94 := yyvsc94 + yyInitial_yyvs_size
+			yyvs94 := yyspecial_routines94.resize (yyvs94, yyvsc94)
+		end
+	end
+	yyvs94.put (yyval94, yyvsp94)
+end
+		end
+
+	yy_do_action_503 is
+			--|#line <not available> "eiffel.y"
+		local
+			yyval94: PAIR [STRING_AS, CLICK_AST]
+		do
+--|#line <not available> "eiffel.y"
+debug ("GEYACC")
+	std.error.put_line ("Executing parser user-code from file 'eiffel.y' at line <not available>")
+end
+
+yyval94 := new_clickable_string (new_string_as (cloned_lower_string (token_buffer))) 
+if yy_parsing_status = yyContinue then
+	yyssp := yyssp - 1
+	yyvsp94 := yyvsp94 + 1
+	yyvsp1 := yyvsp1 -1
+	if yyvsp94 >= yyvsc94 then
+		if yyvs94 = Void then
+			debug ("GEYACC")
+				std.error.put_line ("Create yyvs94")
+			end
+			create yyspecial_routines94
+			yyvsc94 := yyInitial_yyvs_size
+			yyvs94 := yyspecial_routines94.make (yyvsc94)
+		else
+			debug ("GEYACC")
+				std.error.put_line ("Resize yyvs94")
+			end
+			yyvsc94 := yyvsc94 + yyInitial_yyvs_size
+			yyvs94 := yyspecial_routines94.resize (yyvs94, yyvsc94)
+		end
+	end
+	yyvs94.put (yyval94, yyvsp94)
+end
+		end
+
+	yy_do_action_504 is
+			--|#line <not available> "eiffel.y"
+		local
+			yyval94: PAIR [STRING_AS, CLICK_AST]
+		do
+--|#line <not available> "eiffel.y"
+debug ("GEYACC")
+	std.error.put_line ("Executing parser user-code from file 'eiffel.y' at line <not available>")
+end
+
+yyval94 := new_clickable_string (new_lt_string_as) 
+if yy_parsing_status = yyContinue then
+	yyssp := yyssp - 1
+	yyvsp94 := yyvsp94 + 1
+	yyvsp1 := yyvsp1 -1
+	if yyvsp94 >= yyvsc94 then
+		if yyvs94 = Void then
+			debug ("GEYACC")
+				std.error.put_line ("Create yyvs94")
+			end
+			create yyspecial_routines94
+			yyvsc94 := yyInitial_yyvs_size
+			yyvs94 := yyspecial_routines94.make (yyvsc94)
+		else
+			debug ("GEYACC")
+				std.error.put_line ("Resize yyvs94")
+			end
+			yyvsc94 := yyvsc94 + yyInitial_yyvs_size
+			yyvs94 := yyspecial_routines94.resize (yyvs94, yyvsc94)
+		end
+	end
+	yyvs94.put (yyval94, yyvsp94)
+end
+		end
+
+	yy_do_action_505 is
+			--|#line <not available> "eiffel.y"
+		local
+			yyval94: PAIR [STRING_AS, CLICK_AST]
+		do
+--|#line <not available> "eiffel.y"
+debug ("GEYACC")
+	std.error.put_line ("Executing parser user-code from file 'eiffel.y' at line <not available>")
+end
+
+yyval94 := new_clickable_string (new_le_string_as) 
+if yy_parsing_status = yyContinue then
+	yyssp := yyssp - 1
+	yyvsp94 := yyvsp94 + 1
+	yyvsp1 := yyvsp1 -1
+	if yyvsp94 >= yyvsc94 then
+		if yyvs94 = Void then
+			debug ("GEYACC")
+				std.error.put_line ("Create yyvs94")
+			end
+			create yyspecial_routines94
+			yyvsc94 := yyInitial_yyvs_size
+			yyvs94 := yyspecial_routines94.make (yyvsc94)
+		else
+			debug ("GEYACC")
+				std.error.put_line ("Resize yyvs94")
+			end
+			yyvsc94 := yyvsc94 + yyInitial_yyvs_size
+			yyvs94 := yyspecial_routines94.resize (yyvs94, yyvsc94)
+		end
+	end
+	yyvs94.put (yyval94, yyvsp94)
+end
+		end
+
+	yy_do_action_506 is
+			--|#line <not available> "eiffel.y"
+		local
+			yyval94: PAIR [STRING_AS, CLICK_AST]
+		do
+--|#line <not available> "eiffel.y"
+debug ("GEYACC")
+	std.error.put_line ("Executing parser user-code from file 'eiffel.y' at line <not available>")
+end
+
+yyval94 := new_clickable_string (new_gt_string_as) 
+if yy_parsing_status = yyContinue then
+	yyssp := yyssp - 1
+	yyvsp94 := yyvsp94 + 1
+	yyvsp1 := yyvsp1 -1
+	if yyvsp94 >= yyvsc94 then
+		if yyvs94 = Void then
+			debug ("GEYACC")
+				std.error.put_line ("Create yyvs94")
+			end
+			create yyspecial_routines94
+			yyvsc94 := yyInitial_yyvs_size
+			yyvs94 := yyspecial_routines94.make (yyvsc94)
+		else
+			debug ("GEYACC")
+				std.error.put_line ("Resize yyvs94")
+			end
+			yyvsc94 := yyvsc94 + yyInitial_yyvs_size
+			yyvs94 := yyspecial_routines94.resize (yyvs94, yyvsc94)
+		end
+	end
+	yyvs94.put (yyval94, yyvsp94)
+end
+		end
+
+	yy_do_action_507 is
+			--|#line <not available> "eiffel.y"
+		local
+			yyval94: PAIR [STRING_AS, CLICK_AST]
+		do
+--|#line <not available> "eiffel.y"
+debug ("GEYACC")
+	std.error.put_line ("Executing parser user-code from file 'eiffel.y' at line <not available>")
+end
+
+yyval94 := new_clickable_string (new_ge_string_as) 
+if yy_parsing_status = yyContinue then
+	yyssp := yyssp - 1
+	yyvsp94 := yyvsp94 + 1
+	yyvsp1 := yyvsp1 -1
+	if yyvsp94 >= yyvsc94 then
+		if yyvs94 = Void then
+			debug ("GEYACC")
+				std.error.put_line ("Create yyvs94")
+			end
+			create yyspecial_routines94
+			yyvsc94 := yyInitial_yyvs_size
+			yyvs94 := yyspecial_routines94.make (yyvsc94)
+		else
+			debug ("GEYACC")
+				std.error.put_line ("Resize yyvs94")
+			end
+			yyvsc94 := yyvsc94 + yyInitial_yyvs_size
+			yyvs94 := yyspecial_routines94.resize (yyvs94, yyvsc94)
+		end
+	end
+	yyvs94.put (yyval94, yyvsp94)
+end
+		end
+
+	yy_do_action_508 is
+			--|#line <not available> "eiffel.y"
+		local
+			yyval94: PAIR [STRING_AS, CLICK_AST]
+		do
+--|#line <not available> "eiffel.y"
+debug ("GEYACC")
+	std.error.put_line ("Executing parser user-code from file 'eiffel.y' at line <not available>")
+end
+
+yyval94 := new_clickable_string (new_minus_string_as) 
+if yy_parsing_status = yyContinue then
+	yyssp := yyssp - 1
+	yyvsp94 := yyvsp94 + 1
+	yyvsp1 := yyvsp1 -1
+	if yyvsp94 >= yyvsc94 then
+		if yyvs94 = Void then
+			debug ("GEYACC")
+				std.error.put_line ("Create yyvs94")
+			end
+			create yyspecial_routines94
+			yyvsc94 := yyInitial_yyvs_size
+			yyvs94 := yyspecial_routines94.make (yyvsc94)
+		else
+			debug ("GEYACC")
+				std.error.put_line ("Resize yyvs94")
+			end
+			yyvsc94 := yyvsc94 + yyInitial_yyvs_size
+			yyvs94 := yyspecial_routines94.resize (yyvs94, yyvsc94)
+		end
+	end
+	yyvs94.put (yyval94, yyvsp94)
+end
+		end
+
+	yy_do_action_509 is
+			--|#line <not available> "eiffel.y"
+		local
+			yyval94: PAIR [STRING_AS, CLICK_AST]
+		do
+--|#line <not available> "eiffel.y"
+debug ("GEYACC")
+	std.error.put_line ("Executing parser user-code from file 'eiffel.y' at line <not available>")
+end
+
+yyval94 := new_clickable_string (new_plus_string_as) 
+if yy_parsing_status = yyContinue then
+	yyssp := yyssp - 1
+	yyvsp94 := yyvsp94 + 1
+	yyvsp1 := yyvsp1 -1
+	if yyvsp94 >= yyvsc94 then
+		if yyvs94 = Void then
+			debug ("GEYACC")
+				std.error.put_line ("Create yyvs94")
+			end
+			create yyspecial_routines94
+			yyvsc94 := yyInitial_yyvs_size
+			yyvs94 := yyspecial_routines94.make (yyvsc94)
+		else
+			debug ("GEYACC")
+				std.error.put_line ("Resize yyvs94")
+			end
+			yyvsc94 := yyvsc94 + yyInitial_yyvs_size
+			yyvs94 := yyspecial_routines94.resize (yyvs94, yyvsc94)
+		end
+	end
+	yyvs94.put (yyval94, yyvsp94)
+end
+		end
+
+	yy_do_action_510 is
+			--|#line <not available> "eiffel.y"
+		local
+			yyval94: PAIR [STRING_AS, CLICK_AST]
+		do
+--|#line <not available> "eiffel.y"
+debug ("GEYACC")
+	std.error.put_line ("Executing parser user-code from file 'eiffel.y' at line <not available>")
+end
+
+yyval94 := new_clickable_string (new_star_string_as) 
+if yy_parsing_status = yyContinue then
+	yyssp := yyssp - 1
+	yyvsp94 := yyvsp94 + 1
+	yyvsp1 := yyvsp1 -1
+	if yyvsp94 >= yyvsc94 then
+		if yyvs94 = Void then
+			debug ("GEYACC")
+				std.error.put_line ("Create yyvs94")
+			end
+			create yyspecial_routines94
+			yyvsc94 := yyInitial_yyvs_size
+			yyvs94 := yyspecial_routines94.make (yyvsc94)
+		else
+			debug ("GEYACC")
+				std.error.put_line ("Resize yyvs94")
+			end
+			yyvsc94 := yyvsc94 + yyInitial_yyvs_size
+			yyvs94 := yyspecial_routines94.resize (yyvs94, yyvsc94)
+		end
+	end
+	yyvs94.put (yyval94, yyvsp94)
+end
+		end
+
+	yy_do_action_511 is
+			--|#line <not available> "eiffel.y"
+		local
+			yyval94: PAIR [STRING_AS, CLICK_AST]
+		do
+--|#line <not available> "eiffel.y"
+debug ("GEYACC")
+	std.error.put_line ("Executing parser user-code from file 'eiffel.y' at line <not available>")
+end
+
+yyval94 := new_clickable_string (new_slash_string_as) 
+if yy_parsing_status = yyContinue then
+	yyssp := yyssp - 1
+	yyvsp94 := yyvsp94 + 1
+	yyvsp1 := yyvsp1 -1
+	if yyvsp94 >= yyvsc94 then
+		if yyvs94 = Void then
+			debug ("GEYACC")
+				std.error.put_line ("Create yyvs94")
+			end
+			create yyspecial_routines94
+			yyvsc94 := yyInitial_yyvs_size
+			yyvs94 := yyspecial_routines94.make (yyvsc94)
+		else
+			debug ("GEYACC")
+				std.error.put_line ("Resize yyvs94")
+			end
+			yyvsc94 := yyvsc94 + yyInitial_yyvs_size
+			yyvs94 := yyspecial_routines94.resize (yyvs94, yyvsc94)
+		end
+	end
+	yyvs94.put (yyval94, yyvsp94)
+end
+		end
+
+	yy_do_action_512 is
+			--|#line <not available> "eiffel.y"
+		local
+			yyval94: PAIR [STRING_AS, CLICK_AST]
+		do
+--|#line <not available> "eiffel.y"
+debug ("GEYACC")
+	std.error.put_line ("Executing parser user-code from file 'eiffel.y' at line <not available>")
+end
+
+yyval94 := new_clickable_string (new_mod_string_as) 
+if yy_parsing_status = yyContinue then
+	yyssp := yyssp - 1
+	yyvsp94 := yyvsp94 + 1
+	yyvsp1 := yyvsp1 -1
+	if yyvsp94 >= yyvsc94 then
+		if yyvs94 = Void then
+			debug ("GEYACC")
+				std.error.put_line ("Create yyvs94")
+			end
+			create yyspecial_routines94
+			yyvsc94 := yyInitial_yyvs_size
+			yyvs94 := yyspecial_routines94.make (yyvsc94)
+		else
+			debug ("GEYACC")
+				std.error.put_line ("Resize yyvs94")
+			end
+			yyvsc94 := yyvsc94 + yyInitial_yyvs_size
+			yyvs94 := yyspecial_routines94.resize (yyvs94, yyvsc94)
+		end
+	end
+	yyvs94.put (yyval94, yyvsp94)
+end
+		end
+
+	yy_do_action_513 is
+			--|#line <not available> "eiffel.y"
+		local
+			yyval94: PAIR [STRING_AS, CLICK_AST]
+		do
+--|#line <not available> "eiffel.y"
+debug ("GEYACC")
+	std.error.put_line ("Executing parser user-code from file 'eiffel.y' at line <not available>")
+end
+
+yyval94 := new_clickable_string (new_div_string_as) 
+if yy_parsing_status = yyContinue then
+	yyssp := yyssp - 1
+	yyvsp94 := yyvsp94 + 1
+	yyvsp1 := yyvsp1 -1
+	if yyvsp94 >= yyvsc94 then
+		if yyvs94 = Void then
+			debug ("GEYACC")
+				std.error.put_line ("Create yyvs94")
+			end
+			create yyspecial_routines94
+			yyvsc94 := yyInitial_yyvs_size
+			yyvs94 := yyspecial_routines94.make (yyvsc94)
+		else
+			debug ("GEYACC")
+				std.error.put_line ("Resize yyvs94")
+			end
+			yyvsc94 := yyvsc94 + yyInitial_yyvs_size
+			yyvs94 := yyspecial_routines94.resize (yyvs94, yyvsc94)
+		end
+	end
+	yyvs94.put (yyval94, yyvsp94)
+end
+		end
+
+	yy_do_action_514 is
+			--|#line <not available> "eiffel.y"
+		local
+			yyval94: PAIR [STRING_AS, CLICK_AST]
+		do
+--|#line <not available> "eiffel.y"
+debug ("GEYACC")
+	std.error.put_line ("Executing parser user-code from file 'eiffel.y' at line <not available>")
+end
+
+yyval94 := new_clickable_string (new_power_string_as) 
+if yy_parsing_status = yyContinue then
+	yyssp := yyssp - 1
+	yyvsp94 := yyvsp94 + 1
+	yyvsp1 := yyvsp1 -1
+	if yyvsp94 >= yyvsc94 then
+		if yyvs94 = Void then
+			debug ("GEYACC")
+				std.error.put_line ("Create yyvs94")
+			end
+			create yyspecial_routines94
+			yyvsc94 := yyInitial_yyvs_size
+			yyvs94 := yyspecial_routines94.make (yyvsc94)
+		else
+			debug ("GEYACC")
+				std.error.put_line ("Resize yyvs94")
+			end
+			yyvsc94 := yyvsc94 + yyInitial_yyvs_size
+			yyvs94 := yyspecial_routines94.resize (yyvs94, yyvsc94)
+		end
+	end
+	yyvs94.put (yyval94, yyvsp94)
+end
+		end
+
+	yy_do_action_515 is
+			--|#line <not available> "eiffel.y"
+		local
+			yyval94: PAIR [STRING_AS, CLICK_AST]
+		do
+--|#line <not available> "eiffel.y"
+debug ("GEYACC")
+	std.error.put_line ("Executing parser user-code from file 'eiffel.y' at line <not available>")
+end
+
+yyval94 := new_clickable_string (new_and_string_as) 
+if yy_parsing_status = yyContinue then
+	yyssp := yyssp - 1
+	yyvsp94 := yyvsp94 + 1
+	yyvsp1 := yyvsp1 -1
+	if yyvsp94 >= yyvsc94 then
+		if yyvs94 = Void then
+			debug ("GEYACC")
+				std.error.put_line ("Create yyvs94")
+			end
+			create yyspecial_routines94
+			yyvsc94 := yyInitial_yyvs_size
+			yyvs94 := yyspecial_routines94.make (yyvsc94)
+		else
+			debug ("GEYACC")
+				std.error.put_line ("Resize yyvs94")
+			end
+			yyvsc94 := yyvsc94 + yyInitial_yyvs_size
+			yyvs94 := yyspecial_routines94.resize (yyvs94, yyvsc94)
+		end
+	end
+	yyvs94.put (yyval94, yyvsp94)
+end
+		end
+
+	yy_do_action_516 is
+			--|#line <not available> "eiffel.y"
+		local
+			yyval94: PAIR [STRING_AS, CLICK_AST]
+		do
+--|#line <not available> "eiffel.y"
+debug ("GEYACC")
+	std.error.put_line ("Executing parser user-code from file 'eiffel.y' at line <not available>")
+end
+
+yyval94 := new_clickable_string (new_and_then_string_as) 
+if yy_parsing_status = yyContinue then
+	yyssp := yyssp - 1
+	yyvsp94 := yyvsp94 + 1
+	yyvsp1 := yyvsp1 -1
+	if yyvsp94 >= yyvsc94 then
+		if yyvs94 = Void then
+			debug ("GEYACC")
+				std.error.put_line ("Create yyvs94")
+			end
+			create yyspecial_routines94
+			yyvsc94 := yyInitial_yyvs_size
+			yyvs94 := yyspecial_routines94.make (yyvsc94)
+		else
+			debug ("GEYACC")
+				std.error.put_line ("Resize yyvs94")
+			end
+			yyvsc94 := yyvsc94 + yyInitial_yyvs_size
+			yyvs94 := yyspecial_routines94.resize (yyvs94, yyvsc94)
+		end
+	end
+	yyvs94.put (yyval94, yyvsp94)
+end
+		end
+
+	yy_do_action_517 is
+			--|#line <not available> "eiffel.y"
+		local
+			yyval94: PAIR [STRING_AS, CLICK_AST]
+		do
+--|#line <not available> "eiffel.y"
+debug ("GEYACC")
+	std.error.put_line ("Executing parser user-code from file 'eiffel.y' at line <not available>")
+end
+
+yyval94 := new_clickable_string (new_implies_string_as) 
+if yy_parsing_status = yyContinue then
+	yyssp := yyssp - 1
+	yyvsp94 := yyvsp94 + 1
+	yyvsp1 := yyvsp1 -1
+	if yyvsp94 >= yyvsc94 then
+		if yyvs94 = Void then
+			debug ("GEYACC")
+				std.error.put_line ("Create yyvs94")
+			end
+			create yyspecial_routines94
+			yyvsc94 := yyInitial_yyvs_size
+			yyvs94 := yyspecial_routines94.make (yyvsc94)
+		else
+			debug ("GEYACC")
+				std.error.put_line ("Resize yyvs94")
+			end
+			yyvsc94 := yyvsc94 + yyInitial_yyvs_size
+			yyvs94 := yyspecial_routines94.resize (yyvs94, yyvsc94)
+		end
+	end
+	yyvs94.put (yyval94, yyvsp94)
+end
+		end
+
+	yy_do_action_518 is
+			--|#line <not available> "eiffel.y"
+		local
+			yyval94: PAIR [STRING_AS, CLICK_AST]
+		do
+--|#line <not available> "eiffel.y"
+debug ("GEYACC")
+	std.error.put_line ("Executing parser user-code from file 'eiffel.y' at line <not available>")
+end
+
+yyval94 := new_clickable_string (new_or_string_as) 
+if yy_parsing_status = yyContinue then
+	yyssp := yyssp - 1
+	yyvsp94 := yyvsp94 + 1
+	yyvsp1 := yyvsp1 -1
+	if yyvsp94 >= yyvsc94 then
+		if yyvs94 = Void then
+			debug ("GEYACC")
+				std.error.put_line ("Create yyvs94")
+			end
+			create yyspecial_routines94
+			yyvsc94 := yyInitial_yyvs_size
+			yyvs94 := yyspecial_routines94.make (yyvsc94)
+		else
+			debug ("GEYACC")
+				std.error.put_line ("Resize yyvs94")
+			end
+			yyvsc94 := yyvsc94 + yyInitial_yyvs_size
+			yyvs94 := yyspecial_routines94.resize (yyvs94, yyvsc94)
+		end
+	end
+	yyvs94.put (yyval94, yyvsp94)
+end
+		end
+
+	yy_do_action_519 is
+			--|#line <not available> "eiffel.y"
+		local
+			yyval94: PAIR [STRING_AS, CLICK_AST]
+		do
+--|#line <not available> "eiffel.y"
+debug ("GEYACC")
+	std.error.put_line ("Executing parser user-code from file 'eiffel.y' at line <not available>")
+end
+
+yyval94 := new_clickable_string (new_or_else_string_as) 
+if yy_parsing_status = yyContinue then
+	yyssp := yyssp - 1
+	yyvsp94 := yyvsp94 + 1
+	yyvsp1 := yyvsp1 -1
+	if yyvsp94 >= yyvsc94 then
+		if yyvs94 = Void then
+			debug ("GEYACC")
+				std.error.put_line ("Create yyvs94")
+			end
+			create yyspecial_routines94
+			yyvsc94 := yyInitial_yyvs_size
+			yyvs94 := yyspecial_routines94.make (yyvsc94)
+		else
+			debug ("GEYACC")
+				std.error.put_line ("Resize yyvs94")
+			end
+			yyvsc94 := yyvsc94 + yyInitial_yyvs_size
+			yyvs94 := yyspecial_routines94.resize (yyvs94, yyvsc94)
+		end
+	end
+	yyvs94.put (yyval94, yyvsp94)
+end
+		end
+
+	yy_do_action_520 is
+			--|#line <not available> "eiffel.y"
+		local
+			yyval94: PAIR [STRING_AS, CLICK_AST]
+		do
+--|#line <not available> "eiffel.y"
+debug ("GEYACC")
+	std.error.put_line ("Executing parser user-code from file 'eiffel.y' at line <not available>")
+end
+
+yyval94 := new_clickable_string (new_xor_string_as) 
+if yy_parsing_status = yyContinue then
+	yyssp := yyssp - 1
+	yyvsp94 := yyvsp94 + 1
+	yyvsp1 := yyvsp1 -1
+	if yyvsp94 >= yyvsc94 then
+		if yyvs94 = Void then
+			debug ("GEYACC")
+				std.error.put_line ("Create yyvs94")
+			end
+			create yyspecial_routines94
+			yyvsc94 := yyInitial_yyvs_size
+			yyvs94 := yyspecial_routines94.make (yyvsc94)
+		else
+			debug ("GEYACC")
+				std.error.put_line ("Resize yyvs94")
+			end
+			yyvsc94 := yyvsc94 + yyInitial_yyvs_size
+			yyvs94 := yyspecial_routines94.resize (yyvs94, yyvsc94)
+		end
+	end
+	yyvs94.put (yyval94, yyvsp94)
+end
+		end
+
+	yy_do_action_521 is
+			--|#line <not available> "eiffel.y"
+		local
+			yyval94: PAIR [STRING_AS, CLICK_AST]
+		do
+--|#line <not available> "eiffel.y"
+debug ("GEYACC")
+	std.error.put_line ("Executing parser user-code from file 'eiffel.y' at line <not available>")
+end
+
+yyval94 := new_clickable_string (new_string_as (cloned_lower_string (token_buffer))) 
+if yy_parsing_status = yyContinue then
+	yyssp := yyssp - 1
+	yyvsp94 := yyvsp94 + 1
+	yyvsp1 := yyvsp1 -1
+	if yyvsp94 >= yyvsc94 then
+		if yyvs94 = Void then
+			debug ("GEYACC")
+				std.error.put_line ("Create yyvs94")
+			end
+			create yyspecial_routines94
+			yyvsc94 := yyInitial_yyvs_size
+			yyvs94 := yyspecial_routines94.make (yyvsc94)
+		else
+			debug ("GEYACC")
+				std.error.put_line ("Resize yyvs94")
+			end
+			yyvsc94 := yyvsc94 + yyInitial_yyvs_size
+			yyvs94 := yyspecial_routines94.resize (yyvs94, yyvsc94)
+		end
+	end
+	yyvs94.put (yyval94, yyvsp94)
+end
+		end
+
+	yy_do_action_522 is
+			--|#line <not available> "eiffel.y"
+		local
+			yyval5: ARRAY_AS
+		do
+--|#line <not available> "eiffel.y"
+debug ("GEYACC")
+	std.error.put_line ("Executing parser user-code from file 'eiffel.y' at line <not available>")
+end
+
+yyval5 := new_array_as (yyvs72.item (yyvsp72)) 
+if yy_parsing_status = yyContinue then
+	yyssp := yyssp - 3
+	yyvsp5 := yyvsp5 + 1
+	yyvsp1 := yyvsp1 -2
+	yyvsp72 := yyvsp72 -1
+	if yyvsp5 >= yyvsc5 then
+		if yyvs5 = Void then
+			debug ("GEYACC")
+				std.error.put_line ("Create yyvs5")
+			end
+			create yyspecial_routines5
+			yyvsc5 := yyInitial_yyvs_size
+			yyvs5 := yyspecial_routines5.make (yyvsc5)
+		else
+			debug ("GEYACC")
+				std.error.put_line ("Resize yyvs5")
+			end
+			yyvsc5 := yyvsc5 + yyInitial_yyvs_size
+			yyvs5 := yyspecial_routines5.resize (yyvs5, yyvsc5)
+		end
+	end
+	yyvs5.put (yyval5, yyvsp5)
+end
+		end
+
+	yy_do_action_523 is
+			--|#line <not available> "eiffel.y"
+		local
+			yyval62: TUPLE_AS
+		do
+--|#line <not available> "eiffel.y"
+debug ("GEYACC")
+	std.error.put_line ("Executing parser user-code from file 'eiffel.y' at line <not available>")
+end
+
+yyval62 := new_tuple_as (yyvs72.item (yyvsp72)) 
+if yy_parsing_status = yyContinue then
+	yyssp := yyssp - 3
+	yyvsp62 := yyvsp62 + 1
+	yyvsp1 := yyvsp1 -2
+	yyvsp72 := yyvsp72 -1
+	if yyvsp62 >= yyvsc62 then
+		if yyvs62 = Void then
+			debug ("GEYACC")
+				std.error.put_line ("Create yyvs62")
+			end
+			create yyspecial_routines62
+			yyvsc62 := yyInitial_yyvs_size
+			yyvs62 := yyspecial_routines62.make (yyvsc62)
+		else
+			debug ("GEYACC")
+				std.error.put_line ("Resize yyvs62")
+			end
+			yyvsc62 := yyvsc62 + yyInitial_yyvs_size
+			yyvs62 := yyspecial_routines62.resize (yyvs62, yyvsc62)
+		end
+	end
+	yyvs62.put (yyval62, yyvsp62)
+end
+		end
+
+	yy_do_action_524 is
+			--|#line <not available> "eiffel.y"
+		local
+			yyval1: ANY
+		do
+--|#line <not available> "eiffel.y"
+debug ("GEYACC")
+	std.error.put_line ("Executing parser user-code from file 'eiffel.y' at line <not available>")
 end
 
 
-yyval58 := current_position.twin 
-			yyval := yyval58
 if yy_parsing_status = yyContinue then
-	yyvsp := yyvsp + 1
-	if yyvsp >= yyvsc then
-		yyvsc := yyvsc + yyInitial_stack_size
-		yyvs := FIXED_ARRAY_.resize (yyvs, yyvsc)
-		debug ("GEYACC")
-			std.error.put_string ("Stack (yyvs) size increased to ")
-			std.error.put_integer (yyvsc)
-			std.error.put_new_line
+	yyssp := yyssp - 0
+	yyvsp1 := yyvsp1 + 1
+	if yyvsp1 >= yyvsc1 then
+		if yyvs1 = Void then
+			debug ("GEYACC")
+				std.error.put_line ("Create yyvs1")
+			end
+			create yyspecial_routines1
+			yyvsc1 := yyInitial_yyvs_size
+			yyvs1 := yyspecial_routines1.make (yyvsc1)
+		else
+			debug ("GEYACC")
+				std.error.put_line ("Resize yyvs1")
+			end
+			yyvsc1 := yyvsc1 + yyInitial_yyvs_size
+			yyvs1 := yyspecial_routines1.resize (yyvs1, yyvsc1)
 		end
 	end
-	yyvs.put (yyval, yyvsp)
+	yyvs1.put (yyval1, yyvsp1)
+end
+		end
+
+	yy_do_action_525 is
+			--|#line <not available> "eiffel.y"
+		local
+			yyval58: TOKEN_LOCATION
+		do
+--|#line <not available> "eiffel.y"
+debug ("GEYACC")
+	std.error.put_line ("Executing parser user-code from file 'eiffel.y' at line <not available>")
+end
+
+yyval58 := current_position.twin 
+if yy_parsing_status = yyContinue then
+	yyssp := yyssp - 0
+	yyvsp58 := yyvsp58 + 1
+	if yyvsp58 >= yyvsc58 then
+		if yyvs58 = Void then
+			debug ("GEYACC")
+				std.error.put_line ("Create yyvs58")
+			end
+			create yyspecial_routines58
+			yyvsc58 := yyInitial_yyvs_size
+			yyvs58 := yyspecial_routines58.make (yyvsc58)
+		else
+			debug ("GEYACC")
+				std.error.put_line ("Resize yyvs58")
+			end
+			yyvsc58 := yyvsc58 + yyInitial_yyvs_size
+			yyvs58 := yyspecial_routines58.resize (yyvs58, yyvsc58)
+		end
+	end
+	yyvs58.put (yyval58, yyvsp58)
 end
 		end
 
@@ -12385,7 +18775,7 @@ end
 			-- Execute error action.
 		do
 			inspect yy_act
-			when 814 then
+			when 820 then
 					-- End-of-file expected action.
 				report_eof_expected_error
 			else
@@ -12450,62 +18840,64 @@ feature {NONE} -- Table templates
 			-- but once functions cannot be declared with anchored types.
 		once
 			Result := yyfixed_array (<<
-			    0,  298,  298,  298,  299,  301,  288,  287,  257,  257,
-			  302,  257,  259,  259,  259,  260,  260,  260,  258,  258,
-			  173,  169,  169,  223,  223,  223,  136,  136,  136,  136,
-			  300,  300,  300,  300,  304,  304,  305,  305,  208,  208,
-			  240,  240,  241,  241,  164,  164,  148,  306,  147,  147,
-			  253,  253,  254,  254,  239,  239,  303,  303,  163,  295,
-			  295,  292,  308,  308,  291,  291,  291,  289,  290,  140,
-			  149,  149,  150,  150,  150,  269,  269,  269,  270,  270,
-			  194,  194,  195,  195,  195,  195,  195,  195,  195,  271,
-			  271,  272,  272,  200,  233,  233,  232,  232,  234,  234,
+			    0,  313,  313,  313,  313,  314,  316,  303,  302,  273,
+			  273,  317,  273,  275,  275,  275,  276,  276,  276,  274,
+			  274,  175,  171,  171,  239,  239,  239,  136,  136,  136,
+			  136,  315,  315,  315,  315,  319,  319,  320,  320,  221,
+			  221,  256,  256,  257,  257,  166,  166,  148,  321,  147,
+			  147,  269,  269,  270,  270,  255,  255,  318,  318,  165,
+			  310,  310,  307,  323,  323,  306,  306,  306,  304,  305,
+			  140,  149,  149,  150,  150,  150,  285,  285,  285,  286,
+			  286,  201,  201,  202,  202,  202,  202,  202,  202,  202,
+			  287,  287,  288,  288,  213,  249,  249,  248,  248,  250,
 
-			  158,  165,  165,  165,  227,  227,  226,  226,  151,  151,
-			  242,  242,  244,  244,  243,  243,  246,  246,  245,  245,
-			  248,  248,  247,  247,  281,  281,  282,  282,  283,  283,
-			  220,  309,  309,  285,  285,  286,  286,  221,  255,  255,
-			  256,  256,  216,  216,  205,  310,  204,  204,  204,  161,
-			  162,  210,  210,  181,  181,  284,  284,  262,  262,  263,
-			  263,  176,  307,  307,  177,  177,  177,  177,  177,  177,
-			  177,  177,  177,  177,  201,  201,  312,  201,  313,  157,
-			  157,  314,  157,  315,  275,  275,  276,  276,  212,  213,
-			  213,  213,  215,  215,  219,  219,  219,  219,  219,  219,
+			  250,  158,  167,  167,  167,  243,  243,  242,  242,  151,
+			  151,  258,  258,  260,  260,  259,  259,  262,  262,  261,
+			  261,  264,  264,  263,  263,  296,  296,  297,  297,  298,
+			  298,  236,  324,  324,  300,  300,  301,  301,  237,  271,
+			  271,  272,  272,  231,  231,  218,  325,  217,  217,  217,
+			  163,  164,  223,  223,  186,  186,  299,  299,  278,  278,
+			  279,  279,  178,  322,  322,  179,  179,  179,  179,  179,
+			  179,  179,  179,  179,  179,  214,  214,  327,  214,  328,
+			  157,  157,  329,  157,  330,  291,  291,  292,  292,  227,
+			  228,  228,  228,  230,  230,  234,  234,  234,  234,  234,
 
-			  217,  279,  279,  279,  278,  278,  280,  280,  250,  250,
-			  251,  251,  252,  252,  166,  166,  166,  167,  316,  296,
-			  296,  249,  249,  172,  230,  230,  231,  231,  156,  264,
-			  264,  174,  224,  224,  225,  225,  144,  266,  266,  182,
-			  182,  182,  182,  182,  182,  182,  182,  182,  182,  182,
-			  182,  182,  182,  182,  182,  182,  182,  265,  265,  184,
-			  277,  277,  183,  183,  317,  222,  222,  222,  155,  273,
-			  273,  273,  274,  274,  202,  261,  261,  135,  135,  203,
-			  203,  228,  228,  229,  229,  152,  152,  152,  152,  152,
-			  152,  206,  206,  206,  207,  207,  207,  207,  207,  207,
+			  234,  232,  294,  294,  294,  295,  295,  266,  266,  267,
+			  267,  268,  268,  168,  168,  168,  169,  331,  311,  311,
+			  265,  265,  174,  246,  246,  247,  247,  156,  280,  280,
+			  176,  240,  240,  241,  241,  144,  282,  282,  187,  187,
+			  187,  187,  187,  187,  187,  187,  187,  187,  187,  187,
+			  187,  187,  187,  187,  187,  187,  281,  281,  189,  293,
+			  293,  188,  188,  332,  238,  238,  238,  155,  289,  289,
+			  289,  290,  290,  215,  277,  277,  135,  135,  216,  216,
+			  244,  244,  245,  245,  152,  152,  152,  152,  152,  152,
+			  219,  219,  219,  220,  220,  220,  220,  220,  220,  220,
 
-			  207,  193,  193,  193,  193,  193,  193,  267,  267,  267,
-			  268,  268,  192,  192,  192,  192,  192,  192,  192,  192,
-			  192,  192,  153,  153,  153,  154,  154,  218,  218,  130,
-			  130,  133,  133,  175,  175,  175,  175,  175,  175,  175,
-			  175,  175,  146,  159,  159,  159,  159,  159,  159,  159,
+			  200,  200,  200,  200,  200,  200,  283,  283,  283,  284,
+			  284,  199,  199,  199,  153,  153,  153,  154,  154,  233,
+			  233,  130,  130,  133,  133,  177,  177,  177,  177,  177,
+			  177,  177,  177,  177,  146,  235,  159,  159,  159,  159,
 			  159,  159,  159,  159,  159,  159,  159,  159,  159,  159,
-			  159,  159,  159,  159,  159,  160,  160,  160,  160,  160,
-			  160,  160,  160,  160,  160,  160,  160,  160,  160,  160,
-			  160,  160,  160,  170,  143,  143,  143,  143,  143,  143,
-			  143,  143,  143,  143,  143,  143,  189,  188,  187,  191,
+			  159,  159,  159,  159,  159,  159,  159,  159,  159,  159,
+			  160,  160,  161,  161,  161,  161,  161,  161,  161,  161,
+			  161,  161,  161,  161,  161,  161,  161,  161,  162,  162,
+			  162,  162,  162,  162,  172,  143,  143,  143,  143,  143,
+			  143,  143,  143,  143,  143,  143,  143,  194,  193,  192,
 
-			  186,  196,  196,  196,  196,  190,  197,  198,  142,  142,
-			  185,  185,  171,  171,  171,  131,  132,  235,  235,  235,
-			  236,  236,  237,  237,  238,  238,  168,  137,  137,  137,
-			  137,  137,  137,  138,  138,  138,  138,  138,  138,  141,
-			  141,  145,  178,  178,  180,  179,  179,  199,  199,  199,
-			  139,  209,  209,  209,  211,  211,  211,  211,  211,  211,
-			  211,  211,  211,  211,  211,  211,  211,  211,  211,  211,
-			  211,  211,  211,  211,  211,  294,  294,  294,  294,  293,
-			  293,  293,  293,  293,  293,  293,  293,  293,  293,  293,
-			  293,  293,  293,  293,  293,  293,  293,  134,  214,  311,
+			  198,  191,  203,  203,  195,  195,  197,  196,  204,  204,
+			  206,  205,  142,  142,  190,  190,  173,  173,  173,  131,
+			  132,  251,  251,  251,  252,  252,  253,  253,  254,  254,
+			  170,  137,  137,  137,  137,  137,  137,  138,  138,  138,
+			  138,  138,  138,  138,  138,  138,  141,  141,  145,  145,
+			  180,  180,  180,  181,  181,  182,  183,  183,  184,  185,
+			  185,  207,  207,  207,  209,  208,  208,  210,  210,  211,
+			  212,  212,  139,  222,  222,  225,  225,  225,  226,  224,
+			  224,  224,  224,  224,  224,  224,  224,  224,  224,  224,
+			  224,  224,  224,  224,  224,  224,  224,  224,  224,  224,
 
-			  297>>)
+			  309,  309,  309,  309,  308,  308,  308,  308,  308,  308,
+			  308,  308,  308,  308,  308,  308,  308,  308,  308,  308,
+			  308,  308,  134,  229,  326,  312>>)
 		end
 
 	yytypes1_template: ANY is
@@ -12519,90 +18911,91 @@ feature {NONE} -- Table templates
 			    1,    1,    1,    1,    1,    1,    1,    1,    1,    1,
 			    1,    1,    1,    1,    1,    1,    1,    1,    1,    1,
 			    1,    1,    1,    1,    1,    1,    1,    1,    1,    1,
-			    1,    2,    5,    7,    8,   10,   11,   13,   20,   25,
-			   25,   33,   33,   33,   39,   39,   44,   44,   44,   44,
-			   44,   45,   48,   49,   57,   59,   60,   60,   62,   93,
-			   93,    1,    1,    1,    1,   63,   63,   63,   92,   58,
+			    1,    1,    2,    5,    7,    8,   10,   11,   13,   20,
+			   25,   25,   25,   25,   33,   33,   33,   39,   39,   39,
+			   39,   44,   44,   44,   44,   44,   44,   45,   48,   49,
+			   49,   50,   50,   50,   50,   57,   59,   60,   60,   60,
 
-			    1,    1,    1,    1,   35,   81,   58,    1,    1,    1,
-			    1,    1,    1,    1,   94,    1,    1,    1,    1,    1,
-			   33,   33,   46,    1,    1,   72,   60,    1,    1,    1,
+			   60,   62,   63,   93,   93,    1,    1,    1,    1,   63,
+			   63,   63,   92,   58,    1,    1,    1,    1,   35,   81,
+			   58,    1,    1,    1,    1,    1,    1,    1,   94,    1,
+			    1,    1,    1,    1,   33,   33,   46,   63,    1,    1,
+			   72,   60,    1,    1,    1,    1,    1,    1,    1,    1,
 			    1,    1,    1,    1,    1,    1,    1,    1,    1,    1,
-			    1,    1,    1,    1,    1,   94,    1,    1,    1,    1,
-			    1,    1,    1,   92,   93,   93,   93,   25,   72,   72,
-			    1,   63,   92,   72,    1,   58,   63,   25,   25,    1,
-			   25,    1,   25,    1,   25,    1,    1,    1,    1,    1,
-			    1,    1,    1,    1,    1,    1,    1,    1,    1,    1,
-			    1,    1,    1,   33,    1,   25,   72,    1,    1,   92,
+			   94,   58,    1,    1,    1,    1,    1,    1,   92,   93,
+			   93,   93,   25,   72,   72,   63,   63,   72,   63,   58,
+			   63,   25,   25,    1,   25,    1,    1,   25,   63,    1,
+			    1,   25,    1,    1,    1,    1,    1,    1,    1,    1,
 
-			    1,   33,    1,    1,   33,   39,   39,   39,    1,   89,
+			    1,    1,    1,    1,    1,    1,    1,    1,    1,    1,
+			   33,    1,   25,   72,    1,    1,    1,    1,    1,    1,
+			    1,    1,    1,    1,   25,   92,    1,   33,    1,    1,
+			   33,   39,   39,   39,   39,   39,   39,   63,    1,   89,
 			    1,    1,    1,    1,    1,    1,    1,   35,   33,   33,
 			   58,   58,    3,   11,   33,   33,   44,   63,   25,    1,
 			   84,    1,   92,    1,   25,   72,   63,   58,   11,   25,
-			    1,    1,   92,    1,    1,    1,   63,   33,    1,    1,
-			   33,   80,   80,   11,   25,   25,   25,   25,   25,   25,
-			   25,   25,   25,   25,   25,   25,   25,    1,   25,   25,
-			    1,   25,   25,   25,   58,   11,   11,   89,    1,   63,
-			   89,   92,   92,    1,    1,    1,    1,    1,    1,    1,
-			    7,    7,    8,   10,   13,   20,   33,   39,   50,   60,
+			    1,    1,    1,    1,    1,    1,   58,   33,    1,    1,
+			   33,   80,   80,    1,    1,   11,   25,   25,   25,   25,
+			   25,   25,   25,   25,   25,   25,   25,   25,   25,    1,
 
-			   66,   33,   33,    1,   72,    1,    1,    1,    1,    1,
-			   25,   46,   84,   58,   33,    1,    1,    1,    1,   33,
-			    1,   25,    1,   58,   58,    1,   84,   58,    1,    1,
-			    1,    1,   25,   25,   33,    1,    1,   89,   77,   58,
-			    1,    1,    1,   62,    1,    1,    1,   84,   84,    3,
-			   44,    1,    1,    1,   92,    1,    1,    1,   84,   72,
-			   25,    1,   84,    1,   33,    1,   58,    1,    4,   58,
-			   11,   33,   84,   63,    1,   60,    1,    1,    7,   92,
-			    1,   33,   33,   39,    1,    1,   89,   46,    1,   33,
-			   58,   84,   72,    4,   33,   33,   60,    1,   60,    1,
+			   25,   25,    1,   25,   25,   25,   58,   11,   11,   11,
+			   63,   33,    1,    1,    1,    1,   89,    1,    1,    1,
+			   63,   89,   92,   92,    1,    1,    1,    1,    1,    1,
+			    7,    7,    8,   10,   13,   20,   33,   39,   50,   50,
+			   50,   50,   50,   50,   60,   63,   66,   33,   33,    1,
+			   72,    1,    1,    1,   25,   46,   84,   33,    1,    1,
+			    1,    1,   33,    1,   25,   60,   58,    1,    4,   84,
+			   58,    1,    1,    1,    1,   25,   25,   33,   72,    1,
+			    1,   89,   77,   58,    1,   62,    1,    1,    1,   84,
+			   84,    3,   44,   63,    1,    1,   84,   72,   25,   33,
 
-			    1,    1,   31,   32,   77,   77,   89,    1,    1,    1,
-			    1,    1,   89,    1,   92,   72,    1,   72,   84,   60,
-			    1,   85,    1,    1,   32,    1,    1,    1,    1,   89,
-			   72,   47,   85,   58,    1,   58,    1,   96,   32,    1,
-			   47,   47,   92,    1,   18,   69,   69,   58,   63,    1,
-			   89,    1,   15,   78,    1,   68,   18,    1,    1,   76,
-			    1,    1,    1,    1,    1,    1,   71,   76,   76,   76,
-			   86,    1,   78,   92,   76,   93,   17,   68,   93,    1,
-			   15,   29,   74,   74,   15,   78,   76,   76,   76,   51,
-			   86,   93,   76,   24,   71,   78,    1,   76,   76,   76,
+			   84,   33,   33,    4,   58,   11,   33,   84,   63,    1,
+			   60,    1,    1,    7,   46,   72,   84,   72,   33,   60,
+			    1,   60,    1,    1,    1,   31,   32,   77,   77,   84,
+			   60,    1,   85,    1,    1,   32,    1,    1,   47,   85,
+			   58,    1,   58,    1,   96,   32,   47,   47,   92,    1,
+			   18,   69,   69,   58,   63,    1,   89,    1,   15,   78,
+			    1,   68,   18,    1,    1,   76,    1,    1,    1,    1,
+			    1,    1,   71,   76,   76,   76,   86,    1,   78,   92,
+			   76,   93,   17,   68,   93,    1,   15,   29,   74,   74,
+			   15,   78,   76,   76,   76,   51,   86,   93,   76,   24,
 
-			   76,   76,   76,    1,   71,   71,    1,    1,    1,    1,
-			    1,    1,   15,    1,   28,   73,   93,   95,    1,   58,
-			   29,   76,    1,    1,    1,   24,    1,   30,   76,   76,
-			   76,    1,   76,   92,   93,   17,    1,    1,   15,   78,
-			   28,    1,    1,    9,   90,   93,    1,   42,   51,   93,
-			    1,   76,    1,   76,   89,   89,   93,   64,   80,   90,
-			   90,    1,    1,   63,   42,   58,    1,   76,    1,    1,
-			   58,    1,   64,    1,   63,    1,    1,   16,   81,   61,
-			   88,   88,    1,   81,    1,    1,    1,    1,    1,    7,
-			   16,   81,    1,   81,   61,   61,   58,    1,    1,    1,
+			   71,   78,    1,   76,   76,   76,   76,   76,   76,    1,
+			   71,   71,    1,    1,    1,    1,    1,    1,   15,    1,
+			   28,   73,   93,   95,    1,   58,   29,   76,    1,    1,
+			    1,   24,    1,   30,   76,   76,   76,    1,   76,   92,
+			   93,   17,    1,    1,   15,   78,   28,    1,    1,    9,
+			   90,   93,    1,   42,   51,   93,    1,   76,    1,   76,
+			   89,   89,   93,   64,   80,   90,   90,    1,    1,   63,
+			   42,   58,    1,   76,    1,    1,   58,    1,   64,    1,
+			   63,    1,    1,   16,   81,   61,   88,   88,    1,   81,
+			    1,    1,    1,    1,    1,    7,   16,   81,    1,   81,
 
-			    1,   81,   81,   81,   56,   60,    1,    1,   25,   33,
-			   33,   63,   56,    1,    1,    1,    1,   52,   25,    1,
-			   52,    1,   90,   52,   88,   64,   80,   90,   90,    1,
-			    1,    1,    1,   26,   40,   55,   88,   58,   64,   82,
-			    1,   27,   58,   82,    1,   23,    1,   38,   82,    1,
-			   60,   60,    1,   23,    1,   82,   63,   38,    1,    1,
-			    1,    6,   14,   19,   21,   34,   36,   37,   38,   43,
-			   53,   54,   58,   23,   88,   82,    1,    1,   58,   82,
-			    1,    1,    1,    1,    1,    1,    1,    1,    1,    1,
-			    2,   33,   44,   44,   44,   44,   44,   45,   48,   49,
+			   61,   61,   58,    1,    1,    1,    1,   81,   81,   81,
+			   56,   60,    1,    1,   25,   33,   33,   63,   56,    1,
+			    1,    1,    1,   52,   25,    1,   52,    1,   90,   52,
+			   88,   64,   80,   90,   90,    1,    1,    1,    1,   26,
+			   40,   55,   88,   58,   64,   82,    1,   27,   58,   82,
+			    1,   23,    1,   38,   82,    1,   60,   60,    1,   23,
+			    1,   82,   63,   38,    1,    1,    1,    6,   14,   19,
+			   21,   34,   36,   37,   38,   43,   53,   54,   58,   23,
+			   88,   82,    1,    1,   58,   82,    1,    1,    1,    1,
+			    1,    1,    1,    1,    1,    2,   33,   44,   44,   44,
 
+			   44,   44,   44,   44,   45,   48,   49,   49,   49,   63,
 			   88,   25,    1,   88,    1,    1,   25,    1,   87,   88,
-			   92,    1,    1,    2,   33,   63,   63,   25,    1,    1,
-			    1,   12,   67,   67,   88,    1,   65,   25,   25,    1,
-			    1,   60,   87,   82,    1,   63,    4,    1,    1,   25,
-			   25,   58,    1,   82,   12,   25,   33,    1,   82,    1,
-			    1,    1,    1,    2,    1,   13,   33,   39,   41,   49,
-			   83,   82,    1,    1,   58,   22,   70,   70,   58,   60,
-			    2,    4,    1,    1,    1,    1,    1,    1,    1,   25,
-			   25,    1,   82,   22,    1,    4,   63,   13,   33,   49,
-			   13,   33,   39,   49,   33,   39,   49,   13,   33,   39,
+			    1,    2,   33,   63,   63,   63,   25,    1,    1,    1,
+			   12,   67,   67,   88,    1,   65,   25,   25,    1,    1,
+			   60,   87,   82,    1,    4,    2,    1,    1,   25,   25,
+			   58,    1,   82,   12,   25,   33,    1,   82,    1,    1,
+			    1,    4,    2,   13,   33,   39,   41,   49,   49,   49,
+			   63,   83,   82,    1,    1,   58,   22,   70,   70,   58,
+			   60,    4,    1,    1,    1,    1,    1,    1,   25,   25,
+			    1,   82,   22,    1,   13,   33,   49,   63,   13,   33,
 
-			   49,   82,   41,    1,   82,    1,   25,    1,   82,    1,
-			    1,    1,   82,   33,    1,    1,    1>>)
+			   39,   49,   33,   39,   49,   63,   13,   33,   39,   49,
+			   82,   41,    1,   82,    1,   25,   82,    1,    1,   82,
+			    1,    1,    1>>)
 		end
 
 	yytypes2_template: ANY is
@@ -12631,96 +19024,97 @@ feature {NONE} -- Table templates
 			-- but once functions cannot be declared with anchored types.
 		once
 			Result := yyfixed_array (<<
-			    8,   11,    0,  426,  500,   34,    1,  500,  474,  473,
-			  472,  471,  470,  469,  468,  467,  466,  465,  464,  463,
-			  462,  461,  460,  459,  458,  457,  456,  367,  453,  455,
-			  452,    0,  388,    0,    0,  417,    0,    0,    0,  387,
-			    0,  440,  439,  422,  500,  422,    0,  500,  500,  450,
-			  454,  435,  441,  444,    0,    0,    0,    0,  383,    0,
-			    0,  389,  368,  365,  436,  433,  370,  434,  395,    3,
-			  344,  412,    0,  417,  366,  343,  392,  386,  385,  384,
-			  394,  390,  391,  393,  371,  293,  437,  451,  369,  413,
-			  414,    0,    0,    0,    7,    2,  192,  193,  201,    0,
+			    9,   12,    0,  430,  525,   35,    1,  525,  499,  498,
+			  497,  496,  495,  494,  493,  492,  491,  490,  489,  488,
+			  487,  486,  485,  484,  483,  482,  481,  362,  477,  480,
+			  476,    0,  389,    0,    0,  421,    0,    0,  525,  388,
+			    0,  447,  446,  426,  525,  525,  426,    0,  525,  525,
+			  472,  479,  464,  448,  455,    0,    0,    0,    0,  384,
+			    0,    0,  390,  363,  360,  443,  437,  365,  442,  396,
+			    3,  338,  361,  339,  416,    0,  421,  438,  336,  379,
+			  439,  393,  387,  386,  385,  395,  381,  391,  392,  394,
+			  382,  440,  337,  380,  441,  366,  292,  444,  475,  473,
 
-			   35,   36,    0,   36,   18,  500,   22,  500,  500,    0,
-			  478,  477,  476,  475,   68,  306,  303,  304,  500,    0,
-			  412,  307,    0,    0,    0,  401,  438,  496,  495,  494,
-			  493,  492,  491,  490,  489,  488,  487,  486,  485,  484,
-			  483,  482,  481,  480,  479,   67,    0,  500,    0,  382,
-			  381,    6,    0,   64,   65,   66,  379,  424,    0,  423,
-			    0,    0,  201,    0,  500,    0,    0,    0,  376,  140,
-			  375,  446,  373,  445,  374,    0,    0,    0,    0,    0,
+			  474,  364,  378,  417,  418,    0,    0,    0,    8,    2,
+			  193,  194,  202,    0,   36,   37,    0,   37,   19,  525,
+			   23,  525,  525,    0,  503,  502,  501,  500,   69,  305,
+			  302,  303,  525,    0,  416,  306,    0,  304,    0,    0,
+			  402,  445,  521,  520,  519,  518,  517,  516,  515,  514,
+			  513,  512,  511,  510,  509,  508,  507,  506,  505,  504,
+			   68,    0,  525,    0,  377,  376,    7,    0,   65,   66,
+			   67,  374,  428,    0,  427,    0,    0,    0,  525,    0,
+			    0,    0,  371,  141,  370,  466,  454,  368,    0,  465,
+			  453,  369,    0,    0,    0,    0,    0,    0,    0,    0,
+
 			    0,    0,    0,    0,    0,    0,    0,    0,    0,    0,
-			    0,    0,    0,    0,  500,  377,  415,    0,    0,  201,
+			    0,  525,  372,  419,    0,    0,    0,  525,  469,  449,
+			  458,    0,    0,    0,  383,  202,  200,  199,    0,    0,
+			  198,  197,  450,  451,  452,  456,  457,    0,  525,  201,
+			    0,   38,   32,    0,   37,   37,   31,   20,    0,    0,
+			    0,    0,  413,  398,  416,  421,  412,    0,    0,    0,
+			  290,    0,    0,  422,  424,    0,    0,    0,  397,    0,
+			  523,    0,    0,  525,  335,  522,  323,  306,  525,  367,
+			  139,  142,    0,    0,    0,  399,  346,  345,  344,  343,
+			  342,  341,  340,  353,  355,  354,  356,  357,  358,    0,
 
-			  199,  198,    0,    0,  197,  196,  442,  443,  500,  200,
-			    0,   37,   31,    0,   36,   36,   30,   19,    0,    0,
-			    0,    0,  409,  397,  412,  417,  408,    0,    0,    0,
-			  291,    0,    0,  418,  420,    0,    0,    0,  396,    0,
-			  498,    0,    0,  500,  500,  497,    0,  307,  500,  372,
-			  138,  141,    0,  398,  351,  350,  349,  348,  347,  346,
-			  345,  358,  360,  359,  361,  362,  363,    0,  352,  357,
-			    0,  354,  356,  364,    0,  400,  405,  195,  202,  206,
-			    0,  201,  500,   33,   32,   21,   25,  447,    0,    0,
-			   23,   27,  431,  427,  428,    0,   26,  429,  430,  432,
+			  347,  352,    0,  349,  351,  359,    0,  401,  407,  406,
+			    0,  421,  471,  460,  470,  459,  196,    0,    0,  203,
+			  205,    0,  202,  525,   34,   33,   22,   26,    0,    0,
+			   24,   28,  435,  431,  432,    0,   27,  433,  434,  461,
+			  462,  463,  467,  468,  436,    0,   57,  306,  306,    0,
+			  420,  301,  311,  307,  313,  309,    0,  306,  421,  423,
+			    0,    0,  306,  375,  429,  478,    0,    0,  317,  293,
+			  323,  525,    0,    0,  373,  348,  350,  306,  410,  204,
+			  525,  195,  152,    0,   29,    0,    0,   58,   21,  299,
+			  296,  414,  415,  312,  308,    0,  291,  403,  425,  421,
 
-			   56,  307,  307,    0,  416,  305,  302,  312,  500,  308,
-			  321,  310,    0,    0,  307,  417,  419,    0,    0,  307,
-			  380,  425,    0,    0,    0,  500,  294,  331,  500,    0,
-			    0,  378,  353,  355,  307,  203,  500,  194,  151,    0,
-			  449,  448,   28,    0,    0,   57,   20,  300,  297,  410,
-			  411,    0,    0,    0,  201,  309,    0,    0,  292,  402,
-			  421,    0,  298,  500,  307,  417,  331,    0,  326,    0,
-			  399,  139,  295,  207,    0,   38,  210,   29,   24,  201,
-			  199,  198,  197,  196,  500,  500,    0,  311,    0,  417,
-			    0,  299,  404,  325,  417,  307,  152,    0,   75,    0,
+			  297,  306,  421,  318,    0,  400,  140,  294,  206,    0,
+			   39,  209,   30,   25,  310,  411,  298,  324,  306,  153,
+			    0,   76,    0,    0,  215,  217,  211,    0,  210,  295,
+			   40,  525,  525,  213,  214,  218,  208,    0,   79,  525,
+			    0,   78,  525,    0,  216,  212,   80,   81,  202,  284,
+			  282,  105,  525,    0,  220,   82,   83,    0,    0,  286,
+			    0,   41,  283,  287,    0,  219,  115,  123,   90,  119,
+			   57,   89,  113,  117,  121,    0,   95,   51,    0,   53,
+			  285,  111,  107,  106,    0,   48,   63,   43,  525,   42,
+			    0,  289,    0,  116,  124,   92,   91,    0,  120,   99,
 
-			    0,  216,  218,  212,    0,  211,  195,  320,  319,  318,
-			  317,  204,    0,  314,  201,  406,  417,  332,  296,   39,
-			  500,  500,  214,  215,  219,  209,    0,  316,  205,    0,
-			  403,   78,  500,    0,   77,  500,    0,  217,  213,  315,
-			   79,   80,  201,  285,  283,  104,  500,    0,  221,   81,
-			   82,    0,    0,  287,    0,   40,  284,  288,    0,  220,
-			  114,  122,   89,  118,   56,   88,  112,  116,  120,    0,
-			   94,   50,    0,   52,  286,  110,  106,  105,    0,   47,
-			   62,   42,  500,   41,    0,  290,    0,  115,  123,   91,
-			   90,    0,  119,   98,   96,  101,   97,  113,  116,  117,
+			   97,  102,   98,  114,  117,  118,  121,  122,    0,   88,
+			   96,  113,   52,    0,    0,    0,    0,    0,   49,   64,
+			   55,   63,   60,  125,    0,  261,   44,  288,  221,    0,
+			    0,  100,  103,   57,  104,  121,    0,   87,  117,   54,
+			  112,  108,  525,  525,   47,   50,   56,   63,  127,  163,
+			  143,   62,  263,  525,   93,   94,  101,    0,   86,  121,
+			    0,    0,   61,  129,  525,    0,  128,   59,  525,   16,
+			  524,    9,   85,    0,  110,    0,    0,  126,  130,  164,
+			  144,   13,  525,   70,   71,  187,  262,  524,  525,    0,
+			   84,  109,  132,   16,  525,   16,   72,   39,   18,  525,
 
-			  120,  121,    0,   87,   95,  112,   51,    0,    0,    0,
-			    0,    0,   48,   63,   54,   62,   59,  124,    0,  262,
-			   43,  289,  222,    0,    0,   99,  102,   56,  103,  120,
-			    0,   86,  116,   53,  111,  107,  500,  500,   46,   49,
-			   55,   62,  126,  162,  142,   61,  264,  500,   92,   93,
-			  100,    0,   85,  120,    0,    0,   60,  128,  500,    0,
-			  127,   58,  500,   15,  499,    8,   84,    0,  109,    0,
-			    0,  125,  129,  163,  143,   12,  500,   69,   70,  186,
-			  263,  499,  500,    0,   83,  108,  131,   15,  500,   15,
-			   71,   38,   17,  500,  187,   56,    0,    5,    4,    0,
+			  188,   57,    0,    6,    5,    0,  525,   74,  525,   73,
+			   75,  146,   17,  189,  190,  416,    0,   57,  175,  192,
+			  133,  131,  177,  156,  191,  179,  524,  134,    0,  524,
+			  176,  136,  525,  157,  135,  163,  525,  163,  149,  148,
+			  147,  180,  178,    0,  137,  155,  524,  152,    0,  154,
+			  182,  274,  525,  160,  524,  525,  150,  151,  184,  524,
+			  163,    0,   57,  161,  273,  525,  163,  167,  173,  165,
+			  172,  169,  170,  166,  163,  171,  174,  168,    0,  524,
+			  181,  275,  145,  138,    0,  259,  162,    0,    0,  268,
+			    0,  524,    0,  525,    0,  325,  416,  331,  327,  326,
 
-			  500,   73,  500,   72,   74,  145,   16,  188,  189,  412,
-			    0,   56,  174,  191,  132,  130,  176,  155,  190,  178,
-			  499,  133,    0,  499,  175,  135,  500,  156,  134,  162,
-			  500,  162,  148,  147,  146,  179,  177,    0,  136,  154,
-			  499,  151,    0,  153,  181,  275,  500,  159,  499,  500,
-			  149,  150,  183,  499,  162,    0,   56,  160,  274,  500,
-			  162,  166,  172,  164,  171,  168,  169,  165,  162,  170,
-			  173,  167,    0,  499,  180,  276,  144,  137,    0,  260,
-			  161,    0,    0,  269,    0,  499,    0,    0,  500,    0,
-			  333,  412,  339,  335,  334,  336,  341,  337,  338,  340,
+			  328,  333,  405,  404,  329,  330,  332,  409,  408,    0,
+			  183,  231,  524,  264,    0,    0,    0,    0,  163,    0,
+			  322,  323,  321,    0,  320,    0,    0,    0,    0,  525,
+			  233,  256,  232,  260,    0,    0,  277,  279,  163,  269,
+			  271,    0,    0,  334,  315,  323,    0,    0,  276,  278,
+			    0,  163,    0,  234,  266,  416,  525,  525,  270,    0,
+			  267,  316,  323,  240,  242,  238,  236,  248,  409,  408,
+			    0,    0,  257,  230,    0,    0,  225,  228,  525,    0,
+			  272,  314,    0,    0,    0,    0,  163,    0,  265,    0,
+			  163,    0,  226,    0,  241,  247,  255,    0,  246,  243,
 
-			  182,  232,  499,  265,    0,    0,    0,    0,  162,    0,
-			    0,  330,  500,  331,  329,  328,    0,    0,    0,    0,
-			  500,  234,  257,  233,  261,    0,    0,  278,  280,  162,
-			  270,  272,    0,    0,  342,    0,  323,    0,    0,  277,
-			  279,    0,  162,    0,  235,  267,  412,  500,  500,  271,
-			    0,  268,    0,  331,    0,  241,  243,  239,  237,  249,
-			    0,  258,  231,    0,    0,  226,  229,  500,    0,  273,
-			  331,  322,    0,    0,    0,    0,    0,  162,    0,  266,
-			    0,  162,    0,  227,    0,  324,    0,  242,  248,  256,
-			  247,  244,  245,  251,  246,  240,  254,  255,  250,  253,
-
-			  252,  236,  238,  162,  230,  223,    0,    0,    0,  162,
-			    0,  259,  228,  407,    0,    0,    0>>)
+			  244,  250,  245,  239,  253,    0,  254,  249,  252,  251,
+			  235,  237,  163,  229,  222,    0,    0,  163,  258,  227,
+			    0,    0,    0>>)
 		end
 
 	yydefgoto_template: ANY is
@@ -12728,26 +19122,29 @@ feature {NONE} -- Table templates
 			-- but once functions cannot be declared with anchored types.
 		once
 			Result := yyfixed_array (<<
-			  713,   61,  222,  368,   62,  661,  290,  291,   63,   64,
-			  543,   65,  223,   66,  721,   67,  662,  452,  480,  577,
-			  590,  476,  444,  663,   68,  664,  765,  645,  493,  157,
-			   70,  633,  641,  514,  481,  527,  402,  403,   71,  219,
-			   72,   73,  665,  104,  666,  667,  647,  668,  297,   74,
-			   75,  634,  758,  547,  669,  226,   76,   77,   78,   79,
-			   80,   81,  311,  122,  431,  441,   82,   83,  759,  298,
-			  489,  617,  670,  671,  635,  604,   84,   85,  398,   86,
-			  375,   87,  579,  595,   88,  279,  563,   96,  716,   97,
-			  557,  625,  726,  300,  722,  723,  477,  455,  445,  446,
+			  721,   62,  252,  368,   63,  667,  330,  331,   64,   65,
+			  549,   66,  253,   67,  730,   68,  668,  458,  486,  583,
+			  596,  482,  450,  669,   69,  670,  776,  651,  499,  172,
+			   71,   72,   73,  639,  647,  520,  487,  533,  425,  426,
+			   74,  249,   75,   76,  671,  118,  672,  673,  653,  674,
+			  337,   77,   78,  234,   79,   80,  640,  766,  553,  675,
+			  256,   81,   82,   83,   84,  701,   85,   86,   87,  355,
+			  136,  438,  447,   88,  767,   89,   90,  338,   91,   92,
+			  341,   93,   94,  495,  623,  676,  677,  641,  610,   95,
+			   96,  421,   97,  410,   98,   99,  100,  585,  601,  101,
 
-			  766,  767,  466,  505,  494,  125,  235,  158,  159,  515,
-			  482,  483,  474,  497,  498,  499,  500,  501,  502,  459,
-			  338,  404,  405,  495,  472,  558,  252,    5,  105,  591,
-			  578,  655,  639,  648,  782,  743,  760,  230,  312,  421,
-			  432,  470,  490,  708,  732,  580,  581,  703,  386,  209,
-			  280,  544,  559,  560,  622,  627,  628,   98,  153,   89,
-			   90,  475,  516,  145,  114,  517,  437,   99,  814,    6,
-			  102,  598,    7,  346,  103,  212,  512,  640,  518,  600,
-			  612,  582,  620,  623,  653,  673,  424,  564>>)
+			  320,  569,  110,  725,  111,  102,  563,  631,  735,  346,
+			  731,  732,  483,  461,  451,  452,  777,  778,  472,  511,
+			  500,  140,  265,  173,  174,  521,  488,  489,  480,  503,
+			  504,  505,  506,  507,  508,  465,  382,  427,  428,  501,
+			  478,  564,  282,    5,  119,  597,  584,  661,  645,  654,
+			  791,  752,  771,  260,  356,  432,  439,  476,  496,  718,
+			  741,  586,  587,  713,  239,  321,  550,  565,  566,  628,
+			  633,  634,  112,  168,  103,  104,  481,  522,  160,  128,
+			  523,  444,  113,  820,    6,  116,  604,    7,  388,  117,
+			  242,  518,  646,  524,  606,  618,  588,  626,  629,  659,
+
+			  679,  435,  570>>)
 		end
 
 	yypact_template: ANY is
@@ -12755,96 +19152,97 @@ feature {NONE} -- Table templates
 			-- but once functions cannot be declared with anchored types.
 		once
 			Result := yyfixed_array (<<
-			  137, 1739, 1251, -32768,    7,  153, -32768, -32768, -32768, -32768,
+			  254, 2117, 1421, -32768,    3,   26, -32768, -32768, -32768, -32768,
 			 -32768, -32768, -32768, -32768, -32768, -32768, -32768, -32768, -32768, -32768,
 			 -32768, -32768, -32768, -32768, -32768, -32768, -32768, -32768, -32768, -32768,
-			 -32768,  708,  308,  333,   35,  128, 1926, 2136,  751,  263,
-			    9, -32768, -32768, 1251,  219, 1251,  749, -32768,    7, -32768,
-			 -32768, -32768, -32768, -32768, 1251, 1251,  766, 1251, -32768, 1599,
-			 1483,  514, -32768, -32768, -32768, -32768, -32768, -32768, -32768, 2262,
-			 -32768,  750, 1251,  670, -32768, -32768, -32768, -32768, -32768, -32768,
-			 -32768, -32768,  506,  498, -32768, -32768, -32768, -32768, -32768, -32768,
-			 -32768,  269,  201,  422, -32768, -32768, -32768, -32768,  637,  721,
+			 -32768,  795,  269,  324,  311,    2, 2280, 2336, -32768,  266,
+			   16, -32768, -32768, 1421,    3,    3, 1421,  771, -32768,    3,
+			 -32768, -32768, -32768, -32768, -32768, 1421, 1421,  800, 1421, -32768,
+			 2001, 1885,  565, -32768, -32768, -32768, -32768, -32768, -32768, -32768,
+			 2744, -32768, -32768, -32768,  787, 1421,  745, -32768, -32768, -32768,
+			 -32768, -32768, -32768, -32768, -32768, -32768, -32768, -32768,  551,  550,
+			  549, -32768, -32768, -32768, -32768, -32768, -32768, -32768, -32768, -32768,
 
-			 -32768,  698,  729,  135, -32768,  320,  131, -32768, -32768,   57,
-			 -32768, -32768, -32768, -32768, -32768, -32768, -32768, -32768,    7, 1251,
-			  761,  691,  758,  269, 1135, -32768, -32768, -32768, -32768, -32768,
+			 -32768, -32768, 2517, -32768, -32768,  678,   48,  366, -32768, -32768,
+			 -32768, -32768,  701,  761, -32768,  732,  772,  210, -32768,   25,
+			  619, -32768, -32768,  184, -32768, -32768, -32768, -32768, -32768, -32768,
+			 -32768, -32768,    3, 1421,  799,  744,  796, -32768,  678, 1305,
 			 -32768, -32768, -32768, -32768, -32768, -32768, -32768, -32768, -32768, -32768,
-			 -32768, -32768, -32768, -32768, -32768, -32768,  269, -32768,   57, -32768,
-			 -32768, -32768, 1251, -32768, -32768, -32768, -32768, 2262,  735,  741,
-			  269,  676,  482,  736,    7,  131,  734, 2219, -32768,  131,
-			 -32768, -32768, -32768, -32768, -32768,   57, 1251, 1251, 1251, 1251,
-			 1251, 1251, 1251, 1251, 1251, 1251, 1251, 1251, 1251, 1019,
-			 1251,  903, 1251, 1251, -32768, -32768, -32768,   57,   57,  637,
-
-			 -32768, -32768,  737,  727, -32768, -32768, -32768, -32768,   74, -32768,
-			  269, -32768, -32768,  269,  698,  698, -32768, -32768,  710, 1715,
-			  131,  131,  702, -32768, -32768,  670, -32768,  720, 2201,  785,
-			 -32768,   57,  716, -32768, 2262,  387,  707,  131, -32768, 2158,
-			 -32768, 1251,  706, -32768, -32768, -32768,  704,  691, -32768,  252,
-			 -32768,  544,  703, -32768,  483,  483,  483,  483,  483,  846,
-			  846, 1066, 1066, 1066, 1066, 1066, 1066, 1251, 2291, 2277,
-			 1251, 1908, 2180, -32768,  131, -32768, -32768, -32768, -32768, -32768,
-			  305,  637,  763, -32768, -32768, -32768, -32768, -32768,  442,  354,
-			 -32768, -32768, -32768, -32768, -32768,  -20, -32768, -32768, -32768, -32768,
-
-			  328,  691,  691,   57, -32768, -32768, -32768,  708,  189, -32768,
-			 2262, -32768,  383,  699,  691,  670, -32768, 1251,  719,  691,
-			 -32768, 2262,  696,  131,  655, -32768, -32768,  289, -32768,   57,
-			  131, -32768, 2291, 1908,  691, -32768,    7, -32768,  546,  690,
-			 -32768, -32768, -32768,  669, 1763, -32768, -32768, -32768, -32768,  702,
-			 -32768,  269,   15,  422,  412, -32768, 1367,  656, -32768, -32768,
-			 2262,  131, -32768, -32768,  691,  670,  289,  131, -32768,  131,
-			 -32768, -32768, -32768, -32768, 1949,  516,    3, -32768, -32768,  637,
-			  687,  686,  682,  675,   18,  349,  674, -32768,  269,  670,
-			  631, -32768, -32768, -32768,  670,  691, -32768, 1926,  638,  680,
-
-			  679, -32768, -32768, -32768,  665,  664,  663, -32768, -32768, -32768,
-			 -32768,  596,  255, -32768,  637, -32768,  670, -32768, -32768, -32768,
-			  605, -32768, -32768, -32768,  642, -32768,    3, -32768,  585,  641,
-			 -32768, -32768,  496,  269, -32768,  657,  269, -32768, -32768, -32768,
-			 -32768,  649,  637,  167, -32768,  623,  582,  639,  629, -32768,
-			  242,  234,  -10,   37,  -10,  591, -32768,  167,  -10, -32768,
-			  -10,  -10,  -10,  -10,  204, -32768,  551,  541,  528,  612,
-			  608, -32768,  324, -32768,  594, -32768, -32768,  628,  223, -32768,
-			  778, -32768, -32768,  591,  -10,   37,  174,  594,  594, -32768,
-			  618,  601,  594, -32768,  598,  140, -32768, -32768,  541, -32768,
-
-			  528, -32768,  589, -32768, -32768,  551, -32768,  269,  -10,  -10,
-			  604,  599,  598, -32768, -32768,  510, -32768,  233,  -10,  558,
-			 -32768,  594, -32768,  -10,  -10, -32768, -32768,  517,  594,  528,
-			  567, -32768,  541, -32768, -32768, -32768,    7,    7, -32768, -32768,
-			 -32768,  557,  131, -32768,  590, -32768, -32768, -32768, -32768, -32768,
-			 -32768,  560, -32768,  528,  303,  279, -32768, -32768,  544,  575,
-			  131,  509,    7,  312,  -37,  547, -32768,  552, -32768,  572,
-			  571, -32768, -32768, -32768, -32768, 1879,  550, -32768, -32768, -32768,
-			 -32768,  902, -32768,  549, -32768, -32768,  553,  518,  709,  518,
-			 -32768,  516, -32768,  529, -32768,  517, 1251, -32768, -32768,  131,
-
-			    7, -32768,  677, -32768, -32768, -32768, -32768, -32768, 2262,  415,
-			  545,  517,  495, 1251, -32768, -32768,  527,  508, 2262, -32768,
-			  462,  131,  243,  462, -32768, -32768,  544, -32768,  131, -32768,
-			 -32768, -32768, -32768, -32768, -32768,  511, -32768,  538, -32768, -32768,
-			  181,  546, 1949, -32768,  473,  472,    7, -32768,  403,   63,
-			 -32768, -32768, -32768,  157, -32768,  490,  517, -32768, -32768, -32768,
 			 -32768, -32768, -32768, -32768, -32768, -32768, -32768, -32768, -32768, -32768,
-			 -32768, -32768,  578,  157, -32768, -32768, -32768, -32768, 1251,  474,
-			  509,   94, 1251,  524,  520,  475,  110,   -9,   41, 1251,
-			  514,  388, -32768, -32768, -32768, -32768, -32768, -32768,  506,  498,
+			 -32768,  771, -32768,  184, -32768, -32768, -32768, 1421, -32768, -32768,
+			 -32768, -32768, 2744,  765,  773,  764,   -6,  768, -32768,  619,
+			  774, 2702, -32768,  619, -32768, -32768, -32768, -32768,  160, -32768,
+			 -32768, -32768,  184, 1421, 1421, 1421, 1421, 1421, 1421, 1421,
 
-			 -32768, 1928,  314,  418, 1251, 1251, 2103, 1977, -32768,  445,
-			  454, -32768,    7,  289, -32768, -32768,  463, 2139, 1251, 1251,
-			 -32768, -32768,  431,  385, -32768, 1251,  391, 2262, 2262, -32768,
-			 -32768, -32768,  335,  425, -32768,  437, -32768,  -13,  447, 2262,
-			 2262,  405, -32768,  399, -32768, 2262,  317, -32768,  230, -32768,
-			 1949, -32768,  -13,  289,  404,  443,  430,  423, -32768,  406,
-			   22, -32768, -32768, 1251, 1251, -32768,  327,  -34,  282, -32768,
-			  289, -32768,  269,  249,  405,  410,  405, -32768,  405, 2262,
-			 2121, -32768,  214, -32768, 1251, -32768,  251, -32768, -32768, -32768,
-			 -32768, -32768, -32768, -32768, -32768, -32768, -32768, -32768, -32768, -32768,
+			 1421, 1421, 1421, 1421, 1421, 1421, 1189, 1421, 1073, 1421,
+			 1421, -32768, -32768, -32768,  184,  184,  184,    3, -32768, -32768,
+			 -32768,  619, 1769, 1653, -32768,  701, -32768, -32768,  779,  778,
+			 -32768, -32768, -32768, -32768, -32768, -32768, -32768,  319,  287, -32768,
+			  678, -32768, -32768,  678,  732,  732, -32768, -32768,  762,  823,
+			  619,  619,  749, -32768, -32768,  745, -32768,  753, 2684,  957,
+			 -32768,  184,  748, -32768, 2744,  333,  767,  619, -32768, 2642,
+			 -32768, 1421, 2303, -32768, -32768, -32768,  425,  744, -32768,  233,
+			 -32768,  613,  741,  528,  482, -32768,  524,  524,  524,  524,
+			  524,  442,  442,  940,  940,  940,  940,  940,  940, 1421,
 
-			 -32768, -32768, -32768, -32768, -32768, -32768, 1957,  151,  158, -32768,
-			  131, -32768, -32768, -32768,  145,   50, -32768>>)
+			 2305, 2759, 1421, 2724, 2665, -32768,  619, -32768, -32768, -32768,
+			  679,  745, -32768, -32768, -32768, -32768, -32768,  759,  758, -32768,
+			 -32768,  201,  701,  807, -32768, -32768, -32768, -32768,  481,  467,
+			 -32768, -32768, -32768, -32768, -32768,  112, -32768, -32768, -32768, -32768,
+			 -32768, -32768, -32768, -32768, -32768,  478,  385,  744,  744,  184,
+			 -32768, -32768,  294, -32768, 2744, -32768,  332,  744,  745, -32768,
+			 1421,  619,  744, -32768, 2744, -32768,  619,  619, -32768, -32768,
+			  425, -32768,  184,  619, -32768, 2305, 2724,  744, -32768, -32768,
+			    3, -32768,  610,  730, -32768,  709, 2141, -32768, -32768, -32768,
+			 -32768,  749, -32768, -32768, -32768, 1537, -32768, -32768, 2744,  745,
+
+			 -32768,  744,  745, -32768,  619, -32768, -32768, -32768, -32768, 2358,
+			  588,   38, -32768, -32768, -32768, -32768, -32768, -32768,  744, -32768,
+			 2280,  692,  735,  725, -32768, -32768, -32768,  708,  714, -32768,
+			 -32768,  835, -32768, -32768, -32768,  703, -32768,   38, -32768,  580,
+			  678, -32768,  757,  678, -32768, -32768, -32768,  713,  701,   92,
+			 -32768,  687,  756,  706,  704, -32768,  492,  137,  138,  178,
+			  138,  666, -32768,   92,  138, -32768,  138,  138,  138,  138,
+			   97, -32768,  615,  603,  594,  674,  665, -32768,  354, -32768,
+			  661, -32768, -32768,  691,  115, -32768,  570, -32768, -32768,  666,
+			  138,  178,   -7,  661,  661, -32768,  690,  664,  661, -32768,
+
+			  660,   39, -32768, -32768,  603, -32768,  594, -32768,  648, -32768,
+			 -32768,  615, -32768,  678,  138,  138,  663,  662,  660, -32768,
+			 -32768,  344, -32768,  198,  138,  623, -32768,  661, -32768,  138,
+			  138, -32768, -32768,  591,  661,  594,  629, -32768,  603, -32768,
+			 -32768, -32768,    3,    3, -32768, -32768, -32768,  626,  619, -32768,
+			  651, -32768, -32768, -32768, -32768, -32768, -32768,  622, -32768,  594,
+			  335,  255, -32768, -32768,  613,  640,  619,  582,    3,  251,
+			   58,  609, -32768,  614, -32768,  631,  635, -32768, -32768, -32768,
+			 -32768, 2257,  607, -32768, -32768, -32768, -32768,  817, -32768,  601,
+			 -32768, -32768,  620,  596,  956,  596, -32768,  588, -32768,  600,
+
+			 -32768,  591, 1421, -32768, -32768,  619,    3, -32768,  900, -32768,
+			 -32768, -32768, -32768, -32768, 2744,  496,  612,  591,  567, 1421,
+			 -32768, -32768,  593,  574, 2744, -32768,  372,  619,   12,  372,
+			 -32768, -32768,  613, -32768,  619, -32768, -32768, -32768, -32768, -32768,
+			 -32768,  583, -32768,  608, -32768, -32768,  501,  610, 2358, -32768,
+			  535,  538,    3, -32768,  657,  144, -32768, -32768, -32768,   19,
+			 -32768,  564,  591, -32768, -32768, -32768, -32768, -32768, -32768, -32768,
+			 -32768, -32768, -32768, -32768, -32768, -32768, -32768, -32768,  553,   19,
+			 -32768, -32768, -32768, -32768, 1421,  546,  582,  349, 1421,  592,
+			  584,  525,   32,  220, 1421,  565,  355, -32768, -32768, -32768,
+
+			 -32768, -32768, -32768, -32768, -32768,  551, -32768,  550,  549,  548,
+			 -32768,  511,  400,  468, 1421, 1421, 2335, 2401, -32768,  490,
+			 -32768,  425, -32768,    1, -32768,  518, 2624, 1421, 1421, -32768,
+			 -32768,  435,  391, -32768, 1421,  387, 2744, 2744, -32768, -32768,
+			 -32768,  253,  415, -32768, -32768,  425,    1,  453, 2744, 2744,
+			  374, -32768,  389, -32768, 2744,  447, -32768,  326, -32768, 2358,
+			 -32768, -32768,  425,  444,  395,  313, -32768,  293, -32768, -32768,
+			  399,   15, -32768, -32768, 1421, 1421, -32768,  195,  277,  171,
+			 -32768, -32768,  259,  374,  587,  374, -32768,  374, 2744, 2484,
+			 -32768,  121, -32768, 1421, -32768, -32768, -32768,   20, -32768, -32768,
+
+			 -32768, -32768, -32768, -32768, -32768,  299, -32768, -32768, -32768, -32768,
+			 -32768, -32768, -32768, -32768, -32768, 2191,  110, -32768, -32768, -32768,
+			   89,   79, -32768>>)
 		end
 
 	yypgoto_template: ANY is
@@ -12852,26 +19250,29 @@ feature {NONE} -- Table templates
 			-- but once functions cannot be declared with anchored types.
 		once
 			Result := yyfixed_array (<<
-			 -586,  258,  625, -341, -32768, -32768,  579,  344, -32768, -212,
-			 -32768, -213, -134, -32768,  197, -215, -32768, -398, -32768, -32768,
-			 -32768,  407,  469, -32768, -208, -32768,  122, -32768,  394,    1,
-			  476, -32768, -32768,  371,  408, -32768, -32768,  459,    0, -32768,
-			  142,  118, -32768, -103, -32768, -32768,  236, -32768,  -67,  -75,
-			  -81, -32768,   98, -32768, -32768,  565,  211,  207,  206,  205,
-			  203,  188,  499, -32768,  426, -32768,  182,  180, -167, -32768,
-			  323, -32768, -32768, -32768, -32768, -32768, -32768, -32768,  259,  -23,
-			  200, -366,  254, -32768,  537,   43, -32768, -145, -32768, -32768,
-			  267,  196, -32768, -32768, -32768, -32768, -32768, -32768, -32768, -32768,
+			 -607,  295,  617, -366, -32768, -32768,  579,  388, -32768, -214,
+			 -32768, -227, -146, -32768,  232, -246, -32768, -399, -32768, -32768,
+			 -32768,  414,  473, -32768, -236, -32768,  146, -32768,  426,   -2,
+			  -37,  821, -32768, -32768, -32768,  401,  429, -32768, -32768,  484,
+			   60, -32768,  179,  604, -32768, -111, -32768, -32768,  263, -32768,
+			 -106,  -21,  -67, -32768,  -80,  -87, -32768,  111, -32768, -32768,
+			  563,  235,  231,  230,  229, -32768,  226,  225,  222,  502,
+			 -32768,  457, -32768,  215, -552, -499, -521, -32768, -231, -234,
+			 -32768, -235, -242,  360, -32768, -32768, -32768, -32768, -32768, -32768,
+			 -32768,  288,  -34,  234, -400,  616, -32768,  284, -32768,  533,
 
-			 -32768, -32768,  355, -32768, -32768,  -58, -32768,  776, -32768, -32768,
-			 -32768, -32768, -136,  363,  307,  353, -390,  351, -451, -32768,
-			 -32768, -32768, -32768, -412, -32768, -164, -32768,  231, -549, -32768,
-			 -109, -32768, -571, -32768, -32768, -32768, -32768,  268, -32768, -32768,
-			 -32768, -32768, -32768, -32768, -32768, -601, -32768, -32768, -32768, -178,
-			 -374, -32768, -32768, -32768, -32768, -32768, -32768,  -11, -32768,   56,
-			   25,    4,  257, -32768, -32768, -32768, -32768,   10, -32768, -32768,
-			 -32768, -32768, -32768, -367, -32768,  -87, -32768, -534, -32768, -32768,
-			 -32768, -431, -32768, -32768, -32768, -32768, -32768, -32768>>)
+			   17, -32768,  424, -32768, -32768,   -3,  297,  227, -32768, -32768,
+			 -32768, -32768, -32768, -32768, -32768, -32768, -32768, -32768,  386, -32768,
+			 -32768,  -46, -32768,  805, -32768, -32768, -32768, -32768, -222,  403,
+			  339,  390, -475,  384, -371, -32768, -32768, -32768, -32768, -411,
+			 -32768, -178, -32768,  270, -369, -32768,  -31, -32768, -448, -32768,
+			 -32768, -32768, -32768, -245, -32768, -32768, -32768, -32768, -32768, -32768,
+			 -32768, -549, -32768, -32768, -213,   27, -32768, -32768, -32768, -32768,
+			 -32768, -32768,  -95, -32768,  275,   82,  -24,  292, -32768, -32768,
+			 -32768, -32768,   -1, -32768, -32768, -32768, -32768, -32768, -380, -32768,
+			  -98, -32768, -538, -32768, -32768, -32768, -270, -32768, -32768, -32768,
+
+			 -32768, -32768, -32768>>)
 		end
 
 	yytable_template: ANY is
@@ -12879,261 +19280,312 @@ feature {NONE} -- Table templates
 			-- but once functions cannot be declared with anchored types.
 		once
 			Result := yyfixed_array (<<
-			    4,  236,  217,   69,  294,  251,  293,  292,  396,  561,
-			  412,  295,  207,  126,  238,  196,  216,  106,  206,  624,
-			    3,  277,  636,  151,    3,  393,  205,  593,   43, -184,
-			 -225,  453, -225,  162,  120,  152,  401,  712, -184,  602,
-			   94,  253,  151,   93,  156,  485,  342,   95,    3,  530,
-			  816,   94,  674,  434,   93,  167,  168,  165,  170,  484,
-			  643,  119,  778,  275,  276,  155,   37,  411,    3,  150,
-			  -49,  400,  700,  195,   94,  380, -327,   93,  551,   33,
-			  199,  118,  711,  675,  709,   37,  711,  161,   92,  679,
-			    3,  166,  201,  204,  399,  117,  154,  496,   33,   92,
+			   70,  231,  141,  334,  403,  281,  120,  343,  247,  419,
+			  225,  567,  316,  335,  342,  340,  171,  268,  339,  246,
+			  236,  109,  333,  187,  191,  -10,   -4,  235,  139,  535,
+			  213,  137,  369,  514,    3,  332,  108,  161,  459,  107,
+			  233,  274,  167,  262,  178,  221,  285,  179,  138,  166,
+			  219,  441,  491,  181,  182,  787,  184,  188,  188,  528,
+			    4,  175,  176,  559,  490,    3,  180,  532,  307,  308,
+			  309,  424,  166,  212,  638,  637,  165,  630,  132,  822,
+			  642,    3,  636,  -10,  106, -185,  232,  -10,  115,  821,
+			  502,  -10,   37,  -10,  134,  -10,  720,  635,  -10,  114,
 
-			  539,  724,  567,  337,  149,   91,  218,   94,  529,  224,
-			   93,   37,  232,  -49,  538,  106,   91,  220,  221,  109,
-			  228,  777,   92,  278,   33,  234,  -49,  283,  284,  294,
-			  116,  293,  292,   37,  680,  660,  295,  733,  207,   91,
-			  115,  659,  553,   94,  206,  815,   33,  705,  224,  242,
-			  704,  753,  121,  239,  124,   92,  160,  237,  748,  658,
-			  550,  227,  554,  555,    3,  247,  770,  304,  526,  250,
-			    3,  761,   91,  151,  123,  224,  810,  254,  255,  256,
-			  257,  258,  259,  260,  261,  262,  263,  264,  265,  266,
-			  268,  269,  271,  272,  273,  370,  299,  224,  224,  281,
+			  273,  105,  389,  390,  237,   33,  423,  545,  226,  381,
+			  680,  164,  396, -185,  786,   37,  745,  400,  120,  544,
+			  250,  251,  170,  -10, -185,  -49,  706,  720,   33,  422,
+			  710,  258,  407, -185,  387,  536,  686,  264,  457,  762,
+			  334,  517,  719,  457,  343,  322,  324,  325,  323,  257,
+			  335,  342,  340,  556,  516,  339,  416,  708,  266,  333,
+			   43,  267,  236,  733,  557,  269,  227,  230,  -49,  235,
+			  108,  166,  332,  429,  284,  283,  818,  276,  384,  707,
+			  248,  -49,  233,  254,  477,  187,  191,  814,  573,  649,
+			  219,  286,  287,  288,  289,  290,  291,  292,  293,  294,
 
-			  -48,  406,  282,  215,  274,  211,  801,  246,    2,  649,
-			  804,  193,    1,  451,  508,  101,   37,  649,  573,  296,
-			  301,  302,   94, -184,  811,  353,  100,  225,  607,   33,
-			  310,  224,  808,  214,    3,  160,  429,  319,  812,  313,
-			  522,  345,  321,  -48,  615, -157, -157, -157, -157,  511,
-			  451, -184,   94,  323,  324,   93,  -48,  359,  327,  542,
-			 -157,  200,  510,  207,  450,  160,  225,   94,  332,  206,
-			  352,  333,  207,  541,  334, -157,  651,  329,  206,   52,
-			  805,  471,    3, -157, -157, -157,  383,  351,  148,  677,
-			  328,  448,  339,  225, -224,  336, -224,  354,  807,  193,
+			  295,  296,  297,  298,  300,  301,  303,  304,  305,  350,
+			  306,  -50,  681,  599,   37,  344,  666,    3,  685,  188,
+			  188,  613,  665,  254,  548,  608,  405,   33,  232,  769,
+			  796,  801,  804,  809,  310,  456,  793,  621,  547,  277,
+			  664,  380,  492,  280,  493,  494,  345,  498,  657,  210,
+			  379,  768,  254,  108,  -50, -319,  107,  354,  372,  790,
+			   37,  769,  769,  769,  769,  378,  769,  -50,  527,  364,
+			  742,  371,  366,   33,  254,  254,  254,  370,  245,  534,
+			  241,  311,  683,  768,  768,  768,  768,    3,  768,   53,
+			  757,  163,    3,  759,  123,  380,  785,  375,  758,  236,
 
-			   92,  147,   94,  224,  428,  632,  631,  392,  465,  193,
-			  193,  464,  193,  630,  367,  225,  225,   91,  360,  336,
-			  754,  299,  486,  364,  487,  488,  569,  492,  629,  224,
-			  371,  415,  463,  109,  462,  366,  417,  193,  369,  461,
-			  379,  731,  460,  336,  296,  336,  108,  784,  521,  314,
-			  568,  161,  381,  382,  335,  194,  763,  310,  430,  528,
-			  294,  389,  293,  292,  507,  345,  313,  394,  344,  395,
-			  193,  506,  736,  390,  419,  750,  193,  414,   -9,  373,
-			  749,  193,   -9,  173,  769,  341,   -9,  576,   -9, -313,
-			   -9,  781,  575,   -9, -313,  324,  193,  193,  193,  193,
+			  376,  106,  575,  772,  162,  132,  235,  122,  244,  336,
+			  347,  348,  397,  318,  317,  169,  784,  740,  105,  233,
+			  108,  254,  383,  107,  221,    2,  582,  362,  220,    1,
+			   38,  581,  121,  318,  317,  334,  319,  133,  810,  343,
+			  132, -224,  813, -224,    3,  448,  342,  340,  220,  393,
+			  339,  210,  344,  415,  333,  744,  417,  132,  398,  780,
+			  210,  210,  479,  210,  816,  232,  377,  332,  106,  819,
+			  404,  131,  395,  360,  123,  380,  655,  394,  359,  761,
+			  229,  228,  574,  345,  655,  105,  430,   37,  229,  228,
+			 -223,  210, -223,  354,  513,   54,  781,  408,  783,    3,
 
-			  193,  193,  193,  193,  193,  193,  193,  193,  193,  776,
-			  193,  193,  771,  193,  193,  193, -184, -184,   -9,  203,
-			  202,  225,  442,  356,  203,  202,  775,  317,  355,  785,
-			  433,  435,  316,  774,   53,   52,  203,  202,    3,   53,
-			  473,  719,  433,    3,  718,  447,  773,  225,  113,  112,
-			  772,   53,  193,  194,  613,    3,  447,  626,  478,  385,
-			  384,  111,  110,  193,  626,  762,  491, -158, -158, -158,
-			 -158,  171,  329,  340,  193,  193,  754,  155,  601,  155,
-			  603,  754, -158,  155,  752,  155,  155,  155,  155,  720,
-			  217,  751,  519,  747,  207,  742,  533, -158,  737,  217,
+			   33,  512,  715,   54,   53,  714,  130,    3,  728,  254,
+			  -46,  727,  132,  318,  317,  -46,  129,  519,  539,  -46,
+			  132,  399,  387,  -46,  221,  386,  401,  402,  220,  219,
+			  440,  442,  254,  406, -185, -185,  484,  210,  440,  127,
+			  126,  453, -185,  210,  497,   38,  336,  782,  210,  632,
+			  367,  453,  125,  124, -185,  773,  632, -185,  197,  196,
+			  195,  194,  193,   59,  418,  210,  210,  210,  210,  210,
+			  210,  210,  210,  210,  210,  210,  210,  210,  372,  210,
+			  210,  760,  210,  210,  210,  211,  774,  525,  247,  756,
+			  540,  484,  284,  283,  236,  729,  190,  247,  189,  751,
 
-			  206,  244,  193,  176,   58, -158, -158, -158,  154,  155,
-			  154,  734,  534,  478,  154,  326,  154,  154,  154,  154,
-			  155,  725,  545,  198, -184, -184,  755,  491,  549,  244,
-			  208,  197, -184,  155,  155,  172,  174,  -76,  -76,  175,
-			  154, -184,  250,  155, -184,  148,  573, -184,  155,  155,
-			  707,  154,  299,  702,  345,  -76,  676,  565,  787,  790,
-			  250,  797,  -76,  755,  154,  154,  654,  -76,  570,  347,
-			  348,  -76,  652,  374,  154,  -76,  -45,  646,  644,  154,
-			  154,  -45,  358,  513,  330,  -45,  106,  362,  616,  -45,
-			  621,  619,  596,  576,  614,  606,  609,  608,  106,  610,
+			  551,  235, -185, -185,  763,  497,  555,  220,  219,  218,
+			  186,  315,  185,  314,  233,  209,  208,  207,  206,  205,
+			  204,  203,  202,  201,  200,  199,  198,  197,  196,  195,
+			  194,  193,   59,  210,  211,  619,  794,  798,  579,  806,
+			  170,  763,  170,  210,  193,   59,  170,  344,  170,  170,
+			  170,  170,  571,  746,  210,  210,  743,  313,  471,  312,
+			  232,  470,  607,  576,  609, -158, -158, -158, -158,  560,
+			  561,  734,  170,  221,  216,  215,  214,  210,  345,  694,
+			 -158,  120,  469,  170,  468,  580,    3,  602,  693,  467,
+			  192, -185,  466,  120,  692, -158,  170,  170,  120,  132,
 
-			  397,  599,  372,  106,  689,  574,  789,  793,  796,  800,
-			  586,    3,  106,  688,  618,  597,  592,  585,  584,  687,
-			  571,  250,    1,  443,  686,  461,  566,  786,  250,  562,
-			  513,  463,  391,  552,  508,  685,  637,  546,  684,  683,
-			  642, -282,  345,  611,  451,  537,  -56,  -56, -282,   38,
-			  536,  460,  682, -282,   37,  531,  524, -282,  523,  672,
-			  207, -282,  479,  418,  -56,   35,  206,   33,  509,  678,
-			  458,  -56,  691,  681,  757,  710,  -56,  464,  503,  701,
-			  -56,  457,  454,  706,  -56,  208,  449,  714,  439,  656,
-			  717, -203,  436,  207,  207,  207,  124,  207,  443,  206,
+			  614,  229,  228, -158, -158, -158,  170,  120,  280,  163,
+			  691,  170,  170,  690,  689,  729,   54,  624,  717,  579,
+			    3,  -77,  -77,  617,   38,  712,  280,  688,  387,   37,
+			  682,  643,  660,  132,  658,  648,  -45,  409,  135,  -77,
+			   35,  -45,   33,  519,  765,  -45,  -77,  652,  687,  -45,
+			  650,  -77,    3,  373,  678,  -77,  627,  625,   38,  -77,
+			  622,  620,  615,  236,  684,  616,  612,  603,  605,  662,
+			  235,  582,  420,  598,  592,  709,  591,  800,  803,  808,
+			  590,  765,  711,  233,    1,  577,  716,  280,  572,  723,
+			  568,  467,  726,  469,  280,  558,  236,  236,  236,  519,
 
-			  206,  206, -202,  206,  426,  727,  728,  792,  795,  799,
-			  427,  757,  423,  422,  425,  420, -281,  229,  416,  739,
-			  740,  413,  410, -281,  388,  746,  745,  303, -281,  409,
-			  741,  715, -281,  408,  407,  377, -281,  714,  376,  -13,
-			  -13,  756,  365,  363,  361,  357,  107,  -13,  331,  285,
-			  193,  325,  714,  322,  318,  735,  173,  764,  768,  -13,
-			  193,  -13,  -13,  315,  779,  780,  171,  305,  211,  248,
-			  -13,  -14,  -14,  788,  791,  794,  798,  768,  756,  -14,
-			  245,  241,  243,  231,  240,  806, -301,  213,  194,  210,
-			 -208,  -14,  169,  -14,  -14,  164,  583,  146,  556,   60,
+			  236,  514,  552,  235,  235,  235,  457,  235,  543,  542,
+			  724,  108,  736,  737,  537,  466,  233,  233,  233,  530,
+			  233, -159, -159, -159, -159,  748,  749,  255,  750,  232,
+			  529,  515,  754,  169,  470,  169, -159,  485,  696,  169,
+			  509,  169,  169,  169,  169,  464,  460,  770,  463,  238,
+			  455, -159,  722,  443,  437,  775,  779,  436,  434, -159,
+			 -159, -159,  232,  232,  232,  169,  232,  255,  433,  431,
+			  259,  139,  788,  789,  349,  412,  169,  779,  411,  797,
+			  770,  805,  770,  722,  770,  273,  374,  315,  313,  169,
+			  169,  815,  361,  210,  755,  358,  255,  449,  449,  169,
 
-			   59,  469,  -14,  468, -208, -208,   58,   57,   56,   55,
-			  813,   54,  532,  467,   53,   52,   51,   50,    3,   49,
-			   48,  163, -208,   47,  638,  504,   46,  572,   45, -208,
-			  309,  308,  343,   43, -208,  594,   42,   41, -208,   40,
-			 -208,  650, -208,  193,  -44,   39,  548, -208,  193,  -44,
-			  605,  513,  699,  -44,  698,  387,   38,  -44,  440,  193,
-			  697,   37,  180,  179,  178,  177,  176,   58,  350,  193,
-			  193,   36,   35,   34,   33,  696,  802,  695,  694,  693,
-			   32,  193,  193,  692,  657,  438,  540,  193,  525,  783,
-			  307,  520,   30,   29,   28,   27,   26,   25,   24,   23,
+			  274,  326,  241,  210,  169,  169,  722,  190,  186,  278,
+			  764,  272,  275,  271,  270, -281, -280,  132,  255,  255,
+			  255,  261, -281, -280, -300,  211,  183, -281, -280,  240,
+			  243, -281, -280,  121, -207, -281, -280,  329,  328,  562,
+			  475,  589,  795,  799,  802,  807,  474,  764, -207, -207,
+			  538,  177,   54,   53,   52,   51,    3,   50,   49,  473,
+			  327,  644,  510,  578,   47,  357, -207,  454,  385,  132,
+			   44,  600,  387, -207,   42,   41,  -57,  -57, -207, -186,
+			 -186,  656, -207, -186, -207,  611, -207, -186,  365,  554,
+			  210, -207, -186,  705,  -57,  210,  446,  414,  811, -186,
 
-			   22,   21,   20,   19,   18,   17,   16,   15,   14,   13,
-			   12,   11,   10,    9,    8,  456,  535,   60,   59,  589,
-			  744,  193,  193,  378,   58,   57,   56,   55,  349,   54,
-			  690,    0,   53,   52,   51,   50,    3,   49,   48,    0,
-			    0,   47,    0,    0,   46,    0,   45,    0,  193,   44,
-			    0,   43,    0,    0,   42,   41,    0,   40,    0,    0,
-			    0,    0,    0,   39, -185, -185,    0,  270, -185,    0,
-			    0,    0, -185,    0,   38,    0,    0, -185,    0,   37,
-			    0,    0,    0,    0, -185,    0,    0, -185,    0,   36,
-			   35,   34,   33,    0,    0,    0, -185,    0,   32,    0,
+			  704,  -57, -186,  703,  702,  210,  -57,  700,  699,  698,
+			  -57, -186,  392,  697,  -57,  210,  210,  663,  526, -186,
+			 -186,  445,  546,  224,  792,  462,  531,  210,  210,  541,
+			   30,   29,   28,  210,   26,   25,   24,   23,   22,   21,
+			   20,   19,   18,   17,   16,   15,   14,   13,   12,   11,
+			   10,    9,    8,  255,  199,  198,  197,  196,  195,  194,
+			  193,   59,  -14,  -14,  753,  413,  391,  210,  210,  595,
+			  -14,   61,   60,  695,    0,    0,  255,    0,   59,   58,
+			   57,   56,  -14,   55,  -14,  -14,   54,   53,   52,   51,
+			    3,   50,   49,  -14,  210,   48,    0,    0,   47,    0,
 
-			    0,    0,    0,    0, -185, -185,    0,    0,   31,    0,
+			   46,    0,  353,   45,   44,   43,    0,    0,   42,   41,
+			    0,   40,    0,    0,    0,    0,    0,   39,  -15,  -15,
+			    0,    0,    0,    0,    0,    0,  -15,    0,   38,    0,
+			    0,    0,    0,   37,    0,    0,    0,    0,  -15,    0,
+			  -15,  -15,    0,   36,   35,   34,   33,    0,    0,  -15,
+			    0,    0,   32,    0,    0,    0,    0,    0,    0,    0,
+			    0,    0,  352,    0,   30,   29,   28,   27,   26,   25,
+			   24,   23,   22,   21,   20,   19,   18,   17,   16,   15,
+			   14,   13,   12,   11,   10,    9,    8,   61,   60,    0,
+			    0,    0,    0,    0,   59,   58,   57,   56,    0,   55,
+
+			    0,    0,   54,   53,   52,   51,    3,   50,   49,    0,
+			    0,   48,    0,    0,   47,    0,   46,    0,    0,   45,
+			   44,   43,    0,    0,   42,   41,    0,   40,    0,    0,
+			    0,    0,    0,   39,    0,    0,    0,  302,    0,    0,
+			    0,    0,    0,    0,   38,    0,    0,    0,    0,   37,
+			    0,    0,    0,    0,    0,    0,    0,    0,    0,   36,
+			   35,   34,   33,    0,    0,    0,    0,    0,   32,    0,
+			    0,    0,    0,    0,    0,    0,    0,    0,   31,    0,
 			   30,   29,   28,   27,   26,   25,   24,   23,   22,   21,
 			   20,   19,   18,   17,   16,   15,   14,   13,   12,   11,
-			   10,    9,    8,   60,   59,    0,    0,    0,    0,    0,
-			   58,   57,   56,   55,    0,   54,    0,    0,   53,   52,
-			   51,   50,    3,   49,   48,    0,    0,   47,    0,    0,
-			   46,    0,   45,    0,    0,   44,    0,   43,    0,    0,
+
+			   10,    9,    8,   61,   60,    0,    0,    0,    0,    0,
+			   59,   58,   57,   56,    0,   55,    0,    0,   54,   53,
+			   52,   51,    3,   50,   49,    0,    0,   48,    0,    0,
+			   47,    0,   46,    0,    0,   45,   44,   43,    0,    0,
 			   42,   41,    0,   40,    0,    0,    0,    0,    0,   39,
-			  182,  181,  180,  179,  178,  177,  176,   58,    0,    0,
+			    0,    0,    0,    0,    0,    0,    0,    0,    0,    0,
 			   38,    0,    0,    0,    0,   37,    0,    0,    0,    0,
-
 			    0,    0,    0,    0,    0,   36,   35,   34,   33,    0,
-			    0,    0,    0,    0,   32,    0,    0,    0,  267,    0,
+			    0,    0,    0,    0,   32,    0,    0,    0,  299,    0,
 			    0,    0,    0,    0,   31,    0,   30,   29,   28,   27,
-			   26,   25,   24,   23,   22,   21,   20,   19,   18,   17,
-			   16,   15,   14,   13,   12,   11,   10,    9,    8,   60,
-			   59,    0,    0,    0,    0,    0,   58,   57,   56,   55,
-			    0,   54,    0,    0,   53,   52,   51,   50,    3,   49,
-			   48,    0,    0,   47,    0,    0,   46,    0,   45,    0,
-			  233,   44,    0,   43,    0,    0,   42,   41,    0,   40,
-			    0,    0,    0,    0,    0,   39,    0,    0,    0,    0,
 
+			   26,   25,   24,   23,   22,   21,   20,   19,   18,   17,
+			   16,   15,   14,   13,   12,   11,   10,    9,    8,   61,
+			   60,    0,    0,    0,    0,    0,   59,   58,   57,   56,
+			    0,   55,    0,    0,   54,   53,   52,   51,    3,   50,
+			   49,    0,    0,   48,    0,    0,   47,    0,   46,    0,
+			  263,   45,   44,   43,    0,    0,   42,   41,    0,   40,
+			    0,    0,    0,    0,    0,   39,    0,    0,    0,    0,
 			    0,    0,    0,    0,    0,    0,   38,    0,    0,    0,
 			    0,   37,    0,    0,    0,    0,    0,    0,    0,    0,
 			    0,   36,   35,   34,   33,    0,    0,    0,    0,    0,
+
 			   32,    0,    0,    0,    0,    0,    0,    0,    0,    0,
 			   31,    0,   30,   29,   28,   27,   26,   25,   24,   23,
 			   22,   21,   20,   19,   18,   17,   16,   15,   14,   13,
-			   12,   11,   10,    9,    8,   60,   59,    0,    0,    0,
-			    0,    0,   58,   57,   56,   55,    0,   54,    0,    0,
-			   53,   52,   51,   50,    3,   49,   48,    0,    0,   47,
-			    0,    0,   46,    0,   45,    0,    0,   44,    0,   43,
-
+			   12,   11,   10,    9,    8,   61,   60,    0,    0,    0,
+			    0,    0,   59,   58,   57,   56,    0,   55,    0,    0,
+			   54,   53,   52,   51,    3,   50,   49,    0,    0,   48,
+			    0,    0,   47,    0,   46,    0,    0,   45,   44,   43,
 			    0,    0,   42,   41,    0,   40,    0,    0,    0,    0,
 			    0,   39,    0,    0,    0,    0,    0,    0,    0,    0,
 			    0,    0,   38,    0,    0,    0,    0,   37,    0,    0,
+
 			    0,    0,    0,    0,    0,    0,    0,   36,   35,   34,
 			   33,    0,    0,    0,    0,    0,   32,    0,    0,    0,
 			    0,    0,    0,    0,    0,    0,   31,    0,   30,   29,
 			   28,   27,   26,   25,   24,   23,   22,   21,   20,   19,
 			   18,   17,   16,   15,   14,   13,   12,   11,   10,    9,
-			    8,   60,   59,    0,    0,    0,    0,    0,   58,   57,
-			   56,   55,    0,   54,    0,    0,   53,   52,   51,   50,
-
-			    3,   49,   48,    0,    0,   47,    0,    0,   46,    0,
-			   45,    0,    0,  308,    0,   43,    0,    0,   42,   41,
+			    8,   61,   60,    0,    0,    0,    0,    0,   59,   58,
+			   57,   56,    0,   55,    0,    0,   54,   53,   52,   51,
+			    3,   50,   49,    0,    0,   48,    0,    0,   47,    0,
+			   46,    0,    0,   45,   44,   43,    0,    0,   42,   41,
 			    0,   40,    0,    0,    0,    0,    0,   39,    0,    0,
+
 			    0,    0,    0,    0,    0,    0,    0,    0,   38,    0,
 			    0,    0,    0,   37,    0,    0,    0,    0,    0,    0,
 			    0,    0,    0,   36,   35,   34,   33,    0,    0,    0,
 			    0,    0,   32,    0,    0,    0,    0,    0,    0,    0,
-			    0,    0,  307,    0,   30,   29,   28,   27,   26,   25,
+			    0,    0,  352,    0,   30,   29,   28,   27,   26,   25,
 			   24,   23,   22,   21,   20,   19,   18,   17,   16,   15,
-			   14,   13,   12,   11,   10,    9,    8,   60,   59,    0,
+			   14,   13,   12,   11,   10,    9,    8,   61,   60,    0,
+			    0,    0,    0,    0,   59,   58,   57,   56,    0,   55,
+			    0,    0,  315,   53,  314,   51,    3,   50,   49,    0,
+			    0,   48,    0,    0,   47,    0,   46,    0,    0,   45,
 
-			    0,    0,    0,    0,   58,   57,   56,   55,    0,   54,
-			    0,    0,  173,   52,   51,   50,    3,   49,   48,    0,
-			    0,   47,    0,    0,   46,    0,   45,    0,    0,   44,
-			    0,   43,    0,    0,   42,   41,    0,   40,    0,    0,
+			   44,   43,    0,    0,   42,   41,    0,   40,    0,    0,
 			    0,    0,    0,   39,    0,    0,    0,    0,    0,    0,
 			    0,    0,    0,    0,   38,    0,    0,    0,    0,   37,
 			    0,    0,    0,    0,    0,    0,    0,    0,    0,   36,
 			   35,   34,   33,    0,    0,    0,    0,    0,   32,    0,
 			    0,    0,    0,    0,    0,    0,    0,    0,   31,    0,
 			   30,   29,   28,   27,   26,   25,   24,   23,   22,   21,
-
 			   20,   19,   18,   17,   16,   15,   14,   13,   12,   11,
-			   10,    9,    8,   60,   59,    0,    0,    0,    0,    0,
-			   58,   57,   56,   55,    0,   54,    0,    0,  171,   52,
-			   51,   50,    3,   49,   48,    0,    0,   47,    0,    0,
-			   46,    0,   45,    0,    0,   44,    0,   43,    0,    0,
+			   10,    9,    8,   61,   60,    0,    0,    0,    0,    0,
+			   59,   58,   57,   56,    0,   55,    0,    0,  313,   53,
+
+			  312,   51,    3,   50,   49,    0,    0,   48,    0,    0,
+			   47,    0,   46,    0,    0,   45,   44,   43,    0,    0,
 			   42,   41,    0,   40,    0,    0,    0,    0,    0,   39,
 			    0,    0,    0,    0,    0,    0,    0,    0,    0,    0,
 			   38,    0,    0,    0,    0,   37,    0,    0,    0,    0,
 			    0,    0,    0,    0,    0,   36,   35,   34,   33,    0,
 			    0,    0,    0,    0,   32,    0,    0,    0,    0,    0,
-
 			    0,    0,    0,    0,   31,    0,   30,   29,   28,   27,
 			   26,   25,   24,   23,   22,   21,   20,   19,   18,   17,
-			   16,   15,   14,   13,   12,   11,   10,    9,    8,  289,
-			  288,    0,    0,    0,    0,    0,    0,    0,    0,    0,
-			    0,    0,    0,    0,   53,   52,  287,   50,    3,   49,
-			   48,    0,  286,  -10,  -10,    0,   46,    0,    0,    0,
-			    0,    0,    0,    0,    0,    0,   42,   41,  -10,  -10,
-			  -10,  -10,  -10,  -10,  -10,    0,  -10,  289,  288,    0,
-			  -10,    0,    0,    0,    0,    0,    0,    0,    0,    0,
-			  -10,  -10,   53,   52,  287,   50,    3,   49,   48,    0,
+			   16,   15,   14,   13,   12,   11,   10,    9,    8,   61,
 
-			    0,    0,    0,    0,   46,    0,    0,    0,    0,    0,
-			    0,    0,    0,    0,   42,   41,    0,    0,    0,    0,
-			    0,    0,   30,   29,   28,    0,   26,   25,   24,   23,
+			   60,    0,    0,    0,    0,    0,   59,   58,   57,   56,
+			    0,   55,    0,    0,  190,   53,  189,   51,    3,   50,
+			   49,    0,    0,   48,    0,    0,   47,    0,   46,    0,
+			    0,   45,   44,   43,    0,    0,   42,   41,    0,   40,
+			    0,    0,    0,    0,    0,   39,    0,    0,    0,    0,
+			    0,    0,    0,    0,    0,    0,   38,    0,    0,    0,
+			    0,   37,    0,    0,    0,    0,    0,    0,    0,    0,
+			    0,   36,   35,   34,   33,    0,    0,    0,    0,    0,
+			   32,    0,    0,    0,    0,    0,    0,    0,    0,    0,
+			   31,    0,   30,   29,   28,   27,   26,   25,   24,   23,
+
 			   22,   21,   20,   19,   18,   17,   16,   15,   14,   13,
-			   12,   11,   10,    9,    8,    0,  -10,  -10,  -10,    0,
-			  -10,  -10,  -10,  -10,  -10,  -10,  -10,  -10,  -10,  -10,
-			  -10,  -10,  -10,  -10,  -10,  -10,  -10,  -10,  -10,    0,
+			   12,   11,   10,    9,    8,   61,   60,    0,    0,    0,
+			    0,    0,   59,   58,   57,   56,    0,   55,    0,    0,
+			  186,   53,  185,   51,    3,   50,   49,    0,    0,   48,
+			    0,    0,   47,    0,   46,    0,    0,   45,   44,   43,
+			    0,    0,   42,   41,    0,   40,    0,    0,    0,    0,
+			    0,   39,    0,    0,    0,    0,    0,    0,    0,    0,
+			    0,    0,   38,    0,    0,    0,    0,   37,    0,    0,
+			    0,    0,    0,    0,    0,    0,    0,   36,   35,   34,
+			   33,    0,    0,    0,    0,    0,   32,    0,    0,    0,
+
+			    0,    0,    0,    0,    0,    0,   31,    0,   30,   29,
+			   28,   27,   26,   25,   24,   23,   22,   21,   20,   19,
+			   18,   17,   16,   15,   14,   13,   12,   11,   10,    9,
+			    8,  -11,  -11,    0,    0,    0,    0,    0,    0,    0,
+			    0,    0,    0,    0,    0,    0,  -11,  -11,  -11,  -11,
+			  -11,  -11,  -11,    0,  -11,  329,  328,    0,  -11,    0,
+			    0,    0,    0,  -11,  -11,    0,    0,    0,  -11,  -11,
+			   54,   53,   52,   51,    3,   50,   49,    0,    0,    0,
+			    0,    0,   47,    0,    0,    0,    0,  132,   44,    0,
+			    0,    0,   42,   41,    0,  209,  208,  207,  206,  205,
+
+			  204,  203,  202,  201,  200,  199,  198,  197,  196,  195,
+			  194,  193,   59,    0,    0,    0,    0,    0,    0,    0,
+			    0,    0,    0,    0,  -11,  -11,  -11,    0,  -11,  -11,
+			  -11,  -11,  -11,  -11,  -11,  -11,  -11,  -11,  -11,  -11,
+			  -11,  -11,  -11,  -11,  -11,  -11,  -11,    0,   30,   29,
+			   28,    0,   26,   25,   24,   23,   22,   21,   20,   19,
+			   18,   17,   16,   15,   14,   13,   12,   11,   10,    9,
+			    8,  329,  328,    0,    0,    0,    0,    0,    0,    0,
+			    0,    0,    0,    0,    0,    0,   54,   53,   52,   51,
+			  817,   50,    0,    0,    0,    0,    0,    0,    0,    0,
+
+			    0,    0,    0,  132,   44,    0,    0,    0,   42,   41,
+			    0,    0,   51,  205,  204,  203,  202,  201,  200,  199,
+			  198,  197,  196,  195,  194,  193,   59,   44,    0,    0,
+			    0,    0,  594,    0,    0,   51,    0,    0,    0,  209,
+			  208,  207,  206,  205,  204,  203,  202,  201,  200,  199,
+			  198,  197,  196,  195,  194,  193,   59,    0,  593,    0,
+			    0,    0,    0,    0,   30,   29,   28,    0,   26,   25,
+			   24,   23,   22,   21,   20,   19,   18,   17,   16,   15,
+			   14,   13,   12,   11,   10,    9,    8,   30,   29,   28,
+			   51,   26,   25,   24,   23,   22,   21,   20,   19,   18,
+
+			   17,   16,   15,   14,   13,   12,   11,   10,    9,    8,
 			   30,   29,   28,    0,   26,   25,   24,   23,   22,   21,
 			   20,   19,   18,   17,   16,   15,   14,   13,   12,   11,
-			   10,    9,    8,  289,  288,    0,    0,    0,    0,    0,
+			   10,    9,    8,   51,  738,    0,    0,    0,    0,    0,
+			    0,    0,    0,    0,    0,    0,  739,  159,  158,  157,
+			  156,  155,  154,  153,  152,  151,  150,  149,  148,  147,
+			  146,  145,  144,  143,    0,  142,   29,    0,    0,   26,
+			   25,   24,   23,   22,   21,   20,   19,   18,   17,   16,
+			   15,   14,   13,   12,   11,   10,    9,    8,  209,  208,
+			  207,  206,  205,  204,  203,  202,  201,  200,  199,  198,
 
-			    0,    0,    0,    0,    0,    0,    0,    0,   53,   52,
-			  287,   50,    0,   49,  190,  189,  188,  187,  186,  185,
-			  184,  183,  182,  181,  180,  179,  178,  177,  176,   58,
-			   42,   41,  192,  191,  190,  189,  188,  187,  186,  185,
-			  184,  183,  182,  181,  180,  179,  178,  177,  176,   58,
-			    0,    0,    0,    0,  588,    0,    0,    0,   50,    0,
-			    0,  192,  191,  190,  189,  188,  187,  186,  185,  184,
-			  183,  182,  181,  180,  179,  178,  177,  176,   58,    0,
-			  587,   50,    0,    0,    0,    0,   30,   29,   28,    0,
-			   26,   25,   24,   23,   22,   21,   20,   19,   18,   17,
+			  197,  196,  195,  194,  193,   59,    0,    0,    0,   29,
+			    0,    0,   26,   25,   24,   23,   22,   21,   20,   19,
+			   18,   17,   16,   15,   14,   13,   12,   11,   10,    9,
+			    8,  223,  222,    0,    0,    0,    0,    0,   59,   58,
+			   57,   56,  221,   55,    0,    0,  220,  219,  218,    0,
+			    3,    0,   49,    0,    0,   48,    0,    0,   47,    0,
+			   46,    0,    0,  217,    0,   43,    0,  812,    0,    0,
+			    0,   40,    0,    0,    0,    0,    0,   39,    0,    0,
+			    0,    0,    0,    0,    0,    0,    0,    0,   38,    0,
+			    0,    0,    0,   37,    0,    0,    0,    0,    0,    0,
 
-			   16,   15,   14,   13,   12,   11,   10,    9,    8,   50,
-			    0,    0,    0,    0,    0,    0,    0,    0,    0,    0,
-			    0,    0,  730,    0,    0,    0,    0,    0,    0,    0,
-			    0,    0,  720,   30,   29,   28,    0,   26,   25,   24,
-			   23,   22,   21,   20,   19,   18,   17,   16,   15,   14,
-			   13,   12,   11,   10,    9,    8,  809,   29,    0,    0,
-			   26,   25,   24,   23,   22,   21,   20,   19,   18,   17,
-			   16,   15,   14,   13,   12,   11,   10,    9,    8,    0,
-			    0,    0,    0,    0,    0,   29,    0,    0,   26,   25,
-			   24,   23,   22,   21,   20,   19,   18,   17,   16,   15,
+			    0,    0,    0,    0,   35,   34,   33,    0,    0,    0,
+			    0,    0,   32,    0,    0,    0,    0,    0,    0,    0,
+			    0,    0,   31,    0,    0,    0,    0,   27,  209,  208,
+			  207,  206,  205,  204,  203,  202,  201,  200,  199,  198,
+			  197,  196,  195,  194,  193,   59,  209,  208,  207,  206,
+			  205,  204,  203,  202,  201,  200,  199,  198,  197,  196,
+			  195,  194,  193,   59,    0,    0,    0,    0,    0,  747,
+			  208,  207,  206,  205,  204,  203,  202,  201,  200,  199,
+			  198,  197,  196,  195,  194,  193,   59,  363,  209,  208,
+			  207,  206,  205,  204,  203,  202,  201,  200,  199,  198,
 
-			   14,   13,   12,   11,   10,    9,    8,  192,  191,  190,
-			  189,  188,  187,  186,  185,  184,  183,  182,  181,  180,
-			  179,  178,  177,  176,   58,  192,  191,  190,  189,  188,
-			  187,  186,  185,  184,  183,  182,  181,  180,  179,  178,
-			  177,  176,   58,  192,  191,  190,  189,  188,  187,  186,
-			  185,  184,  183,  182,  181,  180,  179,  178,  177,  176,
-			   58,    0,  192,  191,  190,  189,  188,  187,  186,  185,
-			  184,  183,  182,  181,  180,  179,  178,  177,  176,   58,
-			    0,    0,    0,    0,  738,  191,  190,  189,  188,  187,
-			  186,  185,  184,  183,  182,  181,  180,  179,  178,  177,
-
-			  176,   58,  729,  320,  803,  192,  191,  190,  189,  188,
-			  187,  186,  185,  184,  183,  182,  181,  180,  179,  178,
-			  177,  176,   58,  192,  191,  190,  189,  188,  187,  186,
-			  185,  184,  183,  182,  181,  180,  179,  178,  177,  176,
-			   58,    0,    0,    0,    0,    0,  306,  144,  143,  142,
-			  141,  140,  139,  138,  137,  136,  135,  134,  133,  132,
-			  131,  130,  129,  128,  249,  127,  192,  191,  190,  189,
-			  188,  187,  186,  185,  184,  183,  182,  181,  180,  179,
-			  178,  177,  176,   58,  189,  188,  187,  186,  185,  184,
-			  183,  182,  181,  180,  179,  178,  177,  176,   58,  188,
-
-			  187,  186,  185,  184,  183,  182,  181,  180,  179,  178,
-			  177,  176,   58>>)
+			  197,  196,  195,  194,  193,   59,  209,  208,  207,  206,
+			  205,  204,  203,  202,  201,  200,  199,  198,  197,  196,
+			  195,  194,  193,   59,    0,    0,    0,    0,    0,  351,
+			  207,  206,  205,  204,  203,  202,  201,  200,  199,  198,
+			  197,  196,  195,  194,  193,   59,    0,  279,  209,  208,
+			  207,  206,  205,  204,  203,  202,  201,  200,  199,  198,
+			  197,  196,  195,  194,  193,   59,  206,  205,  204,  203,
+			  202,  201,  200,  199,  198,  197,  196,  195,  194,  193,
+			   59>>)
 		end
 
 	yycheck_template: ANY is
@@ -13141,152 +19593,171 @@ feature {NONE} -- Table templates
 			-- but once functions cannot be declared with anchored types.
 		once
 			Result := yyfixed_array (<<
-			    0,  146,  105,    2,  219,  169,  219,  219,  374,  543,
-			  384,  219,   93,   36,  148,   73,  103,    7,   93,  620,
-			   33,  199,  623,   33,   33,  366,   93,  576,   48,   66,
-			   64,  443,   66,   44,   34,   26,   33,   46,   75,  588,
-			   33,  175,   33,   36,   40,  457,   66,    4,   33,  500,
-			    0,   33,  653,  420,   36,   54,   55,   47,   57,  457,
-			  631,   26,   40,  197,  198,   40,   76,   49,   33,   60,
-			   33,   68,  673,   72,   33,   60,   35,   36,  529,   89,
-			   91,   46,   95,  654,  685,   76,   95,   44,   81,  660,
-			   33,   48,   92,   93,   91,   60,   40,  464,   89,   81,
+			    2,  107,   36,  249,  370,  183,    7,  249,  119,  409,
+			  105,  549,  225,  249,  249,  249,   40,  163,  249,  117,
+			  107,    4,  249,   60,   61,    0,    0,  107,   26,  504,
+			   76,   34,  277,   40,   33,  249,   33,   38,  449,   36,
+			  107,   47,   26,  138,   47,   25,  192,   48,   46,   33,
+			   30,  431,  463,   55,   56,   40,   58,   60,   61,   66,
+			    0,   44,   45,  538,  463,   33,   49,   28,  214,  215,
+			  216,   33,   33,   75,   62,   63,   60,  626,   46,    0,
+			  629,   33,   70,   58,   81,   66,  107,   62,   62,    0,
+			  470,   66,   76,   68,   34,   70,   95,   85,   73,   73,
 
-			  512,  702,  553,  281,   95,   98,  106,   33,  498,  109,
-			   36,   76,  123,   76,  512,  105,   98,  107,  108,   25,
-			  119,   99,   81,   49,   89,  124,   89,  214,  215,  344,
-			   95,  344,  344,   76,  668,   72,  344,  708,  219,   98,
-			  105,   78,  532,   33,  219,    0,   89,   53,  148,  160,
-			   56,  737,   34,  152,   26,   81,   46,  147,  729,   96,
-			  527,  118,  536,  537,   33,  165,  752,  225,   28,  169,
-			   33,  742,   98,   33,   46,  175,   25,  176,  177,  178,
-			  179,  180,  181,  182,  183,  184,  185,  186,  187,  188,
-			  189,  190,  191,  192,  193,  329,  219,  197,  198,  210,
+			  106,   98,  347,  348,  107,   89,   68,  518,   60,  322,
+			  659,   95,  357,   94,   99,   76,  723,  362,  119,  518,
+			  121,  122,   40,   98,   66,   33,  678,   95,   89,   91,
+			  679,  133,  377,   75,   37,  506,  674,  139,   46,  746,
+			  386,   26,  691,   46,  386,  240,  244,  245,  243,  132,
+			  386,  386,  386,  533,   39,  386,  401,  678,  161,  386,
+			   48,  162,  249,  712,  535,  167,  106,  107,   76,  249,
+			   33,   33,  386,  418,   14,   15,   66,  178,   66,  678,
+			  120,   89,  249,  123,   47,  222,  223,   66,  559,  637,
+			   30,  193,  194,  195,  196,  197,  198,  199,  200,  201,
 
-			   33,  379,  213,   68,  194,   70,  777,  164,   71,  640,
-			  781,   69,   75,   46,   40,   62,   76,  648,   37,  219,
-			  220,  221,   33,   66,   66,   36,   73,  109,  595,   89,
-			  229,  231,  803,   98,   33,   46,  414,  237,  809,  229,
-			   66,   37,  241,   76,  611,   64,   65,   66,   67,   26,
-			   46,   94,   33,  243,  244,   36,   89,  315,  248,   26,
-			   79,   60,   39,  344,  442,   46,  148,   33,  267,  344,
-			   81,  270,  353,   40,  274,   94,  642,   25,  353,   30,
-			   66,   47,   33,  102,  103,  104,  353,   98,   25,  656,
-			   38,  436,  282,  175,   64,   40,   66,  308,   47,  157,
+			  202,  203,  204,  205,  206,  207,  208,  209,  210,  255,
+			  211,   33,  660,  582,   76,  249,   72,   33,  666,  222,
+			  223,  601,   78,  163,   26,  594,  372,   89,  249,  750,
+			  782,  783,  784,  785,  217,  448,   65,  617,   40,  179,
+			   96,   40,  464,  183,  466,  467,  249,  469,  648,   70,
+			   49,  750,  192,   33,   76,   35,   36,  259,   25,   64,
+			   76,  782,  783,  784,  785,  311,  787,   89,  490,  271,
+			  718,   38,  273,   89,  214,  215,  216,  278,   68,  501,
+			   70,  221,  662,  782,  783,  784,  785,   33,  787,   30,
+			  738,   25,   33,   40,   25,   40,    3,  299,   45,  386,
 
-			   81,   38,   33,  303,   49,   62,   63,  365,   66,  167,
-			  168,   69,  170,   70,   25,  197,  198,   98,  317,   40,
-			   71,  344,  458,  323,  460,  461,   47,  463,   85,  329,
-			  330,  389,   90,   25,   92,  325,  394,  195,  328,   97,
-			  351,  707,  100,   40,  344,   40,   38,   65,  484,  231,
-			   47,  308,  352,  353,   49,   38,   39,  356,  416,  495,
-			  575,  361,  575,  575,   40,   37,  356,  367,   40,  369,
-			  228,   47,  713,  363,  397,   40,  234,  388,   58,  336,
-			   45,  239,   62,   29,  750,   31,   66,   75,   68,   40,
-			   70,   64,   80,   73,   45,  385,  254,  255,  256,  257,
+			  302,   81,   47,  751,   38,   46,  386,   38,   98,  249,
+			  250,  251,  358,   14,   15,   40,    3,  717,   98,  386,
+			   33,  261,  323,   36,   25,   71,   75,  267,   29,   75,
+			   71,   80,   38,   14,   15,  581,   49,   26,  786,  581,
+			   46,   64,  790,   66,   33,  440,  581,  581,   29,  352,
+			  581,  172,  386,  399,  581,  721,  402,   46,  360,  759,
+			  181,  182,  457,  184,  812,  386,  306,  581,   81,  817,
+			  371,   60,   40,   40,   25,   40,  646,   45,   45,  745,
+			   14,   15,   47,  386,  654,   98,  420,   76,   14,   15,
+			   64,  212,   66,  395,   40,   29,  762,  380,    3,   33,
 
-			  258,  259,  260,  261,  262,  263,  264,  265,  266,    3,
-			  268,  269,  753,  271,  272,  273,  102,  103,   98,   14,
-			   15,  303,  433,   40,   14,   15,    3,   40,   45,  770,
-			  420,  421,   45,    3,   29,   30,   14,   15,   33,   29,
-			  451,   53,  432,   33,   56,  435,    3,  329,  115,  116,
-			   46,   29,  310,   38,   39,   33,  446,  621,  454,   47,
-			   48,  128,  129,  321,  628,   66,  462,   64,   65,   66,
-			   67,   29,   25,   31,  332,  333,   71,  452,  587,  454,
-			  589,   71,   79,  458,   47,  460,  461,  462,  463,  104,
-			  593,   66,  482,  102,  575,   64,  507,   94,   35,  602,
+			   89,   47,   53,   29,   30,   56,   95,   33,   53,  349,
+			   66,   56,   46,   14,   15,   71,  105,   73,  513,   75,
+			   46,  361,   37,   79,   25,   40,  366,  367,   29,   30,
+			  431,  432,  372,  373,   62,   63,  460,  258,  439,  115,
+			  116,  442,   70,  264,  468,   71,  386,    3,  269,  627,
+			   25,  452,  128,  129,   82,   66,  634,   85,   16,   17,
+			   18,   19,   20,   21,  404,  286,  287,  288,  289,  290,
+			  291,  292,  293,  294,  295,  296,  297,  298,   25,  300,
+			  301,   66,  303,  304,  305,   38,   39,  488,  599,  102,
+			  514,  515,   14,   15,  581,  104,   29,  608,   31,   64,
 
-			  575,   47,  360,   20,   21,  102,  103,  104,  452,  484,
-			  454,   66,  508,  509,  458,  247,  460,  461,  462,  463,
-			  495,  103,  518,   25,   62,   63,  741,  523,  524,   47,
-			   48,   25,   70,  508,  509,   59,   60,   41,   42,   25,
-			  484,   66,  542,  518,   82,   25,   37,   85,  523,  524,
-			   26,  495,  575,   79,   37,   59,   66,  547,  773,  774,
-			  560,  776,   66,  778,  508,  509,   94,   71,  558,  301,
-			  302,   75,   99,   27,  518,   79,   66,   39,   67,  523,
-			  524,   71,  314,   73,   40,   75,  576,  319,   93,   79,
-			   82,   64,  582,   75,   49,   66,  596,  596,  588,  599,
+			  524,  581,  102,  103,  750,  529,  530,   29,   30,   31,
+			   29,   29,   31,   31,  581,    4,    5,    6,    7,    8,
+			    9,   10,   11,   12,   13,   14,   15,   16,   17,   18,
+			   19,   20,   21,  354,   38,   39,  782,  783,   37,  785,
+			  458,  787,  460,  364,   20,   21,  464,  581,  466,  467,
+			  468,  469,  553,   35,  375,  376,   66,   29,   66,   31,
+			  581,   69,  593,  564,  595,   64,   65,   66,   67,  542,
+			  543,  103,  490,   25,   25,   25,   25,  398,  581,   26,
+			   79,  582,   90,  501,   92,  568,   33,  588,   35,   97,
+			   25,   66,  100,  594,   41,   94,  514,  515,  599,   46,
 
-			   84,   48,  334,  593,   26,  562,  773,  774,  775,  776,
-			   39,   33,  602,   35,  613,   66,   66,   45,   66,   41,
-			   45,  621,   75,   41,   46,   97,   66,  772,  628,   39,
-			   73,   90,  364,   66,   40,   57,  626,   79,   60,   61,
-			  630,   59,   37,  600,   46,   46,   41,   42,   66,   71,
-			   46,  100,   74,   71,   76,   66,   55,   75,   40,  649,
-			  741,   79,   71,  395,   59,   87,  741,   89,   40,  659,
-			   41,   66,  672,   95,  741,  686,   71,   69,   66,  678,
-			   75,   42,   59,  682,   79,   48,   37,  687,   47,  646,
-			  689,  106,   50,  774,  775,  776,   26,  778,   41,  774,
+			  602,   14,   15,  102,  103,  104,  524,  608,  548,   25,
+			   57,  529,  530,   60,   61,  104,   29,  619,   26,   37,
+			   33,   41,   42,  606,   71,   79,  566,   74,   37,   76,
+			   66,  632,   94,   46,   99,  636,   66,   27,   34,   59,
+			   87,   71,   89,   73,  750,   75,   66,   39,   95,   79,
+			   67,   71,   33,   40,  655,   75,   82,   64,   71,   79,
+			   93,   49,  602,  750,  665,  605,   66,   66,   48,  652,
+			  750,   75,   84,   66,   39,  678,   45,  783,  784,  785,
+			   66,  787,  684,  750,   75,   45,  688,  627,   66,  692,
+			   39,   97,  694,   90,  634,   66,  783,  784,  785,   73,
 
-			  775,  776,  106,  778,   40,  704,  705,  774,  775,  776,
-			   47,  778,   33,   33,   49,   77,   59,   26,   87,  718,
-			  719,   47,   47,   66,   68,  725,  725,   25,   71,   47,
-			  720,  688,   75,   47,   47,   66,   79,  737,   48,   62,
-			   63,  741,   87,   47,   25,   46,   38,   70,   45,   39,
-			  608,   47,  752,   47,   47,  712,   29,  747,  748,   82,
-			  618,   84,   85,   47,  763,  764,   29,   47,   70,   35,
-			   93,   62,   63,  773,  774,  775,  776,  767,  778,   70,
-			   44,   40,  106,   25,   49,  784,   25,   58,   38,   68,
-			   27,   82,   26,   84,   85,   46,  565,   46,  541,   14,
+			  787,   40,   79,  783,  784,  785,   46,  787,   46,   46,
+			  693,   33,  714,  715,   66,  100,  783,  784,  785,   55,
+			  787,   64,   65,   66,   67,  727,  728,  123,  729,  750,
+			   40,   40,  734,  458,   69,  460,   79,   71,  678,  464,
+			   66,  466,  467,  468,  469,   41,   59,  750,   42,   48,
+			   37,   94,  692,   50,   40,  756,  757,   49,   33,  102,
+			  103,  104,  783,  784,  785,  490,  787,  163,   33,   77,
+			   26,   26,  774,  775,   25,   66,  501,  778,   48,  782,
+			  783,  784,  785,  723,  787,  106,   45,   29,   29,  514,
+			  515,  793,   25,  614,  734,   47,  192,   41,   41,  524,
 
-			   15,  450,   93,  450,   41,   42,   21,   22,   23,   24,
-			  810,   26,  505,  450,   29,   30,   31,   32,   33,   34,
-			   35,   45,   59,   38,  628,  470,   41,  560,   43,   66,
-			   45,   46,  295,   48,   71,  581,   51,   52,   75,   54,
-			   77,  641,   79,  701,   66,   60,  523,   84,  706,   71,
-			  591,   73,  672,   75,  672,  356,   71,   79,  432,  717,
-			  672,   76,   16,   17,   18,   19,   20,   21,  303,  727,
-			  728,   86,   87,   88,   89,  672,  778,  672,  672,  672,
-			   95,  739,  740,  672,  648,  426,  515,  745,  494,  767,
-			  105,  483,  107,  108,  109,  110,  111,  112,  113,  114,
+			   47,   39,   70,  624,  529,  530,  746,   29,   29,   35,
+			  750,   47,   44,   40,   49,   59,   59,   46,  214,  215,
+			  216,   25,   66,   66,   25,   38,   26,   71,   71,   68,
+			   58,   75,   75,   38,   27,   79,   79,   14,   15,  547,
+			  456,  571,  782,  783,  784,  785,  456,  787,   41,   42,
+			  511,   46,   29,   30,   31,   32,   33,   34,   35,  456,
+			   37,  634,  476,  566,   41,  261,   59,  443,  335,   46,
+			   47,  587,   37,   66,   51,   52,   41,   42,   71,   62,
+			   63,  647,   75,   66,   77,  597,   79,   70,  272,  529,
+			  711,   84,   75,  678,   59,  716,  439,  395,  787,   82,
 
-			  115,  116,  117,  118,  119,  120,  121,  122,  123,  124,
-			  125,  126,  127,  128,  129,  446,  509,   14,   15,  575,
-			  723,  779,  780,  344,   21,   22,   23,   24,  303,   26,
-			  672,   -1,   29,   30,   31,   32,   33,   34,   35,   -1,
-			   -1,   38,   -1,   -1,   41,   -1,   43,   -1,  806,   46,
-			   -1,   48,   -1,   -1,   51,   52,   -1,   54,   -1,   -1,
-			   -1,   -1,   -1,   60,   62,   63,   -1,   64,   66,   -1,
-			   -1,   -1,   70,   -1,   71,   -1,   -1,   75,   -1,   76,
-			   -1,   -1,   -1,   -1,   82,   -1,   -1,   85,   -1,   86,
-			   87,   88,   89,   -1,   -1,   -1,   94,   -1,   95,   -1,
+			  678,   66,   85,  678,  678,  726,   71,  678,  678,  678,
+			   75,   94,  349,  678,   79,  736,  737,  654,  489,  102,
+			  103,  437,  521,  102,  778,  452,  500,  748,  749,  515,
+			  107,  108,  109,  754,  111,  112,  113,  114,  115,  116,
+			  117,  118,  119,  120,  121,  122,  123,  124,  125,  126,
+			  127,  128,  129,  349,   14,   15,   16,   17,   18,   19,
+			   20,   21,   62,   63,  732,  386,  349,  788,  789,  581,
+			   70,   14,   15,  678,   -1,   -1,  372,   -1,   21,   22,
+			   23,   24,   82,   26,   84,   85,   29,   30,   31,   32,
+			   33,   34,   35,   93,  815,   38,   -1,   -1,   41,   -1,
 
-			   -1,   -1,   -1,   -1,  102,  103,   -1,   -1,  105,   -1,
+			   43,   -1,   45,   46,   47,   48,   -1,   -1,   51,   52,
+			   -1,   54,   -1,   -1,   -1,   -1,   -1,   60,   62,   63,
+			   -1,   -1,   -1,   -1,   -1,   -1,   70,   -1,   71,   -1,
+			   -1,   -1,   -1,   76,   -1,   -1,   -1,   -1,   82,   -1,
+			   84,   85,   -1,   86,   87,   88,   89,   -1,   -1,   93,
+			   -1,   -1,   95,   -1,   -1,   -1,   -1,   -1,   -1,   -1,
+			   -1,   -1,  105,   -1,  107,  108,  109,  110,  111,  112,
+			  113,  114,  115,  116,  117,  118,  119,  120,  121,  122,
+			  123,  124,  125,  126,  127,  128,  129,   14,   15,   -1,
+			   -1,   -1,   -1,   -1,   21,   22,   23,   24,   -1,   26,
+
+			   -1,   -1,   29,   30,   31,   32,   33,   34,   35,   -1,
+			   -1,   38,   -1,   -1,   41,   -1,   43,   -1,   -1,   46,
+			   47,   48,   -1,   -1,   51,   52,   -1,   54,   -1,   -1,
+			   -1,   -1,   -1,   60,   -1,   -1,   -1,   64,   -1,   -1,
+			   -1,   -1,   -1,   -1,   71,   -1,   -1,   -1,   -1,   76,
+			   -1,   -1,   -1,   -1,   -1,   -1,   -1,   -1,   -1,   86,
+			   87,   88,   89,   -1,   -1,   -1,   -1,   -1,   95,   -1,
+			   -1,   -1,   -1,   -1,   -1,   -1,   -1,   -1,  105,   -1,
 			  107,  108,  109,  110,  111,  112,  113,  114,  115,  116,
 			  117,  118,  119,  120,  121,  122,  123,  124,  125,  126,
+
 			  127,  128,  129,   14,   15,   -1,   -1,   -1,   -1,   -1,
 			   21,   22,   23,   24,   -1,   26,   -1,   -1,   29,   30,
 			   31,   32,   33,   34,   35,   -1,   -1,   38,   -1,   -1,
-			   41,   -1,   43,   -1,   -1,   46,   -1,   48,   -1,   -1,
+			   41,   -1,   43,   -1,   -1,   46,   47,   48,   -1,   -1,
 			   51,   52,   -1,   54,   -1,   -1,   -1,   -1,   -1,   60,
-			   14,   15,   16,   17,   18,   19,   20,   21,   -1,   -1,
+			   -1,   -1,   -1,   -1,   -1,   -1,   -1,   -1,   -1,   -1,
 			   71,   -1,   -1,   -1,   -1,   76,   -1,   -1,   -1,   -1,
-
 			   -1,   -1,   -1,   -1,   -1,   86,   87,   88,   89,   -1,
 			   -1,   -1,   -1,   -1,   95,   -1,   -1,   -1,   99,   -1,
 			   -1,   -1,   -1,   -1,  105,   -1,  107,  108,  109,  110,
+
 			  111,  112,  113,  114,  115,  116,  117,  118,  119,  120,
 			  121,  122,  123,  124,  125,  126,  127,  128,  129,   14,
 			   15,   -1,   -1,   -1,   -1,   -1,   21,   22,   23,   24,
 			   -1,   26,   -1,   -1,   29,   30,   31,   32,   33,   34,
 			   35,   -1,   -1,   38,   -1,   -1,   41,   -1,   43,   -1,
-			   45,   46,   -1,   48,   -1,   -1,   51,   52,   -1,   54,
+			   45,   46,   47,   48,   -1,   -1,   51,   52,   -1,   54,
 			   -1,   -1,   -1,   -1,   -1,   60,   -1,   -1,   -1,   -1,
-
 			   -1,   -1,   -1,   -1,   -1,   -1,   71,   -1,   -1,   -1,
 			   -1,   76,   -1,   -1,   -1,   -1,   -1,   -1,   -1,   -1,
 			   -1,   86,   87,   88,   89,   -1,   -1,   -1,   -1,   -1,
+
 			   95,   -1,   -1,   -1,   -1,   -1,   -1,   -1,   -1,   -1,
 			  105,   -1,  107,  108,  109,  110,  111,  112,  113,  114,
 			  115,  116,  117,  118,  119,  120,  121,  122,  123,  124,
 			  125,  126,  127,  128,  129,   14,   15,   -1,   -1,   -1,
 			   -1,   -1,   21,   22,   23,   24,   -1,   26,   -1,   -1,
 			   29,   30,   31,   32,   33,   34,   35,   -1,   -1,   38,
-			   -1,   -1,   41,   -1,   43,   -1,   -1,   46,   -1,   48,
-
+			   -1,   -1,   41,   -1,   43,   -1,   -1,   46,   47,   48,
 			   -1,   -1,   51,   52,   -1,   54,   -1,   -1,   -1,   -1,
 			   -1,   60,   -1,   -1,   -1,   -1,   -1,   -1,   -1,   -1,
 			   -1,   -1,   71,   -1,   -1,   -1,   -1,   76,   -1,   -1,
+
 			   -1,   -1,   -1,   -1,   -1,   -1,   -1,   86,   87,   88,
 			   89,   -1,   -1,   -1,   -1,   -1,   95,   -1,   -1,   -1,
 			   -1,   -1,   -1,   -1,   -1,   -1,  105,   -1,  107,  108,
@@ -13294,10 +19765,10 @@ feature {NONE} -- Table templates
 			  119,  120,  121,  122,  123,  124,  125,  126,  127,  128,
 			  129,   14,   15,   -1,   -1,   -1,   -1,   -1,   21,   22,
 			   23,   24,   -1,   26,   -1,   -1,   29,   30,   31,   32,
-
 			   33,   34,   35,   -1,   -1,   38,   -1,   -1,   41,   -1,
-			   43,   -1,   -1,   46,   -1,   48,   -1,   -1,   51,   52,
+			   43,   -1,   -1,   46,   47,   48,   -1,   -1,   51,   52,
 			   -1,   54,   -1,   -1,   -1,   -1,   -1,   60,   -1,   -1,
+
 			   -1,   -1,   -1,   -1,   -1,   -1,   -1,   -1,   71,   -1,
 			   -1,   -1,   -1,   76,   -1,   -1,   -1,   -1,   -1,   -1,
 			   -1,   -1,   -1,   86,   87,   88,   89,   -1,   -1,   -1,
@@ -13305,1669 +19776,1288 @@ feature {NONE} -- Table templates
 			   -1,   -1,  105,   -1,  107,  108,  109,  110,  111,  112,
 			  113,  114,  115,  116,  117,  118,  119,  120,  121,  122,
 			  123,  124,  125,  126,  127,  128,  129,   14,   15,   -1,
-
 			   -1,   -1,   -1,   -1,   21,   22,   23,   24,   -1,   26,
 			   -1,   -1,   29,   30,   31,   32,   33,   34,   35,   -1,
 			   -1,   38,   -1,   -1,   41,   -1,   43,   -1,   -1,   46,
-			   -1,   48,   -1,   -1,   51,   52,   -1,   54,   -1,   -1,
+
+			   47,   48,   -1,   -1,   51,   52,   -1,   54,   -1,   -1,
 			   -1,   -1,   -1,   60,   -1,   -1,   -1,   -1,   -1,   -1,
 			   -1,   -1,   -1,   -1,   71,   -1,   -1,   -1,   -1,   76,
 			   -1,   -1,   -1,   -1,   -1,   -1,   -1,   -1,   -1,   86,
 			   87,   88,   89,   -1,   -1,   -1,   -1,   -1,   95,   -1,
 			   -1,   -1,   -1,   -1,   -1,   -1,   -1,   -1,  105,   -1,
 			  107,  108,  109,  110,  111,  112,  113,  114,  115,  116,
-
 			  117,  118,  119,  120,  121,  122,  123,  124,  125,  126,
 			  127,  128,  129,   14,   15,   -1,   -1,   -1,   -1,   -1,
 			   21,   22,   23,   24,   -1,   26,   -1,   -1,   29,   30,
+
 			   31,   32,   33,   34,   35,   -1,   -1,   38,   -1,   -1,
-			   41,   -1,   43,   -1,   -1,   46,   -1,   48,   -1,   -1,
+			   41,   -1,   43,   -1,   -1,   46,   47,   48,   -1,   -1,
 			   51,   52,   -1,   54,   -1,   -1,   -1,   -1,   -1,   60,
 			   -1,   -1,   -1,   -1,   -1,   -1,   -1,   -1,   -1,   -1,
 			   71,   -1,   -1,   -1,   -1,   76,   -1,   -1,   -1,   -1,
 			   -1,   -1,   -1,   -1,   -1,   86,   87,   88,   89,   -1,
 			   -1,   -1,   -1,   -1,   95,   -1,   -1,   -1,   -1,   -1,
-
 			   -1,   -1,   -1,   -1,  105,   -1,  107,  108,  109,  110,
 			  111,  112,  113,  114,  115,  116,  117,  118,  119,  120,
 			  121,  122,  123,  124,  125,  126,  127,  128,  129,   14,
-			   15,   -1,   -1,   -1,   -1,   -1,   -1,   -1,   -1,   -1,
-			   -1,   -1,   -1,   -1,   29,   30,   31,   32,   33,   34,
-			   35,   -1,   37,   14,   15,   -1,   41,   -1,   -1,   -1,
-			   -1,   -1,   -1,   -1,   -1,   -1,   51,   52,   29,   30,
-			   31,   32,   33,   34,   35,   -1,   37,   14,   15,   -1,
-			   41,   -1,   -1,   -1,   -1,   -1,   -1,   -1,   -1,   -1,
-			   51,   52,   29,   30,   31,   32,   33,   34,   35,   -1,
 
-			   -1,   -1,   -1,   -1,   41,   -1,   -1,   -1,   -1,   -1,
-			   -1,   -1,   -1,   -1,   51,   52,   -1,   -1,   -1,   -1,
-			   -1,   -1,  107,  108,  109,   -1,  111,  112,  113,  114,
+			   15,   -1,   -1,   -1,   -1,   -1,   21,   22,   23,   24,
+			   -1,   26,   -1,   -1,   29,   30,   31,   32,   33,   34,
+			   35,   -1,   -1,   38,   -1,   -1,   41,   -1,   43,   -1,
+			   -1,   46,   47,   48,   -1,   -1,   51,   52,   -1,   54,
+			   -1,   -1,   -1,   -1,   -1,   60,   -1,   -1,   -1,   -1,
+			   -1,   -1,   -1,   -1,   -1,   -1,   71,   -1,   -1,   -1,
+			   -1,   76,   -1,   -1,   -1,   -1,   -1,   -1,   -1,   -1,
+			   -1,   86,   87,   88,   89,   -1,   -1,   -1,   -1,   -1,
+			   95,   -1,   -1,   -1,   -1,   -1,   -1,   -1,   -1,   -1,
+			  105,   -1,  107,  108,  109,  110,  111,  112,  113,  114,
+
 			  115,  116,  117,  118,  119,  120,  121,  122,  123,  124,
-			  125,  126,  127,  128,  129,   -1,  107,  108,  109,   -1,
-			  111,  112,  113,  114,  115,  116,  117,  118,  119,  120,
-			  121,  122,  123,  124,  125,  126,  127,  128,  129,   -1,
+			  125,  126,  127,  128,  129,   14,   15,   -1,   -1,   -1,
+			   -1,   -1,   21,   22,   23,   24,   -1,   26,   -1,   -1,
+			   29,   30,   31,   32,   33,   34,   35,   -1,   -1,   38,
+			   -1,   -1,   41,   -1,   43,   -1,   -1,   46,   47,   48,
+			   -1,   -1,   51,   52,   -1,   54,   -1,   -1,   -1,   -1,
+			   -1,   60,   -1,   -1,   -1,   -1,   -1,   -1,   -1,   -1,
+			   -1,   -1,   71,   -1,   -1,   -1,   -1,   76,   -1,   -1,
+			   -1,   -1,   -1,   -1,   -1,   -1,   -1,   86,   87,   88,
+			   89,   -1,   -1,   -1,   -1,   -1,   95,   -1,   -1,   -1,
+
+			   -1,   -1,   -1,   -1,   -1,   -1,  105,   -1,  107,  108,
+			  109,  110,  111,  112,  113,  114,  115,  116,  117,  118,
+			  119,  120,  121,  122,  123,  124,  125,  126,  127,  128,
+			  129,   14,   15,   -1,   -1,   -1,   -1,   -1,   -1,   -1,
+			   -1,   -1,   -1,   -1,   -1,   -1,   29,   30,   31,   32,
+			   33,   34,   35,   -1,   37,   14,   15,   -1,   41,   -1,
+			   -1,   -1,   -1,   46,   47,   -1,   -1,   -1,   51,   52,
+			   29,   30,   31,   32,   33,   34,   35,   -1,   -1,   -1,
+			   -1,   -1,   41,   -1,   -1,   -1,   -1,   46,   47,   -1,
+			   -1,   -1,   51,   52,   -1,    4,    5,    6,    7,    8,
+
+			    9,   10,   11,   12,   13,   14,   15,   16,   17,   18,
+			   19,   20,   21,   -1,   -1,   -1,   -1,   -1,   -1,   -1,
+			   -1,   -1,   -1,   -1,  107,  108,  109,   -1,  111,  112,
+			  113,  114,  115,  116,  117,  118,  119,  120,  121,  122,
+			  123,  124,  125,  126,  127,  128,  129,   -1,  107,  108,
+			  109,   -1,  111,  112,  113,  114,  115,  116,  117,  118,
+			  119,  120,  121,  122,  123,  124,  125,  126,  127,  128,
+			  129,   14,   15,   -1,   -1,   -1,   -1,   -1,   -1,   -1,
+			   -1,   -1,   -1,   -1,   -1,   -1,   29,   30,   31,   32,
+			   99,   34,   -1,   -1,   -1,   -1,   -1,   -1,   -1,   -1,
+
+			   -1,   -1,   -1,   46,   47,   -1,   -1,   -1,   51,   52,
+			   -1,   -1,   32,    8,    9,   10,   11,   12,   13,   14,
+			   15,   16,   17,   18,   19,   20,   21,   47,   -1,   -1,
+			   -1,   -1,   75,   -1,   -1,   32,   -1,   -1,   -1,    4,
+			    5,    6,    7,    8,    9,   10,   11,   12,   13,   14,
+			   15,   16,   17,   18,   19,   20,   21,   -1,  101,   -1,
+			   -1,   -1,   -1,   -1,  107,  108,  109,   -1,  111,  112,
+			  113,  114,  115,  116,  117,  118,  119,  120,  121,  122,
+			  123,  124,  125,  126,  127,  128,  129,  107,  108,  109,
+			   32,  111,  112,  113,  114,  115,  116,  117,  118,  119,
+
+			  120,  121,  122,  123,  124,  125,  126,  127,  128,  129,
 			  107,  108,  109,   -1,  111,  112,  113,  114,  115,  116,
 			  117,  118,  119,  120,  121,  122,  123,  124,  125,  126,
-			  127,  128,  129,   14,   15,   -1,   -1,   -1,   -1,   -1,
-
-			   -1,   -1,   -1,   -1,   -1,   -1,   -1,   -1,   29,   30,
-			   31,   32,   -1,   34,    6,    7,    8,    9,   10,   11,
-			   12,   13,   14,   15,   16,   17,   18,   19,   20,   21,
-			   51,   52,    4,    5,    6,    7,    8,    9,   10,   11,
-			   12,   13,   14,   15,   16,   17,   18,   19,   20,   21,
-			   -1,   -1,   -1,   -1,   75,   -1,   -1,   -1,   32,   -1,
-			   -1,    4,    5,    6,    7,    8,    9,   10,   11,   12,
-			   13,   14,   15,   16,   17,   18,   19,   20,   21,   -1,
-			  101,   32,   -1,   -1,   -1,   -1,  107,  108,  109,   -1,
-			  111,  112,  113,  114,  115,  116,  117,  118,  119,  120,
-
-			  121,  122,  123,  124,  125,  126,  127,  128,  129,   32,
-			   -1,   -1,   -1,   -1,   -1,   -1,   -1,   -1,   -1,   -1,
-			   -1,   -1,   45,   -1,   -1,   -1,   -1,   -1,   -1,   -1,
-			   -1,   -1,  104,  107,  108,  109,   -1,  111,  112,  113,
+			  127,  128,  129,   32,   99,   -1,   -1,   -1,   -1,   -1,
+			   -1,   -1,   -1,   -1,   -1,   -1,   45,  111,  112,  113,
 			  114,  115,  116,  117,  118,  119,  120,  121,  122,  123,
-			  124,  125,  126,  127,  128,  129,   99,  108,   -1,   -1,
-			  111,  112,  113,  114,  115,  116,  117,  118,  119,  120,
-			  121,  122,  123,  124,  125,  126,  127,  128,  129,   -1,
-			   -1,   -1,   -1,   -1,   -1,  108,   -1,   -1,  111,  112,
-			  113,  114,  115,  116,  117,  118,  119,  120,  121,  122,
+			  124,  125,  126,  127,   -1,  129,  108,   -1,   -1,  111,
+			  112,  113,  114,  115,  116,  117,  118,  119,  120,  121,
+			  122,  123,  124,  125,  126,  127,  128,  129,    4,    5,
+			    6,    7,    8,    9,   10,   11,   12,   13,   14,   15,
 
-			  123,  124,  125,  126,  127,  128,  129,    4,    5,    6,
-			    7,    8,    9,   10,   11,   12,   13,   14,   15,   16,
-			   17,   18,   19,   20,   21,    4,    5,    6,    7,    8,
-			    9,   10,   11,   12,   13,   14,   15,   16,   17,   18,
-			   19,   20,   21,    4,    5,    6,    7,    8,    9,   10,
-			   11,   12,   13,   14,   15,   16,   17,   18,   19,   20,
-			   21,   -1,    4,    5,    6,    7,    8,    9,   10,   11,
-			   12,   13,   14,   15,   16,   17,   18,   19,   20,   21,
-			   -1,   -1,   -1,   -1,   45,    5,    6,    7,    8,    9,
-			   10,   11,   12,   13,   14,   15,   16,   17,   18,   19,
+			   16,   17,   18,   19,   20,   21,   -1,   -1,   -1,  108,
+			   -1,   -1,  111,  112,  113,  114,  115,  116,  117,  118,
+			  119,  120,  121,  122,  123,  124,  125,  126,  127,  128,
+			  129,   14,   15,   -1,   -1,   -1,   -1,   -1,   21,   22,
+			   23,   24,   25,   26,   -1,   -1,   29,   30,   31,   -1,
+			   33,   -1,   35,   -1,   -1,   38,   -1,   -1,   41,   -1,
+			   43,   -1,   -1,   46,   -1,   48,   -1,   83,   -1,   -1,
+			   -1,   54,   -1,   -1,   -1,   -1,   -1,   60,   -1,   -1,
+			   -1,   -1,   -1,   -1,   -1,   -1,   -1,   -1,   71,   -1,
+			   -1,   -1,   -1,   76,   -1,   -1,   -1,   -1,   -1,   -1,
 
-			   20,   21,   99,   45,   83,    4,    5,    6,    7,    8,
-			    9,   10,   11,   12,   13,   14,   15,   16,   17,   18,
-			   19,   20,   21,    4,    5,    6,    7,    8,    9,   10,
-			   11,   12,   13,   14,   15,   16,   17,   18,   19,   20,
-			   21,   -1,   -1,   -1,   -1,   -1,   45,  111,  112,  113,
-			  114,  115,  116,  117,  118,  119,  120,  121,  122,  123,
-			  124,  125,  126,  127,   45,  129,    4,    5,    6,    7,
+			   -1,   -1,   -1,   -1,   87,   88,   89,   -1,   -1,   -1,
+			   -1,   -1,   95,   -1,   -1,   -1,   -1,   -1,   -1,   -1,
+			   -1,   -1,  105,   -1,   -1,   -1,   -1,  110,    4,    5,
+			    6,    7,    8,    9,   10,   11,   12,   13,   14,   15,
+			   16,   17,   18,   19,   20,   21,    4,    5,    6,    7,
 			    8,    9,   10,   11,   12,   13,   14,   15,   16,   17,
-			   18,   19,   20,   21,    7,    8,    9,   10,   11,   12,
-			   13,   14,   15,   16,   17,   18,   19,   20,   21,    8,
-
-			    9,   10,   11,   12,   13,   14,   15,   16,   17,   18,
-			   19,   20,   21>>)
-		end
+			   18,   19,   20,   21,   -1,   -1,   -1,   -1,   -1,   45,
+			    5,    6,    7,    8,    9,   10,   11,   12,   13,   14,
+			   15,   16,   17,   18,   19,   20,   21,   45,    4,    5,
+			    6,    7,    8,    9,   10,   11,   12,   13,   14,   15,
 
-feature {NONE} -- Conversion
-
-	yytype2 (v: ANY): ACCESS_AS is
-		require
-			valid_type: yyis_type2 (v)
-		do
-			Result ?= v
-		ensure
-			definition: Result = v
+			   16,   17,   18,   19,   20,   21,    4,    5,    6,    7,
+			    8,    9,   10,   11,   12,   13,   14,   15,   16,   17,
+			   18,   19,   20,   21,   -1,   -1,   -1,   -1,   -1,   45,
+			    6,    7,    8,    9,   10,   11,   12,   13,   14,   15,
+			   16,   17,   18,   19,   20,   21,   -1,   45,    4,    5,
+			    6,    7,    8,    9,   10,   11,   12,   13,   14,   15,
+			   16,   17,   18,   19,   20,   21,    7,    8,    9,   10,
+			   11,   12,   13,   14,   15,   16,   17,   18,   19,   20,
+			   21>>)
 		end
 
-	yyis_type2 (v: ANY): BOOLEAN is
-		local
-			u: ACCESS_AS
-		do
-			u ?= v
-			Result := (u = v)
-		end
+feature {NONE} -- Semantic value stacks
 
-	yytype3 (v: ANY): ACCESS_FEAT_AS is
-		require
-			valid_type: yyis_type3 (v)
-		do
-			Result ?= v
-		ensure
-			definition: Result = v
-		end
+	yyvs1: SPECIAL [ANY]
+			-- Stack for semantic values of type ANY
 
-	yyis_type3 (v: ANY): BOOLEAN is
-		local
-			u: ACCESS_FEAT_AS
-		do
-			u ?= v
-			Result := (u = v)
-		end
+	yyvsc1: INTEGER
+			-- Capacity of semantic value stack `yyvs1'
 
-	yytype4 (v: ANY): ACCESS_INV_AS is
-		require
-			valid_type: yyis_type4 (v)
-		do
-			Result ?= v
-		ensure
-			definition: Result = v
-		end
+	yyvsp1: INTEGER
+			-- Top of semantic value stack `yyvs1'
 
-	yyis_type4 (v: ANY): BOOLEAN is
-		local
-			u: ACCESS_INV_AS
-		do
-			u ?= v
-			Result := (u = v)
-		end
+	yyspecial_routines1: KL_SPECIAL_ROUTINES [ANY]
+			-- Routines that ought to be in SPECIAL [ANY]
 
-	yytype5 (v: ANY): ARRAY_AS is
-		require
-			valid_type: yyis_type5 (v)
-		do
-			Result ?= v
-		ensure
-			definition: Result = v
-		end
+	yyvs2: SPECIAL [ACCESS_AS]
+			-- Stack for semantic values of type ACCESS_AS
 
-	yyis_type5 (v: ANY): BOOLEAN is
-		local
-			u: ARRAY_AS
-		do
-			u ?= v
-			Result := (u = v)
-		end
+	yyvsc2: INTEGER
+			-- Capacity of semantic value stack `yyvs2'
 
-	yytype6 (v: ANY): ASSIGN_AS is
-		require
-			valid_type: yyis_type6 (v)
-		do
-			Result ?= v
-		ensure
-			definition: Result = v
-		end
+	yyvsp2: INTEGER
+			-- Top of semantic value stack `yyvs2'
 
-	yyis_type6 (v: ANY): BOOLEAN is
-		local
-			u: ASSIGN_AS
-		do
-			u ?= v
-			Result := (u = v)
-		end
+	yyspecial_routines2: KL_SPECIAL_ROUTINES [ACCESS_AS]
+			-- Routines that ought to be in SPECIAL [ACCESS_AS]
 
-	yytype7 (v: ANY): ATOMIC_AS is
-		require
-			valid_type: yyis_type7 (v)
-		do
-			Result ?= v
-		ensure
-			definition: Result = v
-		end
+	yyvs3: SPECIAL [ACCESS_FEAT_AS]
+			-- Stack for semantic values of type ACCESS_FEAT_AS
 
-	yyis_type7 (v: ANY): BOOLEAN is
-		local
-			u: ATOMIC_AS
-		do
-			u ?= v
-			Result := (u = v)
-		end
+	yyvsc3: INTEGER
+			-- Capacity of semantic value stack `yyvs3'
 
-	yytype8 (v: ANY): BIT_CONST_AS is
-		require
-			valid_type: yyis_type8 (v)
-		do
-			Result ?= v
-		ensure
-			definition: Result = v
-		end
+	yyvsp3: INTEGER
+			-- Top of semantic value stack `yyvs3'
 
-	yyis_type8 (v: ANY): BOOLEAN is
-		local
-			u: BIT_CONST_AS
-		do
-			u ?= v
-			Result := (u = v)
-		end
+	yyspecial_routines3: KL_SPECIAL_ROUTINES [ACCESS_FEAT_AS]
+			-- Routines that ought to be in SPECIAL [ACCESS_FEAT_AS]
 
-	yytype9 (v: ANY): BODY_AS is
-		require
-			valid_type: yyis_type9 (v)
-		do
-			Result ?= v
-		ensure
-			definition: Result = v
-		end
+	yyvs4: SPECIAL [ACCESS_INV_AS]
+			-- Stack for semantic values of type ACCESS_INV_AS
 
-	yyis_type9 (v: ANY): BOOLEAN is
-		local
-			u: BODY_AS
-		do
-			u ?= v
-			Result := (u = v)
-		end
+	yyvsc4: INTEGER
+			-- Capacity of semantic value stack `yyvs4'
 
-	yytype10 (v: ANY): BOOL_AS is
-		require
-			valid_type: yyis_type10 (v)
-		do
-			Result ?= v
-		ensure
-			definition: Result = v
-		end
+	yyvsp4: INTEGER
+			-- Top of semantic value stack `yyvs4'
 
-	yyis_type10 (v: ANY): BOOLEAN is
-		local
-			u: BOOL_AS
-		do
-			u ?= v
-			Result := (u = v)
-		end
+	yyspecial_routines4: KL_SPECIAL_ROUTINES [ACCESS_INV_AS]
+			-- Routines that ought to be in SPECIAL [ACCESS_INV_AS]
 
-	yytype11 (v: ANY): CALL_AS is
-		require
-			valid_type: yyis_type11 (v)
-		do
-			Result ?= v
-		ensure
-			definition: Result = v
-		end
+	yyvs5: SPECIAL [ARRAY_AS]
+			-- Stack for semantic values of type ARRAY_AS
 
-	yyis_type11 (v: ANY): BOOLEAN is
-		local
-			u: CALL_AS
-		do
-			u ?= v
-			Result := (u = v)
-		end
+	yyvsc5: INTEGER
+			-- Capacity of semantic value stack `yyvs5'
 
-	yytype12 (v: ANY): CASE_AS is
-		require
-			valid_type: yyis_type12 (v)
-		do
-			Result ?= v
-		ensure
-			definition: Result = v
-		end
+	yyvsp5: INTEGER
+			-- Top of semantic value stack `yyvs5'
 
-	yyis_type12 (v: ANY): BOOLEAN is
-		local
-			u: CASE_AS
-		do
-			u ?= v
-			Result := (u = v)
-		end
+	yyspecial_routines5: KL_SPECIAL_ROUTINES [ARRAY_AS]
+			-- Routines that ought to be in SPECIAL [ARRAY_AS]
 
-	yytype13 (v: ANY): CHAR_AS is
-		require
-			valid_type: yyis_type13 (v)
-		do
-			Result ?= v
-		ensure
-			definition: Result = v
-		end
+	yyvs6: SPECIAL [ASSIGN_AS]
+			-- Stack for semantic values of type ASSIGN_AS
 
-	yyis_type13 (v: ANY): BOOLEAN is
-		local
-			u: CHAR_AS
-		do
-			u ?= v
-			Result := (u = v)
-		end
+	yyvsc6: INTEGER
+			-- Capacity of semantic value stack `yyvs6'
 
-	yytype14 (v: ANY): CHECK_AS is
-		require
-			valid_type: yyis_type14 (v)
-		do
-			Result ?= v
-		ensure
-			definition: Result = v
-		end
+	yyvsp6: INTEGER
+			-- Top of semantic value stack `yyvs6'
 
-	yyis_type14 (v: ANY): BOOLEAN is
-		local
-			u: CHECK_AS
-		do
-			u ?= v
-			Result := (u = v)
-		end
+	yyspecial_routines6: KL_SPECIAL_ROUTINES [ASSIGN_AS]
+			-- Routines that ought to be in SPECIAL [ASSIGN_AS]
 
-	yytype15 (v: ANY): CLIENT_AS is
-		require
-			valid_type: yyis_type15 (v)
-		do
-			Result ?= v
-		ensure
-			definition: Result = v
-		end
+	yyvs7: SPECIAL [ATOMIC_AS]
+			-- Stack for semantic values of type ATOMIC_AS
 
-	yyis_type15 (v: ANY): BOOLEAN is
-		local
-			u: CLIENT_AS
-		do
-			u ?= v
-			Result := (u = v)
-		end
+	yyvsc7: INTEGER
+			-- Capacity of semantic value stack `yyvs7'
 
-	yytype16 (v: ANY): CONTENT_AS is
-		require
-			valid_type: yyis_type16 (v)
-		do
-			Result ?= v
-		ensure
-			definition: Result = v
-		end
+	yyvsp7: INTEGER
+			-- Top of semantic value stack `yyvs7'
 
-	yyis_type16 (v: ANY): BOOLEAN is
-		local
-			u: CONTENT_AS
-		do
-			u ?= v
-			Result := (u = v)
-		end
+	yyspecial_routines7: KL_SPECIAL_ROUTINES [ATOMIC_AS]
+			-- Routines that ought to be in SPECIAL [ATOMIC_AS]
 
-	yytype17 (v: ANY): CONVERT_FEAT_AS is
-		require
-			valid_type: yyis_type17 (v)
-		do
-			Result ?= v
-		ensure
-			definition: Result = v
-		end
+	yyvs8: SPECIAL [BIT_CONST_AS]
+			-- Stack for semantic values of type BIT_CONST_AS
 
-	yyis_type17 (v: ANY): BOOLEAN is
-		local
-			u: CONVERT_FEAT_AS
-		do
-			u ?= v
-			Result := (u = v)
-		end
+	yyvsc8: INTEGER
+			-- Capacity of semantic value stack `yyvs8'
 
-	yytype18 (v: ANY): CREATE_AS is
-		require
-			valid_type: yyis_type18 (v)
-		do
-			Result ?= v
-		ensure
-			definition: Result = v
-		end
+	yyvsp8: INTEGER
+			-- Top of semantic value stack `yyvs8'
 
-	yyis_type18 (v: ANY): BOOLEAN is
-		local
-			u: CREATE_AS
-		do
-			u ?= v
-			Result := (u = v)
-		end
+	yyspecial_routines8: KL_SPECIAL_ROUTINES [BIT_CONST_AS]
+			-- Routines that ought to be in SPECIAL [BIT_CONST_AS]
 
-	yytype19 (v: ANY): CREATION_AS is
-		require
-			valid_type: yyis_type19 (v)
-		do
-			Result ?= v
-		ensure
-			definition: Result = v
-		end
+	yyvs9: SPECIAL [BODY_AS]
+			-- Stack for semantic values of type BODY_AS
 
-	yyis_type19 (v: ANY): BOOLEAN is
-		local
-			u: CREATION_AS
-		do
-			u ?= v
-			Result := (u = v)
-		end
+	yyvsc9: INTEGER
+			-- Capacity of semantic value stack `yyvs9'
 
-	yytype20 (v: ANY): CREATION_EXPR_AS is
-		require
-			valid_type: yyis_type20 (v)
-		do
-			Result ?= v
-		ensure
-			definition: Result = v
-		end
+	yyvsp9: INTEGER
+			-- Top of semantic value stack `yyvs9'
 
-	yyis_type20 (v: ANY): BOOLEAN is
-		local
-			u: CREATION_EXPR_AS
-		do
-			u ?= v
-			Result := (u = v)
-		end
+	yyspecial_routines9: KL_SPECIAL_ROUTINES [BODY_AS]
+			-- Routines that ought to be in SPECIAL [BODY_AS]
 
-	yytype21 (v: ANY): DEBUG_AS is
-		require
-			valid_type: yyis_type21 (v)
-		do
-			Result ?= v
-		ensure
-			definition: Result = v
-		end
+	yyvs10: SPECIAL [BOOL_AS]
+			-- Stack for semantic values of type BOOL_AS
 
-	yyis_type21 (v: ANY): BOOLEAN is
-		local
-			u: DEBUG_AS
-		do
-			u ?= v
-			Result := (u = v)
-		end
+	yyvsc10: INTEGER
+			-- Capacity of semantic value stack `yyvs10'
 
-	yytype22 (v: ANY): ELSIF_AS is
-		require
-			valid_type: yyis_type22 (v)
-		do
-			Result ?= v
-		ensure
-			definition: Result = v
-		end
+	yyvsp10: INTEGER
+			-- Top of semantic value stack `yyvs10'
 
-	yyis_type22 (v: ANY): BOOLEAN is
-		local
-			u: ELSIF_AS
-		do
-			u ?= v
-			Result := (u = v)
-		end
+	yyspecial_routines10: KL_SPECIAL_ROUTINES [BOOL_AS]
+			-- Routines that ought to be in SPECIAL [BOOL_AS]
 
-	yytype23 (v: ANY): ENSURE_AS is
-		require
-			valid_type: yyis_type23 (v)
-		do
-			Result ?= v
-		ensure
-			definition: Result = v
-		end
+	yyvs11: SPECIAL [CALL_AS]
+			-- Stack for semantic values of type CALL_AS
 
-	yyis_type23 (v: ANY): BOOLEAN is
-		local
-			u: ENSURE_AS
-		do
-			u ?= v
-			Result := (u = v)
-		end
+	yyvsc11: INTEGER
+			-- Capacity of semantic value stack `yyvs11'
 
-	yytype24 (v: ANY): EXPORT_ITEM_AS is
-		require
-			valid_type: yyis_type24 (v)
-		do
-			Result ?= v
-		ensure
-			definition: Result = v
-		end
+	yyvsp11: INTEGER
+			-- Top of semantic value stack `yyvs11'
 
-	yyis_type24 (v: ANY): BOOLEAN is
-		local
-			u: EXPORT_ITEM_AS
-		do
-			u ?= v
-			Result := (u = v)
-		end
+	yyspecial_routines11: KL_SPECIAL_ROUTINES [CALL_AS]
+			-- Routines that ought to be in SPECIAL [CALL_AS]
 
-	yytype25 (v: ANY): EXPR_AS is
-		require
-			valid_type: yyis_type25 (v)
-		do
-			Result ?= v
-		ensure
-			definition: Result = v
-		end
+	yyvs12: SPECIAL [CASE_AS]
+			-- Stack for semantic values of type CASE_AS
 
-	yyis_type25 (v: ANY): BOOLEAN is
-		local
-			u: EXPR_AS
-		do
-			u ?= v
-			Result := (u = v)
-		end
+	yyvsc12: INTEGER
+			-- Capacity of semantic value stack `yyvs12'
 
-	yytype26 (v: ANY): EXTERNAL_AS is
-		require
-			valid_type: yyis_type26 (v)
-		do
-			Result ?= v
-		ensure
-			definition: Result = v
-		end
+	yyvsp12: INTEGER
+			-- Top of semantic value stack `yyvs12'
 
-	yyis_type26 (v: ANY): BOOLEAN is
-		local
-			u: EXTERNAL_AS
-		do
-			u ?= v
-			Result := (u = v)
-		end
+	yyspecial_routines12: KL_SPECIAL_ROUTINES [CASE_AS]
+			-- Routines that ought to be in SPECIAL [CASE_AS]
 
-	yytype27 (v: ANY): EXTERNAL_LANG_AS is
-		require
-			valid_type: yyis_type27 (v)
-		do
-			Result ?= v
-		ensure
-			definition: Result = v
-		end
+	yyvs13: SPECIAL [CHAR_AS]
+			-- Stack for semantic values of type CHAR_AS
 
-	yyis_type27 (v: ANY): BOOLEAN is
-		local
-			u: EXTERNAL_LANG_AS
-		do
-			u ?= v
-			Result := (u = v)
-		end
+	yyvsc13: INTEGER
+			-- Capacity of semantic value stack `yyvs13'
 
-	yytype28 (v: ANY): FEATURE_AS is
-		require
-			valid_type: yyis_type28 (v)
-		do
-			Result ?= v
-		ensure
-			definition: Result = v
-		end
+	yyvsp13: INTEGER
+			-- Top of semantic value stack `yyvs13'
 
-	yyis_type28 (v: ANY): BOOLEAN is
-		local
-			u: FEATURE_AS
-		do
-			u ?= v
-			Result := (u = v)
-		end
+	yyspecial_routines13: KL_SPECIAL_ROUTINES [CHAR_AS]
+			-- Routines that ought to be in SPECIAL [CHAR_AS]
 
-	yytype29 (v: ANY): FEATURE_CLAUSE_AS is
-		require
-			valid_type: yyis_type29 (v)
-		do
-			Result ?= v
-		ensure
-			definition: Result = v
-		end
+	yyvs14: SPECIAL [CHECK_AS]
+			-- Stack for semantic values of type CHECK_AS
 
-	yyis_type29 (v: ANY): BOOLEAN is
-		local
-			u: FEATURE_CLAUSE_AS
-		do
-			u ?= v
-			Result := (u = v)
-		end
+	yyvsc14: INTEGER
+			-- Capacity of semantic value stack `yyvs14'
 
-	yytype30 (v: ANY): FEATURE_SET_AS is
-		require
-			valid_type: yyis_type30 (v)
-		do
-			Result ?= v
-		ensure
-			definition: Result = v
-		end
+	yyvsp14: INTEGER
+			-- Top of semantic value stack `yyvs14'
 
-	yyis_type30 (v: ANY): BOOLEAN is
-		local
-			u: FEATURE_SET_AS
-		do
-			u ?= v
-			Result := (u = v)
-		end
+	yyspecial_routines14: KL_SPECIAL_ROUTINES [CHECK_AS]
+			-- Routines that ought to be in SPECIAL [CHECK_AS]
 
-	yytype31 (v: ANY): FORMAL_AS is
-		require
-			valid_type: yyis_type31 (v)
-		do
-			Result ?= v
-		ensure
-			definition: Result = v
-		end
+	yyvs15: SPECIAL [CLIENT_AS]
+			-- Stack for semantic values of type CLIENT_AS
 
-	yyis_type31 (v: ANY): BOOLEAN is
-		local
-			u: FORMAL_AS
-		do
-			u ?= v
-			Result := (u = v)
-		end
+	yyvsc15: INTEGER
+			-- Capacity of semantic value stack `yyvs15'
 
-	yytype32 (v: ANY): FORMAL_DEC_AS is
-		require
-			valid_type: yyis_type32 (v)
-		do
-			Result ?= v
-		ensure
-			definition: Result = v
-		end
+	yyvsp15: INTEGER
+			-- Top of semantic value stack `yyvs15'
 
-	yyis_type32 (v: ANY): BOOLEAN is
-		local
-			u: FORMAL_DEC_AS
-		do
-			u ?= v
-			Result := (u = v)
-		end
+	yyspecial_routines15: KL_SPECIAL_ROUTINES [CLIENT_AS]
+			-- Routines that ought to be in SPECIAL [CLIENT_AS]
 
-	yytype33 (v: ANY): ID_AS is
-		require
-			valid_type: yyis_type33 (v)
-		do
-			Result ?= v
-		ensure
-			definition: Result = v
-		end
+	yyvs16: SPECIAL [CONTENT_AS]
+			-- Stack for semantic values of type CONTENT_AS
 
-	yyis_type33 (v: ANY): BOOLEAN is
-		local
-			u: ID_AS
-		do
-			u ?= v
-			Result := (u = v)
-		end
+	yyvsc16: INTEGER
+			-- Capacity of semantic value stack `yyvs16'
 
-	yytype34 (v: ANY): IF_AS is
-		require
-			valid_type: yyis_type34 (v)
-		do
-			Result ?= v
-		ensure
-			definition: Result = v
-		end
+	yyvsp16: INTEGER
+			-- Top of semantic value stack `yyvs16'
 
-	yyis_type34 (v: ANY): BOOLEAN is
-		local
-			u: IF_AS
-		do
-			u ?= v
-			Result := (u = v)
-		end
+	yyspecial_routines16: KL_SPECIAL_ROUTINES [CONTENT_AS]
+			-- Routines that ought to be in SPECIAL [CONTENT_AS]
 
-	yytype35 (v: ANY): INDEX_AS is
-		require
-			valid_type: yyis_type35 (v)
-		do
-			Result ?= v
-		ensure
-			definition: Result = v
-		end
+	yyvs17: SPECIAL [CONVERT_FEAT_AS]
+			-- Stack for semantic values of type CONVERT_FEAT_AS
 
-	yyis_type35 (v: ANY): BOOLEAN is
-		local
-			u: INDEX_AS
-		do
-			u ?= v
-			Result := (u = v)
-		end
+	yyvsc17: INTEGER
+			-- Capacity of semantic value stack `yyvs17'
 
-	yytype36 (v: ANY): INSPECT_AS is
-		require
-			valid_type: yyis_type36 (v)
-		do
-			Result ?= v
-		ensure
-			definition: Result = v
-		end
+	yyvsp17: INTEGER
+			-- Top of semantic value stack `yyvs17'
 
-	yyis_type36 (v: ANY): BOOLEAN is
-		local
-			u: INSPECT_AS
-		do
-			u ?= v
-			Result := (u = v)
-		end
+	yyspecial_routines17: KL_SPECIAL_ROUTINES [CONVERT_FEAT_AS]
+			-- Routines that ought to be in SPECIAL [CONVERT_FEAT_AS]
 
-	yytype37 (v: ANY): INSTR_CALL_AS is
-		require
-			valid_type: yyis_type37 (v)
-		do
-			Result ?= v
-		ensure
-			definition: Result = v
-		end
+	yyvs18: SPECIAL [CREATE_AS]
+			-- Stack for semantic values of type CREATE_AS
 
-	yyis_type37 (v: ANY): BOOLEAN is
-		local
-			u: INSTR_CALL_AS
-		do
-			u ?= v
-			Result := (u = v)
-		end
+	yyvsc18: INTEGER
+			-- Capacity of semantic value stack `yyvs18'
 
-	yytype38 (v: ANY): INSTRUCTION_AS is
-		require
-			valid_type: yyis_type38 (v)
-		do
-			Result ?= v
-		ensure
-			definition: Result = v
-		end
+	yyvsp18: INTEGER
+			-- Top of semantic value stack `yyvs18'
 
-	yyis_type38 (v: ANY): BOOLEAN is
-		local
-			u: INSTRUCTION_AS
-		do
-			u ?= v
-			Result := (u = v)
-		end
+	yyspecial_routines18: KL_SPECIAL_ROUTINES [CREATE_AS]
+			-- Routines that ought to be in SPECIAL [CREATE_AS]
 
-	yytype39 (v: ANY): INTEGER_CONSTANT is
-		require
-			valid_type: yyis_type39 (v)
-		do
-			Result ?= v
-		ensure
-			definition: Result = v
-		end
+	yyvs19: SPECIAL [CREATION_AS]
+			-- Stack for semantic values of type CREATION_AS
 
-	yyis_type39 (v: ANY): BOOLEAN is
-		local
-			u: INTEGER_CONSTANT
-		do
-			u ?= v
-			Result := (u = v)
-		end
+	yyvsc19: INTEGER
+			-- Capacity of semantic value stack `yyvs19'
 
-	yytype40 (v: ANY): INTERNAL_AS is
-		require
-			valid_type: yyis_type40 (v)
-		do
-			Result ?= v
-		ensure
-			definition: Result = v
-		end
+	yyvsp19: INTEGER
+			-- Top of semantic value stack `yyvs19'
 
-	yyis_type40 (v: ANY): BOOLEAN is
-		local
-			u: INTERNAL_AS
-		do
-			u ?= v
-			Result := (u = v)
-		end
+	yyspecial_routines19: KL_SPECIAL_ROUTINES [CREATION_AS]
+			-- Routines that ought to be in SPECIAL [CREATION_AS]
 
-	yytype41 (v: ANY): INTERVAL_AS is
-		require
-			valid_type: yyis_type41 (v)
-		do
-			Result ?= v
-		ensure
-			definition: Result = v
-		end
+	yyvs20: SPECIAL [CREATION_EXPR_AS]
+			-- Stack for semantic values of type CREATION_EXPR_AS
 
-	yyis_type41 (v: ANY): BOOLEAN is
-		local
-			u: INTERVAL_AS
-		do
-			u ?= v
-			Result := (u = v)
-		end
+	yyvsc20: INTEGER
+			-- Capacity of semantic value stack `yyvs20'
 
-	yytype42 (v: ANY): INVARIANT_AS is
-		require
-			valid_type: yyis_type42 (v)
-		do
-			Result ?= v
-		ensure
-			definition: Result = v
-		end
+	yyvsp20: INTEGER
+			-- Top of semantic value stack `yyvs20'
 
-	yyis_type42 (v: ANY): BOOLEAN is
-		local
-			u: INVARIANT_AS
-		do
-			u ?= v
-			Result := (u = v)
-		end
+	yyspecial_routines20: KL_SPECIAL_ROUTINES [CREATION_EXPR_AS]
+			-- Routines that ought to be in SPECIAL [CREATION_EXPR_AS]
 
-	yytype43 (v: ANY): LOOP_AS is
-		require
-			valid_type: yyis_type43 (v)
-		do
-			Result ?= v
-		ensure
-			definition: Result = v
-		end
+	yyvs21: SPECIAL [DEBUG_AS]
+			-- Stack for semantic values of type DEBUG_AS
 
-	yyis_type43 (v: ANY): BOOLEAN is
-		local
-			u: LOOP_AS
-		do
-			u ?= v
-			Result := (u = v)
-		end
+	yyvsc21: INTEGER
+			-- Capacity of semantic value stack `yyvs21'
 
-	yytype44 (v: ANY): NESTED_AS is
-		require
-			valid_type: yyis_type44 (v)
-		do
-			Result ?= v
-		ensure
-			definition: Result = v
-		end
+	yyvsp21: INTEGER
+			-- Top of semantic value stack `yyvs21'
 
-	yyis_type44 (v: ANY): BOOLEAN is
-		local
-			u: NESTED_AS
-		do
-			u ?= v
-			Result := (u = v)
-		end
+	yyspecial_routines21: KL_SPECIAL_ROUTINES [DEBUG_AS]
+			-- Routines that ought to be in SPECIAL [DEBUG_AS]
 
-	yytype45 (v: ANY): NESTED_EXPR_AS is
-		require
-			valid_type: yyis_type45 (v)
-		do
-			Result ?= v
-		ensure
-			definition: Result = v
-		end
+	yyvs22: SPECIAL [ELSIF_AS]
+			-- Stack for semantic values of type ELSIF_AS
 
-	yyis_type45 (v: ANY): BOOLEAN is
-		local
-			u: NESTED_EXPR_AS
-		do
-			u ?= v
-			Result := (u = v)
-		end
+	yyvsc22: INTEGER
+			-- Capacity of semantic value stack `yyvs22'
 
-	yytype46 (v: ANY): OPERAND_AS is
-		require
-			valid_type: yyis_type46 (v)
-		do
-			Result ?= v
-		ensure
-			definition: Result = v
-		end
+	yyvsp22: INTEGER
+			-- Top of semantic value stack `yyvs22'
 
-	yyis_type46 (v: ANY): BOOLEAN is
-		local
-			u: OPERAND_AS
-		do
-			u ?= v
-			Result := (u = v)
-		end
+	yyspecial_routines22: KL_SPECIAL_ROUTINES [ELSIF_AS]
+			-- Routines that ought to be in SPECIAL [ELSIF_AS]
 
-	yytype47 (v: ANY): PARENT_AS is
-		require
-			valid_type: yyis_type47 (v)
-		do
-			Result ?= v
-		ensure
-			definition: Result = v
-		end
+	yyvs23: SPECIAL [ENSURE_AS]
+			-- Stack for semantic values of type ENSURE_AS
 
-	yyis_type47 (v: ANY): BOOLEAN is
-		local
-			u: PARENT_AS
-		do
-			u ?= v
-			Result := (u = v)
-		end
+	yyvsc23: INTEGER
+			-- Capacity of semantic value stack `yyvs23'
 
-	yytype48 (v: ANY): PRECURSOR_AS is
-		require
-			valid_type: yyis_type48 (v)
-		do
-			Result ?= v
-		ensure
-			definition: Result = v
-		end
+	yyvsp23: INTEGER
+			-- Top of semantic value stack `yyvs23'
 
-	yyis_type48 (v: ANY): BOOLEAN is
-		local
-			u: PRECURSOR_AS
-		do
-			u ?= v
-			Result := (u = v)
-		end
+	yyspecial_routines23: KL_SPECIAL_ROUTINES [ENSURE_AS]
+			-- Routines that ought to be in SPECIAL [ENSURE_AS]
 
-	yytype49 (v: ANY): STATIC_ACCESS_AS is
-		require
-			valid_type: yyis_type49 (v)
-		do
-			Result ?= v
-		ensure
-			definition: Result = v
-		end
+	yyvs24: SPECIAL [EXPORT_ITEM_AS]
+			-- Stack for semantic values of type EXPORT_ITEM_AS
 
-	yyis_type49 (v: ANY): BOOLEAN is
-		local
-			u: STATIC_ACCESS_AS
-		do
-			u ?= v
-			Result := (u = v)
-		end
+	yyvsc24: INTEGER
+			-- Capacity of semantic value stack `yyvs24'
 
-	yytype50 (v: ANY): REAL_AS is
-		require
-			valid_type: yyis_type50 (v)
-		do
-			Result ?= v
-		ensure
-			definition: Result = v
-		end
+	yyvsp24: INTEGER
+			-- Top of semantic value stack `yyvs24'
 
-	yyis_type50 (v: ANY): BOOLEAN is
-		local
-			u: REAL_AS
-		do
-			u ?= v
-			Result := (u = v)
-		end
+	yyspecial_routines24: KL_SPECIAL_ROUTINES [EXPORT_ITEM_AS]
+			-- Routines that ought to be in SPECIAL [EXPORT_ITEM_AS]
 
-	yytype51 (v: ANY): RENAME_AS is
-		require
-			valid_type: yyis_type51 (v)
-		do
-			Result ?= v
-		ensure
-			definition: Result = v
-		end
+	yyvs25: SPECIAL [EXPR_AS]
+			-- Stack for semantic values of type EXPR_AS
 
-	yyis_type51 (v: ANY): BOOLEAN is
-		local
-			u: RENAME_AS
-		do
-			u ?= v
-			Result := (u = v)
-		end
+	yyvsc25: INTEGER
+			-- Capacity of semantic value stack `yyvs25'
 
-	yytype52 (v: ANY): REQUIRE_AS is
-		require
-			valid_type: yyis_type52 (v)
-		do
-			Result ?= v
-		ensure
-			definition: Result = v
-		end
+	yyvsp25: INTEGER
+			-- Top of semantic value stack `yyvs25'
 
-	yyis_type52 (v: ANY): BOOLEAN is
-		local
-			u: REQUIRE_AS
-		do
-			u ?= v
-			Result := (u = v)
-		end
+	yyspecial_routines25: KL_SPECIAL_ROUTINES [EXPR_AS]
+			-- Routines that ought to be in SPECIAL [EXPR_AS]
 
-	yytype53 (v: ANY): RETRY_AS is
-		require
-			valid_type: yyis_type53 (v)
-		do
-			Result ?= v
-		ensure
-			definition: Result = v
-		end
+	yyvs26: SPECIAL [EXTERNAL_AS]
+			-- Stack for semantic values of type EXTERNAL_AS
 
-	yyis_type53 (v: ANY): BOOLEAN is
-		local
-			u: RETRY_AS
-		do
-			u ?= v
-			Result := (u = v)
-		end
+	yyvsc26: INTEGER
+			-- Capacity of semantic value stack `yyvs26'
 
-	yytype54 (v: ANY): REVERSE_AS is
-		require
-			valid_type: yyis_type54 (v)
-		do
-			Result ?= v
-		ensure
-			definition: Result = v
-		end
+	yyvsp26: INTEGER
+			-- Top of semantic value stack `yyvs26'
 
-	yyis_type54 (v: ANY): BOOLEAN is
-		local
-			u: REVERSE_AS
-		do
-			u ?= v
-			Result := (u = v)
-		end
+	yyspecial_routines26: KL_SPECIAL_ROUTINES [EXTERNAL_AS]
+			-- Routines that ought to be in SPECIAL [EXTERNAL_AS]
 
-	yytype55 (v: ANY): ROUT_BODY_AS is
-		require
-			valid_type: yyis_type55 (v)
-		do
-			Result ?= v
-		ensure
-			definition: Result = v
-		end
+	yyvs27: SPECIAL [EXTERNAL_LANG_AS]
+			-- Stack for semantic values of type EXTERNAL_LANG_AS
 
-	yyis_type55 (v: ANY): BOOLEAN is
-		local
-			u: ROUT_BODY_AS
-		do
-			u ?= v
-			Result := (u = v)
-		end
+	yyvsc27: INTEGER
+			-- Capacity of semantic value stack `yyvs27'
 
-	yytype56 (v: ANY): ROUTINE_AS is
-		require
-			valid_type: yyis_type56 (v)
-		do
-			Result ?= v
-		ensure
-			definition: Result = v
-		end
+	yyvsp27: INTEGER
+			-- Top of semantic value stack `yyvs27'
 
-	yyis_type56 (v: ANY): BOOLEAN is
-		local
-			u: ROUTINE_AS
-		do
-			u ?= v
-			Result := (u = v)
-		end
+	yyspecial_routines27: KL_SPECIAL_ROUTINES [EXTERNAL_LANG_AS]
+			-- Routines that ought to be in SPECIAL [EXTERNAL_LANG_AS]
 
-	yytype57 (v: ANY): ROUTINE_CREATION_AS is
-		require
-			valid_type: yyis_type57 (v)
-		do
-			Result ?= v
-		ensure
-			definition: Result = v
-		end
+	yyvs28: SPECIAL [FEATURE_AS]
+			-- Stack for semantic values of type FEATURE_AS
 
-	yyis_type57 (v: ANY): BOOLEAN is
-		local
-			u: ROUTINE_CREATION_AS
-		do
-			u ?= v
-			Result := (u = v)
-		end
+	yyvsc28: INTEGER
+			-- Capacity of semantic value stack `yyvs28'
 
-	yytype58 (v: ANY): TOKEN_LOCATION is
-		require
-			valid_type: yyis_type58 (v)
-		do
-			Result ?= v
-		ensure
-			definition: Result = v
-		end
+	yyvsp28: INTEGER
+			-- Top of semantic value stack `yyvs28'
 
-	yyis_type58 (v: ANY): BOOLEAN is
-		local
-			u: TOKEN_LOCATION
-		do
-			u ?= v
-			Result := (u = v)
-		end
+	yyspecial_routines28: KL_SPECIAL_ROUTINES [FEATURE_AS]
+			-- Routines that ought to be in SPECIAL [FEATURE_AS]
 
-	yytype59 (v: ANY): PAIR [ROUTINE_CREATION_AS, TOKEN_LOCATION] is
-		require
-			valid_type: yyis_type59 (v)
-		do
-			Result ?= v
-		ensure
-			definition: Result = v
-		end
+	yyvs29: SPECIAL [FEATURE_CLAUSE_AS]
+			-- Stack for semantic values of type FEATURE_CLAUSE_AS
 
-	yyis_type59 (v: ANY): BOOLEAN is
-		local
-			u: PAIR [ROUTINE_CREATION_AS, TOKEN_LOCATION]
-		do
-			u ?= v
-			Result := (u = v)
-		end
+	yyvsc29: INTEGER
+			-- Capacity of semantic value stack `yyvs29'
 
-	yytype60 (v: ANY): STRING_AS is
-		require
-			valid_type: yyis_type60 (v)
-		do
-			Result ?= v
-		ensure
-			definition: Result = v
-		end
+	yyvsp29: INTEGER
+			-- Top of semantic value stack `yyvs29'
 
-	yyis_type60 (v: ANY): BOOLEAN is
-		local
-			u: STRING_AS
-		do
-			u ?= v
-			Result := (u = v)
-		end
+	yyspecial_routines29: KL_SPECIAL_ROUTINES [FEATURE_CLAUSE_AS]
+			-- Routines that ought to be in SPECIAL [FEATURE_CLAUSE_AS]
 
-	yytype61 (v: ANY): TAGGED_AS is
-		require
-			valid_type: yyis_type61 (v)
-		do
-			Result ?= v
-		ensure
-			definition: Result = v
-		end
+	yyvs30: SPECIAL [FEATURE_SET_AS]
+			-- Stack for semantic values of type FEATURE_SET_AS
 
-	yyis_type61 (v: ANY): BOOLEAN is
-		local
-			u: TAGGED_AS
-		do
-			u ?= v
-			Result := (u = v)
-		end
+	yyvsc30: INTEGER
+			-- Capacity of semantic value stack `yyvs30'
 
-	yytype62 (v: ANY): TUPLE_AS is
-		require
-			valid_type: yyis_type62 (v)
-		do
-			Result ?= v
-		ensure
-			definition: Result = v
-		end
+	yyvsp30: INTEGER
+			-- Top of semantic value stack `yyvs30'
 
-	yyis_type62 (v: ANY): BOOLEAN is
-		local
-			u: TUPLE_AS
-		do
-			u ?= v
-			Result := (u = v)
-		end
+	yyspecial_routines30: KL_SPECIAL_ROUTINES [FEATURE_SET_AS]
+			-- Routines that ought to be in SPECIAL [FEATURE_SET_AS]
 
-	yytype63 (v: ANY): TYPE_AS is
-		require
-			valid_type: yyis_type63 (v)
-		do
-			Result ?= v
-		ensure
-			definition: Result = v
-		end
+	yyvs31: SPECIAL [FORMAL_AS]
+			-- Stack for semantic values of type FORMAL_AS
 
-	yyis_type63 (v: ANY): BOOLEAN is
-		local
-			u: TYPE_AS
-		do
-			u ?= v
-			Result := (u = v)
-		end
+	yyvsc31: INTEGER
+			-- Capacity of semantic value stack `yyvs31'
 
-	yytype64 (v: ANY): TYPE_DEC_AS is
-		require
-			valid_type: yyis_type64 (v)
-		do
-			Result ?= v
-		ensure
-			definition: Result = v
-		end
+	yyvsp31: INTEGER
+			-- Top of semantic value stack `yyvs31'
 
-	yyis_type64 (v: ANY): BOOLEAN is
-		local
-			u: TYPE_DEC_AS
-		do
-			u ?= v
-			Result := (u = v)
-		end
+	yyspecial_routines31: KL_SPECIAL_ROUTINES [FORMAL_AS]
+			-- Routines that ought to be in SPECIAL [FORMAL_AS]
 
-	yytype65 (v: ANY): VARIANT_AS is
-		require
-			valid_type: yyis_type65 (v)
-		do
-			Result ?= v
-		ensure
-			definition: Result = v
-		end
+	yyvs32: SPECIAL [FORMAL_DEC_AS]
+			-- Stack for semantic values of type FORMAL_DEC_AS
 
-	yyis_type65 (v: ANY): BOOLEAN is
-		local
-			u: VARIANT_AS
-		do
-			u ?= v
-			Result := (u = v)
-		end
+	yyvsc32: INTEGER
+			-- Capacity of semantic value stack `yyvs32'
 
-	yytype66 (v: ANY): EIFFEL_LIST [ATOMIC_AS] is
-		require
-			valid_type: yyis_type66 (v)
-		do
-			Result ?= v
-		ensure
-			definition: Result = v
-		end
+	yyvsp32: INTEGER
+			-- Top of semantic value stack `yyvs32'
 
-	yyis_type66 (v: ANY): BOOLEAN is
-		local
-			u: EIFFEL_LIST [ATOMIC_AS]
-		do
-			u ?= v
-			Result := (u = v)
-		end
+	yyspecial_routines32: KL_SPECIAL_ROUTINES [FORMAL_DEC_AS]
+			-- Routines that ought to be in SPECIAL [FORMAL_DEC_AS]
 
-	yytype67 (v: ANY): EIFFEL_LIST [CASE_AS] is
-		require
-			valid_type: yyis_type67 (v)
-		do
-			Result ?= v
-		ensure
-			definition: Result = v
-		end
+	yyvs33: SPECIAL [ID_AS]
+			-- Stack for semantic values of type ID_AS
 
-	yyis_type67 (v: ANY): BOOLEAN is
-		local
-			u: EIFFEL_LIST [CASE_AS]
-		do
-			u ?= v
-			Result := (u = v)
-		end
+	yyvsc33: INTEGER
+			-- Capacity of semantic value stack `yyvs33'
 
-	yytype68 (v: ANY): EIFFEL_LIST [CONVERT_FEAT_AS] is
-		require
-			valid_type: yyis_type68 (v)
-		do
-			Result ?= v
-		ensure
-			definition: Result = v
-		end
+	yyvsp33: INTEGER
+			-- Top of semantic value stack `yyvs33'
 
-	yyis_type68 (v: ANY): BOOLEAN is
-		local
-			u: EIFFEL_LIST [CONVERT_FEAT_AS]
-		do
-			u ?= v
-			Result := (u = v)
-		end
+	yyspecial_routines33: KL_SPECIAL_ROUTINES [ID_AS]
+			-- Routines that ought to be in SPECIAL [ID_AS]
 
-	yytype69 (v: ANY): EIFFEL_LIST [CREATE_AS] is
-		require
-			valid_type: yyis_type69 (v)
-		do
-			Result ?= v
-		ensure
-			definition: Result = v
-		end
+	yyvs34: SPECIAL [IF_AS]
+			-- Stack for semantic values of type IF_AS
 
-	yyis_type69 (v: ANY): BOOLEAN is
-		local
-			u: EIFFEL_LIST [CREATE_AS]
-		do
-			u ?= v
-			Result := (u = v)
-		end
+	yyvsc34: INTEGER
+			-- Capacity of semantic value stack `yyvs34'
 
-	yytype70 (v: ANY): EIFFEL_LIST [ELSIF_AS] is
-		require
-			valid_type: yyis_type70 (v)
-		do
-			Result ?= v
-		ensure
-			definition: Result = v
-		end
+	yyvsp34: INTEGER
+			-- Top of semantic value stack `yyvs34'
 
-	yyis_type70 (v: ANY): BOOLEAN is
-		local
-			u: EIFFEL_LIST [ELSIF_AS]
-		do
-			u ?= v
-			Result := (u = v)
-		end
+	yyspecial_routines34: KL_SPECIAL_ROUTINES [IF_AS]
+			-- Routines that ought to be in SPECIAL [IF_AS]
 
-	yytype71 (v: ANY): EIFFEL_LIST [EXPORT_ITEM_AS] is
-		require
-			valid_type: yyis_type71 (v)
-		do
-			Result ?= v
-		ensure
-			definition: Result = v
-		end
+	yyvs35: SPECIAL [INDEX_AS]
+			-- Stack for semantic values of type INDEX_AS
 
-	yyis_type71 (v: ANY): BOOLEAN is
-		local
-			u: EIFFEL_LIST [EXPORT_ITEM_AS]
-		do
-			u ?= v
-			Result := (u = v)
-		end
+	yyvsc35: INTEGER
+			-- Capacity of semantic value stack `yyvs35'
 
-	yytype72 (v: ANY): EIFFEL_LIST [EXPR_AS] is
-		require
-			valid_type: yyis_type72 (v)
-		do
-			Result ?= v
-		ensure
-			definition: Result = v
-		end
+	yyvsp35: INTEGER
+			-- Top of semantic value stack `yyvs35'
 
-	yyis_type72 (v: ANY): BOOLEAN is
-		local
-			u: EIFFEL_LIST [EXPR_AS]
-		do
-			u ?= v
-			Result := (u = v)
-		end
+	yyspecial_routines35: KL_SPECIAL_ROUTINES [INDEX_AS]
+			-- Routines that ought to be in SPECIAL [INDEX_AS]
 
-	yytype73 (v: ANY): EIFFEL_LIST [FEATURE_AS] is
-		require
-			valid_type: yyis_type73 (v)
-		do
-			Result ?= v
-		ensure
-			definition: Result = v
-		end
+	yyvs36: SPECIAL [INSPECT_AS]
+			-- Stack for semantic values of type INSPECT_AS
 
-	yyis_type73 (v: ANY): BOOLEAN is
-		local
-			u: EIFFEL_LIST [FEATURE_AS]
-		do
-			u ?= v
-			Result := (u = v)
-		end
+	yyvsc36: INTEGER
+			-- Capacity of semantic value stack `yyvs36'
 
-	yytype74 (v: ANY): EIFFEL_LIST [FEATURE_CLAUSE_AS] is
-		require
-			valid_type: yyis_type74 (v)
-		do
-			Result ?= v
-		ensure
-			definition: Result = v
-		end
+	yyvsp36: INTEGER
+			-- Top of semantic value stack `yyvs36'
 
-	yyis_type74 (v: ANY): BOOLEAN is
-		local
-			u: EIFFEL_LIST [FEATURE_CLAUSE_AS]
-		do
-			u ?= v
-			Result := (u = v)
-		end
+	yyspecial_routines36: KL_SPECIAL_ROUTINES [INSPECT_AS]
+			-- Routines that ought to be in SPECIAL [INSPECT_AS]
 
-	yytype76 (v: ANY): EIFFEL_LIST [FEATURE_NAME] is
-		require
-			valid_type: yyis_type76 (v)
-		do
-			Result ?= v
-		ensure
-			definition: Result = v
-		end
+	yyvs37: SPECIAL [INSTR_CALL_AS]
+			-- Stack for semantic values of type INSTR_CALL_AS
 
-	yyis_type76 (v: ANY): BOOLEAN is
-		local
-			u: EIFFEL_LIST [FEATURE_NAME]
-		do
-			u ?= v
-			Result := (u = v)
-		end
+	yyvsc37: INTEGER
+			-- Capacity of semantic value stack `yyvs37'
 
-	yytype77 (v: ANY): EIFFEL_LIST [FORMAL_DEC_AS] is
-		require
-			valid_type: yyis_type77 (v)
-		do
-			Result ?= v
-		ensure
-			definition: Result = v
-		end
+	yyvsp37: INTEGER
+			-- Top of semantic value stack `yyvs37'
 
-	yyis_type77 (v: ANY): BOOLEAN is
-		local
-			u: EIFFEL_LIST [FORMAL_DEC_AS]
-		do
-			u ?= v
-			Result := (u = v)
-		end
+	yyspecial_routines37: KL_SPECIAL_ROUTINES [INSTR_CALL_AS]
+			-- Routines that ought to be in SPECIAL [INSTR_CALL_AS]
 
-	yytype78 (v: ANY): EIFFEL_LIST [ID_AS] is
-		require
-			valid_type: yyis_type78 (v)
-		do
-			Result ?= v
-		ensure
-			definition: Result = v
-		end
+	yyvs38: SPECIAL [INSTRUCTION_AS]
+			-- Stack for semantic values of type INSTRUCTION_AS
 
-	yyis_type78 (v: ANY): BOOLEAN is
-		local
-			u: EIFFEL_LIST [ID_AS]
-		do
-			u ?= v
-			Result := (u = v)
-		end
+	yyvsc38: INTEGER
+			-- Capacity of semantic value stack `yyvs38'
 
-	yytype80 (v: ANY): ARRAYED_LIST [INTEGER] is
-		require
-			valid_type: yyis_type80 (v)
-		do
-			Result ?= v
-		ensure
-			definition: Result = v
-		end
+	yyvsp38: INTEGER
+			-- Top of semantic value stack `yyvs38'
 
-	yyis_type80 (v: ANY): BOOLEAN is
-		local
-			u: ARRAYED_LIST [INTEGER]
-		do
-			u ?= v
-			Result := (u = v)
-		end
+	yyspecial_routines38: KL_SPECIAL_ROUTINES [INSTRUCTION_AS]
+			-- Routines that ought to be in SPECIAL [INSTRUCTION_AS]
 
-	yytype81 (v: ANY): INDEXING_CLAUSE_AS is
-		require
-			valid_type: yyis_type81 (v)
-		do
-			Result ?= v
-		ensure
-			definition: Result = v
-		end
+	yyvs39: SPECIAL [INTEGER_CONSTANT]
+			-- Stack for semantic values of type INTEGER_CONSTANT
 
-	yyis_type81 (v: ANY): BOOLEAN is
-		local
-			u: INDEXING_CLAUSE_AS
-		do
-			u ?= v
-			Result := (u = v)
-		end
+	yyvsc39: INTEGER
+			-- Capacity of semantic value stack `yyvs39'
 
-	yytype82 (v: ANY): EIFFEL_LIST [INSTRUCTION_AS] is
-		require
-			valid_type: yyis_type82 (v)
-		do
-			Result ?= v
-		ensure
-			definition: Result = v
-		end
+	yyvsp39: INTEGER
+			-- Top of semantic value stack `yyvs39'
 
-	yyis_type82 (v: ANY): BOOLEAN is
-		local
-			u: EIFFEL_LIST [INSTRUCTION_AS]
-		do
-			u ?= v
-			Result := (u = v)
-		end
+	yyspecial_routines39: KL_SPECIAL_ROUTINES [INTEGER_CONSTANT]
+			-- Routines that ought to be in SPECIAL [INTEGER_CONSTANT]
 
-	yytype83 (v: ANY): EIFFEL_LIST [INTERVAL_AS] is
-		require
-			valid_type: yyis_type83 (v)
-		do
-			Result ?= v
-		ensure
-			definition: Result = v
-		end
+	yyvs40: SPECIAL [INTERNAL_AS]
+			-- Stack for semantic values of type INTERNAL_AS
 
-	yyis_type83 (v: ANY): BOOLEAN is
-		local
-			u: EIFFEL_LIST [INTERVAL_AS]
-		do
-			u ?= v
-			Result := (u = v)
-		end
+	yyvsc40: INTEGER
+			-- Capacity of semantic value stack `yyvs40'
 
-	yytype84 (v: ANY): EIFFEL_LIST [OPERAND_AS] is
-		require
-			valid_type: yyis_type84 (v)
-		do
-			Result ?= v
-		ensure
-			definition: Result = v
-		end
+	yyvsp40: INTEGER
+			-- Top of semantic value stack `yyvs40'
 
-	yyis_type84 (v: ANY): BOOLEAN is
-		local
-			u: EIFFEL_LIST [OPERAND_AS]
-		do
-			u ?= v
-			Result := (u = v)
-		end
+	yyspecial_routines40: KL_SPECIAL_ROUTINES [INTERNAL_AS]
+			-- Routines that ought to be in SPECIAL [INTERNAL_AS]
 
-	yytype85 (v: ANY): EIFFEL_LIST [PARENT_AS] is
-		require
-			valid_type: yyis_type85 (v)
-		do
-			Result ?= v
-		ensure
-			definition: Result = v
-		end
+	yyvs41: SPECIAL [INTERVAL_AS]
+			-- Stack for semantic values of type INTERVAL_AS
 
-	yyis_type85 (v: ANY): BOOLEAN is
-		local
-			u: EIFFEL_LIST [PARENT_AS]
-		do
-			u ?= v
-			Result := (u = v)
-		end
+	yyvsc41: INTEGER
+			-- Capacity of semantic value stack `yyvs41'
 
-	yytype86 (v: ANY): EIFFEL_LIST [RENAME_AS] is
-		require
-			valid_type: yyis_type86 (v)
-		do
-			Result ?= v
-		ensure
-			definition: Result = v
-		end
+	yyvsp41: INTEGER
+			-- Top of semantic value stack `yyvs41'
 
-	yyis_type86 (v: ANY): BOOLEAN is
-		local
-			u: EIFFEL_LIST [RENAME_AS]
-		do
-			u ?= v
-			Result := (u = v)
-		end
+	yyspecial_routines41: KL_SPECIAL_ROUTINES [INTERVAL_AS]
+			-- Routines that ought to be in SPECIAL [INTERVAL_AS]
 
-	yytype87 (v: ANY): EIFFEL_LIST [STRING_AS] is
-		require
-			valid_type: yyis_type87 (v)
-		do
-			Result ?= v
-		ensure
-			definition: Result = v
-		end
+	yyvs42: SPECIAL [INVARIANT_AS]
+			-- Stack for semantic values of type INVARIANT_AS
 
-	yyis_type87 (v: ANY): BOOLEAN is
-		local
-			u: EIFFEL_LIST [STRING_AS]
-		do
-			u ?= v
-			Result := (u = v)
-		end
+	yyvsc42: INTEGER
+			-- Capacity of semantic value stack `yyvs42'
 
-	yytype88 (v: ANY): EIFFEL_LIST [TAGGED_AS] is
-		require
-			valid_type: yyis_type88 (v)
-		do
-			Result ?= v
-		ensure
-			definition: Result = v
-		end
+	yyvsp42: INTEGER
+			-- Top of semantic value stack `yyvs42'
 
-	yyis_type88 (v: ANY): BOOLEAN is
-		local
-			u: EIFFEL_LIST [TAGGED_AS]
-		do
-			u ?= v
-			Result := (u = v)
-		end
+	yyspecial_routines42: KL_SPECIAL_ROUTINES [INVARIANT_AS]
+			-- Routines that ought to be in SPECIAL [INVARIANT_AS]
 
-	yytype89 (v: ANY): EIFFEL_LIST [TYPE_AS] is
-		require
-			valid_type: yyis_type89 (v)
-		do
-			Result ?= v
-		ensure
-			definition: Result = v
-		end
+	yyvs43: SPECIAL [LOOP_AS]
+			-- Stack for semantic values of type LOOP_AS
 
-	yyis_type89 (v: ANY): BOOLEAN is
-		local
-			u: EIFFEL_LIST [TYPE_AS]
-		do
-			u ?= v
-			Result := (u = v)
-		end
+	yyvsc43: INTEGER
+			-- Capacity of semantic value stack `yyvs43'
 
-	yytype90 (v: ANY): EIFFEL_LIST [TYPE_DEC_AS] is
-		require
-			valid_type: yyis_type90 (v)
-		do
-			Result ?= v
-		ensure
-			definition: Result = v
-		end
+	yyvsp43: INTEGER
+			-- Top of semantic value stack `yyvs43'
 
-	yyis_type90 (v: ANY): BOOLEAN is
-		local
-			u: EIFFEL_LIST [TYPE_DEC_AS]
-		do
-			u ?= v
-			Result := (u = v)
-		end
+	yyspecial_routines43: KL_SPECIAL_ROUTINES [LOOP_AS]
+			-- Routines that ought to be in SPECIAL [LOOP_AS]
 
-	yytype92 (v: ANY): PAIR [ID_AS, CLICK_AST] is
-		require
-			valid_type: yyis_type92 (v)
-		do
-			Result ?= v
-		ensure
-			definition: Result = v
-		end
+	yyvs44: SPECIAL [NESTED_AS]
+			-- Stack for semantic values of type NESTED_AS
 
-	yyis_type92 (v: ANY): BOOLEAN is
-		local
-			u: PAIR [ID_AS, CLICK_AST]
-		do
-			u ?= v
-			Result := (u = v)
-		end
+	yyvsc44: INTEGER
+			-- Capacity of semantic value stack `yyvs44'
 
-	yytype93 (v: ANY): PAIR [FEATURE_NAME, CLICK_AST] is
-		require
-			valid_type: yyis_type93 (v)
-		do
-			Result ?= v
-		ensure
-			definition: Result = v
-		end
+	yyvsp44: INTEGER
+			-- Top of semantic value stack `yyvs44'
 
-	yyis_type93 (v: ANY): BOOLEAN is
-		local
-			u: PAIR [FEATURE_NAME, CLICK_AST]
-		do
-			u ?= v
-			Result := (u = v)
-		end
+	yyspecial_routines44: KL_SPECIAL_ROUTINES [NESTED_AS]
+			-- Routines that ought to be in SPECIAL [NESTED_AS]
 
-	yytype94 (v: ANY): PAIR [STRING_AS, CLICK_AST] is
-		require
-			valid_type: yyis_type94 (v)
-		do
-			Result ?= v
-		ensure
-			definition: Result = v
-		end
+	yyvs45: SPECIAL [NESTED_EXPR_AS]
+			-- Stack for semantic values of type NESTED_EXPR_AS
 
-	yyis_type94 (v: ANY): BOOLEAN is
-		local
-			u: PAIR [STRING_AS, CLICK_AST]
-		do
-			u ?= v
-			Result := (u = v)
-		end
+	yyvsc45: INTEGER
+			-- Capacity of semantic value stack `yyvs45'
 
-	yytype95 (v: ANY): PAIR [EIFFEL_LIST [FEATURE_NAME], CLICK_AST] is
-		require
-			valid_type: yyis_type95 (v)
-		do
-			Result ?= v
-		ensure
-			definition: Result = v
-		end
+	yyvsp45: INTEGER
+			-- Top of semantic value stack `yyvs45'
 
-	yyis_type95 (v: ANY): BOOLEAN is
-		local
-			u: PAIR [EIFFEL_LIST [FEATURE_NAME], CLICK_AST]
-		do
-			u ?= v
-			Result := (u = v)
-		end
+	yyspecial_routines45: KL_SPECIAL_ROUTINES [NESTED_EXPR_AS]
+			-- Routines that ought to be in SPECIAL [NESTED_EXPR_AS]
 
-	yytype96 (v: ANY): PAIR [TYPE_AS, EIFFEL_LIST [FEATURE_NAME]] is
-		require
-			valid_type: yyis_type96 (v)
-		do
-			Result ?= v
-		ensure
-			definition: Result = v
-		end
+	yyvs46: SPECIAL [OPERAND_AS]
+			-- Stack for semantic values of type OPERAND_AS
 
-	yyis_type96 (v: ANY): BOOLEAN is
-		local
-			u: PAIR [TYPE_AS, EIFFEL_LIST [FEATURE_NAME]]
-		do
-			u ?= v
-			Result := (u = v)
-		end
+	yyvsc46: INTEGER
+			-- Capacity of semantic value stack `yyvs46'
+
+	yyvsp46: INTEGER
+			-- Top of semantic value stack `yyvs46'
+
+	yyspecial_routines46: KL_SPECIAL_ROUTINES [OPERAND_AS]
+			-- Routines that ought to be in SPECIAL [OPERAND_AS]
+
+	yyvs47: SPECIAL [PARENT_AS]
+			-- Stack for semantic values of type PARENT_AS
+
+	yyvsc47: INTEGER
+			-- Capacity of semantic value stack `yyvs47'
+
+	yyvsp47: INTEGER
+			-- Top of semantic value stack `yyvs47'
+
+	yyspecial_routines47: KL_SPECIAL_ROUTINES [PARENT_AS]
+			-- Routines that ought to be in SPECIAL [PARENT_AS]
+
+	yyvs48: SPECIAL [PRECURSOR_AS]
+			-- Stack for semantic values of type PRECURSOR_AS
+
+	yyvsc48: INTEGER
+			-- Capacity of semantic value stack `yyvs48'
+
+	yyvsp48: INTEGER
+			-- Top of semantic value stack `yyvs48'
+
+	yyspecial_routines48: KL_SPECIAL_ROUTINES [PRECURSOR_AS]
+			-- Routines that ought to be in SPECIAL [PRECURSOR_AS]
+
+	yyvs49: SPECIAL [STATIC_ACCESS_AS]
+			-- Stack for semantic values of type STATIC_ACCESS_AS
+
+	yyvsc49: INTEGER
+			-- Capacity of semantic value stack `yyvs49'
+
+	yyvsp49: INTEGER
+			-- Top of semantic value stack `yyvs49'
+
+	yyspecial_routines49: KL_SPECIAL_ROUTINES [STATIC_ACCESS_AS]
+			-- Routines that ought to be in SPECIAL [STATIC_ACCESS_AS]
+
+	yyvs50: SPECIAL [REAL_AS]
+			-- Stack for semantic values of type REAL_AS
+
+	yyvsc50: INTEGER
+			-- Capacity of semantic value stack `yyvs50'
+
+	yyvsp50: INTEGER
+			-- Top of semantic value stack `yyvs50'
+
+	yyspecial_routines50: KL_SPECIAL_ROUTINES [REAL_AS]
+			-- Routines that ought to be in SPECIAL [REAL_AS]
+
+	yyvs51: SPECIAL [RENAME_AS]
+			-- Stack for semantic values of type RENAME_AS
+
+	yyvsc51: INTEGER
+			-- Capacity of semantic value stack `yyvs51'
+
+	yyvsp51: INTEGER
+			-- Top of semantic value stack `yyvs51'
+
+	yyspecial_routines51: KL_SPECIAL_ROUTINES [RENAME_AS]
+			-- Routines that ought to be in SPECIAL [RENAME_AS]
+
+	yyvs52: SPECIAL [REQUIRE_AS]
+			-- Stack for semantic values of type REQUIRE_AS
+
+	yyvsc52: INTEGER
+			-- Capacity of semantic value stack `yyvs52'
+
+	yyvsp52: INTEGER
+			-- Top of semantic value stack `yyvs52'
+
+	yyspecial_routines52: KL_SPECIAL_ROUTINES [REQUIRE_AS]
+			-- Routines that ought to be in SPECIAL [REQUIRE_AS]
+
+	yyvs53: SPECIAL [RETRY_AS]
+			-- Stack for semantic values of type RETRY_AS
+
+	yyvsc53: INTEGER
+			-- Capacity of semantic value stack `yyvs53'
+
+	yyvsp53: INTEGER
+			-- Top of semantic value stack `yyvs53'
+
+	yyspecial_routines53: KL_SPECIAL_ROUTINES [RETRY_AS]
+			-- Routines that ought to be in SPECIAL [RETRY_AS]
+
+	yyvs54: SPECIAL [REVERSE_AS]
+			-- Stack for semantic values of type REVERSE_AS
+
+	yyvsc54: INTEGER
+			-- Capacity of semantic value stack `yyvs54'
+
+	yyvsp54: INTEGER
+			-- Top of semantic value stack `yyvs54'
+
+	yyspecial_routines54: KL_SPECIAL_ROUTINES [REVERSE_AS]
+			-- Routines that ought to be in SPECIAL [REVERSE_AS]
+
+	yyvs55: SPECIAL [ROUT_BODY_AS]
+			-- Stack for semantic values of type ROUT_BODY_AS
+
+	yyvsc55: INTEGER
+			-- Capacity of semantic value stack `yyvs55'
+
+	yyvsp55: INTEGER
+			-- Top of semantic value stack `yyvs55'
+
+	yyspecial_routines55: KL_SPECIAL_ROUTINES [ROUT_BODY_AS]
+			-- Routines that ought to be in SPECIAL [ROUT_BODY_AS]
+
+	yyvs56: SPECIAL [ROUTINE_AS]
+			-- Stack for semantic values of type ROUTINE_AS
+
+	yyvsc56: INTEGER
+			-- Capacity of semantic value stack `yyvs56'
+
+	yyvsp56: INTEGER
+			-- Top of semantic value stack `yyvs56'
+
+	yyspecial_routines56: KL_SPECIAL_ROUTINES [ROUTINE_AS]
+			-- Routines that ought to be in SPECIAL [ROUTINE_AS]
+
+	yyvs57: SPECIAL [ROUTINE_CREATION_AS]
+			-- Stack for semantic values of type ROUTINE_CREATION_AS
+
+	yyvsc57: INTEGER
+			-- Capacity of semantic value stack `yyvs57'
+
+	yyvsp57: INTEGER
+			-- Top of semantic value stack `yyvs57'
+
+	yyspecial_routines57: KL_SPECIAL_ROUTINES [ROUTINE_CREATION_AS]
+			-- Routines that ought to be in SPECIAL [ROUTINE_CREATION_AS]
+
+	yyvs58: SPECIAL [TOKEN_LOCATION]
+			-- Stack for semantic values of type TOKEN_LOCATION
+
+	yyvsc58: INTEGER
+			-- Capacity of semantic value stack `yyvs58'
+
+	yyvsp58: INTEGER
+			-- Top of semantic value stack `yyvs58'
+
+	yyspecial_routines58: KL_SPECIAL_ROUTINES [TOKEN_LOCATION]
+			-- Routines that ought to be in SPECIAL [TOKEN_LOCATION]
+
+	yyvs59: SPECIAL [PAIR [ROUTINE_CREATION_AS, TOKEN_LOCATION]]
+			-- Stack for semantic values of type PAIR [ROUTINE_CREATION_AS, TOKEN_LOCATION]
+
+	yyvsc59: INTEGER
+			-- Capacity of semantic value stack `yyvs59'
+
+	yyvsp59: INTEGER
+			-- Top of semantic value stack `yyvs59'
+
+	yyspecial_routines59: KL_SPECIAL_ROUTINES [PAIR [ROUTINE_CREATION_AS, TOKEN_LOCATION]]
+			-- Routines that ought to be in SPECIAL [PAIR [ROUTINE_CREATION_AS, TOKEN_LOCATION]]
+
+	yyvs60: SPECIAL [STRING_AS]
+			-- Stack for semantic values of type STRING_AS
+
+	yyvsc60: INTEGER
+			-- Capacity of semantic value stack `yyvs60'
+
+	yyvsp60: INTEGER
+			-- Top of semantic value stack `yyvs60'
+
+	yyspecial_routines60: KL_SPECIAL_ROUTINES [STRING_AS]
+			-- Routines that ought to be in SPECIAL [STRING_AS]
+
+	yyvs61: SPECIAL [TAGGED_AS]
+			-- Stack for semantic values of type TAGGED_AS
+
+	yyvsc61: INTEGER
+			-- Capacity of semantic value stack `yyvs61'
+
+	yyvsp61: INTEGER
+			-- Top of semantic value stack `yyvs61'
+
+	yyspecial_routines61: KL_SPECIAL_ROUTINES [TAGGED_AS]
+			-- Routines that ought to be in SPECIAL [TAGGED_AS]
+
+	yyvs62: SPECIAL [TUPLE_AS]
+			-- Stack for semantic values of type TUPLE_AS
+
+	yyvsc62: INTEGER
+			-- Capacity of semantic value stack `yyvs62'
+
+	yyvsp62: INTEGER
+			-- Top of semantic value stack `yyvs62'
+
+	yyspecial_routines62: KL_SPECIAL_ROUTINES [TUPLE_AS]
+			-- Routines that ought to be in SPECIAL [TUPLE_AS]
+
+	yyvs63: SPECIAL [TYPE_AS]
+			-- Stack for semantic values of type TYPE_AS
+
+	yyvsc63: INTEGER
+			-- Capacity of semantic value stack `yyvs63'
+
+	yyvsp63: INTEGER
+			-- Top of semantic value stack `yyvs63'
+
+	yyspecial_routines63: KL_SPECIAL_ROUTINES [TYPE_AS]
+			-- Routines that ought to be in SPECIAL [TYPE_AS]
+
+	yyvs64: SPECIAL [TYPE_DEC_AS]
+			-- Stack for semantic values of type TYPE_DEC_AS
+
+	yyvsc64: INTEGER
+			-- Capacity of semantic value stack `yyvs64'
+
+	yyvsp64: INTEGER
+			-- Top of semantic value stack `yyvs64'
+
+	yyspecial_routines64: KL_SPECIAL_ROUTINES [TYPE_DEC_AS]
+			-- Routines that ought to be in SPECIAL [TYPE_DEC_AS]
+
+	yyvs65: SPECIAL [VARIANT_AS]
+			-- Stack for semantic values of type VARIANT_AS
+
+	yyvsc65: INTEGER
+			-- Capacity of semantic value stack `yyvs65'
+
+	yyvsp65: INTEGER
+			-- Top of semantic value stack `yyvs65'
+
+	yyspecial_routines65: KL_SPECIAL_ROUTINES [VARIANT_AS]
+			-- Routines that ought to be in SPECIAL [VARIANT_AS]
+
+	yyvs66: SPECIAL [EIFFEL_LIST [ATOMIC_AS]]
+			-- Stack for semantic values of type EIFFEL_LIST [ATOMIC_AS]
+
+	yyvsc66: INTEGER
+			-- Capacity of semantic value stack `yyvs66'
+
+	yyvsp66: INTEGER
+			-- Top of semantic value stack `yyvs66'
+
+	yyspecial_routines66: KL_SPECIAL_ROUTINES [EIFFEL_LIST [ATOMIC_AS]]
+			-- Routines that ought to be in SPECIAL [EIFFEL_LIST [ATOMIC_AS]]
+
+	yyvs67: SPECIAL [EIFFEL_LIST [CASE_AS]]
+			-- Stack for semantic values of type EIFFEL_LIST [CASE_AS]
+
+	yyvsc67: INTEGER
+			-- Capacity of semantic value stack `yyvs67'
+
+	yyvsp67: INTEGER
+			-- Top of semantic value stack `yyvs67'
+
+	yyspecial_routines67: KL_SPECIAL_ROUTINES [EIFFEL_LIST [CASE_AS]]
+			-- Routines that ought to be in SPECIAL [EIFFEL_LIST [CASE_AS]]
+
+	yyvs68: SPECIAL [EIFFEL_LIST [CONVERT_FEAT_AS]]
+			-- Stack for semantic values of type EIFFEL_LIST [CONVERT_FEAT_AS]
+
+	yyvsc68: INTEGER
+			-- Capacity of semantic value stack `yyvs68'
+
+	yyvsp68: INTEGER
+			-- Top of semantic value stack `yyvs68'
+
+	yyspecial_routines68: KL_SPECIAL_ROUTINES [EIFFEL_LIST [CONVERT_FEAT_AS]]
+			-- Routines that ought to be in SPECIAL [EIFFEL_LIST [CONVERT_FEAT_AS]]
+
+	yyvs69: SPECIAL [EIFFEL_LIST [CREATE_AS]]
+			-- Stack for semantic values of type EIFFEL_LIST [CREATE_AS]
+
+	yyvsc69: INTEGER
+			-- Capacity of semantic value stack `yyvs69'
+
+	yyvsp69: INTEGER
+			-- Top of semantic value stack `yyvs69'
+
+	yyspecial_routines69: KL_SPECIAL_ROUTINES [EIFFEL_LIST [CREATE_AS]]
+			-- Routines that ought to be in SPECIAL [EIFFEL_LIST [CREATE_AS]]
+
+	yyvs70: SPECIAL [EIFFEL_LIST [ELSIF_AS]]
+			-- Stack for semantic values of type EIFFEL_LIST [ELSIF_AS]
+
+	yyvsc70: INTEGER
+			-- Capacity of semantic value stack `yyvs70'
+
+	yyvsp70: INTEGER
+			-- Top of semantic value stack `yyvs70'
+
+	yyspecial_routines70: KL_SPECIAL_ROUTINES [EIFFEL_LIST [ELSIF_AS]]
+			-- Routines that ought to be in SPECIAL [EIFFEL_LIST [ELSIF_AS]]
+
+	yyvs71: SPECIAL [EIFFEL_LIST [EXPORT_ITEM_AS]]
+			-- Stack for semantic values of type EIFFEL_LIST [EXPORT_ITEM_AS]
+
+	yyvsc71: INTEGER
+			-- Capacity of semantic value stack `yyvs71'
+
+	yyvsp71: INTEGER
+			-- Top of semantic value stack `yyvs71'
+
+	yyspecial_routines71: KL_SPECIAL_ROUTINES [EIFFEL_LIST [EXPORT_ITEM_AS]]
+			-- Routines that ought to be in SPECIAL [EIFFEL_LIST [EXPORT_ITEM_AS]]
+
+	yyvs72: SPECIAL [EIFFEL_LIST [EXPR_AS]]
+			-- Stack for semantic values of type EIFFEL_LIST [EXPR_AS]
+
+	yyvsc72: INTEGER
+			-- Capacity of semantic value stack `yyvs72'
+
+	yyvsp72: INTEGER
+			-- Top of semantic value stack `yyvs72'
+
+	yyspecial_routines72: KL_SPECIAL_ROUTINES [EIFFEL_LIST [EXPR_AS]]
+			-- Routines that ought to be in SPECIAL [EIFFEL_LIST [EXPR_AS]]
+
+	yyvs73: SPECIAL [EIFFEL_LIST [FEATURE_AS]]
+			-- Stack for semantic values of type EIFFEL_LIST [FEATURE_AS]
+
+	yyvsc73: INTEGER
+			-- Capacity of semantic value stack `yyvs73'
+
+	yyvsp73: INTEGER
+			-- Top of semantic value stack `yyvs73'
+
+	yyspecial_routines73: KL_SPECIAL_ROUTINES [EIFFEL_LIST [FEATURE_AS]]
+			-- Routines that ought to be in SPECIAL [EIFFEL_LIST [FEATURE_AS]]
+
+	yyvs74: SPECIAL [EIFFEL_LIST [FEATURE_CLAUSE_AS]]
+			-- Stack for semantic values of type EIFFEL_LIST [FEATURE_CLAUSE_AS]
+
+	yyvsc74: INTEGER
+			-- Capacity of semantic value stack `yyvs74'
+
+	yyvsp74: INTEGER
+			-- Top of semantic value stack `yyvs74'
+
+	yyspecial_routines74: KL_SPECIAL_ROUTINES [EIFFEL_LIST [FEATURE_CLAUSE_AS]]
+			-- Routines that ought to be in SPECIAL [EIFFEL_LIST [FEATURE_CLAUSE_AS]]
+
+	yyvs75: SPECIAL [FEATURE_NAME]
+			-- Stack for semantic values of type FEATURE_NAME
+
+	yyvsc75: INTEGER
+			-- Capacity of semantic value stack `yyvs75'
+
+	yyvsp75: INTEGER
+			-- Top of semantic value stack `yyvs75'
+
+	yyspecial_routines75: KL_SPECIAL_ROUTINES [FEATURE_NAME]
+			-- Routines that ought to be in SPECIAL [FEATURE_NAME]
+
+	yyvs76: SPECIAL [EIFFEL_LIST [FEATURE_NAME]]
+			-- Stack for semantic values of type EIFFEL_LIST [FEATURE_NAME]
+
+	yyvsc76: INTEGER
+			-- Capacity of semantic value stack `yyvs76'
+
+	yyvsp76: INTEGER
+			-- Top of semantic value stack `yyvs76'
+
+	yyspecial_routines76: KL_SPECIAL_ROUTINES [EIFFEL_LIST [FEATURE_NAME]]
+			-- Routines that ought to be in SPECIAL [EIFFEL_LIST [FEATURE_NAME]]
+
+	yyvs77: SPECIAL [EIFFEL_LIST [FORMAL_DEC_AS]]
+			-- Stack for semantic values of type EIFFEL_LIST [FORMAL_DEC_AS]
+
+	yyvsc77: INTEGER
+			-- Capacity of semantic value stack `yyvs77'
+
+	yyvsp77: INTEGER
+			-- Top of semantic value stack `yyvs77'
+
+	yyspecial_routines77: KL_SPECIAL_ROUTINES [EIFFEL_LIST [FORMAL_DEC_AS]]
+			-- Routines that ought to be in SPECIAL [EIFFEL_LIST [FORMAL_DEC_AS]]
+
+	yyvs78: SPECIAL [EIFFEL_LIST [ID_AS]]
+			-- Stack for semantic values of type EIFFEL_LIST [ID_AS]
+
+	yyvsc78: INTEGER
+			-- Capacity of semantic value stack `yyvs78'
+
+	yyvsp78: INTEGER
+			-- Top of semantic value stack `yyvs78'
+
+	yyspecial_routines78: KL_SPECIAL_ROUTINES [EIFFEL_LIST [ID_AS]]
+			-- Routines that ought to be in SPECIAL [EIFFEL_LIST [ID_AS]]
+
+	yyvs79: SPECIAL [INTEGER]
+			-- Stack for semantic values of type INTEGER
+
+	yyvsc79: INTEGER
+			-- Capacity of semantic value stack `yyvs79'
+
+	yyvsp79: INTEGER
+			-- Top of semantic value stack `yyvs79'
+
+	yyspecial_routines79: KL_SPECIAL_ROUTINES [INTEGER]
+			-- Routines that ought to be in SPECIAL [INTEGER]
+
+	yyvs80: SPECIAL [ARRAYED_LIST [INTEGER]]
+			-- Stack for semantic values of type ARRAYED_LIST [INTEGER]
+
+	yyvsc80: INTEGER
+			-- Capacity of semantic value stack `yyvs80'
+
+	yyvsp80: INTEGER
+			-- Top of semantic value stack `yyvs80'
+
+	yyspecial_routines80: KL_SPECIAL_ROUTINES [ARRAYED_LIST [INTEGER]]
+			-- Routines that ought to be in SPECIAL [ARRAYED_LIST [INTEGER]]
+
+	yyvs81: SPECIAL [INDEXING_CLAUSE_AS]
+			-- Stack for semantic values of type INDEXING_CLAUSE_AS
+
+	yyvsc81: INTEGER
+			-- Capacity of semantic value stack `yyvs81'
+
+	yyvsp81: INTEGER
+			-- Top of semantic value stack `yyvs81'
+
+	yyspecial_routines81: KL_SPECIAL_ROUTINES [INDEXING_CLAUSE_AS]
+			-- Routines that ought to be in SPECIAL [INDEXING_CLAUSE_AS]
+
+	yyvs82: SPECIAL [EIFFEL_LIST [INSTRUCTION_AS]]
+			-- Stack for semantic values of type EIFFEL_LIST [INSTRUCTION_AS]
+
+	yyvsc82: INTEGER
+			-- Capacity of semantic value stack `yyvs82'
+
+	yyvsp82: INTEGER
+			-- Top of semantic value stack `yyvs82'
+
+	yyspecial_routines82: KL_SPECIAL_ROUTINES [EIFFEL_LIST [INSTRUCTION_AS]]
+			-- Routines that ought to be in SPECIAL [EIFFEL_LIST [INSTRUCTION_AS]]
+
+	yyvs83: SPECIAL [EIFFEL_LIST [INTERVAL_AS]]
+			-- Stack for semantic values of type EIFFEL_LIST [INTERVAL_AS]
+
+	yyvsc83: INTEGER
+			-- Capacity of semantic value stack `yyvs83'
+
+	yyvsp83: INTEGER
+			-- Top of semantic value stack `yyvs83'
+
+	yyspecial_routines83: KL_SPECIAL_ROUTINES [EIFFEL_LIST [INTERVAL_AS]]
+			-- Routines that ought to be in SPECIAL [EIFFEL_LIST [INTERVAL_AS]]
+
+	yyvs84: SPECIAL [EIFFEL_LIST [OPERAND_AS]]
+			-- Stack for semantic values of type EIFFEL_LIST [OPERAND_AS]
+
+	yyvsc84: INTEGER
+			-- Capacity of semantic value stack `yyvs84'
+
+	yyvsp84: INTEGER
+			-- Top of semantic value stack `yyvs84'
+
+	yyspecial_routines84: KL_SPECIAL_ROUTINES [EIFFEL_LIST [OPERAND_AS]]
+			-- Routines that ought to be in SPECIAL [EIFFEL_LIST [OPERAND_AS]]
+
+	yyvs85: SPECIAL [EIFFEL_LIST [PARENT_AS]]
+			-- Stack for semantic values of type EIFFEL_LIST [PARENT_AS]
+
+	yyvsc85: INTEGER
+			-- Capacity of semantic value stack `yyvs85'
+
+	yyvsp85: INTEGER
+			-- Top of semantic value stack `yyvs85'
+
+	yyspecial_routines85: KL_SPECIAL_ROUTINES [EIFFEL_LIST [PARENT_AS]]
+			-- Routines that ought to be in SPECIAL [EIFFEL_LIST [PARENT_AS]]
+
+	yyvs86: SPECIAL [EIFFEL_LIST [RENAME_AS]]
+			-- Stack for semantic values of type EIFFEL_LIST [RENAME_AS]
+
+	yyvsc86: INTEGER
+			-- Capacity of semantic value stack `yyvs86'
+
+	yyvsp86: INTEGER
+			-- Top of semantic value stack `yyvs86'
+
+	yyspecial_routines86: KL_SPECIAL_ROUTINES [EIFFEL_LIST [RENAME_AS]]
+			-- Routines that ought to be in SPECIAL [EIFFEL_LIST [RENAME_AS]]
+
+	yyvs87: SPECIAL [EIFFEL_LIST [STRING_AS]]
+			-- Stack for semantic values of type EIFFEL_LIST [STRING_AS]
+
+	yyvsc87: INTEGER
+			-- Capacity of semantic value stack `yyvs87'
+
+	yyvsp87: INTEGER
+			-- Top of semantic value stack `yyvs87'
+
+	yyspecial_routines87: KL_SPECIAL_ROUTINES [EIFFEL_LIST [STRING_AS]]
+			-- Routines that ought to be in SPECIAL [EIFFEL_LIST [STRING_AS]]
+
+	yyvs88: SPECIAL [EIFFEL_LIST [TAGGED_AS]]
+			-- Stack for semantic values of type EIFFEL_LIST [TAGGED_AS]
+
+	yyvsc88: INTEGER
+			-- Capacity of semantic value stack `yyvs88'
+
+	yyvsp88: INTEGER
+			-- Top of semantic value stack `yyvs88'
+
+	yyspecial_routines88: KL_SPECIAL_ROUTINES [EIFFEL_LIST [TAGGED_AS]]
+			-- Routines that ought to be in SPECIAL [EIFFEL_LIST [TAGGED_AS]]
+
+	yyvs89: SPECIAL [EIFFEL_LIST [TYPE_AS]]
+			-- Stack for semantic values of type EIFFEL_LIST [TYPE_AS]
+
+	yyvsc89: INTEGER
+			-- Capacity of semantic value stack `yyvs89'
+
+	yyvsp89: INTEGER
+			-- Top of semantic value stack `yyvs89'
+
+	yyspecial_routines89: KL_SPECIAL_ROUTINES [EIFFEL_LIST [TYPE_AS]]
+			-- Routines that ought to be in SPECIAL [EIFFEL_LIST [TYPE_AS]]
+
+	yyvs90: SPECIAL [EIFFEL_LIST [TYPE_DEC_AS]]
+			-- Stack for semantic values of type EIFFEL_LIST [TYPE_DEC_AS]
+
+	yyvsc90: INTEGER
+			-- Capacity of semantic value stack `yyvs90'
+
+	yyvsp90: INTEGER
+			-- Top of semantic value stack `yyvs90'
+
+	yyspecial_routines90: KL_SPECIAL_ROUTINES [EIFFEL_LIST [TYPE_DEC_AS]]
+			-- Routines that ought to be in SPECIAL [EIFFEL_LIST [TYPE_DEC_AS]]
+
+	yyvs91: SPECIAL [CLICK_AST]
+			-- Stack for semantic values of type CLICK_AST
+
+	yyvsc91: INTEGER
+			-- Capacity of semantic value stack `yyvs91'
+
+	yyvsp91: INTEGER
+			-- Top of semantic value stack `yyvs91'
+
+	yyspecial_routines91: KL_SPECIAL_ROUTINES [CLICK_AST]
+			-- Routines that ought to be in SPECIAL [CLICK_AST]
+
+	yyvs92: SPECIAL [PAIR [ID_AS, CLICK_AST]]
+			-- Stack for semantic values of type PAIR [ID_AS, CLICK_AST]
+
+	yyvsc92: INTEGER
+			-- Capacity of semantic value stack `yyvs92'
+
+	yyvsp92: INTEGER
+			-- Top of semantic value stack `yyvs92'
+
+	yyspecial_routines92: KL_SPECIAL_ROUTINES [PAIR [ID_AS, CLICK_AST]]
+			-- Routines that ought to be in SPECIAL [PAIR [ID_AS, CLICK_AST]]
+
+	yyvs93: SPECIAL [PAIR [FEATURE_NAME, CLICK_AST]]
+			-- Stack for semantic values of type PAIR [FEATURE_NAME, CLICK_AST]
+
+	yyvsc93: INTEGER
+			-- Capacity of semantic value stack `yyvs93'
+
+	yyvsp93: INTEGER
+			-- Top of semantic value stack `yyvs93'
+
+	yyspecial_routines93: KL_SPECIAL_ROUTINES [PAIR [FEATURE_NAME, CLICK_AST]]
+			-- Routines that ought to be in SPECIAL [PAIR [FEATURE_NAME, CLICK_AST]]
+
+	yyvs94: SPECIAL [PAIR [STRING_AS, CLICK_AST]]
+			-- Stack for semantic values of type PAIR [STRING_AS, CLICK_AST]
+
+	yyvsc94: INTEGER
+			-- Capacity of semantic value stack `yyvs94'
+
+	yyvsp94: INTEGER
+			-- Top of semantic value stack `yyvs94'
+
+	yyspecial_routines94: KL_SPECIAL_ROUTINES [PAIR [STRING_AS, CLICK_AST]]
+			-- Routines that ought to be in SPECIAL [PAIR [STRING_AS, CLICK_AST]]
+
+	yyvs95: SPECIAL [PAIR [EIFFEL_LIST [FEATURE_NAME], CLICK_AST]]
+			-- Stack for semantic values of type PAIR [EIFFEL_LIST [FEATURE_NAME], CLICK_AST]
+
+	yyvsc95: INTEGER
+			-- Capacity of semantic value stack `yyvs95'
+
+	yyvsp95: INTEGER
+			-- Top of semantic value stack `yyvs95'
+
+	yyspecial_routines95: KL_SPECIAL_ROUTINES [PAIR [EIFFEL_LIST [FEATURE_NAME], CLICK_AST]]
+			-- Routines that ought to be in SPECIAL [PAIR [EIFFEL_LIST [FEATURE_NAME], CLICK_AST]]
+
+	yyvs96: SPECIAL [PAIR [TYPE_AS, EIFFEL_LIST [FEATURE_NAME]]]
+			-- Stack for semantic values of type PAIR [TYPE_AS, EIFFEL_LIST [FEATURE_NAME]]
+
+	yyvsc96: INTEGER
+			-- Capacity of semantic value stack `yyvs96'
+
+	yyvsp96: INTEGER
+			-- Top of semantic value stack `yyvs96'
 
+	yyspecial_routines96: KL_SPECIAL_ROUTINES [PAIR [TYPE_AS, EIFFEL_LIST [FEATURE_NAME]]]
+			-- Routines that ought to be in SPECIAL [PAIR [TYPE_AS, EIFFEL_LIST [FEATURE_NAME]]]
 
 feature {NONE} -- Constants
 
-	yyFinal: INTEGER is 816
+	yyFinal: INTEGER is 822
 			-- Termination state id
 
 	yyFlag: INTEGER is -32768
@@ -14976,14 +21066,14 @@ feature {NONE} -- Constants
 	yyNtbase: INTEGER is 130
 			-- Number of tokens
 
-	yyLast: INTEGER is 2312
+	yyLast: INTEGER is 2780
 			-- Upper bound of `yytable' and `yycheck'
 
 	yyMax_token: INTEGER is 384
 			-- Maximum token id
 			-- (upper bound of `yytranslate'.)
 
-	yyNsyms: INTEGER is 318
+	yyNsyms: INTEGER is 333
 			-- Number of symbols
 			-- (terminal and nonterminal)
 

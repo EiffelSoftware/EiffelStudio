@@ -4,7 +4,7 @@
 
 
  /* File created by MIDL compiler version 6.00.0361 */
-/* at Mon Sep 08 16:06:37 2003
+/* at Thu Oct 02 11:30:41 2003
  */
 /* Compiler settings for ise_cache_manager.idl:
     Oicf, W1, Zp8, env=Win32 (32b run)
@@ -113,11 +113,9 @@ EXTERN_C const IID IID_ISE_Cache_COM_ISE_CACHE_MANAGER;
             /* [in] */ BSTR apath,
             /* [in] */ BSTR adest) = 0;
         
-        virtual /* [id] */ HRESULT STDMETHODCALLTYPE impl( 
-            /* [retval][out] */ IUnknown **pRetVal) = 0;
+        virtual /* [restricted] */ void STDMETHODCALLTYPE Missing10( void) = 0;
         
-        virtual /* [id] */ HRESULT STDMETHODCALLTYPE _set_impl( 
-            /* [in] */ IUnknown *p1) = 0;
+        virtual /* [restricted] */ void STDMETHODCALLTYPE Missing11( void) = 0;
         
         virtual /* [id] */ HRESULT STDMETHODCALLTYPE initialize( void) = 0;
         
@@ -210,13 +208,11 @@ EXTERN_C const IID IID_ISE_Cache_COM_ISE_CACHE_MANAGER;
             /* [in] */ BSTR apath,
             /* [in] */ BSTR adest);
         
-        /* [id] */ HRESULT ( STDMETHODCALLTYPE *impl )( 
-            ISE_Cache_COM_ISE_CACHE_MANAGER * This,
-            /* [retval][out] */ IUnknown **pRetVal);
+        /* [restricted] */ void ( STDMETHODCALLTYPE *Missing10 )( 
+            ISE_Cache_COM_ISE_CACHE_MANAGER * This);
         
-        /* [id] */ HRESULT ( STDMETHODCALLTYPE *_set_impl )( 
-            ISE_Cache_COM_ISE_CACHE_MANAGER * This,
-            /* [in] */ IUnknown *p1);
+        /* [restricted] */ void ( STDMETHODCALLTYPE *Missing11 )( 
+            ISE_Cache_COM_ISE_CACHE_MANAGER * This);
         
         /* [id] */ HRESULT ( STDMETHODCALLTYPE *initialize )( 
             ISE_Cache_COM_ISE_CACHE_MANAGER * This);
@@ -297,11 +293,11 @@ EXTERN_C const IID IID_ISE_Cache_COM_ISE_CACHE_MANAGER;
 #define ISE_Cache_COM_ISE_CACHE_MANAGER_consume_local_assembly(This,apath,adest)	\
     (This)->lpVtbl -> consume_local_assembly(This,apath,adest)
 
-#define ISE_Cache_COM_ISE_CACHE_MANAGER_impl(This,pRetVal)	\
-    (This)->lpVtbl -> impl(This,pRetVal)
+#define ISE_Cache_COM_ISE_CACHE_MANAGER_Missing10(This)	\
+    (This)->lpVtbl -> Missing10(This)
 
-#define ISE_Cache_COM_ISE_CACHE_MANAGER__set_impl(This,p1)	\
-    (This)->lpVtbl -> _set_impl(This,p1)
+#define ISE_Cache_COM_ISE_CACHE_MANAGER_Missing11(This)	\
+    (This)->lpVtbl -> Missing11(This)
 
 #define ISE_Cache_COM_ISE_CACHE_MANAGER_initialize(This)	\
     (This)->lpVtbl -> initialize(This)
@@ -375,24 +371,22 @@ void __RPC_STUB ISE_Cache_COM_ISE_CACHE_MANAGER_consume_local_assembly_Stub(
     DWORD *_pdwStubPhase);
 
 
-/* [id] */ HRESULT STDMETHODCALLTYPE ISE_Cache_COM_ISE_CACHE_MANAGER_impl_Proxy( 
-    ISE_Cache_COM_ISE_CACHE_MANAGER * This,
-    /* [retval][out] */ IUnknown **pRetVal);
+/* [restricted] */ void STDMETHODCALLTYPE ISE_Cache_COM_ISE_CACHE_MANAGER_Missing10_Proxy( 
+    ISE_Cache_COM_ISE_CACHE_MANAGER * This);
 
 
-void __RPC_STUB ISE_Cache_COM_ISE_CACHE_MANAGER_impl_Stub(
+void __RPC_STUB ISE_Cache_COM_ISE_CACHE_MANAGER_Missing10_Stub(
     IRpcStubBuffer *This,
     IRpcChannelBuffer *_pRpcChannelBuffer,
     PRPC_MESSAGE _pRpcMessage,
     DWORD *_pdwStubPhase);
 
 
-/* [id] */ HRESULT STDMETHODCALLTYPE ISE_Cache_COM_ISE_CACHE_MANAGER__set_impl_Proxy( 
-    ISE_Cache_COM_ISE_CACHE_MANAGER * This,
-    /* [in] */ IUnknown *p1);
+/* [restricted] */ void STDMETHODCALLTYPE ISE_Cache_COM_ISE_CACHE_MANAGER_Missing11_Proxy( 
+    ISE_Cache_COM_ISE_CACHE_MANAGER * This);
 
 
-void __RPC_STUB ISE_Cache_COM_ISE_CACHE_MANAGER__set_impl_Stub(
+void __RPC_STUB ISE_Cache_COM_ISE_CACHE_MANAGER_Missing11_Stub(
     IRpcStubBuffer *This,
     IRpcChannelBuffer *_pRpcChannelBuffer,
     PRPC_MESSAGE _pRpcMessage,
@@ -519,11 +513,9 @@ EXTERN_C const IID IID_ISE_Cache_COM_ASSEMBLY_INFORMATION;
         virtual /* [id] */ HRESULT STDMETHODCALLTYPE culture( 
             /* [retval][out] */ BSTR *pRetVal) = 0;
         
-        virtual /* [id] */ HRESULT STDMETHODCALLTYPE impl( 
-            /* [retval][out] */ IUnknown **pRetVal) = 0;
+        virtual /* [restricted] */ void STDMETHODCALLTYPE Missing8( void) = 0;
         
-        virtual /* [id] */ HRESULT STDMETHODCALLTYPE _set_impl( 
-            /* [in] */ IUnknown *p1) = 0;
+        virtual /* [restricted] */ void STDMETHODCALLTYPE Missing9( void) = 0;
         
         virtual /* [id] */ HRESULT STDMETHODCALLTYPE make( 
             /* [in] */ IUnknown *ass) = 0;
@@ -589,13 +581,11 @@ EXTERN_C const IID IID_ISE_Cache_COM_ASSEMBLY_INFORMATION;
             ISE_Cache_COM_ASSEMBLY_INFORMATION * This,
             /* [retval][out] */ BSTR *pRetVal);
         
-        /* [id] */ HRESULT ( STDMETHODCALLTYPE *impl )( 
-            ISE_Cache_COM_ASSEMBLY_INFORMATION * This,
-            /* [retval][out] */ IUnknown **pRetVal);
+        /* [restricted] */ void ( STDMETHODCALLTYPE *Missing8 )( 
+            ISE_Cache_COM_ASSEMBLY_INFORMATION * This);
         
-        /* [id] */ HRESULT ( STDMETHODCALLTYPE *_set_impl )( 
-            ISE_Cache_COM_ASSEMBLY_INFORMATION * This,
-            /* [in] */ IUnknown *p1);
+        /* [restricted] */ void ( STDMETHODCALLTYPE *Missing9 )( 
+            ISE_Cache_COM_ASSEMBLY_INFORMATION * This);
         
         /* [id] */ HRESULT ( STDMETHODCALLTYPE *make )( 
             ISE_Cache_COM_ASSEMBLY_INFORMATION * This,
@@ -652,11 +642,11 @@ EXTERN_C const IID IID_ISE_Cache_COM_ASSEMBLY_INFORMATION;
 #define ISE_Cache_COM_ASSEMBLY_INFORMATION_culture(This,pRetVal)	\
     (This)->lpVtbl -> culture(This,pRetVal)
 
-#define ISE_Cache_COM_ASSEMBLY_INFORMATION_impl(This,pRetVal)	\
-    (This)->lpVtbl -> impl(This,pRetVal)
+#define ISE_Cache_COM_ASSEMBLY_INFORMATION_Missing8(This)	\
+    (This)->lpVtbl -> Missing8(This)
 
-#define ISE_Cache_COM_ASSEMBLY_INFORMATION__set_impl(This,p1)	\
-    (This)->lpVtbl -> _set_impl(This,p1)
+#define ISE_Cache_COM_ASSEMBLY_INFORMATION_Missing9(This)	\
+    (This)->lpVtbl -> Missing9(This)
 
 #define ISE_Cache_COM_ASSEMBLY_INFORMATION_make(This,ass)	\
     (This)->lpVtbl -> make(This,ass)
@@ -689,24 +679,22 @@ void __RPC_STUB ISE_Cache_COM_ASSEMBLY_INFORMATION_culture_Stub(
     DWORD *_pdwStubPhase);
 
 
-/* [id] */ HRESULT STDMETHODCALLTYPE ISE_Cache_COM_ASSEMBLY_INFORMATION_impl_Proxy( 
-    ISE_Cache_COM_ASSEMBLY_INFORMATION * This,
-    /* [retval][out] */ IUnknown **pRetVal);
+/* [restricted] */ void STDMETHODCALLTYPE ISE_Cache_COM_ASSEMBLY_INFORMATION_Missing8_Proxy( 
+    ISE_Cache_COM_ASSEMBLY_INFORMATION * This);
 
 
-void __RPC_STUB ISE_Cache_COM_ASSEMBLY_INFORMATION_impl_Stub(
+void __RPC_STUB ISE_Cache_COM_ASSEMBLY_INFORMATION_Missing8_Stub(
     IRpcStubBuffer *This,
     IRpcChannelBuffer *_pRpcChannelBuffer,
     PRPC_MESSAGE _pRpcMessage,
     DWORD *_pdwStubPhase);
 
 
-/* [id] */ HRESULT STDMETHODCALLTYPE ISE_Cache_COM_ASSEMBLY_INFORMATION__set_impl_Proxy( 
-    ISE_Cache_COM_ASSEMBLY_INFORMATION * This,
-    /* [in] */ IUnknown *p1);
+/* [restricted] */ void STDMETHODCALLTYPE ISE_Cache_COM_ASSEMBLY_INFORMATION_Missing9_Proxy( 
+    ISE_Cache_COM_ASSEMBLY_INFORMATION * This);
 
 
-void __RPC_STUB ISE_Cache_COM_ASSEMBLY_INFORMATION__set_impl_Stub(
+void __RPC_STUB ISE_Cache_COM_ASSEMBLY_INFORMATION_Missing9_Stub(
     IRpcStubBuffer *This,
     IRpcChannelBuffer *_pRpcChannelBuffer,
     PRPC_MESSAGE _pRpcMessage,

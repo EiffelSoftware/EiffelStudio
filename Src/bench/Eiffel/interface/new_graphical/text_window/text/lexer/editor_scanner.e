@@ -32,6 +32,7 @@ inherit
 	KL_SHARED_EXCEPTIONS
 	KL_SHARED_ARGUMENTS
 
+	SHARED_EIFFEL_PROJECT
 
 feature {NONE} -- Local variables
 

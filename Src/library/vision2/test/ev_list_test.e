@@ -125,7 +125,7 @@ feature {NONE} -- Implementation
 
 	avoid_cond: BOOLEAN is
 		do
-			description.append ("Your list's item: " + item_text (list.item) + "; LINKED_LIST: " + item_text (similar_list.item) + "%N")
+			--description.append ("Your list's item: " + item_text (list.item) + "; LINKED_LIST: " + item_text (similar_list.item) + "%N")
 			Result := True
 		end
 
@@ -135,9 +135,6 @@ feature {NONE} -- Implementation
 		do
 			if list.count /= similar_list.count then
 				description.append (" `count' incorrect.%N")
-				test_successful := False
-			elseif not items_equal then 
-				description.append (" items incorrect.%N")
 				test_successful := False
 			elseif list.first /= similar_list.first then 
 				description.append (" `first' incorrect.%N")
@@ -194,6 +191,9 @@ feature {NONE} -- Implementation
 				test_successful := False
 			elseif list.off /= similar_list.off then 
 				description.append (" `off' incorrect.%N")
+				test_successful := False
+			elseif not items_equal then 
+				description.append (" items incorrect.%N")
 				test_successful := False
 			else
 				description.append (" OK%N")
@@ -394,8 +394,8 @@ end -- class EV_LIST_TEST
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
---| Revision 1.4  2000/03/01 17:00:13  brendel
---| Attempt to fix item-test.
+--| Revision 1.5  2000/03/01 17:25:48  brendel
+--| Fixed `item' comparison.
 --|
 --| Revision 1.2  2000/03/01 16:18:17  brendel
 --| Added tests for all single-item-add features.

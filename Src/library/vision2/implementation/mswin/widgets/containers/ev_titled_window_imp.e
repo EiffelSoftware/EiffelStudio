@@ -48,6 +48,7 @@ feature {NONE} -- Initialization
 			-- Create `Current' with interface `an_interface'.
 		do
 			internal_class_name := new_class_name
+			internal_icon_name := ""
 			base_make (an_interface)
 			make_top ("EV_TITLED_WINDOW")
 			create accel_list.make (10)
@@ -59,12 +60,7 @@ feature -- Access
 			-- Application name to be displayed by
 			-- the window manager.
 		do
-			if internal_title /= Void and then internal_title.count /= 0 then
 				Result := internal_title
-				check
-					Result_ok: equal (Result, text)
-				end
-			end
 		end
 
 	internal_title: STRING
@@ -76,11 +72,7 @@ feature -- Access
 			-- displayed by the window manager when
 			-- application is iconified.
 		do
-			if internal_icon_name = Void then
-				Result := title
-			else
-				Result := internal_icon_name
-			end
+			Result := internal_icon_name
 		end
 
 	icon_pixmap: EV_PIXMAP is
@@ -163,7 +155,7 @@ feature -- Element change
 	set_title (txt: STRING) is
 			-- Make `txt' the title of `Current'.            
 		do
-			internal_title := txt
+			internal_title := clone (txt)
 			if not is_minimized then
 				set_text (txt)
 			end
@@ -172,7 +164,7 @@ feature -- Element change
 	set_icon_name (txt: STRING) is
 			-- Make `txt' the new icon name.
 		do
-			internal_icon_name := txt
+			internal_icon_name := clone (txt)
 			if is_minimized then
 				set_text (txt)
 			end
@@ -456,7 +448,11 @@ feature {NONE} -- WEL Implementation
 			-- Resize the child if it exists.
 		do
 			if size_type = Wel_window_constants.Size_minimized then
-				set_text (icon_name)
+				if icon_name.is_empty then
+					set_text (internal_title)
+				else
+					set_text (icon_name)
+				end
 			elseif size_type = Wel_window_constants.Size_restored or
 			       size_type = Wel_window_constants.Size_maximized
 			then

@@ -79,7 +79,7 @@ feature -- Basic operation
 	refresh is
 			-- Synchronize display with current stone 
 		do
-			text_area.load_eiffel_file (development_window.file_name)
+			text_area.load_file (development_window.file_name)
 		end
 
 	on_text_saved is

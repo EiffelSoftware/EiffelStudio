@@ -32,10 +32,7 @@ inherit
 			{NONE} all
 		end
 	
-	SHARED_RESOURCES
-		export
-			{NONE} all
-		end
+	EB_SHARED_PREFERENCES
 	
 	EB_DEBUGGER_OBSERVER
 		export
@@ -491,7 +488,7 @@ feature {NONE} -- Implementation
 	use_animated_icons: BOOLEAN is
 			-- Should we use animated icons whenever possible? (compiling, running)
 		do
-			Result := boolean_resource_value ("use_animated_icons", True)
+			Result := preferences.development_window_data.use_animated_icons
 		end
 
 	running_icon_index: INTEGER

@@ -20,21 +20,14 @@ inherit
 			default_create, is_equal, copy
 		end
 
-	EB_FEATURE_TOOL_DATA
-		undefine
-			default_create, is_equal, copy
-		end
-
-	EB_FORMATTER_DATA
-		rename
-			show_all_callers as formatter_show_all_callers
+	EB_SHARED_WINDOW_MANAGER
 		export
 			{NONE} all
 		undefine
 			default_create, is_equal, copy
 		end
-		
-	EB_SHARED_WINDOW_MANAGER
+
+	EB_SHARED_PREFERENCES
 		export
 			{NONE} all
 		undefine
@@ -123,7 +116,7 @@ feature {EB_FEATURES_TOOL} -- Implementation
 			l_class: CLASS_C
 		do
 			if not retried then
-				expand_tree := expand_feature_tree
+				expand_tree := preferences.feature_tool_data.expand_feature_tree
 				l_class := features_tool.current_compiled_class
 				class_text := l_class.text
 				if class_text /= Void or else l_class.is_precompiled then
@@ -199,7 +192,7 @@ feature {EB_FEATURES_TOOL} -- Implementation
 			l_clauses: ARRAYED_LIST [DOTNET_FEATURE_CLAUSE_AS [CONSUMED_ENTITY]]
 		do
 			if not retried then
-				expand_tree := expand_feature_tree
+				expand_tree := preferences.feature_tool_data.expand_feature_tree
 				class_text := features_tool.current_compiled_class.text
 				l_dev_win := Window_manager.last_focused_development_window
 				if l_dev_win /= Void then

@@ -30,17 +30,22 @@ inherit
 			{NONE} all
 		end
 
-	EB_DEBUG_TOOL_DATA
-		export
-			{NONE} all
-		end
-
 	SHARED_DEBUG
 		export
 			{NONE} all
 		end
 
 	VALUE_TYPES
+		export
+			{NONE} all
+		end
+	
+	EV_SHARED_APPLICATION
+		export
+			{NONE} all
+		end
+		
+	EB_SHARED_PREFERENCES
 		export
 			{NONE} all
 		end
@@ -58,8 +63,8 @@ feature {NONE} -- Initialization
 	make (a_manager: EB_TOOL_MANAGER) is
 			-- Initialize `Current'.
 		do
-			min_slice_ref.set_item (min_slice)
-			max_slice_ref.set_item (max_slice)
+			min_slice_ref.set_item (preferences.debug_tool_data.min_slice)
+			max_slice_ref.set_item (preferences.debug_tool_data.max_slice)		
 			Precursor {EB_TOOL} (a_manager)
 			display_first_attributes := True
 			display_first_onces := False
@@ -514,8 +519,8 @@ feature -- Memory management
 			-- Recycle `Current', but leave `Current' in an unstable state,
 			-- so that we know whether we're still referenced or not.
 		do
-			set_integer_resource ("min_slice", min_slice_ref.item)
-			set_integer_resource ("max_slice", max_slice_ref.item)
+			preferences.debug_tool_data.min_slice_preference.set_value (min_slice_ref.item)
+			preferences.debug_tool_data.max_slice_preference.set_value (max_slice_ref.item)
 			debugger_manager.kept_objects.wipe_out
 			displayed_objects.wipe_out
 			pretty_print_cmd.end_debug
@@ -565,7 +570,7 @@ feature {NONE} -- Layout Implementation
 				end
 			end
 		end
-			
+
 	expand_result: BOOLEAN
 			-- Should the "Result" tree item be expanded?
 

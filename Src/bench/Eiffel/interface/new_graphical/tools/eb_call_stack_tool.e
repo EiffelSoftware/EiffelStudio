@@ -41,7 +41,7 @@ inherit
 			{NONE} all
 		end
 	
-	EB_DEBUG_TOOL_DATA
+	EB_SHARED_PREFERENCES
 		export
 			{NONE} all
 		end
@@ -732,7 +732,7 @@ feature {NONE} -- Implementation
 			i: INTEGER
 		do
 				--| Get last path from the preferences.
-			last_path := last_saved_stack_path
+			last_path := preferences.debug_tool_data.last_saved_stack_path
 			if last_path = Void then
 					--| The first time, start in the project directory.
 				create standard_path.make
@@ -788,7 +788,8 @@ feature {NONE} -- Implementation
 				fn.put_string (stt.image)
 				fn.close
 					--| Save the path to the preferences.
-				set_last_saved_stack_path (fd.file_path)
+				preferences.debug_tool_data.last_saved_stack_path_preference.set_value (fd.file_path)
+				preferences.preferences.save_resource (preferences.debug_tool_data.last_saved_stack_path_preference)
 			else
 					-- The file name was probably incorrect (not creatable).
 				create wd.make_with_text (Warning_messages.w_Not_creatable (fd.file_name))
@@ -951,7 +952,7 @@ feature {NONE} -- Implementation: set stack depth command
 				nb := element_nb.value
 			end
 			if set_as_default.is_selected then
-				set_max_stack_depth (nb)
+				preferences.debug_tool_data.max_stack_depth_preference.set_value (nb)
 			end
 			close_dialog
 			debugger_manager.set_maximum_stack_depth (nb)

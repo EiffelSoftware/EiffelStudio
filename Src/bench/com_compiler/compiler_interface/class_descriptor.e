@@ -30,6 +30,7 @@ inherit
 			is_deferred,
 			is_external,
 			is_generic,
+			is_library,
 			is_in_system
 		end
 
@@ -379,6 +380,14 @@ feature -- Access
 		do
 			if is_in_system then
 				Result := compiler_class.compiled_class.generics /= Void
+			end
+		end
+		
+	is_library: BOOLEAN is
+			-- Is class part of a library.
+		do
+			if is_in_system then
+				Result := compiler_class.compiled_class.cluster.is_library
 			end
 		end
 

@@ -9,13 +9,7 @@ class C_EXTENSION_I
 
 inherit
 	EXTERNAL_EXT_I
-		rename
-			is_equal as ext_is_equal
-		end
-	EXTERNAL_EXT_I
 		redefine
-			is_equal
-		select
 			is_equal
 		end
 
@@ -36,7 +30,7 @@ feature -- Comparison
 
 	is_equal (other: like Current): BOOLEAN is
 		do	
-			Result := ext_is_equal (other) and then
+			Result := {EXTERNAL_EXT_I} precursor (other) and then
 				equal (special_file_name, other.special_file_name)
 		end
 

@@ -16,7 +16,7 @@ create
 	
 feature {NONE} -- Initialization
 
-	make (target: SYSTEM_OBJECT; function_ptr: POINTER) is
+	make (a_target: SYSTEM_OBJECT; function_ptr: POINTER) is
 			-- Create a new delegate object
 		external
 			"IL creator signature (System.Object, System.IntPtr) use ISE.Runtime.EV_PIXMAP_IMP_DELEGATE"

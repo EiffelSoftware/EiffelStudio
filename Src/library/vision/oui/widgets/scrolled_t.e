@@ -38,7 +38,7 @@ feature {NONE} -- Initialization
 		do
 			create_ev_widget (a_name, a_parent, False)
 		end;
-	
+
 	create_ev_widget (a_name: STRING; a_parent: COMPOSITE; man: BOOLEAN) is
 			-- Create a scrolled text with `a_name' as identifier,
 			-- `a_parent' as parent and call `set_default'.
@@ -77,7 +77,7 @@ feature {NONE} -- Initialization
 			implementation := toolkit.scrolled_t_word_wrapped (Current, man, a_parent);
 			set_default
 		end;
-	
+
 feature -- Status report
 
 	is_vertical_scrollbar: BOOLEAN is
@@ -130,7 +130,7 @@ feature -- Status setting
 			implementation.hide_horizontal_scrollbar
 		end;
 
-feature {G_ANY, G_ANY_I, WIDGET_I, TOOLKIT} -- Implementation
+feature -- Implementation
 
 	implementation: SCROLLED_T_I;
 			-- Implementation of current text

@@ -160,7 +160,7 @@ feature
 							vtec1.set_feature (f);
 							vtec1.set_entity_name (argument_name);
 							Error_handler.insert_error (vtec1);
-						elseif not solved_type.valid_expanded_creation then
+						elseif not solved_type.valid_expanded_creation (associated_class) then
 							!!vtec2;
 							vtec2.set_class (associated_class);
 							vtec2.set_feature (f);

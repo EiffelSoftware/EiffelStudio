@@ -365,6 +365,25 @@ feature
 			wipe_out;
 		end;
 
+feature -- Unique values
+
+	has_unique: BOOLEAN is
+			-- Does the current class have a unique declaration ?
+		do
+			Result := unique_values /= Void
+		end;
+
+	unique_values: HASH_TABLE [INTEGER, STRING];
+			-- Stores the values of the unique attributes
+
+	set_unique_values (u: HASH_TABLE [INTEGER, STRING]) is
+			-- Assign `u' to `unique_values'.
+		do
+			unique_values := u;
+		end;
+
+feature
+
 	trace is
 			-- Trace the type stack
 		local

@@ -47,6 +47,11 @@ feature -- Type check, byte code and dead code removal
 			end;
 		end;
 
+	is_unique: BOOLEAN is
+		do
+			Result := content /= Void and then content.is_unique
+		end;
+
 	check_local_names is
 			-- Check conflicts between local names and feature names
 		do

@@ -3,6 +3,9 @@ class BIN_POWER_AS
 inherit
 
 	ARITHMETIC_AS
+		redefine
+			balanced
+		end
 
 feature
 
@@ -11,6 +14,12 @@ feature
 			-- binary expression
 		once
 			Result := "_infix_power";
+		end;
+
+	balanced: BOOLEAN is
+			-- Is the operation balanced ?
+		do
+			-- Do nothing
 		end;
 
 	byte_anchor: BIN_POWER_B is

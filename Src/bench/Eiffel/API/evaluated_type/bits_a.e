@@ -24,7 +24,7 @@ inherit
 
 feature
 
-	check_conformance (target_type: TYPE_A) is
+	check_conformance (target_name: STRING; target_type: TYPE_A) is
 			-- Check if Current conforms to `other'.
 			-- If not, insert error into Error handler
 			-- which uses `context' for initialisation of the

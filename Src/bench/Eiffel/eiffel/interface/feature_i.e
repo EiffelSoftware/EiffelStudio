@@ -600,12 +600,17 @@ feature -- Export checking
 		end;
 
 feature -- Check
+-- Note: `require else' can be used even if the feature has no
+-- precursor. There is no problem to raise an error in the normal case,
+-- the only case  where we cannot do anything is when aliases are used
+-- and one name references a feature with a predecessor and not the
+-- other one
 
-	check_assertions is
-			-- Raise an error if "require else" or "ensure then" is used
-			-- but the feature has no ancestor
-		do
-		end;
+--	check_assertions is
+--			-- Raise an error if "require else" or "ensure then" is used
+--			-- but the feature has no ancestor
+--		do
+--		end;
 
 	type_check is
 			-- Third pass on current feature
@@ -616,19 +621,20 @@ feature -- Check
 				-- Body of the feature
 			bd: INTEGER
 		do
-			check_assertions;
+-- See the note near the declaration of `check_assertions'
+--			check_assertions;
 			record_suppliers (context.supplier_ids);
 				-- Take the body in the body server
 			bd := body_id;
-			if is_code_replicated then
-debug
-	io.error.putstring ("feature - name: ");
+debug ("SERVER", "TYPE_CHECK");
+	io.error.putstring ("feature name: ");
 	io.error.putstring (feature_name);
 	io.error.new_line;
-	io.error.putstring ("type check - body id: ");
+	io.error.putstring ("body id: ");
 	io.error.putint (body_id);
 	io.error.new_line;
 end;
+			if is_code_replicated then
 				body := Rep_feat_server.item (bd);
 			else
 				body := Body_server.item (bd);
@@ -1031,7 +1037,7 @@ end;
 						vtec1.set_feature (Current);
 						vtec1.set_entity_name (feature_name);
 						Error_handler.insert_error (vtec1);
-					elseif not solved_type.valid_expanded_creation then
+					elseif not solved_type.valid_expanded_creation (class_c) then
 						!!vtec2;
 						vtec2.set_class (written_class);	
 						vtec2.set_feature (Current);

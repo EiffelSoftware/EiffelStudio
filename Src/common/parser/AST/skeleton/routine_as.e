@@ -322,7 +322,7 @@ feature -- Type check, byte code and dead code removal
 								context.init_error (vtec1);
 								vtec1.set_entity_name (local_name);
 								Error_handler.insert_error (vtec1);
-							elseif not solved_type.valid_expanded_creation then
+							elseif not solved_type.valid_expanded_creation (context_class) then
 								!!vtec2;
 								context.init_error (vtec2);
 								vtec2.set_entity_name (local_name);

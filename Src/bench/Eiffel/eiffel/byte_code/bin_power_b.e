@@ -28,11 +28,11 @@ feature
 				result_type := left_type
 			end;
 			if result_type.is_long then
-				generated_file.putstring (" (long) pow((double)");
+				generated_file.putstring ("(long) math_power((double)");
 			elseif result_type.is_float then
-				generated_file.putstring (" (float) pow((double)");
+				generated_file.putstring ("(float) math_power((double)");
 			else
-				generated_file.putstring (" (double) pow((double)");
+				generated_file.putstring ("(double) math_power((double)");
 			end;
 			left.print_register;
 			generated_file.putstring (",(double)");

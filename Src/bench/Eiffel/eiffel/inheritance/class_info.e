@@ -35,6 +35,9 @@ feature
 	creators: EIFFEL_LIST [CREATE_AS];
 			-- Creators
 
+	unique_values: HASH_TABLE [INTEGER, STRING];
+			-- Stores the values of the unique attributes
+
 	set_id (i: INTEGER) is
 			-- Assign `i' to `id'.
 		do
@@ -63,6 +66,12 @@ feature
 			-- Assign `c' to `creators'.
 		do
 			creators := c;
+		end;
+
+	set_unique_values (u: HASH_TABLE [INTEGER, STRING]) is
+			-- Assign `u' to `unique_values'.
+		do
+			unique_values := u;
 		end;
 
 	features: EIFFEL_LIST [FEATURE_CLAUSE_AS] is

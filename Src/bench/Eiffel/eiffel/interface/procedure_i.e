@@ -10,8 +10,7 @@ inherit
 			has_postcondition, has_precondition, is_ensure_then,
 			is_require_else, is_procedure, argument_names, arguments,
 			obsolete_message, assert_id_set, set_assert_id_set,
-			check_local_names, duplicate_arguments,
-			check_assertions
+			check_local_names, duplicate_arguments
 		end;
 	FEATURE_I
 		redefine
@@ -19,8 +18,7 @@ inherit
 			has_postcondition, has_precondition, is_ensure_then,
 			is_require_else, is_procedure, argument_names, arguments,
 			obsolete_message, assert_id_set, set_assert_id_set,
-			check_local_names, duplicate_arguments,
-			check_assertions
+			check_local_names, duplicate_arguments
 		select
 			transfer_to
 		end
@@ -204,40 +202,46 @@ feature
 			end;
 		end;
 
-	check_assertions is
-		local
-			fas: FEATURE_AS;
-			body: BODY_AS;
-			ras: ROUTINE_AS;
-			precondition: REQUIRE_AS;
-			postcondition: ENSURE_AS;
-			ve05: VE05;
-		do
-			if is_origin then
-				fas := Body_server.item (body_Id);
-				body := fas.body;
-				ras ?= body.content;
-				if ras /= Void then
-					precondition := ras.precondition;
-					postcondition := ras.postcondition;
-					if
-						(precondition /= Void and then precondition.is_else)
-					or else
-						(postcondition /= Void and then postcondition.is_then)
-					then
-io.error.putstring ("Error VE05: require else or ensure then%NClass: ");
-io.error.putstring (System.current_class.class_name);
-io.error.putstring ("%NFeature: ");
-io.error.putstring (feature_name);
-io.error.new_line;
+-- Note: `require else' can be used even if the feature has no
+-- precursor. There is no problem to raise an error in the normal case,
+-- the only case  where we cannot do anything is when aliases are used
+-- and one name references a feature with a predecessor and not the
+-- other one
+
+--	check_assertions is
+--		local
+--			fas: FEATURE_AS;
+--			body: BODY_AS;
+--			ras: ROUTINE_AS;
+--			precondition: REQUIRE_AS;
+--			postcondition: ENSURE_AS;
+--			ve05: VE05;
+--		do
+--			if is_origin then
+--				fas := Body_server.item (body_Id);
+--				body := fas.body;
+--				ras ?= body.content;
+--				if ras /= Void then
+--					precondition := ras.precondition;
+--					postcondition := ras.postcondition;
+--					if
+--						(precondition /= Void and then precondition.is_else)
+--					or else
+--						(postcondition /= Void and then postcondition.is_then)
+--					then
+--io.error.putstring ("Error VE05: require else or ensure then%NClass: ");
+--io.error.putstring (System.current_class.class_name);
+--io.error.putstring ("%NFeature: ");
+--io.error.putstring (feature_name);
+--io.error.new_line;
 --						!!ve05;
 --						ve05.set_class (System.current_class);
 --						ve05.set_feature (Current);
 --						Error_handler.insert_error (ve05);
 --						Error_handler.checksum;
-					end;
-				end;
-			end;
-		end;
+--					end;
+--				end;
+--			end;
+--		end;
 
 end

@@ -77,7 +77,7 @@ feature -- Type check, byte code production, dead_code_removal
 			context.pop (1);
 			target_type := context.item.actual_type;
 
-			source_type.check_conformance (target_type);
+			source_type.check_conformance (target.access_name, target_type);
 				-- Update type stack
 			context.pop (1);
 		end;

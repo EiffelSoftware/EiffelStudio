@@ -46,7 +46,7 @@ feature
 			end;
 		end;
 
-	check_conformance (target_type: TYPE_A) is
+	check_conformance (target_name: STRING; target_type: TYPE_A) is
 			-- Check if Current conforms to `other'.
 			-- If not, insert error into Error handler.
 		local
@@ -57,7 +57,7 @@ feature
 				context.init_error (vjar);
 				vjar.set_source_type (Current);
 				vjar.set_target_type (target_type);
-				vjar.set_target_name ("");
+				vjar.set_target_name (target_name);
 				Error_handler.insert_error (vjar);
 			end;
 		end;
@@ -315,9 +315,10 @@ feature
 						act_type.associated_class.is_deferred;
 		end;
 
-	valid_expanded_creation: BOOLEAN is
+	valid_expanded_creation (class_c: CLASS_C): BOOLEAN is
 			-- Is the expanded type has an associated class with one
-			-- creation routine with no arguments only ?
+			-- creation routine with no arguments only, exported to
+			-- `a_class'
 		require
 			has_expanded
 		local
@@ -336,7 +337,8 @@ feature
 					creation_name := creators.key_for_iteration;
 					creation_feature :=
 									a_class.feature_table.item (creation_name);
-					Result := creation_feature.argument_count = 0;
+					Result := creation_feature.argument_count = 0 and then
+						creators.item_for_iteration.valid_for (class_c)
 				else 
 					Result := False;
 				end;

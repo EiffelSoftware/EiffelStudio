@@ -1,5 +1,5 @@
--- Error for a rename clause where the old name appears more than once
--- in rename clauses
+-- Error for a rename clause an infix is renamed as a prefix
+-- or the opposite
 
 class VHRC4 
 

@@ -149,6 +149,8 @@ feature
 			creation_name: STRING;
 			equiv_tables: BOOLEAN;
 		do
+			new_body_id := 0;
+
 			a_class := pass_c.associated_class;
 			supplier_status_modified := is_supplier_status_modified;
 
@@ -202,9 +204,6 @@ feature
 			if a_class.changed then
 					-- Remove all changed features if any
 				a_class.changed_features.clear_all;
-					-- Reset the unique value counter for re-processing
-					-- the unique values in feature `feature_unit'.
-				a_class.unique_counter.reset;
 					-- Class `a_class' is syntactically changed
 				analyze_declarations;
 					-- Look for generic types in the inheritance clause
@@ -368,13 +367,13 @@ feature
 				-- Put the resulting table in the temporary feature table
 				-- server.
 			Tmp_feat_tbl_server.put (resulting_table);
-				-- Update `Tmp_body_server'.
 debug ("HAS_CALLS")
 			resulting_table.trace_replications;
 end;
 debug ("TRACE_TABLE")
 			resulting_table.trace_replications;
 end;
+				-- Update `Tmp_body_server'.
 			update_body_server;
 				-- Update table `changed_features' of `a_class'.
 			update_changed_features;
@@ -813,7 +812,6 @@ end;
 				-- compiled one ?
 			read_info: READ_INFO;
 			feature_name: STRING;
-			unique_counter: COUNTER;
 			integer_value: INT_VALUE_I;
 				-- Internal name of the feature
 			vffd4: VFFD4;
@@ -823,7 +821,7 @@ end;
 debug ("ACTIVITY")
 	io.error.putstring ("FEATURE_UNIT on ");
 	io.error.putstring (feature_name);
-	io.error.putstring ("%N");
+	io.error.new_line;
 end;
 			Result := yacc_feature.new_feature;
 			Result.set_feature_name (feature_name);
@@ -834,10 +832,15 @@ end;
 			if Result.is_unique then
 					-- Unique value processing
 				unique_feature ?= Result;
-				unique_counter := a_class.unique_counter;
 				!!integer_value;
-				integer_value.set_int_val (unique_counter.next);
+				integer_value.set_int_val
+					(class_info.unique_values.item (feature_name));
 				unique_feature.set_value (integer_value);
+debug ("ACTIVITY")
+	io.error.putstring ("Value: ");
+	io.error.putint (integer_value.int_val);
+	io.error.new_line;
+end;
 			elseif Result.is_external then
 					-- Track new externals introduced in the class
 				external_i ?= Result;
@@ -961,7 +964,7 @@ end;
 					-- features of `a_class'.
 debug ("ACTIVITY")
 	io.error.putstring (feature_name);
-	io.error.putstring (" inserted in changed_features (new body id %N");
+	io.error.putstring (" inserted in changed_features (new body id)%N");
 end;
 				changed_features.add_front (feature_name);
 			end;
@@ -1318,6 +1321,13 @@ end;
 				invariant_removed := True;
 					-- Remove invariant description from server
 				Tmp_inv_ast_server.remove_id (class_id);
+			elseif Tmp_inv_ast_server.has (class_id) then
+					-- There was an invariant in the previous
+					-- unsuccessful compilation: remove
+					-- it from the server and reset `invariant_feature'
+					-- in CLASS_C
+				a_class.set_invariant_feature (Void);
+				Tmp_inv_ast_server.remove_id (class_id);
 			end;
 		end;
 
@@ -1523,14 +1533,19 @@ debug ("REPLICATION")
 end;
 			feat.set_written_in (a_class.id);
 			feat.set_is_code_replicated;
-			if feat.is_unique then
-					-- Unique value processing
-				unique_feature ?= feat;
-				unique_counter := a_class.unique_counter;
-				!!integer_value;
-				integer_value.set_int_val (unique_counter.next);
-				unique_feature.set_value (integer_value);
-			elseif feat.is_external then
+
+
+-- FIXME: ask Bertrand
+-- The unique keeps the same value if it is replicated
+
+--			if feat.is_unique then
+--					-- Unique value processing
+--				unique_feature ?= feat;
+--				unique_counter := a_class.unique_counter;
+--				!!integer_value;
+--				integer_value.set_int_val (unique_counter.next);
+--				unique_feature.set_value (integer_value);
+			if feat.is_external then
 					-- Track new externals introduced in the class
 				external_i ?= feat;
 				new_externals.start;

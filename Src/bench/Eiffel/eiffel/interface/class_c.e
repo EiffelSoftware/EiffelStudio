@@ -225,6 +225,8 @@ feature
 				file.is_open_read;
 			end;
 
+			unique_counter.reset;
+
 				-- Call Yacc
 			class_file_name := file_name;
 			collection_off;
@@ -299,6 +301,11 @@ feature
 				-- `id' of CLASS_C and file ".TMP_AST".
 			ast.set_id (id);
 			Tmp_ast_server.put (ast);
+			if ast_context.has_unique then
+					-- Compute the values of the unique constants
+				class_info.set_unique_values (ast_context.unique_values);
+				ast_context.set_unique_values (Void);
+			end;
 
 				-- Save index left by the temporary ast server into the
 				-- class information.
@@ -409,6 +416,7 @@ feature -- Third pass: byte code production and type check
 			melted_info: FEAT_MELTED_INFO;
 			melt_set: like melted_set;
 			type_check_error: BOOLEAN;
+			byte_code_generated: BOOLEAN;
 			body_id: INTEGER;
 			feat_dep: FEATURE_DEPENDANCE;
 			rep_removed: BOOLEAN;
@@ -457,6 +465,11 @@ feature -- Third pass: byte code production and type check
 				feature_name := feature_i.feature_name;
 				if feature_i.to_melt_in (Current) then
 
+debug ("ACTIVITY")
+	io.error.putstring ("%TTo melt_in true: ");
+	io.error.putstring (feature_name);
+	io.error.new_line;
+end;
 						-- For a feature written in the class
 					feature_changed := 	changed_features.has (feature_name)
 										and
@@ -531,8 +544,9 @@ end;
 							feature_i.type_check;
 							type_check_error := Error_handler.new_error;
 
-							if 	feature_changed
-								and then
+		--					if 	feature_changed
+		--						and then
+							if
 								not type_check_error
 							then
 								if f_suppliers /= Void then
@@ -562,6 +576,7 @@ debug ("ACTIVITY")
 	io.error.new_line;
 end;
 									feature_i.compute_byte_code;
+									byte_code_generated := True;
 --								end;
 
 							end;
@@ -579,16 +594,22 @@ end;
 
 					ast_context.clear2;
 
-					if	feature_changed
+					if	(feature_changed or else byte_code_generated)
 						and then
 						not (type_check_error or else feature_i.is_deferred)
 					then
+debug ("ACTIVITY")
+	io.error.putstring ("%TMeted_set.put for ");
+	io.error.putstring (feature_name);
+	io.error.new_line;
+end;
 							-- Remember the melted feature information
 							-- if it is not deferred.
 						!!melted_info.make (feature_i);
 						melt_set.put (melted_info);
 					end;
 					type_check_error := False;
+					byte_code_generated := False;
 
 				elseif ((not feature_i.in_pass3) or else
 							-- The feature is deferred and written in the current class
@@ -807,8 +828,9 @@ end;
 					Error_handler.mark;
 					invar_clause.type_check;
 
-					if	invariant_changed
-						and then
+					--if	invariant_changed
+					--	and then
+					if
 						not Error_handler.new_error
 					then
 						if f_suppliers /= Void then
@@ -912,15 +934,17 @@ feature -- Melting
 	update_melted_set is
 			-- Remove the non valid MELTED_INFO
 		do
-			from
-				melted_set.start
-			until
-				melted_set.after
-			loop
-				if not melted_set.item.is_valid (Current) then
-					melted_set.remove;
-				else
-					melted_set.forth
+			if melted_set /= Void then
+				from
+					melted_set.start
+				until
+					melted_set.after
+				loop
+					if not melted_set.item.is_valid (Current) then
+						melted_set.remove;
+					else
+						melted_set.forth
+					end;
 				end;
 			end;
 		end;
@@ -1909,6 +1933,7 @@ feature -- Supplier checking
 			is_root_class: Current = System.root_class.compiled_class
 		local
 			vsrc1: VSRC1;
+			vsrc2: VSRC2;
 		do
 			if
 				generics /= Void
@@ -1916,6 +1941,12 @@ feature -- Supplier checking
 				!!vsrc1;
 				vsrc1.set_class (Current);
 				Error_handler.insert_error (vsrc1);
+				Error_handler.checksum;
+			end;
+			if is_deferred then
+				!!vsrc2;
+				vsrc2.set_class (Current);
+				Error_handler.insert_error (vsrc2);
 				Error_handler.checksum;
 			end;
 		end;
@@ -1929,7 +1960,7 @@ feature -- Supplier checking
 			creation_proc: FEATURE_I;
 			creation_name, system_creation: STRING;
 			error: BOOLEAN;
-			vsrc2: VSRC2;
+			vsrc3: VSRC3;
 			arg_type: TYPE_A;
 			vd27: VD27;
 		do
@@ -1953,10 +1984,10 @@ feature -- Supplier checking
 						error := True;
 					end;
 					if error then
-						!!vsrc2;
-						vsrc2.set_class (Current);
-						vsrc2.set_creation_feature (creation_proc);
-						Error_handler.insert_error (vsrc2);
+						!!vsrc3;
+						vsrc3.set_class (Current);
+						vsrc3.set_creation_feature (creation_proc);
+						Error_handler.insert_error (vsrc3);
 					end;
 					creators.forth;
 				end;
@@ -2101,6 +2132,11 @@ feature -- Convenience features
 			date := eif_date ($str);
 		end;
 
+	set_invariant_feature (f: INVARIANT_FEAT_I) is
+		do
+			invariant_feature := f;
+		end;
+
 	set_skeleton (s: GENERIC_SKELETON) is
 			-- Assign `s' to `skeleton'.
 		do
@@ -2220,6 +2256,13 @@ feature -- Actual class type
 		require
 			good_argument: feature_name /= Void;
 		do
+debug ("ACTIVITY")
+	io.error.putstring ("CLASS_C: ");
+	io.error.putstring (class_name);
+	io.error.putstring ("%NChanged_feature: ");
+	io.error.putstring (feature_name);
+	io.error.new_line;
+end;
 			changed_features.put (feature_name);
 		end;
 	
@@ -3029,7 +3072,6 @@ feature -- Dino stuff
 			melted_set.put (melted_info);
 			System.freeze_set1.put (id);
 		end;
-
 
 	has_types: BOOLEAN is
 			-- Are there any generic instantiations of Current

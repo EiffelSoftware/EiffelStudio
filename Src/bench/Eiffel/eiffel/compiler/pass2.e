@@ -57,7 +57,7 @@ feature
 		local
 			pass_c: PASS2_C;
 			current_class: CLASS_C;
-			id: INTEGEr
+			id: INTEGER
 		do
 			from
 				changed_classes.start

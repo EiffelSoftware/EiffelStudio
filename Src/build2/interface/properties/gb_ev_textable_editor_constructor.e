@@ -46,7 +46,7 @@ feature -- Access
 				-- calling, so if the obejct represented by `Current' is a menu separator,
 				-- we must hide it, to prevent text modification. It must be created, and hidden
 				-- to fulfill postconditions on this routine.
-			if object.type.is_equal ("EV_MENU_SEPARATOR") then
+			if is_instance_of (first, dynamic_type_from_string ("EV_MENU_SEPARATOR")) then
 				text_entry.hide
 			end
 				

@@ -15,7 +15,7 @@ indexing
 
 class EVENT_EXAMPLE
 
-creation
+create
 	make
 
 feature -- Initialization
@@ -24,15 +24,15 @@ feature -- Initialization
 		do
 			create birthday_actions
 			create sweet_sixteen_actions.make (birthday_actions)
-			birthday_actions.extend (~send_card (?, ?, "Sam"))
-			birthday_actions.extend (~buy_gift (?, ?, "cigars", "Sam"))
-			birthday_actions.extend (~buy_gift (?, ?, "wine", "Sam"))
-			birthday_actions.extend (birthday_actions~wrapper (?, ?, ~ print ("doing nothing...%N")))
+			birthday_actions.extend (agent send_card (?, ?, "Sam"))
+			birthday_actions.extend (agent buy_gift (?, ?, "cigars", "Sam"))
+			birthday_actions.extend (agent buy_gift (?, ?, "wine", "Sam"))
+			birthday_actions.extend (agent birthday_actions.wrapper (?, ?, agent print ("doing nothing...%N")))
 
 			create nirvana_actions.make ("nirvana", <<>>)
-			nirvana_actions.extend (~bliss_out)
+			nirvana_actions.extend (agent bliss_out)
 
-			sweet_sixteen_actions.extend (~buy_car (?, "Sam"))
+			sweet_sixteen_actions.extend (agent buy_car (?, "Sam"))
 
 			birthday_actions.call ([16, "Alice"])
 
@@ -40,7 +40,7 @@ feature -- Initialization
 			birthday_actions.call ([36, "Bertrand"])
 			birthday_actions.call ([37, "Bertrand"])
 
-			birthday_actions.extend (~buy_gift (?, ?, "learning perl", "Sam"))
+			birthday_actions.extend (agent buy_gift (?, ?, "learning perl", "Sam"))
 
 			birthday_actions.pause
 
@@ -55,11 +55,11 @@ feature -- Initialization
 			birthday_actions.resume
 
 			create loopy_actions.make ("loopy stuff", <<"counter">>)
-			loopy_actions.extend (~loopy_wrapper (?, ~print("loopy action1!!%N")))
-			loopy_actions.extend (~loopy_wrapper (?, ~print("loopy action2!!%N")))
-			loopy_actions.extend (~loopy_action) 
-			loopy_actions.extend (~loopy_wrapper (?, ~print("loopy action4!!%N")))
-			loopy_actions.extend (~loopy_wrapper (?, ~print("loopy action5!!%N")))
+			loopy_actions.extend (agent loopy_wrapper (?, agent print("loopy action1!!%N")))
+			loopy_actions.extend (agent loopy_wrapper (?, agent print("loopy action2!!%N")))
+			loopy_actions.extend (agent loopy_action) 
+			loopy_actions.extend (agent loopy_wrapper (?, agent print("loopy action4!!%N")))
+			loopy_actions.extend (agent loopy_wrapper (?, agent print("loopy action5!!%N")))
 			loopy_actions.call ([1])
 		end
 

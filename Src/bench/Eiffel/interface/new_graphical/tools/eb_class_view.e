@@ -144,18 +144,14 @@ feature -- Status setting
 			-- Display information from the selected formatter.
 		do
 			visible := True
-				if Workbench.is_already_compiled then
-					from
-						managed_formatters.start
-					until
-						managed_formatters.after
-					loop
-						managed_formatters.item.on_shown
-						managed_formatters.forth
-					end
-				else
-					output_line.set_text (Interface_names.l_Compile_first)
-				end
+			from
+				managed_formatters.start
+			until
+				managed_formatters.after
+			loop
+				managed_formatters.item.on_shown
+				managed_formatters.forth
+			end
 		end
 
 	on_deselect is

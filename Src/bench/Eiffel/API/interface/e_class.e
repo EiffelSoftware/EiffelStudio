@@ -25,7 +25,8 @@ inherit
 	SHARED_INST_CONTEXT;
 	SHARED_ERROR_HANDLER;
 	SHARED_RESCUE_STATUS;
-	SHARED_PASS
+	SHARED_PASS;	
+	SHARED_TEXT_ITEMS
 
 feature -- Initialization
 
@@ -445,7 +446,8 @@ feature -- Output
 			if gens /= Void then
 				old_cluster := Inst_context.cluster;
 				Inst_context.set_cluster (cluster);
-				st.add_string (" [");
+				st.add_string (" ");
+				st.add (ti_L_bracket);
 				from
 					gens.start
 				until
@@ -457,15 +459,18 @@ feature -- Output
 					st.add_string (c_name);
 					constraint_type := formal_dec.constraint;
 					if constraint_type /= Void then
-						st.add_string (" -> ");
+						st.add_string (" ");
+						st.add (ti_Constraint);
+						st.add_string (" ");
 						constraint_type.append_to (st)
 					end;
 					gens.forth;
 					if not gens.after then
-						st.add_string (", ");
+						st.add (ti_Comma);
+						st.add_string (" ");
 					end;
 				end;
-				st.add_string ("]");
+				st.add (ti_R_bracket);
 				Inst_context.set_cluster (old_cluster);
 			end;
 		end;

@@ -31,16 +31,16 @@ feature -- Initialization
 			-- Create a split window child with `a_name' as
 			-- identifier and `a_parent' as parent.
 		do
-			form_make (name, a_parent);
 			parent := a_parent
+			form_make (name, a_parent);
 		end;
 
 	make_unmanaged (name: STRING; a_parent: SPLIT_WINDOW) is
 			-- Create a split window child with `a_name' as
 			-- identifier and `a_parent' as parent.
 		do
-			form_make_unmanaged (name, a_parent);
 			parent := a_parent
+			form_make_unmanaged (name, a_parent);
 		end
 
 feature -- Status Setting

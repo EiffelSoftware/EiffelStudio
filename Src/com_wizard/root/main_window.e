@@ -12,7 +12,7 @@ inherit
 			on_notify
 		end
 
-	OUTPUT_WINDOW
+	WIZARD_OUTPUT_WINDOW
 	
 	STORABLE
 		rename

@@ -1,26 +1,65 @@
--- Topological sort on classes
+indexing
+	description: "Topological sort on classes."
+	date: "$Date$"
+	revision: "$Revision$"
 
 class CLASS_SORTER
 
 inherit
-	SHARED_ERROR_HANDLER
 	COMPILER_EXPORTER
-	SHARED_COUNTER
-	SHARED_CONFIGURE_RESOURCES
 
-creation
+	SHARED_ERROR_HANDLER
+		export
+			{NONE} all
+		end
+
+	SHARED_COUNTER
+		export
+			{NONE} all
+		end
+
+	SHARED_CONFIGURE_RESOURCES
+		export
+			{NONE} all
+		end
+
+create
 	make
 
-feature -- Initialization
+feature {NONE} -- Initialization
 
 	make is
 			-- Creation
 		do
-			!! order.make (1,0)
-			!! precursor_count.make (1,0)
-			!! successors.make (1,0)
-			!! original.make (1,0)
-			!! outsides2.make
+			create order.make (1,0)
+			create precursor_count.make (1,0)
+			create successors.make (1,0)
+			create original.make (1,0)
+			create outsides1.make (1)
+			create outsides2.make
+		end
+
+	init (n: INTEGER) is
+			-- Initialization for `n' items to sort.
+		require
+			n_positive: n >= 0
+		do
+			order.resize (1, n)
+			precursor_count.resize (1, n)
+			successors.resize (1, n)
+			original.resize (1, n)
+			outsides1.wipe_out
+			outsides2.wipe_out
+			count := n
+			clear
+			fill_original
+		ensure
+			count_set: count = n
+			order_capacity_set: order.capacity >= n
+			successors_capacity_set: successors.capacity >= n
+			original_capacity_set: original.capacity >= n
+			outsides1_empty: outsides1.is_empty
+			outsides2_empty: outsides2.is_empty
 		end
 
 feature -- Sort
@@ -42,21 +81,7 @@ feature -- Sort
 			check_validity
 		end
 
-	init (n: INTEGER) is
-			-- Initialization for `n' items to sort.
-		do
-			order.resize (1, n)
-			precursor_count.resize (1, n)
-			successors.resize (1, n)
-			original.resize (1, n)
-			create outsides1.make (n)
-			outsides2.wipe_out
-			count := n
-			clear
-			fill_original
-		end
-
-feature -- Access
+feature {NONE} -- Access
 
 	count: INTEGER
 			-- Number of items to sort
@@ -77,7 +102,7 @@ feature -- Access
 	successors: ARRAY [ARRAYED_LIST [CLASS_C]]
 			-- Succesors of items
 
-feature -- Filling
+feature {NONE} -- Filling
 
 	fill_original is
 			-- Fill `original' with the lists `descendants' of classes
@@ -211,6 +236,8 @@ feature -- Filling
 	insert_succ (succ_list: ARRAYED_LIST [CLASS_C]) is
 			-- Insert all the successors in `outsides' if they don't have any
 			-- precursor which still remains for a later sutdy.
+		require
+			succ_list_not_void: succ_list /= Void
 		local
 			succ: ARRAY [CLASS_C]
 			i, nb_item, succ_id, k: INTEGER
@@ -243,7 +270,10 @@ feature -- Filling
 
 	sort_succ (succ: ARRAYED_LIST [CLASS_C]): ARRAY [CLASS_C] is
 			-- Create a sorted array of CLASS_C where the criteria is
-			-- less precursor and less successors.
+			-- less precursor and less successors and more class usage (i.e.
+			-- referring more classes).
+		require
+			succ_not_void: succ /= Void
 		local
 			a_class: CLASS_C
 			i, j, nb_succ, nb_prec, nb_item, nb_clients: INTEGER
@@ -254,8 +284,8 @@ feature -- Filling
 			nb_item := succ.count
 			if succ.count /= 0 then
 				from
-					!! Result.make (1, nb_item)
-					!! index.make (1, nb_item)
+					create Result.make (1, nb_item)
+					create index.make (1, nb_item)
 					nb_item := 0
 					succ.start
 				until
@@ -327,7 +357,7 @@ feature -- Filling
 					no_cycle := False
 					a_class := original.item (i)
 					if name_list = Void then
-						!! name_list.make
+						create name_list.make
 					end
 					name_list.put_front (a_class.class_id)
 				end
@@ -338,7 +368,7 @@ feature -- Filling
 				finalize
 			else
 					-- Cycle(s) in inheritance graph
-				!!vhpr1
+				create vhpr1
 				vhpr1.set_involved_classes (name_list)
 				Error_handler.insert_error (vhpr1)
 			end
@@ -472,4 +502,12 @@ feature {NONE} -- Implementation
 			Result := down
 		end
 	
+invariant
+	order_not_void: order /= Void
+	precursor_count_not_void: precursor_count /= Void
+	successors_not_void: successors /= Void
+	original_not_void: original /= Void
+	outsides1_not_void: outsides1 /= Void
+	outsides2_not_void: outsides2 /= Void
+
 end

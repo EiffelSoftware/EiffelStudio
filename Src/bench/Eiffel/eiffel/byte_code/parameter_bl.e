@@ -106,10 +106,10 @@ feature
 							buf.putstring (" = ");
 							if not real_type(expression.type).is_separate then
 								buf.putstring (" CURLTS(");
-								expression.stored_register.print_register_by_name;
+								expression.stored_register.print_register;
 								buf.putstring ("); ");
 							else
-								expression.stored_register.print_register_by_name;
+								expression.stored_register.print_register;
 								buf.putstring (";");
 							end;
 							buf.new_line;

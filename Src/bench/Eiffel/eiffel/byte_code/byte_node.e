@@ -243,7 +243,7 @@ feature -- Generic conformance
 
 			buffer.putstring ("typres = RTCID(&typcache,")
 
-			context.Current_register.print_register_by_name
+			context.Current_register.print_register
 
 			buffer.putstring (", ")
 			buffer.putint (gtype.generated_id (context.final_mode))

@@ -6,7 +6,7 @@ inherit
 
 	REGISTRABLE
 		redefine
-			get_register, free_register
+			get_register, free_register, print_register
 		end
 
 	BYTE_NODE

@@ -38,7 +38,7 @@ feature
 			else
 				buf.putstring ("RTIS(");
 			end;
-			context.Current_register.print_register_by_name;
+			context.Current_register.print_register;
 			buf.putstring (gc_rparan_comma);
 			buf.new_line;
 				-- Now evaluate the expression

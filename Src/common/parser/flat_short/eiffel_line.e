@@ -1,107 +1,111 @@
+indexing
+
+	description: 
+		"Representation of an eiffel line of class text.";
+	date: "$Date$";
+	revision: "$Revision $"
+
 class EIFFEL_LINE
-
-inherit
-
-	COMPARABLE
-		undefine
-			is_equal
-		end;
-	ANY
 
 creation
 
 	make
 	
-feature
+feature -- Initialization
 	
-	make (p: INTEGER; s: STRING) is
-			-- create a line with p as position and s as text
+	make (start_pos, end_pos: INTEGER; s: STRING) is
+			-- Create a line with `p' as position and 
+			-- `s' as text.
+		require
+			good_values: start_pos >= 0 and then end_pos >= 0;
+			valid_positions: end_pos >= start_pos;
 		do
-			position := p;
-			text := s;
+			start_position := start_pos;
+			end_position := end_pos;
+			!! text.make (s.count);
+			text.append (s);	
 		end;
 
-	position: INTEGER;
-		-- position of the line in the file (in character)
+feature -- Properites
 
-	infix "<" (other: like Current): BOOLEAN is
-		do	
-			Result := position < other.position;
-		end;
-			
-	text: STRING;
-		-- text of the line;
+	Eiffel_comment_identifier: STRING is "--";
+			-- Comment identifier
 
-	count: INTEGER is
-		do
-			Result := text.count;
-		end;
+	text: STRING;	
+			-- Eiffel line text
 
-	empty: BOOLEAN is
-			-- is the line empty
-		do
-			Result := text.empty;
-		end;
-	
-	left_adjust is
-			-- Remove leading blanks or tabs update position accordingly
-		local
-			old_count: INTEGER;
-		do
-			old_count := text.count;
-			text.left_adjust;
-			position := position + (old_count - text.count);
-		end;
+	start_position: INTEGER;
+			-- Position at the beginning of the line 
 
-	right_adjust is
-			-- Remove trailing blanks or tabs.
-		do
-			text.right_adjust
-		end;
-	
-	comment: like Current is
-			-- Comment at the end of the string			
+	end_position: INTEGER;
+			-- Position at the end of the line 
+
+	comment: CELL2 [STRING, INTEGER] is
+			-- Comment extracted from Eiffel line
+			-- (Void if comment was not found). First item
+			-- is the comment string and the second item is the
+			-- position of the comment string within the line
 		local
 			seeker: MATCH;
+			comment_pos: INTEGER;
+			comment_string: STRING;
+			start_pos: INTEGER;
+			t: like text;
+			tc: INTEGER
 		do
-			if comment_string = void  and not comment_found then
-				!!seeker.make (text, "--", false);
-				seeker.find_next;
-				if seeker.position  + 2 <= text.count then
-					!!comment_string.make (position + seeker.position + 2,
-						text.substring (seeker.position + 2, text.count));
-					comment_found := true;
-				elseif seeker.position < text.count then
-					!!comment_string.make (position + seeker.position + 2, "");
-					comment_found := true
-				end;
+			t := text;
+			if t.count >= 2 then
+				comment_pos := t.substring_index (Eiffel_comment_identifier, 1);
+				if comment_pos > 0 then
+					tc := t.count;
+					Result := comment_line;
+						-- Comment found	
+					start_pos := comment_pos + 2;
+					if start_pos < tc then
+						comment_string := t.substring (start_pos, tc);
+						comment_string.right_adjust;
+					else
+							-- Empty comment line.
+						!! comment_string.make (0)
+					end;
+					Result.make (comment_string, start_position + comment_pos);
+				end
 			end;
-			Result := comment_string;
-		end;
-				
-	discard_comment	is
-			-- discard the comment, if any
-		do
-			text.head (count - comment_string.count - 2);
-			right_adjust;
-			comment_string := void;
+		ensure
+			valid_result: Result /= Void implies 
+					(Result.item1 /= Void and then Result.item2 > 0)
 		end;
 
-feature -- trace
+feature -- Access
+
+	is_within (position: INTEGER): BOOLEAN is
+			-- Is `position' within line?
+		do
+			Result := position >= start_position and then
+					position <= end_position
+		ensure
+			Result implies position >= start_position and then
+					position <= end_position
+		end
+
+feature {NONE} -- Implementation
+
+	comment_line: CELL2 [STRING, INTEGER] is
+		do
+			!! Result.make (Void, 0)
+		end;
+				
+feature -- Debug
 
 	trace is
 		do
-			io.error.putstring ("position: ");
-			io.error.putint (position);
+			io.error.putstring ("start pos: ");
+			io.error.putint (start_position);
+			io.error.putstring (" end pos: ");
+			io.error.putint (end_position);
 			io.error.putstring (" ");
 			io.error.putstring (text);
 			io.error.new_line;	
 		end
-
-feature {NONE}
-
-		comment_string: like Current;
-		
-		comment_found: BOOLEAN;
 
 end

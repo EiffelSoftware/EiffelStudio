@@ -87,6 +87,17 @@ feature -- Element change
 			string_set: a_string.is_equal (string)
 		end
 
+	set_null_character (offset: INTEGER) is
+			-- Set `%U' at `offset' position of `Current'.
+		require
+			valid_offset: offset >= 0 and offset < capacity
+		local
+			a: CHARACTER
+		do
+			a := '%U'
+			c_memcpy (item.offset_pointer (offset, 1), $a, 1)
+		end
+
 	set_size_in_string (n: INTEGER) is
 			-- Set two first bytes of string pointed by `item' to
 			-- value represented by `n' in a two bytes representation.

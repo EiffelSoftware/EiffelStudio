@@ -373,12 +373,10 @@ feature {NONE} -- Implementation
 	list_item_deselected (list_item: EV_LIST_ITEM) is
 			-- `list_item' has been deselected from `constants_combo_box'.
 		local
-			constant: GB_PIXMAP_CONSTANT
 			constant_context: GB_CONSTANT_CONTEXT
 		do
 			constant_context := object.constants.item (internal_gb_ev_any.type + internal_type)
 			if constant_context /= Void then
-				constant ?= constant_context.constant
 				constant_context.destroy
 			end
 		end

@@ -344,7 +344,7 @@ rt_public char *sprealloc(char *ptr, long int nbitems)
 	 * references somthing valid (although the area is no longer shared)--RAM.
 	 */
 
-	epush(&loc_stack, &ptr);	/* Object may move if GC called */
+	epush(&loc_stack, (char *)(&ptr));	/* Object may move if GC called */
 	object = xrealloc(ptr, (unsigned int)(elem_size * nbitems + LNGPAD(2)), GC_ON | GC_FREE);
 	if ((char *) 0 == object) {
 		eraise("special reallocation", EN_MEM);
@@ -1636,7 +1636,7 @@ rt_public char *xrealloc(register char *ptr, register unsigned int nbytes, int g
 
 	if (gc_flag & GC_ON) {
 		safeptr = ptr;
-		if (-1 == epush(&loc_stack, &safeptr)) {	/* Protect against moves */
+		if (-1 == epush(&loc_stack, (char *)(&safeptr))) {	/* Protect against moves */
 			eraise("object reallocation", EN_MEM);	/* No more memory */
 			return (char *) 0;						/* They ignored it */
 		}

@@ -643,7 +643,6 @@ feature {NONE} -- External features
 			"c_ora_make"
 		end
 
-
 	ora_disconnect: INTEGER is
 		external
 			"C"

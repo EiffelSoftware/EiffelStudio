@@ -1,4 +1,4 @@
-<document title="18 EXECUTING A SYSTEM WITHIN AND WITHOUTEIFFELSTUDIO" output="studio">
+<document title="18 EXECUTING A SYSTEM WITHIN AND WITHOUT EIFFELSTUDIO" output="studio">
 	<meta_data/>
 	<paragraph>
 		<paragraph>
@@ -62,7 +62,13 @@
 					<symbol>--&gt;</symbol>
 				</code>
 				<code>
-					<keyword>Debug/Settings</keyword>
+					<keyword>Project Settings</keyword>
+				</code>
+				<code>
+					<symbol>--&gt;</symbol>
+				</code>
+				<code>
+					<keyword>Debug/Profile</keyword>
 				</code>
 				<code>
 					<symbol>--&gt;</symbol>

@@ -1,5 +1,5 @@
 <document title="Managing links" output="studio">
-	<meta_data/>
+	<meta_data></meta_data>
 	<paragraph>
 		<list ordered="false">
 			<item>
@@ -18,6 +18,12 @@
 				<link>
 					<url>30_new_aggregate_link.xml</url>
 					<label>Creating aggregate client/supplier links</label>
+				</link>
+			</item>
+			<item>
+				<link>
+					<url>50_handles.xml</url>
+					<label>Creating handles</label>
 				</link>
 			</item>
 			<item>

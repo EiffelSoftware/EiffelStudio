@@ -1,5 +1,5 @@
 <document title="The Eiffel for.NET Language" output="studio">
-	<meta_data/>
+	<meta_data></meta_data>
 	<paragraph>
 		<paragraph>These pages contain documentation that describes the Eiffel programming language.</paragraph>
 		<paragraph>Eiffel is considered both a development methodology and a programming language.</paragraph>
@@ -61,7 +61,7 @@
 			</item>
 			<item>
 				<link>
-					<url>80_assemblies.xml"</url>
+					<url>80_assemblies.xml</url>
 					<label>Using Referenced Assemblies</label>
 				</link>
 			</item>

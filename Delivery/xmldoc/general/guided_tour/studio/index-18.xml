@@ -1,5 +1,5 @@
 <document title="17 THE COMMAND-LINE COMPILER" output="studio">
-	<meta_data/>
+	<meta_data></meta_data>
 	<paragraph>
 		<paragraph>
 			<link>
@@ -37,8 +37,8 @@
 				<cell><bold>EFFECT</bold></cell>
 			</row>
 			<row>
-				<cell>-ace file_name</cell>
-				<cell/>
+				<cell>--ace</cell>
+				<cell>file_name</cell>
 				<cell>Use as Ace the file of name file_name . (Default: file Ace.ace in current directory.) </cell>
 			</row>
 			<row>
@@ -72,13 +72,13 @@
 				<cell>Print all versions of feature in descendants of class. </cell>
 			</row>
 			<row>
-				<cell>-filter filter_name</cell>
-				<cell>class_name</cell>
+				<cell>-filter</cell>
+				<cell>filter_name</cell>
 				<cell>Print text of class processed by filter_name . </cell>
 			</row>
 			<row>
 				<cell>-finalize</cell>
-				<cell/>
+				<cell></cell>
 				<cell>Produce finalized version of system (optimized ANSI C code and executable module). </cell>
 			</row>
 			<row>
@@ -93,12 +93,12 @@
 			</row>
 			<row>
 				<cell>-freeze</cell>
-				<cell/>
+				<cell></cell>
 				<cell>Freeze system</cell>
 			</row>
 			<row>
 				<cell>-help</cell>
-				<cell/>
+				<cell></cell>
 				<cell>Print short help message listing options of ec </cell>
 			</row>
 			<row>
@@ -108,27 +108,27 @@
 			</row>
 			<row>
 				<cell>-keep</cell>
-				<cell/>
+				<cell></cell>
 				<cell>Keep assertions in final mode (useful with-finalize only). </cell>
 			</row>
 			<row>
 				<cell>-loop</cell>
-				<cell/>
+				<cell></cell>
 				<cell>Enter interactive mode where you may repeatedly request ec operations without having to restart ec. </cell>
 			</row>
 			<row>
 				<cell>-precompile</cell>
-				<cell/>
+				<cell></cell>
 				<cell>Precompile system, treating it as a library</cell>
 			</row>
 			<row>
-				<cell>-project file .epr</cell>
-				<cell/>
+				<cell>-project file</cell>
+				<cell>your_file.epr</cell>
 				<cell>Use the project of which file . epr is the project file</cell>
 			</row>
 			<row>
-				<cell>-project_path directory</cell>
-				<cell/>
+				<cell>-project_path</cell>
+				<cell>directory</cell>
 				<cell>Create project directory in directory . (Default: current directory.) </cell>
 			</row>
 			<row>
@@ -138,7 +138,7 @@
 			</row>
 			<row>
 				<cell>-stop</cell>
-				<cell/>
+				<cell></cell>
 				<cell>Stop on error. (Default: no.) </cell>
 			</row>
 			<row>
@@ -148,7 +148,7 @@
 			</row>
 			<row>
 				<cell>-version</cell>
-				<cell/>
+				<cell></cell>
 				<cell>Print EiffelStudio version.</cell>
 			</row>
 		</table>

@@ -1,5 +1,5 @@
 <document title="EiffelCOM" output="studio">
-	<meta_data/>
+	<meta_data></meta_data>
 	<paragraph>
 		<list ordered="false">
 			<item>
@@ -34,7 +34,7 @@
 			</item>
 			<item>
 				<link>
-					<url>06_access_type.xml </url>
+					<url>06_access_type.xml</url>
 					<label>Access Type</label>
 				</link>
 			</item>
@@ -47,12 +47,12 @@
 		</list>
 		<seealso>
 			<bold>See Also</bold> 
-			<line_break/>
+			<line_break></line_break>
 			<link>
 				<url>../../tools/wizards/com/index.xml</url>
 				<label>EiffelCOM wizard</label>
 			</link>
-			<line_break/>
+			<line_break></line_break>
 			<link>
 				<url>../../libraries/com/index.xml</url>
 				<label> EiffelCOM library</label>

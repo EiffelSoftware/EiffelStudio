@@ -1,5 +1,5 @@
 <document title="Key shortcuts">
-	<meta_data/>
+	<meta_data></meta_data>
 	<paragraph>
 		<paragraph>Many operations in EiffelBuild do not require the use of the mouse. The same effect can be achieved through the keyboard only.</paragraph>
 		<paragraph>This page gathers all the keyboard shortcuts available in the environment.</paragraph>
@@ -50,13 +50,17 @@
 				<cell>Delete</cell>
 				<cell>Delete object from currently selected tool.</cell>
 			</row>
+			<row>
+				<cell>Ctrl+T</cell>
+				<cell>Tool always on top.</cell>
+			</row>
 		</table>
 		<paragraph>
 			<bold>Note</bold>: These shortcuts are not always available and are dependent on the state of EiffelBuild. For example, Ctrl+S does nothing if there is no modified project open. 
 		</paragraph>
 		<seealso>
 			<bold>See Also</bold>
-			<line_break/>
+			<line_break></line_break>
 			<link>
 				<url>/tools/eiffelbuild/reference/10_general_interface_description/index.xml</url>
 				<label>General interface description</label>

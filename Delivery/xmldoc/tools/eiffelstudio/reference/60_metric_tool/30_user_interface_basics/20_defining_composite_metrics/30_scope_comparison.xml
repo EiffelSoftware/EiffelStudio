@@ -1,5 +1,5 @@
 <document title="Scope comparison for metrics" output="studio">
-	<meta_data/>
+	<meta_data></meta_data>
 	<paragraph>
 		<paragraph>Notation: a1 // a2</paragraph>
 		<paragraph>Applicability: a1 and a2 are the same metric except for a possibly different scope.</paragraph>
@@ -19,9 +19,9 @@
 		<paragraph>and to define any scope comparison metrics.</paragraph>
 		<seealso>
 			<bold>See Also</bold>
-			<line_break/>
+			<line_break></line_break>
 			<link>
-				<url>../../../../how_to_s/70_analyzing_a_project/20_handling_new_metrics/10_defining_new_metrics/40_defining_scope_comparison_metrics.xml"</url>
+				<url>../../../../how_to_s/70_analyzing_a_project/20_handling_new_metrics/10_defining_new_metrics/40_defining_scope_comparison_metrics.xml</url>
 				<label>Defining scope comparison metrics</label>
 			</link>
 		</seealso>

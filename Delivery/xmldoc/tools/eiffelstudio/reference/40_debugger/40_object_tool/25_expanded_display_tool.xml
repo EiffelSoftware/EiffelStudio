@@ -1,5 +1,5 @@
 <document title="Expanded display" output="studio">
-	<meta_data/>
+	<meta_data></meta_data>
 	<paragraph>
 		<paragraph>Located in the object tool toolbar, this command 
 			<image>
@@ -7,7 +7,7 @@
 			</image> opens an Expanded display dialog when an object is dropped onto the button. 
 <line_break></line_break>			
 			The dropped object needs to have a string representation of its value, for instance an object conform to <link><url>/libraries/base/reference/kernel/classic/string_chart.xml</url><label><code><class_name>STRING</class_name></code></label></link>
-			 or conform to  <link><url>/libraries/base/reference/kernel/classic/debug_output_chart.xml</url><label><code><class_name>DEBUG_OUTPUT</class_name></code></label></link> (see 
+			 or conform to  <link><url>/libraries/base/reference/support/debug_output_chart.xml</url><label><code><class_name>DEBUG_OUTPUT</class_name></code></label></link> (see 
 			<link>
 				<url>17_debug_output.xml</url>
 				<label>Debug Output</label>

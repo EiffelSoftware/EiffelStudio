@@ -11,7 +11,7 @@
 		<list ordered="false">
 			<item>
 				<link>
-					<url>calculator.xml </url>
+					<url>calculator.xml</url>
 					<label>Calculator</label>
 				</link>
 			</item>

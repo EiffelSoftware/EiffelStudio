@@ -315,23 +315,7 @@
 			</code> directory around, for use either on a file system or on your Web site, with the guarantee that the hyperlinks will work -- as long as you move the entire directory together.
 		</paragraph>
 		<paragraph>To continue the Guided Tour, you do 
-			<bold>not</bold> need to complete the generation now unless you want to.  The generated HTML is available in a subdirectory 
-			<code>
-				<keyword>index-09A</keyword>
-			</code> on the Eiffel site, at <link>
-			<url>http://www.eiffel.com/doc/manuals/intro/environment/index-09A/</url><label>http://www.eiffel.com/doc/manuals/intro/environment/index-09A/.</label></link>
-		</paragraph>
-		<note>
-			<italic>The name </italic>
-			<code>
-				<keyword>index-09A</keyword>
-			</code> 
-			<italic>for the needs of this manual.  The default name is, as noted, </italic>
-			<code>
-				<keyword>Documentation</keyword>
-			</code>.
-		</note>
-		<paragraph>If you are happy with looking up one of these pre-generated directories rather than producing your own, click 
+			<bold>not</bold> need to complete the generation now unless you want to.  If you are happy to continue without generating the documentation at the moment then click 
 			<code>
 				<keyword>Cancel</keyword>
 			</code> on the last dialog.
@@ -343,15 +327,7 @@
 			<size>2</size>
 			<content>Browsing generated documentation</content>
 		</heading>
-		<paragraph>Let's take a peek at the generated documentation.  If you are reading this electronically you can see the generated documentation in the 
-			<code>
-				<keyword>index-09A</keyword>
-			</code> subdirectory of the documentation.  Since you can browse the HTML files of that subdirectory at your leisure we'll just take a quick look to get familiar with the basics.
-		</paragraph>
-		<note>
-			<italic>Make sure you have a browser with full support for style sheets, such as Internet Explorer 4 or later, Netscape 4 or later.  </italic>
-		</note>
-		<paragraph>We start with the root of the generated documentation, 
+		<paragraph>Let's take a look at the generated documentation.  We start with the root of the generated documentation, 
 			<code>
 				<keyword>index-09A/index.xml</keyword>
 			</code> :
@@ -429,13 +405,7 @@
 		<paragraph>This indicates the relations of the cluster to others in the hierarchy, and its list of classes.  Again you could click any class name but instead note the mention 
 			<code>
 				<keyword>(diagram)</keyword>
-			</code> next to the cluster name near the top.  Remember that when generating the documentation we elected ( 
-			<span>
-				<link>
-					<url>index-09.xml</url><anchor_name>81896</anchor_name>
-					<label>"Choosing a level of detail", page 45</label>
-				</link>)
-			</span> to generate everything, diagrams included.  Hadn't we checked the corresponding check box, the 
+			</code> next to the cluster name near the top.  Remember that when generating the documentation we elected to generate everything, diagrams included.  Hadn't we checked the corresponding check box, the 
 			<code>
 				<keyword>(diagram)</keyword>
 			</code> link wouldn't be there.  Click it now to get the generated diagrams:

@@ -1,0 +1,11 @@
+VSTA, not defined in ETL
+
+    Consider a  static access to  `f' a C external routine
+	or a .NET static  external of a class `C'. The call is
+    valid  if and  only if it  satisfies the following two
+	conditions:
+
+        1 `C' is a class name, not a type.
+
+        2 `f' is a  C  external  routine  or a .NET static
+		  external.

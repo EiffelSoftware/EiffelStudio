@@ -1,0 +1,3 @@
+Error: feature is not available for static access.
+What to do: make sure that feature is either a C external routine
+    or a .NET static external.

@@ -1,0 +1,2 @@
+Error: not a valid class specification for static access
+What to do: make sure that it is just a class name and not a type specification.

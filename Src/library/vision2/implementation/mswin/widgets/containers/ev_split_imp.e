@@ -16,7 +16,8 @@ inherit
 			wel_window,
 			set_insensitive,
 			set_size,
-			parent_ask_resize
+			parent_ask_resize,
+			set_move_and_size
 		end
 
 feature -- Access
@@ -48,9 +49,7 @@ feature -- Resizing
 		-- Resize the box and all the children inside
 		do
 			parent_ask_resize (new_width, new_height)
-			if parent_imp /= Void then
-				parent_imp.child_has_resized (new_width, new_height, Current)
-			end
+			notify_size_to_parent
 		end
 
 feature {NONE} -- Implementation
@@ -81,6 +80,14 @@ feature {NONE} -- Implementation
    			temp_width, temp_height: INTEGER
    		do
   			wel_window.resize (minimum_width.max (new_width), minimum_height.max (new_height))
+			resize_children (wel_window.level)
+		end
+
+	set_move_and_size (a_x, a_y, new_width, new_height: INTEGER) is
+			-- When the parent asks to move and resize, it does it
+			-- and the notice the child.
+		do
+			Precursor (a_x, a_y, new_width, new_height)
 			resize_children (wel_window.level)
 		end
 

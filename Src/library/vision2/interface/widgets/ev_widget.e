@@ -88,10 +88,7 @@ feature -- Access
 		require
 			not_destroyed: not is_destroyed
 		do
-			Result := implementation.pointer_style
-			if Result = Void then
-				Result := Default_pixmaps.Standard_cursor
-			end
+			Result := implementation.internal_pointer_style
 		end
 
 	actual_drop_target_agent: FUNCTION [ANY, TUPLE [INTEGER, INTEGER], EV_ABSTRACT_PICK_AND_DROPABLE] is

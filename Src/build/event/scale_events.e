@@ -20,16 +20,6 @@ feature {CATALOG}
 	
 feature {NONE}
 
-	move_ev: MOVE_EV is
-		once
-			!!Result.make
-		end;
-
-	value_changed_ev: VALUE_CHANGED_EV is
-		once
-			!!Result.make
-		end;
-
 	symbol: PIXMAP is
 		do
 			Result := Pixmaps.scale_pixmap

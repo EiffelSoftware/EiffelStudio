@@ -20,28 +20,6 @@ feature {CATALOG}
 	
 feature {NONE}
 
-	but_act_ev: BUT_ACT_EV is
-		once
-			!!Result.make
-		end;
-
-	but_rel_ev: BUT_REL_EV is
-		once
-			!!Result.make
-		end;
-
-	but_arm_ev: BUT_ARM_EV is
-		once
-			!!Result.make
-		end;
-
-	value_changed_ev: VALUE_CHANGED_EV is
-		once
-			!!Result.make
-		end;
-
-feature 
-
 	make (cat: like associated_catalog) is
 		do
 			page_create (cat);

@@ -20,16 +20,6 @@ feature {CATALOG}
 	
 feature {NONE}
 
-	t_modify: TEXT_MODIFIED_EV is
-		once
-			!!Result.make
-		end;
-
-	t_motion: TEXT_MOTION_EV is
-		once
-			!!Result.make
-		end;
-
 	symbol: PIXMAP is
 		do
 			Result := Pixmaps.text_pixmap
@@ -50,8 +40,8 @@ feature {NONE}
 	make (cat: like associated_catalog) is
 		do
 			make_page (cat);
-			extend (t_modify);
-			extend (t_motion)
+			extend (text_modify_ev);
+			extend (text_motion_ev)
 		end
 
 end

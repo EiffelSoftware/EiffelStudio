@@ -20,11 +20,6 @@ feature {CATALOG}
 	
 feature {NONE}
 
-	t_return: KEY_RET_EV is
-		once
-			!!Result.make
-		end;
-
 	symbol: PIXMAP is
 		do
 			Result := Pixmaps.text_field_pixmap
@@ -45,7 +40,7 @@ feature {CATALOG}
 	make (cat: like associated_catalog) is
 		do
 			make_page (cat);
-			extend (t_return);
+			extend (key_return_ev);
 		end
 
 end

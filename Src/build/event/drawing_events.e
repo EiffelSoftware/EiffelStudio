@@ -20,21 +20,6 @@ feature {CATALOG}
 	
 feature {NONE}
 
-	expose_ev: EXPOSE_EV is
-		once
-			!!Result.make
-		end;
-
-	input_ev: INPUT_EV is
-		once
-			!!Result.make
-		end;
-
-	resize_ev: RESIZE_EV is
-		once
-			!!Result.make
-		end;
-
 	symbol: PIXMAP is
 		do
 			Result := Pixmaps.drawing_area_pixmap

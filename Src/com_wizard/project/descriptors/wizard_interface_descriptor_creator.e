@@ -68,7 +68,7 @@ feature -- Basic operations
 
 			tmp_lib_descriptor := system_descriptor.library_descriptor (tmp_guid)
 			if name = Void or else name.empty then
-				create name.make (0)
+				create name.make (100)
 				name.append ("interface_")
 				name.append (tmp_lib_descriptor.name)
 				name.append ("_")
@@ -85,15 +85,13 @@ feature -- Basic operations
 			if is_forbidden_c_word (name) then
 				name.prepend ("a_")
 			end
-			create c_type_name.make (0)
+			create c_type_name.make (100)
 			c_type_name.append (name)
 			system_descriptor.add_c_type (name)
 
-			create c_header_file_name.make (0)
+			create c_header_file_name.make (100)
 			if not Non_generated_type_libraries.has (tmp_lib_descriptor.guid) then
-				c_header_file_name.append ("ecom_")
-				c_header_file_name.append (name)
-				c_header_file_name.append (".h")
+				c_header_file_name := header_name (name)
 			end
 
 			lcid := tmp_type_attr.lcid

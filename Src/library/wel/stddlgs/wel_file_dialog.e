@@ -30,22 +30,17 @@ feature {NONE} -- Initialization
 			-- Make and setup the structure
 		do
 			standard_dialog_make
-			cwel_open_file_name_set_lstructsize (item,
-				structure_size)
+			cwel_open_file_name_set_lstructsize (item, structure_size)
 			!! str_file_name.make_empty (Max_file_name_length)
 			str_file_name.set_string ("")
 			!! str_file_title.make_empty (Max_file_title_length)
 			str_file_title.set_string ("")
 			!! str_title.make_empty (Max_title_length)
 			str_title.set_string ("")
-			cwel_open_file_name_set_lpstrfile (item,
-				str_file_name.item)
-			cwel_open_file_name_set_nmaxfile (item,
-				Max_file_name_length - 10)
-			cwel_open_file_name_set_lpstrfiletitle (item,
-				str_file_title.item)
-			cwel_open_file_name_set_nmaxfiletitle (item,
-				Max_file_title_length - 10)
+			cwel_open_file_name_set_lpstrfile (item, str_file_name.item)
+			cwel_open_file_name_set_nmaxfile (item, Max_file_name_length - 10)
+			cwel_open_file_name_set_lpstrfiletitle (item, str_file_title.item)
+			cwel_open_file_name_set_nmaxfiletitle (item, Max_file_title_length - 10)
 			set_default_title
 			add_flag (Ofn_hidereadonly)
 		end

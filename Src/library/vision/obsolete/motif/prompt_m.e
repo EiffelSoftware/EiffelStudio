@@ -192,8 +192,7 @@ feature
 		do
 			ext_name := MapplyLabelString.to_c;
 			ext_name_label := a_label.to_c;
-			to_left_xm_string (screen_object, $ext_name_label,
-							$ext_name)
+			to_left_xm_string (screen_object, ext_name_label, ext_name)
 		end;
 
 	set_cancel_label (a_label: STRING) is
@@ -206,8 +205,7 @@ feature
 		do
 			ext_name := McancelLabelString.to_c;
 			ext_name_label := a_label.to_c;
-			to_left_xm_string (screen_object, $ext_name_label,
-							$ext_name)
+			to_left_xm_string (screen_object, ext_name_label, ext_name)
 		end;
 
 	set_help_label (a_label: STRING) is
@@ -220,8 +218,7 @@ feature
 		do
 			ext_name_label := a_label.to_c;
 			ext_name := MhelpLabelString.to_c;
-			to_left_xm_string (screen_object, $ext_name_label,
-							$ext_name)
+			to_left_xm_string (screen_object, ext_name_label, ext_name)
 		end;
 
 	set_ok_label (a_label: STRING) is
@@ -234,8 +231,7 @@ feature
 		do
 			ext_name_label := a_label.to_c;
 			ext_name := MokLabelString.to_c;
-			to_left_xm_string (screen_object, $ext_name_label,
-							$ext_name)
+			to_left_xm_string (screen_object, ext_name_label, ext_name)
 		end;
 
 	set_selection_label (a_label: STRING) is
@@ -246,8 +242,7 @@ feature
 		do
 			ext_name_label := a_label.to_c;
 			ext_name := MselectionLabelString.to_c;
-			to_left_xm_string (screen_object, $ext_name_label,
-							$ext_name)
+			to_left_xm_string (screen_object, ext_name_label, ext_name)
 		end;
 
 	set_selection_text (a_text: STRING) is
@@ -259,8 +254,7 @@ feature
 		do
 			ext_name_text := a_text.to_c;
 			ext_name := MtextString.to_c;
-			to_left_xm_string (screen_object, $ext_name_text,
-							$ext_name)
+			to_left_xm_string (screen_object, ext_name_text, ext_name)
 		end;
 
 	show_apply_button is

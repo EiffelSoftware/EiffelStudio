@@ -296,8 +296,7 @@ feature
 			ext_name_text := a_text.to_c;
 			ext_name := MtitleString.to_c;
 			xt_unmanage_child (text_widget);
-			to_left_xm_string (screen_object, $ext_name_text,
-						$ext_name);
+			to_left_xm_string (screen_object, ext_name_text, ext_name);
 			xt_manage_child (text_widget);
 		ensure then
 		--	text.equal (a_text)

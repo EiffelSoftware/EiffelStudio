@@ -114,7 +114,7 @@ feature
 		do
 			ext_name_label := a_label.to_c;
 			ext_name := MfileListlabelString.to_c;
-			to_left_xm_string (screen_object, $ext_name_label, $ext_name)
+			to_left_xm_string (screen_object, ext_name_label, ext_name)
 		end;
 
 	set_dir_list_label (a_label: STRING) is
@@ -127,7 +127,7 @@ feature
 		do
 			ext_name_label := a_label.to_c;
 			ext_name := MdirListlabelString.to_c;
-			to_left_xm_string (screen_object, $ext_name_label, $ext_name)
+			to_left_xm_string (screen_object, ext_name_label, ext_name)
 		end;
 
 	selected_file: STRING is
@@ -158,7 +158,7 @@ feature
 		do
 			ext_name := MdirMask.to_c;
 			ext_name_filter := a_filter.to_c;
-			to_left_xm_string (screen_object, $ext_name_filter, $ext_name)
+			to_left_xm_string (screen_object, ext_name_filter, ext_name)
 		end;
 
 	is_dir_valid: BOOLEAN is
@@ -199,7 +199,7 @@ feature
 		do
 			ext_name_dir := a_directory_name.to_c;
 			ext_name := Mdirectory.to_c;
-			to_left_xm_string (screen_object, $ext_name_dir, $ext_name)
+			to_left_xm_string (screen_object, ext_name_dir, ext_name)
 		end;
 
 	pattern: STRING is
@@ -221,7 +221,7 @@ feature
 		do
 			ext_name := Mpattern.to_c;
 			ext_name_pattern := a_pattern.to_c;
-			to_left_xm_string (screen_object, $ext_name_pattern, $ext_name)
+			to_left_xm_string (screen_object, ext_name_pattern, ext_name)
 		end;
 
 	set_filter_label (a_label: STRING) is
@@ -234,7 +234,7 @@ feature
 		do
 			ext_name_label := a_label.to_c;
 			ext_name := MfilterLabelString.to_c;
-			to_left_xm_string (screen_object, $ext_name_label, $ext_name)
+			to_left_xm_string (screen_object, ext_name_label, ext_name)
 		end;
 
 	file_list: LINKED_LIST [STRING] is

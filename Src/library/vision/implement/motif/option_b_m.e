@@ -131,7 +131,7 @@ feature
 			xt_unmanage_child (button_widget);
 			ext_name := MlabelString.to_c;
 			ext_name_text := a_text.to_c;
-			to_left_xm_string (button_widget, $ext_name_text, $ext_name);
+			to_left_xm_string (button_widget, ext_name_text, ext_name);
 			xt_manage_child (button_widget);
 		ensure then
 			text.is_equal (a_text)
@@ -157,7 +157,7 @@ feature
 			xt_unmanage_child (title_widget);
 			ext_name := MlabelString.to_c;
 			ext_name_title := a_title.to_c;
-			to_left_xm_string (title_widget, $ext_name_title, $ext_name);
+			to_left_xm_string (title_widget, ext_name_title, ext_name);
 			xt_manage_child (title_widget);
 		ensure then
 			title.is_equal (a_title)
@@ -171,7 +171,7 @@ feature
 			no_title := "";
 			ext_name := MlabelString.to_c;
 			ext_name_title := no_title.to_c;
-			to_left_xm_string (title_widget, $ext_name_title, $ext_name);
+			to_left_xm_string (title_widget, ext_name_title, ext_name);
 		end;
 
 	set_height (new_height: INTEGER) is

@@ -20,7 +20,7 @@ feature {NONE}
 			ext_name: ANY;
 		do
 			ext_name := resource_name.to_c;
-			set_motif_font (screen_object, font_ptr, $ext_name)
+			set_motif_font (screen_object, font_ptr, ext_name)
 		end;
 
 feature {NONE} -- external feature

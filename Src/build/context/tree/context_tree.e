@@ -415,7 +415,9 @@ feature -- Hole
 			if group_stone /= Void then
 				st := group_stone.data;
 			end;
-			context_type ?= st;
+			if main_panel.project_initialized then
+				context_type ?= st;
+			end;
 			if context_type /= Void and then
 				context_type = context_catalog.perm_wind_type then
 					new_context := context_type.create_context (Void);

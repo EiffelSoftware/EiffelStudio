@@ -5206,6 +5206,8 @@ rt_private void assign(long offset, uint32 type)
 
 	last = opop();					/* Value to be assigned */
 
+	CHECK("Target same type as source", last->type == type);
+
 #define l last
 #define i icurrent
 
@@ -5216,21 +5218,8 @@ rt_private void assign(long offset, uint32 type)
 	case SK_INT8: *(EIF_INTEGER_8 *)(i->it_ref + offset) = l->it_int8; break;
 	case SK_INT16: *(EIF_INTEGER_16 *)(i->it_ref + offset) = l->it_int16; break;
 	case SK_INT64: *(EIF_INTEGER_64 *)(i->it_ref + offset) = l->it_int64; break;
-	case SK_INT32:
-		switch (last->type) {
-		case SK_INT32: *(EIF_INTEGER_32 *)(i->it_ref + offset) = l->it_int32; break;
-		case SK_FLOAT: *(EIF_INTEGER_32 *) (i->it_ref + offset) = (EIF_INTEGER_32) l->it_float; break;
-		case SK_DOUBLE: *(EIF_INTEGER_32 *) (i->it_ref + offset) = (EIF_INTEGER_32) l->it_double; break;
-		default: eif_panic(MTC RT_UNKNOWN_TYPE_MSG);
-		}
-		break;
-	case SK_FLOAT:
-		switch (last->type) {
-		case SK_FLOAT: *(EIF_REAL *) (i->it_ref + offset) = l->it_float; break;
-		case SK_DOUBLE: *(EIF_REAL *) (i->it_ref + offset) = (EIF_REAL) l->it_double;break;
-		default: eif_panic(MTC RT_UNKNOWN_TYPE_MSG);
-		}
-		break;
+	case SK_INT32: *(EIF_INTEGER_32 *)(i->it_ref + offset) = l->it_int32; break;
+	case SK_FLOAT: *(EIF_REAL *) (i->it_ref + offset) = l->it_float; break;
 	case SK_DOUBLE: *(EIF_DOUBLE *) (i->it_ref + offset) = l->it_double; break;
 	case SK_POINTER: *(EIF_POINTER *) (i->it_ref + offset) = l->it_ptr; break;
 	case SK_BIT: b_copy(l->it_bit, i->it_ref + offset); break;

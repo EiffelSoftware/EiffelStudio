@@ -5,8 +5,12 @@ REM *********************************************
 
 ECHO Building Codedom files
 
-CD checkout\dotnet\codedom_provider
-REM in checkout\dotnet\codedom_provider
+SET EIFFEL_SRC=%CD%\checkout\head
+SET ISE_EIFFEL="%2"
+SET PATH=%INIT_PATH%;"%2\studio\spec\windows\bin"
+
+CD checkout\head\dotnet\codedom_provider
+REM in checkout\head\dotnet\codedom_provider
 CALL build_studio.bat /release
 IF NOT EXIST build_studio GOTO END
 IF NOT EXIST build_studio\EiffelSoftware.Codedom\EIFGEN\F_code\EiffelSoftware.Codedom.dll GOTO END
@@ -19,7 +23,7 @@ IF NOT EXIST build_studio\esplitter\EIFGEN\F_code\esplitter.exe GOTO END
 IF NOT EXIST build_studio\esplit\EIFGEN\F_code\esplit.exe GOTO END
 
 ECHO Copying files
-CD ..\..\..\delivery
+CD ..\..\..\..\delivery
 REM in delivery
 MKDIR codedom
 CD codedom
@@ -29,25 +33,25 @@ MKDIR configs
 COPY ..\..\default.ecd configs\
 
 MKDIR bin
-COPY ..\..\checkout\dotnet\codedom_provider\build_studio\EiffelSoftware.CodeDom.CacheBrowser\EIFGEN\F_code\EiffelSoftware.CodeDom.CacheBrowser.dll bin\
-COPY ..\..\checkout\dotnet\codedom_provider\build_studio\EiffelSoftware.CodeDom\EIFGEN\F_code\EiffelSoftware.Codedom.dll bin\
-COPY ..\..\checkout\dotnet\codedom_provider\build_studio\EiffelSoftware.CodeDom.Base\EIFGEN\F_code\EiffelSoftware.CodeDom.Base.dll bin\
-COPY ..\..\checkout\dotnet\codedom_provider\build_studio\EiffelSoftware.CodeDom.Base\EIFGEN\F_code\libEiffelSoftware.CodeDom.Base.dll bin\
-COPY ..\..\checkout\dotnet\codedom_provider\build_studio\EiffelSoftware.CodeDom.Vision2\EIFGEN\F_code\EiffelSoftware.CodeDom.Vision2.dll bin\
-COPY ..\..\checkout\dotnet\codedom_provider\build_studio\EiffelSoftware.CodeDom.Vision2\EIFGEN\F_code\libEiffelSoftware.CodeDom.Vision2.dll bin\
-COPY ..\..\checkout\dotnet\codedom_provider\build_studio\EiffelSoftware.CodeDom.Splitter\EIFGEN\F_code\EiffelSoftware.CodeDom.Splitter.dll bin\
-COPY ..\..\checkout\dotnet\codedom_provider\build_studio\ecdpman\EIFGEN\F_code\ecdpman.exe bin\
-COPY ..\..\checkout\dotnet\codedom_provider\build_studio\esplitter\EIFGEN\F_code\esplitter.exe bin\
-COPY ..\..\checkout\dotnet\codedom_provider\build_studio\esplit\EIFGEN\F_code\esplit.exe bin\
-COPY ..\..\checkout\dotnet\codedom_provider\build_studio\nmap\EIFGEN\F_code\nmap.exe bin\
-COPY ..\..\checkout\Eiffel\eiffel\com_il_generation\Core\run-time\EiffelSoftware.Runtime.dll bin\
+COPY ..\..\checkout\head\dotnet\codedom_provider\build_studio\EiffelSoftware.CodeDom.CacheBrowser\EIFGEN\F_code\EiffelSoftware.CodeDom.CacheBrowser.dll bin\
+COPY ..\..\checkout\head\dotnet\codedom_provider\build_studio\EiffelSoftware.CodeDom\EIFGEN\F_code\EiffelSoftware.Codedom.dll bin\
+COPY ..\..\checkout\head\dotnet\codedom_provider\build_studio\EiffelSoftware.CodeDom.Base\EIFGEN\F_code\EiffelSoftware.CodeDom.Base.dll bin\
+COPY ..\..\checkout\head\dotnet\codedom_provider\build_studio\EiffelSoftware.CodeDom.Base\EIFGEN\F_code\libEiffelSoftware.CodeDom.Base.dll bin\
+COPY ..\..\checkout\head\dotnet\codedom_provider\build_studio\EiffelSoftware.CodeDom.Vision2\EIFGEN\F_code\EiffelSoftware.CodeDom.Vision2.dll bin\
+COPY ..\..\checkout\head\dotnet\codedom_provider\build_studio\EiffelSoftware.CodeDom.Vision2\EIFGEN\F_code\libEiffelSoftware.CodeDom.Vision2.dll bin\
+COPY ..\..\checkout\head\dotnet\codedom_provider\build_studio\EiffelSoftware.CodeDom.Splitter\EIFGEN\F_code\EiffelSoftware.CodeDom.Splitter.dll bin\
+COPY ..\..\checkout\head\dotnet\codedom_provider\build_studio\ecdpman\EIFGEN\F_code\ecdpman.exe bin\
+COPY ..\..\checkout\head\dotnet\codedom_provider\build_studio\esplitter\EIFGEN\F_code\esplitter.exe bin\
+COPY ..\..\checkout\head\dotnet\codedom_provider\build_studio\esplit\EIFGEN\F_code\esplit.exe bin\
+COPY ..\..\checkout\head\dotnet\codedom_provider\build_studio\nmap\EIFGEN\F_code\nmap.exe bin\
+COPY ..\..\checkout\compiler\Eiffel\eiffel\com_il_generation\Core\run-time\EiffelSoftware.Runtime.dll bin\
 
 CD bin
 REM in delivery\codedom\bin
 MKDIR icons
 CD icons
 REM in delivery\codedom\bin\icons
-XCOPY ..\..\..\..\checkout\dotnet\codedom_provider\tools\manager\icons /E
+XCOPY ..\..\..\..\checkout\head\dotnet\codedom_provider\tools\manager\icons /E
 SET CODEDOM_BUILT=1
 
 CD ..\..\..\..

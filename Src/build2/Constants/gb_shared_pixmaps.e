@@ -148,6 +148,11 @@ feature -- Pngs
 			Result := build_classic_pixmap ("maximize")
 		end
 		
+	Icon_restore: ARRAY [EV_PIXMAP] is
+		once
+			Result := build_classic_pixmap ("restore")
+		end
+		
 	Icon_close: ARRAY [EV_PIXMAP] is
 		once
 			Result := build_classic_pixmap ("close")

@@ -179,7 +179,18 @@ feature -- Definition
 		ensure
 			success: last_call_success = 0
 		end
-		
+
+	define_parameter (name: UNI_STRING; pos: INTEGER) is
+			-- Define parameter `name' at position `pos' in current method.
+		require
+			name_not_void: name /= Void
+			valid_pos: pos >= 0
+		do
+			last_call_success := c_define_parameter (item, name.item, 0, pos, 1, pos, 0, 0)
+		ensure
+			success: last_call_success = 0
+		end
+	
 feature -- Settings
 
 	set_user_entry_point (entry_point_token: INTEGER) is
@@ -245,7 +256,7 @@ feature {NONE} -- Implementation
 			lang_guid, lang_vendor, doc_type: POINTER; sym_writer: POINTER): INTEGER
 		is
 			-- Call `ISymUnmanagedWriter->DefineDocument'.
-		external
+		external 
 			"[
 				C++ ISymUnmanagedWriter signature
 					(LPWSTR, GUID *, GUID *, GUID *, ISymUnmanagedDocumentWriter **): EIF_INTEGER
@@ -269,6 +280,20 @@ feature {NONE} -- Implementation
 			]"
 		alias
 			"DefineLocalVariable"
+		end
+
+	c_define_parameter (an_item: POINTER; name: POINTER; attributes, param_pos: INTEGER;
+			Addresskind, unused1, unused2, unused3: INTEGER): INTEGER
+		is
+			-- Call `ISymUnmanagedWriter->DefineParameter'.
+		external
+			"[
+				C++ ISymUnmanagedWriter signature
+					(LPWSTR, ULONG32, ULONG32, ULONG32, ULONG32, ULONG32, ULONG32): EIF_INTEGER
+				use "cli_headers.h"
+			]"
+		alias
+			"DefineParameter"
 		end
 
 	c_define_sequence_points (an_item: POINTER; document: POINTER; count: INTEGER;

@@ -11,18 +11,9 @@ inherit
 
 	FEATURE_STONE
 		rename
-			make as old_make,
-			check_validity as old_check_validity
-		redefine
-			history_name, feature_name
-		end;
-	FEATURE_STONE
-		rename
 			make as old_make
 		redefine
 			check_validity, history_name, feature_name
-		select
-			check_validity 
 		end 
 
 creation 
@@ -67,12 +58,16 @@ feature -- Update
 				-- invalid
 				if e_class /= Void then
 						-- Find e_feature from feature_name.
-					feat := e_class.feature_with_name (feature_name);
-					if feat /= Void then
-						e_feature := feat;
-						if start_position = -1 then
-								-- calculate positions
-							old_check_validity	
+					if e_class.feature_table /= Void then
+							-- System has been completely compiled and has all its
+							-- feature tables.
+						feat := e_class.feature_with_name (feature_name);
+						if feat /= Void then
+							e_feature := feat;
+							if start_position = -1 then
+									-- calculate positions
+								{FEATURE_STONE} Precursor	
+							end
 						end
 					end
 				end

@@ -88,7 +88,7 @@ feature -- Initialization
 			execute_button.add_activate_action (Current, execute_it);
 			cancel_button.add_activate_action (Current, cancel_it);
 			associated_command := cmd;
-			set_composite_attributes (Current)
+			set_composite_attributes (Current);
 		end;
 
 feature -- Execution; Implementation
@@ -158,6 +158,7 @@ feature {NONE} -- Implementation
 					list.go_i_th (list.selected_position)
 				end
 			elseif argument = cancel_it then
+				unrealize;
 				popdown
 			elseif argument = display_it or argument = execute_it then
 				tmp_name := associated_command.filter_name;
@@ -172,6 +173,7 @@ feature {NONE} -- Implementation
 					associated_command.execute (Current)
 				elseif argument = execute_it then
 					associated_command.execute (associated_command);
+					unrealize;
 					popdown
 				end
 			end

@@ -2182,6 +2182,27 @@ feature {NONE} -- Event handling
 			-- Called by `expose_actions' of `drawable'.
 		do
 		end
+		
+	client_x_to_virtual_x (client_x: INTEGER): INTEGER is
+			-- Convert `client_x' in client coordinates to a virtual grid coordinate.
+		require
+			client_x_positive: client_x >= 0
+		do
+			Result := client_x + internal_client_x - viewport_x_offset
+		ensure
+			result_greater_or_equal_to_client_x: Result >= client_x
+		end
+		
+	client_y_to_virtual_y (client_y: INTEGER): INTEGER is
+			-- Convert `client_y' in client coordinates to a virtual grid coordinate.
+		require
+			client_y_positive: client_y >= 0
+		do
+			Result := client_y + internal_client_y - viewport_y_offset
+		ensure
+			result_greater_or_equal_to_client_y: Result >= client_y
+		end
+		
 
 	pointer_motion_received (a_x, a_y: INTEGER; a_x_tilt, a_y_tilt, a_pressure: DOUBLE; a_screen_x, a_screen_y: INTEGER) is
 			-- Called by `pointer_motion_actions' of `drawable'.
@@ -2191,9 +2212,9 @@ feature {NONE} -- Event handling
 			if pointer_motion_actions_internal /= Void and then not pointer_motion_actions_internal.is_empty then
 				pointed_item := drawer.item_at_position (a_x, a_y)
 				if pointed_item /= Void then
-					pointer_motion_actions_internal.call ([a_x + internal_client_x - viewport_x_offset, a_y + internal_client_y - viewport_y_offset, pointed_item.interface])
+					pointer_motion_actions_internal.call ([client_x_to_virtual_x(a_x), client_y_to_virtual_y (a_y), pointed_item.interface])
 				else
-					pointer_motion_actions_internal.call ([a_x + internal_client_x - viewport_x_offset, a_y + internal_client_y - viewport_y_offset, Void])
+					pointer_motion_actions_internal.call ([client_x_to_virtual_x(a_x), client_y_to_virtual_y (a_y), Void])
 				end
 			end
 		end
@@ -2206,9 +2227,9 @@ feature {NONE} -- Event handling
 			if pointer_double_press_actions_internal /= Void and then not pointer_double_press_actions_internal.is_empty then
 				pointed_item := drawer.item_at_position (a_x, a_y)
 				if pointed_item /= Void then
-					pointer_double_press_actions_internal.call ([a_x + internal_client_x - viewport_x_offset, a_y + internal_client_y - viewport_y_offset, a_button, pointed_item.interface])
+					pointer_double_press_actions_internal.call ([client_x_to_virtual_x(a_x), client_y_to_virtual_y (a_y), a_button, pointed_item.interface])
 				else
-					pointer_double_press_actions_internal.call ([a_x + internal_client_x - viewport_x_offset, a_y + internal_client_y - viewport_y_offset, a_button, Void])
+					pointer_double_press_actions_internal.call ([client_x_to_virtual_x(a_x), client_y_to_virtual_y (a_y), a_button, Void])
 				end
 			end
 		end
@@ -2429,6 +2450,8 @@ feature {NONE} -- Implementation
 
 	update_grid_row_indices (a_index: INTEGER) is
 			-- Recalculate subsequent row indexes starting from `a_index'
+		require
+			valid_index: to_implement_assertion ("Add assertion for `a_index' values.")
 		local
 			i, a_row_count: INTEGER
 			row_i: EV_GRID_ROW_I

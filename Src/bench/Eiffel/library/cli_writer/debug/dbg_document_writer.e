@@ -8,6 +8,9 @@ class
 
 inherit
 	COM_OBJECT
+		export
+			{DBG_WRITER} item
+		end
 
 create
 	make_by_pointer

@@ -147,6 +147,14 @@ feature {EV_TREE_ITEM_I} -- Implementation
 			delete_item (item_imp)
 		end
 
+	notify_item_info (item_imp: EV_TREE_ITEM_IMP) is
+			-- Notify the system of the changes of the item.
+			-- The item must have all the necessary flags and
+			-- informations to notify.
+		do
+			cwin_send_message (item, Tvm_setitem, 0, item_imp.to_integer) 
+		end
+
 feature {NONE} -- WEL Implementation
 
 	default_style: INTEGER is

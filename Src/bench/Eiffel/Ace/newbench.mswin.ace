@@ -5,7 +5,6 @@ root
 	eb_kernel: make
 
 default
-	arguments ("-from_bench")
 	assertion (check)
 	assertion (require)
 	assertion (ensure)
@@ -84,6 +83,7 @@ default
 	disabled_debug ("sep_debug")
 	disabled_debug ("server")
 	disabled_debug ("show_prof_query")
+	disabled_debug ("timing")
 	disabled_debug ("trace_table")
 	disabled_debug ("transfer")
 	disabled_debug ("type_check")
@@ -216,7 +216,7 @@ cluster
 
 	all status (communications):		"$\status"
 		exclude
-			"no_dotnet"; 
+			"no_dotnet"; "CVS"; 
 		end
 
 	ipc (communications):		"$\ipc"

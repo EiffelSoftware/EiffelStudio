@@ -515,6 +515,8 @@
 			<TEXT>last_saved_stack_path<STRING>/</STRING></TEXT>
 			<TEXT>max_slice<INTEGER>50</INTEGER></TEXT>
 			<TEXT>min_slice<INTEGER>0</INTEGER></TEXT>
+			<TEXT>dyn_lib_window_height<INTEGER>300</INTEGER></TEXT>
+			<TEXT>dyn_lib_window_width<INTEGER>450</INTEGER></TEXT>
 			<TEXT>development_window__height<INTEGER>480</INTEGER></TEXT>
 			<TEXT>development_window__width<INTEGER>640</INTEGER></TEXT>
 			<TEXT>development_window__is_maximized<BOOLEAN>False</BOOLEAN></TEXT>

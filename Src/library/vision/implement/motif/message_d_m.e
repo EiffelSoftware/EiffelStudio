@@ -17,7 +17,8 @@ inherit
 		redefine
 			set_x, set_y, set_x_y,
 			define_cursor_if_shell,
-			undefine_cursor_if_shell
+			undefine_cursor_if_shell,
+			is_stackable
 		end;
 
 	MESSAGE_D_I
@@ -61,6 +62,8 @@ feature -- Creation
 		end;
 
 feature 
+
+	is_stackable: BOOLEAN is do end;
 
 	set_x (new_x: INTEGER) is
 			-- Put at horizontal position `new_x'

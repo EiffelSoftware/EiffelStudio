@@ -52,6 +52,35 @@ feature
 			set_boolean (screen_object, flag, $ext_name);
 		end;
 
+	circulate_up is
+		do
+			x_circulate_up (xt_display (screen_object), xt_window(screen_object));
+		end;
+
+
+	circulate_down is
+		do
+			x_circulate_down (xt_display (screen_object), xt_window(screen_object));
+		end;
+
+	restack_children (s_child_list: ARRAY [STACKABLE]) is
+		local
+			warray: ARRAY [POINTER];
+			ind: INTEGER;
+			arg1: ANY;
+		do
+			!!warray.make (s_child_list.lower, s_child_list.upper);
+			from ind := s_child_list.lower
+			until ind > s_child_list.upper
+			loop
+				warray.put(s_child_list.item(ind).window, ind);
+				ind := ind + 1;
+			end;
+			arg1 := warray.to_c;
+			x_restack (Xt_display(screen_object), $arg1, s_child_list.count);
+		end;
+			
+
 feature {NONE} -- External features
 
 	create_bulletin (b_name: ANY; scr_obj: POINTER): POINTER is

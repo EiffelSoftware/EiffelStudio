@@ -21,7 +21,7 @@ inherit
 			make
 		redefine
 			define_cursor_if_shell, undefine_cursor_if_shell,
-			set_x, set_y, set_x_y
+			set_x, set_y, set_x_y, is_stackable
 		end;
 
 	DIALOG_M
@@ -59,6 +59,8 @@ feature
 			a_font_box_dialog.set_dialog_imp (Current);
 			forbid_resize
 		end;
+
+	is_stackable: BOOLEAN is do end;
 
 feature {ALL_CURS_X}
 

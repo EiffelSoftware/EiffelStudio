@@ -9,6 +9,17 @@ indexing
 
 deferred class FONT_LIST_I 
 
+inherit
+	G_ANY_I
+		export
+			{NONE} all
+		undefine
+			copy,
+			is_equal,
+			consistent,
+			setup
+		end;
+
 feature 
 
 	count: INTEGER is

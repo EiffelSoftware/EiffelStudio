@@ -11,7 +11,9 @@ deferred class PRIMITIVE_I
 
 inherit
 
-	WIDGET_I
+	WIDGET_I;
+
+	STACKABLE_I;
 
 feature 
 

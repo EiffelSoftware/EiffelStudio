@@ -19,11 +19,6 @@ inherit
 			{ANY} empty
 		end;
 
-	G_ANY_I
-		export
-			{NONE} all
-		end;
-
 	TASK_I;
 
 	EVENT_HDL;

@@ -596,6 +596,7 @@ feature {NONE} -- Implementation
 			a_text: STRING
 			i, j: INTEGER
 			part_text: EV_MODEL_TEXT
+			l_max_generics_name_length: INTEGER
 		do
 			a_text := model.generics
 			
@@ -604,32 +605,15 @@ feature {NONE} -- Implementation
 				generics_label.wipe_out
 				generics_label.set_point_position (0, 0)
 				if a_text.count > max_generics_name_length then
-					from
-						s := ""
-						rest := a_text
-						i := rest.last_index_of (' ', max_generics_name_length)
-						j := rest.last_index_of ('_', max_generics_name_length)
-						if j > i then
+					if a_text.count > 2 * max_generics_name_length then
+						-- warp to two lines
+						l_max_generics_name_length := (a_text.count / 2).ceiling
+						i := a_text.index_of (' ', l_max_generics_name_length)
+						j := a_text.index_of ('_', l_max_generics_name_length)
+						if j < i then
 							i := j
 						end
-						if i = 0 then
-							i := max_generics_name_length
-						end
-					until
-						i = 0 or else rest.count <= max_generics_name_length
-					loop
-						s := rest.substring (1, i)
-						rest := rest.substring (i + 1, rest.count)
-						if rest.count > max_generics_name_length then
-							i := rest.last_index_of (' ', max_generics_name_length)
-							j := rest.last_index_of ('_', max_generics_name_length)
-							if j > i then
-								i := j
-							end
-							if i = 0 then
-								i := max_generics_name_length
-							end
-						end
+						s := a_text.substring (1, i)
 						create part_text.make_with_text (s)
 						assign_generics_properties_to_text (part_text)
 						if world /= Void then
@@ -638,7 +622,46 @@ feature {NONE} -- Implementation
 						part_text.set_point_position (0, generics_label.bounding_box.height)
 						part_text.set_x (0)
 						generics_label.extend (part_text)
+						rest := a_text.substring (i + 1, a_text.count)
+					else
+						l_max_generics_name_length := max_generics_name_length
+						from
+							s := ""
+							rest := a_text
+							i := rest.last_index_of (' ', l_max_generics_name_length)
+							j := rest.last_index_of ('_', l_max_generics_name_length)
+							if j > i then
+								i := j
+							end
+							if i = 0 then
+								i := l_max_generics_name_length
+							end
+						until
+							i = 0 or else rest.count <= l_max_generics_name_length
+						loop
+							s := rest.substring (1, i)
+							rest := rest.substring (i + 1, rest.count)
+							if rest.count > l_max_generics_name_length then
+								i := rest.last_index_of (' ', l_max_generics_name_length)
+								j := rest.last_index_of ('_', l_max_generics_name_length)
+								if j > i then
+									i := j
+								end
+								if i = 0 then
+									i := l_max_generics_name_length
+								end
+							end
+							create part_text.make_with_text (s)
+							assign_generics_properties_to_text (part_text)
+							if world /= Void then
+								part_text.scale (world.scale_factor)
+							end
+							part_text.set_point_position (0, generics_label.bounding_box.height)
+							part_text.set_x (0)
+							generics_label.extend (part_text)
+						end
 					end
+					
 					s := rest			
 					create part_text.make_with_text (s)
 					assign_generics_properties_to_text (part_text)
@@ -664,22 +687,18 @@ feature {NONE} -- Implementation
 			request_update
 		end
 		
-	information_border: INTEGER is 0
-		
 	update_information_positions is
 			-- Set positions of `name_labels', `bon_icons' and `generics_label'.
 		local
 			ibbox, nbbox, gbbox: EV_RECTANGLE
-			h, w, cur_pos, cur_y_pos: INTEGER
-			l_min_size: like minimum_size
-			r: DOUBLE
-			omega: DOUBLE
+			cur_pos, cur_y_pos: INTEGER
+			h, w: INTEGER
 		do
 			ibbox := icon_figures.bounding_box
 			nbbox := name_labels.bounding_box
 			gbbox := generics_label.bounding_box
 			
-			if model.generics /= Void and then model.generics.count + model.name.count < 10  then
+			if model.generics /= Void and then model.generics.count + model.name.count <= max_class_name_length  then
 				-- on one line
 				h := ibbox.height + nbbox.height
 				
@@ -694,7 +713,7 @@ feature {NONE} -- Implementation
 				
 				name_labels.set_point_position (cur_y_pos, cur_pos)
 				cur_y_pos := cur_y_pos + nbbox.width // 2 + w
-				generics_label.set_point_position (cur_y_pos, cur_pos)	
+				generics_label.set_point_position (cur_y_pos, cur_pos)
 			else
 				h := ibbox.height + nbbox.height + gbbox.height
 				
@@ -709,15 +728,50 @@ feature {NONE} -- Implementation
 				generics_label.set_point_position (port_x, cur_pos)	
 			end
 			
-			l_min_size := minimum_size
-			
-			w := l_min_size.width
-			h := l_min_size.height
+			update_radius
+		end
+		
+	update_radius is
+			-- Update `ellipse_radius_1' and `ellipse_radius_2'.
+		local
+			l_min_size: EV_RECTANGLE
+			w, h: INTEGER
+			r, omega: DOUBLE
+		do
+			if is_high_quality then
+				if model.generics /= Void and then model.generics.count + model.name.count <= max_class_name_length  then				
+					l_min_size := minimum_size
+				
+					w := l_min_size.width
+					h := l_min_size.height
+					if icon_figures.bounding_box.height = 0 then
+						h := (h * 1.5).truncated_to_integer
+					end
+				else
+					l_min_size := minimum_size
+				
+					w := l_min_size.width
+					h := l_min_size.height
+					if icon_figures.bounding_box.height = 0 and then generics_label.bounding_box.height = 0 and then name_labels.count = 1 then
+						h := (h * 1.5).truncated_to_integer
+					end
+				end
+			else
+				l_min_size := name_labels.bounding_box
+				
+				w := l_min_size.width
+				h := l_min_size.height
+				if name_labels.count = 1 then
+					h := (h * 1.5).truncated_to_integer
+				end
+			end
+
 			r := distance (l_min_size.left, l_min_size.top, l_min_size.left + w / 2, l_min_size.top + h / 2)			
 			omega := line_angle (l_min_size.left + w / 2, l_min_size.top + h / 2, l_min_size.left + w, l_min_size.top)
 			ellipse_radius_2 := sqrt (r^2*sine(omega)^2*(1 + (cosine(omega)^2/(sine(omega)^2*(w^2/h^2)))))
 			ellipse_radius_1 := w * ellipse_radius_2 / h
 		end
+		
 
 	set_ellipse_properties is
 			-- Set properties of ellipse.
@@ -813,6 +867,7 @@ feature {NONE} -- Implementation
 					icon_figures.hide
 					generics_label.hide
 				end
+				update_radius
 				request_update
 			end
 		end

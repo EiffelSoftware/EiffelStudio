@@ -350,8 +350,7 @@ feature -- Execution
 				end
 				eifnet_debugger.do_step_next
 			end
-		end
-		
+		end		
 
 	notify_newbreakpoint is
 			-- Send an interrupt to the application
@@ -375,7 +374,8 @@ feature -- Execution
 			-- Process the termination of the executed
 			-- application. Also execute the `termination_command'.
 		do
-			Eifnet_debugger.terminate_debugger_session
+--			Eifnet_debugger.terminate_debugger_session
+-- this is now called directly from EIFNET_DEBUGGER.on_exit_process
 		end
 		
 feature -- Controle execution

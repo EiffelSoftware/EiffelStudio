@@ -432,12 +432,14 @@ feature {NONE} -- Implementation
 		local
 			container_object: GB_CONTAINER_OBJECT
 		do
-			container_object ?= an_object
-			if container_object /= Void and then parent_editor.object /= an_object then
-				if (first.merged_radio_button_groups = Void) then
-					Result := True
-				elseif not first.merged_radio_button_groups.has (container_object.object) then
-					Result := True
+			if an_object.object /= Void then
+				container_object ?= an_object
+				if container_object /= Void and then parent_editor.object /= an_object then
+					if (first.merged_radio_button_groups = Void) then
+						Result := True
+					elseif not first.merged_radio_button_groups.has (container_object.object) then
+						Result := True
+					end
 				end
 			end
 		end

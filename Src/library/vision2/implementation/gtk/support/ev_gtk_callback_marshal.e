@@ -54,7 +54,7 @@ feature {NONE} -- Basic operation
 			agent_not_void: agent /= Void
 			n_args_not_negative: n_args >= 0
 			args_not_null: n_args > 0 implies args /= Default_pointer
-			two_args_max: n_args <= 3
+			three_args_max: n_args <= 3
 				-- At present we only know how to deal with
 				-- one to three agruments. (a GdkEvent*)
 				-- (Or two arguments which are ignored)
@@ -62,7 +62,7 @@ feature {NONE} -- Basic operation
 				-- FIXME improve this comment. sam
 		local
 			tuple: TUPLE
-			mcl_int_agent: PROCEDURE [EV_MULTI_COLUMN_LIST, TUPLE [INTEGER]]
+			mcl_int_agent: PROCEDURE [EV_MULTI_COLUMN_LIST_IMP, TUPLE [INTEGER]]
 		do
 			if n_args = 1 then
 				tuple := gdk_event_to_tuple (gtk_value_pointer (args))
@@ -83,7 +83,7 @@ feature {NONE} -- Basic operation
 					-- we assume we have a row number in the first arg and we pass it.
 				mcl_int_agent ?= agent
 				if mcl_int_agent /= Void then
-					agent.call ([[gtk_value_pointer (args)]])
+					agent.call ([[gtk_value_int (args)]])
 				end
 			else
 				agent.call ([[]])
@@ -308,6 +308,9 @@ end -- class EV_GTK_CALLBACK_MARSHAL
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.7  2000/02/18 22:24:17  king
+--| Correct marshal feature to deal with mclist
+--|
 --| Revision 1.6  2000/02/18 19:26:25  king
 --| Corrected changes to marshal
 --|

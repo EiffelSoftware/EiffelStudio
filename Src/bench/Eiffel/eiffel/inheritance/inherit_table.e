@@ -416,6 +416,10 @@ end;
 				a_class.class_interface.process_features (resulting_table)
 			end
 
+				-- Instantiate generic parameter in context of current
+				-- class.
+			a_class.update_generic_features
+
 				-- Put the resulting table in the temporary feature table
 				-- server.
 			Tmp_feat_tbl_server.put (resulting_table);

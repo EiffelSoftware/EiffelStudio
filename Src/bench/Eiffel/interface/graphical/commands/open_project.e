@@ -88,9 +88,9 @@ feature {NONE} -- Implementation
 						!! project_dir.make (dir_name);
 						Project_directory.set_directory (dir_name)
 						make_project
-						last_name_chooser.set_file_selection;
-						last_name_chooser.set_title (Interface_names.t_Select_a_file);
 						if project_tool.initialized then
+							last_name_chooser.set_file_selection;
+							last_name_chooser.set_title (Interface_names.t_Select_a_file);
 							last_name_chooser.show_file_selection_list;
 							last_name_chooser.show_file_selection_label;
 						end

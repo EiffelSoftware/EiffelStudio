@@ -114,6 +114,36 @@ long size;
 	/* NOTREACHED */
 }
 
+char *makebit(bit)
+char *bit;
+{
+	/* Returns a new bit object with value `s' */
+	uint32 val;
+	int i, j, nb_packs;
+	char *result;
+	uint32 *arena;
+	long blength = strlen(bit);
+	
+	result = bmalloc(blength);		/* Creates bit object */
+	arena = ARENA(result);
+	nb_packs = BIT_NBPACK(blength);
+	for (i=0; i<nb_packs-1; i++) {
+		val = (uint32) 0;
+		for (j=BIT_UNIT-1; j>=0 ; j--)
+			val += (1 << j) * ((*bit++ == '1') ? 1 : 0);
+		*arena++ = val;
+	}
+	val = (uint32) 0;
+	blength %= BIT_UNIT;
+	if (blength == 0)
+		blength = BIT_UNIT;
+	for (j=BIT_UNIT-1; j>= (int)(BIT_UNIT-blength); j--)
+		val += (1 << j) * ((*bit++ == '1') ? 1 : 0);
+	*arena = val;
+
+	return result;
+}
+
 public char b_equal(a, b)
 char *a;
 char *b;

@@ -1046,10 +1046,10 @@ rt_private void interpret(int flag, int where)
 				break;
 			case SK_POINTER:
 				switch (offset) {
-					case 8: last->it_int8 = (EIF_INTEGER_8) last->it_ptr; break;
-					case 16: last->it_int16 = (EIF_INTEGER_16) last->it_ptr; break;
-					case 32: last->it_int32 = (EIF_INTEGER_32) last->it_ptr; break;
-					case 64: last->it_int64 = (EIF_INTEGER_64) last->it_ptr; break;
+					case 8: last->it_int8 = (EIF_INTEGER_8) (rt_uint_ptr) last->it_ptr; break;
+					case 16: last->it_int16 = (EIF_INTEGER_16) (rt_uint_ptr) last->it_ptr; break;
+					case 32: last->it_int32 = (EIF_INTEGER_32) (rt_uint_ptr) last->it_ptr; break;
+					case 64: last->it_int64 = (EIF_INTEGER_64) (rt_uint_ptr) last->it_ptr; break;
 					default:
 						eif_panic ("Illegal type");
 				}	
@@ -1205,10 +1205,10 @@ rt_private void interpret(int flag, int where)
 				break;
 			case SK_POINTER:
 				switch (offset) {
-					case 8: last->it_int8 = (EIF_INTEGER_8) last->it_ptr; break;
-					case 16: last->it_int16 = (EIF_INTEGER_16) last->it_ptr; break;
-					case 32: last->it_int32 = (EIF_INTEGER_32) last->it_ptr; break;
-					case 64: last->it_int64 = (EIF_INTEGER_64) last->it_ptr; break;
+					case 8: last->it_int8 = (EIF_INTEGER_8) (rt_uint_ptr) last->it_ptr; break;
+					case 16: last->it_int16 = (EIF_INTEGER_16) (rt_uint_ptr) last->it_ptr; break;
+					case 32: last->it_int32 = (EIF_INTEGER_32) (rt_uint_ptr) last->it_ptr; break;
+					case 64: last->it_int64 = (EIF_INTEGER_64) (rt_uint_ptr) last->it_ptr; break;
 					default:
 						eif_panic ("Illegal type");
 				}	

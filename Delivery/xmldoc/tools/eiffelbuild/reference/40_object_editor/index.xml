@@ -122,7 +122,7 @@
 			<item>String properties inputted via a text field are updated within the object every time a key is pressed</item>
 			<item>Integer properties inputted via a text field are only updated within the object when return is pressed, or the input box looses the focus.</item>
 			<item>Almost without exception, a push button which controls a property, will open up a dialog, allowing the property to be edited. Examples are colors, pixmaps and events.</item>
-			<item>If when you attempt to modify a property, it returns back to its original value, it means that the value you attempted to enter was invalid. For example, looking at the screen show above, if you enter -50 into the minimum_height text field and press return, it will revert back to 23. This is because the minimum_height of an EV_BUTTON may not be set to less than 0. To find allowable values for properties of an 
+			<item>If when you attempt to modify a property, it returns back to its original value, it means that the value you attempted to enter was invalid. For example, looking at the screen show above, if you enter -50 into the minimum_height text field and press return, it will revert back to 23. This is because the minimum_height of an <code><class_name>EV_BUTTON</class_name></code> may not be set to less than 0. To find allowable values for properties of an 
 				<link>
 					<url>/tools/eiffelbuild/reference/02_notation.xml#object</url>
 					<label>object</label>
@@ -171,11 +171,19 @@
 		<heading>
 			<size>2</size>Advanced property manipulation
 		</heading>
+		<paragraph>All fields that may use constants have a button marked with the constants symbol <image>
+				<url>/images/eiffelbuild/icons/icon_format_onces_color.png</url>
+			</image>, which when selected, modifies the field to allow selection of the desired constant. A combo box is displayed with all valid constants (matching the type of the property) displayed, from which you may select the constant you wish to use. To remove the use of the constant, simply press the constants button again, which removes the constant, and sets the property to a manifest value representing the previous value of the last selected constant.
+
+</paragraph>
+		<heading>
+			<size>2</size>Advanced property manipulation
+		</heading>
 		<paragraph>Although many of the properties of 
 			<link>
 				<url>/tools/eiffelbuild/reference/02_notation.xml#object</url>
 				<label>objects</label>
-			</link> are relatively simple, and can be manipulated with STRING or INTEGER values, there are others that require more complicated control mechanisms. The following 
+			</link> are relatively simple, and can be manipulated with <code><class_name>STRING</class_name></code> or <code><class_name>INTEGER</class_name></code> values, there are others that require more complicated control mechanisms. The following 
 			<link>
 				<url>/tools/eiffelbuild/reference/02_notation.xml#object</url>
 				<label>object</label>
@@ -185,19 +193,19 @@
 			<item>
 				<link>
 					<url>10_merged_radio_button_groups.xml</url>
-					<label>Merging radio button groups of EV_CONTAINER</label>
+					<label>Merging radio button groups of <code><class_name>EV_CONTAINER</class_name></code></label>
 				</link>
 			</item>
 			<item>
 				<link>
 					<url>20_table_children_positioning.xml</url>
-					<label>Positioning children of EV_TABLE</label>
+					<label>Positioning children of <code><class_name>EV_TABLE</class_name></code></label>
 				</link>
 			</item>
 			<item>
 				<link>
 					<url>30_fixed_children_positioning.xml</url>
-					<label>Positioning children of EV_FIXED</label>
+					<label>Positioning children of <code><class_name>EV_FIXED</class_name></code></label>
 				</link>
 			</item>
 		</list>
@@ -229,7 +237,7 @@
 				<url>/images/eiffelbuild/screenshots/event_selection_dialog.png</url>
 			</image>
 		</paragraph>
-		<paragraph>Looking at the screenshot above, you will see that this dialog contains all the action_sequences available for the EV_BUTTON to which the object editor is targeted.</paragraph>
+		<paragraph>Looking at the screenshot above, you will see that this dialog contains all the action_sequences available for the <code><class_name>EV_BUTTON</class_name></code> to which the object editor is targeted.</paragraph>
 		<paragraph>If you check a button connected with one of the action sequences, you will be then able to enter the name of a feature that you wish to connect to the action sequence. The screenshot above shows the user has connected a feature named `button_pressed' to the `select_actions'. When 
 			<link>
 				<url>/tools/eiffelbuild/reference/90_code_generation/index.xml</url>

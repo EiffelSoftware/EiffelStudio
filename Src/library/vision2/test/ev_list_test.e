@@ -55,7 +55,12 @@ feature -- Basic operation
 		--	test_list.extend (["put_right", ~test_put_right])
 		--	test_list.extend (["put_i_th", ~test_put_i_th])
 		--	test_list.extend (["force", ~test_force])
-			test_list.extend (["put_front", ~test_put_front])
+		--	test_list.extend (["put_front", ~test_put_front])
+			test_list.extend (["prune", ~test_prune])
+			test_list.extend (["prune_all", ~test_prune_all])
+			test_list.extend (["remove", ~test_remove])
+			test_list.extend (["remove_left", ~test_remove_left])
+			test_list.extend (["remove_right", ~test_remove_right])
 
 			description.append ("Initial state... ")
 			append_result
@@ -462,6 +467,103 @@ feature {NONE} -- Implementation
 			end
 		end
 
+	test_prune is
+		local
+			n: INTEGER
+			existing_item: G
+		do
+			from
+				n := Testsize
+			until
+				n = 1
+			loop
+				if similar_list.prunable and then not similar_list.empty then
+					if similar_list.readable then
+						existing_item := similar_list.item
+					else
+						existing_item := similar_list.first
+					end
+					list.prune (existing_item)
+					similar_list.prune (existing_item)
+				end
+				n := n - 1
+			end
+		end
+
+	test_prune_all is
+		local
+			n: INTEGER
+			existing_item: G
+		do
+			from
+				n := Testsize
+			until
+				n = 1
+			loop
+				if similar_list.prunable and then not similar_list.empty then
+					if similar_list.readable then
+						existing_item := similar_list.item
+					else
+						existing_item := similar_list.first
+					end
+					list.prune_all (existing_item)
+					similar_list.prune_all (existing_item)
+				end
+				n := n - 1
+			end
+		end
+
+	test_remove is
+		local
+			n: INTEGER
+		do
+			from
+				n := Testsize
+			until
+				n = 1
+			loop
+				if similar_list.prunable and then similar_list.writable then
+					list.remove
+					similar_list.remove
+				end
+				n := n - 1
+			end
+		end
+
+	test_remove_left is
+		local
+			n: INTEGER
+		do
+			from
+				n := Testsize
+			until
+				n = 1
+			loop
+				if similar_list.index > 1 then
+					list.remove_left
+					similar_list.remove_left
+				end
+				n := n - 1
+			end
+		end
+
+	test_remove_right is
+		local
+			n: INTEGER
+		do
+			from
+				n := Testsize
+			until
+				n = 1
+			loop
+				if similar_list.index < similar_list.count then
+					list.remove_right
+					similar_list.remove_right
+				end
+				n := n - 1
+			end
+		end
+
 invariant
 	list_not_void: list /= Void
 	description_not_void: description /= Void
@@ -489,6 +591,9 @@ end -- class EV_LIST_TEST
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.11  2000/03/02 01:35:27  brendel
+--| Added tests for remove-features.
+--|
 --| Revision 1.10  2000/03/01 23:11:56  brendel
 --| Added check for initial state.
 --|

@@ -39,12 +39,30 @@ feature -- Creation
 
 feature -- Access
 
-	item, infix "@" (k: INTEGER): ANY is
-			-- Entry of key `k'.
+	item, infix "@" (index: INTEGER): ANY is
+			-- Entry of key `index'.
 		require
-			valid_index: valid_index (k)
+			valid_index: valid_index (index)
 		do
-			Result ?= native_array.item (k - 1)
+			Result ?= native_array.item (index - 1)
+			if Result = Void then
+					-- This is not an Eiffel reference type, it must be
+					-- a basic type. If not we do nothing.
+				inspect arg_item_code (index)
+				when boolean_code then Result := boolean_item (index)
+				when character_code then Result := character_item (index)
+				when double_code then Result := double_item (index)
+				when real_code then Result := real_item (index)
+				when pointer_code then Result := pointer_item (index)
+				when integer_code then Result := integer_32_item (index)
+				when integer_8_code then Result := integer_8_item (index)
+				when integer_16_code then Result := integer_16_item (index)
+				when integer_64_code then Result := integer_64_item (index)
+				when reference_code then
+						-- It is a reference which is not of type ANY. We return
+						-- Void for now.
+				end
+			end
 		end
 
 	reference_item (index: INTEGER): ANY is
@@ -231,6 +249,7 @@ feature -- Status report
 			retried: BOOLEAN
 			l_int: INTERNAL
 			l_any: ANY
+			l_child, l_parent: TYPE
 		do
 			if not retried then
 				if v = Void then
@@ -259,8 +278,9 @@ feature -- Status report
 						else
 								-- Let's check that type of `v' conforms to specified type of `index'-th
 								-- arguments of current TUPLE, this time we use simple .NET type conformance.
-							Result := v.get_type.is_subclass_of (
-								feature {ISE_RUNTIME}.type_of_generic_parameter (Current, index))
+							l_child := v.get_type
+							l_parent := feature {ISE_RUNTIME}.type_of_generic_parameter (Current, index)
+							Result := l_child.equals (l_parent) or l_child.is_subclass_of (l_parent)
 						end
 					end
 				end

@@ -43,7 +43,7 @@ inherit
 		end
 
 	EV_HASH_TABLE_ITEM_HOLDER_IMP
-
+	
 	WEL_TOOL_BAR
 		rename
 			make as wel_make,
@@ -257,15 +257,54 @@ feature -- Element change
 	clear_items is
 			-- Clear all the items of the list.
 		local
-			list: ARRAYED_LIST [EV_TOOL_BAR_BUTTON_IMP]
+			list: ARRAYED_LIST [EV_ITEM_IMP]	
+			but: EV_TOOL_BAR_BUTTON_IMP
+			counter: INTEGER
 		do
 			from
-				list ?= ev_children
+				list := children
+				counter := 0 
+			until
+				counter = list.count
+			loop
+				but ?= list @ (counter + 1)
+				but.interface.remove_implementation
+				counter := counter + 1
+			end
+			reset_contents
+			list.wipe_out
+		end
+
+	reset_contents is
+		local
+			list: ARRAYED_LIST [EV_ITEM_IMP]
+		do
+			from
+				list := children
 				list.start
 			until
-				list.empty
+				list.off
 			loop
-				remove_item (list.item)
+				cwin_send_message (item, Tb_deletebutton, 0, 0)
+				list.forth
+			end
+		end
+
+	remove_all_items is
+			-- Remove `children' without destroying them.
+		local
+			temp_children: ARRAYED_LIST [EV_ITEM_IMP]
+			current_item: EV_ITEM
+		do
+			from
+				temp_children := children
+				temp_children.finish
+			until
+				temp_children.before
+			loop
+				current_item ?= temp_children.item.interface
+				current_item.set_parent (Void)
+				temp_children.back
 			end
 		end
 

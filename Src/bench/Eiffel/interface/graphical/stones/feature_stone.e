@@ -107,14 +107,16 @@ feature -- dragging
 		local
 			cs: CLICK_STONE;
 			sp, ep: INTEGER;
-			temp: STRING
+			temp: STRING;
+			classc_stone: CLASSC_STONE
 		do 
 			!! Result.make (1, 2);
 				temp := "-- Version from class: ";
 				sp := temp.count;
 				ep := e_feature.written_class.name.count;
 				ep := ep + sp;
-			!! cs.make (e_feature.written_class.stone, sp, ep);
+			!! classc_stone.make (e_feature.written_class);
+			!! cs.make (classc_stone, sp, ep);
 			Result.put (cs, 1);
 				sp := ep + 3;
 				ep := sp + end_position - start_position;
@@ -214,8 +216,7 @@ feature -- dragging
 				if Eiffel_system.class_of_id (e_class.id) = e_class then
 					new_e_feature := e_class.feature_with_name (e_feature.name);
 					if new_e_feature /= Void then
-						-- FIXME !!!
-						--Result := e_feature.stone (e_class)
+						!! Result.make (e_feature, e_class)
 					end
 				end
 			end

@@ -495,9 +495,10 @@ feature {NONE} -- Implementation
 			timeout: EV_TIMEOUT
 		do
 			if viewport.height < control_holder.minimum_height then
-				if not scroll_bar.is_show_requested then	
-			viewport.resize_actions.pause
-			control_holder.resize_actions.pause
+				if not scroll_bar.is_show_requested then
+					parent_window (Current).lock_update
+					viewport.resize_actions.pause
+					control_holder.resize_actions.pause
 						-- There is no way ti resize a box in a viewport to
 						-- be smaller, so we must rebuild a new box,
 						-- and expand it by putting the items in.
@@ -522,7 +523,7 @@ feature {NONE} -- Implementation
 					
 					viewport.resize_actions.resume
 					control_holder.resize_actions.resume
-	
+					parent_window (Current).unlock_update
 				end
 			else
 				scroll_bar.hide

@@ -208,7 +208,10 @@ feature -- Element change
 			put_feature_qualification
 
 			l_is_str := current_feature.is_infix or current_feature.is_prefix
-			if class_c /= Void and then class_c.feature_table.has (name_of_current_feature) then
+			if
+				class_c /= Void and then class_c.has_feature_table and then
+				class_c.feature_table.has (name_of_current_feature)
+			then
 				-- Feature should be clickable
 				l_feature ?= class_c.feature_table.item (name_of_current_feature).
 					api_feature (class_c.class_id)
@@ -418,7 +421,7 @@ feature {NONE} -- Element Change
 			end
 			
 			-- Tell if feature is overloaded and or static
-			if class_c /= Void then
+			if class_c /= Void and then class_c.has_feature_table then
 				l_overloaded_names := class_c.feature_table.overloaded_names
 				if l_overloaded_names /= Void then
 					l_id := names_heap.id_of (current_feature.dotnet_eiffel_name)

@@ -90,7 +90,7 @@ feature -- Element change
 			ftxt.prepare_for_feature (a_dn_entity)
 			if not (current_class_only and ftxt.is_inherited) then
 				ftxt.put_normal_feature
-				if ftxt.class_c /= Void then
+				if ftxt.class_c /= Void and then ftxt.class_c.has_feature_table then
 						-- Is compiled class so we can make feature clickable and scrollable.
 					l_dev_win := Window_manager.last_focused_development_window
 					if l_dev_win /= Void then

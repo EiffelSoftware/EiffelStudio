@@ -22,6 +22,10 @@ extern "C" {
 #include "limits.h"							/* For PATH_MAX */
 #include "macros.h"
 
+#ifdef I_DIRENT								/* For PATH_MAX under Linux */
+#include <dirent.h>
+#endif
+
 /*
  * The following universal constants might not be found in the standard headers
  * included in file.c. Rather than getting an headache trying to Configure that,

@@ -1,9 +1,12 @@
 class HOLE_COMMAND
 
 inherit
-	PIXMAP_COMMAND
+	TWO_STATE_CMD
+		rename
+			true_state_symbol as symbol,
+			false_state_symbol as full_symbol
 		redefine
-			holder
+			holder, full_symbol
 		end;
 	STONE_TYPES
 

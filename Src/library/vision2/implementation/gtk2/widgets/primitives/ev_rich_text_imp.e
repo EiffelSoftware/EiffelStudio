@@ -45,6 +45,18 @@ feature {NONE} -- Initialization
 
 feature -- Status Report
 
+	formatting_contiguous (start_index, end_index: INTEGER): BOOLEAN is
+			-- Is formatting from caret position `start_index' to `end_index' contiguous?
+		do
+		end
+		
+	formatting_range_information (start_index, end_index: INTEGER): EV_CHARACTER_FORMAT_RANGE_INFORMATION is
+			-- Formatting range information from caret position `start_index' to `end_index'.
+			-- `Result' is a snapshot of `Current', and does not remain consistent as the contents
+			-- are subsequently changed.
+		do
+		end
+
 	index_from_position (an_x_position, a_y_position: INTEGER): INTEGER is
 			-- Index of character closest to position `x_position', `y_position'.
 		local
@@ -107,10 +119,11 @@ feature -- Status report
 			a_font_description: POINTER
 			a_color: POINTER
 			a_font: EV_FONT
+			a_font_imp: EV_FONT_IMP
 			font_size, font_weight, font_style: INTEGER
 			a_effects: EV_CHARACTER_FORMAT_EFFECTS
 			a_red, a_blue, a_green: INTEGER
-			a_family: STRING
+			a_family: EV_GTK_C_UTF8_STRING
 		do
 			create Result
 			create a_text_iter.make
@@ -122,11 +135,22 @@ feature -- Status report
 			
 
 			a_font_description := gtk_text_attributes_struct_font_description (a_text_attributes)
-			create a_family.make_from_c (feature {EV_GTK_DEPENDENT_EXTERNALS}.pango_font_description_get_family (a_font_description))
+			create a_family.make_from_utf8_pointer (feature {EV_GTK_DEPENDENT_EXTERNALS}.pango_font_description_get_family (a_font_description))
 			font_style := feature {EV_GTK_DEPENDENT_EXTERNALS}.pango_font_description_get_style (a_font_description)
 			font_weight := feature {EV_GTK_DEPENDENT_EXTERNALS}.pango_font_description_get_weight (a_font_description)
 			font_size := feature {EV_GTK_DEPENDENT_EXTERNALS}.pango_font_description_get_size (a_font_description) // feature {EV_GTK_DEPENDENT_EXTERNALS}.pango_scale
-
+			create a_font
+			
+			a_font.set_height (font_size)
+			if font_style > 0 then
+				a_font.set_shape (feature {EV_FONT_CONSTANTS}.shape_italic)
+			end
+			a_font_imp ?= a_font.implementation
+			a_font_imp.set_weight_from_pango_weight (font_weight)
+			
+			a_font.preferred_families.extend (a_family.string)
+			
+			Result.set_font (a_font)
 			
 			a_color := gtk_text_appearance_struct_fg_color (a_text_appearance)
 			a_red := feature {EV_GTK_EXTERNALS}.gdk_color_struct_red (a_color) // 256
@@ -254,6 +278,18 @@ feature -- Status setting
 		end
 		
 feature {NONE} -- Implementation
+
+	gtk_text_view_set_tabs (a_text_view, a_pango_tab_array: POINTER) is
+			external
+				"C signature (GtkTextView*, PangoTabArray*) use <gtk/gtk.h>"
+			end
+
+	pango_tab_array_new (initial_size: INTEGER; dimension_in_pixels: BOOLEAN): POINTER is
+			external
+				"C inline use <gtk/gtk.h>"
+			alias
+				"pango_tab_array_new ((gint) $initial_size, (gboolean) $dimension_in_pixels)"
+			end
 
 	gtk_text_attributes_struct_font_description (a_text_attributes: POINTER): POINTER is
 			external

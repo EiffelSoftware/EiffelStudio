@@ -52,17 +52,6 @@ void c_ev_gtk_callback_marshal (
 	}
 }
 
-// FIXME temporary wrapper for GTK_VALUE_POINTER should really be elsewhere
-void* gtk_value_pointer (void* p)
-{
-	return (GTK_VALUE_POINTER(*(GtkArg*)p));
-}
-
-int gtk_value_int (void* p)
-{
-	return (GTK_VALUE_INT(*(GtkArg*)p));
-}
-
 guint c_ev_gtk_callback_marshal_signal_connect (
     GtkObject* c_object,
     const gchar* signal,
@@ -233,6 +222,9 @@ guint c_ev_gtk_callback_marshal_delete_connect (
 //------------------------------------------------------------------------------
 //
 // $Log$
+// Revision 1.16  2004/03/19 23:09:27  king
+// Removed gtk_value_pointer and gtk_value_int as these are implemented inline
+//
 // Revision 1.15  2003/08/13 20:33:08  king
 // Removed idle handling code as we now perform this in our main loop
 //

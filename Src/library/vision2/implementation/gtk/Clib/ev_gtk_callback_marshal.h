@@ -37,10 +37,6 @@ guint c_ev_gtk_callback_marshal_timeout_connect (gint, EIF_OBJECT);
 
 guint c_ev_gtk_callback_marshal_delete_connect (GtkObject*, EIF_OBJECT);
 
-void* gtk_value_pointer (void*);
-
-int gtk_value_int (void*);
-
 #endif
 
 //------------------------------------------------------------------------------
@@ -48,6 +44,9 @@ int gtk_value_int (void*);
 //------------------------------------------------------------------------------
 //
 // $Log$
+// Revision 1.8  2004/03/19 23:09:41  king
+// Removed gtk_value_pointer and gtk_value_int as these are implemented inline
+//
 // Revision 1.7  2003/08/13 20:32:41  king
 // Removed idle handling code as we now perform this in our main loop
 //

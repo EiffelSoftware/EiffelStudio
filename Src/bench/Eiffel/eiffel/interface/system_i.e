@@ -2415,6 +2415,7 @@ feature -- Generation
 			-- Eiffel executable.
 		local
 			deg_output: DEGREE_OUTPUT
+			t: AUXILIARY_FILES
 			degree_message: STRING
 		do
 			degree_message := "Generation of auxiliary files"

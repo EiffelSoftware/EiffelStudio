@@ -46,7 +46,6 @@ feature -- Code generation
 		do
 			inspect
 				dll_type
-			when dll16_type then
 			when dll32_type then
 				generate_dll_body (False)
 			when dllwin32_type then

@@ -253,12 +253,12 @@ feature -- Status report
 	has_selection: BOOLEAN is
 			-- Is there a current text selection?
 		local
-			wel_sel: INTEGER
+			wel_sel: POINTER
 			start_pos, end_pos: INTEGER
 				-- starting and ending character positions of the 
 				-- current selection in the edit control
 		do
-			wel_sel := cwin_send_message_result (edit_item, Em_getsel, 0, 0)
+			wel_sel := cwin_send_message_result (edit_item, Em_getsel, to_wparam (0), to_lparam (0))
 			start_pos := cwin_hi_word (wel_sel)
 			end_pos := cwin_lo_word (wel_sel)
 
@@ -269,11 +269,8 @@ feature -- Status report
 
 	internal_caret_position: INTEGER is
 			-- Caret position.
-		local
-			wel_sel: INTEGER
 		do
-			wel_sel := cwin_send_message_result (edit_item, Em_getsel, 0, 0)
-			Result := cwin_hi_word (wel_sel)
+			Result := cwin_hi_word (cwin_send_message_result (edit_item, Em_getsel, to_wparam (0), to_lparam (0)))
 		end
 
 	has_focus: BOOLEAN is
@@ -332,7 +329,7 @@ feature -- Status setting
 	internal_set_caret_position (pos: INTEGER) is
 			-- Set the caret position to `pos'.
 		do
-			cwin_send_message (edit_item, Em_setsel, pos, pos)
+			cwin_send_message (edit_item, Em_setsel, to_wparam (pos), to_lparam (pos))
 		end
 
 feature -- Basic operation
@@ -340,32 +337,32 @@ feature -- Basic operation
 	deselect_all is
 			-- Unselect the currently selected text.
 		do
-			cwin_send_message (edit_item, Em_setsel, -1, 0)
+			cwin_send_message (edit_item, Em_setsel, to_wparam (-1), to_lparam (0))
 		end
 
 	delete_selection is
 			-- Delete the current selection.
 		do
-			cwin_send_message (edit_item, Wm_clear, 0, 0)
+			cwin_send_message (edit_item, Wm_clear, to_wparam (0), to_lparam (0))
 		end
 
 	cut_selection is 
 			-- Cut the current selection to the clipboard.
 		do
-			cwin_send_message (edit_item, Wm_cut, 0, 0)
+			cwin_send_message (edit_item, Wm_cut, to_wparam (0), to_lparam (0))
 		end
 
 	copy_selection is
 			-- Copy the current selection to the clipboard.
 		do
-			cwin_send_message (edit_item, Wm_copy, 0, 0)
+			cwin_send_message (edit_item, Wm_copy, to_wparam (0), to_lparam (0))
 		end
 
 	clip_paste is
 			-- Paste the contents of the clipboard to the current
 			-- caret position.
 		do
-			cwin_send_message (edit_item, Wm_paste, 0, 0)
+			cwin_send_message (edit_item, Wm_paste, to_wparam (0), to_lparam (0))
 		end
 
 	replace_selection (txt: STRING) is
@@ -379,8 +376,7 @@ feature -- Basic operation
 			wel_str: WEL_STRING
 		do
 			create wel_str.make (txt)
-			cwin_send_message (edit_item, Em_replacesel, 
-				0, cwel_pointer_to_integer (wel_str.item))
+			cwin_send_message (edit_item, Em_replacesel, to_wparam (0), wel_str.item)
 		end
 
 feature {EV_LIST_ITEM_IMP} -- Pixmap handling
@@ -811,7 +807,7 @@ feature {EV_INTERNAL_COMBO_FIELD_IMP, EV_INTERNAL_COMBO_BOX_IMP}
 			-- needs to be repainted.
 		do
 			disable_default_processing
-			set_message_return_value (1)
+			set_message_return_value (to_lresult (1))
 		end
 
 feature {NONE} -- WEL Implementation
@@ -925,14 +921,14 @@ feature {NONE} -- WEL Implementation
 			-- Zero based index of the first character selected.
 		do
 			Result := cwin_lo_word (cwin_send_message_result (edit_item,
-				Em_getsel, 0, 0))
+				Em_getsel, to_wparam (0), to_lparam (0)))
 		end
 
 	wel_selection_end: INTEGER is
 			-- Zero based index of the last character selected.
 		do
 			Result := cwin_hi_word (cwin_send_message_result (edit_item,
-				Em_getsel, 0, 0))
+				Em_getsel, to_wparam (0), to_lparam (0)))
 		end
 		
 feature {NONE} -- Feature that should be directly implemented by externals
@@ -953,24 +949,6 @@ feature {NONE} -- Feature that should be directly implemented by externals
 			check
 				Never_called: False
 			end
-		end
-
-	mouse_message_x (lparam: INTEGER): INTEGER is
-			-- Encapsulation of the c_mouse_message_x function of
-			-- WEL_WINDOW. Normaly, we should be able to have directly
-			-- c_mouse_message_x deferred but it does not wotk because
-			-- it would be implemented by an external.
-		do
-			Result := c_mouse_message_x (lparam)
-		end
-
-	mouse_message_y (lparam: INTEGER): INTEGER is
-			-- Encapsulation of the c_mouse_message_x function of
-			-- WEL_WINDOW. Normaly, we should be able to have directly
-			-- c_mouse_message_x deferred but it does not wotk because
-			-- it would be implemented by an external.
-		do
-			Result := c_mouse_message_y (lparam)
 		end
 
 	show_window (hwnd: POINTER; cmd_show: INTEGER) is

@@ -224,24 +224,6 @@ feature {EV_SPIN_BUTTON_IMP} -- Feature that should be directly
 			Result := cwin_get_next_dlggroupitem (hdlg, hctl, previous)
 		end
 
-	mouse_message_x (lparam: INTEGER): INTEGER is
-			-- Encapsulation of the c_mouse_message_x function of
-			-- WEL_WINDOW. Normaly, we should be able to have directly
-			-- c_mouse_message_x deferred but it does not wotk because
-			-- it would be implemented by an external.
-		do
-			Result := c_mouse_message_x (lparam)
-		end
-
-	mouse_message_y (lparam: INTEGER): INTEGER is
-			-- Encapsulation of the c_mouse_message_x function of
-			-- WEL_WINDOW. Normaly, we should be able to have directly
-			-- c_mouse_message_x deferred but it does not wotk because
-			-- it would be implemented by an external.
-		do
-			Result := c_mouse_message_y (lparam)
-		end
-
 	show_window (hwnd: POINTER; cmd_show: INTEGER) is
 			-- Encapsulation of the cwin_show_window function of
 			-- WEL_WINDOW. Normaly, we should be able to have directly

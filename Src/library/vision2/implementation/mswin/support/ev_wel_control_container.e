@@ -115,24 +115,6 @@ feature {NONE} -- Deferred features
 
 feature {NONE} -- Features that should be directly implemented by externals.
 
-	mouse_message_x (lparam: INTEGER): INTEGER is
-			-- Encapsulation of the c_mouse_message_x function of
-			-- WEL_WINDOW. Normaly, we should be able to have directly
-			-- c_mouse_message_x deferred but it does not wotk because
-			-- it would be implemented by an external.
-		do
-			Result := c_mouse_message_x (lparam)
-		end
-
-	mouse_message_y (lparam: INTEGER): INTEGER is
-			-- Encapsulation of the c_mouse_message_x function of
-			-- WEL_WINDOW. Normaly, we should be able to have directly
-			-- c_mouse_message_x deferred but it does not wotk because
-			-- it would be implemented by an external.
-		do
-			Result := c_mouse_message_y (lparam)
-		end
-
 	show_window (hwnd: POINTER; cmd_show: INTEGER) is
 			-- Encapsulation of the cwin_show_window function of
 			-- WEL_WINDOW. Normaly, we should be able to have directly
@@ -142,37 +124,37 @@ feature {NONE} -- Features that should be directly implemented by externals.
 			cwin_show_window (hwnd, cmd_show)
 		end
 
-	get_wm_hscroll_code (wparam, lparam: INTEGER): INTEGER is
+	get_wm_hscroll_code (wparam, lparam: POINTER): INTEGER is
 			-- Encapsulation of the external cwin_get_wm_hscroll_code.
 		do
 			Result := cwin_get_wm_hscroll_code (wparam, lparam)
 		end
 
-	get_wm_hscroll_hwnd (wparam, lparam: INTEGER): POINTER is
+	get_wm_hscroll_hwnd (wparam, lparam: POINTER): POINTER is
 			-- Encapsulation of the external cwin_get_wm_hscroll_hwnd
 		do
 			Result := cwin_get_wm_hscroll_hwnd (wparam, lparam)
 		end
 
-	get_wm_hscroll_pos (wparam, lparam: INTEGER): INTEGER is
+	get_wm_hscroll_pos (wparam, lparam: POINTER): INTEGER is
 			-- Encapsulation of the external cwin_get_wm_hscroll_pos
 		do
 			Result := cwin_get_wm_hscroll_pos (wparam, lparam)
 		end
 
-	get_wm_vscroll_code (wparam, lparam: INTEGER): INTEGER is
+	get_wm_vscroll_code (wparam, lparam: POINTER): INTEGER is
 			-- Encapsulation of the external cwin_get_wm_vscroll_code.
 		do
 			Result := cwin_get_wm_vscroll_code (wparam, lparam)
 		end
 
-	get_wm_vscroll_hwnd (wparam, lparam: INTEGER): POINTER is
+	get_wm_vscroll_hwnd (wparam, lparam: POINTER): POINTER is
 			-- Encapsulation of the external cwin_get_wm_vscroll_hwnd
 		do
 			Result := cwin_get_wm_vscroll_hwnd (wparam, lparam)
 		end
 
-	get_wm_vscroll_pos (wparam, lparam: INTEGER): INTEGER is
+	get_wm_vscroll_pos (wparam, lparam: POINTER): INTEGER is
 			-- Encapsulation of the external cwin_get_wm_vscroll_pos
 		do
 			Result := cwin_get_wm_vscroll_pos (wparam, lparam)

@@ -664,7 +664,7 @@ feature {EV_ANY_I} -- Implementation
 
 feature {NONE} -- Implementation
 		
-	default_process_message (msg, wparam, lparam: INTEGER) is
+	default_process_message (msg: INTEGER; wparam, lparam: POINTER) is
 			-- Process `msg' which has not been processed by
 			-- `process_message'.
 		do
@@ -897,7 +897,7 @@ feature {NONE} -- Implementation
 				mouse_wheel_actions_internal.call ([delta // 120])
 					-- Only return True if the mouse wheel actions are not empty,
 					-- as this overrides intellipoint software if installed.
-				set_message_return_value (1)
+				set_message_return_value (to_lresult (1))
 			end
 		end
 
@@ -993,7 +993,7 @@ feature {NONE} -- Implementation, cursor of the widget
 				and then cursor_pixmap /= Void
 			then
 				internal_on_set_cursor		
-				set_message_return_value (1)
+				set_message_return_value (to_lresult (1))
 				disable_default_processing
 			end
 		end
@@ -1135,7 +1135,7 @@ feature -- Deferred features
 		deferred
 		end
 
-	set_message_return_value (v: INTEGER) is
+	set_message_return_value (v: POINTER) is
 		deferred
 		end
 

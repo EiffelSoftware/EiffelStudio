@@ -47,7 +47,7 @@ inherit
 		redefine
 			on_draw_item
 		end
-
+		
 feature {NONE} -- Initialization
 
 	initialize is
@@ -192,7 +192,6 @@ feature {NONE} -- WEL Implementation
 			menu_list: EV_MENU_ITEM_LIST
 			menu_list_imp: EV_MENU_ITEM_LIST_IMP
 			win_imp: EV_WINDOW_IMP
-			return_value: INTEGER
 		do
 			win_imp := top_level_window_imp
 			if win_imp /= Void then
@@ -200,14 +199,14 @@ feature {NONE} -- WEL Implementation
 				if menu_list /= Void then
 					menu_list_imp ?= menu_list.implementation
 					if menu_list_imp /= Void then
-						return_value := menu_list_imp.on_menu_char (char_code, corresponding_menu)
-						win_imp.set_message_return_value (return_value)
+						win_imp.set_message_return_value (
+							menu_list_imp.on_menu_char (char_code, corresponding_menu))
 					end
 				end
 			end
 		end
 
-	on_draw_item (control_id: INTEGER; draw_item: WEL_DRAW_ITEM_STRUCT) is
+	on_draw_item (control_id: POINTER; draw_item: WEL_DRAW_ITEM_STRUCT) is
 			-- Handle Wm_drawitem messages.
 			-- A owner-draw control identified by `control_id' has
 			-- been changed and must be drawn. `draw_item' contains
@@ -262,7 +261,7 @@ feature {NONE} -- WEL Implementation
 				debug ("WEL")
 					io.put_string ("Warning, there is no `decrement_reference'%Nfor the previous brush%N")
 				end
-				set_message_return_value (brush.to_integer)
+				set_message_return_value (brush.item)
 				disable_default_processing
 			end
 		end
@@ -285,7 +284,7 @@ feature {NONE} -- WEL Implementation
  			end
  		end
 
-	on_wm_vscroll (wparam, lparam: INTEGER) is
+	on_wm_vscroll (wparam, lparam: POINTER) is
  			-- Wm_vscroll message.
  		local
  			gauge: EV_GAUGE_IMP
@@ -317,7 +316,7 @@ feature {NONE} -- WEL Implementation
 			end
  		end
  
- 	on_wm_hscroll (wparam, lparam: INTEGER) is
+ 	on_wm_hscroll (wparam, lparam: POINTER) is
  			-- Wm_hscroll message.
  		local
  			gauge: EV_GAUGE_IMP
@@ -427,7 +426,7 @@ feature {NONE} -- WEL Implementation
 					-- A message has been received from an EV_LIST notifying
 					-- us that a bounding box selection is beginning. We
 					-- return 1 to override this behaviour.
-				set_message_return_value (1)
+				set_message_return_value (to_lresult (1))
 			elseif info.code = (feature {WEL_RICH_EDIT_MESSAGE_CONSTANTS}.en_selchange) then
 				rich_text ?= info.window_from
 				create selchange.make_by_nmhdr (info)
@@ -518,7 +517,7 @@ feature {NONE} -- Implementation : deferred features
 		deferred
 		end
 
-	set_message_return_value (v: INTEGER) is
+	set_message_return_value (v: POINTER) is
 		deferred
 		end
 
@@ -536,32 +535,32 @@ feature {EV_ANY_I} -- Implementation
 
 feature {NONE} -- Feature that should be directly implemented by externals
 
-	get_wm_hscroll_code (wparam, lparam: INTEGER): INTEGER is
+	get_wm_hscroll_code (wparam, lparam: POINTER): INTEGER is
 			-- Encapsulation of the external cwin_get_wm_hscroll_code.
 		deferred
 		end
 
-	get_wm_hscroll_hwnd (wparam, lparam: INTEGER): POINTER is
+	get_wm_hscroll_hwnd (wparam, lparam: POINTER): POINTER is
 			-- Encapsulation of the external cwin_get_wm_hscroll_hwnd
 		deferred
 		end
 
-	get_wm_hscroll_pos (wparam, lparam: INTEGER): INTEGER is
+	get_wm_hscroll_pos (wparam, lparam: POINTER): INTEGER is
 			-- Encapsulation of the external cwin_get_wm_hscroll_pos
 		deferred
 		end
 
-	get_wm_vscroll_code (wparam, lparam: INTEGER): INTEGER is
+	get_wm_vscroll_code (wparam, lparam: POINTER): INTEGER is
 			-- Encapsulation of the external cwin_get_wm_vscroll_code.
 		deferred
 		end
 
-	get_wm_vscroll_hwnd (wparam, lparam: INTEGER): POINTER is
+	get_wm_vscroll_hwnd (wparam, lparam: POINTER): POINTER is
 			-- Encapsulation of the external cwin_get_wm_vscroll_hwnd
 		deferred
 		end
 
-	get_wm_vscroll_pos (wparam, lparam: INTEGER): INTEGER is
+	get_wm_vscroll_pos (wparam, lparam: POINTER): INTEGER is
 			-- Encapsulation of the external cwin_get_wm_vscroll_pos
 		deferred
 		end
@@ -782,11 +781,11 @@ feature -- Event handling
 
 feature {NONE} -- Implementation
 
-	default_process_message (msg, wparam, lparam: INTEGER) is
+	default_process_message (msg: INTEGER; wparam, lparam: POINTER) is
 			-- Process `msg' which has not been processed by
 			-- `process_message'.
 		do
-			if not process_menu_message(msg, wparam, lparam) then
+			if not process_menu_message (msg, wparam, lparam) then
 				Precursor {EV_WIDGET_IMP} (msg, wparam, lparam)
 			end
 		end

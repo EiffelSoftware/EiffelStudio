@@ -94,7 +94,6 @@ feature {NONE} -- Implementation
 			-- Create the dialog
 		local
 			common_controls_dll: WEL_COMMON_CONTROLS_DLL
-			tmp_res: INTEGER
 			return_value: POINTER
 			err: WEL_ERROR
 		do
@@ -113,8 +112,10 @@ feature {NONE} -- Implementation
 				cwel_dialog_procedure_address
 				)
 			debug ("VISION2_WINDOWS")
-				tmp_res := cwel_pointer_to_integer (return_value)
-				if tmp_res = 0 or tmp_res = -1 then
+				if
+					return_value = default_pointer or
+					return_value = cwel_integer_to_pointer (-1)
+				then
 					create err
 					err.display_last_error
 				end
@@ -132,7 +133,7 @@ feature {NONE} -- Externals
 	cwin_dialog_box_indirect (hinst, lptemplate, hparent, dlgprc: POINTER): POINTER is
 				-- SDK DialogBoxIndirect
 			external 
-				"C [macro <wel.h>] (HINSTANCE, LPCDLGTEMPLATE, HWND, DLGPROC): EIF_POINTER"
+				"C [macro <wel.h>] (HINSTANCE, LPCDLGTEMPLATE, HWND, DLGPROC): INT_PTR"
 			alias
 				"DialogBoxIndirect"
 			end

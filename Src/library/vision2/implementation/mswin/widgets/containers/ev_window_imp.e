@@ -616,7 +616,7 @@ feature {EV_ANY_I} -- Implementation
 			Result := Ws_ex_controlparent
 		end
 
-	default_process_message (msg, wparam, lparam: INTEGER) is
+	default_process_message (msg: INTEGER; wparam, lparam: POINTER) is
 			-- Process `msg' which has not been processed by
 			-- `process_message'.
 		do
@@ -775,7 +775,7 @@ feature {EV_ANY_I} -- Implementation
 			set_default_processing (False)
 		end
 
-	on_wm_mouseactivate (wparam, lparam: INTEGER) is
+	on_wm_mouseactivate (wparam, lparam: POINTER) is
 			-- `Current' has been activated thanks to the click of a window.
 		local
 			msg: INTEGER
@@ -807,7 +807,7 @@ feature {EV_ANY_I} -- Implementation
 						--| If we have reached here, then we do not want to raise the window, as
 						--| the click is either going to start a drag/pick and drop or there is
 						--| one currently executing (quered on `application_imp').
-					set_message_return_value (Wel_input_constants.Ma_noactivate)
+					set_message_return_value (to_lresult (Wel_input_constants.Ma_noactivate))
 					disable_default_processing
 					override_movement := True
 					if not has_focus and not widget_has_drag (source) then
@@ -833,7 +833,7 @@ feature {EV_ANY_I} -- Implementation
 				else
 						--| If we are here, then there is a drag/pick and drop executing, so
 						--| we override the movement.
-					set_message_return_value (Wel_input_constants.Ma_noactivate)
+					set_message_return_value (to_lresult (Wel_input_constants.Ma_noactivate))
 					disable_default_processing
 					override_movement := True
 					if not has_focus then
@@ -927,7 +927,7 @@ feature {EV_ANY_I} -- Implementation
 			end
 		end
 
-	on_wm_window_pos_changing (lparam: INTEGER) is
+	on_wm_window_pos_changing (lparam: POINTER) is
 			-- The position of `Current' is changing.
 		local
 			info: WEL_WINDOW_POS
@@ -938,7 +938,7 @@ feature {EV_ANY_I} -- Implementation
 				-- a drag/pick and drop raising `Current'.
 			if override_movement then
 					--We retain the z order of `Current'.
-				create info.make_by_pointer (cwel_integer_to_pointer (lparam))
+				create info.make_by_pointer (lparam)
 				create flag_cst
 				cur_flag := info.flags
 				cur_flag := set_flag (cur_flag, flag_cst.Swp_nozorder)
@@ -947,8 +947,7 @@ feature {EV_ANY_I} -- Implementation
 			override_movement := False
 		end
 		
-	window_process_message (hwnd: POINTER; msg,
-			wparam, lparam: INTEGER): INTEGER is
+	window_process_message (hwnd: POINTER; msg: INTEGER; wparam, lparam: POINTER): POINTER is
 			-- Call the routine `on_*' corresponding to the
 			-- message `msg'.
 		local
@@ -966,7 +965,7 @@ feature {EV_ANY_I} -- Implementation
 					-- solution, then I see no reason why we should not do it. Julian 08/14/02
 				modeless_dialog_imp ?= Current
 				if modeless_dialog_imp /= Void then
-					if wparam = 1 then
+					if wparam.to_integer_32 = 1 then
 						if application_imp.pick_and_drop_source /= Void or application_imp.awaiting_movement or
 							application_imp.transport_just_ended or application_imp.override_from_mouse_activate then
 							disable_default_processing
@@ -983,7 +982,7 @@ feature {EV_ANY_I} -- Implementation
 			elseif msg = Wm_activate then
 				window_on_wm_activate (wparam, lparam)
 			elseif msg = Wm_initmenupopup then
-				create a_menu.make_by_pointer (cwel_integer_to_pointer (wparam))
+				create a_menu.make_by_pointer (wparam)
 				on_menu_opened (a_menu)
 			elseif msg = Wm_enteridle then
 					--| FIXME This message is sent when `Current' has a modal dialog
@@ -992,22 +991,22 @@ feature {EV_ANY_I} -- Implementation
 				if application_imp.idle_actions /= Void then
 					application_imp.idle_actions.call (Void)	
 				end
-				fire_dialog_show_actions (cwel_integer_to_pointer (lparam))
+				fire_dialog_show_actions (lparam)
 			else
 				Result := Precursor {WEL_FRAME_WINDOW} (hwnd, msg, wparam, lparam)
 			end
 		end
 		
-	window_on_wm_activate (wparam, lparam: INTEGER) is
+	window_on_wm_activate (wparam, lparam: POINTER) is
 			-- `Wm_activate' message recieved form Windows by `Current'.
 		local
 			titled_window: EV_TITLED_WINDOW_IMP
 		do
-			if wparam /= Wel_window_constants.Wa_inactive then
+			if cwin_lo_word (wparam) /= Wel_window_constants.Wa_inactive then
 						-- We must now restore the focus to `last_focused_widget'
 						-- as the window is now being re-activated.
 				if is_window (last_focused_widget) then
-						window_of_item (last_focused_widget).set_focus
+					window_of_item (last_focused_widget).set_focus
 							-- Calling disable_default_processing is required in order to
 							-- stop the focus being removed from `last_focused_widget' after
 							-- we set it. However, this stops on_set_focus being called, so we
@@ -1125,24 +1124,6 @@ feature {EV_PND_TRANSPORTER_IMP, EV_WIDGET_IMP}
 
 feature {NONE} -- Features that should be directly implemented by externals
 
-	mouse_message_x (lparam: INTEGER): INTEGER is
-			-- Encapsulation of the c_mouse_message_x function of
-			-- WEL_WINDOW. Normaly, we should be able to have directly
-			-- c_mouse_message_x deferred but it does not wotk because
-			-- it would be implemented by an external.
-		do
-			Result := c_mouse_message_x (lparam)
-		end
-
-	mouse_message_y (lparam: INTEGER): INTEGER is
-			-- Encapsulation of the c_mouse_message_x function of
-			-- WEL_WINDOW. Normaly, we should be able to have directly
-			-- c_mouse_message_x deferred but it does not wotk because
-			-- it would be implemented by an external.
-		do
-			Result := c_mouse_message_y (lparam)
-		end
-
 	show_window (hwnd: POINTER; cmd_show: INTEGER) is
 			-- Encapsulation of the cwin_show_window function of
 			-- WEL_WINDOW. Normaly, we should be able to have directly
@@ -1152,37 +1133,37 @@ feature {NONE} -- Features that should be directly implemented by externals
 			cwin_show_window (hwnd, cmd_show)
 		end
 
-	get_wm_hscroll_code (wparam, lparam: INTEGER): INTEGER is
+	get_wm_hscroll_code (wparam, lparam: POINTER): INTEGER is
 			-- Encapsulation of the external cwin_get_wm_hscroll_code.
 		do
 			Result := cwin_get_wm_hscroll_code (wparam, lparam)
 		end
 
-	get_wm_hscroll_hwnd (wparam, lparam: INTEGER): POINTER is
+	get_wm_hscroll_hwnd (wparam, lparam: POINTER): POINTER is
 			-- Encapsulation of the external cwin_get_wm_hscroll_hwnd
 		do
 			Result := cwin_get_wm_hscroll_hwnd (wparam, lparam)
 		end
 
-	get_wm_hscroll_pos (wparam, lparam: INTEGER): INTEGER is
+	get_wm_hscroll_pos (wparam, lparam: POINTER): INTEGER is
 			-- Encapsulation of the external cwin_get_wm_hscroll_pos
 		do
 			Result := cwin_get_wm_hscroll_pos (wparam, lparam)
 		end
 
-	get_wm_vscroll_code (wparam, lparam: INTEGER): INTEGER is
+	get_wm_vscroll_code (wparam, lparam: POINTER): INTEGER is
 			-- Encapsulation of the external cwin_get_wm_vscroll_code.
 		do
 			Result := cwin_get_wm_vscroll_code (wparam, lparam)
 		end
 
-	get_wm_vscroll_hwnd (wparam, lparam: INTEGER): POINTER is
+	get_wm_vscroll_hwnd (wparam, lparam: POINTER): POINTER is
 			-- Encapsulation of the external cwin_get_wm_vscroll_hwnd
 		do
 			Result := cwin_get_wm_vscroll_hwnd (wparam, lparam)
 		end
 
-	get_wm_vscroll_pos (wparam, lparam: INTEGER): INTEGER is
+	get_wm_vscroll_pos (wparam, lparam: POINTER): INTEGER is
 			-- Encapsulation of the external cwin_get_wm_vscroll_pos
 		do
 			Result := cwin_get_wm_vscroll_pos (wparam, lparam)

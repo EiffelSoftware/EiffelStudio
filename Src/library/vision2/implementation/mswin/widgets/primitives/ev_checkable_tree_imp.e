@@ -128,14 +128,14 @@ feature {EV_ANY_I} -- Implementation
 			create pt.make (click_original_x_pos, click_original_y_pos)
 			create info.make_with_point (pt)
 				-- Send a Tvm_hittest message to determine the pointed node.
-			cwin_send_message (wel_item, Tvm_hittest, 0, info.to_integer)
+			cwin_send_message (wel_item, Tvm_hittest, to_wparam (0), info.item)
 				-- Check if the click was performed on the check box state icon.
 			if info.flags.is_equal (tvht_onitemstateicon) then
 					-- Retreive the tree item that was clicked.
 				tree_node ?= (all_ev_children @ info.hitem)
 					-- Post a custom message, `Um_checkable_tree_state_change' in order to respond to the
 					-- state change at the correct point in the processing. See Microsoft KB entry 261289. 
-				cwin_post_message (wel_item, Um_checkable_tree_state_change, cwel_pointer_to_integer (info.hitem), 0)
+				cwin_post_message (wel_item, Um_checkable_tree_state_change, info.hitem, to_lparam(0))
 			end
 		end
 		
@@ -158,7 +158,7 @@ feature {NONE} -- Implementation
 		-- over the next item before releasing the mouse button. Without doing this, it is
 		-- not possible to correctly respond to the check box states.
 		
-	process_message (hwnd: POINTER; msg: INTEGER; wparam: INTEGER; lparam: INTEGER): INTEGER is
+	process_message (hwnd: POINTER; msg: INTEGER; wparam, lparam: POINTER): POINTER is
 			-- Process all message plus `WM_GETDLGCODE'.
 		local
 			tree_node: EV_TREE_ITEM_IMP
@@ -167,7 +167,7 @@ feature {NONE} -- Implementation
 				-- we sent within `on_wm_click'. If so, process the state change.
 			if msg = um_checkable_tree_state_change then
 					-- Retrieve the tree node whose checkable state has changed.
-				tree_node ?= (all_ev_children @ cwel_integer_to_pointer (wparam))
+				tree_node ?= (all_ev_children @ wparam)
 					-- Determine if the node is being checked or unchecked (reversed as we are about to set it explicitly).
 				if is_item_checked (tree_node.interface) then
 					tree_node.set_mask (tree_node.mask | tvif_state)

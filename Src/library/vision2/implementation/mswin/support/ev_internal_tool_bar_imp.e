@@ -55,22 +55,20 @@ feature {NONE} -- WEL Implementation
 	on_notify (a_control_id: INTEGER; info: WEL_NMHDR) is
 		local
 			tt1: WEL_TOOLTIP_TEXT
-			id_from: INTEGER
 			tooltip_text: STRING
 			tooltip: WEL_TOOLTIP
-			int: INTEGER
+			int: POINTER
 			env: EV_ENVIRONMENT
 			app: EV_APPLICATION
 		do
 			if info.code = Ttn_needtext then
 					-- Set resource string id.
 				create tt1.make_by_nmhdr (info)
-				id_from := info.id_from
 					-- We retrieve a pointer to the tooltip for `toolbar'
 				int := cwin_send_message_result (
-					toolbar.wel_item, tb_gettooltips, 0, 0)
+					toolbar.wel_item, tb_gettooltips, to_wparam (0), to_lparam (0))
 					-- We create `tooltip' from retrieved pointer.	
-				create tooltip.make_by_pointer (cwel_integer_to_pointer (int))
+				create tooltip.make_by_pointer (int)
 				create env
 				app := env.application
 					-- If there is a tooltip delay and it has changed then
@@ -120,7 +118,7 @@ feature {NONE} -- WEL Implementation
 				--| Disable the default windows processing and return correct
 				--| value to Windows, i.e. nonzero value.
 			disable_default_processing
-			set_message_return_value (1)
+			set_message_return_value (to_lresult (1))
 		end
 
 	on_size (size_type, a_width, a_height: INTEGER) is

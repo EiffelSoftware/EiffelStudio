@@ -396,7 +396,7 @@ feature -- Status setting
 				l_wel_tooltip ?= window_of_item (all_tooltips.item)
 				if l_wel_tooltip /= Void then
 					cwin_send_message (l_wel_tooltip.item, Ttm_setdelaytime,
-						Ttdt_initial, cwin_make_long (a_delay, 0))
+						cwel_integer_to_pointer (Ttdt_initial), cwin_make_long (a_delay, 0))
 					all_tooltips.forth
 				else
 					all_tooltips.remove
@@ -553,9 +553,11 @@ feature {NONE} -- Implementation
 		do
 			stop_processing_requested := True
 			if application_main_window /= Void then
-				cwin_post_message (application_main_window.item, stop_processing_requested_msg, 0, 0)
+				cwin_post_message (application_main_window.item, stop_processing_requested_msg,
+					default_pointer, default_pointer)
 			else
-				cwin_post_message (default_pointer, stop_processing_requested_msg, 0, 0)
+				cwin_post_message (default_pointer, stop_processing_requested_msg,
+					default_pointer, default_pointer)
 			end
 		end
 		
@@ -634,8 +636,7 @@ feature {NONE} -- Externals
 			"GetKeyState"
 		end
 		
-	cwin_send_message (hwnd: POINTER; msg, wparam,
-				lparam: INTEGER) is
+	cwin_send_message (hwnd: POINTER; msg: INTEGER; wparam, lparam: POINTER) is
 			-- SDK SendMessage (without the result)
 		external
 			"C [macro %"wel.h%"] (HWND, UINT, WPARAM, LPARAM)"
@@ -643,13 +644,18 @@ feature {NONE} -- Externals
 			"SendMessage"
 		end
 
-	cwin_post_message (hwnd: POINTER; msg, wparam,
-				lparam: INTEGER) is
+	cwin_post_message (hwnd: POINTER; msg: INTEGER; wparam, lparam: POINTER) is
 			-- SDK PostMessage (without the result)
 		external
 			"C [macro %"wel.h%"] (HWND, UINT, WPARAM, LPARAM)"
 		alias
 			"PostMessage"
+		end
+
+	frozen cwel_integer_to_pointer (i: INTEGER): POINTER is
+			-- Converts an integer `i' to a pointer
+		external
+			"C [macro <wel.h>] (EIF_INTEGER): EIF_POINTER"
 		end
 
 end -- class EV_APPLICATION_IMP

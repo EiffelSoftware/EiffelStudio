@@ -298,7 +298,7 @@ feature {NONE} -- Implementation
 			our_window ?= Current				
 			if our_window = wel_window then
 				class_cursor.set
-				set_message_return_value (1)
+				set_message_return_value (to_lresult (1))
 				disable_default_processing
 			else
 				Precursor {EV_CONTAINER_IMP} (hit_code)

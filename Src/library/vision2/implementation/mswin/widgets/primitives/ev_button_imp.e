@@ -357,13 +357,13 @@ feature {NONE} -- WEL Implementation
 			Precursor {EV_PRIMITIVE_IMP} (virtual_key, key_data)
 		end
 
-	process_message (hwnd: POINTER; msg: INTEGER; wparam: INTEGER; lparam: INTEGER): INTEGER is
+	process_message (hwnd: POINTER; msg: INTEGER; wparam, lparam: POINTER): POINTER is
 			-- Process all message plus `WM_GETDLGCODE'.
 		do
 			if msg = Wm_getdlgcode then
 					--| We prevent here Windows to redraw the default push button by itself
 					--| as we do the redrawing by ourselves.
-				Result := 0
+				Result := to_lresult (0)
 				set_default_processing (False)
 			else
 				Result := Precursor (hwnd, msg, wparam, lparam)
@@ -880,24 +880,6 @@ feature {NONE} -- Feature that should be directly implemented by externals
 			-- Encapsulation of the SDK GetNextDlgGroupItem.
 		do
 			Result := cwin_get_next_dlggroupitem (hdlg, hctl, previous)
-		end
-
-	mouse_message_x (lparam: INTEGER): INTEGER is
-			-- Encapsulation of the c_mouse_message_x function of
-			-- WEL_WINDOW. Normaly, we should be able to have directly
-			-- c_mouse_message_x deferred but it does not work because
-			-- it would be implemented by an external.
-		do
-			Result := c_mouse_message_x (lparam)
-		end
-
-	mouse_message_y (lparam: INTEGER): INTEGER is
-			-- Encapsulation of the c_mouse_message_x function of
-			-- WEL_WINDOW. Normally, we should be able to have directly
-			-- c_mouse_message_x deferred but it does not work because
-			-- it would be implemented by an external.
-		do
-			Result := c_mouse_message_y (lparam)
 		end
 
 	show_window (hwnd: POINTER; cmd_show: INTEGER) is

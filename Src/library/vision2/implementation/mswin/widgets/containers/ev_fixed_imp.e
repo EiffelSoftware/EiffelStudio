@@ -241,7 +241,7 @@ feature {NONE} -- WEL Implementation
 				-- required and will be hidden by `Current' if they are inside.
 				-- This will solve that problem.
 			disable_default_processing
-			set_message_return_value (1)
+			set_message_return_value (to_lresult (1))
 				-- Quick access to `ev_children'.
 			temp_children := ev_children
 				-- Retrieve original index of `ev_children'.

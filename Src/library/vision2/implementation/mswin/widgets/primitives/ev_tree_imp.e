@@ -141,8 +141,8 @@ feature -- Access
 			handle: POINTER
 		do
 			if selected then
-				handle := cwel_integer_to_pointer (cwin_send_message_result 
-				(wel_item, Tvm_getnextitem, Tvgn_caret, 0))
+				handle := cwin_send_message_result (wel_item, Tvm_getnextitem,
+					to_wparam (Tvgn_caret), to_lparam (0))
 				Result ?= (all_ev_children @ handle).interface
 			else
 				Result := Void
@@ -158,15 +158,13 @@ feature -- Access
 			handle: POINTER
 		do
 			if selected then
-				handle := cwel_integer_to_pointer (cwin_send_message_result 
-				(wel_item, Tvm_getnextitem, Tvgn_caret, 0))
+				handle := cwin_send_message_result (wel_item, Tvm_getnextitem,
+					to_wparam (Tvgn_caret), to_lparam (0))
 				Result ?= all_ev_children @ handle
 			else
 				Result := Void
 			end
-			
 		end
-		
 
 feature -- Basic operations
 
@@ -263,29 +261,24 @@ feature -- Basic operations
 			-- List of the direct children of `item_imp'.
 			-- If the `item_imp' is Void, it returns the children of the tree.
 		local
-			handle: INTEGER
 			hwnd: POINTER
 			a_default_pointer: POINTER
 		do
 			create Result.make (1)
 			from
 				if item_imp = Void then
-					handle := cwin_send_message_result (
-					wel_item, Tvm_getnextitem, Tvgn_root, 0)
-					hwnd := cwel_integer_to_pointer (handle)
+					hwnd := cwin_send_message_result (
+						wel_item, Tvm_getnextitem, to_wparam (Tvgn_root), to_lparam (0))
 				else
-					handle := cwin_send_message_result (
-						wel_item, Tvm_getnextitem, Tvgn_child,
-						cwel_pointer_to_integer (item_imp.h_item))
-					hwnd := cwel_integer_to_pointer (handle)
+					hwnd := cwin_send_message_result (
+						wel_item, Tvm_getnextitem, to_wparam (Tvgn_child), item_imp.h_item)
 				end
 			until
 				hwnd = a_default_pointer
 			loop
 				Result.extend (all_ev_children @ hwnd)
-				handle := cwin_send_message_result (wel_item,
-					Tvm_getnextitem, Tvgn_next, handle)
-				hwnd := cwel_integer_to_pointer (handle)
+				hwnd := cwin_send_message_result (wel_item,
+					Tvm_getnextitem, to_wparam (Tvgn_next), hwnd)
 			end
 		end
 		
@@ -299,7 +292,7 @@ feature -- Basic operations
 			check
 				tree_node_imp /= Void
 			end
-			cwin_send_message (wel_item, Tvm_ensurevisible, 0, cwel_pointer_to_integer (tree_node_imp.h_item))
+			cwin_send_message (wel_item, Tvm_ensurevisible, to_wparam (0), tree_node_imp.h_item)
 		end
 
 feature {EV_TREE_NODE_I} -- Implementation
@@ -329,7 +322,7 @@ feature {EV_TREE_NODE_I} -- Implementation
 			-- The item must have all the necessary flags and
 			-- informations to notify.
 		do
-			cwin_send_message (wel_item, Tvm_setitem, 0, item_imp.to_integer) 
+			cwin_send_message (wel_item, Tvm_setitem, to_wparam (0), item_imp.wel_item) 
 		end
 
 feature {EV_ANY_I} -- Implementation
@@ -372,7 +365,7 @@ feature {EV_ANY_I} -- Implementation
 		do
 			create pt.make (x_pos, y_pos)
 			create info.make_with_point (pt)
-			cwin_send_message (wel_item, Tvm_hittest, 0, info.to_integer)
+			cwin_send_message (wel_item, Tvm_hittest, to_wparam (0), info.item)
 			if flag_set (info.flags, Tvht_onitemlabel)
 			or flag_set (info.flags, Tvht_onitemicon)
 			then
@@ -528,7 +521,7 @@ feature {EV_ANY_I} -- WEL Implementation
 				-- value to 1 (True) which stops windows from selecting the next
 				-- item in `Current'.
 			if removing_item then
-				wel_parent.set_message_return_value (1)
+				wel_parent.set_message_return_value (to_lresult (1))
 			end
 		end
 
@@ -589,8 +582,7 @@ feature {EV_ANY_I} -- WEL Implementation
 			expand_called_manually := True
 			tree_item ?= an_item
 			if not is_expanded (tree_item) then
-				cwin_send_message (wel_item, Tvm_expand, Tve_expand,
-					cwel_pointer_to_integer (an_item.h_item))
+				cwin_send_message (wel_item, Tvm_expand, to_wparam (Tve_expand), an_item.h_item)
 				tree_item.interface.expand_actions.call (Void)
 			end
 			expand_called_manually := False
@@ -606,8 +598,7 @@ feature {EV_ANY_I} -- WEL Implementation
 			expand_called_manually := True
 			tree_item ?= an_item
 			if is_expanded (tree_item) then
-				cwin_send_message (wel_item, Tvm_expand, Tve_collapse,
-					cwel_pointer_to_integer (an_item.h_item))
+				cwin_send_message (wel_item, Tvm_expand, to_wparam (Tve_collapse), an_item.h_item)
 				tree_item.interface.collapse_actions.call (Void)
 			end
 			expand_called_manually := False
@@ -731,24 +722,6 @@ feature {NONE} -- Feature that should be directly implemented by externals
 			check
 				Never_called: False
 			end
-		end
-
-	mouse_message_x (lparam: INTEGER): INTEGER is
-			-- Encapsulation of the c_mouse_message_x function of
-			-- WEL_WINDOW. Normaly, we should be able to have directly
-			-- c_mouse_message_x deferred but it does not work because
-			-- it would be implemented by an external.
-		do
-			Result := c_mouse_message_x (lparam)
-		end
-
-	mouse_message_y (lparam: INTEGER): INTEGER is
-			-- Encapsulation of the c_mouse_message_x function of
-			-- WEL_WINDOW. Normaly, we should be able to have directly
-			-- c_mouse_message_x deferred but it does not work because
-			-- it would be implemented by an external.
-		do
-			Result := c_mouse_message_y (lparam)
 		end
 
 	show_window (hwnd: POINTER; cmd_show: INTEGER) is

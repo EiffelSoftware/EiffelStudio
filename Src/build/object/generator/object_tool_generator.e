@@ -89,10 +89,10 @@ feature -- Creation
 
 			arrow_form.attach_top_widget (include_button, exclude_button, 5)
 			arrow_form.attach_top_widget (include_button, exclude_label, 5)
-			arrow_form.attach_top_widget (include_label, exclude_label, 5)
+			arrow_form.attach_top_widget (include_label, exclude_label, 13)
 			arrow_form.attach_top_widget (include_all_button, exclude_all_button, 5)
 			arrow_form.attach_top_widget (include_all_button, exclude_all_label, 5)
-			arrow_form.attach_top_widget (include_all_label, exclude_all_label, 5)
+			arrow_form.attach_top_widget (include_all_label, exclude_all_label, 13)
 
 			arrow_form.attach_bottom (exclude_button, 0)
 			arrow_form.attach_bottom (exclude_label, 0)
@@ -343,6 +343,8 @@ feature -- Closeable
 	close is
 			-- Close object tool generator.
 		do
+			exclude_all_queries
+			--properties_rc.hide
 			hide
 		end
 

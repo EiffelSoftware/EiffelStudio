@@ -6,6 +6,8 @@ inherit
 	CON_ICON_STONE
 		undefine
 			is_equal
+		redefine
+			transportable
 		end;
 	HOLE
 		rename
@@ -42,6 +44,11 @@ feature {NONE}
 		end
 
 	is_vertical: BOOLEAN;
+
+	transportable: BOOLEAN is
+		do
+			Result := not data.deleted
+		end;
 
 feature {NONE}
 

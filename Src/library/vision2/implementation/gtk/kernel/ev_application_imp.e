@@ -69,10 +69,6 @@ feature {NONE} -- Initialization
 			-- Display the first window, set up the post_launch_actions,
 			-- and start the event loop.
 		do
-			a_timeout_imp ?= (create {EV_TIMEOUT}).implementation
-			a_timeout_imp.interface.actions.extend (agent (interface.post_launch_actions).call (empty_tuple))
-			a_timeout_imp.set_interval_kamikaze (0)
-
 
 			internal_idle_actions.not_empty_actions.extend (
 				agent connect_internal_idle_actions
@@ -97,6 +93,11 @@ feature {NONE} -- Initialization
 				print ("This application is designed for Gtk 1.2.8 and above, your current version is 1.2." + gtk_mic_ver.out + " and may cause some unexpected behavior%N")
 			end
 			is_in_gtk_main := True
+			
+			a_timeout_imp ?= (create {EV_TIMEOUT}).implementation
+			a_timeout_imp.interface.actions.extend (agent (interface.post_launch_actions).call (empty_tuple))
+			a_timeout_imp.set_interval_kamikaze (75)
+				-- 75 allows gtk to calculate its initial sizing before post_launch_actions are called.
 			feature {EV_GTK_EXTERNALS}.gtk_main
 			is_in_gtk_main := False
 			

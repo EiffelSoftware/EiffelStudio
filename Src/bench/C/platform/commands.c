@@ -65,7 +65,7 @@ EIF_OBJ c_code_dir, freeze_cmd_name;
 	DIR *dirp;
 	char *cmd, *current_dir;
 
- #ifndef __VMS
+#ifndef __VMS
 		/* First copy `finish_freezing' if it does not exist */
 	dirp = (DIR *)dir_open(eif_access(c_code_dir));
 
@@ -83,7 +83,7 @@ EIF_OBJ c_code_dir, freeze_cmd_name;
 		}
 	(void) closedir(dirp);
 
- #endif
+#endif
 		/* Go to the C code directory and start finish_freezing */
 	current_dir = getcwd(NULL, PATH_MAX);
 	chdir(eif_access(c_code_dir));

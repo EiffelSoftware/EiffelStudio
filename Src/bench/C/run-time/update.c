@@ -83,8 +83,8 @@ char ignore_updt;
 
 /* TEMPORARY */
 #ifdef __WINDOWS_386__
- #define UPDTLEN 10		/* Note, changed indenting for readability TNH */
- #define UPDT_NAME "\\melted.eif"
+#define UPDTLEN 10		/* Note, changed indenting for readability TNH */
+#define UPDT_NAME "\\melted.eif"
 
 	inipath = eif_getenv ("ES3INI");
 	GetPrivateProfileString   ("Environment", "MELT_PATH", "", buf, 128, inipath);
@@ -92,12 +92,12 @@ char ignore_updt;
 	if (strlen(buf)){
 		meltpath = buf;
 #else	/* not windows */
- #define UPDTLEN 10
- #ifdef __VMS
-  #define UPDT_NAME "melted.eif"
- #else
-  #define UPDT_NAME "/melted.eif"
- #endif
+#define UPDTLEN 10
+#ifdef __VMS
+#define UPDT_NAME "melted.eif"
+#else
+#define UPDT_NAME "/melted.eif"
+#endif
 	meltpath = eif_getenv ("MELT_PATH");
 	if (meltpath) {
 #endif

@@ -17,18 +17,18 @@
 
 #ifdef __VMS
  /* define these routines in upr case, cause that's how they are in the lib */
- #define lib$find_file LIB$FIND_FILE
- #define sys$getmsg SYS$GETMSG
- #define cma$tis_errno_get_addr CMA$TIS_ERRNO_GET_ADDR
- #include <errno.h>	/* redefine cma$tis... to caps before this include! */
- #include <string.h>
- #include <lib$routines.h>
- #include <stdio.h>
- #include <ctype.h>
- #include <descrip.h>
- #include <ssdef.h>	/* for system services error codes */
- #include <rmsdef.h>	/* for RMS error codes */
- #include <starlet.h>		/* for sys$getmsg() */
+#define lib$find_file LIB$FIND_FILE
+#define sys$getmsg SYS$GETMSG
+#define cma$tis_errno_get_addr CMA$TIS_ERRNO_GET_ADDR
+#include <errno.h>	/* redefine cma$tis... to caps before this include! */
+#include <string.h>
+#include <lib$routines.h>
+#include <stdio.h>
+#include <ctype.h>
+#include <descrip.h>
+#include <ssdef.h>	/* for system services error codes */
+#include <rmsdef.h>	/* for RMS error codes */
+#include <starlet.h>		/* for sys$getmsg() */
 #endif
 
 #include <sys/types.h>
@@ -166,11 +166,11 @@ public EIF_CHARACTER eif_dir_separator ()
 #ifdef __WINDOWS_386__
 	return '\\';
 #else
- #ifdef __VMS
+#ifdef __VMS
 	return '.';
- #else
+#else
 	return '/';
- #endif	/* vms */
+#endif	/* vms */
 #endif
 }
 
@@ -299,11 +299,11 @@ char *name;
 		return (EIF_BOOLEAN) TRUE;
 #else
 
- #ifdef HAS_GETEUID
+#ifdef HAS_GETEUID
 	int uid, gid;				/* File owner and group */
- #endif
+#endif
 
- #define ST_MODE     0x0fff      /* Keep only permission mode */
+#define ST_MODE     0x0fff      /* Keep only permission mode */
 
 	int mode;					/* Current mode */
 	struct stat buf;            /* Buffer to get file statistics */
@@ -311,7 +311,7 @@ char *name;
 	stat(name, &buf);			/* Cannot fail (precondition) */
 	mode = buf.st_mode & ST_MODE;
 
- #ifdef HAS_GETEUID
+#ifdef HAS_GETEUID
 	uid = buf.st_uid;
 	gid = buf.st_gid;
 
@@ -320,7 +320,7 @@ char *name;
 	else if (gid == getegid())
 		return (EIF_BOOLEAN) ((mode & S_IRGRP) ? '\01' : '\0');
 	else
- #endif
+#endif
 		return (EIF_BOOLEAN) ((mode & S_IROTH) ? '\01' : '\0');
 #endif	/* not vms */
 }
@@ -339,9 +339,9 @@ char *name;
 		return (EIF_BOOLEAN) TRUE;
 #else
 
- #ifdef HAS_GETEUID
+#ifdef HAS_GETEUID
 	int uid, gid;				/* File owner and group */
- #endif
+#endif
 
 	int mode;					/* Current mode */
 	struct stat buf;            /* Buffer to get file statistics */
@@ -349,7 +349,7 @@ char *name;
 	stat(name, &buf);			/* Cannot fail (precondition) */
 	mode = buf.st_mode & ST_MODE;
 
- #ifdef HAS_GETEUID
+#ifdef HAS_GETEUID
 	uid = buf.st_uid;
 	gid = buf.st_gid;
 
@@ -358,7 +358,7 @@ char *name;
 	else if (gid == getegid())
 		return (EIF_BOOLEAN) ((mode & S_IWGRP) ? '\01' : '\0');
 	else
- #endif
+#endif
 		return (EIF_BOOLEAN) ((mode & S_IWOTH) ? '\01' : '\0');
 #endif	/* not vms */
 }
@@ -377,9 +377,9 @@ char *name;
 		return (EIF_BOOLEAN) TRUE;
 #else
 
- #ifdef HAS_GETEUID
+#ifdef HAS_GETEUID
 	int uid, gid;				/* File owner and group */
- #endif
+#endif
 
 	int mode;					/* Current mode */
 	struct stat buf;            /* Buffer to get file statistics */
@@ -387,7 +387,7 @@ char *name;
 	stat(name, &buf);			/* Cannot fail (precondition) */
 	mode = buf.st_mode & ST_MODE;
 
- #ifdef HAS_GETEUID
+#ifdef HAS_GETEUID
 	uid = buf.st_uid;
 	gid = buf.st_gid;
 
@@ -396,7 +396,7 @@ char *name;
 	else if (gid == getegid())
 		return (EIF_BOOLEAN) ((mode & S_IXGRP) ? '\01' : '\0');
 	else
- #endif
+#endif
 		return (EIF_BOOLEAN) ((mode & S_IXOTH) ? '\01' : '\0');
 #endif	/* not vms */
 }

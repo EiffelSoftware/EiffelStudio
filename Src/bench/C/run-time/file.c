@@ -1413,11 +1413,11 @@ char *path;
 		strcpy (temp, "[]");
 #else	/* vms */
 	strcpy (temp, path);
- #ifdef __WINDOWS_386__
+#ifdef __WINDOWS_386__
 	ptr = rindex(temp, '\\');
- #else
+#else
 	ptr = rindex(temp, '/');
- #endif
+#endif
 	if (ptr != (char *) 0)
 		*ptr = '\0';
 	else

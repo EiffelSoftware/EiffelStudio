@@ -193,7 +193,7 @@ char *s;
 		result = 0;
 		}
 #else
- #ifdef __VMS	/* if s starts with '[', prepend 'run ' */
+#ifdef __VMS	/* if s starts with '[', prepend 'run ' */
 	if (s[0]=='[') {
 		run_command = cmalloc( 4 + strlen(s) );
 		sprintf(run_command,"run %s",s);
@@ -201,9 +201,9 @@ char *s;
 		}
 	else
 		result = (EIF_INTEGER) system (s);
- #else
+#else
 	result = (EIF_INTEGER) system (s);
- #endif
+#endif
 #endif
 #ifdef SIGCLD
 	(void)signal (SIGCLD, old_signal_hdlr);
@@ -407,10 +407,10 @@ char	*string;
 }	/* putenv */
 
 #ifdef TEST
- #include <stdio.h>
- #include <ssdef.h>
- #include <errno.h>
- #include <starlet.h>		/* for sys$getmsg() */
+#include <stdio.h>
+#include <ssdef.h>
+#include <errno.h>
+#include <starlet.h>		/* for sys$getmsg() */
 
 main ()
 {

@@ -22,7 +22,9 @@ extern EIF_INTEGER eif_system ();
 
 #ifdef __WINDOWS_386__
 
-/* DLL Stuff */
+/* DLL declarations */
+
+#include <windows.h>
 
 extern HANDLE eif_load_dll();
 extern void eif_free_dlls();

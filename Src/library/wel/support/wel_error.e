@@ -21,7 +21,25 @@ feature -- Status
 			cwin_display_last_error
 		end
 
+feature -- Setting
+
+	reset_last_error_code is
+			-- Reset `last_error_code' to `0'.
+		do
+			cwin_set_last_error_code (0)
+		ensure
+			last_error_code_set: last_error_code = 0
+		end
+
 feature {NONE} -- Implementation
+
+	cwin_set_last_error_code (i: INTEGER) is
+			-- Set new value for `last_error_code'.
+		external
+			"C macro signature (DWORD) use <windows.h>"
+		alias
+			"SetLastError"
+		end
 
 	cwin_get_last_error_code: INTEGER is
 			-- The GetLastError function retrieves the calling thread's

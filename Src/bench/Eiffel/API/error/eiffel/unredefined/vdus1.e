@@ -22,13 +22,13 @@ feature -- Properties
 
 feature -- Output
 
-	build_explain (ow: OUTPUT_WINDOW) is
+	build_explain (st: STRUCTURED_TEXT) is
 		do
-			ow.put_string ("Invalid feature name: ");
-			ow.put_string (feature_name);
-			ow.put_string ("%NIn Undefine clause for parent: ");
-			parent.append_name (ow);
-			ow.new_line;
+			st.add_string ("Invalid feature name: ");
+			st.add_string (feature_name);
+			st.add_string ("%NIn Undefine clause for parent: ");
+			parent.append_name (st);
+			st.add_new_line;
 		end;
 
 end -- class VDUS1

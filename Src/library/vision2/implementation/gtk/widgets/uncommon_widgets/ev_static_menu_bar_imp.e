@@ -35,12 +35,21 @@ feature {NONE} -- Initialization
 			par_imp: EV_WINDOW_IMP
 		do
 			widget := gtk_menu_bar_new ()
+			parent := par
 			par_imp ?= par.implementation
 			check
 				good_implementation: par_imp /= Void
 			end
 			par_imp.add_static_menu (Current)	
 		end	
+
+feature -- Access
+
+	parent: EV_WINDOW
+			-- The parent of the Current widget
+			-- If the widget is an EV_WINDOW without parent,
+			-- this attribute will be `Void'
+
 
 feature {NONE} -- Implementation	
 

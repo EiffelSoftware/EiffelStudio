@@ -22,7 +22,8 @@ feature
 			good_argument: f /= void;
 			file_not_open: f.is_closed;
 			file_exists: f.exists;
-			file_readable: f.is_readable
+			file_readable: f.is_readable;
+			file_has_content: not f.empty
 		local
 			p_line,comment_line: EIFFEL_LINE;
 			comment: EIFFEL_COMMENTS;	-- a comment
@@ -70,7 +71,8 @@ feature
 			good_argument: f /= void;
 			file_not_open: f.is_closed;
 			file_exists: f.exists;
-			file_readable: f.is_readable
+			file_readable: f.is_readable;
+			file_has_content: not f.empty
 		local
 			p_line,comment_line: EIFFEL_LINE;
 			comment: EIFFEL_COMMENTS;	-- a comment
@@ -126,6 +128,7 @@ debug ("FS_COMMENT")
 	io.error.putstring ("in go after for pos: ");
 	io.error.putint (pos);
 	io.error.new_line;
+	trace
 end;
 			from
 				lines.start;
@@ -157,6 +160,7 @@ debug ("FS_COMMENT")
 	io.error.putstring ("in go before for pos: ");
 	io.error.putint (pos);
 	io.error.new_line;
+	trace
 end;
 			from
 				lines.finish;
@@ -216,8 +220,6 @@ end;
 			end;
 		end;
 
-		
-								
 	find_last_match (pattern: STRING; stop: INTEGER; context: BOOLEAN) is
   				  -- find last occurence of pattern between current position
   				  -- and stop, checking pattern context if context is true.
@@ -347,7 +349,7 @@ feature
 			end;
 		end;
 
-feature {NONE}
+feature
 
 	trace is
 		do
@@ -360,6 +362,11 @@ feature {NONE}
 				lines.item.trace;
 				lines.forth;	
 			end;
+			comment_trace
+		end
+
+	comment_trace is
+		do
 			io.error.putstring ("*** COMMENTS ****%N")
 			from
 				comments.start;

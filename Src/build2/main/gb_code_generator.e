@@ -404,13 +404,13 @@ feature {NONE} -- Implementation
 						-- Store `ace_text'.
 				create ace_output_file.make (ace_file_name)
 				if not ace_output_file.exists or project_settings.rebuild_ace_file then
-					if ace_output_file.is_access_writable then
+					if ace_output_file.exists  and not ace_output_file.is_access_writable then
+						read_only_files.extend (ace_file_name)
+					else
 						ace_output_file.open_write
 						ace_output_file.start
 						ace_output_file.putstring (ace_text)
 						ace_output_file.close
-					else
-						read_only_files.extend (ace_file_name)
 					end
 				end
 			end
@@ -508,13 +508,13 @@ feature {NONE} -- Implementation
 					constants_file_name := generated_path.twin
 					constants_file_name.extend (project_settings.constants_class_name.as_lower + Class_implementation_extension.as_lower + ".e")
 					create constants_file.make (constants_file_name)
-					if constants_file.is_access_writable then
-						constants_file.make_open_write (constants_file_name)
+					if constants_file.exists and not constants_file.is_access_writable then
+						read_only_files.extend (constants_file_name)
+					else
+						constants_file.create_read_write
 						constants_file.start
 						constants_file.putstring (constants_content)
 						constants_file.close
-					else
-						read_only_files.extend (constants_file_name)
 					end
 					
 							-- Now generate the interface class name for constants.
@@ -630,13 +630,13 @@ feature {NONE} -- Implementation
 					application_file_name := generated_path.twin
 					application_file_name.extend (application_class_name.as_lower + eiffel_class_extension)
 					create application_output_file.make (application_file_name)
-					if application_output_file.is_access_writable then
-						application_output_file.open_read_write
+					if application_output_file.exists and not application_output_file.is_access_writable then
+						read_only_files.extend (application_file_name)
+					else
+						application_output_file.create_read_write
 						application_output_file.start
 						application_output_file.putstring (application_text)
 						application_output_file.close
-					else
-						read_only_files.extend (application_file_name)
 					end
 				end
 			end
@@ -792,13 +792,13 @@ feature {NONE} -- Implementation
 	
 						-- Store `class_text'.				
 					create window_output_file.make (file_name)
-					if window_output_file.is_access_writable then
-						window_output_file.open_read_write
+					if window_output_file.exists and not window_output_file.is_access_writable then
+						read_only_files.extend (file_name)
+					else
+						window_output_file.create_read_write
 						window_output_file.start
 						window_output_file.putstring (class_text)
 						window_output_file.close
-					else
-					read_only_files.extend (file_name)
 					end
 				end
 			end

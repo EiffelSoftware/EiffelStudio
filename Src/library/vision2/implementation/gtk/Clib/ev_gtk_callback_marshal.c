@@ -58,16 +58,17 @@ void c_ev_gtk_callback_marshal (
         g_log (G_LOG_DOMAIN, G_LOG_LEVEL_DEBUG,
             "c_ev_gtk_callback_marshal (%X (%s), %X, %d, %X)",
             (int) object, 
-            gtk_type_name (GTK_OBJECT_TYPE (object)),
+            object ? gtk_type_name (GTK_OBJECT_TYPE (object)) : "",
             (int) agent,
             n_args,
             (int) args
-        );
 		*/
+        );
+		
     // require
             // `object' == NULL on idle callback.
-			// We do not use `object', so no need for precondition.
-			// g_assert (object != NULL);
+            // We do not use `object', so no need for precondition.
+            // g_assert (object != NULL);
             g_assert (agent != NULL);
             g_assert (ev_gtk_callback_marshal_object != NULL);
             g_assert (ev_gtk_callback_marshal != NULL);
@@ -75,7 +76,7 @@ void c_ev_gtk_callback_marshal (
             ev_gtk_callback_marshal (
                 eif_access (ev_gtk_callback_marshal_object),
                 eif_access (agent),
-                n_args,
+                (EIF_INTEGER) n_args,
                 (EIF_POINTER) args 
             );
     // end
@@ -382,6 +383,9 @@ guint c_ev_gtk_callback_marshal_delete_connect (
 //------------------------------------------------------------------------------
 //
 // $Log$
+// Revision 1.8  2000/04/04 20:28:13  oconnor
+// made log in marshal NULL object safe
+//
 // Revision 1.7  2000/04/01 01:24:43  oconnor
 // syntax
 //

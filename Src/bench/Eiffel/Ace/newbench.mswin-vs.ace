@@ -347,7 +347,7 @@ cluster
 
 	all eac_components:		"$EIFFEL_SRC\dotnet\consumer\components"
 
-	all activation_checker:		"$EIFFEL_SRC\Eiffel\library\activation\enterprise"
+	all activation_checker:		"$EIFFEL_SRC\Eiffel\library\activation"
 		exclude
 			"free";"command_line"; "unix";"CVS"
 		end

@@ -20,9 +20,9 @@ feature -- Output
 				loop
 					(text.item).append_to (Current)
 					text.forth
-				end;
+				end
 			end
-		end;
+		end
 
 feature {TEXT_ITEM} -- Implementation
 
@@ -31,7 +31,7 @@ feature {TEXT_ITEM} -- Implementation
 		require
 			text_not_void: text /= Void
 		deferred
-		end;
+		end
 
 	process_character_text (text: CHARACTER_TEXT) is
 			-- Process string text `t'.
@@ -78,7 +78,7 @@ feature {TEXT_ITEM} -- Implementation
 		require
 			text_not_void: text /= Void
 		deferred
-		end;
+		end
 
 	process_assertion_tag_text (text: ASSERTION_TAG_TEXT) is
 			-- Process string text `t'.
@@ -105,39 +105,39 @@ feature {TEXT_ITEM} -- Implementation
 		end
 
 	process_comment_text (text: COMMENT_TEXT) is
-			-- Process comment text. 
+			-- Process comment text.
 		require
 			text_not_void: text /= Void
 		deferred
-		end;
+		end
 
 	process_difference_text_item (text: DIFFERENCE_TEXT_ITEM) is
 				-- Process difference text text.
 		require
 			text_not_void: text /= Void
 		do
-		end;
+		end
 
 	process_class_name_text (text: CLASS_NAME_TEXT) is
 			-- Process class name text `text'.
 		require
 			text_not_void: text /= Void
 		deferred
-		end;
+		end
 
 	process_cluster_name_text (text: CLUSTER_NAME_TEXT) is
 			-- Process cluster name text `text'.
 		require
 			text_not_void: text /= Void
 		deferred
-		end;
+		end
 
 	process_feature_name_text (text: FEATURE_NAME_TEXT) is
 			-- Process feature name text `text'.
 		require
 			text_not_void: text /= Void
 		deferred
-		end;
+		end
 
 	process_exported_feature_name_text (text: EXPORTED_FEATURE_NAME_TEXT) is
 			-- Process exported feature name text `text'.
@@ -147,9 +147,9 @@ feature {TEXT_ITEM} -- Implementation
 		end
 
 	process_feature_error (text: FEATURE_ERROR_TEXT) is
-	            -- Process error feature text.
-        	do
-        		process_feature_text (text)
+			-- Process error feature text.
+		do
+			process_feature_text (text)
 		end
 
 	process_feature_text (text: FEATURE_TEXT) is
@@ -157,7 +157,7 @@ feature {TEXT_ITEM} -- Implementation
 		require
 			text_not_void: text /= Void
 		deferred
-		end;
+		end
 
 	process_breakpoint_index (text: BREAKPOINT_TEXT) is
 			-- Process feature text `text'.
@@ -169,106 +169,106 @@ feature {TEXT_ITEM} -- Implementation
 	process_breakpoint (a_bp: BREAKPOINT_ITEM) is
 			-- Process breakpoint.
 		deferred
-		end;
+		end
 
 	process_padded is
 			-- Process padded item at start of non breakpoint line.
 		deferred
-		end;
+		end
 
 	process_new_line (text: NEW_LINE_ITEM) is
 			-- Process new line text `t'.
 		require
 			text_not_void: text /= Void
 		deferred
-		end;
+		end
 
 	process_indentation (text: INDENT_TEXT) is
 			-- Process indentation `t'.
 		require
 			text_not_void: text /= Void
 		deferred
-		end;
+		end
 
 	process_after_class (text: AFTER_CLASS) is
 			-- Process after class text `t'.
 		require
 			text_not_void: text /= Void
 		deferred
-		end;
+		end
 
 	process_before_class (text: BEFORE_CLASS) is
 			-- Process before class `t'.
 		require
 			text_not_void: text /= Void
 		deferred
-		end;
+		end
 
 	process_filter_item (text: FILTER_ITEM) is
 			-- Process filter text `t'.
 		require
 			text_not_void: text /= Void
 		deferred
-		end;
+		end
 
 	process_symbol_text (text: SYMBOL_TEXT) is
 			-- Process symbol text.
 		require
 			text_not_void: text /= Void
 		deferred
-		end;
+		end
 
 	process_keyword_text (text: KEYWORD_TEXT) is
 			-- Process keyword text.
 		require
 			text_not_void: text /= Void
 		deferred
-		end;
+		end
 
 	process_operator_text (text: OPERATOR_TEXT) is
 			-- Process operator text.
 		require
 			text_not_void: text /= Void
 		deferred
-		end;
+		end
 
 	process_address_text (text: ADDRESS_TEXT) is
 			-- Process address text.
 		require
 			text_not_void: text /= Void
 		deferred
-		end;
+		end
 
 	process_error_text (text: ERROR_TEXT) is
 			-- Process error text.
 		require
 			text_not_void: text /= Void
 		deferred
-		end;
+		end
 
 	process_cl_syntax (text: CL_SYNTAX_ITEM) is
 			-- Process class syntax text.
 		require
 			text_not_void: text /= Void
 		deferred
-		end;
+		end
 
 	process_ace_syntax (text: ACE_SYNTAX_ITEM) is
 			-- Process Ace syntax text.
 		require
 			text_not_void: text /= Void
 		deferred
-		end;
+		end
 
 	process_column_text (text: COLUMN_TEXT) is
 			-- Process `text'.
 		do
-		end;
+		end
 
 	process_call_stack_item (text: CALL_STACK_ITEM) is
 			-- Process the current callstack text.
 		do
-		end;
+		end
 
 	process_menu_text (text: MENU_TEXT) is
 			-- Process menu item. This is only useful for generation to

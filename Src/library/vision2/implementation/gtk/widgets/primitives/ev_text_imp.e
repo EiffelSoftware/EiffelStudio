@@ -161,11 +161,6 @@ feature -- Status report
 
 	last_position_from_line_number (i: INTEGER): INTEGER is
 			-- Position of the last character on the `i'-th line.
-		local
-			pos : INTEGER
-			count: INTEGER
-			start: INTEGER
-			a_text: STRING
 		do
 			if valid_line_index (i + 1) then
 				Result := first_position_from_line_number (i + 1) - 1

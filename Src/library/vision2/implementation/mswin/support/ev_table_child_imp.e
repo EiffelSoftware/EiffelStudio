@@ -50,23 +50,6 @@ feature -- Access
 			-- The right line of the table to which the child is
 			-- attach.
 
-feature -- Status report
-
-feature -- Status settings
-
-	adapt_position_and_size (x_step, x_rest, y_step, y_rest: INTEGER) is
-			-- Adapt the x position and the width of the widget knowing
-			-- the increase or decrease step by cell.
-		require
-			widget /= Void
-		do
---			widget.set_move_and_size (
---				widget.x + x_step * left_attachment + x_rest - left_attachment,
---				widget.y + y_step * top_attachment + y_rest - top_attachment,
---				widget.width + x_step * (right_attachment - left_attachment) + give_rest (left_attachment, x_rest),
---				widget.height + y_step * (top_attachment - bottom_attachment) + give_rest (right_attachment, y_rest))
-		end
-
 feature -- Element change
 
 	set_attachment (top, left, bottom, right: INTEGER) is

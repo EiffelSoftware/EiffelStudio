@@ -64,7 +64,8 @@ class FIXED_LIST [G] inherit
 			{FIXED_LIST, FIXED_TREE}
 				array_make
 		undefine
-			count, linear_representation, put, resizable, fill
+			count, linear_representation, put, resizable, fill,
+			for_all, there_exists, do_all, do_if
 		redefine
 			full, extend, prunable
 		end

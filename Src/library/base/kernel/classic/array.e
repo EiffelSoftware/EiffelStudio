@@ -322,6 +322,108 @@ feature -- Element change
 			--     item (index_pos + i) = other.item (start_pos + i)
 		end
 
+feature -- Iteration
+
+	do_all (action: PROCEDURE [ANY, TUPLE [G]]) is
+			-- Apply `action' to every non-void item.
+			-- Semantics not guaranteed if `action' changes the structure;
+			-- in such a case, apply iterator to clone of structure instead. 
+		require
+			action_not_void: action /= Void
+		local
+			t: TUPLE [G]
+			i, nb: INTEGER
+			l_area: like area
+		do
+			from
+				create t
+				i := 0
+				nb := capacity - 1
+				l_area := area
+			until
+				i > nb
+			loop
+				t.put (l_area.item (i), 1)
+				action.call (t)
+				i := i + 1
+			end
+		end
+
+	do_if (action: PROCEDURE [ANY, TUPLE [G]]; test: FUNCTION [ANY, TUPLE [G], BOOLEAN]) is
+			-- Apply `action' to every non-void item that satisfies `test'.
+			-- Semantics not guaranteed if `action' or `test' changes the structure;
+			-- in such a case, apply iterator to clone of structure instead. 
+		require
+			action_not_void: action /= Void
+			test_not_void: test /= Void
+		local
+			t: TUPLE [G]
+			i, nb: INTEGER
+			l_area: like area
+		do
+			from
+				create t
+				i := 0
+				nb := capacity - 1
+				l_area := area
+			until
+				i > nb
+			loop
+				t.put (l_area.item (i), 1)
+				if test.item (t) then
+					action.call (t)
+				end
+				i := i + 1
+			end
+		end
+
+	there_exists (test: FUNCTION [ANY, TUPLE [G], BOOLEAN]): BOOLEAN is
+			-- Is `test' true for at least one item?
+		require
+			test_not_void: test /= Void
+		local
+			t: TUPLE [G]
+			i, nb: INTEGER
+			l_area: like area
+		do
+			from
+				create t
+				i := 0
+				nb := capacity - 1
+				l_area := area
+			until
+				i > nb or Result
+			loop
+				t.put (l_area.item (i), 1)
+				Result := test.item (t)
+				i := i + 1
+			end
+		end
+
+	for_all (test: FUNCTION [ANY, TUPLE [G], BOOLEAN]): BOOLEAN is
+			-- Is `test' true for all non-void items?
+		require
+			test_not_void: test /= Void
+		local
+			t: TUPLE [G]
+			i, nb: INTEGER
+			l_area: like area
+		do
+			from
+				create t
+				i := 0
+				nb := capacity - 1
+				l_area := area
+				Result := True
+			until
+				i > nb or not Result
+			loop
+				t.put (l_area.item (i), 1)
+				Result := test.item (t)
+				i := i + 1
+			end
+		end
+
 feature -- Removal
 
 	wipe_out is

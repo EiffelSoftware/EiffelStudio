@@ -35,7 +35,8 @@ class ARRAYED_LIST [G] inherit
 				capacity
 		undefine
 			linear_representation, prunable, put, is_equal,
-			prune, occurrences, extendible, fill
+			prune, occurrences, extendible, fill,
+			for_all, there_exists, do_all, do_if
 		redefine
 			extend, prune_all, full, wipe_out,
 			is_inserted, make_from_array, has

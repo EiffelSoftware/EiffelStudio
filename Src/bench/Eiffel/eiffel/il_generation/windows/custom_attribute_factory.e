@@ -56,6 +56,7 @@ feature -- Settings
 						Inst_context.set_cluster (l_class_c.cluster)
 						context.clear2
 						context.set_current_class (l_class_c)
+						context.set_current_feature (a_feature)
 						attributes.type_check
 						context.start_lines
 						l_attributes := attributes.byte_node

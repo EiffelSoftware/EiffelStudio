@@ -78,7 +78,11 @@ feature
 			else
 				buf.putchar ('(');
 			end;
-			real_type (type).c_type.generate_function_cast (buf, argument_types);
+			if extension /= Void and then extension.has_signature then
+				real_type (type).c_type.generate_external_function_cast (buf, extension);
+			else
+				real_type (type).c_type.generate_function_cast (buf, argument_types);
+			end
 			if	
 				Compilation_modes.is_precompiling or else
 				typ.base_class.is_precompiled

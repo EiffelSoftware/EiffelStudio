@@ -79,6 +79,78 @@ feature -- Basic operations
 			function_descriptor_exist: func_desc /= Void
 		end
 
+	generate_dual (a_descriptor: WIZARD_FUNCTION_DESCRIPTOR) is
+			-- Generate pure virtual function
+		require
+			non_void_descriptor: a_descriptor /= Void
+		local
+			signature: STRING
+			visitor: WIZARD_DATA_TYPE_VISITOR
+		do
+			func_desc := a_descriptor
+
+			create ccom_feature_writer.make
+			create c_header_files.make
+			ccom_feature_writer.set_pure_virtual
+
+			create signature.make (0)
+
+			ccom_feature_writer.set_name (func_desc.name)
+			ccom_feature_writer.set_comment(func_desc.description)
+
+			ccom_feature_writer.set_result_type(Std_method_imp)
+
+			if not func_desc.arguments.empty then
+				from
+					func_desc.arguments.start
+				until
+					func_desc.arguments.off
+				loop
+					create visitor
+					visitor.visit (func_desc.arguments.item.type)
+
+					signature.append (visitor.c_type)
+					if visitor.is_array_type then
+						signature.append (Asterisk)
+					end
+					signature.append (Space)
+					signature.append (func_desc.arguments.item.name)
+					signature.append (Comma)
+					if visitor.c_header_file /= Void and then not visitor.c_header_file.empty then
+						c_header_files.force (visitor.c_header_file)
+					end
+
+					func_desc.arguments.forth
+				end
+
+				create visitor
+				visitor.visit (a_descriptor.return_type)
+
+				if visitor.c_type.is_equal (Void_c_keyword) then
+					-- Remove the last comma
+					if signature.item (signature.count).is_equal(',') then
+						signature.remove (signature.count)
+					end
+				else
+					signature.append (visitor.c_type)
+					signature.append (Space)
+					signature.append (Asterisk)
+					signature.append (Return_value_name)
+				end
+					
+				if visitor.c_header_file /= Void and then not visitor.c_header_file.empty then
+					c_header_files.force (visitor.c_header_file)
+				end
+			end
+
+			ccom_feature_writer.set_signature(signature)
+
+		ensure
+			ccom_feature_writer_exist: ccom_feature_writer /= Void
+			function_descriptor_exist: func_desc /= Void
+		end
+
+
 end -- class WIZARD_CPP_VIRTUAL_FUNCTION_GENERATOR
 
 --|----------------------------------------------------------------

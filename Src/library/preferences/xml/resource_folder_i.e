@@ -16,6 +16,9 @@ feature -- Initialization
 	make_default (doc: XM_ELEMENT; struct: like structure) is
 			-- Initialization of Current, belonging to `struct',
 			-- according to `doc'.
+		require
+			doc_not_void: doc /= Void
+			struct_not_void: struct /= Void
 		local
 			s: STRING
 		do
@@ -53,12 +56,18 @@ feature -- Initialization
 	make_root (location: STRING; struct: RESOURCE_STRUCTURE) is
 			-- Create Current (as a root folder of `struct')
 			-- taking data from `location'.
+		require
+			location_not_void: location /= Void
+			struct_not_void: struct /= Void
 		deferred
 		end
 
 	make_default_root (file_name: FILE_NAME; struct: like structure) is
 			-- Create Current (as a root folder of `struct')
 			-- taking data from `file_name'.
+		require
+			file_name_not_void: file_name /= Void
+			struct_not_void: struct /= Void
 		local
 			parser: XM_EIFFEL_PARSER
 			l_file: KL_TEXT_INPUT_FILE
@@ -98,13 +107,13 @@ feature -- Initialization
 			-- effective load of data from `xml_elem'.
 		local
 			resource: RESOURCE
-			child: RESOURCE_FOLDER_IMP
+			child: like Current
 			cursor,des_cursor: DS_LINKED_LIST_CURSOR[XM_NODE]
 			node: XM_ELEMENT
 			txt: XM_CHARACTER_DATA
 		do
 			create description.make (20)
-			create {ARRAYED_LIST [RESOURCE_FOLDER_I]} child_list.make (10)
+			create {ARRAYED_LIST [like Current]} child_list.make (10)
 			create {ARRAYED_LIST [RESOURCE]} resource_list.make (20)
 			resource_list.compare_objects
 			cursor := xml_elem.new_cursor
@@ -135,7 +144,7 @@ feature -- Initialization
 						resource_list.extend (resource)
 						structure.put_resource (resource)
 					elseif node.name.is_equal ("TOPIC") then
-						create child.make_default (node, structure)
+						child := new_child (node, structure)
 						child.create_interface
 						child_list.extend (child)
 					end
@@ -341,6 +350,16 @@ feature {NONE} -- Implementation
 			-- Is a change in the resource reflected in the application
 			-- immediately ?
 
+	new_child (doc: XM_ELEMENT; struct: like structure): like Current is
+			-- New instance of Current belonging to `struct' according to `doc'.
+		require
+			doc_not_void: doc /= Void
+			struct_not_void: struct /= Void
+		deferred
+		ensure
+			child_not_void: Result /= Void
+		end
+		
 invariant
 	structure_exists: structure /= Void
 

@@ -12,14 +12,9 @@ inherit
 		export {NONE} all end
 
 create
-	make, make_root, make_default, make_default_root
+	make_root, make_default, make_default_root
 
 feature -- Initialization
-
-	make (doc: XM_ELEMENT; struct: like structure) is
-		do
-			make_default (doc, struct)
-		end
 
 	make_root (file_name: FILE_NAME; struct: RESOURCE_STRUCTURE) is
 		do
@@ -173,6 +168,14 @@ feature -- Output
 			end
 			Result.append (identation)
 			Result.append ("</TOPIC>%N")
+		end
+
+feature {NONE} -- Implementation
+
+	new_child (doc: XM_ELEMENT; struct: like structure): like Current is
+			-- New instance of Current belonging to `struct' according to `doc'.
+		do
+			create Result.make_default (doc, struct)
 		end
 
 end -- class RESOURCE_FOLDER_XML

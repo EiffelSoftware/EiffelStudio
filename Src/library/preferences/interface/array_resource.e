@@ -9,10 +9,9 @@ class
 inherit
 	STRING_RESOURCE
 		rename
-			make as sr_make,
-			default_value as value
+			make as make_from_string
 		redefine
-			set_value, value
+			set_value, make_from_string
 		end
 
 create
@@ -36,13 +35,11 @@ feature {NONE} -- Initialization
 			type := a_type
 			name := a_name
 			value := a_value
+			default_value := a_value
 			update_actual_value
 		end
 
 feature -- Access
-
-	value: STRING
-			-- Value of the resource 
 
 	actual_value: ARRAY [STRING]
 			-- The array, as represented by `value'.
@@ -71,6 +68,7 @@ feature -- Setting
 			-- `actual_value',
 		do
 			value := a_string
+			default_value := a_string
 			update_actual_value
 		end
 

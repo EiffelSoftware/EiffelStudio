@@ -29,11 +29,17 @@ inherit
 			make as list_make, go_i_th as select_transaction, 
 			item as transaction
 		export
+			{ANY} valid_index, valid_cursor_index
+			{MULTIPLE_TRANSACTION} cursor, go_to, area, subcopy, i_th, upper,
+				valid_cursor, array_valid_index, subarray, lower
 			{NONE} all
 		end
 
 create
 	make
+
+create {MULTIPLE_TRANSACTION}
+	make_filled
 
 feature {NONE} -- Initialization
 

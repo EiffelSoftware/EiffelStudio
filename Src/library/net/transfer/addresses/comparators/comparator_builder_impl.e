@@ -6,7 +6,10 @@ indexing
 	date: "$Date$"
 	revision: "$Revision$"
 
-class COMPARATOR_BUILDER_IMPL inherit
+class COMPARATOR_BUILDER_IMPL
+
+inherit
+	ANY
 
 	ASCII
 		export

@@ -31,6 +31,10 @@
 #define ccom_currency_multiply_by_4bytes_integer(_ptr_, _ptr_2,_ptr_3) VarCyMulI4((*_ptr_),_ptr_2,_ptr_3)
 #define ccom_currency_subtract(_ptr_, _ptr_2,_ptr_3) VarCySub((*_ptr_), (*_ptr_2),_ptr_3)
 
+#ifdef __cplusplus
+	extern "C" {
+#endif
+
 // Zero value
 void ccom_currency_value_zero (CY * a_value);
 
@@ -41,5 +45,9 @@ EIF_DOUBLE ccom_currency_to_double (CY * a_value);
 void ccom_currency_value_one (CY * a_value);
 
 EIF_REFERENCE ccom_currency_convert_to_eiffel_currency (CY * a_value);
- 
+
+#ifdef __cplusplus
+	}
+#endif
+
 #endif // !__ECOM_E_CURRENCY_H_INC__

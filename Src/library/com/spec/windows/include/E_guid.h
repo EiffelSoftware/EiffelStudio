@@ -26,8 +26,16 @@
 #define ccom_is_equal_guid(_guid1_,_guid2_) ((IsEqualGUID((REFGUID)(_guid1_),(REFGUID)(_guid2_)) == FALSE)? EIF_FALSE : EIF_TRUE)
 #endif
 
+#ifdef __cplusplus
+	extern "C" {
+#endif
+
 EIF_POINTER ccom_guid_to_wide_string (GUID * guid);
 EIF_REFERENCE ccom_guid_to_defstring (GUID * guid);
 void ccom_generate_guid (GUID * guid);
+
+#ifdef __cplusplus
+	}
+#endif
 
 #endif // !__ECOM_E_GUID_H_INC__

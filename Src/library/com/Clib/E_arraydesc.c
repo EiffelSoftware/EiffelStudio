@@ -5,16 +5,20 @@
 //
 //  File:		E_arraydesc.cpp
 //
-//  Contents:	
+//  Contents:
 //
 //
 //--------------------------------------------------------------------------
 
 
 #include "E_arraydesc.h"
-  
+
 //------------------------------------------------------------------
-  
+
+#ifdef __cplusplus
+	extern "C" {
+#endif
+
 EIF_REFERENCE ccom_arraydesc_bounds (EIF_POINTER ptr)
 {
 	ARRAYDESC *pAR = (ARRAYDESC*)ptr;
@@ -27,7 +31,7 @@ EIF_REFERENCE ccom_arraydesc_bounds (EIF_POINTER ptr)
 	EIF_TYPE_ID eif_bound_id;
 	int i=1;
 	USHORT dims = pAR->cDims;
-													
+
 	eif_bound_id = eif_type_id ("ECOM_SAFE_ARRAY_BOUND");
 	eif_array_id = eif_type_id ("ARRAY [ECOM_SAFE_ARRAY_BOUND]");
 	eif_array_make = eif_proc ("make", eif_array_id);
@@ -35,7 +39,7 @@ EIF_REFERENCE ccom_arraydesc_bounds (EIF_POINTER ptr)
 	eif_bound_make = eif_proc ("make_by_pointer", eif_bound_id);
 	Result = eif_create (eif_array_id);
 	eif_array_make (eif_access (Result), 1, dims);
-	while (i <= dims) 
+	while (i <= dims)
 	{
 		Bounds = eif_create (eif_bound_id);
 		eif_bound_make (eif_access (Bounds), &(pAR->rgbounds[i-1]));
@@ -45,3 +49,7 @@ EIF_REFERENCE ccom_arraydesc_bounds (EIF_POINTER ptr)
 		}
 	return eif_wean (Result);
 };
+
+#ifdef __cplusplus
+	}
+#endif

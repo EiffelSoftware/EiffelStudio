@@ -117,12 +117,6 @@ feature {NONE} -- Implementation
 
 feature {NONE} -- Constants
 
-	New_project_wizards_path: DIRECTORY_NAME is
-		once
-			Result := clone (Wizards_path)
-			Result.extend ("new_projects")
-		end
-
 	Additional_parameters: STRING is
 		do
 			Result := "Ace=%"<ACE>%"%NDirectory=%"<DIRECTORY>%"%NCompilation=%"<COMPILATION>%""

@@ -347,49 +347,15 @@ feature {EV_TREE_IMP, EV_TREE_NODE_IMP} -- Implementation
 				ev_children.forth
 			end
 		end
-		
-feature {EV_APPLICATION_IMP} -- Implementation
-		
-	pointer_over_widget (a_gdk_window: POINTER; a_x, a_y: INTEGER): BOOLEAN is
-		-- Is mouse pointer over the row.
-		local
-			gdkwin_parent, clist_parent: POINTER
-			par_tree_imp: EV_TREE_IMP
-		do
-			par_tree_imp := parent_tree_imp
-			if par_tree_imp /= Void then
-				gdkwin_parent := feature {EV_GTK_EXTERNALS}.gdk_window_get_parent (a_gdk_window)
-				clist_parent := feature {EV_GTK_EXTERNALS}.gdk_window_get_parent (
-					feature {EV_GTK_EXTERNALS}.gtk_clist_struct_clist_window (par_tree_imp.list_widget)
-				)
-				if gdkwin_parent = clist_parent then
-					if par_tree_imp.row_from_y_coord (a_y) = Current then
-						Result := True
-					end	
-				end
-			end
-		end
 
 feature {EV_TREE_IMP} -- Implementation
-
-	parent_widget_is_displayed: BOOLEAN is
-			-- Is parent tree displayed?
-		local
-			temp_par_tree_imp: EV_TREE_IMP
-		do
-			temp_par_tree_imp := parent_tree_imp
-			if temp_par_tree_imp /= Void then
-				Result := temp_par_tree_imp.is_displayed
-			end
-		end
 		
 	is_viewable: BOOLEAN is
 			-- Is Current viewable by user?
 		do
 			Result := feature {EV_GTK_EXTERNALS}.gtk_ctree_is_viewable (parent_tree_imp.list_widget, tree_node_ptr)
 		end
-		
-		
+	
 	text: STRING is
 			-- Text displayed.
 		do

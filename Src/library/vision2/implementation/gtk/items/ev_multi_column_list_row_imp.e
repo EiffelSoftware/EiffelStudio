@@ -149,17 +149,6 @@ feature -- PND
 				do_not_call: False
 			end
 		end
-		
-	parent_widget_is_displayed: BOOLEAN is
-			--
-		local
-			temp_par_imp: EV_MULTI_COLUMN_LIST_IMP
-		do
-			temp_par_imp := parent_imp
-			if temp_par_imp /= Void then
-				Result := temp_par_imp.is_displayed
-			end
-		end
 
 feature -- Element Change
 
@@ -194,26 +183,6 @@ feature -- Basic operations
 						parent_imp.update_children_agent) then
 					app.do_once_on_idle (
 						parent_imp.update_children_agent)
-				end
-			end
-		end
-
-feature {EV_APPLICATION_IMP} -- Implementation
-
-	pointer_over_widget (a_gdk_window: POINTER; a_x, a_y: INTEGER): BOOLEAN is
-		-- Is mouse pointer over the row.
-		local
-			gdkwin_parent, clist_parent: POINTER
-		do
-			if parent_imp /= Void then
-				gdkwin_parent := feature {EV_GTK_EXTERNALS}.gdk_window_get_parent (a_gdk_window)
-				clist_parent := feature {EV_GTK_EXTERNALS}.gdk_window_get_parent (
-					feature {EV_GTK_EXTERNALS}.gtk_clist_struct_clist_window (parent_imp.list_widget)
-				)
-				if gdkwin_parent = clist_parent then
-					if parent_imp.row_from_y_coord (a_y) = index then
-						Result := True
-					end	
 				end
 			end
 		end

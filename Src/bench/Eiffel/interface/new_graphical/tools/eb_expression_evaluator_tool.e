@@ -467,7 +467,7 @@ feature {NONE} -- Implementation
 					l_row := disabled_expression_to_row (l_expr, Void)
 				else
 					if eval then
-						expressions.item.evaluate
+						l_expr.evaluate
 						l_row:= expression_to_row (l_expr, Void)
 					else
 						l_row := unevaluated_expression_to_row (l_expr, Void)
@@ -505,6 +505,7 @@ feature {NONE} -- Implementation
 			typ: STRING
 			evaluator: DBG_EXPRESSION_EVALUATOR
 			l_tooltip: STRING
+			l_error_message: STRING
 		do
 				-- Recycle Row ..
 			Result := recycle_row_item (a_item)
@@ -514,7 +515,8 @@ feature {NONE} -- Implementation
 			Result.extend (expr.expression)
 			l_tooltip.append_string ("--< EXPRESSION >--%N  " + expr.expression + "%N%N")
 			
-			if expr.error_message = Void then
+			l_error_message := expr.error_message
+			if l_error_message = Void then
 				evaluator := expr.expression_evaluator
 				dmp := evaluator.final_result_value
 				if dmp /= Void then
@@ -535,10 +537,10 @@ feature {NONE} -- Implementation
 					Result.set_deny_cursor (ost.X_stone_cursor)
 				end
 			else
-				l_tooltip.prepend_string ("[!] Error occurred : %N" + expr.error_message + "%N%N")
+				l_tooltip.prepend_string ("[!] Error occurred : %N" + l_error_message + "%N%N")
 				
-				Result.extend ("Error occurred (double click to see details)" ) --| Removed for better display: expr.error_message)
-				Result.pointer_double_press_actions.extend (agent show_text_in_popup (expr.error_message, ?,?,?,?,?,?,?,?))			
+				Result.extend ("Error occurred (double click to see details)" ) --| Removed for better display: l_error_message)
+				Result.pointer_double_press_actions.extend (agent show_text_in_popup (l_error_message, ?,?,?,?,?,?,?,?))			
 				Result.set_pixmap (Icon_exception)
 			end
 			Result.set_tooltip (l_tooltip)			

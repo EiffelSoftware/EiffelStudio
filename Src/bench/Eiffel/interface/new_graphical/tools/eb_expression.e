@@ -152,9 +152,12 @@ feature -- Bridge to dbg_expression_evaluator
 
 	error_message: STRING is
 			-- Error message text if any error occurred
+		local
+			l_evaluator: DBG_EXPRESSION_EVALUATOR
 		do
-			if Result = Void and then expression_evaluator /= Void then
-				Result := expression_evaluator.error_message
+			l_evaluator := expression_evaluator
+			if Result = Void and then l_evaluator /= Void then
+				Result := l_evaluator.error_message
 			end
 		end
 		

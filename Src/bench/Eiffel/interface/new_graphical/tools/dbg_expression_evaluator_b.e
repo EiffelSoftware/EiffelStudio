@@ -43,6 +43,7 @@ inherit
 		
 	COMPILER_EXPORTER
 			--| Just to be able to access E_FEATURE::associated_feature_i :(
+			--| and other expression evaluation purpose
 		export
 			{NONE} all
 		end
@@ -1229,6 +1230,7 @@ feature -- Change Context
 				if l_reset_byte_node then
 						--| this means we will recompute the EXPR_B value according to the new context				
 					reset_expression_byte_node
+					reset_ast_context
 				end				
 			end
 		end
@@ -1368,6 +1370,7 @@ feature {NONE} -- Implementation
 				if error_handler.has_error then
 					l_error := error_handler.error_list.first
 					error_message := "Error " + l_error.code + " :" + error_to_string (l_error)
+					error_handler.wipe_out
 				else
 					if error_message = Void then
 						error_message := "Error!"
@@ -1404,6 +1407,13 @@ feature {NONE} -- Implementation
 					ast_context.set_locals (l_ct_locals)
 				end
 			end
+		end
+		
+	reset_ast_context is
+			-- Reset AST Context
+			-- useful especially when error occured on expression
+		do
+			Ast_context.clear1
 		end
 
 	reset_expression_byte_node is

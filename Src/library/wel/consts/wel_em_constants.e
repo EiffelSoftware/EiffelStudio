@@ -72,6 +72,10 @@ feature -- Access
 	Em_getpasswordchar: INTEGER is 210
 
 	Em_getlimittext: INTEGER is 213
+	
+	Em_settypographyoptions: INTEGER is 1226
+	
+	Em_gettypographyoptions: INTEGER is 1227
 
 end -- class WEL_EM_CONSTANTS
 

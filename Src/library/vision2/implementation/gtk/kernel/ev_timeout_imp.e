@@ -16,7 +16,8 @@ inherit
 	EV_ANY_IMP
 		redefine
 			interface,
-			destroy
+			destroy,
+			dispose
 		end
 
 create
@@ -110,6 +111,15 @@ feature {EV_ANY_I} -- Implementation
 	destroy is 
 			-- Render `Current' unusable.
 		do 
+			set_interval (0)
+			Precursor {EV_ANY_IMP}
+		end
+		
+feature {NONE} -- Implementation
+
+	dispose is
+			-- Clean up
+		do
 			set_interval (0)
 			Precursor {EV_ANY_IMP}
 		end

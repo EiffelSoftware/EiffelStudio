@@ -489,16 +489,12 @@ feature -- Status setting
 			until
 				(last_contiguous_position - last_false_pos).abs = 1 or counter = a_text_length
 			loop
-				if internal_character_format_contiguous (counter, counter + current_step) then
-						-- This is performed here so that on Windows we do not have to
-						-- change the selection while querying the format. The previous call has
-						-- set the selection already.
+					-- We must check that we are not attempting to query outside of the current text bounds.
+					-- If so, we treat it as a non contiguous find, and keep processing.
+				if counter + current_step <= a_text_length and then internal_character_format_contiguous (counter, counter + current_step) then
 					last_contiguous_position := current_step
 					if value_finder = default_step then
 						counter := (counter + default_step - 1).min (a_text_length)
-						if counter > a_text_length - 50 then
-							do_nothing
-						end
 						current_step := default_step
 					else
 						value_finder := value_finder // 2
@@ -514,11 +510,6 @@ feature -- Status setting
 		ensure
 			Result_valid: Result <= a_text_length
 		end
-		
-	last_format: EV_CHARACTER_FORMAT
-		-- Last contiguous character format found be last query to `next_change_of_character'.
-		-- By using this we can optimize various implementations by not providing another
-		-- query to the control if not needed.
 	
 	default_step: INTEGER is 8
 		-- Default step used when buffering into RTF.

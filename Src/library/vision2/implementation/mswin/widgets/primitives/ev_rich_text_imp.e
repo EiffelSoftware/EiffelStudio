@@ -270,12 +270,19 @@ feature -- Status report
 		local
 			mask: INTEGER
 			wel_character_format: WEL_CHARACTER_FORMAT
+			range_already_selected: BOOLEAN
 		do
-			safe_store_caret
+			if start_index = wel_selection_start + 1 and end_index = wel_selection_end + 1 then
+				range_already_selected := True
+			else
+				safe_store_caret
+			end
 			wel_character_format := current_selection_character_format
 			mask := wel_character_format.mask
 			Result := flag_set (mask, cfm_color | cfm_bold | cfm_face | cfm_size | cfm_strikeout | cfm_underline | cfm_italic)
-			safe_restore_caret
+			if not range_already_selected then
+				safe_restore_caret
+			end
 		end
 
 	index_from_position (an_x_position, a_y_position: INTEGER): INTEGER is

@@ -10,30 +10,17 @@ class
 
 inherit
 
-	LINKED_SET [STRING]
-		redefine
-			extend
-		end
+	ARRAY [STRING]
 
 	S_EXPORT_I
+		undefine
+			is_equal, copy, consistent, setup
 		redefine
 			is_all, is_none, is_set
 		end
 
 creation
-	make,
-	make_none
-
-feature {NONE} -- Initialization
-
-	make_none is
-			-- Initialize Current to be exported to none.
-		do
-			make;
-			put_front (None_string)
-		ensure
-			is_none: is_none
-		end
+	make
 
 feature -- Properties
 
@@ -41,13 +28,13 @@ feature -- Properties
 			-- Is Current exported to none?
 		do
 			Result := (count = 0) or else 
-					((count = 1) and then Any_string.is_equal(i_th(1)))
+					((count = 1) and then Any_string.is_equal(item(1)))
 		end
 
 	is_none: BOOLEAN is
 			-- Is Current exported to none?
 		do
-			Result := (count = 1) and then None_string.is_equal(i_th(1))
+			Result := (count = 1) and then None_string.is_equal(item(1))
 		end
 
 	is_set: BOOLEAN is True;
@@ -60,9 +47,7 @@ feature -- Comparison
 			-- Is `other' the same as Current ?
 		local
 			other_set: S_EXPORT_SET_I
-			one_client: STRING
-			pos: INTEGER
-			c1, c2: CURSOR
+			index: INTEGER
 		do
 			if other.is_all then
 				Result := is_all
@@ -71,45 +56,19 @@ feature -- Comparison
 			else
 				other_set ?= other
 				if other_set /= Void and then count = other_set.count then
-					c1 := cursor
-					c2 := other_set.cursor
 					from
 						Result := True
-						start
+						index := 1
+					variant
+						remaining_elements: count - index
 					until
-						after or else not Result
+						not Result or else index > count
 					loop
-						one_client := item
-						other_set.start
-						other_set.search (one_client)
-						Result := 	(not other_set.after)
-									and then
-									one_client.is_equal (other_set.item)
-						forth
+						Result :=  other_set.has (item (index))
+						index := index + 1
 					end
-					go_to (c1)
-					other_set.go_to (c2)
 				end
 			end
-		end
-
-	extend (v: like item) is
-			-- Add `v' to end.
-			-- Do not move cursor.
-		local
-			p: like first_element
-		do
-			p := new_cell (v)
-			if empty then
-				first_element := p
-				active := p
-			elseif not has (v) then
-				last_element.put_right (p)
-				if after then 
-					active := p 
-				end
-			end
-			count := count + 1
 		end
 
 feature {NONE} -- Implementation properties

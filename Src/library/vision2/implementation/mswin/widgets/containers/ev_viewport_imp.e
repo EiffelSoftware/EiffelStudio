@@ -10,7 +10,8 @@ class
 inherit
 	EV_VIEWPORT_I
 		redefine
-			interface
+			interface,
+			set_offset
 		end
 		
 	EV_CELL_IMP
@@ -122,6 +123,15 @@ feature -- Element change
 			end
 		end
 
+	set_offset (an_x, a_y: INTEGER) is
+			-- Assign `an_x' to `x_offset'.
+			-- Assign `a_y' to `y_offset'.
+		do
+			if child /= Void then
+				child.wel_move (- an_x, - a_y)
+			end
+		end
+
 feature {NONE} -- Implementation
 
 	default_style: INTEGER is
@@ -185,6 +195,9 @@ end -- class EV_VIEWPORT_IMP
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.11  2000/04/24 16:02:16  brendel
+--| Added redefinition of set_offset, to move x and y at the same time.
+--|
 --| Revision 1.10  2000/04/22 01:24:23  brendel
 --| Improved wel_move_and_resize.
 --|

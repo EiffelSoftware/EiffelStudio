@@ -1,4 +1,4 @@
-indexing
+indexing	
 	description: "Objects that provide useful facilities for widgets."
 	author: ""
 	date: "$Date$"
@@ -11,18 +11,20 @@ feature -- Basic operations
 
 	parent_window (widget: EV_WIDGET): EV_WINDOW is
 			-- `Result' is window parent of `widget'.
+			-- `Void' if none.
 		local
 			window: EV_WINDOW
 		do
 			window ?= widget.parent
 			if window = Void then
-				Result := parent_window (widget.parent)
+				if widget.parent /= Void then
+					Result := parent_window (widget.parent)
+				end	
 			else
 				Result := window
-			end
-			
+			end	
 		end
-		
+
 	extend_no_expand (a_box: EV_BOX; a_widget: EV_WIDGET) is
 			-- Extend `a_widget' into `a_box' and disable expandability.
 		require

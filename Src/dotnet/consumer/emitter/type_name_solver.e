@@ -8,9 +8,6 @@ class
 
 inherit
 	COMPARABLE
-		redefine
-			is_equal
-		end
 
 create
 	make
@@ -67,13 +64,6 @@ feature -- Comparison
 			-- Is current object less than `other'?
 		do
 			Result := weight < other.weight
-		end
-
-	is_equal (other: like Current): BOOLEAN is
-			-- Is `other' attached to an object of the same type
-			-- as current object and identical to it?
-		do
-			Result := internal_type.equals_type (other.internal_type)
 		end
 
 feature {TYPE_NAME_SOLVER, ASSEMBLY_CONSUMER} -- Implementation

@@ -175,9 +175,8 @@ feature {NONE} -- debugger behavior
 			create l_copy.make_copy (l_previous_stack_info)
 			
 			l_il_debug_info := Eifnet_debugger_info.controller.Il_debug_info_recorder
-			l_feat := l_il_debug_info.feature_i_by_module_class_token (
+			l_feat := l_il_debug_info.feature_i_by_module_feature_token (
 						l_copy.current_module_name, 
-						l_copy.current_class_token, 
 						l_copy.current_feature_token
 					)
 			l_class_type := l_il_debug_info.class_type_for_module_class_token (
@@ -264,7 +263,7 @@ feature {NONE} -- debugger behavior
 					if inside_valid_feature_call_stack_stepping then
 						l_current_il_offset := l_current_stack_info.current_il_offset
 						
-						l_feat := Il_debug_info_recorder.feature_i_by_module_class_token (l_module_name, l_class_token, l_feat_token)				
+						l_feat := Il_debug_info_recorder.feature_i_by_module_feature_token (l_module_name, l_feat_token)				
 						debug ("debugger_trace_stepping")
 							print ("[!] Valid and known feature [0x" + l_class_token.to_hex_string 
 									+ "::" + l_feat.feature_name 
@@ -317,8 +316,9 @@ feature {NONE} -- debugger behavior
 							Eifnet_debugger_info.last_control_mode_is_step_next
 						then
 							Eifnet_debugger_info.controller.do_step_range (False, <<[0,l_current_stack_info.current_il_code_size]>>)
-						else --| FIXME: JFIAT : default ?? needed ???
---							print ("[WARNING] unexpected/expected case in step_complete callback%N") --FIXME: JFIAT
+						else 
+							--| FIXME JFIAT : is this default stepping case needed ???
+--							print ("[WARNING] unexpected/expected case in step_complete callback%N") 
 							Eifnet_debugger_info.controller.do_step_range (False, <<[0,l_current_stack_info.current_il_code_size]>>)
 						end
 					end

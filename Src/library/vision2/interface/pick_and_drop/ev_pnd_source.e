@@ -18,17 +18,11 @@ inherit
 
 feature -- Attributes 
 
-	transported_data: ANY is
+	transported_data: ANY
 			-- Transported data
-		do
-			Result := implementation.transported_data
-		end
 
-	data_type: EV_PND_TYPE is
+	data_type: EV_PND_TYPE
 			-- Type of the transported data
-		do
-			Result := implementation.data_type
-		end
 
 feature -- Access
 
@@ -56,13 +50,13 @@ feature -- Access
 	set_transported_data (dt: like transported_data) is
 			-- Set the `transported_data'.
 		do
-			implementation.set_transported_data (dt)
+			transported_data := dt
 		end
 
 	set_data_type (dt_type: EV_PND_TYPE) is
 			-- Make `dt_type' the new data type.
 		do
-			implementation.set_data_type (dt_type)
+			data_type := dt_type
 		end
 
 feature {NONE} -- Implementation

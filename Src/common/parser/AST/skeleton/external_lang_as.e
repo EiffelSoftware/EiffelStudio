@@ -9,7 +9,10 @@ class EXTERNAL_LANG_AS
 
 inherit
 
-	AST_EIFFEL;
+	AST_EIFFEL
+		redefine
+			is_equivalent
+		end;
 	EXTERNAL_CONSTANTS;
 	COMPILER_EXPORTER
 
@@ -32,6 +35,15 @@ feature -- Properties
 
 	extension: EXTERNAL_EXTENSION_AS;
 			-- Parsed external extension
+
+feature -- Comparison
+
+	is_equivalent (other: like Current): BOOLEAN is
+			-- Is `other' equivalent to the current object ?
+		do
+				-- FIXME: equiv should be done on EXTERNAL_EXTENSION_AS
+			Result := language_name.is_equivalent (other.language_name)
+		end
 
 feature {NONE} -- Implementation
 

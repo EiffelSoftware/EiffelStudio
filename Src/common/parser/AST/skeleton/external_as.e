@@ -11,7 +11,7 @@ inherit
 
 	ROUT_BODY_AS
 		redefine
-			is_external
+			is_external, is_equivalent
 		end;
 
 feature {NONE} -- Initialization
@@ -53,6 +53,15 @@ feature -- Properties
 				Result := alias_name.value;
 			end;
 		end; -- external_name
+
+feature -- Comparison
+
+	is_equivalent (other: like Current): BOOLEAN is
+			-- Is `other' equivalent to the current object ?
+		do
+			Result := equivalent (alias_name, other.alias_name) and then
+				equivalent (language_name, other.language_name)
+		end
 
 feature {AST_EIFFEL} -- Output
 

@@ -10,7 +10,10 @@ class STRING_AS
 inherit
 
 	PART_COMPARABLE;
-	ATOMIC_AS;
+	ATOMIC_AS
+		redefine
+			is_equivalent
+		end;
 	CHARACTER_ROUTINES
 
 feature {NONE} -- Initilization
@@ -34,6 +37,13 @@ feature -- Comparison
 		do
 			Result := value < other.value
 		end;
+
+	is_equivalent (other: like Current): BOOLEAN is
+			-- Is `other' equivalent to the current object ?
+		do
+				-- `value' cannot be Void
+			Result := value.is_equal (other.value)
+		end
 
 feature -- Output
 

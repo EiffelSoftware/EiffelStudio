@@ -50,7 +50,6 @@ feature -- Type check, byte code and dead code removal
 			-- Type check an access to Result
 		local
 			feat_type: TYPE_A
-			access_result: RESULT_B
 			vrle3: VRLE3
 			error_found: BOOLEAN
 			veen2a: VEEN2A
@@ -80,8 +79,7 @@ feature -- Type check, byte code and dead code removal
 				context.replace (feat_type)
 
 					-- Update the access line
-				create access_result
-				context.access_line.insert (access_result)
+				context.access_line.insert (create {RESULT_B})
 			end
 		end
 

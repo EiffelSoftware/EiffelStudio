@@ -158,7 +158,7 @@ feature
 							object_name := cl_type.base_file_name;
 							!!file_name.make (16);
 							file_name.append (object_name);
-							file_name.append (Dot_o);
+							file_name.append (".o");
 							object_baskets.item (cl_type.packet_number).extend (file_name);
 						end;
 

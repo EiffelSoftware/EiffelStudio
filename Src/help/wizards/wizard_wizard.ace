@@ -50,7 +50,7 @@ cluster
 
 	all vision2:		"$EIFFEL_SRC\library\vision2"
 		exclude
-			"gtk"; "test"; 
+			"gtk2"; "gtk"; "test"; 
 		end
 
 	all wel:		"$EIFFEL_SRC\library\wel"

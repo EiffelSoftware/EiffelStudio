@@ -192,20 +192,9 @@ feature -- Access
 			-- Chained assertion for current analyzed feature.
 		require
 			valid_global_adapt: global_adapt /= Void;
-		local
-			chained_prec: CHAINED_ASSERTIONS;
-			t_feat: FEATURE_I;
-			assert_id_set: ASSERT_ID_SET
 		do
 			if global_adapt.target_enclosing_feature /= Void then
-				t_feat := global_adapt.target_enclosing_feature;
-				assert_id_set := t_feat.assert_id_set
-				if assert_id_set /= Void and then
-					assert_id_set.count > 0 
-				then
-					chained_prec := 
-						format_registration.chained_assertion_of_fid (t_feat.feature_id)
-				end
+				Result := format_registration.chained_assertion
 			end
 		end;
 
@@ -459,7 +448,7 @@ feature -- Element change
 	prepare_class_text is
 			-- Append standard text before class.
 		do
-			text.add_class (class_c.e_class);
+			text.add_before_class (class_c.e_class);
 		end;
 
 	end_class_text is
@@ -659,7 +648,7 @@ feature {NONE} -- Implementation
 				f_name := adapt.final_name;
 				if feature_i /= void and then in_bench_mode then
 					c := adapt.target_class.e_class;
-					!FEATURE_NAME_TEXT! item.make (f_name, 
+					!FEATURE_TEXT! item.make (f_name, 
 						feature_i.api_feature (c.id), c);
 				else			
 					!! item.make (f_name)

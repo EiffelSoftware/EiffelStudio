@@ -45,7 +45,7 @@ feature
 	special_routines: SPECIAL_FEATURES is
 			-- Array containing special routines.
 		once
-			!!Result.make
+			!!Result
 		end;
 
 	is_feature_special: BOOLEAN is
@@ -54,8 +54,7 @@ feature
 			-- If found return True (and keep reference position).
 			-- Otherwize, return false;
 		do
-			special_routines.find (feature_name);
-			Result := special_routines.found;
+			Result := special_routines.has (feature_name);
 		end;
 
 	init (f: FEATURE_I) is

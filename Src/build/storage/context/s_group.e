@@ -59,24 +59,32 @@ feature
 	set_context_attributes (a_context: GROUP_C) is
 		local
 			context_list: LINKED_LIST [CONTEXT];
-			index, counter: INTEGER
+			index, counter: INTEGER;
+			rescued: BOOLEAN
 		do
-				-- retrieve the modified attributes
-			old_set_context_attributes (a_context);
+			if not rescued then
+					-- retrieve the modified attributes
+				old_set_context_attributes (a_context);
 
-			context_list := a_context.subtree;
-			from
-				index := 1;
-				counter := 1
-				context_list.start
-			until
-				context_list.after
-			loop
-				index := retrieve_attributes (context_list.item, index);
-				context_list.forth
-				counter := counter + 1;
-				index := index + 1
+				context_list := a_context.subtree;
+				from
+					index := 1;
+					counter := 1
+					context_list.start
+				until
+					context_list.after
+				loop
+					index := retrieve_attributes (context_list.item, index);
+					context_list.forth
+					counter := counter + 1;
+					index := index + 1
+				end;
+			else
+				rescued := False
 			end;
+		rescue
+			rescued := True;
+			retry
 		end;
 
 	set_group_type (new_type: INTEGER) is
@@ -119,8 +127,17 @@ feature {NONE}
 			s_context: S_CONTEXT;
 		do
 			Result := index;
+			debug ("STORER")
+				io.error.putstring ("setting attributes for context: ");
+				io.error.putstring (a_context.full_name)
+				io.error.new_line;
+			end;
 			s_context := subtree.item (Result);
+				-- To indicate on the context side that we
+				-- are retrieving from disk
+			a_context.set_retrieved_node (s_context);
 			s_context.set_context_attributes (a_context);
+			a_context.set_retrieved_node (Void);
 				-- Update the visual name
 			if s_context.visual_name /= Void then
 				a_context.set_visual_name (s_context.visual_name)
@@ -155,7 +172,7 @@ feature {NONE}
 				-- Store the old id.
 			context_table.put (a_context, id);
 			debug ("STORER")
-				io.error.putstring ("s_cont: ");
+				io.error.putstring ("In c_table: s_cont: ");
 				io.error.putstring (s_context.internal_name);
 				io.error.putstring ("cont: ");
 				io.error.putstring (a_context.entity_name);
@@ -169,7 +186,7 @@ feature {NONE}
 				Result := Result + 1;
 				Result := retrieve_attributes (a_context.child, Result);
 				a_context.child_forth;
-			end;
+			end
 		end;
 
 feature -- Debugging

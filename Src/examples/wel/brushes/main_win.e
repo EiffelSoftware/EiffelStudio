@@ -71,8 +71,8 @@ feature {NONE} -- Implementation
 	on_paint (paint_dc: WEL_PAINT_DC; invalid_rect: WEL_RECT) is
 			-- Draw the ISE logo bitmap
 		do
-			--paint_dc.draw_bitmap (ise_logo, 158, 10, 
-			--	ise_logo.width, ise_logo.height)
+			paint_dc.draw_bitmap (ise_logo, 158, 10, 
+				ise_logo.width, ise_logo.height)
 		end
 		
 	on_timer (timer_id: INTEGER) is

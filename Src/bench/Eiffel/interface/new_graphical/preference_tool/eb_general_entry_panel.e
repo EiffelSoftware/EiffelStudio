@@ -29,22 +29,22 @@ feature {NONE} -- Initialization
 		do
 			Precursor (par, a_tool)
 
-			Create acrobat_reader.make_with_resource (Current, parameters.acrobat_reader)
-			Create text_mode.make_with_resource (Current, parameters.text_mode)
+			create acrobat_reader.make_with_resource (Current, parameters.acrobat_reader)
+			create text_mode.make_with_resource (Current, parameters.text_mode)
 			if Platform_constants.is_windows then
-				Create tab_step.make_with_resource (Current, parameters.tab_step)
+				create tab_step.make_with_resource (Current, parameters.tab_step)
 			end
-			Create editor.make_with_resource (Current, parameters.editor)
-			Create filter_path.make_with_resource (Current, parameters.filter_path)
-			Create profile_path.make_with_resource (Current, parameters.profile_path)
-			Create tmp_path.make_with_resource (Current, parameters.tmp_path)
-			Create shell_command.make_with_resource (Current, parameters.shell_command)
-			Create filter_name.make_with_resource (Current, parameters.filter_name)
-			Create filter_command.make_with_resource (Current, parameters.filter_command)
+			create editor.make_with_resource (Current, parameters.editor)
+			create filter_path.make_with_resource (Current, parameters.filter_path)
+			create profile_path.make_with_resource (Current, parameters.profile_path)
+			create tmp_path.make_with_resource (Current, parameters.tmp_path)
+			create shell_command.make_with_resource (Current, parameters.shell_command)
+			create filter_name.make_with_resource (Current, parameters.filter_name)
+			create filter_command.make_with_resource (Current, parameters.filter_command)
 			if not Platform_constants.is_windows then
-				Create print_shell_command.make_with_resource (Current, parameters.print_shell_command)
+				create print_shell_command.make_with_resource (Current, parameters.print_shell_command)
 			else
-				Create browsing_facilities.make_with_resource (Current, parameters.browsing_facilities)
+				create browsing_facilities.make_with_resource (Current, parameters.browsing_facilities)
 			end
 
 			resources.extend (acrobat_reader)
@@ -71,8 +71,8 @@ feature -- Access
 	name: STRING is "General preferences"
 			-- Current's name
 
-	symbol: PIXMAP is
-		once
+	symbol: EV_PIXMAP is
+		do
 			Result := Pixmaps.bm_General
 		end
 

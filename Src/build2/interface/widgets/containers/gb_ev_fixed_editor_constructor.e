@@ -33,18 +33,21 @@ feature -- Access
 			-- A vision2 component to enable modification
 			-- of items held in `objects'.
 		local
-			button: EV_BUTTON
+			button: EV_TOOL_BAR_BUTTON
+			tool_bar: EV_TOOL_BAR
 			horizontal_box: EV_HORIZONTAL_BOX
 		do
 			create button.make_with_text ("Position children...")
+			create tool_bar
+			tool_bar.extend (button)
 			if first.is_empty then
-				button.disable_sensitive
+				button.parent.disable_sensitive
 			end
 			create result
 			initialize_attribute_editor (Result)
 			create horizontal_box
-			horizontal_box.extend (button)
-			horizontal_box.disable_item_expand (button)
+			horizontal_box.extend (tool_bar)
+			horizontal_box.disable_item_expand (tool_bar)
 			Result.extend (horizontal_box)
 			button.select_actions.extend (agent show_layout_window)
 			

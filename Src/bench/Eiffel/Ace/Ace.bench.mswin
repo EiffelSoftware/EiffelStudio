@@ -128,7 +128,7 @@ cluster
 
 -- SWITCH clusters (chose one cluster per directory in switch directory)
 	
-		licence: 			"$BENCH/Eiffel/switch/license/no_license";	
+		license: 			"$BENCH/Eiffel/switch/license/no_license";	
 		dle_switch:			"$BENCH/Eiffel/switch/dle/dle";
 		generation_switch:	"$BENCH/Eiffel/switch/generation/professional";
 		interface_switch:	"$BENCH/Eiffel/switch/interface/graphical";

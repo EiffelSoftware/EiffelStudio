@@ -85,12 +85,6 @@ rt_private int cid_to_dtype(EIF_TYPE_ID cid);		/* Converts a class ID into a dyn
 rt_private int locate(EIF_REFERENCE object, char *name);			/* Locate attribute by name in skeleton */
 rt_public int eiflocate (EIF_OBJECT object, char *name);
 
-#ifndef lint
-rt_private char *rcsid =
-	"$Id$";
-#endif
-
-
 /* 
  * `visible' exception handling
  */
@@ -586,12 +580,12 @@ rt_shared char *ct_value(struct ctable *ct, register char *key)
 	 * location in the value array. Return a null pointer if item is not found.
 	 */
 	
-	register2 long pos;		/* Position in H table */
-	register3 int32 hsize;		/* Size of H table */
-	register4 char **hkeys;		/* Array of keys */
+	long pos;		/* Position in H table */
+	int32 hsize;		/* Size of H table */
+	char **hkeys;		/* Array of keys */
 
-	register5 int32 tryv = (int32) 0;	/* Count number of attempts */
-	register6 long inc;		/* Loop increment */
+	int32 tryv = (int32) 0;	/* Count number of attempts */
+	long inc;		/* Loop increment */
 
 	/* Initializations */
 	hsize = ct->h_size;

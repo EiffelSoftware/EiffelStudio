@@ -20,8 +20,13 @@ extern "C" {
 #include "config.h"
 #include "portable.h"
 
+#ifdef VXWORKS
+#define URGENT_CHUNK	1016	/* Size of urgent chunk (1K with overhead) */
+#define URGENT_NBR		1		/* Number of urgent chunks allocated */
+#else
 #define URGENT_CHUNK	1016	/* Size of urgent chunk (1K with overhead) */
 #define URGENT_NBR		10		/* Number of urgent chunks allocated */
+#endif
 
 rt_shared void ufill(void);			/* Get as many chunks as possible */
 rt_shared char *uchunk(void);			/* Urgent allocation of a stack chunk */

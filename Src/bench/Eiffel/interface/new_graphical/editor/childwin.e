@@ -696,25 +696,31 @@ feature {NONE} -- Display functions
 			-- Display `line' at the coordinates (`d_x', `d_y') on the
 			-- device context `dc'.
 		local
-			curr_y				: INTEGER
-			cursor_line 		: BOOLEAN -- Is the cursor present in the current line?
-			curr_token			: EDITOR_TOKEN
-			width_cursor		: INTEGER
-			start_cursor		: INTEGER
-			selected_line		: BOOLEAN -- Is the entire line selected?
-			not_selected_line	: BOOLEAN -- Is the entire line NOT selected?
-			token_selection		: INTEGER
-			token_begin_selection: INTEGER
-			token_end_selection: INTEGER
+			curr_y					: INTEGER
+			cursor_line 			: BOOLEAN -- Is the cursor present in the current line?
+			curr_token				: EDITOR_TOKEN
+			width_cursor			: INTEGER
+			start_cursor			: INTEGER
+			selected_line			: BOOLEAN -- Is the entire line selected?
+			not_selected_line		: BOOLEAN -- Is the entire line NOT selected?
+			token_selection			: INTEGER
+			token_begin_selection	: INTEGER
+			token_end_selection		: INTEGER
+			local_begin_selection 	: TEXT_CURSOR -- cache of the value of begin_selection
+			local_end_selection		: TEXT_CURSOR -- cache of the value of end_selection
 		do
 			curr_y := (a_line - first_line_displayed) * line_increment
 			cursor_line := (a_line = cursor.y_in_lines)
 
 			if has_selection then
-				if (a_line > begin_selection.y_in_lines) and (a_line < end_selection.y_in_lines) then
+					-- Compute optimisations
+				local_begin_selection := begin_selection
+				local_end_selection := end_selection
+
+				if (a_line > local_begin_selection.y_in_lines) and (a_line < local_end_selection.y_in_lines) then
 					selected_line := True
 				end
-				if (a_line < begin_selection.y_in_lines) or (a_line > end_selection.y_in_lines) then
+				if (a_line < local_begin_selection.y_in_lines) or (a_line > local_end_selection.y_in_lines) then
 					not_selected_line := True
 				end
 			end
@@ -741,42 +747,42 @@ feature {NONE} -- Display functions
 						token_selection := Token_not_selected
 
 						-- Some tokens in the line are selected, and the selection starts and ends on the same line
-					elseif (a_line = begin_selection.y_in_lines) and then (a_line = end_selection.y_in_lines) then
-						if (curr_token.position > begin_selection.token.position) and then (curr_token.position < end_selection.token.position) then
+					elseif (a_line = local_begin_selection.y_in_lines) and then (a_line = local_end_selection.y_in_lines) then
+						if (curr_token.position > local_begin_selection.token.position) and then (curr_token.position < local_end_selection.token.position) then
 							token_selection := Token_selected
-						elseif (curr_token.position < begin_selection.token.position) or else (curr_token.position > end_selection.token.position) then
+						elseif (curr_token.position < local_begin_selection.token.position) or else (curr_token.position > local_end_selection.token.position) then
 							token_selection := Token_not_selected
 						else
 							token_begin_selection := 1
 							token_end_selection := curr_token.length + 1
-							if (curr_token.position = begin_selection.token.position) then
+							if (curr_token.position = local_begin_selection.token.position) then
 								token_selection := Token_half_selected
-								token_begin_selection := begin_selection.pos_in_token
+								token_begin_selection := local_begin_selection.pos_in_token
 							end
-							if (curr_token.position = end_selection.token.position) then
+							if (curr_token.position = local_end_selection.token.position) then
 								token_selection := Token_half_selected
-								token_end_selection := end_selection.pos_in_token
+								token_end_selection := local_end_selection.pos_in_token
 							end
 						end
 
 						-- Some tokens in the line are selected (first selected line)
-					elseif (a_line = begin_selection.y_in_lines) then
-						if (curr_token.position > begin_selection.token.position) then
+					elseif (a_line = local_begin_selection.y_in_lines) then
+						if (curr_token.position > local_begin_selection.token.position) then
 							token_selection := Token_selected
-						elseif (curr_token.position = begin_selection.token.position) then
+						elseif (curr_token.position = local_begin_selection.token.position) then
 							token_selection := Token_half_selected
-							token_begin_selection := begin_selection.pos_in_token
+							token_begin_selection := local_begin_selection.pos_in_token
 							token_end_selection := curr_token.length + 1
 						end
 
 						-- Some tokens in the line are selected (last selected line)
-					elseif (a_line = end_selection.y_in_lines) then
-						if (curr_token.position < end_selection.token.position) then
+					elseif (a_line = local_end_selection.y_in_lines) then
+						if (curr_token.position < local_end_selection.token.position) then
 							token_selection := Token_selected
-						elseif (curr_token.position = end_selection.token.position) then
+						elseif (curr_token.position = local_end_selection.token.position) then
 							token_selection := Token_half_selected
 							token_begin_selection := 1
-							token_end_selection := end_selection.pos_in_token
+							token_end_selection := local_end_selection.pos_in_token
 						end
 
 					end
@@ -817,7 +823,8 @@ feature {NONE} -- Display functions
 
 				-- Display the end token
 			curr_token := line.eol_token
-			if has_selection and then (begin_selection.y_in_lines /= end_selection.y_in_lines) and then (selected_line or else (a_line = begin_selection.y_in_lines)) then 
+			if has_selection and then (local_begin_selection.y_in_lines /= local_end_selection.y_in_lines) and then 
+			   (selected_line or else (a_line = local_begin_selection.y_in_lines)) then 
 				line.eol_token.display_end_token_selected(curr_y, dc, width)
 			else
 				line.eol_token.display_end_token_normal(curr_y, dc, width)

@@ -2,47 +2,51 @@
 set OLD_PATH=%PATH
 set OLD_EIFFEL_SRC=%EIFFEL_SRC
 set INIT_DIR=%@EXECSTR[cd]
+set TMP_ISE_EIFFEL=ISE_EIFFEL
+
 call set_aliases.btm
 remtrace Set up the environment
 on break goto broken
 TIMER ON /1 >> NUL
 TIMER ON /2 >> NUL
+if exist %INSTALL_LOG fullrf %INSTALL_LOG
+set ISE_EIFFEL=%INSTALL_DIR
 
-
-alias compile_aces `^
-for %a in *.ace do (^
+alias compile_ace `^
+echo Compiling Ace: %1\%2 &^
 clean_project &^
-melt %a &^
+melt %2 &^
 wff &^
 iff not exist EIFGEN\W_code\*.exe then &^
-echo %d\%t\%a won't melt. &^
+echo *****Error***** %1\%2 won't melt. &^
 endiff &^
 clean_project &^
-finalize %a &^
+finalize %2 &^
 fff &^
 iff not exist EIFGEN\F_code\*.exe then &^
-echo %d\%t\%a won't finalize. &^
+echo *****Error***** %1\%2 won't finalize. &^
 endiff &^
-clean_project )`
+clean_project`
+
+alias compile_aces `for %a in (*.ace) do compile_ace %1 %a`
+
+alias test_subdir `^
+echo Testing subdir %@EXECSTR[cd] &^
+iff isdir %2 then &^
+cd %2 &^
+compile_aces %1 &^
+test_subdirs %1\%2 &^
+cd .. &^
+endiff`
 
 alias test_subdirs `^
-ls /b *. > subdirs.txt &^
-for %t in @subdirs.txt do ( &^
-iff isdir %t then &^
-cd %t &^
-compile_aces &^
-cd .. &^
-endiff )`
+echo Testing subdirs of %1 &^
+if exist subdirs.txt fullrf subdirs.txt &^
+dir /AD /b >> subdirs.txt &^
+for %t in (@subdirs.txt) do test_subdir %1 %t`
 
-alias test_lib `^
-ls /b *. > subdirs.txt &^
-for %d in @subdirs.txt do ( &^
-iff isdir %t then &^
-cd %t &^
-compile_aces &^
-cd .. &^
-endiff )`
-
+cdd %INSTALL_DIR\examples
+test_subdirs %INSTALL_DIR\examples
 
 CANCEL
 

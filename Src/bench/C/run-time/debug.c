@@ -222,8 +222,7 @@ public void dsync()
 	 */
 
 	struct dcall *context;		/* Current calling context */
-	int body_id;				/* Body ID of current feature */
-	
+
 	/* Reset execution status. It is important to restore that information, even
 	 * if we are in a non-debuggable feature because the DX_STEP status must be
 	 * propagated and the first time we will enter a debuggable feature, we'll

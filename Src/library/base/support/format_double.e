@@ -14,7 +14,7 @@ inherit
 	FORMAT_INTEGER
 		rename
 			make as set_defaults,
-			separate as separate_integral,
+			split as split_integral,
 			formatted as fm_formatted
 		export {NONE}
 			fm_formatted
@@ -173,7 +173,7 @@ feature -- Conversion
 				fraction := floor ((d - floor (d)) * 10^(decimals+1))
 			end
 			if not no_separator then
-				ints := separate_integral (integral.out)
+				ints := split_integral (integral.out)
 				if after_decimal_separate then
 					fracs := separate_fraction (pad_fraction(fraction))
 				else

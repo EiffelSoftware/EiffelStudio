@@ -55,19 +55,19 @@ feature -- Properties
 
 feature -- Output
 
-	build_explain (ow: OUTPUT_WINDOW) is
+	build_explain (st: STRUCTURED_TEXT) is
 		local
 			msg: STRING
 		do
 			msg := syntax_message;
 			if not msg.empty then
-				ow.put_char ('(');
-				ow.put_string (msg)
-				ow.put_string (")%N");
+				st.add_char ('(');
+				st.add_string (msg)
+				st.add_string (")%N");
 			end
 		end;
 
-	trace (ow: OUTPUT_WINDOW) is
+	trace (st: STRUCTURED_TEXT) is
 			-- Debug purpose
 		local
 			file: PLAIN_TEXT_FILE;
@@ -94,34 +94,34 @@ feature -- Output
 			end;
 			file.close;
 
-			ow.put_string ("Syntax error at line ");
-			ow.put_int (line_number);
+			st.add_string ("Syntax error at line ");
+			st.add_int (line_number);
 			if Lace.parsed then
 				if Lace.successfull then
 						-- Error happened in a class
-					ow.put_string (" in class ");
-					ow.put_class_syntax (Current, System.current_class.e_class, 
+					st.add_string (" in class ");
+					st.add_class_syntax (Current, System.current_class.e_class, 
 							System.current_class.e_class.signature)
 				else
 						-- Error happened while parsing a "use" file
-					ow.put_string (" in Cluster_properties %"Use%" file")
+					st.add_string (" in Cluster_properties %"Use%" file")
 					if file_name /= Void then
-						ow.put_string ("%N	 File: "); 
-						ow.put_string (file_name);
+						st.add_string ("%N	 File: "); 
+						st.add_string (file_name);
 					end;
 				end
 			else
-				ow.put_ace_syntax (Current, " in Ace file")
+				st.add_ace_syntax (Current, " in Ace file")
 			end;
-			ow.new_line;
-			build_explain (ow);
-			display_line (ow, previous_line);
-			display_error_line (ow, current_line, 
+			st.add_new_line;
+			build_explain (st);
+			display_line (st, previous_line);
+			display_error_line (st, current_line, 
 						start_position - start_line_pos);
-			display_line (ow, next_line);
+			display_line (st, next_line);
 		end;
 
-	display_line (ow: OUTPUT_WINDOW; a_line: STRING) is
+	display_line (st: STRUCTURED_TEXT; a_line: STRING) is
 		local
 			i: INTEGER;
 			nb: INTEGER;
@@ -136,16 +136,16 @@ feature -- Output
 					i := i + 1;
 					c := a_line.item (i);
 					if c = '%T' then
-						ow.put_string ("	")
+						st.add_string ("	")
 					else
-						ow.put_char (c)
+						st.add_char (c)
 					end;
 				end;
-				ow.new_line;
+				st.add_new_line;
 			end;
 		end;
 
-	display_error_line (ow: OUTPUT_WINDOW; a_line: STRING; pos: INTEGER) is
+	display_error_line (st: STRUCTURED_TEXT; a_line: STRING; pos: INTEGER) is
 		local
 			i, nb: INTEGER;
 			c: CHARACTER;
@@ -159,28 +159,28 @@ feature -- Output
 				i := i + 1;
 				c := a_line.item (i);
 				if c = '%T' then
-					ow.put_string ("	");
+					st.add_string ("	");
 					if i <= pos then
 						nb_tab := nb_tab + 1;
 					end;
 				else
-					ow.put_char (c)
+					st.add_char (c)
 				end;
 			end;
-			ow.new_line;
+			st.add_new_line;
 			position := pos + 3*nb_tab;
 			if position = 0 then
-				ow.put_string ("^---------------------------%N");
+				st.add_string ("^---------------------------%N");
 			else
 				from
 					i := 1;
 				until
 					i > position
 				loop
-					ow.put_char ('-');
+					st.add_char ('-');
 					i := i + 1;
 				end;
-				ow.put_string ("^%N");
+				st.add_string ("^%N");
 			end;
 		end;
 

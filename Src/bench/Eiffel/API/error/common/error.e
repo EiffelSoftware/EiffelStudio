@@ -55,35 +55,35 @@ feature -- Comparison
 
 feature -- Output
 
-	trace (ow: OUTPUT_WINDOW) is
+	trace (st: STRUCTURED_TEXT) is
 		require
-			valid_ow: ow /= Void;
+			valid_st: st /= Void;
 			is_defined: is_defined
 		do
-			print_error_message (ow);
-			build_explain (ow);
+			print_error_message (st);
+			build_explain (st);
 		end;
 
-	print_error_message (ow: OUTPUT_WINDOW) is
+	print_error_message (st: STRUCTURED_TEXT) is
 		require
-			valid_ow: ow /= Void
+			valid_st: st /= Void
 		do
-			ow.put_string (Error_string);
-			ow.put_string (" code: ");
-			ow.put_error (Current, code);
+			st.add_string (Error_string);
+			st.add_string (" code: ");
+			st.add_error (Current, code);
 			if subcode /= 0 then
-				ow.put_char ('(');
-				ow.put_int (subcode);
-				ow.put_string (")%N");
+				st.add_char ('(');
+				st.add_int (subcode);
+				st.add_string (")%N");
 			else
-				ow.new_line;
+				st.add_new_line;
 			end;
-			print_short_help (ow);
+			print_short_help (st);
 		end;
 
-	print_short_help (ow: OUTPUT_WINDOW) is
+	print_short_help (st: STRUCTURED_TEXT) is
 		require
-			valid_ow: ow /= Void
+			valid_st: st /= Void
 		local
 			file_name: STRING;
 			f_name: FILE_NAME;
@@ -104,25 +104,25 @@ feature -- Output
 					file.end_of_file
 				loop
 					file.readline;
-					ow.put_string (file.laststring);
-					ow.new_line;
+					st.add_string (clone (file.laststring));
+					st.add_new_line;
 				end;
 				file.close;
 			else
-				ow.put_string ("%NNo help available for this error%N%
+				st.add_string ("%NNo help available for this error%N%
 							%(cannot read file: ");
-				ow.put_string (file_name);
-				ow.put_string (")%N%
+				st.add_string (file_name);
+				st.add_string (")%N%
 							%%NAn error message should always be available.%N%
 							%Please contact ISE.%N%N");
 			end;
 		end;
 
-	build_explain (ow: OUTPUT_WINDOW) is
+	build_explain (st: STRUCTURED_TEXT) is
 			-- Build specific explanation image for current error
 			-- in `error_window'.
 		require
-			valid_ow: ow /= Void
+			valid_st: st /= Void
 		deferred
 		end;
 

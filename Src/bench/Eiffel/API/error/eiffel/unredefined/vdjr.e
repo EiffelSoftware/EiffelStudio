@@ -41,27 +41,27 @@ feature -- Access
 
 feature -- Output
 
-	print_signatures (ow: OUTPUT_WINDOW) is
+	print_signatures (st: STRUCTURED_TEXT) is
 		local
 			oclass, nclass: E_CLASS
 		do
 			oclass := old_feature.written_class;
 			nclass := new_feature.written_class;
-			ow.put_string ("First feature: ");
-			old_feature.append_signature (ow, oclass);
-			ow.put_string ("%NVersion from: ");
-			oclass.append_name (ow);
-			ow.put_string ("%NSecond feature: ");
-			new_feature.append_signature (ow, nclass);
-			ow.put_string ("%NVersion from: ");
-			nclass.append_name (ow);
-			ow.new_line;
+			st.add_string ("First feature: ");
+			old_feature.append_signature (st, oclass);
+			st.add_string ("%NVersion from: ");
+			oclass.append_name (st);
+			st.add_string ("%NSecond feature: ");
+			new_feature.append_signature (st, nclass);
+			st.add_string ("%NVersion from: ");
+			nclass.append_name (st);
+			st.add_new_line;
 		end;
 
-	build_explain (ow: OUTPUT_WINDOW) is
+	build_explain (st: STRUCTURED_TEXT) is
 		do
-			ow.put_string ("Different numbers of arguments%N");
-			print_signatures (ow);
+			st.add_string ("Different numbers of arguments%N");
+			print_signatures (st);
 		end;
 
 feature {COMPILER_EXPORTER}

@@ -22,13 +22,13 @@ feature -- Property
 
 feature -- Output
 
-	build_explain (ow: OUTPUT_WINDOW) is
+	build_explain (st: STRUCTURED_TEXT) is
 		do
-			put_cluster_name (ow);
-			ow.put_string ("Option: ");
-			ow.put_string (node.option.option_name);
-			ow.new_line;
-			put_class_name (ow);
+			put_cluster_name (st);
+			st.add_string ("Option: ");
+			st.add_string (node.option.option_name);
+			st.add_new_line;
+			put_class_name (st);
 		end;
 
 feature {O_OPTION_SD} -- Setting

@@ -31,17 +31,17 @@ feature -- Properties
 
 feature -- Output
 
-	build_explain (ow: OUTPUT_WINDOW) is
+	build_explain (st: STRUCTURED_TEXT) is
 			-- Build specific explanation image for current error
-			-- in `ow'.
+			-- in `st'.
 		do
-			ow.put_string ("Target name: ");
-			ow.put_string (target_name);
-			ow.put_string ("%NTarget type: ");
-			target_type.append_to (ow);
-			ow.put_string ("%NSource_type: ");
-			source_type.append_to (ow);
-			ow.new_line
+			st.add_string ("Target name: ");
+			st.add_string (target_name);
+			st.add_string ("%NTarget type: ");
+			target_type.append_to (st);
+			st.add_string ("%NSource_type: ");
+			source_type.append_to (st);
+			st.add_new_line
 		end
 
 feature {COMPILER_EXPORTER}

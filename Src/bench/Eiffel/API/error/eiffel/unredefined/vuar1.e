@@ -26,23 +26,23 @@ feature -- Properties
 
 feature -- Output
 
-	build_explain (ow: OUTPUT_WINDOW) is
+	build_explain (st: STRUCTURED_TEXT) is
 		do
 			if called_feature /= Void then
-				print_called_feature (ow);
-				ow.put_string ("%NNumber of actuals: ");
-				ow.put_int (argument_count);
-				ow.put_string (" Number of formals: ");
-				ow.put_int (called_feature.argument_count);
-				ow.new_line;
+				print_called_feature (st);
+				st.add_string ("%NNumber of actuals: ");
+				st.add_int (argument_count);
+				st.add_string (" Number of formals: ");
+				st.add_int (called_feature.argument_count);
+				st.add_new_line;
 			elseif called_local /= Void then
-				ow.put_string ("Local variable name: ");
-				ow.put_string (called_local);
-				ow.new_line
+				st.add_string ("Local variable name: ");
+				st.add_string (called_local);
+				st.add_new_line
 			elseif called_arg /= Void then
-				ow.put_string ("Argument name: ");
-				ow.put_string (called_arg);
-				ow.new_line
+				st.add_string ("Argument name: ");
+				st.add_string (called_arg);
+				st.add_new_line
 			end;
 		end;
 

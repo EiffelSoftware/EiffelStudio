@@ -26,13 +26,13 @@ feature -- Properties
 
 feature -- Output
 
-	build_explain (ow: OUTPUT_WINDOW) is
+	build_explain (st: STRUCTURED_TEXT) is
 		do
-			ow.put_string ("Cluster name: ");
-			ow.put_string (cluster_name);
-			ow.put_string ("%NPath name: ");
-			ow.put_string (path);
-			ow.new_line
+			st.add_string ("Cluster name: ");
+			st.add_string (cluster_name);
+			st.add_string ("%NPath name: ");
+			st.add_string (path);
+			st.add_new_line
 		end;
 
 feature {CLUSTER_I} -- Setting

@@ -23,12 +23,12 @@ feature -- Property
 
 feature -- Output
 
-	build_explain (ow: OUTPUT_WINDOW) is
+	build_explain (st: STRUCTURED_TEXT) is
 		do
 			if value < 0 then
-				ow.put_string ("Constant: ");
-				ow.put_int (value);
-				ow.new_line;
+				st.add_string ("Constant: ");
+				st.add_int (value);
+				st.add_new_line;
 			end;
 		end;
 

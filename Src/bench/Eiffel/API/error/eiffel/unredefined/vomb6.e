@@ -41,18 +41,18 @@ feature -- Access
 
 feature -- Output
 
-	build_explain (ow: OUTPUT_WINDOW) is
+	build_explain (st: STRUCTURED_TEXT) is
 		local
 			wclass: E_CLASS
 		do
 			wclass := unique_feature.written_class;
-			ow.put_string ("Constant: ");
-			unique_feature.append_name (ow, wclass);
-			ow.put_string (" From: ");
-			wclass.append_name (ow);
-			ow.put_string ("%NOrigin of conflicting constants: ");
-			written_class.append_name (ow);
-			ow.new_line;
+			st.add_string ("Constant: ");
+			unique_feature.append_name (st, wclass);
+			st.add_string (" From: ");
+			wclass.append_name (st);
+			st.add_string ("%NOrigin of conflicting constants: ");
+			written_class.append_name (st);
+			st.add_new_line;
 		end;
 
 feature {COMPILER_EXPORTEr}

@@ -18,12 +18,12 @@ feature -- Property
 
 feature -- Output
 
-	build_explain (ow: OUTPUT_WINDOW) is
+	build_explain (st: STRUCTURED_TEXT) is
 		do
-			put_cluster_name (ow);
-			ow.put_string ("File name: ");
-			ow.put_string (use_name);
-			ow.new_line;
+			put_cluster_name (st);
+			st.add_string ("File name: ");
+			st.add_string (use_name);
+			st.add_new_line;
 		end;
 
 feature {CLUST_PROP_SD} -- Setting

@@ -29,11 +29,11 @@ feature
 	code: STRING is "VJAW";
 			-- Error code
 
-	build_explain (ow: OUTPUT_WINDOW) is
+	build_explain (st: STRUCTURED_TEXT) is
 		do
-			ow.put_string ("Target: ");
-			ow.put_string (target.access_name);
-			ow.new_line;
+			st.add_string ("Target: ");
+			st.add_string (target.access_name);
+			st.add_new_line;
 		end;
 
 end -- class VE03

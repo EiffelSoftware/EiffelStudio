@@ -18,7 +18,7 @@ feature
 
 	subcode: INTEGER is 21;
 
-	build_explain (ow: OUTPUT_WINDOW) is
+	build_explain (st: STRUCTURED_TEXT) is
 		do
 		end;
 

@@ -44,25 +44,25 @@ feature -- Access
 
 feature -- Output
 
-	build_explain (ow: OUTPUT_WINDOW) is
+	build_explain (st: STRUCTURED_TEXT) is
 		do
 			if e_feature /= Void then
-				ow.put_string ("In feature: ");
-				e_feature.append_name (ow, e_feature.written_class);
-				ow.new_line;
+				st.add_string ("In feature: ");
+				e_feature.append_name (st, e_feature.written_class);
+				st.add_new_line;
 			else
-				ow.put_string ("In inheritance clause%N");
+				st.add_string ("In inheritance clause%N");
 			end;
 			if entity_name /= Void then
-				ow.put_string ("Entity name: ");
-				ow.put_string (entity_name);
-				ow.new_line;
+				st.add_string ("Entity name: ");
+				st.add_string (entity_name);
+				st.add_new_line;
 			end;
-			ow.put_string ("Invalid type: ");
-			type.append_to (ow);
-			ow.put_string ("%NBase class: ");
-			base_class.append_signature (ow);
-			ow.new_line;
+			st.add_string ("Invalid type: ");
+			type.append_to (st);
+			st.add_string ("%NBase class: ");
+			base_class.append_signature (st);
+			st.add_new_line;
 		end;
 
 feature {COMPILER_EXPORTER}

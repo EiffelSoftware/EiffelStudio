@@ -28,13 +28,13 @@ feature
 	code: STRING is "VEEN";
 			-- Error code
 
-	build_explain (ow: OUTPUT_WINDOW) is
+	build_explain (st: STRUCTURED_TEXT) is
 			-- Build specific explanation image for current error
-			-- in `ow'.
+			-- in `st'.
 		do
-			ow.put_string ("Identifier: ");
-			ow.put_string (identifier);
-			ow.new_line;
+			st.add_string ("Identifier: ");
+			st.add_string (identifier);
+			st.add_new_line;
 		end
 
 end -- class VEEN

@@ -24,16 +24,16 @@ feature -- Properties
 
 feature -- Output
 
-	build_explain (ow: OUTPUT_WINDOW) is
+	build_explain (st: STRUCTURED_TEXT) is
 			-- Build specific explanation explain for current error
-			-- in `ow'.
+			-- in `st'.
 		do
 			from
 				error_list.start
 			until
 				error_list.after
 			loop
-				error_list.item.build_explain (ow);
+				error_list.item.build_explain (st);
 				error_list.forth;
 			end;
 		end;

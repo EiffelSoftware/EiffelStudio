@@ -22,16 +22,16 @@ feature -- Properties
 
 feature -- Output
 
-	build_explain (ow: OUTPUT_WINDOW) is
+	build_explain (st: STRUCTURED_TEXT) is
 		do
-			ow.put_string ("Option: ");
-			ow.put_string (option_name);
+			st.add_string ("Option: ");
+			st.add_string (option_name);
 			if option_value /= Void then
-				ow.put_string ("%NInvalid option value: ");
-				ow.put_string (option_value);
-				ow.new_line
+				st.add_string ("%NInvalid option value: ");
+				st.add_string (option_value);
+				st.add_new_line
 			else
-				ow.put_string ("%NNo option value%N");
+				st.add_string ("%NNo option value%N");
 			end;
 		end;
 

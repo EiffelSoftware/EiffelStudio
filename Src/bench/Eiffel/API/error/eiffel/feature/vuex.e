@@ -43,23 +43,23 @@ feature -- Access
 
 feature -- Output
 
-	build_explain (ow: OUTPUT_WINDOW) is
+	build_explain (st: STRUCTURED_TEXT) is
 			-- Build specific explanation image for current error
-			-- in `ow'.
+			-- in `st'.
 		local
 			w_class: E_CLASS
 		do
 			w_class := exported_feature.written_class;
-			ow.put_string ("Feature: ");
-			exported_feature.append_name (ow, w_class);
-			ow.put_string (" Class: ");
-			static_class.append_name (ow);
-			ow.put_string (" Version from: ");
-			w_class.append_name (ow);
-			ow.new_line;
-			ow.put_string ("Not exported to class ");
-			e_class.append_name (ow);
-			ow.new_line
+			st.add_string ("Feature: ");
+			exported_feature.append_name (st, w_class);
+			st.add_string (" Class: ");
+			static_class.append_name (st);
+			st.add_string (" Version from: ");
+			w_class.append_name (st);
+			st.add_new_line;
+			st.add_string ("Not exported to class ");
+			e_class.append_name (st);
+			st.add_new_line
 		end
 
 feature {COMPILER_EXPORTER} -- Setting

@@ -27,11 +27,11 @@ feature -- Properties
 
 feature -- Output
 
-	build_explain (ow: OUTPUT_WINDOW) is
+	build_explain (st: STRUCTURED_TEXT) is
 		do
-			ow.put_string ("Creation procedure name: ");
-			ow.put_string (creation_feature);
-			ow.new_line;
+			st.add_string ("Creation procedure name: ");
+			st.add_string (creation_feature);
+			st.add_new_line;
 		end;
 
 feature {COMPILER_EXPORTER} -- Setting

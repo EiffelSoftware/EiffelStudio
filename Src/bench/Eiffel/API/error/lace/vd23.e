@@ -18,11 +18,11 @@ feature -- Property
 
 feature -- Output
 
-	build_explain (ow: OUTPUT_WINDOW) is
+	build_explain (st: STRUCTURED_TEXT) is
 		do
-			ow.put_string ("Class name: ");
-			ow.put_string (class_name);
-			ow.new_line;
+			st.add_string ("Class name: ");
+			st.add_string (class_name);
+			st.add_new_line;
 		end;
 
 feature {UNIVERSE_I} -- Setting

@@ -30,12 +30,12 @@ feature -- Properties
 
 feature -- Output
 
-	build_explain (ow: OUTPUT_WINDOW) is
+	build_explain (st: STRUCTURED_TEXT) is
 		do
 			if formal_name /= Void then
-				ow.put_string ("Parameter name: ");
-				ow.put_string (formal_name);
-				ow.new_line;
+				st.add_string ("Parameter name: ");
+				st.add_string (formal_name);
+				st.add_new_line;
 			end;
 		end;
 

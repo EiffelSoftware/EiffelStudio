@@ -28,11 +28,11 @@ feature
 	code: STRING is "NOT_SUPPORTED";
 			-- Error code
 
-	build_explain (ow: OUTPUT_WINDOW) is
+	build_explain (st: STRUCTURED_TEXT) is
 		do
-			ow.put_string ("Error message: ");
-			ow.put_string (message);
-			ow.new_line;
+			st.add_string ("Error message: ");
+			st.add_string (message);
+			st.add_new_line;
 		end
 
 end -- class NOT_SUPPORTED

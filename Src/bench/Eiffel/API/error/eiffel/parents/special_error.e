@@ -42,12 +42,12 @@ feature -- Properties
 
 feature -- Output
 
-	build_explain (ow: OUTPUT_WINDOW) is
+	build_explain (st: STRUCTURED_TEXT) is
 			-- Build specific explanation image for current error
-			-- in `ow'.
+			-- in `st'.
 		do
-			ow.put_string (error_case);
-			ow.new_line;
+			st.add_string (error_case);
+			st.add_new_line;
 		end;
 
 end -- class SPECIAL_ERROR

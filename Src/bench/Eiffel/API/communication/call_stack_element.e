@@ -154,7 +154,7 @@ feature -- Properties
 
 feature -- Output
 
-	display_arguments (ow: OUTPUT_WINDOW) is
+	display_arguments (st: STRUCTURED_TEXT) is
 			-- Display the arguments passed to the routine
 			-- associated with Current call.
 		local
@@ -164,18 +164,18 @@ feature -- Output
 			if args_list /= Void then
 				from
 					args_list.start;
-					ow.put_string ("%NArguments: %N")
+					st.add_string ("%NArguments: %N")
 				until
 					args_list.after
 				loop
-					ow.put_string ("%T");
-					args_list.item.append_to (ow, 0);
+					st.add_string ("%T");
+					args_list.item.append_to (st, 0);
 					args_list.forth;
 				end;
 			end;
 		end;
 
-	display_locals (ow: OUTPUT_WINDOW) is
+	display_locals (st: STRUCTURED_TEXT) is
 			-- Display the local entities and result (if it exists) of 
 			-- the routine associated with Current call.
 		local
@@ -185,7 +185,7 @@ feature -- Output
 		do
 			locals_list := locals;
 			if locals_list /= Void or else private_result /= Void then
-				ow.put_string ("%NLocal entities: %N");
+				st.add_string ("%NLocal entities: %N");
 			end;
 			if locals_list /= Void then
 				!! local_names.make;
@@ -205,20 +205,20 @@ feature -- Output
 					until
 						local_names.after
 					loop
-						ow.put_string ("%T");
-						local_names.item.append_to (ow, 0);
+						st.add_string ("%T");
+						local_names.item.append_to (st, 0);
 						local_names.forth	
 					end
 				end
 			end;
 			if private_result /= Void then
 					-- Display the Result entity value.
-				ow.put_string ("%T");
-				private_result.append_to (ow, 0);
+				st.add_string ("%T");
+				private_result.append_to (st, 0);
 			end;
 		end; 
 
-	display_feature (ow: OUTPUT_WINDOW) is
+	display_feature (st: STRUCTURED_TEXT) is
 			-- Display information about associated routine.
 		local
 			nb_blanks, i: INTEGER;
@@ -229,15 +229,15 @@ feature -- Output
 			c := dynamic_class;
 			oc := origin_class;
 				-- Print object address (14 characters)
-			ow.put_string ("[");
+			st.add_string ("[");
 			if c /= Void then
-				ow.put_address (object_address, c)
+				st.add_address (object_address, c)
 				nb_blanks := 14 - object_address.count
 			else
-				ow.put_string ("0x0");
+				st.add_string ("0x0");
 				nb_blanks := 11
 			end
-			ow.put_string ("]");
+			st.add_string ("]");
 			if nb_blanks <= 0 then 
 				nb_blanks := 1 
 			end;
@@ -246,32 +246,32 @@ feature -- Output
 			until 
 				i > nb_blanks 
 			loop 
-				ow.put_string (" "); 
+				st.add_string (" "); 
 				i := i + 1
 			end;
 
 				-- Print class name
 			if c /= Void then
-				c.append_name (ow);
+				c.append_name (st);
 				nb_blanks := 18 - c.name.count;
 				if nb_blanks <= 0 then nb_blanks := 1 end;
 				from i := 1 until i > nb_blanks 
 				loop 
-					ow.put_string (" "); i := i + 1
+					st.add_string (" "); i := i + 1
 				end;
 			else
-				ow.put_string ("NOT FOUND		   ");
+				st.add_string ("NOT FOUND		   ");
 			end;
 
-			ow.put_feature_name (routine_name, c);
+			st.add_feature_name (routine_name, c);
 			if oc /= c then
-				ow.put_string (" (From ");
+				st.add_string (" (From ");
 				if oc /= Void then
-					oc.append_name (ow);
+					oc.append_name (st);
 				else
-					ow.put_string ("Void")
+					st.add_string ("Void")
 				end;
-				ow.put_string (")");
+				st.add_string (")");
 			end;
 		ensure
 			initialized_not_changed: old initialized = initialized

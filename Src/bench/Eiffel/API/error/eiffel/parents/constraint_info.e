@@ -22,20 +22,20 @@ feature -- Properties
 
 feature -- Output
 
-	build_explain (ow: OUTPUT_WINDOW) is
+	build_explain (st: STRUCTURED_TEXT) is
 		require
 			actual_type /= Void;
 			c_type /= Void;
 		do
-			ow.put_string ("For type: ");
-			type.append_to (ow);
-			ow.put_string ("%NArgument number: ");
-			ow.put_int (formal_number);
-			ow.put_string (":%NActual generic parameter: ");
-			actual_type.append_to (ow);
-			ow.put_string ("%NType to which it should conform: ");
-			c_type.append_to (ow);
-			ow.new_line;
+			st.add_string ("For type: ");
+			type.append_to (st);
+			st.add_string ("%NArgument number: ");
+			st.add_int (formal_number);
+			st.add_string (":%NActual generic parameter: ");
+			actual_type.append_to (st);
+			st.add_string ("%NType to which it should conform: ");
+			c_type.append_to (st);
+			st.add_new_line;
 		end
 
 feature {COMPILER_EXPORTER} -- Setting

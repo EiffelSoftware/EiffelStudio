@@ -38,15 +38,15 @@ feature -- Access
 
 feature -- Output
 
-	build_explain (ow: OUTPUT_WINDOW) is
+	build_explain (st: STRUCTURED_TEXT) is
 			-- Build specific explanation explain for current error
-			-- in `ow'.
+			-- in `st'.
 		do
-			ow.put_string ("Formal type: ");
-			formal_type.append_to (ow);
-			ow.put_string ("%NActual type: ");
-			actual_type.append_to (ow);
-			ow.new_line;
+			st.add_string ("Formal type: ");
+			formal_type.append_to (st);
+			st.add_string ("%NActual type: ");
+			actual_type.append_to (st);
+			st.add_new_line;
 		end;
 
 feature {COMPILER_EXPORTER}

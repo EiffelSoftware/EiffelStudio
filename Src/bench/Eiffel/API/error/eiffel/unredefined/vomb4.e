@@ -36,11 +36,11 @@ feature -- Access
 
 feature -- Output
 
-	build_explain (ow: OUTPUT_WINDOW) is
+	build_explain (st: STRUCTURED_TEXT) is
 		do
-			ow.put_string ("Duplicate name: ");
-			unique_feature.append_name (ow, unique_feature.written_class);
-			ow.new_line;
+			st.add_string ("Duplicate name: ");
+			unique_feature.append_name (st, unique_feature.written_class);
+			st.add_new_line;
 		end;
 
 feature {COMPILER_EXPORTER}

@@ -18,17 +18,17 @@ feature -- Property
 
 feature -- Output
 
-	put_file_name (ow: OUTPUT_WINDOW) is
+	put_file_name (st: STRUCTURED_TEXT) is
 		do
-			ow.put_string ("File name: ");
-			ow.put_string (file_name);
-			ow.new_line;
+			st.add_string ("File name: ");
+			st.add_string (file_name);
+			st.add_new_line;
 		end;
 
-	build_explain (ow: OUTPUT_WINDOW) is
+	build_explain (st: STRUCTURED_TEXT) is
 		do
-			put_cluster_name (ow);
-			put_file_name (ow);
+			put_cluster_name (st);
+			put_file_name (st);
 		end;
 
 feature {AST_LACE, COMPILER_EXPORTER} -- Setting

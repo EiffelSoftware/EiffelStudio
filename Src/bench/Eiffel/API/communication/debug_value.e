@@ -56,29 +56,29 @@ feature -- Comparison
 
 feature -- Output
 
-	append_to (ow: OUTPUT_WINDOW; indent: INTEGER) is
-			-- Append `Current' to `ow' printing the name, type
+	append_to (st: STRUCTURED_TEXT; indent: INTEGER) is
+			-- Append `Current' to `st' printing the name, type
 			-- and its value.
 		require
-			valid_ow: ow /= Void;
+			valid_st: st /= Void;
 			valid_indent: indent >= 0;
 			valid_name: name /= Void
 		do
-			append_tabs (ow, indent);
+			append_tabs (st, indent);
 			if is_attribute then
-				ow.put_feature_name (name, e_class)
+				st.add_feature_name (name, e_class)
 			else
-				ow.put_string (name)
+				st.add_string (name)
 			end;
-			ow.put_string (": ");
-			append_type_and_value (ow);
-			ow.new_line
+			st.add_string (": ");
+			append_type_and_value (st);
+			st.add_new_line
 		end;
 
-	append_type_and_value (ow: OUTPUT_WINDOW) is 
-			-- Append value of Current to `ow'.
+	append_type_and_value (st: STRUCTURED_TEXT) is 
+			-- Append value of Current to `st'.
 		require
-			valid_ow: ow /= Void;
+			valid_st: st /= Void;
 			valid_name: name /= Void
 		deferred 
 		end;
@@ -104,10 +104,10 @@ feature {RECV_VALUE} -- Setting
 
 feature {NONE} -- Implementation
 
-	append_tabs (ow: OUTPUT_WINDOW; indent: INTEGER) is
-			-- Append `indent' tabulation character to `ow'.
+	append_tabs (st: STRUCTURED_TEXT; indent: INTEGER) is
+			-- Append `indent' tabulation character to `st'.
 		require
-			ow: ow /= Void;
+			st: st /= Void;
 			indent_positive: indent >= 0
 		local
 			i: INTEGER
@@ -117,7 +117,7 @@ feature {NONE} -- Implementation
 			until
 				i > indent
 			loop
-				ow.put_string ("%T");
+				st.add_string ("%T");
 				i := i + 1
 			end
 		end;

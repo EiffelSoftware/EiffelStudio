@@ -40,9 +40,9 @@ feature -- Output
 	dump: STRING is "Void";
 			-- Dumped trace
 
-	append_to (ow: OUTPUT_WINDOW) is
+	append_to (st: STRUCTURED_TEXT) is
 		do
-			ow.put_string ("Void");
+			st.add_string ("Void");
 		end;
 
 feature {COMPILER_EXPORTER}

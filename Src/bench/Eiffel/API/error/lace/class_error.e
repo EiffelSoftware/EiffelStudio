@@ -18,17 +18,17 @@ feature -- Properties
 
 feature -- Output
 
-	put_class_name (ow: OUTPUT_WINDOW) is
+	put_class_name (st: STRUCTURED_TEXT) is
 		do
-			ow.put_string ("Class name: ");
-			ow.put_string (class_name);
-			ow.new_line;
+			st.add_string ("Class name: ");
+			st.add_string (class_name);
+			st.add_new_line;
 		end;
 
-	build_explain (ow: OUTPUT_WINDOW) is
+	build_explain (st: STRUCTURED_TEXT) is
 		do
-			put_cluster_name (ow);
-			put_class_name (ow);
+			put_cluster_name (st);
+			put_class_name (st);
 		end;
 
 feature {AST_LACE, COMPILER_EXPORTER} -- Setting

@@ -17,14 +17,14 @@ feature -- Property
 
 feature -- Output
 
-	build_explain (ow: OUTPUT_WINDOW) is
+	build_explain (st: STRUCTURED_TEXT) is
 		do
-			put_cluster_path (ow);
-			ow.put_string ("First cluster: ");
-			ow.put_string (cluster.cluster_name);
-			ow.put_string ("%NSecond cluster: ");
-			ow.put_string (second_cluster_name);
-			ow.new_line;
+			put_cluster_path (st);
+			st.add_string ("First cluster: ");
+			st.add_string (cluster.cluster_name);
+			st.add_string ("%NSecond cluster: ");
+			st.add_string (second_cluster_name);
+			st.add_new_line;
 		end;
 
 feature {CLUSTER_SD} -- Setting

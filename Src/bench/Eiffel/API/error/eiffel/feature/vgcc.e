@@ -26,18 +26,18 @@ feature -- Properties
 
 feature -- Output
 
-	print_name (ow: OUTPUT_WINDOW) is
+	print_name (st: STRUCTURED_TEXT) is
 		do
-			ow.put_string ("Creation of: ");
-			ow.put_string (target_name);
-			ow.put_string ("%NTarget type: ");
-			type.append_to (ow);
-			ow.new_line;
+			st.add_string ("Creation of: ");
+			st.add_string (target_name);
+			st.add_string ("%NTarget type: ");
+			type.append_to (st);
+			st.add_new_line;
 		end;
 
-	build_explain (ow: OUTPUT_WINDOW) is
+	build_explain (st: STRUCTURED_TEXT) is
 		do
-			print_name (ow)
+			print_name (st)
 		end;
 
 feature {COMPILER_EXPORTER} -- Setting

@@ -25,13 +25,13 @@ feature -- Properties
 
 feature -- Output
 
-	build_explain (ow: OUTPUT_WINDOW) is
+	build_explain (st: STRUCTURED_TEXT) is
 		do
-			ow.put_string ("Kind of routine: ");
+			st.add_string ("Kind of routine: ");
 			if is_deferred then
-				ow.put_string ("deferred%N")
+				st.add_string ("deferred%N")
 			else
-				ow.put_string ("external%N")
+				st.add_string ("external%N")
 			end;
 		end;
 

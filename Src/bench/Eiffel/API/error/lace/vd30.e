@@ -21,11 +21,11 @@ feature -- Property
 
 feature -- Output
 
-	build_explain (ow: OUTPUT_WINDOW) is
+	build_explain (st: STRUCTURED_TEXT) is
 		do
-			ow.put_string ("Invalid class name: ");
-			ow.put_string (root_class_name);
-			ow.new_line
+			st.add_string ("Invalid class name: ");
+			st.add_string (root_class_name);
+			st.add_new_line
 		end;
 
 feature {ROOT_SD} -- Setting

@@ -68,10 +68,10 @@ feature -- Setting
 
 feature -- Output
 
-	append_to (cw: OUTPUT_WINDOW) is
-			-- Append Current type to `cw'.:wq
+	append_to (st: STRUCTURED_TEXT) is
+			-- Append Current type to `st'.
 		do
-			cw.put_string (dump)
+			st.add_string (dump)
 		end;
 
 	dump: STRING is

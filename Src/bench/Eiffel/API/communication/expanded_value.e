@@ -64,39 +64,39 @@ feature -- Access
 
 feature -- Output
 
-	append_to (ow: OUTPUT_WINDOW; indent: INTEGER) is
-			-- Append `Current' to `ow' with `indent' tabs the left margin.
+	append_to (st: STRUCTURED_TEXT; indent: INTEGER) is
+			-- Append `Current' to `st' with `indent' tabs the left margin.
 		local
 			ec: E_CLASS;
 		do
-			append_tabs (ow, indent);
-			ow.put_feature_name (name, e_class)
-			ow.put_string (": expanded ");
+			append_tabs (st, indent);
+			st.add_feature_name (name, e_class)
+			st.add_string (": expanded ");
 			ec := dynamic_class;
 			if ec /= Void then
-				ec.append_name (ow);
-				ow.new_line;
-				append_tabs (ow, indent + 1);
-				ow.put_string ("-- begin sub-object --");
-				ow.new_line;
+				ec.append_name (st);
+				st.add_new_line;
+				append_tabs (st, indent + 1);
+				st.add_string ("-- begin sub-object --");
+				st.add_new_line;
 				from
 					attributes.start
 				until
 					attributes.after
 				loop
-					attributes.item.append_to (ow, indent + 2);
+					attributes.item.append_to (st, indent + 2);
 					attributes.forth
 				end;
-				append_tabs (ow, indent + 1);
-				ow.put_string ("-- end sub-object --");
-				ow.new_line
+				append_tabs (st, indent + 1);
+				st.add_string ("-- end sub-object --");
+				st.add_new_line
 			else
-				Any_class.append_name (ow);
-				ow.put_string (" = Unknown")
+				Any_class.append_name (st);
+				st.add_string (" = Unknown")
 			end
 		end;
 
-	append_type_and_value (ow: OUTPUT_WINDOW) is
+	append_type_and_value (st: STRUCTURED_TEXT) is
 		do
 		end;
 

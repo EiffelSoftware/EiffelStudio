@@ -24,20 +24,20 @@ feature -- Properties
 
 feature -- Output
 
-	print_types (ow: OUTPUT_WINDOW) is
+	print_types (st: STRUCTURED_TEXT) is
 		do
-			ow.put_string ("First type: ");
-			old_type.append_to (ow);
-			ow.put_string ("%NSecond type: ");
-			type.append_to (ow);
-			ow.new_line;
+			st.add_string ("First type: ");
+			old_type.append_to (st);
+			st.add_string ("%NSecond type: ");
+			type.append_to (st);
+			st.add_new_line;
 		end;
 
-	build_explain (ow: OUTPUT_WINDOW) is
+	build_explain (st: STRUCTURED_TEXT) is
 		do
-			ow.put_string ("Result types are different%N");
-			print_types (ow);
-			print_signatures (ow);
+			st.add_string ("Result types are different%N");
+			print_types (st);
+			print_signatures (st);
 		end;
 
 feature {COMPILER_EXPORTER} -- Setting

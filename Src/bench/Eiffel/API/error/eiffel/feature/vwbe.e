@@ -27,12 +27,12 @@ feature -- Properties
 
 feature -- Output
 
-	build_explain (ow: OUTPUT_WINDOW) is
+	build_explain (st: STRUCTURED_TEXT) is
 		do
-			ow.put_string (where);
-			ow.put_string ("%NExpression type: ");
-			type.append_to (ow);
-			ow.new_line;
+			st.add_string (where);
+			st.add_string ("%NExpression type: ");
+			type.append_to (st);
+			st.add_new_line;
 		end;
 
 feature {COMPILER_EXPORTER} -- Setting

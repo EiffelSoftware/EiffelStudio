@@ -39,16 +39,16 @@ feature -- Access
 
 feature -- Output
 
-	trace (ow: OUTPUT_WINDOW) is
+	trace (st: STRUCTURED_TEXT) is
 		do
-			print_error_message (ow);
-			ow.put_string ("Class: ");
-			e_class.append_signature (ow);
-			ow.new_line;
-			build_explain (ow)
+			print_error_message (st);
+			st.add_string ("Class: ");
+			e_class.append_signature (st);
+			st.add_new_line;
+			build_explain (st)
 		end;
 
-	build_explain (ow: OUTPUT_WINDOW) is
+	build_explain (st: STRUCTURED_TEXT) is
 		do
 		end;
 

@@ -70,70 +70,70 @@ feature -- Access
 
 feature -- Output
 
-	append_to (ow: OUTPUT_WINDOW; indent: INTEGER) is
-			-- Append `Current' to `ow' with `indent' tabs the left margin.
+	append_to (st: STRUCTURED_TEXT; indent: INTEGER) is
+			-- Append `Current' to `st' with `indent' tabs the left margin.
 		local
 			status: APPLICATION_STATUS
 		do
-			append_tabs (ow, indent);
-			ow.put_feature_name (name, e_class);
-			ow.put_string (": ");
-			dynamic_class.append_name (ow);
-			ow.put_string (" [");
+			append_tabs (st, indent);
+			st.add_feature_name (name, e_class);
+			st.add_string (": ");
+			dynamic_class.append_name (st);
+			st.add_string (" [");
 			status := Application.status;
 			if status /= Void and status.is_stopped then
-				ow.put_address (address, dynamic_class)
+				st.add_address (address, dynamic_class)
 			else
-				ow.put_string (address)
+				st.add_string (address)
 			end
-			ow.put_string ("]");
-			ow.new_line;
-			append_tabs (ow, indent + 1);
-			ow.put_string ("-- begin special object --");
-			ow.new_line;
+			st.add_string ("]");
+			st.add_new_line;
+			append_tabs (st, indent + 1);
+			st.add_string ("-- begin special object --");
+			st.add_new_line;
 			if sp_lower > 0 then
-				append_tabs (ow, indent + 2);
-				ow.put_string ("... Items skipped ...");
-				ow.new_line
+				append_tabs (st, indent + 2);
+				st.add_string ("... Items skipped ...");
+				st.add_new_line
 			end;
 			from
 				items.start
 			until
 				items.after
 			loop
-				items.item.append_to (ow, indent + 2);
+				items.item.append_to (st, indent + 2);
 				items.forth
 			end;
 			if 0 <= sp_upper and sp_upper < capacity - 1 then
-				append_tabs (ow, indent + 2);
-				ow.put_string ("... More items ...");
-				ow.new_line
+				append_tabs (st, indent + 2);
+				st.add_string ("... More items ...");
+				st.add_new_line
 			end;
-			append_tabs (ow, indent + 1);
-			ow.put_string ("-- end special object --");
-			ow.new_line
+			append_tabs (st, indent + 1);
+			st.add_string ("-- end special object --");
+			st.add_new_line
 		end;
 
-	append_type_and_value (ow: OUTPUT_WINDOW) is
+	append_type_and_value (st: STRUCTURED_TEXT) is
 		local
 			ec: E_CLASS
 		do
 			if address = Void then
-				ow.put_string ("NONE = Void")
+				st.add_string ("NONE = Void")
 			else
 				ec := dynamic_class;
 				if ec /= Void then
-					ec.append_name (ow);
-					ow.put_string (" [");
+					ec.append_name (st);
+					st.add_string (" [");
 					if Application.is_running and Application.is_stopped then
-						ow.put_address (address, ec)
+						st.add_address (address, ec)
 					else
-						ow.put_string (address)
+						st.add_string (address)
 					end;
-					ow.put_string ("]");
+					st.add_string ("]");
 				else
-					Any_class.append_name (ow);
-					ow.put_string (" = Unknown")
+					Any_class.append_name (st);
+					st.add_string (" = Unknown")
 				end
 			end
 		end;

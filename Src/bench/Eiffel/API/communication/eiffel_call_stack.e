@@ -29,24 +29,22 @@ feature -- Properties
 
 feature -- Output
 
-	display_stack (ow: OUTPUT_WINDOW) is
-			-- Display callstack in `ow'.
+	display_stack (st: STRUCTURED_TEXT) is
+			-- Display callstack in `st'.
 		do
-			ow.put_string ("%NCall stack:%N%N");
-			ow.put_string
-				("Object		  Class		  Routine%N");
-			ow.put_string
-				("------		  -----		  -------%N");
+			st.add_string ("%NCall stack:%N%N");
+			st.add_string ("Object		  Class		  Routine%N");
+			st.add_string ("------		  -----		  -------%N");
 			from
 				start
 			until
 				after
 			loop
-				item.display_feature (ow);
-				ow.new_line;
+				item.display_feature (st);
+				st.add_new_line;
 				forth
 			end;
-			ow.new_line
+			st.add_new_line
 		end;
 
 feature {NONE}

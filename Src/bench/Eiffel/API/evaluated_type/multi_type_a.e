@@ -73,23 +73,23 @@ feature -- Output
 			Result.append (">>");
 		end;
 
-	append_to (ow: OUTPUT_WINDOW) is
+	append_to (st: STRUCTURED_TEXT) is
 		local
 			i: INTEGER
 		do
-			ow.put_string ("<<");
+			st.add_string ("<<");
 			from
 				i := 1;
 			until
 				i > count
 			loop
-				item (i).append_to (ow);
+				item (i).append_to (st);
 				if i /= count then
-					ow.put_string (", ");
+					st.add_string (", ");
 				end;
 				i := i + 1;
 			end;
-			ow.put_string (">>");
+			st.add_string (">>");
 		end;
 
 feature {COMPILER_EXPORTER}

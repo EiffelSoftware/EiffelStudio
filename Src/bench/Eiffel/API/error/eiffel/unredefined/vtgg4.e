@@ -28,19 +28,19 @@ feature -- Properties
 
 feature -- Output
 
-	build_explain (ow: OUTPUT_WINDOW) is
+	build_explain (st: STRUCTURED_TEXT) is
 			-- Build specific explanation explain for current error
-			-- in `ow'.
+			-- in `st'.
 		do
-			ow.put_string ("In parent clause: ");
-			parent_type.append_to (ow);
-			ow.new_line;
+			st.add_string ("In parent clause: ");
+			parent_type.append_to (st);
+			st.add_new_line;
 			from
 				error_list.start
 			until
 				error_list.after
 			loop
-				error_list.item.build_explain (ow);
+				error_list.item.build_explain (st);
 				error_list.forth;
 			end;
 		end;

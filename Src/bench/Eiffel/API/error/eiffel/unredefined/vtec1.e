@@ -26,12 +26,12 @@ feature -- Properties
 
 feature -- Output
 
-	build_explain (ow: OUTPUT_WINDOW) is
+	build_explain (st: STRUCTURED_TEXT) is
 		do
 			if entity_name /= Void then
-				ow.put_string ("Entity name: ");
-				ow.put_string (entity_name);
-				ow.new_line;
+				st.add_string ("Entity name: ");
+				st.add_string (entity_name);
+				st.add_new_line;
 			end;
 		end;
 

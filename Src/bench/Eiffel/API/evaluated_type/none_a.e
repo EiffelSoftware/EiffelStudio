@@ -42,9 +42,9 @@ feature -- Output
 	dump: STRING is "NONE";
 			-- Dumped trace
 
-	append_to (ow: OUTPUT_WINDOW) is
+	append_to (st: STRUCTURED_TEXT) is
 		do
-			ow.put_string ("NONE");
+			st.add_string ("NONE");
 		end;
 
 feature {COMPILER_EXPORTER}

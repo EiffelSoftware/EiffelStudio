@@ -17,11 +17,11 @@ inherit
 
 feature -- Output
 
-	build_explain (ow: OUTPUT_WINDOW) is
+	build_explain (st: STRUCTURED_TEXT) is
 		do
-			ow.put_string ("Cluster name: ");
-			ow.put_string (cluster_name);
-			ow.new_line
+			st.add_string ("Cluster name: ");
+			st.add_string (cluster_name);
+			st.add_new_line
 		end;
 
 end -- class VD05

@@ -27,24 +27,24 @@ feature -- Properties
 
 feature -- Output
 
-	build_explain (ow: OUTPUT_WINDOW) is
+	build_explain (st: STRUCTURED_TEXT) is
 			-- Build specific explanation explain for current error
-			-- in `ow'.
+			-- in `st'.
 		do
-			ow.put_string ("Names of classes involved in cycle:%N");
+			st.add_string ("Names of classes involved in cycle:%N");
 			from
 				involved_classes.start
 			until
 				involved_classes.after
 			loop
 				if involved_classes.item /= involved_classes.first then
-					ow.put_string (", ");
+					st.add_string (", ");
 				end;
 				Eiffel_system.class_of_id (involved_classes.item)
-						.append_name (ow);
+						.append_name (st);
 				involved_classes.forth;
 			end;
-			ow.new_line;
+			st.add_new_line;
 		end;
 
 feature {COMPILER_EXPORTER} -- Setting

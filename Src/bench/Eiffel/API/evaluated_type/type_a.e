@@ -181,7 +181,7 @@ feature -- Access
 
 feature -- Output
 
-	append_to (click_window: OUTPUT_WINDOW) is
+	append_to (structured_text: STRUCTURED_TEXT) is
 		deferred
 		end;
 

@@ -65,15 +65,15 @@ feature -- Comparison
 
 feature -- Output
 
-	build_explain (ow: OUTPUT_WINDOW) is
+	build_explain (st: STRUCTURED_TEXT) is
 		do
-			ow.put_string ("Class: ");
-			associated_class.append_name (ow);
-			ow.put_string ("%NObsolete class: ");
-			obsolete_class.append_name (ow);
-			ow.put_string ("%NObsolete message: ");
-			ow.put_string (obsolete_class.obsolete_message);
-			ow.new_line;
+			st.add_string ("Class: ");
+			associated_class.append_name (st);
+			st.add_string ("%NObsolete class: ");
+			obsolete_class.append_name (st);
+			st.add_string ("%NObsolete message: ");
+			st.add_string (obsolete_class.obsolete_message);
+			st.add_new_line;
 		end;
 
 feature {COMPILER_EXPORTER}

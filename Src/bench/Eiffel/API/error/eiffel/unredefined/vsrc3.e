@@ -36,12 +36,12 @@ feature -- Access
 
 feature -- Output
 
-	build_explain (ow: OUTPUT_WINDOW) is
+	build_explain (st: STRUCTURED_TEXT) is
 		do
-			ow.put_string ("Creation feature: ");
-			creation_feature.append_signature (ow,
+			st.add_string ("Creation feature: ");
+			creation_feature.append_signature (st,
 				creation_feature.written_class);
-			ow.new_line;
+			st.add_new_line;
 		end;
 
 feature {COMPILER_EXPORTER}

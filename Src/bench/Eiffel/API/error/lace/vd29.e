@@ -20,15 +20,15 @@ feature -- Property
 
 feature -- Output
 
-	build_explain (ow: OUTPUT_WINDOW) is
+	build_explain (st: STRUCTURED_TEXT) is
 		do
-			ow.put_string ("Class name: ");
-			ow.put_string (root_class_name);
-			ow.put_string ("%NFirst cluster: ");
-			ow.put_string (cluster.cluster_name);
-			ow.put_string ("%NSecond cluster: ");
-			ow.put_string (second_cluster_name);
-			ow.new_line
+			st.add_string ("Class name: ");
+			st.add_string (root_class_name);
+			st.add_string ("%NFirst cluster: ");
+			st.add_string (cluster.cluster_name);
+			st.add_string ("%NSecond cluster: ");
+			st.add_string (second_cluster_name);
+			st.add_new_line
 		end;
 
 feature {ROOT_SD} -- Setting

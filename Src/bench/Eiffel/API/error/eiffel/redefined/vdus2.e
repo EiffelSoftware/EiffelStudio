@@ -44,15 +44,15 @@ feature -- Access
 
 feature -- Output
 
-	build_explain (ow: OUTPUT_WINDOW) is
+	build_explain (st: STRUCTURED_TEXT) is
 			-- Build specific explanation image for current error
-			-- in `ow'.
+			-- in `st'.
 		do
-			ow.put_string ("Feature: ");
-			undefined_feature.append_signature (ow, undefined_feature.written_class);
-			ow.put_string ("%NIn Undefine clause for parent: ");
-			parent.append_name (ow);
-			ow.new_line
+			st.add_string ("Feature: ");
+			undefined_feature.append_signature (st, undefined_feature.written_class);
+			st.add_string ("%NIn Undefine clause for parent: ");
+			parent.append_name (st);
+			st.add_new_line
 		end
 
 feature {COMPILER_EXPORTER}

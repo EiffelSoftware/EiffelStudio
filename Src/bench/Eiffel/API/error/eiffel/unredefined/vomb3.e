@@ -23,11 +23,11 @@ feature -- Properties
 
 feature -- Output
 
-	build_explain (ow: OUTPUT_WINDOW) is
+	build_explain (st: STRUCTURED_TEXT) is
 		do
-			ow.put_string ("Duplicate values: ");
-			interval.display (ow);
-			ow.new_line;
+			st.add_string ("Duplicate values: ");
+			interval.display (st);
+			st.add_new_line;
 		end;
 
 feature {COMPILER_EXPORTER} -- Setting

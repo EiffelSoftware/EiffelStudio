@@ -35,16 +35,16 @@ feature -- Access
 
 feature -- Output
 
-	build_explain (ow: OUTPUT_WINDOW) is
+	build_explain (st: STRUCTURED_TEXT) is
 		local
 			ec: E_CLASS
 		do
 			ec := exported_feature.written_class;
-			ow.put_string ("Insufficiently exported feature: ");
-			exported_feature.append_name (ow, ec);
-			ow.put_string (" from ");
-			ec.append_name (ow);
-			ow.new_line;
+			st.add_string ("Insufficiently exported feature: ");
+			exported_feature.append_name (st, ec);
+			st.add_string (" from ");
+			ec.append_name (st);
+			st.add_new_line;
 		end;
 
 feature {ACCESS_FEAT_AS_B} -- Setting

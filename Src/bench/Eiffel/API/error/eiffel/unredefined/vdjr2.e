@@ -21,13 +21,13 @@ feature -- Properties
 
 feature -- Output
 
-	build_explain (ow: OUTPUT_WINDOW) is
+	build_explain (st: STRUCTURED_TEXT) is
 		do
-			ow.put_string ("Argument number: ");
-			ow.put_int (argument_number);
-			ow.new_line;
-			print_types (ow);
-			print_signatures (ow);
+			st.add_string ("Argument number: ");
+			st.add_int (argument_number);
+			st.add_new_line;
+			print_types (st);
+			print_signatures (st);
 		end;
 
 feature {COMPILER_EXPORTER} -- Setting

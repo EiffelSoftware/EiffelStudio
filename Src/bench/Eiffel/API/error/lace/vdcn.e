@@ -13,9 +13,9 @@ inherit
 
 feature -- Output
 
-	build_explain (ow: OUTPUT_WINDOW) is
+	build_explain (st: STRUCTURED_TEXT) is
 		do
-			put_cluster_name (ow);
+			put_cluster_name (st);
 		end;
 
 end -- class VDCN

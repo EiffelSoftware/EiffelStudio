@@ -64,10 +64,10 @@ feature -- Output
 			Result.append_integer (base_type);
 		end;
 
-	append_to (ow: OUTPUT_WINDOW) is
+	append_to (st: STRUCTURED_TEXT) is
 		do
-			ow.put_string ("BIT ");
-			ow.put_int (base_type);
+			st.add_string ("BIT ");
+			st.add_int (base_type);
 		end;
 
 feature {COMPILER_EXPORTER}

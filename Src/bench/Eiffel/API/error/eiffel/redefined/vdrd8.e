@@ -42,20 +42,20 @@ feature -- Access
 
 feature -- Output
 
-	build_explain (ow: OUTPUT_WINDOW) is
+	build_explain (st: STRUCTURED_TEXT) is
 			-- Build specific explanation explain for current error
-			-- in `ow'.
+			-- in `st'.
 		do
-			ow.put_string ("Feature: ");
-			a_feature.append_name (ow, a_feature.written_class);
+			st.add_string ("Feature: ");
+			a_feature.append_name (st, a_feature.written_class);
 			if postcondition then
 				if precondition then
-					ow.put_string ("%NInvalid assertion clauses: precondition and postcondition%N")
+					st.add_string ("%NInvalid assertion clauses: precondition and postcondition%N")
 				else
-					ow.put_string ("%NInvalid assertion clause: postcondition%N")
+					st.add_string ("%NInvalid assertion clause: postcondition%N")
 				end;
 			else
-				ow.put_string ("%NInvalid assertion clause: precondition%N")
+				st.add_string ("%NInvalid assertion clause: precondition%N")
 			end;
 		end;
 

@@ -27,12 +27,12 @@ feature -- Properties
 
 feature -- Output
 
-	build_explain (ow: OUTPUT_WINDOW) is
+	build_explain (st: STRUCTURED_TEXT) is
 		do
-			ow.put_string ("Anchor name: ");
-			ow.put_string (argument_name);
-			ow.new_line;
-			old_build_explain (ow);
+			st.add_string ("Anchor name: ");
+			st.add_string (argument_name);
+			st.add_new_line;
+			old_build_explain (st);
 		end;
 
 feature {COMPILER_EXPORTER} -- Setting

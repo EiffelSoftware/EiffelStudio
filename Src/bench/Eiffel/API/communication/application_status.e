@@ -154,86 +154,84 @@ feature -- Setting
 
 feature -- Output
 
-	display_status (ow: OUTPUT_WINDOW) is
+	display_status (st: STRUCTURED_TEXT) is
 			-- Display the status of the running application.
 		local
 			c, oc: E_CLASS;
 			ll: LINKED_LIST [STRING];
 			f, of: E_FEATURE;
 		do
-			ow.clear_window;
 			if not is_stopped then
-				ow.put_string ("System is running%N")
+				st.add_string ("System is running%N")
 			else -- Application is stopped.
 					-- Print object address.
-				ow.put_string ("Stopped in object [");
+				st.add_string ("Stopped in object [");
 				c := dynamic_class;
-				ow.put_address (object_address, c);
-				ow.put_string ("]%N");
+				st.add_address (object_address, c);
+				st.add_string ("]%N");
 					-- Print class name.
-				ow.put_string ("%TClass: ");
-				c.append_name (ow);
-				ow.put_string ("%N");
+				st.add_string ("%TClass: ");
+				c.append_name (st);
+				st.add_string ("%N");
 					-- Print routine name.
-				ow.put_string ("%TFeature: ");
+				st.add_string ("%TFeature: ");
 				if e_feature /= Void then
 					oc := origin_class;
-					e_feature.append_name (ow, oc)
+					e_feature.append_name (st, oc)
 					if oc /= c then
-						ow.put_string (" (From ");
-						oc.append_name (ow)
-						ow.put_string (")")
+						st.add_string (" (From ");
+						oc.append_name (st)
+						st.add_string (")")
 					end
 				else
-					ow.put_string ("Void")
+					st.add_string ("Void")
 				end;
-				ow.put_string ("%N");
+				st.add_string ("%N");
 					-- Print the reason for stopping.
-				ow.put_string ("%TReason: ");
+				st.add_string ("%TReason: ");
 				inspect reason
 				when Pg_break then
-					ow.put_string ("Stop point reached%N")
+					st.add_string ("Stop point reached%N")
 				when Pg_interrupt then
-					ow.put_string ("Execution interrupted%N")
+					st.add_string ("Execution interrupted%N")
 				when Pg_raise then
-					ow.put_string ("Explicit exception pending%N");
-					display_exception (ow)
+					st.add_string ("Explicit exception pending%N");
+					display_exception (st)
 				when Pg_viol then
-					ow.put_string ("Implicit exception pending%N");
-					display_exception (ow)
+					st.add_string ("Implicit exception pending%N");
+					display_exception (st)
 				else
-					ow.put_string ("Unknown%N")
+					st.add_string ("Unknown%N")
 				end;
 				if not where.empty then
-					where.first.display_arguments (ow);
-					where.first.display_locals (ow);
-					where.display_stack (ow)
+					where.first.display_arguments (st);
+					where.first.display_locals (st);
+					where.display_stack (st)
 				end
 			end;
-			ow.display
 		end;
 	
-	display_exception (ow: OUTPUT_WINDOW) is
-			-- Display exception in `ow'.
+	display_exception (st: STRUCTURED_TEXT) is
+			-- Display exception in `st'.
 		require
-			non_void_ow: ow /= Void;
+			non_void_st: st /= Void;
 			valid_code: exception_code > 0
 		local
 			e: EXCEPTIONS;
 			m: STRING
 		do
-			ow.put_string ("%T%TCode: ");
-			ow.put_int (exception_code);
-			ow.put_string (" (");
+			st.add_string ("%T%TCode: ");
+			st.add_int (exception_code);
+			st.add_string (" (");
 			!!e;
 			m := e.meaning (exception_code);
 			if m = Void then
 				m := "Undefined"
 			end;
-			ow.put_string (m);
-			ow.put_string (")%N%T%TTag: ");
-			ow.put_string (exception_tag);
-			ow.new_line
+			st.add_string (m);
+			st.add_string (")%N%T%TTag: ");
+			st.add_string (exception_tag);
+			st.add_new_line
 		end;
 
 end -- class APPLICATION_STATUS

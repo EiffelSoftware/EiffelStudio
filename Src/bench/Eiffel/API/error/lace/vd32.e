@@ -24,11 +24,11 @@ feature -- Property
 
 feature -- Output
 
-	build_explain (ow: OUTPUT_WINDOW) is
+	build_explain (st: STRUCTURED_TEXT) is
 		do
-			ow.put_string ("Unknown option: ");
-			ow.put_string (option_name);
-			ow.new_line;
+			st.add_string ("Unknown option: ");
+			st.add_string (option_name);
+			st.add_new_line;
 		end;
 
 feature {D_OPTION_SD, CLUST_PROP_SD} -- Setting

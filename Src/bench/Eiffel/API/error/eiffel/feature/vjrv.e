@@ -26,12 +26,12 @@ feature -- Properties
 
 feature -- Output
 
-	build_explain (ow: OUTPUT_WINDOW) is
+	build_explain (st: STRUCTURED_TEXT) is
 		do
-			ow.put_string ("Target name: ");
-			ow.put_string (target_name);
-			ow.put_string ("%NTarget type: ");
-			target_type.append_to (ow);
+			st.add_string ("Target name: ");
+			st.add_string (target_name);
+			st.add_string ("%NTarget type: ");
+			target_type.append_to (st);
 		end;
 
 feature {COMPILER_EXPORTER}

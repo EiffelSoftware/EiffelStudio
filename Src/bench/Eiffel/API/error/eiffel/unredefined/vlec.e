@@ -35,11 +35,11 @@ feature -- Access
 
 feature -- Output
 
-	build_explain (ow: OUTPUT_WINDOW) is
+	build_explain (st: STRUCTURED_TEXT) is
 		do
-			ow.put_string ("Name of class involved in cycle: ");
-			client.append_name (ow);
-			ow.new_line;
+			st.add_string ("Name of class involved in cycle: ");
+			client.append_name (st);
+			st.add_new_line;
 		end;
 
 feature {COMPILER_EXPORTER}

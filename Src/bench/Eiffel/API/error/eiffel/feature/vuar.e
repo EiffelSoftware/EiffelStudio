@@ -34,16 +34,16 @@ feature -- Access
 
 feature -- Output
 
-	print_called_feature (ow: OUTPUT_WINDOW) is
+	print_called_feature (st: STRUCTURED_TEXT) is
 		local
 			a_class: E_CLASS
 		do
 			a_class := called_feature.written_class;
-			ow.put_string ("Called feature: ");
-			called_feature.append_signature (ow, a_class);
-			ow.put_string (" from ");
-			a_class.append_name (ow);
-			ow.new_line;
+			st.add_string ("Called feature: ");
+			called_feature.append_signature (st, a_class);
+			st.add_string (" from ");
+			a_class.append_name (st);
+			st.add_new_line;
 		end;
 
 feature {ACCESS_FEAT_AS_B} -- Setting

@@ -81,12 +81,8 @@ feature -- IL code generation
 		local
 			target_type: TYPE_I
 			create_type: CREATE_TYPE
-			create_feat: CREATE_FEAT
-			is_native_array, is_external: BOOLEAN
+			is_external: BOOLEAN
 			cl_type: CL_TYPE_I
-			class_c: CLASS_C
-			native_array_class: NATIVE_ARRAY_B
-			f: FEATURE_B
 		do
 			generate_il_line_info
 			target_type := Context.real_type (target.type)
@@ -97,71 +93,32 @@ feature -- IL code generation
 				create_type ?= info	
 				if create_type /= Void then
 					cl_type ?= create_type.type
-					check
-						cl_type_not_void: cl_type /= Void
-					end
-					class_c := cl_type.base_class
-					is_native_array := class_c.is_native_array
-					is_external := class_c.is_external
 				else
-					create_feat ?= info
-					if create_feat /= Void then
-						is_native_array := create_feat.is_array (target.type)
-						is_external := create_feat.is_external (target.type)
-					end
+					cl_type ?= target_type
 				end
 
-				if is_native_array then
-					native_array_class ?= class_c
-					is_native_array := native_array_class /= Void
-				end
+				is_external := cl_type /= Void and then cl_type.base_class.is_external
 
 					-- Issue current object if needed for assignment
 				target.generate_il_start_assignment
 
-				if is_external and then not is_native_array then
-					context.set_il_external_creation (True)
-					if System.java_generation then
-						info.generate_il
-						il_generator.duplicate_top
-					end
+				if is_external then
 						-- Creation call on an external class.
-					if call /= Void then
-						call.message.generate_il
+					context.set_il_external_creation (True)
+					check
+						call_not_void: call /= Void
 					end
+						-- An external class has always a feature call
+						-- as `default_create' can't be called on them.
+					call.message.generate_il
 					context.set_il_external_creation (False)
 					target.generate_il_assignment (target_type)
 				else
-					if not is_native_array then
-							-- Standard creation call
-						info.generate_il
-						target.generate_il_assignment (target_type)
-						if call /= Void then
-							call.generate_il
-						end
-					else
-							-- Creation call on an NATIVE_ARRAY.
-						check
-							call_not_void: call /= Void
-						end
-						f ?= call.message
-						check
-							f_not_void: f /= Void
-							f_name_is_make: f.feature_name.is_equal ("make")
-						end
-
-						if create_feat /= Void then
-								-- If it is a creation of an attribute
-								-- we have to generate `count' first and then
-								-- the `create_feat' will generate correct IL
-								-- code
-							f.parameters.generate_il
-							create_feat.generate_il
-						else
-								-- We have to generate ourself the IL code.
-							f.generate_il_array_creation
-						end
-						target.generate_il_assignment (target_type)
+						-- Standard creation call for a normal Eiffel class.
+					info.generate_il
+					target.generate_il_assignment (target_type)
+					if call /= Void then
+						call.generate_il
 					end
 				end
 			else

@@ -132,9 +132,8 @@ feature -- IL code generation
 			-- Generate IL code for creation instruction
 		local
 			create_type: CREATE_TYPE
-			is_native_creation, is_external_creation: BOOLEAN
+			is_external_class: BOOLEAN
 			cl_type: CL_TYPE_I
-			class_c: CLASS_C
 		do
 			generate_il_line_info
 			create_type ?= info	
@@ -147,50 +146,39 @@ feature -- IL code generation
 			end
 
 			if cl_type.is_reference then
-				class_c := cl_type.base_class
-				is_native_creation := class_c.is_native_array
-				is_external_creation := class_c.is_external
+				is_external_class := cl_type.base_class.is_external
 
-				if is_external_creation and then not is_native_creation then
+				if is_external_class then
 						-- Creation call on external class.
-					if call /= Void then
-						context.set_il_external_creation (True)
-						call.set_parent (create {NESTED_B})
-						call.set_info (info)
-						call.generate_il
-						call.set_parent (Void)
-						context.set_il_external_creation (False)
+					check
+						call_not_void: call /= Void
 					end
+						-- An external class has always a feature call
+						-- as `default_create' can't be called on them.
+					context.set_il_external_creation (True)
+					call.set_parent (create {NESTED_B})
+					call.set_info (info)
+					call.generate_il
+					call.set_parent (Void)
+					context.set_il_external_creation (False)
 				else
-					if not is_native_creation then
-							-- Standard creation call
-						info.generate_il
-						if call /= Void then
-							il_generator.duplicate_top
-							call.set_info (info)
-							call.set_parent (create {NESTED_B})
-							call.generate_il
-							call.set_parent (Void)
-						end
-					else
-							-- Creation call on an ARRAY.
-						check
-							call_not_void: call /= Void
-							call_name_is_make: call.feature_name.is_equal ("make")
-						end
-
-							-- We have to generate ourself the IL code.
-						call.set_info (info)
-						call.generate_il_array_creation
-					end
-				end
-			else
-						-- Creation on expanded or basic types.
+						-- Standard creation call
+					info.generate_il
 					if call /= Void then
 						il_generator.duplicate_top
 						call.set_info (info)
+						call.set_parent (create {NESTED_B})
 						call.generate_il
+						call.set_parent (Void)
 					end
+				end
+			else
+					-- Creation on expanded or basic types.
+				if call /= Void then
+					il_generator.duplicate_top
+					call.set_info (info)
+					call.generate_il
+				end
 			end
 		end
 

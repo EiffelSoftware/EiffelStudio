@@ -96,6 +96,8 @@
 	<li><B>EV_PRINT_PROJECTOR</B> - Added `has_printer' check to `make_with_context', ensuring that if you are to print to a printer, at least one printer is available.</li>
 	<li><B>EV_PRINT_CONTEXT</B> - `default_create' now initializes a set of standard values, permitting the printing to the default printer, using US letter size.</li>
 	<li><B>EV_RELATIVE_POINT</B> - The features `set_x_abs', `set_y_abs', `set_angle_abs', `set_scale_x_abs' and `set_scale_y_abs' now all have a precondition ensuring that you may only call them while `being_positioned' is True, which is only the case during execution of a custom positioning agent. Previously, if they were called at other times, the values set would be overridden.</li>
+	<li><B>EV_FIGURE</B> - `accept_cursor' and `deny_cursor' are now available as queries.</li>
+	<li><B>EV_ABSTRACT_PICK_AND_DROPABLE</B> - `set_accept_cursor' and `set_deny_cursor' no longer accept `Void' arguments.
 </ul>
 		<P><b>Breaking changes</b></P>
 		<UL>

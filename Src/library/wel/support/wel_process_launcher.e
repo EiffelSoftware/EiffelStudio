@@ -150,6 +150,23 @@ feature -- Basic Operations
 			terminate_process			
 		end
 			
+	terminate_process is
+			-- Terminate current process (corresponding to `process_info').
+		local
+			l_boolean: BOOLEAN
+		do
+			if last_launch_successful then
+				l_boolean := cwin_exit_code_process (process_info.process_handle, $last_process_result)
+				if l_boolean then
+					if last_process_result = cwin_still_active then
+						l_boolean := cwin_terminate_process (process_info.process_handle, 0)
+					end
+					cwin_close_handle (process_info.thread_handle)
+					cwin_close_handle (process_info.process_handle)
+				end
+			end
+		end
+
 feature -- Access
 
 	last_launch_successful: BOOLEAN
@@ -229,26 +246,6 @@ feature {NONE} -- Implementation
 
 	internal_block_size: INTEGER
 			-- Output block size
-
-	terminate_process is
-			-- Terminate current process (corresponding to `process_info').
-		local
-			a_boolean: BOOLEAN
-			terminated: BOOLEAN		
-		do
-			a_boolean := cwin_exit_code_process (process_info.process_handle, $last_process_result)
-			check
-				valid_external_call_2: a_boolean
-			end
-			cwin_close_handle (process_info.thread_handle)
-			cwin_close_handle (process_info.process_handle)
-			if last_process_result = cwin_still_active then
-				terminated := cwin_terminate_process (process_info.process_handle, 0)
-				check
-					valid_external_call_3: terminated
-				end
-			end
-		end
 
 feature {NONE} -- Externals
 

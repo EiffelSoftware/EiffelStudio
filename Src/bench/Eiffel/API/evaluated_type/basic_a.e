@@ -70,17 +70,19 @@ feature {COMPILER_EXPORTER}
 			Result := type.actual_type
 		end
 
-	type_i: BASIC_I is
-			-- Instantiated type
-		deferred
-		end
-
 	meta_type: BASIC_I is
 			-- Associated meta type
 		do
 			Result := type_i
 		end
 
+	type_i: BASIC_I is
+			-- Instantiated type.
+			--| Return type is redefined that's why we need
+			--| this declaration.
+		deferred
+		end
+		
 	good_generics: BOOLEAN is
 			-- Has the current type the right number of generic types ?
 		do

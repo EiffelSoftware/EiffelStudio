@@ -48,8 +48,8 @@ feature {COMPILER_EXPORTER}
 
 	type_i: FLOAT_I is
 			-- C type
-		once
-			Result := Float_c_type
+		do
+			create Result
 		end
 
 	same_as (other: TYPE_A): BOOLEAN is

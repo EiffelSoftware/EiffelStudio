@@ -53,8 +53,8 @@ feature {COMPILER_EXPORTER}
 
 	type_i: DOUBLE_I is
 			-- C type
-		once
-			Result := Double_c_type
+		do
+			create Result
 		end
 
 end -- class DOUBLE_A

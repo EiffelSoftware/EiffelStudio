@@ -139,6 +139,13 @@ feature -- Access: file name
 			Result.extend_from_array (<<short_studio_name, "help", "defaults", Eiffel_platform>>)
 		end
 
+	Assemblies_path: FILE_NAME is
+			-- Location of Eiffel Assembly Cache.
+		once
+			create Result.make_from_string (Eiffel_installation_dir_name)
+			Result.extend_from_array (<<"dotnet", "assemblies">>)
+		end
+		
 	Default_class_file: FILE_NAME is
 		once
 			Result := clone (Templates_path)

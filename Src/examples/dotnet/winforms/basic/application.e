@@ -19,28 +19,28 @@ feature -- Initialization
 			handler: EVENT_HANDLER
 		do
 			create main_win.make
-			main_win.set_text (("Hello World!").to_cil)
+			main_win.set_text ("Hello World!")
 			
 			create button.make
 			button.set_parent (main_win)
-			point.make_from_x_and_y (80, 65)
-			size.make_from_width_and_height (75, 24)
+			point.make (80, 65)
+			size.make (75, 24)
 			button.set_size (size)
 			button.set_location (point)
-			button.set_text (("Message").to_cil)
+			button.set_text ("Message")
 			
 			create label.make
-			point.make_from_x_and_y (20, 20)
-			size.make_from_width_and_height (200, 30)
+			point.make (20, 20)
+			size.make (200, 30)
 			label.set_location (point)
 			label.set_size (size)
-			label.set_text (("Welcome to an Eiffel example on how to use Winforms.").to_cil)
+			label.set_text ("Welcome to an Eiffel example on how to use Winforms.")
 			label.set_parent (main_win)
 			
 			create handler.make (Current, $on_close)
 			button.add_click (handler)
 			
-			size.make_from_width_and_height (240, 130)
+			size.make (240, 130)
 			main_win.set_size (size)
 			
 			main_win.show
@@ -66,8 +66,7 @@ feature -- Actions
 		local
 			res: WINFORMS_DIALOG_RESULT
 		do
-			res := feature {WINFORMS_MESSAGE_BOX}.show_string_string (
-				("You just clicked on the %"Message%" button").to_cil, ("An Eiffel Message Box").to_cil)
+			res := feature {WINFORMS_MESSAGE_BOX}.show ("You just clicked on the %"Message%" button", "An Eiffel Message Box")
 		end
 
 invariant

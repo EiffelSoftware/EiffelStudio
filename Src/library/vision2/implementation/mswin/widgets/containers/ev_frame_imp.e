@@ -270,6 +270,7 @@ feature {NONE} -- WEL Implementation
 		do
 			disable_default_processing
 			set_message_return_value (1)
+			paint_dc.fill_rect (invalid_rect, background_brush)
 		end
 
 	on_paint (paint_dc: WEL_PAINT_DC; invalid_rect: WEL_RECT) is
@@ -336,7 +337,7 @@ feature {NONE} -- WEL Implementation
 				end
 			else
 				if item = Void then
-					r.set_rect (1, half + 1, cur_width - 1, cur_height - 1)
+					r.set_rect (1, 1, cur_width - 1, cur_height - 1)
 					paint_dc.fill_rect (r, bk_brush)
 				end
 			end
@@ -417,6 +418,12 @@ end -- class EV_FRAME_IMP
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.40  2001/06/29 19:00:35  rogers
+--| `on_erase_background' now fills in the `invalid_rect' with the background
+--| color. Previously, we just disabled the default processing. This fixes a
+--| bug where you have an item inside `Current' that does not resize to fill
+--| all of `Current', the background was not updated correctly.
+--|
 --| Revision 1.39  2001/06/07 23:08:15  rogers
 --| Merged DEVEL branch into Main trunc.
 --|

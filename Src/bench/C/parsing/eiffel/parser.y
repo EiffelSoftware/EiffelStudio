@@ -281,7 +281,7 @@ Feature_clause_list:
 	;
 
 Feature_clause:
-	TE_FEATURE {$$ = start_position;} Clients {list_init();} Feature_declaration_list
+	TE_FEATURE {$<value>$ = start_position;} Clients {list_init();} Feature_declaration_list
 		{
 		$$ = list_new(CONSTRUCT_LIST_AS);
 		$$ = ($$ == NULL)?NULL:create_fclause_as($3,$$,$<value>2);
@@ -624,7 +624,7 @@ Type_mark:					/* empty */
 	;
 
 
-Routine:					Obsolete {$$ = start_position;} 
+Routine:					Obsolete {$<value>$ = start_position;} 
 							Precondition Local_declarations 
 							Routine_body Postcondition Rescue TE_END
 								{$$ = create_routine_as($1,$<value>2,$3,$4,$5,$6,$7);}

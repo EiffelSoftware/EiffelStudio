@@ -29,9 +29,9 @@ feature {NONE} -- Implementation
 			-- on a per-thread basis. Multiple threads do not overwrite
 			-- each other's last-error code. 
 		external
-			"C [macro <windows.h>]: DWORD"
+			"C [macro <windows.h>]"
 		alias
-			"GetLastError"
+			"GetLastError()"
 		end
 
 	cwin_display_last_error is

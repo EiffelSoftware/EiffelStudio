@@ -485,38 +485,44 @@ feature {NONE} -- Implementation
 			l_process: SYSTEM_DLL_PROCESS
 			l_output_reader, l_error_reader: SYSTEM_THREAD
 			l_res: SYSTEM_OBJECT
+			l_compiler_path: STRING
 		do
 			if not l_retried then
 				create last_compilation_results.make (temp_files)
-				create l_start_info.make_from_file_name_and_arguments (Compiler_path + Directory_separator.out + Compiler_file_name, "-batch -finalize -ace " + ace_file_name)
-				l_start_info.set_working_directory (compilation_directory)
-				l_start_info.set_create_no_window (True)
-				l_start_info.set_redirect_standard_error (True)
-				l_start_info.set_redirect_standard_output (True)
-				l_start_info.set_use_shell_execute (False)
-				create l_process.make
-				l_process.set_start_info (l_start_info)
-				if l_process.start then
-					output_stream := l_process.standard_output
-					error_stream := l_process.standard_error
-					create l_output_reader.make (create {THREAD_START}.make (Current, $read_output))
-					create l_error_reader.make (create {THREAD_START}.make (Current, $read_error))
-					l_output_reader.start
-					l_error_reader.start
-					l_process.wait_for_exit
-					l_output_reader.join
-					l_error_reader.join
-					if compiler_error /= Void then
---						l_res := last_compilation_results.errors.add (create {SYSTEM_DLL_COMPILER_ERROR}.make ("", 0, 0, "", compiler_error))					
-						l_res := last_compilation_results.output.add (compiler_error)
+				l_compiler_path := Compiler_path
+				if l_compiler_path = Void then
+					Event_manager.raise_event (feature {CODE_EVENTS_IDS}.Missing_compiler_path, [])
+				else
+					create l_start_info.make_from_file_name_and_arguments (l_compiler_path + Directory_separator.out + Compiler_file_name, "-batch -finalize -ace " + ace_file_name)
+					l_start_info.set_working_directory (compilation_directory)
+					l_start_info.set_create_no_window (True)
+					l_start_info.set_redirect_standard_error (True)
+					l_start_info.set_redirect_standard_output (True)
+					l_start_info.set_use_shell_execute (False)
+					create l_process.make
+					l_process.set_start_info (l_start_info)
+					if l_process.start then
+						output_stream := l_process.standard_output
+						error_stream := l_process.standard_error
+						create l_output_reader.make (create {THREAD_START}.make (Current, $read_output))
+						create l_error_reader.make (create {THREAD_START}.make (Current, $read_error))
+						l_output_reader.start
+						l_error_reader.start
+						l_process.wait_for_exit
+						l_output_reader.join
+						l_error_reader.join
+						if compiler_error /= Void then
+	--						l_res := last_compilation_results.errors.add (create {SYSTEM_DLL_COMPILER_ERROR}.make ("", 0, 0, "", compiler_error))					
+							l_res := last_compilation_results.output.add (compiler_error)
+						end
+						if compiler_output /= Void then
+							l_res := last_compilation_results.output.add (compiler_output)
+						end
+						check_compilation_result
 					end
-					if compiler_output /= Void then
-						l_res := last_compilation_results.output.add (compiler_output)
-					end
-					check_compilation_result
+					cleanup
+					reset_temp_files
 				end
-				cleanup
-				reset_temp_files
 				ace_file_path := Void
 				source_generator := Void
 				compilation_directory := Void

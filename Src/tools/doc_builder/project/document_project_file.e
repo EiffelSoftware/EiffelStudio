@@ -538,17 +538,19 @@ feature {NONE} -- Implementation
 			end
 			
 				-- Shortcuts
-			if e.name.is_equal (shortcut_tag) then
-				create tag_shortcut.make_with_key_combination ((create {EV_KEY}), True, False, False)
+			if project.shared_constants.application_constants.is_gui_mode then			
+				if e.name.is_equal (shortcut_tag) then
+					create tag_shortcut.make_with_key_combination ((create {EV_KEY}), True, False, False)
+				end
+				
+				if e.name.is_equal (shortcut_key_tag) then
+					tag_shortcut.set_key (create {EV_KEY}.make_with_code (l_value.to_integer))
+				end	
+				
+				if e.name.is_equal (shortcut_value_tag) then
+					project.shared_document_editor.add_tag_accelerator (tag_shortcut, l_value)
+				end				
 			end
-			
-			if e.name.is_equal (shortcut_key_tag) then
-				tag_shortcut.set_key (create {EV_KEY}.make_with_code (l_value.to_integer))
-			end	
-			
-			if e.name.is_equal (shortcut_value_tag) then
-				project.shared_document_editor.add_tag_accelerator (tag_shortcut, l_value)
-			end				
 			
 				-- Process sub_elements
 			l_elements := e.elements

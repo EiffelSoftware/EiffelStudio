@@ -25,11 +25,11 @@ feature {NONE} -- Implementation
 			table.set_minimum_size (300, 300)
 			table.resize (3, 3)
 			create button.make_with_text ("Spans two cells")
-			table.put (button, 1, 1, 2, 1)
+			table.put_at_position (button, 1, 1, 2, 1)
 			create button.make_with_text ("Spans three cells")
-			table.put (button, 3, 1, 1, 3)
+			table.put_at_position (button, 3, 1, 1, 3)
 			create button.make_with_text ("Spans four cells")
-			table.put (button, 1, 2, 2, 2)
+			table.put_at_position (button, 1, 2, 2, 2)
 
 			widget := table
 		end

@@ -35,7 +35,7 @@ feature {NONE} -- Implementation
 				until
 					x >= 8
 				loop
-					table.put (create {EV_BUTTON}.make_with_text (x.out + "," + y.out), x, y, 1, 1)
+					table.put_at_position (create {EV_BUTTON}.make_with_text (x.out + "," + y.out), x, y, 1, 1)
 					x := x + 1
 				end
 				y := y + 1

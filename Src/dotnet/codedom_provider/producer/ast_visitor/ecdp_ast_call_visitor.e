@@ -40,21 +40,18 @@ feature {AST_YACC} -- Implementation
 	process_access_feat_as (l_as: ACCESS_FEAT_AS) is
 			-- Process `l_as'.
 		local
-			l_snippet_expression: SYSTEM_DLL_CODE_SNIPPET_EXPRESSION
 			l_method_invoke_expression: SYSTEM_DLL_CODE_METHOD_INVOKE_EXPRESSION
 			l_property_reference_expression: SYSTEM_DLL_CODE_PROPERTY_REFERENCE_EXPRESSION
 			l_event_reference_expression: SYSTEM_DLL_CODE_EVENT_REFERENCE_EXPRESSION
 			l_expression: SYSTEM_DLL_CODE_EXPRESSION
 			l_method_reference_expression, l_method_reference_expression_2: SYSTEM_DLL_CODE_METHOD_REFERENCE_EXPRESSION
 			l_method_name: STRING
-			l_method_name_2: SYSTEM_STRING
 			l_attribute_reference_expression: SYSTEM_DLL_CODE_FIELD_REFERENCE_EXPRESSION
 			l_attribute_type: STRING
 			l_method_type: STRING
 			l_assign_statement: SYSTEM_DLL_CODE_ASSIGN_STATEMENT
 			l_attach_event_statement: SYSTEM_DLL_CODE_ATTACH_EVENT_STATEMENT
 			l_delegate_expression: SYSTEM_DLL_CODE_DELEGATE_CREATE_EXPRESSION
-			l_primitive_expression: SYSTEM_DLL_CODE_PRIMITIVE_EXPRESSION
 			l_current_reference_expression: SYSTEM_DLL_CODE_THIS_REFERENCE_EXPRESSION
 			l_variable_reference_expression: SYSTEM_DLL_CODE_VARIABLE_REFERENCE_EXPRESSION
 			l_cast_expression: SYSTEM_DLL_CODE_CAST_EXPRESSION
@@ -220,9 +217,6 @@ feature {AST_YACC} -- Implementation
 		local
 			l_delegate_expression: SYSTEM_DLL_CODE_DELEGATE_CREATE_EXPRESSION
 			l_creation_expression: SYSTEM_DLL_CODE_OBJECT_CREATE_EXPRESSION
-			l_method_invoke_expression: SYSTEM_DLL_CODE_METHOD_INVOKE_EXPRESSION
-			l_type_of_expression: SYSTEM_DLL_CODE_TYPE_OF_EXPRESSION
-			l_type_reference: SYSTEM_DLL_CODE_TYPE_REFERENCE
 			l_expression: SYSTEM_DLL_CODE_EXPRESSION
 		do
 			l_delegate_expression ?= current_element
@@ -258,15 +252,11 @@ feature {AST_YACC} -- Implementation
 			-- Process `l_as'.
 		local
 			l_cast_expression: SYSTEM_DLL_CODE_CAST_EXPRESSION
-			l_snippet_expression: SYSTEM_DLL_CODE_SNIPPET_EXPRESSION
 			l_method_invoke_expression: SYSTEM_DLL_CODE_METHOD_INVOKE_EXPRESSION
 			l_expression: SYSTEM_DLL_CODE_EXPRESSION
-			l_local, l_parameter: BOOLEAN
 			l_assign_statement: SYSTEM_DLL_CODE_ASSIGN_STATEMENT
-			l_attach_event_statement: SYSTEM_DLL_CODE_ATTACH_EVENT_STATEMENT
 			l_method_reference_expression, l_method_reference_expression_2: SYSTEM_DLL_CODE_METHOD_REFERENCE_EXPRESSION
 			l_property_reference_expression: SYSTEM_DLL_CODE_PROPERTY_REFERENCE_EXPRESSION
-			l_event_reference_expression: SYSTEM_DLL_CODE_EVENT_REFERENCE_EXPRESSION
 			l_attribute_reference_expression: SYSTEM_DLL_CODE_FIELD_REFERENCE_EXPRESSION
 			l_variable_reference_expression: SYSTEM_DLL_CODE_VARIABLE_REFERENCE_EXPRESSION
 			l_array_creation_expression: SYSTEM_DLL_CODE_ARRAY_CREATE_EXPRESSION
@@ -445,15 +435,7 @@ feature {AST_YACC} -- Implementation
 			-- Process `l_as'.
 		local
 			l_method_invoke_expression: SYSTEM_DLL_CODE_METHOD_INVOKE_EXPRESSION
-			l_expression: SYSTEM_DLL_CODE_EXPRESSION
-			l_assign_statement: SYSTEM_DLL_CODE_ASSIGN_STATEMENT
-			l_attach_event_statement: SYSTEM_DLL_CODE_ATTACH_EVENT_STATEMENT
-			l_method_reference_expression: SYSTEM_DLL_CODE_METHOD_REFERENCE_EXPRESSION
-			l_property_reference_expression: SYSTEM_DLL_CODE_PROPERTY_REFERENCE_EXPRESSION
 			l_variable_reference_expression: SYSTEM_DLL_CODE_VARIABLE_REFERENCE_EXPRESSION
-			l_event_reference_expression: SYSTEM_DLL_CODE_EVENT_REFERENCE_EXPRESSION
-			l_nested_expression: NESTED_AS
-			l_feature_as: ACCESS_FEAT_AS
 		do	
 			l_method_invoke_expression ?= current_element
 			if l_method_invoke_expression = Void then

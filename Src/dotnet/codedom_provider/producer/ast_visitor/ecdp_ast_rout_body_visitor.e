@@ -45,8 +45,6 @@ feature {AST_YACC} -- Implementation
 			-- Process `l_as'.
 		local
 			l_current_routine: SYSTEM_DLL_CODE_MEMBER_METHOD
-			l_statement: SYSTEM_DLL_CODE_STATEMENT
-			l_expression: SYSTEM_DLL_CODE_EXPRESSION
 		do
 			l_current_routine ?= current_element
 			check

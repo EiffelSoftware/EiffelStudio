@@ -213,8 +213,6 @@ feature {AST_YACC} -- Implementation
 
 	process_loop_as (l_as: LOOP_AS) is
 			-- Process `l_as'.
-		local
-			l_loop_statement: SYSTEM_DLL_CODE_ITERATION_STATEMENT
 		do
 		end
 

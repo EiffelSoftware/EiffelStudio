@@ -43,8 +43,6 @@ feature  -- Access
 
 	child_list (path: STRING): LINKED_LIST [like folder] is
 			-- List of children of `path' folder.
-		local
-			child_list_i: LINKED_LIST [RESOURCE_FOLDER_I]
 		do
 			Result := implementation.child_list (path)
 		end

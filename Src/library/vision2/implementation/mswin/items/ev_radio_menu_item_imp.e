@@ -23,6 +23,11 @@ inherit
 			is_selected
 		end
 
+	EV_RADIO_PEER_IMP
+		redefine
+			interface
+		end
+
 create
 	make
 
@@ -31,68 +36,11 @@ feature -- Status report
 	is_selected: BOOLEAN is
 			-- Is this menu item checked?
 		do
-			if parent_imp = Void then
-				--| If a radio menu item does not have a parent, it must appear
-				--| to be checked to satisfy radio grouping contracts.
-				--| (an unparented radio item is checked, or in other words: has
-				--| its own group and a group always has 1 selected item)
-				Result := True
-			else
-				Result := parent_imp.item_checked (id)	
-			end
-		end
-
-	peers: LINKED_LIST [like interface] is
-			-- List of all radio items in the group `Current' is in.
-		local
-			cur: CURSOR
-		do
-			create Result.make
-			if radio_group /= Void then
-				cur := radio_group.cursor
-				from
-					radio_group.start
-				until
-					radio_group.off
-				loop
-					Result.extend (radio_group.item.interface)
-					radio_group.forth
-				end
-				radio_group.go_to (cur)
-			else
-				check
-					-- This item should be selected as enforced by other contracts.
-					is_selected: is_selected
-				end
-				Result.extend (interface)
-			end
-		end
-
-	selected_peer: like interface is
-			-- Radio item that is currently selected.
-		local
-			cur: CURSOR
-		do
-			if radio_group /= Void then
-				cur := radio_group.cursor
-				from
-					radio_group.start
-				until
-					radio_group.off or else Result /= Void
-				loop
-					if radio_group.item.is_selected then
-						Result := radio_group.item.interface
-					end
-					radio_group.forth
-				end
-				radio_group.go_to (cur)
-			else
-				check
-					-- This item should be selected as enforced by other contracts.
-					is_selected: is_selected
-				end
-				Result := interface
-			end
+			--| If a radio menu item does not have a parent, it must appear
+			--| to be checked to satisfy radio grouping contracts.
+			--| (an unparented radio item is checked, or in other words: has
+			--| its own group and a group always has 1 selected item)
+			Result := (parent_imp = Void) or else Precursor
 		end
 
 feature -- Status setting
@@ -113,52 +61,12 @@ feature -- Status setting
 				end
 				radio_group.go_to (cur)
 			end
-			Precursor
+			if parent_imp /= Void then
+				Precursor
+			end
 		end
 
 feature {EV_ANY_I} -- Implementation
-
-	radio_group: LINKED_LIST [like Current]
-
-	set_radio_group (a_list: like radio_group) is
-			-- Remove `Current' from `radio_group'.
-			-- Set `radio_group' to `a_list'.
-			-- Extend `Current' in `a_list'.
-		require
-			a_list_not_void: a_list /= Void
-			a_list_not_has_current: not a_list.has (Current)
-		do
-			if radio_group /= Void then
-				remove_from_radio_group
-			end
-			radio_group := a_list
-			if radio_group.empty then
-				enable_select
-			end
-			radio_group.extend (Current)
-		ensure
-			assigned: radio_group = a_list
-			in_it: radio_group.has (Current)
-		end
-
-	remove_from_radio_group is
-			-- Remove `Current' from `radio_group'.
-			-- Set `radio_group' to `Void'.
-		require
-			radio_group_not_void: radio_group /= Void
-		do
-			radio_group.start
-			radio_group.prune (Current)
-			check
-				removed: not radio_group.has (Current)
-			end
-			if is_selected and then not radio_group.empty then
-				radio_group.first.enable_select
-			end
-			radio_group := Void
-		ensure
-			void: radio_group = Void
-		end
 
 	interface: EV_RADIO_MENU_ITEM
 
@@ -193,6 +101,10 @@ end -- class EV_RADIO_MENU_ITEM_IMP
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.17  2000/02/25 02:19:26  brendel
+--| Removed implementation of features that are now inherited from
+--| EV_RADIO_PEER_IMP.
+--|
 --| Revision 1.16  2000/02/24 20:36:47  brendel
 --| Changed to comply with new inheritance structure. Invariants have been
 --| moved from this file to EV_RADIO_PEER.

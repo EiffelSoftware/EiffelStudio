@@ -60,4 +60,7 @@ feature -- Access
 		do
 		end
 
+	pixmap_icon_location: STRING is "eiffel_wizard_icon.bmp"
+		-- Icon for the Eiffel Store Wizard
+
 end -- class WIZARD_FINAL_STATE

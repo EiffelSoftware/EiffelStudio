@@ -43,12 +43,10 @@ public:
 
 	// Automation types
 	
-	EIF_REFERENCE ccom_ce_currency (CURRENCY a_currency);
 	EIF_REFERENCE ccom_ce_date (DATE a_date);
 	EIF_REFERENCE ccom_ce_bstr (BSTR a_bstr);
 	EIF_REFERENCE ccom_ce_hresult (HRESULT a_hresult);
 	EIF_BOOLEAN ccom_ce_boolean (VARIANT_BOOL a_bool);
-	EIF_REFERENCE ccom_ce_decimal (DECIMAL a_decimal);
 	EIF_REFERENCE ccom_ce_lpstr (LPSTR a_string);
 	EIF_REFERENCE ccom_ce_variant (VARIANT * a_variant);
 	EIF_REFERENCE ccom_ce_dispatch (IDispatch * a_dispatch);
@@ -66,6 +64,7 @@ public:
 	EIF_REFERENCE ccom_ce_pointed_hresult (HRESULT * a_hresult);
 	
 	EIF_REFERENCE ccom_ce_pointed_record (void * a_record_pointer, char * a_class_name);
+	EIF_REFERENCE ccom_ce_pointed_interface (void * a_interface_pointer, char * a_class_name);
 	
 	// Safearray
 	

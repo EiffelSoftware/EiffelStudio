@@ -58,7 +58,7 @@ feature {NONE} -- Implementation
 					interface_descriptors.off
 				loop
 					-- Add parent and import header files
-					cpp_class_writer.add_parent (interface_descriptors.item.c_type_name)
+					cpp_class_writer.add_parent (interface_descriptors.item.c_type_name, Public)
 					cpp_class_writer.add_import (interface_descriptors.item.c_header_file_name)
 					cpp_class_writer.add_other_source (iid_definition (interface_descriptors.item.name, interface_descriptors.item.guid))
 

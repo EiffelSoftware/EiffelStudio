@@ -29,7 +29,7 @@ feature -- Access
 			cpp_class_writer.add_other_source (iid_definition (a_descriptor.name, a_descriptor.guid))
 
 			if a_descriptor.inherited_interface /= Void then
-				cpp_class_writer.add_parent (a_descriptor.inherited_interface.c_type_name)
+				cpp_class_writer.add_parent (a_descriptor.inherited_interface.c_type_name, Public)
 			end
 
 			a_descriptor.functions.sort

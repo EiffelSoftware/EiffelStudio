@@ -72,7 +72,7 @@ feature {NONE} -- Initialization
 			signal_connect ("unselect_row", ~deselect_callback)
 
 			--| FIXME IEK  Click column needs special attention in marshal feature
-			--signal_connect ("click_column", (~column_click_callback)
+			signal_connect ("click_column", ~column_click_callback)
 			c_object := temp_c_object
 
 			if rows_height > 0 then
@@ -95,20 +95,28 @@ feature {NONE} -- Initialization
 			show_title_row
 		end
 
-	select_callback (int: INTEGER) is
+	select_callback (int: TUPLE [INTEGER]) is
 		do
-			print (int.out + "%N")
 			interface.select_actions.call ([])
 			selected_item.select_actions.call ([])
 		end
 
-	deselect_callback (int: INTEGER) is
+	deselect_callback (int: TUPLE [INTEGER]) is
+		local
+			temp_int: INTEGER_REF
+			a_position: INTEGER
 		do
+			temp_int ?= int.item (1)
+				-- Row position from gtk is zero based so increment.
+			a_position := temp_int.item + 1
+
+			interface.i_th (a_position).deselect_actions.call ([])
 			interface.deselect_actions.call ([])
 		end
 
-	column_click_callback (int: INTEGER) is
+	column_click_callback (int: TUPLE [INTEGER]) is
 		do
+			-- FIXME IEK Should include column number somewhere.
 			interface.column_click_actions.call ([])
 		end	
 
@@ -531,6 +539,9 @@ end -- class EV_MULTI_COLUMN_LIST_IMP
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.29  2000/02/19 01:19:52  king
+--| Changed parameter of callbacks from integer to tuple[integer]
+--|
 --| Revision 1.28  2000/02/19 00:02:50  oconnor
 --| c-ed out old command stuff
 --|

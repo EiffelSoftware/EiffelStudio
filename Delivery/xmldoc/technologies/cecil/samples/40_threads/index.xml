@@ -1,4 +1,18 @@
-<document title="CECIL - Threads" output="studio"><meta_data ><help /></meta_data><paragraph ><heading ><size >2</size>bank_account</heading><paragraph >After you have done the appropriate steps to compile the example, you will get a `bank_account.exe' on windows, or `bank_account' on Unix. </paragraph><paragraph >This program launches two types of threads:</paragraph><list ordered="false"><item >the spenders withdraw some money from a shared bank acccount</item><item >the savers make some deposits on it. </item></list><paragraph >The Eiffel Threads are launched from C. The synchronization is done from Eiffel. The shared bank account is a C structure, and is updated by the Eiffel Threads using some C externals. </paragraph><paragraph ><line_break />In main. c:<line_break />LISTSZ size of bank account history. <line_break />DEPOSITORS numbers of savers. <line_break />WITHDRAWERS numbers of spenders. </paragraph><paragraph /><paragraph >A typical output will be:</paragraph>
+<document title="CECIL - Threads" output="studio">
+	<meta_data/>
+	<paragraph >
+		<heading ><size >2</size>bank_account</heading>
+
+		<paragraph >After you have done the appropriate steps to compile the example, you will get a `bank_account.exe' on windows, or `bank_account' on Unix. </paragraph><paragraph >This program launches two types of threads:</paragraph><list ordered="false"><item >the spenders withdraw some money from a shared bank acccount</item><item >the savers make some deposits on it. </item></list><paragraph >The Eiffel Threads are launched from C. The synchronization is done from Eiffel. The shared bank account is a C structure, and is updated by the Eiffel Threads using some C externals. </paragraph><paragraph ><line_break />
+
+In main. c:<line_break />
+LISTSZ size of bank account history. <line_break />
+DEPOSITORS numbers of savers. <line_break />
+WITHDRAWERS numbers of spenders. </paragraph>
+<line_break/>
+<paragraph />
+
+<paragraph >A typical output will be:</paragraph>
 
 <code_block >
 $ bank_account

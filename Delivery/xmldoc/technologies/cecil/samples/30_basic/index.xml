@@ -1,4 +1,10 @@
-<document title="CECIL - Basic sample" output="studio"><meta_data ><help /></meta_data><paragraph ><heading ><size >2</size>cecil-test</heading><paragraph >After you have done the appropriate steps to compile the example, you will get a `cecil.exe' on windows, or `cecil' on Unix. </paragraph><paragraph >This example performs some basic tests of CECIL from C to Eiffel and Eiffel to C. You can:</paragraph><list ordered="false"><item >choose to raise an exception when a routine is not visible</item><item >create an Eiffel string</item><item >choose to raise a precondition violation from C. </item></list><paragraph /><paragraph >A typical output will be:</paragraph>
+<document title="CECIL - Basic sample" output="studio">
+	<meta_data/>
+	<paragraph >
+
+<heading ><size >2</size>cecil-test</heading>
+
+<paragraph >After you have done the appropriate steps to compile the example, you will get a `cecil.exe' on windows, or `cecil' on Unix. </paragraph><paragraph >This example performs some basic tests of CECIL from C to Eiffel and Eiffel to C. You can:</paragraph><list ordered="false"><item >choose to raise an exception when a routine is not visible</item><item >create an Eiffel string</item><item >choose to raise a precondition violation from C. </item></list><paragraph /><paragraph >A typical output will be:</paragraph>
 
 <code_block >
 $ cecil

@@ -27,7 +27,7 @@ inherit
 feature -- Basic Operations
 
 	check_activation is
-			-- Check wheter product can be started.
+			-- Check whether product can be started.
 			-- Decrement remaining execution count
 			-- if not activated.
 			-- Set `can_run' to `True' if product can

@@ -31,21 +31,6 @@ feature {NONE} -- Implementation
 
 	displayed: LINKED_LIST [CL_TYPE_A];
 
-	add_tabs (st: STRUCTURED_TEXT; i: INTEGER) is
-			-- Add `i' tabs to `structured_text'.
-		local
-			j: INTEGER
-		do
-			from
-				j := 1;
-			until
-				j > i
-			loop
-				structured_text.add_indent;
-				j := j + 1
-			end;
-		end;
-
 	already_processed (t: CL_TYPE_A): BOOLEAN is
 		do
 			from

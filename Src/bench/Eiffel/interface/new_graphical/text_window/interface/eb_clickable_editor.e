@@ -460,6 +460,7 @@ feature {NONE}-- Process Vision2 Events
 			stone: STONE
 			bkstn: BREAKABLE_STONE
 			cur: EDITOR_CURSOR
+			cv_errst: ERROR_STONE
 		do
 			if button = 1 and then pick_n_drop_status /= pnd_drop then
 				{EB_EDITOR} Precursor (x_pos, y_pos, button, a_screen_x, a_screen_y)
@@ -482,9 +483,14 @@ feature {NONE}-- Process Vision2 Events
 					if ctrled_key then
 						stone := text_displayed.stone_at (cur)
 						if stone /= Void then
-							Window_manager.create_window
-							if Window_manager.last_created_window /= Void then
-								Window_manager.last_created_window.set_stone (stone)
+							cv_errst ?= stone
+							if cv_errst = Void then
+								Window_manager.create_window
+								if Window_manager.last_created_window /= Void then
+									Window_manager.last_created_window.set_stone (stone)
+								end
+							else
+								Window_manager.last_focused_development_window.set_stone (cv_errst)
 							end
 						end
 					end

@@ -117,7 +117,6 @@ feature {NONE} -- Generation
 			until
 				cnt = l_cnt
 			loop
-				print ("Generating HTML for directory " + target.name)
 				a_dir.readentry
 				if not (a_dir.lastentry.is_equal (".") or a_dir.lastentry.is_equal ("..")) then
 							-- Create directory/filename

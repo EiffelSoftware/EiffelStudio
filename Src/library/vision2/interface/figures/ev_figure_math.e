@@ -125,6 +125,16 @@ feature -- Implementation
 			Result := ((x - xc) / r1) ^ 2 + ((y - yc) / r2) ^ 2 <= 1
 		end
 
+	point_on_ellipse_boundary (x, y, xc, yc, r1, r2, width: INTEGER): BOOLEAN  is
+			-- Is (`x', `y') on specified ellipse border?
+			--| With orientation 0.0.
+		local
+--			tmp: INTEGER
+		do
+--			tmp := ((x - xc) / r1) ^ 2 + ((y - yc) / r2) ^ 2
+--			Result := tmp <= (1 - semi_width_ratio) and 
+		end
+
 	point_on_rectangle (x, y, x1, y1, x2, y2: INTEGER): BOOLEAN is
 			-- Is (`x', `y') inside specified box?
 			--| With orientation 0.0.

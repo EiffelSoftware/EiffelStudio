@@ -13,13 +13,13 @@ inherit
 		redefine
 			build_format_bar, build_text_windows,
 			tool_name, hole, stone_type, 
-			process_any, build_menus, hole_button,
+			process_any, build_menus,
 			update_boolean_resource,
 			update_integer_resource
 		end;
 	BAR_AND_TEXT
 		redefine
-			build_format_bar, hole_button,build_text_windows,
+			build_format_bar, build_text_windows,
 			tool_name,  hole, stone_type, process_any, build_menus,
 			update_boolean_resource,
 			update_integer_resource
@@ -157,10 +157,7 @@ feature -- Window Properties
 
 feature {NONE} -- Attributes; Forms And Holes
 
-	hole: EXPLAIN_CMD;
-			-- Hole characterizing Current.
-
-	hole_button: EXPLAIN_HOLE;
+	hole: EXPLAIN_HOLE;
 			-- Hole characterizing Current.
 
 end -- class EXPLAIN_W

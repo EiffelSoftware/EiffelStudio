@@ -41,7 +41,7 @@ STDMETHODIMP ecom_eiffel_compiler::IEnumClusterProp_impl_stub::Next(  /* [out] *
 	EIF_OBJECT tmp_rgelt = NULL;
 	if (rgelt != NULL)
 	{
-		tmp_rgelt = eif_protect (grt_ce_ISE_c.ccom_ce_pointed_cell_161 (rgelt, NULL));
+		tmp_rgelt = eif_protect (grt_ce_ISE_c.ccom_ce_pointed_cell_162 (rgelt, NULL));
 		if (*rgelt != NULL)
 			(*rgelt)->AddRef ();
 	}
@@ -58,7 +58,7 @@ STDMETHODIMP ecom_eiffel_compiler::IEnumClusterProp_impl_stub::Next(  /* [out] *
 	
 	if (*rgelt != NULL)
 		(*rgelt)->Release ();
-	grt_ec_ISE_c.ccom_ec_pointed_cell_161 (((tmp_rgelt != NULL) ? eif_wean (tmp_rgelt) : NULL), rgelt);
+	grt_ec_ISE_c.ccom_ec_pointed_cell_162 (((tmp_rgelt != NULL) ? eif_wean (tmp_rgelt) : NULL), rgelt);
 	rt_ec.ccom_ec_pointed_unsigned_long (((tmp_pcelt_fetched != NULL) ? eif_wean (tmp_pcelt_fetched) : NULL), pcelt_fetched);
 	
 	END_ECATCH;
@@ -114,7 +114,7 @@ STDMETHODIMP ecom_eiffel_compiler::IEnumClusterProp_impl_stub::Clone(  /* [out] 
 	EIF_OBJECT tmp_ppenum = NULL;
 	if (ppenum != NULL)
 	{
-		tmp_ppenum = eif_protect (grt_ce_ISE_c.ccom_ce_pointed_cell_158 (ppenum, NULL));
+		tmp_ppenum = eif_protect (grt_ce_ISE_c.ccom_ce_pointed_cell_159 (ppenum, NULL));
 		if (*ppenum != NULL)
 			(*ppenum)->AddRef ();
 	}
@@ -126,7 +126,7 @@ STDMETHODIMP ecom_eiffel_compiler::IEnumClusterProp_impl_stub::Clone(  /* [out] 
 	
 	if (*ppenum != NULL)
 		(*ppenum)->Release ();
-	grt_ec_ISE_c.ccom_ec_pointed_cell_158 (((tmp_ppenum != NULL) ? eif_wean (tmp_ppenum) : NULL), ppenum);
+	grt_ec_ISE_c.ccom_ec_pointed_cell_159 (((tmp_ppenum != NULL) ? eif_wean (tmp_ppenum) : NULL), ppenum);
 	
 	END_ECATCH;
 	return S_OK;
@@ -145,7 +145,7 @@ STDMETHODIMP ecom_eiffel_compiler::IEnumClusterProp_impl_stub::ith_item(  /* [in
 	EIF_OBJECT tmp_rgelt = NULL;
 	if (rgelt != NULL)
 	{
-		tmp_rgelt = eif_protect (grt_ce_ISE_c.ccom_ce_pointed_cell_161 (rgelt, NULL));
+		tmp_rgelt = eif_protect (grt_ce_ISE_c.ccom_ce_pointed_cell_162 (rgelt, NULL));
 		if (*rgelt != NULL)
 			(*rgelt)->AddRef ();
 	}
@@ -157,7 +157,7 @@ STDMETHODIMP ecom_eiffel_compiler::IEnumClusterProp_impl_stub::ith_item(  /* [in
 	
 	if (*rgelt != NULL)
 		(*rgelt)->Release ();
-	grt_ec_ISE_c.ccom_ec_pointed_cell_161 (((tmp_rgelt != NULL) ? eif_wean (tmp_rgelt) : NULL), rgelt);
+	grt_ec_ISE_c.ccom_ec_pointed_cell_162 (((tmp_rgelt != NULL) ? eif_wean (tmp_rgelt) : NULL), rgelt);
 	
 	END_ECATCH;
 	return S_OK;

@@ -87,6 +87,13 @@ feature -- Basic Operations
 			ccom_precompile (initializer)
 		end
 
+	expand_path (a_path: STRING): STRING is
+			-- Takes a path and expands it using the env vars.
+			-- `a_path' [in].  
+		do
+			Result := ccom_expand_path (initializer, a_path)
+		end
+
 	generate_msil_keyfile (filename: STRING) is
 			-- Generate a cyrptographic key filename.
 			-- `filename' [in].  
@@ -150,6 +157,12 @@ feature {NONE}  -- Externals
 			-- Return ISE_EIFFEL environment var.
 		external
 			"C++ [ecom_eiffel_compiler::IEiffelCompiler_impl_proxy %"ecom_eiffel_compiler_IEiffelCompiler_impl_proxy.h%"](): EIF_REFERENCE"
+		end
+
+	ccom_expand_path (cpp_obj: POINTER; a_path: STRING): STRING is
+			-- Takes a path and expands it using the env vars.
+		external
+			"C++ [ecom_eiffel_compiler::IEiffelCompiler_impl_proxy %"ecom_eiffel_compiler_IEiffelCompiler_impl_proxy.h%"](EIF_OBJECT): EIF_REFERENCE"
 		end
 
 	ccom_generate_msil_keyfile (cpp_obj: POINTER; filename: STRING) is

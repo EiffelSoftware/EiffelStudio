@@ -285,6 +285,7 @@ feature {NONE} -- Internal Statur Setting
 			-- Remove `get_' for properties getters.
 		require
 			non_void_meth: meth /= void
+			is_consumed_method: (create {REFLECTION}).is_consumed_method (meth)
 		local
 			name: STRING
 		do

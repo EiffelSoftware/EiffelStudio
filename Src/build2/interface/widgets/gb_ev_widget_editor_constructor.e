@@ -41,7 +41,7 @@ feature -- Access
 			if first.is_show_requested and not is_show_requested_check_button.is_selected then
 				is_show_requested_check_button.select_actions.block
 				is_show_requested_check_button.enable_select
-				is_show_requested_check_button.select_actions.block
+				is_show_requested_check_button.select_actions.resume
 			end
 			
 			minimum_width_entry.update_constant_display (first.minimum_width.out)

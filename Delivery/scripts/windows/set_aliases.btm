@@ -13,7 +13,7 @@ set TMP_EIFFEL_SRC=D:\tmpdev
 REM Where the new delivery is set up. Warning: if it exists, the directory will be erased!
 set INSTALL_DIR=D:\InstalledEiffel50
 REM Where Visual C++ is installed (to recompile the run-time)
-set C_COMPILER_PATH=C:\apps\VC98
+set C_COMPILER_PATH=C:\\apps\\VC98
 REM Get where hhc and wfwi are located, to be able to compile the documentation and the delivery.
 set PATH=%PATH;"C:\Program Files\HTML Help Workshop";"C:\apps\Wise for Windows Installer Evaluation\WfWI.exe"
 
@@ -23,7 +23,7 @@ REM File management
 REM Copy also hidden files, keep attributes, overwrite automatically
 alias copy *copy /hkz
 REM Remove completely a directory
-alias fullrd del /syqxz
+alias fullrd del /syqxz >>& %INSTALL_LOG
 REM Remove a file
 alias fullrf del /yqz
 REM Retrieve a file from the old delivery and put it in the new one

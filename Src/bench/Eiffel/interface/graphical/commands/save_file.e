@@ -71,7 +71,7 @@ feature {NONE} -- Implementation
 					if not to_write.empty then
 						new_file.putstring (to_write);
 						char := to_write.item (to_write.count);
-						if char /= '%N' and then char /= '%R' then 
+						if Platform_constants.is_unix and then char /= '%N' and then char /= '%R' then 
 							-- Add a carriage return like vi if there's none at the end 
 							new_file.new_line
 						end; 

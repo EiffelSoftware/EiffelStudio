@@ -9,17 +9,13 @@ class
 
 inherit
 	EV_STATUS_BAR_I
-		rename
-			make as widget_old_make
-		export
-		undefine
 		redefine
 			parent_imp
-		select
 		end
+
 	EV_PRIMITIVE_IMP
 		rename
-			make as widget_old_make
+			make as wrong_make
 		redefine
 			parent_imp
 		end
@@ -76,16 +72,6 @@ feature -- Element change
 			gtk_container_remove ( widget, stat_bar.widget)
 			ev_children.search (stat_bar)
 			ev_children.remove
-		end
-
-feature {NONE} -- Inapplicable
-
-	widget_old_make is
-			-- Do not call.
-		do
-			check
-				Inapplicable: False
-			end
 		end
 
 end -- class EV_STATUS_BAR_IMP

@@ -73,13 +73,16 @@ feature -- Events for list
 	Cmd_selection: INTEGER is 17
 			-- The selection of the list has changed
 
+	Cmd_dblclk: INTEGER is 18
+			-- The user double clicked on an item
+
 feature -- Event for text_components
 
-	Cmd_activate: INTEGER is 17
+--	Cmd_selection: INTEGER is 17
 			-- The text inside the component is modified by the
 			-- user
 
-	Cmd_update: INTEGER is 18
+	Cmd_activate: INTEGER is 18
 			-- The text inside the componant is going to be
 			-- update after a change of the user.
 

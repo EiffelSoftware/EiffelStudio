@@ -1,4 +1,3 @@
---| FIXME Not for release
 --| FIXME NOT_REVIEWED this file has not been reviewed
 indexing
 	description: 
@@ -28,7 +27,8 @@ creation
 
 feature -- Initialization
 
-	make_with_values(a_dashed_mode: INTEGER; a_width: INTEGER; a_color: WEL_COLOR_REF) is
+	make_with_values (a_dashed_mode: INTEGER; a_width: INTEGER;
+		a_color: WEL_COLOR_REF) is
 			-- Set the style of the pen to `a_dashed_mode',
 			-- the line width to `a_width' and the color
 			-- to `a_color'.
@@ -43,8 +43,15 @@ feature -- Access
 		local
 			color_hash_value: REAL
 		do
-			color_hash_value := 262144.0*color.red + 4096.0*color.green + 64.0*color.blue
-			Result := (color_hash_value.abs.floor + line_width * 2 + dashed_line_mode).abs
+			color_hash_value :=
+				262144.0*color.red +
+				4096.0*color.green +
+				64.0*color.blue
+			Result := (
+				color_hash_value.abs.floor +
+				line_width * 2 +
+				dashed_line_mode
+			).abs
 		end
 
 	dashed_line_mode: INTEGER
@@ -72,7 +79,8 @@ feature -- Comparison
 
 feature -- Element change
 
-	set_values(a_dashed_mode: INTEGER; a_width: INTEGER; a_color: WEL_COLOR_REF) is
+	set_values (a_dashed_mode: INTEGER; a_width: INTEGER;
+		a_color: WEL_COLOR_REF) is
 			-- Set the style of the pen to `a_dashed_mode',
 			-- the line width to `a_width' and the color
 			-- to `a_color'.

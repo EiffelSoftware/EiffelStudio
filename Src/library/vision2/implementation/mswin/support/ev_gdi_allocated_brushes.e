@@ -1,4 +1,3 @@
---| FIXME Not for release
 --| FIXME NOT_REVIEWED this file has not been reviewed
 indexing
 	description: 
@@ -47,7 +46,8 @@ feature -- Access
 				Result := allocated_objects.item(fake_object).item
 				debug("GDIObjectsCreation")
 					successful_cache := successful_cache + 1
-					io.putstring("retrieved cached version ("+successful_cache.out+"/"+total_cache.out+")%N")
+					io.putstring("retrieved cached version %
+						%("+successful_cache.out+"/"+total_cache.out+")%N")
 				end
 			else
 					-- New brush, not already in our table. So we create it...
@@ -61,7 +61,8 @@ feature -- Access
 				fake_object.set_item(Result)
 				allocated_objects.extend(fake_object, fake_object)
 				debug("GDIObjectsCreation")
-					io.putstring("created ("+successful_cache.out+"/"+total_cache.out+")%N")
+					io.putstring("created %
+						%("+successful_cache.out+"/"+total_cache.out+")%N")
 				end
 			end
 		ensure

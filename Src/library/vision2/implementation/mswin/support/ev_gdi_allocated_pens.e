@@ -1,4 +1,3 @@
---| FIXME Not for release
 --| FIXME NOT_REVIEWED this file has not been reviewed
 indexing
 	description: 
@@ -28,7 +27,8 @@ creation
 
 feature -- Access
 
-	get (a_dashed_mode: INTEGER; a_width: INTEGER; a_color: WEL_COLOR_REF): WEL_PEN is
+	get (a_dashed_mode: INTEGER; a_width: INTEGER;
+			a_color: WEL_COLOR_REF): WEL_PEN is
 		local
 			fake_object: EV_GDI_PEN
 		do
@@ -47,7 +47,8 @@ feature -- Access
 				Result := allocated_objects.item(fake_object).item
 				debug("GDIObjectsCreation")
 					successful_cache := successful_cache + 1
-					io.putstring("retrieved cached version ("+successful_cache.out+"/"+total_cache.out+")%N")
+					io.putstring("retrieved cached version %
+						%("+successful_cache.out+"/"+total_cache.out+")%N")
 				end
 			else
 					-- New pen, not already in our table. So we create it...
@@ -57,7 +58,8 @@ feature -- Access
 				fake_object.set_item(Result)
 				allocated_objects.extend(fake_object, fake_object)
 				debug("GDIObjectsCreation")
-					io.putstring("created ("+successful_cache.out+"/"+total_cache.out+")%N")
+					io.putstring("created %
+						%("+successful_cache.out+"/"+total_cache.out+")%N")
 				end
 			end
 		ensure

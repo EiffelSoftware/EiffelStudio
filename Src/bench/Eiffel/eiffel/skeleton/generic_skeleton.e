@@ -3,11 +3,9 @@
 class GENERIC_SKELETON 
 
 inherit
-
 	SORTED_TWO_WAY_LIST [ATTR_DESC]
 
 creation
-
 	make
 
 feature 

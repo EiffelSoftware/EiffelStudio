@@ -161,16 +161,10 @@ feature {NONE} -- Implementation
 		do
 			if not is_valid_error_string (warn.error_string) then
 				create st.make
-				warn.print_short_help (st)
+				warn.trace (st)
 				create sf.make
 				sf.process_text (st)
 				full_error := clone (sf.output)
-				
-				create st.make
-				warn.build_explain (st)
-				create sf.make
-				sf.process_text (st)
-				full_error.append (sf.output)
 			else
 				full_error := clone (warn.error_string)
 			end
@@ -245,16 +239,10 @@ feature {NONE} -- Implementation
 					full_error := clone (special_err.error_case)
 				else
 					create st.make
-					err.print_short_help (st)
+					err.trace (st)
 					create sf.make
 					sf.process_text (st)
 					full_error := clone (sf.output)
-					
-					create st.make
-					err.build_explain (st)
-					create sf.make
-					sf.process_text (st)
-					full_error.append (sf.output)
 				end
 			else
 				full_error := clone (err.error_string)

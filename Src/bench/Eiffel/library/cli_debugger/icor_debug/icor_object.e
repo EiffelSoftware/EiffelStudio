@@ -156,6 +156,9 @@ feature -- Ref management
 			l_nb_ref := feature {CLI_COM}.release (item)
 			debug ("COM_OBJECT")
 				io.error.put_string ("Quitting [" + generating_type + "].release [" + l_nb_ref.out + "] on " + item.out + "%N")
+			end
+			if l_nb_ref = 0 then
+				item := default_pointer
 			end			
 		end
 		

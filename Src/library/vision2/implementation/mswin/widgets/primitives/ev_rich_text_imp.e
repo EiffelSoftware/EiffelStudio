@@ -449,6 +449,35 @@ feature -- Status report
 			enable_redraw
 		end
 		
+	initialize_for_loading is
+			-- Initialize `Current' for load operations, by performing
+			-- optimizations that prevent the control from slowing down due to
+			-- unecessary optimizations.
+		do
+			internal_actions_blocked := True
+			disable_redraw
+			if selection_change_actions_internal /= Void then
+				selection_change_actions_internal.block
+			end
+			if caret_move_actions_internal /= Void then
+				caret_move_actions_internal.block
+			end
+		end
+		
+	complete_loading is
+			-- Restore `Current' back to its default state before last call
+			-- to `initialize_for_loading'.
+		do
+			if selection_change_actions_internal /= Void then
+				selection_change_actions_internal.resume
+			end
+			if caret_move_actions_internal /= Void then
+				caret_move_actions_internal.resume
+			end
+			internal_actions_blocked := False
+			enable_redraw
+		end
+		
 	paragraph_format_contiguous (start_position, end_position: INTEGER): BOOLEAN is
 			-- Is paragraph formatting from caret_position `start_position' to `end_position' contiguous?
 		local
@@ -1068,7 +1097,7 @@ feature -- Status setting
 				unselect
 			end
 			text_up_to_date := False
-			set_caret_position (original_position)
+			set_caret_position (original_position.min (text_length))
 		end
 
 	enable_word_wrapping is
@@ -1288,7 +1317,7 @@ feature -- Status setting
 			-- Restore caret position stored by last call to `safe_store_caret' and restore
 			-- change events.
 		do	
-			internal_set_caret_position (original_caret_position)
+			internal_set_caret_position (original_caret_position.min (text_length))
 			if must_restore_selection then
 				if last_known_caret_position < original_selection_end then
 						-- The direction of the selection is important when selecting with the keyboard

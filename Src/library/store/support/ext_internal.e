@@ -92,13 +92,24 @@ feature -- Basic operations
 				boolean_ref ?= value
 				local_boolean := boolean_ref.item
 				set_boolean_field (i, object, local_boolean)
-			elseif is_string (value) and ftype = Character_type then
-				local_string1 ?= value
-				if local_string1.count = 1 then
-					local_char := local_string1.item (1)
-					set_character_field (i, object, local_char)
-				else
-					Result := False
+			elseif is_string (value) then
+				if ftype = Character_type then
+					local_string1 ?= value
+					if local_string1.count = 1 then
+						local_char := local_string1.item (1)
+						set_character_field (i, object, local_char)
+					else
+						Result := False
+					end
+				elseif ftype = Boolean_type then
+					local_string1 ?= value
+					if local_string1.count = 1 then
+						local_char := local_string1.item (1)
+						local_boolean := 'T' = local_char
+						set_boolean_field (i, object, local_boolean)
+					else
+						Result := False
+					end
 				end
 			elseif ftype = Reference_type then
 				set_reference_field (i, object, value)

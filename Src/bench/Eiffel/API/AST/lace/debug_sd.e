@@ -44,9 +44,9 @@ feature -- Properties
 
 feature {COMPILER_EXPORTER}
 
-	adapt ( value: OPT_VAL_SD
-			classes:EXTEND_TABLE [CLASS_I, STRING]
-			list: LACE_LIST [ID_SD]) is
+	adapt ( value: OPT_VAL_SD; classes: HASH_TABLE [CLASS_I, STRING];
+			list: LACE_LIST [ID_SD])
+		is
 		local
 			debug_tag: DEBUG_TAG_I
 			tag_value: STRING

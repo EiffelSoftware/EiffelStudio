@@ -79,7 +79,7 @@ feature {COMPILER_EXPORTER} -- Lace compilation
 			vscn: VSCN;
 			ok: BOOLEAN;
 			renamed_classes: HASH_TABLE [STRING, STRING];
-			classes: EXTEND_TABLE [CLASS_I, STRING]
+			classes: HASH_TABLE [CLASS_I, STRING]
 		do
 
 				-- Check first existence of cluster named `cluster_name'.

@@ -54,6 +54,10 @@ feature
 
 	class_type: CLASS_TYPE;
 			-- The class type which we are generating
+			--| will be changed for assertion chaining
+
+	original_class_type: CLASS_TYPE;
+			-- class type we are generating
 
 	generated_file: INDENT_FILE;
 			-- File used for code generation
@@ -329,6 +333,7 @@ feature
 			-- set has_inherited_assertion to True.
 		do
 			set_class_type (t);
+			original_class_type := t;
 			--if System.Redef_feat_server.has (associated_class.id) then
 				--has_inherited_assertion := True
 			--else
@@ -682,6 +687,7 @@ feature
 			local_index_table := Void;
 			associated_register_table := Void;
 			class_type := Void;
+			original_class_type := Void;
 			byte_code := Void;
 		end;
 

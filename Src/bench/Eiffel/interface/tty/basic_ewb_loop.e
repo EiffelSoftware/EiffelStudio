@@ -9,10 +9,34 @@ inherit
 			help_message as loop_help,
 			abbreviation as loop_abb
 		redefine
-			check_permissions
+			check_permissions, make_new_project
 		end;
 
 feature
+
+	make_new_project is
+			-- Initialize project as a new one.
+			--| Redefined because we shouldn't complain if
+			--|`Ace.ace' or `Ace' are not there (as default)
+		local
+			workb: WORKBENCH_I;
+			init_work: INIT_WORKBENCH;
+		do
+				-- Do not do anything if already initialized.
+				-- (Introduced for the command loop)
+			if not initialized.item then
+				!!workb;
+				!!init_work.make (workb);
+				workb.make;
+				if Ace_name /= Void then
+					check_ace_file (Ace_name);
+				end;
+				Workbench.lace.set_file_name (Ace_name);
+					-- The project is now initialized
+					-- (Introduced for the command loop)
+				initialized.put (True);
+			end
+		end
 
 	execute is
 		do

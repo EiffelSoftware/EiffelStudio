@@ -8,20 +8,15 @@ class
 
 inherit
 	SHARED_EIFFEL_PROJECT
-
-	SHARED_RESCUE_STATUS
-	
+	SHARED_RESCUE_STATUS	
 	PROJECT_CONTEXT
 
---	EB_SAVE_FILE_CMD
-	EB_EDITOR_COMMAND
+	EB_SAVE_FILE_CMD
 		redefine
 			tool, execute
 		end
 
 	EB_SYSTEM_TOOL_DATA
-	EB_GENERAL_DATA
-	NEW_EB_CONSTANTS
 
 creation
 	make
@@ -70,7 +65,7 @@ feature -- Execution
 				-- Create a backup of the file in case there will be a problem during the savings.
 			tmp_name := clone (file_name)
 			tmp_name.append (".swp")
-			!! tmp_file.make (tmp_name)
+			create tmp_file.make (tmp_name)
 			create_backup := not tmp_file.exists and then tmp_file.is_creatable
 
 			if not create_backup then
@@ -78,7 +73,7 @@ feature -- Execution
 			end
 
 			if aok then
-				to_write := tool.text_window.text
+				to_write := tool.text_area.text
 				tmp_file.open_write
 				if not to_write.empty then
 					to_write.prune_all ('%R')
@@ -101,17 +96,16 @@ feature -- Execution
 					new_file.delete
 					tmp_file.change_name (file_name)
 				end
+				tool.set_last_saving_date (tmp_file.date)
 
 				if tool.last_format = tool.format_list.text_format then
 					--| Only set the file name if it is an Ace file
 					--| (and not the show_clusters file name).
 					Eiffel_ace.set_file_name (file_name)
 				end
-				tool.text_window.disable_clicking
+				tool.text_area.disable_clicking
 				if tool.stone /= Void and then parse_ace_after_saving then
-					if tool.parse_file then
-						tool.synchronise_stone
-					end
+					tool.parse_file
 				end
 				tool.update_save_symbol
 			end

@@ -35,6 +35,7 @@ inherit
 			set_size,
 			set_minimum_width,
 			set_minimum_height,
+			dimensions_set,
 			child_minwidth_changed,
 			child_minheight_changed,
 			add_child,
@@ -45,7 +46,7 @@ inherit
 
 	WEL_FRAME_WINDOW
 		rename
-			parent as wel_parent,
+			set_parent as wel_set_parent,
 			destroy as wel_destroy
 		undefine
 				-- We undefine the features refined by EV_CONTAINER_IMP
@@ -353,6 +354,17 @@ feature -- Event - command association
 
 feature {EV_WIDGET_IMP} -- Implementation
 
+	dimensions_set (new_width, new_height: INTEGER): BOOLEAN is
+			-- Check if the dimensions of the widget are set to 
+			-- the values given or the minimum values possible 
+			-- for that widget.
+			-- we must redefine it because windows do not
+			-- allow as little windows as we want.
+		do
+			Result := (width = new_width or else width = minimum_width.max (system_metrics.window_minimum_width)) and then
+				  (height = new_height or else height = minimum_height.max (system_metrics.window_minimum_height))
+		end
+
 	child_minwidth_changed (value: INTEGER; the_child: EV_WIDGET_IMP) is
 			-- Resize the container according to the 
 			-- resize of the child
@@ -427,8 +439,7 @@ feature {NONE} -- Implementation
 			-- By default there is no background
 		do
 			if background_color /= Void then
-				!! Result.make_solid (background_color)
---				disable_default_processing
+				!! Result.make_solid (background_color_imp)
 			end
 		end
 
@@ -457,7 +468,7 @@ feature {NONE} -- Implementation
 		do
 			execute_command (Cmd_size, Void)
 			if shown and then child /= Void then
-				child.parent_ask_resize (a_width, a_height)
+				child.parent_ask_resize (client_width, client_height)
 			end
 		end
 

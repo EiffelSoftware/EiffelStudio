@@ -3500,7 +3500,7 @@ rt_private void mark_new_generation(EIF_CONTEXT_NOARG)
 	overflow_stack_depth = 0;
 
 	/* First deal with the root object. If it is not old, then mark it */
-	if (!(HEADER(root_obj)->ov_flags & EO_OLD))
+	if (root_obj && !(HEADER(root_obj)->ov_flags & EO_OLD))
 		root_obj = GEN_SWITCH(&root_obj);
 
 	/* Deal with remembered set, which records the addresses of all the

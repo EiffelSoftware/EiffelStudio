@@ -13,6 +13,8 @@ indexing
 deferred class 
 	EV_APPLICATION
 
+--|FIXME Provide access to modifier key state (Shift, Alt, Meta ect).
+
 inherit
 	EV_ANY
 		redefine
@@ -200,6 +202,9 @@ end -- class EV_APPLICATION
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.20  2000/03/27 19:05:12  oconnor
+--| added fixme
+--|
 --| Revision 1.19  2000/03/27 19:00:31  oconnor
 --| added comment
 --|

@@ -35,7 +35,7 @@ feature {NONE}
 
 	make (a_screen: SCREEN) is
 		local
-			form: FORM;
+			top_form, form: FORM;
 			close_b: CLOSE_WINDOW_BUTTON;
 			del_com: DELETE_WINDOW;
 			ok_b: OK_BUTTON;
@@ -44,26 +44,30 @@ feature {NONE}
 			-- make the form
 			shell_make (Widget_names.namer_window, a_screen)
 			!! form.make (Widget_names.form, Current);
-			!! focus_label.make (form);
-			!! close_b.make (Current, form, focus_label);
-			!! namer_hole.make (Current, form);
-			!! ok_b.make (Current, form);
+			!! top_form.make (Widget_names.form, form);
+			!! focus_label.make (top_form);
+			!! close_b.make (Current, top_form, focus_label);
+			!! namer_hole.make (Current, top_form);
+			!! ok_b.make (Current, top_form);
 			!! text.make (Widget_names.textfield, form)
 
-			form.attach_top (namer_hole, 0)
-			form.attach_top (ok_b, 0)
-			form.attach_top (focus_label, 0)
-			form.attach_left (namer_hole, 0)
-			form.attach_right_widget (ok_b, focus_label, 0)
-			form.attach_left_widget (namer_hole, focus_label, 0)
-			form.attach_right_widget (close_b, ok_b, 0)
-			form.attach_right (close_b, 0);
+			top_form.attach_top (namer_hole, 0)
+			top_form.attach_top (ok_b, 0)
+			top_form.attach_top (focus_label, 0)
+			top_form.attach_left (namer_hole, 0)
+			top_form.attach_right_widget (ok_b, focus_label, 0)
+			top_form.attach_left_widget (namer_hole, focus_label, 0)
+			top_form.attach_right_widget (close_b, ok_b, 0)
+			top_form.attach_right (close_b, 0);
+			top_form.attach_bottom (focus_label, 0)
+			top_form.attach_bottom (namer_hole, 0)
+			top_form.attach_bottom (ok_b, 0)
+			top_form.attach_bottom (close_b, 0)
+			form.attach_top (top_form, 0);
+			form.attach_right (top_form, 0);
+			form.attach_left (top_form, 0);
 			form.attach_left(text, 2)
 			form.attach_right(text, 2)
-			form.attach_top_widget (focus_label, text, 0)
-			form.attach_top_widget (namer_hole, text, 0)
-			form.attach_top_widget (ok_b, text, 2)
-			form.attach_top_widget (close_b, text, 2)
 			form.attach_bottom (text, 2)
 
 			-- add callbacks and modal behaviour
@@ -79,7 +83,8 @@ feature
 
 	set_namable (nam: like namable) is
 		require
-			valid_nam: nam /= Void
+			valid_nam: nam /= Void;
+			is_able_to_be_named: nam.is_able_to_be_named
 		do
 			namable := nam;
 			update_name;
@@ -87,7 +92,8 @@ feature
 
 	popup_with (nam: like namable) is
 		require
-			valid_nam: nam /= Void
+			valid_nam: nam /= Void;
+			is_able_to_be_named: nam.is_able_to_be_named
 		do
 			set_namable (nam);
 			set_x_y (screen.x, screen.y);

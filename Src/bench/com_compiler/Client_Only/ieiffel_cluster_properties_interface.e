@@ -157,13 +157,6 @@ feature -- Status Report
 			Result := True
 		end
 
-	set_parent_name_user_precondition (return_value: STRING): BOOLEAN is
-			-- User-defined preconditions for `set_parent_name'.
-			-- Redefine in descendants if needed.
-		do
-			Result := True
-		end
-
 	has_parent_user_precondition: BOOLEAN is
 			-- User-defined preconditions for `has_parent'.
 			-- Redefine in descendants if needed.
@@ -398,15 +391,6 @@ feature -- Basic Operations
 			-- Name of the parent cluster.
 		require
 			parent_name_user_precondition: parent_name_user_precondition
-		deferred
-
-		end
-
-	set_parent_name (return_value: STRING) is
-			-- Name of the parent cluster.
-			-- `return_value' [in].  
-		require
-			set_parent_name_user_precondition: set_parent_name_user_precondition (return_value)
 		deferred
 
 		end

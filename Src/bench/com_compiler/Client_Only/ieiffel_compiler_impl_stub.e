@@ -30,12 +30,6 @@ feature -- Access
 			-- Put Implementation here.
 		end
 
-	ise_eiffel: STRING is
-			-- Return ISE_EIFFEL environment var.
-		do
-			-- Put Implementation here.
-		end
-
 	freeze_command_name: STRING is
 			-- Eiffel Freeze command name
 		do
@@ -62,6 +56,12 @@ feature -- Access
 
 	is_output_piped: BOOLEAN is
 			-- Is compiler output sent to pipe `output_pipe_name'
+		do
+			-- Put Implementation here.
+		end
+
+	can_run: BOOLEAN is
+			-- Can product be run? (i.e. is it activated or was run less than 10 times)
 		do
 			-- Put Implementation here.
 		end

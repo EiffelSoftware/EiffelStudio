@@ -43,12 +43,6 @@ feature -- Access
 			Result := ccom_compiler_version (initializer)
 		end
 
-	ise_eiffel: STRING is
-			-- Return ISE_EIFFEL environment var.
-		do
-			Result := ccom_ise_eiffel (initializer)
-		end
-
 	freeze_command_name: STRING is
 			-- Eiffel Freeze command name
 		do
@@ -77,6 +71,12 @@ feature -- Access
 			-- Is compiler output sent to pipe `output_pipe_name'
 		do
 			Result := ccom_is_output_piped (initializer)
+		end
+
+	can_run: BOOLEAN is
+			-- Can product be run? (i.e. is it activated or was run less than 10 times)
+		do
+			Result := ccom_can_run (initializer)
 		end
 
 	call_back_on_ieiffel_compiler_events_enabled: BOOLEAN
@@ -237,12 +237,6 @@ feature {NONE}  -- Externals
 			"C++ [ecom_eiffel_compiler::CEiffelCompiler %"ecom_eiffel_compiler_CEiffelCompiler.h%"](): EIF_REFERENCE"
 		end
 
-	ccom_ise_eiffel (cpp_obj: POINTER): STRING is
-			-- Return ISE_EIFFEL environment var.
-		external
-			"C++ [ecom_eiffel_compiler::CEiffelCompiler %"ecom_eiffel_compiler_CEiffelCompiler.h%"](): EIF_REFERENCE"
-		end
-
 	ccom_expand_path (cpp_obj: POINTER; a_path: STRING): STRING is
 			-- Takes a path and expands it using the env vars.
 		external
@@ -293,6 +287,12 @@ feature {NONE}  -- Externals
 
 	ccom_is_output_piped (cpp_obj: POINTER): BOOLEAN is
 			-- Is compiler output sent to pipe `output_pipe_name'
+		external
+			"C++ [ecom_eiffel_compiler::CEiffelCompiler %"ecom_eiffel_compiler_CEiffelCompiler.h%"](): EIF_BOOLEAN"
+		end
+
+	ccom_can_run (cpp_obj: POINTER): BOOLEAN is
+			-- Can product be run? (i.e. is it activated or was run less than 10 times)
 		external
 			"C++ [ecom_eiffel_compiler::CEiffelCompiler %"ecom_eiffel_compiler_CEiffelCompiler.h%"](): EIF_BOOLEAN"
 		end

@@ -72,6 +72,30 @@ feature -- Access
 			-- Put Implementation here.
 		end
 
+	inherited_features: IENUM_FEATURE_INTERFACE is
+			-- List of class inherited features.
+		do
+			-- Put Implementation here.
+		end
+
+	inherited_feature_count: INTEGER is
+			-- Number of inherited features.
+		do
+			-- Put Implementation here.
+		end
+
+	creation_routines: IENUM_FEATURE_INTERFACE is
+			-- List of class creation routines.
+		do
+			-- Put Implementation here.
+		end
+
+	creation_routine_count: INTEGER is
+			-- Number of creation routines.
+		do
+			-- Put Implementation here.
+		end
+
 	clients: IENUM_EIFFEL_CLASS_INTERFACE is
 			-- List of class clients.
 		do

@@ -38,6 +38,15 @@ feature -- Basic Operations
 			-- Put Implementation here.
 		end
 
+	add_local_assembly (assembly_prefix: STRING; cluster_name: STRING; a_path: STRING) is
+			-- Add a local assembly to the project.
+			-- `assembly_prefix' [in].  
+			-- `cluster_name' [in].  
+			-- `a_path' [in].  
+		do
+			-- Put Implementation here.
+		end
+
 	remove_assembly (assembly_identifier: STRING) is
 			-- Remove an assembly from the project.
 			-- `assembly_identifier' [in].  
@@ -102,13 +111,6 @@ feature -- Basic Operations
 
 	is_valid_prefix (assembly_prefix: STRING): BOOLEAN is
 			-- Is 'prefix' a valid assembly prefix
-			-- `assembly_prefix' [in].  
-		do
-			-- Put Implementation here.
-		end
-
-	is_prefix_allocated (assembly_prefix: STRING): BOOLEAN is
-			-- Has the 'prefix' already been allocated to another assembly
 			-- `assembly_prefix' [in].  
 		do
 			-- Put Implementation here.

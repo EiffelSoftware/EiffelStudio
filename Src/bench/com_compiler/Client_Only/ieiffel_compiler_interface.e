@@ -73,13 +73,6 @@ feature -- Status Report
 			Result := True
 		end
 
-	ise_eiffel_user_precondition: BOOLEAN is
-			-- User-defined preconditions for `ise_eiffel'.
-			-- Redefine in descendants if needed.
-		do
-			Result := True
-		end
-
 	expand_path_user_precondition (a_path: STRING): BOOLEAN is
 			-- User-defined preconditions for `expand_path'.
 			-- Redefine in descendants if needed.
@@ -138,6 +131,13 @@ feature -- Status Report
 
 	is_output_piped_user_precondition: BOOLEAN is
 			-- User-defined preconditions for `is_output_piped'.
+			-- Redefine in descendants if needed.
+		do
+			Result := True
+		end
+
+	can_run_user_precondition: BOOLEAN is
+			-- User-defined preconditions for `can_run'.
 			-- Redefine in descendants if needed.
 		do
 			Result := True
@@ -217,14 +217,6 @@ feature -- Basic Operations
 
 		end
 
-	ise_eiffel: STRING is
-			-- Return ISE_EIFFEL environment var.
-		require
-			ise_eiffel_user_precondition: ise_eiffel_user_precondition
-		deferred
-
-		end
-
 	expand_path (a_path: STRING): STRING is
 			-- Takes a path and expands it using the env vars.
 			-- `a_path' [in].  
@@ -296,6 +288,14 @@ feature -- Basic Operations
 			-- Is compiler output sent to pipe `output_pipe_name'
 		require
 			is_output_piped_user_precondition: is_output_piped_user_precondition
+		deferred
+
+		end
+
+	can_run: BOOLEAN is
+			-- Can product be run? (i.e. is it activated or was run less than 10 times)
+		require
+			can_run_user_precondition: can_run_user_precondition
 		deferred
 
 		end

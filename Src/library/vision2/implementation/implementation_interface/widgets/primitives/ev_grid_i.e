@@ -889,11 +889,19 @@ feature {EV_GRID_DRAWER_I, EV_GRID_COLUMN_I, EV_GRID_ROW_I, EV_DRAWABLE_GRID_ITE
 	drawable: EV_DRAWING_AREA
 		-- Drawing area for `Current' on which all drawing operations are performed.
 		
-	virtual_x_position: INTEGER
-			-- Virtual X coordinate of `viewport' relative to left hand edge of grid.
+	internal_client_x: INTEGER
+		-- X coordinate of client area relative to the left edge of the virtual
+		-- area which `Current' comprises.
+
+	internal_client_y: INTEGER
+		-- Y coordinate of client area relative to the top edge of the virtual
+		-- area which `Current' comprises.
+			
+	internal_client_width: INTEGER
+		-- Width of client area in which items are displayed.
 		
-	virtual_y_position: INTEGER
-			-- Virtual Y coordinate of `viewport' relative to top edge of grid.
+	internal_client_height: INTEGER
+		-- Height of client area in which items are displayed.
 
 	viewport: EV_VIEWPORT
 		-- Viewport containing `header' and `drawable', permitting the header to be offset
@@ -1243,27 +1251,27 @@ feature {NONE} -- Drawing implementation
 		do
 			if is_vertical_scrolling_per_item then
 				if is_row_height_fixed then
-					virtual_y_position := row_height * a_value
+					internal_client_y := row_height * a_value
 				else
-					virtual_y_position := row_offsets.i_th (a_value + 1)
+					internal_client_y := row_offsets.i_th (a_value + 1)
 				end
 			else
-				virtual_y_position := a_value
+				internal_client_y := a_value
 			end
 			buffer_space := (buffered_drawable_size - viewport.height)
 			current_buffer_position := viewport.y_offset
 			
-			if (virtual_y_position > last_vertical_scroll_bar_value) and ((virtual_y_position - last_vertical_scroll_bar_value) + (current_buffer_position)) >= buffer_space then
+			if (internal_client_y > last_vertical_scroll_bar_value) and ((internal_client_y - last_vertical_scroll_bar_value) + (current_buffer_position)) >= buffer_space then
 				viewport.set_y_offset (0)
 				redraw_client_area
-			elseif (virtual_y_position < last_vertical_scroll_bar_value) and ((virtual_y_position - last_vertical_scroll_bar_value) + (current_buffer_position)) <= 0 then
+			elseif (internal_client_y < last_vertical_scroll_bar_value) and ((internal_client_y - last_vertical_scroll_bar_value) + (current_buffer_position)) <= 0 then
 				viewport.set_y_offset (buffer_space)
 				redraw_client_area
 			else
-				viewport.set_y_offset (current_buffer_position + virtual_y_position - last_vertical_scroll_bar_value)
+				viewport.set_y_offset (current_buffer_position + internal_client_y - last_vertical_scroll_bar_value)
 			end
 			
-			last_vertical_scroll_bar_value := virtual_y_position
+			last_vertical_scroll_bar_value := internal_client_y
 		end
 
 	horizontal_scroll_bar_changed (a_value: INTEGER) is
@@ -1275,26 +1283,26 @@ feature {NONE} -- Drawing implementation
 			current_buffer_position: INTEGER
 		do
 			if is_horizontal_scrolling_per_item then
-				virtual_x_position := column_offsets.i_th (a_value + 1)
+				internal_client_x := column_offsets.i_th (a_value + 1)
 			else
-				virtual_x_position := a_value
+				internal_client_x := a_value
 			end
 			
 			buffer_space := (buffered_drawable_size - viewport.width)
 			current_buffer_position := viewport.x_offset
 			
-			if (virtual_x_position > last_horizontal_scroll_bar_value) and ((virtual_x_position - last_horizontal_scroll_bar_value) + (current_buffer_position)) >= buffer_space then
+			if (internal_client_x > last_horizontal_scroll_bar_value) and ((internal_client_x - last_horizontal_scroll_bar_value) + (current_buffer_position)) >= buffer_space then
 				viewport.set_x_offset (0)
 				redraw_client_area
-			elseif (virtual_x_position < last_horizontal_scroll_bar_value) and ((virtual_x_position - last_horizontal_scroll_bar_value) + (current_buffer_position)) < 0 then
+			elseif (internal_client_x < last_horizontal_scroll_bar_value) and ((internal_client_x - last_horizontal_scroll_bar_value) + (current_buffer_position)) < 0 then
 				viewport.set_x_offset (buffer_space)
 				redraw_client_area
 			else
-				viewport.set_x_offset (current_buffer_position + virtual_x_position - last_horizontal_scroll_bar_value)
+				viewport.set_x_offset (current_buffer_position + internal_client_x - last_horizontal_scroll_bar_value)
 			end
-			header_viewport.set_x_offset (virtual_x_position)
+			header_viewport.set_x_offset (internal_client_x)
 			
-			last_horizontal_scroll_bar_value := virtual_x_position
+			last_horizontal_scroll_bar_value := internal_client_x
 		end
 		
 	last_horizontal_scroll_bar_value: INTEGER
@@ -1619,10 +1627,10 @@ invariant
 	drawer_not_void: is_initialized implies drawer /= Void
 	drawable_not_void: is_initialized implies drawable /= Void
 	header_positioned_corrently: is_initialized implies header_viewport.x_offset >= 0 and header_viewport.y_offset = 0
-	virtual_x_position_valid_while_vertical_scrollbar_hidden: is_initialized and then not vertical_scroll_bar.is_show_requested implies virtual_x_position = 0
-	virtual_x_position_valid_while_vertical_scrollbar_shown: is_initialized and then vertical_scroll_bar.is_show_requested implies virtual_x_position >= 0
-	virtual_y_position_valid_while_horizontal_scrollbar_hidden: is_initialized and then not horizontal_scroll_bar.is_show_requested implies virtual_y_position = 0
-	virtual_y_position_valid_while_horizontal_scrollbar_shown: is_initialized and then horizontal_scroll_bar.is_show_requested implies virtual_y_position >= 0
+	internal_client_x_valid_while_vertical_scrollbar_hidden: is_initialized and then not vertical_scroll_bar.is_show_requested implies internal_client_x = 0
+	internal_client_x_valid_while_vertical_scrollbar_shown: is_initialized and then vertical_scroll_bar.is_show_requested implies internal_client_x >= 0
+	internal_client_y_valid_while_horizontal_scrollbar_hidden: is_initialized and then not horizontal_scroll_bar.is_show_requested implies internal_client_y = 0
+	internal_client_y_valid_while_horizontal_scrollbar_shown: is_initialized and then horizontal_scroll_bar.is_show_requested implies internal_client_y >= 0
 	row_heights_fixed_implies_row_offsets_void: is_row_height_fixed implies row_offsets = Void
 	row_lists_count_equal: is_initialized implies internal_row_data.count = grid_rows.count
 	dynamic_modes_mutually_exclusive: not (is_content_completely_dynamic and is_content_partially_dynamic)

@@ -262,10 +262,15 @@ feature {NONE} -- WEL Implementation
 			-- Propagate `keys', `x_pos' and `y_pos' to the appropriate item event.
 		local
 			it: EV_TREE_ITEM_IMP
+			pt: WEL_POINT
+			offsets: TUPLE [INTEGER, INTEGER]
 		do
+			pt := client_to_screen (x_pos, y_pos)
 			it := find_item_at_position (x_pos, y_pos)
 			if it /= Void then
-				it.interface.pointer_button_press_actions.call ([x_pos, y_pos, button, 0.0, 0.0, 0.0, 0, 0])
+				offsets := it.relative_position
+				it.interface.pointer_button_press_actions.call ([x_pos - offsets.integer_arrayed @ 1 + 1,
+				y_pos - offsets.integer_arrayed @ 2, button, 0.0, 0.0, 0.0, pt.x, pt.y])
 			end
 		end
 
@@ -337,7 +342,6 @@ feature {NONE} -- WEL Implementation
 	on_size (size_type, a_height, a_width: INTEGER) is
 			-- List resized.
 		do
-			--Precursor (size_type, a_height, a_width)
 			interface.resize_actions.call ([screen_x, screen_y, a_width, a_height])
 		end
 
@@ -386,10 +390,15 @@ feature {NONE} -- WEL Implementation
 			-- Executed when the mouse move.
 		local
 			it: EV_TREE_ITEM_IMP
+			pt: WEL_POINT
+			offsets: TUPLE [INTEGER, INTEGER]
 		do
 			it := find_item_at_position (x_pos, y_pos)
+			pt := client_to_screen (x_pos, y_pos)
 			if it /= Void then
-				it.interface.pointer_motion_actions.call ([x_pos, y_pos, 0.0, 0.0, 0.0, 0, 0])
+				offsets := it.relative_position
+				it.interface.pointer_motion_actions.call ([x_pos - offsets.integer_arrayed @ 1 + 1,
+				y_pos - offsets.integer_arrayed @ 2, 0.0, 0.0, 0.0, pt.x, pt.y])
 			end
 			{EV_PRIMITIVE_IMP} Precursor (keys, x_pos, y_pos)
 		end
@@ -468,6 +477,9 @@ end -- class EV_TREE_IMP
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.48  2000/03/13 20:50:03  rogers
+--| Tree item's events now are called with the relative x and relative y positions instead of 0 0..
+--|
 --| Revision 1.47  2000/03/13 18:30:56  rogers
 --| Removed old command association. Connected the select, deselect, collapse and expand events to the tree, and also propogated them to the items of the tree.
 --|

@@ -262,6 +262,7 @@ feature -- Window Implementation
 	destroy is
 			-- Destroy Current.
 		do
+			unregister_holes;
 			eb_shell.destroy
 		end;
 

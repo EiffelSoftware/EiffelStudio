@@ -1059,13 +1059,13 @@ int op;
 		return (EIF_BOOLEAN) ((mode & S_ISUID) ? '\01' : '\0');
 #endif
 	case 4: /* Is file setgid */
-#ifdef EIF_WIN32
+#if defined EIF_WIN32 || defined EIF_OS2
 		return (EIF_BOOLEAN) ('\0');
 #else
 		return (EIF_BOOLEAN) ((mode & S_ISGID) ? '\01' : '\0');
 #endif
 	case 5: /* Is file sticky */
-#ifdef EIF_WIN32
+#if defined EIF_WIN32 || defined EIF_OS2
 		return (EIF_BOOLEAN) ('\0');
 #else
 		return (EIF_BOOLEAN) ((mode & S_ISVTX) ? '\01' : '\0');
@@ -1322,8 +1322,13 @@ int flag;		/* Add (1) or remove (0) permissions */
 	case 'u':
 		while (*what)
 			switch (*what++) {
-#ifdef EIF_WIN32
+#if defined EIF_WIN32
 			case 's', 'r', 'w', 'x': break;
+#elif defined EIF_OS2
+			case 's': break;
+			case 'r': break;
+			case 'w': break;
+			case 'x': break;
 #else
 			case 's':
 				if (flag) fmode |= S_ISUID; else fmode &= ~S_ISUID;
@@ -1714,7 +1719,7 @@ struct utimbuf *times;
 #endif
 
 
-#ifndef HAS_LINK
+#ifndef HAS_UNLINK
 #ifndef unlink
 
 int unlink(path)

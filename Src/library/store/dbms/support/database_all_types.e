@@ -4,7 +4,7 @@ indexing
 	revision: "$Revision$"
 
 class 
-	DATABASE_ALL_TYPES [G -> DATABASE]
+	DATABASE_ALL_TYPES [G -> DATABASE create default_create end]
 
 inherit
 
@@ -60,19 +60,19 @@ feature -- Element change
 		local
 			a_db_type: DB_TYPE
 		once
-			!DATABASE_STRING[G]!a_db_type
+			!DATABASE_STRING [G]!a_db_type
 			register_type (a_db_type)
-			!DATABASE_CHARACTER[G]!a_db_type
+			!DATABASE_CHARACTER [G]!a_db_type
 			register_type (a_db_type)
-			!DATABASE_INTEGER[G]!a_db_type
+			!DATABASE_INTEGER [G]!a_db_type
 			register_type (a_db_type)
-			!DATABASE_BOOLEAN[G]!a_db_type
+			!DATABASE_BOOLEAN [G]!a_db_type
 			register_type (a_db_type)
-			!DATABASE_REAL[G]!a_db_type
+			!DATABASE_REAL [G]!a_db_type
 			register_type (a_db_type)
-			!DATABASE_DOUBLE[G]!a_db_type
+			!DATABASE_DOUBLE [G]!a_db_type
 			register_type (a_db_type)
-			!DATABASE_DATETIME[G]!a_db_type
+			!DATABASE_DATETIME [G]!a_db_type
 			register_type (a_db_type)
 		ensure
 			positive_count: count > 0

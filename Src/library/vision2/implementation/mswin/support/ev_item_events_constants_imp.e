@@ -20,6 +20,10 @@ feature -- General events for items
 	Cmd_item_dblclk: INTEGER is 3
 			-- The user dblclk on the item
 
+	Cmd_item_subtree: INTEGER is 3
+			-- The user has expanded or collapsed a subtree
+			-- item
+
 feature -- Upper constants value
 
 	item_command_count: INTEGER is 3

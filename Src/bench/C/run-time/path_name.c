@@ -36,8 +36,7 @@ EIF_BOOLEAN eif_is_volume_name_valid (EIF_POINTER);
 
 /* Validity */
 
-EIF_BOOLEAN eif_is_directory_valid(p)
-EIF_POINTER p;
+EIF_BOOLEAN eif_is_directory_valid(EIF_POINTER p)
 {
 		/* Test to see if `p' is a well constructed directory path */
 #if defined EIF_WINDOWS || defined EIF_OS2
@@ -105,8 +104,7 @@ EIF_POINTER p;
 #endif
 }
 
-EIF_BOOLEAN eif_is_volume_name_valid (p)
-EIF_POINTER p;
+EIF_BOOLEAN eif_is_volume_name_valid (EIF_POINTER p)
 {
 #ifdef __WINDOWS_386__
 	int drive;
@@ -141,8 +139,7 @@ EIF_POINTER p;
 #endif
 }
 
-EIF_BOOLEAN eif_is_file_name_valid (p)
-EIF_POINTER p;
+EIF_BOOLEAN eif_is_file_name_valid (EIF_POINTER p)
 {
 #if defined EIF_WINDOWS || defined EIF_OS2
 #ifdef EIF_WIN_31
@@ -457,6 +454,7 @@ EIF_REFERENCE eif_extracted_paths(EIF_POINTER p)
 {
 	/* Returns p's directory components as a manifest array */
  
+	EIF_GET_CONTEXT
 	EIF_REFERENCE array;
  
 	array = emalloc(arr_dtype);
@@ -470,5 +468,6 @@ EIF_REFERENCE eif_extracted_paths(EIF_POINTER p)
 	/* Unix */
 	implement
 #endif
+	EIF_END_GET_CONTEXT
 }
 

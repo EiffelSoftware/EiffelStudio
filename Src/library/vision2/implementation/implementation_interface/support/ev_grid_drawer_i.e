@@ -110,7 +110,7 @@ feature -- Basic operations
 			internal_client_y: INTEGER
 			vertical_buffer_offset: INTEGER
 			current_row: EV_GRID_ROW_I
-			visible_physical_row_indexes: SPECIAL [INTEGER]
+--			visible_physical_row_indexes: SPECIAL [INTEGER]
 			first_row_index: INTEGER
 			last_row_index: INTEGER
 			first_row_index_set, last_row_index_set: BOOLEAN
@@ -183,11 +183,8 @@ feature -- Basic operations
 							Result.extend (row_counter)
 						end
 
-						if not last_row_index_set and then invalid_y_end < i then
+						if not last_row_index_set and then invalid_y_end <= i + current_height then
 							last_row_index := row_counter
-							if row_counter + 1 <= grid.row_count then
-								Result.extend (row_counter + 1)
-							end
 							last_row_index_set := True
 						end
 						if current_row.subrow_count > 0 and not current_row.is_expanded then

@@ -18,6 +18,11 @@ inherit
 			default_create
 		end
 		
+	GB_SHARED_OBJECT_HANDLER	
+		undefine
+			default_create
+		end
+		
 feature -- Access
 
 	ev_type: EV_BOX
@@ -135,16 +140,28 @@ feature {NONE} -- Implementation
 			-- Change the expanded status of `w'.
 		local
 			box_parent: EV_BOX
+			child_object: GB_OBJECT
 		do
 			box_parent ?= w.parent
 			check
 				parent_is_box: box_parent /= Void
 			end
+			child_object := Object_handler.object_from_display_widget (w)
+				-- As this is called twice, once for the display, and once
+				-- for the builder window, `child_object' may be `Void'.
+				-- We only need to perform the setting if `child_object' is non `Void'.
 			if check_button.is_selected then
 				box_parent.enable_item_expand (w)
+				if child_object /= Void then
+					child_object.enable_expanded_in_box
+				end
 			else
 				box_parent.disable_item_expand (w)
+				if child_object /= Void then
+					child_object.disable_expanded_in_box
+				end
 			end
+			
 			enable_project_modified
 		end
 

@@ -10,7 +10,8 @@ inherit
 	COMMAND_W
 		redefine
 			execute
-		end
+		end;
+	SHARED_TABS
 
 feature 
 

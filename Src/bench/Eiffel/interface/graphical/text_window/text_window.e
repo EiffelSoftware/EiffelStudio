@@ -3,13 +3,14 @@ class TEXT_WINDOW
 
 inherit
 
-	TAB_TEXT
+	SCROLLED_T
 		rename
-			execute as tab_execute,
-			count as size,
+			count as st_size,
 			make as text_create,
 			lower as lower_window,
-			set_cursor_position as tab_text_set_cursor_position
+			set_cursor_position as st_set_cursor_position
+		export
+			{NONE} st_size, st_set_cursor_position
 		undefine
 			copy, setup, consistent, is_equal
 		end;
@@ -19,13 +20,19 @@ inherit
 		end;
 	COMMAND_W
 		undefine
-			copy, setup, consistent, is_equal, context_data_useful
+			copy, setup, consistent, is_equal
 		redefine
-			execute
-		select
 			execute
 		end;
 	SHARED_ACCELERATOR
+		undefine
+			copy, setup, consistent, is_equal
+		end;
+	SHARED_EXEC_ENVIRONMENT
+		undefine
+			copy, setup, consistent, is_equal
+		end;
+	SHARED_TABS
 		undefine
 			copy, setup, consistent, is_equal
 		end
@@ -44,6 +51,7 @@ feature
 			set_mode_for_editing;
 			add_callbacks;
 			upper := -1 			-- Init clickable array.
+			set_default_callbacks;
 			set_accelerators
 		end;
 
@@ -369,12 +377,19 @@ feature {NONE}
 
 feature 
 
+	size: INTEGER is
+			-- Number of character in the text
+			-- (1 tab = 1 character)
+		do
+			Result := st_size
+		end;
+
 	set_cursor_position (a_position: INTEGER) is
 			-- Set `cursor_position' to `a_position' if the new position
 			-- is not out of bounds.
 		do
-			if a_position <= size then
-				tab_text_set_cursor_position (a_position)
+			if a_position <= st_size then
+				st_set_cursor_position (a_position)
 			end
 		end;
 
@@ -385,7 +400,7 @@ feature
 		local
 			cur_pos: INTEGER
 		do
-			cur_pos := unexpanded_position (character_position (screen.x - real_x, screen.y - real_y));
+			cur_pos := character_position (screen.x-real_x, screen.y-real_y);
 			update_focus (cur_pos);
 			highlight_focus
 		end;
@@ -462,7 +477,6 @@ feature {NONE}
 			cursor_x, cursor_y: INTEGER;
 			start_pos: INTEGER
 		do
-			tab_execute (argument);
 			if not changed then
 				if argument = modify_event then
 					if not history.islast then
@@ -475,7 +489,7 @@ feature {NONE}
 					end;
 					if clickable_count /= 0 then
 						change_focus;
-						start_pos := expanded_position (focus_start);
+						start_pos := focus_start;
 						cursor_x  := x_coordinate (start_pos) + real_x;
 						cursor_y := y_coordinate (start_pos) + real_y;
 						tool.transport (focus, current, cursor_x, cursor_y)
@@ -494,17 +508,42 @@ feature {NONE}
 
 feature {NONE} -- Callback values
 
-	grabber: ANY is
-		once
-			!! Result
-		end;
-	new_tooler: ANY is
-		once
-			!! Result
+	grabber: ANY is once !! Result end;
+	new_tooler: ANY is once !! Result end;
+	modify_event: ANY is once !!Result end;
+
+	set_default_callbacks is
+		do
+			add_modify_action (Current, modify_event)
 		end;
 
+feature -- Tabulations
+
+	tab_length: INTEGER;
+			-- Number of blank characters in a tabulation
+
+	set_tab_length (new_length: INTEGER) is
+			-- Assign `new_length' to `tab_length'.
+		require
+			valid_length: valid_tab_step (new_length)
+		do
+			tab_length := new_length
+		ensure
+			assigned: tab_length = new_length;
+			cursor_not_moved: cursor_position = old cursor_position
+		end;
+
+	set_tab_length_to_default is
+			-- Set `tab_length' to the default tab length.
+		do
+			if tab_length /= default_tab_length.item then
+				set_tab_length (default_tab_length.item)
+			end
+		end;
+	
 invariant
 
-	history_exists: history /= Void
+	history_exists: history /= Void;
+	valid_tab_length: valid_tab_step (tab_length)
 
 end

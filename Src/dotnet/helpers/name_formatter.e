@@ -6,33 +6,47 @@ class
 
 feature -- Basic Operations
 
-	formatted_type_name (name: STRING; depth: INTEGER): STRING is
+	formatted_type_name (name: STRING; used_names: HASH_TABLE [STRING, STRING]): STRING is
 			-- Format `name' to Eiffel conventions.
-			-- Use last `depth' . in .NET name.
 		require
 			non_void_name: name /= Void
 			valid_name: not name.is_empty and then name.item (1) /= '.'
-			valid_depth: depth >= 0 and depth <= name.occurrences ('.')
+			used_names_not_void: used_names /= Void
 		local
-			partial: STRING
-			i, index, count: INTEGER
+			i, index, pos, count: INTEGER
+			sb: SYSTEM_STRING
 		do
-			count := name.count
-			index := name.last_index_of ('.', count)
+			index := name.occurrences ('.')
 			if index > 0 then
 				from
-					i := 1
+					count := name.count
+					pos := name.last_index_of ('.', count)
+					Result := full_formatted_type_name (name.substring (pos + 1, count))
+					i := 2
 				until
-					i > depth
+					i > index or else not used_names.has (Result)
 				loop
-					index := name.last_index_of ('.', index - 1)
+					pos := name.last_index_of ('.', pos - 1)
+					Result := full_formatted_type_name (name.substring (pos + 1, count))
 					i := i + 1
 				end
-				partial := name.substring (index + 1, count)
 			else
-				partial := name
+				Result := full_formatted_type_name (name)
 			end
-			Result := full_formatted_type_name (partial)
+			if used_names.has (Result) then
+				from
+					count := 2
+				until
+					not used_names.has (Result)
+				loop
+					sb := Result.to_cil.trim_end (Digits)
+					create Result.make_from_cil (sb)
+					Result.append ("_")
+					Result.append (count.out)
+					count := count + 1
+				end
+			end
+			used_names.put (Result, Result)
 		ensure
 			non_void_name: Result /= Void
 		end
@@ -438,6 +452,12 @@ feature {NONE} -- Constants
 	native_array_string: STRING is "NATIVE_ARRAY ["
 	in_string: STRING is "_IN_"
 			-- To save time in creating those strings in current class.
+
+	Digits: NATIVE_ARRAY [CHARACTER] is
+			-- Digits
+		once
+			Result := (<<'0','1','2','3','4','5','6','7','8','9','_'>>).to_cil
+		end
 
 end -- class NAME_FORMATTER
 

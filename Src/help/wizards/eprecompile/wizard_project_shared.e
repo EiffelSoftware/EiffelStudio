@@ -6,7 +6,7 @@ indexing
 
 class
 	WIZARD_PROJECT_SHARED
-
+	
 feature {NONE} -- Constants
 
 	Default_precompiled_location: DIRECTORY_NAME is
@@ -33,25 +33,13 @@ feature {NONE} -- Constants
 	Eiffel_installation_dir_name: STRING is
 			-- EIFFEL5 name.
 		once
-			Result := (create {EXECUTION_ENVIRONMENT}).get ("EIFFEL5")
-		ensure
-			Result_not_void: Result /= Void
+			Result := execution_environment.get ("ISE_EIFFEL")
 		end
 
 	Eiffel_platform: STRING is
 			-- PLATFORM name.
-		local
-			ev_env: EV_ENVIRONMENT
 		once
-			Result := (create {EXECUTION_ENVIRONMENT}).get ("PLATFORM")
-			if Result = Void then 
-				create ev_env
-				if ev_env.platform = ev_env.Ev_platform_win32 then
-					Result := "windows"
-				end
-			end
-		ensure
-			Result_not_void: Result /= Void
+			Result := execution_environment.get ("ISE_PLATFORM")
 		end
 
 	Interface_names: INTERFACE_NAMES is
@@ -59,5 +47,11 @@ feature {NONE} -- Constants
 		once
 			create Result
 		end
+		
+	execution_environment: EXECUTION_ENVIRONMENT is
+			-- Shared execution environment object
+		once
+			create Result
+		end		
 
 end -- class PROJECT_WIZARD_SHARED

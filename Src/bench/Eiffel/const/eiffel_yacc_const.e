@@ -116,5 +116,6 @@ feature {NONE}
 	address_current_as: INTEGER is 155;
 	address_result_as: INTEGER is 156;
 	external_lang_as: INTEGER is 158;
+	expr_address_as: INTEGER is 160;
 
 end

@@ -52,6 +52,11 @@ inherit
 		export
 			{NONE} all
 		end
+		
+	GB_SHARED_CONSTANTS
+		export
+			{NONE} all
+		end
 	
 	EV_DIALOG_CONSTANTS
 		export
@@ -134,12 +139,16 @@ feature -- Basic operations
 				if component_viewer.is_show_requested then
 					command_handler.show_hide_component_viewer_command.execute
 				end
+					-- Hide the display and builder windows.
 				if display_window.is_show_requested then
 					command_handler.show_hide_display_window_command.execute
 				end
-					-- Hide the display and builder windows.
 				if builder_window.is_show_requested then
 					command_handler.show_hide_builder_window_command.execute
+				end
+					-- Hide the constants dialog.
+				if Constants_dialog.is_show_requested then
+					command_handler.Show_hide_constants_dialog_command.execute
 				end
 					
 					-- Now empty `multiple_split_area'.
@@ -166,6 +175,9 @@ feature -- Basic operations
 					-- Ensure that the project is not flagged as modified, as no
 					-- project will now be open
 				System_status.disable_project_modified
+				
+					-- Now reset all constants.
+				constants.reset
 				
 				command_handler.update
 			end

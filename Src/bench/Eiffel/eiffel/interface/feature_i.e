@@ -993,15 +993,23 @@ feature -- Signature checking
 			arg_id: ID_AS
 			vreg: VREG
 			vrfa: VRFA
+			l_area: SPECIAL [ID_AS]
+			i, nb: INTEGER
 		do
 			from
 				arg_names := argument_names
-				arg_names.start
+				l_area := arg_names.area
+				nb := arg_names.count
 			until
-				arg_names.after
+				i = nb
 			loop
-				arg_id := arg_names.item
-				if arg_names.index_of (arg_id, 2) /= 0 then
+				arg_id := l_area.item (i)
+					-- Searching to find after the current item another one
+					-- with the same name. 
+					-- We do `i + 2' for the start index because we need to go
+					-- one step further (+ 1) and also because we are directly
+					-- using area (+ 1)
+				if arg_names.locate_index_of (arg_id, 1, i + 2) /= 0 then
 						-- Two arguments with the same name
 					!!vreg
 					vreg.set_class (written_class)
@@ -1018,7 +1026,7 @@ feature -- Signature checking
 					vrfa.set_other_feature (feat_table.found_item)
 					Error_handler.insert_error (vrfa)
 				end
-				arg_names.forth
+				i := i + 1
 			end
 		end
 
@@ -1456,7 +1464,7 @@ end
 			arg_id /= Void
 		do
 			if arguments /= Void then
-				Result := argument_names.index_of (arg_id, 1)
+				Result := argument_names.locate_index_of (arg_id, 1, 1)
 			end
 		end
 

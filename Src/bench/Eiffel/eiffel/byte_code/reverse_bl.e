@@ -93,7 +93,8 @@ feature
 			-- Generate assignment
 		local
 			cl_type_i: CL_TYPE_I;
-			gen_type : GEN_TYPE_I
+			gen_type: GEN_TYPE_I
+			cr_info: CREATE_INFO
 			buf: GENERATION_BUFFER
 		do
 			buf := buffer
@@ -148,18 +149,27 @@ feature
 				buf.putstring (" = ");
 			end;
 			if how /= None_assignment then
+				if not cl_type_i.is_explicit then
+					cr_info := cl_type_i.cr_info
+				end
+
 				buf.putstring ("RTRV(");
--- FIXME!!!! use something similar to CREATE_INFO in CREATION_BL
-					-- It so happens that reverse assignments are only allowed
-					-- on reference types.
 
 				if gen_type = Void then
 					if context.final_mode then
-						buf.putint (cl_type_i.type_id - 1);
+						if cr_info = Void then
+							buf.putint (cl_type_i.type_id - 1);
+						else
+							cr_info.generate_reverse (buf, True)
+						end
 					else
-						buf.putstring ("RTUD(");
-						cl_type_i.associated_class_type.id.generated_id (buf)
-						buf.putchar (')');
+						if cr_info = Void then
+							buf.putstring ("RTUD(");
+							cl_type_i.associated_class_type.id.generated_id (buf)
+							buf.putchar (')');
+						else
+							cr_info.generate_reverse (buf, False)
+						end
 					end;
 				else
 					buf.putstring ("typres");

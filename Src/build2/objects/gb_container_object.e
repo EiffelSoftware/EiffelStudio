@@ -134,8 +134,7 @@ feature {NONE} -- Implementation
 			
 				-- Now connect all events.
 			display_object.child.set_pebble_function (agent retrieve_pebble)
-			display_object.child.drop_actions.extend (agent add_new_object_wrapper (?))
-			display_object.child.drop_actions.extend (agent add_new_component_wrapper (?))
+			display_object.child.drop_actions.extend (agent handle_object_drop (?))
 			display_object.child.drop_actions.set_veto_pebble_function (agent can_add_child (?))
 			display_object.child.drop_actions.extend (agent set_color)
 		end
@@ -173,7 +172,7 @@ feature {GB_COMMAND_NAME_CHANGE, GB_OBJECT_HANDLER, GB_OBJECT, GB_COMMAND_CHANGE
 			end
 		end
 		
-feature {GB_EV_EDITOR_CONSTRUCTOR} -- Implementatio
+feature {GB_EV_EDITOR_CONSTRUCTOR} -- Implementation
 
 	real_display_object: EV_ANY is
 			-- `Result' is widget associated with `display_object'.

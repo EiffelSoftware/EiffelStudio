@@ -28,7 +28,7 @@ feature -- Update
 			error_raised, is_hidden: BOOLEAN;
 			class_name: STRING;
 		do
-			if System.is_precompiling then
+			if Compilation_modes.is_precompiling then
 				if value /= Void then
 					if (value.is_yes or else value.is_all) then
 						is_hidden := True;

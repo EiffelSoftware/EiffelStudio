@@ -44,15 +44,16 @@ feature -- Access
 		do
 			create Result
 			initialize_attribute_editor (Result)
-			create rows_entry.make (Current, Result, gb_ev_table_rows, gb_ev_table_rows_tooltip,
+			create rows_entry.make (Current, Result, rows_string, gb_ev_table_rows, gb_ev_table_rows_tooltip,
 				agent set_rows (?), agent valid_row_value (?))
-			create columns_entry.make (Current, Result, gb_ev_table_columns, gb_ev_table_columns_tooltip,
+			create columns_entry.make (Current, Result, columns_string, gb_ev_table_columns, gb_ev_table_columns_tooltip,
 				agent set_columns (?), agent valid_column_value (?))
-			create row_spacing_entry.make (Current, Result, gb_ev_table_row_spacing, gb_ev_table_row_spacing_tooltip,
+			create row_spacing_entry.make (Current, Result, row_spacing_string, gb_ev_table_row_spacing, gb_ev_table_row_spacing_tooltip,
 				agent set_row_spacing (?), agent valid_spacing (?))
-			create column_spacing_entry.make (Current, Result, gb_ev_table_column_spacing, gb_ev_table_column_spacing_tooltip,
+			create column_spacing_entry.make (Current, Result, column_spacing_string, gb_ev_table_column_spacing, gb_ev_table_column_spacing_tooltip,
 				agent set_column_spacing (?), agent valid_spacing (?))
-			create border_width_entry.make (Current, Result, gb_ev_table_border_width, gb_ev_table_border_width_tooltip, agent set_border_width (?), agent valid_spacing (?))
+			create border_width_entry.make (Current, Result, border_width_string, gb_ev_table_border_width, gb_ev_table_border_width_tooltip,
+				agent set_border_width (?), agent valid_spacing (?))
 			create homogeneous_button.make_with_text ("Is_homogeneous?")
 			homogeneous_button.select_actions.extend (agent toggle_homogeneous)
 			homogeneous_button.select_actions.extend (agent update_editors)
@@ -185,9 +186,9 @@ feature {NONE} -- Implementation
 			list.set_minimum_width (100)
 			vertical_box.extend (list)
 			split_area.disable_item_expand (vertical_box)
-			create layout_rows_entry.make (Current, vertical_box, gb_ev_table_rows, gb_ev_table_rows_tooltip,
+			create layout_rows_entry.make (Current, vertical_box, rows_string, gb_ev_table_rows, gb_ev_table_rows_tooltip,
 				agent set_rows_and_draw (?), agent valid_row_value (?))
-			create layout_columns_entry.make (Current, vertical_box, gb_ev_table_columns, gb_ev_table_columns_tooltip,
+			create layout_columns_entry.make (Current, vertical_box, columns_string, gb_ev_table_columns, gb_ev_table_columns_tooltip,
 				agent set_columns_and_draw (?), agent valid_column_value (?))
 			layout_rows_entry.set_text (first.rows.out)
 			layout_columns_entry.set_text (first.columns.out)

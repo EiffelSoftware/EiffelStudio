@@ -89,7 +89,6 @@ feature {GB_CODE_GENERATOR} -- Output
 			-- settings held in `Current' which is
 			-- in a compilable format.
 		local
-			full_information: HASH_TABLE [ELEMENT_INFORMATION, STRING]
 			element_info: ELEMENT_INFORMATION
 			linked_groups: ARRAYED_LIST [INTEGER]
 			temp_output: STRING
@@ -127,7 +126,6 @@ feature {GB_DEFERRED_BUILDER} -- Status setting
 			-- Build from XML any information that was
 			-- deferred during the load/build cycle.
 		local
-			full_information: HASH_TABLE [ELEMENT_INFORMATION, STRING]
 			element_info: ELEMENT_INFORMATION
 			temp_string: STRING
 			counter, last_space, found_id: INTEGER

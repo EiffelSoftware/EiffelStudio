@@ -28,13 +28,13 @@ feature -- Access
 			create Result
 			initialize_attribute_editor (Result)
 			
-			create x_offset_entry.make (Current, Result, gb_ev_viewport_x_offset, gb_ev_viewport_x_offset_tooltip,
+			create x_offset_entry.make (Current, Result, x_offset_string, gb_ev_viewport_x_offset, gb_ev_viewport_x_offset_tooltip,
 				agent set_x_offset (?), agent valid_position (?))
-			create y_offset_entry.make (Current, Result, gb_ev_viewport_y_offset, gb_ev_viewport_y_offset_tooltip,
+			create y_offset_entry.make (Current, Result, y_offset_string, gb_ev_viewport_y_offset, gb_ev_viewport_y_offset_tooltip,
 				agent set_y_offset (?), agent valid_position (?))
-			create item_width_entry.make (Current, Result, gb_ev_viewport_item_width, gb_ev_viewport_item_width_tooltip,
+			create item_width_entry.make (Current, Result, item_width_string, gb_ev_viewport_item_width, gb_ev_viewport_item_width_tooltip,
 				agent set_item_width (?), agent valid_item_width (?))
-			create item_height_entry.make (Current, Result, gb_ev_viewport_item_height, gb_ev_viewport_item_height_tooltip,
+			create item_height_entry.make (Current, Result, item_height_string, gb_ev_viewport_item_height, gb_ev_viewport_item_height_tooltip,
 				agent set_item_height (?), agent valid_item_height (?))
 			
 			update_attribute_editor

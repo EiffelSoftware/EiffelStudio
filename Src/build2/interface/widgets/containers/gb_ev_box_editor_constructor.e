@@ -48,9 +48,9 @@ feature -- Access
 			is_homogeneous_check.select_actions.extend (agent update_homogeneous)
 			is_homogeneous_check.select_actions.extend (agent update_editors)
 			
-			create padding_entry.make (Current, Result, gb_ev_box_padding_width, gb_ev_box_padding_width_tooltip,
+			create padding_entry.make (Current, Result, padding_string, gb_ev_box_padding_width, gb_ev_box_padding_width_tooltip,
 				agent set_padding (?), agent valid_input (?))
-			create border_entry.make (Current, Result, gb_ev_box_border_width, gb_ev_box_border_width_tooltip,
+			create border_entry.make (Current, Result, border_string, gb_ev_box_border_width, gb_ev_box_border_width_tooltip,
 				agent set_border (?), agent valid_input (?))
 
 				-- We only add the is_expandable label if there are children
@@ -170,7 +170,7 @@ feature {NONE} -- Implementation
 		do
 			for_all_objects (agent {EV_BOX}.set_border_width (value))
 		end
-		
+
 	is_homogeneous_check: EV_CHECK_BUTTON
 
 	border_entry, padding_entry: GB_INTEGER_INPUT_FIELD

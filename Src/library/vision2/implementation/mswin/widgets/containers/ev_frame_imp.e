@@ -100,11 +100,11 @@ feature {EV_WIDGET_IMP} -- Implementation
 			if resize_type = 3 then
 				move_and_resize (child_cell.x, child_cell.y, child_cell.width, child_cell.height, True)
 			elseif resize_type = 2 then
-				move_and_resize ((child_cell.width - width)//2 + child_cell.x, child_cell.y, width, child_cell.height, True)
+				move_and_resize ((child_cell.width - width)//2 + child_cell.x, child_cell.y, minimum_width, child_cell.height, True)
 			elseif resize_type = 1 then
-				move_and_resize (child_cell.x, (child_cell.height - height)//2 + child_cell.y, child_cell.width, height, True)
+				move_and_resize (child_cell.x, (child_cell.height - height)//2 + child_cell.y, child_cell.width, minimum_height, True)
 			else
-				move ((child_cell.width - width)//2 + child_cell.x, (child_cell.height - height)//2 + child_cell.y)
+				move_and_resize ((child_cell.width - width)//2 + child_cell.x, (child_cell.height - height)//2 + child_cell.y, minimum_width, minimum_height, True)
 			end
 			if child /= Void then
 				child.set_move_and_size (box_width, box_text_height + box_height, 

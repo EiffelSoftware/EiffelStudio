@@ -27,6 +27,10 @@ Ftp server: ftp.eiffel.com
 
 #include <ctype.h>
 
+#ifdef EIF_OS2
+#include <io.h>
+#endif
+
 #include "limits.h" 	
 #include "macros.h"
 #include "parser.h"

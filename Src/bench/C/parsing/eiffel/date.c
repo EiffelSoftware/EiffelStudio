@@ -36,7 +36,7 @@ EIF_INTEGER date;
 {
 	/* Check to see if the directory `path' has changed after `date' */
 
-#ifdef EIF_WINDOWS
+#if defined EIF_WINDOWS || defined EIF_OS2
 	return (EIF_BOOLEAN) 1;
 #else
 	static struct stat info;

@@ -72,7 +72,6 @@ feature -- Basic operations
 				shown_once, created_project: BOOLEAN
 				conf_dialog, directory_conf: EV_CONFIRMATION_DIALOG
 				create_project: BOOLEAN
-				dialog_exists: BOOLEAN
 				directory: DIRECTORY
 			do
 				from

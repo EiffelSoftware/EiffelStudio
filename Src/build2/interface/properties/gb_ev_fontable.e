@@ -23,7 +23,6 @@ feature {GB_XML_STORE} -- Output
 	generate_xml (element: XML_ELEMENT) is
 			-- Generate an XML representation of `Current' in `element'.
 		local
-			deselectable: EV_DESELECTABLE
 			font: EV_FONT
 			fontable: EV_FONTABLE
 		do

@@ -446,7 +446,6 @@ feature {NONE} -- Implementation
 	close_requested is 
 			-- End the current application.
 		local
-			confirmation: EV_CONFIRMATION_DIALOG
 			question: EV_QUESTION_DIALOG
 			must_exit, must_save: BOOLEAN
 			constants: EV_DIALOG_CONSTANTS

@@ -51,11 +51,11 @@ feature -- Access
 		end
 
 	selected_item: EV_LIST_ITEM is
-			-- Item which is currently selected, for a multiple
-			-- selection, it gives the last selected item.
+			-- Item which is currently selected
+			-- It needs to be in single selection mode
 		require
 			exists: not destroyed
-			item_selected: selected
+			single_selection: not is_multiple_selection
 		do
 			Result := implementation.selected_item
 		end
@@ -68,7 +68,6 @@ feature -- Access
 			-- `selected_items' for a single selection list
 		require
 			exists: not destroyed
-			item_selected: selected
 		do
 			Result := implementation.selected_items
 		end

@@ -696,6 +696,12 @@ feature {NONE} -- Implementation
 							if not ((box.i_th (insert_position.min (box.count)) = insert_label) or (box.i_th ((insert_position - 1).max (1)) = insert_label)) then
 								dragged_index := box.index_of (widget_source_being_docked.interface, 1)
 								if widget_source_being_docked.parent = box.interface and (dragged_index = insert_position or dragged_index = insert_position - 1) then
+										-- Now unparent `insert_label' as we are now pointing to our original location,
+										-- or next to it, so there should be no insert label displayed.
+									temp_int := box.index_of (widget_source_being_docked.interface, 1)
+									if temp_int = insert_position or temp_int + 1 = insert_position then
+										remove_insert_label									
+									end
 								else
 									if insert_label.parent /= Void then
 										insert_label_pos := position_in_parent (insert_label_imp)
@@ -760,7 +766,7 @@ feature {NONE} -- Implementation
 								if item_source_being_docked.parent = tool_bar.interface and (dragged_index = insert_position or dragged_index = insert_position - 1) then
 										-- As we are pointing to the original tool bar item that
 										-- is being transported, we remove `insert_sep' to illustrate
-										-- that no movememnt will occur when the transport ends.
+										-- that no movement will occur when the transport ends.
 									remove_insert_sep
 								else
 									if insert_label.parent /= Void then

@@ -23,6 +23,23 @@ feature -- For DATABASE_STATUS
 		deferred
 		end
 
+	is_error_updated: BOOLEAN is
+			-- Has a database function been called since last update which may have
+			-- updated error code, error message or warning message?
+		deferred
+		end
+
+	found: BOOLEAN is
+			-- Is there any record matching the last
+			-- selection condition used ?
+		deferred
+		end
+
+	clear_error is
+			-- Reset database error status.
+		deferred
+		end
+
 feature -- For DATABASE_CHANGE 
 
 	descriptor_is_available: BOOLEAN is
@@ -99,7 +116,7 @@ feature -- For DATABASE_SELECTION, DATABASE_CHANGE
 		do
 		end
 
-	bind_parameter (value: ARRAY [ANY]; parameters: ARRAY [ANY]; descriptor: INTEGER; uhandle: HANDLE; sql: STRING) is
+	bind_parameter (value: ARRAY [ANY]; parameters: ARRAY [ANY]; descriptor: INTEGER; sql: STRING) is
 			-- Bind the parameters from the `parameters' array with
 			-- the values from the `value' array. It has been implemented
 			-- for the use of dynamic sql
@@ -397,6 +414,11 @@ feature -- External features
 		deferred
 		end
 
+	get_error_code: INTEGER is
+			-- Function related with the error processing
+		deferred
+		end
+
 	get_warn_message: POINTER is
 			-- Function related with the error processing
 		deferred
@@ -410,35 +432,33 @@ feature -- External features
 		deferred
 		end
 
-	init_order (no_descriptor: INTEGER; command: STRING): INTEGER is
+	init_order (no_descriptor: INTEGER; command: STRING) is
 			-- In DYNAMICALLY EXECUTE mode perform the SQL statement
 			-- But this routine only get things ready for dynamic execution:
 			-- 1. get the SQL statement PREPAREd; and check if there are 
 			-- warning message for the SQL statement;                 
 			-- 2. DESCRIBE the SQL statement and get enough information to 
 			-- allocate enough memory space for the corresponding descriptor.                                                
-			-- 3. return error number. 
 		deferred
 		end
 
-	start_order (no_descriptor: INTEGER): INTEGER is
+	start_order (no_descriptor: INTEGER) is
 			-- Finish execution of a SQL statement in DYNAMICLLY EXECUTION mode:                                                         */
 			-- 1. if the PREPAREd SQL statement is a NON_SELECT statement, 
 			-- just EXECUTE it; otherwise, DEFINE a CURSOR for it and 
 			-- OPEN the CURSOR. In the process, if error occurs, do some
 			-- clearence;                                              
-			-- 3. return error number. 
 		deferred
 		end
 
-	next_row (no_descriptor: INTEGER): INTEGER is
+	next_row (no_descriptor: INTEGER) is
 			-- A SELECT statement is now being executed in DYNAMIC EXECUTION mode,
 			-- the  routine is to FETCH a new tuple from database
 			-- and if a new tuple is fetched, return 1 otherwise return 0.
 		deferred
 		end
 
-	terminate_order (no_descriptor: INTEGER): INTEGER is
+	terminate_order (no_descriptor: INTEGER) is
 			-- A SQL has been performed in DYNAMIC EXECUTION mode,
 			-- so the routine is to do some clearence:                             
 			-- 1. if the DYNAMICLLY EXECUTED SQL statement is a NON_SELECT 
@@ -457,10 +477,9 @@ feature -- External features
 		deferred
 		end
 
-	exec_immediate (no_descriptor: INTEGER; command: STRING): INTEGER is
+	exec_immediate (no_descriptor: INTEGER; command: STRING) is
 			-- In IMMEDIATE EXECUTE mode perform the SQL statement, 
 			-- and then check if there is warning message for the execution,    
-			-- and finally return error number.
 		deferred
 		end
 
@@ -626,22 +645,22 @@ feature -- External features
 		deferred
 		end
 
-	connect (user_name, user_passwd, data_source, application, hostname, roleId, rolePassWd, groupId: STRING): INTEGER is
+	connect (user_name, user_passwd, data_source, application, hostname, roleId, rolePassWd, groupId: STRING) is
 			-- Connect to an ODBC database
 		deferred
 		end
 
-	disconnect: INTEGER is
+	disconnect is
 			-- Disconnect the current connection with an database
 		deferred
 		end
 
-	commit: INTEGER is
+	commit is
 			-- Commit the current transaction
 		deferred
 		end
 
-	rollback: INTEGER is
+	rollback is
 			-- Commit the current transaction
 		deferred
 		end

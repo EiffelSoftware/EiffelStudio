@@ -249,23 +249,23 @@ feature {NONE} -- Implementation
 				end
 				if split_position /= new_pos then
 					create t
---|--------------------------------------------------------------
---| Removed the "real time resizing". As soon as windows
---| get a little complex, it blocks the system for 2 to 3 sec.
---|
---| Uncomment the following lines to add it again.
---|--------------------------------------------------------------
---|					if t.has_drag_full_windows then
---|							-- Move the splitter to the mouse position and
---|							-- update content when dragging.
---|						set_split_position (new_pos)
---|					else
+ --|--------------------------------------------------------------
+ --| Removed the "real time resizing". As soon as windows
+ --| get a little complex, it blocks the system for 2 to 3 sec.
+ --|
+ --| Uncomment the following lines to add it again.
+ --|--------------------------------------------------------------
+ --|					if t.has_drag_full_windows then
+ --|							-- Move the splitter to the mouse position and
+ --|							-- update content when dragging.
+ --|						set_split_position (new_pos)
+ --|					else
 							-- Move shade of splitter and do not update content.
 						create window_dc.make (Current)
 						invert_split (window_dc)
 						split_position := new_pos
 						invert_split (window_dc)
---|					end
+ --|					end
 				end
 			else
 				Precursor {EV_SPLIT_AREA_IMP} (keys, x_pos, y_pos)
@@ -356,175 +356,19 @@ feature {NONE} -- Implementation
 
 end -- class EV_VERTICAL_SPLIT_AREA_IMP
 
---|-----------------------------------------------------------------------------
---| EiffelVision: library of reusable components for ISE Eiffel.
---| Copyright (C) 1986-2000 Interactive Software Engineering Inc.
+--|----------------------------------------------------------------
+--| EiffelVision2: library of reusable components for ISE Eiffel.
+--| Copyright (C) 1986-2001 Interactive Software Engineering Inc.
 --| All rights reserved. Duplication and distribution prohibited.
 --| May be used only with ISE Eiffel, under terms of user license. 
 --| Contact ISE for any other use.
 --|
 --| Interactive Software Engineering Inc.
---| ISE Building, 2nd floor
---| 270 Storke Road, Goleta, CA 93117 USA
+--| ISE Building
+--| 360 Storke Road, Goleta, CA 93117 USA
 --| Telephone 805-685-1006, Fax 805-685-6869
 --| Electronic mail <info@eiffel.com>
---| Customer support e-mail <support@eiffel.com>
+--| Customer support: http://support.eiffel.com>
 --| For latest info see award-winning pages: http://www.eiffel.com
---|-----------------------------------------------------------------------------
-
 --|----------------------------------------------------------------
---| CVS log
---|----------------------------------------------------------------
---|
---| $Log$
---| Revision 1.23  2001/07/14 12:46:25  manus
---| Replace --! by --|
---|
---| Revision 1.22  2001/07/14 12:16:30  manus
---| Cosmetics, replace the long:
---| --|-----------------------------------------------------------------------------
---| by the short version which is standard among all ISE libraries
---| --|----------------------------------------------------------------
---|
---| Revision 1.21  2001/07/02 21:08:08  rogers
---| `set_first' and `set_second' now call `new_item_actions'.
---|
---| Revision 1.20  2001/06/07 23:08:15  rogers
---| Merged DEVEL branch into Main trunc.
---|
---| Revision 1.17.8.39  2001/04/04 19:48:15  rogers
---| We only draw the separator in on_wm_paint if `Current' contains two
---| widgets. There is no need otherwise as the separator is covered or hidden.
---|
---| Revision 1.17.8.38  2001/04/04 18:42:17  rogers
---| Class_cursor now returns the standard arrow when `Current' is empty.
---|
---| Revision 1.17.8.37  2001/03/04 22:31:01  pichery
---| Cosmetics
---|
---| Revision 1.17.8.36  2001/01/30 22:42:24  rogers
---| Fixed bug in set_second. The new split_position calculation was incorrect.
---|
---| Revision 1.17.8.35  2001/01/19 19:47:59  rogers
---| Layout widgets now always invalidates the separator.
---|
---| Revision 1.17.8.34  2001/01/11 22:59:18  rogers
---| On_left_button_up now calls invert_split, to restore the inverted area.
---| This bug would show up when `Current' contained two trees.
---|
---| Revision 1.17.8.33  2000/12/29 15:39:16  pichery
---| Added comments.
---|
---| Revision 1.17.8.32  2000/12/29 15:37:18  pichery
---| Removed the "real time resizing". As soon as windows
---| get a little complex, it blocks the system for 2 to 3 sec.
---|
---| Revision 1.17.8.31  2000/12/08 03:15:03  manus
---| If `originator' was true we were calling `ev_move_and_resize' instead
---| of `ev_apply_new_size'. This is a mistake in the integration of version
---| 1.17.8.17, since integration of EV_HORIZONTAL_SPLIT_AREA_IMP of version
---| 1.18.4.21 was correct.
---|
---| Revision 1.17.8.30  2000/12/04 23:18:21  rogers
---| Formatting to 80 columns.
---|
---| Revision 1.17.8.29  2000/11/09 01:12:07  rogers
---| Removed deletion of black pen from on_paint as pen is a once function.
---|
---| Revision 1.17.8.28  2000/11/02 05:02:11  manus
---| Updated comment on EV_SYSTEM_PEN_IMP to show that after using one of these
---| WEL_PEN object the Vision2 implementor needs to call `delete' on them to
---| free the allocated GDI object. Updated code of classes which was not doing
---| it.
---|
---| Revision 1.17.8.27  2000/10/27 02:33:12  manus
---| No need to get the background brush, we can just get the
---| `wel_background_color' to draw splitter.
---|
---| Revision 1.17.8.26  2000/10/25 03:11:53  manus
---| Fixed side effects of setting the cursor to a different shape. In
---| `on_set_cursor' we should test the `hit_code' to figure out if we have to
---| change the shape or not, namely it has to be done when the hit_code is
---| either `nowhere' or `client'. The rest is taken care by Windows.
---|
---| Even though doing this fix, does not work for EV_SPLIT_AREA_IMP because
---| the cursor it lost, so I forced the setting of the cursor to its
---| `class_cursor' when it was needed.
---|
---| Fixed a bug in EV_SPLIT_AREA_IMP and descendants where `cursor_on_widget'
---| was not update in `on_mouse_move' because we forgot to call its Precursor.
---|
---| Revision 1.17.8.25  2000/10/22 23:50:17  manus
---| New split area behavior based on the status of `show content while dragging'
---| from the `effects' tab in Windows control panel. When it is enabled we do a
---| live update, otherwise we draw the shade of the splitter and it is updated
---| at the end when user release the button.
---| Relies on new WEL class `WEL_SYSTEM_PARAMETER_INFO'.
---|
---| Revision 1.17.8.24  2000/10/12 15:50:25  pichery
---| Added reference tracking for GDI objects to decrease
---| the number of GDI objects alive.
---|
---| Revision 1.17.8.23  2000/09/28 19:46:41  rogers
---| Fixed set_second, so when moving the split_position, it takes into
---| account the splitter_width. Postconditions are no longer violated.
---|
---| Revision 1.17.8.22  2000/09/05 19:09:54  rogers
---| Fixed set_second so splitter_in_valid_position invaraiant is no longer
---| broken.
---|
---| Revision 1.17.8.21  2000/08/15 17:33:47  rogers
---| Removed fixme from split_area_resizing, as no fix is required.
---|
---| Revision 1.17.8.19  2000/08/11 22:11:42  rogers
---| Removed unreferenced variable from on_wm_paint.
---|
---| Revision 1.17.8.18  2000/08/11 18:54:21  rogers
---| Fixed copyright clauses. Now use ! instead of |. Formatting.
---|
---| Revision 1.17.8.17  2000/08/08 15:38:08  manus
---| New resizing policy by calling `ev_' instead of `internal_', see
---|   `vision2/implementation/mswin/doc/sizing_how_to.txt'.
---| Clean up code with new resizing code and better `on_wm_paint' procedure
---| which collects GDI objects.
---|
---| Revision 1.17.8.16  2000/08/01 20:57:04  rogers
---| Redefined class_name and class_cursor to allow correct cursor to be used.
---|
---| Revision 1.17.8.15  2000/08/01 18:56:38  rogers
---| Comments, formatting.
---|
---| Revision 1.17.8.14  2000/07/29 00:01:10  rogers
---| Correct layout_widgets for when first and second are both displayed.
---|
---| Revision 1.17.8.12  2000/07/28 22:39:18  rogers
---| On mouse move now uses click_relative_position so the splitter is
---| actually set to the exact position required. Layout widgets now invalidates
---| `Current', so as necessary, lone calls to invalidate have been removed.
---|
---| Revision 1.17.8.11  2000/07/28 21:07:37  rogers
---| Corrected drawing of normal separator in on_wm_paint. Set_first and
---| set_second now set the splitter_width to visible_Splitter_width instead
---| of magic number.
---|
---| Revision 1.17.8.10  2000/07/28 19:54:53  rogers
---| Added set_click_position which assigns the horizontal offset into the
---| splitter to `click_relative_position'. Also now call invalidate when the
---| mouse moves, so the separator is drawn correctly.
---|
---| Revision 1.17.8.9  2000/07/28 18:23:15  rogers
---| Really now redefefined on_wm_paint.
---|
---| Revision 1.17.8.8  2000/07/28 18:07:04  rogers
---| Redefined on_wm_paint, so we can draw the splitter ourselves.
---|
---| Revision 1.17.8.7  2000/07/27 20:12:19  rogers
---| Implemented all features necessary for implementation. Added copyright
---| clause and CVS area at end of file.
---|
---|
---|----------------------------------------------------------------
---| End of CVS log
---|----------------------------------------------------------------
-
 

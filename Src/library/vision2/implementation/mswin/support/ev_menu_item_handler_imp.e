@@ -123,75 +123,18 @@ feature {EV_POPUP_MENU_IMP} -- Deferred features
 end -- class EV_MENU_ITEM_HANDLER_IMP
 
 --|----------------------------------------------------------------
---| EiffelVision: library of reusable components for ISE Eiffel.
---| Copyright (C) 1986-1998 Interactive Software Engineering Inc.
+--| EiffelVision2: library of reusable components for ISE Eiffel.
+--| Copyright (C) 1986-2001 Interactive Software Engineering Inc.
 --| All rights reserved. Duplication and distribution prohibited.
 --| May be used only with ISE Eiffel, under terms of user license. 
 --| Contact ISE for any other use.
 --|
 --| Interactive Software Engineering Inc.
---| ISE Building, 2nd floor
---| 270 Storke Road, Goleta, CA 93117 USA
+--| ISE Building
+--| 360 Storke Road, Goleta, CA 93117 USA
 --| Telephone 805-685-1006, Fax 805-685-6869
 --| Electronic mail <info@eiffel.com>
---| Customer support e-mail <support@eiffel.com>
+--| Customer support: http://support.eiffel.com>
 --| For latest info see award-winning pages: http://www.eiffel.com
 --|----------------------------------------------------------------
 
---|----------------------------------------------------------------
---| CVS log
---|----------------------------------------------------------------
---|
---| $Log$
---| Revision 1.8  2001/07/14 12:16:29  manus
---| Cosmetics, replace the long:
---| --|-----------------------------------------------------------------------------
---| by the short version which is standard among all ISE libraries
---| --|----------------------------------------------------------------
---|
---| Revision 1.7  2001/06/07 23:08:13  rogers
---| Merged DEVEL branch into Main trunc.
---|
---| Revision 1.3.4.3  2001/03/01 03:23:44  manus
---| Removed obsolete calls to `empty', now replaced by `is_equal'.
---|
---| Revision 1.3.4.2  2000/08/11 23:59:17  rogers
---| Aded fixme not for release. As this class is no longer used by Vision2.
---|
---| Revision 1.3.4.1  2000/05/03 19:09:18  oconnor
---| mergred from HEAD
---|
---| Revision 1.6  2000/02/23 02:20:45  brendel
---| Removed feature `on_menu_command'.
---| This is now handled in EV_WINDOW_IMP.
---|
---| Revision 1.5  2000/02/19 05:45:00  oconnor
---| released
---|
---| Revision 1.4  2000/02/14 11:40:41  oconnor
---| merged changes from prerelease_20000214
---|
---| Revision 1.3.6.5  2000/02/05 02:14:35  brendel
---| Commented out some implementation.
---| This class will probably be obsolete anyway.
---|
---| Revision 1.3.6.4  2000/02/04 01:05:40  brendel
---| Rearranged inheritance structure in compliance with revised interface.
---| Nothing has been implemented yet!
---|
---| Revision 1.3.6.3  2000/01/27 19:30:15  oconnor
---| added --| FIXME Not for release
---|
---| Revision 1.3.6.2  1999/12/17 17:01:00  rogers
---| Altered to fit in with the review branch. Minor changes, code now uses ev_children.
---|
---| Revision 1.3.6.1  1999/11/24 17:30:22  oconnor
---| merged with DEVEL branch
---|
---| Revision 1.3.2.3  1999/11/02 17:20:08  oconnor
---| Added CVS log, redoing creation sequence
---|
---|
---|----------------------------------------------------------------
---| End of CVS log
---|----------------------------------------------------------------

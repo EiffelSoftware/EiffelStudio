@@ -226,72 +226,18 @@ feature {NONE} -- Implementation
 end -- class EV_PRINT_DIALOG_IMP
 
 --|----------------------------------------------------------------
---| EiffelVision: library of reusable components for ISE Eiffel.
---| Copyright (C) 1986-1998 Interactive Software Engineering Inc.
+--| EiffelVision2: library of reusable components for ISE Eiffel.
+--| Copyright (C) 1986-2001 Interactive Software Engineering Inc.
 --| All rights reserved. Duplication and distribution prohibited.
 --| May be used only with ISE Eiffel, under terms of user license. 
 --| Contact ISE for any other use.
 --|
 --| Interactive Software Engineering Inc.
---| ISE Building, 2nd floor
---| 270 Storke Road, Goleta, CA 93117 USA
+--| ISE Building
+--| 360 Storke Road, Goleta, CA 93117 USA
 --| Telephone 805-685-1006, Fax 805-685-6869
 --| Electronic mail <info@eiffel.com>
---| Customer support e-mail <support@eiffel.com>
+--| Customer support: http://support.eiffel.com>
 --| For latest info see award-winning pages: http://www.eiffel.com
 --|----------------------------------------------------------------
 
---|----------------------------------------------------------------
---| CVS log
---|----------------------------------------------------------------
---|
---| $Log$
---| Revision 1.5  2001/07/14 12:16:30  manus
---| Cosmetics, replace the long:
---| --|-----------------------------------------------------------------------------
---| by the short version which is standard among all ISE libraries
---| --|----------------------------------------------------------------
---|
---| Revision 1.4  2001/06/07 23:08:14  rogers
---| Merged DEVEL branch into Main trunc.
---|
---| Revision 1.2.8.8  2001/04/26 19:21:20  king
---| Made releaseable
---|
---| Revision 1.2.8.7  2001/04/26 19:15:32  king
---| Cosmetics
---|
---| Revision 1.2.8.6  2000/12/13 23:36:01  king
---| Altered print_context to set pointer of printer dc
---|
---| Revision 1.2.8.5  2000/11/11 02:10:03  andrew
---| Made Compilable
---|
---| Revision 1.2.8.4  2000/10/13 21:38:24  andrew
---| Removed landscape_checked: BOOLEAN and portrait_checked: BOOLEAN
---|
---| Revision 1.2.8.3  2000/10/12 22:10:11  andrew
---| Made compilable
---|
---| Revision 1.2.8.2  2000/10/06 18:51:05  king
---| Made compilable
---|
---| Revision 1.2.8.1  2000/05/03 19:09:23  oconnor
---| mergred from HEAD
---|
---| Revision 1.3  2000/02/14 11:40:42  oconnor
---| merged changes from prerelease_20000214
---|
---| Revision 1.2.10.2  2000/01/27 19:30:19  oconnor
---| added --| FIXME Not for release
---|
---| Revision 1.2.10.1  1999/11/24 17:30:25  oconnor
---| merged with DEVEL branch
---|
---| Revision 1.2.6.2  1999/11/02 17:20:09  oconnor
---| Added CVS log, redoing creation sequence
---|
---|
---|----------------------------------------------------------------
---| End of CVS log
---|----------------------------------------------------------------

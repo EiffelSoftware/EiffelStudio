@@ -11,51 +11,65 @@ feature -- Access
 
 	Cc_rgbinit: INTEGER is
 		external
-			"C [macro <cdlg.h>]"
+			"C [macro %"cdlg.h%"]"
 		alias
 			"CC_RGBINIT"
 		end
 
 	Cc_fullopen: INTEGER is
 		external
-			"C [macro <cdlg.h>]"
+			"C [macro %"cdlg.h%"]"
 		alias
 			"CC_FULLOPEN"
 		end
 
 	Cc_preventfullopen: INTEGER is
 		external
-			"C [macro <cdlg.h>]"
+			"C [macro %"cdlg.h%"]"
 		alias
 			"CC_PREVENTFULLOPEN"
 		end
 
 	Cc_showhelp: INTEGER is
 		external
-			"C [macro <cdlg.h>]"
+			"C [macro %"cdlg.h%"]"
 		alias
 			"CC_SHOWHELP"
 		end
 
 	Cc_enablehook: INTEGER is
 		external
-			"C [macro <cdlg.h>]"
+			"C [macro %"cdlg.h%"]"
 		alias
 			"CC_ENABLEHOOK"
 		end
 
 	Cc_enabletemplate: INTEGER is
 		external
-			"C [macro <cdlg.h>]"
+			"C [macro %"cdlg.h%"]"
 		alias
 			"CC_ENABLETEMPLATE"
 		end
 
 	Cc_enabletemplatehandle: INTEGER is
 		external
-			"C [macro <cdlg.h>]"
+			"C [macro %"cdlg.h%"]"
 		alias
 			"CC_ENABLETEMPLATEHANDLE"
+		end
+
+	Cc_solidcolor: INTEGER is
+		external
+			"C [macro %"cdlg.h%"]"
+		alias
+			"CC_SOLIDCOLOR"
+		end
+
+	Cc_anycolor: INTEGER is
+		external
+			"C [macro %"cdlg.h%"]"
+		alias
+			"CC_ANYCOLOR"
 		end
 
 end -- class WEL_CHOOSE_COLOR_CONSTANTS

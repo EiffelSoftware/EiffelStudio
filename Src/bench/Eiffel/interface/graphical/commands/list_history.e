@@ -6,13 +6,16 @@ indexing
 	date: "$Date$";
 	revision: "$Revision$"
 
-deferred class LIST_HISTORY
+class LIST_HISTORY
 
 inherit
 	ICONED_COMMAND
 		redefine
 			execute
 		end
+
+creation
+	make
 
 feature {NONE} -- Initialization
 
@@ -26,7 +29,7 @@ feature -- Properties
 
 	symbol: PIXMAP is
 			-- Symbol for the button
-		once
+		do
 			Result := Void
 		ensure then
 			Void_result: Result = Void
@@ -81,14 +84,29 @@ feature {NONE} -- Implementation
 			!! a_list.make;
 			fill_list (a_list);
 			choices.popup (Current, a_list);
-			choices.select_i_th (text_window.history.index + 1)
+			choices.select_i_th (tool.history.index + 1)
 		end;
 
 	fill_list (list: TWO_WAY_LIST [STRING]) is
 			-- Fill `list' with strings.
-            --| Be careful: `fill_list' may not change
-            --| the position of the active item!!
-		deferred
+			--| Be careful: `fill_list' may not change
+			--| the position of the active item!!
+		local
+			cur: CURSOR;
+			a_string: STRING;
+			history: STONE_HISTORY
+		do
+			history := tool.history;
+			cur := history.cursor;
+			from
+				history.start
+			until
+				history.after
+			loop
+				list.extend (history.item.history_name)
+				history.forth
+			end;
+			history.go_to (cur)
 		end;
 
 	retarget_text_window is
@@ -101,7 +119,7 @@ feature {NONE} -- Implementation
 			if pos > 1 then
 					--| Position 1 is the "--cancel--" entry.
 				pos := pos - 1;
-				history := text_window.history;
+				history := tool.history;
 				from
 					history.start
 				until
@@ -110,7 +128,7 @@ feature {NONE} -- Implementation
 					history.forth;
 					pos := pos - 1
 				end;
-				text_window.last_format.execute (history.item)
+				tool.last_format.execute (history.item)
 			end
 		end;
 

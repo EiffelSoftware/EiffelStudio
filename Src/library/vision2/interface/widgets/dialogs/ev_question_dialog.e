@@ -12,66 +12,35 @@ class
 inherit
 	EV_MESSAGE_DIALOG
 		redefine
-			implementation,
-			make_default,
-			make
+			implementation
 		end
+
 creation
 	make,
-	make_default
+	make_default,
+	make_with_text
 
 feature {NONE} -- Initialization
 
-	make (par: EV_WINDOW) is
-			-- Create the dialog box.
-		do
-			!EV_QUESTION_DIALOG_IMP!implementation.make (par)
-			{EV_MESSAGE_DIALOG} Precursor (par)
-		end
-
-	make_default (par: EV_WINDOW; msg, dtitle: STRING) is
-			-- Create with default_options
+	make (par: EV_CONTAINER) is
+			-- Create a message dialog with `par' as parent.
 		do
 			!EV_QUESTION_DIALOG_IMP! implementation.make (par)
-			{EV_MESSAGE_DIALOG} Precursor (par, msg, dtitle)
 		end
 
-feature -- status settings
-
-	add_yesno_buttons is
-			-- Add two buttons Yes and No.
+	make_with_text (par: EV_CONTAINER; a_title, a_msg: STRING) is
+			-- Create a message box with `par' as parent, `a_title' as
+			-- title and `a_msg' as message.
 		do
-			implementation.add_yesno_buttons
+			!EV_QUESTION_DIALOG_IMP! implementation.make_with_text (par, a_title, a_msg)
 		end
 
-	add_yesnocancel_buttons is
-			-- Add three buttons : Yes, No and Cancel.
+	make_default (par: EV_CONTAINER; a_title, a_msg: STRING) is
+			-- Create the default message dialog with `par' as
+			-- parent, `a_title' as title and `a_msg' as message
+			-- and displays it.
 		do
-			implementation.add_yesnocancel_buttons
-		end
-
-feature -- Event - command association
-
-	add_yes_command (cmd: EV_COMMAND; arg: EV_ARGUMENTS) is
-			-- Add `cmd' to the list of commands to be executed when
-			-- the Yes button is pressed.
-			-- If there is no Yes button, the event never occurs.
-		require
-			exists: not destroyed
-			valid_command: cmd /= Void
-		do
-			Implementation.add_yes_command (cmd, arg)
-		end
-
-	add_no_command (cmd: EV_COMMAND; arg: EV_ARGUMENTS) is
-			-- Add `cmd' to the list of commands to be executed when
-			-- the No button is pressed.
-			-- If there is no No button, the event never occurs.
-		require
-			exists: not destroyed
-			valid_command: cmd /= Void
-		do
-			Implementation.add_no_command (cmd, arg)
+			!EV_QUESTION_DIALOG_IMP! implementation.make_default (par, a_title, a_msg)
 		end
 
 feature {NONE} -- Implementation

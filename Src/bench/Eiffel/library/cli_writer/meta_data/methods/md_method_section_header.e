@@ -12,108 +12,80 @@ inherit
 create
 	make
 	
-feature -- Initialization
+feature {NONE} -- Creation
 
-	make, remake (a_try_offset, a_try_length, a_handler_offset,
-			a_handler_length, a_type_token: INTEGER)
-		is
+	make is
 			-- Create fat method section header.
 		do
-			if a_try_length < 256 and a_handler_length < 256 then
-				is_fat := False
-				internal_data := ((feature {MD_METHOD_CONSTANTS}.Section_ehtable)
-					.to_integer_32 |<< 24) | count
-			else
-				is_fat := True
-				internal_data := ((feature {MD_METHOD_CONSTANTS}.Section_ehtable |
-					feature {MD_METHOD_CONSTANTS}.Section_fat_format)
-					.to_integer_32 |<< 24) | count
-			end
-			try_offset := a_try_offset
-			try_length := a_try_length
-			handler_offset := a_handler_offset
-			handler_length := a_handler_length
-			type_token := a_type_token
 		ensure
-			try_offset_set: try_offset = a_try_offset
-			try_length_set: try_length = a_try_length
-			handler_offset_set: handler_offset = a_handler_offset
-			handler_length_set: handler_length = a_handler_length
-			type_token_set: type_token = a_type_token
+			not_is_fat: not is_fat
+			no_clauses: clause_count = 0
 		end
 
-feature -- Access
+feature -- Initialization
 
-	flags: INTEGER
-			-- Flags for current section.
-			
-	try_offset: INTEGER
-			-- Offset in bytes of try block from start of the header.
-			
-	try_length: INTEGER
-			-- Length in bytes of try bock.
-
-	handler_offset: INTEGER
-			-- Offset in bytes of location of handler.
-			
-	handler_length: INTEGER
-			-- Length of handler code in bytes.
-			
-	type_token: INTEGER
-			-- Meta data token for type-based exception handler.
-			
-feature -- Access
-
-	count: INTEGER is
-			-- Size of structure once emitted.
+	reset is
+			-- Reset all data to default values.
 		do
-			if is_fat then
-				Result := 28
-			else
-				Result := 16
-			end
+			is_fat := False
+			clause_count := 0
+		ensure
+			not_is_fat: not is_fat
+			no_clauses: clause_count = 0
 		end
-		
+
+feature -- Access
+
+	count: INTEGER is 4
+			-- Size of header in bytes once emitted.
+
+	is_fat: BOOLEAN
+			-- Is current header a fat one?
+
+feature -- Modification
+
+	register_exception_clause (clause: MD_EXCEPTION_CLAUSE) is
+			-- Update current header information to reflect exception `clause' in section.
+		require
+			clause_not_void: clause /= Void
+			clause_is_defined: clause.is_defined
+		do
+			clause_count := clause_count + 1
+			if clause.is_fat or else clause_count >= 21 then
+					-- The exception clause is fat or there are too many exception clauses.
+					-- Small format allows less than (256 - count) // 12 clauses, i.e. less than 21 clauses.
+				is_fat := True
+			end
+		ensure
+			is_fat_enforced: clause.is_fat implies is_fat
+			clause_count_incremented: clause_count = old clause_count + 1
+		end
+
 feature -- Saving
 
 	write_to_stream (m: MANAGED_POINTER; pos: INTEGER) is
 			-- Write to stream `m' at position `pos'.
 		local
-			l_byte: INTEGER_8
+			kind: INTEGER_8
+			size: INTEGER
 		do
-			l_byte := ((internal_data & 0xFF000000) |>> 24).to_integer_8
-			m.put_integer_8 (l_byte, pos)
-
-				-- FIXME: Manu 3/29/2002: Should it be big endian?
-			l_byte := count.to_integer_8
-			m.put_integer_8 (l_byte, pos + 1)
-				-- +3 as size is coded on 3 bytes, but as we only use only
-				-- one exception, we store the first 8 bits and skip the last
-				-- 16 as they are `0'.
-			
 			if is_fat then
-				m.put_integer_32 (flags, pos + 4)
-				m.put_integer_32 (try_offset, pos + 8)
-				m.put_integer_32 (try_length, pos + 12)
-				m.put_integer_32 (handler_offset, pos + 16)
-				m.put_integer_32 (handler_length, pos + 20)
-				m.put_integer_32 (type_token, pos + 24)
+				kind := feature {MD_METHOD_CONSTANTS}.Section_ehtable |
+					feature {MD_METHOD_CONSTANTS}.Section_fat_format
+				size := clause_count * 24 + count
 			else
-				m.put_integer_16 (flags.to_integer_16, pos + 4)
-				m.put_integer_16 (try_offset.to_integer_16, pos + 6)
-				m.put_integer_8 (try_length.to_integer_8, pos + 8)
-				m.put_integer_16 (handler_offset.to_integer_16, pos + 9)
-				m.put_integer_8 (handler_length.to_integer_8, pos + 11)
-				m.put_integer_32 (type_token, pos + 12)
+				kind := feature {MD_METHOD_CONSTANTS}.Section_ehtable
+				size := clause_count * 12 + count
 			end
+			m.put_integer_8 (kind, pos)
+			m.put_integer_8 (size.to_integer_8, pos + 1)
+			m.put_integer_8 ((size |>> 8).to_integer_8, pos + 2)
+			m.put_integer_8 ((size |>> 16).to_integer_8, pos + 3)
 		end
 
 feature {NONE} -- Internal data
 
-	internal_data: INTEGER
-			-- Stores kind and size of clause.
-	
-	is_fat: BOOLEAN
-			-- Is current header a fat one?
-		
+	clause_count: INTEGER
+			-- Number of registered exception clauses
+
 end -- class MD_METHOD_SECTION_HEADER

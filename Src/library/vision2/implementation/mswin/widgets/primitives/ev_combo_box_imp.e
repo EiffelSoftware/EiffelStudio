@@ -19,11 +19,28 @@ inherit
 	EV_LIST_ITEM_HOLDER_IMP
 
 	EV_TEXT_COMPONENT_IMP
+		export {EV_INTERNAL_COMBO_FIELD_IMP, EV_INTERNAL_COMBO_BOX_IMP}
+			on_left_button_down,
+			on_middle_button_down,
+			on_right_button_down,
+			on_left_button_up,
+			on_middle_button_up,
+			on_right_button_up,
+			on_left_button_double_click,
+			on_middle_button_double_click,
+			on_right_button_double_click,
+			on_mouse_move,
+			on_key_down,
+			on_key_up,
+			on_set_focus,
+			on_kill_focus,
+			on_set_cursor
 		redefine
 			set_minimum_width_in_characters,
 			set_default_minimum_size,
 			move_and_resize,
-			set_editable
+			set_editable,
+			on_key_down
 		end
 		
 	WEL_DROP_DOWN_COMBO_BOX_EX
@@ -39,6 +56,9 @@ inherit
 			height as wel_height,
 			insert_item as wel_insert_item,
 			set_limit_text as set_text_limit
+		export
+			{EV_INTERNAL_COMBO_FIELD_IMP} edit_item
+			{EV_INTERNAL_COMBO_BOX_IMP} combo_item
 		undefine
 			window_process_message,
 			remove_command,
@@ -83,8 +103,20 @@ feature {NONE} -- Initialization
 			internal_window_make (default_parent, Void, default_style + Cbs_dropdown,
 				0, 0, 0, 90, 0, default_pointer)
  			id := 0
-			!! ev_children.make (2)
+			create text_field.make_from_combo (Current)
+			create combo.make_from_combo (Current)
+			create ev_children.make (2)
 		end
+
+feature -- Access
+
+	text_field: EV_INTERNAL_COMBO_FIELD_IMP
+			-- An internal text field that forwards the events to the
+			-- current combo-box-ex.
+
+	combo: EV_INTERNAL_COMBO_BOX_IMP
+			-- The combo_box inside the combo-box-ex. It forwards the
+			-- events.
 
 feature -- Measurement
 
@@ -328,14 +360,23 @@ feature {NONE} -- Implementation
 			-- Set the read-only state.
 		local
 			par_imp: WEL_WINDOW
+			a, b, c: INTEGER
 		do
 			if is_editable then
+				-- We keep some useful informations
 				par_imp ?= parent_imp
+				a := x; b := y; c := width
+
+				-- We destroy the old combo
 				wel_destroy
+				text_field := Void
+
+				-- We create the new combo.
   				internal_window_make (par_imp, Void, default_style + Cbs_dropdownlist,
-					0, 0, 0, 90, 0, default_pointer)
+					a, b, c, 90, 0, default_pointer)
  	 			id := 0
-				internal_copy_list --(temp_list)
+				create combo.make_from_combo (Current)
+				internal_copy_list
 			end
 		end
 
@@ -343,14 +384,23 @@ feature {NONE} -- Implementation
 			-- Set the read-write state.
 		local
 			par_imp: WEL_WINDOW
+			a, b, c: INTEGER
 		do
 			if not is_editable then
+				-- We keep some useful informations
 				par_imp ?= parent_imp
+				a := x; b := y; c := width
+
+				-- We destroy the old combo
 				wel_destroy
+				combo := Void
+
+				-- We create the new combo.
   				internal_window_make (par_imp, Void, default_style + Cbs_dropdown,
-					0, 0, 0, 90, 0, default_pointer)
+					a, b, c, 90, 0, default_pointer)
  	 			id := 0
-				internal_copy_list --(temp_list)
+				create text_field.make_from_combo (Current)
+				internal_copy_list
 			end
 		end
 
@@ -360,7 +410,24 @@ feature {NONE} -- Implementation
 			Result := flag_set (style, Cbs_dropdownlist)
 		end
 
-feature {NONE} -- Notification messages
+feature {EV_INTERNAL_COMBO_FIELD_IMP, EV_INTERNAL_COMBO_BOX_IMP} -- WEL Implementation
+
+	on_key_down (virtual_key, key_data: INTEGER) is
+			-- We check if the enter key is pressed)
+			-- 13 is the number of the return key.
+		do
+			{EV_TEXT_COMPONENT_IMP} Precursor (virtual_key, key_data)
+			process_tab_key (virtual_key)
+		end
+
+feature {NONE} -- WEL Implementation
+
+	default_style: INTEGER is
+		do
+			Result := Ws_child + Ws_visible + Ws_group 
+						+ Ws_tabstop + Ws_vscroll
+						+ Cbs_autohscroll
+		end
 
 	old_selected_item: EV_LIST_ITEM_IMP
 			-- The previously selected item
@@ -370,6 +437,7 @@ feature {NONE} -- Notification messages
 			-- or has selected an item from the control's drop-down list.
 		do
 			if info.why = Cbenf_return then
+				set_caret_position (0)
 				execute_command (Cmd_activate, Void)
 			end
 		end
@@ -409,8 +477,6 @@ feature {NONE} -- Notification messages
 			execute_command (Cmd_change, Void)
 		end
 
-feature {NONE} -- WEL implementation
-
    	move_and_resize (a_x, a_y, a_width, a_height: INTEGER; repaint: BOOLEAN) is
    			-- We must not resize the height of the combo-box.
    		do
@@ -437,14 +503,7 @@ feature {NONE} -- WEL implementation
 			Result := cwin_hi_word (cwin_send_message_result (edit_item, Em_getsel, 0, 0))
 		end
 
-	default_style: INTEGER is
-		do
-			Result := Ws_child + Ws_visible + Ws_group 
-						+ Ws_tabstop + Ws_vscroll
-						+ Cbs_autohscroll
-		end
-
-feature -- Temp
+Feature -- Temp
 
 	set_minimum_width_in_characters (nb: INTEGER) is
 			-- Make `nb' characters visible on one line.
@@ -468,7 +527,9 @@ feature {NONE} -- Feature that should be directly implemented by externals
 			-- because we cannot do a deferred feature become an
 			-- external feature.
 		do
-			Result := cwin_get_next_dlggroupitem (hdlg, hctl, previous)
+			check
+				Never_called: False
+			end
 		end
 
 	mouse_message_x (lparam: INTEGER): INTEGER is

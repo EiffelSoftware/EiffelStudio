@@ -5,23 +5,9 @@ indexing
 	date: "$Date$";
 	revision: "$Revision$"
 
-class CHILD_CLIP
+class
 
-feature -- Modification & Insertion 
-
-	set_clipped_by_children is
-			-- Specifies that drawing into the area of a drawing obscured by
-			-- its visible children produces no effect.
-		do
-			subwindow_mode := ClipByChildren;
-		end;
-
-	set_including_inferiors is
-			-- Specifies that drawing appears through visible children even
-			-- when they have opaque backgrounds.
-		do
-			subwindow_mode := IncludeInferiors;
-		end;
+	CHILD_CLIP
 
 feature -- Status report 
 
@@ -39,6 +25,21 @@ feature -- Status report
 			Result := subwindow_mode = IncludeInferiors
 		end;
 
+feature -- Status setting
+
+	set_clipped_by_children is
+			-- Specifies that drawing into the area of a drawing obscured by
+			-- its visible children produces no effect.
+		do
+			subwindow_mode := ClipByChildren;
+		end;
+
+	set_including_inferiors is
+			-- Specifies that drawing appears through visible children even
+			-- when they have opaque backgrounds.
+		do
+			subwindow_mode := IncludeInferiors;
+		end;
 
 feature {NONE} -- Access
 
@@ -52,9 +53,7 @@ feature {NONE} -- Access
 	IncludeInferiors: INTEGER is 1;
 			-- X code to define include inferiors mode
 
-
 end -- class CHILD_CLIP
-
 
 --|----------------------------------------------------------------
 --| EiffelVision: library of reusable components for ISE Eiffel 3.

@@ -5,7 +5,9 @@ indexing
 	date: "$Date$";
 	revision: "$Revision$"
 
-class ANGLE_ROUT 
+class
+
+	ANGLE_ROUT 
 
 inherit
 
@@ -22,7 +24,7 @@ feature -- Basic operation
 			-- Trigonometric cosine of `a' degrees
 		require
 			a_smaller_than_360: a < 360;
-          	a_positive: a >= 0
+			a_positive: a >= 0
 		do
 			Result := cosine (((Pi*a)/180.0).truncated_to_real)
 		end;
@@ -31,7 +33,7 @@ feature -- Basic operation
 			-- Trigonometric sine of `a' degrees
 		require
 			a_smaller_than_360: a < 360;
-          	a_positive: a >= 0
+			a_positive: a >= 0
 		do
 			Result := sine (((Pi*a)/180.0).truncated_to_real)
 		end;
@@ -41,10 +43,10 @@ feature -- Basic operation
 		do
 			Result := angle;
 			if angle >= 360 then
-				Result := angle-360.0*((angle/360).truncated_to_integer)
+				Result := angle - 360.0 * ((angle / 360).truncated_to_integer)
 			end;
 			if angle < 0 then
-				Result := angle+360.0*((1-angle/360).truncated_to_integer)
+				Result := angle + 360.0 * ((1 - angle / 360).truncated_to_integer)
 			end
 		ensure
 			Result >= 0;
@@ -52,7 +54,6 @@ feature -- Basic operation
 		end;
 
 end -- class ANGLE_ROUT
-
 
 --|----------------------------------------------------------------
 --| EiffelVision: library of reusable components for ISE Eiffel 3.

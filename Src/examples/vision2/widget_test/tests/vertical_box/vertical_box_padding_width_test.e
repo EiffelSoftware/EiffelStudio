@@ -40,7 +40,7 @@ feature {NONE} -- Implementation
 			-- Adjust `padding_width' of `vertical_box'
 			-- by `adjustment'. Update controls accordingly.
 		require
-			valid_new_width: vertical_box.border_width + adjustment >= 0
+			valid_new_width: vertical_box.padding_width + adjustment >= 0
 		do
 			vertical_box.set_padding_width (vertical_box.padding_width + adjustment)
 			if adjustment <= 0 then

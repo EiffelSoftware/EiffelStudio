@@ -24,10 +24,7 @@ inherit
 			{NONE} all
 		end
 
-	EXECUTION_ENVIRONMENT
-		export
-			{NONE} all
-		end
+	WIZARD_EXECUTION_ENVIRONMENT
 
 	WEL_HELP_CONSTANTS
 		export
@@ -107,7 +104,7 @@ feature -- Behavior
 		local
 			tmp_help_path: STRING			
 		do
-			tmp_help_path := clone (get ("EIFFEL4"))
+			tmp_help_path := clone (execution_environment.get ("EIFFEL4"))
 			tmp_help_path.append ("\wizards\com\eiffelcom.hlp")
 			win_help (tmp_help_path, Help_context, help_topic_id)
 		end

@@ -1,3 +1,4 @@
+
 class
 	MAIN_WINDOW
 
@@ -529,7 +530,7 @@ feature {WIZARD_FIRST_CHOICE_DIALOG} -- Behavior
 		local
 			tmp_help_path: STRING			
 		do
-			tmp_help_path := clone (get ("EIFFEL4"))
+			tmp_help_path := clone (execution_environment.get ("EIFFEL4"))
 			tmp_help_path.append ("\wizards\com\eiffelcom.hlp")
 			win_help (tmp_help_path, Help_finder, 0)
 		end

@@ -152,9 +152,6 @@ feature {EV_ANY_I} -- implementation
 			check
 				item_implementation_not_void: item_imp /= Void
 			end
-			--| FIXME Switched bottom 2 statements.
-			--| The parent may not be Void before calling remove_item
-			--| because menu items cannot work without their parent.
 			remove_item (item_imp)
 			item_imp.set_parent (Void)
 		end
@@ -249,7 +246,7 @@ feature {NONE} -- Implementation
 
 	item_to_imp (an_item: EV_ITEM): EV_ITEM_IMP is
 			-- Get implementation from `an_item'.
-		require
+		require	
 			an_item_not_void: an_item /= Void
 		do
 			Result ?= an_item.implementation
@@ -257,7 +254,7 @@ feature {NONE} -- Implementation
 				has_implementation: Result /= Void
 			end
 		ensure
-			not_void: Result /= Void
+			result_not_void: Result /= Void
 		end
 
 feature -- Event handling
@@ -296,6 +293,9 @@ end -- class EV_ITEM_LIST_IMP
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.26  2000/03/30 19:53:31  rogers
+--| Comments and removed unecessary FIXME.
+--|
 --| Revision 1.25  2000/03/30 17:47:12  brendel
 --| Changed export status.
 --|
